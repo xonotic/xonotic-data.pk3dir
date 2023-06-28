@@ -3,10 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Baker Doge, 2023
 # Basil <cigariscigar@gmail.com>, 2011,2013
 # Dmitro Sokhin <gamebot@ex.ua>, 2015
 # Basil <cigariscigar@gmail.com>, 2011,2013
 # Ihor Andreev, 2021
+# Ihor <ihor@noleron.com>, 2021
 # Ihor <ihor@noleron.com>, 2021
 # Ihor <ihor@noleron.com>, 2021
 # Illia Serediuk, 2022
@@ -20,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-06-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Ihor <ihor@noleron.com>, 2021\n"
+"Last-Translator: Baker Doge, 2023\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -142,7 +144,7 @@ msgstr "альтернативний вогонь"
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Натисніть ^3%s^1 для зміни режиму огляду"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
@@ -175,12 +177,12 @@ msgstr "^2Зараз  ^1розминка^2!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:163
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "^31^2 гравець потрібен, щоб почати матч."
 
 #: qcsrc/client/hud/panel/infomessages.qc:165
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "^3%d^2 гравців потрібно, щоб розпочати матч."
 
 #: qcsrc/client/hud/panel/infomessages.qc:173
 #, c-format
@@ -214,7 +216,7 @@ msgstr "Натисніть ^3%s%s для налаштування"
 #: qcsrc/client/hud/panel/infomessages.qc:203
 #: qcsrc/menu/xonotic/keybinder.qc:117
 msgid "team selection"
-msgstr ""
+msgstr "вибір команди"
 
 #: qcsrc/client/hud/panel/infomessages.qc:213
 msgid "^1Spectating this player:"
@@ -250,7 +252,7 @@ msgstr "Гравець %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:202
 msgid "Standard quick menu"
-msgstr ""
+msgstr "Типове швидке меню"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:634
 #: qcsrc/client/hud/panel/quickmenu.qc:636
@@ -278,11 +280,11 @@ msgstr "QMCMD^Надіслати публічне повідомлення в"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^:-) / nice one"
-msgstr ""
+msgstr "QMCMD^:-) / файно"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^nice one"
-msgstr ""
+msgstr "QMCMD^файно"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^good game"
@@ -303,7 +305,7 @@ msgstr "QMCMD^Надіслати англійською мовою"
 #: qcsrc/client/hud/panel/quickmenu.qc:829
 #: qcsrc/client/hud/panel/quickmenu.qc:845
 msgid "QMCMD^Team chat"
-msgstr ""
+msgstr "QMCMD^Командний чат"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^strength soon"
@@ -641,19 +643,19 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "The total damage taken"
-msgstr ""
+msgstr "Всього шкоди отримано"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of flag drops"
-msgstr ""
+msgstr "Кількість прапорів втрачено"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^drops"
-msgstr ""
+msgstr "SCO^втрачено"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Player ELO"
-msgstr ""
+msgstr "Гравець ELO"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^elo"
@@ -1075,12 +1077,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2357
 #, c-format
 msgid "^3%1.0f minutes"
-msgstr ""
+msgstr "^3%1.0f хвилин"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2384
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7/^5%d ^7гравців"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2385 qcsrc/client/main.qc:1436
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
@@ -1090,43 +1092,43 @@ msgstr "Мапа:"
 #: qcsrc/client/hud/panel/scoreboard.qc:2548
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "Нагорода за швидкість: %d%s^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2552
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "Найшвидший за весь час: %d%s^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2586
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
-msgstr ""
+msgstr "^1Повернення до гри через ^3%s^1..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2596
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr ""
+msgstr "Ви загинули, почекайте ще ^3%s^7 перед поверненням у гру"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2605
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr ""
+msgstr "Ви загинули, натисніть ^2%s^7 щоб повернутися до гри"
 
 #: qcsrc/client/hud/panel/strafehud.qc:1312
 msgid "qu"
-msgstr ""
+msgstr "qu"
 
 #: qcsrc/client/hud/panel/strafehud.qc:1313
 msgid "m"
-msgstr ""
+msgstr "м"
 
 #: qcsrc/client/hud/panel/strafehud.qc:1314
 msgid "km"
-msgstr ""
+msgstr "км"
 
 #: qcsrc/client/hud/panel/strafehud.qc:1315
 msgid "mi"
-msgstr ""
+msgstr "миль"
 
 #: qcsrc/client/hud/panel/strafehud.qc:1316
 msgid "nmi"
@@ -1134,32 +1136,32 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:126
 msgid "Warmup"
-msgstr ""
+msgstr "Розігрів"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr ""
+msgstr "Розігрів: недостатньо гравців"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "Розігрів: немає обмеження по часу"
 
 #: qcsrc/client/hud/panel/timer.qc:137
 msgid "Timeout"
-msgstr ""
+msgstr "Час вичерпано"
 
 #: qcsrc/client/hud/panel/timer.qc:139
 msgid "Sudden Death"
-msgstr ""
+msgstr "Раптова смерть"
 
 #: qcsrc/client/hud/panel/timer.qc:141
 msgid "Overtime"
-msgstr ""
+msgstr "Додатковий час"
 
 #: qcsrc/client/hud/panel/timer.qc:143
 #, c-format
 msgid "Overtime #%d"
-msgstr ""
+msgstr "Додатковий час #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
@@ -1262,7 +1264,7 @@ msgstr ""
 #: qcsrc/client/main.qc:1365 qcsrc/client/main.qc:1379
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
-msgstr ""
+msgstr "Без використання зброї"
 
 #: qcsrc/client/main.qc:1377
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
@@ -1281,7 +1283,7 @@ msgstr "Твоя версія клієнта не актуальна."
 
 #: qcsrc/client/main.qc:1390
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
-msgstr ""
+msgstr "### ВИ НЕ ЗМОЖЕТЕ ПОГРАТИ НА ЦЬОМУ СЕРВЕРІ ###"
 
 #: qcsrc/client/main.qc:1391
 msgid "Please update!"
@@ -1289,26 +1291,26 @@ msgstr "Будь-ласка оновіться!"
 
 #: qcsrc/client/main.qc:1394
 msgid "This server is using an outdated Xonotic version."
-msgstr ""
+msgstr "Цей сервер використовує застарілу версію Xonotic."
 
 #: qcsrc/client/main.qc:1395
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
-msgstr ""
+msgstr "### НЕСУМІСНА ВЕРСІЯ СЕРВЕРУ, ВИ НЕ МОЖЕТЕ ПРИЄДНАТИСЬ ###"
 
 #: qcsrc/client/main.qc:1397
 #, c-format
 msgid "Welcome to %s"
-msgstr ""
+msgstr "Ласкаво просимо до %s"
 
 #: qcsrc/client/main.qc:1411 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
-msgstr ""
+msgstr "Рівень %d:"
 
 #: qcsrc/client/main.qc:1413
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
-msgstr ""
+msgstr "^BGНатисніть ^F2%s^BG щоб увійти до гри"
 
 #: qcsrc/client/main.qc:1434
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
@@ -1322,34 +1324,34 @@ msgstr "Цей матч підтримує"
 #: qcsrc/client/main.qc:1450
 #, c-format
 msgid "%d players"
-msgstr ""
+msgstr "%d гравців"
 
 #: qcsrc/client/main.qc:1452
 #, c-format
 msgid "%d to %d players"
-msgstr ""
+msgstr "%d до %d гравців"
 
 #: qcsrc/client/main.qc:1454
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "%d максимальна кількість гравців"
 
 #: qcsrc/client/main.qc:1456
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "%d мінімальна кількість гравців"
 
 #: qcsrc/client/main.qc:1461
 msgid "Active modifications:"
-msgstr ""
+msgstr "Активні модифікації:"
 
 #: qcsrc/client/main.qc:1464
 msgid "Special gameplay tips:"
-msgstr ""
+msgstr "Особливі поради до ігроладу:"
 
 #: qcsrc/client/main.qc:1471
 msgid "Server's message"
-msgstr ""
+msgstr "Повідомлення від серверу"
 
 #: qcsrc/client/main.qc:1565
 #, c-format
@@ -1384,19 +1386,19 @@ msgstr "%d секунд залишилось"
 
 #: qcsrc/client/mapvoting.qc:559
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
-msgstr ""
+msgstr "mv_mapdownload: ^3Вам не дозволено користуватися цією командою!"
 
 #: qcsrc/client/mapvoting.qc:569
 msgid "^1Error:^7 Couldn't find pak index."
-msgstr ""
+msgstr "^1Error:^7 Неможливо знайти заголовок pak-архіву."
 
 #: qcsrc/client/mapvoting.qc:578
 msgid "Requesting preview..."
-msgstr ""
+msgstr "Запитуємо попередній перегляд..."
 
 #: qcsrc/client/view.qc:883
 msgid "Nade timer"
-msgstr ""
+msgstr "Затримка гранати"
 
 #: qcsrc/client/view.qc:888
 msgid "Capture progress"
@@ -1419,6 +1421,8 @@ msgid ""
 "Destroy obstacles to find and destroy the enemy power core before time runs "
 "out"
 msgstr ""
+"Знешкодьте перешкоди, щоб знайти та знищити ядро сили противника до того, як "
+"закінчиться час."
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:22
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:28
@@ -1438,7 +1442,7 @@ msgstr "Clan Arena"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Kill all enemy teammates to win the round"
-msgstr ""
+msgstr "Вбийте усіх членів команди противника для перемоги у цьому раунді"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
@@ -1448,11 +1452,11 @@ msgstr "Ліміт раунда:"
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "The amount of rounds won needed before the match will end"
-msgstr ""
+msgstr "Необхідна кількість раундів до закінчення матчу"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
-msgstr ""
+msgstr "Час на захоплення"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid "Capture the Flag"
@@ -1463,6 +1467,8 @@ msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
+"Знайдіть та доставте прапор противника на свою базу, і захищайте прапор на "
+"вашій базі від противника"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "Capture limit:"
@@ -1470,12 +1476,12 @@ msgstr "Ліміт захоплень:"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr ""
+msgstr "Кількість захоплень прапора до закінчення матчу"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
 msgid "Rankings"
-msgstr ""
+msgstr "Ранг"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
 msgid "Race CTS"
@@ -1491,11 +1497,11 @@ msgstr "Deathmatch"
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Score as many frags as you can"
-msgstr ""
+msgstr "Захопіть якомога більше прапорів"
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Capture and defend all the control points to win"
-msgstr ""
+msgstr "Захопіть та утримуйте всі контрольні точки до перемоги"
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Domination"
@@ -1505,7 +1511,7 @@ msgstr "Domination"
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr ""
+msgstr "Кількість захоплених точок для завершення матчу"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
@@ -1513,7 +1519,7 @@ msgstr "Дуель"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
-msgstr ""
+msgstr "Дуель на арені визначить переможця"
 
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:15
 msgid "Freeze Tag"
@@ -1670,24 +1676,24 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "Гільза"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
-msgstr ""
+msgstr "Кулі"
 
 #: qcsrc/common/items/item/ammo.qh:124
 msgid "Rockets"
-msgstr ""
+msgstr "Ракети"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "Батарейки"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
-msgstr ""
+msgstr "Плазма"
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
@@ -1729,7 +1735,7 @@ msgstr "Ракетний ранець"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "Fuel"
-msgstr ""
+msgstr "Паливо"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
@@ -1865,7 +1871,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:374
 #, c-format
 msgid "%s^7 won the game!"
-msgstr ""
+msgstr "%s^7 переміг у грі!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:384
 #: qcsrc/common/minigames/minigame/pp.qc:450
@@ -2337,11 +2343,11 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:28
 msgid "Red base"
-msgstr ""
+msgstr "База червоних"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Blue base"
-msgstr ""
+msgstr "База синіх"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:30
 msgid "Yellow base"
@@ -2364,11 +2370,11 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:61
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Control point"
-msgstr ""
+msgstr "Контрольна точка"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:40
 msgid "Dropped key"
-msgstr ""
+msgstr "Загублений ключ"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:41
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:43
@@ -2376,16 +2382,16 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:45
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:46
 msgid "Key carrier"
-msgstr ""
+msgstr "Кур'єр з ключем"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:42
 msgid "Run here"
-msgstr ""
+msgstr "Бігом сюди"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 msgid "Ball"
-msgstr ""
+msgstr "М'яч"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:50
@@ -2393,32 +2399,32 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:52
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:53
 msgid "Ball carrier"
-msgstr ""
+msgstr "Переносить м'яча"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:55
 msgid "Leader"
-msgstr ""
+msgstr "Лідер"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:58
 msgid "Goal"
-msgstr ""
+msgstr "Гол"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:63
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:64
 msgid "Generator"
-msgstr ""
+msgstr "Генератор"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:66
 msgid "Weapon"
-msgstr ""
+msgstr "Зброя"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:68
 msgid "Monster"
-msgstr ""
+msgstr "Чудовисько"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:70
 msgid "Vehicle"
-msgstr ""
+msgstr "Транспортний засіб"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:71
 msgid "Intruder!"
@@ -2474,7 +2480,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
 msgid "^BG%s^BG captured the flag"
-msgstr ""
+msgstr "^BG%s^BG захопив прапор"
 
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
@@ -2496,7 +2502,7 @@ msgstr "^BG ^TC^TT^BG прапор був повернений на базу в�
 
 #: qcsrc/common/notifications/all.inc:246
 msgid "^BGThe flag was returned by its owner"
-msgstr ""
+msgstr "^BGВласник повернув прапор на місце"
 
 #: qcsrc/common/notifications/all.inc:247
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
@@ -2504,7 +2510,7 @@ msgstr "^BG ^TC^TT^BG прапор був знищений і тому пове�
 
 #: qcsrc/common/notifications/all.inc:248
 msgid "^BGThe flag was destroyed and returned to base"
-msgstr ""
+msgstr "^BGПрапор було знищено і повернено на базу"
 
 #: qcsrc/common/notifications/all.inc:249
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
@@ -2512,7 +2518,7 @@ msgstr "^BG ^TC^TT^BG був кинутий на базі і тому повер
 
 #: qcsrc/common/notifications/all.inc:250
 msgid "^BGThe flag was dropped in the base and returned itself"
-msgstr ""
+msgstr "^BGПрапор було втрачено і повернуто на базу"
 
 #: qcsrc/common/notifications/all.inc:251
 msgid ""
@@ -2524,7 +2530,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:252
 msgid "^BGThe flag fell somewhere it couldn't be reached and returned to base"
-msgstr ""
+msgstr "^BGПрапор було втрачено у недоступному місці і повернуто на базу"
 
 #: qcsrc/common/notifications/all.inc:253
 #, c-format
@@ -2540,6 +2546,7 @@ msgstr ""
 msgid ""
 "^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"
 msgstr ""
+"^BGПрапор самостійно повернувся на базу після ^F1%.2f^BG seconds очікування"
 
 #: qcsrc/common/notifications/all.inc:255
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
@@ -2547,7 +2554,7 @@ msgstr "^BG ^TC^TT^BG прапор повернувся на базу"
 
 #: qcsrc/common/notifications/all.inc:256
 msgid "^BGThe flag has returned to the base"
-msgstr ""
+msgstr "^BGПрапор повернуто на базу"
 
 #: qcsrc/common/notifications/all.inc:257
 #, c-format
@@ -2557,7 +2564,7 @@ msgstr "^BG%s^BG втратив ^TC^TT^BG прапор"
 #: qcsrc/common/notifications/all.inc:258
 #, c-format
 msgid "^BG%s^BG lost the flag"
-msgstr ""
+msgstr "^BG%s^BG втратив прапор"
 
 #: qcsrc/common/notifications/all.inc:259
 #, c-format
@@ -2567,7 +2574,7 @@ msgstr "^BG%s^BG захопив ^TC^TT^BG прапор"
 #: qcsrc/common/notifications/all.inc:260
 #, c-format
 msgid "^BG%s^BG got the flag"
-msgstr ""
+msgstr "^BG%s^BG підняв прапор"
 
 #: qcsrc/common/notifications/all.inc:261
 #: qcsrc/common/notifications/all.inc:262
@@ -3192,12 +3199,12 @@ msgstr "^F1%s^BG ^F4недоступний(а)^BG на цій мапі"
 #: qcsrc/common/notifications/all.inc:391
 #, c-format
 msgid "^BG%s^BG is connecting..."
-msgstr ""
+msgstr "^BG%s^BG підключається до гри..."
 
 #: qcsrc/common/notifications/all.inc:392
 #, c-format
 msgid "^BG%s^F3 connected"
-msgstr ""
+msgstr "^BG%s^F3 підключився до гри"
 
 #: qcsrc/common/notifications/all.inc:393
 #, c-format
@@ -3207,7 +3214,7 @@ msgstr "^BG%s^F3 зараз грає"
 #: qcsrc/common/notifications/all.inc:394
 #, c-format
 msgid "^BG%s^F3 is now playing on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 приєднався до команди ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:396
 #: qcsrc/common/notifications/all.inc:718
@@ -3792,7 +3799,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:542
 msgid "^F4You are now alone!"
-msgstr ""
+msgstr "^F4Останній герой!"
 
 #: qcsrc/common/notifications/all.inc:544
 msgid "^BGYou are attacking!"
@@ -3810,20 +3817,20 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:548
 #, c-format
 msgid "%s players are needed for this match."
-msgstr ""
+msgstr "%s гравців необхідно для початку матчу."
 
 #: qcsrc/common/notifications/all.inc:549
 msgid "^BGBegin!"
-msgstr ""
+msgstr "^BGПочинаємо!"
 
 #: qcsrc/common/notifications/all.inc:550
 msgid "^BGGame starts in"
-msgstr ""
+msgstr "^BGПочаток гри через"
 
 #: qcsrc/common/notifications/all.inc:551
 #, c-format
 msgid "^BGRound %s starts in"
-msgstr ""
+msgstr "^BGРаунд %s починається через"
 
 #: qcsrc/common/notifications/all.inc:552
 msgid "^F4Round cannot start"
@@ -5171,7 +5178,7 @@ msgstr "Midair"
 
 #: qcsrc/common/util.qc:258
 msgid "Melee only Arena"
-msgstr ""
+msgstr "Бій тільки на холодній зброї"
 
 #: qcsrc/common/util.qc:260
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
@@ -6123,7 +6130,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:354
 msgid "Russian"
-msgstr ""
+msgstr "Московська"
 
 #: qcsrc/menu/xonotic/credits.qc:370
 msgid "Serbian"
@@ -6143,7 +6150,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:409
 msgid "Ukrainian"
-msgstr ""
+msgstr "Солов'їна"
 
 #: qcsrc/menu/xonotic/credits.qc:418
 msgid "Past Contributors"
@@ -6248,11 +6255,11 @@ msgstr "Приєднатися!"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:26
 msgid "Restart level"
-msgstr ""
+msgstr "Перезапустити рівень"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:42
 msgid "Main menu"
-msgstr ""
+msgstr "Головне меню"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:45
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
@@ -6262,7 +6269,7 @@ msgstr "Сервери"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:48
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:19
 msgid "Profile"
-msgstr ""
+msgstr "Профіль"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:51
 #: qcsrc/menu/xonotic/dialog_settings.qh:6
@@ -6276,16 +6283,16 @@ msgstr "Керування"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:56
 msgid "Quick menu"
-msgstr ""
+msgstr "Швидке меню"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
 #: qcsrc/menu/xonotic/dialog_welcome.qc:133
 msgid "Spectate"
-msgstr ""
+msgstr "Спостерігати"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qh:8
 msgid "Game menu"
-msgstr ""
+msgstr "Меню гри"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:18
 msgid "Ammunition display:"
@@ -7512,11 +7519,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 msgid "Show high latency servers"
-msgstr ""
+msgstr "Показувати сервери із високою затримкою"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:59
 msgid "Reload the server list"
-msgstr ""
+msgstr "Перезавантажити список серверів"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:62
 msgid "Pause"
@@ -7543,12 +7550,12 @@ msgstr "Показати більше інформації про виділен
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:105
 msgid "No Terms of Service specified"
-msgstr ""
+msgstr "Умов Використання не вказано"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 msgid "MOD^Default"
-msgstr ""
+msgstr "MOD^За замовчуванням"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 #, c-format
@@ -7712,16 +7719,17 @@ msgstr "Переглянути"
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:13
 msgid "Playing a demo will disconnect you from the current match."
 msgstr ""
+"Якщо запустити програвання демки, то це відключить вас від поточного матчу."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:15
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:15
 msgid "Do you really wish to disconnect now?"
-msgstr ""
+msgstr "Ви точно хочете покинути гру?"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qh:6
 msgid "Disconnect"
-msgstr ""
+msgstr "Відключитись"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
 msgid "Timing a demo will disconnect you from the current match."
@@ -9352,21 +9360,21 @@ msgstr "Клавіші визначені користувачем"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:12
 #, c-format
 msgid "%d fps"
-msgstr ""
+msgstr "%d кадрів"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
 #, c-format
 msgid "%d KiB/s"
-msgstr ""
+msgstr "%d КБіт/с"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:14
 #, c-format
 msgid "%d MiB/s"
-msgstr ""
+msgstr "%d МБіт/с"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
 msgid "Network"
-msgstr ""
+msgstr "Мережа"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:33
 msgid "Show netgraph"
@@ -9378,28 +9386,28 @@ msgstr "Показувати графік розмірів пакетів та �
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Packet loss compensation"
-msgstr ""
+msgstr "Компенсувати втрату мережевих пакетів"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "Each packet includes a copy of the previous message"
-msgstr ""
+msgstr "Кожен пакет містить копію попереднього повідомлення"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Movement prediction error compensation"
-msgstr ""
+msgstr "Вгадувати рухи під час втрати мережевих пакетів"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:43
 msgid "Use encryption (AES) when available"
-msgstr ""
+msgstr "Використовувати AES-шифрування (якщо можливо)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:46
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:68
 msgid "Bandwidth limit:"
-msgstr ""
+msgstr "Обмежити ширину каналу:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
-msgstr ""
+msgstr "Вкажіть швидкість вашої мережі"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
@@ -9419,19 +9427,19 @@ msgstr "Локальна затримка:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "HTTP downloads"
-msgstr ""
+msgstr "HTTP-завантажень"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:64
 msgid "Simultaneous:"
-msgstr ""
+msgstr "Одночасно:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Maximum number of concurrent HTTP downloads"
-msgstr ""
+msgstr "Максимальна кількість одночасних HTTP-завантажень"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
 msgid "Framerate"
-msgstr ""
+msgstr "Частота кадрів"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:84
 msgid "Show frames per second"
@@ -9491,11 +9499,11 @@ msgstr "Розширені"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:132
 msgid "Show current date and time"
-msgstr ""
+msgstr "Показувати поточний день та час"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:133
 msgid "Show current date and time of day, useful on screenshots"
-msgstr ""
+msgstr "Показувати поточний день та час, корисно для знімків екрану"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:136
 msgid "Enable developer mode"
@@ -9512,7 +9520,7 @@ msgstr "Тут ви зможете змінити будь-які деталі �
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:148
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
 msgid "Factory reset"
-msgstr ""
+msgstr "Повернутись до заводських налаштувань"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:31
 msgid "Cvar filter:"
@@ -9544,7 +9552,7 @@ msgstr "Додаткові налаштування"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:11
 msgid "Are you sure you want to reset all settings?"
-msgstr ""
+msgstr "Повернутись до налаштувань за замовчуванням?"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
@@ -9556,7 +9564,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"
-msgstr ""
+msgstr "Мова тексту"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:67
 msgid "Set language"
@@ -9580,15 +9588,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"
-msgstr ""
+msgstr "Відключитись зараз"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
 msgid "Switch language"
-msgstr ""
+msgstr "Змінити мову"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qh:6
 msgid "Warning"
-msgstr ""
+msgstr "Попередження"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:33
 msgid "Resolution:"
@@ -9663,6 +9671,8 @@ msgid ""
 "Vsync prevents tearing, but increases latency and caps your fps at the "
 "screen refresh rate"
 msgstr ""
+"Вертикальна синхронізація попереджає розриви зображення, проте збільшує "
+"затримку і обмежує частоту кадрів на заданній частоті оновлення екрану"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:64
 msgid "High-quality frame buffer"
@@ -9694,7 +9704,7 @@ msgstr "4x"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "Resolution scaling:"
-msgstr ""
+msgstr "Масштабування розширення екрану:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:87
 msgid ""
@@ -9708,7 +9718,7 @@ msgstr "Анізотропна фільтрація:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:92
 msgid "Anisotropic filtering quality"
-msgstr ""
+msgstr "Якість анізотропної фільтрації"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:93
 msgid "ANISO^Disabled"
@@ -9750,7 +9760,7 @@ msgstr "Яскравість:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:113
 msgid "Brightness of black"
-msgstr ""
+msgstr "Глибина чорного"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:115
 msgid "Contrast:"
@@ -9758,7 +9768,7 @@ msgstr "Контраст:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:117
 msgid "Brightness of white"
-msgstr ""
+msgstr "Яскравість білого"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:119
 msgid "Gamma:"
@@ -9858,7 +9868,7 @@ msgstr "Важка"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
-msgstr ""
+msgstr "Почати кампанію!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
@@ -9904,34 +9914,38 @@ msgstr "спостерігати"
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
 msgid "Terms of Service have been updated. Please read them before continuing:"
 msgstr ""
+"Умови Користування було оновлено. Будь-ласка, ознайомтеся з ними, якщо "
+"хочете грати далі:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
 msgstr ""
+"Ласкаво просимо до Xonotic! Будь-ласка, спочатку ознайомтеся із наступними "
+"Умовами Користування:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:94
 msgid "Accept"
-msgstr ""
+msgstr "Приймаю"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:98
 msgid "Don't accept (quit the game)"
-msgstr ""
+msgstr "Відмовляюсь (виходжу з гри)"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
-msgstr ""
+msgstr "Додати ваш псевдонім до статистичної обробки?"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr ""
+msgstr "Відповідаючи \"Ні\" ви будете відображатися як \"Анонімний гравець\""
 
 #: qcsrc/menu/xonotic/gametypelist.qc:88
 msgid "teamplay"
-msgstr ""
+msgstr "командна гра"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:90
 msgid "free for all"
-msgstr ""
+msgstr "бій без правил"
 
 #: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "Moving"
@@ -9939,11 +9953,11 @@ msgstr "Рух"
 
 #: qcsrc/menu/xonotic/keybinder.qc:39
 msgid "move forwards"
-msgstr ""
+msgstr "рух уперед"
 
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "move backwards"
-msgstr ""
+msgstr "рух назад"
 
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "strafe left"
@@ -9963,7 +9977,7 @@ msgstr "присідання / занурення"
 
 #: qcsrc/menu/xonotic/keybinder.qc:46
 msgid "jetpack"
-msgstr ""
+msgstr "ракетний ранець"
 
 #: qcsrc/menu/xonotic/keybinder.qc:49
 msgid "Attacking"
@@ -10007,11 +10021,11 @@ msgstr "скриншот"
 
 #: qcsrc/menu/xonotic/keybinder.qc:91
 msgid "maximize radar"
-msgstr ""
+msgstr "збільшити радар"
 
 #: qcsrc/menu/xonotic/keybinder.qc:92
 msgid "3rd person view"
-msgstr ""
+msgstr "вид від 3-ї особи"
 
 #: qcsrc/menu/xonotic/keybinder.qc:93
 msgid "enter spectator mode"
@@ -10019,7 +10033,7 @@ msgstr "увійти в режим спостерігача"
 
 #: qcsrc/menu/xonotic/keybinder.qc:96
 msgid "Communication"
-msgstr ""
+msgstr "Зв'язок"
 
 #: qcsrc/menu/xonotic/keybinder.qc:97
 msgid "public chat"
@@ -10059,19 +10073,19 @@ msgstr "автовибір команди"
 
 #: qcsrc/menu/xonotic/keybinder.qc:122
 msgid "drop key/flag, exit vehicle"
-msgstr ""
+msgstr "викинути ключа/прапор, вийти з транспортного засобу"
 
 #: qcsrc/menu/xonotic/keybinder.qc:123
 msgid "suicide / respawn"
-msgstr ""
+msgstr "самогубство / респаун"
 
 #: qcsrc/menu/xonotic/keybinder.qc:124
 msgid "quick menu"
-msgstr ""
+msgstr "\"швидке\" меню"
 
 #: qcsrc/menu/xonotic/keybinder.qc:126
 msgid "scoreboard user interface"
-msgstr ""
+msgstr "інтерфейс таблиці очок"
 
 #: qcsrc/menu/xonotic/keybinder.qc:129
 msgid "User defined"
@@ -10079,51 +10093,51 @@ msgstr "Визначені користувачем"
 
 #: qcsrc/menu/xonotic/keybinder.qc:136
 msgid "Development"
-msgstr ""
+msgstr "Розробка"
 
 #: qcsrc/menu/xonotic/keybinder.qc:137
 msgid "sandbox menu"
-msgstr ""
+msgstr "меню пісочниці"
 
 #: qcsrc/menu/xonotic/keybinder.qc:138
 msgid "drag object (sandbox)"
-msgstr ""
+msgstr "потягнути об'єкт (у пісочниці)"
 
 #: qcsrc/menu/xonotic/keybinder.qc:139
 msgid "waypoint editor menu"
-msgstr ""
+msgstr "меню редактора вейпоінту"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
-msgstr ""
+msgstr "Покинути поточний матч"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
-msgstr ""
+msgstr "Зупинити демку"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"
-msgstr ""
+msgstr "Вийти з кампанії"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:18
 msgid "Leave singleplayer"
-msgstr ""
+msgstr "Вийти з одиночної гри"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:20
 msgid "Leave multiplayer"
-msgstr ""
+msgstr "Вийти з гри у мережі"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current campaign level"
-msgstr ""
+msgstr "Вийти з поточного рівня кампанії"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:30
 msgid "Leave current singleplayer match"
-msgstr ""
+msgstr "Вийти з поточного одиночного матчу"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:32
 msgid "Leave current multiplayer match / Disconnect from the server"
-msgstr ""
+msgstr "Вийти з мережевої гри / Відключитися від серверу"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:76 qcsrc/menu/xonotic/mainwindow.qc:79
 msgid "Do not press this button again!"
@@ -10329,51 +10343,51 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
-msgstr ""
+msgstr "Січень"
 
 #: qcsrc/menu/xonotic/statslist.qc:30
 msgid "February"
-msgstr ""
+msgstr "Лютий"
 
 #: qcsrc/menu/xonotic/statslist.qc:31
 msgid "March"
-msgstr ""
+msgstr "Березень"
 
 #: qcsrc/menu/xonotic/statslist.qc:32
 msgid "April"
-msgstr ""
+msgstr "Квітень"
 
 #: qcsrc/menu/xonotic/statslist.qc:33
 msgid "May"
-msgstr ""
+msgstr "Травень"
 
 #: qcsrc/menu/xonotic/statslist.qc:34
 msgid "June"
-msgstr ""
+msgstr "Червень"
 
 #: qcsrc/menu/xonotic/statslist.qc:35
 msgid "July"
-msgstr ""
+msgstr "Липень"
 
 #: qcsrc/menu/xonotic/statslist.qc:36
 msgid "August"
-msgstr ""
+msgstr "Серпень"
 
 #: qcsrc/menu/xonotic/statslist.qc:37
 msgid "September"
-msgstr ""
+msgstr "Вересень"
 
 #: qcsrc/menu/xonotic/statslist.qc:38
 msgid "October"
-msgstr ""
+msgstr "Жовтень"
 
 #: qcsrc/menu/xonotic/statslist.qc:39
 msgid "November"
-msgstr ""
+msgstr "Листопад"
 
 #: qcsrc/menu/xonotic/statslist.qc:40
 msgid "December"
-msgstr ""
+msgstr "Грудень"
 
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format
@@ -10382,45 +10396,45 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
-msgstr ""
+msgstr "Приєднався:"
 
 #: qcsrc/menu/xonotic/statslist.qc:104
 msgid "Last match:"
-msgstr ""
+msgstr "Остання гра:"
 
 #: qcsrc/menu/xonotic/statslist.qc:111
 msgid "Time played:"
-msgstr ""
+msgstr "Проведено часу у грі:"
 
 #: qcsrc/menu/xonotic/statslist.qc:118 qcsrc/menu/xonotic/statslist.qc:231
 msgid "Favorite map:"
-msgstr ""
+msgstr "Улюблена арена:"
 
 #: qcsrc/menu/xonotic/statslist.qc:150 qcsrc/menu/xonotic/statslist.qc:202
 #: qcsrc/menu/xonotic/statslist.qc:245
 #, c-format
 msgid "Matches:"
-msgstr ""
+msgstr "Зіграно матчей:"
 
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
 msgid "Wins/Losses:"
-msgstr ""
+msgstr "Перемоги/Поразок:"
 
 #: qcsrc/menu/xonotic/statslist.qc:156
 #, c-format
 msgid "Win percentage:"
-msgstr ""
+msgstr "Загальний відсоток перемог:"
 
 #: qcsrc/menu/xonotic/statslist.qc:167
 #, c-format
 msgid "Kills/Deaths:"
-msgstr ""
+msgstr "Вбивств/Смертей:"
 
 #: qcsrc/menu/xonotic/statslist.qc:173
 #, c-format
 msgid "Kill ratio:"
-msgstr ""
+msgstr "Співвідношення вбивств:"
 
 #: qcsrc/menu/xonotic/statslist.qc:208
 msgid "ELO:"
@@ -10428,11 +10442,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:215
 msgid "Rank:"
-msgstr ""
+msgstr "Ранг:"
 
 #: qcsrc/menu/xonotic/statslist.qc:222
 msgid "Percentile:"
-msgstr ""
+msgstr "Процентиль:"
 
 #: qcsrc/menu/xonotic/statslist.qc:247
 #, c-format
@@ -10441,7 +10455,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:420
 msgid "Update can be downloaded at:"
-msgstr ""
+msgstr "Оновлення можна завантажити:"
 
 #: qcsrc/menu/xonotic/util.qc:518
 msgid "Autogenerating mapinfo for newly added maps..."
@@ -10457,6 +10471,8 @@ msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
 msgstr ""
+"^1ПОМИЛКА: Стиснення текстур обов'язкове, проте не підтримується.\n"
+"^1Очікуйте візуальних артефактів зображення."
 
 #: qcsrc/menu/xonotic/util.qc:772
 msgid "Use default"
