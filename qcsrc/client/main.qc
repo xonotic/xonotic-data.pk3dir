@@ -887,7 +887,10 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 					default: pointparticles(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1); break;
 				}
 			}
-			if(autocvar_cl_spawn_event_sound)
+
+			// If more network data is needed refactor this as it only needs a single bit for networking a bool
+			bool silent = ReadByte();
+			if(autocvar_cl_spawn_event_sound && !silent)
 			{
 				sound(this, CH_TRIGGER, SND_SPAWN, VOL_BASE, ATTEN_NORM);
 			}
