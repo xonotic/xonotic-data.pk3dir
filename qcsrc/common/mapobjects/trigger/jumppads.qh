@@ -13,6 +13,14 @@ const int PUSH_SILENT = BIT(1); // not used?
 #define PUSH_VELOCITY_BIDIRECTIONAL_Z     BIT(5)
 #define PUSH_VELOCITY_CLAMP_NEGATIVE_ADDS BIT(6)
 
+#define PUSH_VELOCITY_PLAYERDIR_XY        BIT(0)
+#define PUSH_VELOCITY_ADD_XY              BIT(1)
+#define PUSH_VELOCITY_PLAYERDIR_Z         BIT(2)
+#define PUSH_VELOCITY_ADD_Z               BIT(3)
+#define PUSH_VELOCITY_BIDIRECTIONAL_XY    BIT(4)
+#define PUSH_VELOCITY_BIDIRECTIONAL_Z     BIT(5)
+#define PUSH_VELOCITY_CLAMP_NEGATIVE_ADDS BIT(6)
+
 IntrusiveList g_jumppads;
 STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
 

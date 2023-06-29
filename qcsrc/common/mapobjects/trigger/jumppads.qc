@@ -267,6 +267,19 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		}
 	}
 
+	bool already_pushed = false;
+	if(is_velocity_pad) // remember velocity jump pads
+	{
+		if(this == targ.last_pushed || (targ.last_pushed && !STAT(Q3COMPAT, targ))) // if q3compat is active overwrite last stored jump pad, otherwise ignore
+		{
+			already_pushed = true;
+		}
+		else
+		{
+			targ.last_pushed = this; // may be briefly out of sync between client and server if client prediction is toggled
+		}
+	}
+
 	if(this.enemy)
 	{
 		if(!is_velocity_pad)
@@ -816,9 +829,8 @@ spawnfunc(trigger_push)
  */
 spawnfunc(trigger_push_velocity)
 {
-	EXACTTRIGGER_INIT;
+	WarpZoneLib_ExactTrigger_Init(this, false);
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
-
 	this.active = ACTIVE_ACTIVE;
 	this.use = trigger_push_use;
 	settouch(this, trigger_push_velocity_touch);
