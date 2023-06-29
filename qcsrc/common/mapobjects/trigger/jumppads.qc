@@ -249,23 +249,8 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 
 	vector org = targ.origin;
 
-	if(STAT(Q3COMPAT, targ) || this.spawnflags & PUSH_STATIC)
-	{
+	if(Q3COMPAT_COMMON || this.spawnflags & PUSH_STATIC)
 		org = (this.absmin + this.absmax) * 0.5;
-	}
-
-	bool already_pushed = false;
-	if(is_velocity_pad) // remember velocity jump pads
-	{
-		if(this == targ.last_pushed || (targ.last_pushed && !STAT(Q3COMPAT, targ))) // if q3compat is active overwrite last stored jump pad, otherwise ignore
-		{
-			already_pushed = true;
-		}
-		else
-		{
-			targ.last_pushed = this; // may be briefly out of sync between client and server if client prediction is toggled
-		}
-	}
 
 	bool already_pushed = false;
 	if(is_velocity_pad) // remember velocity jump pads
