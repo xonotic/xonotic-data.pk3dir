@@ -23,6 +23,7 @@
 # Sless <sless@gmx.net>, 2014
 # TheTrueBrot <noah.schluessel@gmail.com>, 2015
 # Wuzzy <Wuzzy@disroot.org>, 2016
+# Wuzzy <Wuzzy@disroot.org>, 2023
 # Wuzzy <Wuzzy@disroot.org>, 2016
 # Yepoleb <huberg18@gmail.com>, 2013
 msgid ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-06-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
+"Last-Translator: Wuzzy <Wuzzy@disroot.org>, 2023\n"
 "Language-Team: German (http://app.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -1611,8 +1612,8 @@ msgstr "Leben:"
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
 msgstr ""
-"Kämpfe in diesem Chaos, um den meisten verursachten Schaden und die meisten "
-"Frags!"
+"Kämpfe in diesem Chaos und richte den meisten Schaden an und mach die "
+"meisten Frags!"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
@@ -1686,11 +1687,11 @@ msgstr "Überlebender"
 msgid "Identify and eliminate all the hunters before all your allies are gone"
 msgstr ""
 "Identifiziere und eliminiere alle Jäger, bevor alle deine Verbündeten "
-"verschwunden sind"
+"gestorben sind"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Survival"
-msgstr "Surivival"
+msgstr "Survival"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -1713,16 +1714,16 @@ msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem!"
 msgstr ""
-"Kämpfe mit deinem Team in diesem Chaos, um den meisten verursachten Schaden "
-"und die meisten Frags!"
+"Kämpfe mit deinem Team um den meisten verursachten Schaden und die meisten "
+"Frags in diesem Chaos!"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr "Team Mayhem"
+msgstr "Team-Mayhem"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr "Hülsen"
+msgstr "Patronen"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
@@ -1734,7 +1735,7 @@ msgstr "Raketen"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr "Cells"
+msgstr "Zellen"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
@@ -3562,6 +3563,8 @@ msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
 "the update from ^F3https://xonotic.org^BG!"
 msgstr ""
+"^F4BEACHTE: ^F1Xonotic %s^BG ist draussen, und du hast noch ^F2Xonotic %s^BG "
+"– hol dir das Update von ^F3https://xonotic.org^BG!"
 
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
@@ -4218,7 +4221,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:640
 msgid "^K1You were punished for attacking your team mates!"
-msgstr "^K1Du wurdest für das attakieren von Teammitgliedern bestraft!"
+msgstr "^K1Du wurdest für den Angriff auf deine Teammitglieder bestraft!"
 
 #: qcsrc/common/notifications/all.inc:641
 msgid "^K1Die camper!"
@@ -4527,7 +4530,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^K1You aren't allowed to play because you are banned in this server"
-msgstr ""
+msgstr "^K1Du darfst nicht spielen, weil du von diesem Server verbannt bist"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4807,7 +4810,7 @@ msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
 msgstr ""
-"^BGDu bist ein ^k1Jäger^BG! Eliminiere die Überlebenden ohne Verdacht zu "
+"^BGDu bist ein ^K1Jäger^BG! Eliminiere die Überlebenden, ohne Verdacht zu "
 "erregen!"
 
 #: qcsrc/common/notifications/all.inc:790
