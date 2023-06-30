@@ -90,7 +90,7 @@ void kh_ScoreRules(int teams)
         field_team(ST_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
         field(SP_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
         field(SP_KH_PUSHES, "pushes", 0);
-        field(SP_KH_DESTROYS, "destroyed", SFL_LOWER_IS_BETTER);
+        field(SP_KH_DESTROYS, "destructions", SFL_LOWER_IS_BETTER);
         field(SP_KH_PICKUPS, "pickups", 0);
         field(SP_KH_KCKILLS, "kckills", 0);
         field(SP_KH_LOSSES, "losses", SFL_LOWER_IS_BETTER);

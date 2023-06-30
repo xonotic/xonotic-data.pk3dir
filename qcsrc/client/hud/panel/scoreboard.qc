@@ -136,7 +136,7 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^caps"),          "caps", "               ", _("How often a flag (CTF) or a key (KeyHunt) was captured"));
 		SCO_LABEL(_("SCO^captime"),       "captime", "            ", _("Time of fastest capture (CTF)"));
 		SCO_LABEL(_("SCO^deaths"),        "deaths", "             ", _("Number of deaths"));
-		SCO_LABEL(_("SCO^destroyed"),     "destroyed", "          ", _("Number of keys destroyed by pushing them into void"));
+		SCO_LABEL(_("SCO^destructions"),  "destructions", "       ", _("Number of objectives destroyed (Assault, Onslaught) or keys destroyed by pushing them into void (KeyHunt)"));
 		SCO_LABEL(_("SCO^damage"),        "dmg", "                ", _("The total damage done"));
 		SCO_LABEL(_("SCO^dmgtaken"),      "dmgtaken", "           ", _("The total damage taken"));
 		SCO_LABEL(_("SCO^drops"),         "drops", "              ", _("Number of flag drops"));
@@ -158,7 +158,6 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^losses"),        "losses", "             ", _("Number of times a key was lost"));
 		SCO_LABEL(_("SCO^name"),          "name", "               ", _("Player name"));
 		SCO_LABEL(_("SCO^nick"),          "nick", "               ", _("Player name"));
-		SCO_LABEL(_("SCO^objectives"),    "objectives", "         ", _("Number of objectives destroyed"));
 		SCO_LABEL(_("SCO^pickups"),       "pickups", "            ", _("How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"));
 		SCO_LABEL(_("SCO^ping"),          "ping", "               ", _("Ping time"));
 		SCO_LABEL(_("SCO^pl"),            "pl", "                 ", _("Packet loss"));

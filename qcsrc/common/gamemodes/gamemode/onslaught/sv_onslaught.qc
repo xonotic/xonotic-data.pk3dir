@@ -2135,7 +2135,7 @@ void ons_ScoreRules()
 	int teams = TeamBalance_GetAllowedTeams(balance);
 	TeamBalance_Destroy(balance);
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-	    field_team(ST_ONS_CAPS, "destroyed", SFL_SORT_PRIO_PRIMARY);
+	    field_team(ST_ONS_CAPS, "destructions", SFL_SORT_PRIO_PRIMARY);
 	    field(SP_ONS_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
 	    field(SP_ONS_TAKES,	"takes", 0);
 	});
