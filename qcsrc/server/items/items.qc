@@ -969,10 +969,6 @@ void StartItem(entity this, entity def)
 	if (def.m_canonical_spawnfunc != "") // FIXME why do weapons set itemdef to an entity that doesn't have this?
 		this.classname = def.m_canonical_spawnfunc;
 
-	string itemname = def.m_name;
-	float(entity player, entity item) pickupevalfunc = def.m_pickupevalfunc;
-	float pickupbasevalue = def.m_botvalue;
-
 	startitem_failed = false;
 
 	this.item_model_ent = def.m_model;
@@ -990,17 +986,15 @@ void StartItem(entity this, entity def)
 	if(!this.pickup_anyway && def.m_pickupanyway)
 		this.pickup_anyway = def.m_pickupanyway();
 
-	int itemid = def.m_itemid;
-	this.items = itemid;
-	int weaponid = def.instanceOfWeaponPickup ? def.m_weapon.m_id : 0;
-	this.weapon = weaponid;
+	this.items = def.m_itemid;
+	this.weapon = def.instanceOfWeaponPickup ? def.m_weapon.m_id : 0;
 
 	// bones_was_here TODO: implement sv_cullentities_dist and replace g_items_maxdist with it
 	if(!this.fade_end)
 		this.fade_end = autocvar_g_items_maxdist;
 
-	if(weaponid)
-		STAT(WEAPONS, this) = WepSet_FromWeapon(REGISTRY_GET(Weapons, weaponid));
+	if(this.weapon)
+		STAT(WEAPONS, this) = WepSet_FromWeapon(REGISTRY_GET(Weapons, this.weapon));
 
 	this.flags = FL_ITEM | def.m_itemflags;
 	IL_PUSH(g_items, this);
@@ -1127,20 +1121,20 @@ void StartItem(entity this, entity def)
 		{
 			// why not flags & fl_item?
 			FOREACH_ENTITY_RADIUS(this.origin, 3, it.is_item, {
-				LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(this.origin));
+				LOG_TRACE("XXX Found duplicated item: ", def.m_name, vtos(this.origin));
 				LOG_TRACE(" vs ", it.netname, vtos(it.origin));
 				error("Mapper sucks.");
 			});
 			this.is_item = true;
 		}
 
-		weaponsInMap |= WepSet_FromWeapon(REGISTRY_GET(Weapons, weaponid));
+		weaponsInMap |= WepSet_FromWeapon(REGISTRY_GET(Weapons, this.weapon));
 
 		if (	    def.instanceOfPowerup
 			||  def.instanceOfWeaponPickup
 			|| (def.instanceOfHealth && def != ITEM_HealthSmall)
 			|| (def.instanceOfArmor && def != ITEM_ArmorSmall)
-			|| (itemid & (IT_KEY1 | IT_KEY2))
+			|| (def.m_itemid & (IT_KEY1 | IT_KEY2))
 		)
 		{
 			if(!this.target || this.target == "")
@@ -1153,9 +1147,9 @@ void StartItem(entity this, entity def)
 	}
 
 	this.bot_pickup = true;
-	this.bot_pickupevalfunc = pickupevalfunc;
-	this.bot_pickupbasevalue = pickupbasevalue;
-	this.netname = itemname;
+	this.bot_pickupevalfunc = def.m_pickupevalfunc;
+	this.bot_pickupbasevalue = def.m_botvalue;
+	this.netname = def.m_name;
 	settouch(this, Item_Touch);
 	//this.effects |= EF_LOWPRECISION;
 
