@@ -100,14 +100,7 @@ bool have_pickup_item(entity this)
 	if (this.itemdef.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
 		return false;
 
-	if(this.itemdef.instanceOfPowerup)
-	{
-		if(autocvar_g_powerups > 0)
-			return true;
-		if(autocvar_g_powerups == 0)
-			return false;
-	}
-	else
+	if(!this.itemdef.instanceOfPowerup)
 	{
 		if(autocvar_g_pickup_items > 0)
 			return true;

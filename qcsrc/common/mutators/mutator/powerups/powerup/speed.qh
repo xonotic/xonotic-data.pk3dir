@@ -16,16 +16,14 @@ SOUND(Speed, Item_Sound("powerup_shield"));
 #ifdef SVQC
 .float speed_finished;
 
-bool autocvar_g_powerups_speed = 1;
-float autocvar_g_balance_powerup_speed_attackrate = 0.8;
-float autocvar_g_balance_powerup_speed_highspeed = 1.5;
-float autocvar_g_balance_powerup_speed_time = 30;
-void powerup_speed_init(Pickup this, entity item)
+bool autocvar_g_powerups_speed;
+float autocvar_g_balance_powerup_speed_attackrate;
+float autocvar_g_balance_powerup_speed_highspeed;
+float autocvar_g_balance_powerup_speed_time;
+void powerup_speed_init(Pickup def, entity item)
 {
-    if(autocvar_g_powerups_speed)
-        this.spawnflags = ITEM_FLAG_NORMAL;
-    else
-        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+    if(!autocvar_g_powerups || !autocvar_g_powerups_speed)
+        def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 
     if(!item.speed_finished)
         item.speed_finished = (item.count) ? item.count : autocvar_g_balance_powerup_speed_time;
@@ -37,6 +35,7 @@ REGISTER_ITEM(Speed, Powerup) {
     this.m_iteminit         =   powerup_speed_init;
 #endif
 #ifdef GAMEQC
+    this.spawnflags         =   ITEM_FLAG_NORMAL;
     this.m_itemid           =   IT_SPEED;
     this.m_model            =   MDL_BUFF; // TODO: MDL_Speed_ITEM when new model available
     this.m_skin             =   9;
