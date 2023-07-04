@@ -961,10 +961,14 @@ void item_use(entity this, entity actor, entity trigger)
 	gettouch(this)(this, actor);
 }
 
-// if defaultrespawntime is 0 get respawntime from the item definition
-// if defaultrespawntimejitter is 0 get respawntimejitter from the item definition
-void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)
+void StartItem(entity this, entity def)
 {
+	if (def.m_spawnfunc_hookreplace)
+		def = def.m_spawnfunc_hookreplace(def, this);
+	this.itemdef = def;
+	if (def.m_canonical_spawnfunc != "") // FIXME why do weapons set itemdef to an entity that doesn't have this?
+		this.classname = def.m_canonical_spawnfunc;
+
 	string itemname = def.m_name;
 	float(entity player, entity item) pickupevalfunc = def.m_pickupevalfunc;
 	float pickupbasevalue = def.m_botvalue;
@@ -1059,8 +1063,15 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		// must be done before Item_Reset() and after MUTATORBLOCKED check (blocked items may have null func ptrs)
 		if(!this.respawntime) // both need to be set
 		{
-			this.respawntime = defaultrespawntime ? defaultrespawntime : def.m_respawntime();
-			this.respawntimejitter = defaultrespawntimejitter ? defaultrespawntimejitter : def.m_respawntimejitter();
+			if (def.m_respawntime)
+				this.respawntime = def.m_respawntime();
+			else
+				LOG_WARNF("Default respawntime for a %s is unavailable from its itemdef", this.classname);
+
+			if (def.m_respawntimejitter)
+				this.respawntimejitter = def.m_respawntimejitter();
+			else
+				LOG_WARNF("Default respawntimejitter for a %s is unavailable from its itemdef", this.classname);
 		}
 
 		if(this.angles != '0 0 0')
@@ -1194,16 +1205,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	precache_sound(this.item_pickupsound);
 
 	setItemGroup(this);
-}
-
-void StartItem(entity this, GameItem def)
-{
-	def = def.m_spawnfunc_hookreplace(def, this);
-
-	this.classname = def.m_canonical_spawnfunc;
-
-	this.itemdef = def;
-	_StartItem(this, this.itemdef, 0, 0);
 }
 
 #define IS_SMALL(def) ((def.instanceOfHealth && def == ITEM_HealthSmall) || (def.instanceOfArmor && def == ITEM_ArmorSmall))
