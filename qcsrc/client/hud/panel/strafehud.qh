@@ -73,6 +73,8 @@ float autocvar_hud_panel_strafehud_sonar_pitch_exponent = 1;
 bool autocvar_hud_panel_strafehud_vangle = false;
 vector autocvar_hud_panel_strafehud_vangle_color = '0.75 0.75 0.75';
 float autocvar_hud_panel_strafehud_vangle_size = 1;
+bool autocvar_hud_panel_strafehud_strafeefficiency = false;
+float autocvar_hud_panel_strafehud_strafeefficiency_size = 1;
 int autocvar_hud_panel_strafehud_projection = 0;
 
 void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int, bool, float);

@@ -921,10 +921,10 @@ void HUD_StrafeHUD()
 		}
 
 		// draw the actual strafe angle
+		float strafe_ratio = 0;
 		if(!immobile)
 		{
 			float moveangle = fabs(angle + wishangle);
-			float strafe_ratio = 0;
 
 			// player is overturning
 			if(moveangle >= 90)
@@ -1133,6 +1133,24 @@ void HUD_StrafeHUD()
 
 				if(was_drawn)
 					text_offset_bottom += startspeed_height;
+			}
+		}
+
+		// strafe efficiency
+		{
+			if(autocvar_hud_panel_strafehud_strafeefficiency)
+			{
+				float strafeeff_height = autocvar_hud_panel_strafehud_strafeefficiency_size * panel_size.y;
+				string strafeeff_text = strcat(ftos_decimals(strafe_ratio * 100, 2), "%");
+			    vector strafeeff_color = '1 1 1' - (strafe_ratio > 0 ? '1 0 1' : '0 1 1') * fabs(strafe_ratio);
+
+				bool was_drawn = StrafeHUD_drawTextIndicator(
+					strafeeff_text, strafeeff_height,
+					strafeeff_color, 1,
+					time, text_offset_top, STRAFEHUD_TEXT_TOP);
+
+				if(was_drawn)
+					text_offset_top += strafeeff_height;
 			}
 		}
 
