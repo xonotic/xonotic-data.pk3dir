@@ -73,7 +73,8 @@ entity toast(entity actor, entity from, float range, float damage)
     if (etarget)
     {
         te_csqc_lightningarc(from.origin, etarget.origin);
-        Damage(etarget, actor, actor, damage, DEATH_TURRET_TESLA.m_id, DMG_NOWEP, etarget.origin, '0 0 0');
+        if (etarget != actor.realowner)
+            Damage(etarget, actor, actor, damage, DEATH_TURRET_TESLA.m_id, DMG_NOWEP, etarget.origin, '0 0 0');
         etarget.railgunhit = true;
         IL_PUSH(g_railgunhit, etarget);
     }
