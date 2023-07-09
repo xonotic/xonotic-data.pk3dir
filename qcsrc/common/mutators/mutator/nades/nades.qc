@@ -1427,7 +1427,7 @@ int nades_CheckTypes(entity player, int cl_ntype)
 #define CL_NADE_TYPE_CHECK(cl_ntype, cvar) \
 	case cl_ntype.m_id: \
 		if (!cvar) return NADE_TYPE_NORMAL.m_id; \
-		break;
+		break
 
 	switch (cl_ntype)
 	{
