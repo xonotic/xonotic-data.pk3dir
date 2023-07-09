@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-06-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: oblector o, 2022\n"
+"Last-Translator: oblector o, 2022-2023\n"
 "Language-Team: Latin (http://app.transifex.com/team-xonotic/xonotic/language/"
 "la/)\n"
 "Language: la\n"
@@ -3011,7 +3011,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:345
 #, c-format
 msgid "^BG%s^K1 was phased out by a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 turriola deletus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:346
 #, c-format
@@ -3021,7 +3021,7 @@ msgstr "^BG%s^K1 Turriolae plasma fervens accepit%s%s"
 #: qcsrc/common/notifications/all.inc:347
 #, c-format
 msgid "^BG%s^K1 was electrocuted by a Tesla turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Teslae turriola electrice occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:348
 #, c-format
@@ -3372,11 +3372,14 @@ msgstr "^BG%s^BG cursum reliquit"
 #, c-format
 msgid "^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"
 msgstr ""
+"^BG%s^BG non fuit celerior quam gradum %s%s^BG suum, cuius tempus fuit %s%s "
+"%s"
 
 #: qcsrc/common/notifications/all.inc:434
 #, c-format
 msgid "^BG%s^BG couldn't break the %s%s^BG place record of %s%s %s"
 msgstr ""
+"^BG%s^BG non fuit celerior quam gradum %s%s^BG, cuius tempus fuit %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
@@ -3387,11 +3390,14 @@ msgstr "^BG%s^BG cursum finivit"
 #, c-format
 msgid "^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s"
 msgstr ""
+"^BG%s^BG celerior fuit quam %s^BG gradum %s%s^BG, tempus novum fuit %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
 msgid "^BG%s^BG improved their %s%s^BG place record with %s%s %s"
 msgstr ""
+"^BG%s^BG celerior fuit quam suum ipsum gradum %s%s^BG, tempus novum fuit %s"
+"%s %s"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -3399,6 +3405,8 @@ msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID "
 "and will be lost."
 msgstr ""
+"^BG%s^BG celerior fuit quam aliquid tempus horum, tempus novum ^F2%s^BG "
+"fuit, sed non est cryptographice consignatus, temporis igitur obliviscetur."
 
 #: qcsrc/common/notifications/all.inc:439
 #, c-format
@@ -3406,11 +3414,13 @@ msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but is anonymous and will be "
 "lost."
 msgstr ""
+"^BG%s^BG celerior fuit quam aliquid tempus horum, tempus novum ^F2%s^BG "
+"fuit, sed anonymus est, temporis igitur obliviscetur."
 
 #: qcsrc/common/notifications/all.inc:440
 #, c-format
 msgid "^BG%s^BG set the %s%s^BG place record with %s%s"
-msgstr ""
+msgstr "^BG%s^BG gradum %s%s^BG creavit, tempus fuit %s%s"
 
 #: qcsrc/common/notifications/all.inc:442
 #, c-format
@@ -3476,6 +3486,8 @@ msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
 "the update from ^F3https://xonotic.org^BG!"
 msgstr ""
+"^F4NOTA: ^F1Xonoticus %s^BG editus est, at ^F2Xonoticum %s^BG habes, eum "
+"novum in ^F3https://xonotic.org^BG inveni!"
 
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
@@ -3638,7 +3650,7 @@ msgstr "^BG%s%s^K1, Polybolo ^BG%s^K1, perforatus est%s%s"
 #: qcsrc/common/notifications/all.inc:812
 #, c-format
 msgid "^BGYou cannot place more than ^F2%s^BG mines at a time"
-msgstr "^F2%s^BG tribuli simul ponere non potes"
+msgstr "^F2%s^BG tribulos simul ponere non potes"
 
 #: qcsrc/common/notifications/all.inc:492
 #, c-format
@@ -3698,6 +3710,8 @@ msgid ""
 "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
 "%s%s"
 msgstr ""
+"^BG%s%s^K1, Missilium Pellentium Serra Immoderata ^BG%s^K1, dimidiatus est%s"
+"%s"
 
 #: qcsrc/common/notifications/all.inc:503
 #, c-format
@@ -3711,7 +3725,7 @@ msgstr ""
 #, c-format
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Missilium Pellentium Serra Immoderata sua dimidiatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:505
 #, c-format
@@ -4411,7 +4425,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^K1You aren't allowed to play because you are banned in this server"
-msgstr ""
+msgstr "^K1Te ludere vetatur quia hoc moderatro expulsus es"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4888,12 +4902,12 @@ msgstr "HARMAGEDDON! "
 #: qcsrc/common/notifications/all.qh:480
 #, c-format
 msgid "%s(^F1Bot^BG)"
-msgstr ""
+msgstr "%s(^F1Automatus^BG)"
 
 #: qcsrc/common/notifications/all.qh:482
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
-msgstr ""
+msgstr "%s(Ping ^F1%d^BG)"
 
 #: qcsrc/common/notifications/all.qh:489
 #, c-format
@@ -4901,6 +4915,8 @@ msgid ""
 "\n"
 "(Health ^1%d^BG / Armor ^2%d^BG)%s"
 msgstr ""
+"\n"
+"(Sanitas ^1%d^BG / Armatura ^2%d^BG)%s"
 
 #: qcsrc/common/notifications/all.qh:491
 #, c-format
@@ -4908,6 +4924,8 @@ msgid ""
 "\n"
 "(^F4Dead^BG)%s"
 msgstr ""
+"\n"
+"(^F4Mortus^BG)%s"
 
 #: qcsrc/common/notifications/all.qh:512 qcsrc/common/notifications/all.qh:525
 #, c-format
@@ -7149,7 +7167,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:6
 msgid "Multiplayer"
-msgstr ""
+msgstr "Duo Ludentes aut Plures"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid ""
@@ -7225,84 +7243,88 @@ msgid ""
 "The maximum amount of players or bots that can be connected to your server "
 "at once"
 msgstr ""
+"Numerus maximus ludentium, hominum vel automatorum, qui cum moderatro tuo se "
+"conectere possunt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "Number of bots:"
-msgstr ""
+msgstr "Automatorum numerus:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
 msgid "Amount of bots on your server"
-msgstr ""
+msgstr "Quot sunt ludentes automati in moderatro tuo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:129
 msgid "Bot skill:"
-msgstr ""
+msgstr "Automati habilitas:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:132
 msgid "Specify how experienced the bots will be"
-msgstr ""
+msgstr "Quam habiles automati erunt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:133
 msgid "Botlike"
-msgstr ""
+msgstr "Automatulus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
 msgid "Beginner"
-msgstr ""
+msgstr "Tiro"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
 msgid "You will win"
-msgstr ""
+msgstr "Vinces"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
 msgid "You can win"
-msgstr ""
+msgstr "Vincere potes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
 msgid "You might win"
-msgstr ""
+msgstr "Vinces forte"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
 msgid "Advanced"
-msgstr ""
+msgstr "Sagax"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
 msgid "Expert"
-msgstr ""
+msgstr "Expertus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
 msgid "Pro"
-msgstr ""
+msgstr "Peritus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:141
 msgid "Assassin"
-msgstr ""
+msgstr "Interfector"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
 msgid "Unhuman"
-msgstr ""
+msgstr "Inhumanus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:143
 msgid "Godlike"
-msgstr ""
+msgstr "Divinus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:160
 msgid "Mutators..."
-msgstr ""
+msgstr "Mutationes..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:161
 msgid "Mutators and weapon arenas"
-msgstr ""
+msgstr "Mutationes et armorum harenae"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:171
 msgid "Maplist"
-msgstr ""
+msgstr "Harenarum index"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:181
 msgid ""
 "Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-"
 "Delete to clear; Enter when done."
 msgstr ""
+"Hic clicca vel Ctrl-F preme ut verbum scribe et videas modo nomina quae eum "
+"verbum contineantur. Ctrl-Delete ut verbum obliviscatur; Enter ut finias."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:190
 msgid "Add shown"
@@ -7884,7 +7906,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:131
 msgid "Allow player statistics to use your nickname"
-msgstr ""
+msgstr "Sinisne nomen tuum in statisticis nuntiari"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:136
 msgid "Allow player statistics to rank you in leaderboards"
@@ -9971,11 +9993,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
-msgstr ""
+msgstr "Sinisne nomen tuum in statisticis nuntiari?"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr ""
+msgstr "Si non sines, scribetur \"Lusor Anonymus\""
 
 #: qcsrc/menu/xonotic/gametypelist.qc:88
 msgid "teamplay"
@@ -10147,7 +10169,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
-msgstr ""
+msgstr "Hunc ludum linquere"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
@@ -10155,7 +10177,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"
-msgstr ""
+msgstr "Expeditionem linquere"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:18
 msgid "Leave singleplayer"
@@ -10248,7 +10270,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:1054
 msgid "ENC^none"
-msgstr ""
+msgstr "nulla"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1054
 msgid "encryption:"
@@ -10257,17 +10279,17 @@ msgstr "cryptographia:"
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 #, c-format
 msgid "mod: %s"
-msgstr ""
+msgstr "mod: %s"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1057
 #, c-format
 msgid "modified settings"
-msgstr ""
+msgstr "optiones mutatae"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1057
 #, c-format
 msgid "official settings"
-msgstr ""
+msgstr "optiones ordinariae"
 
 #: qcsrc/menu/xonotic/serverlist.qh:152
 msgid "SLCAT^Favorites"
@@ -10275,7 +10297,7 @@ msgstr "Praelata"
 
 #: qcsrc/menu/xonotic/serverlist.qh:153
 msgid "SLCAT^Recommended"
-msgstr ""
+msgstr "Suadenda"
 
 #: qcsrc/menu/xonotic/serverlist.qh:154
 msgid "SLCAT^Normal Servers"
@@ -10287,11 +10309,11 @@ msgstr "Moderatra"
 
 #: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Competitive Mode"
-msgstr ""
+msgstr "Competitorum Modus"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Modified Servers"
-msgstr ""
+msgstr "Moderatra Mutata"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Overkill"
@@ -10303,15 +10325,15 @@ msgstr "InstaGib"
 
 #: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Defrag Mode"
-msgstr ""
+msgstr "Modus sine Caede"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
-msgstr ""
+msgstr "<TITULUS>"
 
 #: qcsrc/menu/xonotic/skinlist.qc:71
 msgid "<AUTHOR>"
-msgstr ""
+msgstr "<AUCTOR>"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:72
 msgid "VOL^MAX"

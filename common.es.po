@@ -27,6 +27,7 @@
 # Yllelder, 2016
 # Yllelder, 2016
 # Yotta Mxt, 2023
+# Yotta Mxt, 2023
 # z 411 <winrar.hurr@gmail.com>, 2021-2022
 msgid ""
 msgstr ""
@@ -34,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-06-24 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yotta Mxt, 2023\n"
+"Last-Translator: LegendGuard, 2020-2023\n"
 "Language-Team: Spanish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -4526,7 +4527,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^K1You aren't allowed to play because you are banned in this server"
-msgstr "^K1 No puedes jugar porque has sido baneado de este servidor"
+msgstr "^K1No puedes jugar porque estás baneado en este servidor"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"

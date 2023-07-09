@@ -4430,7 +4430,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^K1You aren't allowed to play because you are banned in this server"
-msgstr ""
+msgstr "^K1このサーバーでは禁止されているため、プレイすることはできません"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
