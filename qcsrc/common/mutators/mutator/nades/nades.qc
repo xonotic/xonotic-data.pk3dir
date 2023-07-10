@@ -51,7 +51,7 @@ bool darkblink;
 void HUD_DarkBlinking()
 {
 	vector bottomright = vec2(vid_conwidth, vid_conheight);
-	drawfill('0 0 0', bottomright, NADE_TYPE_DARNESS.m_color, 0.986, DRAWFLAG_NORMAL);
+	drawfill('0 0 0', bottomright, NADE_TYPE_DARKNESS.m_color, 0.986, DRAWFLAG_NORMAL);
 }
 
 REGISTER_MUTATOR(cl_nades, true);
@@ -59,7 +59,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 {
 	if (STAT(NADE_DARKNESS_TIME) > time)
 	{
-		M_ARGV(0, vector) = NADE_TYPE_DARNESS.m_color;
+		M_ARGV(0, vector) = NADE_TYPE_DARKNESS.m_color;
 		HUD_DarkBlinking();
 		return true;
 	}
@@ -938,7 +938,7 @@ void nade_boom(entity this)
 	case nade_type: \
 		nade_blast = blast; \
 		expef = exp_effect; \
-		break;
+		break
 
 	switch ( REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this)) )
 	{
@@ -951,7 +951,7 @@ void nade_boom(entity this)
 		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      false,                         EFFECT_SPAWN_YELLOW);
 		SET_NADE_EFFECT(NADE_TYPE_VEIL,        false,                         EFFECT_SPAWN_NEUTRAL);
 		SET_NADE_EFFECT(NADE_TYPE_AMMO,        false,                         EFFECT_SPAWN_BROWN);
-		SET_NADE_EFFECT(NADE_TYPE_DARNESS,        false,                         EFFECT_EXPLOSION_MEDIUM);
+		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    false,                         EFFECT_EXPLOSION_MEDIUM);
 		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      true,                          EFFECT_NADE_EXPLODE(this.realowner.team));
 		default: expef = EFFECT_NADE_EXPLODE(this.realowner.team); break;
 	}
@@ -981,7 +981,7 @@ void nade_boom(entity this)
 		case NADE_TYPE_ENTRAP:      nade_entrap_boom(this);      break;
 		case NADE_TYPE_VEIL:        nade_veil_boom(this);        break;
 		case NADE_TYPE_AMMO:        nade_ammo_boom(this);        break;
-		case NADE_TYPE_DARNESS:     nade_darkness_boom(this);    break;
+		case NADE_TYPE_DARKNESS:    nade_darkness_boom(this);    break;
 	}
 
 	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
@@ -1440,7 +1440,7 @@ int nades_CheckTypes(entity player, int cl_ntype)
 		CL_NADE_TYPE_CHECK(NADE_TYPE_ENTRAP,      autocvar_g_nades_entrap);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_VEIL,        autocvar_g_nades_veil);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_AMMO,        autocvar_g_nades_ammo);
-		CL_NADE_TYPE_CHECK(NADE_TYPE_DARNESS,     autocvar_g_nades_darkness);
+		CL_NADE_TYPE_CHECK(NADE_TYPE_DARKNESS,    autocvar_g_nades_darkness);
 	}
 	return cl_ntype;
 #undef CL_NADE_TYPE_CHECK
