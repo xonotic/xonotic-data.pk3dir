@@ -7135,46 +7135,6 @@ effect nade_neutral_burn
 	tex 71 73
 	trailspacing 16
 	velocityjitter 10 10 10
-effect nade_green_burn
-	type smoke
-	alpha 100 100 250
-	color 0x40ff9b 0xff3c00
-	sizeincrease -1
-	size 5 5
-	tex 65 65
-	trailspacing 1
-effect nade_green_burn
-	type smoke
-	alpha 200 200 1000
-	color 0xff0000 0xffa2a2
-	notunderwater
-	sizeincrease -30
-	size 45 25
-	tex 65 65
-	trailspacing 64
-effect nade_green_burn
-	type bubble
-	alpha 256 256 256
-	bounce 1.500000
-	color 0x40ff9b 0xff3c00
-	gravity -0.125000
-	liquidfriction 4
-	size 1 1
-	tex 62 62
-	trailspacing 16
-	underwater
-	velocityjitter 16 16 16
-effect nade_green_burn
-	type smoke
-	alpha 300 900 1500
-	color 0x40ff9b 0xff3c00
-	originjitter 2 2 2
-	rotate -180 180 20 -20
-	sizeincrease -40
-	size 15 25
-	tex 71 73
-	trailspacing 16
-	velocityjitter 10 10 10
 effect nade_brown_burn
 	type smoke
 	alpha 100 100 250

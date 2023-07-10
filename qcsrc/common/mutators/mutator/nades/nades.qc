@@ -57,7 +57,7 @@ void HUD_DarkBlinking()
 REGISTER_MUTATOR(cl_nades, true);
 MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 {
-	if (STAT(NADE_DARK_TIME) > time)
+	if (STAT(NADE_DARKNESS_TIME) > time)
 	{
 		M_ARGV(0, vector) = NADE_TYPE_DARK.m_color;
 		HUD_DarkBlinking();
@@ -75,7 +75,7 @@ NET_HANDLE(TE_CSQC_DARKBLINKING, bool isNew)
 	localcmd("play2 sound/misc/blind\n");
 	darkblink = true;
 	dark_appeartime = time;
-	dark_fadetime = STAT(NADE_DARK_TIME);
+	dark_fadetime = STAT(NADE_DARKNESS_TIME);
 }
 
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
@@ -815,7 +815,7 @@ void DarkBlinking(entity e)
 	}
 }
 
-void nade_dark_think(entity this)
+void nade_darkness_think(entity this)
 {
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
@@ -826,7 +826,7 @@ void nade_dark_think(entity this)
 
 	if(time >= this.ltime)
 	{
-		if ( autocvar_g_nades_dark_explode )
+		if ( autocvar_g_nades_darkness_explode )
 		{
 			entity expef = EFFECT_NADE_EXPLODE(this.realowner.team);
 			Send_Effect(expef, this.origin + '0 0 1', '0 0 0', 1);
@@ -867,34 +867,34 @@ void nade_dark_think(entity this)
 	if (checked) \
 	if ( IS_REAL_CLIENT(it) ) \
 	{ \
-		STAT(NADE_DARK_TIME, it) = time + 0.1; \
+		STAT(NADE_DARKNESS_TIME, it) = time + 0.1; \
 		DarkBlinking(it); \
 	} \
 	break;
 
 	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_dark_time > 0,
 	{
-		switch (autocvar_g_nades_dark_teamcheck)
+		switch (autocvar_g_nades_darkness_teamcheck)
 		{
 			// 1: nade owner isn't affected; 2: no teammate is affected; any other number than 1 and 2: friendly fire
 			case 1:  DARK_NADE_RADIUS_TEAMCHECK(it != this.realowner);
 			case 2:  DARK_NADE_RADIUS_TEAMCHECK(DIFF_TEAM(it, this.realowner) && it != this.realowner);
-			default: DARK_NADE_RADIUS_TEAMCHECK(!autocvar_g_nades_dark_teamcheck || (DIFF_TEAM(it, this.realowner) && it != this.realowner));
+			default: DARK_NADE_RADIUS_TEAMCHECK(!autocvar_g_nades_darkness_teamcheck || (DIFF_TEAM(it, this.realowner) && it != this.realowner));
 		}
 	});
 #undef DARK_NADE_RADIUS_TEAMCHECK
 }
 
-void nade_dark_boom(entity this)
+void nade_darkness_boom(entity this)
 {
-	entity fountain = new(nade_dark_fountain);
+	entity fountain = new(nade_darkness_fountain);
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
 	setorigin(fountain, fountain.origin);
-	setthink(fountain, nade_dark_think);
+	setthink(fountain, nade_darkness_think);
 	fountain.nextthink = time;
-	fountain.ltime = time + autocvar_g_nades_dark_time;
+	fountain.ltime = time + autocvar_g_nades_darkness_time;
 	fountain.pushltime = fountain.wait = fountain.ltime;
 	fountain.team = this.team;
 	set_movetype(fountain, MOVETYPE_TOSS);
@@ -904,7 +904,7 @@ void nade_dark_boom(entity this)
 	fountain.nade_special_time = time + 0.3;
 	fountain.angles = this.angles;
 
-	if ( autocvar_g_nades_dark_explode )
+	if ( autocvar_g_nades_darkness_explode )
 	{
 		setmodel(fountain, MDL_PROJECTILE_GRENADE);
 		entity timer = new(nade_timer);
@@ -981,7 +981,7 @@ void nade_boom(entity this)
 		case NADE_TYPE_ENTRAP:      nade_entrap_boom(this);       break;
 		case NADE_TYPE_VEIL:        nade_veil_boom(this);         break;
 		case NADE_TYPE_AMMO:        nade_ammo_boom(this);         break;
-		case NADE_TYPE_DARK:        nade_dark_boom(this);         break;
+		case NADE_TYPE_DARK:        nade_darkness_boom(this);         break;
 	}
 
 	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
@@ -1440,7 +1440,7 @@ int nades_CheckTypes(entity player, int cl_ntype)
 		CL_NADE_TYPE_CHECK(NADE_TYPE_ENTRAP,      autocvar_g_nades_entrap);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_VEIL,        autocvar_g_nades_veil);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_AMMO,        autocvar_g_nades_ammo);
-		CL_NADE_TYPE_CHECK(NADE_TYPE_DARK,        autocvar_g_nades_dark);
+		CL_NADE_TYPE_CHECK(NADE_TYPE_DARK,        autocvar_g_nades_darkness);
 	}
 	return cl_ntype;
 #undef CL_NADE_TYPE_CHECK
