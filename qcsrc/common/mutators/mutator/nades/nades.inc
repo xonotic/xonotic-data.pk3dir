@@ -104,7 +104,7 @@ REGISTER_NADE(AMMO) {
 #endif
 }
 
-REGISTER_NADE(DARK) {
+REGISTER_NADE(DARKNESS) {
     this.m_color = '0.23 0 0.23';
     this.m_name = _("Darkness grenade");
     this.m_icon = "nade_darkness";
