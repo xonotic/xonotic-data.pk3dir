@@ -238,7 +238,6 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 	}
 
 	CSQCVehicleSetup(player, HUD_NORMAL);
-	setsize(player, STAT(PL_MIN, player), STAT(PL_MAX, player));
 
 	player.takedamage     = DAMAGE_AIM;
 	player.solid          = SOLID_SLIDEBOX;
@@ -257,6 +256,7 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 		delete(gunner.(weaponentity));
 	}
 	player.vehicle_enter_delay = time + 2;
+	setsize(player, STAT(PL_MIN, player), STAT(PL_MAX, player));
 
 	fixedmakevectors(vehic.angles);
 

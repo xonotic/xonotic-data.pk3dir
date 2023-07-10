@@ -31,7 +31,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 {
 	wpn = wpn.m_spawnfunc_hookreplace(wpn, this);
 	this.classname = wpn.m_canonical_spawnfunc;
-	if (!Item_IsLoot(this) && !this.m_isreplaced)
+	if (!ITEM_IS_LOOT(this) && !this.m_isreplaced)
 	{
 		if (wpn.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
@@ -60,7 +60,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 				if(wep != WEP_Null)
 				{
 					entity replacement = spawn();
-					copyentity(this, replacement);
+					Item_CopyFields(this, replacement);
 					replacement.m_isreplaced = true;
 					weapon_defaultspawnfunc(replacement, wep);
 				}
@@ -79,7 +79,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 		}
 	}
 
-	if(!Item_IsLoot(this))
+	if(!ITEM_IS_LOOT(this))
 		weaponsInMapAll |= WepSet_FromWeapon(wpn);
 
 	if (!Item_IsDefinitionAllowed(wpn.m_pickup))
@@ -153,15 +153,12 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	if(!this.owner)
 		this.glowmod = wpn.wpcolor;
 	else
-		this.glowmod = colormapPaletteColor(this.owner.clientcolors & 0x0F, true) * 2;
+		this.glowmod = colormapPaletteColor(this.owner.clientcolors & 0x0F, true);
 
 	GameItem def = wpn.m_pickup;
-	_StartItem(
-		this,
-		this.itemdef = def,
-		this.respawntime, // defaultrespawntime
-		this.respawntimejitter // defaultrespawntimejitter
-	);
+	this.itemdef = def;
+	_StartItem(this, this.itemdef, this.respawntime, this.respawntimejitter);
+
 	#if 0 // WEAPONTODO
 	if (this.modelindex) { // don't precache if this was removed
 		wpn.wr_init(wpn);

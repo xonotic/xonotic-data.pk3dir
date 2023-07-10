@@ -1,4 +1,4 @@
-string Buff_UndeprecateName(string buffname)
+string Buff_CompatName(string buffname)
 {
     switch(buffname)
     {
@@ -80,21 +80,6 @@ CLASS(DisabilityBuff, Buff)
 ENDCLASS(DisabilityBuff)
 REGISTER_BUFF(DISABILITY, NEW(DisabilityBuff));
 BUFF_SPAWNFUNCS(disability, BUFF_DISABILITY)
-// status effect applied to targets by the disability buff
-CLASS(Disabled, StatusEffects)
-    ATTRIB(Disabled, netname, string, "disabled");
-#if 0
-    // NOTE: status effect name and icon disabled as they are not displayed
-    // re-enable if status effects are given a visual element
-    ATTRIB(Disabled, m_name, string, _("Disabled"));
-    ATTRIB(Disabled, m_icon, string, "buff_disability");
-#endif
-    ATTRIB(Disabled, m_color, vector, '0.94 0.3 1');
-    ATTRIB(Disabled, m_hidden, bool, true);
-    ATTRIB(Disabled, m_lifetime, float, 10);
-    ATTRIB(Disabled, disabled_effect_time, float, 0); // TODO: handle this effect client side like EF_FLAME!
-ENDCLASS(Disabled)
-REGISTER_STATUSEFFECT(Disabled, NEW(Disabled));
 
 CLASS(VengeanceBuff, Buff)
     ATTRIB(VengeanceBuff, m_name, string, _("Vengeance"));

@@ -490,7 +490,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 {
 	setorigin(ent, old.origin);
 	ent.angles = old.angles;
-	ent.noalign = Item_ShouldKeepPosition(old);
+	ent.noalign = ITEM_SHOULD_KEEP_POSITION(old);
 
 	buff_Init(ent);
 }
@@ -533,21 +533,6 @@ METHOD(Buff, m_remove, void(StatusEffects this, entity actor, int removal_type))
 	if(IS_PLAYER(actor))
 		actor.effects &= ~EF_NOSHADOW;
 	SUPER(Buff).m_remove(this, actor, removal_type);
-}
-
-METHOD(Disabled, m_tick, void(StatusEffects this, entity actor))
-{
-	if(time >= actor.disabled_effect_time)
-	{
-		Send_Effect(EFFECT_SMOKING, actor.origin + ((actor.mins + actor.maxs) * 0.5), '0 0 0', 1);
-		actor.disabled_effect_time = time + 0.5;
-	}
-	SUPER(Disabled).m_tick(this, actor);
-}
-METHOD(Disabled, m_remove, void(StatusEffects this, entity actor, int removal_type))
-{
-	actor.disabled_effect_time = 0;
-	SUPER(Disabled).m_remove(this, actor, removal_type);
 }
 
 METHOD(AmmoBuff, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
@@ -709,7 +694,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 
 	if(StatusEffects_active(BUFF_DISABILITY, frag_attacker))
 	if(frag_target != frag_attacker)
-		StatusEffects_apply(STATUSEFFECT_Disabled, frag_target, time + autocvar_g_buffs_disability_slowtime, 0);
+		StatusEffects_apply(STATUSEFFECT_Stunned, frag_target, time + autocvar_g_buffs_disability_slowtime, 0);
 
 	if(StatusEffects_active(BUFF_INFERNO, frag_target))
 	{
@@ -763,7 +748,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics_UpdateStats)
 	entity player = M_ARGV(0, entity);
 	// these automatically reset, no need to worry
 
-	if(StatusEffects_active(STATUSEFFECT_Disabled, player))
+	if(StatusEffects_active(STATUSEFFECT_Stunned, player))
 		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_buffs_disability_speed;
 }
 
@@ -780,7 +765,7 @@ MUTATOR_HOOKFUNCTION(buffs, MonsterMove)
 {
 	entity mon = M_ARGV(0, entity);
 
-	if(StatusEffects_active(STATUSEFFECT_Disabled, mon))
+	if(StatusEffects_active(STATUSEFFECT_Stunned, mon))
 	{
 		M_ARGV(1, float) *= autocvar_g_buffs_disability_speed; // run speed
 		M_ARGV(2, float) *= autocvar_g_buffs_disability_speed; // walk speed
@@ -917,7 +902,7 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponRateFactor)
 {
 	entity player = M_ARGV(1, entity);
 
-	if(StatusEffects_active(STATUSEFFECT_Disabled, player))
+	if(StatusEffects_active(STATUSEFFECT_Stunned, player))
 		M_ARGV(0, float) *= autocvar_g_buffs_disability_rate;
 }
 
@@ -925,7 +910,7 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 {
 	entity player = M_ARGV(1, entity);
 
-	if(StatusEffects_active(STATUSEFFECT_Disabled, player))
+	if(StatusEffects_active(STATUSEFFECT_Stunned, player))
 		M_ARGV(0, float) *= autocvar_g_buffs_disability_weaponspeed;
 }
 

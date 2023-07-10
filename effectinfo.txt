@@ -2506,6 +2506,29 @@ effect poisonfield
 	size 1 1
 	tex 0 8
 	velocityjitter 5 5 5
+effect darkfield
+	type smoke
+	airfriction 1
+	alpha 256 256 50
+	bounce 1.500000
+	color 0x600089 0x000000
+	count 10
+	gravity -0.010000
+	originjitter 333 333 0
+	sizeincrease 10
+	size 1 1
+	tex 0 8
+	velocityjitter 5 5 30
+effect darkfield
+	type smoke
+	alpha 256 256 50
+	color 0x600089 0x000000
+	count 5
+	gravity -0.001000
+	originjitter 333 333 0
+	sizeincrease 10
+	size 1 1
+	tex 48 55
 effect icefield
 	type smoke
 	airfriction 1
@@ -8927,3 +8950,19 @@ effect respawn_ghost
 	originoffset 0 0 -8
 	originjitter 28 28 16
 	velocityjitter 0 0 256
+effect item_despawn
+	type snow
+//	type smoke
+	blend add
+	alpha 192 256 256
+	color 0xff9600 0xffefb8
+	count 32
+	originjitter 8 8 8
+	sizeincrease 1
+	size 0.5 1
+	tex 48 55
+	velocityjitter 16 16 32
+	lightradius 48
+	lightradiusfade 64
+	lightcolor 1 0.75 0.36
+	lightshadow 1

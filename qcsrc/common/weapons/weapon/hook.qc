@@ -243,8 +243,8 @@ METHOD(Hook, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Hook, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2;
-    org2 = w_org + w_backoff * 2;
+    // the hook bomb uses a negative w_backoff factor because it explodes slightly below the floor, unlike other projectiles
+    vector org2 = w_org + w_backoff * -2;
     pointparticles(EFFECT_HOOK_EXPLODE, org2, '0 0 0', 1);
     if(!w_issilent)
         sound(actor, CH_SHOTS, SND_HOOKBOMB_IMPACT, VOL_BASE, ATTN_NORM);

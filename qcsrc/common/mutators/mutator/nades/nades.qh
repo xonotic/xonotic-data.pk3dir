@@ -6,8 +6,10 @@
 bool autocvar_g_nades;
 bool autocvar_g_nades_override_dropweapon = true;
 vector autocvar_g_nades_throw_offset;
-bool autocvar_g_nades_spawn;
+bool autocvar_g_nades_onspawn;
 int autocvar_g_nades_spawn_count;
+float autocvar_g_nades_spawn_health_respawn;
+float autocvar_g_nades_spawn_destroy_damage = 25;
 bool autocvar_g_nades_client_select;
 bool autocvar_g_nades_pickup = true;
 float autocvar_g_nades_pickup_time = 2;
@@ -57,7 +59,8 @@ float autocvar_g_nades_ice_health;
 bool autocvar_g_nades_ice_explode;
 bool autocvar_g_nades_ice_teamcheck;
 bool autocvar_g_nades_translocate = true;
-bool autocvar_g_nades_spawntype = true;
+float autocvar_g_nades_translocate_destroy_damage = 25;
+bool autocvar_g_nades_spawn = true;
 bool autocvar_g_nades_heal = true;
 float autocvar_g_nades_heal_time;
 float autocvar_g_nades_heal_rate;
@@ -86,11 +89,11 @@ float autocvar_g_nades_ammo_time;
 float autocvar_g_nades_ammo_rate;
 float autocvar_g_nades_ammo_friend;
 float autocvar_g_nades_ammo_foe;
-bool autocvar_g_nades_dark;
-float autocvar_g_nades_dark_damage;
-float autocvar_g_nades_dark_time;
-float autocvar_g_nades_dark_radius;
-string autocvar_g_nades_pokenade_type;
+bool autocvar_g_nades_darkness;
+bool autocvar_g_nades_darkness_explode;
+bool autocvar_g_nades_darkness_teamcheck;
+float autocvar_g_nades_darkness_time;
+string autocvar_g_nades_pokenade_monster_type;
 int autocvar_g_nades_tandemnade_type;
 float autocvar_g_nades_pokenade_monster_lifetime;
 float autocvar_g_nades_pokenade_turret_lifetime;
@@ -119,8 +122,8 @@ const int PROJECTILE_NADE_EMERALD = 88;
 const int PROJECTILE_NADE_EMERALD_BURN = 89;
 const int PROJECTILE_NADE_AMMO = 90;
 const int PROJECTILE_NADE_AMMO_BURN = 91;
-const int PROJECTILE_NADE_DARK = 92;
-const int PROJECTILE_NADE_DARK_BURN = 93;
+const int PROJECTILE_NADE_DARKNESS = 92;
+const int PROJECTILE_NADE_DARKNESS_BURN = 93;
 
 REGISTRY(Nades, BITS(4))
 REGISTER_REGISTRY(Nades)
@@ -189,8 +192,7 @@ REPLICATE_INIT(int, cvar_cl_tandemnade_type);
 .float nade_veil_prevalpha;
 .float nade_entrap_time;
 .float nade_ammo_time;
-.float nade_dark_time;
-.float nade_dark_prevalpha;
+.float nade_darkness_time;
 
 bool orb_send(entity this, entity to, int sf);
 
@@ -213,82 +215,6 @@ void nades_GiveBonus(entity player, float score);
     /**/
 MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
 
-#endif
-
-REGISTER_NET_TEMP(TE_CSQC_DARKBLINKING);
-
-#ifdef CSQC
-#include <client/draw.qh>
-#include <client/hud/hud.qh>
-
-float dark_appeartime;
-float dark_fadetime;
-
-void HUD_DarkBlinking()
-{
-	vector bottomright = vec2(vid_conwidth, vid_conheight);
-
-	drawfill('0 0 0', bottomright, '0.23 0 0.23', 0.986, DRAWFLAG_NORMAL);
-}
-
-#elif defined(SVQC)
-#include <server/command/common.qh>
-
-void DarkBlinking(entity e)
-{
-	if(e == NULL)
-		return;
-
-	int accepted = VerifyClientEntity(e, true, false);
-
-	if(accepted > 0) 
-	{
-		msg_entity = e;
-		WriteHeader(MSG_ONE, TE_CSQC_DARKBLINKING);
-	}
-}
-#endif
-
-#ifdef CSQC
-
-bool darkblink;
-
-REGISTER_MUTATOR(cl_darkblink, true);
-
-MUTATOR_HOOKFUNCTION(cl_darkblink, HUD_Draw_overlay)
-{
-	if(!darkblink)
-		return false;
-	
-	if (g_stat_HEALTH < 0)
-		darkblink = false;
-	
-	if(STAT(GAME_STOPPED))
-		darkblink = false;
-
-	if(time <= dark_fadetime)
-	{
-		HUD_DarkBlinking();
-		return false;
-	}
-	else
-		darkblink = false;
-
-	return false;
-}
-
-NET_HANDLE(TE_CSQC_DARKBLINKING, bool isNew)
-{
-	return = true;
-
-	if(darkblink)
-		return;
-
-	localcmd("play2 sound/misc/blind\n");
-	darkblink = true;
-	dark_appeartime = time;
-	dark_fadetime = time + 7;
-}
 #endif
 
 #ifdef CSQC

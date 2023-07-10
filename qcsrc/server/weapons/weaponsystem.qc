@@ -291,7 +291,7 @@ bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponenti
 		if (ATTACK_FINISHED(actor, weaponentity) > time + actor.(weaponentity).weapon_frametime * 0.5) return false;
 		entity this = actor.(weaponentity);
 		// don't fire while changing weapon
-		if (this.state != WS_READY) return false;
+		if (!actor.vehicle && this.state != WS_READY) return false;
 	}
 	return true;
 }
@@ -670,7 +670,7 @@ void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector 
 	setorigin(flash, offset);
 
 	entity xflash = spawn();
-	copyentity(flash, xflash);
+	copyentity_qc(flash, xflash);
 
 	flash.viewmodelforclient = actor;
 

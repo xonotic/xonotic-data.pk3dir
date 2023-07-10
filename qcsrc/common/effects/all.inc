@@ -175,6 +175,7 @@ entity EFFECT_SPAWN(int teamid)
     }
 }
 
+EFFECT(0, DARKFIELD,                "darkfield")
 EFFECT(0, ICEORGLASS,               "iceorglass")
 EFFECT(0, ICEFIELD,                 "icefield")
 EFFECT(0, FIREFIELD,                "firefield")
@@ -234,6 +235,7 @@ entity EFFECT_CAP(int teamid)
 
 EFFECT(0, ITEM_PICKUP,              "item_pickup")
 EFFECT(0, ITEM_RESPAWN,             "item_respawn")
+EFFECT(0, ITEM_DESPAWN,             "item_despawn")
 
 EFFECT(0, ONS_GENERATOR_DAMAGED,    "torch_small")
 EFFECT(0, ONS_GENERATOR_GIB,        "onslaught_generator_gib_explode")
@@ -255,6 +257,7 @@ EFFECT(0, SMOKE_RING,               "smoke_ring")
 EFFECT(0, JUMPPAD,                  "jumppad_activate")
 EFFECT(1, BULLET,                   "tr_bullet")
 EFFECT(1, BULLET_WEAK,              "tr_bullet_weak")
+EFFECT(0, EF_SHOCK,                 "arc_lightning")
 EFFECT(0, EF_FLAME,                 "EF_FLAME")
 EFFECT(0, EF_STARDUST,              "EF_STARDUST")
 EFFECT(0, TE_EXPLOSION,             "TE_EXPLOSION")

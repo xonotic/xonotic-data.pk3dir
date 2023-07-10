@@ -14,6 +14,7 @@ void trigger_push_use(entity this, entity actor, entity trigger)
 #endif
 
 REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_PUSH)
+REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_PUSH_VELOCITY)
 REGISTER_NET_LINKED(ENT_CLIENT_TARGET_PUSH)
 
 /*
@@ -38,6 +39,14 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 	grav = PHYS_GRAVITY(NULL);
 	if(pushed_entity && pushed_entity.gravity)
 		grav *= pushed_entity.gravity;
+
+	// Q3 has frametime-dependent gravity, but its trigger_push velocity calculation doesn't account for that.
+	// This discrepancy can be simulated accurately which ensures that all entities will arrive
+	// where they would in Q3 with gravity 800 at 125fps, even if entity-specific gravity is applied.
+	// This can be hard-coded because we don't support the Q3 world.gravity field at this time.
+	// See physicsCPMA.cfg for maths and test results.
+	if (Q3COMPAT_COMMON)
+		grav /= 750/800; // exact float, unlike 800/750
 
 	zdist = torg.z - org.z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
@@ -69,7 +78,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 		and ti.
 	 */
 
-	// push him so high...
+	// push them so high...
 	vz = sqrt(fabs(2 * grav * jumpheight)); // NOTE: sqrt(positive)!
 
 	// we start with downwards velocity only if it's a downjump and the jump apex should be outside the jump!
@@ -128,22 +137,144 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 	return sdir * vs + '0 0 1' * vz;
 }
 
-bool jumppad_push(entity this, entity targ)
+vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity tgt, float speed, float count, entity pushed_entity, bool already_pushed)
+{
+	bool is_playerdir_xy = boolean(this.spawnflags & PUSH_VELOCITY_PLAYERDIR_XY);
+	bool is_add_xy = boolean(this.spawnflags & PUSH_VELOCITY_ADD_XY);
+	bool is_playerdir_z = boolean(this.spawnflags & PUSH_VELOCITY_PLAYERDIR_Z);
+	bool is_add_z = boolean(this.spawnflags & PUSH_VELOCITY_ADD_Z);
+	bool is_bidirectional_xy = boolean(this.spawnflags & PUSH_VELOCITY_BIDIRECTIONAL_XY);
+	bool is_bidirectional_z = boolean(this.spawnflags & PUSH_VELOCITY_BIDIRECTIONAL_Z);
+	bool is_clamp_negative_adds = boolean(this.spawnflags & PUSH_VELOCITY_CLAMP_NEGATIVE_ADDS);
+
+	vector sdir = normalize(vec2(pushed_entity.velocity));
+	float zdir = pushed_entity.velocity.z;
+	if(zdir != 0) zdir = copysign(1, zdir);
+
+	vector vs_tgt = '0 0 0';
+	float vz_tgt = 0;
+	if (!is_playerdir_xy || !is_playerdir_z)
+	{
+		vector vel_tgt = trigger_push_calculatevelocity(org, tgt, 0, pushed_entity);
+		vs_tgt = vec2(vel_tgt);
+		vz_tgt = vel_tgt.z;
+
+		// bidirectional jump pads do not play nicely with xonotic's jump pad targets
+		if (is_bidirectional_xy)
+		{
+			if (normalize(vs_tgt) * sdir < 0)
+			{
+				vs_tgt *= -1;
+			}
+		}
+
+		if (is_bidirectional_z)
+		{
+			if (signbit(vz_tgt) != signbit(zdir))
+			{
+				vz_tgt *= -1;
+			}
+		}
+	}
+
+	vector vs;
+	if (is_playerdir_xy)
+	{
+		vs = sdir * speed;
+	}
+	else
+	{
+		vs = vs_tgt;
+	}
+
+	float vz;
+	if (is_playerdir_z)
+	{
+		vz = zdir * count;
+	}
+	else
+	{
+		vz = vz_tgt;
+	}
+
+	if (is_add_xy)
+	{
+		vector vs_add = vec2(pushed_entity.velocity);
+		if (already_pushed)
+		{
+			vs = vs_add;
+		}
+		else
+		{
+			vs += vs_add;
+
+			if (is_clamp_negative_adds)
+			{
+				if ((normalize(vs) * sdir) < 0)
+				{
+					vs = '0 0 0';
+				}
+			}
+		}
+	}
+
+	if (is_add_z)
+	{
+		float vz_add = pushed_entity.velocity.z;
+		if (already_pushed)
+		{
+			vz = vz_add;
+		}
+		else
+		{
+			vz += vz_add;
+
+			if (is_clamp_negative_adds)
+			{
+				if (signbit(vz) != signbit(zdir))
+				{
+					vz = 0;
+				}
+			}
+		}
+	}
+
+	return vs + '0 0 1' * vz;
+}
+
+bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 {
 	if (!isPushable(targ))
 		return false;
 
 	vector org = targ.origin;
 
-	if(STAT(Q3COMPAT))
+	if(Q3COMPAT_COMMON || this.spawnflags & PUSH_STATIC)
+		org = (this.absmin + this.absmax) * 0.5;
+
+	bool already_pushed = false;
+	if(is_velocity_pad) // remember velocity jump pads
 	{
-		org.z += targ.mins_z;
-		org.z += 1; // off by 1!
+		if(this == targ.last_pushed || (targ.last_pushed && !STAT(Q3COMPAT, targ))) // if q3compat is active overwrite last stored jump pad, otherwise ignore
+		{
+			already_pushed = true;
+		}
+		else
+		{
+			targ.last_pushed = this; // may be briefly out of sync between client and server if client prediction is toggled
+		}
 	}
 
 	if(this.enemy)
 	{
-		targ.velocity = trigger_push_calculatevelocity(org, this.enemy, this.height, targ);
+		if(!is_velocity_pad)
+		{
+			targ.velocity = trigger_push_calculatevelocity(org, this.enemy, this.height, targ);
+		}
+		else
+		{
+			targ.velocity = trigger_push_velocity_calculatevelocity(this, org, this.enemy, this.speed, this.count, targ, already_pushed);
+		}
 	}
 	else if(this.target && this.target != "")
 	{
@@ -156,14 +287,31 @@ bool jumppad_push(entity this, entity targ)
 			else
 				RandomSelection_AddEnt(e, 1, 1);
 		}
-		targ.velocity = trigger_push_calculatevelocity(org, RandomSelection_chosen_ent, this.height, targ);
+		if(!is_velocity_pad)
+		{
+			targ.velocity = trigger_push_calculatevelocity(org, RandomSelection_chosen_ent, this.height, targ);
+		}
+		else
+		{
+			targ.velocity = trigger_push_velocity_calculatevelocity(this, org, RandomSelection_chosen_ent, this.speed, this.count, targ, already_pushed);
+		}
 	}
 	else
 	{
-		targ.velocity = this.movedir;
+		if(!is_velocity_pad)
+		{
+			targ.velocity = this.movedir;
+		}
+		else
+		{
+#ifdef SVQC
+			objerror (this, "Jumppad with no target");
+#endif
+			return false;
+		}
 	}
 
-	UNSET_ONGROUND(targ);
+	if(!is_velocity_pad) UNSET_ONGROUND(targ);
 
 #ifdef CSQC
 	if (targ.flags & FL_PROJECTILE)
@@ -191,7 +339,7 @@ bool jumppad_push(entity this, entity targ)
 
 		// prevent sound spam when a player hits the jumppad more than once
 		// or when a dead player gets stuck in the jumppad for some reason
-		if(this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
+		if(!already_pushed && this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
 		{
 			// flash when activated
 			Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);
@@ -268,7 +416,7 @@ void trigger_push_touch(entity this, entity toucher)
 
 	EXACTTRIGGER_TOUCH(this, toucher);
 
-	noref bool success = jumppad_push(this, toucher);
+	noref bool success = jumppad_push(this, toucher, false);
 
 #ifdef SVQC
 	if (success && (this.spawnflags & PUSH_ONCE))
@@ -278,6 +426,19 @@ void trigger_push_touch(entity this, entity toucher)
 		this.nextthink = time;
 	}
 #endif
+}
+
+void trigger_push_velocity_touch(entity this, entity toucher)
+{
+	if (this.active == ACTIVE_NOT)
+		return;
+
+	if(this.team && DIFF_TEAM(this, toucher))
+		return;
+
+	EXACTTRIGGER_TOUCH(this, toucher);
+
+	jumppad_push(this, toucher, true);
 }
 
 #ifdef SVQC
@@ -575,6 +736,21 @@ float trigger_push_send(entity this, entity to, float sf)
 	return true;
 }
 
+float trigger_push_velocity_send(entity this, entity to, float sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH_VELOCITY);
+
+	WriteByte(MSG_ENTITY, this.team);
+	WriteInt24_t(MSG_ENTITY, this.spawnflags);
+	WriteByte(MSG_ENTITY, this.active);
+	WriteCoord(MSG_ENTITY, this.speed);
+	WriteCoord(MSG_ENTITY, this.count);
+
+	trigger_common_write(this, true);
+
+	return true;
+}
+
 void trigger_push_updatelink(entity this)
 {
 	this.SendFlags |= SF_TRIGGER_INIT;
@@ -583,6 +759,11 @@ void trigger_push_updatelink(entity this)
 void trigger_push_link(entity this)
 {
 	trigger_link(this, trigger_push_send);
+}
+
+void trigger_push_velocity_link(entity this)
+{
+	trigger_link(this, trigger_push_velocity_send);
 }
 
 /*
@@ -601,8 +782,8 @@ spawnfunc(trigger_push)
 {
 	SetMovedir(this);
 
-	trigger_init(this);
-
+	WarpZoneLib_ExactTrigger_Init(this, false);
+	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 	this.active = ACTIVE_ACTIVE;
 	this.use = trigger_push_use;
 	settouch(this, trigger_push_touch);
@@ -624,6 +805,29 @@ spawnfunc(trigger_push)
 	InitializeEntity(this, trigger_push_findtarget, INITPRIO_FINDTARGET);
 }
 
+/*
+ * ENTITY PARAMETERS:
+ *
+ *   target:  this points to the target_position to which the player will jump.
+ *   speed:   XY speed for player-directional velocity pads - either sets or adds to the player's horizontal velocity.
+ *   count:   Z speed for player-directional velocity pads - either sets or adds to the player's vertical velocity.
+ */
+spawnfunc(trigger_push_velocity)
+{
+	WarpZoneLib_ExactTrigger_Init(this, false);
+	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
+	this.active = ACTIVE_ACTIVE;
+	this.use = trigger_push_use;
+	settouch(this, trigger_push_velocity_touch);
+
+	// normal push setup
+	if (!this.noise)
+		this.noise = "misc/jumppad.wav";
+	precache_sound (this.noise);
+
+	trigger_push_velocity_link(this); // link it now
+}
+
 
 bool target_push_send(entity this, entity to, float sf)
 {
@@ -643,7 +847,7 @@ void target_push_use(entity this, entity actor, entity trigger)
 	if(trigger.classname == "trigger_push" || trigger == this)
 		return; // WTF, why is this a thing
 
-	jumppad_push(this, actor);
+	jumppad_push(this, actor, false);
 }
 
 void target_push_link(entity this)
@@ -701,6 +905,24 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 	settouch(this, trigger_push_touch);
 	this.move_time = time;
 	defer(this, 0.25, trigger_push_findtarget);
+
+	return true;
+}
+
+NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH_VELOCITY, bool isnew)
+{
+	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }
+	this.spawnflags = ReadInt24_t();
+	this.active = ReadByte();
+	this.speed = ReadCoord();
+	this.count = ReadCoord();
+
+	trigger_common_read(this, true);
+
+	this.entremove = trigger_remove_generic;
+	this.solid = SOLID_TRIGGER;
+	settouch(this, trigger_push_velocity_touch);
+	this.move_time = time;
 
 	return true;
 }

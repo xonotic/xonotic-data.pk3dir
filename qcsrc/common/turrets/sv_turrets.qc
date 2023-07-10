@@ -315,6 +315,8 @@ void turret_respawn(entity this)
 
 	Turret tur = get_turretinfo(this.m_id);
 	tur.tr_setup(tur, this);
+
+	setorigin(this, this.origin); // make sure it's linked to the area grid
 }
 
 

@@ -3,6 +3,15 @@
 
 const int PUSH_ONCE = BIT(0); // legacy, deactivate with relay instead
 const int PUSH_SILENT = BIT(1); // not used?
+const int PUSH_STATIC = BIT(12); // xonotic-only, Q3 already behaves like this by default
+
+#define PUSH_VELOCITY_PLAYERDIR_XY        BIT(0)
+#define PUSH_VELOCITY_ADD_XY              BIT(1)
+#define PUSH_VELOCITY_PLAYERDIR_Z         BIT(2)
+#define PUSH_VELOCITY_ADD_Z               BIT(3)
+#define PUSH_VELOCITY_BIDIRECTIONAL_XY    BIT(4)
+#define PUSH_VELOCITY_BIDIRECTIONAL_Z     BIT(5)
+#define PUSH_VELOCITY_CLAMP_NEGATIVE_ADDS BIT(6)
 
 IntrusiveList g_jumppads;
 STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
@@ -10,6 +19,8 @@ STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
 .float pushltime;
 .bool istypefrag;
 .float height;
+
+.entity last_pushed;
 
 const int NUM_JUMPPADSUSED = 3;
 .float jumppadcount;
@@ -43,7 +54,7 @@ bool trigger_push_test(entity this, entity item);
 void trigger_push_findtarget(entity this);
 
 /*
- * ENTITY PARAMETERS:
+ * ENTITY PARAMETERS trigger_push:
  *
  *   target:  target of jump
  *   height:  the absolute value is the height of the highest point of the jump
@@ -54,8 +65,17 @@ void trigger_push_findtarget(entity this);
  *            values to target a point on the ceiling.
  *   movedir: if target is not set, this * speed * 10 is the velocity to be reached.
  */
+
+/*
+ * ENTITY PARAMETERS trigger_push_velocity:
+ *
+ *   target:  this points to the target_position to which the player will jump.
+ *   speed:   XY speed for player-directional velocity pads - either sets or adds to the player's horizontal velocity.
+ *   count:   Z speed for player-directional velocity pads - either sets or adds to the player's vertical velocity.
+ */
 #ifdef SVQC
 spawnfunc(trigger_push);
+spawnfunc(trigger_push_velocity);
 
 spawnfunc(target_push);
 spawnfunc(info_notnull);
