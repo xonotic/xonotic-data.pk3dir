@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-10 07:22+0200\n"
+"POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021\n"
 "Language-Team: Japanese (Japan) (http://app.transifex.com/team-xonotic/"
@@ -2205,7 +2205,7 @@ msgid "Ammo grenade"
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:109
-msgid "Dark grenade"
+msgid "Darkness grenade"
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:139
