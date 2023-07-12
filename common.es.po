@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yotta Mxt, 2023\n"
+"Last-Translator: LegendGuard, 2020-2023\n"
 "Language-Team: Spanish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -2248,11 +2248,11 @@ msgstr "Granada de Velo"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:99
 msgid "Ammo grenade"
-msgstr ""
+msgstr "Granada de Munición"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:109
 msgid "Darkness grenade"
-msgstr ""
+msgstr "Granada de la Oscuridad"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
@@ -8456,7 +8456,7 @@ msgstr "Ajustes preestablecidos de calidad:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:45
 msgid "PRE^OMG!"
-msgstr "OMG!"
+msgstr "¡DIOS!"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:48
 msgid "PRE^Low"

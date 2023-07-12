@@ -2231,7 +2231,7 @@ msgstr "Боевая граната"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:109
 msgid "Darkness grenade"
-msgstr ""
+msgstr "Граната тьмы"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60

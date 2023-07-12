@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yotta Mxt, 2022\n"
+"Last-Translator: LegendGuard, 2020-2021,2023\n"
 "Language-Team: Catalan (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ca/)\n"
 "Language: ca\n"
@@ -1441,7 +1441,7 @@ msgstr ""
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "Point limit:"
-msgstr ""
+msgstr "Límit de punts:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
@@ -1477,7 +1477,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "Capture limit:"
-msgstr ""
+msgstr "Límit de captures:"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
@@ -1510,7 +1510,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Domination"
-msgstr ""
+msgstr "Dominació"
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:35
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
@@ -1651,7 +1651,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Survival"
-msgstr ""
+msgstr "Supervivència"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -1667,7 +1667,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Team Keepaway"
-msgstr ""
+msgstr "Keepaway per equips"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid ""
@@ -1681,24 +1681,24 @@ msgstr "Team Mayhem"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "Cartutxos"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
-msgstr ""
+msgstr "Bales"
 
 #: qcsrc/common/items/item/ammo.qh:124
 msgid "Rockets"
-msgstr ""
+msgstr "Coets"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "Cèl·lules"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
-msgstr ""
+msgstr "Plasma"
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
@@ -9931,23 +9931,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:55
 msgid "WEAPON^previous"
-msgstr ""
+msgstr "anterior"
 
 #: qcsrc/menu/xonotic/keybinder.qc:56
 msgid "WEAPON^next"
-msgstr ""
+msgstr "següent"
 
 #: qcsrc/menu/xonotic/keybinder.qc:57
 msgid "WEAPON^previously used"
-msgstr ""
+msgstr "anteriorment utilitzat"
 
 #: qcsrc/menu/xonotic/keybinder.qc:58
 msgid "WEAPON^best"
-msgstr ""
+msgstr "millor"
 
 #: qcsrc/menu/xonotic/keybinder.qc:59
 msgid "reload"
-msgstr ""
+msgstr "recarregar"
 
 #: qcsrc/menu/xonotic/keybinder.qc:87
 msgid "hold zoom"
@@ -9979,15 +9979,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:96
 msgid "Communication"
-msgstr ""
+msgstr "Comunicació"
 
 #: qcsrc/menu/xonotic/keybinder.qc:97
 msgid "public chat"
-msgstr ""
+msgstr "xat públic"
 
 #: qcsrc/menu/xonotic/keybinder.qc:98
 msgid "team chat"
-msgstr ""
+msgstr "xat en equip"
 
 #: qcsrc/menu/xonotic/keybinder.qc:99
 msgid "show chat history"
@@ -9995,11 +9995,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:100
 msgid "vote YES"
-msgstr ""
+msgstr "votar SÍ"
 
 #: qcsrc/menu/xonotic/keybinder.qc:101
 msgid "vote NO"
-msgstr ""
+msgstr "votar NO"
 
 #: qcsrc/menu/xonotic/keybinder.qc:105
 msgid "Client"
@@ -10107,11 +10107,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
 msgid "spectator"
-msgstr ""
+msgstr "espectador"
 
 #: qcsrc/menu/xonotic/playermodel.qc:161
 msgid "<no model found>"
-msgstr ""
+msgstr "<no model found>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:262
 msgid "SERVER^Remove favorite"
@@ -10123,7 +10123,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:267
 msgid "SERVER^Favorite"
-msgstr ""
+msgstr "Favorit"
 
 #: qcsrc/menu/xonotic/serverlist.qc:268
 msgid ""
@@ -10133,7 +10133,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:754
 msgid "Ping"
-msgstr ""
+msgstr "Ping"
 
 #: qcsrc/menu/xonotic/serverlist.qc:755
 msgid "Hostname"
@@ -10141,24 +10141,24 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:756
 msgid "Map"
-msgstr ""
+msgstr "Mapa"
 
 #: qcsrc/menu/xonotic/serverlist.qc:757
 msgid "Type"
-msgstr ""
+msgstr "Tipus"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1054
 #, c-format
 msgid "AES level %d"
-msgstr ""
+msgstr "Nivell AES %d"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1054
 msgid "ENC^none"
-msgstr ""
+msgstr "res"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1054
 msgid "encryption:"
-msgstr ""
+msgstr "encripció:"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 #, c-format
@@ -10177,35 +10177,35 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qh:152
 msgid "SLCAT^Favorites"
-msgstr ""
+msgstr "Favorits"
 
 #: qcsrc/menu/xonotic/serverlist.qh:153
 msgid "SLCAT^Recommended"
-msgstr ""
+msgstr "Recomanats"
 
 #: qcsrc/menu/xonotic/serverlist.qh:154
 msgid "SLCAT^Normal Servers"
-msgstr ""
+msgstr "Servidors normals"
 
 #: qcsrc/menu/xonotic/serverlist.qh:155
 msgid "SLCAT^Servers"
-msgstr ""
+msgstr "Servidors"
 
 #: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Competitive Mode"
-msgstr ""
+msgstr "Mode competitiu"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Modified Servers"
-msgstr ""
+msgstr "Servidors modificats"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Overkill"
-msgstr ""
+msgstr "Overkill"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^InstaGib"
-msgstr ""
+msgstr "InstaGib"
 
 #: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Defrag Mode"
@@ -10221,44 +10221,44 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:72
 msgid "VOL^MAX"
-msgstr ""
+msgstr "MAX"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:74
 msgid "VOL^OFF"
-msgstr ""
+msgstr "OFF"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:82
 #, c-format
 msgid "%s dB"
-msgstr ""
+msgstr "%s dB"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:14
 msgid "PART^OMG"
-msgstr ""
+msgstr "VATUA L'OLLA!"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:15
 msgid "PARTQUAL^Low"
-msgstr ""
+msgstr "Baix"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:16
 msgid "PARTQUAL^Medium"
-msgstr ""
+msgstr "Mig"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:17
 msgid "PARTQUAL^Normal"
-msgstr ""
+msgstr "Normal"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:18
 msgid "PARTQUAL^High"
-msgstr ""
+msgstr "Alt"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:19
 msgid "PARTQUAL^Ultra"
-msgstr ""
+msgstr "Ultra"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:20
 msgid "PARTQUAL^Ultimate"
-msgstr ""
+msgstr "Definitiu"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:13
 msgid ""
@@ -10268,23 +10268,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/slider_resolution.qc:131
 msgid "Screen resolution"
-msgstr ""
+msgstr "Resolució de la pantalla"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "FADESPEED^Slow"
-msgstr ""
+msgstr "Lent"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "FADESPEED^Normal"
-msgstr ""
+msgstr "Normal"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "FADESPEED^Fast"
-msgstr ""
+msgstr "Ràpid"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "FADESPEED^Instant"
-msgstr ""
+msgstr "Instant"
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
@@ -10337,7 +10337,7 @@ msgstr "Desembre"
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr ""
+msgstr "DATE^%m %d, %Y"
 
 #: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
@@ -10383,11 +10383,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:208
 msgid "ELO:"
-msgstr ""
+msgstr "ELO:"
 
 #: qcsrc/menu/xonotic/statslist.qc:215
 msgid "Rank:"
-msgstr ""
+msgstr "Rang:"
 
 #: qcsrc/menu/xonotic/statslist.qc:222
 msgid "Percentile:"
@@ -10396,7 +10396,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/statslist.qc:247
 #, c-format
 msgid "%d (unranked)"
-msgstr ""
+msgstr "%d (sense classificar)"
 
 #: qcsrc/menu/xonotic/util.qc:420
 msgid "Update can be downloaded at:"
@@ -10409,7 +10409,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:553
 #, c-format
 msgid "Update to %s now!"
-msgstr ""
+msgstr "Actualitza ara a %s!"
 
 #: qcsrc/menu/xonotic/util.qc:638
 msgid ""

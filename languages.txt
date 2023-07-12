@@ -4,8 +4,8 @@ de    "German" "Deutsch" 99%
 de_CH "German (Switzerland)" "Deutsch (Schweiz)" 99%
 en    "English" "English" 100%
 en_AU "English (Australia)" "English (Australia)" 69%
-es    "Spanish" "Español" 99%
-fr    "French" "Français" 99%
+es    "Spanish" "Español" 100%
+fr    "French" "Français" 100%
 ga    "Irish" "Irish" 29%
 it    "Italian" "Italiano" 99%
 la    "Latin" "Lingua Latina" 70%
@@ -13,7 +13,7 @@ hu    "Hungarian" "Magyar" 43%
 nl    "Dutch" "Nederlands" 61%
 pl    "Polish" "Polski" 79%
 pt    "Portuguese" "Português" 77%
-pt_BR "Portuguese (Brazil)" "Português (Brasil)" 99%
+pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
 ro    "Romanian" "Romana" 67%
 fi    "Finnish" "Suomi" 98%
 sv    "Swedish" "Svenska" 99%
@@ -22,11 +22,11 @@ cs    "Czech" "Čeština" 30%
 el    "Greek" "Ελληνική" 44%
 be    "Belarusian" "Беларуская" 49%
 bg    "Bulgarian" "Български" 69%
-ru    "Russian" "Русский" 99%
+ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 58%
 uk    "Ukrainian" "Українська" 57%
-zh_TW "Chinese (Taiwan)" "中文（正體字）" 99%
-zh_CN "Chinese (China)" "中文（简体字）" 99%
-zh_HK "Chinese (Hong Kong)" "中文（香港字）" 99%
-ja_JP "Japanese" "日本語" 99%
+zh_TW "Chinese (Taiwan)" "中文（正體字）" 100%
+zh_CN "Chinese (China)" "中文（简体字）" 100%
+zh_HK "Chinese (Hong Kong)" "中文（香港字）" 100%
+ja_JP "Japanese" "日本語" 100%
 ko    "Korean" "한국의" 35%
