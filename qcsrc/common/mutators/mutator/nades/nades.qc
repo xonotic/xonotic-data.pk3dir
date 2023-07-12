@@ -57,7 +57,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 	if (STAT(NADE_DARKNESS_TIME) > time)
 	{
 		if (!darkblink)
-			localcmd("play2 sound/misc/blind\n");
+			sound(csqcplayer, CH_PAIN, SND_BLIND, VOL_BASE, ATTEN_NORM);
 		darkblink = true;
 		M_ARGV(0, vector) = NADE_TYPE_DARKNESS.m_color;
 		HUD_DarkBlinking();
