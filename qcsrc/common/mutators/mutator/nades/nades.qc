@@ -59,12 +59,11 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 		if (!darkblink)
 			sound(csqcplayer, CH_PAIN, SND_BLIND, VOL_BASE, ATTEN_NORM);
 		darkblink = true;
-		M_ARGV(0, vector) = NADE_TYPE_DARKNESS.m_color;
 		HUD_DarkBlinking();
+		M_ARGV(1, float) = 0; // alpha_multipl 0, don't draw normal overlay
 		return true;
 	}
-	else
-		darkblink = false;
+	darkblink = false;
 	return false;
 }
 
