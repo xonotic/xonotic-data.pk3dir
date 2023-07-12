@@ -39,13 +39,10 @@ entity Nade_TrailEffect(int proj, int nade_team)
 }
 #endif
 
-REGISTER_NET_TEMP(TE_CSQC_DARKBLINKING);
 #ifdef CSQC
 #include <client/draw.qh>
 #include <client/hud/hud.qh>
 
-float dark_appeartime;
-float dark_fadetime;
 bool darkblink;
 
 void HUD_DarkBlinking()
@@ -59,23 +56,16 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 {
 	if (STAT(NADE_DARKNESS_TIME) > time)
 	{
+		if (!darkblink)
+			localcmd("play2 sound/misc/blind\n");
+		darkblink = true;
 		M_ARGV(0, vector) = NADE_TYPE_DARKNESS.m_color;
 		HUD_DarkBlinking();
 		return true;
 	}
+	else
+		darkblink = false;
 	return false;
-}
-
-NET_HANDLE(TE_CSQC_DARKBLINKING, bool isNew)
-{
-	return = true;
-
-	if(darkblink) return;
-
-	localcmd("play2 sound/misc/blind\n");
-	darkblink = true;
-	dark_appeartime = time;
-	dark_fadetime = STAT(NADE_DARKNESS_TIME);
 }
 
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
@@ -798,19 +788,6 @@ void nade_ammo_boom(entity this)
 	orb.colormod = '0.66 0.33 0';
 }
 
-void DarkBlinking(entity e)
-{
-	if(e == NULL) return;
-
-	int accepted = VerifyClientEntity(e, true, false);
-
-	if(accepted > 0)
-	{
-		msg_entity = e;
-		WriteHeader(MSG_ONE, TE_CSQC_DARKBLINKING);
-	}
-}
-
 void nade_darkness_think(entity this)
 {
 	if(round_handler_IsActive())
@@ -872,7 +849,6 @@ void nade_darkness_think(entity this)
 			case 1:  if(it == this.realowner) continue; // don't affect the player who threw the nade
 		}
 		STAT(NADE_DARKNESS_TIME, it) = time + 0.1;
-		DarkBlinking(it);
 	});
 }
 
