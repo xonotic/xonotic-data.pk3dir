@@ -92,6 +92,8 @@ MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 }
 MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 {
+	if (!mut_is_active(MUT_NADES)) return;
+
 	entity proj = M_ARGV(0, entity);
 
 	if (proj.cnt == PROJECTILE_NAPALM_FOUNTAIN)
@@ -103,6 +105,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 
 	entity nade_type = Nade_FromProjectile(proj.cnt);
 	if (nade_type == NADE_TYPE_Null) return;
+
 	if(STAT(NADES_SMALL))
 	{
 		proj.mins = '-8 -8 -8';
