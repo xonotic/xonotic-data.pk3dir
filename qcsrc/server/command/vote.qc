@@ -25,6 +25,7 @@
 #include <server/scores.qh>
 #include <server/teamplay.qh>
 #include <server/weapons/accuracy.qh>
+#include <server/weapons/selection.qh>
 #include <server/world.qh>
 
 // =============================================
@@ -426,6 +427,13 @@ void reset_map(bool is_fake_round_start)
 			it.avelocity = '0 0 0';
 			CS(it).movement = '0 0 0';
 			PutClientInServer(it);
+
+			if(IS_BOT_CLIENT(it))
+			{
+				.entity weaponentity = weaponentities[0];
+				if(it.(weaponentity).m_weapon == WEP_Null)
+					W_NextWeapon(it, 0, weaponentity);
+			}
 		});
 	}
 }
@@ -505,14 +513,17 @@ void ReadyRestart_force(bool is_fake_round_start)
 
 void ReadyRestart(bool forceWarmupEnd)
 {
-	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing)
+	if (MUTATOR_CALLHOOK(ReadyRestart_Deny))
 	{
 		// NOTE: ReadyRestart support is mandatory in campaign
 		if (autocvar_g_campaign)
 			error("ReadyRestart must be supported in campaign mode!");
 		localcmd("restart\n"); // if ReadyRestart is denied, restart the server
 	}
-	else localcmd("\nsv_hook_readyrestart\n");
+	else if (intermission_running || race_completing) // game is over, ReadyRestart no longer available
+		localcmd("restart\n");
+	else
+		localcmd("\nsv_hook_readyrestart\n");
 
 	if(forceWarmupEnd || autocvar_g_campaign)
 		warmup_stage = 0; // forcefully end warmup and go to match stage
@@ -762,6 +773,29 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 	
 	switch (first_command) // now go through and parse the proper commands to adjust as needed.
 	{
+		case "movetoauto":
+		case "movetored":
+		case "movetoblue":
+		case "movetoyellow":
+		case "movetopink":
+		case "movetospec":
+		{
+			entity victim = GetIndexedEntity(argc, (startpos + 1));
+			float accepted = VerifyClientEntity(victim, true, false);
+			if (accepted > 0)
+			{
+				vote_parsed_command = vote_command;
+				vote_parsed_display = sprintf("^1%s #%d ^7%s", first_command, etof(victim), victim.netname);
+			}
+			else
+			{
+				print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n"));
+				return 0;
+			}
+
+			break;
+		}
+
 		case "kick":
 		case "kickban":    // catch all kick/kickban commands
 		{
@@ -834,6 +868,22 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
+		case "fraglimit": // include restrictions on the maximum votable frag limit
+		{
+			float fraglimit_vote = stof(argv(startpos + 1));
+			float fraglimit_min = 0;
+			float fraglimit_max = 999999;
+			if(fraglimit_vote > fraglimit_max || fraglimit_vote < fraglimit_min)
+			{
+				print_to(caller, strcat("Invalid fraglimit vote, accepted values are between ", ftos(fraglimit_min), " and ", ftos(fraglimit_max), "."));
+				return -1;
+			}
+			vote_parsed_command = strcat("fraglimit ", ftos(fraglimit_vote));
+			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
+
+			break;
+		}
+
 		case "timelimit": // include restrictions on the maximum votable time limit
 		{
 			float timelimit_vote = stof(argv(startpos + 1));
@@ -842,7 +892,6 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 				print_to(caller, strcat("Invalid timelimit vote, accepted values are between ", ftos(autocvar_timelimit_min), " and ", ftos(autocvar_timelimit_max), "."));
 				return -1;
 			}
-			timelimit_vote = bound(autocvar_timelimit_min, timelimit_vote, autocvar_timelimit_max);
 			vote_parsed_command = strcat("timelimit ", ftos(timelimit_vote));
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 

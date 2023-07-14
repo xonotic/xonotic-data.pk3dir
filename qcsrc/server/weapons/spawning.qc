@@ -31,7 +31,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 {
 	wpn = wpn.m_spawnfunc_hookreplace(wpn, this);
 	this.classname = wpn.m_canonical_spawnfunc;
-	if (!Item_IsLoot(this) && !this.m_isreplaced)
+	if (!ITEM_IS_LOOT(this) && !this.m_isreplaced)
 	{
 		if (wpn.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
@@ -79,7 +79,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 		}
 	}
 
-	if(!Item_IsLoot(this))
+	if(!ITEM_IS_LOOT(this))
 		weaponsInMapAll |= WepSet_FromWeapon(wpn);
 
 	if (!Item_IsDefinitionAllowed(wpn.m_pickup))

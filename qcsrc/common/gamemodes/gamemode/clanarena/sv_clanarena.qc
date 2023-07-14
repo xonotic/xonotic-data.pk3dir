@@ -324,6 +324,9 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
+
+	if (!warmup_stage)
+		eliminatedPlayers.SendFlags |= 1;
 }
 
 MUTATOR_HOOKFUNCTION(ca, reset_map_players)

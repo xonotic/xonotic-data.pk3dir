@@ -1,6 +1,7 @@
 #include "banning.qh"
 
 #include <common/command/_mod.qh>
+#include <common/minigames/sv_minigames.qh>
 #include <common/state.qh>
 #include <common/stats.qh>
 #include <common/util.qh>
@@ -176,13 +177,13 @@ void BanCommand_mute(int request, int argc, string command)
 				if (accepted > 0)
 				{
 					string theid = "";
-					if(!PlayerInIPList(client, autocvar_g_muteban_list))
+					if(!PlayerInIPList(client, autocvar_g_chatban_list))
 						theid = cons(theid, client.netaddress);
-					if(!PlayerInIDList(client, autocvar_g_muteban_list))
+					if(!PlayerInIDList(client, autocvar_g_chatban_list))
 						theid = cons(theid, client.crypto_idfp);
 					CS(client).muted = true;
 					LOG_INFO(strcat("Mute-banning player ", GetCallerName(client), " (", argv(1), ")."));
-					cvar_set("g_muteban_list", cons(autocvar_g_muteban_list, theid));
+					cvar_set("g_chatban_list", cons(autocvar_g_chatban_list, theid));
 
 					return;
 				}
@@ -199,7 +200,7 @@ void BanCommand_mute(int request, int argc, string command)
 		{
 			LOG_HELP("Usage:^3 sv_cmd mute <client>");
 			LOG_HELP("  <client> is the entity number or name of the player to mute.");
-			LOG_HELP("See also: ^2unmute, g_muteban_list^7");
+			LOG_HELP("See also: ^2unmute, g_chatban_list^7");
 			return;
 		}
 	}
@@ -226,6 +227,8 @@ void BanCommand_playban(int request, int argc, string command)
 
 					LOG_INFO(strcat("Play-banning player ", GetCallerName(client), " (", argv(1), ")."));
 					PutObserverInServer(client, true, true);
+					if (autocvar_g_playban_minigames) 
+						part_minigame(client);
 					cvar_set("g_playban_list", cons(autocvar_g_playban_list, theid));
 
 					return;
@@ -310,14 +313,14 @@ void BanCommand_unmute(int request, int argc)
 				if (accepted > 0)
 				{
 					string tmp_string = "";
-					FOREACH_WORD(autocvar_g_muteban_list, it != client.netaddress,
+					FOREACH_WORD(autocvar_g_chatban_list, it != client.netaddress,
 					{
 						if(client.crypto_idfp && it == substring(client.crypto_idfp, 0, strlen(it)))
 							continue;
 						tmp_string = cons(tmp_string, it);
 					});
 
-					cvar_set("g_muteban_list", tmp_string);
+					cvar_set("g_chatban_list", tmp_string);
 					LOG_INFO(strcat("Unmuting player ", GetCallerName(client), " (", original_arg, ")."));
 					CS(client).muted = false;
 
@@ -336,7 +339,7 @@ void BanCommand_unmute(int request, int argc)
 		{
 			LOG_HELP("Usage:^3 sv_cmd unmute <client>");
 			LOG_HELP("  <client> is the entity number or name of the player to unmute.");
-			LOG_HELP("See also: ^2mute, g_muteban_list^7");
+			LOG_HELP("See also: ^2mute, g_chatban_list^7");
 			return;
 		}
 	}

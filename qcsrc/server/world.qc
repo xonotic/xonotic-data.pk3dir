@@ -257,8 +257,9 @@ void cvar_changes_init()
 		BADCVAR("timeformat");
 		BADCVAR("timestamps");
 		BADCVAR("g_require_stats");
-		BADCVAR("g_muteban_list");
+		BADCVAR("g_chatban_list");
 		BADCVAR("g_playban_list");
+		BADCVAR("g_playban_minigames");
 		BADCVAR("g_voteban_list");
 		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");
@@ -494,6 +495,7 @@ void cvar_changes_init()
 		BADCVAR("g_ban_sync_uri");
 		BADCVAR("g_buffs");
 		BADCVAR("g_ca_teams_override");
+		BADCVAR("g_ca_prevent_stalemate");
 		BADCVAR("g_ctf_fullbrightflags");
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_ctf_leaderboard");

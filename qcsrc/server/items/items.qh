@@ -5,7 +5,6 @@
 
 float autocvar_g_balance_superweapons_time;
 bool autocvar_g_fullbrightitems;
-float autocvar_g_items_mindist;
 float autocvar_g_items_maxdist;
 float autocvar_g_items_dropped_lifetime;
 int autocvar_g_pickup_items;
@@ -37,7 +36,7 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 .float item_respawncounter;
 
-.float noalign; // if set to 1, the item or spawnpoint won't be dropped to the floor
+.bool noalign; // if set to 1, the item or spawnpoint won't be dropped to the floor
 
 .float superweapons_finished; // NOTE: this field is used only by map entities, it does not directly apply the superweapons stat
 

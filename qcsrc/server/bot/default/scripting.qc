@@ -390,7 +390,7 @@ void bot_cmdhelp(string scmd)
 				desc = "Resets the goal stack";
 				break;
 			case BOT_CMD_CC:
-				desc = "Execute client command. Examples: cc \"say something\"; cc god; cc \"name newnickname\"; cc kill;";
+				desc = "Execute client command. Examples: cc say something; cc god; cc name newnickname; cc kill;";
 				break;
 			case BOT_CMD_IF:
 				desc = "Perform simple conditional execution.\n"

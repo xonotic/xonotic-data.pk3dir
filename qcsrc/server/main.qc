@@ -32,6 +32,7 @@ void dropclient_do(entity this)
 		dropclient(this.owner);
 	delete(this);
 }
+
 /**
  * Schedules dropclient for a player and returns true;
  * if dropclient is already scheduled (for that player) it does nothing and returns false.
@@ -142,12 +143,12 @@ void CreatureFrame_FallDamage(entity this)
 	bool have_hook = false;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-	    .entity weaponentity = weaponentities[slot];
-	    if(this.(weaponentity).hook && this.(weaponentity).hook.state)
-	    {
-	    	have_hook = true;
-	    	break;
-	    }
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity).hook && this.(weaponentity).hook.state)
+		{
+			have_hook = true;
+			break;
+		}
 	}
 	if(!have_hook)
 	{
@@ -224,33 +225,33 @@ void dedicated_print(string input)
 
 void make_safe_for_remove(entity e)
 {
-    if (e.initialize_entity)
-    {
-        entity ent, prev = NULL;
-        for (ent = initialize_entity_first; ent; )
-        {
-            if ((ent == e) || ((ent.classname == "initialize_entity") && (ent.enemy == e)))
-            {
-                //print("make_safe_for_remove: getting rid of initializer ", etos(ent), "\n");
-                // skip it in linked list
-                if (prev)
-                {
-                    prev.initialize_entity_next = ent.initialize_entity_next;
-                    ent = prev.initialize_entity_next;
-                }
-                else
-                {
-                    initialize_entity_first = ent.initialize_entity_next;
-                    ent = initialize_entity_first;
-                }
-            }
-            else
-            {
-                prev = ent;
-                ent = ent.initialize_entity_next;
-            }
-        }
-    }
+	if (e.initialize_entity)
+	{
+		entity ent, prev = NULL;
+		for (ent = initialize_entity_first; ent; )
+		{
+			if ((ent == e) || ((ent.classname == "initialize_entity") && (ent.enemy == e)))
+			{
+				//print("make_safe_for_remove: getting rid of initializer ", etos(ent), "\n");
+				// skip it in linked list
+				if (prev)
+				{
+					prev.initialize_entity_next = ent.initialize_entity_next;
+					ent = prev.initialize_entity_next;
+				}
+				else
+				{
+					initialize_entity_first = ent.initialize_entity_next;
+					ent = initialize_entity_first;
+				}
+			}
+			else
+			{
+				prev = ent;
+				ent = ent.initialize_entity_next;
+			}
+		}
+	}
 }
 
 void remove_except_protected(entity e)
@@ -262,15 +263,15 @@ void remove_except_protected(entity e)
 
 void remove_unsafely(entity e)
 {
-    if(e.classname == "spike")
-        error("Removing spikes is forbidden (crylink bug), please report");
-    builtin_remove(e);
+	if(e.classname == "spike")
+		error("Removing spikes is forbidden (crylink bug), please report");
+	builtin_remove(e);
 }
 
 void remove_safely(entity e)
 {
-    make_safe_for_remove(e);
-    builtin_remove(e);
+	make_safe_for_remove(e);
+	builtin_remove(e);
 }
 
 /*
@@ -287,9 +288,9 @@ void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
 {
-    // TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
-    IL_EACH(g_players, IS_FAKE_CLIENT(it), sys_phys_update(it, frametime));
-    IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPreThink(it));
+	// TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
+	IL_EACH(g_players, IS_FAKE_CLIENT(it), sys_phys_update(it, frametime));
+	IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPreThink(it));
 
 	execute_next_frame();
 	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause();
@@ -312,10 +313,10 @@ void StartFrame()
 				++c_seen;
 		});
 		LOG_INFO(
-		    "CEFC time: ", ftos(t * 1000), "ms; ",
-            "CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ",
-            "CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0')
-        );
+			"CEFC time: ", ftos(t * 1000), "ms; ",
+			"CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ",
+			"CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0')
+		);
 		client_cefc_accumulatortime = time;
 		client_cefc_accumulator = 0;
 	}
@@ -355,8 +356,8 @@ void StartFrame()
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
 	GlobalStats_updateglobal();
-    FOREACH_CLIENT(true, GlobalStats_update(it));
-    IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPostThink(it));
+	FOREACH_CLIENT(true, GlobalStats_update(it));
+	IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPostThink(it));
 }
 
 .vector originjitter;
@@ -388,22 +389,22 @@ void SV_OnEntityPreSpawnFunction(entity this)
 
 	if (this.monster_attack) {
 		IL_PUSH(g_monster_targets, this);
-    }
+	}
 
 	// support special -1 and -2 angle from radiant
 	if (this.angles == '0 -1 0') {
 		this.angles = '-90 0 0';
 	} else if (this.angles == '0 -2 0') {
 		this.angles = '+90 0 0';
-    }
+	}
 
-    #define X(out, in) MACRO_BEGIN \
-        if (in != 0) { out = out + (random() * 2 - 1) * in; } \
-    MACRO_END
-    X(this.origin.x, this.originjitter.x); X(this.origin.y, this.originjitter.y); X(this.origin.z, this.originjitter.z);
-    X(this.angles.x, this.anglesjitter.x); X(this.angles.y, this.anglesjitter.y); X(this.angles.z, this.anglesjitter.z);
-    X(this.angles.y, this.anglejitter);
-    #undef X
+	#define X(out, in) MACRO_BEGIN \
+		if (in != 0) { out = out + (random() * 2 - 1) * in; } \
+	MACRO_END
+	X(this.origin.x, this.originjitter.x); X(this.origin.y, this.originjitter.y); X(this.origin.z, this.originjitter.z);
+	X(this.angles.x, this.anglesjitter.x); X(this.angles.y, this.anglesjitter.y); X(this.angles.z, this.anglesjitter.z);
+	X(this.angles.y, this.anglejitter);
+	#undef X
 
 	if (MUTATOR_CALLHOOK(OnEntityPreSpawn, this)) {
 		delete(this);

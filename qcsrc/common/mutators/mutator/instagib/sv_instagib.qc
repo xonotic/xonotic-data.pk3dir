@@ -109,7 +109,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
 {
 	entity item = M_ARGV(1, entity);
 
-	item.monster_loot = ITEM_VaporizerCells;
+	item.itemdef = ITEM_VaporizerCells;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
@@ -362,7 +362,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return true;
 	}
 
-	if(item.weapon == WEP_VAPORIZER.m_id && Item_IsLoot(item))
+	if(item.weapon == WEP_VAPORIZER.m_id && ITEM_IS_LOOT(item))
 	{
 		SetResource(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
 		return false;

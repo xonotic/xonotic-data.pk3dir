@@ -265,6 +265,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 	if (MUTATOR_CALLHOOK(ClientObituary, inflictor, attacker, targ, deathtype, attacker.(weaponentity))) { CS(targ).killcount = 0; return; }
 	notif_anonymous = M_ARGV(5, bool);
 
+	// TODO: Replace "???" with a translatable "Anonymous player" string
+	// https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/2839
 	if(notif_anonymous)
 		attacker_name = "???";
 
