@@ -1110,8 +1110,6 @@ void StartItem(entity this, entity def)
 		// do item filtering according to game mode and other things
 		if (this.noalign <= 0)
 		{
-			// first nudge it off the floor a little bit to avoid math errors
-			setorigin(this, this.origin + '0 0 1');
 			// note droptofloor returns false if stuck/or would fall too far
 			if (!this.noalign)
 				droptofloor(this);
