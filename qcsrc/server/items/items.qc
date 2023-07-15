@@ -1046,6 +1046,9 @@ void StartItem(entity this, entity def)
 			this.nextthink = max(this.strength_finished, this.invincible_finished, this.superweapons_finished);
 		}
 
+		// most loot items have a bigger horizontal size than a player
+		nudgeoutofsolid(this);
+
 		// don't drop if in a NODROP zone (such as lava)
 		traceline(this.origin, this.origin, MOVE_NORMAL, this);
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
