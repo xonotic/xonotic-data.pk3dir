@@ -969,9 +969,30 @@ void StartItem(entity this, entity def)
 	if (def.m_canonical_spawnfunc != "") // FIXME why do weapons set itemdef to an entity that doesn't have this?
 		this.classname = def.m_canonical_spawnfunc;
 
-	startitem_failed = false;
+	startitem_failed = true; // early return means failure
 
-	this.item_model_ent = def.m_model;
+	// some mutators check for resources set by m_iteminit in FilterItem
+	if(def.m_iteminit)
+		def.m_iteminit(def, this);
+
+	// also checked by some mutators in FilterItem
+	this.items = def.m_itemid;
+	this.weapon = def.instanceOfWeaponPickup ? def.m_weapon.m_id : 0;
+	if(this.weapon)
+		STAT(WEAPONS, this) = WepSet_FromWeapon(REGISTRY_GET(Weapons, this.weapon));
+	this.flags = FL_ITEM | def.m_itemflags;
+
+	// FilterItem may change any field of a specific instance of an item, but
+	// it must not change any itemdef field (would cause mutators to break other mutators),
+	// and must not convert items into different ones (StartItem could be refactored to support that).
+	if(MUTATOR_CALLHOOK(FilterItem, this))
+	{
+		delete(this);
+		return;
+	}
+
+	if (!this.item_model_ent)
+		this.item_model_ent = def.m_model;
 
 	if (!this.item_pickupsound_ent)
 		this.item_pickupsound_ent = def.m_sound;
@@ -980,31 +1001,15 @@ void StartItem(entity this, entity def)
 	if (this.item_pickupsound == "")
 		LOG_WARNF("No pickup sound set for a %s", this.classname);
 
-	if(def.m_iteminit)
-		def.m_iteminit(def, this);
-
 	if(!this.pickup_anyway && def.m_pickupanyway)
 		this.pickup_anyway = def.m_pickupanyway();
-
-	this.items = def.m_itemid;
-	this.weapon = def.instanceOfWeaponPickup ? def.m_weapon.m_id : 0;
 
 	// bones_was_here TODO: implement sv_cullentities_dist and replace g_items_maxdist with it
 	if(!this.fade_end)
 		this.fade_end = autocvar_g_items_maxdist;
 
-	if(this.weapon)
-		STAT(WEAPONS, this) = WepSet_FromWeapon(REGISTRY_GET(Weapons, this.weapon));
-
-	this.flags = FL_ITEM | def.m_itemflags;
+	// bones_was_here TODO: can we do this after we're sure the entity won't be deleted?
 	IL_PUSH(g_items, this);
-
-	if(MUTATOR_CALLHOOK(FilterItem, this)) // error means we do not want the item
-	{
-		startitem_failed = true;
-		delete(this);
-		return;
-	}
 
 	this.mdl = this.model ? this.model : strzone(this.item_model_ent.model_str());
 	setmodel(this, MDL_Null); // precision set below
@@ -1041,7 +1046,6 @@ void StartItem(entity this, entity def)
 		traceline(this.origin, this.origin, MOVE_NORMAL, this);
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
 		{
-			startitem_failed = true;
 			delete(this);
 			return;
 		}
@@ -1053,7 +1057,6 @@ void StartItem(entity this, entity def)
 		// must be done after def.m_iteminit() as that may set ITEM_FLAG_MUTATORBLOCKED
 		if(!have_pickup_item(this))
 		{
-			startitem_failed = true;
 			delete(this);
 			return;
 		}
@@ -1108,7 +1111,6 @@ void StartItem(entity this, entity def)
 		{
 			// target_give not yet supported; maybe later
 			print("removed targeted ", this.classname, "\n");
-			startitem_failed = true;
 			delete(this);
 			return;
 		}
@@ -1192,7 +1194,6 @@ void StartItem(entity this, entity def)
 	// call this hook after everything else has been done
 	if (MUTATOR_CALLHOOK(Item_Spawn, this))
 	{
-		startitem_failed = true;
 		delete(this);
 		return;
 	}
@@ -1203,6 +1204,8 @@ void StartItem(entity this, entity def)
 	precache_sound(this.item_pickupsound);
 
 	setItemGroup(this);
+
+	startitem_failed = false;
 }
 
 #define IS_SMALL(def) ((def.instanceOfHealth && def == ITEM_HealthSmall) || (def.instanceOfArmor && def == ITEM_ArmorSmall))
