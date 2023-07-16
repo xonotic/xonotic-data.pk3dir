@@ -976,9 +976,13 @@ void StartItem(entity this, entity def)
 	startitem_failed = false;
 
 	this.item_model_ent = def.m_model;
-	this.item_pickupsound_ent = def.m_sound;
-	if (!this.item_pickupsound)
+
+	if (!this.item_pickupsound_ent)
+		this.item_pickupsound_ent = def.m_sound;
+	if (!this.item_pickupsound && this.item_pickupsound_ent)
 		this.item_pickupsound = Sound_fixpath(this.item_pickupsound_ent);
+	if (this.item_pickupsound == "")
+		LOG_WARNF("No pickup sound set for a %s", this.classname);
 
 	if(def.m_iteminit)
 		def.m_iteminit(def, this);
