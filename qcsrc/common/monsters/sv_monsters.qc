@@ -42,28 +42,17 @@ void monster_dropitem(entity this, entity attacker)
 	if(!this.candrop || !this.monster_loot || !autocvar_g_monsters_drop)
 		return;
 
-	vector org = CENTER_OR_VIEWOFS(this);
 	entity e = spawn();
-	Item_SetLoot(e, true);
-	e.spawnfunc_checked = true;
-
-	e.monster_loot = this.monster_loot;
+	e.itemdef = this.monster_loot;
+	e.origin = CENTER_OR_VIEWOFS(this);
+	e.velocity = randomvec() * 175 + '0 0 325';
+	e.lifetime = max(0, autocvar_g_monsters_drop_time);
 
 	MUTATOR_CALLHOOK(MonsterDropItem, this, e, attacker);
 	e = M_ARGV(1, entity);
 
-	if(e && e.monster_loot)
-	{
-		e.noalign = true;
-		StartItem(e, e.monster_loot);
-		if(startitem_failed || wasfreed(e))
-			return;
-		e.gravity = 1;
-		setorigin(e, org);
-		e.velocity = randomvec() * 175 + '0 0 325';
-		e.item_spawnshieldtime = time + 0.7;
-		SUB_SetFade(e, time + autocvar_g_monsters_drop_time, 1);
-	}
+	if(e && e.itemdef)
+		Item_Initialise(e);
 }
 
 bool monster_facing(entity this, entity targ)

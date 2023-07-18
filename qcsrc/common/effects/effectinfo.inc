@@ -4026,6 +4026,43 @@ SUB(poisonfield) {
 	MY(velocityjitter) = '5.0 5.0 5.0';
 }
 
+// cover small area in dark fog, spawn it once per second
+DEF(darkfield);
+SUB(darkfield) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 50;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x600089";
+	MY(color_max) = "0x000000";
+	MY(count) = 10;
+	MY(gravity) = -0.010000;
+	MY(originjitter) = '333.0 333.0 0.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '5.0 5.0 30.0';
+}
+SUB(darkfield) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 50;
+	MY(color_min) = "0x600089";
+	MY(color_max) = "0x000000";
+	MY(count) = 5;
+	MY(gravity) = -0.001000;
+	MY(originjitter) = '333.0 333.0 0.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+}
+
 // cover small area in icy mist, spawn it once per second
 DEF(icefield);
 SUB(icefield) {

@@ -801,7 +801,7 @@ void havocbot_movetogoal(entity this)
 			{
 				if (IS_DEAD(this.goalcurrent))
 				{
-					IL_EACH(g_items, it.enemy == this.goalcurrent && Item_IsLoot(it),
+					IL_EACH(g_items, it.enemy == this.goalcurrent && ITEM_IS_LOOT(it),
 					{
 						if (vdist(it.origin - this.goalcurrent.death_origin, <, 50))
 						{
@@ -814,7 +814,7 @@ void havocbot_movetogoal(entity this)
 						}
 					});
 				}
-				if (!Item_IsLoot(this.goalcurrent))
+				if (!ITEM_IS_LOOT(this.goalcurrent))
 				{
 					navigation_goalrating_timeout_force(this);
 					return;

@@ -184,7 +184,7 @@ void Item_Show(entity e, int mode)
 
 void Item_Think(entity this)
 {
-	if (Item_IsLoot(this))
+	if (ITEM_IS_LOOT(this))
 	{
 		if (time < this.wait - IT_DESPAWNFX_TIME)
 			this.nextthink = min(time + IT_UPDATE_INTERVAL, this.wait - IT_DESPAWNFX_TIME); // ensuring full time for effects
@@ -675,7 +675,7 @@ bool Item_GiveTo(entity item, entity player)
 void Item_Touch(entity this, entity toucher)
 {
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
-	if (Item_IsLoot(this))
+	if (ITEM_IS_LOOT(this))
 	{
 		if (ITEM_TOUCH_NEEDKILL())
 		{
@@ -700,7 +700,7 @@ void Item_Touch(entity this, entity toucher)
 
 	toucher = M_ARGV(1, entity);
 
-	if (Item_IsExpiring(this))
+	if (ITEM_IS_EXPIRING(this))
 	{
 		this.strength_finished = max(0, this.strength_finished - time);
 		this.invincible_finished = max(0, this.invincible_finished - time);
@@ -711,7 +711,7 @@ void Item_Touch(entity this, entity toucher)
 	bool gave = ITEM_HANDLE(Pickup, this.itemdef, this, toucher);
 	if (!gave)
 	{
-		if (Item_IsExpiring(this))
+		if (ITEM_IS_EXPIRING(this))
 		{
 			// undo what we did above
 			this.strength_finished += time;
@@ -740,7 +740,7 @@ LABEL(pickup)
 		return;
 	}
 
-	if (Item_IsLoot(this))
+	if (ITEM_IS_LOOT(this))
 	{
 		delete(this);
 		return;
@@ -774,7 +774,7 @@ void Item_Reset(entity this)
 {
 	Item_Show(this, !this.state);
 
-	if (Item_IsLoot(this))
+	if (ITEM_IS_LOOT(this))
 	{
 		return;
 	}
@@ -832,7 +832,7 @@ void Item_CopyFields(entity this, entity to)
 {
 	setorigin(to, this.origin);
 	to.spawnflags = this.spawnflags;
-	to.noalign = Item_ShouldKeepPosition(this);
+	to.noalign = ITEM_SHOULD_KEEP_POSITION(this);
 	to.cnt = this.cnt;
 	to.team = this.team;
 	to.spawnfunc_checked = true;
@@ -1009,7 +1009,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	// set item size before we spawn a waypoint or droptofloor or MoveOutOfSolid
 	setsize (this, this.pos1 = def.m_mins, this.pos2 = def.m_maxs);
 
-	if (Item_IsLoot(this))
+	if (ITEM_IS_LOOT(this))
 	{
 		this.reset = RemoveItem;
 
@@ -1029,7 +1029,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		//this.damagedbycontents = true;
 		//IL_PUSH(g_damagedbycontents, this);
 
-		if (Item_IsExpiring(this))
+		if (ITEM_IS_EXPIRING(this))
 		{
 			// if item is worthless after a timer, have it expire then
 			this.nextthink = max(this.strength_finished, this.invincible_finished, this.superweapons_finished);
@@ -1158,7 +1158,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 	if(def.instanceOfWeaponPickup)
 	{
-		if (!Item_IsLoot(this)) // if dropped, colormap is already set up nicely
+		if (!ITEM_IS_LOOT(this)) // if dropped, colormap is already set up nicely
 			this.colormap = 1024; // color shirt=0 pants=0 grey
 		if (!(this.spawnflags & 1024))
 			this.ItemStatus |= ITS_ANIMATE1;
@@ -1211,7 +1211,7 @@ int group_count = 1;
 
 void setItemGroup(entity this)
 {
-	if(!IS_SMALL(this.itemdef) || Item_IsLoot(this))
+	if(!IS_SMALL(this.itemdef) || ITEM_IS_LOOT(this))
 		return;
 
 	FOREACH_ENTITY_RADIUS(this.origin, 120, (it != this) && IS_SMALL(it.itemdef),
@@ -1256,7 +1256,7 @@ void setItemGroupCount()
 
 void target_items_use(entity this, entity actor, entity trigger)
 {
-	if(Item_IsLoot(actor))
+	if(ITEM_IS_LOOT(actor))
 	{
 		EXACTTRIGGER_TOUCH(this, trigger);
 		delete(actor);
@@ -1271,7 +1271,7 @@ void target_items_use(entity this, entity actor, entity trigger)
 		EXACTTRIGGER_TOUCH(this, trigger);
 	}
 
-	IL_EACH(g_items, it.enemy == actor && Item_IsLoot(it),
+	IL_EACH(g_items, it.enemy == actor && ITEM_IS_LOOT(it),
 	{
 		delete(it);
 	});

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-24 07:22+0200\n"
+"POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (Hong Kong) (http://app.transifex.com/team-xonotic/"
@@ -2190,17 +2190,25 @@ msgstr "減速榴彈"
 msgid "Veil grenade"
 msgstr "隱身榴彈"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:102
+#: qcsrc/common/mutators/mutator/nades/nades.inc:99
+msgid "Ammo grenade"
+msgstr "彈藥榴彈"
+
+#: qcsrc/common/mutators/mutator/nades/nades.inc:109
+msgid "Darkness grenade"
+msgstr "暗黑榴彈"
+
+#: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
 msgstr "丟出武器 / 扔榴彈"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:104
+#: qcsrc/common/mutators/mutator/nades/nades.qc:141
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr "^3榴彈^8已啓用，按 ^3%s^8 投擲"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:99
+#: qcsrc/common/mutators/mutator/nades/nades.qh:123
 msgid "Grenade"
 msgstr "榴彈"
 
@@ -2949,7 +2957,7 @@ msgstr "^BG%s^K1 再也遭不住了%s%s"
 #: qcsrc/common/notifications/all.inc:335
 #, c-format
 msgid "^BG%s^K1 is now preserved for centuries to come%s%s"
-msgstr "^BG%s^K1 被埋在土裏去度過下一世紀%s%s"
+msgstr "^BG%s^K1 被埋在土裏見證歷史%s%s"
 
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
@@ -3146,7 +3154,7 @@ msgstr "^BG%s^BG 失去了%s^BG增益！"
 #: qcsrc/common/notifications/all.inc:703
 #, c-format
 msgid "^BGYou dropped the %s^BG buff!"
-msgstr "^BG你丟掉了%s^BG增益！"
+msgstr "^BG你失去了%s^BG增益！"
 
 #: qcsrc/common/notifications/all.inc:382
 #: qcsrc/common/notifications/all.inc:704
@@ -3291,7 +3299,7 @@ msgstr "^TC^TT隊^BG發電機被摧毀"
 
 #: qcsrc/common/notifications/all.inc:417
 msgid "^TC^TT^BG generator spontaneously combusted due to overtime!"
-msgstr "^TC^TT隊^BG發電機因超時而自然燃盡！"
+msgstr "^TC^TT隊^BG發電機在超時後自然燃盡！"
 
 #: qcsrc/common/notifications/all.inc:419
 #, c-format
@@ -3444,15 +3452,13 @@ msgstr "^BG你不被應許更換團隊"
 msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have "
 "^F2Xonotic %s"
-msgstr ""
-"^F4注意：^BG此服務器在運行 ^F1Xonotic %s (beta)^BG，此客户端為 ^F2Xonotic %s"
+msgstr "^F4注意：^BG此服務器是 ^F1Xonotic %s (beta)^BG，你在遊玩 ^F2Xonotic %s"
 
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
 msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"
-msgstr ""
-"^F4注意：^BG此服務器在運行 ^F1Xonotic %s^BG，你的客户端為 ^F2Xonotic %s"
+msgstr "^F4注意：^BG此服務器是 ^F1Xonotic %s^BG，你在遊玩 ^F2Xonotic %s"
 
 #: qcsrc/common/notifications/all.inc:458
 #, c-format
@@ -3460,6 +3466,8 @@ msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
 "the update from ^F3https://xonotic.org^BG!"
 msgstr ""
+"^F4注意: ^F1Xonotic %s^BG 已發佈，但你在遊玩 ^F2Xonotic %s^BG——可到 "
+"^F3https://xonotic.org^BG 下載更新！"
 
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
@@ -3525,7 +3533,7 @@ msgstr "^BG%s^K1 被自己的滅世炸上了天%s%s"
 #: qcsrc/common/notifications/all.inc:472
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的電射槍光束爆破了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的電射槍光束爆破%s%s"
 
 #: qcsrc/common/notifications/all.inc:473
 #, c-format
@@ -3704,7 +3712,7 @@ msgstr "^BG%s^K1 被自己的絕滅火箭炮鏈鋸炸飛了%s%s"
 #: qcsrc/common/notifications/all.inc:507
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用絕滅霰彈槍擊倒%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用絕滅霰彈槍擊殺%s%s"
 
 #: qcsrc/common/notifications/all.inc:508
 #, c-format
@@ -3714,17 +3722,17 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 用步槍狙擊%s%s"
 #: qcsrc/common/notifications/all.inc:509
 #, c-format
 msgid "^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s"
-msgstr "^BG%s%s^K1 死在了 ^BG%s^K1 的步槍彈下%s%s"
+msgstr "^BG%s%s^K1 死於 ^BG%s^K1 的步槍突擊%s%s"
 
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s"
-msgstr "^BG%s%s^K1 沒能逃過 ^BG%s^K1 的步槍彈%s%s"
+msgstr "^BG%s%s^K1 沒能躲過 ^BG%s^K1 的步槍突擊%s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s"
-msgstr "^BG%s%s^K1 沒能逃過 ^BG%s^K1 的步槍攻擊%s%s"
+msgstr "^BG%s%s^K1 沒能躲過 ^BG%s^K1 的步槍%s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
@@ -3744,22 +3752,22 @@ msgstr "^BG%s^K1 試圖把玩跟蹤火箭%s%s"
 #: qcsrc/common/notifications/all.inc:515
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用脈衝槍擊倒%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用脈衝槍擊殺%s%s"
 
 #: qcsrc/common/notifications/all.inc:516
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shockwave%s%s"
-msgstr "^BG%s%s^K1 用脈衝槍把 ^BG%s^K1 搧得再起不能%s%s"
+msgstr "^BG%s%s^K1 用脈衝槍把 ^BG%s^K1 擊倒%s%s"
 
 #: qcsrc/common/notifications/all.inc:517
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用霰彈槍擊倒%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用霰彈槍擊殺%s%s"
 
 #: qcsrc/common/notifications/all.inc:518
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s"
-msgstr "^BG%s%s^K1 用大霰彈槍把 ^BG%s^K1 搧得再起不能%s%s"
+msgstr "^BG%s%s^K1 用大霰彈槍把 ^BG%s^K1 擊倒%s%s"
 
 #: qcsrc/common/notifications/all.inc:519
 #, c-format
@@ -4393,7 +4401,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^K1You aren't allowed to play because you are banned in this server"
-msgstr ""
+msgstr "^K1由於你被此服務器封禁，你不可以加入遊戲"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4585,7 +4593,7 @@ msgid ""
 "^BGAdded ^F4%s^BG to the game!"
 msgstr ""
 "^F2現在是^F4決勝時刻^F2！\n"
-"^BG為遊戲添加了 ^F4%s^BG！"
+"^BG為遊戲延長了 ^F4%s^BG！"
 
 #: qcsrc/common/notifications/all.inc:760
 msgid "^K1In^BG-portal created"
@@ -6208,8 +6216,8 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
-"歡迎來到 Xonotic，請選擇你的語言、輸入玩家名稱以開始。這些選項隨後可以在有關"
-"選項修改。"
+"歡迎來到 Xonotic。 請選擇你的語言、輸入玩家名稱以開始游戏。 這些選項可以隨後"
+"在菜单更改。"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:50
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28

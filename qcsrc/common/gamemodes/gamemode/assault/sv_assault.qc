@@ -255,6 +255,7 @@ int WinningCondition_Assault()
 
 			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
 
+			// in campaign the game ends when the player destroys the objective, there's no second round
 			if(ent.cnt == 1 || autocvar_g_campaign) // this was the second round or the only round in campaign
 			{
 				status = WINNING_YES;
@@ -629,8 +630,9 @@ MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(as, ReadyRestart_Deny)
 {
-	// readyrestart not supported (yet)
-	// it's supported only in campaign mode (single round mode), since campaign requires it
+	// readyrestart not supported
+	// it's allowed only in campaign since the campaign requires readyrestart support
+	// to do so Assault is played in single round mode
 	if (autocvar_g_campaign)
 		return false;
 	return true;

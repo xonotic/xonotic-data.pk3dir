@@ -9,24 +9,24 @@
 # Andrei Stepanov, 2014-2023
 # Andrey P <andrey.pyntikov@gmail.com>, 2016
 # Artem Vorotnikov <artem@vorotnikov.me>, 2015
-# Blueberryy <igory.ygr200@gmail.com>, 2021
-# Blueberryy <igory.ygr200@gmail.com>, 2021
-# Blueberryy <igory.ygr200@gmail.com>, 2021
-# Blueberryy <igory.ygr200@gmail.com>, 2021
+# berry <igory.ygr200@gmail.com>, 2021
+# berry <igory.ygr200@gmail.com>, 2021
+# berry <igory.ygr200@gmail.com>, 2021
+# berry <igory.ygr200@gmail.com>, 2021
 # Lord Canistra <lordcanistra@gmail.com>, 2011
 # Mirio <opivy@hotmail.de>, 2017
 # Nick S <morosophos@teichisma.info>, 2018-2019
 # Simple88, 2016
 # Simple88, 2016
 # Артём Котлубай, 2022
-# Артём Котлубай <artemkotlubai@yandex.ru>, 2022-2023
+# Темак, 2022-2023
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-24 07:22+0200\n"
+"POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артём Котлубай <artemkotlubai@yandex.ru>, 2022-2023\n"
+"Last-Translator: Andrei Stepanov, 2014-2023\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -2225,17 +2225,25 @@ msgstr "Граната-ловушка"
 msgid "Veil grenade"
 msgstr "Маскировочная граната"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:102
+#: qcsrc/common/mutators/mutator/nades/nades.inc:99
+msgid "Ammo grenade"
+msgstr "Боевая граната"
+
+#: qcsrc/common/mutators/mutator/nades/nades.inc:109
+msgid "Darkness grenade"
+msgstr "Граната тьмы"
+
+#: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
 msgstr "бросить оружие/гранату"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:104
+#: qcsrc/common/mutators/mutator/nades/nades.qc:141
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr "^3гранаты^8 включены, нажмите ^3%s^8 для их использования"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:99
+#: qcsrc/common/mutators/mutator/nades/nades.qh:123
 msgid "Grenade"
 msgstr "Граната"
 

@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Delian, 2023
 # 411370735b8ef90fa32c21e58a50941e_d905c03 <7784313cf022f885419b74f26eaf98f3_541595>, 2016-2017
 # Krasimir Mikov, 2022
 # Krasimir Mikov, 2022
@@ -15,9 +16,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-24 07:22+0200\n"
+"POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: ubone <van_ds_ff@mail.bg>, 2016\n"
+"Last-Translator: Delian, 2023\n"
 "Language-Team: Bulgarian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/bg/)\n"
 "Language: bg\n"
@@ -242,7 +243,7 @@ msgstr "Играч %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:202
 msgid "Standard quick menu"
-msgstr ""
+msgstr "Стандартно бързо меню"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:634
 #: qcsrc/client/hud/panel/quickmenu.qc:636
@@ -858,7 +859,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "SCO^играти рундове"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "SCO^score"
@@ -886,11 +887,11 @@ msgstr "SCO^сума"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "Number of survivals"
-msgstr ""
+msgstr "Брой оцелели"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "SCO^survivals"
-msgstr ""
+msgstr "SCO^оцелявания"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "Number of domination points taken (Domination)"
@@ -1147,7 +1148,7 @@ msgstr "Загряване"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr ""
+msgstr "Загрявка: твърде малко играчи"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
@@ -1329,27 +1330,27 @@ msgstr "Режим на игра:"
 
 #: qcsrc/client/main.qc:1448
 msgid "This match supports"
-msgstr ""
+msgstr "Този мач поддържа"
 
 #: qcsrc/client/main.qc:1450
 #, c-format
 msgid "%d players"
-msgstr ""
+msgstr "%d играчи"
 
 #: qcsrc/client/main.qc:1452
 #, c-format
 msgid "%d to %d players"
-msgstr ""
+msgstr "%d до %d играчи"
 
 #: qcsrc/client/main.qc:1454
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "%d играчи максимум "
 
 #: qcsrc/client/main.qc:1456
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "%d играчи минимум"
 
 #: qcsrc/client/main.qc:1461
 msgid "Active modifications:"
@@ -1659,7 +1660,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Survival"
-msgstr ""
+msgstr "Оцеляване"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -1748,7 +1749,7 @@ msgstr "Реактивна раница"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "Fuel"
-msgstr ""
+msgstr "Гориво"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
@@ -2019,7 +2020,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
-msgstr ""
+msgstr "Морски шах"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:699
 msgid "Single Player"
@@ -2068,7 +2069,7 @@ msgstr "Zombie"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:19
 msgid "Ammo"
-msgstr ""
+msgstr "Патрони"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:30
 msgid "Resistance"
@@ -2076,7 +2077,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:41
 msgid "Medic"
-msgstr ""
+msgstr "Медик"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:53
 msgid "Bash"
@@ -2204,17 +2205,25 @@ msgstr ""
 msgid "Veil grenade"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:102
+#: qcsrc/common/mutators/mutator/nades/nades.inc:99
+msgid "Ammo grenade"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nades.inc:109
+msgid "Darkness grenade"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:104
+#: qcsrc/common/mutators/mutator/nades/nades.qc:141
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:99
+#: qcsrc/common/mutators/mutator/nades/nades.qh:123
 msgid "Grenade"
 msgstr "Граната"
 
@@ -2305,11 +2314,11 @@ msgstr "Замръзен!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:11
 msgid "Reviving"
-msgstr ""
+msgstr "Съживяване"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
-msgstr ""
+msgstr "Предмет:"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:15
 msgid "Checkpoint"
@@ -2352,7 +2361,7 @@ msgstr "Изпуснато знаме"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:27
 msgid "White base"
-msgstr ""
+msgstr "Бяла база"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:28
 msgid "Red base"
@@ -2364,15 +2373,15 @@ msgstr "Синя база"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:30
 msgid "Yellow base"
-msgstr ""
+msgstr "Жълта база"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
 msgid "Pink base"
-msgstr ""
+msgstr "Розова база"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:32
 msgid "Return flag here"
-msgstr ""
+msgstr "Върнете знамето тук"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:34
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:35
@@ -2416,7 +2425,7 @@ msgstr "Притежател на топката"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:55
 msgid "Leader"
-msgstr ""
+msgstr "Лидер"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:58
 msgid "Goal"
@@ -2887,7 +2896,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
 msgid "^BG%s^K1 was smashed by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 бе премазан от Голем%s%s"
 
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
@@ -3828,7 +3837,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:542
 msgid "^F4You are now alone!"
-msgstr ""
+msgstr "^F4Вие сте сам сега!"
 
 #: qcsrc/common/notifications/all.inc:544
 msgid "^BGYou are attacking!"
@@ -4161,7 +4170,7 @@ msgstr "^K1Станахте твърде хрупкав!"
 
 #: qcsrc/common/notifications/all.inc:647
 msgid "^K1You fragged yourself!"
-msgstr ""
+msgstr "^K1Вие се самоубихте!"
 
 #: qcsrc/common/notifications/all.inc:647
 msgid "^K1You need to be more careful!"
@@ -5280,7 +5289,7 @@ msgstr ""
 
 #: qcsrc/common/util.qc:1449
 msgid "<UNKNOWN KEYNUM>"
-msgstr ""
+msgstr "<UNKNOWN KEYNUM>"
 
 #: qcsrc/common/util.qc:1454
 msgid "TAB"
@@ -5623,12 +5632,12 @@ msgstr ""
 #: qcsrc/common/util.qc:1582
 #, c-format
 msgid "LEFT"
-msgstr ""
+msgstr "ЛЯВО"
 
 #: qcsrc/common/util.qc:1583
 #, c-format
 msgid "RIGHT"
-msgstr ""
+msgstr "ДЯСНО"
 
 #: qcsrc/common/util.qc:1589
 #, c-format
@@ -5638,7 +5647,7 @@ msgstr ""
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 #, c-format
 msgid "Press %s"
-msgstr ""
+msgstr "Натиснете %s"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:956
 msgid "No right gunner!"
@@ -5686,7 +5695,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/blaster.qh:20
 msgid "Blaster"
-msgstr ""
+msgstr "Бластер"
 
 #: qcsrc/common/weapons/weapon/crylink.qh:20
 msgid "Crylink"
@@ -5964,7 +5973,7 @@ msgstr "%dти"
 
 #: qcsrc/lib/oo.qh:336
 msgid "No description"
-msgstr ""
+msgstr "Без описание"
 
 #: qcsrc/lib/string.qh:186
 #, c-format
@@ -6054,15 +6063,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:147
 msgid "Translators"
-msgstr ""
+msgstr "Преводачи"
 
 #: qcsrc/menu/xonotic/credits.qc:149
 msgid "Asturian"
-msgstr ""
+msgstr "Астурски"
 
 #: qcsrc/menu/xonotic/credits.qc:154
 msgid "Belarusian"
-msgstr ""
+msgstr "Белоруски"
 
 #: qcsrc/menu/xonotic/credits.qc:157
 msgid "Bulgarian"
@@ -6070,15 +6079,15 @@ msgstr "Български"
 
 #: qcsrc/menu/xonotic/credits.qc:166
 msgid "Chinese (China)"
-msgstr ""
+msgstr "Китайски (Китай)"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "Китайски (Хонг Конг)"
 
 #: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
-msgstr ""
+msgstr "Китайски (Тайван)"
 
 #: qcsrc/menu/xonotic/credits.qc:200
 msgid "Czech"
@@ -6086,15 +6095,15 @@ msgstr "Чешки"
 
 #: qcsrc/menu/xonotic/credits.qc:210
 msgid "Dutch"
-msgstr ""
+msgstr "Нидерландски"
 
 #: qcsrc/menu/xonotic/credits.qc:218
 msgid "English (Australia)"
-msgstr ""
+msgstr "Английски (Австралия)"
 
 #: qcsrc/menu/xonotic/credits.qc:224
 msgid "Finnish"
-msgstr ""
+msgstr "Фински"
 
 #: qcsrc/menu/xonotic/credits.qc:235
 msgid "French"
@@ -6114,11 +6123,11 @@ msgstr "Унгарски"
 
 #: qcsrc/menu/xonotic/credits.qc:275
 msgid "Indonesian"
-msgstr ""
+msgstr "Индонезийски"
 
 #: qcsrc/menu/xonotic/credits.qc:280
 msgid "Irish"
-msgstr ""
+msgstr "Ирландски"
 
 #: qcsrc/menu/xonotic/credits.qc:283
 msgid "Italian"
@@ -6126,11 +6135,11 @@ msgstr "Италиански"
 
 #: qcsrc/menu/xonotic/credits.qc:290
 msgid "Japanese"
-msgstr ""
+msgstr "Японски"
 
 #: qcsrc/menu/xonotic/credits.qc:298
 msgid "Kazakh"
-msgstr ""
+msgstr "Казахски"
 
 #: qcsrc/menu/xonotic/credits.qc:301
 msgid "Korean"
@@ -6138,7 +6147,7 @@ msgstr "Корейски"
 
 #: qcsrc/menu/xonotic/credits.qc:307
 msgid "Latin"
-msgstr ""
+msgstr "Латински"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Polish"
@@ -6146,11 +6155,11 @@ msgstr "Полски"
 
 #: qcsrc/menu/xonotic/credits.qc:330
 msgid "Portuguese"
-msgstr ""
+msgstr "Португалски"
 
 #: qcsrc/menu/xonotic/credits.qc:339
 msgid "Portuguese (Brazil)"
-msgstr ""
+msgstr "Португалски (Бразилия)"
 
 #: qcsrc/menu/xonotic/credits.qc:345
 msgid "Romanian"
@@ -6170,11 +6179,11 @@ msgstr "Испански"
 
 #: qcsrc/menu/xonotic/credits.qc:394
 msgid "Swedish"
-msgstr ""
+msgstr "Шведски"
 
 #: qcsrc/menu/xonotic/credits.qc:399
 msgid "Turkish"
-msgstr ""
+msgstr "Турски"
 
 #: qcsrc/menu/xonotic/credits.qc:409
 msgid "Ukrainian"
@@ -6288,7 +6297,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:42
 msgid "Main menu"
-msgstr ""
+msgstr "Главно меню"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:45
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
@@ -6312,12 +6321,12 @@ msgstr "Контроли"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:56
 msgid "Quick menu"
-msgstr ""
+msgstr "Бързо меню"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
 #: qcsrc/menu/xonotic/dialog_welcome.qc:133
 msgid "Spectate"
-msgstr ""
+msgstr "Наблюдаване"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qh:8
 msgid "Game menu"
@@ -7080,7 +7089,7 @@ msgstr "Y:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:144
 msgid "Center line"
-msgstr ""
+msgstr "Централна линия"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:145
 #, c-format
@@ -7193,7 +7202,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
 #, c-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d минути"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:85
 msgid "TIMLIM^Default"
@@ -7206,7 +7215,7 @@ msgstr "1 минута"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:103
 msgid "TIMLIM^Infinite"
-msgstr ""
+msgstr "TIMLIM^безкрайно"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
 msgid "Teams:"
@@ -7214,15 +7223,15 @@ msgstr "Отбори:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
 msgid "2 teams"
-msgstr ""
+msgstr "2 отбора"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
 msgid "3 teams"
-msgstr ""
+msgstr "3 отбора"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:116
 msgid "4 teams"
-msgstr ""
+msgstr "4 отбора"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
 msgid "Player slots:"
@@ -7393,7 +7402,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:130
 msgid "All players are almost invisible"
-msgstr ""
+msgstr "Всички играчи са почти невидими"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:134
 msgid ""
@@ -7507,7 +7516,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:251
 msgid "with blaster"
-msgstr ""
+msgstr "с бластер"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:252
 msgid "Always carry the blaster as an additional weapon in Nix"
@@ -7651,7 +7660,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:213
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
@@ -8203,7 +8212,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decreasing"
-msgstr ""
+msgstr "Намаляване"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increase pitch with more damage"
@@ -8211,7 +8220,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increasing"
-msgstr ""
+msgstr "Повишаване"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:159
 msgid "Chat message sound"
@@ -8259,11 +8268,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:180
 msgid "Sometimes"
-msgstr ""
+msgstr "Понякога"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:181
 msgid "Often"
-msgstr ""
+msgstr "Често"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:188
 msgid "Debug info about sounds"
@@ -8347,23 +8356,23 @@ msgstr "Детайли за играча:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:79
 msgid "PDET^Low"
-msgstr ""
+msgstr "PDET^Ниско"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:80
 msgid "PDET^Medium"
-msgstr ""
+msgstr "PDET^Средно"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:81
 msgid "PDET^Normal"
-msgstr ""
+msgstr "PDET^Нормално"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:82
 msgid "PDET^Good"
-msgstr ""
+msgstr "PDET^Добро"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:83
 msgid "PDET^Best"
-msgstr ""
+msgstr "PDET^Най-добро"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:87
 msgid "Texture resolution:"
@@ -8409,7 +8418,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Show sky"
-msgstr ""
+msgstr "Покажи небе"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
 msgid "Show surfaces"
@@ -8675,7 +8684,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:81
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:97
 msgid "Size:"
-msgstr ""
+msgstr "Големина:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:64
 msgid "By health"
@@ -8896,11 +8905,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:47
 msgid "Target"
-msgstr ""
+msgstr "Цел"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:48
 msgid "Attacker"
-msgstr ""
+msgstr "Нападател"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:49
 msgid "SPREES^Both"
@@ -8982,7 +8991,7 @@ msgstr "Съобщения"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:30
 msgid "Items"
-msgstr ""
+msgstr "Предмети"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:32
 msgid "Use simple 2D images instead of item models"
@@ -8994,15 +9003,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:37
 msgid "Unavailable color:"
-msgstr ""
+msgstr "Неналичен цвят:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:39
 msgid "GHOITEMS^Black"
-msgstr ""
+msgstr "GHOITEMS^Черно"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:40
 msgid "GHOITEMS^Dark"
-msgstr ""
+msgstr "GHOITEMS^Тъмно"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:41
 msgid "GHOITEMS^Tinted"
@@ -9010,11 +9019,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:42
 msgid "GHOITEMS^Normal"
-msgstr ""
+msgstr "GHOITEMS^Нормално"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:43
 msgid "GHOITEMS^Blue"
-msgstr ""
+msgstr "GHOITEMS^Синьо"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
 #: qcsrc/menu/xonotic/serverlist.qc:758
@@ -9172,7 +9181,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:105
 msgid "VZOOM^Factor"
-msgstr ""
+msgstr "VZOOM^Коефициент"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:112
 msgid "Display reticle 2D overlay while zooming"
@@ -9283,7 +9292,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:58
 msgid "Mouse"
-msgstr ""
+msgstr "Мишка"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:60
 msgid "Sensitivity:"
@@ -9380,7 +9389,7 @@ msgstr "Потребителски клавиш"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:12
 #, c-format
 msgid "%d fps"
-msgstr ""
+msgstr "%d fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
 #, c-format
@@ -9990,11 +9999,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:46
 msgid "jetpack"
-msgstr ""
+msgstr "реактивна раница"
 
 #: qcsrc/menu/xonotic/keybinder.qc:49
 msgid "Attacking"
-msgstr ""
+msgstr "Атакуване"
 
 #: qcsrc/menu/xonotic/keybinder.qc:55
 msgid "WEAPON^previous"
@@ -10046,11 +10055,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:96
 msgid "Communication"
-msgstr ""
+msgstr "Комуникация"
 
 #: qcsrc/menu/xonotic/keybinder.qc:97
 msgid "public chat"
-msgstr ""
+msgstr "публичен чат"
 
 #: qcsrc/menu/xonotic/keybinder.qc:98
 msgid "team chat"
@@ -10062,11 +10071,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:100
 msgid "vote YES"
-msgstr ""
+msgstr "гласувайте ДА"
 
 #: qcsrc/menu/xonotic/keybinder.qc:101
 msgid "vote NO"
-msgstr ""
+msgstr "гласувайте НЕ"
 
 #: qcsrc/menu/xonotic/keybinder.qc:105
 msgid "Client"
@@ -10094,7 +10103,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:124
 msgid "quick menu"
-msgstr ""
+msgstr "бързо меню"
 
 #: qcsrc/menu/xonotic/keybinder.qc:126
 msgid "scoreboard user interface"
@@ -10126,7 +10135,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
-msgstr ""
+msgstr "Спрете демото"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"
@@ -10134,11 +10143,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:18
 msgid "Leave singleplayer"
-msgstr ""
+msgstr "Напуснете самостоятелната игра"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:20
 msgid "Leave multiplayer"
-msgstr ""
+msgstr "Напуснете мрежовата игра"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current campaign level"
@@ -10301,27 +10310,27 @@ msgstr "%s dB"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:14
 msgid "PART^OMG"
-msgstr ""
+msgstr "PART^ОМГ"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:15
 msgid "PARTQUAL^Low"
-msgstr ""
+msgstr "PARTQUAL^Ниско"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:16
 msgid "PARTQUAL^Medium"
-msgstr ""
+msgstr "PARTQUAL^Средно"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:17
 msgid "PARTQUAL^Normal"
-msgstr ""
+msgstr "PARTQUAL^Нормално"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:18
 msgid "PARTQUAL^High"
-msgstr ""
+msgstr "PARTQUAL^Високо"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:19
 msgid "PARTQUAL^Ultra"
-msgstr ""
+msgstr "PARTQUAL^Ултра"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:20
 msgid "PARTQUAL^Ultimate"
@@ -10339,19 +10348,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "FADESPEED^Slow"
-msgstr ""
+msgstr "FADESPEED^Бавно"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "FADESPEED^Normal"
-msgstr ""
+msgstr "FADESPEED^Нормално"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "FADESPEED^Fast"
-msgstr ""
+msgstr "FADESPEED^Бързо"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "FADESPEED^Instant"
-msgstr ""
+msgstr "FADESPEED^Моментално"
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
@@ -10412,7 +10421,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:104
 msgid "Last match:"
-msgstr ""
+msgstr "Последен мач:"
 
 #: qcsrc/menu/xonotic/statslist.qc:111
 msgid "Time played:"
@@ -10454,7 +10463,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:215
 msgid "Rank:"
-msgstr ""
+msgstr "Ранк:"
 
 #: qcsrc/menu/xonotic/statslist.qc:222
 msgid "Percentile:"
