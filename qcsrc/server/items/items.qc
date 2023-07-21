@@ -679,6 +679,7 @@ void Item_Touch(entity this, entity toucher)
 	{
 		if (ITEM_TOUCH_NEEDKILL())
 		{
+			this.SendFlags |= ISF_REMOVEFX;
 			RemoveItem(this);
 			return;
 		}
@@ -742,7 +743,8 @@ LABEL(pickup)
 
 	if (ITEM_IS_LOOT(this))
 	{
-		delete(this);
+		this.SendFlags |= ISF_REMOVEFX;
+		RemoveItem(this);
 		return;
 	}
 	if (!this.spawnshieldtime)
@@ -847,7 +849,16 @@ void RemoveItem(entity this)
 	if(wasfreed(this) || !this) { return; }
 	if(this.waypointsprite_attached)
 		WaypointSprite_Kill(this.waypointsprite_attached);
-	delete(this);
+
+	if (this.SendFlags & ISF_REMOVEFX)
+	{
+		// delay removal until ISF_REMOVEFX has been sent
+		setthink(this, RemoveItem);
+		this.nextthink = time + 2 * autocvar_sys_ticrate; // micro optimisation: next frame will be too soon
+		this.solid = SOLID_NOT; // untouchable
+	}
+	else
+		delete(this);
 }
 
 // pickup evaluation functions

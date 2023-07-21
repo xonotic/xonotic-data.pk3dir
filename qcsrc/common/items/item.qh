@@ -38,6 +38,7 @@ const int IT_SPEED						= BIT(13);
 const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
 
 // item networking
+const int ISF_REMOVEFX          = BIT(0); // technically unnecessary (after the kludge in Item_Think() is reverted), but cheaper and cleaner than using ITS_AVAILABLE
 const int ISF_LOCATION          = BIT(1);
 const int ISF_MODEL             = BIT(2);
 const int ISF_STATUS            = BIT(3);
