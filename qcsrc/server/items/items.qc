@@ -36,6 +36,24 @@ bool ItemSend(entity this, entity to, int sf)
 	else
 		sf &= ~ISF_DROP;
 
+	// if this item is being spawned (in CSQC's perspective)
+	// reuse ISF_SIZE and ISF_SIZE2 to also tell CSQC its bbox size
+	if(sf & ISF_SIZE)
+	{
+		if(this.maxs == ITEM_S_MAXS) // Small
+		{
+			sf |= ISF_SIZE;
+			sf &= ~ISF_SIZE2;
+		}
+		else if(this.maxs == ITEM_L_MAXS) // Large
+		{
+			sf &= ~ISF_SIZE;
+			sf |= ISF_SIZE2;
+		}
+		else // Default
+			sf |= ISF_SIZE | ISF_SIZE2;
+	}
+
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_ITEM);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -50,13 +68,10 @@ bool ItemSend(entity this, entity to, int sf)
 		WriteAngleVector(MSG_ENTITY, this.angles);
 	}
 
-	// sets size on the client, unused on server
-	//if(sf & ISF_SIZE)
-
 	if(sf & ISF_STATUS)
 		WriteByte(MSG_ENTITY, this.ItemStatus);
 
-	if(sf & ISF_MODEL)
+	if(sf & ISF_SIZE || sf & ISF_SIZE2) // always true when it's spawned (in CSQC's perspective)
 	{
 		WriteShort(MSG_ENTITY, bound(0, this.fade_end, 32767));
 
