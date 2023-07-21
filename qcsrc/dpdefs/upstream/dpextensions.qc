@@ -2665,5 +2665,5 @@ float(entity ent) nudgeoutofsolid = #567;
 //Note: makes only one tracebox call if the entity isn't stuck, so don't call tracebox just to see if you should call nudgeoutofsolid.
 
 
-// bones_was_here: commented as QC wants to use this but we still need to support div0-stable:
+// bones_was_here: commented as GMQCC wants to use this but we still need to support div0-stable:
 //float(float dividend, float divisor) mod = #245;
