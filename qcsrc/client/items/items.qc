@@ -215,9 +215,6 @@ void ItemDraw(entity this)
 
 void ItemRemove(entity this)
 {
-	if(this.alpha)
-	if(!this.wait || time < this.wait - ticrate) // despawning loot items have their own effects
-		pointparticles(EFFECT_ITEM_PICKUP, (this.absmin + this.absmax) * 0.5, '0 0 0', 1);
 	strfree(this.mdl);
 }
 
@@ -290,6 +287,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 			IL_PUSH(g_drawables, this);
 			this.draw = ItemDraw;
 			this.flags |= FL_ITEM;
+			this.entremove = ItemRemove;
 		}
 
 		this.fade_end = ReadShort();
@@ -325,7 +323,16 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		SET_ONGROUND(this); // extra overkill
 	}
 
-	this.entremove = ItemRemove;
+	if(sf & ISF_REMOVEFX && !(sf & ISF_SIZE) && !(sf & ISF_MODEL)) // TODO !isnew isn't reliable for this... are we double sending initialisations?
+	{
+		// no longer available to pick up, about to be removed
+		if (this.drawmask) // this.alpha > 0
+			pointparticles(EFFECT_ITEM_PICKUP, (this.absmin + this.absmax) * 0.5, '0 0 0', 1);
+		// removing now causes CSQC_Ent_Remove() to spam
+		this.drawmask = 0;
+		IL_REMOVE(g_drawables, this);
+		this.solid = SOLID_NOT;
+	}
 
 	return true;
 }
