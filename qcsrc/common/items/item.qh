@@ -40,7 +40,7 @@ const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPER
 // item networking
 const int ISF_REMOVEFX          = BIT(0); // technically unnecessary (after the kludge in Item_Think() is reverted), but cheaper and cleaner than using ITS_AVAILABLE
 const int ISF_LOCATION          = BIT(1);
-const int ISF_MODEL             = BIT(2);
+const int ISF_SIZE2             = BIT(2);
 const int ISF_STATUS            = BIT(3);
 const int ISF_COLORMAP          = BIT(4);
 const int ISF_DROP              = BIT(5);
