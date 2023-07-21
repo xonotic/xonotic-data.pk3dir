@@ -5,6 +5,7 @@
 # Translators:
 # c2e331a438add123670fbf39846b5de3_8c31b08 <d7888a78469511cd116b0058dd23f760_811520>, 2021
 # Ákos RUSZKAI, 2012
+# Barnabás Klemens, 2023
 # c2e331a438add123670fbf39846b5de3_8c31b08 <d7888a78469511cd116b0058dd23f760_811520>, 2021
 # divVerent <divVerent@gmail.com>, 2011
 # divVerent <divVerent@gmail.com>, 2011
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: MmAaXx500 <viktor.balogh2000@gmail.com>, 2018\n"
+"Last-Translator: Barnabás Klemens, 2023\n"
 "Language-Team: Hungarian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/hu/)\n"
 "Language: hu\n"
@@ -39,7 +40,7 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr ""
+msgstr "^1Nem lehet írni  %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
