@@ -1082,11 +1082,19 @@ void StartItem(entity this, entity def)
 		if(this.angles != '0 0 0')
 			this.SendFlags |= ISF_ANGLES;
 
-		if(q3compat && !this.team)
+		if(q3compat)
 		{
-			string t = GetField_fullspawndata(this, "team");
-			// bones_was_here: this hack is cheaper than changing to a .string strcmp()
-			if(t) this.team = crc16(false, t);
+			if (!this.team)
+			{
+				string t = GetField_fullspawndata(this, "team");
+				// bones_was_here: this hack is cheaper than changing to a .string strcmp()
+				if(t) this.team = crc16(false, t);
+			}
+
+			// In Q3 the origin is in the middle of the bbox ("radius" 15), in Xon it's at the bottom
+			// so we need to offset vertically (only for items placed by the mapper).
+			this.origin.z += -15 - this.mins.z;
+			setorigin(this, this.origin);
 		}
 
 		// it's a level item
