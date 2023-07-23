@@ -6,6 +6,7 @@
 # c2e331a438add123670fbf39846b5de3_8c31b08 <d7888a78469511cd116b0058dd23f760_811520>, 2021
 # Ákos RUSZKAI, 2012
 # Barnabás Klemens, 2023
+# Barnabás Klemens, 2023
 # c2e331a438add123670fbf39846b5de3_8c31b08 <d7888a78469511cd116b0058dd23f760_811520>, 2021
 # divVerent <divVerent@gmail.com>, 2011
 # divVerent <divVerent@gmail.com>, 2011
@@ -34,35 +35,34 @@ msgstr ""
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
 msgstr ""
-"^2Sikeresen exportálva %s fájlba! (Megjegyzés: a data/data/ könyvtárba lett "
-"mentve)"
+"^2Sikeresen exportálva ide: %s! (Megjegyzés: A data/data/-fájlba lett mentve)"
 
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr "^1Nem lehet írni  %s"
+msgstr "^1Nem lehet ide írni: %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
 msgid "Title at %s"
-msgstr "Cím a(z) %s elérési úton."
+msgstr "Cím itt: %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3Visszaszámlálási üzenet ekkor: %s, ^COUNT-másodperc van hátra"
 
 #: qcsrc/client/hud/panel/centerprint.qc:204
 #, c-format
 msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
-msgstr "^1Többsoros üzenet %s-kor, ami ^BOLDtovább tart, mint a normális érték"
+msgstr "^1Többsoros üzenet ekkor:%s, ami ^BOLDtovább tart, mint a normális"
 
 #: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
 msgid "Message at time %s"
-msgstr "Üzenet %s-kor"
+msgstr "Üzenet ekkor:%s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:211
 msgid "Generic message"
@@ -71,7 +71,7 @@ msgstr "Átlagos üzenet"
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
-msgstr "játszik ellene:"
+msgstr "szemben velük:"
 
 #: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
@@ -89,23 +89,22 @@ msgstr "^1Néző"
 #: qcsrc/client/hud/panel/infomessages.qc:94
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr "^7%s^1-t nézed és követed"
+msgstr "^1Éppen őt figyeled: ^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Nyomd meg a ^3%s^1 gombot, hogy nézőként lépj be!"
+msgstr "^1Nyomj ^3%s^1-t hogy megfigyelj"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #: qcsrc/menu/xonotic/keybinder.qc:50
 msgid "primary fire"
-msgstr "Elsődleges tüzelés"
+msgstr "Elsődleges fegyver"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr ""
-"^1Használd a ^3%s^1 vagy ^3%s^1 gombokat a következő vagy előző játékoshoz"
+msgstr "^1Nyomj ^3%s^1-t, vagy ^3%s^1-t a következő, vagy az előző játékoshoz"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/client/hud/panel/infomessages.qc:111
@@ -120,12 +119,15 @@ msgstr "előző fegyver"
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr "^1Használd a ^3%s^1 vagy ^3%s^1 gombokat a sebesség változtatásához!"
+msgstr ""
+"^1Használd a/az ^3%s^1 vagy a/az ^3%s^1 gombokat a sebesség változtatásához"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
 msgstr ""
+"^1Nyomj ^3%s^1 -t, hogy megfigyelj, ^3%s^1-t, hogy megváltoztasd a "
+"kameramódot"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/client/hud/panel/infomessages.qc:115
@@ -136,17 +138,17 @@ msgstr "fegyver eldobása"
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/menu/xonotic/keybinder.qc:51
 msgid "secondary fire"
-msgstr "Másodlagos tüzelés"
+msgstr "Másodlagos fegyver"
 
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr "^1Nyomd meg a ^3%s^1 gombot a kameramód-váltáshoz."
+msgstr "^1Nyomj ^3%s^1-t a kameramód-váltáshoz"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^1Nyomd meg a ^3%s^1 gombot a játékmód információkért!"
+msgstr "^1Nyomj ^3%s^1-t a játékmód információkért"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #: qcsrc/menu/xonotic/keybinder.qc:106
@@ -156,7 +158,7 @@ msgstr "szerver információ"
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^1Nyomd meg a ^3%s^1 gombot a játékba való belépéshez!"
+msgstr "^1Nyomj ^3%s^1-t a játékba való belépéshez"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130 qcsrc/client/main.qc:1409
 #: qcsrc/common/notifications/all.qh:442
@@ -166,7 +168,7 @@ msgstr "ugrás"
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr "^1A játék ^3%d^1 másodpercen belül elkezdődik!"
+msgstr "^1A játék ^3%d^1 másodpercen belül elkezdődik"
 
 #: qcsrc/client/hud/panel/infomessages.qc:151
 msgid "^2Currently in ^1warmup^2 stage!"
@@ -174,17 +176,17 @@ msgstr "^2Jelenleg ^1BEMELEGÍTÉS^7 zajlik!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:163
 msgid "^31^2 more player is needed for the match to start."
-msgstr "^31^2 több játékosra van szükség, hogy a játék elkezdődhessen."
+msgstr "^31^2-al több játékosra van szükség, hogy a játék elkezdődhessen."
 
 #: qcsrc/client/hud/panel/infomessages.qc:165
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr "^31%d^2 több játékosra van szükség, hogy a játék elkezdődhessen."
+msgstr "^31%d^2-al több játékosra van szükség, hogy a játék elkezdődhessen."
 
 #: qcsrc/client/hud/panel/infomessages.qc:173
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr "%s, kérlek nyomd meg a ^3%s%s gombot a bemelegítés befejezéséhez!"
+msgstr "%sNyomj ^3%s%s-t a bemelegítés befejezéséhez"
 
 #: qcsrc/client/hud/panel/infomessages.qc:173
 #: qcsrc/client/hud/panel/infomessages.qc:178
@@ -199,7 +201,7 @@ msgstr "^2Várakozás a többiekre, hogy befejezzék a bemelegítést..."
 #: qcsrc/client/hud/panel/infomessages.qc:178
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr "^2Nyomd meg a ^3%s^2 gombot a bemelegítés befejezéséhez!"
+msgstr "^2Nyomj ^3%s^2-t a bemelegítés befejezéséhez"
 
 #: qcsrc/client/hud/panel/infomessages.qc:200
 msgid "Teamnumbers are unbalanced!"
@@ -208,28 +210,28 @@ msgstr "A csapatok egyenlőtlenül vannak elosztva!"
 #: qcsrc/client/hud/panel/infomessages.qc:203
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr " Nyomd meg a ^3%s%s gombot a kiegyenlítéshez!"
+msgstr " Nyomj ^3%s%s-t a kiegyenlítéshez"
 
 #: qcsrc/client/hud/panel/infomessages.qc:203
 #: qcsrc/menu/xonotic/keybinder.qc:117
 msgid "team selection"
-msgstr "Válassz csapatot!"
+msgstr "csapat választás"
 
 #: qcsrc/client/hud/panel/infomessages.qc:213
 msgid "^1Spectating this player:"
-msgstr "^1Ezt a játékost követed::"
+msgstr "^1Ezt a játékost követed:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:213
 msgid "^1Spectating you:"
-msgstr "^1Téged követnek:"
+msgstr "^1Ők figyelnek téged:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:229
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7Nyomd meg az ^3ESC^7 gombot a HUD beállításának lehetőségeihez!"
+msgstr "^7Nyomj ^3ESC^7-t a HUD beállításának lehetőségeihez."
 
 #: qcsrc/client/hud/panel/infomessages.qc:230
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr "^3Kattints duplán^7 egy panelre a panel-specifikus beállításokhoz!"
+msgstr "^3Kattints duplán^7 egy panelre a panel-specifikus beállításokhoz."
 
 #: qcsrc/client/hud/panel/infomessages.qc:231
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -10470,13 +10472,15 @@ msgstr "MapInfo készítése az újonnan hozzáadott pályákhoz..."
 #: qcsrc/menu/xonotic/util.qc:553
 #, c-format
 msgid "Update to %s now!"
-msgstr "Frissítés %s-re/ra!"
+msgstr "Frissíts %s-re/ra azonnal!"
 
 #: qcsrc/menu/xonotic/util.qc:638
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
 msgstr ""
+"^1HIBA: A textúra tömörítése szükséges, de nem támogatott.\n"
+"^1Vizuális problémákra számíthat."
 
 #: qcsrc/menu/xonotic/util.qc:772
 msgid "Use default"
