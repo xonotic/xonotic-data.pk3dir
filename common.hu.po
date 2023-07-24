@@ -94,17 +94,19 @@ msgstr "^1Éppen őt figyeled: ^7%s"
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Nyomj ^3%s^1-t hogy megfigyelj"
+msgstr "^1Nyomd meg a(z) ^3%s^1 gombot, hogy figyelhess"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #: qcsrc/menu/xonotic/keybinder.qc:50
 msgid "primary fire"
-msgstr "Elsődleges fegyver"
+msgstr "elsődleges fegyver"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr "^1Nyomj ^3%s^1-t, vagy ^3%s^1-t a következő, vagy az előző játékoshoz"
+msgstr ""
+"^1Nyomd meg a(z) ^3%s^1 vagy ^3%s^1 gombokat a következő vagy előző "
+"játékoshoz"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/client/hud/panel/infomessages.qc:111
@@ -120,14 +122,14 @@ msgstr "előző fegyver"
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
 msgstr ""
-"^1Használd a/az ^3%s^1 vagy a/az ^3%s^1 gombokat a sebesség változtatásához"
+"^1Használd a(z) ^3%s^1 vagy a ^3%s^1 gombokat a sebesség változtatásához"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
 msgstr ""
-"^1Nyomj ^3%s^1 -t, hogy megfigyelj, ^3%s^1-t, hogy megváltoztasd a "
-"kameramódot"
+"^1Nyomd me a(z) ^3%s^1 gombot hogy megfigyelj, vagy a(z) ^3%s^1 gombot, hogy "
+"megváltoztasd a kameramódot"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/client/hud/panel/infomessages.qc:115
@@ -138,17 +140,17 @@ msgstr "fegyver eldobása"
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/menu/xonotic/keybinder.qc:51
 msgid "secondary fire"
-msgstr "Másodlagos fegyver"
+msgstr "másodlagos fegyver"
 
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr "^1Nyomj ^3%s^1-t a kameramód-váltáshoz"
+msgstr "^1Nyomd meg a(z) ^3%s^1 billentyűt a kameramód-váltáshoz"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^1Nyomj ^3%s^1-t a játékmód információkért"
+msgstr "^1Nyomd meg a(z) ^3%s^1 billentyűt a játékmód információkért"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #: qcsrc/menu/xonotic/keybinder.qc:106
@@ -158,7 +160,7 @@ msgstr "szerver információ"
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^1Nyomj ^3%s^1-t a játékba való belépéshez"
+msgstr "^1Nyomd meg a(z) ^3%s^1 billentyűt a játékba való belépéshez"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130 qcsrc/client/main.qc:1409
 #: qcsrc/common/notifications/all.qh:442
@@ -176,17 +178,17 @@ msgstr "^2Jelenleg ^1BEMELEGÍTÉS^7 zajlik!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:163
 msgid "^31^2 more player is needed for the match to start."
-msgstr "^31^2-al több játékosra van szükség, hogy a játék elkezdődhessen."
+msgstr "Még ^31^2 játékosra van szükség, hogy a játék elkezdődhessen."
 
 #: qcsrc/client/hud/panel/infomessages.qc:165
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr "^31%d^2-al több játékosra van szükség, hogy a játék elkezdődhessen."
+msgstr "Még ^3%d^2 játékosra van szükség, hogy a játék elkezdődhessen."
 
 #: qcsrc/client/hud/panel/infomessages.qc:173
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr "%sNyomj ^3%s%s-t a bemelegítés befejezéséhez"
+msgstr "%sNyomd meg a(z) ^3%s%s gombot  a bemelegítés befejezéséhez"
 
 #: qcsrc/client/hud/panel/infomessages.qc:173
 #: qcsrc/client/hud/panel/infomessages.qc:178
@@ -201,7 +203,7 @@ msgstr "^2Várakozás a többiekre, hogy befejezzék a bemelegítést..."
 #: qcsrc/client/hud/panel/infomessages.qc:178
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr "^2Nyomj ^3%s^2-t a bemelegítés befejezéséhez"
+msgstr "^2Nyomd meg a(z) ^3%s^2 gombot a bemelegítés befejezéséhez"
 
 #: qcsrc/client/hud/panel/infomessages.qc:200
 msgid "Teamnumbers are unbalanced!"
@@ -210,7 +212,7 @@ msgstr "A csapatok egyenlőtlenül vannak elosztva!"
 #: qcsrc/client/hud/panel/infomessages.qc:203
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr " Nyomj ^3%s%s-t a kiegyenlítéshez"
+msgstr " Nyomd meg a(z) ^3%s%s gombot a kiegyenlítéshez"
 
 #: qcsrc/client/hud/panel/infomessages.qc:203
 #: qcsrc/menu/xonotic/keybinder.qc:117
@@ -219,7 +221,7 @@ msgstr "csapat választás"
 
 #: qcsrc/client/hud/panel/infomessages.qc:213
 msgid "^1Spectating this player:"
-msgstr "^1Ezt a játékost követed:"
+msgstr "^1Ezt a játékost figyeled:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:213
 msgid "^1Spectating you:"
@@ -227,7 +229,7 @@ msgstr "^1Ők figyelnek téged:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:229
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7Nyomj ^3ESC^7-t a HUD beállításának lehetőségeihez."
+msgstr "^7Nyomd meg az ^3ESC^7 gombot a HUD beállításainak megjelenítéséhez."
 
 #: qcsrc/client/hud/panel/infomessages.qc:230
 msgid "^3Doubleclick ^7a panel for panel-specific options."
@@ -250,7 +252,7 @@ msgstr "Játékos %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:202
 msgid "Standard quick menu"
-msgstr "Starndard gyorsmenü"
+msgstr "Alapvető gyorsmenü"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:634
 #: qcsrc/client/hud/panel/quickmenu.qc:636
@@ -286,7 +288,7 @@ msgstr "QMCMD^szép volt"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^good game"
-msgstr "QMCMD^jó a meccs"
+msgstr "QMCMD^jó mecss"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:822
 msgid "QMCMD^hi / good luck"
@@ -298,7 +300,7 @@ msgstr "QMCMD^helló / sok szerencsét és jó szórakozást"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Írd le Angolul"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:829
 #: qcsrc/client/hud/panel/quickmenu.qc:845
@@ -307,15 +309,15 @@ msgstr "QMCMD^Csapat beszélgetés"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "QMCMD^hamarosan megerősödnek"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^szabad tárgy %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "QMCMD^ingyen tárgy, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:832
 msgid "QMCMD^took item (l:%l^7)"
@@ -327,15 +329,15 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 msgid "QMCMD^negative"
-msgstr ""
+msgstr "QMCMD^negatív"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:834
 msgid "QMCMD^positive"
-msgstr ""
+msgstr "QMCMD^pozitív"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^Segítség (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^need help, icon"
@@ -416,7 +418,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^Send private message to"
-msgstr ""
+msgstr "QMCMD^Küldj privát üzenetet neki:"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 #: qcsrc/client/hud/panel/quickmenu.qc:880
@@ -430,11 +432,11 @@ msgstr "QMCMD^Nézet/HUD beállítások"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^3rd person view"
-msgstr ""
+msgstr "QMCMD^3-dik személy nézet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^Player models like mine"
-msgstr ""
+msgstr "QMCMD^Sajátomhoz hasonló játékos modellek"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "QMCMD^Names above players"
@@ -455,7 +457,7 @@ msgstr "QMCMD^Hálózati grafikon"
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^Sound settings"
-msgstr "Hang beállítások"
+msgstr "QMCMD^Hang-beállítások"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^Hit sound"
@@ -463,16 +465,16 @@ msgstr "QMCMD^Találat hang"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^Chat sound"
-msgstr "QMCMD^Chat hang"
+msgstr "QMCMD^Csevegés hang"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "QMCMD^Változtasd meg a megfigyelési nézetet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:872
 #: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "QMCMD^Observer camera"
-msgstr ""
+msgstr "QMCMD^Megfigyelő kamera"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "QMCMD^Increase speed"
@@ -484,7 +486,7 @@ msgstr "QMCMD^Sebesség csökkentése"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "QMCMD^Falnak ütközés"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "QMCMD^Fullscreen"
@@ -509,7 +511,7 @@ msgstr "QMCMD^Játékidő csökkentése"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:888
 msgid "QMCMD^Extend match time"
-msgstr "QMCMD^Játékidő csökkentése"
+msgstr "QMCMD^Játékidő növelése"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:891
 msgid "QMCMD^Shuffle teams"
@@ -517,42 +519,42 @@ msgstr "QMCMD^Csapatok összekeverése"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Server quick menu"
-msgstr ""
+msgstr "Szerver gyors menü"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:898
 msgid "Waypoint editor menu"
-msgstr ""
+msgstr "Útvonalpontszerkesztő menü"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:901
 msgid "Waypoint editor menu as default"
-msgstr ""
+msgstr "Útvonalpontszerkesztő menü alapvetően"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 msgid "Server quick menu as default"
-msgstr ""
+msgstr "Szerver gyorsmenü alapvetően"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "QMCMD^Egy játékos megfigyelése"
 
 #: qcsrc/client/hud/panel/racetimer.qc:56
 #, c-format
 msgid " (-%dL)"
-msgstr " (-%dR)"
+msgstr " (-%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:61
 #, c-format
 msgid " (+%dL)"
-msgstr " (+%dR)"
+msgstr " (+%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:80
 msgid "Start line"
-msgstr "Start"
+msgstr "Startvonal"
 
 #: qcsrc/client/hud/panel/racetimer.qc:82
 #: qcsrc/client/hud/panel/racetimer.qc:86
 msgid "Finish line"
-msgstr "Cél"
+msgstr "Célvonal"
 
 #: qcsrc/client/hud/panel/racetimer.qc:84
 #: qcsrc/client/hud/panel/racetimer.qc:153
@@ -565,19 +567,19 @@ msgstr "Közepes %d"
 #: qcsrc/client/hud/panel/racetimer.qc:264
 #, c-format
 msgid "PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "Büntetés: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1242
 msgid "missing a checkpoint"
-msgstr ""
+msgstr "hiányzik az ellenőrzőpont"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
-msgstr ""
+msgstr "Kattints a teleportálási cél kiválasztásához"
 
 #: qcsrc/client/hud/panel/radar.qc:343
 msgid "Click to select spawn location"
-msgstr ""
+msgstr "Kattints az újraszületés hely kiválasztásához"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of ball carrier kills"
