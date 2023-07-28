@@ -712,8 +712,9 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(ITEM_WEAPON_UNAVAILABLE,           N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^F1%s^BG is ^F4not available^BG on this map"), "")
 
     MSG_CENTER_NOTIF(JOIN_NOSPAWNS,                     N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K1No spawnpoints available!\nHope your team can fix it..."), "")
-    MSG_CENTER_NOTIF(JOIN_PREVENT,                      N_ENABLE,    0, 1, "f1",             CPID_PREVENT_JOIN,      "0 0",  _("^K1You may not join the game at this time.\nThis match is limited to ^F2%s^BG players."), "")
     MSG_CENTER_NOTIF(JOIN_PLAYBAN,                      N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  BOLD(_("^K1You aren't allowed to play because you are banned in this server")), "")
+    MSG_CENTER_NOTIF(JOIN_PREVENT,                      N_ENABLE,    0, 1, "f1",             CPID_PREVENT_JOIN,      "0 0",  _("^K1You may not join the game at this time.\nThis match is limited to ^F2%s^BG players."), "")
+    MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
 
     MSG_CENTER_NOTIF(KEEPAWAY_DROPPED,                  N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has dropped the ball!"), "")
     MSG_CENTER_NOTIF(KEEPAWAY_PICKUP,                   N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has picked up the ball!"), "")
@@ -797,8 +798,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_CENTER_NOTIF(TIMEOUT_BEGINNING,                 N_ENABLE,    0, 1, "",               CPID_TIMEOUT,           "1 f1", _("^F4Timeout begins in ^COUNT"), "")
     MSG_CENTER_NOTIF(TIMEOUT_ENDING,                    N_ENABLE,    0, 1, "",               CPID_TIMEIN,            "1 f1", _("^F4Timeout ends in ^COUNT"), "")
-
-    MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
 
     MSG_CENTER_NOTIF(VEHICLE_ENTER,                     N_ENABLE,    0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to enter/exit the vehicle"), "")
     MSG_CENTER_NOTIF(VEHICLE_ENTER_GUNNER,              N_ENABLE,    0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to enter the vehicle gunner"), "")
