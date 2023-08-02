@@ -49,6 +49,8 @@ string autocvar_hud_fontsize;
 string hud_fontsize_str;
 float max_namesize;
 
+int total_medals;
+
 float sbt_bg_alpha;
 float sbt_fg_alpha;
 float sbt_fg_alpha_self;
@@ -1510,6 +1512,25 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 	return vec2(item_pos.x, item_pos.y + i * hud_fontsize.y * 1.25);
 }
 
+vector Scoreboard_DrawMedal(vector pos, string icon, float height, float number)
+{
+	if(!number) return pos;
+	total_medals += number;
+
+	vector tmp_sz, tmp_sz2;
+	tmp_sz = draw_getimagesize(icon);
+	tmp_sz2 = vec2(height*(tmp_sz.x/tmp_sz.y), height);
+	string val = ftos(number);
+
+	drawpic(pos, icon, tmp_sz2, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+	pos.x += tmp_sz2.x + hud_fontsize.x * 0.25;
+	drawstring(pos + eY * ((tmp_sz2.y - hud_fontsize.y) / 2), val, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+	pos.x += stringwidth(val, false, hud_fontsize) + hud_fontsize.x * 0.5;
+	return pos;
+}
+
 vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 {
 	int max_players = 999;
@@ -1655,6 +1676,49 @@ bool Scoreboard_WouldDraw()
 	else if (scoreboard_showscores_force || MUTATOR_CALLHOOK(DrawScoreboard_Force))
 		return true;
 	return false;
+}
+
+vector Scoreboard_MedalStats_Draw(vector pos)
+{
+	vector orig = pos;
+	float height = hud_fontsize.y * 2;
+
+	entity pl = playerslots[current_player];
+
+	vector title_pos = pos;
+	pos.x += 0.5 * hud_fontsize.x + panel_bg_padding;
+	pos.y += 1.25 * hud_fontsize.y;
+
+	total_medals = 0;
+
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/airshot", 		height, pl.(scores(SP_MEDAL_AIRSHOT)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/damage", 		height, pl.(scores(SP_MEDAL_DAMAGE)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/electrobitch", 	height, pl.(scores(SP_MEDAL_ELECTROBITCH)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/excellent", 		height, pl.(scores(SP_MEDAL_EXCELLENT)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/firstblood", 	height, pl.(scores(SP_MEDAL_FIRSTBLOOD)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/headshot", 		height, pl.(scores(SP_MEDAL_HEADSHOT)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/humiliation",	height, pl.(scores(SP_MEDAL_HUMILIATION)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/impressive",		height, pl.(scores(SP_MEDAL_IMPRESSIVE)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/yoda", 			height, pl.(scores(SP_MEDAL_YODA)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/telefrag",		height, pl.(scores(SP_MEDAL_TELEFRAG)));
+
+	if(total_medals)
+		pos.x += hud_fontsize.x;
+
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/accuracy", 		height, pl.(scores(SP_MEDAL_ACCURACY)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/assist", 		height, pl.(scores(SP_MEDAL_ASSIST)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/capture", 		height, pl.(scores(SP_MEDAL_CAPTURE)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/defense", 		height, pl.(scores(SP_MEDAL_DEFENSE)));
+	pos = Scoreboard_DrawMedal(pos, "gfx/medal/perfect", 		height, pl.(scores(SP_MEDAL_PERFECT)));
+
+	if(!total_medals) return orig;
+
+	drawstring(title_pos, sprintf(_("Medal stats (total %d)"), total_medals),
+		hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+	pos.x = orig.x;
+	pos.y += height + hud_fontsize.y * 0.5;
+	return pos;
 }
 
 float average_accuracy;
@@ -2516,6 +2580,8 @@ void Scoreboard_Draw()
 		// display it anyway
 		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
 	}
+
+	pos = Scoreboard_MedalStats_Draw(pos);
 
 	// draw scoreboard spectators before accuracy and item stats
 	if (autocvar_hud_panel_scoreboard_spectators_position == 0) {

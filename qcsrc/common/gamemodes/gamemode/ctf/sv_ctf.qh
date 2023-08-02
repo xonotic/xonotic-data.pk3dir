@@ -176,3 +176,5 @@ void havocbot_role_ctf_setrole(entity bot, int role);
 // team checking
 #define CTF_SAMETEAM(a,b) ((autocvar_g_ctf_reverse || (ctf_oneflag && autocvar_g_ctf_oneflag_reverse)) ? DIFF_TEAM(a,b) : SAME_TEAM(a,b))
 #define CTF_DIFFTEAM(a,b) ((autocvar_g_ctf_reverse || (ctf_oneflag && autocvar_g_ctf_oneflag_reverse)) ? SAME_TEAM(a,b) : DIFF_TEAM(a,b))
+#define CTF_IS_NEAR(player, it, extra_size) \
+	boxesoverlap(player.absmin - extra_size, player.absmax + extra_size, it.absmin, it.absmax)

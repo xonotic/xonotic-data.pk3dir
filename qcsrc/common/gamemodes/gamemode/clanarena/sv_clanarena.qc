@@ -44,6 +44,21 @@ void CA_count_alive_players()
 
 void nades_Clear(entity player);
 
+entity ca_LastPlayer(float tm)
+{
+	entity last_pl = NULL;
+	FOREACH_CLIENT(IS_PLAYER(it) && it.team == tm, {
+		if (!IS_DEAD(it))
+		{
+			if (!last_pl)
+				last_pl = it;
+			else
+				return NULL;
+		}
+	});
+	return last_pl;
+}
+
 int CA_PreventStalemate()
 {
 	//LOG_INFO("PreventStalemate running");
@@ -140,11 +155,25 @@ float CA_CheckWinner()
 	if (!winner_team)
 		return 0;
 
+	bool perfect = false;
 	if(winner_team > 0)
 	{
+		// Defense medal: If you won the round alone
+		//entity tm = Team_GetTeam(winner_team);
+		//entity last_pl = ca_LastPlayer(winner_team);
+
+		// TODO : Get number of players in the team
+		//if(last_pl && Team_GetNumberOfPlayers(tm) >= 3) {
+		//	GIVE_MEDAL(last_pl, DEFENSE);
+		//}
+
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_CA_ROUNDS, +1);
+
+		// TODO : Get number of players in the team
+		//if (Team_GetNumberOfPlayers(tm) >= 3 && Team_GetNumberOfAlivePlayers(tm) == Team_GetNumberOfPlayers(tm))
+		//	perfect = true;
 	}
 	else if(winner_team == -1)
 	{
@@ -161,7 +190,16 @@ float CA_CheckWinner()
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
-	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		nades_Clear(it);
+
+		// Give perfect medal if everyone in the winner team is alive
+		if(perfect && it.team == winner_team) {
+			GIVE_MEDAL(it, PERFECT);
+		}
+
+		// TODO : Accuracy medal
+	});
 
 	return 1;
 }

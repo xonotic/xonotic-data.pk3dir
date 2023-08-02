@@ -86,6 +86,21 @@ bool freezetag_CheckTeams()
 void nades_Clear(entity);
 void nades_GiveBonus(entity player, float score);
 
+entity freezetag_LastPlayer(float tm)
+{
+	entity last_pl = NULL;
+	FOREACH_CLIENT(IS_PLAYER(it) && it.team == tm, {
+		if (STAT(FROZEN, it) != FROZEN_NORMAL && GetResource(it, RES_HEALTH) >= 1)
+		{
+			if (!last_pl)
+				last_pl = it;
+			else
+				return NULL;
+		}
+	});
+	return last_pl;
+}
+
 bool freezetag_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
@@ -108,6 +123,12 @@ bool freezetag_CheckWinner()
 
 	if(winner_team > 0)
 	{
+		entity last_pl = freezetag_LastPlayer(winner_team);
+		if(last_pl) {
+			// Defense medal for winning the round alone
+			GIVE_MEDAL(last_pl, DEFENSE);
+		}
+
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_FT_ROUNDS, +1);
@@ -642,6 +663,10 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, revivers_first.netname);
 			Send_Notification(NOTIF_ONE, revivers_first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, revivers_first.netname);
+
+			// Assist medal for reviving a team mate
+			GIVE_MEDAL(revivers_first, ASSIST);
+
 			if(autocvar_sv_eventlog)
 			{
 				string revivers = "";

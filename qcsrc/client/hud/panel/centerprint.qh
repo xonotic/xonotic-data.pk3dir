@@ -18,6 +18,9 @@ float autocvar_hud_panel_centerprint_fontscale_title = 1.8;
 bool autocvar_hud_panel_centerprint_dynamichud = true;
 float autocvar_hud_panel_centerprint_time;
 
+bool autocvar_hud_panel_centerprint_medals = true;
+int autocvar_hud_panel_centerprint_medals_max = 5;
+
 void centerprint_Add(int new_id, string strMessage, float duration, int countdown_num);
 void centerprint_AddStandard(string strMessage);
 void centerprint_Kill(int id);
@@ -26,3 +29,4 @@ void centerprint_KillAll();
 void centerprint_SetDuelTitle(string left, string right);
 void centerprint_SetTitle(string title);
 void centerprint_ClearTitle();
+void centerprint_Medal(string icon, int times);

@@ -25,6 +25,8 @@ ENUMCLASS(MSG)
 	CASE(MSG, CHOICE)
 	/** Kill centerprint message @deprecated */
 	CASE(MSG, CENTER_KILL)
+	/** Medal notification */
+	CASE(MSG, MEDAL)
 ENUMCLASS_END(MSG)
 
 string Get_Notif_TypeName(MSG net_type)
@@ -36,6 +38,7 @@ string Get_Notif_TypeName(MSG net_type)
 		case MSG_CENTER: return "MSG_CENTER";
 		case MSG_MULTI: return "MSG_MULTI";
 		case MSG_CHOICE: return "MSG_CHOICE";
+		case MSG_MEDAL: return "MSG_MEDAL";
 		case MSG_CENTER_KILL: return "MSG_CENTER_KILL";
 	}
 	LOG_WARNF("Get_Notif_TypeName(%d): Improper net type!", ORDINAL(net_type));
@@ -158,6 +161,13 @@ void Create_Notification_Entity_Choice(entity notif,
 										MSG chtype,
 										Notification optiona,
 										Notification optionb);
+
+void Create_Notification_Entity_Medal(entity notif,
+										float var_cvar,
+										string namestring,
+										/* MSG_MEDAL */
+										string icon,
+										Notification anncename);
 
 void Dump_Notifications(int fh, bool alsoprint);
 
@@ -391,6 +401,7 @@ const int NOTIF_QUEUE_MAX = 10;
 entity notif_queue_entity[NOTIF_QUEUE_MAX];
 MSG notif_queue_type[NOTIF_QUEUE_MAX];
 float notif_queue_time[NOTIF_QUEUE_MAX];
+float notif_queue_f1[NOTIF_QUEUE_MAX];
 
 float notif_queue_next_time;
 int notif_queue_length;
@@ -468,9 +479,6 @@ MACRO_END
 	SPREE_ITEM(5, 05, _("RAGE! "), _("%s^K1 unlocked RAGE! %s^BG"), _("%s^K1 made FIVE SCORES IN A ROW! %s^BG")) \
 	SPREE_ITEM(10, 10, _("MASSACRE! "), _("%s^K1 started a MASSACRE! %s^BG"), _("%s^K1 made TEN SCORES IN A ROW! %s^BG")) \
 	SPREE_ITEM(15, 15, _("MAYHEM! "), _("%s^K1 executed MAYHEM! %s^BG"), _("%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(20, 20, _("BERSERKER! "), _("%s^K1 is a BERSERKER! %s^BG"), _("%s^K1 made TWENTY SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(25, 25, _("CARNAGE! "), _("%s^K1 inflicts CARNAGE! %s^BG"), _("%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(30, 30, _("ARMAGEDDON! "), _("%s^K1 unleashes ARMAGEDDON! %s^BG"), _("%s^K1 made THIRTY SCORES IN A ROW! %s^BG"))
 
 #ifdef CSQC
 string notif_arg_frag_ping(bool newline, float fping)
@@ -864,6 +872,18 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 			chtype,                                  /* chtype      */ \
 			optiona,                                 /* optiona     */ \
 			optionb);                                /* optionb     */ \
+	}
+
+#define MSG_MEDAL_NOTIF(name, defaultvalue, icon, anncename) \
+	NOTIF_ADD_AUTOCVAR(MEDAL_##name, defaultvalue) \
+	MSG_MEDAL_NOTIF_(0, MEDAL_##name, MEDAL_##name, defaultvalue, icon, anncename)
+
+#define MSG_MEDAL_NOTIF_(teamnum, name, cvarname, defaultvalue, icon, anncename) \
+	REGISTER(Notifications, name, m_id, new_pure(msg_medal_notification)) { \
+		Create_Notification_Entity      (this, defaultvalue, ACVNN(cvarname), MSG_MEDAL, strtoupper(#name), teamnum); \
+		Create_Notification_Entity_Medal(this, ACVNN(cvarname), strtoupper(#name), \
+			icon, \
+			anncename); \
 	}
 
 REGISTRY_BEGIN(Notifications)
