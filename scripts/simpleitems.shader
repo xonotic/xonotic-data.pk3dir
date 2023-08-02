@@ -466,3 +466,49 @@ g_fuelregen_simple // fuel regen powerup
 		blendfunc blend
 	}
 }
+
+// relic powerups
+
+models/items/g_strength_luma // strength
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_strength_luma
+		blendfunc blend
+	}
+}
+
+models/items/g_invincible_luma // invincible
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_invincible_luma
+		blendfunc blend
+	}
+}
+
+models/items/g_invisibility_luma // invisibility
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_invisibility_luma
+		blendfunc blend
+	}
+}
+
+models/items/g_speed_luma // speed
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_speed_luma
+		blendfunc blend
+	}
+}
