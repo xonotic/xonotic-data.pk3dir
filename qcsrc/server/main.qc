@@ -468,6 +468,32 @@ string GetField_fullspawndata(entity e, string f, ...)
 	return v;
 }
 
+/*
+=============
+FindFileInMapPack
+
+Returns the first matching VFS file path that exists in the current map's pack.
+Returns string_null if no files match or the map isn't packaged.
+=============
+*/
+string FindFileInMapPack(string pattern)
+{
+	if(!checkextension("DP_QC_FS_SEARCH_PACKFILE"))
+		return string_null;
+
+	string base_pack = whichpack(strcat("maps/", mapname, ".bsp"));
+	if(base_pack == "" || !base_pack) // this map isn't packaged or there was an error
+		return string_null;
+
+	int glob = search_packfile_begin(pattern, true, true, base_pack);
+	if(glob < 0)
+		return string_null;
+
+	string file = search_getfilename(glob, 0);
+	search_end(glob);
+	return file;
+}
+
 void WarpZone_PostInitialize_Callback()
 {
 	// create waypoint links for warpzones
