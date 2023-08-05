@@ -45,7 +45,7 @@ bool Item_Initialise(entity item);
 /// \param[in] item Item to check.
 /// \return True if item should keep its position or false if it should be
 /// dropped to the ground.
-#define ITEM_SHOULD_KEEP_POSITION(item) (item.noalign || item.spawnflags & 1)
+#define ITEM_SHOULD_KEEP_POSITION(item) (item.noalign || (item.spawnflags & 1))
 
 /// \brief Returns whether the item is expiring (i.e. its strength, shield and
 /// superweapon timers expire while it is on the ground).

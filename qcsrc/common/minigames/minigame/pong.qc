@@ -703,7 +703,7 @@ int pong_client_event(entity minigame, string event, ...)
 		case "menu_click":
 		{
 			string cmd = ...(0,string);
-			if( cmd == "pong_throw" && minigame.minigame_flags & PONG_STATUS_WAIT )
+			if( cmd == "pong_throw" && ( minigame.minigame_flags & PONG_STATUS_WAIT ) )
 			{
 				minigame_cmd("throw");
 			}
