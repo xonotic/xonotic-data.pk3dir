@@ -1097,6 +1097,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 
 		mintime = fireendtime - time;
 		maxtime = max(mintime, t);
+		LOG_INFOF("^3Fire_AddDamage: player %s: mintime = %f, maxtime = %f\n", e.netname, mintime, maxtime);
 
 		mindps = e.fire_damagepersec;
 		maxdps = max(mindps, dps);
@@ -1170,6 +1171,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 			}
 			if(accuracy_isgooddamage(o, e))
 				accuracy_add(o, DEATH_WEAPONOF(dt), 0, max(0, totaldamage - mindamage));
+			LOG_INFOF("^3                damage = %f\n", max(0, totaldamage - mindamage));
 			return max(0, totaldamage - mindamage); // can never be negative, but to make sure
 		}
 		else
@@ -1200,6 +1202,8 @@ void Fire_ApplyDamage(entity e)
 	float fireendtime = StatusEffects_gettime(STATUSEFFECT_Burning, e);
 	t = min(frametime, fireendtime - time);
 	d = e.fire_damagepersec * t;
+	LOG_INFOF("^4Fire_ApplyDamage: player %s: t = %f\n", e.netname, t);
+	LOG_INFOF("^4                  d = %f\n", d);
 
 	hi = e.fire_owner.hitsound_damage_dealt;
 	ty = e.fire_owner.typehitsound;
