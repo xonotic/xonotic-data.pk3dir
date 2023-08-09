@@ -7,6 +7,7 @@
 # Gustaf Alhäll, 2022
 # Hanicef <gustaf@hanicef.me>, 2021
 # Logan Zerfass, 2023
+# Logan Zerfass, 2023
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
