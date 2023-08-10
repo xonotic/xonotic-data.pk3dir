@@ -7,16 +7,16 @@ CLASS(Vortex, Weapon)
 /* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Vortex, wpcolor, vector, '0.5 1 1');
-/* modelname */ ATTRIB(Vortex, mdl, string, "nex");
+/* modelname */ ATTRIB(Vortex, mdl, string, "vortex");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Vortex, m_model, Model, MDL_VORTEX_ITEM);
 /* flash mdl */ ATTRIB(Vortex, m_muzzlemodel, Model, MDL_Null);
 /* flash eff */ ATTRIB(Vortex, m_muzzleeffect, entity, EFFECT_VORTEX_MUZZLEFLASH);
 #endif
-/* crosshair */ ATTRIB(Vortex, w_crosshair, string, "gfx/crosshairnex");
+/* crosshair */ ATTRIB(Vortex, w_crosshair, string, "gfx/crosshairvortex");
 /* crosshair */ ATTRIB(Vortex, w_crosshair_size, float, 0.65);
-/* reticle   */ ATTRIB(Vortex, w_reticle, string, "gfx/reticle_nex");
-/* wepimg    */ ATTRIB(Vortex, model2, string, "weaponnex");
+/* reticle   */ ATTRIB(Vortex, w_reticle, string, "gfx/reticle_vortex");
+/* wepimg    */ ATTRIB(Vortex, model2, string, "weaponvortex");
 /* refname   */ ATTRIB(Vortex, netname, string, "vortex");
 /* wepname   */ ATTRIB(Vortex, m_name, string, _("Vortex"));
 /* legacy    */ ATTRIB(Vortex, m_deprecated_netname, string, "nex");

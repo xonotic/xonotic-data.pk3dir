@@ -87,14 +87,14 @@ g_electro_simple // electro
 	}
 }
 
-g_nex_simple // vortex
+g_vortex_simple // vortex
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 
 	{
-		map models/weapons/g_nex_simple
+		map models/weapons/g_vortex_simple
 		blendfunc blend
 	}
 }
@@ -111,26 +111,26 @@ g_hagar_simple // hagar
 	}
 }
 
-g_gl_simple // mortar
+g_mortar_simple // mortar
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 
 	{
-		map models/weapons/g_gl_simple
+		map models/weapons/g_mortar_simple
 		blendfunc blend
 	}
 }
 
-g_rl_simple // devastator
+g_devastator_simple // devastator
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 
 	{
-		map models/weapons/g_rl_simple
+		map models/weapons/g_devastator_simple
 		blendfunc blend
 	}
 }
@@ -147,26 +147,26 @@ g_shotgun_simple // shotgun
 	}
 }
 
-g_uzi_simple // machine gun
+g_machinegun_simple // machine gun
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 
 	{
-		map models/weapons/g_uzi_simple
+		map models/weapons/g_machinegun_simple
 		blendfunc blend
 	}
 }
 
-g_campingrifle_simple // sniper rifle
+g_rifle_simple // sniper rifle
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 
 	{
-		map models/weapons/g_campingrifle_simple
+		map models/weapons/g_rifle_simple
 		blendfunc blend
 	}
 }
@@ -195,26 +195,26 @@ g_hlac_simple // HLAC
 	}
 }
 
-g_hookgun_simple // hook gun
+g_hook_simple // grappling hook
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 
 	{
-		map models/weapons/g_hookgun_simple
+		map models/weapons/g_hook_simple
 		blendfunc blend
 	}
 }
 
-g_laser_simple // blaster
+g_blaster_simple // blaster
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 
 	{
-		map models/weapons/g_laser_simple
+		map models/weapons/g_blaster_simple
 		blendfunc blend
 	}
 }
@@ -231,14 +231,14 @@ g_minelayer_simple // minelayer
 	}
 }
 
-g_minstanex_simple // vaporizer
+g_vaporizer_simple // vaporizer
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 
 	{
-		map models/weapons/g_minstanex_simple
+		map models/weapons/g_vaporizer_simple
 		blendfunc blend
 	}
 }
@@ -291,14 +291,14 @@ g_ok_hmg_simple // heavy machinegun
 	}
 }
 
-g_ok_rl_simple // rocket propelled chainsaw
+g_ok_rpc_simple // rocket propelled chainsaw
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 
 	{
-		map models/weapons/g_ok_rl_simple
+		map models/weapons/g_ok_rpc_simple
 		blendfunc blend
 	}
 }

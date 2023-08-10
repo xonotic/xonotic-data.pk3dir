@@ -27,7 +27,7 @@ void W_OverkillHeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity
 
 	W_DecreaseAmmo(WEP_OVERKILL_HMG, actor, WEP_CVAR_PRI(okhmg, ammo), weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(okhmg, damage), WEP_OVERKILL_HMG.m_id);
+	W_SetupShot(actor, weaponentity, true, 0, SND_MACHINEGUN_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(okhmg, damage), WEP_OVERKILL_HMG.m_id);
 
 	if(!autocvar_g_norecoil)
 	{

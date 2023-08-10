@@ -1,4 +1,4 @@
-MNex-Diffuse
+MNex-Diffuse // vaporizer
 {
 	dpglossexponentmod 64
 	dpreflectcube env/exomorph/exomorph

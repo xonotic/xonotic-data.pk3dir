@@ -538,7 +538,7 @@ void HUD_Crosshair(entity this)
 					ring_value = charge;
 					ring_alpha = autocvar_crosshair_ring_vortex_alpha;
 					ring_rgb = wcross_color;
-					ring_image = "gfx/crosshair_ring_nexgun";
+					ring_image = "gfx/crosshair_ring_vortex";
 				}
 				else if (autocvar_crosshair_ring && wepent.activeweapon == WEP_MINE_LAYER && WEP_CVAR(minelayer, limit) && autocvar_crosshair_ring_minelayer)
 				{

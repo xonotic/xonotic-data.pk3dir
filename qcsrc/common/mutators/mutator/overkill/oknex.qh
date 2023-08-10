@@ -7,13 +7,13 @@ CLASS(OverkillNex, Weapon)
 /* flags     */ ATTRIB(OverkillNex, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED);
 /* rating    */ ATTRIB(OverkillNex, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(OverkillNex, wpcolor, vector, '0.5 1 1');
-/* modelname */ ATTRIB(OverkillNex, mdl, string, "ok_sniper");
+/* modelname */ ATTRIB(OverkillNex, mdl, string, "ok_nex");
 #ifdef GAMEQC
-/* model     */ ATTRIB(OverkillNex, m_model, Model, MDL_OK_SNIPER_ITEM);
+/* model     */ ATTRIB(OverkillNex, m_model, Model, MDL_OK_NEX_ITEM);
 #endif
-/* crosshair */ ATTRIB(OverkillNex, w_crosshair, string, "gfx/crosshairnex");
+/* crosshair */ ATTRIB(OverkillNex, w_crosshair, string, "gfx/crosshairvortex");
 /* crosshair */ ATTRIB(OverkillNex, w_crosshair_size, float, 0.65);
-/* reticle   */ ATTRIB(OverkillNex, w_reticle, string, "gfx/reticle_nex");
+/* reticle   */ ATTRIB(OverkillNex, w_reticle, string, "gfx/reticle_vortex");
 /* wepimg    */ ATTRIB(OverkillNex, model2, string, "ok_weapon_rail");
 /* refname   */ ATTRIB(OverkillNex, netname, string, "oknex");
 /* wepname   */ ATTRIB(OverkillNex, m_name, string, _("Overkill Nex"));

@@ -1,4 +1,4 @@
-grenadelauncher
+grenadelauncher // mortar material
 {
 	dpreflectcube cubemaps/default/sky
 	{
@@ -6,7 +6,7 @@ grenadelauncher
 		rgbgen lightingDiffuse
 	}
 }
-grenadelauncher_sight
+grenadelauncher_sight  // mortar sight material
 {
 	{
 	animMap 1 textures/glsight01.tga textures/glsight02.tga textures/glsight03.tga
