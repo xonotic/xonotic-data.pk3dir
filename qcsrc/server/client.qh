@@ -402,6 +402,8 @@ const int MIN_SPEC_TIME = 1;
 bool joinAllowed(entity this);
 void Join(entity this);
 
+void PlayerFrame (entity this);
+
 #define SPECTATE_COPY() ACCUMULATE void SpectateCopy(entity this, entity spectatee)
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }
 

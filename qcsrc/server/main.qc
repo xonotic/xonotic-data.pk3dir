@@ -364,6 +364,7 @@ void StartFrame()
 		GlobalStats_update(it);
 		if (IS_FAKE_CLIENT(it))
 			PlayerPostThink(it); // DP calls this for real clients only
+		PlayerFrame(it);
 	});
 }
 
