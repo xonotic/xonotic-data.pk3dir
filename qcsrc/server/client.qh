@@ -83,9 +83,6 @@ float autocvar_sv_player_scale;
 
 void ClientState_attach(entity this);
 
-IntrusiveList g_players;
-STATIC_INIT(g_players) { g_players = IL_NEW(); }
-
 CLASS(Client, Object)
     /** Client name */
     ATTRIB(Client, netname, string, this.netname);
@@ -278,10 +275,8 @@ CLASS(Player, Client)
 
     INIT(Player) {
         this.classname = STR_PLAYER;
-        IL_PUSH(g_players, this);
     }
     DESTRUCTOR(Player) {
-        IL_REMOVE(g_players, this);
     }
 ENDCLASS(Player)
 

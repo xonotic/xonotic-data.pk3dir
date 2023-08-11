@@ -288,9 +288,12 @@ void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
 {
-	// TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
-	IL_EACH(g_players, IS_FAKE_CLIENT(it), sys_phys_update(it, frametime));
-	IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPreThink(it));
+	FOREACH_CLIENT(IS_FAKE_CLIENT(it),
+	{
+		// DP calls these for real clients only
+		sys_phys_update(it, frametime); // called by SV_PlayerPhysics for players
+		PlayerPreThink(it);
+	});
 
 	execute_next_frame();
 	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause();
@@ -356,8 +359,12 @@ void StartFrame()
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
 	GlobalStats_updateglobal();
-	FOREACH_CLIENT(true, GlobalStats_update(it));
-	IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPostThink(it));
+	FOREACH_CLIENT(true,
+	{
+		GlobalStats_update(it);
+		if (IS_FAKE_CLIENT(it))
+			PlayerPostThink(it); // DP calls this for real clients only
+	});
 }
 
 .vector originjitter;
