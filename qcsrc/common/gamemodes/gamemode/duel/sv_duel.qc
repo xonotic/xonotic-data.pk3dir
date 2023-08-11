@@ -11,6 +11,12 @@ MUTATOR_HOOKFUNCTION(duel, Scores_CountFragsRemaining)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(duel, Scores_AnnounceLeads)
+{
+	// enable leads announcer
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(duel, FilterItemDefinition)
 {
 	entity definition = M_ARGV(0, entity);

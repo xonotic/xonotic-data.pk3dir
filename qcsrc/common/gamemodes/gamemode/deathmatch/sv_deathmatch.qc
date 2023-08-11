@@ -5,3 +5,9 @@ MUTATOR_HOOKFUNCTION(dm, Scores_CountFragsRemaining)
 	// announce remaining frags
 	return true;
 }
+
+MUTATOR_HOOKFUNCTION(dm, Scores_AnnounceLeads)
+{
+	// enable leads announcer
+	return true;
+}
