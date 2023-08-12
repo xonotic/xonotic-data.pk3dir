@@ -922,10 +922,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 			// measure distance from nearest point on target (not origin)
 			// to nearest point on inflictor (not origin)
 			vector nearest = targ.WarpZone_findradius_nearest;
+			vector inflictororigin_wz = targ.WarpZone_findradius_nearest + targ.WarpZone_findradius_dist;
 			vector inflictornearest = NearestPointOnBoundingBox(
-				inflictororigin - (inflictor.maxs - inflictor.mins) * 0.5,
-				inflictororigin + (inflictor.maxs - inflictor.mins) * 0.5,
-				nearest);
+				inflictororigin_wz + inflictor.mins, inflictororigin_wz + inflictor.maxs, nearest);
 			vector diff = inflictornearest - nearest;
 
 			// round up a little on the damage to ensure full damage on impacts
