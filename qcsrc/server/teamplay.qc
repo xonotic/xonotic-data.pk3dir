@@ -234,11 +234,6 @@ bool Player_SetTeamIndex(entity player, int index)
 	return true;
 }
 
-bool IsQueueNeeded(entity ignore)
-{
-	return (teamplay && autocvar_g_balance_teams_queue && !autocvar_g_campaign && AVAILABLE_TEAMS == 2 && TeamBalance_AreEqual(ignore, true));
-}
-
 entity SpectatorWantsJoin(entity this)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
@@ -273,7 +268,7 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 
 		if (team_index != -1)
 		{
-			if (!IS_BOT_CLIENT(player) && IsQueueNeeded(player) && !SpectatorWantsJoin(player))
+			if (!IS_BOT_CLIENT(player) && IS_QUEUE_NEEDED(player) && !SpectatorWantsJoin(player))
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_WANTS_TEAM), player.netname);
 				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_JOIN_PREVENT_QUEUE);
@@ -750,7 +745,6 @@ void Remove_Countdown(entity this)
 		return;
 	}
 
-	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MOVETOSPEC_REMOVE, playername(remove_player.netname, remove_player.team, true), remove_timeleft);
 	--remove_timeleft;
 	this.nextthink = time + 1;
 }
@@ -803,6 +797,8 @@ void TeamBalance_RemoveExcessPlayers(entity ignore)
 						remove_countdown = new_pure(remove_countdown);
 						setthink(remove_countdown, Remove_Countdown);
 						remove_countdown.nextthink = time;
+
+						Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MOVETOSPEC_REMOVE, playername(remove_player.netname, remove_player.team, true), remove_timeleft);
 					}
 				}
 				else
