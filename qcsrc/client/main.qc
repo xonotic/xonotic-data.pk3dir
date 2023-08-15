@@ -747,7 +747,7 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 		for(int i = 0; i < maxclients;)
 			for(int f = ReadByte(), b = 0; b < 8 && i < maxclients; ++b, ++i)
 				if(playerslots[i])
-					playerslots[i].ready = f & BIT(b);
+					playerslots[i].ready = (f & BIT(b));
 
 	return = true;
 

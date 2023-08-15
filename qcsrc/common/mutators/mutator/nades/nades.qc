@@ -1671,9 +1671,13 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.nade_refire = (autocvar_g_nades_onspawn) 
-		? time + autocvar_g_nades_nade_refire 
-		: time + autocvar_g_spawnshieldtime;
+	if (StatusEffects_active(STATUSEFFECT_SpawnShield, player))
+		player.nade_refire = StatusEffects_gettime(STATUSEFFECT_SpawnShield, player);
+	else
+		player.nade_refire = time;
+
+	if (!autocvar_g_nades_onspawn)
+		player.nade_refire += autocvar_g_nades_nade_refire;
 
 	if(autocvar_g_nades_bonus_client_select)
 		STAT(NADE_BONUS_TYPE, player) = CS_CVAR(player).cvar_cl_nade_type;

@@ -5,6 +5,8 @@
 # Translators:
 # afba88cf42cbdff57149d4a6d53a94f9, 2018
 # Wuzzy <Wuzzy@disroot.org>, 2016-2018
+# BL4NKY -, 2023
+# BL4NKY, 2023
 # TheTrueBrot <noah.schluessel@gmail.com>, 2015
 # cvcxc <hans.andersen72@yahoo.com>, 2013
 # divVerent <divVerent@gmail.com>, 2011,2013
@@ -2246,11 +2248,11 @@ msgstr "Schleiergranate"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:99
 msgid "Ammo grenade"
-msgstr ""
+msgstr "Munitionsgranate"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:109
 msgid "Darkness grenade"
-msgstr ""
+msgstr "Finsternisgranate"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60

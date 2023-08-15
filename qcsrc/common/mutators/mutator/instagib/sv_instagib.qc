@@ -279,25 +279,15 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
 
 void instagib_replace_item_with(entity this, GameItem def)
 {
-	entity new_item = NULL;
+	entity new_item = spawn();
 	switch (def)
 	{
 		case ITEM_Invisibility:
-			new_item = new(item_invisibility);
 			new_item.invisibility_finished = autocvar_g_instagib_invisibility_time;
 			break;
 		case ITEM_Speed:
-			new_item = new(item_speed);
 			new_item.speed_finished = autocvar_g_instagib_speed_time;
 			break;
-		case ITEM_ExtraLife:
-			new_item = new(item_extralife);
-			break;
-		case ITEM_VaporizerCells:
-			new_item = new(item_vaporizer_cells);
-			break;
-		default:
-			error("Unhandled replacement item.");
 	}
 	Item_CopyFields(this, new_item);
 	StartItem(new_item, def);
@@ -329,49 +319,43 @@ void instagib_replace_item_with_random_powerup(entity item)
 MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
-	entity def = item.itemdef;
-	if(def == ITEM_Strength || def == ITEM_Shield || def == ITEM_HealthMega || def == ITEM_ArmorMega)
+
+	switch (item.itemdef)
 	{
-		if(autocvar_g_powerups)
-			instagib_replace_item_with_random_powerup(item);
-		return true;
+		case ITEM_Strength: case ITEM_Shield: case ITEM_HealthMega: case ITEM_ArmorMega:
+			if(autocvar_g_powerups)
+				instagib_replace_item_with_random_powerup(item);
+			return true;
+		case ITEM_Cells:
+			if(autocvar_g_instagib_ammo_convert_cells)
+				instagib_replace_item_with(item, ITEM_VaporizerCells);
+			return true;
+		case ITEM_Rockets:
+			if(autocvar_g_instagib_ammo_convert_rockets)
+				instagib_replace_item_with(item, ITEM_VaporizerCells);
+			return true;
+		case ITEM_Shells:
+			if(autocvar_g_instagib_ammo_convert_shells)
+				instagib_replace_item_with(item, ITEM_VaporizerCells);
+			return true;
+		case ITEM_Bullets:
+			if(autocvar_g_instagib_ammo_convert_bullets)
+				instagib_replace_item_with(item, ITEM_VaporizerCells);
+			return true;
 	}
 
-	if(def == ITEM_Cells)
+	switch (item.weapon)
 	{
-		if(autocvar_g_instagib_ammo_convert_cells)
+		case WEP_VAPORIZER.m_id:
+			if (ITEM_IS_LOOT(item))
+			{
+				SetResource(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
+				return false;
+			}
+			break;
+		case WEP_DEVASTATOR.m_id: case WEP_VORTEX.m_id:
 			instagib_replace_item_with(item, ITEM_VaporizerCells);
-		return true;
-	}
-	else if(def == ITEM_Rockets)
-	{
-		if(autocvar_g_instagib_ammo_convert_rockets)
-			instagib_replace_item_with(item, ITEM_VaporizerCells);
-		return true;
-	}
-	else if(def == ITEM_Shells)
-	{
-		if(autocvar_g_instagib_ammo_convert_shells)
-			instagib_replace_item_with(item, ITEM_VaporizerCells);
-		return true;
-	}
-	else if(def == ITEM_Bullets)
-	{
-		if(autocvar_g_instagib_ammo_convert_bullets)
-			instagib_replace_item_with(item, ITEM_VaporizerCells);
-		return true;
-	}
-
-	if(item.weapon == WEP_VAPORIZER.m_id && ITEM_IS_LOOT(item))
-	{
-		SetResource(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
-		return false;
-	}
-
-	if(item.weapon == WEP_DEVASTATOR.m_id || item.weapon == WEP_VORTEX.m_id)
-	{
-		instagib_replace_item_with(item, ITEM_VaporizerCells);
-		return true;
+			return true;
 	}
 
 	if(item.itemdef.instanceOfPowerup)

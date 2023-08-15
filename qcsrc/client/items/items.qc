@@ -75,12 +75,12 @@ void ItemSetModel(entity this, bool wantsimple)
 
 void ItemDraw(entity this)
 {
-	bool wantsimple = autocvar_cl_simple_items && this.ItemStatus & ITS_ALLOWSI;
+	bool wantsimple = autocvar_cl_simple_items && (this.ItemStatus & ITS_ALLOWSI);
 	if(wantsimple != this.item_simple && this.item_simple != -1)
 		ItemSetModel(this, wantsimple);
 
 	// no bobbing applied to simple items, for consistency's sake (no visual difference between ammo and weapons)
-	bool animate = autocvar_cl_items_animate & 1 && this.item_simple <= 0 && (this.ItemStatus & ITS_ANIMATE1 || this.ItemStatus & ITS_ANIMATE2);
+	bool animate = (autocvar_cl_items_animate & 1) && this.item_simple <= 0 && ((this.ItemStatus & ITS_ANIMATE1) || (this.ItemStatus & ITS_ANIMATE2));
 
 	// rotation must be set before running physics
 	if(!animate)
@@ -201,7 +201,7 @@ void ItemDraw(entity this)
 		if(autocvar_cl_items_animate & 2)
 			this.alpha *= (this.wait - time) / IT_DESPAWNFX_TIME;
 
-		if(autocvar_cl_items_animate & 4 && time >= this.pointtime)
+		if((autocvar_cl_items_animate & 4) && time >= this.pointtime)
 		{
 			pointparticles(EFFECT_ITEM_DESPAWN, this.origin + '0 0 16', '0 0 0', 1);
 			if (this.delay > 0.0625)
@@ -215,9 +215,6 @@ void ItemDraw(entity this)
 
 void ItemRemove(entity this)
 {
-	if(this.alpha)
-	if(!this.wait || time < this.wait - ticrate) // despawning loot items have their own effects
-		pointparticles(EFFECT_ITEM_PICKUP, (this.absmin + this.absmax) * 0.5, '0 0 0', 1);
 	strfree(this.mdl);
 }
 
@@ -278,7 +275,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
 			if(this.ItemStatus & ITS_GLOW)
 				this.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
-			if(prevItemStatus & ITS_AVAILABLE && this.alpha)
+			if((prevItemStatus & ITS_AVAILABLE) && this.alpha)
 				pointparticles(EFFECT_ITEM_PICKUP, (this.absmin + this.absmax) * 0.5, '0 0 0', 1);
 		}
 	}
@@ -290,6 +287,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 			IL_PUSH(g_drawables, this);
 			this.draw = ItemDraw;
 			this.flags |= FL_ITEM;
+			this.entremove = ItemRemove;
 		}
 
 		this.fade_end = ReadShort();
@@ -325,7 +323,16 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		SET_ONGROUND(this); // extra overkill
 	}
 
-	this.entremove = ItemRemove;
+	if(sf & ISF_REMOVEFX && !(sf & ISF_SIZE) && !(sf & ISF_MODEL)) // TODO !isnew isn't reliable for this... are we double sending initialisations?
+	{
+		// no longer available to pick up, about to be removed
+		if (this.drawmask) // this.alpha > 0
+			pointparticles(EFFECT_ITEM_PICKUP, (this.absmin + this.absmax) * 0.5, '0 0 0', 1);
+		// removing now causes CSQC_Ent_Remove() to spam
+		this.drawmask = 0;
+		IL_REMOVE(g_drawables, this);
+		this.solid = SOLID_NOT;
+	}
 
 	return true;
 }

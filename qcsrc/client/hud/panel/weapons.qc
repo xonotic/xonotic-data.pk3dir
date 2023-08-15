@@ -501,7 +501,7 @@ void HUD_Weapons()
 		}
 		else
 		{
-			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)
+			if ((it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK))
 				&& !(weapons_stat & WepSet_FromWeapon(it)))
 			{
 				continue;
