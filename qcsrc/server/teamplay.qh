@@ -17,6 +17,10 @@ bool lockteams;
 
 .int team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
+#define IS_QUEUE_NEEDED(ignore) \
+	(teamplay && autocvar_g_balance_teams_queue && !autocvar_g_campaign && AVAILABLE_TEAMS == 2 \
+	&& TeamBalance_AreEqual(ignore, true))
+
 // ========================== Global teams API ================================
 
 void Team_InitTeams();
@@ -118,7 +122,6 @@ enum
 	TEAM_CHANGE_SPECTATOR = 4 ///< Player is joining spectators. //TODO: Remove?
 };
 
-bool IsQueueNeeded(entity ignore);
 entity SpectatorWantsJoin(entity this);
 
 /// \brief Sets the team of the player.
@@ -191,7 +194,7 @@ void TeamBalance_Destroy(entity balance);
 /// \return Bitmask of allowed teams.
 int TeamBalance_GetAllowedTeams(entity balance);
 
-bool TeamBalance_AreEqual(entity ignore);
+bool TeamBalance_AreEqual(entity ignore, bool would_leave);
 void TeamBalance_RemoveExcessPlayers(entity ignore);
 
 /// \brief Returns whether the team change to the specified team is allowed.

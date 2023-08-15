@@ -2140,7 +2140,7 @@ int nJoinAllowed(entity this, entity ignore)
 
 bool queuePlayer(entity this)
 {
-	if(IsQueueNeeded(this) && !SpectatorWantsJoin(this))
+	if(IS_QUEUE_NEEDED(this) && !SpectatorWantsJoin(this))
 	{
 		if(autocvar_g_balance_teams)
 			TeamBalance_JoinBestTeam(this);

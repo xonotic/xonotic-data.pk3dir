@@ -255,11 +255,6 @@ bool Player_SetTeamIndex(entity player, int index)
 	return true;
 }
 
-bool IsQueueNeeded(entity ignore)
-{
-	return (teamplay && autocvar_g_balance_teams_queue && !autocvar_g_campaign && AVAILABLE_TEAMS == 2 && TeamBalance_AreEqual(ignore));
-}
-
 entity SpectatorWantsJoin(entity this)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
@@ -294,7 +289,7 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 
 		if (team_index != -1)
 		{
-			if (!IS_BOT_CLIENT(player) && IsQueueNeeded(player) && !SpectatorWantsJoin(player))
+			if (!IS_BOT_CLIENT(player) && IS_QUEUE_NEEDED(player) && !SpectatorWantsJoin(player))
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_WANTS_TEAM), player.netname);
 				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_JOIN_PREVENT_QUEUE);
@@ -716,26 +711,34 @@ int TeamBalance_GetAllowedTeams(entity balance)
 	return result;
 }
 
-bool TeamBalance_AreEqual(entity ignore)
+bool TeamBalance_AreEqual(entity ignore, bool would_leave)
 {
 	entity balance = TeamBalance_CheckAllowedTeams(ignore);
 	TeamBalance_GetTeamCounts(balance, ignore);
 
+	bool equality = true;
 	int total;
 	int prev_total = 0;
+	int bots = 0;
 
 	for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		total = TeamBalance_GetTeamFromIndex(balance, i).m_num_players;
+		bots += TeamBalance_GetTeamFromIndex(balance, i).m_num_bots;
 		if(i > 1 && total != prev_total)
 		{
-			TeamBalance_Destroy(balance);
-			return false;
+			equality = false;
+			break;
 		}
 		prev_total = total;
 	}
 	TeamBalance_Destroy(balance);
-	return true;
+
+	// Ignore if there are "ghost" bots that would leave if anyone joined
+	if (would_leave && bots > autocvar_bot_number)
+		return false;
+
+	return equality;
 }
 
 entity remove_countdown;
@@ -744,7 +747,7 @@ int remove_timeleft;
 
 void Remove_Countdown(entity this)
 {
-	if(remove_timeleft <= 0 || TeamBalance_AreEqual(NULL))
+	if(remove_timeleft <= 0 || TeamBalance_AreEqual(NULL, false))
 	{
 		if(remove_timeleft <= 0)
 		{
@@ -763,7 +766,6 @@ void Remove_Countdown(entity this)
 		return;
 	}
 
-	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MOVETOSPEC_REMOVE, playername(remove_player.netname, remove_player.team, true), remove_timeleft);
 	--remove_timeleft;
 	this.nextthink = time + 1;
 }
@@ -816,6 +818,8 @@ void TeamBalance_RemoveExcessPlayers(entity ignore)
 						remove_countdown = new_pure(remove_countdown);
 						setthink(remove_countdown, Remove_Countdown);
 						remove_countdown.nextthink = time;
+
+						Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MOVETOSPEC_REMOVE, playername(remove_player.netname, remove_player.team, true), remove_timeleft);
 					}
 				}
 				else
