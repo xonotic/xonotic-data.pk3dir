@@ -189,7 +189,7 @@ void TeamBalance_Destroy(entity balance);
 /// \return Bitmask of allowed teams.
 int TeamBalance_GetAllowedTeams(entity balance);
 
-bool TeamBalance_AreEqual(entity ignore);
+bool TeamBalance_AreEqual(entity ignore, bool would_leave);
 void TeamBalance_RemoveExcessPlayers(entity ignore);
 
 /// \brief Returns whether the team change to the specified team is allowed.

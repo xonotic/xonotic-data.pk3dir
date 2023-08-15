@@ -236,7 +236,7 @@ bool Player_SetTeamIndex(entity player, int index)
 
 bool IsQueueNeeded(entity ignore)
 {
-	return (teamplay && autocvar_g_balance_teams_queue && !autocvar_g_campaign && AVAILABLE_TEAMS == 2 && TeamBalance_AreEqual(ignore));
+	return (teamplay && autocvar_g_balance_teams_queue && !autocvar_g_campaign && AVAILABLE_TEAMS == 2 && TeamBalance_AreEqual(ignore, true));
 }
 
 entity SpectatorWantsJoin(entity this)
@@ -695,26 +695,34 @@ int TeamBalance_GetAllowedTeams(entity balance)
 	return result;
 }
 
-bool TeamBalance_AreEqual(entity ignore)
+bool TeamBalance_AreEqual(entity ignore, bool would_leave)
 {
 	entity balance = TeamBalance_CheckAllowedTeams(ignore);
 	TeamBalance_GetTeamCounts(balance, ignore);
 
+	bool equality = true;
 	int total;
 	int prev_total = 0;
+	int bots = 0;
 
 	for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		total = TeamBalance_GetTeamFromIndex(balance, i).m_num_players;
+		bots += TeamBalance_GetTeamFromIndex(balance, i).m_num_bots;
 		if(i > 1 && total != prev_total)
 		{
-			TeamBalance_Destroy(balance);
-			return false;
+			equality = false;
+			break;
 		}
 		prev_total = total;
 	}
 	TeamBalance_Destroy(balance);
-	return true;
+
+	// Ignore if there are "ghost" bots that would leave if anyone joined
+	if (would_leave && bots > autocvar_bot_number)
+		return false;
+
+	return equality;
 }
 
 entity remove_countdown;
@@ -723,7 +731,7 @@ int remove_timeleft;
 
 void Remove_Countdown(entity this)
 {
-	if(remove_timeleft <= 0 || TeamBalance_AreEqual(NULL))
+	if(remove_timeleft <= 0 || TeamBalance_AreEqual(NULL, false))
 	{
 		if(remove_timeleft <= 0)
 		{
