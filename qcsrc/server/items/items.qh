@@ -5,18 +5,14 @@
 
 float autocvar_g_balance_superweapons_time;
 bool autocvar_g_fullbrightitems;
-float autocvar_g_items_mindist;
 float autocvar_g_items_maxdist;
 float autocvar_g_items_dropped_lifetime;
 int autocvar_g_pickup_items;
 bool autocvar_g_nodepthtestitems;
 #define autocvar_g_weapon_stay cvar("g_weapon_stay")
 
-void StartItem(entity this, entity a);
-.int item_group;
-.int item_group_count;
-
 float autocvar_sv_simple_items;
+
 bool ItemSend(entity this, entity to, int sf);
 
 const float ITEM_RESPAWN_TICKS = 10;
@@ -37,7 +33,7 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 .float item_respawncounter;
 
-.float noalign; // if set to 1, the item or spawnpoint won't be dropped to the floor
+.bool noalign; // if set to 1, the item or spawnpoint won't be dropped to the floor
 
 .float superweapons_finished; // NOTE: this field is used only by map entities, it does not directly apply the superweapons stat
 
@@ -93,8 +89,10 @@ float healtharmor_pickupevalfunc(entity player, entity item);
 
 .bool is_item;
 .entity itemdef;
-void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter);
+void StartItem(entity this, entity def);
 
+.int item_group;
+.int item_group_count;
 void setItemGroup(entity this);
 void setItemGroupCount();
 

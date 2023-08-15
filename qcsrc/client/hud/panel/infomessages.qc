@@ -206,7 +206,7 @@ void HUD_InfoMessages()
 					s = strcat(blinkcolor, _("Teamnumbers are unbalanced!"));
 					tm = GetTeam(myteam, false);
 					if (tm && tm.team != NUM_SPECTATOR && tm.team_size == ts_max)
-						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey(_("team selection"), "scoreboard_team_selection"), blinkcolor));
+						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey(_("team selection"), "team_selection_show"), blinkcolor));
 					InfoMessage(s);
 				}
 			}

@@ -2,6 +2,7 @@
 
 #include <common/csqcmodel_settings.qh>
 #include <common/deathtypes/all.qh>
+#include <common/debug.qh>
 #include <common/effects/all.qh>
 #include <common/effects/qc/globalsound.qh>
 #include <common/ent_cs.qh>
@@ -983,7 +984,7 @@ bool findinlist_abbrev(string tofind, string list)
 		return false; // empty list or search, just return
 
 	// this function allows abbreviated strings!
-	FOREACH_WORD(list, it == substring(tofind, 0, strlen(it)),
+	FOREACH_WORD(list, it != "" && it == substring(tofind, 0, strlen(it)),
 	{
 		return true;
 	});
@@ -1011,6 +1012,8 @@ bool PlayerInIDList(entity p, string idlist)
 
 bool PlayerInList(entity player, string list)
 {
+	if (list == "")
+		return false;
 	return boolean(PlayerInIDList(player, list) || PlayerInIPList(player, list));
 }
 
@@ -1043,9 +1046,7 @@ void SendWelcomeMessage(entity this, int msg_type)
 	WriteByte(msg_type, boolean(autocvar_g_campaign));
 	if (boolean(autocvar_g_campaign))
 	{
-		WriteString(msg_type, Campaign_GetTitle());
 		WriteByte(msg_type, Campaign_GetLevelNum());
-		WriteString(msg_type, Campaign_GetMessage());
 		return;
 	}
 	WriteString(msg_type, autocvar_hostname);
@@ -1194,7 +1195,7 @@ void ClientConnect(entity this)
 	if (PlayerInList(this, autocvar_g_playban_list))
 		TRANSMUTE(Observer, this);
 
-	if (PlayerInList(this, autocvar_g_muteban_list)) // muteban
+	if (PlayerInList(this, autocvar_g_chatban_list)) // chatban
 		CS(this).muted = true;
 
 	MUTATOR_CALLHOOK(ClientConnect, this);
@@ -2128,6 +2129,32 @@ bool joinAllowed(entity this)
 	return true;
 }
 
+void show_entnum(entity this)
+{
+	// waypoint editor implements a similar feature for waypoints
+	if (waypointeditor_enabled)
+		return;
+
+	if (wasfreed(this.wp_aimed))
+		this.wp_aimed = NULL;
+
+	WarpZone_crosshair_trace_plusvisibletriggers(this);
+	entity ent = NULL;
+	if (trace_ent)
+	{
+		ent = trace_ent;
+		if (ent != this.wp_aimed)
+		{
+			string str = sprintf(
+				"^7ent #%d\n^8 netname: ^3%s\n^8 classname: ^5%s\n^8 origin: ^2'%s'",
+				etof(ent), ent.netname, ent.classname, vtos(ent.origin));
+			debug_text_3d((ent.absmin + ent.absmax) * 0.5, str, 0, 7, '0 0 0');
+		}
+	}
+	if (this.wp_aimed != ent)
+		this.wp_aimed = ent;
+}
+
 .string shootfromfixedorigin;
 .bool dualwielding_prev;
 bool PlayerThink(entity this)
@@ -2148,6 +2175,8 @@ bool PlayerThink(entity this)
 	}
 
 	if (frametime) player_powerups(this);
+
+	if (frametime && autocvar_sv_show_entnum) show_entnum(this);
 
 	if (IS_DEAD(this)) {
 		if (this.personal && g_race_qualifying) {
@@ -2293,11 +2322,18 @@ void ObserverOrSpectatorThink(entity this)
 		}
 	}
 
+	if (frametime && autocvar_sv_show_entnum) show_entnum(this);
+
 	if (IS_BOT_CLIENT(this) && !CS(this).autojoin_checked)
 	{
 		CS(this).autojoin_checked = true;
 		TRANSMUTE(Player, this);
 		PutClientInServer(this);
+
+		.entity weaponentity = weaponentities[0];
+		if(this.(weaponentity).m_weapon == WEP_Null)
+			W_NextWeapon(this, 0, weaponentity);
+
 		return;
 	}
 

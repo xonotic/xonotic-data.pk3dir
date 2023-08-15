@@ -396,8 +396,8 @@ entity havocbot_select_an_item_of_group(entity this, int gr)
 
 // Check for water/slime/lava and dangerous edges
 // (only when the bot is on the ground or jumping intentionally)
-// returns true for danger
-bool havocbot_checkdanger(entity this, vector dst_ahead)
+// returns a number > 0 for danger
+int havocbot_checkdanger(entity this, vector dst_ahead)
 {
 	vector dst_down = dst_ahead - '0 0 3000';
 	traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
@@ -415,16 +415,16 @@ bool havocbot_checkdanger(entity this, vector dst_ahead)
 		if (trace_endpos.z < this.origin.z + this.mins.z)
 		{
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-				return true;
+				return 1;
 			else if (trace_endpos.z < min(this.origin.z + this.mins.z, this.goalcurrent.origin.z) - 100)
-				return true;
+				return 2;
 			else
 			{
 				s = pointcontents(trace_endpos + '0 0 1');
 				if (s != CONTENT_SOLID)
 				{
 					if (s == CONTENT_LAVA || s == CONTENT_SLIME)
-						return true;
+						return 3;
 					else if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 					{
 						// the traceline check isn't enough but is good as optimization,
@@ -432,7 +432,7 @@ bool havocbot_checkdanger(entity this, vector dst_ahead)
 						tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
 						if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 						{
-							return true;
+							return 4;
 						}
 					}
 				}
@@ -625,7 +625,7 @@ void havocbot_movetogoal(entity this)
 		if (this.items & IT_JETPACK)
 			action_for_trigger_hurt = 1;
 		else if (!this.jumppadcount && !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
-			&& !(this.goalcurrent_prev && this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)
+			&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP))
 			&& GetResource(this, RES_HEALTH) + GetResource(this, RES_ARMOR) > ROCKETJUMP_DAMAGE())
 		{
 			action_for_trigger_hurt = 2;
@@ -801,7 +801,7 @@ void havocbot_movetogoal(entity this)
 			{
 				if (IS_DEAD(this.goalcurrent))
 				{
-					IL_EACH(g_items, it.enemy == this.goalcurrent && Item_IsLoot(it),
+					IL_EACH(g_items, it.enemy == this.goalcurrent && ITEM_IS_LOOT(it),
 					{
 						if (vdist(it.origin - this.goalcurrent.death_origin, <, 50))
 						{
@@ -814,7 +814,7 @@ void havocbot_movetogoal(entity this)
 						}
 					});
 				}
-				if (!Item_IsLoot(this.goalcurrent))
+				if (!ITEM_IS_LOOT(this.goalcurrent))
 				{
 					navigation_goalrating_timeout_force(this);
 					return;
@@ -883,7 +883,7 @@ void havocbot_movetogoal(entity this)
 
 	bool bunnyhop_forbidden = false;
 	vector destorg = get_closer_dest(this.goalcurrent, this.origin);
-	if (this.jumppadcount && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
+	if (this.jumppadcount && (this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
 	{
 		// if bot used the jumppad, push towards jumppad origin until jumppad waypoint gets removed
 		destorg = this.goalcurrent.origin;
@@ -1137,7 +1137,10 @@ void havocbot_movetogoal(entity this)
 			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.2 : flatdir * 32);
 			vector dst_ahead = this.origin + this.view_ofs + offset;
 			bool unreachable = false;
-			if (havocbot_checkdanger(this, dst_ahead))
+			int r = havocbot_checkdanger(this, dst_ahead);
+			if (r > 0 && r < 4)
+				danger_detected = true;
+			else if (r == 4)
 			{
 				if (destorg.z > this.origin.z + jumpstepheightvec.z)
 				{

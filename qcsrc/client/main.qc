@@ -541,7 +541,7 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-
+.int survival_status;
 void Ent_RemovePlayerScore(entity this)
 {
 	if(this.owner) {
@@ -550,6 +550,11 @@ void Ent_RemovePlayerScore(entity this)
 		FOREACH(Scores, true, {
 			this.owner.(scores(it)) = 0; // clear all scores
 		});
+		this.owner.ready = 0;
+		this.owner.eliminated = 0;
+		this.owner.colormap = 0;
+		// TODO add a hook to reset this Survival field
+		this.owner.survival_status = 0;
 	}
 }
 
@@ -739,7 +744,7 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 		for(int i = 0; i < maxclients;)
 			for(int f = ReadByte(), b = 0; b < 8 && i < maxclients; ++b, ++i)
 				if(playerslots[i])
-					playerslots[i].ready = f & BIT(b);
+					playerslots[i].ready = (f & BIT(b));
 
 	return = true;
 
@@ -1397,18 +1402,18 @@ bool net_handle_ServerWelcome()
 	campaign = ReadByte();
 	if (campaign)
 	{
-		string campaign_title = ReadString();
 		int campaign_level = ReadByte();
-		string campaign_msg = ReadString();
-		string welcomedialog_args;
-		welcomedialog_args = strcat("HOSTNAME \"", campaign_title, "\"");
+		// Menu can't build the whole campaign message because it lacks getcommandkey and CCR
+		// so we build part of the message here and let the menu insert the level description
+		// (that client doesn't know) by replacing the keyword _LEVEL_DESC
 		string key = getcommandkey(_("jump"), "+jump");
 		string msg = strcat(
 			CCR("^F1"), sprintf(_("Level %d:"), campaign_level),
-			sprintf(CCR(" ^BG%s\n^3\n"), campaign_msg),
+			sprintf(CCR(" ^BG%s\n\n"), "_LEVEL_DESC"),
 			sprintf(CCR(_("^BGPress ^F2%s^BG to enter the game")), key));
 		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
-		welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+		string welcomedialog_args = strcat("CAMPAIGN ", itos(campaign_level), " \"", msg, "\"");
+
 		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
 		return true;
 	}
