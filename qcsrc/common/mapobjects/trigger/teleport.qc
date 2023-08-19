@@ -40,7 +40,7 @@ bool Teleport_Active(entity this, entity player)
 			return false;
 
 	// no need to call IS_OBSERVER(), observers never call use/touch functions which means this is never an observer
-	if(this.classname == "trigger_teleport" && this.spawnflags & TELEPORT_OBSERVERS_ONLY)
+	if(this.classname == "trigger_teleport" && (this.spawnflags & TELEPORT_OBSERVERS_ONLY))
 		return false;
 
 	return true;

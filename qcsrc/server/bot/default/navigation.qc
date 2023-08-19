@@ -1738,7 +1738,7 @@ int navigation_poptouchedgoals(entity this)
 
 				navigation_poproute(this);
 				++removed_goals;
-				if(this.goalcurrent && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
+				if(this.goalcurrent && (this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
 					return removed_goals;
 			}
 		}

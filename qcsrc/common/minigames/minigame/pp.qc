@@ -452,7 +452,7 @@ string pp_turn_to_string(int turnflags)
 	if ( turnflags & PP_TURN_WIN )
 	{
 		// translator-friendly messages composed of 2 existing messages
-		if ( (turnflags&PP_TURN_TEAM) != minigame_self.team )
+		if ( (turnflags & PP_TURN_TEAM) != minigame_self.team )
 			return strcat(_("You lost the game!"), "\n", _("Select \"^1Next Match^7\" on the menu for a rematch!"));
 		return strcat(_("You win!"), "\n", _("Select \"^1Next Match^7\" on the menu to start a new match!"));
 	}

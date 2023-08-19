@@ -193,10 +193,10 @@ void WarpZone_Touch(entity this, entity toucher)
 	if(toucher.move_movetype == MOVETYPE_NONE || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_entity)
 		return;
 
-	EXACTTRIGGER_TOUCH(this, toucher);
-
 	if(WarpZone_PlaneDist(this, toucher.origin + toucher.view_ofs) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
 		return;
+
+	EXACTTRIGGER_TOUCH(this, toucher);
 
 	float f;
 	// number of frames we need to go back:

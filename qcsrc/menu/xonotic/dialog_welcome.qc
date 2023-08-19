@@ -93,7 +93,7 @@ void XonoticWelcomeDialog_draw(entity me)
 	if (!(gamestatus & (GAME_ISSERVER | GAME_CONNECTED)))
 		me.close(me);
 
-	if(me.serverinfo_MOTD == "" && gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
+	if(me.serverinfo_MOTD == "" && (gamestatus & (GAME_CONNECTED | GAME_ISSERVER)))
 	{
 		// if serverinfo_MOTD is empty while connected it means we are connected to an old server
 		// in this case show the csqc welcome message and instantly close the dialog

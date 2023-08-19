@@ -578,7 +578,7 @@ bool Item_GiveTo(entity item, entity player)
 	}
 
 	int its;
-	if((its = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
+	if((its = (item.items - ((item.items & player.items)) & IT_PICKUPMASK)))
 	{
 		pickedup = true;
 		player.items |= its;
