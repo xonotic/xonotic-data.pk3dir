@@ -27,6 +27,7 @@ CLASS(Hagar, Weapon)
         P(class, prefix, edgedamage, float, BOTH) \
         P(class, prefix, force, float, BOTH) \
         P(class, prefix, health, float, BOTH) \
+        P(class, prefix, homing_speed_turnrate, float, PRI) \
         P(class, prefix, lifetime, float, PRI) \
         P(class, prefix, lifetime_min, float, SEC) \
         P(class, prefix, lifetime_rand, float, SEC) \

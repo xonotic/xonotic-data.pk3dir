@@ -75,6 +75,189 @@ void W_Hagar_Touch2(entity this, entity toucher)
 	}
 }
 
+/***************************************/
+// LegendGuard writes homming missile part to test 02-02-2021
+// LegendGuard adds a copy from hk_weapon.qc functions and the EXPERIMENT of homing missile of this weapon worked successfully 07-02-2021
+bool validate_target(entity this, entity proj, entity targ)
+{
+	if (!targ)
+		return false;
+
+	// we know for sure pure entities are bad targets
+	if (is_pure(targ))
+		return false;
+
+	// If only this was used more..
+	if (targ.flags & FL_NOTARGET)
+		return false;
+
+	// Cant touch this
+	if ((targ.takedamage == DAMAGE_NO) || (GetResource(targ, RES_HEALTH) < 0))
+		return false;
+
+	// player
+	if (IS_PLAYER(targ))
+	{
+		if (this.target_select_playerbias < 0)
+			return false;
+
+		if (IS_DEAD(targ))
+			return false;
+	}
+
+	// Missile
+	if ((targ.flags & FL_PROJECTILE) && (this.target_select_missilebias < 0))
+		return false;
+
+	// Team check
+	if (SAME_TEAM(this, targ) || SAME_TEAM(this, targ.owner))
+		return false;
+
+	return true;
+}
+
+void Hagar_homing_Missile_Think(entity this)
+{
+	// Check if lifetime has expired
+	if (this.cnt < time)
+		W_Hagar_Explode(this, NULL);
+
+	vector vu, vd, vf, vl, vr, ve;   // Vector (direction)
+	float  fu, fd, ff, fl, fr, fe;   // Fraction to solid
+	vector olddir, wishdir, newdir;  // Final direction
+	float lt_for;   // Length of Trace FORwrad
+	float lt_seek;  // Length of Trace SEEK (left, right, up down)
+	float pt_seek;  // Pitch of Trace SEEK (How mutch to angele left, right up, down trace towards v_forward)
+
+	//this.nextthink = time + this.ticrate;
+	this.nextthink = time + 0.25;
+	this.nextthink = time;
+
+	if (IS_DEAD(this.enemy) || IS_SPEC(this.enemy) || IS_OBSERVER(this.enemy))
+		this.enemy = NULL;
+
+	// Pick the closest valid target missile can see.
+	if (!this.enemy)
+	{
+		// in this case, the lighter check is to validate it first, and check distance if it is valid
+		IL_EACH(g_damagedbycontents, validate_target(this.owner, this, it),
+		{
+			if(vdist((this.origin - it.origin), >, 1000))
+				continue;
+
+			WarpZone_TraceLine(this.origin, it.origin, true, this.enemy);
+			if (trace_fraction == 1 || trace_ent == it)
+			{
+
+				if(!this.enemy)
+					this.enemy = it;
+				else if(vlen2(this.origin - it.origin) < vlen2(this.origin - this.enemy.origin))
+					this.enemy = it;
+			}
+		});
+	}
+
+	this.angles = vectoangles(this.velocity);
+	this.angles_x = this.angles_x * -1;
+	makevectors(this.angles);
+	this.angles_x = this.angles_x * -1;
+
+	if (this.enemy)
+	{
+		// Get data on enemy position
+		vector pre_pos = this.enemy.origin + this.enemy.velocity * min((vlen(this.enemy.origin - this.origin) / vlen(this.velocity)), 0.5);
+
+		WarpZone_TraceLine(this.origin, pre_pos, true, this.enemy);
+		ve = normalize(pre_pos - this.origin);
+		fe = trace_fraction;
+	}
+	else
+	{
+		ve = '0 0 0';
+		fe = 0;
+	}
+
+	if ((fe != 1) || (this.enemy == NULL) || vdist(this.origin - this.enemy.origin, >, 1000))
+	{
+		float myspeed = vlen(this.velocity);
+
+		lt_for  = myspeed * 3;
+		lt_seek = myspeed * 2.95;
+
+		// Trace forward
+		traceline(this.origin, this.origin + v_forward * lt_for, false, this);
+		vf = trace_endpos;
+		ff = trace_fraction;
+
+		// Setup trace pitch
+		pt_seek = 1 - ff;
+		pt_seek = bound(0.15, pt_seek, 0.8);
+		if (ff < 0.5) pt_seek = 1;
+
+		// Trace left
+		traceline(this.origin, this.origin + (-1 * (v_right * pt_seek) + (v_forward * ff)) * lt_seek, false, this);
+		vl = trace_endpos;
+		fl = trace_fraction;
+
+		// Trace right
+		traceline(this.origin,  this.origin + ((v_right * pt_seek) + (v_forward * ff)) * lt_seek, false, this);
+		vr = trace_endpos;
+		fr = trace_fraction;
+
+		// Trace up
+		traceline(this.origin,  this.origin + ((v_up * pt_seek) + (v_forward * ff)) * lt_seek, false, this);
+		vu = trace_endpos;
+		fu = trace_fraction;
+
+		// Trace down
+		traceline(this.origin,  this.origin + (-1 * (v_up * pt_seek) + (v_forward * ff)) * lt_seek, false, this);
+		vd = trace_endpos;
+		fd = trace_fraction;
+
+		vl = normalize(vl - this.origin);
+		vr = normalize(vr - this.origin);
+		vu = normalize(vu - this.origin);
+		vd = normalize(vd - this.origin);
+
+		// Panic tresh passed, find a single direction and turn as hard as we can
+		if (pt_seek == 1)
+		{
+			wishdir = v_right;
+			if (fl > fr) wishdir = -1 * v_right;
+			if (fu > fl) wishdir = v_up;
+			if (fd > fu) wishdir = -1 * v_up;
+		}
+		else
+		{
+			// Normalize our trace vectors to make a smooth path
+			wishdir = normalize( (vl * fl) + (vr * fr) +  (vu * fu) +  (vd * fd) );
+		}
+
+		if (this.enemy)
+		{
+			if (fe < 0.1) fe = 0.1; // Make sure we always try to move sligtly towards our target
+			wishdir = (wishdir * (1 - fe)) + (ve * fe);
+		}
+	}
+	else
+	{
+		wishdir = ve;
+	}
+
+	// Calculate new heading
+	olddir = normalize(this.velocity);
+	newdir = normalize(olddir + wishdir * WEP_CVAR_PRI(hagar, homing_speed_turnrate));
+
+	// Set heading & speed
+	this.velocity = newdir * vlen(this.velocity);
+
+	// Align model with new heading
+	this.angles = vectoangles(this.velocity);
+
+	UpdateCSQCProjectile(this);
+}
+/********************************/
+
 void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity missile;
@@ -99,8 +282,15 @@ void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	settouch(missile, W_Hagar_Touch);
 	missile.use = W_Hagar_Explode_use;
-	setthink(missile, adaptor_think2use_hittype_splash);
-	missile.nextthink = time + WEP_CVAR_PRI(hagar, lifetime);
+	if (WEP_CVAR_PRI(hagar, homing_speed_turnrate) == 0) {
+		setthink(missile, adaptor_think2use_hittype_splash);
+		missile.nextthink = time + WEP_CVAR_PRI(hagar, lifetime);
+	} else {
+		setthink(missile, Hagar_homing_Missile_Think);
+		missile.nextthink = time + 0.5; // when to start homing
+		missile.nextthink = time; // when to start homing
+		missile.cnt = time + WEP_CVAR_PRI(hagar, lifetime);
+	}
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = thiswep.m_id;
 	missile.weaponentity_fld = weaponentity;
