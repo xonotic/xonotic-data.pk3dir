@@ -122,45 +122,50 @@ void Hagar_homing_Missile_Think(entity this)
 	if (this.cnt < time)
 		W_Hagar_Explode(this, NULL);
 
-	vector vu, vd, vf, vl, vr, ve;   // Vector (direction)
-	float  fu, fd, ff, fl, fr, fe;   // Fraction to solid
-	vector olddir, wishdir, newdir;  // Final direction
-	float lt_for;   // Length of Trace FORwrad
-	float lt_seek;  // Length of Trace SEEK (left, right, up down)
-	float pt_seek;  // Pitch of Trace SEEK (How mutch to angele left, right up, down trace towards v_forward)
+	vector wishdir, newdir;
 
-	//this.nextthink = time + this.ticrate;
-	this.nextthink = time + 0.25;
-	this.nextthink = time;
+	// how often to home
+	// this.ticrate is unset aka 0 for now
+	// if this is set the amount of homing should be scaled to compensate
+	this.nextthink = time + this.ticrate;
 
 	if (IS_DEAD(this.enemy) || IS_SPEC(this.enemy) || IS_OBSERVER(this.enemy))
 		this.enemy = NULL;
 
 	// Pick the closest valid target missile can see.
-	if (!this.enemy)
+	//if (!this.enemy)
+	if (true)
 	{
 		// in this case, the lighter check is to validate it first, and check distance if it is valid
 		IL_EACH(g_damagedbycontents, validate_target(this.owner, this, it),
 		{
-			if(vdist((this.origin - it.origin), >, 1000))
+			if (vdist((this.origin - it.origin), >, 1000))
 				continue;
 
 			WarpZone_TraceLine(this.origin, it.origin, true, this.enemy);
 			if (trace_fraction == 1 || trace_ent == it)
 			{
+				if (!this.enemy)
+					this.enemy = it;
+				else {
+					vector n = normalize(this.velocity);
+					vector vi = it.origin         - this.origin; // current iter
+					vector ve = this.enemy.origin - this.origin; // selected enemy
 
-				if(!this.enemy)
-					this.enemy = it;
-				else if(vlen2(this.origin - it.origin) < vlen2(this.origin - this.enemy.origin))
-					this.enemy = it;
+					// calculate direction and distance from the
+					// flight path by removing the forward axis
+					vi = vi - (n * (vi * n));
+					ve = ve - (n * (ve * n));
+
+					print(sprintf("%s: %f, %s: %f\n", it.netname, vlen(vi), this.enemy.netname, vlen(ve)));
+					print(sprintf("vi: %v, ve: %v\n\n", vi, ve));
+					//if (vlen2(this.origin - it.origin) < vlen2(this.origin - this.enemy.origin))
+					if (vlen2(vi) < vlen2(ve))
+						this.enemy = it;
+				}
 			}
 		});
 	}
-
-	this.angles = vectoangles(this.velocity);
-	this.angles_x = this.angles_x * -1;
-	makevectors(this.angles);
-	this.angles_x = this.angles_x * -1;
 
 	if (this.enemy)
 	{
@@ -168,88 +173,23 @@ void Hagar_homing_Missile_Think(entity this)
 		vector pre_pos = this.enemy.origin + this.enemy.velocity * min((vlen(this.enemy.origin - this.origin) / vlen(this.velocity)), 0.5);
 
 		WarpZone_TraceLine(this.origin, pre_pos, true, this.enemy);
-		ve = normalize(pre_pos - this.origin);
-		fe = trace_fraction;
+		wishdir = normalize(pre_pos - this.origin);
 	}
 	else
 	{
-		ve = '0 0 0';
-		fe = 0;
+		wishdir = '0 0 0';
 	}
 
-	if ((fe != 1) || (this.enemy == NULL) || vdist(this.origin - this.enemy.origin, >, 1000))
-	{
-		float myspeed = vlen(this.velocity);
-
-		lt_for  = myspeed * 3;
-		lt_seek = myspeed * 2.95;
-
-		// Trace forward
-		traceline(this.origin, this.origin + v_forward * lt_for, false, this);
-		vf = trace_endpos;
-		ff = trace_fraction;
-
-		// Setup trace pitch
-		pt_seek = 1 - ff;
-		pt_seek = bound(0.15, pt_seek, 0.8);
-		if (ff < 0.5) pt_seek = 1;
-
-		// Trace left
-		traceline(this.origin, this.origin + (-1 * (v_right * pt_seek) + (v_forward * ff)) * lt_seek, false, this);
-		vl = trace_endpos;
-		fl = trace_fraction;
-
-		// Trace right
-		traceline(this.origin,  this.origin + ((v_right * pt_seek) + (v_forward * ff)) * lt_seek, false, this);
-		vr = trace_endpos;
-		fr = trace_fraction;
-
-		// Trace up
-		traceline(this.origin,  this.origin + ((v_up * pt_seek) + (v_forward * ff)) * lt_seek, false, this);
-		vu = trace_endpos;
-		fu = trace_fraction;
-
-		// Trace down
-		traceline(this.origin,  this.origin + (-1 * (v_up * pt_seek) + (v_forward * ff)) * lt_seek, false, this);
-		vd = trace_endpos;
-		fd = trace_fraction;
-
-		vl = normalize(vl - this.origin);
-		vr = normalize(vr - this.origin);
-		vu = normalize(vu - this.origin);
-		vd = normalize(vd - this.origin);
-
-		// Panic tresh passed, find a single direction and turn as hard as we can
-		if (pt_seek == 1)
-		{
-			wishdir = v_right;
-			if (fl > fr) wishdir = -1 * v_right;
-			if (fu > fl) wishdir = v_up;
-			if (fd > fu) wishdir = -1 * v_up;
-		}
-		else
-		{
-			// Normalize our trace vectors to make a smooth path
-			wishdir = normalize( (vl * fl) + (vr * fr) +  (vu * fu) +  (vd * fd) );
-		}
-
-		if (this.enemy)
-		{
-			if (fe < 0.1) fe = 0.1; // Make sure we always try to move sligtly towards our target
-			wishdir = (wishdir * (1 - fe)) + (ve * fe);
-		}
-	}
-	else
-	{
-		wishdir = ve;
-	}
-
+	// FIXME simplification
 	// Calculate new heading
-	olddir = normalize(this.velocity);
+	vector olddir = normalize(this.velocity);
 	newdir = normalize(olddir + wishdir * WEP_CVAR_PRI(hagar, homing_speed_turnrate));
+	//newdir = this.velocity + wishdir * WEP_CVAR_PRI(hagar, homing_speed_turnrate);
 
+	print(sprintf("newdir %v, wishdir: %v\n", newdir, wishdir));
 	// Set heading & speed
 	this.velocity = newdir * vlen(this.velocity);
+	//this.velocity = normalize(newdir) * vlen(this.velocity);
 
 	// Align model with new heading
 	this.angles = vectoangles(this.velocity);
