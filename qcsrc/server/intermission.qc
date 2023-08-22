@@ -210,9 +210,9 @@ float MaplistMethod_Random() // random map selection
 	return -1;
 }
 
-float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 // the exponent sets a bias on the map selection:
 // the higher the exponent, the less likely "shortly repeated" same maps are
+float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 {
 	float i, j, imax, insertpos;
 
@@ -232,11 +232,21 @@ float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 
 		// insert the current map there
 		newlist = "";
-		for(j = 1; j < insertpos; ++j)                 // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above
-			newlist = strcat(newlist, " ", argv(j));
+		for(j = 1; j < insertpos; ) // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above
+		{
+			if (j + 2 < insertpos)
+				newlist = strcat(newlist, " ", argv(j++), " ", argv(j++), " ", argv(j++));
+			else
+				newlist = strcat(newlist, " ", argv(j++));
+		}
 		newlist = strcat(newlist, " ", argv(0));       // now insert the just selected map
-		for(j = insertpos; j < Map_Count; ++j)         // i == Map_Count: no loop, has just been inserted as last
-			newlist = strcat(newlist, " ", argv(j));
+		for(j = insertpos; j < Map_Count; ) // i == Map_Count: no loop, has just been inserted as last
+		{
+			if (j + 2 < Map_Count)
+				newlist = strcat(newlist, " ", argv(j++), " ", argv(j++), " ", argv(j++));
+			else
+				newlist = strcat(newlist, " ", argv(j++));
+		}
 		newlist = substring(newlist, 1, strlen(newlist) - 1);
 		cvar_set("g_maplist", newlist);
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");

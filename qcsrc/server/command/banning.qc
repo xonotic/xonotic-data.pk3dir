@@ -1,6 +1,7 @@
 #include "banning.qh"
 
 #include <common/command/_mod.qh>
+#include <common/minigames/sv_minigames.qh>
 #include <common/state.qh>
 #include <common/stats.qh>
 #include <common/util.qh>
@@ -119,7 +120,7 @@ void BanCommand_kickban(int request, int argc, string command)
 	}
 }
 
-void BanCommand_mute(int request, int argc, string command)  // TODO: Add a sort of mute-"ban" which allows players to be muted based on IP/cryptokey
+void BanCommand_mute(int request, int argc, string command)
 {
 	switch (request)
 	{
@@ -127,12 +128,20 @@ void BanCommand_mute(int request, int argc, string command)  // TODO: Add a sort
 		{
 			if (argc >= 2)
 			{
-				entity client = GetFilteredEntity(argv(1));
+				entity client = GetIndexedEntity(argc, 1);
 				float accepted = VerifyClientEntity(client, true, false);
 
 				if (accepted > 0)
 				{
+					string theid = "";
+					if(!PlayerInIPList(client, autocvar_g_chatban_list))
+						theid = cons(theid, client.netaddress);
+					if(!PlayerInIDList(client, autocvar_g_chatban_list))
+						theid = cons(theid, client.crypto_idfp);
 					CS(client).muted = true;
+					LOG_INFO(strcat("Mute-banning player ", GetCallerName(client), " (", argv(1), ")."));
+					cvar_set("g_chatban_list", cons(autocvar_g_chatban_list, theid));
+
 					return;
 				}
 				else
@@ -148,7 +157,53 @@ void BanCommand_mute(int request, int argc, string command)  // TODO: Add a sort
 		{
 			LOG_HELP("Usage:^3 sv_cmd mute <client>");
 			LOG_HELP("  <client> is the entity number or name of the player to mute.");
-			LOG_HELP("See also: ^2unmute^7");
+			LOG_HELP("See also: ^2unmute, g_chatban_list^7");
+			return;
+		}
+	}
+}
+
+void BanCommand_playban(int request, int argc, string command)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (argc >= 2)
+			{
+				entity client = GetIndexedEntity(argc, 1);
+				float accepted = VerifyClientEntity(client, true, false);
+
+				if (accepted > 0)
+				{
+					string theid = "";
+					if(!PlayerInIPList(client, autocvar_g_playban_list))
+						theid = cons(theid, client.netaddress);
+					if(!PlayerInIDList(client, autocvar_g_playban_list))
+						theid = cons(theid, client.crypto_idfp);
+
+					LOG_INFO(strcat("Play-banning player ", GetCallerName(client), " (", argv(1), ")."));
+					PutObserverInServer(client, true, true);
+					if (autocvar_g_playban_minigames) 
+						part_minigame(client);
+					cvar_set("g_playban_list", cons(autocvar_g_playban_list, theid));
+
+					return;
+				}
+				else
+				{
+					LOG_INFO("playban: ", GetClientErrorString(accepted, argv(1)), ".");
+				}
+			}
+		}
+
+		default:
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd playban <client>");
+			LOG_HELP("  <client> is the entity number or name of the player to ban being forced to spectate permanently,");
+			LOG_HELP("See also: ^2g_playban_list, unplayban^7");
 			return;
 		}
 	}
@@ -208,12 +263,24 @@ void BanCommand_unmute(int request, int argc)
 		{
 			if (argc >= 2)
 			{
-				entity client = GetFilteredEntity(argv(1));
+				entity client = GetIndexedEntity(argc, 1);
 				float accepted = VerifyClientEntity(client, true, false);
+				string original_arg = argv(1);
 
 				if (accepted > 0)
 				{
+					string tmp_string = "";
+					FOREACH_WORD(autocvar_g_chatban_list, it != client.netaddress,
+					{
+						if(client.crypto_idfp && it == substring(client.crypto_idfp, 0, strlen(it)))
+							continue;
+						tmp_string = cons(tmp_string, it);
+					});
+
+					cvar_set("g_chatban_list", tmp_string);
+					LOG_INFO(strcat("Unmuting player ", GetCallerName(client), " (", original_arg, ")."));
 					CS(client).muted = false;
+
 					return;
 				}
 				else
@@ -229,7 +296,140 @@ void BanCommand_unmute(int request, int argc)
 		{
 			LOG_HELP("Usage:^3 sv_cmd unmute <client>");
 			LOG_HELP("  <client> is the entity number or name of the player to unmute.");
-			LOG_HELP("See also: ^2mute^7");
+			LOG_HELP("See also: ^2mute, g_chatban_list^7");
+			return;
+		}
+	}
+}
+
+void BanCommand_unplayban(int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (argv(1))
+			{
+				entity client = GetIndexedEntity(argc, 1);
+				float accepted = VerifyClientEntity(client, true, false);
+				string original_arg = argv(1);
+
+				if (accepted > 0)
+				{
+					string tmp_string = "";
+					FOREACH_WORD(autocvar_g_playban_list, it != client.netaddress,
+					{
+						if(client.crypto_idfp && it == substring(client.crypto_idfp, 0, strlen(it)))
+							continue;
+						tmp_string = cons(tmp_string, it);
+					});
+
+					cvar_set("g_playban_list", tmp_string);
+					LOG_INFO(strcat("Releasing forced to spectate player ", GetCallerName(client), " (", original_arg, ")."));
+
+					return;
+				}
+				else
+				{
+					LOG_INFO("unplayban: ", GetClientErrorString(accepted, argv(1)), ".");
+				}
+			}
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd unplayban <banid>");
+			LOG_HELP("  Where <banid> is the ID of the forced to spectate ban of which to remove.");
+			LOG_HELP("See also: ^2playban, g_playban_list^7");
+			return;
+		}
+	}
+}
+
+void BanCommand_unvoteban(int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (argv(1))
+			{
+				entity client = GetIndexedEntity(argc, 1);
+				float accepted = VerifyClientEntity(client, true, false);
+				string original_arg = argv(1);
+
+				if (accepted > 0)
+				{
+					string tmp_string = "";
+					FOREACH_WORD(autocvar_g_voteban_list, it != client.netaddress,
+					{
+						if(client.crypto_idfp && it == substring(client.crypto_idfp, 0, strlen(it)))
+							continue;
+						tmp_string = cons(tmp_string, it);
+					});
+
+					cvar_set("g_voteban_list", tmp_string);
+					LOG_INFO(strcat("Unvote-banning player ", GetCallerName(client), " (", original_arg, ")."));
+
+					return;
+				}
+				else
+				{
+					LOG_INFO("unvoteban: ", GetClientErrorString(accepted, argv(1)), ".");
+				}
+			}
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd unvoteban <banid>");
+			LOG_HELP("  Where <banid> is the ID of the ban from voting of which to remove.");
+			LOG_HELP("See also: ^2voteban, g_voteban_list^7");
+			return;
+		}
+	}
+}
+
+void BanCommand_voteban(int request, int argc, string command)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (argc >= 2)
+			{
+				entity client = GetIndexedEntity(argc, 1);
+				float accepted = VerifyClientEntity(client, true, false);
+
+				if (accepted > 0)
+				{
+					string theid = "";
+					if(!PlayerInIPList(client, autocvar_g_voteban_list))
+						theid = cons(theid, client.netaddress);
+					if(!PlayerInIDList(client, autocvar_g_voteban_list))
+						theid = cons(theid, client.crypto_idfp);
+
+					LOG_INFO(strcat("Vote-banning player ", GetCallerName(client), " (", argv(1), ")."));
+					cvar_set("g_voteban_list", cons(autocvar_g_voteban_list, theid));
+
+					return;
+				}
+				else
+				{
+					LOG_INFO("voteban: ", GetClientErrorString(accepted, argv(1)), ".");
+				}
+			}
+		}
+
+		default:
+			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd voteban <client>");
+			LOG_HELP("  <client> is the entity number or name of the player to ban from voting,");
+			LOG_HELP("See also: ^2g_voteban_list, unvoteban^7");
 			return;
 		}
 	}
@@ -265,12 +465,16 @@ void BanCommand_(int request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define BAN_COMMANDS(request, arguments, command) \
-	BAN_COMMAND("ban", BanCommand_ban(request, arguments, command), "Ban an IP address or a range of addresses (like 1.2.3)") \
-	BAN_COMMAND("banlist", BanCommand_banlist(request), "List all existing bans") \
-	BAN_COMMAND("kickban", BanCommand_kickban(request, arguments, command), "Disconnect a client and ban it at the same time") \
-	BAN_COMMAND("mute", BanCommand_mute(request, arguments, command), "Disallow a client from talking by muting them") \
-	BAN_COMMAND("unban", BanCommand_unban(request, arguments), "Remove an existing ban") \
-	BAN_COMMAND("unmute", BanCommand_unmute(request, arguments), "Unmute a client") \
+	BAN_COMMAND("ban",          BanCommand_ban(request, arguments, command),        "Ban an IP address or a range of addresses (like 1.2.3)") \
+	BAN_COMMAND("banlist",      BanCommand_banlist(request),                        "List all existing bans") \
+	BAN_COMMAND("kickban",      BanCommand_kickban(request, arguments, command),    "Disconnect a client and ban it at the same time") \
+	BAN_COMMAND("mute",         BanCommand_mute(request, arguments, command),       "Disallow a client from talking by muting them") \
+	BAN_COMMAND("playban",      BanCommand_playban(request, arguments, command),    "Force to spectate a client permanently") \
+	BAN_COMMAND("unban",        BanCommand_unban(request, arguments),               "Remove an existing ban") \
+	BAN_COMMAND("unmute",       BanCommand_unmute(request, arguments),              "Unmute a client") \
+	BAN_COMMAND("unvoteban",    BanCommand_unvoteban(request, arguments),           "Remove an existing voting ban") \
+	BAN_COMMAND("unplayban",    BanCommand_unplayban(request, arguments),           "Remove an existing forced to spectate ban") \
+	BAN_COMMAND("voteban",      BanCommand_voteban(request, arguments, command),    "Disallow a client from voting") \
 	/* nothing */
 
 void BanCommand_macro_help()

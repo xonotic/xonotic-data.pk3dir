@@ -390,7 +390,7 @@ void bot_cmdhelp(string scmd)
 				desc = "Resets the goal stack";
 				break;
 			case BOT_CMD_CC:
-				desc = "Execute client command. Examples: cc \"say something\"; cc god; cc \"name newnickname\"; cc kill;";
+				desc = "Execute client command. Examples: cc say something; cc god; cc name newnickname; cc kill;";
 				break;
 			case BOT_CMD_IF:
 				desc = "Perform simple conditional execution.\n"
@@ -1212,13 +1212,13 @@ float bot_execute_commands_once(entity this)
 	ispressingkey = boolean(bot_presskeys(this));
 
 	// Handle conditions
-	if (!(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE))
-	if((this.bot_cmd_condition_status & CMD_CONDITION_true) && this.bot_cmd_condition_status & CMD_CONDITION_false_BLOCK)
+	if (!(bot_cmd.bot_cmd_type == BOT_CMD_FI || bot_cmd.bot_cmd_type == BOT_CMD_ELSE))
+	if((this.bot_cmd_condition_status & CMD_CONDITION_true) && (this.bot_cmd_condition_status & CMD_CONDITION_false_BLOCK))
 	{
 		bot_command_executed(this, true);
 		return -1;
 	}
-	else if((this.bot_cmd_condition_status & CMD_CONDITION_false) && this.bot_cmd_condition_status & CMD_CONDITION_true_BLOCK)
+	else if((this.bot_cmd_condition_status & CMD_CONDITION_false) && (this.bot_cmd_condition_status & CMD_CONDITION_true_BLOCK))
 	{
 		bot_command_executed(this, true);
 		return -1;

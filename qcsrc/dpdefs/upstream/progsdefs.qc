@@ -236,7 +236,7 @@ float	FL_INWATER				= 16;	// for enter / leave water splash
 float	FL_MONSTER				= 32;
 float	FL_GODMODE				= 64;	// player cheat
 float	FL_NOTARGET				= 128;	// player cheat
-float	FL_ITEM					= 256;	// extra wide size for bonus items
+float	FL_ITEM					= 256;	// extra wide size for bonus items IF sv_legacy_bbox_expand is 1
 float	FL_ONGROUND				= 512;	// standing on something
 float	FL_PARTIALGROUND		= 1024;	// not all corners are valid
 float	FL_WATERJUMP			= 2048;	// player jumping out of water
@@ -403,7 +403,7 @@ void(entity e, string m) setmodel	= #3;		// set movetype and solid first
 void(entity e, vector min, vector max) setsize = #4;
 // #5 was removed
 void() break_to_debugger						= #6;
-float() random						= #7;		// returns 0 - 1
+float() random						= #7;	// Returns a random number > 0 and < 1
 void(entity e, float chan, string samp, float volume, ...) sound = #8;
 vector(vector v) normalize			= #9;
 void(string e, ...) error				= #10;

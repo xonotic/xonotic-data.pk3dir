@@ -9,7 +9,7 @@ bool isPushable(entity e)
 		return false;
 	if(e.iscreature)
 		return true;
-	if (Item_IsLoot(e))
+	if (ITEM_IS_LOOT(e))
 	{
 		return true;
 	}
@@ -99,30 +99,6 @@ void generic_netlinked_legacy_use(entity this, entity actor, entity trigger)
 {
 	//LOG_WARNF("Entity %s was (de)activated by a trigger, please update map to use relays", this.targetname);
 	this.setactive(this, ACTIVE_TOGGLE);
-}
-
-bool autocvar_g_triggers_debug = true;
-
-void trigger_init(entity this)
-{
-	string m = this.model;
-	EXACTTRIGGER_INIT;
-	if(autocvar_g_triggers_debug)
-	{
-		if(m != "")
-	 	{
-	 		precache_model(m);
-	 		_setmodel(this, m); // no precision needed
-		}
-		setorigin(this, this.origin);
-		if(this.scale)
-			setsize(this, this.mins * this.scale, this.maxs * this.scale);
-		else
-			setsize(this, this.mins, this.maxs);
-	}
-
-	if(autocvar_g_triggers_debug)
-		BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 }
 
 void trigger_link(entity this, bool(entity this, entity to, int sendflags) sendfunc)

@@ -93,3 +93,23 @@ REGISTER_NADE(VEIL) {
     NADE_PROJECTILE(1, PROJECTILE_NADE_VEIL_BURN, EFFECT_NADE_TRAIL_BURN_NEUTRAL);
 #endif
 }
+
+REGISTER_NADE(AMMO) {
+    this.m_color = '0.66 0.33 0';
+    this.m_name = _("Ammo grenade");
+    this.m_icon = "nade_ammo";
+#ifdef GAMEQC
+    NADE_PROJECTILE(0, PROJECTILE_NADE_AMMO, EFFECT_NADE_TRAIL_BROWN);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_AMMO_BURN, EFFECT_NADE_TRAIL_BURN_BROWN);
+#endif
+}
+
+REGISTER_NADE(DARKNESS) {
+    this.m_color = '0.23 0 0.23';
+    this.m_name = _("Darkness grenade");
+    this.m_icon = "nade_darkness";
+#ifdef GAMEQC
+    NADE_PROJECTILE(0, PROJECTILE_NADE_DARKNESS, EFFECT_NADE_TRAIL_PURPLE);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_DARKNESS_BURN, EFFECT_NADE_TRAIL_BURN_PURPLE);
+#endif
+}

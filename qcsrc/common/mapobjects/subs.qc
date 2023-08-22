@@ -104,6 +104,8 @@ void SUB_CalcMoveDone(entity this)
 
 void SUB_CalcMovePause(entity this)
 {
+	if (!this.move_controller)
+		return;
 	this.move_controller.animstate_starttime += frametime;
 	this.move_controller.animstate_endtime += frametime;
 }

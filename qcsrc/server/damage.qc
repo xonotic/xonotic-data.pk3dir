@@ -245,8 +245,10 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 	if (MUTATOR_CALLHOOK(ClientObituary, inflictor, attacker, targ, deathtype, attacker.(weaponentity))) { CS(targ).killcount = 0; return; }
 	notif_anonymous = M_ARGV(5, bool);
 
+	// TODO: Replace "???" with a translatable "Anonymous player" string
+	// https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/2839
 	if(notif_anonymous)
-		attacker_name = "Anonymous player";
+		attacker_name = "???";
 
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(
@@ -531,11 +533,11 @@ void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(it.(weaponentity).hook.aiment == targ)
-	    		RemoveHook(it.(weaponentity).hook);
-	    }
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(it.(weaponentity).hook.aiment == targ)
+				RemoveHook(it.(weaponentity).hook);
+		}
 	});
 
 	// add waypoint
@@ -565,11 +567,11 @@ void Unfreeze(entity targ, bool reset_health)
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(it.(weaponentity).hook.aiment == targ)
-	    		RemoveHook(it.(weaponentity).hook);
-	    }
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(it.(weaponentity).hook.aiment == targ)
+				RemoveHook(it.(weaponentity).hook);
+		}
 	});
 
 	// remove the ice block
@@ -710,11 +712,11 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		if(IS_PLAYER(targ) && damage > 0 && attacker)
 		{
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		    {
-		    	.entity went = weaponentities[slot];
-		    	if(targ.(went).hook && targ.(went).hook.aiment == attacker)
-		    		RemoveHook(targ.(went).hook);
-		    }
+			{
+				.entity went = weaponentities[slot];
+				if(targ.(went).hook && targ.(went).hook.aiment == attacker)
+					RemoveHook(targ.(went).hook);
+			}
 		}
 
 		if(STAT(FROZEN, targ) && !ITEM_DAMAGE_NEEDKILL(deathtype)
@@ -917,13 +919,17 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 		if (((cantbe != targ) && !mustbe) || (mustbe == targ))
 		if (targ.takedamage)
 		{
-			// measure distance from nearest point on target (not origin)
-			// to nearest point on inflictor (not origin)
+			// calculate distance from nearest point on target to nearest point on inflictor
+			// instead of origin to ensure full damage on impacts
+
 			vector nearest = targ.WarpZone_findradius_nearest;
+
+			// optimize code by getting inflictororigin_wz from WarpZone_FindRadius calculations instead of
+			//vector inflictororigin_wz = WarpZone_TransformOrigin(targ, inflictororigin);
+
+			vector inflictororigin_wz = targ.WarpZone_findradius_nearest + targ.WarpZone_findradius_dist;
 			vector inflictornearest = NearestPointOnBoundingBox(
-				inflictororigin - (inflictor.maxs - inflictor.mins) * 0.5,
-				inflictororigin + (inflictor.maxs - inflictor.mins) * 0.5,
-				nearest);
+				inflictororigin_wz + inflictor.mins, inflictororigin_wz + inflictor.maxs, nearest);
 			vector diff = inflictornearest - nearest;
 
 			// round up a little on the damage to ensure full damage on impacts
@@ -939,16 +945,13 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					float a;
 					float c;
 					vector hitloc;
-					vector myblastorigin;
 					vector center;
-
-					myblastorigin = WarpZone_TransformOrigin(targ, inflictororigin);
 
 					// if it's a player, use the view origin as reference
 					center = CENTER_OR_VIEWOFS(targ);
 
-					force = normalize(center - myblastorigin);
-					force = force * (finaldmg / coredamage) * forceintensity;
+					force = normalize(center - inflictororigin_wz);
+					force = force * (finaldmg / max(coredamage, edgedamage)) * forceintensity;
 					hitloc = nearest;
 
 					// apply special scaling along the z axis if set
@@ -1018,14 +1021,15 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 						if(autocvar_g_throughfloor_debug)
 							LOG_INFOF(" D=%f F=%f", finaldmg, vlen(force));
+
+						/*if (targ == attacker)
+						{
+							print("hits ", ftos(hits), " / ", ftos(total));
+							print(" finaldmg ", ftos(finaldmg), " force ", ftos(vlen(force)));
+							print(" (", vtos(force), ") (", ftos(a), ")\n");
+						}*/
 					}
 
-					//if (targ == attacker)
-					//{
-					//	print("hits ", ftos(hits), " / ", ftos(total));
-					//	print(" finaldmg ", ftos(finaldmg), " force ", vtos(force));
-					//	print(" (", ftos(a), ")\n");
-					//}
 					if(finaldmg || force)
 					{
 						if(targ.iscreature)
@@ -1050,14 +1054,14 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	RadiusDamage_running = 0;
 
 	if(!DEATH_ISSPECIAL(deathtype))
-		accuracy_add(attacker, DEATH_WEAPONOF(deathtype), 0, min(coredamage, stat_damagedone));
+		accuracy_add(attacker, DEATH_WEAPONOF(deathtype), 0, min(max(coredamage, edgedamage), stat_damagedone));
 
 	return total_damage_to_creatures;
 }
 
 float RadiusDamage(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 {
-	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, 
+	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad,
 									cantbe, mustbe, false, forceintensity, 1, deathtype, weaponentity, directhitentity);
 }
 
