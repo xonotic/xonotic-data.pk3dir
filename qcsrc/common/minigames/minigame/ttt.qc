@@ -298,6 +298,7 @@ void ttt_hud_status(vector pos, vector mySize)
 	vector tile_size = '48 48 0';
 
 	entity e;
+	string allspecs = "";
 	FOREACH_MINIGAME_ENTITY(e)
 	{
 		if ( e.classname == "minigame_player" && e.team != TTT_SPECTATOR_TEAM )
@@ -317,8 +318,35 @@ void ttt_hud_status(vector pos, vector mySize)
 			mypos_x += tile_size_x;
 
 			drawstring(mypos,ftos(e.minigame_flags),tile_size,
-					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					'0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
+
+		if (e.classname == "minigame_player" && e.team == TTT_SPECTATOR_TEAM)
+		{
+			string current_spec = "";
+
+			string cmpctString = entcs_GetName(e.minigame_playerslot - 1);
+			if (strlennocol(cmpctString) > 8)
+			{
+				int new_length = textLengthUpToLength(cmpctString, 8, strlennocol);
+				cmpctString = strcat(substring(cmpctString, 0, new_length), "..");
+			}
+			if (strlen(allspecs) > 0)
+				current_spec = strcat(",", cmpctString);
+			else
+				current_spec = cmpctString;
+			if (strlen(allspecs) < 90)
+				allspecs = strcat(allspecs, current_spec);
+		}
+	}
+	if (strlen(allspecs) > 0)
+	{
+		pos_y = pos_y * 0.3;
+		pos_x = pos_x * 0.41;
+
+		ts = minigame_drawstring_wrapped(mySize_x * 1.7, pos, "Spectators: ", '14 14 0', '0.85 0.47 0.42', panel_fg_alpha, DRAWFLAG_NORMAL, 0);
+		pos_y += 14;
+		ts = minigame_drawcolorcodedstring_wrapped(mySize_x * 1.7, pos, allspecs, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL, 0);
 	}
 }
 
@@ -430,7 +458,7 @@ int ttt_ai_random(int piecemask)
 
 	RandomSelection_Init();
 
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = 0; i < 9; ++i )
 	{
 		if ( piecemask & f )
 			RandomSelection_AddFloat(f, 1, 1);
@@ -506,9 +534,9 @@ void ttt_aimove(entity minigame)
 		int piecemask_free = 0;
 		int pieceflag = 1;
 		string pos;
-		for ( int i = 0; i < 3; i++ )
+		for ( int i = 0; i < 3; ++i )
 		{
-			for ( int j = 0; j < 3; j++ )
+			for ( int j = 0; j < 3; ++j )
 			{
 				pos = minigame_tile_buildname(i,j);
 				entity piece = ttt_find_piece(minigame,pos);
