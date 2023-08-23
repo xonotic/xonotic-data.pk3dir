@@ -256,6 +256,12 @@ void c4_hud_board(vector pos, vector mySize)
 	c4_boardpos = pos;
 	c4_boardsize = mySize;
 
+	string allspecs = "";
+	float allspecs_width = 0;
+	float max_allspecs_width = c4_boardsize.x;
+	float max_current_spec_width = hud_fontsize.x * 5;
+	float allspecs_lines = 2;
+
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("c4/board_under"));
 
 	drawpic(pos, minigame_texture("c4/board_over"), mySize, '1 1 1', 1, 0);
@@ -299,6 +305,28 @@ void c4_hud_board(vector pos, vector mySize)
 					minigame_texture(strcat("c4/piece",ftos(e.team))),
 					tile_size, '1 1 1'*icon_color, panel_fg_alpha, DRAWFLAG_NORMAL );
 		}
+
+		if (allspecs_width >= 0 && e.classname == "minigame_player" && e.team == C4_SPECTATOR_TEAM)
+		{
+			string current_spec = ColorTranslateRGB(entcs_GetName(e.minigame_playerslot - 1));
+			current_spec = textShortenToWidth(current_spec, max_current_spec_width, hud_fontsize, stringwidth_colors);
+			if (allspecs != "")
+				current_spec = strcat(", ", current_spec);
+			else
+				current_spec = current_spec;
+
+			allspecs_width = stringwidth(allspecs, true, hud_fontsize);
+
+			float max_width = max_allspecs_width * allspecs_lines - max_current_spec_width;
+			if (allspecs_width + stringwidth(current_spec, true, hud_fontsize) < max_width)
+				allspecs = strcat(allspecs, current_spec);
+			else
+			{
+				// current_spec doesn't fit in the list
+				allspecs = strcat(allspecs, ", ...");
+				allspecs_width = -1; // skip remaining spectators
+			}
+		}
 	}
 
 	if ( active_minigame.minigame_flags & C4_TURN_WIN )
@@ -321,6 +349,16 @@ void c4_hud_board(vector pos, vector mySize)
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
 			sprintf(_("%s^7 won the game!"), pname),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
+	}
+
+	if (allspecs != "")
+	{
+		pos = c4_boardpos;
+		pos.y -= panel_bg_border + hud_fontsize.y * (1.25 + allspecs_lines + 0.5);
+		minigame_drawstring_wrapped(max_allspecs_width, pos, _("Spectators:"), hud_fontsize * 1.25, '0.85 0.47 0.42', panel_fg_alpha, DRAWFLAG_NORMAL, 0);
+
+		pos.y += hud_fontsize.y * 1.25;
+		minigame_drawcolorcodedstring_wrapped(max_allspecs_width, pos, allspecs, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL, 0);
 	}
 }
 
@@ -353,11 +391,6 @@ void c4_hud_status(vector pos, vector mySize)
 	}
 
 	entity e;
-	string allspecs = "";
-	float allspecs_width = 0;
-	float max_allspecs_width = mySize.x * 1.7;
-	float max_current_spec_width = hud_fontsize.x * 5;
-	float allspecs_lines = 2;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
 		if ( e.classname == "minigame_player" && e.team != C4_SPECTATOR_TEAM )
@@ -376,37 +409,6 @@ void c4_hud_status(vector pos, vector mySize)
 
 			mypos_x += tile_size_x;
 		}
-
-		if (allspecs_width >= 0 && e.classname == "minigame_player" && e.team == C4_SPECTATOR_TEAM)
-		{
-			string current_spec = ColorTranslateRGB(entcs_GetName(e.minigame_playerslot - 1));
-			current_spec = textShortenToWidth(current_spec, max_current_spec_width, hud_fontsize, stringwidth_colors);
-			if (allspecs != "")
-				current_spec = strcat(", ", current_spec);
-			else
-				current_spec = current_spec;
-
-			allspecs_width = stringwidth(allspecs, true, hud_fontsize);
-
-			float max_width = max_allspecs_width * allspecs_lines - max_current_spec_width;
-			if (allspecs_width + stringwidth(current_spec, true, hud_fontsize) < max_width)
-				allspecs = strcat(allspecs, current_spec);
-			else
-			{
-				// current_spec doesn't fit in the list
-				allspecs = strcat(allspecs, ", ...");
-				allspecs_width = -1; // skip remaining spectators
-			}
-		}
-	}
-	if (allspecs != "")
-	{
-		pos_y = pos_y * 0.3;
-		pos_x = pos_x * 0.41;
-
-		ts = minigame_drawstring_wrapped(max_allspecs_width, pos, _("Spectators:"), hud_fontsize * 1.25, '0.85 0.47 0.42', panel_fg_alpha, DRAWFLAG_NORMAL, 0);
-		pos.y += hud_fontsize.y * 1.25;
-		ts = minigame_drawcolorcodedstring_wrapped(max_allspecs_width, pos, allspecs, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL, 0);
 	}
 }
 
