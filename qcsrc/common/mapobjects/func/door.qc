@@ -54,7 +54,7 @@ void door_blocked(entity this, entity blocker)
 			&& blocker.takedamage != DAMAGE_NO
 #endif
 			&& this.wait >= 0
-			&& !(Q3COMPAT_COMMON && this.spawnflags & Q3_DOOR_CRUSHER)
+			&& !(Q3COMPAT_COMMON && (this.spawnflags & Q3_DOOR_CRUSHER))
 		)
 		{
 			if (this.state == STATE_DOWN)
@@ -415,7 +415,9 @@ LinkDoors
 
 entity LinkDoors_nextent(entity cur, entity near, entity pass)
 {
-	while((cur = find(cur, classname, pass.classname)) && ((cur.spawnflags & DOOR_DONT_LINK && !Q3COMPAT_COMMON) || cur.enemy))
+	while((cur = find(cur, classname, pass.classname))
+	&& (((cur.spawnflags & DOOR_DONT_LINK) && !Q3COMPAT_COMMON) 
+	|| cur.enemy))
 	{
 	}
 	return cur;
@@ -453,7 +455,8 @@ void LinkDoors(entity this)
 		return;		// already linked by another door
 
 	// Q3 door linking is done for teamed doors only and is not affected by spawnflags or bmodel proximity
-	if ((this.spawnflags & DOOR_DONT_LINK && !Q3COMPAT_COMMON) || (Q3COMPAT_COMMON && !this.team))
+	if (((this.spawnflags & DOOR_DONT_LINK) && !Q3COMPAT_COMMON)
+	|| (Q3COMPAT_COMMON && !this.team))
 	{
 		this.owner = this.enemy = this;
 
@@ -622,9 +625,11 @@ void door_init_startopen(entity this)
 	this.pos1 = this.origin;
 
 // no longer needed: not using delayed initialisation for door_init_startopen()
-//#ifdef SVQC
-//	this.SendFlags |= SF_TRIGGER_UPDATE;
-//#endif
+#if 0
+#ifdef SVQC
+	this.SendFlags |= SF_TRIGGER_UPDATE;
+#endif
+#endif
 }
 
 void door_reset(entity this)

@@ -6,13 +6,15 @@
 # Gustaf Alhäll, 2022
 # Gustaf Alhäll, 2022
 # Hanicef <gustaf@hanicef.me>, 2021
+# Logan Zerfass, 2023
+# Logan Zerfass, 2023
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-24 07:22+0200\n"
+"POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hanicef <gustaf@hanicef.me>, 2021\n"
+"Last-Translator: Logan Zerfass, 2023\n"
 "Language-Team: Swedish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/sv/)\n"
 "Language: sv\n"
@@ -2205,17 +2207,25 @@ msgstr "Fångningsgranat"
 msgid "Veil grenade"
 msgstr "Slöjgranat"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:102
+#: qcsrc/common/mutators/mutator/nades/nades.inc:99
+msgid "Ammo grenade"
+msgstr "Ammunitiongranat"
+
+#: qcsrc/common/mutators/mutator/nades/nades.inc:109
+msgid "Darkness grenade"
+msgstr "Mörkgranat"
+
+#: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
 msgstr "släpp vapen / kasta granat"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:104
+#: qcsrc/common/mutators/mutator/nades/nades.qc:141
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr "^3granater^8 är påslagna, tryck ^3%s^8 för att använda dem"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:99
+#: qcsrc/common/mutators/mutator/nades/nades.qh:123
 msgid "Grenade"
 msgstr "Granat"
 
@@ -3508,6 +3518,8 @@ msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
 "the update from ^F3https://xonotic.org^BG!"
 msgstr ""
+"^F4ANMÄRKNING: ^F1Xonotic %s^BG är ute, och du har fortfarande ^F2Xonotic "
+"%s^BG - hämta uppdatering från ^F3https://xonotic.org^BG!"
 
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
@@ -4451,6 +4463,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:716
 msgid "^K1You aren't allowed to play because you are banned in this server"
 msgstr ""
+"^K1Du har inte tillåtelse att spela för att du är bannad från denna server"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"

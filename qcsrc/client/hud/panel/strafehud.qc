@@ -215,7 +215,7 @@ void HUD_StrafeHUD()
 			{
 				trace_dphitq3surfaceflags = 0;
 				tracebox(strafeplayer.origin, strafeplayer.mins, strafeplayer.maxs, strafeplayer.origin - '0 0 1', MOVE_NOMONSTERS, strafeplayer);
-				onslick = trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK;
+				onslick = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK);
 			}
 			real_onslick = onslick;
 
@@ -334,7 +334,7 @@ void HUD_StrafeHUD()
 		}
 		else // alternatively calculate wishdir by querying pressed keys
 		{
-			if(keys & KEY_FORWARD || keys & KEY_BACKWARD)
+			if((keys & KEY_FORWARD) || (keys & KEY_BACKWARD))
 				wishangle = 45;
 			else
 				wishangle = 90;
@@ -833,7 +833,8 @@ void HUD_StrafeHUD()
 					slickoffset.y = cos(j * DEG2RAD) * slickrotate;
 
 					traceline(traceorigin, traceorigin + slickoffset, MOVE_NOMONSTERS, strafeplayer);
-					if((PHYS_FRICTION(strafeplayer) == 0 && trace_fraction < 1) || trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
+					if((PHYS_FRICTION(strafeplayer) == 0 && trace_fraction < 1) 
+					|| (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK))
 						slickdetected = true;
 					if(i == 0)
 						break;

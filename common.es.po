@@ -26,14 +26,16 @@
 # Ari_tent <xonotic@outlook.com>, 2014
 # Yllelder, 2016
 # Yllelder, 2016
+# Yotta Mxt, 2023
+# Yotta Mxt, 2023
 # z 411 <winrar.hurr@gmail.com>, 2021-2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-24 07:22+0200\n"
+"POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: LegendGuard, 2020-2023\n"
+"Last-Translator: Yotta Mxt, 2023\n"
 "Language-Team: Spanish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -2244,17 +2246,25 @@ msgstr "Granada de Trampa"
 msgid "Veil grenade"
 msgstr "Granada de Velo"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:102
+#: qcsrc/common/mutators/mutator/nades/nades.inc:99
+msgid "Ammo grenade"
+msgstr "Granada de Munición"
+
+#: qcsrc/common/mutators/mutator/nades/nades.inc:109
+msgid "Darkness grenade"
+msgstr "Granada de la Oscuridad"
+
+#: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
 msgstr "soltar arma / tirar granada"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:104
+#: qcsrc/common/mutators/mutator/nades/nades.qc:141
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr "^3granadas^8 activadas, pulsa ^3%s^8 para usarlas"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:99
+#: qcsrc/common/mutators/mutator/nades/nades.qh:123
 msgid "Grenade"
 msgstr "Granada"
 
@@ -4525,7 +4535,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^K1You aren't allowed to play because you are banned in this server"
-msgstr ""
+msgstr "^K1No puedes jugar porque estás baneado en este servidor"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -8446,7 +8456,7 @@ msgstr "Ajustes preestablecidos de calidad:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:45
 msgid "PRE^OMG!"
-msgstr "OMG!"
+msgstr "¡DIOS!"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:48
 msgid "PRE^Low"

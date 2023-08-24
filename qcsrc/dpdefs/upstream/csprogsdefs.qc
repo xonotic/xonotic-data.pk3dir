@@ -336,7 +336,7 @@ void(entity e, string m) setmodel = #3;
 void(entity e, vector min, vector max) setsize = #4;
 
 void() break_to_debugger = #6;
-float() random = #7;
+float() random = #7; // Returns a random number > 0 and < 1
 void(entity e, float chan, string samp, float volume, float atten, ...) sound = #8;
 vector(vector v) normalize = #9;
 void(string e) error = #10;
@@ -430,7 +430,7 @@ void(float fhandle) fclose = #111;
 string(float fhandle) fgets = #112;
 void(float fhandle, string s) fputs = #113;
 float(string s) strlen = #114;
-string(...) strcat = #115;
+string(string s, string...) strcat = #115;
 string(string s, float start, float length) substring = #116;
 vector(string) stov = #117;
 string(string s) strzone = #118;
@@ -1449,6 +1449,10 @@ void(entity e, string s) parseentitydata = #608;
 //function definitions:
 void coverage() = #642;  // Reports a coverage event. The engine counts for each of the calls to this builtin whether it has been called.
 
+//DP_RM_CLIPGROUP
+//see: dpextensions.qc
+.float clipgroup;
+
 //DP_QC_FS_SEARCH_PACKFILE
 //idea: Mario
 //darkplaces implementation: Mario
@@ -1457,6 +1461,15 @@ float(string pattern, float caseinsensitive, float quiet, string packfile) searc
 //description:
 //extension to search_begin (DP_QC_FS_SEARCH), performs a filename search with the specified pattern (for example "maps/*.bsp") and stores the results in a search slot (minimum of 128 supported by any engine with this extension), the other functions take this returned search slot number, be sure to search_free when done (they are also freed on progs reload).
 //only searches for files within the specified packfile, which is expected to match the results of whichpack().
+
+//DP_QC_FINDBOX
+//see: dpextensions.qc
+entity(vector mins, vector maxs) findbox = #566;
+entity(vector mins, vector maxs, .entity tofield) findbox_tofield = #566;
+
+//DP_QC_NUDGEOUTOFSOLID
+//see: dpextensions.qc
+float(entity ent) nudgeoutofsolid = #567;
 
 // assorted builtins
 const float		STAT_MOVEVARS_TICRATE           = 240;
@@ -1485,5 +1498,5 @@ vector gettaginfo_forward;
 vector gettaginfo_right;
 vector gettaginfo_up;
 float checkpvs(vector viewpos, entity viewee) = #240;
-// bones_was_here: commented as QC wants to use this but we still need to support div0-stable:
+// bones_was_here: commented as GMQCC wants to use this but we still need to support div0-stable:
 //float mod(float dividend, float divisor) = #245;

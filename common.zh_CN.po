@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-24 07:22+0200\n"
+"POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (http://app.transifex.com/team-xonotic/"
@@ -2196,17 +2196,25 @@ msgstr "减速榴弹"
 msgid "Veil grenade"
 msgstr "隐身榴弹"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:102
+#: qcsrc/common/mutators/mutator/nades/nades.inc:99
+msgid "Ammo grenade"
+msgstr "弹药榴弹"
+
+#: qcsrc/common/mutators/mutator/nades/nades.inc:109
+msgid "Darkness grenade"
+msgstr "暗黑榴弹"
+
+#: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
 msgstr "丢出武器 / 扔榴弹"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:104
+#: qcsrc/common/mutators/mutator/nades/nades.qc:141
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr "^3榴弹^8已启用，按 ^3%s^8 投掷"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:99
+#: qcsrc/common/mutators/mutator/nades/nades.qh:123
 msgid "Grenade"
 msgstr "榴弹"
 
@@ -3152,7 +3160,7 @@ msgstr "^BG%s^BG 失去了%s^BG增益！"
 #: qcsrc/common/notifications/all.inc:703
 #, c-format
 msgid "^BGYou dropped the %s^BG buff!"
-msgstr "^BG你丢掉了%s^BG增益！"
+msgstr "^BG你失去了%s^BG增益！"
 
 #: qcsrc/common/notifications/all.inc:382
 #: qcsrc/common/notifications/all.inc:704
@@ -4591,7 +4599,7 @@ msgid ""
 "^BGAdded ^F4%s^BG to the game!"
 msgstr ""
 "^F2现在是^F4决胜时刻^F2！\n"
-"^BG为游戏添加了 ^F4%s^BG！"
+"^BG为游戏延长了 ^F4%s^BG！"
 
 #: qcsrc/common/notifications/all.inc:760
 msgid "^K1In^BG-portal created"

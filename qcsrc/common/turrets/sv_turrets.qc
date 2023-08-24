@@ -695,7 +695,8 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	if(!e_target)
 		return -2;
 
-	if(e_target.owner == e_turret)
+	// Don't attack against owner
+	if(e_target.owner == e_turret || e_target == e_turret.realowner)
 		return -0.5;
 
 	if(!checkpvs(e_target.origin, e_turret))
