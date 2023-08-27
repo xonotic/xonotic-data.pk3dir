@@ -206,9 +206,9 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	this.solid = SOLID_TRIGGER;
 	// this.effects = EF_NOMODELFLAGS;
 
-	// this should make collisions with bmodels more exact, but it leads to
-	// projectiles no longer being able to lie on a bmodel
-	this.move_nomonsters = MOVE_WORLDONLY;
+	// collide with all bmodels but leave detection of hits on players (etc) to SVQC
+	this.move_nomonsters = MOVE_NOMONSTERS;
+
 	if (f & 0x40)
 		SET_ONGROUND(this);
 	else
