@@ -5,6 +5,7 @@
 # Translators:
 # afba88cf42cbdff57149d4a6d53a94f9, 2018
 # Wuzzy <Wuzzy@disroot.org>, 2016-2018
+# BL4NKY, 2023
 # BL4NKY -, 2023
 # BL4NKY, 2023
 # TheTrueBrot <noah.schluessel@gmail.com>, 2015
