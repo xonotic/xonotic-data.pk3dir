@@ -170,7 +170,7 @@ void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx)
 {
 	vector org = '0 0 0';
 	int ctf_flags = 0;
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 6; ++i)
 	{
 		if (argv(arg_idx + i) != "")
 			ctf_flags++;
@@ -190,7 +190,7 @@ void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx)
 	else
 	{
 		vector v1, v2, v3, v4, v5, v6;
-		for (int i = 1; i <= ctf_flags; i++)
+		for (int i = 1; i <= ctf_flags; ++i)
 		{
 			if (i == 1) { v1 = stov(argv(arg_idx++)); org = v1 / ctf_flags; }
 			else if (i == 2) { v2 = stov(argv(arg_idx++)); org += v2 / ctf_flags; }

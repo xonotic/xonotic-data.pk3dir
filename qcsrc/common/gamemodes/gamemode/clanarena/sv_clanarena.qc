@@ -50,7 +50,7 @@ int CA_PreventStalemate()
 	int winnerTeam = 0;
 	int secondTeam = 0;
 
-	for(int i = 1; i <= AVAILABLE_TEAMS; i++)
+	for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		if(!winnerTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)))
 		{
@@ -80,7 +80,7 @@ int CA_PreventStalemate()
 	int secondTeamHealth = 0;
 	int teamIndex, teamHealth;
 
-	for(int i = 1; i <= AVAILABLE_TEAMS; i++)
+	for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		teamIndex = i;
 		teamHealth = 0;
