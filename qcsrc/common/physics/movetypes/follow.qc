@@ -27,5 +27,5 @@ void _Movetype_Physics_Follow(entity this) // SV_Physics_Follow
 	}
 
 	this.angles = e.angles + this.v_angle;
-	_Movetype_LinkEdict(this, false);
+	setorigin(this, this.origin); // SV_LinkEdict
 }

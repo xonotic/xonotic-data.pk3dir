@@ -63,7 +63,8 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		this.pm_time = 0.25;
 
 	_Movetype_CheckVelocity(this);
-	_Movetype_LinkEdict(this, true);
+	setorigin(this, this.origin); // SV_LinkEdict
+	_Movetype_LinkEdict_TouchAreaGrid(this);
 
 	if (clip & 8)  // teleport
 		return;
@@ -124,7 +125,8 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		}
 
 		_Movetype_CheckVelocity(this);
-		_Movetype_LinkEdict(this, true);
+		setorigin(this, this.origin); // SV_LinkEdict
+		_Movetype_LinkEdict_TouchAreaGrid(this);
 
 		// check for stuckness, possibly due to the limited precision of floats
 		// in the clipping hulls
@@ -191,5 +193,6 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	}
 
 	_Movetype_CheckVelocity(this);
-	_Movetype_LinkEdict(this, true);
+	setorigin(this, this.origin); // SV_LinkEdict
+	_Movetype_LinkEdict_TouchAreaGrid(this);
 }

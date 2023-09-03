@@ -518,21 +518,6 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 	trace_dphittexturename = save_trace_dphittexturename;
 }
 
-bool autocvar__movetype_debug = false;
-void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
-{
-	if(autocvar__movetype_debug)
-	{
-		this.absmin = this.origin + this.mins;
-		this.absmax = this.origin + this.maxs;
-	}
-	else
-		setorigin(this, this.origin); // calls SV_LinkEdict
-
-	if(touch_triggers)
-		_Movetype_LinkEdict_TouchAreaGrid(this);
-}
-
 int _Movetype_ContentsMask(entity this)  // SV_GenericHitSuperContentsMask
 {
 	if(this)
@@ -619,7 +604,7 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	}
 	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
 		etof(this), this.classname, vtos(this.origin));
-	_Movetype_LinkEdict(this, false);
+	setorigin(this, this.origin); // SV_LinkEdict
 	return UNSTICK_FIXED;
 }
 
@@ -636,7 +621,7 @@ void _Movetype_CheckStuck(entity this)  // SV_CheckStuck
 		case UNSTICK_STUCK:
 			vector offset = this.oldorigin - this.origin;
 			if(!_Movetype_TestEntityPosition(offset))
-				_Movetype_LinkEdict(this, false);
+				setorigin(this, this.origin); // SV_LinkEdict
 			// couldn't unstick, should we warn about this?
 			break;
 	}
@@ -671,7 +656,7 @@ void _Movetype_PushEntityTrace(entity this, vector push)
 	tracebox(this.origin, this.mins, this.maxs, end, type, this);
 }
 
-bool _Movetype_PushEntity(entity this, vector push, bool dolink)  // SV_PushEntity
+bool _Movetype_PushEntity(entity this, vector push, bool trigger_search)  // SV_PushEntity
 {
 	_Movetype_PushEntityTrace(this, push);
 
@@ -690,7 +675,9 @@ bool _Movetype_PushEntity(entity this, vector push, bool dolink)  // SV_PushEnti
 
 	vector last_origin = this.origin;
 
-	_Movetype_LinkEdict(this, dolink);
+	setorigin(this, this.origin); // SV_LinkEdict
+	if (trigger_search)
+		_Movetype_LinkEdict_TouchAreaGrid(this);
 
 	if((this.solid >= SOLID_TRIGGER && trace_fraction < 1 && (!IS_ONGROUND(this) || this.groundentity != trace_ent)))
 		_Movetype_Impact(this, trace_ent);
@@ -716,7 +703,7 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 			_Movetype_CheckWater(this);
 			this.origin = this.origin + movedt * this.velocity;
 			this.angles = this.angles + movedt * this.avelocity;
-			_Movetype_LinkEdict(this, false);
+			setorigin(this, this.origin); // SV_LinkEdict
 			break;
 		case MOVETYPE_STEP:
 			_Movetype_Physics_Step(this, movedt);
@@ -778,7 +765,8 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 
 	//_Movetype_CheckVelocity(this);
 
-	_Movetype_LinkEdict(this, true);
+	setorigin(this, this.origin); // SV_LinkEdict
+	_Movetype_LinkEdict_TouchAreaGrid(this);
 
 	//_Movetype_CheckVelocity(this);
 }

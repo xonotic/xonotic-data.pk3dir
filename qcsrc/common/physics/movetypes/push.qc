@@ -26,7 +26,7 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 			this.angles_y -= 360.0 * floor(this.angles_y * (1.0 / 360.0));
 			this.angles_z -= 360.0 * floor(this.angles_z * (1.0 / 360.0));
 			this.ltime += dt;
-			_Movetype_LinkEdict(this, false);
+			setorigin(this, this.origin); // SV_LinkEdict
 			return;
 		}
 		default:
@@ -60,7 +60,7 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 	this.origin = this.origin + dt * this.velocity;
 	this.angles = this.angles + dt * this.avelocity;
 	this.ltime += dt;
-	_Movetype_LinkEdict(this, false); // pulls absmin/absmax from the engine
+	setorigin(this, this.origin); // SV_LinkEdict
 
 	if(this.move_movetype == MOVETYPE_FAKEPUSH) // Tenebrae's MOVETYPE_PUSH variant that doesn't push...
 	{
@@ -124,7 +124,8 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 		if(check.move_movetype == MOVETYPE_PHYSICS)
 		{
 			check.origin = check.origin + move;
-			_Movetype_LinkEdict(check, true);
+			setorigin(this, this.origin); // SV_LinkEdict
+			_Movetype_LinkEdict_TouchAreaGrid(this);
 			continue;
 		}
 
@@ -176,14 +177,14 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 			this.origin = pushorig;
 			this.angles = pushang;
 			this.ltime = pushltime;
-			_Movetype_LinkEdict(this, false);
+			setorigin(this, this.origin); // SV_LinkEdict
 
 			// move back any entities we already moved
 			IL_EACH(g_pushmove_moved, true,
 			{
 				check.origin = check.moved_from;
 				check.angles = check.moved_fromangles;
-				_Movetype_LinkEdict(check, false);
+				setorigin(this, this.origin); // SV_LinkEdict
 			});
 
 			// if the pusher has a "blocked" function, call it, otherwise just stay in place until the obstacle is gone
