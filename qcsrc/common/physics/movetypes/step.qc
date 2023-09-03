@@ -10,7 +10,6 @@ void _Movetype_Physics_Step(entity this, float dt) // SV_Physics_Step
 			_Movetype_CheckVelocity(this);
 			_Movetype_FlyMove(this, dt, true, false, 0);
 			setorigin(this, this.origin); // SV_LinkEdict
-			_Movetype_LinkEdict_TouchAreaGrid(this);
 		}
 	}
 	else
@@ -18,7 +17,6 @@ void _Movetype_Physics_Step(entity this, float dt) // SV_Physics_Step
 		_Movetype_CheckVelocity(this);
 		_Movetype_FlyMove(this, dt, true, false, 0);
 		setorigin(this, this.origin); // SV_LinkEdict
-		_Movetype_LinkEdict_TouchAreaGrid(this);
 
 		// TODO? movetypesteplandevent
 	}

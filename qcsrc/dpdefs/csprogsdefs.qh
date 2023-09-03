@@ -50,6 +50,9 @@
 #define use use1
 .void(entity this, entity actor, entity trigger) use;
 
+#define touch touch1
+.void(entity this, entity toucher) touch;
+
 #undef drawpic
 #undef drawstring
 #undef drawcharacter

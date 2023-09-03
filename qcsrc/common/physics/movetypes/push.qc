@@ -155,8 +155,7 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 		{
 			if(_Movetype_NudgeOutOfSolid_PivotIsKnownGood(check, pivot))
 			{
-				// hack to invoke all necessary movement triggers
-				_Movetype_PushEntity(check, '0 0 0', true);
+				_Movetype_LinkEdict_TouchAreaGrid(this);
 				// we could fix it or entity "check" was telported
 				continue;
 			}

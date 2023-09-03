@@ -69,9 +69,10 @@ SELFWRAP(think, void, (), (entity this), (this))
 #define getthink(e) SELFWRAP_GET(think, e)
 
 #ifdef GAMEQC
-SELFWRAP(touch, void, (), (entity this, entity toucher), (this, other))
-#define settouch(e, f) SELFWRAP_SET(touch, e, f)
-#define gettouch(e) SELFWRAP_GET(touch, e)
+// self wrapping touch funcs is unnecessary with sv_playerphysicsqc 3 and .touch redeclaration
+// see dpdefs/progsdefs.qh and dpdefs/csprogsdefs.qh
+#define settouch(e, f) (e).touch = (f)
+#define gettouch(e) (e).touch
 #endif
 
 #ifdef GAMEQC

@@ -901,10 +901,12 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 			this.angles = this.angles + movedt * this.avelocity;
 			setorigin(this, this.origin); // SV_LinkEdict
 			break;
-		case MOVETYPE_STEP:
+		case MOVETYPE_STEP: // based on FlyMove
+			_Movetype_LinkEdict_TouchAreaGrid(this); // FlyMove doesn't call this
 			_Movetype_Physics_Step(this, movedt);
 			break;
-		case MOVETYPE_WALK:
+		case MOVETYPE_WALK: // based on FlyMove
+			_Movetype_LinkEdict_TouchAreaGrid(this); // FlyMove doesn't call this
 			_Movetype_Physics_Walk(this, movedt);
 			break;
 		case MOVETYPE_TOSS:
@@ -923,6 +925,7 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 void _Movetype_Physics_ClientFrame(entity this, float movedt)
 {
 	IL_CLEAR(g_touched_triggers);
+	_Movetype_LinkEdict_TouchAreaGrid(this);
 
 	this.move_didgravity = -1;
 	switch (this.move_movetype)
@@ -940,6 +943,7 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			_Movetype_CheckWater(this);
 			this.origin = this.origin + movedt * this.velocity;
 			this.angles = this.angles + movedt * this.avelocity;
+			setorigin(this, this.origin); // SV_LinkEdict
 			break;
 		case MOVETYPE_STEP:
 			_Movetype_Physics_Step(this, movedt);
@@ -960,11 +964,6 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 		case MOVETYPE_PHYSICS:
 			break;
 	}
-
-	//_Movetype_CheckVelocity(this);
-
-	setorigin(this, this.origin); // SV_LinkEdict
-	_Movetype_LinkEdict_TouchAreaGrid(this);
 
 	//_Movetype_CheckVelocity(this);
 }
