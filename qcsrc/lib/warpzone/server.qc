@@ -198,7 +198,7 @@ void WarpZone_Touch(entity this, entity toucher)
 
 	EXACTTRIGGER_TOUCH(this, toucher);
 
-	float f;
+	float f = 0;
 	// number of frames we need to go back:
 	//   dist = 16*sqrt(2) qu
 	//   dist ~ 24 qu
@@ -209,12 +209,15 @@ void WarpZone_Touch(entity this, entity toucher)
 	// but max 0.25 sec = 0.25/frametime frames
 	//       24/(0.25/frametime)
 	//       96*frametime
+#if 0
+// with race-free triggers this should be unnecessary
 	float d;
 	d = 24 + max(vlen(toucher.mins), vlen(toucher.maxs));
 	if(IS_NOT_A_CLIENT(toucher))
 		f = -d / bound(frametime * d * 1, frametime * vlen(toucher.velocity), d);
 	else
 		f = -1;
+#endif
 	if(WarpZone_Teleport(this, toucher, f, 0))
 	{
 #ifdef SVQC
