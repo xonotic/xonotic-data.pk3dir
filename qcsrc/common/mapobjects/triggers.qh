@@ -55,3 +55,7 @@ void trigger_remove_generic(entity this);
 .string target;
 .string targetname;
 #endif
+
+
+.bool trigger_exact; // whether touchers must touch the model or just the bbox (default, faster)
+

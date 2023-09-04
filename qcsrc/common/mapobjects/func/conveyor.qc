@@ -62,7 +62,7 @@ bool conveyor_send(entity this, entity to, int sendflags)
 
 	if(sendflags & SF_TRIGGER_INIT)
 	{
-		WriteByte(MSG_ENTITY, this.warpzone_isboxy);
+		WriteByte(MSG_ENTITY, this.trigger_exact);
 		WriteVector(MSG_ENTITY, this.origin);
 
 		WriteVector(MSG_ENTITY, this.mins);
@@ -141,7 +141,7 @@ NET_HANDLE(ENT_CLIENT_CONVEYOR, bool isnew)
 
 	if(sendflags & SF_TRIGGER_INIT)
 	{
-		this.warpzone_isboxy = ReadByte();
+		this.trigger_exact = ReadByte();
 		this.origin = ReadVector();
 		setorigin(this, this.origin);
 

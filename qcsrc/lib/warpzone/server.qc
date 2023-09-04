@@ -235,7 +235,7 @@ bool WarpZone_Send(entity this, entity to, int sendflags)
 
 	// we must send this flag for clientside to match properly too
 	int f = 0;
-	if(this.warpzone_isboxy)
+	if(this.trigger_exact)
 		BITSET_ASSIGN(f, 1);
 	if(this.warpzone_fadestart)
 		BITSET_ASSIGN(f, 2);

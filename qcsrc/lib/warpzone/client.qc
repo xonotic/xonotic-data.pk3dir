@@ -43,7 +43,7 @@ NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 		IL_PUSH(g_warpzones, this);
 
 	int f = ReadByte();
-	this.warpzone_isboxy = (f & 1);
+	this.trigger_exact = f & 1;
 	if(f & 4)
 	{
 		this.origin = ReadVector();

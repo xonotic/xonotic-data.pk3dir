@@ -110,7 +110,7 @@ void trigger_link(entity this, bool(entity this, entity to, int sendflags) sendf
 void trigger_common_write(entity this, bool withtarget)
 {
 	int f = 0;
-	if(this.warpzone_isboxy)
+	if(this.trigger_exact)
 		BITSET_ASSIGN(f, 1);
 	if(this.origin != '0 0 0')
 		BITSET_ASSIGN(f, 4);
@@ -167,7 +167,7 @@ void trigger_common_write(entity this, bool withtarget)
 void trigger_common_read(entity this, bool withtarget)
 {
 	int f = ReadByte();
-	this.warpzone_isboxy = (f & 1);
+	this.trigger_exact = f & 1;
 
 	if(withtarget)
 	{

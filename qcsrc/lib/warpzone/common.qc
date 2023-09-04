@@ -139,7 +139,7 @@ float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 
 	float f, s;
 
-	if(!e.modelindex || e.warpzone_isboxy)
+	if(!e.modelindex || !e.trigger_exact)
 		return 1;
 
 	// work around trigger_hurt on geit3ctf1 not being detected by tracebox
