@@ -2202,11 +2202,11 @@ msgstr "Veli granata"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:99
 msgid "Ammo grenade"
-msgstr ""
+msgstr "Missilium granata"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:109
 msgid "Darkness grenade"
-msgstr ""
+msgstr "Tenebrarum granata"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
@@ -5752,7 +5752,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/rifle.qh:21
 msgid "Rifle"
-msgstr ""
+msgstr "Sclopetum Pungens"
 
 #: qcsrc/common/weapons/weapon/seeker.qh:20
 msgid "T.A.G. Seeker"
@@ -6775,23 +6775,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:44
 msgid "Zoom mode:"
-msgstr ""
+msgstr "Amplificationis modus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:46
 msgid "Zoomed in"
-msgstr ""
+msgstr "Amplificatus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
 msgid "Zoomed out"
-msgstr ""
+msgstr "Imminutus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:48
 msgid "Always zoomed"
-msgstr ""
+msgstr "Semper amplificatus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
 msgid "Never zoomed"
-msgstr ""
+msgstr "Nunquam amplificatus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
@@ -7193,12 +7193,12 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:777 qcsrc/menu/xonotic/util.qc:786
 #: qcsrc/menu/xonotic/util.qc:794 qcsrc/menu/xonotic/util.qc:806
 msgid "Default"
-msgstr ""
+msgstr "Ordinarius"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:42
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Unlimited"
-msgstr ""
+msgstr "Infinitus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:76
 msgid "Gametype"
@@ -7219,7 +7219,7 @@ msgstr "%d minuta"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:85
 msgid "TIMLIM^Default"
-msgstr ""
+msgstr "Ordinarium"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:171
@@ -7248,7 +7248,7 @@ msgstr "4 manus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
 msgid "Player slots:"
-msgstr ""
+msgstr "Ludentium numerus:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
 msgid ""
@@ -7623,7 +7623,7 @@ msgstr "Videre notas de moderatro indicato"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:105
 msgid "No Terms of Service specified"
-msgstr ""
+msgstr "Pactio Usuum non scripta"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
 #: qcsrc/menu/xonotic/serverlist.qc:1055
@@ -7706,7 +7706,7 @@ msgstr "Condicio"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
 msgid "Terms of Service"
-msgstr ""
+msgstr "Pactio Usuum"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
@@ -8228,13 +8228,15 @@ msgstr "Canalem sinistrum et dextrum commutare"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:139
 msgid "Headphone friendly mode"
-msgstr ""
+msgstr "Modus pro instrumento auriculario"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:140
 msgid ""
 "Enable spatialization (blend the right and left channel slightly to decrease "
 "stereo separation a bit for headphones)"
 msgstr ""
+"Sonos spatializat (i.e., sonos dextros et sinistros paulum miscet ut soni "
+"minus disiungantur si instrumento auriculario uteris)"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:144
 msgid "Hit indication sound"
@@ -9991,19 +9993,19 @@ msgstr "spectare"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
 msgid "Terms of Service have been updated. Please read them before continuing:"
-msgstr ""
+msgstr "Pactio Usuum mutata est. Pactionem novam lege antequam procedas:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
-msgstr ""
+msgstr "Salve in Xonotico! A te petimus ut hanc Pactionem Usuum legas:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:94
 msgid "Accept"
-msgstr ""
+msgstr "Accipio"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:98
 msgid "Don't accept (quit the game)"
-msgstr ""
+msgstr "Non accipio (ludum linquere)"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
@@ -10220,7 +10222,7 @@ msgstr "Noli premere hoc iterum!"
 #: qcsrc/menu/xonotic/maplist.qc:294
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again."
-msgstr ""
+msgstr "Hem, hoc ludi non potest (m est NULL). Ordinatur iterum ut emendetur."
 
 #: qcsrc/menu/xonotic/maplist.qc:302
 #, c-format
@@ -10232,6 +10234,8 @@ msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again."
 msgstr ""
+"Hem, hoc ludi non potest (ludi modus erroneus). Ordinatur iterum ut "
+"emendetur."
 
 #: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
 msgid "spectator"
