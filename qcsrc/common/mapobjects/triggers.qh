@@ -59,3 +59,13 @@ void trigger_remove_generic(entity this);
 
 .bool trigger_exact; // whether touchers must touch the model or just the bbox (default, faster)
 
+// Accumulates triggers successfully activated during an entity's move, their .touch func won't be called again that move
+IntrusiveList g_touched_triggers;
+STATIC_INIT(g_touched_triggers) { g_touched_triggers = IL_NEW(); }
+
+// intended for use in the touch funcs of bmodel triggers, it should be the last condition to save the CPU time
+// WARNING: this kills the trace globals
+#define EXACTTRIGGER_TOUCH(e,t) if(!WarpZoneLib_ExactTrigger_Touch((e), (t), true)) return
+
+#define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init(this, true)
+

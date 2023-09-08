@@ -452,6 +452,7 @@ void _Movetype_Impact(entity this, entity toucher)  // SV_Impact
 	trace_dphittexturename = save_trace_dphittexturename;
 }
 
+.entity touch_chain; // DO NOT REUSE: for calling touch functions only
 void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGrid
 {
 	if(this.solid == SOLID_NOT)
@@ -656,37 +657,232 @@ void _Movetype_PushEntityTrace(entity this, vector push)
 	tracebox(this.origin, this.mins, this.maxs, end, type, this);
 }
 
+void WarpZone_Touch(entity this, entity toucher);
+.int solid_OG;
 bool _Movetype_PushEntity(entity this, vector push, bool trigger_search)  // SV_PushEntity
 {
-	_Movetype_PushEntityTrace(this, push);
+	/* Race-free trigger touching design
+	 *
+	 * We need to collide with triggers as we move to ensure they're triggered in the correct order and without missing any, even if they're not touching at the start and end of the move.
+	 * We temporarily enable collisions on all the triggers touching the move bounding box, except warpzones: often the move in which we'd collide isn't the same one as the move in which we'd satisfy the PlaneDist condition.  If we find potentially triggerable warpzone(s) we prevent races by shortening the trace if necessary.  While moving, EXACTTRIGGER_TOUCH checks are needed only for warpzones, because we collide with the bmodels of normal triggers here.
+	 *
+	 * We also need to do a stationary search for triggers once per move to detect triggers that we don't move into while they're active, but instead touch by spawning, teleporting, .solid change, etc (trace_startsolid case).  These cases can be detected while moving but not reliably because we usually won't collide with them once inside, and another entity (or a world plane) could be present so trace_ent could return that instead.
+	 */
 
-	// NOTE: this is a workaround for the QC's lack of a worldstartsolid trace parameter
-	if(trace_startsolid)
-	{
-		int oldtype = this.move_nomonsters;
-		this.move_nomonsters = MOVE_WORLDONLY;
-		_Movetype_PushEntityTrace(this, push);
-		this.move_nomonsters = oldtype;
-		if(trace_startsolid)
-			return true;
-	}
-
-	this.origin = trace_endpos;
-
-	vector last_origin = this.origin;
-
-	setorigin(this, this.origin); // SV_LinkEdict
-	if (trigger_search)
+	if (trigger_search && !IS_CLIENT(this)) // clients always do this static search at the start of each move
 		_Movetype_LinkEdict_TouchAreaGrid(this);
 
-	if((this.solid >= SOLID_TRIGGER && trace_fraction < 1 && (!IS_ONGROUND(this) || this.groundentity != trace_ent)))
-		_Movetype_Impact(this, trace_ent);
+	entity chain_start = NULL, it;
+	vector origin_OG = this.origin;
+	vector velocity_OG = this.velocity;
+	vector end = this.origin + push;
+	bool returnval = true; // will be false if we get teleported
+	float push_fraction = 1;
+	entity warpzone = NULL;
+	vector save_trace_endpos = '0 0 0';
+	float save_trace_fraction = 0;
+	entity save_trace_ent = NULL;
+	vector tele_dest = '0 0 0';
 
-	return (this.origin == last_origin); // false if teleported by touch
+	// enable collisions with all the triggers that could be touched during this move
+	if (this.solid >= SOLID_TRIGGER)
+	{
+		// create the bounding box of the entire move
+		vector clipboxmins, clipboxmaxs;
+		clipboxmins.x = min(this.origin.x, end.x) + this.mins.x - 1;
+		clipboxmins.y = min(this.origin.y, end.y) + this.mins.y - 1;
+		clipboxmins.z = min(this.origin.z, end.z) + this.mins.z - 1;
+		clipboxmaxs.x = max(this.origin.x, end.x) + this.maxs.x + 1;
+		clipboxmaxs.y = max(this.origin.y, end.y) + this.maxs.y + 1;
+		clipboxmaxs.z = max(this.origin.z, end.z) + this.maxs.z + 1;
+
+		for (chain_start = it = findbox_tofield(clipboxmins, clipboxmaxs, touch_chain); it; it = it.touch_chain)
+		{
+			if (it.solid == SOLID_TRIGGER && it != this)
+			if (it.move_nomonsters != MOVE_NOMONSTERS && it.move_nomonsters != MOVE_WORLDONLY) // why? matches _Movetype_LinkEdict_TouchAreaGrid()
+			if (gettouch(it))
+			if (!IL_CONTAINS(g_touched_triggers, it))
+			{
+				if (gettouch(it) == WarpZone_Touch) // special case :(
+				{
+					// warping requires origin + view_ofs to be in a specific segment of the trigger: it's bisected by a plane
+					float planedist_end = WarpZone_PlaneDist(it, end + this.view_ofs);
+					if (planedist_end < 0) // this warpzone is probably triggerable during this move, see: WarpZone_Touch()
+					{
+//						LOG_INFOF("%s @ %f: WarpZone IS triggerable this move", PROGNAME, time);
+
+						// in case of multiple warpzones (wtf!) choose the one that will become triggerable first
+						if (!warpzone || planedist_end < WarpZone_PlaneDist(warpzone, end + this.view_ofs))
+							warpzone = it;
+
+						// to make warping race-free we need to move far enough to satisfy the condition in WarpZone_Touch()
+						// but not so far that we leave the trigger and/or hit the back wall
+						if (planedist_end < -1)
+						{
+							float planedist_start = WarpZone_PlaneDist(it, this.origin + this.view_ofs);
+							push_fraction = bound(0, (planedist_start + 1) / (planedist_start - planedist_end), push_fraction);
+//							LOG_INFOF("%s @ %f: shortened trace to push_fraction %f", PROGNAME, time, push_fraction);
+						}
+					}
+					continue; // no collision with warpzones, it would prevent reaching the activation point in a single tracebox
+				}
+				it.solid_OG = it.solid; // they're all SOLID_TRIGGER but we also need to distinguish them from normally-solid ents
+				it.solid = it.trigger_exact ? SOLID_BSP : SOLID_BBOX;
+//				LOG_INFOF("%s @ %f: marked a \"%s\" with model \"%s\" trigger_exact %d as %s for \"%s\"", PROGNAME, time, it.classname, it.model, it.trigger_exact, (it.solid == SOLID_BBOX ? "SOLID_BBOX" : "SOLID_BSP"), this.classname);
+			}
+		}
+	}
+
+	while (true)
+	{
+		_Movetype_PushEntityTrace(this, push * push_fraction);
+
+		/* bones_was_here TODO: implement trace_worldstartsolid (and other tracebox extensions)
+		// fail the move if stuck in world
+		if (trace_worldstartsolid)
+			return true;
+		*/
+		// NOTE: this is a workaround for the QC's lack of a worldstartsolid trace parameter
+		if (trace_startsolid && (!trace_ent || !trace_ent.solid_OG)) // world or not a trigger
+		{
+//			LOG_WARNF("_Movetype_PushEntity(): \"%s\" in solid with edictnum %d classname \"%s\" at \"%v\"", this.classname, etof(trace_ent), trace_ent.classname, this.origin);
+			int oldtype = this.move_nomonsters;
+			this.move_nomonsters = MOVE_WORLDONLY;
+			_Movetype_PushEntityTrace(this, push * push_fraction);
+			this.move_nomonsters = oldtype;
+			if (trace_startsolid)
+			{
+				LOG_WARNF("_Movetype_PushEntity(): failed to move \"%s\" because it's stuck in the world at \"%v\"", this.classname, this.origin);
+				return true;
+			}
+		}
+
+		setorigin(this, save_trace_endpos = trace_endpos); // update absmin, absmax for WarpZoneLib_ExactTrigger_Touch() TODO only needed for WZ?
+		save_trace_fraction = trace_fraction;
+		save_trace_ent = trace_ent; // TODO only needed for debug prints ?
+
+		if (trace_fraction == 1 && warpzone && returnval) // reached a warpzone activation point without teleporting first
+		{
+//			LOG_INFOF("%s @ %f: reached a warpzone activation point", PROGNAME, time);
+
+			save_trace_ent = trace_ent = warpzone; // TODO only needed for debug prints ?
+			vector save_trace_plane_normal = trace_plane_normal;
+			if (!wasfreed(warpzone) && warpzone.solid && gettouch(warpzone))
+				gettouch(warpzone)(warpzone, this);
+
+			if (this.origin != save_trace_endpos) // successful warp
+			{
+//				LOG_INFOF("%s @ %f: ^2\"%s\" was warped after touching a \"%s\", planedist %f trace_fraction %f push_fraction %f", PROGNAME, time, this.classname, save_trace_ent.classname, WarpZone_PlaneDist(save_trace_ent, save_trace_endpos + this.view_ofs), save_trace_fraction, push_fraction);
+				returnval = false;
+				break;
+			}
+
+			trace_plane_normal = save_trace_plane_normal;
+			// failed to warp
+//			LOG_INFOF("%s @ %f: ^1\"%s\" failed to be warped by \"%s\" at planedist %f trace_fraction %f push_fraction %f", PROGNAME, time, this.classname, save_trace_ent.classname, WarpZone_PlaneDist(save_trace_ent, this.origin + this.view_ofs), save_trace_fraction, push_fraction);
+			warpzone = NULL;
+			if (push_fraction < 1) // if this was a short trace
+			{
+				save_trace_fraction = trace_fraction = push_fraction; // NOT finished yet
+				push_fraction = 1; // continue with a full length trace
+			}
+		}
+
+		// many maps use axis-aligned brushes/entities making it fairly common to impact a plane or touch a trigger
+		// with trace_fraction == 1 so checking for a plane instead detects these events sooner in real and CPU time.
+		// NOT finished if we failed to warp with a short trace: will now continue with a full length trace
+		if (trace_plane_normal.z == 0 && trace_plane_normal.y == 0 && trace_plane_normal.x == 0) // didn't hit any plane
+		if (trace_fraction == 1) // didn't switch from short trace to full length after failing to warp above
+			break; // push finished
+
+		if (trace_ent && trace_ent.solid_OG) // hit a trigger in the chain
+		{
+//			LOG_INFOF("%s @ %f: marking a \"%s\" as %s after being hit by \"%s\", startsolid: %d", PROGNAME, time, trace_ent.classname, (trace_ent.solid_OG == SOLID_TRIGGER ? "SOLID_TRIGGER" : ftos(trace_ent.solid_OG)), this.classname, trace_startsolid);
+			bool te = trace_ent.trigger_exact;
+			trace_ent.trigger_exact = false;
+			trace_ent.solid = trace_ent.solid_OG;
+//			LOG_INFOF("%s @ %f: calling touch func for \"%s\" after being hit by \"%s\"", PROGNAME, time, save_trace_ent.classname, this.classname);
+			if (gettouch(trace_ent)) // we already checked, but it could have been unset by another touch func we called
+				gettouch(trace_ent)(trace_ent, this);
+			if (!wasfreed(save_trace_ent))
+			{
+				IL_PUSH(g_touched_triggers, save_trace_ent);
+				save_trace_ent.trigger_exact = te;
+			}
+			trace_plane_normal = '0 0 0'; // pretend we didn't hit any plane because triggers don't block entity movement
+		}
+		else if (returnval) // hit world or a normally solid entity without being teleported first
+		{
+			if((this.solid >= SOLID_TRIGGER && (!IS_ONGROUND(this) || this.groundentity != trace_ent)))
+				_Movetype_Impact(this, trace_ent); // saves and restores trace globals
+
+			if (wasfreed(this))
+			{
+//				LOG_INFOF("%s @ %f Impact: X was deleted after touching a %s", PROGNAME, time, trace_ent.classname);
+			}
+			else if (this.origin != trace_endpos) // teleporter
+			{
+//				LOG_INFOF("%s @ %f Impact: %s was teleported after touching a %s", PROGNAME, time, this.classname, trace_ent.classname);
+				returnval = false;
+			}
+			else if (this.velocity != velocity_OG) // jump pad
+			{
+				// probs no point doing this for impacts
+				//trace_plane_normal = '0 0 0'; // disable velocity clipping in calling func
+//				LOG_INFOF("%s @ %f Impact: %s was redirected after touching a %s", PROGNAME, time, this.classname, trace_ent.classname);
+			}
+			break; // velocity clipping is required
+		}
+
+		if (wasfreed(this))
+		{
+//			LOG_INFOF("%s @ %f: X was deleted after touching a \"%s\"", PROGNAME, time, save_trace_ent.classname);
+			break;
+		}
+		else if (this.origin != save_trace_endpos) // teleported
+		{
+//			LOG_INFOF("%s @ %f: ^2\"%s\" was teleported after touching a \"%s\", planedist %f trace_fraction %f push_fraction %f", PROGNAME, time, this.classname, save_trace_ent.classname, WarpZone_PlaneDist(save_trace_ent, save_trace_endpos + this.view_ofs), save_trace_fraction, push_fraction);
+			returnval = false;
+			// don't move past this point, but do touch any other triggers sharing the plane we hit here
+			// FIXME NOT reliable for dfwc2010-3 yet!
+			push_fraction *= save_trace_fraction;
+			tele_dest = this.origin; // need to end up here, but we'll reset origin (etc) below for other touch funcs that may rely on it
+		}
+		else if (this.velocity != velocity_OG && returnval) // redirected (jump pad etc)
+		{
+//			LOG_INFOF("%s @ %f: \"%s\" was redirected after touching a \"%s\"", PROGNAME, time, this.classname, save_trace_ent.classname);
+			// return so that a new PushEntity call will be made by the movetype
+			// pretend we didn't hit any plane, because the trigger has no collision for the purpose of entity movement
+			//trace_plane_normal = '0 0 0'; // disable velocity clipping in calling func FIXME this could now be lost because we don't break here
+			//trace_fraction = save_trace_fraction; // continue the move with new velocity
+			// don't move past this point, but do touch any other triggers sharing the plane we hit here
+			push_fraction *= save_trace_fraction;
+		}
+
+		setorigin(this, origin_OG); // reset absmin, absmax in case a touch func changed them
+	}
+
+	for (it = chain_start; it; it = it.touch_chain)
+	{
+		if (it.solid_OG) // if we changed .solid
+		{
+			if (it.solid == (it.trigger_exact ? SOLID_BSP : SOLID_BBOX)) // if it's still as set above
+				it.solid = it.solid_OG;
+			it.solid_OG = 0;
+		}
+	}
+
+	trace_fraction = save_trace_fraction * push_fraction;
+	if (!wasfreed(this))
+		setorigin(this, (tele_dest == '0 0 0' ? this.origin : tele_dest)); // SV_LinkEdict
+
+	return returnval;
 }
 
 void _Movetype_Physics_Frame(entity this, float movedt)
 {
+	IL_CLEAR(g_touched_triggers);
+
 	this.move_didgravity = -1;
 	switch (this.move_movetype)
 	{
@@ -726,6 +922,8 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 
 void _Movetype_Physics_ClientFrame(entity this, float movedt)
 {
+	IL_CLEAR(g_touched_triggers);
+
 	this.move_didgravity = -1;
 	switch (this.move_movetype)
 	{
