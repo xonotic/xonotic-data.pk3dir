@@ -458,33 +458,15 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 	if(this.solid == SOLID_NOT)
 		return;
 
-	// due to a lack of pointers in QC, we must save the trace values and restore them for other functions
-	bool save_trace_allsolid = trace_allsolid;
-	bool save_trace_startsolid = trace_startsolid;
-	float save_trace_fraction = trace_fraction;
-	bool save_trace_inwater = trace_inwater;
-	bool save_trace_inopen = trace_inopen;
-	vector save_trace_endpos = trace_endpos;
-	vector save_trace_plane_normal = trace_plane_normal;
-	float save_trace_plane_dist = trace_plane_dist;
-	entity save_trace_ent = trace_ent;
-	int save_trace_dpstartcontents = trace_dpstartcontents;
-	int save_trace_dphitcontents = trace_dphitcontents;
-	int save_trace_dphitq3surfaceflags = trace_dphitq3surfaceflags;
-	string save_trace_dphittexturename = trace_dphittexturename;
-
-	vector emin = this.absmin, emax = this.absmax;
 	// Xonotic and Nexuiz maps assume triggers will be activated by adjacent players
-	// prior to sv_legacy_bbox_expand 0 DP always did this for SVQC and never for CSQC
-	// we also need this for zero-size bboxes because radius == 0 returns nothing
+	// prior to sv_legacy_bbox_expand 0 DP always did this 1u expansion for SVQC and never for CSQC
 	// see also: WarpZoneLib_ExactTrigger_Touch()
-	emin -= '1 1 1';
-	emax += '1 1 1';
-
-	FOREACH_ENTITY_RADIUS_ORDERED(0.5 * (this.absmin + this.absmax), 0.5 * vlen(emin - emax), true, {
+	for (entity it = findbox_tofield(this.absmin - '1 1 1', this.absmax + '1 1 1', touch_chain); it; it = it.touch_chain)
+	{
 		if (it.solid == SOLID_TRIGGER && it != this)
 		if (it.move_nomonsters != MOVE_NOMONSTERS && it.move_nomonsters != MOVE_WORLDONLY)
-		if (gettouch(it) && boxesoverlap(it.absmin, it.absmax, emin, emax))
+		if (gettouch(it))
+		if (!IL_CONTAINS(g_touched_triggers, it))
 		{
 			trace_allsolid = false;
 			trace_startsolid = false;
@@ -501,22 +483,10 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			trace_dphittexturename = string_null;
 
 			gettouch(it)(it, this);
+			if (!wasfreed(it) && !it.trigger_exact) // if exact trigger failed it may still be touchable later this move
+				IL_PUSH(g_touched_triggers, it);
 		}
-	});
-
-	trace_allsolid = save_trace_allsolid;
-	trace_startsolid = save_trace_startsolid;
-	trace_fraction = save_trace_fraction;
-	trace_inwater = save_trace_inwater;
-	trace_inopen = save_trace_inopen;
-	trace_endpos = save_trace_endpos;
-	trace_plane_normal = save_trace_plane_normal;
-	trace_plane_dist = save_trace_plane_dist;
-	trace_ent = save_trace_ent;
-	trace_dpstartcontents = save_trace_dpstartcontents;
-	trace_dphitcontents = save_trace_dphitcontents;
-	trace_dphitq3surfaceflags = save_trace_dphitq3surfaceflags;
-	trace_dphittexturename = save_trace_dphittexturename;
+	}
 }
 
 int _Movetype_ContentsMask(entity this)  // SV_GenericHitSuperContentsMask
