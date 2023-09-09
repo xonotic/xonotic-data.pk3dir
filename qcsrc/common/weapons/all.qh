@@ -298,15 +298,10 @@ const .float reloading_time = reload_time;
 
 // read cvars from weapon settings
 // cvars are created as such: g_balance_wepname_name
-#define WEP_CVAR(wepname, name) (_wep_##wepname.wepvar_##name)
-#define WEP_CVAR_PRI(wepname, name) WEP_CVAR(wepname, primary_##name)
-#define WEP_CVAR_SEC(wepname, name) WEP_CVAR(wepname, secondary_##name)
-#define WEP_CVAR_BOTH(wepname, isprimary, name) ((isprimary) ? WEP_CVAR_PRI(wepname, name) : WEP_CVAR_SEC(wepname, name))
-
-#define WEP_CVAR_E(wep, name) (wep.wepvar_##name)
-#define WEP_CVAR_PRI_E(wep, name) WEP_CVAR_E(wep, primary_##name)
-#define WEP_CVAR_SEC_E(wep, name) WEP_CVAR_E(wep, secondary_##name)
-#define WEP_CVAR_BOTH_E(wep, isprimary, name) ((isprimary) ? WEP_CVAR_PRI_E(wep, name) : WEP_CVAR_SEC_E(wep, name))
+#define WEP_CVAR(wep, name) (wep.wepvar_##name)
+#define WEP_CVAR_PRI(wep, name) WEP_CVAR(wep, primary_##name)
+#define WEP_CVAR_SEC(wep, name) WEP_CVAR(wep, secondary_##name)
+#define WEP_CVAR_BOTH(wep, isprimary, name) ((isprimary) ? WEP_CVAR_PRI(wep, name) : WEP_CVAR_SEC(wep, name))
 
 const int WEP_FIRST = 1;
 #define WEP_LAST (REGISTRY_COUNT(Weapons) - 1)

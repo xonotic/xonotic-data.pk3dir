@@ -358,8 +358,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.maxs = '4 4 4';
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
-				this.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
-				this.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
+				this.bouncefactor = WEP_CVAR_SEC(WEP_ELECTRO, bouncefactor);
+				this.bouncestop = WEP_CVAR_SEC(WEP_ELECTRO, bouncestop);
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
@@ -376,8 +376,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.maxs = '3 3 3';
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
-				this.bouncefactor = WEP_CVAR(mortar, bouncefactor);
-				this.bouncestop = WEP_CVAR(mortar, bouncestop);
+				this.bouncefactor = WEP_CVAR(WEP_MORTAR, bouncefactor);
+				this.bouncestop = WEP_CVAR(WEP_MORTAR, bouncestop);
 				break;
 			case PROJECTILE_GOLEM_LIGHTNING:
 				this.mins = '-8 -8 -8';
@@ -462,8 +462,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			    this.maxs = '0 0 -4';
 			    this.move_movetype = MOVETYPE_BOUNCE;
 			    settouch(this, func_null);
-			    this.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
-			    this.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
+			    this.bouncefactor = WEP_CVAR_SEC(WEP_ELECTRO, bouncefactor);
+			    this.bouncestop = WEP_CVAR_SEC(WEP_ELECTRO, bouncestop);
 			    break;
 			*/
 			default:
