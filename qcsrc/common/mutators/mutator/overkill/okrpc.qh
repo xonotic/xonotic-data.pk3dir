@@ -64,7 +64,7 @@ CLASS(OverkillRocketPropelledChainsaw, Weapon)
 #undef X
 
 ENDCLASS(OverkillRocketPropelledChainsaw)
-REGISTER_WEAPON(OVERKILL_RPC, okrpc, NEW(OverkillRocketPropelledChainsaw));
+REGISTER_WEAPON(OVERKILL_RPC, NEW(OverkillRocketPropelledChainsaw));
 
 //SPAWNFUNC_WEAPON(weapon_okrpc, WEP_OVERKILL_RPC)
 //SPAWNFUNC_WEAPON(weapon_rpc, WEP_OVERKILL_RPC)

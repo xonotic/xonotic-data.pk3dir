@@ -72,7 +72,7 @@ CLASS(OverkillNex, Weapon)
 #undef X
 
 ENDCLASS(OverkillNex)
-REGISTER_WEAPON(OVERKILL_NEX, oknex, NEW(OverkillNex));
+REGISTER_WEAPON(OVERKILL_NEX, NEW(OverkillNex));
 
 
 //SPAWNFUNC_WEAPON(weapon_oknex, WEP_OVERKILL_NEX)
