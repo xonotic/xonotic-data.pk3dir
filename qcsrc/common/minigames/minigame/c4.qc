@@ -316,7 +316,7 @@ void c4_hud_board(vector pos, vector mySize)
 			sprintf(_("%s^7 won the game!"), pname),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
-		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5*panel_fg_alpha,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
 			sprintf(_("%s^7 won the game!"), pname),
@@ -347,12 +347,13 @@ void c4_hud_status(vector pos, vector mySize)
 		mypos = pos;
 		if ( (active_minigame.minigame_flags&C4_TURN_TEAM) == 2 )
 			mypos_y  += player_fontsize_y + ts_y;
-		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5*panel_fg_alpha,DRAWFLAG_ADDITIVE);
 		mypos_y += player_fontsize_y;
-		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25*panel_fg_alpha,DRAWFLAG_ADDITIVE);
 	}
 
 	entity e;
+	string allspecs = "";
 	FOREACH_MINIGAME_ENTITY(e)
 	{
 		if ( e.classname == "minigame_player" && e.team != C4_SPECTATOR_TEAM )
@@ -371,6 +372,33 @@ void c4_hud_status(vector pos, vector mySize)
 
 			mypos_x += tile_size_x;
 		}
+
+		if (e.classname == "minigame_player" && e.team == C4_SPECTATOR_TEAM)
+		{
+			string current_spec = "";
+
+			string cmpctString = entcs_GetName(e.minigame_playerslot - 1);
+			if (strlennocol(cmpctString) > 8)
+			{
+				int new_length = textLengthUpToLength(cmpctString, 8, strlennocol);
+				cmpctString = strcat(substring(cmpctString, 0, new_length), "..");
+			}
+			if (strlen(allspecs) > 0)
+				current_spec = strcat(",", cmpctString);
+			else
+				current_spec = cmpctString;
+			if (strlen(allspecs) < 90)
+				allspecs = strcat(allspecs, current_spec);
+		}
+	}
+	if (strlen(allspecs) > 0)
+	{
+		pos_y = pos_y * 0.3;
+		pos_x = pos_x * 0.41;
+
+		ts = minigame_drawstring_wrapped(mySize_x * 1.7, pos, "Spectators: ", '14 14 0', '0.85 0.47 0.42', panel_fg_alpha, DRAWFLAG_NORMAL, 0);
+		pos_y += 14;
+		ts = minigame_drawcolorcodedstring_wrapped(mySize_x * 1.7, pos, allspecs, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL, 0);
 	}
 }
 
