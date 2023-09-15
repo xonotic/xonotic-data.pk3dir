@@ -418,7 +418,8 @@ LinkDoors
 
 entity LinkDoors_nextent(entity cur, entity near, entity pass)
 {
-	while((cur = find(cur, classname, pass.classname)) && ((cur.spawnflags & DOOR_DONT_LINK) || cur.enemy))
+	while ((cur = find(cur, classname, pass.classname))
+	&& ((!Q3COMPAT_COMMON && (cur.spawnflags & DOOR_DONT_LINK)) || cur.enemy))
 	{
 	}
 	return cur;
@@ -426,6 +427,9 @@ entity LinkDoors_nextent(entity cur, entity near, entity pass)
 
 bool LinkDoors_isconnected(entity e1, entity e2, entity pass)
 {
+	if(Q3COMPAT_COMMON)
+		return e1.team == e2.team;
+
 	float DELTA = 4;
 	if((e1.absmin_x > e2.absmax_x + DELTA)
 	|| (e1.absmin_y > e2.absmax_y + DELTA)
@@ -451,7 +455,9 @@ void LinkDoors(entity this)
 
 	if (this.enemy)
 		return;		// already linked by another door
-	if (this.spawnflags & DOOR_DONT_LINK)
+
+	// Q3 door linking is done for teamed doors only and is not affected by spawnflags or bmodel proximity
+	if ((!Q3COMPAT_COMMON && (this.spawnflags & DOOR_DONT_LINK)) || (Q3COMPAT_COMMON && !this.team))
 	{
 		this.owner = this.enemy = this;
 
@@ -775,8 +781,18 @@ spawnfunc(func_door)
 			this.speed = 100;
 	}
 
-	if (q3compat && !this.dmg)
-		this.dmg = 2;
+	if (q3compat)
+	{
+		if (!this.dmg)
+			this.dmg = 2;
+
+		if (!this.team)
+		{
+			string t = GetField_fullspawndata(this, "team");
+			// bones_was_here: same hack as used to support teamed items on Q3 maps
+			if (t) this.team = crc16(false, t);
+		}
+	}
 
 	settouch(this, door_touch);
 
