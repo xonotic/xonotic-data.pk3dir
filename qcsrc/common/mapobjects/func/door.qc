@@ -47,31 +47,29 @@ void door_blocked(entity this, entity blocker)
 			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 
-		 // don't change direction for dead or dying stuff
-		if(IS_DEAD(blocker)
+		// don't change direction for dead or dying stuff
+		if (!IS_DEAD(blocker)
 #ifdef SVQC
-			&& (blocker.takedamage == DAMAGE_NO)
+			&& blocker.takedamage != DAMAGE_NO
 #endif
+			&& this.wait >= 0
 		)
 		{
-			if (this.wait >= 0)
+			if (this.state == STATE_DOWN)
 			{
-				if (this.state == STATE_DOWN)
-				{
-					if (this.classname == "door")
-						door_go_up(this, NULL, NULL);
-					else
-						door_rotating_go_up(this, blocker);
-				}
+				if (this.classname == "door")
+					door_go_up(this, NULL, NULL);
 				else
-				{
-					if (this.classname == "door")
-						door_go_down(this);
-					else
-						door_rotating_go_down(this);
-				}
-				reverse = true;
+					door_rotating_go_up(this, blocker);
 			}
+			else
+			{
+				if (this.classname == "door")
+					door_go_down(this);
+				else
+					door_rotating_go_down(this);
+			}
+			reverse = true;
 		}
 #ifdef SVQC
 		else
@@ -82,7 +80,8 @@ void door_blocked(entity this, entity blocker)
 		}
 #endif
 	}
-	if (!reverse && this.classname == "door")
+	// if we didn't change direction and are using a non-linear movement controller, we must pause it
+	if (!reverse && this.classname == "door" && this.move_controller)
 		SUB_CalcMovePause(this);
 }
 
