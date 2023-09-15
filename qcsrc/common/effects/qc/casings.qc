@@ -164,7 +164,7 @@ NET_HANDLE(casings, bool isNew)
 
     return = true;
 
-    casing.silent = (casing.state & 0x80);
+    casing.silent = casing.state & 0x80;
     if ((casing.state & 0x40) && !autocvar_chase_active)
         casing.origin += autocvar_cl_gunoffset.x * v_forward
                        - autocvar_cl_gunoffset.y * v_right
