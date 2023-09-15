@@ -679,14 +679,28 @@ void door_init_shared(entity this)
 
 	if (q3compat)
 	{
-		// CPMA adds these fields for overriding the engine sounds
+		// CPMA adds these fields for overriding the Q3 default sounds
 		string s = GetField_fullspawndata(this, "sound_start", true);
 		string e = GetField_fullspawndata(this, "sound_end", true);
 
 		if (s)
 			this.noise2 = strzone(s);
+		else
+		{
+			// PK3s supporting Q3A sometimes include custom sounds at Q3 default paths
+			s = "sound/movers/doors/dr1_strt.wav";
+			if (FindFileInMapPack(s))
+				this.noise2 = s;
+		}
+
 		if (e)
 			this.noise1 = strzone(e);
+		else
+		{
+			e = "sound/movers/doors/dr1_end.wav";
+			if (FindFileInMapPack(e))
+				this.noise1 = e;
+		}
 	}
 
 	// sound when door stops moving
