@@ -29,6 +29,7 @@ void door_blocked(entity this, entity blocker)
 {
 	bool reverse = false;
 	if((this.spawnflags & DOOR_CRUSH)
+		&& !Q3COMPAT_COMMON
 #ifdef SVQC
 		&& (blocker.takedamage != DAMAGE_NO)
 #elif defined(CSQC)
@@ -53,6 +54,7 @@ void door_blocked(entity this, entity blocker)
 			&& blocker.takedamage != DAMAGE_NO
 #endif
 			&& this.wait >= 0
+			&& !(Q3COMPAT_COMMON && (this.spawnflags & Q3_DOOR_CRUSHER))
 		)
 		{
 			if (this.state == STATE_DOWN)
@@ -75,7 +77,7 @@ void door_blocked(entity this, entity blocker)
 		else
 		{
 			//gib dying stuff just to make sure
-			if((this.dmg) && (blocker.takedamage != DAMAGE_NO))    // Shall we bite?
+			if (this.dmg && blocker.takedamage != DAMAGE_NO && IS_DEAD(blocker))    // Shall we bite?
 				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 		}
 #endif
