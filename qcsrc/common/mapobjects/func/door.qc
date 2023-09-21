@@ -29,7 +29,6 @@ void door_blocked(entity this, entity blocker)
 {
 	bool reverse = false;
 	if((this.spawnflags & DOOR_CRUSH)
-		&& !Q3COMPAT_COMMON
 #ifdef SVQC
 		&& (blocker.takedamage != DAMAGE_NO)
 #elif defined(CSQC)
@@ -44,46 +43,46 @@ void door_blocked(entity this, entity blocker)
 	else
 	{
 #ifdef SVQC
-		if(this.dmg && blocker.takedamage != DAMAGE_NO)    // Shall we bite?
+		if((this.dmg) && (blocker.takedamage == DAMAGE_YES))    // Shall we bite?
 			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 
-		// don't change direction for dead or dying stuff
-		if(!IS_DEAD(blocker)
+		 // don't change direction for dead or dying stuff
+		if(IS_DEAD(blocker)
 #ifdef SVQC
-			&& blocker.takedamage != DAMAGE_NO
+			&& (blocker.takedamage == DAMAGE_NO)
 #endif
-			&& this.wait >= 0
-			&& !(Q3COMPAT_COMMON && (this.spawnflags & Q3_DOOR_CRUSHER))
 		)
 		{
-			if (this.state == STATE_DOWN)
+			if (this.wait >= 0)
 			{
-				if (this.classname == "door")
-					door_go_up(this, NULL, NULL);
+				if (this.state == STATE_DOWN)
+				{
+					if (this.classname == "door")
+						door_go_up(this, NULL, NULL);
+					else
+						door_rotating_go_up(this, blocker);
+				}
 				else
-					door_rotating_go_up(this, blocker);
+				{
+					if (this.classname == "door")
+						door_go_down(this);
+					else
+						door_rotating_go_down(this);
+				}
+				reverse = true;
 			}
-			else
-			{
-				if (this.classname == "door")
-					door_go_down(this);
-				else
-					door_rotating_go_down(this);
-			}
-			reverse = true;
 		}
 #ifdef SVQC
 		else
 		{
 			//gib dying stuff just to make sure
-			if(this.dmg && blocker.takedamage != DAMAGE_NO && IS_DEAD(blocker))    // Shall we bite?
+			if((this.dmg) && (blocker.takedamage != DAMAGE_NO))    // Shall we bite?
 				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 		}
 #endif
 	}
-	// if we didn't change direction and are using a non-linear movement controller, we must pause it
-	if (!reverse && this.classname == "door" && this.move_controller)
+	if (!reverse && this.classname == "door")
 		SUB_CalcMovePause(this);
 }
 
@@ -213,13 +212,10 @@ bool door_check_keys(entity door, entity player)
 	return false;
 }
 
-void door_use(entity this, entity actor, entity trigger)
+void door_fire(entity this, entity actor, entity trigger)
 {
-	//dprint("door_use (model: ");dprint(this.model);dprint(")\n");
-
-	if (!this.owner)
-		return;
-	this = this.owner;
+	if (this.owner != this)
+		objerror (this, "door_fire: this.owner != this");
 
 	if (this.spawnflags & DOOR_TOGGLE)
 	{
@@ -258,6 +254,14 @@ void door_use(entity this, entity actor, entity trigger)
 		}
 		e = e.enemy;
 	} while ((e != this) && (e != NULL));
+}
+
+void door_use(entity this, entity actor, entity trigger)
+{
+	//dprint("door_use (model: ");dprint(this.model);dprint(")\n");
+
+	if (this.owner)
+		door_fire(this.owner, actor, trigger);
 }
 
 void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
@@ -365,25 +369,14 @@ void door_trigger_touch(entity this, entity toucher)
 #endif
 			return;
 
-	if (this.owner.state == STATE_UP)
+	if (time < this.door_finished)
 		return;
 
 	// check if door is locked
 	if (!door_check_keys(this, toucher))
 		return;
 
-	if (this.owner.state == STATE_TOP)
-	{
-		if (this.owner.nextthink < this.owner.ltime + this.owner.wait)
-		{
-			entity e = this.owner;
-			do {
-				e.nextthink = e.ltime + e.wait;
-				e = e.enemy;
-			} while (e != this.owner);
-		}
-		return;
-	}
+	this.door_finished = time + 1;
 
 	door_use(this.owner, toucher, NULL);
 }
@@ -415,9 +408,7 @@ LinkDoors
 
 entity LinkDoors_nextent(entity cur, entity near, entity pass)
 {
-	while((cur = find(cur, classname, pass.classname))
-	&& (((cur.spawnflags & DOOR_DONT_LINK) && !Q3COMPAT_COMMON) 
-	|| cur.enemy))
+	while((cur = find(cur, classname, pass.classname)) && ((cur.spawnflags & DOOR_DONT_LINK) || cur.enemy))
 	{
 	}
 	return cur;
@@ -425,9 +416,6 @@ entity LinkDoors_nextent(entity cur, entity near, entity pass)
 
 bool LinkDoors_isconnected(entity e1, entity e2, entity pass)
 {
-	if(Q3COMPAT_COMMON)
-		return e1.team == e2.team;
-
 	float DELTA = 4;
 	if((e1.absmin_x > e2.absmax_x + DELTA)
 	|| (e1.absmin_y > e2.absmax_y + DELTA)
@@ -453,10 +441,7 @@ void LinkDoors(entity this)
 
 	if (this.enemy)
 		return;		// already linked by another door
-
-	// Q3 door linking is done for teamed doors only and is not affected by spawnflags or bmodel proximity
-	if (((this.spawnflags & DOOR_DONT_LINK) && !Q3COMPAT_COMMON)
-	|| (Q3COMPAT_COMMON && !this.team))
+	if (this.spawnflags & DOOR_DONT_LINK)
 	{
 		this.owner = this.enemy = this;
 
@@ -559,7 +544,7 @@ SILVER_KEY causes the door to open only if the activator holds a silver key.
 "speed"		movement speed (100 default)
 "wait"		wait before returning (3 default, -1 = never return)
 "lip"		lip remaining at end of move (8 default)
-"dmg"		damage to inflict when blocked (0 default)
+"dmg"		damage to inflict when blocked (2 default)
 "sounds"
 0)	no sound
 1)	stone
@@ -624,11 +609,8 @@ void door_init_startopen(entity this)
 	this.pos2 = this.pos1;
 	this.pos1 = this.origin;
 
-// no longer needed: not using delayed initialisation for door_init_startopen()
-#if 0
 #ifdef SVQC
 	this.SendFlags |= SF_TRIGGER_UPDATE;
-#endif
 #endif
 }
 
@@ -684,28 +666,14 @@ void door_init_shared(entity this)
 
 	if (q3compat)
 	{
-		// CPMA adds these fields for overriding the Q3 default sounds
+		// CPMA adds these fields for overriding the engine sounds
 		string s = GetField_fullspawndata(this, "sound_start", true);
 		string e = GetField_fullspawndata(this, "sound_end", true);
 
 		if (s)
 			this.noise2 = strzone(s);
-		else
-		{
-			// PK3s supporting Q3A sometimes include custom sounds at Q3 default paths
-			s = "sound/movers/doors/dr1_strt.wav";
-			if (FindFileInMapPack(s))
-				this.noise2 = s;
-		}
-
 		if (e)
 			this.noise1 = strzone(e);
-		else
-		{
-			e = "sound/movers/doors/dr1_end.wav";
-			if (FindFileInMapPack(e))
-				this.noise1 = e;
-		}
 	}
 
 	// sound when door stops moving
@@ -725,7 +693,7 @@ void door_init_shared(entity this)
 	}
 	else if (!this.wait)
 	{
-		this.wait = q3compat ? 2 : 3;
+		this.wait = 3;
 	}
 
 	if (!this.lip)
@@ -770,19 +738,15 @@ spawnfunc(func_door)
 	if(this.spawnflags & DOOR_NONSOLID)
 		this.solid = SOLID_NOT;
 
-	door_init_shared(this);
-
-	this.pos1 = this.origin;
-	vector absmovedir;
-	absmovedir.x = fabs(this.movedir.x);
-	absmovedir.y = fabs(this.movedir.y);
-	absmovedir.z = fabs(this.movedir.z);
-	this.pos2 = this.pos1 + this.movedir * (absmovedir * this.size - this.lip);
-
 // DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 // but spawn in the open position
 	if (this.spawnflags & DOOR_START_OPEN)
-		door_init_startopen(this);
+		InitializeEntity(this, door_init_startopen, INITPRIO_SETLOCATION);
+
+	door_init_shared(this);
+
+	this.pos1 = this.origin;
+	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 
 	if(autocvar_sv_doors_always_open)
 	{
@@ -794,19 +758,6 @@ spawnfunc(func_door)
 			this.speed = 400;
 		else
 			this.speed = 100;
-	}
-
-	if (q3compat)
-	{
-		if (!this.dmg)
-			this.dmg = 2;
-
-		if (!this.team)
-		{
-			string t = GetField_fullspawndata(this, "team");
-			// bones_was_here: same hack as used to support teamed items on Q3 maps
-			if(t) this.team = crc16(false, t);
-		}
 	}
 
 	settouch(this, door_touch);
