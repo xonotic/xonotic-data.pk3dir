@@ -663,14 +663,18 @@ void GameplayMode_DelayedInit(entity this)
 	if (!g_duel)
 		MapReadSizes(mapname);
 
-	if (autocvar_g_maxplayers < 0 && teamplay)
+	if (autocvar_g_maxplayers < 0)
 	{
-		// automatic maxplayers should be a multiple of team count
-		if (map_maxplayers == 0 || map_maxplayers > maxclients)
+		if (map_maxplayers <= 0)
 			map_maxplayers = maxclients; // unlimited, but may need rounding
-		int d = map_maxplayers % AVAILABLE_TEAMS;
-		int u = AVAILABLE_TEAMS - d;
-		map_maxplayers += (u <= d && u + map_maxplayers <= maxclients) ? u : -d;
+		map_maxplayers = bound(max(2, AVAILABLE_TEAMS * 2), map_maxplayers, maxclients);
+		if (teamplay)
+		{
+			// automatic maxplayers should be a multiple of team count
+			int down = map_maxplayers % AVAILABLE_TEAMS;
+			int up = AVAILABLE_TEAMS - down;
+			map_maxplayers += (up < down && up + map_maxplayers <= maxclients) ? up : -down;
+		}
 	}
 
 	if (warmup_stage < 0)
@@ -681,9 +685,9 @@ void GameplayMode_DelayedInit(entity this)
 		if (teamplay)
 		{
 			// automatic minplayers should be a multiple of team count
-			int d = map_minplayers % AVAILABLE_TEAMS;
-			int u = AVAILABLE_TEAMS - d;
-			map_minplayers += (u < d && u + map_minplayers <= m) ? u : -d;
+			int down = map_minplayers % AVAILABLE_TEAMS;
+			int up = AVAILABLE_TEAMS - down;
+			map_minplayers += (up < down && up + map_minplayers <= m) ? up : -down;
 		}
 	}
 	else
