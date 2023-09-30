@@ -7,9 +7,7 @@ void plat_link(entity this);
 void plat_delayedinit(entity this)
 {
 	plat_link(this);
-	// Q3 uses only a truth check of .targetname to decide whether to spawn a trigger
-	if(!Q3COMPAT_COMMON || this.targetname == "")
-		plat_spawn_inside_trigger(this); // the "start moving" trigger
+	plat_spawn_inside_trigger(this); // the "start moving" trigger
 }
 
 float plat_send(entity this, entity to, float sf)
@@ -58,12 +56,7 @@ void plat_link(entity this)
 
 spawnfunc(func_plat)
 {
-	if (q3compat)
-	{
-		this.spawnflags = 0; // Q3 plats have no spawnflags
-		if (!this.dmg) this.dmg = 2;
-	}
-	else if (this.spawnflags & CRUSH)
+	if (this.spawnflags & CRUSH)
 	{
 		this.dmg = 10000;
 	}
@@ -98,28 +91,14 @@ spawnfunc(func_plat)
 
 	if (q3compat)
 	{
-		// CPMA adds these fields for overriding the Q3 default sounds
+		// CPMA adds these fields for overriding the engine sounds
 		string s = GetField_fullspawndata(this, "sound_start", true);
 		string e = GetField_fullspawndata(this, "sound_end", true);
 
 		if (s)
 			this.noise = strzone(s);
-		else
-		{
-			// PK3s supporting Q3A sometimes include custom sounds at Q3 default paths
-			s = "sound/movers/plats/pt1_strt.wav";
-			if (FindFileInMapPack(s))
-				this.noise = s;
-		}
-
 		if (e)
 			this.noise1 = strzone(e);
-		else
-		{
-			e = "sound/movers/plats/pt1_end.wav";
-			if (FindFileInMapPack(e))
-				this.noise1 = e;
-		}
 	}
 
 	if(this.noise && this.noise != "")
@@ -143,8 +122,8 @@ spawnfunc(func_plat)
 
 	setblocked(this, plat_crush);
 
-	if (!this.speed) this.speed = q3compat ? 200 : 150;
-	if (!this.lip) this.lip = q3compat ? 8 : 16;
+	if (!this.speed) this.speed = 150;
+	if (!this.lip) this.lip = 16;
 	if (!this.height) this.height = this.size.z - this.lip;
 
 	this.pos1 = this.origin;
@@ -207,8 +186,7 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 		set_movetype(this, MOVETYPE_PUSH);
 		this.move_time = time;
 
-		if(!Q3COMPAT_COMMON || this.targetname == "")
-			plat_spawn_inside_trigger(this);
+		plat_spawn_inside_trigger(this);
 	}
 
 	if(sf & SF_TRIGGER_RESET)

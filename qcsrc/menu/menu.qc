@@ -126,7 +126,8 @@ void UpdateConWidthHeight(float w, float h, float p)
 {
 	if (w != vidwidth_s || h != vidheight_s || p != vidpixelheight_s)
 	{
-		if (updateConwidths(w, h, p)) localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
+		if (updateConwidths(w, h, p) && menuNotTheFirstFrame)
+			localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
 		vidwidth_s = w;
 		vidheight_s = h;
 		vidpixelheight_s = p;

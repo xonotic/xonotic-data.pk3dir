@@ -577,8 +577,8 @@ bool Item_GiveTo(entity item, entity player)
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ITEM_JETPACK_GOT);
 	}
 
-	int its;
-	if((its = (item.items - ((item.items & player.items)) & IT_PICKUPMASK)))
+	int its = (item.items - (item.items & player.items)) & IT_PICKUPMASK;
+	if (its)
 	{
 		pickedup = true;
 		player.items |= its;
