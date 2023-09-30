@@ -18,8 +18,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 
 	if (WEP_CVAR_PRI(shotgun, spread_fixed) > 0)
 	{
-		vector forward, right, up;
-		forward = v_forward;
+		vector right, up;
 		right = v_right;
 		up = v_up;
 
@@ -27,7 +26,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 
 		for(int sc = 0; sc < bullets; ++sc)
 		{
-			vector s = W_CalculateSpreadPattern(sc, bullets, true);
+			vector s = W_CalculateSpreadPattern(sc, bullets);
 			s = s * fixed_spread_factor;
 			fireBullet_antilag(actor, weaponentity, w_shotorg, w_shotdir + right * s.y + up * s.z, 0, solidpenetration, damage, 0, force, thiswep.m_id, bullet_trail_effect, false);
 		}

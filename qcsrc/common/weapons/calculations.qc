@@ -184,7 +184,7 @@ int W_GetGunAlignment(entity player)
 }
 #endif
 
-vector W_CalculateSpreadPattern(int counter, int total, bool returnTransformVector)
+vector W_CalculateSpreadPattern(int counter, int total)
 {
 	// first is always centered
 	if (counter == 0)
@@ -201,15 +201,12 @@ vector W_CalculateSpreadPattern(int counter, int total, bool returnTransformVect
 	// 9 is a 3x3 grid and 13 is a circle with center + 3 per quadrant
 	makevectors('0 360 0' * ((0.25 * ((total + 1) % 2)) + (counter / (total - 1))));
 
-	if (returnTransformVector) // return transform vector
-	{
-		s.y = v_forward.x;
-		s.z = v_forward.y;
-	}
-	else // return original result normal vector
-	{
-		s = v_forward;
-	}
+	// return transform vector
+	s.y = v_forward.x;
+	s.z = v_forward.y;
+
+	//else // return original result normal vector
+		//s = v_forward;
 
 	return s;
 }
