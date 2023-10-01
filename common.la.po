@@ -3647,7 +3647,7 @@ msgstr "^BG%s^K1 suis auribus M@!#%% Klein Lagena nocuit%s%s"
 #: qcsrc/common/notifications/all.inc:489
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Polybolo ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:490
 #, c-format
@@ -3693,13 +3693,13 @@ msgstr "^BG%s^K1 suo Mortario se rupit%s%s"
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Polybolo Immoderato ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:499
 #, c-format
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Polybolo Immoderato ^BG%s^K1, divisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
@@ -3710,7 +3710,7 @@ msgstr "^BG%s%s^K1, Polybolo Immoderato ^BG%s^K1, perforatus est%s%s"
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Nece Immoderata ^BG%s^K1, in vaporem mutatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
@@ -3744,27 +3744,30 @@ msgstr "^BG%s^K1 Missilium Pellentium Serra Immoderata sua se rupit%s%s"
 #: qcsrc/common/notifications/all.inc:507
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Sclopeto Immoderato ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:508
 #, c-format
 msgid "^BG%s%s^K1 was sniped with a Rifle by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Sclopeto Pungenti ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:509
 #, c-format
 msgid "^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s"
 msgstr ""
+"^BG%s%s^K1 sub ^BG%s^K1 Sclopeti Pungentis missilium pluvia mortus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s"
 msgstr ""
+"^BG%s%s^K1, ex ^BG%s^K1 Sclopeti Pungentis missilium pluvia, effugire non "
+"potuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, ex ^BG%s^K1 Sclopeto Pungenti, effugire non potuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
@@ -3794,12 +3797,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:517
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Sclopeto ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:518
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 magno Sclopeto ^BG%s^K1 alapam dedit%s%s"
 
 #: qcsrc/common/notifications/all.inc:519
 #, c-format
@@ -3819,12 +3822,12 @@ msgstr "^BG%s^K1 suis auribus M@!#%% Tuba nocuit%s%s"
 #: qcsrc/common/notifications/all.inc:522
 #, c-format
 msgid "^BG%s%s^K1 has been sublimated by ^BG%s^K1's Vaporizer%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Vaporatro ^BG%s^K1, fervefactus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:523
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Vortice ^BG%s^K1, in vaporem mutatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:542
 msgid "^F4You are now alone!"
@@ -5149,20 +5152,20 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
-msgstr ""
+msgstr "Plasmatis Tormentum"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:8
 msgid "Dual plasma"
-msgstr ""
+msgstr "Plasma Duplum"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:20
 msgid "Dual Plasma Cannon"
-msgstr ""
+msgstr "Plasmatis Dupli Tormentum"
 
 #: qcsrc/common/turrets/turret/tesla.qh:13
 #: qcsrc/common/turrets/turret/tesla_weapon.qh:7
 msgid "Tesla Coil"
-msgstr ""
+msgstr "Teslae Spira"
 
 #: qcsrc/common/turrets/turret/walker.qh:15
 msgid "Walker Turret"
@@ -5228,7 +5231,7 @@ msgstr "Pugna Modo Pugno"
 #: qcsrc/common/util.qc:260
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
 msgid "Piñata"
-msgstr ""
+msgstr "Referti Armis"
 
 #: qcsrc/common/util.qc:261
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:197
@@ -5675,7 +5678,7 @@ msgstr "Cursor"
 
 #: qcsrc/common/vehicles/vehicle/racer_weapon.qh:9
 msgid "Racer cannon"
-msgstr ""
+msgstr "Cursoris tormentum"
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:21
 msgid "Raptor"
@@ -5683,7 +5686,7 @@ msgstr "Raptor"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:9
 msgid "Raptor cannon"
-msgstr ""
+msgstr "Raptoris tormentum"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:17
 msgid "Raptor bomb"
@@ -9960,7 +9963,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
-msgstr ""
+msgstr "Victor"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "join 'best' team (auto-select)"
@@ -10017,31 +10020,31 @@ msgstr "Si non sines, scribetur \"Lusor Anonymus\""
 
 #: qcsrc/menu/xonotic/gametypelist.qc:88
 msgid "teamplay"
-msgstr ""
+msgstr "manus ludus"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:90
 msgid "free for all"
-msgstr ""
+msgstr "omnes contra omnes"
 
 #: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "Moving"
-msgstr ""
+msgstr "Motio"
 
 #: qcsrc/menu/xonotic/keybinder.qc:39
 msgid "move forwards"
-msgstr ""
+msgstr "progredi"
 
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "move backwards"
-msgstr ""
+msgstr "regredi"
 
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "strafe left"
-msgstr ""
+msgstr "sinistrorsum gradi"
 
 #: qcsrc/menu/xonotic/keybinder.qc:42
 msgid "strafe right"
-msgstr ""
+msgstr "dextrorsum gradi"
 
 #: qcsrc/menu/xonotic/keybinder.qc:43
 msgid "jump / swim"
@@ -10077,39 +10080,39 @@ msgstr "optima"
 
 #: qcsrc/menu/xonotic/keybinder.qc:59
 msgid "reload"
-msgstr ""
+msgstr "replere"
 
 #: qcsrc/menu/xonotic/keybinder.qc:87
 msgid "hold zoom"
-msgstr ""
+msgstr "amplificare"
 
 #: qcsrc/menu/xonotic/keybinder.qc:88
 msgid "toggle zoom"
-msgstr ""
+msgstr "alternare amplificationes"
 
 #: qcsrc/menu/xonotic/keybinder.qc:89
 msgid "show scores"
-msgstr ""
+msgstr "rationarium videre"
 
 #: qcsrc/menu/xonotic/keybinder.qc:90
 msgid "screen shot"
-msgstr ""
+msgstr "imaginem servare"
 
 #: qcsrc/menu/xonotic/keybinder.qc:91
 msgid "maximize radar"
-msgstr ""
+msgstr "detectrum amplificare"
 
 #: qcsrc/menu/xonotic/keybinder.qc:92
 msgid "3rd person view"
-msgstr ""
+msgstr "3ae personae visio"
 
 #: qcsrc/menu/xonotic/keybinder.qc:93
 msgid "enter spectator mode"
-msgstr ""
+msgstr "spectatoris modus"
 
 #: qcsrc/menu/xonotic/keybinder.qc:96
 msgid "Communication"
-msgstr ""
+msgstr "Locutio"
 
 #: qcsrc/menu/xonotic/keybinder.qc:97
 msgid "public chat"
@@ -10121,19 +10124,19 @@ msgstr "manus locutorium"
 
 #: qcsrc/menu/xonotic/keybinder.qc:99
 msgid "show chat history"
-msgstr ""
+msgstr "prius locuta videre"
 
 #: qcsrc/menu/xonotic/keybinder.qc:100
 msgid "vote YES"
-msgstr ""
+msgstr "approbare suffragio"
 
 #: qcsrc/menu/xonotic/keybinder.qc:101
 msgid "vote NO"
-msgstr ""
+msgstr "reprobare suffragio"
 
 #: qcsrc/menu/xonotic/keybinder.qc:105
 msgid "Client"
-msgstr ""
+msgstr "Cliens"
 
 #: qcsrc/menu/xonotic/keybinder.qc:109 qcsrc/menu/xonotic/keybinder.qc:111
 msgid "enter console"
