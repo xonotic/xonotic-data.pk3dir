@@ -416,9 +416,9 @@ int menuTooltipState;  // 0: static, 1: fading in, 2: fading out, 3: forced fadi
 bool m_testmousetooltipbox(vector pos)
 {
 	return !(
-		(pos.x >= menuTooltipOrigin.x && pos.x < menuTooltipOrigin.x + menuTooltipSize.x)
-		&& (pos.y >= menuTooltipOrigin.y && pos.y < menuTooltipOrigin.y + menuTooltipSize.y)
-			);
+	    (pos.x >= menuTooltipOrigin.x && pos.x < menuTooltipOrigin.x + menuTooltipSize.x)
+	    && (pos.y >= menuTooltipOrigin.y && pos.y < menuTooltipOrigin.y + menuTooltipSize.y)
+	        );
 }
 bool m_testtooltipbox(vector tooltippos)
 {
@@ -710,12 +710,12 @@ void m_draw(float width, float height)
 	{
 		menuNotTheFirstFrame = true;
 		if (Menu_Active && !cvar("menu_video_played"))
-		{
-			localcmd("cd loop $menu_cdtrack\n");
-			// TODO: use this when we have a welcome sound
-			//localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
-			menuLogoAlpha = -0.8;  // no idea why, but when I start this at zero, it jumps instead of fading FIXME
-		}
+        {
+            localcmd("cd loop $menu_cdtrack\n");
+            // TODO: use this when we have a welcome sound
+            //localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
+            menuLogoAlpha = -0.8;  // no idea why, but when I start this at zero, it jumps instead of fading FIXME
+        }
 		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!
 		localcmd("set menu_video_played 1\n");
 	}
@@ -739,8 +739,8 @@ void m_draw(float width, float height)
 	if (Menu_Active)
 	{
 		if (getmousetarget() == (menuMouseMode ? MT_CLIENT : MT_MENU)
-			&& (getkeydest() == KEY_MENU || getkeydest() == KEY_MENU_GRABBED))
-				setkeydest(keyGrabber ? KEY_MENU_GRABBED : KEY_MENU);
+		    && (getkeydest() == KEY_MENU || getkeydest() == KEY_MENU_GRABBED))
+		    	setkeydest(keyGrabber ? KEY_MENU_GRABBED : KEY_MENU);
 		else m_hide();
 	}
 
@@ -998,31 +998,4 @@ void m_play_click_sound(string soundfile)
 {
 	if (!cvar("menu_sounds")) return;
 	localsound(soundfile);
-}
-
-void m_cvar_changed(string theCvarName, string oldValue, string newValue)
-{
-	if (!menuInitialized) return;
-
-	// some variables have name "\n"
-	// LOG_INFOF("========> QC: Cvar \"%s\" changed from \"%s\" to \"%s\"",
-	//     strreplace("\n", "\\n", theCvarName),
-	//     strreplace("\n", "\\n", oldValue),
-	//     strreplace("\n", "\\n", newValue)
-	// );
-
-	// search for subscribed callbacks and call them
-	IL_EACH(cvarCallbackItems, it.cvarName == theCvarName, 
-	{
-		// LOG_INFOF("=========> Callback triggered for %s", it.name);
-		entity theContext = it.context;
-		it.callback(theCvarName, oldValue, newValue, theContext);
-	});
-}
-
-void cvar_onChangeSubscribe(string theCvarName, cvar_callback theCallback, entity theContext)
-{
-	entity callbackItem;
-	callbackItem = createCvarCallbackItem(theCvarName, theCallback, theContext);
-	IL_PUSH(cvarCallbackItems, callbackItem);
 }

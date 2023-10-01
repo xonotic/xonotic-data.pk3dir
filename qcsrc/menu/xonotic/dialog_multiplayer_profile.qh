@@ -5,7 +5,6 @@ const int COLOR_BUTTONS_COUNT = 15;
 CLASS(XonoticProfileTab, XonoticTab)
 	METHOD(XonoticProfileTab, fill, void(entity));
 	METHOD(XonoticProfileTab, draw, void(entity));
-	METHOD(XonoticProfileTab, updateColor, void(entity));
 	ATTRIB(XonoticProfileTab, intendedWidth, float, 0.9);
 	ATTRIB(XonoticProfileTab, rows, float, 23);
 	ATTRIB(XonoticProfileTab, columns, float, 6.1);  // added extra .2 for center space
@@ -18,5 +17,3 @@ CLASS(XonoticProfileTab, XonoticTab)
 	ATTRIB(XonoticProfileTab, playerModelSelector, entity);
 ENDCLASS(XonoticProfileTab)
 entity makeXonoticProfileTab();
-
-cvar_callback onCvarChanged;
