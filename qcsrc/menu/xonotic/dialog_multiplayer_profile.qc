@@ -92,7 +92,7 @@ void XonoticProfileTab_fill(entity me)
 	entity e, label;
 	float i;
 	me.applyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
-		"_cl_color \"$"MENU_CVAR_COLOR"\""
+		"_cl_color \"$"MENU_CVAR_COLOR"\";"
 		"color -1 -1;" // apply colors contained in _cl_color
 		"name \"$"MENU_CVAR_NAME"\";"
 		"playermodel $"MENU_CVAR_MODEL";"
