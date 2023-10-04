@@ -34,6 +34,7 @@ entity makeXonoticProfileTab()
 	return me;
 }
 
+bool autocvar__menu_profile_apply_button_command_executed;
 void XonoticProfileTab_draw(entity me)
 {
 	string name = cvar_string("_cl_name");
@@ -42,10 +43,12 @@ void XonoticProfileTab_draw(entity me)
 		me.playerNameLabel.alpha = ((mod(time * 2, 2) < 1) ? 1 : 0);
 	else
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;
-	
-	// if values changed from console, update it in menu
-	if (me.applyButton.disabled)
+
+	// if this cvar is set then we are sure the apply button command has really taken effect
+	// we can't assume that it gets executed in one frame due to how cmd works
+	if (autocvar__menu_profile_apply_button_command_executed)
 	{
+		cvar_set("_menu_profile_apply_button_command_executed", "0");
 		// name field
 		string inputName  = cvar_string(MENU_CVAR_NAME);
 		if (name != inputName)
@@ -97,6 +100,7 @@ void XonoticProfileTab_fill(entity me)
 		"name \"$"MENU_CVAR_NAME"\";"
 		"playermodel $"MENU_CVAR_MODEL";"
 		"playerskin $"MENU_CVAR_SKIN";"
+		"_menu_profile_apply_button_command_executed 1;"
 		, COMMANDBUTTON_APPLY);
 	me.applyButton.disableOnClick = true;
 
