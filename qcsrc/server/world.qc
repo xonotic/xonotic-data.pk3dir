@@ -1063,7 +1063,7 @@ spawnfunc(worldspawn)
 	WinningConditionHelper(this); // set worldstatus
 
 	if (autocvar_sv_autopause && server_is_dedicated && !wantrestart)
-		// INITPRIO_LAST is to soon: bots either didn't join yet or didn't leave yet, see: bot_fixcount()
+		// INITPRIO_LAST is too soon: bots either didn't join yet or didn't leave yet, see: bot_fixcount()
 		defer(this, 5, Pause_TryPause_Dedicated);
 
 	world_initialized = 1;
