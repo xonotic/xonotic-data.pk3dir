@@ -44,18 +44,22 @@ void XonoticProfileTab_draw(entity me)
 	else
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;
 
-	// if this cvar is set then we are sure the apply button command has really taken effect
+	// when this cvar is set to 1 we are sure the apply button command has really taken effect
 	// we can't assume that it gets executed in one frame due to how cmd works
-	if (autocvar__menu_profile_apply_button_command_executed)
+	if (autocvar__menu_profile_apply_button_command_executed == -1) // set to -1 on menu init
 	{
 		cvar_set("_menu_profile_apply_button_command_executed", "0");
-		// name field
+		// initialize the input name box text
 		string inputName  = cvar_string(MENU_CVAR_NAME);
 		if (name != inputName)
 		{
 			cvar_set(MENU_CVAR_NAME, name);
 			me.nameInput.loadCvars(me.nameInput);
 		}
+	}
+	else if (autocvar__menu_profile_apply_button_command_executed == 1) // set to 1 by the apply button command
+	{
+		cvar_set("_menu_profile_apply_button_command_executed", "0");
 
 		// color buttons
 		string color = cvar_string("_cl_color");
