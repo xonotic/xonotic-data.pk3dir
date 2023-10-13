@@ -34,6 +34,12 @@ entity makeXonoticProfileTab()
 	return me;
 }
 
+bool nameinputbox_changed;
+void NameInputBox_Change(entity box, entity me)
+{
+	nameinputbox_changed = true;
+}
+
 bool autocvar__menu_profile_apply_button_command_executed;
 void XonoticProfileTab_draw(entity me)
 {
@@ -46,20 +52,10 @@ void XonoticProfileTab_draw(entity me)
 
 	// when this cvar is set to 1 we are sure the apply button command has really taken effect
 	// we can't assume that it gets executed in one frame due to how cmd works
-	if (autocvar__menu_profile_apply_button_command_executed == -1) // set to -1 on menu init
+	if (autocvar__menu_profile_apply_button_command_executed) // set by the apply button command
 	{
 		cvar_set("_menu_profile_apply_button_command_executed", "0");
-		// initialize the input name box text
-		string inputName  = cvar_string(MENU_CVAR_NAME);
-		if (name != inputName)
-		{
-			cvar_set(MENU_CVAR_NAME, name);
-			me.nameInput.loadCvars(me.nameInput);
-		}
-	}
-	else if (autocvar__menu_profile_apply_button_command_executed == 1) // set to 1 by the apply button command
-	{
-		cvar_set("_menu_profile_apply_button_command_executed", "0");
+		nameinputbox_changed = false;
 
 		// color buttons
 		string color = cvar_string("_cl_color");
@@ -85,6 +81,16 @@ void XonoticProfileTab_draw(entity me)
 			cvar_set(MENU_CVAR_MODEL, model);
 			me.playerModelSelector.loadCvars(me.playerModelSelector);
 			me.playerModelSelector.go(me.playerModelSelector, 0);
+		}
+	}
+	else if (!nameinputbox_changed)
+	{
+		// check if _cl_name has changed in console
+		string inputName  = cvar_string(MENU_CVAR_NAME);
+		if (name != inputName)
+		{
+			cvar_set(MENU_CVAR_NAME, name);
+			me.nameInput.loadCvars(me.nameInput);
 		}
 	}
 
@@ -130,6 +136,8 @@ void XonoticProfileTab_fill(entity me)
 			me.nameInput.saveImmediately = 0;  // Sorry, can't do this, it spams "name" commands.
 			me.nameInput.enableClearButton = 0;
 			me.nameInput.applyButton = me.applyButton;
+			me.nameInput.onChange = NameInputBox_Change;
+			me.nameInput.onChangeEntity = me;
 			label.textEntity = me.nameInput;
 	me.TR(me);
 		me.TD(me, 5, 1, e = makeXonoticColorpicker(me.nameInput));

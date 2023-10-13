@@ -67,7 +67,6 @@ void m_init()
 	}
 	prvm_language = strzone(prvm_language);
 	cvar_set("_menu_prvm_language", prvm_language);
-	cvar_set("_menu_profile_apply_button_command_executed", "-1");
 
 #ifdef WATERMARK
 		LOG_TRACEF("^4MQC Build information: ^1%s", WATERMARK);
