@@ -2518,8 +2518,8 @@ msgstr "^BG%s^BG kaappasi ^TC^TT^BG lipun"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG kaappasi ^TC^TT^BG lipun ^F1%s^BG sekunnissa, rikkoen ^BG%s^BG's "
 "edellisen ennätyksen ^F2%s^BG sekuntia"
@@ -2690,8 +2690,8 @@ msgstr "^BG%s%s^K1 palautettiin maanpinnalle syyllisen ollen ^BG%s^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
 msgstr ""
-"^BG%s%s^K1 tunsi mitä se on kun tekee poppaa ^BG%s^K1's tulen polttaessa^K1%s"
-"%s"
+"^BG%s%s^K1 tunsi mitä se on kun tekee poppaa ^BG%s^K1's tulen "
+"polttaessa^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
@@ -2744,8 +2744,8 @@ msgstr "^BG%s%s^K1 ei tervehtynyt ^BG%s^K1's Terveysnaatista %s%s"
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"
 msgstr ""
-"^BG%s%s^K1 ammuttiin planeettaa kiertävälle radalle syyllisen ollen ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 ammuttiin planeettaa kiertävälle radalle syyllisen ollen "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
@@ -3545,8 +3545,8 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"
 msgstr ""
-"^BG%s%s^K1 kuoli syyn ollen ^BG%s^K1 on mahtava soittamaan @!#%%'n Haitaria%s"
-"%s"
+"^BG%s%s^K1 kuoli syyn ollen ^BG%s^K1 on mahtava soittamaan @!#%%'n "
+"Haitaria%s%s"
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -3744,8 +3744,8 @@ msgstr "^BG%s^K1 räjäyttivät itsensä omalla Mörssärillään%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 niputettiin ^BG%s^K1'n Ylimalkaallisen Raskaalla Konekiväärillä%s"
-"%s"
+"^BG%s%s^K1 niputettiin ^BG%s^K1'n Ylimalkaallisen Raskaalla "
+"Konekiväärillä%s%s"
 
 #: qcsrc/common/notifications/all.inc:499
 #, c-format
@@ -3760,8 +3760,8 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 ropisi täyteen reikiä ^BG%s^K1'n Ylimalkaallisella konekiväärillä"
-"%s%s"
+"^BG%s%s^K1 ropisi täyteen reikiä ^BG%s^K1'n Ylimalkaallisella "
+"konekiväärillä%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -3771,8 +3771,8 @@ msgstr "^BG%s%s^K1 höyrytettiin ^BG%s^K1'n Ylimalkaallisella Nex:illä%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 "^BG%s%s^K1 sahattiin kahtia ^BG%s^K1'n Ylimalkaallisella rakettikäyttöisellä "
 "moottorisahalla%s%s"

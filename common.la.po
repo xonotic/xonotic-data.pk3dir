@@ -2489,8 +2489,8 @@ msgstr "^BG%s^BG vexillum ^TC^TT^BG cepit"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG vexillum ^TC^TT^BG ^F1%s^BG secundis cepit, fuit captus celerior "
 "anteriore celerrimo, quem ^BG%s^BG ^F2%s^BG secundis fecerat"
@@ -3404,8 +3404,8 @@ msgstr ""
 #, c-format
 msgid "^BG%s^BG improved their %s%s^BG place record with %s%s %s"
 msgstr ""
-"^BG%s^BG celerior fuit quam suum ipsum gradum %s%s^BG, tempus novum fuit %s"
-"%s %s"
+"^BG%s^BG celerior fuit quam suum ipsum gradum %s%s^BG, tempus novum fuit "
+"%s%s %s"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -3715,19 +3715,19 @@ msgstr "^BG%s%s^K1, Nece Immoderata ^BG%s^K1, in vaporem mutatus est%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1, Missilium Pellentium Serra Immoderata ^BG%s^K1, dimidiatus est%s"
-"%s"
+"^BG%s%s^K1, Missilium Pellentium Serra Immoderata ^BG%s^K1, dimidiatus "
+"est%s%s"
 
 #: qcsrc/common/notifications/all.inc:503
 #, c-format
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 Missilium Pellentium Serram Immoderatam, ^BG%s^K1, fere vitavit%s"
-"%s"
+"^BG%s%s^K1 Missilium Pellentium Serram Immoderatam, ^BG%s^K1, fere "
+"vitavit%s%s"
 
 #: qcsrc/common/notifications/all.inc:504
 #, c-format

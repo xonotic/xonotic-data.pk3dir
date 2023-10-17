@@ -2540,8 +2540,8 @@ msgstr "^BG%s^BG capturó la bandera ^TC^TT^BG"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG capturó la bandera ^TC^TT^BG en ^F1%s^BG segundos, batiendo el "
 "récord anterior de ^BG%s^BG de ^F2%s^BG segundos"
@@ -2847,8 +2847,8 @@ msgstr "^BG%s%s^K1 fue explotado a pedazos por el Robot Araña de ^BG%s^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s"
 msgstr ""
-"^BG%s%s^K1 quedó atrapado en la explosión cuando el Racer de ^BG%s^K1 explotó"
-"%s%s"
+"^BG%s%s^K1 quedó atrapado en la explosión cuando el Racer de ^BG%s^K1 "
+"explotó%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
@@ -3117,8 +3117,8 @@ msgstr "^BG%s^K1fue reventado por una torreta Walker%s%s"
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Bumblebee explosion%s%s"
 msgstr ""
-"^BG%s^K1 fue alcanzado por la onda expansiva de una explosión de Bumblebee%s"
-"%s"
+"^BG%s^K1 fue alcanzado por la onda expansiva de una explosión de "
+"Bumblebee%s%s"
 
 #: qcsrc/common/notifications/all.inc:352
 #, c-format
@@ -3134,8 +3134,8 @@ msgstr "^BG%s^K1 fue alcanzado por una bomba de racimo de un Raptor%s%s"
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Raptor explosion%s%s"
 msgstr ""
-"^BG%s^K1 fue alcanzado por la explosión de la bomba de racimo de un Raptor%s"
-"%s"
+"^BG%s^K1 fue alcanzado por la explosión de la bomba de racimo de un "
+"Raptor%s%s"
 
 #: qcsrc/common/notifications/all.inc:355
 #, c-format
@@ -3647,8 +3647,8 @@ msgstr "^BG%s%s^K1 fue despedazado por el rayo del Electro de ^BG%s^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 felt the electrifying air of ^BG%s^K1's Electro combo%s%s"
 msgstr ""
-"^BG%s%s^K1 sintió el aire electrificante del el combo de Electro de ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 sintió el aire electrificante del el combo de Electro de "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:474
 #, c-format
@@ -3781,8 +3781,8 @@ msgstr "^BG%s^K1 se explotó a sí mismo con su propio Mortero%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 fue arrebatado por la Ametralladora Pesada Overkill de ^BG%s^K1%s"
-"%s"
+"^BG%s%s^K1 fue arrebatado por la Ametralladora Pesada Overkill de "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:499
 #, c-format
@@ -3807,8 +3807,8 @@ msgstr "^BG%s%s^K1 ha sido vaporizado por el Nex Overkill de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 "^BG%s%s^K1 fue aserrado por la mitad por la Motosierra Overkill Propulsada "
 "por Cohetes de ^BG%s^K1%s%s"
@@ -3818,8 +3818,8 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 casi esquivó la Motosierra Overkill Propulsada por Cohetes d^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 casi esquivó la Motosierra Overkill Propulsada por Cohetes "
+"d^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:504
 #, c-format

@@ -2478,8 +2478,8 @@ msgstr "^BG%s^BG 奪取了^TC^TT隊^BG旗幟"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG 奪取^TC^TT隊^BG旗幟用了 ^F1%s^BG 秒，打破了原來 ^BG%s^BG ^F2%s^BG 秒"
 "的記錄"
@@ -3687,8 +3687,8 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 用絕滅星璇槍刺到人間蒸發%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr "^BG%s%s^K1 被 ^BG%s^K1 用絕滅火箭炮鏈鋸鋸成兩份%s%s"
 
 #: qcsrc/common/notifications/all.inc:503

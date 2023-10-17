@@ -2480,8 +2480,8 @@ msgstr "^BG%s^BG a capturat steagul ^TC^TT^BG"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG a capturat steagul ^TC^TT^BG în ^F1%s^BG secunde, spărgând recordul "
 "lui ^BG%s^BG de ^F2%s^BG secunde"
@@ -2926,8 +2926,8 @@ msgstr "^BG%sK1 a devenit expert în arta auto-exploziei%s%s"
 msgid ""
 "^BG%s^K1 decided to take a look at the results of their napalm explosion%s%s"
 msgstr ""
-"^BG%s^K1 a decis să simtă pe pielea sa rezultatul propriei explozii cu napalm"
-"%s%s"
+"^BG%s^K1 a decis să simtă pe pielea sa rezultatul propriei explozii cu "
+"napalm%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
@@ -3512,8 +3512,8 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"
 msgstr ""
-"^BG%s%s^K1 a murit din cauza virtuozității lui ^BG%s^K1's pe @!#%%'n acordeon"
-"%s%s"
+"^BG%s%s^K1 a murit din cauza virtuozității lui ^BG%s^K1's pe @!#%%'n "
+"acordeon%s%s"
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -3623,8 +3623,8 @@ msgstr "^BG%s^K1 a uitat de propriai Mină de foc%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by a burst of ^BG%s^K1's Hagar rockets%s%s"
 msgstr ""
-"^BG%s%s^K1 a fost zdrobit și sfârtecat de valul de rachete%s%s al lui ^BG"
-"%s^K1"
+"^BG%s%s^K1 a fost zdrobit și sfârtecat de valul de rachete%s%s al lui "
+"^BG%s^K1"
 
 #: qcsrc/common/notifications/all.inc:482
 #, c-format
@@ -3650,8 +3650,8 @@ msgstr "^BG%s^K1 a fost neglijent cu HLAC-ul său%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was caught in ^BG%s^K1's Hook gravity bomb%s%s"
 msgstr ""
-"^BG%s%s^K1 a fost prins în Cârligul bombelor gravitaționale%s%s ale lui ^BG"
-"%s^K1"
+"^BG%s%s^K1 a fost prins în Cârligul bombelor gravitaționale%s%s ale lui "
+"^BG%s^K1"
 
 #: qcsrc/common/notifications/all.inc:487
 #, c-format
@@ -3738,8 +3738,8 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:503

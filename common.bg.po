@@ -2495,8 +2495,8 @@ msgstr "^BG%s^BG открадна ^TC^TT^BG знаме"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG плени ^TC^TT^BG знаме за ^F1%s^BG секунди, подобрявайки рекорда на "
 "^BG%s^BG от ^F2%s^BG секудни"
@@ -2776,16 +2776,16 @@ msgstr "^BG%s%s^K1 не можа да устои на розовите пръс�
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Raptor exploded%s%s"
 msgstr ""
-"^BG%s%s^K1 бе хваната от взривната вълна когато експлодира Raptor-а на ^BG"
-"%s^K1 %s%s"
+"^BG%s%s^K1 бе хваната от взривната вълна когато експлодира Raptor-а на "
+"^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:299
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s"
 msgstr ""
-"^BG%s%s^K1 бе хванат от взривната вълна когато експлодира Spiderbot-а на ^BG"
-"%s^K1 %s%s"
+"^BG%s%s^K1 бе хванат от взривната вълна когато експлодира Spiderbot-а на "
+"^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:300
 #, c-format
@@ -3727,8 +3727,8 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:503
