@@ -118,12 +118,7 @@ void GotoFirstMap(entity this)
 	{
 		// cvar_set("_sv_init", "0");
 		// we do NOT set this to 0 any more, so someone "accidentally" changing
-		// to this "init" map on a dedicated server will cause no permanent
-		// harm
-		if(autocvar_g_maplist_shuffle)
-			ShuffleMaplist();
-		n = tokenizebyseparator(autocvar_g_maplist, " ");
-		cvar_set("g_maplist_index", ftos(n - 1)); // jump to map 0 in GotoNextMap
+		// to this "init" map on a dedicated server will cause no permanent harm
 
 		MapInfo_Enumerate();
 		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);

@@ -12,7 +12,6 @@
 #include <server/command/cmd.qh>
 #include <server/command/getreplies.qh>
 #include <server/gamelog.qh>
-#include <server/intermission.qh>
 #include <server/world.qh>
 
 // definitions
@@ -203,16 +202,7 @@ void MapVote_AddVotable(string nextMap, bool isSuggestion)
 
 void MapVote_AddVotableMaps(int nmax, int smax)
 {
-	int available_maps = 0;
-	if (autocvar_g_maplist != "")
-	{
-		int c = tokenizebyseparator(autocvar_g_maplist, " ");
-		for (int i = 0; i < c; ++i)
-		{
-			if (Map_Check(i, 1) || Map_Check(i, 2))
-				++available_maps;
-		}
-	}
+	int available_maps = Maplist_Init();
 	int max_attempts = available_maps;
 	if (available_maps >= 2)
 		max_attempts = min(available_maps * 5, 100);
@@ -251,16 +241,6 @@ void MapVote_Init()
 		mapvote_screenshot_dirs[i] = strzone(argv(i));
 
 	MapVote_AddVotableMaps(nmax, smax);
-
-	if(mapvote_count == 0)
-	{
-		bprint( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
-		if(autocvar_g_maplist_shuffle)
-			ShuffleMaplist();
-		localcmd("\nmenu_cmd sync\n");
-		MapVote_AddVotableMaps(nmax, 0);
-	}
 
 	mapvote_count_real = mapvote_count;
 	if(mapvote_abstain)
@@ -773,8 +753,6 @@ bool GameTypeVote_SetGametype(Gametype type)
 	}
 
 	cvar_set("g_maplist", MapInfo_ListAllowedMaps(type, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()) );
-	if(autocvar_g_maplist_shuffle)
-		ShuffleMaplist();
 
 	return true;
 }

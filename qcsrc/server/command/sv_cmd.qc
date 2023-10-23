@@ -21,6 +21,7 @@
 #include <server/command/radarmap.qh>
 #include <server/intermission.qh>
 #include <server/ipban.qh>
+#include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
 #include <server/scores_rules.qh>
