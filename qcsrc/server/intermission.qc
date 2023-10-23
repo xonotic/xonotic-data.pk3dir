@@ -130,6 +130,9 @@ bool Map_Check(int position, float pass)
 	{
 		if(pass == 2)
 			return true;
+		// MapInfo_Map_flags was set by MapInfo_CheckMap()
+		if (MapInfo_Map_flags & MAPINFO_FLAG_DONOTWANT)
+			return false;
 		if(MapHasRightSize(map_next))
 			return true;
 		return false;
@@ -275,7 +278,7 @@ void Maplist_Init()
 	if (i == Map_Count)
 	{
 		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags() | MAPINFO_FLAG_NOAUTOMAPLIST));
+		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
 		if(autocvar_g_maplist_shuffle)
 			ShuffleMaplist();
 		if(!server_is_dedicated)
