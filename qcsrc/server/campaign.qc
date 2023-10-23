@@ -41,19 +41,9 @@ float Campaign_Invalid()
 	return 0;
 }
 
-string Campaign_GetTitle()
-{
-	return campaign_title;
-}
-
 int Campaign_GetLevelNum()
 {
 	return campaign_level + 1;
-}
-
-string Campaign_GetMessage()
-{
-	return strcat(campaign_shortdesc[0], "\n^3\n", campaign_longdesc[0]);
 }
 
 void CampaignPreInit()

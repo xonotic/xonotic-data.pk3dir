@@ -28,7 +28,7 @@ void Weapon_whereis(Weapon this, entity cl)
 	if (!autocvar_g_showweaponspawns) return;
 	IL_EACH(g_items, it.weapon == this.m_id && (!it.team || (it.ItemStatus & ITS_AVAILABLE)),
 	{
-		if (Item_IsLoot(it) && (autocvar_g_showweaponspawns < 2))
+		if (ITEM_IS_LOOT(it) && (autocvar_g_showweaponspawns < 2))
 		{
 			continue;
 		}

@@ -368,7 +368,7 @@ void pp_hud_board(vector pos, vector mySize)
 			sprintf(_("%s^7 won the game!"), pname),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
-		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5*panel_fg_alpha,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
 			sprintf(_("%s^7 won the game!"), pname),
@@ -399,9 +399,9 @@ void pp_hud_status(vector pos, vector mySize)
 		mypos = pos;
 		if ( (active_minigame.minigame_flags&PP_TURN_TEAM) == 2 )
 			mypos_y  += player_fontsize_y + ts_y;
-		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5*panel_fg_alpha,DRAWFLAG_ADDITIVE);
 		mypos_y += player_fontsize_y;
-		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25*panel_fg_alpha,DRAWFLAG_ADDITIVE);
 	}
 
 	entity e;
@@ -452,7 +452,7 @@ string pp_turn_to_string(int turnflags)
 	if ( turnflags & PP_TURN_WIN )
 	{
 		// translator-friendly messages composed of 2 existing messages
-		if ( (turnflags&PP_TURN_TEAM) != minigame_self.team )
+		if ( (turnflags & PP_TURN_TEAM) != minigame_self.team )
 			return strcat(_("You lost the game!"), "\n", _("Select \"^1Next Match^7\" on the menu for a rematch!"));
 		return strcat(_("You win!"), "\n", _("Select \"^1Next Match^7\" on the menu to start a new match!"));
 	}

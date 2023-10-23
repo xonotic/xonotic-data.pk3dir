@@ -1044,9 +1044,7 @@ void SendWelcomeMessage(entity this, int msg_type)
 	WriteByte(msg_type, boolean(autocvar_g_campaign));
 	if (boolean(autocvar_g_campaign))
 	{
-		WriteString(msg_type, Campaign_GetTitle());
 		WriteByte(msg_type, Campaign_GetLevelNum());
-		WriteString(msg_type, Campaign_GetMessage());
 		return;
 	}
 	WriteString(msg_type, autocvar_hostname);

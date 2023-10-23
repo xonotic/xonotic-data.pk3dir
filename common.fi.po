@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-03 07:22+0200\n"
+"POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Oftox, 2023\n"
 "Language-Team: Finnish (http://app.transifex.com/team-xonotic/xonotic/"
@@ -163,7 +163,7 @@ msgstr "palvelimen tiedot"
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Paina ^3%s^1 liittyäksesi"
 
-#: qcsrc/client/hud/panel/infomessages.qc:130 qcsrc/client/main.qc:1405
+#: qcsrc/client/hud/panel/infomessages.qc:130 qcsrc/client/main.qc:1409
 #: qcsrc/common/notifications/all.qh:442
 msgid "jump"
 msgstr "hyppää"
@@ -569,7 +569,7 @@ msgstr "Välimuoto %d"
 msgid "PENALTY: %.1f (%s)"
 msgstr "RANGAISTUS: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1237
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1242
 msgid "missing a checkpoint"
 msgstr "tarkastuspiste sivuutettu"
 
@@ -581,373 +581,373 @@ msgstr "Napsauta valitaksesi kaukosiirron määränpään"
 msgid "Click to select spawn location"
 msgstr "Napsauta valitaksesi saapumismääränpään"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:128
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of ball carrier kills"
 msgstr "Pallonkantajatapot"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:128
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^bckills"
 msgstr "SCO^pktapot"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:129
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^bctime"
 msgstr "SCO^pkajat"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:129
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Total amount of time holding the ball in Keepaway"
 msgstr "Pallon hallussapidon yhteisaika Keepaway:ssa "
 
-#: qcsrc/client/hud/panel/scoreboard.qc:130
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
 msgstr "Kuinka usein lippu (CTF) tai avain (KeyHunt) saatiin kaapattua"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:130
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^caps"
 msgstr "SCO^kaappaukset"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:131
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^captime"
 msgstr "SCO^kaappausaika"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:131
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Time of fastest capture (CTF)"
 msgstr "Nopeimman kaappauksen aika (CTF)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Number of deaths"
 msgstr "Kuolemien määrä"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^deaths"
 msgstr "SCO^kuolemaa"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Number of keys destroyed by pushing them into void"
 msgstr "Tuhottujen avainten määrä työntämällä ne hukkaan"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^destroyed"
 msgstr "SCO^tuhotut"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^damage"
 msgstr "SCO^vaurio"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "The total damage done"
 msgstr "Tehtyjen tuhojen yhteismäärä"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^dmgtaken"
 msgstr "SCO^ttvastaanotot"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "The total damage taken"
 msgstr "Kärsityt tuhot kokonaisuudessaan"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of flag drops"
 msgstr "Lippupudotusten määrä"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^drops"
 msgstr "SCO^pudotukset"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Player ELO"
 msgstr "Pelaaja ELO"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^elo"
 msgstr "SCO^elo"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:138
+#: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^fastest"
 msgstr "SCO^nopein"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:138
+#: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Time of fastest lap (Race/CTS)"
 msgstr "Nopeimman kierroksen aika (kilpa/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:139
+#: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of faults committed"
 msgstr "Tehtyjen rikkomusten määrä"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:139
+#: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^faults"
 msgstr "SCO^rikkeet"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
+#: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of flag carrier kills"
 msgstr "Lipunkantajien tappomäärä"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
+#: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^fckills"
 msgstr "SCO^lktapot"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "FPS"
 msgstr "FPS-ruutunopeus"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^fps"
 msgstr "SCO^fpsruutunopeus"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "Number of kills minus suicides"
 msgstr "Tapot poislukien itsemurhat"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^frags"
 msgstr "SCO^tapot"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Number of goals scored"
 msgstr "Tehdyt maalit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^goals"
 msgstr "SCO^maalit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Number of hunts (Survival)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^hunts"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of keys carrier kills"
 msgstr "Avaimenkantajatapot"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^kckills"
 msgstr "SCO^aktapot"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
+#: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^k/d"
 msgstr "SCO^t/k"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
-#: qcsrc/client/hud/panel/scoreboard.qc:147
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "The kill-death ratio"
 msgstr "Suhdeluku tapot-kuolemat "
 
-#: qcsrc/client/hud/panel/scoreboard.qc:147
+#: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^kdr"
 msgstr "SCO^tks"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^kdratio"
 msgstr "SCO^tksuhdeluku"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of kills"
 msgstr "Tapot"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^kills"
 msgstr "SCO^tappoa"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Number of laps finished (Race/CTS)"
 msgstr "Loppuunsaatettujen kierrosten lukumäärä (kilpa/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^laps"
 msgstr "SCO^kierrosta"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:151
+#: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "Number of lives (LMS)"
 msgstr "Elämien määrä (LMS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:151
+#: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "SCO^lives"
 msgstr "SCO^elämät"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "Number of times a key was lost"
 msgstr "Montako kertaa avain menetettiin"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^losses"
 msgstr "SCO^menetykset"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:153
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Player name"
 msgstr "Pelaajan nimi"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^name"
 msgstr "SCO^nimi"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^nick"
 msgstr "SCO^lempinimi"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of objectives destroyed"
 msgstr "Tavoitekohteita tuhottu"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^objectives"
 msgstr "SCO^tavoitteet"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr ""
 "Monastiko lippu (CTF) tai avain (KeyHunt) tai pallo (Keepaway) poimittiin"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "SCO^pickups"
 msgstr "SCO^poiminnat"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Ping time"
 msgstr "Ping-aika"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^ping"
 msgstr "Viive"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "Packet loss"
 msgstr "Pakettirokotukset"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^pl"
 msgstr "SCO^pr"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "Number of players pushed into void"
 msgstr "Montako pelaajaa työnnettiin hukkaan"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "SCO^pushes"
 msgstr "SCO^työnnöt"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:160
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "Player rank"
 msgstr "Pelaajan taso"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:160
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "SCO^rank"
 msgstr "SCO^taso"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "Number of flag returns"
 msgstr "Lipunpalautusten määrä"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "SCO^returns"
 msgstr "SCO^palautukset"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of revivals"
 msgstr "Virkoamisten määrä"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^revivals"
 msgstr "SCO^virkoamiset"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of rounds won"
 msgstr "Voitetut kierrokset"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^rounds won"
 msgstr "SCO^voitetut kierrokset"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "Number of rounds played"
 msgstr "Pelattujen kierrosten määrä"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^rounds played"
 msgstr "SCO^pelatut kierrokset"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "SCO^score"
 msgstr "SCO^pistemäärä"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "Total score"
 msgstr "Yhteispisteet"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of suicides"
 msgstr "Itsemurhat"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^suicides"
 msgstr "SCO^itsemurhia"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of kills minus deaths"
 msgstr "Tapot poislukien kuolemat"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "SCO^sum"
 msgstr "SCO^määrä"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "Number of survivals"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "SCO^survivals"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "Number of domination points taken (Domination)"
 msgstr "Otetut dominointipisteet (Domination)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "SCO^takes"
 msgstr "SCO^otot"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:176
 msgid "Number of teamkills"
 msgstr "Joukkuetapot"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:176
 msgid "SCO^teamkills"
 msgstr "SCO^joukkuetapot"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "Number of ticks (Domination)"
 msgstr "Tikkausten määrä (Domination)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "SCO^ticks"
 msgstr "SCO^tikkaukset"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:178
 msgid "SCO^time"
 msgstr "SCO^aika"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:178
 msgid "Total time raced (Race/CTS)"
 msgstr "Kilvan kokonaisaika (kilpa/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:701
+#: qcsrc/client/hud/panel/scoreboard.qc:707
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr "Voit mukauttaa tulostaulua käyttäen ^2scoreboard_columns_set käskyä."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:702
+#: qcsrc/client/hud/panel/scoreboard.qc:708
 msgid "Usage:"
 msgstr "Käyttö:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:704
+#: qcsrc/client/hud/panel/scoreboard.qc:710
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr "^2scoreboard_columns_set ^3field1 field2 ..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:705
+#: qcsrc/client/hud/panel/scoreboard.qc:711
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
@@ -955,7 +955,7 @@ msgstr ""
 "^2scoreboard_columns_set ^7ilman argumentteja otetaan argumentit cvar "
 "scoreboard_columns :sta"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:706
+#: qcsrc/client/hud/panel/scoreboard.qc:712
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
@@ -963,7 +963,7 @@ msgstr ""
 "  ^5Huomautus: ^7scoreboard_columns_set ilman argumentteja ajetaan jokaisen "
 "kartan aloituksessa"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:707
+#: qcsrc/client/hud/panel/scoreboard.qc:713
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
@@ -971,15 +971,15 @@ msgstr ""
 "^2scoreboard_columns_set ^3expand_default ^7lataa vakioulkoasun ja laajentaa "
 "sen muotoon cvar scoreboard_columns jotta voit muokata sitä"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:708
+#: qcsrc/client/hud/panel/scoreboard.qc:714
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr "Voit käyttää ^3|^7 aloittaaksesi oikealle tasatut kentät."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:709
+#: qcsrc/client/hud/panel/scoreboard.qc:715
 msgid "The following field names are recognized (case insensitive):"
 msgstr "Seuraavat kenttänimet tunnistetaan (ei vaatimusta kirjainkoolle):"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:715
+#: qcsrc/client/hud/panel/scoreboard.qc:721
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -993,7 +993,7 @@ msgstr ""
 "kenttänä \n"
 "näyttääksesi kaikki tarjolla olevat kentät sen hetkiselle pelimuodolle. "
 
-#: qcsrc/client/hud/panel/scoreboard.qc:721
+#: qcsrc/client/hud/panel/scoreboard.qc:727
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
@@ -1001,12 +1001,12 @@ msgstr ""
 "Erikoispelimuotojen nimiä 'teams' ja 'noteams' voidaan käyttää\n"
 "sisällyttääksesi/poislukien KAIKKI teams/noteams pelimuodot."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:725
+#: qcsrc/client/hud/panel/scoreboard.qc:731
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr ""
 "Esimerkki: scoreboard_columns_set nimi ping pl | +ctf/kenttä3 -dm/kenttä4"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:726
+#: qcsrc/client/hud/panel/scoreboard.qc:732
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
@@ -1014,7 +1014,7 @@ msgstr ""
 "näyttää nimen, pingin ja pl:n asemoituna vasemmalle, ja kentät\n"
 "pystysuorapalkista oikealla asemoituna oikealle."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:728
+#: qcsrc/client/hud/panel/scoreboard.qc:734
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
@@ -1022,10 +1022,10 @@ msgstr ""
 "'kenttä3' näytetään vain CTF:ssä, ja 'kenttä4' näytetään kaikissa\n"
 "muissa pelimuodoissa poislukien muoto DM."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1026
-#: qcsrc/client/hud/panel/scoreboard.qc:1041
-#: qcsrc/client/hud/panel/scoreboard.qc:1111
-#: qcsrc/client/hud/panel/scoreboard.qc:1122 qcsrc/common/util.qc:385
+#: qcsrc/client/hud/panel/scoreboard.qc:1039
+#: qcsrc/client/hud/panel/scoreboard.qc:1054
+#: qcsrc/client/hud/panel/scoreboard.qc:1124
+#: qcsrc/client/hud/panel/scoreboard.qc:1135 qcsrc/common/util.qc:385
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -1034,103 +1034,103 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1686
+#: qcsrc/client/hud/panel/scoreboard.qc:1699
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Tarkkuustilastot (keskimäärin %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1843
+#: qcsrc/client/hud/panel/scoreboard.qc:1856
 msgid "Item stats"
 msgstr "Esineen tilastot"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1954
+#: qcsrc/client/hud/panel/scoreboard.qc:1967
 msgid "Map stats:"
 msgstr "Kartan tilastot:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1984
+#: qcsrc/client/hud/panel/scoreboard.qc:1997
 msgid "Monsters killed:"
 msgstr "Hirviöitä tapettu:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1991
+#: qcsrc/client/hud/panel/scoreboard.qc:2004
 msgid "Secrets found:"
 msgstr "Salaisuuksia löydettiin:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2201
+#: qcsrc/client/hud/panel/scoreboard.qc:2214
 #, c-format
 msgid "Spectators"
 msgstr "Katselijat"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2223
+#: qcsrc/client/hud/panel/scoreboard.qc:2236
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2223
+#: qcsrc/client/hud/panel/scoreboard.qc:2236
 #, c-format
 msgid "^5%s %s"
 msgstr "^5%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2224
+#: qcsrc/client/hud/panel/scoreboard.qc:2237
 msgid "SCO^points"
 msgstr "SCO^pisteet"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2315
+#: qcsrc/client/hud/panel/scoreboard.qc:2328
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "Joukkueen valinta"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2327
+#: qcsrc/client/hud/panel/scoreboard.qc:2340
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^7Paina ^3%s^7 liittyäksesi valittuun joukkueeseen"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2329
+#: qcsrc/client/hud/panel/scoreboard.qc:2342
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr ""
 "^7Paina ^3%s^7 automaattista valintaa varten ja liittyäksesi tuohon valintaan"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2333
+#: qcsrc/client/hud/panel/scoreboard.qc:2346
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7Paina ^3%s ^7valitaksesi määrätyn joukkueen"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2344
+#: qcsrc/client/hud/panel/scoreboard.qc:2357
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f minuuttia"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2371
+#: qcsrc/client/hud/panel/scoreboard.qc:2384
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7pelaajaa"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2372 qcsrc/client/main.qc:1431
+#: qcsrc/client/hud/panel/scoreboard.qc:2385 qcsrc/client/main.qc:1436
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Kartta:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2535
+#: qcsrc/client/hud/panel/scoreboard.qc:2548
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Nopeuspalkinto: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2539
+#: qcsrc/client/hud/panel/scoreboard.qc:2552
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Kaikkien aikojen nopein: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2573
+#: qcsrc/client/hud/panel/scoreboard.qc:2586
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Virkoaminen tapahtuu ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2583
+#: qcsrc/client/hud/panel/scoreboard.qc:2596
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Olet kuollut, odota ^3%s^7 ennen uudelleenvirkoamista"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2592
+#: qcsrc/client/hud/panel/scoreboard.qc:2605
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Olet kuollut, paina ^2%s^7 virotaksesi uudelleen"
@@ -1242,139 +1242,139 @@ msgstr "Ei saatavissa"
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Koetetaan poistaa joukkuetta joka ei ole joukkuelistassa!"
 
-#: qcsrc/client/main.qc:1139 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
+#: qcsrc/client/main.qc:1144 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1140 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/client/main.qc:1145 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1141 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
+#: qcsrc/client/main.qc:1146 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1142 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
+#: qcsrc/client/main.qc:1147 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1143 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/client/main.qc:1148 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
 msgstr "knots"
 
-#: qcsrc/client/main.qc:1354
+#: qcsrc/client/main.qc:1359
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
 msgstr "Kaikkien aseiden taistelukenttä"
 
-#: qcsrc/client/main.qc:1355
+#: qcsrc/client/main.qc:1360
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
 msgstr "Kaikkien aseiden taistelukenttä"
 
-#: qcsrc/client/main.qc:1356
+#: qcsrc/client/main.qc:1361
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
 msgstr "Suurimman osan aseiden taistelukenttä"
 
-#: qcsrc/client/main.qc:1357
+#: qcsrc/client/main.qc:1362
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
 msgstr "Taistelukenttä jossa suurin osa aseista käytössä"
 
-#: qcsrc/client/main.qc:1360 qcsrc/client/main.qc:1374
+#: qcsrc/client/main.qc:1365 qcsrc/client/main.qc:1379
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
 msgstr "Taistelukenttä jossa ei käytetä aseita"
 
-#: qcsrc/client/main.qc:1372
+#: qcsrc/client/main.qc:1377
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
 #, c-format
 msgid "%s Arena"
 msgstr "%s taistelukenttä"
 
-#: qcsrc/client/main.qc:1383 qcsrc/client/main.qc:1388
+#: qcsrc/client/main.qc:1388 qcsrc/client/main.qc:1393
 #, c-format
 msgid "This is %s"
 msgstr "Tämä on %s"
 
-#: qcsrc/client/main.qc:1384
+#: qcsrc/client/main.qc:1389
 msgid "Your client version is outdated."
 msgstr "Käyttämäsi asiakasohjelmajulkaisu on vanhentunut."
 
-#: qcsrc/client/main.qc:1385
+#: qcsrc/client/main.qc:1390
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### ET VOI PELATA TÄLLÄ PALVELIMELLA ###"
 
-#: qcsrc/client/main.qc:1386
+#: qcsrc/client/main.qc:1391
 msgid "Please update!"
 msgstr "Ole hyvä ja päivitä!"
 
-#: qcsrc/client/main.qc:1389
+#: qcsrc/client/main.qc:1394
 msgid "This server is using an outdated Xonotic version."
 msgstr "Tämä palvelin käyttää Xonotic:in vanhentunutta julkaisua."
 
-#: qcsrc/client/main.qc:1390
+#: qcsrc/client/main.qc:1395
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### TÄMÄ PALVELIN ON YHTEENSOPIMATON ETKÄ TÄTEN VOI LIITTYÄ ###"
 
-#: qcsrc/client/main.qc:1392
+#: qcsrc/client/main.qc:1397
 #, c-format
 msgid "Welcome to %s"
 msgstr "Tervetuloa kohteeseen %s"
 
-#: qcsrc/client/main.qc:1407 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1411 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Taso %d:"
 
-#: qcsrc/client/main.qc:1409
+#: qcsrc/client/main.qc:1413
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGPaina ^F2%s^BG liittyäksesi peliin"
 
-#: qcsrc/client/main.qc:1429
+#: qcsrc/client/main.qc:1434
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Pelityyppi"
 
-#: qcsrc/client/main.qc:1443
+#: qcsrc/client/main.qc:1448
 msgid "This match supports"
 msgstr "Tämä ottelu tukee"
 
-#: qcsrc/client/main.qc:1445
+#: qcsrc/client/main.qc:1450
 #, c-format
 msgid "%d players"
 msgstr "%d pelaajaa"
 
-#: qcsrc/client/main.qc:1447
+#: qcsrc/client/main.qc:1452
 #, c-format
 msgid "%d to %d players"
 msgstr "%d :stä %d pelaajaa"
 
-#: qcsrc/client/main.qc:1449
+#: qcsrc/client/main.qc:1454
 #, c-format
 msgid "%d players maximum"
 msgstr "%d pelaajaa on erimmäismäärä"
 
-#: qcsrc/client/main.qc:1451
+#: qcsrc/client/main.qc:1456
 #, c-format
 msgid "%d players minimum"
 msgstr "%d pelaajaa on vähimmäismäärä"
 
-#: qcsrc/client/main.qc:1456
+#: qcsrc/client/main.qc:1461
 msgid "Active modifications:"
 msgstr "Toimessa olevat muunnokset:"
 
-#: qcsrc/client/main.qc:1459
+#: qcsrc/client/main.qc:1464
 msgid "Special gameplay tips:"
 msgstr "Erityisvinkit pelaamiseen:"
 
-#: qcsrc/client/main.qc:1466
+#: qcsrc/client/main.qc:1471
 msgid "Server's message"
 msgstr "Palvelimen viesti"
 
-#: qcsrc/client/main.qc:1560
+#: qcsrc/client/main.qc:1565
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (ei sidottu)"
@@ -1659,11 +1659,11 @@ msgstr "Kisaa toisia pelaajia vastaan kohti maaliviivaa"
 msgid "Laps:"
 msgstr "Kierrokset:"
 
-#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:16
+#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:63
 msgid "Hunter"
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:22
+#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:69
 msgid "Survivor"
 msgstr ""
 
@@ -1815,7 +1815,7 @@ msgid "Create"
 msgstr "Luo"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
-#: qcsrc/menu/xonotic/dialog_welcome.qc:113
+#: qcsrc/menu/xonotic/dialog_welcome.qc:131
 msgid "Join"
 msgstr "Liity"
 
@@ -2226,18 +2226,26 @@ msgstr "Ansakranaatti"
 msgid "Veil grenade"
 msgstr "Huntukranaatti"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:102
+#: qcsrc/common/mutators/mutator/nades/nades.inc:99
+msgid "Ammo grenade"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nades.inc:109
+msgid "Darkness grenade"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
 msgstr "pudota ase / heitä naatti"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:104
+#: qcsrc/common/mutators/mutator/nades/nades.qc:141
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr ""
 "^3naattia^8 tarjolla käytettäväksi, paina ^3%s^8 ottaaksesi ne käyttöön"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:99
+#: qcsrc/common/mutators/mutator/nades/nades.qh:123
 msgid "Grenade"
 msgstr "Kranaatti"
 
@@ -2510,8 +2518,8 @@ msgstr "^BG%s^BG kaappasi ^TC^TT^BG lipun"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG kaappasi ^TC^TT^BG lipun ^F1%s^BG sekunnissa, rikkoen ^BG%s^BG's "
 "edellisen ennätyksen ^F2%s^BG sekuntia"
@@ -2682,8 +2690,8 @@ msgstr "^BG%s%s^K1 palautettiin maanpinnalle syyllisen ollen ^BG%s^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
 msgstr ""
-"^BG%s%s^K1 tunsi mitä se on kun tekee poppaa ^BG%s^K1's tulen polttaessa^K1%s"
-"%s"
+"^BG%s%s^K1 tunsi mitä se on kun tekee poppaa ^BG%s^K1's tulen "
+"polttaessa^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
@@ -2736,8 +2744,8 @@ msgstr "^BG%s%s^K1 ei tervehtynyt ^BG%s^K1's Terveysnaatista %s%s"
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"
 msgstr ""
-"^BG%s%s^K1 ammuttiin planeettaa kiertävälle radalle syyllisen ollen ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 ammuttiin planeettaa kiertävälle radalle syyllisen ollen "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
@@ -3529,18 +3537,16 @@ msgstr ""
 #, c-format
 msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
-"the update from ^F3http://www.xonotic.org/^BG!"
+"the update from ^F3https://xonotic.org^BG!"
 msgstr ""
-"^F4HUOMAUTUS: ^F1Xonotic %s^BG on julkaistu, ja sinulla on edelleen "
-"^F2Xonotic %s^BG - hae päivitys osoitteesta ^F3http://www.xonotic.org/^BG!"
 
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"
 msgstr ""
-"^BG%s%s^K1 kuoli syyn ollen ^BG%s^K1 on mahtava soittamaan @!#%%'n Haitaria%s"
-"%s"
+"^BG%s%s^K1 kuoli syyn ollen ^BG%s^K1 on mahtava soittamaan @!#%%'n "
+"Haitaria%s%s"
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -3738,8 +3744,8 @@ msgstr "^BG%s^K1 räjäyttivät itsensä omalla Mörssärillään%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 niputettiin ^BG%s^K1'n Ylimalkaallisen Raskaalla Konekiväärillä%s"
-"%s"
+"^BG%s%s^K1 niputettiin ^BG%s^K1'n Ylimalkaallisen Raskaalla "
+"Konekiväärillä%s%s"
 
 #: qcsrc/common/notifications/all.inc:499
 #, c-format
@@ -3754,8 +3760,8 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 ropisi täyteen reikiä ^BG%s^K1'n Ylimalkaallisella konekiväärillä"
-"%s%s"
+"^BG%s%s^K1 ropisi täyteen reikiä ^BG%s^K1'n Ylimalkaallisella "
+"konekiväärillä%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -3765,8 +3771,8 @@ msgstr "^BG%s%s^K1 höyrytettiin ^BG%s^K1'n Ylimalkaallisella Nex:illä%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 "^BG%s%s^K1 sahattiin kahtia ^BG%s^K1'n Ylimalkaallisella rakettikäyttöisellä "
 "moottorisahalla%s%s"
@@ -4495,9 +4501,7 @@ msgstr ""
 "Tämä ottelu on rajoitettu ^F2%s^BG pelaajaan."
 
 #: qcsrc/common/notifications/all.inc:716
-msgid ""
-"^K1You aren't allowed to play because you are banned in this server, but you "
-"can play minigames"
+msgid "^K1You aren't allowed to play because you are banned in this server"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:720
@@ -6354,7 +6358,7 @@ msgid "Save settings"
 msgstr "Tallenna asetukset"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qh:7
-#: qcsrc/menu/xonotic/dialog_welcome.qc:12
+#: qcsrc/menu/xonotic/dialog_welcome.qc:13
 #: qcsrc/menu/xonotic/dialog_welcome.qh:6
 msgid "Welcome"
 msgstr "Tervetuloa"
@@ -6401,7 +6405,7 @@ msgid "Quick menu"
 msgstr "Pikavalikko"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
-#: qcsrc/menu/xonotic/dialog_welcome.qc:115
+#: qcsrc/menu/xonotic/dialog_welcome.qc:133
 msgid "Spectate"
 msgstr "Katsele"
 

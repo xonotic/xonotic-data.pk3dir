@@ -499,14 +499,17 @@ void ReadyRestart_force(bool is_fake_round_start)
 
 void ReadyRestart(bool forceWarmupEnd)
 {
-	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || intermission_running || race_completing)
+	if (MUTATOR_CALLHOOK(ReadyRestart_Deny))
 	{
 		// NOTE: ReadyRestart support is mandatory in campaign
 		if (autocvar_g_campaign)
 			error("ReadyRestart must be supported in campaign mode!");
 		localcmd("restart\n"); // if ReadyRestart is denied, restart the server
 	}
-	else localcmd("\nsv_hook_readyrestart\n");
+	else if (intermission_running || race_completing) // game is over, ReadyRestart no longer available
+		localcmd("restart\n");
+	else
+		localcmd("\nsv_hook_readyrestart\n");
 
 	if(forceWarmupEnd || autocvar_g_campaign)
 		warmup_stage = 0; // forcefully end warmup and go to match stage

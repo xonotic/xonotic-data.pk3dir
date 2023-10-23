@@ -14,16 +14,14 @@ SOUND(Shield, Item_Sound("powerup_shield"));
 #endif
 
 #ifdef SVQC
-bool autocvar_g_powerups_shield = 1;
+bool autocvar_g_powerups_shield;
 float autocvar_g_balance_powerup_invincible_takedamage;
-float autocvar_g_balance_powerup_invincible_takeforce = 0.33;
+float autocvar_g_balance_powerup_invincible_takeforce;
 float autocvar_g_balance_powerup_invincible_time;
-void powerup_shield_init(Pickup this, entity item)
+void powerup_shield_init(Pickup def, entity item)
 {
-    if(autocvar_g_powerups_shield)
-        this.spawnflags = ITEM_FLAG_NORMAL;
-    else
-        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+    if(!autocvar_g_powerups || !autocvar_g_powerups_shield)
+        def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 
     if(!item.invincible_finished)
         item.invincible_finished = (item.count) ? item.count : autocvar_g_balance_powerup_invincible_time;
@@ -35,6 +33,7 @@ REGISTER_ITEM(Shield, Powerup) {
     this.m_iteminit         =   powerup_shield_init;
 #endif
 #ifdef GAMEQC
+    this.spawnflags         =   ITEM_FLAG_NORMAL;
     this.m_itemid           =   IT_INVINCIBLE;
     this.m_model            =   MDL_Shield_ITEM;
     this.m_sound            =   SND_Shield;

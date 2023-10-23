@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-03 07:22+0200\n"
+"POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: oblector o, 2022\n"
+"Last-Translator: oblector o, 2022-2023\n"
 "Language-Team: Latin (http://app.transifex.com/team-xonotic/xonotic/language/"
 "la/)\n"
 "Language: la\n"
@@ -147,7 +147,7 @@ msgstr "moderatri notae"
 msgid "^1Press ^3%s^1 to join"
 msgstr "^3%s^1 preme ut incipias"
 
-#: qcsrc/client/hud/panel/infomessages.qc:130 qcsrc/client/main.qc:1405
+#: qcsrc/client/hud/panel/infomessages.qc:130 qcsrc/client/main.qc:1409
 #: qcsrc/common/notifications/all.qh:442
 msgid "jump"
 msgstr "salire"
@@ -553,7 +553,7 @@ msgstr "Meta %da"
 msgid "PENALTY: %.1f (%s)"
 msgstr "MULTA: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1237
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1242
 msgid "missing a checkpoint"
 msgstr "meta ambita"
 
@@ -565,372 +565,372 @@ msgstr "Clica ut locum in quem teleporteris seligas"
 msgid "Click to select spawn location"
 msgstr "Clica ut locum in quo nascaris seligas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:128
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of ball carrier kills"
 msgstr "Quotiens pilam portantem interfecit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:128
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^bckills"
 msgstr "SCO^ppinterf"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:129
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^bctime"
 msgstr "SCO^pptempus"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:129
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Total amount of time holding the ball in Keepaway"
 msgstr "Quid tempus totum pilam portabat Abhibitione"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:130
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
 msgstr "Quotiens vexillum (VC) aut clavem (CV) cepit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:130
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^caps"
 msgstr "SCO^caps"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:131
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^captime"
 msgstr "SCO^captempus"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:131
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Time of fastest capture (CTF)"
 msgstr "Captus celerrimi tempus (VC)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Number of deaths"
 msgstr "Quotiens mortuus est"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^deaths"
 msgstr "SCO^mortes"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Number of keys destroyed by pushing them into void"
 msgstr "Quot claves deletae demissae in vacuum"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^destroyed"
 msgstr "SCO^delet"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^damage"
 msgstr "SCO^vulnus"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "The total damage done"
 msgstr "Quantum vulnus fecit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^dmgtaken"
 msgstr "SCO^vulninse"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "The total damage taken"
 msgstr "Quantum vulnus in se"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of flag drops"
 msgstr "Quotiens vexillum demisit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^drops"
 msgstr "SCO^demiss"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Player ELO"
 msgstr "Ludentis gradus Elonis"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^elo"
 msgstr "SCO^elo"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:138
+#: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^fastest"
 msgstr "celerrim"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:138
+#: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Time of fastest lap (Race/CTS)"
 msgstr "Circumitus celerrimi tempus (Cursu)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:139
+#: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of faults committed"
 msgstr "Quotiens deliquit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:139
+#: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^faults"
 msgstr "SCO^delict"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
+#: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of flag carrier kills"
 msgstr "Quotiens vexilliferum interfecit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
+#: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^fckills"
 msgstr "SCO^vpinterf"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "FPS"
 msgstr "QIS (quadra in secundum)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^fps"
 msgstr "SCO^qis"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "Number of kills minus suicides"
 msgstr "Quotiens interfecit, suicidiis subtractis"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^frags"
 msgstr "caedes"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Number of goals scored"
 msgstr "Quotiens pilam in portam iecit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^goals"
 msgstr "SCO^pilport"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Number of hunts (Survival)"
 msgstr "Quotiens venatus est (Superstites)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^hunts"
 msgstr "venatus"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of keys carrier kills"
 msgstr "Quotiens clavem portantem interfecit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^kckills"
 msgstr "SCO^cpinterf"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
+#: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^k/d"
 msgstr "if/m"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
-#: qcsrc/client/hud/panel/scoreboard.qc:147
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "The kill-death ratio"
 msgstr "Quotiens interfecit, mortibus divisis"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:147
+#: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^kdr"
 msgstr "ifmd"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^kdratio"
 msgstr "ifmdivis"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of kills"
 msgstr "Quotiens interfecit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^kills"
 msgstr "SCO^interf"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Number of laps finished (Race/CTS)"
 msgstr "Quotiens circumivit (Cursu)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^laps"
 msgstr "circumit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:151
+#: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "Number of lives (LMS)"
 msgstr "Quot vitae (HSU)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:151
+#: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "SCO^lives"
 msgstr "SCO^vitae"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "Number of times a key was lost"
 msgstr "Quotiens clavem amisit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^losses"
 msgstr "SCO^amiss"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:153
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Player name"
 msgstr "Ludenti nomen"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^name"
 msgstr "SCO^nomen"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^nick"
 msgstr "SCO^agnomen"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of objectives destroyed"
 msgstr "Quot metae deletae sunt"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^objectives"
 msgstr "metae"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr "Quotiens vexillum (VC) aut clavem (CV) aut pilam (Abhibitione) ferebat"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "SCO^pickups"
 msgstr "SCO^lationes"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Ping time"
 msgstr "Ping tempus"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^ping"
 msgstr "SCO^ping"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "Packet loss"
 msgstr "Perditae litterae (interretiales)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^pl"
 msgstr "pl"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "Number of players pushed into void"
 msgstr "Quotiens ludentem in vacuum pepulit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "SCO^pushes"
 msgstr "SCO^puls"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:160
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "Player rank"
 msgstr "Ludentis gradus"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:160
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "SCO^rank"
 msgstr "SCO^gradus"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "Number of flag returns"
 msgstr "Quotiens vexillum rettulit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "SCO^returns"
 msgstr "SCO^relat"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of revivals"
 msgstr "Quotiens ludentem restituit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^revivals"
 msgstr "restitut"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of rounds won"
 msgstr "Quot temporibus vicit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^rounds won"
 msgstr "SCO^quot vicit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "Number of rounds played"
 msgstr "Quot temporibus lusit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^rounds played"
 msgstr "quot lusit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "SCO^score"
 msgstr "ratio"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "Total score"
 msgstr "Tota ratio"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of suicides"
 msgstr "Quot suicidia"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^suicides"
 msgstr "suicidia"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of kills minus deaths"
 msgstr "Quotiens interfecit, mortibus subtractiis"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "SCO^sum"
 msgstr "summa"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "Number of survivals"
 msgstr "Quotiens superstes fuit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "SCO^survivals"
 msgstr "superstes"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "Number of domination points taken (Domination)"
 msgstr "Quotiens dominationis locum tetigit (Dominatione)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "SCO^takes"
 msgstr "SCO^tact"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:176
 msgid "Number of teamkills"
 msgstr "Quotiens manus collegam interfecit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:176
 msgid "SCO^teamkills"
 msgstr "SCO^colleginterf"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "Number of ticks (Domination)"
 msgstr "Quot tic (Dominatione)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "SCO^ticks"
 msgstr "SCO^tic"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:178
 msgid "SCO^time"
 msgstr "tempus"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:178
 msgid "Total time raced (Race/CTS)"
 msgstr "Quousque cucurrit (Cursu)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:701
+#: qcsrc/client/hud/panel/scoreboard.qc:707
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr "Si rationarium mutare vis, ^2scoreboard_columns_set iubeto."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:702
+#: qcsrc/client/hud/panel/scoreboard.qc:708
 msgid "Usage:"
 msgstr "Usus:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:704
+#: qcsrc/client/hud/panel/scoreboard.qc:710
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr "^2scoreboard_columns_set ^3columna1 columna2 ..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:705
+#: qcsrc/client/hud/panel/scoreboard.qc:711
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
@@ -938,7 +938,7 @@ msgstr ""
 "^2scoreboard_columns_set ^7si non sunt argumenta, columnas legit ex "
 "variabili scoreboard_columns"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:706
+#: qcsrc/client/hud/panel/scoreboard.qc:712
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
@@ -946,7 +946,7 @@ msgstr ""
 "  ^5Nota: ^7scoreboard_columns_set si non sunt argumenta, iubetur semper cum "
 "ludus incipit"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:707
+#: qcsrc/client/hud/panel/scoreboard.qc:713
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
@@ -954,17 +954,17 @@ msgstr ""
 "^2scoreboard_columns_set ^3expand_default ^7rationarii formam ordinariam in "
 "variabili scoreboard_columns scribit ut legas et transcribas id quod vellis"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:708
+#: qcsrc/client/hud/panel/scoreboard.qc:714
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr "Signum ^3|^7 scribe ut ad columnae latus dextrum res scribantur."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:709
+#: qcsrc/client/hud/panel/scoreboard.qc:715
 msgid "The following field names are recognized (case insensitive):"
 msgstr ""
 "Noscuntur columnarum nomina quae sequuntur (litteras parvas vel magnas "
 "scribere potes):"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:715
+#: qcsrc/client/hud/panel/scoreboard.qc:721
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -977,18 +977,18 @@ msgstr ""
 "cum inter ea non sit. Atque 'all' scribere potes ut omnes ludi modi\n"
 "columnas videas."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:721
+#: qcsrc/client/hud/panel/scoreboard.qc:727
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr "Nomen 'teams' manuum modis est, et nomen 'noteams' aliis modis."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:725
+#: qcsrc/client/hud/panel/scoreboard.qc:731
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr ""
 "Exemplum: scoreboard_columns_set name ping pl | +ctf/columna3 -dm/columna4"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:726
+#: qcsrc/client/hud/panel/scoreboard.qc:732
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
@@ -996,7 +996,7 @@ msgstr ""
 "nomen, ping et PL ad latus sinistrum scribuntur, et aliae ad latus\n"
 "dextrum scribuntur."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:728
+#: qcsrc/client/hud/panel/scoreboard.qc:734
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
@@ -1004,10 +1004,10 @@ msgstr ""
 "'columna3' modo Vexilli Captu 'ctf' videbitur, et 'columna4' omni\n"
 "modo praeter Interfectionem 'dm' videbitur."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1026
-#: qcsrc/client/hud/panel/scoreboard.qc:1041
-#: qcsrc/client/hud/panel/scoreboard.qc:1111
-#: qcsrc/client/hud/panel/scoreboard.qc:1122 qcsrc/common/util.qc:385
+#: qcsrc/client/hud/panel/scoreboard.qc:1039
+#: qcsrc/client/hud/panel/scoreboard.qc:1054
+#: qcsrc/client/hud/panel/scoreboard.qc:1124
+#: qcsrc/client/hud/panel/scoreboard.qc:1135 qcsrc/common/util.qc:385
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -1016,102 +1016,102 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1686
+#: qcsrc/client/hud/panel/scoreboard.qc:1699
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Accuratiae statistica (media %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1843
+#: qcsrc/client/hud/panel/scoreboard.qc:1856
 msgid "Item stats"
 msgstr "Utilium statistica"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1954
+#: qcsrc/client/hud/panel/scoreboard.qc:1967
 msgid "Map stats:"
 msgstr "Harenae statistica:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1984
+#: qcsrc/client/hud/panel/scoreboard.qc:1997
 msgid "Monsters killed:"
 msgstr "Beluae occisae:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1991
+#: qcsrc/client/hud/panel/scoreboard.qc:2004
 msgid "Secrets found:"
 msgstr "Arcana inventa:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2201
+#: qcsrc/client/hud/panel/scoreboard.qc:2214
 #, c-format
 msgid "Spectators"
 msgstr "Spectatores"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2223
+#: qcsrc/client/hud/panel/scoreboard.qc:2236
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2223
+#: qcsrc/client/hud/panel/scoreboard.qc:2236
 #, c-format
 msgid "^5%s %s"
 msgstr "^5%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2224
+#: qcsrc/client/hud/panel/scoreboard.qc:2237
 msgid "SCO^points"
 msgstr "ratio"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2315
+#: qcsrc/client/hud/panel/scoreboard.qc:2328
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "Manus Selectio"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2327
+#: qcsrc/client/hud/panel/scoreboard.qc:2340
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^3%s^7 preme ut in manum selectam conscribaris"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2329
+#: qcsrc/client/hud/panel/scoreboard.qc:2342
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr "^3%s^7 preme ut in aliquam manum conscribaris"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2333
+#: qcsrc/client/hud/panel/scoreboard.qc:2346
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^3%s^7 preme ut quamvis manum seligas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2344
+#: qcsrc/client/hud/panel/scoreboard.qc:2357
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f minuta"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2371
+#: qcsrc/client/hud/panel/scoreboard.qc:2384
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7ludentes"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2372 qcsrc/client/main.qc:1431
+#: qcsrc/client/hud/panel/scoreboard.qc:2385 qcsrc/client/main.qc:1436
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Harena:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2535
+#: qcsrc/client/hud/panel/scoreboard.qc:2548
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Celeritate donum: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2539
+#: qcsrc/client/hud/panel/scoreboard.qc:2552
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Omnium celerrimus: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2573
+#: qcsrc/client/hud/panel/scoreboard.qc:2586
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Renasceris ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2583
+#: qcsrc/client/hud/panel/scoreboard.qc:2596
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Mortuus es, ^3%s^7 exspecta renaturus"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2592
+#: qcsrc/client/hud/panel/scoreboard.qc:2605
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Mortuus es, ^2%s^7 preme ut renascaris"
@@ -1223,139 +1223,139 @@ msgstr "Deest"
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Manum quae in indicem non est excipere non potes!"
 
-#: qcsrc/client/main.qc:1139 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
+#: qcsrc/client/main.qc:1144 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1140 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/client/main.qc:1145 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1141 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
+#: qcsrc/client/main.qc:1146 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1142 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
+#: qcsrc/client/main.qc:1147 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
 msgid "mph"
 msgstr "mi/h"
 
-#: qcsrc/client/main.qc:1143 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/client/main.qc:1148 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
 msgstr "nmi/h"
 
-#: qcsrc/client/main.qc:1354
+#: qcsrc/client/main.qc:1359
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
 msgstr "Harena cum Omnibus Armis"
 
-#: qcsrc/client/main.qc:1355
+#: qcsrc/client/main.qc:1360
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
 msgstr "Harena cum Omnibus Armis Praesentibus"
 
-#: qcsrc/client/main.qc:1356
+#: qcsrc/client/main.qc:1361
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
 msgstr "Harena cum Plurimis Armis"
 
-#: qcsrc/client/main.qc:1357
+#: qcsrc/client/main.qc:1362
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
 msgstr "Harena cum Plurimis Armis Praesentibus"
 
-#: qcsrc/client/main.qc:1360 qcsrc/client/main.qc:1374
+#: qcsrc/client/main.qc:1365 qcsrc/client/main.qc:1379
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
 msgstr "Harena sine Armis"
 
-#: qcsrc/client/main.qc:1372
+#: qcsrc/client/main.qc:1377
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
 #, c-format
 msgid "%s Arena"
 msgstr "Harena cum %s"
 
-#: qcsrc/client/main.qc:1383 qcsrc/client/main.qc:1388
+#: qcsrc/client/main.qc:1388 qcsrc/client/main.qc:1393
 #, c-format
 msgid "This is %s"
 msgstr "Est %s"
 
-#: qcsrc/client/main.qc:1384
+#: qcsrc/client/main.qc:1389
 msgid "Your client version is outdated."
 msgstr "Nimis vetus cliens computatralis tuum est."
 
-#: qcsrc/client/main.qc:1385
+#: qcsrc/client/main.qc:1390
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### MODERATRO HOC LUDERE NON POTES ###"
 
-#: qcsrc/client/main.qc:1386
+#: qcsrc/client/main.qc:1391
 msgid "Please update!"
 msgstr "Novius inveni!"
 
-#: qcsrc/client/main.qc:1389
+#: qcsrc/client/main.qc:1394
 msgid "This server is using an outdated Xonotic version."
 msgstr "Moderatrum hoc Xonoticum veterem habet."
 
-#: qcsrc/client/main.qc:1390
+#: qcsrc/client/main.qc:1395
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### MODERATRUM HOC NON INTELLEGIT PROPTEREA LUDERE NON POTES ###"
 
-#: qcsrc/client/main.qc:1392
+#: qcsrc/client/main.qc:1397
 #, c-format
 msgid "Welcome to %s"
 msgstr "Salve, es in %s"
 
-#: qcsrc/client/main.qc:1407 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1411 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Munus %dum:"
 
-#: qcsrc/client/main.qc:1409
+#: qcsrc/client/main.qc:1413
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^F2%s^BG preme ut ludas"
 
-#: qcsrc/client/main.qc:1429
+#: qcsrc/client/main.qc:1434
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Ludi modus:"
 
-#: qcsrc/client/main.qc:1443
+#: qcsrc/client/main.qc:1448
 msgid "This match supports"
 msgstr "Hoc ludo sinuntur"
 
-#: qcsrc/client/main.qc:1445
+#: qcsrc/client/main.qc:1450
 #, c-format
 msgid "%d players"
 msgstr "%d ludentes"
 
-#: qcsrc/client/main.qc:1447
+#: qcsrc/client/main.qc:1452
 #, c-format
 msgid "%d to %d players"
 msgstr "%d ludentes aut plures, sed non plures quam %d"
 
-#: qcsrc/client/main.qc:1449
+#: qcsrc/client/main.qc:1454
 #, c-format
 msgid "%d players maximum"
 msgstr "non plures quam %d ludentes"
 
-#: qcsrc/client/main.qc:1451
+#: qcsrc/client/main.qc:1456
 #, c-format
 msgid "%d players minimum"
 msgstr "%d ludentes aut plures"
 
-#: qcsrc/client/main.qc:1456
+#: qcsrc/client/main.qc:1461
 msgid "Active modifications:"
 msgstr "Mutationes praesentes:"
 
-#: qcsrc/client/main.qc:1459
+#: qcsrc/client/main.qc:1464
 msgid "Special gameplay tips:"
 msgstr "Ludi insignis suasa:"
 
-#: qcsrc/client/main.qc:1466
+#: qcsrc/client/main.qc:1471
 msgid "Server's message"
 msgstr "Moderatri nuntium"
 
-#: qcsrc/client/main.qc:1560
+#: qcsrc/client/main.qc:1565
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (sine clavi)"
@@ -1637,11 +1637,11 @@ msgstr "Cum aliis cursoribus ad metam curre"
 msgid "Laps:"
 msgstr "Circumitus:"
 
-#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:16
+#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:63
 msgid "Hunter"
 msgstr "Venator"
 
-#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:22
+#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:69
 msgid "Survivor"
 msgstr "Superstes"
 
@@ -1795,7 +1795,7 @@ msgid "Create"
 msgstr "Creare"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
-#: qcsrc/menu/xonotic/dialog_welcome.qc:113
+#: qcsrc/menu/xonotic/dialog_welcome.qc:131
 msgid "Join"
 msgstr "Incipere"
 
@@ -2200,17 +2200,25 @@ msgstr "Laquei granata"
 msgid "Veil grenade"
 msgstr "Veli granata"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:102
+#: qcsrc/common/mutators/mutator/nades/nades.inc:99
+msgid "Ammo grenade"
+msgstr "Missilium granata"
+
+#: qcsrc/common/mutators/mutator/nades/nades.inc:109
+msgid "Darkness grenade"
+msgstr "Tenebrarum granata"
+
+#: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
 msgstr "arma demittere / granatam iacere"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:104
+#: qcsrc/common/mutators/mutator/nades/nades.qc:141
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr "^8sunt ^3granatae^8, ^3%s^8 preme ut eis utaris"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:99
+#: qcsrc/common/mutators/mutator/nades/nades.qh:123
 msgid "Grenade"
 msgstr "Granata"
 
@@ -2277,7 +2285,7 @@ msgstr "Stupefactus"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
-msgstr "Perarma"
+msgstr "Arma Magna"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -2481,8 +2489,8 @@ msgstr "^BG%s^BG vexillum ^TC^TT^BG cepit"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG vexillum ^TC^TT^BG ^F1%s^BG secundis cepit, fuit captus celerior "
 "anteriore celerrimo, quem ^BG%s^BG ^F2%s^BG secundis fecerat"
@@ -3011,7 +3019,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:345
 #, c-format
 msgid "^BG%s^K1 was phased out by a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 turriola deletus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:346
 #, c-format
@@ -3021,7 +3029,7 @@ msgstr "^BG%s^K1 Turriolae plasma fervens accepit%s%s"
 #: qcsrc/common/notifications/all.inc:347
 #, c-format
 msgid "^BG%s^K1 was electrocuted by a Tesla turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Teslae turriola electrice occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:348
 #, c-format
@@ -3372,11 +3380,14 @@ msgstr "^BG%s^BG cursum reliquit"
 #, c-format
 msgid "^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"
 msgstr ""
+"^BG%s^BG non fuit celerior quam gradum %s%s^BG suum, cuius tempus fuit %s%s "
+"%s"
 
 #: qcsrc/common/notifications/all.inc:434
 #, c-format
 msgid "^BG%s^BG couldn't break the %s%s^BG place record of %s%s %s"
 msgstr ""
+"^BG%s^BG non fuit celerior quam gradum %s%s^BG, cuius tempus fuit %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
@@ -3387,11 +3398,14 @@ msgstr "^BG%s^BG cursum finivit"
 #, c-format
 msgid "^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s"
 msgstr ""
+"^BG%s^BG celerior fuit quam %s^BG gradum %s%s^BG, tempus novum fuit %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
 msgid "^BG%s^BG improved their %s%s^BG place record with %s%s %s"
 msgstr ""
+"^BG%s^BG celerior fuit quam suum ipsum gradum %s%s^BG, tempus novum fuit "
+"%s%s %s"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -3399,6 +3413,8 @@ msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID "
 "and will be lost."
 msgstr ""
+"^BG%s^BG celerior fuit quam aliquid tempus horum, tempus novum ^F2%s^BG "
+"fuit, sed non est cryptographice consignatus, temporis igitur obliviscetur."
 
 #: qcsrc/common/notifications/all.inc:439
 #, c-format
@@ -3406,11 +3422,13 @@ msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but is anonymous and will be "
 "lost."
 msgstr ""
+"^BG%s^BG celerior fuit quam aliquid tempus horum, tempus novum ^F2%s^BG "
+"fuit, sed anonymus est, temporis igitur obliviscetur."
 
 #: qcsrc/common/notifications/all.inc:440
 #, c-format
 msgid "^BG%s^BG set the %s%s^BG place record with %s%s"
-msgstr ""
+msgstr "^BG%s^BG gradum %s%s^BG creavit, tempus fuit %s%s"
 
 #: qcsrc/common/notifications/all.inc:442
 #, c-format
@@ -3434,7 +3452,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:448
 #, c-format
 msgid "^BG%s^K1 picked up a Superweapon"
-msgstr "^BG%s^K1 Perarma tenet"
+msgstr "^BG%s^K1 Arma Magna tenet"
 
 #: qcsrc/common/notifications/all.inc:450
 #: qcsrc/common/notifications/all.inc:789
@@ -3474,10 +3492,10 @@ msgstr ""
 #, c-format
 msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
-"the update from ^F3http://www.xonotic.org/^BG!"
+"the update from ^F3https://xonotic.org^BG!"
 msgstr ""
 "^F4NOTA: ^F1Xonoticus %s^BG editus est, at ^F2Xonoticum %s^BG habes, eum "
-"novum in ^F3http://www.xonotic.org/^BG inveni!"
+"novum in ^F3https://xonotic.org^BG inveni!"
 
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
@@ -3629,7 +3647,7 @@ msgstr "^BG%s^K1 suis auribus M@!#%% Klein Lagena nocuit%s%s"
 #: qcsrc/common/notifications/all.inc:489
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Polybolo ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:490
 #, c-format
@@ -3640,7 +3658,7 @@ msgstr "^BG%s%s^K1, Polybolo ^BG%s^K1, perforatus est%s%s"
 #: qcsrc/common/notifications/all.inc:812
 #, c-format
 msgid "^BGYou cannot place more than ^F2%s^BG mines at a time"
-msgstr "^F2%s^BG tribuli simul ponere non potes"
+msgstr "^F2%s^BG tribulos simul ponere non potes"
 
 #: qcsrc/common/notifications/all.inc:492
 #, c-format
@@ -3675,13 +3693,13 @@ msgstr "^BG%s^K1 suo Mortario se rupit%s%s"
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Polybolo Immoderato ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:499
 #, c-format
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Polybolo Immoderato ^BG%s^K1, divisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
@@ -3692,28 +3710,30 @@ msgstr "^BG%s%s^K1, Polybolo Immoderato ^BG%s^K1, perforatus est%s%s"
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Nece Immoderata ^BG%s^K1, in vaporem mutatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
+"^BG%s%s^K1, Missilium Pellentium Serra Immoderata ^BG%s^K1, dimidiatus "
+"est%s%s"
 
 #: qcsrc/common/notifications/all.inc:503
 #, c-format
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 Missilium Pellentium Serram Immoderatam, ^BG%s^K1, fere vitavit%s"
-"%s"
+"^BG%s%s^K1 Missilium Pellentium Serram Immoderatam, ^BG%s^K1, fere "
+"vitavit%s%s"
 
 #: qcsrc/common/notifications/all.inc:504
 #, c-format
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Missilium Pellentium Serra Immoderata sua dimidiatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:505
 #, c-format
@@ -3724,27 +3744,30 @@ msgstr "^BG%s^K1 Missilium Pellentium Serra Immoderata sua se rupit%s%s"
 #: qcsrc/common/notifications/all.inc:507
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Sclopeto Immoderato ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:508
 #, c-format
 msgid "^BG%s%s^K1 was sniped with a Rifle by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Sclopeto Pungenti ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:509
 #, c-format
 msgid "^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s"
 msgstr ""
+"^BG%s%s^K1 sub ^BG%s^K1 Sclopeti Pungentis missilium pluvia mortus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s"
 msgstr ""
+"^BG%s%s^K1, ex ^BG%s^K1 Sclopeti Pungentis missilium pluvia, effugire non "
+"potuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, ex ^BG%s^K1 Sclopeto Pungenti, effugire non potuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
@@ -3774,12 +3797,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:517
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Sclopeto ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:518
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 magno Sclopeto ^BG%s^K1 alapam dedit%s%s"
 
 #: qcsrc/common/notifications/all.inc:519
 #, c-format
@@ -3799,12 +3822,12 @@ msgstr "^BG%s^K1 suis auribus M@!#%% Tuba nocuit%s%s"
 #: qcsrc/common/notifications/all.inc:522
 #, c-format
 msgid "^BG%s%s^K1 has been sublimated by ^BG%s^K1's Vaporizer%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Vaporatro ^BG%s^K1, fervefactus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:523
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Vortice ^BG%s^K1, in vaporem mutatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:542
 msgid "^F4You are now alone!"
@@ -4412,12 +4435,8 @@ msgstr ""
 "Hic non plures quam ^F2%s^BG ludentes ludere possunt."
 
 #: qcsrc/common/notifications/all.inc:716
-msgid ""
-"^K1You aren't allowed to play because you are banned in this server, but you "
-"can play minigames"
-msgstr ""
-"^K1Te ludere vetatur quia hoc moderatro expulsus es, sed ludos parvos ludere "
-"potes"
+msgid "^K1You aren't allowed to play because you are banned in this server"
+msgstr "^K1Te ludere vetatur quia hoc moderatro expulsus es"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4680,15 +4699,15 @@ msgstr "^BGModo %s^BG plura facienda..."
 
 #: qcsrc/common/notifications/all.inc:784
 msgid "^F2Superweapons have broken down"
-msgstr "^F2Perarma perfracta sunt"
+msgstr "^F2Arma Magna perfracta sunt"
 
 #: qcsrc/common/notifications/all.inc:785
 msgid "^F2Superweapons have been lost"
-msgstr "^F2Perarma perdita sunt"
+msgstr "^F2Arma Magna perdita sunt"
 
 #: qcsrc/common/notifications/all.inc:786
 msgid "^F2You now have a superweapon"
-msgstr "^F2Perarma tenes"
+msgstr "^F2Arma Magna tenes"
 
 #: qcsrc/common/notifications/all.inc:788
 msgid ""
@@ -4894,12 +4913,12 @@ msgstr "HARMAGEDDON! "
 #: qcsrc/common/notifications/all.qh:480
 #, c-format
 msgid "%s(^F1Bot^BG)"
-msgstr ""
+msgstr "%s(^F1Automatus^BG)"
 
 #: qcsrc/common/notifications/all.qh:482
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
-msgstr ""
+msgstr "%s(Ping ^F1%d^BG)"
 
 #: qcsrc/common/notifications/all.qh:489
 #, c-format
@@ -4907,6 +4926,8 @@ msgid ""
 "\n"
 "(Health ^1%d^BG / Armor ^2%d^BG)%s"
 msgstr ""
+"\n"
+"(Sanitas ^1%d^BG / Armatura ^2%d^BG)%s"
 
 #: qcsrc/common/notifications/all.qh:491
 #, c-format
@@ -4914,6 +4935,8 @@ msgid ""
 "\n"
 "(^F4Dead^BG)%s"
 msgstr ""
+"\n"
+"(^F4Mortus^BG)%s"
 
 #: qcsrc/common/notifications/all.qh:512 qcsrc/common/notifications/all.qh:525
 #, c-format
@@ -5129,20 +5152,20 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
-msgstr ""
+msgstr "Plasmatis Tormentum"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:8
 msgid "Dual plasma"
-msgstr ""
+msgstr "Plasma Duplum"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:20
 msgid "Dual Plasma Cannon"
-msgstr ""
+msgstr "Plasmatis Dupli Tormentum"
 
 #: qcsrc/common/turrets/turret/tesla.qh:13
 #: qcsrc/common/turrets/turret/tesla_weapon.qh:7
 msgid "Tesla Coil"
-msgstr ""
+msgstr "Teslae Spira"
 
 #: qcsrc/common/turrets/turret/walker.qh:15
 msgid "Walker Turret"
@@ -5208,7 +5231,7 @@ msgstr "Pugna Modo Pugno"
 #: qcsrc/common/util.qc:260
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
 msgid "Piñata"
-msgstr ""
+msgstr "Referti Armis"
 
 #: qcsrc/common/util.qc:261
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:197
@@ -5655,7 +5678,7 @@ msgstr "Cursor"
 
 #: qcsrc/common/vehicles/vehicle/racer_weapon.qh:9
 msgid "Racer cannon"
-msgstr ""
+msgstr "Cursoris tormentum"
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:21
 msgid "Raptor"
@@ -5663,7 +5686,7 @@ msgstr "Raptor"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:9
 msgid "Raptor cannon"
-msgstr ""
+msgstr "Raptoris tormentum"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:17
 msgid "Raptor bomb"
@@ -5732,7 +5755,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/rifle.qh:21
 msgid "Rifle"
-msgstr ""
+msgstr "Sclopetum Pungens"
 
 #: qcsrc/common/weapons/weapon/seeker.qh:20
 msgid "T.A.G. Seeker"
@@ -5987,11 +6010,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:4
 msgid "Core Team"
-msgstr ""
+msgstr "Socii Primarii"
 
 #: qcsrc/menu/xonotic/credits.qc:13
 msgid "Extended Team"
-msgstr ""
+msgstr "Socii Adiutores"
 
 #: qcsrc/menu/xonotic/credits.qc:31
 msgid "Website"
@@ -6011,7 +6034,7 @@ msgstr "Animatio"
 
 #: qcsrc/menu/xonotic/credits.qc:53
 msgid "Campaign"
-msgstr ""
+msgstr "Expeditio"
 
 #: qcsrc/menu/xonotic/credits.qc:56
 msgid "Level Design"
@@ -6019,11 +6042,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:81
 msgid "Music / Sound FX"
-msgstr ""
+msgstr "Cantus / Soni"
 
 #: qcsrc/menu/xonotic/credits.qc:97
 msgid "Game Code"
-msgstr ""
+msgstr "Ludi Codex Computatralis"
 
 #: qcsrc/menu/xonotic/credits.qc:113
 msgid "Marketing / PR"
@@ -6031,15 +6054,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:119
 msgid "Legal"
-msgstr ""
+msgstr "Legum"
 
 #: qcsrc/menu/xonotic/credits.qc:124
 msgid "Game Engine"
-msgstr ""
+msgstr "Ludi Codicis Fundamenta"
 
 #: qcsrc/menu/xonotic/credits.qc:128
 msgid "Engine Additions"
-msgstr ""
+msgstr "Codicis Fundamenta Addita"
 
 #: qcsrc/menu/xonotic/credits.qc:134
 msgid "Compiler"
@@ -6047,7 +6070,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:140
 msgid "Other Active Contributors"
-msgstr ""
+msgstr "Alii qui Recens Adiuverunt"
 
 #: qcsrc/menu/xonotic/credits.qc:147
 msgid "Translators"
@@ -6179,7 +6202,7 @@ msgstr "Ucrainica"
 
 #: qcsrc/menu/xonotic/credits.qc:418
 msgid "Past Contributors"
-msgstr ""
+msgstr "Alii qui Prius Adiuverunt"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:73
 msgid "forced to be saved to config.cfg"
@@ -6199,7 +6222,7 @@ msgstr "privatum"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:95
 msgid "engine setting"
-msgstr ""
+msgstr "codicis fundamentorum optio"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:97
 msgid "read only"
@@ -6212,7 +6235,7 @@ msgstr "legendum modo"
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:75
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
-msgstr ""
+msgstr "Ita"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:7
 msgid "Credits"
@@ -6258,13 +6281,15 @@ msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
+"Sinuntur ab initio lusoris statisticae, sed tamen per indicem 'Lusoris "
+"Paginam' eas vetare potes"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:95
 msgid "Save settings"
 msgstr "Optiones servare"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qh:7
-#: qcsrc/menu/xonotic/dialog_welcome.qc:12
+#: qcsrc/menu/xonotic/dialog_welcome.qc:13
 #: qcsrc/menu/xonotic/dialog_welcome.qh:6
 msgid "Welcome"
 msgstr "Salve"
@@ -6294,7 +6319,7 @@ msgstr "Moderatra"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:48
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:19
 msgid "Profile"
-msgstr ""
+msgstr "Lusoris Pagina"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:51
 #: qcsrc/menu/xonotic/dialog_settings.qh:6
@@ -6304,14 +6329,14 @@ msgstr "Optiones"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:54
 #: qcsrc/menu/xonotic/dialog_settings.qc:23
 msgid "Input"
-msgstr ""
+msgstr "Claves premendae"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:56
 msgid "Quick menu"
 msgstr "Index celer"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
-#: qcsrc/menu/xonotic/dialog_welcome.qc:115
+#: qcsrc/menu/xonotic/dialog_welcome.qc:133
 msgid "Spectate"
 msgstr "Spectare"
 
@@ -6325,17 +6350,17 @@ msgstr "Missilia videre:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
 msgid "Show only current ammo type"
-msgstr ""
+msgstr "Missilia modo quibus tunc utitur videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:46
 msgid "Noncurrent alpha:"
-msgstr ""
+msgstr "Traluciditas aliorum:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:50
 msgid "Noncurrent scale:"
-msgstr ""
+msgstr "Proportio aliorum:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
@@ -6368,118 +6393,118 @@ msgstr "Dextrum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qh:6
 msgid "Ammo Panel"
-msgstr ""
+msgstr "Missilium Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:21
 msgid "Message duration:"
-msgstr ""
+msgstr "Nuntii tempus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:23
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:25
 msgid "Fade time:"
-msgstr ""
+msgstr "Evanescit tempus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:27
 msgid "Flip messages order"
-msgstr ""
+msgstr "Nuntiorum series inversa"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:18
 msgid "Text alignment:"
-msgstr ""
+msgstr "Scriptum ad latus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:22
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:70
 msgid "Center"
-msgstr ""
+msgstr "Medium"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:37
 msgid "Font scale:"
-msgstr ""
+msgstr "Litterae magnitudo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:41
 msgid "Bold font scale:"
-msgstr ""
+msgstr "Litterae gravis magnitudo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
-msgstr ""
+msgstr "Scripti Medii Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:17
 msgid "Chat entries:"
-msgstr ""
+msgstr "Locutorii versus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:20
 msgid "Chat size:"
-msgstr ""
+msgstr "Locutorii magnitudo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:24
 msgid "Chat lifetime:"
-msgstr ""
+msgstr "Locutorii tempus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:28
 msgid "Chat beep sound"
-msgstr ""
+msgstr "Locutorii sonus 'bip'"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qh:6
 msgid "Chat Panel"
-msgstr ""
+msgstr "Locutorii Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:16
 msgid "Engine info:"
-msgstr ""
+msgstr "Codicis Fundamentorum notae:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:19
 msgid "Use an averaging algorithm for fps"
-msgstr ""
+msgstr "QIS reri per mediarum computationem"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
-msgstr ""
+msgstr "Codicis Fundamentorum Notae Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:17
 msgid "Combine health and armor"
-msgstr ""
+msgstr "Sanitatem et armaturam iungere"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:17
 msgid "Enable status bar"
-msgstr ""
+msgstr "Status tabellam videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:19
 msgid "Status bar alignment:"
-msgstr ""
+msgstr "Status tabella ad latus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:39
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:27
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:37
 msgid "Inward"
-msgstr ""
+msgstr "Internum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:40
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:38
 msgid "Outward"
-msgstr ""
+msgstr "Externum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:34
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:32
 msgid "Icon alignment:"
-msgstr ""
+msgstr "Imago ad latus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:42
 msgid "Flip health and armor positions"
-msgstr ""
+msgstr "Sanitatem et armaturam invertere"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qh:6
 msgid "Health/Armor Panel"
-msgstr ""
+msgstr "Sanitatis/Armaturae Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:16
 msgid "Info messages:"
@@ -6506,40 +6531,40 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:762 qcsrc/menu/xonotic/util.qc:778
 #: qcsrc/menu/xonotic/util.qc:795
 msgid "Disable"
-msgstr ""
+msgstr "Non videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 msgid "Enable spectating"
-msgstr ""
+msgstr "Videre dum spectas"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "Enable even playing in warmup"
-msgstr ""
+msgstr "Videre dum exercitium est"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
 msgid "Reduced"
-msgstr ""
+msgstr "Minor"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
 msgid "Text/icon ratio:"
-msgstr ""
+msgstr "Scripti/Imaginis magnitudo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:35
 msgid "Hide spawned items"
-msgstr ""
+msgstr "Non videre de utilibus natis"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:37
 msgid "Hide big armor and health"
-msgstr ""
+msgstr "Non videre de sanitate magna et armatura"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
 msgid "Dynamic size"
-msgstr ""
+msgstr "Magnitudinem variare"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qh:6
 msgid "Items Time Panel"
-msgstr ""
+msgstr "Utilium Temporum Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
@@ -6576,47 +6601,47 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:26
 #: qcsrc/menu/xonotic/util.qc:750
 msgid "Enable"
-msgstr ""
+msgstr "Videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:31
 msgid "Enable even observing"
-msgstr ""
+msgstr "Videre dum specis"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:32
 msgid "Enable only in Race/CTS"
-msgstr ""
+msgstr "Videre modo dum est Cursus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
 msgid "Status bar"
-msgstr ""
+msgstr "Status tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:67
 msgid "Left align"
-msgstr ""
+msgstr "Ad Sinistrum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:73
 msgid "Right align"
-msgstr ""
+msgstr "Ad Dextrum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:28
 msgid "Inward align"
-msgstr ""
+msgstr "Ad Internum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
 msgid "Outward align"
-msgstr ""
+msgstr "Ad Externum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
 msgid "Flip speed/acceleration positions"
-msgstr ""
+msgstr "Velocitatem et accelerationem invertere"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
 msgid "Speed:"
-msgstr ""
+msgstr "Velocitas:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:38
 msgid "Include vertical speed"
@@ -6632,7 +6657,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:58
 msgid "Acceleration:"
-msgstr ""
+msgstr "Acceleratio:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:59
 msgid "Include vertical acceleration"
@@ -6640,15 +6665,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qh:6
 msgid "Physics Panel"
-msgstr ""
+msgstr "Physicae Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:18
 msgid "Pickup messages:"
-msgstr ""
+msgstr "Collectorum notae:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:29
 msgid "Show timer:"
-msgstr ""
+msgstr "Tempus scribere:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
@@ -6656,18 +6681,18 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:145
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
 msgid "Never"
-msgstr ""
+msgstr "Numquam"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:32
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:182
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:147
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
 msgid "Always"
-msgstr ""
+msgstr "Semper"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:33
 msgid "Spectating"
-msgstr ""
+msgstr "Si spectas"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
 msgid "Icon size scale:"
@@ -6675,16 +6700,16 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
-msgstr ""
+msgstr "Collectorum Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
-msgstr ""
+msgstr "Potestatum Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Always enable"
-msgstr ""
+msgstr "Semper videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
@@ -6692,23 +6717,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
-msgstr ""
+msgstr "Clavium Pressarum Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
-msgstr ""
+msgstr "Indicis Celeris Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.qh:6
 msgid "Race Timer Panel"
-msgstr ""
+msgstr "Cursus Temporis Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
 msgid "Enable in team games"
-msgstr ""
+msgstr "Videre in manus ludis"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
 msgid "Radar:"
-msgstr ""
+msgstr "Detectrum:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:26
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:68
@@ -6721,84 +6746,84 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:124
 #: qcsrc/menu/xonotic/util.qc:784
 msgid "Alpha:"
-msgstr ""
+msgstr "Traluciditas"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:30
 msgid "Rotation:"
-msgstr ""
+msgstr "Rotatio:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:32
 msgid "Forward"
-msgstr ""
+msgstr "Directus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:33
 msgid "West"
-msgstr ""
+msgstr "Occidens"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:34
 msgid "South"
-msgstr ""
+msgstr "Auster"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:35
 msgid "East"
-msgstr ""
+msgstr "Oriens"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:36
 msgid "North"
-msgstr ""
+msgstr "Septentriones"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:40
 msgid "Scale:"
-msgstr ""
+msgstr "Proportio:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:44
 msgid "Zoom mode:"
-msgstr ""
+msgstr "Amplificationis modus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:46
 msgid "Zoomed in"
-msgstr ""
+msgstr "Amplificatus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
 msgid "Zoomed out"
-msgstr ""
+msgstr "Imminutus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:48
 msgid "Always zoomed"
-msgstr ""
+msgstr "Semper amplificatus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
 msgid "Never zoomed"
-msgstr ""
+msgstr "Nunquam amplificatus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
-msgstr ""
+msgstr "Detectri Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:17
 msgid "Score:"
-msgstr ""
+msgstr "Ratio:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:20
 msgid "Rankings:"
-msgstr ""
+msgstr "Gradus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:21
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:58
 msgid "Off"
-msgstr ""
+msgstr "Sine"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:22
 msgid "And me"
-msgstr ""
+msgstr "Mecum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:23
 msgid "Pure"
-msgstr ""
+msgstr "Pura"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qh:6
 msgid "Score Panel"
-msgstr ""
+msgstr "Rationum Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:38
 msgid "StrafeHUD mode:"
@@ -6897,88 +6922,88 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Alpha after voting:"
-msgstr ""
+msgstr "Traluciditas post suffragium:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
-msgstr ""
+msgstr "Suffragii Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:22
 msgid "Fade out after:"
-msgstr ""
+msgstr "Evanescere post:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:26
 #, c-format
 msgid "%ds"
-msgstr ""
+msgstr "%ds"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:30
 msgid "Fade effect:"
-msgstr ""
+msgstr "Quomodo evanescit:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "EF^None"
-msgstr ""
+msgstr "Nullus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Alpha"
-msgstr ""
+msgstr "Tralucidus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:35
 msgid "Slide"
-msgstr ""
+msgstr "Labitur"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:36
 msgid "EF^Both"
-msgstr ""
+msgstr "Ambo"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:40
 msgid "Weapon icons:"
-msgstr ""
+msgstr "Armorum imagines:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:43
 msgid "Show only owned weapons"
-msgstr ""
+msgstr "Modo arma tenta videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
 msgid "Show weapon ID as:"
-msgstr ""
+msgstr "Armorum nota scripta:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "SHOWAS^None"
-msgstr ""
+msgstr "Nulla"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:56
 msgid "Number"
-msgstr ""
+msgstr "Numerus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:57
 msgid "Bind"
-msgstr ""
+msgstr "Clavis"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:60
 msgid "Weapon ID scale:"
-msgstr ""
+msgstr "Proportio Nominis:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:66
 msgid "Show Accuracy"
-msgstr ""
+msgstr "Accuratiam Videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:67
 msgid "Show Ammo"
-msgstr ""
+msgstr "Missilia Videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:70
 msgid "Ammo bar alpha:"
-msgstr ""
+msgstr "Missilium tabellae traluciditas:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:76
 msgid "Ammo bar color:"
-msgstr ""
+msgstr "Missilium tabellae color:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qh:6
 msgid "Weapons Panel"
-msgstr ""
+msgstr "Armorum Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:19
 msgid "HUD skins"
@@ -7019,12 +7044,12 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60 qcsrc/menu/xonotic/util.qc:775
 msgid "Border size:"
-msgstr ""
+msgstr "Marginis magnitudo:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:75
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:114
 msgid "Team color:"
-msgstr ""
+msgstr "Manus color:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83 qcsrc/menu/xonotic/util.qc:801
 msgid "Test team color in configure mode"
@@ -7056,27 +7081,27 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:121
 msgid "Grid settings:"
-msgstr ""
+msgstr "Reticulati optiones:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:122
 msgid "Snap panels to grid"
-msgstr ""
+msgstr "Ad reticulatum tabellas dirigere"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:125
 msgid "Grid size:"
-msgstr ""
+msgstr "Reticulati magnitudo:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:127
 msgid "X:"
-msgstr ""
+msgstr "X:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:134
 msgid "Y:"
-msgstr ""
+msgstr "Y:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:144
 msgid "Center line"
-msgstr ""
+msgstr "Linea media"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:145
 #, c-format
@@ -7084,6 +7109,8 @@ msgid ""
 "Show a vertical centerline to help align panels. It's possible to show more "
 "vertical lines by editing %s in the console"
 msgstr ""
+"Linea media erecta pingitur ut tabellas dirigas. Plures lineas erectas "
+"videre potes si iussum scribis et %s mutas"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:148
 msgid "Exit setup"
@@ -7095,16 +7122,16 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
-msgstr ""
+msgstr "Belua:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:22
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:20
 msgid "Spawn"
-msgstr ""
+msgstr "Nasci"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:23
 msgid "Remove"
-msgstr ""
+msgstr "Deleri"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:25
 msgid "Move target:"
@@ -7112,32 +7139,32 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:26
 msgid "Follow"
-msgstr ""
+msgstr "Sequi"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:27
 msgid "Wander"
-msgstr ""
+msgstr "Vagari"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:28
 msgid "Spawnpoint"
-msgstr ""
+msgstr "Ubi nascitur"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:29
 msgid "No moving"
-msgstr ""
+msgstr "Immobilis"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:31
 msgid "Colors:"
-msgstr ""
+msgstr "Colores:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:33
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:39
 msgid "Set skin:"
-msgstr ""
+msgstr "Pellem eligere:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qh:6
 msgid "Monster Tools"
-msgstr ""
+msgstr "Beluae Instrumenta"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
 msgid "Find servers to play on"
@@ -7149,17 +7176,19 @@ msgstr "Ludi tui ipsius hospes esse"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:18
 msgid "Media"
-msgstr ""
+msgstr "Soni imaginesque"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:6
 msgid "Multiplayer"
-msgstr ""
+msgstr "Duo Ludentes aut Plures"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid ""
 "Play online, against your friends in LAN, view demos or change player "
 "settings"
 msgstr ""
+"Lude interreti vel reti locali cum amicis tuis, vel pelliculas "
+"cinematographicas inspice, vel lusoris optiones elige"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
@@ -7167,33 +7196,33 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:777 qcsrc/menu/xonotic/util.qc:786
 #: qcsrc/menu/xonotic/util.qc:794 qcsrc/menu/xonotic/util.qc:806
 msgid "Default"
-msgstr ""
+msgstr "Ordinarius"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:42
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Unlimited"
-msgstr ""
+msgstr "Infinitus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:76
 msgid "Gametype"
-msgstr ""
+msgstr "Ludi modus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:81
 msgid "Time limit:"
-msgstr ""
+msgstr "Tempus terminale:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "Timelimit in minutes that when hit, will end the match"
-msgstr ""
+msgstr "Ludus finietur cum hoc tempus transierit"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
 #, c-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d minuta"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:85
 msgid "TIMLIM^Default"
-msgstr ""
+msgstr "Ordinarium"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:171
@@ -7202,159 +7231,163 @@ msgstr "1 minutum"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:103
 msgid "TIMLIM^Infinite"
-msgstr ""
+msgstr "Infinitum"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
 msgid "Teams:"
-msgstr ""
+msgstr "Manus:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
 msgid "2 teams"
-msgstr ""
+msgstr "2 manus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
 msgid "3 teams"
-msgstr ""
+msgstr "3 manus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:116
 msgid "4 teams"
-msgstr ""
+msgstr "4 manus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
 msgid "Player slots:"
-msgstr ""
+msgstr "Ludentium numerus:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
 msgid ""
 "The maximum amount of players or bots that can be connected to your server "
 "at once"
 msgstr ""
+"Numerus maximus ludentium, hominum vel automatorum, qui cum moderatro tuo se "
+"conectere possunt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "Number of bots:"
-msgstr ""
+msgstr "Automatorum numerus:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
 msgid "Amount of bots on your server"
-msgstr ""
+msgstr "Quot sunt ludentes automati in moderatro tuo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:129
 msgid "Bot skill:"
-msgstr ""
+msgstr "Automati habilitas:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:132
 msgid "Specify how experienced the bots will be"
-msgstr ""
+msgstr "Quam habiles automati erunt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:133
 msgid "Botlike"
-msgstr ""
+msgstr "Automatulus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
 msgid "Beginner"
-msgstr ""
+msgstr "Tiro"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
 msgid "You will win"
-msgstr ""
+msgstr "Vinces"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
 msgid "You can win"
-msgstr ""
+msgstr "Vincere potes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
 msgid "You might win"
-msgstr ""
+msgstr "Vinces forte"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
 msgid "Advanced"
-msgstr ""
+msgstr "Sagax"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
 msgid "Expert"
-msgstr ""
+msgstr "Expertus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
 msgid "Pro"
-msgstr ""
+msgstr "Peritus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:141
 msgid "Assassin"
-msgstr ""
+msgstr "Interfector"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
 msgid "Unhuman"
-msgstr ""
+msgstr "Inhumanus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:143
 msgid "Godlike"
-msgstr ""
+msgstr "Divinus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:160
 msgid "Mutators..."
-msgstr ""
+msgstr "Mutationes..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:161
 msgid "Mutators and weapon arenas"
-msgstr ""
+msgstr "Mutationes et armorum harenae"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:171
 msgid "Maplist"
-msgstr ""
+msgstr "Harenarum index"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:181
 msgid ""
 "Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-"
 "Delete to clear; Enter when done."
 msgstr ""
+"Hic clicca vel Ctrl-F preme ut verbum scribe et videas modo nomina quae eum "
+"verbum contineantur. Ctrl-Delete ut verbum obliviscatur; Enter ut finias."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:190
 msgid "Add shown"
-msgstr ""
+msgstr "Visas addere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:191
 msgid "Add the maps shown in the list to your selection"
-msgstr ""
+msgstr "Harenas visas in selectionem tuam addere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:194
 msgid "Remove shown"
-msgstr ""
+msgstr "Visas removere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:195
 msgid "Remove the maps shown in the list from your selection"
-msgstr ""
+msgstr "Harenas visas ex selectionem tuam removere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:200
 msgid "Add all"
-msgstr ""
+msgstr "Omnes addere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
 msgid "Add every available map to your selection"
-msgstr ""
+msgstr "Omnes harenas servatas in selectionem tuam addere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:204
 msgid "Remove all"
-msgstr ""
+msgstr "Omnes removere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:205
 msgid "Remove all the maps from your selection"
-msgstr ""
+msgstr "Omnes harenas ex selectionem tuam removere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:213
 msgid "Start multiplayer!"
-msgstr ""
+msgstr "Incipere plurium ludentium ludum!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:52
 msgid "Title:"
-msgstr ""
+msgstr "Titulus:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:58
 msgid "Author:"
-msgstr ""
+msgstr "Auctor:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:64
 msgid "Game types:"
-msgstr ""
+msgstr "Ludi modi:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
@@ -7363,15 +7396,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:90
 msgid "MAP^Play"
-msgstr ""
+msgstr "Ludere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qh:7
 msgid "Map Information"
-msgstr ""
+msgstr "Harenae notae"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:63
 msgid "MUT^None"
-msgstr ""
+msgstr "Nulla"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
@@ -7538,44 +7571,44 @@ msgstr "Mutationes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:32
 msgid "SRVS^Categories"
-msgstr ""
+msgstr "Genera"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:42
 msgid "SRVS^Empty"
-msgstr ""
+msgstr "Vacua"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:43
 msgid "Show empty servers"
-msgstr ""
+msgstr "Moderatra vacua videre"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:47
 msgid "SRVS^Full"
-msgstr ""
+msgstr "Completa"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:48
 msgid "Show full servers that have no slots available"
-msgstr ""
+msgstr "Videre moderatra completa quibus plures ludere non possunt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "SRVS^Laggy"
-msgstr ""
+msgstr "Sera"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 msgid "Show high latency servers"
-msgstr ""
+msgstr "Videre moderatra quorum nexiones interretiales serae sunt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:59
 msgid "Reload the server list"
-msgstr ""
+msgstr "Moderatrorum indicem scribere iterum"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:62
 msgid "Pause"
-msgstr ""
+msgstr "Retinere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:63
 msgid ""
 "Pause updating the server list to prevent servers from \"jumping around\""
-msgstr ""
+msgstr "Moderatrorum indicis mutationes retinet ne nomina \"exsiliant\""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:75
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:30
@@ -7584,16 +7617,16 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:86
 msgid "Info..."
-msgstr ""
+msgstr "Notae..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:87
 msgid "Show more information about the currently highlighted server"
-msgstr ""
+msgstr "Videre notas de moderatro indicato"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:105
 msgid "No Terms of Service specified"
-msgstr ""
+msgstr "Pactio Usuum non scripta"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
 #: qcsrc/menu/xonotic/serverlist.qc:1055
@@ -7603,7 +7636,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 #, c-format
 msgid "%d modified"
-msgstr ""
+msgstr "%d mutatas"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 msgid "Official"
@@ -7670,17 +7703,17 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:213
 msgid "Status"
-msgstr ""
+msgstr "Condicio"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_termsofservice.qh:7
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
 msgid "Terms of Service"
-msgstr ""
+msgstr "Pactio Usuum"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
-msgstr ""
+msgstr "Moderatri Notae"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:24
 msgid "Hostname:"
@@ -7688,7 +7721,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:48
 msgid "Mod:"
-msgstr ""
+msgstr "Mod:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:53
 msgid "Version:"
@@ -7696,16 +7729,16 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:58
 msgid "Settings:"
-msgstr ""
+msgstr "Optiones:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:65
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:102
 msgid "Players:"
-msgstr ""
+msgstr "Ludentes:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:70
 msgid "Bots:"
-msgstr ""
+msgstr "Automati:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:75
 msgid "Free slots:"
@@ -7713,7 +7746,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:81
 msgid "Encryption:"
-msgstr ""
+msgstr "Cryptographia:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:86
 msgid "ID:"
@@ -7733,27 +7766,29 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:25
 msgid "Demos"
-msgstr ""
+msgstr "Cinematographia"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:26
 msgid "Screenshots"
-msgstr ""
+msgstr "Photographia"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:27
 msgid "Music Player"
-msgstr ""
+msgstr "Cantus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:48
 msgid "Auto record demos"
-msgstr ""
+msgstr "Cinematographiam semper servare"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:57
 msgid "Timedemo"
-msgstr ""
+msgstr "Tempus metiri"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:58
 msgid "Benchmark how fast your computer can run the highlighted demo"
 msgstr ""
+"Quantum tempus necesse est ut computatrum tuum imagines cinematographicas "
+"pingat"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:62
 msgid "DEMO^Play"
@@ -7771,7 +7806,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qh:6
 msgid "Disconnect"
-msgstr ""
+msgstr "Dinectere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
 msgid "Timing a demo will disconnect you from the current match."
@@ -7779,59 +7814,59 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:37
 msgid "MUSICPL^Add"
-msgstr ""
+msgstr "Addere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:40
 msgid "MUSICPL^Add all"
-msgstr ""
+msgstr "Omnes addere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:44
 msgid "Set as menu track"
-msgstr ""
+msgstr "Indicis cantum eligere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:48
 msgid "Reset default menu track"
-msgstr ""
+msgstr "Indicis cantum ordinarium reponere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:54
 msgid "Playlist:"
-msgstr ""
+msgstr "Series cantuum:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:55
 msgid "Random order"
-msgstr ""
+msgstr "Ordo mixta"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:60
 msgid "MUSICPL^Stop"
-msgstr ""
+msgstr "Finire"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:63
 msgid "MUSICPL^Play"
-msgstr ""
+msgstr "Canere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:66
 msgid "MUSICPL^Pause"
-msgstr ""
+msgstr "Intermittere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:69
 msgid "MUSICPL^Prev"
-msgstr ""
+msgstr "Anterior"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:72
 msgid "MUSICPL^Next"
-msgstr ""
+msgstr "Posterior"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:76
 msgid "MUSICPL^Remove"
-msgstr ""
+msgstr "Removere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:79
 msgid "MUSICPL^Remove all"
-msgstr ""
+msgstr "Omnes removere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:41
 msgid "Auto screenshot scoreboard"
-msgstr ""
+msgstr "Rationariorum imagines semper servare"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:62
 msgid "Open in the viewer"
@@ -7864,23 +7899,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:50
 msgid "Name"
-msgstr ""
+msgstr "Nomen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:79
 msgid "Model"
-msgstr ""
+msgstr "Forma"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:98
 msgid "Glowing color"
-msgstr ""
+msgstr "Color illuminans"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:108
 msgid "Detail color"
-msgstr ""
+msgstr "Color subtilis"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:123
 msgid "Statistics"
-msgstr ""
+msgstr "Statisticae"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:127
 msgid "Allow player statistics to track your client"
@@ -7888,7 +7923,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:131
 msgid "Allow player statistics to use your nickname"
-msgstr ""
+msgstr "Sinisne nomen tuum in statisticis nuntiari"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:136
 msgid "Allow player statistics to rank you in leaderboards"
@@ -7896,7 +7931,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:156
 msgid "Select language..."
-msgstr ""
+msgstr "Linguam elige..."
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:12
 msgid "Are you sure you want to quit?"
@@ -8032,31 +8067,31 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:18
 msgid "Video"
-msgstr ""
+msgstr "Imagines"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:19
 msgid "Effects"
-msgstr ""
+msgstr "Subtilitas Graphica"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:20
 msgid "Audio"
-msgstr ""
+msgstr "Soni"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:22
 msgid "Game"
-msgstr ""
+msgstr "Ludus"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:24
 msgid "User"
-msgstr ""
+msgstr "Utens"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:25 qcsrc/menu/xonotic/keybinder.qc:121
 msgid "Misc"
-msgstr ""
+msgstr "Alia"
 
 #: qcsrc/menu/xonotic/dialog_settings.qh:8
 msgid "Change the game settings"
-msgstr ""
+msgstr "Ludi optiones optare"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:30
 msgid "Master:"
@@ -8196,13 +8231,15 @@ msgstr "Canalem sinistrum et dextrum commutare"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:139
 msgid "Headphone friendly mode"
-msgstr ""
+msgstr "Modus pro instrumento auriculario"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:140
 msgid ""
 "Enable spatialization (blend the right and left channel slightly to decrease "
 "stereo separation a bit for headphones)"
 msgstr ""
+"Sonos spatializat (i.e., sonos dextros et sinistros paulum miscet ut soni "
+"minus disiungantur si instrumento auriculario uteris)"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:144
 msgid "Hit indication sound"
@@ -8662,7 +8699,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:237
 msgid "Particles"
-msgstr ""
+msgstr "Particulae"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:238
 msgid "Spawnpoint effects"
@@ -8682,47 +8719,51 @@ msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
+"Cum quo multiplicare numerum particularum. Si multiplicandus parvus est, "
+"erunt paucae particulae, atque computatrum velocius erit"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:254
 msgid "Particles further away than this will not be drawn"
-msgstr ""
+msgstr "Particulae quae distant plus quam hanc mensuram non pinguntur"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:31
 msgid "No crosshair"
-msgstr ""
+msgstr "Sine reticulo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:62
 msgid "Per weapon"
-msgstr ""
+msgstr "Armorum singula"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:34
 msgid ""
 "Set a different crosshair for each weapon, good if you play without weapon "
 "models"
 msgstr ""
+"Arma singula reticula distincta habent, quod prudens est si arma tua non "
+"vides"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:48
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:81
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:97
 msgid "Size:"
-msgstr ""
+msgstr "Magnitudo:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:64
 msgid "By health"
-msgstr ""
+msgstr "Secundum sanitatem"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:76
 msgid "Use rings to indicate weapon status"
-msgstr ""
+msgstr "Anelli condiciones armorum indicant"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:93
 msgid "Enable center crosshair dot"
-msgstr ""
+msgstr "Reticuli punctum medium videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:111
 msgid "Use normal crosshair color"
-msgstr ""
+msgstr "Reticuli color ordinarius"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:122
 msgid "Smooth effects of crosshairs"
@@ -8754,11 +8795,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qh:7
 msgid "Crosshair"
-msgstr ""
+msgstr "Reticulum"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
-msgstr ""
+msgstr "Rationarium"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:48
 msgid "Fading speed:"
@@ -8766,11 +8807,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:51
 msgid "Enable rows / columns highlighting"
-msgstr ""
+msgstr "Versus/columnas illuminatas videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:53
 msgid "Show accuracy underneath scoreboard"
-msgstr ""
+msgstr "Accuratiam sub rationario videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:55
 msgid "Show team sizes:"
@@ -8801,7 +8842,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:77
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:130
 msgid "Font size:"
-msgstr ""
+msgstr "Litterae magnitudo:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:83
 msgid "Edge offset:"
@@ -8809,15 +8850,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:91
 msgid "Fade when near the crosshair"
-msgstr ""
+msgstr "Evanescit si circum reticulum"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:95
 msgid "Display names instead of icons"
-msgstr ""
+msgstr "Nomina non imagines videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:100
 msgid "Damage"
-msgstr ""
+msgstr "Vulnus"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:102
 msgid "Overlay:"
@@ -8833,11 +8874,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:118
 msgid "Player Names"
-msgstr ""
+msgstr "Ludentium Nomina"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:120
 msgid "Show names above players"
-msgstr ""
+msgstr "Nomina super ludentes videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:136
 msgid "Max distance:"
@@ -9013,98 +9054,100 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:30
 msgid "Items"
-msgstr ""
+msgstr "Utilia"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:32
 msgid "Use simple 2D images instead of item models"
-msgstr ""
+msgstr "Imagines planas non formas solidas videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:34
 msgid "Unavailable alpha:"
-msgstr ""
+msgstr "Traluciditas si absens:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:37
 msgid "Unavailable color:"
-msgstr ""
+msgstr "Color si absens:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:39
 msgid "GHOITEMS^Black"
-msgstr ""
+msgstr "Niger"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:40
 msgid "GHOITEMS^Dark"
-msgstr ""
+msgstr "Fuscus"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:41
 msgid "GHOITEMS^Tinted"
-msgstr ""
+msgstr "Tinctus"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:42
 msgid "GHOITEMS^Normal"
-msgstr ""
+msgstr "Ordinarius"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:43
 msgid "GHOITEMS^Blue"
-msgstr ""
+msgstr "Caeruleus"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
 #: qcsrc/menu/xonotic/serverlist.qc:758
 msgid "Players"
-msgstr ""
+msgstr "Lusores"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:51
 msgid "Force player models to mine"
-msgstr ""
+msgstr "Ludentium formae aequales meae"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:53
 msgid "Force player colors to mine"
-msgstr ""
+msgstr "Ludentium colores aequales meo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team"
 msgstr ""
+"NB: si in manus ludis hoc optas, forte non distinguuntur coloribus manus tua "
+"et manus hostium"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Except in team games"
-msgstr ""
+msgstr "Sed non manus ludis"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"
-msgstr ""
+msgstr "Duello modo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
 msgid "Only in team games"
-msgstr ""
+msgstr "Manus ludis modo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "In team games and Duel"
-msgstr ""
+msgstr "Manus ludis et duello"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
 msgid "Body fading:"
-msgstr ""
+msgstr "Evanescunt corpora:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:67
 msgid "Gibs:"
-msgstr ""
+msgstr "Intestina:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:69
 msgid "GIBS^None"
-msgstr ""
+msgstr "Nulla"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:70
 msgid "GIBS^Few"
-msgstr ""
+msgstr "Pauca"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:71
 msgid "GIBS^Many"
-msgstr ""
+msgstr "Multa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:72
 msgid "GIBS^Lots"
-msgstr ""
+msgstr "Plures"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:7
 msgid "Models"
@@ -9898,23 +9941,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:169
 msgid "Campaign Difficulty:"
-msgstr ""
+msgstr "Expeditio Difficultate:"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:170
 msgid "CSKL^Easy"
-msgstr ""
+msgstr "Facili"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:171
 msgid "CSKL^Medium"
-msgstr ""
+msgstr "Media"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:172
 msgid "CSKL^Hard"
-msgstr ""
+msgstr "Difficili"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
-msgstr ""
+msgstr "Expeditionem ludere!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
@@ -9926,7 +9969,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
-msgstr ""
+msgstr "Victor"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "join 'best' team (auto-select)"
@@ -9959,55 +10002,55 @@ msgstr "spectare"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:78
 msgid "Terms of Service have been updated. Please read them before continuing:"
-msgstr ""
+msgstr "Pactio Usuum mutata est. Pactionem novam lege antequam procedas:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:80
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
-msgstr ""
+msgstr "Salve in Xonotico! A te petimus ut hanc Pactionem Usuum legas:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:94
 msgid "Accept"
-msgstr ""
+msgstr "Accipio"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:98
 msgid "Don't accept (quit the game)"
-msgstr ""
+msgstr "Non accipio (ludum linquere)"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
-msgstr ""
+msgstr "Sinisne nomen tuum in statisticis nuntiari?"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr ""
+msgstr "Si non sines, scribetur \"Lusor Anonymus\""
 
 #: qcsrc/menu/xonotic/gametypelist.qc:88
 msgid "teamplay"
-msgstr ""
+msgstr "manus ludus"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:90
 msgid "free for all"
-msgstr ""
+msgstr "omnes contra omnes"
 
 #: qcsrc/menu/xonotic/keybinder.qc:38
 msgid "Moving"
-msgstr ""
+msgstr "Motio"
 
 #: qcsrc/menu/xonotic/keybinder.qc:39
 msgid "move forwards"
-msgstr ""
+msgstr "progredi"
 
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "move backwards"
-msgstr ""
+msgstr "regredi"
 
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "strafe left"
-msgstr ""
+msgstr "sinistrorsum gradi"
 
 #: qcsrc/menu/xonotic/keybinder.qc:42
 msgid "strafe right"
-msgstr ""
+msgstr "dextrorsum gradi"
 
 #: qcsrc/menu/xonotic/keybinder.qc:43
 msgid "jump / swim"
@@ -10043,43 +10086,43 @@ msgstr "optima"
 
 #: qcsrc/menu/xonotic/keybinder.qc:59
 msgid "reload"
-msgstr ""
+msgstr "replere"
 
 #: qcsrc/menu/xonotic/keybinder.qc:87
 msgid "hold zoom"
-msgstr ""
+msgstr "amplificare"
 
 #: qcsrc/menu/xonotic/keybinder.qc:88
 msgid "toggle zoom"
-msgstr ""
+msgstr "alternare amplificationes"
 
 #: qcsrc/menu/xonotic/keybinder.qc:89
 msgid "show scores"
-msgstr ""
+msgstr "rationarium videre"
 
 #: qcsrc/menu/xonotic/keybinder.qc:90
 msgid "screen shot"
-msgstr ""
+msgstr "imaginem servare"
 
 #: qcsrc/menu/xonotic/keybinder.qc:91
 msgid "maximize radar"
-msgstr ""
+msgstr "detectrum amplificare"
 
 #: qcsrc/menu/xonotic/keybinder.qc:92
 msgid "3rd person view"
-msgstr ""
+msgstr "3ae personae visio"
 
 #: qcsrc/menu/xonotic/keybinder.qc:93
 msgid "enter spectator mode"
-msgstr ""
+msgstr "spectatoris modus"
 
 #: qcsrc/menu/xonotic/keybinder.qc:96
 msgid "Communication"
-msgstr ""
+msgstr "Locutio"
 
 #: qcsrc/menu/xonotic/keybinder.qc:97
 msgid "public chat"
-msgstr ""
+msgstr "locutorium publicum"
 
 #: qcsrc/menu/xonotic/keybinder.qc:98
 msgid "team chat"
@@ -10087,19 +10130,19 @@ msgstr "manus locutorium"
 
 #: qcsrc/menu/xonotic/keybinder.qc:99
 msgid "show chat history"
-msgstr ""
+msgstr "prius locuta videre"
 
 #: qcsrc/menu/xonotic/keybinder.qc:100
 msgid "vote YES"
-msgstr ""
+msgstr "approbare suffragio"
 
 #: qcsrc/menu/xonotic/keybinder.qc:101
 msgid "vote NO"
-msgstr ""
+msgstr "reprobare suffragio"
 
 #: qcsrc/menu/xonotic/keybinder.qc:105
 msgid "Client"
-msgstr ""
+msgstr "Cliens"
 
 #: qcsrc/menu/xonotic/keybinder.qc:109 qcsrc/menu/xonotic/keybinder.qc:111
 msgid "enter console"
@@ -10151,7 +10194,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
-msgstr ""
+msgstr "Hunc ludum linquere"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
@@ -10159,36 +10202,36 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"
-msgstr ""
+msgstr "Expeditionem linquere"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:18
 msgid "Leave singleplayer"
-msgstr ""
+msgstr "Linquere unius ludentis ludum"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:20
 msgid "Leave multiplayer"
-msgstr ""
+msgstr "Linquere plurium ludentium ludum"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current campaign level"
-msgstr ""
+msgstr "Linquere hanc expeditionis partem"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:30
 msgid "Leave current singleplayer match"
-msgstr ""
+msgstr "Hunc unius ludentis ludum linquere"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:32
 msgid "Leave current multiplayer match / Disconnect from the server"
-msgstr ""
+msgstr "Hunc plurium ludentium ludum linquere / A moderatro se dinectere"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:76 qcsrc/menu/xonotic/mainwindow.qc:79
 msgid "Do not press this button again!"
-msgstr ""
+msgstr "Noli premere hoc iterum!"
 
 #: qcsrc/menu/xonotic/maplist.qc:294
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again."
-msgstr ""
+msgstr "Hem, hoc ludi non potest (m est NULL). Ordinatur iterum ut emendetur."
 
 #: qcsrc/menu/xonotic/maplist.qc:302
 #, c-format
@@ -10200,6 +10243,8 @@ msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again."
 msgstr ""
+"Hem, hoc ludi non potest (ludi modus erroneus). Ordinatur iterum ut "
+"emendetur."
 
 #: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
 msgid "spectator"
@@ -10252,7 +10297,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:1054
 msgid "ENC^none"
-msgstr ""
+msgstr "nulla"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1054
 msgid "encryption:"
@@ -10261,17 +10306,17 @@ msgstr "cryptographia:"
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 #, c-format
 msgid "mod: %s"
-msgstr ""
+msgstr "mod: %s"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1057
 #, c-format
 msgid "modified settings"
-msgstr ""
+msgstr "optiones mutatae"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1057
 #, c-format
 msgid "official settings"
-msgstr ""
+msgstr "optiones ordinariae"
 
 #: qcsrc/menu/xonotic/serverlist.qh:152
 msgid "SLCAT^Favorites"
@@ -10279,7 +10324,7 @@ msgstr "Praelata"
 
 #: qcsrc/menu/xonotic/serverlist.qh:153
 msgid "SLCAT^Recommended"
-msgstr ""
+msgstr "Suadenda"
 
 #: qcsrc/menu/xonotic/serverlist.qh:154
 msgid "SLCAT^Normal Servers"
@@ -10291,11 +10336,11 @@ msgstr "Moderatra"
 
 #: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Competitive Mode"
-msgstr ""
+msgstr "Competitorum Modus"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Modified Servers"
-msgstr ""
+msgstr "Moderatra Mutata"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Overkill"
@@ -10307,28 +10352,28 @@ msgstr "InstaGib"
 
 #: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Defrag Mode"
-msgstr ""
+msgstr "Modus sine Caede"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
-msgstr ""
+msgstr "<TITULUS>"
 
 #: qcsrc/menu/xonotic/skinlist.qc:71
 msgid "<AUTHOR>"
-msgstr ""
+msgstr "<AUCTOR>"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:72
 msgid "VOL^MAX"
-msgstr ""
+msgstr "MAX"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:74
 msgid "VOL^OFF"
-msgstr ""
+msgstr "MUTUS"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:82
 #, c-format
 msgid "%s dB"
-msgstr ""
+msgstr "%s dB"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:14
 msgid "PART^OMG"
@@ -10363,26 +10408,28 @@ msgid ""
 "Change the sharpness of the textures. Lowering it will effectively reduce "
 "texture memory usage, but make the textures appear very blurry."
 msgstr ""
+"Texturarum subtilitatem delige. Si subtilitatem minorem deligis, memoria "
+"computatrali minore utitur, sed ita texturae minus clarae videntur."
 
 #: qcsrc/menu/xonotic/slider_resolution.qc:131
 msgid "Screen resolution"
-msgstr ""
+msgstr "Quadri magnitudo"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "FADESPEED^Slow"
-msgstr ""
+msgstr "Lente"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "FADESPEED^Normal"
-msgstr ""
+msgstr "Ordinarium"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "FADESPEED^Fast"
-msgstr ""
+msgstr "Celeriter"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "FADESPEED^Instant"
-msgstr ""
+msgstr "Statim"
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"

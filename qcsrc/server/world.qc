@@ -663,14 +663,18 @@ void GameplayMode_DelayedInit(entity this)
 	if (!g_duel)
 		MapReadSizes(mapname);
 
-	if (autocvar_g_maxplayers < 0 && teamplay)
+	if (autocvar_g_maxplayers < 0)
 	{
-		// automatic maxplayers should be a multiple of team count
-		if (map_maxplayers == 0 || map_maxplayers > maxclients)
+		if (map_maxplayers <= 0)
 			map_maxplayers = maxclients; // unlimited, but may need rounding
-		int d = map_maxplayers % AVAILABLE_TEAMS;
-		int u = AVAILABLE_TEAMS - d;
-		map_maxplayers += (u <= d && u + map_maxplayers <= maxclients) ? u : -d;
+		map_maxplayers = bound(max(2, AVAILABLE_TEAMS * 2), map_maxplayers, maxclients);
+		if (teamplay)
+		{
+			// automatic maxplayers should be a multiple of team count
+			int down = map_maxplayers % AVAILABLE_TEAMS;
+			int up = AVAILABLE_TEAMS - down;
+			map_maxplayers += (up < down && up + map_maxplayers <= maxclients) ? up : -down;
+		}
 	}
 
 	if (warmup_stage < 0)
@@ -681,9 +685,9 @@ void GameplayMode_DelayedInit(entity this)
 		if (teamplay)
 		{
 			// automatic minplayers should be a multiple of team count
-			int d = map_minplayers % AVAILABLE_TEAMS;
-			int u = AVAILABLE_TEAMS - d;
-			map_minplayers += (u < d && u + map_minplayers <= m) ? u : -d;
+			int down = map_minplayers % AVAILABLE_TEAMS;
+			int up = AVAILABLE_TEAMS - down;
+			map_minplayers += (up < down && up + map_minplayers <= m) ? up : -down;
 		}
 	}
 	else
@@ -2149,16 +2153,26 @@ void readlevelcvars()
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
 	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
 	g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
-	g_pickup_respawntime_short = cvar("g_pickup_respawntime_short");
-	g_pickup_respawntime_medium = cvar("g_pickup_respawntime_medium");
-	g_pickup_respawntime_long = cvar("g_pickup_respawntime_long");
+	g_pickup_respawntime_armor_small = cvar("g_pickup_respawntime_armor_small");
+	g_pickup_respawntime_armor_medium = cvar("g_pickup_respawntime_armor_medium");
+	g_pickup_respawntime_armor_big = cvar("g_pickup_respawntime_armor_big");
+	g_pickup_respawntime_armor_mega = cvar("g_pickup_respawntime_armor_mega");
+	g_pickup_respawntime_health_small = cvar("g_pickup_respawntime_health_small");
+	g_pickup_respawntime_health_medium = cvar("g_pickup_respawntime_health_medium");
+	g_pickup_respawntime_health_big = cvar("g_pickup_respawntime_health_big");
+	g_pickup_respawntime_health_mega = cvar("g_pickup_respawntime_health_mega");
 	g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
 	g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
 	g_pickup_respawntimejitter_superweapon = cvar("g_pickup_respawntimejitter_superweapon");
 	g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
-	g_pickup_respawntimejitter_short = cvar("g_pickup_respawntimejitter_short");
-	g_pickup_respawntimejitter_medium = cvar("g_pickup_respawntimejitter_medium");
-	g_pickup_respawntimejitter_long = cvar("g_pickup_respawntimejitter_long");
+	g_pickup_respawntimejitter_armor_small = cvar("g_pickup_respawntimejitter_armor_small");
+	g_pickup_respawntimejitter_armor_medium = cvar("g_pickup_respawntimejitter_armor_medium");
+	g_pickup_respawntimejitter_armor_big = cvar("g_pickup_respawntimejitter_armor_big");
+	g_pickup_respawntimejitter_armor_mega = cvar("g_pickup_respawntimejitter_armor_mega");
+	g_pickup_respawntimejitter_health_small = cvar("g_pickup_respawntimejitter_health_small");
+	g_pickup_respawntimejitter_health_medium = cvar("g_pickup_respawntimejitter_health_medium");
+	g_pickup_respawntimejitter_health_big = cvar("g_pickup_respawntimejitter_health_big");
+	g_pickup_respawntimejitter_health_mega = cvar("g_pickup_respawntimejitter_health_mega");
 	g_pickup_respawntimejitter_powerup = cvar("g_pickup_respawntimejitter_powerup");
 
 	g_pickup_shells = cvar("g_pickup_shells");

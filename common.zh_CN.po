@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-03 07:22+0200\n"
+"POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (http://app.transifex.com/team-xonotic/"
@@ -164,7 +164,7 @@ msgstr "服务器信息"
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1按 ^3%s^1 以加入"
 
-#: qcsrc/client/hud/panel/infomessages.qc:130 qcsrc/client/main.qc:1405
+#: qcsrc/client/hud/panel/infomessages.qc:130 qcsrc/client/main.qc:1409
 #: qcsrc/common/notifications/all.qh:442
 msgid "jump"
 msgstr "跳跃"
@@ -570,7 +570,7 @@ msgstr "第 %d 中间点"
 msgid "PENALTY: %.1f (%s)"
 msgstr "惩罚：%.1f（%s）"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1237
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1242
 msgid "missing a checkpoint"
 msgstr "缺失一个检查点"
 
@@ -582,386 +582,386 @@ msgstr "点击选择传送目的地"
 msgid "Click to select spawn location"
 msgstr "点击选择出生点"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:128
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of ball carrier kills"
 msgstr "带球人击杀数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:128
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^bckills"
 msgstr "杀死带球人"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:129
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^bctime"
 msgstr "持球时间"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:129
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Total amount of time holding the ball in Keepaway"
 msgstr "在驱离模式中持球的总时间"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:130
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
 msgstr "夺取旗帜或猎取钥匙的频率"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:130
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^caps"
 msgstr "夺取"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:131
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^captime"
 msgstr "夺取时间"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:131
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Time of fastest capture (CTF)"
 msgstr "最快夺旗时间（CTF）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Number of deaths"
 msgstr "死亡次数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^deaths"
 msgstr "死亡"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Number of keys destroyed by pushing them into void"
 msgstr "推入虚空而销毁的钥匙数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^destroyed"
 msgstr "摧毁"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^damage"
 msgstr "伤害"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "The total damage done"
 msgstr "造成的总伤害"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^dmgtaken"
 msgstr "受伤"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "The total damage taken"
 msgstr "受到的总伤害"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of flag drops"
 msgstr "掉落旗帜数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^drops"
 msgstr "掉旗"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Player ELO"
 msgstr "玩家 ELO 分数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^elo"
 msgstr "elo"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:138
+#: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^fastest"
 msgstr "最快"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:138
+#: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Time of fastest lap (Race/CTS)"
 msgstr "最快跑圈时间（竞速 / CTS）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:139
+#: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of faults committed"
 msgstr "失误数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:139
+#: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^faults"
 msgstr "失误"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
+#: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of flag carrier kills"
 msgstr "持旗者击杀数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
+#: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^fckills"
 msgstr "杀死持旗者"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "FPS"
 msgstr "FPS"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^fps"
 msgstr "fps"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "Number of kills minus suicides"
 msgstr "除自杀外击杀数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^frags"
 msgstr "杀敌"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Number of goals scored"
 msgstr "进球数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^goals"
 msgstr "进球"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Number of hunts (Survival)"
 msgstr "狩猎次数（生存模式）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^hunts"
 msgstr "狩猎"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of keys carrier kills"
 msgstr "钥匙携带者击杀数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^kckills"
 msgstr "杀死携钥者"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
+#: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^k/d"
 msgstr "击杀/死亡"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
-#: qcsrc/client/hud/panel/scoreboard.qc:147
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "The kill-death ratio"
 msgstr "击杀数与死亡数的比例"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:147
+#: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^kdr"
 msgstr "击杀/死亡比"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^kdratio"
 msgstr "击杀/死亡比"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of kills"
 msgstr "击杀数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^kills"
 msgstr "击杀"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Number of laps finished (Race/CTS)"
 msgstr "跑完的圈数（竞速 / CTS）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^laps"
 msgstr "圈"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:151
+#: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "Number of lives (LMS)"
 msgstr "剩余的生命数（笑到最后）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:151
+#: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "SCO^lives"
 msgstr "生命"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "Number of times a key was lost"
 msgstr "钥匙丢失次数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^losses"
 msgstr "丢失"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:153
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Player name"
 msgstr "玩家名称"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^name"
 msgstr "名字"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^nick"
 msgstr "昵称"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of objectives destroyed"
 msgstr "摧毁的目标数量"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^objectives"
 msgstr "目标"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr "捡起旗帜/钥匙/球的频率"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "SCO^pickups"
 msgstr "捡起"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Ping time"
 msgstr "Ping 时间"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^ping"
 msgstr "延迟"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "Packet loss"
 msgstr "网络通讯包丢失"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^pl"
 msgstr "丢包"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "Number of players pushed into void"
 msgstr "推入虚空的玩家数量"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "SCO^pushes"
 msgstr "推下"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:160
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "Player rank"
 msgstr "玩家排名"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:160
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "SCO^rank"
 msgstr "排名"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "Number of flag returns"
 msgstr "归还旗帜数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "SCO^returns"
 msgstr "归还"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of revivals"
 msgstr "复活次数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^revivals"
 msgstr "重生"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of rounds won"
 msgstr "获胜的竞赛数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^rounds won"
 msgstr "赢局"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "Number of rounds played"
 msgstr "参与的竞赛数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^rounds played"
 msgstr "参局"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "SCO^score"
 msgstr "分数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "Total score"
 msgstr "总分数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of suicides"
 msgstr "自杀次数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^suicides"
 msgstr "自杀"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of kills minus deaths"
 msgstr "杀敌数减去死亡数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "SCO^sum"
 msgstr "总和"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "Number of survivals"
 msgstr "生还次数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "SCO^survivals"
 msgstr "生还"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "Number of domination points taken (Domination)"
 msgstr "统治点占领数（统治）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "SCO^takes"
 msgstr "占领"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:176
 msgid "Number of teamkills"
 msgstr "击杀队友数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:176
 msgid "SCO^teamkills"
 msgstr "杀死队友"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "Number of ticks (Domination)"
 msgstr "占领刻数量（统治模式）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "SCO^ticks"
 msgstr "刻"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:178
 msgid "SCO^time"
 msgstr "时间"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:178
 msgid "Total time raced (Race/CTS)"
 msgstr "竞速总时（竞速/CTS）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:701
+#: qcsrc/client/hud/panel/scoreboard.qc:707
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr "你可以用命令 ^2scoreboard_columns_set 修改得分榜。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:702
+#: qcsrc/client/hud/panel/scoreboard.qc:708
 msgid "Usage:"
 msgstr "用法："
 
-#: qcsrc/client/hud/panel/scoreboard.qc:704
+#: qcsrc/client/hud/panel/scoreboard.qc:710
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr "^2scoreboard_columns_set ^3域1 域2 ..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:705
+#: qcsrc/client/hud/panel/scoreboard.qc:711
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
 "^2scoreboard_columns_set ^7不含参数时会从 cvar scroreboard_columns 读取参数"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:706
+#: qcsrc/client/hud/panel/scoreboard.qc:712
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
 "  ^5注意：^7不含参数的 scoreboard_columns_set 在每张地图开始前都会执行一次"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:707
+#: qcsrc/client/hud/panel/scoreboard.qc:713
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
@@ -969,15 +969,15 @@ msgstr ""
 "^2scoreboard_columns_set ^3expand_default ^7加载默认布局并将它扩展到 cvar "
 "scoreboard_columns 以便你更改"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:708
+#: qcsrc/client/hud/panel/scoreboard.qc:714
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr "你可以用 ^3|^7 开头以使域右对齐"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:709
+#: qcsrc/client/hud/panel/scoreboard.qc:715
 msgid "The following field names are recognized (case insensitive):"
 msgstr "可使用以下域名称（大小写不敏感）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:715
+#: qcsrc/client/hud/panel/scoreboard.qc:721
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -988,33 +988,33 @@ msgstr ""
 "之后一个斜杠，以使此域仅显示在这些（或除了这些）游戏类型中。你也可以使"
 "用‘all’以显示当前游戏模式的所有域。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:721
+#: qcsrc/client/hud/panel/scoreboard.qc:727
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
 "特殊游戏模式‘teams’和‘noteams’可用于包含/除去所有团队合作/非团队的游戏模式。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:725
+#: qcsrc/client/hud/panel/scoreboard.qc:731
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr "如：scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:726
+#: qcsrc/client/hud/panel/scoreboard.qc:732
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr "会左对齐显示名称、延迟和丢包，右对齐显示竖杠符号右侧的域。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:728
+#: qcsrc/client/hud/panel/scoreboard.qc:734
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr "“field3”将只在夺旗战显示，“field4”将在除死亡竞技的所有游戏模式显示。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1026
-#: qcsrc/client/hud/panel/scoreboard.qc:1041
-#: qcsrc/client/hud/panel/scoreboard.qc:1111
-#: qcsrc/client/hud/panel/scoreboard.qc:1122 qcsrc/common/util.qc:385
+#: qcsrc/client/hud/panel/scoreboard.qc:1039
+#: qcsrc/client/hud/panel/scoreboard.qc:1054
+#: qcsrc/client/hud/panel/scoreboard.qc:1124
+#: qcsrc/client/hud/panel/scoreboard.qc:1135 qcsrc/common/util.qc:385
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -1023,102 +1023,102 @@ msgstr "“field3”将只在夺旗战显示，“field4”将在除死亡竞技
 msgid "N/A"
 msgstr "无"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1686
+#: qcsrc/client/hud/panel/scoreboard.qc:1699
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "精准度（平均 %d%%）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1843
+#: qcsrc/client/hud/panel/scoreboard.qc:1856
 msgid "Item stats"
 msgstr "物品统计"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1954
+#: qcsrc/client/hud/panel/scoreboard.qc:1967
 msgid "Map stats:"
 msgstr "地图统计："
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1984
+#: qcsrc/client/hud/panel/scoreboard.qc:1997
 msgid "Monsters killed:"
 msgstr "怪物击杀："
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1991
+#: qcsrc/client/hud/panel/scoreboard.qc:2004
 msgid "Secrets found:"
 msgstr "发现秘密："
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2201
+#: qcsrc/client/hud/panel/scoreboard.qc:2214
 #, c-format
 msgid "Spectators"
 msgstr "旁观者"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2223
+#: qcsrc/client/hud/panel/scoreboard.qc:2236
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2223
+#: qcsrc/client/hud/panel/scoreboard.qc:2236
 #, c-format
 msgid "^5%s %s"
 msgstr "^5%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2224
+#: qcsrc/client/hud/panel/scoreboard.qc:2237
 msgid "SCO^points"
 msgstr "分"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2315
+#: qcsrc/client/hud/panel/scoreboard.qc:2328
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "选择团队"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2327
+#: qcsrc/client/hud/panel/scoreboard.qc:2340
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^7按 ^3%s^7 以加入所选队伍"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2329
+#: qcsrc/client/hud/panel/scoreboard.qc:2342
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr "^7按 ^3%s^7 以自动选择并加入队伍"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2333
+#: qcsrc/client/hud/panel/scoreboard.qc:2346
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7按 ^3%s ^7 以加入特定队伍"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2344
+#: qcsrc/client/hud/panel/scoreboard.qc:2357
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f 分钟"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2371
+#: qcsrc/client/hud/panel/scoreboard.qc:2384
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7 / ^5%d^7 位玩家"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2372 qcsrc/client/main.qc:1431
+#: qcsrc/client/hud/panel/scoreboard.qc:2385 qcsrc/client/main.qc:1436
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "地图："
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2535
+#: qcsrc/client/hud/panel/scoreboard.qc:2548
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "速度领先：%d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2539
+#: qcsrc/client/hud/panel/scoreboard.qc:2552
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "史上最快：%d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2573
+#: qcsrc/client/hud/panel/scoreboard.qc:2586
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1在 ^3%s^1 后重生……"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2583
+#: qcsrc/client/hud/panel/scoreboard.qc:2596
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "你死了，等待 ^3%s^7 后重生"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2592
+#: qcsrc/client/hud/panel/scoreboard.qc:2605
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "你死了, 按下 ^2%s^7 重生"
@@ -1230,139 +1230,139 @@ msgstr "不可用"
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "正在移除不在队伍列表中的队伍！"
 
-#: qcsrc/client/main.qc:1139 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
+#: qcsrc/client/main.qc:1144 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
 msgstr "单位每秒"
 
-#: qcsrc/client/main.qc:1140 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/client/main.qc:1145 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
 msgstr "米每秒"
 
-#: qcsrc/client/main.qc:1141 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
+#: qcsrc/client/main.qc:1146 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
 msgstr "千米每时"
 
-#: qcsrc/client/main.qc:1142 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
+#: qcsrc/client/main.qc:1147 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
 msgid "mph"
 msgstr "英里每时"
 
-#: qcsrc/client/main.qc:1143 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/client/main.qc:1148 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
 msgstr "海里每时"
 
-#: qcsrc/client/main.qc:1354
+#: qcsrc/client/main.qc:1359
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
 msgstr "全武器竞技"
 
-#: qcsrc/client/main.qc:1355
+#: qcsrc/client/main.qc:1360
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
 msgstr "所有可用武器的竞技"
 
-#: qcsrc/client/main.qc:1356
+#: qcsrc/client/main.qc:1361
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
 msgstr "多数武器竞技"
 
-#: qcsrc/client/main.qc:1357
+#: qcsrc/client/main.qc:1362
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
 msgstr "多数可用武器的竞技"
 
-#: qcsrc/client/main.qc:1360 qcsrc/client/main.qc:1374
+#: qcsrc/client/main.qc:1365 qcsrc/client/main.qc:1379
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
 msgstr "无武器竞技"
 
-#: qcsrc/client/main.qc:1372
+#: qcsrc/client/main.qc:1377
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
 #, c-format
 msgid "%s Arena"
 msgstr "%s 竞技"
 
-#: qcsrc/client/main.qc:1383 qcsrc/client/main.qc:1388
+#: qcsrc/client/main.qc:1388 qcsrc/client/main.qc:1393
 #, c-format
 msgid "This is %s"
 msgstr "这里是 %s"
 
-#: qcsrc/client/main.qc:1384
+#: qcsrc/client/main.qc:1389
 msgid "Your client version is outdated."
 msgstr "你的客户端版本过旧。"
 
-#: qcsrc/client/main.qc:1385
+#: qcsrc/client/main.qc:1390
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### 你不能在此服务器游玩 ###"
 
-#: qcsrc/client/main.qc:1386
+#: qcsrc/client/main.qc:1391
 msgid "Please update!"
 msgstr "请更新！"
 
-#: qcsrc/client/main.qc:1389
+#: qcsrc/client/main.qc:1394
 msgid "This server is using an outdated Xonotic version."
 msgstr "此服务器在使用过旧的 Xonotic 版本。"
 
-#: qcsrc/client/main.qc:1390
+#: qcsrc/client/main.qc:1395
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### 不兼容此服务器，因此你不能加入 ###"
 
-#: qcsrc/client/main.qc:1392
+#: qcsrc/client/main.qc:1397
 #, c-format
 msgid "Welcome to %s"
 msgstr "欢迎来到 %s"
 
-#: qcsrc/client/main.qc:1407 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1411 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "关卡 %d："
 
-#: qcsrc/client/main.qc:1409
+#: qcsrc/client/main.qc:1413
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BG按 ^F2%s^BG 以进入游戏"
 
-#: qcsrc/client/main.qc:1429
+#: qcsrc/client/main.qc:1434
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "游戏类型："
 
-#: qcsrc/client/main.qc:1443
+#: qcsrc/client/main.qc:1448
 msgid "This match supports"
 msgstr "此竞赛支持"
 
-#: qcsrc/client/main.qc:1445
+#: qcsrc/client/main.qc:1450
 #, c-format
 msgid "%d players"
 msgstr "%d 位玩家"
 
-#: qcsrc/client/main.qc:1447
+#: qcsrc/client/main.qc:1452
 #, c-format
 msgid "%d to %d players"
 msgstr "%d 到 %d 位玩家"
 
-#: qcsrc/client/main.qc:1449
+#: qcsrc/client/main.qc:1454
 #, c-format
 msgid "%d players maximum"
 msgstr "至多 %d 位玩家"
 
-#: qcsrc/client/main.qc:1451
+#: qcsrc/client/main.qc:1456
 #, c-format
 msgid "%d players minimum"
 msgstr "至少 %d 位玩家"
 
-#: qcsrc/client/main.qc:1456
+#: qcsrc/client/main.qc:1461
 msgid "Active modifications:"
 msgstr "起效的修改："
 
-#: qcsrc/client/main.qc:1459
+#: qcsrc/client/main.qc:1464
 msgid "Special gameplay tips:"
 msgstr "特殊游戏提示："
 
-#: qcsrc/client/main.qc:1466
+#: qcsrc/client/main.qc:1471
 msgid "Server's message"
 msgstr "服务器消息"
 
-#: qcsrc/client/main.qc:1560
+#: qcsrc/client/main.qc:1565
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (未绑定)"
@@ -1637,11 +1637,11 @@ msgstr "与其他玩家赛跑到达终点线"
 msgid "Laps:"
 msgstr "圈数："
 
-#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:16
+#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:63
 msgid "Hunter"
 msgstr "狩猎者"
 
-#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:22
+#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:69
 msgid "Survivor"
 msgstr "生存者"
 
@@ -1791,7 +1791,7 @@ msgid "Create"
 msgstr "创建"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
-#: qcsrc/menu/xonotic/dialog_welcome.qc:113
+#: qcsrc/menu/xonotic/dialog_welcome.qc:131
 msgid "Join"
 msgstr "加入"
 
@@ -2196,17 +2196,25 @@ msgstr "减速榴弹"
 msgid "Veil grenade"
 msgstr "隐身榴弹"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:102
+#: qcsrc/common/mutators/mutator/nades/nades.inc:99
+msgid "Ammo grenade"
+msgstr "弹药榴弹"
+
+#: qcsrc/common/mutators/mutator/nades/nades.inc:109
+msgid "Darkness grenade"
+msgstr "暗黑榴弹"
+
+#: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
 msgstr "丢出武器 / 扔榴弹"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:104
+#: qcsrc/common/mutators/mutator/nades/nades.qc:141
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr "^3榴弹^8已启用，按 ^3%s^8 投掷"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:99
+#: qcsrc/common/mutators/mutator/nades/nades.qh:123
 msgid "Grenade"
 msgstr "榴弹"
 
@@ -2476,8 +2484,8 @@ msgstr "^BG%s^BG 夺取了^TC^TT队^BG旗帜"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG 夺取^TC^TT队^BG旗帜用了 ^F1%s^BG 秒，打破了原来 ^BG%s^BG ^F2%s^BG 秒"
 "的记录"
@@ -2955,7 +2963,7 @@ msgstr "^BG%s^K1 再也遭不住了%s%s"
 #: qcsrc/common/notifications/all.inc:335
 #, c-format
 msgid "^BG%s^K1 is now preserved for centuries to come%s%s"
-msgstr "^BG%s^K1 被埋在土里去度过下一世纪%s%s"
+msgstr "^BG%s^K1 被埋在土里见证历史%s%s"
 
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
@@ -3152,7 +3160,7 @@ msgstr "^BG%s^BG 失去了%s^BG增益！"
 #: qcsrc/common/notifications/all.inc:703
 #, c-format
 msgid "^BGYou dropped the %s^BG buff!"
-msgstr "^BG你丢掉了%s^BG增益！"
+msgstr "^BG你失去了%s^BG增益！"
 
 #: qcsrc/common/notifications/all.inc:382
 #: qcsrc/common/notifications/all.inc:704
@@ -3297,7 +3305,7 @@ msgstr "^TC^TT队^BG发电机被摧毁"
 
 #: qcsrc/common/notifications/all.inc:417
 msgid "^TC^TT^BG generator spontaneously combusted due to overtime!"
-msgstr "^TC^TT队^BG发电机因超时而自然燃尽！"
+msgstr "^TC^TT队^BG发电机在超时后自然燃尽！"
 
 #: qcsrc/common/notifications/all.inc:419
 #, c-format
@@ -3450,24 +3458,22 @@ msgstr "^BG你不被应许更换团队"
 msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have "
 "^F2Xonotic %s"
-msgstr ""
-"^F4注意：^BG此服务器在运行 ^F1Xonotic %s (beta)^BG，此客户端为 ^F2Xonotic %s"
+msgstr "^F4注意：^BG此服务器是 ^F1Xonotic %s (beta)^BG，你在游玩 ^F2Xonotic %s"
 
 #: qcsrc/common/notifications/all.inc:457
 #, c-format
 msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"
-msgstr ""
-"^F4注意：^BG此服务器在运行 ^F1Xonotic %s^BG，你的客户端为 ^F2Xonotic %s"
+msgstr "^F4注意：^BG此服务器是 ^F1Xonotic %s^BG，你在游玩 ^F2Xonotic %s"
 
 #: qcsrc/common/notifications/all.inc:458
 #, c-format
 msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
-"the update from ^F3http://www.xonotic.org/^BG!"
+"the update from ^F3https://xonotic.org^BG!"
 msgstr ""
-"^F4注意：^F1Xonotic %s^BG 已发布，而此客户端为 ^F2Xonotic %s^BG。在 "
-"^F3http://www.xonotic.org/^BG 获取更新！"
+"^F4注意: ^F1Xonotic %s^BG 已发布，但你在游玩 ^F2Xonotic %s^BG——可到 "
+"^F3https://xonotic.org^BG 下载更新！"
 
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
@@ -3533,7 +3539,7 @@ msgstr "^BG%s^K1 被自己的灭世炸上了天%s%s"
 #: qcsrc/common/notifications/all.inc:472
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的电射枪光束爆破了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的电射枪光束爆破%s%s"
 
 #: qcsrc/common/notifications/all.inc:473
 #, c-format
@@ -3687,8 +3693,8 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 用绝灭星璇枪刺到人间蒸发%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr "^BG%s%s^K1 被 ^BG%s^K1 用绝灭火箭炮链锯锯成两份%s%s"
 
 #: qcsrc/common/notifications/all.inc:503
@@ -3712,7 +3718,7 @@ msgstr "^BG%s^K1 被自己的绝灭火箭炮链锯炸飞了%s%s"
 #: qcsrc/common/notifications/all.inc:507
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用绝灭霰弹枪击倒%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用绝灭霰弹枪击杀%s%s"
 
 #: qcsrc/common/notifications/all.inc:508
 #, c-format
@@ -3722,17 +3728,17 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 用步枪狙击%s%s"
 #: qcsrc/common/notifications/all.inc:509
 #, c-format
 msgid "^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s"
-msgstr "^BG%s%s^K1 死在了 ^BG%s^K1 的步枪弹下%s%s"
+msgstr "^BG%s%s^K1 死于 ^BG%s^K1 的步枪突击%s%s"
 
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s"
-msgstr "^BG%s%s^K1 没能逃过 ^BG%s^K1 的步枪弹%s%s"
+msgstr "^BG%s%s^K1 没能躲过 ^BG%s^K1 的步枪突击%s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s"
-msgstr "^BG%s%s^K1 没能逃过 ^BG%s^K1 的步枪攻击%s%s"
+msgstr "^BG%s%s^K1 没能躲过 ^BG%s^K1 的步枪%s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
@@ -3752,22 +3758,22 @@ msgstr "^BG%s^K1 试图把玩跟踪火箭%s%s"
 #: qcsrc/common/notifications/all.inc:515
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用脉冲枪击倒%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用脉冲枪击杀%s%s"
 
 #: qcsrc/common/notifications/all.inc:516
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shockwave%s%s"
-msgstr "^BG%s%s^K1 用脉冲枪把 ^BG%s^K1 搧得再起不能%s%s"
+msgstr "^BG%s%s^K1 用脉冲枪把 ^BG%s^K1 击倒%s%s"
 
 #: qcsrc/common/notifications/all.inc:517
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用霰弹枪击倒%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用霰弹枪击杀%s%s"
 
 #: qcsrc/common/notifications/all.inc:518
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s"
-msgstr "^BG%s%s^K1 用大霰弹枪把 ^BG%s^K1 搧得再起不能%s%s"
+msgstr "^BG%s%s^K1 用大霰弹枪把 ^BG%s^K1 击倒%s%s"
 
 #: qcsrc/common/notifications/all.inc:519
 #, c-format
@@ -4400,10 +4406,8 @@ msgstr ""
 "这轮竞赛限制为 ^F2%s^BG 位玩家。"
 
 #: qcsrc/common/notifications/all.inc:716
-msgid ""
-"^K1You aren't allowed to play because you are banned in this server, but you "
-"can play minigames"
-msgstr "^K1由于你被此服务器封禁，你不可以加入游戏。不过你可以游玩小游戏"
+msgid "^K1You aren't allowed to play because you are banned in this server"
+msgstr "^K1由于你被此服务器封禁，你不可以加入游戏"
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4595,7 +4599,7 @@ msgid ""
 "^BGAdded ^F4%s^BG to the game!"
 msgstr ""
 "^F2现在是^F4决胜时刻^F2！\n"
-"^BG为游戏添加了 ^F4%s^BG！"
+"^BG为游戏延长了 ^F4%s^BG！"
 
 #: qcsrc/common/notifications/all.inc:760
 msgid "^K1In^BG-portal created"
@@ -6218,8 +6222,8 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
-"欢迎来到 Xonotic，请选择你的语言、输入玩家名称以开始。这些选项随后可以在有关"
-"选项修改。"
+"欢迎来到 Xonotic。 请选择你的语言、输入玩家名称以开始游戏。 这些选项可以随后"
+"在菜单更改。"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:50
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
@@ -6254,7 +6258,7 @@ msgid "Save settings"
 msgstr "保存设置"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qh:7
-#: qcsrc/menu/xonotic/dialog_welcome.qc:12
+#: qcsrc/menu/xonotic/dialog_welcome.qc:13
 #: qcsrc/menu/xonotic/dialog_welcome.qh:6
 msgid "Welcome"
 msgstr "欢迎"
@@ -6301,7 +6305,7 @@ msgid "Quick menu"
 msgstr "快捷菜单"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:61
-#: qcsrc/menu/xonotic/dialog_welcome.qc:115
+#: qcsrc/menu/xonotic/dialog_welcome.qc:133
 msgid "Spectate"
 msgstr "旁观"
 
