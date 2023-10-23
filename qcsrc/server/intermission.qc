@@ -154,6 +154,7 @@ void Map_Goto_SetStr(string nextmapname)
 
 void Map_Goto_SetIndex(int position)
 {
+	Map_Current = position;
 	cvar_set("g_maplist_index", ftos(position));
 	Map_Goto_SetStr(argv(position));
 }
@@ -254,9 +255,8 @@ int MaplistMethod_Shuffle(float exponent) // more clever shuffling
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
 
 		// NOTE: the selected map has just been inserted at (insertpos-1)th position
-		Map_Current = insertpos - 1; // this is not really valid, but this way the fallback has a chance of working
-		if(Map_Check(Map_Current, 1))
-			return Map_Current;
+		if (Map_Check(insertpos - 1, 1))
+			return insertpos - 1;
 	}
 	return -1;
 }
