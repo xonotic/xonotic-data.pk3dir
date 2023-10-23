@@ -774,30 +774,12 @@ void GameCommand_gametype(int request, int argc)
 			if (argv(1) != "")
 			{
 				string s = argv(1);
-				Gametype t = MapInfo_Type_FromString(s, false, false), tsave = MapInfo_CurrentGametype();
+				Gametype t = MapInfo_Type_FromString(s, false, false);
 
 				if (t)
-				{
-					MapInfo_SwitchGameType(t);
-					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-					if (MapInfo_count > 0)
-					{
-						// update lsmaps in case the gametype changed, this way people can easily list maps for it
-						if (lsmaps_reply != "")   strunzone(lsmaps_reply);
-						lsmaps_reply = strzone(getlsmaps());
-						bprint("Game type successfully switched to ", s, "\n");
-					}
-					else
-					{
-						bprint("Cannot use this game type: no map for it found\n");
-						MapInfo_SwitchGameType(tsave);
-						MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-					}
-				}
+					GameTypeVote_SetGametype(t);
 				else
-				{
 					bprint("Failed to switch to ", s, ": this game type does not exist!\n");
-				}
 
 				return;
 			}

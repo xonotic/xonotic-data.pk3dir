@@ -772,8 +772,6 @@ bool GameTypeVote_SetGametype(Gametype type)
 		return false;
 	}
 
-	//localcmd("gametype ", MapInfo_Type_ToString(type), "\n");
-
 	cvar_set("g_maplist", MapInfo_ListAllowedMaps(type, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()) );
 	if(autocvar_g_maplist_shuffle)
 		ShuffleMaplist();
