@@ -24,14 +24,24 @@ vector w_shotend;
 // make sure you call makevectors first (FIXME?)
 void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vector s_forward, vector mi, vector ma, float antilag, float recoil, Sound snd, float chan, float maxdamage, float range, int deathtype);
 
-#define W_SetupShot_Dir_ProjectileSize(ent, wepent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, deathtype) \
-	W_SetupShot_Dir_ProjectileSize_Range(ent, wepent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, max_shot_distance, deathtype)
+//                             W_SetupShot_Dir -v
+// W_SetupShot -> W_SetupShot_ProjectileSize -> W_SetupShot_Dir_ProjectileSize -> W_SetupShot_Dir_ProjectileSize_Range
+//                                                             W_SetupShot_Range -^
+
+//                    W_SetupShot -> W_SetupShot_ProjectileSize           gains args '0 0 0', '0 0 0'            for mi, ma
+//     W_SetupShot_ProjectileSize -> W_SetupShot_Dir_ProjectileSize       gains arg  v_forward                   for s_forward
+//                W_SetupShot_Dir -> W_SetupShot_Dir_ProjectileSize       gains args '0 0 0', '0 0 0'            for mi, ma
+// W_SetupShot_Dir_ProjectileSize -> W_SetupShot_Dir_ProjectileSize_Range gains arg  max_shot_distance           for range
+//              W_SetupShot_Range -> W_SetupShot_Dir_ProjectileSize_Range gains args v_forward, '0 0 0', '0 0 0' for s_forward, mi, ma
+
+#define W_SetupShot(ent, wepent, antilag, recoil, snd, chan, maxdamage, deathtype) \
+	W_SetupShot_ProjectileSize(ent, wepent, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, deathtype)
 #define W_SetupShot_ProjectileSize(ent, wepent, mi, ma, antilag, recoil, snd, chan, maxdamage, deathtype) \
 	W_SetupShot_Dir_ProjectileSize(ent, wepent, v_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, deathtype)
 #define W_SetupShot_Dir(ent, wepent, s_forward, antilag, recoil, snd, chan, maxdamage, deathtype) \
 	W_SetupShot_Dir_ProjectileSize(ent, wepent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, deathtype)
-#define W_SetupShot(ent, wepent, antilag, recoil, snd, chan, maxdamage, deathtype) \
-	W_SetupShot_ProjectileSize(ent, wepent, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, deathtype)
+#define W_SetupShot_Dir_ProjectileSize(ent, wepent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, deathtype) \
+	W_SetupShot_Dir_ProjectileSize_Range(ent, wepent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, max_shot_distance, deathtype)
 #define W_SetupShot_Range(ent, wepent, antilag, recoil, snd, chan, maxdamage, range, deathtype) \
 	W_SetupShot_Dir_ProjectileSize_Range(ent, wepent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, range, deathtype)
 

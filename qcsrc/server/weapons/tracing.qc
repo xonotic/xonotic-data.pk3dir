@@ -69,11 +69,13 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	if(IS_PLAYER(ent))
 		W_HitPlotAnalysis(ent, wep, forward, right, up);
 
-	vector md = ent.(weaponentity).movedir;
-	vector vecs = ((md.x > 0) ? md : '0 0 0');
+	vector md = ent.(weaponentity).movedir; // read shot origin offsets
+	vector vecs = ((md.x > 0) ? md : '0 0 0'); // forward/backward offset
+	vector dv = right * -vecs.y + up * vecs.z; // sideways and vertical offset
 
-	vector dv = right * -vecs.y + up * vecs.z;
-	w_shotorg = ent.origin + ent.view_ofs;
+	w_shotorg = ent.origin + ent.view_ofs; // player origin + view offset meaning their eyes
+
+	// move the shotorg sideways and vertically as much as requested if possible
 	if(antilag)
 	{
 		if(CS(ent).antilag_debug)
@@ -96,6 +98,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	else
 		tracebox(w_shotorg, mi, ma, w_shotorg + forward * (vecs.x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - forward * nudge;
+
 	// calculate the shotdir from the chosen shotorg
 	if(W_DualWielding(ent))
 		w_shotdir = s_forward;
