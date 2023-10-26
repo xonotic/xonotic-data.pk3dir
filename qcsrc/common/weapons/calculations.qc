@@ -191,9 +191,8 @@ vector W_CalculateSpreadPattern(int pattern, int counter, int total)
 	switch (pattern)
 	{
 		default:
-		case 0:
+		case 1:
 		{
-
 			// first is always centered
 			if (counter == 0)
 				return '0 0 0';
@@ -204,7 +203,7 @@ vector W_CalculateSpreadPattern(int pattern, int counter, int total)
 
 			return s;
 		}
-		case 1:
+		case 2:
 		{
 			// first is always centered
 			if (counter == 0)
