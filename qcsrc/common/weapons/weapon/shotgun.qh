@@ -43,7 +43,8 @@ CLASS(Shotgun, Weapon)
 		P(class, prefix, secondary, float, NONE) \
 		P(class, prefix, solidpenetration, float, PRI) \
 		P(class, prefix, spread, float, PRI) \
-		P(class, prefix, spread_fixed, float, PRI) \
+		P(class, prefix, spread_pattern, float, PRI) \
+		P(class, prefix, spread_pattern_scale, float, PRI) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
 		P(class, prefix, weaponreplace, string,NONE) \
