@@ -2517,8 +2517,8 @@ msgstr "^BG%s^BG capturou a bandeira ^TC^TT^BG"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG capturou a bandeira ^TC^TT^BG em ^F1%s^BG segundos, quebrando o "
 "recorde anterior de ^BG%s^BG de ^F2%s^BG segundos"
@@ -3048,8 +3048,8 @@ msgstr "^BG%s^K1 não conseguiu se esconder da sentinela Hunter%s%s"
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
 msgstr ""
-"^BG%s^K1 ficou cheio de buracos por causa de uma sentinela de Metralhadora%s"
-"%s"
+"^BG%s^K1 ficou cheio de buracos por causa de uma sentinela de "
+"Metralhadora%s%s"
 
 #: qcsrc/common/notifications/all.inc:344
 #, c-format
@@ -3439,8 +3439,8 @@ msgstr "^BG%s^BG acabou a corrida"
 #, c-format
 msgid "^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s"
 msgstr ""
-"^BG%s^BG quebrou o recorde %s%s^BG de %s^BG e substituiu seu recorde com %s"
-"%s %s"
+"^BG%s^BG quebrou o recorde %s%s^BG de %s^BG e substituiu seu recorde com "
+"%s%s %s"
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
@@ -3629,8 +3629,8 @@ msgstr "^BG%s^K1 brincou com raios de Electro%s%s"
 #, c-format
 msgid "^BG%s^K1 could not remember where they put their Electro orb%s%s"
 msgstr ""
-"^BG%s^K1 não conseguiu se lembrar onde tinha colocado a sua esfera de Electro"
-"%s%s"
+"^BG%s^K1 não conseguiu se lembrar onde tinha colocado a sua esfera de "
+"Electro%s%s"
 
 #: qcsrc/common/notifications/all.inc:477
 #, c-format
@@ -3761,8 +3761,8 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 ficou cheio de buracos por causa da Metralhadora Suprema de ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 ficou cheio de buracos por causa da Metralhadora Suprema de "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -3772,8 +3772,8 @@ msgstr "^BG%s%s^K1 foi vaporizado pela Vortex Suprema de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 "^BG%s%s^K1 foi serrado ao meio pelo Lança-motosserras Supremo de ^BG%s^K1%s%s"
 
@@ -9758,8 +9758,8 @@ msgstr "Deseja mesmo redefinir todas as configurações para o padrão?"
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
 msgstr ""
-"Isso irá criar uma cópia da sua configuração na seguinte pasta: C:\\Users"
-"\\[usuário]\\Saved Games\\xonotic\\data"
+"Isso irá criar uma cópia da sua configuração na seguinte pasta: C:"
+"\\Users\\[usuário]\\Saved Games\\xonotic\\data"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skins"

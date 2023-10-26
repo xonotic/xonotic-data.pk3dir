@@ -2488,8 +2488,8 @@ msgstr "^BG%s^BG が ^TC^TT^BG 旗を取れた"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG が ^F1%s^BG 秒で ^TC^TT^BG 旗を取れたし、^BG%s^BG の以前の記録であ"
 "る ^F2%s^BG 秒を破った"
@@ -3717,8 +3717,8 @@ msgstr "^BG%s%s^K1 は ^BG%s^K1 のオーバーキルネクス%s%sによって�
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 "^BG%s%s^K1 は ^BG%s^K1 のオーバーキルロケット推進チェーンソー%s%sによって半分"
 "に切断された"

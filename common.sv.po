@@ -2499,11 +2499,11 @@ msgstr "^BG%s^BG fångade den ^TC^TT^BG flaggan"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
-"^BG%s^BG fångade den ^TC^TT^BG flaggan på ^F1%s^BG sekunder, vilket slår ^BG"
-"%s^BGs föregående rekord på ^F2%s^BG sekunder"
+"^BG%s^BG fångade den ^TC^TT^BG flaggan på ^F1%s^BG sekunder, vilket slår "
+"^BG%s^BGs föregående rekord på ^F2%s^BG sekunder"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
@@ -2755,8 +2755,8 @@ msgstr "^BG%s%s^K1 dog i en olycka med ^BG%s^K1%s%s"
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s%s"
 msgstr ""
-"^BG%s%s^K1 var inblandad i sprängningen när ^BG%s^K1s Bumblebee exploderade%s"
-"%s"
+"^BG%s%s^K1 var inblandad i sprängningen när ^BG%s^K1s Bumblebee "
+"exploderade%s%s"
 
 #: qcsrc/common/notifications/all.inc:294
 #, c-format
@@ -2789,8 +2789,8 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s"
 msgstr ""
-"^BG%s%s^K1 var inblandad i sprängningen när ^BG%s^K1s Spiderbot exploderade%s"
-"%s"
+"^BG%s%s^K1 var inblandad i sprängningen när ^BG%s^K1s Spiderbot "
+"exploderade%s%s"
 
 #: qcsrc/common/notifications/all.inc:300
 #, c-format
@@ -2939,8 +2939,8 @@ msgstr "^BG%s^K1 bemästrade konsten av själv-nading%s%s"
 msgid ""
 "^BG%s^K1 decided to take a look at the results of their napalm explosion%s%s"
 msgstr ""
-"^BG%s^K1 bestämde sig för att ta en titt på resultatet av sin napalmexplosion"
-"%s%s"
+"^BG%s^K1 bestämde sig för att ta en titt på resultatet av sin "
+"napalmexplosion%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
@@ -3741,11 +3741,11 @@ msgstr "^BG%s%s^K1 blev förångad av ^BG%s^K1s Overkill Nex%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 var sågad på mitten av ^BG%s^K1s Overkill Raketframdriven Motorsåg"
-"%s%s"
+"^BG%s%s^K1 var sågad på mitten av ^BG%s^K1s Overkill Raketframdriven "
+"Motorsåg%s%s"
 
 #: qcsrc/common/notifications/all.inc:503
 #, c-format
@@ -3759,8 +3759,8 @@ msgstr ""
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s^K1 var sågad på mitten av sin egen Overkill Raketframdriven Motorsåg%s"
-"%s"
+"^BG%s^K1 var sågad på mitten av sin egen Overkill Raketframdriven "
+"Motorsåg%s%s"
 
 #: qcsrc/common/notifications/all.inc:505
 #, c-format

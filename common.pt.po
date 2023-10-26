@@ -2485,8 +2485,8 @@ msgstr "^BG%s^BG capturou a bandeira ^TC^TT^BG"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG capturou a bandeira ^TC^TT^BG em ^F1%s^BG segundos, quebrando o "
 "recorde anterior de ^BG%s^BG de ^F2%s^BG segundos"
@@ -3592,8 +3592,8 @@ msgstr "^BG%s^K1 brincou com os Parafusos Elétricos%s%s"
 #, c-format
 msgid "^BG%s^K1 could not remember where they put their Electro orb%s%s"
 msgstr ""
-"^BG%s^K1 não conseguiu lembrar-se onde tinha colocado a sua esfera Elétrica%s"
-"%s"
+"^BG%s^K1 não conseguiu lembrar-se onde tinha colocado a sua esfera "
+"Elétrica%s%s"
 
 #: qcsrc/common/notifications/all.inc:477
 #, c-format
@@ -3733,8 +3733,8 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:503
@@ -9648,8 +9648,8 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
 msgstr ""
-"Isto irá criar uma cópia da tua configuração na seguinte pasta: C:\\Users"
-"\\[utilizador]\\Saved Games\\xonotic\\data"
+"Isto irá criar uma cópia da tua configuração na seguinte pasta: C:"
+"\\Users\\[utilizador]\\Saved Games\\xonotic\\data"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skins"

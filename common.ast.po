@@ -2472,8 +2472,8 @@ msgstr "^BG%s^BG capturó la bandera del ^TC^TT"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG capturó bandera del ^TC^TT^BG en ^F1%s^BG segundos, superando'l "
 "récor anterior que fizo ^BG%s^BG de ^F2%s^BG segundos"
@@ -2706,8 +2706,8 @@ msgstr ""
 #, c-format
 msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s"
 msgstr ""
-"^BG%s%s^K1 tentó d'ocupar l'espaciu de destín del teletresporte de ^BG%s^K1%s"
-"%s"
+"^BG%s%s^K1 tentó d'ocupar l'espaciu de destín del teletresporte de "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:291
 #, c-format
@@ -3484,8 +3484,8 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"
 msgstr ""
-"^BG%s%s^K1 morrió pola bonísima interpretación de ^BG%s^K1 col @!#%% acordión"
-"%s%s"
+"^BG%s%s^K1 morrió pola bonísima interpretación de ^BG%s^K1 col @!#%% "
+"acordión%s%s"
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -3702,8 +3702,8 @@ msgstr "^BG%s%s^K1 vaporióse pol Nex Desaxeráu de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:503
@@ -3795,8 +3795,8 @@ msgstr "^K1Agora ^BG%s^K1 quedó pensando colos portales%s%s"
 #, c-format
 msgid "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s"
 msgstr ""
-"^BG%s%s^K1 morrió pola bonísima interpretación de ^BG%s^K1 cola @!#%% tuba%s"
-"%s"
+"^BG%s%s^K1 morrió pola bonísima interpretación de ^BG%s^K1 cola @!#%% "
+"tuba%s%s"
 
 #: qcsrc/common/notifications/all.inc:521
 #, c-format
