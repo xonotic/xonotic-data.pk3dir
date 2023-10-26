@@ -35,6 +35,8 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SPAWNEVENT);
 
+	print(sprintf("Write %i\n", autocvar_g_spawn_alloweffects));
+
 	if(autocvar_g_spawn_alloweffects)
 	{
 		WriteByte(MSG_ENTITY, etof(this.owner));
