@@ -874,8 +874,6 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 
 		int particlesAndOrSound = ReadByte();
 
-		print(sprintf("Read %i\n", particlesAndOrSound));
-
 		if(is_new)
 		{
 			float teamnum = entcs_GetTeam(entnum - 1);
