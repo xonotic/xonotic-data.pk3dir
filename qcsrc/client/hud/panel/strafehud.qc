@@ -193,6 +193,9 @@ void HUD_StrafeHUD()
 		float  text_offset_bottom            = 0;
 		float  hfov                          = getproperty(VF_FOVX);
 
+		if(isnan(hfov))
+			hfov = 0;
+
 		// real_* variables which are always positive with no wishangle offset
 		float real_bestangle;
 		float real_prebestangle;
@@ -352,7 +355,11 @@ void HUD_StrafeHUD()
 		range_minangle = 90 - range_minangle; // calculate value which is never >90 or <45
 		range_minangle *= 2; // multiply to accommodate for both sides of the hud
 
-		if(autocvar_hud_panel_strafehud_range == 0)
+		if(isnan(autocvar_hud_panel_strafehud_range))
+		{
+			hudangle = 0;
+		}
+		else if(autocvar_hud_panel_strafehud_range == 0)
 		{
 			if(autocvar__hud_configure)
 				hudangle = 90;
@@ -556,14 +563,16 @@ void HUD_StrafeHUD()
 		// best angle to strafe at
 		// in case of ground friction we may decelerate if the acceleration is smaller than the speed loss from friction
 		real_bestangle = bestangle = (strafespeed > bestspeed ? acos(bestspeed / strafespeed) * RAD2DEG : 0);
+		odd_bestangle = -bestangle;
 		real_prebestangle = prebestangle = (strafespeed > movespeed ? acos(movespeed / strafespeed) * RAD2DEG : 0);
 		if(direction == STRAFEHUD_DIRECTION_LEFT) // the angle becomes negative in case we strafe left
 		{
 			bestangle *= -1;
+			odd_bestangle *= -1;
 			prebestangle *= -1;
 		}
-		odd_bestangle = -bestangle - wishangle;
 		bestangle -= wishangle;
+		odd_bestangle -= wishangle;
 		prebestangle -= wishangle;
 
 		// various offsets and size calculations of hud indicator elements
@@ -593,7 +602,6 @@ void HUD_StrafeHUD()
 		if(mode == STRAFEHUD_MODE_VIEW_CENTERED)
 			currentangle_offset = angle / hudangle * panel_size.x;
 		else
-
 			currentangle_offset = bound(-hudangle / 2, angle, hudangle / 2) / hudangle * panel_size.x + panel_size.x / 2;
 
 		// best strafe acceleration angle
@@ -1142,7 +1150,7 @@ void HUD_StrafeHUD()
 			{
 				float strafeeff_height = autocvar_hud_panel_strafehud_strafeefficiency_size * panel_size.y;
 				string strafeeff_text = strcat(ftos_decimals(strafe_ratio * 100, 2), "%");
-			    vector strafeeff_color = '1 1 1' - (strafe_ratio > 0 ? '1 0 1' : '0 1 1') * fabs(strafe_ratio);
+				vector strafeeff_color = '1 1 1' - (strafe_ratio > 0 ? '1 0 1' : '0 1 1') * fabs(strafe_ratio);
 
 				bool was_drawn = StrafeHUD_drawTextIndicator(
 					strafeeff_text, strafeeff_height,
