@@ -294,12 +294,6 @@ void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
 {
-	IL_EACH(g_moveables, it.last_pushed,
-	{
-		if(!WarpZoneLib_ExactTrigger_Touch(it.last_pushed, it, false))
-			it.last_pushed = NULL;
-	});
-
 	// TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
 	IL_EACH(g_players, IS_FAKE_CLIENT(it), sys_phys_update(it, frametime));
 	IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPreThink(it));
