@@ -94,8 +94,7 @@ REGISTER_STAT(GAMESTARTTIME, float, game_starttime)
 /** arc heat in [0,1] */
 REGISTER_STAT(PRESSED_KEYS, int)
 REGISTER_STAT(FUEL, int)
-/** compressShotOrigin */
-REGISTER_STAT(SHOTORG, int)
+REGISTER_STAT(SHOTORG, vector)
 REGISTER_STAT(LEADLIMIT, float, autocvar_leadlimit)
 REGISTER_STAT(LEADLIMIT_AND_FRAGLIMIT, float, autocvar_leadlimit_and_fraglimit)
 

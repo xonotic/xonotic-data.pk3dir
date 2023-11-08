@@ -512,25 +512,20 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	this.view_ofs = '0 0 0';
 	this.movedir_aligned = this.movedir;
 
-	if (this.movedir.x >= 0)
-	{
-		//int algn = STAT(GUNALIGN, this.owner);
-		int algn = W_GunAlign(this, STAT(GUNALIGN, this.owner));
-	#ifdef SVQC
-		this.m_gunalign = algn;
-	#endif
-		vector v = this.movedir;
-		this.movedir = shotorg_adjust(v, false, false, algn);
-		this.movedir_aligned = shotorg_adjust(v, false, true, algn);
-		this.view_ofs = this.movedir_aligned - v;
-	}
-	int compressed_shotorg = compressShotOrigin(this.movedir);
-	// make them match perfectly
+	//int algn = STAT(GUNALIGN, this.owner);
+	int algn = W_GunAlign(this, STAT(GUNALIGN, this.owner));
+#ifdef SVQC
+	this.m_gunalign = algn;
+#endif
+	vector v = this.movedir;
+	this.movedir = shotorg_adjust(v, false, false, algn);
+	this.movedir_aligned = shotorg_adjust(v, false, true, algn);
+	this.view_ofs = this.movedir_aligned - v;
+
 #ifdef SVQC
 	// null during init
-	if (this.owner) STAT(SHOTORG, this.owner) = compressed_shotorg;
+	if (this.owner) STAT(SHOTORG, this.owner) = this.movedir;
 #endif
-	this.movedir = decompressShotOrigin(compressed_shotorg);
 
 #ifdef SVQC
 	this.spawnorigin += this.view_ofs;  // offset the casings origin by the same amount
@@ -786,8 +781,7 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 		rlplayer = csqcplayer; // fall back to the global
 
 	vector md = wepent.movedir_aligned;
-	vector vecs = ((md.x > 0) ? md : '0 0 0');
-	vector dv = forward * vecs.x + right * -vecs.y + up * vecs.z;
+	vector dv = forward * md.x + right * -md.y + up * md.z;
 	vector org = rlplayer.origin + rlplayer.view_ofs + dv;
 
 	pointparticles(thiswep.m_muzzleeffect, org, forward * 1000, 1);

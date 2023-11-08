@@ -122,7 +122,7 @@ float TrueAimCheck(entity wepent)
 
 	vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * STAT(VIEWHEIGHT));
 
-	vecs = decompressShotOrigin(STAT(SHOTORG));
+	vecs = STAT(SHOTORG);
 
 	traceline(traceorigin, traceorigin + view_forward * max_shot_distance, mv, ta);
 	trueaimpoint = trace_endpos;
@@ -133,10 +133,7 @@ float TrueAimCheck(entity wepent)
 	if(vdist((trueaimpoint - traceorigin), <, g_trueaim_minrange))
 		trueaimpoint = traceorigin + view_forward * g_trueaim_minrange;
 
-	if(vecs.x > 0)
-		vecs.y = -vecs.y;
-	else
-		vecs = '0 0 0';
+	vecs.y = -vecs.y;
 
 	dv = view_right * vecs.y + view_up * vecs.z;
 	w_shotorg = traceorigin + dv;

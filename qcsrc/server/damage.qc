@@ -961,8 +961,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						#if 0
 							// code stolen from W_SetupShot_Dir_ProjectileSize_Range()
 							vector md = targ.(weaponentity).movedir;
-							vector vecs = ((md.x > 0) ? md : '0 0 0');
-							vector dv = v_right * -vecs.y + v_up * vecs.z;
+							vector dv = v_right * -md.y + v_up * md.z;
 							vector mi = '0 0 0', ma = '0 0 0';
 
 							if(IS_CLIENT(targ)) // no antilag for non-clients!
@@ -977,8 +976,8 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 							center.z = trace_endpos.z;
 						#else
-							// very cheap way but it skips movedir.x > 0 checks and move into solid checks which is fine most of the time for now AFAIK
-							// this should only really be an issue with absurd g_shootfromfixedorigin custom values like "-1 0 9001"
+							// very cheap way but it skips move into solid checks which is fine most of the time for now AFAIK
+							// this should only really be an issue with absurd g_shootfromfixedorigin custom values like "0 0 9001"
 							center.z = center.z + targ.(weaponentity).movedir.z;
 						#endif
 						}

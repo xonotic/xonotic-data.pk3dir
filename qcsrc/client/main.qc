@@ -1097,14 +1097,14 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 {
 	nb_pb_period = ReadByte() / 32; //Accuracy of 1/32th
 
-	hook_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
-	hook_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
-	hook_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
-	hook_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
-	arc_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
-	arc_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
-	arc_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
-	arc_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
+	hook_shotorigin[0] = ReadVector();
+	hook_shotorigin[1] = ReadVector();
+	hook_shotorigin[2] = ReadVector();
+	hook_shotorigin[3] = ReadVector();
+	arc_shotorigin[0]  = ReadVector();
+	arc_shotorigin[1]  = ReadVector();
+	arc_shotorigin[2]  = ReadVector();
+	arc_shotorigin[3]  = ReadVector();
 
 	strcpy(forcefog, ReadString());
 

@@ -148,9 +148,6 @@ float isGametypeInFilter(entity gt, float tp, float ts, string pattern);
 vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel, float spd, float newton_style);
 vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_style, float mi, float ma);
 
-float compressShotOrigin(vector v);
-vector decompressShotOrigin(float f);
-
 #ifdef SVQC
 string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply, monsterlist_reply; // cached replies
 string records_reply[10];

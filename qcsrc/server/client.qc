@@ -873,14 +873,14 @@ void ClientInit_misc(entity this)
 	int channel = MSG_ONE;
 	WriteHeader(channel, ENT_CLIENT_INIT);
 	WriteByte(channel, g_nexball_meter_period * 32);
-	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[0]));
-	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[1]));
-	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[2]));
-	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[3]));
-	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[0]));
-	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[1]));
-	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[2]));
-	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[3]));
+	WriteVector(channel, hook_shotorigin[0]);
+	WriteVector(channel, hook_shotorigin[1]);
+	WriteVector(channel, hook_shotorigin[2]);
+	WriteVector(channel, hook_shotorigin[3]);
+	WriteVector(channel, arc_shotorigin[0]);
+	WriteVector(channel, arc_shotorigin[1]);
+	WriteVector(channel, arc_shotorigin[2]);
+	WriteVector(channel, arc_shotorigin[3]);
 
 	if(autocvar_sv_foginterval && world.fog != "")
 		WriteString(channel, world.fog);
