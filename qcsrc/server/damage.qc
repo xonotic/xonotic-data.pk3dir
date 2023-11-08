@@ -945,10 +945,55 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					float a;
 					float c;
 					vector hitloc;
-					vector center;
 
 					// if it's a player, use the view origin as reference
-					center = CENTER_OR_VIEWOFS(targ);
+					vector center = CENTER_OR_VIEWOFS(targ);
+
+					if (autocvar_g_player_damageplayercenter)
+					{
+						if (targ != attacker)
+						{
+							// always use target's bbox centerpoint
+							center = targ.origin + ((targ.mins + targ.maxs) * 0.5);
+						}
+						else // targ == attacker
+						{
+						#if 0
+							// code stolen from W_SetupShot_Dir_ProjectileSize_Range()
+							vector md = targ.(weaponentity).movedir;
+							vector vecs = ((md.x > 0) ? md : '0 0 0');
+							vector dv = v_right * -vecs.y + v_up * vecs.z;
+							vector mi = '0 0 0', ma = '0 0 0';
+
+							if(IS_CLIENT(targ)) // no antilag for non-clients!
+							{
+								if(CS(targ).antilag_debug)
+									tracebox_antilag(targ, center, mi, ma, center + dv, MOVE_NORMAL, targ, CS(targ).antilag_debug);
+								else
+									tracebox_antilag(targ, center, mi, ma, center + dv, MOVE_NORMAL, targ, ANTILAG_LATENCY(targ));
+							}
+							else
+								tracebox(center, mi, ma, center + dv, MOVE_NORMAL, targ);
+
+							center.z = trace_endpos.z;
+						#else
+							// very cheap way but it skips movedir.x > 0 checks and move into solid checks which is fine most of the time for now AFAIK
+							// this should only really be an issue with absurd g_shootfromfixedorigin custom values like "-1 0 9001"
+							center.z = center.z + targ.(weaponentity).movedir.z;
+						#endif
+						}
+					}
+
+					/* debug prints
+					print(sprintf("origin  vec %v\n", targ.origin));
+					print(sprintf("movedir vec %v\n", targ.(weaponentity).movedir));
+					print(sprintf("old def vec %v\n", CENTER_OR_VIEWOFS(targ)));
+					print(sprintf("origin+vofs %v\n", targ.origin + targ.view_ofs));
+					print(sprintf("bbox center %v\n", (targ.origin + ((targ.mins + targ.maxs) * 0.5))));
+					print(sprintf("center  vec %v\n", center));
+					print(sprintf("shotorg vec %v\n", w_shotorg));
+					print("\n");
+					*/
 
 					force = normalize(center - inflictororigin_wz);
 					force = force * (finaldmg / max(coredamage, edgedamage)) * forceintensity;
