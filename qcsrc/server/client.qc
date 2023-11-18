@@ -2089,7 +2089,6 @@ int nJoinAllowed(entity this, entity ignore)
 
 bool joinAllowed(entity this)
 {
-	if (CS(this).version_mismatch && !autocvar_sv_spectate) dropclient_schedule(this);
 	if (CS(this).version_mismatch) return false;
 	if (time < CS(this).jointime + MIN_SPEC_TIME) return false;
 	if (!nJoinAllowed(this, this)) return false;
