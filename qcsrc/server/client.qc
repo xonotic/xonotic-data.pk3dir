@@ -2434,6 +2434,11 @@ void PlayerPreThink (entity this)
 
 	WarpZone_PlayerPhysics_FixVAngle(this);
 
+	if (autocvar_sv_spectate < 0)
+		blockSpectators = 1;
+	else if(autocvar_sv_spectate)
+		blockSpectators = 0;
+
 	if (frametime) {
 		// physics frames: update anticheat stuff
 		anticheat_prethink(this);
