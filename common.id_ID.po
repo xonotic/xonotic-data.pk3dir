@@ -9,6 +9,7 @@
 # Ariesandy Hidayat, 2023
 # red koala, 2023
 # Red Koala, 2023
+# Red Koala, 2023
 # red koala, 2023
 msgid ""
 msgstr ""
@@ -4386,7 +4387,7 @@ msgstr "^BGAnda mendapatkan Jetpack^F1"
 msgid ""
 "^K1No spawnpoints available!\n"
 "Hope your team can fix it..."
-msgstr ""
+msgstr "Tidak ada tempat spawn tersedia! Semoga tim-mu bisa memperbaikinya..."
 
 #: qcsrc/common/notifications/all.inc:715
 #, c-format
@@ -4399,7 +4400,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^K1You aren't allowed to play because you are banned in this server"
-msgstr ""
+msgstr "^K1Anda tidak diizinkan bermain karena anda di ban di server ini "
 
 #: qcsrc/common/notifications/all.inc:720
 msgid "^BGYou picked up the ball"
@@ -4464,7 +4465,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:735
 #, c-format
 msgid "^BGWaiting for %s player(s) to join..."
-msgstr "^BGMenunggu pemain %s bergabung..."
+msgstr "^BGMenunggu pemain %s untuk bergabung..."
 
 #: qcsrc/common/notifications/all.inc:737
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
@@ -4485,7 +4486,7 @@ msgstr "^BGDapatkan beberapa peluru! Tersisa ^F4^COUNT^BG!"
 #: qcsrc/common/notifications/all.inc:740
 #, c-format
 msgid "^F2Extra lives remaining: ^K1%s"
-msgstr ""
+msgstr "^F2Sisa nyawa ekstra: ^K1%s"
 
 #: qcsrc/common/notifications/all.inc:742
 #, c-format
@@ -4506,7 +4507,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:746
 msgid "^BGYou captured a control point"
-msgstr ""
+msgstr "^BGAnda menangkap poin kontrol"
 
 #: qcsrc/common/notifications/all.inc:747
 #, c-format
@@ -4529,13 +4530,15 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:751
 msgid "^BGThe ^TCenemy^BG generator is no longer shielded!"
-msgstr ""
+msgstr "^BGGenerator ^TCmusuh^BG tidak lagi terlindungi"
 
 #: qcsrc/common/notifications/all.inc:752
 msgid ""
 "^K1Your generator is NOT shielded!\n"
 "^BGRe-capture control points to shield it!"
 msgstr ""
+"^K1Generator anda TIDAK terlindungi!\n"
+"^BGAmbil poin kontrol untuk melindunginya!"
 
 #: qcsrc/common/notifications/all.inc:753
 #, c-format
@@ -4597,7 +4600,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:767
 msgid "^F2Shield surrounds you"
-msgstr ""
+msgstr "^F2Anda terlindungi"
 
 #: qcsrc/common/notifications/all.inc:768
 msgid "^F2Shield has worn off"

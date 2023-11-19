@@ -1,5 +1,5 @@
 ast   "Asturian" "Asturianu" 73%
-id_ID "Indonesian" "Bahasa Indonesia" 39%
+id_ID "Indonesian" "Bahasa Indonesia" 40%
 de    "German" "Deutsch" 100%
 de_CH "German (Switzerland)" "Deutsch (Schweiz)" 100%
 en    "English" "English" 100%
@@ -8,7 +8,7 @@ es    "Spanish" "Español" 100%
 fr    "French" "Français" 100%
 ga    "Irish" "Irish" 29%
 it    "Italian" "Italiano" 99%
-la    "Latin" "Lingua Latina" 81%
+la    "Latin" "Lingua Latina" 84%
 hu    "Hungarian" "Magyar" 44%
 nl    "Dutch" "Nederlands" 61%
 pl    "Polish" "Polski" 79%
