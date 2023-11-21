@@ -4781,11 +4781,11 @@ msgstr "^K1Вы совершите самоубийство через ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:798
 msgid "^F4Timeout begins in ^COUNT"
-msgstr "^F4Тайм-аут начнётся через ^COUNT"
+msgstr "^F4Тайм-аут начнётся через ^COUNT с"
 
 #: qcsrc/common/notifications/all.inc:799
 msgid "^F4Timeout ends in ^COUNT"
-msgstr "^F4Тайм-аут закончится через ^COUNT"
+msgstr "^F4Тайм-аут закончится через ^COUNT с"
 
 #: qcsrc/common/notifications/all.inc:801
 msgid "^K1Cannot join given minigame session!"
@@ -9538,7 +9538,7 @@ msgstr "Показывать график размеров пакетов и д�
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Packet loss compensation"
-msgstr "Смягчение потери пакетов (п/п)"
+msgstr "Смягчать потери пакетов (п/п)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "Each packet includes a copy of the previous message"
@@ -9546,7 +9546,7 @@ msgstr "Каждый пакет включает в себя копию пред
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Movement prediction error compensation"
-msgstr "Смягчение ошибок предрасчёта движения"
+msgstr "Смягчать ошибки предрасчёта движения"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:43
 msgid "Use encryption (AES) when available"
