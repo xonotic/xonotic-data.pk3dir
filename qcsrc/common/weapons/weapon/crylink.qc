@@ -209,6 +209,8 @@ void W_Crylink_LinkJoinEffect_Think(entity this)
 			}
 		}
 	}
+	if (this.crylink_owner)
+		this.crylink_owner.crylink_released_for_bot_time = time;
 	delete(this);
 }
 
@@ -262,12 +264,22 @@ void W_Crylink_Touch(entity this, entity toucher)
 		if(this == this.crylink_owner.(weaponentity).crylink_lastgroup)
 			this.crylink_owner.(weaponentity).crylink_lastgroup = NULL;
 		W_Crylink_LinkExplode(this.queuenext, this, toucher);
+
+		// crylink_released_for_bot_time is set whenever a projectile explodes because it's
+		// the only way to tell bots to release the fire button
+		// NOTE: setting this field to human players too doesn't hurt (it's never checked) and
+		// is cheaper than checking IS_BOT_CLIENT(e.crylink_owner)
+		if (this.crylink_owner)
+			this.crylink_owner.crylink_released_for_bot_time = time;
+
 		this.classname = "spike_oktoremove";
 		delete(this);
 		return;
 	}
 	else if(finalhit)
 	{
+		if (this.crylink_owner)
+			this.crylink_owner.crylink_released_for_bot_time = time;
 		// just unlink
 		delete(this);
 		return;
@@ -519,12 +531,74 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	}
 }
 
+#define bot_aim_CRYLINK_PRI() \
+	bot_aim(actor, weaponentity, WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false, false)
+#define bot_aim_CRYLINK_SEC() \
+	bot_aim(actor, weaponentity, WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false, true)
+
 METHOD(Crylink, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(random() < 0.10)
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false, true);
-    else
-        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false, true);
+	if(WEP_CVAR_PRI(crylink, joinexplode) && WEP_CVAR_PRI(crylink, shots) > 1)
+	{
+		// less skilled bots prefer primary attack even with greater distances
+		float atck_radius = WEP_CVAR_PRI(crylink, speed) * map_bound_ranges(skill, 0, 10, 0.9, 0.6);
+		if (vdist(actor.origin - actor.enemy.origin, >, atck_radius))
+		{
+			PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim_CRYLINK_SEC();
+			return;
+		}
+
+		PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim_CRYLINK_PRI();
+
+		entity first_proj = NULL;
+		IL_EACH(g_projectiles, true,
+		{
+			if (it.crylink_owner == actor && actor.(weaponentity).crylink_waitrelease == 1)
+			{
+				first_proj = it; // this is always the middle one
+				break;
+			}
+		});
+		if (!first_proj)
+		{
+			// keep the fire button released for a short while otherwise the weapon may not
+			// detect the release event at all and doesn't shoot again
+			if (time < actor.crylink_released_for_bot_time + 0.05)
+				PHYS_INPUT_BUTTON_ATCK(actor) = false;
+			return;
+		}
+
+		float fired_time = first_proj.teleport_time - WEP_CVAR_PRI(crylink, joindelay);
+		if (time > fired_time + map_bound_ranges(skill, 0, 10, 1.2, 0.8)) // release after this time anyway
+		{
+			PHYS_INPUT_BUTTON_ATCK(actor) = false;
+			actor.crylink_released_for_bot_time = time;
+			return;
+		}
+
+		float pred_time = max(0.01, 200 / WEP_CVAR_PRI(crylink, speed));
+		IL_EACH(g_bot_targets, it.bot_attack && it != actor,
+		{
+			vector target_pos = it.origin + (it.maxs - it.mins) * 0.5;
+			float target_radius = map_bound_ranges(skill, 0, 10, 10, 50);
+			if (vdist(target_pos - (first_proj.origin + first_proj.velocity * pred_time), <=, target_radius))
+			{
+				PHYS_INPUT_BUTTON_ATCK(actor) = false;
+				actor.crylink_released_for_bot_time = time;
+				return;
+			}
+		});
+
+		PHYS_INPUT_BUTTON_ATCK(actor) = true; // keep it pressed
+		return;
+	}
+
+	// if join explode is not available bots use a shorter primary attack radius
+	float atck_radius = WEP_CVAR_PRI(crylink, speed) * map_bound_ranges(skill, 0, 10, 0.7, 0.4);
+	if (vdist(actor.origin - actor.enemy.origin, >, atck_radius))
+		PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim_CRYLINK_PRI();
+	else
+		PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim_CRYLINK_SEC();
 }
 METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {

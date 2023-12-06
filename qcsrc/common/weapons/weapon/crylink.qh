@@ -5,7 +5,7 @@ CLASS(Crylink, Weapon)
 /* ammotype  */ ATTRIB(Crylink, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Crylink, impulse, int, 6);
 /* flags     */ ATTRIB(Crylink, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_CANCLIMB);
-/* rating    */ ATTRIB(Crylink, bot_pickupbasevalue, float, 6000);
+/* rating    */ ATTRIB(Crylink, bot_pickupbasevalue, float, 7000);
 /* color     */ ATTRIB(Crylink, wpcolor, vector, '1 0.5 1');
 /* modelname */ ATTRIB(Crylink, mdl, string, "crylink");
 #ifdef GAMEQC
@@ -70,6 +70,7 @@ SPAWNFUNC_WEAPON(weapon_crylink, WEP_CRYLINK)
 .entity crylink_lastgroup;
 
 .entity crylink_owner; // we can't use realowner, as that's subject to change
+.float crylink_released_for_bot_time;
 
 .entity queuenext;
 .entity queueprev;
