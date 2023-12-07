@@ -176,10 +176,15 @@ void Shutdown()
 
 	cvar_set("slowmo", cvar_defstring("slowmo")); // reset it back to 'default'
 
+	// fire game or demo end hooks when CSQC VM shuts down
 	if (!isdemo())
 	{
+		// if _cl_hook_gamestart wasn't called with an actual gamemode
+		// before CSQC VM shutdown then call it with nop fallback here
 		if (!(calledhooks & HOOK_START))
 			localcmd("\n_cl_hook_gamestart nop\n");
+
+		// call gameend hook if it hasn't somehow yet fired by intermission starting
 		if (!(calledhooks & HOOK_END))
 		{
 			int gamecount = cvar("cl_matchcount");
@@ -188,6 +193,16 @@ void Shutdown()
 			// earlier versions of the game abuse the hook to set this cvar
 			localcmd(strcat("cl_matchcount ", itos(gamecount + 1), "\n"));
 			//cvar_set("cl_matchcount", itos(gamecount + 1));
+			calledhooks |= HOOK_END;
+		}
+	}
+	else
+	{
+		// call demo end hook
+		if (!(calledhooks & HOOK_END))
+		{
+			localcmd("\ncl_hook_demoend\n");
+			calledhooks |= HOOK_END; // mark the hook as having fired
 		}
 	}
 
@@ -1012,11 +1027,22 @@ void CSQC_Ent_Remove(entity this)
 
 void Gamemode_Init()
 {
+	// fire game or demo start hooks here
 	if (!isdemo())
 	{
 		if(!(calledhooks & HOOK_START))
+		{
 			localcmd("\n_cl_hook_gamestart ", MapInfo_Type_ToString(gametype), "\n");
-		calledhooks |= HOOK_START;
+			calledhooks |= HOOK_START; // mark start hook as fired
+		}
+	}
+	else
+	{
+		if (!(calledhooks & HOOK_START))
+		{
+			localcmd("\ncl_hook_demostart\n");
+			calledhooks |= HOOK_START; // mark start hook as fired
+		}
 	}
 }
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
