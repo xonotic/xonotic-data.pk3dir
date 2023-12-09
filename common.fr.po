@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2023\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -2533,8 +2533,8 @@ msgstr "^BG%s^BG a capturé le drapeau ^TC^TT^BG"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG a capturé le drapeau ^TC^TT^BG en ^F1%s^BG secondes, battant le "
 "précédent record de ^BG%s^BG en ^F2%s^BG secondes"
@@ -2692,8 +2692,8 @@ msgstr "^BG%s%s^K1 a été tué par ^BG%s^K1 et son bonus de ^BG%s^K1 ^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
 msgstr ""
-"^BG%s%s^K1 a été pris pour cible par ^BG%s^K1 et son bonus de ^BG%s^K1 ^K1%s"
-"%s"
+"^BG%s%s^K1 a été pris pour cible par ^BG%s^K1 et son bonus de ^BG%s^K1 "
+"^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
@@ -2803,8 +2803,8 @@ msgstr ""
 #, c-format
 msgid "^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s%s"
 msgstr ""
-"^BG%s%s^K1 en a vu de toutes les couleurs avec le canon du Bumblebee de ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 en a vu de toutes les couleurs avec le canon du Bumblebee de "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:295
 #, c-format
@@ -2825,8 +2825,8 @@ msgstr "^BG%s%s^K1 n'a pas pu résister aux bulles violettes de ^BG%s^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Raptor exploded%s%s"
 msgstr ""
-"^BG%s%s^K1 a été pris dans le souffle quand le Raptor de ^BG%s^K1 a explosé%s"
-"%s"
+"^BG%s%s^K1 a été pris dans le souffle quand le Raptor de ^BG%s^K1 a "
+"explosé%s%s"
 
 #: qcsrc/common/notifications/all.inc:299
 #, c-format
@@ -2850,8 +2850,8 @@ msgstr "^BG%s%s^K1 a été réduit en miettes par le Spiderbot de ^BG%s^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s"
 msgstr ""
-"^BG%s%s^K1 a été pris dans le souffle quand le Racer de ^BG%s^K1 a explosé%s"
-"%s"
+"^BG%s%s^K1 a été pris dans le souffle quand le Racer de ^BG%s^K1 a "
+"explosé%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
@@ -3454,8 +3454,8 @@ msgstr "^BG%s^BG a abandonné la course"
 #, c-format
 msgid "^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"
 msgstr ""
-"^BG%s^BG n'a pas réussi à améliorer son record au classement de %s%s^BG de %s"
-"%s %s"
+"^BG%s^BG n'a pas réussi à améliorer son record au classement de %s%s^BG de "
+"%s%s %s"
 
 #: qcsrc/common/notifications/all.inc:434
 #, c-format
@@ -3786,16 +3786,16 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 a été réduit en miettes par la Mitraillette Overkill lourde de ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 a été réduit en miettes par la Mitraillette Overkill lourde de "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 a été criblé de balles par la Mitraillette Overkill de ^BG%s^K1%s"
-"%s"
+"^BG%s%s^K1 a été criblé de balles par la Mitraillette Overkill de "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -3805,27 +3805,27 @@ msgstr "^BG%s%s^K1 a été vaporisé par le Nex Overkill de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 a été scié en deux par la Tronçonneuse à roquettes Overkill de ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 a été scié en deux par la Tronçonneuse à roquettes Overkill de "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:503
 #, c-format
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 a presque évité la Tronçonneuse à roquettes Overkill de ^BG%s^K1%s"
-"%s"
+"^BG%s%s^K1 a presque évité la Tronçonneuse à roquettes Overkill de "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:504
 #, c-format
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s^K1 a été scié en deux par sa propre Tronçonneuse à roquettes Overkill%s"
-"%s"
+"^BG%s^K1 a été scié en deux par sa propre Tronçonneuse à roquettes "
+"Overkill%s%s"
 
 #: qcsrc/common/notifications/all.inc:505
 #, c-format
@@ -3847,15 +3847,15 @@ msgstr "^BG%s%s^K1 a été abattu par le Fusil de précision de ^BG%s^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s"
 msgstr ""
-"^BG%s%s^K1 est mort dans la grêle de balles du Fusil de précision de ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 est mort dans la grêle de balles du Fusil de précision de "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s"
 msgstr ""
-"^BG%s%s^K1 n'a pas pu éviter la grêle de balles du Fusil de précision de ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 n'a pas pu éviter la grêle de balles du Fusil de précision de "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
@@ -4530,7 +4530,7 @@ msgid ""
 "^K1You may not join the game at this time.\n"
 "This match is limited to ^F2%s^BG players."
 msgstr ""
-"^K1Vous ne pouvez actuellement pas rejoindre la partie.\n"
+"^K1Vous ne pouvez pas rejoindre la partie actuellement.\n"
 "Cette partie est limitée à ^F2%s^BG joueurs."
 
 #: qcsrc/common/notifications/all.inc:716

@@ -2477,8 +2477,8 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:242
@@ -3680,8 +3680,8 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:503
@@ -10331,9 +10331,10 @@ msgid "Screen resolution"
 msgstr ""
 "A csúszkával a képernyő felbontását tudod megváltoztatni. TIPP: Ha több "
 "monitorod van, és a kép az összes monitorra szét van feszítve, akkor az "
-"Egyéb -> Haladó beállításokban keresd ki a listából a \"vid_netwmfullscreen"
-"\" változót, és állítsd át az értékét \"1\"-re! Ez megoldja problémát, de "
-"ebben az esetben csak a képernyőd natív felbontását tudod csak használni!"
+"Egyéb -> Haladó beállításokban keresd ki a listából a "
+"\"vid_netwmfullscreen\" változót, és állítsd át az értékét \"1\"-re! Ez "
+"megoldja problémát, de ebben az esetben csak a képernyőd natív felbontását "
+"tudod csak használni!"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "FADESPEED^Slow"

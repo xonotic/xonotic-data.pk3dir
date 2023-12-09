@@ -26,16 +26,16 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артём Котлубай, 2022\n"
+"Last-Translator: Andrei Stepanov, 2014-2023\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
@@ -437,7 +437,7 @@ msgstr "Вид от третьего лица"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^Player models like mine"
-msgstr "Модели игроков такие же как у меня"
+msgstr "Заменить модели игроков моей"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "QMCMD^Names above players"
@@ -1842,7 +1842,7 @@ msgstr "Игра окончена!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click 'Next Level' to continue"
-msgstr "Прекрасно! Щёлкните по «Следующий уровень» для продолжения"
+msgstr "Прекрасно! Щёлкните на «Следующий уровень» для продолжения"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1181
 #: qcsrc/common/minigames/minigame/c4.qc:381
@@ -2514,8 +2514,8 @@ msgstr "^BG%s^BG захватил ^TC^TT^BG флаг"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG захватил ^TC^TT^BG флаг за ^F1%s^BG секунд, побив предыдущий рекорд "
 "^BG%s^BG — ^F2%s^BG секунды"
@@ -2802,8 +2802,8 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s"
 msgstr ""
-"^BG%s%s^K1 зацепило взрывной волной от взорвавшегося на Пауке-боте ^BG%s^K1%s"
-"%s"
+"^BG%s%s^K1 зацепило взрывной волной от взорвавшегося на Пауке-боте "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:300
 #, c-format
@@ -3712,8 +3712,8 @@ msgstr "^BG%s^K1 забыл о своей мине%s%s"
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Mortar grenade%s%s"
 msgstr ""
-"^BG%s%s^K1 оказался в зоне поражения гранаты, выпущенной из Мортиры ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 оказался в зоне поражения гранаты, выпущенной из Мортиры "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
@@ -3756,8 +3756,8 @@ msgstr "^BG%s%s^K1 был испарён Оверкилл Нексом ^BG%s^K1%
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 "^BG%s%s^K1 был распилен пополам Оверкилл Реактивной Бензопилой ^BG%s^K1%s%s"
 
@@ -3811,8 +3811,8 @@ msgstr "^BG%s%s^K1 не смог спрятаться от Винтовки ^BG%
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s"
 msgstr ""
-"^BG%s%s^K1 попал под обстрел ракетами из Самонаводчика со стороны ^BG%s^K1%s"
-"%s"
+"^BG%s%s^K1 попал под обстрел ракетами из Самонаводчика со стороны "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:513
 #, c-format
@@ -4781,11 +4781,11 @@ msgstr "^K1Вы совершите самоубийство через ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:798
 msgid "^F4Timeout begins in ^COUNT"
-msgstr "^F4Тайм-аут начнётся через ^COUNT"
+msgstr "^F4Тайм-аут начнётся через ^COUNT с"
 
 #: qcsrc/common/notifications/all.inc:799
 msgid "^F4Timeout ends in ^COUNT"
-msgstr "^F4Тайм-аут закончится через ^COUNT"
+msgstr "^F4Тайм-аут закончится через ^COUNT с"
 
 #: qcsrc/common/notifications/all.inc:801
 msgid "^K1Cannot join given minigame session!"
@@ -9538,7 +9538,7 @@ msgstr "Показывать график размеров пакетов и д�
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Packet loss compensation"
-msgstr "Смягчение потери пакетов (п/п)"
+msgstr "Смягчать потери пакетов (п/п)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "Each packet includes a copy of the previous message"
@@ -9546,7 +9546,7 @@ msgstr "Каждый пакет включает в себя копию пред
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Movement prediction error compensation"
-msgstr "Смягчение ошибок предрасчёта движения"
+msgstr "Смягчать ошибки предрасчёта движения"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:43
 msgid "Use encryption (AES) when available"

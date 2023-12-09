@@ -15,6 +15,7 @@
 # ibra kap <ibrakap@gmail.com>, 2019
 # Lucifer Morningstar, 2022
 # Lucifer Morningstar, 2022
+# Mehmet Ali Kaplan, 2023
 # Tan Siret Akıncı <tanakinci2002@gmail.com>, 2021
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Tan Siret Akıncı <tanakinci2002@gmail.com>, 2021\n"
+"Last-Translator: Mehmet Ali Kaplan, 2023\n"
 "Language-Team: Turkish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/tr/)\n"
 "Language: tr\n"
@@ -49,7 +50,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr ""
+msgstr "^3Geri sayım mesajı zamanı %s, kalan saniyeler; ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:204
 #, c-format
@@ -246,7 +247,7 @@ msgstr "Oyuncu %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:202
 msgid "Standard quick menu"
-msgstr ""
+msgstr "Standart hızlı menü"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:634
 #: qcsrc/client/hud/panel/quickmenu.qc:636
@@ -303,7 +304,7 @@ msgstr "Takım sohbet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "QMCMD^güç yakında"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -355,44 +356,44 @@ msgstr "bayrak görüldü, simge"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:838
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^savunanlar (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:838
 msgid "QMCMD^defending, icon"
-msgstr ""
+msgstr "QMCMD^savunanlar, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:839
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:839
 msgid "QMCMD^roaming, icon"
-msgstr ""
+msgstr "QMCMD^roaming, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^saldıranlar (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^attacking, icon"
-msgstr ""
+msgstr "QMCMD^saldıranlar, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^sancak-taşıyıcısı öldü (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr ""
+msgstr "QMCMD^sancak-taşıyıcısı öldü, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
-msgstr ""
+msgstr "QMCMD^sancağı düşürdü (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^dropped flag, icon"
-msgstr ""
+msgstr "QMCMD^sancağı düşürdü, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^drop weapon, icon"
@@ -404,11 +405,11 @@ msgstr "silah bırakıldı %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^drop flag/key, icon"
-msgstr ""
+msgstr "QMCMD^sancak/anahtar düştü, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^sancak/anahtar düşürüldü %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^Send private message to"
@@ -430,7 +431,7 @@ msgstr "Üçüncü şahıs görünümü"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^Player models like mine"
-msgstr ""
+msgstr "QMCMD^benimki gibi Oyuncu modelleri"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "QMCMD^Names above players"
@@ -513,19 +514,19 @@ msgstr "Takımları karıştır"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Server quick menu"
-msgstr ""
+msgstr "Hızlı sunucu menüsü"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:898
 msgid "Waypoint editor menu"
-msgstr ""
+msgstr "Hedefnokta editör menüsü"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:901
 msgid "Waypoint editor menu as default"
-msgstr ""
+msgstr "Varsayılan olarak Hedefnokta editör menüsü "
 
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 msgid "Server quick menu as default"
-msgstr ""
+msgstr "Varsayılan olarak hızlı Sunucu menüsü"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "QMCMD^Spectate a player"
@@ -594,6 +595,7 @@ msgstr "Keepaway'de topu tutma süresi"
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
 msgstr ""
+"Ne kadar sıklıkla bir sancak (BK) ya da anahtar (AnahtarAvı) ele geçirildi"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^caps"
@@ -889,11 +891,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "Number of survivals"
-msgstr ""
+msgstr "Hayatta kalanların sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "SCO^survivals"
-msgstr ""
+msgstr "SCO^Hayatta Kalanlar"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "Number of domination points taken (Domination)"
@@ -909,15 +911,15 @@ msgstr "Takım arkadaşlarını öldürme sayısı"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:176
 msgid "SCO^teamkills"
-msgstr ""
+msgstr "SCO^TakımdanÖldürülenler"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "Number of ticks (Domination)"
-msgstr ""
+msgstr "Tiklerin sayısı (Kontrol)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "SCO^ticks"
-msgstr ""
+msgstr "SCO^Tikler"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:178
 msgid "SCO^time"
@@ -925,7 +927,7 @@ msgstr "Süre"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:178
 msgid "Total time raced (Race/CTS)"
-msgstr ""
+msgstr "Yarışılan toplam zaman (Race/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:707
 msgid ""
@@ -1015,7 +1017,7 @@ msgstr "İsabet istatistikleri (ortalama %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1856
 msgid "Item stats"
-msgstr ""
+msgstr "Eşya istatistikleri"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1967
 msgid "Map stats:"
@@ -1056,17 +1058,17 @@ msgstr "Takım Seçimi"
 #: qcsrc/client/hud/panel/scoreboard.qc:2340
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
-msgstr ""
+msgstr "^7Tıklayın ^3%s^7 ya seçili takıma katılmak için"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2342
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
-msgstr ""
+msgstr "^7Tıklayın ^3%s^7 ya otomatik takım seçip katılmak için"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2346
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
-msgstr ""
+msgstr "^7Tıklayın ^3%s ^7ya spesifik bir takım seçmek için"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2357
 #, c-format
@@ -1076,7 +1078,7 @@ msgstr "^3%1.0f dakika"
 #: qcsrc/client/hud/panel/scoreboard.qc:2384
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7/^5%d ^7oyuncular"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2385 qcsrc/client/main.qc:1436
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
@@ -1130,19 +1132,19 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:126
 msgid "Warmup"
-msgstr ""
+msgstr "Isınma"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr ""
+msgstr "Isınma: çok az oyuncu"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "Isınma: zaman limiti yok"
 
 #: qcsrc/client/hud/panel/timer.qc:137
 msgid "Timeout"
-msgstr ""
+msgstr "Süre bitti"
 
 #: qcsrc/client/hud/panel/timer.qc:139
 msgid "Sudden Death"
@@ -1150,16 +1152,16 @@ msgstr "Ani ölüm"
 
 #: qcsrc/client/hud/panel/timer.qc:141
 msgid "Overtime"
-msgstr ""
+msgstr "Uzatma"
 
 #: qcsrc/client/hud/panel/timer.qc:143
 #, c-format
 msgid "Overtime #%d"
-msgstr ""
+msgstr "Uzatma #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
-msgstr ""
+msgstr "^1Hud ayarlama moduna girmeden önce yanıtlamak zorundasınız"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1243,17 +1245,17 @@ msgstr ""
 #: qcsrc/client/main.qc:1360
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
-msgstr ""
+msgstr "Arenadaki tüm hazır silahlar"
 
 #: qcsrc/client/main.qc:1361
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
-msgstr ""
+msgstr "Arenadaki çoğu silahlar"
 
 #: qcsrc/client/main.qc:1362
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
-msgstr ""
+msgstr "Arenadaki çoğu hazır silahlar"
 
 #: qcsrc/client/main.qc:1365 qcsrc/client/main.qc:1379
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
@@ -1269,42 +1271,42 @@ msgstr "%s Arena"
 #: qcsrc/client/main.qc:1388 qcsrc/client/main.qc:1393
 #, c-format
 msgid "This is %s"
-msgstr ""
+msgstr "Bu %s"
 
 #: qcsrc/client/main.qc:1389
 msgid "Your client version is outdated."
-msgstr ""
+msgstr "Sizin istemci versiyonunuz eski sürüm"
 
 #: qcsrc/client/main.qc:1390
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
-msgstr ""
+msgstr "### SİZ BU SUNUCUDA OYNAYAMAZSINIZ ###"
 
 #: qcsrc/client/main.qc:1391
 msgid "Please update!"
-msgstr ""
+msgstr "Lütfen güncelleyin!"
 
 #: qcsrc/client/main.qc:1394
 msgid "This server is using an outdated Xonotic version."
-msgstr ""
+msgstr "Bu sunucu eski bir Xonotic versiyonu kullanıyor."
 
 #: qcsrc/client/main.qc:1395
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
-msgstr ""
+msgstr "### BU SUNUCU UYUMSUZ VE BU YÜZDEN SİZ KATILAMAZSINIZ ###"
 
 #: qcsrc/client/main.qc:1397
 #, c-format
 msgid "Welcome to %s"
-msgstr ""
+msgstr "%s ya Hoşgeldiniz"
 
 #: qcsrc/client/main.qc:1411 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
-msgstr ""
+msgstr "Seviye %d:"
 
 #: qcsrc/client/main.qc:1413
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
-msgstr ""
+msgstr "^BGBasın ^F2%s^BG oyuna girmek için"
 
 #: qcsrc/client/main.qc:1434
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
@@ -1328,24 +1330,24 @@ msgstr ""
 #: qcsrc/client/main.qc:1454
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "Maksimum oyuncular %d "
 
 #: qcsrc/client/main.qc:1456
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "Minimum oyuncular %d"
 
 #: qcsrc/client/main.qc:1461
 msgid "Active modifications:"
-msgstr ""
+msgstr "Aktif modifikasyonlar:"
 
 #: qcsrc/client/main.qc:1464
 msgid "Special gameplay tips:"
-msgstr ""
+msgstr "Özel oynanış ipuçları:"
 
 #: qcsrc/client/main.qc:1471
 msgid "Server's message"
-msgstr ""
+msgstr "Sunucunun mesajı"
 
 #: qcsrc/client/main.qc:1565
 #, c-format
@@ -1381,6 +1383,8 @@ msgstr "%d saniye kaldı"
 #: qcsrc/client/mapvoting.qc:559
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr ""
+"mv_mapdownload: ^3Siz bu emiri kendi başınıza kullanma hakkına sahip "
+"değilsiniz"
 
 #: qcsrc/client/mapvoting.qc:569
 msgid "^1Error:^7 Couldn't find pak index."
@@ -1439,12 +1443,12 @@ msgstr "Turu kazanmak için tüm düşman takım unsurlarını öldür"
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr ""
+msgstr "Tur limiti:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "The amount of rounds won needed before the match will end"
-msgstr ""
+msgstr "Maçı bitmeden raundu kazanmak için kazanılması gereken puanlar"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1464,11 +1468,11 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "Capture limit:"
-msgstr ""
+msgstr "Ele geçirme limiti:"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr ""
+msgstr "Maç bitmeden elde edilmesi gereken ele geçirmeler"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
@@ -1477,7 +1481,7 @@ msgstr "Sıralamalar"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
 msgid "Race CTS"
-msgstr ""
+msgstr "Yarış CTS"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
 msgid "Race for fastest time."
@@ -1503,7 +1507,7 @@ msgstr "Hakimiyet"
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr ""
+msgstr "Maç bitmeden elde edilmesi gereken puanlar"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
@@ -1563,7 +1567,7 @@ msgstr "Hayatta kalanlar yok olana kadar hayatta kal ve öldür"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:20
 msgid "Lives:"
-msgstr ""
+msgstr "Canlar:"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
@@ -1588,7 +1592,7 @@ msgstr "Düşman kalesine gol at, kendi kaleni koru"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr ""
+msgstr "Hedef Limiti:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
@@ -1628,19 +1632,19 @@ msgstr "Turlar:"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:63
 msgid "Hunter"
-msgstr ""
+msgstr "Avcı"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:69
 msgid "Survivor"
-msgstr ""
+msgstr "Hayatta Kalan"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
-msgstr ""
+msgstr "Müttefiklerin ölmeden tüm avcıları bul ve ortadan kaldır"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Survival"
-msgstr ""
+msgstr "Hayatta Kalma"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -1653,7 +1657,7 @@ msgstr "Takım Kapışması"
 
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
-msgstr ""
+msgstr "Topu tutarak aldığın öldürmelerden takımın için puan kazan"
 
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Team Keepaway"
@@ -1671,24 +1675,24 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "Tüfek Kovanları"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
-msgstr ""
+msgstr "Mermiler"
 
 #: qcsrc/common/items/item/ammo.qh:124
 msgid "Rockets"
-msgstr ""
+msgstr "ROketler"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "Enerji Hücreleri"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
-msgstr ""
+msgstr "Plazma"
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
@@ -1730,11 +1734,11 @@ msgstr "Jetpack"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "Fuel"
-msgstr ""
+msgstr "Yakıt"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
-msgstr ""
+msgstr "Yakıt yenileyici"
 
 #: qcsrc/common/items/item/jetpack.qh:99
 msgid "Fuel regen"
@@ -1752,7 +1756,7 @@ msgstr "Öldürme sınırı"
 
 #: qcsrc/common/mapinfo.qh:89
 msgid "The amount of frags needed before the match will end"
-msgstr ""
+msgstr "Maç bitmeden elde edilmesi gereken infazların sayısı"
 
 #: qcsrc/common/minigames/cl_minigames.qc:379
 msgid "It's your turn"
@@ -1791,11 +1795,11 @@ msgstr "Küçükoyunlar"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:582
 msgid "Minigame message"
-msgstr ""
+msgstr "Minioyun mesajı"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "Dozer"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1107
 #: qcsrc/common/minigames/minigame/ps.qc:425
@@ -1856,7 +1860,7 @@ msgstr "Kaydet"
 
 #: qcsrc/common/minigames/minigame/c4.qc:2
 msgid "Connect Four"
-msgstr ""
+msgstr "Dörtlü Bağla"
 
 #: qcsrc/common/minigames/minigame/c4.qc:316
 #: qcsrc/common/minigames/minigame/c4.qc:322
@@ -1904,7 +1908,7 @@ msgstr "Parçanızı yerleştirmek için oyun tahtasına tıklayın"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:3
 msgid "Nine Men's Morris"
-msgstr ""
+msgstr "9 Adam'ın Morrisi"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:619
 msgid ""
@@ -1924,7 +1928,7 @@ msgstr "Rakibin parçalarından birini alabilirsin"
 
 #: qcsrc/common/minigames/minigame/pong.qc:2
 msgid "Pong"
-msgstr ""
+msgstr "Pong"
 
 #: qcsrc/common/minigames/minigame/pong.qc:607
 #: qcsrc/common/minigames/minigame/ttt.qc:309
@@ -1950,7 +1954,7 @@ msgstr "YZ Oyuncusunu Sil"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
-msgstr ""
+msgstr "İttir-Çek"
 
 #: qcsrc/common/minigames/minigame/pp.qc:456
 #: qcsrc/common/minigames/minigame/ttt.qc:339
@@ -1967,7 +1971,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:464
 #: qcsrc/common/minigames/minigame/ttt.qc:347
 msgid "Wait for your opponent to confirm the rematch"
-msgstr ""
+msgstr "Rakibinizin rövanş için onaylamasını bekleyiniz"
 
 #: qcsrc/common/minigames/minigame/pp.qc:613
 #: qcsrc/common/minigames/minigame/ttt.qc:698
@@ -1980,11 +1984,11 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/ps.qc:418
 msgid "All pieces cleared!"
-msgstr ""
+msgstr "Tüm parçalar temizlendi!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:420
 msgid "Remaining pieces:"
-msgstr ""
+msgstr "Kalan parçalar:"
 
 #: qcsrc/common/minigames/minigame/ps.qc:488
 #, c-format
@@ -2014,7 +2018,7 @@ msgstr "Tek Oyuncu"
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Golem"
-msgstr ""
+msgstr "Golem:"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
@@ -2023,7 +2027,7 @@ msgstr "Sihirbaz"
 
 #: qcsrc/common/monsters/monster/mage.qh:29
 msgid "Mage spike"
-msgstr ""
+msgstr "Büyücü dikeni"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2036,7 +2040,7 @@ msgstr "Örümcek saldırısı"
 
 #: qcsrc/common/monsters/monster/spider.qh:39
 msgid "Webbed"
-msgstr ""
+msgstr "Ağlandı"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
@@ -2142,7 +2146,7 @@ msgstr "Dost ateşi için hasar numarası çizin"
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:9
 #: qcsrc/menu/xonotic/keybinder.qc:45
 msgid "off-hand hook"
-msgstr ""
+msgstr "boş-el kancası"
 
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
@@ -2151,7 +2155,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:33
 msgid "Vaporizer ammo"
-msgstr ""
+msgstr "Buharlaştırıcı mermisi"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:59
 #: qcsrc/common/mutators/mutator/instagib/items.qh:62
@@ -2188,20 +2192,20 @@ msgstr "Tuzak bombası"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:88
 msgid "Veil grenade"
-msgstr ""
+msgstr "Örtü bombası"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:99
 msgid "Ammo grenade"
-msgstr ""
+msgstr "Cephane bombası"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:109
 msgid "Darkness grenade"
-msgstr ""
+msgstr "Karanlık bombası"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
-msgstr ""
+msgstr "silah bırakma / bomba atma"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:141
 #, c-format
@@ -2219,15 +2223,15 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:22
 msgid "Overkill Heavy Machine Gun"
-msgstr ""
+msgstr "Aşırıhasar ağır makineli tüfek"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:20
 msgid "Overkill MachineGun"
-msgstr ""
+msgstr "Aşırıhasar makineli tüfek"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
 msgid "Overkill Nex"
-msgstr ""
+msgstr "Aşırıshasar Nex"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:22
 msgid "Overkill Rocket Propelled Chainsaw"
@@ -2235,7 +2239,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
-msgstr ""
+msgstr "Aşırıhasar Pompalı Tüfek"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
@@ -2263,19 +2267,19 @@ msgstr "Kuvvet"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
-msgstr ""
+msgstr "Yanıyor"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
-msgstr ""
+msgstr "Diriliş Kalkanı"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/stunned.qh:16
 msgid "Stunned"
-msgstr ""
+msgstr "Sersemlemiş"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
-msgstr ""
+msgstr "Süpersilahlar"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -2299,7 +2303,7 @@ msgstr "Soğuk!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:11
 msgid "Reviving"
-msgstr ""
+msgstr "Yeniden canlanıyor"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
@@ -2410,11 +2414,11 @@ msgstr "Küre taşıyıcı"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:55
 msgid "Leader"
-msgstr ""
+msgstr "Lider"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:58
 msgid "Goal"
-msgstr ""
+msgstr "Hedef"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:63
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:64
@@ -2478,8 +2482,8 @@ msgstr "^BG%s^BG ^TC^TT^BG bayrağı ele geçirildi"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:242
@@ -2604,12 +2608,12 @@ msgstr "^F2Bir sonraki raundu izleyeceksin"
 
 #: qcsrc/common/notifications/all.inc:273
 msgid "^F2Match is restarting..."
-msgstr ""
+msgstr "^F2Maç yeniden başlatılıyor..."
 
 #: qcsrc/common/notifications/all.inc:274
 #: qcsrc/common/notifications/all.inc:548
 msgid "^F4Countdown stopped!"
-msgstr ""
+msgstr "^F4Gerisayım durduruldu!"
 
 #: qcsrc/common/notifications/all.inc:276
 #, c-format
@@ -3263,7 +3267,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:408
 msgid "^BGMonsters are currently disabled"
-msgstr ""
+msgstr "^BGCanavarlar şuan kapatıldı"
 
 #: qcsrc/common/notifications/all.inc:410
 msgid "^BGThe ^TC^TT^BG team held the ball for too long"
@@ -3291,7 +3295,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:416
 msgid "^TC^TT^BG generator has been destroyed"
-msgstr ""
+msgstr "^TC^TT^BG bir jeneratör yok edildi"
 
 #: qcsrc/common/notifications/all.inc:417
 msgid "^TC^TT^BG generator spontaneously combusted due to overtime!"
@@ -3681,8 +3685,8 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:503
@@ -3794,11 +3798,11 @@ msgstr "^F4Artık yalnızsın!"
 
 #: qcsrc/common/notifications/all.inc:544
 msgid "^BGYou are attacking!"
-msgstr ""
+msgstr "^BGSaldırıdasın!"
 
 #: qcsrc/common/notifications/all.inc:545
 msgid "^BGYou are defending!"
-msgstr ""
+msgstr "^BGSavunmadasın!"
 
 #: qcsrc/common/notifications/all.inc:546
 #, c-format
@@ -3812,24 +3816,24 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:549
 msgid "^BGBegin!"
-msgstr ""
+msgstr "^BGBaşla!"
 
 #: qcsrc/common/notifications/all.inc:550
 msgid "^BGGame starts in"
-msgstr ""
+msgstr "^BGOyun başlıyor"
 
 #: qcsrc/common/notifications/all.inc:551
 #, c-format
 msgid "^BGRound %s starts in"
-msgstr ""
+msgstr "^BGRaunt %s içinde başlıyor"
 
 #: qcsrc/common/notifications/all.inc:552
 msgid "^F4Round cannot start"
-msgstr ""
+msgstr "^F4Raunt başlayamaz"
 
 #: qcsrc/common/notifications/all.inc:557
 msgid "^F2Don't camp!"
-msgstr ""
+msgstr "^F2Pusma!"
 
 #: qcsrc/common/notifications/all.inc:561
 msgid ""
@@ -3840,7 +3844,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:562
 msgid "^BGThis flag is currently inactive"
-msgstr ""
+msgstr "^BGBu bayrak şu an aktif değil"
 
 #: qcsrc/common/notifications/all.inc:563
 msgid ""
@@ -3989,7 +3993,7 @@ msgstr "^BGArtık düşmanlar seni radarda görebilir!"
 
 #: qcsrc/common/notifications/all.inc:594
 msgid "^BGYou returned the ^TC^TT^BG flag!"
-msgstr ""
+msgstr "^BGSen geri getirdin ^TC^TT^BG sancağı!"
 
 #: qcsrc/common/notifications/all.inc:595
 msgid "^BGStalemate! Enemies can now see you on radar!"
@@ -4070,7 +4074,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:637
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
-msgstr ""
+msgstr "^F2Sen bir ^K1BONUS BOMBA^F2! kazandın"
 
 #: qcsrc/common/notifications/all.inc:639
 #, c-format
@@ -4083,7 +4087,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:640
 msgid "^K1You were punished for attacking your team mates!"
-msgstr ""
+msgstr "^K1Takım arkadaşlarına saldırdığın için cezalandırıldın!"
 
 #: qcsrc/common/notifications/all.inc:641
 msgid "^K1Die camper!"
@@ -4132,7 +4136,7 @@ msgstr "^K1Sıcaklığa dayanamadın!"
 
 #: qcsrc/common/notifications/all.inc:649
 msgid "^K1You need to watch out for monsters!"
-msgstr ""
+msgstr "^K1Canavarlara dikkat et!"
 
 #: qcsrc/common/notifications/all.inc:649
 msgid "^K1You were killed by a monster!"
@@ -4140,23 +4144,23 @@ msgstr "^K1Bir canavar tarafından öldürüldün"
 
 #: qcsrc/common/notifications/all.inc:650
 msgid "^K1Tastes like chicken!"
-msgstr ""
+msgstr "^K1Tadı tavuk gibi!"
 
 #: qcsrc/common/notifications/all.inc:650
 msgid "^K1You forgot to put the pin back in!"
-msgstr ""
+msgstr "^K1Pini geri takmayı unuttun!"
 
 #: qcsrc/common/notifications/all.inc:651
 msgid "^K1Hanging around a napalm explosion is bad!"
-msgstr ""
+msgstr "^K1Napalm patlamasının çevresinde takılmak kötüdür!"
 
 #: qcsrc/common/notifications/all.inc:652
 msgid "^K1You felt a little chilly!"
-msgstr ""
+msgstr "^K1Biraz serinlik hissettin!"
 
 #: qcsrc/common/notifications/all.inc:652
 msgid "^K1You got a little bit too cold!"
-msgstr ""
+msgstr "^K1Biraz fazla soğuğa yakalandın!"
 
 #: qcsrc/common/notifications/all.inc:653
 msgid "^K1Your Healing Nade is a bit defective"

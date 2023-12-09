@@ -1,1 +1,31 @@
 #pragma once
+
+bool autocvar_cl_damagetext;
+string autocvar_cl_damagetext_format;
+bool autocvar_cl_damagetext_format_verbose;
+bool autocvar_cl_damagetext_format_hide_redundant;
+vector autocvar_cl_damagetext_color;
+bool autocvar_cl_damagetext_color_per_weapon;
+float autocvar_cl_damagetext_size_min;
+float autocvar_cl_damagetext_size_min_damage;
+float autocvar_cl_damagetext_size_max;
+float autocvar_cl_damagetext_size_max_damage;
+float autocvar_cl_damagetext_alpha_start;
+float autocvar_cl_damagetext_alpha_lifetime;
+vector autocvar_cl_damagetext_velocity_world;
+vector autocvar_cl_damagetext_offset_world;
+float autocvar_cl_damagetext_accumulate_alpha_rel;
+int autocvar_cl_damagetext_friendlyfire;
+vector autocvar_cl_damagetext_friendlyfire_color;
+
+bool autocvar_cl_damagetext_2d;
+vector autocvar_cl_damagetext_2d_pos;
+float autocvar_cl_damagetext_2d_alpha_start;
+float autocvar_cl_damagetext_2d_alpha_lifetime;
+float autocvar_cl_damagetext_2d_size_lifetime;
+vector autocvar_cl_damagetext_2d_velocity;
+vector autocvar_cl_damagetext_2d_overlap_offset;
+float autocvar_cl_damagetext_2d_close_range;
+bool autocvar_cl_damagetext_2d_out_of_view;
+vector autocvar_cl_damagetext_velocity_screen;
+vector autocvar_cl_damagetext_offset_screen;

@@ -963,10 +963,57 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					float a;
 					float c;
 					vector hitloc;
-					vector center;
 
 					// if it's a player, use the view origin as reference
-					center = CENTER_OR_VIEWOFS(targ);
+					vector center = CENTER_OR_VIEWOFS(targ);
+
+					if (autocvar_g_player_damageplayercenter)
+					{
+						if (targ != attacker)
+						{
+							// always use target's bbox centerpoint
+							center = targ.origin + ((targ.mins + targ.maxs) * 0.5);
+						}
+						else // targ == attacker
+						{
+						#if 0
+							// code stolen from W_SetupShot_Dir_ProjectileSize_Range()
+							vector md = targ.(weaponentity).movedir;
+							vector dv = v_right * -md.y + v_up * md.z;
+							vector mi = '0 0 0', ma = '0 0 0';
+
+							if(IS_CLIENT(targ)) // no antilag for non-clients!
+							{
+								if(CS(targ).antilag_debug)
+									tracebox_antilag(targ, center, mi, ma, center + dv, MOVE_NORMAL, targ, CS(targ).antilag_debug);
+								else
+									tracebox_antilag(targ, center, mi, ma, center + dv, MOVE_NORMAL, targ, ANTILAG_LATENCY(targ));
+							}
+							else
+								tracebox(center, mi, ma, center + dv, MOVE_NORMAL, targ);
+
+							center.z = trace_endpos.z;
+						#else
+							// very cheap way but it skips move into solid checks which is fine most of the time for now AFAIK
+							// this should only really be an issue with some rare edge cases where
+							// shot origin was prevented from going into a ceiling but it still explodes at the ceiling
+							// shot origin wasn't raised as high as possible and the shooter gets upwards knockback
+							// TL;DR: no bugs if vertical shot origin is always within player bbox
+							center.z = center.z + targ.(weaponentity).movedir.z;
+						#endif
+						}
+					}
+
+					/* debug prints
+					print(sprintf("origin  vec %v\n", targ.origin));
+					print(sprintf("movedir vec %v\n", targ.(weaponentity).movedir));
+					print(sprintf("old def vec %v\n", CENTER_OR_VIEWOFS(targ)));
+					print(sprintf("origin+vofs %v\n", targ.origin + targ.view_ofs));
+					print(sprintf("bbox center %v\n", (targ.origin + ((targ.mins + targ.maxs) * 0.5))));
+					print(sprintf("center  vec %v\n", center));
+					print(sprintf("shotorg vec %v\n", w_shotorg));
+					print("\n");
+					*/
 
 					force = normalize(center - inflictororigin_wz);
 					force = force * (finaldmg / max(coredamage, edgedamage)) * forceintensity;

@@ -289,6 +289,65 @@ spawnfunc(target_fragsFilter)
 	this.use = fragsfilter_use;
 }
 
+#define PRINT_REDTEAM BIT(0) // Q3 only, not used in Q3DF
+#define PRINT_BLUETEAM BIT(1) // Q3 only, not used in Q3DF
+#define PRINT_PRIVATE BIT(2) // Q3 only, not used in Q3DF
+#define PRINT_BROADCAST BIT(3) // Q3DF only, default behavior in Q3
+
+void target_print_message(entity this, entity actor)
+{
+	centerprint(actor, this.message);
+	play2(actor, SND(TALK));
+}
+
+void target_print_use(entity this, entity actor, entity trigger)
+{
+	if(!IS_PLAYER(actor))
+		return;
+
+	if(this.message == "")
+		return;
+
+	bool priv, red, blue;
+	if(!(q3compat & Q3COMPAT_DEFI)) // Q3 spawnflags
+	{
+		priv = boolean(this.spawnflags & PRINT_PRIVATE);
+		red = boolean(this.spawnflags & PRINT_REDTEAM);
+		blue = boolean(this.spawnflags & PRINT_BLUETEAM);
+	}
+	else // Q3DF spawnflags
+	{
+		priv = !boolean(this.spawnflags & PRINT_BROADCAST);
+		red = blue = false;
+	}
+
+	if(priv)
+	{
+		target_print_message(this, actor);
+	}
+	else
+	{
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && ((!red && !blue) || (red && it.team == NUM_TEAM_1) || (blue && it.team == NUM_TEAM_2)), target_print_message(this, it));
+	}
+}
+
+/*
+ * ENTITY PARAMETERS:
+ *
+ *   message: text string to print on screen.
+ *   targetname: the activating trigger points to this.
+ */
+spawnfunc(target_print)
+{
+	this.use = target_print_use;
+}
+
+// target_smallprint, Q3DF only
+spawnfunc(target_smallprint)
+{
+	spawnfunc_target_print(this);
+}
+
 .bool notteam;
 .bool notsingle;
 .bool notfree;
