@@ -576,12 +576,15 @@ METHOD(Crylink, wr_aim, void(entity thiswep, entity actor, .entity weaponentity)
 			return;
 		}
 
-		float pred_time = max(0.01, 200 / WEP_CVAR_PRI(crylink, speed));
+		// time needed for ring projectiles to come back to the center after release
+		float join_time = max(0.01, 200 / WEP_CVAR_PRI(crylink, speed));
 		IL_EACH(g_bot_targets, it.bot_attack && it != actor,
 		{
-			vector target_pos = it.origin + (it.maxs - it.mins) * 0.5;
+			// target radius is reduced for low skilled bots so that they hardly join projectiles
 			float target_radius = map_bound_ranges(skill, 0, 10, 10, 50);
-			if (vdist(target_pos - (first_proj.origin + first_proj.velocity * pred_time), <=, target_radius))
+			vector predicted_target_pos = it.origin + (it.maxs - it.mins) * 0.5 + it.velocity * join_time;
+			vector predicted_proj_pos = first_proj.origin + first_proj.velocity * join_time;
+			if (vdist(predicted_target_pos - predicted_proj_pos, <=, target_radius))
 			{
 				PHYS_INPUT_BUTTON_ATCK(actor) = false;
 				actor.crylink_released_for_bot_time = time;
