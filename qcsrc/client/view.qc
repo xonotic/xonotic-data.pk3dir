@@ -1641,9 +1641,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	else if(game_stopped_time && !STAT(GAME_STOPPED))
 		game_stopped_time = 0;
 
-	// fire intermission hooks here once intermission starts
-	// do not fire game/demo end hooks here as we are
-	// still running something until the CSQC VM is shutdown
+	// fire intermission hooks here
+	// game/demo end hooks are executed on CSQC VM shutdown
 	if(intermission && !(calledhooks & HOOK_INTERMISSION))
 	{
 		if(!isdemo())
