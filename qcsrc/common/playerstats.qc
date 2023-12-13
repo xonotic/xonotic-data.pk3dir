@@ -258,22 +258,21 @@ void PlayerStats_GameReport(bool finished)
 		PlayerStats_GameReport_FinalizePlayer(it);
 	});
 
-	if(autocvar_g_playerstats_gamereport_uri != "")
-	{
-		PlayerStats_GameReport_DelayMapVote = true;
-		url_multi_fopen(
-			autocvar_g_playerstats_gamereport_uri,
-			FILE_APPEND,
-			PlayerStats_GameReport_Handler,
-			NULL
-		);
-	}
-	else
+	if(autocvar_g_playerstats_gamereport_uri == "" || warmup_stage)
 	{
 		PlayerStats_GameReport_DelayMapVote = false;
 		db_close(PS_GR_OUT_DB);
 		PS_GR_OUT_DB = -1;
+		return;
 	}
+
+	PlayerStats_GameReport_DelayMapVote = true;
+	url_multi_fopen(
+		autocvar_g_playerstats_gamereport_uri,
+		FILE_APPEND,
+		PlayerStats_GameReport_Handler,
+		NULL
+	);
 }
 
 void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that scores are added properly
