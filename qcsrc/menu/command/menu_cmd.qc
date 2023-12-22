@@ -55,7 +55,7 @@ void GameCommand(string theCommand)
 		LOG_HELP("   if <item> is not specified it shows the list of available items in the console");
 		LOG_HELP("  'dumptree' dumps the state of the menu as a tree to the console");
 		LOG_HELP("  'isdemo' checks if engine is currently running a demo. If given an <item> then 1 / 0 is placed");
-		LOG_HELP("   in a cvar with that name. Otherwise _menu_isdemo cvar is written to.");
+		LOG_HELP("   in the cvar with that name. Otherwise without an argument the result is printed to console.");
 
 		LOG_HELP("\nGeneric commands shared by all programs:");
 		GenericCommand_macro_help();
@@ -205,20 +205,17 @@ void GameCommand(string theCommand)
 
 	if (argv(0) == "isdemo")
 	{
-		if (isdemo())
+		int value = isdemo();
+
+		if (argv(1) != "")
 		{
-			if (argv(1) != "")
-				cvar_set(argv(1), "1");
-			else
-				localcmd("\nset _menu_isdemo 1\n");
+			cvar_set(argv(1), ftos(value));
 		}
 		else
 		{
-			if (argv(1) != "")
-				cvar_set(argv(1), "0");
-			else
-				localcmd("\nset _menu_isdemo 0\n");
+			print(sprintf("%d\n", value));
 		}
+
 		return;
 	}
 
