@@ -569,8 +569,6 @@ METHOD(WalkerTurret, tr_death, void(WalkerTurret this, entity it))
 }
 METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
 {
-    it.ticrate = 0.05;
-
     // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
     if(it.move_movetype == MOVETYPE_WALK)
     {

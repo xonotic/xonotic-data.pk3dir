@@ -841,7 +841,7 @@ void Monster_Remove(entity this)
 
 void Monster_Dead_Think(entity this)
 {
-	this.nextthink = time + this.ticrate;
+	this.nextthink = time;
 
 	Monster mon = REGISTRY_GET(Monsters, this.monsterid);
 	mon.mr_deadthink(mon, this);
@@ -1150,7 +1150,7 @@ void Monster_Frozen_Think(entity this)
 {
 	if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 	{
-		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + this.ticrate * this.revive_speed, 1);
+		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
 		SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * this.max_health));
 		if (this.iceblock)
 			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
@@ -1163,7 +1163,7 @@ void Monster_Frozen_Think(entity this)
 	}
 	else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
 	{
-		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - this.ticrate * this.revive_speed, 1);
+		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
 		SetResourceExplicit(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (this.max_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
 
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE) && this.sprite)
@@ -1226,7 +1226,7 @@ void Monster_Enemy_Check(entity this)
 void Monster_Think(entity this)
 {
 	setthink(this, Monster_Think);
-	this.nextthink = time + this.ticrate;
+	this.nextthink = time;
 
 	if(this.monster_lifetime && time >= this.monster_lifetime)
 	{
@@ -1314,7 +1314,7 @@ bool Monster_Spawn_Setup(entity this)
 	}
 
 	setthink(this, Monster_Think);
-	this.nextthink = time + this.ticrate;
+	this.nextthink = time;
 
 	if(MUTATOR_CALLHOOK(MonsterSpawn, this))
 		return false;
@@ -1428,8 +1428,6 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 
 	setsize(this, RoundPerfectVector(mon.m_mins * this.scale), RoundPerfectVector(mon.m_maxs * this.scale));
 	this.view_ofs			= '0 0 0.7' * (this.maxs_z * 0.5);
-
-	this.ticrate = bound(sys_frametime, ((!this.ticrate) ? autocvar_g_monsters_think_delay : this.ticrate), 60);
 
 	Monster_UpdateModel(this);
 
