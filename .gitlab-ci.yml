@@ -8,7 +8,6 @@ before_script:
   - ln -s $PWD data/xonotic-data.pk3dir
 
   - export MAKEFLAGS=-j$(nproc); echo MAKEFLAGS=$MAKEFLAGS
-#   FIXME: -march=native -mtune=native _changes the hash_, why?!?
 # - export CC="gcc -pipe -march=native -mtune=native"
   - export CC="gcc -pipe"
 
@@ -75,7 +74,7 @@ test_sv_game:
     - wget -nv -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
     - wget -nv -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
 
-    - EXPECT=27f38dfbbd72e4bf8f9b540882d5ccbe
+    - EXPECT=210a5126bffa3cd2acdb8d62bcec9e11
     - HASH=$(${ENGINE} +exec serverbench.cfg
       | tee /dev/stderr
       | grep '^:'
