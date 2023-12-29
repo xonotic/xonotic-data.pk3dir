@@ -259,17 +259,20 @@ NET_HANDLE(damagetext, bool isNew)
 	bool is2d;
 	entity entDT = NULL; // which DT to update
 
+	float alphathreshold = autocvar_cl_damagetext_accumulate_alpha_rel
+	                * autocvar_cl_damagetext_alpha_start;
+
 	// check if this entity already has a DamageText for it
 	IL_EACH(g_damagetext, it.m_group == server_entity_index, {
 		// if the time window where damage accumulates closes,
 		// disown the parent entity from this DamageText
 		// and (likely) give the entity a new DT afterwards
 		// this should only cancel damage accumulation for this DT
-		if (autocvar_cl_damagetext_accumulate_lifetime > 0 // negative never disowns
-		&& (time - it.hit_time > autocvar_cl_damagetext_accumulate_lifetime))
+		if ((autocvar_cl_damagetext_accumulate_lifetime >= 0) // negative never disowns
+		&& (time - it.hit_time > autocvar_cl_damagetext_accumulate_lifetime)
+		&& (current_alpha(it) > alphathreshold))
 		{
 			it.m_group = 0;
-			break;
 		}
 		else
 		{
@@ -278,8 +281,8 @@ NET_HANDLE(damagetext, bool isNew)
 			potential_damage += it.m_potential_damage;
 
 			entDT = it;
-			break;
 		}
+		break;
 	});
 
 	if (can_use_3d && !prefer_2d)
@@ -288,10 +291,7 @@ NET_HANDLE(damagetext, bool isNew)
 		is2d = false;
 		position = entcs.origin;
 
-		float threshold = autocvar_cl_damagetext_accumulate_alpha_rel
-		                * autocvar_cl_damagetext_alpha_start;
-
-		if (entDT && current_alpha(entDT) > threshold)
+		if (entDT)
 			goto updateDT;
 
 		// 3D DamageTexts can later be changed into 2D,
