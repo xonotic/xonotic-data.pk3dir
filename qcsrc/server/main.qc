@@ -5,6 +5,7 @@
 #include <common/deathtypes/all.qh>
 #include <common/debug.qh>
 #include <common/mapinfo.qh>
+#include <common/mapobjects/_mod.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <common/util.qh>
 #include <common/vehicles/all.qh>
@@ -187,12 +188,14 @@ void CreatureFrame_All()
 	});
 }
 
+// called shortly after map change in dedicated
 void Pause_TryPause_Dedicated(entity this)
 {
-	if (player_count == 0)
+	if (player_count == 0 && !intermission_running && !autocvar__endmatch)
 		setpause(1);
 }
 
+// called every normal frame in singleplayer/listen
 void Pause_TryPause()
 {
 	int n = 0, p = 0;
@@ -207,9 +210,12 @@ void Pause_TryPause()
 		setpause(0);
 }
 
+// called every paused frame by DP
 void SV_PausedTic(float elapsedtime)
 {
-	if (!server_is_dedicated)
+	if (autocvar__endmatch) // `endmatch` while paused
+		setpause(0); // proceed to intermission
+	else if (!server_is_dedicated)
 	{
 		if (autocvar_sv_autopause)
 			Pause_TryPause();
@@ -288,12 +294,17 @@ void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
 {
+	IL_EACH(g_moveables, it.last_pushed,
+	{
+		if(!WarpZoneLib_ExactTrigger_Touch(it.last_pushed, it, false))
+			it.last_pushed = NULL;
+	});
+
 	// TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
 	IL_EACH(g_players, IS_FAKE_CLIENT(it), sys_phys_update(it, frametime));
 	IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPreThink(it));
 
 	execute_next_frame();
-	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause();
 
 	delete_fn = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
@@ -345,6 +356,10 @@ void StartFrame()
 
 	CreatureFrame_All();
 	CheckRules_World();
+
+	// after CheckRules_World() as it may set intermission_running, and after RedirectionThink() in case listen server is closing
+	if (autocvar_sv_autopause && !server_is_dedicated && !intermission_running)
+		Pause_TryPause();
 
 	if (warmup_stage && !game_stopped && warmup_limit > 0 && time - game_starttime >= warmup_limit) {
 		ReadyRestart(true);

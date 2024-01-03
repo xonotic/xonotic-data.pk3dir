@@ -63,7 +63,6 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     int deathtype = M_ARGV(5, int);
     float potential_damage = M_ARGV(6, float);
     if(DEATH_WEAPONOF(deathtype) == WEP_VAPORIZER) return;
-    if(deathtype == DEATH_FIRE.m_id || deathtype == DEATH_BUFF.m_id) return; // TODO: exclude damage over time and thorn effects
 
     int flags = 0;
     if (SAME_TEAM(hit, attacker)) flags |= DTFLAG_SAMETEAM;
