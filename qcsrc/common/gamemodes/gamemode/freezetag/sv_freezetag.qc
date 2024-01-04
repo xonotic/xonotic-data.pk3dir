@@ -3,9 +3,11 @@
 #include <common/resources/sv_resources.qh>
 #include <server/elimination.qh>
 
+int autocvar_g_freezetag_frozen_lives = 2;
 float autocvar_g_freezetag_frozen_maxtime;
 float autocvar_g_freezetag_revive_clearspeed;
 float autocvar_g_freezetag_round_timelimit;
+int autocvar_g_freezetag_spectate_enemies;
 //int autocvar_g_freezetag_teams;
 int autocvar_g_freezetag_teams_override;
 float autocvar_g_freezetag_warmup;
@@ -18,6 +20,19 @@ float autocvar_g_ft_start_ammo_rockets = 160;
 float autocvar_g_ft_start_ammo_cells = 180;
 float autocvar_g_ft_start_ammo_plasma = 180;
 float autocvar_g_ft_start_ammo_fuel = 0;
+
+.int lives;
+const int FT_INFINITE_LIVES = 100; // this number appears in the description of g_freezetag_frozen_lives too
+bool g_freezetag_spectate_enemies; // updated on map reset
+
+int freezetag_Get_Start_Lives()
+{
+	int start_lives = bound(0, autocvar_g_freezetag_frozen_lives, FT_INFINITE_LIVES);
+	// 0 lives is not acceptable because players would die without getting frozen even once
+	if (!autocvar_g_freezetag_frozen_lives || warmup_stage)
+		start_lives = FT_INFINITE_LIVES;
+	return start_lives;
+}
 
 void freezetag_count_alive_players()
 {
@@ -197,6 +212,8 @@ bool freezetag_isEliminated(entity e)
 {
 	if(IS_PLAYER(e) && (STAT(FROZEN, e) == FROZEN_NORMAL || IS_DEAD(e)))
 		return true;
+	if(INGAME_JOINED(e) && e.frags == FRAGS_PLAYER_OUT_OF_GAME)
+		return true;
 	return false;
 }
 
@@ -315,6 +332,8 @@ void ft_RemovePlayer(entity this)
 		freezetag_LastPlayerForTeam_Notify(this);
 	Unfreeze(this, false);
 
+	this.lives = 0;
+	INGAME_STATUS_CLEAR(this);
 	SetResourceExplicit(this, RES_HEALTH, 0); // neccessary to correctly count alive players
 	freezetag_count_alive_players();
 }
@@ -331,7 +350,29 @@ MUTATOR_HOOKFUNCTION(ft, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	ft_RemovePlayer(player);
+	bool is_forced = M_ARGV(1, bool);
+	if (is_forced && INGAME(player))
+	{
+		INGAME_STATUS_CLEAR(player);
+		ft_RemovePlayer(player);
+	}
+
+	if (player.killindicator_teamchange == -2) // player wants to spectate
+	{
+		entcs_update_players(player);
+		INGAME_STATUS_CLEAR(player);
+		ft_RemovePlayer(player);
+	}
+	if (INGAME(player))
+	{
+		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
+		player.would_spectate = observe_blocked_if_eliminated; // if blocked from observing force to spectate now
+	}
+	if (!warmup_stage)
+		eliminatedPlayers.SendFlags |= 1;
+	if (!INGAME(player))
+		return false;  // allow team reset
+	return true;  // prevent team reset
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerDies)
@@ -359,8 +400,19 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	// if you succeed changing team through the menu
 	if (frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 	{
-		freezetag_Add_Score(frag_target, frag_attacker);
 		freezetag_count_alive_players();
+		// anticipate Unfreeze call here otherwise when it gets called later it will reset
+		// freezetag_frozen_timeout to a value > 0 and player won't get frozen on respawn
+		if (STAT(FROZEN, frag_target) == FROZEN_NORMAL)
+			Unfreeze(frag_target, true);
+		else if (!warmup_stage)
+		{
+			if (frag_target.lives < FT_INFINITE_LIVES)
+			{
+				frag_target.lives--;
+				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_LIVES_REMAINING, frag_target.lives);
+			}
+		}
 		freezetag_LastPlayerForTeam_Notify(frag_target);
 		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		return true;
@@ -373,43 +425,86 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		if ((STAT(FROZEN, frag_target) != FROZEN_NORMAL) && !IS_PLAYER(frag_attacker))
 			GameRules_scoring_add(frag_target, SCORE, -1);
 
-		// by restoring some health right after player death (soft-kill)
-		// weapons and ammo won't be reset
-		SetResourceExplicit(frag_target, RES_HEALTH, 1);
-		// restore armor as it was removed in PlayerDamage
-		SetResourceExplicit(frag_target, RES_ARMOR, frag_target.freezetag_frozen_armor);
+		if (frag_target.lives > 0 || (!frag_target.lives && STAT(FROZEN, frag_target) == FROZEN_NORMAL))
+		{
+			// by restoring some health right after player death (soft-kill)
+			// weapons and ammo won't be reset
+			SetResourceExplicit(frag_target, RES_HEALTH, 1);
+			// restore armor as it was removed in PlayerDamage
+			SetResourceExplicit(frag_target, RES_ARMOR, frag_target.freezetag_frozen_armor);
 
-		// relocate
-		entity spot = SelectSpawnPoint(frag_target, true);
-		setorigin(frag_target, spot.origin);
-		frag_target.oldorigin = frag_target.origin;
-		frag_target.fixangle = true; // turn this way immediately
-		frag_target.angles = vec2(spot.angles);
-		frag_target.velocity = '0 0 0';
-		frag_target.oldvelocity = frag_target.velocity; // prevents fall damage, see CreatureFrame_FallDamage
-		frag_target.avelocity = '0 0 0';
-		frag_target.punchangle = '0 0 0';
-		frag_target.punchvector = '0 0 0';
+			// relocate
+			entity spot = SelectSpawnPoint(frag_target, true);
+			setorigin(frag_target, spot.origin);
+			frag_target.oldorigin = frag_target.origin;
+			frag_target.fixangle = true; // turn this way immediately
+			frag_target.angles = vec2(spot.angles);
+			frag_target.velocity = '0 0 0';
+			frag_target.oldvelocity = frag_target.velocity; // prevents fall damage, see CreatureFrame_FallDamage
+			frag_target.avelocity = '0 0 0';
+			frag_target.punchangle = '0 0 0';
+			frag_target.punchvector = '0 0 0';
+		}
 	}
 
 	if (STAT(FROZEN, frag_target) == FROZEN_NORMAL)
 		return true;
 
-	freezetag_Freeze(frag_target, frag_attacker);
-	freezetag_LastPlayerForTeam_Notify(frag_target);
-
-	if(frag_attacker == frag_target || frag_attacker == NULL)
+	// player died and is not frozen
+	if (frag_target.lives > 0)
 	{
-		if(IS_PLAYER(frag_target))
-			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_SELF);
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_SELF, frag_target.netname);
+		// freeze
+		freezetag_Freeze(frag_target, frag_attacker);
+		if (!warmup_stage)
+		{
+			if (frag_target.lives < FT_INFINITE_LIVES)
+			{
+				frag_target.lives--;
+				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_LIVES_REMAINING, frag_target.lives);
+			}
+		}
 	}
 	else
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname);
+		// schedule respawn, player will be moved to observer on respawn
+		frag_target.respawn_flags = RESPAWN_SILENT;
+		// prevent unwanted sudden rejoin as spectator and movement of spectator camera
+		frag_target.respawn_time = time + 2;
+		frag_target.respawn_flags |= RESPAWN_FORCE;
+		eliminatedPlayers.SendFlags |= 1;
+		frag_target.lives = -1;
+		freezetag_Add_Score(frag_target, frag_attacker);
+		freezetag_count_alive_players();
+	}
+	freezetag_LastPlayerForTeam_Notify(frag_target);
+
+	if (frag_target.lives > 0)
+	{
+		if(frag_attacker == frag_target || frag_attacker == NULL)
+		{
+			if(IS_PLAYER(frag_target))
+				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_SELF);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_SELF, frag_target.netname);
+		}
+		else
+		{
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname);
+		}
 	}
 
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(ft, ForbidSpawn)
+{
+	entity player = M_ARGV(0, entity);
+
+	// if player lost all their lives and is observing, this check prevents any attempt
+	// to join that would only cause observer to respawn in another spawnpoint (as observer)
+	if (player.lives == -1) // player lost all their lives
+		return true;
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
@@ -425,6 +520,9 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 		return true;
 	}
 
+	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
+	player.lives = freezetag_Get_Start_Lives();
+
 	freezetag_count_alive_players();
 
 	if(round_handler_IsActive())
@@ -439,15 +537,24 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(ft, PutClientInServer)
 {
+	entity player = M_ARGV(0, entity);
+
+	if (player.lives == -1 && IS_PLAYER(player)) // this is true even when player is trying to join
+		TRANSMUTE(Observer, player);
+
 	eliminatedPlayers.SendFlags |= 1;
 }
 
 MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	int start_lives = freezetag_Get_Start_Lives();
+	FOREACH_CLIENT(INGAME(it) || IS_BOT_CLIENT(it), {
 		CS(it).killcount = 0;
 		it.freezetag_revive_time = 0;
 		it.freezetag_frozen_timeout = -1;
+		INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
+		it.lives = start_lives;
+		TRANSMUTE(Player, it);
 		PutClientInServer(it);
 		it.freezetag_frozen_timeout = 0;
 	});
@@ -685,6 +792,99 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	return true;
 }
 
+/** Returns next available player to spectate if g_freezetag_spectate_enemies == 0 */
+entity FT_SpectateNext(entity player, entity start)
+{
+	if (SAME_TEAM(start, player)) return start;
+	// continue from current player
+	for (entity e = start; (e = find(e, classname, STR_PLAYER)); )
+	{
+		if (SAME_TEAM(player, e)) return e;
+	}
+	// restart from the beginning
+	for (entity e = NULL; (e = find(e, classname, STR_PLAYER)); )
+	{
+		if (SAME_TEAM(player, e)) return e;
+	}
+	return start;
+}
+
+MUTATOR_HOOKFUNCTION(ft, SpectateSet)
+{
+	entity client = M_ARGV(0, entity);
+	entity targ = M_ARGV(1, entity);
+
+	if (g_freezetag_spectate_enemies != 1 && INGAME(client))
+	if (DIFF_TEAM(targ, client))
+		return true;
+}
+
+MUTATOR_HOOKFUNCTION(ft, SpectateNext)
+{
+	entity client = M_ARGV(0, entity);
+
+	if (g_freezetag_spectate_enemies != 1 && INGAME(client)
+		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
+	{
+		entity targ = M_ARGV(1, entity);
+		M_ARGV(1, entity) = FT_SpectateNext(client, targ);
+		return true;
+	}
+}
+
+MUTATOR_HOOKFUNCTION(ft, SpectatePrev)
+{
+	entity client = M_ARGV(0, entity);
+	entity targ = M_ARGV(1, entity);
+	entity first = M_ARGV(2, entity);
+
+	if (g_freezetag_spectate_enemies != 1 && INGAME(client)
+		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
+	{
+		do { targ = targ.chain; }
+		while(targ && DIFF_TEAM(targ, client));
+
+		if (!targ)
+		{
+			for (targ = first; targ && DIFF_TEAM(targ, client); targ = targ.chain);
+
+			if (targ == client.enemy)
+				return MUT_SPECPREV_RETURN;
+		}
+	}
+	else
+		return MUT_SPECPREV_CONTINUE;
+
+	M_ARGV(1, entity) = targ;
+
+	return MUT_SPECPREV_FOUND;
+}
+
+MUTATOR_HOOKFUNCTION(ft, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
+{
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+		if (IS_PLAYER(it) || INGAME_JOINED(it))
+			++M_ARGV(0, int);
+		++M_ARGV(1, int);
+	});
+	return true;
+}
+
+MUTATOR_HOOKFUNCTION(ft, ClientCommand_Spectate)
+{
+	entity player = M_ARGV(0, entity);
+
+	if (INGAME(player))
+	{
+		// they're going to spec, we can do other checks
+		if (autocvar_sv_spectate && (IS_SPEC(player) || IS_OBSERVER(player)))
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_LEAVE);
+		return MUT_SPECCMD_FORCE;
+	}
+
+	return MUT_SPECCMD_CONTINUE;
+}
+
 MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 {
 	start_items &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
@@ -775,6 +975,9 @@ void freezetag_Initialize()
 		field_team(ST_FT_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
 		field(SP_FREEZETAG_REVIVALS, "revivals", 0);
 	});
+
+	g_freezetag_spectate_enemies = autocvar_g_freezetag_spectate_enemies;
+	observe_blocked_if_eliminated = (g_freezetag_spectate_enemies == -1);
 
 	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);

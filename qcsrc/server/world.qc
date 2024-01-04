@@ -372,6 +372,7 @@ void cvar_changes_init()
 		BADCVAR("g_forced_respawn");
 		BADCVAR("g_freezetag_point_leadlimit");
 		BADCVAR("g_freezetag_point_limit");
+		BADCVAR("g_freezetag_spectate_enemies");
 		BADCVAR("g_glowtrails");
 		BADCVAR("g_hats");
 		BADCVAR("g_casings");
