@@ -22,6 +22,7 @@ float autocvar_g_ft_start_ammo_plasma = 180;
 float autocvar_g_ft_start_ammo_fuel = 0;
 
 .int lives;
+.float remaining_lives_msg_time;
 const int FT_INFINITE_LIVES = 100; // this number appears in the description of g_freezetag_frozen_lives too
 bool g_freezetag_spectate_enemies; // updated on map reset
 
@@ -357,6 +358,8 @@ MUTATOR_HOOKFUNCTION(ft, MakePlayerObserver)
 		ft_RemovePlayer(player);
 	}
 
+	player.remaining_lives_msg_time = 0;
+
 	if (player.killindicator_teamchange == -2) // player wants to spectate
 	{
 		entcs_update_players(player);
@@ -410,7 +413,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			if (frag_target.lives < FT_INFINITE_LIVES)
 			{
 				frag_target.lives--;
-				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_LIVES_REMAINING, frag_target.lives);
+				frag_target.remaining_lives_msg_time = time + 2;
 			}
 		}
 		freezetag_LastPlayerForTeam_Notify(frag_target);
@@ -460,7 +463,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			if (frag_target.lives < FT_INFINITE_LIVES)
 			{
 				frag_target.lives--;
-				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_LIVES_REMAINING, frag_target.lives);
+				frag_target.remaining_lives_msg_time = time + 2;
 			}
 		}
 	}
@@ -522,6 +525,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 
 	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	player.lives = freezetag_Get_Start_Lives();
+	player.remaining_lives_msg_time = 0;
 
 	freezetag_count_alive_players();
 
@@ -554,6 +558,7 @@ MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 		it.freezetag_frozen_timeout = -1;
 		INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
 		it.lives = start_lives;
+		it.remaining_lives_msg_time = 0;
 		TRANSMUTE(Player, it);
 		PutClientInServer(it);
 		it.freezetag_frozen_timeout = 0;
@@ -640,6 +645,13 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 	if (!(frametime && IS_PLAYER(player)))
 		return true;
+
+	if (player.remaining_lives_msg_time && time > player.remaining_lives_msg_time)
+	{
+		// show this message a couple seconds after the freeze message to avoid cluttering the screen
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_LIVES_REMAINING, player.lives);
+		player.remaining_lives_msg_time = 0;
+	}
 
 	entity revivers_last = NULL;
 	entity revivers_first = NULL;
