@@ -21,8 +21,10 @@ float autocvar_g_ft_start_ammo_cells = 180;
 float autocvar_g_ft_start_ammo_plasma = 180;
 float autocvar_g_ft_start_ammo_fuel = 0;
 
-.int lives;
 .float remaining_lives_msg_time;
+const float REMAINING_LIVES_MSG_DELAY = 2;
+
+.int lives;
 const int FT_INFINITE_LIVES = 100; // this number appears in the description of g_freezetag_frozen_lives too
 bool g_freezetag_spectate_enemies; // updated on map reset
 
@@ -413,7 +415,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			if (frag_target.lives < FT_INFINITE_LIVES)
 			{
 				frag_target.lives--;
-				frag_target.remaining_lives_msg_time = time + 2;
+				frag_target.remaining_lives_msg_time = time + REMAINING_LIVES_MSG_DELAY;
 			}
 		}
 		freezetag_LastPlayerForTeam_Notify(frag_target);
@@ -463,7 +465,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			if (frag_target.lives < FT_INFINITE_LIVES)
 			{
 				frag_target.lives--;
-				frag_target.remaining_lives_msg_time = time + 2;
+				frag_target.remaining_lives_msg_time = time + REMAINING_LIVES_MSG_DELAY;
 			}
 		}
 	}
@@ -517,9 +519,10 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 	if(player.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
 		return true; // do nothing, round is starting right now
 
-	if(player.freezetag_frozen_timeout <= -2) // player was dead
+	if(player.freezetag_frozen_timeout == -2) // player died due to teamswitch
 	{
 		freezetag_Freeze(player, NULL);
+		player.remaining_lives_msg_time = time + REMAINING_LIVES_MSG_DELAY;
 		return true;
 	}
 
@@ -533,6 +536,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 	if(round_handler_IsRoundStarted())
 	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_SPAWN_LATE);
+		player.remaining_lives_msg_time = time + REMAINING_LIVES_MSG_DELAY;
 		freezetag_Freeze(player, NULL);
 	}
 
