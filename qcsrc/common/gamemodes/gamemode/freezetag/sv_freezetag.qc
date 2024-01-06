@@ -494,18 +494,15 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	}
 	freezetag_LastPlayerForTeam_Notify(frag_target);
 
-	if (frag_target.lives > 0)
+	if (frag_target.lives >= 0)
 	{
-		if(frag_attacker == frag_target || frag_attacker == NULL)
+		if(frag_attacker == frag_target || !IS_PLAYER(frag_attacker))
 		{
-			if(IS_PLAYER(frag_target))
-				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_SELF);
+			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_SELF);
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_SELF, frag_target.netname);
 		}
 		else
-		{
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname);
-		}
 	}
 
 	return true;
