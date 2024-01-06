@@ -24,13 +24,20 @@ float autocvar_g_ft_start_ammo_fuel = 0;
 .float remaining_lives_msg_time;
 const float REMAINING_LIVES_MSG_DELAY = 2;
 
+// set to start lives on round start (start lives can never be 0); lives decrease
+// every time a player gets frozen unless start lives are infinite or during warmup;
+// it's set to -1 when a player is eliminated
 .int lives;
 const int FT_INFINITE_LIVES = 100; // this number appears in the description of g_freezetag_frozen_lives too
 bool g_freezetag_spectate_enemies; // updated on map reset
 
+// keeps track of the lowest number of lives a player has during a round
+// if it's >= 0 new players spawn with this number of lives otherwise they can't spawn
+int ft_lowest_lives;
+
 int freezetag_Get_Start_Lives()
 {
-	int start_lives = bound(0, autocvar_g_freezetag_frozen_lives, FT_INFINITE_LIVES);
+	int start_lives = bound(0, floor(autocvar_g_freezetag_frozen_lives), FT_INFINITE_LIVES);
 	// 0 lives is not acceptable because players would die without getting frozen even once
 	if (!autocvar_g_freezetag_frozen_lives || warmup_stage)
 		start_lives = FT_INFINITE_LIVES;
@@ -415,11 +422,13 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			if (frag_target.lives < FT_INFINITE_LIVES)
 			{
 				frag_target.lives--;
+				ft_lowest_lives = bound(-1, ft_lowest_lives, frag_target.lives);
 				frag_target.remaining_lives_msg_time = time + REMAINING_LIVES_MSG_DELAY;
 			}
 		}
 		freezetag_LastPlayerForTeam_Notify(frag_target);
-		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
+		if (frag_target.lives >= 0)
+			frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		return true;
 	}
 
@@ -465,11 +474,12 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			if (frag_target.lives < FT_INFINITE_LIVES)
 			{
 				frag_target.lives--;
+				ft_lowest_lives = min(ft_lowest_lives, frag_target.lives);
 				frag_target.remaining_lives_msg_time = time + REMAINING_LIVES_MSG_DELAY;
 			}
 		}
 	}
-	else
+	else //if (frag_target.lives <= 0) // NOTE: in warmup this can't happen
 	{
 		// schedule respawn, player will be moved to observer on respawn
 		frag_target.respawn_flags = RESPAWN_SILENT;
@@ -478,6 +488,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		frag_target.respawn_flags |= RESPAWN_FORCE;
 		eliminatedPlayers.SendFlags |= 1;
 		frag_target.lives = -1;
+		ft_lowest_lives = -1;
 		freezetag_Add_Score(frag_target, frag_attacker);
 		freezetag_count_alive_players();
 	}
@@ -504,9 +515,7 @@ MUTATOR_HOOKFUNCTION(ft, ForbidSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	// if player lost all their lives and is observing, this check prevents any attempt
-	// to join that would only cause observer to respawn in another spawnpoint (as observer)
-	if (player.lives == -1) // player lost all their lives
+	if (ft_lowest_lives == -1 && INGAME(player)) // at least 1 player is eliminated
 		return true;
 
 	return false;
@@ -526,9 +535,13 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 		return true;
 	}
 
-	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
-	player.lives = freezetag_Get_Start_Lives();
+	// players start with the lowest number of lives instead of start lives
+	// to prevent players from gaining lives by spectating and rejoining
+	player.lives = ft_lowest_lives;
 	player.remaining_lives_msg_time = 0;
+
+	if (player.lives < 0)
+		return true;
 
 	freezetag_count_alive_players();
 
@@ -547,8 +560,15 @@ MUTATOR_HOOKFUNCTION(ft, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (player.lives == -1 && IS_PLAYER(player)) // this is true even when player is trying to join
+	if (ft_lowest_lives == -1 && IS_PLAYER(player)) // this is true even when player is trying to join
+	{
 		TRANSMUTE(Observer, player);
+		if (CS(player).jointime != time && !INGAME(player)) // not when connecting
+		{
+			INGAME_STATUS_SET(player, INGAME_STATUS_JOINING);
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
+		}
+	}
 
 	eliminatedPlayers.SendFlags |= 1;
 }
@@ -556,6 +576,7 @@ MUTATOR_HOOKFUNCTION(ft, PutClientInServer)
 MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 {
 	int start_lives = freezetag_Get_Start_Lives();
+	ft_lowest_lives = start_lives;
 	FOREACH_CLIENT(INGAME(it) || IS_BOT_CLIENT(it), {
 		CS(it).killcount = 0;
 		it.freezetag_revive_time = 0;
@@ -994,6 +1015,8 @@ void freezetag_Initialize()
 
 	g_freezetag_spectate_enemies = autocvar_g_freezetag_spectate_enemies;
 	observe_blocked_if_eliminated = (g_freezetag_spectate_enemies == -1);
+
+	ft_lowest_lives = freezetag_Get_Start_Lives();
 
 	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
