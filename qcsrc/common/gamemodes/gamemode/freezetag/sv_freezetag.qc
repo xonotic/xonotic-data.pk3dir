@@ -522,9 +522,6 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
-		return true; // do nothing, round is starting right now
-
 	if(player.freezetag_frozen_timeout == -2) // player died due to teamswitch
 	{
 		freezetag_Freeze(player, NULL);
@@ -539,6 +536,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 
 	if (player.lives < 0)
 		return true;
+
+	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 
 	freezetag_count_alive_players();
 
@@ -572,18 +571,22 @@ MUTATOR_HOOKFUNCTION(ft, PutClientInServer)
 
 MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 {
+	g_freezetag_spectate_enemies = autocvar_g_freezetag_spectate_enemies;
+	observe_blocked_if_eliminated = (g_freezetag_spectate_enemies == -1);
+	// we can avoid sending observe_blocked_if_eliminated to all clients here (with ClientData_Touch)
+	// since it will get sent whenever the client spectates someone anyway
+
 	int start_lives = freezetag_Get_Start_Lives();
 	ft_lowest_lives = start_lives;
 	FOREACH_CLIENT(INGAME(it) || IS_BOT_CLIENT(it), {
 		CS(it).killcount = 0;
 		it.freezetag_revive_time = 0;
-		it.freezetag_frozen_timeout = -1;
+		it.freezetag_frozen_timeout = 0;
 		INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
 		it.lives = start_lives;
 		it.remaining_lives_msg_time = 0;
 		TRANSMUTE(Player, it);
 		PutClientInServer(it);
-		it.freezetag_frozen_timeout = 0;
 	});
 	freezetag_count_alive_players();
 	return true;
