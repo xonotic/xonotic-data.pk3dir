@@ -1641,29 +1641,31 @@ void CSQC_UpdateView(entity this, float w, float h)
 	else if(game_stopped_time && !STAT(GAME_STOPPED))
 		game_stopped_time = 0;
 
-	// fire intermission hooks here
-	// game/demo end hooks are executed on CSQC VM shutdown
-	if(intermission && !(calledhooks & HOOK_INTERMISSION))
+	// fire intermission hooks and gameend hook here
+	// gameend hook is executed on CSQC VM shutdown if
+	// the shutdown happens before intermission start
+	if(intermission
+	&& (calledhooks & HOOK_START) // ensure that we have initiated a gamemode
+	&& !(calledhooks & HOOK_END)) // fire only once
+	&& !(calledhooks & HOOK_INTERMISSION)
 	{
 		if(!isdemo())
 		{
-			// ensure that we have properly initiated a gamemode
-			// before firing this hook. gamestart -> intermission
-			if(calledhooks & HOOK_START)
-			{
-				localcmd("\ncl_hook_intermission\n");
-				calledhooks |= HOOK_INTERMISSION;
-			}
+			int gamecount = cvar("cl_matchcount");
+			localcmd("\ncl_hook_gameend\n");
+			// NOTE: using localcmd here to ensure it's executed AFTER cl_hook_gameend
+			// earlier versions of the game abuse the hook to set this cvar
+			localcmd(strcat("cl_matchcount ", itos(gamecount + 1), "\n"));
+			//cvar_set("cl_matchcount", itos(gamecount + 1));
+			calledhooks |= HOOK_END;
+
+			localcmd("\ncl_hook_intermission\n");
+			calledhooks |= HOOK_INTERMISSION;
 		}
 		else
 		{
-			// ensure that we have properly initiated a gamemode
-			// before firing this hook. demostart -> intermission
-			if(calledhooks & HOOK_START)
-			{
-				localcmd("\ncl_hook_demointermission\n");
-				calledhooks |= HOOK_INTERMISSION;
-			}
+			localcmd("\ncl_hook_demointermission\n");
+			calledhooks |= HOOK_INTERMISSION;
 		}
 	}
 
