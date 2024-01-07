@@ -1652,10 +1652,10 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// fire intermission hooks and gameend hook here
 	// gameend hook is executed on CSQC VM shutdown if
 	// the shutdown happens before intermission start
-	if(intermission
+	if (intermission
 	&& (calledhooks & HOOK_START) // ensure that we have initiated a gamemode
-	&& !(calledhooks & HOOK_END)) // fire only once
-	&& !(calledhooks & HOOK_INTERMISSION)
+	&& !(calledhooks & HOOK_END) // fire only once
+	&& !(calledhooks & HOOK_INTERMISSION))
 	{
 		if(!isdemo())
 		{
