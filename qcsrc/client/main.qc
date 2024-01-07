@@ -1076,13 +1076,25 @@ bool CSQC_Parse_TempEntity()
 	return false;
 }
 
+bool autocvar_r_drawfog;
+bool autocvar_r_fog_exp2;
 string forcefog;
 void Fog_Force()
 {
 	if (autocvar_cl_orthoview && autocvar_cl_orthoview_nofog)
-		localcmd("\nr_drawfog 0\n");
+	{
+		if (autocvar_r_drawfog)
+			cvar_set("r_drawfog", "0");
+	}
 	else if (forcefog != "")
-		localcmd(sprintf("\nfog %s\nr_fog_exp2 0\nr_drawfog 1\n", forcefog));
+	{
+		// using cvar_set as it's faster and safer than a command
+		if (!autocvar_r_drawfog)
+			cvar_set("r_drawfog", "1");
+		if (autocvar_r_fog_exp2)
+			cvar_set("r_fog_exp2", "0");
+		localcmd(sprintf("\nfog %s\n", forcefog));
+	}
 }
 
 bool net_handle_ServerWelcome();

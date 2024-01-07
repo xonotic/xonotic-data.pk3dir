@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: oblector o, 2022-2023\n"
+"Last-Translator: oblector o, 2022\n"
 "Language-Team: Latin (http://app.transifex.com/team-xonotic/xonotic/language/"
 "la/)\n"
 "Language: la\n"
@@ -7007,7 +7007,7 @@ msgstr "Armorum Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:19
 msgid "HUD skins"
-msgstr ""
+msgstr "Facies Notarum Superpositarum"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:22
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:179
@@ -7028,11 +7028,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:28
 msgid "Set skin"
-msgstr ""
+msgstr "Faciem eligere"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:37
 msgid "Save current skin"
-msgstr ""
+msgstr "Hanc faciem servare"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:46
 msgid "Panel background defaults:"
@@ -8055,7 +8055,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:81
 msgid "Show help"
-msgstr ""
+msgstr "Explanationes legere"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:82
 msgid "* is the object you are facing"
@@ -8063,7 +8063,7 @@ msgstr "* est id quod ante te est"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qh:6
 msgid "Sandbox Tools"
-msgstr ""
+msgstr "Probationis Utensilia"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:18
 msgid "Video"
@@ -9440,11 +9440,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:31
 msgid "Command when pressed:"
-msgstr ""
+msgstr "Iussum cum premitur:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:34
 msgid "Command when released:"
-msgstr ""
+msgstr "Iussum cum solvitur:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:40
 msgid "Cancel"
@@ -9544,7 +9544,7 @@ msgstr "Numerum quadrorum in secundum videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:85
 msgid "Show your rendered frames per second"
-msgstr ""
+msgstr "Numerum tuum quadrorum pictorum in secundum videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:87
 msgid "Maximum:"
@@ -9606,7 +9606,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:141
 msgid "Advanced settings..."
-msgstr ""
+msgstr "Optiones involutae..."
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:142
 msgid "Advanced settings where you can tweak every single variable of the game"
@@ -9627,7 +9627,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:45
 msgid "Setting:"
-msgstr ""
+msgstr "Optio:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:49
 msgid "Type:"
@@ -9639,11 +9639,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:70
 msgid "Description:"
-msgstr ""
+msgstr "Descriptio:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qh:7
 msgid "Advanced settings"
-msgstr ""
+msgstr "Optiones involutae"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:11
 msgid "Are you sure you want to reset all settings?"
@@ -9655,7 +9655,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skins"
-msgstr ""
+msgstr "Facies Indicis"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"
@@ -9675,19 +9675,19 @@ msgstr "Nec sanguinem nec intestina pingere, sed alias imagines decoras"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
 msgid "While connected language changes will be applied only to the menu,"
-msgstr ""
+msgstr "Dum conexio tenetur, in hanc linguam vertuntur indicum scripta solum,"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
 msgid "full language changes will take effect starting from the next game"
-msgstr ""
+msgstr "et alia scripta vertentur cum ludus posterior incipietur"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"
-msgstr ""
+msgstr "Dinectere nunc"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
 msgid "Switch language"
-msgstr ""
+msgstr "Linguam commutare"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qh:6
 msgid "Warning"
@@ -9699,63 +9699,65 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:37
 msgid "Font/UI size:"
-msgstr ""
+msgstr "Magnitudo Litterarum/Imaginum:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:39
 msgid "SZ^Unreadable"
-msgstr ""
+msgstr "Illegibilis"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:40
 msgid "SZ^Tiny"
-msgstr ""
+msgstr "Minima"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:41
 msgid "SZ^Little"
-msgstr ""
+msgstr "Parvula"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:42
 msgid "SZ^Small"
-msgstr ""
+msgstr "Parva"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:43
 msgid "SZ^Medium"
-msgstr ""
+msgstr "Media"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:44
 msgid "SZ^Large"
-msgstr ""
+msgstr "Magna"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:45
 msgid "SZ^Huge"
-msgstr ""
+msgstr "Immensa"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:46
 msgid "SZ^Gigantic"
-msgstr ""
+msgstr "Gigas"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:47
 msgid "SZ^Colossal"
-msgstr ""
+msgstr "Colossica"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:51
 msgid "Color depth:"
-msgstr ""
+msgstr "Colorum subtilitas:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:53
 msgid "How many bits per pixel (BPP) to render at, 32 is recommended"
 msgstr ""
+"In quot digitis binariis (bit) colores singulorum laterculorum scribere, 32 "
+"suadetur"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:54
 msgid "16bit"
-msgstr ""
+msgstr "16bit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:55
 msgid "32bit"
-msgstr ""
+msgstr "32bit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:59
 msgid "Full screen"
-msgstr ""
+msgstr "Totum quadrum"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:61
 msgid "Vertical Synchronization"
@@ -9941,7 +9943,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:149
 msgid "Instant action! (random map with bots)"
-msgstr ""
+msgstr "Actio fortuita! (fortuita harena cum automatis)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:169
 msgid "Campaign Difficulty:"
@@ -9965,11 +9967,12 @@ msgstr "Expeditionem ludere!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
-msgstr ""
+msgstr "Unus ludens"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
 msgstr ""
+"Ludere expeditionem unius ludentis vel actionem fortuitam cum automatis"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
@@ -9977,11 +9980,11 @@ msgstr "Victor"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "join 'best' team (auto-select)"
-msgstr ""
+msgstr "in manum 'optimam' (computatro eligitur)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Autoselect team (recommended)"
-msgstr ""
+msgstr "Computatro manus eligi (quod suadetur)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
@@ -10158,7 +10161,7 @@ msgstr "linquere"
 
 #: qcsrc/menu/xonotic/keybinder.qc:116
 msgid "auto-join team"
-msgstr ""
+msgstr "computatro eligi manus"
 
 #: qcsrc/menu/xonotic/keybinder.qc:122
 msgid "drop key/flag, exit vehicle"
@@ -10178,7 +10181,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:129
 msgid "User defined"
-msgstr ""
+msgstr "Creata ab utente"
 
 #: qcsrc/menu/xonotic/keybinder.qc:136
 msgid "Development"
@@ -10186,15 +10189,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:137
 msgid "sandbox menu"
-msgstr ""
+msgstr "probationum index"
 
 #: qcsrc/menu/xonotic/keybinder.qc:138
 msgid "drag object (sandbox)"
-msgstr ""
+msgstr "rem trahere (probatione)"
 
 #: qcsrc/menu/xonotic/keybinder.qc:139
 msgid "waypoint editor menu"
-msgstr ""
+msgstr "locorum indicandorum index"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
@@ -10202,7 +10205,7 @@ msgstr "Hunc ludum linquere"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
-msgstr ""
+msgstr "Finire demonstrationem"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"
