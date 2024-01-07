@@ -224,6 +224,8 @@ bool freezetag_isEliminated(entity e)
 		return true;
 	if(INGAME_JOINED(e) && e.frags == FRAGS_PLAYER_OUT_OF_GAME)
 		return true;
+	if(INGAME_JOINING(e))
+		return true;
 	return false;
 }
 
@@ -977,8 +979,9 @@ MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
 	int kill_count_to_attacker = M_ARGV(3, int);
 	int kill_count_to_target = M_ARGV(4, int);
 
-	if(STAT(FROZEN, frag_target) == FROZEN_NORMAL)
-		return; // target was already frozen, so this is just pushing them off the cliff
+	// here number of lives has not yet been decreased so we check == 0 instead of -1
+	if(STAT(FROZEN, frag_target) == FROZEN_NORMAL || frag_target.lives == 0)
+		return;
 
 	Send_Notification(NOTIF_ONE, frag_attacker, MSG_CHOICE, CHOICE_FRAG_FREEZE, frag_target.netname, kill_count_to_attacker, (IS_BOT_CLIENT(frag_target) ? -1 : CS(frag_target).ping));
 	Send_Notification(NOTIF_ONE, frag_target, MSG_CHOICE, CHOICE_FRAGGED_FREEZE, frag_attacker.netname, kill_count_to_target,
