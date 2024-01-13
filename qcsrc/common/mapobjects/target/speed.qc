@@ -2,7 +2,7 @@
 
 #define XYZ_ARRAY(name) float name[3]
 #define ARRAY_AS_VECTOR(a) ((a)[0] * '1 0 0' + (a)[1] * '0 1 0' + (a)[2] * '0 0 1')
-#define VECTOR_TO_ARRAY(a, e) { vector v = (e); (a)[0] = v.x; (a)[1] = v.y; (a)[2] = v.z; }
+#define VECTOR_TO_ARRAY(a, e) MACRO_BEGIN vector v = (e); (a)[0] = v.x; (a)[1] = v.y; (a)[2] = v.z; MACRO_END
 #define FOR_XYZ(idx) for(int idx = 0; idx < 3; ++idx)
 vector target_speed_calculatevelocity(entity this, float speed, entity pushed_entity)
 {
