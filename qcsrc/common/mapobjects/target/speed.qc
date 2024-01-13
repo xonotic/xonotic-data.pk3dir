@@ -108,12 +108,10 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 	}
 	else
 	{
-		VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * speed)
-
-		if(is_add)
-		{
-			VECTOR_TO_ARRAY(pushvel, ARRAY_AS_VECTOR(pushvel) + ARRAY_AS_VECTOR(oldvel));
-		}
+		if(!is_add)
+			VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * speed);
+		else
+			VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * speed + ARRAY_AS_VECTOR(oldvel));
 	}
 
 	FOR_XYZ(i)
