@@ -481,7 +481,7 @@ vector GetCurrentFov(float fov)
 		}
 	}
 
-	if(almost_equals(current_viewzoom, 1))
+	if(zoomfactor == 1 || current_viewzoom > 0.999) // zoomfactor check prevents a division by 0
 		current_zoomfraction = 0;
 	else if(almost_equals(current_viewzoom, 1/zoomfactor))
 		current_zoomfraction = 1;
