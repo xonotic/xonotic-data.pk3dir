@@ -1667,7 +1667,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 			//cvar_set("cl_matchcount", itos(gamecount + 1));
 			calledhooks |= HOOK_END;
 
-			localcmd("\ncl_hook_intermission\n");
+			localcmd("\ncl_hook_gameintermission\n");
 			calledhooks |= HOOK_INTERMISSION;
 		}
 		else
