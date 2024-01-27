@@ -9,6 +9,7 @@ bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 	vector org = vec3(floor(this.origin.x), floor(this.origin.y), floor(this.origin.z));
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, this.projectiledeathtype);
+	WriteByte(MSG_ENTITY, etof(this.owner)); // attacker
 	WriteVector(MSG_ENTITY, org);
 	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
 	WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
@@ -35,6 +36,7 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	// origin is just data to be sent
 	//setorigin(e, org);
 	e.origin = org;
+	e.owner = dmgowner;
 	e.projectiledeathtype = deathtype;
 	e.dmg = coredamage;
 	e.dmg_edge = edgedamage;
@@ -191,13 +193,15 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 {
 	float thedamage, rad, edge, thisdmg;
-	bool hitplayer = false;
+	bool hitplayer = false, hitme = false;
 	int species, forcemul;
 	vector force, thisforce;
 
 	w_deathtype = ReadShort();
 	w_issilent = (w_deathtype & 0x8000);
 	w_deathtype = (w_deathtype & 0x7FFF);
+
+	int attacker = ReadByte();
 
 	w_org = ReadVector();
 
@@ -263,7 +267,9 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 		DamageEffect(it, w_org, thisdmg, w_deathtype, species);
 
-		if(it != csqcplayer && (it.isplayermodel & ISPLAYER_MODEL))
+		if(it == csqcplayer)
+			hitme = true; // this impact damaged me
+		else if(it != csqcplayer && (it.isplayermodel & ISPLAYER_MODEL))
 			hitplayer = true; // this impact damaged another player
 	});
 
@@ -400,29 +406,37 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	MUTATOR_CALLHOOK(DamageInfo, this, w_deathtype, w_org);
 
-	// TODO spawn particle effects and sounds based on w_deathtype
 	if(!DEATH_ISSPECIAL(w_deathtype))
-	if(!hitplayer || rad) // don't show ground impacts for hitscan weapons if a player was hit
 	{
-		Weapon hitwep = DEATH_WEAPONOF(w_deathtype);
-		w_random = prandom();
-
-		vector force_dir = normalize(force);
-		// this traceline usually starts in solid when a hitscan shot hits a surface with a very small angle
-		// if so, try another traceline starting further back (may still start in solid but only with extremely small angles)
-		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
-		if(trace_startsolid)
-			traceline(w_org - force_dir * 40, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
-		if(trace_fraction < 1)
-			w_backoff = trace_plane_normal;
-		else
-			w_backoff = -force_dir;
-		setorigin(this, w_org + w_backoff * 2); // for sound() calls
-
-		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
+		if(hitme)
 		{
-			if(!MUTATOR_CALLHOOK(Weapon_ImpactEffect, hitwep, this))
-				hitwep.wr_impacteffect(hitwep, this);
+			HitIndicator_attacker = attacker;
+			HitIndicator_time = time;
+		}
+
+		// TODO spawn particle effects and sounds based on w_deathtype
+		if(!hitplayer || rad) // don't show ground impacts for hitscan weapons if a player was hit
+		{
+			Weapon hitwep = DEATH_WEAPONOF(w_deathtype);
+			w_random = prandom();
+
+			vector force_dir = normalize(force);
+			// this traceline usually starts in solid when a hitscan shot hits a surface with a very small angle
+			// if so, try another traceline starting further back (may still start in solid but only with extremely small angles)
+			traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
+			if(trace_startsolid)
+				traceline(w_org - force_dir * 40, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
+			if(trace_fraction < 1)
+				w_backoff = trace_plane_normal;
+			else
+				w_backoff = -force_dir;
+			setorigin(this, w_org + w_backoff * 2); // for sound() calls
+
+			if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
+			{
+				if(!MUTATOR_CALLHOOK(Weapon_ImpactEffect, hitwep, this))
+					hitwep.wr_impacteffect(hitwep, this);
+			}
 		}
 	}
 }

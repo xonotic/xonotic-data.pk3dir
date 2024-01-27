@@ -753,6 +753,30 @@ void View_EventChase(entity this)
 	}
 }
 
+void HitIndicatorShow()
+{
+	if (!autocvar_cl_hit_indicator || autocvar_cl_hit_indicator_size <= 0
+		|| time > HitIndicator_time + 1
+		|| !HitIndicator_attacker || !CSQCModel_server2csqc(HitIndicator_attacker - 1))
+	{
+		return;
+	}
+
+	entity attacker = CSQCModel_server2csqc(HitIndicator_attacker - 1);
+	vector org = project_3d_to_2d(attacker.origin);
+	vector scr_center = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
+	float radius = autocvar_cl_hit_indicator_radius * min(vid_conwidth, vid_conheight);
+	vector ofs = normalize(org - scr_center - org.z * eZ) * radius;
+	float ang = atan2(-ofs.x, -ofs.y);
+	if (org.z < 0)
+	{
+		ang += M_PI;
+		ofs = -ofs;
+	}
+	org = scr_centersss + ofs;
+	drawspritearrow(org, ang, '1 0 0', 0.8, autocvar_cl_hit_indicator_size);
+}
+
 vector damage_blurpostprocess, content_blurpostprocess;
 
 void UpdateDamage()
@@ -906,6 +930,8 @@ void HUD_Draw(entity this)
 			HUD_Scale_Disable();
 		}
 	}
+
+	HitIndicatorShow();
 
 	// crosshair goes VERY LAST
 	UpdateDamage();

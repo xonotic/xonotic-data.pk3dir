@@ -94,6 +94,12 @@ int autocvar_cl_nade_timer;
 bool autocvar_r_drawviewmodel;
 vector autocvar_cl_gunoffset;
 
+bool autocvar_cl_hit_indicator = 1;
+float autocvar_cl_hit_indicator_radius = 0.15;
+float autocvar_cl_hit_indicator_size = 1.1;
+int HitIndicator_attacker;
+int HitIndicator_time;
+
 void calc_followmodel_ofs(entity view);
 
 vector project_3d_to_2d(vector vec);
