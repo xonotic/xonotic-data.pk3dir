@@ -193,9 +193,10 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 {
 	float thedamage, rad, edge, thisdmg;
-	bool hitplayer = false, hitme = false;
+	bool hitplayer = false;
 	int species, forcemul;
 	vector force, thisforce;
+	float hitme_damage = 0;
 
 	w_deathtype = ReadShort();
 	w_issilent = (w_deathtype & 0x8000);
@@ -267,8 +268,8 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 		DamageEffect(it, w_org, thisdmg, w_deathtype, species);
 
-		if(it == csqcplayer)
-			hitme = true; // this impact damaged me
+		if(it == csqcplayer && attacker - 1 != player_localnum)
+			hitme_damage = thisdmg; // this impact damaged me
 		else if(it != csqcplayer && (it.isplayermodel & ISPLAYER_MODEL))
 			hitplayer = true; // this impact damaged another player
 	});
@@ -408,11 +409,8 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	if(!DEATH_ISSPECIAL(w_deathtype))
 	{
-		if(hitme)
-		{
-			HitIndicator_attacker = attacker;
-			HitIndicator_time = time;
-		}
+		if(hitme_damage > 0)
+			HitIndicatorUpdate(hitme_damage, attacker);
 
 		// TODO spawn particle effects and sounds based on w_deathtype
 		if(!hitplayer || rad) // don't show ground impacts for hitscan weapons if a player was hit

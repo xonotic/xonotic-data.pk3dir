@@ -753,16 +753,33 @@ void View_EventChase(entity this)
 	}
 }
 
+void HitIndicatorUpdate(float dmg, int attacker)
+{
+	if (time < HitIndicator_time + 1 && HitIndicator_attacker == attacker)
+		HitIndicator_damage += dmg;
+	else
+		HitIndicator_damage = dmg;
+	HitIndicator_attacker = attacker;
+	HitIndicator_time = time;
+}
+
 void HitIndicatorShow()
 {
 	if (!autocvar_cl_hit_indicator || autocvar_cl_hit_indicator_size <= 0
-		|| time > HitIndicator_time + 1
-		|| !HitIndicator_attacker || !CSQCModel_server2csqc(HitIndicator_attacker - 1))
+		|| autocvar_chase_active || time > HitIndicator_time + autocvar_cl_hit_indicator_fade_time)
 	{
 		return;
 	}
 
 	entity attacker = CSQCModel_server2csqc(HitIndicator_attacker - 1);
+	if (!HitIndicator_attacker || !CSQCModel_server2csqc(HitIndicator_attacker - 1))
+		return;
+
+	// hide indicator if attacker is not visible (check ported from shownames.qc)
+	traceline(view_origin, attacker.origin, MOVE_NOMONSTERS, attacker);
+	if (trace_fraction < 1 && (trace_networkentity != attacker.sv_entnum && trace_ent.entnum != attacker.sv_entnum))
+		return;
+
 	vector org = project_3d_to_2d(attacker.origin);
 	vector scr_center = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 	float radius = autocvar_cl_hit_indicator_radius * min(vid_conwidth, vid_conheight);
@@ -773,8 +790,12 @@ void HitIndicatorShow()
 		ang += M_PI;
 		ofs = -ofs;
 	}
-	org = scr_centersss + ofs;
-	drawspritearrow(org, ang, '1 0 0', 0.8, autocvar_cl_hit_indicator_size);
+	org = scr_center + ofs;
+	float alpha = autocvar_cl_hit_indicator_fade_alpha;
+	alpha *= 1 - (time - HitIndicator_time) / autocvar_cl_hit_indicator_fade_time;
+	float size = autocvar_cl_hit_indicator_size;
+	size = map_bound_ranges(HitIndicator_damage, 30, 90, size, size * 2);
+	drawspritearrow(org, ang, '1 0 0', alpha, size, true);
 }
 
 vector damage_blurpostprocess, content_blurpostprocess;
