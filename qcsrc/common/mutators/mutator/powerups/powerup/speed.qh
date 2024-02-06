@@ -52,6 +52,7 @@ REGISTER_ITEM(Speed, Powerup) {
 }
 
 SPAWNFUNC_ITEM(item_speed, ITEM_Speed)
+SPAWNFUNC_ITEM(item_buff_speed, ITEM_Speed)
 
 CLASS(Speed, Powerups)
     ATTRIB(Speed, netname, string, "speed");
