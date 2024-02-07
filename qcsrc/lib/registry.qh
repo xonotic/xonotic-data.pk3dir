@@ -200,7 +200,7 @@ void Registry_send(string id, string hash);
 		string h = REGISTRY_HASH(id) = strzone(digest_hex("MD4", s)); \
 		LOG_DEBUGF(#id ": %s\n[%s]", h, s); \
 	} \
-	void Registry_check(string r, string sv) \
+	void Registry_check(string r, string sv) /* called by CSQC */ \
 	{ \
 		if (r == #id) \
 		{ \
@@ -211,7 +211,7 @@ void Registry_send(string id, string hash);
 			} \
 		} \
 	} \
-	void Registry_send_all() { Registry_send(#id, REGISTRY_HASH(id)); } \
+	void Registry_send_all() { Registry_send(#id, REGISTRY_HASH(id)); } /* called by SVQC */ \
 
 #define _REGISTER_REGISTRY(id, str) \
 	ACCUMULATE_FUNCTION(__static_init_1, Register##id) \
