@@ -714,7 +714,7 @@ string notif_arg_item_wepammo(float f1, float f2)
 
 REGISTRY(Notifications, BITS(11))
 REGISTER_REGISTRY(Notifications)
-REGISTRY_SORT(Notifications);
+REGISTRY_SORT(Notifications)
 
 REGISTRY_DEFINE_GET(Notifications, NULL)
 STATIC_INIT(Notifications) { FOREACH(Notifications, true, it.m_id = i); }

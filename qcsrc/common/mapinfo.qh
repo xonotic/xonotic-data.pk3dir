@@ -123,7 +123,7 @@ ENDCLASS(Gametype)
 
 REGISTRY(Gametypes, 32)
 REGISTER_REGISTRY(Gametypes)
-REGISTRY_SORT(Gametypes);
+REGISTRY_SORT(Gametypes)
 REGISTRY_CHECK(Gametypes)
 
 REGISTRY_DEFINE_GET(Gametypes, NULL)
