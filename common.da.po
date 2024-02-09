@@ -3,6 +3,8 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# A Person, 2023
+# A Person, 2023
 # Archy Coder, 2022
 # Archy Coder, 2022
 msgid ""
@@ -54,12 +56,12 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/centerprint.qc:211
 msgid "Generic message"
-msgstr ""
+msgstr "Generisk besked"
 
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
-msgstr ""
+msgstr "mod"
 
 #: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
@@ -102,7 +104,7 @@ msgstr "næste våben"
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/client/hud/panel/infomessages.qc:111
 msgid "previous weapon"
-msgstr ""
+msgstr "forrige våben"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
@@ -118,12 +120,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 msgid "drop weapon"
-msgstr ""
+msgstr "lig våben"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/menu/xonotic/keybinder.qc:51
 msgid "secondary fire"
-msgstr ""
+msgstr "sekundære skud"
 
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
@@ -138,7 +140,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #: qcsrc/menu/xonotic/keybinder.qc:106
 msgid "server info"
-msgstr ""
+msgstr "server info"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #, c-format
@@ -148,12 +150,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:130 qcsrc/client/main.qc:1409
 #: qcsrc/common/notifications/all.qh:442
 msgid "jump"
-msgstr "hoppe"
+msgstr "hop"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr "^1Spil begynder om ^3%d^1 sekunder"
+msgstr "^1Spillet starter om ^3%d^1 sekunder"
 
 #: qcsrc/client/hud/panel/infomessages.qc:151
 msgid "^2Currently in ^1warmup^2 stage!"
@@ -161,7 +163,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:163
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "^31^2 flere spillere kræves for at start kampen"
 
 #: qcsrc/client/hud/panel/infomessages.qc:165
 #, c-format
@@ -177,7 +179,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:178
 #: qcsrc/menu/xonotic/keybinder.qc:102
 msgid "ready"
-msgstr ""
+msgstr "klar"
 
 #: qcsrc/client/hud/panel/infomessages.qc:175
 msgid "^2Waiting for others to ready up to end warmup..."
@@ -200,7 +202,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:203
 #: qcsrc/menu/xonotic/keybinder.qc:117
 msgid "team selection"
-msgstr ""
+msgstr "hold selektion"
 
 #: qcsrc/client/hud/panel/infomessages.qc:213
 msgid "^1Spectating this player:"
@@ -249,7 +251,7 @@ msgstr "Kommando%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:667
 msgid "Continue..."
-msgstr ""
+msgstr "Fortsæt..."
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 #: qcsrc/client/hud/panel/quickmenu.qc:825
@@ -270,11 +272,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^good game"
-msgstr ""
+msgstr "QMCMD^god kamp"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:822
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "QMCMD^hej / held og lykke"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:822
 msgid "QMCMD^hi / good luck and have fun"
@@ -282,7 +284,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^Send in English"
-msgstr "QMCMD^Send i Engelsk"
+msgstr "QMCMD^Send på Engelsk"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:829
 #: qcsrc/client/hud/panel/quickmenu.qc:845
@@ -861,7 +863,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of suicides"
-msgstr "Antal selvmord"
+msgstr "Antal selvdrab"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^suicides"

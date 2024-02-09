@@ -7,7 +7,7 @@
 # Antoni Das <Antonidas159@gmail.com>, 2017
 # Antonio <piuntn@gmail.com>, 2023
 # LegendGuard, 2020
-# LegendGuard, 2020-2023
+# LegendGuard, 2020-2024
 # Lento <securemailfor28-xonotic@yahoo.co.jp>, 2015
 # RYU N. <ryusho2523@yahoo.co.jp>, 2021
 # z 411 <winrar.hurr@gmail.com>, 2021-2022
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021\n"
+"Last-Translator: LegendGuard, 2020-2024\n"
 "Language-Team: Japanese (Japan) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/ja_JP/)\n"
 "Language: ja_JP\n"
@@ -351,7 +351,7 @@ msgstr "QMCMD^旗が見えました、アイコン"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:838
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "QMCMD^守り中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "QMCMD^防衛中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:838
 msgid "QMCMD^defending, icon"

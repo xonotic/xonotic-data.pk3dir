@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2023\n"
+"Last-Translator: Hugo Locurcio, 2013-2014\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -4241,7 +4241,7 @@ msgstr "^K1Change de tactique, campeur !"
 
 #: qcsrc/common/notifications/all.inc:642
 msgid "^K1You unfairly eliminated yourself!"
-msgstr "^K1Vous vous êtes éliminé tout seul !"
+msgstr "^K1Vous vous êtes injustement éliminé vous-même !"
 
 #: qcsrc/common/notifications/all.inc:643
 #, c-format
@@ -4266,7 +4266,7 @@ msgstr "^K1Vous êtes devenu un peu trop croustillant !"
 
 #: qcsrc/common/notifications/all.inc:647
 msgid "^K1You fragged yourself!"
-msgstr "^K1Vous vous êtes tué tout seul !"
+msgstr "^K1Vous vous êtes tué vous-même !"
 
 #: qcsrc/common/notifications/all.inc:647
 msgid "^K1You need to be more careful!"
@@ -4475,7 +4475,7 @@ msgstr "^K3Vous avez dégelé ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:688
 msgid "^K3You revived yourself"
-msgstr "^K3Vous vous êtes dégelé tout seul"
+msgstr "^K3Vous vous êtes dégelé vous-même"
 
 #: qcsrc/common/notifications/all.inc:689
 #, c-format
@@ -4497,7 +4497,7 @@ msgstr "^BGL'équipe ^TC^TT^BG perd la manche"
 
 #: qcsrc/common/notifications/all.inc:698
 msgid "^K1You froze yourself"
-msgstr "^K1Vous vous êtes gelé tout seul"
+msgstr "^K1Vous vous êtes gelé vous-même"
 
 #: qcsrc/common/notifications/all.inc:699
 msgid "^K1Round already started, you spawn as frozen"

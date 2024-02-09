@@ -481,7 +481,7 @@ vector GetCurrentFov(float fov)
 		}
 	}
 
-	if(almost_equals(current_viewzoom, 1))
+	if(zoomfactor == 1 || current_viewzoom > 0.999) // zoomfactor check prevents a division by 0
 		current_zoomfraction = 0;
 	else if(almost_equals(current_viewzoom, 1/zoomfactor))
 		current_zoomfraction = 1;
@@ -1200,6 +1200,7 @@ void View_PostProcessing()
 {
 	float e1 = (autocvar_hud_postprocessing_maxbluralpha != 0);
 	float e2 = (autocvar_hud_powerup != 0);
+	bool want_postprocessing = false;
 	if(autocvar_hud_postprocessing && (e1 || e2)) // TODO: Remove this code and re-do the postprocess handling in the engine, where it properly belongs.
 	{
 		// enable or disable rendering types if they are used or not
@@ -1217,6 +1218,7 @@ void View_PostProcessing()
 				old_blurradius = blurradius;
 				old_bluralpha = bluralpha;
 			}
+			want_postprocessing = true;
 		}
 		else if(cvar_string("r_glsl_postprocess_uservec1") != "0 0 0 0") // reduce cvar_set spam as much as possible
 		{
@@ -1243,18 +1245,24 @@ void View_PostProcessing()
 				cvar_set("r_glsl_postprocess_uservec2", strcat(ftos((sharpen_intensity / 5) * autocvar_hud_powerup), " ", ftos(-sharpen_intensity * autocvar_hud_powerup), " 0 0"));
 				old_sharpen_intensity = sharpen_intensity;
 			}
+			want_postprocessing = true;
 		}
 		else if(cvar_string("r_glsl_postprocess_uservec2") != "0 0 0 0") // reduce cvar_set spam as much as possible
 		{
 			cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
 			old_sharpen_intensity = 0;
 		}
-
+	}
+	if (want_postprocessing)
+	{
 		if(cvar("r_glsl_postprocess") == 0)
 			cvar_set("r_glsl_postprocess", "2");
 	}
-	else if(cvar("r_glsl_postprocess") == 2)
-		cvar_set("r_glsl_postprocess", "0");
+	else
+	{
+		if(cvar("r_glsl_postprocess") == 2)
+			cvar_set("r_glsl_postprocess", "0");
+	}
 }
 
 void View_Lock()

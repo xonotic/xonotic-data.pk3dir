@@ -978,8 +978,8 @@ msgid ""
 "or in all but these game types. You can also specify 'all' as a\n"
 "field to show all fields available for the current game mode."
 msgstr ""
-"在域前你可以放一個 +（或 -）號，後跟一個以逗號分割的遊戲類型列表，\n"
-"之後一個斜槓，以使此域僅顯示在這些（或除了這些）遊戲類型中。你也可以使"
+"在域前你可以放一個 +（或 -）號，後跟一個以逗號分割的遊戲模式列表，\n"
+"之後一個斜槓，以使此域僅顯示在這些（或除了這些）遊戲模式中。你也可以使"
 "用‘all’以顯示當前遊戲模式的所有域。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:727
@@ -1318,7 +1318,7 @@ msgstr "^BG按 ^F2%s^BG 以進入遊戲"
 #: qcsrc/client/main.qc:1434
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
-msgstr "遊戲類型："
+msgstr "遊戲模式："
 
 #: qcsrc/client/main.qc:1448
 msgid "This match supports"
@@ -1376,7 +1376,7 @@ msgstr "不在意"
 
 #: qcsrc/client/mapvoting.qc:395
 msgid "Decide the gametype"
-msgstr "選擇遊戲種類"
+msgstr "選擇遊戲模式"
 
 #: qcsrc/client/mapvoting.qc:395
 msgid "Vote for a map"
@@ -2184,11 +2184,11 @@ msgstr "怪物榴彈"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:78
 msgid "Entrap grenade"
-msgstr "減速榴彈"
+msgstr "滯速榴彈"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:88
 msgid "Veil grenade"
-msgstr "隱身榴彈"
+msgstr "藏匿榴彈"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:99
 msgid "Ammo grenade"
@@ -2196,7 +2196,7 @@ msgstr "彈藥榴彈"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:109
 msgid "Darkness grenade"
-msgstr "暗黑榴彈"
+msgstr "暗影榴彈"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
@@ -3568,7 +3568,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 放的小火球燒着了%s%s"
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s^K1 should have used a smaller gun%s%s"
-msgstr "^BG%s^K1 駕馭不了這麼大的搶%s%s"
+msgstr "^BG%s^K1 沒能駕馭這麼大的槍%s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
@@ -10268,7 +10268,7 @@ msgstr "InstaGib（瞬殺）"
 
 #: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Defrag Mode"
-msgstr "Defrag（無殺戮模式）"
+msgstr "Defrag（休閒）"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"

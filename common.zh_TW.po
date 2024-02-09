@@ -241,7 +241,7 @@ msgstr "^3雙擊^7一個板面以配置特定板面選項。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:231
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr "^3CTRL ^7以禁用碰撞檢測， ^3SHIFT ^7以及"
+msgstr "^3CTRL ^7以停用碰撞檢測， ^3SHIFT ^7以及"
 
 #: qcsrc/client/hud/panel/infomessages.qc:232
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
@@ -986,8 +986,8 @@ msgid ""
 "or in all but these game types. You can also specify 'all' as a\n"
 "field to show all fields available for the current game mode."
 msgstr ""
-"在域前你可以放一個 +（或 -）號，後跟一個以逗號分割的遊戲型別列表，\n"
-"之後一個斜槓，以使此域僅顯示在這些（或除了這些）遊戲型別中。你也可以使"
+"在域前你可以放一個 +（或 -）號，後跟一個以逗號分割的遊戲類型列表，\n"
+"之後一個斜槓，以使此域僅顯示在這些（或除了這些）遊戲類型中。你也可以使"
 "用‘all’以顯示當前遊戲類型的所有域。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:727
@@ -1327,7 +1327,7 @@ msgstr "^BG按 ^F2%s^BG 以進入遊戲"
 #: qcsrc/client/main.qc:1434
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
-msgstr "遊戲型別："
+msgstr "遊戲類型："
 
 #: qcsrc/client/main.qc:1448
 msgid "This match supports"
@@ -1385,7 +1385,7 @@ msgstr "不在意"
 
 #: qcsrc/client/mapvoting.qc:395
 msgid "Decide the gametype"
-msgstr "選擇遊戲種類"
+msgstr "選擇遊戲類型"
 
 #: qcsrc/client/mapvoting.qc:395
 msgid "Vote for a map"
@@ -2193,11 +2193,11 @@ msgstr "怪物榴彈"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:78
 msgid "Entrap grenade"
-msgstr "減速榴彈"
+msgstr "滯速榴彈"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:88
 msgid "Veil grenade"
-msgstr "隱身榴彈"
+msgstr "藏匿榴彈"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:99
 msgid "Ammo grenade"
@@ -2205,7 +2205,7 @@ msgstr "彈藥榴彈"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:109
 msgid "Darkness grenade"
-msgstr "暗黑榴彈"
+msgstr "暗影榴彈"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #: qcsrc/menu/xonotic/keybinder.qc:60
@@ -2461,7 +2461,7 @@ msgstr "^1伺服器提示："
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr "^F4注意：^BG此伺服器當前禁用了聊天"
+msgstr "^F4注意：^BG此伺服器當前停用了聊天"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2469,15 +2469,15 @@ msgstr "^F4注意：^BG競賽過程中旁觀者的聊天不會傳送給玩家"
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
-msgstr "^F4注意：^BG此伺服器當前禁用了私密聊天"
+msgstr "^F4注意：^BG此伺服器當前停用了私密聊天"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
-msgstr "^F4注意：^BG此伺服器當前禁用了觀察者聊天"
+msgstr "^F4注意：^BG此伺服器當前停用了觀察者聊天"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
-msgstr "^F4注意：^BG此伺服器當前禁用了團隊聊天"
+msgstr "^F4注意：^BG此伺服器當前停用了團隊聊天"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -3276,7 +3276,7 @@ msgstr "^BG%s^F3 耗盡了生命"
 
 #: qcsrc/common/notifications/all.inc:408
 msgid "^BGMonsters are currently disabled"
-msgstr "^BG怪物當前被禁用"
+msgstr "^BG怪物當前被停用"
 
 #: qcsrc/common/notifications/all.inc:410
 msgid "^BGThe ^TC^TT^BG team held the ball for too long"
@@ -3577,7 +3577,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 放的小火球燒著了%s%s"
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s^K1 should have used a smaller gun%s%s"
-msgstr "^BG%s^K1 駕馭不了這麼大的搶%s%s"
+msgstr "^BG%s^K1 沒能駕馭這麼大的槍%s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
@@ -4746,7 +4746,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:807
 msgid "^F2Intruder detected, disabling shields!"
-msgstr "^F2檢測到入侵者，正在禁用護盾！"
+msgstr "^F2檢測到入侵者，正在停用護盾！"
 
 #: qcsrc/common/notifications/all.inc:809
 msgid ""
@@ -6503,7 +6503,7 @@ msgstr "提示訊息面板"
 #: qcsrc/menu/xonotic/util.qc:762 qcsrc/menu/xonotic/util.qc:778
 #: qcsrc/menu/xonotic/util.qc:795
 msgid "Disable"
-msgstr "禁用"
+msgstr "停用"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
@@ -7037,7 +7037,7 @@ msgstr "HUD 容器效果："
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:95
 msgid "DOCK^Disabled"
-msgstr "禁用"
+msgstr "停用"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:96
 msgid "DOCK^Small"
@@ -7644,7 +7644,7 @@ msgstr "自定義的統計伺服器"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1059
 msgid "stats disabled"
-msgstr "禁用了統計"
+msgstr "停用了統計"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1059
@@ -8241,7 +8241,7 @@ msgstr "時間提醒："
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:170
 msgid "WRN^Disabled"
-msgstr "已禁用"
+msgstr "已停用"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:172
 msgid "5 minutes"
@@ -8407,7 +8407,7 @@ msgstr "避免有損的紋理壓縮"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Disable sky for performance and visibility"
-msgstr "禁用天空以提高效能和可見度"
+msgstr "停用天空以提高效能和可見度"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Show sky"
@@ -8421,7 +8421,7 @@ msgstr "顯示曲面"
 msgid ""
 "Disable textures completely for very slow hardware. This gives a huge "
 "performance boost, but looks very ugly."
-msgstr "在非常慢的硬體上禁用材質。這會極大提高效能，但看起來很醜"
+msgstr "在非常慢的硬體上停用材質。這會極大提高效能，但看起來很醜"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:136
 msgid "Use lightmaps"
@@ -8529,7 +8529,7 @@ msgstr "傷害效果："
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:186
 msgid "DMGFX^Disabled"
-msgstr "禁用"
+msgstr "停用"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:187
 msgid "Skeletal"
@@ -8894,7 +8894,7 @@ msgstr "在提示訊息中顯示連殺："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:46
 msgid "SPREES^Disabled"
-msgstr "禁用"
+msgstr "停用"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:47
 msgid "Target"
@@ -9147,7 +9147,7 @@ msgstr "放縮速度："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:82
 msgid "How fast the view will be zoomed, disable to zoom instantly"
-msgstr "視角放縮速度，禁用以瞬間放縮"
+msgstr "視角放縮速度，停用以瞬間放縮"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:91
 msgid "ZOOM^Instant"
@@ -9322,7 +9322,7 @@ msgstr "啟用內建滑鼠加速"
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:83
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:86
 msgid "Disable system mouse acceleration"
-msgstr "禁用內建滑鼠加速"
+msgstr "停用內建滑鼠加速"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:80
 msgid "Make use of DGA mouse input"
@@ -9346,7 +9346,7 @@ msgstr "起跳時使用噴氣揹包："
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:102
 msgid "JPJUMP^Disabled"
-msgstr "禁用"
+msgstr "停用"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:103
 msgid "Air only"
@@ -9484,7 +9484,7 @@ msgstr "目標值："
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:101
 msgid "TRGT^Disabled"
-msgstr "已禁用"
+msgstr "已停用"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:112
 msgid "Idle limit:"
@@ -9503,11 +9503,11 @@ msgid ""
 "Menu tooltips: disabled, standard or advanced (also shows cvar or console "
 "command bound to the menu item)"
 msgstr ""
-"選單工具提示：已禁用、標準或高階（也在控制檯顯示繫結到選單項命令的 cvar）"
+"選單工具提示：已停用、標準或高階（也在控制檯顯示繫結到選單項命令的 cvar）"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:127
 msgid "TLTIP^Disabled"
-msgstr "已禁用"
+msgstr "已停用"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:128
 msgid "TLTIP^Standard"
@@ -9592,7 +9592,7 @@ msgstr "設定語言"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:72
 msgid "Disable gore effects and harsh language"
-msgstr "禁用血腥效果和惡劣的語言"
+msgstr "停用血腥效果和惡劣的語言"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:73
 msgid "Replace blood and gibs with content that does not have any gore effects"
@@ -9708,7 +9708,7 @@ msgstr "啟用抗鋸齒，可以平滑 3D 幾何的邊緣。注意這可能極�
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:76
 msgid "AA^Disabled"
-msgstr "已禁用"
+msgstr "已停用"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:77
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:94
@@ -9740,7 +9740,7 @@ msgstr "各向異性過濾質量"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:93
 msgid "ANISO^Disabled"
-msgstr "已禁用"
+msgstr "已停用"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:96
 msgid "8x"
@@ -9762,7 +9762,7 @@ msgstr "透過在正常渲染開始前繪製一份場景的僅深度版本來防
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:105
 msgid "DF^Disabled"
-msgstr "已禁用"
+msgstr "已停用"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:106
 msgid "DF^World"
@@ -10277,7 +10277,7 @@ msgstr "InstaGib（瞬殺）"
 
 #: qcsrc/menu/xonotic/serverlist.qh:160
 msgid "SLCAT^Defrag Mode"
-msgstr "Defrag（無殺戮模式）"
+msgstr "Defrag（休閒）"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
