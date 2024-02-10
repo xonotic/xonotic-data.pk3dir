@@ -5,20 +5,27 @@
 // enable to debug melee range
 //#define SHOTGUN_MELEEDEBUG
 
-void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float isprimary, float ammocount, float damage, float falloff_halflife, float falloff_mindist, float falloff_maxdist, float bullets, float spread, float solidpenetration, float force, float falloff_forcehalflife, entity bullet_trail_effect)
+void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity,
+                      float isprimary, float ammocount, float damage,
+                      float falloff_halflife, float falloff_mindist, float falloff_maxdist,
+                      float bullets, float spread, float solidpenetration,
+                      float force, float falloff_forcehalflife, entity bullet_trail_effect)
 {
 	W_DecreaseAmmo(thiswep, actor, ammocount, weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), damage * bullets, thiswep.m_id);
+	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE,
+		((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), damage * bullets, thiswep.m_id);
 
-	// TRICK: do the antilag outside the regular fireBullet function, so it isn't performed unnecessarily on every single bullet!
+	// TRICK: do the antilag outside the regular fireBullet function,
+	// so it isn't performed unnecessarily on every single bullet!
 	float lag = antilag_getlag(actor);
 	if(lag && bullets > 0)
 		antilag_takeback_all(actor, lag);
 
 	for(int sc = 0;sc < bullets;sc = sc + 1)
-		fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, falloff_halflife, falloff_mindist,
-			falloff_maxdist, 0, force, falloff_forcehalflife, thiswep.m_id, bullet_trail_effect, false);
+		fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration,
+			damage, falloff_halflife, falloff_mindist, falloff_maxdist, 0, force,
+			falloff_forcehalflife, thiswep.m_id, bullet_trail_effect, false);
 
 	if(lag && bullets > 0)
 		antilag_restore_all(actor);

@@ -16,13 +16,29 @@ void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity we
 	ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(machinegun, first_refire) * W_WeaponRateFactor(actor);
 
 	if(actor.(weaponentity).misc_bulletcounter == 1)
-		fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(machinegun, first_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, first_damage),
-			WEP_CVAR(machinegun, damagefalloff_halflife), WEP_CVAR(machinegun, damagefalloff_mindist), WEP_CVAR(machinegun, damagefalloff_maxdist), 0, WEP_CVAR(machinegun, first_force),
-			WEP_CVAR(machinegun, damagefalloff_forcehalflife), deathtype, EFFECT_BULLET, true);
+		fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir,
+		                   WEP_CVAR(machinegun, first_spread),
+		                   WEP_CVAR(machinegun, solidpenetration),
+		                   WEP_CVAR(machinegun, first_damage),
+		                   WEP_CVAR(machinegun, damagefalloff_halflife),
+		                   WEP_CVAR(machinegun, damagefalloff_mindist),
+		                   WEP_CVAR(machinegun, damagefalloff_maxdist),
+		                   0,
+		                   WEP_CVAR(machinegun, first_force),
+		                   WEP_CVAR(machinegun, damagefalloff_forcehalflife),
+		                   deathtype, EFFECT_BULLET, true);
 	else
-		fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(machinegun, sustained_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage),
-			WEP_CVAR(machinegun, damagefalloff_halflife), WEP_CVAR(machinegun, damagefalloff_mindist), WEP_CVAR(machinegun, damagefalloff_maxdist), 0, WEP_CVAR(machinegun, sustained_force),
-			WEP_CVAR(machinegun, damagefalloff_forcehalflife), deathtype, EFFECT_BULLET, true);
+		fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir,
+		                   WEP_CVAR(machinegun, sustained_spread),
+		                   WEP_CVAR(machinegun, solidpenetration),
+		                   WEP_CVAR(machinegun, sustained_damage),
+		                   WEP_CVAR(machinegun, damagefalloff_halflife),
+		                   WEP_CVAR(machinegun, damagefalloff_mindist),
+		                   WEP_CVAR(machinegun, damagefalloff_maxdist),
+		                   0,
+		                   WEP_CVAR(machinegun, sustained_force),
+		                   WEP_CVAR(machinegun, damagefalloff_forcehalflife),
+		                   deathtype, EFFECT_BULLET, true);
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
