@@ -184,7 +184,7 @@ void Registry_send(string id, string hash);
 			if (++group_idx < 50) /* this is to reduce strlen calls */ \
 				continue; \
 			int group_len = strlen(group); \
-			if (str_len + 1 + group_len >= 16383) /* exceeding max string length? */ \
+			if (str_len + 1 + group_len >= VM_TEMPSTRING_MAXSIZE) \
 			{ \
 				/* keep previous digests and replace current string with its digest */ \
 				s = strcat(substring(s, 0, digests_len), ":", digest_hex("MD4", s)); \
