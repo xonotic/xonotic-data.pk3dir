@@ -161,6 +161,9 @@ EFFECT(0, SPAWN_BLUE,               "spawn_event_blue")
 EFFECT(0, SPAWN_YELLOW,             "spawn_event_yellow")
 EFFECT(0, SPAWN_PINK,               "spawn_event_pink")
 EFFECT(0, SPAWN_NEUTRAL,            "spawn_event_neutral")
+EFFECT(0, SPAWN_GREEN,              "spawn_event_green")
+EFFECT(0, SPAWN_BROWN,              "spawn_event_brown")
+EFFECT(0, SPAWN_PURPLE,             "spawn_event_purple")
 entity EFFECT_SPAWN(int teamid)
 {
     switch (teamid) {
@@ -172,6 +175,7 @@ entity EFFECT_SPAWN(int teamid)
     }
 }
 
+EFFECT(0, DARKFIELD,                "darkfield")
 EFFECT(0, ICEORGLASS,               "iceorglass")
 EFFECT(0, ICEFIELD,                 "icefield")
 EFFECT(0, FIREFIELD,                "firefield")
@@ -231,6 +235,7 @@ entity EFFECT_CAP(int teamid)
 
 EFFECT(0, ITEM_PICKUP,              "item_pickup")
 EFFECT(0, ITEM_RESPAWN,             "item_respawn")
+EFFECT(0, ITEM_DESPAWN,             "item_despawn")
 
 EFFECT(0, ONS_GENERATOR_DAMAGED,    "torch_small")
 EFFECT(0, ONS_GENERATOR_GIB,        "onslaught_generator_gib_explode")

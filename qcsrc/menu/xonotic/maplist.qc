@@ -80,7 +80,7 @@ void XonoticMapList_draw(entity me)
 {
 	if(me.startButton)
 		me.startButton.disabled = ((me.selectedItem < 0) || (me.selectedItem >= me.nItems)
-			|| (gamestatus & (GAME_ISSERVER | GAME_CONNECTED) && cvar("g_campaign")));
+			|| ((gamestatus & (GAME_ISSERVER | GAME_CONNECTED)) && cvar("g_campaign")));
 	SUPER(XonoticMapList).draw(me);
 }
 

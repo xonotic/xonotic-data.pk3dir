@@ -30,8 +30,12 @@ float menuAlpha;
 float menuLogoAlpha;
 float prevMenuAlpha;
 bool menuInitialized;
-bool menuNotTheFirstFrame;
 int menuMouseMode;
+
+// Used for having effects only execute once in main menu, not for every reload
+// 0: never been in main menu before. 1: coming back to main menu. 2: in main menu.
+int menuNotTheFirstFrame;
+bool autocvar_menu_no_music_nor_welcome;
 
 float conwidth_s, conheight_s;
 float vidwidth_s, vidheight_s, vidpixelheight_s;
@@ -122,7 +126,8 @@ void UpdateConWidthHeight(float w, float h, float p)
 {
 	if (w != vidwidth_s || h != vidheight_s || p != vidpixelheight_s)
 	{
-		if (updateConwidths(w, h, p)) localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
+		if (updateConwidths(w, h, p) && menuNotTheFirstFrame)
+			localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
 		vidwidth_s = w;
 		vidheight_s = h;
 		vidpixelheight_s = p;
@@ -678,13 +683,14 @@ void m_tooltip(vector pos)
 }
 
 const int MIN_DISCONNECTION_TIME = 1;
-float autocvar_menu_force_on_disconnection;
 bool autocvar_g_campaign;
 void m_draw(float width, float height)
 {
 	static float connected_time;
 	if (clientstate() == CS_DISCONNECTED)
 	{
+		// avoid a bug where the main menu re-opens when changing maps
+		// potentially exclusive to `map <mapname>` cmd?
 		if (connected_time && time - connected_time > MIN_DISCONNECTION_TIME)
 		{
 			if (autocvar_g_campaign)
@@ -695,10 +701,18 @@ void m_draw(float width, float height)
 				cvar_set("g_campaign", "0");
 				m_sync();
 			}
-			if (autocvar_menu_force_on_disconnection > 0)
-				m_toggle(true);
+
+			// reload the menu so that disconnecting players don't
+			// have to press ESC to open it again
+			m_toggle(true);
+
 			localcmd("\nmenu_cmd directmenu Welcome RESET\n");
 			connected_time = 0;
+
+			// reset main menu
+			// FIXME?: find out if anything should be done to reset it more,
+			// this is just a fix to make main menu music replay nicely
+			menuNotTheFirstFrame = 1;
 		}
 	}
 	else
@@ -720,18 +734,24 @@ void m_draw(float width, float height)
 		m_init_delayed();
 		return;
 	}
-	if (!menuNotTheFirstFrame)
+
+	if (menuNotTheFirstFrame == 0) // only fade the menu in once ever
+		menuLogoAlpha = -0.8;  // no idea why, but when I start this at zero, it jumps instead of fading FIXME
+
+	if (menuNotTheFirstFrame <= 1) // only once per menu reload
 	{
-		menuNotTheFirstFrame = true;
-		if (Menu_Active && !cvar("menu_video_played"))
-        {
-            localcmd("cd loop $menu_cdtrack\n");
-            // TODO: use this when we have a welcome sound
-            //localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
-            menuLogoAlpha = -0.8;  // no idea why, but when I start this at zero, it jumps instead of fading FIXME
-        }
-		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!
-		localcmd("set menu_video_played 1\n");
+		if (Menu_Active && !autocvar_menu_no_music_nor_welcome)
+		{
+			localcmd("cd loop $menu_cdtrack\n");
+
+			// TODO: enable this when we have a welcome sound
+			// FIXME: change the file used according to the selected announcer
+			// Only play the welcome announcement once, not on any menu reloads
+			//if (menuNotTheFirstFrame == 0)
+			//localcmd("play sound/announcer/default/welcome.wav\n");
+		}
+
+		menuNotTheFirstFrame = 2;
 	}
 
 	float t = gettime();

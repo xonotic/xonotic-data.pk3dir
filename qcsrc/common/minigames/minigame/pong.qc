@@ -601,7 +601,7 @@ void pong_hud_status(vector pos, vector mySize)
 			mypos = pos;
 			mypos_y  += (e.team-1) * (player_fontsize_y + ts_y);
 
-			drawfill(mypos, ts, pong_team_to_color(e.team), 0.25, DRAWFLAG_ADDITIVE);
+			drawfill(mypos, ts, pong_team_to_color(e.team), 0.25 * panel_fg_alpha, DRAWFLAG_ADDITIVE);
 
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				(e.minigame_playerslot ? entcs_GetName(e.minigame_playerslot-1) : _("AI")),
@@ -703,7 +703,7 @@ int pong_client_event(entity minigame, string event, ...)
 		case "menu_click":
 		{
 			string cmd = ...(0,string);
-			if( cmd == "pong_throw" && minigame.minigame_flags & PONG_STATUS_WAIT )
+			if( cmd == "pong_throw" && ( minigame.minigame_flags & PONG_STATUS_WAIT ) )
 			{
 				minigame_cmd("throw");
 			}

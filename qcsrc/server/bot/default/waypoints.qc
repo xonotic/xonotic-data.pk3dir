@@ -1563,9 +1563,9 @@ void waypoint_load_hardwiredlinks()
 		{
 			waypoint_addlink(wp_from, wp_to);
 			waypoint_mark_hardwiredlink(wp_from, wp_to);
-		} else if (wp_from.wpflags & WPFLAGMASK_NORELINK
-			&& ((wp_from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT))
-				|| (wp_from.wpisbox && wp_from.wpflags & WAYPOINTFLAG_TELEPORT)))
+		}
+		else if ((wp_from.wpflags & WPFLAGMASK_NORELINK) && ((wp_from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT))
+		|| (wp_from.wpisbox && (wp_from.wpflags & WAYPOINTFLAG_TELEPORT))))
 		{
 			waypoint_addlink(wp_from, wp_to);
 		}

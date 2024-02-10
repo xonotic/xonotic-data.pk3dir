@@ -18,34 +18,31 @@ entity makeXonoticPlayerList()
 
 void XonoticPlayerList_setPlayerList(entity me, string plist)
 {
-	int buf,i,n;
-	string s;
+	int i;
+	int buf = buf_create();
 
-	buf = buf_create();
 	me.nItems = tokenizebyseparator(plist, "\n");
 	for(i = 0; i < me.nItems; ++i)
 	{
-		bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME, argv(i)); // -666 100 "^4Nex ^2Player"
+		bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME, argv(i)); // -666 100 "^4Xon ^2Player"
 	}
 
 	for(i = 0; i < me.nItems; ++i)
 	{
-		s = bufstr_get(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME);
-		n = tokenize_console(s);
+		string name = bufstr_get(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME);
+		int n = tokenize_console(name);
 
+		bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_SCORE, argv(0)); // -666
+		bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_PING,  argv(1)); // 100
 		if(n == PLAYERPARM_COUNT)
 		{
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_SCORE, argv(0)); // -666
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_PING,  argv(1)); // 100
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_TEAM,  argv(2)); // 0 for spec, else 1, 2, 3, 4
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME,  argv(3)); // ^4Nex ^2Player
+			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME,  argv(3)); // ^4Xon ^2Player
 		}
 		else
 		{
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_SCORE, argv(0)); // -666
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_PING,  argv(1)); // 100
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_TEAM,  "-1");
-			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME,  argv(2)); // ^4Nex ^2Player
+			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME,  argv(2)); // ^4Xon ^2Player
 		}
 	}
 	me.playerList = buf;
@@ -77,12 +74,9 @@ void XonoticPlayerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 
 void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
-	string s;
-	string score;
-	float t;
-	vector rgb;
+	float t = stof(me.getPlayerList(me, i, PLAYERPARM_TEAM));
 
-	t = stof(me.getPlayerList(me, i, PLAYERPARM_TEAM));
+	vector rgb = SKINCOLOR_TEXT;
 	if(t == 1)
 		rgb = colormapPaletteColor(4, 0);
 	else if(t == 2)
@@ -91,11 +85,9 @@ void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		rgb = colormapPaletteColor(12, 0);
 	else if(t == 4)
 		rgb = colormapPaletteColor(9, 0);
-	else
-		rgb = SKINCOLOR_TEXT;
 
-	s = me.getPlayerList(me, i, PLAYERPARM_NAME);
-	score = me.getPlayerList(me, i, PLAYERPARM_SCORE);
+	string name = me.getPlayerList(me, i, PLAYERPARM_NAME);
+	string score = me.getPlayerList(me, i, PLAYERPARM_SCORE);
 
 	if(substring(score, strlen(score) - 10, 10) == ":spectator")
 	{
@@ -112,9 +104,10 @@ void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 			score = _("spectator");
 	}
 
-	s = draw_TextShortenToWidth(s, me.columnNameSize, 1, me.realFontSize);
-	draw_Text(me.realUpperMargin2 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 1, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', 1, 1);
+	name = draw_TextShortenToWidth(name, me.columnNameSize, 1, me.realFontSize);
+	draw_Text(me.realUpperMargin2 * eY + me.columnNameOrigin * eX, name, me.realFontSize, '1 1 1', 1, 1);
 
 	score = draw_TextShortenToWidth(score, me.columnScoreSize, 0, me.realFontSize);
-	draw_Text(me.realUpperMargin2 * eY + (me.columnScoreOrigin + 1.00 * (me.columnScoreSize - draw_TextWidth(score, 1, me.realFontSize))) * eX, score, me.realFontSize, rgb, 1, 0);
+	float score_ofs = me.columnScoreSize - draw_TextWidth(score, 1, me.realFontSize);
+	draw_Text(me.realUpperMargin2 * eY + (me.columnScoreOrigin + score_ofs) * eX, score, me.realFontSize, rgb, 1, 0);
 }

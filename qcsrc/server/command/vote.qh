@@ -3,6 +3,8 @@
 bool autocvar_sv_vote_call;
 bool autocvar_sv_vote_change;
 string autocvar_sv_vote_commands;
+bool autocvar_sv_vote_debug;
+bool autocvar_sv_vote_gamestart;
 int autocvar_sv_vote_limit;
 float autocvar_sv_vote_majority_factor;
 float autocvar_sv_vote_majority_factor_of_voted;
@@ -19,7 +21,6 @@ bool autocvar_sv_vote_singlecount;
 float autocvar_sv_vote_stop;
 float autocvar_sv_vote_timeout;
 float autocvar_sv_vote_wait;
-bool autocvar_sv_vote_gamestart;
 
 // definitions for command selection between progs
 const float VC_ASGNMNT_BOTH = 1;
@@ -56,7 +57,7 @@ string vote_parsed_display; // visual string which is fixed after being parsed
 
 // allow functions to be used in other code like world.qc and teamplay.qc
 void VoteThink();
-void VoteReset();
+void VoteReset(bool verbose);
 void VoteCommand(int request, entity caller, int argc, string vote_command);
 
 // warmup and nagger stuff

@@ -490,7 +490,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 {
 	setorigin(ent, old.origin);
 	ent.angles = old.angles;
-	ent.noalign = Item_ShouldKeepPosition(old);
+	ent.noalign = ITEM_SHOULD_KEEP_POSITION(old);
 
 	buff_Init(ent);
 }

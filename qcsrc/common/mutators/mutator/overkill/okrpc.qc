@@ -130,7 +130,7 @@ void W_OverkillRocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .ent
 
 METHOD(OverkillRocketPropelledChainsaw, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(okrpc, speed), 0, WEP_CVAR_PRI(okrpc, lifetime), false, true);
+	PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(okrpc, speed), 0, WEP_CVAR_PRI(okrpc, lifetime), false, true);
 }
 
 METHOD(OverkillRocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -199,25 +199,25 @@ METHOD(OverkillRocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep, enti
 
 METHOD(OverkillRocketPropelledChainsaw, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, weaponentity, WEP_CVAR_PRI(okrpc, ammo), SND_RELOAD);
+	W_Reload(actor, weaponentity, WEP_CVAR_PRI(okrpc, ammo), SND_RELOAD);
 }
 
 METHOD(OverkillRocketPropelledChainsaw, wr_suicidemessage, Notification(entity thiswep))
 {
-    if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
-        return WEAPON_OVERKILL_RPC_SUICIDE_SPLASH;
-    else
-        return WEAPON_OVERKILL_RPC_SUICIDE_DIRECT;
+	if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
+		return WEAPON_OVERKILL_RPC_SUICIDE_SPLASH;
+	else
+		return WEAPON_OVERKILL_RPC_SUICIDE_DIRECT;
 }
 
 METHOD(OverkillRocketPropelledChainsaw, wr_killmessage, Notification(entity thiswep))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-        return WEAPON_BLASTER_MURDER;
-    else if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
-        return WEAPON_OVERKILL_RPC_MURDER_SPLASH;
-    else
-        return WEAPON_OVERKILL_RPC_MURDER_DIRECT;
+	if(w_deathtype & HITTYPE_SECONDARY)
+		return WEAPON_BLASTER_MURDER;
+	else if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
+		return WEAPON_OVERKILL_RPC_MURDER_SPLASH;
+	else
+		return WEAPON_OVERKILL_RPC_MURDER_DIRECT;
 }
 
 #endif
@@ -226,10 +226,10 @@ METHOD(OverkillRocketPropelledChainsaw, wr_killmessage, Notification(entity this
 
 METHOD(OverkillRocketPropelledChainsaw, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2 = w_org + w_backoff * 2;
-    pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
-    if(!w_issilent)
-        sound(actor, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+	vector org2 = w_org + w_backoff * 2;
+	pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
+	if(!w_issilent)
+		sound(actor, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 }
 
 #endif

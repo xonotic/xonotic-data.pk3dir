@@ -283,7 +283,7 @@ MUTATOR_HOOKFUNCTION(cts, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if (Item_IsLoot(item))
+	if (ITEM_IS_LOOT(item))
 	{
 		if(item.monster_loot && autocvar_g_cts_drop_monster_items)
 			return false;

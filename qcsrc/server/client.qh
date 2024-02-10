@@ -7,6 +7,7 @@
 #include <common/sounds/all.qh>
 
 bool autocvar__notarget;
+bool autocvar_sv_show_entnum;
 int autocvar_g_balance_armor_start;
 float autocvar_g_balance_pause_armor_rot_spawn;
 float autocvar_g_balance_pause_fuel_rot_spawn;
