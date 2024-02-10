@@ -22,9 +22,10 @@ void GotoNextMap(float reinit);
 
 bool Map_IsRecent(string m);
 
-string GetNextMap();
+bool Map_Check(int position, float pass);
 
-void ShuffleMaplist();
+int Maplist_Init(void);
+string GetNextMap(void);
 
 void Map_Goto_SetStr(string nextmapname);
 

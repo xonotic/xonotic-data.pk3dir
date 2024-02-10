@@ -935,9 +935,6 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 	return false;
 }
 
-#if defined(CSQC) || defined(MENUQC)
-string(string filename) whichpack = #503;
-#endif
 string _MapInfo_CheckArenaFile(string pFilename, string pMapname)
 {
 	// returns the file name if valid, otherwise returns ""
@@ -1170,14 +1167,14 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		{
 			MapInfo_Map_flags |= MAPINFO_FLAG_FRUSTRATING;
 		}
-		else if(t == "noautomaplist")
+		else if(t == "donotwant" || t == "noautomaplist")
 		{
-			MapInfo_Map_flags |= MAPINFO_FLAG_NOAUTOMAPLIST;
+			MapInfo_Map_flags |= MAPINFO_FLAG_DONOTWANT;
 		}
 		else if(t == "gameversion_min")
 		{
 			if (cvar("gameversion") < stof(s))
-				MapInfo_Map_flags |= MAPINFO_FLAG_NOAUTOMAPLIST;
+				MapInfo_Map_flags |= MAPINFO_FLAG_DONOTWANT;
 		}
 		else if(t == "type")
 		{

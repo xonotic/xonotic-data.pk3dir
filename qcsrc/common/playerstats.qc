@@ -258,22 +258,21 @@ void PlayerStats_GameReport(bool finished)
 		PlayerStats_GameReport_FinalizePlayer(it);
 	});
 
-	if(autocvar_g_playerstats_gamereport_uri != "")
-	{
-		PlayerStats_GameReport_DelayMapVote = true;
-		url_multi_fopen(
-			autocvar_g_playerstats_gamereport_uri,
-			FILE_APPEND,
-			PlayerStats_GameReport_Handler,
-			NULL
-		);
-	}
-	else
+	if(autocvar_g_playerstats_gamereport_uri == "" || warmup_stage)
 	{
 		PlayerStats_GameReport_DelayMapVote = false;
 		db_close(PS_GR_OUT_DB);
 		PS_GR_OUT_DB = -1;
+		return;
 	}
+
+	PlayerStats_GameReport_DelayMapVote = true;
+	url_multi_fopen(
+		autocvar_g_playerstats_gamereport_uri,
+		FILE_APPEND,
+		PlayerStats_GameReport_Handler,
+		NULL
+	);
 }
 
 void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that scores are added properly
@@ -369,6 +368,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 * C: number of "unpure" cvar changes
 		 * U: UDP port number of the server
 		 * D: duration of the match
+		 * RP: number of rounds played
 		 * L: "ladder" in which the server is participating in
 		 * P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
 		 * Q: team number of an existing team (format: team#NN); this also sets the owner for all following "e" lines (lower case!)
@@ -409,7 +409,10 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
 			url_fputs(fh, sprintf("U %d\n", cvar("port")));
 			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
-			url_fputs(fh, sprintf("L %s\n", autocvar_g_playerstats_gamereport_ladder));
+			if (rounds_played > 0)
+				url_fputs(fh, sprintf("RP %d\n", rounds_played));
+			if (autocvar_g_playerstats_gamereport_ladder != "")
+				url_fputs(fh, sprintf("L %s\n", autocvar_g_playerstats_gamereport_ladder));
 
 			// TEAMS
 			if(teamplay)

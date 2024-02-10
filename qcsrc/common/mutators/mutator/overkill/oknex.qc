@@ -186,79 +186,82 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(oknex, animtime), w_ready);
 		return;
 	}
-	//if ((WEP_CVAR(oknex, charge) && (WEP_CVAR(oknex, secondary) == 1)) ? (PHYS_INPUT_BUTTON_ZOOM(actor) | PHYS_INPUT_BUTTON_ZOOMSCRIPT(actor)) : (fire & 2))
-	//{
-	//	if(WEP_CVAR(oknex, charge))
-	//	{
-	//		actor.(weaponentity).oknex_charge_rottime = time + WEP_CVAR(oknex, charge_rot_pause);
-	//		float dt = frametime / W_TICSPERFRAME;
-	//
-	//		if(actor.(weaponentity).oknex_charge < 1)
-	//		{
-	//			if(WEP_CVAR_SEC(oknex, chargepool))
-	//			{
-	//				if(WEP_CVAR_SEC(oknex, ammo))
-	//				{
-	//					// always deplete if secondary is held
-	//					actor.(weaponentity).oknex_chargepool_ammo = max(0, actor.(weaponentity).oknex_chargepool_ammo - WEP_CVAR_SEC(oknex, ammo) * dt);
 
-	//					dt = min(dt, (1 - actor.(weaponentity).oknex_charge) / WEP_CVAR(oknex, charge_rate));
-	//					actor.oknex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(oknex, chargepool_pause_regen);
-	//					dt = min(dt, actor.(weaponentity).oknex_chargepool_ammo);
-	//					dt = max(0, dt);
+#if 0
+	if ((WEP_CVAR(oknex, charge) && (WEP_CVAR(oknex, secondary) == 1)) ? (PHYS_INPUT_BUTTON_ZOOM(actor) | PHYS_INPUT_BUTTON_ZOOMSCRIPT(actor)) : (fire & 2))
+	{
+		if(WEP_CVAR(oknex, charge))
+		{
+			actor.(weaponentity).oknex_charge_rottime = time + WEP_CVAR(oknex, charge_rot_pause);
+			float dt = frametime / W_TICSPERFRAME;
+	
+			if(actor.(weaponentity).oknex_charge < 1)
+			{
+				if(WEP_CVAR_SEC(oknex, chargepool))
+				{
+					if(WEP_CVAR_SEC(oknex, ammo))
+					{
+						// always deplete if secondary is held
+						actor.(weaponentity).oknex_chargepool_ammo = max(0, actor.(weaponentity).oknex_chargepool_ammo - WEP_CVAR_SEC(oknex, ammo) * dt);
 
-	//					actor.(weaponentity).oknex_charge += dt * WEP_CVAR(oknex, charge_rate);
-	//				}
-	//			}
+						dt = min(dt, (1 - actor.(weaponentity).oknex_charge) / WEP_CVAR(oknex, charge_rate));
+						actor.oknex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(oknex, chargepool_pause_regen);
+						dt = min(dt, actor.(weaponentity).oknex_chargepool_ammo);
+						dt = max(0, dt);
 
-	//			else if(WEP_CVAR_SEC(oknex, ammo))
-	//			{
-	//				if(fire & 2) // only eat ammo when the button is pressed
-	//				{
-	//					dt = min(dt, (1 - actor.(weaponentity).oknex_charge) / WEP_CVAR(oknex, charge_rate));
-	//					if(!(actor.items & IT_UNLIMITED_AMMO))
-	//					{
-	//						// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	//						if(autocvar_g_balance_vortex_reload_ammo)
-	//						{
-	//							dt = min(dt, (actor.(weaponentity).clip_load - WEP_CVAR_PRI(oknex, ammo)) / WEP_CVAR_SEC(oknex, ammo));
-	//							dt = max(0, dt);
-	//							if(dt > 0)
-	//							{
-	//								actor.(weaponentity).clip_load = max(WEP_CVAR_SEC(oknex, ammo), actor.(weaponentity).clip_load - WEP_CVAR_SEC(oknex, ammo) * dt);
-	//							}
-	//							actor.(weaponentity).(weapon_load[WEP_OVERKILL_NEX.m_id]) = actor.(weaponentity).clip_load;
-	//						}
-	//						else
-	//						{
-	//							dt = min(dt, (actor.(thiswep.ammo_field) - WEP_CVAR_PRI(oknex, ammo)) / WEP_CVAR_SEC(oknex, ammo));
-	//							dt = max(0, dt);
-	//							if(dt > 0)
-	//							{
-	//								actor.(thiswep.ammo_field) = max(WEP_CVAR_SEC(oknex, ammo), actor.(thiswep.ammo_field) - WEP_CVAR_SEC(oknex, ammo) * dt);
-	//							}
-	//						}
-	//					}
-	//					actor.(weaponentity).oknex_charge += dt * WEP_CVAR(oknex, charge_rate);
-	//				}
-	//			}
+						actor.(weaponentity).oknex_charge += dt * WEP_CVAR(oknex, charge_rate);
+					}
+				}
 
-	//			else
-	//			{
-	//				dt = min(dt, (1 - actor.(weaponentity).oknex_charge) / WEP_CVAR(oknex, charge_rate));
-	//				actor.(weaponentity).oknex_charge += dt * WEP_CVAR(oknex, charge_rate);
-	//			}
-	//		}
-	//	}
-	//	else if(WEP_CVAR(oknex, secondary))
-	//	{
-	//		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(oknex, refire)))
-	//		{
-	//			W_OverkillNex_Attack(thiswep, actor, weaponentity, 1);
-	//			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(oknex, animtime), w_ready);
-	//		}
-	//	}
-	//}
+				else if(WEP_CVAR_SEC(oknex, ammo))
+				{
+					if(fire & 2) // only eat ammo when the button is pressed
+					{
+						dt = min(dt, (1 - actor.(weaponentity).oknex_charge) / WEP_CVAR(oknex, charge_rate));
+						if(!(actor.items & IT_UNLIMITED_AMMO))
+						{
+							// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+							if(autocvar_g_balance_vortex_reload_ammo)
+							{
+								dt = min(dt, (actor.(weaponentity).clip_load - WEP_CVAR_PRI(oknex, ammo)) / WEP_CVAR_SEC(oknex, ammo));
+								dt = max(0, dt);
+								if(dt > 0)
+								{
+									actor.(weaponentity).clip_load = max(WEP_CVAR_SEC(oknex, ammo), actor.(weaponentity).clip_load - WEP_CVAR_SEC(oknex, ammo) * dt);
+								}
+								actor.(weaponentity).(weapon_load[WEP_OVERKILL_NEX.m_id]) = actor.(weaponentity).clip_load;
+							}
+							else
+							{
+								dt = min(dt, (actor.(thiswep.ammo_field) - WEP_CVAR_PRI(oknex, ammo)) / WEP_CVAR_SEC(oknex, ammo));
+								dt = max(0, dt);
+								if(dt > 0)
+								{
+									actor.(thiswep.ammo_field) = max(WEP_CVAR_SEC(oknex, ammo), actor.(thiswep.ammo_field) - WEP_CVAR_SEC(oknex, ammo) * dt);
+								}
+							}
+						}
+						actor.(weaponentity).oknex_charge += dt * WEP_CVAR(oknex, charge_rate);
+					}
+				}
+
+				else
+				{
+					dt = min(dt, (1 - actor.(weaponentity).oknex_charge) / WEP_CVAR(oknex, charge_rate));
+					actor.(weaponentity).oknex_charge += dt * WEP_CVAR(oknex, charge_rate);
+				}
+			}
+		}
+		else if(WEP_CVAR(oknex, secondary))
+		{
+			if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(oknex, refire)))
+			{
+				W_OverkillNex_Attack(thiswep, actor, weaponentity, 1);
+				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(oknex, animtime), w_ready);
+			}
+		}
+	}
+#endif
 }
 
 METHOD(OverkillNex, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))

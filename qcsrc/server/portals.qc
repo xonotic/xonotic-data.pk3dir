@@ -404,6 +404,7 @@ void Portal_Connect(entity teleporter, entity destination)
 #else
 	teleporter.solid = SOLID_BSP;
 #endif
+	setorigin(teleporter, teleporter.origin); // link it to the area grid
 }
 
 void Portal_Remove(entity portal, float killed)

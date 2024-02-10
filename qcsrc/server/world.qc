@@ -118,12 +118,7 @@ void GotoFirstMap(entity this)
 	{
 		// cvar_set("_sv_init", "0");
 		// we do NOT set this to 0 any more, so someone "accidentally" changing
-		// to this "init" map on a dedicated server will cause no permanent
-		// harm
-		if(autocvar_g_maplist_shuffle)
-			ShuffleMaplist();
-		n = tokenizebyseparator(autocvar_g_maplist, " ");
-		cvar_set("g_maplist_index", ftos(n - 1)); // jump to map 0 in GotoNextMap
+		// to this "init" map on a dedicated server will cause no permanent harm
 
 		MapInfo_Enumerate();
 		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -236,6 +231,10 @@ void cvar_changes_init()
 		BADCVAR("timeformat");
 		BADCVAR("timestamps");
 		BADCVAR("g_require_stats");
+		BADCVAR("g_chatban_list");
+		BADCVAR("g_playban_list");
+		BADCVAR("g_playban_minigames");
+		BADCVAR("g_voteban_list");
 		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");
 		BADPREFIX("g_banned_list");
@@ -259,8 +258,6 @@ void cvar_changes_init()
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
-		BADCVAR("sv_muteban_list");
-		BADCVAR("sv_voteban_list");
 		BADCVAR("sv_allow_customplayermodels_idlist");
 		BADCVAR("sv_allow_customplayermodels_speciallist");
 
@@ -304,6 +301,10 @@ void cvar_changes_init()
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
+		BADCVAR("g_tka");
+		BADCVAR("g_tka_on_ka_maps");
+		BADCVAR("g_tka_on_tdm_maps");
+		BADCVAR("g_tka_teams");
 		BADCVAR("g_tmayhem");
 		BADCVAR("g_tmayhem_teams");
 		BADCVAR("g_vip");
@@ -331,8 +332,11 @@ void cvar_changes_init()
 
 		if(adding)
 		{
+			if (cvar_changes == "")
+				cvar_changes = "// this server runs at modified server settings:\n";
+
 			cvar_changes = strcat(cvar_changes, k, " \"", v, "\" // \"", d, "\"\n");
-			if(strlen(cvar_changes) > 16384)
+			if(strlen(cvar_changes) >= VM_TEMPSTRING_MAXSIZE)
 			{
 				cvar_changes = "// too many settings have been changed to show them here\n";
 				adding = 0;
@@ -408,7 +412,6 @@ void cvar_changes_init()
 		BADCVAR("w_prop_interval");
 		BADPREFIX("chat_");
 		BADPREFIX("crypto_");
-		BADPREFIX("gameversion");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
 		BADPREFIX("g_hats_");
@@ -452,6 +455,7 @@ void cvar_changes_init()
 		BADCVAR("g_ban_sync_uri");
 		BADCVAR("g_buffs");
 		BADCVAR("g_ca_teams_override");
+		BADCVAR("g_ca_prevent_stalemate");
 		BADCVAR("g_ctf_fullbrightflags");
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_ctf_leaderboard");
@@ -545,8 +549,11 @@ void cvar_changes_init()
 
 		if(pureadding)
 		{
+			if (cvar_purechanges == "")
+				cvar_purechanges = "// this server runs at modified gameplay settings:\n";
+
 			cvar_purechanges = strcat(cvar_purechanges, k, " \"", v, "\" // \"", d, "\"\n");
-			if(strlen(cvar_purechanges) > 16384)
+			if(strlen(cvar_purechanges) >= VM_TEMPSTRING_MAXSIZE)
 			{
 				cvar_purechanges = "// too many settings have been changed to show them here\n";
 				pureadding = 0;
@@ -561,15 +568,13 @@ void cvar_changes_init()
 		// though.
 	}
 	buf_del(h);
+
 	if(cvar_changes == "")
 		cvar_changes = "// this server runs at default server settings\n";
-	else
-		cvar_changes = strcat("// this server runs at modified server settings:\n", cvar_changes);
 	cvar_changes = strzone(cvar_changes);
+
 	if(cvar_purechanges == "")
 		cvar_purechanges = "// this server runs at default gameplay settings\n";
-	else
-		cvar_purechanges = strcat("// this server runs at modified gameplay settings:\n", cvar_purechanges);
 	cvar_purechanges = strzone(cvar_purechanges);
 }
 
@@ -657,14 +662,18 @@ void GameplayMode_DelayedInit(entity this)
 	if (!g_duel)
 		MapReadSizes(mapname);
 
-	if (autocvar_g_maxplayers < 0 && teamplay)
+	if (autocvar_g_maxplayers < 0)
 	{
-		// automatic maxplayers should be a multiple of team count
-		if (map_maxplayers == 0 || map_maxplayers > maxclients)
+		if (map_maxplayers <= 0)
 			map_maxplayers = maxclients; // unlimited, but may need rounding
-		int d = map_maxplayers % AVAILABLE_TEAMS;
-		int u = AVAILABLE_TEAMS - d;
-		map_maxplayers += (u <= d && u + map_maxplayers <= maxclients) ? u : -d;
+		map_maxplayers = bound(max(2, AVAILABLE_TEAMS * 2), map_maxplayers, maxclients);
+		if (teamplay)
+		{
+			// automatic maxplayers should be a multiple of team count
+			int down = map_maxplayers % AVAILABLE_TEAMS;
+			int up = AVAILABLE_TEAMS - down;
+			map_maxplayers += (up < down && up + map_maxplayers <= maxclients) ? up : -down;
+		}
 	}
 
 	if (warmup_stage < 0)
@@ -675,9 +684,9 @@ void GameplayMode_DelayedInit(entity this)
 		if (teamplay)
 		{
 			// automatic minplayers should be a multiple of team count
-			int d = map_minplayers % AVAILABLE_TEAMS;
-			int u = AVAILABLE_TEAMS - d;
-			map_minplayers += (u < d && u + map_minplayers <= m) ? u : -d;
+			int down = map_minplayers % AVAILABLE_TEAMS;
+			int up = AVAILABLE_TEAMS - down;
+			map_minplayers += (up < down && up + map_minplayers <= m) ? up : -down;
 		}
 	}
 	else
@@ -686,7 +695,7 @@ void GameplayMode_DelayedInit(entity this)
 
 void InitGameplayMode()
 {
-	VoteReset();
+	VoteReset(false);
 
 	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
 	get_mi_min_max(1);
@@ -1053,7 +1062,7 @@ spawnfunc(worldspawn)
 	WinningConditionHelper(this); // set worldstatus
 
 	if (autocvar_sv_autopause && server_is_dedicated && !wantrestart)
-		// INITPRIO_LAST is to soon: bots either didn't join yet or didn't leave yet, see: bot_fixcount()
+		// INITPRIO_LAST is too soon: bots either didn't join yet or didn't leave yet, see: bot_fixcount()
 		defer(this, 5, Pause_TryPause_Dedicated);
 
 	world_initialized = 1;
@@ -1336,7 +1345,7 @@ void NextLevel()
 
 	//pos = FindIntermission ();
 
-	VoteReset();
+	VoteReset(true);
 
 	DumpStats(true);
 
@@ -2143,16 +2152,26 @@ void readlevelcvars()
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
 	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
 	g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
-	g_pickup_respawntime_short = cvar("g_pickup_respawntime_short");
-	g_pickup_respawntime_medium = cvar("g_pickup_respawntime_medium");
-	g_pickup_respawntime_long = cvar("g_pickup_respawntime_long");
+	g_pickup_respawntime_armor_small = cvar("g_pickup_respawntime_armor_small");
+	g_pickup_respawntime_armor_medium = cvar("g_pickup_respawntime_armor_medium");
+	g_pickup_respawntime_armor_big = cvar("g_pickup_respawntime_armor_big");
+	g_pickup_respawntime_armor_mega = cvar("g_pickup_respawntime_armor_mega");
+	g_pickup_respawntime_health_small = cvar("g_pickup_respawntime_health_small");
+	g_pickup_respawntime_health_medium = cvar("g_pickup_respawntime_health_medium");
+	g_pickup_respawntime_health_big = cvar("g_pickup_respawntime_health_big");
+	g_pickup_respawntime_health_mega = cvar("g_pickup_respawntime_health_mega");
 	g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
 	g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
 	g_pickup_respawntimejitter_superweapon = cvar("g_pickup_respawntimejitter_superweapon");
 	g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
-	g_pickup_respawntimejitter_short = cvar("g_pickup_respawntimejitter_short");
-	g_pickup_respawntimejitter_medium = cvar("g_pickup_respawntimejitter_medium");
-	g_pickup_respawntimejitter_long = cvar("g_pickup_respawntimejitter_long");
+	g_pickup_respawntimejitter_armor_small = cvar("g_pickup_respawntimejitter_armor_small");
+	g_pickup_respawntimejitter_armor_medium = cvar("g_pickup_respawntimejitter_armor_medium");
+	g_pickup_respawntimejitter_armor_big = cvar("g_pickup_respawntimejitter_armor_big");
+	g_pickup_respawntimejitter_armor_mega = cvar("g_pickup_respawntimejitter_armor_mega");
+	g_pickup_respawntimejitter_health_small = cvar("g_pickup_respawntimejitter_health_small");
+	g_pickup_respawntimejitter_health_medium = cvar("g_pickup_respawntimejitter_health_medium");
+	g_pickup_respawntimejitter_health_big = cvar("g_pickup_respawntimejitter_health_big");
+	g_pickup_respawntimejitter_health_mega = cvar("g_pickup_respawntimejitter_health_mega");
 	g_pickup_respawntimejitter_powerup = cvar("g_pickup_respawntimejitter_powerup");
 
 	g_pickup_shells = cvar("g_pickup_shells");

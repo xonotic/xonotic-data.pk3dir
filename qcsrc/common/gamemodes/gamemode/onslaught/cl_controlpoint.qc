@@ -122,7 +122,11 @@ void cpicon_construct(entity this, bool isnew)
 		set_movetype(this.icon_realmodel, MOVETYPE_NOCLIP);
 	}
 
-	if(this.iscaptured) { this.icon_realmodel.solid = SOLID_BBOX; }
+	if(this.iscaptured)
+	{
+		this.icon_realmodel.solid = SOLID_BBOX;
+		setorigin(this.icon_realmodel, this.icon_realmodel.origin); // link
+	}
 
 	set_movetype(this, MOVETYPE_NOCLIP);
 	this.move_time		= time;

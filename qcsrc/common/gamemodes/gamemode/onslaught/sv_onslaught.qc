@@ -555,6 +555,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 		sound(this, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILT, VOL_BASE, ATTEN_NORM);
 		this.owner.iscaptured = true;
 		this.solid = SOLID_BBOX;
+		setorigin(this, this.origin); // setorigin after change to solid field to ensure area grid linking
 
 		Send_Effect(EFFECT_CAP(this.owner.team), this.owner.origin, '0 0 0', 1);
 

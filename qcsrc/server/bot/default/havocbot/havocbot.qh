@@ -29,6 +29,9 @@
 
 .vector havocbot_keyboard;
 
+.float randomdirectiontime;
+.vector randomdirection;
+
 /*
  * Functions
  */

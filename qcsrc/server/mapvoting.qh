@@ -30,10 +30,11 @@ void MapVote_Start();
 void MapVote_Spawn();
 void MapVote_Think();
 void MapVote_SendPicture(entity to, int id);
+bool GameTypeVote_SetGametype(entity type);
 float GameTypeVote_Start();
 float GameTypeVote_Finished(float pos);
 string GameTypeVote_MapInfo_FixName(string m);
 
-float gametypevote;
+bool gametypevote;
 string getmapname_stored;
 float mapvote_initialized;

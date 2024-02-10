@@ -38,6 +38,7 @@ const int IT_SPEED						= BIT(13);
 const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
 
 // item networking
+const int ISF_REMOVEFX          = BIT(0); // technically unnecessary (after the kludge in Item_Think() is reverted), but cheaper and cleaner than using ITS_AVAILABLE
 const int ISF_LOCATION          = BIT(1);
 const int ISF_MODEL             = BIT(2);
 const int ISF_STATUS            = BIT(3);
@@ -57,6 +58,14 @@ const int ITS_AVAILABLE         = BIT(3);
 const int ITS_ALLOWFB           = BIT(4);
 const int ITS_ALLOWSI           = BIT(5);
 const int ITS_GLOW              = BIT(6);
+const int ITS_EXPIRING          = BIT(7);
+
+// enough to notice it's about to despawn and circle jump to grab it
+const float IT_DESPAWNFX_TIME = 1.5;
+
+// 2hz probably enough to correct a desync caused by serious lag
+// FIXME but updating faster applies the kludge in Item_Think() sooner so it's less noticeable
+const float IT_UPDATE_INTERVAL = 0.0625;
 
 .float fade_start;
 .float fade_end;

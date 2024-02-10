@@ -20,6 +20,8 @@ const int AI_STATUS_STUCK                      = BIT(11); // Cannot reach any go
 .int aistatus;
 
 // Skill system
+#define SUPERBOT (skill > 100)
+
 float autoskill_nextthink;
 
 // havocbot_keyboardskill // keyboard movement

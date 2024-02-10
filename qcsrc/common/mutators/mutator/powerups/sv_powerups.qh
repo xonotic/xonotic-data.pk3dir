@@ -14,5 +14,7 @@ REGISTER_MUTATOR(powerups, true);
 .float prevstrengthsound;
 .float prevstrengthsoundattempt;
 
+void powerups_DropItem_Think(entity this);
+
 // q3compat
 .float count;

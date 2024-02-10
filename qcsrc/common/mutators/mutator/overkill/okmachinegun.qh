@@ -4,18 +4,18 @@ CLASS(OverkillMachineGun, Weapon)
 /* spawnfunc */ ATTRIB(OverkillMachineGun, m_canonical_spawnfunc, string, "weapon_okmachinegun");
 /* ammotype  */ ATTRIB(OverkillMachineGun, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(OverkillMachineGun, impulse, int, 3);
-/* flags	 */ ATTRIB(OverkillMachineGun, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_MUTATORBLOCKED);
-/* rating	*/ ATTRIB(OverkillMachineGun, bot_pickupbasevalue, float, 7000);
-/* color	 */ ATTRIB(OverkillMachineGun, wpcolor, vector, '1 1 0');
+/* flags     */ ATTRIB(OverkillMachineGun, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_MUTATORBLOCKED);
+/* rating    */ ATTRIB(OverkillMachineGun, bot_pickupbasevalue, float, 7000);
+/* color     */ ATTRIB(OverkillMachineGun, wpcolor, vector, '1 1 0');
 /* modelname */ ATTRIB(OverkillMachineGun, mdl, string, "ok_mg");
 #ifdef GAMEQC
-/* model	 */ ATTRIB(OverkillMachineGun, m_model, Model, MDL_OK_MG_ITEM);
+/* model     */ ATTRIB(OverkillMachineGun, m_model, Model, MDL_OK_MG_ITEM);
 /* flash mdl */ ATTRIB(OverkillMachineGun, m_muzzlemodel, Model, MDL_MACHINEGUN_MUZZLEFLASH);
 /* flash eff */ ATTRIB(OverkillMachineGun, m_muzzleeffect, entity, EFFECT_MACHINEGUN_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(OverkillMachineGun, w_crosshair, string, "gfx/crosshairuzi");
 /* crosshair */ ATTRIB(OverkillMachineGun, w_crosshair_size, float, 0.6);
-/* wepimg	*/ ATTRIB(OverkillMachineGun, model2, string, "ok_weapon_smg");
+/* wepimg    */ ATTRIB(OverkillMachineGun, model2, string, "ok_weapon_smg");
 /* refname   */ ATTRIB(OverkillMachineGun, netname, string, "okmachinegun");
 /* wepname   */ ATTRIB(OverkillMachineGun, m_name, string, _("Overkill MachineGun"));
 

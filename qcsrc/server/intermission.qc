@@ -20,8 +20,7 @@ string GetMapname()
 	return mapname;
 }
 
-float Map_Count, Map_Current;
-string Map_Current_Name;
+int Map_Count, Map_Current;
 
 // NOTE: this now expects the map list to be already tokenized and the count in Map_Count
 int GetMaplistPosition()
@@ -130,6 +129,9 @@ bool Map_Check(int position, float pass)
 	{
 		if(pass == 2)
 			return true;
+		// MapInfo_Map_flags was set by MapInfo_CheckMap()
+		if (MapInfo_Map_flags & MAPINFO_FLAG_DONOTWANT)
+			return false;
 		if(MapHasRightSize(map_next))
 			return true;
 		return false;
@@ -150,8 +152,9 @@ void Map_Goto_SetStr(string nextmapname)
 		getmapname_stored = strzone(nextmapname);
 }
 
-void Map_Goto_SetFloat(float position)
+void Map_Goto_SetIndex(int position)
 {
+	Map_Current = position;
 	cvar_set("g_maplist_index", ftos(position));
 	Map_Goto_SetStr(argv(position));
 }
@@ -164,9 +167,9 @@ void Map_Goto(float reinit)
 // return codes of map selectors:
 //   -1 = temporary failure (that is, try some method that is guaranteed to succeed)
 //   -2 = permanent failure
-float MaplistMethod_Iterate() // usual method
+int MaplistMethod_Iterate(void) // usual method
 {
-	float pass, i;
+	int pass, i;
 
 	LOG_TRACE("Trying MaplistMethod_Iterate");
 
@@ -174,7 +177,7 @@ float MaplistMethod_Iterate() // usual method
 	{
 		for(i = 1; i < Map_Count; ++i)
 		{
-			float mapindex;
+			int mapindex;
 			mapindex = (i + Map_Current) % Map_Count;
 			if(Map_Check(mapindex, pass))
 				return mapindex;
@@ -183,7 +186,7 @@ float MaplistMethod_Iterate() // usual method
 	return -1;
 }
 
-float MaplistMethod_Repeat() // fallback method
+int MaplistMethod_Repeat(void) // fallback method
 {
 	LOG_TRACE("Trying MaplistMethod_Repeat");
 
@@ -192,9 +195,9 @@ float MaplistMethod_Repeat() // fallback method
 	return -2;
 }
 
-float MaplistMethod_Random() // random map selection
+int MaplistMethod_Random(void) // random map selection
 {
-	float i, imax;
+	int i, imax;
 
 	LOG_TRACE("Trying MaplistMethod_Random");
 
@@ -202,7 +205,7 @@ float MaplistMethod_Random() // random map selection
 
 	for(i = 0; i <= imax; ++i)
 	{
-		float mapindex;
+		int mapindex;
 		mapindex = (Map_Current + floor(random() * (Map_Count - 1) + 1)) % Map_Count; // any OTHER map
 		if(Map_Check(mapindex, 1))
 			return mapindex;
@@ -210,9 +213,9 @@ float MaplistMethod_Random() // random map selection
 	return -1;
 }
 
-float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 // the exponent sets a bias on the map selection:
 // the higher the exponent, the less likely "shortly repeated" same maps are
+int MaplistMethod_Shuffle(float exponent) // more clever shuffling
 {
 	float i, j, imax, insertpos;
 
@@ -232,67 +235,77 @@ float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 
 		// insert the current map there
 		newlist = "";
-		for(j = 1; j < insertpos; ++j)                 // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above
-			newlist = strcat(newlist, " ", argv(j));
+		for(j = 1; j < insertpos; ) // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above
+		{
+			if (j + 2 < insertpos)
+				newlist = strcat(newlist, " ", argv(j++), " ", argv(j++), " ", argv(j++));
+			else
+				newlist = strcat(newlist, " ", argv(j++));
+		}
 		newlist = strcat(newlist, " ", argv(0));       // now insert the just selected map
-		for(j = insertpos; j < Map_Count; ++j)         // i == Map_Count: no loop, has just been inserted as last
-			newlist = strcat(newlist, " ", argv(j));
+		for(j = insertpos; j < Map_Count; ) // i == Map_Count: no loop, has just been inserted as last
+		{
+			if (j + 2 < Map_Count)
+				newlist = strcat(newlist, " ", argv(j++), " ", argv(j++), " ", argv(j++));
+			else
+				newlist = strcat(newlist, " ", argv(j++));
+		}
 		newlist = substring(newlist, 1, strlen(newlist) - 1);
 		cvar_set("g_maplist", newlist);
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
 
 		// NOTE: the selected map has just been inserted at (insertpos-1)th position
-		Map_Current = insertpos - 1; // this is not really valid, but this way the fallback has a chance of working
-		if(Map_Check(Map_Current, 1))
-			return Map_Current;
+		if (Map_Check(insertpos - 1, 1))
+			return insertpos - 1;
 	}
 	return -1;
 }
 
-void Maplist_Init()
+int Maplist_Init(void)
 {
-	float i = Map_Count = 0;
+	int i, available_maps = 0;
+	Map_Count = 0;
 	if(autocvar_g_maplist != "")
 	{
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
 		for (i = 0; i < Map_Count; ++i)
-		{
 			if (Map_Check(i, 2))
-				break;
-		}
+				++available_maps;
 	}
 
-	if (i == Map_Count)
+	if (!available_maps)
 	{
 		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags() | MAPINFO_FLAG_NOAUTOMAPLIST));
-		if(autocvar_g_maplist_shuffle)
-			ShuffleMaplist();
+		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
 		if(!server_is_dedicated)
 			localcmd("\nmenu_cmd sync\n");
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
+		for (i = 0; i < Map_Count; ++i)
+			if (Map_Check(i, 2))
+				++available_maps;
 	}
+
 	if(Map_Count == 0)
 		error("empty maplist, cannot select a new map");
+
 	Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
 
-	strcpy(Map_Current_Name, argv(Map_Current)); // will be automatically freed on exit thanks to DP
-	// this may or may not be correct, but who cares, in the worst case a map
-	// isn't chosen in the first pass that should have been
+	if(autocvar_g_maplist_shuffle)
+		cvar_set("g_maplist", shufflewords(autocvar_g_maplist));
+
+	return available_maps;
 }
 
-string GetNextMap()
+// NOTE: call Maplist_Init() before making GetNextMap() call(s)
+string GetNextMap(void)
 {
-	Maplist_Init();
-	float nextMap = -1;
+	int nextMap = -1;
 
-	if(nextMap == -1)
-		if(autocvar_g_maplist_shuffle > 0)
-			nextMap = MaplistMethod_Shuffle(autocvar_g_maplist_shuffle + 1);
+	if(nextMap == -1 && autocvar_g_maplist_shuffle > 0)
+		nextMap = MaplistMethod_Shuffle(autocvar_g_maplist_shuffle + 1);
 
-	if(nextMap == -1)
-		if(autocvar_g_maplist_selectrandom)
-			nextMap = MaplistMethod_Random();
+	if(nextMap == -1 && autocvar_g_maplist_selectrandom)
+		nextMap = MaplistMethod_Random();
 
 	if(nextMap == -1)
 		nextMap = MaplistMethod_Iterate();
@@ -302,7 +315,7 @@ string GetNextMap()
 
 	if(nextMap >= 0)
 	{
-		Map_Goto_SetFloat(nextMap);
+		Map_Goto_SetIndex(nextMap);
 		return getmapname_stored;
 	}
 
@@ -379,15 +392,11 @@ void GotoNextMap(float reinit)
 		return;
 	alreadychangedlevel = true;
 
+	Maplist_Init();
 	string nextMap = GetNextMap();
 	if(nextMap == "")
 		error("Everything is broken - cannot find a next map. Please report this to the developers.");
 	Map_Goto(reinit);
-}
-
-void ShuffleMaplist()
-{
-	cvar_set("g_maplist", shufflewords(autocvar_g_maplist));
 }
 
 string GotoMap(string m)
