@@ -1,6 +1,8 @@
 #include "vaporizer.qh"
 
+#ifdef GAMEQC
 REGISTER_NET_TEMP(TE_CSQC_VAPORBEAMPARTICLE)
+#endif
 
 #if defined(SVQC)
 void SendCSQCVaporizerBeamParticle(entity player, int hit) {

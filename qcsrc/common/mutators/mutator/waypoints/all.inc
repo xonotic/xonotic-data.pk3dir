@@ -71,3 +71,5 @@ REGISTER_WAYPOINT(Vehicle, _("Vehicle"), "", '1 1 1', 1);
 REGISTER_WAYPOINT(VehicleIntruder, _("Intruder!"), "", '1 1 1', 1);
 
 REGISTER_WAYPOINT(Seeker, _("Tagged"), "", '0.5 1 0', 2);
+
+REGISTER_WAYPOINT(Buff, _("Buff"), "", '1 0.5 0', 1);
