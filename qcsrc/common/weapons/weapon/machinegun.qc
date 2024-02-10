@@ -71,7 +71,8 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 {
 	float machinegun_spread;
 
-	//check if max is lower or higher than min so it can be used invertedly, accurate with more firing, like Hyperion weapons from Borderlands
+	// check if max is lower or higher than min so it can be used invertedly,
+	// accurate with more firing, like Hyperion weapons from Borderlands
 	if (WEP_CVAR(machinegun, spread_max) > WEP_CVAR(machinegun, spread_min))
 	{
 		lowerEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_min);
@@ -181,7 +182,8 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 		actor.(weaponentity).machinegun_spread_accumulation = bound(0, (WEP_CVAR(machinegun, spread_add) * actor.(weaponentity).misc_bulletcounter), spreadSpectrumDistance);
 	}
 
-	// function for reducing mg's damage with no spread and adding damage with heated up barrel or vice versa depending on the values of exposed cvars
+	// function for reducing mg's damage with no spread and adding damage with
+	// heated up barrel or vice versa depending on the values of exposed cvars
 	float coldMultiplierApplicationPercent = 1;
 	float heatMultiplierApplicationPercent = 1;
 
@@ -315,7 +317,8 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
                 actor.(weaponentity).machinegun_spread_accumulation = max(actor.(weaponentity).machinegun_spread_accumulation - ((time - actor.(weaponentity).lastShotTime) * WEP_CVAR(machinegun, spread_decay)), 0);
                 actor.(weaponentity).lastShotTime = time;
 
-                //check if max is lower or higher than min so it can be used invertedly, accurate with more firing, like Hyperion weapons from Borderlands
+                // check if max is lower or higher than min so it can be used invertedly,
+		// accurate with more firing, like Hyperion weapons from Borderlands
                 if (WEP_CVAR(machinegun, spread_max) > WEP_CVAR(machinegun, spread_min))
                 {
                         lowerEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_min);
