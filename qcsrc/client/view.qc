@@ -753,49 +753,70 @@ void View_EventChase(entity this)
 	}
 }
 
+#define HITINDICATOR_EXPIRED(i) (time >= HitIndicator_time[i] + autocvar_cl_hit_indicator_fade_time)
+
 void HitIndicatorUpdate(float dmg, entity attacker)
 {
-	if (time < HitIndicator_time + 1 && HitIndicator_attacker == attacker)
-		HitIndicator_damage += dmg;
+	int i = 0;
+	int first_free_spot = -1;
+	for (i = 0; i < HITINDICATOR_MAX_COUNT; ++i)
+	{
+		if (first_free_spot == -1 && HITINDICATOR_EXPIRED(i))
+			first_free_spot = i;
+		else if (attacker == HitIndicator_attacker[i] && !HITINDICATOR_EXPIRED(i))
+			break;
+	}
+
+	bool is_new = false;
+	if (i == HITINDICATOR_MAX_COUNT) // if no matching attacker found
+	{
+		if (first_free_spot == -1) // if no free spot found
+			return; // too many hits, ignore this new hit
+		i = first_free_spot;
+		is_new = true;
+	}
+
+	HitIndicator_attacker[i] = attacker;
+	HitIndicator_time[i] = time;
+	if (is_new)
+		HitIndicator_damage[i] = dmg;
 	else
-		HitIndicator_damage = dmg;
-	HitIndicator_attacker = attacker;
-	HitIndicator_time = time;
+		HitIndicator_damage[i] += dmg;
 }
 
 void HitIndicatorShow()
 {
-	if (!autocvar_cl_hit_indicator || autocvar_cl_hit_indicator_size <= 0
-		|| autocvar_chase_active || time > HitIndicator_time + autocvar_cl_hit_indicator_fade_time)
+	if (!autocvar_cl_hit_indicator || autocvar_cl_hit_indicator_size <= 0 || autocvar_chase_active)
+		return;
+
+	for (int i = 0; i < HITINDICATOR_MAX_COUNT; ++i)
 	{
-		return;
+		entity attacker = HitIndicator_attacker[i];
+		if (!attacker || HITINDICATOR_EXPIRED(i))
+			continue;
+
+		// hide indicator if attacker is not visible (check ported from shownames.qc)
+		traceline(view_origin, attacker.origin, MOVE_NOMONSTERS, attacker);
+		if (trace_fraction < 1 && (trace_networkentity != attacker.sv_entnum && trace_ent.entnum != attacker.sv_entnum))
+			continue;
+
+		vector org = project_3d_to_2d(attacker.origin);
+		vector scr_center = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
+		float radius = autocvar_cl_hit_indicator_radius * min(vid_conwidth, vid_conheight);
+		vector ofs = normalize(org - scr_center - org.z * eZ) * radius;
+		float ang = atan2(-ofs.x, -ofs.y);
+		if (org.z < 0)
+		{
+			ang += M_PI;
+			ofs = -ofs;
+		}
+		org = scr_center + ofs;
+		float alpha = autocvar_cl_hit_indicator_fade_alpha;
+		alpha *= 1 - (time - HitIndicator_time[i]) / autocvar_cl_hit_indicator_fade_time;
+		float size = autocvar_cl_hit_indicator_size;
+		size = map_bound_ranges(HitIndicator_damage[i], 30, 90, size, size * 2);
+		drawspritearrow(org, ang, '1 0 0', alpha, size, true);
 	}
-
-	entity attacker = HitIndicator_attacker;
-	if (!attacker)
-		return;
-
-	// hide indicator if attacker is not visible (check ported from shownames.qc)
-	traceline(view_origin, attacker.origin, MOVE_NOMONSTERS, attacker);
-	if (trace_fraction < 1 && (trace_networkentity != attacker.sv_entnum && trace_ent.entnum != attacker.sv_entnum))
-		return;
-
-	vector org = project_3d_to_2d(attacker.origin);
-	vector scr_center = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-	float radius = autocvar_cl_hit_indicator_radius * min(vid_conwidth, vid_conheight);
-	vector ofs = normalize(org - scr_center - org.z * eZ) * radius;
-	float ang = atan2(-ofs.x, -ofs.y);
-	if (org.z < 0)
-	{
-		ang += M_PI;
-		ofs = -ofs;
-	}
-	org = scr_center + ofs;
-	float alpha = autocvar_cl_hit_indicator_fade_alpha;
-	alpha *= 1 - (time - HitIndicator_time) / autocvar_cl_hit_indicator_fade_time;
-	float size = autocvar_cl_hit_indicator_size;
-	size = map_bound_ranges(HitIndicator_damage, 30, 90, size, size * 2);
-	drawspritearrow(org, ang, '1 0 0', alpha, size, true);
 }
 
 vector damage_blurpostprocess, content_blurpostprocess;

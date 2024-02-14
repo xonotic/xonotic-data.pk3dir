@@ -99,9 +99,10 @@ float autocvar_cl_hit_indicator_fade_alpha = 0.8;
 float autocvar_cl_hit_indicator_fade_time = 1.5;
 float autocvar_cl_hit_indicator_radius = 0.15;
 float autocvar_cl_hit_indicator_size = 1.1;
-entity HitIndicator_attacker;
-float HitIndicator_damage;
-int HitIndicator_time;
+const int HITINDICATOR_MAX_COUNT = 10;
+entity HitIndicator_attacker[HITINDICATOR_MAX_COUNT];
+float HitIndicator_damage[HITINDICATOR_MAX_COUNT];
+int HitIndicator_time[HITINDICATOR_MAX_COUNT];
 
 void calc_followmodel_ofs(entity view);
 
