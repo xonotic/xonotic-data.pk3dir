@@ -103,6 +103,7 @@ const int HITINDICATOR_MAX_COUNT = 10;
 entity HitIndicator_attacker[HITINDICATOR_MAX_COUNT];
 float HitIndicator_damage[HITINDICATOR_MAX_COUNT];
 int HitIndicator_time[HITINDICATOR_MAX_COUNT];
+float HitIndicator_fade_time;
 
 void calc_followmodel_ofs(entity view);
 

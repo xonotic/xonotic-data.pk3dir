@@ -753,10 +753,12 @@ void View_EventChase(entity this)
 	}
 }
 
-#define HITINDICATOR_EXPIRED(i) (time >= HitIndicator_time[i] + autocvar_cl_hit_indicator_fade_time)
+#define HITINDICATOR_EXPIRED(i) (time >= HitIndicator_time[i] + HitIndicator_fade_time)
 
 void HitIndicatorUpdate(float dmg, entity attacker)
 {
+	HitIndicator_fade_time = bound(0.1, autocvar_cl_hit_indicator_fade_time, 2);
+
 	int i = 0;
 	int first_free_spot = -1;
 	for (i = 0; i < HITINDICATOR_MAX_COUNT; ++i)
@@ -811,8 +813,8 @@ void HitIndicatorShow()
 			ofs = -ofs;
 		}
 		org = scr_center + ofs;
-		float alpha = autocvar_cl_hit_indicator_fade_alpha;
-		alpha *= 1 - (time - HitIndicator_time[i]) / autocvar_cl_hit_indicator_fade_time;
+		float alpha = bound(0, autocvar_cl_hit_indicator_fade_alpha, 1);
+		alpha *= 1 - (time - HitIndicator_time[i]) / HitIndicator_fade_time;
 		float size = autocvar_cl_hit_indicator_size;
 		size = map_bound_ranges(HitIndicator_damage[i], 30, 90, size, size * 2);
 		drawspritearrow(org, ang, '1 0 0', alpha, size, true);
