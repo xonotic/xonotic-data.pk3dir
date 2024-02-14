@@ -26,12 +26,13 @@ bool write_damagetext(entity this, entity client, int sf)
 	float potential_damage = this.dent_net_potential;
 	if (!(
 		(SV_DAMAGETEXT_ALL()) ||
-		(SV_DAMAGETEXT_PLAYERS() && client == attacker) ||
+		(SV_DAMAGETEXT_PLAYERS() && (client == attacker || client == hit || client.enemy == hit)) ||
 		(SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_SPEC(client) && client.enemy == attacker) ||
 		(SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_OBSERVER(client))
 	)) return false;
 
 	WriteHeader(MSG_ENTITY, damagetext);
+	WriteByte(MSG_ENTITY, etof(attacker));
 	WriteByte(MSG_ENTITY, etof(hit));
 	WriteInt24_t(MSG_ENTITY, deathtype);
 	WriteByte(MSG_ENTITY, flags);

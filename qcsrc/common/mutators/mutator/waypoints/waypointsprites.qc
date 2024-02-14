@@ -337,10 +337,10 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 }
 
 // returns location of sprite text
-vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
+vector drawspritearrow(vector o, float ang, vector rgb, float a, float t, bool no_border)
 {
     float size   = 9.0 * t;
-    float border = 1.5 * t;
+    float border = no_border ? 0 : 1.5 * t;
     float margin = 4.0 * t;
 
     float borderDiag = border * M_SQRT2;
@@ -659,7 +659,7 @@ void Draw_WaypointSprite(entity this)
             SetResourceExplicit(this, RES_HEALTH, -1);
     }
 
-    o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
+    o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t, false);
 
 	string pic = "";
 	bool is_text = true;

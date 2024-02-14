@@ -219,6 +219,7 @@ float current_alpha(entity damage_text)
 NET_HANDLE(damagetext, bool isNew)
 {
 	make_pure(this);
+	int attacker_server_entity_index = ReadByte();
 	int server_entity_index = ReadByte();
 	int deathtype = ReadInt24_t();
 	int flags = ReadByte();
@@ -236,6 +237,24 @@ NET_HANDLE(damagetext, bool isNew)
 
 	return = true;
 	if (!isNew) return;
+
+	int attacker_client_entity_index = attacker_server_entity_index - 1;
+	entity attacker_entcs = entcs_receiver(attacker_client_entity_index);
+
+	int client_entity_index = server_entity_index - 1;
+	entity entcs = entcs_receiver(client_entity_index);
+
+	if (attacker_entcs && client_entity_index == current_player)
+	{
+		if (autocvar_cl_hit_indicator && autocvar_cl_hit_indicator_size > 0 && !autocvar_chase_active)
+		{
+			float total = rint((health + armor) / DAMAGETEXT_PRECISION_MULTIPLIER);
+			HitIndicatorUpdate(total, attacker_entcs);
+		}
+		if (!autocvar_cl_damagetext_received)
+			return;
+	}
+
 	if (autocvar_cl_damagetext == 0) return;
 	if (friendlyfire)
 	{
@@ -247,8 +266,6 @@ NET_HANDLE(damagetext, bool isNew)
 			return;
 	}
 
-	int client_entity_index = server_entity_index - 1;
-	entity entcs = entcs_receiver(client_entity_index);
 
 	bool can_use_3d = entcs && entcs.has_origin;
 	bool too_close = vdist(entcs.origin - view_origin, <, autocvar_cl_damagetext_2d_close_range);
