@@ -788,14 +788,29 @@ void HitIndicatorUpdate(float dmg, entity attacker)
 
 void HitIndicatorShow()
 {
+	if (STAT(HEALTH) <= 0 && HitIndicator_time[0] >= 0)
+	{
+		// if dead remove all indicators
+		for (int i = 0; i < HITINDICATOR_MAX_COUNT; ++i)
+			HitIndicator_attacker[i] = NULL;
+		HitIndicator_time[0] = -1; // this is to avoid removing indicators every frame
+		return;
+	}
+
 	if (!autocvar_cl_hit_indicator || autocvar_cl_hit_indicator_size <= 0 || autocvar_chase_active)
 		return;
 
 	for (int i = 0; i < HITINDICATOR_MAX_COUNT; ++i)
 	{
 		entity attacker = HitIndicator_attacker[i];
-		if (!attacker || HITINDICATOR_EXPIRED(i))
+		if (!attacker)
 			continue;
+		if (HITINDICATOR_EXPIRED(i) || entcs_IsDead(attacker.sv_entnum) || wasfreed(attacker))
+		{
+			// if the attacker dies or disconnects remove the related hit indicator
+			HitIndicator_attacker[i] = NULL;
+			continue;
+		}
 
 		// hide indicator if attacker is not visible (check ported from shownames.qc)
 		traceline(view_origin, attacker.origin, MOVE_NOMONSTERS, attacker);
