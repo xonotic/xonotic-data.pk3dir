@@ -244,9 +244,10 @@ NET_HANDLE(damagetext, bool isNew)
 	int client_entity_index = server_entity_index - 1;
 	entity entcs = entcs_receiver(client_entity_index);
 
-	if (attacker_entcs && client_entity_index == current_player)
+	if (client_entity_index == current_player)
 	{
-		if (autocvar_cl_hit_indicator && autocvar_cl_hit_indicator_size > 0 && !autocvar_chase_active)
+		if (attacker_entcs && !autocvar_chase_active
+			&& autocvar_cl_hit_indicator && autocvar_cl_hit_indicator_size > 0)
 		{
 			float total = rint((health + armor) / DAMAGETEXT_PRECISION_MULTIPLIER);
 			HitIndicatorUpdate(total, attacker_entcs);

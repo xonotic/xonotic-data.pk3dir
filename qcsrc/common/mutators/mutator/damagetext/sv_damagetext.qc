@@ -63,7 +63,9 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 	float armor = M_ARGV(3, float);
 	int deathtype = M_ARGV(5, int);
 	float potential_damage = M_ARGV(6, float);
-	if(DEATH_WEAPONOF(deathtype) == WEP_VAPORIZER) return;
+
+	if(MUTATOR_IS_ENABLED(mutator_instagib) && DEATH_WEAPONOF(deathtype) == WEP_VAPORIZER)
+		return;
 
 	int flags = 0;
 	if (SAME_TEAM(hit, attacker)) flags |= DTFLAG_SAMETEAM;
