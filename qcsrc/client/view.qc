@@ -832,7 +832,16 @@ void HitIndicatorShow()
 		alpha *= 1 - (time - HitIndicator_time[i]) / HitIndicator_fade_time;
 		float size = autocvar_cl_hit_indicator_size;
 		size = map_bound_ranges(HitIndicator_damage[i], 30, 90, size, size * 2);
-		drawspritearrow(org, ang, '1 0 0', alpha, size, true);
+		org = drawspritearrow(org, ang, autocvar_cl_hit_indicator_color, alpha, size, true);
+
+		if (autocvar_cl_hit_indicator_text)
+		{
+			string text = ftos(HitIndicator_damage[i]);
+			vector t_size = autocvar_cl_hit_indicator_text_size * '1 1 0';
+			org.x += map_ranges(ofs.x, -radius, radius, 0, -1) * stringwidth(text, false, t_size);
+			org.y -= t_size.y * 0.5;
+			drawstring_builtin(org, text, t_size, autocvar_cl_hit_indicator_text_color, alpha, DRAWFLAG_NORMAL);
+		}
 	}
 }
 
