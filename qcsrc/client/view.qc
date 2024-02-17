@@ -828,8 +828,10 @@ void HitIndicatorShow()
 			ofs = -ofs;
 		}
 		org = scr_center + ofs;
-		float alpha = bound(0, autocvar_cl_hit_indicator_fade_alpha, 1);
-		alpha *= 1 - (time - HitIndicator_time[i]) / HitIndicator_fade_time;
+		float alpha_max = bound(0.1, autocvar_cl_hit_indicator_fade_alpha_max, 1);
+		float alpha_min = bound(0, autocvar_cl_hit_indicator_fade_alpha_min, alpha_max);
+		float alpha = alpha_min;
+		alpha += (alpha_max - alpha_min) * (1 - (time - HitIndicator_time[i]) / HitIndicator_fade_time);
 		float size = autocvar_cl_hit_indicator_size;
 		size = map_bound_ranges(HitIndicator_damage[i], 30, 90, size, size * 2);
 		org = drawspritearrow(org, ang, autocvar_cl_hit_indicator_color, alpha, size, true);
