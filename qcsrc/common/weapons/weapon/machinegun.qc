@@ -110,23 +110,17 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 
 	float spread_acc = actor.(weaponentity).machinegun_spread_accumulation;
 
-	spread_acc = max(spread_acc - ((time - actor.(weaponentity).lastShotTime) * WEP_CVAR(machinegun, spread_decay)), 0);
-
-	if (inversedSpread)
-	{
-		spread_acc = bound(WEP_CVAR(machinegun, spread_max), WEP_CVAR(machinegun, spread_min) - spread_acc, WEP_CVAR(machinegun, spread_min));
-	}
-	else
-	{
-		spread_acc = bound(WEP_CVAR(machinegun, spread_min), WEP_CVAR(machinegun, spread_min) + spread_acc, WEP_CVAR(machinegun, spread_max));
-	}
-
-	actor.(weaponentity).lastShotTime = time;
+	float timediff = time - actor.(weaponentity).lastShotTime;
+	spread_acc = bound(spreadSpectrumMin,
+	                   spread_acc - (timediff * WEP_CVAR(machinegun, spread_decay)),
+	                   spreadSpectrumMax);
 
 	if (WEP_CVAR(machinegun, spread_decay) == 0)
 	{
 		spread_acc = bound(0, (WEP_CVAR(machinegun, spread_add) * actor.(weaponentity).misc_bulletcounter), spreadSpectrumDistance);
 	}
+
+	actor.(weaponentity).lastShotTime = time;
 
 	// function for reducing mg's damage with no spread and adding damage with
 	// heated up barrel or vice versa depending on the values of exposed cvars
