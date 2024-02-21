@@ -110,71 +110,17 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	// debug print opt-in
-	#if 0
-		// Step by step calculations for machinegun_spread_accumulation with optional debug printing
-		// done before inversed spread support was added but still should give a fairly good idea
+	actor.(weaponentity).machinegun_spread_accumulation = max(actor.(weaponentity).machinegun_spread_accumulation - ((time - actor.(weaponentity).lastShotTime) * WEP_CVAR(machinegun, spread_decay)), 0);
 
-		// the time of the last shot
-		print(sprintf("old     time: %f \n", actor.(weaponentity).lastShotTime));
+	if (inversedSpread)
+	{
+		machinegun_spread = bound(WEP_CVAR(machinegun, spread_max), WEP_CVAR(machinegun, spread_min) - actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_min));
+	}
+	else
+	{
+		machinegun_spread = bound(WEP_CVAR(machinegun, spread_min), WEP_CVAR(machinegun, spread_min) + actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_max));
+	}
 
-		// check current time
-		print(sprintf("current time: %f \n", time));
-
-		// seconds passed since the last shot
-		// lastShotTime is given value at the end of the calculations
-		float secondsSinceLastShot = (time - actor.(weaponentity).lastShotTime);
-		print(sprintf("seconds between last time and this time: %f \n", secondsSinceLastShot));
-
-		// use seconds passed since last shot to calculate how much spread should have decayed since then
-		float spreadReduction = secondsSinceLastShot * WEP_CVAR(machinegun, spread_decay);
-		print(sprintf("spread accumulation reduction: %f \n", spreadReduction));
-
-		// reduce spread by the calculated amount
-		float stepByStep = actor.(weaponentity).machinegun_spread_accumulation - spreadReduction;
-
-		// if spread is reduced to the negatives make it 0 instead
-		// the following if block is replaced by max(accumulation, 0);
-		if (stepByStep < 0)
-		{
-			print("step by step spread was less than 0, it was reset to 0 before firing \n");
-			stepByStep = 0;
-		}
-
-		print(sprintf("current spread accumulation: %f \n", stepByStep));
-
-		// calculate spread on one line
-		float oneliner = max(actor.(weaponentity).machinegun_spread_accumulation - ((time - actor.(weaponentity).lastShotTime) * WEP_CVAR(machinegun, spread_decay)), 0);
-		print(sprintf("oneline spread accumulation: %f \n", oneliner));
-
-		// check that the step by step and oneliner match
-		if (stepByStep != oneliner)
-			print("MISMATCH BETWEEN STEP BY STEP AND ONELINER!\n");
-
-		actor.(weaponentity).machinegun_spread_accumulation = oneliner;
-
-		if (inversedSpread)
-		{
-			machinegun_spread = bound(WEP_CVAR(machinegun, spread_max), WEP_CVAR(machinegun, spread_min) - actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_min));
-			print(sprintf("final inversed machinegun_spread: %f \n\n", machinegun_spread));
-		}
-		else
-		{
-			machinegun_spread = bound(WEP_CVAR(machinegun, spread_min), WEP_CVAR(machinegun, spread_min) + actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_max));
-			print(sprintf("final non-inverse machinegun_spread: %f \n\n", machinegun_spread));
-		}
-	#else
-		actor.(weaponentity).machinegun_spread_accumulation = max(actor.(weaponentity).machinegun_spread_accumulation - ((time - actor.(weaponentity).lastShotTime) * WEP_CVAR(machinegun, spread_decay)), 0);
-
-		if (inversedSpread)
-		{
-			machinegun_spread = bound(WEP_CVAR(machinegun, spread_max), WEP_CVAR(machinegun, spread_min) - actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_min));
-		}
-		else
-		{
-			machinegun_spread = bound(WEP_CVAR(machinegun, spread_min), WEP_CVAR(machinegun, spread_min) + actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_max));
-		}
-	#endif
 	actor.(weaponentity).lastShotTime = time;
 
 	if (WEP_CVAR(machinegun, spread_decay) == 0)
