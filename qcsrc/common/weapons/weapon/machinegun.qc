@@ -58,7 +58,7 @@ void W_MachineGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentit
 			w_ready(thiswep, actor, weaponentity, fire);
 			return;
 		}
-		actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
+		++actor.(weaponentity).misc_bulletcounter;
 		W_MachineGun_Attack(thiswep, thiswep.m_id, actor, weaponentity);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(machinegun, sustained_refire), W_MachineGun_Attack_Frame);
 	}
@@ -225,8 +225,8 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, machinegun_spread, WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage) * heat,
 	           0, WEP_CVAR(machinegun, sustained_force), thiswep.m_id, EFFECT_BULLET);
 
-	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
-	actor.(weaponentity).machinegun_spread_accumulation = actor.(weaponentity).machinegun_spread_accumulation + WEP_CVAR(machinegun, spread_add);
+	++actor.(weaponentity).misc_bulletcounter;
+	actor.(weaponentity).machinegun_spread_accumulation += WEP_CVAR(machinegun, spread_add);
 	if(actor.(weaponentity).machinegun_spread_accumulation > spreadSpectrumDistance)
 	{
 		actor.(weaponentity).machinegun_spread_accumulation = spreadSpectrumDistance;
@@ -269,7 +269,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		actor.(weaponentity).machinegun_spread_accumulation = spreadSpectrumDistance;
 	}
 
-	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
+	++actor.(weaponentity).misc_bulletcounter;
 	if(actor.(weaponentity).misc_bulletcounter == 0)
 	{
 		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(machinegun, burst_refire2) * W_WeaponRateFactor(actor);
