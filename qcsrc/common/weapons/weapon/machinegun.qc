@@ -130,31 +130,13 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 
 	// function for reducing mg's damage with no spread and adding damage with
 	// heated up barrel or vice versa depending on the values of exposed cvars
-	float coldMultiplierApplicationPercent = 1;
 	float heatMultiplierApplicationPercent = 1;
+	float coldMultiplierApplicationPercent = 1;
 
 	if (spreadSpectrumDistance > 0) //avoid division by 0, can never be < 0 either due to how it is set when defined
 	{
-		coldMultiplierApplicationPercent = (spreadSpectrumDistance - actor.(weaponentity).machinegun_spread_accumulation) / spreadSpectrumDistance;
-		heatMultiplierApplicationPercent =                           actor.(weaponentity).machinegun_spread_accumulation  / spreadSpectrumDistance;
-		// these formulas seem to give numbers which are used as the distance from one end to the other
-		// cold = lower end, heat = higher end, spreadSpectrumDistance = spreadSpectrumMax - spreadSpectrumMin = 30 for these examples
-		//
-		// examples for cold barrel / coldMultiplierApplicationPercent:
-		// min 5 , spread buildup 100% , max 35
-		// (30 - 30) / 30 = 0   apply none of the multiplier
-		// min 5 , spread buildup  50% , max 35
-		// (30 - 15) / 30 = 0.5 apply half of the multiplier
-		// min 5 , spread buildup   0% , max 35
-		// (30 -  0) / 30 = 1   apply all  of the multiplier
-		//
-		// examples for warm barrel / heatMultiplierApplicationPercent:
-		// min 5 , spread buildup   0% , max 35
-		// 30 / 30 = 1   apply all  of the multiplier
-		// min 5 , spread buildup  50% , max 35
-		// 15 / 30 = 0.5 apply half of the multiplier
-		// min 5 , spread buildup 100% , max 35
-		//  0 / 30 = 0   apply none of the multiplier
+		heatMultiplierApplicationPercent = actor.(weaponentity).machinegun_spread_accumulation / spreadSpectrumDistance;
+		coldMultiplierApplicationPercent = 1 - heatMultiplierApplicationPercent;
 	}
 
 	// example where low end has halved damage and high end has tripled damage:
