@@ -108,24 +108,24 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 	}
 	spreadSpectrumDistance = spreadSpectrumMax - spreadSpectrumMin;
 
-	float machinegun_spread;
+	float spread_acc = actor.(weaponentity).machinegun_spread_accumulation;
 
-	actor.(weaponentity).machinegun_spread_accumulation = max(actor.(weaponentity).machinegun_spread_accumulation - ((time - actor.(weaponentity).lastShotTime) * WEP_CVAR(machinegun, spread_decay)), 0);
+	spread_acc = max(spread_acc - ((time - actor.(weaponentity).lastShotTime) * WEP_CVAR(machinegun, spread_decay)), 0);
 
 	if (inversedSpread)
 	{
-		machinegun_spread = bound(WEP_CVAR(machinegun, spread_max), WEP_CVAR(machinegun, spread_min) - actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_min));
+		spread_acc = bound(WEP_CVAR(machinegun, spread_max), WEP_CVAR(machinegun, spread_min) - spread_acc, WEP_CVAR(machinegun, spread_min));
 	}
 	else
 	{
-		machinegun_spread = bound(WEP_CVAR(machinegun, spread_min), WEP_CVAR(machinegun, spread_min) + actor.(weaponentity).machinegun_spread_accumulation, WEP_CVAR(machinegun, spread_max));
+		spread_acc = bound(WEP_CVAR(machinegun, spread_min), WEP_CVAR(machinegun, spread_min) + spread_acc, WEP_CVAR(machinegun, spread_max));
 	}
 
 	actor.(weaponentity).lastShotTime = time;
 
 	if (WEP_CVAR(machinegun, spread_decay) == 0)
 	{
-		actor.(weaponentity).machinegun_spread_accumulation = bound(0, (WEP_CVAR(machinegun, spread_add) * actor.(weaponentity).misc_bulletcounter), spreadSpectrumDistance);
+		spread_acc = bound(0, (WEP_CVAR(machinegun, spread_add) * actor.(weaponentity).misc_bulletcounter), spreadSpectrumDistance);
 	}
 
 	// function for reducing mg's damage with no spread and adding damage with
@@ -135,7 +135,7 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 
 	if (spreadSpectrumDistance > 0) //avoid division by 0, can never be < 0 either due to how it is set when defined
 	{
-		heatMultiplierApplicationPercent = actor.(weaponentity).machinegun_spread_accumulation / spreadSpectrumDistance;
+		heatMultiplierApplicationPercent = spread_acc / spreadSpectrumDistance;
 		coldMultiplierApplicationPercent = 1 - heatMultiplierApplicationPercent;
 	}
 
@@ -150,15 +150,18 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 	// so 0.5 cold to 4 heat would average out to 2.25 with no spectrum distance for spread
 	if (spreadSpectrumDistance == 0) heat = heat / 2;
 
-	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, machinegun_spread, WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage) * heat,
+	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, spread_acc,
+	           WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage) * heat,
 	           0, WEP_CVAR(machinegun, sustained_force), thiswep.m_id, EFFECT_BULLET);
 
 	++actor.(weaponentity).misc_bulletcounter;
-	actor.(weaponentity).machinegun_spread_accumulation += WEP_CVAR(machinegun, spread_add);
-	if(actor.(weaponentity).machinegun_spread_accumulation > spreadSpectrumDistance)
+	spread_acc += WEP_CVAR(machinegun, spread_add);
+	if(spread_acc > spreadSpectrumDistance)
 	{
-		actor.(weaponentity).machinegun_spread_accumulation = spreadSpectrumDistance;
+		spread_acc = spreadSpectrumDistance;
 	}
+
+	actor.(weaponentity).machinegun_spread_accumulation = spread_acc;
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
