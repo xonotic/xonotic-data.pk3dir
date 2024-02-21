@@ -110,14 +110,19 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 
 	float spread_acc = actor.(weaponentity).machinegun_spread_accumulation;
 
-	float timediff = time - actor.(weaponentity).lastShotTime;
-	spread_acc = bound(spreadSpectrumMin,
-	                   spread_acc - (timediff * WEP_CVAR(machinegun, spread_decay)),
-	                   spreadSpectrumMax);
-
-	if (WEP_CVAR(machinegun, spread_decay) == 0)
+	// time based spread decay
+	if (WEP_CVAR(machinegun, spread_decay))
 	{
-		spread_acc = bound(0, (WEP_CVAR(machinegun, spread_add) * actor.(weaponentity).misc_bulletcounter), spreadSpectrumDistance);
+		float timediff = time - actor.(weaponentity).lastShotTime;
+		spread_acc = bound(spreadSpectrumMin,
+		                   spread_acc - (timediff * WEP_CVAR(machinegun, spread_decay)),
+		                   spreadSpectrumMax);
+	}
+	else // legacy behavior for Nexuiz weapon balance
+	{
+		spread_acc = bound(WEP_CVAR(machinegun, spread_min),
+		                  (WEP_CVAR(machinegun, spread_add) * actor.(weaponentity).misc_bulletcounter),
+		                   WEP_CVAR(machinegun, spread_max));
 	}
 
 	actor.(weaponentity).lastShotTime = time;
