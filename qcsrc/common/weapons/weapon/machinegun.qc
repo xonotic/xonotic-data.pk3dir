@@ -5,8 +5,8 @@
 .float machinegun_spread_accumulation;
 .float lastShotTime;
 
-float lowerEndOfSpreadSpectrum;
-float higherEndOfSpreadSpectrum;
+float spreadSpectrumMin;
+float spreadSpectrumMax;
 float spreadSpectrumDistance;
 bool inversedSpread;
 
@@ -75,17 +75,17 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 	// accurate with more firing, like Hyperion weapons from Borderlands
 	if (WEP_CVAR(machinegun, spread_max) > WEP_CVAR(machinegun, spread_min))
 	{
-		lowerEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_min);
-		higherEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_max);
+		spreadSpectrumMin = WEP_CVAR(machinegun, spread_min);
+		spreadSpectrumMax = WEP_CVAR(machinegun, spread_max);
 		inversedSpread = false;
 	}
 	else
 	{
-		lowerEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_max);
-		higherEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_min);
+		spreadSpectrumMin = WEP_CVAR(machinegun, spread_max);
+		spreadSpectrumMax = WEP_CVAR(machinegun, spread_min);
 		inversedSpread = true;
 	}
-	spreadSpectrumDistance = higherEndOfSpreadSpectrum - lowerEndOfSpreadSpectrum;
+	spreadSpectrumDistance = spreadSpectrumMax - spreadSpectrumMin;
 
 	if(!(fire & 1) || !weapon_prepareattack_check(thiswep, actor, weaponentity, false, -1))
 	{
@@ -192,7 +192,7 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 		coldMultiplierApplicationPercent = (spreadSpectrumDistance - actor.(weaponentity).machinegun_spread_accumulation) / spreadSpectrumDistance;
 		heatMultiplierApplicationPercent =                           actor.(weaponentity).machinegun_spread_accumulation  / spreadSpectrumDistance;
 		// these formulas seem to give numbers which are used as the distance from one end to the other
-		// cold = lower end, heat = higher end, spreadSpectrumDistance = higherEndOfSpreadSpectrum - lowerEndOfSpreadSpectrum = 30 for these examples
+		// cold = lower end, heat = higher end, spreadSpectrumDistance = spreadSpectrumMax - spreadSpectrumMin = 30 for these examples
 		//
 		// examples for cold barrel / coldMultiplierApplicationPercent:
 		// min 5 , spread buildup 100% , max 35
@@ -321,20 +321,20 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
 		// accurate with more firing, like Hyperion weapons from Borderlands
                 if (WEP_CVAR(machinegun, spread_max) > WEP_CVAR(machinegun, spread_min))
                 {
-                        lowerEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_min);
-                        higherEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_max);
+                        spreadSpectrumMin = WEP_CVAR(machinegun, spread_min);
+                        spreadSpectrumMax = WEP_CVAR(machinegun, spread_max);
                         inversedSpread = false;
                 }
                 else
                 {
-                        lowerEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_max);
-                        higherEndOfSpreadSpectrum = WEP_CVAR(machinegun, spread_min);
+                        spreadSpectrumMin = WEP_CVAR(machinegun, spread_max);
+                        spreadSpectrumMax = WEP_CVAR(machinegun, spread_min);
                         inversedSpread = true;
                 }
-                spreadSpectrumDistance = higherEndOfSpreadSpectrum - lowerEndOfSpreadSpectrum;
+                spreadSpectrumDistance = spreadSpectrumMax - spreadSpectrumMin;
 
                 // block alt fire if spread accumulation is >50%
-                if(actor.(weaponentity).machinegun_spread_accumulation > (higherEndOfSpreadSpectrum + lowerEndOfSpreadSpectrum) / 2)
+                if(actor.(weaponentity).machinegun_spread_accumulation > (spreadSpectrumMax + spreadSpectrumMin) / 2)
                 {
                     w_ready(thiswep, actor, weaponentity, fire);
                     return;
