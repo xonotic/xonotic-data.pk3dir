@@ -69,24 +69,6 @@ void W_MachineGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentit
 
 void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	float machinegun_spread;
-
-	// check if max is lower or higher than min so it can be used invertedly,
-	// accurate with more firing, like Hyperion weapons from Borderlands
-	if (WEP_CVAR(machinegun, spread_max) > WEP_CVAR(machinegun, spread_min))
-	{
-		spreadSpectrumMin = WEP_CVAR(machinegun, spread_min);
-		spreadSpectrumMax = WEP_CVAR(machinegun, spread_max);
-		inversedSpread = false;
-	}
-	else
-	{
-		spreadSpectrumMin = WEP_CVAR(machinegun, spread_max);
-		spreadSpectrumMax = WEP_CVAR(machinegun, spread_min);
-		inversedSpread = true;
-	}
-	spreadSpectrumDistance = spreadSpectrumMax - spreadSpectrumMin;
-
 	if(!(fire & 1) || !weapon_prepareattack_check(thiswep, actor, weaponentity, false, -1))
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -109,6 +91,24 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 		actor.punchangle_x = random() - 0.5;
 		actor.punchangle_y = random() - 0.5;
 	}
+
+	// check if max is lower or higher than min so it can be used invertedly,
+	// accurate with more firing, like Hyperion weapons from Borderlands
+	if (WEP_CVAR(machinegun, spread_max) > WEP_CVAR(machinegun, spread_min))
+	{
+		spreadSpectrumMin = WEP_CVAR(machinegun, spread_min);
+		spreadSpectrumMax = WEP_CVAR(machinegun, spread_max);
+		inversedSpread = false;
+	}
+	else
+	{
+		spreadSpectrumMin = WEP_CVAR(machinegun, spread_max);
+		spreadSpectrumMax = WEP_CVAR(machinegun, spread_min);
+		inversedSpread = true;
+	}
+	spreadSpectrumDistance = spreadSpectrumMax - spreadSpectrumMin;
+
+	float machinegun_spread;
 
 	actor.(weaponentity).machinegun_spread_accumulation = max(actor.(weaponentity).machinegun_spread_accumulation - ((time - actor.(weaponentity).lastShotTime) * WEP_CVAR(machinegun, spread_decay)), 0);
 
