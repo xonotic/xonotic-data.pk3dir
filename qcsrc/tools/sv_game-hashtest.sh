@@ -205,13 +205,11 @@ createdtoday "data/maps/stormkeep.waypoints" \
 createdtoday "data/maps/stormkeep.waypoints.cache" \
 	|| wget -nv -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
 
-set +u
-if [ -z "$EXPECT" ]
+if [ -z "${EXPECT-}" ]
 then
 	# find the line with expected hash from .gitlab-ci.yml, extract the hash and remove carriage return
 	EXPECT="$(grep 'EXPECT=' './.gitlab-ci.yml' | cut -d '=' -f 2 | tr -d $'\r')"
 fi
-set -u
 HASH=$(${ENGINE} +exec serverbench.cfg \
       | tee /dev/stderr \
       | grep '^:' \
