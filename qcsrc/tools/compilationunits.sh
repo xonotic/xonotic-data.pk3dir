@@ -54,45 +54,45 @@ declare -a NOWARN=(
 )
 QCCFLAGS+=("${NOWARN[@]}")
 
+# when used does this lead to .tmp or qcsrc/.tmp ?? both?
+export WORKDIR=../.tmp
+
 # source additional functions
 . qcc.sh
-
-# when used does this lead to .tmp or qcsrc/.tmp ?? both?
-WORKDIR=../.tmp
 
 # move to qcsrc
 cd ..
 
 function check1() {
-	declare -l prog="${1}"
-	declare -l file="${2}"
+	declare -l prog="$1"
+	declare -l file="$2"
 	export MODE="$prog"
 
-	declare -a includes=("-include lib/_all.inc")
-	[ -f "${prog}/_all.qh" ] && includes+=("-include ${prog}/_all.qh")
+	declare -a includes=("-include" "lib/_all.inc")
+	[ -f "$prog/_all.qh" ] && includes+=("-include $prog/_all.qh")
 
-	# FIXME: one arg array requires splitting until qcc.sh is fixed
-	qpp "$file" "test-${prog}.dat" \
-		${includes[@]} \
-		-I. "${QCCIDENT}" "${QCCDEFS[@]}" > "${WORKDIR}/${prog}.qc"
-	qcc "${QCCFLAGS[@]}" -o "../${WORKDIR}/test-${prog}.dat" "../${WORKDIR}/${prog}.qc" >/dev/null
+	qpp "$file" "test-$prog.dat" \
+		"${includes[@]}" \
+		-I. "$QCCIDENT" "${QCCDEFS[@]}" > "$WORKDIR/$prog.qc"
+	qcc "${QCCFLAGS[@]}" -o "../$WORKDIR/test-$prog.dat" "../$WORKDIR/$prog.qc" >/dev/null
 }
 
 function check() {
-	declare -l prog="${1}"
+	declare -l prog="$1"
 	find "$prog" -type f -name '*.qc' -print0 | sort -z | while read -r -d '' file
 	do
 		check1 "$prog" "$file"
 	done
 }
 
-if [ ${#@} -eq 0 ]
-then # no args, check all
+# check argument array length
+if [ "${#@}" = "0" ]
+then # no args, run all checks
 	check client
 	check server
 	check menu
-else # check specific
-	for var in "${@}"
+else # run a specific check
+	for var in "$@"
 	do
 		var="${var#test-}"
 		check "$var"

@@ -20,57 +20,70 @@ then
 fi
 
 function qpp() {
-	IN=$1
-	OUT=$2
-	case "${MODE}" in
+	IN="$1"
+	OUT="$2"
+	case "$MODE" in
 		client)
-			DEFS="-DGAMEQC -DCSQC"
+			DEFS=("-DGAMEQC" "-DCSQC")
 			;;
 		menu)
-			DEFS="-DMENUQC"
+			DEFS=("-DMENUQC")
 			;;
 		server)
-			DEFS="-DGAMEQC -DSVQC"
+			DEFS=("-DGAMEQC" "-DSVQC")
 			;;
 	esac
-	#>&2 echo + ${CPP} "${@:3}" ${DEFS} "${IN}"
+
+	#>&2 echo + $CPP "${@:3}" "${DEFS[@]}" "$IN"
+
+	# don't exit from additional info step
 	set +e
+
 	# additional information
-	${CPP} "${@:3}" ${DEFS} \
-		-dM 1>"${WORKDIR}/${MODE}_macros.txt" \
-		-H 2>"${WORKDIR}/${MODE}_includes.txt" \
-		"${IN}"
+	$CPP "${@:3}" "${DEFS[@]}" \
+		-dM 1>"$WORKDIR/${MODE}_macros.txt" \
+		-H 2>"$WORKDIR/${MODE}_includes.txt" \
+		"$IN"
+
 	# main step
-	${CPP} ${@:3} ${DEFS} -MMD -MP -MT "${OUT}" -Wall -Wundef -Werror "${IN}" -o "${WORKDIR}/${MODE}.txt"
+	$CPP "${@:3}" "${DEFS[@]}" -MMD -MP -MT "$OUT" -Wall -Wundef -Werror "$IN" -o "$WORKDIR/$MODE.txt"
+
 	err=$?
+
+	# exit with error code if main step gave one
+	[ "$err" != "0" ] && return "$err"
+
 	set -e
-	if [ ${err} -ne 0 ]; then return ${err}; fi
-	sed -E 's/^#(line)? ([[:digit:]]+) "(.*)".*/'$'\\\n''#pragma file(\3)'$'\\\n''#pragma line(\2)/g' "${WORKDIR}/${MODE}.txt"
+
+	# TODO: document what this does
+	sed -E 's/^#(line)? ([[:digit:]]+) "(.*)".*/'$'\\\n''#pragma file(\3)'$'\\\n''#pragma line(\2)/g' "$WORKDIR/$MODE.txt"
 }
 
 function qcc() {
-	#>&2 echo + $(basename ${QCC}) $@
+	#>&2 echo + $(basename $QCC) $@
+
 	# FIXME: relative compiler path is too deep
-	(cd tools && ${QCC} "$@")
+	(cd tools && $QCC "$@")
 }
 
 # wtf is this? the file has exit on error and only has env var
 # assignments before this which I assume is an implicit $? aka
 # return value check of the last command? This block should never
-# execute???
+# execute??? If this is meant to be standalone driver code then
+# it should be refactored...
 $(return >/dev/null 2>&1) || {
-	MODE=$1
-	OUT=$2
-	IN=$3
-	case "${OUT}" in
+	MODE="$1"
+	OUT="$2"
+	IN="$3"
+	case "$OUT" in
 	/*)
-		OUT_ABSOLUTE=${OUT}
+		OUT_ABSOLUTE="$OUT"
 		;;
 	*)
-		OUT_ABSOLUTE=${PWD}/${OUT}
+		OUT_ABSOLUTE="$PWD/$OUT"
 		;;
 	esac
 	set -x
-	qpp "${IN}" "${OUT}" -I. ${QCCIDENT} ${QCCDEFS} > "${WORKDIR}/${MODE}.qc"
-	qcc ${QCCFLAGS} -o "${OUT_ABSOLUTE}" "../${WORKDIR}/${MODE}.qc"
+	qpp "$IN" "$OUT" -I. "$QCCIDENT" "$QCCDEFS" > "$WORKDIR/$MODE.qc"
+	qcc "$QCCFLAGS" -o "$OUT_ABSOLUTE" "../$WORKDIR/$MODE.qc"
 }
