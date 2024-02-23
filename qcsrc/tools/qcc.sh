@@ -1,13 +1,23 @@
 #!/usr/bin/env bash
+
 set -euo pipefail
 IFS=$' \n\t'
 
-WORKDIR=${WORKDIR}
-CPP=${CPP}
-QCC=${QCC}
 QCCIDENT="-DGMQCC"
-QCCDEFS=${QCCDEFS}
-QCCFLAGS=${QCCFLAGS}
+
+# check that we have all necessary env vars
+if [ -z "${WORKDIR-}" ] \
+|| [ -z "${CPP-}" ] \
+|| [ -z "${QCC-}" ] \
+|| [ -z "${QCCDEFS-}" ] \
+|| [ -z "${QCCFLAGS-}" ]
+then
+	# hardcode qcc.sh name because this file is sourced
+	# qcsrc/tools/compilationunits.sh: Necessary env vars were not set
+	# would be very misleading
+	printf "%s: qcc.sh: Necessary env vars were not set\n" "$0" > /dev/stderr
+	exit 1
+fi
 
 function qpp() {
 	IN=$1
@@ -44,6 +54,10 @@ function qcc() {
 	(cd tools && ${QCC} "$@")
 }
 
+# wtf is this? the file has exit on error and only has env var
+# assignments before this which I assume is an implicit $? aka
+# return value check of the last command? This block should never
+# execute???
 $(return >/dev/null 2>&1) || {
 	MODE=$1
 	OUT=$2
