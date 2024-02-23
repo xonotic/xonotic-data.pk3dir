@@ -84,6 +84,6 @@ $(return >/dev/null 2>&1) || {
 		;;
 	esac
 	set -x
-	qpp "$IN" "$OUT" -I. "$QCCIDENT" "$QCCDEFS" > "$WORKDIR/$MODE.qc"
-	qcc "$QCCFLAGS" -o "$OUT_ABSOLUTE" "../$WORKDIR/$MODE.qc"
+	qpp "$IN" "$OUT" -I. "$QCCIDENT" $QCCDEFS > "$WORKDIR/$MODE.qc"
+	qcc $QCCFLAGS -o "$OUT_ABSOLUTE" "../$WORKDIR/$MODE.qc"
 }
