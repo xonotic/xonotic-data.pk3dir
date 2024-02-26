@@ -127,6 +127,7 @@ void CopyBody(entity this, float keepvelocity)
 
 	if(clone.colormap <= maxclients && clone.colormap > 0)
 		clone.colormap = 1024 + this.clientcolors;
+	clone.sv_entnum = etof(this); // sent to CSQC for color mapping purposes
 
 	CSQCMODEL_AUTOINIT(clone);
 	clone.CopyBody_nextthink = this.nextthink;
