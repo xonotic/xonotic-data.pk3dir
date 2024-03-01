@@ -1,5 +1,5 @@
-*.q[ch] linguist-language=C
-*.inc linguist-language=C
+*.q[ch] linguist-language=C gitlab-language=C
+*.inc linguist-language=C gitlab-language=C
 
 * -crlf
 *.0 -crlf
