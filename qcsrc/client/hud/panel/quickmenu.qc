@@ -5,6 +5,7 @@
 #include <client/mapvoting.qh>
 #include <common/ent_cs.qh>
 #include <common/minigames/cl_minigames.qh>
+#include <client/view.qh>
 
 // QuickMenu (#23)
 
