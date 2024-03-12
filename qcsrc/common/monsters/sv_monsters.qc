@@ -575,6 +575,27 @@ void Monster_Use(entity this, entity actor, entity trigger)
 	if(Monster_ValidTarget(this, actor, true)) { this.enemy = actor; }
 }
 
+/// Returns an origin that's near targetorigin and visible to this monster.
+vector Monster_WanderTarget(entity this, vector targetorigin)
+{
+	vector pos, ang;
+
+	ang_y = rint(random() * 500);
+	ang_x = this.angles_x;
+	ang_z = this.angles_z;
+	makevectors(ang);
+	pos = targetorigin + v_forward * this.wander_distance;
+	if(((this.flags & FL_FLY) && (this.spawnflags & MONSTERFLAG_FLY_VERTICAL)) || (this.flags & FL_SWIM))
+	{
+		pos.z = random() * 200;
+		if(random() >= 0.5)
+			pos.z *= -1;
+	}
+	// truncate movement so we don't do walking into walls animations
+	traceline(this.origin + this.view_ofs, pos, MOVE_NORMAL, this);
+	return trace_endpos;
+}
+
 vector Monster_Move_Target(entity this, entity targ)
 {
 	// enemy is always preferred target
@@ -610,7 +631,14 @@ vector Monster_Move_Target(entity this, entity targ)
 		{
 			this.monster_movestate = MONSTER_MOVE_FOLLOW;
 			this.last_trace = time + 0.3;
-			return (this.monster_follow) ? this.monster_follow.origin : this.origin;
+			if (this.monster_follow)
+			{
+				if (vdist(this.origin - this.monster_follow.origin, <, this.wander_distance))
+					this.last_trace = time + this.wander_delay;
+				return Monster_WanderTarget(this, this.monster_follow.origin);
+			}
+			else
+				return this.origin;
 		}
 		case MONSTER_MOVE_SPAWNLOC:
 		{
@@ -635,36 +663,22 @@ vector Monster_Move_Target(entity this, entity targ)
 		default:
 		case MONSTER_MOVE_WANDER:
 		{
-			vector pos;
 			this.monster_movestate = MONSTER_MOVE_WANDER;
-
 			if(this.monster_moveto)
 			{
 				this.last_trace = time + 0.5;
-				pos = this.monster_moveto;
+				return this.monster_moveto;
 			}
 			else if(targ)
 			{
 				this.last_trace = time + 0.5;
-				pos = targ.origin;
+				return targ.origin;
 			}
 			else
 			{
 				this.last_trace = time + this.wander_delay;
-
-				this.angles_y = rint(random() * 500);
-				makevectors(this.angles);
-				pos = this.origin + v_forward * this.wander_distance;
-
-				if(((this.flags & FL_FLY) && (this.spawnflags & MONSTERFLAG_FLY_VERTICAL)) || (this.flags & FL_SWIM))
-				{
-					pos.z = random() * 200;
-					if(random() >= 0.5)
-						pos.z *= -1;
-				}
+				return Monster_WanderTarget(this, this.origin);
 			}
-
-			return pos;
 		}
 	}
 }
