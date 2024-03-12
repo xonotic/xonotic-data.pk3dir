@@ -841,16 +841,16 @@ void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
 	}
 }
 
-bool WarpZoneLib_MoveOutOfSolid(entity e)
+int WarpZoneLib_MoveOutOfSolid(entity e)
 {
 	vector o = e.origin;
 	traceline(o, o, MOVE_WORLDONLY, e);
 	if (trace_startsolid)
-		return false;
+		return 0; // too stuck, giving up
 
 	tracebox(o, e.mins, e.maxs, o, MOVE_WORLDONLY, e);
 	if (!trace_startsolid)
-		return true;
+		return -1; // wasn't stuck
 
 	vector m0 = e.mins;
 	vector m1 = e.maxs;
@@ -868,8 +868,8 @@ bool WarpZoneLib_MoveOutOfSolid(entity e)
 	if (trace_startsolid)
 	{
 		setorigin(e, o);
-		return false;
+		return 0; // can't fix
 	}
 
-	return true;
+	return 1; // was stuck but is fixed now
 }

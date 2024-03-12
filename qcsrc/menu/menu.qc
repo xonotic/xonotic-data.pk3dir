@@ -17,6 +17,7 @@
 
 #include "xonotic/util.qh"
 
+#include <common/checkextension.qh>
 #include <common/items/_mod.qh>
 #include <common/weapons/_all.qh>
 #include <common/mapinfo.qh>
@@ -75,6 +76,8 @@ void m_init()
 #ifdef WATERMARK
 		LOG_TRACEF("^4MQC Build information: ^1%s", WATERMARK);
 #endif
+
+	CheckEngineExtensions();
 
 	// list all game dirs (TEST)
 	if (cvar("developer") > 0)
