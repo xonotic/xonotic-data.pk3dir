@@ -683,8 +683,81 @@ vector Monster_Move_Target(entity this, entity targ)
 	}
 }
 
-.entity draggedby;
+// Check for water/slime/lava and dangerous edges
+// (only when the bot is on the ground or jumping intentionally)
+// returns a number > 0 for danger
+// based on havocbot_checkdanger()
+int Monster_CheckDanger(entity this, vector dst_ahead)
+{
+	float s;
 
+	if((this.flags & FL_FLY) || (this.flags & FL_SWIM))
+	{
+		// Look ahead
+		traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
+
+		// Only care about the skybox if it's below
+		// bones_was_here: does this even matter when flying/swimming?
+		if (trace_endpos.z < this.origin.z + this.mins.z
+		&& trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+			return 1;
+
+		s = pointcontents(trace_endpos + '0 0 1');
+		if (s != CONTENT_SOLID)
+		{
+			if (s == CONTENT_LAVA || s == CONTENT_SLIME)
+				return 3;
+
+			if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+			{
+				// the traceline check isn't enough but is good as optimization,
+				// when not true (most of the time) this tracebox call is avoided
+				tracebox(this.origin + this.view_ofs, this.mins, this.maxs, dst_ahead, true, this);
+				if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+					return 4;
+			}
+		}
+	}
+	else
+	{
+		vector dst_down = dst_ahead - '0 0 3000';
+
+		// Look downwards
+		traceline(dst_ahead, dst_down, true, NULL);
+		//te_lightning2(NULL, this.origin + this.view_ofs, dst_ahead); // Draw "ahead" look
+		//te_lightning2(NULL, dst_ahead, trace_endpos); // Draw "downwards" look
+		if (trace_endpos.z < this.origin.z + this.mins.z)
+		{
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+				return 1;
+
+			// If following an enemy ignore probably-non-fatal falls,
+			// if wandering only ignore small falls.
+			if (trace_endpos.z < (this.origin.z + this.mins.z) - (this.enemy ? 1024 : 100))
+				return 2;
+
+			s = pointcontents(trace_endpos + '0 0 1');
+			if (s != CONTENT_SOLID)
+			{
+				if (s == CONTENT_LAVA || s == CONTENT_SLIME)
+					return 3;
+
+				if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+				{
+					// the traceline check isn't enough but is good as optimization,
+					// when not true (most of the time) this tracebox call is avoided
+					tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
+					if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+						return 4;
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+.entity draggedby;
 void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 {
 	// update goal entity if lost
@@ -787,7 +860,12 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	fixedmakevectors(this.angles);
 	float vz = this.velocity_z;
 
-	if(!turret_closetotarget(this, this.moveto, 16))
+	// Check for danger ahead
+	float bboxwidth = min(this.maxs_x - this.mins_x, this.maxs_y - this.mins_y);
+	int danger = Monster_CheckDanger(this, this.origin + this.view_ofs
+		+ (vdist(this.velocity, >, bboxwidth * 5) ? this.velocity * 0.2 : v_forward * bboxwidth));
+
+	if(!danger && !turret_closetotarget(this, this.moveto, 16))
 	{
 		bool do_run = (this.enemy || this.monster_moveto);
 		movelib_move_simple(this, v_forward, ((do_run) ? runspeed : walkspeed), 0.4);
@@ -829,6 +907,12 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	{
 		turny = bound(turny * -1, shortangle_f(real_angle.y, this.angles.y), turny);
 		this.angles_y += turny;
+	}
+
+	if (danger)
+	{
+		this.last_trace = time + 0.3;
+		this.moveto = Monster_WanderTarget(this, this.origin);
 	}
 }
 
