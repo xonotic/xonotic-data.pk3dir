@@ -50,14 +50,17 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 	float movetime = dt;
 	for (int bump = 0; bump < MAX_CLIP_PLANES && movetime > 0; bump++)
 	{
+		if(this.velocity == '0 0 0')
+			break;
+
 		vector move = this.velocity * movetime;
 		if(!_Movetype_PushEntity(this, move, true))
-			return;
+			return; // teleported
 		if (wasfreed(this))
 			return;
 
 		// NOTE: this is bmodelstartsolid in the engine
-		if (trace_startsolid && trace_ent.solid == SOLID_BSP)
+		if (trace_allsolid && trace_fraction == 0 && trace_ent.solid == SOLID_BSP)
 		{
 			// QC lacks pointers so we must save the old trace values
 			float oldtrace_fraction = trace_fraction;
@@ -68,9 +71,16 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 			trace_plane_normal = oldtrace_plane_normal;
 			trace_ent = oldtrace_ent;
 			if(!_Movetype_PushEntity(this, move, true))
-				return;
+				return; // teleported
 			if (wasfreed(this))
 				return;
+			if (trace_allsolid && trace_fraction == 0)
+			{
+				// immovably stuck, don't waste CPU trying to move again
+				this.velocity = '0 0 0';
+				SET_ONGROUND(this);
+				return;
+			}
 		}
 
 		if (trace_fraction == 1)

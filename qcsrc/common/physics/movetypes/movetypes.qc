@@ -708,7 +708,10 @@ bool _Movetype_PushEntity(entity this, vector push, bool dolink)  // SV_PushEnti
 		_Movetype_PushEntityTrace(this, push);
 		this.move_nomonsters = oldtype;
 		if(trace_startsolid)
+		{
+			trace_fraction = 0;
 			return true;
+		}
 	}
 
 	this.origin = trace_endpos;
