@@ -1,6 +1,8 @@
 #include "shockwave.qh"
 
+#ifdef GAMEQC
 REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
+#endif
 
 #ifdef SVQC
 
