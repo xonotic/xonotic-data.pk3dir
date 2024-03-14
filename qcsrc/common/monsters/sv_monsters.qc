@@ -841,6 +841,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	if(this.state && time >= this.attack_finished_single[0])
 		this.state = 0; // attack is over
 
+// Select destination
 	if(this.state != MONSTER_ATTACK_MELEE) // don't move if set
 	if(time >= this.last_trace || this.enemy) // update enemy or rider instantly
 		this.moveto = Monster_Move_Target(this, targ);
@@ -857,6 +858,19 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	if(!(this.spawnflags & MONSTERFLAG_FLY_VERTICAL) && !(this.flags & FL_SWIM))
 		this.moveto_z = this.origin_z;
 
+// Steer towards destination
+	this.steerto = steerlib_attract2(this, ((this.monster_face) ? this.monster_face : this.moveto), 0.5, 500, 0.95);
+	vector real_angle = vectoangles(this.steerto) - this.angles;
+	float turny = 25;
+	if(this.state == MONSTER_ATTACK_MELEE)
+		turny = 0;
+	if(turny)
+	{
+		turny = bound(turny * -1, shortangle_f(real_angle.y, this.angles.y), turny);
+		this.angles_y += turny;
+	}
+
+// Update velocity
 	fixedmakevectors(this.angles);
 	float vz = this.velocity_z;
 
@@ -897,18 +911,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	if(!((this.flags & FL_FLY) || (this.flags & FL_SWIM)))
 		this.velocity_z = vz;
 
-	this.steerto = steerlib_attract2(this, ((this.monster_face) ? this.monster_face : this.moveto), 0.5, 500, 0.95);
-
-	vector real_angle = vectoangles(this.steerto) - this.angles;
-	float turny = 25;
-	if(this.state == MONSTER_ATTACK_MELEE)
-		turny = 0;
-	if(turny)
-	{
-		turny = bound(turny * -1, shortangle_f(real_angle.y, this.angles.y), turny);
-		this.angles_y += turny;
-	}
-
+// If this path is dangerous try to find a different one next frame
 	if (danger)
 	{
 		this.last_trace = time + 0.3;
