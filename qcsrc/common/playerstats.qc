@@ -290,7 +290,8 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 
 		if(autocvar_g_playerstats_gamereport_uri != cvar_defstring("g_playerstats_gamereport_uri"))
 			serverflags |= SERVERFLAG_PLAYERSTATS | SERVERFLAG_PLAYERSTATS_CUSTOM;
-		else if(checkextension("DP_CRYPTO")) // xonstat requires player and server IDs
+		else if(checkextension("DP_CRYPTO") && checkextension("DP_QC_URI_POST"))
+			// XonStat submission requires player and server IDs, and HTTPS POST
 			serverflags |= SERVERFLAG_PLAYERSTATS;
 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ALIVETIME);
