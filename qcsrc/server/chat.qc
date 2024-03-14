@@ -117,11 +117,11 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 		if(privatesay)
 		{
-			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
+			msgstr = strcat("\{1}\r* ", colorprefix, namestr, "^3 tells you: ^7");
 			privatemsgprefixlen = strlen(msgstr);
 			msgstr = strcat(msgstr, msgin);
 			cmsgstr = strcat(colorstr, colorprefix, namestr, "^3 tells you:\n^7", msgin);
-			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay.netname, privatesay.team, (autocvar_g_chat_teamcolors && IS_PLAYER(privatesay))), ": ^7");
+			privatemsgprefix = strcat("\{1}\r* ^3You tell ", playername(privatesay.netname, privatesay.team, (autocvar_g_chat_teamcolors && IS_PLAYER(privatesay))), ": ^7");
 		}
 		else if(teamsay)
 		{
@@ -130,10 +130,10 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				//msgin = strreplace("/me", "", msgin);
 				//msgin = substring(msgin, 3, strlen(msgin));
 				//msgin = strreplace("/me", strcat(colorstr, "(", colorprefix, namestr, colorstr, ")^7"), msgin);
-				msgstr = strcat("\{1}\{13}^4* ", "^7", msgin);
+				msgstr = strcat("\{1}\r^4* ", "^7", msgin);
 			}
 			else
-				msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
+				msgstr = strcat("\{1}\r", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
 			cmsgstr = strcat(colorstr, "(", colorprefix, namestr, colorstr, ")\n^7", msgin);
 		}
 		else

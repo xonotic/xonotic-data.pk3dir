@@ -94,6 +94,7 @@ void m_init()
 	cvar_set("_menu_cmd_closemenu_available", "1");
 
 	// needs to be done so early because of the constants they create
+	static_init_early();
 	static_init();
 	static_init_late();
 	static_init_precache();
