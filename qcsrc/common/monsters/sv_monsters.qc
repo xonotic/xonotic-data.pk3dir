@@ -828,8 +828,9 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	runspeed = bound(0, M_ARGV(1, float) * MONSTER_SKILLMOD(this), runspeed * 2.5); // limit maxspeed to prevent craziness
 	walkspeed = bound(0, M_ARGV(2, float) * MONSTER_SKILLMOD(this), walkspeed * 2.5); // limit maxspeed to prevent craziness
 
-	if(teamplay && autocvar_g_monsters_teams)
-	if(DIFF_TEAM(this.monster_follow, this))
+	if(this.monster_follow)
+	if((teamplay && autocvar_g_monsters_teams && DIFF_TEAM(this.monster_follow, this))
+	|| IS_SPEC(this.monster_follow) || IS_OBSERVER(this.monster_follow))
 		this.monster_follow = NULL;
 
 	if(this.state == MONSTER_ATTACK_RANGED && IS_ONGROUND(this))
