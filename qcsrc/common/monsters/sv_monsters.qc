@@ -1385,9 +1385,6 @@ bool Monster_Spawn_Setup(entity this)
 	this.pain_finished = this.nextthink;
 	this.last_enemycheck = this.spawn_time + random(); // slight delay
 
-	if(IS_PLAYER(this.monster_follow))
-		this.effects |= EF_DIMLIGHT;
-
 	if(!this.wander_delay) { this.wander_delay = 2; }
 	if(!this.wander_distance) { this.wander_distance = 600; }
 
