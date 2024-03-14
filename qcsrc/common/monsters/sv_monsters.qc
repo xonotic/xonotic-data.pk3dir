@@ -1548,6 +1548,13 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 		setorigin(this, trace_endpos);
 	}
 
+	if (!nudgeoutofsolid(this))
+	{
+		// Stuck and not fixable
+		Monster_Remove(this);
+		return false;
+	}
+
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
 		monster_setupcolors(this);
 
