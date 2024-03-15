@@ -2433,7 +2433,7 @@ void RunThink(entity this, float dt)
 
 	float oldtime = time; // do we need to save this?
 
-	for (int iterations = 0; iterations < 128 && !wasfreed(this); iterations++)
+	for (int iterations = 0; iterations < 128 && !wasfreed(this); ++iterations)
 	{
 		time = max(oldtime, this.nextthink);
 		this.nextthink = 0;
