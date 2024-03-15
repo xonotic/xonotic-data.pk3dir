@@ -20,7 +20,7 @@ bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot) // SV
 {
 	vector stuckorigin = this.origin;
 	vector goodmins = pivot, goodmaxs = pivot;
-	for(int bump = 0; bump < 6; bump++)
+	for(int bump = 0; bump < 6; ++bump)
 	{
 		int coord = 2 - (bump >> 1);
 		int dir = (bump & 1);
@@ -150,7 +150,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 
 	original_velocity = primal_velocity = this.velocity;
 
-	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
+	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES; ++bumpcount)
 	{
 		if(this.velocity == '0 0 0')
 			break;
@@ -265,11 +265,11 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		// modify original_velocity so it parallels all of the clip planes
 		vector new_velocity = '0 0 0';
 		int plane;
-		for (plane = 0;plane < numplanes;plane++)
+		for (plane = 0;plane < numplanes; ++plane)
 		{
 			int newplane;
 			new_velocity = _Movetype_ClipVelocity(original_velocity, planes[plane], 1);
-			for (newplane = 0;newplane < numplanes;newplane++)
+			for (newplane = 0;newplane < numplanes; ++newplane)
 			{
 				if(newplane != plane)
 				{

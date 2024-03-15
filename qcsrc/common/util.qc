@@ -239,7 +239,7 @@ string build_mutator_list(string s)
 		n = tokenizebyseparator(s, ", ");
 	}
 	string s2 = "";
-	for (string arg = ""; i < n; i++)
+	for (string arg = ""; i < n; ++i)
 	{
 		if (i >= 0) arg = argv(i);
 		// cond is the condition for showing the mutator enabled in the menu

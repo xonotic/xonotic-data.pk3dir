@@ -201,7 +201,7 @@ void W_RocketMinsta_Attack(entity actor, .entity weaponentity, int mode)
 	// uses electro effects
 	W_MuzzleFlash(WEP_ELECTRO, actor, weaponentity, w_shotorg, w_shotdir);
 
-	for (int counter = 0; counter < total; counter++)
+	for (int counter = 0; counter < total; ++counter)
 	{
 		proj = new(plasma_prim);
 		proj.owner = proj.realowner = actor;
