@@ -58,6 +58,16 @@ vector InfoMessages_drawstring(string s, vector pos, vector sz, float a, vector 
 	img_curr_group = -1; \
 MACRO_END
 
+string get_team_list(int team_mask)
+{
+	return strcat(
+		((team_mask & BIT(0)) ? strcat(Team_ColoredFullName(NUM_TEAM_1), (team_mask >> 1) ? ", " : "") : ""),
+		((team_mask & BIT(1)) ? strcat(Team_ColoredFullName(NUM_TEAM_2), (team_mask >> 2) ? ", " : "") : ""),
+		((team_mask & BIT(2)) ? strcat(Team_ColoredFullName(NUM_TEAM_3), (team_mask >> 3) ? ", " : "") : ""),
+		((team_mask & BIT(3)) ? Team_ColoredFullName(NUM_TEAM_4) : "")
+	);
+}
+
 void HUD_InfoMessages()
 {
 	if(!autocvar__hud_configure)
@@ -178,6 +188,14 @@ void HUD_InfoMessages()
 					s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey(_("ready"), "ready"));
 				InfoMessage(s);
 			}
+		}
+
+		int missing_teams_mask = STAT(MISSING_TEAMS_MASK);
+		if (missing_teams_mask)
+		{
+			string missing_teams_list = get_team_list(missing_teams_mask);
+			s = sprintf(_("%sNeed active players for: %s"), blinkcolor, missing_teams_list);
+			InfoMessage(s);
 		}
 
 		if(teamplay && !spectatee_status && teamnagger)
