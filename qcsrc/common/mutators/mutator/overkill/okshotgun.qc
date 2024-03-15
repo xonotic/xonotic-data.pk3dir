@@ -52,6 +52,8 @@ METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity wea
 			WEP_CVAR_PRI(okshotgun, damage),
 			WEP_CVAR_PRI(okshotgun, bullets),
 			WEP_CVAR_PRI(okshotgun, spread),
+			WEP_CVAR_PRI(okshotgun, spread_pattern),
+			WEP_CVAR_PRI(okshotgun, spread_pattern_scale),
 			WEP_CVAR_PRI(okshotgun, solidpenetration),
 			WEP_CVAR_PRI(okshotgun, force),
 			EFFECT_RIFLE_WEAK);
