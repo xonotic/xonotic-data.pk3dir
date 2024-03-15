@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: oblector o, 2022-2024\n"
+"Last-Translator: oblector o, 2022\n"
 "Language-Team: Latin (http://app.transifex.com/team-xonotic/xonotic/language/"
 "la/)\n"
 "Language: la\n"
@@ -511,11 +511,11 @@ msgstr "Locorum indicandorum index"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:901
 msgid "Waypoint editor menu as default"
-msgstr ""
+msgstr "Praeferre locorum indicandorum indicem"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 msgid "Server quick menu as default"
-msgstr ""
+msgstr "Praeferre moderatri indicem celerem"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "QMCMD^Spectate a player"
@@ -3772,27 +3772,27 @@ msgstr "^BG%s%s^K1, ex ^BG%s^K1 Sclopeto Pungenti, effugire non potuit%s%s"
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, missilibus ^BG%s^K1 Persecutri, afflictatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:513
 #, c-format
 msgid "^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Persecutro ^BG%s^K1, inventus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:514
 #, c-format
 msgid "^BG%s^K1 played with tiny Seeker rockets%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Persecutri missilia minima lusit%s%s"
 
 #: qcsrc/common/notifications/all.inc:515
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Unda Impingente ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:516
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shockwave%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 magna Unda Impingente ^BG%s^K1 alapam dedit%s%s"
 
 #: qcsrc/common/notifications/all.inc:517
 #, c-format
@@ -4737,15 +4737,15 @@ msgstr "^K1Temet interficies post ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:798
 msgid "^F4Timeout begins in ^COUNT"
-msgstr ""
+msgstr "^F4Intermissio fiet post ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:799
 msgid "^F4Timeout ends in ^COUNT"
-msgstr ""
+msgstr "^F4Intermissio finietur post ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:801
 msgid "^K1Cannot join given minigame session!"
-msgstr ""
+msgstr "^K1Ludi parvi sessio incipi non potuit!"
 
 #: qcsrc/common/notifications/all.inc:803
 #, c-format
@@ -5730,7 +5730,7 @@ msgstr "Hagar"
 
 #: qcsrc/common/weapons/weapon/hlac.qh:20
 msgid "Heavy Laser Assault Cannon"
-msgstr ""
+msgstr "Hyperbolicae Lucis Assilientis Tormentum"
 
 #: qcsrc/common/weapons/weapon/hook.qh:20
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:169
@@ -5743,7 +5743,7 @@ msgstr "Polybolus"
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:20
 msgid "Mine Layer"
-msgstr ""
+msgstr "Tribuliferum"
 
 #: qcsrc/common/weapons/weapon/mortar.qh:20
 msgid "Mortar"
@@ -5751,7 +5751,7 @@ msgstr "Mortarium"
 
 #: qcsrc/common/weapons/weapon/porto.qh:18
 msgid "Port-O-Launch"
-msgstr ""
+msgstr "Teleportiferum"
 
 #: qcsrc/common/weapons/weapon/rifle.qh:21
 msgid "Rifle"
@@ -5759,11 +5759,11 @@ msgstr "Sclopetum Pungens"
 
 #: qcsrc/common/weapons/weapon/seeker.qh:20
 msgid "T.A.G. Seeker"
-msgstr ""
+msgstr "T.A.G. Persecutrum"
 
 #: qcsrc/common/weapons/weapon/shockwave.qh:18
 msgid "Shockwave"
-msgstr ""
+msgstr "Unda Impingens"
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:20
 msgid "Shotgun"
@@ -6006,7 +6006,7 @@ msgstr "Versus %dus"
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:68
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:115
 msgid "Custom"
-msgstr ""
+msgstr "Utens optat"
 
 #: qcsrc/menu/xonotic/credits.qc:4
 msgid "Core Team"
@@ -6038,7 +6038,7 @@ msgstr "Expeditio"
 
 #: qcsrc/menu/xonotic/credits.qc:56
 msgid "Level Design"
-msgstr ""
+msgstr "Harenarum Constructio"
 
 #: qcsrc/menu/xonotic/credits.qc:81
 msgid "Music / Sound FX"
@@ -6066,7 +6066,7 @@ msgstr "Codicis Fundamenta Addita"
 
 #: qcsrc/menu/xonotic/credits.qc:134
 msgid "Compiler"
-msgstr ""
+msgstr "Interpretatrum Codicis Computatralis"
 
 #: qcsrc/menu/xonotic/credits.qc:140
 msgid "Other Active Contributors"
@@ -7135,7 +7135,7 @@ msgstr "Deleri"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:25
 msgid "Move target:"
-msgstr ""
+msgstr "Attentionem movere:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:26
 msgid "Follow"
@@ -7392,7 +7392,7 @@ msgstr "Ludi modi:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
 msgid "Close"
-msgstr ""
+msgstr "Dimittere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:90
 msgid "MAP^Play"
@@ -7440,7 +7440,7 @@ msgstr "Quisque inimicus non vulneratur cum in solo stat"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:143
 msgid "Damage done to your enemy gets added to your own health"
-msgstr "Vulnus qui inimico infers, sanitati tuae addetur"
+msgstr "Vulnus quod inimico infers, sanitati tuae addetur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:148
 msgid ""
@@ -7484,6 +7484,8 @@ msgid ""
 "Some weapon spawns will be randomly replaced with new weapons: Heavy Laser "
 "Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker"
 msgstr ""
+"Quaedam arma fortuito commutabuntur cum armis novis: Hyperbolicae Lucis "
+"Assilientis Tormentum, Tribuliferum, Sclopetum Pungens, T.A.G. Persecutrum"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:188
 msgid ""
@@ -7613,7 +7615,7 @@ msgstr "Moderatrorum indicis mutationes retinet ne nomina \"exsiliant\""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:75
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:30
 msgid "Address:"
-msgstr ""
+msgstr "Locus interretialis:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:86
 msgid "Info..."
@@ -7631,7 +7633,7 @@ msgstr "Pactio Usuum non scripta"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 msgid "MOD^Default"
-msgstr ""
+msgstr "Ordinaria"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 #, c-format
@@ -7640,7 +7642,7 @@ msgstr "%d mutatas"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 msgid "Official"
-msgstr ""
+msgstr "Normae Auctorum"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:159
 msgid "N/A (auth library missing, can't connect)"
@@ -7684,7 +7686,7 @@ msgstr "Postulatur (cryptographabit)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:191
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
-msgstr ""
+msgstr "Scribe in 'cvar' `crypto_aeslevel` ut optionem eligas"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1059
@@ -7717,7 +7719,7 @@ msgstr "Moderatri Notae"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:24
 msgid "Hostname:"
-msgstr ""
+msgstr "Moderatri Nomen:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:48
 msgid "Mod:"
@@ -7725,7 +7727,7 @@ msgstr "Mod:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:53
 msgid "Version:"
-msgstr ""
+msgstr "Editio:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:58
 msgid "Settings:"
@@ -7742,7 +7744,7 @@ msgstr "Automati:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:75
 msgid "Free slots:"
-msgstr ""
+msgstr "Spatia vacua:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:81
 msgid "Encryption:"
@@ -7750,7 +7752,7 @@ msgstr "Cryptographia:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:86
 msgid "ID:"
-msgstr ""
+msgstr "Nomen computatrale:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:91
 msgid "Key:"
@@ -7870,23 +7872,23 @@ msgstr "Rationariorum imagines semper servare"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:62
 msgid "Open in the viewer"
-msgstr ""
+msgstr "Imaginem videre in indice speciali"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:137
 msgid "Reset"
-msgstr ""
+msgstr "Reponere"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:142
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:145
 msgid "Next"
-msgstr ""
+msgstr "Posterior"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:150
 msgid "Slide show"
-msgstr ""
+msgstr "Spectaculum imaginum"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:38
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:22
@@ -7895,7 +7897,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:21
 msgid "Apply immediately"
-msgstr ""
+msgstr "Confirmare optiones nunc"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:50
 msgid "Name"
@@ -7919,7 +7921,7 @@ msgstr "Statisticae"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:127
 msgid "Allow player statistics to track your client"
-msgstr ""
+msgstr "Sinisne in statisticis clientem computatralem vestigari"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:131
 msgid "Allow player statistics to use your nickname"
@@ -7927,7 +7929,7 @@ msgstr "Sinisne nomen tuum in statisticis nuntiari"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:136
 msgid "Allow player statistics to rank you in leaderboards"
-msgstr ""
+msgstr "Sinisne gradum tuum in statisticis indicari"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:156
 msgid "Select language..."
@@ -8039,7 +8041,7 @@ msgstr "Vis:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:76
 msgid "Claim *"
-msgstr ""
+msgstr "* assumere"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:78
 msgid "* object info"
@@ -8327,11 +8329,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:11
 msgid "Are you sure you want to reset all key bindings?"
-msgstr ""
+msgstr "Certumne est tibi oblivisci omnes claves premendas?"
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qh:6
 msgid "Reset key bindings"
-msgstr ""
+msgstr "Reponere claves premendas"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:41
 msgid "Quality preset:"
@@ -8871,15 +8873,15 @@ msgstr "Vulnus"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:102
 msgid "Overlay:"
-msgstr ""
+msgstr "Superpositum:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:105
 msgid "Factor:"
-msgstr ""
+msgstr "Proportio:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:110
 msgid "Fade rate:"
-msgstr ""
+msgstr "Quomodo evanescit:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:118
 msgid "Player Names"
@@ -8891,11 +8893,11 @@ msgstr "Nomina super ludentes videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:136
 msgid "Max distance:"
-msgstr ""
+msgstr "Distantia maxima:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:142
 msgid "Decolorize:"
-msgstr ""
+msgstr "Colorem minuere:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:146
 #: qcsrc/menu/xonotic/keybinder.qc:115
@@ -9016,7 +9018,7 @@ msgstr "In Vexilli Captu nomen eius qui vexillum rapuit videre"
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:92
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:122
 msgid "Other"
-msgstr ""
+msgstr "Aliae"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:78
 msgid "Display console messages in the top left corner"
@@ -9238,25 +9240,27 @@ msgstr "Statim"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:95
 msgid "ZOOM^Zoom sensitivity:"
-msgstr ""
+msgstr "Perceptibilitas cum amplificatione"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:97
 msgid ""
 "How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no "
 "sensitivity change)"
 msgstr ""
+"Quomodo muris perceptibilitatem amplificatio mutat, ab 0 (minor "
+"perceptibilitas) ad 1 (aequalis perceptibilitas)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:100
 msgid "Velocity zoom"
-msgstr ""
+msgstr "Amplificare cum celer es"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:101
 msgid "Forward movement only"
-msgstr ""
+msgstr "Modo si progrederis"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:105
 msgid "VZOOM^Factor"
-msgstr ""
+msgstr "Proportio"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:112
 msgid "Display reticle 2D overlay while zooming"
@@ -9289,30 +9293,34 @@ msgstr "Deorsum"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:49
 msgid "Use priority list for weapon cycling"
-msgstr ""
+msgstr "Hac ordine armorum uteris cum arma tenta permutas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:50
 msgid ""
 "Make use of the list above when cycling through weapons with the mouse wheel"
 msgstr ""
+"Hac ordine armorum secundum praecedentias uteris cum arma tenta permutas, "
+"per muris rotam vel aliam clavem quam elegisti"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:52
 msgid "Cycle through only usable weapon selections"
-msgstr ""
+msgstr "Cum arma tenta permutas, non tenebis in manu arma quibus uti non potes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:56
 msgid "Auto switch weapons on pickup"
-msgstr ""
+msgstr "Arma tenta statim commutas cum nova capis"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
 msgid ""
 "Automatically switch to newly picked up weapons if they are better than what "
 "you are carrying"
 msgstr ""
+"Arma tenta statim commutas ut teneas in manu nova arma si haec sunt meliora "
+"quam arma anteriora"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:60
 msgid "Release attack buttons when you switch weapons"
-msgstr ""
+msgstr "Statim missile emittis cum arma tenta commutas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:63
 msgid "Draw 1st person weapon model"
@@ -9371,31 +9379,31 @@ msgstr "Mus"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:60
 msgid "Sensitivity:"
-msgstr ""
+msgstr "Perceptibilitas muris:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:62
 msgid "Mouse speed multiplier"
-msgstr ""
+msgstr "Muris celeritatis multiplicandus"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:64
 msgid "Smooth aiming"
-msgstr ""
+msgstr "Muris motio suavior"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:65
 msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
-msgstr ""
+msgstr "Polire muris motionem, quae morosior autem fieri potest"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:67
 msgid "Invert aiming"
-msgstr ""
+msgstr "Muris motio inversa"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:68
 msgid "Invert mouse movement on the Y-axis"
-msgstr ""
+msgstr "In muris motione, commutare 'sursum' et 'deorsum'"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:70
 msgid "Use system mouse positioning"
-msgstr ""
+msgstr "Muris motio secundum systema computatrale generale"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:75
 msgid "Enable built in mouse acceleration"
@@ -9455,7 +9463,7 @@ msgstr "Iussum cum solvitur:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:40
 msgid "Cancel"
-msgstr ""
+msgstr "Nihil facere"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qh:7
 msgid "User defined key bind"
@@ -9579,25 +9587,27 @@ msgstr "Infinitus"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:124
 msgid "Menu tooltips:"
-msgstr ""
+msgstr "Adiutus cum indices transis:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:126
 msgid ""
 "Menu tooltips: disabled, standard or advanced (also shows cvar or console "
 "command bound to the menu item)"
 msgstr ""
+"Adiutus indicum: nullus vel ordinarius vel involutus (i.e., scribit "
+"variabiles aut iussus computatrales affines)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:127
 msgid "TLTIP^Disabled"
-msgstr ""
+msgstr "Nullus"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:128
 msgid "TLTIP^Standard"
-msgstr ""
+msgstr "Ordinarius"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:129
 msgid "TLTIP^Advanced"
-msgstr ""
+msgstr "Involutus"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:132
 msgid "Show current date and time"
@@ -9609,7 +9619,7 @@ msgstr "Diem et horam videre, id quod est prudens in photographiis servatis"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:136
 msgid "Enable developer mode"
-msgstr ""
+msgstr "Modus pro inspectoribus codicum"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:141
 msgid "Advanced settings..."
@@ -9618,19 +9628,20 @@ msgstr "Optiones involutae..."
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:142
 msgid "Advanced settings where you can tweak every single variable of the game"
 msgstr ""
+"Optiones involutae sunt ubi mutare potes quamvis optionem variabilem in ludo"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:148
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
 msgid "Factory reset"
-msgstr ""
+msgstr "Integrare omnia"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:31
 msgid "Cvar filter:"
-msgstr ""
+msgstr "Electe enumerare:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:38
 msgid "Modified cvars only"
-msgstr ""
+msgstr "Modo optiones mutatae"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:45
 msgid "Setting:"
@@ -9638,7 +9649,7 @@ msgstr "Optio:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:49
 msgid "Type:"
-msgstr ""
+msgstr "Genus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Value:"
@@ -9654,11 +9665,13 @@ msgstr "Optiones involutae"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:11
 msgid "Are you sure you want to reset all settings?"
-msgstr ""
+msgstr "Certumne est tibi oblivisci omnes optiones?"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
 msgstr ""
+"Si hoc eligis, servabitur scriptum separatum cum omnibus optionibus in "
+"'data', ut eas recordari possis"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skins"
@@ -9698,11 +9711,11 @@ msgstr "Linguam commutare"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qh:6
 msgid "Warning"
-msgstr ""
+msgstr "Nota bene"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:33
 msgid "Resolution:"
-msgstr ""
+msgstr "Magnitudo:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:37
 msgid "Font/UI size:"
@@ -9811,37 +9824,40 @@ msgstr "4x"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "Resolution scaling:"
-msgstr ""
+msgstr "Proportio magnitudinis:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:87
 msgid ""
 "Screen or window size multiplier, above 1x does antialiasing, below 1x may "
 "help slow GPUs"
 msgstr ""
+"Multiplicandus numeri laterculorum in quibusdam calculationibus, si maior "
+"quam 1x imago politur, et si minor quam 1x calculationes graphicae "
+"faciliores sunt"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:90
 msgid "Anisotropy:"
-msgstr ""
+msgstr "Pictura anisotropica:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:92
 msgid "Anisotropic filtering quality"
-msgstr ""
+msgstr "Pulchritudo artificii picturae anisotropicae"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:93
 msgid "ANISO^Disabled"
-msgstr ""
+msgstr "Sine"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:96
 msgid "8x"
-msgstr ""
+msgstr "8x"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:97
 msgid "16x"
-msgstr ""
+msgstr "16x"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:102
 msgid "Depth first:"
-msgstr ""
+msgstr "Profunditas primo:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:104
 msgid ""
@@ -9851,49 +9867,52 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:105
 msgid "DF^Disabled"
-msgstr ""
+msgstr "Sine"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:106
 msgid "DF^World"
-msgstr ""
+msgstr "Mundi"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:107
 msgid "DF^All"
-msgstr ""
+msgstr "Omnium"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:111
 msgid "Brightness:"
-msgstr ""
+msgstr "Nitor:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:113
 msgid "Brightness of black"
-msgstr ""
+msgstr "Nitor coloris nigri"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:115
 msgid "Contrast:"
-msgstr ""
+msgstr "Distinctio:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:117
 msgid "Brightness of white"
-msgstr ""
+msgstr "Nitor coloris candidi"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:119
 msgid "Gamma:"
-msgstr ""
+msgstr "Gamma:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:123
 msgid ""
 "Inverse gamma correction value, a brightness effect that does not affect "
 "white or black"
 msgstr ""
+"Numerus Gamma in quadam calculatione, correctionis inversae colorum, quae "
+"est artificium illuminationis graphicae, conservans colores nigrum "
+"candidumque"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:127
 msgid "Contrast boost:"
-msgstr ""
+msgstr "Distinctionis multiplicandus"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:131
 msgid "By how much to multiply the contrast in dark areas"
-msgstr ""
+msgstr "Cum quo multiplicare distinctionem colorum in locis umbrosis"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:135
 msgid "Saturation:"
@@ -9926,32 +9945,36 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:153
 msgid "Wait for GPU to finish each frame"
 msgstr ""
+"Exspectare ut semper pingat totum quadrum pars computatralis calculationum "
+"graphicarum"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:154
 msgid ""
 "Make the CPU wait for the GPU to finish each frame, can help with some "
 "strange input or video lag on some machines"
 msgstr ""
+"Si expectas eam partem ut pingat semper picturam completam, fortasse "
+"corrigat aliquae menda inusitata, morae imaginum, in aliquibus computatris"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:158
 msgid "Use OpenGL 2.0 shaders (GLSL)"
-msgstr ""
+msgstr "Uti codicibus computationis graphicae umbrantis, OpenGL 2.0 (GLSL)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:164
 msgid "Flip view horizontally"
-msgstr ""
+msgstr "Invertere quadri latus dextrum et sinistrum"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:165
 msgid "Poor man's left handed mode"
-msgstr ""
+msgstr "Rudis modus pro manu laeva"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:167
 msgid "Psycho coloring (easter egg)"
-msgstr ""
+msgstr "Colores psychici (iocus)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:171
 msgid "Trippy vertices (easter egg)"
-msgstr ""
+msgstr "Punctus vertiginosi (iocus)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:149
 msgid "Instant action! (random map with bots)"
@@ -10165,7 +10188,7 @@ msgstr "Cliens"
 
 #: qcsrc/menu/xonotic/keybinder.qc:109 qcsrc/menu/xonotic/keybinder.qc:111
 msgid "enter console"
-msgstr ""
+msgstr "iussorum locus"
 
 #: qcsrc/menu/xonotic/keybinder.qc:112
 msgid "quit"
@@ -10299,7 +10322,7 @@ msgstr "Ping"
 
 #: qcsrc/menu/xonotic/serverlist.qc:755
 msgid "Hostname"
-msgstr ""
+msgstr "Moderatri nomen"
 
 #: qcsrc/menu/xonotic/serverlist.qc:756
 msgid "Map"
@@ -10307,12 +10330,12 @@ msgstr "Harena"
 
 #: qcsrc/menu/xonotic/serverlist.qc:757
 msgid "Type"
-msgstr ""
+msgstr "Genus"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1054
 #, c-format
 msgid "AES level %d"
-msgstr ""
+msgstr "Gradus AES %d"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1054
 msgid "ENC^none"
@@ -10560,7 +10583,7 @@ msgstr "Percentilis:"
 #: qcsrc/menu/xonotic/statslist.qc:247
 #, c-format
 msgid "%d (unranked)"
-msgstr ""
+msgstr "%d (sine gradu)"
 
 #: qcsrc/menu/xonotic/util.qc:420
 msgid "Update can be downloaded at:"
@@ -10568,7 +10591,7 @@ msgstr "Novus Xonoticus capi potest in:"
 
 #: qcsrc/menu/xonotic/util.qc:518
 msgid "Autogenerating mapinfo for newly added maps..."
-msgstr ""
+msgstr "Computatrum scribit notas harenae nuper additae..."
 
 #: qcsrc/menu/xonotic/util.qc:553
 #, c-format
@@ -10583,7 +10606,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:772
 msgid "Use default"
-msgstr ""
+msgstr "Ordinario uti"
 
 #: qcsrc/menu/xonotic/util.qc:792
 msgid "Team Color:"
