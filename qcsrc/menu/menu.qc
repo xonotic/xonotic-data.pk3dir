@@ -920,6 +920,10 @@ void m_toggle(int mode)
 	if (Menu_Active)
 	{
 		if (mode == 1) return;
+		// when togglemenu is called without arguments (mode is -1)
+		// the menu is closed only when connected
+		if (mode == -1 && !(gamestatus & GAME_CONNECTED)) return;
+		// togglemenu 0 always closes the menu
 		m_hide();
 	}
 	else
