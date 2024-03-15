@@ -1381,7 +1381,7 @@ string translate_weaponarena(string s)
 
 	int n = tokenizebyseparator(s, " & ");
 	string wpn_list = "";
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; ++i)
 	{
 		Weapon wep = Weapon_from_name(argv(i));
 		if (wep == WEP_Null)

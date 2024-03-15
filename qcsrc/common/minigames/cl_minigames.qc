@@ -262,7 +262,7 @@ string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_
 		take_until = strlen(s);
 
 	int skip = 0;
-	for ( int i = 0; i < take_until; i++ )
+	for ( int i = 0; i < take_until; ++i )
 		if ( substring(s,i,1) == "\n" )
 		{
 			take_until = i;
@@ -364,7 +364,7 @@ void minigame_cmd_workaround(float dummy, string...cmdargc)
 	string cmd;
 	cmd = "cmd minigame ";
 	float i;
-	for ( i = 0; i < cmdargc; i++ )
+	for ( i = 0; i < cmdargc; ++i )
 		cmd = strcat(cmd,...(i,string));
 	localcmd(strcat(cmd,"\n"));
 }

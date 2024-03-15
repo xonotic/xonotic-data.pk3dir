@@ -47,7 +47,7 @@ void PlayerStats_GameReport_Reset_All()
 	if(PS_GR_OUT_DB < 0)
 		return;
 
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < 16; ++i)
 		if (teamscorekeepers[i])
 			PlayerStats_GameReport_AddTeam(i + 1);
 	FOREACH_CLIENT(true, {

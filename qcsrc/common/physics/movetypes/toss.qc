@@ -48,7 +48,7 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 	this.angles = this.angles + this.avelocity * dt;
 
 	float movetime = dt;
-	for (int bump = 0; bump < MAX_CLIP_PLANES && movetime > 0; bump++)
+	for (int bump = 0; bump < MAX_CLIP_PLANES && movetime > 0; ++bump)
 	{
 		if(this.velocity == '0 0 0')
 			break;
