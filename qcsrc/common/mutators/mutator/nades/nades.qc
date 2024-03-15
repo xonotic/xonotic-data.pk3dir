@@ -37,9 +37,11 @@ entity Nade_TrailEffect(int proj, int nade_team)
 
     return EFFECT_Null;
 }
-#endif
 
 REGISTER_NET_TEMP(TE_CSQC_DARKBLINKING);
+
+#endif
+
 #ifdef CSQC
 #include <client/draw.qh>
 #include <client/hud/hud.qh>

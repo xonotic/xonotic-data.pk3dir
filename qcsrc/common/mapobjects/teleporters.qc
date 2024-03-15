@@ -225,9 +225,16 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 
 	if(!(teleporter.classname == "trigger_teleport" && (teleporter.spawnflags & TELEPORT_KEEP_SPEED)) &&
 	   !(teleporter.classname == "target_teleporter" && (teleporter.spawnflags & TARGET_TELEPORTER_KEEP_SPEED)))
+	{
+		// test if player is slower than min
+		if(STAT(TELEPORT_MINSPEED, player))
+			if(vdist(player.velocity, <, STAT(TELEPORT_MINSPEED, player)))
+				player.velocity = normalize(player.velocity) * max(0, STAT(TELEPORT_MINSPEED, player));
+		// test if player is faster than max (or if min is above max)
 		if(STAT(TELEPORT_MAXSPEED, player))
 			if(vdist(player.velocity, >, STAT(TELEPORT_MAXSPEED, player)))
 				player.velocity = normalize(player.velocity) * max(0, STAT(TELEPORT_MAXSPEED, player));
+	}
 
 	locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
 

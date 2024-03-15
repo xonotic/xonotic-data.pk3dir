@@ -2515,8 +2515,8 @@ msgstr "^BG%s^BG ha catturato la bandiera ^TC^TT^BG"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG ha catturato la bandiera ^TC^TT^BG in ^F1%s^BG secondi, battendo il "
 "precedente record di ^BG%s^BG di ^F2%s^BG secondi"
@@ -2827,8 +2827,8 @@ msgstr "^BG%s%s^K1 è stato ridotto a brandelli dallo Spiderbot di ^BG%s^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was blasted to bits by ^BG%s^K1's Spiderbot%s%s"
 msgstr ""
-"^BG%s%s^K1 è stato fatto scoppiare in pezzettini dallo Spiderbot di ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 è stato fatto scoppiare in pezzettini dallo Spiderbot di "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:302
 #, c-format
@@ -3454,8 +3454,8 @@ msgstr "^BG%s^BG ha abbandonato la gara"
 #, c-format
 msgid "^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"
 msgstr ""
-"^BG%s^BG non è riuscito a battere il proprio record del %s%s^BG posto di %s"
-"%s %s"
+"^BG%s^BG non è riuscito a battere il proprio record del %s%s^BG posto di "
+"%s%s %s"
 
 #: qcsrc/common/notifications/all.inc:434
 #, c-format
@@ -3645,8 +3645,8 @@ msgstr ""
 #, c-format
 msgid "^BG%s%s^K1 felt the electrifying air of ^BG%s^K1's Electro combo%s%s"
 msgstr ""
-"^BG%s%s^K1 ha sentito l'aria elettrificata della combo dell'Electro di ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 ha sentito l'aria elettrificata della combo dell'Electro di "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:474
 #, c-format
@@ -3717,8 +3717,8 @@ msgstr "^BG%s^K1 è diventato un pò sovraeccitato con il proprio HLAC%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was caught in ^BG%s^K1's Hook gravity bomb%s%s"
 msgstr ""
-"^BG%s%s^K1 è stato catturato nella bomba di gravità del Rampino di ^BG%s^K1%s"
-"%s"
+"^BG%s%s^K1 è stato catturato nella bomba di gravità del Rampino di "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:487
 #, c-format
@@ -3808,8 +3808,8 @@ msgstr "^BG%s%s^K1 è stato vaporizzato dall'Overkill Vortex di ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 "^BG%s%s^K1 è stato tagliato in due dall'Overkill Rocket Propelled Chainsaw "
 "di ^BG%s^K1%s%s"
@@ -3819,16 +3819,16 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 ha quasi schivato l'Overkill Rocket Propelled Chainsaw di ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 ha quasi schivato l'Overkill Rocket Propelled Chainsaw di "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:504
 #, c-format
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s^K1 è stato segato in due dal proprio Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s^K1 è stato segato in due dal proprio Overkill Rocket Propelled "
+"Chainsaw%s%s"
 
 #: qcsrc/common/notifications/all.inc:505
 #, c-format

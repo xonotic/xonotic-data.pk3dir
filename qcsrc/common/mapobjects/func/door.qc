@@ -44,12 +44,12 @@ void door_blocked(entity this, entity blocker)
 	else
 	{
 #ifdef SVQC
-		if(this.dmg && blocker.takedamage != DAMAGE_NO)    // Shall we bite?
+		if (this.dmg && blocker.takedamage != DAMAGE_NO)    // Shall we bite?
 			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 
 		// don't change direction for dead or dying stuff
-		if(!IS_DEAD(blocker)
+		if (!IS_DEAD(blocker)
 #ifdef SVQC
 			&& blocker.takedamage != DAMAGE_NO
 #endif
@@ -77,7 +77,7 @@ void door_blocked(entity this, entity blocker)
 		else
 		{
 			//gib dying stuff just to make sure
-			if(this.dmg && blocker.takedamage != DAMAGE_NO && IS_DEAD(blocker))    // Shall we bite?
+			if (this.dmg && blocker.takedamage != DAMAGE_NO && IS_DEAD(blocker))    // Shall we bite?
 				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 		}
 #endif
@@ -415,9 +415,8 @@ LinkDoors
 
 entity LinkDoors_nextent(entity cur, entity near, entity pass)
 {
-	while((cur = find(cur, classname, pass.classname)) 
-	&& (((cur.spawnflags & DOOR_DONT_LINK) && !Q3COMPAT_COMMON) 
-	|| cur.enemy))
+	while ((cur = find(cur, classname, pass.classname))
+	&& ((!Q3COMPAT_COMMON && (cur.spawnflags & DOOR_DONT_LINK)) || cur.enemy))
 	{
 	}
 	return cur;
@@ -455,8 +454,7 @@ void LinkDoors(entity this)
 		return;		// already linked by another door
 
 	// Q3 door linking is done for teamed doors only and is not affected by spawnflags or bmodel proximity
-	if (((this.spawnflags & DOOR_DONT_LINK) && !Q3COMPAT_COMMON) 
-	|| (Q3COMPAT_COMMON && !this.team))
+	if ((!Q3COMPAT_COMMON && (this.spawnflags & DOOR_DONT_LINK)) || (Q3COMPAT_COMMON && !this.team))
 	{
 		this.owner = this.enemy = this;
 
@@ -624,11 +622,8 @@ void door_init_startopen(entity this)
 	this.pos2 = this.pos1;
 	this.pos1 = this.origin;
 
-// no longer needed: not using delayed initialisation for door_init_startopen()
-#if 0
 #ifdef SVQC
 	this.SendFlags |= SF_TRIGGER_UPDATE;
-#endif
 #endif
 }
 
@@ -770,6 +765,12 @@ spawnfunc(func_door)
 	if(this.spawnflags & DOOR_NONSOLID)
 		this.solid = SOLID_NOT;
 
+	// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
+	// but spawn in the open position
+	// the tuba door on xoylent requires the delayed init
+	if (this.spawnflags & DOOR_START_OPEN)
+		InitializeEntity(this, door_init_startopen, INITPRIO_SETLOCATION);
+
 	door_init_shared(this);
 
 	this.pos1 = this.origin;
@@ -778,11 +779,6 @@ spawnfunc(func_door)
 	absmovedir.y = fabs(this.movedir.y);
 	absmovedir.z = fabs(this.movedir.z);
 	this.pos2 = this.pos1 + this.movedir * (absmovedir * this.size - this.lip);
-
-// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
-// but spawn in the open position
-	if (this.spawnflags & DOOR_START_OPEN)
-		door_init_startopen(this);
 
 	if(autocvar_sv_doors_always_open)
 	{
@@ -805,14 +801,14 @@ spawnfunc(func_door)
 		{
 			string t = GetField_fullspawndata(this, "team");
 			// bones_was_here: same hack as used to support teamed items on Q3 maps
-			if(t) this.team = crc16(false, t);
+			if (t) this.team = crc16(false, t);
 		}
 	}
 
 	settouch(this, door_touch);
 
-// LinkDoors can't be done until all of the doors have been spawned, so
-// the sizes can be detected properly.
+	// LinkDoors can't be done until all of the doors have been spawned, so
+	// the sizes can be detected properly.
 	InitializeEntity(this, LinkDoors, INITPRIO_LINKDOORS);
 
 	this.reset = door_reset;

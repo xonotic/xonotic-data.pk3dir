@@ -8,7 +8,7 @@ void plat_delayedinit(entity this)
 {
 	plat_link(this);
 	// Q3 uses only a truth check of .targetname to decide whether to spawn a trigger
-	if(!Q3COMPAT_COMMON || this.targetname == "")
+	if (!Q3COMPAT_COMMON || this.targetname == "")
 		plat_spawn_inside_trigger(this); // the "start moving" trigger
 }
 
@@ -207,7 +207,7 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 		set_movetype(this, MOVETYPE_PUSH);
 		this.move_time = time;
 
-		if(!Q3COMPAT_COMMON || this.targetname == "")
+		if (!Q3COMPAT_COMMON || this.targetname == "")
 			plat_spawn_inside_trigger(this);
 	}
 

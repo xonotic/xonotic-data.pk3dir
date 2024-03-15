@@ -1,6 +1,5 @@
 #pragma once
 
-bool WarpZoneLib_MoveOutOfSolid(entity e);
 #ifdef SVQC
 void WarpZoneLib_ExactTrigger_Init(entity this, bool unsetmodel);
 #endif

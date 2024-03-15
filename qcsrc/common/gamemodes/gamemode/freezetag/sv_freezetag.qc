@@ -167,8 +167,11 @@ void freezetag_Add_Score(entity targ, entity attacker)
 	{
 		// got frozen by an enemy
 		// counted as "kill" and "death" already
+		if(SAME_TEAM(attacker, targ))
+			GameRules_scoring_add(attacker, SCORE, -1);
+		else
+			GameRules_scoring_add(attacker, SCORE, +1);
 		GameRules_scoring_add(targ, SCORE, -1);
-		GameRules_scoring_add(attacker, SCORE, +1);
 	}
 	// else nothing - got frozen by the game type rules themselves
 }
@@ -365,6 +368,11 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 
 	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
+		// can't use freezetag_Add_Score here since it doesn't assign any points
+		// if the attacker is not a player (e.g. triggerhurt) by design
+		if ((STAT(FROZEN, frag_target) != FROZEN_NORMAL) && !IS_PLAYER(frag_attacker))
+			GameRules_scoring_add(frag_target, SCORE, -1);
+
 		// by restoring some health right after player death (soft-kill)
 		// weapons and ammo won't be reset
 		SetResourceExplicit(frag_target, RES_HEALTH, 1);

@@ -1184,35 +1184,56 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 	return myvel + spd * mydir;
 }
 
+/*
+ * Compresses the shot origin offset vector to an int with the following format:
+ * xxxxxxxx|Syyyyyyy|Syzzzzzz
+ * 32109876|54321098|76543210
+ * 1st byte: x component
+ * 2nd byte: y component in the last 7 bits and the sign of the x component in the 1st bit
+ * 3rd byte: z component in the last 7 bits and the sign of the z component in the 1st bit
+ * All values are multiplied on compression and divided on decompression
+ * so the precision of the values is 0.5 if multiplied by 2 and 0.25 if multiplied by 4
+ * Values are bound to the following ranges:
+ * x: -127.5  +127.5
+ * y:      0  +31.75 negative values not allowed because the gun can't be aligned to the left by default
+ * z: -31.75  +31.75
+ */
 float compressShotOrigin(vector v)
 {
-	float rx = rint(v.x * 2);
-	float ry = rint(v.y * 4) + 128;
-	float rz = rint(v.z * 4) + 128;
-	if(rx > 255 || rx < 0)
+	int rx_neg = (v.x < 0) ? 1 : 0;
+	int rz_neg = (v.z < 0) ? 1 : 0;
+	int rx = rint(fabs(v.x) * 2);
+	int ry = rint(v.y * 4);
+	int rz = rint(fabs(v.z) * 4);
+	if(rx > 255) // 128 * 2 - 1
 	{
 		LOG_DEBUG("shot origin ", vtos(v), " x out of bounds\n");
 		rx = bound(0, rx, 255);
 	}
-	if(ry > 255 || ry < 0)
+	if(ry > 127 || ry < 0) // 32 * 4 - 1
 	{
 		LOG_DEBUG("shot origin ", vtos(v), " y out of bounds\n");
-		ry = bound(0, ry, 255);
+		ry = bound(0, ry, 127);
 	}
-	if(rz > 255 || rz < 0)
+	if(rz > 127) // 32 * 4 - 1
 	{
 		LOG_DEBUG("shot origin ", vtos(v), " z out of bounds\n");
-		rz = bound(0, rz, 255);
+		rz = bound(0, rz, 127);
 	}
+	ry |= rx_neg * BIT(7);
+	rz |= rz_neg * BIT(7);
 	return rx * 0x10000 + ry * 0x100 + rz;
 }
 vector decompressShotOrigin(int f)
 {
 	vector v;
-	v.x = ((f & 0xFF0000) / 0x10000) / 2;
-	v.y = ((f & 0xFF00) / 0x100 - 128) / 4;
-	v.z = ((f & 0xFF) - 128) / 4;
-	return v;
+	v.x = f >> 16;
+	v.y = (f & 0xFF00) >> 8;
+	v.z = f & 0xFF;
+	// remove sign bits and apply sign
+	if (v.y & BIT(7)) { v.y &= ~BIT(7); v.x *= -1; }
+	if (v.z & BIT(7)) { v.z &= ~BIT(7); v.z *= -1; }
+	return vec3(v.x / 2, v.y / 4, v.z / 4);
 }
 
 #ifdef GAMEQC
@@ -1677,21 +1698,6 @@ void Skeleton_SetBones(entity e)
 string to_execute_next_frame;
 void execute_next_frame()
 {
-#ifdef SVQC
-	IL_EACH(g_moveables, it.last_pushed,
-	{
-		if(!WarpZoneLib_ExactTrigger_Touch(it.last_pushed, it, false))
-		{
-			it.last_pushed = NULL;
-		}
-	});
-#elif defined(CSQC)
-	if(csqcplayer.last_pushed && !WarpZoneLib_ExactTrigger_Touch(csqcplayer.last_pushed, csqcplayer, false))
-	{
-		csqcplayer.last_pushed = NULL;
-	}
-#endif
-
 	if(to_execute_next_frame)
 	{
 		localcmd("\n", to_execute_next_frame, "\n");

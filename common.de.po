@@ -2537,11 +2537,11 @@ msgstr "^BG%s^BG hat die ^TC^TT^BG Flagge erobert"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
-"^BG%s^BG hat die ^TC^TT^BG Flagge in ^F1%s^BG Sekunden erobert, und damit ^BG"
-"%s^BGs Rekord von ^F2%s^BG Sekunden geschlagen"
+"^BG%s^BG hat die ^TC^TT^BG Flagge in ^F1%s^BG Sekunden erobert, und damit "
+"^BG%s^BGs Rekord von ^F2%s^BG Sekunden geschlagen"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
@@ -2698,8 +2698,8 @@ msgstr "^BG%s%s^K1 wurde durch ^BG%s^K1s ^BG%s^K1-Bonus getötet ^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
 msgstr ""
-"^BG%s%s^K1 wurde durch ^BG%s^K1s ^BG%s^K1-Bonus zu Punkten verarbeitet ^K1%s"
-"%s"
+"^BG%s%s^K1 wurde durch ^BG%s^K1s ^BG%s^K1-Bonus zu Punkten verarbeitet "
+"^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
@@ -3665,8 +3665,8 @@ msgstr "^BG%s^K1 hat mit Elektro-Blitzen gespielt%s%s"
 #, c-format
 msgid "^BG%s^K1 could not remember where they put their Electro orb%s%s"
 msgstr ""
-"^BG%s^K1 konnte sich nicht erinnern, wo noch einmal diese Elektro-Kugel lag%s"
-"%s"
+"^BG%s^K1 konnte sich nicht erinnern, wo noch einmal diese Elektro-Kugel "
+"lag%s%s"
 
 #: qcsrc/common/notifications/all.inc:477
 #, c-format
@@ -3809,8 +3809,8 @@ msgstr "^BG%s%s^K1 wurde von ^BG%s^K1s Overkill-Nex vaporisiert%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 "^BG%s%s^K1 wurde von ^BG%s^K1s Overkill-Raketenkettensäge in zwei Teile "
 "zersägt%s%s"

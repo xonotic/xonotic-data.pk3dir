@@ -7,6 +7,9 @@
 // netcode mismatch and not sure what caused it? developer_csqcentities 1
 
 .string netname;
+
+#ifdef GAMEQC
+
 .int m_id;
 .bool(entity this, entity sender, bool isNew) m_read;
 #define NET_HANDLE(id, param) bool Net_Handle_##id(entity this, entity sender, param)
@@ -37,7 +40,6 @@ string _net_prevmsgstr;
 			this.netname = #id; \
 		}
 #endif
-#define REGISTER_NET_S2C(id) REGISTER_NET_TEMP(id)
 
 REGISTRY(TempEntities, BITS(8) - 80)
 REGISTER_REGISTRY(TempEntities)
@@ -106,6 +108,8 @@ REGISTRY_CHECK(C2S_Protocol)
 
 REGISTRY_DEFINE_GET(C2S_Protocol, NULL)
 STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
+
+#endif // GAMEQC
 
 #ifdef SVQC
 	const int MSG_ENTITY = 5;
