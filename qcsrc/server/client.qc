@@ -1204,6 +1204,11 @@ void ClientConnect(entity this)
 		localcmd("\nsv_hook_firstjoin\n");
 	}
 }
+
+.string shootfromfixedorigin;
+.entity chatbubbleentity;
+void player_powerups_remove_all(entity this);
+
 /*
 =============
 ClientDisconnect
@@ -1211,9 +1216,6 @@ ClientDisconnect
 Called when a client disconnects from the server
 =============
 */
-.entity chatbubbleentity;
-void player_powerups_remove_all(entity this);
-
 void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
@@ -1256,6 +1258,8 @@ void ClientDisconnect(entity this)
 	Unfreeze(this, false);
 
 	RemoveGrapplingHooks(this);
+
+	strfree(this.shootfromfixedorigin);
 
 	// Here, everything has been done that requires this player to be a client.
 
@@ -2124,7 +2128,6 @@ void show_entnum(entity this)
 		this.wp_aimed = ent;
 }
 
-.string shootfromfixedorigin;
 .bool dualwielding_prev;
 bool PlayerThink(entity this)
 {
@@ -2226,7 +2229,7 @@ bool PlayerThink(entity this)
 	FixPlayermodel(this);
 
 	if (this.shootfromfixedorigin != autocvar_g_shootfromfixedorigin) {
-		this.shootfromfixedorigin = autocvar_g_shootfromfixedorigin;
+		strcpy(this.shootfromfixedorigin, autocvar_g_shootfromfixedorigin);
 		stuffcmd(this, sprintf("\ncl_shootfromfixedorigin \"%s\"\n", autocvar_g_shootfromfixedorigin));
 	}
 
