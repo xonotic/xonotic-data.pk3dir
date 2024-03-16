@@ -227,9 +227,9 @@ spawnfunc(item_key)
 
 	// find default model
 	string _model = string_null;
-	if (this.itemkeys <= ITEM_KEY_BIT(2) || this.itemkeys == 0xffffff) {
+	if (this.itemkeys <= BIT(2) || this.itemkeys == 0xffffff) {
 		_model = "models/keys/key.md3";
-	} else if (this.itemkeys >= ITEM_KEY_BIT(3) && this.itemkeys <= ITEM_KEY_BIT(5)) {
+	} else if (this.itemkeys >= BIT(3) && this.itemkeys <= BIT(5)) {
 		_model = "models/keys/key.md3"; // FIXME: replace it by a keycard model!
 	} else if (this.model == "") {
 		objerror(this, "item_key doesn't have a default model for this key and a custom one was not specified!");
@@ -277,7 +277,7 @@ Don't use this entity on new maps! Use item_key instead.
 */
 spawnfunc(item_key1)
 {
-	this.itemkeys = ITEM_KEY_BIT(1);
+	this.itemkeys = BIT(1);
 	spawnfunc_item_key(this);
 }
 
@@ -295,7 +295,7 @@ Don't use this entity on new maps! Use item_key instead.
 */
 spawnfunc(item_key2)
 {
-	this.itemkeys = ITEM_KEY_BIT(0);
+	this.itemkeys = BIT(0);
 	spawnfunc_item_key(this);
 }
 
