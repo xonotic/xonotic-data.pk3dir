@@ -750,7 +750,7 @@ void door_init_shared(entity this)
 // spawnflags require key (for now only func_door)
 spawnfunc(func_door)
 {
-	// Quake 1 keys compatibility
+	// Quake 1 and QL keys compatibility
 	if (this.spawnflags & SPAWNFLAGS_GOLD_KEY)
 		this.itemkeys |= ITEM_KEY_BIT(0);
 	if (this.spawnflags & SPAWNFLAGS_SILVER_KEY)

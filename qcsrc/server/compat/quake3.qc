@@ -37,6 +37,9 @@
  item_health_small           Q3A    health.qh
  item_health_mega            Q3A    health.qh
  item_regen                  Q3A    buffs/all.inc
+ item_key_gold               QL     keys.qc
+ item_key_silver             QL     keys.qc
+ item_key_master             QL     keys.qc
  weapon_machinegun           Q3A    machinegun.qh
  weapon_grenadelauncher      Q3A    mortar.qh
  weapon_rocketlauncher       Q3A    devastator.qh
