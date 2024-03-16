@@ -1204,17 +1204,17 @@ float compressShotOrigin(vector v)
 	int rx = rint(fabs(v.x) * 2);
 	int ry = rint(fabs(v.y) * 2);
 	int rz = rint(fabs(v.z) * 2);
-	if(rx > 255)
+	if(rx > 255) // 128 * 2 - 1
 	{
 		LOG_DEBUG("shot origin ", vtos(v), " x out of bounds\n");
 		rx = bound(0, rx, 255);
 	}
-	if(ry > 63)
+	if(ry > 63) // 32 * 2 - 1
 	{
 		LOG_DEBUG("shot origin ", vtos(v), " y out of bounds\n");
 		ry = bound(0, ry, 63);
 	}
-	if(rz > 63)
+	if(rz > 63) // 32 * 2 - 1
 	{
 		LOG_DEBUG("shot origin ", vtos(v), " z out of bounds\n");
 		rz = bound(0, rz, 63);
