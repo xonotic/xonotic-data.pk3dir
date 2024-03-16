@@ -614,6 +614,15 @@ void door_link()
 {
 	//Net_LinkEntity(this, false, 0, door_send);
 }
+
+void door_init_keys(entity this)
+{
+	// Quake 1 and QL keys compatibility
+	if (this.spawnflags & SPAWNFLAGS_GOLD_KEY)
+		this.itemkeys |= BIT(0);
+	if (this.spawnflags & SPAWNFLAGS_SILVER_KEY)
+		this.itemkeys |= BIT(1);
+}
 #endif
 
 void door_init_startopen(entity this)
@@ -637,6 +646,7 @@ void door_reset(entity this)
 
 #ifdef SVQC
 	this.SendFlags |= SF_TRIGGER_RESET;
+	door_init_keys(this);
 #endif
 }
 
@@ -750,11 +760,7 @@ void door_init_shared(entity this)
 // spawnflags require key (for now only func_door)
 spawnfunc(func_door)
 {
-	// Quake 1 and QL keys compatibility
-	if (this.spawnflags & SPAWNFLAGS_GOLD_KEY)
-		this.itemkeys |= BIT(0);
-	if (this.spawnflags & SPAWNFLAGS_SILVER_KEY)
-		this.itemkeys |= BIT(1);
+	door_init_keys(this);
 
 	SetMovedir(this);
 
