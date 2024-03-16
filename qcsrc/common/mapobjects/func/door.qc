@@ -752,9 +752,9 @@ spawnfunc(func_door)
 {
 	// Quake 1 and QL keys compatibility
 	if (this.spawnflags & SPAWNFLAGS_GOLD_KEY)
-		this.itemkeys |= ITEM_KEY_BIT(0);
+		this.itemkeys |= BIT(0);
 	if (this.spawnflags & SPAWNFLAGS_SILVER_KEY)
-		this.itemkeys |= ITEM_KEY_BIT(1);
+		this.itemkeys |= BIT(1);
 
 	SetMovedir(this);
 
