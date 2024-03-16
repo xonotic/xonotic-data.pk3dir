@@ -35,6 +35,10 @@ CLASS(Vehicle, Object)
     /** vehicle 3rd person view distance */
     ATTRIB(Vehicle, height, float, 0);
 
+    METHOD(Vehicle, display, void(entity this, void(string name, string icon) returns)) {
+        returns(this.vehicle_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
+    }
+
     /** (BOTH) setup vehicle data */
     METHOD(Vehicle, vr_setup, void(Vehicle this, entity instance)) { }
     /** (SERVER) logic to run every frame */
