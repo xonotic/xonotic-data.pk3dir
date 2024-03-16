@@ -2342,9 +2342,9 @@ void DropToFloor_QC(entity this)
 	 * It was enabled by default in all Xonotic releases and in Nexuiz, so now certain maps depend on it.
 	 * Example: on erbium 0.8.6 the shards @ crylink are too low (in collision with the floor),
 	 * so without this those fall through the floor.
-	 * Q3, Q2 and Quake don't try to move items out of solid.
+	 * Q3, Q2 and Quake don't try to move items out of solid, but doing so here fixes epsilon issues on a few Q3 maps.
 	 */
-	if(!Q3COMPAT_COMMON && autocvar_sv_mapformat_is_quake3) // Xonotic, Nexuiz
+	if(autocvar_sv_mapformat_is_quake3) // Xonotic, Nexuiz
 	{
 		nudgeresult = nudgeoutofsolid(this);
 		if (!nudgeresult)
