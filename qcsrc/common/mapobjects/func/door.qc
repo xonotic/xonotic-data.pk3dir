@@ -683,6 +683,10 @@ void door_init_shared(entity this)
 		string s = GetField_fullspawndata(this, "sound_start", true);
 		string e = GetField_fullspawndata(this, "sound_end", true);
 
+		// Quake Live adds these ones, because of course it had to be different from CPMA
+		if (!s) s = GetField_fullspawndata(this, "startsound", true);
+		if (!e) e = GetField_fullspawndata(this, "endsound", true);
+
 		if (s)
 			this.noise2 = strzone(s);
 		else
