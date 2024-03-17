@@ -1769,18 +1769,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 			StatusEffects_apply(STATUSEFFECT_Superweapons, e, autocvar_g_balance_superweapons_time, 0, false);
 	}
 
-	if(e.statuseffects)
-	{
-		FOREACH(StatusEffect, true,
-		{
-			if(e.statuseffects.statuseffect_time[it.m_id] <= 0)
-				e.statuseffects.statuseffect_time[it.m_id] = 0;
-			else
-				e.statuseffects.statuseffect_time[it.m_id] += time;
-		});
-			
-		StatusEffects_update(e);
-	}
+	// in this function all the StatusEffects_apply calls are not finalized
+	// since they only set the effect duration instead of the proper end time
+	// finalize them here
+	StatusEffects_finalize(e);
 
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{

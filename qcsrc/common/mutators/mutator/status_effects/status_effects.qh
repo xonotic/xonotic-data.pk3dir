@@ -188,9 +188,15 @@ void StatusEffects_tick(entity actor);
 // pass the entity with a .statuseffects on server side
 float StatusEffects_gettime(StatusEffects this, entity actor);
 #endif
+
 #ifdef SVQC
-// call when applying the effect to an entity
-void StatusEffects_apply(StatusEffects this, entity actor, float eff_time, int eff_flags, bool timecheck);
+// applies the effect to an entity
+// if finalized is true (standard usage) eff_time is effect end time
+// otherwise eff_time is effect duration and end time must be set with StatusEffects_finalize
+void StatusEffects_apply(StatusEffects this, entity actor, float eff_time, int eff_flags, bool finalized);
+
+// this function must be called after calling StatusEffects_apply with finalized set to false
+void StatusEffects_finalize(entity actor);
 
 // copies all the status effect fields to the specified storage entity
 // does not perform an update

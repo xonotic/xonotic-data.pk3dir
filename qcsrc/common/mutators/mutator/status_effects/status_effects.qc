@@ -25,12 +25,24 @@ float StatusEffects_gettime(StatusEffects this, entity actor)
 }
 #endif
 #ifdef SVQC
-void StatusEffects_apply(StatusEffects this, entity actor, float eff_time, int eff_flags, bool timecheck)
+void StatusEffects_apply(StatusEffects this, entity actor, float eff_time, int eff_flags, bool finalized)
 {
-	if (!actor || (timecheck && eff_time <= time))
+	if (!actor || (finalized && eff_time <= time))
 		return;
 
 	this.m_apply(this, actor, eff_time, eff_flags);
+}
+
+void StatusEffects_finalize(entity actor)
+{
+	FOREACH(StatusEffect, true,
+	{
+		if(actor.statuseffects.statuseffect_time[it.m_id] <= 0)
+			actor.statuseffects.statuseffect_time[it.m_id] = 0;
+		else
+			actor.statuseffects.statuseffect_time[it.m_id] += time;
+	});
+	StatusEffects_update(actor);
 }
 
 void StatusEffects_copy(StatusEffects this, entity store, float time_offset)
