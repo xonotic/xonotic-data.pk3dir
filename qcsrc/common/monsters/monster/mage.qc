@@ -337,7 +337,7 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 
 void M_Mage_Defend_Shield(entity this)
 {
-	StatusEffects_apply(STATUSEFFECT_Shield, this, time + autocvar_g_monster_mage_shield_time, 0);
+	StatusEffects_apply(STATUSEFFECT_Shield, this, time + autocvar_g_monster_mage_shield_time, 0, true);
 	this.mage_shield_delay = time + (autocvar_g_monster_mage_shield_delay);
 	SetResourceExplicit(this, RES_ARMOR, autocvar_g_monster_mage_shield_blockpercent);
 	setanim(this, this.anim_shoot, true, true, true);

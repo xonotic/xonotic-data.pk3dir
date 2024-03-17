@@ -25,8 +25,11 @@ float StatusEffects_gettime(StatusEffects this, entity actor)
 }
 #endif
 #ifdef SVQC
-void StatusEffects_apply(StatusEffects this, entity actor, float eff_time, int eff_flags)
+void StatusEffects_apply(StatusEffects this, entity actor, float eff_time, int eff_flags, bool timecheck)
 {
+	if (!actor || (timecheck && eff_time <= time))
+		return;
+
 	this.m_apply(this, actor, eff_time, eff_flags);
 }
 

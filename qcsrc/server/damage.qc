@@ -1206,7 +1206,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 			// b) totaltime = min(maxtime, totaldamage / mindps) = totaldamage / maxdps
 
 			e.fire_damagepersec = totaldamage / totaltime;
-			StatusEffects_apply(STATUSEFFECT_Burning, e, time + totaltime, 0);
+			StatusEffects_apply(STATUSEFFECT_Burning, e, time + totaltime, 0, true);
 			if(totaldamage > 1.2 * mindamage)
 			{
 				e.fire_deathtype = dt;
@@ -1226,7 +1226,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 	else
 	{
 		e.fire_damagepersec = dps;
-		StatusEffects_apply(STATUSEFFECT_Burning, e, time + t, 0);
+		StatusEffects_apply(STATUSEFFECT_Burning, e, time + t, 0, true);
 		e.fire_deathtype = dt;
 		e.fire_owner = o;
 		e.fire_hitsound = false;

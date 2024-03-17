@@ -190,7 +190,7 @@ float StatusEffects_gettime(StatusEffects this, entity actor);
 #endif
 #ifdef SVQC
 // call when applying the effect to an entity
-void StatusEffects_apply(StatusEffects this, entity actor, float eff_time, int eff_flags);
+void StatusEffects_apply(StatusEffects this, entity actor, float eff_time, int eff_flags, bool timecheck);
 
 // copies all the status effect fields to the specified storage entity
 // does not perform an update
