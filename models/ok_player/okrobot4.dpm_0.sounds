@@ -19,7 +19,7 @@ needhelp sound/player/robot/coms/needhelp 2
 //seenenemy sound/player/robot/player/seenenemy 0
 seenflag sound/player/robot/coms/seenflag 0
 taunt sound/player/robot/coms/taunt 3
-teamshoot sound/player/robot/coms/teamshoot 3
+teamshoot sound/player/robot/coms/teamshoot 2
 death sound/player/robot/player/death 3
 drown sound/player/robot/player/drown 0
 fall sound/player/robot/player/fall 0
