@@ -736,7 +736,8 @@ void InitGameplayMode()
 
 	MapInfo_ClearTemps();
 
-	gamemode_name = MapInfo_Type_ToText(MapInfo_LoadedGametype);
+	strcpy(gametype_custom_string, autocvar__sv_vote_gametype_custom);
+	cvar_set("_sv_vote_gametype_custom", ""); // clear it immediately so it can't get stuck
 
 	cache_mutatormsg = strzone("");
 	cache_lastmutatormsg = strzone("");
@@ -2644,6 +2645,7 @@ void Shutdown()
 		MapInfo_Shutdown();
 
 		strfree(sv_termsofservice_url_escaped);
+		strfree(gametype_custom_string);
 	}
 	else if(world_initialized == 0)
 	{
