@@ -231,7 +231,7 @@ msgstr "^1Vous regarde(nt) :"
 
 #: qcsrc/client/hud/panel/infomessages.qc:229
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7Appuyez sur ^3ÉCHAP ^7pour afficher les options de l'ATH"
+msgstr "^7Appuyez sur ^3ÉCHAP ^7pour afficher les options de l'ATH."
 
 #: qcsrc/client/hud/panel/infomessages.qc:230
 msgid "^3Doubleclick ^7a panel for panel-specific options."
@@ -7811,7 +7811,7 @@ msgstr "Utiliser la cvar « crypto_aeslevel » pour changer vos préférences"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1059
 msgid "custom stats server"
-msgstr "Serveur personnalisé de statistiques"
+msgstr "serveur de statistiques personnalisé"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1059
@@ -9769,7 +9769,7 @@ msgstr "Filtre de cvar :"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:38
 msgid "Modified cvars only"
-msgstr "cvars modifiées uniquement"
+msgstr "Cvars modifiées uniquement"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:45
 msgid "Setting:"
@@ -9831,7 +9831,7 @@ msgstr ""
 msgid "full language changes will take effect starting from the next game"
 msgstr ""
 "les changements linguistiques complets prendront effet à partir de la "
-"prochaine partie."
+"prochaine partie"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"
