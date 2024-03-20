@@ -10,11 +10,11 @@
 
 int autocvar_g_mapinfo_q3compat = 1;
 
-#ifdef MENUQC
-#define WARN_COND false
+#ifdef SVQC
+	bool autocvar_g_mapinfo_ignore_warnings;
+	#define WARN_COND (!autocvar_g_mapinfo_ignore_warnings && MapInfo_Map_bspname == mi_shortname)
 #else
-bool autocvar_g_mapinfo_ignore_warnings;
-#define WARN_COND (!autocvar_g_mapinfo_ignore_warnings && MapInfo_Map_bspname == mi_shortname)
+	#define WARN_COND false
 #endif
 
 // generic string stuff
@@ -616,7 +616,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 Gametype MapInfo_Type_FromString(string gtype, bool dowarn, bool is_q3compat)
 {
 	string replacement = "";
-	bool do_warn = true;
+
 	switch (gtype)
 	{
 		case "nexball":   replacement = "nb"; break;
@@ -625,13 +625,13 @@ Gametype MapInfo_Type_FromString(string gtype, bool dowarn, bool is_q3compat)
 		case "invasion":  replacement = "inv"; break;
 		case "assault":   replacement = "as"; break;
 		case "race":      replacement = "rc"; break;
-		// quake 3 compat
-		case "ffa": 	  replacement = "dm"; do_warn = false; break;
-		case "cctf":
-		case "oneflag":   replacement = "ctf"; do_warn = false; break;
-		case "tournament":
-		case "tourney":   replacement = "duel"; do_warn = false; break;
-		case "arena":     if(is_q3compat) { replacement = "ca"; do_warn = false; } break;
+		// Q3/QL compat, see DoesQ3ARemoveThisEntity() in quake3.qc for complete lists
+		case "ffa":       replacement = "dm"; break;
+		case "cctf": // from ThreeWave, maps with this should all have "ctf" too
+		case "oneflag":   replacement = "ctf"; break;
+		case "tourney":   replacement = "duel"; break;
+		case "arena": // which Q3 mod is this from? In Nexuiz it was 'duel with rounds'.
+			if(is_q3compat) { replacement = "ca"; } break;
 	}
 	if (replacement != "")
 	{
@@ -906,7 +906,8 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 			string types = s;
 			types = strreplace("team", "tdm ft", types);
 			types = strreplace("ffa", "dm lms ka", types);
-			if(strstrofs(types, "tournament", 0) < 0 && strstrofs(types, "tdm", 0) >= 0) // larger team map, support additional gamemodes!
+			types = strreplace("tourney", "duel", types); // QL used duel so the following check must support it
+			if(strstrofs(types, "duel", 0) < 0 && strstrofs(types, "tdm", 0) >= 0) // larger team map, support additional gamemodes!
 				types = cons(types, "ca kh");
 			FOREACH_WORD(types, true,
 			{
