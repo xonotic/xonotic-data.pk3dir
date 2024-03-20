@@ -216,15 +216,21 @@ void MapVote_AddVotableMaps(int nmax, int smax)
 }
 
 bool GameTypeVote_SetGametype(Gametype type);
-void GameTypeVote_ApplyGameType(Gametype type)
+
+// gametype_name can be the name of a custom gametype based on Gametype type
+void GameTypeVote_ApplyGameType(Gametype type, string gametype_name)
 {
+	if (gametype_name == "")
+		gametype_name = MapInfo_Type_ToString(type);
+
 	localcmd("sv_vote_gametype_hook_all\n");
-	localcmd("sv_vote_gametype_hook_", MapInfo_Type_ToString(type), "\n");
+	localcmd("sv_vote_gametype_hook_", gametype_name, "\n");
 
 	if (!GameTypeVote_SetGametype(type))
 		LOG_TRACE("Selected gametype is not supported by any map");
 }
 
+string voted_gametype_string;
 Gametype voted_gametype;
 Gametype match_gametype;
 void MapVote_Init()
@@ -272,7 +278,7 @@ void MapVote_Init()
 	// properly restarts the map applying the current game type.
 	// Applying voted_gametype before map vote start is needed to properly initialize map vote.
 	if (match_gametype)
-		GameTypeVote_ApplyGameType(match_gametype);
+		GameTypeVote_ApplyGameType(match_gametype, gametype_custom_string);
 }
 
 void MapVote_SendPicture(entity to, int id)
@@ -499,6 +505,7 @@ bool MapVote_Finished(int mappos)
 				Map_Goto_SetStr(autocvar_nextmap);
 				Map_Goto(0);
 				alreadychangedlevel = true;
+				strfree(voted_gametype_string);
 				return true;
 			}
 			else
@@ -695,11 +702,12 @@ void MapVote_Think()
 				// clear match_gametype so that GameTypeVote_ApplyGameType
 				// prints the game type switch message
 				match_gametype = NULL;
-				GameTypeVote_ApplyGameType(voted_gametype);
+				GameTypeVote_ApplyGameType(voted_gametype, voted_gametype_string);
 			}
 
 			Map_Goto_SetStr(mapvote_maps[mapvote_winner]);
 			Map_Goto(0);
+			strfree(voted_gametype_string);
 		}
 		return;
 	}
@@ -793,9 +801,15 @@ bool GameTypeVote_Finished(int pos)
 		return false;
 
 	match_gametype = MapInfo_CurrentGametype();
-	voted_gametype = MapInfo_Type_FromString(mapvote_maps[pos], false, false);
+	voted_gametype = GameTypeVote_Type_FromString(mapvote_maps[pos]);
+	strcpy(voted_gametype_string, mapvote_maps[pos]);
 
-	GameTypeVote_ApplyGameType(voted_gametype);
+	GameTypeVote_ApplyGameType(voted_gametype, voted_gametype_string);
+
+	// save to a cvar so it can be applied back when gametype is temporary
+	// changed on gametype vote end of the next game
+	if (mapvote_maps_flags[pos] & GTV_CUSTOM)
+		cvar_set("_sv_vote_gametype_custom", voted_gametype_string);
 
 	gametypevote_finished = true;
 
