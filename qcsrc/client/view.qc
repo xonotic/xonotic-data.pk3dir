@@ -16,6 +16,7 @@
 #include <common/debug.qh>
 #include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
+#include <common/impulses/all.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/target/music.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
@@ -613,8 +614,24 @@ int WantEventchase(entity this, bool want_vehiclechase)
 	return 0;
 }
 
+bool waiting_CAMERA_SPECTATOR_update;
 void View_EventChase(entity this)
 {
+	if(spectatee_status > 0 && autocvar_chase_active > 0)
+	{
+		// if chase_active is enabled by the user, spectator camera never switches to 1st person
+		// that means CAMERA_SPECTATOR 1 behaves as 0 and is redundant, so we forcedly skip it
+		if (STAT(CAMERA_SPECTATOR) == 1)
+		{
+			if (!waiting_CAMERA_SPECTATOR_update)
+			{
+				Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR 2
+				waiting_CAMERA_SPECTATOR_update = true;
+			}
+		}
+		else waiting_CAMERA_SPECTATOR_update = false;
+	}
+
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
