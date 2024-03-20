@@ -58,9 +58,8 @@ SPAWNFUNC_Q3AMMO_COND(ammo_bullets, (q3compat & Q3COMPAT_ARENA), WEP_SHOTGUN, WE
 // GL -> Mortar
 SPAWNFUNC_Q3AMMO(ammo_grenades, WEP_MORTAR)
 
-// Team Arena Proximity Launcher -> Mortar
-// It's more accurate to spawn Mine Layer but players prefer Mortar, and weapon_grenadelauncher is usually disabled by "notta" and weapon_prox_launcher placed at the same origin
-SPAWNFUNC_Q3(weapon_prox_launcher, ammo_mines, WEP_MORTAR)
+// Team Arena Proximity Launcher -> Mine Layer
+SPAWNFUNC_Q3(weapon_prox_launcher, ammo_mines, WEP_MINE_LAYER)
 
 // Team Arena Chaingun -> HLAC
 SPAWNFUNC_Q3(weapon_chaingun, ammo_belt, WEP_HLAC)
