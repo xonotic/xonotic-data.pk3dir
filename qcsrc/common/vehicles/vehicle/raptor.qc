@@ -615,6 +615,7 @@ METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
 }
 METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
 {
+	CSQCModel_UnlinkEntity(instance); // networking the death scene would be a nightmare
 	SetResourceExplicit(instance, RES_HEALTH, 0);
     instance.event_damage		= func_null;
     instance.solid				= SOLID_CORPSE;

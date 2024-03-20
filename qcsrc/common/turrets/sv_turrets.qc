@@ -203,6 +203,9 @@ void turret_die(entity this)
 		sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 		Send_Effect(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
 
+		if (this.tur_spawned)
+			tmp_turcount--;
+
 		tur.tr_death(tur, this);
 
 		delete(this.tur_head);
@@ -228,6 +231,14 @@ void turret_damage(entity this, entity inflictor, entity attacker, float damage,
 	// Inactive turrets take no damage. (hm..)
 	if(!this.active)
 		return;
+
+	if(this.realowner == attacker)
+	{
+		if(autocvar_g_friendlyfire)
+			damage = damage * autocvar_g_friendlyfire;
+		else
+			return;
+	}
 
 	if(SAME_TEAM(this, attacker))
 	{
@@ -1022,6 +1033,15 @@ void turret_fire(entity this)
 
 void turret_think(entity this)
 {
+	if(this.tur_spawned && this.turret_lifetime != 0)
+	if(time >= this.turret_lifetime)
+	{
+		tmp_turcount--;
+
+		turret_die(this);
+		return;
+	}
+
 	this.nextthink = time + this.ticrate;
 
 	MUTATOR_CALLHOOK(TurretThink, this);
@@ -1140,6 +1160,8 @@ void turret_think(entity this)
 		if(do_target_scan)
 		{
 			this.enemy = turret_select_target(this);
+			// Don't attack against owner
+			if(this.enemy == this.realowner) return;
 			this.target_select_time = time;
 		}
 
@@ -1417,5 +1439,91 @@ bool turret_initialize(entity this, Turret tur)
 		return false;
 
 	return true;
+}
+
+entity spawnturret (entity e, string turret, Turret tur, entity spawnedby, entity own, vector orig, bool respwn, bool invincible, bool removeifinvalid, int moveflag, bool optional)
+{
+	if (autocvar_g_turrets_max <= 0 || autocvar_g_turrets_max_perplayer <= 0) { print_to(own, "Turret spawning is disabled"); return NULL; }
+
+	if (tmp_turcount >= autocvar_g_turrets_max) { print_to(own, "The maximum turret count has been reached"); return NULL; }
+
+	if (tmp_turcount >= autocvar_g_turrets_max_perplayer) { print_to(own, "You can't spawn any more turrets"); return NULL; }
+
+	e.spawnflags = TSF_SUSPENDED;
+	e.tur_spawned = true;
+
+	if(!respwn) { e.spawnflags |= TSL_NO_RESPAWN; }
+	if(invincible) { e.damage_flags |= TFL_DMG_NO; }
+
+	setorigin(e, orig);
+	bool allow_any = boolean(turret == "anyrandom");
+
+	if(turret == "random" || allow_any)
+	{
+		RandomSelection_Init();
+		FOREACH(Turrets, it != TUR_Null && (allow_any || !(it.spawnflags & TSF_SUSPENDED)),
+		{
+			RandomSelection_AddEnt(it, 1, 1);
+		});
+
+		tur = RandomSelection_chosen_ent;
+	}
+	else if(turret != "")
+	{
+		bool found = false;
+		FOREACH(Turrets, it != TUR_Null,
+		{
+			if(it.netname == turret)
+			{
+				found = true;
+				tur = it; // we have the turret, old turret id is no longer required
+				break;
+			}
+		});
+
+		if(!found && tur == TUR_Null)
+		{
+			if(removeifinvalid)
+			{
+				delete(e);
+				return NULL; // no good
+			}
+			// select a random valid turret type if no valid turret was provided
+			return spawnturret(e, "random", TUR_Null, spawnedby, own, orig, respwn, invincible, removeifinvalid, moveflag, optional);
+		}
+	}
+
+	e.realowner = spawnedby;
+
+	if(IS_PLAYER(spawnedby))
+	{
+		if(teamplay)
+			e.team = spawnedby.team; // colors handled in spawn code
+
+		// TODO: Create a "following player" feature when turret has moveflag
+		// if(moveflag && (e.turret_flags & TUR_FLAG_MOVE))
+		//	// do something
+
+		e.angles_y = spawnedby.angles_y;
+	}
+	
+	if(!(e.spawnflags & TSF_SUSPENDED)) { delete(e); return NULL; } // remove even if told not to, as we didn't spawn any kind of turret
+
+	// don't spawn suspended in the air, spawn on the ground
+	setorigin(e, e.origin);
+	tracebox(e.origin + '0 0 100', tur.m_mins, tur.m_maxs, e.origin - '0 0 10000', MOVE_WORLDONLY, e);
+	setorigin(e, trace_endpos);
+
+	// spawn!
+	turret_initialize(e, tur);
+
+	tmp_turcount++;
+	
+	// LOG_INFOF("^1tur.netname^3: %s", tur.netname);
+
+	if (optional)
+		e.tur_head.effects = (EF_DIMLIGHT | EF_FULLBRIGHT);
+
+	return e;
 }
 #endif

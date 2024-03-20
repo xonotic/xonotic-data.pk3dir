@@ -63,13 +63,13 @@ REGISTER_NADE(HEAL) {
 #endif
 }
 
-REGISTER_NADE(MONSTER) {
-    this.m_color = '0.25 0.75 0';
-    this.m_name = _("Monster grenade");
-    this.m_icon = "nade_monster";
+REGISTER_NADE(TANDEM) {
+    this.m_color = '0.33 1 0.67';
+    this.m_name = _("Tandem grenade");
+    this.m_icon = "nade_tandem";
 #ifdef GAMEQC
-    NADE_PROJECTILE(0, PROJECTILE_NADE_MONSTER, EFFECT_NADE_TRAIL_RED);
-    NADE_PROJECTILE(1, PROJECTILE_NADE_MONSTER_BURN, EFFECT_NADE_TRAIL_BURN_RED);
+    NADE_PROJECTILE(0, PROJECTILE_NADE_TANDEM, EFFECT_NADE_TRAIL_GREEN);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_TANDEM_BURN, EFFECT_NADE_TRAIL_BURN_GREEN);
 #endif
 }
 
