@@ -260,6 +260,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
     if(actor.(weaponentity).clip_load >= 0) // we are not currently reloading
     if(WEP_CVAR(shotgun, secondary) == 1)
     if(((fire & 1) && !IS_BOT_CLIENT(actor) && GetResource(actor, thiswep.ammo_type) <= 0 && actor.(weaponentity).clip_load == 0 && !(actor.items & IT_UNLIMITED_AMMO)) || (fire & 2))
+    if(!WEP_CVAR_SEC(shotgun, melee_blockedbyfiring) || time >= actor.(weaponentity).shotgun_primarytime)
     if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(shotgun, refire)))
     {
         // melee attack

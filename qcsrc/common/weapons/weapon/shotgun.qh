@@ -28,6 +28,7 @@ CLASS(Shotgun, Weapon)
 		P(class, prefix, bullets, float, PRI) \
 		P(class, prefix, damage, float, BOTH) \
 		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, melee_blockedbyfiring, bool, SEC) \
 		P(class, prefix, melee_delay, float, SEC) \
 		P(class, prefix, melee_multihit, float, SEC) \
 		P(class, prefix, melee_nonplayerdamage, float, SEC) \
