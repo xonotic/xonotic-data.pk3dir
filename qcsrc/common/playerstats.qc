@@ -47,7 +47,7 @@ void PlayerStats_GameReport_Reset_All()
 	if(PS_GR_OUT_DB < 0)
 		return;
 
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < 16; ++i)
 		if (teamscorekeepers[i])
 			PlayerStats_GameReport_AddTeam(i + 1);
 	FOREACH_CLIENT(true, {
@@ -288,11 +288,11 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 	{
 		PlayerStats_GameReport_DelayMapVote = true;
 
-		serverflags |= SERVERFLAG_PLAYERSTATS;
 		if(autocvar_g_playerstats_gamereport_uri != cvar_defstring("g_playerstats_gamereport_uri"))
-		{
-			serverflags |= SERVERFLAG_PLAYERSTATS_CUSTOM;
-		}
+			serverflags |= SERVERFLAG_PLAYERSTATS | SERVERFLAG_PLAYERSTATS_CUSTOM;
+		else if(checkextension("DP_CRYPTO") && checkextension("DP_QC_URI_POST"))
+			// XonStat submission requires player and server IDs, and HTTPS POST
+			serverflags |= SERVERFLAG_PLAYERSTATS;
 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ALIVETIME);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_AVGLATENCY);

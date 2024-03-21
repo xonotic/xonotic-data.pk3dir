@@ -8,13 +8,14 @@
 # 62197a8afd75a0a64478212fcb55f596, 2017
 # Jonathan van der Steege <jonakeys@hotmail.com>, 2016
 # Jonathan van der Steege <jonakeys@hotmail.com>, 2016,2022
+# joostruis <joostruis@gmail.com>, 2024
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Jonathan van der Steege <jonakeys@hotmail.com>, 2016,2022\n"
+"Last-Translator: joostruis <joostruis@gmail.com>, 2024\n"
 "Language-Team: Dutch (http://app.transifex.com/team-xonotic/xonotic/language/"
 "nl/)\n"
 "Language: nl\n"
@@ -206,7 +207,7 @@ msgstr "Druk ^3%s%s om aan te passen"
 #: qcsrc/client/hud/panel/infomessages.qc:203
 #: qcsrc/menu/xonotic/keybinder.qc:117
 msgid "team selection"
-msgstr ""
+msgstr "team selectie"
 
 #: qcsrc/client/hud/panel/infomessages.qc:213
 msgid "^1Spectating this player:"
@@ -240,7 +241,7 @@ msgstr "Speler %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:202
 msgid "Standard quick menu"
-msgstr ""
+msgstr "Standaard snelmenu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:634
 #: qcsrc/client/hud/panel/quickmenu.qc:636
@@ -507,19 +508,19 @@ msgstr "QMCMD^Meng teams"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Server quick menu"
-msgstr ""
+msgstr "Server snelmenu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:898
 msgid "Waypoint editor menu"
-msgstr ""
+msgstr "Waypoint editor menu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:901
 msgid "Waypoint editor menu as default"
-msgstr ""
+msgstr "Waypoint editor menu als standaard"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 msgid "Server quick menu as default"
-msgstr ""
+msgstr "Server snelmenu als standaard"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "QMCMD^Spectate a player"
@@ -571,7 +572,7 @@ msgstr "Klik om spawnpunt te selecteren"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of ball carrier kills"
-msgstr ""
+msgstr "Aantal baldrager doden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^bckills"
@@ -10066,7 +10067,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:124
 msgid "quick menu"
-msgstr ""
+msgstr "snelmenu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:126
 msgid "scoreboard user interface"
@@ -10094,23 +10095,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
-msgstr ""
+msgstr "Huidig spel verlaten"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
-msgstr ""
+msgstr "Demo stoppen"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"
-msgstr ""
+msgstr "Campagne verlaten"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:18
 msgid "Leave singleplayer"
-msgstr ""
+msgstr "Singleplayer verlaten"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:20
 msgid "Leave multiplayer"
-msgstr ""
+msgstr "Multiplayer verlaten"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current campaign level"
@@ -10178,7 +10179,7 @@ msgstr "Ping"
 
 #: qcsrc/menu/xonotic/serverlist.qc:755
 msgid "Hostname"
-msgstr ""
+msgstr "Hostname"
 
 #: qcsrc/menu/xonotic/serverlist.qc:756
 msgid "Map"
@@ -10214,7 +10215,7 @@ msgstr "aangepaste instellingen"
 #: qcsrc/menu/xonotic/serverlist.qc:1057
 #, c-format
 msgid "official settings"
-msgstr ""
+msgstr "officiële instellingen"
 
 #: qcsrc/menu/xonotic/serverlist.qh:152
 msgid "SLCAT^Favorites"
@@ -10382,35 +10383,35 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
-msgstr ""
+msgstr "Meegedaan:"
 
 #: qcsrc/menu/xonotic/statslist.qc:104
 msgid "Last match:"
-msgstr ""
+msgstr "Laatste spel:"
 
 #: qcsrc/menu/xonotic/statslist.qc:111
 msgid "Time played:"
-msgstr ""
+msgstr "Tijd gespeeld:"
 
 #: qcsrc/menu/xonotic/statslist.qc:118 qcsrc/menu/xonotic/statslist.qc:231
 msgid "Favorite map:"
-msgstr ""
+msgstr "Favoriete map:"
 
 #: qcsrc/menu/xonotic/statslist.qc:150 qcsrc/menu/xonotic/statslist.qc:202
 #: qcsrc/menu/xonotic/statslist.qc:245
 #, c-format
 msgid "Matches:"
-msgstr ""
+msgstr "Gespeeld:"
 
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
 msgid "Wins/Losses:"
-msgstr ""
+msgstr "Gewonnen/Verloren:"
 
 #: qcsrc/menu/xonotic/statslist.qc:156
 #, c-format
 msgid "Win percentage:"
-msgstr ""
+msgstr "Winst percentage:"
 
 #: qcsrc/menu/xonotic/statslist.qc:167
 #, c-format
@@ -10428,7 +10429,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:215
 msgid "Rank:"
-msgstr ""
+msgstr "Rang:"
 
 #: qcsrc/menu/xonotic/statslist.qc:222
 msgid "Percentile:"

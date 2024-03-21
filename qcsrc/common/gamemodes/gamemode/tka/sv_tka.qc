@@ -179,6 +179,7 @@ void tka_DropEvent(entity player) // runs any time that a player is supposed to 
 	ball.takedamage = DAMAGE_YES;
 	ball.effects &= ~EF_NODRAW;
 	setorigin(ball, player.origin + '0 0 10');
+	nudgeoutofsolid(ball); // a ball has a horizontally bigger bbox than a player
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	ball.owner = NULL;
 	navigation_dynamicgoal_set(ball, player);
@@ -220,7 +221,10 @@ void tka_SpawnBalls()
 	{
 		entity e = new(keepawayball);
 		setmodel(e, MDL_TKA_BALL);
-		setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
+		// 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
+		// bones_was_here: that was WITH sv_legacy_bbox_expand 1 and FL_ITEM (mins -= '15 15 1'; maxs += '15 15 1')
+		// it's round so should have a symmetrical bbox, same height as pickup items so it can't be jumped over in any physics
+		setsize(e, '-24 -24 -24', '24 24 24');
 		e.damageforcescale = autocvar_g_tkaball_damageforcescale;
 		e.takedamage = DAMAGE_YES;
 		e.solid = SOLID_TRIGGER;

@@ -17,6 +17,7 @@
 
 #include "xonotic/util.qh"
 
+#include <common/checkextension.qh>
 #include <common/items/_mod.qh>
 #include <common/weapons/_all.qh>
 #include <common/mapinfo.qh>
@@ -75,6 +76,8 @@ void m_init()
 #ifdef WATERMARK
 		LOG_TRACEF("^4MQC Build information: ^1%s", WATERMARK);
 #endif
+
+	CheckEngineExtensions();
 
 	// list all game dirs (TEST)
 	if (cvar("developer") > 0)
@@ -917,6 +920,10 @@ void m_toggle(int mode)
 	if (Menu_Active)
 	{
 		if (mode == 1) return;
+		// when togglemenu is called without arguments (mode is -1)
+		// the menu is closed only when connected
+		if (mode == -1 && !(gamestatus & GAME_CONNECTED)) return;
+		// togglemenu 0 always closes the menu
 		m_hide();
 	}
 	else

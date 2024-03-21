@@ -34,65 +34,55 @@ void print_assertfailed_fatal(string expr);
 #define ASSERT_LESS(name, var, const) noref int name[(const - var + 1)];
 
 
-#if defined(MENUQC)
-string(string, string...) strcat1n = #53;
-#else
-string(string, string...) strcat1n = #115;
-#endif
-
 // would be nice if __FUNC__ could be concatenated at compile time
 #if 0
 	// less work, bigger binary
-	#define __SOURCELOC__ (sprintf("^7%s^9(^9"__FILE__"^7:^9"STR(__LINE__)"^7)", __FUNC__))
+	#define __SOURCELOC__ (sprintf("^7%s^9(^9"__FILE__"^7:^9"STR(__LINE__)"^7)\n", __FUNC__))
 #else
-	#define __SOURCELOC__ (sprintf("^7%s^9(^9%s^7:^9%s^7)", __FUNC__, __FILE__, STR(__LINE__)))
+	#define __SOURCELOC__ (sprintf("^7%s^9(^9%s^7:^9%s^7)\n", __FUNC__, __FILE__, STR(__LINE__)))
 #endif
 
-#define _LOG_HEADER(level) "^9[::^7"PROGNAME"^9::"level"^9] ", __SOURCELOC__
-#define _LOG(f, level, s) \
+#define _LOG_HEADER(level, full) strcat("^9[::^7", PROGNAME, "^9::", level, "^9] ", ((full) ? __SOURCELOC__ : ""))
+
+#define _LOG(func_header, level, func_msg, s) \
 	MACRO_BEGIN \
-		if (autocvar_developer > 0) f(strcat1n(_LOG_HEADER(level), "\n")); \
-		f(strcat1n("^7", s, "\n")); \
+		func_header(_LOG_HEADER(level, autocvar_developer > 0)); \
+		func_msg(strcat("^7", s, "\n")); \
 	MACRO_END
 
-#define  LOG_FATAL(...) _LOG_FATAL(strcat1n(__VA_ARGS__))
+#define  LOG_FATAL(...) _LOG_FATAL(strcat(__VA_ARGS__))
 #define  LOG_FATALF(...) _LOG_FATAL(sprintf(__VA_ARGS__))
-#define _LOG_FATAL(s) _LOG(error, "^1FATAL", s)
+#define _LOG_FATAL(s) _LOG(print, "^1FATAL", error, s)
 
-#define  LOG_SEVERE(...) _LOG_SEVERE(strcat1n(__VA_ARGS__))
+#define  LOG_SEVERE(...) _LOG_SEVERE(strcat(__VA_ARGS__))
 #define  LOG_SEVEREF(...) _LOG_SEVERE(sprintf(__VA_ARGS__))
-#define _LOG_SEVERE(s) _LOG(backtrace, "^1SEVERE", s)
+#define _LOG_SEVERE(s) _LOG(print, "^1SEVERE", backtrace, s)
 
-#define  LOG_WARN(...) _LOG_WARN(strcat1n(__VA_ARGS__))
+#define  LOG_WARN(...) _LOG_WARN(strcat(__VA_ARGS__))
 #define  LOG_WARNF(...) _LOG_WARN(sprintf(__VA_ARGS__))
-#define _LOG_WARN(s) _LOG(print, "^3WARNING", s)
+#define _LOG_WARN(s) _LOG(print, "^3WARNING", print, s)
 
-#define  LOG_INFO(...) _LOG_INFO(strcat1n(__VA_ARGS__))
+#define  LOG_INFO(...) _LOG_INFO(strcat(__VA_ARGS__))
 #define  LOG_INFOF(...) _LOG_INFO(sprintf(__VA_ARGS__))
 #define _LOG_INFO(s) \
 	MACRO_BEGIN \
-		if (autocvar_developer > 1) dprint(strcat1n(_LOG_HEADER("^5INFO"), "\n")); \
+		if (autocvar_developer > 0) print(_LOG_HEADER("^5INFO", autocvar_developer > 1)); \
 		string __s = s; \
 		print("^7", __s); \
 		/* TODO: unconditionally add a newline when possible */ \
 		if (str2chr(__s, strlen(__s) - 1) != '\n') { print("\n"); } \
 	MACRO_END
 
-#define  LOG_TRACE(...) _LOG_TRACE(strcat1n(__VA_ARGS__))
+#define  LOG_TRACE(...) _LOG_TRACE(strcat(__VA_ARGS__))
 #define  LOG_TRACEF(...) _LOG_TRACE(sprintf(__VA_ARGS__))
-#define _LOG_TRACE(s) _LOG(dprint, "^6TRACE", s)
+#define _LOG_TRACE(s) _LOG(dprint, "^6TRACE", dprint, s)
 
-#define  LOG_DEBUG(...) _LOG_DEBUG(strcat1n(__VA_ARGS__))
+#define  LOG_DEBUG(...) _LOG_DEBUG(strcat(__VA_ARGS__))
 #define  LOG_DEBUGF(...) _LOG_DEBUG(sprintf(__VA_ARGS__))
-#define _LOG_DEBUG(s) _LOG(dprint2, "^2DEBUG", s)
-
-#define dprint2(msg) \
-	MACRO_BEGIN \
-		if (autocvar_developer > 1) dprint(msg); \
-	MACRO_END
+#define _LOG_DEBUG(s) if (autocvar_developer > 1) _LOG(dprint, "^2DEBUG", dprint, s)
 
 // same as LOG_INFO but without any debug information that bloats console output and compiled program files
-#define  LOG_HELP(...) _LOG_HELP(strcat1n(__VA_ARGS__))
+#define  LOG_HELP(...) _LOG_HELP(strcat(__VA_ARGS__))
 #define  LOG_HELPF(...) _LOG_HELP(sprintf(__VA_ARGS__))
 #define _LOG_HELP(s) \
 	MACRO_BEGIN \

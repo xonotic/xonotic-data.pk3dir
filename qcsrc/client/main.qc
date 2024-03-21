@@ -13,6 +13,7 @@
 #include <client/shownames.qh>
 #include <client/view.qh>
 #include <client/weapons/projectile.qh>
+#include <common/checkextension.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.inc>
 #include <common/effects/all.qh>
@@ -49,6 +50,8 @@ void CSQC_Init()
 #ifdef WATERMARK
 	LOG_TRACEF("^4CSQC Build information: ^1%s", WATERMARK);
 #endif
+
+	CheckEngineExtensions();
 
 	{
 		int i = 0;
@@ -1378,7 +1381,7 @@ string translate_weaponarena(string s)
 
 	int n = tokenizebyseparator(s, " & ");
 	string wpn_list = "";
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; ++i)
 	{
 		Weapon wep = Weapon_from_name(argv(i));
 		if (wep == WEP_Null)

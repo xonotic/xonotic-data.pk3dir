@@ -16,14 +16,14 @@
 # RedGuff <domsau2@yahoo.fr>, 2014
 # Yannick Le Guen <leguen.yannick@gmail.com>, 2013
 # Hugo Locurcio, 2013
-# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2023
+# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2024
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2024\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -231,7 +231,7 @@ msgstr "^1Vous regarde(nt) :"
 
 #: qcsrc/client/hud/panel/infomessages.qc:229
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7Appuyez sur ^3ÉCHAP ^7pour afficher les options de l'ATH"
+msgstr "^7Appuyez sur ^3ÉCHAP ^7pour afficher les options de l'ATH."
 
 #: qcsrc/client/hud/panel/infomessages.qc:230
 msgid "^3Doubleclick ^7a panel for panel-specific options."
@@ -4793,12 +4793,12 @@ msgstr "^BGSéquence terminée !"
 
 #: qcsrc/common/notifications/all.inc:781
 msgid "^BGThere are more to go..."
-msgstr "^BGMais il y en a encore…"
+msgstr "^BGIl en reste encore…"
 
 #: qcsrc/common/notifications/all.inc:782
 #, c-format
 msgid "^BGOnly %s^BG more to go..."
-msgstr "^BGEncore %s^BG à faire…"
+msgstr "^BGPlus que %s^BG…"
 
 #: qcsrc/common/notifications/all.inc:784
 msgid "^F2Superweapons have broken down"
@@ -7811,7 +7811,7 @@ msgstr "Utiliser la cvar « crypto_aeslevel » pour changer vos préférences"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1059
 msgid "custom stats server"
-msgstr "Serveur personnalisé de statistiques"
+msgstr "serveur de statistiques personnalisé"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1059
@@ -9769,7 +9769,7 @@ msgstr "Filtre de cvar :"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:38
 msgid "Modified cvars only"
-msgstr "cvars modifiées uniquement"
+msgstr "Cvars modifiées uniquement"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:45
 msgid "Setting:"
@@ -9831,7 +9831,7 @@ msgstr ""
 msgid "full language changes will take effect starting from the next game"
 msgstr ""
 "les changements linguistiques complets prendront effet à partir de la "
-"prochaine partie."
+"prochaine partie"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
 msgid "Disconnect now"
