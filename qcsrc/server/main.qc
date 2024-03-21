@@ -436,6 +436,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
  * Avoids the need to declare fields just to read them once :)
  *
  * Returns the last instance of the field to match DarkPlaces behaviour.
+ *
  * Path support: converts \ to / and tests the file if a third (bool, true) arg is passed.
  * Returns string_null if the entity does not have the field, or the file is not in the VFS.
  *
@@ -445,11 +446,8 @@ string GetField_fullspawndata(entity e, string f, ...)
 {
 	string v = string_null;
 
-	if (!e.fullspawndata)
-	{
-		//LOG_WARNF("^1EDICT %s (classname %s) has no fullspawndata, engine lacks support?", ftos(num_for_edict(e)), e.classname);
+	if (!e.fullspawndata) // Engine lacks support, warning spam in CheckEngineExtensions()
 		return v;
-	}
 
 	if (strstrofs(e.fullspawndata, "//", 0) >= 0)
 	{
