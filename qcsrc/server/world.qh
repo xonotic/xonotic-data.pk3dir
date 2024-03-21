@@ -156,10 +156,6 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 void CheckRules_World();
 float RedirectionThink();
 
-// quake 3 music compatibility
-.string music;
-.string noise;
-
 void readplayerstartcvars();
 
 void readlevelcvars();

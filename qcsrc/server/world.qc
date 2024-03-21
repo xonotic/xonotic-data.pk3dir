@@ -930,18 +930,12 @@ spawnfunc(worldspawn)
 	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, _MapInfo_FindArenaFile(mapname, ".defi") != "");
 
 	// quake 3 music support
-	if(world.music || world.noise)
-	{
+	// bones_was_here: Q3 doesn't support .noise but the Nexuiz _MapInfo_Generate() does.
+	// TODO: Q3 supports an optional intro file: "music/intro.wav music/loop.wav"
+	string music = GetField_fullspawndata(world, "music", true);
+	if (music || world.noise)
 		// prefer .music over .noise
-		string chosen_music;
-		if(world.music)
-			chosen_music = world.music;
-		else
-			chosen_music = world.noise;
-
-		string newstuff = strcat(clientstuff, "cd loop \"", chosen_music, "\"\n");
-		strcpy(clientstuff, newstuff);
-	}
+		strcpy(clientstuff, strcat(clientstuff, "cd loop \"", (music ? music : world.noise), "\"\n"));
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
