@@ -278,7 +278,7 @@ void MapVote_Init()
 	// properly restarts the map applying the current game type.
 	// Applying voted_gametype before map vote start is needed to properly initialize map vote.
 	if (match_gametype)
-		GameTypeVote_ApplyGameType(match_gametype, gametype_custom_string);
+		GameTypeVote_ApplyGameType(match_gametype, loaded_gametype_custom_string);
 }
 
 void MapVote_SendPicture(entity to, int id)
@@ -564,11 +564,16 @@ bool MapVote_CheckRules_2()
 	RandomSelection_Init();
 	currentPlace = 0;
 	currentVotes = -1;
+	string current_gametype_string;
+	if (loaded_gametype_custom_string != "")
+		current_gametype_string = loaded_gametype_custom_string;
+	else
+		current_gametype_string = MapInfo_Type_ToString(MapInfo_CurrentGametype());
 	for(i = 0; i < mapvote_count_real; ++i)
 		if ( mapvote_maps_flags[i] & GTV_AVAILABLE )
 		{
 			RandomSelection_AddFloat(i, 1, mapvote_selections[i]);
-			if ( gametypevote && mapvote_maps[i] == MapInfo_Type_ToString(MapInfo_CurrentGametype()) )
+			if ( gametypevote && mapvote_maps[i] == current_gametype_string )
 			{
 				currentVotes = mapvote_selections[i];
 				currentPlace = i;
@@ -877,7 +882,12 @@ bool GameTypeVote_Start()
 	{
 		if ( mapvote_count > 0 )
 			strunzone(mapvote_maps[0]);
-		mapvote_maps[0] = strzone(MapInfo_Type_ToString(MapInfo_CurrentGametype()));
+		string current_gametype_string;
+		if (loaded_gametype_custom_string != "")
+			current_gametype_string = loaded_gametype_custom_string;
+		else
+			current_gametype_string = MapInfo_Type_ToString(MapInfo_CurrentGametype());
+		mapvote_maps[0] = strzone(current_gametype_string);
 		//GameTypeVote_Finished(0);
 		MapVote_Finished(0);
 		return false;
