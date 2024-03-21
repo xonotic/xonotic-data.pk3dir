@@ -737,6 +737,7 @@ void InitGameplayMode()
 	MapInfo_ClearTemps();
 
 	strcpy(loaded_gametype_custom_string, autocvar__sv_vote_gametype_custom);
+	gametype_custom_enabled = (loaded_gametype_custom_string != "");
 	cvar_set("_sv_vote_gametype_custom", ""); // clear it immediately so it can't get stuck
 
 	cache_mutatormsg = strzone("");
