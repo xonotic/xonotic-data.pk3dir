@@ -208,6 +208,10 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 	float i;
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
 	WriteRegistered(Gametypes, MSG_ENTITY, MapInfo_LoadedGametype);
+	string gt_name = "";
+	if (gametype_custom_string != "")
+		gt_name = cvar_string(strcat("sv_vote_gametype_", gametype_custom_string, "_name"));
+	WriteString(MSG_ENTITY, gt_name);
 	FOREACH(Scores, true, {
 		WriteString(MSG_ENTITY, scores_label(it));
 		WriteByte(MSG_ENTITY, scores_flags(it));

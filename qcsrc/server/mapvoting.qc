@@ -399,7 +399,12 @@ bool MapVote_SendEntity(entity this, entity to, int sf)
 		{
 			// map vote but gametype has been chosen via voting screen
 			WriteByte(MSG_ENTITY, BIT(1)); // gametypevote_flags
-			WriteString(MSG_ENTITY, MapInfo_Type_ToText(voted_gametype));
+			string voted_gametype_name;
+			if (voted_gametype_string == MapInfo_Type_ToString(voted_gametype))
+				voted_gametype_name = MapInfo_Type_ToText(voted_gametype);
+			else
+				voted_gametype_name = cvar_string(strcat("sv_vote_gametype_", voted_gametype_string, "_name"));
+			WriteString(MSG_ENTITY, voted_gametype_name);
 		}
 		else
 			WriteByte(MSG_ENTITY, 0); // map vote
