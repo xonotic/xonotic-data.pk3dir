@@ -1,9 +1,9 @@
 #include "speed.qh"
 
-#define XYZ_ARRAY(name) float name[3]
-#define ARRAY_AS_VECTOR(a) ((a)[0] * '1 0 0' + (a)[1] * '0 1 0' + (a)[2] * '0 0 1')
-#define VECTOR_TO_ARRAY(a, e) MACRO_BEGIN vector v = (e); (a)[0] = v.x; (a)[1] = v.y; (a)[2] = v.z; MACRO_END
-#define FOR_XYZ(idx) for(int idx = 0; idx < 3; ++idx)
+// bones_was_here: TODO implement subscript support for vectors in gmqcc
+// or _something_ so code like this can be cheaper...
+#define ARRAY_AS_VECTOR(a) vec3((a)[0], (a)[1], (a)[2])
+#define VECTOR_TO_ARRAY(a, e) (a)[0] = (e).x, (a)[1] = (e).y, (a)[2] = (e).z
 vector target_speed_calculatevelocity(entity this, float speed, entity pushed_entity)
 {
 	bool is_percentage = boolean(this.spawnflags & SPEED_PERCENTAGE);
@@ -26,10 +26,10 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 		speed = max(speed, 0);
 	}
 
-	XYZ_ARRAY(pushvel);
+	float pushvel[3];
 	VECTOR_TO_ARRAY(pushvel, pushed_entity.velocity);
 
-	FOR_XYZ(i)
+	for(int i = 0; i < 3; ++i)
 	{
 		// launcher can only be either positive or negative not both
 		if(is_launcher && is_positive[i] && is_negative[i])
@@ -64,7 +64,7 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 		if(is_add) launcherspeed += oldspeed;
 	}
 
-	FOR_XYZ(i)
+	for(int i = 0; i < 3; ++i)
 	{
 		if(((pushvel[i] != 0) || is_launcher) && (is_positive[i] != is_negative[i]))
 		{
@@ -97,7 +97,7 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 		}
 	}
 
-	XYZ_ARRAY(oldvel);
+	float oldvel[3];
 	VECTOR_TO_ARRAY(oldvel, pushed_entity.velocity);
 
 	if(is_launcher)
@@ -114,7 +114,7 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 			VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * speed + ARRAY_AS_VECTOR(oldvel));
 	}
 
-	FOR_XYZ(i)
+	for(int i = 0; i < 3; ++i)
 	{
 		// preserve unaffected directions
 		if(!is_positive[i] && !is_negative[i])
@@ -125,10 +125,8 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 
 	return ARRAY_AS_VECTOR(pushvel);
 }
-#undef XYZ_ARRAY
 #undef ARRAY_AS_VECTOR
 #undef VECTOR_TO_ARRAY
-#undef FOR_XYZ
 
 REGISTER_NET_LINKED(ENT_CLIENT_TARGET_SPEED)
 
