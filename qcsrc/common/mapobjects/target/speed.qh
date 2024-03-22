@@ -1,0 +1,12 @@
+#pragma once
+
+
+#define SPEED_PERCENTAGE BIT(0)
+#define SPEED_ADD        BIT(1)
+#define SPEED_POSITIVE_X BIT(2)
+#define SPEED_NEGATIVE_X BIT(3)
+#define SPEED_POSITIVE_Y BIT(4)
+#define SPEED_NEGATIVE_Y BIT(5)
+#define SPEED_POSITIVE_Z BIT(6)
+#define SPEED_NEGATIVE_Z BIT(7)
+#define SPEED_LAUNCHER   BIT(8)
