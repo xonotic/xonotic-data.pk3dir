@@ -159,9 +159,10 @@ spawnfunc(target_speed)
 	this.use = target_speed_use;
 	this.reset = target_speed_reset;
 
-	// FIXME: zero and unset cannot be disambiguated in xonotic
-	//if (!this.speed)
-	//	this.speed = 100;
+	// support a 0 speed setting AND a default
+	string s = GetField_fullspawndata(this, "speed");
+	if (!s || s == "")
+		this.speed = 100;
 
 	target_speed_link(this);
 }
