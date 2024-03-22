@@ -429,8 +429,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	}
 }
 
-string GetField_fullspawndata(entity e, string f, ...)
-/* Retrieves the value of a map entity field from fullspawndata
+/** Retrieves the value of a map entity field from fullspawndata
  * This bypasses field value changes made by the engine,
  * eg string-to-float and escape sequence substitution.
  *
@@ -442,6 +441,7 @@ string GetField_fullspawndata(entity e, string f, ...)
  *
  * FIXME: entities with //comments are not supported.
  */
+string GetField_fullspawndata(entity e, string f, ...)
 {
 	string v = string_null;
 
