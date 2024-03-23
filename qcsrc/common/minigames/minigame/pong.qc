@@ -575,6 +575,8 @@ void pong_hud_board(vector pos, vector mySize)
 
 		}
 	}
+
+	minigame_show_allspecs(pos, mySize);
 }
 
 // Required function, draw the game status panel

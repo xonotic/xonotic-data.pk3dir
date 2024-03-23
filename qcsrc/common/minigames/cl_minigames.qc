@@ -246,6 +246,51 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 #undef FIELD
 #undef MSLE
 
+void minigame_show_allspecs(vector boardpos, vector boardsize)
+{
+	string allspecs = "";
+	float allspecs_width = 0;
+	float max_allspecs_width = boardsize.x;
+	float max_current_spec_width = hud_fontsize.x * 5;
+	int allspecs_lines = 2;
+
+	entity e;
+	FOREACH_MINIGAME_ENTITY(e)
+	{
+		if (allspecs_width >= 0 && e.classname == "minigame_player" && e.team == C4_SPECTATOR_TEAM)
+		{
+			string current_spec = ColorTranslateRGB(entcs_GetName(e.minigame_playerslot - 1));
+			current_spec = textShortenToWidth(current_spec, max_current_spec_width, hud_fontsize, stringwidth_colors);
+			if (allspecs != "")
+				current_spec = strcat(", ", current_spec);
+			else
+				current_spec = current_spec;
+
+			allspecs_width = stringwidth(allspecs, true, hud_fontsize);
+
+			float max_width = max_allspecs_width * allspecs_lines - max_current_spec_width;
+			if (allspecs_width + stringwidth(current_spec, true, hud_fontsize) < max_width)
+				allspecs = strcat(allspecs, current_spec);
+			else
+			{
+				// current_spec doesn't fit in the list
+				allspecs = strcat(allspecs, ", ...");
+				allspecs_width = -1; // skip remaining spectators
+			}
+		}
+	}
+
+	if (allspecs != "")
+	{
+		vector pos = boardpos;
+		pos.y -= panel_bg_border + hud_fontsize.y * (1.25 + allspecs_lines + 0.5);
+		minigame_drawstring_wrapped(max_allspecs_width, pos, _("Spectators:"), hud_fontsize * 1.25, '0.85 0.47 0.42', panel_fg_alpha, DRAWFLAG_NORMAL, 0);
+
+		pos.y += hud_fontsize.y * 1.25;
+		minigame_drawcolorcodedstring_wrapped(max_allspecs_width, pos, allspecs, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL, 0);
+	}
+}
+
 string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
 	string s = getWrappedLine_remaining;
