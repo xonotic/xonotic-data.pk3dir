@@ -1119,6 +1119,8 @@ void bd_hud_board(vector pos, vector mySize)
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
 			victory_text, winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
+
+	minigame_show_allspecs(bd_boardpos, bd_boardsize);
 }
 
 
