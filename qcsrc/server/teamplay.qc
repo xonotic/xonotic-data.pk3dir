@@ -58,7 +58,7 @@ entity Team_GetTeamFromIndex(int index)
 {
 	if (!Team_IsValidIndex(index))
 	{
-		LOG_FATALF("Team_GetTeamFromIndex: Index is invalid: %f", index);
+		LOG_FATALF("Index is invalid: %f", index);
 	}
 	return g_team_entities[index - 1];
 }
@@ -67,7 +67,7 @@ entity Team_GetTeam(int team_num)
 {
 	if (!Team_IsValidTeam(team_num))
 	{
-		LOG_FATALF("Team_GetTeam: Value is invalid: %f", team_num);
+		LOG_FATALF("Value is invalid: %f", team_num);
 	}
 	return g_team_entities[Team_TeamToIndex(team_num) - 1];
 }
@@ -361,7 +361,7 @@ void Player_SetForcedTeamIndex(entity player, int team_index)
 		{
 			if (!Team_IsValidIndex(team_index))
 			{
-				LOG_FATAL("Player_SetForcedTeamIndex: Invalid team index.");
+				LOG_FATAL("Invalid team index.");
 			}
 			else
 			{
@@ -640,12 +640,11 @@ int TeamBalance_GetAllowedTeams(entity balance)
 {
 	if (balance == NULL)
 	{
-		LOG_FATAL("TeamBalance_GetAllowedTeams: Team balance entity is NULL.");
+		LOG_FATAL("Team balance entity is NULL.");
 	}
 	if (balance.m_team_balance_state == TEAM_BALANCE_UNINITIALIZED)
 	{
-		LOG_FATAL("TeamBalance_GetAllowedTeams: "
-			"Team balance entity is not initialized.");
+		LOG_FATAL("Team balance entity is not initialized.");
 	}
 	int result = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
@@ -662,16 +661,15 @@ bool TeamBalance_IsTeamAllowed(entity balance, int index)
 {
 	if (balance == NULL)
 	{
-		LOG_FATAL("TeamBalance_IsTeamAllowed: Team balance entity is NULL.");
+		LOG_FATAL("Team balance entity is NULL.");
 	}
 	if (balance.m_team_balance_state == TEAM_BALANCE_UNINITIALIZED)
 	{
-		LOG_FATAL("TeamBalance_IsTeamAllowed: "
-			"Team balance entity is not initialized.");
+		LOG_FATAL("Team balance entity is not initialized.");
 	}
 	if (!Team_IsValidIndex(index))
 	{
-		LOG_FATALF("TeamBalance_IsTeamAllowed: Team index is invalid: %f",
+		LOG_FATALF("Team index is invalid: %f",
 			index);
 	}
 	return TeamBalance_IsTeamAllowedInternal(balance, index);
@@ -681,12 +679,11 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 {
 	if (balance == NULL)
 	{
-		LOG_FATAL("TeamBalance_GetTeamCounts: Team balance entity is NULL.");
+		LOG_FATAL("Team balance entity is NULL.");
 	}
 	if (balance.m_team_balance_state == TEAM_BALANCE_UNINITIALIZED)
 	{
-		LOG_FATAL("TeamBalance_GetTeamCounts: "
-			"Team balance entity is not initialized.");
+		LOG_FATAL("Team balance entity is not initialized.");
 	}
 	if (MUTATOR_CALLHOOK(TeamBalance_GetTeamCounts) == true)
 	{
@@ -763,18 +760,15 @@ int TeamBalance_GetNumberOfPlayers(entity balance, int index)
 {
 	if (balance == NULL)
 	{
-		LOG_FATAL("TeamBalance_GetNumberOfPlayers: "
-			"Team balance entity is NULL.");
+		LOG_FATAL("Team balance entity is NULL.");
 	}
 	if (balance.m_team_balance_state != TEAM_BALANCE_TEAM_COUNTS_FILLED)
 	{
-		LOG_FATAL("TeamBalance_GetNumberOfPlayers: "
-			"TeamBalance_GetTeamCounts has not been called.");
+		LOG_FATAL("TeamBalance_GetTeamCounts has not been called.");
 	}
 	if (!Team_IsValidIndex(index))
 	{
-		LOG_FATALF("TeamBalance_GetNumberOfPlayers: Team index is invalid: %f",
-			index);
+		LOG_FATALF("Team index is invalid: %f", index);
 	}
 	return balance.m_team_balance_team[index - 1].m_num_players;
 }
@@ -783,12 +777,11 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player)
 {
 	if (balance == NULL)
 	{
-		LOG_FATAL("TeamBalance_FindBestTeam: Team balance entity is NULL.");
+		LOG_FATAL("Team balance entity is NULL.");
 	}
 	if (balance.m_team_balance_state == TEAM_BALANCE_UNINITIALIZED)
 	{
-		LOG_FATAL("TeamBalance_FindBestTeam: "
-			"Team balance entity is not initialized.");
+		LOG_FATAL("Team balance entity is not initialized.");
 	}
 	// count how many players are in each team
 	if (ignore_player)
@@ -802,7 +795,7 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player)
 	int team_bits = TeamBalance_FindBestTeams(balance, player, true);
 	if (team_bits == 0)
 	{
-		LOG_FATALF("TeamBalance_FindBestTeam: No teams available for %s\n",
+		LOG_FATALF("No teams available for %s\n",
 			MapInfo_Type_ToString(MapInfo_CurrentGametype()));
 	}
 	RandomSelection_Init();
@@ -820,12 +813,11 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 {
 	if (balance == NULL)
 	{
-		LOG_FATAL("TeamBalance_FindBestTeams: Team balance entity is NULL.");
+		LOG_FATAL("Team balance entity is NULL.");
 	}
 	if (balance.m_team_balance_state != TEAM_BALANCE_TEAM_COUNTS_FILLED)
 	{
-		LOG_FATAL("TeamBalance_FindBestTeams: "
-			"TeamBalance_GetTeamCounts has not been called.");
+		LOG_FATAL("TeamBalance_GetTeamCounts has not been called.");
 	}
 	if (MUTATOR_CALLHOOK(TeamBalance_FindBestTeams, player) == true)
 	{
@@ -867,21 +859,20 @@ int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
 {
 	if (balance == NULL)
 	{
-		LOG_FATAL("TeamBalance_CompareTeams: Team balance entity is NULL.");
+		LOG_FATAL("Team balance entity is NULL.");
 	}
 	if (balance.m_team_balance_state != TEAM_BALANCE_TEAM_COUNTS_FILLED)
 	{
-		LOG_FATAL("TeamBalance_CompareTeams: "
-			"TeamBalance_GetTeamCounts has not been called.");
+		LOG_FATAL("TeamBalance_GetTeamCounts has not been called.");
 	}
 	if (!Team_IsValidIndex(team_index_a))
 	{
-		LOG_FATALF("TeamBalance_CompareTeams: team_index_a is invalid: %f",
+		LOG_FATALF("team_index_a is invalid: %f",
 			team_index_a);
 	}
 	if (!Team_IsValidIndex(team_index_b))
 	{
-		LOG_FATALF("TeamBalance_CompareTeams: team_index_b is invalid: %f",
+		LOG_FATALF("team_index_b is invalid: %f",
 			team_index_b);
 	}
 	if (team_index_a == team_index_b)
@@ -1080,7 +1071,7 @@ entity TeamBalance_GetTeamFromIndex(entity balance, int index)
 {
 	if (!Team_IsValidIndex(index))
 	{
-		LOG_FATALF("TeamBalance_GetTeamFromIndex: Index is invalid: %f", index);
+		LOG_FATALF("Index is invalid: %f", index);
 	}
 	return balance.m_team_balance_team[index - 1];
 }
