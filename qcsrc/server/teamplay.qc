@@ -795,8 +795,7 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player)
 	int team_bits = TeamBalance_FindBestTeams(balance, player, true);
 	if (team_bits == 0)
 	{
-		LOG_FATALF("No teams available for %s\n",
-			MapInfo_Type_ToString(MapInfo_CurrentGametype()));
+		LOG_FATALF("No teams available for %s\n", GetGametype());
 	}
 	RandomSelection_Init();
 	for (int i = 1; i <= NUM_TEAMS; ++i)
