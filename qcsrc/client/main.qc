@@ -1439,6 +1439,7 @@ bool net_handle_ServerWelcome()
 	string hostversion = ReadString();
 	bool version_mismatch = flags & 2;
 	bool version_check = flags & 4;
+	MapInfo_Map_titlestring = ReadString();
 	srv_minplayers = ReadByte();
 	srv_maxplayers = ReadByte();
 	string modifications = translate_modifications(ReadString());
@@ -1450,15 +1451,7 @@ bool net_handle_ServerWelcome()
 
 	msg = strcat(msg, "\n\n", _("Gametype:"), " ^1", MapInfo_Type_ToText(gametype), "\n");
 
-	msg = strcat(msg, "\n", _("Map:"), " ^2");
-	if (world.message == "")
-		msg = strcat(msg, mi_shortname, "\n");
-	else
-	{
-		int i = strstrofs(world.message, " by ", 0); // matches _MapInfo_Generate()
-		string longname = i >= 0 ? substring(world.message, 0, i) : world.message;
-		msg = strcat(msg, (strcasecmp(longname, mi_shortname) ? strcat(mi_shortname, " ^7// ^2") : ""), longname, "\n");
-	}
+	msg = strcat(msg, "\n", _("Map:"), " ", MapInfo_Map_titlestring, "\n");
 
 	if (srv_minplayers || srv_maxplayers)
 	{

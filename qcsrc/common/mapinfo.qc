@@ -339,17 +339,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 				_MapInfo_Map_worldspawn_music = v;
 			else if(k == "noise")
 				_MapInfo_Map_worldspawn_music = v;
-			else if(k == "message" && (!MapInfo_Map_title || MapInfo_Map_title == "<TITLE>"))
-			{
-				i = strstrofs(v, " by ", 0);
-				if(MapInfo_Map_author == "<AUTHOR>" && i >= 0)
-				{
-					MapInfo_Map_title = substring(v, 0, i);
-					MapInfo_Map_author = substring(v, i + 4, strlen(v) - (i + 4));
-				}
-				else
-					MapInfo_Map_title = v;
-			}
+			else if(k == "message" && (!MapInfo_Map_title || MapInfo_Map_title == "<TITLE>") && v != "")
+				MapInfo_Map_title = v;
 		}
 		else
 		{
@@ -765,7 +756,23 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 	}
 }
 
-float MapInfo_isRedundant(string fn, string t)
+/// Removes author string from title (if found)
+/// and copies it to MapInfo_Map_author if that wasn't set.
+string MapInfo_title_sans_author(string title)
+{
+	int offset;
+
+	if ((offset = strstrofs(title, " by ", 0)) >= 0)
+	{
+		if (MapInfo_Map_author == "<AUTHOR>")
+			MapInfo_Map_author = substring(title, offset + 4, strlen(title) - (offset + 4));
+		title = substring(title, 0, offset);
+	}
+
+	return title != "" ? title : "<TITLE>";
+}
+
+bool MapInfo_isRedundant(string fn, string t)
 {
 	// normalize file name
 	fn = strreplace("_", "", fn);
@@ -1059,6 +1066,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			r = _MapInfo_Generate(pFilename);
 			if(!r)
 				return 0;
+			MapInfo_Map_title = MapInfo_title_sans_author(MapInfo_Map_title);
 			fh = fopen(fn, FILE_WRITE);
 			fputs(fh, strcat("title ", MapInfo_Map_title, "\n"));
 			fputs(fh, strcat("description ", MapInfo_Map_description, "\n"));
@@ -1310,12 +1318,26 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 	fclose(fh);
 
 LABEL(mapinfo_handled)
+#ifdef SVQC
+	// if the map is currently loaded we can read worldspawn fields directly
+	if (pFilename == mi_shortname)
+	{
+		if (MapInfo_Map_title == "<TITLE>")
+			if (world.message != "")
+				MapInfo_Map_title = world.message;
+	}
+#endif
+	// Could skip removing author from title when it's source is .mapinfo
+	// but must always do it for world.message and .arena/.defi as VQ3 didn't support author
+	// so mappers tended to put it in world.message and/or longname.
+	MapInfo_Map_title = MapInfo_title_sans_author(MapInfo_Map_title); // may set author if not set
+
 	if(MapInfo_Map_title == "<TITLE>")
-		MapInfo_Map_titlestring = MapInfo_Map_bspname;
+		MapInfo_Map_titlestring = strcat("^2", MapInfo_Map_bspname);
 	else if(MapInfo_isRedundant(MapInfo_Map_bspname, MapInfo_Map_title))
-		MapInfo_Map_titlestring = MapInfo_Map_title;
+		MapInfo_Map_titlestring = strcat("^2", MapInfo_Map_title);
 	else
-		MapInfo_Map_titlestring = sprintf("%s: %s", MapInfo_Map_bspname, MapInfo_Map_title);
+		MapInfo_Map_titlestring = sprintf("^2%s ^7// ^2%s", MapInfo_Map_bspname, MapInfo_Map_title);
 
 	MapInfo_Cache_Store();
 	if(MapInfo_Map_supportedGametypes != 0)
