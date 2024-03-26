@@ -54,6 +54,8 @@ void GameCommand(string theCommand)
 		LOG_HELP("  'closemenu' closes the menu window named <item> (or the menu window containing an item named <item>)");
 		LOG_HELP("   if <item> is not specified it shows the list of available items in the console");
 		LOG_HELP("  'dumptree' dumps the state of the menu as a tree to the console");
+		LOG_HELP("  'isdemo' checks if engine is currently running a demo. If given an <item> then 1 / 0 is placed");
+		LOG_HELP("   in the cvar with that name. Otherwise without an argument the result is printed to console.");
 
 		LOG_HELP("\nGeneric commands shared by all programs:");
 		GenericCommand_macro_help();
@@ -75,21 +77,21 @@ void GameCommand(string theCommand)
 		return;
 	}
 
-	string cmd = argv(0);
+	string argcmd = argv(0);
 	string filter = string_null;
 	bool close_mode = false;
-	if (cmd == "closemenu")
+	if (argcmd == "closemenu")
 	{
 		close_mode = true;
-		cmd = "directmenu";
+		argcmd = "directmenu";
 	}
-	else if (cmd == "directpanelhudmenu")
+	else if (argcmd == "directpanelhudmenu")
 	{
 		filter = "HUD";
-		cmd = "directmenu";
+		argcmd = "directmenu";
 	}
 
-	if (cmd == "directmenu")
+	if (argcmd == "directmenu")
 	{
 		if (argc == 1)
 		{
@@ -198,6 +200,22 @@ void GameCommand(string theCommand)
 	{
 		_dumptree_space = "";
 		depthfirst(main, parent, firstChild, nextSibling, _dumptree_open, _dumptree_close, NULL);
+		return;
+	}
+
+	if (argv(0) == "isdemo")
+	{
+		int value = isdemo();
+
+		if (argv(1) != "")
+		{
+			cvar_set(argv(1), ftos(value));
+		}
+		else
+		{
+			print(sprintf("%d\n", value));
+		}
+
 		return;
 	}
 
