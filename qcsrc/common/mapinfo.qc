@@ -10,11 +10,11 @@
 
 int autocvar_g_mapinfo_q3compat = 1;
 
-#ifdef MENUQC
-#define WARN_COND false
+#ifdef SVQC
+	bool autocvar_g_mapinfo_ignore_warnings;
+	#define WARN_COND (!autocvar_g_mapinfo_ignore_warnings && MapInfo_Map_bspname == mi_shortname)
 #else
-bool autocvar_g_mapinfo_ignore_warnings;
-#define WARN_COND (!autocvar_g_mapinfo_ignore_warnings && MapInfo_Map_bspname == mi_shortname)
+	#define WARN_COND false
 #endif
 
 // generic string stuff
@@ -274,8 +274,29 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	float diameter, spawnpoints;
 	float spawnplaces;
 	bool is_q3df_map = false;
-
 	vector mapMins, mapMaxs;
+
+	if(autocvar_g_mapinfo_q3compat >= 2) // generate mapinfo using arena data
+	{
+		// try for .arena or .defi files, as they may have more accurate information
+		// supporting .arena AND .defi for the same map
+		bool success = false;
+		fh = -1;
+		fn = _MapInfo_FindArenaFile(pFilename, ".arena");
+		if(fn != "" && (fh = fopen(fn, FILE_READ)) >= 0)
+		{
+			success = _MapInfo_ParseArena(fn, fh, pFilename, NULL, false, true);
+			fclose(fh);
+		}
+		fn = _MapInfo_FindArenaFile(pFilename, ".defi");
+		if(fn != "" && (fh = fopen(fn, FILE_READ)) >= 0)
+		{
+			success |= _MapInfo_ParseArena(fn, fh, pFilename, NULL, true, true);
+			fclose(fh);
+		}
+		if (success && autocvar_g_mapinfo_q3compat == 3)
+			return 3; // skip entity analysis
+	}
 
 	r = 1;
 	fn = strcat("maps/", pFilename, ".ent");
@@ -288,38 +309,14 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	}
 	if(fh < 0)
 		return 0;
-	LOG_INFO("Analyzing ", fn, " to generate initial mapinfo");
+	LOG_INFO("Generating ", pFilename, ".mapinfo: analyzing ", fn);
 
 	inWorldspawn = 2;
-	MapInfo_Map_flags = 0;
-	MapInfo_Map_supportedGametypes = 0;
 	spawnpoints = 0;
 	spawnplaces = 0;
 	_MapInfo_Map_worldspawn_music = "";
 	mapMins = '0 0 0';
 	mapMaxs = '0 0 0';
-
-	if(autocvar_g_mapinfo_q3compat == 2) // generate mapinfo using arena data
-	{
-		// try for .arena or .defi files, as they may have more accurate information
-		bool isdefi = false;
-		float arena_fh = -1;
-		string arena_fn = _MapInfo_FindArenaFile(pFilename, ".arena");
-		if(arena_fn != "")
-			arena_fh = fopen(arena_fn, FILE_READ);
-		if(arena_fh < 0)
-		{
-			isdefi = true;
-			arena_fn = _MapInfo_FindArenaFile(pFilename, ".defi");
-			if(arena_fn != "")
-				arena_fh = fopen(arena_fn, FILE_READ);
-		}
-		if(arena_fh >= 0)
-		{
-			_MapInfo_ParseArena(arena_fn, arena_fh, pFilename, NULL, isdefi, true);
-			fclose(arena_fh);
-		}
-	}
 
 	for (;;)
 	{
@@ -396,7 +393,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 				else if(v == "target_music" || v == "trigger_music")
 					_MapInfo_Map_worldspawn_music = string_null; // don't use regular BGM
 				else if(v == "target_stopTimer")
-					is_q3df_map = true; // don't support standard gamemodes
+					is_q3df_map = true; // don't support standard gametypes UNLESS we found them in .arena
 				else
 					FOREACH(Gametypes, true, it.m_generate_mapinfo(it, v));
 			}
@@ -616,7 +613,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 Gametype MapInfo_Type_FromString(string gtype, bool dowarn, bool is_q3compat)
 {
 	string replacement = "";
-	bool do_warn = true;
+
 	switch (gtype)
 	{
 		case "nexball":   replacement = "nb"; break;
@@ -625,13 +622,13 @@ Gametype MapInfo_Type_FromString(string gtype, bool dowarn, bool is_q3compat)
 		case "invasion":  replacement = "inv"; break;
 		case "assault":   replacement = "as"; break;
 		case "race":      replacement = "rc"; break;
-		// quake 3 compat
-		case "ffa": 	  replacement = "dm"; do_warn = false; break;
-		case "cctf":
-		case "oneflag":   replacement = "ctf"; do_warn = false; break;
-		case "tournament":
-		case "tourney":   replacement = "duel"; do_warn = false; break;
-		case "arena":     if(is_q3compat) { replacement = "ca"; do_warn = false; } break;
+		// Q3/QL compat, see DoesQ3ARemoveThisEntity() in quake3.qc for complete lists
+		case "ffa":       replacement = "dm"; break;
+		case "cctf": // from ThreeWave, maps with this should all have "ctf" too
+		case "oneflag":   replacement = "ctf"; break;
+		case "tourney":   replacement = "duel"; break;
+		case "arena": // which Q3 mod is this from? In Nexuiz it was 'duel with rounds'.
+			if(is_q3compat) { replacement = "ca"; } break;
 	}
 	if (replacement != "")
 	{
@@ -803,6 +800,10 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 	int stored_supportedFeatures = 0;
 	int stored_flags = 0;
 	string t, s;
+
+	if (isgenerator)
+		LOG_INFO("Generating ", pFilename, ".mapinfo: analyzing ", arena_filename);
+
 	for (;;)
 	{
 		if (!((s = fgets(fh))))
@@ -836,8 +837,9 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 				if(stored_Map_title != "")
 					MapInfo_Map_title = stored_Map_title;
 				MapInfo_Map_author = stored_Map_author;
+				// might have .arena AND .defi for the same map so these bitfields are OR'd
 				if(isgenerator)
-					MapInfo_Map_supportedGametypes = stored_supportedGametypes;
+					MapInfo_Map_supportedGametypes |= stored_supportedGametypes;
 				else
 				{
 					FOREACH(Gametypes, it.m_flags & stored_supportedGametypes,
@@ -845,8 +847,8 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 						_MapInfo_Map_ApplyGametype ("", pGametypeToSet, it, true);
 					});
 				}
-				MapInfo_Map_supportedFeatures = stored_supportedFeatures;
-				MapInfo_Map_flags = stored_flags;
+				MapInfo_Map_supportedFeatures |= stored_supportedFeatures;
+				MapInfo_Map_flags |= stored_flags;
 				return true; // no need to continue through the file, we have our map!
 			}
 			else
@@ -906,7 +908,8 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 			string types = s;
 			types = strreplace("team", "tdm ft", types);
 			types = strreplace("ffa", "dm lms ka", types);
-			if(strstrofs(types, "tournament", 0) < 0 && strstrofs(types, "tdm", 0) >= 0) // larger team map, support additional gamemodes!
+			types = strreplace("tourney", "duel", types); // QL used duel so the following check must support it
+			if(strstrofs(types, "duel", 0) < 0 && strstrofs(types, "tdm", 0) >= 0) // larger team map, support additional gamemodes!
 				types = cons(types, "ca kh");
 			FOREACH_WORD(types, true,
 			{
@@ -1023,28 +1026,27 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 	fh = fopen(fn, FILE_READ);
 	if(fh < 0)
 	{
-		if(autocvar_g_mapinfo_q3compat) // use arena data instead of generating a mapinfo file
+		if(autocvar_g_mapinfo_q3compat == 1) // use arena data instead of generating a mapinfo file
 		{
-			bool isdefi = false;
-			if(autocvar_g_mapinfo_q3compat == 1) // only parse .arena files in mode 1
-			{
-				fn = _MapInfo_FindArenaFile(pFilename, ".arena");
-				if(fn != "")
-					fh = fopen(fn, FILE_READ);
-			}
-			if(fh < 0 || autocvar_g_mapinfo_q3compat == 2)
-			{
-				isdefi = true;
-				fn = _MapInfo_FindArenaFile(pFilename, ".defi");
-				if(fn != "")
-					fh = fopen(fn, FILE_READ);
-			}
-			if(fh >= 0)
+			// supporting .arena AND .defi for the same map
+			bool success = false;
+			fn = _MapInfo_FindArenaFile(pFilename, ".arena");
+			if(fn != "" && (fh = fopen(fn, FILE_READ)) >= 0)
 			{
 				_MapInfo_Map_Reset();
-				if(_MapInfo_ParseArena(fn, fh, pFilename, pGametypeToSet, isdefi, false))
-					goto mapinfo_handled; // skip generation
+				success = _MapInfo_ParseArena(fn, fh, pFilename, pGametypeToSet, false, false);
+				fclose(fh);
 			}
+			fn = _MapInfo_FindArenaFile(pFilename, ".defi");
+			if(fn != "" && (fh = fopen(fn, FILE_READ)) >= 0)
+			{
+				if(!success)
+					_MapInfo_Map_Reset();
+				success |= _MapInfo_ParseArena(fn, fh, pFilename, pGametypeToSet, true, false);
+				fclose(fh);
+			}
+			if(success)
+				goto mapinfo_handled; // skip generation
 		}
 
 		fn = strcat("maps/autogenerated/", pFilename, ".mapinfo");
@@ -1305,9 +1307,9 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		else if(WARN_COND)
 			LOG_WARN("Map ", pFilename, " provides unknown info item ", t, ", ignored");
 	}
-	LABEL(mapinfo_handled)
 	fclose(fh);
 
+LABEL(mapinfo_handled)
 	if(MapInfo_Map_title == "<TITLE>")
 		MapInfo_Map_titlestring = MapInfo_Map_bspname;
 	else if(MapInfo_isRedundant(MapInfo_Map_bspname, MapInfo_Map_title))

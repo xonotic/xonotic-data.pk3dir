@@ -487,6 +487,23 @@ spawnfunc(dom_controlpoint)
 	IL_PUSH(g_dompoints, this);
 }
 
+	// Quake Live CP
+/*QUAKED team_dom_point (0 .2 1) (-16 -16 0) (16 16 88)
+Domination capture point.
+-------- KEYS --------
+identifier : Set to 1, 2, or 3 to match to point 'A', 'B', or 'C'.
+count : Adjust the range of the capture point (in units, eg: 64, 128... etc).
+target : Target name for multiple info_player_deathmatch entities (to allow spawning near that particular dom point).
+-------- NOTES --------
+Do not assign a 'gametype' key to this item. It is used in all four team game types. The game will call for it as needed.
+-------- MODEL FOR RADIANT ONLY - DO NOT SET THIS AS A KEY --------
+model="models/powerups/domination/dompoint.md3"
+*/
+spawnfunc(team_dom_point)
+{
+	spawnfunc_dom_controlpoint(this);
+}
+
 /*QUAKED spawnfunc_dom_team (0 .5 .8) (-32 -32 -24) (32 32 32)
 Team declaration for Domination gameplay, this allows you to decide what team
 names and control point models are used in your map.

@@ -929,18 +929,12 @@ spawnfunc(worldspawn)
 	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, _MapInfo_FindArenaFile(mapname, ".defi") != "");
 
 	// quake 3 music support
-	if(world.music || world.noise)
-	{
+	// bones_was_here: Q3 doesn't support .noise but the Nexuiz _MapInfo_Generate() does.
+	// TODO: Q3 supports an optional intro file: "music/intro.wav music/loop.wav"
+	string music = GetField_fullspawndata(this, "music", true);
+	if (music || world.noise)
 		// prefer .music over .noise
-		string chosen_music;
-		if(world.music)
-			chosen_music = world.music;
-		else
-			chosen_music = world.noise;
-
-		string newstuff = strcat(clientstuff, "cd loop \"", chosen_music, "\"\n");
-		strcpy(clientstuff, newstuff);
-	}
+		strcpy(clientstuff, strcat(clientstuff, "cd loop \"", (music ? music : world.noise), "\"\n"));
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
@@ -2342,9 +2336,9 @@ void DropToFloor_QC(entity this)
 	 * It was enabled by default in all Xonotic releases and in Nexuiz, so now certain maps depend on it.
 	 * Example: on erbium 0.8.6 the shards @ crylink are too low (in collision with the floor),
 	 * so without this those fall through the floor.
-	 * Q3, Q2 and Quake don't try to move items out of solid.
+	 * Q3, Q2 and Quake don't try to move items out of solid, but doing so here fixes epsilon issues on a few Q3 maps.
 	 */
-	if(!Q3COMPAT_COMMON && autocvar_sv_mapformat_is_quake3) // Xonotic, Nexuiz
+	if(autocvar_sv_mapformat_is_quake3) // Xonotic, Nexuiz
 	{
 		nudgeresult = nudgeoutofsolid(this);
 		if (!nudgeresult)
