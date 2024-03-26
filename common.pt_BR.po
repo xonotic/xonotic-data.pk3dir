@@ -9,7 +9,7 @@
 # NotThatPrivate Yes <henriqueferreira2009@gmail.com>, 2015
 # Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail.com>, 2015
 # Rui <xymarior@yandex.com>, 2018
-# yy0zz, 2021-2023
+# yy0zz, 2021-2024
 # yy0zz, 2021
 # zerowhy . <anymailz@tutanota.com>, 2021
 msgid ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-24 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2024\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -1788,7 +1788,7 @@ msgstr "A quantidade de execuções necessária para acabar a partida"
 
 #: qcsrc/common/minigames/cl_minigames.qc:287
 msgid "Spectators:"
-msgstr ""
+msgstr "Espectadores:"
 
 #: qcsrc/common/minigames/cl_minigames.qc:424
 msgid "It's your turn"
