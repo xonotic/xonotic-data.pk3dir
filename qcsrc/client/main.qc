@@ -875,11 +875,13 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 	{
 		this.origin = ReadVector();
 
+		int particlesAndOrSound = ReadByte();
+
 		if(is_new)
 		{
 			float teamnum = entcs_GetTeam(entnum - 1);
 
-			if(autocvar_cl_spawn_event_particles)
+			if(autocvar_cl_spawn_event_particles && (particlesAndOrSound & BIT(0)))
 			{
 				switch(teamnum)
 				{
@@ -890,7 +892,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 					default: pointparticles(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1); break;
 				}
 			}
-			if(autocvar_cl_spawn_event_sound)
+
+			if(autocvar_cl_spawn_event_sound && (particlesAndOrSound & BIT(1)))
 			{
 				sound(this, CH_TRIGGER, SND_SPAWN, VOL_BASE, ATTEN_NORM);
 			}
