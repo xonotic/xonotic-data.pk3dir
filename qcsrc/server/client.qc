@@ -1054,12 +1054,16 @@ void SendWelcomeMessage(entity this, int msg_type)
 	if (CS(this).version < autocvar_gameversion)
 		flags |= 4;
 	MapInfo_Get_ByName(mi_shortname, 0, NULL);
+	if (MapInfo_Map_author != "")
+		flags |= 8;
 	WriteByte(msg_type, flags);
 
 	WriteString(msg_type, autocvar_hostname);
 	WriteString(msg_type, autocvar_g_xonoticversion);
 
 	WriteString(msg_type, MapInfo_Map_titlestring);
+	if (flags & 8)
+		WriteString(msg_type, MapInfo_Map_author);
 	MapInfo_ClearTemps();
 
 	WriteByte(msg_type, autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers);

@@ -1440,6 +1440,7 @@ bool net_handle_ServerWelcome()
 	bool version_mismatch = flags & 2;
 	bool version_check = flags & 4;
 	MapInfo_Map_titlestring = ReadString();
+	MapInfo_Map_author = flags & 8 ? ReadString() : "";
 	srv_minplayers = ReadByte();
 	srv_maxplayers = ReadByte();
 	string modifications = translate_modifications(ReadString());
@@ -1452,6 +1453,8 @@ bool net_handle_ServerWelcome()
 	msg = strcat(msg, "\n\n", _("Gametype:"), " ^1", MapInfo_Type_ToText(gametype), "\n");
 
 	msg = strcat(msg, "\n", _("Map:"), " ", MapInfo_Map_titlestring, "\n");
+	if (flags & 8)
+		msg = strcat(msg, "^9", _("by:"), " ", MapInfo_Map_author, "\n");
 
 	if (srv_minplayers || srv_maxplayers)
 	{

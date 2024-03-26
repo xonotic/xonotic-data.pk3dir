@@ -768,6 +768,18 @@ string MapInfo_title_sans_author(string title)
 			MapInfo_Map_author = substring(title, offset + 4, strlen(title) - (offset + 4));
 		title = substring(title, 0, offset);
 	}
+	else if ((offset = strstrofs(title, " (by ", 0)) >= 0 || (offset = strstrofs(title, " [by ", 0)) >= 0)
+	{
+		if (MapInfo_Map_author == "<AUTHOR>")
+			MapInfo_Map_author = substring(title, offset + 5, strlen(title) - (offset + 5) - 1);
+		title = substring(title, 0, offset);
+	}
+	else if ((offset = strstrofs(title, "Made By ", 0)) >= 0) // often at the start of the string
+	{
+		if (MapInfo_Map_author == "<AUTHOR>")
+			MapInfo_Map_author = substring(title, offset + 8, strlen(title) - (offset + 8));
+		title = substring(title, 0, offset);
+	}
 
 	return title != "" ? title : "<TITLE>";
 }
@@ -843,7 +855,8 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 				MapInfo_Map_description = stored_Map_description;
 				if(stored_Map_title != "")
 					MapInfo_Map_title = stored_Map_title;
-				MapInfo_Map_author = stored_Map_author;
+				if(stored_Map_author != "") // write the usual "<AUTHOR>" if we have nothing better
+					MapInfo_Map_author = stored_Map_author;
 				// might have .arena AND .defi for the same map so these bitfields are OR'd
 				if(isgenerator)
 					MapInfo_Map_supportedGametypes |= stored_supportedGametypes;
@@ -1325,6 +1338,9 @@ LABEL(mapinfo_handled)
 		if (MapInfo_Map_title == "<TITLE>")
 			if (world.message != "")
 				MapInfo_Map_title = world.message;
+		if (MapInfo_Map_author == "<AUTHOR>")
+			if ((s = GetField_fullspawndata(world, "author")) != "")
+				MapInfo_Map_author = s;
 	}
 #endif
 	// Could skip removing author from title when it's source is .mapinfo
@@ -1338,6 +1354,9 @@ LABEL(mapinfo_handled)
 		MapInfo_Map_titlestring = strcat("^2", MapInfo_Map_title);
 	else
 		MapInfo_Map_titlestring = sprintf("^2%s ^7// ^2%s", MapInfo_Map_bspname, MapInfo_Map_title);
+
+	if (MapInfo_Map_author == "<AUTHOR>")
+		MapInfo_Map_author = ""; // don't display "<AUTHOR>" in the UI (we do write it to .mapinfo files)
 
 	MapInfo_Cache_Store();
 	if(MapInfo_Map_supportedGametypes != 0)
