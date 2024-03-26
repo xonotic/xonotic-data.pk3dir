@@ -443,9 +443,8 @@ void IntermissionThink(entity this)
 		this.autoscreenshot = -1;
 		if(IS_REAL_CLIENT(this))
 		{
-			string num = strftime_s(); // strftime(false, "%s") isn't reliable, see strftime_s description
-			stuffcmd(this, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; "
-				"echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), num));
+			stuffcmd(this, sprintf("\ncl_autoscreenshot_screenshot %s %s; "
+				"echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), matchid));
 		}
 		return;
 	}
@@ -464,7 +463,7 @@ void FixIntermissionClient(entity e)
 {
 	if(!e.autoscreenshot) // initial call
 	{
-		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
+		e.autoscreenshot = time + 0.1;	// used for autoscreenshot
 		SetResourceExplicit(e, RES_HEALTH, -2342); // health in the first intermission phase
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
