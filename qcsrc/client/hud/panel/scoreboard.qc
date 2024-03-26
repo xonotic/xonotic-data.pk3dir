@@ -43,10 +43,13 @@ const int MAX_SBT_FIELDS = MAX_SCORE;
 PlayerScoreField sbt_field[MAX_SBT_FIELDS + 1];
 float sbt_field_size[MAX_SBT_FIELDS + 1];
 string sbt_field_title[MAX_SBT_FIELDS + 1];
+string sbt_field_title_short[MAX_SBT_FIELDS + 1];
 int sbt_num_fields;
+float sbt_field_title_maxwidth;
 
 string autocvar_hud_fontsize;
 string hud_fontsize_str;
+float scoreboard_table_fieldtitle_maxwidth;
 float max_namesize;
 
 float sbt_bg_alpha;
@@ -75,6 +78,7 @@ float autocvar_hud_panel_scoreboard_table_bg_alpha = 0;
 float autocvar_hud_panel_scoreboard_table_bg_scale = 0.25;
 float autocvar_hud_panel_scoreboard_table_fg_alpha = 0.9;
 float autocvar_hud_panel_scoreboard_table_fg_alpha_self = 1;
+float autocvar_hud_panel_scoreboard_table_fieldtitle_maxwidth = 0.07;
 bool autocvar_hud_panel_scoreboard_table_highlight = true;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha = 0.2;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha_self = 0.4;
@@ -136,9 +140,9 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^caps"),          "caps", "               ", _("How often a flag (CTF) or a key (KeyHunt) was captured"));
 		SCO_LABEL(_("SCO^captime"),       "captime", "            ", _("Time of fastest capture (CTF)"));
 		SCO_LABEL(_("SCO^deaths"),        "deaths", "             ", _("Number of deaths"));
-		SCO_LABEL(_("SCO^destroyed"),     "destroyed", "          ", _("Number of keys destroyed by pushing them into void"));
+		SCO_LABEL(_("SCO^destructions"),  "destructions", "       ", _("Number of keys destroyed by pushing them into void"));
 		SCO_LABEL(_("SCO^damage"),        "dmg", "                ", _("The total damage done"));
-		SCO_LABEL(_("SCO^dmgtaken"),      "dmgtaken", "           ", _("The total damage taken"));
+		SCO_LABEL(_("SCO^damage taken"),  "dmgtaken", "           ", _("The total damage taken"));
 		SCO_LABEL(_("SCO^drops"),         "drops", "              ", _("Number of flag drops"));
 		SCO_LABEL(_("SCO^elo"),           "elo", "                ", _("Player ELO"));
 		SCO_LABEL(_("SCO^fastest"),       "fastest", "            ", _("Time of fastest lap (Race/CTS)"));
@@ -146,6 +150,7 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^fckills"),       "fckills", "            ", _("Number of flag carrier kills"));
 		SCO_LABEL(_("SCO^fps"),           "fps", "                ", _("FPS"));
 		SCO_LABEL(_("SCO^frags"),         "frags", "              ", _("Number of kills minus suicides"));
+		SCO_LABEL(_("SCO^generators"),    "generators", "         ", _("Number of generators destroyed"));
 		SCO_LABEL(_("SCO^goals"),         "goals", "              ", _("Number of goals scored"));
 		SCO_LABEL(_("SCO^hunts"),         "hunts", "              ", _("Number of hunts (Survival)"));
 		SCO_LABEL(_("SCO^kckills"),       "kckills", "            ", _("Number of keys carrier kills"));
@@ -762,7 +767,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 {
 	TC(int, argc);
 	int i, slash;
-	string str, pattern;
+	string str, str2, pattern;
 	bool have_name = false, have_primary = false, have_secondary = false, have_separator = false;
 	int missing;
 
@@ -772,7 +777,12 @@ void Cmd_Scoreboard_SetFields(int argc)
 	// sbt_fields uses strunzone on the titles!
 	if(!sbt_field_title[0])
 		for(i = 0; i < MAX_SBT_FIELDS; ++i)
+		{
 			sbt_field_title[i] = strzone("(null)");
+			sbt_field_title_short[i] = strzone("(null)");
+		}
+
+	sbt_field_title_maxwidth = vid_conwidth * max(0.01, autocvar_hud_panel_scoreboard_table_fieldtitle_maxwidth);
 
 	// TODO: re enable with gametype dependant cvars?
 	if(argc < 3) // no arguments provided
@@ -839,7 +849,10 @@ void Cmd_Scoreboard_SetFields(int argc)
 
 		str = strtolower(str);
 		strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(str));
-		sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
+
+		str2 = textShortenToWidth(sbt_field_title[sbt_num_fields], sbt_field_title_maxwidth, hud_fontsize, stringwidth_nocolors);
+		strcpy(sbt_field_title_short[sbt_num_fields], str2);
+		sbt_field_size[sbt_num_fields] = stringwidth(str2, false, hud_fontsize);
 
 		PlayerScoreField j;
 		switch(str)
@@ -870,6 +883,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 					LOG_INFOF("^1Error:^7 Unknown score field: '%s'", str);
 
 				strfree(sbt_field_title[sbt_num_fields]);
+				strfree(sbt_field_title_short[sbt_num_fields]);
 				sbt_field_size[sbt_num_fields] = 0;
 				continue;
 
@@ -900,13 +914,17 @@ void Cmd_Scoreboard_SetFields(int argc)
 		if(!have_name)
 		{
 			strfree(sbt_field_title[sbt_num_fields]);
+			strfree(sbt_field_title_short[sbt_num_fields]);
 			for(i = sbt_num_fields; i > 0; --i)
 			{
 				sbt_field_title[i] = sbt_field_title[i-1];
+				sbt_field_title_short[i] = sbt_field_title_short[i-1];
 				sbt_field_size[i] = sbt_field_size[i-1];
 				sbt_field[i] = sbt_field[i-1];
 			}
 			sbt_field_title[0] = strzone(TranslateScoresLabel("name"));
+			str2 = textShortenToWidth(sbt_field_title[0], sbt_field_title_maxwidth, hud_fontsize, stringwidth_nocolors);
+			sbt_field_title_short[0] = strzone(str2);
 			sbt_field[0] = SP_NAME;
 			++sbt_num_fields;
 			LOG_INFO("fixed missing field 'name'");
@@ -914,13 +932,16 @@ void Cmd_Scoreboard_SetFields(int argc)
 			if(!have_separator)
 			{
 				strfree(sbt_field_title[sbt_num_fields]);
+				strfree(sbt_field_title_short[sbt_num_fields]);
 				for(i = sbt_num_fields; i > 1; --i)
 				{
 					sbt_field_title[i] = sbt_field_title[i-1];
+					sbt_field_title_short[i] = sbt_field_title_short[i-1];
 					sbt_field_size[i] = sbt_field_size[i-1];
 					sbt_field[i] = sbt_field[i-1];
 				}
 				sbt_field_title[1] = strzone("|");
+				sbt_field_title_short[1] = strzone("|");
 				sbt_field[1] = SP_SEPARATOR;
 				sbt_field_size[1] = stringwidth("|", false, hud_fontsize);
 				++sbt_num_fields;
@@ -930,6 +951,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 		else if(!have_separator)
 		{
 			strcpy(sbt_field_title[sbt_num_fields], "|");
+			strcpy(sbt_field_title_short[sbt_num_fields], "|");
 			sbt_field_size[sbt_num_fields] = stringwidth("|", false, hud_fontsize);
 			sbt_field[sbt_num_fields] = SP_SEPARATOR;
 			++sbt_num_fields;
@@ -937,16 +959,26 @@ void Cmd_Scoreboard_SetFields(int argc)
 		}
 		if(!have_secondary)
 		{
-			strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(scores_label(ps_secondary)));
-			sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
+			str = TranslateScoresLabel(scores_label(ps_secondary));
+			strcpy(sbt_field_title[sbt_num_fields], str);
+
+			str2 = textShortenToWidth(str, sbt_field_title_maxwidth, hud_fontsize, stringwidth_nocolors);
+			strcpy(sbt_field_title_short[sbt_num_fields], str2);
+			sbt_field_size[sbt_num_fields] = stringwidth(str2, false, hud_fontsize);
+
 			sbt_field[sbt_num_fields] = ps_secondary;
 			++sbt_num_fields;
 			LOG_INFOF("fixed missing field '%s'", scores_label(ps_secondary));
 		}
 		if(!have_primary)
 		{
-			strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(scores_label(ps_primary)));
-			sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
+			str = TranslateScoresLabel(scores_label(ps_primary));
+			strcpy(sbt_field_title[sbt_num_fields], str);
+
+			str2 = textShortenToWidth(str, sbt_field_title_maxwidth, hud_fontsize, stringwidth_nocolors);
+			strcpy(sbt_field_title_short[sbt_num_fields], str2);
+			sbt_field_size[sbt_num_fields] = stringwidth(str2, false, hud_fontsize);
+
 			sbt_field[sbt_num_fields] = ps_primary;
 			++sbt_num_fields;
 			LOG_INFOF("fixed missing field '%s'", scores_label(ps_primary));
@@ -1235,9 +1267,13 @@ string Scoreboard_FixColumnWidth(int i, string str)
 
 void Scoreboard_initFieldSizes()
 {
+	sbt_field_title_maxwidth = vid_conwidth * max(0.01, autocvar_hud_panel_scoreboard_table_fieldtitle_maxwidth);
 	for(int i = 0; i < sbt_num_fields; ++i)
 	{
-		sbt_field_size[i] = stringwidth(sbt_field_title[i], false, hud_fontsize);
+		string str = sbt_field_title[i];
+		string str2 = textShortenToWidth(str, sbt_field_title_maxwidth, hud_fontsize, stringwidth_nocolors);
+		strcpy(sbt_field_title_short[i], str2);
+		sbt_field_size[i] = stringwidth(str2, false, hud_fontsize);
 		Scoreboard_FixColumnWidth(i, "");
 	}
 }
@@ -1258,7 +1294,7 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
 		if (sbt_highlight)
 			if (i % 2)
 				drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + text_offset, sbt_field_title_short[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		pos.x += column_dim.x;
 	}
 	if(sbt_field[i] == SP_SEPARATOR)
@@ -1278,8 +1314,8 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
 					drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
 				}
 
-			text_offset.x = sbt_field_size[i] - stringwidth(sbt_field_title[i], false, hud_fontsize);
-			drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			text_offset.x = sbt_field_size[i] - stringwidth(sbt_field_title_short[i], false, hud_fontsize);
+			drawstring(pos + text_offset, sbt_field_title_short[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
 			pos.x -= hud_fontsize.x;
 		}
 	}
@@ -2255,12 +2291,21 @@ void Scoreboard_Draw()
 				scoreboard_fade_alpha = min(1, scoreboard_fade_alpha + frametime * scoreboard_fadeinspeed);
 			else
 				scoreboard_fade_alpha = 1;
+
+			bool sb_reinit = false;
 			if(hud_fontsize_str != autocvar_hud_fontsize)
 			{
 				hud_fontsize = HUD_GetFontsize("hud_fontsize");
-				Scoreboard_initFieldSizes();
 				strcpy(hud_fontsize_str, autocvar_hud_fontsize);
+				sb_reinit = true;
 			}
+			if(scoreboard_table_fieldtitle_maxwidth != autocvar_hud_panel_scoreboard_table_fieldtitle_maxwidth)
+			{
+				scoreboard_table_fieldtitle_maxwidth = autocvar_hud_panel_scoreboard_table_fieldtitle_maxwidth;
+				sb_reinit = true;
+			}
+			if (sb_reinit)
+				Scoreboard_initFieldSizes();
 		}
 		else {
 			float scoreboard_fadeoutspeed = autocvar_hud_panel_scoreboard_fadeoutspeed;

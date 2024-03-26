@@ -1197,7 +1197,7 @@ bool Onslaught_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
-		TeamScore_AddToTeam(winner_team, ST_ONS_CAPS, +1);
+		TeamScore_AddToTeam(winner_team, ST_ONS_GENS, +1);
 	}
 	else if(winner_team == -1)
 	{
@@ -2135,7 +2135,7 @@ void ons_ScoreRules()
 	int teams = TeamBalance_GetAllowedTeams(balance);
 	TeamBalance_Destroy(balance);
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-	    field_team(ST_ONS_CAPS, "destroyed", SFL_SORT_PRIO_PRIMARY);
+	    field_team(ST_ONS_GENS, "generators", SFL_SORT_PRIO_PRIMARY);
 	    field(SP_ONS_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
 	    field(SP_ONS_TAKES,	"takes", 0);
 	});
