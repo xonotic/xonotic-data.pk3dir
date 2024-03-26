@@ -238,10 +238,10 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		if(!DEATH_ISSPECIAL(deathtype))
 		{
-			damage *= Handicap_GetTotalHandicap(this);
+			damage *= Handicap_GetTotalHandicap(this, true);
 			if (this != attacker && IS_PLAYER(attacker))
 			{
-				damage /= Handicap_GetTotalHandicap(attacker);
+				damage /= Handicap_GetTotalHandicap(attacker, false);
 			}
 		}
 
