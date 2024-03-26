@@ -2326,6 +2326,8 @@ void Scoreboard_Draw()
 	// Game Info: Game Type
 	if (scoreboard_ui_enabled == 2)
 		str = _("Team Selection");
+	else if (gametype_custom_name != "")
+		str = gametype_custom_name;
 	else
 		str = MapInfo_Type_ToText(gametype);
 	draw_beginBoldFont();

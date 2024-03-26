@@ -143,6 +143,7 @@ string getWrappedLine_remaining;
 string getWrappedLine(float w, vector size, textLengthUpToWidth_widthFunction_t tw);
 string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw);
 
+// FIXME can't use Gametype gt because Gitlab compilation unit test fails
 float isGametypeInFilter(entity gt, float tp, float ts, string pattern);
 
 vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel, float spd, float newton_style);

@@ -778,7 +778,11 @@ void GameCommand_gametype(int request, int argc)
 				Gametype t = MapInfo_Type_FromString(s, false, false);
 
 				if (t)
-					GameTypeVote_SetGametype(t);
+				{
+					// don't execute gametype hooks because they can change active
+					// gametype rules if executed during the game
+					GameTypeVote_SetGametype(t, "", false);
+				}
 				else
 					bprint("Failed to switch to ", s, ": this game type does not exist!\n");
 
