@@ -617,7 +617,7 @@ void PutPlayerInServer(entity this)
 	PS(this).dual_weapons = '0 0 0';
 
 	if(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS)
-		StatusEffects_apply(STATUSEFFECT_Superweapons, this, time + autocvar_g_balance_superweapons_time, 0);
+		StatusEffects_apply(STATUSEFFECT_Superweapons, this, time + autocvar_g_balance_superweapons_time, 0, true);
 
 	this.items = start_items;
 
@@ -636,7 +636,7 @@ void PutPlayerInServer(entity this)
 		this.pauseregen_finished += f;
 	}
 
-	StatusEffects_apply(STATUSEFFECT_SpawnShield, this, shieldtime, 0);
+	StatusEffects_apply(STATUSEFFECT_SpawnShield, this, shieldtime, 0, true);
 
 	this.damageforcescale = autocvar_g_player_damageforcescale;
 	this.death_time = 0;
@@ -1534,7 +1534,7 @@ void player_powerups(entity this)
 			else
 			{
 				play_countdown(this, StatusEffects_gettime(STATUSEFFECT_Superweapons, this), SND_POWEROFF);
-				if (time > StatusEffects_gettime(STATUSEFFECT_Superweapons, this))
+				if (time >= StatusEffects_gettime(STATUSEFFECT_Superweapons, this))
 				{
 					this.items = this.items - (this.items & IT_SUPERWEAPON);
 					STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;

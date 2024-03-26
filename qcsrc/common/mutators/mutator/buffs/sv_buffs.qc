@@ -247,9 +247,9 @@ void buff_Touch(entity this, entity toucher)
 
 	buff_RemoveAll(toucher, STATUSEFFECT_REMOVE_NORMAL); // remove previous buffs so that a new one may be added
 	if(bufftime)
-		StatusEffects_apply(thebuff, toucher, min(time + bufftime, max(oldtime, time) + bufftime), 0);
+		StatusEffects_apply(thebuff, toucher, min(time + bufftime, max(oldtime, time) + bufftime), 0, true);
 	else
-		StatusEffects_apply(thebuff, toucher, time + 999, 0); // HACK: zero timer means "infinite"!
+		StatusEffects_apply(thebuff, toucher, time + 999, 0, true); // HACK: zero timer means "infinite"!
 
 	STAT(LAST_PICKUP, toucher) = time;
 }
@@ -694,7 +694,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 
 	if(StatusEffects_active(BUFF_DISABILITY, frag_attacker))
 	if(frag_target != frag_attacker)
-		StatusEffects_apply(STATUSEFFECT_Stunned, frag_target, time + autocvar_g_buffs_disability_slowtime, 0);
+		StatusEffects_apply(STATUSEFFECT_Stunned, frag_target, time + autocvar_g_buffs_disability_slowtime, 0, true);
 
 	if(StatusEffects_active(BUFF_INFERNO, frag_target))
 	{

@@ -21,13 +21,31 @@ float StatusEffects_gettime(StatusEffects this, entity actor)
 	store = actor.statuseffects;
 #endif
 	if(!store) return 0;
-	return store.statuseffect_time[this.m_id];
+	float eff_time = store.statuseffect_time[this.m_id];
+	// if effect end time has passed and m_tick hasn't removed the effect yet
+	// return current time since the effect is actually still active in this frame
+	return (eff_time < time ? time : eff_time);
 }
 #endif
 #ifdef SVQC
-void StatusEffects_apply(StatusEffects this, entity actor, float eff_time, int eff_flags)
+void StatusEffects_apply(StatusEffects this, entity actor, float eff_time, int eff_flags, bool finalized)
 {
+	if (!actor || (finalized && eff_time <= time))
+		return;
+
 	this.m_apply(this, actor, eff_time, eff_flags);
+}
+
+void StatusEffects_finalize(entity actor)
+{
+	FOREACH(StatusEffect, true,
+	{
+		if(actor.statuseffects.statuseffect_time[it.m_id] <= 0)
+			actor.statuseffects.statuseffect_time[it.m_id] = 0;
+		else
+			actor.statuseffects.statuseffect_time[it.m_id] += time;
+	});
+	StatusEffects_update(actor);
 }
 
 void StatusEffects_copy(StatusEffects this, entity store, float time_offset)
