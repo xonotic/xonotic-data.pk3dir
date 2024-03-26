@@ -435,9 +435,6 @@ void SetBrushEntityModel(entity this, bool with_lod)
 			_setmodel(this, this.model); // no precision needed
 		if(with_lod)
 			InitializeEntity(this, LODmodel_attach, INITPRIO_FINDTARGET);
-
-		if(endsWith(this.model, ".obj")) // WORKAROUND: darkplaces currently rotates .obj models on entities incorrectly, we need to add 180 degrees to the Y axis
-			this.angles_y = anglemods(this.angles_y - 180);
 	}
 	setorigin(this, this.origin);
 	ApplyMinMaxScaleAngles(this);
