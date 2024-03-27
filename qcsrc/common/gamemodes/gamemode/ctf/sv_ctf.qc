@@ -469,6 +469,13 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	tracebox(player.origin - FLAG_DROP_OFFSET, flag.m_mins, flag.m_maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
 	flag.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 	setorigin(flag, trace_endpos);
+	if (trace_startsolid && !nudgeoutofsolid(flag)) // TODO: trace_allsolid would perform better but isn't 100% reliable yet
+	{
+		// the flag's bbox doesn't fit but we can assume the player's current bbox does
+		tracebox(player.origin - FLAG_DROP_OFFSET, player.mins, player.maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
+		flag.origin = trace_endpos;
+		setsize(flag, player.mins, player.maxs); // this allows physics to move the flag somewhere its think func can resize it
+	}
 	flag.owner.flagcarried = NULL;
 	GameRules_scoring_vip(flag.owner, false);
 	flag.owner = NULL;
@@ -960,7 +967,6 @@ void ctf_FlagThink(entity this)
 
 	// sanity checks
 	if(this.mins != this.m_mins || this.maxs != this.m_maxs) { // reset the flag boundaries in case it got squished
-		LOG_TRACE("wtf the flag got squashed?");
 		tracebox(this.origin, this.m_mins, this.m_maxs, this.origin, MOVE_NOMONSTERS, this);
 		if(!trace_startsolid || this.noalign) // can we resize it without getting stuck?
 			setsize(this, this.m_mins, this.m_maxs);
@@ -1365,7 +1371,8 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 
 	// appearence
 	_setmodel(flag, flag.model); // precision set below
-	setsize(flag, CTF_FLAG.m_mins * flag.scale, CTF_FLAG.m_maxs * flag.scale);
+	// 0.8.6 with sv_legacy_bbox_expand 1 did this FL_ITEM expansion in DP
+	setsize(flag, CTF_FLAG.m_mins * flag.scale - '15 15 1', CTF_FLAG.m_maxs * flag.scale + '15 15 1');
 	flag.m_mins = flag.mins; // store these for squash checks
 	flag.m_maxs = flag.maxs;
 	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));

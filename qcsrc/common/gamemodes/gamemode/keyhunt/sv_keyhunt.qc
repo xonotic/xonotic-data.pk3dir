@@ -45,8 +45,8 @@ const float KH_KEY_XYSPEED = 45;
 #endif
 const float KH_KEY_WP_ZSHIFT = 20;
 
-const vector KH_KEY_MIN = '-10 -10 -46';
-const vector KH_KEY_MAX = '10 10 3';
+const vector KH_KEY_MIN = '-25 -25 -46'; // 0.8.6 used '-10 -10 -46' with sv_legacy_bbox_expand 1 and FL_ITEM
+const vector KH_KEY_MAX = '25 25 4';     // 0.8.6 used '10 10 3'     with sv_legacy_bbox_expand 1 and FL_ITEM
 const float KH_KEY_BRIGHTNESS = 2;
 
 bool kh_no_radar_circles;
@@ -291,6 +291,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	if(!IL_CONTAINS(g_items, key))
 		IL_PUSH(g_items, key);
 	set_movetype(key, MOVETYPE_TOSS);
+	nudgeoutofsolid(key); // a key has a bigger bbox than a player
 	key.pain_finished = time + autocvar_g_balance_keyhunt_delay_return;
 	key.damageforcescale = autocvar_g_balance_keyhunt_damageforcescale;
 	key.takedamage = DAMAGE_YES;

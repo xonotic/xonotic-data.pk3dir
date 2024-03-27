@@ -298,6 +298,11 @@ void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, vo
 			break;
 	}
 
+	// Q3 implements this fallback for all movers at the end of its InitMover()
+	// If .speed is negative this applies, instead of the mover-specific default speed.
+	if (traveltime <= 0)
+		traveltime = 0.001;
+
 	// Very short animations don't really show off the effect
 	// of controlled animation, so let's just use linear movement.
 	// Alternatively entities can choose to specify non-controlled movement.

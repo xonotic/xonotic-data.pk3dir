@@ -74,6 +74,7 @@ const int REPLICATEVARS_DESTROY = 1; // destroy data associated with cvars (shut
 				strcpy(field, s); \
 			} \
 		})
+		#define REPLICATE_vector(fld, var, func) REPLICATE_7(fld, vector, var, func, { field = stov(it); },          , )
 		#define REPLICATE_float(fld, var, func) REPLICATE_7(fld, float, var, func,  { field = stof(it); },          , )
 		#define REPLICATE_bool(fld, var, func) REPLICATE_7(fld, bool, var, func,   { field = boolean(stoi(it)); }, , )
 		#define REPLICATE_int(fld, var, func) REPLICATE_7(fld, int, var, func,    { field = stoi(it); },          , )
@@ -100,6 +101,7 @@ const int REPLICATEVARS_DESTROY = 1; // destroy data associated with cvars (shut
 				store.fld = field; \
 			}
 	#elif defined(CSQC)
+		#define REPLICATE_vector(fld, var, func) REPLICATE_7(fld, vector, var, func, (fld != stov(cvar_string(var))), { fld = stov(cvar_string(var)); }, )
 		#define REPLICATE_string(fld, var, func) REPLICATE_7(fld, float, var, func, (fld != cvar_string(var)), { strcpy(fld, cvar_string(var)); }, { strfree(fld); })
 		#define REPLICATE_float(fld, var, func) REPLICATE_7(fld, float, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 		#define REPLICATE_bool(fld, var, func) REPLICATE_7(fld, bool, var, func, (fld != cvar(var)), { fld = cvar(var); }, )

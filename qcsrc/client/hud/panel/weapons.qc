@@ -502,10 +502,8 @@ void HUD_Weapons()
 		else
 		{
 			if ((it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK))
-				&& !(weapons_stat & WepSet_FromWeapon(it)))
-			{
+			&& !(weapons_stat & WepSet_FromWeapon(it)))
 				continue;
-			}
 		}
 
 		// figure out the drawing position of weapon

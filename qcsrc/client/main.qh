@@ -84,12 +84,14 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 
 IntrusiveList g_drawables;
 IntrusiveList g_drawables_2d;
+IntrusiveList g_damagetext;
 IntrusiveList g_radarlinks;
 IntrusiveList g_radaricons;
 STATIC_INIT(main)
 {
 	g_drawables = IL_NEW();
 	g_drawables_2d = IL_NEW();
+	g_damagetext = IL_NEW();
 	g_radarlinks = IL_NEW();
 	g_radaricons = IL_NEW();
 }

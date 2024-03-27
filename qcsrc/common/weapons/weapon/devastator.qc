@@ -239,9 +239,7 @@ void W_Devastator_Think(entity this)
 				f = 1;
 
 			vector md = this.realowner.(weaponentity).movedir;
-			vector vecs = ((md.x > 0) ? md : '0 0 0');
-
-			vector dv = v_right * -vecs.y + v_up * vecs.z;
+			vector dv = v_right * -md.y + v_up * md.z;
 
 			if(!W_DualWielding(this.realowner))
 				dv = '0 0 0'; // don't override!

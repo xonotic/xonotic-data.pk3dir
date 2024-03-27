@@ -214,7 +214,7 @@ void HUD_StrafeHUD()
 			{
 				trace_dphitq3surfaceflags = 0;
 				tracebox(strafeplayer.origin, strafeplayer.mins, strafeplayer.maxs, strafeplayer.origin - '0 0 1', MOVE_NOMONSTERS, strafeplayer);
-				onslick = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK);
+				onslick = trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK;
 			}
 			real_onslick = onslick;
 

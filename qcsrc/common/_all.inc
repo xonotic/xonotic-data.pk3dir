@@ -2,6 +2,7 @@ noref float autocvar_net_connecttimeout = 30;
 
 #include "announcer.qc"
 #include "colors.qc"
+#include "checkextension.qc"
 
 #ifdef GAMEQC
 #include "anim.qc"

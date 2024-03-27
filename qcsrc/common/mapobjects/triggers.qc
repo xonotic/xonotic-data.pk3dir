@@ -205,6 +205,8 @@ void trigger_common_read(entity this, bool withtarget)
 		this.angles = '0 0 0';
 
 	this.modelindex = ReadShort();
+	if (this.modelindex)
+		setmodelindex(this, this.modelindex);
 	this.mins = ReadVector();
 	this.maxs = ReadVector();
 	this.scale = ReadByte() / 16;

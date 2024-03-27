@@ -3,11 +3,11 @@
 #define MAX_SCORE 128
 
 #define REGISTER_SP(id) REGISTER(Scores, SP, id, m_id, new_pure(PlayerScoreField))
-REGISTRY(Scores, MAX_SCORE);
+REGISTRY(Scores, MAX_SCORE)
 REGISTER_REGISTRY(Scores)
 // do not sort alphabetically, player sort priority is based on score registration order
-//REGISTRY_SORT(Scores);
-REGISTRY_CHECK(Scores);
+//REGISTRY_SORT(Scores)
+REGISTRY_CHECK(Scores)
 
 REGISTRY_DEFINE_GET(Scores, NULL)
 STATIC_INIT(Scores_renumber) { FOREACH(Scores, true, it.m_id = i); }

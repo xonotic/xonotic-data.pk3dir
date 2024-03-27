@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-11 07:22+0200\n"
+"POT-Creation-Date: 2024-03-24 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Oftox, 2023\n"
 "Language-Team: Finnish (http://app.transifex.com/team-xonotic/xonotic/"
@@ -163,7 +163,7 @@ msgstr "palvelimen tiedot"
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Paina ^3%s^1 liittyäksesi"
 
-#: qcsrc/client/hud/panel/infomessages.qc:130 qcsrc/client/main.qc:1409
+#: qcsrc/client/hud/panel/infomessages.qc:130 qcsrc/client/main.qc:1424
 #: qcsrc/common/notifications/all.qh:442
 msgid "jump"
 msgstr "hyppää"
@@ -569,7 +569,7 @@ msgstr "Välimuoto %d"
 msgid "PENALTY: %.1f (%s)"
 msgstr "RANGAISTUS: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1242
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1257
 msgid "missing a checkpoint"
 msgstr "tarkastuspiste sivuutettu"
 
@@ -1105,7 +1105,7 @@ msgstr "^3%1.0f minuuttia"
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7pelaajaa"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2385 qcsrc/client/main.qc:1436
+#: qcsrc/client/hud/panel/scoreboard.qc:2385 qcsrc/client/main.qc:1451
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Kartta:"
@@ -1135,23 +1135,23 @@ msgstr "Olet kuollut, odota ^3%s^7 ennen uudelleenvirkoamista"
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Olet kuollut, paina ^2%s^7 virotaksesi uudelleen"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1312
+#: qcsrc/client/hud/panel/strafehud.qc:1313
 msgid "qu"
 msgstr "qu"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1313
+#: qcsrc/client/hud/panel/strafehud.qc:1314
 msgid "m"
 msgstr "m"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1314
+#: qcsrc/client/hud/panel/strafehud.qc:1315
 msgid "km"
 msgstr "km"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1315
+#: qcsrc/client/hud/panel/strafehud.qc:1316
 msgid "mi"
 msgstr "mi"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1316
+#: qcsrc/client/hud/panel/strafehud.qc:1317
 msgid "nmi"
 msgstr "mpk"
 
@@ -1226,155 +1226,155 @@ msgstr "Kyllä"
 msgid "No"
 msgstr "Ei"
 
-#: qcsrc/client/hud/panel/weapons.qc:631
+#: qcsrc/client/hud/panel/weapons.qc:629
 msgid "Out of ammo"
 msgstr "Ammukset loppu"
 
-#: qcsrc/client/hud/panel/weapons.qc:635
+#: qcsrc/client/hud/panel/weapons.qc:633
 msgid "Don't have"
 msgstr "Ei ole"
 
-#: qcsrc/client/hud/panel/weapons.qc:639
+#: qcsrc/client/hud/panel/weapons.qc:637
 msgid "Unavailable"
 msgstr "Ei saatavissa"
 
-#: qcsrc/client/main.qc:300
+#: qcsrc/client/main.qc:303
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Koetetaan poistaa joukkuetta joka ei ole joukkuelistassa!"
 
-#: qcsrc/client/main.qc:1144 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
+#: qcsrc/client/main.qc:1159 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1145 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/client/main.qc:1160 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1146 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
+#: qcsrc/client/main.qc:1161 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1147 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
+#: qcsrc/client/main.qc:1162 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1148 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/client/main.qc:1163 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
 msgstr "knots"
 
-#: qcsrc/client/main.qc:1359
+#: qcsrc/client/main.qc:1374
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
 msgstr "Kaikkien aseiden taistelukenttä"
 
-#: qcsrc/client/main.qc:1360
+#: qcsrc/client/main.qc:1375
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
 msgstr "Kaikkien aseiden taistelukenttä"
 
-#: qcsrc/client/main.qc:1361
+#: qcsrc/client/main.qc:1376
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
 msgstr "Suurimman osan aseiden taistelukenttä"
 
-#: qcsrc/client/main.qc:1362
+#: qcsrc/client/main.qc:1377
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
 msgstr "Taistelukenttä jossa suurin osa aseista käytössä"
 
-#: qcsrc/client/main.qc:1365 qcsrc/client/main.qc:1379
+#: qcsrc/client/main.qc:1380 qcsrc/client/main.qc:1394
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
 msgstr "Taistelukenttä jossa ei käytetä aseita"
 
-#: qcsrc/client/main.qc:1377
+#: qcsrc/client/main.qc:1392
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
 #, c-format
 msgid "%s Arena"
 msgstr "%s taistelukenttä"
 
-#: qcsrc/client/main.qc:1388 qcsrc/client/main.qc:1393
+#: qcsrc/client/main.qc:1403 qcsrc/client/main.qc:1408
 #, c-format
 msgid "This is %s"
 msgstr "Tämä on %s"
 
-#: qcsrc/client/main.qc:1389
+#: qcsrc/client/main.qc:1404
 msgid "Your client version is outdated."
 msgstr "Käyttämäsi asiakasohjelmajulkaisu on vanhentunut."
 
-#: qcsrc/client/main.qc:1390
+#: qcsrc/client/main.qc:1405
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### ET VOI PELATA TÄLLÄ PALVELIMELLA ###"
 
-#: qcsrc/client/main.qc:1391
+#: qcsrc/client/main.qc:1406
 msgid "Please update!"
 msgstr "Ole hyvä ja päivitä!"
 
-#: qcsrc/client/main.qc:1394
+#: qcsrc/client/main.qc:1409
 msgid "This server is using an outdated Xonotic version."
 msgstr "Tämä palvelin käyttää Xonotic:in vanhentunutta julkaisua."
 
-#: qcsrc/client/main.qc:1395
+#: qcsrc/client/main.qc:1410
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### TÄMÄ PALVELIN ON YHTEENSOPIMATON ETKÄ TÄTEN VOI LIITTYÄ ###"
 
-#: qcsrc/client/main.qc:1397
+#: qcsrc/client/main.qc:1412
 #, c-format
 msgid "Welcome to %s"
 msgstr "Tervetuloa kohteeseen %s"
 
-#: qcsrc/client/main.qc:1411 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1426 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Taso %d:"
 
-#: qcsrc/client/main.qc:1413
+#: qcsrc/client/main.qc:1428
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGPaina ^F2%s^BG liittyäksesi peliin"
 
-#: qcsrc/client/main.qc:1434
+#: qcsrc/client/main.qc:1449
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Pelityyppi"
 
-#: qcsrc/client/main.qc:1448
+#: qcsrc/client/main.qc:1463
 msgid "This match supports"
 msgstr "Tämä ottelu tukee"
 
-#: qcsrc/client/main.qc:1450
+#: qcsrc/client/main.qc:1465
 #, c-format
 msgid "%d players"
 msgstr "%d pelaajaa"
 
-#: qcsrc/client/main.qc:1452
+#: qcsrc/client/main.qc:1467
 #, c-format
 msgid "%d to %d players"
 msgstr "%d :stä %d pelaajaa"
 
-#: qcsrc/client/main.qc:1454
+#: qcsrc/client/main.qc:1469
 #, c-format
 msgid "%d players maximum"
 msgstr "%d pelaajaa on erimmäismäärä"
 
-#: qcsrc/client/main.qc:1456
+#: qcsrc/client/main.qc:1471
 #, c-format
 msgid "%d players minimum"
 msgstr "%d pelaajaa on vähimmäismäärä"
 
-#: qcsrc/client/main.qc:1461
+#: qcsrc/client/main.qc:1476
 msgid "Active modifications:"
 msgstr "Toimessa olevat muunnokset:"
 
-#: qcsrc/client/main.qc:1464
+#: qcsrc/client/main.qc:1479
 msgid "Special gameplay tips:"
 msgstr "Erityisvinkit pelaamiseen:"
 
-#: qcsrc/client/main.qc:1471
+#: qcsrc/client/main.qc:1486
 msgid "Server's message"
 msgstr "Palvelimen viesti"
 
-#: qcsrc/client/main.qc:1565
+#: qcsrc/client/main.qc:1580
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (ei sidottu)"
@@ -1418,15 +1418,15 @@ msgstr "^1Virhe:^7 Ei löytynyt: pak index."
 msgid "Requesting preview..."
 msgstr "Pyydetään esikatselua..."
 
-#: qcsrc/client/view.qc:883
+#: qcsrc/client/view.qc:900
 msgid "Nade timer"
 msgstr "Naattiajastin"
 
-#: qcsrc/client/view.qc:888
+#: qcsrc/client/view.qc:905
 msgid "Capture progress"
 msgstr "Kaappauksen edistyminen"
 
-#: qcsrc/client/view.qc:893
+#: qcsrc/client/view.qc:910
 msgid "Revival progress"
 msgstr "Elpymisen edistyminen"
 
@@ -1724,7 +1724,7 @@ msgstr "Kennot"
 msgid "Plasma"
 msgstr "Plasma"
 
-#: qcsrc/common/items/item/armor.qh:42
+#: qcsrc/common/items/item/armor.qh:40
 msgid "Small armor"
 msgstr "Pieni panssari"
 
@@ -1732,27 +1732,27 @@ msgstr "Pieni panssari"
 msgid "Medium armor"
 msgstr "Keskiluokan panssari"
 
-#: qcsrc/common/items/item/armor.qh:126 qcsrc/common/items/item/armor.qh:133
+#: qcsrc/common/items/item/armor.qh:128 qcsrc/common/items/item/armor.qh:135
 msgid "Big armor"
 msgstr "Iso panssari"
 
-#: qcsrc/common/items/item/armor.qh:170 qcsrc/common/items/item/armor.qh:177
+#: qcsrc/common/items/item/armor.qh:172 qcsrc/common/items/item/armor.qh:179
 msgid "Mega armor"
 msgstr "Mahtipanssari"
 
-#: qcsrc/common/items/item/health.qh:42
+#: qcsrc/common/items/item/health.qh:40
 msgid "Small health"
 msgstr "Pieni terveyspalautus"
 
-#: qcsrc/common/items/item/health.qh:84
+#: qcsrc/common/items/item/health.qh:85
 msgid "Medium health"
 msgstr "Keskiluokan terveyspalautus"
 
-#: qcsrc/common/items/item/health.qh:126 qcsrc/common/items/item/health.qh:129
+#: qcsrc/common/items/item/health.qh:129 qcsrc/common/items/item/health.qh:132
 msgid "Big health"
 msgstr "Suuri terveyspalautus"
 
-#: qcsrc/common/items/item/health.qh:170 qcsrc/common/items/item/health.qh:177
+#: qcsrc/common/items/item/health.qh:173 qcsrc/common/items/item/health.qh:180
 msgid "Mega health"
 msgstr "Mahtava terveyspalautus"
 
@@ -1788,7 +1788,11 @@ msgstr "Tapporaja:"
 msgid "The amount of frags needed before the match will end"
 msgstr "Tarvittava tappojen määrä ennen ottelun päättymistä"
 
-#: qcsrc/common/minigames/cl_minigames.qc:379
+#: qcsrc/common/minigames/cl_minigames.qc:287
+msgid "Spectators:"
+msgstr ""
+
+#: qcsrc/common/minigames/cl_minigames.qc:424
 msgid "It's your turn"
 msgstr "Sinun vuorosi"
 
@@ -1823,7 +1827,7 @@ msgstr "Liity"
 msgid "Minigames"
 msgstr "Pienpelit"
 
-#: qcsrc/common/minigames/cl_minigames_hud.qc:582
+#: qcsrc/common/minigames/cl_minigames_hud.qc:581
 msgid "Minigame message"
 msgstr "Pienpeliviesti"
 
@@ -1841,49 +1845,49 @@ msgstr "Peli on ohi!"
 msgid "Well done! Click 'Next Level' to continue"
 msgstr "Hienosti meni! Napsauta 'Seuraava Taso' jatkaaksesi"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1181
-#: qcsrc/common/minigames/minigame/c4.qc:381
-#: qcsrc/common/minigames/minigame/nmm.qc:605
-#: qcsrc/common/minigames/minigame/pong.qc:624
-#: qcsrc/common/minigames/minigame/pp.qc:447
-#: qcsrc/common/minigames/minigame/ps.qc:498
-#: qcsrc/common/minigames/minigame/ttt.qc:329
+#: qcsrc/common/minigames/minigame/bd.qc:1183
+#: qcsrc/common/minigames/minigame/c4.qc:383
+#: qcsrc/common/minigames/minigame/nmm.qc:607
+#: qcsrc/common/minigames/minigame/pong.qc:626
+#: qcsrc/common/minigames/minigame/pp.qc:449
+#: qcsrc/common/minigames/minigame/ps.qc:500
+#: qcsrc/common/minigames/minigame/ttt.qc:331
 msgid "You are spectating"
 msgstr "Olet tällä hetkellä katsojana"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1184
+#: qcsrc/common/minigames/minigame/bd.qc:1186
 msgid "Better luck next time!"
 msgstr "Paremmin ensi kerralla!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1189
+#: qcsrc/common/minigames/minigame/bd.qc:1191
 msgid "Tubular! Press \"Next Level\" to continue!"
 msgstr "Se meni putkeen! Paina \"Seuraava Taso\" jatkaaksesi!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1191
+#: qcsrc/common/minigames/minigame/bd.qc:1193
 msgid "Wicked! Press \"Next Level\" to continue!"
 msgstr "Päheetä! Paina \"Seuraava taso\" jatkaaksesi!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1195
+#: qcsrc/common/minigames/minigame/bd.qc:1197
 msgid "Press the space bar to change your currently selected tile"
 msgstr "Paina välilyöntiä vaihtaaksesi valitsemasi murikan"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1198
+#: qcsrc/common/minigames/minigame/bd.qc:1200
 msgid "Push the boulders onto the targets"
 msgstr "Työnnä lohkareet kohteita kohti"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1434
+#: qcsrc/common/minigames/minigame/bd.qc:1436
 msgid "Next Level"
 msgstr "Seuraava Taso"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1435
+#: qcsrc/common/minigames/minigame/bd.qc:1437
 msgid "Restart"
 msgstr "Aloita uudelleen"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1436
+#: qcsrc/common/minigames/minigame/bd.qc:1438
 msgid "Editor"
 msgstr "Muokkain"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1437
+#: qcsrc/common/minigames/minigame/bd.qc:1439
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:37
 msgid "Save"
 msgstr "Tallenna"
@@ -1902,37 +1906,37 @@ msgstr "Neljän suora"
 msgid "%s^7 won the game!"
 msgstr "%s^7 voitti pelin!"
 
-#: qcsrc/common/minigames/minigame/c4.qc:384
-#: qcsrc/common/minigames/minigame/pp.qc:450
-#: qcsrc/common/minigames/minigame/ttt.qc:332
+#: qcsrc/common/minigames/minigame/c4.qc:386
+#: qcsrc/common/minigames/minigame/pp.qc:452
+#: qcsrc/common/minigames/minigame/ttt.qc:334
 msgid "Draw"
 msgstr "Tasapeli"
 
-#: qcsrc/common/minigames/minigame/c4.qc:389
-#: qcsrc/common/minigames/minigame/nmm.qc:610
-#: qcsrc/common/minigames/minigame/pp.qc:456
-#: qcsrc/common/minigames/minigame/ttt.qc:339
+#: qcsrc/common/minigames/minigame/c4.qc:391
+#: qcsrc/common/minigames/minigame/nmm.qc:612
+#: qcsrc/common/minigames/minigame/pp.qc:458
+#: qcsrc/common/minigames/minigame/ttt.qc:341
 msgid "You lost the game!"
 msgstr "Hävisit pelin!"
 
-#: qcsrc/common/minigames/minigame/c4.qc:390
-#: qcsrc/common/minigames/minigame/nmm.qc:611
-#: qcsrc/common/minigames/minigame/pp.qc:457
-#: qcsrc/common/minigames/minigame/ttt.qc:340
+#: qcsrc/common/minigames/minigame/c4.qc:392
+#: qcsrc/common/minigames/minigame/nmm.qc:613
+#: qcsrc/common/minigames/minigame/pp.qc:459
+#: qcsrc/common/minigames/minigame/ttt.qc:342
 msgid "You win!"
 msgstr "Voitto on sinun!"
 
-#: qcsrc/common/minigames/minigame/c4.qc:394
-#: qcsrc/common/minigames/minigame/nmm.qc:615
-#: qcsrc/common/minigames/minigame/pp.qc:468
-#: qcsrc/common/minigames/minigame/ttt.qc:351
+#: qcsrc/common/minigames/minigame/c4.qc:396
+#: qcsrc/common/minigames/minigame/nmm.qc:617
+#: qcsrc/common/minigames/minigame/pp.qc:470
+#: qcsrc/common/minigames/minigame/ttt.qc:353
 msgid "Wait for your opponent to make their move"
 msgstr "Odota että vastustajasi toteuttaa liikkeensä"
 
-#: qcsrc/common/minigames/minigame/c4.qc:397
-#: qcsrc/common/minigames/minigame/nmm.qc:617
-#: qcsrc/common/minigames/minigame/pp.qc:471
-#: qcsrc/common/minigames/minigame/ttt.qc:354
+#: qcsrc/common/minigames/minigame/c4.qc:399
+#: qcsrc/common/minigames/minigame/nmm.qc:619
+#: qcsrc/common/minigames/minigame/pp.qc:473
+#: qcsrc/common/minigames/minigame/ttt.qc:356
 msgid "Click on the game board to place your piece"
 msgstr "Napsauta pelilaudalla asettaaksesi nappulasi"
 
@@ -1940,19 +1944,19 @@ msgstr "Napsauta pelilaudalla asettaaksesi nappulasi"
 msgid "Nine Men's Morris"
 msgstr "Mylly"
 
-#: qcsrc/common/minigames/minigame/nmm.qc:619
+#: qcsrc/common/minigames/minigame/nmm.qc:621
 msgid ""
 "You can select one of your pieces to move it in one of the surrounding places"
 msgstr ""
 "Voit valita nappuloistasi yhden siirtääksesi sen yhteen ympäröivistä "
 "paikoista"
 
-#: qcsrc/common/minigames/minigame/nmm.qc:621
+#: qcsrc/common/minigames/minigame/nmm.qc:623
 msgid "You can select one of your pieces to move it anywhere on the board"
 msgstr ""
 "Voit valita yhden nappuloistasi siirtääksesi sen laudalla mihin tahansa "
 
-#: qcsrc/common/minigames/minigame/nmm.qc:623
+#: qcsrc/common/minigames/minigame/nmm.qc:625
 msgid "You can take one of the opponent's pieces"
 msgstr "Voit syödä yhden vastustajasi nappuloista"
 
@@ -1960,25 +1964,25 @@ msgstr "Voit syödä yhden vastustajasi nappuloista"
 msgid "Pong"
 msgstr "Pong-mailapeli"
 
-#: qcsrc/common/minigames/minigame/pong.qc:607
-#: qcsrc/common/minigames/minigame/ttt.qc:309
+#: qcsrc/common/minigames/minigame/pong.qc:609
+#: qcsrc/common/minigames/minigame/ttt.qc:311
 msgid "AI"
 msgstr "AI-tekoäly"
 
-#: qcsrc/common/minigames/minigame/pong.qc:626
+#: qcsrc/common/minigames/minigame/pong.qc:628
 msgid "Press ^1Start Match^7 to start the match with the current players"
 msgstr ""
 "Paina ^1Aloita Ottelu^7 aloittaaksesi ottelun tämänhetkisillä pelaajilla"
 
-#: qcsrc/common/minigames/minigame/pong.qc:698
+#: qcsrc/common/minigames/minigame/pong.qc:700
 msgid "Start Match"
 msgstr "Aloita Ottelu"
 
-#: qcsrc/common/minigames/minigame/pong.qc:699
+#: qcsrc/common/minigames/minigame/pong.qc:701
 msgid "Add AI player"
 msgstr "Lisää AI-tekoälypelaajia"
 
-#: qcsrc/common/minigames/minigame/pong.qc:700
+#: qcsrc/common/minigames/minigame/pong.qc:702
 msgid "Remove AI player"
 msgstr "Poista AI-tekoälypelaaja"
 
@@ -1986,25 +1990,25 @@ msgstr "Poista AI-tekoälypelaaja"
 msgid "Push-Pull"
 msgstr "Työnnä-Vedä"
 
-#: qcsrc/common/minigames/minigame/pp.qc:456
-#: qcsrc/common/minigames/minigame/ttt.qc:339
+#: qcsrc/common/minigames/minigame/pp.qc:458
+#: qcsrc/common/minigames/minigame/ttt.qc:341
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
 msgstr "Valitse valikossa \"^1Seuraava Ottelu^7\" uusintaottelua varten!"
 
-#: qcsrc/common/minigames/minigame/pp.qc:457
-#: qcsrc/common/minigames/minigame/pp.qc:463
-#: qcsrc/common/minigames/minigame/ttt.qc:340
-#: qcsrc/common/minigames/minigame/ttt.qc:346
+#: qcsrc/common/minigames/minigame/pp.qc:459
+#: qcsrc/common/minigames/minigame/pp.qc:465
+#: qcsrc/common/minigames/minigame/ttt.qc:342
+#: qcsrc/common/minigames/minigame/ttt.qc:348
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr "Valitse valikossa \"^1Seuraava Ottelu^7\" aloittaaksesi uuden ottelun!"
 
-#: qcsrc/common/minigames/minigame/pp.qc:464
-#: qcsrc/common/minigames/minigame/ttt.qc:347
+#: qcsrc/common/minigames/minigame/pp.qc:466
+#: qcsrc/common/minigames/minigame/ttt.qc:349
 msgid "Wait for your opponent to confirm the rematch"
 msgstr "Odota vastustajasi vahvistusta uusintaottelulle"
 
-#: qcsrc/common/minigames/minigame/pp.qc:613
-#: qcsrc/common/minigames/minigame/ttt.qc:698
+#: qcsrc/common/minigames/minigame/pp.qc:615
+#: qcsrc/common/minigames/minigame/ttt.qc:700
 msgid "Next Match"
 msgstr "Seuraava Ottelu"
 
@@ -2020,20 +2024,20 @@ msgstr "Kaikki nappulat poisputsattu!"
 msgid "Remaining pieces:"
 msgstr "Jäljelläolevat nappulat:"
 
-#: qcsrc/common/minigames/minigame/ps.qc:488
+#: qcsrc/common/minigames/minigame/ps.qc:490
 #, c-format
 msgid "Pieces left: %s"
 msgstr "Nappuloita jäljellä: %s"
 
-#: qcsrc/common/minigames/minigame/ps.qc:501
+#: qcsrc/common/minigames/minigame/ps.qc:503
 msgid "No more valid moves"
 msgstr "Ei enempää kelvollisia siirtoja"
 
-#: qcsrc/common/minigames/minigame/ps.qc:504
+#: qcsrc/common/minigames/minigame/ps.qc:506
 msgid "Well done, you win!"
 msgstr "Hienosti meni, voitto on sinun!"
 
-#: qcsrc/common/minigames/minigame/ps.qc:507
+#: qcsrc/common/minigames/minigame/ps.qc:509
 msgid "Jump a piece over another to capture it"
 msgstr "Pompsauta nappula toisen päälle kaapataksesi sen"
 
@@ -2041,7 +2045,7 @@ msgstr "Pompsauta nappula toisen päälle kaapataksesi sen"
 msgid "Tic Tac Toe"
 msgstr "Ristinolla"
 
-#: qcsrc/common/minigames/minigame/ttt.qc:699
+#: qcsrc/common/minigames/minigame/ttt.qc:701
 msgid "Single Player"
 msgstr "Yksinpeli"
 
@@ -2139,10 +2143,6 @@ msgstr "Lykästys"
 msgid "Flight"
 msgstr "Lento"
 
-#: qcsrc/common/mutators/mutator/buffs/buffs.qh:12
-msgid "Buff"
-msgstr "Tsemppi"
-
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:8
 msgid "Damage text"
 msgstr "Vahinkoteksti"
@@ -2234,12 +2234,12 @@ msgstr ""
 msgid "Darkness grenade"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:139
+#: qcsrc/common/mutators/mutator/nades/nades.qc:141
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
 msgstr "pudota ase / heitä naatti"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:141
+#: qcsrc/common/mutators/mutator/nades/nades.qc:143
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr ""
@@ -2276,27 +2276,27 @@ msgstr "Ylimalkaallinen rakettikäyttöinen moottorisaha"
 msgid "Overkill Shotgun"
 msgstr "Ylimalkaallinen haulikko"
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
-#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:46
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:49
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:58
 msgid "Invisibility"
 msgstr "Näkymättömyys"
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
-#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
-#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:57
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:44
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:47
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:56
 msgid "Shield"
 msgstr "Suoja"
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
-#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:47
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:50
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:59
 msgid "Speed"
 msgstr "Nopeus"
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:47
-#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
-#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:58
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:46
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:49
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:57
 msgid "Strength"
 msgstr "Voima"
 
@@ -2349,13 +2349,13 @@ msgid "Checkpoint"
 msgstr "Jatkopiste"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:16
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:235
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:237
 msgid "Finish"
 msgstr "Loppu"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:235
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:237
 msgid "Start"
 msgstr "Alku"
 
@@ -2480,7 +2480,11 @@ msgstr "Tunkeutuja!"
 msgid "Tagged"
 msgstr "Korvamerkitty"
 
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:692
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:75
+msgid "Buff"
+msgstr "Tsemppi"
+
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:694
 #, c-format
 msgid "%s needing help!"
 msgstr "%s avuntarpeessa!"
@@ -2518,8 +2522,8 @@ msgstr "^BG%s^BG kaappasi ^TC^TT^BG lipun"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 "^BG%s^BG kaappasi ^TC^TT^BG lipun ^F1%s^BG sekunnissa, rikkoen ^BG%s^BG's "
 "edellisen ennätyksen ^F2%s^BG sekuntia"
@@ -2690,8 +2694,8 @@ msgstr "^BG%s%s^K1 palautettiin maanpinnalle syyllisen ollen ^BG%s^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
 msgstr ""
-"^BG%s%s^K1 tunsi mitä se on kun tekee poppaa ^BG%s^K1's tulen polttaessa^K1%s"
-"%s"
+"^BG%s%s^K1 tunsi mitä se on kun tekee poppaa ^BG%s^K1's tulen "
+"polttaessa^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
@@ -2744,8 +2748,8 @@ msgstr "^BG%s%s^K1 ei tervehtynyt ^BG%s^K1's Terveysnaatista %s%s"
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"
 msgstr ""
-"^BG%s%s^K1 ammuttiin planeettaa kiertävälle radalle syyllisen ollen ^BG"
-"%s^K1%s%s"
+"^BG%s%s^K1 ammuttiin planeettaa kiertävälle radalle syyllisen ollen "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
@@ -3278,13 +3282,13 @@ msgid "^BG%s^F3 is now playing on the ^TC^TT team"
 msgstr "^BG%s^F3 pelaa nyt ^TC^TT joukkueessa"
 
 #: qcsrc/common/notifications/all.inc:396
-#: qcsrc/common/notifications/all.inc:718
+#: qcsrc/common/notifications/all.inc:719
 #, c-format
 msgid "^BG%s^BG has dropped the ball!"
 msgstr "^BG%s^BG on pudottanut pallon!"
 
 #: qcsrc/common/notifications/all.inc:397
-#: qcsrc/common/notifications/all.inc:719
+#: qcsrc/common/notifications/all.inc:720
 #, c-format
 msgid "^BG%s^BG has picked up the ball!"
 msgstr "^BG%s^BG on poiminut pallon!"
@@ -3499,12 +3503,12 @@ msgid "^BG%s^K1 picked up a Superweapon"
 msgstr "^BG%s^K1 poimi Mahtiaseen"
 
 #: qcsrc/common/notifications/all.inc:450
-#: qcsrc/common/notifications/all.inc:789
+#: qcsrc/common/notifications/all.inc:790
 msgid "^K1Hunters^BG win the round"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:451
-#: qcsrc/common/notifications/all.inc:791
+#: qcsrc/common/notifications/all.inc:792
 msgid "^F1Survivors^BG win the round"
 msgstr ""
 
@@ -3545,8 +3549,8 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"
 msgstr ""
-"^BG%s%s^K1 kuoli syyn ollen ^BG%s^K1 on mahtava soittamaan @!#%%'n Haitaria%s"
-"%s"
+"^BG%s%s^K1 kuoli syyn ollen ^BG%s^K1 on mahtava soittamaan @!#%%'n "
+"Haitaria%s%s"
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -3705,7 +3709,7 @@ msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
 msgstr "^BG%s%s^K1 koristeltiin reikiä täyteen ^BG%s^K1'n Konekiväärillä%s%s"
 
 #: qcsrc/common/notifications/all.inc:491
-#: qcsrc/common/notifications/all.inc:812
+#: qcsrc/common/notifications/all.inc:811
 #, c-format
 msgid "^BGYou cannot place more than ^F2%s^BG mines at a time"
 msgstr "^BGEt voi asettaa enempää kuin ^F2%s^BG miinaa kerrallaan"
@@ -3744,8 +3748,8 @@ msgstr "^BG%s^K1 räjäyttivät itsensä omalla Mörssärillään%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 niputettiin ^BG%s^K1'n Ylimalkaallisen Raskaalla Konekiväärillä%s"
-"%s"
+"^BG%s%s^K1 niputettiin ^BG%s^K1'n Ylimalkaallisen Raskaalla "
+"Konekiväärillä%s%s"
 
 #: qcsrc/common/notifications/all.inc:499
 #, c-format
@@ -3760,8 +3764,8 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 ropisi täyteen reikiä ^BG%s^K1'n Ylimalkaallisella konekiväärillä"
-"%s%s"
+"^BG%s%s^K1 ropisi täyteen reikiä ^BG%s^K1'n Ylimalkaallisella "
+"konekiväärillä%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -3771,8 +3775,8 @@ msgstr "^BG%s%s^K1 höyrytettiin ^BG%s^K1'n Ylimalkaallisella Nex:illä%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
 "^BG%s%s^K1 sahattiin kahtia ^BG%s^K1'n Ylimalkaallisella rakettikäyttöisellä "
 "moottorisahalla%s%s"
@@ -4094,7 +4098,7 @@ msgid "^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"
 msgstr "^BGSinun %sjoukkuekaverisi (^BG%s%s)^BG sai lipun! Suojelua!"
 
 #: qcsrc/common/notifications/all.inc:593
-#: qcsrc/common/notifications/all.inc:731
+#: qcsrc/common/notifications/all.inc:732
 msgid "^BGEnemies can now see you on radar!"
 msgstr "^BGNäyt nyt vihollisten tutkassa!"
 
@@ -4492,6 +4496,10 @@ msgstr ""
 "Toivottavasti joukkueesi korjaa ongelman..."
 
 #: qcsrc/common/notifications/all.inc:715
+msgid "^K1You aren't allowed to play because you are banned in this server"
+msgstr ""
+
+#: qcsrc/common/notifications/all.inc:716
 #, c-format
 msgid ""
 "^K1You may not join the game at this time.\n"
@@ -4500,19 +4508,19 @@ msgstr ""
 "^K1Et voi liittyä peliin tällä hetkellä.\n"
 "Tämä ottelu on rajoitettu ^F2%s^BG pelaajaan."
 
-#: qcsrc/common/notifications/all.inc:716
-msgid "^K1You aren't allowed to play because you are banned in this server"
-msgstr ""
+#: qcsrc/common/notifications/all.inc:717
+msgid "^K1Cannot join given minigame session!"
+msgstr "^K1Annettuun pienpeli-istuntoon ei voitu liittyä!"
 
-#: qcsrc/common/notifications/all.inc:720
+#: qcsrc/common/notifications/all.inc:721
 msgid "^BGYou picked up the ball"
 msgstr "^BGPoimit pallon matkaan"
 
-#: qcsrc/common/notifications/all.inc:721
+#: qcsrc/common/notifications/all.inc:722
 msgid "^BGGet the ball to score points for frags!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.inc:723
+#: qcsrc/common/notifications/all.inc:724
 msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Help the key carriers to meet!"
@@ -4520,7 +4528,7 @@ msgstr ""
 "^BGKaikki avaimet ovat joukkueesi hallussa!\n"
 "Avusta avaintenkantajia tapaamaan toisensa!"
 
-#: qcsrc/common/notifications/all.inc:724
+#: qcsrc/common/notifications/all.inc:725
 msgid ""
 "^BGAll keys are in ^TC^TT team^BG's hands!\n"
 "Interfere ^F4NOW^BG!"
@@ -4528,7 +4536,7 @@ msgstr ""
 "^BGKaikki avaimet ovat ^TC^TT joukkueen^BG hallussa!\n"
 "Puutu tilanteeseen ^F4NOW^BG!"
 
-#: qcsrc/common/notifications/all.inc:725
+#: qcsrc/common/notifications/all.inc:726
 msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Meet the other key carriers ^F4NOW^BG!"
@@ -4536,29 +4544,29 @@ msgstr ""
 "^BGKaikki avaimet ovat sinun joukkueesi hallussa!\n"
 "Järjestä tapaaminen muiden avaintenkantajien kanssa ^F4NOW^BG!"
 
-#: qcsrc/common/notifications/all.inc:726
+#: qcsrc/common/notifications/all.inc:727
 msgid "^F4Round will start in ^COUNT"
 msgstr "^F4Kierros alkaa ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:727
+#: qcsrc/common/notifications/all.inc:728
 msgid "^BGScanning frequency range..."
 msgstr "^BGLäpikäydään taajuusaluetta..."
 
-#: qcsrc/common/notifications/all.inc:728
+#: qcsrc/common/notifications/all.inc:729
 msgid "^BGYou are starting with the ^TC^TT Key"
 msgstr "^BGAloitat ^TC^TT Avaimella"
 
-#: qcsrc/common/notifications/all.inc:730
+#: qcsrc/common/notifications/all.inc:731
 msgid "^BGYou have no lives left, you must wait until the next match"
 msgstr ""
 "^BGSinulla ei ole enää elämiä jäljellä, sinun täytyy odottaa seuraavaa "
 "ottelua"
 
-#: qcsrc/common/notifications/all.inc:732
+#: qcsrc/common/notifications/all.inc:733
 msgid "^BGLeaders can now be seen by enemies on radar!"
 msgstr "^BGViholliset voivat nyt nähdä johtajat tutkassa!"
 
-#: qcsrc/common/notifications/all.inc:734
+#: qcsrc/common/notifications/all.inc:735
 #, c-format
 msgid ""
 "^BGWaiting for players to join...\n"
@@ -4567,33 +4575,33 @@ msgstr ""
 "^BGPelaajia odotetaan liittyväksi...\n"
 "Aktiivisia tarvitaan: %s"
 
-#: qcsrc/common/notifications/all.inc:735
+#: qcsrc/common/notifications/all.inc:736
 #, c-format
 msgid "^BGWaiting for %s player(s) to join..."
 msgstr "^BGOdotetaan %s pelaajaa (pelaajia) liittymään..."
 
-#: qcsrc/common/notifications/all.inc:737
+#: qcsrc/common/notifications/all.inc:738
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
 msgstr "^BGAseesi valahti luokkaa alemmaksi kunnes löydät ammuksia!"
 
-#: qcsrc/common/notifications/all.inc:738
+#: qcsrc/common/notifications/all.inc:739
 msgid "^F4^COUNT^BG left to find some ammo!"
 msgstr "^F4^LASKENTA^BG jäljellä löytää ammuksia!"
 
-#: qcsrc/common/notifications/all.inc:739
+#: qcsrc/common/notifications/all.inc:740
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
 msgstr "^BGHanki ammuksia tai olet kuollut tuotapikaa ^F4^LASKENTA^BG!"
 
-#: qcsrc/common/notifications/all.inc:739
+#: qcsrc/common/notifications/all.inc:740
 msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
 msgstr "^BGHanki niitä ammuksia! ^F4^LASKENTA^BG jäljellä!"
 
-#: qcsrc/common/notifications/all.inc:740
+#: qcsrc/common/notifications/all.inc:741
 #, c-format
 msgid "^F2Extra lives remaining: ^K1%s"
 msgstr "^F2Lisäelämiä jäljellä: ^K1%s"
 
-#: qcsrc/common/notifications/all.inc:742
+#: qcsrc/common/notifications/all.inc:743
 #, c-format
 msgid ""
 "^F2^COUNT^BG until weapon change...\n"
@@ -4602,34 +4610,34 @@ msgstr ""
 "^F2^LASKENTA^BG jäljellä seuraavaan asevaihtoon...\n"
 "Seuraava ase: ^F1%s"
 
-#: qcsrc/common/notifications/all.inc:743
+#: qcsrc/common/notifications/all.inc:744
 #, c-format
 msgid "^F2Active weapon: ^F1%s"
 msgstr "^F2Ase toimessa: ^F1%s"
 
-#: qcsrc/common/notifications/all.inc:745
+#: qcsrc/common/notifications/all.inc:746
 #, c-format
 msgid "^BGYou captured %s^BG control point"
 msgstr "^BGKaappasit haltuusi %s^BG hallintapisteen"
 
-#: qcsrc/common/notifications/all.inc:746
+#: qcsrc/common/notifications/all.inc:747
 msgid "^BGYou captured a control point"
 msgstr "^BGSinä kaappasit hallintapisteen"
 
-#: qcsrc/common/notifications/all.inc:747
+#: qcsrc/common/notifications/all.inc:748
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
 msgstr "^TC^TT^BG joukkue kaappasi %s^BG hallintapisteen"
 
-#: qcsrc/common/notifications/all.inc:748
+#: qcsrc/common/notifications/all.inc:749
 msgid "^TC^TT^BG team captured a control point"
 msgstr "^TC^TT^BG joukkue kaappasi hallintapisteen"
 
-#: qcsrc/common/notifications/all.inc:749
+#: qcsrc/common/notifications/all.inc:750
 msgid "^BGThis control point currently cannot be captured"
 msgstr "^BGTätä hallintapistettä ei nykyisellään voi kaapata haltuun"
 
-#: qcsrc/common/notifications/all.inc:750
+#: qcsrc/common/notifications/all.inc:751
 msgid ""
 "^BGThe enemy generator cannot be destroyed yet\n"
 "^F2Capture some control points to unshield it"
@@ -4637,11 +4645,11 @@ msgstr ""
 "^BGVihollisgeneraattoria ei vielä voi tuhota\n"
 "^F2Kaappaa hallintapisteitä haltuusi karsiaksesi sen suojaukset"
 
-#: qcsrc/common/notifications/all.inc:751
+#: qcsrc/common/notifications/all.inc:752
 msgid "^BGThe ^TCenemy^BG generator is no longer shielded!"
 msgstr "^BGNyt ^TCvihollisten^BG generaattori on riisuttu suojauksistaan!"
 
-#: qcsrc/common/notifications/all.inc:752
+#: qcsrc/common/notifications/all.inc:753
 msgid ""
 "^K1Your generator is NOT shielded!\n"
 "^BGRe-capture control points to shield it!"
@@ -4649,17 +4657,17 @@ msgstr ""
 "^K1Generaattorisi EI ole suojattu!\n"
 "^BGKaappaa hallintapisteet takaisin suojataksesi sitä!"
 
-#: qcsrc/common/notifications/all.inc:753
+#: qcsrc/common/notifications/all.inc:754
 #, c-format
 msgid "^BGPress ^F2%s^BG to teleport"
 msgstr "^BGPaina ^F2%s^BG etäsiirtyäksesi"
 
-#: qcsrc/common/notifications/all.inc:754
+#: qcsrc/common/notifications/all.inc:755
 #, c-format
 msgid "^BGTeleporting disabled for %s"
 msgstr "^BGEtäsiirto on kytketty pois %s :lle"
 
-#: qcsrc/common/notifications/all.inc:756
+#: qcsrc/common/notifications/all.inc:757
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep fragging until we have a winner!"
@@ -4667,7 +4675,7 @@ msgstr ""
 "^F2Nyt pelataan ^F4JATKOAIKAA^F2!\n"
 "Jatka lahtaamista kunnes voittaja selviää!"
 
-#: qcsrc/common/notifications/all.inc:756
+#: qcsrc/common/notifications/all.inc:757
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep scoring until we have a winner!"
@@ -4675,7 +4683,7 @@ msgstr ""
 "^F2Nyt pelataan ^F4JATKOAIKAA^F2!\n"
 "Jatka pisteiden takomista kunnes voittaja selviää!"
 
-#: qcsrc/common/notifications/all.inc:757
+#: qcsrc/common/notifications/all.inc:758
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "\n"
@@ -4689,7 +4697,7 @@ msgstr ""
 "Mitä enemmän hallintapisteitä joukkueesi pitää hallussa,\n"
 "sitä nopeammin vastustajan generaattorit hiipuvat"
 
-#: qcsrc/common/notifications/all.inc:758
+#: qcsrc/common/notifications/all.inc:759
 #, c-format
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
@@ -4698,139 +4706,135 @@ msgstr ""
 "^F2Nyt pelataan ^F4JATKOAIKAA^F2!\n"
 "^BGLisätty ^F4%s^BG peliin!"
 
-#: qcsrc/common/notifications/all.inc:760
+#: qcsrc/common/notifications/all.inc:761
 msgid "^K1In^BG-portal created"
 msgstr "^K1Sisäänkäynti^BG-portaali on luotu"
 
-#: qcsrc/common/notifications/all.inc:761
+#: qcsrc/common/notifications/all.inc:762
 msgid "^F3Out^BG-portal created"
 msgstr "^F3Uloskäynti^BG-portaali luotu"
 
-#: qcsrc/common/notifications/all.inc:762
+#: qcsrc/common/notifications/all.inc:763
 msgid "^F1Portal creation failed"
 msgstr "^F1Portaalin luominen epäonnistui"
 
-#: qcsrc/common/notifications/all.inc:764
+#: qcsrc/common/notifications/all.inc:765
 msgid "^F2Strength infuses your weapons with devastating power"
 msgstr "^F2Voima sytyttää aseesi tuhoisalla vahvuudella"
 
-#: qcsrc/common/notifications/all.inc:765
+#: qcsrc/common/notifications/all.inc:766
 msgid "^F2Strength has worn off"
 msgstr "^F2Voima ehtyi pois"
 
-#: qcsrc/common/notifications/all.inc:767
+#: qcsrc/common/notifications/all.inc:768
 msgid "^F2Shield surrounds you"
 msgstr "^F2Sinua ympäröi suojus"
 
-#: qcsrc/common/notifications/all.inc:768
+#: qcsrc/common/notifications/all.inc:769
 msgid "^F2Shield has worn off"
 msgstr "^F2Suoja ehtyi pois"
 
-#: qcsrc/common/notifications/all.inc:770
+#: qcsrc/common/notifications/all.inc:771
 msgid "^F2You are on speed"
 msgstr "^F2Olet vauhdissa"
 
-#: qcsrc/common/notifications/all.inc:771
+#: qcsrc/common/notifications/all.inc:772
 msgid "^F2Speed has worn off"
 msgstr "^F2Vauhti ehtyi pois"
 
-#: qcsrc/common/notifications/all.inc:773
+#: qcsrc/common/notifications/all.inc:774
 msgid "^F2You are invisible"
 msgstr "^F2Olet näkymätön"
 
-#: qcsrc/common/notifications/all.inc:774
+#: qcsrc/common/notifications/all.inc:775
 msgid "^F2Invisibility has worn off"
 msgstr "^F2Näkymättömyys ehtyi pois"
 
-#: qcsrc/common/notifications/all.inc:776
+#: qcsrc/common/notifications/all.inc:777
 msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
 msgstr ""
 
-#: qcsrc/common/notifications/all.inc:778
+#: qcsrc/common/notifications/all.inc:779
 msgid "^F2The race is over, finish your lap!"
 msgstr "^F2Kilpa on ohi, päätä kierroksesi päätökseen!"
 
-#: qcsrc/common/notifications/all.inc:780
+#: qcsrc/common/notifications/all.inc:781
 msgid "^BGSequence completed!"
 msgstr "^BGOsio saatettu päätökseen!"
 
-#: qcsrc/common/notifications/all.inc:781
+#: qcsrc/common/notifications/all.inc:782
 msgid "^BGThere are more to go..."
 msgstr "^BGEdessä on lisää..."
 
-#: qcsrc/common/notifications/all.inc:782
+#: qcsrc/common/notifications/all.inc:783
 #, c-format
 msgid "^BGOnly %s^BG more to go..."
 msgstr "^BGAinoastaan %s^BG jäljellä..."
 
-#: qcsrc/common/notifications/all.inc:784
+#: qcsrc/common/notifications/all.inc:785
 msgid "^F2Superweapons have broken down"
 msgstr "^F2Mahtiaseet ovat menneet rikki"
 
-#: qcsrc/common/notifications/all.inc:785
+#: qcsrc/common/notifications/all.inc:786
 msgid "^F2Superweapons have been lost"
 msgstr "^F2Mahtiaseet menetetty"
 
-#: qcsrc/common/notifications/all.inc:786
+#: qcsrc/common/notifications/all.inc:787
 msgid "^F2You now have a superweapon"
 msgstr "^F2Sinulla on nyt hallussasi mahtiase"
 
-#: qcsrc/common/notifications/all.inc:788
+#: qcsrc/common/notifications/all.inc:789
 msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.inc:790
+#: qcsrc/common/notifications/all.inc:791
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.inc:793
+#: qcsrc/common/notifications/all.inc:794
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
 msgstr "^K1Vaihdetaan ^TC^TT^K1 ajassa ^LASKENTA"
 
-#: qcsrc/common/notifications/all.inc:794
+#: qcsrc/common/notifications/all.inc:795
 msgid "^K1Changing team in ^COUNT"
 msgstr "^K1Vaihdetaan joukkuetta ajassa ^LASKENTA"
 
-#: qcsrc/common/notifications/all.inc:795
+#: qcsrc/common/notifications/all.inc:796
 msgid "^K1Spectating in ^COUNT"
 msgstr "^K1Katselu alkaa ^LASKENTA"
 
-#: qcsrc/common/notifications/all.inc:796
+#: qcsrc/common/notifications/all.inc:797
 msgid "^K1Suicide in ^COUNT"
 msgstr "^K1Itsemurha ajassa ^LASKENTA"
 
-#: qcsrc/common/notifications/all.inc:798
+#: qcsrc/common/notifications/all.inc:799
 msgid "^F4Timeout begins in ^COUNT"
 msgstr "^F4Aikalisä alkaa ^LASKENTA"
 
-#: qcsrc/common/notifications/all.inc:799
+#: qcsrc/common/notifications/all.inc:800
 msgid "^F4Timeout ends in ^COUNT"
 msgstr "^F4Aikalisä päättyy ajassa ^LASKENTA"
 
-#: qcsrc/common/notifications/all.inc:801
-msgid "^K1Cannot join given minigame session!"
-msgstr "^K1Annettuun pienpeli-istuntoon ei voitu liittyä!"
-
-#: qcsrc/common/notifications/all.inc:803
+#: qcsrc/common/notifications/all.inc:802
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter/exit the vehicle"
 msgstr "^BGPaina ^F2%s^BG käydäksesi sisään/poistuaksesi ajoneuvosta"
 
-#: qcsrc/common/notifications/all.inc:804
+#: qcsrc/common/notifications/all.inc:803
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the vehicle gunner"
 msgstr "^BGPaina ^F2%s^BG käydäksesi sisälle ajoneuvon ampumisosaan"
 
-#: qcsrc/common/notifications/all.inc:805
+#: qcsrc/common/notifications/all.inc:804
 #, c-format
 msgid "^BGPress ^F2%s^BG to steal this vehicle"
 msgstr "^BGPaina ^F2%s^BG varastaaksesi ajoneuvon"
 
-#: qcsrc/common/notifications/all.inc:806
+#: qcsrc/common/notifications/all.inc:805
 msgid ""
 "^F2The enemy is stealing one of your vehicles!\n"
 "^F4Stop them!"
@@ -4838,16 +4842,16 @@ msgstr ""
 "^F2Vihulainen varastaa yhtä ajoneuvoistasi!\n"
 "^F4Pysäytä heidät!"
 
-#: qcsrc/common/notifications/all.inc:807
+#: qcsrc/common/notifications/all.inc:806
 msgid "^F2Intruder detected, disabling shields!"
 msgstr "^F2Tunkeilija havaittu, kytketään suojat pois!"
 
-#: qcsrc/common/notifications/all.inc:809
+#: qcsrc/common/notifications/all.inc:808
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
 msgstr ""
 
-#: qcsrc/common/notifications/all.inc:810
+#: qcsrc/common/notifications/all.inc:809
 msgid "^K1You aren't allowed to vote because you are banned in this server"
 msgstr ""
 
@@ -5350,375 +5354,375 @@ msgstr "Naatit"
 msgid "Offhand blaster"
 msgstr "Toiskäden läjäytin"
 
-#: qcsrc/common/util.qc:1399
+#: qcsrc/common/util.qc:1420
 msgid "Male"
 msgstr "Miespuolinen"
 
-#: qcsrc/common/util.qc:1400
+#: qcsrc/common/util.qc:1421
 msgid "Female"
 msgstr "Naispuolinen"
 
-#: qcsrc/common/util.qc:1401
+#: qcsrc/common/util.qc:1422
 msgid "Undisclosed"
 msgstr "Epäselvä"
 
-#: qcsrc/common/util.qc:1448
+#: qcsrc/common/util.qc:1469
 msgid "<KEY NOT FOUND>"
 msgstr "<KEY NOT FOUND>"
 
-#: qcsrc/common/util.qc:1449
+#: qcsrc/common/util.qc:1470
 msgid "<UNKNOWN KEYNUM>"
 msgstr "<UNKNOWN KEYNUM>"
 
-#: qcsrc/common/util.qc:1454
+#: qcsrc/common/util.qc:1475
 msgid "TAB"
 msgstr "TAB"
 
-#: qcsrc/common/util.qc:1455 qcsrc/common/util.qc:1526
+#: qcsrc/common/util.qc:1476 qcsrc/common/util.qc:1547
 #, c-format
 msgid "ENTER"
 msgstr "ENTER-rivinvaihtonäppäin"
 
-#: qcsrc/common/util.qc:1456
+#: qcsrc/common/util.qc:1477
 msgid "ESCAPE"
 msgstr "ESCAPE"
 
-#: qcsrc/common/util.qc:1457
+#: qcsrc/common/util.qc:1478
 msgid "SPACE"
 msgstr "VÄLILYÖNTI"
 
-#: qcsrc/common/util.qc:1459
+#: qcsrc/common/util.qc:1480
 msgid "BACKSPACE"
 msgstr "BACKSPACE-taakseaskellusnäppäin"
 
-#: qcsrc/common/util.qc:1460 qcsrc/common/util.qc:1517
+#: qcsrc/common/util.qc:1481 qcsrc/common/util.qc:1538
 #, c-format
 msgid "UPARROW"
 msgstr "NUOLI YLÖSPÄIN"
 
-#: qcsrc/common/util.qc:1461 qcsrc/common/util.qc:1512
+#: qcsrc/common/util.qc:1482 qcsrc/common/util.qc:1533
 #, c-format
 msgid "DOWNARROW"
 msgstr "NUOLI ALASPÄIN"
 
-#: qcsrc/common/util.qc:1462 qcsrc/common/util.qc:1514
+#: qcsrc/common/util.qc:1483 qcsrc/common/util.qc:1535
 #, c-format
 msgid "LEFTARROW"
 msgstr "NUOLI VASEMMALLE"
 
-#: qcsrc/common/util.qc:1463 qcsrc/common/util.qc:1515
+#: qcsrc/common/util.qc:1484 qcsrc/common/util.qc:1536
 #, c-format
 msgid "RIGHTARROW"
 msgstr "NUOLI OIKEALLE"
 
-#: qcsrc/common/util.qc:1465
+#: qcsrc/common/util.qc:1486
 msgid "ALT"
 msgstr "ALT"
 
-#: qcsrc/common/util.qc:1466
+#: qcsrc/common/util.qc:1487
 msgid "CTRL"
 msgstr "CTRL"
 
-#: qcsrc/common/util.qc:1467
+#: qcsrc/common/util.qc:1488
 msgid "SHIFT"
 msgstr "SHIFT-vaihtonäppäin"
 
-#: qcsrc/common/util.qc:1469 qcsrc/common/util.qc:1510
+#: qcsrc/common/util.qc:1490 qcsrc/common/util.qc:1531
 #, c-format
 msgid "INS"
 msgstr "INS"
 
-#: qcsrc/common/util.qc:1470 qcsrc/common/util.qc:1520
+#: qcsrc/common/util.qc:1491 qcsrc/common/util.qc:1541
 #, c-format
 msgid "DEL"
 msgstr "DEL"
 
-#: qcsrc/common/util.qc:1471 qcsrc/common/util.qc:1513
+#: qcsrc/common/util.qc:1492 qcsrc/common/util.qc:1534
 #, c-format
 msgid "PGDN"
 msgstr "PGDN"
 
-#: qcsrc/common/util.qc:1472 qcsrc/common/util.qc:1518
+#: qcsrc/common/util.qc:1493 qcsrc/common/util.qc:1539
 #, c-format
 msgid "PGUP"
 msgstr "PGUP"
 
-#: qcsrc/common/util.qc:1473 qcsrc/common/util.qc:1516
+#: qcsrc/common/util.qc:1494 qcsrc/common/util.qc:1537
 #, c-format
 msgid "HOME"
 msgstr "HOME"
 
-#: qcsrc/common/util.qc:1474 qcsrc/common/util.qc:1511
+#: qcsrc/common/util.qc:1495 qcsrc/common/util.qc:1532
 #, c-format
 msgid "END"
 msgstr "END"
 
-#: qcsrc/common/util.qc:1476
+#: qcsrc/common/util.qc:1497
 msgid "PAUSE"
 msgstr "PAUSE"
 
-#: qcsrc/common/util.qc:1478
+#: qcsrc/common/util.qc:1499
 msgid "NUMLOCK"
 msgstr "NUMLOCK"
 
-#: qcsrc/common/util.qc:1479
+#: qcsrc/common/util.qc:1500
 msgid "CAPSLOCK"
 msgstr "CAPSLOCK"
 
-#: qcsrc/common/util.qc:1480
+#: qcsrc/common/util.qc:1501
 msgid "SCROLLOCK"
 msgstr "SCROLLOCK"
 
-#: qcsrc/common/util.qc:1482
+#: qcsrc/common/util.qc:1503
 msgid "SEMICOLON"
 msgstr "PUOLIPISTE"
 
-#: qcsrc/common/util.qc:1483
+#: qcsrc/common/util.qc:1504
 msgid "TILDE"
 msgstr "TILDE-aaltoviiva"
 
-#: qcsrc/common/util.qc:1484
+#: qcsrc/common/util.qc:1505
 msgid "BACKQUOTE"
 msgstr "BACKQUOTE-taaksepäinlainaus"
 
-#: qcsrc/common/util.qc:1485
+#: qcsrc/common/util.qc:1506
 msgid "QUOTE"
 msgstr "QUOTE-lainausmerkki"
 
-#: qcsrc/common/util.qc:1486
+#: qcsrc/common/util.qc:1507
 msgid "APOSTROPHE"
 msgstr "HEITTOMERKKI"
 
-#: qcsrc/common/util.qc:1487
+#: qcsrc/common/util.qc:1508
 msgid "BACKSLASH"
 msgstr "KENOVIIVA VASEMMALLE"
 
-#: qcsrc/common/util.qc:1495
+#: qcsrc/common/util.qc:1516
 #, c-format
 msgid "F%d"
 msgstr "F%d"
 
-#: qcsrc/common/util.qc:1505
+#: qcsrc/common/util.qc:1526
 #, c-format
 msgid "KP_%d"
 msgstr "KP_%d"
 
-#: qcsrc/common/util.qc:1510 qcsrc/common/util.qc:1511
-#: qcsrc/common/util.qc:1512 qcsrc/common/util.qc:1513
-#: qcsrc/common/util.qc:1514 qcsrc/common/util.qc:1515
-#: qcsrc/common/util.qc:1516 qcsrc/common/util.qc:1517
-#: qcsrc/common/util.qc:1518 qcsrc/common/util.qc:1519
-#: qcsrc/common/util.qc:1520 qcsrc/common/util.qc:1521
-#: qcsrc/common/util.qc:1522 qcsrc/common/util.qc:1523
-#: qcsrc/common/util.qc:1524 qcsrc/common/util.qc:1525
-#: qcsrc/common/util.qc:1526 qcsrc/common/util.qc:1527
+#: qcsrc/common/util.qc:1531 qcsrc/common/util.qc:1532
+#: qcsrc/common/util.qc:1533 qcsrc/common/util.qc:1534
+#: qcsrc/common/util.qc:1535 qcsrc/common/util.qc:1536
+#: qcsrc/common/util.qc:1537 qcsrc/common/util.qc:1538
+#: qcsrc/common/util.qc:1539 qcsrc/common/util.qc:1540
+#: qcsrc/common/util.qc:1541 qcsrc/common/util.qc:1542
+#: qcsrc/common/util.qc:1543 qcsrc/common/util.qc:1544
+#: qcsrc/common/util.qc:1545 qcsrc/common/util.qc:1546
+#: qcsrc/common/util.qc:1547 qcsrc/common/util.qc:1548
 #, c-format
 msgid "KP_%s"
 msgstr "KP_%s"
 
-#: qcsrc/common/util.qc:1519
+#: qcsrc/common/util.qc:1540
 #, c-format
 msgid "PERIOD"
 msgstr "PISTE"
 
-#: qcsrc/common/util.qc:1521
+#: qcsrc/common/util.qc:1542
 #, c-format
 msgid "DIVIDE"
 msgstr "JAKOMERKKI"
 
-#: qcsrc/common/util.qc:1522
+#: qcsrc/common/util.qc:1543
 #, c-format
 msgid "SLASH"
 msgstr "KENOVIIVA OIKEALLE"
 
-#: qcsrc/common/util.qc:1523
+#: qcsrc/common/util.qc:1544
 #, c-format
 msgid "MULTIPLY"
 msgstr "KERTOMERKKI"
 
-#: qcsrc/common/util.qc:1524
+#: qcsrc/common/util.qc:1545
 #, c-format
 msgid "MINUS"
 msgstr "MIINUS"
 
-#: qcsrc/common/util.qc:1525
+#: qcsrc/common/util.qc:1546
 #, c-format
 msgid "PLUS"
 msgstr "PLUS"
 
-#: qcsrc/common/util.qc:1527
+#: qcsrc/common/util.qc:1548
 #, c-format
 msgid "EQUALS"
 msgstr "YHTÄKUIN"
 
-#: qcsrc/common/util.qc:1532
+#: qcsrc/common/util.qc:1553
 msgid "PRINTSCREEN"
 msgstr "PRINTSCREEN-näppäin"
 
-#: qcsrc/common/util.qc:1535
+#: qcsrc/common/util.qc:1556
 #, c-format
 msgid "MOUSE%d"
 msgstr "HIIRI%d"
 
-#: qcsrc/common/util.qc:1537
+#: qcsrc/common/util.qc:1558
 msgid "MWHEELUP"
 msgstr "HIIRIRULLA YLÖS"
 
-#: qcsrc/common/util.qc:1538
+#: qcsrc/common/util.qc:1559
 msgid "MWHEELDOWN"
 msgstr "HIIRIRULLA ALAS"
 
-#: qcsrc/common/util.qc:1541
+#: qcsrc/common/util.qc:1562
 #, c-format
 msgid "JOY%d"
 msgstr "SAUVA%d"
 
-#: qcsrc/common/util.qc:1544
+#: qcsrc/common/util.qc:1565
 #, c-format
 msgid "AUX%d"
 msgstr "AUX%d"
 
-#: qcsrc/common/util.qc:1551
+#: qcsrc/common/util.qc:1572
 #, c-format
 msgid "DPAD_UP"
 msgstr "D-PADI_YLÖS"
 
-#: qcsrc/common/util.qc:1551 qcsrc/common/util.qc:1552
-#: qcsrc/common/util.qc:1553 qcsrc/common/util.qc:1554
-#: qcsrc/common/util.qc:1555 qcsrc/common/util.qc:1556
-#: qcsrc/common/util.qc:1557 qcsrc/common/util.qc:1558
-#: qcsrc/common/util.qc:1559 qcsrc/common/util.qc:1560
-#: qcsrc/common/util.qc:1561 qcsrc/common/util.qc:1562
-#: qcsrc/common/util.qc:1563 qcsrc/common/util.qc:1564
-#: qcsrc/common/util.qc:1565 qcsrc/common/util.qc:1566
-#: qcsrc/common/util.qc:1567 qcsrc/common/util.qc:1568
-#: qcsrc/common/util.qc:1569 qcsrc/common/util.qc:1570
+#: qcsrc/common/util.qc:1572 qcsrc/common/util.qc:1573
+#: qcsrc/common/util.qc:1574 qcsrc/common/util.qc:1575
+#: qcsrc/common/util.qc:1576 qcsrc/common/util.qc:1577
+#: qcsrc/common/util.qc:1578 qcsrc/common/util.qc:1579
+#: qcsrc/common/util.qc:1580 qcsrc/common/util.qc:1581
+#: qcsrc/common/util.qc:1582 qcsrc/common/util.qc:1583
+#: qcsrc/common/util.qc:1584 qcsrc/common/util.qc:1585
+#: qcsrc/common/util.qc:1586 qcsrc/common/util.qc:1587
+#: qcsrc/common/util.qc:1588 qcsrc/common/util.qc:1589
+#: qcsrc/common/util.qc:1590 qcsrc/common/util.qc:1591
 #, c-format
 msgid "X360_%s"
 msgstr "X360_%s"
 
-#: qcsrc/common/util.qc:1552
+#: qcsrc/common/util.qc:1573
 #, c-format
 msgid "DPAD_DOWN"
 msgstr "D-PADI_ALAS"
 
-#: qcsrc/common/util.qc:1553
+#: qcsrc/common/util.qc:1574
 #, c-format
 msgid "DPAD_LEFT"
 msgstr "D-PADI_VASEN"
 
-#: qcsrc/common/util.qc:1554
+#: qcsrc/common/util.qc:1575
 #, c-format
 msgid "DPAD_RIGHT"
 msgstr "D-PADI_OIKEA"
 
-#: qcsrc/common/util.qc:1555
+#: qcsrc/common/util.qc:1576
 #, c-format
 msgid "START"
 msgstr "START-nappi"
 
-#: qcsrc/common/util.qc:1556
+#: qcsrc/common/util.qc:1577
 #, c-format
 msgid "BACK"
 msgstr "BACK-takaisinnappi"
 
-#: qcsrc/common/util.qc:1557
+#: qcsrc/common/util.qc:1578
 #, c-format
 msgid "LEFT_THUMB"
 msgstr "VASEN_PEUKALO"
 
-#: qcsrc/common/util.qc:1558
+#: qcsrc/common/util.qc:1579
 #, c-format
 msgid "RIGHT_THUMB"
 msgstr "OIKEA_PEUKALO"
 
-#: qcsrc/common/util.qc:1559
+#: qcsrc/common/util.qc:1580
 #, c-format
 msgid "LEFT_SHOULDER"
 msgstr "VASEN_OLKAPÄÄ"
 
-#: qcsrc/common/util.qc:1560
+#: qcsrc/common/util.qc:1581
 #, c-format
 msgid "RIGHT_SHOULDER"
 msgstr "OIKEA_OLKAPÄÄ"
 
-#: qcsrc/common/util.qc:1561
+#: qcsrc/common/util.qc:1582
 #, c-format
 msgid "LEFT_TRIGGER"
 msgstr "VASEN_LIIPAISIN"
 
-#: qcsrc/common/util.qc:1562
+#: qcsrc/common/util.qc:1583
 #, c-format
 msgid "RIGHT_TRIGGER"
 msgstr "OIKEA_LIIPAISIN"
 
-#: qcsrc/common/util.qc:1563
+#: qcsrc/common/util.qc:1584
 #, c-format
 msgid "LEFT_THUMB_UP"
 msgstr "VASEN_PEUKALO_YLÖS"
 
-#: qcsrc/common/util.qc:1564
+#: qcsrc/common/util.qc:1585
 #, c-format
 msgid "LEFT_THUMB_DOWN"
 msgstr "VASEN_PEUKALO_ALAS"
 
-#: qcsrc/common/util.qc:1565
+#: qcsrc/common/util.qc:1586
 #, c-format
 msgid "LEFT_THUMB_LEFT"
 msgstr "VASEN_PEUKALO_VASEN"
 
-#: qcsrc/common/util.qc:1566
+#: qcsrc/common/util.qc:1587
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
 msgstr "VASEN_PEUKALO_OIKEA"
 
-#: qcsrc/common/util.qc:1567
+#: qcsrc/common/util.qc:1588
 #, c-format
 msgid "RIGHT_THUMB_UP"
 msgstr "OIKEA_PEUKALO_YLÖS"
 
-#: qcsrc/common/util.qc:1568
+#: qcsrc/common/util.qc:1589
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
 msgstr "OIKEA_PEUKALO_ALAS"
 
-#: qcsrc/common/util.qc:1569
+#: qcsrc/common/util.qc:1590
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
 msgstr "OIKEA_PEUKALO_VASEN"
 
-#: qcsrc/common/util.qc:1570
+#: qcsrc/common/util.qc:1591
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
 msgstr "OIKEA_PEUKALO_OIKEA"
 
-#: qcsrc/common/util.qc:1580 qcsrc/common/util.qc:1581
-#: qcsrc/common/util.qc:1582 qcsrc/common/util.qc:1583
+#: qcsrc/common/util.qc:1601 qcsrc/common/util.qc:1602
+#: qcsrc/common/util.qc:1603 qcsrc/common/util.qc:1604
 #, c-format
 msgid "JOY_%s"
 msgstr "Sauvaohjain_%s"
 
-#: qcsrc/common/util.qc:1580
+#: qcsrc/common/util.qc:1601
 #, c-format
 msgid "UP"
 msgstr "YLÖS"
 
-#: qcsrc/common/util.qc:1581
+#: qcsrc/common/util.qc:1602
 #, c-format
 msgid "DOWN"
 msgstr "ALAS"
 
-#: qcsrc/common/util.qc:1582
+#: qcsrc/common/util.qc:1603
 #, c-format
 msgid "LEFT"
 msgstr "VASEN"
 
-#: qcsrc/common/util.qc:1583
+#: qcsrc/common/util.qc:1604
 #, c-format
 msgid "RIGHT"
 msgstr "OIKEA"
 
-#: qcsrc/common/util.qc:1589
+#: qcsrc/common/util.qc:1610
 #, c-format
 msgid "MIDINOTE%d"
 msgstr "MIDIHUOMAUTUS%d"
@@ -6054,12 +6058,12 @@ msgstr "%dth"
 msgid "No description"
 msgstr "Ei kuvausta"
 
-#: qcsrc/lib/string.qh:186
+#: qcsrc/lib/string.qh:189
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
 msgstr "%d päivää, %02d:%02d:%02d"
 
-#: qcsrc/lib/string.qh:187
+#: qcsrc/lib/string.qh:190
 #, c-format
 msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
@@ -10375,7 +10379,7 @@ msgstr ""
 "Täh? Tätä ei voi pelata (epäkelpo pelityyppi). Uudelleensuodatetaan jotta "
 "näin ei tapahtuisi enää."
 
-#: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
+#: qcsrc/menu/xonotic/playerlist.qc:110
 msgid "spectator"
 msgstr "katsoja"
 

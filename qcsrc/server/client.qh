@@ -101,9 +101,6 @@ int autocvar_sv_timer_countdown = 1; // 0 = disabled, 1 = enabled, 2 = spect onl
 
 void ClientState_attach(entity this);
 
-IntrusiveList g_players;
-STATIC_INIT(g_players) { g_players = IL_NEW(); }
-
 CLASS(Client, Object)
     /** Client name */
     ATTRIB(Client, netname, string, this.netname);
@@ -300,10 +297,8 @@ CLASS(Player, Client)
 
     INIT(Player) {
         this.classname = STR_PLAYER;
-        IL_PUSH(g_players, this);
     }
     DESTRUCTOR(Player) {
-        IL_REMOVE(g_players, this);
     }
 ENDCLASS(Player)
 
@@ -431,6 +426,8 @@ int GetPlayerLimit();
 const int MIN_SPEC_TIME = 1;
 bool joinAllowed(entity this);
 void Join(entity this);
+
+void PlayerFrame (entity this);
 
 #define SPECTATE_COPY() ACCUMULATE void SpectateCopy(entity this, entity spectatee)
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }

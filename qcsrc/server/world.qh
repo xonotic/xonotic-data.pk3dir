@@ -28,8 +28,6 @@ float autocvar_timelimit_max;
 float autocvar_timelimit_overtime;
 int autocvar_timelimit_overtimes;
 float autocvar_timelimit_suddendeath;
-bool autocvar_sv_gameplayfix_droptofloorstartsolid;
-bool autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect;
 
 // z411
 bool autocvar_sv_jingle_end;
@@ -57,7 +55,8 @@ float cvar_purechanges_count;
 
 string modname;
 
-string gamemode_name;
+string autocvar__sv_vote_gametype_custom;
+string gametype_custom_string;
 
 string record_type;
 

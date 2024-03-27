@@ -839,6 +839,9 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 	// needs to be called before physics are run!
 	if(IS_REAL_CLIENT(this))
 		PM_UpdateButtons(this, CS(this));
+#elif defined(CSQC)
+	if(this.last_pushed && !WarpZoneLib_ExactTrigger_Touch(this.last_pushed, this, false))
+		this.last_pushed = NULL;
 #endif
 
 	sys_phys_update(this, PHYS_INPUT_TIMELENGTH);

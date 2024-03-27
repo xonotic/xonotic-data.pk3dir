@@ -239,7 +239,7 @@ string build_mutator_list(string s)
 		n = tokenizebyseparator(s, ", ");
 	}
 	string s2 = "";
-	for (string arg = ""; i < n; i++)
+	for (string arg = ""; i < n; ++i)
 	{
 		if (i >= 0) arg = argv(i);
 		// cond is the condition for showing the mutator enabled in the menu
@@ -1184,35 +1184,56 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 	return myvel + spd * mydir;
 }
 
+// compresses the shot origin offset vector to an int with the following format:
+// xxxxxxxx SSyyyyyy SUzzzzzz
+// 32109876 54321098 76543210
+// 1st byte: x component (it uses all 8 bits)
+// 2nd byte: y component in the last 6 bits and the signs of the x and y components
+// 3rd byte: z component in the last 6 bits and the sign of the z component (the 2nd bit is unused)
+// all values are doubled on compression and halved on decompression
+// so the precision for all components is 0.5
+// values are bound to the following ranges:
+// x: -127.5 +127.5
+// y:  -31.5  +31.5
+// z:  -31.5  +31.5
 float compressShotOrigin(vector v)
 {
-	float rx = rint(v.x * 2);
-	float ry = rint(v.y * 4) + 128;
-	float rz = rint(v.z * 4) + 128;
-	if(rx > 255 || rx < 0)
+	int rx_neg = (v.x < 0) ? 1 : 0;
+	int ry_neg = (v.y < 0) ? 1 : 0;
+	int rz_neg = (v.z < 0) ? 1 : 0;
+	int rx = rint(fabs(v.x) * 2);
+	int ry = rint(fabs(v.y) * 2);
+	int rz = rint(fabs(v.z) * 2);
+	if(rx > 255) // 128 * 2 - 1
 	{
 		LOG_DEBUG("shot origin ", vtos(v), " x out of bounds\n");
 		rx = bound(0, rx, 255);
 	}
-	if(ry > 255 || ry < 0)
+	if(ry > 63) // 32 * 2 - 1
 	{
 		LOG_DEBUG("shot origin ", vtos(v), " y out of bounds\n");
-		ry = bound(0, ry, 255);
+		ry = bound(0, ry, 63);
 	}
-	if(rz > 255 || rz < 0)
+	if(rz > 63) // 32 * 2 - 1
 	{
 		LOG_DEBUG("shot origin ", vtos(v), " z out of bounds\n");
-		rz = bound(0, rz, 255);
+		rz = bound(0, rz, 63);
 	}
+	ry |= ry_neg * BIT(6) + rx_neg * BIT(7);
+	rz |= rz_neg * BIT(6); // BIT(7) unused
 	return rx * 0x10000 + ry * 0x100 + rz;
 }
 vector decompressShotOrigin(int f)
 {
 	vector v;
-	v.x = ((f & 0xFF0000) / 0x10000) / 2;
-	v.y = ((f & 0xFF00) / 0x100 - 128) / 4;
-	v.z = ((f & 0xFF) - 128) / 4;
-	return v;
+	v.x = f >> 16;
+	v.y = (f & 0xFF00) >> 8;
+	v.z = f & 0xFF;
+	// remove sign bits and apply sign
+	if (v.y & BIT(7)) { v.y &= ~BIT(7); v.x *= -1; }
+	if (v.y & BIT(6)) { v.y &= ~BIT(6); v.y *= -1; }
+	if (v.z & BIT(6)) { v.z &= ~BIT(6); v.z *= -1; }
+	return v / 2;
 }
 
 #ifdef GAMEQC
@@ -1677,21 +1698,6 @@ void Skeleton_SetBones(entity e)
 string to_execute_next_frame;
 void execute_next_frame()
 {
-#ifdef SVQC
-	IL_EACH(g_moveables, it.last_pushed,
-	{
-		if(!WarpZoneLib_ExactTrigger_Touch(it.last_pushed, it, false))
-		{
-			it.last_pushed = NULL;
-		}
-	});
-#elif defined(CSQC)
-	if(csqcplayer.last_pushed && !WarpZoneLib_ExactTrigger_Touch(csqcplayer.last_pushed, csqcplayer, false))
-	{
-		csqcplayer.last_pushed = NULL;
-	}
-#endif
-
 	if(to_execute_next_frame)
 	{
 		localcmd("\n", to_execute_next_frame, "\n");

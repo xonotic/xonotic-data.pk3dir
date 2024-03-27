@@ -170,7 +170,7 @@ void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx)
 {
 	vector org = '0 0 0';
 	int ctf_flags = 0;
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 6; ++i)
 	{
 		if (argv(arg_idx + i) != "")
 			ctf_flags++;
@@ -190,7 +190,7 @@ void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx)
 	else
 	{
 		vector v1, v2, v3, v4, v5, v6;
-		for (int i = 1; i <= ctf_flags; i++)
+		for (int i = 1; i <= ctf_flags; ++i)
 		{
 			if (i == 1) { v1 = stov(argv(arg_idx++)); org = v1 / ctf_flags; }
 			else if (i == 2) { v2 = stov(argv(arg_idx++)); org += v2 / ctf_flags; }
@@ -647,7 +647,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 			e = it; break;
 		});
 		if (!e)
-			e = waypoint_spawn(jp.absmin - PL_MAX_CONST + '1 1 1', jp.absmax - PL_MIN_CONST + '-1 -1 -1', WAYPOINTFLAG_TELEPORT);
+			e = waypoint_spawn(jp.absmin - PL_MAX_CONST, jp.absmax - PL_MIN_CONST, WAYPOINTFLAG_TELEPORT);
 		if (!pl.wp_locked)
 			pl.wp_locked = e;
 	}
@@ -1563,9 +1563,9 @@ void waypoint_load_hardwiredlinks()
 		{
 			waypoint_addlink(wp_from, wp_to);
 			waypoint_mark_hardwiredlink(wp_from, wp_to);
-		} else if ((wp_from.wpflags & WPFLAGMASK_NORELINK)
-			&& ((wp_from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT))
-				|| (wp_from.wpisbox && (wp_from.wpflags & WAYPOINTFLAG_TELEPORT))))
+		}
+		else if ((wp_from.wpflags & WPFLAGMASK_NORELINK) && ((wp_from.wpflags & (WAYPOINTFLAG_JUMP | WAYPOINTFLAG_SUPPORT))
+		|| (wp_from.wpisbox && (wp_from.wpflags & WAYPOINTFLAG_TELEPORT))))
 		{
 			waypoint_addlink(wp_from, wp_to);
 		}
@@ -2062,7 +2062,7 @@ void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent)
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent)
 {
 	destination = waypoint_fixorigin(destination, tracetest_ent);
-	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, e.absmin - PL_MAX_CONST + '1 1 1', e.absmax - PL_MIN_CONST + '-1 -1 -1', destination, destination, timetaken);
+	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, e.absmin - PL_MAX_CONST, e.absmax - PL_MIN_CONST, destination, destination, timetaken);
 }
 
 entity waypoint_spawnpersonal(entity this, vector position)

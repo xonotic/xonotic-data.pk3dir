@@ -13,6 +13,7 @@
 #include <client/shownames.qh>
 #include <client/view.qh>
 #include <client/weapons/projectile.qh>
+#include <common/checkextension.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.inc>
 #include <common/effects/all.qh>
@@ -49,6 +50,8 @@ void CSQC_Init()
 #ifdef WATERMARK
 	LOG_TRACEF("^4CSQC Build information: ^1%s", WATERMARK);
 #endif
+
+	CheckEngineExtensions();
 
 	{
 		int i = 0;
@@ -747,7 +750,7 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 		for(int i = 0; i < maxclients;)
 			for(int f = ReadByte(), b = 0; b < 8 && i < maxclients; ++b, ++i)
 				if(playerslots[i])
-					playerslots[i].ready = (f & BIT(b));
+					playerslots[i].ready = f & BIT(b);
 
 	return = true;
 
@@ -1074,13 +1077,25 @@ bool CSQC_Parse_TempEntity()
 	return false;
 }
 
+bool autocvar_r_drawfog;
+bool autocvar_r_fog_exp2;
 string forcefog;
 void Fog_Force()
 {
 	if (autocvar_cl_orthoview && autocvar_cl_orthoview_nofog)
-		localcmd("\nr_drawfog 0\n");
+	{
+		if (autocvar_r_drawfog)
+			cvar_set("r_drawfog", "0");
+	}
 	else if (forcefog != "")
-		localcmd(sprintf("\nfog %s\nr_fog_exp2 0\nr_drawfog 1\n", forcefog));
+	{
+		// using cvar_set as it's faster and safer than a command
+		if (!autocvar_r_drawfog)
+			cvar_set("r_drawfog", "1");
+		if (autocvar_r_fog_exp2)
+			cvar_set("r_fog_exp2", "0");
+		localcmd(sprintf("\nfog %s\n", forcefog));
+	}
 }
 
 bool net_handle_ServerWelcome();
@@ -1406,7 +1421,7 @@ string translate_weaponarena(string s)
 
 	int n = tokenizebyseparator(s, " & ");
 	string wpn_list = "";
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; ++i)
 	{
 		Weapon wep = Weapon_from_name(argv(i));
 		if (wep == WEP_Null)

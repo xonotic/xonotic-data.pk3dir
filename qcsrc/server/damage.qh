@@ -128,6 +128,8 @@ void Unfreeze(entity targ, bool reset_health);
 // WEAPONTODO
 #define DMG_NOWEP (weaponentities[0])
 
+int autocvar_g_player_damageplayercenter;
+
 // NOTE: the .weaponentity parameter can be set to DMG_NOWEP if the attack wasn't caused by a weapon or player
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 

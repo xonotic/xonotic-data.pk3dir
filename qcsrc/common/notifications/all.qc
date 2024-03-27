@@ -1257,12 +1257,12 @@ void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time, 
 	} else {
 		// Put in queue
 		if(notif_queue_length >= NOTIF_QUEUE_MAX) return;
-	
+
 		notif_queue_type[notif_queue_length] = net_type;
 		notif_queue_entity[notif_queue_length] = notif;
 		notif_queue_time[notif_queue_length] = notif_queue_next_time;
 		notif_queue_f1[notif_queue_length] = f1;
-		
+
 		notif_queue_next_time += queue_time;
 		++notif_queue_length;
 	}
@@ -1277,7 +1277,7 @@ void Local_Notification_Queue_Process()
 
 	// Shift queue to the left
 	--notif_queue_length;
-	for (int j = 0; j < notif_queue_length; j++) {
+	for (int j = 0; j < notif_queue_length; ++j) {
 		notif_queue_type[j] = notif_queue_type[j+1];
 		notif_queue_entity[j] = notif_queue_entity[j+1];
 		notif_queue_time[j] = notif_queue_time[j+1];

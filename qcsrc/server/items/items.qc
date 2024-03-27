@@ -36,6 +36,24 @@ bool ItemSend(entity this, entity to, int sf)
 	else
 		sf &= ~ISF_DROP;
 
+	// if this item is being spawned (in CSQC's perspective)
+	// reuse ISF_SIZE and ISF_SIZE2 to also tell CSQC its bbox size
+	if(sf & ISF_SIZE)
+	{
+		if(this.maxs == ITEM_S_MAXS) // Small
+		{
+			sf |= ISF_SIZE;
+			sf &= ~ISF_SIZE2;
+		}
+		else if(this.maxs == ITEM_L_MAXS) // Large
+		{
+			sf &= ~ISF_SIZE;
+			sf |= ISF_SIZE2;
+		}
+		else // Default
+			sf |= ISF_SIZE | ISF_SIZE2;
+	}
+
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_ITEM);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -50,13 +68,10 @@ bool ItemSend(entity this, entity to, int sf)
 		WriteAngleVector(MSG_ENTITY, this.angles);
 	}
 
-	// sets size on the client, unused on server
-	//if(sf & ISF_SIZE)
-
 	if(sf & ISF_STATUS)
 		WriteByte(MSG_ENTITY, this.ItemStatus);
 
-	if(sf & ISF_MODEL)
+	if(sf & ISF_SIZE || sf & ISF_SIZE2) // always true when it's spawned (in CSQC's perspective)
 	{
 		WriteShort(MSG_ENTITY, bound(0, this.fade_end, 32767));
 
@@ -595,8 +610,8 @@ bool Item_GiveTo(entity item, entity player)
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ITEM_JETPACK_GOT);
 	}
 
-	int its;
-	if((its = (item.items - ((item.items & player.items)) & IT_PICKUPMASK)))
+	int its = (item.items - (item.items & player.items)) & IT_PICKUPMASK;
+	if (its)
 	{
 		pickedup = true;
 		player.items |= its;
@@ -1064,6 +1079,9 @@ void StartItem(entity this, entity def)
 			this.nextthink = max(this.strength_finished, this.invincible_finished, this.superweapons_finished);
 		}
 
+		// most loot items have a bigger horizontal size than a player
+		nudgeoutofsolid(this);
+
 		// don't drop if in a NODROP zone (such as lava)
 		traceline(this.origin, this.origin, MOVE_NORMAL, this);
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
@@ -1100,11 +1118,19 @@ void StartItem(entity this, entity def)
 		if(this.angles != '0 0 0')
 			this.SendFlags |= ISF_ANGLES;
 
-		if(q3compat && !this.team)
+		if(q3compat)
 		{
-			string t = GetField_fullspawndata(this, "team");
-			// bones_was_here: this hack is cheaper than changing to a .string strcmp()
-			if(t) this.team = crc16(false, t);
+			if (!this.team)
+			{
+				string t = GetField_fullspawndata(this, "team");
+				// bones_was_here: this hack is cheaper than changing to a .string strcmp()
+				if(t) this.team = crc16(false, t);
+			}
+
+			// In Q3 the origin is in the middle of the bbox ("radius" 15), in Xon it's at the bottom
+			// so we need to offset vertically (only for items placed by the mapper).
+			this.origin.z += -15 - this.mins.z;
+			setorigin(this, this.origin);
 		}
 
 		// it's a level item
@@ -1117,8 +1143,6 @@ void StartItem(entity this, entity def)
 		// do item filtering according to game mode and other things
 		if (this.noalign <= 0)
 		{
-			// first nudge it off the floor a little bit to avoid math errors
-			setorigin(this, this.origin + '0 0 1');
 			// note droptofloor returns false if stuck/or would fall too far
 			if (!this.noalign)
 				droptofloor(this);
@@ -1269,7 +1293,7 @@ void setItemGroup(entity this)
 
 void setItemGroupCount()
 {
-	for (int k = 1; k <= group_count; k++)
+	for (int k = 1; k <= group_count; ++k)
 	{
 		int count = 0;
 		IL_EACH(g_items, IS_SMALL(it.itemdef) && it.item_group == k, { count++; });
