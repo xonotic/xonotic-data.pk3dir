@@ -130,9 +130,9 @@ void HUD_SpectHUD_drawTeamPlayers(vector pos, entity tm, vector rgb, bool invert
 		
 		// Highlight current player
 		if(pl.sv_entnum == current_player && spectatee_status != -1)
-			drawfill(tmp_over, total_sz, '1 1 1', 0.3, DRAWFLAG_NORMAL);
+			drawfill(tmp_over, total_sz, '1 1 1', a * 0.3, DRAWFLAG_NORMAL);
 		if(dead || pl.eliminated)
-			drawfill(tmp_over, total_sz, '0 0 0', 0.4, DRAWFLAG_NORMAL);
+			drawfill(tmp_over, total_sz, '0 0 0', a * 0.4, DRAWFLAG_NORMAL);
 		
 		if(!invert)
 			pos.x -= icon_size.x;
@@ -154,7 +154,7 @@ void HUD_SpectHUD_drawTeamScore(vector pos, entity tm, vector rgb, bool invert)
 	if(invert)
 		pos.x -= teamscore_size.x;
 	
-	drawfill(pos, teamscore_size, rgb * 0.8, 0.3, DRAWFLAG_NORMAL);
+	drawfill(pos, teamscore_size, rgb * 0.8, panel_fg_alpha * 0.3, DRAWFLAG_NORMAL);
 	
 	tmp = pos;
 	tmp.x += (teamscore_size.x - stringwidth(tmp_str, true, teamscore_fontsize)) / 2;
@@ -204,15 +204,15 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 	if(invert) tmp.x -= health_sz.x + (teamscore_size.x * 0.1);
 	
 	if(pl.sv_entnum == current_player && spectatee_status != -1)
-		drawfill(tmp, total_sz, '1 1 1', 0.3, DRAWFLAG_NORMAL);
+		drawfill(tmp, total_sz, '1 1 1', panel_fg_alpha * 0.3, DRAWFLAG_NORMAL);
 
 	if(entcs_IsDead(pl.sv_entnum))
-		drawfill(tmp, total_sz, '0 0 0', 0.4, DRAWFLAG_NORMAL);
+		drawfill(tmp, total_sz, '0 0 0', panel_fg_alpha * 0.4, DRAWFLAG_NORMAL);
 	
 	// Player score
 	tmp_str = ftos(pl.(scores(ps_primary)));
 	
-	drawfill(pos, teamscore_size, '0 0 0', 0.3, DRAWFLAG_NORMAL);
+	drawfill(pos, teamscore_size, '0 0 0', panel_fg_alpha * 0.3, DRAWFLAG_NORMAL);
 	
 	tmp = pos;
 	tmp.x += (teamscore_size.x - stringwidth(tmp_str, true, teamscore_fontsize)) / 2;
@@ -233,7 +233,7 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 	else
 		tmp.x += teamscore_size.x;
 	
-	drawfill(tmp, health_sz, '0 0 0', 0.3, DRAWFLAG_NORMAL);
+	drawfill(tmp, health_sz, '0 0 0', panel_fg_alpha * 0.3, DRAWFLAG_NORMAL);
 	
 	// Bars
 	if(health) {
@@ -243,7 +243,7 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 		else
 			tmp.x += teamscore_size.x;
 	
-		drawfill(tmp, vec2(health, health_sz.y), autocvar_hud_progressbar_health_color, 0.7, DRAWFLAG_NORMAL);
+		drawfill(tmp, vec2(health, health_sz.y), autocvar_hud_progressbar_health_color, panel_fg_alpha * 0.7, DRAWFLAG_NORMAL);
 	}
 	
 	if(armor) {
@@ -256,7 +256,7 @@ void HUD_SpectHUD_drawDuelScore(vector pos, entity pl, bool invert)
 		else
 			tmp.x += teamscore_size.x;
 		
-		drawfill(tmp, vec2(armor, armor_sz.y), autocvar_hud_progressbar_armor_color, 0.7, DRAWFLAG_NORMAL);
+		drawfill(tmp, vec2(armor, armor_sz.y), autocvar_hud_progressbar_armor_color, panel_fg_alpha * 0.7, DRAWFLAG_NORMAL);
 	}
 	
 	// Align vertically
