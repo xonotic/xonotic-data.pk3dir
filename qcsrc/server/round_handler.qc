@@ -53,6 +53,7 @@ void round_handler_Think(entity this)
 				this.nextthink = time;
 				FOREACH_CLIENT(IS_PLAYER(it), { roundaccuracy_clear(it); });
 				rounds_played++;
+				round_delaytime = 0;
 				if (this.roundStart) this.roundStart();
 				return;
 			}
