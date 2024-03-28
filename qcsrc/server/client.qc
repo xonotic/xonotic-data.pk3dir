@@ -414,6 +414,8 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 
 	if (CS(this).just_joined)
 		CS(this).just_joined = false;
+	if (this.wants_join)
+		this.wants_join = 0;
 }
 
 int player_getspecies(entity this)
@@ -1119,6 +1121,7 @@ void ClientConnect(entity this)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? GameLog_ProcessIP(this.netaddress) : "bot"), ":", playername(this.netname, this.team, false)));
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
+	this.wants_join = 0;
 
 	stuffcmd(this, clientstuff, "\n");
 	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -1290,6 +1293,9 @@ void ClientDisconnect(entity this)
 
 	if (player_count == 0)
 		localcmd("\nsv_hook_lastleave\n");
+
+	if (teamplay && autocvar_g_balance_teams_remove)
+		TeamBalance_RemoveExcessPlayers(NULL);
 }
 
 void ChatBubbleThink(entity this)
@@ -1985,15 +1991,17 @@ void ShowRespawnCountdown(entity this)
 	}
 }
 
-.bool team_selected;
 bool ShowTeamSelection(entity this)
 {
 	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
+		return false;
+	if (SpectatorWantsJoin(this))
 		return false;
 	if (frametime) // once per frame is more than enough
 		stuffcmd(this, "_scoreboard_team_selection 1\n");
 	return true;
 }
+
 void Join(entity this)
 {
 	if (autocvar_g_campaign && !campaign_bots_may_start && !game_stopped && time >= game_starttime)
@@ -2001,8 +2009,12 @@ void Join(entity this)
 
 	TRANSMUTE(Player, this);
 
+	entity queued_join = SpectatorWantsJoin(this);
+	if(queued_join)
+		this.team_selected = false; // Don't let this player select team
+
 	if(!this.team_selected)
-	if(autocvar_g_campaign || autocvar_g_balance_teams)
+	if(autocvar_g_campaign || autocvar_g_balance_teams || queued_join)
 		TeamBalance_JoinBestTeam(this);
 
 	if(autocvar_g_campaign)
@@ -2015,10 +2027,16 @@ void Join(entity this)
 	if(IS_PLAYER(this))
 	if(teamplay && this.team != -1)
 	{
+		if(this.wants_join)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
 	}
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 	this.team_selected = false;
+	this.wants_join = 0;
+
+	if(queued_join)
+		Join(queued_join);
 }
 
 int GetPlayerLimit()
@@ -2091,6 +2109,17 @@ int nJoinAllowed(entity this, entity ignore)
 	return free_slots;
 }
 
+bool queuePlayer(entity this)
+{
+	if(IS_QUEUE_NEEDED(this) && !SpectatorWantsJoin(this))
+	{
+		if(autocvar_g_balance_teams)
+			TeamBalance_JoinBestTeam(this);
+		return true;
+	}
+	return false;
+}
+
 bool joinAllowed(entity this)
 {
 	if (CS(this).version_mismatch) return false;
@@ -2099,6 +2128,8 @@ bool joinAllowed(entity this)
 	if (teamplay && lockteams) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
 	if (ShowTeamSelection(this)) return false;
+	if (this.wants_join) return false;
+	if (queuePlayer(this)) return false;
 	return true;
 }
 
@@ -2793,6 +2824,8 @@ void PlayerFrame (entity this)
 				{
 					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
 					PutObserverInServer(this, true, true);
+					if(autocvar_g_balance_teams_remove)
+						TeamBalance_RemoveExcessPlayers(this);
 				}
 				else
 				{

@@ -152,6 +152,10 @@ ENTCS_PROP(FRAGS, true, frags, frags, ENTCS_SET_NORMAL,
 	{ WriteShort(chan, ent.frags); },
 	{ ent.frags = ReadShort(); })
 
+ENTCS_PROP(WANTSJOIN, true, wants_join, wants_join, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, ent.wants_join); },
+	{ ent.wants_join = ReadByte(); })
+
 // use sv_solid to avoid changing solidity state of entcs entities
 ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.sv_solid); },
