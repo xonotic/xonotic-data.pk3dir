@@ -361,7 +361,12 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = NULL;
 }
 
-void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect, bool do_antilag)
+void fireBullet_falloff(entity this, .entity weaponentity, vector start, vector dir,
+                        float spread, float max_solid_penetration, float damage,
+			float falloff_halflife, float falloff_mindist,
+			float falloff_maxdist, float headshot_multiplier,
+			float force, float falloff_forcehalflife,
+			float dtype, entity tracer_effect, bool do_antilag)
 {
 	dir = normalize(dir + randomvec() * spread);
 	vector end = start + dir * max_shot_distance;
@@ -438,7 +443,27 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 				headshot = true;
 			}
 			bool gooddamage = accuracy_isgooddamage(this, hit);
-			Damage(hit, this, this, damage * damage_fraction, dtype, weaponentity, start, force * dir * damage_fraction);
+
+			// start, end and trace_endpos seem completely unreliable to use for falloff calculations, using entity.origins
+			// dist is only used to measure distance between shooter and target entities and do math based on the distance
+			// target's location = hit.origin
+			// shooter's location = this.origin
+			float dist = vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hit.origin) - this.origin);
+			//float damagefalloffmultiplier = ExponentialFalloff(falloff_mindist, falloff_maxdist, falloff_halflife, dist);
+			//float forcefalloffmultiplier = ExponentialFalloff(falloff_mindist, falloff_maxdist, falloff_forcehalflife, dist);
+			//Damage(hit, this, this, damage * damage_fraction * damagefalloffmultiplier, dtype, weaponentity, start, force * dir * damage_fraction * forcefalloffmultiplier);
+			//LOG_INFOF("distance: %f\n", dist);
+			//LOG_INFOF("damagefalloffmultiplier: %f\n", damagefalloffmultiplier);
+			//LOG_INFOF("forcefalloffmultiplier: %f\n", forcefalloffmultiplier);
+			//LOG_INFOF("mindist: %f\n", falloff_mindist);
+			//LOG_INFOF("maxdist: %f\n", falloff_maxdist);
+			//LOG_INFOF("halflife: %f\n", falloff_halflife);
+			//LOG_INFOF("forcehalflife: %f\n", falloff_forcehalflife);
+
+			// same as the Damage() in above comment but without auxiliary variables for falloff, preserved in comment for readability and debugging
+			Damage(hit, this, this, damage * damage_fraction * ExponentialFalloff(falloff_mindist, falloff_maxdist, falloff_halflife, dist),
+				dtype, weaponentity, start, force * dir * damage_fraction * ExponentialFalloff(falloff_mindist, falloff_maxdist, falloff_forcehalflife, dist));
+
 			// calculate hits for ballistic weapons
 			if(gooddamage)
 			{
@@ -505,6 +530,11 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 	// restore shooter solid type
 	if(this)
 		this.dphitcontentsmask = oldsolid;
+}
+
+void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect, bool do_antilag)
+{
+	fireBullet_falloff(this, weaponentity, start, dir, spread, max_solid_penetration, damage, 0, 0, 0, headshot_multiplier, force, 0, dtype, tracer_effect, do_antilag);
 }
 
 void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect)

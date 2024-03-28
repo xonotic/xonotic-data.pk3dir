@@ -126,7 +126,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	yoda = 0;
 	impressive_hits = 0;
-	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, vaporizer_damage, true, WEP_CVAR_PRI(vaporizer, force), 0, 0, 0, 0, thiswep.m_id);
+	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, vaporizer_damage, true, WEP_CVAR_PRI(vaporizer, force), WEP_CVAR_PRI(vaporizer, damagefalloff_mindist), WEP_CVAR_PRI(vaporizer, damagefalloff_maxdist), WEP_CVAR_PRI(vaporizer, damagefalloff_halflife), WEP_CVAR_PRI(vaporizer, damagefalloff_forcehalflife), thiswep.m_id);
 
 	// do this now, as goodhits is disabled below
 	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
