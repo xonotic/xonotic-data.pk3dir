@@ -115,7 +115,6 @@ void round_handler_Spawn(bool() canRoundStart_func, bool() canRoundEnd_func, voi
 	this.roundStart = roundStart_func;
 	this.wait = false;
 	round_handler_Init(5, 5, 180);
-	this.nextthink = time;
 
 	ScoreInfo_SetLabel_PlayerScore(SP_ROUNDS_PL, "rounds_pl", 0);
 }
