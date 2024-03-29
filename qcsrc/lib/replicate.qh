@@ -1,10 +1,5 @@
 #pragma once
 
-#ifdef SVQC
-// copies a string to a tempstring (so one can strunzone it)
-string strcat1(string s) = #115; // FRIK_FILE
-#endif
-
 #if defined(CSQC)
 const int REPLICATEVARS_SEND_ALL = -1; // sync all cvars with the server (init)
 const int REPLICATEVARS_CHECK = 0; // check if any cvar has changed and sync it with the server
@@ -68,7 +63,7 @@ const int REPLICATEVARS_DESTROY = 1; // destroy data associated with cvars (shut
 		{ strfree(field); }, \
 		{ \
 			/* also initialize to the default value of func when requesting cvars */ \
-			string s = func(this, strcat1(field)); \
+			string s = func(this, strcat(field)); \
 			if (s != field) \
 			{ \
 				strcpy(field, s); \
