@@ -66,12 +66,14 @@ function qcc() {
 	(cd tools && $QCC "$@")
 }
 
-# wtf is this? the file has exit on error and only has env var
-# assignments before this which I assume is an implicit $? aka
-# return value check of the last command? This block should never
-# execute??? If this is meant to be standalone driver code then
-# it should be refactored...
-$(return >/dev/null 2>&1) || {
+# Driver code which is not ran if this file is sourced from elsewhere.
+# If it is not sourced then the driver code block is executed.
+# If it is sourced from elsewher then the driver code bock
+# is not executed and this file gives the above functions.
+#
+# Bashism: if this script file is the main executing program
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]
+then
 	MODE="$1"
 	OUT="$2"
 	IN="$3"
@@ -86,4 +88,4 @@ $(return >/dev/null 2>&1) || {
 	set -x
 	qpp "$IN" "$OUT" -I. "$QCCIDENT" $QCCDEFS > "$WORKDIR/$MODE.qc"
 	qcc $QCCFLAGS -o "$OUT_ABSOLUTE" "../$WORKDIR/$MODE.qc"
-}
+fi
