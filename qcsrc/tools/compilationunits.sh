@@ -26,6 +26,14 @@ export WORKDIR=../.tmp
 # source additional functions and variables for compiling
 . qcc.sh
 
+declare -a NOWARN=(
+	# -Wno-field-redeclared is included via WTFS by default
+	-Wno-unused-variable
+	-Wno-implicit-function-pointer
+	-Wno-missing-return-values
+)
+QCCFLAGS+=("${NOWARN[@]}")
+
 # move to qcsrc
 cd ..
 

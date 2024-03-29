@@ -72,21 +72,12 @@ declare -a QCCFLAGS=(
 	"${QCCFLAGS_WERROR[@]}"
 	-Wall
 	"${QCCFLAGS_WTFS[@]}"
-	-flno
 	-futf8
-	-fno-bail-on-werror
 	-freturn-assignments
 	-frelaxed-switch
 	# -Ooverlap-locals is required
 	-Ooverlap-locals
 )
-declare -a NOWARN=(
-	-Wno-field-redeclared
-	-Wno-unused-variable
-	-Wno-implicit-function-pointer
-	-Wno-missing-return-values
-)
-QCCFLAGS+=("${NOWARN[@]}")
 
 for extraflag in ${QCCFLAGS_EXTRA-}
 do
@@ -161,6 +152,12 @@ then
 		OUT_ABSOLUTE="$PWD/$OUT"
 		;;
 	esac
+
+	QCCFLAGS+=(
+		-flno
+		-fno-bail-on-werror
+	)
+
 	set -x
 	qpp "$IN" "$OUT" -I. "$QCCIDENT" "${QCCDEFS[@]}" > "$WORKDIR/$MODE.qc"
 	qcc "${QCCFLAGS[@]}" -o "$OUT_ABSOLUTE" "../$WORKDIR/$MODE.qc"
