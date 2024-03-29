@@ -1414,7 +1414,9 @@ string GetVersionMessage(string hostversion, bool version_mismatch, bool version
 
 bool net_handle_ServerWelcome()
 {
-	campaign = ReadByte();
+	int flags = ReadByte();
+
+	campaign = flags & 1;
 	if (campaign)
 	{
 		int campaign_level = ReadByte();
@@ -1435,8 +1437,8 @@ bool net_handle_ServerWelcome()
 
 	strcpy(hostname, ReadString());
 	string hostversion = ReadString();
-	bool version_mismatch = ReadByte();
-	bool version_check = ReadByte();
+	bool version_mismatch = flags & 2;
+	bool version_check = flags & 4;
 	srv_minplayers = ReadByte();
 	srv_maxplayers = ReadByte();
 	string modifications = translate_modifications(ReadString());

@@ -1041,16 +1041,23 @@ void ClientPreConnect(entity this)
 // also note that they aren't all registered mutators, e.g. jetpack, low gravity
 void SendWelcomeMessage(entity this, int msg_type)
 {
-	WriteByte(msg_type, boolean(autocvar_g_campaign));
 	if (boolean(autocvar_g_campaign))
 	{
+		WriteByte(msg_type, 1);
 		WriteByte(msg_type, Campaign_GetLevelNum());
 		return;
 	}
+
+	int flags = 0;
+	if (CS(this).version_mismatch)
+		flags |= 2;
+	if (CS(this).version < autocvar_gameversion)
+		flags |= 4;
+	WriteByte(msg_type, flags);
+
 	WriteString(msg_type, autocvar_hostname);
 	WriteString(msg_type, autocvar_g_xonoticversion);
-	WriteByte(msg_type, CS(this).version_mismatch);
-	WriteByte(msg_type, (CS(this).version < autocvar_gameversion));
+
 	WriteByte(msg_type, autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers);
 	WriteByte(msg_type, GetPlayerLimit());
 
