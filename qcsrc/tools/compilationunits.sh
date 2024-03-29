@@ -4,10 +4,6 @@ set -eu
 
 cd "$(realpath "$(dirname "$0")")"
 
-[ -z "${QCCFLAGS_WATERMARK-}" ] && \
-	QCCFLAGS_WATERMARK=$(git describe --tags --dirty='~')
-export QCCFLAGS_WATERMARK
-
 # This script attempts to build the codebase in every possible header configuration,
 # to check that all files #include what they need, so that we can eventually move away
 # from a unity build and into incremental compilation.
@@ -24,40 +20,10 @@ CPP="cc -xc -E"
 [ -z "${QCC-}" ] && \
 	export QCC="$PWD/../../../../gmqcc/gmqcc"
 
-declare -a QCCDEFS=(
-	-DNDEBUG=1
-	-DXONOTIC=1
-	-DWATERMARK="\"$QCCFLAGS_WATERMARK\""
-	-DENABLE_EFFECTINFO=0
-	-DENABLE_DEBUGDRAW=0
-	-DENABLE_DEBUGTRACE=0
-)
-
-declare -a QCCFLAGS=(
-	-std=gmqcc
-	# Without -O3, GMQCC thinks some variables are used uninitialized if the initialization is done inside an `if (1)` block
-	# (which is created by e.g. BEGIN_MACRO) which would cause the compilation units test to fail.
-	# There doesn't appear to be any measurable increase in compile time
-	# and it allows us to get rid of some explicit initializations which are just useless noise.
-	-O3
-	-Wall -Werror
-	-futf8
-	-freturn-assignments
-	-frelaxed-switch
-	-Ooverlap-locals
-)
-declare -a NOWARN=(
-	-Wno-field-redeclared
-	-Wno-unused-variable
-	-Wno-implicit-function-pointer
-	-Wno-missing-return-values
-)
-QCCFLAGS+=("${NOWARN[@]}")
-
 # when used does this lead to .tmp or qcsrc/.tmp ?? both?
 export WORKDIR=../.tmp
 
-# source additional functions
+# source additional functions and variables for compiling
 . qcc.sh
 
 # move to qcsrc

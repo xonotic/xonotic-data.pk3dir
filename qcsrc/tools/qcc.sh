@@ -3,21 +3,97 @@
 set -euo pipefail
 IFS=$' \n\t'
 
-QCCIDENT="-DGMQCC"
-
 # check that we have all necessary env vars
 if [ -z "${WORKDIR-}" ] \
 || [ -z "${CPP-}" ] \
-|| [ -z "${QCC-}" ] \
-|| [ -z "${QCCDEFS-}" ] \
-|| [ -z "${QCCFLAGS-}" ]
+|| [ -z "${QCC-}" ]
 then
-	# hardcode qcc.sh name because this file is sourced
-	# qcsrc/tools/compilationunits.sh: Necessary env vars were not set
-	# would be very misleading
-	printf "%s: qcc.sh: Necessary env vars were not set\n" "$0" > /dev/stderr
+	printf "%s: Necessary env vars were not set\n" \
+		"${BASH_SOURCE[0]}" > /dev/stderr
 	exit 1
 fi
+
+# make sure to initialize these variables,
+# give them default values if they are valueless
+NDEBUG="${NDEBUG-1}"
+XONOTIC="${XONOTIC-1}"
+QCCFLAGS_WATERMARK="${QCCFLAGS_WATERMARK-"$(git describe --tags --dirty='~')"}"
+ENABLE_EFFECTINFO="${ENABLE_EFFECTINFO-0}"
+ENABLE_DEBUGDRAW="${ENABLE_DEBUGDRAW-0}"
+ENABLE_DEBUGTRACE="${ENABLE_DEBUGTRACE-0}"
+
+QCCIDENT="-DGMQCC"
+
+# {{{ QCCDEFS
+
+declare -a QCCDEFS=(
+	-DNDEBUG="$NDEBUG"
+	-DXONOTIC="$XONOTIC"
+	-DWATERMARK="\"$QCCFLAGS_WATERMARK\""
+	-DENABLE_EFFECTINFO="$ENABLE_EFFECTINFO"
+	-DENABLE_DEBUGDRAW="$ENABLE_DEBUGDRAW"
+	-DENABLE_DEBUGTRACE="$ENABLE_DEBUGTRACE"
+)
+if [ -n "${BUILD_MOD-}" ]
+then
+	QCCDEFS+=(
+		-DBUILD_MOD=\""$BUILD_MOD"\"
+		-I"$BUILD_MOD"
+	)
+fi
+for extradef in ${QCCDEFS_EXTRA-}
+do
+	QCCDEFS+=("$extradef")
+done
+
+# }}}
+
+# {{{ QCCFLAGS
+
+# Set to empty string to temporarily enable warnings when debugging
+for flag in ${QCCFLAGS_WERROR-'-Werror'}
+do
+	QCCFLAGS_WERROR+=("$flag")
+done
+
+# We eventually need to get rid of these
+for flag in ${QCCFLAGS_WTFS-'-Wno-field-redeclared'}
+do
+	QCCFLAGS_WTFS+=("$flag")
+done
+
+declare -a QCCFLAGS=(
+	-std=gmqcc
+	# Without -O3, GMQCC thinks some variables are used uninitialized if the initialization is done inside an `if (1)` block
+	# (which is created by e.g. BEGIN_MACRO) which would cause the compilation units test to fail.
+	# There doesn't appear to be any measurable increase in compile time
+	# and it allows us to get rid of some explicit initializations which are just useless noise.
+	-O3
+	"${QCCFLAGS_WERROR[@]}"
+	-Wall
+	"${QCCFLAGS_WTFS[@]}"
+	-flno
+	-futf8
+	-fno-bail-on-werror
+	-freturn-assignments
+	-frelaxed-switch
+	# -Ooverlap-locals is required
+	-Ooverlap-locals
+)
+declare -a NOWARN=(
+	-Wno-field-redeclared
+	-Wno-unused-variable
+	-Wno-implicit-function-pointer
+	-Wno-missing-return-values
+)
+QCCFLAGS+=("${NOWARN[@]}")
+
+for extraflag in ${QCCFLAGS_EXTRA-}
+do
+	QCCFLAGS+=("$extraflag")
+done
+
+# }}}
 
 function qpp() {
 	IN="$1"
@@ -86,6 +162,6 @@ then
 		;;
 	esac
 	set -x
-	qpp "$IN" "$OUT" -I. "$QCCIDENT" $QCCDEFS > "$WORKDIR/$MODE.qc"
-	qcc $QCCFLAGS -o "$OUT_ABSOLUTE" "../$WORKDIR/$MODE.qc"
+	qpp "$IN" "$OUT" -I. "$QCCIDENT" "${QCCDEFS[@]}" > "$WORKDIR/$MODE.qc"
+	qcc "${QCCFLAGS[@]}" -o "$OUT_ABSOLUTE" "../$WORKDIR/$MODE.qc"
 fi
