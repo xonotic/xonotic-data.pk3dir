@@ -1089,7 +1089,8 @@ void GameCommand_moveplayer(int request, int argc)
 						if (team_num == client.team)  // already on the destination team
 						{
 							// keep the forcing undone
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ",
+								Team_ColoredFullName(team_num), ".");
 							continue;
 						}
 						else if (team_num == 0)  // auto team
@@ -1119,7 +1120,8 @@ void GameCommand_moveplayer(int request, int argc)
 						}
 						if (!TeamBalance_IsTeamAllowed(balance, team_id))
 						{
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ",
+								Team_ColoredFullName(team_num), ".");
 							TeamBalance_Destroy(balance);
 							continue;
 						}
@@ -1130,7 +1132,8 @@ void GameCommand_moveplayer(int request, int argc)
 						if (MoveToTeam(client, team_id, 6))
 						{
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ",
+								Team_ColoredFullName(team_num), ".");
 						}
 						else
 						{
