@@ -801,7 +801,6 @@ bool GameTypeVote_SetGametype(Gametype type, string gametype_string, bool call_h
 		bprint("Cannot use this game type: no map for it found\n");
 		MapInfo_SwitchGameType(tsave);
 		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-		LOG_TRACE("Selected gametype is not supported by any map");
 		return false;
 	}
 
