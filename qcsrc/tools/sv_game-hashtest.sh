@@ -55,22 +55,22 @@ hashtestcleanup() {
 	# Few files' removal has been disabled for file reuse
 	# It's possible to get rate limited with enough testing
 
-	rm lock
-	rm data/darkplaces_history.txt
-	rm data/xonotic-data.pk3dir
-	#rm data/stormkeep.pk3
-	rm data/data/defaultSVQC.cfg
-	rm data/data/hits---1.plot
-	rm data/data/hits---2.plot
-	rm data/data/hits---3.plot
-	rm data/data/notifications_dump.cfg
-	rm data/data/server.db
-	rmdir data/data/
-	#rm data/maps/_init.bsp
-	#rm data/maps/stormkeep.mapinfo
-	#rm data/maps/stormkeep.waypoints
-	#rm data/maps/stormkeep.waypoints.cache
-	#rmdir data/maps/
+	rm -fv lock
+	rm -fv data/darkplaces_history.txt
+	rm -fv data/xonotic-data.pk3dir
+	#rm -fv data/stormkeep.pk3
+	rm -fv data/data/defaultSVQC.cfg
+	rm -fv data/data/hits---1.plot
+	rm -fv data/data/hits---2.plot
+	rm -fv data/data/hits---3.plot
+	rm -fv data/data/notifications_dump.cfg
+	rm -fv data/data/server.db
+	rmdir  data/data/
+	#rm -fv data/maps/_init.bsp
+	#rm -fv data/maps/stormkeep.mapinfo
+	#rm -fv data/maps/stormkeep.waypoints
+	#rm -fv data/maps/stormkeep.waypoints.cache
+	#rmdir  data/maps/
 
 	set -e
 }
