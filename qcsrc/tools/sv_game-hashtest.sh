@@ -23,7 +23,6 @@ command -V md5sum    > /dev/null
 command -V mkdir     > /dev/null
 command -V mktemp    > /dev/null
 command -V rm        > /dev/null
-command -V rmdir     > /dev/null
 command -V sed       > /dev/null
 command -V tee       > /dev/null
 command -V test      > /dev/null
@@ -65,12 +64,12 @@ hashtestcleanup() {
 	rm -fv data/data/hits---3.plot
 	rm -fv data/data/notifications_dump.cfg
 	rm -fv data/data/server.db
-	rmdir  data/data/
+	rm -dfv data/data/
 	#rm -fv data/maps/_init.bsp
 	#rm -fv data/maps/stormkeep.mapinfo
 	#rm -fv data/maps/stormkeep.waypoints
 	#rm -fv data/maps/stormkeep.waypoints.cache
-	#rmdir  data/maps/
+	#rm -dfv data/maps/
 
 	set -e
 }
@@ -90,7 +89,7 @@ then # file exists
 	then # file exists but it's not a symlink, replace it
 		if [ -d data/xonotic-data.pk3dir ]
 		then # it's a dir
-			rmdir data/xonotic-data.pk3dir
+			rm -dfv data/xonotic-data.pk3dir
 			ln -s "$PWD" data/xonotic-data.pk3dir
 		else # it's not a dir
 			rm data/xonotic-data.pk3dir
