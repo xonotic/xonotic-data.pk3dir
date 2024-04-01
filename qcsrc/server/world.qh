@@ -49,7 +49,8 @@ float cvar_purechanges_count;
 string modname;
 
 string autocvar__sv_vote_gametype_custom;
-string gametype_custom_string;
+bool gametype_custom_enabled;
+string loaded_gametype_custom_string;
 
 string record_type;
 
