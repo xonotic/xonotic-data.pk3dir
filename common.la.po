@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-24 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: oblector o, 2022\n"
+"Last-Translator: oblector o, 2022-2024\n"
 "Language-Team: Latin (http://app.transifex.com/team-xonotic/xonotic/language/"
 "la/)\n"
 "Language: la\n"
@@ -1770,7 +1770,7 @@ msgstr "Quotiens caedem facere necesse est ut ludus finiatur"
 
 #: qcsrc/common/minigames/cl_minigames.qc:287
 msgid "Spectators:"
-msgstr ""
+msgstr "Spectatores:"
 
 #: qcsrc/common/minigames/cl_minigames.qc:424
 msgid "It's your turn"
@@ -3625,12 +3625,12 @@ msgstr "^BG%s^K1 Hagaris missilia minima lusit%s%s"
 #: qcsrc/common/notifications/all.inc:484
 #, c-format
 msgid "^BG%s%s^K1 was cut down with ^BG%s^K1's HLAC%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, HLAT ^BG%s^K1, occisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:485
 #, c-format
 msgid "^BG%s^K1 got a little jumpy with their HLAC%s%s"
-msgstr ""
+msgstr "^BG%s^K1 suo HLAT nimis saliens fuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:486
 #, c-format
@@ -5507,7 +5507,7 @@ msgstr "MROTADEORS"
 #: qcsrc/common/util.qc:1562
 #, c-format
 msgid "JOY%d"
-msgstr ""
+msgstr "GUBRNCL%d"
 
 #: qcsrc/common/util.qc:1565
 #, c-format
@@ -5517,7 +5517,7 @@ msgstr "AUX%d"
 #: qcsrc/common/util.qc:1572
 #, c-format
 msgid "DPAD_UP"
-msgstr ""
+msgstr "DCRUX_SURS"
 
 #: qcsrc/common/util.qc:1572 qcsrc/common/util.qc:1573
 #: qcsrc/common/util.qc:1574 qcsrc/common/util.qc:1575
@@ -5536,17 +5536,17 @@ msgstr "X360_%s"
 #: qcsrc/common/util.qc:1573
 #, c-format
 msgid "DPAD_DOWN"
-msgstr ""
+msgstr "DCRUX_DEORS"
 
 #: qcsrc/common/util.qc:1574
 #, c-format
 msgid "DPAD_LEFT"
-msgstr ""
+msgstr "DCRUX_SINIS"
 
 #: qcsrc/common/util.qc:1575
 #, c-format
 msgid "DPAD_RIGHT"
-msgstr ""
+msgstr "DCRUX_DEXTR"
 
 #: qcsrc/common/util.qc:1576
 #, c-format
@@ -5581,12 +5581,12 @@ msgstr "DEXTER_UMERUS"
 #: qcsrc/common/util.qc:1582
 #, c-format
 msgid "LEFT_TRIGGER"
-msgstr ""
+msgstr "SINISTER_EMISS"
 
 #: qcsrc/common/util.qc:1583
 #, c-format
 msgid "RIGHT_TRIGGER"
-msgstr ""
+msgstr "DEXTER_EMISS"
 
 #: qcsrc/common/util.qc:1584
 #, c-format
@@ -5632,7 +5632,7 @@ msgstr "DEXTER_POLLEX_DEXTR"
 #: qcsrc/common/util.qc:1603 qcsrc/common/util.qc:1604
 #, c-format
 msgid "JOY_%s"
-msgstr ""
+msgstr "GUBRNCL_%s"
 
 #: qcsrc/common/util.qc:1601
 #, c-format
@@ -5657,7 +5657,7 @@ msgstr "DEXTRUM"
 #: qcsrc/common/util.qc:1610
 #, c-format
 msgid "MIDINOTE%d"
-msgstr ""
+msgstr "MIDISONUS%d"
 
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 #, c-format
@@ -6054,7 +6054,7 @@ msgstr "Ludi Codex Computatralis"
 
 #: qcsrc/menu/xonotic/credits.qc:113
 msgid "Marketing / PR"
-msgstr ""
+msgstr "Annuntiationes"
 
 #: qcsrc/menu/xonotic/credits.qc:119
 msgid "Legal"
@@ -6243,11 +6243,11 @@ msgstr "Ita"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:7
 msgid "Credits"
-msgstr ""
+msgstr "Auctores"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:8
 msgid "The Xonotic credits"
-msgstr ""
+msgstr "Xonotici auctores"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:44
 msgid ""
@@ -7065,23 +7065,23 @@ msgstr "Margo:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:93
 msgid "HUD Dock:"
-msgstr ""
+msgstr "Margo Picta:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:95
 msgid "DOCK^Disabled"
-msgstr ""
+msgstr "Nulla"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:96
 msgid "DOCK^Small"
-msgstr ""
+msgstr "Parva"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:97
 msgid "DOCK^Medium"
-msgstr ""
+msgstr "Media"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:98
 msgid "DOCK^Large"
-msgstr ""
+msgstr "Magna"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:121
 msgid "Grid settings:"
@@ -8049,15 +8049,15 @@ msgstr "* assumere"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:78
 msgid "* object info"
-msgstr ""
+msgstr "* rei notae"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:79
 msgid "* mesh info"
-msgstr ""
+msgstr "* structurae notae"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:80
 msgid "* attachment info"
-msgstr ""
+msgstr "* iunctionis notae"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:81
 msgid "Show help"
@@ -8329,7 +8329,7 @@ msgstr "Saepe"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:188
 msgid "Debug info about sounds"
-msgstr ""
+msgstr "Sonorum notae pro investigatoribus"
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:11
 msgid "Are you sure you want to reset all key bindings?"
@@ -8702,11 +8702,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:230
 msgid "Motion blur strength - 0.4 recommended"
-msgstr ""
+msgstr "Quanta confusio colorum - 0.4 suadetur"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:231
 msgid "Motion blur:"
-msgstr ""
+msgstr "Confundere colores cum moves:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:237
 msgid "Particles"
@@ -8779,7 +8779,7 @@ msgstr "Reticuli color ordinarius"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:122
 msgid "Smooth effects of crosshairs"
-msgstr ""
+msgstr "Lenes motiones reticulorum"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:125
 msgid "Perform hit tests for the crosshair"
@@ -8861,7 +8861,7 @@ msgstr "Litterae magnitudo:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:83
 msgid "Edge offset:"
-msgstr ""
+msgstr "A margine distare:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:91
 msgid "Fade when near the crosshair"
@@ -9411,25 +9411,26 @@ msgstr "Muris motio secundum systema computatrale generale"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:75
 msgid "Enable built in mouse acceleration"
-msgstr ""
+msgstr "Murem accelerare secundum ludi codicem"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:79
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:83
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:86
 msgid "Disable system mouse acceleration"
-msgstr ""
+msgstr "Non accelerare murem secundum systema generale"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:80
 msgid "Make use of DGA mouse input"
-msgstr ""
+msgstr "Uti muris codice DGA"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:94
 msgid "Pressing \"enter console\" key also closes it"
-msgstr ""
+msgstr "\"Iussorum locum intrare\" premere ut eo exeas quoque"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:95
 msgid "Allow the console toggling bind to also close the console"
 msgstr ""
+"Una clavis habet duas actiones oppositas, intrare et exire iussorum loco"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:97
 msgid "Automatically repeat jumping if holding jump"
@@ -9455,7 +9456,7 @@ msgstr "Semper"
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:115
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:120
 msgid "Use joystick input"
-msgstr ""
+msgstr "Uti gubernaculo"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:31
 msgid "Command when pressed:"
@@ -9657,7 +9658,7 @@ msgstr "Genus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Value:"
-msgstr ""
+msgstr "Valor:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:70
 msgid "Description:"
@@ -9798,7 +9799,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:64
 msgid "High-quality frame buffer"
-msgstr ""
+msgstr "Subtiliores picturae in calculationum spatio"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:72
 msgid "Antialiasing:"
@@ -9868,6 +9869,8 @@ msgid ""
 "Eliminate overdraw by rendering a depth-only version of the scene before the "
 "normal rendering starts"
 msgstr ""
+"Vitat pingere super picturam, per artificium quod est primo pingere formas "
+"modo secundum distantias ante picturam ordinariam"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:105
 msgid "DF^Disabled"
@@ -9920,31 +9923,34 @@ msgstr "Cum quo multiplicare distinctionem colorum in locis umbrosis"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:135
 msgid "Saturation:"
-msgstr ""
+msgstr "Evidentia colorum:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:139
 msgid ""
 "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL color control"
 msgstr ""
+"Evidentia colorum mutare (0 = cinerei, 1 = ordinarii, 2 = nimis evidentes), "
+"necesse est dominium colorum GLSL"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:144
 msgid "LIT^Ambient:"
-msgstr ""
+msgstr "Sola parietesque"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:146
 msgid ""
 "Ambient lighting, if set too high it tends to make light on maps look dull "
 "and flat"
 msgstr ""
+"Illuminatio solorum parietumque, quae si nimis elevatur, fit hebes et plana"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:148
 msgid "Intensity:"
-msgstr ""
+msgstr "Intensitas:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:150
 msgid "Global rendering brightness"
-msgstr ""
+msgstr "Nitor picturae generalis"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:153
 msgid "Wait for GPU to finish each frame"
@@ -10068,7 +10074,7 @@ msgstr "Sinisne nomen tuum in statisticis nuntiari?"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr "Si non sines, scribetur \"Lusor Anonymus\""
+msgstr "Si non sinis, scribetur \"Lusor Anonymus\""
 
 #: qcsrc/menu/xonotic/gametypelist.qc:88
 msgid "teamplay"
@@ -10216,7 +10222,7 @@ msgstr "index celer"
 
 #: qcsrc/menu/xonotic/keybinder.qc:126
 msgid "scoreboard user interface"
-msgstr ""
+msgstr "rationarii index pro utente"
 
 #: qcsrc/menu/xonotic/keybinder.qc:129
 msgid "User defined"
@@ -10224,7 +10230,7 @@ msgstr "Creata ab utente"
 
 #: qcsrc/menu/xonotic/keybinder.qc:136
 msgid "Development"
-msgstr ""
+msgstr "Pro scriptore codicum"
 
 #: qcsrc/menu/xonotic/keybinder.qc:137
 msgid "sandbox menu"
@@ -10607,6 +10613,8 @@ msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
 msgstr ""
+"^1ERROR: breviare texturas postulatur sed computatrum ineptum est.\n"
+"^1Exspecta vitia in imagine."
 
 #: qcsrc/menu/xonotic/util.qc:772
 msgid "Use default"
