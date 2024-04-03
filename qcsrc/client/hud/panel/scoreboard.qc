@@ -47,6 +47,7 @@ float sbt_field_title_condense_factor[MAX_SBT_FIELDS + 1];
 float sbt_field_title_width[MAX_SBT_FIELDS + 1];
 int sbt_num_fields;
 float sbt_field_title_maxwidth;
+float sbt_field_title_maxwidth_factor;
 
 string autocvar_hud_fontsize;
 float max_namesize;
@@ -1227,8 +1228,9 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 		if (init)
 		{
 			sbt_field_size[i] = sbt_field_title_width[i];
-			if (sbt_field_size[i] && sbt_field_size[i] > sbt_field_title_maxwidth)
-				sbt_field_size[i] = sbt_field_title_maxwidth;
+			float title_maxwidth = sbt_field_title_maxwidth * sbt_field_title_maxwidth_factor;
+			if (sbt_field_size[i] && sbt_field_size[i] > title_maxwidth)
+				sbt_field_size[i] = title_maxwidth;
 		}
 		sbt_fixcolumnwidth_len = stringwidth(str, false, hud_fontsize);
 	}
@@ -1241,16 +1243,28 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 	if (sbt_field_title_width[i] > sbt_field_size[i])
 	{
 		float real_maxwidth = sbt_field_size[i];
-		if (sbt_field_title_width[i] > sbt_field_title_maxwidth)
-			real_maxwidth = max(sbt_field_size[i], sbt_field_title_maxwidth);
+		float title_maxwidth = sbt_field_title_maxwidth * sbt_field_title_maxwidth_factor;
+		if (sbt_field_title_width[i] > title_maxwidth)
+			real_maxwidth = max(sbt_field_size[i], title_maxwidth);
 		sbt_field_title_condense_factor[i] = real_maxwidth / sbt_field_title_width[i];
 	}
 
 	return str;
 }
 
-void Scoreboard_initFieldSizes()
+void Scoreboard_initFieldSizes(bool compress_more)
 {
+	if (compress_more)
+	{
+		sbt_field_title_maxwidth_factor -= 0.05;
+		if (sbt_field_title_maxwidth * sbt_field_title_maxwidth_factor < 0.01 * vid_conwidth)
+		{
+			sbt_field_title_maxwidth_factor = (0.01 * vid_conwidth) / sbt_field_title_maxwidth;
+			return;
+		}
+	}
+	else
+		sbt_field_title_maxwidth_factor = 1;
 	int name_index = 0;
 	for(int i = 0; i < sbt_num_fields; ++i)
 	{
@@ -1294,6 +1308,9 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
 		}
 		pos.x += column_dim.x;
 	}
+
+	float left_columns_end = pos.x - hud_fontsize.x;
+
 	if(sbt_field[i] == SP_SEPARATOR)
 	{
 		pos.x = panel_pos.x + panel_size.x - hud_fontsize.x * 0.5;
@@ -1328,6 +1345,10 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
 			}
 			pos.x -= hud_fontsize.x;
 		}
+
+		float right_columns_start = pos.x + hud_fontsize.x * 0.5;
+		if (left_columns_end > right_columns_start)
+			Scoreboard_initFieldSizes(true);
 	}
 
 	pos.x = panel_pos.x;
@@ -2316,7 +2337,8 @@ void Scoreboard_Draw()
 			if (scoreboard_table_fieldtitle_maxwidth_prev != autocvar_hud_panel_scoreboard_table_fieldtitle_maxwidth)
 			{
 				scoreboard_table_fieldtitle_maxwidth_prev = autocvar_hud_panel_scoreboard_table_fieldtitle_maxwidth;
-				sbt_field_title_maxwidth = vid_conwidth * max(0.01, autocvar_hud_panel_scoreboard_table_fieldtitle_maxwidth);
+				sbt_field_title_maxwidth = bound(0.01, autocvar_hud_panel_scoreboard_table_fieldtitle_maxwidth, 0.1);
+				sbt_field_title_maxwidth *= vid_conwidth;
 				sb_init_field_sizes = true;
 			}
 		}
@@ -2369,7 +2391,7 @@ void Scoreboard_Draw()
 
 	// field sizes can be initialized now after panel_size.x calculation
 	if (!sbt_field_size[0] || sb_init_field_sizes)
-		Scoreboard_initFieldSizes();
+		Scoreboard_initFieldSizes(false);
 
 	Scoreboard_UpdatePlayerTeams();
 
