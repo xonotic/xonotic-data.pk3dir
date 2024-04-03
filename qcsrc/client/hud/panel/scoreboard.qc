@@ -140,9 +140,9 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^caps"),          "caps", "               ", _("How often a flag (CTF) or a key (KeyHunt) was captured"));
 		SCO_LABEL(_("SCO^captime"),       "captime", "            ", _("Time of fastest capture (CTF)"));
 		SCO_LABEL(_("SCO^deaths"),        "deaths", "             ", _("Number of deaths"));
-		SCO_LABEL(_("SCO^destroyed"),     "destroyed", "          ", _("Number of keys destroyed by pushing them into void"));
-		SCO_LABEL(_("SCO^damage"),        "dmg", "                ", _("The total damage done"));
-		SCO_LABEL(_("SCO^dmgtaken"),      "dmgtaken", "           ", _("The total damage taken"));
+		SCO_LABEL(_("SCO^destructions"),  "destructions", "       ", _("Number of keys destroyed by pushing them into void"));
+		SCO_LABEL(_("SCO^damage dealt"),  "dmg", "                ", _("The total damage dealt"));
+		SCO_LABEL(_("SCO^damage taken"),  "dmgtaken", "           ", _("The total damage taken"));
 		SCO_LABEL(_("SCO^drops"),         "drops", "              ", _("Number of flag drops"));
 		SCO_LABEL(_("SCO^elo"),           "elo", "                ", _("Player ELO"));
 		SCO_LABEL(_("SCO^fastest"),       "fastest", "            ", _("Time of fastest lap (Race/CTS)"));
@@ -150,6 +150,7 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^fckills"),       "fckills", "            ", _("Number of flag carrier kills"));
 		SCO_LABEL(_("SCO^fps"),           "fps", "                ", _("FPS"));
 		SCO_LABEL(_("SCO^frags"),         "frags", "              ", _("Number of kills minus suicides"));
+		SCO_LABEL(_("SCO^generators"),    "generators", "         ", _("Number of generators destroyed"));
 		SCO_LABEL(_("SCO^goals"),         "goals", "              ", _("Number of goals scored"));
 		SCO_LABEL(_("SCO^hunts"),         "hunts", "              ", _("Number of hunts (Survival)"));
 		SCO_LABEL(_("SCO^kckills"),       "kckills", "            ", _("Number of keys carrier kills"));
