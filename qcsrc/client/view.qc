@@ -1550,7 +1550,7 @@ void View_UpdateFov()
 	setproperty(VF_FOV, fov);
 }
 
-void CSQC_UpdateView(entity this, float w, float h)
+void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 {
 	TC(int, w); TC(int, h);
 

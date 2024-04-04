@@ -43,7 +43,7 @@
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 
-void CSQC_Init()
+void CSQC_Init(float apilevel, string enginename, float engineversion)
 {
 	prvm_language = strzone(cvar_string("prvm_language"));
 
