@@ -153,13 +153,17 @@ void HUD_Timer()
 	if(subtimer_str) {
 		float subtimer_padding = subtimer_size.y / 5;
 		timer_size.x -= subtimer_size.x;
-		drawstring_aspect(pos + eX * timer_size.x + eY * subtimer_padding, (swap ? timer_str : subtimer_str), subtimer_size - eY * subtimer_padding * 2, (swap ? timer_color : subtimer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eX * timer_size.x + eY * subtimer_padding,
+			(swap ? timer_str : subtimer_str), subtimer_size - eY * 2 * subtimer_padding,
+			(swap ? timer_color : subtimer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	drawstring_aspect(pos, (swap ? subtimer_str : timer_str), timer_size, (swap ? subtimer_color : timer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos,
+		(swap ? subtimer_str : timer_str), timer_size,
+		(swap ? subtimer_color : timer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
+
+	draw_endBoldFont();
 
 	if(subtext)
 		drawstring_aspect(pos + eY * timer_size.y, subtext, subtext_size, '0 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
-
-	draw_endBoldFont();
 }
