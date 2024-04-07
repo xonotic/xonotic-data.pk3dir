@@ -437,7 +437,7 @@ void sandbox_Database_Load()
 			if(e.material)
 			{
 				// since objects are being loaded for the first time, precache material sounds for each
-				for (i = 1; i <= 5; i++) // 5 sounds in total
+				for (i = 1; i <= 5; ++i) // 5 sounds in total
 					precache_sound(strcat("object/impact_", e.material, "_", ftos(i), ".wav"));
 			}
 		}
@@ -714,7 +714,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							strfree(e.material);
 							if(argv(3))
 							{
-								for (j = 1; j <= 5; j++) // precache material sounds, 5 in total
+								for (j = 1; j <= 5; ++j) // precache material sounds, 5 in total
 									precache_sound(strcat("object/impact_", argv(3), "_", ftos(j), ".wav"));
 								e.material = strzone(argv(3));
 							}

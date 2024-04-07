@@ -8,11 +8,6 @@
 #include <common/mutators/mutator/waypoints/all.qh>
 #endif
 
-#ifdef GAMEQC
-REGISTER_WAYPOINT(Buff, _("Buff"), "", '1 0.5 0', 1);
-REGISTER_RADARICON(Buff, 1);
-#endif
-
 #define REGISTER_BUFF(id, inst) \
     REGISTER(StatusEffect, BUFF_##id, m_id, inst)
 

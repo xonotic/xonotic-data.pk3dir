@@ -173,13 +173,21 @@ void plat_use(entity this, entity actor, entity trigger)
 	plat_go_down(this);
 }
 
+void plat_target_use(entity this, entity actor, entity trigger)
+{
+	if (this.state == STATE_TOP)
+		this.nextthink = this.ltime + 1;
+	else if (this.state != STATE_UP)
+		plat_go_up(this);
+}
+
 // WARNING: backwards compatibility because people don't use already existing fields :(
 // TODO: Check if any maps use these fields and remove these fields if it doesn't break maps
 .string sound1, sound2;
 
 void plat_reset(entity this)
 {
-	if(this.targetname && this.targetname != "")
+	if (this.targetname && this.targetname != "" && !Q3COMPAT_COMMON)
 	{
 		setorigin(this, this.pos1);
 		this.state = STATE_UP;
@@ -189,7 +197,7 @@ void plat_reset(entity this)
 	{
 		setorigin(this, this.pos2);
 		this.state = STATE_BOTTOM;
-		this.use = plat_trigger_use;
+		this.use = (this.targetname != "" && Q3COMPAT_COMMON) ? plat_target_use : plat_trigger_use;
 	}
 
 #ifdef SVQC

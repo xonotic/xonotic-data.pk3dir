@@ -24,7 +24,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
     }
 
     FOREACH(Nades, true, {
-        for (int j = 0; j < 2; j++)
+        for (int j = 0; j < 2; ++j)
         {
             if (it.m_projectile[j] == proj)
             {
@@ -37,9 +37,11 @@ entity Nade_TrailEffect(int proj, int nade_team)
 
     return EFFECT_Null;
 }
-#endif
 
 REGISTER_NET_TEMP(TE_CSQC_DARKBLINKING);
+
+#endif
+
 #ifdef CSQC
 #include <client/draw.qh>
 #include <client/hud/hud.qh>
@@ -388,7 +390,7 @@ void napalm_fountain_think(entity this)
 
 void nade_napalm_boom(entity this)
 {
-	for (int c = 0; c < autocvar_g_nades_napalm_ball_count; c++)
+	for (int c = 0; c < autocvar_g_nades_napalm_ball_count; ++c)
 		nade_napalm_ball(this);
 
 	entity fountain = new(nade_napalm_fountain);

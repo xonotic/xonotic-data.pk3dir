@@ -437,7 +437,7 @@ void sys_phys_simulate_simple(entity this, float dt)
 
 	this.angles += dt * this.avelocity;
 	float movetime = dt;
-	for (int i = 0; i < MAX_CLIP_PLANES && movetime > 0; i++) {
+	for (int i = 0; i < MAX_CLIP_PLANES && movetime > 0; ++i) {
 		vector push = vel * movetime;
 		vector p0 = pos;
 		vector p1 = p0 + push;

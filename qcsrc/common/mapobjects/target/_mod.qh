@@ -7,4 +7,5 @@
 #include <common/mapobjects/target/spawn.qh>
 #include <common/mapobjects/target/spawnpoint.qh>
 #include <common/mapobjects/target/speaker.qh>
+#include <common/mapobjects/target/speed.qh>
 #include <common/mapobjects/target/voicescript.qh>

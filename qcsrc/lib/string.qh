@@ -4,6 +4,9 @@
 #include "sort.qh"
 #include "oo.qh"
 
+// this is not exactly 16KiB (16384 bytes) because one byte is reserved for the \0 terminator
+#define VM_TEMPSTRING_MAXSIZE 16383
+
 // string logic
 //
 // true: is truthy
@@ -567,7 +570,7 @@ vector checkColorCode(string theText, int text_len, int pos, bool check_at_the_e
 	int ofs = cc_len;
 	if (!check_at_the_end)
 		ofs--;
-	for (; ofs >= 1; ofs--)
+	for (; ofs >= 1; --ofs)
 	{
 		if (!(pos >= ofs && text_len >= pos + (cc_len - ofs)))
 			continue;

@@ -343,8 +343,10 @@ REGISTER_STAT(NB_METERSTART, float)
 
 #ifdef SVQC
 float autocvar_g_teleport_maxspeed;
+float autocvar_g_teleport_minspeed;
 #endif
 REGISTER_STAT(TELEPORT_MAXSPEED, float, autocvar_g_teleport_maxspeed)
+REGISTER_STAT(TELEPORT_MINSPEED, float, autocvar_g_teleport_minspeed)
 REGISTER_STAT(TELEPORT_TELEFRAG_AVOID, int, autocvar_g_telefrags_avoid)
 
 REGISTER_STAT(CAMERA_SPECTATOR, int)

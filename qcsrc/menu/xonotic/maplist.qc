@@ -234,7 +234,7 @@ void MapList_Add_Shown(entity btn, entity me)
 {
 	float i, n;
 	n = strlen(me.g_maplistCache);
-	for (i = 0 ; i < n; i++)
+	for (i = 0 ; i < n; ++i)
 	{
 		if (!me.g_maplistCacheQuery(me, i))
 			me.g_maplistCacheToggle(me, i);
@@ -246,7 +246,7 @@ void MapList_Remove_Shown(entity btn, entity me)
 {
 	float i, n;
 	n = strlen(me.g_maplistCache);
-	for (i = 0 ; i < n; i++)
+	for (i = 0 ; i < n; ++i)
 	{
 		if (me.g_maplistCacheQuery(me, i))
 			me.g_maplistCacheToggle(me, i);

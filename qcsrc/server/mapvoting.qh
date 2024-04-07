@@ -30,8 +30,10 @@ void MapVote_Start();
 void MapVote_Spawn();
 void MapVote_Think();
 void MapVote_SendPicture(entity to, int id);
+// FIXME can't use Gametype type because Gitlab compilation unit test fails
+bool GameTypeVote_SetGametype(entity type, string gametype_string, bool call_hooks);
 float GameTypeVote_Start();
-float GameTypeVote_Finished(float pos);
+float GameTypeVote_Finished(int pos);
 string GameTypeVote_MapInfo_FixName(string m);
 
 bool gametypevote;

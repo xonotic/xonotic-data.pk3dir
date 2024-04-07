@@ -331,7 +331,7 @@ void GetCvars_handleString_Fixup(entity this, entity store, string thisname, flo
 	if (f >= 0) // also initialize to the fitting value for "" when sending cvars out
 		if (thisname == name)
 		{
-			string s = func(this, strcat1(store.(field)));
+			string s = func(this, strcat(store.(field)));
 			if (s != store.(field))
 			{
 				strcpy(store.(field), s);
@@ -386,7 +386,7 @@ void GetCvars(entity this, entity store, int f)
 		LOG_INFO("Warning: requesting cvar values is deprecated. Client should send them automatically using REPLICATE.\n");
 
 	if (f > 0)
-		s = strcat1(argv(f));
+		s = strcat(argv(f));
 
 	get_cvars_f = f;
 	get_cvars_s = s;

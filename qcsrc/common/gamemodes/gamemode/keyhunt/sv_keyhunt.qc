@@ -45,8 +45,8 @@ const float KH_KEY_XYSPEED = 45;
 #endif
 const float KH_KEY_WP_ZSHIFT = 20;
 
-const vector KH_KEY_MIN = '-10 -10 -46';
-const vector KH_KEY_MAX = '10 10 3';
+const vector KH_KEY_MIN = '-25 -25 -46'; // 0.8.6 used '-10 -10 -46' with sv_legacy_bbox_expand 1 and FL_ITEM
+const vector KH_KEY_MAX = '25 25 4';     // 0.8.6 used '10 10 3'     with sv_legacy_bbox_expand 1 and FL_ITEM
 const float KH_KEY_BRIGHTNESS = 2;
 
 bool kh_no_radar_circles;
@@ -90,7 +90,7 @@ void kh_ScoreRules(int teams)
         field_team(ST_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
         field(SP_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
         field(SP_KH_PUSHES, "pushes", 0);
-        field(SP_KH_DESTROYS, "destroyed", SFL_LOWER_IS_BETTER);
+        field(SP_KH_DESTRUCTIONS, "destructions", SFL_LOWER_IS_BETTER);
         field(SP_KH_PICKUPS, "pickups", 0);
         field(SP_KH_KCKILLS, "kckills", 0);
         field(SP_KH_LOSSES, "losses", SFL_LOWER_IS_BETTER);
@@ -291,6 +291,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	if(!IL_CONTAINS(g_items, key))
 		IL_PUSH(g_items, key);
 	set_movetype(key, MOVETYPE_TOSS);
+	nudgeoutofsolid(key); // a key has a bigger bbox than a player
 	key.pain_finished = time + autocvar_g_balance_keyhunt_delay_return;
 	key.damageforcescale = autocvar_g_balance_keyhunt_damageforcescale;
 	key.takedamage = DAMAGE_YES;
@@ -606,7 +607,7 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 			// don't actually GIVE them the -nn points, just log
 
 		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
-			GameRules_scoring_add(lostkey.kh_previous_owner, KH_DESTROYS, 1);
+			GameRules_scoring_add(lostkey.kh_previous_owner, KH_DESTRUCTIONS, 1);
 
 		DistributeEvenly_Init(autocvar_g_balance_keyhunt_score_destroyed, keys * of + players);
 

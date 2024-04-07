@@ -58,5 +58,6 @@ REGISTER_RADARICON(TAGGED,          1);
 REGISTER_RADARICON(Item,            1);
 REGISTER_RADARICON(Vehicle,         1);
 REGISTER_RADARICON(Weapon,          1);
+REGISTER_RADARICON(Buff,            1);
 
 #include "all.inc"

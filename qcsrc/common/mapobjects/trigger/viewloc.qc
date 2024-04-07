@@ -32,37 +32,16 @@ void viewloc_think(entity this)
 #if 1
 	FOREACH_CLIENT(!it.viewloc && IS_PLAYER(it),
 	{
-		vector emin = it.absmin;
-		vector emax = it.absmax;
-		if(this.solid == SOLID_BSP)
-		{
-			emin -= '1 1 1';
-			emax += '1 1 1';
-		}
-		if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
-		{
-			if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, it)) // accurate
-				it.viewloc = this;
-		}
+		if (WarpZoneLib_ExactTrigger_Touch(this, it, false))
+			it.viewloc = this;
 	});
 #else
-
-		for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
-			if(!e.viewloc)
-				if(IS_PLAYER(e)) // should we support non-player entities with this?
-				//if(!IS_DEAD(e)) // death view is handled separately, we can't override this just yet
-				{
-					vector emin = e.absmin;
-					vector emax = e.absmax;
-					if(this.solid == SOLID_BSP)
-					{
-						emin -= '1 1 1';
-						emax += '1 1 1';
-					}
-					if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
-						if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, e)) // accurate
-							e.viewloc = this;
-				}
+	for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
+		if(!e.viewloc)
+			if(IS_PLAYER(e)) // should we support non-player entities with this?
+			//if(!IS_DEAD(e)) // death view is handled separately, we can't override this just yet
+				if (WarpZoneLib_ExactTrigger_Touch(this, it, false))
+					e.viewloc = this;
 #endif
 
 	this.nextthink = time;

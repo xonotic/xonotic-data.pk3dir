@@ -520,7 +520,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		{
 			recordtime = race_checkpoint_records[cp];
 			float myrecordtime = e.race_checkpoint_record[cp];
-			recordholder = strcat1(race_checkpoint_recordholders[cp]); // make a tempstring copy, as we'll possibly strunzone it!
+			recordholder = strcat(race_checkpoint_recordholders[cp]); // make a tempstring copy, as we'll possibly strunzone it!
 			if(recordholder == e.netname)
 				recordholder = "";
 

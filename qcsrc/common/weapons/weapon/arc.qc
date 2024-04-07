@@ -564,8 +564,7 @@ void Arc_Smoke(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 	makevectors(actor.v_angle);
 	w_shotdir = v_forward;
 	vector md = actor.(weaponentity).movedir;
-	vector vecs = ((md.x > 0) ? md : '0 0 0');
-	vector dv = v_forward * vecs.x + v_right * -vecs.y + v_up * vecs.z;
+	vector dv = v_forward * md.x + v_right * -md.y + v_up * md.z;
 	w_shotorg = actor.origin + actor.view_ofs + dv;
 	//W_SetupShot_Range(actor,weaponentity,false,0,SND_Null,0,0,0,thiswep.m_id);
 
@@ -722,10 +721,11 @@ METHOD(Arc, wr_init, void(entity thiswep))
 {
     if(!arc_shotorigin[0])
     {
-        arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 1);
-        arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 2);
-        arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 3);
-        arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 4);
+    	vector vecs = CL_Weapon_GetShotOrg(WEP_ARC.m_id);
+        arc_shotorigin[0] = shotorg_adjust(vecs, false, false, 1);
+        arc_shotorigin[1] = shotorg_adjust(vecs, false, false, 2);
+        arc_shotorigin[2] = shotorg_adjust(vecs, false, false, 3);
+        arc_shotorigin[3] = shotorg_adjust(vecs, false, false, 4);
     }
 }
 METHOD(Arc, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
