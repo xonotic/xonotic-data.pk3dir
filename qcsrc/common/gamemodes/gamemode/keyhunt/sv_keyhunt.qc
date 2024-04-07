@@ -90,7 +90,7 @@ void kh_ScoreRules(int teams)
         field_team(ST_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
         field(SP_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
         field(SP_KH_PUSHES, "pushes", 0);
-        field(SP_KH_DESTROYS, "destroyed", SFL_LOWER_IS_BETTER);
+        field(SP_KH_DESTRUCTIONS, "destructions", SFL_LOWER_IS_BETTER);
         field(SP_KH_PICKUPS, "pickups", 0);
         field(SP_KH_KCKILLS, "kckills", 0);
         field(SP_KH_LOSSES, "losses", SFL_LOWER_IS_BETTER);
@@ -607,7 +607,7 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 			// don't actually GIVE them the -nn points, just log
 
 		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
-			GameRules_scoring_add(lostkey.kh_previous_owner, KH_DESTROYS, 1);
+			GameRules_scoring_add(lostkey.kh_previous_owner, KH_DESTRUCTIONS, 1);
 
 		DistributeEvenly_Init(autocvar_g_balance_keyhunt_score_destroyed, keys * of + players);
 
