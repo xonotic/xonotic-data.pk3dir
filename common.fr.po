@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-04-08 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2024\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -631,23 +631,23 @@ msgstr "Nombre de clés détruites en les poussant dans le vide"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^destructions"
-msgstr ""
+msgstr "destructions"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^damage dealt"
-msgstr ""
+msgstr "dommages infligés"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "The total damage dealt"
-msgstr ""
+msgstr "Le total des dommages infligés"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^damage taken"
-msgstr ""
+msgstr "dommages subis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "The total damage taken"
-msgstr "Les dommages totaux subis"
+msgstr "Le total des dommages subis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of flag drops"
@@ -707,11 +707,11 @@ msgstr "frags"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "Number of generators destroyed"
-msgstr ""
+msgstr "Nombre de générateurs détruits"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^generators"
-msgstr ""
+msgstr "générateurs"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Number of goals scored"
@@ -945,7 +945,7 @@ msgstr "temps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:183
 msgid "Total time raced (Race/CTS)"
-msgstr "Temps total couru (Course / CTS)"
+msgstr "Temps de course total (Course / CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:712
 msgid ""

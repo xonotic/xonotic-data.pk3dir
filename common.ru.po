@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-04-08 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артём Котлубай, 2022\n"
+"Last-Translator: Andrei Stepanov, 2014-2024\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -629,19 +629,19 @@ msgstr "Число ключей, сломанных толчком в пусто
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^destructions"
-msgstr ""
+msgstr "разрушения"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^damage dealt"
-msgstr ""
+msgstr "урона нанесено"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "The total damage dealt"
-msgstr ""
+msgstr "Общий нанесённый урон"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^damage taken"
-msgstr ""
+msgstr "урона получено"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "The total damage taken"
@@ -705,11 +705,11 @@ msgstr "фраги"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "Number of generators destroyed"
-msgstr ""
+msgstr "Число уничтоженных генераторов"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^generators"
-msgstr ""
+msgstr "генераторы"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Number of goals scored"
