@@ -6,13 +6,15 @@
 # Gustaf Alhäll, 2022
 # Gustaf Alhäll, 2022
 # Hanicef <gustaf@hanicef.me>, 2021
+# Logan Zerfass, 2023
+# Logan Zerfass, 2023
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-11 07:22+0200\n"
+"POT-Creation-Date: 2024-04-08 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hanicef <gustaf@hanicef.me>, 2021\n"
+"Last-Translator: Logan Zerfass, 2023\n"
 "Language-Team: Swedish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/sv/)\n"
 "Language: sv\n"
@@ -148,7 +150,7 @@ msgstr "serverinfo"
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Tryck på ^3%s^1 för att gå med"
 
-#: qcsrc/client/hud/panel/infomessages.qc:130 qcsrc/client/main.qc:1409
+#: qcsrc/client/hud/panel/infomessages.qc:130 qcsrc/client/main.qc:1430
 #: qcsrc/common/notifications/all.qh:442
 msgid "jump"
 msgstr "hoppa"
@@ -554,7 +556,7 @@ msgstr "Mellanliggande %d"
 msgid "PENALTY: %.1f (%s)"
 msgstr "BESTRAFFNING: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1242
+#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1263
 msgid "missing a checkpoint"
 msgstr "Saknar en kontrollpunkt"
 
@@ -566,376 +568,384 @@ msgstr "Klicka för att välja en teleporteringsdestination"
 msgid "Click to select spawn location"
 msgstr "Klicka för att välja återskapningsplats"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Number of ball carrier kills"
 msgstr "Mängden bollhållarmord"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^bckills"
 msgstr "bhmord"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^bctime"
 msgstr "bhtid"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Total amount of time holding the ball in Keepaway"
 msgstr "Totala mängden tid som hållit bollen i Keepaway"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
 msgstr "Hur ofta en flagga (CTF) eller en nyckel (KeyHunt) var fångad"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^caps"
 msgstr "fång"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^captime"
 msgstr "tagtid"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Time of fastest capture (CTF)"
 msgstr "Tiden av den snabbaste tagningen (CTF)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:138
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of deaths"
 msgstr "Mängden död"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:138
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^deaths"
 msgstr "död"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:139
+#: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of keys destroyed by pushing them into void"
 msgstr "Mängden nycklar förstörda genom att putta dem i void"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:139
-msgid "SCO^destroyed"
-msgstr "förstörd"
+#: qcsrc/client/hud/panel/scoreboard.qc:143
+msgid "SCO^destructions"
+msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
-msgid "SCO^damage"
-msgstr "skada"
+#: qcsrc/client/hud/panel/scoreboard.qc:144
+msgid "SCO^damage dealt"
+msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
-msgid "The total damage done"
-msgstr "Totala mängden skada gjord"
+#: qcsrc/client/hud/panel/scoreboard.qc:144
+msgid "The total damage dealt"
+msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
-msgid "SCO^dmgtaken"
-msgstr "skdatagen"
+#: qcsrc/client/hud/panel/scoreboard.qc:145
+msgid "SCO^damage taken"
+msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "The total damage taken"
 msgstr "Totala mängden skada tagen"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of flag drops"
 msgstr "Mängden flaggsläppningar"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^drops"
 msgstr "släpp"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Player ELO"
 msgstr "Spelar-ELO"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^elo"
 msgstr "elo"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^fastest"
 msgstr "snabbast"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "Time of fastest lap (Race/CTS)"
 msgstr "Tiden av snabbaste loppet (Race/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Number of faults committed"
 msgstr "Mängden fel gjorda"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^faults"
 msgstr "fel"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "Number of flag carrier kills"
 msgstr "Mängden flaggbärarmord"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^fckills"
 msgstr "fbmord"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:147
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "FPS"
 msgstr "FPS"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:147
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^fps"
 msgstr "fps"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of kills minus suicides"
 msgstr "Mängden mord minus självmord"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^frags"
 msgstr "fragg"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:153
+msgid "Number of generators destroyed"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:153
+msgid "SCO^generators"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Number of goals scored"
 msgstr "Mängden mål gjorda"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^goals"
 msgstr "mål"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
+#: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of hunts (Survival)"
 msgstr "Mängden jakt (Survival)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
+#: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^hunts"
 msgstr "jakt"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:151
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Number of keys carrier kills"
 msgstr "Mängden nykelbärarmord"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:151
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^kckills"
 msgstr "nbmord"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "SCO^k/d"
 msgstr "m/d"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:152
-#: qcsrc/client/hud/panel/scoreboard.qc:153
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:157
+#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "The kill-death ratio"
 msgstr "Mord-dödsförhållande"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^kdr"
 msgstr "mdh"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^kdratio"
 msgstr "mdförhåll"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Number of kills"
 msgstr "Mängden mord"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^kills"
 msgstr "mord"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of laps finished (Race/CTS)"
 msgstr "Mängden lopp slutförda (Race/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^laps"
 msgstr "lopp"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "Number of lives (LMS)"
 msgstr "Mängden liv (LMS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "SCO^lives"
 msgstr "liv"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Number of times a key was lost"
 msgstr "Hur många gånger nyckeln var förlorad"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^losses"
 msgstr "förlust"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
-#: qcsrc/client/hud/panel/scoreboard.qc:160
+#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "Player name"
 msgstr "Spelnamn"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^name"
 msgstr "namn"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:160
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "SCO^nick"
 msgstr "nick"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "Number of objectives destroyed"
 msgstr "Mängden mål förstörda"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "SCO^objectives"
 msgstr "mål"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr ""
 "Hur ofta en flagga (CTF), en nyckel (KeyHund) eller en boll (Keepaway) var "
 "upplockad"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "SCO^pickups"
 msgstr "upplock"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Ping time"
 msgstr "Pingtid"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^ping"
 msgstr "ping"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Packet loss"
 msgstr "Paketförlust"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^pl"
 msgstr "pf"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "Number of players pushed into void"
 msgstr "Mängden spelare puttade ner i void"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^pushes"
 msgstr "putt"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "Player rank"
 msgstr "Spelarrang"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "SCO^rank"
 msgstr "rang"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of flag returns"
 msgstr "Mängden flaggåterlämningar"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^returns"
 msgstr "återlämning"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of revivals"
 msgstr "Mängden återupplivaden"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "SCO^revivals"
 msgstr "återuppliv"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "Number of rounds won"
 msgstr "Mängden omgångar vunna"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "SCO^rounds won"
 msgstr "omgångar vunna"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "Number of rounds played"
 msgstr "Mängden omgångar spelade"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "SCO^rounds played"
 msgstr "omgångar spelade"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:176
 msgid "SCO^score"
 msgstr "poäng"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:176
 msgid "Total score"
 msgstr "Totala mängden poäng"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "Number of suicides"
 msgstr "Mängden självmord"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "SCO^suicides"
 msgstr "självmord"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:173
+#: qcsrc/client/hud/panel/scoreboard.qc:178
 msgid "Number of kills minus deaths"
 msgstr "Mängden mord minus död"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:173
+#: qcsrc/client/hud/panel/scoreboard.qc:178
 msgid "SCO^sum"
 msgstr "summa"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:174
+#: qcsrc/client/hud/panel/scoreboard.qc:179
 msgid "Number of survivals"
 msgstr "Mängden överlevnader"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:174
+#: qcsrc/client/hud/panel/scoreboard.qc:179
 msgid "SCO^survivals"
 msgstr "överlevnader"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:175
+#: qcsrc/client/hud/panel/scoreboard.qc:180
 msgid "Number of domination points taken (Domination)"
 msgstr "Mängden domineringspoäng tagna (Domination)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:175
+#: qcsrc/client/hud/panel/scoreboard.qc:180
 msgid "SCO^takes"
 msgstr "tagna"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:176
+#: qcsrc/client/hud/panel/scoreboard.qc:181
 msgid "Number of teamkills"
 msgstr "Mängden lagmord"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:176
+#: qcsrc/client/hud/panel/scoreboard.qc:181
 msgid "SCO^teamkills"
 msgstr "lagmord"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:177
+#: qcsrc/client/hud/panel/scoreboard.qc:182
 msgid "Number of ticks (Domination)"
 msgstr "Mängden ticks (Domination)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:177
+#: qcsrc/client/hud/panel/scoreboard.qc:182
 msgid "SCO^ticks"
 msgstr "ticks"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:178
+#: qcsrc/client/hud/panel/scoreboard.qc:183
 msgid "SCO^time"
 msgstr "tid"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:178
+#: qcsrc/client/hud/panel/scoreboard.qc:183
 msgid "Total time raced (Race/CTS)"
 msgstr "Total tid tävlats (Race/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:707
+#: qcsrc/client/hud/panel/scoreboard.qc:712
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
 "Du kan ändra poängtavlan med användning av ^2scoreboard_columns_set-"
 "kommandot."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:708
+#: qcsrc/client/hud/panel/scoreboard.qc:713
 msgid "Usage:"
 msgstr "Användning:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:710
+#: qcsrc/client/hud/panel/scoreboard.qc:715
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr "^2scoreboard_columns_set ^3fält1 fält ..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:711
+#: qcsrc/client/hud/panel/scoreboard.qc:716
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
@@ -943,7 +953,7 @@ msgstr ""
 "^2scoreboard_columns_set ^7utan argument hämtar argumenten från cvaren "
 "scoreboard_columns"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:712
+#: qcsrc/client/hud/panel/scoreboard.qc:717
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
@@ -951,7 +961,7 @@ msgstr ""
 "  ^5Anmärkning: ^7scoreboard_columns_set utan argument körs varje gång "
 "kartan startas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:713
+#: qcsrc/client/hud/panel/scoreboard.qc:718
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
@@ -959,15 +969,15 @@ msgstr ""
 "^2scoreboard_columns_set ^3expand_default ^7laddar standardlayouten och "
 "expanderar det in till cvaren scoreboard_columns så du kan ändra den"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:714
+#: qcsrc/client/hud/panel/scoreboard.qc:719
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr "Du kan använda en ^3|^7 för att starta de högerjusterade fälten."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:715
+#: qcsrc/client/hud/panel/scoreboard.qc:720
 msgid "The following field names are recognized (case insensitive):"
 msgstr "De följande fältnamnen är igenkända (skiftesokänslig):"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:721
+#: qcsrc/client/hud/panel/scoreboard.qc:726
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -982,7 +992,7 @@ msgstr ""
 "ett \n"
 "fält för att visa alla tillgängliga fält för det nuvarande spelläget."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:727
+#: qcsrc/client/hud/panel/scoreboard.qc:732
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
@@ -990,11 +1000,11 @@ msgstr ""
 "Den speciella speltypesnamnen 'teams' och 'noteams' kan användas för att\n"
 "inkludera/exkludera ALLA lag- eller ickelagspellägen"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:731
+#: qcsrc/client/hud/panel/scoreboard.qc:736
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr "Exempel: scoreboard_columns_set namn ping pl | +ctf/fält3 -dm/fält4"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:732
+#: qcsrc/client/hud/panel/scoreboard.qc:737
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
@@ -1002,7 +1012,7 @@ msgstr ""
 "kommer att visa namn, ping och pl justerat till vänster, och fälten\n"
 "höger om den vertikala strecket justerat till höger."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:734
+#: qcsrc/client/hud/panel/scoreboard.qc:739
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
@@ -1010,10 +1020,10 @@ msgstr ""
 "'fält3' kommer att bara synas i CTF, och 'fält4' kommer att synas i alla\n"
 "andra spellägen förutom DM."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1039
-#: qcsrc/client/hud/panel/scoreboard.qc:1054
-#: qcsrc/client/hud/panel/scoreboard.qc:1124
-#: qcsrc/client/hud/panel/scoreboard.qc:1135 qcsrc/common/util.qc:385
+#: qcsrc/client/hud/panel/scoreboard.qc:1037
+#: qcsrc/client/hud/panel/scoreboard.qc:1052
+#: qcsrc/client/hud/panel/scoreboard.qc:1122
+#: qcsrc/client/hud/panel/scoreboard.qc:1133 qcsrc/common/util.qc:385
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -1022,123 +1032,123 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1699
+#: qcsrc/client/hud/panel/scoreboard.qc:1767
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Noggrannhetsstatistik (genomsnitt %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1856
+#: qcsrc/client/hud/panel/scoreboard.qc:1924
 msgid "Item stats"
 msgstr "Sakstatistik"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1967
+#: qcsrc/client/hud/panel/scoreboard.qc:2035
 msgid "Map stats:"
 msgstr "Kartstatistik:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1997
+#: qcsrc/client/hud/panel/scoreboard.qc:2065
 msgid "Monsters killed:"
 msgstr "Monster dödade:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2004
+#: qcsrc/client/hud/panel/scoreboard.qc:2072
 msgid "Secrets found:"
 msgstr "Hemligheter hittade:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2214
+#: qcsrc/client/hud/panel/scoreboard.qc:2282
 #, c-format
 msgid "Spectators"
 msgstr "Åskådare"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2236
+#: qcsrc/client/hud/panel/scoreboard.qc:2304
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2236
+#: qcsrc/client/hud/panel/scoreboard.qc:2304
 #, c-format
 msgid "^5%s %s"
 msgstr "^5%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2237
+#: qcsrc/client/hud/panel/scoreboard.qc:2305
 msgid "SCO^points"
 msgstr "poäng"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2328
+#: qcsrc/client/hud/panel/scoreboard.qc:2413
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "Lagval"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2340
+#: qcsrc/client/hud/panel/scoreboard.qc:2427
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^7Tryck ^3%s^7 för att gå med det valda laget"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2342
+#: qcsrc/client/hud/panel/scoreboard.qc:2429
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr "^7Tryck ^3%s^7 för att auto-välja ett lag och gå med"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2346
+#: qcsrc/client/hud/panel/scoreboard.qc:2433
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7Tryck ^3%s ^7för att välja ett specifikt lag"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2357
+#: qcsrc/client/hud/panel/scoreboard.qc:2444
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f minuter"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2384
+#: qcsrc/client/hud/panel/scoreboard.qc:2471
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7spelare"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2385 qcsrc/client/main.qc:1436
+#: qcsrc/client/hud/panel/scoreboard.qc:2472 qcsrc/client/main.qc:1457
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Karta:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2548
+#: qcsrc/client/hud/panel/scoreboard.qc:2635
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Hastighetsutmärkelse: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2552
+#: qcsrc/client/hud/panel/scoreboard.qc:2639
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Snabbast någonsin: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2586
+#: qcsrc/client/hud/panel/scoreboard.qc:2673
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Återskapas om ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2596
+#: qcsrc/client/hud/panel/scoreboard.qc:2683
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Du är död, vänta ^3%s^7 innan återskapning"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2605
+#: qcsrc/client/hud/panel/scoreboard.qc:2692
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Du är död, tryck på ^2%s^7 för ått återskapa"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1312
+#: qcsrc/client/hud/panel/strafehud.qc:1313
 msgid "qu"
 msgstr "qu"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1313
+#: qcsrc/client/hud/panel/strafehud.qc:1314
 msgid "m"
 msgstr "m"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1314
+#: qcsrc/client/hud/panel/strafehud.qc:1315
 msgid "km"
 msgstr "km"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1315
+#: qcsrc/client/hud/panel/strafehud.qc:1316
 msgid "mi"
 msgstr "mi"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1316
+#: qcsrc/client/hud/panel/strafehud.qc:1317
 msgid "nmi"
 msgstr "nmi"
 
@@ -1213,155 +1223,155 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nej"
 
-#: qcsrc/client/hud/panel/weapons.qc:631
+#: qcsrc/client/hud/panel/weapons.qc:629
 msgid "Out of ammo"
 msgstr "Slut på ammunition"
 
-#: qcsrc/client/hud/panel/weapons.qc:635
+#: qcsrc/client/hud/panel/weapons.qc:633
 msgid "Don't have"
 msgstr "Har inte"
 
-#: qcsrc/client/hud/panel/weapons.qc:639
+#: qcsrc/client/hud/panel/weapons.qc:637
 msgid "Unavailable"
 msgstr "Otillgänglig"
 
-#: qcsrc/client/main.qc:300
+#: qcsrc/client/main.qc:305
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Försöker ta bort ett lag som inte är i laglistan!"
 
-#: qcsrc/client/main.qc:1144 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
+#: qcsrc/client/main.qc:1165 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1145 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/client/main.qc:1166 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1146 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
+#: qcsrc/client/main.qc:1167 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1147 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
+#: qcsrc/client/main.qc:1168 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1148 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/client/main.qc:1169 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
 msgstr "knop"
 
-#: qcsrc/client/main.qc:1359
+#: qcsrc/client/main.qc:1380
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
 msgstr "Alla Vapen-Arena"
 
-#: qcsrc/client/main.qc:1360
+#: qcsrc/client/main.qc:1381
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
 msgstr "Alla Tillgängliga Vapen-Arena"
 
-#: qcsrc/client/main.qc:1361
+#: qcsrc/client/main.qc:1382
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
 msgstr "Flesta Vapen-Arena"
 
-#: qcsrc/client/main.qc:1362
+#: qcsrc/client/main.qc:1383
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
 msgstr "Flesta Tillgängliga Vapen-Arena"
 
-#: qcsrc/client/main.qc:1365 qcsrc/client/main.qc:1379
+#: qcsrc/client/main.qc:1386 qcsrc/client/main.qc:1400
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
 msgstr "Inga Vapen-Arena"
 
-#: qcsrc/client/main.qc:1377
+#: qcsrc/client/main.qc:1398
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
 #, c-format
 msgid "%s Arena"
 msgstr "%s Arena"
 
-#: qcsrc/client/main.qc:1388 qcsrc/client/main.qc:1393
+#: qcsrc/client/main.qc:1409 qcsrc/client/main.qc:1414
 #, c-format
 msgid "This is %s"
 msgstr "Detta är %s"
 
-#: qcsrc/client/main.qc:1389
+#: qcsrc/client/main.qc:1410
 msgid "Your client version is outdated."
 msgstr "Din klientversion är utdaterad."
 
-#: qcsrc/client/main.qc:1390
+#: qcsrc/client/main.qc:1411
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### DU KOMMER INTE ATT KUNNA SPELA PÅ DENNA SERVER ###"
 
-#: qcsrc/client/main.qc:1391
+#: qcsrc/client/main.qc:1412
 msgid "Please update!"
 msgstr "Vänligen uppdatera!"
 
-#: qcsrc/client/main.qc:1394
+#: qcsrc/client/main.qc:1415
 msgid "This server is using an outdated Xonotic version."
 msgstr "Denna server använder en utdaterad Xonotic-version."
 
-#: qcsrc/client/main.qc:1395
+#: qcsrc/client/main.qc:1416
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### DENNA SERVER ÄN INKOMPATIBEL OCH DU KAN DÄRFÖR INTE GÅ MED ###"
 
-#: qcsrc/client/main.qc:1397
+#: qcsrc/client/main.qc:1418
 #, c-format
 msgid "Welcome to %s"
 msgstr "Välkommen till %s"
 
-#: qcsrc/client/main.qc:1411 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1432 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Nivå %d:"
 
-#: qcsrc/client/main.qc:1413
+#: qcsrc/client/main.qc:1434
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGTryck på ^F2%s^BG för att gå med i spelet"
 
-#: qcsrc/client/main.qc:1434
+#: qcsrc/client/main.qc:1455
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Speltyp:"
 
-#: qcsrc/client/main.qc:1448
+#: qcsrc/client/main.qc:1469
 msgid "This match supports"
 msgstr "Denna match stödjer"
 
-#: qcsrc/client/main.qc:1450
+#: qcsrc/client/main.qc:1471
 #, c-format
 msgid "%d players"
 msgstr "%d spelare"
 
-#: qcsrc/client/main.qc:1452
+#: qcsrc/client/main.qc:1473
 #, c-format
 msgid "%d to %d players"
 msgstr "%d till %d spelare"
 
-#: qcsrc/client/main.qc:1454
+#: qcsrc/client/main.qc:1475
 #, c-format
 msgid "%d players maximum"
 msgstr "%d spelare maximum"
 
-#: qcsrc/client/main.qc:1456
+#: qcsrc/client/main.qc:1477
 #, c-format
 msgid "%d players minimum"
 msgstr "%d spelare minimum"
 
-#: qcsrc/client/main.qc:1461
+#: qcsrc/client/main.qc:1482
 msgid "Active modifications:"
 msgstr "Aktiva modifikationer:"
 
-#: qcsrc/client/main.qc:1464
+#: qcsrc/client/main.qc:1485
 msgid "Special gameplay tips:"
 msgstr "Speciella speltypstips:"
 
-#: qcsrc/client/main.qc:1471
+#: qcsrc/client/main.qc:1492
 msgid "Server's message"
 msgstr "Serverns meddelande"
 
-#: qcsrc/client/main.qc:1565
+#: qcsrc/client/main.qc:1586
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (ej bunden)"
@@ -1405,15 +1415,15 @@ msgstr "^1Fel:^7 Kunde inte hitta pak-index."
 msgid "Requesting preview..."
 msgstr "Skickar förfrågan om förhandsgranskning..."
 
-#: qcsrc/client/view.qc:883
+#: qcsrc/client/view.qc:900
 msgid "Nade timer"
 msgstr "Granattimer"
 
-#: qcsrc/client/view.qc:888
+#: qcsrc/client/view.qc:905
 msgid "Capture progress"
 msgstr "Fångningsprocess"
 
-#: qcsrc/client/view.qc:893
+#: qcsrc/client/view.qc:910
 msgid "Revival progress"
 msgstr "Återupplivningsprocess"
 
@@ -1706,7 +1716,7 @@ msgstr "Celler"
 msgid "Plasma"
 msgstr "Plasma"
 
-#: qcsrc/common/items/item/armor.qh:42
+#: qcsrc/common/items/item/armor.qh:40
 msgid "Small armor"
 msgstr "Liten rustning"
 
@@ -1714,27 +1724,27 @@ msgstr "Liten rustning"
 msgid "Medium armor"
 msgstr "Medelstor rustning"
 
-#: qcsrc/common/items/item/armor.qh:126 qcsrc/common/items/item/armor.qh:133
+#: qcsrc/common/items/item/armor.qh:128 qcsrc/common/items/item/armor.qh:135
 msgid "Big armor"
 msgstr "Stor rustning"
 
-#: qcsrc/common/items/item/armor.qh:170 qcsrc/common/items/item/armor.qh:177
+#: qcsrc/common/items/item/armor.qh:172 qcsrc/common/items/item/armor.qh:179
 msgid "Mega armor"
 msgstr "Megarustning"
 
-#: qcsrc/common/items/item/health.qh:42
+#: qcsrc/common/items/item/health.qh:40
 msgid "Small health"
 msgstr "Liten hälsa"
 
-#: qcsrc/common/items/item/health.qh:84
+#: qcsrc/common/items/item/health.qh:85
 msgid "Medium health"
 msgstr "Medelstor hälsa"
 
-#: qcsrc/common/items/item/health.qh:126 qcsrc/common/items/item/health.qh:129
+#: qcsrc/common/items/item/health.qh:129 qcsrc/common/items/item/health.qh:132
 msgid "Big health"
 msgstr "Stor hälsa"
 
-#: qcsrc/common/items/item/health.qh:170 qcsrc/common/items/item/health.qh:177
+#: qcsrc/common/items/item/health.qh:173 qcsrc/common/items/item/health.qh:180
 msgid "Mega health"
 msgstr "Megahälsa"
 
@@ -1770,7 +1780,11 @@ msgstr "Fraggräns:"
 msgid "The amount of frags needed before the match will end"
 msgstr "Antal fraggningar som krävs innan matchen tar slut"
 
-#: qcsrc/common/minigames/cl_minigames.qc:379
+#: qcsrc/common/minigames/cl_minigames.qc:287
+msgid "Spectators:"
+msgstr ""
+
+#: qcsrc/common/minigames/cl_minigames.qc:424
 msgid "It's your turn"
 msgstr "Det är din tur"
 
@@ -1805,7 +1819,7 @@ msgstr "Gå med"
 msgid "Minigames"
 msgstr "Minispel"
 
-#: qcsrc/common/minigames/cl_minigames_hud.qc:582
+#: qcsrc/common/minigames/cl_minigames_hud.qc:581
 msgid "Minigame message"
 msgstr "Minispelmeddelande"
 
@@ -1823,49 +1837,49 @@ msgstr "Spelet är slut!"
 msgid "Well done! Click 'Next Level' to continue"
 msgstr "Bra jobbat! Klicka på 'Nästa Nivå' för att fortsätta"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1181
-#: qcsrc/common/minigames/minigame/c4.qc:381
-#: qcsrc/common/minigames/minigame/nmm.qc:605
-#: qcsrc/common/minigames/minigame/pong.qc:624
-#: qcsrc/common/minigames/minigame/pp.qc:447
-#: qcsrc/common/minigames/minigame/ps.qc:498
-#: qcsrc/common/minigames/minigame/ttt.qc:329
+#: qcsrc/common/minigames/minigame/bd.qc:1183
+#: qcsrc/common/minigames/minigame/c4.qc:383
+#: qcsrc/common/minigames/minigame/nmm.qc:607
+#: qcsrc/common/minigames/minigame/pong.qc:626
+#: qcsrc/common/minigames/minigame/pp.qc:449
+#: qcsrc/common/minigames/minigame/ps.qc:500
+#: qcsrc/common/minigames/minigame/ttt.qc:331
 msgid "You are spectating"
 msgstr "Du åskådar"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1184
+#: qcsrc/common/minigames/minigame/bd.qc:1186
 msgid "Better luck next time!"
 msgstr "Bättre lycka nästa gång!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1189
+#: qcsrc/common/minigames/minigame/bd.qc:1191
 msgid "Tubular! Press \"Next Level\" to continue!"
 msgstr "Rörformad! Tryck på \"Nästa Nivå\" för att fortsätta!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1191
+#: qcsrc/common/minigames/minigame/bd.qc:1193
 msgid "Wicked! Press \"Next Level\" to continue!"
 msgstr "Galet! Tryck på \"Nästa Nivå\" för att fortsätta!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1195
+#: qcsrc/common/minigames/minigame/bd.qc:1197
 msgid "Press the space bar to change your currently selected tile"
 msgstr "Tryck på blanksteg för att ändra din nuvarande kakel"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1198
+#: qcsrc/common/minigames/minigame/bd.qc:1200
 msgid "Push the boulders onto the targets"
 msgstr "Putta stenblocken över måltavlorna"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1434
+#: qcsrc/common/minigames/minigame/bd.qc:1436
 msgid "Next Level"
 msgstr "Nästa Nivå"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1435
+#: qcsrc/common/minigames/minigame/bd.qc:1437
 msgid "Restart"
 msgstr "Starta Om"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1436
+#: qcsrc/common/minigames/minigame/bd.qc:1438
 msgid "Editor"
 msgstr "Redigerare"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1437
+#: qcsrc/common/minigames/minigame/bd.qc:1439
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:37
 msgid "Save"
 msgstr "Spara"
@@ -1884,37 +1898,37 @@ msgstr "Fyra-i-Rad"
 msgid "%s^7 won the game!"
 msgstr "%s^7 vann spelet!"
 
-#: qcsrc/common/minigames/minigame/c4.qc:384
-#: qcsrc/common/minigames/minigame/pp.qc:450
-#: qcsrc/common/minigames/minigame/ttt.qc:332
+#: qcsrc/common/minigames/minigame/c4.qc:386
+#: qcsrc/common/minigames/minigame/pp.qc:452
+#: qcsrc/common/minigames/minigame/ttt.qc:334
 msgid "Draw"
 msgstr "Rita"
 
-#: qcsrc/common/minigames/minigame/c4.qc:389
-#: qcsrc/common/minigames/minigame/nmm.qc:610
-#: qcsrc/common/minigames/minigame/pp.qc:456
-#: qcsrc/common/minigames/minigame/ttt.qc:339
+#: qcsrc/common/minigames/minigame/c4.qc:391
+#: qcsrc/common/minigames/minigame/nmm.qc:612
+#: qcsrc/common/minigames/minigame/pp.qc:458
+#: qcsrc/common/minigames/minigame/ttt.qc:341
 msgid "You lost the game!"
 msgstr "Du har förlorat spelet!"
 
-#: qcsrc/common/minigames/minigame/c4.qc:390
-#: qcsrc/common/minigames/minigame/nmm.qc:611
-#: qcsrc/common/minigames/minigame/pp.qc:457
-#: qcsrc/common/minigames/minigame/ttt.qc:340
+#: qcsrc/common/minigames/minigame/c4.qc:392
+#: qcsrc/common/minigames/minigame/nmm.qc:613
+#: qcsrc/common/minigames/minigame/pp.qc:459
+#: qcsrc/common/minigames/minigame/ttt.qc:342
 msgid "You win!"
 msgstr "Du vann!"
 
-#: qcsrc/common/minigames/minigame/c4.qc:394
-#: qcsrc/common/minigames/minigame/nmm.qc:615
-#: qcsrc/common/minigames/minigame/pp.qc:468
-#: qcsrc/common/minigames/minigame/ttt.qc:351
+#: qcsrc/common/minigames/minigame/c4.qc:396
+#: qcsrc/common/minigames/minigame/nmm.qc:617
+#: qcsrc/common/minigames/minigame/pp.qc:470
+#: qcsrc/common/minigames/minigame/ttt.qc:353
 msgid "Wait for your opponent to make their move"
 msgstr "Vänta på din motståndare att göra sin flytt"
 
-#: qcsrc/common/minigames/minigame/c4.qc:397
-#: qcsrc/common/minigames/minigame/nmm.qc:617
-#: qcsrc/common/minigames/minigame/pp.qc:471
-#: qcsrc/common/minigames/minigame/ttt.qc:354
+#: qcsrc/common/minigames/minigame/c4.qc:399
+#: qcsrc/common/minigames/minigame/nmm.qc:619
+#: qcsrc/common/minigames/minigame/pp.qc:473
+#: qcsrc/common/minigames/minigame/ttt.qc:356
 msgid "Click on the game board to place your piece"
 msgstr "Klicka på spelbordet för att placera din pjäs"
 
@@ -1922,18 +1936,18 @@ msgstr "Klicka på spelbordet för att placera din pjäs"
 msgid "Nine Men's Morris"
 msgstr "Nine Men's Morris"
 
-#: qcsrc/common/minigames/minigame/nmm.qc:619
+#: qcsrc/common/minigames/minigame/nmm.qc:621
 msgid ""
 "You can select one of your pieces to move it in one of the surrounding places"
 msgstr ""
 "Du kan välja en av dina pjäser att flytta den till en av de kringliggande "
 "platserna"
 
-#: qcsrc/common/minigames/minigame/nmm.qc:621
+#: qcsrc/common/minigames/minigame/nmm.qc:623
 msgid "You can select one of your pieces to move it anywhere on the board"
 msgstr "Du kan välja en av dina pjäser att flytta till varsomhelst på bordet"
 
-#: qcsrc/common/minigames/minigame/nmm.qc:623
+#: qcsrc/common/minigames/minigame/nmm.qc:625
 msgid "You can take one of the opponent's pieces"
 msgstr "Du kan ta motståndarens delar"
 
@@ -1941,25 +1955,25 @@ msgstr "Du kan ta motståndarens delar"
 msgid "Pong"
 msgstr "Pong"
 
-#: qcsrc/common/minigames/minigame/pong.qc:607
-#: qcsrc/common/minigames/minigame/ttt.qc:309
+#: qcsrc/common/minigames/minigame/pong.qc:609
+#: qcsrc/common/minigames/minigame/ttt.qc:311
 msgid "AI"
 msgstr "AI"
 
-#: qcsrc/common/minigames/minigame/pong.qc:626
+#: qcsrc/common/minigames/minigame/pong.qc:628
 msgid "Press ^1Start Match^7 to start the match with the current players"
 msgstr ""
 "Tryck på ^1Börja Matchen^7 för att starta matchen med de nuvarande spelarna"
 
-#: qcsrc/common/minigames/minigame/pong.qc:698
+#: qcsrc/common/minigames/minigame/pong.qc:700
 msgid "Start Match"
 msgstr "Börja Matchen"
 
-#: qcsrc/common/minigames/minigame/pong.qc:699
+#: qcsrc/common/minigames/minigame/pong.qc:701
 msgid "Add AI player"
 msgstr "Lägg till AI-spelare"
 
-#: qcsrc/common/minigames/minigame/pong.qc:700
+#: qcsrc/common/minigames/minigame/pong.qc:702
 msgid "Remove AI player"
 msgstr "Ta bort AI-spelare"
 
@@ -1967,25 +1981,25 @@ msgstr "Ta bort AI-spelare"
 msgid "Push-Pull"
 msgstr "Push-Pull"
 
-#: qcsrc/common/minigames/minigame/pp.qc:456
-#: qcsrc/common/minigames/minigame/ttt.qc:339
+#: qcsrc/common/minigames/minigame/pp.qc:458
+#: qcsrc/common/minigames/minigame/ttt.qc:341
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
 msgstr "Välj \"^1Nästa Match^7\" på menyn för en returmatch!"
 
-#: qcsrc/common/minigames/minigame/pp.qc:457
-#: qcsrc/common/minigames/minigame/pp.qc:463
-#: qcsrc/common/minigames/minigame/ttt.qc:340
-#: qcsrc/common/minigames/minigame/ttt.qc:346
+#: qcsrc/common/minigames/minigame/pp.qc:459
+#: qcsrc/common/minigames/minigame/pp.qc:465
+#: qcsrc/common/minigames/minigame/ttt.qc:342
+#: qcsrc/common/minigames/minigame/ttt.qc:348
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr "Välj \"^1Nästa Match^7\" på menyn för att start en ny match!"
 
-#: qcsrc/common/minigames/minigame/pp.qc:464
-#: qcsrc/common/minigames/minigame/ttt.qc:347
+#: qcsrc/common/minigames/minigame/pp.qc:466
+#: qcsrc/common/minigames/minigame/ttt.qc:349
 msgid "Wait for your opponent to confirm the rematch"
 msgstr "Väntar på din motståndare att godkänna en returmatch"
 
-#: qcsrc/common/minigames/minigame/pp.qc:613
-#: qcsrc/common/minigames/minigame/ttt.qc:698
+#: qcsrc/common/minigames/minigame/pp.qc:615
+#: qcsrc/common/minigames/minigame/ttt.qc:700
 msgid "Next Match"
 msgstr "Nästa Match"
 
@@ -2001,20 +2015,20 @@ msgstr "All pjäser tömda!"
 msgid "Remaining pieces:"
 msgstr "Återstående pjäser:"
 
-#: qcsrc/common/minigames/minigame/ps.qc:488
+#: qcsrc/common/minigames/minigame/ps.qc:490
 #, c-format
 msgid "Pieces left: %s"
 msgstr "Bitar kvar: %s"
 
-#: qcsrc/common/minigames/minigame/ps.qc:501
+#: qcsrc/common/minigames/minigame/ps.qc:503
 msgid "No more valid moves"
 msgstr "Inga mer giltiga flytt"
 
-#: qcsrc/common/minigames/minigame/ps.qc:504
+#: qcsrc/common/minigames/minigame/ps.qc:506
 msgid "Well done, you win!"
 msgstr "Bra gjort, du vinner!"
 
-#: qcsrc/common/minigames/minigame/ps.qc:507
+#: qcsrc/common/minigames/minigame/ps.qc:509
 msgid "Jump a piece over another to capture it"
 msgstr "Hoppa en pjäs över en annan för att ta den"
 
@@ -2022,7 +2036,7 @@ msgstr "Hoppa en pjäs över en annan för att ta den"
 msgid "Tic Tac Toe"
 msgstr "Tre-i-Rad"
 
-#: qcsrc/common/minigames/minigame/ttt.qc:699
+#: qcsrc/common/minigames/minigame/ttt.qc:701
 msgid "Single Player"
 msgstr "En Spelare"
 
@@ -2120,10 +2134,6 @@ msgstr "Tur"
 msgid "Flight"
 msgstr "Flyg"
 
-#: qcsrc/common/mutators/mutator/buffs/buffs.qh:12
-msgid "Buff"
-msgstr "Buff"
-
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:8
 msgid "Damage text"
 msgstr "Skadetext"
@@ -2207,18 +2217,18 @@ msgstr "Slöjgranat"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:99
 msgid "Ammo grenade"
-msgstr ""
+msgstr "Ammunitiongranat"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:109
 msgid "Darkness grenade"
-msgstr ""
+msgstr "Mörkgranat"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:139
+#: qcsrc/common/mutators/mutator/nades/nades.qc:141
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
 msgstr "släpp vapen / kasta granat"
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:141
+#: qcsrc/common/mutators/mutator/nades/nades.qc:143
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr "^3granater^8 är påslagna, tryck ^3%s^8 för att använda dem"
@@ -2252,27 +2262,27 @@ msgstr "Overkill Raketframdriven Motorsåg"
 msgid "Overkill Shotgun"
 msgstr "Overkill Hagelbörsa"
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
-#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:46
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:49
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:58
 msgid "Invisibility"
 msgstr "Osynlighet"
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
-#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
-#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:57
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:44
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:47
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:56
 msgid "Shield"
 msgstr "Sköld"
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
-#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:47
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:50
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:59
 msgid "Speed"
 msgstr "Hastighet"
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:47
-#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
-#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:58
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:46
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:49
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:57
 msgid "Strength"
 msgstr "Styrka"
 
@@ -2325,13 +2335,13 @@ msgid "Checkpoint"
 msgstr "Kontrollpunkt"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:16
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:235
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:237
 msgid "Finish"
 msgstr "Slut"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:235
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:237
 msgid "Start"
 msgstr "Start"
 
@@ -2456,7 +2466,11 @@ msgstr "Inkräktare!"
 msgid "Tagged"
 msgstr "Taggad"
 
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:692
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:75
+msgid "Buff"
+msgstr "Buff"
+
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:694
 #, c-format
 msgid "%s needing help!"
 msgstr "%s behöver hjälp!"
@@ -2497,11 +2511,11 @@ msgstr "^BG%s^BG fångade den ^TC^TT^BG flaggan"
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
-"%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
+"^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
-"^BG%s^BG fångade den ^TC^TT^BG flaggan på ^F1%s^BG sekunder, vilket slår ^BG"
-"%s^BGs föregående rekord på ^F2%s^BG sekunder"
+"^BG%s^BG fångade den ^TC^TT^BG flaggan på ^F1%s^BG sekunder, vilket slår "
+"^BG%s^BGs föregående rekord på ^F2%s^BG sekunder"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
@@ -2753,8 +2767,8 @@ msgstr "^BG%s%s^K1 dog i en olycka med ^BG%s^K1%s%s"
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s%s"
 msgstr ""
-"^BG%s%s^K1 var inblandad i sprängningen när ^BG%s^K1s Bumblebee exploderade%s"
-"%s"
+"^BG%s%s^K1 var inblandad i sprängningen när ^BG%s^K1s Bumblebee "
+"exploderade%s%s"
 
 #: qcsrc/common/notifications/all.inc:294
 #, c-format
@@ -2787,8 +2801,8 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s"
 msgstr ""
-"^BG%s%s^K1 var inblandad i sprängningen när ^BG%s^K1s Spiderbot exploderade%s"
-"%s"
+"^BG%s%s^K1 var inblandad i sprängningen när ^BG%s^K1s Spiderbot "
+"exploderade%s%s"
 
 #: qcsrc/common/notifications/all.inc:300
 #, c-format
@@ -2937,8 +2951,8 @@ msgstr "^BG%s^K1 bemästrade konsten av själv-nading%s%s"
 msgid ""
 "^BG%s^K1 decided to take a look at the results of their napalm explosion%s%s"
 msgstr ""
-"^BG%s^K1 bestämde sig för att ta en titt på resultatet av sin napalmexplosion"
-"%s%s"
+"^BG%s^K1 bestämde sig för att ta en titt på resultatet av sin "
+"napalmexplosion%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
@@ -3255,13 +3269,13 @@ msgid "^BG%s^F3 is now playing on the ^TC^TT team"
 msgstr "^BG%s^F3 spelar nu på ^TC^TT lag"
 
 #: qcsrc/common/notifications/all.inc:396
-#: qcsrc/common/notifications/all.inc:718
+#: qcsrc/common/notifications/all.inc:719
 #, c-format
 msgid "^BG%s^BG has dropped the ball!"
 msgstr "^BG%s^BG har släppt bollen!"
 
 #: qcsrc/common/notifications/all.inc:397
-#: qcsrc/common/notifications/all.inc:719
+#: qcsrc/common/notifications/all.inc:720
 #, c-format
 msgid "^BG%s^BG has picked up the ball!"
 msgstr "^BG%s^BG har plockat upp bollen!"
@@ -3479,12 +3493,12 @@ msgid "^BG%s^K1 picked up a Superweapon"
 msgstr "^BG%s^K1 plockade upp ett Supervapen"
 
 #: qcsrc/common/notifications/all.inc:450
-#: qcsrc/common/notifications/all.inc:789
+#: qcsrc/common/notifications/all.inc:790
 msgid "^K1Hunters^BG win the round"
 msgstr "^K1Jägarna^BG vinner omgången"
 
 #: qcsrc/common/notifications/all.inc:451
-#: qcsrc/common/notifications/all.inc:791
+#: qcsrc/common/notifications/all.inc:792
 msgid "^F1Survivors^BG win the round"
 msgstr "^F1Överlevarna^BG vinner omgången"
 
@@ -3516,6 +3530,8 @@ msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
 "the update from ^F3https://xonotic.org^BG!"
 msgstr ""
+"^F4ANMÄRKNING: ^F1Xonotic %s^BG är ute, och du har fortfarande ^F2Xonotic "
+"%s^BG - hämta uppdatering från ^F3https://xonotic.org^BG!"
 
 #: qcsrc/common/notifications/all.inc:460
 #, c-format
@@ -3676,7 +3692,7 @@ msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
 msgstr "^BG%s%s^K1 blev full av hål av ^BG%s^K1s Kulspruta%s%s"
 
 #: qcsrc/common/notifications/all.inc:491
-#: qcsrc/common/notifications/all.inc:812
+#: qcsrc/common/notifications/all.inc:811
 #, c-format
 msgid "^BGYou cannot place more than ^F2%s^BG mines at a time"
 msgstr "^BGDu kan inte placera mer än ^F2%s^BG minor på samma gång"
@@ -3737,11 +3753,11 @@ msgstr "^BG%s%s^K1 blev förångad av ^BG%s^K1s Overkill Nex%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled Chainsaw"
-"%s%s"
+"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
+"Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 var sågad på mitten av ^BG%s^K1s Overkill Raketframdriven Motorsåg"
-"%s%s"
+"^BG%s%s^K1 var sågad på mitten av ^BG%s^K1s Overkill Raketframdriven "
+"Motorsåg%s%s"
 
 #: qcsrc/common/notifications/all.inc:503
 #, c-format
@@ -3755,8 +3771,8 @@ msgstr ""
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s^K1 var sågad på mitten av sin egen Overkill Raketframdriven Motorsåg%s"
-"%s"
+"^BG%s^K1 var sågad på mitten av sin egen Overkill Raketframdriven "
+"Motorsåg%s%s"
 
 #: qcsrc/common/notifications/all.inc:505
 #, c-format
@@ -4052,7 +4068,7 @@ msgid "^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"
 msgstr "^BGYour %slagkamrat (^BG%s%s)^BG har flaggan! Skydda dem!"
 
 #: qcsrc/common/notifications/all.inc:593
-#: qcsrc/common/notifications/all.inc:731
+#: qcsrc/common/notifications/all.inc:732
 msgid "^BGEnemies can now see you on radar!"
 msgstr "^BGFiender kan nu se dig på radarn!"
 
@@ -4448,6 +4464,11 @@ msgstr ""
 "Hoppas att ditt lag kan fixa det..."
 
 #: qcsrc/common/notifications/all.inc:715
+msgid "^K1You aren't allowed to play because you are banned in this server"
+msgstr ""
+"^K1Du har inte tillåtelse att spela för att du är bannad från denna server"
+
+#: qcsrc/common/notifications/all.inc:716
 #, c-format
 msgid ""
 "^K1You may not join the game at this time.\n"
@@ -4456,19 +4477,19 @@ msgstr ""
 "^K1Du kan inte gå med spelet just nu.\n"
 "Matchen är begränsad till ^F2%s^BG spelare."
 
-#: qcsrc/common/notifications/all.inc:716
-msgid "^K1You aren't allowed to play because you are banned in this server"
-msgstr ""
+#: qcsrc/common/notifications/all.inc:717
+msgid "^K1Cannot join given minigame session!"
+msgstr "^K1Kan inte gå med på given minispelsession!"
 
-#: qcsrc/common/notifications/all.inc:720
+#: qcsrc/common/notifications/all.inc:721
 msgid "^BGYou picked up the ball"
 msgstr "^BGDu har plockat upp bollen"
 
-#: qcsrc/common/notifications/all.inc:721
+#: qcsrc/common/notifications/all.inc:722
 msgid "^BGGet the ball to score points for frags!"
 msgstr "^BGHämta bollen för att få poäng för fragg!"
 
-#: qcsrc/common/notifications/all.inc:723
+#: qcsrc/common/notifications/all.inc:724
 msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Help the key carriers to meet!"
@@ -4476,7 +4497,7 @@ msgstr ""
 "^BGAlla nycklar är i erat lags händer!\n"
 "Hjälp nyckelbärarna att träffas!"
 
-#: qcsrc/common/notifications/all.inc:724
+#: qcsrc/common/notifications/all.inc:725
 msgid ""
 "^BGAll keys are in ^TC^TT team^BG's hands!\n"
 "Interfere ^F4NOW^BG!"
@@ -4484,7 +4505,7 @@ msgstr ""
 "^BGAlla nycklar är i ^TC^TT lag^BGs händer!\n"
 "Ingrip ^F4NU^BG!"
 
-#: qcsrc/common/notifications/all.inc:725
+#: qcsrc/common/notifications/all.inc:726
 msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Meet the other key carriers ^F4NOW^BG!"
@@ -4492,27 +4513,27 @@ msgstr ""
 "^BGAlla nycklar är i erat lags händer!\n"
 "Möt de andra nyckelbärarna ^F4NU^BG!"
 
-#: qcsrc/common/notifications/all.inc:726
+#: qcsrc/common/notifications/all.inc:727
 msgid "^F4Round will start in ^COUNT"
 msgstr "^F4Omgången kommer att starta om ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:727
+#: qcsrc/common/notifications/all.inc:728
 msgid "^BGScanning frequency range..."
 msgstr "^BGSkannar frekvensräckvidden..."
 
-#: qcsrc/common/notifications/all.inc:728
+#: qcsrc/common/notifications/all.inc:729
 msgid "^BGYou are starting with the ^TC^TT Key"
 msgstr "^BGDu börjar med den ^TC^TT Nyckeln"
 
-#: qcsrc/common/notifications/all.inc:730
+#: qcsrc/common/notifications/all.inc:731
 msgid "^BGYou have no lives left, you must wait until the next match"
 msgstr "^BGDu har inga liv kvar, du måste vänta till den nästa matchen"
 
-#: qcsrc/common/notifications/all.inc:732
+#: qcsrc/common/notifications/all.inc:733
 msgid "^BGLeaders can now be seen by enemies on radar!"
 msgstr "^BGLedare kan nu ses av fiender på radar!"
 
-#: qcsrc/common/notifications/all.inc:734
+#: qcsrc/common/notifications/all.inc:735
 #, c-format
 msgid ""
 "^BGWaiting for players to join...\n"
@@ -4521,33 +4542,33 @@ msgstr ""
 "^BGVäntar på att spelare ska gå med...\n"
 "Behöver aktiva spelare för: %s"
 
-#: qcsrc/common/notifications/all.inc:735
+#: qcsrc/common/notifications/all.inc:736
 #, c-format
 msgid "^BGWaiting for %s player(s) to join..."
 msgstr "^BGVäntar på %s spelare att gå med..."
 
-#: qcsrc/common/notifications/all.inc:737
+#: qcsrc/common/notifications/all.inc:738
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
 msgstr "^BGDitt vapen har blivit nergraderat tills du hittar ammunition!"
 
-#: qcsrc/common/notifications/all.inc:738
+#: qcsrc/common/notifications/all.inc:739
 msgid "^F4^COUNT^BG left to find some ammo!"
 msgstr "^F4^COUNT^BG lämnade för att hitta ammunition!"
 
-#: qcsrc/common/notifications/all.inc:739
+#: qcsrc/common/notifications/all.inc:740
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
 msgstr "^BGHämta ammunition, annars är du död om ^F4^COUNT^BG!"
 
-#: qcsrc/common/notifications/all.inc:739
+#: qcsrc/common/notifications/all.inc:740
 msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
 msgstr "^BGHämta ammunition! ^F4^COUNT^BG kvar!"
 
-#: qcsrc/common/notifications/all.inc:740
+#: qcsrc/common/notifications/all.inc:741
 #, c-format
 msgid "^F2Extra lives remaining: ^K1%s"
 msgstr "^F2Extraliv kvar: ^K1%s"
 
-#: qcsrc/common/notifications/all.inc:742
+#: qcsrc/common/notifications/all.inc:743
 #, c-format
 msgid ""
 "^F2^COUNT^BG until weapon change...\n"
@@ -4556,34 +4577,34 @@ msgstr ""
 "^F2^COUNT^BG tills vapenväxling...\n"
 "Nästa vapen: ^F1%s"
 
-#: qcsrc/common/notifications/all.inc:743
+#: qcsrc/common/notifications/all.inc:744
 #, c-format
 msgid "^F2Active weapon: ^F1%s"
 msgstr "^F2Aktivt vapen: ^F1%s"
 
-#: qcsrc/common/notifications/all.inc:745
+#: qcsrc/common/notifications/all.inc:746
 #, c-format
 msgid "^BGYou captured %s^BG control point"
 msgstr "^BGDu fångade %s^BG kontrollpunkt"
 
-#: qcsrc/common/notifications/all.inc:746
+#: qcsrc/common/notifications/all.inc:747
 msgid "^BGYou captured a control point"
 msgstr "^BGDu fångade en kontrollpunkt"
 
-#: qcsrc/common/notifications/all.inc:747
+#: qcsrc/common/notifications/all.inc:748
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
 msgstr "^TC^TT^BG lag fångade %s^BG kontrollpunkt"
 
-#: qcsrc/common/notifications/all.inc:748
+#: qcsrc/common/notifications/all.inc:749
 msgid "^TC^TT^BG team captured a control point"
 msgstr "^TC^TT^BG lag fångade en kontrollpunkt"
 
-#: qcsrc/common/notifications/all.inc:749
+#: qcsrc/common/notifications/all.inc:750
 msgid "^BGThis control point currently cannot be captured"
 msgstr "^BGDenna kontrollpunkten kan för nuvarande inte bli fångad"
 
-#: qcsrc/common/notifications/all.inc:750
+#: qcsrc/common/notifications/all.inc:751
 msgid ""
 "^BGThe enemy generator cannot be destroyed yet\n"
 "^F2Capture some control points to unshield it"
@@ -4591,11 +4612,11 @@ msgstr ""
 "^BGFiendens generator kan inte bli förstörd än\n"
 "^F2Ta några kontrollpuknter för att avskölda den"
 
-#: qcsrc/common/notifications/all.inc:751
+#: qcsrc/common/notifications/all.inc:752
 msgid "^BGThe ^TCenemy^BG generator is no longer shielded!"
 msgstr "^BG^TCFiendens^BG generator är inte längre sköldad!"
 
-#: qcsrc/common/notifications/all.inc:752
+#: qcsrc/common/notifications/all.inc:753
 msgid ""
 "^K1Your generator is NOT shielded!\n"
 "^BGRe-capture control points to shield it!"
@@ -4603,17 +4624,17 @@ msgstr ""
 "^K1Eran generator är INTE sköldad!\n"
 "^BGTa tillbaka kontrollpunkter för att skölda den!"
 
-#: qcsrc/common/notifications/all.inc:753
+#: qcsrc/common/notifications/all.inc:754
 #, c-format
 msgid "^BGPress ^F2%s^BG to teleport"
 msgstr "^BGTryck på ^F2%s^BG för att teleportera"
 
-#: qcsrc/common/notifications/all.inc:754
+#: qcsrc/common/notifications/all.inc:755
 #, c-format
 msgid "^BGTeleporting disabled for %s"
 msgstr "^BGTeleportering är avslagen för %s"
 
-#: qcsrc/common/notifications/all.inc:756
+#: qcsrc/common/notifications/all.inc:757
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep fragging until we have a winner!"
@@ -4621,7 +4642,7 @@ msgstr ""
 "^F2Spelar nu ^F4ÖVERTID^F2!\n"
 "Fortsätt fragga tills vi har en vinnare!"
 
-#: qcsrc/common/notifications/all.inc:756
+#: qcsrc/common/notifications/all.inc:757
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep scoring until we have a winner!"
@@ -4629,7 +4650,7 @@ msgstr ""
 "^F2Spelar nu ^F4ÖVERTID^F2!\n"
 "Fortsätt poängsätta tills vi har en vinnare!"
 
-#: qcsrc/common/notifications/all.inc:757
+#: qcsrc/common/notifications/all.inc:758
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "\n"
@@ -4643,7 +4664,7 @@ msgstr ""
 "Desto fler kontrollpunkter erat lag håller,\n"
 "desto snabbare förfaller fiendens generator"
 
-#: qcsrc/common/notifications/all.inc:758
+#: qcsrc/common/notifications/all.inc:759
 #, c-format
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
@@ -4652,51 +4673,51 @@ msgstr ""
 "^F2Spelar nu ^F4ÖVERTID^F2!\n"
 "^BGLade till ^F4%s^BG i spelet!"
 
-#: qcsrc/common/notifications/all.inc:760
+#: qcsrc/common/notifications/all.inc:761
 msgid "^K1In^BG-portal created"
 msgstr "^K1In^BG-portal skapad"
 
-#: qcsrc/common/notifications/all.inc:761
+#: qcsrc/common/notifications/all.inc:762
 msgid "^F3Out^BG-portal created"
 msgstr "^F3Ut^BG-portal skapad"
 
-#: qcsrc/common/notifications/all.inc:762
+#: qcsrc/common/notifications/all.inc:763
 msgid "^F1Portal creation failed"
 msgstr "^F1Portaluppskapning misslyckades"
 
-#: qcsrc/common/notifications/all.inc:764
+#: qcsrc/common/notifications/all.inc:765
 msgid "^F2Strength infuses your weapons with devastating power"
 msgstr "^F2Styrka förstärker ditt vapen med förödande kraft"
 
-#: qcsrc/common/notifications/all.inc:765
+#: qcsrc/common/notifications/all.inc:766
 msgid "^F2Strength has worn off"
 msgstr "^F2Styrka har tagit slut"
 
-#: qcsrc/common/notifications/all.inc:767
+#: qcsrc/common/notifications/all.inc:768
 msgid "^F2Shield surrounds you"
 msgstr "^F2Sköld omger dig"
 
-#: qcsrc/common/notifications/all.inc:768
+#: qcsrc/common/notifications/all.inc:769
 msgid "^F2Shield has worn off"
 msgstr "^F2Sköld har tagit slut"
 
-#: qcsrc/common/notifications/all.inc:770
+#: qcsrc/common/notifications/all.inc:771
 msgid "^F2You are on speed"
 msgstr "^F2Du är på hastighet"
 
-#: qcsrc/common/notifications/all.inc:771
+#: qcsrc/common/notifications/all.inc:772
 msgid "^F2Speed has worn off"
 msgstr "^F2Hastighet har tagit slut"
 
-#: qcsrc/common/notifications/all.inc:773
+#: qcsrc/common/notifications/all.inc:774
 msgid "^F2You are invisible"
 msgstr "^F2Du är osynlig"
 
-#: qcsrc/common/notifications/all.inc:774
+#: qcsrc/common/notifications/all.inc:775
 msgid "^F2Invisibility has worn off"
 msgstr "^F2Osynlighet har tagit slut"
 
-#: qcsrc/common/notifications/all.inc:776
+#: qcsrc/common/notifications/all.inc:777
 msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
@@ -4704,90 +4725,86 @@ msgstr ""
 "^K1Du är tvingad att åskåda och har inte tillåtelse att spela för att du är "
 "bannad från denna server"
 
-#: qcsrc/common/notifications/all.inc:778
+#: qcsrc/common/notifications/all.inc:779
 msgid "^F2The race is over, finish your lap!"
 msgstr "^F2Tävlingen är över, slutför ditt varv!"
 
-#: qcsrc/common/notifications/all.inc:780
+#: qcsrc/common/notifications/all.inc:781
 msgid "^BGSequence completed!"
 msgstr "^BGSekvensen avklared!"
 
-#: qcsrc/common/notifications/all.inc:781
+#: qcsrc/common/notifications/all.inc:782
 msgid "^BGThere are more to go..."
 msgstr "^BGDet är mer kvar..."
 
-#: qcsrc/common/notifications/all.inc:782
+#: qcsrc/common/notifications/all.inc:783
 #, c-format
 msgid "^BGOnly %s^BG more to go..."
 msgstr "^BGBara %s^BG kvar..."
 
-#: qcsrc/common/notifications/all.inc:784
+#: qcsrc/common/notifications/all.inc:785
 msgid "^F2Superweapons have broken down"
 msgstr "^F2Supervapen har brutits ner"
 
-#: qcsrc/common/notifications/all.inc:785
+#: qcsrc/common/notifications/all.inc:786
 msgid "^F2Superweapons have been lost"
 msgstr "^F2Supervapen har gått förlorade"
 
-#: qcsrc/common/notifications/all.inc:786
+#: qcsrc/common/notifications/all.inc:787
 msgid "^F2You now have a superweapon"
 msgstr "^F2Du har nu ett supervapen"
 
-#: qcsrc/common/notifications/all.inc:788
+#: qcsrc/common/notifications/all.inc:789
 msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
 msgstr ""
 "^BGDu är en ^K1jägare^BG! Eliminera de överlevande utan att väcka misstankar!"
 
-#: qcsrc/common/notifications/all.inc:790
+#: qcsrc/common/notifications/all.inc:791
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
 msgstr "^BGDu är en ^F1överlevare^BG! Identifiera och eliminera jägarna!"
 
-#: qcsrc/common/notifications/all.inc:793
+#: qcsrc/common/notifications/all.inc:794
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
 msgstr "^K1Byter till ^TC^TT^K1 om ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:794
+#: qcsrc/common/notifications/all.inc:795
 msgid "^K1Changing team in ^COUNT"
 msgstr "^K1Byter lag om ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:795
+#: qcsrc/common/notifications/all.inc:796
 msgid "^K1Spectating in ^COUNT"
 msgstr "^K1Åskådar om ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:796
+#: qcsrc/common/notifications/all.inc:797
 msgid "^K1Suicide in ^COUNT"
 msgstr "^K1Självmord om ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:798
+#: qcsrc/common/notifications/all.inc:799
 msgid "^F4Timeout begins in ^COUNT"
 msgstr "^F4Timeout börjar om ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:799
+#: qcsrc/common/notifications/all.inc:800
 msgid "^F4Timeout ends in ^COUNT"
 msgstr "^F4Timeout slutar om ^COUNT"
 
-#: qcsrc/common/notifications/all.inc:801
-msgid "^K1Cannot join given minigame session!"
-msgstr "^K1Kan inte gå med på given minispelsession!"
-
-#: qcsrc/common/notifications/all.inc:803
+#: qcsrc/common/notifications/all.inc:802
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter/exit the vehicle"
 msgstr "^BGTryck på ^F2%s^BG för att gå in/ut fordonet"
 
-#: qcsrc/common/notifications/all.inc:804
+#: qcsrc/common/notifications/all.inc:803
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the vehicle gunner"
 msgstr "^BGTryck på ^F2%s^BG för att gå in i fordonsskytt"
 
-#: qcsrc/common/notifications/all.inc:805
+#: qcsrc/common/notifications/all.inc:804
 #, c-format
 msgid "^BGPress ^F2%s^BG to steal this vehicle"
 msgstr "^BGTryck på ^F2%s^BG för att själa detta fordonet"
 
-#: qcsrc/common/notifications/all.inc:806
+#: qcsrc/common/notifications/all.inc:805
 msgid ""
 "^F2The enemy is stealing one of your vehicles!\n"
 "^F4Stop them!"
@@ -4795,18 +4812,18 @@ msgstr ""
 "^F2Fienden stjäler en av era fordon!\n"
 "^F4Stoppa dem!"
 
-#: qcsrc/common/notifications/all.inc:807
+#: qcsrc/common/notifications/all.inc:806
 msgid "^F2Intruder detected, disabling shields!"
 msgstr "^F2Inkräktare upptäckt, slår av sköldarna!"
 
-#: qcsrc/common/notifications/all.inc:809
+#: qcsrc/common/notifications/all.inc:808
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
 msgstr ""
 "^K1Du har inte tillåtelse att starta en röstning för att du är bannad från "
 "denna server"
 
-#: qcsrc/common/notifications/all.inc:810
+#: qcsrc/common/notifications/all.inc:809
 msgid "^K1You aren't allowed to vote because you are banned in this server"
 msgstr ""
 "^K1Du har inte tillåtelse att rösta för att du är bannad från denna server"
@@ -5310,375 +5327,375 @@ msgstr "Granater"
 msgid "Offhand blaster"
 msgstr "Av-handsblaster"
 
-#: qcsrc/common/util.qc:1399
+#: qcsrc/common/util.qc:1420
 msgid "Male"
 msgstr "Man"
 
-#: qcsrc/common/util.qc:1400
+#: qcsrc/common/util.qc:1421
 msgid "Female"
 msgstr "Kvinna"
 
-#: qcsrc/common/util.qc:1401
+#: qcsrc/common/util.qc:1422
 msgid "Undisclosed"
 msgstr "Hemlig"
 
-#: qcsrc/common/util.qc:1448
+#: qcsrc/common/util.qc:1469
 msgid "<KEY NOT FOUND>"
 msgstr "<NYCKEL HITTADES INTE>"
 
-#: qcsrc/common/util.qc:1449
+#: qcsrc/common/util.qc:1470
 msgid "<UNKNOWN KEYNUM>"
 msgstr "<OKÄND NYCKELVÄRDE>"
 
-#: qcsrc/common/util.qc:1454
+#: qcsrc/common/util.qc:1475
 msgid "TAB"
 msgstr "TABB"
 
-#: qcsrc/common/util.qc:1455 qcsrc/common/util.qc:1526
+#: qcsrc/common/util.qc:1476 qcsrc/common/util.qc:1547
 #, c-format
 msgid "ENTER"
 msgstr "ENTER"
 
-#: qcsrc/common/util.qc:1456
+#: qcsrc/common/util.qc:1477
 msgid "ESCAPE"
 msgstr "ESCAPE"
 
-#: qcsrc/common/util.qc:1457
+#: qcsrc/common/util.qc:1478
 msgid "SPACE"
 msgstr "BLANKSTEG"
 
-#: qcsrc/common/util.qc:1459
+#: qcsrc/common/util.qc:1480
 msgid "BACKSPACE"
 msgstr "BAKSTEG"
 
-#: qcsrc/common/util.qc:1460 qcsrc/common/util.qc:1517
+#: qcsrc/common/util.qc:1481 qcsrc/common/util.qc:1538
 #, c-format
 msgid "UPARROW"
 msgstr "UPPIL"
 
-#: qcsrc/common/util.qc:1461 qcsrc/common/util.qc:1512
+#: qcsrc/common/util.qc:1482 qcsrc/common/util.qc:1533
 #, c-format
 msgid "DOWNARROW"
 msgstr "NERPIL"
 
-#: qcsrc/common/util.qc:1462 qcsrc/common/util.qc:1514
+#: qcsrc/common/util.qc:1483 qcsrc/common/util.qc:1535
 #, c-format
 msgid "LEFTARROW"
 msgstr "VÄNSTERPIL"
 
-#: qcsrc/common/util.qc:1463 qcsrc/common/util.qc:1515
+#: qcsrc/common/util.qc:1484 qcsrc/common/util.qc:1536
 #, c-format
 msgid "RIGHTARROW"
 msgstr "HÖGERPIL"
 
-#: qcsrc/common/util.qc:1465
+#: qcsrc/common/util.qc:1486
 msgid "ALT"
 msgstr "ALT"
 
-#: qcsrc/common/util.qc:1466
+#: qcsrc/common/util.qc:1487
 msgid "CTRL"
 msgstr "CTRL"
 
-#: qcsrc/common/util.qc:1467
+#: qcsrc/common/util.qc:1488
 msgid "SHIFT"
 msgstr "SKIFT"
 
-#: qcsrc/common/util.qc:1469 qcsrc/common/util.qc:1510
+#: qcsrc/common/util.qc:1490 qcsrc/common/util.qc:1531
 #, c-format
 msgid "INS"
 msgstr "INS"
 
-#: qcsrc/common/util.qc:1470 qcsrc/common/util.qc:1520
+#: qcsrc/common/util.qc:1491 qcsrc/common/util.qc:1541
 #, c-format
 msgid "DEL"
 msgstr "DEL"
 
-#: qcsrc/common/util.qc:1471 qcsrc/common/util.qc:1513
+#: qcsrc/common/util.qc:1492 qcsrc/common/util.qc:1534
 #, c-format
 msgid "PGDN"
 msgstr "PGDN"
 
-#: qcsrc/common/util.qc:1472 qcsrc/common/util.qc:1518
+#: qcsrc/common/util.qc:1493 qcsrc/common/util.qc:1539
 #, c-format
 msgid "PGUP"
 msgstr "PGUP"
 
-#: qcsrc/common/util.qc:1473 qcsrc/common/util.qc:1516
+#: qcsrc/common/util.qc:1494 qcsrc/common/util.qc:1537
 #, c-format
 msgid "HOME"
 msgstr "HOME"
 
-#: qcsrc/common/util.qc:1474 qcsrc/common/util.qc:1511
+#: qcsrc/common/util.qc:1495 qcsrc/common/util.qc:1532
 #, c-format
 msgid "END"
 msgstr "END"
 
-#: qcsrc/common/util.qc:1476
+#: qcsrc/common/util.qc:1497
 msgid "PAUSE"
 msgstr "PAUSE"
 
-#: qcsrc/common/util.qc:1478
+#: qcsrc/common/util.qc:1499
 msgid "NUMLOCK"
 msgstr "NUMLOCK"
 
-#: qcsrc/common/util.qc:1479
+#: qcsrc/common/util.qc:1500
 msgid "CAPSLOCK"
 msgstr "CAPSLOCK"
 
-#: qcsrc/common/util.qc:1480
+#: qcsrc/common/util.qc:1501
 msgid "SCROLLOCK"
 msgstr "SCROLLOCK"
 
-#: qcsrc/common/util.qc:1482
+#: qcsrc/common/util.qc:1503
 msgid "SEMICOLON"
 msgstr "SEMIKOLON"
 
-#: qcsrc/common/util.qc:1483
+#: qcsrc/common/util.qc:1504
 msgid "TILDE"
 msgstr "TILDE"
 
-#: qcsrc/common/util.qc:1484
+#: qcsrc/common/util.qc:1505
 msgid "BACKQUOTE"
 msgstr "BACKQUOTE"
 
-#: qcsrc/common/util.qc:1485
+#: qcsrc/common/util.qc:1506
 msgid "QUOTE"
 msgstr "CITAT"
 
-#: qcsrc/common/util.qc:1486
+#: qcsrc/common/util.qc:1507
 msgid "APOSTROPHE"
 msgstr "APOSTROF"
 
-#: qcsrc/common/util.qc:1487
+#: qcsrc/common/util.qc:1508
 msgid "BACKSLASH"
 msgstr "OMVÄNT SNEDSTRECK"
 
-#: qcsrc/common/util.qc:1495
+#: qcsrc/common/util.qc:1516
 #, c-format
 msgid "F%d"
 msgstr "F%d"
 
-#: qcsrc/common/util.qc:1505
+#: qcsrc/common/util.qc:1526
 #, c-format
 msgid "KP_%d"
 msgstr "KP_%d"
 
-#: qcsrc/common/util.qc:1510 qcsrc/common/util.qc:1511
-#: qcsrc/common/util.qc:1512 qcsrc/common/util.qc:1513
-#: qcsrc/common/util.qc:1514 qcsrc/common/util.qc:1515
-#: qcsrc/common/util.qc:1516 qcsrc/common/util.qc:1517
-#: qcsrc/common/util.qc:1518 qcsrc/common/util.qc:1519
-#: qcsrc/common/util.qc:1520 qcsrc/common/util.qc:1521
-#: qcsrc/common/util.qc:1522 qcsrc/common/util.qc:1523
-#: qcsrc/common/util.qc:1524 qcsrc/common/util.qc:1525
-#: qcsrc/common/util.qc:1526 qcsrc/common/util.qc:1527
+#: qcsrc/common/util.qc:1531 qcsrc/common/util.qc:1532
+#: qcsrc/common/util.qc:1533 qcsrc/common/util.qc:1534
+#: qcsrc/common/util.qc:1535 qcsrc/common/util.qc:1536
+#: qcsrc/common/util.qc:1537 qcsrc/common/util.qc:1538
+#: qcsrc/common/util.qc:1539 qcsrc/common/util.qc:1540
+#: qcsrc/common/util.qc:1541 qcsrc/common/util.qc:1542
+#: qcsrc/common/util.qc:1543 qcsrc/common/util.qc:1544
+#: qcsrc/common/util.qc:1545 qcsrc/common/util.qc:1546
+#: qcsrc/common/util.qc:1547 qcsrc/common/util.qc:1548
 #, c-format
 msgid "KP_%s"
 msgstr "KP_%s"
 
-#: qcsrc/common/util.qc:1519
+#: qcsrc/common/util.qc:1540
 #, c-format
 msgid "PERIOD"
 msgstr "PUNKT"
 
-#: qcsrc/common/util.qc:1521
+#: qcsrc/common/util.qc:1542
 #, c-format
 msgid "DIVIDE"
 msgstr "DIVIDERA"
 
-#: qcsrc/common/util.qc:1522
+#: qcsrc/common/util.qc:1543
 #, c-format
 msgid "SLASH"
 msgstr "SNEDSTRECK"
 
-#: qcsrc/common/util.qc:1523
+#: qcsrc/common/util.qc:1544
 #, c-format
 msgid "MULTIPLY"
 msgstr "GÅNGER"
 
-#: qcsrc/common/util.qc:1524
+#: qcsrc/common/util.qc:1545
 #, c-format
 msgid "MINUS"
 msgstr "MINUS"
 
-#: qcsrc/common/util.qc:1525
+#: qcsrc/common/util.qc:1546
 #, c-format
 msgid "PLUS"
 msgstr "PLUS"
 
-#: qcsrc/common/util.qc:1527
+#: qcsrc/common/util.qc:1548
 #, c-format
 msgid "EQUALS"
 msgstr "LIKA MED"
 
-#: qcsrc/common/util.qc:1532
+#: qcsrc/common/util.qc:1553
 msgid "PRINTSCREEN"
 msgstr "PRINTSCREEN"
 
-#: qcsrc/common/util.qc:1535
+#: qcsrc/common/util.qc:1556
 #, c-format
 msgid "MOUSE%d"
 msgstr "MUS%d"
 
-#: qcsrc/common/util.qc:1537
+#: qcsrc/common/util.qc:1558
 msgid "MWHEELUP"
 msgstr "MHJULUP"
 
-#: qcsrc/common/util.qc:1538
+#: qcsrc/common/util.qc:1559
 msgid "MWHEELDOWN"
 msgstr "MHJULNER"
 
-#: qcsrc/common/util.qc:1541
+#: qcsrc/common/util.qc:1562
 #, c-format
 msgid "JOY%d"
 msgstr "SPAK%d"
 
-#: qcsrc/common/util.qc:1544
+#: qcsrc/common/util.qc:1565
 #, c-format
 msgid "AUX%d"
 msgstr "AUX%d"
 
-#: qcsrc/common/util.qc:1551
+#: qcsrc/common/util.qc:1572
 #, c-format
 msgid "DPAD_UP"
 msgstr "DPAD_UPP"
 
-#: qcsrc/common/util.qc:1551 qcsrc/common/util.qc:1552
-#: qcsrc/common/util.qc:1553 qcsrc/common/util.qc:1554
-#: qcsrc/common/util.qc:1555 qcsrc/common/util.qc:1556
-#: qcsrc/common/util.qc:1557 qcsrc/common/util.qc:1558
-#: qcsrc/common/util.qc:1559 qcsrc/common/util.qc:1560
-#: qcsrc/common/util.qc:1561 qcsrc/common/util.qc:1562
-#: qcsrc/common/util.qc:1563 qcsrc/common/util.qc:1564
-#: qcsrc/common/util.qc:1565 qcsrc/common/util.qc:1566
-#: qcsrc/common/util.qc:1567 qcsrc/common/util.qc:1568
-#: qcsrc/common/util.qc:1569 qcsrc/common/util.qc:1570
+#: qcsrc/common/util.qc:1572 qcsrc/common/util.qc:1573
+#: qcsrc/common/util.qc:1574 qcsrc/common/util.qc:1575
+#: qcsrc/common/util.qc:1576 qcsrc/common/util.qc:1577
+#: qcsrc/common/util.qc:1578 qcsrc/common/util.qc:1579
+#: qcsrc/common/util.qc:1580 qcsrc/common/util.qc:1581
+#: qcsrc/common/util.qc:1582 qcsrc/common/util.qc:1583
+#: qcsrc/common/util.qc:1584 qcsrc/common/util.qc:1585
+#: qcsrc/common/util.qc:1586 qcsrc/common/util.qc:1587
+#: qcsrc/common/util.qc:1588 qcsrc/common/util.qc:1589
+#: qcsrc/common/util.qc:1590 qcsrc/common/util.qc:1591
 #, c-format
 msgid "X360_%s"
 msgstr "X360_%s"
 
-#: qcsrc/common/util.qc:1552
+#: qcsrc/common/util.qc:1573
 #, c-format
 msgid "DPAD_DOWN"
 msgstr "DPAD_NER"
 
-#: qcsrc/common/util.qc:1553
+#: qcsrc/common/util.qc:1574
 #, c-format
 msgid "DPAD_LEFT"
 msgstr "DPAD_VÄNSTER"
 
-#: qcsrc/common/util.qc:1554
+#: qcsrc/common/util.qc:1575
 #, c-format
 msgid "DPAD_RIGHT"
 msgstr "DPAD_HÖGER"
 
-#: qcsrc/common/util.qc:1555
+#: qcsrc/common/util.qc:1576
 #, c-format
 msgid "START"
 msgstr "START"
 
-#: qcsrc/common/util.qc:1556
+#: qcsrc/common/util.qc:1577
 #, c-format
 msgid "BACK"
 msgstr "BACK"
 
-#: qcsrc/common/util.qc:1557
+#: qcsrc/common/util.qc:1578
 #, c-format
 msgid "LEFT_THUMB"
 msgstr "VÄNSTER_THUMB"
 
-#: qcsrc/common/util.qc:1558
+#: qcsrc/common/util.qc:1579
 #, c-format
 msgid "RIGHT_THUMB"
 msgstr "HÖGER_THUMB"
 
-#: qcsrc/common/util.qc:1559
+#: qcsrc/common/util.qc:1580
 #, c-format
 msgid "LEFT_SHOULDER"
 msgstr "VÄNSTER_AXEL"
 
-#: qcsrc/common/util.qc:1560
+#: qcsrc/common/util.qc:1581
 #, c-format
 msgid "RIGHT_SHOULDER"
 msgstr "HÖGER_AXEL"
 
-#: qcsrc/common/util.qc:1561
+#: qcsrc/common/util.qc:1582
 #, c-format
 msgid "LEFT_TRIGGER"
 msgstr "VÄNSTER_UTLÖSARE"
 
-#: qcsrc/common/util.qc:1562
+#: qcsrc/common/util.qc:1583
 #, c-format
 msgid "RIGHT_TRIGGER"
 msgstr "HÖGER_UTLÖSARE"
 
-#: qcsrc/common/util.qc:1563
+#: qcsrc/common/util.qc:1584
 #, c-format
 msgid "LEFT_THUMB_UP"
 msgstr "VÄNSTER_THUMB_UPP"
 
-#: qcsrc/common/util.qc:1564
+#: qcsrc/common/util.qc:1585
 #, c-format
 msgid "LEFT_THUMB_DOWN"
 msgstr "VÄNSTER_THUMB_NER"
 
-#: qcsrc/common/util.qc:1565
+#: qcsrc/common/util.qc:1586
 #, c-format
 msgid "LEFT_THUMB_LEFT"
 msgstr "VÄNSTER_THUMB_VÄNSTER"
 
-#: qcsrc/common/util.qc:1566
+#: qcsrc/common/util.qc:1587
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
 msgstr "VÄNSTEL_THUMB_HÖGER"
 
-#: qcsrc/common/util.qc:1567
+#: qcsrc/common/util.qc:1588
 #, c-format
 msgid "RIGHT_THUMB_UP"
 msgstr "HÖGER_THUMB_UPP"
 
-#: qcsrc/common/util.qc:1568
+#: qcsrc/common/util.qc:1589
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
 msgstr "HÖGER_THUMB_NER"
 
-#: qcsrc/common/util.qc:1569
+#: qcsrc/common/util.qc:1590
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
 msgstr "HÖGER_THUMB_VÄNSTER"
 
-#: qcsrc/common/util.qc:1570
+#: qcsrc/common/util.qc:1591
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
 msgstr "HÖGER_THUMB_HÖGER"
 
-#: qcsrc/common/util.qc:1580 qcsrc/common/util.qc:1581
-#: qcsrc/common/util.qc:1582 qcsrc/common/util.qc:1583
+#: qcsrc/common/util.qc:1601 qcsrc/common/util.qc:1602
+#: qcsrc/common/util.qc:1603 qcsrc/common/util.qc:1604
 #, c-format
 msgid "JOY_%s"
 msgstr "SPAK_%s"
 
-#: qcsrc/common/util.qc:1580
+#: qcsrc/common/util.qc:1601
 #, c-format
 msgid "UP"
 msgstr "UPP"
 
-#: qcsrc/common/util.qc:1581
+#: qcsrc/common/util.qc:1602
 #, c-format
 msgid "DOWN"
 msgstr "NER"
 
-#: qcsrc/common/util.qc:1582
+#: qcsrc/common/util.qc:1603
 #, c-format
 msgid "LEFT"
 msgstr "VÄNSTER"
 
-#: qcsrc/common/util.qc:1583
+#: qcsrc/common/util.qc:1604
 #, c-format
 msgid "RIGHT"
 msgstr "HÖGER"
 
-#: qcsrc/common/util.qc:1589
+#: qcsrc/common/util.qc:1610
 #, c-format
 msgid "MIDINOTE%d"
 msgstr "MIDINOT%d"
@@ -6014,12 +6031,12 @@ msgstr "%d:e"
 msgid "No description"
 msgstr "Ingen beskrivning"
 
-#: qcsrc/lib/string.qh:186
+#: qcsrc/lib/string.qh:189
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
 msgstr "%d dagar, %02d:%02d:%02d"
 
-#: qcsrc/lib/string.qh:187
+#: qcsrc/lib/string.qh:190
 #, c-format
 msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
@@ -10314,7 +10331,7 @@ msgstr ""
 "Va? Kan inte spela detta (ogiltig speltyp). Omfiltrerar så att detta inte "
 "händer igen."
 
-#: qcsrc/menu/xonotic/playerlist.qc:102 qcsrc/menu/xonotic/playerlist.qc:112
+#: qcsrc/menu/xonotic/playerlist.qc:110
 msgid "spectator"
 msgstr "åskådare"
 

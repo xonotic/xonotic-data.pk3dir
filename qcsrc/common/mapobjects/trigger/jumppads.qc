@@ -242,6 +242,25 @@ vector trigger_push_velocity_calculatevelocity(entity this, vector org, entity t
 	return vs + '0 0 1' * vz;
 }
 
+#ifdef SVQC
+void trigger_push_velocity_think(entity this)
+{
+	bool found = false;
+	IL_EACH(g_moveables, it.last_pushed == this,
+	{
+		if(!WarpZoneLib_ExactTrigger_Touch(this, it, false))
+			it.last_pushed = NULL;
+		else
+			found = true;
+	});
+
+	if(found)
+		this.nextthink = time;
+	else
+		setthink(this, func_null);
+}
+#endif
+
 bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 {
 	if (!isPushable(targ))
@@ -249,7 +268,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 
 	vector org = targ.origin;
 
-	if(Q3COMPAT_COMMON || this.spawnflags & PUSH_STATIC)
+	if(Q3COMPAT_COMMON || (this.spawnflags & PUSH_STATIC))
 		org = (this.absmin + this.absmax) * 0.5;
 
 	bool already_pushed = false;
@@ -262,6 +281,11 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		else
 		{
 			targ.last_pushed = this; // may be briefly out of sync between client and server if client prediction is toggled
+
+			#ifdef SVQC
+			setthink(this, trigger_push_velocity_think);
+			this.nextthink = time;
+			#endif
 		}
 	}
 
@@ -588,7 +612,10 @@ bool trigger_push_test(entity this, entity item)
 			}
 			else
 			{
-				if (trigger_push_testorigin(e, t, this, org))
+				// optimization: if horizontal velocity is 0 then target is not good since the trajectory
+				// will definitely go back to the jumppad (horizontal velocity of best_vel can't be 0 anyway)
+				if ((e.velocity.x != 0 || e.velocity.y != 0)
+					&& trigger_push_testorigin(e, t, this, org))
 				{
 					best_target = trace_endpos;
 					best_org = org;

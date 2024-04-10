@@ -268,7 +268,7 @@ string invite_minigame(entity inviter, entity player)
 		return "Invalid player";
 	if ( inviter == player )
 		return "You can't invite yourself";
-	if (PlayerInList(player, autocvar_g_playban_list) && autocvar_g_playban_minigames) // playban
+	if (autocvar_g_playban_minigames && PlayerInList(player, autocvar_g_playban_list)) // playban
 		return "You can't invite a banned player";
 	if ( CS(player).active_minigame == CS(inviter).active_minigame )
 		return strcat(player.netname," is already playing");
@@ -314,7 +314,7 @@ void ClientCommand_minigame(entity caller, int request, int argc, string command
 		return;
 	}
 
-	if (PlayerInList(caller, autocvar_g_playban_list) && autocvar_g_playban_minigames) // playban
+	if (autocvar_g_playban_minigames && PlayerInList(caller, autocvar_g_playban_list)) // playban
 	{
 		Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_JOIN_PLAYBAN);
 		sprint(caller, "You aren't allowed to play minigames because you are banned from them in this server.\n");

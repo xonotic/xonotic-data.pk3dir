@@ -24,7 +24,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
     }
 
     FOREACH(Nades, true, {
-        for (int j = 0; j < 2; j++)
+        for (int j = 0; j < 2; ++j)
         {
             if (it.m_projectile[j] == proj)
             {
@@ -37,6 +37,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
 
     return EFFECT_Null;
 }
+
 #endif
 
 #ifdef CSQC
@@ -385,7 +386,7 @@ void napalm_fountain_think(entity this)
 
 void nade_napalm_boom(entity this)
 {
-	for (int c = 0; c < autocvar_g_nades_napalm_ball_count; c++)
+	for (int c = 0; c < autocvar_g_nades_napalm_ball_count; ++c)
 		nade_napalm_ball(this);
 
 	entity fountain = new(nade_napalm_fountain);
@@ -1644,9 +1645,13 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.nade_refire = (autocvar_g_nades_onspawn) 
-		? time + autocvar_g_nades_nade_refire 
-		: time + autocvar_g_spawnshieldtime;
+	if (StatusEffects_active(STATUSEFFECT_SpawnShield, player))
+		player.nade_refire = StatusEffects_gettime(STATUSEFFECT_SpawnShield, player);
+	else
+		player.nade_refire = time;
+
+	if (!autocvar_g_nades_onspawn)
+		player.nade_refire += autocvar_g_nades_nade_refire;
 
 	if(autocvar_g_nades_bonus_client_select)
 		STAT(NADE_BONUS_TYPE, player) = CS_CVAR(player).cvar_cl_nade_type;

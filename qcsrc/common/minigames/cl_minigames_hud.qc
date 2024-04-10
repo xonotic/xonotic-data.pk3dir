@@ -537,8 +537,7 @@ void HUD_MinigameMenu ()
 
 		if ( e.flags & 2 )
 		{
-			drawfill(panel_pos, eX*panel_size_x + eY*itemh, e.colormod,
-					panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawfill(panel_pos, eX*panel_size_x + eY*itemh, e.colormod, panel_fg_alpha, DRAWFLAG_NORMAL);
 			color = '0 0 0';
 		}
 
@@ -555,7 +554,7 @@ void HUD_MinigameMenu ()
 			HUD_MinigameMenu_DrawEntry(panel_pos+offset,e.message,e.size,color);
 
 		if ( e == HUD_MinigameMenu_activeitem )
-			drawfill(panel_pos, eX*panel_size_x + eY*itemh,'1 1 1', 0.25, DRAWFLAG_ADDITIVE);
+			drawfill(panel_pos, eX*panel_size_x + eY*itemh,'1 1 1', 0.25 * panel_fg_alpha, DRAWFLAG_ADDITIVE);
 
 		panel_pos_y += itemh;
 	}

@@ -35,7 +35,7 @@ float(string s) checkextension = #99;
 //field definitions:
 .float buttonchat;
 //description:
-//true if the player is currently chatting (in messagemode, menus or console)
+//true if the player is currently chatting (in messagemode, menus or console) or if their game window is not active.
 
 //DP_BUTTONUSE
 //idea: id Software
@@ -2140,7 +2140,7 @@ void(float fhandle) fclose = #111; // closes a file
 string(float fhandle) fgets = #112; // reads a line of text from the file and returns as a tempstring
 void(float fhandle, string s, ...) fputs = #113; // writes a line of text to the end of the file
 float(string s) strlen = #114; // returns how many characters are in a string
-string(string s1, string s2, ...) strcat = #115; // concatenates two or more strings (for example "abc", "def" would return "abcdef") and returns as a tempstring
+string(string s, string...) strcat = #115; // concatenates 1 to 8 strings (for example "abc", "def" would return "abcdef") and returns as a tempstring
 string(string s, float start, float length) substring = #116; // returns a section of a string as a tempstring - see FTE_STRINGS for enhanced version
 vector(string s) stov = #117; // returns vector value from a string
 string(string s, ...) strzone = #118; // makes a copy of a string into the string zone and returns it, this is often used to keep around a tempstring for longer periods of time (tempstrings are replaced often)
@@ -2644,7 +2644,6 @@ void(string cmdname) registercommand = #352;
 //description:
 //Adds a new console command which will take priority over a previous command of the same name (including engine commands) and in CSQC is removed when the VM shuts down. This will call CSQC_ConsoleCommand(string command) or ConsoleCmd(string command) in SVQC.  Return value should be true if QC handled the command, otherwise return false to have the engine handle it.
 
-
 //DP_QC_FINDBOX
 //idea: Mario
 //darkplaces implementation: bones_was_here
@@ -2654,5 +2653,17 @@ entity(vector mins, vector maxs, .entity tofield) findbox_tofield = #566;
 //description:
 //Returns a chain of entities that are touching a box (a simpler findradius); supports DP_QC_FINDCHAIN_TOFIELD
 
-// bones_was_here: commented as QC wants to use this but we still need to support div0-stable:
+//DP_QC_NUDGEOUTOFSOLID
+//idea: LadyHavoc, bones_was_here
+//darkplaces implementation: LadyHavoc, bones_was_here
+//builtin definitions:
+float(entity ent) nudgeoutofsolid = #567;
+//cvar definitions:
+//sv_gameplayfix_nudgeoutofsolid_separation
+//description:
+//Attempts to move a stuck entity out of solid brushes, returning 1 if successful, 0 if it remains stuck, -1 if it wasn't stuck.
+//Note: makes only one tracebox call if the entity isn't stuck, so don't call tracebox just to see if you should call nudgeoutofsolid.
+
+
+// bones_was_here: commented as GMQCC wants to use this but we still need to support div0-stable:
 //float(float dividend, float divisor) mod = #245;

@@ -162,7 +162,7 @@ void pong_ball_think(entity this)
 	this.SendFlags |= MINIG_SF_UPDATE;
 
 	int i;
-	for ( i = 1; i <= PONG_MAX_PLAYERS; i++ )
+	for ( i = 1; i <= PONG_MAX_PLAYERS; ++i )
 		if ( pong_paddle_hit(this, i) )
 		{
 			pong_paddle_bounce(this,i);
@@ -357,7 +357,7 @@ int pong_server_event(entity minigame, string event, ...)
 
 			entity player = ...(0,entity);
 			int i;
-			for ( i = 0; i < PONG_MAX_PLAYERS; i++ )
+			for ( i = 0; i < PONG_MAX_PLAYERS; ++i )
 			{
 				if ( minigame.pong_paddles[i] == NULL )
 				{
@@ -374,7 +374,7 @@ int pong_server_event(entity minigame, string event, ...)
 			entity paddle;
 			entity ai;
 			int i;
-			for ( i = 0; i < PONG_MAX_PLAYERS; i++ )
+			for ( i = 0; i < PONG_MAX_PLAYERS; ++i )
 			{
 				paddle = minigame.pong_paddles[i];
 				if ( paddle != NULL && paddle.realowner == player )
@@ -403,7 +403,7 @@ int pong_server_event(entity minigame, string event, ...)
 						minigame.SendFlags |= MINIG_SF_UPDATE;
 
 						entity ball;
-						for ( int j = 0; j < autocvar_sv_minigames_pong_ball_number; j++ )
+						for ( int j = 0; j < autocvar_sv_minigames_pong_ball_number; ++j )
 						{
 							ball = msle_spawn(minigame,new(pong_ball));
 							ball.pong_length = autocvar_sv_minigames_pong_ball_radius;
@@ -447,8 +447,8 @@ int pong_server_event(entity minigame, string event, ...)
 					// potentially compiler bug
 					int j;
 					if ( minigame.minigame_flags & PONG_STATUS_WAIT )
-						for ( j = 0; j < PONG_MAX_PLAYERS; j++ )
-						//for ( int j = 0; j < PONG_MAX_PLAYERS; j++ )
+						for ( j = 0; j < PONG_MAX_PLAYERS; ++j )
+						//for ( int j = 0; j < PONG_MAX_PLAYERS; ++j )
 						{
 							if ( minigame.pong_paddles[j] == NULL )
 							{
@@ -466,7 +466,7 @@ int pong_server_event(entity minigame, string event, ...)
 					if ( minigame.minigame_flags & PONG_STATUS_WAIT )
 					{
 						entity paddle;
-						for ( int j = PONG_MAX_PLAYERS-1; j >= 0; j-- )
+						for ( int j = PONG_MAX_PLAYERS-1; j >= 0; --j )
 						{
 							paddle = minigame.pong_paddles[j];
 							if ( paddle != NULL &&
@@ -575,6 +575,8 @@ void pong_hud_board(vector pos, vector mySize)
 
 		}
 	}
+
+	minigame_show_allspecs(pos, mySize);
 }
 
 // Required function, draw the game status panel
@@ -601,7 +603,7 @@ void pong_hud_status(vector pos, vector mySize)
 			mypos = pos;
 			mypos_y  += (e.team-1) * (player_fontsize_y + ts_y);
 
-			drawfill(mypos, ts, pong_team_to_color(e.team), 0.25, DRAWFLAG_ADDITIVE);
+			drawfill(mypos, ts, pong_team_to_color(e.team), 0.25 * panel_fg_alpha, DRAWFLAG_ADDITIVE);
 
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				(e.minigame_playerslot ? entcs_GetName(e.minigame_playerslot-1) : _("AI")),
@@ -703,7 +705,7 @@ int pong_client_event(entity minigame, string event, ...)
 		case "menu_click":
 		{
 			string cmd = ...(0,string);
-			if( cmd == "pong_throw" && minigame.minigame_flags & PONG_STATUS_WAIT )
+			if( cmd == "pong_throw" && ( minigame.minigame_flags & PONG_STATUS_WAIT ) )
 			{
 				minigame_cmd("throw");
 			}

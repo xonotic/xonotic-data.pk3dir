@@ -16,6 +16,7 @@
 #include <common/debug.qh>
 #include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
+#include <common/impulses/all.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/target/music.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
@@ -481,7 +482,7 @@ vector GetCurrentFov(float fov)
 		}
 	}
 
-	if(almost_equals(current_viewzoom, 1))
+	if(zoomfactor == 1 || current_viewzoom > 0.999) // zoomfactor check prevents a division by 0
 		current_zoomfraction = 0;
 	else if(almost_equals(current_viewzoom, 1/zoomfactor))
 		current_zoomfraction = 1;
@@ -613,8 +614,24 @@ int WantEventchase(entity this, bool want_vehiclechase)
 	return 0;
 }
 
+bool waiting_CAMERA_SPECTATOR_update;
 void View_EventChase(entity this)
 {
+	if(spectatee_status > 0 && autocvar_chase_active > 0)
+	{
+		// if chase_active is enabled by the user, spectator camera never switches to 1st person
+		// that means CAMERA_SPECTATOR 1 behaves as 0 and is redundant, so we forcedly skip it
+		if (STAT(CAMERA_SPECTATOR) == 1)
+		{
+			if (!waiting_CAMERA_SPECTATOR_update)
+			{
+				Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR 2
+				waiting_CAMERA_SPECTATOR_update = true;
+			}
+		}
+		else waiting_CAMERA_SPECTATOR_update = false;
+	}
+
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
@@ -1203,6 +1220,7 @@ void View_PostProcessing()
 {
 	float e1 = (autocvar_hud_postprocessing_maxbluralpha != 0);
 	float e2 = (autocvar_hud_powerup != 0);
+	bool want_postprocessing = false;
 	if(autocvar_hud_postprocessing && (e1 || e2)) // TODO: Remove this code and re-do the postprocess handling in the engine, where it properly belongs.
 	{
 		// enable or disable rendering types if they are used or not
@@ -1220,6 +1238,7 @@ void View_PostProcessing()
 				old_blurradius = blurradius;
 				old_bluralpha = bluralpha;
 			}
+			want_postprocessing = true;
 		}
 		else if(cvar_string("r_glsl_postprocess_uservec1") != "0 0 0 0") // reduce cvar_set spam as much as possible
 		{
@@ -1246,18 +1265,24 @@ void View_PostProcessing()
 				cvar_set("r_glsl_postprocess_uservec2", strcat(ftos((sharpen_intensity / 5) * autocvar_hud_powerup), " ", ftos(-sharpen_intensity * autocvar_hud_powerup), " 0 0"));
 				old_sharpen_intensity = sharpen_intensity;
 			}
+			want_postprocessing = true;
 		}
 		else if(cvar_string("r_glsl_postprocess_uservec2") != "0 0 0 0") // reduce cvar_set spam as much as possible
 		{
 			cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
 			old_sharpen_intensity = 0;
 		}
-
+	}
+	if (want_postprocessing)
+	{
 		if(cvar("r_glsl_postprocess") == 0)
 			cvar_set("r_glsl_postprocess", "2");
 	}
-	else if(cvar("r_glsl_postprocess") == 2)
-		cvar_set("r_glsl_postprocess", "0");
+	else
+	{
+		if(cvar("r_glsl_postprocess") == 2)
+			cvar_set("r_glsl_postprocess", "0");
+	}
 }
 
 void View_Lock()
@@ -1528,7 +1553,7 @@ void View_UpdateFov()
 	setproperty(VF_FOV, fov);
 }
 
-void CSQC_UpdateView(entity this, float w, float h)
+void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 {
 	TC(int, w); TC(int, h);
 
@@ -1706,6 +1731,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	// draw 2D entities
 	IL_EACH(g_drawables_2d, it.draw2d, it.draw2d(it));
+	IL_EACH(g_damagetext, it.draw2d, it.draw2d(it));
 	Draw_ShowNames_All();
 #if ENABLE_DEBUGDRAW
 	Debug_Draw();

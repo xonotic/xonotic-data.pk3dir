@@ -16,15 +16,13 @@ SOUND(Invisibility, Item_Sound("powerup"));
 #ifdef SVQC
 .float invisibility_finished;
 
-bool autocvar_g_powerups_invisibility = 1;
-float autocvar_g_balance_powerup_invisibility_alpha = 0.15;
-float autocvar_g_balance_powerup_invisibility_time = 30;
-void powerup_invisibility_init(Pickup this, entity item)
+bool autocvar_g_powerups_invisibility;
+float autocvar_g_balance_powerup_invisibility_alpha;
+float autocvar_g_balance_powerup_invisibility_time;
+void powerup_invisibility_init(Pickup def, entity item)
 {
-    if(autocvar_g_powerups_invisibility)
-        this.spawnflags = ITEM_FLAG_NORMAL;
-    else
-        this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
+    if(!autocvar_g_powerups || !autocvar_g_powerups_invisibility)
+        def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 
     if(!item.invisibility_finished)
         item.invisibility_finished = (item.count) ? item.count : autocvar_g_balance_powerup_invisibility_time;
@@ -36,6 +34,7 @@ REGISTER_ITEM(Invisibility, Powerup) {
     this.m_iteminit         =   powerup_invisibility_init;
 #endif
 #ifdef GAMEQC
+    this.spawnflags         =   ITEM_FLAG_NORMAL;
     this.m_itemid           =   IT_INVISIBILITY;
     this.m_model            =   MDL_BUFF; // TODO: MDL_Invisibility_ITEM when new model available
     this.m_skin             =   12;
@@ -52,6 +51,7 @@ REGISTER_ITEM(Invisibility, Powerup) {
 }
 
 SPAWNFUNC_ITEM(item_invisibility, ITEM_Invisibility)
+SPAWNFUNC_ITEM(item_buff_invisibility, ITEM_Invisibility)
 
 CLASS(Invisibility, Powerups)
     ATTRIB(Invisibility, netname, string, "invisibility");

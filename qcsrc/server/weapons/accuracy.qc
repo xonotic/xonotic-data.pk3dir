@@ -60,7 +60,7 @@ void accuracy_reset(entity e)
 	entity a = CS(e).accuracy;
 	if (!a) return;
 
-	for (int i = 0; i < REGISTRY_MAX(Weapons); i++)
+	for (int i = 0; i < REGISTRY_MAX(Weapons); ++i)
 	{
 		a.accuracy_frags[i] = 0;
 		a.accuracy_hit[i] = 0;

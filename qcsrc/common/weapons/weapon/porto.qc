@@ -118,9 +118,10 @@ void W_Porto_Fail(entity this, float failhard)
 
 	if(this.cnt < 0 && !failhard && this.realowner.playerid == this.playerid && !IS_DEAD(this.realowner) && !(STAT(WEAPONS, this.realowner) & WEPSET(PORTO)))
 	{
-		setsize(this, '-16 -16 0', '16 16 48');
+		// FIXME: item properties should be obtained from the registry
+		setsize(this, ITEM_D_MINS, ITEM_D_MAXS);
 		setorigin(this, this.origin + trace_plane_normal);
-		if(move_out_of_solid(this))
+		if(nudgeoutofsolid(this))
 		{
 			this.flags = FL_ITEM;
 			IL_PUSH(g_items, this);
@@ -171,7 +172,7 @@ void W_Porto_Touch(entity this, entity toucher)
 		traceline(trace_ent.origin, trace_ent.origin + '0 0 2' * PL_MIN_CONST.z, MOVE_WORLDONLY, this);
 		if(trace_fraction >= 1)
 			return;
-		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+		if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & DPCONTENTS_PLAYERCLIP))
 			return;
 		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 			return;
