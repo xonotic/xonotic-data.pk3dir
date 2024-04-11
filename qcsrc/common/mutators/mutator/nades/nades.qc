@@ -204,7 +204,7 @@ void nade_timer_think(entity this)
 
 void nade_burn_spawn(entity _nade)
 {
-	CSQCProjectile(_nade, true, REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, _nade)).m_projectile[true], true);
+	CSQCProjectile(_nade, true, REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, _nade)).m_projectile[1], true);
 }
 
 void nade_spawn(entity _nade)
@@ -222,7 +222,7 @@ void nade_spawn(entity _nade)
 
 	_nade.effects |= EF_LOWPRECISION;
 
-	CSQCProjectile(_nade, true, REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, _nade)).m_projectile[false], true);
+	CSQCProjectile(_nade, true, REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, _nade)).m_projectile[0], true);
 }
 
 void normal_nade_boom(entity this)
@@ -1261,7 +1261,7 @@ bool nade_customize(entity this, entity client)
 		if(!this.traileffectnum)
 		{
 			entity nade = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this));
-			this.traileffectnum = _particleeffectnum(Nade_TrailEffect(nade.m_projectile[false], this.team).eent_eff_name);
+			this.traileffectnum = _particleeffectnum(Nade_TrailEffect(nade.m_projectile[0], this.team).eent_eff_name);
 		}
 		this.alpha = 1;
 	}
@@ -1273,11 +1273,13 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 {
 	entity n = new(nade), fn = new(fake_nade);
 
-	STAT(NADE_BONUS_TYPE, n) = max(1, ntype);
 	n.pokenade_type = pntype;
 
-	if(REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, n)) == NADE_TYPE_Null)
-		STAT(NADE_BONUS_TYPE, n) = NADE_TYPE_NORMAL.m_id;
+	Nade def = REGISTRY_GET(Nades, max(1, ntype));
+	if(def == NADE_TYPE_Null)
+		def = NADE_TYPE_NORMAL;
+
+	STAT(NADE_BONUS_TYPE, n) = def.m_id;
 
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
@@ -1285,8 +1287,8 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	//setattachment(n, player, "bip01 l hand");
 	n.exteriormodeltoclient = player;
 	setcefc(n, nade_customize);
-	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, n)).m_projectile[false], player.team).eent_eff_name);
-	n.colormod = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, n)).m_color;
+	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(def.m_projectile[0], player.team).eent_eff_name);
+	n.colormod = def.m_color;
 	n.realowner = nowner;
 	n.colormap = player.colormap;
 	n.glowmod = player.glowmod;
@@ -1297,19 +1299,19 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	n.projectiledeathtype = DEATH_NADE.m_id;
 	n.weaponentity_fld = weaponentity;
 	n.nade_lifetime = ntime;
-	n.alpha = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, n)).m_alpha;
+	n.alpha = def.m_alpha;
 
 	setmodel(fn, MDL_NADE_VIEW);
 	//setattachment(fn, player.(weaponentity), "");
 	fn.viewmodelforclient = player;
 	fn.realowner = fn.owner = player;
-	fn.colormod = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, n)).m_color;
+	fn.colormod = def.m_color;
 	fn.colormap = player.colormap;
 	fn.glowmod = player.glowmod;
 	setthink(fn, SUB_Remove);
 	fn.nextthink = n.wait;
 	fn.weaponentity_fld = weaponentity;
-	fn.alpha = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, n)).m_alpha;
+	fn.alpha = def.m_alpha;
 
 	player.nade = n;
 	player.fake_nade = fn;
