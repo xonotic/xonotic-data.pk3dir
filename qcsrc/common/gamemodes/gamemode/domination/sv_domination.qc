@@ -299,7 +299,7 @@ void dom_controlpoint_setup(entity this)
 	this.flags = FL_ITEM;
 	setsize(this, '-48 -48 -32', '48 48 32'); // 0.8.6 used '-32 -32 -32', '32 32 32' with sv_legacy_bbox_expand 1 and FL_ITEM
 	setorigin(this, this.origin + '0 0 20');
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 
 	waypoint_spawnforitem(this);
 	WaypointSprite_SpawnFixed(WP_DomNeut, this.origin + '0 0 32', this, sprite, RADARICON_DOMPOINT);

@@ -2414,7 +2414,7 @@ void DropToFloor_QC(entity this)
 	setorigin(this, this.dropped_origin = this.origin);
 }
 
-void droptofloor(entity this)
+void DropToFloor_QC_DelayedInit(entity this)
 {
 	InitializeEntity(this, DropToFloor_QC, INITPRIO_DROPTOFLOOR);
 }

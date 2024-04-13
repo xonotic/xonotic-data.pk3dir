@@ -126,7 +126,7 @@ void spawn_item_key(entity this)
 
 	// NOTE: this isn't an FL_ITEM so it doesn't get the special treatment in DropToFloor_QC()
 	if (!this.noalign)
-		droptofloor(this);
+		DropToFloor_QC_DelayedInit(this);
 
 	settouch(this, item_key_touch);
 }
