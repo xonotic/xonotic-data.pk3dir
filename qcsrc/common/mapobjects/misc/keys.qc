@@ -165,6 +165,7 @@ spawnfunc(item_key)
 {
 	string _netname;
 	vector _colormod;
+	string _model = "models/keys/key.md3";
 
 	// reject this entity if more than one key was set!
 	if (this.itemkeys>0 && (this.itemkeys & (this.itemkeys-1)) != 0)
@@ -195,16 +196,19 @@ spawnfunc(item_key)
 	case BIT(3):
 		_netname = "RED keycard";
 		_colormod = '.9 0 0';
+		_model = "models/keys/key.md3"; // FIXME: replace it by a keycard model!
 		break;
 
 	case BIT(4):
 		_netname = "BLUE keycard";
 		_colormod = '0 0 .9';
+		_model = "models/keys/key.md3"; // FIXME: replace it by a keycard model!
 		break;
 
 	case BIT(5):
 		_netname = "GREEN keycard";
 		_colormod = '0 .9 0';
+		_model = "models/keys/key.md3"; // FIXME: replace it by a keycard model!
 		break;
 
 	case 0xffffff: // an unlisted key...
@@ -216,28 +220,22 @@ spawnfunc(item_key)
 		_netname = "FLUFFY PINK keycard";
 		_colormod = '1 1 1';
 
-		if (this.netname == "") {
+		if (this.netname == "")
+		{
 			objerror(this, "item_key doesn't have a default name for this key and a custom one was not specified!");
 			delete(this);
 			return;
 		}
+		if (this.model == "")
+		{
+			objerror(this, "item_key doesn't have a default model for this key and a custom one was not specified!");
+			delete(this);
+			return;
+		}
 		break;
-
 	}
 
-	// find default model
-	string _model = string_null;
-	if (this.itemkeys <= BIT(2) || this.itemkeys == 0xffffff) {
-		_model = "models/keys/key.md3";
-	} else if (this.itemkeys >= BIT(3) && this.itemkeys <= BIT(5)) {
-		_model = "models/keys/key.md3"; // FIXME: replace it by a keycard model!
-	} else if (this.model == "") {
-		objerror(this, "item_key doesn't have a default model for this key and a custom one was not specified!");
-		delete(this);
-		return;
-	}
-
-	// set defailt netname
+	// set default netname
 	if (this.netname == "")
 		this.netname = _netname;
 
