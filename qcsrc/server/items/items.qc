@@ -1125,9 +1125,8 @@ void StartItem(entity this, entity def)
 		// do item filtering according to game mode and other things
 		if (this.noalign <= 0)
 		{
-			// note droptofloor returns false if stuck/or would fall too far
 			if (!this.noalign)
-				droptofloor(this);
+				DropToFloor_QC_DelayedInit(this);
 			waypoint_spawnforitem(this);
 		}
 
