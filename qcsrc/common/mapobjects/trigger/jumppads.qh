@@ -27,6 +27,7 @@ STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
 const int NUM_JUMPPADSUSED = 3;
 .float jumppadcount;
 .entity jumppadsused[NUM_JUMPPADSUSED];
+.bool jumppad_first_push;
 
 #ifdef SVQC
 void SUB_UseTargets(entity this, entity actor, entity trigger);

@@ -386,6 +386,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 			{
 				targ.(jumppadsused[targ.jumppadcount % NUM_JUMPPADSUSED]) = this;
 				targ.jumppadcount = targ.jumppadcount + 1;
+				targ.jumppad_first_push = true;
 			}
 
 			if(IS_REAL_CLIENT(targ))

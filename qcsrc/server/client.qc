@@ -2541,7 +2541,7 @@ void DrownPlayer(entity this)
 }
 
 .bool move_qcphysics;
-
+.bool jumppad_first_push;
 void Player_Physics(entity this)
 {
 	this.movetype = (this.move_qcphysics) ? MOVETYPE_QCPLAYER : this.move_movetype;
@@ -2555,6 +2555,9 @@ void Player_Physics(entity this)
 	Movetype_Physics_NoMatchTicrate(this, CS(this).pm_frametime, true);
 
 	CS(this).pm_frametime = 0;
+
+	if (this.jumppad_first_push)
+		this.jumppad_first_push = false;
 }
 
 /*
