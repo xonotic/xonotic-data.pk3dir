@@ -14,6 +14,7 @@ REGISTER_MUTATOR(damagetext, true);
 .float dent_net_health;
 .float dent_net_armor;
 .float dent_net_potential;
+.entity dent_attackers;
 
 bool write_damagetext(entity this, entity client, int sf)
 {
@@ -96,6 +97,13 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 		net_text_prev.dent_net_potential = potential_damage;
 		return;
 	}
+	else if (!IL_CONTAINS(hit.dent_attackers, attacker))
+	{
+		// player is hit for the first time after respawn by this attacker
+		IL_PUSH(hit.dent_attackers, attacker);
+		flags |= DTFLAG_STOP_ACCUMULATION; // forcedly stop client-side damage accumulation
+	}
+
 	entity net_text = new_pure(net_damagetext);
 	net_text.realowner = attacker;
 	net_text.enemy = hit;
@@ -112,4 +120,26 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 	net_text.nextthink = (time > 10) ? (time + 0.5) : 10; // allow a buffer from start time for clients to load in
 
 	Net_LinkEntity(net_text, false, 0, write_damagetext);
+}
+
+MUTATOR_HOOKFUNCTION(damagetext, ClientDisconnect)
+{
+	entity player = M_ARGV(0, entity);
+	if (player.dent_attackers)
+		IL_DELETE(player.dent_attackers);
+
+	// NOTE this player is automatically removed from dent_attackers lists of other players
+	// by intrusive list's ONREMOVE
+}
+
+MUTATOR_HOOKFUNCTION(damagetext, PlayerSpawn)
+{
+	entity player = M_ARGV(0, entity);
+	if (player.dent_attackers == NULL)
+	{
+		player.dent_attackers = IL_NEW();
+		return true;
+	}
+
+	IL_CLEAR(player.dent_attackers);
 }
