@@ -64,6 +64,22 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 	float potential_damage = M_ARGV(6, float);
 	if(DEATH_WEAPONOF(deathtype) == WEP_VAPORIZER) return;
 
+	static entity net_text_prev;
+	static float net_damagetext_prev_time;
+
+	bool multiple = (net_damagetext_prev_time == time && net_text_prev && !wasfreed(net_text_prev)
+		&& net_text_prev.realowner == attacker && net_text_prev.enemy == hit
+		&& net_text_prev.dent_net_deathtype == deathtype);
+
+	if (multiple)
+	{
+		// damage of multiple projectiles hitting player at the same time, e.g. shotgun
+		// is accumulated on the same damagetext entity
+		health += net_text_prev.dent_net_health;
+		armor += net_text_prev.dent_net_armor;
+		potential_damage += net_text_prev.dent_net_potential;
+	}
+
 	int flags = 0;
 	if (SAME_TEAM(hit, attacker)) flags |= DTFLAG_SAMETEAM;
 	if (health >= DAMAGETEXT_SHORT_LIMIT) flags |= DTFLAG_BIG_HEALTH;
@@ -72,6 +88,14 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 	if (!armor) flags |= DTFLAG_NO_ARMOR;
 	if (almost_equals_eps(armor + health, potential_damage, 5)) flags |= DTFLAG_NO_POTENTIAL;
 
+	if (multiple)
+	{
+		net_text_prev.dent_net_flags = flags;
+		net_text_prev.dent_net_health = health;
+		net_text_prev.dent_net_armor = armor;
+		net_text_prev.dent_net_potential = potential_damage;
+		return;
+	}
 	entity net_text = new_pure(net_damagetext);
 	net_text.realowner = attacker;
 	net_text.enemy = hit;
@@ -80,6 +104,9 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 	net_text.dent_net_health = health;
 	net_text.dent_net_armor = armor;
 	net_text.dent_net_potential = potential_damage;
+
+	net_text_prev = net_text;
+	net_damagetext_prev_time = time;
 
 	setthink(net_text, SUB_Remove);
 	net_text.nextthink = (time > 10) ? (time + 0.5) : 10; // allow a buffer from start time for clients to load in
