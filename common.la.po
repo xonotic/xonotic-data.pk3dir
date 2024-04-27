@@ -579,7 +579,7 @@ msgstr "SCO^pptempus"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Total amount of time holding the ball in Keepaway"
-msgstr "Quid tempus totum pilam portabat Abhibitione"
+msgstr "Quantum tempus totum pilam portabat Abhibitione"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
@@ -611,19 +611,19 @@ msgstr "Quot claves deletae demissae in vacuum"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^destructions"
-msgstr ""
+msgstr "deletiones"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^damage dealt"
-msgstr ""
+msgstr "vulnus illatum"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "The total damage dealt"
-msgstr ""
+msgstr "Totum vulnus quod hic intulit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^damage taken"
-msgstr ""
+msgstr "vulnus acceptum"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "The total damage taken"
@@ -687,11 +687,11 @@ msgstr "caedes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "Number of generators destroyed"
-msgstr ""
+msgstr "Quot generatra deleta"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^generators"
-msgstr ""
+msgstr "generatra"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Number of goals scored"
