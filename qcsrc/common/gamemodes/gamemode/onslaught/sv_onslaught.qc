@@ -36,22 +36,9 @@ float autocvar_g_onslaught_teleport_radius;
 float autocvar_g_onslaught_spawn_choose;
 float autocvar_g_onslaught_click_radius;
 
-entity cam;
-
 // =======================
 // CaptureShield Functions
 // =======================
-
-bool clientcamera_send(entity this, entity to, int sf)
-{
-	WriteHeader(MSG_ENTITY, ENT_ONSCAMERA);
-
-	WriteVector(MSG_ENTITY, this.origin);
-
-	WriteAngleVector(MSG_ENTITY, this.angles);
-
-	return true;
-}
 
 bool ons_CaptureShield_Customize(entity this, entity client)
 {
@@ -327,14 +314,15 @@ int ons_ControlPoint_CanBeLinked(entity cp, int teamnum)
 	return 0;
 }
 
+// return values:
+// -2: SAME TEAM, attackable by enemy!
+// -1: SAME TEAM!
+// 0: off limits
+// 1: attack it
+// 2: touch it
+// 3: attack it (HIGH PRIO)
+// 4: touch it (HIGH PRIO)
 int ons_ControlPoint_Attackable(entity cp, int teamnum)
-	// -2: SAME TEAM, attackable by enemy!
-	// -1: SAME TEAM!
-	// 0: off limits
-	// 1: attack it
-	// 2: touch it
-	// 3: attack it (HIGH PRIO)
-	// 4: touch it (HIGH PRIO)
 {
 	int a;
 
@@ -852,6 +840,15 @@ void ons_Generator_UpdateSprite(entity e)
 		}
 		WaypointSprite_Ping(e.sprite);
 	}
+}
+
+entity cam;
+bool clientcamera_send(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_ONSCAMERA);
+	WriteVector(MSG_ENTITY, this.origin);
+	WriteAngleVector(MSG_ENTITY, this.angles);
+	return true;
 }
 
 void ons_camSetup(entity this)
