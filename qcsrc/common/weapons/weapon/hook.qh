@@ -50,7 +50,7 @@ CLASS(Hook, Weapon)
 #undef X
 
 ENDCLASS(Hook)
-REGISTER_WEAPON(HOOK, hook, NEW(Hook));
+REGISTER_WEAPON(HOOK, NEW(Hook));
 
 SPAWNFUNC_WEAPON(weapon_hook, WEP_HOOK)
 
