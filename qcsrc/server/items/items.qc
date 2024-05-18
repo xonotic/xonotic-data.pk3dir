@@ -1104,7 +1104,7 @@ void StartItem(entity this, entity def)
 		{
 			if (!this.team)
 			{
-				string t = GetField_fullspawndata(this, "team");
+				string t = GetField_fullspawndata(this, "team", false);
 				// bones_was_here: this hack is cheaper than changing to a .string strcmp()
 				if(t) this.team = crc16(false, t);
 			}

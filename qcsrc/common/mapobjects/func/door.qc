@@ -809,7 +809,7 @@ spawnfunc(func_door)
 
 		if (!this.team)
 		{
-			string t = GetField_fullspawndata(this, "team");
+			string t = GetField_fullspawndata(this, "team", false);
 			// bones_was_here: same hack as used to support teamed items on Q3 maps
 			if (t) this.team = crc16(false, t);
 		}
