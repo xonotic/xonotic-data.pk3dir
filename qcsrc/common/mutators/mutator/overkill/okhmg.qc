@@ -63,9 +63,9 @@ METHOD(OverkillHeavyMachineGun, wr_think, void(entity thiswep, entity actor, .en
 	if ((WEP_CVAR_SEC(WEP_OVERKILL_HMG, refire_type) == 1) && (fire & 2) && (time >= actor.jump_interval))
 	{
 		// Secondary uses it's own refire timer if refire_type is 1.
-		actor.jump_interval = time + WEP_CVAR_SEC(WEP_BLASTER, refire) * W_WeaponRateFactor(actor);
+		actor.jump_interval = time + WEP_CVAR_PRI(WEP_BLASTER, refire) * W_WeaponRateFactor(actor);
 		makevectors(actor.v_angle);
-		W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
+		W_Blaster_Attack(actor, weaponentity);
 		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
@@ -98,13 +98,13 @@ METHOD(OverkillHeavyMachineGun, wr_think, void(entity thiswep, entity actor, .en
 	}
 	if ((fire & 2) && (WEP_CVAR_SEC(WEP_OVERKILL_HMG, refire_type) == 0)) // Secondary attack
 	{
-		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(WEP_BLASTER, refire)))
+		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_BLASTER, refire)))
 		{
 			return;
 		}
 		makevectors(actor.v_angle);
-		W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
-		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_BLASTER, animtime), w_ready);
+		W_Blaster_Attack(actor, weaponentity);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_PRI(WEP_BLASTER, animtime), w_ready);
 	}
 }
 
@@ -120,10 +120,10 @@ METHOD(OverkillHeavyMachineGun, wr_checkammo1, bool(entity thiswep, entity actor
 
 METHOD(OverkillHeavyMachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(WEP_BLASTER, ammo);
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(WEP_BLASTER, ammo);
 	if (autocvar_g_balance_okhmg_reload_ammo)
 	{
-		ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_HMG.m_id]) >= WEP_CVAR_SEC(WEP_BLASTER, ammo);
+		ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_HMG.m_id]) >= WEP_CVAR_PRI(WEP_BLASTER, ammo);
 	}
 	return ammo_amount;
 }
