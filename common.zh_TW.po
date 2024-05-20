@@ -630,19 +630,19 @@ msgstr "推入虛空而銷燬的鑰匙數"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^destructions"
-msgstr ""
+msgstr "摧毀"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^damage dealt"
-msgstr ""
+msgstr "傷害"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "The total damage dealt"
-msgstr ""
+msgstr "造成的總傷害"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^damage taken"
-msgstr ""
+msgstr "受傷"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "The total damage taken"
@@ -706,11 +706,11 @@ msgstr "殺敵"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of generators destroyed"
-msgstr ""
+msgstr "摧毀的發電機數量"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^generators"
-msgstr ""
+msgstr "發電機"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Number of goals scored"
@@ -1339,7 +1339,7 @@ msgstr "遊戲類型："
 
 #: qcsrc/client/main.qc:1463
 msgid "by:"
-msgstr ""
+msgstr "作者："
 
 #: qcsrc/client/main.qc:1467
 msgid "This match supports"
@@ -1422,7 +1422,7 @@ msgstr "正在請求預覽……"
 
 #: qcsrc/client/view.qc:903
 msgid "Nade timer"
-msgstr "榴彈計時"
+msgstr "手雷計時"
 
 #: qcsrc/client/view.qc:908
 msgid "Capture progress"
@@ -1781,7 +1781,7 @@ msgstr "殺敵數達到目標後，一輪競賽結束"
 
 #: qcsrc/common/minigames/cl_minigames.qc:287
 msgid "Spectators:"
-msgstr ""
+msgstr "旁觀者："
 
 #: qcsrc/common/minigames/cl_minigames.qc:424
 msgid "It's your turn"
@@ -2181,57 +2181,57 @@ msgstr "額外的生命"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:18
 msgid "Napalm grenade"
-msgstr "烈焰榴彈"
+msgstr "烈焰手雷"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:28
 msgid "Ice grenade"
-msgstr "冰榴彈"
+msgstr "寒冰手雷"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:38
 msgid "Translocate grenade"
-msgstr "穿越榴彈"
+msgstr "穿越手雷"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:48
 msgid "Spawn grenade"
-msgstr "復活點榴彈"
+msgstr "復活點手雷"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:58
 msgid "Heal grenade"
-msgstr "治癒榴彈"
+msgstr "治療手雷"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:68
 msgid "Monster grenade"
-msgstr "怪物榴彈"
+msgstr "怪物手雷"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:78
 msgid "Entrap grenade"
-msgstr "滯速榴彈"
+msgstr "滯速手雷"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:88
 msgid "Veil grenade"
-msgstr "藏匿榴彈"
+msgstr "藏匿手雷"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:99
 msgid "Ammo grenade"
-msgstr "彈藥榴彈"
+msgstr "彈藥手雷"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:109
 msgid "Darkness grenade"
-msgstr "暗影榴彈"
+msgstr "暗影手雷"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:137
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
-msgstr "丟出武器 / 扔榴彈"
+msgstr "丟出武器 / 扔手雷"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
-msgstr "^3榴彈^8已啟用，按 ^3%s^8 投擲"
+msgstr "^8啟用了^3手雷^8，按 ^3%s^8 投擲"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:123
 msgid "Grenade"
-msgstr "榴彈"
+msgstr "手雷"
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
@@ -2688,7 +2688,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 推到一隻怪物面前%s%s"
 #: qcsrc/common/notifications/all.inc:283
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的榴彈引爆了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的手雷引爆了%s%s"
 
 #: qcsrc/common/notifications/all.inc:284
 #, c-format
@@ -2698,22 +2698,22 @@ msgstr "^BG%s%s^K1 離燃燒爆炸太近%s%s"
 #: qcsrc/common/notifications/all.inc:284
 #, c-format
 msgid "^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的燃燒榴彈燒死了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的燃燒手雷燒死了%s%s"
 
 #: qcsrc/common/notifications/all.inc:285
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的冰榴彈引爆了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的寒冰手雷引爆了%s%s"
 
 #: qcsrc/common/notifications/all.inc:286
 #, c-format
 msgid "^BG%s%s^K1 was frozen to death by ^BG%s^K1's Ice Nade%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 的冰榴彈凍死了%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 的寒冰手雷凍死了%s%s"
 
 #: qcsrc/common/notifications/all.inc:287
 #, c-format
 msgid "^BG%s%s^K1 has not been healed by ^BG%s^K1's Healing Nade%s%s"
-msgstr "^BG%s%s^K1 沒有被 ^BG%s^K1 的治癒榴彈所治癒%s%s"
+msgstr "^BG%s%s^K1 沒有被 ^BG%s^K1 的治療手雷所治癒%s%s"
 
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
@@ -2921,18 +2921,18 @@ msgstr "^BG%s^K1 親身體驗了喪屍的一堂功夫課%s%s"
 #: qcsrc/common/notifications/all.inc:327
 #, c-format
 msgid "^BG%s^K1 mastered the art of self-nading%s%s"
-msgstr "^BG%s^K1 掌握了榴彈自爆藝術%s%s"
+msgstr "^BG%s^K1 掌握了手雷自爆藝術%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
 msgid ""
 "^BG%s^K1 decided to take a look at the results of their napalm explosion%s%s"
-msgstr "^BG%s^K1 看了看自己燃燒榴彈的爆炸效果%s%s"
+msgstr "^BG%s^K1 看了看自己燃燒手雷的爆炸效果%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
 msgid "^BG%s^K1 was burned to death by their own Napalm Nade%s%s"
-msgstr "^BG%s^K1 被自己的燃燒榴彈燒死了%s%s"
+msgstr "^BG%s^K1 被自己的燃燒手雷燒死了%s%s"
 
 #: qcsrc/common/notifications/all.inc:328
 #, c-format
@@ -2942,12 +2942,12 @@ msgstr "^BG%s^K1 覺得有點冷%s%s"
 #: qcsrc/common/notifications/all.inc:328
 #, c-format
 msgid "^BG%s^K1 was frozen to death by their own Ice Nade%s%s"
-msgstr "^BG%s^K1 被自己的凍結榴彈凍死了%s%s"
+msgstr "^BG%s^K1 被自己的寒冰手雷凍死了%s%s"
 
 #: qcsrc/common/notifications/all.inc:329
 #, c-format
 msgid "^BG%s^K1's Healing Nade didn't quite heal them%s%s"
-msgstr "^BG%s^K1 的治癒榴彈並沒怎麼治癒自己%s%s"
+msgstr "^BG%s^K1 的治療手雷並沒怎麼治癒自己%s%s"
 
 #: qcsrc/common/notifications/all.inc:330
 #, c-format
@@ -3127,7 +3127,7 @@ msgstr "^BG%s^K3 透過跌落復活"
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
 msgid "^BG%s^K3 was revived by their Nade explosion"
-msgstr "^BG%s^K3 被他的榴彈爆炸復活"
+msgstr "^BG%s^K3 被手雷爆炸復活"
 
 #: qcsrc/common/notifications/all.inc:369
 #, c-format
@@ -3417,14 +3417,14 @@ msgstr "^BG%s^BG 打破了自己 %s%s^BG 記錄：%s%s %s"
 msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID "
 "and will be lost."
-msgstr "^BG%s^BG 以 ^F2%s^BG 創造了新紀錄，但不幸因為缺少 UID 而將丟失。"
+msgstr "^BG%s^BG 以 ^F2%s^BG 創造了新紀錄，但不幸因缺少 UID 而丟失。"
 
 #: qcsrc/common/notifications/all.inc:439
 #, c-format
 msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but is anonymous and will be "
 "lost."
-msgstr "^BG%s^BG 以 ^F2%s^BG 創造了新紀錄，但因其匿名而將丟失。"
+msgstr "^BG%s^BG 以 ^F2%s^BG 創造了新紀錄，但因匿名而丟失。"
 
 #: qcsrc/common/notifications/all.inc:440
 #, c-format
@@ -3447,7 +3447,7 @@ msgstr "^TC^TT隊^BG得分！"
 msgid ""
 "^F2You have to become a player within the next %s, otherwise you will be "
 "kicked, because spectating isn't allowed at this time!"
-msgstr "^F2你必須在 %s內參與遊戲，否則將被踢出。現在不允許旁觀！"
+msgstr "^F2你必須在 %s內參與遊戲，否則會被踢出。現在不允許旁觀！"
 
 #: qcsrc/common/notifications/all.inc:448
 #, c-format
@@ -3518,7 +3518,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 的弧光電束爆破了%s%s"
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
 msgid "^BG%s^K1 played with Arc bolts%s%s"
-msgstr "^BG%s^K1 試圖把玩弧光電束%s%s"
+msgstr "^BG%s^K1 把玩弧光電束%s%s"
 
 #: qcsrc/common/notifications/all.inc:465
 #, c-format
@@ -3573,7 +3573,7 @@ msgstr "^BG%s%s^K1 離 ^BG%s^K1 的電射球太近%s%s"
 #: qcsrc/common/notifications/all.inc:475
 #, c-format
 msgid "^BG%s^K1 played with Electro bolts%s%s"
-msgstr "^BG%s^K1 試圖把玩電射槍光束%s%s"
+msgstr "^BG%s^K1 把玩電射槍光束%s%s"
 
 #: qcsrc/common/notifications/all.inc:476
 #, c-format
@@ -3613,7 +3613,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 的哈格火箭彈痛擊%s%s"
 #: qcsrc/common/notifications/all.inc:483
 #, c-format
 msgid "^BG%s^K1 played with tiny Hagar rockets%s%s"
-msgstr "^BG%s^K1 試圖把玩小哈格火箭彈%s%s"
+msgstr "^BG%s^K1 把玩哈格火箭彈%s%s"
 
 #: qcsrc/common/notifications/all.inc:484
 #, c-format
@@ -3644,7 +3644,7 @@ msgstr "^BG%s^K1 用亂音克萊因瓶傷到了自己的耳朵%s%s"
 #: qcsrc/common/notifications/all.inc:489
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 被 ^BG%s^K1 用機槍狙擊%s%s"
+msgstr "^BG%s%s^K1 被 ^BG%s^K1 用機槍擊殺%s%s"
 
 #: qcsrc/common/notifications/all.inc:490
 #, c-format
@@ -3670,22 +3670,22 @@ msgstr "^BG%s^K1 忘記自己放置了地雷%s%s"
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Mortar grenade%s%s"
-msgstr "^BG%s%s^K1 離 ^BG%s^K1 打出的榴彈太近%s%s"
+msgstr "^BG%s%s^K1 離 ^BG%s^K1 的迫击炮榴彈太近%s%s"
 
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
 msgid "^BG%s%s^K1 ate ^BG%s^K1's Mortar grenade%s%s"
-msgstr "^BG%s%s^K1 吃了一記 ^BG%s^K1 的榴彈%s%s"
+msgstr "^BG%s%s^K1 吃了一記 ^BG%s^K1 的迫击炮榴彈%s%s"
 
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
 msgid "^BG%s^K1 didn't see their own Mortar grenade%s%s"
-msgstr "^BG%s^K1 沒能躲過自己的榴彈%s%s"
+msgstr "^BG%s^K1 沒能躲過自己的迫击炮榴彈%s%s"
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
 msgid "^BG%s^K1 blew themself up with their own Mortar%s%s"
-msgstr "^BG%s^K1 被自己的榴彈炸飛了%s%s"
+msgstr "^BG%s^K1 被自己的迫击炮炸飛了%s%s"
 
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
@@ -3772,7 +3772,7 @@ msgstr "^BG%s%s^K1 被 ^BG%s^K1 的瞄準者盯住了%s%s"
 #: qcsrc/common/notifications/all.inc:514
 #, c-format
 msgid "^BG%s^K1 played with tiny Seeker rockets%s%s"
-msgstr "^BG%s^K1 試圖把玩跟蹤火箭%s%s"
+msgstr "^BG%s^K1 把玩跟蹤火箭%s%s"
 
 #: qcsrc/common/notifications/all.inc:515
 #, c-format
@@ -4103,11 +4103,11 @@ msgstr "^K1%s你在打字時讓 ^BG%s^K1 得分^BG"
 #: qcsrc/common/notifications/all.inc:636
 #, c-format
 msgid "^BGPress ^F2%s^BG again to toss the nade!"
-msgstr "^BG再按一次 ^F2%s^BG 來扔出榴彈！"
+msgstr "^BG再按一次 ^F2%s^BG 扔出手雷！"
 
 #: qcsrc/common/notifications/all.inc:637
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
-msgstr "^F2你得到了一個^K1獎勵手榴彈^F2！"
+msgstr "^F2你得到了一個^K1獎勵手手雷^F2！"
 
 #: qcsrc/common/notifications/all.inc:639
 #, c-format
@@ -4181,7 +4181,7 @@ msgstr "^K1嚐起來像雞肉！"
 
 #: qcsrc/common/notifications/all.inc:650
 msgid "^K1You forgot to put the pin back in!"
-msgstr "^K1你忘記把拉環塞回榴彈了！"
+msgstr "^K1你忘記把拉環塞回手雷了！"
 
 #: qcsrc/common/notifications/all.inc:651
 msgid "^K1Hanging around a napalm explosion is bad!"
@@ -4197,7 +4197,7 @@ msgstr "^K1你變得有些涼！"
 
 #: qcsrc/common/notifications/all.inc:653
 msgid "^K1Your Healing Nade is a bit defective"
-msgstr "^K1你的治癒榴彈有點不管用"
+msgstr "^K1你的治療手雷有點不管用"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid "^K1You are respawning for running out of ammo..."
@@ -4800,7 +4800,7 @@ msgstr "丟出旗子"
 
 #: qcsrc/common/notifications/all.qh:441
 msgid "throw nade"
-msgstr "扔榴彈"
+msgstr "扔手雷"
 
 #: qcsrc/common/notifications/all.qh:467
 #, c-format
@@ -5266,7 +5266,7 @@ msgstr "無初始武器"
 
 #: qcsrc/common/util.qc:271
 msgid "Nades"
-msgstr "榴彈"
+msgstr "手雷"
 
 #: qcsrc/common/util.qc:272
 msgid "Offhand blaster"
@@ -5737,7 +5737,7 @@ msgstr "地雷放置器"
 
 #: qcsrc/common/weapons/weapon/mortar.qh:20
 msgid "Mortar"
-msgstr "榴彈槍"
+msgstr "迫击炮"
 
 #: qcsrc/common/weapons/weapon/porto.qh:18
 msgid "Port-O-Launch"
