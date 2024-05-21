@@ -34,7 +34,7 @@ CLASS(PortoLaunch, Weapon)
     W_PROPS(X, PortoLaunch, porto)
 #undef X
 ENDCLASS(PortoLaunch)
-REGISTER_WEAPON(PORTO, porto, NEW(PortoLaunch));
+REGISTER_WEAPON(PORTO, NEW(PortoLaunch));
 
 SPAWNFUNC_WEAPON(weapon_porto, WEP_PORTO)
 

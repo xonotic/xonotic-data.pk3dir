@@ -60,7 +60,7 @@ CLASS(Crylink, Weapon)
 #undef X
 
 ENDCLASS(Crylink)
-REGISTER_WEAPON(CRYLINK, crylink, NEW(Crylink));
+REGISTER_WEAPON(CRYLINK, NEW(Crylink));
 
 SPAWNFUNC_WEAPON(weapon_crylink, WEP_CRYLINK)
 

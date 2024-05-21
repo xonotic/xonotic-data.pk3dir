@@ -73,7 +73,7 @@ CLASS(Electro, Weapon)
 #undef X
 
 ENDCLASS(Electro)
-REGISTER_WEAPON(ELECTRO, electro, NEW(Electro));
+REGISTER_WEAPON(ELECTRO, NEW(Electro));
 
 SPAWNFUNC_WEAPON(weapon_electro, WEP_ELECTRO)
 
