@@ -621,6 +621,10 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	if(!old_time || new_time < old_time)
 		GameRules_scoring_add(player, CTF_CAPTIME, new_time - old_time);
 
+	// Scores announcer
+	// TODO : This should call a function and announce which team is leading if the leader announcing code is merged.
+	Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(player.team, ANNCE_TEAM_SCORES));
+
 	// effects
 	Send_Effect_(flag.capeffect, flag.origin, '0 0 0', 1);
 #if 0
@@ -655,6 +659,14 @@ void ctf_Handle_Return(entity flag, entity player)
 	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_NUM(flag.team, CENTER_CTF_RETURN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(flag.team, INFO_CTF_RETURN), player.netname);
+
+		FOREACH_CLIENT(IS_PLAYER(it), {
+			if(it.team == flag.team)
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_CTF_RETURN_TEAM);
+			else
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_CTF_RETURN_ENEMY);
+		});
+		Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(flag.team, ANNCE_CTF_RETURN));
 	}
 	_sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTEN_NONE);
 	ctf_EventLog("return", flag.team, player);
@@ -724,16 +736,22 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 
 	// messages and sounds
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_NUM(flag.team, INFO_CTF_PICKUP), player.netname);
+	Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(flag.team, ANNCE_CTF_PICKUP));
+
 	if(ctf_stalemate)
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER);
 	if(!flag.team)
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PICKUP_NEUTRAL);
 	else if(CTF_DIFFTEAM(player, flag))
+	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_NUM(flag.team, CENTER_CTF_PICKUP));
+		Send_Notification(NOTIF_ONE_ONLY, player, MSG_ANNCE, ANNCE_CTF_PICKUP_YOU);
+	}
 	else
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((SAME_TEAM(player, flag)) ? CENTER_CTF_PICKUP_RETURN : CENTER_CTF_PICKUP_RETURN_ENEMY), Team_ColorCode(flag.team));
 
 	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_NUM(flag.team, CHOICE_CTF_PICKUP_TEAM), Team_ColorCode(player.team), player.netname);
+	Send_Notification(NOTIF_TEAM_ONLY_EXCEPT, player, MSG_ANNCE, ANNCE_CTF_PICKUP_TEAM);
 
 	if(!flag.team)
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player && DIFF_TEAM(it, player), { Send_Notification(NOTIF_ONE, it, MSG_CHOICE, CHOICE_CTF_PICKUP_ENEMY_NEUTRAL, Team_ColorCode(player.team), player.netname); });
@@ -741,7 +759,10 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	if(flag.team)
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
 			if(CTF_SAMETEAM(flag, it))
+			{
 				Send_Notification(NOTIF_ONE, it, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_CTF_PICKUP_ENEMY);
+			}
 			else if(DIFF_TEAM(player, it))
 				Send_Notification(NOTIF_ONE, it, MSG_CHOICE, APP_NUM(flag.team, CHOICE_CTF_PICKUP_ENEMY_OTHER), Team_ColorCode(player.team), player.netname);
 		});
@@ -817,6 +838,13 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 				case RETURN_TIMEOUT:
 					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_NUM(flag.team, INFO_CTF_FLAGRETURN_TIMEOUT)); break;
 			}
+			FOREACH_CLIENT(IS_PLAYER(it), {
+				if(it.team == flag.team)
+					Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_CTF_RETURN_TEAM);
+				else
+					Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_CTF_RETURN_ENEMY);
+			});
+			Send_Notification(NOTIF_ALL_SPEC, NULL, MSG_ANNCE, APP_TEAM_NUM(flag.team, ANNCE_CTF_RETURN));
 			_sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTEN_NONE);
 			ctf_EventLog("returned", flag.team, NULL);
 			flag.enemy = NULL;

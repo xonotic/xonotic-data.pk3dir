@@ -41,6 +41,7 @@ string Notification_CheckArgs(
 			break;
 		}
 
+		case NOTIF_ALL_SPEC:
 		case NOTIF_ALL:
 		{
 			if (client) {
@@ -50,6 +51,7 @@ string Notification_CheckArgs(
 		}
 
 		case NOTIF_TEAM:
+		case NOTIF_TEAM_ONLY:
 		{
 			if (!teamplay) {
 				return "Teamplay not active!";
@@ -60,6 +62,7 @@ string Notification_CheckArgs(
 		}
 
 		case NOTIF_TEAM_EXCEPT:
+		case NOTIF_TEAM_ONLY_EXCEPT:
 		{
 			if (!teamplay) {
 				return "Teamplay not active!";
@@ -119,6 +122,20 @@ bool Notification_ShouldSend(NOTIF broadcast, entity to_client, entity other_cli
 						)
 					)
 				)
+			);
+		case NOTIF_TEAM_ONLY:
+			return (
+				(to_client.team == other_client.team)
+			);
+		case NOTIF_TEAM_ONLY_EXCEPT:
+			return (
+				(to_client != other_client)
+				&&
+				(to_client.team == other_client.team)
+			);
+		case NOTIF_ALL_SPEC:
+			return (
+				(IS_SPEC(to_client) || IS_OBSERVER(to_client))
 			);
 		case NOTIF_ALL:
 			return true;
