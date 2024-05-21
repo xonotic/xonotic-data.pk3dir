@@ -2,9 +2,20 @@
 
 #ifdef SVQC
 
-void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, float pDamage, float pHeadshotDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, Sound pSound, entity actor)
+void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, int deathtype, Sound pSound, entity actor, bool isprimary)
 {
-	float i;
+	float pAmmo = WEP_CVAR_BOTH(rifle, isprimary, ammo);
+	float pDamage = WEP_CVAR_BOTH(rifle, isprimary, damage);
+	float pDF_HalfLife = WEP_CVAR_BOTH(rifle, isprimary, damagefalloff_halflife);
+	float pDF_ForceHalfLife = WEP_CVAR_BOTH(rifle, isprimary, damagefalloff_forcehalflife);
+	float pDF_MaxDist = WEP_CVAR_BOTH(rifle, isprimary, damagefalloff_maxdist);
+	float pDF_MinDist = WEP_CVAR_BOTH(rifle, isprimary, damagefalloff_mindist);
+	float pForce = WEP_CVAR_BOTH(rifle, isprimary, force);
+	float pHeadshotDamage = WEP_CVAR_BOTH(rifle, isprimary, headshot_multiplier);
+	float pShots = WEP_CVAR_BOTH(rifle, isprimary, shots);
+	float pSolidPenetration = WEP_CVAR_BOTH(rifle, isprimary, solidpenetration);
+	float pSpread = WEP_CVAR_BOTH(rifle, isprimary, spread);
+	float pTracer = WEP_CVAR_BOTH(rifle, isprimary, tracer);
 
 	W_DecreaseAmmo(thiswep, actor, pAmmo, weaponentity);
 
@@ -18,8 +29,11 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, flo
 		w_shotorg = actor.origin + actor.view_ofs + ((w_shotorg - actor.origin - actor.view_ofs) * v_forward) * v_forward;
 	}
 
-	for(i = 0; i < pShots; ++i)
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pHeadshotDamage, pForce, deathtype, (pTracer ? EFFECT_RIFLE : EFFECT_RIFLE_WEAK));
+	for(int i = 0; i < pShots; ++i)
+		fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir, pSpread,
+			pSolidPenetration, pDamage, pDF_HalfLife, pDF_MinDist,
+			pDF_MaxDist, pHeadshotDamage, pForce, pDF_ForceHalfLife,
+			deathtype, (pTracer ? EFFECT_RIFLE : EFFECT_RIFLE_WEAK), true);
 
 	if(autocvar_g_casings >= 2)
 	{
@@ -30,12 +44,12 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, flo
 
 void W_Rifle_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	W_Rifle_FireBullet(thiswep, weaponentity, WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, headshot_multiplier), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), thiswep.m_id, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), SND_CAMPINGRIFLE_FIRE, actor);
+	W_Rifle_FireBullet(thiswep, weaponentity, thiswep.m_id, SND_CAMPINGRIFLE_FIRE, actor, true);
 }
 
 void W_Rifle_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	W_Rifle_FireBullet(thiswep, weaponentity, WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, headshot_multiplier), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), thiswep.m_id | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), SND_CAMPINGRIFLE_FIRE2, actor);
+	W_Rifle_FireBullet(thiswep, weaponentity, thiswep.m_id | HITTYPE_SECONDARY, SND_CAMPINGRIFLE_FIRE2, actor, false);
 }
 
 .void(Weapon thiswep, entity actor, .entity weaponentity) rifle_bullethail_attackfunc;
