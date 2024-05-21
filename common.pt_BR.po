@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-11 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2024\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -1348,7 +1348,7 @@ msgstr "Modo de jogo:"
 
 #: qcsrc/client/main.qc:1463
 msgid "by:"
-msgstr ""
+msgstr "por:"
 
 #: qcsrc/client/main.qc:1467
 msgid "This match supports"
