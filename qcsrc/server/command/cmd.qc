@@ -1025,6 +1025,19 @@ void SV_ParseClientCommand(entity this, string command)
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
 		case "say": case "say_team": case "tell": break;   // chat has its own flood control in chat.qc
+		case "minigame":                                   // flood control only for common commands
+			string arg = argv(1);
+			if (arg == "")
+				goto flood_control;
+			for (int i = 0; i < MINIGAME_COMMON_CMD_COUNT; ++i)
+			{
+				if (MINIGAME_COMMON_CMD[i] == arg)
+					goto flood_control;
+			}
+			// if we get here we haven't found any common command, so no flood control for other commands
+			// individual minigame commands shouldn't be limited for gameplay reasons
+			// FIXME unknown/wrong minigame commands have no flood control
+			break;
 		case "color": case "topcolor": case "bottomcolor": // handled by engine in host_cmd.c
 			if(!IS_CLIENT(this)) // on connection
 			{
@@ -1041,6 +1054,7 @@ void SV_ParseClientCommand(entity this, string command)
 			if(!IS_CLIENT(this)) break;
 			// else fall through to default: flood control
 		default:
+			LABEL(flood_control)
 			if (!timeout_status)  // not while paused
 			{
 				entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially

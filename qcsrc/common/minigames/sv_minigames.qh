@@ -1,5 +1,19 @@
 #pragma once
 
+enum
+{
+	MINIGAME_COMMON_CMD_ID_CREATE,
+	MINIGAME_COMMON_CMD_ID_JOIN,
+	MINIGAME_COMMON_CMD_ID_LIST,
+	MINIGAME_COMMON_CMD_ID_LIST_SESSIONS,
+	MINIGAME_COMMON_CMD_ID_END,
+	MINIGAME_COMMON_CMD_ID_PART,
+	MINIGAME_COMMON_CMD_ID_INVITE,
+	MINIGAME_COMMON_CMD_COUNT
+};
+string MINIGAME_COMMON_CMD[MINIGAME_COMMON_CMD_COUNT] =
+	{"create", "join", "list", "list-sessions", "end", "part", "invite"};
+
 bool autocvar_sv_minigames;
 bool autocvar_sv_minigames_observer;
 
