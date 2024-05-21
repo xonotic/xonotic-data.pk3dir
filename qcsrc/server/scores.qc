@@ -445,6 +445,25 @@ float PlayerScore_Compare(entity t1, entity t2, bool strict)
 	return result;
 }
 
+bool Score_NewLeader()
+{
+	// Returns true if the game leader has changed
+	if(teamplay) {
+		if (WinningConditionHelper_winnerteam != WinningConditionHelper_winnerteam_last && (WinningConditionHelper_secondteam || WinningConditionHelper_equality))
+		{
+			WinningConditionHelper_winnerteam_last = WinningConditionHelper_winnerteam;
+			return true;
+		}
+	} else {
+		if (WinningConditionHelper_winner != WinningConditionHelper_winner_last && (WinningConditionHelper_second || WinningConditionHelper_equality))
+		{
+			WinningConditionHelper_winner_last = WinningConditionHelper_winner;
+			return true;
+		}
+	}
+	return false;
+}
+
 void WinningConditionHelper(entity this)
 {
 	float c;
@@ -547,7 +566,13 @@ void WinningConditionHelper(entity this)
 
 		WinningConditionHelper_equality = (PlayerScore_Compare(winnerscorekeeper, secondscorekeeper, false) == 0);
 		if(WinningConditionHelper_equality)
+		{
+			WinningConditionHelper_equality_one = WinningConditionHelper_winner;
+			WinningConditionHelper_equality_two = WinningConditionHelper_second;
 			WinningConditionHelper_winner = WinningConditionHelper_second = NULL;
+		}
+		else
+			WinningConditionHelper_equality_one = WinningConditionHelper_equality_two = NULL;
 
 		WinningConditionHelper_topscore = winnerscorekeeper.scores_primary;
 		WinningConditionHelper_secondscore = secondscorekeeper.scores_primary;

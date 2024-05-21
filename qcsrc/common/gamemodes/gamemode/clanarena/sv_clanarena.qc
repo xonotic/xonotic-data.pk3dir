@@ -162,17 +162,20 @@ float CA_CheckWinner()
 	if(winner_team > 0)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, APP_TEAM_NUM(winner_team, ANNCE_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_CA_ROUNDS, +1);
 	}
 	else if(winner_team == -1)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
 	else if(winner_team == -2)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 	}
 
@@ -346,7 +349,10 @@ void ca_LastPlayerForTeam_Notify(entity this)
 	{
 		entity pl = ca_LastPlayerForTeam(this);
 		if (pl)
+		{
 			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
+			Send_Notification(NOTIF_ONE, pl, MSG_ANNCE, ANNCE_ALONE);
+		}
 	}
 }
 

@@ -868,6 +868,7 @@ MUTATOR_HOOKABLE(FireBullet_Hit, EV_FireBullet_Hit);
 MUTATOR_HOOKABLE(FixPlayermodel, EV_FixPlayermodel);
 
 /** Return error to play frag remaining announcements */
+MUTATOR_HOOKABLE(Scores_AnnounceLeads, EV_NO_ARGS);
 MUTATOR_HOOKABLE(Scores_CountFragsRemaining, EV_NO_ARGS);
 
 #define EV_GrappleHookThink(i, o) \

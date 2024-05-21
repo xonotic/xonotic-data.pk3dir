@@ -101,16 +101,25 @@ void Score_ClearAll();
 void Score_NicePrint(entity to);
 
 /**
+ * Returns if there's a new leader since the last time the function was called.
+ */
+bool Score_NewLeader();
+
+/**
  * Sets the following results for the current scores entities.
  */
 void WinningConditionHelper(entity this);
 float WinningConditionHelper_topscore;      ///< highest score
 float WinningConditionHelper_secondscore;   ///< second highest score
 float WinningConditionHelper_winnerteam;    ///< the color of the winning team, or -1 if none
+float WinningConditionHelper_winnerteam_last;
 float WinningConditionHelper_secondteam;    ///< the color of the second team, or -1 if none
 float WinningConditionHelper_equality;      ///< we have no winner
 entity WinningConditionHelper_winner;       ///< the winning player, or NULL if none
 entity WinningConditionHelper_second;       ///< the second player, or NULL if none
+entity WinningConditionHelper_winner_last;
+entity WinningConditionHelper_equality_one;
+entity WinningConditionHelper_equality_two;
 float WinningConditionHelper_lowerisbetter; ///< lower is better, duh
 float WinningConditionHelper_zeroisworst;   ///< zero is worst, duh
 #define WINNINGCONDITIONHELPER_LOWERISBETTER_WORST 999999999
