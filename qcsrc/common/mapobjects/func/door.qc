@@ -29,6 +29,7 @@ void door_blocked(entity this, entity blocker)
 {
 	bool reverse = false;
 	if((this.spawnflags & DOOR_CRUSH)
+		&& !Q3COMPAT_COMMON
 #ifdef SVQC
 		&& (blocker.takedamage != DAMAGE_NO)
 #elif defined(CSQC)
@@ -43,46 +44,46 @@ void door_blocked(entity this, entity blocker)
 	else
 	{
 #ifdef SVQC
-		if((this.dmg) && (blocker.takedamage == DAMAGE_YES))    // Shall we bite?
+		if (this.dmg && blocker.takedamage != DAMAGE_NO)    // Shall we bite?
 			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 
-		 // don't change direction for dead or dying stuff
-		if(IS_DEAD(blocker)
+		// don't change direction for dead or dying stuff
+		if (!IS_DEAD(blocker)
 #ifdef SVQC
-			&& (blocker.takedamage == DAMAGE_NO)
+			&& blocker.takedamage != DAMAGE_NO
 #endif
+			&& this.wait >= 0
+			&& !(Q3COMPAT_COMMON && (this.spawnflags & Q3_DOOR_CRUSHER))
 		)
 		{
-			if (this.wait >= 0)
+			if (this.state == STATE_DOWN)
 			{
-				if (this.state == STATE_DOWN)
-				{
-					if (this.classname == "door")
-						door_go_up(this, NULL, NULL);
-					else
-						door_rotating_go_up(this, blocker);
-				}
+				if (this.classname == "door")
+					door_go_up(this, NULL, NULL);
 				else
-				{
-					if (this.classname == "door")
-						door_go_down(this);
-					else
-						door_rotating_go_down(this);
-				}
-				reverse = true;
+					door_rotating_go_up(this, blocker);
 			}
+			else
+			{
+				if (this.classname == "door")
+					door_go_down(this);
+				else
+					door_rotating_go_down(this);
+			}
+			reverse = true;
 		}
 #ifdef SVQC
 		else
 		{
 			//gib dying stuff just to make sure
-			if((this.dmg) && (blocker.takedamage != DAMAGE_NO))    // Shall we bite?
+			if (this.dmg && blocker.takedamage != DAMAGE_NO && IS_DEAD(blocker))    // Shall we bite?
 				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 		}
 #endif
 	}
-	if (!reverse && this.classname == "door")
+	// if we didn't change direction and are using a non-linear movement controller, we must pause it
+	if (!reverse && this.classname == "door" && this.move_controller)
 		SUB_CalcMovePause(this);
 }
 
@@ -212,10 +213,13 @@ bool door_check_keys(entity door, entity player)
 	return false;
 }
 
-void door_fire(entity this, entity actor, entity trigger)
+void door_use(entity this, entity actor, entity trigger)
 {
-	if (this.owner != this)
-		objerror (this, "door_fire: this.owner != this");
+	//dprint("door_use (model: ");dprint(this.model);dprint(")\n");
+
+	if (!this.owner)
+		return;
+	this = this.owner;
 
 	if (this.spawnflags & DOOR_TOGGLE)
 	{
@@ -254,14 +258,6 @@ void door_fire(entity this, entity actor, entity trigger)
 		}
 		e = e.enemy;
 	} while ((e != this) && (e != NULL));
-}
-
-void door_use(entity this, entity actor, entity trigger)
-{
-	//dprint("door_use (model: ");dprint(this.model);dprint(")\n");
-
-	if (this.owner)
-		door_fire(this.owner, actor, trigger);
 }
 
 void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
@@ -369,14 +365,25 @@ void door_trigger_touch(entity this, entity toucher)
 #endif
 			return;
 
-	if (time < this.door_finished)
+	if (this.owner.state == STATE_UP)
 		return;
 
 	// check if door is locked
 	if (!door_check_keys(this, toucher))
 		return;
 
-	this.door_finished = time + 1;
+	if (this.owner.state == STATE_TOP)
+	{
+		if (this.owner.nextthink < this.owner.ltime + this.owner.wait)
+		{
+			entity e = this.owner;
+			do {
+				e.nextthink = e.ltime + e.wait;
+				e = e.enemy;
+			} while (e != this.owner);
+		}
+		return;
+	}
 
 	door_use(this.owner, toucher, NULL);
 }
@@ -408,7 +415,8 @@ LinkDoors
 
 entity LinkDoors_nextent(entity cur, entity near, entity pass)
 {
-	while((cur = find(cur, classname, pass.classname)) && ((cur.spawnflags & DOOR_DONT_LINK) || cur.enemy))
+	while ((cur = find(cur, classname, pass.classname))
+	&& ((!Q3COMPAT_COMMON && (cur.spawnflags & DOOR_DONT_LINK)) || cur.enemy))
 	{
 	}
 	return cur;
@@ -416,6 +424,9 @@ entity LinkDoors_nextent(entity cur, entity near, entity pass)
 
 bool LinkDoors_isconnected(entity e1, entity e2, entity pass)
 {
+	if(Q3COMPAT_COMMON)
+		return e1.team == e2.team;
+
 	float DELTA = 4;
 	if((e1.absmin_x > e2.absmax_x + DELTA)
 	|| (e1.absmin_y > e2.absmax_y + DELTA)
@@ -441,7 +452,9 @@ void LinkDoors(entity this)
 
 	if (this.enemy)
 		return;		// already linked by another door
-	if (this.spawnflags & DOOR_DONT_LINK)
+
+	// Q3 door linking is done for teamed doors only and is not affected by spawnflags or bmodel proximity
+	if ((!Q3COMPAT_COMMON && (this.spawnflags & DOOR_DONT_LINK)) || (Q3COMPAT_COMMON && !this.team))
 	{
 		this.owner = this.enemy = this;
 
@@ -544,7 +557,7 @@ SILVER_KEY causes the door to open only if the activator holds a silver key.
 "speed"		movement speed (100 default)
 "wait"		wait before returning (3 default, -1 = never return)
 "lip"		lip remaining at end of move (8 default)
-"dmg"		damage to inflict when blocked (2 default)
+"dmg"		damage to inflict when blocked (0 default)
 "sounds"
 0)	no sound
 1)	stone
@@ -601,6 +614,15 @@ void door_link()
 {
 	//Net_LinkEntity(this, false, 0, door_send);
 }
+
+void door_init_keys(entity this)
+{
+	// Quake 1 and QL keys compatibility
+	if (this.spawnflags & SPAWNFLAGS_GOLD_KEY)
+		this.itemkeys |= BIT(0);
+	if (this.spawnflags & SPAWNFLAGS_SILVER_KEY)
+		this.itemkeys |= BIT(1);
+}
 #endif
 
 void door_init_startopen(entity this)
@@ -624,6 +646,7 @@ void door_reset(entity this)
 
 #ifdef SVQC
 	this.SendFlags |= SF_TRIGGER_RESET;
+	door_init_keys(this);
 #endif
 }
 
@@ -666,14 +689,32 @@ void door_init_shared(entity this)
 
 	if (q3compat)
 	{
-		// CPMA adds these fields for overriding the engine sounds
+		// CPMA adds these fields for overriding the Q3 default sounds
 		string s = GetField_fullspawndata(this, "sound_start", true);
 		string e = GetField_fullspawndata(this, "sound_end", true);
 
+		// Quake Live adds these ones, because of course it had to be different from CPMA
+		if (!s) s = GetField_fullspawndata(this, "startsound", true);
+		if (!e) e = GetField_fullspawndata(this, "endsound", true);
+
 		if (s)
 			this.noise2 = strzone(s);
+		else
+		{
+			// PK3s supporting Q3A sometimes include custom sounds at Q3 default paths
+			s = "sound/movers/doors/dr1_strt.wav";
+			if (FindFileInMapPack(s))
+				this.noise2 = s;
+		}
+
 		if (e)
 			this.noise1 = strzone(e);
+		else
+		{
+			e = "sound/movers/doors/dr1_end.wav";
+			if (FindFileInMapPack(e))
+				this.noise1 = e;
+		}
 	}
 
 	// sound when door stops moving
@@ -693,7 +734,7 @@ void door_init_shared(entity this)
 	}
 	else if (!this.wait)
 	{
-		this.wait = 3;
+		this.wait = q3compat ? 2 : 3;
 	}
 
 	if (!this.lip)
@@ -719,11 +760,7 @@ void door_init_shared(entity this)
 // spawnflags require key (for now only func_door)
 spawnfunc(func_door)
 {
-	// Quake 1 keys compatibility
-	if (this.spawnflags & SPAWNFLAGS_GOLD_KEY)
-		this.itemkeys |= ITEM_KEY_BIT(0);
-	if (this.spawnflags & SPAWNFLAGS_SILVER_KEY)
-		this.itemkeys |= ITEM_KEY_BIT(1);
+	door_init_keys(this);
 
 	SetMovedir(this);
 
@@ -738,15 +775,20 @@ spawnfunc(func_door)
 	if(this.spawnflags & DOOR_NONSOLID)
 		this.solid = SOLID_NOT;
 
-// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
-// but spawn in the open position
+	// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
+	// but spawn in the open position
+	// the tuba door on xoylent requires the delayed init
 	if (this.spawnflags & DOOR_START_OPEN)
 		InitializeEntity(this, door_init_startopen, INITPRIO_SETLOCATION);
 
 	door_init_shared(this);
 
 	this.pos1 = this.origin;
-	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
+	vector absmovedir;
+	absmovedir.x = fabs(this.movedir.x);
+	absmovedir.y = fabs(this.movedir.y);
+	absmovedir.z = fabs(this.movedir.z);
+	this.pos2 = this.pos1 + this.movedir * (absmovedir * this.size - this.lip);
 
 	if(autocvar_sv_doors_always_open)
 	{
@@ -760,10 +802,23 @@ spawnfunc(func_door)
 			this.speed = 100;
 	}
 
+	if (q3compat)
+	{
+		if (!this.dmg)
+			this.dmg = 2;
+
+		if (!this.team)
+		{
+			string t = GetField_fullspawndata(this, "team");
+			// bones_was_here: same hack as used to support teamed items on Q3 maps
+			if (t) this.team = crc16(false, t);
+		}
+	}
+
 	settouch(this, door_touch);
 
-// LinkDoors can't be done until all of the doors have been spawned, so
-// the sizes can be detected properly.
+	// LinkDoors can't be done until all of the doors have been spawned, so
+	// the sizes can be detected properly.
 	InitializeEntity(this, LinkDoors, INITPRIO_LINKDOORS);
 
 	this.reset = door_reset;

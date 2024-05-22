@@ -285,7 +285,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
 	return vecs;
 }
 
-vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn)
+vector shotorg_adjust(vector vecs, bool y_is_right, bool visual, int algn)
 {
 	string s;
 	if (visual)
@@ -317,7 +317,6 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
 	return vecs;
 }
 
-#define shotorg_adjust shotorg_adjust_values
 
 /**
  * supported formats:
@@ -524,13 +523,34 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		this.movedir_aligned = shotorg_adjust(v, false, true, algn);
 		this.view_ofs = this.movedir_aligned - v;
 	}
-	int compressed_shotorg = compressShotOrigin(this.movedir);
-	// make them match perfectly
-#ifdef SVQC
-	// null during init
-	if (this.owner) STAT(SHOTORG, this.owner) = compressed_shotorg;
-#endif
-	this.movedir = decompressShotOrigin(compressed_shotorg);
+
+	// shotorg_adjust can give negative .x from shootfromfixedorigin
+	// recheck .x here due to it
+	if (this.movedir.x >= 0)
+	{
+		int compressed_shotorg = compressShotOrigin(this.movedir);
+		// make them match perfectly
+	#ifdef SVQC
+		// null during init
+		if (this.owner) STAT(SHOTORG, this.owner) = compressed_shotorg;
+	#endif
+		this.movedir = decompressShotOrigin(compressed_shotorg);
+	}
+	else
+	{
+		// don't support negative x shotorgs
+		this.movedir = '0 0 0';
+
+		// reset _aligned here too even though as a side effect
+		// g_shootfromfixedorigin can make it reset
+		// it'd be only slightly better if it was checked individually
+		this.movedir_aligned = '0 0 0';
+
+	#ifdef SVQC
+		// null during init
+		if (this.owner) STAT(SHOTORG, this.owner) = 0;
+	#endif
+	}
 
 #ifdef SVQC
 	this.spawnorigin += this.view_ofs;  // offset the casings origin by the same amount
@@ -786,8 +806,7 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 		rlplayer = csqcplayer; // fall back to the global
 
 	vector md = wepent.movedir_aligned;
-	vector vecs = ((md.x > 0) ? md : '0 0 0');
-	vector dv = forward * vecs.x + right * -vecs.y + up * vecs.z;
+	vector dv = forward * md.x + right * -md.y + up * md.z;
 	vector org = rlplayer.origin + rlplayer.view_ofs + dv;
 
 	pointparticles(thiswep.m_muzzleeffect, org, forward * 1000, 1);

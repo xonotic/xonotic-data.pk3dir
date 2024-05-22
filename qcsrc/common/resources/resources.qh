@@ -49,8 +49,8 @@ STATIC_INIT(default_order_resources)
 }
 #endif
 
-REGISTRY_SORT(Resources);
-REGISTRY_CHECK(Resources);
+REGISTRY_SORT(Resources)
+REGISTRY_CHECK(Resources)
 
 REGISTRY_DEFINE_GET(Resources, NULL)
 STATIC_INIT(Resources_renumber) { FOREACH(Resources, true, it.m_id = i); }

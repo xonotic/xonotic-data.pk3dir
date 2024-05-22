@@ -30,7 +30,17 @@ void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weap
 	}
 
 	okmachinegun_spread = bound(WEP_CVAR_PRI(okmachinegun, spread_min), WEP_CVAR_PRI(okmachinegun, spread_min) + (WEP_CVAR_PRI(okmachinegun, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR_PRI(okmachinegun, spread_max));
-	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, okmachinegun_spread, WEP_CVAR_PRI(okmachinegun, solidpenetration), WEP_CVAR_PRI(okmachinegun, damage), 0, WEP_CVAR_PRI(okmachinegun, force), WEP_OVERKILL_MACHINEGUN.m_id, EFFECT_RIFLE);
+
+	fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir, okmachinegun_spread,
+	                   WEP_CVAR_PRI(okmachinegun, solidpenetration),
+	                   WEP_CVAR_PRI(okmachinegun, damage),
+	                   WEP_CVAR(okmachinegun, damagefalloff_halflife),
+	                   WEP_CVAR(okmachinegun, damagefalloff_mindist),
+	                   WEP_CVAR(okmachinegun, damagefalloff_maxdist),
+	                   0,
+	                   WEP_CVAR_PRI(okmachinegun, force),
+	                   WEP_CVAR(okmachinegun, damagefalloff_forcehalflife),
+	                   WEP_OVERKILL_MACHINEGUN.m_id, EFFECT_RIFLE, true);
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 

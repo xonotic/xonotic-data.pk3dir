@@ -5,6 +5,7 @@
 #include <common/util.qh>
 #include <server/campaign.qh>
 #include <server/command/vote.qh>
+#include <server/scores.qh>
 #include <server/world.qh>
 
 void round_handler_Think(entity this)
@@ -109,6 +110,8 @@ void round_handler_Spawn(bool() canRoundStart_func, bool() canRoundEnd_func, voi
 	this.wait = false;
 	round_handler_Init(5, 5, 180);
 	this.nextthink = time;
+
+	ScoreInfo_SetLabel_PlayerScore(SP_ROUNDS_PL, "rounds_pl", 0);
 }
 
 void round_handler_Reset(float next_think)

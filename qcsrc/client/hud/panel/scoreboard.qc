@@ -43,11 +43,16 @@ const int MAX_SBT_FIELDS = MAX_SCORE;
 PlayerScoreField sbt_field[MAX_SBT_FIELDS + 1];
 float sbt_field_size[MAX_SBT_FIELDS + 1];
 string sbt_field_title[MAX_SBT_FIELDS + 1];
+float sbt_field_title_condense_factor[MAX_SBT_FIELDS + 1];
+float sbt_field_title_width[MAX_SBT_FIELDS + 1];
 int sbt_num_fields;
+float sbt_field_title_maxwidth;
+float sbt_field_title_maxwidth_factor;
 
 string autocvar_hud_fontsize;
-string hud_fontsize_str;
 float max_namesize;
+float name_field_index;
+int sb_field_sizes_init;
 
 float sbt_bg_alpha;
 float sbt_fg_alpha;
@@ -75,6 +80,7 @@ float autocvar_hud_panel_scoreboard_table_bg_alpha = 0;
 float autocvar_hud_panel_scoreboard_table_bg_scale = 0.25;
 float autocvar_hud_panel_scoreboard_table_fg_alpha = 0.9;
 float autocvar_hud_panel_scoreboard_table_fg_alpha_self = 1;
+float autocvar_hud_panel_scoreboard_table_fieldtitle_maxwidth = 0.07;
 bool autocvar_hud_panel_scoreboard_table_highlight = true;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha = 0.2;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha_self = 0.4;
@@ -123,54 +129,63 @@ string Label_getInfo(string label, int mode)
 	if (mode == 1)
 		label = "bckills"; // first case in the switch
 
+#define SCO_LABEL(strlabel, label, padding, help) \
+	case label: \
+		if (!mode) \
+			return CTX(strlabel); \
+		LOG_HELP("^3", label, padding, "^7", help);
+
 	switch(label)
 	{
-		case "bckills":      if (!mode) return CTX(_("SCO^bckills"));      else LOG_HELP(strcat("^3", "bckills", "            ^7", _("Number of ball carrier kills")));
-		case "bctime":       if (!mode) return CTX(_("SCO^bctime"));       else LOG_HELP(strcat("^3", "bctime", "             ^7", _("Total amount of time holding the ball in Keepaway")));
-		case "caps":         if (!mode) return CTX(_("SCO^caps"));         else LOG_HELP(strcat("^3", "caps", "               ^7", _("How often a flag (CTF) or a key (KeyHunt) was captured")));
-		case "captime":      if (!mode) return CTX(_("SCO^captime"));      else LOG_HELP(strcat("^3", "captime", "            ^7", _("Time of fastest capture (CTF)")));
-		case "deaths":       if (!mode) return CTX(_("SCO^deaths"));       else LOG_HELP(strcat("^3", "deaths", "             ^7", _("Number of deaths")));
-		case "destroyed":    if (!mode) return CTX(_("SCO^destroyed"));    else LOG_HELP(strcat("^3", "destroyed", "          ^7", _("Number of keys destroyed by pushing them into void")));
-		case "dmg":          if (!mode) return CTX(_("SCO^damage"));       else LOG_HELP(strcat("^3", "dmg", "                ^7", _("The total damage done")));
-		case "dmgtaken":     if (!mode) return CTX(_("SCO^dmgtaken"));     else LOG_HELP(strcat("^3", "dmgtaken", "           ^7", _("The total damage taken")));
-		case "drops":        if (!mode) return CTX(_("SCO^drops"));        else LOG_HELP(strcat("^3", "drops", "              ^7", _("Number of flag drops")));
-		case "elo":          if (!mode) return CTX(_("SCO^elo"));          else LOG_HELP(strcat("^3", "elo", "                ^7", _("Player ELO")));
-		case "fastest":      if (!mode) return CTX(_("SCO^fastest"));      else LOG_HELP(strcat("^3", "fastest", "            ^7", _("Time of fastest lap (Race/CTS)")));
-		case "faults":       if (!mode) return CTX(_("SCO^faults"));       else LOG_HELP(strcat("^3", "faults", "             ^7", _("Number of faults committed")));
-		case "fckills":      if (!mode) return CTX(_("SCO^fckills"));      else LOG_HELP(strcat("^3", "fckills", "            ^7", _("Number of flag carrier kills")));
-		case "fps":          if (!mode) return CTX(_("SCO^fps"));          else LOG_HELP(strcat("^3", "fps", "                ^7", _("FPS")));
-		case "frags":        if (!mode) return CTX(_("SCO^frags"));        else LOG_HELP(strcat("^3", "frags", "              ^7", _("Number of kills minus suicides")));
-		case "goals":        if (!mode) return CTX(_("SCO^goals"));        else LOG_HELP(strcat("^3", "goals", "              ^7", _("Number of goals scored")));
-		case "kckills":      if (!mode) return CTX(_("SCO^kckills"));      else LOG_HELP(strcat("^3", "kckills", "            ^7", _("Number of keys carrier kills")));
-		case "kd":           if (!mode) return CTX(_("SCO^k/d"));          else LOG_HELP(strcat("^3", "kd", "                 ^7", _("The kill-death ratio")));
-		case "kdr":          if (!mode) return CTX(_("SCO^kdr"));          else LOG_HELP(strcat("^3", "kdr", "                ^7", _("The kill-death ratio")));
-		case "kdratio":      if (!mode) return CTX(_("SCO^kdratio"));      else LOG_HELP(strcat("^3", "kdratio", "            ^7", _("The kill-death ratio")));
-		case "kills":        if (!mode) return CTX(_("SCO^kills"));        else LOG_HELP(strcat("^3", "kills", "              ^7", _("Number of kills")));
-		case "laps":         if (!mode) return CTX(_("SCO^laps"));         else LOG_HELP(strcat("^3", "laps", "               ^7", _("Number of laps finished (Race/CTS)")));
-		case "lives":        if (!mode) return CTX(_("SCO^lives"));        else LOG_HELP(strcat("^3", "lives", "              ^7", _("Number of lives (LMS)")));
-		case "losses":       if (!mode) return CTX(_("SCO^losses"));       else LOG_HELP(strcat("^3", "losses", "             ^7", _("Number of times a key was lost")));
-		case "name":         if (!mode) return CTX(_("SCO^name"));         else LOG_HELP(strcat("^3", "name", "               ^7", _("Player name")));
-		case "nick":         if (!mode) return CTX(_("SCO^nick"));         else LOG_HELP(strcat("^3", "nick", "               ^7", _("Player name")));
-		case "objectives":   if (!mode) return CTX(_("SCO^objectives"));   else LOG_HELP(strcat("^3", "objectives", "         ^7", _("Number of objectives destroyed")));
-		case "pickups":      if (!mode) return CTX(_("SCO^pickups"));      else LOG_HELP(strcat("^3", "pickups", "            ^7", _("How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up")));
-		case "ping":         if (!mode) return CTX(_("SCO^ping"));         else LOG_HELP(strcat("^3", "ping", "               ^7", _("Ping time")));
-		case "pl":           if (!mode) return CTX(_("SCO^pl"));           else LOG_HELP(strcat("^3", "pl", "                 ^7", _("Packet loss")));
-		case "pushes":       if (!mode) return CTX(_("SCO^pushes"));       else LOG_HELP(strcat("^3", "pushes", "             ^7", _("Number of players pushed into void")));
-		case "rank":         if (!mode) return CTX(_("SCO^rank"));         else LOG_HELP(strcat("^3", "rank", "               ^7", _("Player rank")));
-		case "returns":      if (!mode) return CTX(_("SCO^returns"));      else LOG_HELP(strcat("^3", "returns", "            ^7", _("Number of flag returns")));
-		case "revivals":     if (!mode) return CTX(_("SCO^revivals"));     else LOG_HELP(strcat("^3", "revivals", "           ^7", _("Number of revivals")));
-		case "rounds":       if (!mode) return CTX(_("SCO^rounds won"));   else LOG_HELP(strcat("^3", "rounds", "             ^7", _("Number of rounds won")));
-		case "rounds_pl":    if (!mode) return CTX(_("SCO^rounds played"));else LOG_HELP(strcat("^3", "rounds_pl", "          ^7", _("Number of rounds played")));
-		case "score":        if (!mode) return CTX(_("SCO^score"));        else LOG_HELP(strcat("^3", "score", "              ^7", _("Total score")));
-		case "suicides":     if (!mode) return CTX(_("SCO^suicides"));     else LOG_HELP(strcat("^3", "suicides", "           ^7", _("Number of suicides")));
-		case "sum":          if (!mode) return CTX(_("SCO^sum"));          else LOG_HELP(strcat("^3", "sum", "                ^7", _("Number of kills minus deaths")));
-		case "takes":        if (!mode) return CTX(_("SCO^takes"));        else LOG_HELP(strcat("^3", "takes", "              ^7", _("Number of domination points taken (Domination)")));
-		case "teamkills":    if (!mode) return CTX(_("SCO^teamkills"));    else LOG_HELP(strcat("^3", "teamkills", "          ^7", _("Number of teamkills")));
-		case "ticks":        if (!mode) return CTX(_("SCO^ticks"));        else LOG_HELP(strcat("^3", "ticks", "              ^7", _("Number of ticks (Domination)")));
-		case "time":         if (!mode) return CTX(_("SCO^time"));         else LOG_HELP(strcat("^3", "time", "               ^7", _("Total time raced (Race/CTS)")));
-		default: return label;
+		SCO_LABEL(_("SCO^bckills"),       "bckills", "            ", _("Number of ball carrier kills"));
+		SCO_LABEL(_("SCO^bctime"),        "bctime", "             ", _("Total amount of time holding the ball in Keepaway"));
+		SCO_LABEL(_("SCO^caps"),          "caps", "               ", _("How often a flag (CTF) or a key (KeyHunt) was captured"));
+		SCO_LABEL(_("SCO^captime"),       "captime", "            ", _("Time of fastest capture (CTF)"));
+		SCO_LABEL(_("SCO^deaths"),        "deaths", "             ", _("Number of deaths"));
+		SCO_LABEL(_("SCO^destructions"),  "destructions", "       ", _("Number of keys destroyed by pushing them into void"));
+		SCO_LABEL(_("SCO^damage dealt"),  "dmg", "                ", _("The total damage dealt"));
+		SCO_LABEL(_("SCO^damage taken"),  "dmgtaken", "           ", _("The total damage taken"));
+		SCO_LABEL(_("SCO^drops"),         "drops", "              ", _("Number of flag drops"));
+		SCO_LABEL(_("SCO^elo"),           "elo", "                ", _("Player ELO"));
+		SCO_LABEL(_("SCO^fastest"),       "fastest", "            ", _("Time of fastest lap (Race/CTS)"));
+		SCO_LABEL(_("SCO^faults"),        "faults", "             ", _("Number of faults committed"));
+		SCO_LABEL(_("SCO^fckills"),       "fckills", "            ", _("Number of flag carrier kills"));
+		SCO_LABEL(_("SCO^fps"),           "fps", "                ", _("FPS"));
+		SCO_LABEL(_("SCO^frags"),         "frags", "              ", _("Number of kills minus suicides"));
+		SCO_LABEL(_("SCO^generators"),    "generators", "         ", _("Number of generators destroyed"));
+		SCO_LABEL(_("SCO^goals"),         "goals", "              ", _("Number of goals scored"));
+		SCO_LABEL(_("SCO^hunts"),         "hunts", "              ", _("Number of hunts (Survival)"));
+		SCO_LABEL(_("SCO^kckills"),       "kckills", "            ", _("Number of keys carrier kills"));
+		SCO_LABEL(_("SCO^k/d"),           "kd", "                 ", _("The kill-death ratio"));
+		SCO_LABEL(_("SCO^kdr"),           "kdr", "                ", _("The kill-death ratio"));
+		SCO_LABEL(_("SCO^kdratio"),       "kdratio", "            ", _("The kill-death ratio"));
+		SCO_LABEL(_("SCO^kills"),         "kills", "              ", _("Number of kills"));
+		SCO_LABEL(_("SCO^laps"),          "laps", "               ", _("Number of laps finished (Race/CTS)"));
+		SCO_LABEL(_("SCO^lives"),         "lives", "              ", _("Number of lives (LMS)"));
+		SCO_LABEL(_("SCO^losses"),        "losses", "             ", _("Number of times a key was lost"));
+		SCO_LABEL(_("SCO^name"),          "name", "               ", _("Player name"));
+		SCO_LABEL(_("SCO^nick"),          "nick", "               ", _("Player name"));
+		SCO_LABEL(_("SCO^objectives"),    "objectives", "         ", _("Number of objectives destroyed"));
+		SCO_LABEL(_("SCO^pickups"),       "pickups", "            ", _("How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"));
+		SCO_LABEL(_("SCO^ping"),          "ping", "               ", _("Ping time"));
+		SCO_LABEL(_("SCO^pl"),            "pl", "                 ", _("Packet loss"));
+		SCO_LABEL(_("SCO^pushes"),        "pushes", "             ", _("Number of players pushed into void"));
+		SCO_LABEL(_("SCO^rank"),          "rank", "               ", _("Player rank"));
+		SCO_LABEL(_("SCO^returns"),       "returns", "            ", _("Number of flag returns"));
+		SCO_LABEL(_("SCO^revivals"),      "revivals", "           ", _("Number of revivals"));
+		SCO_LABEL(_("SCO^rounds won"),    "rounds", "             ", _("Number of rounds won"));
+		SCO_LABEL(_("SCO^rounds played"), "rounds_pl", "          ", _("Number of rounds played"));
+		SCO_LABEL(_("SCO^score"),         "score", "              ", _("Total score"));
+		SCO_LABEL(_("SCO^suicides"),      "suicides", "           ", _("Number of suicides"));
+		SCO_LABEL(_("SCO^sum"),           "sum", "                ", _("Number of kills minus deaths"));
+		SCO_LABEL(_("SCO^survivals"),     "survivals", "          ", _("Number of survivals"));
+		SCO_LABEL(_("SCO^takes"),         "takes", "              ", _("Number of domination points taken (Domination)"));
+		SCO_LABEL(_("SCO^teamkills"),     "teamkills", "          ", _("Number of teamkills"));
+		SCO_LABEL(_("SCO^ticks"),         "ticks", "              ", _("Number of ticks (Domination)"));
+		SCO_LABEL(_("SCO^time"),          "time", "               ", _("Total time raced (Race/CTS)"));
 	}
 	return label;
+#undef SCO_LABEL
 }
 
 bool scoreboard_ui_disabling;
@@ -733,19 +748,20 @@ void Cmd_Scoreboard_Help()
 // e.g. -teams,rc,cts,lms/kills ?+rc/kills
 #define SCOREBOARD_DEFAULT_COLUMNS \
 "ping pl fps name |" \
-" -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
-" -teams,lms/deaths +ft,tdm/deaths" \
+" -teams,rc,cts,surv,inv,lms/kills +ft,tdm,tmayhem/kills ?+rc,inv/kills" \
+" -teams,surv,lms/deaths +ft,tdm,tmayhem/deaths" \
 " +tdm/sum" \
-" -teams,lms,rc,cts,inv,ka/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
-" -cts,dm,tdm,ka,ft/frags" /* tdm already has this in "score" */ \
-" +tdm,ft,dom,ons,as/teamkills"\
-" -rc,cts,nb/dmg -rc,cts,nb/dmgtaken" \
+" -teams,lms,rc,cts,surv,inv,ka/suicides +ft,tdm,tmayhem/suicides ?+rc,inv/suicides" \
+" -cts,dm,tdm,surv,ka,ft,mayhem,tmayhem/frags" /* tdm already has this in "score" */ \
+" +tdm,ft,dom,ons,as,tmayhem/teamkills"\
+" -rc,cts,surv,nb/dmg -rc,cts,surv,nb/dmgtaken" \
+" +surv/survivals +surv/hunts" \
 " +ctf/pickups +ctf/fckills +ctf/returns +ctf/caps +ons/takes +ons/caps" \
 " +lms/lives +lms/rank" \
 " +kh/kckills +kh/losses +kh/caps" \
 " ?+rc/laps ?+rc/time +rc,cts/fastest" \
 " +as/objectives +nb/faults +nb/goals" \
-" +ka/pickups +ka/bckills +ka/bctime +ft/revivals" \
+" +ka,tka/pickups +ka,tka/bckills +ka,tka/bctime +ft/revivals" \
 " +dom/ticks +dom/takes" \
 " -lms,rc,cts,inv,nb/score"
 
@@ -830,7 +846,6 @@ void Cmd_Scoreboard_SetFields(int argc)
 
 		str = strtolower(str);
 		strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(str));
-		sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
 
 		PlayerScoreField j;
 		switch(str)
@@ -861,7 +876,6 @@ void Cmd_Scoreboard_SetFields(int argc)
 					LOG_INFOF("^1Error:^7 Unknown score field: '%s'", str);
 
 				strfree(sbt_field_title[sbt_num_fields]);
-				sbt_field_size[sbt_num_fields] = 0;
 				continue;
 
 				LABEL(found)
@@ -894,7 +908,6 @@ void Cmd_Scoreboard_SetFields(int argc)
 			for(i = sbt_num_fields; i > 0; --i)
 			{
 				sbt_field_title[i] = sbt_field_title[i-1];
-				sbt_field_size[i] = sbt_field_size[i-1];
 				sbt_field[i] = sbt_field[i-1];
 			}
 			sbt_field_title[0] = strzone(TranslateScoresLabel("name"));
@@ -908,12 +921,10 @@ void Cmd_Scoreboard_SetFields(int argc)
 				for(i = sbt_num_fields; i > 1; --i)
 				{
 					sbt_field_title[i] = sbt_field_title[i-1];
-					sbt_field_size[i] = sbt_field_size[i-1];
 					sbt_field[i] = sbt_field[i-1];
 				}
 				sbt_field_title[1] = strzone("|");
 				sbt_field[1] = SP_SEPARATOR;
-				sbt_field_size[1] = stringwidth("|", false, hud_fontsize);
 				++sbt_num_fields;
 				LOG_INFO("fixed missing field '|'");
 			}
@@ -921,7 +932,6 @@ void Cmd_Scoreboard_SetFields(int argc)
 		else if(!have_separator)
 		{
 			strcpy(sbt_field_title[sbt_num_fields], "|");
-			sbt_field_size[sbt_num_fields] = stringwidth("|", false, hud_fontsize);
 			sbt_field[sbt_num_fields] = SP_SEPARATOR;
 			++sbt_num_fields;
 			LOG_INFO("fixed missing field '|'");
@@ -929,7 +939,6 @@ void Cmd_Scoreboard_SetFields(int argc)
 		if(!have_secondary)
 		{
 			strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(scores_label(ps_secondary)));
-			sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
 			sbt_field[sbt_num_fields] = ps_secondary;
 			++sbt_num_fields;
 			LOG_INFOF("fixed missing field '%s'", scores_label(ps_secondary));
@@ -937,7 +946,6 @@ void Cmd_Scoreboard_SetFields(int argc)
 		if(!have_primary)
 		{
 			strcpy(sbt_field_title[sbt_num_fields], TranslateScoresLabel(scores_label(ps_primary)));
-			sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
 			sbt_field[sbt_num_fields] = ps_primary;
 			++sbt_num_fields;
 			LOG_INFOF("fixed missing field '%s'", scores_label(ps_primary));
@@ -945,6 +953,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 	}
 
 	sbt_field[sbt_num_fields] = SP_END;
+	sb_field_sizes_init = 1;
 }
 
 string Scoreboard_AddPlayerId(string pl_name, entity pl)
@@ -970,7 +979,13 @@ string Scoreboard_GetName(entity pl)
 	}
 	else if(!teamplay)
 	{
-		int f = entcs_GetClientColors(pl.sv_entnum);
+		int f;
+		// NOTE: always adding 1024 allows saving the colormap 0 as a value != 0
+		if (playerslots[pl.sv_entnum].colormap >= 1024)
+			f = playerslots[pl.sv_entnum].colormap - 1024; // override server-side player colors
+		else
+			f = entcs_GetClientColors(pl.sv_entnum);
+
 		{
 			sbt_field_icon0 = "gfx/scoreboard/playercolor_base";
 			sbt_field_icon1 = "gfx/scoreboard/playercolor_shirt";
@@ -1150,7 +1165,7 @@ float sbt_fixcolumnwidth_len;
 float sbt_fixcolumnwidth_iconlen;
 float sbt_fixcolumnwidth_marginlen;
 
-string Scoreboard_FixColumnWidth(int i, string str)
+string Scoreboard_FixColumnWidth(int i, string str, bool init)
 {
 	TC(int, i);
 	float f;
@@ -1190,6 +1205,9 @@ string Scoreboard_FixColumnWidth(int i, string str)
 	else
 		sbt_fixcolumnwidth_marginlen = 0;
 
+	if (init)
+		sbt_field_title_width[i] = stringwidth(sbt_field_title[i], false, hud_fontsize);
+
 	if(sbt_field[i] == SP_NAME) // name gets all remaining space
 	{
 		int j;
@@ -1198,33 +1216,74 @@ string Scoreboard_FixColumnWidth(int i, string str)
 			if(j != i)
 				if (sbt_field[i] != SP_SEPARATOR)
 					remaining_space += sbt_field_size[j] + hud_fontsize.x;
-		sbt_field_size[i] = panel_size.x - remaining_space;
+		sbt_field_size[i] = max(sbt_field_title_width[i], panel_size.x - remaining_space);
 
 		if (sbt_fixcolumnwidth_iconlen != 0)
 			remaining_space += sbt_fixcolumnwidth_marginlen + sbt_fixcolumnwidth_iconlen * hud_fontsize.x;
-		float namesize = panel_size.x - remaining_space;
+		float namesize = max(sbt_field_title_width[i], panel_size.x - remaining_space);
 		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
 		sbt_fixcolumnwidth_len = stringwidth(str, true, hud_fontsize);
 
-		max_namesize = vid_conwidth - remaining_space;
+		max_namesize = max(sbt_field_title_width[i], vid_conwidth - remaining_space);
 	}
 	else
+	{
+		if (init)
+		{
+			sbt_field_size[i] = sbt_field_title_width[i];
+			float title_maxwidth = sbt_field_title_maxwidth * sbt_field_title_maxwidth_factor;
+			if (sbt_field_size[i] && sbt_field_size[i] > title_maxwidth)
+				sbt_field_size[i] = title_maxwidth;
+		}
 		sbt_fixcolumnwidth_len = stringwidth(str, false, hud_fontsize);
+	}
 
 	f = sbt_fixcolumnwidth_len + sbt_fixcolumnwidth_marginlen + sbt_fixcolumnwidth_iconlen * hud_fontsize.x;
 	if(sbt_field_size[i] < f)
 		sbt_field_size[i] = f;
 
+	sbt_field_title_condense_factor[i] = 0;
+	if (sbt_field_title_width[i] > sbt_field_size[i])
+	{
+		float real_maxwidth = sbt_field_size[i];
+		float title_maxwidth = sbt_field_title_maxwidth * sbt_field_title_maxwidth_factor;
+		if (sbt_field_title_width[i] > title_maxwidth)
+			real_maxwidth = max(sbt_field_size[i], title_maxwidth);
+		sbt_field_title_condense_factor[i] = real_maxwidth / sbt_field_title_width[i];
+	}
+
 	return str;
 }
 
-void Scoreboard_initFieldSizes()
+void Scoreboard_initFieldSizes(bool compress_more)
 {
+	if (compress_more)
+	{
+		float sbt_field_title_maxwidth_factor_prev = sbt_field_title_maxwidth_factor;
+		sbt_field_title_maxwidth_factor -= 0.05;
+		if (sbt_field_title_maxwidth * sbt_field_title_maxwidth_factor < 0.01 * vid_conwidth)
+		{
+			sbt_field_title_maxwidth_factor = (0.01 * vid_conwidth) / sbt_field_title_maxwidth;
+			if (sbt_field_title_maxwidth_factor_prev == sbt_field_title_maxwidth_factor)
+				return;
+		}
+	}
+	else
+		sbt_field_title_maxwidth_factor = 1;
+
 	for(int i = 0; i < sbt_num_fields; ++i)
 	{
-		sbt_field_size[i] = stringwidth(sbt_field_title[i], false, hud_fontsize);
-		Scoreboard_FixColumnWidth(i, "");
+		if (sbt_field[i] == SP_NAME)
+		{
+			name_field_index = i;
+			continue;
+		}
+
+		Scoreboard_FixColumnWidth(i, "", true);
 	}
+
+	// update name field size in the end as it takes remaining space
+	Scoreboard_FixColumnWidth(name_field_index, "", true);
 }
 
 vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
@@ -1243,9 +1302,18 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
 		if (sbt_highlight)
 			if (i % 2)
 				drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+		vector prev_drawfontscale = drawfontscale;
+		if (sbt_field_title_condense_factor[i])
+			drawfontscale.x *= sbt_field_title_condense_factor[i];
 		drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
+		if (sbt_field_title_condense_factor[i])
+		{
+			drawfontscale.x *= sbt_field_title_condense_factor[i];
+			drawfontscale = prev_drawfontscale;
+		}
 		pos.x += column_dim.x;
 	}
+
 	if(sbt_field[i] == SP_SEPARATOR)
 	{
 		pos.x = panel_pos.x + panel_size.x - hud_fontsize.x * 0.5;
@@ -1263,8 +1331,21 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
 					drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
 				}
 
-			text_offset.x = sbt_field_size[i] - stringwidth(sbt_field_title[i], false, hud_fontsize);
+			vector prev_drawfontscale = drawfontscale;
+			float titlewidth = stringwidth(sbt_field_title[i], false, hud_fontsize);
+			if (sbt_field_title_condense_factor[i])
+			{
+				drawfontscale.x *= sbt_field_title_condense_factor[i];
+				text_offset.x = sbt_field_size[i] - titlewidth * sbt_field_title_condense_factor[i];
+			}
+			else
+				text_offset.x = sbt_field_size[i] - titlewidth;
 			drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			if (sbt_field_title_condense_factor[i])
+			{
+				drawfontscale.x *= sbt_field_title_condense_factor[i];
+				drawfontscale = prev_drawfontscale;
+			}
 			pos.x -= hud_fontsize.x;
 		}
 	}
@@ -1316,7 +1397,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 			continue;
 		}
 		str = Scoreboard_GetField(pl, field, autocvar_hud_panel_scoreboard_scores_per_round);
-		str = Scoreboard_FixColumnWidth(i, str);
+		str = Scoreboard_FixColumnWidth(i, str, false);
 
 		pos.x += sbt_field_size[i] + hud_fontsize.x;
 
@@ -1352,7 +1433,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 			}
 
 			str = Scoreboard_GetField(pl, field, autocvar_hud_panel_scoreboard_scores_per_round);
-			str = Scoreboard_FixColumnWidth(i, str);
+			str = Scoreboard_FixColumnWidth(i, str, false);
 
 			if(field == SP_NAME) {
 				tmp.x = sbt_fixcolumnwidth_len; // left or right aligned? let's put it right...
@@ -2240,11 +2321,22 @@ void Scoreboard_Draw()
 				scoreboard_fade_alpha = min(1, scoreboard_fade_alpha + frametime * scoreboard_fadeinspeed);
 			else
 				scoreboard_fade_alpha = 1;
+
+			static string hud_fontsize_str;
 			if(hud_fontsize_str != autocvar_hud_fontsize)
 			{
 				hud_fontsize = HUD_GetFontsize("hud_fontsize");
-				Scoreboard_initFieldSizes();
 				strcpy(hud_fontsize_str, autocvar_hud_fontsize);
+				sb_field_sizes_init = 1;
+			}
+
+			static float scoreboard_table_fieldtitle_maxwidth_prev;
+			if (scoreboard_table_fieldtitle_maxwidth_prev != autocvar_hud_panel_scoreboard_table_fieldtitle_maxwidth)
+			{
+				scoreboard_table_fieldtitle_maxwidth_prev = autocvar_hud_panel_scoreboard_table_fieldtitle_maxwidth;
+				sbt_field_title_maxwidth = bound(0.01, autocvar_hud_panel_scoreboard_table_fieldtitle_maxwidth, 0.1);
+				sbt_field_title_maxwidth *= vid_conwidth;
+				sb_field_sizes_init = 1;
 			}
 		}
 		else {
@@ -2294,6 +2386,14 @@ void Scoreboard_Draw()
 	panel_pos.x = scoreboard_left;
 	panel_size.x = fixed_scoreboard_width;
 
+	// field sizes can be initialized now after panel_size.x calculation
+	if (!sbt_field_size[0] || sb_field_sizes_init)
+	{
+		bool compress = (sb_field_sizes_init == 2);
+		Scoreboard_initFieldSizes(compress);
+		sb_field_sizes_init = 0;
+	}
+
 	Scoreboard_UpdatePlayerTeams();
 
 	scoreboard_top = panel_pos.y;
@@ -2311,6 +2411,8 @@ void Scoreboard_Draw()
 	// Game Info: Game Type
 	if (scoreboard_ui_enabled == 2)
 		str = _("Team Selection");
+	else if (gametype_custom_name != "")
+		str = gametype_custom_name;
 	else
 		str = MapInfo_Type_ToText(gametype);
 	draw_beginBoldFont();
@@ -2501,6 +2603,10 @@ void Scoreboard_Draw()
 		// display it anyway
 		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
 	}
+
+	// if the name column is too small, try to compress all other field titles
+	if (sbt_field_size[name_field_index] < sbt_field_title_width[name_field_index] + hud_fontsize.x)
+		sb_field_sizes_init = 2;
 
 	// draw scoreboard spectators before accuracy and item stats
 	if (autocvar_hud_panel_scoreboard_spectators_position == 0) {

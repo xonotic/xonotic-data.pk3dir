@@ -418,10 +418,10 @@ void spiderbot_blowup(entity this)
 	b.angles = this.angles;
 	setsize(b, this.mins, this.maxs);
 
+	h.solid = SOLID_BBOX; // before setorigin for immediate area grid linking
 	vector org = gettaginfo(this, gettagindex(this, "tag_head"));
 	setorigin(h, org);
 	set_movetype(h, MOVETYPE_BOUNCE);
-	h.solid = SOLID_BBOX;
 	h.velocity = v_up * (500 + random() * 500) + randomvec() * 128;
 	h.modelflags = MF_ROCKET;
 	h.effects = EF_FLAME | EF_LOWPRECISION;
@@ -434,17 +434,17 @@ void spiderbot_blowup(entity this)
 	setthink(h, spiderbot_headfade);
 	h.nextthink = time;
 
+	g1.solid = SOLID_CORPSE; // before setorigin for immediate area grid linking
 	org = gettaginfo(this.tur_head, gettagindex(this.tur_head, "tag_hardpoint01"));
 	setorigin(g1, org);
 	set_movetype(g1, MOVETYPE_TOSS);
-	g1.solid = SOLID_CORPSE;
 	g1.velocity = v_forward * 700 + (randomvec() * 32);
 	g1.avelocity = randomvec() * 180;
 
+	g2.solid = SOLID_CORPSE; // before setorigin for immediate area grid linking
 	org = gettaginfo(this.tur_head, gettagindex(this.tur_head, "tag_hardpoint02"));
 	setorigin(g2, org);
 	set_movetype(g2, MOVETYPE_TOSS);
-	g2.solid = SOLID_CORPSE;
 	g2.velocity = v_forward * 700 + (randomvec() * 32);
 	g2.avelocity = randomvec() * 180;
 

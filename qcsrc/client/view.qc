@@ -16,6 +16,7 @@
 #include <common/debug.qh>
 #include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
+#include <common/impulses/all.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/target/music.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
@@ -481,7 +482,7 @@ vector GetCurrentFov(float fov)
 		}
 	}
 
-	if(almost_equals(current_viewzoom, 1))
+	if(zoomfactor == 1 || current_viewzoom > 0.999) // zoomfactor check prevents a division by 0
 		current_zoomfraction = 0;
 	else if(almost_equals(current_viewzoom, 1/zoomfactor))
 		current_zoomfraction = 1;
@@ -613,8 +614,24 @@ int WantEventchase(entity this, bool want_vehiclechase)
 	return 0;
 }
 
+bool waiting_CAMERA_SPECTATOR_update;
 void View_EventChase(entity this)
 {
+	if(spectatee_status > 0 && autocvar_chase_active > 0)
+	{
+		// if chase_active is enabled by the user, spectator camera never switches to 1st person
+		// that means CAMERA_SPECTATOR 1 behaves as 0 and is redundant, so we forcedly skip it
+		if (STAT(CAMERA_SPECTATOR) == 1)
+		{
+			if (!waiting_CAMERA_SPECTATOR_update)
+			{
+				Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR 2
+				waiting_CAMERA_SPECTATOR_update = true;
+			}
+		}
+		else waiting_CAMERA_SPECTATOR_update = false;
+	}
+
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
@@ -860,7 +877,10 @@ void HUD_Draw(entity this)
 	{
 		if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 		{
-			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
+			vector col = M_ARGV(0, vector);
+			float alpha_multipl = M_ARGV(1, float);
+			if (alpha_multipl > 0)
+				drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_multipl, DRAWFLAG_ADDITIVE);
 		}
 		else if(STAT(FROZEN))
 		{
@@ -1200,6 +1220,7 @@ void View_PostProcessing()
 {
 	float e1 = (autocvar_hud_postprocessing_maxbluralpha != 0);
 	float e2 = (autocvar_hud_powerup != 0);
+	bool want_postprocessing = false;
 	if(autocvar_hud_postprocessing && (e1 || e2)) // TODO: Remove this code and re-do the postprocess handling in the engine, where it properly belongs.
 	{
 		// enable or disable rendering types if they are used or not
@@ -1217,6 +1238,7 @@ void View_PostProcessing()
 				old_blurradius = blurradius;
 				old_bluralpha = bluralpha;
 			}
+			want_postprocessing = true;
 		}
 		else if(cvar_string("r_glsl_postprocess_uservec1") != "0 0 0 0") // reduce cvar_set spam as much as possible
 		{
@@ -1243,18 +1265,24 @@ void View_PostProcessing()
 				cvar_set("r_glsl_postprocess_uservec2", strcat(ftos((sharpen_intensity / 5) * autocvar_hud_powerup), " ", ftos(-sharpen_intensity * autocvar_hud_powerup), " 0 0"));
 				old_sharpen_intensity = sharpen_intensity;
 			}
+			want_postprocessing = true;
 		}
 		else if(cvar_string("r_glsl_postprocess_uservec2") != "0 0 0 0") // reduce cvar_set spam as much as possible
 		{
 			cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
 			old_sharpen_intensity = 0;
 		}
-
+	}
+	if (want_postprocessing)
+	{
 		if(cvar("r_glsl_postprocess") == 0)
 			cvar_set("r_glsl_postprocess", "2");
 	}
-	else if(cvar("r_glsl_postprocess") == 2)
-		cvar_set("r_glsl_postprocess", "0");
+	else
+	{
+		if(cvar("r_glsl_postprocess") == 2)
+			cvar_set("r_glsl_postprocess", "0");
+	}
 }
 
 void View_Lock()
@@ -1525,7 +1553,7 @@ void View_UpdateFov()
 	setproperty(VF_FOV, fov);
 }
 
-void CSQC_UpdateView(entity this, float w, float h)
+void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 {
 	TC(int, w); TC(int, h);
 
@@ -1703,6 +1731,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	// draw 2D entities
 	IL_EACH(g_drawables_2d, it.draw2d, it.draw2d(it));
+	IL_EACH(g_damagetext, it.draw2d, it.draw2d(it));
 	Draw_ShowNames_All();
 #if ENABLE_DEBUGDRAW
 	Debug_Draw();
@@ -1742,7 +1771,7 @@ vector camera_offset, current_camera_offset, mouse_angles, current_angles, curre
 void CSQC_Demo_Camera()
 {
 	float speed, attenuation, dimensions;
-	vector tmp, delta;
+	vector tmp;
 
 	if( autocvar_camera_reset || !camera_mode )
 	{
@@ -1783,30 +1812,22 @@ void CSQC_Demo_Camera()
 		}
 	}
 
-	while (mouse_angles.x < -180) mouse_angles.x = mouse_angles.x + 360;
-	while (mouse_angles.x > 180) mouse_angles.x = mouse_angles.x - 360;
-	while (mouse_angles.y < -180) mouse_angles.y = mouse_angles.y + 360;
-	while (mouse_angles.y > 180) mouse_angles.y = mouse_angles.y - 360;
-
-	// Fix difference when angles don't have the same sign
-	delta = '0 0 0';
-	if(mouse_angles.y < -60 && current_angles.y > 60)
-		delta = '0 360 0';
-	if(mouse_angles.y > 60 && current_angles.y < -60)
-		delta = '0 -360 0';
-
 	if(autocvar_camera_look_player)
 		attenuation = autocvar_camera_look_attenuation;
 	else
 		attenuation = autocvar_camera_speed_attenuation;
 
 	attenuation = 1 / max(1, attenuation);
-	current_angles += (mouse_angles - current_angles + delta) * attenuation;
+	current_angles += (mouse_angles - current_angles) * attenuation;
 
-	while (current_angles.x < -180) current_angles.x = current_angles.x + 360;
-	while (current_angles.x > 180) current_angles.x = current_angles.x - 360;
-	while (current_angles.y < -180) current_angles.y = current_angles.y + 360;
-	while (current_angles.y > 180) current_angles.y = current_angles.y - 360;
+	// limit current pitch angle to sane values
+	if (current_angles.x < -90) current_angles.x = -90;
+	if (current_angles.x > 90 ) current_angles.x = 90;
+
+	// limit mouse and current yaw angles to standard values simultaneously so that the difference
+	// between these angles is not altered
+	while (current_angles.y < -180 && mouse_angles.y < -180) {current_angles.y += 360; mouse_angles.y += 360;}
+	while (current_angles.y > 180  && mouse_angles.y > 180 ) {current_angles.y -= 360; mouse_angles.y -= 360;}
 
 	// Camera position
 	tmp = '0 0 0';

@@ -42,11 +42,11 @@ CLASS(Vortex, Weapon)
 		P(class, prefix, charge_shot_multiplier, float, NONE) \
 		P(class, prefix, charge_start, float, NONE) \
 		P(class, prefix, charge_velocity_rate, float, NONE) \
+		P(class, prefix, damage, float, BOTH) \
 		P(class, prefix, damagefalloff_forcehalflife, float, BOTH) \
 		P(class, prefix, damagefalloff_halflife, float, BOTH) \
 		P(class, prefix, damagefalloff_maxdist, float, BOTH) \
 		P(class, prefix, damagefalloff_mindist, float, BOTH) \
-		P(class, prefix, damage, float, BOTH) \
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, secondary, float, NONE) \

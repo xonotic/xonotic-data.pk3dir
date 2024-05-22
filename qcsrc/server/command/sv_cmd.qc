@@ -21,6 +21,7 @@
 #include <server/command/radarmap.qh>
 #include <server/intermission.qh>
 #include <server/ipban.qh>
+#include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
 #include <server/scores_rules.qh>
@@ -465,7 +466,7 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 			LOG_HELP("  <client> can be either the name of the bot or a progressive number (not the entity number!)");
 			LOG_HELP("           can also be '*' or 'all' to allow sending the command to all the bots");
 			LOG_HELP("  For full list of commands, see bot_cmd help [<command>].");
-			LOG_HELP("Examples: sv_cmd bot_cmd 1 cc \"say something\"");
+			LOG_HELP("Examples: sv_cmd bot_cmd 1 cc say something");
 			LOG_HELP("          sv_cmd bot_cmd 1 presskey jump");
 			LOG_HELP("          sv_cmd bot_cmd * pause");
 			return;
@@ -774,30 +775,16 @@ void GameCommand_gametype(int request, int argc)
 			if (argv(1) != "")
 			{
 				string s = argv(1);
-				Gametype t = MapInfo_Type_FromString(s, false, false), tsave = MapInfo_CurrentGametype();
+				Gametype t = MapInfo_Type_FromString(s, false, false);
 
 				if (t)
 				{
-					MapInfo_SwitchGameType(t);
-					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-					if (MapInfo_count > 0)
-					{
-						// update lsmaps in case the gametype changed, this way people can easily list maps for it
-						if (lsmaps_reply != "")   strunzone(lsmaps_reply);
-						lsmaps_reply = strzone(getlsmaps());
-						bprint("Game type successfully switched to ", s, "\n");
-					}
-					else
-					{
-						bprint("Cannot use this game type: no map for it found\n");
-						MapInfo_SwitchGameType(tsave);
-						MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-					}
+					// don't execute gametype hooks because they can change active
+					// gametype rules if executed during the game
+					GameTypeVote_SetGametype(t, "", false);
 				}
 				else
-				{
 					bprint("Failed to switch to ", s, ": this game type does not exist!\n");
-				}
 
 				return;
 			}
@@ -1069,7 +1056,7 @@ void GameCommand_moveplayer(int request, int argc)
 					else if (destination == "spectator")
 					{
 						string pl_name = playername(client.netname, client.team, false);
-						if (!IS_SPEC(client) && !IS_OBSERVER(client))
+						if (!(IS_SPEC(client) || IS_OBSERVER(client)) || INGAME(client))
 						{
 							PutObserverInServer(client, true, true);
 
@@ -1106,7 +1093,8 @@ void GameCommand_moveplayer(int request, int argc)
 						if (team_num == client.team)  // already on the destination team
 						{
 							// keep the forcing undone
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ",
+								Team_ColoredFullName(team_num), ".");
 							continue;
 						}
 						else if (team_num == 0)  // auto team
@@ -1136,7 +1124,8 @@ void GameCommand_moveplayer(int request, int argc)
 						}
 						if (!TeamBalance_IsTeamAllowed(balance, team_id))
 						{
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ",
+								Team_ColoredFullName(team_num), ".");
 							TeamBalance_Destroy(balance);
 							continue;
 						}
@@ -1147,7 +1136,8 @@ void GameCommand_moveplayer(int request, int argc)
 						if (MoveToTeam(client, team_id, 6))
 						{
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ",
+								Team_ColoredFullName(team_num), ".");
 						}
 						else
 						{

@@ -13,6 +13,7 @@
 #include <client/shownames.qh>
 #include <client/view.qh>
 #include <client/weapons/projectile.qh>
+#include <common/checkextension.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.inc>
 #include <common/effects/all.qh>
@@ -42,13 +43,15 @@
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 
-void CSQC_Init()
+void CSQC_Init(float apilevel, string enginename, float engineversion)
 {
 	prvm_language = strzone(cvar_string("prvm_language"));
 
 #ifdef WATERMARK
 	LOG_TRACEF("^4CSQC Build information: ^1%s", WATERMARK);
 #endif
+
+	CheckEngineExtensions();
 
 	{
 		int i = 0;
@@ -194,6 +197,8 @@ void Shutdown()
 	localcmd("\ncl_hook_shutdown\n");
 
 	localcmd("\n-button12\n");
+
+	strfree(gametype_custom_name);
 
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
@@ -541,7 +546,7 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-
+.int survival_status;
 void Ent_RemovePlayerScore(entity this)
 {
 	if(this.owner) {
@@ -550,6 +555,11 @@ void Ent_RemovePlayerScore(entity this)
 		FOREACH(Scores, true, {
 			this.owner.(scores(it)) = 0; // clear all scores
 		});
+		this.owner.ready = 0;
+		this.owner.eliminated = 0;
+		this.owner.colormap = 0;
+		// TODO add a hook to reset this Survival field
+		this.owner.survival_status = 0;
 	}
 }
 
@@ -867,11 +877,13 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 	{
 		this.origin = ReadVector();
 
+		int particlesAndOrSound = ReadByte();
+
 		if(is_new)
 		{
 			float teamnum = entcs_GetTeam(entnum - 1);
 
-			if(autocvar_cl_spawn_event_particles)
+			if(autocvar_cl_spawn_event_particles && (particlesAndOrSound & BIT(0)))
 			{
 				switch(teamnum)
 				{
@@ -882,7 +894,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 					default: pointparticles(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1); break;
 				}
 			}
-			if(autocvar_cl_spawn_event_sound)
+
+			if(autocvar_cl_spawn_event_sound && (particlesAndOrSound & BIT(1)))
 			{
 				sound(this, CH_TRIGGER, SND_SPAWN, VOL_BASE, ATTEN_NORM);
 			}
@@ -1055,13 +1068,25 @@ bool CSQC_Parse_TempEntity()
 	return false;
 }
 
+bool autocvar_r_drawfog;
+bool autocvar_r_fog_exp2;
 string forcefog;
 void Fog_Force()
 {
 	if (autocvar_cl_orthoview && autocvar_cl_orthoview_nofog)
-		localcmd("\nr_drawfog 0\n");
+	{
+		if (autocvar_r_drawfog)
+			cvar_set("r_drawfog", "0");
+	}
 	else if (forcefog != "")
-		localcmd(sprintf("\nfog %s\nr_fog_exp2 0\nr_drawfog 1\n", forcefog));
+	{
+		// using cvar_set as it's faster and safer than a command
+		if (!autocvar_r_drawfog)
+			cvar_set("r_drawfog", "1");
+		if (autocvar_r_fog_exp2)
+			cvar_set("r_fog_exp2", "0");
+		localcmd(sprintf("\nfog %s\n", forcefog));
+	}
 }
 
 bool net_handle_ServerWelcome();
@@ -1069,6 +1094,7 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
 	gametype = ReadRegistered(Gametypes);
+	strcpy(gametype_custom_name, ReadString());
 	teamplay = _MapInfo_GetTeamPlayBool(gametype);
 	HUD_ModIcons_SetFunc();
 	FOREACH(Scores, true, {
@@ -1361,7 +1387,7 @@ string translate_weaponarena(string s)
 
 	int n = tokenizebyseparator(s, " & ");
 	string wpn_list = "";
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; ++i)
 	{
 		Weapon wep = Weapon_from_name(argv(i));
 		if (wep == WEP_Null)
@@ -1394,29 +1420,33 @@ string GetVersionMessage(string hostversion, bool version_mismatch, bool version
 
 bool net_handle_ServerWelcome()
 {
-	campaign = ReadByte();
+	int flags = ReadByte();
+
+	campaign = flags & 1;
 	if (campaign)
 	{
-		string campaign_title = ReadString();
 		int campaign_level = ReadByte();
-		string campaign_msg = ReadString();
-		string welcomedialog_args;
-		welcomedialog_args = strcat("HOSTNAME \"", campaign_title, "\"");
+		// Menu can't build the whole campaign message because it lacks getcommandkey and CCR
+		// so we build part of the message here and let the menu insert the level description
+		// (that client doesn't know) by replacing the keyword _LEVEL_DESC
 		string key = getcommandkey(_("jump"), "+jump");
 		string msg = strcat(
 			CCR("^F1"), sprintf(_("Level %d:"), campaign_level),
-			sprintf(CCR(" ^BG%s\n^3\n"), campaign_msg),
+			sprintf(CCR(" ^BG%s\n\n"), "_LEVEL_DESC"),
 			sprintf(CCR(_("^BGPress ^F2%s^BG to enter the game")), key));
 		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
-		welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+		string welcomedialog_args = strcat("CAMPAIGN ", itos(campaign_level), " \"", msg, "\"");
+
 		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
 		return true;
 	}
 
 	strcpy(hostname, ReadString());
 	string hostversion = ReadString();
-	bool version_mismatch = ReadByte();
-	bool version_check = ReadByte();
+	bool version_mismatch = flags & 2;
+	bool version_check = flags & 4;
+	MapInfo_Map_titlestring = ReadString();
+	MapInfo_Map_author = flags & 8 ? ReadString() : "";
 	srv_minplayers = ReadByte();
 	srv_maxplayers = ReadByte();
 	string modifications = translate_modifications(ReadString());
@@ -1428,15 +1458,9 @@ bool net_handle_ServerWelcome()
 
 	msg = strcat(msg, "\n\n", _("Gametype:"), " ^1", MapInfo_Type_ToText(gametype), "\n");
 
-	msg = strcat(msg, "\n", _("Map:"), " ^2");
-	if (world.message == "")
-		msg = strcat(msg, mi_shortname, "\n");
-	else
-	{
-		int i = strstrofs(world.message, " by ", 0); // matches _MapInfo_Generate()
-		string longname = i >= 0 ? substring(world.message, 0, i) : world.message;
-		msg = strcat(msg, (strcasecmp(longname, mi_shortname) ? strcat(mi_shortname, " ^7// ^2") : ""), longname, "\n");
-	}
+	msg = strcat(msg, "\n", _("Map:"), " ", MapInfo_Map_titlestring, "\n");
+	if (flags & 8)
+		msg = strcat(msg, "^9", _("by:"), " ", MapInfo_Map_author, "\n");
 
 	if (srv_minplayers || srv_maxplayers)
 	{

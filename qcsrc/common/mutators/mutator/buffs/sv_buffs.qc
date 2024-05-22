@@ -314,7 +314,7 @@ void buff_Think(entity this)
 		this.skin = buff.m_skin;
 
 		setmodel(this, MDL_BUFF);
-		setsize(this, BUFF_MIN, BUFF_MAX);
+		setsize(this, ITEM_D_MINS, ITEM_L_MAXS);
 
 		if(this.buff_waypoint)
 		{
@@ -440,7 +440,7 @@ void buff_Init(entity this)
 	setthink(this, buff_Think);
 	settouch(this, buff_Touch);
 	setmodel(this, MDL_BUFF);
-	setsize(this, BUFF_MIN, BUFF_MAX);
+	setsize(this, ITEM_D_MINS, ITEM_L_MAXS);
 	this.reset = buff_Reset;
 	this.nextthink = time + 0.1;
 	this.gravity = 1;
@@ -490,7 +490,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 {
 	setorigin(ent, old.origin);
 	ent.angles = old.angles;
-	ent.noalign = Item_ShouldKeepPosition(old);
+	ent.noalign = ITEM_SHOULD_KEEP_POSITION(old);
 
 	buff_Init(ent);
 }

@@ -7,6 +7,7 @@
 #include <common/sounds/all.qh>
 
 bool autocvar__notarget;
+bool autocvar_sv_show_entnum;
 int autocvar_g_balance_armor_start;
 float autocvar_g_balance_pause_armor_rot_spawn;
 float autocvar_g_balance_pause_fuel_rot_spawn;
@@ -81,9 +82,6 @@ float autocvar_sv_player_scale;
 .string playerskin;
 
 void ClientState_attach(entity this);
-
-IntrusiveList g_players;
-STATIC_INIT(g_players) { g_players = IL_NEW(); }
 
 CLASS(Client, Object)
     /** Client name */
@@ -277,10 +275,8 @@ CLASS(Player, Client)
 
     INIT(Player) {
         this.classname = STR_PLAYER;
-        IL_PUSH(g_players, this);
     }
     DESTRUCTOR(Player) {
-        IL_REMOVE(g_players, this);
     }
 ENDCLASS(Player)
 
@@ -359,6 +355,10 @@ void calculate_player_respawn_time(entity this);
 
 bool PlayerInList(entity player, string list);
 
+bool PlayerInIDList(entity p, string idlist);
+
+bool PlayerInIPList(entity p, string iplist);
+
 void ClientData_Touch(entity e);
 
 int nJoinAllowed(entity this, entity ignore);
@@ -401,6 +401,8 @@ int GetPlayerLimit();
 const int MIN_SPEC_TIME = 1;
 bool joinAllowed(entity this);
 void Join(entity this);
+
+void PlayerFrame (entity this);
 
 #define SPECTATE_COPY() ACCUMULATE void SpectateCopy(entity this, entity spectatee)
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }

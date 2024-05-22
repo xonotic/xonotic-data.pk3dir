@@ -24,7 +24,9 @@ METHOD(Vortex, wr_glow, vector(Vortex this, int actor_colors, entity wepent))
 }
 #endif
 
+#ifdef GAMEQC
 REGISTER_NET_TEMP(TE_CSQC_VORTEXBEAMPARTICLE)
+#endif
 
 #if defined(SVQC)
 void SendCSQCVortexBeamParticle(float charge) {

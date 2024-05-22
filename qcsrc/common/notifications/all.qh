@@ -251,10 +251,16 @@ ENUMCLASS(NOTIF)
 	CASE(NOTIF, TEAM)
 	/** send only to X team and their spectators, except for Y person and their spectators */
 	CASE(NOTIF, TEAM_EXCEPT)
+	/** send only to X team; don't include spectators */
+	CASE(NOTIF, TEAM_ONLY)
+	/** send to team X team except for Y person; don't include spectators */
+	CASE(NOTIF, TEAM_ONLY_EXCEPT)
 	/** send to everyone */
 	CASE(NOTIF, ALL)
 	/** send to everyone except X person and their spectators */
 	CASE(NOTIF, ALL_EXCEPT)
+	/** send to all spectators **/
+	CASE(NOTIF, ALL_SPEC)
 ENUMCLASS_END(NOTIF)
 
 string Get_Notif_BroadcastName(NOTIF broadcast)
@@ -263,10 +269,13 @@ string Get_Notif_BroadcastName(NOTIF broadcast)
 	{
 		case NOTIF_ONE: return "NOTIF_ONE";
 		case NOTIF_ONE_ONLY: return "NOTIF_ONE_ONLY";
+		case NOTIF_ALL_SPEC: return "NOTIF_ALL_SPEC";
 		case NOTIF_ALL_EXCEPT: return "NOTIF_ALL_EXCEPT";
 		case NOTIF_ALL: return "NOTIF_ALL";
 		case NOTIF_TEAM: return "NOTIF_TEAM";
 		case NOTIF_TEAM_EXCEPT: return "NOTIF_TEAM_EXCEPT";
+		case NOTIF_TEAM_ONLY: return "NOTIF_TEAM_ONLY";
+		case NOTIF_TEAM_ONLY_EXCEPT: return "NOTIF_TEAM_ONLY_EXCEPT";
 	}
 	LOG_WARNF("Get_Notif_BroadcastName(%d): Improper broadcast!", broadcast);
 	return "";
@@ -714,7 +723,7 @@ string notif_arg_item_wepammo(float f1, float f2)
 
 REGISTRY(Notifications, BITS(11))
 REGISTER_REGISTRY(Notifications)
-REGISTRY_SORT(Notifications);
+REGISTRY_SORT(Notifications)
 
 REGISTRY_DEFINE_GET(Notifications, NULL)
 STATIC_INIT(Notifications) { FOREACH(Notifications, true, it.m_id = i); }

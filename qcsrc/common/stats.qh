@@ -125,6 +125,7 @@ REGISTER_STAT(MONSTERS_KILLED, int)
 REGISTER_STAT(NADE_BONUS, float)
 REGISTER_STAT(NADE_BONUS_TYPE, int)
 REGISTER_STAT(NADE_BONUS_SCORE, float)
+REGISTER_STAT(NADE_DARKNESS_TIME, float)
 REGISTER_STAT(PLASMA, int)
 REGISTER_STAT(FROZEN, int)
 REGISTER_STAT(REVIVE_PROGRESS, float)
@@ -132,6 +133,7 @@ REGISTER_STAT(ROUNDLOST, int)
 REGISTER_STAT(CAPTURE_PROGRESS, float)
 REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 REGISTER_STAT(KILL_TIME, float)
+REGISTER_STAT(TKA_BALLSTATUS, int)
 
 #ifdef SVQC
 float autocvar_sv_showfps = 0;
@@ -202,7 +204,7 @@ int autocvar_sv_gameplayfix_easierwaterjump = 1;
 int autocvar_sv_gameplayfix_stepdown = 2;
 float autocvar_sv_gameplayfix_stepdown_maxspeed = 0;
 int autocvar_sv_gameplayfix_stepmultipletimes = 1;
-int autocvar_sv_gameplayfix_unstickplayers = 0;
+int autocvar_sv_gameplayfix_unstickplayers;
 int autocvar_sv_gameplayfix_fixedcheckwatertransition = 1;
 int autocvar_sv_gameplayfix_slidemoveprojectiles = 1;
 int autocvar_sv_gameplayfix_grenadebouncedownslopes = 1;
@@ -341,8 +343,10 @@ REGISTER_STAT(NB_METERSTART, float)
 
 #ifdef SVQC
 float autocvar_g_teleport_maxspeed;
+float autocvar_g_teleport_minspeed;
 #endif
 REGISTER_STAT(TELEPORT_MAXSPEED, float, autocvar_g_teleport_maxspeed)
+REGISTER_STAT(TELEPORT_MINSPEED, float, autocvar_g_teleport_minspeed)
 REGISTER_STAT(TELEPORT_TELEFRAG_AVOID, int, autocvar_g_telefrags_avoid)
 
 REGISTER_STAT(CAMERA_SPECTATOR, int)

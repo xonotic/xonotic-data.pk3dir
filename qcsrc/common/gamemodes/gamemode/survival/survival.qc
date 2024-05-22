@@ -1,1 +1,5 @@
 #include "survival.qh"
+
+#ifdef GAMEQC
+REGISTER_NET_LINKED(ENT_CLIENT_SURVIVALSTATUSES)
+#endif
