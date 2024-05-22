@@ -27,6 +27,10 @@ CLASS(Shotgun, Weapon)
 		P(class, prefix, animtime, float, BOTH) \
 		P(class, prefix, bullets, float, PRI) \
 		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, damagefalloff_forcehalflife, float, PRI) \
+		P(class, prefix, damagefalloff_halflife, float, PRI) \
+		P(class, prefix, damagefalloff_maxdist, float, PRI) \
+		P(class, prefix, damagefalloff_mindist, float, PRI) \
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, melee_delay, float, SEC) \
 		P(class, prefix, melee_multihit, float, SEC) \

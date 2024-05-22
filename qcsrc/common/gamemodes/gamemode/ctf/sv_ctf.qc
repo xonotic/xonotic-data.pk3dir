@@ -1387,7 +1387,7 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	else // drop to floor, automatically find a platform and set that as spawn origin
 	{
 		flag.noalign = false;
-		droptofloor(flag);
+		DropToFloor_QC_DelayedInit(flag);
 		set_movetype(flag, MOVETYPE_NONE);
 	}
 

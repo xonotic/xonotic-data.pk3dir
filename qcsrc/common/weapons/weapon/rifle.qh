@@ -28,25 +28,29 @@ CLASS(Rifle, Weapon)
 		P(class, prefix, burstcost, float, BOTH) \
 		P(class, prefix, bursttime, float, NONE) \
 		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, damagefalloff_forcehalflife, float, BOTH) \
+		P(class, prefix, damagefalloff_halflife, float, BOTH) \
+		P(class, prefix, damagefalloff_maxdist, float, BOTH) \
+		P(class, prefix, damagefalloff_mindist, float, BOTH) \
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, headshot_multiplier, float, BOTH) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload, float, SEC) \
 		P(class, prefix, reload_ammo, float, NONE) \
-    	P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, secondary, float, NONE) \
 		P(class, prefix, shots, float, BOTH) \
 		P(class, prefix, solidpenetration, float, BOTH) \
 		P(class, prefix, spread, float, BOTH) \
-    	P(class, prefix, switchdelay_drop, float, NONE) \
-    	P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
 		P(class, prefix, tracer, float, BOTH) \
-    	P(class, prefix, weaponreplace, string, NONE) \
-    	P(class, prefix, weaponstartoverride, float, NONE) \
-    	P(class, prefix, weaponstart, float, NONE) \
-    	P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Rifle, rifle)
+	W_PROPS(X, Rifle, rifle)
 #undef X
 ENDCLASS(Rifle)
 REGISTER_WEAPON(RIFLE, rifle, NEW(Rifle));
