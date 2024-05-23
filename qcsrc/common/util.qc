@@ -457,8 +457,8 @@ vector decompressShortVector(int data)
 	}
 	else
 	{
-		q = .19634954084936207740 * q;
-		p = .19634954084936207740 * p - 1.57079632679489661922;
+		q = M_PI_16 * q;
+		p = M_PI_16 * p - M_PI_2;
 		out.x = cos(q) *  cos(p);
 		out.y = sin(q) *  cos(p);
 		out.z =          -sin(p);
