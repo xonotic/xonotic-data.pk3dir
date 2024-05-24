@@ -170,3 +170,6 @@ IntrusiveList g_moveables;
 STATIC_INIT(g_moveables) { g_moveables = IL_NEW(); }
 
 bool observe_blocked_if_eliminated = false; // forbids eliminated players from observing
+
+void MatchEnd_RestoreSpectatorAndTeamStatus(.int prev_team_field);
+void MatchEnd_RestoreSpectatorStatus();
