@@ -151,14 +151,32 @@
 	{
 		int n;
 		{
-			string s = cdr(pair);
-			if (s) n = stof(s);
-			else n = 0;
+			// values may contain "X" or "X Y"
+			// where X is all and Y is gentle
+			string values = cdr(pair);
+			if (values)
+			{
+	#ifdef CSQC
+				if (autocvar_cl_gentle || autocvar_cl_gentle_voices)
+				{
+					string gentle = cdr(values);
+					if (gentle)
+						n = stof(gentle);
+					else
+						n = stof(values);
+				}
+				else
+	#endif
+					n = stof(values);
+			}
+			else
+				n = 0;
 		}
-		string sample = car(pair);
-		if (n > 0) sample = sprintf("%s%d.wav", sample, floor(r * n + 1));  // randomization
-		else sample = sprintf("%s.wav", sample);
-		return sample;
+
+		if (n > 0)
+			return sprintf("%s%d.wav", car(pair), floor(r * n + 1));  // randomization
+		else
+			return sprintf("%s.wav", car(pair));
 	}
 
 	float GlobalSound_pitch(float _pitch)
@@ -221,6 +239,9 @@
 
 	void PrecachePlayerSounds(string f)
 	{
+#ifdef CSQC
+		bool gentle_warning = true; // only warn once per file
+#endif
 		int fh = fopen(f, FILE_READ);
 		if (fh < 0)
 		{
@@ -229,15 +250,38 @@
 		}
 		for (string s; (s = fgets(fh)); )
 		{
+			// likely missing for pre-0.9 clients and thus initialized here
+			string gentle = "";
+
 			int n = tokenize_console(s);
-			if (n != 3)
+
+			switch (n)
 			{
-				if (n != 0) LOG_WARNF("Invalid sound info line: %s", s);
-				continue;
+				case 0:
+					// empty line
+					continue;
+				case 4:
+					// new format with separate gentle lines count
+					gentle = argv(3);
+					break;
+				case 3:
+					// old format without separate gentle lines count
+#ifdef CSQC
+					if (gentle_warning && (autocvar_cl_gentle || autocvar_cl_gentle_voices))
+					{
+						LOG_WARNF("cl_gentle_voices: Missing gentle # in sound info file: %s", f);
+						gentle_warning = false;
+					}
+#endif
+					break;
+				default:
+					LOG_WARNF("Invalid sound info line: %s", s);
+					continue;
 			}
+
 			string file = argv(1);
 			string variants = argv(2);
-			PrecacheGlobalSound(strcat(file, " ", variants));
+			PrecacheGlobalSound(strcat(file, " ", variants, " ", gentle));
 		}
 		fclose(fh);
 	}
@@ -262,6 +306,9 @@
 
 		bool LoadPlayerSounds(entity this, string f, bool strict)
 		{
+#ifdef CSQC
+			bool gentle_warning = true; // only warn once per file
+#endif
 			int fh = fopen(f, FILE_READ);
 			if (fh < 0)
 			{
@@ -270,11 +317,31 @@
 			}
 			for (string s; (s = fgets(fh)); )
 			{
+				string gentle = ""; // likely is missing for old clients on new servers
+
 				int n = tokenize_console(s);
-				if (n != 3)
+				switch (n)
 				{
-					if (n != 0) LOG_WARNF("Invalid sound info line: %s", s);
-					continue;
+					case 0:
+						// empty line
+						continue;
+					case 4:
+						// new format with separate gentle lines count
+						gentle = argv(3);
+						break;
+					case 3:
+#ifdef CSQC
+						// old format without separate gentle lines count
+						if (gentle_warning && (autocvar_cl_gentle || autocvar_cl_gentle_voices))
+						{
+							LOG_WARNF("cl_gentle_voices: Missing gentle # in sound info file: %s", f);
+							gentle_warning = false;
+						}
+#endif
+						break;
+					default:
+						LOG_WARNF("Invalid sound info line: %s", s);
+						continue;
 				}
 				string key = argv(0);
 				var .string field = GetPlayerSoundSampleField(key);
@@ -286,7 +353,7 @@
 				}
 				string file = argv(1);
 				string variants = argv(2);
-				strcpy(this.(field), strcat(file, " ", variants));
+				strcpy(this.(field), strcat(file, " ", variants, " ", gentle));
 			}
 			fclose(fh);
 			return true;
