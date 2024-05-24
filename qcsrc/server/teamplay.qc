@@ -889,6 +889,8 @@ void TeamBalance_AutoBalanceBots()
 	//if (!(autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance))
 	//	return;
 
+	if (intermission_running) return;
+
 	entity balance = TeamBalance_CheckAllowedTeams(NULL);
 	TeamBalance_GetTeamCounts(balance, NULL);
 	int smallest_team_index = 0;

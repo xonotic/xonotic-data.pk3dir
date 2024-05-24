@@ -1319,6 +1319,40 @@ void DumpStats(float final)
 	}
 }
 
+// it should be called by gametypes where players can join a team but have to wait before playing
+// it puts players who joined too late (without being able to play) back to spectators
+// if prev_team_field is not team it also puts players who previously switched team (without being
+// able to play on the new team) back to previous team
+void MatchEnd_RestoreSpectatorAndTeamStatus(.int prev_team_field)
+{
+	bool fix_team = (teamplay && prev_team_field != team);
+	FOREACH_CLIENT(true,
+	{
+		if (!IS_PLAYER(it) && INGAME_JOINING(it))
+		{
+			INGAME_STATUS_CLEAR(it);
+			PutObserverInServer(it, true, false);
+			bprint(playername(it.netname, it.team, false), " has been moved back to spectator");
+			it.winning = false;
+		}
+		else if (fix_team && INGAME_JOINED(it) && it.(prev_team_field) && it.team != it.(prev_team_field))
+		{
+			Player_SetForcedTeamIndex(it, TEAM_FORCE_DEFAULT);
+			if (MoveToTeam(it, Team_TeamToIndex(it.(prev_team_field)), 6))
+			{
+				string pl_name = playername(it.netname, it.team, false);
+				bprint(pl_name, " has been moved back to the ", Team_ColoredFullName(it.team));
+			}
+			it.winning = (it.team == WinningConditionHelper_winnerteam);
+		}
+	});
+}
+
+void MatchEnd_RestoreSpectatorStatus()
+{
+	MatchEnd_RestoreSpectatorAndTeamStatus(team);
+}
+
 /*
 go to the next level for deathmatch
 only called if a time or frag limit has expired
@@ -1345,6 +1379,8 @@ void NextLevel()
 	//pos = FindIntermission ();
 
 	VoteReset(true);
+
+	MUTATOR_CALLHOOK(MatchEnd_BeforeScores);
 
 	DumpStats(true);
 

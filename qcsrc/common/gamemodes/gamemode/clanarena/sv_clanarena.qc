@@ -13,6 +13,7 @@ float autocvar_g_ca_start_ammo_plasma = 180;
 float autocvar_g_ca_start_ammo_fuel = 0;
 
 .float ca_damage_counter;
+.int prev_team;
 
 void CA_count_alive_players()
 {
@@ -188,6 +189,8 @@ float CA_CheckWinner()
 void CA_RoundStart()
 {
 	allowed_to_spawn = boolean(warmup_stage);
+	if (!warmup_stage)
+		FOREACH_CLIENT(IS_PLAYER(it), it.prev_team = it.team);
 }
 
 bool CA_CheckTeams()
@@ -309,6 +312,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
 			PutClientInServer(it);
 		}
+		it.prev_team = 0;
 	});
 	return true;
 }
@@ -316,6 +320,12 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 {
 	allowed_to_spawn = true;
+	return true;
+}
+
+MUTATOR_HOOKFUNCTION(ca, MatchEnd_BeforeScores)
+{
+	MatchEnd_RestoreSpectatorAndTeamStatus(prev_team);
 	return true;
 }
 
