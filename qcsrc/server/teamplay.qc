@@ -234,6 +234,27 @@ bool Player_SetTeamIndex(entity player, int index)
 	return true;
 }
 
+/** Returns true when enough players are queued that the next will join directly
+ * to the only available team (also triggering the joins of the queued players).
+ * Optionally only counts players who selected a specific team when joining the queue.
+ */
+bool QueuedPlayersReady(entity this, bool checkspecificteam)
+{
+	int numplayersqueued = 0;
+
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this
+	&& (checkspecificteam ? it.wants_join > 0 : it.wants_join),
+	{
+		LOG_DEBUGF("Player %s is waiting to join team %d", it.netname, it.wants_join);
+		++numplayersqueued;
+		if (numplayersqueued >= AVAILABLE_TEAMS - 1)
+			return true;
+	});
+
+	LOG_DEBUG("No players waiting to join.");
+	return false;
+}
+
 bool SetPlayerTeam(entity player, int team_index, int type)
 {
 	int old_team_index = Entity_GetTeamIndex(player);
@@ -252,7 +273,13 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 			TeamBalance_AutoBalanceBots();
 
 		if (team_index != -1)
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
+		{
+			if (!queuePlayer(player, team_index))
+			{
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
+				player.team_selected = true; // no autoselect in Join()
+			}
+		}
 	}
 
 	if (team_index == -1)
@@ -320,6 +347,19 @@ void Player_SetTeamIndexChecked(entity player, int team_index)
 		}
 	}
 	TeamBalance_Destroy(balance);
+
+	// g_balance_teams_queue: before joining the queue,
+	// check if a queued player already chose the selected team
+	if (!IS_BOT_CLIENT(player) && IS_QUEUE_NEEDED(player))
+	{
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != player && it.wants_join == team_index,
+		{
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_NUM(Team_IndexToTeam(team_index), CENTER_JOIN_PREVENT_QUEUE_TEAM_FAIL), it.netname);
+			player.team_selected = false;
+			return;
+		});
+	}
+
 	SetPlayerTeam(player, team_index, TEAM_CHANGE_MANUAL);
 }
 
@@ -657,6 +697,171 @@ int TeamBalance_GetAllowedTeams(entity balance)
 	return result;
 }
 
+bool TeamBalance_AreEqual(entity ignore, bool would_leave)
+{
+	entity balance = TeamBalance_CheckAllowedTeams(ignore);
+	TeamBalance_GetTeamCounts(balance, ignore);
+
+	bool equality = true;
+	int total;
+	int prev_total = 0;
+	int bots = 0;
+
+	for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
+	{
+		total = TeamBalance_GetTeamFromIndex(balance, i).m_num_players;
+		bots += TeamBalance_GetTeamFromIndex(balance, i).m_num_bots;
+		if(i > 1 && total != prev_total)
+		{
+			equality = false;
+			break;
+		}
+		prev_total = total;
+	}
+	TeamBalance_Destroy(balance);
+
+	// Ignore if there are "ghost" bots that would leave if anyone joined
+	if (would_leave && bots > autocvar_bot_number)
+		return false;
+
+	return equality;
+}
+
+entity remove_countdown;
+void Remove_Countdown(entity this)
+{
+	if(this.lifetime <= 0 || TeamBalance_AreEqual(NULL, false))
+	{
+		if(this.lifetime <= 0)
+		{
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_REMOVE, playername(remove_countdown.enemy.netname, remove_countdown.enemy.team, true));
+			PutObserverInServer(remove_countdown.enemy, true, true);
+		}
+
+		Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_REMOVE);
+
+		delete(this);
+		remove_countdown = NULL;
+
+		TeamBalance_RemoveExcessPlayers(NULL); // Check again for excess players in case someone also left while in countdown
+		return;
+	}
+
+	--this.lifetime;
+	this.nextthink = time + 1;
+}
+
+// FIXME: support more than 2 teams, the notification will be... awkward
+// FIXME: also don't kick the fc/bc/kc lol
+void TeamBalance_RemoveExcessPlayers(entity ignore)
+{
+	if(AVAILABLE_TEAMS != 2 || autocvar_g_campaign) return;
+
+	entity balance = TeamBalance_CheckAllowedTeams(ignore);
+	TeamBalance_GetTeamCounts(balance, ignore);
+
+	int min = 0;
+
+	for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
+	{
+		int cur = TeamBalance_GetTeamFromIndex(balance, i).m_num_players;
+		if(i == 1 || cur < min)
+			min = cur;
+	}
+
+	for(int tmi = 1; tmi <= AVAILABLE_TEAMS; ++tmi)
+	{
+		int cur = TeamBalance_GetTeamFromIndex(balance, tmi).m_num_players;
+		if(cur > 0 && cur > min) // If this team has excess players
+		{
+			// Get newest player
+			int latest_join = 0;
+			entity latest_join_pl = NULL;
+
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) || INGAME(it), {
+				if(it.team == Team_IndexToTeam(tmi) && CS(it).startplaytime > latest_join)
+				{
+					latest_join = CS(it).startplaytime;
+					latest_join_pl = it;
+				}
+			});
+
+			// Force player to spectate
+			if(latest_join_pl)
+			{
+				// Send player to spectate
+				if(autocvar_g_balance_teams_remove_wait)
+				{
+					// Give a warning before moving to spect
+					if (!remove_countdown)
+					{
+						remove_countdown = new_pure(remove_countdown);
+						setthink(remove_countdown, Remove_Countdown);
+						remove_countdown.nextthink = time;
+						Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MOVETOSPEC_REMOVE, playername(latest_join_pl.netname, latest_join_pl.team, true), autocvar_g_balance_teams_remove_wait);
+					}
+					remove_countdown.enemy = latest_join_pl;
+					remove_countdown.lifetime = autocvar_g_balance_teams_remove_wait;
+				}
+				else
+				{
+					// Move to spects immediately
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_REMOVE, latest_join_pl.netname);
+					PutObserverInServer(latest_join_pl, true, true);
+				}
+			}
+		}
+	}
+
+	TeamBalance_Destroy(balance);
+}
+
+bool TeamBalance_QueuedPlayersTagIn(entity ignore)
+{
+	if (!teamplay)
+		return true;
+
+	bool balanced = true;
+	int j, teamplayers, teamplayers_max = 0;
+	entity balance = TeamBalance_CheckAllowedTeams(ignore);
+
+	TeamBalance_GetTeamCounts(balance, ignore);
+
+	// find the target player count
+	for (j = 1; j <= AVAILABLE_TEAMS; ++j)
+	{
+		teamplayers = TeamBalance_GetTeamFromIndex(balance, j).m_num_players;
+		if(teamplayers > teamplayers_max)
+			teamplayers_max = teamplayers;
+	}
+
+	for (j = 1; j <= AVAILABLE_TEAMS; ++j)
+	{
+		teamplayers = TeamBalance_GetTeamFromIndex(balance, j).m_num_players;
+		// first pass: find player(s) who want to play on this specific team
+		FOREACH_CLIENT(it != ignore && it.wants_join == j,
+		{
+			if (teamplayers >= teamplayers_max)
+				break;
+			Join(it, false);
+			++teamplayers;
+		});
+		// second pass: find player(s) who want to play on any team
+		FOREACH_CLIENT(it != ignore && it.wants_join < 0,
+		{
+			if (teamplayers >= teamplayers_max)
+				break;
+			Join(it, false);
+			++teamplayers;
+		});
+		if (teamplayers < teamplayers_max)
+			balanced = false;
+	}
+
+	TeamBalance_Destroy(balance);
+	return balanced;
+}
+
 bool TeamBalance_IsTeamAllowed(entity balance, int index)
 {
 	if (balance == NULL)
@@ -707,6 +912,10 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			if (it == ignore)
 			{
 				continue;
+			}
+			if (it.wants_join)
+			{
+				continue; // Queued players aren't actually in the game.
 			}
 			int team_num;
 			// TODO: Reconsider when the player is truly on the team.
