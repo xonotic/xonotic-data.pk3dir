@@ -1497,6 +1497,15 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		if(pl == ignored_pl)
 			continue;
 
+		if(entcs_GetWantsJoin(pl.sv_entnum))
+		{
+			vector tmcolor = Team_ColorRGB(Team_IndexToTeam(entcs_GetWantsJoin(pl.sv_entnum)));
+			tmcolor -= tmcolor * sin(2*M_PI*time);
+
+			drawstring(pos, "(Q)", hud_fontsize, tmcolor, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			pos.x += stringwidth("(Q) ", true, hud_fontsize);
+		}
+
 		field = "";
 		if(this_team == NUM_SPECTATOR)
 		{

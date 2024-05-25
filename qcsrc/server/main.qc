@@ -59,6 +59,11 @@ bool dropclient_schedule(entity this)
 	setthink(e, dropclient_do);
 	e.owner = this;
 	e.nextthink = time + 0.1;
+
+	// ignore this player for team balancing and queuing
+	this.team = -1;
+	this.wants_join = 0;
+	this.classname = STR_OBSERVER;
 	return true;
 }
 

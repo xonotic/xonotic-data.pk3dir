@@ -359,7 +359,7 @@ void ClientCommand_join(entity caller, int request)
 			if (!game_stopped && IS_CLIENT(caller) && !IS_PLAYER(caller))
 			{
 				if (joinAllowed(caller))
-					Join(caller);
+					Join(caller, true);
 				else if(time < CS(caller).jointime + MIN_SPEC_TIME)
 					CS(caller).autojoin_checked = -1;
 			}
@@ -583,12 +583,9 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			if (team_num)
 				ClientKill_TeamChange(caller, team_num);
 			else // auto
-				ClientKill_TeamChange(caller, -1);
+				if (!queuePlayer(caller, 0)) // the queue uses deferred autoselect
+					ClientKill_TeamChange(caller, -1);
 
-			if (!IS_PLAYER(caller))
-			{
-				caller.team_selected = true; // avoids asking again for team selection on join
-			}
 			return;
 		}
 		default:
@@ -694,7 +691,7 @@ void ClientCommand_spectate(entity caller, int request)
 
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN) return;
 
-				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE))
+				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE || caller.wants_join))
 				if (autocvar_sv_spectate == 1)
 					ClientKill_TeamChange(caller, -2); // observe
 			}
