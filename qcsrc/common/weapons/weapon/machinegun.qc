@@ -5,8 +5,8 @@
 .float machinegun_spread_accumulation;
 .float spreadUpdateTime;
 
-float spreadSpectrumMin;
-float spreadSpectrumMax;
+//float spreadSpectrumMin; // localized to Auto and Burst
+//float spreadSpectrumMax; // localized to Auto and Burst
 //float spreadSpectrumDistance; // localized to MachineGun_Heat()
 //bool inversedSpread; // unused for now
 
@@ -46,7 +46,7 @@ actor.(weaponentity).machinegun_spread_accumulation = spread_acc;               
 actor.(weaponentity).spreadUpdateTime = time;                                           \
 MACRO_END
 
-float MachineGun_Heat(float spread_acc)
+float MachineGun_Heat(float spread_acc, float spreadSpectrumMin, float spreadSpectrumMax)
 {
 	// function for reducing mg's damage with no spread and adding damage with
 	// heated up barrel or vice versa depending on the values of exposed cvars
@@ -157,10 +157,13 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 		actor.punchangle_y = random() - 0.5;
 	}
 
+	float spreadSpectrumMin;
+	float spreadSpectrumMax;
+
 	MACHINEGUN_UPDATE_SPREAD;
 
 	float spread_acc = actor.(weaponentity).machinegun_spread_accumulation;
-	float heat = MachineGun_Heat(spread_acc);
+	float heat = MachineGun_Heat(spread_acc, spreadSpectrumMin, spreadSpectrumMax);
 
 	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, spread_acc,
 	           WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage) * heat,
@@ -194,13 +197,17 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		actor.punchangle_y = random() - 0.5;
 	}
 
+	float spreadSpectrumMin;
+	float spreadSpectrumMax;
+
 	MACHINEGUN_UPDATE_SPREAD;
 
 	float spread_acc = actor.(weaponentity).machinegun_spread_accumulation;
+	float heat = MachineGun_Heat(spread_acc, spreadSpectrumMin, spreadSpectrumMax);
 
 	fireBullet(actor, weaponentity, w_shotorg, w_shotdir,
 	           WEP_CVAR(machinegun, burst_spread), WEP_CVAR(machinegun, solidpenetration),
-	           WEP_CVAR(machinegun, sustained_damage) * MachineGun_Heat(spread_acc),
+	           WEP_CVAR(machinegun, sustained_damage) * heat,
 	           0, WEP_CVAR(machinegun, sustained_force),
 	           thiswep.m_id, EFFECT_BULLET);
 
