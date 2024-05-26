@@ -259,18 +259,6 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
 		if(fire & 2)
 		if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
 		{
-			if(WEP_CVAR(machinegun, spread_decay) != 0)
-			{
-				MACHINEGUN_UPDATE_SPREAD;
-
-				// block alt fire if spread accumulation is >50%
-				if(actor.(weaponentity).machinegun_spread_accumulation > (spreadSpectrumMax + spreadSpectrumMin) / 2)
-				{
-					w_ready(thiswep, actor, weaponentity, fire);
-					return;
-				}
-			}
-
 			if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
 			if(!(actor.items & IT_UNLIMITED_AMMO))
 			{
