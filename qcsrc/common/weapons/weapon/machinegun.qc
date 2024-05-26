@@ -171,8 +171,7 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 
 	++actor.(weaponentity).misc_bulletcounter;
 
-	// add spread for this shot within spectrum limits
-	spread_acc = bound(spreadSpectrumMin, spread_acc + WEP_CVAR(machinegun, spread_add), spreadSpectrumMax);
+	spread_acc += WEP_CVAR(machinegun, spread_add);
 
 	actor.(weaponentity).machinegun_spread_accumulation = spread_acc;
 
@@ -219,10 +218,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), vectoangles(v_forward), 3, actor, weaponentity);
 	}
 
-	// add spread for this shot within spectrum limits
-	spread_acc = bound(spreadSpectrumMin,
-	                   spread_acc + WEP_CVAR(machinegun, spread_add),
-	                   spreadSpectrumMax);
+	spread_acc += WEP_CVAR(machinegun, spread_add);
 
 	++actor.(weaponentity).misc_bulletcounter;
 	if(actor.(weaponentity).misc_bulletcounter == 0)
