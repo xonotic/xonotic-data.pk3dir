@@ -194,7 +194,15 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(machinegun, burst_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), 0, WEP_CVAR(machinegun, sustained_force), thiswep.m_id, EFFECT_BULLET);
+	MACHINEGUN_UPDATE_SPREAD;
+
+	float spread_acc = actor.(weaponentity).machinegun_spread_accumulation;
+
+	fireBullet(actor, weaponentity, w_shotorg, w_shotdir,
+	           WEP_CVAR(machinegun, burst_spread), WEP_CVAR(machinegun, solidpenetration),
+	           WEP_CVAR(machinegun, sustained_damage) * MachineGun_Heat(spread_acc),
+	           0, WEP_CVAR(machinegun, sustained_force),
+	           thiswep.m_id, EFFECT_BULLET);
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
@@ -205,7 +213,6 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 	}
 
 	// add spread for this shot within spectrum limits
-	float spread_acc = actor.(weaponentity).machinegun_spread_accumulation;
 	spread_acc = bound(spreadSpectrumMin,
 	                   spread_acc + WEP_CVAR(machinegun, spread_add),
 	                   spreadSpectrumMax);
