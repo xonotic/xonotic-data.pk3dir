@@ -8,7 +8,7 @@
 float spreadSpectrumMin;
 float spreadSpectrumMax;
 float spreadSpectrumDistance;
-bool inversedSpread;
+//bool inversedSpread;
 
 void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponentity)
 {
@@ -98,13 +98,13 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 	{
 		spreadSpectrumMin = WEP_CVAR(machinegun, spread_min);
 		spreadSpectrumMax = WEP_CVAR(machinegun, spread_max);
-		inversedSpread = false;
+		//inversedSpread = false;
 	}
 	else
 	{
 		spreadSpectrumMin = WEP_CVAR(machinegun, spread_max);
 		spreadSpectrumMax = WEP_CVAR(machinegun, spread_min);
-		inversedSpread = true;
+		//inversedSpread = true;
 	}
 	spreadSpectrumDistance = spreadSpectrumMax - spreadSpectrumMin;
 
@@ -251,13 +251,13 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
 				{
 					spreadSpectrumMin = WEP_CVAR(machinegun, spread_min);
 					spreadSpectrumMax = WEP_CVAR(machinegun, spread_max);
-					inversedSpread = false;
+					//inversedSpread = false;
 				}
 				else
 				{
 					spreadSpectrumMin = WEP_CVAR(machinegun, spread_max);
 					spreadSpectrumMax = WEP_CVAR(machinegun, spread_min);
-					inversedSpread = true;
+					//inversedSpread = true;
 				}
 				spreadSpectrumDistance = spreadSpectrumMax - spreadSpectrumMin;
 
