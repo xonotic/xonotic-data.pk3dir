@@ -3,12 +3,77 @@
 #ifdef SVQC
 
 .float machinegun_spread_accumulation;
-.float lastShotTime;
+.float spreadUpdateTime;
 
 float spreadSpectrumMin;
 float spreadSpectrumMax;
-float spreadSpectrumDistance;
-//bool inversedSpread;
+//float spreadSpectrumDistance; // localized to MachineGun_Heat()
+//bool inversedSpread; // unused for now
+
+#define MACHINEGUN_UPDATE_SPREAD MACRO_BEGIN                                            \
+/* check if max is lower or higher than min so it can be used invertedly, */            \
+/* accurate with more firing, like Hyperion weapons from Borderlands      */            \
+if (WEP_CVAR(machinegun, spread_max) > WEP_CVAR(machinegun, spread_min))                \
+{                                                                                       \
+    spreadSpectrumMin = WEP_CVAR(machinegun, spread_min);                               \
+    spreadSpectrumMax = WEP_CVAR(machinegun, spread_max);                               \
+    /*inversedSpread = false;*/                                                         \
+}                                                                                       \
+else                                                                                    \
+{                                                                                       \
+    spreadSpectrumMin = WEP_CVAR(machinegun, spread_max);                               \
+    spreadSpectrumMax = WEP_CVAR(machinegun, spread_min);                               \
+    /*inversedSpread = true;*/                                                          \
+}                                                                                       \
+                                                                                        \
+float spread_acc = actor.(weaponentity).machinegun_spread_accumulation;                 \
+                                                                                        \
+/* time based spread decay */                                                           \
+if (WEP_CVAR(machinegun, spread_decay))                                                 \
+{                                                                                       \
+    float timediff = time - actor.(weaponentity).spreadUpdateTime;                      \
+    spread_acc = bound(spreadSpectrumMin,                                               \
+        spread_acc - (timediff * WEP_CVAR(machinegun, spread_decay)),                   \
+        spreadSpectrumMax);                                                             \
+}                                                                                       \
+else /* legacy behavior for Nexuiz weapon balance */                                    \
+{                                                                                       \
+    spread_acc = bound(WEP_CVAR(machinegun, spread_min),                                \
+        (WEP_CVAR(machinegun, spread_add) * actor.(weaponentity).misc_bulletcounter),   \
+        WEP_CVAR(machinegun, spread_max));                                              \
+}                                                                                       \
+actor.(weaponentity).machinegun_spread_accumulation = spread_acc;                       \
+actor.(weaponentity).spreadUpdateTime = time;                                           \
+MACRO_END
+
+float MachineGun_Heat(float spread_acc)
+{
+	// function for reducing mg's damage with no spread and adding damage with
+	// heated up barrel or vice versa depending on the values of exposed cvars
+	float heatMultiplierApplicationPercent = 1;
+	float coldMultiplierApplicationPercent = 1;
+
+	float spreadSpectrumDistance = spreadSpectrumMax - spreadSpectrumMin;
+
+	if (spreadSpectrumDistance > 0) //avoid division by 0, can never be < 0 either due to how it is set when defined
+	{
+		heatMultiplierApplicationPercent = spread_acc / spreadSpectrumDistance;
+		coldMultiplierApplicationPercent = 1 - heatMultiplierApplicationPercent;
+	}
+
+	// example where low end has halved damage and high end has tripled damage:
+	// with 50% spread accumulation: heat = (0.5 * 0.5) + (0.5 * 3) = 0.25 + 1.5 = 1.75 damage multiplier
+	// with 90% spread accumulation: heat = (0.1 * 0.5) + (0.9 * 3) = 0.05 + 2.7 = 2.75 damage multiplier
+	float heat = (coldMultiplierApplicationPercent * WEP_CVAR(machinegun, spread_cold_damagemultiplier))
+	           + (heatMultiplierApplicationPercent * WEP_CVAR(machinegun, spread_heat_damagemultiplier));
+
+	// avoid damage doubling from (1 * 1) + (1 * 1) = 2
+	// this also averages the 2 multipliers when spreadSpectrumDistance == 0
+	// so 0.5 cold to 4 heat would average out to 2.25 with no spectrum distance for spread
+	if (spreadSpectrumDistance == 0) heat = heat / 2;
+
+	return heat;
+}
 
 void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponentity)
 {
@@ -92,62 +157,10 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	// check if max is lower or higher than min so it can be used invertedly,
-	// accurate with more firing, like Hyperion weapons from Borderlands
-	if (WEP_CVAR(machinegun, spread_max) > WEP_CVAR(machinegun, spread_min))
-	{
-		spreadSpectrumMin = WEP_CVAR(machinegun, spread_min);
-		spreadSpectrumMax = WEP_CVAR(machinegun, spread_max);
-		//inversedSpread = false;
-	}
-	else
-	{
-		spreadSpectrumMin = WEP_CVAR(machinegun, spread_max);
-		spreadSpectrumMax = WEP_CVAR(machinegun, spread_min);
-		//inversedSpread = true;
-	}
-	spreadSpectrumDistance = spreadSpectrumMax - spreadSpectrumMin;
+	MACHINEGUN_UPDATE_SPREAD;
 
 	float spread_acc = actor.(weaponentity).machinegun_spread_accumulation;
-
-	// time based spread decay
-	if (WEP_CVAR(machinegun, spread_decay))
-	{
-		float timediff = time - actor.(weaponentity).lastShotTime;
-		spread_acc = bound(spreadSpectrumMin,
-		                   spread_acc - (timediff * WEP_CVAR(machinegun, spread_decay)),
-		                   spreadSpectrumMax);
-	}
-	else // legacy behavior for Nexuiz weapon balance
-	{
-		spread_acc = bound(WEP_CVAR(machinegun, spread_min),
-		                  (WEP_CVAR(machinegun, spread_add) * actor.(weaponentity).misc_bulletcounter),
-		                   WEP_CVAR(machinegun, spread_max));
-	}
-
-	actor.(weaponentity).lastShotTime = time;
-
-	// function for reducing mg's damage with no spread and adding damage with
-	// heated up barrel or vice versa depending on the values of exposed cvars
-	float heatMultiplierApplicationPercent = 1;
-	float coldMultiplierApplicationPercent = 1;
-
-	if (spreadSpectrumDistance > 0) //avoid division by 0, can never be < 0 either due to how it is set when defined
-	{
-		heatMultiplierApplicationPercent = spread_acc / spreadSpectrumDistance;
-		coldMultiplierApplicationPercent = 1 - heatMultiplierApplicationPercent;
-	}
-
-	// example where low end has halved damage and high end has tripled damage:
-	// with 50% spread accumulation: heat = (0.5 * 0.5) + (0.5 * 3) = 0.25 + 1.5 = 1.75 damage multiplier
-	// with 90% spread accumulation: heat = (0.1 * 0.5) + (0.9 * 3) = 0.05 + 2.7 = 2.75 damage multiplier
-	float heat = (coldMultiplierApplicationPercent * WEP_CVAR(machinegun, spread_cold_damagemultiplier))
-	           + (heatMultiplierApplicationPercent * WEP_CVAR(machinegun, spread_heat_damagemultiplier));
-
-	// avoid damage doubling from (1 * 1) + (1 * 1) = 2
-	// this also averages the 2 multipliers when spreadSpectrumDistance == 0
-	// so 0.5 cold to 4 heat would average out to 2.25 with no spectrum distance for spread
-	if (spreadSpectrumDistance == 0) heat = heat / 2;
+	float heat = MachineGun_Heat(spread_acc);
 
 	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, spread_acc,
 	           WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage) * heat,
@@ -241,25 +254,7 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
 		{
 			if(WEP_CVAR(machinegun, spread_decay) != 0)
 			{
-				// update spread accumulation
-				actor.(weaponentity).machinegun_spread_accumulation = max(actor.(weaponentity).machinegun_spread_accumulation - ((time - actor.(weaponentity).lastShotTime) * WEP_CVAR(machinegun, spread_decay)), 0);
-				actor.(weaponentity).lastShotTime = time;
-
-				// check if max is lower or higher than min so it can be used invertedly,
-				// accurate with more firing, like Hyperion weapons from Borderlands
-				if (WEP_CVAR(machinegun, spread_max) > WEP_CVAR(machinegun, spread_min))
-				{
-					spreadSpectrumMin = WEP_CVAR(machinegun, spread_min);
-					spreadSpectrumMax = WEP_CVAR(machinegun, spread_max);
-					//inversedSpread = false;
-				}
-				else
-				{
-					spreadSpectrumMin = WEP_CVAR(machinegun, spread_max);
-					spreadSpectrumMax = WEP_CVAR(machinegun, spread_min);
-					//inversedSpread = true;
-				}
-				spreadSpectrumDistance = spreadSpectrumMax - spreadSpectrumMin;
+				MACHINEGUN_UPDATE_SPREAD;
 
 				// block alt fire if spread accumulation is >50%
 				if(actor.(weaponentity).machinegun_spread_accumulation > (spreadSpectrumMax + spreadSpectrumMin) / 2)
