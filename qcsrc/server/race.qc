@@ -526,11 +526,14 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 
 		if(tvalid)
 		{
-			float myrecordtime = e.race_checkpoint_record[cp];
-			if (autocvar_g_race_cptimes_onlyself) {
-				recordtime = myrecordtime;
+			if (autocvar_g_race_cptimes_onlyself)
+			{
+				// return their own checkpoint time
+				recordtime = e.race_checkpoint_record[cp];
 				recordholder = "";
-			} else {
+			}
+			else
+			{
 				recordtime = race_checkpoint_records[cp];
 				// make a tempstring copy, as we'll possibly strunzone it
 				recordholder = strcat(race_checkpoint_recordholders[cp]);
@@ -538,6 +541,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 				if(recordholder == e.netname)
 					recordholder = "";
 			}
+
 			if(t != 0)
 			{
 				if(cp == race_timed_checkpoint)
@@ -545,8 +549,6 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 					race_setTime(GetMapname(), t, e.crypto_idfp, e.netname, e, true);
 					MUTATOR_CALLHOOK(Race_FinalCheckpoint, e);
 				}
-				if(t < myrecordtime || myrecordtime == 0)
-					e.race_checkpoint_record[cp] = t; // resending done below
 
 				if(t < recordtime || recordtime == 0)
 				{
@@ -585,6 +587,14 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 					}
 				});
 			}
+		}
+		// check if new pb should be set for a checkpoint
+		if(tvalid)
+		{
+			float myrecordtime = e.race_checkpoint_record[cp];
+			if(t != 0)
+				if(t < myrecordtime || myrecordtime == 0)
+					e.race_checkpoint_record[cp] = t;
 		}
 	}
 	else // RACE! Not Qualifying
