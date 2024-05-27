@@ -21,9 +21,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-26 07:22+0200\n"
+"POT-Creation-Date: 2024-05-27 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2024\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -161,7 +161,7 @@ msgstr "informations serveur"
 #: qcsrc/client/hud/panel/infomessages.qc:133
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr ""
+msgstr "^2Vous êtes en file d'attente pour rejoindre l'équipe %s%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #, c-format
@@ -3324,12 +3324,12 @@ msgstr "^BG%s^F3 joue maintenant dans l'équipe ^TC^TT"
 #: qcsrc/common/notifications/all.inc:395
 #, c-format
 msgid "^BG%s^F3 wants to play on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 souhaite jouer dans l'équipe ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:396
 #, c-format
 msgid "^BG%s^F3 wants to play"
-msgstr ""
+msgstr "^BG%s^F3 souhaite jouer"
 
 #: qcsrc/common/notifications/all.inc:398
 #: qcsrc/common/notifications/all.inc:728
@@ -3455,11 +3455,14 @@ msgstr ""
 #, c-format
 msgid "^BG%s^F3 has left the queue after idling for %s seconds"
 msgstr ""
+"^BG%s^F3 a quitté la file d'attente après une inactivité de %s secondes"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 for balance reasons"
 msgstr ""
+"^BG%s^F3 a été déplacé vers les^BG spectateurs^F3 pour des raisons "
+"d'équilibre"
 
 #: qcsrc/common/notifications/all.inc:431
 msgid ""
@@ -3489,7 +3492,7 @@ msgstr "^BG%s^F3 est maintenant^BG spectateur"
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
 msgid "^BG%s^F3 has left the queue"
-msgstr ""
+msgstr "^BG%s^F3 a quitté la file d'attente"
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
@@ -4501,6 +4504,8 @@ msgid ""
 "^K1Teams unbalanced!\n"
 "^BGMoving %s^BG to spectators in ^COUNT..."
 msgstr ""
+"^K1Équipes déséquilibrées !\n"
+"^BGDéplacement de %s^BG vers les spectateurs dans ^COUNT…"
 
 #: qcsrc/common/notifications/all.inc:687
 #, c-format
@@ -4596,15 +4601,15 @@ msgstr "^K1Impossible de rejoindre cette session de mini jeux !"
 
 #: qcsrc/common/notifications/all.inc:724
 msgid "^BGYou are now queued to join the game."
-msgstr ""
+msgstr "^BGVous êtes maintenant en file d'attente pour rejoindre la partie."
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou are now queued to join on ^TC^TT^BG team."
-msgstr ""
+msgstr "^BGVous êtes maintenant en file d'attente dans l'équipe ^TC^TT^BG."
 
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
-msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^BG first."
+msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:730

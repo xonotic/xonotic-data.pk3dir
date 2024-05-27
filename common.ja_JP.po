@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-26 07:22+0200\n"
+"POT-Creation-Date: 2024-05-27 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021,2024\n"
 "Language-Team: Japanese (Japan) (http://app.transifex.com/team-xonotic/"
@@ -4507,7 +4507,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
-msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^BG first."
+msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:730

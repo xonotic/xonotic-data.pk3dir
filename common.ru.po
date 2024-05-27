@@ -24,9 +24,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-26 07:22+0200\n"
+"POT-Creation-Date: 2024-05-27 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артём Котлубай, 2022\n"
+"Last-Translator: Andrei Stepanov, 2014-2024\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -162,7 +162,7 @@ msgstr "сведения о сервере"
 #: qcsrc/client/hud/panel/infomessages.qc:133
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr ""
+msgstr "^2Вы поставлены в очередь для присоединения к команде %s%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #, c-format
@@ -3292,12 +3292,12 @@ msgstr "^BG%s^F3 теперь играет в команде ^TC^TT"
 #: qcsrc/common/notifications/all.inc:395
 #, c-format
 msgid "^BG%s^F3 wants to play on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 хочет играть в команде ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:396
 #, c-format
 msgid "^BG%s^F3 wants to play"
-msgstr ""
+msgstr "^BG%s^F3 хочет играть"
 
 #: qcsrc/common/notifications/all.inc:398
 #: qcsrc/common/notifications/all.inc:728
@@ -3421,12 +3421,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 has left the queue after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 покинул очередь из-за бездействия в течении %s секунд"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 for balance reasons"
-msgstr ""
+msgstr "^BG%s^F3 был перемещён к^BG зрителям^F3 с целью баланса"
 
 #: qcsrc/common/notifications/all.inc:431
 msgid ""
@@ -3456,7 +3456,7 @@ msgstr "^BG%s^F3 теперь^BG зритель"
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
 msgid "^BG%s^F3 has left the queue"
-msgstr ""
+msgstr "^BG%s^F3 покинул очередь"
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
@@ -4444,6 +4444,8 @@ msgid ""
 "^K1Teams unbalanced!\n"
 "^BGMoving %s^BG to spectators in ^COUNT..."
 msgstr ""
+"^K1Команды не равны!\n"
+"^BGПеремещение %s^BG к зрителям через ^COUNT…"
 
 #: qcsrc/common/notifications/all.inc:687
 #, c-format
@@ -4539,15 +4541,15 @@ msgstr "^K1Невозможно присоединиться к данной с�
 
 #: qcsrc/common/notifications/all.inc:724
 msgid "^BGYou are now queued to join the game."
-msgstr ""
+msgstr "^BGВы теперь в очереди для присоединения к игре."
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou are now queued to join on ^TC^TT^BG team."
-msgstr ""
+msgstr "^BGВы теперь в очереди для присоединения к команде ^TC^TT^BG."
 
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
-msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^BG first."
+msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:730
