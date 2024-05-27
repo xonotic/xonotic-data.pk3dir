@@ -44,6 +44,9 @@ vector minigame_hud_denormalize_size(vector v, vector pos, vector mySize);
 // Check if the mouse is inside the given area
 bool minigame_hud_mouse_in(vector pos, vector sz);
 
+// show spectator list above the board
+void minigame_show_allspecs(vector boardpos, vector boardsize);
+
 // Like drawstring, but wrapping words to fit maxwidth
 // returns the size of the drawn area
 // align selects the string alignment (0 = left, 0.5 = center, 1 = right)

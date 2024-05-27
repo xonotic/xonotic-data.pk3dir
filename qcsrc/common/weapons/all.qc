@@ -285,7 +285,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
 	return vecs;
 }
 
-vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn)
+vector shotorg_adjust(vector vecs, bool y_is_right, bool visual, int algn)
 {
 	string s;
 	if (visual)
@@ -317,7 +317,6 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
 	return vecs;
 }
 
-#define shotorg_adjust shotorg_adjust_values
 
 /**
  * supported formats:

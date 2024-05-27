@@ -431,6 +431,8 @@ void ps_hud_board(vector pos, vector mySize)
 			strcat(_("Game over!"), " ", remaining_text),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
+
+	minigame_show_allspecs(ps_boardpos, ps_boardsize);
 }
 
 

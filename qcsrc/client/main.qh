@@ -30,6 +30,7 @@ string minimapname;
 
 bool postinit;
 entity gametype;
+string gametype_custom_name;
 // temporary hack
 #define ISGAMETYPE(NAME) (gametype == MAPINFO_TYPE_##NAME)
 

@@ -323,6 +323,12 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_global)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(surv, MatchEnd_BeforeScores)
+{
+	MatchEnd_RestoreSpectatorStatus();
+	return true;
+}
+
 entity surv_LastPlayerForTeam(entity this)
 {
 	entity last_pl = NULL;

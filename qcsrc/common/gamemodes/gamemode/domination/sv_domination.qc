@@ -297,9 +297,9 @@ void dom_controlpoint_setup(entity this)
 	if(!this.flags & FL_ITEM)
 		IL_PUSH(g_items, this);
 	this.flags = FL_ITEM;
-	setsize(this, '-32 -32 -32', '32 32 32');
+	setsize(this, '-48 -48 -32', '48 48 32'); // 0.8.6 used '-32 -32 -32', '32 32 32' with sv_legacy_bbox_expand 1 and FL_ITEM
 	setorigin(this, this.origin + '0 0 20');
-	droptofloor(this);
+	DropToFloor_QC_DelayedInit(this);
 
 	waypoint_spawnforitem(this);
 	WaypointSprite_SpawnFixed(WP_DomNeut, this.origin + '0 0 32', this, sprite, RADARICON_DOMPOINT);
@@ -485,6 +485,23 @@ spawnfunc(dom_controlpoint)
 		this.effects |= EF_FULLBRIGHT;
 
 	IL_PUSH(g_dompoints, this);
+}
+
+	// Quake Live CP
+/*QUAKED team_dom_point (0 .2 1) (-16 -16 0) (16 16 88)
+Domination capture point.
+-------- KEYS --------
+identifier : Set to 1, 2, or 3 to match to point 'A', 'B', or 'C'.
+count : Adjust the range of the capture point (in units, eg: 64, 128... etc).
+target : Target name for multiple info_player_deathmatch entities (to allow spawning near that particular dom point).
+-------- NOTES --------
+Do not assign a 'gametype' key to this item. It is used in all four team game types. The game will call for it as needed.
+-------- MODEL FOR RADIANT ONLY - DO NOT SET THIS AS A KEY --------
+model="models/powerups/domination/dompoint.md3"
+*/
+spawnfunc(team_dom_point)
+{
+	spawnfunc_dom_controlpoint(this);
 }
 
 /*QUAKED spawnfunc_dom_team (0 .5 .8) (-32 -32 -24) (32 32 32)

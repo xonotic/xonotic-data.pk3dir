@@ -185,12 +185,13 @@ mkdir -p data/maps
 createdtoday "data/maps/_init.bsp" \
 	|| wget -nv -O data/maps/_init.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
 
+PASS=0
 while read -r LINE
 do
 	printf "%s\n" "$LINE"
-	[ "$LINE" = "All tests OK" ] && PASS=1
+	printf "%s\n" "$LINE" | grep -q ".*All tests OK$" && PASS=1
 done < <(${ENGINE} +developer 1 +map _init +sv_cmd runtest +wait +quit)
-test "$PASS" = "1" || { printf 'sv_cmd runtest failed!'; exit 1; }
+test "$PASS" = "1" || { printf "\033[1;31m%s\033[0m\n" "sv_cmd runtest failed!"; exit 1; }
 
 ${ENGINE} +map _init +sv_cmd dumpnotifs +wait +quit
 diff notifications.cfg data/data/notifications_dump.cfg ||
@@ -228,8 +229,8 @@ then # green ok print
 	printf "\033[32m%s\033[0m\n" "hashes match"
 	exit 0
 else # red error print
-	printf "\033[32m%s\033[0m\n" "expected: $EXPECT"
-	printf "\033[32m%s\033[0m\n" "  actual: $HASH"
-	printf "\033[31m%s\033[0m\n" "!!! ERROR: HASHES DO NOT MATCH !!!"
+	printf "\033[31m%s\033[0m\n" "expected: $EXPECT"
+	printf "\033[31m%s\033[0m\n" "  actual: $HASH"
+	printf "\033[1;31m%s\033[0m\n" "!!! ERROR: HASHES DO NOT MATCH !!!"
 	exit 1
 fi

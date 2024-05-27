@@ -359,7 +359,7 @@ void ClientCommand_join(entity caller, int request)
 			if (!game_stopped && IS_CLIENT(caller) && !IS_PLAYER(caller))
 			{
 				if (joinAllowed(caller))
-					Join(caller);
+					Join(caller, true);
 				else if(time < CS(caller).jointime + MIN_SPEC_TIME)
 					CS(caller).autojoin_checked = -1;
 			}
@@ -583,12 +583,9 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			if (team_num)
 				ClientKill_TeamChange(caller, team_num);
 			else // auto
-				ClientKill_TeamChange(caller, -1);
+				if (!queuePlayer(caller, 0)) // the queue uses deferred autoselect
+					ClientKill_TeamChange(caller, -1);
 
-			if (!IS_PLAYER(caller))
-			{
-				caller.team_selected = true; // avoids asking again for team selection on join
-			}
 			return;
 		}
 		default:
@@ -694,7 +691,7 @@ void ClientCommand_spectate(entity caller, int request)
 
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN) return;
 
-				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE))
+				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE || caller.wants_join))
 				if (autocvar_sv_spectate == 1)
 					ClientKill_TeamChange(caller, -2); // observe
 			}
@@ -1025,6 +1022,19 @@ void SV_ParseClientCommand(entity this, string command)
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
 		case "say": case "say_team": case "tell": break;   // chat has its own flood control in chat.qc
+		case "minigame":                                   // flood control only for common commands
+			string arg = argv(1);
+			if (arg == "")
+				goto flood_control;
+			for (int i = 0; i < MINIGAME_COMMON_CMD_COUNT; ++i)
+			{
+				if (MINIGAME_COMMON_CMD[i] == arg)
+					goto flood_control;
+			}
+			// if we get here we haven't found any common command, so no flood control for other commands
+			// individual minigame commands shouldn't be limited for gameplay reasons
+			// FIXME unknown/wrong minigame commands have no flood control
+			break;
 		case "color": case "topcolor": case "bottomcolor": // handled by engine in host_cmd.c
 			if(!IS_CLIENT(this)) // on connection
 			{
@@ -1041,6 +1051,7 @@ void SV_ParseClientCommand(entity this, string command)
 			if(!IS_CLIENT(this)) break;
 			// else fall through to default: flood control
 		default:
+			LABEL(flood_control)
 			if (!timeout_status)  // not while paused
 			{
 				entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially

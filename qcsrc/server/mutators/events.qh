@@ -146,6 +146,9 @@ MUTATOR_HOOKABLE(ItemSound, EV_ItemSound);
     /**/
 MUTATOR_HOOKABLE(GiveFragsForKill, EV_GiveFragsForKill);
 
+/** called when the match ends, before recording scores */
+MUTATOR_HOOKABLE(MatchEnd_BeforeScores, EV_NO_ARGS);
+
 /** called when the match ends */
 MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
 

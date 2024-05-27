@@ -268,9 +268,11 @@ NET_HANDLE(damagetext, bool isNew)
 		// disown the parent entity from this DamageText
 		// and (likely) give the entity a new DT afterwards
 		// this should only cancel damage accumulation for this DT
-		if ((autocvar_cl_damagetext_accumulate_lifetime >= 0) // negative never disowns
-		&& (time - it.hit_time > autocvar_cl_damagetext_accumulate_lifetime)
-		&& (current_alpha(it) > alphathreshold))
+
+		if (flags & DTFLAG_STOP_ACCUMULATION
+			|| ((autocvar_cl_damagetext_accumulate_lifetime >= 0) // negative never disowns
+				&& (time - it.hit_time > autocvar_cl_damagetext_accumulate_lifetime)
+				&& (current_alpha(it) > alphathreshold)))
 		{
 			it.m_group = 0;
 		}

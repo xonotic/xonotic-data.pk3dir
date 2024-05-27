@@ -374,6 +374,8 @@ void pp_hud_board(vector pos, vector mySize)
 			sprintf(_("%s^7 won the game!"), pname),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
+
+	minigame_show_allspecs(pp_boardpos, pp_boardsize);
 }
 
 

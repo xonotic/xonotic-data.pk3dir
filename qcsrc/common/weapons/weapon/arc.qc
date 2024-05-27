@@ -721,10 +721,11 @@ METHOD(Arc, wr_init, void(entity thiswep))
 {
     if(!arc_shotorigin[0])
     {
-        arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 1);
-        arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 2);
-        arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 3);
-        arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 4);
+    	vector vecs = CL_Weapon_GetShotOrg(WEP_ARC.m_id);
+        arc_shotorigin[0] = shotorg_adjust(vecs, false, false, 1);
+        arc_shotorigin[1] = shotorg_adjust(vecs, false, false, 2);
+        arc_shotorigin[2] = shotorg_adjust(vecs, false, false, 3);
+        arc_shotorigin[3] = shotorg_adjust(vecs, false, false, 4);
     }
 }
 METHOD(Arc, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
