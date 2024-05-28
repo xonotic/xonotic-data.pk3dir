@@ -4550,7 +4550,7 @@ msgstr "^BGВы теперь в очереди для присоединения
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "^K2Пожалуйста, выберите другую команду! %s^K2 выбрал ^TC^TT^K2 первым."
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYou picked up the ball"

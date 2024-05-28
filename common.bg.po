@@ -13,13 +13,14 @@
 # ubone <van_ds_ff@mail.bg>, 2016
 # set_killer <mettall@abv.bg>, 2014
 # ubone <van_ds_ff@mail.bg>, 2016
+# С Станев, 2024
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-27 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: ubone <van_ds_ff@mail.bg>, 2016\n"
+"Last-Translator: С Станев, 2024\n"
 "Language-Team: Bulgarian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/bg/)\n"
 "Language: bg\n"
@@ -210,7 +211,7 @@ msgstr "Броят на играчите е небалансиран"
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr "Натиснете ^3%s%s за да нагласите"
+msgstr "Натиснете ^3%s%s, за да нагласите"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #: qcsrc/menu/xonotic/keybinder.qc:117
@@ -297,7 +298,7 @@ msgstr "QMCMD^здрасти / пожелавам ти късмет и се за
 
 #: qcsrc/client/hud/panel/quickmenu.qc:826
 msgid "QMCMD^Send in English"
-msgstr "QMCMD^Изпрати на Английски"
+msgstr "QMCMD^Изпрати на aнглийски"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 #: qcsrc/client/hud/panel/quickmenu.qc:847
@@ -568,15 +569,15 @@ msgstr "НАКАЗАНИЕ: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1263
 msgid "missing a checkpoint"
-msgstr "пропуснат чекпойнт"
+msgstr "пропусната проверочна точка"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
-msgstr "Цъкни за да избереш дестинация за телепортиране"
+msgstr "Цъкни, за да избереш цел за телепортиране"
 
 #: qcsrc/client/hud/panel/radar.qc:343
 msgid "Click to select spawn location"
-msgstr "Цъкни за да избереш място за прераждане"
+msgstr "Цъкни, за да избереш място на прераждане"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Number of ball carrier kills"
@@ -624,7 +625,7 @@ msgstr "Брой на унищожени ключове, избутани в б�
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^destructions"
-msgstr ""
+msgstr "SCO^разрушения"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^damage dealt"
@@ -636,7 +637,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^damage taken"
-msgstr ""
+msgstr "SCO^поета щета"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "The total damage taken"
@@ -700,11 +701,11 @@ msgstr "SCO^фрагове"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of generators destroyed"
-msgstr ""
+msgstr "Брой унищожени генератори"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^generators"
-msgstr ""
+msgstr "SCO^генератора"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Number of goals scored"
@@ -774,7 +775,7 @@ msgstr "SCO^животи"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "Number of times a key was lost"
-msgstr "Колко пъти ключа е бил изгубен"
+msgstr "Брой загуби на ключа"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "SCO^losses"
@@ -813,7 +814,7 @@ msgstr "SCO^задигания"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "Ping time"
-msgstr "Пинг време"
+msgstr "Време за пинг"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^ping"
@@ -869,11 +870,11 @@ msgstr "SCO^спечелени рундове"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "Number of rounds played"
-msgstr ""
+msgstr "Брой изиграни кръгове"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "SCO^rounds played"
-msgstr "SCO^играти рундове"
+msgstr "SCO^изиграни кръгове"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:178
 msgid "SCO^score"
@@ -1084,7 +1085,7 @@ msgstr "Избор на отбор"
 #: qcsrc/client/hud/panel/scoreboard.qc:2436
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
-msgstr ""
+msgstr "^7Натиснете ^3%s^7, за да се включите в избрания отбор"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2438
 #, c-format
@@ -1094,7 +1095,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2442
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
-msgstr ""
+msgstr "^7Натиснете ^3%s ^7, за да изберете определен отбор"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2453
 #, c-format
@@ -1104,7 +1105,7 @@ msgstr "^3%1.0f минути"
 #: qcsrc/client/hud/panel/scoreboard.qc:2480
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7/^5%d ^7играча"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2481 qcsrc/client/main.qc:1461
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
@@ -1166,15 +1167,15 @@ msgstr "Загрявка: твърде малко играчи"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "Загрявка: неограничено време"
 
 #: qcsrc/client/hud/panel/timer.qc:137
 msgid "Timeout"
-msgstr "Таймаут"
+msgstr "Изтичане на времето"
 
 #: qcsrc/client/hud/panel/timer.qc:139
 msgid "Sudden Death"
-msgstr "Внезапна Смърт"
+msgstr "Внезапна смърт"
 
 #: qcsrc/client/hud/panel/timer.qc:141
 msgid "Overtime"
@@ -1187,8 +1188,7 @@ msgstr "Допълнително време #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
-msgstr ""
-"^1Трябва да отговорите преди да влезнете в режим за конфигуриране на HUD"
+msgstr "^1Трябва да отговорите, преди да влезете в режим за настройка на HUD"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1196,15 +1196,15 @@ msgstr "^2Име ^7вместо \"^1Анонимен играч^7\" в стат�
 
 #: qcsrc/client/hud/panel/vote.qc:119
 msgid "A vote has been called for:"
-msgstr "Бе започнато гласуване за:"
+msgstr "Започнало е гласуване за:"
 
 #: qcsrc/client/hud/panel/vote.qc:121
 msgid "Allow servers to store and display your name?"
-msgstr "Позволявате ли сървърите да пазят и показват вашето име?"
+msgstr "Позволявате ли сървърите да пазят и показват име ви?"
 
 #: qcsrc/client/hud/panel/vote.qc:125
 msgid "^1Configure the HUD"
-msgstr "^1Конфигуриране на HUD"
+msgstr "^1Настройка на HUD"
 
 #: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
@@ -1230,7 +1230,7 @@ msgstr "Не"
 
 #: qcsrc/client/hud/panel/weapons.qc:629
 msgid "Out of ammo"
-msgstr "Мунициите свършиха"
+msgstr "Боеприпасите свършиха"
 
 #: qcsrc/client/hud/panel/weapons.qc:633
 msgid "Don't have"
@@ -1238,7 +1238,7 @@ msgstr "Нямам"
 
 #: qcsrc/client/hud/panel/weapons.qc:637
 msgid "Unavailable"
-msgstr "Не е на разположение"
+msgstr "Не е налично"
 
 #: qcsrc/client/main.qc:305
 msgid "Trying to remove a team which is not in the teamlist!"
@@ -1247,7 +1247,7 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1165 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
-msgstr "qu/s"
+msgstr ""
 
 #: qcsrc/client/main.qc:1166 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
@@ -1273,7 +1273,7 @@ msgstr "Арена с всички оръжия"
 #: qcsrc/client/main.qc:1381
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
-msgstr "Арена с Всички Оръжия"
+msgstr "Арена с всички налични оръжия"
 
 #: qcsrc/client/main.qc:1382
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
@@ -1283,12 +1283,12 @@ msgstr "Арена с повечето оръжия"
 #: qcsrc/client/main.qc:1383
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
-msgstr "Арена с Повечето Оръжия"
+msgstr "Арена с повечето от наличните оръжия"
 
 #: qcsrc/client/main.qc:1386 qcsrc/client/main.qc:1400
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
-msgstr "Арена Без Оръжия"
+msgstr "Арена без оръжия"
 
 #: qcsrc/client/main.qc:1398
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
@@ -1303,7 +1303,7 @@ msgstr "Това е %s"
 
 #: qcsrc/client/main.qc:1410
 msgid "Your client version is outdated."
-msgstr "Вашата версия е стара."
+msgstr "Версия на приложението ви е стара."
 
 #: qcsrc/client/main.qc:1411
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
@@ -1319,8 +1319,7 @@ msgstr "Този сървър използва стара версия на Xono
 
 #: qcsrc/client/main.qc:1416
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
-msgstr ""
-"### ТОЗИ СЪРВЪР Е НЕСЪВМЕСТИМ И СЛЕДОВАТЕЛНО НЕ МОЖЕ ДА СЕ ПРИСЪЕДИНИТЕ ###"
+msgstr "### ТОЗИ СЪРВЪР Е НЕСЪВМЕСТИМ И ЗАТОВА НЕ МОЖЕ ДА СЕ ПРИСЪЕДИНИТЕ ###"
 
 #: qcsrc/client/main.qc:1418
 #, c-format
@@ -1335,20 +1334,20 @@ msgstr "Ниво %d:"
 #: qcsrc/client/main.qc:1436
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
-msgstr ""
+msgstr "^BGНатиснете ^F2%s^BG за влизане в играта"
 
 #: qcsrc/client/main.qc:1459
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
-msgstr "Режим на игра:"
+msgstr "Вид игра:"
 
 #: qcsrc/client/main.qc:1463
 msgid "by:"
-msgstr ""
+msgstr "от:"
 
 #: qcsrc/client/main.qc:1467
 msgid "This match supports"
-msgstr "Този мач поддържа"
+msgstr "Тази игра поддържа"
 
 #: qcsrc/client/main.qc:1469
 #, c-format
@@ -1376,11 +1375,11 @@ msgstr "Активни модификации:"
 
 #: qcsrc/client/main.qc:1483
 msgid "Special gameplay tips:"
-msgstr "Специални игрални съвети:"
+msgstr "Специални съвети за игра:"
 
 #: qcsrc/client/main.qc:1490
 msgid "Server's message"
-msgstr ""
+msgstr "Съобщение от сървъра"
 
 #: qcsrc/client/main.qc:1584
 #, c-format
@@ -1424,7 +1423,7 @@ msgstr "^1Грешка:^7 Не може да намери индекс."
 
 #: qcsrc/client/mapvoting.qc:578
 msgid "Requesting preview..."
-msgstr "Изискване на преглед..."
+msgstr "Заявяване на преглед..."
 
 #: qcsrc/client/view.qc:903
 msgid "Nade timer"
@@ -1444,7 +1443,7 @@ msgstr "грешка при създаването на curl манипулат�
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid "Assault"
-msgstr "Assault"
+msgstr "Нападение"
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid ""
@@ -1468,7 +1467,7 @@ msgstr "Максимум точки:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
-msgstr "Clan Arena"
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Kill all enemy teammates to win the round"
@@ -1477,12 +1476,12 @@ msgstr "Убий всички противници, за да спечелиш �
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr ""
+msgstr "Брой кръговете:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "The amount of rounds won needed before the match will end"
-msgstr ""
+msgstr "Брой спечелени кръгове, нужни за край на играта"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
@@ -1490,21 +1489,23 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid "Capture the Flag"
-msgstr "Capture the Flag"
+msgstr "Пленяване на знамето"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
+"Намерете и донесете вражеското знаме в базата си, опазете вашата от отбора "
+"на противника"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "Capture limit:"
-msgstr "Максимум хващания:"
+msgstr "Брой пленявания:"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr ""
+msgstr "Брой пленявания, нужни за край на играта"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
@@ -1513,7 +1514,7 @@ msgstr "Класиране"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
 msgid "Race CTS"
-msgstr "Race CTS"
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
 msgid "Race for fastest time."
@@ -1525,7 +1526,7 @@ msgstr "Deathmatch"
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Score as many frags as you can"
-msgstr ""
+msgstr "Отбележете възможно най-много убийства"
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Capture and defend all the control points to win"
@@ -1533,25 +1534,25 @@ msgstr "Превземи и защитавай всички контролни �
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Domination"
-msgstr "Domination"
+msgstr "Господство"
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:35
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr ""
+msgstr "Брой точки нужни за край на играта"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
-msgstr "Дуел"
+msgstr "Двубой"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
-msgstr ""
+msgstr "Бийте се един срещу друг на арената, за да определоте победителя"
 
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:15
 msgid "Freeze Tag"
-msgstr "Freeze Tag"
+msgstr "Замръзванка"
 
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:15
 msgid ""
@@ -1563,11 +1564,11 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Invasion"
-msgstr "Invasion"
+msgstr "Нашествие"
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Survive against waves of monsters"
-msgstr ""
+msgstr "Оцеляване срещу пълчища от чудовища"
 
 #: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
 msgid "Hold the ball to get points for kills"
@@ -1579,11 +1580,11 @@ msgstr "Keepaway"
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
 msgid "Gather all the keys to win the round"
-msgstr "Събери всички ключове, за да спечелиш рунда."
+msgstr "Събери всички ключове, за да спечелиш кръга"
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
 msgid "Key Hunt"
-msgstr "Key Hunt"
+msgstr "Лов на ключове"
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:18
 msgid "^1You have no more lives left"
@@ -1591,7 +1592,7 @@ msgstr "^1Нямате повече животи"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Last Man Standing"
-msgstr "Last Man Standing"
+msgstr "Последният оцелял"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Survive and kill until the enemies have no lives left"
@@ -1607,32 +1608,34 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
-msgstr ""
+msgstr "Пълна лудница"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "How much score is needed before the match will end"
-msgstr ""
+msgstr "Колко точки са нужни за край на играта"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
-msgstr "Nexball"
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
 msgstr ""
+"Стреляйте и ритайте топката в противниковата врата, докато опазвате вашата "
+"чиста"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr ""
+msgstr "Брой голове"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
-msgstr ""
+msgstr "Брой голове, нужни за край на играта"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:9
 msgid "Ball Stealer"
-msgstr "Крадеца на Топката"
+msgstr "Крадене на топката"
 
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
@@ -1642,7 +1645,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:8
 msgid "Onslaught"
-msgstr "Onslaught"
+msgstr "На нож"
 
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:96
 msgid "Personal best"
@@ -1654,7 +1657,7 @@ msgstr "Сървърно постижение"
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:11
 msgid "Race"
-msgstr "Race"
+msgstr "Състезание"
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:11
 msgid "Race against other players to the finish line"
@@ -1666,15 +1669,16 @@ msgstr "Обиколки:"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:63
 msgid "Hunter"
-msgstr ""
+msgstr "Ловец"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:69
 msgid "Survivor"
-msgstr ""
+msgstr "Плячка"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
 msgstr ""
+"Открийте и унищожете всички ловци, преди да са си отишли съюзниците ви."
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Survival"
@@ -1686,7 +1690,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Team Deathmatch"
-msgstr "Team Deathmatch"
+msgstr "Отборна игра на смъртта"
 
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
@@ -1704,28 +1708,28 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr ""
+msgstr "Отборна пълна лудница"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "Снаряди"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
-msgstr ""
+msgstr "Патрони"
 
 #: qcsrc/common/items/item/ammo.qh:124
 msgid "Rockets"
-msgstr ""
+msgstr "Ракети"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "Клетки"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
-msgstr ""
+msgstr "Плазма"
 
 #: qcsrc/common/items/item/armor.qh:40
 msgid "Small armor"
@@ -1793,11 +1797,11 @@ msgstr ""
 
 #: qcsrc/common/minigames/cl_minigames.qc:287
 msgid "Spectators:"
-msgstr ""
+msgstr "Зрители"
 
 #: qcsrc/common/minigames/cl_minigames.qc:424
 msgid "It's your turn"
-msgstr "Твой ред е."
+msgstr "Твой ред е"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:363
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:67 qcsrc/menu/xonotic/dialog_quit.qh:6
@@ -1814,7 +1818,7 @@ msgstr "Текуща Игра"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:431
 msgid "Exit Menu"
-msgstr "Излез от Менюто"
+msgstr "Излезане от менюто"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:442
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
@@ -1975,7 +1979,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/pong.qc:700
 msgid "Start Match"
-msgstr "Стартирай Мач"
+msgstr "Започване на играта"
 
 #: qcsrc/common/minigames/minigame/pong.qc:701
 msgid "Add AI player"
@@ -2009,7 +2013,7 @@ msgstr "Изчакай противника ти да потвърди рева�
 #: qcsrc/common/minigames/minigame/pp.qc:615
 #: qcsrc/common/minigames/minigame/ttt.qc:700
 msgid "Next Match"
-msgstr "Следващ Мач"
+msgstr "Следваща игра"
 
 #: qcsrc/common/minigames/minigame/ps.qc:2
 msgid "Peg Solitaire"
@@ -2046,7 +2050,7 @@ msgstr "Морски шах"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:701
 msgid "Single Player"
-msgstr "Солова Игра"
+msgstr "Самостоятелна игра"
 
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
@@ -2056,7 +2060,7 @@ msgstr ""
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
 msgid "Mage"
-msgstr "Mage"
+msgstr "Чародей"
 
 #: qcsrc/common/monsters/monster/mage.qh:29
 msgid "Mage spike"
@@ -2065,7 +2069,7 @@ msgstr ""
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
 msgid "Spider"
-msgstr "Spider"
+msgstr "Паяк"
 
 #: qcsrc/common/monsters/monster/spider.qh:28
 msgid "Spider attack"
@@ -2078,7 +2082,7 @@ msgstr ""
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
 msgid "Wyvern"
-msgstr "Wyvern"
+msgstr "Змей"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:28
 msgid "Wyvern attack"
@@ -2087,11 +2091,11 @@ msgstr ""
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
 msgid "Zombie"
-msgstr "Zombie"
+msgstr "Зомби"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:19
 msgid "Ammo"
-msgstr "Патрони"
+msgstr "Боеприпаси"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:30
 msgid "Resistance"

@@ -4611,6 +4611,7 @@ msgstr "^BGVous êtes maintenant en file d'attente dans l'équipe ^TC^TT^BG."
 #, c-format
 msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
 msgstr ""
+"^K2Veuillez choisir une autre équipe ! %s^K2 a choisi ^TC^TT^K2 en premier."
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYou picked up the ball"
