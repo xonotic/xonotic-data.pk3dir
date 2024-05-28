@@ -2411,6 +2411,9 @@ void Scoreboard_Draw()
 	string str;
 	vector str_pos;
 
+	if (scoreboard_ui_enabled)
+		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, '0 0 0', 0.7 * panel_fade_alpha, DRAWFLAG_NORMAL);
+
 	vector sb_gameinfo_type_fontsize, sb_gameinfo_detail_fontsize;
 
 	// Begin of Game Info Section
