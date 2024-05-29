@@ -696,9 +696,6 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 
 	if(newspectatee_status != spectatee_status)
 	{
-		// clear race stuff
-		race_laptime = 0;
-		race_checkpointtime = 0;
 		hud_dynamic_shake_factor = -1;
 		spectatee_status_changed_time = time;
 	}

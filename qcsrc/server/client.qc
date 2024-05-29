@@ -1879,8 +1879,26 @@ void SetSpectatee_status(entity this, int spectatee_num)
 			CS(this).pressedkeys = 0;
 			STAT(PRESSED_KEYS, this) = 0;
 		}
+
 		ClientData_Touch(this);
-		if (g_race || g_cts) race_InitSpectator();
+
+		// init or clear race data
+		if ((g_race || g_cts) && g_race_qualifying && IS_REAL_CLIENT(this))
+		{
+			msg_entity = this;
+
+			if (this.enemy && this.enemy.race_laptime)
+			{
+				// init
+				race_SendNextCheckpoint(this.enemy, 1);
+			}
+			else
+			{
+				// send reset to this spectator
+				WriteHeader(MSG_ONE, TE_CSQC_RACE);
+				WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_CLEAR);
+			}
+		}
 	}
 }
 
