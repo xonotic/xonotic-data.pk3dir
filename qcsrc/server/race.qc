@@ -68,13 +68,6 @@ void write_recordmarker(entity pl, float tstart, float dt)
 IntrusiveList g_race_targets;
 IntrusiveList g_racecheckpoints;
 
-void race_InitSpectator()
-{
-	if(g_race_qualifying)
-		if(msg_entity.enemy.race_laptime)
-			race_SendNextCheckpoint(msg_entity.enemy, 1);
-}
-
 float race_readTime(string map, float pos)
 {
 	return stof(db_get(ServerProgsDB, strcat(map, record_type, "time", ftos(pos))));
