@@ -17,6 +17,7 @@
 # cvcxc <hans.andersen72@yahoo.com>, 2013
 # Yepoleb <huberg18@gmail.com>, 2013
 # Iwan Gabovitch, 2024
+# Iwan Gabovitch, 2024
 # Larson März <larson@protonmail.ch>, 2016
 # Larson März <larson@protonmail.ch>, 2016
 # afba88cf42cbdff57149d4a6d53a94f9, 2018
@@ -4614,7 +4615,7 @@ msgstr "^BGDu stehst nun in der Warteliste zum Beitritt im Team ^TC^TT^BG."
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "^K2Wähle bitte ein anderes Team! %s^K2 wählte ^TC^TT^K2 zuerst."
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYou picked up the ball"
