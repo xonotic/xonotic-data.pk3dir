@@ -1104,7 +1104,7 @@ void StartItem(entity this, entity def)
 		{
 			if (!this.team)
 			{
-				string t = GetField_fullspawndata(this, "team");
+				string t = GetField_fullspawndata(this, "team", false);
 				// bones_was_here: this hack is cheaper than changing to a .string strcmp()
 				if(t) this.team = crc16(false, t);
 			}
@@ -1125,9 +1125,8 @@ void StartItem(entity this, entity def)
 		// do item filtering according to game mode and other things
 		if (this.noalign <= 0)
 		{
-			// note droptofloor returns false if stuck/or would fall too far
 			if (!this.noalign)
-				droptofloor(this);
+				DropToFloor_QC_DelayedInit(this);
 			waypoint_spawnforitem(this);
 		}
 

@@ -877,7 +877,10 @@ void HUD_Draw(entity this)
 	{
 		if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 		{
-			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
+			vector col = M_ARGV(0, vector);
+			float alpha_multipl = M_ARGV(1, float);
+			if (alpha_multipl > 0)
+				drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_multipl, DRAWFLAG_ADDITIVE);
 		}
 		else if(STAT(FROZEN))
 		{
@@ -1550,7 +1553,7 @@ void View_UpdateFov()
 	setproperty(VF_FOV, fov);
 }
 
-void CSQC_UpdateView(entity this, float w, float h)
+void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 {
 	TC(int, w); TC(int, h);
 

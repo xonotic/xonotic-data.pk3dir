@@ -450,6 +450,9 @@ void cvar_changes_init()
 		BADCVAR("gametype");
 		BADCVAR("g_antilag");
 		BADCVAR("g_balance_teams");
+		BADCVAR("g_balance_teams_queue");
+		BADCVAR("g_balance_teams_remove");
+		BADCVAR("g_balance_teams_remove_wait");
 		BADCVAR("g_balance_teams_prevent_imbalance");
 		BADCVAR("g_balance_teams_scorefactor");
 		BADCVAR("g_ban_sync_trusted_servers");
@@ -736,7 +739,8 @@ void InitGameplayMode()
 
 	MapInfo_ClearTemps();
 
-	strcpy(gametype_custom_string, autocvar__sv_vote_gametype_custom);
+	strcpy(loaded_gametype_custom_string, autocvar__sv_vote_gametype_custom);
+	gametype_custom_enabled = (loaded_gametype_custom_string != "");
 	cvar_set("_sv_vote_gametype_custom", ""); // clear it immediately so it can't get stuck
 
 	cache_mutatormsg = strzone("");
@@ -929,18 +933,12 @@ spawnfunc(worldspawn)
 	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, _MapInfo_FindArenaFile(mapname, ".defi") != "");
 
 	// quake 3 music support
-	if(world.music || world.noise)
-	{
+	// bones_was_here: Q3 doesn't support .noise but the Nexuiz _MapInfo_Generate() does.
+	// TODO: Q3 supports an optional intro file: "music/intro.wav music/loop.wav"
+	string music = GetField_fullspawndata(world, "music", true);
+	if (music || world.noise)
 		// prefer .music over .noise
-		string chosen_music;
-		if(world.music)
-			chosen_music = world.music;
-		else
-			chosen_music = world.noise;
-
-		string newstuff = strcat(clientstuff, "cd loop \"", chosen_music, "\"\n");
-		strcpy(clientstuff, newstuff);
-	}
+		strcpy(clientstuff, strcat(clientstuff, "cd loop \"", (music ? music : world.noise), "\"\n"));
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
@@ -1324,6 +1322,40 @@ void DumpStats(float final)
 	}
 }
 
+// it should be called by gametypes where players can join a team but have to wait before playing
+// it puts players who joined too late (without being able to play) back to spectators
+// if prev_team_field is not team it also puts players who previously switched team (without being
+// able to play on the new team) back to previous team
+void MatchEnd_RestoreSpectatorAndTeamStatus(.int prev_team_field)
+{
+	bool fix_team = (teamplay && prev_team_field != team);
+	FOREACH_CLIENT(true,
+	{
+		if (!IS_PLAYER(it) && INGAME_JOINING(it))
+		{
+			INGAME_STATUS_CLEAR(it);
+			PutObserverInServer(it, true, false);
+			bprint(playername(it.netname, it.team, false), " has been moved back to spectator");
+			it.winning = false;
+		}
+		else if (fix_team && INGAME_JOINED(it) && it.(prev_team_field) && it.team != it.(prev_team_field))
+		{
+			Player_SetForcedTeamIndex(it, TEAM_FORCE_DEFAULT);
+			if (MoveToTeam(it, Team_TeamToIndex(it.(prev_team_field)), 6))
+			{
+				string pl_name = playername(it.netname, it.team, false);
+				bprint(pl_name, " has been moved back to the ", Team_ColoredFullName(it.team));
+			}
+			it.winning = (it.team == WinningConditionHelper_winnerteam);
+		}
+	});
+}
+
+void MatchEnd_RestoreSpectatorStatus()
+{
+	MatchEnd_RestoreSpectatorAndTeamStatus(team);
+}
+
 /*
 go to the next level for deathmatch
 only called if a time or frag limit has expired
@@ -1350,6 +1382,8 @@ void NextLevel()
 	//pos = FindIntermission ();
 
 	VoteReset(true);
+
+	MUTATOR_CALLHOOK(MatchEnd_BeforeScores);
 
 	DumpStats(true);
 
@@ -1783,7 +1817,7 @@ void CheckRules_World()
 	}
 }
 
-float want_weapon(entity weaponinfo, float allguns)
+int want_weapon(entity weaponinfo, int allguns)
 {
 	int d = 0;
 	bool allow_mutatorblocked = false;
@@ -1793,10 +1827,12 @@ float want_weapon(entity weaponinfo, float allguns)
 
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(WantWeapon, weaponinfo, d, allguns, allow_mutatorblocked);
 	d = M_ARGV(1, float);
-	allguns = M_ARGV(2, bool);
+	allguns = M_ARGV(2, int);
 	allow_mutatorblocked = M_ARGV(3, bool);
 
-	if(allguns)
+	if(allguns == 1)
+		d = boolean(!(weaponinfo.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
+	else if(allguns == 2)
 		d = boolean((weaponinfo.spawnflags & WEP_FLAG_NORMAL) && !(weaponinfo.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
 	else if(!mutator_returnvalue)
 		d = !(!weaponinfo.weaponstart);
@@ -2419,7 +2455,7 @@ void DropToFloor_QC(entity this)
 	setorigin(this, this.dropped_origin = this.origin);
 }
 
-void droptofloor(entity this)
+void DropToFloor_QC_DelayedInit(entity this)
 {
 	InitializeEntity(this, DropToFloor_QC, INITPRIO_DROPTOFLOOR);
 }
@@ -2645,7 +2681,7 @@ void Shutdown()
 		MapInfo_Shutdown();
 
 		strfree(sv_termsofservice_url_escaped);
-		strfree(gametype_custom_string);
+		strfree(loaded_gametype_custom_string);
 	}
 	else if(world_initialized == 0)
 	{

@@ -43,7 +43,7 @@
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 
-void CSQC_Init()
+void CSQC_Init(float apilevel, string enginename, float engineversion)
 {
 	prvm_language = strzone(cvar_string("prvm_language"));
 
@@ -197,6 +197,8 @@ void Shutdown()
 	localcmd("\ncl_hook_shutdown\n");
 
 	localcmd("\n-button12\n");
+
+	strfree(gametype_custom_name);
 
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
@@ -694,9 +696,6 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 
 	if(newspectatee_status != spectatee_status)
 	{
-		// clear race stuff
-		race_laptime = 0;
-		race_checkpointtime = 0;
 		hud_dynamic_shake_factor = -1;
 		spectatee_status_changed_time = time;
 	}
@@ -875,11 +874,13 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 	{
 		this.origin = ReadVector();
 
+		int particlesAndOrSound = ReadByte();
+
 		if(is_new)
 		{
 			float teamnum = entcs_GetTeam(entnum - 1);
 
-			if(autocvar_cl_spawn_event_particles)
+			if(autocvar_cl_spawn_event_particles && (particlesAndOrSound & BIT(0)))
 			{
 				switch(teamnum)
 				{
@@ -890,7 +891,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 					default: pointparticles(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1); break;
 				}
 			}
-			if(autocvar_cl_spawn_event_sound)
+
+			if(autocvar_cl_spawn_event_sound && (particlesAndOrSound & BIT(1)))
 			{
 				sound(this, CH_TRIGGER, SND_SPAWN, VOL_BASE, ATTEN_NORM);
 			}
@@ -1089,6 +1091,7 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
 	gametype = ReadRegistered(Gametypes);
+	strcpy(gametype_custom_name, ReadString());
 	teamplay = _MapInfo_GetTeamPlayBool(gametype);
 	HUD_ModIcons_SetFunc();
 	FOREACH(Scores, true, {
@@ -1191,6 +1194,29 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			{
 				race_penaltyaccumulator = 0;
 				race_laptime = time; // valid
+			}
+
+			// show checkpoint splits after a run
+			// specs can switch players for confusing splits, deny service
+			// if hit 255 finish line or if finish line is 0 or if restarted
+			if (!entcs_IsSpectating(player_localnum)
+			&& (race_checkpoint == 255
+			|| race_checkpoint < race_checkpoint_splits_previous))
+			{
+				LOG_HELP("Checkpoint Splits:\n");
+				for (int i = 0; i < 255; ++i)
+				{
+					// does this index have a split?
+					if (race_checkpoint_splits[i])
+					{
+						// print it and free it
+						LOG_HELP(race_checkpoint_splits[i]);
+						strfree(race_checkpoint_splits[i]);
+					}
+				}
+
+				// allow registering 0th cp in case we start at 254 start line
+				race_checkpoint_splits_previous = 0;
 			}
 			break;
 
@@ -1414,7 +1440,9 @@ string GetVersionMessage(string hostversion, bool version_mismatch, bool version
 
 bool net_handle_ServerWelcome()
 {
-	campaign = ReadByte();
+	int flags = ReadByte();
+
+	campaign = flags & 1;
 	if (campaign)
 	{
 		int campaign_level = ReadByte();
@@ -1435,8 +1463,10 @@ bool net_handle_ServerWelcome()
 
 	strcpy(hostname, ReadString());
 	string hostversion = ReadString();
-	bool version_mismatch = ReadByte();
-	bool version_check = ReadByte();
+	bool version_mismatch = flags & 2;
+	bool version_check = flags & 4;
+	MapInfo_Map_titlestring = ReadString();
+	MapInfo_Map_author = flags & 8 ? ReadString() : "";
 	srv_minplayers = ReadByte();
 	srv_maxplayers = ReadByte();
 	string modifications = translate_modifications(ReadString());
@@ -1448,15 +1478,9 @@ bool net_handle_ServerWelcome()
 
 	msg = strcat(msg, "\n\n", _("Gametype:"), " ^1", MapInfo_Type_ToText(gametype), "\n");
 
-	msg = strcat(msg, "\n", _("Map:"), " ^2");
-	if (world.message == "")
-		msg = strcat(msg, mi_shortname, "\n");
-	else
-	{
-		int i = strstrofs(world.message, " by ", 0); // matches _MapInfo_Generate()
-		string longname = i >= 0 ? substring(world.message, 0, i) : world.message;
-		msg = strcat(msg, (strcasecmp(longname, mi_shortname) ? strcat(mi_shortname, " ^7// ^2") : ""), longname, "\n");
-	}
+	msg = strcat(msg, "\n", _("Map:"), " ", MapInfo_Map_titlestring, "\n");
+	if (flags & 8)
+		msg = strcat(msg, "^9", _("by:"), " ", MapInfo_Map_author, "\n");
 
 	if (srv_minplayers || srv_maxplayers)
 	{

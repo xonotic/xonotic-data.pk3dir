@@ -779,7 +779,11 @@ void GameCommand_gametype(int request, int argc)
 				Gametype t = MapInfo_Type_FromString(s, false, false);
 
 				if (t)
-					GameTypeVote_SetGametype(t);
+				{
+					// don't execute gametype hooks because they can change active
+					// gametype rules if executed during the game
+					GameTypeVote_SetGametype(t, "", false);
+				}
 				else
 					bprint("Failed to switch to ", s, ": this game type does not exist!\n");
 
@@ -1090,7 +1094,8 @@ void GameCommand_moveplayer(int request, int argc)
 						if (team_num == client.team)  // already on the destination team
 						{
 							// keep the forcing undone
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ",
+								Team_ColoredFullName(team_num), ".");
 							continue;
 						}
 						else if (team_num == 0)  // auto team
@@ -1120,7 +1125,8 @@ void GameCommand_moveplayer(int request, int argc)
 						}
 						if (!TeamBalance_IsTeamAllowed(balance, team_id))
 						{
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ",
+								Team_ColoredFullName(team_num), ".");
 							TeamBalance_Destroy(balance);
 							continue;
 						}
@@ -1131,7 +1137,8 @@ void GameCommand_moveplayer(int request, int argc)
 						if (MoveToTeam(client, team_id, 6))
 						{
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ",
+								Team_ColoredFullName(team_num), ".");
 						}
 						else
 						{

@@ -304,7 +304,8 @@ bool MinigameImpulse(entity this, int imp)
 	return false;
 }
 
-
+// this macro exists only to shorten code lines
+#define MINIGAME_CMD(cmd_id) MINIGAME_COMMON_CMD[MINIGAME_COMMON_CMD_ID_##cmd_id]
 
 void ClientCommand_minigame(entity caller, int request, int argc, string command)
 {
@@ -324,7 +325,7 @@ void ClientCommand_minigame(entity caller, int request, int argc, string command
 	if (request == CMD_REQUEST_COMMAND )
 	{
 		string minig_cmd = argv(1);
-		if ( minig_cmd == "create" && argc > 2 )
+		if ( minig_cmd == MINIGAME_CMD(CREATE) && argc > 2 )
 		{
 			entity minig = start_minigame(caller, argv(2));
 			if ( minig )
@@ -333,7 +334,7 @@ void ClientCommand_minigame(entity caller, int request, int argc, string command
 				sprint(caller,"Cannot start minigame session!\n");
 			return;
 		}
-		else if ( minig_cmd == "join" && argc > 2 )
+		else if ( minig_cmd == MINIGAME_CMD(JOIN) && argc > 2 )
 		{
 			entity minig = join_minigame(caller, argv(2));
 			if ( minig )
@@ -345,19 +346,19 @@ void ClientCommand_minigame(entity caller, int request, int argc, string command
 			}
 			return;
 		}
-		else if ( minig_cmd == "list" )
+		else if ( minig_cmd == MINIGAME_CMD(LIST) )
 		{
 			FOREACH(Minigames, true, sprint(caller, it.netname, " (", it.message, ") ", "\n"));
 			return;
 		}
-		else if ( minig_cmd == "list-sessions" )
+		else if ( minig_cmd == MINIGAME_CMD(LIST_SESSIONS) )
 		{
 			entity e;
 			for ( e = minigame_sessions; e != NULL; e = e.list_next )
 				sprint(caller,e.netname,"\n");
 			return;
 		}
-		else if ( minig_cmd == "end" || minig_cmd == "part" )
+		else if ( minig_cmd == MINIGAME_CMD(END) || minig_cmd == MINIGAME_CMD(PART) )
 		{
 			if ( CS(caller).active_minigame )
 			{
@@ -368,7 +369,7 @@ void ClientCommand_minigame(entity caller, int request, int argc, string command
 				sprint(caller,"You aren't playing any minigame...\n");
 			return;
 		}
-		else if ( minig_cmd == "invite" && argc > 2 )
+		else if ( minig_cmd == MINIGAME_CMD(INVITE) && argc > 2 )
 		{
 			if ( CS(caller).active_minigame )
 			{

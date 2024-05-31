@@ -21,6 +21,8 @@ const int PUSH_SILENT = BIT(1); // not used?
 #define PUSH_VELOCITY_BIDIRECTIONAL_Z     BIT(5)
 #define PUSH_VELOCITY_CLAMP_NEGATIVE_ADDS BIT(6)
 
+#define Q3_TARGET_PUSH_JUMPPAD            BIT(0) // target_push defaults to "wind tunnel" mode in Q3
+
 IntrusiveList g_jumppads;
 STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
 

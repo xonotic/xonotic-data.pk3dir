@@ -50,10 +50,14 @@ METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity wea
 		W_Shotgun_Attack(thiswep, actor, weaponentity, true,
 			WEP_CVAR_PRI(okshotgun, ammo),
 			WEP_CVAR_PRI(okshotgun, damage),
+			WEP_CVAR_PRI(okshotgun, damagefalloff_halflife),
+			WEP_CVAR_PRI(okshotgun, damagefalloff_mindist),
+			WEP_CVAR_PRI(okshotgun, damagefalloff_maxdist),
 			WEP_CVAR_PRI(okshotgun, bullets),
 			WEP_CVAR_PRI(okshotgun, spread),
 			WEP_CVAR_PRI(okshotgun, solidpenetration),
 			WEP_CVAR_PRI(okshotgun, force),
+			WEP_CVAR_PRI(okshotgun, damagefalloff_forcehalflife),
 			EFFECT_RIFLE_WEAK);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(okshotgun, animtime), w_ready);
 		return;

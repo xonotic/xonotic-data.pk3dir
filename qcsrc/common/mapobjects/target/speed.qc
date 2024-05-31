@@ -1,9 +1,9 @@
 #include "speed.qh"
 
-#define XYZ_ARRAY(name) float name[3]
-#define ARRAY_AS_VECTOR(a) ((a)[0] * '1 0 0' + (a)[1] * '0 1 0' + (a)[2] * '0 0 1')
+// bones_was_here: TODO implement subscript support for vectors in gmqcc
+// or _something_ so code like this can be cheaper...
+#define ARRAY_AS_VECTOR(a) vec3((a)[0], (a)[1], (a)[2])
 #define VECTOR_TO_ARRAY(a, e) { vector v = (e); (a)[0] = v.x; (a)[1] = v.y; (a)[2] = v.z; }
-#define FOR_XYZ(idx) for(int idx = 0; idx < 3; ++idx)
 vector target_speed_calculatevelocity(entity this, float speed, entity pushed_entity)
 {
 	bool is_percentage = boolean(this.spawnflags & SPEED_PERCENTAGE);
@@ -26,10 +26,10 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 		speed = max(speed, 0);
 	}
 
-	XYZ_ARRAY(pushvel);
-	VECTOR_TO_ARRAY(pushvel, pushed_entity.velocity);
+	float pushvel[3];
+	VECTOR_TO_ARRAY(pushvel, pushed_entity.velocity)
 
-	FOR_XYZ(i)
+	for(int i = 0; i < 3; ++i)
 	{
 		// launcher can only be either positive or negative not both
 		if(is_launcher && is_positive[i] && is_negative[i])
@@ -64,7 +64,7 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 		if(is_add) launcherspeed += oldspeed;
 	}
 
-	FOR_XYZ(i)
+	for(int i = 0; i < 3; ++i)
 	{
 		if(((pushvel[i] != 0) || is_launcher) && (is_positive[i] != is_negative[i]))
 		{
@@ -97,26 +97,24 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 		}
 	}
 
-	XYZ_ARRAY(oldvel);
-	VECTOR_TO_ARRAY(oldvel, pushed_entity.velocity);
+	float oldvel[3];
+	VECTOR_TO_ARRAY(oldvel, pushed_entity.velocity)
 
 	if(is_launcher)
 	{
 		// launcher will always launch you in the correct direction
 		// even if speed is set to a negative value, fabs() is correct
-		VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * fabs(launcherspeed));
+		VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * fabs(launcherspeed))
 	}
 	else
 	{
-		VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * speed)
-
-		if(is_add)
-		{
-			VECTOR_TO_ARRAY(pushvel, ARRAY_AS_VECTOR(pushvel) + ARRAY_AS_VECTOR(oldvel));
-		}
+		if(!is_add)
+			VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * speed)
+		else
+			VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * speed + ARRAY_AS_VECTOR(oldvel))
 	}
 
-	FOR_XYZ(i)
+	for(int i = 0; i < 3; ++i)
 	{
 		// preserve unaffected directions
 		if(!is_positive[i] && !is_negative[i])
@@ -127,10 +125,8 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 
 	return ARRAY_AS_VECTOR(pushvel);
 }
-#undef XYZ_ARRAY
 #undef ARRAY_AS_VECTOR
 #undef VECTOR_TO_ARRAY
-#undef FOR_XYZ
 
 REGISTER_NET_LINKED(ENT_CLIENT_TARGET_SPEED)
 
@@ -163,9 +159,10 @@ spawnfunc(target_speed)
 	this.use = target_speed_use;
 	this.reset = target_speed_reset;
 
-	// FIXME: zero and unset cannot be disambiguated in xonotic
-	//if (!this.speed)
-	//	this.speed = 100;
+	// support a 0 speed setting AND a default
+	string s = GetField_fullspawndata(this, "speed", false);
+	if (!s || s == "")
+		this.speed = 100;
 
 	target_speed_link(this);
 }
@@ -174,7 +171,7 @@ bool target_speed_send(entity this, entity to, float sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TARGET_SPEED);
 
-	WriteInt24_t(MSG_ENTITY, this.spawnflags);
+	WriteShort(MSG_ENTITY, this.spawnflags);
 	WriteByte(MSG_ENTITY, this.active);
 	WriteString(MSG_ENTITY, this.targetname);
 	WriteCoord(MSG_ENTITY, this.speed);
@@ -196,7 +193,7 @@ void target_speed_remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_TARGET_SPEED, bool isnew)
 {
-	this.spawnflags = ReadInt24_t();
+	this.spawnflags = ReadShort();
 	this.active = ReadByte();
 	this.targetname = strzone(ReadString());
 	this.speed = ReadCoord();

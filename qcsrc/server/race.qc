@@ -86,13 +86,6 @@ void write_recordmarker(entity pl, float newpos, float tstart, float dt)
 IntrusiveList g_race_targets;
 IntrusiveList g_racecheckpoints;
 
-void race_InitSpectator()
-{
-	if(g_race_qualifying)
-		if(msg_entity.enemy.race_laptime)
-			race_SendNextCheckpoint(msg_entity.enemy, 1);
-}
-
 float race_readTime(string map, float pos)
 {
 	return stof(db_get(ServerProgsDB, strcat(map, record_type, "time", ftos(pos))));
@@ -574,8 +567,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		if(tvalid)
 		{
 			recordtime = race_checkpoint_records[cp];
-			float myrecordtime = e.race_checkpoint_record[cp];
-			recordholder = strcat1(race_checkpoint_recordholders[cp]); // make a tempstring copy, as we'll possibly strunzone it!
+			recordholder = strcat(race_checkpoint_recordholders[cp]); // make a tempstring copy, as we'll possibly strunzone it!
 			if(recordholder == e.netname)
 				recordholder = "";
 
@@ -586,8 +578,6 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 					race_setTime(GetMapname(), t, e.crypto_idfp, e.netname, e, true);
 					MUTATOR_CALLHOOK(Race_FinalCheckpoint, e);
 				}
-				if(t < myrecordtime || myrecordtime == 0)
-					e.race_checkpoint_record[cp] = t; // resending done below
 
 				if(t < recordtime || recordtime == 0)
 				{
@@ -626,6 +616,14 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 					}
 				});
 			}
+		}
+		// check if new pb should be set for a checkpoint
+		if(tvalid)
+		{
+			float myrecordtime = e.race_checkpoint_record[cp];
+			if(t != 0)
+				if(t < myrecordtime || myrecordtime == 0)
+					e.race_checkpoint_record[cp] = t;
 		}
 	}
 	else // RACE! Not Qualifying
