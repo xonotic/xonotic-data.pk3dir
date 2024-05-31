@@ -238,19 +238,11 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 		return;
 
 	int cp = e.race_checkpoint;
-        float myrecordtime = e.race_checkpoint_record[cp];
-        float recordtime;
-        string recordholder;
-        if (autocvar_g_cts_cptimes_onlyself && (race_CheckpointNetworkID(cp) < 254)) {  // cp 254 - start line, cp 255 - finish line
-          recordtime = myrecordtime;
-          recordholder = "";
-        } else {
-          recordtime = race_checkpoint_records[cp];
-
-   	  recordholder = race_checkpoint_recordholders[cp];
- 	  if(recordholder == e.netname)
+	float recordtime = race_checkpoint_records[cp];
+	float myrecordtime = e.race_checkpoint_record[cp];
+	string recordholder = race_checkpoint_recordholders[cp];
+	if(recordholder == e.netname)
 		recordholder = "";
-        }
 
 	if(!IS_REAL_CLIENT(e))
 		return;
@@ -581,17 +573,12 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 
 		if(tvalid)
 		{
-                        float myrecordtime = e.race_checkpoint_record[cp];
-                        if (autocvar_g_cts_cptimes_onlyself && (race_CheckpointNetworkID(cp) < 254)) {  // cp 254 - start line, cp 255 - finish line
-                          recordtime = myrecordtime;
-                          recordholder = "";
-                        } else {
-                          recordtime = race_checkpoint_records[cp];
-                          recordholder = strcat1(race_checkpoint_recordholders[cp]); // make a tempstring copy, as we'll possibly strunzone it
-                          if(recordholder == e.netname)
+			recordtime = race_checkpoint_records[cp];
+			float myrecordtime = e.race_checkpoint_record[cp];
+			recordholder = strcat1(race_checkpoint_recordholders[cp]); // make a tempstring copy, as we'll possibly strunzone it!
+			if(recordholder == e.netname)
 				recordholder = "";
 
-                        }
 			if(t != 0)
 			{
 				if(cp == race_timed_checkpoint)
