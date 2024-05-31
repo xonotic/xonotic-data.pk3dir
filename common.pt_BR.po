@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-27 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2024\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -153,7 +153,7 @@ msgstr "informações do servidor"
 #: qcsrc/client/hud/panel/infomessages.qc:133
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr ""
+msgstr "^2Você está na fila para entrar na equipe %s%s^2"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #, c-format
@@ -3294,12 +3294,12 @@ msgstr "^BG%s^F3 está jogando agora na equipe ^TC^TT"
 #: qcsrc/common/notifications/all.inc:395
 #, c-format
 msgid "^BG%s^F3 wants to play on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 quer jogar na equipe ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:396
 #, c-format
 msgid "^BG%s^F3 wants to play"
-msgstr ""
+msgstr "^BG%s^F3 quer jogar"
 
 #: qcsrc/common/notifications/all.inc:398
 #: qcsrc/common/notifications/all.inc:728
@@ -3426,12 +3426,14 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 has left the queue after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 saiu da fila por inatividade por %s segundos"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 for balance reasons"
 msgstr ""
+"^BG%s^F3 foi transferido para^BG os espectadores^F3 por motivos de "
+"balanceamento"
 
 #: qcsrc/common/notifications/all.inc:431
 msgid ""
@@ -3459,7 +3461,7 @@ msgstr "^BG%s^F3 está assistindo^BG agora"
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
 msgid "^BG%s^F3 has left the queue"
-msgstr ""
+msgstr "^BG%s^F3 saiu da fila"
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
@@ -4461,6 +4463,8 @@ msgid ""
 "^K1Teams unbalanced!\n"
 "^BGMoving %s^BG to spectators in ^COUNT..."
 msgstr ""
+"^K1Equipes desequilibradas!\n"
+"^BGTransferindo %s^BG aos espectadores em ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:687
 #, c-format
@@ -4556,16 +4560,16 @@ msgstr "^K1Não foi possível entrar nesta sessão de minijogo!"
 
 #: qcsrc/common/notifications/all.inc:724
 msgid "^BGYou are now queued to join the game."
-msgstr ""
+msgstr "^BGVocê agora está na fila para entrar no jogo."
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou are now queued to join on ^TC^TT^BG team."
-msgstr ""
+msgstr "^BGVocê agora está na fila para entrar na equipe ^TC^TT^BG."
 
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "^K2Por favor escolha outra equipe! %s^K2 escolheu ^TC^TT^K2 primeiro."
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYou picked up the ball"

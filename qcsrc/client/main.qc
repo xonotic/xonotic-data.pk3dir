@@ -696,9 +696,6 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 
 	if(newspectatee_status != spectatee_status)
 	{
-		// clear race stuff
-		race_laptime = 0;
-		race_checkpointtime = 0;
 		hud_dynamic_shake_factor = -1;
 		spectatee_status_changed_time = time;
 	}
@@ -1197,6 +1194,29 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			{
 				race_penaltyaccumulator = 0;
 				race_laptime = time; // valid
+			}
+
+			// show checkpoint splits after a run
+			// specs can switch players for confusing splits, deny service
+			// if hit 255 finish line or if finish line is 0 or if restarted
+			if (!entcs_IsSpectating(player_localnum)
+			&& (race_checkpoint == 255
+			|| race_checkpoint < race_checkpoint_splits_previous))
+			{
+				LOG_HELP("Checkpoint Splits:\n");
+				for (int i = 0; i < 255; ++i)
+				{
+					// does this index have a split?
+					if (race_checkpoint_splits[i])
+					{
+						// print it and free it
+						LOG_HELP(race_checkpoint_splits[i]);
+						strfree(race_checkpoint_splits[i]);
+					}
+				}
+
+				// allow registering 0th cp in case we start at 254 start line
+				race_checkpoint_splits_previous = 0;
 			}
 			break;
 

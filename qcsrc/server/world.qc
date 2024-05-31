@@ -1817,7 +1817,7 @@ void CheckRules_World()
 	}
 }
 
-float want_weapon(entity weaponinfo, float allguns)
+int want_weapon(entity weaponinfo, int allguns)
 {
 	int d = 0;
 	bool allow_mutatorblocked = false;
@@ -1827,10 +1827,12 @@ float want_weapon(entity weaponinfo, float allguns)
 
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(WantWeapon, weaponinfo, d, allguns, allow_mutatorblocked);
 	d = M_ARGV(1, float);
-	allguns = M_ARGV(2, bool);
+	allguns = M_ARGV(2, int);
 	allow_mutatorblocked = M_ARGV(3, bool);
 
-	if(allguns)
+	if(allguns == 1)
+		d = boolean(!(weaponinfo.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
+	else if(allguns == 2)
 		d = boolean((weaponinfo.spawnflags & WEP_FLAG_NORMAL) && !(weaponinfo.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
 	else if(!mutator_returnvalue)
 		d = !(!weaponinfo.weaponstart);
