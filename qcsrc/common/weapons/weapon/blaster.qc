@@ -45,9 +45,9 @@ void W_Blaster_Attack(
 	float atk_deathtype)
 {
 	bool isprimary = !(atk_deathtype & HITTYPE_SECONDARY);
-	float atk_shotangle = WEP_CVAR_BOTH(blaster, isprimary, shotangle);
+	float atk_shotangle_rad = WEP_CVAR_BOTH(blaster, isprimary, shotangle) * DEG2RAD;
 	float atk_damage = WEP_CVAR_BOTH(blaster, isprimary, damage);
-	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
+	vector s_forward = v_forward * cos(atk_shotangle_rad) + v_up * sin(atk_shotangle_rad);
 
 	W_SetupShot_Dir(actor, weaponentity, s_forward, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, atk_damage, atk_deathtype);
 	W_MuzzleFlash(WEP_BLASTER, actor, weaponentity, w_shotorg, w_shotdir);

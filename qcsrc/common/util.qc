@@ -459,8 +459,9 @@ vector decompressShortVector(int data)
 	{
 		q = M_PI / 16 * q;
 		p = M_PI / 16 * p - M_PI_2;
-		out.x = cos(q) *  cos(p);
-		out.y = sin(q) *  cos(p);
+		float cos_p = cos(p);
+		out.x = cos(q) *  cos_p;
+		out.y = sin(q) *  cos_p;
 		out.z =          -sin(p);
 	}
 
