@@ -1271,7 +1271,7 @@ bool StrafeHUD_drawTextIndicator(string text, float height, vector color, float 
 	if((height <= 0) || (lasttime <= 0) || (fadetime <= 0) || ((time - lasttime) >= fadetime))
 		return false;
 
-	float alpha = cos(((time - lasttime) / fadetime) * 90 * DEG2RAD); // fade non-linear like the physics panel does
+	float alpha = cos(((time - lasttime) / fadetime) * M_PI_2); // fade non-linear like the physics panel does
 	vector size = panel_size;
 	size.y = height;
 

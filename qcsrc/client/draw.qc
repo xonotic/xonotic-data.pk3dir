@@ -217,8 +217,8 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 		return;  // Complete rectangle, nothing more needed.
 	}
 
-	float co = cos(f * 2 * M_PI);
-	float si = sin(f * 2 * M_PI);
+	float co = cos(f * (2 * M_PI));
+	float si = sin(f * (2 * M_PI));
 	float q = fabs(co) + fabs(si);
 	co /= q;
 	si /= q;

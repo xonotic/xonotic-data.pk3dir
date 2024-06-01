@@ -457,8 +457,8 @@ vector decompressShortVector(int data)
 	}
 	else
 	{
-		q = .19634954084936207740 * q;
-		p = .19634954084936207740 * p - 1.57079632679489661922;
+		q = M_PI / 16 * q;
+		p = M_PI / 16 * p - M_PI_2;
 		out.x = cos(q) *  cos(p);
 		out.y = sin(q) *  cos(p);
 		out.z =          -sin(p);
@@ -484,7 +484,7 @@ float compressShortVector(vector vec)
 		error("BOGUS vectoangles");
 	//print("angles: ", vtos(ang), "\n");
 
-	p = floor(0.5 + (ang.x + 90) * 16 / 180) & 15; // -90..90 to 0..14
+	p = floor(0.5 + (ang.x + 90) * (16 / 180)) & 15; // -90..90 to 0..14
 	if(p == 0)
 	{
 		if(vec.z < 0)
@@ -493,7 +493,7 @@ float compressShortVector(vector vec)
 			y = 30;
 	}
 	else
-		y = floor(0.5 + ang.y * 32 / 360) & 31; // 0..360 to 0..32
+		y = floor(0.5 + ang.y * (32 / 360)) & 31; // 0..360 to 0..32
 	len = invertLengthLog(vlen(vec));
 
 	//print("compressed: p:", ftos(p)); print(" y:", ftos(y)); print(" len:", ftos(len), "\n");

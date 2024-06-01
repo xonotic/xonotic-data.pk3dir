@@ -451,7 +451,7 @@ void nade_ice_think(entity this)
 	randomr = random();
 	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_nade_radius;
 	float randomw;
-	randomw = random() * M_PI * 2;
+	randomw = random() * (2 * M_PI);
 	vector randomp;
 	randomp.x = randomr * cos(randomw);
 	randomp.y = randomr * sin(randomw);
@@ -829,7 +829,7 @@ void nade_darkness_think(entity this)
 	randomr = random();
 	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_nade_radius;
 	float randomw;
-	randomw = random() * M_PI * 2;
+	randomw = random() * (2 * M_PI);
 	vector randomp;
 	randomp.x = randomr * cos(randomw);
 	randomp.y = randomr * sin(randomw);
