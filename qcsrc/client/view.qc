@@ -40,7 +40,6 @@
 #include <lib/warpzone/client.qh>
 #include <lib/warpzone/common.qh>
 
-float autocvar_cl_viewmodel_scale;
 float autocvar_cl_viewmodel_alpha = 1;
 
 bool autocvar_cl_bobmodel;
@@ -229,7 +228,7 @@ vector bobmodel_ofs(entity view)
 	float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
 	if (bobmodel_scale && xyspeed)
 	{
-		float bspeed = xyspeed * 0.01 * autocvar_cl_viewmodel_scale * bobmodel_scale;
+		float bspeed = xyspeed * 0.01 * bobmodel_scale;
 		float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
 		gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
 		gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
