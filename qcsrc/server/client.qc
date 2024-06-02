@@ -1324,7 +1324,7 @@ void ChatBubbleThink(entity this)
 	if ( !IS_DEAD(this.owner) && IS_PLAYER(this.owner) )
 	{
 		if ( CS(this.owner).active_minigame && PHYS_INPUT_BUTTON_MINIGAME(this.owner) )
-			this.mdl = "models/sprites/minigame_busy.iqm";
+			this.mdl = "models/misc/minigame_busy.spr";
 		else if (PHYS_INPUT_BUTTON_CHAT(this.owner))
 			this.mdl = "models/misc/chatbubble.spr";
 	}

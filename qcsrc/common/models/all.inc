@@ -335,7 +335,7 @@ MODEL(VEH_SPIDERBOT_TOP,                "models/vehicles/spiderbot_top.dpm");
 MODEL(VEH_SPIDERBOT_VIEW,               "models/vehicles/spiderbot_cockpit.dpm");
 
 MODEL(CHAT,                             "models/misc/chatbubble.spr");
-MODEL(CHAT_MINIGAME,                    "models/sprites/minigame_busy.iqm");
+MODEL(CHAT_MINIGAME,                    "models/misc/minigame_busy.spr");
 
 MODEL(0,                                "models/sprites/0.spr32");
 MODEL(1,                                "models/sprites/1.spr32");
