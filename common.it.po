@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Antonio <piuntn@gmail.com>, 2013-2023
+# Antonio <piuntn@gmail.com>, 2013-2024
 # Antonio 'terencehill' Piu <piuntn@gmail.com>, 2011-2012
 # Costa <yesbubu@hotmail.it>, 2014,2021
 # Felice Sallustio <fel.sallustio@gmail.com>, 2011
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-02 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Antonio <piuntn@gmail.com>, 2013-2023\n"
+"Last-Translator: Antonio <piuntn@gmail.com>, 2013-2024\n"
 "Language-Team: Italian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
 "Language: it\n"
@@ -151,7 +151,7 @@ msgstr "info del server"
 #: qcsrc/client/hud/panel/infomessages.qc:133
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr ""
+msgstr "^2Sei in coda per unirti alla squadra %s%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #, c-format
@@ -623,19 +623,19 @@ msgstr "Numero di chiavi distrutte spingendole nel vuoto"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^destructions"
-msgstr ""
+msgstr "distruzioni"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^damage dealt"
-msgstr ""
+msgstr "danno inferto"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "The total damage dealt"
-msgstr ""
+msgstr "Il danno inferto totale"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^damage taken"
-msgstr ""
+msgstr "Danno subito"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "The total damage taken"
@@ -699,11 +699,11 @@ msgstr "frags"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "Number of generators destroyed"
-msgstr ""
+msgstr "Numero di generatori distrutti"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^generators"
-msgstr ""
+msgstr "generatori"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Number of goals scored"
@@ -1273,7 +1273,7 @@ msgstr "nodi"
 
 #: qcsrc/client/main.qc:1206
 msgid "Checkpoint times:"
-msgstr ""
+msgstr "Tempi checkpoint:"
 
 #: qcsrc/client/main.qc:1400
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
@@ -1353,7 +1353,7 @@ msgstr "Tipo di gioco:"
 
 #: qcsrc/client/main.qc:1483
 msgid "by:"
-msgstr ""
+msgstr "di:"
 
 #: qcsrc/client/main.qc:1487
 msgid "This match supports"
@@ -1811,7 +1811,7 @@ msgstr "Il numero di frag necessari prima che la partita finisca"
 
 #: qcsrc/common/minigames/cl_minigames.qc:287
 msgid "Spectators:"
-msgstr ""
+msgstr "Spettatori:"
 
 #: qcsrc/common/minigames/cl_minigames.qc:424
 msgid "It's your turn"
@@ -2246,11 +2246,11 @@ msgstr "Granata velo"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:99
 msgid "Ammo grenade"
-msgstr ""
+msgstr "Granata di munizioni"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:109
 msgid "Darkness grenade"
-msgstr ""
+msgstr "Granata di oscurità"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:137
 #: qcsrc/menu/xonotic/keybinder.qc:60
@@ -3322,12 +3322,12 @@ msgstr "^BG%s^F3 sta giocando adesso nella ^TCsquadra ^TT"
 #: qcsrc/common/notifications/all.inc:395
 #, c-format
 msgid "^BG%s^F3 wants to play on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 vuole giocare nella ^TCsquadra ^TT"
 
 #: qcsrc/common/notifications/all.inc:396
 #, c-format
 msgid "^BG%s^F3 wants to play"
-msgstr ""
+msgstr "^BG%s^F3 vuole giocare"
 
 #: qcsrc/common/notifications/all.inc:398
 #: qcsrc/common/notifications/all.inc:728
@@ -3457,12 +3457,14 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 has left the queue after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 ha abbandonato la coda dopo %ssecondi di inattività"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 for balance reasons"
 msgstr ""
+"^BG%s^F3 è stato spostato tra gli ^BG spettatori ^F3 per ragioni di "
+"bilanciamento"
 
 #: qcsrc/common/notifications/all.inc:431
 msgid ""
@@ -3493,7 +3495,7 @@ msgstr "^BG%s^F3 adesso è uno^BG spettatore"
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
 msgid "^BG%s^F3 has left the queue"
-msgstr ""
+msgstr "^BG%s^F3 ha abbandonato la coda"
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
@@ -4512,6 +4514,8 @@ msgid ""
 "^K1Teams unbalanced!\n"
 "^BGMoving %s^BG to spectators in ^COUNT..."
 msgstr ""
+"^K1Squadre sbilanciate!\n"
+"^BG%s ^BGverrà spostato tra gli spettatori fra ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:687
 #, c-format
@@ -4607,16 +4611,16 @@ msgstr "^K1Non puoi partecipare alla data sessione di minigame!"
 
 #: qcsrc/common/notifications/all.inc:724
 msgid "^BGYou are now queued to join the game."
-msgstr ""
+msgstr "^BGSei in coda per entrare nel gioco."
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou are now queued to join on ^TC^TT^BG team."
-msgstr ""
+msgstr "^BGSei in coda per unirti alla squadra ^TC^TT^BG."
 
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "^K2Scegli una squadra diversa! %s^K2 ha scelto ^TC^TT^K2 prima."
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYou picked up the ball"
