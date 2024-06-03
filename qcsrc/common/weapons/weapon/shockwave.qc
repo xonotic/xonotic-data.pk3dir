@@ -1,6 +1,8 @@
 #include "shockwave.qh"
 
+#ifdef GAMEQC
 REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
+#endif
 
 #ifdef SVQC
 
@@ -360,7 +362,21 @@ void W_Shockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 						*
 						WEP_CVAR(shockwave, blast_jump_force_velocitybias)
 					);
-				final_force = normalize((CENTER_OR_VIEWOFS(head) - attack_hitpos) + vel);
+
+				if (autocvar_g_player_damageplayercenter)
+				{
+					vector shot_origin = CENTER_OR_VIEWOFS(actor);
+					shot_origin.z += actor.(weaponentity).movedir.z;
+					//if (head == actor) // was checked for already, is true
+						final_force = normalize((shot_origin - attack_hitpos) + vel);
+					//else // use target's bbox centerpoint
+						//final_force = normalize(((head.origin + ((head.mins + head.maxs) * 0.5)) - attack_hitpos) + vel);
+				}
+				else
+				{
+					// if it's a player, use the view origin as reference
+					final_force = normalize((CENTER_OR_VIEWOFS(head) - attack_hitpos) + vel);
+				}
 
 				// now multiply the direction by force units
 				final_force *= (WEP_CVAR(shockwave, blast_jump_force) * multiplier);
@@ -431,7 +447,18 @@ void W_Shockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 				// figure out the direction of force
 				final_force = (w_shotdir * WEP_CVAR(shockwave, blast_splash_force_forwardbias));
-				final_force = normalize(CENTER_OR_VIEWOFS(head) - (attack_hitpos - final_force));
+				if (autocvar_g_player_damageplayercenter)
+				{
+					//if (head == actor) // was checked for already, is false
+						//final_force = normalize(CENTER_OR_VIEWOFS(actor) + '0 0 actor.(weaponentity).movedir.z' - (attack_hitpos - final_force));
+					//else // use target's bbox centerpoint
+						final_force = normalize((head.origin + ((head.mins + head.maxs) * 0.5)) - (attack_hitpos - final_force));
+				}
+				else
+				{
+					// if it's a player, use the view origin as reference
+					final_force = normalize(CENTER_OR_VIEWOFS(head) - (attack_hitpos - final_force));
+				}
 				//te_lightning2(NULL, attack_hitpos, (attack_hitpos + (final_force * 200)));
 
 				// now multiply the direction by force units
@@ -467,8 +494,18 @@ void W_Shockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 			//  BLAST CONE CALCULATION
 			// ========================
 
-			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
-			center = CENTER_OR_VIEWOFS(head);
+			if (autocvar_g_player_damageplayercenter)
+			{
+				//if (head == actor) // was checked for already, is false
+					//center = CENTER_OR_VIEWOFS(actor) + '0 0 actor.(weaponentity).movedir.z';
+				//else // use target's bbox centerpoint
+					center = head.origin + ((head.mins + head.maxs) * 0.5);
+			}
+			else
+			{
+				// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
+				center = CENTER_OR_VIEWOFS(head);
+			}
 
 			// find the closest point on the enemy to the center of the attack
 			float h; // hypotenuse, which is the distance between attacker to head

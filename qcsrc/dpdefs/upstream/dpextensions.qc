@@ -35,7 +35,7 @@ float(string s) checkextension = #99;
 //field definitions:
 .float buttonchat;
 //description:
-//true if the player is currently chatting (in messagemode, menus or console)
+//true if the player is currently chatting (in messagemode, menus or console) or if their game window is not active.
 
 //DP_BUTTONUSE
 //idea: id Software
@@ -2140,7 +2140,7 @@ void(float fhandle) fclose = #111; // closes a file
 string(float fhandle) fgets = #112; // reads a line of text from the file and returns as a tempstring
 void(float fhandle, string s, ...) fputs = #113; // writes a line of text to the end of the file
 float(string s) strlen = #114; // returns how many characters are in a string
-string(string s1, string s2, ...) strcat = #115; // concatenates two or more strings (for example "abc", "def" would return "abcdef") and returns as a tempstring
+string(string s, string...) strcat = #115; // concatenates 1 to 8 strings (for example "abc", "def" would return "abcdef") and returns as a tempstring
 string(string s, float start, float length) substring = #116; // returns a section of a string as a tempstring - see FTE_STRINGS for enhanced version
 vector(string s) stov = #117; // returns vector value from a string
 string(string s, ...) strzone = #118; // makes a copy of a string into the string zone and returns it, this is often used to keep around a tempstring for longer periods of time (tempstrings are replaced often)
@@ -2665,5 +2665,5 @@ float(entity ent) nudgeoutofsolid = #567;
 //Note: makes only one tracebox call if the entity isn't stuck, so don't call tracebox just to see if you should call nudgeoutofsolid.
 
 
-// bones_was_here: commented as QC wants to use this but we still need to support div0-stable:
+// bones_was_here: commented as GMQCC wants to use this but we still need to support div0-stable:
 //float(float dividend, float divisor) mod = #245;

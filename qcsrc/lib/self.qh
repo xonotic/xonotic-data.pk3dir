@@ -99,9 +99,7 @@ SELFWRAP(SendEntity, bool, (entity to, int sendflags), (entity this, entity to, 
 
 #define ChangeYaw(e, ...) (__self = (e), builtin_ChangeYaw(__VA_ARGS__))
 #define checkclient(e, ...) (__self = (e), builtin_checkclient(__VA_ARGS__))
-#ifndef SVQC
-    #define droptofloor(e, ...) (__self = (e), builtin_droptofloor(__VA_ARGS__))
-#endif
+#define droptofloor(e, ...) (__self = (e), builtin_droptofloor(__VA_ARGS__))
 #define error(...) (__self = (NULL), builtin_error(__VA_ARGS__))
 #define movetogoal(e, ...) (__self = (e), builtin_movetogoal(__VA_ARGS__))
 #define walkmove(e, ...) (__self = (e), builtin_walkmove(__VA_ARGS__))

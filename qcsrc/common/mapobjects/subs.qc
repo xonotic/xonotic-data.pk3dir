@@ -104,6 +104,8 @@ void SUB_CalcMoveDone(entity this)
 
 void SUB_CalcMovePause(entity this)
 {
+	if (!this.move_controller)
+		return;
 	this.move_controller.animstate_starttime += frametime;
 	this.move_controller.animstate_endtime += frametime;
 }
@@ -296,6 +298,11 @@ void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, vo
 			break;
 	}
 
+	// Q3 implements this fallback for all movers at the end of its InitMover()
+	// If .speed is negative this applies, instead of the mover-specific default speed.
+	if (traveltime <= 0)
+		traveltime = 0.001;
+
 	// Very short animations don't really show off the effect
 	// of controlled animation, so let's just use linear movement.
 	// Alternatively entities can choose to specify non-controlled movement.
@@ -428,9 +435,6 @@ void SetBrushEntityModel(entity this, bool with_lod)
 			_setmodel(this, this.model); // no precision needed
 		if(with_lod)
 			InitializeEntity(this, LODmodel_attach, INITPRIO_FINDTARGET);
-
-		if(endsWith(this.model, ".obj")) // WORKAROUND: darkplaces currently rotates .obj models on entities incorrectly, we need to add 180 degrees to the Y axis
-			this.angles_y = anglemods(this.angles_y - 180);
 	}
 	setorigin(this, this.origin);
 	ApplyMinMaxScaleAngles(this);

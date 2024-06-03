@@ -5,6 +5,7 @@
 #include <common/deathtypes/all.qh>
 #include <common/debug.qh>
 #include <common/mapinfo.qh>
+#include <common/mapobjects/_mod.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <common/util.qh>
 #include <common/vehicles/all.qh>
@@ -58,6 +59,11 @@ bool dropclient_schedule(entity this)
 	setthink(e, dropclient_do);
 	e.owner = this;
 	e.nextthink = time + 0.1;
+
+	// ignore this player for team balancing and queuing
+	this.team = -1;
+	this.wants_join = 0;
+	this.classname = STR_OBSERVER;
 	return true;
 }
 
@@ -187,12 +193,14 @@ void CreatureFrame_All()
 	});
 }
 
+// called shortly after map change in dedicated
 void Pause_TryPause_Dedicated(entity this)
 {
-	if (player_count == 0)
+	if (player_count == 0 && !intermission_running && !autocvar__endmatch)
 		setpause(1);
 }
 
+// called every normal frame in singleplayer/listen
 void Pause_TryPause()
 {
 	int n = 0, p = 0;
@@ -207,9 +215,12 @@ void Pause_TryPause()
 		setpause(0);
 }
 
+// called every paused frame by DP
 void SV_PausedTic(float elapsedtime)
 {
-	if (!server_is_dedicated)
+	if (autocvar__endmatch) // `endmatch` while paused
+		setpause(0); // proceed to intermission
+	else if (!server_is_dedicated)
 	{
 		if (autocvar_sv_autopause)
 			Pause_TryPause();
@@ -288,12 +299,14 @@ void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
 {
-	// TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
-	IL_EACH(g_players, IS_FAKE_CLIENT(it), sys_phys_update(it, frametime));
-	IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPreThink(it));
+	FOREACH_CLIENT(IS_FAKE_CLIENT(it),
+	{
+		// DP calls these for real clients only
+		sys_phys_update(it, frametime); // called by SV_PlayerPhysics for players
+		PlayerPreThink(it);
+	});
 
 	execute_next_frame();
-	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause();
 
 	delete_fn = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
@@ -346,6 +359,10 @@ void StartFrame()
 	CreatureFrame_All();
 	CheckRules_World();
 
+	// after CheckRules_World() as it may set intermission_running, and after RedirectionThink() in case listen server is closing
+	if (autocvar_sv_autopause && !server_is_dedicated && !intermission_running)
+		Pause_TryPause();
+
 	if (warmup_stage && !game_stopped && warmup_limit > 0 && time - game_starttime >= warmup_limit) {
 		ReadyRestart(true);
 		return;
@@ -356,8 +373,13 @@ void StartFrame()
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
 	GlobalStats_updateglobal();
-	FOREACH_CLIENT(true, GlobalStats_update(it));
-	IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPostThink(it));
+	FOREACH_CLIENT(true,
+	{
+		GlobalStats_update(it);
+		if (IS_FAKE_CLIENT(it))
+			PlayerPostThink(it); // DP calls this for real clients only
+		PlayerFrame(it);
+	});
 }
 
 .vector originjitter;
@@ -412,27 +434,25 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	}
 }
 
-string GetField_fullspawndata(entity e, string f, ...)
-/* Retrieves the value of a map entity field from fullspawndata
+/** Retrieves the value of a map entity field from fullspawndata.
  * This bypasses field value changes made by the engine,
  * eg string-to-float and escape sequence substitution.
  *
  * Avoids the need to declare fields just to read them once :)
  *
  * Returns the last instance of the field to match DarkPlaces behaviour.
- * Path support: converts \ to / and tests the file if a third (bool, true) arg is passed.
+ *
+ * Path support: converts \ to / and checks the file exists, if vfspath is true.
  * Returns string_null if the entity does not have the field, or the file is not in the VFS.
  *
  * FIXME: entities with //comments are not supported.
  */
+string GetField_fullspawndata(entity e, string fieldname, bool vfspath)
 {
 	string v = string_null;
 
-	if (!e.fullspawndata)
-	{
-		//LOG_WARNF("^1EDICT %s (classname %s) has no fullspawndata, engine lacks support?", ftos(num_for_edict(e)), e.classname);
+	if (!e.fullspawndata) // Engine lacks support, warning spam in CheckEngineExtensions()
 		return v;
-	}
 
 	if (strstrofs(e.fullspawndata, "//", 0) >= 0)
 	{
@@ -442,14 +462,14 @@ string GetField_fullspawndata(entity e, string f, ...)
 		return v;
 	}
 
-	//print(sprintf("%s(EDICT %s, FIELD %s)\n", __FUNC__, ftos(num_for_edict(e)), f));
+	//print(sprintf("%s(EDICT %s, FIELD %s)\n", __FUNC__, ftos(num_for_edict(e)), fieldname));
 	//print(strcat("FULLSPAWNDATA:", e.fullspawndata, "\n"));
 
 	// tokenize treats \ as an escape, but tokenize_console returns the required literal
 	for (int t = tokenize_console(e.fullspawndata) - 3; t > 0; t -= 2)
 	{
 		//print(sprintf("\tTOKEN %s:%s\t%s:%s\n", ftos(t), ftos(t + 1), argv(t), argv(t + 1)));
-		if (argv(t) == f)
+		if (argv(t) == fieldname)
 		{
 			v = argv(t + 1);
 			break;
@@ -458,7 +478,7 @@ string GetField_fullspawndata(entity e, string f, ...)
 
 	//print(strcat("RESULT: ", v, "\n\n"));
 
-	if (v && ...(0, bool) == true)
+	if (v && vfspath)
 	{
 		v = strreplace("\\", "/", v);
 		if (whichpack(v) == "")
@@ -466,6 +486,32 @@ string GetField_fullspawndata(entity e, string f, ...)
 	}
 
 	return v;
+}
+
+/*
+=============
+FindFileInMapPack
+
+Returns the first matching VFS file path that exists in the current map's pack.
+Returns string_null if no files match or the map isn't packaged.
+=============
+*/
+string FindFileInMapPack(string pattern)
+{
+	if (!checkextension("DP_QC_FS_SEARCH_PACKFILE"))
+		return string_null;
+
+	string base_pack = whichpack(strcat("maps/", mapname, ".bsp"));
+	if (base_pack == "" || !base_pack) // this map isn't packaged or there was an error
+		return string_null;
+
+	int glob = search_packfile_begin(pattern, true, true, base_pack);
+	if (glob < 0)
+		return string_null;
+
+	string file = search_getfilename(glob, 0);
+	search_end(glob);
+	return file;
 }
 
 void WarpZone_PostInitialize_Callback()

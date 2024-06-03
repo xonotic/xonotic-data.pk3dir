@@ -42,13 +42,17 @@ float		trace_inopen;
 float		trace_inwater;
 
 //
-// required prog functions
+// prog functions called by engine
 //
-void()		CSQC_Init;
-void()		CSQC_Shutdown;
-float(float f, float t, float n)	CSQC_InputEvent;
-void(float w, float h)		CSQC_UpdateView;
-float(string s)	CSQC_ConsoleCommand;
+void  CSQC_Init(float apilevel, string enginename, float engineversion);
+void  CSQC_Shutdown();
+float CSQC_InputEvent(float evtype, float scanx, float chary);
+void  CSQC_UpdateView(float vid_width, float vid_height, float notmenu); // required for EXT_CSQC (preferred)
+float CSQC_ConsoleCommand(string cmdstr);
+#ifdef CSQC_SIMPLE // hud-only CSQC
+	void CSQC_DrawHud(vector virtsize, float showscores); // required for CSQC_SIMPLE (fallback)
+	void CSQC_DrawScores(vector virtsize, float showscores);
+#endif
 
 //these fields are read and set by the default player physics
 vector		pmove_org;
@@ -430,7 +434,7 @@ void(float fhandle) fclose = #111;
 string(float fhandle) fgets = #112;
 void(float fhandle, string s) fputs = #113;
 float(string s) strlen = #114;
-string(...) strcat = #115;
+string(string s, string...) strcat = #115;
 string(string s, float start, float length) substring = #116;
 vector(string) stov = #117;
 string(string s) strzone = #118;
@@ -1443,11 +1447,22 @@ void(float fh, entity e) writetofile = #606;
 float(string s) isfunction = #607;
 void(entity e, string s) parseentitydata = #608;
 
+//DP_QC_FINDCHAIN_TOFIELD
+//see: dpextensions.qc
+entity(vector org, float rad, .entity tofield) findradius_tofield = #22;
+entity(.string fld, string match, .entity tofield) findchain_tofield = #402;
+entity(.float fld, float match, .entity tofield) findchainflags_tofield = #450;
+entity(.float fld, float match, .entity tofield) findchainfloat_tofield = #403;
+
 //DP_COVERAGE
 //idea: divVerent
 //darkplaces implementation: divVerent
 //function definitions:
 void coverage() = #642;  // Reports a coverage event. The engine counts for each of the calls to this builtin whether it has been called.
+
+//DP_RM_CLIPGROUP
+//see: dpextensions.qc
+.float clipgroup;
 
 //DP_QC_FS_SEARCH_PACKFILE
 //idea: Mario
@@ -1457,6 +1472,15 @@ float(string pattern, float caseinsensitive, float quiet, string packfile) searc
 //description:
 //extension to search_begin (DP_QC_FS_SEARCH), performs a filename search with the specified pattern (for example "maps/*.bsp") and stores the results in a search slot (minimum of 128 supported by any engine with this extension), the other functions take this returned search slot number, be sure to search_free when done (they are also freed on progs reload).
 //only searches for files within the specified packfile, which is expected to match the results of whichpack().
+
+//DP_QC_FINDBOX
+//see: dpextensions.qc
+entity(vector mins, vector maxs) findbox = #566;
+entity(vector mins, vector maxs, .entity tofield) findbox_tofield = #566;
+
+//DP_QC_NUDGEOUTOFSOLID
+//see: dpextensions.qc
+float(entity ent) nudgeoutofsolid = #567;
 
 // assorted builtins
 const float		STAT_MOVEVARS_TICRATE           = 240;
@@ -1485,5 +1509,5 @@ vector gettaginfo_forward;
 vector gettaginfo_right;
 vector gettaginfo_up;
 float checkpvs(vector viewpos, entity viewee) = #240;
-// bones_was_here: commented as QC wants to use this but we still need to support div0-stable:
+// bones_was_here: commented as GMQCC wants to use this but we still need to support div0-stable:
 //float mod(float dividend, float divisor) = #245;

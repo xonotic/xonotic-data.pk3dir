@@ -11,11 +11,8 @@ int autocvar_g_pickup_items;
 bool autocvar_g_nodepthtestitems;
 #define autocvar_g_weapon_stay cvar("g_weapon_stay")
 
-void StartItem(entity this, entity a);
-.int item_group;
-.int item_group_count;
-
 float autocvar_sv_simple_items;
+
 bool ItemSend(entity this, entity to, int sf);
 
 const float ITEM_RESPAWN_TICKS = 10;
@@ -92,8 +89,10 @@ float healtharmor_pickupevalfunc(entity player, entity item);
 
 .bool is_item;
 .entity itemdef;
-void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter);
+void StartItem(entity this, entity def);
 
+.int item_group;
+.int item_group_count;
 void setItemGroup(entity this);
 void setItemGroupCount();
 

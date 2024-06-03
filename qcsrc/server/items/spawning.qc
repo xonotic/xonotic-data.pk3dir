@@ -50,7 +50,7 @@ bool Item_Initialise(entity item)
 			StartItem(item, it);
 			goto classname_found;
 		});
-		LOG_FATALF("Item_Initialize: Invalid classname: %s", item.classname);
+		LOG_FATALF("Invalid classname: %s", item.classname);
 		LABEL(classname_found)
 	}
 

@@ -64,23 +64,48 @@ void Physics_UpdateStats(entity this)
 		STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw) * maxspd_mod;
 	}
 
-	/* Q3 uses the following:
-	 *             MIN '-15 -15 -24'
-	 *             MAX '15 15 32'
-	 *        VIEW_OFS '0 0 26'
-	 *      CROUCH_MIN '-15 -15 -24'
-	 *      CROUCH_MAX '15 15 16'
-	 * CROUCH_VIEW_OFS '0 0 12'
-	 * but xon player models have a different z offset to suit the origin at 24/69
-	 * at q3compat hitbox and model scale the equivalent offset is origin at 20/56
-	 */
-	bool q3hb = q3compat && autocvar_sv_q3compat_changehitbox;
-	STAT(PL_MIN, this)             = q3hb ? '-15 -15 -20' : autocvar_sv_player_mins;
-	STAT(PL_MAX, this)             = q3hb ? '15 15 36'    : autocvar_sv_player_maxs;
-	STAT(PL_VIEW_OFS, this)        = q3hb ? '0 0 30'      : autocvar_sv_player_viewoffset;
-	STAT(PL_CROUCH_MIN, this)      = q3hb ? '-15 -15 -20' : autocvar_sv_player_crouch_mins;
-	STAT(PL_CROUCH_MAX, this)      = q3hb ? '15 15 20'    : autocvar_sv_player_crouch_maxs;
-	STAT(PL_CROUCH_VIEW_OFS, this) = q3hb ? '0 0 16'      : autocvar_sv_player_crouch_viewoffset;
+	if (autocvar_sv_mapformat_is_quake3)
+	{
+		/* Q3 uses the following:
+		 *                 MIN '-15 -15 -24'
+		 *                 MAX '15 15 32'
+		 *            VIEW_OFS '0 0 26'
+		 *          CROUCH_MIN '-15 -15 -24'
+		 *          CROUCH_MAX '15 15 16'
+		 *     CROUCH_VIEW_OFS '0 0 12'
+		 * but Xonotic player models have a different z offset to suit origin at 24/69.
+		 * At q3compat hitbox dimensions and model scale the equivalent offset is origin at 20/56.
+		 * See also: model .scale in PutPlayerInServer().
+		 */
+		bool q3hb = q3compat && autocvar_sv_q3compat_changehitbox;
+		STAT(PL_MIN, this)             = q3hb ? '-15 -15 -20' : autocvar_sv_player_mins;
+		STAT(PL_MAX, this)             = q3hb ? '15 15 36'    : autocvar_sv_player_maxs;
+		STAT(PL_VIEW_OFS, this)        = q3hb ? '0 0 30'      : autocvar_sv_player_viewoffset;
+		STAT(PL_CROUCH_MIN, this)      = q3hb ? '-15 -15 -20' : autocvar_sv_player_crouch_mins;
+		STAT(PL_CROUCH_MAX, this)      = q3hb ? '15 15 20'    : autocvar_sv_player_crouch_maxs;
+		STAT(PL_CROUCH_VIEW_OFS, this) = q3hb ? '0 0 16'      : autocvar_sv_player_crouch_viewoffset;
+	}
+	else
+	{
+		/* Quake and Q2 use a wider bbox matching the Q1BSP 32x32x56 cliphull:
+		 *                 MIN '-16 -16 -24'
+		 *                 MAX '16 16 32'
+		 *            VIEW_OFS '0 0 22'
+		 * Quake doesn't support crouching, Q2 has a very low crouch:
+		 *          CROUCH_MIN '-16 -16 -24'
+		 *          CROUCH_MAX '16 16 4'
+		 *     CROUCH_VIEW_OFS '0 0 -2'
+		 * We probably want a higher VIEW_OFS and Xonotic models don't crouch low enough for Q2 settings
+		 * so these are the same heights as for Q3 above.
+		 */
+		STAT(PL_MIN, this)             = '-16 -16 -20';
+		STAT(PL_MAX, this)             = '16 16 36';
+		STAT(PL_VIEW_OFS, this)        = '0 0 30';
+		STAT(PL_CROUCH_MIN, this)      = '-16 -16 -20';
+		// Q1BSP has no cliphull to support crouching so disable it there, see PM_ClientMovement_UpdateStatus().
+		STAT(PL_CROUCH_MAX, this)      = autocvar_sv_mapformat_is_quake2 ? '16 16 20' : STAT(PL_MAX, this);
+		STAT(PL_CROUCH_VIEW_OFS, this) = autocvar_sv_mapformat_is_quake2 ? '0 0 16'   : STAT(PL_VIEW_OFS, this);
+	}
 
 	// old stats
 	// fix some new settings
@@ -167,6 +192,10 @@ void PM_ClientMovement_UpdateStatus(entity this)
 
 	MUTATOR_CALLHOOK(PlayerCanCrouch, this, do_crouch);
 	do_crouch = M_ARGV(1, bool);
+
+	// Disable crouching on Q1BSP because it lacks a suitable cliphull (HLBSP added one).
+	if (STAT(PL_CROUCH_MAX, this).z == STAT(PL_MAX, this).z)
+		do_crouch = false;
 
 	if (do_crouch) {
 		if (!IS_DUCKED(this)) {
@@ -839,6 +868,9 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 	// needs to be called before physics are run!
 	if(IS_REAL_CLIENT(this))
 		PM_UpdateButtons(this, CS(this));
+#elif defined(CSQC)
+	if(this.last_pushed && !WarpZoneLib_ExactTrigger_Touch(this.last_pushed, this, false))
+		this.last_pushed = NULL;
 #endif
 
 	sys_phys_update(this, PHYS_INPUT_TIMELENGTH);

@@ -24,7 +24,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
     }
 
     FOREACH(Nades, true, {
-        for (int j = 0; j < 2; j++)
+        for (int j = 0; j < 2; ++j)
         {
             if (it.m_projectile[j] == proj)
             {
@@ -37,21 +37,19 @@ entity Nade_TrailEffect(int proj, int nade_team)
 
     return EFFECT_Null;
 }
+
 #endif
 
-REGISTER_NET_TEMP(TE_CSQC_DARKBLINKING);
 #ifdef CSQC
 #include <client/draw.qh>
 #include <client/hud/hud.qh>
 
-float dark_appeartime;
-float dark_fadetime;
-bool darkblink;
+bool darkness_fadealpha;
 
 void HUD_DarkBlinking()
 {
 	vector bottomright = vec2(vid_conwidth, vid_conheight);
-	drawfill('0 0 0', bottomright, NADE_TYPE_DARKNESS.m_color, 0.986, DRAWFLAG_NORMAL);
+	drawfill('0 0 0', bottomright, NADE_TYPE_DARKNESS.m_color, darkness_fadealpha, DRAWFLAG_NORMAL);
 }
 
 REGISTER_MUTATOR(cl_nades, true);
@@ -59,23 +57,20 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 {
 	if (STAT(NADE_DARKNESS_TIME) > time)
 	{
-		M_ARGV(0, vector) = NADE_TYPE_DARKNESS.m_color;
+		if (!darkness_fadealpha)
+			sound(csqcplayer, CH_PAIN, SND_BLIND, VOL_BASE, ATTEN_NORM);
+		darkness_fadealpha = min(0.986, darkness_fadealpha + frametime * 7);
+	}
+	else if (darkness_fadealpha > 0)
+		darkness_fadealpha = max(0, darkness_fadealpha - frametime * 7);
+
+	if (darkness_fadealpha > 0)
+	{
 		HUD_DarkBlinking();
+		M_ARGV(1, float) = 0; // alpha_multipl 0, don't draw normal overlay
 		return true;
 	}
 	return false;
-}
-
-NET_HANDLE(TE_CSQC_DARKBLINKING, bool isNew)
-{
-	return = true;
-
-	if(darkblink) return;
-
-	localcmd("play2 sound/misc/blind\n");
-	darkblink = true;
-	dark_appeartime = time;
-	dark_fadetime = STAT(NADE_DARKNESS_TIME);
 }
 
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
@@ -98,6 +93,8 @@ MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 }
 MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 {
+	if (!mut_is_active(MUT_NADES)) return;
+
 	entity proj = M_ARGV(0, entity);
 
 	if (proj.cnt == PROJECTILE_NAPALM_FOUNTAIN)
@@ -109,6 +106,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 
 	entity nade_type = Nade_FromProjectile(proj.cnt);
 	if (nade_type == NADE_TYPE_Null) return;
+
 	if(STAT(NADES_SMALL))
 	{
 		proj.mins = '-8 -8 -8';
@@ -206,7 +204,7 @@ void nade_timer_think(entity this)
 
 void nade_burn_spawn(entity _nade)
 {
-	CSQCProjectile(_nade, true, REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, _nade)).m_projectile[true], true);
+	CSQCProjectile(_nade, true, REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, _nade)).m_projectile[1], true);
 }
 
 void nade_spawn(entity _nade)
@@ -224,7 +222,7 @@ void nade_spawn(entity _nade)
 
 	_nade.effects |= EF_LOWPRECISION;
 
-	CSQCProjectile(_nade, true, REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, _nade)).m_projectile[false], true);
+	CSQCProjectile(_nade, true, REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, _nade)).m_projectile[0], true);
 }
 
 void normal_nade_boom(entity this)
@@ -388,7 +386,7 @@ void napalm_fountain_think(entity this)
 
 void nade_napalm_boom(entity this)
 {
-	for (int c = 0; c < autocvar_g_nades_napalm_ball_count; c++)
+	for (int c = 0; c < autocvar_g_nades_napalm_ball_count; ++c)
 		nade_napalm_ball(this);
 
 	entity fountain = new(nade_napalm_fountain);
@@ -453,7 +451,7 @@ void nade_ice_think(entity this)
 	randomr = random();
 	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_nade_radius;
 	float randomw;
-	randomw = random() * M_PI * 2;
+	randomw = random() * (2 * M_PI);
 	vector randomp;
 	randomp.x = randomr * cos(randomw);
 	randomp.y = randomr * sin(randomw);
@@ -471,24 +469,20 @@ void nade_ice_think(entity this)
 
 	float current_freeze_time = this.ltime - time - 0.1;
 
-#define ICE_NADE_RADIUS_TEAMCHECK(checked) \
-	if (checked) \
-	if (!it.revival_time || ((time - it.revival_time) >= 1.5)) \
-	if (!STAT(FROZEN, it)) \
-		nade_ice_freeze(this, it, current_freeze_time); \
-	break;
-
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_freeze_time > 0,
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage
+		&& !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_freeze_time > 0
+		&& (!it.revival_time || ((time - it.revival_time) >= 1.5)) && !STAT(FROZEN, it),
 	{
 		switch (autocvar_g_nades_ice_teamcheck)
 		{
-			// 1: nade owner isn't affected; 2: no teammate is affected; any other number than 1 and 2: friendly fire
-			case 1:  ICE_NADE_RADIUS_TEAMCHECK(it != this.realowner);
-			case 2:  ICE_NADE_RADIUS_TEAMCHECK(DIFF_TEAM(it, this.realowner) && it != this.realowner);
-			default: ICE_NADE_RADIUS_TEAMCHECK(!autocvar_g_nades_ice_teamcheck || (DIFF_TEAM(it, this.realowner) || it == this.realowner));
+			case 0:  break; // affect everyone
+			default: 
+			case 2:  if(SAME_TEAM(it, this.realowner)) continue; // don't affect teammates
+			         // fall through (check case 1 condition too)
+			case 1:  if(it == this.realowner) continue; // don't affect the player who threw the nade
 		}
+		nade_ice_freeze(this, it, current_freeze_time);
 	});
-#undef ICE_NADE_RADIUS_TEAMCHECK
 }
 
 void nade_ice_boom(entity this)
@@ -802,19 +796,6 @@ void nade_ammo_boom(entity this)
 	orb.colormod = '0.66 0.33 0';
 }
 
-void DarkBlinking(entity e)
-{
-	if(e == NULL) return;
-
-	int accepted = VerifyClientEntity(e, true, false);
-
-	if(accepted > 0)
-	{
-		msg_entity = e;
-		WriteHeader(MSG_ONE, TE_CSQC_DARKBLINKING);
-	}
-}
-
 void nade_darkness_think(entity this)
 {
 	if(round_handler_IsActive())
@@ -848,7 +829,7 @@ void nade_darkness_think(entity this)
 	randomr = random();
 	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_nade_radius;
 	float randomw;
-	randomw = random() * M_PI * 2;
+	randomw = random() * (2 * M_PI);
 	vector randomp;
 	randomp.x = randomr * cos(randomw);
 	randomp.y = randomr * sin(randomw);
@@ -861,28 +842,22 @@ void nade_darkness_think(entity this)
 		Send_Effect(EFFECT_DARKFIELD, this.origin, '0 0 0', 1);
 	}
 
+
 	float current_dark_time = this.ltime - time - 0.1;
 
-#define DARK_NADE_RADIUS_TEAMCHECK(checked) \
-	if (checked) \
-	if ( IS_REAL_CLIENT(it) ) \
-	{ \
-		STAT(NADE_DARKNESS_TIME, it) = time + 0.1; \
-		DarkBlinking(it); \
-	} \
-	break;
-
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_dark_time > 0,
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage
+		&& !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_dark_time > 0 && IS_REAL_CLIENT(it),
 	{
 		switch (autocvar_g_nades_darkness_teamcheck)
 		{
-			// 1: nade owner isn't affected; 2: no teammate is affected; any other number than 1 and 2: friendly fire
-			case 1:  DARK_NADE_RADIUS_TEAMCHECK(it != this.realowner);
-			case 2:  DARK_NADE_RADIUS_TEAMCHECK(DIFF_TEAM(it, this.realowner) && it != this.realowner);
-			default: DARK_NADE_RADIUS_TEAMCHECK(!autocvar_g_nades_darkness_teamcheck || (DIFF_TEAM(it, this.realowner) && it != this.realowner));
+			case 0:  break; // affect everyone
+			default:
+			case 2:  if(SAME_TEAM(it, this.realowner)) continue; // don't affect teammates
+			         // fall through (check case 1 condition too)
+			case 1:  if(it == this.realowner) continue; // don't affect the player who threw the nade
 		}
+		STAT(NADE_DARKNESS_TIME, it) = time + 0.1;
 	});
-#undef DARK_NADE_RADIUS_TEAMCHECK
 }
 
 void nade_darkness_boom(entity this)
@@ -1286,7 +1261,7 @@ bool nade_customize(entity this, entity client)
 		if(!this.traileffectnum)
 		{
 			entity nade = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this));
-			this.traileffectnum = _particleeffectnum(Nade_TrailEffect(nade.m_projectile[false], this.team).eent_eff_name);
+			this.traileffectnum = _particleeffectnum(Nade_TrailEffect(nade.m_projectile[0], this.team).eent_eff_name);
 		}
 		this.alpha = 1;
 	}
@@ -1298,11 +1273,13 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 {
 	entity n = new(nade), fn = new(fake_nade);
 
-	STAT(NADE_BONUS_TYPE, n) = max(1, ntype);
 	n.pokenade_type = pntype;
 
-	if(REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, n)) == NADE_TYPE_Null)
-		STAT(NADE_BONUS_TYPE, n) = NADE_TYPE_NORMAL.m_id;
+	Nade def = REGISTRY_GET(Nades, max(1, ntype));
+	if(def == NADE_TYPE_Null)
+		def = NADE_TYPE_NORMAL;
+
+	STAT(NADE_BONUS_TYPE, n) = def.m_id;
 
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
@@ -1310,8 +1287,8 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	//setattachment(n, player, "bip01 l hand");
 	n.exteriormodeltoclient = player;
 	setcefc(n, nade_customize);
-	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, n)).m_projectile[false], player.team).eent_eff_name);
-	n.colormod = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, n)).m_color;
+	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(def.m_projectile[0], player.team).eent_eff_name);
+	n.colormod = def.m_color;
 	n.realowner = nowner;
 	n.colormap = player.colormap;
 	n.glowmod = player.glowmod;
@@ -1322,19 +1299,19 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	n.projectiledeathtype = DEATH_NADE.m_id;
 	n.weaponentity_fld = weaponentity;
 	n.nade_lifetime = ntime;
-	n.alpha = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, n)).m_alpha;
+	n.alpha = def.m_alpha;
 
 	setmodel(fn, MDL_NADE_VIEW);
 	//setattachment(fn, player.(weaponentity), "");
 	fn.viewmodelforclient = player;
 	fn.realowner = fn.owner = player;
-	fn.colormod = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, n)).m_color;
+	fn.colormod = def.m_color;
 	fn.colormap = player.colormap;
 	fn.glowmod = player.glowmod;
 	setthink(fn, SUB_Remove);
 	fn.nextthink = n.wait;
 	fn.weaponentity_fld = weaponentity;
-	fn.alpha = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, n)).m_alpha;
+	fn.alpha = def.m_alpha;
 
 	player.nade = n;
 	player.fake_nade = fn;
@@ -1424,10 +1401,9 @@ void nades_Clear(entity player)
 
 int nades_CheckTypes(entity player, int cl_ntype)
 {
-#define CL_NADE_TYPE_CHECK(cl_ntype, cvar) \
-	case cl_ntype.m_id: \
-		if (!cvar) return NADE_TYPE_NORMAL.m_id; \
-		break
+	// TODO check what happens without this patch
+#define CL_NADE_TYPE_CHECK(nade_ent, nade_cvar) \
+	case nade_ent.m_id: if (nade_cvar) return cl_ntype
 
 	switch (cl_ntype)
 	{
@@ -1442,7 +1418,7 @@ int nades_CheckTypes(entity player, int cl_ntype)
 		CL_NADE_TYPE_CHECK(NADE_TYPE_AMMO,        autocvar_g_nades_ammo);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_DARKNESS,    autocvar_g_nades_darkness);
 	}
-	return cl_ntype;
+	return NADE_TYPE_NORMAL.m_id; // default to NADE_TYPE_NORMAL for unknown nade types
 #undef CL_NADE_TYPE_CHECK
 }
 
@@ -1671,9 +1647,13 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.nade_refire = (autocvar_g_nades_onspawn) 
-		? time + autocvar_g_nades_nade_refire 
-		: time + autocvar_g_spawnshieldtime;
+	if (StatusEffects_active(STATUSEFFECT_SpawnShield, player))
+		player.nade_refire = StatusEffects_gettime(STATUSEFFECT_SpawnShield, player);
+	else
+		player.nade_refire = time;
+
+	if (!autocvar_g_nades_onspawn)
+		player.nade_refire += autocvar_g_nades_nade_refire;
 
 	if(autocvar_g_nades_bonus_client_select)
 		STAT(NADE_BONUS_TYPE, player) = CS_CVAR(player).cvar_cl_nade_type;

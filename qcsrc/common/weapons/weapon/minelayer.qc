@@ -18,6 +18,7 @@ void W_MineLayer_Stick(entity this, entity to)
 
 	newmine.owner = this.owner;
 	newmine.realowner = this.realowner;
+	PROJECTILE_MAKETRIGGER(newmine);
 	setorigin(newmine, this.origin);
 	setmodel(newmine, MDL_MINELAYER_MINE);
 	setsize(newmine, '-4 -4 -4', '4 4 4');

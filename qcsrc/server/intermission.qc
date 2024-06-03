@@ -20,8 +20,7 @@ string GetMapname()
 	return mapname;
 }
 
-float Map_Count, Map_Current;
-string Map_Current_Name;
+int Map_Count, Map_Current;
 
 // NOTE: this now expects the map list to be already tokenized and the count in Map_Count
 int GetMaplistPosition()
@@ -130,6 +129,9 @@ bool Map_Check(int position, float pass)
 	{
 		if(pass == 2)
 			return true;
+		// MapInfo_Map_flags was set by MapInfo_CheckMap()
+		if (MapInfo_Map_flags & MAPINFO_FLAG_DONOTWANT)
+			return false;
 		if(MapHasRightSize(map_next))
 			return true;
 		return false;
@@ -150,8 +152,9 @@ void Map_Goto_SetStr(string nextmapname)
 		getmapname_stored = strzone(nextmapname);
 }
 
-void Map_Goto_SetFloat(float position)
+void Map_Goto_SetIndex(int position)
 {
+	Map_Current = position;
 	cvar_set("g_maplist_index", ftos(position));
 	Map_Goto_SetStr(argv(position));
 }
@@ -164,9 +167,9 @@ void Map_Goto(float reinit)
 // return codes of map selectors:
 //   -1 = temporary failure (that is, try some method that is guaranteed to succeed)
 //   -2 = permanent failure
-float MaplistMethod_Iterate() // usual method
+int MaplistMethod_Iterate(void) // usual method
 {
-	float pass, i;
+	int pass, i;
 
 	LOG_TRACE("Trying MaplistMethod_Iterate");
 
@@ -174,7 +177,7 @@ float MaplistMethod_Iterate() // usual method
 	{
 		for(i = 1; i < Map_Count; ++i)
 		{
-			float mapindex;
+			int mapindex;
 			mapindex = (i + Map_Current) % Map_Count;
 			if(Map_Check(mapindex, pass))
 				return mapindex;
@@ -183,7 +186,7 @@ float MaplistMethod_Iterate() // usual method
 	return -1;
 }
 
-float MaplistMethod_Repeat() // fallback method
+int MaplistMethod_Repeat(void) // fallback method
 {
 	LOG_TRACE("Trying MaplistMethod_Repeat");
 
@@ -192,9 +195,9 @@ float MaplistMethod_Repeat() // fallback method
 	return -2;
 }
 
-float MaplistMethod_Random() // random map selection
+int MaplistMethod_Random(void) // random map selection
 {
-	float i, imax;
+	int i, imax;
 
 	LOG_TRACE("Trying MaplistMethod_Random");
 
@@ -202,7 +205,7 @@ float MaplistMethod_Random() // random map selection
 
 	for(i = 0; i <= imax; ++i)
 	{
-		float mapindex;
+		int mapindex;
 		mapindex = (Map_Current + floor(random() * (Map_Count - 1) + 1)) % Map_Count; // any OTHER map
 		if(Map_Check(mapindex, 1))
 			return mapindex;
@@ -212,7 +215,7 @@ float MaplistMethod_Random() // random map selection
 
 // the exponent sets a bias on the map selection:
 // the higher the exponent, the less likely "shortly repeated" same maps are
-float MaplistMethod_Shuffle(float exponent) // more clever shuffling
+int MaplistMethod_Shuffle(float exponent) // more clever shuffling
 {
 	float i, j, imax, insertpos;
 
@@ -252,57 +255,57 @@ float MaplistMethod_Shuffle(float exponent) // more clever shuffling
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
 
 		// NOTE: the selected map has just been inserted at (insertpos-1)th position
-		Map_Current = insertpos - 1; // this is not really valid, but this way the fallback has a chance of working
-		if(Map_Check(Map_Current, 1))
-			return Map_Current;
+		if (Map_Check(insertpos - 1, 1))
+			return insertpos - 1;
 	}
 	return -1;
 }
 
-void Maplist_Init()
+int Maplist_Init(void)
 {
-	float i = Map_Count = 0;
+	int i, available_maps = 0;
+	Map_Count = 0;
 	if(autocvar_g_maplist != "")
 	{
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
 		for (i = 0; i < Map_Count; ++i)
-		{
 			if (Map_Check(i, 2))
-				break;
-		}
+				++available_maps;
 	}
 
-	if (i == Map_Count)
+	if (!available_maps)
 	{
 		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags() | MAPINFO_FLAG_NOAUTOMAPLIST));
-		if(autocvar_g_maplist_shuffle)
-			ShuffleMaplist();
+		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
 		if(!server_is_dedicated)
 			localcmd("\nmenu_cmd sync\n");
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
+		for (i = 0; i < Map_Count; ++i)
+			if (Map_Check(i, 2))
+				++available_maps;
 	}
+
 	if(Map_Count == 0)
 		error("empty maplist, cannot select a new map");
+
 	Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
 
-	strcpy(Map_Current_Name, argv(Map_Current)); // will be automatically freed on exit thanks to DP
-	// this may or may not be correct, but who cares, in the worst case a map
-	// isn't chosen in the first pass that should have been
+	if(autocvar_g_maplist_shuffle)
+		cvar_set("g_maplist", shufflewords(autocvar_g_maplist));
+
+	return available_maps;
 }
 
-string GetNextMap()
+// NOTE: call Maplist_Init() before making GetNextMap() call(s)
+string GetNextMap(void)
 {
-	Maplist_Init();
-	float nextMap = -1;
+	int nextMap = -1;
 
-	if(nextMap == -1)
-		if(autocvar_g_maplist_shuffle > 0)
-			nextMap = MaplistMethod_Shuffle(autocvar_g_maplist_shuffle + 1);
+	if(nextMap == -1 && autocvar_g_maplist_shuffle > 0)
+		nextMap = MaplistMethod_Shuffle(autocvar_g_maplist_shuffle + 1);
 
-	if(nextMap == -1)
-		if(autocvar_g_maplist_selectrandom)
-			nextMap = MaplistMethod_Random();
+	if(nextMap == -1 && autocvar_g_maplist_selectrandom)
+		nextMap = MaplistMethod_Random();
 
 	if(nextMap == -1)
 		nextMap = MaplistMethod_Iterate();
@@ -312,7 +315,7 @@ string GetNextMap()
 
 	if(nextMap >= 0)
 	{
-		Map_Goto_SetFloat(nextMap);
+		Map_Goto_SetIndex(nextMap);
 		return getmapname_stored;
 	}
 
@@ -389,15 +392,11 @@ void GotoNextMap(float reinit)
 		return;
 	alreadychangedlevel = true;
 
+	Maplist_Init();
 	string nextMap = GetNextMap();
 	if(nextMap == "")
 		error("Everything is broken - cannot find a next map. Please report this to the developers.");
 	Map_Goto(reinit);
-}
-
-void ShuffleMaplist()
-{
-	cvar_set("g_maplist", shufflewords(autocvar_g_maplist));
 }
 
 string GotoMap(string m)
@@ -444,9 +443,32 @@ void IntermissionThink(entity this)
 		this.autoscreenshot = -1;
 		if(IS_REAL_CLIENT(this))
 		{
-			string num = strftime_s(); // strftime(false, "%s") isn't reliable, see strftime_s description
-			stuffcmd(this, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; "
-				"echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), num));
+			// in old clients "cl_autoscreenshot_screenshot_s %s %s;" takes the screenshot
+			// "cl_autoscreenshot_screenshot %s %s;" does nothing because the cl_autoscreenshot_screenshot alias
+			// doesn't exist; the cl_autoscreenshot_screenshot dummy cvar is created
+			// so that "cl_autoscreenshot_screenshot %s %s" doesn't print any warning in console
+
+			// in new clients "cl_autoscreenshot_screenshot %s %s;" takes the screenshot
+			// even if the cl_autoscreenshot_screenshot cvar is created, only the cl_autoscreenshot_screenshot alias
+			// is executed since only the alias is executed if a cvar with the same name exists
+			// cl_autoscreenshot_screenshot_s is not run as cl_autoscreenshot_screenshot alias clears it
+			// (it doesn't delete it so that "unalias cl_autoscreenshot_screenshot_s;" doesn't print any warning)
+
+			// this stuffcmd is needed only for Xonotic 0.8.6 or lower
+			// the s in cl_autoscreenshot_screenshot_s stands for server alias (alias name can't be longer than 32)
+			stuffcmd(this, sprintf("\n"
+				"alias cl_autoscreenshot_screenshot_s \"screenshot screenshots/autoscreenshot/%s-%s.jpg\";"
+				"set cl_autoscreenshot_screenshot 0;", GetMapname(), matchid));
+
+			// keep only this stuffcmd after the next release
+			stuffcmd(this, sprintf("\ncl_autoscreenshot_screenshot %s %s;"
+				"echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), matchid));
+
+			// this stuffcmd is needed only for Xonotic 0.8.6 or lower
+			stuffcmd(this, "\n"
+				"cl_autoscreenshot_screenshot_s %s %s;"
+				"unset cl_autoscreenshot_screenshot;"
+				"unalias cl_autoscreenshot_screenshot_s;");
 		}
 		return;
 	}
@@ -465,7 +487,7 @@ void FixIntermissionClient(entity e)
 {
 	if(!e.autoscreenshot) // initial call
 	{
-		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
+		e.autoscreenshot = time + 0.1;
 		SetResourceExplicit(e, RES_HEALTH, -2342); // health in the first intermission phase
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{

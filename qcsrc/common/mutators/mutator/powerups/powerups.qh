@@ -8,8 +8,7 @@ MODEL(Powerup_ITEM, "models/relics/relic_powerup.md3");
 
 CLASS(Powerup, Pickup)
 #ifdef SVQC
-    ATTRIB(Powerup, m_mins, vector, '-16 -16 0');
-    ATTRIB(Powerup, m_maxs, vector, '16 16 80');
+    ATTRIB(Powerup, m_maxs, vector, ITEM_L_MAXS);
 #endif
 #ifdef GAMEQC
     ATTRIB(Powerup, m_model, Model, MDL_Powerup_ITEM);
