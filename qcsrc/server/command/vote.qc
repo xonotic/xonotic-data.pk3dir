@@ -549,6 +549,14 @@ void ReadyCount()
 	// map_minplayers can only be > 0 if g_warmup was -1 at worldspawn
 	int minplayers = autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers;
 
+	// This allows warmup to end with zero players to prevent complaints
+	// of server never changing map with legacy config (sv_autopause 0).
+	// Countdown is NOT aborted by teams becoming unbalanced, for simplicity and because
+	// g_balance_teams_queue works during countdown which is a less disruptive solution.
+	bool badteams = (teamplay && total_players && autocvar_sv_teamnagger)
+		? !MUTATOR_CALLHOOK(HideTeamNagger, NULL) && TeamBalance_SizeDifference(NULL) >= autocvar_sv_teamnagger
+		: false;
+
 	if (total_players < minplayers)
 	{
 		if (game_starttime > time) // someone bailed during countdown, back to warmup
@@ -563,9 +571,14 @@ void ReadyCount()
 			warmup_limit = -1;
 		return; // don't ReadyRestart if players are ready but too few
 	}
-	else if (minplayers && warmup_limit <= 0)
+	else if (badteams)
+		warmup_limit = -1;
+	else if (warmup_limit <= 0
+	&& game_starttime <= time) // No countdown in progress; checked to prevent early countdown end
+	                           // if someone leaves after badteams was overridden with `allready`.
 	{
-		// there's enough players now but we're still in infinite warmup
+		// there's enough players now and teams are ok
+		// but we're still in infinite warmup and may need to switch to timed warmup
 		warmup_limit = cvar("g_warmup_limit");
 		if (warmup_limit == 0)
 			warmup_limit = autocvar_timelimit * 60;

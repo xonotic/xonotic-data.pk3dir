@@ -128,7 +128,9 @@ void HUD_Timer()
 		{
 			Scoreboard_UpdatePlayerTeams(); // ensure numplayers is current
 			if (srv_minplayers - numplayers > 0)
-				subtext = _("Warmup: too few players");
+				subtext = _("Warmup: too few players!");
+			else if (teamnagger && (ts_max - ts_min) >= teamnagger)
+				subtext = _("Warmup: teams unbalanced!");
 			else
 				subtext = _("Warmup: no time limit");
 		}

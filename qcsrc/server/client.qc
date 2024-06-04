@@ -259,7 +259,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 		{
 			if (vote_called) { VoteCount(false); }
 			this.ready = false;
-			if (warmup_stage || game_starttime > time) recount_ready = true;
+			if (warmup_stage || game_starttime > time) /* warmup OR countdown */ recount_ready = true;
 		}
 		entcs_update_players(this);
 	}
@@ -821,7 +821,7 @@ void PutPlayerInServer(entity this)
 
 	antilag_clear(this, CS(this));
 
-	if (warmup_stage < 0 || warmup_stage > 1)
+	if (warmup_stage)
 		ReadyCount();
 }
 
@@ -1294,7 +1294,7 @@ void ClientDisconnect(entity this)
 	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
-	if (warmup_stage || game_starttime > time) ReadyCount();
+	if (warmup_stage || game_starttime > time) /* warmup OR countdown */ ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
 
 	player_powerups_remove_all(this); // stop powerup sound
