@@ -568,7 +568,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				sprint(caller, "^1You cannot change team, forbidden by the server.\n");
 				return;
 			}
-			if (team_num && autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
+			if (team_num && autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
 			{
 				entity balance = TeamBalance_CheckAllowedTeams(caller);
 				TeamBalance_GetTeamCounts(balance, caller);
