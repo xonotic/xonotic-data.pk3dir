@@ -279,6 +279,9 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
 				player.team_selected = true; // no autoselect in Join()
 			}
+
+			if (warmup_stage)
+				ReadyCount(); // teams might be balanced now
 		}
 	}
 
@@ -695,6 +698,29 @@ int TeamBalance_GetAllowedTeams(entity balance)
 		}
 	}
 	return result;
+}
+
+int TeamBalance_SizeDifference(entity ignore)
+{
+	if (!teamplay)
+		return 0;
+
+	entity balance = TeamBalance_CheckAllowedTeams(ignore);
+	TeamBalance_GetTeamCounts(balance, ignore);
+
+	int ts_min = 255, ts_max = 0;
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
+	{
+		int ts = TeamBalance_GetTeamFromIndex(balance, i).m_num_players;
+		if (ts_min > ts)
+			ts_min = ts;
+		if (ts_max < ts)
+			ts_max = ts;
+	}
+
+	TeamBalance_Destroy(balance);
+
+	return ts_max - ts_min;
 }
 
 bool TeamBalance_AreEqual(entity ignore, bool would_leave)
