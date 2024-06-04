@@ -38,7 +38,6 @@ REGISTER_ITEM(Strength, Powerup) {
     this.m_itemid           =   IT_STRENGTH;
     this.m_skin             =   0;
     this.m_sound            =   SND_Strength;
-    // this.m_glow             =   true;
     this.m_respawnsound     =   SND_STRENGTH_RESPAWN;
 #endif
     this.netname            =   "strength";
