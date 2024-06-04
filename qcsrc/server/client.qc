@@ -1135,6 +1135,7 @@ void ClientConnect(entity this)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? GameLog_ProcessIP(this.netaddress) : "bot"), ":", playername(this.netname, this.team, false)));
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
+	this.wants_join = 0;
 
 	stuffcmd(this, clientstuff, "\n");
 	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -1306,6 +1307,10 @@ void ClientDisconnect(entity this)
 
 	if (player_count == 0)
 		localcmd("\nsv_hook_lastleave\n");
+
+	if (!TeamBalance_QueuedPlayersTagIn(this))
+	if (autocvar_g_balance_teams_remove)
+		TeamBalance_RemoveExcessPlayers(NULL);
 }
 
 void ChatBubbleThink(entity this)
@@ -1874,8 +1879,26 @@ void SetSpectatee_status(entity this, int spectatee_num)
 			CS(this).pressedkeys = 0;
 			STAT(PRESSED_KEYS, this) = 0;
 		}
+
 		ClientData_Touch(this);
-		if (g_race || g_cts) race_InitSpectator();
+
+		// init or clear race data
+		if ((g_race || g_cts) && g_race_qualifying && IS_REAL_CLIENT(this))
+		{
+			msg_entity = this;
+
+			if (this.enemy && this.enemy.race_laptime)
+			{
+				// init
+				race_SendNextCheckpoint(this.enemy, 1);
+			}
+			else
+			{
+				// send reset to this spectator
+				WriteHeader(MSG_ONE, TE_CSQC_RACE);
+				WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_CLEAR);
+			}
+		}
 	}
 }
 
@@ -2001,24 +2024,38 @@ void ShowRespawnCountdown(entity this)
 	}
 }
 
-.bool team_selected;
 bool ShowTeamSelection(entity this)
 {
 	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
+		return false;
+	if (QueuedPlayersReady(this, true))
 		return false;
 	if (frametime) // once per frame is more than enough
 		stuffcmd(this, "_scoreboard_team_selection 1\n");
 	return true;
 }
-void Join(entity this)
+
+void Join(entity this, bool queued_join)
 {
+	bool teamautoselect = autocvar_g_campaign || autocvar_g_balance_teams || this.wants_join < 0;
+
 	if (autocvar_g_campaign && !campaign_bots_may_start && !game_stopped && time >= game_starttime)
 		ReadyRestart(true);
 
 	TRANSMUTE(Player, this);
 
-	if(!this.team_selected)
-	if(autocvar_g_campaign || autocvar_g_balance_teams)
+	if(queued_join)
+	{
+		// First we must put queued player(s) in their team(s) (they chose first).
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && it.wants_join,
+		{
+			Join(it, false);
+			// ensure TeamBalance_JoinBestTeam will run if necessary for `this`
+			teamautoselect = true;
+		});
+	}
+
+	if(!this.team_selected && teamautoselect)
 		TeamBalance_JoinBestTeam(this);
 
 	if(autocvar_g_campaign)
@@ -2031,10 +2068,13 @@ void Join(entity this)
 	if(IS_PLAYER(this))
 	if(teamplay && this.team != -1)
 	{
+		if(this.wants_join)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
 	}
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 	this.team_selected = false;
+	this.wants_join = 0;
 }
 
 int GetPlayerLimit()
@@ -2107,6 +2147,31 @@ int nJoinAllowed(entity this, entity ignore)
 	return free_slots;
 }
 
+bool queuePlayer(entity this, int team_index)
+{
+	if(IS_BOT_CLIENT(this) || !IS_QUEUE_NEEDED(this) || QueuedPlayersReady(this, false))
+		return false;
+
+	if(team_index <= 0)
+	{
+		// defer team selection until Join()
+		this.wants_join = -1;
+		this.team_selected = false;
+		this.team = -1;
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_WANTS, this.netname);
+		Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_JOIN_PREVENT_QUEUE);
+	}
+	else
+	{
+		this.wants_join = team_index; // Player queued to join
+		this.team_selected = true; // no autoselect in Join()
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_WANTS_TEAM), this.netname);
+		Send_Notification(NOTIF_ONE, this, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_JOIN_PREVENT_QUEUE_TEAM));
+	}
+
+	return true;
+}
+
 bool joinAllowed(entity this)
 {
 	if (CS(this).version_mismatch) return false;
@@ -2115,6 +2180,8 @@ bool joinAllowed(entity this)
 	if (teamplay && lockteams) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
 	if (ShowTeamSelection(this)) return false;
+	if (this.wants_join) return false;
+	if (queuePlayer(this, 0)) return false;
 	return true;
 }
 
@@ -2380,7 +2447,7 @@ void ObserverOrSpectatorThink(entity this)
 			{
 				this.flags &= ~FL_SPAWNING;
 				if(joinAllowed(this))
-					Join(this);
+					Join(this, true);
 				else if(time < CS(this).jointime + MIN_SPEC_TIME)
 					CS(this).autojoin_checked = -1;
 				return;
@@ -2485,7 +2552,7 @@ void PlayerPreThink (entity this)
 				&& (!teamplay || autocvar_g_balance_teams)))
 		{
 			if(joinAllowed(this))
-				Join(this);
+				Join(this, true);
 			return;
 		}
 	}
@@ -2750,9 +2817,9 @@ void PlayerFrame (entity this)
 
 
 // formerly PostThink code
-	if (autocvar_sv_maxidle > 0 || (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0))
+	if (autocvar_sv_maxidle > 0 || ((IS_PLAYER(this) || this.wants_join) && autocvar_sv_maxidle_playertospectator > 0))
 	if (IS_REAL_CLIENT(this))
-	if (IS_PLAYER(this) || autocvar_sv_maxidle_alsokickspectators)
+	if (IS_PLAYER(this) || this.wants_join || autocvar_sv_maxidle_alsokickspectators)
 	if (!intermission_running) // NextLevel() kills all centerprints after setting this true
 	{
 		int totalClients = 0;
@@ -2769,7 +2836,7 @@ void PlayerFrame (entity this)
 					totalClients = 0;
 			}
 		}
-		else if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+		else if ((IS_PLAYER(this) || this.wants_join) && autocvar_sv_maxidle_playertospectator > 0)
 		{
 			FOREACH_CLIENT(IS_REAL_CLIENT(it),
 			{
@@ -2793,22 +2860,35 @@ void PlayerFrame (entity this)
 		else
 		{
 			float maxidle_time = autocvar_sv_maxidle;
-			if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+			if ((IS_PLAYER(this) || this.wants_join)
+			&& autocvar_sv_maxidle_playertospectator > 0)
 				maxidle_time = autocvar_sv_maxidle_playertospectator;
 			float timeleft = ceil(maxidle_time - (time - CS(this).parm_idlesince));
 			float countdown_time = max(min(10, maxidle_time - 1), ceil(maxidle_time * 0.33)); // - 1 to support maxidle_time <= 10
 			if (timeleft == countdown_time && !CS(this).idlekick_lasttimeleft)
 			{
-				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
-					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOVETOSPEC_IDLING, timeleft);
+				if ((IS_PLAYER(this) || this.wants_join) && autocvar_sv_maxidle_playertospectator > 0)
+				{
+					if (!this.wants_join) // no countdown centreprint when getting kicked off the join queue
+						Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOVETOSPEC_IDLING, timeleft);
+				}
 				else
 					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
 			}
-			if (timeleft <= 0) {
-				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+			if (timeleft <= 0)
+			{
+				if ((IS_PLAYER(this) || this.wants_join)
+				&& autocvar_sv_maxidle_playertospectator > 0)
 				{
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
+					if (this.wants_join)
+						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING_QUEUE, this.netname, maxidle_time);
+					else
+						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
 					PutObserverInServer(this, true, true);
+					// when the player is kicked off the server, these are called in ClientDisconnect()
+					if (!TeamBalance_QueuedPlayersTagIn(this))
+					if (autocvar_g_balance_teams_remove)
+						TeamBalance_RemoveExcessPlayers(this);
 				}
 				else
 				{
@@ -2817,7 +2897,9 @@ void PlayerFrame (entity this)
 				}
 				return;
 			}
-			else if (timeleft <= countdown_time) {
+			else if (timeleft <= countdown_time
+			&& !this.wants_join) // no countdown bangs when getting kicked off the join queue
+			{
 				if (timeleft != CS(this).idlekick_lasttimeleft)
 					play2(this, SND(TALK2));
 				CS(this).idlekick_lasttimeleft = timeleft;

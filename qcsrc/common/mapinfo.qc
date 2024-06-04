@@ -1339,7 +1339,7 @@ LABEL(mapinfo_handled)
 			if (world.message != "")
 				MapInfo_Map_title = world.message;
 		if (MapInfo_Map_author == "<AUTHOR>")
-			if ((s = GetField_fullspawndata(world, "author")) != "")
+			if ((s = GetField_fullspawndata(world, "author", false)) != "")
 				MapInfo_Map_author = s;
 	}
 #endif

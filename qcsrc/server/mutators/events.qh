@@ -146,6 +146,9 @@ MUTATOR_HOOKABLE(ItemSound, EV_ItemSound);
     /**/
 MUTATOR_HOOKABLE(GiveFragsForKill, EV_GiveFragsForKill);
 
+/** called when the match ends, before recording scores */
+MUTATOR_HOOKABLE(MatchEnd_BeforeScores, EV_NO_ARGS);
+
 /** called when the match ends */
 MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
 
@@ -992,8 +995,8 @@ MUTATOR_HOOKABLE(CheckRules_World, EV_CheckRules_World);
     /** weapon info entity */    i(entity, MUTATOR_ARGV_0_entity) \
     /** do want? */              i(float, MUTATOR_ARGV_1_float) \
     /**/                         o(float, MUTATOR_ARGV_1_float) \
-    /** want all guns */         i(bool, MUTATOR_ARGV_2_bool) \
-    /**/                         o(bool, MUTATOR_ARGV_2_bool) \
+    /** want all guns */         i(int, MUTATOR_ARGV_2_int) \
+    /**/                         o(int, MUTATOR_ARGV_2_int) \
     /** want mutator blocked */  i(bool, MUTATOR_ARGV_3_bool) \
     /**/                         o(bool, MUTATOR_ARGV_3_bool) \
     /**/

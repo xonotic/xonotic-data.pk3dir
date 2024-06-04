@@ -59,6 +59,11 @@ bool dropclient_schedule(entity this)
 	setthink(e, dropclient_do);
 	e.owner = this;
 	e.nextthink = time + 0.1;
+
+	// ignore this player for team balancing and queuing
+	this.team = -1;
+	this.wants_join = 0;
+	this.classname = STR_OBSERVER;
 	return true;
 }
 
@@ -429,7 +434,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	}
 }
 
-/** Retrieves the value of a map entity field from fullspawndata
+/** Retrieves the value of a map entity field from fullspawndata.
  * This bypasses field value changes made by the engine,
  * eg string-to-float and escape sequence substitution.
  *
@@ -437,12 +442,12 @@ void SV_OnEntityPreSpawnFunction(entity this)
  *
  * Returns the last instance of the field to match DarkPlaces behaviour.
  *
- * Path support: converts \ to / and tests the file if a third (bool, true) arg is passed.
+ * Path support: converts \ to / and checks the file exists, if vfspath is true.
  * Returns string_null if the entity does not have the field, or the file is not in the VFS.
  *
  * FIXME: entities with //comments are not supported.
  */
-string GetField_fullspawndata(entity e, string f, ...)
+string GetField_fullspawndata(entity e, string fieldname, bool vfspath)
 {
 	string v = string_null;
 
@@ -457,14 +462,14 @@ string GetField_fullspawndata(entity e, string f, ...)
 		return v;
 	}
 
-	//print(sprintf("%s(EDICT %s, FIELD %s)\n", __FUNC__, ftos(num_for_edict(e)), f));
+	//print(sprintf("%s(EDICT %s, FIELD %s)\n", __FUNC__, ftos(num_for_edict(e)), fieldname));
 	//print(strcat("FULLSPAWNDATA:", e.fullspawndata, "\n"));
 
 	// tokenize treats \ as an escape, but tokenize_console returns the required literal
 	for (int t = tokenize_console(e.fullspawndata) - 3; t > 0; t -= 2)
 	{
 		//print(sprintf("\tTOKEN %s:%s\t%s:%s\n", ftos(t), ftos(t + 1), argv(t), argv(t + 1)));
-		if (argv(t) == f)
+		if (argv(t) == fieldname)
 		{
 			v = argv(t + 1);
 			break;
@@ -473,7 +478,7 @@ string GetField_fullspawndata(entity e, string f, ...)
 
 	//print(strcat("RESULT: ", v, "\n\n"));
 
-	if (v && ...(0, bool) == true)
+	if (v && vfspath)
 	{
 		v = strreplace("\\", "/", v);
 		if (whichpack(v) == "")
