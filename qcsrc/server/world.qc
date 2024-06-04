@@ -533,8 +533,8 @@ void cvar_changes_init()
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup");
-		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
+		BADVALUE("sv_teamnagger", "1");
 
 		BADPRESUFFIXVALUE("g_", "_weaponarena", "most");
 		BADPRESUFFIXVALUE("g_", "_weaponarena", "most_available");
