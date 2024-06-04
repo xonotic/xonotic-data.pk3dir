@@ -333,8 +333,8 @@ void Player_SetTeamIndexChecked(entity player, int team_index)
 	{
 		team_index = 1;
 	}
-	// autocvar_g_balance_teams_prevent_imbalance only makes sense if autocvar_g_balance_teams is on, as it makes the team selection dialog pointless
-	if (autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
+
+	if (autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
 	{
 		TeamBalance_GetTeamCounts(balance, player);
 		if ((Team_IndexToBit(team_index) & TeamBalance_FindBestTeams(balance,
@@ -1095,7 +1095,7 @@ int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
 void TeamBalance_AutoBalanceBots()
 {
 	// checks disabled because we always want auto-balanced bots
-	//if (!(autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance))
+	//if (!autocvar_g_balance_teams_prevent_imbalance)
 	//	return;
 
 	if (intermission_running) return;
