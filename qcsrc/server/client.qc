@@ -821,7 +821,10 @@ void PutPlayerInServer(entity this)
 
 	antilag_clear(this, CS(this));
 
-	if (warmup_stage < 0 || warmup_stage > 1)
+	// TODO?  || game_starttime > time 
+		// to catch stacking during countdown
+			// use join queue instead?
+	if (warmup_stage)
 		ReadyCount();
 }
 

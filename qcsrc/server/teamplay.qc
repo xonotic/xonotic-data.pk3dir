@@ -279,6 +279,9 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
 				player.team_selected = true; // no autoselect in Join()
 			}
+
+			if (warmup_stage || game_starttime > time)
+				ReadyCount(); //
 		}
 	}
 

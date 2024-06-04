@@ -18,6 +18,7 @@ float scoreboard_left;
 float scoreboard_right;
 
 int numplayers;
+int ts_min, ts_max; ///< team size
 
 void Cmd_Scoreboard_SetFields(int argc);
 void Scoreboard_Draw();

@@ -549,6 +549,14 @@ void ReadyCount()
 	// map_minplayers can only be > 0 if g_warmup was -1 at worldspawn
 	int minplayers = autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers;
 
+	// no cvar: warmup && teamplay means this match be srs yo
+	// but we still allow warmup to end with zero players to prevent complaints of server never
+	// changing map with "traditional" config: sv_autopause 0 and g_warmup 1 and teamplay.
+	bool teamsok = teamplay && total_players ? TeamBalance_AreEqual(NULL, false) : true;
+
+	// TODO is it better to abort if teams become unbalanced during countdown? or to rely on join queue
+		// join queue seems less disruptive
+
 	if (total_players < minplayers)
 	{
 		if (game_starttime > time) // someone bailed during countdown, back to warmup
@@ -563,9 +571,12 @@ void ReadyCount()
 			warmup_limit = -1;
 		return; // don't ReadyRestart if players are ready but too few
 	}
-	else if (minplayers && warmup_limit <= 0)
+	else if (!teamsok)
+		warmup_limit = -1;
+	else if (warmup_limit <= 0)
 	{
-		// there's enough players now but we're still in infinite warmup
+		// there's enough players now and teams are ok
+		// but we're still in infinite warmup and may need to switch to timed warmup
 		warmup_limit = cvar("g_warmup_limit");
 		if (warmup_limit == 0)
 			warmup_limit = autocvar_timelimit * 60;
