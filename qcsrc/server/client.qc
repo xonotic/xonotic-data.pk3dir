@@ -97,10 +97,6 @@ STATIC_METHOD(Client, Remove, void(Client this))
     ClientDisconnect(this);
 }
 
-void send_CSQC_teamnagger() {
-	WriteHeader(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
-}
-
 int CountSpectators(entity player, entity to)
 {
 	if(!player) { return 0; } // not sure how, but best to be safe
@@ -144,6 +140,9 @@ bool ClientData_Send(entity this, entity to, int sf)
 	                                sf |= BIT(3); // observing blocked
 	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
 	                                sf |= BIT(4); // show spectators
+	if (autocvar_sv_teamnagger && teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
+		if (!MUTATOR_CALLHOOK(HideTeamNagger, this)) // enable teamnagger
+						  sf |= (autocvar_sv_teamnagger & 0x03) << 5; // BIT(5) | BIT(6)
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
@@ -1103,6 +1102,7 @@ void SendWelcomeMessage(entity this, int msg_type)
 ClientConnect
 
 Called when a client connects to the server
+Do not send temp entity headers directly here, they may arrive before CSQC is ready.
 =============
 */
 void ClientConnect(entity this)
@@ -1185,10 +1185,6 @@ void ClientConnect(entity this)
 
 	if (!autocvar_sv_foginterval && world.fog != "")
 		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
-
-	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
-		if(!MUTATOR_CALLHOOK(HideTeamNagger, this))
-			send_CSQC_teamnagger();
 
 	CSQCMODEL_AUTOINIT(this);
 
