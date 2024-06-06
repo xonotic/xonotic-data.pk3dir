@@ -20,13 +20,14 @@
 # Simple88, 2016
 # Артём Котлубай, 2022
 # Темак, 2022-2023
+# Темак, 2024
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-02 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Andrei Stepanov, 2014-2024\n"
+"Last-Translator: Темак, 2024\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -55,7 +56,8 @@ msgstr "Заголовок в %s"
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr "^3Сообщение отсчёта начала матча в течение %s, сек. осталось: ^COUNT"
+msgstr ""
+"^3Сообщение отсчёта начала матча протяжённостью %s, сек. осталось: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:204
 #, c-format
@@ -142,7 +144,7 @@ msgstr "бросить оружие"
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/menu/xonotic/keybinder.qc:51
 msgid "secondary fire"
-msgstr "альтернативный огонь"
+msgstr "вторичный огонь"
 
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
@@ -1928,7 +1930,7 @@ msgstr "Четыре в ряд"
 #: qcsrc/common/minigames/minigame/pp.qc:374
 #, c-format
 msgid "%s^7 won the game!"
-msgstr "%s^7 одерживает победу в игре!"
+msgstr "%s^7 выиграл в игре!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:386
 #: qcsrc/common/minigames/minigame/pp.qc:452
@@ -3425,12 +3427,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 has left the queue after idling for %s seconds"
-msgstr "^BG%s^F3 покинул очередь из-за бездействия в течении %s секунд"
+msgstr "^BG%s^F3 покинул очередь из-за бездействия протяжённостью %s секунд"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 for balance reasons"
-msgstr "^BG%s^F3 был перемещён к^BG зрителям^F3 с целью баланса"
+msgstr "^BG%s^F3 был перемещён к^BG зрителям^F3 для уравнения сил"
 
 #: qcsrc/common/notifications/all.inc:431
 msgid ""
@@ -4528,7 +4530,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:721
 msgid "^K1You aren't allowed to play because you are banned in this server"
-msgstr "^K1Вы не можете играть, потому что вы заблокированы на этом сервере"
+msgstr "^K1По какой-то причине, Вам запрещено играть на этом сервере "
 
 #: qcsrc/common/notifications/all.inc:722
 #, c-format
@@ -4857,11 +4859,11 @@ msgstr "^K1Вы совершите самоубийство через ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:808
 msgid "^F4Timeout begins in ^COUNT"
-msgstr "^F4Тайм-аут начнётся через ^COUNT с"
+msgstr "^F4Отсчёт начнётся через ^COUNT с"
 
 #: qcsrc/common/notifications/all.inc:809
 msgid "^F4Timeout ends in ^COUNT"
-msgstr "^F4Тайм-аут закончится через ^COUNT с"
+msgstr "^F4Отсчёт закончится через ^COUNT с"
 
 #: qcsrc/common/notifications/all.inc:811
 #, c-format
@@ -9610,7 +9612,7 @@ msgstr "Показывать график размеров пакетов и д�
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
 msgid "Packet loss compensation"
-msgstr "Смягчать потери пакетов (п/п)"
+msgstr "Восполнять потери пакетов (п/п)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
 msgid "Each packet includes a copy of the previous message"
@@ -9618,7 +9620,7 @@ msgstr "Каждый пакет включает в себя копию пред
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Movement prediction error compensation"
-msgstr "Смягчать ошибки предрасчёта движения"
+msgstr "Исправлять ошибки предрасчёта движения"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:43
 msgid "Use encryption (AES) when available"
