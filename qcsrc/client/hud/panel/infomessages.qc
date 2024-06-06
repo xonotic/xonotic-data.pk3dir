@@ -201,7 +201,7 @@ void HUD_InfoMessages()
 					if(!ts_max) ts_max = tm.team_size;
 					else ts_max = max(ts_max, tm.team_size);
 				}
-				if ((ts_max - ts_min) > 1)
+				if ((ts_max - ts_min) >= teamnagger)
 				{
 					s = strcat(blinkcolor, _("Teamnumbers are unbalanced!"));
 					tm = GetTeam(myteam, false);
