@@ -74,7 +74,8 @@ float autocvar_sv_player_scale;
 
 .bool team_selected;
 .bool just_joined;
-.bool wants_join;
+/// > 0 is a team index, -1 means team selection is deferred until Join()
+.int wants_join;
 
 .int pressedkeys;
 
