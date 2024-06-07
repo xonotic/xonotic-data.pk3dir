@@ -2900,6 +2900,10 @@ void PlayerFrame (entity this)
 					else
 						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
 					PutObserverInServer(this, true, true);
+					// Can't do this in PutObserverInServer() or SetPlayerTeam() cos it causes
+					// mouse2 (change spectate mode) to kick the player off the join queue.
+					this.wants_join = 0;
+					this.team_selected = false;
 					// when the player is kicked off the server, these are called in ClientDisconnect()
 					if (!TeamBalance_QueuedPlayersTagIn(this))
 					if (autocvar_g_balance_teams_remove)
