@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-02 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: oblector o, 2022\n"
+"Last-Translator: oblector o, 2022-2024\n"
 "Language-Team: Latin (http://app.transifex.com/team-xonotic/xonotic/language/"
 "la/)\n"
 "Language: la\n"
@@ -145,7 +145,7 @@ msgstr "moderatri notae"
 #: qcsrc/client/hud/panel/infomessages.qc:133
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr ""
+msgstr "^2Nunc exspecta ut advoceris ad manum %s%sm^2"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #, c-format
@@ -564,11 +564,11 @@ msgstr "meta ambita"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
-msgstr "Clica ut locum in quem teleporteris seligas"
+msgstr "Clicca ut locum in quem teleporteris seligas"
 
 #: qcsrc/client/hud/panel/radar.qc:343
 msgid "Click to select spawn location"
-msgstr "Clica ut locum in quo nascaris seligas"
+msgstr "Clicca ut locum in quo nascaris seligas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Number of ball carrier kills"
@@ -1258,7 +1258,7 @@ msgstr "nmi/h"
 
 #: qcsrc/client/main.qc:1206
 msgid "Checkpoint times:"
-msgstr ""
+msgstr "Tempora metarum:"
 
 #: qcsrc/client/main.qc:1400
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
@@ -1338,7 +1338,7 @@ msgstr "Ludi modus:"
 
 #: qcsrc/client/main.qc:1483
 msgid "by:"
-msgstr ""
+msgstr "ab:"
 
 #: qcsrc/client/main.qc:1487
 msgid "This match supports"
@@ -3059,7 +3059,7 @@ msgstr "^BG%s^K1 Teslae turriola electrice occisus est%s%s"
 #: qcsrc/common/notifications/all.inc:348
 #, c-format
 msgid "^BG%s^K1 got served a lead enrichment by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Turriolae Peditis plumbo contaminatus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:349
 #, c-format
@@ -3258,12 +3258,12 @@ msgstr "^BG%s^F3 pro ^TCmanu ^TT^F3 ludit"
 #: qcsrc/common/notifications/all.inc:395
 #, c-format
 msgid "^BG%s^F3 wants to play on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 pro ^TCmanu ^TT^F3 ludere vult"
 
 #: qcsrc/common/notifications/all.inc:396
 #, c-format
 msgid "^BG%s^F3 wants to play"
-msgstr ""
+msgstr "^BG%s^F3 ludere vult"
 
 #: qcsrc/common/notifications/all.inc:398
 #: qcsrc/common/notifications/all.inc:728
@@ -3386,12 +3386,12 @@ msgstr "^BG%s^F3 in^BG spectatores^F3 motus est quia otiosus %s secunda fuit"
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 has left the queue after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 non iam advocabitur ad ludum quia otiosus %s secunda fuit"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 for balance reasons"
-msgstr ""
+msgstr "^BG%s^F3 in^BG spectatores^F3 motus est quoniam manus aequabantur"
 
 #: qcsrc/common/notifications/all.inc:431
 msgid ""
@@ -3419,7 +3419,7 @@ msgstr "^BG%s^F3 iam^BG spectat"
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
 msgid "^BG%s^F3 has left the queue"
-msgstr ""
+msgstr "^BG%s^F3 non iam advocabitur ad ludum"
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
@@ -4406,6 +4406,8 @@ msgid ""
 "^K1Teams unbalanced!\n"
 "^BGMoving %s^BG to spectators in ^COUNT..."
 msgstr ""
+"^K1Manus non aequatae!\n"
+"^BGIn spectatores %s^BG fertur ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:687
 #, c-format
@@ -4501,16 +4503,16 @@ msgstr "^K1Ludi parvi sessio incipi non potuit!"
 
 #: qcsrc/common/notifications/all.inc:724
 msgid "^BGYou are now queued to join the game."
-msgstr ""
+msgstr "^BGNunc exspecta ut advoceris ad ludum."
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou are now queued to join on ^TC^TT^BG team."
-msgstr ""
+msgstr "^BGNunc exspecta ut advoceris ad manum ^TC^TTm^BG."
 
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "^K2Aliam manum elige! Quia ^TC^TTm^K2 %s^K2 iam elegit."
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYou picked up the ball"
@@ -5178,7 +5180,7 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/fusionreactor.qh:11
 msgid "Fusion Reactor"
-msgstr ""
+msgstr "Reactrum Fusorium"
 
 #: qcsrc/common/turrets/turret/hellion.qh:13
 msgid "Hellion Missile Turret"
@@ -5214,11 +5216,11 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/phaser.qh:13
 msgid "Phaser Cannon"
-msgstr ""
+msgstr "Tormentum Phasiarium"
 
 #: qcsrc/common/turrets/turret/phaser_weapon.qh:7
 msgid "Phaser"
-msgstr ""
+msgstr "Phasiarium"
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
@@ -6164,11 +6166,11 @@ msgstr "Sinica (Sina)"
 
 #: qcsrc/menu/xonotic/credits.qc:180
 msgid "Chinese (Hong Kong)"
-msgstr "Sinica (Hong Cong)"
+msgstr "Sinica (Hongcongum)"
 
 #: qcsrc/menu/xonotic/credits.qc:193
 msgid "Chinese (Taiwan)"
-msgstr "Sinica (Taivan)"
+msgstr "Sinica (Taivania)"
 
 #: qcsrc/menu/xonotic/credits.qc:200
 msgid "Czech"
@@ -6212,7 +6214,7 @@ msgstr "Hibernica"
 
 #: qcsrc/menu/xonotic/credits.qc:283
 msgid "Italian"
-msgstr "Italiana"
+msgstr "Italica"
 
 #: qcsrc/menu/xonotic/credits.qc:290
 msgid "Japanese"
