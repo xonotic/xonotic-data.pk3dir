@@ -353,7 +353,7 @@ void Player_SetTeamIndexChecked(entity player, int team_index)
 
 	// g_balance_teams_queue: before joining the queue,
 	// check if a queued player already chose the selected team
-	if (!IS_BOT_CLIENT(player) && IS_QUEUE_NEEDED(player))
+	if (!IS_BOT_CLIENT(player) && QueueNeeded(player))
 	{
 		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != player && it.wants_join == team_index,
 		{
@@ -1389,4 +1389,18 @@ void SV_ChangeTeam(entity player, int new_color)
 		return;
 	}
 	Player_SetTeamIndexChecked(player, Team_TeamToIndex((new_color & 0x0F) + 1));
+}
+
+bool QueueNeeded(entity ignore)
+{
+	if (!teamplay || warmup_stage || !autocvar_g_balance_teams_queue || autocvar_g_campaign)
+		return false;
+
+	int human_clients = 0;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		if (++human_clients > 1)
+			return TeamBalance_AreEqual(ignore, true);
+	});
+	return false;
 }
