@@ -2148,7 +2148,7 @@ int nJoinAllowed(entity this, entity ignore)
 
 bool queuePlayer(entity this, int team_index)
 {
-	if(IS_BOT_CLIENT(this) || !IS_QUEUE_NEEDED(this) || QueuedPlayersReady(this, false))
+	if(IS_BOT_CLIENT(this) || !QueueNeeded(this) || QueuedPlayersReady(this, false))
 		return false;
 
 	if(team_index <= 0)
