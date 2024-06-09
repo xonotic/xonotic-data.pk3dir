@@ -554,7 +554,7 @@ void ReadyCount()
 	// Countdown is NOT aborted by teams becoming unbalanced, for simplicity and because
 	// g_balance_teams_queue works during countdown which is a less disruptive solution.
 	bool badteams = (teamplay && total_players && autocvar_sv_teamnagger)
-		? !MUTATOR_CALLHOOK(HideTeamNagger, NULL) && TeamBalance_SizeDifference(NULL) >= autocvar_sv_teamnagger
+		? TeamBalance_SizeDifference(NULL) >= autocvar_sv_teamnagger
 		: false;
 
 	if (total_players < minplayers)
