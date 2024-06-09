@@ -552,7 +552,7 @@ void ReadyCount()
 	// This allows warmup to end with zero players to prevent complaints
 	// of server never changing map with legacy config (sv_autopause 0).
 	bool badteams = (teamplay && total_players && autocvar_sv_teamnagger)
-		? !MUTATOR_CALLHOOK(HideTeamNagger, NULL) && TeamBalance_SizeDifference(NULL) >= autocvar_sv_teamnagger
+		? TeamBalance_SizeDifference(NULL) >= autocvar_sv_teamnagger
 		: false;
 
 	if (total_players < minplayers || badteams)

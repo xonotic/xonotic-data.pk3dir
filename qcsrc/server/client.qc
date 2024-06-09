@@ -141,7 +141,6 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
 	                                sf |= BIT(4); // show spectators
 	if (autocvar_sv_teamnagger && teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
-		if (!MUTATOR_CALLHOOK(HideTeamNagger, this)) // enable teamnagger
 						  sf |= (autocvar_sv_teamnagger & 0x03) << 5; // BIT(5) | BIT(6)
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
