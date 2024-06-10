@@ -12,7 +12,7 @@ la    "Latin" "Lingua Latina" 99%
 hu    "Hungarian" "Magyar" 44%
 nl    "Dutch" "Nederlands" 62%
 pl    "Polish" "Polski" 78%
-pt    "Portuguese" "Português" 77%
+pt    "Portuguese" "Português" 100%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
 ro    "Romanian" "Romana" 67%
 fi    "Finnish" "Suomi" 98%
