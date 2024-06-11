@@ -1,4 +1,4 @@
-// models/items
+////////// ITEMS //////////
 
 a_bullets_luma
 {
@@ -121,17 +121,6 @@ g_h100_luma
 	}
 }
 
-g_invincible_luma
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/items/g_invincible_luma
-		blendfunc blend
-	}
-}
-
 g_jetpack_luma
 {
 	deformVertexes autosprite
@@ -139,17 +128,6 @@ g_jetpack_luma
 	nopicmip
 	{
 		map models/items/g_jetpack_luma
-		blendfunc blend
-	}
-}
-
-g_strength_luma
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/items/g_strength_luma
 		blendfunc blend
 	}
 }
@@ -199,10 +177,78 @@ item_armor_small_luma
 }
 
 
+////////// POWERUPS //////////
+
+// legacy shader
+g_strength_luma
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_strength_luma
+		blendfunc blend
+	}
+}
+
+// legacy shader
+g_invincible_luma
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_invincible_luma
+		blendfunc blend
+	}
+}
+
+models/items/g_strength_luma
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_strength_luma
+		blendfunc blend
+	}
+}
+
+models/items/g_invincible_luma
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_invincible_luma
+		blendfunc blend
+	}
+}
+
+models/items/g_invisibility_luma
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_invisibility_luma
+		blendfunc blend
+	}
+}
+
+models/items/g_speed_luma
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_speed_luma
+		blendfunc blend
+	}
+}
 
 
-
-// models/weapons
+////////// WEAPONS //////////
 
 g_arc_luma
 {

@@ -1,6 +1,5 @@
 ////////// AMMO //////////
 
-
 a_cells_simple // cells
 {
 	deformVertexes autosprite
@@ -48,6 +47,7 @@ a_shells_simple // shells
 		blendfunc blend
 	}
 }
+
 
 ////////// WEAPONS //////////
 
@@ -303,6 +303,7 @@ g_ok_rl_simple // rocket propelled chainsaw
 	}
 }
 
+
 ////////// ARMOR + HEALTH ITEMS //////////
 
 ///// ARMOR /////
@@ -405,9 +406,11 @@ g_h100_simple // 100hp
 	}
 }
 
+
 ////////// POWERUPS //////////
 
-g_strength_simple // strength
+// legacy shader
+g_strength_simple
 {
 	deformVertexes autosprite
 	cull none
@@ -419,7 +422,8 @@ g_strength_simple // strength
 	}
 }
 
-g_invincible_simple // shield
+// legacy shader
+g_invincible_simple
 {
 	deformVertexes autosprite
 	cull none
@@ -427,6 +431,52 @@ g_invincible_simple // shield
 
 	{
 		map models/items/g_invincible_simple
+		blendfunc blend
+	}
+}
+
+models/items/g_strength_simple
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+
+	{
+		map models/items/g_strength_simple
+		blendfunc blend
+	}
+}
+
+models/items/g_invincible_simple
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+
+	{
+		map models/items/g_invincible_simple
+		blendfunc blend
+	}
+}
+
+models/items/g_invisibility_simple
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_invisibility_simple
+		blendfunc blend
+	}
+}
+
+models/items/g_speed_simple
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_speed_simple
 		blendfunc blend
 	}
 }
