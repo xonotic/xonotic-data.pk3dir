@@ -409,6 +409,32 @@ g_h100_simple // 100hp
 
 ////////// POWERUPS //////////
 
+// legacy shader
+g_strength_simple
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+
+	{
+		map models/items/g_strength_simple
+		blendfunc blend
+	}
+}
+
+// legacy shader
+g_invincible_simple
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+
+	{
+		map models/items/g_invincible_simple
+		blendfunc blend
+	}
+}
+
 models/items/g_strength_simple
 {
 	deformVertexes autosprite

@@ -179,6 +179,30 @@ item_armor_small_luma
 
 ////////// POWERUPS //////////
 
+// legacy shader
+g_strength_luma
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_strength_luma
+		blendfunc blend
+	}
+}
+
+// legacy shader
+g_invincible_luma
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/items/g_invincible_luma
+		blendfunc blend
+	}
+}
+
 models/items/g_strength_luma
 {
 	deformVertexes autosprite
