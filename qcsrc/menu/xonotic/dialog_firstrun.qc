@@ -43,6 +43,7 @@ void XonoticFirstRunDialog_fill(entity me)
 		me.TDempty(me, 1);
 		me.TD(me, 2, 4, e = makeXonoticTextLabel(0, _("Welcome to Xonotic, please select your language preference and enter your player name to get started.  You can change these options later through the menu system.")));
 		e.allowWrap = 1;
+		e.allowWrap_spacing = 0.5;
 	me.TR(me);
 
 	me.TR(me);

@@ -26,7 +26,11 @@ CLASS(Label, MenuItem)
 	ATTRIB(Label, disabled, float, 0);
 	ATTRIB(Label, disabledAlpha, float, 0.3);
 	ATTRIB(Label, textEntity, entity);
+	// if allowWrap is enabled text is wrapped on multiple lines and can't be condensed;
+	// lines are centered vertically and are allowed to extend outside the item box
+	// so there should be some free space above and below the item
 	ATTRIB(Label, allowWrap, float, 0);
+	ATTRIB(Label, allowWrap_spacing, float, 0);
 	ATTRIB(Label, recalcPos, float, 0);
 	ATTRIB(Label, condenseFactor, float, 1);
 	ATTRIB(Label, overrideRealOrigin, vector, '0 0 0');
