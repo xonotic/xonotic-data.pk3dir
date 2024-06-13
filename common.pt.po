@@ -9877,7 +9877,7 @@ msgstr ""
 msgid "While connected language changes will be applied only to the menu,"
 msgstr ""
 "Enquanto estiver conectado, as alterações no idioma serão aplicadas apenas "
-"no menu."
+"no menu,"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
 msgid "full language changes will take effect starting from the next game"
