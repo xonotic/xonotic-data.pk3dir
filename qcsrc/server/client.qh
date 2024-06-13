@@ -204,7 +204,8 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_pokenade_type, string, this.cvar_cl_pokenade_type);
     ATTRIB(Client, cvar_cl_spawn_near_teammate, bool, this.cvar_cl_spawn_near_teammate);
     ATTRIB(Client, cvar_cl_gunalign, int, this.cvar_cl_gunalign);
-    ATTRIB(Client, cvar_cl_handicap, float, this.cvar_cl_handicap);
+    ATTRIB(Client, cvar_cl_handicap_damage_given, float, this.cvar_cl_handicap_damage_given);
+    ATTRIB(Client, cvar_cl_handicap_damage_taken, float, this.cvar_cl_handicap_damage_taken);
     ATTRIB(Client, cvar_cl_clippedspectating, bool, this.cvar_cl_clippedspectating);
     ATTRIB(Client, cvar_cl_autoscreenshot, int, this.cvar_cl_autoscreenshot);
     ATTRIB(Client, cvar_cl_jetpack_jump, bool, this.cvar_cl_jetpack_jump);

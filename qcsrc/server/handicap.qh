@@ -9,9 +9,12 @@
 // weak players. Values greater than 1 make the game harder and values less than
 // 1 make the game easier. Right now handicap only affects damage. There are 2
 // types of handicap: voluntary and forced. Voluntary handicap can be set via
-// cl_handicap cvar. For obvious reasons, it can't be less than 1. Forced
+// cl_handicap cvars. For obvious reasons, it can't be less than 1. Forced
 // handicap can be set by server mutators. The total handicap is the product of
 // voluntary and forced handicap.
+// Both handicaps are separated into _take and _give so that mutators and
+// players are able to nerf their damage output or increase intake
+// without changing the other.
 
 /// \brief Initializes handicap to its default value.
 /// \param[in,out] player Player to initialize.
@@ -20,21 +23,25 @@ void Handicap_Initialize(entity player);
 
 /// \brief Returns the voluntary handicap of the player.
 /// \param[in] player Player to check.
+/// \param[in] receiving Whether handicap is for receiving or dealing.
 /// \return Voluntary handicap of the player.
-float Handicap_GetVoluntaryHandicap(entity player);
+float Handicap_GetVoluntaryHandicap(entity player, bool receiving);
 
 /// \brief Returns the forced handicap of the player.
 /// \param[in] player Player to check.
+/// \param[in] receiving Whether handicap is for receiving or dealing.
 /// \return Forced handicap of the player.
-float Handicap_GetForcedHandicap(entity player);
+float Handicap_GetForcedHandicap(entity player, bool receiving);
 
 /// \brief Sets the forced handicap of the player.
 /// \param[in] player Player to alter.
 /// \param[in] value Handicap value to set.
+/// \param[in] receiving Whether handicap is for receiving or dealing.
 /// \return No return.
-void Handicap_SetForcedHandicap(entity player, float value);
+void Handicap_SetForcedHandicap(entity player, float value, bool receiving);
 
 /// \brief Returns the total handicap of the player.
 /// \param[in] player Player to check.
+/// \param[in] receiving Whether handicap is for receiving or dealing.
 /// \return Total handicap of the player.
-float Handicap_GetTotalHandicap(entity player);
+float Handicap_GetTotalHandicap(entity player, bool receiving);
