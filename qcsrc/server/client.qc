@@ -557,11 +557,15 @@ void PutPlayerInServer(entity this)
 	PlayerState_attach(this);
 	accuracy_resend(this);
 
-	if (teamplay && this.bot_forced_team)
-		SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
-
-	if (this.team < 0)
-		TeamBalance_JoinBestTeam(this);
+	if (teamplay)
+	{
+		if (this.bot_forced_team)
+			SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
+		else if (this.wants_join > 0)
+			SetPlayerTeam(this, this.wants_join, TEAM_CHANGE_MANUAL);
+		else if (this.team <= 0 || this.wants_join < 0 || autocvar_g_campaign)
+			TeamBalance_JoinBestTeam(this);
+	}
 
 	entity spot = SelectSpawnPoint(this, false);
 	if (!spot) {
@@ -2033,43 +2037,57 @@ bool ShowTeamSelection(entity this)
 
 void Join(entity this, bool queued_join)
 {
-	bool teamautoselect = autocvar_g_campaign || autocvar_g_balance_teams || this.wants_join < 0;
+	entity player_with_dibs = NULL;
 
 	if (autocvar_g_campaign && !campaign_bots_may_start && !game_stopped && time >= game_starttime)
 		ReadyRestart(true);
 
-	TRANSMUTE(Player, this);
-
 	if(queued_join)
 	{
-		// First we must put queued player(s) in their team(s) (they chose first).
+		// There's no distinction between the Join() call by commands `selectteam; join` and the call triggered by +jump
+		// so we can't reset the selected team here, so the user can't change from a specific team preference to
+		// no preference by pressing +jump. The advantages are: they see the centreprint every time they press +jump
+		// and won't accidentally reset their preference.
+		if (queuePlayer(this, this.wants_join ? this.wants_join : -1))
+			return;
+
+		// First we must put queued player(s) in their team(s) (they chose first)
+		// so autoselect (if necessary) can choose the correct team for the last player `this`.
+		// Relies on `this` skipping the queue (this.team already set, this.wants_join not set) or using autoselect
+		// so when queued player(s) use autoselect it doesn't assign them the same team `this` chose manually.
 		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && it.wants_join,
 		{
+			if (this.wants_join < 0 && this.team_selected > 0 // `this` can't have their preference
+			&& it.wants_join == this.team_selected) // `it` is the player who already chose the team `this` wanted
+				player_with_dibs = it;
+
 			Join(it, false);
-			// ensure TeamBalance_JoinBestTeam will run if necessary for `this`
-			teamautoselect = true;
+			// Get queued player's attention
+			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, APP_TEAM_NUM(it.team, CENTER_JOIN_PLAY_TEAM));
+			Send_Notification(NOTIF_ONE_ONLY, it, MSG_ANNCE, ANNCE_BEGIN);
 		});
 	}
-
-	if(!this.team_selected && teamautoselect)
-		TeamBalance_JoinBestTeam(this);
 
 	if(autocvar_g_campaign)
 		campaign_bots_may_start = true;
 
 	Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
+	TRANSMUTE(Player, this);
 	PutClientInServer(this);
 
 	if(IS_PLAYER(this))
 	if(teamplay && this.team != -1)
 	{
-		if(this.wants_join)
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
+		// limitation: notifications support only 1 translated team name
+		// so the selected team can't be mentioned.
+		if (player_with_dibs)
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_JOIN_PLAY_TEAM_QUEUECONFLICT), player_with_dibs.netname);
 	}
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
-	this.team_selected = false;
+
+	this.team_selected = 0;
 	this.wants_join = 0;
 }
 
@@ -2145,24 +2163,27 @@ int nJoinAllowed(entity this, entity ignore)
 
 bool queuePlayer(entity this, int team_index)
 {
-	if(IS_BOT_CLIENT(this) || !QueueNeeded(this) || QueuedPlayersReady(this, false))
+	if (IS_BOT_CLIENT(this) || !QueueNeeded(this) || QueuedPlayersReady(this, false)
+	|| IS_PLAYER(this)) // prevents a redundant "wants to play" notification (last joining player skips queue)
 		return false;
 
-	if(team_index <= 0)
+	if (team_index <= 0) // team auto select deferred until Join()
 	{
-		// defer team selection until Join()
+		if (team_index != this.wants_join) // prevents chatcon spam
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_WANTS, this.netname);
+		if (this.team_selected >= 0) // prevents this message clobbering CENTER_JOIN_PREVENT_QUEUE_TEAM_CONFLICT
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT_QUEUE);
 		this.wants_join = -1;
-		this.team_selected = false;
-		this.team = -1;
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_WANTS, this.netname);
-		Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_JOIN_PREVENT_QUEUE);
+		this.team_selected = 0;
 	}
 	else
 	{
+		int team_num = Team_IndexToTeam(team_index);
+		if (team_index != this.wants_join) // prevents chatcon spam
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(team_num, INFO_JOIN_WANTS_TEAM), this.netname);
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(team_num, CENTER_JOIN_PREVENT_QUEUE_TEAM));
 		this.wants_join = team_index; // Player queued to join
-		this.team_selected = true; // no autoselect in Join()
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_WANTS_TEAM), this.netname);
-		Send_Notification(NOTIF_ONE, this, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_JOIN_PREVENT_QUEUE_TEAM));
+		this.team_selected = team_index;
 	}
 
 	return true;
@@ -2176,8 +2197,6 @@ bool joinAllowed(entity this)
 	if (teamplay && lockteams) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
 	if (ShowTeamSelection(this)) return false;
-	if (this.wants_join) return false;
-	if (queuePlayer(this, 0)) return false;
 	return true;
 }
 
@@ -2886,7 +2905,7 @@ void PlayerFrame (entity this)
 					// Can't do this in PutObserverInServer() or SetPlayerTeam() cos it causes
 					// mouse2 (change spectate mode) to kick the player off the join queue.
 					this.wants_join = 0;
-					this.team_selected = false;
+					this.team_selected = 0;
 					// when the player is kicked off the server, these are called in ClientDisconnect()
 					if (!TeamBalance_QueuedPlayersTagIn(this))
 					if (autocvar_g_balance_teams_remove)

@@ -19,7 +19,8 @@ void ClientKill_Now_TeamChange(entity this)
 {
 	if (this.killindicator_teamchange == -1)
 	{
-		TeamBalance_JoinBestTeam(this);
+		if (!queuePlayer(this, -1)) // the queue uses deferred autoselect
+			 this.team = -1; // force autoselect in PutPlayerInServer(), after any queued players were joined to avoid 2 players on same team
 	}
 	else if (this.killindicator_teamchange == -2)
 	{
@@ -28,12 +29,13 @@ void ClientKill_Now_TeamChange(entity this)
 
 		if (this.wants_join)
 		{
+			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, this.netname);
 			SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
 			// Can't do this in PutObserverInServer() or SetPlayerTeam() cos it causes
 			// mouse2 (change spectate mode) to kick the player off the join queue.
 			this.wants_join = 0;
-			this.team_selected = false;
+			this.team_selected = 0;
 		}
 		else
 		{

@@ -72,7 +72,8 @@ float autocvar_sv_player_scale;
 .int spectatee_status;
 .bool zoomstate;
 
-.bool team_selected;
+/// > 0 is a team index, if wants_join == -1 the player can't have the team they selected (conflict)
+.int team_selected;
 .bool just_joined;
 /// > 0 is a team index, -1 means team selection is deferred until Join()
 .int wants_join;

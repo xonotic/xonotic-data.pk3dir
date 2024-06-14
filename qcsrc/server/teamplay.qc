@@ -257,6 +257,10 @@ bool QueuedPlayersReady(entity this, bool checkspecificteam)
 
 bool SetPlayerTeam(entity player, int team_index, int type)
 {
+	if (team_index > 0)
+		if (queuePlayer(player, team_index))
+			return true;
+
 	int old_team_index = Entity_GetTeamIndex(player);
 
 	if (!Player_SetTeamIndex(player, team_index))
@@ -274,11 +278,7 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 
 		if (team_index != -1)
 		{
-			if (!queuePlayer(player, team_index))
-			{
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
-				player.team_selected = true; // no autoselect in Join()
-			}
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
 
 			if (warmup_stage)
 				ReadyCount(); // teams might be balanced now
@@ -351,14 +351,24 @@ void Player_SetTeamIndexChecked(entity player, int team_index)
 	}
 	TeamBalance_Destroy(balance);
 
-	// g_balance_teams_queue: before joining the queue,
-	// check if a queued player already chose the selected team
+	// Check if a queued player already chose the selected team,
+	// can't be done in queuePlayer() as it would then need to return true when the
+	// last player's choice conflicts even though they skip the queue, causing a bug in Join().
 	if (!IS_BOT_CLIENT(player) && QueueNeeded(player))
 	{
 		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != player && it.wants_join == team_index,
 		{
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_NUM(Team_IndexToTeam(team_index), CENTER_JOIN_PREVENT_QUEUE_TEAM_FAIL), it.netname);
-			player.team_selected = false;
+			if (QueuedPlayersReady(player, false))
+			{
+				// Join() will handle the notification so it can mention the team `player` will actually get
+				player.team_selected = team_index; // tell it which team to check for to find the conflict
+			}
+			else // > 2 teams
+			{
+				Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, APP_TEAM_NUM(Team_IndexToTeam(team_index), CENTER_JOIN_PREVENT_QUEUE_TEAM_CONFLICT), it.netname);
+				player.team_selected = -1; // no CENTER_JOIN_PREVENT_QUEUE in Join() -> queuePlayer()
+			}
+			player.wants_join = -1; // force autoselect in PutPlayerInServer()
 			return;
 		});
 	}
@@ -941,7 +951,7 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			}
 			if (it.wants_join)
 			{
-				continue; // Queued players aren't actually in the game.
+				continue; // Queued players aren't actually in the game (and shouldn't have .team set).
 			}
 			int team_num;
 			// TODO: Reconsider when the player is truly on the team.

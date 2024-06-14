@@ -523,7 +523,6 @@ void ClientCommand_say_team(entity caller, int request, int argc, string command
 	}
 }
 
-.bool team_selected;
 void ClientCommand_selectteam(entity caller, int request, int argc)
 {
 	switch (request)
@@ -583,8 +582,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			if (team_num)
 				ClientKill_TeamChange(caller, team_num);
 			else // auto
-				if (!queuePlayer(caller, 0)) // the queue uses deferred autoselect
-					ClientKill_TeamChange(caller, -1);
+				ClientKill_TeamChange(caller, -1);
 
 			return;
 		}
