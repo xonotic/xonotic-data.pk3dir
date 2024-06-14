@@ -127,11 +127,14 @@ void HUD_InfoMessages()
 
 			if(!mutator_returnvalue)
 			{
-				if(entcs_GetWantsJoin(current_player))
+				int tm = entcs_GetWantsJoin(current_player);
+				if(tm > 0)
 				{
-					int tm = Team_IndexToTeam(entcs_GetWantsJoin(current_player));
+					tm = Team_IndexToTeam(tm);
 					s = sprintf(_("^2You're queued to join the %s%s^2 team"), Team_ColorCode(tm), Team_ColorName(tm));
 				}
+				else if (tm < 0)
+					s = sprintf(_("^2You're queued to join any available team"));
 				else
 					s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
 				InfoMessage(s);
