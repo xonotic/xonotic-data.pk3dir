@@ -1,9 +1,0 @@
-/*
-Generated framegroups file for h_minstanex
-Used by DarkPlaces to simulate frame groups in DPM models.
-*/
-
-1 21 20 0 // h_minstanex fire
-22 21 20 0 // h_minstanex fire
-43 101 6 1 // h_minstanex idle
-144 101 30 0 // h_minstanex reload

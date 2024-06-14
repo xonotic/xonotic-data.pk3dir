@@ -7,16 +7,16 @@ CLASS(Vaporizer, Weapon)
 /* flags     */ ATTRIB(Vaporizer, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Vaporizer, bot_pickupbasevalue, float, 10000);
 /* color     */ ATTRIB(Vaporizer, wpcolor, vector, '0.5 1 1');
-/* modelname */ ATTRIB(Vaporizer, mdl, string, "minstanex");
+/* modelname */ ATTRIB(Vaporizer, mdl, string, "vaporizer");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Vaporizer, m_model, Model, MDL_VAPORIZER_ITEM);
 /* flash mdl */ ATTRIB(Vaporizer, m_muzzlemodel, Model, MDL_Null);
 /* flash eff */ ATTRIB(Vaporizer, m_muzzleeffect, entity, EFFECT_VORTEX_MUZZLEFLASH);
 #endif
-/* crosshair */ ATTRIB(Vaporizer, w_crosshair, string, "gfx/crosshairminstanex");
+/* crosshair */ ATTRIB(Vaporizer, w_crosshair, string, "gfx/crosshairvaporizer");
 /* crosshair */ ATTRIB(Vaporizer, w_crosshair_size, float, 0.6);
-/* reticle   */ ATTRIB(Vaporizer, w_reticle, string, "gfx/reticle_nex");
-/* wepimg    */ ATTRIB(Vaporizer, model2, string, "weaponminstanex");
+/* reticle   */ ATTRIB(Vaporizer, w_reticle, string, "gfx/reticle_vortex");
+/* wepimg    */ ATTRIB(Vaporizer, model2, string, "weaponvaporizer");
 /* refname   */ ATTRIB(Vaporizer, netname, string, "vaporizer");
 /* wepname   */ ATTRIB(Vaporizer, m_name, string, _("Vaporizer"));
 /* legacy    */ ATTRIB(Vaporizer, m_deprecated_netname, string, "minstanex");

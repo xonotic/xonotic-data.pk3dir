@@ -44,7 +44,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 
         setattachment(beam, actor.tur_head, "tag_fire");
 
-        soundat (actor, trace_endpos, CH_SHOTS, SND(NEXIMPACT), VOL_BASE, ATTEN_NORM);
+        soundat (actor, trace_endpos, CH_SHOTS, SND(VORTEX_IMPACT), VOL_BASE, ATTEN_NORM);
         if (!isPlayer)
         if (actor.tur_head.frame == 0)
             actor.tur_head.frame = 1;

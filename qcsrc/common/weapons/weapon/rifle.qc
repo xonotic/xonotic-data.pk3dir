@@ -44,12 +44,12 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, int deathtype, Sou
 
 void W_Rifle_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	W_Rifle_FireBullet(thiswep, weaponentity, thiswep.m_id, SND_CAMPINGRIFLE_FIRE, actor, true);
+	W_Rifle_FireBullet(thiswep, weaponentity, thiswep.m_id, SND_RIFLE_FIRE, actor, true);
 }
 
 void W_Rifle_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	W_Rifle_FireBullet(thiswep, weaponentity, thiswep.m_id | HITTYPE_SECONDARY, SND_CAMPINGRIFLE_FIRE2, actor, false);
+	W_Rifle_FireBullet(thiswep, weaponentity, thiswep.m_id | HITTYPE_SECONDARY, SND_RIFLE_FIRE2, actor, false);
 }
 
 .void(Weapon thiswep, entity actor, .entity weaponentity) rifle_bullethail_attackfunc;
@@ -224,7 +224,7 @@ METHOD(Rifle, wr_init, void(entity thiswep))
 {
     if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
     {
-        precache_pic("gfx/reticle_nex");
+        precache_pic("gfx/reticle_vortex");
     }
 }
 METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))

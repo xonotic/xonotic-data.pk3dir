@@ -7,7 +7,7 @@ CLASS(Hook, Weapon)
 /* flags     */ ATTRIB(Hook, spawnflags, int, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NOTRUEAIM);
 /* rating    */ ATTRIB(Hook, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(Hook, wpcolor, vector, '0 0.5 0');
-/* modelname */ ATTRIB(Hook, mdl, string, "hookgun");
+/* modelname */ ATTRIB(Hook, mdl, string, "hook");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Hook, m_model, Model, MDL_HOOK_ITEM);
 /* flash mdl */ ATTRIB(Hook, m_muzzlemodel, Model, MDL_Null);

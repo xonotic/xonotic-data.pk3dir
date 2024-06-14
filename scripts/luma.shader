@@ -215,13 +215,13 @@ g_arc_luma
 	}
 }
 
-g_campingrifle_luma
+g_rifle_luma
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 	{
-		map models/weapons/g_campingrifle_luma
+		map models/weapons/g_rifle_luma
 		blendfunc blend
 	}
 }
@@ -259,13 +259,13 @@ g_fireball_luma
 	}
 }
 
-g_gl_luma
+g_mortar_luma
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 	{
-		map models/weapons/g_gl_luma
+		map models/weapons/g_mortar_luma
 		blendfunc blend
 	}
 }
@@ -292,24 +292,24 @@ g_hlac_luma
 	}
 }
 
-g_hookgun_luma
+g_hook_luma
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 	{
-		map models/weapons/g_hookgun_luma
+		map models/weapons/g_hook_luma
 		blendfunc blend
 	}
 }
 
-g_laser_luma
+g_blaster_luma
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 	{
-		map models/weapons/g_laser_luma
+		map models/weapons/g_blaster_luma
 		blendfunc blend
 	}
 }
@@ -325,24 +325,24 @@ g_minelayer_luma
 	}
 }
 
-g_minstanex_luma
+g_vaporizer_luma
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 	{
-		map models/weapons/g_minstanex_luma
+		map models/weapons/g_vaporizer_luma
 		blendfunc blend
 	}
 }
 
-g_nex_luma
+g_vortex_luma
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 	{
-		map models/weapons/g_nex_luma
+		map models/weapons/g_vortex_luma
 		blendfunc blend
 	}
 }
@@ -358,13 +358,13 @@ g_porto_luma
 	}
 }
 
-g_rl_luma
+g_devastator_luma
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 	{
-		map models/weapons/g_rl_luma
+		map models/weapons/g_devastator_luma
 		blendfunc blend
 	}
 }
@@ -413,13 +413,13 @@ g_tuba_luma
 	}
 }
 
-g_uzi_luma
+g_machinegun_luma
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 	{
-		map models/weapons/g_uzi_luma
+		map models/weapons/g_machinegun_luma
 		blendfunc blend
 	}
 }
@@ -435,13 +435,13 @@ g_ok_hmg_luma
 	}
 }
 
-g_ok_rl_luma
+g_ok_rpc_luma
 {
 	deformVertexes autosprite
 	cull none
 	nopicmip
 	{
-		map models/weapons/g_ok_rl_luma
+		map models/weapons/g_ok_rpc_luma
 		blendfunc blend
 	}
 }

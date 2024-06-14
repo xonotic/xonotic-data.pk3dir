@@ -7,7 +7,7 @@ CLASS(Rifle, Weapon)
 /* flags     */ ATTRIB(Rifle, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS);
 /* rating    */ ATTRIB(Rifle, bot_pickupbasevalue, float, 7000);
 /* color     */ ATTRIB(Rifle, wpcolor, vector, '0.5 1 0');
-/* modelname */ ATTRIB(Rifle, mdl, string, "campingrifle");
+/* modelname */ ATTRIB(Rifle, mdl, string, "rifle");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Rifle, m_model, Model, MDL_RIFLE_ITEM);
 /* flash mdl */ ATTRIB(Rifle, m_muzzlemodel, Model, MDL_Null);
@@ -15,7 +15,7 @@ CLASS(Rifle, Weapon)
 #endif
 /* crosshair */ ATTRIB(Rifle, w_crosshair, string, "gfx/crosshairrifle");
 /* crosshair */ ATTRIB(Rifle, w_crosshair_size, float, 0.6);
-/* reticle   */ ATTRIB(Rifle, w_reticle, string, "gfx/reticle_nex");
+/* reticle   */ ATTRIB(Rifle, w_reticle, string, "gfx/reticle_vortex");
 /* wepimg    */ ATTRIB(Rifle, model2, string, "weaponrifle");
 /* refname   */ ATTRIB(Rifle, netname, string, "rifle");
 /* wepname   */ ATTRIB(Rifle, m_name, string, _("Rifle"));

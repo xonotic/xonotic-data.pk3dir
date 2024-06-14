@@ -22,7 +22,7 @@ MODEL(KH_KEY_CARRIED,                   "models/keyhunt/key-carried.md3");
 
 MODEL(OK_HMG,                           W_Model("g_ok_hmg.md3"));
 
-MODEL(OK_RPC,                           W_Model("g_ok_rl.md3"));
+MODEL(OK_RPC,                           W_Model("g_ok_rpc.md3"));
 
 MODEL(OK_MG_VIEW,                       W_Model("h_ok_mg.iqm"));
 MODEL(OK_MG_WORLD,                      W_Model("v_ok_mg.md3"));
@@ -32,9 +32,9 @@ MODEL(OK_SHOTGUN_VIEW,                  W_Model("h_ok_shotgun.iqm"));
 MODEL(OK_SHOTGUN_WORLD,                 W_Model("v_ok_shotgun.md3"));
 MODEL(OK_SHOTGUN_ITEM,                  W_Model("g_ok_shotgun.md3"));
 
-MODEL(OK_SNIPER_VIEW,                   W_Model("h_ok_sniper.iqm"));
-MODEL(OK_SNIPER_WORLD,                  W_Model("v_ok_sniper.md3"));
-MODEL(OK_SNIPER_ITEM,                   W_Model("g_ok_sniper.md3"));
+MODEL(OK_NEX_VIEW,                      W_Model("h_ok_nex.iqm"));
+MODEL(OK_NEX_WORLD,                     W_Model("v_ok_nex.md3"));
+MODEL(OK_NEX_ITEM,                      W_Model("g_ok_nex.md3"));
 
 MODEL(ONS_CP,                           "models/onslaught/controlpoint_icon.md3");
 MODEL(ONS_CP_SHIELD,                    "models/onslaught/controlpoint_shield.md3");
@@ -155,9 +155,9 @@ MODEL(CASING_BULLET,                    "models/casing_bronze.iqm");
 
 MODEL(BUFF,                             "models/relics/relic.md3");
 
-MODEL(BLASTER_VIEW,                     W_Model("h_laser.iqm"));
-MODEL(BLASTER_WORLD,                    W_Model("v_laser.md3"));
-MODEL(BLASTER_ITEM,                     W_Model("g_laser.md3"));
+MODEL(BLASTER_VIEW,                     W_Model("h_blaster.iqm"));
+MODEL(BLASTER_WORLD,                    W_Model("v_blaster.md3"));
+MODEL(BLASTER_ITEM,                     W_Model("g_blaster.md3"));
 
 MODEL(SHOTGUN_MUZZLEFLASH,              "models/uziflash.md3");
 MODEL(SHOTGUN_VIEW,                     W_Model("h_shotgun.iqm"));
@@ -165,13 +165,13 @@ MODEL(SHOTGUN_WORLD,                    W_Model("v_shotgun.md3"));
 MODEL(SHOTGUN_ITEM,                     W_Model("g_shotgun.md3"));
 
 MODEL(MACHINEGUN_MUZZLEFLASH,           "models/uziflash.md3");
-MODEL(MACHINEGUN_VIEW,                  W_Model("h_uzi.iqm"));
-MODEL(MACHINEGUN_WORLD,                 W_Model("v_uzi.md3"));
-MODEL(MACHINEGUN_ITEM,                  W_Model("g_uzi.md3"));
+MODEL(MACHINEGUN_VIEW,                  W_Model("h_machinegun.iqm"));
+MODEL(MACHINEGUN_WORLD,                 W_Model("v_machinegun.md3"));
+MODEL(MACHINEGUN_ITEM,                  W_Model("g_machinegun.md3"));
 
-MODEL(MORTAR_VIEW,                      W_Model("h_gl.iqm"));
-MODEL(MORTAR_WORLD,                     W_Model("v_gl.md3"));
-MODEL(MORTAR_ITEM,                      W_Model("g_gl.md3"));
+MODEL(MORTAR_VIEW,                      W_Model("h_mortar.iqm"));
+MODEL(MORTAR_WORLD,                     W_Model("v_mortar.md3"));
+MODEL(MORTAR_ITEM,                      W_Model("g_mortar.md3"));
 
 MODEL(MINELAYER_MUZZLEFLASH,            "models/flash.md3");
 MODEL(MINELAYER_MINE,                   "models/mine.md3");
@@ -188,18 +188,18 @@ MODEL(CRYLINK_WORLD,                    W_Model("v_crylink.md3"));
 MODEL(CRYLINK_ITEM,                     W_Model("g_crylink.md3"));
 
 MODEL(VORTEX_MUZZLEFLASH,               "models/nexflash.md3");
-MODEL(VORTEX_VIEW,                      W_Model("h_nex.iqm"));
-MODEL(VORTEX_WORLD,                     W_Model("v_nex.md3"));
-MODEL(VORTEX_ITEM,                      W_Model("g_nex.md3"));
+MODEL(VORTEX_VIEW,                      W_Model("h_vortex.iqm"));
+MODEL(VORTEX_WORLD,                     W_Model("v_vortex.md3"));
+MODEL(VORTEX_ITEM,                      W_Model("g_vortex.md3"));
 
 MODEL(HAGAR_VIEW,                       W_Model("h_hagar.iqm"));
 MODEL(HAGAR_WORLD,                      W_Model("v_hagar.md3"));
 MODEL(HAGAR_ITEM,                       W_Model("g_hagar.md3"));
 
 MODEL(DEVASTATOR_MUZZLEFLASH,           "models/flash.md3");
-MODEL(DEVASTATOR_VIEW,                  W_Model("h_rl.iqm"));
-MODEL(DEVASTATOR_WORLD,                 W_Model("v_rl.md3"));
-MODEL(DEVASTATOR_ITEM,                  W_Model("g_rl.md3"));
+MODEL(DEVASTATOR_VIEW,                  W_Model("h_devastator.iqm"));
+MODEL(DEVASTATOR_WORLD,                 W_Model("v_devastator.md3"));
+MODEL(DEVASTATOR_ITEM,                  W_Model("g_devastator.md3"));
 
 MODEL(PORTAL,                           "models/portal.md3");
 MODEL(PORTO_VIEW,                       W_Model("h_porto.iqm"));
@@ -207,14 +207,14 @@ MODEL(PORTO_WORLD,                      W_Model("v_porto.md3"));
 MODEL(PORTO_ITEM,                       W_Model("g_porto.md3"));
 
 MODEL(VAPORIZER_MUZZLEFLASH,            "models/nexflash.md3");
-MODEL(VAPORIZER_VIEW,                   W_Model("h_minstanex.iqm"));
-MODEL(VAPORIZER_WORLD,                  W_Model("v_minstanex.md3"));
-MODEL(VAPORIZER_ITEM,                   W_Model("g_minstanex.md3"));
+MODEL(VAPORIZER_VIEW,                   W_Model("h_vaporizer.iqm"));
+MODEL(VAPORIZER_WORLD,                  W_Model("v_vaporizer.md3"));
+MODEL(VAPORIZER_ITEM,                   W_Model("g_vaporizer.md3"));
 
 MODEL(HOOK,                             "models/hook.md3");
-MODEL(HOOK_VIEW,                        W_Model("h_hookgun.iqm"));
-MODEL(HOOK_WORLD,                       W_Model("v_hookgun.md3"));
-MODEL(HOOK_ITEM,                        W_Model("g_hookgun.md3"));
+MODEL(HOOK_VIEW,                        W_Model("h_hook.iqm"));
+MODEL(HOOK_WORLD,                       W_Model("v_hook.md3"));
+MODEL(HOOK_ITEM,                        W_Model("g_hook.md3"));
 
 MODEL(HLAC_VIEW,                        W_Model("h_hlac.iqm"));
 MODEL(HLAC_WORLD,                       W_Model("v_hlac.md3"));
@@ -228,9 +228,9 @@ MODEL(ACCORDION_WORLD,                  W_Model("v_akordeon.md3"));
 MODEL(KLEINBOTTLE_VIEW,                 W_Model("h_kleinbottle.iqm"));
 MODEL(KLEINBOTTLE_WORLD,                W_Model("v_kleinbottle.md3"));
 
-MODEL(RIFLE_VIEW,                       W_Model("h_campingrifle.iqm"));
-MODEL(RIFLE_WORLD,                      W_Model("v_campingrifle.md3"));
-MODEL(RIFLE_ITEM,                       W_Model("g_campingrifle.md3"));
+MODEL(RIFLE_VIEW,                       W_Model("h_rifle.iqm"));
+MODEL(RIFLE_WORLD,                      W_Model("v_rifle.md3"));
+MODEL(RIFLE_ITEM,                       W_Model("g_rifle.md3"));
 
 MODEL(FIREBALL_SPHERE,                  "models/sphere/sphere.md3");
 MODEL(FIREBALL_VIEW,                    W_Model("h_fireball.iqm"));
@@ -257,9 +257,9 @@ MODEL(HMG_WORLD,                        W_Model("v_ok_hmg.md3"));
 MODEL(HMG_ITEM,                         W_Model("g_ok_hmg.md3"));
 
 MODEL(RPC_MUZZLEFLASH,                  "models/flash.md3");
-MODEL(RPC_VIEW,                         W_Model("h_ok_rl.iqm"));
-MODEL(RPC_WORLD,                        W_Model("v_ok_rl.md3"));
-MODEL(RPC_ITEM,                         W_Model("g_ok_rl.md3"));
+MODEL(RPC_VIEW,                         W_Model("h_ok_rpc.iqm"));
+MODEL(RPC_WORLD,                        W_Model("v_ok_rpc.md3"));
+MODEL(RPC_ITEM,                         W_Model("g_ok_rpc.md3"));
 
 MODEL(TUR_GIB_BASE1,                    "models/turrets/base-gib1.md3");
 MODEL(TUR_GIB_BASE2,                    "models/turrets/base-gib2.md3");

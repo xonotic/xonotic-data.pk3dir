@@ -7,15 +7,15 @@ CLASS(MachineGun, Weapon)
 /* flags     */ ATTRIB(MachineGun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_BLEED);
 /* rating    */ ATTRIB(MachineGun, bot_pickupbasevalue, float, 7000);
 /* color     */ ATTRIB(MachineGun, wpcolor, vector, '1 1 0');
-/* modelname */ ATTRIB(MachineGun, mdl, string, "uzi");
+/* modelname */ ATTRIB(MachineGun, mdl, string, "machinegun");
 #ifdef GAMEQC
 /* model     */ ATTRIB(MachineGun, m_model, Model, MDL_MACHINEGUN_ITEM);
 /* flash mdl */ ATTRIB(MachineGun, m_muzzlemodel, Model, MDL_MACHINEGUN_MUZZLEFLASH);
 /* flash eff */ ATTRIB(MachineGun, m_muzzleeffect, entity, EFFECT_MACHINEGUN_MUZZLEFLASH);
 #endif
-/* crosshair */ ATTRIB(MachineGun, w_crosshair, string, "gfx/crosshairuzi");
+/* crosshair */ ATTRIB(MachineGun, w_crosshair, string, "gfx/crosshairmachinegun");
 /* crosshair */ ATTRIB(MachineGun, w_crosshair_size, float, 0.6);
-/* wepimg    */ ATTRIB(MachineGun, model2, string, "weaponuzi");
+/* wepimg    */ ATTRIB(MachineGun, model2, string, "weaponmachinegun");
 /* refname   */ ATTRIB(MachineGun, netname, string, "machinegun");
 /* wepname   */ ATTRIB(MachineGun, m_name, string, _("MachineGun"));
 /* legacy    */ ATTRIB(MachineGun, m_deprecated_netname, string, "uzi");
