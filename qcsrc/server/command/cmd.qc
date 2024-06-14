@@ -359,8 +359,8 @@ void ClientCommand_join(entity caller, int request)
 		{
 			if (!game_stopped && IS_CLIENT(caller) && !IS_PLAYER(caller))
 			{
-				if (joinAllowed(caller))
-					Join(caller, true);
+				if (joinAllowed(caller, caller.wants_join))
+					Join(caller, teamplay);
 				else if(time < CS(caller).jointime + MIN_SPEC_TIME)
 					CS(caller).autojoin_checked = -1;
 			}
@@ -524,7 +524,6 @@ void ClientCommand_say_team(entity caller, int request, int argc, string command
 	}
 }
 
-.bool team_selected;
 void ClientCommand_selectteam(entity caller, int request, int argc)
 {
 	switch (request)
@@ -581,11 +580,9 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				}
 				TeamBalance_Destroy(balance);
 			}
-			if (team_num)
-				ClientKill_TeamChange(caller, team_num);
-			else // auto
-				if (!queuePlayer(caller, 0)) // the queue uses deferred autoselect
-					ClientKill_TeamChange(caller, -1);
+
+			if (joinAllowed(caller, team_num ? Team_TeamToIndex(team_num) : -1))
+				ClientKill_TeamChange(caller, team_num ? team_num : -1);
 
 			return;
 		}

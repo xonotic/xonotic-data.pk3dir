@@ -274,11 +274,8 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 
 		if (team_index != -1)
 		{
-			if (!queuePlayer(player, team_index))
-			{
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
-				player.team_selected = true; // no autoselect in Join()
-			}
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
+			player.team_selected = team_index; // no autoselect in Join()
 
 			if (warmup_stage)
 				ReadyCount(); // teams might be balanced now
@@ -350,18 +347,6 @@ void Player_SetTeamIndexChecked(entity player, int team_index)
 		}
 	}
 	TeamBalance_Destroy(balance);
-
-	// g_balance_teams_queue: before joining the queue,
-	// check if a queued player already chose the selected team
-	if (!IS_BOT_CLIENT(player) && QueueNeeded(player))
-	{
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != player && it.wants_join == team_index,
-		{
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_NUM(Team_IndexToTeam(team_index), CENTER_JOIN_PREVENT_QUEUE_TEAM_FAIL), it.netname);
-			player.team_selected = false;
-			return;
-		});
-	}
 
 	SetPlayerTeam(player, team_index, TEAM_CHANGE_MANUAL);
 }
@@ -941,7 +926,7 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			}
 			if (it.wants_join)
 			{
-				continue; // Queued players aren't actually in the game.
+				continue; // Queued players aren't actually in the game (and shouldn't have .team set).
 			}
 			int team_num;
 			// TODO: Reconsider when the player is truly on the team.

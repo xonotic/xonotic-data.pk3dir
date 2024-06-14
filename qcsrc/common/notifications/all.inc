@@ -725,7 +725,9 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
     MSG_CENTER_NOTIF(JOIN_PREVENT_QUEUE,                N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^BGYou're queued to join any available team."), "")
     MULTITEAM_CENTER(JOIN_PREVENT_QUEUE_TEAM,           N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^BGYou're queued to join the ^TC^TT^BG team."), "", NAME)
-    MULTITEAM_CENTER(JOIN_PREVENT_QUEUE_TEAM_FAIL,      N_ENABLE,    1, 0, "s1",             CPID_PREVENT_JOIN,      "0 0",  _("^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."), "", NAME)
+    MULTITEAM_CENTER(JOIN_PREVENT_QUEUE_TEAM_CONFLICT,  N_ENABLE,    1, 0, "s1",             CPID_PREVENT_JOIN,      "0 0",  _("^K2You're queued to join any available team.\n%s^K2 chose ^TC^TT^K2 first."), "", NAME)
+    MULTITEAM_CENTER(JOIN_PLAY_TEAM_QUEUECONFLICT,      N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K2You're now playing on ^TC^TT^K2 team!\n%s^K2 chose your preferred team first."), "", NAME)
+    MULTITEAM_CENTER(JOIN_PLAY_TEAM,                    N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGYou're now playing on ^TC^TT^BG team!"), "", NAME)
 
     MSG_CENTER_NOTIF(KEEPAWAY_DROPPED,                  N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has dropped the ball!"), "")
     MSG_CENTER_NOTIF(KEEPAWAY_PICKUP,                   N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has picked up the ball!"), "")
