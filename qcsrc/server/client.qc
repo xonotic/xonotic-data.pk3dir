@@ -556,11 +556,23 @@ void PutPlayerInServer(entity this)
 	PlayerState_attach(this);
 	accuracy_resend(this);
 
-	if (teamplay && this.bot_forced_team)
-		SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
-
-	if (this.team < 0)
-		TeamBalance_JoinBestTeam(this);
+	if (teamplay)
+	{
+		if (this.bot_forced_team)
+			SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
+		else if (this.wants_join > 0)
+		{
+			LOG_INFOF("^6PutPlayerInServer(): Calling SetPlayerTeam() for %s", this.netname);
+			SetPlayerTeam(this, this.wants_join, TEAM_CHANGE_MANUAL);
+		}
+		else if ((this.team <= 0 && !this.team_selected) || autocvar_g_campaign)
+		{
+			LOG_INFOF("^6PutPlayerInServer(): calling TeamBalance_JoinBestTeam() for %s", this.netname);
+			TeamBalance_JoinBestTeam(this);
+		}
+	}
+//	else
+//		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 
 	entity spot = SelectSpawnPoint(this, false);
 	if (!spot) {
@@ -2032,8 +2044,6 @@ bool ShowTeamSelection(entity this)
 
 void Join(entity this, bool queued_join)
 {
-	bool teamautoselect = autocvar_g_campaign || autocvar_g_balance_teams || this.wants_join < 0;
-
 	if (autocvar_g_campaign && !campaign_bots_may_start && !game_stopped && time >= game_starttime)
 		ReadyRestart(true);
 
@@ -2041,17 +2051,26 @@ void Join(entity this, bool queued_join)
 
 	if(queued_join)
 	{
+		int force_autoselect = -1;
+
 		// First we must put queued player(s) in their team(s) (they chose first).
 		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && it.wants_join,
 		{
-			Join(it, false);
-			// ensure TeamBalance_JoinBestTeam will run if necessary for `this`
-			teamautoselect = true;
-		});
-	}
+			if (it.wants_join < 0) // if `it` has no preference
+				force_autoselect = 0; // `this` may have theirs
+			else if (force_autoselect < 0) // `it` has a preference but a previous `it` may not have
+				force_autoselect = 1;
 
-	if(!this.team_selected && teamautoselect)
-		TeamBalance_JoinBestTeam(this);
+			Join(it, false);
+		});
+
+		if (force_autoselect == 1)
+		{
+			// TODO remove
+			LOG_INFOF("^3Forcing autoselect for %s IS_PLAYER %f", this.netname, IS_PLAYER(this));
+			this.team_selected = false;
+		}
+	}
 
 	if(autocvar_g_campaign)
 		campaign_bots_may_start = true;
@@ -2063,11 +2082,10 @@ void Join(entity this, bool queued_join)
 	if(IS_PLAYER(this))
 	if(teamplay && this.team != -1)
 	{
-		if(this.wants_join)
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
 	}
 	else
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
+
 	this.team_selected = false;
 	this.wants_join = 0;
 }
@@ -2147,21 +2165,31 @@ bool queuePlayer(entity this, int team_index)
 	if(IS_BOT_CLIENT(this) || !QueueNeeded(this) || QueuedPlayersReady(this, false))
 		return false;
 
-	if(team_index <= 0)
+	if(IS_PLAYER(this))
 	{
-		// defer team selection until Join()
+		// TODO is this useful?
+		// TODO if so, put this in QueueNeeded instead
+			// TODO put IS_BOT_CLIENT there too?
+		LOG_INFOF("^6skip queuePlayer!");
+		return false;
+	}
+
+	if(team_index <= 0) // team auto select deferred until Join()
+	{
+		if(team_index != this.wants_join)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_WANTS, this.netname);
 		this.wants_join = -1;
 		this.team_selected = false;
-		this.team = -1;
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_WANTS, this.netname);
 		Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_JOIN_PREVENT_QUEUE);
 	}
 	else
 	{
+		int team_num = Team_IndexToTeam(team_index);
+		if(team_index != this.wants_join)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(team_num, INFO_JOIN_WANTS_TEAM), this.netname);
 		this.wants_join = team_index; // Player queued to join
 		this.team_selected = true; // no autoselect in Join()
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_WANTS_TEAM), this.netname);
-		Send_Notification(NOTIF_ONE, this, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_JOIN_PREVENT_QUEUE_TEAM));
+		Send_Notification(NOTIF_ONE, this, MSG_CENTER, APP_TEAM_NUM(team_num, CENTER_JOIN_PREVENT_QUEUE_TEAM));
 	}
 
 	return true;
@@ -2176,7 +2204,21 @@ bool joinAllowed(entity this)
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
 	if (ShowTeamSelection(this)) return false;
 	if (this.wants_join) return false;
-	if (queuePlayer(this, 0)) return false;
+	if (queuePlayer(this, -1)) return false;
+		// this.wants_join prevents the repeat join messages when pressing space, also should be redundant now?
+		// well removing it requires not clobbering an existing wants_join in queuePlayer....
+			// because joinAllowed is called from Other Places ?
+		// but if we do that, it will prevent switching from any join preference to any other directly with the UI....
+		// what if we use index 0 and bail out on that one specifically ?
+			// that makes it impossible to join the queue from joinAllowed... which actually sounds more correct, but does it cause a bug?
+		// TODO can we instead check !QueueNeeded || QueuedPlayersReady here ?
+
+//	if (!IS_BOT_CLIENT(this) && QueueNeeded(this) && !QueuedPlayersReady(this, false)) return false;
+		// this seems to work... but doesn't result in getting the repeat message, are we not actually calling queuePlayer at all now? guess so...
+		// yeah and its broken cos now we cant join the queue at all using SPACE
+	// cant distinguish SPACE joinAllowed from other joinAllowed so this may not be solvable without special casing
+		// what if we refactor to join the queue from Join() instead of here? ie return true here even when queueing is required
+			// should work IF Join() is always used for humans...
 	return true;
 }
 

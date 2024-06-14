@@ -257,6 +257,13 @@ bool QueuedPlayersReady(entity this, bool checkspecificteam)
 
 bool SetPlayerTeam(entity player, int team_index, int type)
 {
+	// TODO remove
+	LOG_INFOF("^6SetPlayerTeam for %s %f", player.netname, team_index);
+
+	if (team_index > 0)
+		if (queuePlayer(player, team_index))
+			return true;
+
 	int old_team_index = Entity_GetTeamIndex(player);
 
 	if (!Player_SetTeamIndex(player, team_index))
@@ -264,7 +271,21 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 
 	LogTeamChange(player.playerid, player.team, type);
 
-	if (team_index != old_team_index)
+	// FIXME: suspect the || player.wants_join causes the extra "now playing" for the second player, when they both select different teams manually
+		// NOPE: removing it doesnt fix that, so its caused by the initial ClientKill_TeamChange() (specific team) AND the TeamBalance_JoinBestTeam()
+			// prolly because team -1 causes SetPlayerTeam() to not detect its the same team ?
+				// yes changing that too does fix it
+					// putting the  || player.wants_join back in re-introduces the double message for the second player (with a different print order)
+						// FIXME FFS but its necessary to get the "now playing" message for the first (queued) player
+							// could un-set .wants_join before we get here, for the last player?
+							// print it in Join() but INSIDE the loop this time? or just where it was but with a better condition?
+								// neater than spreading the special case over several funcs
+								// but then dont we lose the centreprint repeat? :/
+									// yes the || player.wants_join is currently necessary for that cos the centreprint is in queuePlayer
+							// make queuePlayer be called even when the team is the same? save its return value in a bool?
+//	bool qp = queuePlayer(player, team_index);
+
+	if (team_index != old_team_index)// || player.wants_join)
 	{
 		KillPlayerForTeamChange(player);
 		PlayerScore_Clear(player); // works only in game modes without teams
@@ -274,14 +295,24 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 
 		if (team_index != -1)
 		{
-			if (!queuePlayer(player, team_index))
+			// NOTE need to call this here when switching teams?
+			// deffo (pretty sure) need it when selecting a team from the menu
+			// TODO call this even when the team is the same to get the centreprint again ?
+				// done:  || player.wants_join)
+//			if (!queuePlayer(player, team_index))
 			{
+				// needs to be here for swapping teams
+				// this code DOES get called when joining initially (pretty sure) (and when joining the queue?)
+
+				// TODO need to do this message when a player switches from join queue, to actually in the game
+				// TODO then it can be removed from Join(), cos this function gets called in all code paths
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
-				player.team_selected = true; // no autoselect in Join()
+				player.team_selected = true; // don't clobber manual (selectteam command) direct (no queue) .team in Join()
+								// TODO is that the best way to do it?
 			}
 
 			if (warmup_stage)
-				ReadyCount();
+				ReadyCount(); // teams might be balanced now
 		}
 	}
 
