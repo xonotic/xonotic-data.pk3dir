@@ -550,7 +550,8 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			}
 			if (lockteams)
 			{
-				sprint(caller, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_LOCKED);
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_LOCKED);
 				return;
 			}
 
@@ -559,12 +560,14 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				return;
 			if (caller.team == team_num && team_num && !IS_DEAD(caller))
 			{
-				sprint(caller, "^7You already are on that team.\n");
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_SAME);
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_SAME);
 				return;
 			}
 			if (CS(caller).wasplayer && autocvar_g_changeteam_banned)
 			{
-				sprint(caller, "^1You cannot change team, forbidden by the server.\n");
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_NOTALLOWED);
 				return;
 			}
 			if (team_num && autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
@@ -574,7 +577,8 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				if ((Team_IndexToBit(Team_TeamToIndex(team_num)) &
 					TeamBalance_FindBestTeams(balance, caller, false)) == 0)
 				{
-					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
 					TeamBalance_Destroy(balance);
 					return;
 				}

@@ -309,11 +309,12 @@ void Player_SetTeamIndexChecked(entity player, int team_index)
 	{
 		return;
 	}
-	if ((autocvar_g_campaign) || (autocvar_g_changeteam_banned &&
-		CS(player).wasplayer))
+
+	// TODO: this is in ClientCommand_selectteam(), shouldn't be necessary to have it here too (refactor SV_ChangeTeam ?)
+	if ((autocvar_g_campaign) || (autocvar_g_changeteam_banned && CS(player).wasplayer))
 	{
-		Send_Notification(NOTIF_ONE, player, MSG_INFO,
-			INFO_TEAMCHANGE_NOTALLOWED);
+		Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
+		Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_TEAMCHANGE_NOTALLOWED);
 		return;
 	}
 	entity balance = TeamBalance_CheckAllowedTeams(player);
@@ -334,14 +335,15 @@ void Player_SetTeamIndexChecked(entity player, int team_index)
 		team_index = 1;
 	}
 
+	// TODO: this is in ClientCommand_selectteam(), shouldn't be necessary to have it here too (refactor SV_ChangeTeam ?)
 	if (autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
 	{
 		TeamBalance_GetTeamCounts(balance, player);
 		if ((Team_IndexToBit(team_index) & TeamBalance_FindBestTeams(balance,
 			player, false)) == 0)
 		{
-			Send_Notification(NOTIF_ONE, player, MSG_INFO,
-				INFO_TEAMCHANGE_LARGERTEAM);
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
 			TeamBalance_Destroy(balance);
 			return;
 		}
