@@ -969,7 +969,7 @@ void GameCommand_lockteams(int request)
 			if (teamplay)
 			{
 				lockteams = 1;
-				bprint("^1The teams are now locked.\n");
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_LOCKED);
 			}
 			else
 			{
@@ -1645,7 +1645,7 @@ void GameCommand_unlockteams(int request)
 			if (teamplay)
 			{
 				lockteams = 0;
-				bprint("^1The teams are now unlocked.\n");
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_UNLOCKED);
 			}
 			else
 			{
