@@ -28,6 +28,8 @@ void ClientKill_Now_TeamChange(entity this)
 
 		if (this.wants_join)
 		{
+			// clear any "you're queued to join" centreprints
+			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, this.netname);
 			SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
 			// Can't do this in PutObserverInServer() or SetPlayerTeam() cos it causes

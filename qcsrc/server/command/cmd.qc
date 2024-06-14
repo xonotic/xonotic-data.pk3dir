@@ -557,7 +557,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			float team_num = Team_ColorToTeam(argv(1));
 			if (team_num == -1) // invalid
 				return;
-			if (caller.team == team_num && team_num && !IS_DEAD(caller))
+			if (caller.team == team_num && team_num && !IS_DEAD(caller) && !caller.wants_join)
 			{
 				sprint(caller, "^7You already are on that team.\n");
 				return;
@@ -581,10 +581,16 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				TeamBalance_Destroy(balance);
 			}
 			if (team_num)
+			{
+				LOG_INFOF("^6ClientCommand_selectteam: calling ClientKill_TeamChange() for %s team %f", caller.netname, team_num);
 				ClientKill_TeamChange(caller, team_num);
+			}
 			else // auto
-				if (!queuePlayer(caller, 0)) // the queue uses deferred autoselect
+				if (!queuePlayer(caller, -1)) // the queue uses deferred autoselect
+				{
 					ClientKill_TeamChange(caller, -1);
+					LOG_INFOF("^6ClientCommand_selectteam: calling ClientKill_TeamChange() for %s team %f", caller.netname, -1);
+				}
 
 			return;
 		}
