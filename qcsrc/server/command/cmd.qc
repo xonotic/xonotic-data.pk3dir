@@ -575,6 +575,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 					TeamBalance_FindBestTeams(balance, caller, false)) == 0)
 				{
 					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+					Send_Notification(NOTIF_ONE, caller, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
 					TeamBalance_Destroy(balance);
 					return;
 				}

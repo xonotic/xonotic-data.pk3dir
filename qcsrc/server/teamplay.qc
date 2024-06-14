@@ -374,8 +374,8 @@ void Player_SetTeamIndexChecked(entity player, int team_index)
 		if ((Team_IndexToBit(team_index) & TeamBalance_FindBestTeams(balance,
 			player, false)) == 0)
 		{
-			Send_Notification(NOTIF_ONE, player, MSG_INFO,
-				INFO_TEAMCHANGE_LARGERTEAM);
+			Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
 			TeamBalance_Destroy(balance);
 			return;
 		}
