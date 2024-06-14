@@ -925,6 +925,11 @@ void Draw_ArcBeam(entity this)
 		// should be able to acquire this from a generalized function built
 		// into a weapon system for client code.
 
+		// Dr. Jaska: Reply to ^: Do we? If the server would decide where a
+		// client draws a beam it would mean that what the client sees will
+		// always be lagged and not where they are actually hitting in "real
+		// time" after being antilagged. Thus I don't understand the above.
+
 		// find where we are aiming
 		vector myviewangle = view_angles;
 		if (autocvar_chase_active)
@@ -1161,9 +1166,6 @@ void Draw_ArcBeam(entity this)
 	// visual effects for startpoint and endpoint
 	if(this.beam_hiteffect)
 	{
-		// FIXME we really should do this on the server so it actually
-		// matches gameplay. What this client side stuff is doing is no
-		// more than guesswork.
 		if((trace_ent || trace_fraction < 1) && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		pointparticles(
 			this.beam_hiteffect,
