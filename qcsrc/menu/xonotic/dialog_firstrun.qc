@@ -80,7 +80,7 @@ void XonoticFirstRunDialog_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 
-	me.gotoRC(me, me.rows - 4, 0);
+	me.gotoRC(me, me.rows - 4, 0); me.setFirstColumn(me, me.currentColumn);
 	me.TD(me, 1, me.columns, e = makeXonoticTextLabel(0.5, _("Allow player statistics to use your nickname at stats.xonotic.org?")));
 
 	me.gotoRC(me, me.rows - 3, 0);
