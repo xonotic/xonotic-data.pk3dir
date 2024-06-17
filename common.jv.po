@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-02 07:22+0200\n"
+"POT-Creation-Date: 2024-06-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Javanese (http://app.transifex.com/team-xonotic/xonotic/"
@@ -1176,7 +1176,7 @@ msgstr ""
 msgid "^1Configure the HUD"
 msgstr ""
 
-#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:87
+#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
@@ -1187,7 +1187,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:88
+#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
@@ -6211,35 +6211,35 @@ msgid ""
 "menu system."
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:50
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:58
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:62
 msgid "Name under which you will appear in the game"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:74
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:75
 msgid "Text language:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:83
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:89
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:91
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:92
 msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:95
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:96
 msgid "Save settings"
 msgstr ""
 
@@ -9569,19 +9569,17 @@ msgstr ""
 msgid "Replace blood and gibs with content that does not have any gore effects"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
-msgid "While connected language changes will be applied only to the menu,"
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
+msgid ""
+"While connected language changes will be applied only to the menu, full "
+"language changes will take effect starting from the next game"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
-msgid "full language changes will take effect starting from the next game"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:19
 msgid "Switch language"
 msgstr ""
 

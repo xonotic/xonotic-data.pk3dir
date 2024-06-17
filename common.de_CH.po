@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-02 07:22+0200\n"
+"POT-Creation-Date: 2024-06-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
 "Language-Team: German (http://app.transifex.com/team-xonotic/xonotic/"
@@ -1234,7 +1234,7 @@ msgstr "Erlaube Servern, deinen Namen zu speichern und später zu zeigen?"
 msgid "^1Configure the HUD"
 msgstr "^1Das HUD konfigurieren"
 
-#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:87
+#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
@@ -1245,7 +1245,7 @@ msgstr "^1Das HUD konfigurieren"
 msgid "Yes"
 msgstr "Ja"
 
-#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:88
+#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
@@ -6441,30 +6441,30 @@ msgstr ""
 "Spielernamens kann es losgehen.  Diese Optionen können natürlich später im "
 "Menüsystem geändert werden."
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:50
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
 msgstr "Name:"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:58
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:62
 msgid "Name under which you will appear in the game"
 msgstr "Leg deinen Namen im Spiel fest"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:74
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:75
 msgid "Text language:"
 msgstr "Textsprache:"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:83
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
 "Darf stats.xonotic.org deinen Spielernamen für Spielerstatistiken nutzen?"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:89
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"
 msgstr "Später nachfragen"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:91
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:92
 msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
@@ -6472,7 +6472,7 @@ msgstr ""
 "Spielerstatistiken sind standardmässig eingeschaltet. Du kannst dies im "
 "Profil-Menü ändern"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:95
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:96
 msgid "Save settings"
 msgstr "Einstellungen speichern"
 
@@ -9912,21 +9912,17 @@ msgstr ""
 "Blut und Fleischteile durch Dinge ersetzen, die keinerlei brutale Effekte "
 "haben"
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
-msgid "While connected language changes will be applied only to the menu,"
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
+msgid ""
+"While connected language changes will be applied only to the menu, full "
+"language changes will take effect starting from the next game"
 msgstr ""
-"Während du verbunden bist, werden Sprachänderungen nur auf das Menü "
-"angewandt;"
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
-msgid "full language changes will take effect starting from the next game"
-msgstr "volle Sprachänderungen finden erst nach dem Neustart des Spiels statt"
-
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"
 msgstr "Verbindung jetzt unterbrechen"
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:19
 msgid "Switch language"
 msgstr "Sprache ändern"
 

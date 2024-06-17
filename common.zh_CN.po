@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-02 07:22+0200\n"
+"POT-Creation-Date: 2024-06-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (http://app.transifex.com/team-xonotic/"
@@ -1205,7 +1205,7 @@ msgstr "允许服务器存储并展示你的名字？"
 msgid "^1Configure the HUD"
 msgstr "^1设置HUD"
 
-#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:87
+#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
@@ -1216,7 +1216,7 @@ msgstr "^1设置HUD"
 msgid "Yes"
 msgstr "是"
 
-#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:88
+#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
@@ -6295,35 +6295,35 @@ msgstr ""
 "欢迎来到 Xonotic。 请选择你的语言、输入玩家名称以开始游戏。 这些选项可以随后"
 "在菜单更改。"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:50
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
 msgstr "名字："
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:58
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:62
 msgid "Name under which you will appear in the game"
 msgstr "你在游戏里的名字"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:74
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:75
 msgid "Text language:"
 msgstr "文字语言："
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:83
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr "允许 stats.xonotic.org 在玩家统计中使用你的昵称吗？"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:89
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"
 msgstr "未决定"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:91
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:92
 msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr "玩家统计默认启用，你可以在“用户档案”菜单更改"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:95
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:96
 msgid "Save settings"
 msgstr "保存设置"
 
@@ -9665,19 +9665,17 @@ msgstr "禁用血腥效果和恶劣的语言"
 msgid "Replace blood and gibs with content that does not have any gore effects"
 msgstr "将血液与肢体替换为不包含任何血腥效果的内容"
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
-msgid "While connected language changes will be applied only to the menu,"
-msgstr "当已连接游戏时，语言的更改仅应用于菜单，"
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
+msgid ""
+"While connected language changes will be applied only to the menu, full "
+"language changes will take effect starting from the next game"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
-msgid "full language changes will take effect starting from the next game"
-msgstr "完整的语言更改将在下一轮游戏开始后生效"
-
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"
 msgstr "现在断开连接"
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:19
 msgid "Switch language"
 msgstr "切换语言"
 

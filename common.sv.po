@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-02 07:22+0200\n"
+"POT-Creation-Date: 2024-06-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Logan Zerfass, 2023\n"
 "Language-Team: Swedish (http://app.transifex.com/team-xonotic/xonotic/"
@@ -1206,7 +1206,7 @@ msgstr "Tillåt servrar att lagra och visa ditt namn?"
 msgid "^1Configure the HUD"
 msgstr "^1Konfigurera HUD:en"
 
-#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:87
+#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
@@ -1217,7 +1217,7 @@ msgstr "^1Konfigurera HUD:en"
 msgid "Yes"
 msgstr "Ja"
 
-#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:88
+#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
@@ -6358,37 +6358,37 @@ msgstr ""
 "spelarnamn för att komma igång.  Du kan senare ändra dessa inställningar via "
 "menyn."
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:50
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
 msgstr "Namn:"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:58
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:62
 msgid "Name under which you will appear in the game"
 msgstr "Namn som du kommer att synas som i spelet"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:74
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:75
 msgid "Text language:"
 msgstr "Ställ in språk:"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:83
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
 "Tillåt spelstatistiken att använda ditt spelarnamn på stats.xonotic.org?"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:89
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"
 msgstr "Obeslutad"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:91
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:92
 msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
 "Spelstatistik är påslagen som standard, du kan ändra på detta i Profilmenyn"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:95
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:96
 msgid "Save settings"
 msgstr "Spara inställningar"
 
@@ -9791,19 +9791,17 @@ msgid "Replace blood and gibs with content that does not have any gore effects"
 msgstr ""
 "Byter ut blod och inälvor med innehåll som inte har några blodiga effekter"
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
-msgid "While connected language changes will be applied only to the menu,"
-msgstr "Under uppkoppling sker bara språkförändringar i menyn,"
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
+msgid ""
+"While connected language changes will be applied only to the menu, full "
+"language changes will take effect starting from the next game"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
-msgid "full language changes will take effect starting from the next game"
-msgstr "hela språkförändringar börjar få effekt efter starten på ett nytt spel"
-
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"
 msgstr "Koppla bort nu"
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:19
 msgid "Switch language"
 msgstr "Växla språk"
 
