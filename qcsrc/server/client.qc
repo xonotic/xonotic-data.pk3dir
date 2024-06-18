@@ -2700,6 +2700,8 @@ void PlayerFrame (entity this)
 	anticheat_prethink(this);
 
 	// Check if spectating is allowed
+	if (!autocvar_sv_spectate) blockSpectators = 1;
+
 	if (blockSpectators && IS_REAL_CLIENT(this)
 	&& (IS_SPEC(this) || IS_OBSERVER(this)) && !INGAME(this)
 	&& time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime))
