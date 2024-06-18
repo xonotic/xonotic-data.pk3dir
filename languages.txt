@@ -1,11 +1,11 @@
 ast   "Asturian" "Asturianu" 72%
 id_ID "Indonesian" "Bahasa Indonesia" 39%
-de    "German" "Deutsch" 99%
-de_CH "German (Switzerland)" "Deutsch (Schweiz)" 99%
+de    "German" "Deutsch" 100%
+de_CH "German (Switzerland)" "Deutsch (Schweiz)" 100%
 en    "English" "English" 100%
 en_AU "English (Australia)" "English (Australia)" 68%
 es    "Spanish" "Español" 99%
-fr    "French" "Français" 99%
+fr    "French" "Français" 100%
 ga    "Irish" "Irish" 29%
 it    "Italian" "Italiano" 99%
 la    "Latin" "Lingua Latina" 99%
@@ -23,7 +23,7 @@ cs    "Czech" "Čeština" 30%
 el    "Greek" "Ελληνική" 43%
 be    "Belarusian" "Беларуская" 48%
 bg    "Bulgarian" "Български" 70%
-ru    "Russian" "Русский" 99%
+ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 57%
 uk    "Ukrainian" "Українська" 57%
 zh_TW "Chinese (Taiwan)" "中文（正體字）" 99%
