@@ -7,6 +7,7 @@
 # busterdbk <busterdbk@gmail.com>, 2013
 # busterdbk <busterdbk@gmail.com>, 2013
 # Cuzenco Andrei Robert <cuzencoandreirobert2008@gmail.com>, 2019
+# Edward, 2024
 # Iulian Oancea <iulian.o@protonmail.ch>, 2019
 # MirceaKitsune <sonichedgehog_hyperblast00@yahoo.com>, 2011
 # Sorin Botirla <sorin.botirla@gmail.com>, 2015
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Tudor Ionel <tropiko.matrox@gmail.com>, 2015\n"
+"Last-Translator: Edward, 2024\n"
 "Language-Team: Romanian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ro/)\n"
 "Language: ro\n"
@@ -41,7 +42,7 @@ msgstr "^1Nu s-a putut scrie către %s"
 #: qcsrc/client/hud/panel/centerprint.qc:197
 #, c-format
 msgid "Title at %s"
-msgstr ""
+msgstr "Titlu la %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -69,7 +70,7 @@ msgstr "Mesaj generic"
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
-msgstr ""
+msgstr "vs"
 
 #: qcsrc/client/hud/panel/chat.qc:165
 msgid "^3Player^7: This is the chat area."
@@ -139,7 +140,7 @@ msgstr "Mod secundar de tragere"
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Apasă ^3%s^1 pentru a schimba modul camerei"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
 #, c-format
@@ -154,7 +155,7 @@ msgstr "Informații despre server"
 #: qcsrc/client/hud/panel/infomessages.qc:133
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr ""
+msgstr "^2Ești la coadă pentru a te alătura echipei %s%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #, c-format
@@ -218,7 +219,7 @@ msgstr "Apasă ^3%s%s pentru a ajusta"
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #: qcsrc/menu/xonotic/keybinder.qc:117
 msgid "team selection"
-msgstr ""
+msgstr "selecție echipă"
 
 #: qcsrc/client/hud/panel/infomessages.qc:219
 msgid "^1Spectating this player:"
@@ -252,7 +253,7 @@ msgstr "Jucător: %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:204
 msgid "Standard quick menu"
-msgstr ""
+msgstr "Meniu rapid standard"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:636
 #: qcsrc/client/hud/panel/quickmenu.qc:638
@@ -276,7 +277,7 @@ msgstr "Convorbire"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Trimite mesaj public către"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:822
 msgid "QMCMD^:-) / nice one"
@@ -300,7 +301,7 @@ msgstr "QMCMD^salut / baftă și distracție plăcută"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:826
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Trimite în engleză"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 #: qcsrc/client/hud/panel/quickmenu.qc:847
@@ -309,7 +310,7 @@ msgstr "QMCMD^Conversație echipă"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:832
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "QMCMD^forță curând"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -389,7 +390,7 @@ msgstr "QMCMD^posesorul de steag omorât (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr ""
+msgstr "QMCMD^posesorul de steag omorât, pictogramă"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 #, c-format
@@ -469,7 +470,7 @@ msgstr "QMCMD^Sunet conversație"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:869
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "QMCMD^Schimbă camera spectatorului"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:874
 #: qcsrc/client/hud/panel/quickmenu.qc:878
@@ -486,7 +487,7 @@ msgstr "QMCMD^Scade viteza"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:877
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "QMCMD^Coliziunea cu pereții"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:881
 msgid "QMCMD^Fullscreen"
@@ -519,7 +520,7 @@ msgstr "QMCMD^Amestecă echipele"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:898
 msgid "Server quick menu"
-msgstr ""
+msgstr "Meniu rapid al serverului"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:900
 msgid "Waypoint editor menu"
@@ -1799,12 +1800,12 @@ msgstr "Jocul Curent"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:431
 msgid "Exit Menu"
-msgstr "Ieșire Meniu"
+msgstr "Meniu de ieșire"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:442
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
 msgid "Create"
-msgstr "Creare Joc"
+msgstr "Creare joc"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
 #: qcsrc/menu/xonotic/dialog_welcome.qc:131
@@ -3556,6 +3557,8 @@ msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
 "the update from ^F3https://xonotic.org^BG!"
 msgstr ""
+"^F4NOTĂ: ^F1Xonotic %s^BG a apărut, iar tu încă ai ^F2Xonotic %s^BG - obține "
+"actualizarea de la ^F3https://xonotic.org^BG!"
 
 #: qcsrc/common/notifications/all.inc:465
 #, c-format
@@ -4858,7 +4861,7 @@ msgid ""
 "^F2The enemy is stealing one of your vehicles!\n"
 "^F4Stop them!"
 msgstr ""
-"^F2Inamicul îți ciordește un vehicul!\n"
+"^F2Inamicul îți fură unul dintre vehicul!\n"
 "^F4Oprește-l!"
 
 #: qcsrc/common/notifications/all.inc:815
@@ -6330,7 +6333,7 @@ msgstr "OK"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:7
 msgid "Credits"
-msgstr "Credite"
+msgstr "Generic"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:8
 msgid "The Xonotic credits"
@@ -6342,9 +6345,9 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
-"Bine ati venit in Xonotic, va rugam selectati limba dorita si numele "
-"dumneavoastra de jucator pentru a incepe. Puteti schimba aceste preferinte "
-"mai tarziu din cadrul meniului."
+"Bine ai venit la Xonotic, te rugăm să selectezi limba preferată și să "
+"introduci numele tău de jucător pentru a începe. Poți schimba aceste opțiuni "
+"mai târziu prin intermediul meniului"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
@@ -6949,7 +6952,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:56
 msgid "Demo mode"
-msgstr ""
+msgstr "Mod demonstrație"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:60
 msgid "Reset colors"
@@ -7275,6 +7278,8 @@ msgid ""
 "Play online, against your friends in LAN, view demos or change player "
 "settings"
 msgstr ""
+"Joacă online, împotriva prietenilor tăi în rețea, vezi demonstrații sau "
+"schimbă setările de joc"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
@@ -7833,7 +7838,7 @@ msgstr "Capturi de ecran"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:27
 msgid "Music Player"
-msgstr "Player de Muzică"
+msgstr "Player de muzică"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:48
 msgid "Auto record demos"
@@ -7846,6 +7851,7 @@ msgstr "Timedemo"
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:58
 msgid "Benchmark how fast your computer can run the highlighted demo"
 msgstr ""
+"Evaluează cât de repede poate rula computerul tău demonstrația evidențiată"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:62
 msgid "DEMO^Play"
@@ -7853,7 +7859,7 @@ msgstr "DEMO^Vizualizare"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:13
 msgid "Playing a demo will disconnect you from the current match."
-msgstr "Derularea unei demonstrații vă va deconecta de la meciul curent."
+msgstr "Derularea unei demonstrații te va deconecta de la meciul curent."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:15
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:15
@@ -7867,7 +7873,7 @@ msgstr "Deconectează"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
 msgid "Timing a demo will disconnect you from the current match."
-msgstr "Sincronizarea demonstrației vă va deconecta de la meciul curent."
+msgstr "Sincronizarea demonstrației te va deconecta de la meciul curent."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:37
 msgid "MUSICPL^Add"
@@ -7964,11 +7970,11 @@ msgstr "Model"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:98
 msgid "Glowing color"
-msgstr "Strălucire culoare"
+msgstr "Culoarea strălucirii"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:108
 msgid "Detail color"
-msgstr "Detaliu culoare"
+msgstr "Culoarea detaliului"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:123
 msgid "Statistics"
@@ -7992,11 +7998,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:12
 msgid "Are you sure you want to quit?"
-msgstr "Sunteți sigur că vreți să ieșiți?"
+msgstr "Ești sigur că vrei să ieși?"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game"
-msgstr ""
+msgstr "Ieși din joc"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:15
 msgid "Model:"
@@ -8520,7 +8526,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Show sky"
-msgstr ""
+msgstr "Afișare cer"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
 msgid "Show surfaces"
@@ -8650,12 +8656,14 @@ msgstr "DMGFX^Toate"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Realtime dynamic lights"
-msgstr ""
+msgstr "Lumini dinamice în timp real"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:193
 msgid ""
 "Temporary realtime light sources such as explosions, rockets and powerups"
 msgstr ""
+"Surse de lumină în timp real temporare, cum ar fi explozii, rachete și "
+"powerup-uri"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:195
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
@@ -8664,21 +8672,23 @@ msgstr "Umbre"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:196
 msgid "Shadows cast by realtime dynamic lights"
-msgstr ""
+msgstr "Umbre create de lumini dinamice în timp real"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
 msgid "Realtime world lights"
-msgstr ""
+msgstr "Lumini în timp real ale lumii"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
 msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
 msgstr ""
+"Sursele de lumini în timp real sunt incluse în anumite hărți. Poate avea un "
+"impact mare asupra performanței."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 msgid "Shadows cast by realtime world lights"
-msgstr ""
+msgstr "Umbre create de lumini dinamice în timp real ale lumii"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
 msgid "Use normal maps"
@@ -8689,6 +8699,8 @@ msgid ""
 "Directional shading of certain textures to simulate interaction of realtime "
 "light with a bumpy surface"
 msgstr ""
+"Umbrirea direcțională a anumitor texturi pentru a simula interacțiunea "
+"luminii în timp real cu o suprafață denivelată"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:209
 msgid "Soft shadows"
@@ -9555,7 +9567,7 @@ msgstr "Latență locala:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "HTTP downloads"
-msgstr ""
+msgstr "Descărcări HTTP"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:64
 msgid "Simultaneous:"
@@ -9563,7 +9575,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Maximum number of concurrent HTTP downloads"
-msgstr ""
+msgstr "Numărul maxim de descărcări HTTP simultane"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
 msgid "Framerate"
@@ -10047,7 +10059,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:98
 msgid "Don't accept (quit the game)"
-msgstr ""
+msgstr "Nu accepta (ieși din joc)"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:10
 msgid "Allow player statistics to use your nickname?"
@@ -10183,7 +10195,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:112
 msgid "quit"
-msgstr ""
+msgstr "ieși"
 
 #: qcsrc/menu/xonotic/keybinder.qc:116
 msgid "auto-join team"
@@ -10227,11 +10239,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
-msgstr ""
+msgstr "Părăsește meciul actual"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:14
 msgid "Stop demo"
-msgstr ""
+msgstr "Oprire demo"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:16
 msgid "Leave campaign"
@@ -10247,15 +10259,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current campaign level"
-msgstr ""
+msgstr "Părăsește nivelul de campanie actual"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:30
 msgid "Leave current singleplayer match"
-msgstr ""
+msgstr "Părăsește meciul singleplayer actual"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:32
 msgid "Leave current multiplayer match / Disconnect from the server"
-msgstr ""
+msgstr "Părăsește meciul multiplayer actual / Deconectează-te de la server"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:76 qcsrc/menu/xonotic/mainwindow.qc:79
 msgid "Do not press this button again!"
