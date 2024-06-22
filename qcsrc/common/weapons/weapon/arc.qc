@@ -953,18 +953,29 @@ void Draw_ArcBeam(entity this)
 		else
 			{ start_pos = this.origin; }
 
-		// trace forward with an estimation
-		WarpZone_TraceLine(
-			start_pos,
-			start_pos + forward * this.beam_range,
-			MOVE_NOMONSTERS,
-			this
-		);
-
+		vector start_pos_saved = start_pos;
 		int v_shot_idx;  // used later
 		(v_shot_idx = gettagindex(wepent, "shot")) || (v_shot_idx = gettagindex(wepent, "tag_shot"));
 		if(v_shot_idx && this.beam_usevieworigin == 2)
+		{
 			start_pos = gettaginfo(wepent, v_shot_idx) - '0 0 2';
+			traceline(start_pos_saved, start_pos, MOVE_NORMAL, this);
+			if (trace_fraction < 1)
+			{
+				// found an obstacle between view origin and shot tag
+				v_shot_idx = 0;
+				start_pos = trace_endpos;
+				start_pos_saved = start_pos;
+			}
+		}
+
+		// trace forward with an estimation
+		WarpZone_TraceLine(
+			start_pos_saved,
+			start_pos_saved + forward * this.beam_range,
+			MOVE_NOMONSTERS,
+			this
+		);
 
 		// untransform in case our trace went through a warpzone
 		vector end_pos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
@@ -990,7 +1001,10 @@ void Draw_ArcBeam(entity this)
 		start_pos = trace_endpos;
 
 		// calculate the aim direction now
-		wantdir = normalize(end_pos - start_pos);
+		if (vdist(end_pos - start_pos, >, 0.001))
+			wantdir = normalize(end_pos - start_pos);
+		else
+			wantdir = view_forward;
 
 		if(!this.beam_initialized)
 		{
