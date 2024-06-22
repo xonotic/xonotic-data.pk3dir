@@ -9771,6 +9771,8 @@ msgid ""
 "While connected language changes will be applied only to the menu, full "
 "language changes will take effect starting from the next game"
 msgstr ""
+"Dum conexio tenetur, in hanc linguam vertuntur indicum scripta solum, et "
+"alia scripta vertentur cum ludus posterior incipietur"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"
