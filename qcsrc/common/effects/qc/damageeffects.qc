@@ -251,7 +251,8 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		if(it.damageforcescale)
 			if(vdist(thisforce, !=, 0))
 			{
-				it.velocity = it.velocity + damage_explosion_calcpush(it.damageforcescale * thisforce, it.velocity, damagepush_speedfactor);
+				// gibs are unscaled by damagepush_speedfactor
+				it.velocity += it.damageforcescale * thisforce;
 				UNSET_ONGROUND(it);
 			}
 
