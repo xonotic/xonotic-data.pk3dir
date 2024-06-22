@@ -1166,7 +1166,7 @@ void Draw_ArcBeam(entity this)
 	// visual effects for startpoint and endpoint
 	if(this.beam_hiteffect)
 	{
-		if((trace_ent || trace_fraction < 1) && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		if(trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		pointparticles(
 			this.beam_hiteffect,
 			last_origin,
