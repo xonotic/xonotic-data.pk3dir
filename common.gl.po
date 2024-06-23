@@ -577,7 +577,7 @@ msgstr "Número de asasinatos do portador de balón"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^bckills"
-msgstr "SCO^bcAsasinatos"
+msgstr "SCO^Asasinatos portador pelota"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^bctime"
@@ -674,7 +674,7 @@ msgstr "Numero de asasinatos do portador da bandeira"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^fckills"
-msgstr "SCO^fcasasinatos"
+msgstr "SCO^conta de asasinatos"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "FPS"
@@ -722,7 +722,7 @@ msgstr "Número de asasinatos do portador de chaves"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^kckills"
-msgstr "SCO^acasasinatos"
+msgstr "SCO^asasinatos en combate"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^k/d"
@@ -736,7 +736,7 @@ msgstr "A relación asasinatos-mortes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^kdr"
-msgstr "SCO^amr"
+msgstr "SCO^kdr"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^kdratio"
@@ -772,7 +772,7 @@ msgstr "Numero de veces que se perdeu a chave"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "SCO^losses"
-msgstr "SCO^perdidas"
+msgstr "SCO^perdas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:166
 #: qcsrc/client/hud/panel/scoreboard.qc:167
@@ -812,7 +812,7 @@ msgstr "Tempo de ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^ping"
-msgstr "SCO^ping"
+msgstr "SCO^latencia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "Packet loss"
@@ -820,7 +820,7 @@ msgstr "Paquetes perdidos"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "SCO^pl"
-msgstr "SCO^pl"
+msgstr "SCO^pp"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of players pushed into void"
@@ -6444,7 +6444,7 @@ msgstr "Servidores"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:48
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:19
 msgid "Profile"
-msgstr "Perfi"
+msgstr "Perfil"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:51
 #: qcsrc/menu/xonotic/dialog_settings.qh:6
@@ -9835,6 +9835,10 @@ msgid ""
 "While connected language changes will be applied only to the menu, full "
 "language changes will take effect starting from the next game"
 msgstr ""
+"Aínda que os cambios de idioma conectado só se aplicarán ao menú, os cambios "
+"de idioma completos terán efecto a partir do seguinte xogo \n"
+" \n"
+" "
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"
@@ -10456,7 +10460,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:754
 msgid "Ping"
-msgstr "Ping"
+msgstr "Latencia"
 
 #: qcsrc/menu/xonotic/serverlist.qc:755
 msgid "Hostname"

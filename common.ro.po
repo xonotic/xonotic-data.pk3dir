@@ -8,6 +8,7 @@
 # busterdbk <busterdbk@gmail.com>, 2013
 # Cuzenco Andrei Robert <cuzencoandreirobert2008@gmail.com>, 2019
 # Edward, 2024
+# Edward, 2024
 # Iulian Oancea <iulian.o@protonmail.ch>, 2019
 # MirceaKitsune <sonichedgehog_hyperblast00@yahoo.com>, 2011
 # Sorin Botirla <sorin.botirla@gmail.com>, 2015
@@ -685,7 +686,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^fckills"
-msgstr "SCO^fcucideri"
+msgstr "SCO^ucideri"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "FPS"
@@ -7655,7 +7656,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "SRVS^Laggy"
-msgstr ""
+msgstr "SRVS^Lent"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 msgid "Show high latency servers"

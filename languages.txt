@@ -18,7 +18,7 @@ ro    "Romanian" "Romana" 68%
 fi    "Finnish" "Suomi" 98%
 sv    "Swedish" "Svenska" 99%
 tr    "Turkish" "Türkçe" 54%
-gl "gl" "gl" 99%
+gl "gl" "gl" 100%
 cs    "Czech" "Čeština" 30%
 el    "Greek" "Ελληνική" 43%
 be    "Belarusian" "Беларуская" 48%
