@@ -74,6 +74,16 @@ float autocvar_g_nades_entrap_time = 10;
 bool autocvar_g_nades_veil;
 float autocvar_g_nades_veil_time = 8;
 float autocvar_g_nades_veil_radius = 300;
+bool autocvar_g_nades_tandem;
+float autocvar_g_nades_tandem_item_lifetime;
+bool autocvar_g_nades_tandem_includespecial;
+bool autocvar_g_nades_tandem_randomweapon_includespecial = false;
+bool autocvar_g_nades_tandem_item_includespecial;
+float autocvar_g_nades_tandem_ball_item_spawncount = 1;
+float autocvar_g_nades_tandem_ball_spread;
+float autocvar_g_nades_tandem_ball_lifetime = 1;
+float autocvar_g_nades_tandem_fountain_delay = 5;
+float autocvar_g_nades_tandem_fountain_lifetime;
 bool autocvar_g_nades_ammo;
 float autocvar_g_nades_ammo_time;
 float autocvar_g_nades_ammo_rate;
@@ -83,9 +93,11 @@ bool autocvar_g_nades_darkness;
 bool autocvar_g_nades_darkness_explode;
 bool autocvar_g_nades_darkness_teamcheck;
 float autocvar_g_nades_darkness_time;
-bool autocvar_g_nades_pokenade;
 string autocvar_g_nades_pokenade_monster_type;
+int autocvar_g_nades_tandemnade_type;
 float autocvar_g_nades_pokenade_monster_lifetime;
+float autocvar_g_nades_pokenade_turret_lifetime;
+float autocvar_g_nades_pokenade_vehicle_lifetime;
 #endif
 
 // use slots 70-100
@@ -100,16 +112,18 @@ const int PROJECTILE_NADE_TRANSLOCATE = 78;
 const int PROJECTILE_NADE_SPAWN = 79;
 const int PROJECTILE_NADE_HEAL = 80;
 const int PROJECTILE_NADE_HEAL_BURN = 81;
-const int PROJECTILE_NADE_MONSTER = 82;
-const int PROJECTILE_NADE_MONSTER_BURN = 83;
+const int PROJECTILE_NADE_TANDEM = 82;
+const int PROJECTILE_NADE_TANDEM_BURN = 83;
 const int PROJECTILE_NADE_ENTRAP = 84;
 const int PROJECTILE_NADE_ENTRAP_BURN = 85;
 const int PROJECTILE_NADE_VEIL = 86;
 const int PROJECTILE_NADE_VEIL_BURN = 87;
-const int PROJECTILE_NADE_AMMO = 88;
-const int PROJECTILE_NADE_AMMO_BURN = 89;
-const int PROJECTILE_NADE_DARKNESS = 90;
-const int PROJECTILE_NADE_DARKNESS_BURN = 91;
+const int PROJECTILE_NADE_EMERALD = 88;
+const int PROJECTILE_NADE_EMERALD_BURN = 89;
+const int PROJECTILE_NADE_AMMO = 90;
+const int PROJECTILE_NADE_AMMO_BURN = 91;
+const int PROJECTILE_NADE_DARKNESS = 92;
+const int PROJECTILE_NADE_DARKNESS_BURN = 93;
 
 REGISTRY(Nades, BITS(4))
 REGISTER_REGISTRY(Nades)
@@ -153,6 +167,7 @@ Nade Nade_FromProjectile(int proj)
 #ifdef GAMEQC
 REPLICATE_INIT(int, cvar_cl_nade_type);
 REPLICATE_INIT(string, cvar_cl_pokenade_type);
+REPLICATE_INIT(int, cvar_cl_tandemnade_type);
 #endif
 
 #ifdef SVQC
@@ -162,10 +177,13 @@ REPLICATE_INIT(string, cvar_cl_pokenade_type);
 .float nade_refire;
 .float nade_special_time;
 .string pokenade_type;
+.int tandemnade_type;
 .entity nade_damage_target;
 .float cvar_cl_nade_type;
 .string cvar_cl_pokenade_type;
+.int cvar_cl_tandemnade_type;
 .float toss_time;
+.int nade_item_spawncount;
 .float nade_show_particles;
 .float nade_veil_time;
 .float nade_veil_prevalpha;
