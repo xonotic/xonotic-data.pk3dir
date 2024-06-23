@@ -959,7 +959,9 @@ void Draw_ArcBeam(entity this)
 		if(v_shot_idx && this.beam_usevieworigin == 2)
 		{
 			start_pos = gettaginfo(wepent, v_shot_idx) - '0 0 2';
-			traceline(start_pos_saved, start_pos, MOVE_NORMAL, this);
+			// ignore our own player model in this traceline otherwise it may be hit with trace_fraction < 1
+			// while crouching / standing up due to view height smoothing (cl_smoothviewheight)
+			traceline(start_pos_saved, start_pos, MOVE_NORMAL, csqcplayer);
 			if (trace_fraction < 1)
 			{
 				// found an obstacle between view origin and shot tag
