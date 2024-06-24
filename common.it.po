@@ -952,7 +952,7 @@ msgstr "Uso:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:717
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
-msgstr "^2scoreboard_columns_set ^7campo1 campo2 ..."
+msgstr "^2scoreboard_columns_set ^3campo1 campo2 ..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:718
 msgid ""
@@ -9891,6 +9891,8 @@ msgid ""
 "While connected language changes will be applied only to the menu, full "
 "language changes will take effect starting from the next game"
 msgstr ""
+"Quando si è connessi, i cambiamenti di lingua sono applicati solo al menu, "
+"le modifiche complete saranno applicate a partire dalla prossima partita"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"

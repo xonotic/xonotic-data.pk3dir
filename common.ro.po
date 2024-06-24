@@ -1691,40 +1691,40 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr ""
+msgstr "Haos în echipă"
 
 #: qcsrc/common/items/item/ammo.qh:56
 msgid "Shells"
-msgstr ""
+msgstr "Cartușe"
 
 #: qcsrc/common/items/item/ammo.qh:92
 msgid "Bullets"
-msgstr ""
+msgstr "Gloanțe"
 
 #: qcsrc/common/items/item/ammo.qh:124
 msgid "Rockets"
-msgstr ""
+msgstr "Rachete"
 
 #: qcsrc/common/items/item/ammo.qh:156
 msgid "Cells"
-msgstr ""
+msgstr "Celule"
 
 #: qcsrc/common/items/item/ammo.qh:188
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
-msgstr ""
+msgstr "Plasmă"
 
 #: qcsrc/common/items/item/armor.qh:40
 msgid "Small armor"
-msgstr ""
+msgstr "Armură mică"
 
 #: qcsrc/common/items/item/armor.qh:84
 msgid "Medium armor"
-msgstr ""
+msgstr "Armură mijlocie"
 
 #: qcsrc/common/items/item/armor.qh:128 qcsrc/common/items/item/armor.qh:135
 msgid "Big armor"
-msgstr ""
+msgstr "Armură mare"
 
 #: qcsrc/common/items/item/armor.qh:172 qcsrc/common/items/item/armor.qh:179
 msgid "Mega armor"
@@ -1732,15 +1732,15 @@ msgstr "Mega armură"
 
 #: qcsrc/common/items/item/health.qh:40
 msgid "Small health"
-msgstr ""
+msgstr "Viață mică"
 
 #: qcsrc/common/items/item/health.qh:85
 msgid "Medium health"
-msgstr ""
+msgstr "Viață medie"
 
 #: qcsrc/common/items/item/health.qh:129 qcsrc/common/items/item/health.qh:132
 msgid "Big health"
-msgstr ""
+msgstr "Viață mare"
 
 #: qcsrc/common/items/item/health.qh:173 qcsrc/common/items/item/health.qh:180
 msgid "Mega health"
@@ -1750,15 +1750,15 @@ msgstr "Mega viață"
 #: qcsrc/common/util.qc:263
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
 msgid "Jetpack"
-msgstr ""
+msgstr "Jetpack"
 
 #: qcsrc/common/items/item/jetpack.qh:71
 msgid "Fuel"
-msgstr ""
+msgstr "Combustibil"
 
 #: qcsrc/common/items/item/jetpack.qh:96
 msgid "Fuel regenerator"
-msgstr ""
+msgstr "Regenerator de combustibil"
 
 #: qcsrc/common/items/item/jetpack.qh:99
 msgid "Fuel regen"
@@ -1780,7 +1780,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/cl_minigames.qc:287
 msgid "Spectators:"
-msgstr ""
+msgstr "Spectatori:"
 
 #: qcsrc/common/minigames/cl_minigames.qc:424
 msgid "It's your turn"
@@ -1819,21 +1819,21 @@ msgstr "Mini-jocuri"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:581
 msgid "Minigame message"
-msgstr ""
+msgstr "Mesaj de mini-joc"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "Buldozer"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1107
 #: qcsrc/common/minigames/minigame/ps.qc:425
 #: qcsrc/common/minigames/minigame/ps.qc:431
 msgid "Game over!"
-msgstr ""
+msgstr "Joc încheiat!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click 'Next Level' to continue"
-msgstr ""
+msgstr "Bravo! Click pe „Nivelul următor” pentru a continua"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1183
 #: qcsrc/common/minigames/minigame/c4.qc:383
@@ -1851,11 +1851,11 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/bd.qc:1191
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Uimitor! Click pe „Nivelul următor” pentru a continua"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1193
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Bestial! Click pe „Nivelul următor” pentru a continua"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1197
 msgid "Press the space bar to change your currently selected tile"
@@ -1867,7 +1867,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/bd.qc:1436
 msgid "Next Level"
-msgstr ""
+msgstr "Nivelul următor"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1437
 msgid "Restart"
@@ -4872,11 +4872,11 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:817
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
-msgstr ""
+msgstr "^K1Nu ai voie să chemi un vot deoarece ești interzis pe acest server"
 
 #: qcsrc/common/notifications/all.inc:818
 msgid "^K1You aren't allowed to vote because you are banned in this server"
-msgstr ""
+msgstr "^K1Nu ai voie să votezi deoarece ești interzis pe acest server"
 
 #: qcsrc/common/notifications/all.qh:421 qcsrc/common/notifications/all.qh:422
 #, c-format
@@ -6101,7 +6101,7 @@ msgstr "Obiect %d"
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:68
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:115
 msgid "Custom"
-msgstr "personalizat"
+msgstr "Personalizat"
 
 #: qcsrc/menu/xonotic/credits.qc:4
 msgid "Core Team"
@@ -6811,7 +6811,7 @@ msgstr "Aspect forțat:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
-msgstr "Panoul de Taste Apăsate"
+msgstr "Panoul de taste apăsate"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
@@ -7012,7 +7012,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
-msgstr "Panou de Timp"
+msgstr "Panou de timp"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Alpha after voting:"
@@ -7020,7 +7020,7 @@ msgstr "Opacitate după votare:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
-msgstr "Panou de Voturi"
+msgstr "Panou de voturi"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:22
 msgid "Fade out after:"
@@ -8600,7 +8600,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:158
 msgid "Blurred"
-msgstr "Blurate"
+msgstr "Încețoșate"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:159
 msgid "REFL^Good"
@@ -8821,19 +8821,19 @@ msgstr "Tranziție efecte reticul"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:125
 msgid "Perform hit tests for the crosshair"
-msgstr ""
+msgstr "Efectuare teste de lovire pentru țintă"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
 msgid "Blur if obstructed by an obstacle"
-msgstr ""
+msgstr "Încețoșează dacă este acoperită de un obstacol"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:133
 msgid "Blur if obstructed by a teammate"
-msgstr ""
+msgstr "Încețoșează dacă este acoperită de un coechipier"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:137
 msgid "Shrink if obstructed by a teammate"
-msgstr ""
+msgstr "Micșorează dacă este acoperită de un obstacol"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:140
 msgid "Animate crosshair when hitting an enemy"
@@ -8961,15 +8961,15 @@ msgstr "Suprapunere mesaj damage:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:175
 msgid "Dynamic HUD"
-msgstr ""
+msgstr "HUD dinamic"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:176
 msgid "HUD moves around following player's movement"
-msgstr ""
+msgstr "HUD-ul se deplasează conform mișcării jucătorului"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:178
 msgid "Shake the HUD when hurt"
-msgstr ""
+msgstr "Agită HUD-ul când ești rănit"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:182
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
@@ -9002,15 +9002,15 @@ msgstr "Arată doar killingspree-urile unice"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:34
 msgid "Show spree information in centerprints"
-msgstr "Afișează informații killingspree în centru"
+msgstr "Afișează informații despre masacre în centru"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:38
 msgid "Show spree information in death messages"
-msgstr "Afișează informații spree-uri în mesaje cu morți"
+msgstr "Afișează informații despre masacre în mesaje cu morți"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:43
 msgid "Sprees in info messages:"
-msgstr "Spree-uri în mesaje info"
+msgstr "Masacre în mesaje info:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:46
 msgid "SPREES^Disabled"
@@ -9084,7 +9084,7 @@ msgstr "Mesaje notificări informații arme"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:96
 msgid "Announcers"
-msgstr "Comentator"
+msgstr "Comentatori"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:98
 msgid "Respawn countdown sounds"
@@ -9096,7 +9096,7 @@ msgstr "Sunete killstreak"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:104
 msgid "Achievement sounds"
-msgstr "Sunete achievement-uri"
+msgstr "Sunete realizări"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qh:7
 msgid "Messages"
@@ -9156,22 +9156,24 @@ msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team"
 msgstr ""
+"Atenție: dacă este activată în jocurile de echipă, culoarea echipei tale ar "
+"putea fi aceeași cu cea a inamicului"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Except in team games"
-msgstr ""
+msgstr "Cu excepția jocurilor de echipă"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid "Only in Duel"
-msgstr ""
+msgstr "Doar în duel"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
 msgid "Only in team games"
-msgstr ""
+msgstr "Doar în jocurile de echipă"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "In team games and Duel"
-msgstr ""
+msgstr "În jocurile de echipă și duel"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
 msgid "Body fading:"
@@ -9203,15 +9205,15 @@ msgstr "Modele"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:8
 msgid "Customize how players and items are displayed in game"
-msgstr ""
+msgstr "Personalizează cum jucătorii și obiectele sunt afișate în joc"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:26
 msgid "1st person perspective"
-msgstr "Perspectivă persoana 1-a"
+msgstr "Perspectivă persoana I"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:29
 msgid "Slide to third person upon death"
-msgstr "Glisați la persoana a treia după moarte"
+msgstr "Glisați la persoana a III-a după moarte"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:33
 msgid "Smooth the view when landing from a jump"
@@ -9231,7 +9233,7 @@ msgstr "Vizualizează mișcare camerei în timpul mersului"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:50
 msgid "3rd person perspective"
-msgstr "Perspectivă persoana a3-a"
+msgstr "Perspectivă persoana III-a"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:53
 msgid "Back distance"
@@ -9251,7 +9253,7 @@ msgstr "Câmp vizual:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:71
 msgid "Field of vision in degrees"
-msgstr ""
+msgstr "Câmp vizual în grade"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:75
 msgid "ZOOM^Zoom factor:"
@@ -9353,7 +9355,7 @@ msgstr "Eliberează butoanele de atac când schimbi armele"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:63
 msgid "Draw 1st person weapon model"
-msgstr "Afișaj model 1st person"
+msgstr "Afișează modelul armei personal"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
 msgid "Draw the weapon model"
@@ -9384,7 +9386,7 @@ msgstr "Arme"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:34
 msgid "Key Bindings"
-msgstr "Definire Taste"
+msgstr "Definire taste"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:38
 msgid "Change key..."
@@ -9416,7 +9418,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:64
 msgid "Smooth aiming"
-msgstr "Miscare lina"
+msgstr "Mișcare lină"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:65
 msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
@@ -9450,7 +9452,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:94
 msgid "Pressing \"enter console\" key also closes it"
-msgstr "Apăsând tasta \"enter console\" închide deasemenea consola"
+msgstr "Apăsând tasta \"enter console\" închide și consola"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:95
 msgid "Allow the console toggling bind to also close the console"
@@ -10180,11 +10182,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:100
 msgid "vote YES"
-msgstr ""
+msgstr "votează DA"
 
 #: qcsrc/menu/xonotic/keybinder.qc:101
 msgid "vote NO"
-msgstr ""
+msgstr "votează NU"
 
 #: qcsrc/menu/xonotic/keybinder.qc:105
 msgid "Client"

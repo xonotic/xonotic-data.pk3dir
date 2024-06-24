@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Antonio <piuntn@gmail.com>, 2024
 # LegendGuard, 2020
 # LegendGuard, 2020-2021
 # nin hum <ninhum@gmx.com>, 2024
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: nin hum <ninhum@gmx.com>, 2024\n"
+"Last-Translator: Antonio <piuntn@gmail.com>, 2024\n"
 "Language-Team: Galician (http://app.transifex.com/team-xonotic/xonotic/"
 "language/gl/)\n"
 "Language: gl\n"
@@ -581,7 +582,7 @@ msgstr "SCO^Asasinatos portador pelota"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^bctime"
-msgstr "SCO^bctempo"
+msgstr "SCO^cbtempo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Total amount of time holding the ball in Keepaway"
@@ -804,7 +805,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^pickups"
-msgstr "SCO^capturas"
+msgstr "SCO^recollibles"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "Ping time"
@@ -812,7 +813,7 @@ msgstr "Tempo de ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^ping"
-msgstr "SCO^latencia"
+msgstr "SCO^ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "Packet loss"
@@ -1923,7 +1924,7 @@ msgstr "%s^7 gañou o partido!"
 #: qcsrc/common/minigames/minigame/pp.qc:452
 #: qcsrc/common/minigames/minigame/ttt.qc:334
 msgid "Draw"
-msgstr "Debuxar"
+msgstr "Amosar"
 
 #: qcsrc/common/minigames/minigame/c4.qc:391
 #: qcsrc/common/minigames/minigame/nmm.qc:612
@@ -2163,7 +2164,7 @@ msgstr "Texto de danos"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:18
 msgid "Draw damage numbers"
-msgstr "Debuxa números de danos"
+msgstr "Amosa números de danos"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:20
 msgid "Font size minimum:"
@@ -2184,13 +2185,13 @@ msgstr "Cor:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:36
 msgid "Draw damage numbers for friendly fire"
-msgstr "Debuxa números de danos para o fogo amigo"
+msgstr "Amosar números de dano para o fogo amigo"
 
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:10
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:9
 #: qcsrc/menu/xonotic/keybinder.qc:45
 msgid "off-hand hook"
-msgstr "gancho fóra da man"
+msgstr "gancho secundario"
 
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
@@ -2267,23 +2268,23 @@ msgstr "^3bláster de man secundaria^8 activado, preme ^3%s^8 para usalo"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:22
 msgid "Overkill Heavy Machine Gun"
-msgstr "Ametralladora pesada Overkill"
+msgstr "Ametralladora Pesada Esaxerada"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:20
 msgid "Overkill MachineGun"
-msgstr "Ametralladora Overkill"
+msgstr "Ametralladora Esaxerada"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
 msgid "Overkill Nex"
-msgstr "Overkill Nex"
+msgstr "Nex Esaxerado"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:22
 msgid "Overkill Rocket Propelled Chainsaw"
-msgstr "Motosierra propulsada por foguetes Overkill"
+msgstr "Motoserra propulsada por foguetes Esaxerada"
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
 msgid "Overkill Shotgun"
-msgstr "Escopeta Overkill"
+msgstr "Escopeta Esaxerada"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:46
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:49
@@ -3067,7 +3068,7 @@ msgstr "^BG%s^K1 non podía esconderse da torreta Hunter%s%s"
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
-msgstr "^BG%s^K1 estaba cheo de buratos por unha torreta de ametralladora%s%s"
+msgstr "^BG%s^K1 estaba cheo de buratos por unha Ametralladora de torreta%s%s"
 
 #: qcsrc/common/notifications/all.inc:344
 #, c-format
@@ -3338,7 +3339,7 @@ msgstr "^BG%s^BG destruiu a chave ^TC^TT"
 #: qcsrc/common/notifications/all.inc:406
 #, c-format
 msgid "^BG%s^BG picked up the ^TC^TT Key"
-msgstr "^BG%s^BG recolleu a chave ^TC^TT"
+msgstr "^BG%s^BG colleu a chave ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:408
 #, c-format
@@ -3592,17 +3593,17 @@ msgstr "^BG%s^K1 feriu os seus propios oídos co @!#%%'n Accordeon%s%s"
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
 msgid "^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"
-msgstr "^BG%s%s^K1 foi electrocutado polo arc de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 foi electrocutado polo arco de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:468
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr "^BG%s%s^K1 foi destruído polos raios de arco de  ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 foi destruído polos Raios de Arco de  ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:469
 #, c-format
 msgid "^BG%s^K1 played with Arc bolts%s%s"
-msgstr "^BG%s^K1 xogou con raio de arco%s%s"
+msgstr "^BG%s^K1 xogou con Raio de Arco%s%s"
 
 #: qcsrc/common/notifications/all.inc:470
 #, c-format
@@ -3778,26 +3779,27 @@ msgstr "^BG%s^K1 explotouse co seu propio morteiro%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 foi disparado pola ametralladora pesada Overkill de ^BG%s^K1%s%s"
+"^BG%s%s^K1 foi disparado pola Ametralladora Pesada Esaxerada de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:504
 #, c-format
 msgid ""
 "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 foi destrozado pola ametralladora pesada Overkill de ^BG%s^K1%s%s"
+"^BG%s%s^K1 foi destrozado pola Ametralladora Pesada Esaxerada de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:505
 #, c-format
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 estaba cheo de buratos pola ametralladora Overkill de ^BG%s^K1%s%s"
+"^BG%s%s^K1 estaba cheo de buratos pola Ametralladora Esaxerada de "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:506
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr "^BG%s%s^K1 foi vaporizado polo Overkill Nex de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 foi vaporizado polo Nex Esaxerado de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:507
 #, c-format
@@ -3805,15 +3807,15 @@ msgid ""
 "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
 "Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 foi cortado pola metade pola motoserra propulsada por foguetes "
-"Overkill de ^BG%s^K1%s%s"
+"^BG%s%s^K1 foi cortado pola metade pola Motoserra Propulsada por Foguetes "
+"Esaxerados de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:508
 #, c-format
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 case esquivou a motoserra propulsada por foguetes Overkill de "
+"^BG%s%s^K1 case esquivou a Motoserra Propulsada por Foguetes Esaxerada de "
 "^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:509
@@ -3821,16 +3823,16 @@ msgstr ""
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s^K1 foi serrado pola metade pola súa propia motoserra propulsada por "
-"foguetes Overkill%s%s"
+"^BG%s^K1 foi serrado pola metade pola súa propia Motoserra Propulsada por "
+"Foguetes Esaxerada%s%s"
 
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid ""
 "^BG%s^K1 blew themself up with their Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s^K1 explotouse a si mesmo coa súa motoserra propulsada por foguetes "
-"Overkill%s%s"
+"^BG%s^K1 explotouse a si mesmo coa súa Motoserra Propulsada por Foguetes "
+"Esaxerada%s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
@@ -3861,7 +3863,7 @@ msgstr "^BG%s%s^K1 Non se puido agochar do rifle de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:517
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s"
-msgstr "^BG%s%s^K1 foi golpeado polos foguetes Seeker de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 foi golpeado polos Foguetes Buscadores de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:518
 #, c-format
@@ -3871,7 +3873,7 @@ msgstr "^BG%s%s^K1 foi acertado polo Seeker de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:519
 #, c-format
 msgid "^BG%s^K1 played with tiny Seeker rockets%s%s"
-msgstr "^BG%s^K1 xogou con pequenos foguetes Seeker%s%s"
+msgstr "^BG%s^K1 xogou con pequenos Foguetes Buscadores%s%s"
 
 #: qcsrc/common/notifications/all.inc:520
 #, c-format
@@ -3911,12 +3913,12 @@ msgstr "^BG%s^K1 feriu os seus propios oídos ca @!#%%'n Tuba%s%s"
 #: qcsrc/common/notifications/all.inc:527
 #, c-format
 msgid "^BG%s%s^K1 has been sublimated by ^BG%s^K1's Vaporizer%s%s"
-msgstr "^BG%s%s^K1 foi sublimada polo vaporizador de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 foi sublimada polo Vaporizador de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:528
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"
-msgstr "^BG%s%s^K1 foi vaporizado polo Vortex de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 foi vaporizado polo Vórtice de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:547
 msgid "^F4You are now alone!"
@@ -5250,7 +5252,7 @@ msgstr "Cazador-Asasino"
 
 #: qcsrc/common/turrets/turret/machinegun.qh:13
 msgid "Machinegun Turret"
-msgstr "Torreta de ametralladora"
+msgstr "Ametralladora de torreta"
 
 #: qcsrc/common/turrets/turret/machinegun_weapon.qh:7
 msgid "Machinegun"
@@ -5824,7 +5826,7 @@ msgstr "Robot araña"
 
 #: qcsrc/common/weapons/weapon/arc.qh:20
 msgid "Arc"
-msgstr "Arc"
+msgstr "Arco"
 
 #: qcsrc/common/weapons/weapon/blaster.qh:20
 msgid "Blaster"
@@ -5844,7 +5846,7 @@ msgstr "Electro"
 
 #: qcsrc/common/weapons/weapon/fireball.qh:20
 msgid "Fireball"
-msgstr "Fireball"
+msgstr "Bola de Lume"
 
 #: qcsrc/common/weapons/weapon/hagar.qh:20
 msgid "Hagar"
@@ -5852,12 +5854,12 @@ msgstr "Hagar"
 
 #: qcsrc/common/weapons/weapon/hlac.qh:20
 msgid "Heavy Laser Assault Cannon"
-msgstr "Canón de asalto láser pesado"
+msgstr "Canón de Asalto Láser Pesado"
 
 #: qcsrc/common/weapons/weapon/hook.qh:20
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:169
 msgid "Grappling Hook"
-msgstr "Gancho de agarre"
+msgstr "Gancho de Agarre"
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:20
 msgid "MachineGun"
@@ -5865,7 +5867,7 @@ msgstr "Ametralladora"
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:20
 msgid "Mine Layer"
-msgstr "Capa Mina"
+msgstr "Colocador de Minas"
 
 #: qcsrc/common/weapons/weapon/mortar.qh:20
 msgid "Mortar"
@@ -5881,7 +5883,7 @@ msgstr "Rifle"
 
 #: qcsrc/common/weapons/weapon/seeker.qh:20
 msgid "T.A.G. Seeker"
-msgstr "T.A.G. Seeker"
+msgstr "Buscadora S.e.G"
 
 #: qcsrc/common/weapons/weapon/shockwave.qh:18
 msgid "Shockwave"
@@ -7613,7 +7615,7 @@ msgid ""
 "Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker"
 msgstr ""
 "Algunhas aparicións de armas substituiranse aleatoriamente por novas armas: "
-"canón de asalto láser pesado, capa de minas, rifle, T.A.G. seeker"
+"Canón de Asalto Láser Pesado, Colocador de Minas, rifle, Buscadora S.e.G"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:188
 msgid ""
@@ -7621,8 +7623,8 @@ msgid ""
 "delay). This allows players to fire and detonate a Devastator rocket while "
 "in the air for a strong mid-air boost even while moving fast"
 msgstr ""
-"Os foguetes devastadores poden ser detonados ao instante (se non, hai un "
-"pequeno atraso). Isto permite aos xogadores disparar e detonar un foguete "
+"Os Foguetes Devastadores poden ser detonados ao instante (se non, hai un "
+"pequeno atraso). Isto permite aos xogadores disparar e detonar un Foguete "
 "Devastator mentres están no aire para obter un forte impulso no aire mesmo "
 "mentres se move rápido."
 
@@ -8540,7 +8542,7 @@ msgstr "Detalle do xogador:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:79
 msgid "PDET^Low"
-msgstr "PDET^ Baixo"
+msgstr "PDET^Baixo"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:80
 msgid "PDET^Medium"
@@ -9006,7 +9008,7 @@ msgstr "Mostrar nomes en lugar de iconas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:100
 msgid "Damage"
-msgstr "Danos"
+msgstr "Dano"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:102
 msgid "Overlay:"
@@ -9148,11 +9150,11 @@ msgstr "Configuración do modo de xogo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:67
 msgid "Display capture times in Capture The Flag"
-msgstr "Mostra os tempos de captura en Capture The Flag"
+msgstr "Mostra os tempos de captura en Captura A Bandeira"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:71
 msgid "Display name of flag stealer in Capture The Flag"
-msgstr "Mostra os tempos de captura en Capture The Flag"
+msgstr "Mostra os tempos de captura en Captura A Bandeira"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:76
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:92
@@ -9461,11 +9463,11 @@ msgstr "Solta os botóns de ataque cando cambies de arma"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:63
 msgid "Draw 1st person weapon model"
-msgstr "Debuxa un modelo de arma en 1ª persoa"
+msgstr "Amosa un modelo de arma en 1ª persoa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
 msgid "Draw the weapon model"
-msgstr "Debuxa o modelo de arma"
+msgstr "Amosa o modelo de arma"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:68
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:71
@@ -10528,7 +10530,7 @@ msgstr "SLCAT^Servidores modificados"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^Overkill"
-msgstr "SLCAT^Exceso"
+msgstr "SLCAT^Esaxerada"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^InstaGib"
@@ -10565,7 +10567,7 @@ msgstr "PART^DEUS"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:15
 msgid "PARTQUAL^Low"
-msgstr "PARTQUAL^bAIXO"
+msgstr "PARTQUAL^Baixo"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:16
 msgid "PARTQUAL^Medium"
@@ -10666,7 +10668,7 @@ msgstr "Decembro"
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr "DATE^%m %d, %A"
+msgstr "DATE^%m %d, %Y"
 
 #: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
@@ -10748,7 +10750,7 @@ msgid ""
 "^1Expect visual problems."
 msgstr ""
 "^1ERRO: a compresión de texturas é necesaria pero non é compatible.\n"
-"^ 1Agardanse problemas visuais."
+"^1Agardanse problemas visuais."
 
 #: qcsrc/menu/xonotic/util.qc:772
 msgid "Use default"

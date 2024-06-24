@@ -4,6 +4,7 @@
 #
 # Translators:
 # Alan García <bearz_x@hotmail.com>, 2015
+# Antonio <piuntn@gmail.com>, 2024
 # Antonio Sirera <antoniosirera@gmail.com>, 2017
 # Ari_tent <xonotic@outlook.com>, 2014
 # brunodeleo <bruno.laurenzano@gmail.com>, 2014
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yotta Mxt, 2023\n"
+"Last-Translator: Antonio <piuntn@gmail.com>, 2024\n"
 "Language-Team: Spanish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -3623,7 +3624,7 @@ msgid ""
 "the update from ^F3https://xonotic.org^BG!"
 msgstr ""
 "^F4NOTA: ^F1Xonotic %s^BG ya está disponible, pero aún tienes ^F2Xonotic "
-"%s^BG - consigue la actualización en ^F3https://www.xonotic.org^BG!"
+"%s^BG - consigue la actualización en ^F3https://xonotic.org^BG!"
 
 #: qcsrc/common/notifications/all.inc:465
 #, c-format
