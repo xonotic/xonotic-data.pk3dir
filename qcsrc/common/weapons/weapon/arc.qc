@@ -356,16 +356,12 @@ void W_Arc_Beam_Think(entity this)
 		this.SendFlags |= ARC_SF_BEAMDIR;
 
 		// calculate how many segments are needed
-		float max_allowed_segments;
-
+		float max_allowed_segments = ARC_MAX_SEGMENTS;
 		if(WEP_CVAR(arc, beam_distancepersegment))
 		{
-			max_allowed_segments = min(
-				ARC_MAX_SEGMENTS,
-				1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment)))
-			);
+			max_allowed_segments = 1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment)));
+			max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
 		}
-		else { max_allowed_segments = ARC_MAX_SEGMENTS; }
 
 		if(WEP_CVAR(arc, beam_degreespersegment))
 		{
@@ -1047,16 +1043,12 @@ void Draw_ArcBeam(entity this)
 			}
 
 			// calculate how many segments are needed
-			float max_allowed_segments;
-
+			float max_allowed_segments = ARC_MAX_SEGMENTS;
 			if(this.beam_distancepersegment)
 			{
-				max_allowed_segments = min(
-					ARC_MAX_SEGMENTS,
-					1 + (vlen(wantdir / this.beam_distancepersegment))
-				);
+				max_allowed_segments = 1 + (vlen(wantdir / this.beam_distancepersegment));
+				max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
 			}
-			else { max_allowed_segments = ARC_MAX_SEGMENTS; }
 
 			if(this.beam_degreespersegment)
 			{
@@ -1095,16 +1087,12 @@ void Draw_ArcBeam(entity this)
 			float angle = vlen(wantdir - beamdir) * RAD2DEG;
 
 			// calculate how many segments are needed
-			float max_allowed_segments;
-
+			float max_allowed_segments = ARC_MAX_SEGMENTS;
 			if(this.beam_distancepersegment)
 			{
-				max_allowed_segments = min(
-					ARC_MAX_SEGMENTS,
-					1 + (vlen(wantdir / this.beam_distancepersegment))
-				);
+				max_allowed_segments = 1 + (vlen(wantdir / this.beam_distancepersegment));
+				max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
 			}
-			else { max_allowed_segments = ARC_MAX_SEGMENTS; }
 
 			if(this.beam_degreespersegment)
 			{
