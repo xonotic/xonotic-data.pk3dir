@@ -315,7 +315,7 @@ void W_Arc_Beam_Think(entity this)
 
 	// note that if we do this, it'll always be corrected to a maximum angle by beam_maxangle handling
 
-	float segments;
+	float segments = 1;
 	if(this.beam_dir != w_shotdir)
 	{
 		// calculate how much we're going to move the end of the beam to the want position
@@ -365,22 +365,10 @@ void W_Arc_Beam_Think(entity this)
 
 		if(WEP_CVAR(arc, beam_degreespersegment))
 		{
-			segments = bound(
-				1,
-				(
-					min(
-						angle,
-						WEP_CVAR(arc, beam_maxangle)
-					)
-					/
-					WEP_CVAR(arc, beam_degreespersegment)
-				),
-				max_allowed_segments
-			);
+			segments = min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment);
+			segments = bound(1, segments, max_allowed_segments);
 		}
-		else { segments = 1; }
 	}
-	else { segments = 1; }
 
 	vector beam_endpos = (w_shotorg + (this.beam_dir * WEP_CVAR(arc, beam_range)));
 	vector beam_controlpoint = w_shotorg + w_shotdir * (WEP_CVAR(arc, beam_range) * (1 - WEP_CVAR(arc, beam_tightness)));
@@ -1012,6 +1000,7 @@ void Draw_ArcBeam(entity this)
 			this.beam_muzzleentity.drawmask = MASK_NORMAL; // NOTE: this works around the muzzle entity flashing on the middle of the screen for a frame
 		}
 
+		segments = 1;
 		if(this.beam_dir != wantdir)
 		{
 			// calculate how much we're going to move the end of the beam to the want position
@@ -1052,22 +1041,10 @@ void Draw_ArcBeam(entity this)
 
 			if(this.beam_degreespersegment)
 			{
-				segments = bound(
-					1,
-					(
-						min(
-							angle,
-							this.beam_maxangle
-						)
-						/
-						this.beam_degreespersegment
-					),
-					max_allowed_segments
-				);
+				segments = min(angle, this.beam_maxangle) / this.beam_degreespersegment;
+				segments = bound(1, segments, max_allowed_segments);
 			}
-			else { segments = 1; }
 		}
-		else { segments = 1; }
 
 		// set the beam direction which the rest of the code will refer to
 		beamdir = this.beam_dir;
@@ -1082,6 +1059,7 @@ void Draw_ArcBeam(entity this)
 		wantdir = this.v_angle;
 		beamdir = this.angles;
 
+		segments = 1;
 		if(beamdir != wantdir)
 		{
 			float angle = vlen(wantdir - beamdir) * RAD2DEG;
@@ -1096,22 +1074,10 @@ void Draw_ArcBeam(entity this)
 
 			if(this.beam_degreespersegment)
 			{
-				segments = bound(
-					1,
-					(
-						min(
-							angle,
-							this.beam_maxangle
-						)
-						/
-						this.beam_degreespersegment
-					),
-					max_allowed_segments
-				);
+				segments = min(angle, this.beam_maxangle) / this.beam_degreespersegment;
+				segments = bound(1, segments, max_allowed_segments);
 			}
-			else { segments = 1; }
 		}
-		else { segments = 1; }
 	}
 
 	setorigin(this, start_pos);
