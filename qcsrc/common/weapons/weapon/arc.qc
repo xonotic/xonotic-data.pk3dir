@@ -325,32 +325,14 @@ void W_Arc_Beam_Think(entity this)
 		// eachother, however they never actually become the same value with this method.
 		// Perhaps we should do some form of rounding/snapping?
 		float angle = vlen(w_shotdir - this.beam_dir) * RAD2DEG;
+		float max_blendfactor = 1;
 		if(angle && (angle > WEP_CVAR(arc, beam_maxangle)))
-		{
-			// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
-			float blendfactor = bound(
-				0,
-				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
-				min(WEP_CVAR(arc, beam_maxangle) / angle, 1)
-			);
-			if(vdist(this.beam_dir - w_shotdir, <, 0.01))
-				this.beam_dir = w_shotdir;
-			else
-				this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
-		}
+			max_blendfactor = WEP_CVAR(arc, beam_maxangle) / angle;
+		float blendfactor = bound(0, (1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)), max_blendfactor);
+		if(vdist(this.beam_dir - w_shotdir, <, 0.01))
+			this.beam_dir = w_shotdir;
 		else
-		{
-			// the radius is not too far yet, no worries :D
-			float blendfactor = bound(
-				0,
-				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
-				1
-			);
-			if(vdist(this.beam_dir - w_shotdir, <, 0.01))
-				this.beam_dir = w_shotdir;
-			else
-				this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
-		}
+			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 
 		// network information: beam direction
 		this.SendFlags |= ARC_SF_BEAMDIR;
@@ -1010,26 +992,11 @@ void Draw_ArcBeam(entity this)
 			// eachother, however they never actually become the same value with this method.
 			// Perhaps we should do some form of rounding/snapping?
 			float angle = vlen(wantdir - this.beam_dir) * RAD2DEG;
+			float max_blendfactor = 1;
 			if(angle && (angle > this.beam_maxangle))
-			{
-				// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
-				float blendfactor = bound(
-					0,
-					(1 - (this.beam_returnspeed * dt)),
-					min(this.beam_maxangle / angle, 1)
-				);
-				this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
-			}
-			else
-			{
-				// the radius is not too far yet, no worries :D
-				float blendfactor = bound(
-					0,
-					(1 - (this.beam_returnspeed * dt)),
-					1
-				);
-				this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
-			}
+				max_blendfactor = this.beam_maxangle / angle;
+			float blendfactor = bound(0, (1 - (this.beam_returnspeed * dt)), max_blendfactor);
+			this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 
 			// calculate how many segments are needed
 			float max_allowed_segments = ARC_MAX_SEGMENTS;
