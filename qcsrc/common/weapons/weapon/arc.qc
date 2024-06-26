@@ -391,85 +391,80 @@ void W_Arc_Beam_Think(entity this)
 		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
 		new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
 
-		if(trace_ent)
+		if(!trace_ent)
 		{
-			bool is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
-			if(SAME_TEAM(own, trace_ent))
-			{
-				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
-				float rootarmor = ((burst) ? WEP_CVAR(arc, burst_healing_aps) : WEP_CVAR(arc, beam_healing_aps));
-				float hplimit = ((IS_PLAYER(trace_ent)) ? WEP_CVAR(arc, beam_healing_hmax) : RES_LIMIT_NONE);
-				Heal(trace_ent, own, (roothealth * coefficient), hplimit);
-				if(IS_PLAYER(trace_ent) && rootarmor)
-				{
-					if(GetResource(trace_ent, RES_ARMOR) <= WEP_CVAR(arc, beam_healing_amax))
-					{
-						GiveResourceWithLimit(trace_ent, RES_ARMOR, (rootarmor * coefficient), WEP_CVAR(arc, beam_healing_amax));
-						trace_ent.pauserotarmor_finished = max(
-							trace_ent.pauserotarmor_finished,
-							time + autocvar_g_balance_pause_armor_rot
-						);
-					}
-				}
-				if(roothealth || rootarmor)
-					new_beam_type = ARC_BT_HEAL;
-			}
-			else if(trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
-			{
-				// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
-				// NO. trace_endpos should be just fine. If not,
-				// that's an engine bug that needs proper debugging.
-				vector hitorigin = trace_endpos;
+			if(trace_fraction == 1)
+				continue;
 
-				float falloff = ExponentialFalloff(
-					WEP_CVAR(arc, beam_falloff_mindist),
-					WEP_CVAR(arc, beam_falloff_maxdist),
-					WEP_CVAR(arc, beam_falloff_halflifedist),
-					vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
-				);
-
-				float rootdamage;
-				if(is_player)
-				{
-					if(burst)
-						{ rootdamage = WEP_CVAR(arc, burst_damage); }
-					else
-						{ rootdamage = WEP_CVAR(arc, beam_damage); }
-				}
-				else
-					{ rootdamage = WEP_CVAR(arc, beam_nonplayerdamage); }
-
-				if(accuracy_isgooddamage(own, trace_ent))
-				{
-					accuracy_add(
-						own,
-						WEP_ARC,
-						0,
-						rootdamage * coefficient * falloff
-					);
-				}
-
-				Damage(
-					trace_ent,
-					own,
-					own,
-					rootdamage * coefficient * falloff,
-					WEP_ARC.m_id,
-					weaponentity,
-					hitorigin,
-					WEP_CVAR(arc, beam_force) * new_dir * coefficient * falloff
-				);
-
-				new_beam_type = ARC_BT_HIT;
-			}
-			break;
-		}
-		else if(trace_fraction != 1)
-		{
 			// we collided with geometry
 			new_beam_type = ARC_BT_WALL;
 			break;
 		}
+
+		// we collided with an entity
+		bool is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
+		if(SAME_TEAM(own, trace_ent))
+		{
+			float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
+			float rootarmor = ((burst) ? WEP_CVAR(arc, burst_healing_aps) : WEP_CVAR(arc, beam_healing_aps));
+			float hplimit = ((IS_PLAYER(trace_ent)) ? WEP_CVAR(arc, beam_healing_hmax) : RES_LIMIT_NONE);
+			Heal(trace_ent, own, (roothealth * coefficient), hplimit);
+			if(IS_PLAYER(trace_ent) && rootarmor
+				&& GetResource(trace_ent, RES_ARMOR) <= WEP_CVAR(arc, beam_healing_amax))
+			{
+				GiveResourceWithLimit(trace_ent, RES_ARMOR, (rootarmor * coefficient), WEP_CVAR(arc, beam_healing_amax));
+				trace_ent.pauserotarmor_finished = max(
+					trace_ent.pauserotarmor_finished,
+					time + autocvar_g_balance_pause_armor_rot
+				);
+			}
+			if(roothealth || rootarmor)
+				new_beam_type = ARC_BT_HEAL;
+		}
+		else if(trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
+		{
+			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
+			// NO. trace_endpos should be just fine. If not,
+			// that's an engine bug that needs proper debugging.
+			vector hitorigin = trace_endpos;
+
+			float falloff = ExponentialFalloff(
+				WEP_CVAR(arc, beam_falloff_mindist),
+				WEP_CVAR(arc, beam_falloff_maxdist),
+				WEP_CVAR(arc, beam_falloff_halflifedist),
+				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
+			);
+
+			float rootdamage;
+			if(is_player)
+			{
+				if(burst)
+					rootdamage = WEP_CVAR(arc, burst_damage);
+				else
+					rootdamage = WEP_CVAR(arc, beam_damage);
+			}
+			else
+				rootdamage = WEP_CVAR(arc, beam_nonplayerdamage);
+
+			if(accuracy_isgooddamage(own, trace_ent))
+			{
+				accuracy_add(own, WEP_ARC, 0, rootdamage * coefficient * falloff);
+			}
+
+			Damage(
+				trace_ent,
+				own,
+				own,
+				rootdamage * coefficient * falloff,
+				WEP_ARC.m_id,
+				weaponentity,
+				hitorigin,
+				WEP_CVAR(arc, beam_force) * new_dir * coefficient * falloff
+			);
+
+			new_beam_type = ARC_BT_HIT;
+		}
+		break;
 	}
 
 	// te_explosion(trace_endpos);
@@ -869,11 +864,6 @@ void Draw_ArcBeam(entity this)
 	this.move_time = time;
 	if(dt <= 0) { return; }
 
-	if(!this.beam_usevieworigin)
-	{
-		InterpolateOrigin_Do(this);
-	}
-
 	// origin = beam starting origin
 	// v_angle = wanted/aim direction
 	// angles = current direction of beam
@@ -1019,8 +1009,10 @@ void Draw_ArcBeam(entity this)
 		// finally, set this.angles to the proper direction so that muzzle attachment points in proper direction
 		this.angles = fixedvectoangles2(forward, up); // TODO(Samual): is this == warpzone_save_view_angles?
 	}
-	else
+	else // if(!this.beam_usevieworigin)
 	{
+		InterpolateOrigin_Do(this);
+
 		// set the values from the provided info from the networked entity
 		start_pos = this.origin;
 		wantdir = this.v_angle;
@@ -1101,9 +1093,8 @@ void Draw_ArcBeam(entity this)
 	}
 
 	// visual effects for startpoint and endpoint
-	if(this.beam_hiteffect)
+	if(this.beam_hiteffect && trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 	{
-		if(trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		pointparticles(
 			this.beam_hiteffect,
 			last_origin,
