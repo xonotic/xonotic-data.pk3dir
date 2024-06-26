@@ -9,5 +9,8 @@ CLASS(Superweapons, StatusEffects)
 #ifdef GAMEQC
     ATTRIB(Superweapons, m_sound_rm, Sound, SND_POWEROFF);
 #endif
+#ifdef MENUQC
+    ATTRIB(Superweapons, m_hidden, bool, true);
+#endif
 ENDCLASS(Superweapons)
 REGISTER_STATUSEFFECT(Superweapons, NEW(Superweapons));
