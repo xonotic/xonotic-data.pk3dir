@@ -74,7 +74,14 @@ MUTATOR_HOOKFUNCTION(status_effects, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	StatusEffects_removeall(player, STATUSEFFECT_REMOVE_NORMAL); // just to get rid of the pickup sound
+	// specs/observers shouldn't have status_effects and this would
+	// otherwise remove them from the player they are spectating
+	if (IS_PLAYER(player))
+	{
+		// just to get rid of the pickup sound
+		StatusEffects_removeall(player, STATUSEFFECT_REMOVE_NORMAL);
+	}
+
 	return true;
 }
 
