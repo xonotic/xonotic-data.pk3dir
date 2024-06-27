@@ -90,6 +90,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if (source)
 		namestr = playername(source.netname, source.team, (autocvar_g_chat_teamcolors && IS_PLAYER(source)));
 
+	if (autocvar_g_chat_show_playerid)
+		namestr = strcat(namestr, " ^9#", itos(etof(source)), "^7");
+
 	string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
 
 	string msgstr = "", cmsgstr = "";
