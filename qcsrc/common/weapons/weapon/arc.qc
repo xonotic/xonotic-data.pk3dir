@@ -90,7 +90,10 @@ void Arc_Player_SetHeat(entity player, .entity weaponentity)
 void W_Arc_Bolt_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
+	RadiusDamage(this, this.realowner,
+		WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius),
+		NULL, NULL, WEP_CVAR(arc, bolt_force),
+		this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -127,7 +130,12 @@ void W_Arc_Bolt_Touch(entity this, entity toucher)
 		this.owner = NULL;
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 		if(WEP_CVAR(arc, bolt_bounce_explode))
-			RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, this.weaponentity_fld, toucher);
+		{
+			RadiusDamage(this, this.realowner,
+				WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius),
+				NULL, NULL, WEP_CVAR(arc, bolt_force),
+				this.projectiledeathtype, this.weaponentity_fld, toucher);
+		}
 		if(this.cnt == 1 && WEP_CVAR(arc, bolt_bounce_lifetime))
 			this.nextthink = time + WEP_CVAR(arc, bolt_bounce_lifetime);
 	}
@@ -1249,7 +1257,10 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 	{
 		this.beam_type = ReadByte();
 
-		vector beamcolor = ((autocvar_cl_arcbeam_teamcolor) ? colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true) : '1 1 1');
+		vector beamcolor = '1 1 1';
+		if(autocvar_cl_arcbeam_teamcolor)
+			beamcolor = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
+
 		switch(this.beam_type)
 		{
 			case ARC_BT_MISS:
