@@ -1488,7 +1488,7 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 	this.use				= Monster_Use;
 	this.solid				= SOLID_BBOX;
 	set_movetype(this, MOVETYPE_WALK);
-	StatusEffects_apply(STATUSEFFECT_SpawnShield, this, time + autocvar_g_monsters_spawnshieldtime, 0);
+	StatusEffects_apply(STATUSEFFECT_SpawnShield, this, time + autocvar_g_monsters_spawnshieldtime, 0, true);
 	this.enemy				= NULL;
 	this.velocity			= '0 0 0';
 	this.moveto				= this.origin;
