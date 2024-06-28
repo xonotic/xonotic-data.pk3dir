@@ -2191,10 +2191,18 @@ bool queuePlayer(entity this, int team_index)
 
 bool joinAllowed(entity this)
 {
-	if (CS(this).version_mismatch) return false;
+	if (CS(this).version_mismatch)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT_VERSIONMISMATCH);
+		return false;
+	}
 	if (time < CS(this).jointime + MIN_SPEC_TIME) return false;
 	if (!nJoinAllowed(this, this)) return false;
-	if (teamplay && lockteams) return false;
+	if (teamplay && lockteams)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_LOCKED);
+		return false;
+	}
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
 	if (ShowTeamSelection(this)) return false;
 	return true;
