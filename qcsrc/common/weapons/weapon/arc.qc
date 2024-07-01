@@ -90,7 +90,10 @@ void Arc_Player_SetHeat(entity player, .entity weaponentity)
 void W_Arc_Bolt_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
+	RadiusDamage(this, this.realowner,
+		WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius),
+		NULL, NULL, WEP_CVAR(arc, bolt_force),
+		this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -127,7 +130,12 @@ void W_Arc_Bolt_Touch(entity this, entity toucher)
 		this.owner = NULL;
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 		if(WEP_CVAR(arc, bolt_bounce_explode))
-			RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, this.weaponentity_fld, toucher);
+		{
+			RadiusDamage(this, this.realowner,
+				WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius),
+				NULL, NULL, WEP_CVAR(arc, bolt_force),
+				this.projectiledeathtype, this.weaponentity_fld, toucher);
+		}
 		if(this.cnt == 1 && WEP_CVAR(arc, bolt_bounce_lifetime))
 			this.nextthink = time + WEP_CVAR(arc, bolt_bounce_lifetime);
 	}
@@ -315,7 +323,7 @@ void W_Arc_Beam_Think(entity this)
 
 	// note that if we do this, it'll always be corrected to a maximum angle by beam_maxangle handling
 
-	float segments;
+	float segments = 1;
 	if(this.beam_dir != w_shotdir)
 	{
 		// calculate how much we're going to move the end of the beam to the want position
@@ -325,66 +333,32 @@ void W_Arc_Beam_Think(entity this)
 		// eachother, however they never actually become the same value with this method.
 		// Perhaps we should do some form of rounding/snapping?
 		float angle = vlen(w_shotdir - this.beam_dir) * RAD2DEG;
+		float max_blendfactor = 1;
 		if(angle && (angle > WEP_CVAR(arc, beam_maxangle)))
-		{
-			// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
-			float blendfactor = bound(
-				0,
-				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
-				min(WEP_CVAR(arc, beam_maxangle) / angle, 1)
-			);
-			if(vdist(this.beam_dir - w_shotdir, <, 0.01))
-				this.beam_dir = w_shotdir;
-			else
-				this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
-		}
+			max_blendfactor = WEP_CVAR(arc, beam_maxangle) / angle;
+		float blendfactor = bound(0, (1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)), max_blendfactor);
+		if(vdist(this.beam_dir - w_shotdir, <, 0.01))
+			this.beam_dir = w_shotdir;
 		else
-		{
-			// the radius is not too far yet, no worries :D
-			float blendfactor = bound(
-				0,
-				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
-				1
-			);
-			if(vdist(this.beam_dir - w_shotdir, <, 0.01))
-				this.beam_dir = w_shotdir;
-			else
-				this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
-		}
+			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 
 		// network information: beam direction
 		this.SendFlags |= ARC_SF_BEAMDIR;
 
 		// calculate how many segments are needed
-		float max_allowed_segments;
-
+		float max_allowed_segments = ARC_MAX_SEGMENTS;
 		if(WEP_CVAR(arc, beam_distancepersegment))
 		{
-			max_allowed_segments = min(
-				ARC_MAX_SEGMENTS,
-				1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment)))
-			);
+			max_allowed_segments = 1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment)));
+			max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
 		}
-		else { max_allowed_segments = ARC_MAX_SEGMENTS; }
 
 		if(WEP_CVAR(arc, beam_degreespersegment))
 		{
-			segments = bound(
-				1,
-				(
-					min(
-						angle,
-						WEP_CVAR(arc, beam_maxangle)
-					)
-					/
-					WEP_CVAR(arc, beam_degreespersegment)
-				),
-				max_allowed_segments
-			);
+			segments = min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment);
+			segments = bound(1, segments, max_allowed_segments);
 		}
-		else { segments = 1; }
 	}
-	else { segments = 1; }
 
 	vector beam_endpos = (w_shotorg + (this.beam_dir * WEP_CVAR(arc, beam_range)));
 	vector beam_controlpoint = w_shotorg + w_shotdir * (WEP_CVAR(arc, beam_range) * (1 - WEP_CVAR(arc, beam_tightness)));
@@ -425,85 +399,80 @@ void W_Arc_Beam_Think(entity this)
 		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
 		new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
 
-		if(trace_ent)
+		if(!trace_ent)
 		{
-			bool is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
-			if(SAME_TEAM(own, trace_ent))
-			{
-				float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
-				float rootarmor = ((burst) ? WEP_CVAR(arc, burst_healing_aps) : WEP_CVAR(arc, beam_healing_aps));
-				float hplimit = ((IS_PLAYER(trace_ent)) ? WEP_CVAR(arc, beam_healing_hmax) : RES_LIMIT_NONE);
-				Heal(trace_ent, own, (roothealth * coefficient), hplimit);
-				if(IS_PLAYER(trace_ent) && rootarmor)
-				{
-					if(GetResource(trace_ent, RES_ARMOR) <= WEP_CVAR(arc, beam_healing_amax))
-					{
-						GiveResourceWithLimit(trace_ent, RES_ARMOR, (rootarmor * coefficient), WEP_CVAR(arc, beam_healing_amax));
-						trace_ent.pauserotarmor_finished = max(
-							trace_ent.pauserotarmor_finished,
-							time + autocvar_g_balance_pause_armor_rot
-						);
-					}
-				}
-				if(roothealth || rootarmor)
-					new_beam_type = ARC_BT_HEAL;
-			}
-			else if(trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
-			{
-				// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
-				// NO. trace_endpos should be just fine. If not,
-				// that's an engine bug that needs proper debugging.
-				vector hitorigin = trace_endpos;
+			if(trace_fraction == 1)
+				continue;
 
-				float falloff = ExponentialFalloff(
-					WEP_CVAR(arc, beam_falloff_mindist),
-					WEP_CVAR(arc, beam_falloff_maxdist),
-					WEP_CVAR(arc, beam_falloff_halflifedist),
-					vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
-				);
-
-				float rootdamage;
-				if(is_player)
-				{
-					if(burst)
-						{ rootdamage = WEP_CVAR(arc, burst_damage); }
-					else
-						{ rootdamage = WEP_CVAR(arc, beam_damage); }
-				}
-				else
-					{ rootdamage = WEP_CVAR(arc, beam_nonplayerdamage); }
-
-				if(accuracy_isgooddamage(own, trace_ent))
-				{
-					accuracy_add(
-						own,
-						WEP_ARC,
-						0,
-						rootdamage * coefficient * falloff
-					);
-				}
-
-				Damage(
-					trace_ent,
-					own,
-					own,
-					rootdamage * coefficient * falloff,
-					WEP_ARC.m_id,
-					weaponentity,
-					hitorigin,
-					WEP_CVAR(arc, beam_force) * new_dir * coefficient * falloff
-				);
-
-				new_beam_type = ARC_BT_HIT;
-			}
-			break;
-		}
-		else if(trace_fraction != 1)
-		{
 			// we collided with geometry
 			new_beam_type = ARC_BT_WALL;
 			break;
 		}
+
+		// we collided with an entity
+		bool is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
+		if(SAME_TEAM(own, trace_ent))
+		{
+			float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
+			float rootarmor = ((burst) ? WEP_CVAR(arc, burst_healing_aps) : WEP_CVAR(arc, beam_healing_aps));
+			float hplimit = ((IS_PLAYER(trace_ent)) ? WEP_CVAR(arc, beam_healing_hmax) : RES_LIMIT_NONE);
+			Heal(trace_ent, own, (roothealth * coefficient), hplimit);
+			if(IS_PLAYER(trace_ent) && rootarmor
+				&& GetResource(trace_ent, RES_ARMOR) <= WEP_CVAR(arc, beam_healing_amax))
+			{
+				GiveResourceWithLimit(trace_ent, RES_ARMOR, (rootarmor * coefficient), WEP_CVAR(arc, beam_healing_amax));
+				trace_ent.pauserotarmor_finished = max(
+					trace_ent.pauserotarmor_finished,
+					time + autocvar_g_balance_pause_armor_rot
+				);
+			}
+			if(roothealth || rootarmor)
+				new_beam_type = ARC_BT_HEAL;
+		}
+		else if(trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
+		{
+			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
+			// NO. trace_endpos should be just fine. If not,
+			// that's an engine bug that needs proper debugging.
+			vector hitorigin = trace_endpos;
+
+			float falloff = ExponentialFalloff(
+				WEP_CVAR(arc, beam_falloff_mindist),
+				WEP_CVAR(arc, beam_falloff_maxdist),
+				WEP_CVAR(arc, beam_falloff_halflifedist),
+				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
+			);
+
+			float rootdamage;
+			if(is_player)
+			{
+				if(burst)
+					rootdamage = WEP_CVAR(arc, burst_damage);
+				else
+					rootdamage = WEP_CVAR(arc, beam_damage);
+			}
+			else
+				rootdamage = WEP_CVAR(arc, beam_nonplayerdamage);
+
+			if(accuracy_isgooddamage(own, trace_ent))
+			{
+				accuracy_add(own, WEP_ARC, 0, rootdamage * coefficient * falloff);
+			}
+
+			Damage(
+				trace_ent,
+				own,
+				own,
+				rootdamage * coefficient * falloff,
+				WEP_ARC.m_id,
+				weaponentity,
+				hitorigin,
+				WEP_CVAR(arc, beam_force) * new_dir * coefficient * falloff
+			);
+
+			new_beam_type = ARC_BT_HIT;
+		}
+		break;
 	}
 
 	// te_explosion(trace_endpos);
@@ -903,11 +872,6 @@ void Draw_ArcBeam(entity this)
 	this.move_time = time;
 	if(dt <= 0) { return; }
 
-	if(!this.beam_usevieworigin)
-	{
-		InterpolateOrigin_Do(this);
-	}
-
 	// origin = beam starting origin
 	// v_angle = wanted/aim direction
 	// angles = current direction of beam
@@ -1016,6 +980,7 @@ void Draw_ArcBeam(entity this)
 			this.beam_muzzleentity.drawmask = MASK_NORMAL; // NOTE: this works around the muzzle entity flashing on the middle of the screen for a frame
 		}
 
+		segments = 1;
 		if(this.beam_dir != wantdir)
 		{
 			// calculate how much we're going to move the end of the beam to the want position
@@ -1025,57 +990,26 @@ void Draw_ArcBeam(entity this)
 			// eachother, however they never actually become the same value with this method.
 			// Perhaps we should do some form of rounding/snapping?
 			float angle = vlen(wantdir - this.beam_dir) * RAD2DEG;
+			float max_blendfactor = 1;
 			if(angle && (angle > this.beam_maxangle))
-			{
-				// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
-				float blendfactor = bound(
-					0,
-					(1 - (this.beam_returnspeed * dt)),
-					min(this.beam_maxangle / angle, 1)
-				);
-				this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
-			}
-			else
-			{
-				// the radius is not too far yet, no worries :D
-				float blendfactor = bound(
-					0,
-					(1 - (this.beam_returnspeed * dt)),
-					1
-				);
-				this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
-			}
+				max_blendfactor = this.beam_maxangle / angle;
+			float blendfactor = bound(0, (1 - (this.beam_returnspeed * dt)), max_blendfactor);
+			this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 
 			// calculate how many segments are needed
-			float max_allowed_segments;
-
+			float max_allowed_segments = ARC_MAX_SEGMENTS;
 			if(this.beam_distancepersegment)
 			{
-				max_allowed_segments = min(
-					ARC_MAX_SEGMENTS,
-					1 + (vlen(wantdir / this.beam_distancepersegment))
-				);
+				max_allowed_segments = 1 + (vlen(wantdir / this.beam_distancepersegment));
+				max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
 			}
-			else { max_allowed_segments = ARC_MAX_SEGMENTS; }
 
 			if(this.beam_degreespersegment)
 			{
-				segments = bound(
-					1,
-					(
-						min(
-							angle,
-							this.beam_maxangle
-						)
-						/
-						this.beam_degreespersegment
-					),
-					max_allowed_segments
-				);
+				segments = min(angle, this.beam_maxangle) / this.beam_degreespersegment;
+				segments = bound(1, segments, max_allowed_segments);
 			}
-			else { segments = 1; }
 		}
-		else { segments = 1; }
 
 		// set the beam direction which the rest of the code will refer to
 		beamdir = this.beam_dir;
@@ -1083,47 +1017,34 @@ void Draw_ArcBeam(entity this)
 		// finally, set this.angles to the proper direction so that muzzle attachment points in proper direction
 		this.angles = fixedvectoangles2(forward, up); // TODO(Samual): is this == warpzone_save_view_angles?
 	}
-	else
+	else // if(!this.beam_usevieworigin)
 	{
+		InterpolateOrigin_Do(this);
+
 		// set the values from the provided info from the networked entity
 		start_pos = this.origin;
 		wantdir = this.v_angle;
 		beamdir = this.angles;
 
+		segments = 1;
 		if(beamdir != wantdir)
 		{
 			float angle = vlen(wantdir - beamdir) * RAD2DEG;
 
 			// calculate how many segments are needed
-			float max_allowed_segments;
-
+			float max_allowed_segments = ARC_MAX_SEGMENTS;
 			if(this.beam_distancepersegment)
 			{
-				max_allowed_segments = min(
-					ARC_MAX_SEGMENTS,
-					1 + (vlen(wantdir / this.beam_distancepersegment))
-				);
+				max_allowed_segments = 1 + (vlen(wantdir / this.beam_distancepersegment));
+				max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
 			}
-			else { max_allowed_segments = ARC_MAX_SEGMENTS; }
 
 			if(this.beam_degreespersegment)
 			{
-				segments = bound(
-					1,
-					(
-						min(
-							angle,
-							this.beam_maxangle
-						)
-						/
-						this.beam_degreespersegment
-					),
-					max_allowed_segments
-				);
+				segments = min(angle, this.beam_maxangle) / this.beam_degreespersegment;
+				segments = bound(1, segments, max_allowed_segments);
 			}
-			else { segments = 1; }
 		}
-		else { segments = 1; }
 	}
 
 	setorigin(this, start_pos);
@@ -1180,9 +1101,8 @@ void Draw_ArcBeam(entity this)
 	}
 
 	// visual effects for startpoint and endpoint
-	if(this.beam_hiteffect)
+	if(this.beam_hiteffect && trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 	{
-		if(trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		pointparticles(
 			this.beam_hiteffect,
 			last_origin,
@@ -1337,7 +1257,10 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 	{
 		this.beam_type = ReadByte();
 
-		vector beamcolor = ((autocvar_cl_arcbeam_teamcolor) ? colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true) : '1 1 1');
+		vector beamcolor = '1 1 1';
+		if(autocvar_cl_arcbeam_teamcolor)
+			beamcolor = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
+
 		switch(this.beam_type)
 		{
 			case ARC_BT_MISS:
