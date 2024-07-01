@@ -524,20 +524,20 @@ vector GetCurrentFov(float fov)
 		velocityzoom = 1;
 
 	float frustumx, frustumy, fovx, fovy;
-	frustumy = tan(fov * M_PI / 360.0) * 0.75 * current_viewzoom * velocityzoom;
+	frustumy = tan(fov * (M_PI / 360)) * 0.75 * current_viewzoom * velocityzoom;
 	frustumx = frustumy * vid_width / vid_height / vid_pixelheight;
-	fovx = atan2(frustumx, 1) / M_PI * 360.0;
-	fovy = atan2(frustumy, 1) / M_PI * 360.0;
+	fovx = atan2(frustumx, 1) * (360 / M_PI);
+	fovy = atan2(frustumy, 1) * (360 / M_PI);
 
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
 vector GetViewLocationFOV(float fov)
 {
-	float frustumy = tan(fov * M_PI / 360.0) * 0.75;
+	float frustumy = tan(fov * (M_PI / 360)) * 0.75;
 	float frustumx = frustumy * vid_width / vid_height / vid_pixelheight;
-	float fovx = atan2(frustumx, 1) / M_PI * 360.0;
-	float fovy = atan2(frustumy, 1) / M_PI * 360.0;
+	float fovx = atan2(frustumx, 1) * (360 / M_PI);
+	float fovy = atan2(frustumy, 1) * (360 / M_PI);
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 

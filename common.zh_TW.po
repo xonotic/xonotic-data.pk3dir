@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-27 07:22+0200\n"
+"POT-Creation-Date: 2024-06-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 黃柏諺 <s8321414@gmail.com>, 2015\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/team-xonotic/"
@@ -171,7 +171,7 @@ msgstr ""
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1按 ^3%s^1 以加入"
 
-#: qcsrc/client/hud/panel/infomessages.qc:136 qcsrc/client/main.qc:1432
+#: qcsrc/client/hud/panel/infomessages.qc:136 qcsrc/client/main.qc:1452
 #: qcsrc/common/notifications/all.qh:443
 msgid "jump"
 msgstr "跳躍"
@@ -545,39 +545,39 @@ msgstr "預設使用伺服器快捷選單"
 msgid "QMCMD^Spectate a player"
 msgstr "觀察玩家"
 
-#: qcsrc/client/hud/panel/racetimer.qc:56
+#: qcsrc/client/hud/panel/racetimer.qc:57
 #, c-format
 msgid " (-%dL)"
 msgstr " (-%dL)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:61
+#: qcsrc/client/hud/panel/racetimer.qc:62
 #, c-format
 msgid " (+%dL)"
 msgstr " (+%dL)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:80
+#: qcsrc/client/hud/panel/racetimer.qc:81
 msgid "Start line"
 msgstr "起點線"
 
-#: qcsrc/client/hud/panel/racetimer.qc:82
-#: qcsrc/client/hud/panel/racetimer.qc:86
+#: qcsrc/client/hud/panel/racetimer.qc:83
+#: qcsrc/client/hud/panel/racetimer.qc:87
 msgid "Finish line"
 msgstr "終點線"
 
-#: qcsrc/client/hud/panel/racetimer.qc:84
-#: qcsrc/client/hud/panel/racetimer.qc:153
+#: qcsrc/client/hud/panel/racetimer.qc:85
+#: qcsrc/client/hud/panel/racetimer.qc:154
 #, c-format
 msgid "Intermediate %d"
 msgstr "第 %d 中間點"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156
-#: qcsrc/client/hud/panel/racetimer.qc:203
-#: qcsrc/client/hud/panel/racetimer.qc:264
+#: qcsrc/client/hud/panel/racetimer.qc:157
+#: qcsrc/client/hud/panel/racetimer.qc:223
+#: qcsrc/client/hud/panel/racetimer.qc:284
 #, c-format
 msgid "PENALTY: %.1f (%s)"
 msgstr "懲罰：%.1f（%s）"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1263
+#: qcsrc/client/hud/panel/racetimer.qc:157 qcsrc/client/main.qc:1283
 msgid "missing a checkpoint"
 msgstr "缺失一個檢查點"
 
@@ -1079,62 +1079,62 @@ msgstr "^5%s %s"
 msgid "SCO^points"
 msgstr "分"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2422
+#: qcsrc/client/hud/panel/scoreboard.qc:2425
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "選擇團隊"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2436
+#: qcsrc/client/hud/panel/scoreboard.qc:2439
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^7按 ^3%s^7 以加入所選隊伍"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2438
+#: qcsrc/client/hud/panel/scoreboard.qc:2441
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr "^7按 ^3%s^7 以自動選擇並加入隊伍"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2442
+#: qcsrc/client/hud/panel/scoreboard.qc:2445
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7按 ^3%s ^7 以加入特定隊伍"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2453
+#: qcsrc/client/hud/panel/scoreboard.qc:2456
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f 分鐘"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2480
+#: qcsrc/client/hud/panel/scoreboard.qc:2483
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7 / ^5%d^7 位玩家"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2481 qcsrc/client/main.qc:1461
+#: qcsrc/client/hud/panel/scoreboard.qc:2484 qcsrc/client/main.qc:1481
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "地圖："
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2648
+#: qcsrc/client/hud/panel/scoreboard.qc:2651
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "速度領先：%d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2652
+#: qcsrc/client/hud/panel/scoreboard.qc:2655
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "史上最快：%d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2686
+#: qcsrc/client/hud/panel/scoreboard.qc:2689
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1在 ^3%s^1 後復活……"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2696
+#: qcsrc/client/hud/panel/scoreboard.qc:2699
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "你死了，等待 ^3%s^7 後復活"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2705
+#: qcsrc/client/hud/panel/scoreboard.qc:2708
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "你死了, 按下 ^2%s^7 復活"
@@ -1208,7 +1208,7 @@ msgstr "允許伺服器儲存並展示你的名字？"
 msgid "^1Configure the HUD"
 msgstr "^1設定HUD"
 
-#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:87
+#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
@@ -1219,7 +1219,7 @@ msgstr "^1設定HUD"
 msgid "Yes"
 msgstr "是"
 
-#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:88
+#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
@@ -1246,143 +1246,147 @@ msgstr "不可用"
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "正在移除不在隊伍列表中的隊伍！"
 
-#: qcsrc/client/main.qc:1165 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
+#: qcsrc/client/main.qc:1162 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
 msgstr "單位每秒"
 
-#: qcsrc/client/main.qc:1166 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/client/main.qc:1163 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
 msgstr "米每秒"
 
-#: qcsrc/client/main.qc:1167 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
+#: qcsrc/client/main.qc:1164 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
 msgstr "千米每時"
 
-#: qcsrc/client/main.qc:1168 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
+#: qcsrc/client/main.qc:1165 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
 msgid "mph"
 msgstr "英里每時"
 
-#: qcsrc/client/main.qc:1169 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/client/main.qc:1166 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
 msgstr "海里每時"
 
-#: qcsrc/client/main.qc:1380
+#: qcsrc/client/main.qc:1206
+msgid "Checkpoint times:"
+msgstr ""
+
+#: qcsrc/client/main.qc:1400
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
 msgstr "全武器競技"
 
-#: qcsrc/client/main.qc:1381
+#: qcsrc/client/main.qc:1401
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
 msgstr "所有可用武器的競技"
 
-#: qcsrc/client/main.qc:1382
+#: qcsrc/client/main.qc:1402
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
 msgstr "多數武器競技"
 
-#: qcsrc/client/main.qc:1383
+#: qcsrc/client/main.qc:1403
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
 msgstr "多數可用武器的競技"
 
-#: qcsrc/client/main.qc:1386 qcsrc/client/main.qc:1400
+#: qcsrc/client/main.qc:1406 qcsrc/client/main.qc:1420
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
 msgstr "無武器競技"
 
-#: qcsrc/client/main.qc:1398
+#: qcsrc/client/main.qc:1418
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
 #, c-format
 msgid "%s Arena"
 msgstr "%s 競技"
 
-#: qcsrc/client/main.qc:1409 qcsrc/client/main.qc:1414
+#: qcsrc/client/main.qc:1429 qcsrc/client/main.qc:1434
 #, c-format
 msgid "This is %s"
 msgstr "這裡是 %s"
 
-#: qcsrc/client/main.qc:1410
+#: qcsrc/client/main.qc:1430
 msgid "Your client version is outdated."
 msgstr "你的客戶端版本過舊。"
 
-#: qcsrc/client/main.qc:1411
+#: qcsrc/client/main.qc:1431
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### 你不能在此伺服器遊玩 ###"
 
-#: qcsrc/client/main.qc:1412
+#: qcsrc/client/main.qc:1432
 msgid "Please update!"
 msgstr "請更新！"
 
-#: qcsrc/client/main.qc:1415
+#: qcsrc/client/main.qc:1435
 msgid "This server is using an outdated Xonotic version."
 msgstr "此伺服器在使用過舊的 Xonotic 版本。"
 
-#: qcsrc/client/main.qc:1416
+#: qcsrc/client/main.qc:1436
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### 不相容此伺服器，因此你不能加入 ###"
 
-#: qcsrc/client/main.qc:1418
+#: qcsrc/client/main.qc:1438
 #, c-format
 msgid "Welcome to %s"
 msgstr "歡迎來到 %s"
 
-#: qcsrc/client/main.qc:1434 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1454 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "關卡 %d："
 
-#: qcsrc/client/main.qc:1436
+#: qcsrc/client/main.qc:1456
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BG按 ^F2%s^BG 以進入遊戲"
 
-#: qcsrc/client/main.qc:1459
+#: qcsrc/client/main.qc:1479
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "遊戲類型："
 
-#: qcsrc/client/main.qc:1463
+#: qcsrc/client/main.qc:1483
 msgid "by:"
 msgstr "作者："
 
-#: qcsrc/client/main.qc:1467
+#: qcsrc/client/main.qc:1487
 msgid "This match supports"
 msgstr "此競賽支援"
 
-#: qcsrc/client/main.qc:1469
+#: qcsrc/client/main.qc:1489
 #, c-format
 msgid "%d players"
 msgstr "%d 位玩家"
 
-#: qcsrc/client/main.qc:1471
+#: qcsrc/client/main.qc:1491
 #, c-format
 msgid "%d to %d players"
 msgstr "%d 到 %d 位玩家"
 
-#: qcsrc/client/main.qc:1473
+#: qcsrc/client/main.qc:1493
 #, c-format
 msgid "%d players maximum"
 msgstr "至多 %d 位玩家"
 
-#: qcsrc/client/main.qc:1475
+#: qcsrc/client/main.qc:1495
 #, c-format
 msgid "%d players minimum"
 msgstr "至少 %d 位玩家"
 
-#: qcsrc/client/main.qc:1480
+#: qcsrc/client/main.qc:1500
 msgid "Active modifications:"
 msgstr "起效的修改："
 
-#: qcsrc/client/main.qc:1483
+#: qcsrc/client/main.qc:1503
 msgid "Special gameplay tips:"
 msgstr "特殊遊戲提示："
 
-#: qcsrc/client/main.qc:1490
+#: qcsrc/client/main.qc:1510
 msgid "Server's message"
 msgstr "伺服器訊息"
 
-#: qcsrc/client/main.qc:1584
+#: qcsrc/client/main.qc:1604
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (未繫結)"
@@ -5322,375 +5326,375 @@ msgstr "手雷"
 msgid "Offhand blaster"
 msgstr "非手持型鐳射槍"
 
-#: qcsrc/common/util.qc:1420
+#: qcsrc/common/util.qc:1421
 msgid "Male"
 msgstr "男性"
 
-#: qcsrc/common/util.qc:1421
+#: qcsrc/common/util.qc:1422
 msgid "Female"
 msgstr "女性"
 
-#: qcsrc/common/util.qc:1422
+#: qcsrc/common/util.qc:1423
 msgid "Undisclosed"
 msgstr "不公開"
 
-#: qcsrc/common/util.qc:1469
+#: qcsrc/common/util.qc:1470
 msgid "<KEY NOT FOUND>"
 msgstr "<找不到鍵位>"
 
-#: qcsrc/common/util.qc:1470
+#: qcsrc/common/util.qc:1471
 msgid "<UNKNOWN KEYNUM>"
 msgstr "<未知鍵位編號>"
 
-#: qcsrc/common/util.qc:1475
+#: qcsrc/common/util.qc:1476
 msgid "TAB"
 msgstr "Tab"
 
-#: qcsrc/common/util.qc:1476 qcsrc/common/util.qc:1547
+#: qcsrc/common/util.qc:1477 qcsrc/common/util.qc:1548
 #, c-format
 msgid "ENTER"
 msgstr "回車"
 
-#: qcsrc/common/util.qc:1477
+#: qcsrc/common/util.qc:1478
 msgid "ESCAPE"
 msgstr "Esc"
 
-#: qcsrc/common/util.qc:1478
+#: qcsrc/common/util.qc:1479
 msgid "SPACE"
 msgstr "空格"
 
-#: qcsrc/common/util.qc:1480
+#: qcsrc/common/util.qc:1481
 msgid "BACKSPACE"
 msgstr "退格"
 
-#: qcsrc/common/util.qc:1481 qcsrc/common/util.qc:1538
+#: qcsrc/common/util.qc:1482 qcsrc/common/util.qc:1539
 #, c-format
 msgid "UPARROW"
 msgstr "上箭頭"
 
-#: qcsrc/common/util.qc:1482 qcsrc/common/util.qc:1533
+#: qcsrc/common/util.qc:1483 qcsrc/common/util.qc:1534
 #, c-format
 msgid "DOWNARROW"
 msgstr "下箭頭"
 
-#: qcsrc/common/util.qc:1483 qcsrc/common/util.qc:1535
+#: qcsrc/common/util.qc:1484 qcsrc/common/util.qc:1536
 #, c-format
 msgid "LEFTARROW"
 msgstr "左箭頭"
 
-#: qcsrc/common/util.qc:1484 qcsrc/common/util.qc:1536
+#: qcsrc/common/util.qc:1485 qcsrc/common/util.qc:1537
 #, c-format
 msgid "RIGHTARROW"
 msgstr "右箭頭"
 
-#: qcsrc/common/util.qc:1486
+#: qcsrc/common/util.qc:1487
 msgid "ALT"
 msgstr "Alt"
 
-#: qcsrc/common/util.qc:1487
+#: qcsrc/common/util.qc:1488
 msgid "CTRL"
 msgstr "Ctrl"
 
-#: qcsrc/common/util.qc:1488
+#: qcsrc/common/util.qc:1489
 msgid "SHIFT"
 msgstr "Shift"
 
-#: qcsrc/common/util.qc:1490 qcsrc/common/util.qc:1531
+#: qcsrc/common/util.qc:1491 qcsrc/common/util.qc:1532
 #, c-format
 msgid "INS"
 msgstr "Insert 鍵"
 
-#: qcsrc/common/util.qc:1491 qcsrc/common/util.qc:1541
+#: qcsrc/common/util.qc:1492 qcsrc/common/util.qc:1542
 #, c-format
 msgid "DEL"
 msgstr "Delete 鍵"
 
-#: qcsrc/common/util.qc:1492 qcsrc/common/util.qc:1534
+#: qcsrc/common/util.qc:1493 qcsrc/common/util.qc:1535
 #, c-format
 msgid "PGDN"
 msgstr "PageDown 鍵"
 
-#: qcsrc/common/util.qc:1493 qcsrc/common/util.qc:1539
+#: qcsrc/common/util.qc:1494 qcsrc/common/util.qc:1540
 #, c-format
 msgid "PGUP"
 msgstr "PageUp 鍵"
 
-#: qcsrc/common/util.qc:1494 qcsrc/common/util.qc:1537
+#: qcsrc/common/util.qc:1495 qcsrc/common/util.qc:1538
 #, c-format
 msgid "HOME"
 msgstr "Home 鍵"
 
-#: qcsrc/common/util.qc:1495 qcsrc/common/util.qc:1532
+#: qcsrc/common/util.qc:1496 qcsrc/common/util.qc:1533
 #, c-format
 msgid "END"
 msgstr "End 鍵"
 
-#: qcsrc/common/util.qc:1497
+#: qcsrc/common/util.qc:1498
 msgid "PAUSE"
 msgstr "Pause 鍵"
 
-#: qcsrc/common/util.qc:1499
+#: qcsrc/common/util.qc:1500
 msgid "NUMLOCK"
 msgstr "小鍵盤切換鍵"
 
-#: qcsrc/common/util.qc:1500
+#: qcsrc/common/util.qc:1501
 msgid "CAPSLOCK"
 msgstr "大寫鎖定鍵"
 
-#: qcsrc/common/util.qc:1501
+#: qcsrc/common/util.qc:1502
 msgid "SCROLLOCK"
 msgstr "ScrollLock 鍵"
 
-#: qcsrc/common/util.qc:1503
+#: qcsrc/common/util.qc:1504
 msgid "SEMICOLON"
 msgstr "分號"
 
-#: qcsrc/common/util.qc:1504
+#: qcsrc/common/util.qc:1505
 msgid "TILDE"
 msgstr "波浪號"
 
-#: qcsrc/common/util.qc:1505
+#: qcsrc/common/util.qc:1506
 msgid "BACKQUOTE"
 msgstr "反撇號"
 
-#: qcsrc/common/util.qc:1506
+#: qcsrc/common/util.qc:1507
 msgid "QUOTE"
 msgstr "雙引號"
 
-#: qcsrc/common/util.qc:1507
+#: qcsrc/common/util.qc:1508
 msgid "APOSTROPHE"
 msgstr "單引號"
 
-#: qcsrc/common/util.qc:1508
+#: qcsrc/common/util.qc:1509
 msgid "BACKSLASH"
 msgstr "反斜槓"
 
-#: qcsrc/common/util.qc:1516
+#: qcsrc/common/util.qc:1517
 #, c-format
 msgid "F%d"
 msgstr "F%d"
 
-#: qcsrc/common/util.qc:1526
+#: qcsrc/common/util.qc:1527
 #, c-format
 msgid "KP_%d"
 msgstr "KP_%d"
 
-#: qcsrc/common/util.qc:1531 qcsrc/common/util.qc:1532
-#: qcsrc/common/util.qc:1533 qcsrc/common/util.qc:1534
-#: qcsrc/common/util.qc:1535 qcsrc/common/util.qc:1536
-#: qcsrc/common/util.qc:1537 qcsrc/common/util.qc:1538
-#: qcsrc/common/util.qc:1539 qcsrc/common/util.qc:1540
-#: qcsrc/common/util.qc:1541 qcsrc/common/util.qc:1542
-#: qcsrc/common/util.qc:1543 qcsrc/common/util.qc:1544
-#: qcsrc/common/util.qc:1545 qcsrc/common/util.qc:1546
-#: qcsrc/common/util.qc:1547 qcsrc/common/util.qc:1548
+#: qcsrc/common/util.qc:1532 qcsrc/common/util.qc:1533
+#: qcsrc/common/util.qc:1534 qcsrc/common/util.qc:1535
+#: qcsrc/common/util.qc:1536 qcsrc/common/util.qc:1537
+#: qcsrc/common/util.qc:1538 qcsrc/common/util.qc:1539
+#: qcsrc/common/util.qc:1540 qcsrc/common/util.qc:1541
+#: qcsrc/common/util.qc:1542 qcsrc/common/util.qc:1543
+#: qcsrc/common/util.qc:1544 qcsrc/common/util.qc:1545
+#: qcsrc/common/util.qc:1546 qcsrc/common/util.qc:1547
+#: qcsrc/common/util.qc:1548 qcsrc/common/util.qc:1549
 #, c-format
 msgid "KP_%s"
 msgstr "%s"
 
-#: qcsrc/common/util.qc:1540
+#: qcsrc/common/util.qc:1541
 #, c-format
 msgid "PERIOD"
 msgstr "句點"
 
-#: qcsrc/common/util.qc:1542
+#: qcsrc/common/util.qc:1543
 #, c-format
 msgid "DIVIDE"
 msgstr "除號"
 
-#: qcsrc/common/util.qc:1543
+#: qcsrc/common/util.qc:1544
 #, c-format
 msgid "SLASH"
 msgstr "斜槓"
 
-#: qcsrc/common/util.qc:1544
+#: qcsrc/common/util.qc:1545
 #, c-format
 msgid "MULTIPLY"
 msgstr "乘號"
 
-#: qcsrc/common/util.qc:1545
+#: qcsrc/common/util.qc:1546
 #, c-format
 msgid "MINUS"
 msgstr "減號"
 
-#: qcsrc/common/util.qc:1546
+#: qcsrc/common/util.qc:1547
 #, c-format
 msgid "PLUS"
 msgstr "加號"
 
-#: qcsrc/common/util.qc:1548
+#: qcsrc/common/util.qc:1549
 #, c-format
 msgid "EQUALS"
 msgstr "等號"
 
-#: qcsrc/common/util.qc:1553
+#: qcsrc/common/util.qc:1554
 msgid "PRINTSCREEN"
 msgstr "PrintScreen 鍵"
 
-#: qcsrc/common/util.qc:1556
+#: qcsrc/common/util.qc:1557
 #, c-format
 msgid "MOUSE%d"
 msgstr "滑鼠按鍵 %d"
 
-#: qcsrc/common/util.qc:1558
+#: qcsrc/common/util.qc:1559
 msgid "MWHEELUP"
 msgstr "滑鼠向上滾輪"
 
-#: qcsrc/common/util.qc:1559
+#: qcsrc/common/util.qc:1560
 msgid "MWHEELDOWN"
 msgstr "滑鼠向下滾輪"
 
-#: qcsrc/common/util.qc:1562
+#: qcsrc/common/util.qc:1563
 #, c-format
 msgid "JOY%d"
 msgstr "操縱桿 %d"
 
-#: qcsrc/common/util.qc:1565
+#: qcsrc/common/util.qc:1566
 #, c-format
 msgid "AUX%d"
 msgstr "AUX%d"
 
-#: qcsrc/common/util.qc:1572
+#: qcsrc/common/util.qc:1573
 #, c-format
 msgid "DPAD_UP"
 msgstr "DPad 上"
 
-#: qcsrc/common/util.qc:1572 qcsrc/common/util.qc:1573
-#: qcsrc/common/util.qc:1574 qcsrc/common/util.qc:1575
-#: qcsrc/common/util.qc:1576 qcsrc/common/util.qc:1577
-#: qcsrc/common/util.qc:1578 qcsrc/common/util.qc:1579
-#: qcsrc/common/util.qc:1580 qcsrc/common/util.qc:1581
-#: qcsrc/common/util.qc:1582 qcsrc/common/util.qc:1583
-#: qcsrc/common/util.qc:1584 qcsrc/common/util.qc:1585
-#: qcsrc/common/util.qc:1586 qcsrc/common/util.qc:1587
-#: qcsrc/common/util.qc:1588 qcsrc/common/util.qc:1589
-#: qcsrc/common/util.qc:1590 qcsrc/common/util.qc:1591
+#: qcsrc/common/util.qc:1573 qcsrc/common/util.qc:1574
+#: qcsrc/common/util.qc:1575 qcsrc/common/util.qc:1576
+#: qcsrc/common/util.qc:1577 qcsrc/common/util.qc:1578
+#: qcsrc/common/util.qc:1579 qcsrc/common/util.qc:1580
+#: qcsrc/common/util.qc:1581 qcsrc/common/util.qc:1582
+#: qcsrc/common/util.qc:1583 qcsrc/common/util.qc:1584
+#: qcsrc/common/util.qc:1585 qcsrc/common/util.qc:1586
+#: qcsrc/common/util.qc:1587 qcsrc/common/util.qc:1588
+#: qcsrc/common/util.qc:1589 qcsrc/common/util.qc:1590
+#: qcsrc/common/util.qc:1591 qcsrc/common/util.qc:1592
 #, c-format
 msgid "X360_%s"
 msgstr "X360 %s"
 
-#: qcsrc/common/util.qc:1573
+#: qcsrc/common/util.qc:1574
 #, c-format
 msgid "DPAD_DOWN"
 msgstr "DPad 下"
 
-#: qcsrc/common/util.qc:1574
+#: qcsrc/common/util.qc:1575
 #, c-format
 msgid "DPAD_LEFT"
 msgstr "DPad 左"
 
-#: qcsrc/common/util.qc:1575
+#: qcsrc/common/util.qc:1576
 #, c-format
 msgid "DPAD_RIGHT"
 msgstr "DPad 右"
 
-#: qcsrc/common/util.qc:1576
+#: qcsrc/common/util.qc:1577
 #, c-format
 msgid "START"
 msgstr "開始鍵"
 
-#: qcsrc/common/util.qc:1577
+#: qcsrc/common/util.qc:1578
 #, c-format
 msgid "BACK"
 msgstr "返回鍵"
 
-#: qcsrc/common/util.qc:1578
+#: qcsrc/common/util.qc:1579
 #, c-format
 msgid "LEFT_THUMB"
 msgstr "左操縱杆按下"
 
-#: qcsrc/common/util.qc:1579
+#: qcsrc/common/util.qc:1580
 #, c-format
 msgid "RIGHT_THUMB"
 msgstr "右操縱杆按下"
 
-#: qcsrc/common/util.qc:1580
+#: qcsrc/common/util.qc:1581
 #, c-format
 msgid "LEFT_SHOULDER"
 msgstr "手柄左前按鈕"
 
-#: qcsrc/common/util.qc:1581
+#: qcsrc/common/util.qc:1582
 #, c-format
 msgid "RIGHT_SHOULDER"
 msgstr "手柄右前按鈕"
 
-#: qcsrc/common/util.qc:1582
+#: qcsrc/common/util.qc:1583
 #, c-format
 msgid "LEFT_TRIGGER"
 msgstr "手柄左扳機鍵"
 
-#: qcsrc/common/util.qc:1583
+#: qcsrc/common/util.qc:1584
 #, c-format
 msgid "RIGHT_TRIGGER"
 msgstr "手柄右扳機鍵"
 
-#: qcsrc/common/util.qc:1584
+#: qcsrc/common/util.qc:1585
 #, c-format
 msgid "LEFT_THUMB_UP"
 msgstr "左操縱桿向上"
 
-#: qcsrc/common/util.qc:1585
+#: qcsrc/common/util.qc:1586
 #, c-format
 msgid "LEFT_THUMB_DOWN"
 msgstr "左操縱桿向下"
 
-#: qcsrc/common/util.qc:1586
+#: qcsrc/common/util.qc:1587
 #, c-format
 msgid "LEFT_THUMB_LEFT"
 msgstr "左操縱桿向左"
 
-#: qcsrc/common/util.qc:1587
+#: qcsrc/common/util.qc:1588
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
 msgstr "左操縱桿向右"
 
-#: qcsrc/common/util.qc:1588
+#: qcsrc/common/util.qc:1589
 #, c-format
 msgid "RIGHT_THUMB_UP"
 msgstr "右操縱桿向上"
 
-#: qcsrc/common/util.qc:1589
+#: qcsrc/common/util.qc:1590
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
 msgstr "右操縱桿向下"
 
-#: qcsrc/common/util.qc:1590
+#: qcsrc/common/util.qc:1591
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
 msgstr "右操縱桿向左"
 
-#: qcsrc/common/util.qc:1591
+#: qcsrc/common/util.qc:1592
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
 msgstr "右操縱桿向右"
 
-#: qcsrc/common/util.qc:1601 qcsrc/common/util.qc:1602
-#: qcsrc/common/util.qc:1603 qcsrc/common/util.qc:1604
+#: qcsrc/common/util.qc:1602 qcsrc/common/util.qc:1603
+#: qcsrc/common/util.qc:1604 qcsrc/common/util.qc:1605
 #, c-format
 msgid "JOY_%s"
 msgstr "操縱桿 %s"
 
-#: qcsrc/common/util.qc:1601
+#: qcsrc/common/util.qc:1602
 #, c-format
 msgid "UP"
 msgstr "上"
 
-#: qcsrc/common/util.qc:1602
+#: qcsrc/common/util.qc:1603
 #, c-format
 msgid "DOWN"
 msgstr "下"
 
-#: qcsrc/common/util.qc:1603
+#: qcsrc/common/util.qc:1604
 #, c-format
 msgid "LEFT"
 msgstr "左"
 
-#: qcsrc/common/util.qc:1604
+#: qcsrc/common/util.qc:1605
 #, c-format
 msgid "RIGHT"
 msgstr "右"
 
-#: qcsrc/common/util.qc:1610
+#: qcsrc/common/util.qc:1611
 #, c-format
 msgid "MIDINOTE%d"
 msgstr "Midi 音符 %d"
@@ -6294,35 +6298,35 @@ msgstr ""
 "歡迎來到 Xonotic。 請選擇你的語言、輸入玩家名稱以開始游戏。 這些選項可以隨後"
 "在菜单更改。"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:50
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
 msgstr "名字："
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:58
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:62
 msgid "Name under which you will appear in the game"
 msgstr "你在遊戲裡的名字"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:74
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:75
 msgid "Text language:"
 msgstr "文字語言："
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:83
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr "允許 stats.xonotic.org 在玩家統計中使用你的暱稱嗎？"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:89
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"
 msgstr "未決定"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:91
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:92
 msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr "玩家統計預設啟用，你可以在「用家檔案」選單更改"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:95
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:96
 msgid "Save settings"
 msgstr "儲存設定"
 
@@ -9664,19 +9668,17 @@ msgstr "停用血腥效果和惡劣的語言"
 msgid "Replace blood and gibs with content that does not have any gore effects"
 msgstr "將血液與肢體替換為不包含任何血腥效果的內容"
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
-msgid "While connected language changes will be applied only to the menu,"
-msgstr "當已連線遊戲時，語言的更改僅應用於選單，"
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
+msgid ""
+"While connected language changes will be applied only to the menu, full "
+"language changes will take effect starting from the next game"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
-msgid "full language changes will take effect starting from the next game"
-msgstr "完整的語言更改將在下一輪遊戲開始後生效"
-
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"
 msgstr "現在斷開連線"
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:19
 msgid "Switch language"
 msgstr "切換語言"
 

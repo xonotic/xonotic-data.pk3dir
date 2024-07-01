@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-27 07:22+0200\n"
+"POT-Creation-Date: 2024-06-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Logan Zerfass, 2023\n"
 "Language-Team: Swedish (http://app.transifex.com/team-xonotic/xonotic/"
@@ -155,7 +155,7 @@ msgstr ""
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Tryck på ^3%s^1 för att gå med"
 
-#: qcsrc/client/hud/panel/infomessages.qc:136 qcsrc/client/main.qc:1432
+#: qcsrc/client/hud/panel/infomessages.qc:136 qcsrc/client/main.qc:1452
 #: qcsrc/common/notifications/all.qh:443
 msgid "jump"
 msgstr "hoppa"
@@ -529,39 +529,39 @@ msgstr "Serversnabbmeny som standard"
 msgid "QMCMD^Spectate a player"
 msgstr "Åskåda spelare"
 
-#: qcsrc/client/hud/panel/racetimer.qc:56
+#: qcsrc/client/hud/panel/racetimer.qc:57
 #, c-format
 msgid " (-%dL)"
 msgstr " (-%dV)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:61
+#: qcsrc/client/hud/panel/racetimer.qc:62
 #, c-format
 msgid " (+%dL)"
 msgstr " (+%dV)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:80
+#: qcsrc/client/hud/panel/racetimer.qc:81
 msgid "Start line"
 msgstr "Startlinjen"
 
-#: qcsrc/client/hud/panel/racetimer.qc:82
-#: qcsrc/client/hud/panel/racetimer.qc:86
+#: qcsrc/client/hud/panel/racetimer.qc:83
+#: qcsrc/client/hud/panel/racetimer.qc:87
 msgid "Finish line"
 msgstr "Slutlinjen"
 
-#: qcsrc/client/hud/panel/racetimer.qc:84
-#: qcsrc/client/hud/panel/racetimer.qc:153
+#: qcsrc/client/hud/panel/racetimer.qc:85
+#: qcsrc/client/hud/panel/racetimer.qc:154
 #, c-format
 msgid "Intermediate %d"
 msgstr "Mellanliggande %d"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156
-#: qcsrc/client/hud/panel/racetimer.qc:203
-#: qcsrc/client/hud/panel/racetimer.qc:264
+#: qcsrc/client/hud/panel/racetimer.qc:157
+#: qcsrc/client/hud/panel/racetimer.qc:223
+#: qcsrc/client/hud/panel/racetimer.qc:284
 #, c-format
 msgid "PENALTY: %.1f (%s)"
 msgstr "BESTRAFFNING: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1263
+#: qcsrc/client/hud/panel/racetimer.qc:157 qcsrc/client/main.qc:1283
 msgid "missing a checkpoint"
 msgstr "Saknar en kontrollpunkt"
 
@@ -1077,62 +1077,62 @@ msgstr "^5%s %s"
 msgid "SCO^points"
 msgstr "poäng"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2422
+#: qcsrc/client/hud/panel/scoreboard.qc:2425
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "Lagval"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2436
+#: qcsrc/client/hud/panel/scoreboard.qc:2439
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^7Tryck ^3%s^7 för att gå med det valda laget"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2438
+#: qcsrc/client/hud/panel/scoreboard.qc:2441
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr "^7Tryck ^3%s^7 för att auto-välja ett lag och gå med"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2442
+#: qcsrc/client/hud/panel/scoreboard.qc:2445
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7Tryck ^3%s ^7för att välja ett specifikt lag"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2453
+#: qcsrc/client/hud/panel/scoreboard.qc:2456
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f minuter"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2480
+#: qcsrc/client/hud/panel/scoreboard.qc:2483
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7spelare"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2481 qcsrc/client/main.qc:1461
+#: qcsrc/client/hud/panel/scoreboard.qc:2484 qcsrc/client/main.qc:1481
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Karta:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2648
+#: qcsrc/client/hud/panel/scoreboard.qc:2651
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Hastighetsutmärkelse: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2652
+#: qcsrc/client/hud/panel/scoreboard.qc:2655
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Snabbast någonsin: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2686
+#: qcsrc/client/hud/panel/scoreboard.qc:2689
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Återskapas om ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2696
+#: qcsrc/client/hud/panel/scoreboard.qc:2699
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Du är död, vänta ^3%s^7 innan återskapning"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2705
+#: qcsrc/client/hud/panel/scoreboard.qc:2708
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Du är död, tryck på ^2%s^7 för ått återskapa"
@@ -1206,7 +1206,7 @@ msgstr "Tillåt servrar att lagra och visa ditt namn?"
 msgid "^1Configure the HUD"
 msgstr "^1Konfigurera HUD:en"
 
-#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:87
+#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
@@ -1217,7 +1217,7 @@ msgstr "^1Konfigurera HUD:en"
 msgid "Yes"
 msgstr "Ja"
 
-#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:88
+#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
@@ -1244,143 +1244,147 @@ msgstr "Otillgänglig"
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Försöker ta bort ett lag som inte är i laglistan!"
 
-#: qcsrc/client/main.qc:1165 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
+#: qcsrc/client/main.qc:1162 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1166 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/client/main.qc:1163 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1167 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
+#: qcsrc/client/main.qc:1164 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1168 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
+#: qcsrc/client/main.qc:1165 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1169 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/client/main.qc:1166 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
 msgstr "knop"
 
-#: qcsrc/client/main.qc:1380
+#: qcsrc/client/main.qc:1206
+msgid "Checkpoint times:"
+msgstr ""
+
+#: qcsrc/client/main.qc:1400
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
 msgstr "Alla Vapen-Arena"
 
-#: qcsrc/client/main.qc:1381
+#: qcsrc/client/main.qc:1401
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
 msgstr "Alla Tillgängliga Vapen-Arena"
 
-#: qcsrc/client/main.qc:1382
+#: qcsrc/client/main.qc:1402
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
 msgstr "Flesta Vapen-Arena"
 
-#: qcsrc/client/main.qc:1383
+#: qcsrc/client/main.qc:1403
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
 msgstr "Flesta Tillgängliga Vapen-Arena"
 
-#: qcsrc/client/main.qc:1386 qcsrc/client/main.qc:1400
+#: qcsrc/client/main.qc:1406 qcsrc/client/main.qc:1420
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
 msgstr "Inga Vapen-Arena"
 
-#: qcsrc/client/main.qc:1398
+#: qcsrc/client/main.qc:1418
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
 #, c-format
 msgid "%s Arena"
 msgstr "%s Arena"
 
-#: qcsrc/client/main.qc:1409 qcsrc/client/main.qc:1414
+#: qcsrc/client/main.qc:1429 qcsrc/client/main.qc:1434
 #, c-format
 msgid "This is %s"
 msgstr "Detta är %s"
 
-#: qcsrc/client/main.qc:1410
+#: qcsrc/client/main.qc:1430
 msgid "Your client version is outdated."
 msgstr "Din klientversion är utdaterad."
 
-#: qcsrc/client/main.qc:1411
+#: qcsrc/client/main.qc:1431
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### DU KOMMER INTE ATT KUNNA SPELA PÅ DENNA SERVER ###"
 
-#: qcsrc/client/main.qc:1412
+#: qcsrc/client/main.qc:1432
 msgid "Please update!"
 msgstr "Vänligen uppdatera!"
 
-#: qcsrc/client/main.qc:1415
+#: qcsrc/client/main.qc:1435
 msgid "This server is using an outdated Xonotic version."
 msgstr "Denna server använder en utdaterad Xonotic-version."
 
-#: qcsrc/client/main.qc:1416
+#: qcsrc/client/main.qc:1436
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### DENNA SERVER ÄN INKOMPATIBEL OCH DU KAN DÄRFÖR INTE GÅ MED ###"
 
-#: qcsrc/client/main.qc:1418
+#: qcsrc/client/main.qc:1438
 #, c-format
 msgid "Welcome to %s"
 msgstr "Välkommen till %s"
 
-#: qcsrc/client/main.qc:1434 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1454 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Nivå %d:"
 
-#: qcsrc/client/main.qc:1436
+#: qcsrc/client/main.qc:1456
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGTryck på ^F2%s^BG för att gå med i spelet"
 
-#: qcsrc/client/main.qc:1459
+#: qcsrc/client/main.qc:1479
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Speltyp:"
 
-#: qcsrc/client/main.qc:1463
+#: qcsrc/client/main.qc:1483
 msgid "by:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1467
+#: qcsrc/client/main.qc:1487
 msgid "This match supports"
 msgstr "Denna match stödjer"
 
-#: qcsrc/client/main.qc:1469
+#: qcsrc/client/main.qc:1489
 #, c-format
 msgid "%d players"
 msgstr "%d spelare"
 
-#: qcsrc/client/main.qc:1471
+#: qcsrc/client/main.qc:1491
 #, c-format
 msgid "%d to %d players"
 msgstr "%d till %d spelare"
 
-#: qcsrc/client/main.qc:1473
+#: qcsrc/client/main.qc:1493
 #, c-format
 msgid "%d players maximum"
 msgstr "%d spelare maximum"
 
-#: qcsrc/client/main.qc:1475
+#: qcsrc/client/main.qc:1495
 #, c-format
 msgid "%d players minimum"
 msgstr "%d spelare minimum"
 
-#: qcsrc/client/main.qc:1480
+#: qcsrc/client/main.qc:1500
 msgid "Active modifications:"
 msgstr "Aktiva modifikationer:"
 
-#: qcsrc/client/main.qc:1483
+#: qcsrc/client/main.qc:1503
 msgid "Special gameplay tips:"
 msgstr "Speciella speltypstips:"
 
-#: qcsrc/client/main.qc:1490
+#: qcsrc/client/main.qc:1510
 msgid "Server's message"
 msgstr "Serverns meddelande"
 
-#: qcsrc/client/main.qc:1584
+#: qcsrc/client/main.qc:1604
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (ej bunden)"
@@ -5381,375 +5385,375 @@ msgstr "Granater"
 msgid "Offhand blaster"
 msgstr "Av-handsblaster"
 
-#: qcsrc/common/util.qc:1420
+#: qcsrc/common/util.qc:1421
 msgid "Male"
 msgstr "Man"
 
-#: qcsrc/common/util.qc:1421
+#: qcsrc/common/util.qc:1422
 msgid "Female"
 msgstr "Kvinna"
 
-#: qcsrc/common/util.qc:1422
+#: qcsrc/common/util.qc:1423
 msgid "Undisclosed"
 msgstr "Hemlig"
 
-#: qcsrc/common/util.qc:1469
+#: qcsrc/common/util.qc:1470
 msgid "<KEY NOT FOUND>"
 msgstr "<NYCKEL HITTADES INTE>"
 
-#: qcsrc/common/util.qc:1470
+#: qcsrc/common/util.qc:1471
 msgid "<UNKNOWN KEYNUM>"
 msgstr "<OKÄND NYCKELVÄRDE>"
 
-#: qcsrc/common/util.qc:1475
+#: qcsrc/common/util.qc:1476
 msgid "TAB"
 msgstr "TABB"
 
-#: qcsrc/common/util.qc:1476 qcsrc/common/util.qc:1547
+#: qcsrc/common/util.qc:1477 qcsrc/common/util.qc:1548
 #, c-format
 msgid "ENTER"
 msgstr "ENTER"
 
-#: qcsrc/common/util.qc:1477
+#: qcsrc/common/util.qc:1478
 msgid "ESCAPE"
 msgstr "ESCAPE"
 
-#: qcsrc/common/util.qc:1478
+#: qcsrc/common/util.qc:1479
 msgid "SPACE"
 msgstr "BLANKSTEG"
 
-#: qcsrc/common/util.qc:1480
+#: qcsrc/common/util.qc:1481
 msgid "BACKSPACE"
 msgstr "BAKSTEG"
 
-#: qcsrc/common/util.qc:1481 qcsrc/common/util.qc:1538
+#: qcsrc/common/util.qc:1482 qcsrc/common/util.qc:1539
 #, c-format
 msgid "UPARROW"
 msgstr "UPPIL"
 
-#: qcsrc/common/util.qc:1482 qcsrc/common/util.qc:1533
+#: qcsrc/common/util.qc:1483 qcsrc/common/util.qc:1534
 #, c-format
 msgid "DOWNARROW"
 msgstr "NERPIL"
 
-#: qcsrc/common/util.qc:1483 qcsrc/common/util.qc:1535
+#: qcsrc/common/util.qc:1484 qcsrc/common/util.qc:1536
 #, c-format
 msgid "LEFTARROW"
 msgstr "VÄNSTERPIL"
 
-#: qcsrc/common/util.qc:1484 qcsrc/common/util.qc:1536
+#: qcsrc/common/util.qc:1485 qcsrc/common/util.qc:1537
 #, c-format
 msgid "RIGHTARROW"
 msgstr "HÖGERPIL"
 
-#: qcsrc/common/util.qc:1486
+#: qcsrc/common/util.qc:1487
 msgid "ALT"
 msgstr "ALT"
 
-#: qcsrc/common/util.qc:1487
+#: qcsrc/common/util.qc:1488
 msgid "CTRL"
 msgstr "CTRL"
 
-#: qcsrc/common/util.qc:1488
+#: qcsrc/common/util.qc:1489
 msgid "SHIFT"
 msgstr "SKIFT"
 
-#: qcsrc/common/util.qc:1490 qcsrc/common/util.qc:1531
+#: qcsrc/common/util.qc:1491 qcsrc/common/util.qc:1532
 #, c-format
 msgid "INS"
 msgstr "INS"
 
-#: qcsrc/common/util.qc:1491 qcsrc/common/util.qc:1541
+#: qcsrc/common/util.qc:1492 qcsrc/common/util.qc:1542
 #, c-format
 msgid "DEL"
 msgstr "DEL"
 
-#: qcsrc/common/util.qc:1492 qcsrc/common/util.qc:1534
+#: qcsrc/common/util.qc:1493 qcsrc/common/util.qc:1535
 #, c-format
 msgid "PGDN"
 msgstr "PGDN"
 
-#: qcsrc/common/util.qc:1493 qcsrc/common/util.qc:1539
+#: qcsrc/common/util.qc:1494 qcsrc/common/util.qc:1540
 #, c-format
 msgid "PGUP"
 msgstr "PGUP"
 
-#: qcsrc/common/util.qc:1494 qcsrc/common/util.qc:1537
+#: qcsrc/common/util.qc:1495 qcsrc/common/util.qc:1538
 #, c-format
 msgid "HOME"
 msgstr "HOME"
 
-#: qcsrc/common/util.qc:1495 qcsrc/common/util.qc:1532
+#: qcsrc/common/util.qc:1496 qcsrc/common/util.qc:1533
 #, c-format
 msgid "END"
 msgstr "END"
 
-#: qcsrc/common/util.qc:1497
+#: qcsrc/common/util.qc:1498
 msgid "PAUSE"
 msgstr "PAUSE"
 
-#: qcsrc/common/util.qc:1499
+#: qcsrc/common/util.qc:1500
 msgid "NUMLOCK"
 msgstr "NUMLOCK"
 
-#: qcsrc/common/util.qc:1500
+#: qcsrc/common/util.qc:1501
 msgid "CAPSLOCK"
 msgstr "CAPSLOCK"
 
-#: qcsrc/common/util.qc:1501
+#: qcsrc/common/util.qc:1502
 msgid "SCROLLOCK"
 msgstr "SCROLLOCK"
 
-#: qcsrc/common/util.qc:1503
+#: qcsrc/common/util.qc:1504
 msgid "SEMICOLON"
 msgstr "SEMIKOLON"
 
-#: qcsrc/common/util.qc:1504
+#: qcsrc/common/util.qc:1505
 msgid "TILDE"
 msgstr "TILDE"
 
-#: qcsrc/common/util.qc:1505
+#: qcsrc/common/util.qc:1506
 msgid "BACKQUOTE"
 msgstr "BACKQUOTE"
 
-#: qcsrc/common/util.qc:1506
+#: qcsrc/common/util.qc:1507
 msgid "QUOTE"
 msgstr "CITAT"
 
-#: qcsrc/common/util.qc:1507
+#: qcsrc/common/util.qc:1508
 msgid "APOSTROPHE"
 msgstr "APOSTROF"
 
-#: qcsrc/common/util.qc:1508
+#: qcsrc/common/util.qc:1509
 msgid "BACKSLASH"
 msgstr "OMVÄNT SNEDSTRECK"
 
-#: qcsrc/common/util.qc:1516
+#: qcsrc/common/util.qc:1517
 #, c-format
 msgid "F%d"
 msgstr "F%d"
 
-#: qcsrc/common/util.qc:1526
+#: qcsrc/common/util.qc:1527
 #, c-format
 msgid "KP_%d"
 msgstr "KP_%d"
 
-#: qcsrc/common/util.qc:1531 qcsrc/common/util.qc:1532
-#: qcsrc/common/util.qc:1533 qcsrc/common/util.qc:1534
-#: qcsrc/common/util.qc:1535 qcsrc/common/util.qc:1536
-#: qcsrc/common/util.qc:1537 qcsrc/common/util.qc:1538
-#: qcsrc/common/util.qc:1539 qcsrc/common/util.qc:1540
-#: qcsrc/common/util.qc:1541 qcsrc/common/util.qc:1542
-#: qcsrc/common/util.qc:1543 qcsrc/common/util.qc:1544
-#: qcsrc/common/util.qc:1545 qcsrc/common/util.qc:1546
-#: qcsrc/common/util.qc:1547 qcsrc/common/util.qc:1548
+#: qcsrc/common/util.qc:1532 qcsrc/common/util.qc:1533
+#: qcsrc/common/util.qc:1534 qcsrc/common/util.qc:1535
+#: qcsrc/common/util.qc:1536 qcsrc/common/util.qc:1537
+#: qcsrc/common/util.qc:1538 qcsrc/common/util.qc:1539
+#: qcsrc/common/util.qc:1540 qcsrc/common/util.qc:1541
+#: qcsrc/common/util.qc:1542 qcsrc/common/util.qc:1543
+#: qcsrc/common/util.qc:1544 qcsrc/common/util.qc:1545
+#: qcsrc/common/util.qc:1546 qcsrc/common/util.qc:1547
+#: qcsrc/common/util.qc:1548 qcsrc/common/util.qc:1549
 #, c-format
 msgid "KP_%s"
 msgstr "KP_%s"
 
-#: qcsrc/common/util.qc:1540
+#: qcsrc/common/util.qc:1541
 #, c-format
 msgid "PERIOD"
 msgstr "PUNKT"
 
-#: qcsrc/common/util.qc:1542
+#: qcsrc/common/util.qc:1543
 #, c-format
 msgid "DIVIDE"
 msgstr "DIVIDERA"
 
-#: qcsrc/common/util.qc:1543
+#: qcsrc/common/util.qc:1544
 #, c-format
 msgid "SLASH"
 msgstr "SNEDSTRECK"
 
-#: qcsrc/common/util.qc:1544
+#: qcsrc/common/util.qc:1545
 #, c-format
 msgid "MULTIPLY"
 msgstr "GÅNGER"
 
-#: qcsrc/common/util.qc:1545
+#: qcsrc/common/util.qc:1546
 #, c-format
 msgid "MINUS"
 msgstr "MINUS"
 
-#: qcsrc/common/util.qc:1546
+#: qcsrc/common/util.qc:1547
 #, c-format
 msgid "PLUS"
 msgstr "PLUS"
 
-#: qcsrc/common/util.qc:1548
+#: qcsrc/common/util.qc:1549
 #, c-format
 msgid "EQUALS"
 msgstr "LIKA MED"
 
-#: qcsrc/common/util.qc:1553
+#: qcsrc/common/util.qc:1554
 msgid "PRINTSCREEN"
 msgstr "PRINTSCREEN"
 
-#: qcsrc/common/util.qc:1556
+#: qcsrc/common/util.qc:1557
 #, c-format
 msgid "MOUSE%d"
 msgstr "MUS%d"
 
-#: qcsrc/common/util.qc:1558
+#: qcsrc/common/util.qc:1559
 msgid "MWHEELUP"
 msgstr "MHJULUP"
 
-#: qcsrc/common/util.qc:1559
+#: qcsrc/common/util.qc:1560
 msgid "MWHEELDOWN"
 msgstr "MHJULNER"
 
-#: qcsrc/common/util.qc:1562
+#: qcsrc/common/util.qc:1563
 #, c-format
 msgid "JOY%d"
 msgstr "SPAK%d"
 
-#: qcsrc/common/util.qc:1565
+#: qcsrc/common/util.qc:1566
 #, c-format
 msgid "AUX%d"
 msgstr "AUX%d"
 
-#: qcsrc/common/util.qc:1572
+#: qcsrc/common/util.qc:1573
 #, c-format
 msgid "DPAD_UP"
 msgstr "DPAD_UPP"
 
-#: qcsrc/common/util.qc:1572 qcsrc/common/util.qc:1573
-#: qcsrc/common/util.qc:1574 qcsrc/common/util.qc:1575
-#: qcsrc/common/util.qc:1576 qcsrc/common/util.qc:1577
-#: qcsrc/common/util.qc:1578 qcsrc/common/util.qc:1579
-#: qcsrc/common/util.qc:1580 qcsrc/common/util.qc:1581
-#: qcsrc/common/util.qc:1582 qcsrc/common/util.qc:1583
-#: qcsrc/common/util.qc:1584 qcsrc/common/util.qc:1585
-#: qcsrc/common/util.qc:1586 qcsrc/common/util.qc:1587
-#: qcsrc/common/util.qc:1588 qcsrc/common/util.qc:1589
-#: qcsrc/common/util.qc:1590 qcsrc/common/util.qc:1591
+#: qcsrc/common/util.qc:1573 qcsrc/common/util.qc:1574
+#: qcsrc/common/util.qc:1575 qcsrc/common/util.qc:1576
+#: qcsrc/common/util.qc:1577 qcsrc/common/util.qc:1578
+#: qcsrc/common/util.qc:1579 qcsrc/common/util.qc:1580
+#: qcsrc/common/util.qc:1581 qcsrc/common/util.qc:1582
+#: qcsrc/common/util.qc:1583 qcsrc/common/util.qc:1584
+#: qcsrc/common/util.qc:1585 qcsrc/common/util.qc:1586
+#: qcsrc/common/util.qc:1587 qcsrc/common/util.qc:1588
+#: qcsrc/common/util.qc:1589 qcsrc/common/util.qc:1590
+#: qcsrc/common/util.qc:1591 qcsrc/common/util.qc:1592
 #, c-format
 msgid "X360_%s"
 msgstr "X360_%s"
 
-#: qcsrc/common/util.qc:1573
+#: qcsrc/common/util.qc:1574
 #, c-format
 msgid "DPAD_DOWN"
 msgstr "DPAD_NER"
 
-#: qcsrc/common/util.qc:1574
+#: qcsrc/common/util.qc:1575
 #, c-format
 msgid "DPAD_LEFT"
 msgstr "DPAD_VÄNSTER"
 
-#: qcsrc/common/util.qc:1575
+#: qcsrc/common/util.qc:1576
 #, c-format
 msgid "DPAD_RIGHT"
 msgstr "DPAD_HÖGER"
 
-#: qcsrc/common/util.qc:1576
+#: qcsrc/common/util.qc:1577
 #, c-format
 msgid "START"
 msgstr "START"
 
-#: qcsrc/common/util.qc:1577
+#: qcsrc/common/util.qc:1578
 #, c-format
 msgid "BACK"
 msgstr "BACK"
 
-#: qcsrc/common/util.qc:1578
+#: qcsrc/common/util.qc:1579
 #, c-format
 msgid "LEFT_THUMB"
 msgstr "VÄNSTER_THUMB"
 
-#: qcsrc/common/util.qc:1579
+#: qcsrc/common/util.qc:1580
 #, c-format
 msgid "RIGHT_THUMB"
 msgstr "HÖGER_THUMB"
 
-#: qcsrc/common/util.qc:1580
+#: qcsrc/common/util.qc:1581
 #, c-format
 msgid "LEFT_SHOULDER"
 msgstr "VÄNSTER_AXEL"
 
-#: qcsrc/common/util.qc:1581
+#: qcsrc/common/util.qc:1582
 #, c-format
 msgid "RIGHT_SHOULDER"
 msgstr "HÖGER_AXEL"
 
-#: qcsrc/common/util.qc:1582
+#: qcsrc/common/util.qc:1583
 #, c-format
 msgid "LEFT_TRIGGER"
 msgstr "VÄNSTER_UTLÖSARE"
 
-#: qcsrc/common/util.qc:1583
+#: qcsrc/common/util.qc:1584
 #, c-format
 msgid "RIGHT_TRIGGER"
 msgstr "HÖGER_UTLÖSARE"
 
-#: qcsrc/common/util.qc:1584
+#: qcsrc/common/util.qc:1585
 #, c-format
 msgid "LEFT_THUMB_UP"
 msgstr "VÄNSTER_THUMB_UPP"
 
-#: qcsrc/common/util.qc:1585
+#: qcsrc/common/util.qc:1586
 #, c-format
 msgid "LEFT_THUMB_DOWN"
 msgstr "VÄNSTER_THUMB_NER"
 
-#: qcsrc/common/util.qc:1586
+#: qcsrc/common/util.qc:1587
 #, c-format
 msgid "LEFT_THUMB_LEFT"
 msgstr "VÄNSTER_THUMB_VÄNSTER"
 
-#: qcsrc/common/util.qc:1587
+#: qcsrc/common/util.qc:1588
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
 msgstr "VÄNSTEL_THUMB_HÖGER"
 
-#: qcsrc/common/util.qc:1588
+#: qcsrc/common/util.qc:1589
 #, c-format
 msgid "RIGHT_THUMB_UP"
 msgstr "HÖGER_THUMB_UPP"
 
-#: qcsrc/common/util.qc:1589
+#: qcsrc/common/util.qc:1590
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
 msgstr "HÖGER_THUMB_NER"
 
-#: qcsrc/common/util.qc:1590
+#: qcsrc/common/util.qc:1591
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
 msgstr "HÖGER_THUMB_VÄNSTER"
 
-#: qcsrc/common/util.qc:1591
+#: qcsrc/common/util.qc:1592
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
 msgstr "HÖGER_THUMB_HÖGER"
 
-#: qcsrc/common/util.qc:1601 qcsrc/common/util.qc:1602
-#: qcsrc/common/util.qc:1603 qcsrc/common/util.qc:1604
+#: qcsrc/common/util.qc:1602 qcsrc/common/util.qc:1603
+#: qcsrc/common/util.qc:1604 qcsrc/common/util.qc:1605
 #, c-format
 msgid "JOY_%s"
 msgstr "SPAK_%s"
 
-#: qcsrc/common/util.qc:1601
+#: qcsrc/common/util.qc:1602
 #, c-format
 msgid "UP"
 msgstr "UPP"
 
-#: qcsrc/common/util.qc:1602
+#: qcsrc/common/util.qc:1603
 #, c-format
 msgid "DOWN"
 msgstr "NER"
 
-#: qcsrc/common/util.qc:1603
+#: qcsrc/common/util.qc:1604
 #, c-format
 msgid "LEFT"
 msgstr "VÄNSTER"
 
-#: qcsrc/common/util.qc:1604
+#: qcsrc/common/util.qc:1605
 #, c-format
 msgid "RIGHT"
 msgstr "HÖGER"
 
-#: qcsrc/common/util.qc:1610
+#: qcsrc/common/util.qc:1611
 #, c-format
 msgid "MIDINOTE%d"
 msgstr "MIDINOT%d"
@@ -6354,37 +6358,37 @@ msgstr ""
 "spelarnamn för att komma igång.  Du kan senare ändra dessa inställningar via "
 "menyn."
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:50
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
 msgstr "Namn:"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:58
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:62
 msgid "Name under which you will appear in the game"
 msgstr "Namn som du kommer att synas som i spelet"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:74
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:75
 msgid "Text language:"
 msgstr "Ställ in språk:"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:83
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
 "Tillåt spelstatistiken att använda ditt spelarnamn på stats.xonotic.org?"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:89
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"
 msgstr "Obeslutad"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:91
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:92
 msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
 "Spelstatistik är påslagen som standard, du kan ändra på detta i Profilmenyn"
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:95
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:96
 msgid "Save settings"
 msgstr "Spara inställningar"
 
@@ -9787,19 +9791,17 @@ msgid "Replace blood and gibs with content that does not have any gore effects"
 msgstr ""
 "Byter ut blod och inälvor med innehåll som inte har några blodiga effekter"
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
-msgid "While connected language changes will be applied only to the menu,"
-msgstr "Under uppkoppling sker bara språkförändringar i menyn,"
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
+msgid ""
+"While connected language changes will be applied only to the menu, full "
+"language changes will take effect starting from the next game"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
-msgid "full language changes will take effect starting from the next game"
-msgstr "hela språkförändringar börjar få effekt efter starten på ett nytt spel"
-
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"
 msgstr "Koppla bort nu"
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:19
 msgid "Switch language"
 msgstr "Växla språk"
 

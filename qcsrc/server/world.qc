@@ -432,6 +432,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
 		BADPRESUFFIX("g_", "_round_timelimit");
+		BADPRESUFFIX("g_", "_round_enddelay");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:

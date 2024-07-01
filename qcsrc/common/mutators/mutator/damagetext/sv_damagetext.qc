@@ -97,7 +97,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 		net_text_prev.dent_net_potential = potential_damage;
 		return;
 	}
-	else if (!IL_CONTAINS(hit.dent_attackers, attacker))
+	else if (attacker && !IL_CONTAINS(hit.dent_attackers, attacker))
 	{
 		// player is hit for the first time after respawn by this attacker
 		IL_PUSH(hit.dent_attackers, attacker);

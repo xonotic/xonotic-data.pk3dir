@@ -1588,7 +1588,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 	for(i = 0; i < 16; ++i)
 	{
 		iteration_scale -= i / 16;
-		theta = random() * 2 * M_PI;
+		theta = random() * (2 * M_PI);
 		loc_y = sin(theta);
 		loc_x = cos(theta);
 		loc_z = 0;

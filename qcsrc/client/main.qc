@@ -1203,7 +1203,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			&& (race_checkpoint == 255
 			|| race_checkpoint < race_checkpoint_splits_previous))
 			{
-				LOG_HELP("Checkpoint Splits:\n");
+				LOG_HELP(_("Checkpoint times:"));
 				for (int i = 0; i < 255; ++i)
 				{
 					// does this index have a split?

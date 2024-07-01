@@ -813,27 +813,27 @@ void HUD_StrafeHUD()
 
 			if(!autocvar_hud_panel_strafehud_uncapped)
 				slicksteps = min(slicksteps, 4);
-			slicksteps = 90 / 2 ** slicksteps;
+			slicksteps = 90 * DEG2RAD / 2 ** slicksteps;
 
 			slickdetected = real_onslick; // don't need to traceline if already touching slick
 
 			// traceline into every direction
 			trace_dphitq3surfaceflags = 0;
 			vector traceorigin = strafeplayer.origin + eZ * strafeplayer.mins.z;
-			for(float i = 0; i < 90 && !slickdetected; i += slicksteps)
+			for(float i = 0; i < 90 * DEG2RAD - 0.00001 && !slickdetected; i += slicksteps)
 			{
 				vector slickoffset;
 				float slickrotate;
-				slickoffset.z = -cos(i * DEG2RAD) * autocvar_hud_panel_strafehud_slickdetector_range;
-				slickrotate = sin(i * DEG2RAD) * autocvar_hud_panel_strafehud_slickdetector_range;
+				slickoffset.z = -cos(i) * autocvar_hud_panel_strafehud_slickdetector_range;
+				slickrotate = sin(i) * autocvar_hud_panel_strafehud_slickdetector_range;
 
-				for(float j = 0; j < 360 && !slickdetected; j += slicksteps)
+				for(float j = 0; j < 360 * DEG2RAD - 0.00001 && !slickdetected; j += slicksteps)
 				{
-					slickoffset.x = sin(j * DEG2RAD) * slickrotate;
-					slickoffset.y = cos(j * DEG2RAD) * slickrotate;
+					slickoffset.x = sin(j) * slickrotate;
+					slickoffset.y = cos(j) * slickrotate;
 
 					traceline(traceorigin, traceorigin + slickoffset, MOVE_NOMONSTERS, strafeplayer);
-					if((PHYS_FRICTION(strafeplayer) == 0 && trace_fraction < 1) 
+					if((PHYS_FRICTION(strafeplayer) == 0 && trace_fraction < 1)
 					|| (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK))
 						slickdetected = true;
 					if(i == 0)
@@ -1447,7 +1447,7 @@ bool StrafeHUD_drawTextIndicator(string text, float height, vector color, float 
 	if((height <= 0) || (lasttime <= 0) || (fadetime <= 0) || ((time - lasttime) >= fadetime))
 		return false;
 
-	float alpha = cos(((time - lasttime) / fadetime) * 90 * DEG2RAD); // fade non-linear like the physics panel does
+	float alpha = cos(((time - lasttime) / fadetime) * M_PI_2); // fade non-linear like the physics panel does
 	vector size = panel_size;
 	size.y = height;
 

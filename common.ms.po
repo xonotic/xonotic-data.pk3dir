@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-27 07:22+0200\n"
+"POT-Creation-Date: 2024-06-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 4b0721bd8a44304c1fd21d8581e7aba4_e088d28 "
 "<64a9a0c5da22e761316957ae436b6281_676465>, 2018\n"
@@ -151,7 +151,7 @@ msgstr ""
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Tekan ^3%s^1 untuk ikut serta"
 
-#: qcsrc/client/hud/panel/infomessages.qc:136 qcsrc/client/main.qc:1432
+#: qcsrc/client/hud/panel/infomessages.qc:136 qcsrc/client/main.qc:1452
 #: qcsrc/common/notifications/all.qh:443
 msgid "jump"
 msgstr "lompat"
@@ -526,39 +526,39 @@ msgstr ""
 msgid "QMCMD^Spectate a player"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:56
+#: qcsrc/client/hud/panel/racetimer.qc:57
 #, c-format
 msgid " (-%dL)"
 msgstr " (-%dL)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:61
+#: qcsrc/client/hud/panel/racetimer.qc:62
 #, c-format
 msgid " (+%dL)"
 msgstr " (+%dL)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:80
+#: qcsrc/client/hud/panel/racetimer.qc:81
 msgid "Start line"
 msgstr "Garisan pemula"
 
-#: qcsrc/client/hud/panel/racetimer.qc:82
-#: qcsrc/client/hud/panel/racetimer.qc:86
+#: qcsrc/client/hud/panel/racetimer.qc:83
+#: qcsrc/client/hud/panel/racetimer.qc:87
 msgid "Finish line"
 msgstr "Garisan penamat"
 
-#: qcsrc/client/hud/panel/racetimer.qc:84
-#: qcsrc/client/hud/panel/racetimer.qc:153
+#: qcsrc/client/hud/panel/racetimer.qc:85
+#: qcsrc/client/hud/panel/racetimer.qc:154
 #, c-format
 msgid "Intermediate %d"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:156
-#: qcsrc/client/hud/panel/racetimer.qc:203
-#: qcsrc/client/hud/panel/racetimer.qc:264
+#: qcsrc/client/hud/panel/racetimer.qc:157
+#: qcsrc/client/hud/panel/racetimer.qc:223
+#: qcsrc/client/hud/panel/racetimer.qc:284
 #, c-format
 msgid "PENALTY: %.1f (%s)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:156 qcsrc/client/main.qc:1263
+#: qcsrc/client/hud/panel/racetimer.qc:157 qcsrc/client/main.qc:1283
 msgid "missing a checkpoint"
 msgstr ""
 
@@ -1051,62 +1051,62 @@ msgstr ""
 msgid "SCO^points"
 msgstr "SCO^mata"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2422
+#: qcsrc/client/hud/panel/scoreboard.qc:2425
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2436
+#: qcsrc/client/hud/panel/scoreboard.qc:2439
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2438
+#: qcsrc/client/hud/panel/scoreboard.qc:2441
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2442
+#: qcsrc/client/hud/panel/scoreboard.qc:2445
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2453
+#: qcsrc/client/hud/panel/scoreboard.qc:2456
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2480
+#: qcsrc/client/hud/panel/scoreboard.qc:2483
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2481 qcsrc/client/main.qc:1461
+#: qcsrc/client/hud/panel/scoreboard.qc:2484 qcsrc/client/main.qc:1481
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2648
+#: qcsrc/client/hud/panel/scoreboard.qc:2651
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Anugerah kelajuan: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2652
+#: qcsrc/client/hud/panel/scoreboard.qc:2655
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Terlaju sepanjang masa: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2686
+#: qcsrc/client/hud/panel/scoreboard.qc:2689
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Lahir semula dalam ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2696
+#: qcsrc/client/hud/panel/scoreboard.qc:2699
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Anda dah mati, tunggu ^3%s^7 sebelum lahir semula"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2705
+#: qcsrc/client/hud/panel/scoreboard.qc:2708
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Anda dah mati, tekan ^2%s^7 untuk lahir semula"
@@ -1180,7 +1180,7 @@ msgstr "Benarkan pelayan untuk menyimpan dan memaparkan nama anda?"
 msgid "^1Configure the HUD"
 msgstr "^1Susun HUD"
 
-#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:87
+#: qcsrc/client/hud/panel/vote.qc:129 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
@@ -1191,7 +1191,7 @@ msgstr "^1Susun HUD"
 msgid "Yes"
 msgstr "Ya"
 
-#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:88
+#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
@@ -1218,143 +1218,147 @@ msgstr "Tak wujud"
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr ""
 
-#: qcsrc/client/main.qc:1165 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
+#: qcsrc/client/main.qc:1162 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1166 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/client/main.qc:1163 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1167 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
+#: qcsrc/client/main.qc:1164 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
 msgstr ""
 
-#: qcsrc/client/main.qc:1168 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
+#: qcsrc/client/main.qc:1165 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
 msgid "mph"
 msgstr ""
 
-#: qcsrc/client/main.qc:1169 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/client/main.qc:1166 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
 msgstr ""
 
-#: qcsrc/client/main.qc:1380
+#: qcsrc/client/main.qc:1206
+msgid "Checkpoint times:"
+msgstr ""
+
+#: qcsrc/client/main.qc:1400
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:26
 msgid "All Weapons Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1381
+#: qcsrc/client/main.qc:1401
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:27
 msgid "All Available Weapons Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1382
+#: qcsrc/client/main.qc:1402
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:28
 msgid "Most Weapons Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1383
+#: qcsrc/client/main.qc:1403
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:29
 msgid "Most Available Weapons Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1386 qcsrc/client/main.qc:1400
+#: qcsrc/client/main.qc:1406 qcsrc/client/main.qc:1420
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:50
 msgid "No Weapons Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1398
+#: qcsrc/client/main.qc:1418
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:48
 #, c-format
 msgid "%s Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1409 qcsrc/client/main.qc:1414
+#: qcsrc/client/main.qc:1429 qcsrc/client/main.qc:1434
 #, c-format
 msgid "This is %s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1410
+#: qcsrc/client/main.qc:1430
 msgid "Your client version is outdated."
 msgstr ""
 
-#: qcsrc/client/main.qc:1411
+#: qcsrc/client/main.qc:1431
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr ""
 
-#: qcsrc/client/main.qc:1412
+#: qcsrc/client/main.qc:1432
 msgid "Please update!"
 msgstr ""
 
-#: qcsrc/client/main.qc:1415
+#: qcsrc/client/main.qc:1435
 msgid "This server is using an outdated Xonotic version."
 msgstr ""
 
-#: qcsrc/client/main.qc:1416
+#: qcsrc/client/main.qc:1436
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr ""
 
-#: qcsrc/client/main.qc:1418
+#: qcsrc/client/main.qc:1438
 #, c-format
 msgid "Welcome to %s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1434 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1454 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1436
+#: qcsrc/client/main.qc:1456
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr ""
 
-#: qcsrc/client/main.qc:1459
+#: qcsrc/client/main.qc:1479
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1463
+#: qcsrc/client/main.qc:1483
 msgid "by:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1467
+#: qcsrc/client/main.qc:1487
 msgid "This match supports"
 msgstr ""
 
-#: qcsrc/client/main.qc:1469
+#: qcsrc/client/main.qc:1489
 #, c-format
 msgid "%d players"
 msgstr ""
 
-#: qcsrc/client/main.qc:1471
+#: qcsrc/client/main.qc:1491
 #, c-format
 msgid "%d to %d players"
 msgstr ""
 
-#: qcsrc/client/main.qc:1473
+#: qcsrc/client/main.qc:1493
 #, c-format
 msgid "%d players maximum"
 msgstr ""
 
-#: qcsrc/client/main.qc:1475
+#: qcsrc/client/main.qc:1495
 #, c-format
 msgid "%d players minimum"
 msgstr ""
 
-#: qcsrc/client/main.qc:1480
+#: qcsrc/client/main.qc:1500
 msgid "Active modifications:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1483
+#: qcsrc/client/main.qc:1503
 msgid "Special gameplay tips:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1490
+#: qcsrc/client/main.qc:1510
 msgid "Server's message"
 msgstr ""
 
-#: qcsrc/client/main.qc:1584
+#: qcsrc/client/main.qc:1604
 #, c-format
 msgid "%s (not bound)"
 msgstr ""
@@ -5250,375 +5254,375 @@ msgstr ""
 msgid "Offhand blaster"
 msgstr ""
 
-#: qcsrc/common/util.qc:1420
+#: qcsrc/common/util.qc:1421
 msgid "Male"
 msgstr ""
 
-#: qcsrc/common/util.qc:1421
+#: qcsrc/common/util.qc:1422
 msgid "Female"
 msgstr ""
 
-#: qcsrc/common/util.qc:1422
+#: qcsrc/common/util.qc:1423
 msgid "Undisclosed"
 msgstr ""
 
-#: qcsrc/common/util.qc:1469
+#: qcsrc/common/util.qc:1470
 msgid "<KEY NOT FOUND>"
 msgstr ""
 
-#: qcsrc/common/util.qc:1470
+#: qcsrc/common/util.qc:1471
 msgid "<UNKNOWN KEYNUM>"
 msgstr ""
 
-#: qcsrc/common/util.qc:1475
+#: qcsrc/common/util.qc:1476
 msgid "TAB"
 msgstr ""
 
-#: qcsrc/common/util.qc:1476 qcsrc/common/util.qc:1547
+#: qcsrc/common/util.qc:1477 qcsrc/common/util.qc:1548
 #, c-format
 msgid "ENTER"
 msgstr ""
 
-#: qcsrc/common/util.qc:1477
+#: qcsrc/common/util.qc:1478
 msgid "ESCAPE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1478
+#: qcsrc/common/util.qc:1479
 msgid "SPACE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1480
+#: qcsrc/common/util.qc:1481
 msgid "BACKSPACE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1481 qcsrc/common/util.qc:1538
+#: qcsrc/common/util.qc:1482 qcsrc/common/util.qc:1539
 #, c-format
 msgid "UPARROW"
 msgstr ""
 
-#: qcsrc/common/util.qc:1482 qcsrc/common/util.qc:1533
+#: qcsrc/common/util.qc:1483 qcsrc/common/util.qc:1534
 #, c-format
 msgid "DOWNARROW"
 msgstr ""
 
-#: qcsrc/common/util.qc:1483 qcsrc/common/util.qc:1535
+#: qcsrc/common/util.qc:1484 qcsrc/common/util.qc:1536
 #, c-format
 msgid "LEFTARROW"
 msgstr ""
 
-#: qcsrc/common/util.qc:1484 qcsrc/common/util.qc:1536
+#: qcsrc/common/util.qc:1485 qcsrc/common/util.qc:1537
 #, c-format
 msgid "RIGHTARROW"
 msgstr ""
 
-#: qcsrc/common/util.qc:1486
+#: qcsrc/common/util.qc:1487
 msgid "ALT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1487
+#: qcsrc/common/util.qc:1488
 msgid "CTRL"
 msgstr ""
 
-#: qcsrc/common/util.qc:1488
+#: qcsrc/common/util.qc:1489
 msgid "SHIFT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1490 qcsrc/common/util.qc:1531
+#: qcsrc/common/util.qc:1491 qcsrc/common/util.qc:1532
 #, c-format
 msgid "INS"
 msgstr ""
 
-#: qcsrc/common/util.qc:1491 qcsrc/common/util.qc:1541
+#: qcsrc/common/util.qc:1492 qcsrc/common/util.qc:1542
 #, c-format
 msgid "DEL"
 msgstr ""
 
-#: qcsrc/common/util.qc:1492 qcsrc/common/util.qc:1534
+#: qcsrc/common/util.qc:1493 qcsrc/common/util.qc:1535
 #, c-format
 msgid "PGDN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1493 qcsrc/common/util.qc:1539
+#: qcsrc/common/util.qc:1494 qcsrc/common/util.qc:1540
 #, c-format
 msgid "PGUP"
 msgstr ""
 
-#: qcsrc/common/util.qc:1494 qcsrc/common/util.qc:1537
+#: qcsrc/common/util.qc:1495 qcsrc/common/util.qc:1538
 #, c-format
 msgid "HOME"
 msgstr ""
 
-#: qcsrc/common/util.qc:1495 qcsrc/common/util.qc:1532
+#: qcsrc/common/util.qc:1496 qcsrc/common/util.qc:1533
 #, c-format
 msgid "END"
 msgstr ""
 
-#: qcsrc/common/util.qc:1497
+#: qcsrc/common/util.qc:1498
 msgid "PAUSE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1499
+#: qcsrc/common/util.qc:1500
 msgid "NUMLOCK"
 msgstr ""
 
-#: qcsrc/common/util.qc:1500
+#: qcsrc/common/util.qc:1501
 msgid "CAPSLOCK"
 msgstr ""
 
-#: qcsrc/common/util.qc:1501
+#: qcsrc/common/util.qc:1502
 msgid "SCROLLOCK"
 msgstr ""
 
-#: qcsrc/common/util.qc:1503
+#: qcsrc/common/util.qc:1504
 msgid "SEMICOLON"
 msgstr ""
 
-#: qcsrc/common/util.qc:1504
+#: qcsrc/common/util.qc:1505
 msgid "TILDE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1505
+#: qcsrc/common/util.qc:1506
 msgid "BACKQUOTE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1506
+#: qcsrc/common/util.qc:1507
 msgid "QUOTE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1507
+#: qcsrc/common/util.qc:1508
 msgid "APOSTROPHE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1508
+#: qcsrc/common/util.qc:1509
 msgid "BACKSLASH"
 msgstr ""
 
-#: qcsrc/common/util.qc:1516
+#: qcsrc/common/util.qc:1517
 #, c-format
 msgid "F%d"
 msgstr ""
 
-#: qcsrc/common/util.qc:1526
+#: qcsrc/common/util.qc:1527
 #, c-format
 msgid "KP_%d"
 msgstr ""
 
-#: qcsrc/common/util.qc:1531 qcsrc/common/util.qc:1532
-#: qcsrc/common/util.qc:1533 qcsrc/common/util.qc:1534
-#: qcsrc/common/util.qc:1535 qcsrc/common/util.qc:1536
-#: qcsrc/common/util.qc:1537 qcsrc/common/util.qc:1538
-#: qcsrc/common/util.qc:1539 qcsrc/common/util.qc:1540
-#: qcsrc/common/util.qc:1541 qcsrc/common/util.qc:1542
-#: qcsrc/common/util.qc:1543 qcsrc/common/util.qc:1544
-#: qcsrc/common/util.qc:1545 qcsrc/common/util.qc:1546
-#: qcsrc/common/util.qc:1547 qcsrc/common/util.qc:1548
+#: qcsrc/common/util.qc:1532 qcsrc/common/util.qc:1533
+#: qcsrc/common/util.qc:1534 qcsrc/common/util.qc:1535
+#: qcsrc/common/util.qc:1536 qcsrc/common/util.qc:1537
+#: qcsrc/common/util.qc:1538 qcsrc/common/util.qc:1539
+#: qcsrc/common/util.qc:1540 qcsrc/common/util.qc:1541
+#: qcsrc/common/util.qc:1542 qcsrc/common/util.qc:1543
+#: qcsrc/common/util.qc:1544 qcsrc/common/util.qc:1545
+#: qcsrc/common/util.qc:1546 qcsrc/common/util.qc:1547
+#: qcsrc/common/util.qc:1548 qcsrc/common/util.qc:1549
 #, c-format
 msgid "KP_%s"
 msgstr ""
 
-#: qcsrc/common/util.qc:1540
+#: qcsrc/common/util.qc:1541
 #, c-format
 msgid "PERIOD"
 msgstr ""
 
-#: qcsrc/common/util.qc:1542
+#: qcsrc/common/util.qc:1543
 #, c-format
 msgid "DIVIDE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1543
+#: qcsrc/common/util.qc:1544
 #, c-format
 msgid "SLASH"
 msgstr ""
 
-#: qcsrc/common/util.qc:1544
+#: qcsrc/common/util.qc:1545
 #, c-format
 msgid "MULTIPLY"
 msgstr ""
 
-#: qcsrc/common/util.qc:1545
+#: qcsrc/common/util.qc:1546
 #, c-format
 msgid "MINUS"
 msgstr ""
 
-#: qcsrc/common/util.qc:1546
+#: qcsrc/common/util.qc:1547
 #, c-format
 msgid "PLUS"
 msgstr ""
 
-#: qcsrc/common/util.qc:1548
+#: qcsrc/common/util.qc:1549
 #, c-format
 msgid "EQUALS"
 msgstr ""
 
-#: qcsrc/common/util.qc:1553
+#: qcsrc/common/util.qc:1554
 msgid "PRINTSCREEN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1556
+#: qcsrc/common/util.qc:1557
 #, c-format
 msgid "MOUSE%d"
 msgstr ""
 
-#: qcsrc/common/util.qc:1558
+#: qcsrc/common/util.qc:1559
 msgid "MWHEELUP"
 msgstr ""
 
-#: qcsrc/common/util.qc:1559
+#: qcsrc/common/util.qc:1560
 msgid "MWHEELDOWN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1562
+#: qcsrc/common/util.qc:1563
 #, c-format
 msgid "JOY%d"
 msgstr ""
 
-#: qcsrc/common/util.qc:1565
+#: qcsrc/common/util.qc:1566
 #, c-format
 msgid "AUX%d"
 msgstr ""
 
-#: qcsrc/common/util.qc:1572
+#: qcsrc/common/util.qc:1573
 #, c-format
 msgid "DPAD_UP"
 msgstr ""
 
-#: qcsrc/common/util.qc:1572 qcsrc/common/util.qc:1573
-#: qcsrc/common/util.qc:1574 qcsrc/common/util.qc:1575
-#: qcsrc/common/util.qc:1576 qcsrc/common/util.qc:1577
-#: qcsrc/common/util.qc:1578 qcsrc/common/util.qc:1579
-#: qcsrc/common/util.qc:1580 qcsrc/common/util.qc:1581
-#: qcsrc/common/util.qc:1582 qcsrc/common/util.qc:1583
-#: qcsrc/common/util.qc:1584 qcsrc/common/util.qc:1585
-#: qcsrc/common/util.qc:1586 qcsrc/common/util.qc:1587
-#: qcsrc/common/util.qc:1588 qcsrc/common/util.qc:1589
-#: qcsrc/common/util.qc:1590 qcsrc/common/util.qc:1591
+#: qcsrc/common/util.qc:1573 qcsrc/common/util.qc:1574
+#: qcsrc/common/util.qc:1575 qcsrc/common/util.qc:1576
+#: qcsrc/common/util.qc:1577 qcsrc/common/util.qc:1578
+#: qcsrc/common/util.qc:1579 qcsrc/common/util.qc:1580
+#: qcsrc/common/util.qc:1581 qcsrc/common/util.qc:1582
+#: qcsrc/common/util.qc:1583 qcsrc/common/util.qc:1584
+#: qcsrc/common/util.qc:1585 qcsrc/common/util.qc:1586
+#: qcsrc/common/util.qc:1587 qcsrc/common/util.qc:1588
+#: qcsrc/common/util.qc:1589 qcsrc/common/util.qc:1590
+#: qcsrc/common/util.qc:1591 qcsrc/common/util.qc:1592
 #, c-format
 msgid "X360_%s"
 msgstr ""
 
-#: qcsrc/common/util.qc:1573
+#: qcsrc/common/util.qc:1574
 #, c-format
 msgid "DPAD_DOWN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1574
+#: qcsrc/common/util.qc:1575
 #, c-format
 msgid "DPAD_LEFT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1575
+#: qcsrc/common/util.qc:1576
 #, c-format
 msgid "DPAD_RIGHT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1576
+#: qcsrc/common/util.qc:1577
 #, c-format
 msgid "START"
 msgstr ""
 
-#: qcsrc/common/util.qc:1577
+#: qcsrc/common/util.qc:1578
 #, c-format
 msgid "BACK"
 msgstr ""
 
-#: qcsrc/common/util.qc:1578
+#: qcsrc/common/util.qc:1579
 #, c-format
 msgid "LEFT_THUMB"
 msgstr ""
 
-#: qcsrc/common/util.qc:1579
+#: qcsrc/common/util.qc:1580
 #, c-format
 msgid "RIGHT_THUMB"
 msgstr ""
 
-#: qcsrc/common/util.qc:1580
+#: qcsrc/common/util.qc:1581
 #, c-format
 msgid "LEFT_SHOULDER"
 msgstr ""
 
-#: qcsrc/common/util.qc:1581
+#: qcsrc/common/util.qc:1582
 #, c-format
 msgid "RIGHT_SHOULDER"
 msgstr ""
 
-#: qcsrc/common/util.qc:1582
+#: qcsrc/common/util.qc:1583
 #, c-format
 msgid "LEFT_TRIGGER"
 msgstr ""
 
-#: qcsrc/common/util.qc:1583
+#: qcsrc/common/util.qc:1584
 #, c-format
 msgid "RIGHT_TRIGGER"
 msgstr ""
 
-#: qcsrc/common/util.qc:1584
+#: qcsrc/common/util.qc:1585
 #, c-format
 msgid "LEFT_THUMB_UP"
 msgstr ""
 
-#: qcsrc/common/util.qc:1585
+#: qcsrc/common/util.qc:1586
 #, c-format
 msgid "LEFT_THUMB_DOWN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1586
+#: qcsrc/common/util.qc:1587
 #, c-format
 msgid "LEFT_THUMB_LEFT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1587
+#: qcsrc/common/util.qc:1588
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1588
+#: qcsrc/common/util.qc:1589
 #, c-format
 msgid "RIGHT_THUMB_UP"
 msgstr ""
 
-#: qcsrc/common/util.qc:1589
+#: qcsrc/common/util.qc:1590
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1590
+#: qcsrc/common/util.qc:1591
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1591
+#: qcsrc/common/util.qc:1592
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1601 qcsrc/common/util.qc:1602
-#: qcsrc/common/util.qc:1603 qcsrc/common/util.qc:1604
+#: qcsrc/common/util.qc:1602 qcsrc/common/util.qc:1603
+#: qcsrc/common/util.qc:1604 qcsrc/common/util.qc:1605
 #, c-format
 msgid "JOY_%s"
 msgstr ""
 
-#: qcsrc/common/util.qc:1601
+#: qcsrc/common/util.qc:1602
 #, c-format
 msgid "UP"
 msgstr ""
 
-#: qcsrc/common/util.qc:1602
+#: qcsrc/common/util.qc:1603
 #, c-format
 msgid "DOWN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1603
+#: qcsrc/common/util.qc:1604
 #, c-format
 msgid "LEFT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1604
+#: qcsrc/common/util.qc:1605
 #, c-format
 msgid "RIGHT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1610
+#: qcsrc/common/util.qc:1611
 #, c-format
 msgid "MIDINOTE%d"
 msgstr ""
@@ -6220,35 +6224,35 @@ msgid ""
 "menu system."
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:50
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:58
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:62
 msgid "Name under which you will appear in the game"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:74
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:75
 msgid "Text language:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:83
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:89
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:91
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:92
 msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_firstrun.qc:95
+#: qcsrc/menu/xonotic/dialog_firstrun.qc:96
 msgid "Save settings"
 msgstr ""
 
@@ -9578,19 +9582,17 @@ msgstr ""
 msgid "Replace blood and gibs with content that does not have any gore effects"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:10
-msgid "While connected language changes will be applied only to the menu,"
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
+msgid ""
+"While connected language changes will be applied only to the menu, full "
+"language changes will take effect starting from the next game"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:12
-msgid "full language changes will take effect starting from the next game"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:16
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:17
+#: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:19
 msgid "Switch language"
 msgstr ""
 

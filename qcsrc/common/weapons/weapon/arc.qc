@@ -840,7 +840,7 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	vector last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
 
 	if(autocvar_cl_arcbeam_simple)
-		Draw_CylindricLine(start, end, thickness, beam.beam_image, 0.25, -time * 3, beam.beam_color, beam.beam_alpha, DRAWFLAG_NORMAL, transformed_view_org);
+		Draw_CylindricLine(start, hit, thickness, beam.beam_image, 0.25, -time * 3, beam.beam_color, beam.beam_alpha, DRAWFLAG_NORMAL, transformed_view_org);
 	else
 	{
 		R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL, false); // DRAWFLAG_ADDITIVE
@@ -925,6 +925,11 @@ void Draw_ArcBeam(entity this)
 		// should be able to acquire this from a generalized function built
 		// into a weapon system for client code.
 
+		// Dr. Jaska: Reply to ^: Do we? If the server would decide where a
+		// client draws a beam it would mean that what the client sees will
+		// always be lagged and not where they are actually hitting in "real
+		// time" after being antilagged. Thus I don't understand the above.
+
 		// find where we are aiming
 		vector myviewangle = view_angles;
 		if (autocvar_chase_active)
@@ -948,18 +953,31 @@ void Draw_ArcBeam(entity this)
 		else
 			{ start_pos = this.origin; }
 
-		// trace forward with an estimation
-		WarpZone_TraceLine(
-			start_pos,
-			start_pos + forward * this.beam_range,
-			MOVE_NOMONSTERS,
-			this
-		);
-
+		vector start_pos_saved = start_pos;
 		int v_shot_idx;  // used later
 		(v_shot_idx = gettagindex(wepent, "shot")) || (v_shot_idx = gettagindex(wepent, "tag_shot"));
 		if(v_shot_idx && this.beam_usevieworigin == 2)
+		{
 			start_pos = gettaginfo(wepent, v_shot_idx) - '0 0 2';
+			// ignore our own player model in this traceline otherwise it may be hit with trace_fraction < 1
+			// while crouching / standing up due to view height smoothing (cl_smoothviewheight)
+			traceline(start_pos_saved, start_pos, MOVE_NORMAL, csqcplayer);
+			if (trace_fraction < 1)
+			{
+				// found an obstacle between view origin and shot tag
+				v_shot_idx = 0;
+				start_pos = trace_endpos;
+				start_pos_saved = start_pos;
+			}
+		}
+
+		// trace forward with an estimation
+		WarpZone_TraceLine(
+			start_pos_saved,
+			start_pos_saved + forward * this.beam_range,
+			MOVE_NOMONSTERS,
+			this
+		);
 
 		// untransform in case our trace went through a warpzone
 		vector end_pos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
@@ -985,7 +1003,10 @@ void Draw_ArcBeam(entity this)
 		start_pos = trace_endpos;
 
 		// calculate the aim direction now
-		wantdir = normalize(end_pos - start_pos);
+		if (vdist(end_pos - start_pos, >, 0.001))
+			wantdir = normalize(end_pos - start_pos);
+		else
+			wantdir = view_forward;
 
 		if(!this.beam_initialized)
 		{
@@ -1161,10 +1182,7 @@ void Draw_ArcBeam(entity this)
 	// visual effects for startpoint and endpoint
 	if(this.beam_hiteffect)
 	{
-		// FIXME we really should do this on the server so it actually
-		// matches gameplay. What this client side stuff is doing is no
-		// more than guesswork.
-		if((trace_ent || trace_fraction < 1) && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		if(trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		pointparticles(
 			this.beam_hiteffect,
 			last_origin,
