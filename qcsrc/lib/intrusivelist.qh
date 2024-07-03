@@ -223,8 +223,8 @@ void IL_INIT(IntrusiveList this)
 		if (idx >= IL_MAX) idx -= IL_MAX;
 		int id = idx;
 		idx *= 2;
-		if (!il_links[idx]) {
-			il_links[idx] = this;
+		if (!il_links[id]) {
+			il_links[id] = this;
 			nextfld = il_links_flds[idx + 0];
 			prevfld = il_links_flds[idx + 1];
 			this.il_id = id;
