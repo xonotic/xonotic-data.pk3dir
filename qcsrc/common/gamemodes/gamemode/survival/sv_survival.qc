@@ -11,11 +11,18 @@ void nades_Clear(entity player);
 entity survivalStatuses;
 void SurvivalStatuses_Init();
 
-void SurvivalStatuses_Send()
+#define STATUS_SEND_RESET   1
+#define STATUS_SEND_HUNTERS 2
+#define STATUS_SEND_ALL     3
+
+void SurvivalStatuses_Send(int sendflags)
 {
-	// SendFlags can be set to anything != 0, SurvivalStatuses_SendEntity won't use its value
-	// Dr. Jaska: this was a lie, the flags were not reset until now
-	survivalStatuses.SendFlags = 1;
+	// If SendFlags is set to non-0 it is networked
+	//
+	// STATUS_SEND_RESET   or BIT(0) or 1 or 0000 0001 -> set all players as survivors
+	// STATUS_SEND_HUNTERS or BIT(1) or 2 or 0000 0010 -> reveal hunters to hunters or to all if round has ended
+	// STATUS_SEND_ALL     or ^both^ or 3 or 0000 0011 -> both of the above
+	survivalStatuses.SendFlags = sendflags;
 }
 
 bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
@@ -23,18 +30,20 @@ bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
 	Stream out = MSG_ENTITY;
 	WriteHeader(out, ENT_CLIENT_SURVIVALSTATUSES);
 
-	// TODO: optimize this instead of always setting it on
-	sendflags = BIT(0); // reset all flags and make all players survivors
-
-	if ((dest.survival_status == SURV_STATUS_HUNTER) || round_handler_AwaitingNextRound())
-		sendflags |= BIT(1); // send hunter statuses
+	// always send hunters their own status and their allies
+	if (dest.survival_status == SURV_STATUS_HUNTER)
+		sendflags |= STATUS_SEND_HUNTERS;
 
 	serialize(byte, out, sendflags);
-	if (sendflags & BIT(1)) {
-		for (int i = 1; i <= maxclients; i += 8) {
+	if (sendflags & STATUS_SEND_HUNTERS)
+	{
+		for (int i = 1; i <= maxclients; i += 8)
+		{
 			int f = 0;
 			entity e = edict_num(i);
-			for (int b = 0; b < 8; ++b, e = nextent(e)) {
+
+			for (int b = 0; b < 8; ++b, e = nextent(e))
+			{
 				bool is_hunter = (INGAME(e) && e.survival_status == SURV_STATUS_HUNTER);
 				if (is_hunter)
 					f |= BIT(b);
@@ -98,7 +107,7 @@ float Surv_CheckWinner()
 		allowed_to_spawn = false;
 		game_stopped = true;
 		round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
-		SurvivalStatuses_Send();
+		SurvivalStatuses_Send(STATUS_SEND_HUNTERS);
 		return 1;
 	}
 
@@ -156,7 +165,7 @@ float Surv_CheckWinner()
 	allowed_to_spawn = false;
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
-	SurvivalStatuses_Send();
+	SurvivalStatuses_Send(STATUS_SEND_HUNTERS);
 
 	FOREACH_CLIENT(true,
 	{
@@ -191,7 +200,7 @@ void Surv_RoundStart()
 		total_hunters++;
 		it.survival_status = SURV_STATUS_HUNTER;
 	});
-	SurvivalStatuses_Send();
+	SurvivalStatuses_Send(STATUS_SEND_RESET);
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
@@ -335,7 +344,7 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 		}
 	});
 	bot_relinkplayerlist();
-	SurvivalStatuses_Send();
+	SurvivalStatuses_Send(STATUS_SEND_RESET);
 	return true;
 }
 
