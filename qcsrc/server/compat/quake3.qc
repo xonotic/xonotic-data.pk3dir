@@ -257,7 +257,7 @@ spawnfunc(target_score)
 }
 
 #define FRAGSFILTER_REMOVER BIT(0)
-#define FRAGSFILTER_RUNONCE BIT(1) // unused
+#define FRAGSFILTER_RUNONCE BIT(1) // introduced but now unused by q3df
 #define FRAGSFILTER_SILENT  BIT(2)
 #define FRAGSFILTER_RESET   BIT(3)
 
