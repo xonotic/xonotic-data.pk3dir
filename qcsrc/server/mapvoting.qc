@@ -69,9 +69,9 @@ int GameTypeVote_AvailabilityStatus(string type_name)
 	if( type == NULL )
 		return flag;
 
-	if ( autocvar_nextmap != "" )
+	if ( GET_NEXTMAP != "" )
 	{
-		if ( !MapInfo_Get_ByName(autocvar_nextmap, false, NULL) )
+		if ( !MapInfo_Get_ByName(GET_NEXTMAP, false, NULL) )
 			return flag;
 		if (!(MapInfo_Map_supportedGametypes & type.gametype_flags))
 			return flag;
@@ -382,7 +382,7 @@ bool MapVote_SendEntity(entity this, entity to, int sf)
 		{
 			// gametype vote
 			WriteByte(MSG_ENTITY, BIT(0)); // gametypevote_flags
-			WriteString(MSG_ENTITY, autocvar_nextmap);
+			WriteString(MSG_ENTITY, GET_NEXTMAP);
 		}
 		else if ( autocvar_sv_vote_gametype )
 		{
@@ -494,9 +494,9 @@ bool MapVote_Finished(int mappos)
 		if ( GameTypeVote_Finished(mappos) )
 		{
 			gametypevote = false;
-			if(autocvar_nextmap != "")
+			if(GET_NEXTMAP != "")
 			{
-				Map_Goto_SetStr(autocvar_nextmap);
+				Map_Goto_SetStr(GET_NEXTMAP);
 				Map_Goto(0);
 				alreadychangedlevel = true;
 				strfree(voted_gametype_string);
@@ -754,7 +754,7 @@ void MapVote_Think()
 		}
 
 		if(autocvar_sv_vote_gametype) { GameTypeVote_Start(); }
-		else if(autocvar_nextmap == "") { MapVote_Init(); }
+		else if(GET_NEXTMAP == "") { MapVote_Init(); }
 	}
 
 	MapVote_Tick();

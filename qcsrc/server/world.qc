@@ -310,7 +310,6 @@ void cvar_changes_init()
 		BADCVAR("g_tmayhem_teams");
 		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
-		BADCVAR("nextmap");
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
 		BADCVAR("g_mapinfo_q3compat");
@@ -918,7 +917,7 @@ spawnfunc(worldspawn)
 	if(autocvar_sv_eventlog)
 		GameLogInit(); // requires matchid to be set
 
-	cvar_set("nextmap", "");
+	SET_NEXTMAP("")
 
 	SetDefaultAlpha();
 

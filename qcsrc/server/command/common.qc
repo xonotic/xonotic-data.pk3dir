@@ -12,6 +12,7 @@
 #include <server/chat.qh>
 #include <server/client.qh>
 #include <server/command/common.qh>
+#include <server/command/vote.qh>
 #include <server/mutators/_mod.qh>
 #include <server/scores.qh>
 #include <server/world.qh>
@@ -530,16 +531,29 @@ void CommonCommand_lsmaps(int request, entity caller)
 	}
 }
 
-void CommonCommand_nextmap(int request, entity caller)
+void CommonCommand_nextmap(int request, entity caller, int argc)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (autocvar_nextmap != "")
-				print_to(caller, autocvar_nextmap);
-			else
-				print_to(caller, "none");
+			//nextmap with mapname arg
+			if (argc >= 2)
+			{
+				if (argc > 2)
+					print_to(caller, "nextmap only takes 1 argument");
+
+				string map = ValidateMap(argv(1), NULL);
+				if (map != "")
+					SET_NEXTMAP(map)
+			}
+			else // nextmap without args
+			{
+				if (GET_NEXTMAP != "")
+					print_to(caller, GET_NEXTMAP);
+				else
+					print_to(caller, "none");
+			}
 			return;  // never fall through to usage
 		}
 

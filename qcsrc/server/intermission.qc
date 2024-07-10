@@ -351,11 +351,11 @@ float DoNextMapOverride(float reinit)
 		alreadychangedlevel = true;
 		return true;
 	}
-	if(autocvar_nextmap != "")
+	if(GET_NEXTMAP != "")
 	{
 		string m;
-		m = GameTypeVote_MapInfo_FixName(autocvar_nextmap);
-		cvar_set("nextmap",m);
+		m = GameTypeVote_MapInfo_FixName(GET_NEXTMAP);
+		SET_NEXTMAP(m)
 
 		if(!m || gametypevote)
 			return false;
@@ -407,7 +407,7 @@ string GotoMap(string m)
 	if (!autocvar_sv_vote_gametype)
 	if(!MapInfo_CheckMap(m))
 		return "The map you suggested does not support the current game mode.";
-	cvar_set("nextmap", m);
+	SET_NEXTMAP(m)
 	if (!intermission_running)
 		cvar_set("_endmatch", "1");
 	if(mapvote_initialized || alreadychangedlevel)

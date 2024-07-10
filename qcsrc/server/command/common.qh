@@ -122,7 +122,7 @@ void CommonCommand_ladder(int request, entity caller);
 
 void CommonCommand_lsmaps(int request, entity caller);
 
-void CommonCommand_nextmap(int request, entity caller);
+void CommonCommand_nextmap(int request, entity caller, int argc);
 
 void CommonCommand_printmaplist(int request, entity caller);
 
@@ -152,7 +152,7 @@ COMMON_COMMAND(editmob, "Modifies a monster or all monsters") { CommonCommand_ed
 COMMON_COMMAND(info, "Request for unique server information set up by admin") { CommonCommand_info(request, caller, arguments); }
 COMMON_COMMAND(ladder, "Get information about top players if supported") { CommonCommand_ladder(request, caller); }
 COMMON_COMMAND(lsmaps, "List maps which can be used with the current game mode") { CommonCommand_lsmaps(request, caller); }
-COMMON_COMMAND(nextmap, "Set/Query nextmap") { CommonCommand_nextmap(request, caller); }
+COMMON_COMMAND(nextmap, "Set/Query nextmap") { CommonCommand_nextmap(request, caller, arguments); }
 COMMON_COMMAND(printmaplist, "Display full server maplist reply") { CommonCommand_printmaplist(request, caller); }
 COMMON_COMMAND(rankings, "Print information about rankings") { CommonCommand_rankings(request, caller); }
 COMMON_COMMAND(records, "Print records for the current gametype") { CommonCommand_records(request, caller); }
