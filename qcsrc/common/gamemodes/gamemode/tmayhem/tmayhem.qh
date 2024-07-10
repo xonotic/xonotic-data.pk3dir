@@ -28,10 +28,10 @@ CLASS(tmayhem, Gametype)
 	}
 	METHOD(tmayhem, m_isForcedSupported, bool(Gametype this))
 	{
-		if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags)){
+		if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.gametype_flags)){
 			return true;
 		}
-		if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.m_flags)){
+		if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.gametype_flags)){
 			return true;
 		}
 		return false;

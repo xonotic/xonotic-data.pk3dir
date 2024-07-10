@@ -73,24 +73,25 @@ int GameTypeVote_AvailabilityStatus(string type_name)
 	{
 		if ( !MapInfo_Get_ByName(autocvar_nextmap, false, NULL) )
 			return flag;
-		if (!(MapInfo_Map_supportedGametypes & type.m_flags))
+		if (!(MapInfo_Map_supportedGametypes & type.gametype_flags))
 			return flag;
 	}
 
 	return flag | GTV_AVAILABLE;
 }
 
-int GameTypeVote_GetMask()
+vector GameTypeVote_GetMask()
 {
-	int n, j, gametype_mask;
+	int n, j;
+	vector gametype_mask;
 	n = tokenizebyseparator(autocvar_sv_vote_gametype_options, " ");
 	n = min(MAPVOTE_COUNT, n);
-	gametype_mask = 0;
+	gametype_mask = '0 0 0';
 	for(j = 0; j < n; ++j)
-		gametype_mask |= GameTypeVote_Type_FromString(argv(j)).m_flags;
+		gametype_mask |= GameTypeVote_Type_FromString(argv(j)).gametype_flags;
 
-	if (gametype_mask == 0)
-		gametype_mask |= MapInfo_CurrentGametype().m_flags;
+	if (gametype_mask == '0 0 0')
+		gametype_mask |= MapInfo_CurrentGametype().gametype_flags;
 
 	return gametype_mask;
 }
