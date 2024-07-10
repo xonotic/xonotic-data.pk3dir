@@ -455,6 +455,9 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(SURVIVAL_HUNTER_WIN,                     N_CONSOLE,  0, 0, "", "",           "",                     _("^K1Hunters^BG win the round"), "")
     MSG_INFO_NOTIF(SURVIVAL_SURVIVOR_WIN,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^F1Survivors^BG win the round"), "")
 
+    MSG_INFO_NOTIF(INFECTION_INFECTED_WIN,                  N_CONSOLE,  0, 0, "", "",           "",                     _("^K1Infected^BG wins the round"), "")
+    MSG_INFO_NOTIF(INFECTION_SURVIVOR_WIN,                  N_CONSOLE,  0, 0, "", "",           "",                     _("^F1Survivors^BG win the round"), "")
+
     MSG_INFO_NOTIF(TEAMCHANGE_LARGERTEAM,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^BGYou cannot change to a larger team"), "")
     MSG_INFO_NOTIF(TEAMCHANGE_NOTALLOWED,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^BGYou are not allowed to change teams"), "")
 
@@ -799,6 +802,11 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(SURVIVAL_HUNTER_WIN,               N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^K1Hunters^BG win the round"), "")
     MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR,                 N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  BOLD(_("^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!")), "")
     MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR_WIN,             N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^F1Survivors^BG win the round"), "")
+
+    MSG_CENTER_NOTIF(INFECTION_INFECTED,                N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  BOLD(_("^BGYou are ^K1infected^BG! Eliminate the survivor(s)!")), "")
+    MSG_CENTER_NOTIF(INFECTION_INFECTED_WIN,            N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^K1Infected^BG wins the round"), "")
+    MSG_CENTER_NOTIF(INFECTION_SURVIVOR,                N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  BOLD(_("^BGYou are a ^F1survivor^BG! Don't get infected!")), "")
+    MSG_CENTER_NOTIF(INFECTION_SURVIVOR_WIN,            N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^F1Survivors^BG win the round"), "")
 
     MULTITEAM_CENTER(TEAMCHANGE,                        N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Changing to ^TC^TT^K1 in ^COUNT"), "", NAME)
     MSG_CENTER_NOTIF(TEAMCHANGE_AUTO,                   N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Changing team in ^COUNT"), "")

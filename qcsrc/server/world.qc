@@ -309,6 +309,7 @@ void cvar_changes_init()
 		BADCVAR("g_tmayhem");
 		BADCVAR("g_tmayhem_teams");
 		BADCVAR("g_vip");
+		BADCVAR("g_infection");
 		BADCVAR("leadlimit");
 		BADCVAR("nextmap");
 		BADCVAR("teamplay");

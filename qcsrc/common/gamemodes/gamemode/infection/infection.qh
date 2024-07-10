@@ -1,0 +1,30 @@
+#pragma once
+
+#include <common/gamemodes/gamemode/deathmatch/deathmatch.qh>
+#include <common/gamemodes/gamemode/tdm/tdm.qh>
+#include <common/mapinfo.qh>
+
+CLASS(Infection, Gametype)
+	INIT(Infection)
+	{
+		this.gametype_init(this, _("Infection"),"inf","g_infection",GAMETYPE_FLAG_TEAMPLAY,"","timelimit=30",_("Survivors must avoid getting infected"));
+	}
+	METHOD(Infection, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+	{
+		return true;
+	}
+	METHOD(Infection, m_isForcedSupported, bool(Gametype this))
+	{
+		if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.gametype_flags))
+		{
+			return true;
+		}
+		if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.gametype_flags))
+		{
+			return true;
+		}
+		return false;
+	}
+ENDCLASS(Infection)
+REGISTER_GAMETYPE(INFECTION, NEW(Infection));
+#define g_infection IS_GAMETYPE(TEAM_DEATHMATCH)

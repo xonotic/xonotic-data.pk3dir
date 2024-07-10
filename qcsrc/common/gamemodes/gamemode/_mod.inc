@@ -8,6 +8,7 @@
 #include <common/gamemodes/gamemode/domination/_mod.inc>
 #include <common/gamemodes/gamemode/duel/_mod.inc>
 #include <common/gamemodes/gamemode/freezetag/_mod.inc>
+#include <common/gamemodes/gamemode/infection/_mod.inc>
 #include <common/gamemodes/gamemode/invasion/_mod.inc>
 #include <common/gamemodes/gamemode/keepaway/_mod.inc>
 #include <common/gamemodes/gamemode/keyhunt/_mod.inc>

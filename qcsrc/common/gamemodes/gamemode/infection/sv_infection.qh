@@ -1,0 +1,14 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+void Infection_Initialize();
+
+REGISTER_MUTATOR(inf, false)
+{
+    MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		Infection_Initialize();
+	}
+	return false;
+}
