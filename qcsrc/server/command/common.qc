@@ -530,6 +530,30 @@ void CommonCommand_lsmaps(int request, entity caller)
 	}
 }
 
+void CommonCommand_nextmap(int request, entity caller)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (autocvar_nextmap != "")
+				print_to(caller, autocvar_nextmap);
+			else
+				print_to(caller, "none");
+			return;  // never fall through to usage
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " nextmap"));
+			print_to(caller, "  Without arguments it prints current nextmap if one is set");
+			print_to(caller, "  With arguments it attempts to set nextmap");
+			return;
+		}
+	}
+}
+
 void CommonCommand_printmaplist(int request, entity caller)
 {
 	switch (request)
