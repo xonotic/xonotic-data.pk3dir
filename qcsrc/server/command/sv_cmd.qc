@@ -1169,6 +1169,43 @@ void GameCommand_moveplayer(int request, int argc)
 	}
 }
 
+void GameCommand_nextmap(int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			//nextmap with mapname arg
+			if (argc >= 2)
+			{
+				if (argc > 2)
+					LOG_HELP("Warning: nextmap only takes 1 argument");
+
+				string map = ValidateMap(argv(1), NULL);
+				if (map != "")
+					set_nextmap(map);
+			}
+			else // nextmap without args
+			{
+				if (get_nextmap() != "")
+					LOG_HELP(get_nextmap());
+				else
+					LOG_HELP("none");
+			}
+			return;  // never fall through to usage
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd nextmap [mapname]");
+			LOG_HELP("  Without arguments it prints current nextmap if one is set");
+			LOG_HELP("  With arguments it attempts to set nextmap");
+			return;
+		}
+	}
+}
+
 void GameCommand_nospectators(int request)
 {
 	switch (request)
@@ -1761,6 +1798,7 @@ SERVER_COMMAND(gotomap, "Simple command to switch to another map") { GameCommand
 SERVER_COMMAND(lockteams, "Disable the ability for players to switch or enter teams") { GameCommand_lockteams(request); }
 SERVER_COMMAND(make_mapinfo, "Automatically rebuild mapinfo files") { GameCommand_make_mapinfo(request); }
 SERVER_COMMAND(moveplayer, "Change the team/status of a player") { GameCommand_moveplayer(request, arguments); }
+SERVER_COMMAND(nextmap, "Set/Query nextmap") { GameCommand_nextmap(request, arguments); }
 SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { GameCommand_nospectators(request); }
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }

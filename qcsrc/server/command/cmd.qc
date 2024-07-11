@@ -142,6 +142,42 @@ void ClientCommand_clientversion(entity caller, int request, int argc)  // inter
 	}
 }
 
+void ClientCommand_nextmap(entity caller, int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			//nextmap with mapname arg
+			if (argc >= 2)
+			{
+				if (argc > 2)
+					sprint(caller, "Warning: nextmap only takes 1 argument\n");
+
+				// TODO: Can this workaround be removed?
+				stuffcmd(caller, strcat("vcall nextmap ", argv(1)));
+			}
+			else // nextmap without args
+			{
+				if (get_nextmap() != "")
+					sprint(caller, get_nextmap(), "\n");
+				else
+					sprint(caller, "none\n");
+			}
+			return;  // never fall through to usage
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, strcat("\nUsage:^3 cmd nextmap [mapname]\n"));
+			sprint(caller, "  Without arguments it prints current nextmap if one is set\n");
+			sprint(caller, "  With arguments it vote calls to set nextmap\n");
+			return;
+		}
+	}
+}
+
 void ClientCommand_mv_getpicture(entity caller, int request, int argc)  // internal command, used only by code
 {
 	switch (request)
@@ -929,6 +965,7 @@ void ClientCommand_(entity caller, int request)
 	CLIENT_COMMAND("kill", ClientCommand_kill(ent, request), "Become a member of the dead") \
 	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
+	CLIENT_COMMAND("nextmap", ClientCommand_nextmap(ent, request, arguments), "Vote call/Query nextmap") \
 	CLIENT_COMMAND("physics", ClientCommand_physics(ent, request, arguments), "Change physics set") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(ent, request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("say", ClientCommand_say(ent, request, arguments, command), "Print a message to chat to all players") \

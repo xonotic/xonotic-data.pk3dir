@@ -531,43 +531,6 @@ void CommonCommand_lsmaps(int request, entity caller)
 	}
 }
 
-void CommonCommand_nextmap(int request, entity caller, int argc)
-{
-	switch (request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			//nextmap with mapname arg
-			if (argc >= 2)
-			{
-				if (argc > 2)
-					print_to(caller, "nextmap only takes 1 argument");
-
-				string map = ValidateMap(argv(1), NULL);
-				if (map != "")
-					set_nextmap(map);
-			}
-			else // nextmap without args
-			{
-				if (get_nextmap() != "")
-					print_to(caller, get_nextmap());
-				else
-					print_to(caller, "none");
-			}
-			return;  // never fall through to usage
-		}
-
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " nextmap"));
-			print_to(caller, "  Without arguments it prints current nextmap if one is set");
-			print_to(caller, "  With arguments it attempts to set nextmap");
-			return;
-		}
-	}
-}
-
 void CommonCommand_printmaplist(int request, entity caller)
 {
 	switch (request)
