@@ -1220,6 +1220,14 @@ void ClientConnect(entity this)
 			setpause(0);
 		localcmd("\nsv_hook_firstjoin\n");
 	}
+
+	// Network nextmap if set
+	if (_nextmap != "")
+	{
+		msg_entity = this;
+		WriteHeader(MSG_ONE, setnextmap);
+		WriteString(MSG_ONE, get_nextmap());
+	}
 }
 
 .string shootfromfixedorigin;
