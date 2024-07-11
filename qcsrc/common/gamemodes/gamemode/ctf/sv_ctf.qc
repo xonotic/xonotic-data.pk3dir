@@ -165,7 +165,20 @@ void ctf_FlagcarrierWaypoints(entity player)
 	{
 		if(!player.wps_enemyflagcarrier)
 		{
-			entity wp = WaypointSprite_Spawn(((ctf_oneflag) ? WP_FlagCarrier : WP_FlagCarrierEnemy), 0, 0, player, FLAG_WAYPOINT_OFFSET, NULL, 0, player, wps_enemyflagcarrier, true, RADARICON_FLAG);
+			entity base_wp = WP_FlagCarrier;
+			if (!ctf_oneflag)
+			{
+				switch (player.team)
+				{
+					case NUM_TEAM_1: base_wp = WP_FlagCarrierEnemyRed; break;
+					case NUM_TEAM_2: base_wp = WP_FlagCarrierEnemyBlue; break;
+					case NUM_TEAM_3: base_wp = WP_FlagCarrierEnemyYellow; break;
+					case NUM_TEAM_4: base_wp = WP_FlagCarrierEnemyPink; break;
+					default: base_wp = WP_FlagCarrierEnemyNeutral; break;
+				}
+			}
+			entity wp = WaypointSprite_Spawn(base_wp, 0, 0, player, FLAG_WAYPOINT_OFFSET, NULL,
+				0, player, wps_enemyflagcarrier, true, RADARICON_FLAG);
 			wp.colormod = WPCOLOR_ENEMYFC(player.team);
 			setcefc(wp, ctf_Stalemate_Customize);
 
@@ -371,7 +384,18 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 
 	// waypoints
 	if(autocvar_g_ctf_flag_dropped_waypoint) {
-		entity wp = WaypointSprite_Spawn(WP_FlagDropped, 0, 0, flag, FLAG_WAYPOINT_OFFSET, NULL, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, true, RADARICON_FLAG);
+		entity base_wp;
+		switch (flag.team)
+		{
+			case NUM_TEAM_1: base_wp = WP_FlagDroppedRed; break;
+			case NUM_TEAM_2: base_wp = WP_FlagDroppedBlue; break;
+			case NUM_TEAM_3: base_wp = WP_FlagDroppedYellow; break;
+			case NUM_TEAM_4: base_wp = WP_FlagDroppedPink; break;
+			default: base_wp = WP_FlagDroppedNeutral; break;
+		}
+		int wp_team = ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team);
+		entity wp = WaypointSprite_Spawn(base_wp, 0, 0, flag, FLAG_WAYPOINT_OFFSET, NULL,
+			wp_team, flag, wps_flagdropped, true, RADARICON_FLAG);
 		wp.colormod = WPCOLOR_DROPPEDFLAG(flag.team);
 	}
 
@@ -889,7 +913,20 @@ void ctf_CheckStalemate()
 		{
 			if((tmp_entity.owner) && (!tmp_entity.owner.wps_enemyflagcarrier))
 			{
-				entity wp = WaypointSprite_Spawn(((ctf_oneflag) ? WP_FlagCarrier : WP_FlagCarrierEnemy), 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, NULL, 0, tmp_entity.owner, wps_enemyflagcarrier, true, RADARICON_FLAG);
+				entity base_wp = WP_FlagCarrier;
+				if (!ctf_oneflag)
+				{
+					switch (tmp_entity.owner.team)
+					{
+						case NUM_TEAM_1: base_wp = WP_FlagCarrierEnemyRed; break;
+						case NUM_TEAM_2: base_wp = WP_FlagCarrierEnemyBlue; break;
+						case NUM_TEAM_3: base_wp = WP_FlagCarrierEnemyYellow; break;
+						case NUM_TEAM_4: base_wp = WP_FlagCarrierEnemyPink; break;
+						default: base_wp = WP_FlagCarrierEnemyNeutral; break;
+					}
+				}
+				entity wp = WaypointSprite_Spawn(base_wp, 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, NULL,
+					0, tmp_entity.owner, wps_enemyflagcarrier, true, RADARICON_FLAG);
 				wp.colormod = WPCOLOR_ENEMYFC(tmp_entity.owner.team);
 				setcefc(tmp_entity.owner.wps_enemyflagcarrier, ctf_Stalemate_Customize);
 			}
