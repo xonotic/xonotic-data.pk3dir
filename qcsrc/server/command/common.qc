@@ -545,12 +545,12 @@ void CommonCommand_nextmap(int request, entity caller, int argc)
 
 				string map = ValidateMap(argv(1), NULL);
 				if (map != "")
-					SET_NEXTMAP(map)
+					set_nextmap(map);
 			}
 			else // nextmap without args
 			{
-				if (GET_NEXTMAP != "")
-					print_to(caller, GET_NEXTMAP);
+				if (get_nextmap() != "")
+					print_to(caller, get_nextmap());
 				else
 					print_to(caller, "none");
 			}

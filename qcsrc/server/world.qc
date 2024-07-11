@@ -917,7 +917,7 @@ spawnfunc(worldspawn)
 	if(autocvar_sv_eventlog)
 		GameLogInit(); // requires matchid to be set
 
-	SET_NEXTMAP("")
+	set_nextmap("");
 
 	SetDefaultAlpha();
 

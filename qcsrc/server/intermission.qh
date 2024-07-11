@@ -3,11 +3,22 @@
 bool autocvar_lastlevel;
 
 string _nextmap;
-// FIXME: dont do this
-#define GET_NEXTMAP _nextmap
-#define SET_NEXTMAP(x) \
-strfree(_nextmap); \
-strcpy(_nextmap, x);
+
+// no reason for get_nextmap to be a function for now
+// macro to not have an unnecessary function call stackframe
+#define get_nextmap() _nextmap
+
+REGISTER_NET_TEMP(setnextmap)
+void set_nextmap(string mapname)
+{
+	if (mapname != "")
+		strcpy(_nextmap, mapname);
+	else
+		strfree(_nextmap);
+
+	WriteHeader(MSG_ALL, setnextmap);
+	WriteString(MSG_ALL, mapname);
+}
 
 bool autocvar_samelevel;
 bool autocvar_sv_autoscreenshot;

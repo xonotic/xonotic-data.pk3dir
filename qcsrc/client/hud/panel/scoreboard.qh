@@ -7,6 +7,18 @@ float autocvar_hud_panel_scoreboard_namesize = 15;
 
 string _nextmap;
 
+REGISTER_NET_TEMP(setnextmap)
+NET_HANDLE(setnextmap, bool isNew)
+{
+	string mapname = ReadString();
+	if (mapname != "")
+		strcpy(_nextmap, mapname);
+	else
+		strfree(_nextmap);
+
+	return true;
+}
+
 bool sb_showscores; // set by +showscores engine command
 
 bool scoreboard_active;
