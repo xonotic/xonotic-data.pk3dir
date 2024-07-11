@@ -2420,6 +2420,12 @@ void Scoreboard_Draw()
 	sb_gameinfo_type_fontsize = hud_fontsize * 2.5;
 	sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
 
+	if(_nextmap != "")
+	{
+		str = strcat("^7 ", _("Next map:")," ^9" , _nextmap);
+		drawcolorcodedstring(pos + '-3.5 6 0', str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
+	}
+
 	// Game Info: Game Type
 	if (scoreboard_ui_enabled == 2)
 		str = _("Team Selection");

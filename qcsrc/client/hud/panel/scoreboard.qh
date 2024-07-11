@@ -5,6 +5,8 @@ bool autocvar_cl_deathscoreboard;
 string autocvar_scoreboard_columns;
 float autocvar_hud_panel_scoreboard_namesize = 15;
 
+string _nextmap;
+
 bool sb_showscores; // set by +showscores engine command
 
 bool scoreboard_active;
