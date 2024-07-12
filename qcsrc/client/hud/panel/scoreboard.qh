@@ -16,6 +16,10 @@ NET_HANDLE(setnextmap, bool isNew)
 	else
 		strfree(_nextmap);
 
+	// If nextmap cvar exists then update its value
+	if (cvar_type("nextmap"))
+		cvar_settemp("nextmap", mapname);
+
 	return true;
 }
 
