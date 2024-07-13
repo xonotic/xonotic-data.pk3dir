@@ -2043,7 +2043,8 @@ void Join(entity this, bool queued_join)
 
 	TRANSMUTE(Player, this);
 
-	if(queued_join)
+	if(queued_join
+	&& TeamBalance_AreEqual(this, true)) // if a player couldn't tag in for balance, don't join them here as it would cause a stack
 	{
 		// First we must put queued player(s) in their team(s) (they chose first).
 		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && it.wants_join,

@@ -19,7 +19,16 @@ void ClientKill_Now_TeamChange(entity this)
 {
 	if (this.killindicator_teamchange == -1)
 	{
-		TeamBalance_JoinBestTeam(this);
+		if (this.team > 0)
+			// ensure team is valid immediately so ClientKill_Now() -> Damage() can update score without error
+			TeamBalance_JoinBestTeam(this);
+		else
+		{
+			// defer autoselect to Join(), after any queued players were joined to avoid 2 players on same team
+			// when the first player(s) chose specific teams and the last player chose autoselect (they skip the queue)
+			this.team = -1;
+			this.team_selected = -1; // don't stop at ShowTeamSelection()
+		}
 	}
 	else if (this.killindicator_teamchange == -2)
 	{
