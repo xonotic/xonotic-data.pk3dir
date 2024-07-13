@@ -32,7 +32,8 @@ void ClientKill_Now_TeamChange(entity this)
 	}
 	else if (this.killindicator_teamchange == -2)
 	{
-		if (blockSpectators)
+		if (!autocvar_sv_spectate)
+			// shouldn't get here because of condition in ClientCommand_spectate()
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 
 		if (this.wants_join)

@@ -1171,10 +1171,9 @@ void ClientConnect(entity this)
 	bot_relinkplayerlist();
 
 	CS(this).spectatortime = time;
-	if (blockSpectators)
-	{
+	if (!autocvar_sv_spectate)
+		// no centreprint here: player forced to join, or informed of why they can't via centreprint
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-	}
 
 	CS(this).jointime = time;
 
@@ -2785,14 +2784,20 @@ void PlayerFrame (entity this)
 	anticheat_prethink(this);
 
 	// Check if spectating is allowed
-	if (!autocvar_sv_spectate) blockSpectators = 1;
-
-	if (blockSpectators && IS_REAL_CLIENT(this)
-	&& (IS_SPEC(this) || IS_OBSERVER(this)) && !INGAME(this)
-	&& time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime))
+	if (!autocvar_sv_spectate && IS_REAL_CLIENT(this)
+	&& (IS_SPEC(this) || IS_OBSERVER(this)) && !INGAME(this))
 	{
-		if (dropclient_schedule(this))
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
+		float cutoff = CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime;
+		if (time > cutoff + MIN_SPEC_TIME * 0.5)
+		{
+			// sv_spectate was disabled recently (or the server was stalled far too long)
+			CS(this).spectatortime = time; // reset the grace period
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+		}
+		else if (time > cutoff)
+			if (dropclient_schedule(this))
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
 	}
 
 	// Check for nameless players

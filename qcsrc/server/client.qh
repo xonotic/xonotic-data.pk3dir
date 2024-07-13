@@ -54,7 +54,7 @@ int autocvar_sv_name_maxlength = 64;
 string autocvar_sv_quickmenu_file;
 bool autocvar_sv_servermodelsonly;
 bool autocvar_sv_showspectators;
-int autocvar_sv_spectate;
+bool autocvar_sv_spectate;
 bool autocvar_sv_teamnagger;
 float autocvar_sv_player_scale;
 
@@ -333,7 +333,6 @@ const int RESPAWN_FORCE = BIT(0);
 const int RESPAWN_SILENT = BIT(1);
 const int RESPAWN_DENY = BIT(2);
 
-float blockSpectators; // if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
 .float spectatortime; // point in time since the client is spectating or observing
 
 .bool player_blocked;

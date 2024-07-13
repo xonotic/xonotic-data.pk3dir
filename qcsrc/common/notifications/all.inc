@@ -801,6 +801,9 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(SEQUENCE_COUNTER,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGThere are more to go..."), "")
     MSG_CENTER_NOTIF(SEQUENCE_COUNTER_FEWMORE,          N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^BGOnly %s^BG more to go..."), "")
 
+    MSG_CENTER_NOTIF(SPECTATE_WARNING,                  N_ENABLE,    0, 1, "f1secs",         CPID_PREVENT_JOIN,      "0 0",  _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!"), "") // same string as INFO_SPECTATE_WARNING
+    MSG_CENTER_NOTIF(SPECTATE_NOTALLOWED,               N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F2Spectating isn't allowed at this time!"), "")
+
     MSG_CENTER_NOTIF(SUPERWEAPON_BROKEN,                N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have broken down"), "")
     MSG_CENTER_NOTIF(SUPERWEAPON_LOST,                  N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have been lost"), "")
     MSG_CENTER_NOTIF(SUPERWEAPON_PICKUP,                N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2You now have a superweapon"), "")
