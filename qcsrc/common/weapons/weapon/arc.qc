@@ -386,7 +386,7 @@ void W_Arc_Beam_Think(entity this)
 			last_origin,
 			new_origin,
 			MOVE_NORMAL,
-			own,
+			NULL,
 			ANTILAG_LATENCY(own)
 		);
 
@@ -399,11 +399,11 @@ void W_Arc_Beam_Think(entity this)
 		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
 		new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
 
+		if(trace_fraction == 1)
+			continue;
+
 		if(!trace_ent)
 		{
-			if(trace_fraction == 1)
-				continue;
-
 			// we collided with geometry
 			new_beam_type = ARC_BT_WALL;
 			break;
@@ -411,7 +411,7 @@ void W_Arc_Beam_Think(entity this)
 
 		// we collided with an entity
 		bool is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
-		if(SAME_TEAM(own, trace_ent))
+		if(trace_ent != own && SAME_TEAM(own, trace_ent))
 		{
 			float roothealth = ((burst) ? WEP_CVAR(arc, burst_healing_hps) : WEP_CVAR(arc, beam_healing_hps));
 			float rootarmor = ((burst) ? WEP_CVAR(arc, burst_healing_aps) : WEP_CVAR(arc, beam_healing_aps));
