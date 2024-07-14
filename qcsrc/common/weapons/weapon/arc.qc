@@ -327,20 +327,17 @@ void W_Arc_Beam_Think(entity this)
 	if(this.beam_dir != w_shotdir)
 	{
 		// calculate how much we're going to move the end of the beam to the want position
-		// WEAPONTODO (server and client):
-		// blendfactor never actually becomes 0 in this situation, which is a problem
-		// regarding precision... this means that this.beam_dir and w_shotdir approach
-		// eachother, however they never actually become the same value with this method.
-		// Perhaps we should do some form of rounding/snapping?
 		float angle = vlen(w_shotdir - this.beam_dir) * RAD2DEG;
-		float max_blendfactor = 1;
-		if(angle && (angle > WEP_CVAR(arc, beam_maxangle)))
-			max_blendfactor = WEP_CVAR(arc, beam_maxangle) / angle;
-		float blendfactor = bound(0, (1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)), max_blendfactor);
-		if(vdist(this.beam_dir - w_shotdir, <, 0.01))
-			this.beam_dir = w_shotdir;
+		if (angle < 0.01) // snap only when very close so it's impossible to notice
+			this.beam_dir = w_shotdir; // snap otherwise vectors will never actually be the same
 		else
+		{
+			float max_blendfactor = 1;
+			if(angle && (angle > WEP_CVAR(arc, beam_maxangle)))
+				max_blendfactor = WEP_CVAR(arc, beam_maxangle) / angle;
+			float blendfactor = bound(0, (1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)), max_blendfactor);
 			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+		}
 
 		// network information: beam direction
 		this.SendFlags |= ARC_SF_BEAMDIR;
@@ -986,30 +983,30 @@ void Draw_ArcBeam(entity this)
 		if(this.beam_dir != wantdir)
 		{
 			// calculate how much we're going to move the end of the beam to the want position
-			// WEAPONTODO (server and client):
-			// blendfactor never actually becomes 0 in this situation, which is a problem
-			// regarding precision... this means that this.beam_dir and w_shotdir approach
-			// eachother, however they never actually become the same value with this method.
-			// Perhaps we should do some form of rounding/snapping?
 			float angle = vlen(wantdir - this.beam_dir) * RAD2DEG;
-			float max_blendfactor = 1;
-			if(angle && (angle > this.beam_maxangle))
-				max_blendfactor = this.beam_maxangle / angle;
-			float blendfactor = bound(0, (1 - (this.beam_returnspeed * dt)), max_blendfactor);
-			this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
-
-			// calculate how many segments are needed
-			float max_allowed_segments = ARC_MAX_SEGMENTS;
-			if(this.beam_distancepersegment)
+			if (angle < 0.01) // snap only when very close so it's impossible to notice
+				this.beam_dir = wantdir; // snap otherwise vectors will never actually be the same
+			else
 			{
-				max_allowed_segments = 1 + (vlen(wantdir / this.beam_distancepersegment));
-				max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
-			}
+				float max_blendfactor = 1;
+				if(angle && (angle > this.beam_maxangle))
+					max_blendfactor = this.beam_maxangle / angle;
+				float blendfactor = bound(0, (1 - (this.beam_returnspeed * dt)), max_blendfactor);
+				this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 
-			if(this.beam_degreespersegment)
-			{
-				segments = min(angle, this.beam_maxangle) / this.beam_degreespersegment;
-				segments = bound(1, segments, max_allowed_segments);
+				// calculate how many segments are needed
+				float max_allowed_segments = ARC_MAX_SEGMENTS;
+				if(this.beam_distancepersegment)
+				{
+					max_allowed_segments = 1 + (vlen(wantdir / this.beam_distancepersegment));
+					max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
+				}
+
+				if(this.beam_degreespersegment)
+				{
+					segments = min(angle, this.beam_maxangle) / this.beam_degreespersegment;
+					segments = bound(1, segments, max_allowed_segments);
+				}
 			}
 		}
 
