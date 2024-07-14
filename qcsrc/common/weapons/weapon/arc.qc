@@ -366,6 +366,7 @@ void W_Arc_Beam_Think(entity this)
 	float i;
 	float new_beam_type = 0;
 	vector last_origin = w_shotorg;
+	vector last_origin_prev = '0 0 0';
 	for(i = 1; i <= segments; ++i)
 	{
 		// WEAPONTODO (client):
@@ -379,7 +380,6 @@ void W_Arc_Beam_Think(entity this)
 			beam_controlpoint,
 			beam_endpos,
 			i / segments);
-		vector new_dir = normalize(new_origin - last_origin);
 
 		WarpZone_traceline_antilag(
 			own,
@@ -390,17 +390,20 @@ void W_Arc_Beam_Think(entity this)
 			ANTILAG_LATENCY(own)
 		);
 
+		last_origin_prev = last_origin; // used later to calculate damage force direction
+		last_origin = trace_endpos;
+
 		// Do all the transforms for warpzones right now, as we already
 		// "are" in the post-trace system (if we hit a player, that's
 		// always BEHIND the last passed wz).
-		last_origin = trace_endpos;
 		w_shotorg = WarpZone_TransformOrigin(WarpZone_trace_transform, w_shotorg);
-		beam_controlpoint = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_controlpoint);
-		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
-		new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
 
 		if(trace_fraction == 1)
+		{
+			beam_controlpoint = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_controlpoint);
+			beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
 			continue;
+		}
 
 		if(!trace_ent)
 		{
@@ -459,6 +462,8 @@ void W_Arc_Beam_Think(entity this)
 				accuracy_add(own, WEP_ARC, 0, rootdamage * coefficient * falloff);
 			}
 
+			vector new_dir = normalize(new_origin - last_origin_prev);
+			new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
 			Damage(
 				trace_ent,
 				own,
@@ -1087,17 +1092,19 @@ void Draw_ArcBeam(entity this)
 			Draw_ArcBeam_callback
 		);
 
+		last_origin = trace_endpos;
+
+		if(trace_fraction < 1)
+			break; // hit something
+
 		// Do all the transforms for warpzones right now, as we already "are" in the post-trace
 		// system (if we hit a player, that's always BEHIND the last passed wz).
-		last_origin = trace_endpos;
 		start_pos = WarpZone_TransformOrigin(WarpZone_trace_transform, start_pos);
 		beam_controlpoint = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_controlpoint);
 		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
 		beamdir = WarpZone_TransformVelocity(WarpZone_trace_transform, beamdir);
 		Draw_ArcBeam_callback_last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
 		Draw_ArcBeam_callback_last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
-
-		if(trace_fraction < 1) { break; }
 	}
 
 	// visual effects for startpoint and endpoint
@@ -1106,7 +1113,7 @@ void Draw_ArcBeam(entity this)
 		pointparticles(
 			this.beam_hiteffect,
 			last_origin,
-			beamdir * -1,
+			-WarpZone_TransformVelocity(WarpZone_trace_transform, beamdir),
 			dt * 2
 		);
 	}
