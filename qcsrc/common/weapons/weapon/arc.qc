@@ -205,7 +205,7 @@ void W_Arc_Beam_Think(entity this)
 		return;
 	}
 
-	float burst = 0;
+	int burst = 0;
 	if( (PHYS_INPUT_BUTTON_ATCK2(own) && !WEP_CVAR(arc, bolt)) || this.beam_bursting)
 	{
 		if(!this.beam_bursting)
@@ -363,11 +363,10 @@ void W_Arc_Beam_Think(entity this)
 	vector beam_endpos = (w_shotorg + (this.beam_dir * WEP_CVAR(arc, beam_range)));
 	vector beam_controlpoint = w_shotorg + w_shotdir * (WEP_CVAR(arc, beam_range) * (1 - WEP_CVAR(arc, beam_tightness)));
 
-	float i;
-	float new_beam_type = 0;
+	int new_beam_type = 0;
 	vector last_origin = w_shotorg;
 	vector last_origin_prev = '0 0 0';
-	for(i = 1; i <= segments; ++i)
+	for(int i = 1; i <= segments; ++i)
 	{
 		// WEAPONTODO (client):
 		// In order to do nice fading and pointing on the starting segment, we must always
@@ -393,9 +392,8 @@ void W_Arc_Beam_Think(entity this)
 		last_origin_prev = last_origin; // used later to calculate damage force direction
 		last_origin = trace_endpos;
 
-		// Do all the transforms for warpzones right now, as we already
-		// "are" in the post-trace system (if we hit a player, that's
-		// always BEHIND the last passed wz).
+		// Do all the transforms for warpzones right now, as we already "are" in the post-trace
+		// system (if we hit a player, that's always BEHIND the last passed wz).
 		w_shotorg = WarpZone_TransformOrigin(WarpZone_trace_transform, w_shotorg);
 
 		if(trace_fraction == 1)
@@ -472,7 +470,7 @@ void W_Arc_Beam_Think(entity this)
 				WEP_ARC.m_id,
 				weaponentity,
 				hitorigin,
-				WEP_CVAR(arc, beam_force) * new_dir * coefficient * falloff
+				WEP_CVAR(arc, beam_force) * coefficient * falloff * new_dir
 			);
 
 			new_beam_type = ARC_BT_HIT;
@@ -496,9 +494,8 @@ void W_Arc_Beam_Think(entity this)
 	this.nextthink = time;
 }
 
-void W_Arc_Beam(float burst, entity actor, .entity weaponentity)
+void W_Arc_Beam(bool burst, entity actor, .entity weaponentity)
 {
-
 	// only play fire sound if 1 sec has passed since player let go the fire button
 	if(time - actor.(weaponentity).beam_prev > 1)
 		sound(actor, CH_WEAPON_A, SND_ARC_FIRE, VOL_BASE, ATTN_NORM);
@@ -512,7 +509,7 @@ void W_Arc_Beam(float burst, entity actor, .entity weaponentity)
 	beam.bot_dodge = true;
 	IL_PUSH(g_bot_dodge, beam);
 	beam.bot_dodgerating = WEP_CVAR(arc, beam_damage);
-	beam.beam_bursting = burst;
+	beam.beam_bursting = boolean(burst);
 	Net_LinkEntity(beam, false, 0, W_Arc_Beam_Send);
 
 	getthink(beam)(beam);
@@ -552,7 +549,7 @@ void Arc_Smoke(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 			Send_Effect(EFFECT_ARC_OVERHEAT_FIRE, smoke_origin, w_shotdir, 1 );
 			if ( !actor.arc_smoke_sound )
 			{
-				actor.arc_smoke_sound = 1;
+				actor.arc_smoke_sound = true;
 				sound(actor, CH_SHOTS_SINGLE, SND_ARC_LOOP_OVERHEAT, VOL_BASE, ATTN_NORM);
 			}
 		}
@@ -569,7 +566,7 @@ void Arc_Smoke(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 	bool stop_smoke_sound = actor.arc_overheat <= time || !attacking;
 	if ((actor.arc_smoke_sound && stop_smoke_sound) || actor.(weaponentity).m_switchweapon != thiswep)
 	{
-		actor.arc_smoke_sound = 0;
+		actor.arc_smoke_sound = false;
 		sound(actor, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 	}
 }
@@ -1066,8 +1063,7 @@ void Draw_ArcBeam(entity this)
 	vector last_origin = start_pos;
 	vector original_start_pos = start_pos;
 
-	float i;
-	for(i = 1; i <= segments; ++i)
+	for(int i = 1; i <= segments; ++i)
 	{
 		// WEAPONTODO (client):
 		// In order to do nice fading and pointing on the starting segment, we must always

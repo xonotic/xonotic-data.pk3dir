@@ -113,14 +113,14 @@ const int ARC_SF_LOCALMASK =   ARC_SF_START | ARC_SF_WANTDIR | ARC_SF_BEAMDIR;
 .entity arc_beam;
 .bool arc_BUTTON_ATCK_prev; // for better animation control
 .float beam_prev;
-.float beam_initialized;
-.float beam_bursting;
+.bool beam_initialized;
+.bool beam_bursting;
 .float beam_teleporttime;
 .float beam_heat; // (beam) amount of heat produced
 .float arc_overheat; // (dropped arc/player) time during which it's too hot
 .float arc_cooldown; // (dropped arc/player) cooling speed
 .float arc_heat_percent;
-.float arc_smoke_sound;
+.bool arc_smoke_sound;
 #endif
 #ifdef CSQC
 
@@ -139,7 +139,7 @@ const int ARC_SF_LOCALMASK =   ARC_SF_START | ARC_SF_WANTDIR | ARC_SF_BEAMDIR;
 .float beam_degreespersegment;
 .float beam_distancepersegment;
 .float beam_usevieworigin;
-.float beam_initialized;
+.bool beam_initialized;
 .float beam_maxangle;
 .float beam_range;
 .float beam_returnspeed;
