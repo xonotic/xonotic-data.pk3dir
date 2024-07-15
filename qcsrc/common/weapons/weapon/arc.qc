@@ -772,16 +772,10 @@ METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
 void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 {
 	entity beam = Draw_ArcBeam_callback_entity;
-	vector transformed_view_org;
-	transformed_view_org = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
-
-	// Thickdir shall be perpendicular to the beam and to the view-to-beam direction (WEAPONTODO: WHY)
-	// WEAPONTODO: Wouldn't it be better to be perpendicular to the beam and to the view FORWARD direction?
-	vector thickdir = normalize(cross(normalize(start - hit), transformed_view_org - start));
+	vector transformed_view_org = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
 
 	vector hitorigin;
 
-	// draw segment
 	#if 0
 	if(trace_fraction != 1)
 	{
@@ -797,20 +791,24 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	hitorigin = hit;
 	#endif
 
-	// decide upon thickness
 	float thickness = beam.beam_thickness;
-
-	// draw primary beam render
-	vector top    = hitorigin + (thickdir * thickness);
-	vector bottom = hitorigin - (thickdir * thickness);
-
-	vector last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
-	vector last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
 
 	if(autocvar_cl_arcbeam_simple)
 		Draw_CylindricLine(start, hit, thickness, beam.beam_image, 0.25, -time * 3, beam.beam_color, beam.beam_alpha, DRAWFLAG_NORMAL, transformed_view_org);
 	else
 	{
+		// Thickdir shall be perpendicular to the beam and to the view-to-beam direction (WEAPONTODO: WHY)
+		// WEAPONTODO: Wouldn't it be better to be perpendicular to the beam and to the view FORWARD direction?
+		vector thickdir = normalize(cross(normalize(start - hit), transformed_view_org - start));
+
+		// draw primary beam render
+		vector top    = hitorigin + (thickdir * thickness);
+		vector bottom = hitorigin - (thickdir * thickness);
+
+		vector last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
+		vector last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
+
+		// draw segment
 		R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL, false); // DRAWFLAG_ADDITIVE
 		R_PolygonVertex(
 			top,
@@ -837,6 +835,11 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 			beam.beam_alpha
 		);
 		R_EndPolygon();
+
+		// set up for the next
+		Draw_ArcBeam_callback_last_thickness = thickness;
+		Draw_ArcBeam_callback_last_top = WarpZone_UnTransformOrigin(WarpZone_trace_transform, top);
+		Draw_ArcBeam_callback_last_bottom = WarpZone_UnTransformOrigin(WarpZone_trace_transform, bottom);
 	}
 
 	// draw trailing particles
@@ -847,11 +850,6 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	{
 		trailparticles(beam, beam.beam_traileffect, start, hitorigin);
 	}
-
-	// set up for the next
-	Draw_ArcBeam_callback_last_thickness = thickness;
-	Draw_ArcBeam_callback_last_top = WarpZone_UnTransformOrigin(WarpZone_trace_transform, top);
-	Draw_ArcBeam_callback_last_bottom = WarpZone_UnTransformOrigin(WarpZone_trace_transform, bottom);
 }
 
 void Reset_ArcBeam()
@@ -1053,9 +1051,12 @@ void Draw_ArcBeam(entity this)
 	vector beam_controlpoint = start_pos + wantdir * (this.beam_range * (1 - this.beam_tightness));
 
 	Draw_ArcBeam_callback_entity = this;
-	Draw_ArcBeam_callback_last_thickness = 0;
-	Draw_ArcBeam_callback_last_top = start_pos;
-	Draw_ArcBeam_callback_last_bottom = start_pos;
+	if(!autocvar_cl_arcbeam_simple)
+	{
+		Draw_ArcBeam_callback_last_thickness = 0;
+		Draw_ArcBeam_callback_last_top = start_pos;
+		Draw_ArcBeam_callback_last_bottom = start_pos;
+	}
 
 	vector last_origin = start_pos;
 	vector original_start_pos = start_pos;
@@ -1096,8 +1097,11 @@ void Draw_ArcBeam(entity this)
 		beam_controlpoint = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_controlpoint);
 		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
 		beamdir = WarpZone_TransformVelocity(WarpZone_trace_transform, beamdir);
-		Draw_ArcBeam_callback_last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
-		Draw_ArcBeam_callback_last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
+		if(!autocvar_cl_arcbeam_simple)
+		{
+			Draw_ArcBeam_callback_last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
+			Draw_ArcBeam_callback_last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
+		}
 	}
 
 	// visual effects for startpoint and endpoint
@@ -1146,9 +1150,12 @@ void Draw_ArcBeam(entity this)
 
 	// cleanup
 	Draw_ArcBeam_callback_entity = NULL;
-	Draw_ArcBeam_callback_last_thickness = 0;
-	Draw_ArcBeam_callback_last_top = '0 0 0';
-	Draw_ArcBeam_callback_last_bottom = '0 0 0';
+	if(!autocvar_cl_arcbeam_simple)
+	{
+		Draw_ArcBeam_callback_last_thickness = 0;
+		Draw_ArcBeam_callback_last_top = '0 0 0';
+		Draw_ArcBeam_callback_last_bottom = '0 0 0';
+	}
 }
 
 void Remove_ArcBeam(entity this)
