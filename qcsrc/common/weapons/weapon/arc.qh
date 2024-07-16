@@ -102,7 +102,7 @@ const int ARC_BT_BURST_HEAL =  0x12;
 const int ARC_BT_BURST_HIT =   0x13;
 const int ARC_BT_BURSTMASK =   0x10;
 
-const int ARC_SF_SETTINGS =    BIT(0);
+const int ARC_SF_UPDATE =      BIT(0);
 const int ARC_SF_START =       BIT(1);
 const int ARC_SF_WANTDIR =     BIT(2);
 const int ARC_SF_BEAMDIR =     BIT(3);
@@ -136,14 +136,8 @@ const int ARC_SF_LOCALMASK =   ARC_SF_START | ARC_SF_WANTDIR | ARC_SF_BEAMDIR;
 
 .entity beam_muzzleentity;
 
-.float beam_degreespersegment;
-.float beam_distancepersegment;
 .float beam_usevieworigin;
 .bool beam_initialized;
-.float beam_maxangle;
-.float beam_range;
-.float beam_returnspeed;
-.float beam_tightness;
 .vector beam_shotorigin;
 
 entity Draw_ArcBeam_callback_entity;

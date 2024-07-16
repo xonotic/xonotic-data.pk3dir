@@ -18,15 +18,8 @@ bool W_Arc_Beam_Send(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, sf);
 	WriteByte(MSG_ENTITY, weaponslot(this.weaponentity_fld));
 
-	if(sf & ARC_SF_SETTINGS) // settings information
+	if(sf & ARC_SF_UPDATE)
 	{
-		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_degreespersegment));
-		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_distancepersegment));
-		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_maxangle));
-		WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
-		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_returnspeed));
-		WriteByte(MSG_ENTITY, WEP_CVAR(arc, beam_tightness) * 10);
-
 		WriteByte(MSG_ENTITY, drawlocal);
 		WriteByte(MSG_ENTITY, etof(this.owner));
 	}
@@ -358,7 +351,8 @@ void W_Arc_Beam_Think(entity this)
 	}
 
 	vector beam_endpos = (w_shotorg + (this.beam_dir * WEP_CVAR(arc, beam_range)));
-	vector beam_controlpoint = w_shotorg + w_shotdir * (WEP_CVAR(arc, beam_range) * (1 - WEP_CVAR(arc, beam_tightness)));
+	float beam_controlpoint_dist = WEP_CVAR(arc, beam_range) * bound(0.001, 1 - WEP_CVAR(arc, beam_tightness), 1);
+	vector beam_controlpoint = w_shotorg + w_shotdir * beam_controlpoint_dist;
 
 	int new_beam_type = 0;
 	vector last_origin = w_shotorg;
@@ -935,7 +929,7 @@ void Draw_ArcBeam(entity this)
 		// trace forward with an estimation
 		WarpZone_TraceLine(
 			start_pos_saved,
-			start_pos_saved + forward * this.beam_range,
+			start_pos_saved + forward * WEP_CVAR(arc, beam_range),
 			MOVE_NOMONSTERS,
 			this
 		);
@@ -987,22 +981,22 @@ void Draw_ArcBeam(entity this)
 			else
 			{
 				float max_blendfactor = 1;
-				if(angle && (angle > this.beam_maxangle))
-					max_blendfactor = this.beam_maxangle / angle;
-				float blendfactor = bound(0, (1 - (this.beam_returnspeed * dt)), max_blendfactor);
+				if(angle && (angle > WEP_CVAR(arc, beam_maxangle)))
+					max_blendfactor = WEP_CVAR(arc, beam_maxangle) / angle;
+				float blendfactor = bound(0, (1 - (WEP_CVAR(arc, beam_returnspeed) * dt)), max_blendfactor);
 				this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 
 				// calculate how many segments are needed
 				float max_allowed_segments = ARC_MAX_SEGMENTS;
-				if(this.beam_distancepersegment)
+				if(WEP_CVAR(arc, beam_distancepersegment))
 				{
-					max_allowed_segments = 1 + (vlen(wantdir / this.beam_distancepersegment));
+					max_allowed_segments = 1 + (vlen(wantdir / WEP_CVAR(arc, beam_distancepersegment)));
 					max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
 				}
 
-				if(this.beam_degreespersegment)
+				if(WEP_CVAR(arc, beam_degreespersegment))
 				{
-					segments = min(angle, this.beam_maxangle) / this.beam_degreespersegment;
+					segments = min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment);
 					segments = bound(1, segments, max_allowed_segments);
 				}
 			}
@@ -1030,15 +1024,15 @@ void Draw_ArcBeam(entity this)
 
 			// calculate how many segments are needed
 			float max_allowed_segments = ARC_MAX_SEGMENTS;
-			if(this.beam_distancepersegment)
+			if(WEP_CVAR(arc, beam_distancepersegment))
 			{
-				max_allowed_segments = 1 + (vlen(wantdir / this.beam_distancepersegment));
+				max_allowed_segments = 1 + (vlen(wantdir / WEP_CVAR(arc, beam_distancepersegment)));
 				max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
 			}
 
-			if(this.beam_degreespersegment)
+			if(WEP_CVAR(arc, beam_degreespersegment))
 			{
-				segments = min(angle, this.beam_maxangle) / this.beam_degreespersegment;
+				segments = min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment);
 				segments = bound(1, segments, max_allowed_segments);
 			}
 		}
@@ -1047,8 +1041,9 @@ void Draw_ArcBeam(entity this)
 	setorigin(this, start_pos);
 	this.beam_muzzleentity.angles_z = random() * 360; // WEAPONTODO: use avelocity instead?
 
-	vector beam_endpos = (start_pos + (beamdir * this.beam_range));
-	vector beam_controlpoint = start_pos + wantdir * (this.beam_range * (1 - this.beam_tightness));
+	vector beam_endpos = (start_pos + (beamdir * WEP_CVAR(arc, beam_range)));
+	float beam_controlpoint_dist = WEP_CVAR(arc, beam_range) * bound(0.001, 1 - WEP_CVAR(arc, beam_tightness), 1);
+	vector beam_controlpoint = start_pos + wantdir * beam_controlpoint_dist;
 
 	Draw_ArcBeam_callback_entity = this;
 	if(!autocvar_cl_arcbeam_simple)
@@ -1201,16 +1196,9 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		flash = this.beam_muzzleentity;
 	}
 
-	if(sf & ARC_SF_SETTINGS) // settings information
+	if(sf & ARC_SF_UPDATE)
 	{
-		this.beam_degreespersegment = ReadShort();
-		this.beam_distancepersegment = ReadShort();
-		this.beam_maxangle = ReadShort();
-		this.beam_range = ReadCoord();
-		this.beam_returnspeed = ReadShort();
-		this.beam_tightness = (ReadByte() / 10);
-
-		if(ReadByte())
+		if(ReadByte()) // drawlocal?
 		{
 			this.beam_usevieworigin = (autocvar_chase_active) ? 1 : 2;
 		}
