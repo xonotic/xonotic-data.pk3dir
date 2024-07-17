@@ -571,7 +571,7 @@ LABEL(skip_difference)
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " rpn <expression>");
-			LOG_HELP("    Operator description (x: string, s: set, f: float):");
+			LOG_HELP("  ^2Operations:");
 			LOG_HELP("    x pop ----------------------------->     : removes the top");
 			LOG_HELP("    x dup -----------------------------> x x : duplicates the top");
 			LOG_HELP("    x x exch --------------------------> x x : swap the top two");
@@ -603,8 +603,13 @@ LABEL(skip_difference)
 			LOG_HELP("    x /MD4 digest ---------------------> x   : MD4 digest");
 			LOG_HELP("    x /SHA256 digest ------------------> x   : SHA256 digest");
 			LOG_HELP("    x /formatstring sprintf1s ---------> x   : sprintf with 1 string (pad, cut)");
+			LOG_HELP("    x fexists -------------------------> f   : checks if a file exists");
 			LOG_HELP("    x eval ---------------------------->     : does something eval");
-			LOG_HELP("    Set operations operate on 'such''strings'.");
+			LOG_HELP("");
+			LOG_HELP("  ^2Notes:");
+			LOG_HELP("    f: float");
+			LOG_HELP("    x: string defined like this: /abc or \"/abc def\"");
+			LOG_HELP("    s: string defined like x and containing a set of space-separated strings");
 			LOG_HELP("    Unknown tokens insert their cvar value.");
 			return;
 		}
