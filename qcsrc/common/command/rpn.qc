@@ -191,9 +191,9 @@ void GenericCommand_rpn(int request, int argc, string command)
 						f = rpn_popf();
 						rpn_setf(!rpn_getf() != !f);
 					} else if(rpncmd == "bitnot") {
-						rpn_setf(~rpn_popf());
+						rpn_setf(~rpn_getf());
 					} else if(rpncmd == "not") {
-						rpn_setf(!rpn_popf());
+						rpn_setf(!rpn_getf());
 					} else if(rpncmd == "abs") {
 						rpn_setf(fabs(rpn_getf()));
 					} else if(rpncmd == "sgn") {
