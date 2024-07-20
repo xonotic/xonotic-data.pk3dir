@@ -9879,8 +9879,9 @@ msgid ""
 "While connected language changes will be applied only to the menu, full "
 "language changes will take effect starting from the next game"
 msgstr ""
-"Quando si è connessi i cambiamenti di lingua saranno applicati solo al menu, "
-"le modifiche complete saranno applicate a partire dalla prossima partita"
+"Enquanto estiver conectado alterações no idioma serão aplicadas somente no "
+"menu, alterações completas de idioma surtirão efeito a partir da próxima "
+"partida."
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"

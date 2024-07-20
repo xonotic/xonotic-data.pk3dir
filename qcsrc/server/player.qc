@@ -608,7 +608,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 {
-	if(GetResource(targ, RES_HEALTH) <= 0 || GetResource(targ, RES_HEALTH) >= limit)
+	float hlth = GetResource(targ, RES_HEALTH);
+	if (hlth <= 0 || hlth >= limit)
 		return false;
 
 	GiveResourceWithLimit(targ, RES_HEALTH, amount, limit);
