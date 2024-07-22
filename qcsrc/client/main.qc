@@ -1209,8 +1209,9 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 					// does this index have a split?
 					if (race_checkpoint_splits[i])
 					{
-						// print it and free it
-						LOG_HELP(race_checkpoint_splits[i]);
+						// print it if enabled and free it
+						if (autocvar_cl_race_checkpoint_splits_console)
+							LOG_HELP(race_checkpoint_splits[i]);
 						strfree(race_checkpoint_splits[i]);
 					}
 				}
