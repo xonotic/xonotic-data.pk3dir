@@ -12,6 +12,85 @@
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,
 // returns true only if it hit targ (don't target non-solid entities)
+bool test_findtrajectorywithleading;
+float findtrajectorywithleading_old(vector org, vector m1, vector m2, entity targ, float shotspeed, float shotspeedupward, float maxtime, float shotdelay, entity ignore)
+{
+	float c, savesolid, shottime;
+	vector dir, end, v, o;
+	if (shotspeed < 1)
+		return false; // could cause division by zero if calculated
+	if (targ.solid < SOLID_BBOX) // SOLID_NOT and SOLID_TRIGGER
+		return false; // could never hit it
+	if (!tracetossent)
+		tracetossent = new(tracetossent);
+	tracetossent.owner = ignore;
+	setsize(tracetossent, m1, m2);
+	savesolid = targ.solid;
+	targ.solid = SOLID_NOT;
+	o = (targ.absmin + targ.absmax) * 0.5;
+	shottime = ((vlen(o - org) / shotspeed) + shotdelay);
+	v = targ.velocity * shottime + o;
+	tracebox(o, targ.mins, targ.maxs, v, false, targ);
+	v = trace_endpos;
+	end = v + (targ.mins + targ.maxs) * 0.5;
+	if (test_findtrajectorywithleading) LOG_INFOF("^x80f vlen        = %f\n", vlen(end - org));
+	if ((vlen(end - org) / shotspeed + 0.2) > maxtime)
+	{
+		// out of range
+		targ.solid = savesolid;
+		return false;
+	}
+
+	if (!tracetossfaketarget)
+		tracetossfaketarget = new(tracetossfaketarget);
+	tracetossfaketarget.solid = savesolid;
+	set_movetype(tracetossfaketarget, targ.move_movetype);
+	_setmodel(tracetossfaketarget, targ.model); // no low precision
+	tracetossfaketarget.model = targ.model;
+	tracetossfaketarget.modelindex = targ.modelindex;
+	setsize(tracetossfaketarget, targ.mins, targ.maxs);
+	setorigin(tracetossfaketarget, v);
+
+	c = 0;
+	dir = normalize(end - org);
+	while (c < 10) // 10 traces
+	{
+		if (test_findtrajectorywithleading) LOG_INFOF("^x8f0 c = %d\n", c);
+		if (test_findtrajectorywithleading) LOG_INFOF("^x0f8 dir_normalized = %v\n", normalize(dir));
+		setorigin(tracetossent, org); // reset
+		tracetossent.velocity = findtrajectory_velocity = normalize(dir) * shotspeed + shotspeedupward * '0 0 1';
+		tracetoss(tracetossent, ignore); // love builtin functions...
+		if (trace_ent == tracetossfaketarget) // done
+		{
+			targ.solid = savesolid;
+
+			// make it disappear
+			tracetossfaketarget.solid = SOLID_NOT;
+			set_movetype(tracetossfaketarget, MOVETYPE_NONE);
+			tracetossfaketarget.model = "";
+			tracetossfaketarget.modelindex = 0;
+			// relink to remove it from physics considerations
+			setorigin(tracetossfaketarget, v);
+
+			return true;
+		}
+		dir.z = dir.z + 0.1; // aim up a little more
+		c = c + 1;
+	}
+	targ.solid = savesolid;
+
+	// make it disappear
+	tracetossfaketarget.solid = SOLID_NOT;
+	set_movetype(tracetossfaketarget, MOVETYPE_NONE);
+	tracetossfaketarget.model = "";
+	tracetossfaketarget.modelindex = 0;
+	// relink to remove it from physics considerations
+	setorigin(tracetossfaketarget, v);
+
+	// leave a valid one even if it won't reach
+	findtrajectory_velocity = normalize(end - org) * shotspeed + shotspeedupward * '0 0 1';
+	return false;
+}
 
 float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, float shotspeed, float shotspeedupward, float maxtime, float shotdelay, entity ignore)
 {
@@ -34,6 +113,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	v = trace_endpos;
 	end = v + (targ.mins + targ.maxs) * 0.5;
 	float shotdistance = max(0.001, vlen(end - org));
+	if (test_findtrajectorywithleading) LOG_INFOF("^x80f shotdistance = %f\n", shotdistance);
 	if ((shotdistance / shotspeed + 0.2) > maxtime)
 	{
 		// out of range
@@ -57,6 +137,8 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	vector test_dir_normalized = dir;
 	while (c < 10) // 10 traces
 	{
+		if (test_findtrajectorywithleading) LOG_INFOF("^x8f0 c = %d\n", c);
+		if (test_findtrajectorywithleading) LOG_INFOF("^x0f8 test_dir_normalized = %v\n", test_dir_normalized);
 		setorigin(tracetossent, org); // reset
 		tracetossent.velocity = findtrajectory_velocity = test_dir_normalized * shotspeed + shotspeedupward * '0 0 1';
 		tracetoss(tracetossent, ignore); // love builtin functions...
@@ -377,6 +459,23 @@ bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeed
 
 	if (applygravity && this.enemy)
 	{
+		findtrajectory_velocity = '0 0 0';
+		findtrajectorywithleading_old(shotorg, '0 0 0', '0 0 0', this.enemy, shotspeed, shotspeedupward, maxshottime, 0, this);
+		vector v_old = findtrajectory_velocity;
+		findtrajectory_velocity = '0 0 0';
+		findtrajectorywithleading(shotorg, '0 0 0', '0 0 0', this.enemy, shotspeed, shotspeedupward, maxshottime, 0, this);
+		vector v_new = findtrajectory_velocity;
+		test_findtrajectorywithleading = false;
+		if (vlen(v_old - v_new) > 0.0005)
+		{
+			LOG_INFOF("^1DIFF = %f\n", vlen(v_old - v_new));
+			test_findtrajectorywithleading = true;
+		}
+		if (test_findtrajectorywithleading)
+			findtrajectorywithleading_old(shotorg, '0 0 0', '0 0 0', this.enemy, shotspeed, shotspeedupward, maxshottime, 0, this);
+		if (test_findtrajectorywithleading)
+			findtrajectorywithleading(shotorg, '0 0 0', '0 0 0', this.enemy, shotspeed, shotspeedupward, maxshottime, 0, this);
+
 		if (!findtrajectorywithleading(shotorg, '0 0 0', '0 0 0', this.enemy, shotspeed, shotspeedupward, maxshottime, 0, this))
 		{
 			this.dphitcontentsmask = hf;
