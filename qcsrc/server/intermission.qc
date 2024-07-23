@@ -116,15 +116,12 @@ bool Map_IsRecent(string m)
 
 bool Map_Check(int position, float pass)
 {
-	string filename;
-	string map_next;
-	map_next = argv(position);
+	string map_next = argv(position);
 	if(pass <= 1)
 	{
 		if(Map_IsRecent(map_next))
 			return false;
 	}
-	filename = Map_Filename(position);
 	if(MapInfo_CheckMap(map_next))
 	{
 		if(pass == 2)
@@ -137,7 +134,10 @@ bool Map_Check(int position, float pass)
 		return false;
 	}
 	else
+	{
+		string filename = Map_Filename(position);
 		LOG_DEBUG( "Couldn't select '", filename, "'..." );
+	}
 
 	return false;
 }
