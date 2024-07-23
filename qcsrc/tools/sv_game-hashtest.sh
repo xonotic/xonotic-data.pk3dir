@@ -66,9 +66,6 @@ hashtestcleanup() {
 	rm -fv data/data/server.db
 	rm -dfv data/data/
 	#rm -fv data/maps/_init.bsp
-	#rm -fv data/maps/stormkeep.mapinfo
-	#rm -fv data/maps/stormkeep.waypoints
-	#rm -fv data/maps/stormkeep.waypoints.cache
 	#rm -dfv data/maps/
 
 	set -e
@@ -198,12 +195,6 @@ diff notifications.cfg data/data/notifications_dump.cfg ||
 
 createdtoday "data/stormkeep.pk3" \
 	|| wget -nv -O data/stormkeep.pk3 https://beta.xonotic.org/pipeline-bin/stormkeep.pk3
-createdtoday "data/maps/stormkeep.mapinfo" \
-	|| wget -nv -O data/maps/stormkeep.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.mapinfo
-createdtoday "data/maps/stormkeep.waypoints" \
-	|| wget -nv -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
-createdtoday "data/maps/stormkeep.waypoints.cache" \
-	|| wget -nv -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
 
 if [ -z "${EXPECT-}" ]
 then
