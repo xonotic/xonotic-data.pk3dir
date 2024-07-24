@@ -2693,6 +2693,18 @@ frametime is always set here.
 void PlayerFrame (entity this)
 {
 // formerly PreThink code
+
+	if (this.score_frame_dmg)
+	{
+		GameRules_scoring_add(this, DMG, this.score_frame_dmg);
+		this.score_frame_dmg = 0;
+	}
+	if (this.score_frame_dmgtaken)
+	{
+		GameRules_scoring_add(this, DMGTAKEN, this.score_frame_dmgtaken);
+		this.score_frame_dmgtaken = 0;
+	}
+
 	STAT(GUNALIGN, this) = CS_CVAR(this).cvar_cl_gunalign; // TODO
 	STAT(MOVEVARS_CL_TRACK_CANJUMP, this) = CS_CVAR(this).cvar_cl_movement_track_canjump;
 
