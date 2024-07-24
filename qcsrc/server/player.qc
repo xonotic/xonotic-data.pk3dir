@@ -431,10 +431,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if ((this != attacker || deathtype == DEATH_KILL.m_id) && realdmg && !STAT(FROZEN, this)
 			&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
 		{
+			// accumulate damage, it will be logged later in this frame
 			if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this) && deathtype != DEATH_KILL.m_id)
-				GameRules_scoring_add(attacker, DMG, realdmg);
+				attacker.score_frame_dmg += realdmg;
 			if (IS_PLAYER(this))
-				GameRules_scoring_add(this, DMGTAKEN, realdmg);
+				this.score_frame_dmgtaken += realdmg;
 		}
 	}
 
