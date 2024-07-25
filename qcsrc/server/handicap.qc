@@ -8,34 +8,83 @@
 #include <common/state.qh>
 #include <server/client.qh>
 
-.float m_handicap; ///< Holds the handicap value.
+.float m_handicap_give; ///< Holds the forced handicap value.
+.float m_handicap_take; ///< Holds the forced handicap value.
 
 void Handicap_Initialize(entity player)
 {
-	CS(player).m_handicap = 1;
+	// forced handicap defaults
+	CS(player).m_handicap_give = 1;
+	CS(player).m_handicap_take = 1;
 }
 
-float Handicap_GetVoluntaryHandicap(entity player)
+float Handicap_GetVoluntaryHandicap(entity player, bool receiving)
 {
-	return bound(1.0, CS_CVAR(player).cvar_cl_handicap, 10.0);
+#if 0
+	if (receiving)
+		return bound(1.0, CS_CVAR(player).cvar_cl_handicap_damage_taken, 10.0);
+	else
+		return bound(1.0, CS_CVAR(player).cvar_cl_handicap_damage_given, 10.0);
+#else
+	// TODO: remove the else vector branch after 0.9 release
+	// Forwards compatibility for old clients on new servers. `cl_handicap 2`
+	// ( '2 0 0' ) is treated the same as `cl_handicap_damage_{given,taken} 2`.
+	// The x is give and y is take.
+	// '2 0 0' gives and takes x2
+	// '2 2 0' gives and takes x2
+	// '2 1 0' only gives x2
+	// '1 2 0' only takes x2
+	// z is wasted
+
+	int handicap_value;
+
+	// First read if the new cvars have a valid value,
+	// if they don't then read old cvar, checking if the old cvar has
+	// separate give and take values or we should use the first value for both
+	if (receiving)
+	{
+		if (CS_CVAR(player).cvar_cl_handicap_damage_taken > 1)
+			handicap_value = CS_CVAR(player).cvar_cl_handicap_damage_taken;
+		else if (CS_CVAR(player).cvar_cl_handicap.y > 0)
+			handicap_value = CS_CVAR(player).cvar_cl_handicap.y;
+		else
+			handicap_value = CS_CVAR(player).cvar_cl_handicap.x;
+	}
+	else
+	{
+		if (CS_CVAR(player).cvar_cl_handicap_damage_given > 1)
+			handicap_value = CS_CVAR(player).cvar_cl_handicap_damage_given;
+		else
+			handicap_value = CS_CVAR(player).cvar_cl_handicap.x;
+	}
+
+	return bound(1.0, handicap_value, 10.0);
+#endif
+
 }
 
-float Handicap_GetForcedHandicap(entity player)
+float Handicap_GetForcedHandicap(entity player, bool receiving)
 {
-	return (CS(player)) ? CS(player).m_handicap : 1;
+	if (receiving)
+		return (CS(player)) ? CS(player).m_handicap_take : 1;
+	else
+		return (CS(player)) ? CS(player).m_handicap_give : 1;
+
 }
 
-void Handicap_SetForcedHandicap(entity player, float value)
+void Handicap_SetForcedHandicap(entity player, float value, bool receiving)
 {
 	if (value <= 0)
-	{
 		error("Handicap_SetForcedHandicap: Invalid handicap value.");
-	}
-	CS(player).m_handicap = value;
+
+	if (receiving)
+		CS(player).m_handicap_take = value;
+	else
+		CS(player).m_handicap_give = value;
 }
 
-float Handicap_GetTotalHandicap(entity player)
+float Handicap_GetTotalHandicap(entity player, bool receiving)
 {
-	return Handicap_GetForcedHandicap(player) * Handicap_GetVoluntaryHandicap(
-		player);
+	return Handicap_GetForcedHandicap(player, receiving) *
+		Handicap_GetVoluntaryHandicap(player, receiving);
 }

@@ -116,15 +116,12 @@ bool Map_IsRecent(string m)
 
 bool Map_Check(int position, float pass)
 {
-	string filename;
-	string map_next;
-	map_next = argv(position);
+	string map_next = argv(position);
 	if(pass <= 1)
 	{
 		if(Map_IsRecent(map_next))
 			return false;
 	}
-	filename = Map_Filename(position);
 	if(MapInfo_CheckMap(map_next))
 	{
 		if(pass == 2)
@@ -137,7 +134,10 @@ bool Map_Check(int position, float pass)
 		return false;
 	}
 	else
+	{
+		string filename = Map_Filename(position);
 		LOG_DEBUG( "Couldn't select '", filename, "'..." );
+	}
 
 	return false;
 }
@@ -443,9 +443,32 @@ void IntermissionThink(entity this)
 		this.autoscreenshot = -1;
 		if(IS_REAL_CLIENT(this))
 		{
-			string num = strftime_s(); // strftime(false, "%s") isn't reliable, see strftime_s description
-			stuffcmd(this, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; "
-				"echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), num));
+			// in old clients "cl_autoscreenshot_screenshot_s %s %s;" takes the screenshot
+			// "cl_autoscreenshot_screenshot %s %s;" does nothing because the cl_autoscreenshot_screenshot alias
+			// doesn't exist; the cl_autoscreenshot_screenshot dummy cvar is created
+			// so that "cl_autoscreenshot_screenshot %s %s" doesn't print any warning in console
+
+			// in new clients "cl_autoscreenshot_screenshot %s %s;" takes the screenshot
+			// even if the cl_autoscreenshot_screenshot cvar is created, only the cl_autoscreenshot_screenshot alias
+			// is executed since only the alias is executed if a cvar with the same name exists
+			// cl_autoscreenshot_screenshot_s is not run as cl_autoscreenshot_screenshot alias clears it
+			// (it doesn't delete it so that "unalias cl_autoscreenshot_screenshot_s;" doesn't print any warning)
+
+			// this stuffcmd is needed only for Xonotic 0.8.6 or lower
+			// the s in cl_autoscreenshot_screenshot_s stands for server alias (alias name can't be longer than 32)
+			stuffcmd(this, sprintf("\n"
+				"alias cl_autoscreenshot_screenshot_s \"screenshot screenshots/autoscreenshot/%s-%s.jpg\";"
+				"set cl_autoscreenshot_screenshot 0;", GetMapname(), matchid));
+
+			// keep only this stuffcmd after the next release
+			stuffcmd(this, sprintf("\ncl_autoscreenshot_screenshot %s %s;"
+				"echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), matchid));
+
+			// this stuffcmd is needed only for Xonotic 0.8.6 or lower
+			stuffcmd(this, "\n"
+				"cl_autoscreenshot_screenshot_s %s %s;"
+				"unset cl_autoscreenshot_screenshot;"
+				"unalias cl_autoscreenshot_screenshot_s;");
 		}
 		return;
 	}
@@ -464,7 +487,7 @@ void FixIntermissionClient(entity e)
 {
 	if(!e.autoscreenshot) // initial call
 	{
-		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
+		e.autoscreenshot = time + 0.1;
 		SetResourceExplicit(e, RES_HEALTH, -2342); // health in the first intermission phase
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{

@@ -33,7 +33,8 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	tracebox(o, targ.mins, targ.maxs, v, false, targ);
 	v = trace_endpos;
 	end = v + (targ.mins + targ.maxs) * 0.5;
-	if ((vlen(end - org) / shotspeed + 0.2) > maxtime)
+	float shotdistance = max(0.001, vlen(end - org));
+	if ((shotdistance / shotspeed + 0.2) > maxtime)
 	{
 		// out of range
 		targ.solid = savesolid;
@@ -51,11 +52,13 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	setorigin(tracetossfaketarget, v);
 
 	c = 0;
-	dir = normalize(end - org);
+	dir = (end - org) / shotdistance; // same as dir = normalize(end - org); but cheaper
+	vector test_dir = dir;
+	vector test_dir_normalized = dir;
 	while (c < 10) // 10 traces
 	{
 		setorigin(tracetossent, org); // reset
-		tracetossent.velocity = findtrajectory_velocity = normalize(dir) * shotspeed + shotspeedupward * '0 0 1';
+		tracetossent.velocity = findtrajectory_velocity = test_dir_normalized * shotspeed + shotspeedupward * '0 0 1';
 		tracetoss(tracetossent, ignore); // love builtin functions...
 		if (trace_ent == tracetossfaketarget) // done
 		{
@@ -71,7 +74,8 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 
 			return true;
 		}
-		dir.z = dir.z + 0.1; // aim up a little more
+		test_dir.z += 0.1; // aim up a little more
+		test_dir_normalized = normalize(test_dir);
 		c = c + 1;
 	}
 	targ.solid = savesolid;
@@ -85,7 +89,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	setorigin(tracetossfaketarget, v);
 
 	// leave a valid one even if it won't reach
-	findtrajectory_velocity = normalize(end - org) * shotspeed + shotspeedupward * '0 0 1';
+	findtrajectory_velocity = dir * shotspeed + shotspeedupward * '0 0 1';
 	return false;
 }
 

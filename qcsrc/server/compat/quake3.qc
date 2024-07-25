@@ -258,12 +258,29 @@ spawnfunc(target_score)
 	this.use = score_use;
 }
 
+#define FRAGSFILTER_REMOVER BIT(0)
+#define FRAGSFILTER_RUNONCE BIT(1) // introduced but now unused by q3df
+#define FRAGSFILTER_SILENT  BIT(2)
+#define FRAGSFILTER_RESET   BIT(3)
+
 void fragsfilter_use(entity this, entity actor, entity trigger)
 {
 	if(!IS_PLAYER(actor))
 		return;
 	if(actor.fragsfilter_cnt >= this.frags)
+	{
+		if(this.spawnflags & FRAGSFILTER_RESET)
+			actor.fragsfilter_cnt = 0;
+		else if(this.spawnflags & FRAGSFILTER_REMOVER)
+			actor.fragsfilter_cnt -= this.frags;
 		SUB_UseTargets(this, actor, trigger);
+	}
+	else if(!(this.spawnflags & FRAGSFILTER_SILENT))
+	{
+		int req_frags = this.frags - actor.fragsfilter_cnt;
+		centerprint(actor, sprintf("%d more frag%s needed", req_frags, req_frags > 1 ? "s" : ""));
+		play2(actor, SND(TALK));
+	}
 }
 spawnfunc(target_fragsFilter)
 {
@@ -346,29 +363,29 @@ bool DoesQ3ARemoveThisEntity(entity this)
 	// Xonotic is usually played with a CPM-based physics so we default to CPM mode
 	if(cvar_string("g_mod_physics") == "Q3")
 	{
-		if(stof(GetField_fullspawndata(this, "notvq3")))
+		if(stof(GetField_fullspawndata(this, "notvq3", false)))
 			return true;
 	}
-	else if(stof(GetField_fullspawndata(this, "notcpm")))
+	else if(stof(GetField_fullspawndata(this, "notcpm", false)))
 		return true;
 
 	// Q3 mappers use "notq3a" or "notta" to disable an entity in Q3A or Q3TA
 	// Xonotic has ~equivalent features to Team Arena
-	if(stof(GetField_fullspawndata(this, "notta")))
+	if(stof(GetField_fullspawndata(this, "notta", false)))
 		return true;
 
 	// FIXME: singleplayer does not use maxclients 1 as that would prevent bots,
 	// this is the case in Q3 also, it uses another method to block clients.
 	// Only accessible in VQ3, via the `spmap` command.
-	if(stof(GetField_fullspawndata(this, "notsingle")))
+	if(stof(GetField_fullspawndata(this, "notsingle", false)))
 		if(maxclients == 1 && IS_GAMETYPE(DEATHMATCH))
 			return true;
 
-	if(stof(GetField_fullspawndata(this, "notteam")))
+	if(stof(GetField_fullspawndata(this, "notteam", false)))
 		if(teamplay)
 			return true;
 
-	if(stof(GetField_fullspawndata(this, "notfree")))
+	if(stof(GetField_fullspawndata(this, "notfree", false)))
 		if(!teamplay)
 			return true;
 

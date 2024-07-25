@@ -696,9 +696,6 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 
 	if(newspectatee_status != spectatee_status)
 	{
-		// clear race stuff
-		race_laptime = 0;
-		race_checkpointtime = 0;
 		hud_dynamic_shake_factor = -1;
 		spectatee_status_changed_time = time;
 	}
@@ -1198,6 +1195,30 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				race_penaltyaccumulator = 0;
 				race_laptime = time; // valid
 			}
+
+			// show checkpoint splits after a run
+			// specs can switch players for confusing splits, deny service
+			// if hit 255 finish line or if finish line is 0 or if restarted
+			if (!entcs_IsSpectating(player_localnum)
+			&& (race_checkpoint == 255
+			|| race_checkpoint < race_checkpoint_splits_previous))
+			{
+				LOG_HELP(_("Checkpoint times:"));
+				for (int i = 0; i < 255; ++i)
+				{
+					// does this index have a split?
+					if (race_checkpoint_splits[i])
+					{
+						// print it if enabled and free it
+						if (autocvar_cl_race_checkpoint_splits_console)
+							LOG_HELP(race_checkpoint_splits[i]);
+						strfree(race_checkpoint_splits[i]);
+					}
+				}
+
+				// allow registering 0th cp in case we start at 254 start line
+				race_checkpoint_splits_previous = 0;
+			}
 			break;
 
 		case RACE_NET_CHECKPOINT_CLEAR:
@@ -1420,7 +1441,9 @@ string GetVersionMessage(string hostversion, bool version_mismatch, bool version
 
 bool net_handle_ServerWelcome()
 {
-	campaign = ReadByte();
+	int flags = ReadByte();
+
+	campaign = flags & 1;
 	if (campaign)
 	{
 		int campaign_level = ReadByte();
@@ -1441,8 +1464,10 @@ bool net_handle_ServerWelcome()
 
 	strcpy(hostname, ReadString());
 	string hostversion = ReadString();
-	bool version_mismatch = ReadByte();
-	bool version_check = ReadByte();
+	bool version_mismatch = flags & 2;
+	bool version_check = flags & 4;
+	MapInfo_Map_titlestring = ReadString();
+	MapInfo_Map_author = flags & 8 ? ReadString() : "";
 	srv_minplayers = ReadByte();
 	srv_maxplayers = ReadByte();
 	string modifications = translate_modifications(ReadString());
@@ -1454,15 +1479,9 @@ bool net_handle_ServerWelcome()
 
 	msg = strcat(msg, "\n\n", _("Gametype:"), " ^1", MapInfo_Type_ToText(gametype), "\n");
 
-	msg = strcat(msg, "\n", _("Map:"), " ^2");
-	if (world.message == "")
-		msg = strcat(msg, mi_shortname, "\n");
-	else
-	{
-		int i = strstrofs(world.message, " by ", 0); // matches _MapInfo_Generate()
-		string longname = i >= 0 ? substring(world.message, 0, i) : world.message;
-		msg = strcat(msg, (strcasecmp(longname, mi_shortname) ? strcat(mi_shortname, " ^7// ^2") : ""), longname, "\n");
-	}
+	msg = strcat(msg, "\n", _("Map:"), " ", MapInfo_Map_titlestring, "\n");
+	if (flags & 8)
+		msg = strcat(msg, "^9", _("by:"), " ", MapInfo_Map_author, "\n");
 
 	if (srv_minplayers || srv_maxplayers)
 	{

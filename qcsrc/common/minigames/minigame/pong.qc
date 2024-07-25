@@ -45,7 +45,7 @@ void pong_ball_throw(entity ball)
 {
 	float angle;
 	do
-		angle = random()*M_PI*2;
+		angle = random() * (2 * M_PI);
 	while ( fabs(sin(angle)) < 0.17 || fabs(cos(angle)) < 0.17 );
 	ball.velocity_x = cos(angle)*autocvar_sv_minigames_pong_ball_speed;
 	ball.velocity_y = sin(angle)*autocvar_sv_minigames_pong_ball_speed;
