@@ -1280,3 +1280,18 @@ MUTATOR_HOOKABLE(AllowRocketJumping, EV_AllowRocketJumping);
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(W_PlayStrengthSound, EV_W_PlayStrengthSound);
+
+/** Return true to prevent sandbox objects from being dragged */
+#define EV_Sandbox_DragAllowed(i, o) \
+    /** object */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(Sandbox_DragAllowed, EV_Sandbox_DragAllowed);
+
+/** Return true to prevent writing sandbox changes to storage */
+MUTATOR_HOOKABLE(Sandbox_SaveAllowed, EV_NO_ARGS);
+
+/** Return true to prevent the player from editing sandbox objects with commands */
+#define EV_Sandbox_EditAllowed(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(Sandbox_EditAllowed, EV_Sandbox_EditAllowed);
