@@ -2659,6 +2659,8 @@ void PlayerPostThink (entity this)
 		{
 			// player's bbox gets resized now, instead of in the damage event that killed the player,
 			// once all the damage events of this frame have been processed with normal size
+			this.mins = PL_MIN_CONST;
+			this.maxs = PL_MAX_CONST;
 			this.maxs.z = 5;
 			setsize(this, this.mins, this.maxs);
 		}

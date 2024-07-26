@@ -104,12 +104,17 @@ void CSQCPlayer_SetMinsMaxs(entity this)
 		this.maxs = PHYS_PL_CROUCH_MAX(this);
 		this.view_ofs = PHYS_PL_CROUCH_VIEWOFS(this);
 	}
+	else if (IS_DEAD(this))
+	{
+		this.mins = PL_MIN_CONST;
+		this.maxs = PL_MAX_CONST;
+		this.maxs.z = 5;
+		this.view_ofs = PHYS_PL_VIEWOFS(this);
+	}
 	else
 	{
 		this.mins = PHYS_PL_MIN(this);
 		this.maxs = PHYS_PL_MAX(this);
-		if (IS_DEAD(this))
-			this.maxs.z = 5;
 		this.view_ofs = PHYS_PL_VIEWOFS(this);
 	}
 }
