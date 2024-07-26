@@ -198,7 +198,9 @@ void dompointtouch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
 		return;
-	if(GetResource(toucher, RES_HEALTH) < 1)
+	if(IS_DEAD(toucher))
+		return;
+	if(IS_INDEPENDENT_PLAYER(toucher))
 		return;
 
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
