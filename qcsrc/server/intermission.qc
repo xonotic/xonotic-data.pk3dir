@@ -261,10 +261,6 @@ int Maplist_Init(void)
 
 	Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
 
-	// NOTE: disabled in favour of shuffling the buffer
-	//if(autocvar_g_maplist_shuffle)
-		//cvar_set("g_maplist", maplist_shuffle(autocvar_g_maplist));
-
 	return Map_Count;
 }
 
