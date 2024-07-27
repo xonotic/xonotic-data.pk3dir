@@ -170,21 +170,27 @@ void Map_Goto(float reinit)
 //   -2 = permanent failure
 int MaplistMethod_Iterate(void) // usual method
 {
-	int pass, i;
+	int attempts = 42; // skip advanced checks if this many maps fail
 
 	LOG_TRACE("Trying MaplistMethod_Iterate");
 
-	for(pass = 1; pass <= 2; ++pass)
+	for(int i = 1; i < Map_Count; ++i)
 	{
-		for(i = 1; i < Map_Count; ++i)
+		int mapindex = (i + Map_Current) % Map_Count;
+		if(Map_Check(bufstr_get(maplist_buffer, mapindex), 1))
+			return mapindex;
+
+		attempts -= 1;
+		if(attempts <= 0)
 		{
-			int mapindex = (i + Map_Current) % Map_Count;
-			// on the second go around, just accept the first valid map
-			if(pass == 2 || Map_Check(bufstr_get(maplist_buffer, mapindex), pass))
-				return mapindex;
+			LOG_DEBUG("MaplistMethod_Iterate: Couldn't find a suitable map, falling back to next valid");
+			break;
 		}
 	}
-	return -1;
+
+	// failing that, just accept the next map in the list
+	int mapindex = (1 + Map_Current) % Map_Count;
+	return mapindex;
 }
 
 int MaplistMethod_Repeat(void) // fallback method
