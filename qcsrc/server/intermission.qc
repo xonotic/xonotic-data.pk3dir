@@ -221,7 +221,7 @@ int Maplist_Init(void)
 	if(autocvar_g_maplist != "")
 	{
 		// make sure there is at least one playable map in the list
-		FOREACH_WORD(autocvar_g_maplist, Map_Check(it, 2),
+		FOREACH_WORD(autocvar_g_maplist, fexists(Map_Filename(it)) && Map_Check(it, 2),
 		{
 			// stop at the first valid map to save resources, list is built later
 			have_maps = true;
@@ -240,7 +240,7 @@ int Maplist_Init(void)
 	maplist_buffer = buf_create();
 
 	int _cnt = 0;
-	FOREACH_WORD(autocvar_g_maplist, Map_Check(it, 2),
+	FOREACH_WORD(autocvar_g_maplist, fexists(Map_Filename(it)) && Map_Check(it, 2),
 	{
 		// NOTE: inlined maplist_shuffle function to avoid a second buffer, keep both in sync
 		if(autocvar_g_maplist_shuffle)

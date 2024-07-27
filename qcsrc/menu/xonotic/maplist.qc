@@ -261,8 +261,8 @@ void MapList_Add_All(entity btn, entity me)
 	_MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
 	s = "";
 	for(i = 0; i < MapInfo_count; ++i)
-		s = strcat(s, " ", MapInfo_BSPName_ByID(i));
-	cvar_set("g_maplist", substring(s, 1, strlen(s) - 1));
+		s = cons(s, MapInfo_BSPName_ByID(i));
+	cvar_set("g_maplist", s);
 	me.refilter(me);
 }
 
