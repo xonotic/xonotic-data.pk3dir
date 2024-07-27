@@ -109,7 +109,10 @@ void CSQCPlayer_SetMinsMaxs(entity this)
 		this.mins = PHYS_PL_MIN(this);
 		this.maxs = PHYS_PL_MAX(this);
 		if(IS_DEAD(this))
-			this.maxs.z = max((this.mins.z + this.maxs.z) * PL_CORPSE_SCALE, this.mins.z + 1);
+		{
+			float h = ceil((this.mins.z + this.maxs.z) * PL_CORPSE_SCALE * 10) / 10;
+			this.maxs.z = max(h, this.mins.z + 1);
+		}
 		this.view_ofs = PHYS_PL_VIEWOFS(this);
 	}
 }
