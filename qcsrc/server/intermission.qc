@@ -267,9 +267,7 @@ int Maplist_Init(void)
 
 void Maplist_Close()
 {
-	if(maplist_buffer >= 0)
-		buf_del(maplist_buffer);
-	maplist_buffer = -1;
+	buf_del(maplist_buffer);
 }
 
 // NOTE: call Maplist_Init() before making GetNextMap() call(s)
