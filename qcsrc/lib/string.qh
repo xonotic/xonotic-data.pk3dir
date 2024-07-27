@@ -198,36 +198,48 @@ string ColorTranslateRGB(string s)
 	return (ColorTranslateMode & 1) ? strdecolorize(s) : s;
 }
 
+
+#ifdef CSQC
+#define NOTIF_COLOR_DEF(v, col) string autocvar_##v = col;
+#define NOTIF_COLOR(v) autocvar_##v
+#endif
+
+#ifdef SVQC
+// server doesn't need customizable colors
+#define NOTIF_COLOR_DEF(v, col) const string v = col;
+#define NOTIF_COLOR(v) v
+#endif
+
 #ifdef GAMEQC
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors
-string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
-string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow // secondary priority (items, locations, numbers, etc)
-string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
-string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red    // notice/attention grabbing texting
+NOTIF_COLOR_DEF(hud_colorset_foreground_1, "2") // F1 - Green  // primary priority (important names, etc)
+NOTIF_COLOR_DEF(hud_colorset_foreground_2, "3") // F2 - Yellow // secondary priority (items, locations, numbers, etc)
+NOTIF_COLOR_DEF(hud_colorset_foreground_3, "4") // F3 - Blue   // tertiary priority or relatively inconsequential text
+NOTIF_COLOR_DEF(hud_colorset_foreground_4, "1") // F4 - Red    // notice/attention grabbing texting
 // "kill" colors
-string autocvar_hud_colorset_kill_1 = "1";       // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
-string autocvar_hud_colorset_kill_2 = "3";       // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
-string autocvar_hud_colorset_kill_3 = "4";       // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
+NOTIF_COLOR_DEF(hud_colorset_kill_1, "1")       // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
+NOTIF_COLOR_DEF(hud_colorset_kill_2, "3")       // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
+NOTIF_COLOR_DEF(hud_colorset_kill_3, "4")       // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
 // background color
-string autocvar_hud_colorset_background = "7";   // BG - White // neutral/unimportant text
+NOTIF_COLOR_DEF(hud_colorset_background, "7")   // BG - White // neutral/unimportant text
 
 /** color code replace, place inside of sprintf and parse the string */
 string CCR(string input)
 {
 	// foreground/normal colors
-	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input);
-	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input);
-	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input);
-	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input);
+	input = strreplace("^F1", strcat("^", NOTIF_COLOR(hud_colorset_foreground_1)), input);
+	input = strreplace("^F2", strcat("^", NOTIF_COLOR(hud_colorset_foreground_2)), input);
+	input = strreplace("^F3", strcat("^", NOTIF_COLOR(hud_colorset_foreground_3)), input);
+	input = strreplace("^F4", strcat("^", NOTIF_COLOR(hud_colorset_foreground_4)), input);
 
 	// "kill" colors
-	input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
-	input = strreplace("^K2", strcat("^", autocvar_hud_colorset_kill_2), input);
-	input = strreplace("^K3", strcat("^", autocvar_hud_colorset_kill_3), input);
+	input = strreplace("^K1", strcat("^", NOTIF_COLOR(hud_colorset_kill_1)), input);
+	input = strreplace("^K2", strcat("^", NOTIF_COLOR(hud_colorset_kill_2)), input);
+	input = strreplace("^K3", strcat("^", NOTIF_COLOR(hud_colorset_kill_3)), input);
 
 	// background colors
-	input = strreplace("^BG", strcat("^", autocvar_hud_colorset_background), input);
+	input = strreplace("^BG", strcat("^", NOTIF_COLOR(hud_colorset_background)), input);
 	input = strreplace("^N", "^7", input);  // "none"-- reset to white...
 	return input;
 }
