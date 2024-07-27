@@ -242,7 +242,7 @@ int Maplist_Init(void)
 	int _cnt = 0;
 	FOREACH_WORD(autocvar_g_maplist, Map_Check(it, 2),
 	{
-		// NOTE: inlined version of maplist_shuffle function, keep both in sync
+		// NOTE: inlined maplist_shuffle function to avoid a second buffer, keep both in sync
 		if(autocvar_g_maplist_shuffle)
 		{
 			int _j = floor(random() * (_cnt + 1));
