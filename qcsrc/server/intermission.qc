@@ -178,9 +178,9 @@ int MaplistMethod_Iterate(void) // usual method
 	{
 		for(i = 1; i < Map_Count; ++i)
 		{
-			int mapindex;
-			mapindex = (i + Map_Current) % Map_Count;
-			if(Map_Check(bufstr_get(maplist_buffer, mapindex), pass))
+			int mapindex = (i + Map_Current) % Map_Count;
+			// on the second go around, just accept the first valid map
+			if(pass == 2 || Map_Check(bufstr_get(maplist_buffer, mapindex), pass))
 				return mapindex;
 		}
 	}
