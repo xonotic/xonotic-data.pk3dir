@@ -226,7 +226,6 @@ int Maplist_Init(void)
 	bool have_maps = false;
 	if(autocvar_g_maplist != "")
 	{
-		string newmaplist = "";
 		int trimmedmaps = 0;
 		// make sure there is at least one playable map in the list
 		// additionally trim any non-existent maps
@@ -237,7 +236,6 @@ int Maplist_Init(void)
 				trimmedmaps += 1;
 				continue;
 			}
-			newmaplist = cons(newmaplist, it);
 			if(have_maps || !Map_Check(it, 2))
 				continue;
 			have_maps = true;
@@ -246,6 +244,11 @@ int Maplist_Init(void)
 		if(trimmedmaps > 0)
 		{
 			LOG_DEBUGF("Maplist_Init: trimmed %d missing maps from the list", trimmedmaps);
+			string newmaplist = "";
+			FOREACH_WORD(autocvar_g_maplist, fexists(Map_Filename(it)),
+			{
+				newmaplist = cons(newmaplist, it);
+			});
 			cvar_set("g_maplist", newmaplist);
 		}
 	}
