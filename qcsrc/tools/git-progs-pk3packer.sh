@@ -83,12 +83,12 @@ packagercleanup() {
 	# right after starting where all files to clean up don't exist yet
 	set +e
 
-	rm "csprogs-$HASH.dat"
-	rm "progs-$HASH.dat"
-	rm progs.txt
-	rm changes.diff
+	rm -fv "csprogs-$HASH.dat"
+	rm -fv "progs-$HASH.dat"
+	rm -fv progs.txt
+	rm -fv changes.diff
 
-	rm z-git-progspk3.zip 2> /dev/null
+	rm -fv z-git-progspk3.zip
 }
 trap 'packagercleanup' EXIT INT QUIT TERM
 
