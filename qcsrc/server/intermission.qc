@@ -226,13 +226,28 @@ int Maplist_Init(void)
 	bool have_maps = false;
 	if(autocvar_g_maplist != "")
 	{
+		string newmaplist = "";
+		int trimmedmaps = 0;
 		// make sure there is at least one playable map in the list
-		FOREACH_WORD(autocvar_g_maplist, fexists(Map_Filename(it)) && Map_Check(it, 2),
+		// additionally trim any non-existent maps
+		FOREACH_WORD(autocvar_g_maplist, true,
 		{
-			// stop at the first valid map to save resources, list is built later
+			if(!fexists(Map_Filename(it)))
+			{
+				trimmedmaps += 1;
+				continue;
+			}
+			newmaplist = cons(newmaplist, it);
+			if(have_maps || !Map_Check(it, 2))
+				continue;
 			have_maps = true;
-			break;
 		});
+
+		if(trimmedmaps > 0)
+		{
+			LOG_DEBUGF("Maplist_Init: trimmed %d missing maps from the list", trimmedmaps);
+			cvar_set("g_maplist", newmaplist);
+		}
 	}
 
 	if (!have_maps)
@@ -246,7 +261,7 @@ int Maplist_Init(void)
 	maplist_buffer = buf_create();
 
 	int _cnt = 0;
-	FOREACH_WORD(autocvar_g_maplist, fexists(Map_Filename(it)) && Map_Check(it, 2),
+	FOREACH_WORD(autocvar_g_maplist, Map_Check(it, 2),
 	{
 		// NOTE: inlined maplist_shuffle function to avoid a second buffer, keep both in sync
 		if(autocvar_g_maplist_shuffle)
