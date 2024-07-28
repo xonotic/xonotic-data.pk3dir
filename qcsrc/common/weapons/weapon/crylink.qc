@@ -347,16 +347,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 		setorigin(proj, w_shotorg);
 		setsize(proj, '0 0 0', '0 0 0');
 
-
-		s = '0 0 0';
-		if(counter == 0)
-			s = '0 0 0';
-		else
-		{
-			makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
-			s.y = v_forward.x;
-			s.z = v_forward.y;
-		}
+		s = W_CalculateSpreadPattern(1, counter, shots);
 		s = s * WEP_CVAR_PRI(crylink, spread) * autocvar_g_weaponspreadfactor;
 		W_SetupProjVelocity_Explicit(proj, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_PRI(crylink, speed), 0, 0, 0, false);
 		settouch(proj, W_Crylink_Touch);
@@ -462,15 +453,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 		if(WEP_CVAR_SEC(crylink, spreadtype) == 1)
 		{
-			s = '0 0 0';
-			if(counter == 0)
-				s = '0 0 0';
-			else
-			{
-				makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
-				s.y = v_forward.x;
-				s.z = v_forward.y;
-			}
+			s = W_CalculateSpreadPattern(1, counter, shots);
 			s = s * WEP_CVAR_SEC(crylink, spread) * autocvar_g_weaponspreadfactor;
 			s = w_shotdir + right * s.y + up * s.z;
 		}
