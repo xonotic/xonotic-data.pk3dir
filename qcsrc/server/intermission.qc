@@ -226,30 +226,40 @@ int Maplist_Init(void)
 	bool have_maps = false;
 	if(autocvar_g_maplist != "")
 	{
-		int trimmedmaps = 0;
 		// make sure there is at least one playable map in the list
-		// additionally trim any non-existent maps
+		bool needtrim = false;
 		FOREACH_WORD(autocvar_g_maplist, true,
 		{
 			if(!fexists(Map_Filename(it)))
 			{
-				trimmedmaps += 1;
+				needtrim = true;
+				if(have_maps)
+					break;
 				continue;
 			}
 			if(have_maps || !Map_Check(it, 2))
 				continue;
 			have_maps = true;
+			if(needtrim)
+				break;
 		});
 
-		if(trimmedmaps > 0)
+		// additionally trim any non-existent maps
+		if(needtrim)
 		{
-			LOG_DEBUGF("Maplist_Init: trimmed %d missing maps from the list", trimmedmaps);
+			int trimmedmaps = 0;
 			string newmaplist = "";
-			FOREACH_WORD(autocvar_g_maplist, fexists(Map_Filename(it)),
+			FOREACH_WORD(autocvar_g_maplist, true,
 			{
+				if(!fexists(Map_Filename(it)))
+				{
+					trimmedmaps += 1;
+					continue;
+				}
 				newmaplist = cons(newmaplist, it);
 			});
 			cvar_set("g_maplist", newmaplist);
+			LOG_DEBUGF("Maplist_Init: trimmed %d missing maps from the list", trimmedmaps);
 		}
 	}
 
