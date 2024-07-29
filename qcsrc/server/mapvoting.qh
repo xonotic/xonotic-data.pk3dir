@@ -24,6 +24,7 @@ float autocvar_sv_vote_gametype_timeout;
 string autocvar_sv_vote_gametype_options;
 float autocvar_sv_vote_gametype_keeptwotime;
 bool autocvar_sv_vote_gametype_default_current;
+bool autocvar_sv_vote_gametype_maplist_reset = true;
 
 // definitions for functions used outside mapvoting.qc
 void MapVote_Start();

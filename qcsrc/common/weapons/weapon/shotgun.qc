@@ -8,8 +8,11 @@
 void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity,
                       float isprimary, float ammocount, float damage,
                       float falloff_halflife, float falloff_mindist, float falloff_maxdist,
-                      float bullets, float spread, float solidpenetration,
-                      float force, float falloff_forcehalflife, entity bullet_trail_effect)
+                      float bullets, float spread,
+                      float spread_pattern, float spread_pattern_scale,
+                      float solidpenetration,
+                      float force, float falloff_forcehalflife,
+                      entity bullet_trail_effect)
 {
 	W_DecreaseAmmo(thiswep, actor, ammocount, weaponentity);
 
@@ -22,10 +25,34 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity,
 	if(lag && bullets > 0)
 		antilag_takeback_all(actor, lag);
 
-	for(int sc = 0;sc < bullets;sc = sc + 1)
-		fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration,
-			damage, falloff_halflife, falloff_mindist, falloff_maxdist, 0, force,
-			falloff_forcehalflife, thiswep.m_id, bullet_trail_effect, false);
+	if (spread_pattern && spread_pattern_scale > 0)
+	{
+		vector right, up;
+		right = v_right;
+		up = v_up;
+
+		float fixed_spread_factor = (spread * autocvar_g_weaponspreadfactor) / spread_pattern_scale;
+
+		for(int sc = 0; sc < bullets; ++sc)
+		{
+			vector s = W_CalculateSpreadPattern(spread_pattern, sc, bullets);
+			s = s * fixed_spread_factor;
+			fireBullet_falloff(actor, weaponentity,
+			                   w_shotorg, w_shotdir + right * s.y + up * s.z,
+			                   0, solidpenetration, damage,
+			                   falloff_halflife, falloff_mindist, falloff_maxdist,
+			                   0, force, falloff_forcehalflife,
+			                   thiswep.m_id, bullet_trail_effect, false);
+		}
+	}
+	else
+		for(int sc = 0; sc < bullets; ++sc)
+			fireBullet_falloff(actor, weaponentity,
+				w_shotorg, w_shotdir,
+				spread, solidpenetration, damage,
+				falloff_halflife, falloff_mindist, falloff_maxdist,
+				0, force, falloff_forcehalflife,
+				thiswep.m_id, bullet_trail_effect, false);
 
 	if(lag && bullets > 0)
 		antilag_restore_all(actor);
@@ -36,7 +63,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity,
 	if(autocvar_g_casings >= 1)
 	{
 		makevectors(actor.v_angle); // for some reason, this is lost
-		//for(int sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
+		//for(int sc = 0; sc < WEP_CVAR_PRI(shotgun, ammo); ++sc)
 			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), vectoangles(v_forward), 1, actor, weaponentity);
 	}
 }
@@ -176,6 +203,8 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity
 		WEP_CVAR_PRI(shotgun, damagefalloff_maxdist),
 		WEP_CVAR_PRI(shotgun, bullets),
 		WEP_CVAR_PRI(shotgun, spread),
+		WEP_CVAR_PRI(shotgun, spread_pattern),
+		WEP_CVAR_PRI(shotgun, spread_pattern_scale),
 		WEP_CVAR_PRI(shotgun, solidpenetration),
 		WEP_CVAR_PRI(shotgun, force),
 		WEP_CVAR_PRI(shotgun, damagefalloff_forcehalflife),
@@ -200,6 +229,8 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 		WEP_CVAR_PRI(shotgun, damagefalloff_maxdist),
 		WEP_CVAR_PRI(shotgun, bullets),
 		WEP_CVAR_PRI(shotgun, spread),
+		WEP_CVAR_PRI(shotgun, spread_pattern),
+		WEP_CVAR_PRI(shotgun, spread_pattern_scale),
 		WEP_CVAR_PRI(shotgun, solidpenetration),
 		WEP_CVAR_PRI(shotgun, force),
 		WEP_CVAR_PRI(shotgun, damagefalloff_forcehalflife),
@@ -245,6 +276,8 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 						WEP_CVAR_PRI(shotgun, damagefalloff_maxdist),
 						WEP_CVAR_PRI(shotgun, bullets),
 						WEP_CVAR_PRI(shotgun, spread),
+						WEP_CVAR_PRI(shotgun, spread_pattern),
+						WEP_CVAR_PRI(shotgun, spread_pattern_scale),
 						WEP_CVAR_PRI(shotgun, solidpenetration),
 						WEP_CVAR_PRI(shotgun, force),
 						WEP_CVAR_PRI(shotgun, damagefalloff_forcehalflife),
@@ -269,6 +302,8 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 						WEP_CVAR_PRI(shotgun, damagefalloff_maxdist),
 						WEP_CVAR_PRI(shotgun, bullets),
 						WEP_CVAR_PRI(shotgun, spread),
+						WEP_CVAR_PRI(shotgun, spread_pattern),
+						WEP_CVAR_PRI(shotgun, spread_pattern_scale),
 						WEP_CVAR_PRI(shotgun, solidpenetration),
 						WEP_CVAR_PRI(shotgun, force),
 						WEP_CVAR_PRI(shotgun, damagefalloff_forcehalflife),

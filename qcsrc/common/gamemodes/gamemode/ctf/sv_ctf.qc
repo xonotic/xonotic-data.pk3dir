@@ -1125,7 +1125,8 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 	}
 
 	// special touch behaviors
-	if(STAT(FROZEN, toucher)) { return; }
+	if(IS_INDEPENDENT_PLAYER(toucher)) { return; }
+	else if(STAT(FROZEN, toucher)) { return; }
 	else if(IS_VEHICLE(toucher))
 	{
 		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)
@@ -2388,7 +2389,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 
 			while(head) // find the closest acceptable target to pass to
 			{
-				if(IS_PLAYER(head) && !IS_DEAD(head))
+				if(IS_PLAYER(head) && !IS_DEAD(head) && !IS_INDEPENDENT_PLAYER(head))
 				if(head != player && SAME_TEAM(head, player))
 				if(!head.speedrunning && !head.vehicle)
 				{

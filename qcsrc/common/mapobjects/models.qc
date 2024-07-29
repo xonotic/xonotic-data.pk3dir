@@ -242,8 +242,6 @@ void Ent_Wall_PreDraw(entity this)
 			{
 				if (vdist(player_dist_math, >=, this.fade_start))
 					alph = 0;
-				else
-					alph = 1;
 			}
 			else
 			{
@@ -253,13 +251,12 @@ void Ent_Wall_PreDraw(entity this)
 							   / (this.fade_end - this.fade_start), 1)) / 100.0;
 			}
 		}
-		else
-		{
-			alph = 1;
-		}
 	}
 	this.alpha = alph;
-	this.drawmask = (alph <= 0) ? 0 : MASK_NORMAL;
+	if(this.alpha >= ALPHA_MIN_VISIBLE)
+		this.drawmask = MASK_NORMAL;
+	else
+		this.drawmask = 0;
 }
 
 void Ent_Wall_Draw(entity this)
@@ -290,11 +287,6 @@ void Ent_Wall_Draw(entity this)
 	}
 	else
 		this.alpha = 1;
-
-	if(this.alpha >= ALPHA_MIN_VISIBLE)
-		this.drawmask = MASK_NORMAL;
-	else
-		this.drawmask = 0;
 }
 
 void Ent_Wall_Remove(entity this)

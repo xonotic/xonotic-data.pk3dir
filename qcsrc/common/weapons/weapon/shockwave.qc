@@ -709,7 +709,7 @@ void Draw_Shockwave(entity this)
 	for(counter = 0; counter < divisions; ++counter)
 	{
 		// perfect circle effect lines
-		makevectors('0 360 0' * (0.75 + (counter - 0.5) / divisions));
+		makevectors('0 360 0' * (counter / divisions));
 		angle.y = v_forward.x;
 		angle.z = v_forward.y;
 
