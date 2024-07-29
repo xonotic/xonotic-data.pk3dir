@@ -2659,7 +2659,8 @@ void PlayerPostThink (entity this)
 		{
 			// player's bbox gets resized now, instead of in the damage event that killed the player,
 			// once all the damage events of this frame have been processed with normal size
-			this.maxs.z = 5;
+			float h = ceil((this.mins.z + this.maxs.z) * PL_CORPSE_SCALE * 10) / 10;
+			this.maxs.z = max(h, this.mins.z + 1);
 			setsize(this, this.mins, this.maxs);
 		}
 		DrownPlayer(this);
