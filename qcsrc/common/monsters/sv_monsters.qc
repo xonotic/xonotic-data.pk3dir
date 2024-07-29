@@ -36,33 +36,23 @@ void monsters_setstatus(entity this)
 	STAT(MONSTERS_KILLED, this) = monsters_killed;
 }
 
+bool autocvar_g_monsters_drop = true;
 void monster_dropitem(entity this, entity attacker)
 {
-	if(!this.candrop || !this.monster_loot)
+	if(!this.candrop || !this.monster_loot || !autocvar_g_monsters_drop)
 		return;
 
-	vector org = CENTER_OR_VIEWOFS(this);
 	entity e = spawn();
-	Item_SetLoot(e, true);
-	e.spawnfunc_checked = true;
-
-	e.monster_loot = this.monster_loot;
+	e.itemdef = this.monster_loot;
+	e.origin = CENTER_OR_VIEWOFS(this);
+	e.velocity = randomvec() * 175 + '0 0 325';
+	e.lifetime = max(0, autocvar_g_monsters_drop_time);
 
 	MUTATOR_CALLHOOK(MonsterDropItem, this, e, attacker);
 	e = M_ARGV(1, entity);
 
-	if(e && e.monster_loot)
-	{
-		e.noalign = true;
-		StartItem(e, e.monster_loot);
-		if(startitem_failed || wasfreed(e))
-			return;
-		e.gravity = 1;
-		setorigin(e, org);
-		e.velocity = randomvec() * 175 + '0 0 325';
-		e.item_spawnshieldtime = time + 0.7;
-		SUB_SetFade(e, time + autocvar_g_monsters_drop_time, 1);
-	}
+	if(e && e.itemdef)
+		Item_Initialise(e);
 }
 
 bool monster_facing(entity this, entity targ)
@@ -585,6 +575,27 @@ void Monster_Use(entity this, entity actor, entity trigger)
 	if(Monster_ValidTarget(this, actor, true)) { this.enemy = actor; }
 }
 
+/// Returns an origin that's near targetorigin and visible to this monster.
+vector Monster_WanderTarget(entity this, vector targetorigin)
+{
+	vector pos, ang;
+
+	ang_y = rint(random() * 500);
+	ang_x = this.angles_x;
+	ang_z = this.angles_z;
+	makevectors(ang);
+	pos = targetorigin + v_forward * this.wander_distance;
+	if(((this.flags & FL_FLY) && (this.spawnflags & MONSTERFLAG_FLY_VERTICAL)) || (this.flags & FL_SWIM))
+	{
+		pos.z = random() * 200;
+		if(random() >= 0.5)
+			pos.z *= -1;
+	}
+	// truncate movement so we don't do walking into walls animations
+	traceline(this.origin + this.view_ofs, pos, MOVE_NORMAL, this);
+	return trace_endpos;
+}
+
 vector Monster_Move_Target(entity this, entity targ)
 {
 	// enemy is always preferred target
@@ -620,7 +631,14 @@ vector Monster_Move_Target(entity this, entity targ)
 		{
 			this.monster_movestate = MONSTER_MOVE_FOLLOW;
 			this.last_trace = time + 0.3;
-			return (this.monster_follow) ? this.monster_follow.origin : this.origin;
+			if (this.monster_follow)
+			{
+				if (vdist(this.origin - this.monster_follow.origin, <, this.wander_distance))
+					this.last_trace = time + this.wander_delay;
+				return Monster_WanderTarget(this, this.monster_follow.origin);
+			}
+			else
+				return this.origin;
 		}
 		case MONSTER_MOVE_SPAWNLOC:
 		{
@@ -645,42 +663,101 @@ vector Monster_Move_Target(entity this, entity targ)
 		default:
 		case MONSTER_MOVE_WANDER:
 		{
-			vector pos;
 			this.monster_movestate = MONSTER_MOVE_WANDER;
-
 			if(this.monster_moveto)
 			{
 				this.last_trace = time + 0.5;
-				pos = this.monster_moveto;
+				return this.monster_moveto;
 			}
 			else if(targ)
 			{
 				this.last_trace = time + 0.5;
-				pos = targ.origin;
+				return targ.origin;
 			}
 			else
 			{
 				this.last_trace = time + this.wander_delay;
-
-				this.angles_y = rint(random() * 500);
-				makevectors(this.angles);
-				pos = this.origin + v_forward * this.wander_distance;
-
-				if(((this.flags & FL_FLY) && (this.spawnflags & MONSTERFLAG_FLY_VERTICAL)) || (this.flags & FL_SWIM))
-				{
-					pos.z = random() * 200;
-					if(random() >= 0.5)
-						pos.z *= -1;
-				}
+				return Monster_WanderTarget(this, this.origin);
 			}
-
-			return pos;
 		}
 	}
 }
 
-.entity draggedby;
+// Check for water/slime/lava and dangerous edges
+// (only when the bot is on the ground or jumping intentionally)
+// returns a number > 0 for danger
+// based on havocbot_checkdanger()
+int Monster_CheckDanger(entity this, vector dst_ahead)
+{
+	float s;
 
+	if((this.flags & FL_FLY) || (this.flags & FL_SWIM))
+	{
+		// Look ahead
+		traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
+
+		// Only care about the skybox if it's below
+		// bones_was_here: does this even matter when flying/swimming?
+		if (trace_endpos.z < this.origin.z + this.mins.z
+		&& trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+			return 1;
+
+		s = pointcontents(trace_endpos + '0 0 1');
+		if (s != CONTENT_SOLID)
+		{
+			if (s == CONTENT_LAVA || s == CONTENT_SLIME)
+				return 3;
+
+			if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+			{
+				// the traceline check isn't enough but is good as optimization,
+				// when not true (most of the time) this tracebox call is avoided
+				tracebox(this.origin + this.view_ofs, this.mins, this.maxs, dst_ahead, true, this);
+				if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+					return 4;
+			}
+		}
+	}
+	else
+	{
+		vector dst_down = dst_ahead - '0 0 3000';
+
+		// Look downwards
+		traceline(dst_ahead, dst_down, true, NULL);
+		//te_lightning2(NULL, this.origin + this.view_ofs, dst_ahead); // Draw "ahead" look
+		//te_lightning2(NULL, dst_ahead, trace_endpos); // Draw "downwards" look
+		if (trace_endpos.z < this.origin.z + this.mins.z)
+		{
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+				return 1;
+
+			// If following an enemy ignore probably-non-fatal falls,
+			// if wandering only ignore small falls.
+			if (trace_endpos.z < (this.origin.z + this.mins.z) - (this.enemy ? 1024 : 100))
+				return 2;
+
+			s = pointcontents(trace_endpos + '0 0 1');
+			if (s != CONTENT_SOLID)
+			{
+				if (s == CONTENT_LAVA || s == CONTENT_SLIME)
+					return 3;
+
+				if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+				{
+					// the traceline check isn't enough but is good as optimization,
+					// when not true (most of the time) this tracebox call is avoided
+					tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
+					if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+						return 4;
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+.entity draggedby;
 void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 {
 	// update goal entity if lost
@@ -751,8 +828,9 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	runspeed = bound(0, M_ARGV(1, float) * MONSTER_SKILLMOD(this), runspeed * 2.5); // limit maxspeed to prevent craziness
 	walkspeed = bound(0, M_ARGV(2, float) * MONSTER_SKILLMOD(this), walkspeed * 2.5); // limit maxspeed to prevent craziness
 
-	if(teamplay && autocvar_g_monsters_teams)
-	if(DIFF_TEAM(this.monster_follow, this))
+	if(this.monster_follow)
+	if((teamplay && autocvar_g_monsters_teams && DIFF_TEAM(this.monster_follow, this))
+	|| IS_SPEC(this.monster_follow) || IS_OBSERVER(this.monster_follow))
 		this.monster_follow = NULL;
 
 	if(this.state == MONSTER_ATTACK_RANGED && IS_ONGROUND(this))
@@ -764,6 +842,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	if(this.state && time >= this.attack_finished_single[0])
 		this.state = 0; // attack is over
 
+// Select destination
 	if(this.state != MONSTER_ATTACK_MELEE) // don't move if set
 	if(time >= this.last_trace || this.enemy) // update enemy or rider instantly
 		this.moveto = Monster_Move_Target(this, targ);
@@ -780,10 +859,28 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	if(!(this.spawnflags & MONSTERFLAG_FLY_VERTICAL) && !(this.flags & FL_SWIM))
 		this.moveto_z = this.origin_z;
 
+// Steer towards destination
+	this.steerto = steerlib_attract2(this, ((this.monster_face) ? this.monster_face : this.moveto), 0.5, 500, 0.95);
+	vector real_angle = vectoangles(this.steerto) - this.angles;
+	float turny = 25;
+	if(this.state == MONSTER_ATTACK_MELEE)
+		turny = 0;
+	if(turny)
+	{
+		turny = bound(turny * -1, shortangle_f(real_angle.y, this.angles.y), turny);
+		this.angles_y += turny;
+	}
+
+// Update velocity
 	fixedmakevectors(this.angles);
 	float vz = this.velocity_z;
 
-	if(!turret_closetotarget(this, this.moveto, 16))
+	// Check for danger ahead
+	float bboxwidth = min(this.maxs_x - this.mins_x, this.maxs_y - this.mins_y);
+	int danger = Monster_CheckDanger(this, this.origin + this.view_ofs
+		+ (vdist(this.velocity, >, bboxwidth * 5) ? this.velocity * 0.2 : v_forward * bboxwidth));
+
+	if(!danger && !turret_closetotarget(this, this.moveto, 16))
 	{
 		bool do_run = (this.enemy || this.monster_moveto);
 		movelib_move_simple(this, v_forward, ((do_run) ? runspeed : walkspeed), 0.4);
@@ -815,16 +912,11 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	if(!((this.flags & FL_FLY) || (this.flags & FL_SWIM)))
 		this.velocity_z = vz;
 
-	this.steerto = steerlib_attract2(this, ((this.monster_face) ? this.monster_face : this.moveto), 0.5, 500, 0.95);
-
-	vector real_angle = vectoangles(this.steerto) - this.angles;
-	float turny = 25;
-	if(this.state == MONSTER_ATTACK_MELEE)
-		turny = 0;
-	if(turny)
+// If this path is dangerous try to find a different one next frame
+	if (danger)
 	{
-		turny = bound(turny * -1, shortangle_f(real_angle.y, this.angles.y), turny);
-		this.angles_y += turny;
+		this.last_trace = time + 0.3;
+		this.moveto = Monster_WanderTarget(this, this.origin);
 	}
 }
 
@@ -976,7 +1068,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	Monster mon = this.monsterdef;
 	mon.mr_death(mon, this);
 
-	if(this.candrop && this.weapon)
+	if(this.candrop && this.weapon && autocvar_g_monsters_drop)
 	{
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		W_ThrowNewWeapon(this, this.weapon, 0, this.origin, randomvec() * 150 + '0 0 325', weaponentity);
@@ -1293,9 +1385,6 @@ bool Monster_Spawn_Setup(entity this)
 	this.pain_finished = this.nextthink;
 	this.last_enemycheck = this.spawn_time + random(); // slight delay
 
-	if(IS_PLAYER(this.monster_follow))
-		this.effects |= EF_DIMLIGHT;
-
 	if(!this.wander_delay) { this.wander_delay = 2; }
 	if(!this.wander_distance) { this.wander_distance = 600; }
 
@@ -1454,6 +1543,13 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 		setorigin(this, this.origin + '0 0 20');
 		tracebox(this.origin + '0 0 64', this.mins, this.maxs, this.origin - '0 0 10000', MOVE_WORLDONLY, this);
 		setorigin(this, trace_endpos);
+	}
+
+	if (!nudgeoutofsolid(this))
+	{
+		// Stuck and not fixable
+		Monster_Remove(this);
+		return false;
 	}
 
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))

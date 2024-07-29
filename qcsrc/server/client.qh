@@ -7,6 +7,7 @@
 #include <common/sounds/all.qh>
 
 bool autocvar__notarget;
+bool autocvar_sv_show_entnum;
 int autocvar_g_balance_armor_start;
 float autocvar_g_balance_pause_armor_rot_spawn;
 float autocvar_g_balance_pause_fuel_rot_spawn;
@@ -71,7 +72,9 @@ float autocvar_sv_player_scale;
 .int spectatee_status;
 .bool zoomstate;
 
+.bool team_selected;
 .bool just_joined;
+.bool wants_join;
 
 .int pressedkeys;
 
@@ -81,9 +84,6 @@ float autocvar_sv_player_scale;
 .string playerskin;
 
 void ClientState_attach(entity this);
-
-IntrusiveList g_players;
-STATIC_INIT(g_players) { g_players = IL_NEW(); }
 
 CLASS(Client, Object)
     /** Client name */
@@ -160,6 +160,7 @@ CLASS(Client, Object)
     ATTRIB(Client, teamkill_soundsource, entity, this.teamkill_soundsource);
     ATTRIB(Client, usekeypressed, bool, this.usekeypressed);
     ATTRIB(Client, jointime, float, this.jointime);
+    ATTRIB(Client, wants_join, bool, this.wants_join);
     ATTRIB(Client, spectatortime, float, this.spectatortime);
     ATTRIB(Client, startplaytime, float, this.startplaytime);
     ATTRIB(Client, version_nagtime, float, this.version_nagtime);
@@ -206,7 +207,8 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_pokenade_type, string, this.cvar_cl_pokenade_type);
     ATTRIB(Client, cvar_cl_spawn_near_teammate, bool, this.cvar_cl_spawn_near_teammate);
     ATTRIB(Client, cvar_cl_gunalign, int, this.cvar_cl_gunalign);
-    ATTRIB(Client, cvar_cl_handicap, float, this.cvar_cl_handicap);
+    ATTRIB(Client, cvar_cl_handicap_damage_given, float, this.cvar_cl_handicap_damage_given);
+    ATTRIB(Client, cvar_cl_handicap_damage_taken, float, this.cvar_cl_handicap_damage_taken);
     ATTRIB(Client, cvar_cl_clippedspectating, bool, this.cvar_cl_clippedspectating);
     ATTRIB(Client, cvar_cl_autoscreenshot, int, this.cvar_cl_autoscreenshot);
     ATTRIB(Client, cvar_cl_jetpack_jump, bool, this.cvar_cl_jetpack_jump);
@@ -277,10 +279,8 @@ CLASS(Player, Client)
 
     INIT(Player) {
         this.classname = STR_PLAYER;
-        IL_PUSH(g_players, this);
     }
     DESTRUCTOR(Player) {
-        IL_REMOVE(g_players, this);
     }
 ENDCLASS(Player)
 
@@ -359,9 +359,11 @@ void calculate_player_respawn_time(entity this);
 
 bool PlayerInList(entity player, string list);
 
-void ClientData_Touch(entity e);
+bool PlayerInIDList(entity p, string idlist);
 
-int nJoinAllowed(entity this, entity ignore);
+bool PlayerInIPList(entity p, string iplist);
+
+void ClientData_Touch(entity e);
 
 void PlayerUseKey(entity this);
 
@@ -399,8 +401,12 @@ void ClientInit_misc(entity this);
 int GetPlayerLimit();
 
 const int MIN_SPEC_TIME = 1;
+void Join(entity this, bool queued_join);
+int nJoinAllowed(entity this, entity ignore);
+bool queuePlayer(entity this, int team_index);
 bool joinAllowed(entity this);
-void Join(entity this);
+
+void PlayerFrame (entity this);
 
 #define SPECTATE_COPY() ACCUMULATE void SpectateCopy(entity this, entity spectatee)
 #define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }

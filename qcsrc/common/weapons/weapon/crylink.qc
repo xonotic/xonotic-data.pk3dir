@@ -347,16 +347,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 		setorigin(proj, w_shotorg);
 		setsize(proj, '0 0 0', '0 0 0');
 
-
-		s = '0 0 0';
-		if(counter == 0)
-			s = '0 0 0';
-		else
-		{
-			makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
-			s.y = v_forward.x;
-			s.z = v_forward.y;
-		}
+		s = W_CalculateSpreadPattern(1, counter, shots);
 		s = s * WEP_CVAR_PRI(crylink, spread) * autocvar_g_weaponspreadfactor;
 		W_SetupProjVelocity_Explicit(proj, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_PRI(crylink, speed), 0, 0, 0, false);
 		settouch(proj, W_Crylink_Touch);
@@ -391,7 +382,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 		MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 	}
-	if(WEP_CVAR_PRI(crylink, joinspread) != 0)
+	if(WEP_CVAR_PRI(crylink, joinspread) != 0 && WEP_CVAR_PRI(crylink, shots) > 1)
 	{
 		actor.(weaponentity).crylink_lastgroup = proj;
 		W_Crylink_CheckLinks(proj);
@@ -462,15 +453,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 		if(WEP_CVAR_SEC(crylink, spreadtype) == 1)
 		{
-			s = '0 0 0';
-			if(counter == 0)
-				s = '0 0 0';
-			else
-			{
-				makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
-				s.y = v_forward.x;
-				s.z = v_forward.y;
-			}
+			s = W_CalculateSpreadPattern(1, counter, shots);
 			s = s * WEP_CVAR_SEC(crylink, spread) * autocvar_g_weaponspreadfactor;
 			s = w_shotdir + right * s.y + up * s.z;
 		}
@@ -511,7 +494,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 		MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 	}
-	if(WEP_CVAR_SEC(crylink, joinspread) != 0)
+	if(WEP_CVAR_SEC(crylink, joinspread) != 0 && WEP_CVAR_SEC(crylink, shots) > 1)
 	{
 		actor.(weaponentity).crylink_lastgroup = proj;
 		W_Crylink_CheckLinks(proj);
@@ -532,7 +515,7 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         thiswep.wr_reload(thiswep, actor, weaponentity);
     }
 
-    if(fire & 1)
+    else if(fire & 1)
     {
         if(actor.(weaponentity).crylink_waitrelease != 1)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(crylink, refire)))
@@ -542,7 +525,7 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         }
     }
 
-    if((fire & 2) && autocvar_g_balance_crylink_secondary)
+    else if((fire & 2) && autocvar_g_balance_crylink_secondary)
     {
         if(actor.(weaponentity).crylink_waitrelease != 2)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(crylink, refire)))

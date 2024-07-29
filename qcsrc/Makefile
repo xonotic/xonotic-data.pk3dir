@@ -6,12 +6,6 @@ WORKDIR ?= ../.tmp
 
 QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty='~')
 VER = $(subst *,\*,$(QCCFLAGS_WATERMARK))
-NDEBUG ?= 1
-XONOTIC ?= 1
-ENABLE_EFFECTINFO ?= 0
-ENABLE_DEBUGDRAW ?= 0
-ENABLE_DEBUGTRACE ?= 0
-BUILD_MOD ?=
 
 ifndef ZIP
 	ifneq ($(shell which zip 2>/dev/null),)
@@ -23,41 +17,11 @@ ifndef ZIP
 	ifneq ($(shell which 7za 2>/dev/null),)
 		ZIP := 7za a -tzip -mx=9 -sdel
 	endif
-    ifndef ZIP
-        $(warning "No zip / 7z / 7za in ($(PATH))")
-        ZIP := : zip_not_found
-    endif
+	ifndef ZIP
+		$(warning "No zip / 7z / 7za in ($(PATH))")
+		ZIP := : zip_not_found
+	endif
 endif
-
-# Set to empty string to temporarily enable warnings when debugging
-QCCFLAGS_WERROR ?= \
-	-Werror
-
-# We eventually need to get rid of these
-QCCFLAGS_WTFS ?= \
-	-Wno-field-redeclared
-
-QCCDEFS ?= \
-	-DXONOTIC=$(XONOTIC) \
-	-DWATERMARK="$(QCCFLAGS_WATERMARK)" \
-	-DNDEBUG=$(NDEBUG) \
-	-DENABLE_EFFECTINFO=$(ENABLE_EFFECTINFO) \
-	-DENABLE_DEBUGDRAW=$(ENABLE_DEBUGDRAW) \
-	-DENABLE_DEBUGTRACE=$(ENABLE_DEBUGTRACE) \
-	$(if $(BUILD_MOD), -DBUILD_MOD="$(BUILD_MOD)" -I$(BUILD_MOD), ) \
-	$(QCCDEFS_EXTRA)
-
-# -Ooverlap-locals is required
-QCCFLAGS ?= \
-	-std=gmqcc \
-	-Ooverlap-locals \
-	-O3 \
-	$(QCCFLAGS_WERROR) \
-	-Wall \
-	$(QCCFLAGS_WTFS) \
-	-flno -futf8 -fno-bail-on-werror \
-	-frelaxed-switch -freturn-assignments \
-	$(QCCFLAGS_EXTRA)
 
 
 
@@ -126,8 +90,6 @@ $(QCCVERSIONFILE): | $(WORKDIR)
 export WORKDIR
 export CPP
 export QCC
-export QCCDEFS
-export QCCFLAGS
 
 $(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE) | $(WORKDIR)
 	@ echo make[1]: Entering directory \`$(CURDIR)/client\'

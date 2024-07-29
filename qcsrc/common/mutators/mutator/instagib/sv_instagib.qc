@@ -17,23 +17,6 @@ bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
 
-void instagib_invisibility(entity this)
-{
-	this.invisibility_finished = autocvar_g_instagib_invisibility_time;
-	StartItem(this, ITEM_Invisibility);
-}
-
-void instagib_extralife(entity this)
-{
-	StartItem(this, ITEM_ExtraLife);
-}
-
-void instagib_speed(entity this)
-{
-	this.speed_finished = autocvar_g_instagib_speed_time;
-	StartItem(this, ITEM_Speed);
-}
-
 /// \brief Returns a random classname of the instagib item.
 /// \param[in] prefix Prefix of the cvars that hold probabilities.
 /// \return Random classname of the instagib item.
@@ -126,7 +109,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
 {
 	entity item = M_ARGV(1, entity);
 
-	item.monster_loot = ITEM_VaporizerCells;
+	item.itemdef = ITEM_VaporizerCells;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
@@ -294,60 +277,85 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
 	M_ARGV(0, string) = "off";
 }
 
-void replace_with_insta_cells(entity item)
+void instagib_replace_item_with(entity this, GameItem def)
 {
-	entity e = new(item_vaporizer_cells);
-	Item_CopyFields(item, e);
-	spawnfunc_item_vaporizer_cells(e);
+	entity new_item = spawn();
+	switch (def)
+	{
+		case ITEM_Invisibility:
+			new_item.invisibility_finished = autocvar_g_instagib_invisibility_time;
+			break;
+		case ITEM_Speed:
+			new_item.speed_finished = autocvar_g_instagib_speed_time;
+			break;
+	}
+	Item_CopyFields(this, new_item);
+	StartItem(new_item, def);
+}
+
+const int INSTAGIB_POWERUP_COUNT = 3;
+GameItem instagib_remaining_powerups[INSTAGIB_POWERUP_COUNT];
+
+// replaces item with a random powerup selected among the less spawned ones
+void instagib_replace_item_with_random_powerup(entity item)
+{
+	static int remaining_powerups_count = INSTAGIB_POWERUP_COUNT;
+	if (remaining_powerups_count == 0)
+		remaining_powerups_count = INSTAGIB_POWERUP_COUNT;
+	if (remaining_powerups_count == INSTAGIB_POWERUP_COUNT)
+	{
+		instagib_remaining_powerups[0] = ITEM_Invisibility;
+		instagib_remaining_powerups[1] = ITEM_ExtraLife;
+		instagib_remaining_powerups[2] = ITEM_Speed;
+	}
+
+	float r = floor(random() * remaining_powerups_count);
+	instagib_replace_item_with(item, instagib_remaining_powerups[r]);
+	for(int i = r; i < INSTAGIB_POWERUP_COUNT - 1; ++i)
+		instagib_remaining_powerups[i] = instagib_remaining_powerups[i + 1];
+	--remaining_powerups_count;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(item.classname == "item_cells")
+	switch (item.itemdef)
 	{
-		if(autocvar_g_instagib_ammo_convert_cells)
-		{
-			replace_with_insta_cells(item);
-		}
-		return true;
-	}
-	else if(item.classname == "item_rockets")
-	{
-		if(autocvar_g_instagib_ammo_convert_rockets)
-		{
-			replace_with_insta_cells(item);
-		}
-		return true;
-	}
-	else if(item.classname == "item_shells")
-	{
-		if(autocvar_g_instagib_ammo_convert_shells)
-		{
-			replace_with_insta_cells(item);
-		}
-		return true;
-	}
-	else if(item.classname == "item_bullets")
-	{
-		if(autocvar_g_instagib_ammo_convert_bullets)
-		{
-			replace_with_insta_cells(item);
-		}
-		return true;
+		case ITEM_Strength: case ITEM_Shield: case ITEM_HealthMega: case ITEM_ArmorMega:
+			if(autocvar_g_powerups)
+				instagib_replace_item_with_random_powerup(item);
+			return true;
+		case ITEM_Cells:
+			if(autocvar_g_instagib_ammo_convert_cells)
+				instagib_replace_item_with(item, ITEM_VaporizerCells);
+			return true;
+		case ITEM_Rockets:
+			if(autocvar_g_instagib_ammo_convert_rockets)
+				instagib_replace_item_with(item, ITEM_VaporizerCells);
+			return true;
+		case ITEM_Shells:
+			if(autocvar_g_instagib_ammo_convert_shells)
+				instagib_replace_item_with(item, ITEM_VaporizerCells);
+			return true;
+		case ITEM_Bullets:
+			if(autocvar_g_instagib_ammo_convert_bullets)
+				instagib_replace_item_with(item, ITEM_VaporizerCells);
+			return true;
 	}
 
-	if(item.weapon == WEP_VAPORIZER.m_id && Item_IsLoot(item))
+	switch (item.weapon)
 	{
-		SetResource(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
-		return false;
-	}
-
-	if(item.weapon == WEP_DEVASTATOR.m_id || item.weapon == WEP_VORTEX.m_id)
-	{
-		replace_with_insta_cells(item);
-		return true;
+		case WEP_VAPORIZER.m_id:
+			if (ITEM_IS_LOOT(item))
+			{
+				SetResource(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
+				return false;
+			}
+			break;
+		case WEP_DEVASTATOR.m_id: case WEP_VORTEX.m_id:
+			instagib_replace_item_with(item, ITEM_VaporizerCells);
+			return true;
 	}
 
 	if(item.itemdef.instanceOfPowerup)
@@ -400,44 +408,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 	{
 		GiveResource(toucher, RES_ARMOR, autocvar_g_instagib_extralives);
 		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES, autocvar_g_instagib_extralives);
+		Inventory_pickupitem(item.itemdef, toucher);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 
 	return MUT_ITEMTOUCH_CONTINUE;
-}
-
-MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
-{
-	if (MUTATOR_RETURNVALUE) return false;
-	if (!autocvar_g_powerups) { return; }
-	entity ent = M_ARGV(0, entity);
-	// Can't use .itemdef here
-	if (!(ent.classname == "item_strength" || ent.classname == "item_shield" || ent.classname == "item_invincible" || ent.classname == "item_health_mega"))
-		return;
-
-	entity e = spawn();
-
-	float r = random();
-	if (r < 0.3)
-	{
-		e.classname = "item_invisibility";
-		setthink(e, instagib_invisibility);
-	}
-	else if (r < 0.6)
-	{
-		e.classname = "item_extralife";
-		setthink(e, instagib_extralife);
-	}
-	else
-	{
-		e.classname = "item_speed";
-		setthink(e, instagib_speed);
-	}
-
-	Item_CopyFields(ent, e);
-	e.nextthink = time + 0.1;
-
-	return true;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsString)

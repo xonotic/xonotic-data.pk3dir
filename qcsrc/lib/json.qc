@@ -76,7 +76,7 @@ bool _json_parse_array() {
     int len = bufstr_add(_json_buffer, "0", 0);
     if (len) bufstr_set(_json_buffer, len - 1, strcat(bufstr_get(_json_buffer, len - 1), ".length"));
     bool required = false;
-    for (int n = 0; ; n++) {
+    for (int n = 0; ; ++n) {
         string key = ftos(n);
         key = _json_ns ? strcat(_json_ns, ".", key) : key;
         int it = bufstr_add(_json_buffer, key, 0);

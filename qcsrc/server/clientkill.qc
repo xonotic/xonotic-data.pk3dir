@@ -25,7 +25,21 @@ void ClientKill_Now_TeamChange(entity this)
 	{
 		if (blockSpectators)
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-		PutObserverInServer(this, false, true);
+
+		if (this.wants_join)
+		{
+			this.wants_join = 0;
+			this.team_selected = false;
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, this.netname);
+			SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
+		}
+		else
+		{
+			PutObserverInServer(this, false, true);
+			if (!TeamBalance_QueuedPlayersTagIn(this))
+			if (autocvar_g_balance_teams_remove)
+				TeamBalance_RemoveExcessPlayers(this);
+		}
 	}
 	else
 	{

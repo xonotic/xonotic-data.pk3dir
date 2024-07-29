@@ -347,6 +347,7 @@ void W_Electro_Orb_Stick(entity this, entity to)
 
 	newproj.owner = this.owner;
 	newproj.realowner = this.realowner;
+	PROJECTILE_MAKETRIGGER(newproj);
 	setorigin(newproj, this.origin);
 	setmodel(newproj, MDL_PROJECTILE_ELECTRO);
 	setsize(newproj, this.mins, this.maxs);

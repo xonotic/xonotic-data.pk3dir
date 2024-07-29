@@ -291,7 +291,7 @@ bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponenti
 		if (ATTACK_FINISHED(actor, weaponentity) > time + actor.(weaponentity).weapon_frametime * 0.5) return false;
 		entity this = actor.(weaponentity);
 		// don't fire while changing weapon
-		if (this.state != WS_READY) return false;
+		if (!actor.vehicle && this.state != WS_READY) return false;
 	}
 	return true;
 }
@@ -833,7 +833,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	this.clip_load = this.(weapon_load[this.m_weapon.m_id]) = -1;
 }
 
-void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, float weapon_type, entity weapon_item, .entity weaponentity)
+void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, int weapon_type, entity weapon_item, .entity weaponentity)
 {
 	Weapon w = REGISTRY_GET(Weapons, weapon_type);
 	weapon_dropevent_item = weapon_item;

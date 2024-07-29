@@ -127,6 +127,7 @@ void CopyBody(entity this, float keepvelocity)
 
 	if(clone.colormap <= maxclients && clone.colormap > 0)
 		clone.colormap = 1024 + this.clientcolors;
+	clone.sv_entnum = etof(this); // sent to CSQC for color mapping purposes
 
 	CSQCMODEL_AUTOINIT(clone);
 	clone.CopyBody_nextthink = this.nextthink;
@@ -237,10 +238,10 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		if(!DEATH_ISSPECIAL(deathtype))
 		{
-			damage *= Handicap_GetTotalHandicap(this);
+			damage *= Handicap_GetTotalHandicap(this, true);
 			if (this != attacker && IS_PLAYER(attacker))
 			{
-				damage /= Handicap_GetTotalHandicap(attacker);
+				damage /= Handicap_GetTotalHandicap(attacker, false);
 			}
 		}
 
@@ -430,10 +431,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if ((this != attacker || deathtype == DEATH_KILL.m_id) && realdmg && !STAT(FROZEN, this)
 			&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
 		{
+			// accumulate damage, it will be logged later in this frame
 			if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this) && deathtype != DEATH_KILL.m_id)
-				GameRules_scoring_add(attacker, DMG, realdmg);
+				attacker.score_frame_dmg += realdmg;
 			if (IS_PLAYER(this))
-				GameRules_scoring_add(this, DMGTAKEN, realdmg);
+				this.score_frame_dmgtaken += realdmg;
 		}
 	}
 
@@ -607,7 +609,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 {
-	if(GetResource(targ, RES_HEALTH) <= 0 || GetResource(targ, RES_HEALTH) >= limit)
+	float hlth = GetResource(targ, RES_HEALTH);
+	if (hlth <= 0 || hlth >= limit)
 		return false;
 
 	GiveResourceWithLimit(targ, RES_HEALTH, amount, limit);

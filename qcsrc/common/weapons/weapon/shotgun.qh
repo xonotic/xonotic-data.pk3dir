@@ -27,6 +27,10 @@ CLASS(Shotgun, Weapon)
 		P(class, prefix, animtime, float, BOTH) \
 		P(class, prefix, bullets, float, PRI) \
 		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, damagefalloff_forcehalflife, float, PRI) \
+		P(class, prefix, damagefalloff_halflife, float, PRI) \
+		P(class, prefix, damagefalloff_maxdist, float, PRI) \
+		P(class, prefix, damagefalloff_mindist, float, PRI) \
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, melee_delay, float, SEC) \
 		P(class, prefix, melee_multihit, float, SEC) \
@@ -39,18 +43,20 @@ CLASS(Shotgun, Weapon)
 		P(class, prefix, melee_traces, float, SEC) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, secondary, float, NONE) \
 		P(class, prefix, solidpenetration, float, PRI) \
 		P(class, prefix, spread, float, PRI) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, spread_pattern, float, PRI) \
+		P(class, prefix, spread_pattern_scale, float, PRI) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Shotgun, shotgun)
+	W_PROPS(X, Shotgun, shotgun)
 #undef X
 
 ENDCLASS(Shotgun)

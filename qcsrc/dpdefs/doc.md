@@ -17,7 +17,7 @@
 // 3 = mousemove absolute, x, y (DP_CSQC)
 bool CSQC_InputEvent(int eventtype, int x, int y);
 
-void CSQC_UpdateView(int width, int height);
+void CSQC_UpdateView(int vid_width, int vid_height, bool notmenu);
 // catch commands registered with registercommand
 bool CSQC_ConsoleCommand(string cmd);
 bool CSQC_Parse_TempEntity();
@@ -30,7 +30,7 @@ entity CSQC_Ent_Spawn(int entnum);
 void CSQC_Ent_Update(bool isnew);
 void CSQC_Ent_Remove();
 
-void CSQC_Init();
+void CSQC_Init(float apilevel, string enginename, float engineversion);
 void CSQC_Shutdown();
 
 // input:

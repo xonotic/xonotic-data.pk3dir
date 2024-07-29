@@ -49,7 +49,7 @@ void sys_phys_update(entity this, float dt)
 
 	float maxspeed_mod = 1;
 
-// conveyors: first fix velocity
+	// conveyors: first fix velocity
 	if (this.conveyor.active) { this.velocity -= this.conveyor.movedir; }
 	MUTATOR_CALLHOOK(PlayerPhysics, this, dt);
 
@@ -97,9 +97,10 @@ void sys_phys_update(entity this, float dt)
 	} else if (MUTATOR_CALLHOOK(PM_Physics, this, maxspeed_mod, dt)) {
 		// handled
 	} else if (this.move_movetype == MOVETYPE_NOCLIP
-	    || this.move_movetype == MOVETYPE_FLY
-	    || this.move_movetype == MOVETYPE_FLY_WORLDONLY
-	    || MUTATOR_CALLHOOK(IsFlying, this)) {
+		|| this.move_movetype == MOVETYPE_FLY
+		|| this.move_movetype == MOVETYPE_FLY_WORLDONLY
+		|| MUTATOR_CALLHOOK(IsFlying, this))
+	{
 		this.com_phys_friction = PHYS_FRICTION(this);
 		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;
 		this.com_phys_acc_rate = PHYS_ACCELERATE(this) * maxspeed_mod;
@@ -163,7 +164,7 @@ void sys_phys_update(entity this, float dt)
 void sys_phys_postupdate(entity this)
 {
 	if (IS_ONGROUND(this)) { this.lastground = time; }
-// conveyors: then break velocity again
+	// conveyors: then break velocity again
 	if (this.conveyor.active) { this.velocity += this.conveyor.movedir; }
 	this.lastflags = this.flags;
 
@@ -216,8 +217,8 @@ void sys_phys_simulate(entity this, float dt)
 	MAKE_VECTORS(vmul(this.v_angle, (this.com_phys_vel_2d ? '0 1 0' : '1 1 1')), forward, right, up);
 	// wishvel = forward * PHYS_CS(this).movement.x + right * PHYS_CS(this).movement.y + up * PHYS_CS(this).movement.z;
 	vector wishvel = forward * PHYS_CS(this).movement.x
-	    + right * PHYS_CS(this).movement.y
-	    + '0 0 1' * PHYS_CS(this).movement.z * (this.com_phys_vel_2d ? 0 : 1);
+		+ right * PHYS_CS(this).movement.y
+		+ '0 0 1' * (PHYS_CS(this).movement.z * (this.com_phys_vel_2d ? 0 : 1));
 	if (this.com_phys_water) {
 		if (PHYS_FROZEN(this))
 		{
@@ -296,8 +297,7 @@ void sys_phys_simulate(entity this, float dt)
 			// log dv/dt = logaccel + logmaxspeed + log(1 - accelqw) (when fast)
 			float strafity = IsMoveInDirection(PHYS_CS(this).movement, -90) + IsMoveInDirection(PHYS_CS(this).movement, +90);  // if one is nonzero, other is always zero
 			if (PHYS_MAXAIRSTRAFESPEED(this)) {
-				wishspeed =
-				    min(wishspeed,
+				wishspeed = min(wishspeed,
 					GeomLerp(this.com_phys_vel_max_air, strafity, this.com_phys_vel_max_air_strafe));
 			}
 			if (PHYS_AIRSTRAFEACCELERATE(this)) {
@@ -305,9 +305,9 @@ void sys_phys_simulate(entity this, float dt)
 			}
 			if (PHYS_AIRSTRAFEACCEL_QW(this)) {
 				airaccelqw =
-				    (((strafity > 0.5 ? PHYS_AIRSTRAFEACCEL_QW(this) : PHYS_AIRACCEL_QW(this)) >= 0) ? +1 : -1)
-				    *
-				    (1 - GeomLerp(1 - fabs(PHYS_AIRACCEL_QW(this)), strafity, 1 - fabs(PHYS_AIRSTRAFEACCEL_QW(this))));
+					(((strafity > 0.5 ? PHYS_AIRSTRAFEACCEL_QW(this) : PHYS_AIRACCEL_QW(this)) >= 0) ? +1 : -1)
+					*
+					(1 - GeomLerp(1 - fabs(PHYS_AIRACCEL_QW(this)), strafity, 1 - fabs(PHYS_AIRSTRAFEACCEL_QW(this))));
 			}
 			// !CPM
 
@@ -373,12 +373,12 @@ void sys_phys_simulate(entity this, float dt)
 				// TODO: apply edge friction
 				// apply ground friction
 				const int realfriction = (IS_ONSLICK(this))
-				    ? PHYS_FRICTION_SLICK(this)
+					? PHYS_FRICTION_SLICK(this)
 					: PHYS_FRICTION(this);
 
 				float f = sqrt(f2);
 				f = 1 - dt * realfriction
-				    * ((f < PHYS_STOPSPEED(this)) ? (PHYS_STOPSPEED(this) / f) : 1);
+					* ((f < PHYS_STOPSPEED(this)) ? (PHYS_STOPSPEED(this) / f) : 1);
 				f = max(0, f);
 				this.velocity *= f;
 				/*
@@ -437,7 +437,7 @@ void sys_phys_simulate_simple(entity this, float dt)
 
 	this.angles += dt * this.avelocity;
 	float movetime = dt;
-	for (int i = 0; i < MAX_CLIP_PLANES && movetime > 0; i++) {
+	for (int i = 0; i < MAX_CLIP_PLANES && movetime > 0; ++i) {
 		vector push = vel * movetime;
 		vector p0 = pos;
 		vector p1 = p0 + push;

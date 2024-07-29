@@ -24,10 +24,16 @@ CLASS(OverkillShotgun, Weapon)
 		P(class, prefix, bot_range, float, PRI) \
 		P(class, prefix, bullets, float, PRI) \
 		P(class, prefix, damage, float, PRI) \
+		P(class, prefix, damagefalloff_forcehalflife, float, PRI) \
+		P(class, prefix, damagefalloff_halflife, float, PRI) \
+		P(class, prefix, damagefalloff_maxdist, float, PRI) \
+		P(class, prefix, damagefalloff_mindist, float, PRI) \
 		P(class, prefix, force, float, PRI) \
 		P(class, prefix, refire, float, PRI) \
 		P(class, prefix, solidpenetration, float, PRI) \
 		P(class, prefix, spread, float, PRI) \
+		P(class, prefix, spread_pattern, float, PRI) \
+		P(class, prefix, spread_pattern_scale, float, PRI) \
 		P(class, prefix, animtime, float, SEC) \
 		P(class, prefix, damage, float, SEC) \
 		P(class, prefix, delay, float, SEC) \

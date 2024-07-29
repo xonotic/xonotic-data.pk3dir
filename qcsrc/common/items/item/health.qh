@@ -3,8 +3,6 @@
 #include "pickup.qh"
 CLASS(Health, Pickup)
 #ifdef SVQC
-    ATTRIB(Health, m_mins, vector, '-16 -16 0');
-    ATTRIB(Health, m_maxs, vector, '16 16 48');
     ATTRIB(Health, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
     ATTRIB(Health, m_botvalue, int, 5000);
 #endif
@@ -34,7 +32,7 @@ void item_healthsmall_init(Pickup this, entity item)
 REGISTER_ITEM(HealthSmall, Health) {
     this.m_canonical_spawnfunc = "item_health_small";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_HealthSmall_ITEM;
     this.m_sound                =   SND_HealthSmall;
 #endif
@@ -43,14 +41,17 @@ REGISTER_ITEM(HealthSmall, Health) {
     this.m_icon                 =   "health_small";
 #ifdef CSQC
     if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
-    	this.m_icon             =   "health"; // compatible with Xonotic v0.8.2 or lower
+        this.m_icon             =   "health"; // compatible with Xonotic v0.8.2 or lower
 #endif
 #ifdef SVQC
+    this.m_mins                 =   ITEM_S_MINS;
+    this.m_maxs                 =   ITEM_S_MAXS;
     this.m_itemid               =   IT_RESOURCE;
-    this.m_respawntime          =   GET(g_pickup_respawntime_short);
-    this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
+    this.m_respawntime          =   GET(g_pickup_respawntime_health_small);
+    this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_health_small);
     this.m_pickupanyway         =   GET(g_pickup_healthsmall_anyway);
     this.m_iteminit             =   item_healthsmall_init;
+
 #endif
 }
 
@@ -76,7 +77,7 @@ void item_healthmedium_init(Pickup this, entity item)
 REGISTER_ITEM(HealthMedium, Health) {
     this.m_canonical_spawnfunc = "item_health_medium";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_HealthMedium_ITEM;
     this.m_sound                =   SND_HealthMedium;
 #endif
@@ -85,12 +86,14 @@ REGISTER_ITEM(HealthMedium, Health) {
     this.m_icon                 =   "health_medium";
 #ifdef CSQC
     if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
-    	this.m_icon             =   "health"; // compatible with Xonotic v0.8.2 or lower
+        this.m_icon             =   "health"; // compatible with Xonotic v0.8.2 or lower
 #endif
 #ifdef SVQC
+    this.m_mins                 =   ITEM_S_MINS;
+    this.m_maxs                 =   ITEM_S_MAXS;
     this.m_itemid               =   IT_RESOURCE;
-    this.m_respawntime          =   GET(g_pickup_respawntime_short);
-    this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
+    this.m_respawntime          =   GET(g_pickup_respawntime_health_medium);
+    this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_health_medium);
     this.m_pickupanyway         =   GET(g_pickup_healthmedium_anyway);
     this.m_iteminit             =   item_healthmedium_init;
 #endif
@@ -118,7 +121,7 @@ void item_healthbig_init(Pickup this, entity item)
 REGISTER_ITEM(HealthBig, Health) {
     this.m_canonical_spawnfunc = "item_health_big";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
+    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
     this.m_model                =   MDL_HealthBig_ITEM;
     this.m_sound                =   SND_HealthBig;
 #endif
@@ -129,12 +132,12 @@ REGISTER_ITEM(HealthBig, Health) {
     this.m_waypoint             =   _("Big health");
 #ifdef CSQC
     if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
-    	this.m_icon             =   "health"; // compatible with Xonotic v0.8.2 or lower
+        this.m_icon             =   "health"; // compatible with Xonotic v0.8.2 or lower
 #endif
 #ifdef SVQC
     this.m_itemid               =   IT_RESOURCE;
-    this.m_respawntime          =   GET(g_pickup_respawntime_medium);
-    this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_medium);
+    this.m_respawntime          =   GET(g_pickup_respawntime_health_big);
+    this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_health_big);
     this.m_pickupanyway         =   GET(g_pickup_healthbig_anyway);
     this.m_iteminit             =   item_healthbig_init;
 #endif
@@ -171,16 +174,16 @@ REGISTER_ITEM(HealthMega, Health) {
     this.m_icon                 =   "health_mega";
 #ifdef CSQC
     if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
-    	this.m_icon             =   "item_mega_health"; // compatible with Xonotic v0.8.2 or lower
+        this.m_icon             =   "item_mega_health"; // compatible with Xonotic v0.8.2 or lower
 #endif
     this.m_color                =   '1 0 0';
     this.m_waypoint             =   _("Mega health");
     this.m_waypointblink        =   2;
 #ifdef SVQC
-    this.m_maxs                 =   '16 16 70';
+    this.m_maxs                 =   ITEM_L_MAXS;
     this.m_itemid               =   IT_RESOURCE;
-    this.m_respawntime          =   GET(g_pickup_respawntime_long);
-    this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
+    this.m_respawntime          =   GET(g_pickup_respawntime_health_mega);
+    this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_health_mega);
     this.m_pickupanyway         =   GET(g_pickup_healthmega_anyway);
     this.m_iteminit             =   item_healthmega_init;
 #endif

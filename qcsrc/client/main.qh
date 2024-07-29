@@ -17,6 +17,14 @@ bool autocvar_hud_showbinds;
 bool autocvar_hud_showbinds_limit;
 bool autocvar__hud_showbinds_reload;
 bool autocvar_developer_csqcentities;
+#if 0
+// TODO: change this path after next (0.9) release
+// or the release after it to support the old-stable release
+// this can't be done now as players would lack these from their configs then
+bool autocvar_cl_race_checkpoint_splits_console;
+#else
+AUTOCVAR_SAVE(cl_race_checkpoint_splits_console, bool, 1, "Print checkpoint splits to console");
+#endif
 bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
 bool autocvar_cl_race_cptimes_showself = false;
 bool autocvar_cl_welcome = true;
@@ -30,6 +38,7 @@ string minimapname;
 
 bool postinit;
 entity gametype;
+string gametype_custom_name;
 // temporary hack
 #define ISGAMETYPE(NAME) (gametype == MAPINFO_TYPE_##NAME)
 
@@ -78,12 +87,14 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 
 IntrusiveList g_drawables;
 IntrusiveList g_drawables_2d;
+IntrusiveList g_damagetext;
 IntrusiveList g_radarlinks;
 IntrusiveList g_radaricons;
 STATIC_INIT(main)
 {
 	g_drawables = IL_NEW();
 	g_drawables_2d = IL_NEW();
+	g_damagetext = IL_NEW();
 	g_radarlinks = IL_NEW();
 	g_radaricons = IL_NEW();
 }
