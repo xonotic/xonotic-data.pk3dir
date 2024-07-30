@@ -1015,6 +1015,7 @@ void SV_ParseClientCommand(entity this, string command)
 		// exempt commands which are not subject to floodcheck
 		case "begin": break;                               // handled by engine in host_cmd.c
 		case "download": break;                            // handled by engine in cl_parse.c
+		case "join": break;                                // handled by server in this file
 		case "mv_getpicture": break;                       // handled by server in this file
 		case "wpeditor": break;                            // handled by server in this file
 		case "pause": break;                               // handled by engine in host_cmd.c
@@ -1054,6 +1055,8 @@ void SV_ParseClientCommand(entity this, string command)
 			LABEL(flood_control)
 			if (!timeout_status)  // not while paused
 			{
+				if(MUTATOR_CALLHOOK(ClientCommand_FloodControl, this, strtolower(argv(0)), argc, command))
+					break; // a mutator has prevented flood control
 				entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
 				// this is basically the same as the chat flood control
 				if (time < store.cmd_floodtime)
