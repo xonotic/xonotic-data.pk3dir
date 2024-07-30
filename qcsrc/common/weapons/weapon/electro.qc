@@ -53,15 +53,16 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 
 void W_Electro_ExplodeComboThink(entity this)
 {
-	float dt = time - this.teleport_time + this.dmg_interval;
-
-	RadiusDamage(this, this.realowner, this.dmg, this.dmg_edge, this.dmg_radius, NULL, NULL, this.dmg_force, this.projectiledeathtype, this.weaponentity_fld, NULL);
-	this.projectiledeathtype |= HITTYPE_BOUNCE; // ensure it doesn't spam its effect
-
-	if(dt < this.dmg_duration)
-		this.nextthink = time + this.dmg_interval; // soon
-	else
+	if(time - this.teleport_time > this.dmg_duration)
+	{
 		delete(this);
+		return;
+	}
+
+	this.nextthink = time + this.dmg_interval;
+
+	RadiusDamage(this, this.realowner, this.dmg, this.dmg_edge, this.dmg_radius, NULL, NULL, 0, this.projectiledeathtype, this.weaponentity_fld, NULL);
+	this.projectiledeathtype |= HITTYPE_BOUNCE; // ensure it doesn't spam its effect
 }
 
 void W_Electro_ExplodeCombo(entity this)
@@ -86,7 +87,6 @@ void W_Electro_ExplodeCombo(entity this)
 		this.dmg = WEP_CVAR(electro, combo_damage) * this.dmg_interval;
 		this.dmg_edge = WEP_CVAR(electro, combo_edgedamage) * this.dmg_interval;
 		this.dmg_radius = WEP_CVAR(electro, combo_radius);
-		this.dmg_force = WEP_CVAR(electro, combo_force) * this.dmg_interval;
 		this.dmg_duration = WEP_CVAR(electro, combo_duration);
 		this.teleport_time = time;
 		this.dmg_last = 1;
