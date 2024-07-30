@@ -327,7 +327,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 				instagib_replace_item_with_random_powerup(item);
 			return true;
 		case ITEM_Invisibility: case ITEM_ExtraLife: case ITEM_Speed:
-			return (autocvar_g_powerups) ? false : true;
+			return false;
 		case ITEM_Cells:
 			if(autocvar_g_instagib_ammo_convert_cells)
 				instagib_replace_item_with(item, ITEM_VaporizerCells);
