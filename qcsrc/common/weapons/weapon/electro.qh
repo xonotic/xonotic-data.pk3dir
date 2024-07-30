@@ -30,12 +30,10 @@ CLASS(Electro, Weapon)
 		P(class, prefix, combo_comboradius_thruwall, float, NONE) \
 		P(class, prefix, combo_damage, float, NONE) \
 		P(class, prefix, combo_damage_interval, float, NONE) \
-		P(class, prefix, combo_damage_linear, float, NONE) \
 		P(class, prefix, combo_duration, float, NONE) \
 		P(class, prefix, combo_edgedamage, float, NONE) \
 		P(class, prefix, combo_force, float, NONE) \
 		P(class, prefix, combo_radius, float, NONE) \
-		P(class, prefix, combo_power, float, NONE) \
 		P(class, prefix, combo_safeammocheck, float, NONE) \
 		P(class, prefix, combo_speed, float, NONE) \
 		P(class, prefix, count, float, SEC) \
@@ -86,11 +84,9 @@ SPAWNFUNC_WEAPON(weapon_electro, WEP_ELECTRO)
 .float dmg_edge;
 .float dmg_radius;
 .float dmg_force;
-.float dmg_power;
 .float dmg_duration;
 .float dmg_last;
 .float dmg_interval;
-.float dmg_linear;
 
 IntrusiveList LimitedElectroBallRubbleList;
 .float electro_count;
