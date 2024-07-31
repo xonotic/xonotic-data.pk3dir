@@ -975,6 +975,35 @@ void ClientCommand_macro_write_aliases(float fh)
 	FOREACH(CLIENT_COMMANDS, true, { CMD_Write_Alias("qc_cmd_cmd", it.m_name, it.m_description); });
 }
 
+bool ClientCommand_antispam(int argc, entity caller, string command)
+{
+	entity store = IS_CLIENT(caller) ? CS(caller) : caller; // unfortunately, we need to store these on the client initially
+	.float floodtime = cmd_floodtime;
+
+	if(autocvar_sv_clientcommand_antispam_percommand)
+	{
+		string c = strtolower(argv(0));
+		FOREACH(CLIENT_COMMANDS, it.m_name == c, {
+			floodtime = cmd_floodtime_forcommand[it.m_id];
+			break;
+		});
+	}
+
+	if(time < store.(floodtime))
+	{
+		sprint(caller, strcat("^3CMD FLOOD CONTROL: wait ^1", ftos(store.(floodtime) - time), "^3 seconds, command was: ", command, "\n"));
+		return true;
+	}
+	else
+	{
+		float spamtime = autocvar_sv_clientcommand_antispam_time;
+		int spamcount = autocvar_sv_clientcommand_antispam_count;
+		store.(floodtime) = max(time - spamcount * spamtime, store.(floodtime)) + spamtime;
+	}
+
+	return false;
+}
+
 // ======================================
 //  Main Function Called By Engine (cmd)
 // ======================================
@@ -1045,15 +1074,8 @@ void SV_ParseClientCommand(entity this, string command)
 			LABEL(flood_control)
 			if (!timeout_status)  // not while paused
 			{
-				entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
-				// this is basically the same as the chat flood control
-				if (time < store.cmd_floodtime)
-				{
-					sprint(this, strcat("^3CMD FLOOD CONTROL: wait ^1", ftos(store.cmd_floodtime - time), "^3 seconds, command was: ", command, "\n"));
-					return;  // too much spam, halt
-				}
-				else
-					store.cmd_floodtime = max(time - autocvar_sv_clientcommand_antispam_count * autocvar_sv_clientcommand_antispam_time, store.cmd_floodtime) + autocvar_sv_clientcommand_antispam_time;
+				if(ClientCommand_antispam(argc, this, command))
+					return; // too much spam, halt
 			}
 			break;  // continue, as we're not flooding yet
 	}

@@ -31,3 +31,5 @@ REGISTRY_DEFINE_GET(CLIENT_COMMANDS, NULL)
 	ENDCLASS(clientcommand_##id) \
 	REGISTER(CLIENT_COMMANDS, CMD_SVCL, id, m_id, NEW(clientcommand_##id)); \
 	METHOD(clientcommand_##id, m_invokecmd, void(clientcommand_##id this, int request, entity caller, int arguments, string command))
+
+.float cmd_floodtime_forcommand[REGISTRY_MAX(CLIENT_COMMANDS)];

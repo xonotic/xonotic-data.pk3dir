@@ -4,6 +4,7 @@
 
 float autocvar_sv_clientcommand_antispam_time;
 int autocvar_sv_clientcommand_antispam_count;
+bool autocvar_sv_clientcommand_antispam_percommand = true;
 
 .float cmd_floodtime;
 .string ignore_list; // stores player id's, maybe can be upgraded to store net address for reconnect protection
