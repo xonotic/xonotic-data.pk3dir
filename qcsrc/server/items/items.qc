@@ -980,6 +980,18 @@ void item_use(entity this, entity actor, entity trigger)
 	gettouch(this)(this, actor);
 }
 
+void item_setactive(entity this, int act)
+{
+	int old_status = this.active;
+	if(act == ACTIVE_TOGGLE)
+		this.active = (this.active == ACTIVE_ACTIVE) ? ACTIVE_NOT : ACTIVE_ACTIVE;
+	else
+		this.active = act;
+
+	if(this.active != old_status)
+		Item_Show(this, ((this.active == ACTIVE_ACTIVE) ? 1 : -1));
+}
+
 void StartItem(entity this, entity def)
 {
 	if (def.m_spawnfunc_hookreplace)
@@ -1145,6 +1157,9 @@ void StartItem(entity this, entity def)
 
 		if(this.targetname != "" && (this.spawnflags & 16))
 			this.use = item_use;
+
+		this.setactive = item_setactive;
+		this.active = ACTIVE_ACTIVE;
 
 		if(autocvar_spawn_debug >= 2)
 		{
