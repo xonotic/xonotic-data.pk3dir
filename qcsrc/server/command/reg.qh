@@ -9,9 +9,9 @@ REGISTRY_DEFINE_GET(SERVER_COMMANDS, NULL)
 #define SERVER_COMMAND(id, description) \
 	CLASS(servercommand_##id, Command) \
 		ATTRIB(servercommand_##id, m_name, string, #id); \
-    	ATTRIB(servercommand_##id, m_description, string, description); \
+		ATTRIB(servercommand_##id, m_description, string, description); \
 	ENDCLASS(servercommand_##id) \
-    REGISTER(SERVER_COMMANDS, CMD_SV, id, m_id, NEW(servercommand_##id)); \
+	REGISTER(SERVER_COMMANDS, CMD_SV, id, m_id, NEW(servercommand_##id)); \
 	METHOD(servercommand_##id, m_invokecmd, void(servercommand_##id this, int request, entity caller, int arguments, string command))
 
 STATIC_INIT(SERVER_COMMANDS_aliases) {
@@ -27,7 +27,7 @@ REGISTRY_DEFINE_GET(CLIENT_COMMANDS, NULL)
 #define CLIENT_COMMAND(id, description) \
 	CLASS(clientcommand_##id, Command) \
 		ATTRIB(clientcommand_##id, m_name, string, #id); \
-    	ATTRIB(clientcommand_##id, m_description, string, description); \
+		ATTRIB(clientcommand_##id, m_description, string, description); \
 	ENDCLASS(clientcommand_##id) \
-    REGISTER(CLIENT_COMMANDS, CMD_SVCL, id, m_id, NEW(clientcommand_##id)); \
+	REGISTER(CLIENT_COMMANDS, CMD_SVCL, id, m_id, NEW(clientcommand_##id)); \
 	METHOD(clientcommand_##id, m_invokecmd, void(clientcommand_##id this, int request, entity caller, int arguments, string command))
