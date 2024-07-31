@@ -1015,7 +1015,6 @@ void SV_ParseClientCommand(entity this, string command)
 		// exempt commands which are not subject to floodcheck
 		case "begin": break;                               // handled by engine in host_cmd.c
 		case "download": break;                            // handled by engine in cl_parse.c
-		case "join": break;                                // handled by server in this file
 		case "mv_getpicture": break;                       // handled by server in this file
 		case "wpeditor": break;                            // handled by server in this file
 		case "pause": break;                               // handled by engine in host_cmd.c
