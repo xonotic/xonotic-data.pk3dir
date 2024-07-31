@@ -24,6 +24,7 @@
 #include <server/cheats.qh>
 #include <server/client.qh>
 #include <server/clientkill.qh>
+#include <server/command/_mod.qh>
 #include <server/command/common.qh>
 #include <server/command/getreplies.qh>
 #include <server/command/vote.qh>
