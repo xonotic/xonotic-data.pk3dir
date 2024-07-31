@@ -299,7 +299,7 @@ string swapwords(string str, float i, float j)
 {
 	string s1, s2, s3, s4, s5;
 	float si, ei, sj, ej, s0, en;
-	int n = tokenizebyseparator(str, " ");  // must match g_maplist processing in ShuffleMaplist and "shuffle"
+	int n = tokenizebyseparator(str, " ");
 	si = argv_start_index(i);
 	sj = argv_start_index(j);
 	ei = argv_end_index(i);

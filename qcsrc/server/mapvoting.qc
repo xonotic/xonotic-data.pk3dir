@@ -214,6 +214,8 @@ void MapVote_AddVotableMaps(int nmax, int smax)
 
 	for (int i = 0; i < max_attempts && mapvote_count < nmax; ++i)
 		MapVote_AddVotable(GetNextMap(), false);
+
+	Maplist_Close();
 }
 
 string voted_gametype_string;

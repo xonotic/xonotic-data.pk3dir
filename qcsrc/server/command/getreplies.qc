@@ -232,21 +232,20 @@ string getladder()
 
 string getmaplist()
 {
-	string maplist = "", col;
-	int i, argc;
+	if(autocvar_g_maplist == "")
+		return "^7Map list is empty";
 
-	argc = tokenize_console(autocvar_g_maplist);
-	for (i = 0; i < argc; ++i)
+	string maplist = "";
+	int mapcount = 0;
+	FOREACH_WORD(autocvar_g_maplist, MapInfo_CheckMap(it),
 	{
-		if (MapInfo_CheckMap(argv(i)))
-		{
-			if (i % 2) col = "^2"; else col = "^3";
-			maplist = sprintf("%s%s%s ", maplist, col, argv(i));
-		}
-	}
+		string col = (i % 2) ? "^2" : "^3";
+		maplist = cons(maplist, strcat(col, it));
+		mapcount += 1;
+	});
 
 	MapInfo_ClearTemps();
-	return sprintf("^7Maps in list: %s\n", maplist);
+	return sprintf("^7Maps in list (%d): %s\n", mapcount, maplist);
 }
 
 const int LSMAPS_MAX = 250;
@@ -276,12 +275,12 @@ string getlsmaps()
 				if (i % 2) col = "^2"; else col = "^3";
 			}
 
-			lsmaps = sprintf("%s%s%s ", lsmaps, col, MapInfo_Map_bspname);
+			lsmaps = cons(lsmaps, strcat(col, MapInfo_Map_bspname));
 		}
 	}
 
 	if(added > LSMAPS_MAX)
-		lsmaps = sprintf("%s^7(%d not listed)", lsmaps, added - LSMAPS_MAX);
+		lsmaps = sprintf("%s ^7(%d not listed)", lsmaps, added - LSMAPS_MAX);
 
 	MapInfo_ClearTemps();
 	return sprintf("^7Maps available (%d)%s: %s\n", added, (newmaps ? " (New maps have asterisks marked in blue)" : ""), lsmaps);
