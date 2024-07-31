@@ -571,6 +571,18 @@ MUTATOR_HOOKABLE(PlayerUseKey, EV_PlayerUseKey);
     /**/
 MUTATOR_HOOKABLE(SV_ParseClientCommand, EV_SV_ParseClientCommand);
 
+/**
+ * please read EV_SV_ParseClientCommand description before using
+ * return true to skip flood control on the given command
+ */
+#define EV_ClientCommand_FloodControl(i, o) \
+    /** client sending the command */       i(entity, MUTATOR_ARGV_0_entity) \
+    /** command name */                     i(string, MUTATOR_ARGV_1_string) \
+    /** argc (also, argv() can be used) */  i(int, MUTATOR_ARGV_2_int) \
+    /** whole command, use only if you really have to */ i(string, MUTATOR_ARGV_3_string) \
+    /**/
+MUTATOR_HOOKABLE(ClientCommand_FloodControl, EV_ClientCommand_FloodControl);
+
 /** please read EV_SV_ParseClientCommand description before using */
 #define EV_SV_ParseServerCommand(i, o) \
    /** command name */ i(string, MUTATOR_ARGV_0_string) \
