@@ -1115,8 +1115,7 @@ void ClientConnect(entity this)
 	TRANSMUTE(Client, this);
 	CS(this).version_nagtime = time + 10 + random() * 10;
 
-	entity store = IS_CLIENT(this) ? CS(this) : this;
-	store.cmd_floodtime = -999999;
+	CS(this).cmd_floodtime = -999999;
 
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_CONNECT, this.netname);
 
@@ -1146,6 +1145,7 @@ void ClientConnect(entity this)
 	FixClientCvars(this);
 
 	// get version info from player
+	// NOTE: cmds are subject to flood control
 	stuffcmd(this, "cmd clientversion $gameversion\n");
 
 	// notify about available teams

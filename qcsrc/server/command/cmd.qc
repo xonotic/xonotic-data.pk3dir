@@ -1036,7 +1036,7 @@ void SV_ParseClientCommand(entity this, string command)
 			// FIXME unknown/wrong minigame commands have no flood control
 			break;
 		case "color": case "topcolor": case "bottomcolor": // handled by engine in host_cmd.c
-			if(!IS_CLIENT(this)) // on connection
+			if(!IS_CLIENT(this)) // on connection (before ClientConnect)
 			{
 				// since gamecode doesn't have any calls earlier than this, do the connecting message here
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING, this.netname);
@@ -1045,18 +1045,16 @@ void SV_ParseClientCommand(entity this, string command)
 				return;
 			break;
 		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
-
-		// on connection, client sends all of these
-		case "name": case "rate": case "rate_burstsize": case "playermodel": case "playerskin": case "clientversion":
-			if(!IS_CLIENT(this)) break;
 			// else fall through to default: flood control
 		default:
 			LABEL(flood_control)
-			if (!timeout_status)  // not while paused
+			// don't apply flood control on connection (before ClientConnect) since many cmds are
+			// executed: name, color, rate, rate_burstsize, playermodel, playerskin
+			if (!timeout_status && IS_CLIENT(this))
 			{
 				if(MUTATOR_CALLHOOK(ClientCommand_FloodControl, this, strtolower(argv(0)), argc, command))
 					break; // a mutator has prevented flood control
-				entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
+				entity store = CS(this);
 				// this is basically the same as the chat flood control
 				if (time < store.cmd_floodtime)
 				{
