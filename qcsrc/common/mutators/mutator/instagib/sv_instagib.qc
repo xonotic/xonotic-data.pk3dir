@@ -326,6 +326,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 			if(autocvar_g_powerups)
 				instagib_replace_item_with_random_powerup(item);
 			return true;
+		case ITEM_Invisibility: case ITEM_ExtraLife: case ITEM_Speed:
+			return false;
 		case ITEM_Cells:
 			if(autocvar_g_instagib_ammo_convert_cells)
 				instagib_replace_item_with(item, ITEM_VaporizerCells);
@@ -357,9 +359,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 			instagib_replace_item_with(item, ITEM_VaporizerCells);
 			return true;
 	}
-
-	if(item.itemdef.instanceOfPowerup)
-		return false;
 
 	float cells = GetResource(item, RES_CELLS);
 	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_vaporizer_cells")
