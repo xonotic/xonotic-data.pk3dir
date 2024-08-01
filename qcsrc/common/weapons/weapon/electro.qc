@@ -65,7 +65,7 @@ void W_Electro_ExplodeComboThink(entity this)
 	float edgedamage = this.dmg_edge * PHYS_INPUT_TIMELENGTH;
 
 	RadiusDamage(this, this.realowner, damage, edgedamage, this.dmg_radius, NULL, NULL, 0, this.projectiledeathtype, this.weaponentity_fld, NULL);
-	this.projectiledeathtype |= HITTYPE_BOUNCE; // ensure it doesn't spam its effect
+	this.projectiledeathtype |= HITTYPE_SPLASH; // ensure it doesn't spam its effect
 }
 
 void W_Electro_ExplodeCombo(entity this)
@@ -77,10 +77,10 @@ void W_Electro_ExplodeCombo(entity this)
 
 	if(WEP_CVAR(electro, combo_duration))
 	{
-		this.projectiledeathtype = WEP_ELECTRO.m_id | HITTYPE_SPLASH;
+		this.projectiledeathtype = WEP_ELECTRO.m_id | HITTYPE_BOUNCE; // use THIS type for a combo because primary can't bounce
 		this.event_damage = func_null;
 		settouch(this, func_null);
-		this.effects |= EF_NODRAW;
+		this.effects |= EF_NODRAW; // hide the orb, rely only on the effect
 
 		setthink(this, W_Electro_ExplodeComboThink);
 		this.nextthink = time;
@@ -90,6 +90,9 @@ void W_Electro_ExplodeCombo(entity this)
 		this.dmg_duration = WEP_CVAR(electro, combo_duration);
 		this.teleport_time = time;
 		set_movetype(this, MOVETYPE_NONE);
+
+		// fire the first damage tick immediately
+		getthink(this)(this);
 		return;
 	}
 
@@ -663,14 +666,7 @@ METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
     }
     else
     {
-        if(w_deathtype & HITTYPE_SPLASH)
-        {
-            org2 = w_org + w_backoff * 2;
-            pointparticles(EFFECT_ELECTRO_COMBO, org2, '0 0 0', 1);
-            if(!w_issilent)
-                sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT_COMBO, VOL_BASE, ATTEN_NORM);
-        }
-        else if(w_deathtype & HITTYPE_BOUNCE)
+        if(w_deathtype & HITTYPE_BOUNCE)
         {
             // this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
             pointparticles(EFFECT_ELECTRO_COMBO, org2, '0 0 0', 1);
