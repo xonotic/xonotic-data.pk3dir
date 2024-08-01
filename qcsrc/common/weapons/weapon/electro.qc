@@ -89,7 +89,6 @@ void W_Electro_ExplodeCombo(entity this)
 		this.dmg_radius = WEP_CVAR(electro, combo_radius);
 		this.dmg_duration = WEP_CVAR(electro, combo_duration);
 		this.teleport_time = time;
-		this.dmg_last = 1;
 		set_movetype(this, MOVETYPE_NONE);
 		return;
 	}

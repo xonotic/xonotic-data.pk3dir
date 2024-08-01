@@ -83,7 +83,6 @@ SPAWNFUNC_WEAPON(weapon_electro, WEP_ELECTRO)
 .float dmg_edge;
 .float dmg_radius;
 .float dmg_duration;
-.float dmg_last;
 
 IntrusiveList LimitedElectroBallRubbleList;
 .float electro_count;
