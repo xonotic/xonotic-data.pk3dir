@@ -922,25 +922,25 @@ void ClientCommand_(entity caller, int request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 CLIENT_COMMAND(autoswitch, "Whether or not to switch automatically when getting a better weapon") { ClientCommand_autoswitch(caller, request, arguments); }
-CLIENT_COMMAND(clear_ignores, "Remove all existing ignored clients") { ClientCommand_clear_ignores(caller, request); }
+CLIENT_COMMAND(clear_ignores, "Remove all existing ignores of players") { ClientCommand_clear_ignores(caller, request); }
 CLIENT_COMMAND(clientversion, "Release version of the game") { ClientCommand_clientversion(caller, request, arguments); }
-CLIENT_COMMAND(ignore, "Ignore a client in the game keeping out of personal chat log for a match") { ClientCommand_ignore(caller, request, arguments, command); }
+CLIENT_COMMAND(ignore, "Ignore a player in the game keeping them out of your personal chat log") { ClientCommand_ignore(caller, request, arguments, command); }
 CLIENT_COMMAND(join, "Become a player in the game") { ClientCommand_join(caller, request); }
 CLIENT_COMMAND(kill, "Become a member of the dead") { ClientCommand_kill(caller, request); }
 CLIENT_COMMAND(minigame, "Start a minigame") { ClientCommand_minigame(caller, request, arguments, command); }
 CLIENT_COMMAND(mv_getpicture, "Retrieve mapshot picture from the server") { ClientCommand_mv_getpicture(caller, request, arguments); }
 CLIENT_COMMAND(physics, "Change physics set") { ClientCommand_physics(caller, request, arguments); }
-CLIENT_COMMAND(ready, "Qualify as ready to end warmup stage (or restart server if allowed)") { ClientCommand_ready(caller, request); }
-CLIENT_COMMAND(say, "Print a message to chat to all players") { ClientCommand_say(caller, request, arguments, command); }
-CLIENT_COMMAND(say_team, "Print a message to chat to all team mates") { ClientCommand_say_team(caller, request, arguments, command); }
+CLIENT_COMMAND(ready, "Qualify as ready to end warmup stage") { ClientCommand_ready(caller, request); }
+CLIENT_COMMAND(say, "Send a public chat message to all players") { ClientCommand_say(caller, request, arguments, command); }
+CLIENT_COMMAND(say_team, "Send a chat message to all team mates") { ClientCommand_say_team(caller, request, arguments, command); }
 CLIENT_COMMAND(selectteam, "Attempt to choose a team to join into") { ClientCommand_selectteam(caller, request, arguments); }
 CLIENT_COMMAND(selfstuff, "Stuffcmd a command to your own client") { ClientCommand_selfstuff(caller, request, command); }
 CLIENT_COMMAND(sentcvar, "New system for sending a client cvar to the server") { ClientCommand_sentcvar(caller, request, arguments); }
-CLIENT_COMMAND(spectate, "Become an observer") { ClientCommand_spectate(caller, request); }
-CLIENT_COMMAND(suggestmap, "Suggest a map to the mapvote at match end") { ClientCommand_suggestmap(caller, request, arguments); }
-CLIENT_COMMAND(tell, "Send a message directly to a player") { ClientCommand_tell(caller, request, arguments, command); }
+CLIENT_COMMAND(spectate, "Become a spectator") { ClientCommand_spectate(caller, request); }
+CLIENT_COMMAND(suggestmap, "Suggest a map to appear at the map voting screen") { ClientCommand_suggestmap(caller, request, arguments); }
+CLIENT_COMMAND(tell, "Send a private chat message to a player which may be visible to server admins") { ClientCommand_tell(caller, request, arguments, command); }
 CLIENT_COMMAND(voice, "Send voice message via sound") { ClientCommand_voice(caller, request, arguments, command); }
-CLIENT_COMMAND(unignore, "Remove an existing ignored player") { ClientCommand_unignore(caller, request, arguments, command); }
+CLIENT_COMMAND(unignore, "Remove an existing ignore of a player") { ClientCommand_unignore(caller, request, arguments, command); }
 CLIENT_COMMAND(wpeditor, "Waypoint editor commands") { ClientCommand_wpeditor(caller, request, arguments); }
 
 void ClientCommand_macro_help(entity caller)
