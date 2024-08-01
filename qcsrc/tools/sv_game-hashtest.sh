@@ -186,10 +186,8 @@ while read -r LINE
 do
 	printf "%s\n" "$LINE"
 	printf "%s\n" "$LINE" | grep -q ".*All tests OK$" && PASS=1
-done < <(${ENGINE} +developer 1 +map _init +sv_cmd runtest +wait +quit)
+done < <(${ENGINE} +developer 1 +map _init +sv_cmd dumpnotifs +sv_cmd runtest +wait +quit)
 test "$PASS" = "1" || { printf "\033[1;31m%s\033[0m\n" "sv_cmd runtest failed!"; exit 1; }
-
-${ENGINE} +map _init +sv_cmd dumpnotifs +wait +quit
 diff notifications.cfg data/data/notifications_dump.cfg ||
 	{ printf "Please update notifications.cfg using \`dumpnotifs\`!"; exit 1; }
 

@@ -214,6 +214,8 @@ void MapVote_AddVotableMaps(int nmax, int smax)
 
 	for (int i = 0; i < max_attempts && mapvote_count < nmax; ++i)
 		MapVote_AddVotable(GetNextMap(), false);
+
+	Maplist_Close();
 }
 
 string voted_gametype_string;
@@ -764,6 +766,8 @@ void MapVote_Think()
 // otherwise gametype_string is the string (short name) of a custom gametype
 bool GameTypeVote_SetGametype(Gametype type, string gametype_string, bool call_hooks)
 {
+	if (gametype_string == "")
+		gametype_string = MapInfo_Type_ToString(type);
 	if (!call_hooks)
 	{
 		// custom gametype is disabled because gametype hooks can't be executed
@@ -771,8 +775,6 @@ bool GameTypeVote_SetGametype(Gametype type, string gametype_string, bool call_h
 	}
 	else
 	{
-		if (gametype_string == "")
-			gametype_string = MapInfo_Type_ToString(type);
 		gametype_custom_enabled = (gametype_string != MapInfo_Type_ToString(type));
 
 		localcmd("sv_vote_gametype_hook_all\n");
@@ -805,7 +807,18 @@ bool GameTypeVote_SetGametype(Gametype type, string gametype_string, bool call_h
 		return false;
 	}
 
-	cvar_set("g_maplist", MapInfo_ListAllowedMaps(type, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()) );
+	bool doreset = autocvar_sv_vote_gametype_maplist_reset;
+	string gvmaplist = strcat("sv_vote_gametype_", gametype_string, "_maplist");
+	if(cvar_type(gvmaplist) & CVAR_TYPEFLAG_EXISTS)
+	{
+		// force a reset if the provided list is empty
+		if(cvar_string(gvmaplist) == "")
+			doreset = true;
+		else
+			cvar_set("g_maplist", cvar_string(gvmaplist));
+	}
+	if(doreset)
+		cvar_set("g_maplist", MapInfo_ListAllowedMaps(type, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()) );
 
 	return true;
 }

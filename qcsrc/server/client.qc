@@ -1115,6 +1115,9 @@ void ClientConnect(entity this)
 	TRANSMUTE(Client, this);
 	CS(this).version_nagtime = time + 10 + random() * 10;
 
+	entity store = IS_CLIENT(this) ? CS(this) : this;
+	store.cmd_floodtime = -999999;
+
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_CONNECT, this.netname);
 
 	bot_clientconnect(this);
@@ -1326,7 +1329,7 @@ void ChatBubbleThink(entity this)
 
 	this.mdl = "";
 
-	if ( !IS_DEAD(this.owner) && IS_PLAYER(this.owner) )
+	if ( !IS_DEAD(this.owner) && IS_PLAYER(this.owner) && !MUTATOR_CALLHOOK(ShowChatBubble, this.owner, this) )
 	{
 		if ( CS(this.owner).active_minigame && PHYS_INPUT_BUTTON_MINIGAME(this.owner) )
 			this.mdl = "models/sprites/minigame_busy.iqm";
@@ -2659,7 +2662,8 @@ void PlayerPostThink (entity this)
 		{
 			// player's bbox gets resized now, instead of in the damage event that killed the player,
 			// once all the damage events of this frame have been processed with normal size
-			this.maxs.z = 5;
+			float h = ceil((this.mins.z + this.maxs.z) * PL_CORPSE_SCALE * 10) / 10;
+			this.maxs.z = max(h, this.mins.z + 1);
 			setsize(this, this.mins, this.maxs);
 		}
 		DrownPlayer(this);

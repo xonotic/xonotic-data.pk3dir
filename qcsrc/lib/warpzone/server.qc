@@ -145,7 +145,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 #ifdef SVQC
 	// prevent further teleports back
-	float dt = (o1 - o10) * v1 * (1 / (v1 * v1));
+	float dt = (v1 != '0 0 0') ? (o1 - o10) * v1 * (1 / (v1 * v1)) : 0;
 	if(dt < PHYS_INPUT_FRAMETIME)
 		player.warpzone_teleport_finishtime += PHYS_INPUT_FRAMETIME - dt;
 #endif

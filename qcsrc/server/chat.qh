@@ -17,6 +17,7 @@ bool autocvar_g_chat_team_allowed;
 int autocvar_g_chat_nospectators;
 bool autocvar_g_chat_teamcolors;
 bool autocvar_g_chat_tellprivacy;
+bool autocvar_g_chat_show_playerid;
 
 const float NUM_NEAREST_ENTITIES = 4;
 entity nearest_entity[NUM_NEAREST_ENTITIES];
