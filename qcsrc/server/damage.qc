@@ -895,7 +895,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 	total_damage_to_creatures = 0;
 
-	if(deathtype != (WEP_HOOK.m_id | HITTYPE_SECONDARY | HITTYPE_BOUNCE) && deathtype != (WEP_ELECTRO.m_id | HITTYPE_BOUNCE | HITTYPE_SPLASH)) // only send damage over time bombs once
+	if(deathtype != (WEP_HOOK.m_id | HITTYPE_SECONDARY | HITTYPE_BOUNCE) && deathtype != (WEP_ELECTRO.m_id | HITTYPE_BOUNCE | HITTYPE_TERTIARY)) // only send damage over time bombs once
 		if(!(deathtype & HITTYPE_SOUND)) // do not send radial sound damage (bandwidth hog)
 		{
 			force = inflictorvelocity;

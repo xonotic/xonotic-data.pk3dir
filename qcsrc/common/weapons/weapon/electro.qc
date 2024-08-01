@@ -65,7 +65,7 @@ void W_Electro_ExplodeComboThink(entity this)
 	float edgedamage = this.dmg_edge * PHYS_INPUT_TIMELENGTH;
 
 	RadiusDamage(this, this.realowner, damage, edgedamage, this.dmg_radius, NULL, NULL, 0, this.projectiledeathtype, this.weaponentity_fld, NULL);
-	this.projectiledeathtype |= HITTYPE_SPLASH; // ensure it doesn't spam its effect
+	this.projectiledeathtype |= HITTYPE_TERTIARY; // ensure it doesn't spam its effect
 }
 
 void W_Electro_ExplodeCombo(entity this)
