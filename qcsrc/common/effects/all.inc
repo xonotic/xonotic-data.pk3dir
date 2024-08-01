@@ -41,7 +41,6 @@ EFFECT(0, GRENADE_MUZZLEFLASH,      "grenadelauncher_muzzleflash")
 
 EFFECT(0, ELECTRO_BALLEXPLODE,      "electro_ballexplode")
 EFFECT(0, ELECTRO_COMBO,            "electro_combo")
-EFFECT(0, ELECTRO_COMBO_LONG,       "electro_combo_long")
 EFFECT(0, ELECTRO_IMPACT,           "electro_impact")
 EFFECT(0, ELECTRO_MUZZLEFLASH,      "electro_muzzleflash")
 
