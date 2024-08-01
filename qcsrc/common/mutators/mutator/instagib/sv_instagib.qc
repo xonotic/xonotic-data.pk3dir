@@ -16,6 +16,7 @@ bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
+bool autocvar_g_instagib_allow_jetpacks;
 
 /// \brief Returns a random classname of the instagib item.
 /// \param[in] prefix Prefix of the cvars that hold probabilities.
@@ -344,6 +345,9 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 			if(autocvar_g_instagib_ammo_convert_bullets)
 				instagib_replace_item_with(item, ITEM_VaporizerCells);
 			return true;
+		case ITEM_Jetpack:
+		case ITEM_JetpackRegen:
+			return !autocvar_g_instagib_allow_jetpacks;
 	}
 
 	switch (item.weapon)
