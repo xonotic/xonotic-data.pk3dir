@@ -1014,6 +1014,7 @@ void SV_ParseClientCommand(entity this, string command)
 	{
 		// exempt commands which are not subject to floodcheck
 		case "begin": break;                               // handled by engine in host_cmd.c
+		case "clientversion": break;                       // requested during connection
 		case "download": break;                            // handled by engine in cl_parse.c
 		case "mv_getpicture": break;                       // handled by server in this file
 		case "wpeditor": break;                            // handled by server in this file
@@ -1047,7 +1048,7 @@ void SV_ParseClientCommand(entity this, string command)
 		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
 
 		// on connection, client sends all of these
-		case "name": case "rate": case "rate_burstsize": case "playermodel": case "playerskin": case "clientversion":
+		case "name": case "rate": case "rate_burstsize": case "playermodel": case "playerskin":
 			if(!IS_CLIENT(this)) break;
 			// else fall through to default: flood control
 		default:
