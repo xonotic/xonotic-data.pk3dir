@@ -1056,15 +1056,21 @@ void SV_ParseClientCommand(entity this, string command)
 			{
 				if(MUTATOR_CALLHOOK(ClientCommand_FloodControl, this, strtolower(argv(0)), argc, command))
 					break; // a mutator has prevented flood control
-				entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
+
 				// this is basically the same as the chat flood control
-				if (time < store.cmd_floodtime)
+				entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
+				// NOTE: using mod_time instead of time here to avoid initializing both this.cmd_floodtime
+				// and CS(this).cmd_floodtime to -(antispam_count * antispam_time) (or -999999)
+				float mod_time = time + autocvar_sv_clientcommand_antispam_count * autocvar_sv_clientcommand_antispam_time;
+				if (mod_time < store.cmd_floodtime)
 				{
-					sprint(this, strcat("^3CMD FLOOD CONTROL: wait ^1", ftos(store.cmd_floodtime - time), "^3 seconds, command was: ", command, "\n"));
+					sprint(this, strcat("^3CMD FLOOD CONTROL: wait ^1", ftos(store.cmd_floodtime - mod_time),
+						"^3 seconds, command was: ", command, "\n"));
 					return;  // too much spam, halt
 				}
 				else
-					store.cmd_floodtime = max(time - autocvar_sv_clientcommand_antispam_count * autocvar_sv_clientcommand_antispam_time, store.cmd_floodtime) + autocvar_sv_clientcommand_antispam_time;
+					// micro-optimization: replaced mod_time - max_delay with time here as they are equal
+					store.cmd_floodtime = max(time, store.cmd_floodtime) + autocvar_sv_clientcommand_antispam_time;
 			}
 			break;  // continue, as we're not flooding yet
 	}
