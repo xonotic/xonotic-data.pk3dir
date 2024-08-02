@@ -50,13 +50,6 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.addValue(e, _("Fast ADSL"), "40000");
 			e.addValue(e, _("Broadband"), "66666");
 			e.configureXonoticTextSliderValues(e);
-	if(cvar("developer") > 0)
-	{
-		me.TR(me);
-		me.TR(me);
-			me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Local latency:")));
-			me.TD(me, 1, 2, e = makeXonoticSlider(0, 1000, 25, "cl_netlocalping"));
-	}
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3.25, e = makeXonoticHeaderLabel(_("HTTP downloads")));
@@ -133,9 +126,6 @@ void XonoticMiscSettingsTab_fill(entity me)
 			_("Show current date and time of day, useful on screenshots")));
 			makeMulti(e, "showdate");
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "developer", _("Enable developer mode")));
-			e.applyButton = miscApplyButton;
-
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton_T(_("Advanced settings..."), '0 0 0',

@@ -182,10 +182,6 @@ void XonoticAudioSettingsTab_fill(entity me)
 			e.addValue(e, _("Always"), "1");
 			e.configureXonoticTextSliderValues(e);
 			e.sendCvars = true;
-	me.TR(me);
-	me.TR(me);
-		if(cvar("developer") > 0)
-			me.TD(me, 1, 3, makeXonoticCheckBox(0, "showsound", _("Debug info about sounds")));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, audioApplyButton);
