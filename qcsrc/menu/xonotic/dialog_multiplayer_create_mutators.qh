@@ -2,7 +2,6 @@
 
 #include "dialog.qh"
 CLASS(XonoticMutatorsDialog, XonoticDialog)
-	METHOD(XonoticMutatorsDialog, toString, string(entity));
 	METHOD(XonoticMutatorsDialog, fill, void(entity));
 	METHOD(XonoticMutatorsDialog, showNotify, void(entity));
 	METHOD(XonoticMutatorsDialog, close, void(entity));
