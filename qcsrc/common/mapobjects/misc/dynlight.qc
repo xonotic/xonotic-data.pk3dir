@@ -85,6 +85,8 @@ void dynlight_find_target(entity this)
 }
 void dynlight_use(entity this, entity actor, entity trigger)
 {
+	if(this.active != ACTIVE_ACTIVE)
+		return;
 	if (this.light_lev == 0)
 		this.light_lev = this.lefty;
 	else
