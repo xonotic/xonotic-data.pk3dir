@@ -90,6 +90,23 @@ void dynlight_use(entity this, entity actor, entity trigger)
 	else
 		this.light_lev = 0;
 }
+void dynlight_setactive(entity this, int act)
+{
+	int old_status = this.active;
+	if(act == ACTIVE_TOGGLE)
+		this.active = (this.active == ACTIVE_ACTIVE) ? ACTIVE_NOT : ACTIVE_ACTIVE;
+	else
+		this.active = act;
+
+	if(this.active != old_status)
+		this.light_lev = (this.active == ACTIVE_ACTIVE) ? this.lefty : 0;
+}
+void dynlight_reset(entity this)
+{
+	// TODO should anything else be reset here?
+	this.active = ACTIVE_ACTIVE;
+	this.light_lev = this.lefty;
+}
 spawnfunc(dynlight)
 {
 	if (!this.light_lev)
@@ -98,6 +115,9 @@ spawnfunc(dynlight)
 		this.color = '1 1 1';
 	this.lefty = this.light_lev;
 	this.use = dynlight_use;
+	this.active = ACTIVE_ACTIVE;
+	this.setactive = dynlight_setactive;
+	this.reset = dynlight_reset;
 	setsize (this, '0 0 0', '0 0 0');
 	setorigin(this, this.origin);
 	//this.pflags = PFLAGS_FULLDYNAMIC;

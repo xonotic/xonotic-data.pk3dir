@@ -790,6 +790,7 @@ void Item_Reset(entity this)
 	}
 	setthink(this, Item_Think);
 	this.nextthink = time;
+	this.active = ACTIVE_ACTIVE;
 	if (this.waypointsprite_attached)
 	{
 		WaypointSprite_Kill(this.waypointsprite_attached);

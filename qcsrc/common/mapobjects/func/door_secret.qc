@@ -10,8 +10,8 @@ void fd_secret_done(entity this);
 
 void fd_secret_use(entity this, entity actor, entity trigger)
 {
-	float temp;
-	string message_save;
+	if(this.active != ACTIVE_ACTIVE)
+		return;
 
 	SetResourceExplicit(this, RES_HEALTH, 10000);
 	if(!this.bot_attack)
@@ -22,7 +22,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 	if (this.origin != this.oldorigin)
 		return;
 
-	message_save = this.message;
+	string message_save = this.message;
 	this.message = ""; // no more message
 	SUB_UseTargets(this, actor, trigger);				// fire all targets / killtargets
 	this.message = message_save;
@@ -35,7 +35,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 		_sound(this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
 	this.nextthink = this.ltime + 0.1;
 
-	temp = 1 - (this.spawnflags & DOOR_SECRET_1ST_LEFT);	// 1 or -1
+	int temp = 1 - (this.spawnflags & DOOR_SECRET_1ST_LEFT);	// 1 or -1
 	makevectors(this.mangle);
 
 	if (!this.t_width)
@@ -153,6 +153,8 @@ void secret_touch(entity this, entity toucher)
 		return;
 	if (this.door_finished > time)
 		return;
+	if (this.active != ACTIVE_ACTIVE)
+		return;
 
 	this.door_finished = time + 2;
 
@@ -174,6 +176,7 @@ void secret_reset(entity this)
 	setorigin(this, this.oldorigin);
 	setthink(this, func_null);
 	this.nextthink = 0;
+	this.active = ACTIVE_ACTIVE;
 }
 
 /*QUAKED spawnfunc_func_door_secret (0 .5 .8) ? open_once 1st_left 1st_down no_shoot always_shoot
@@ -244,6 +247,7 @@ spawnfunc(func_door_secret)
 	setblocked(this, secret_blocked);
 	this.speed = 50;
 	this.use = fd_secret_use;
+	this.active = ACTIVE_ACTIVE;
 	if(!this.targetname || this.targetname == "")
 		this.spawnflags |= DOOR_SECRET_YES_SHOOT;
 

@@ -98,6 +98,7 @@ void spawnpoint_setactive(entity this, int act)
 }
 void spawnpoint_reset(entity this)
 {
+	this.active = ACTIVE_ACTIVE;
 	this.SendFlags |= 1; // update team since it was restored during reset
 }
 
