@@ -79,6 +79,7 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 10.5, 3, e = makeXonoticGametypeList());
 
 	me.gotoRC(me, 12, 0);
+		me.TDempty(me, 0.1);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "menu_create_show_all", _("Show all"),
 			_("Show all available gametypes")));
 	me.gotoRC(me, 13.5, 0);
