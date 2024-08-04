@@ -528,8 +528,9 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_commands");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
-		BADVALUE("sys_ticrate", "0.0166667");
-		BADVALUE("sys_ticrate", "0.0333333");
+		BADVALUE("sys_ticrate", "0.0078125");
+		BADVALUE("sys_ticrate", "0.015625");
+		BADVALUE("sys_ticrate", "0.03125");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup");
