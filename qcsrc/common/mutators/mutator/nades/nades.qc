@@ -14,6 +14,7 @@ REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
 
 REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
 REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
+REPLICATE(cvar_cl_tandemnade_type, int, "cl_tandemnade_type");
 
 entity Nade_TrailEffect(int proj, int nade_team)
 {
@@ -186,6 +187,8 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 #include <common/gamemodes/_mod.qh>
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
+#include <common/vehicles/all.qh>
+#include <common/turrets/all.qh>
 #include <server/command/common.qh>
 
 .float nade_time_primed;
@@ -653,7 +656,6 @@ void nade_heal_touch(entity this, entity toucher)
 {
 	float maxhealth;
 	float health_factor;
-
 	if(IS_PLAYER(toucher) || IS_MONSTER(toucher) || IS_VEHICLE(toucher))
 	if(!IS_DEAD(toucher))
 	if(!STAT(FROZEN, toucher))
@@ -686,20 +688,377 @@ void nade_heal_boom(entity this)
 	settouch(orb, nade_heal_touch);
 	orb.colormod = '1 0 0';
 }
-
-void nade_monster_boom(entity this)
+void nade_tandem_randomweapon(entity e, vector org)
 {
-	if(!autocvar_g_monsters)
+	RandomSelection_Init();
+	FOREACH(Weapons, 
+			it != WEP_Null 
+			&& (!((it.spawnflags & WEP_FLAG_HIDDEN) 
+			|| (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) 
+			|| (it.spawnflags & WEP_FLAG_SPECIALATTACK) 
+			|| (it.spawnflags & WEP_FLAG_SUPERWEAPON))
+			|| autocvar_g_nades_tandem_randomweapon_includespecial),
+	{
+		if((it.spawnflags & WEP_FLAG_HIDDEN)
+			&& (it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+			continue;
+		if(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) continue;
+		if(it.spawnflags & WEP_FLAG_SPECIALATTACK) continue;
+		if(it.spawnflags & WEP_TYPE_OTHER) continue;
+		if (W_IsWeaponThrowable(e, it.m_id))
+			RandomSelection_AddEnt(it, 1, 1);
+	});
+
+	ITEM_SET_LOOT(e, true);
+	e.pickup_anyway = true;
+	e.angles = '0 0 0';
+	e.gravity = 1;
+	setorigin(e, org);
+	e.velocity = randomvec() * 150 + '0 0 325';
+	e.spawnfunc_checked = true;
+	e.glowmod = weaponentity_glowmod(RandomSelection_chosen_ent, 0, e);
+	weapon_defaultspawnfunc(e, RandomSelection_chosen_ent);
+}
+
+entity nade_tandem_randomitem()
+{
+	RandomSelection_Init();
+	FOREACH(Items, 
+			it != NULL 
+			&& (!(it.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
+			&& !(it.m_itemid & IT_JETPACK)
+			&& !(it.m_itemid & IT_FUEL_REGEN)
+			&& !(it.m_itemid & IT_STRENGTH)
+			&& !(it.m_itemid & IT_INVINCIBLE)
+			&& !(it.m_itemid & IT_INVISIBILITY)
+			&& !(it.m_itemid & IT_SPEED)
+			|| autocvar_g_nades_tandem_item_includespecial),
+	{
+		if(it.m_canonical_spawnfunc == "item_armor_mega" 
+		|| it.m_canonical_spawnfunc == "item_health_mega" 
+		|| it.m_canonical_spawnfunc == "item_armor_big" 
+		|| it.m_canonical_spawnfunc == "item_health_big" 
+		|| it.m_canonical_spawnfunc == "item_armor_medium" 
+		|| it.m_canonical_spawnfunc == "item_health_medium" 
+		|| it.m_canonical_spawnfunc == "item_extralife"
+		|| (it.spawnflags & ITEM_FLAG_MUTATORBLOCKED)) 
+			continue;
+		RandomSelection_AddEnt(it, 1, 1);
+	});
+
+	return RandomSelection_chosen_ent;
+}
+
+void nade_tandem_spawnitem(entity e, vector org)
+{
+	entity itm;
+
+	switch (e.pokenade_type)
+	{
+		case "health": { itm = ITEM_HealthSmall; break; }
+		case "armor" : { itm = ITEM_ArmorSmall; break; }
+		case "ammo"	 : 
+		{
+			itm = (random() > 0.5) ? 
+				ITEM_Shells  : (random() > 0.5) ? 
+				ITEM_Bullets : (random() > 0.5) ?
+				ITEM_Rockets : ITEM_Plasma;
+			break;
+		}
+		case "jetpack": 
+		{ 
+			itm = (!autocvar_g_nades_tandem_item_includespecial) ? 
+				ITEM_JetpackFuel : (random() < 0.5) ? 
+				ITEM_JetpackFuel : ITEM_Jetpack; 
+			break; 
+		}
+		default: { itm = nade_tandem_randomitem(); break; }
+	}
+
+	if((IS_GAMETYPE(FREEZETAG) || IS_GAMETYPE(LMS)) 
+		&& (itm != ITEM_ArmorSmall || itm != ITEM_HealthSmall))
+	{
+		// Non-regular items can't be spawned on survival-type gamemodes
+		itm = (random() > 0.5) ? ITEM_ArmorSmall : ITEM_HealthSmall;
+	}
+
+	// item setup
+	ITEM_SET_LOOT(e, true);
+	e.reset = SUB_Remove;
+	e.noalign = true;
+	StartItem(e, itm);
+	e.gravity = 1;
+	setorigin(e, org);
+	e.velocity = randomvec() * 175 + '0 0 325';
+	e.item_spawnshieldtime = time + 0.7;
+	SUB_SetFade(e, time + autocvar_g_nades_tandem_item_lifetime, 1);
+}
+
+void nade_tandem_dropping(entity this, vector org)
+{
+	entity e = spawn();
+	e.spawnfunc_checked = true;
+	e.pokenade_type = this.pokenade_type;
+
+	// Items can't be spawned on CA and Instagib
+	if(!IS_GAMETYPE(CA) && !autocvar_g_instagib)
+	{
+		switch (this.pokenade_type)
+		{
+			case "weapon" 	: 
+			{
+				if (autocvar_g_nades_tandem_includespecial)
+				{
+					nade_tandem_randomweapon(e, org);
+					return;
+				}
+			}
+			case "health"	: 
+			case "armor"	: 
+			case "ammo"		: 
+			case "jetpack"	: 
+			default			: { nade_tandem_spawnitem(e, org); return; }
+		}
+	}
+}
+
+void tandem_ball_think(entity this)
+{
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		delete(this);
 		return;
+	}
+
+	if(time > this.pushltime)
+	{
+		delete(this);
+		return;
+	}
+
+	vector midpoint = ((this.absmin + this.absmax) * 0.5);
+	if(pointcontents(midpoint) == CONTENT_WATER)
+	{
+		this.velocity = this.velocity * 0.5;
+
+		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER) 
+			this.velocity_z = 200;
+	}
+
+	this.angles = vectoangles(this.velocity);
+
+	if (this.nade_item_spawncount < autocvar_g_nades_tandem_ball_item_spawncount)
+	{
+		this.nade_item_spawncount++;
+		nade_tandem_dropping(this, this.origin);
+	}
+
+	this.nextthink = time + 0.1;
+}
+
+void nade_tandem_ball(entity this)
+{
+	entity proj;
+	vector kick;
+
+	spamsound(this, CH_SHOTS, SND_FIREBALL_FIRE, VOL_BASE, ATTEN_NORM);
+
+	proj = new(grenade);
+	proj.bot_dodge = true;
+	proj.pokenade_type = this.pokenade_type;
+	set_movetype(proj, MOVETYPE_BOUNCE);
+	setmodel(proj, MDL_Null);
+	proj.scale = 1; //0.5;
+	setsize(proj, '-4 -4 -4', '4 4 4');
+	setorigin(proj, this.origin);
+	setthink(proj, tandem_ball_think);
+	proj.nextthink = time;
+	proj.effects = EF_LOWPRECISION;
+
+	kick.x =(random() - 0.5) * 2 * autocvar_g_nades_tandem_ball_spread;
+	kick.y = (random() - 0.5) * 2 * autocvar_g_nades_tandem_ball_spread;
+	kick.z = (random() / 2 + 0.5) * autocvar_g_nades_tandem_ball_spread;
+	proj.velocity = kick;
+
+	proj.pushltime = time + autocvar_g_nades_tandem_ball_lifetime;
+
+	proj.angles = vectoangles(proj.velocity);
+	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
+	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
+}
+
+void tandem_fountain_think(entity this)
+{
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		delete(this);
+		return;
+	}
+
+	if(time >= this.ltime)
+	{
+		Send_Effect(EFFECT_SMOKE_SMALL, this.origin + '0 0 1', '0 0 0', 1);
+		sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+
+		delete(this);
+		return;
+	}
+
+	vector midpoint = ((this.absmin + this.absmax) * 0.5);
+	if(pointcontents(midpoint) == CONTENT_WATER)
+	{
+		this.velocity = this.velocity * 0.5;
+
+		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
+			this.velocity_z = 200;
+
+		UpdateCSQCProjectile(this);
+	}
+
+	this.nextthink = time + 0.1;
+	if(time >= this.nade_special_time)
+	{
+		this.nade_special_time = time + autocvar_g_nades_tandem_fountain_delay;
+		nade_tandem_ball(this);
+		Send_Effect(EFFECT_SMOKE_LARGE, this.origin, '0 0 0', 1);
+	}
+}
+
+void tandem_item_fountain_explode(entity this)
+{
+	entity fountain = new(nade_tandem_fountain);
+	fountain.owner = this.owner;
+	fountain.realowner = this.realowner;
+	fountain.origin = this.origin;
+	fountain.pokenade_type = this.pokenade_type;
+	fountain.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, fountain);
+	IL_PUSH(g_bot_dodge, fountain);
+	setorigin(fountain, fountain.origin);
+	setthink(fountain, tandem_fountain_think);
+	fountain.nextthink = time;
+	fountain.ltime = time + autocvar_g_nades_tandem_fountain_lifetime;
+	fountain.pushltime = fountain.ltime;
+	fountain.team = this.team;
+	
+	//nade model maintaining
+	setmodel(fountain, MDL_PROJECTILE_GRENADE);
+	entity timer = new(nade_timer);
+	setmodel(timer, MDL_NADE_TIMER);
+	setattachment(timer, fountain, "");
+	timer.colormap = this.colormap;
+	timer.glowmod = this.glowmod;
+	setthink(timer, nade_timer_think);
+	timer.nextthink = time;
+	timer.wait = fountain.ltime;
+	timer.owner = fountain;
+	timer.skin = 10;
+	
+	set_movetype(fountain, MOVETYPE_TOSS);
+	fountain.bot_dodge = true;
+	fountain.nade_special_time = time;
+	setsize(fountain, '-16 -16 -16', '16 16 16');
+	CSQCProjectile(fountain, true, PROJECTILE_NADE_TANDEM_BURN, true);
+}
+
+void nade_tandem_boom(entity this)
+{
 	entity e = spawn();
 	e.noalign = true; // don't drop to floor
-	e = spawnmonster(e, this.pokenade_type, MON_Null, this.realowner, this.realowner, this.origin, false, false, 1);
-	if(!e)
-		return; // monster failed to be spawned
+	e.gravity = 1;
 
-	if(autocvar_g_nades_pokenade_monster_lifetime > 0)
-		e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
-	e.monster_skill = MONSTER_SKILL_INSANE;
+	this.nade_item_spawncount = 0;
+
+	int tandemnade_type_select = (autocvar_g_nades_tandem_includespecial) ? 
+		this.tandemnade_type : 1;
+
+	switch (tandemnade_type_select)
+	{
+		case 1:
+		{
+			tandem_item_fountain_explode(this);
+			return;
+		}
+		case 2:
+		{
+			if(!autocvar_g_vehicles) 
+				return;
+
+			e = spawnvehicle(
+				e, 
+				this.pokenade_type, 
+				VEH_Null, 
+				this.realowner, 
+				this.realowner, 
+				this.origin, 
+				true, 
+				false, 
+				true,
+				false
+			);
+
+			if(!e)
+				return; // vehicle failed to be spawned
+
+			if(autocvar_g_nades_pokenade_vehicle_lifetime > 0)
+				e.vehicle_lifetime = time + autocvar_g_nades_pokenade_vehicle_lifetime;
+			return;
+		}
+		case 3:
+		{
+			if(!autocvar_g_turrets) 
+				return;
+
+			e = spawnturret(
+				e, 
+				this.pokenade_type, 
+				TUR_Null, 
+				this.realowner, 
+				this.realowner, 
+				this.origin, 
+				false,
+				false, 
+				false, 
+				1,
+				true
+			);
+
+			if(!e)
+				return; // turret failed to be spawned
+			
+			if(autocvar_g_nades_pokenade_turret_lifetime > 0)
+				e.turret_lifetime = time + autocvar_g_nades_pokenade_turret_lifetime;
+			return;
+		}
+		default:
+		{
+			if(!autocvar_g_monsters)
+				return;
+
+			e = spawnmonster(
+				e, 
+				this.pokenade_type, 
+				MON_Null, 
+				this.realowner, 
+				this.realowner, 
+				this.origin, 
+				false, 
+				false, 
+				1
+			);
+
+			if(!e)
+				return; // monster failed to be spawned
+
+			if(autocvar_g_nades_pokenade_monster_lifetime > 0)
+				e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
+			e.monster_skill = MONSTER_SKILL_INSANE;
+		}
+	}
 }
 
 void nade_veil_touch(entity this, entity toucher)
@@ -920,7 +1279,7 @@ void nade_boom(entity this)
 		SET_NADE_EFFECT(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm_blast, EFFECT_EXPLOSION_MEDIUM);
 		SET_NADE_EFFECT(NADE_TYPE_ICE,         false,                         EFFECT_ELECTRO_COMBO /* hookbomb_explode electro_combo bigplasma_impact */);
 		SET_NADE_EFFECT(NADE_TYPE_TRANSLOCATE, false,                         NULL);
-		SET_NADE_EFFECT(NADE_TYPE_MONSTER,     true,                          (!autocvar_g_monsters) ? EFFECT_NADE_EXPLODE(this.realowner.team) : NULL);
+		SET_NADE_EFFECT(NADE_TYPE_TANDEM,      true,                          (!autocvar_g_monsters && !autocvar_g_turrets && !autocvar_g_vehicles) ? EFFECT_NADE_EXPLODE(this.realowner.team) : NULL);
 		SET_NADE_EFFECT(NADE_TYPE_SPAWN,       false,                         GET_NADE_TYPE_SPAWN_EFFECT(this.realowner.team));
 		SET_NADE_EFFECT(NADE_TYPE_HEAL,        false,                         EFFECT_SPAWN_RED);
 		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      false,                         EFFECT_SPAWN_YELLOW);
@@ -952,7 +1311,7 @@ void nade_boom(entity this)
 		case NADE_TYPE_TRANSLOCATE: nade_translocate_boom(this); break;
 		case NADE_TYPE_SPAWN:       nade_spawn_boom(this);       break;
 		case NADE_TYPE_HEAL:        nade_heal_boom(this);        break;
-		case NADE_TYPE_MONSTER:     nade_monster_boom(this);     break;
+		case NADE_TYPE_TANDEM:      nade_tandem_boom(this);      break;
 		case NADE_TYPE_ENTRAP:      nade_entrap_boom(this);      break;
 		case NADE_TYPE_VEIL:        nade_veil_boom(this);        break;
 		case NADE_TYPE_AMMO:        nade_ammo_boom(this);        break;
@@ -967,10 +1326,10 @@ void nade_boom(entity this)
 	delete(this);
 }
 
-void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype);
+void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype, int tntype);
 void nade_pickup(entity this, entity thenade)
 {
-	spawn_held_nade(this, thenade.realowner, autocvar_g_nades_pickup_time, STAT(NADE_BONUS_TYPE, thenade), thenade.pokenade_type);
+	spawn_held_nade(this, thenade.realowner, autocvar_g_nades_pickup_time, STAT(NADE_BONUS_TYPE, thenade), thenade.pokenade_type, thenade.tandemnade_type);
 
 	// set refire so player can't even
 	this.nade_refire = time + autocvar_g_nades_nade_refire;
@@ -1269,11 +1628,12 @@ bool nade_customize(entity this, entity client)
 	return true;
 }
 
-void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype)
+void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype, int tntype)
 {
 	entity n = new(nade), fn = new(fake_nade);
 
 	n.pokenade_type = pntype;
+	n.tandemnade_type = tntype;
 
 	Nade def = REGISTRY_GET(Nades, max(1, ntype));
 	if(def == NADE_TYPE_Null)
@@ -1332,6 +1692,7 @@ void nade_prime(entity this)
 	this.fake_nade = NULL;
 
 	int ntype;
+	int tntype = this.tandemnade_type;
 	string pntype = this.pokenade_type;
 
 	if(StatusEffects_active(STATUSEFFECT_Strength, this) && autocvar_g_nades_bonus_onstrength)
@@ -1340,15 +1701,17 @@ void nade_prime(entity this)
 	{
 		ntype = STAT(NADE_BONUS_TYPE, this);
 		pntype = this.pokenade_type;
+		tntype = this.tandemnade_type;
 		STAT(NADE_BONUS, this) -= 1;
 	}
 	else
 	{
 		ntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_nade_type : autocvar_g_nades_nade_type);
 		pntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		tntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_tandemnade_type : autocvar_g_nades_tandemnade_type);
 	}
 
-	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype);
+	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype, tntype);
 }
 
 bool CanThrowNade(entity this)
@@ -1412,7 +1775,7 @@ int nades_CheckTypes(entity player, int cl_ntype)
 		CL_NADE_TYPE_CHECK(NADE_TYPE_TRANSLOCATE, autocvar_g_nades_translocate);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_SPAWN,       autocvar_g_nades_spawn);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_HEAL,        autocvar_g_nades_heal);
-		CL_NADE_TYPE_CHECK(NADE_TYPE_MONSTER,     autocvar_g_nades_pokenade);
+		CL_NADE_TYPE_CHECK(NADE_TYPE_TANDEM,      autocvar_g_nades_tandem);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_ENTRAP,      autocvar_g_nades_entrap);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_VEIL,        autocvar_g_nades_veil);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_AMMO,        autocvar_g_nades_ammo);
@@ -1531,11 +1894,13 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			{
 				STAT(NADE_BONUS_TYPE, player) = nades_CheckTypes(player, CS_CVAR(player).cvar_cl_nade_type);
 				player.pokenade_type = CS_CVAR(player).cvar_cl_pokenade_type;
+				player.tandemnade_type = CS_CVAR(player).cvar_cl_tandemnade_type;
 			}
 			else
 			{
 				STAT(NADE_BONUS_TYPE, player) = autocvar_g_nades_bonus_type;
 				player.pokenade_type = autocvar_g_nades_pokenade_monster_type;
+				player.tandemnade_type = autocvar_g_nades_tandemnade_type;
 			}
 
 			STAT(NADE_BONUS_TYPE, player) = bound(1, STAT(NADE_BONUS_TYPE, player), Nades_COUNT);
@@ -1776,6 +2141,7 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	STAT(NADE_TIMER, client) = STAT(NADE_TIMER, spectatee);
 	STAT(NADE_BONUS_TYPE, client) = STAT(NADE_BONUS_TYPE, spectatee);
 	client.pokenade_type = spectatee.pokenade_type;
+	client.tandemnade_type = spectatee.tandemnade_type;
 	STAT(NADE_BONUS, client) = STAT(NADE_BONUS, spectatee);
 	STAT(NADE_BONUS_SCORE, client) = STAT(NADE_BONUS_SCORE, spectatee);
 }

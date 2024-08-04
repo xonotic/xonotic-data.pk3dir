@@ -374,6 +374,33 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 	return vtag;
 }
 
+void vehicles_remove(entity this)
+{
+	// to avoid weird entity assignments to other stuff like projectiles
+    this.deadflag = DEAD_DEAD;
+	this.active = ACTIVE_NOT;
+	vehicles_reset(this);
+	this.classname = "";
+
+	this.tur_head.exteriormodeltoclient = NULL;
+
+	CSQCModel_UnlinkEntity(this);
+
+	delete(this.wp00);
+	delete(this.gun1);
+	delete(this.gun2);
+	delete(this.gun3);
+	delete(this.gunner1);
+	delete(this.gunner2);
+	delete(this.vehicle_viewport);
+	delete(this.vehicle_controller);
+	delete(this.vehicle_shieldent);
+	delete(this.vehicle_hudmodel);
+	delete(this.tur_head);
+	delete(this.vehicle);
+	delete(this);
+}
+
 void vehicles_reset_colors(entity this, entity player)
 {
 	int eff = 0, cmap;
@@ -421,7 +448,10 @@ void vehicles_reset_colors(entity this, entity player)
 	this.alpha	 = 1;
 	this.avelocity = '0 0 0';
 	this.velocity  = '0 0 0';
-	this.effects   = eff;
+	if (this.optional_setup)
+		this.effects |= EF_DIMLIGHT;
+	else 
+		this.effects = eff;
 
 	Vehicle info = this.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
 	info.vr_setcolors(info, this);
@@ -516,12 +546,33 @@ void vehicles_setreturn(entity veh)
 
 	if(IS_DEAD(veh))
 	{
+		if (veh.cannot_respawn)
+		{
+			Vehicle info = veh.vehicledef; //REGISTRY_GET(Vehicles, this.vehicleid);
+			info.vr_death(info, veh);
+			
+			RadiusDamage (veh, veh.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_CRUSH.m_id, DMG_NOWEP, NULL);
+			sound (veh, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+			Send_Effect(EFFECT_EXPLOSION_BIG, veh.origin + '0 0 100', '0 0 0', 1);
+
+			tmp_vehcount--;
+
+			vehicles_clearreturn(ret);
+
+			antilag_clear(veh, veh);
+			
+			vehicles_remove(veh);
+			delete(ret);
+
+			return;
+		}
 		ret.cnt		 = time + veh.respawntime;
 		ret.nextthink   = min(time + veh.respawntime, time + veh.respawntime - 5);
 	}
 	else
 	{
-		ret.nextthink   = min(time + veh.respawntime, time + veh.respawntime - 1);
+		if (!veh.cannot_respawn) // if true, don't respawn
+			ret.nextthink   = min(time + veh.respawntime, time + veh.respawntime - 1);
 	}
 
 	setorigin(ret, veh.pos1 + '0 0 96');
@@ -963,6 +1014,18 @@ void vehicles_enter(entity pl, entity veh)
 	if(veh.owner)
 		return; // got here and didn't enter the gunner, return
 
+
+	if(!teamplay)
+	if(!veh.realowner)
+	if(veh.realowner != pl && autocvar_g_vehicles_steal)
+	{
+		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_OWNER, veh.realowner.netname);
+
+		veh.vehicle_shield = 0;
+		veh.old_vehicle_flags = veh.vehicle_flags; // make a backup just so we're not permanently crippling this vehicle
+		veh.vehicle_flags &= ~VHF_SHIELDREGEN;
+	}
+
 	if(teamplay)
 	if(veh.team)
 	if(DIFF_TEAM(pl, veh))
@@ -1084,6 +1147,20 @@ void vehicles_enter(entity pl, entity veh)
 
 void vehicles_think(entity this)
 {
+	if(this.summoned && this.vehicle_lifetime != 0)
+	if(time >= this.vehicle_lifetime)
+	{
+		Send_Effect(EFFECT_TELEPORT, this.origin + '0 0 100', '0 0 0', 1);
+
+		tmp_vehcount--;
+		
+		antilag_clear(this, this);
+		
+		vehicles_remove(this);
+
+		return;
+	}
+
 	this.nextthink = time + autocvar_g_vehicles_thinkrate;
 
 	if(this.owner)
@@ -1280,13 +1357,98 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 
 	if(this.active == ACTIVE_NOT)
 		this.nextthink = 0; // wait until activated
-	else if(autocvar_g_vehicles_delayspawn)
+	else if(autocvar_g_vehicles_delayspawn && !this.summoned)
 		this.nextthink = time + this.respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
+	else if(this.summoned)
+		this.nextthink = time;
 	else
 		this.nextthink = time + game_starttime;
 
 	if(MUTATOR_CALLHOOK(VehicleInit, this))
 		return false;
 
+	if(this.no_respawn_option)
+		this.cannot_respawn = true;
+
 	return true;
+}
+
+entity spawnvehicle (entity e, string vehicle, Vehicle veh, entity spawnedby, entity own, vector orig, bool no_respwn, bool removeifinvalid, bool optional, bool nodrop)
+{
+	if (autocvar_g_vehicles_max <= 0 || autocvar_g_vehicles_max_perplayer <= 0) { print_to(own, "Vehicle spawning is disabled"); return NULL; }
+
+	if (tmp_vehcount >= autocvar_g_vehicles_max) { print_to(own, "The maximum vehicle count has been reached"); return NULL; }
+
+	if (tmp_vehcount >= autocvar_g_vehicles_max_perplayer) { print_to(own, "You can't spawn any more vehicles"); return NULL; }
+
+	e.spawnflags = VHF_MULTISLOT;
+
+	// if this spawnflag isn't, it won't be spawned
+	e.spawnflags |= VHF_ISVEHICLE;
+
+	e.optional_setup = optional;
+	e.no_respawn_option = no_respwn;
+	e.summoned = true;
+
+	setorigin(e, orig);
+	bool allow_any = boolean(vehicle == "anyrandom");
+
+	if(vehicle == "random" || allow_any)
+	{
+		RandomSelection_Init();
+		FOREACH(Vehicles, it != VEH_Null && (allow_any || !(it.spawnflags & VHF_MULTISLOT)),
+		{
+			RandomSelection_AddEnt(it, 1, 1);
+		});
+
+		veh = RandomSelection_chosen_ent;
+	}
+	else if(vehicle != "")
+	{
+		bool found = false;
+		FOREACH(Vehicles, it != VEH_Null,
+		{
+			if(it.netname == vehicle)
+			{
+				found = true;
+				veh = it; // we have the vehicle, old vehicle id is no longer required
+				break;
+			}
+		});
+
+		if(!found && veh == VEH_Null)
+		{
+			if(removeifinvalid)
+			{
+				delete(e);
+				return NULL; // no good
+			}
+			// select a random valid vehicle type if no valid vehicle was provided
+			return spawnvehicle(e, "random", VEH_Null, spawnedby, own, orig, no_respwn, removeifinvalid, optional, nodrop);
+		}
+	}
+
+	e.realowner = spawnedby;
+
+	if(IS_PLAYER(spawnedby))
+	{
+		if(teamplay)
+			e.team = spawnedby.team; // colors handled in spawn code
+		
+		e.angles_y = spawnedby.angles_y;
+	}
+	
+	if(!(e.spawnflags & VHF_ISVEHICLE)) { delete(e); return NULL; } // remove even if told not to, as we didn't spawn any kind of vehicle
+
+	e.velocity = randomvec() * 150 + '0 0 325';
+	e.spawnfunc_checked = true;
+
+	// spawn!
+	vehicle_initialize(e, veh, nodrop);
+
+	tmp_vehcount++;
+
+	// LOG_INFOF("^4veh.netname^3: %s", veh.netname);
+
+	return e;
 }
