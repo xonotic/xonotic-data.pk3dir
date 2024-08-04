@@ -604,7 +604,7 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.strength_finished)
 	{
 		pickedup = true;
-		float t = max(StatusEffects_gettime(STATUSEFFECT_Strength, player), time);
+		float t = StatusEffects_gettime(STATUSEFFECT_Strength, player);
 		if (autocvar_g_powerups_stack)
 			t += item.strength_finished;
 		else
@@ -614,7 +614,7 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.invincible_finished)
 	{
 		pickedup = true;
-		float t = max(StatusEffects_gettime(STATUSEFFECT_Shield, player), time);
+		float t = StatusEffects_gettime(STATUSEFFECT_Shield, player);
 		if (autocvar_g_powerups_stack)
 			t += item.invincible_finished;
 		else
@@ -624,7 +624,7 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.speed_finished)
 	{
 		pickedup = true;
-		float t = max(StatusEffects_gettime(STATUSEFFECT_Speed, player), time);
+		float t = StatusEffects_gettime(STATUSEFFECT_Speed, player);
 		if (autocvar_g_powerups_stack)
 			t += item.speed_finished;
 		else
@@ -634,7 +634,7 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.invisibility_finished)
 	{
 		pickedup = true;
-		float t = max(StatusEffects_gettime(STATUSEFFECT_Invisibility, player), time);
+		float t = StatusEffects_gettime(STATUSEFFECT_Invisibility, player);
 		if (autocvar_g_powerups_stack)
 			t += item.invisibility_finished;
 		else
@@ -644,7 +644,8 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.superweapons_finished)
 	{
 		pickedup = true;
-		StatusEffects_apply(STATUSEFFECT_Superweapons, player, max(StatusEffects_gettime(STATUSEFFECT_Superweapons, player), time) + item.superweapons_finished, 0);
+		float t = StatusEffects_gettime(STATUSEFFECT_Superweapons, player);
+		StatusEffects_apply(STATUSEFFECT_Superweapons, player, t + item.superweapons_finished, 0);
 	}
 
 	// always eat teamed entities

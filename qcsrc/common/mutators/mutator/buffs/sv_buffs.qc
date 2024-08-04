@@ -247,7 +247,7 @@ void buff_Touch(entity this, entity toucher)
 
 	buff_RemoveAll(toucher, STATUSEFFECT_REMOVE_NORMAL); // remove previous buffs so that a new one may be added
 	if(bufftime)
-		StatusEffects_apply(thebuff, toucher, min(time + bufftime, max(oldtime, time) + bufftime), 0);
+		StatusEffects_apply(thebuff, toucher, min(time + bufftime, oldtime + bufftime), 0);
 	else
 		StatusEffects_apply(thebuff, toucher, time + 999, 0); // HACK: zero timer means "infinite"!
 
