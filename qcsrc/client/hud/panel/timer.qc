@@ -128,7 +128,9 @@ void HUD_Timer()
 		{
 			Scoreboard_UpdatePlayerTeams(); // ensure numplayers is current
 			if (srv_minplayers - numplayers > 0)
-				subtext = _("Warmup: too few players");
+				subtext = _("Warmup: too few players!");
+			else if (teamnagger && (ts_max - ts_min) >= teamnagger)
+				subtext = _("Warmup: teams unbalanced!");
 			else
 				subtext = _("Warmup: no time limit");
 		}
@@ -162,8 +164,8 @@ void HUD_Timer()
 		(swap ? subtimer_str : timer_str), timer_size,
 		(swap ? subtimer_color : timer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
 
-	draw_endBoldFont();
-
 	if(subtext)
 		drawstring_aspect(pos + eY * timer_size.y, subtext, subtext_size, '0 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+	draw_endBoldFont();
 }

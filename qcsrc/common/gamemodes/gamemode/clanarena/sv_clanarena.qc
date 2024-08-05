@@ -641,11 +641,6 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 	return MUT_SPECCMD_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(ca, HideTeamNagger)
-{
-	return true; // doesn't work well with the whole spectator as player thing
-}
-
 MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
 {
 	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")

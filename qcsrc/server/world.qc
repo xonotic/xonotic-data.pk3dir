@@ -536,6 +536,7 @@ void cvar_changes_init()
 		BADPREFIX("g_warmup");
 		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
+		BADCVAR("sv_teamnagger");
 
 		BADPRESUFFIXVALUE("g_", "_weaponarena", "most");
 		BADPRESUFFIXVALUE("g_", "_weaponarena", "most_available");
