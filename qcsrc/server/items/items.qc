@@ -1758,7 +1758,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	if(!StatusEffects_active(STATUSEFFECT_Superweapons, e))
 	{
 		if(!g_weaponarena && (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
-			StatusEffects_apply(STATUSEFFECT_Superweapons, e, autocvar_g_balance_superweapons_time, 0);
+			StatusEffects_apply(STATUSEFFECT_Superweapons, e, time + autocvar_g_balance_superweapons_time, 0);
 	}
 
 	if(e.statuseffects)
