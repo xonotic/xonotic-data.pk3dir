@@ -271,8 +271,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(CA_LEAVE,                                N_CONSOLE,  0, 0, "", "",       "",     _("^F2You will spectate in the next round"), "")
 
     MSG_INFO_NOTIF(COUNTDOWN_RESTART,                       N_CHATCON,  0, 0, "", "",       "",     _("^F2Match is restarting..."), "")
-    MSG_INFO_NOTIF(COUNTDOWN_STOP_MINPLAYERS,               N_CHATCON,  0, 1, "f1", "",     "",     _("^F4Countdown stopped! ^BG%s players are needed for this match."), "")
-    MSG_INFO_NOTIF(COUNTDOWN_STOP_BADTEAMS,                 N_CHATCON,  0, 0, "", "",       "",     _("^F4Countdown stopped! ^BGTeams are too unbalanced."), "")
+    MSG_INFO_NOTIF(COUNTDOWN_STOP_MINPLAYERS,               N_CHATCON,  0, 1, "f1", "",     "",     strcat(_("^F4Countdown stopped!"), "\n^BG", _("%s players are needed for this match.")), "")
+    MSG_INFO_NOTIF(COUNTDOWN_STOP_BADTEAMS,                 N_CHATCON,  0, 0, "", "",       "",     strcat(_("^F4Countdown stopped!"), "\n^BG", _("Teams are too unbalanced.")), "")
 
     MSG_INFO_NOTIF(DEATH_MURDER_BUFF,                       N_CONSOLE,  3, 3, "spree_inf s1 s2 f3buffname s3loc spree_end", "s2 s1",    "notify_death",         _("^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"), _("^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"))
     MSG_INFO_NOTIF(DEATH_MURDER_CHEAT,                      N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"), "")
@@ -731,8 +731,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
     MSG_CENTER_NOTIF(JOIN_PREVENT_QUEUE,                N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^BGYou're queued to join any available team."), "")
     MULTITEAM_CENTER(JOIN_PREVENT_QUEUE_TEAM,           N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^BGYou're queued to join the ^TC^TT^BG team."), "", NAME)
-    MULTITEAM_CENTER(JOIN_PREVENT_QUEUE_TEAM_CONFLICT,  N_ENABLE,    1, 0, "s1",             CPID_PREVENT_JOIN,      "0 0",  _("^K2You're queued to join any available team.\n%s^K2 chose ^TC^TT^K2 first."), "", NAME)
-    MULTITEAM_CENTER(JOIN_PLAY_TEAM_QUEUECONFLICT,      N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^K2You're now playing on ^TC^TT^K2 team!\n%s^K2 chose your preferred team first."), "", NAME)
+    MULTITEAM_CENTER(JOIN_PREVENT_QUEUE_TEAM_CONFLICT,  N_ENABLE,    1, 0, "s1",             CPID_PREVENT_JOIN,      "0 0",  strcat(_("^K2You're queued to join any available team."), "\n", _("%s^K2 chose ^TC^TT^K2 first.")), "", NAME)
+    MULTITEAM_CENTER(JOIN_PLAY_TEAM_QUEUECONFLICT,      N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  strcat(_("^K2You're now playing on ^TC^TT^K2 team!"), "\n", _("%s^K2 chose your preferred team first.")), "", NAME)
     MULTITEAM_CENTER(JOIN_PLAY_TEAM,                    N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGYou're now playing on ^TC^TT^BG team!"), "", NAME)
 
     MSG_CENTER_NOTIF(KEEPAWAY_DROPPED,                  N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has dropped the ball!"), "")
