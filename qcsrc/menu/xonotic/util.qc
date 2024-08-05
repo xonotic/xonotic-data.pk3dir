@@ -9,6 +9,7 @@
 #include <common/gamemodes/_mod.qh>
 #include <common/util.qh>
 #include <common/command/_mod.qh>
+#include <menu/xonotic/gametypelist.qh>
 
 float GL_CheckExtension(string ext)
 {
@@ -696,11 +697,11 @@ Gametype GameType_GetID(int cnt)
 int GameType_GetCount()
 {
 	int i = 0;
-	int dev = cvar("developer");
+	bool showall = autocvar_menu_create_show_all;
 	#define GAMETYPE(id) ++i;
 	GAMETYPES
 	#undef GAMETYPE
-	#define GAMETYPE(it) { if (dev > 0) ++i; }
+	#define GAMETYPE(it) { if (showall) ++i; }
 	HIDDEN_GAMETYPES
 	#undef GAMETYPE
 	return i;

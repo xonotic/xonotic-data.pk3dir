@@ -22,3 +22,5 @@ CLASS(XonoticGametypeList, XonoticListBox)
 	ATTRIB(XonoticGametypeList, columnNameSize, float, 0);
 ENDCLASS(XonoticGametypeList)
 entity makeXonoticGametypeList();
+
+bool autocvar_menu_create_show_all;
