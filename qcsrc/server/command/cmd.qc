@@ -359,8 +359,8 @@ void ClientCommand_join(entity caller, int request)
 		{
 			if (!game_stopped && IS_CLIENT(caller) && !IS_PLAYER(caller))
 			{
-				if (joinAllowed(caller))
-					Join(caller, true);
+				if (joinAllowed(caller, caller.wants_join))
+					Join(caller, teamplay);
 				else if(time < CS(caller).jointime + MIN_SPEC_TIME)
 					CS(caller).autojoin_checked = -1;
 			}
@@ -524,7 +524,6 @@ void ClientCommand_say_team(entity caller, int request, int argc, string command
 	}
 }
 
-.bool team_selected;
 void ClientCommand_selectteam(entity caller, int request, int argc)
 {
 	switch (request)
@@ -551,7 +550,8 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			}
 			if (lockteams)
 			{
-				sprint(caller, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_LOCKED);
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_LOCKED);
 				return;
 			}
 
@@ -560,32 +560,33 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				return;
 			if (caller.team == team_num && team_num && !IS_DEAD(caller))
 			{
-				sprint(caller, "^7You already are on that team.\n");
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_SAME);
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_SAME);
 				return;
 			}
 			if (CS(caller).wasplayer && autocvar_g_changeteam_banned)
 			{
-				sprint(caller, "^1You cannot change team, forbidden by the server.\n");
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_NOTALLOWED);
 				return;
 			}
-			if (team_num && autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
+			if (team_num && autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
 			{
 				entity balance = TeamBalance_CheckAllowedTeams(caller);
 				TeamBalance_GetTeamCounts(balance, caller);
 				if ((Team_IndexToBit(Team_TeamToIndex(team_num)) &
 					TeamBalance_FindBestTeams(balance, caller, false)) == 0)
 				{
-					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
 					TeamBalance_Destroy(balance);
 					return;
 				}
 				TeamBalance_Destroy(balance);
 			}
-			if (team_num)
-				ClientKill_TeamChange(caller, team_num);
-			else // auto
-				if (!queuePlayer(caller, 0)) // the queue uses deferred autoselect
-					ClientKill_TeamChange(caller, -1);
+
+			if (joinAllowed(caller, team_num ? Team_TeamToIndex(team_num) : -1))
+				ClientKill_TeamChange(caller, team_num ? team_num : -1);
 
 			return;
 		}
@@ -693,8 +694,10 @@ void ClientCommand_spectate(entity caller, int request)
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN) return;
 
 				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE || caller.wants_join))
-				if (autocvar_sv_spectate == 1)
+				if (autocvar_sv_spectate)
 					ClientKill_TeamChange(caller, -2); // observe
+				else
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_SPECTATE_NOTALLOWED);
 			}
 			return; // never fall through to usage
 		}

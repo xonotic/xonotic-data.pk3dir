@@ -711,6 +711,8 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 	spectatee_status = newspectatee_status;
 
 	// we could get rid of spectatee_status, and derive it from player_localentnum and player_localnum
+
+	teamnagger = (f & 0x60) >> 5; // 0x60 = BIT(5) | BIT(6)
 }
 
 NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
@@ -1349,12 +1351,6 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_status = ReadShort();
 			strcpy(race_status_name, ReadString());
 	}
-	return true;
-}
-
-NET_HANDLE(TE_CSQC_TEAMNAGGER, bool isNew)
-{
-	teamnagger = 1;
 	return true;
 }
 
