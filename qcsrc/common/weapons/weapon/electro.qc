@@ -51,12 +51,50 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 	}
 }
 
+void W_Electro_ExplodeComboThink(entity this)
+{
+	if(time - this.teleport_time > this.dmg_duration)
+	{
+		delete(this);
+		return;
+	}
+
+	this.nextthink = time;
+
+	float damage = this.dmg * PHYS_INPUT_TIMELENGTH;
+	float edgedamage = this.dmg_edge * PHYS_INPUT_TIMELENGTH;
+
+	RadiusDamage(this, this.realowner, damage, edgedamage, this.dmg_radius, NULL, NULL, 0, this.projectiledeathtype, this.weaponentity_fld, NULL);
+	this.projectiledeathtype |= HITTYPE_TERTIARY; // ensure it doesn't spam its effect
+}
+
 void W_Electro_ExplodeCombo(entity this)
 {
 	W_Electro_TriggerCombo(this.origin, WEP_CVAR(electro, combo_comboradius), this.realowner);
 
 	this.event_damage = func_null;
 	this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
+
+	if(WEP_CVAR(electro, combo_duration))
+	{
+		this.projectiledeathtype = WEP_ELECTRO.m_id | HITTYPE_BOUNCE; // use THIS type for a combo because primary can't bounce
+		this.event_damage = func_null;
+		settouch(this, func_null);
+		this.effects |= EF_NODRAW; // hide the orb, rely only on the effect
+
+		setthink(this, W_Electro_ExplodeComboThink);
+		this.nextthink = time;
+		this.dmg = WEP_CVAR(electro, combo_damage);
+		this.dmg_edge = WEP_CVAR(electro, combo_edgedamage);
+		this.dmg_radius = WEP_CVAR(electro, combo_radius);
+		this.dmg_duration = WEP_CVAR(electro, combo_duration);
+		this.teleport_time = time;
+		set_movetype(this, MOVETYPE_NONE);
+
+		// fire the first damage tick immediately
+		getthink(this)(this);
+		return;
+	}
 
 	RadiusDamage(
 		this,
