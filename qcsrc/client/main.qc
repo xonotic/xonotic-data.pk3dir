@@ -651,7 +651,7 @@ NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 {
 	make_pure(this);
-	float newspectatee_status;
+	int newspectatee_status;
 
 	int f = ReadByte();
 
