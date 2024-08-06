@@ -54,7 +54,7 @@ int autocvar_sv_name_maxlength = 64;
 string autocvar_sv_quickmenu_file;
 bool autocvar_sv_servermodelsonly;
 bool autocvar_sv_showspectators;
-int autocvar_sv_spectate;
+bool autocvar_sv_spectate;
 bool autocvar_sv_teamnagger;
 float autocvar_sv_player_scale;
 
@@ -72,9 +72,11 @@ float autocvar_sv_player_scale;
 .int spectatee_status;
 .bool zoomstate;
 
-.bool team_selected;
+/// > 0 is a team index, if wants_join == -1 the player can't have the team they selected (conflict)
+.int team_selected;
 .bool just_joined;
-.bool wants_join;
+/// > 0 is a team index, -1 means team selection is deferred until Join()
+.int wants_join;
 
 .int pressedkeys;
 
@@ -160,7 +162,7 @@ CLASS(Client, Object)
     ATTRIB(Client, teamkill_soundsource, entity, this.teamkill_soundsource);
     ATTRIB(Client, usekeypressed, bool, this.usekeypressed);
     ATTRIB(Client, jointime, float, this.jointime);
-    ATTRIB(Client, wants_join, bool, this.wants_join);
+    ATTRIB(Client, wants_join, int, this.wants_join);
     ATTRIB(Client, spectatortime, float, this.spectatortime);
     ATTRIB(Client, startplaytime, float, this.startplaytime);
     ATTRIB(Client, version_nagtime, float, this.version_nagtime);
@@ -331,7 +333,6 @@ const int RESPAWN_FORCE = BIT(0);
 const int RESPAWN_SILENT = BIT(1);
 const int RESPAWN_DENY = BIT(2);
 
-float blockSpectators; // if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
 .float spectatortime; // point in time since the client is spectating or observing
 
 .bool player_blocked;
@@ -403,8 +404,7 @@ int GetPlayerLimit();
 const int MIN_SPEC_TIME = 1;
 void Join(entity this, bool queued_join);
 int nJoinAllowed(entity this, entity ignore);
-bool queuePlayer(entity this, int team_index);
-bool joinAllowed(entity this);
+bool joinAllowed(entity this, int team_index);
 
 void PlayerFrame (entity this);
 
