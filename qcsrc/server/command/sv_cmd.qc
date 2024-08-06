@@ -969,7 +969,7 @@ void GameCommand_lockteams(int request)
 			if (teamplay)
 			{
 				lockteams = 1;
-				bprint("^1The teams are now locked.\n");
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_LOCKED);
 			}
 			else
 			{
@@ -1180,13 +1180,8 @@ void GameCommand_nospectators(int request)
 				LOG_HELPF("This command works only when the server is running.");
 				return;
 			}
-			blockSpectators = 1;
-			// give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !INGAME(it), {
-				CS(it).spectatortime = time;
-				Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-			});
-			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
+			cvar_settemp("sv_spectate", "0");
+			// if sv_spectate was enabled PlayerFrame() sends SPECTATE_WARNING notifications
 			return;
 		}
 
@@ -1195,6 +1190,7 @@ void GameCommand_nospectators(int request)
 		{
 			LOG_HELP("Usage:^3 sv_cmd nospectators");
 			LOG_HELP("  No arguments required.");
+			LOG_HELP("Temporarily disables the ^3sv_spectate ^7cvar.");
 			return;
 		}
 	}
@@ -1645,7 +1641,7 @@ void GameCommand_unlockteams(int request)
 			if (teamplay)
 			{
 				lockteams = 0;
-				bprint("^1The teams are now unlocked.\n");
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_UNLOCKED);
 			}
 			else
 			{

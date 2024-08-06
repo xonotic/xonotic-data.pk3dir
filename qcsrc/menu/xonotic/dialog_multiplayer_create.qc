@@ -7,6 +7,7 @@
 #include "maplist.qh"
 #include <common/mapinfo.qh>
 
+#include "checkbox.qh"
 #include "image.qh"
 #include "textslider.qh"
 #include "textlabel.qh"
@@ -77,7 +78,11 @@ void XonoticServerCreateTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 10.5, 3, e = makeXonoticGametypeList());
 
-	me.gotoRC(me, 12.5, 0);
+	me.gotoRC(me, 12, 0);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "menu_create_show_all", _("Show all"),
+			_("Show all available gametypes")));
+	me.gotoRC(me, 13.5, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Time limit:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("timelimit_override",
 			_("Timelimit in minutes that when hit, will end the match")));
@@ -107,7 +112,7 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 1, 1, me.labelFraglimit = makeXonoticTextLabel(0, _("Frag limit:")));
 		me.TD(me, 1, 2, e = me.sliderFraglimit = makeXonoticTextSlider("fraglimit_override"));
 
-	me.gotoRC(me, 15, 0);
+	me.gotoRC(me, 16, 0);
 		me.TD(me, 1, 1, me.labelTeams = makeXonoticTextLabel(0, _("Teams:")));
 		me.TD(me, 1, 2, e = me.sliderTeams = makeXonoticTextSlider(string_null));
 			e.addValue(e, _("Default"), "0");
@@ -143,13 +148,6 @@ void XonoticServerCreateTab_fill(entity me)
 			e.addValue(e, _("Godlike"), "10");
 			e.configureXonoticTextSliderValues(e);
 			setDependentAND(e, "bot_number", 0, -1, "g_campaign", 0, 0);
-
-	me.gotoRC(me, me.rows - 3.8, 0);
-		me.TD(me, 1, 3, e0 = makeXonoticTextLabel(0.5, string_null));
-			e0.textEntity = main.mutatorsDialog;
-			e0.allowCut = 1;
-			//e0.allowWrap = 1;
-			setDependent(e0, "g_campaign", 0, 0);
 
 	// mapListBox is in the right column but the ref is needed for mutators dialog here
 	me.mapListBox = makeXonoticMapList();

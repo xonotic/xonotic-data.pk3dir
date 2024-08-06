@@ -25,7 +25,7 @@ be    "Belarusian" "Беларуская" 48%
 bg    "Bulgarian" "Български" 70%
 ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 57%
-uk    "Ukrainian" "Українська" 57%
+uk    "Ukrainian" "Українська" 58%
 zh_TW "Chinese (Taiwan)" "中文（正體字）" 100%
 zh_CN "Chinese (China)" "中文（简体字）" 100%
 zh_HK "Chinese (Hong Kong)" "中文（香港字）" 100%

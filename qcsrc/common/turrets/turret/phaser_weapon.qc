@@ -20,7 +20,6 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
         entity beam = new(PhaserTurret_beam);
-        beam.ticrate = 0.1; //autocvar_sys_ticrate;
         setmodel(beam, MDL_TUR_PHASER_BEAM);
         beam.effects = EF_LOWPRECISION;
         beam.solid = SOLID_NOT;
@@ -29,7 +28,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
         beam.shot_spread = time + 2;
         beam.nextthink = time;
         beam.owner = actor;
-        beam.shot_dmg = actor.shot_dmg / (actor.shot_speed / beam.ticrate);
+        beam.shot_dmg = actor.shot_dmg / (actor.shot_speed / frametime);
         beam.scale = actor.target_range / 256;
         set_movetype(beam, MOVETYPE_NONE);
         beam.enemy = actor.enemy;
@@ -72,7 +71,7 @@ void beam_think(entity this)
         sound (this, CH_SHOTS_SINGLE, SND_TUR_PHASER, VOL_BASE, ATTEN_NORM);
     }
 
-    this.nextthink = time + this.ticrate;
+    this.nextthink = time;
 
     actor.attack_finished_single[0] = time + frametime;
     FireImoBeam (   actor, actor.tur_shotorg,
