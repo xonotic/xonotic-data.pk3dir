@@ -211,7 +211,8 @@ int CategoryForEntry(int entry)
 	}
 
 	// must be normal or impure server
-	return ((impure > autocvar_menu_slist_purethreshold) ? CAT_MODIFIED : CAT_NORMAL);
+	//return ((impure > autocvar_menu_slist_purethreshold) ? CAT_MODIFIED : CAT_NORMAL);
+	return CAT_NORMAL; // don't separate normal and modified server categories
 }
 
 METHOD(XonoticServerList, toggleFavorite, void(XonoticServerList this, string srv))
