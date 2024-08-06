@@ -23,8 +23,8 @@ void counter_use(entity this, entity actor, entity trigger)
 			IL_PUSH(g_counters, mycounter);
 			mycounter.owner = this;
 			mycounter.realowner = actor;
-			mycounter.reset = counter_reset; // NOTE: this may be useless as the player deletes their counters upon respawning
 			mycounter.counter_cnt = 0;
+			// NOTE: will be deleted when the player respawns or match resets
 		}
 		store = mycounter;
 	}
@@ -63,12 +63,34 @@ void counter_use(entity this, entity actor, entity trigger)
 		SUB_UseTargets(this, actor, trigger);
 }
 
+void counter_setactive(entity this, int act)
+{
+	int old_status = this.active;
+	if(act == ACTIVE_TOGGLE)
+		this.active = (this.active == ACTIVE_ACTIVE) ? ACTIVE_NOT : ACTIVE_ACTIVE;
+	else
+		this.active = act;
+
+	if(this.active != old_status && this.active == ACTIVE_ACTIVE)
+	{
+		// perform a complete reset upon reactivation
+		if(this.reset)
+			this.reset(this);
+	}
+}
+
 void counter_reset(entity this)
 {
 	setthink(this, func_null);
 	this.nextthink = 0;
 	this.counter_cnt = 0;
 	this.active = ACTIVE_ACTIVE;
+
+	// remove any per-player counters
+	IL_EACH(g_counters, it.owner == this,
+	{
+		delete(it);
+	});
 }
 
 /*QUAKED spawnfunc_trigger_counter (.5 .5 .5) ? nomessage COUNTER_FIRE_AT_COUNT
@@ -90,5 +112,6 @@ spawnfunc(trigger_counter)
 	this.use = counter_use;
 	this.reset = counter_reset;
 	this.active = ACTIVE_ACTIVE;
+	this.setactive = counter_setactive;
 }
 #endif
