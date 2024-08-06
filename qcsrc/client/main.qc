@@ -1344,8 +1344,10 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			// store new ranking
 			strcpy(grecordholder[pos-1], ReadString());
 			grecordtime[pos-1] = ReadInt24_t();
-			if(strdecolorize(grecordholder[pos-1]) == strdecolorize(entcs_GetName(player_localnum)))
+			if(strdecolorize(grecordholder[pos-1]) == strdecolorize(entcs_GetName(player_localnum))) {
 				race_myrank = pos;
+				localcmd("\ncl_hook_cts_pb ", grecordholder[pos-1], " ", TIME_ENCODED_TOSTRING(grecordtime[pos-1], false), "\n");
+			}
 			break;
 		case RACE_NET_SERVER_STATUS:
 			race_status = ReadShort();
