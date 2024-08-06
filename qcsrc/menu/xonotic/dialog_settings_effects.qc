@@ -150,7 +150,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			_("Higher quality offset mapping, which also has a huge impact on performance")));
 			setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_water", _("Reflections:"),
+		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(1, "r_water_cameraentitiesonly", _("Reflections:"),
 			_("Reflection and refraction quality, has a huge impact on performance on maps with reflecting surfaces")));
 			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("r_water_resolutionmultiplier",
@@ -159,7 +159,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("REFL^Good")), "0.5");
 			e.addValue(e, _("Sharp"), "1");
 			e.configureXonoticTextSliderValues(e);
-			setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);
+			setDependentAND(e, "vid_gl20", 1, 1, "r_water_cameraentitiesonly", 0, 0);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "cl_decals", _("Decals"),
 			_("Enable decals (bullet holes and blood)")));
