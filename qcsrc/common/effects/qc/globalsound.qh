@@ -10,6 +10,10 @@
 	bool autocvar_sv_taunt;
 	bool autocvar_sv_autotaunt;
 #endif
+#ifdef CSQC
+	#include <common/util.qh> //bool autocvar_cl_gentle;
+	bool autocvar_cl_gentle_voices;
+#endif
 
 // player sounds, voice messages
 
