@@ -496,12 +496,14 @@ string formatmessage(entity this, string msg)
 {
 	float p, p1, p2;
 	float n;
+	float escapesize, msglen;
 	vector cursor = '0 0 0';
 	entity cursor_ent = NULL;
 	string escape;
 	string replacement;
 	p = 0;
 	n = 7;
+	escapesize = 2;
 	bool traced = false;
 
 	MUTATOR_CALLHOOK(PreFormatMessage, this, msg);
@@ -534,7 +536,8 @@ string formatmessage(entity this, string msg)
 			traced = true;
 		}
 
-		replacement = substring(msg, p, 2);
+		msglen = strlen(msg);
+		replacement = substring(msg, p, escapesize);
 		escape = substring(msg, p + 1, 1);
 
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
@@ -558,6 +561,20 @@ string formatmessage(entity this, string msg)
 			case "S": replacement = ftos(vlen(this.velocity)); break;
 			case "t": replacement = seconds_tostring(ceil(max(0, autocvar_timelimit * 60 + game_starttime - time))); break;
 			case "T": replacement = seconds_tostring(floor(time - game_starttime)); break;
+			case "1":
+			case "2":
+			case "3":
+			case "4":
+			case "5":
+			case "6":
+			case "7":
+			case "8":
+			case "9":
+			{
+				while (msglen > p+escapesize  && IS_DIGIT(substring(msg,p+escapesize,1))) escapesize = escapesize + 1;
+				replacement = GetFilteredEntity(substring(msg, p + 1, escapesize)).netname;
+				break;
+			}
 			default:
 			{
 				MUTATOR_CALLHOOK(FormatMessage, this, escape, replacement, msg);
@@ -566,7 +583,7 @@ string formatmessage(entity this, string msg)
 			}
 		}
 
-		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
+		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+escapesize, strlen(msg) - (p+escapesize)));
 		p = p + strlen(replacement);
 	}
 	return msg;
