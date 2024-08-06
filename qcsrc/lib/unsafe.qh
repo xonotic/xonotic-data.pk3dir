@@ -10,8 +10,19 @@ X(float)
 X(vector)
 X(entity)
 X(string)
-USING(rawfunc, float(...));
-X(rawfunc)
+
+USING(func_v, void(...));
+X(func_v)
+
+USING(func_f, float(...));
+X(func_f)
+
+USING(func_v_v, void());
+X(func_v_v)
+
+USING(func_bool_v, void(bool));
+X(func_bool_v)
+
 #undef X
 
 #define _strid(s) ITOF(reinterpret_cast(int, s))

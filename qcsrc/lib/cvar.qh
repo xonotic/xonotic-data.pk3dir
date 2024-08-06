@@ -1,5 +1,6 @@
 #pragma once
 
+#include "json.qh"
 #include "nil.qh"
 #include "progname.qh"
 #include "static.qh"
@@ -28,6 +29,18 @@ string MakeConsoleSafe(string input)
 	input = strreplace("$", "$$", input);
 	input = strreplace("\"", "\\\"", input);
 	return input;
+}
+
+ERASEABLE
+string console_encode(string input)
+{
+	return json_stringify_string(strreplace("$", "$$", input));
+}
+
+ERASEABLE
+string console_decode(string input)
+{
+	return json_parse_string(input);
 }
 
 /**
