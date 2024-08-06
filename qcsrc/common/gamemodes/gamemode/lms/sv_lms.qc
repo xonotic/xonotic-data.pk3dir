@@ -562,7 +562,7 @@ MUTATOR_HOOKFUNCTION(lms, PlayerDied)
 		lms_UpdateLeaders();
 }
 
-MUTATOR_HOOKFUNCTION(lms, CalculateRespawnTime)
+MUTATOR_HOOKFUNCTION(lms, CalculateRespawnTime, CBC_ORDER_EXCLUSIVE)
 {
 	entity player = M_ARGV(0, entity);
 	player.respawn_flags |= RESPAWN_FORCE;

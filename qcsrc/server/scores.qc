@@ -288,6 +288,8 @@ float PlayerScore_Clear(entity player)
 {
 	entity sk;
 
+	MUTATOR_CALLHOOK(PlayerScore_Clear, player);
+
 	if(teamscores_entities_count)
 		return 0;
 

@@ -113,6 +113,10 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 1.6, s);
 	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_killers_spawn_faster", _("Killers spawn faster"),
+			_("Respawn faster after killing, and slower after dying")));
+	me.TR(me);
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon & item mutators:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
