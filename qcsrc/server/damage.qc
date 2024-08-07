@@ -1259,17 +1259,18 @@ void Fire_ApplyDamage(entity e)
 	}
 	e.fire_hitsound = true;
 
-	if(!IS_INDEPENDENT_PLAYER(e) && !STAT(FROZEN, e))
+	if(IS_INDEPENDENT_PLAYER(e) || STAT(FROZEN, e))
+		return;
+
+	for(entity head = WarpZone_FindRadius(0.5 * (e.absmin + e.absmax), 0.5 * vlen(e.absmin - e.absmax), true); head; head = head.chain)
 	{
-		IL_EACH(g_damagedbycontents, it.damagedbycontents && it != e,
-		{
-			if(!IS_DEAD(it) && it.takedamage && !IS_INDEPENDENT_PLAYER(it))
-			if(boxesoverlap(e.absmin, e.absmax, it.absmin, it.absmax))
-			{
-				t = autocvar_g_balance_firetransfer_time * (fireendtime - time);
-				d = autocvar_g_balance_firetransfer_damage * e.fire_damagepersec * t;
-				Fire_AddDamage(it, o, d, t, DEATH_FIRE.m_id);
-			}
-		});
+		if(head == e || (IS_PLAYER(head) && SAME_TEAM(head, e))) continue;
+		if(IS_DEAD(head) || STAT(FROZEN, head)) continue;
+		if(IS_INDEPENDENT_PLAYER(head)) continue;
+		if(head.takedamage != DAMAGE_AIM) continue;
+
+		t = autocvar_g_balance_firetransfer_time * (fireendtime - time);
+		d = autocvar_g_balance_firetransfer_damage * e.fire_damagepersec * t;
+		Fire_AddDamage(head, o, d, t, DEATH_FIRE.m_id);
 	}
 }
