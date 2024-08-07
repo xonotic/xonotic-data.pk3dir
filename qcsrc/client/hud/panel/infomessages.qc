@@ -1,4 +1,5 @@
 #include "infomessages.qh"
+#include "racetimer.qh" // for race_checkpoint_splits
 
 #include <client/draw.qh>
 #include <common/ent_cs.qh>
