@@ -376,6 +376,10 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	flag.ctf_dropper = player;
 	flag.ctf_status = FLAG_DROPPED;
 
+	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
+	if(flag.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, flag);
+
 	// messages and sounds
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_NUM(flag.team, INFO_CTF_LOST), player.netname);
 	_sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTEN_NONE);
@@ -741,6 +745,12 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	flag.takedamage = DAMAGE_NO;
 	flag.angles = '0 0 0';
 	flag.ctf_status = FLAG_CARRY;
+
+	flag.damagedbycontents = false;
+	if(IL_CONTAINS(g_damagedbycontents, flag))
+		IL_REMOVE(g_damagedbycontents, flag);
+
+	StatusEffects_removeall(flag, STATUSEFFECT_REMOVE_CLEAR);
 
 	switch(pickuptype)
 	{
@@ -1249,6 +1259,12 @@ void ctf_RespawnFlag(entity flag)
 	flag.angles = flag.mangle;
 	flag.flags = FL_ITEM | FL_NOTARGET;
 
+	flag.damagedbycontents = false;
+	if(IL_CONTAINS(g_damagedbycontents, flag))
+		IL_REMOVE(g_damagedbycontents, flag);
+
+	StatusEffects_removeall(flag, STATUSEFFECT_REMOVE_CLEAR);
+
 	flag.ctf_status = FLAG_BASE;
 	flag.owner = NULL;
 	flag.pass_distance = 0;
@@ -1343,9 +1359,8 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	flag.teleportable = TELEPORT_NORMAL;
 	flag.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 	flag.damagedbytriggers = autocvar_g_ctf_flag_return_when_unreachable;
-	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
-	if(flag.damagedbycontents)
-		IL_PUSH(g_damagedbycontents, flag);
+	flag.damagedbycontents = false; // can be damaged by contents only when dropped
+
 	flag.velocity = '0 0 0';
 	flag.mangle = flag.angles;
 	flag.reset = ctf_Reset;
