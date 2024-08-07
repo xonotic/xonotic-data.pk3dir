@@ -228,6 +228,22 @@ void HUD_InfoMessages()
 				InfoMessage(s);
 			}
 		}
+		if(autocvar_cl_race_checkpoint_splits_infomessage && !spectatee_status) {
+			string lines[6];
+			int ln = 0;
+			for (int i = 0; i <= 255; ++i)
+			{
+				// does this index have a split?
+				if (race_checkpoint_splits[i])
+				{
+					// strcpy will free as needed
+					strcpy(lines[ln], race_checkpoint_splits[i]);
+					ln = (ln + 1) % 6;
+				}
+			}
+			for (int i = 0; i < 6; ++i)
+				InfoMessage(lines[i]);
+		}
 	}
 	else
 	{

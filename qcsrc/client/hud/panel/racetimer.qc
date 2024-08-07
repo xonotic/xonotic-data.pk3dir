@@ -176,22 +176,29 @@ void HUD_RaceTimer ()
 					forcetime = TIME_ENCODED_TOSTRING(race_time, false);
 
 				// store checkpoint splits string for later printing
-				// check if we advanced to next cp
-				if (!entcs_IsSpectating(player_localnum) && race_checkpoint_splits_previous != race_checkpoint)
+				if (!entcs_IsSpectating(player_localnum))
 				{
-					// are we somehow overwriting something? how?
-					if (race_checkpoint_splits[race_checkpoint_splits_previous+1])
+					// 0 or 255 go to 255 as finish, strcpy does the free if needed
+					strcpy(race_checkpoint_splits[race_checkpoint ? race_checkpoint : 255], sprintf("%s %s", forcetime, s));
+				}
+			}
+			else
+			{
+				bool once = true;
+				// clean cp splits on start
+				for (int i = 0; i <= 255; ++i)
+				{
+					if(race_checkpoint_splits[i]
+                                           &&  autocvar_cl_race_checkpoint_splits_console)
 					{
-						LOG_WARNF("race_checkpoint_splits: overwriting #%f %s\n",
-							race_checkpoint_splits_previous+1,
-							race_checkpoint_splits[race_checkpoint_splits_previous+1]);
-						strfree(race_checkpoint_splits[race_checkpoint_splits_previous+1]);
+						if(once)
+						{
+							LOG_HELP(_("Checkpoint times:"));
+							once = false;
+						}
+						LOG_HELP(race_checkpoint_splits[i]);
 					}
-
-					strcpy(race_checkpoint_splits[race_checkpoint_splits_previous+1], sprintf("%s %s", forcetime, s));
-
-					// don't use ++ in case that checkpoints have jumps like 10th to 20th
-					race_checkpoint_splits_previous = race_checkpoint;
+					strfree(race_checkpoint_splits[i]);
 				}
 			}
 		}
