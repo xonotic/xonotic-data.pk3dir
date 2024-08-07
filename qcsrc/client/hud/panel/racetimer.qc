@@ -176,7 +176,7 @@ void HUD_RaceTimer ()
 					forcetime = TIME_ENCODED_TOSTRING(race_time, false);
 
 				// store checkpoint splits string for later printing
-				if (!entcs_IsSpectating(player_localnum))
+				if (!entcs_IsSpectating(player_localnum) && !race_checkpoint_splits[race_checkpoint ? race_checkpoint : 255])
 				{
 					// 0 or 255 go to 255 as finish, strcpy does the free if needed
 					strcpy(race_checkpoint_splits[race_checkpoint ? race_checkpoint : 255], sprintf("%s %s", forcetime, s));
