@@ -427,6 +427,31 @@ void LocalCommand_sendcvar(int request, int argc)
 	}
 }
 
+void LocalCommand_showcps(int request)
+{
+	 switch(request)
+	 {
+		  case CMD_REQUEST_COMMAND:
+			  {
+				LOG_HELP(_("Checkpoint times:"));
+				for (int i = 0; i <= 255; ++i)
+				{
+					// does this index have a split?
+					if (race_checkpoint_splits[i])
+						LOG_HELP(race_checkpoint_splits[i]);
+				}
+				return;
+			  }
+		  default:
+		  case CMD_REQUEST_USAGE:
+			  {
+				LOG_HELP("Usage:^3 cl_cmd showcps");
+				LOG_HELP("  No arguments required, will show current or last run checkpoint times.");
+				return;
+			  }
+	 }
+}
+
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void LocalCommand_(int request)
@@ -465,6 +490,7 @@ CLIENT_COMMAND(hud, "Commands regarding/controlling the HUD system") { LocalComm
 CLIENT_COMMAND(localprint, "Create your own centerprint sent to yourself") { LocalCommand_localprint(request, arguments); }
 CLIENT_COMMAND(mv_download, "Retrieve mapshot picture from the server") { LocalCommand_mv_download(request, arguments); }
 CLIENT_COMMAND(sendcvar, "Send a cvar to the server (like cl_weaponpriority)") { LocalCommand_sendcvar(request, arguments); }
+CLIENT_COMMAND(showcps, "Show the stored checkpoint times for current or last run") { LocalCommand_showcps(request); }
 
 void LocalCommand_macro_help()
 {
