@@ -50,7 +50,7 @@ float autocvar_g_ctf_flag_damageforcescale;
 bool autocvar_g_ctf_flag_dropped_waypoint;
 bool autocvar_g_ctf_flag_dropped_floatinwater;
 bool autocvar_g_ctf_flag_glowtrails;
-int autocvar_g_ctf_flag_health;
+float autocvar_g_ctf_flag_health;
 bool autocvar_g_ctf_flag_return;
 bool autocvar_g_ctf_flag_return_carrying;
 float autocvar_g_ctf_flag_return_carried_radius;
@@ -367,7 +367,10 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	set_movetype(flag, MOVETYPE_TOSS);
 	flag.takedamage = DAMAGE_YES;
 	flag.angles = '0 0 0';
+
+	flag.max_health = ((autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health > 0) ? autocvar_g_ctf_flag_health : 100);
 	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
+
 	flag.ctf_droptime = time;
 	flag.ctf_landtime = 0;
 	flag.ctf_dropper = player;
@@ -1330,8 +1333,10 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	flag.solid = SOLID_TRIGGER;
 	flag.takedamage = DAMAGE_NO;
 	flag.damageforcescale = autocvar_g_ctf_flag_damageforcescale;
-	flag.max_health = ((autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health) ? autocvar_g_ctf_flag_health : 100);
+
+	flag.max_health = ((autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health > 0) ? autocvar_g_ctf_flag_health : 100);
 	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
+
 	flag.event_damage = ctf_FlagDamage;
 	flag.pushable = true;
 	flag.teleportable = TELEPORT_NORMAL;
