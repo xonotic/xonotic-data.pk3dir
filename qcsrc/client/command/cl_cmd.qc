@@ -433,12 +433,13 @@ void LocalCommand_showcps(int request)
 	 {
 		  case CMD_REQUEST_COMMAND:
 			  {
-
 				LOG_HELP(_("Checkpoint times:"));
 				for (int i = 0; i <= 255; ++i)
+				{
 					// does this index have a split?
 					if (race_checkpoint_splits[i])
 						LOG_HELP(race_checkpoint_splits[i]);
+				}
 				return;
 			  }
 		  default:
@@ -450,6 +451,7 @@ void LocalCommand_showcps(int request)
 			  }
 	 }
 }
+
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void LocalCommand_(int request)

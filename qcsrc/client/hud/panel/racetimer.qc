@@ -189,7 +189,7 @@ void HUD_RaceTimer ()
 				for (int i = 0; i <= 255; ++i)
 				{
 					if(race_checkpoint_splits[i]
-                                           &&  autocvar_cl_race_checkpoint_splits_console)
+					&& autocvar_cl_race_checkpoint_splits_console)
 					{
 						if(once)
 						{
