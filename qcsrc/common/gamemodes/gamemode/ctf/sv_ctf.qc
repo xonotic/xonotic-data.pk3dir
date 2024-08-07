@@ -402,7 +402,7 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 		wp.colormod = WPCOLOR_DROPPEDFLAG(flag.team);
 	}
 
-	if(autocvar_g_ctf_flag_return_time || (autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health))
+	if(autocvar_g_ctf_flag_return_time > 0 || autocvar_g_ctf_flag_return_damage)
 	{
 		WaypointSprite_UpdateMaxHealth(flag.wps_flagdropped, flag.max_health);
 		WaypointSprite_UpdateHealth(flag.wps_flagdropped, GetResource(flag, RES_HEALTH));
@@ -789,7 +789,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 
 		case PICKUP_DROPPED:
 		{
-			pickup_dropped_score = (autocvar_g_ctf_flag_return_time ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_return_time) - time) / autocvar_g_ctf_flag_return_time, 1) : 1);
+			pickup_dropped_score = (autocvar_g_ctf_flag_return_time > 0 ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_return_time) - time) / autocvar_g_ctf_flag_return_time, 1) : 1);
 			pickup_dropped_score = floor((autocvar_g_ctf_score_pickup_dropped_late * (1 - pickup_dropped_score) + autocvar_g_ctf_score_pickup_dropped_early * pickup_dropped_score) + 0.5);
 			LOG_TRACE("pickup_dropped_score is ", ftos(pickup_dropped_score));
 			GameRules_scoring_add_team(player, SCORE, pickup_dropped_score);
@@ -827,12 +827,13 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 	if((flag.ctf_status == FLAG_DROPPED) || (flag.ctf_status == FLAG_PASSING))
 	{
 		if (flag.wps_flagdropped
-		&& (autocvar_g_ctf_flag_return_time || autocvar_g_ctf_flag_return_damage))
+		&& (autocvar_g_ctf_flag_return_time > 0 || autocvar_g_ctf_flag_return_damage))
 		{
 			WaypointSprite_UpdateHealth(flag.wps_flagdropped, GetResource(flag, RES_HEALTH));
 		}
 
-		if((GetResource(flag, RES_HEALTH) <= 0) || (time >= flag.ctf_droptime + autocvar_g_ctf_flag_return_time))
+		if((GetResource(flag, RES_HEALTH) <= 0)
+			|| (autocvar_g_ctf_flag_return_time > 0 && time >= flag.ctf_droptime + autocvar_g_ctf_flag_return_time))
 		{
 			switch(returntype)
 			{
@@ -1039,7 +1040,7 @@ void ctf_FlagThink(entity this)
 				ctf_CheckFlagReturn(this, RETURN_NEEDKILL);
 				return;
 			}
-			else if(autocvar_g_ctf_flag_return_time)
+			else if(autocvar_g_ctf_flag_return_time > 0)
 			{
 				TakeResource(this, RES_HEALTH, (this.max_health / autocvar_g_ctf_flag_return_time) * FLAG_THINKRATE);
 				ctf_CheckFlagReturn(this, RETURN_TIMEOUT);
