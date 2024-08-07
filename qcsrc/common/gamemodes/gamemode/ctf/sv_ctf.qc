@@ -827,7 +827,7 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 	if((flag.ctf_status == FLAG_DROPPED) || (flag.ctf_status == FLAG_PASSING))
 	{
 		if (flag.wps_flagdropped
-		&& (autocvar_g_ctf_flag_return_time || (autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health)))
+		&& (autocvar_g_ctf_flag_return_time || autocvar_g_ctf_flag_return_damage))
 		{
 			WaypointSprite_UpdateHealth(flag.wps_flagdropped, GetResource(flag, RES_HEALTH));
 		}
