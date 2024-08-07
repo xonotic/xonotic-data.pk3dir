@@ -166,7 +166,7 @@ void HUD_RaceTimer ()
 		forcetime = "";
 		if(a > 0) // just hit a checkpoint?
 		{
-			if(race_checkpoint != 254)
+			if(race_checkpoint != 254 && race_time)
 			{
 				if(race_time && race_previousbesttime)
 					s = MakeRaceString(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, ((race_mypreviousbesttime) ? TIME_DECODE(race_time) - TIME_DECODE(race_mypreviousbesttime) : 0), 0, race_previousbestname);
