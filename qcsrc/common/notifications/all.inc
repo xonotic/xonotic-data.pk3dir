@@ -361,7 +361,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MULTITEAM_INFO(DEATH_TEAMKILL,                          N_CONSOLE,  3, 1, "s1 s2 s3loc spree_end", "s2 s1",     "notify_teamkill_%s",   _("^BG%s^K1 was betrayed by ^BG%s^K1%s%s"), "", NAME)
 
-    MSG_INFO_NOTIF(DOMINATION_CAPTURE_TIME,                 N_CONSOLE,  2, 2, "s1 s2 f1 f1points f2", "",       "",     _("^BG%s^BG%s^BG (%s %s every %s seconds)"), "")
+    MSG_INFO_NOTIF(DOMINATION_CAPTURE_TIME,                 N_CONSOLE,  2, 2, "s1 s2 f1points f2", "",       "",     strcat("^BG%s^BG%s^BG ", _("(%s every %s seconds)")), "") // example for translators: Red Team has captured the Strength control point (2 points every 5 seconds)
 
     MSG_INFO_NOTIF(FREEZETAG_FREEZE,                        N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^K1 was frozen by ^BG%s"), "")
     MSG_INFO_NOTIF(FREEZETAG_REVIVED,                       N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^K3 was revived by ^BG%s"), "")
