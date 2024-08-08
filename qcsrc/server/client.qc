@@ -1921,7 +1921,7 @@ void SetSpectatee(entity this, entity spectatee)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(old_spectatee.(weaponentity).arc_beam)
-				old_spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
+				old_spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_UPDATE;
 		}
 	}
 	if(spectatee)
@@ -1930,7 +1930,7 @@ void SetSpectatee(entity this, entity spectatee)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(spectatee.(weaponentity).arc_beam)
-				spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
+				spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_UPDATE;
 		}
 	}
 
