@@ -100,6 +100,30 @@ void ClientCommand_clear_ignores(entity caller, int request)
 	}
 }
 
+void ClientCommand_clearcps(entity caller, int request)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (IS_PLAYER(caller))
+				for(int i = 0; i < MAX_CHECKPOINTS ; i++)
+					caller.race_checkpoint_record[i] = 0;
+			else
+				sprint(caller, "ERROR: this command works only if you are player\n");
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd clearcps\n");
+			sprint(caller, "  Clear all your checkpoint times for this game.\n");
+			return;
+		}
+	}
+}
+
 void ClientCommand_clientversion(entity caller, int request, int argc)  // internal command, used only by code
 {
 	switch (request)
@@ -926,6 +950,7 @@ void ClientCommand_(entity caller, int request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 CLIENT_COMMAND(autoswitch, "Whether or not to switch automatically when getting a better weapon") { ClientCommand_autoswitch(caller, request, arguments); }
 CLIENT_COMMAND(clear_ignores, "Remove all existing ignores of players") { ClientCommand_clear_ignores(caller, request); }
+CLIENT_COMMAND(clearcps, "Clear all your checkpoint times for this game") { ClientCommand_clearcps(caller, request); }
 CLIENT_COMMAND(clientversion, "Release version of the game") { ClientCommand_clientversion(caller, request, arguments); }
 CLIENT_COMMAND(ignore, "Ignore a player in the game keeping them out of your personal chat log") { ClientCommand_ignore(caller, request, arguments, command); }
 CLIENT_COMMAND(join, "Become a player in the game") { ClientCommand_join(caller, request); }
