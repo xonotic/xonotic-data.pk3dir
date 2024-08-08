@@ -1470,7 +1470,7 @@ void respawn(entity this)
 	bool damagedbycontents_prev = this.damagedbycontents;
 	if(this.alpha >= 0)
 	{
-		if(autocvar_g_respawn_ghosts)
+		if(autocvar_g_respawn_ghosts && !(this.effects & EF_NODRAW))
 		{
 			this.solid = SOLID_NOT;
 			this.takedamage = DAMAGE_NO;
