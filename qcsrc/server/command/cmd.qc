@@ -32,6 +32,7 @@
 #include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
+#include <server/race.qh>
 #include <server/scores.qh>
 #include <server/teamplay.qh>
 #include <server/world.qh>
@@ -107,8 +108,7 @@ void ClientCommand_clearcps(entity caller, int request)
 		case CMD_REQUEST_COMMAND:
 		{
 			if (IS_PLAYER(caller))
-				for(int i = 0; i < MAX_CHECKPOINTS ; i++)
-					caller.race_checkpoint_record[i] = 0;
+				race_ClearPlayerRecords(caller);
 			else
 				sprint(caller, "ERROR: this command works only if you are player\n");
 			return;
