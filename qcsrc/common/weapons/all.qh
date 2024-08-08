@@ -128,7 +128,10 @@ STATIC_INIT_LATE(W_PROP_reloader)
     REGISTER_WEAPON_2(id, inst); \
     [[alias("WEP_" #id)]] Weapon _wep_##sname
 
-REGISTER_WEAPON(Null, NEW(Weapon));
+CLASS(NullWeapon, Weapon)
+    ATTRIB(NullWeapon, m_hidden, bool, true);
+ENDCLASS(NullWeapon)
+REGISTER_WEAPON(Null, NEW(NullWeapon));
 REGISTRY_DEFINE_GET(Weapons, WEP_Null)
 
 Weapon Weapon_from_name(string s)
@@ -332,6 +335,9 @@ STATIC_INIT(register_weapons_done)
     if (inaccessible != "" && autocvar_developer > 0) LOG_TRACEF("Impulse limit exceeded, weapon(s) will not be directly accessible: %s", inaccessible);
     #ifdef CSQC
     FOREACH(Weapons, true, it.wr_init(it));
+    #endif
+    #ifdef MENUQC
+    FOREACH(Weapons, (it.spawnflags & WEP_FLAG_HIDDEN) && (it.spawnflags & WEP_FLAG_SPECIALATTACK), it.m_hidden = true); // TODO: should "hidden" weapons like the tuba actually be hidden?
     #endif
     weaponorder_byid = "";
     for (int i = REGISTRY_MAX(Weapons) - 1; i >= 1; --i)
