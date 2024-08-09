@@ -246,9 +246,7 @@ void timeout_handler_think(entity this)
 
 				// reset all the flood variables
 				FOREACH_CLIENT(true, {
-					it.nickspamcount = it.nickspamtime = it.floodcontrol_chat =
-						it.floodcontrol_chatteam = it.floodcontrol_chattell =
-							it.floodcontrol_voice = it.floodcontrol_voiceteam = 0;
+					it.floodcontrol_chat = it.floodcontrol_chatteam = it.floodcontrol_chattell = 0;
 				});
 
 				// copy .v_angle to .lastV_angle for every player in order to fix their view during pause (see PlayerPreThink)
