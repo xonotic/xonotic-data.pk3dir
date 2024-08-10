@@ -160,6 +160,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 	string fullmsgstr = msgstr;
 	string fullcmsgstr = cmsgstr;
+	float mod_time = 0;
 
 	// FLOOD CONTROL
 	int flood = 0;
@@ -191,6 +192,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		flood_burst = max(0, flood_burst - 1);
 		// to match explanation in default.cfg, a value of 3 must allow three-line bursts and not four!
 
+		mod_time = gettime(GETTIME_FRAMESTART) + flood_burst * flood_spl;
 		// do flood control for the default line size
 		if(msgstr != "")
 		{
@@ -210,9 +212,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				flood = 2;
 			}
 
-			if (time >= source.(flood_field))
+			if (mod_time >= source.(flood_field))
 			{
-				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + lines * flood_spl;
+				source.(flood_field) = max(gettime(GETTIME_FRAMESTART), source.(flood_field)) + lines * flood_spl;
 			}
 			else
 			{
@@ -222,14 +224,11 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		}
 		else
 		{
-			if (time >= source.(flood_field))
-				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + flood_spl;
+			if (mod_time >= source.(flood_field))
+				source.(flood_field) = max(gettime(GETTIME_FRAMESTART), source.(flood_field)) + flood_spl;
 			else
 				flood = 1;
 		}
-
-		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
-			source.(flood_field) = flood = 0;
 	}
 
 	string sourcemsgstr, sourcecmsgstr;
@@ -276,7 +275,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	{
 		if (autocvar_g_chat_flood_notify_flooder)
 		{
-			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
+			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1",
+				ftos(source.(flood_field) - mod_time), "^3 seconds\n"));
 			ret = 0;
 		}
 		else
