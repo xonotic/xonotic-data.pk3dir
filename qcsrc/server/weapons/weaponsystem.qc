@@ -243,7 +243,7 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 	}
 
 	if (thiswep == WEP_SHOTGUN)
-		if (!secondary && WEP_CVAR(shotgun, secondary) == 1) return false;           // no clicking, just allow
+		if (!secondary && WEP_CVAR(WEP_SHOTGUN, secondary) == 1) return false;           // no clicking, just allow
 
 	if (thiswep == actor.(weaponentity).m_switchweapon && time - actor.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 	{
