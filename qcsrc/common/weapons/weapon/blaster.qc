@@ -14,14 +14,14 @@ void W_Blaster_Touch(entity this, entity toucher)
 		(this.origin + (this.mins + this.maxs) * 0.5),
 		this.velocity,
 		this.realowner,
-		WEP_CVAR_BOTH(this.real_weapon, isprimary, damage),
-		WEP_CVAR_BOTH(this.real_weapon, isprimary, edgedamage),
-		WEP_CVAR_BOTH(this.real_weapon, isprimary, radius),
+		WEP_CVAR_BOTH(WEP_BLASTER, isprimary, damage),
+		WEP_CVAR_BOTH(WEP_BLASTER, isprimary, edgedamage),
+		WEP_CVAR_BOTH(WEP_BLASTER, isprimary, radius),
 		NULL,
 		NULL,
 		false,
-		WEP_CVAR_BOTH(this.real_weapon, isprimary, force),
-		WEP_CVAR_BOTH(this.real_weapon, isprimary, force_zscale),
+		WEP_CVAR_BOTH(WEP_BLASTER, isprimary, force),
+		WEP_CVAR_BOTH(WEP_BLASTER, isprimary, force_zscale),
 		this.projectiledeathtype,
 		this.weaponentity_fld,
 		toucher
@@ -39,11 +39,7 @@ void W_Blaster_Think(entity this)
 	CSQCProjectile(this, true, PROJECTILE_BLASTER, true);
 }
 
-void W_Blaster_Attack(
-	entity actor,
-	entity real_wpn,
-	.entity weaponentity,
-	float atk_deathtype)
+void W_Blaster_Attack(entity actor, .entity weaponentity, int atk_deathtype)
 {
 	bool isprimary = !(atk_deathtype & HITTYPE_SECONDARY);
 	float atk_shotangle_rad = WEP_CVAR_BOTH(WEP_BLASTER, isprimary, shotangle) * DEG2RAD;
@@ -54,7 +50,6 @@ void W_Blaster_Attack(
 	W_MuzzleFlash(WEP_BLASTER, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity missile = new(blasterbolt);
-	missile.real_weapon = real_wpn;
 	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = atk_damage;
@@ -109,7 +104,7 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_BLASTER, refire)))
         {
-            W_Blaster_Attack(actor, thiswep, weaponentity, WEP_BLASTER.m_id);
+            W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_BLASTER, animtime), w_ready);
         }
     }
@@ -128,7 +123,7 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
             {
                 if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_BLASTER, refire)))
                 {
-                    W_Blaster_Attack(actor, thiswep, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
+                    W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_BLASTER, animtime), w_ready);
                 }
 
@@ -167,7 +162,7 @@ METHOD(OffhandBlaster, offhand_think, void(OffhandBlaster this, entity actor, bo
 	actor.jump_interval = time + WEP_CVAR_SEC(WEP_BLASTER, refire) * W_WeaponRateFactor(actor);
 	.entity weaponentity = weaponentities[1];
 	makevectors(actor.v_angle);
-	W_Blaster_Attack(actor, this, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
+	W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
 }
 
 #endif

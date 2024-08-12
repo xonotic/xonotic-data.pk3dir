@@ -67,9 +67,9 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 	if ((WEP_CVAR_SEC(WEP_OVERKILL_MACHINEGUN, refire_type) == 1) && (fire & 2) && (time >= actor.jump_interval))
 	{
 		// Secondary uses it's own refire timer if refire_type is 1.
-		actor.jump_interval = time + WEP_CVAR_SEC(WEP_OVERKILL_MACHINEGUN, refire) * W_WeaponRateFactor(actor);
+		actor.jump_interval = time + WEP_CVAR_SEC(WEP_BLASTER, refire) * W_WeaponRateFactor(actor);
 		makevectors(actor.v_angle);
-		W_Blaster_Attack(actor, thiswep, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
+		W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
 		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
@@ -102,13 +102,13 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 	}
 	if ((fire & 2) && (WEP_CVAR_SEC(WEP_OVERKILL_MACHINEGUN, refire_type) == 0)) // Secondary attack
 	{
-		if (!weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_OVERKILL_MACHINEGUN, refire)))
+		if (!weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_BLASTER, refire)))
 		{
 			return;
 		}
 		makevectors(actor.v_angle);
-		W_Blaster_Attack(actor, thiswep, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
-		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_OVERKILL_MACHINEGUN, animtime), w_ready);
+		W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_BLASTER, animtime), w_ready);
 	}
 }
 
