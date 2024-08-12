@@ -140,10 +140,7 @@ METHOD(OverkillHeavyMachineGun, wr_suicidemessage, Notification(entity thiswep))
 
 METHOD(OverkillHeavyMachineGun, wr_killmessage, Notification(entity thiswep))
 {
-	if(w_deathtype & HITTYPE_SECONDARY)
-		return WEAPON_OVERKILL_HMG_MURDER_SNIPE;
-	else
-		return WEAPON_OVERKILL_HMG_MURDER_SPRAY;
+	return WEAPON_OVERKILL_HMG_MURDER_SPRAY;
 }
 
 #endif
