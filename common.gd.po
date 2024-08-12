@@ -201,7 +201,7 @@ msgstr "^2Brùth air ^3%s^2 gus crìoch a chur air a’ ghreis-ghleusaidh"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Chan eil àireamhan nan sgiobaidhean cothromach!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format

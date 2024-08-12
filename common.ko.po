@@ -203,7 +203,7 @@ msgstr "^2워밍업을 끝내시려면 ^3%s^2를 누르세요"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "팀 숫자가 안 맞아요!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -3500,7 +3500,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:459
 msgid "^BGYou are not allowed to change teams"
-msgstr "^BG당신이 팀을 바꾸는 건 허용되지 않아요"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format

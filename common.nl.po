@@ -203,7 +203,7 @@ msgstr "^2Druk ^3%s^2 om warmup te beëindigen"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Het aantal teamleden is uit balans!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -3489,11 +3489,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:458
 msgid "^BGYou cannot change to a larger team"
-msgstr "^BGJe kunt niet wisselen naar een groter team"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:459
 msgid "^BGYou are not allowed to change teams"
-msgstr "^BGHet is je niet toegestaan van team te wisselen"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -7416,7 +7416,7 @@ msgstr "Kaartinformatie"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:63
 msgid "MUT^None"
-msgstr "MUT^Geen"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
@@ -9471,19 +9471,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
-msgstr "Specificeer je netwerksnelheid"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
-msgstr "Langzaam ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Fast ADSL"
-msgstr "Snel ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 msgid "Broadband"
-msgstr "Breedband"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
 msgid "Local latency:"

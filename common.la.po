@@ -197,7 +197,7 @@ msgstr "^3%s^2 preme ut exercitium finias"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Manus aequatae non sunt numeris!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -1155,7 +1155,7 @@ msgstr "Exercitium"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr "Exercitium: ludentibus eget"
+msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
@@ -3386,7 +3386,7 @@ msgstr "^BG%s^F3 in^BG spectatores^F3 motus est quia otiosus %s secunda fuit"
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 has left the queue after idling for %s seconds"
-msgstr "^BG%s^F3 non iam advocabitur ad ludum quia otiosus %s secunda fuit"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3419,7 +3419,7 @@ msgstr "^BG%s^F3 iam^BG spectat"
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
 msgid "^BG%s^F3 has left the queue"
-msgstr "^BG%s^F3 non iam advocabitur ad ludum"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
@@ -3516,11 +3516,11 @@ msgstr "^F1Superstites^BG tempore vincunt"
 
 #: qcsrc/common/notifications/all.inc:458
 msgid "^BGYou cannot change to a larger team"
-msgstr "^BGIre in manum maiorem non potes"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:459
 msgid "^BGYou are not allowed to change teams"
-msgstr "^BGIre in aliam manum non potes"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -4503,16 +4503,16 @@ msgstr "^K1Ludi parvi sessio incipi non potuit!"
 
 #: qcsrc/common/notifications/all.inc:724
 msgid "^BGYou are now queued to join the game."
-msgstr "^BGNunc exspecta ut advoceris ad ludum."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou are now queued to join on ^TC^TT^BG team."
-msgstr "^BGNunc exspecta ut advoceris ad manum ^TC^TTm^BG."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
-msgstr "^K2Aliam manum elige! Quia ^TC^TTm^K2 %s^K2 iam elegit."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYou picked up the ball"
@@ -7476,7 +7476,7 @@ msgstr "Harenae notae"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:63
 msgid "MUT^None"
-msgstr "Nulla"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
@@ -9592,19 +9592,19 @@ msgstr "Nexionis interretialis velocitas maxima"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
-msgstr "Scribe velocitatem nexionis tuae"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
-msgstr "ADSL lenta"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Fast ADSL"
-msgstr "ADSL velox"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 msgid "Broadband"
-msgstr "Taenia lata"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
 msgid "Local latency:"

@@ -227,7 +227,7 @@ msgstr "^2Naciśnij ^3%s^2 by zakończyć rozgrzewkę"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Drużyny są niezrównoważone!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -1171,7 +1171,7 @@ msgstr "Rozgrzewka"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr "Rozgrzewka: za mało graczy"
+msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
@@ -3528,11 +3528,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:458
 msgid "^BGYou cannot change to a larger team"
-msgstr "^BGNie możesz dołączyć do większej drużyny"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:459
 msgid "^BGYou are not allowed to change teams"
-msgstr "^BGNie możesz zmieniać drużyn"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -7442,7 +7442,7 @@ msgstr "Informacja o mapie"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:63
 msgid "MUT^None"
-msgstr "MUT^Brak"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
@@ -9502,19 +9502,19 @@ msgstr "Limit pobierania:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
-msgstr "Określ prędkość swojej sieci"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
-msgstr "Wolny ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Fast ADSL"
-msgstr "Szybki ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 msgid "Broadband"
-msgstr "Szerokopasmowy "
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
 msgid "Local latency:"

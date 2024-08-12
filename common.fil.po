@@ -197,7 +197,7 @@ msgstr "^2Pindutin ang ^3%s^2 para tapusin ang warm-up"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Hindi pantay ang bilang ng players sa bawat team!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format

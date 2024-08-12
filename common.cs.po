@@ -207,7 +207,7 @@ msgstr "^2Zmáčkni ^3%s^2 pro ukončení zahřívací fáze"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Týmy jsou nevyvážené"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -9431,15 +9431,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
-msgstr "Upřesní svou rychlost internetu"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
-msgstr "Pomalé ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Fast ADSL"
-msgstr "Rychlé ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 msgid "Broadband"

@@ -203,7 +203,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Jumlah tim tidak seimbang!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -3495,11 +3495,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:458
 msgid "^BGYou cannot change to a larger team"
-msgstr "^BGAnda tidak bisa pindah ke tim yan lebih besar"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:459
 msgid "^BGYou are not allowed to change teams"
-msgstr "^BGAnda tidak diizinkan pindah tim"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format

@@ -198,7 +198,7 @@ msgstr "^2Націсніце ^3%s^2 каб скончыць размінку"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Колькасці каманд не збалансаваныя!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -7376,7 +7376,7 @@ msgstr "Інфармацыя пра мапу"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:63
 msgid "MUT^None"
-msgstr "MUT^Няма"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
@@ -9429,15 +9429,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
-msgstr "Марудны ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Fast ADSL"
-msgstr "Хуткі ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 msgid "Broadband"
-msgstr "Шырокапалоснае"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
 msgid "Local latency:"

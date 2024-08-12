@@ -206,7 +206,7 @@ msgstr "^2Aperte ^3%s^2 para terminar o aquecimento"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "As equipes estão desequilibradas!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -1172,7 +1172,7 @@ msgstr "Aquecimento"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr "Aquecimento: faltam jogadores"
+msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
@@ -3430,7 +3430,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 has left the queue after idling for %s seconds"
-msgstr "^BG%s^F3 saiu da fila por inatividade por %s segundos"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3465,7 +3465,7 @@ msgstr "^BG%s^F3 está assistindo^BG agora"
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
 msgid "^BG%s^F3 has left the queue"
-msgstr "^BG%s^F3 saiu da fila"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
@@ -3561,11 +3561,11 @@ msgstr "^F1Sobreviventes^BG vencem a rodada"
 
 #: qcsrc/common/notifications/all.inc:458
 msgid "^BGYou cannot change to a larger team"
-msgstr "^BGVocê não pode trocar para uma equipe maior"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:459
 msgid "^BGYou are not allowed to change teams"
-msgstr "^BGVocê não pode trocar de equipe"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -4564,16 +4564,16 @@ msgstr "^K1Não foi possível entrar nesta sessão de minijogo!"
 
 #: qcsrc/common/notifications/all.inc:724
 msgid "^BGYou are now queued to join the game."
-msgstr "^BGVocê agora está na fila para entrar no jogo."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou are now queued to join on ^TC^TT^BG team."
-msgstr "^BGVocê agora está na fila para entrar na equipe ^TC^TT^BG."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
-msgstr "^K2Por favor escolha outra equipe! %s^K2 escolheu ^TC^TT^K2 primeiro."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYou picked up the ball"
@@ -7550,7 +7550,7 @@ msgstr "Informações do Mapa"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:63
 msgid "MUT^None"
-msgstr "Nenhum"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
@@ -9681,19 +9681,19 @@ msgstr "Limite de largura de banda:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
-msgstr "Especifique a velocidade da sua rede"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
-msgstr "ADSL lenta"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Fast ADSL"
-msgstr "ADSL rápida"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 msgid "Broadband"
-msgstr "Banda larga"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
 msgid "Local latency:"

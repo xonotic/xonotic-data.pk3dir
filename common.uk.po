@@ -15,6 +15,7 @@
 # Illia Serediuk, 2022
 # Illia Serediuk, 2022
 # Vasyl Kushniruk, 2024
+# Vasyl Kushniruk, 2024
 # Dmitro Sokhin <gamebot@ex.ua>, 2015
 # Ihor <ihor@noleron.com>, 2021
 # Ihor <ihor@noleron.com>, 2021
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Vasyl Kushniruk, 2024\n"
+"Last-Translator: Ihor <ihor@noleron.com>, 2021\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -213,7 +214,7 @@ msgstr "^2Натисніть ^3%s^2 щоб завершити розминку"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Нерівність у розмірі команд!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -1155,7 +1156,7 @@ msgstr "Розігрів"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr "Розігрів: недостатньо гравців"
+msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
@@ -7428,7 +7429,7 @@ msgstr "Інформація про мапу"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:63
 msgid "MUT^None"
-msgstr "Жодного"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
@@ -9487,19 +9488,19 @@ msgstr "Обмежити ширину каналу:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
-msgstr "Вкажіть швидкість вашої мережі"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
-msgstr "Повільний ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Fast ADSL"
-msgstr "Швидкій ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 msgid "Broadband"
-msgstr "Широкополосний доступ"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
 msgid "Local latency:"

@@ -197,7 +197,7 @@ msgstr "^2Tekan ^3%s^2 untuk tamatkan sesi panaskan badan"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Jumlah ahli pasukan tidak seimbang!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format

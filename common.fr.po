@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2024\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -214,7 +214,7 @@ msgstr "^2Appuyez sur ^3%s^2 pour terminer l'échauffement"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Les équipes ne sont pas équilibrées !"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -1019,8 +1019,8 @@ msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
-"Les types de jeu spéciaux « teams » et « noteams » peuvent être utilisés "
-"pour\n"
+"Les noms de modes de jeu spéciaux « teams » et « noteams » peuvent être "
+"utilisés pour\n"
 "inclure ou exclure TOUS les modes de jeu en équipe ou non."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:738
@@ -1181,7 +1181,7 @@ msgstr "Échauffement"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr "Échauffement : trop peu de joueurs"
+msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
@@ -1361,7 +1361,7 @@ msgstr "^BGAppuyez sur ^F2%s^BG pour rejoindre la partie"
 #: qcsrc/client/main.qc:1479
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
-msgstr "Type de jeu :"
+msgstr "Mode de jeu :"
 
 #: qcsrc/client/main.qc:1483
 msgid "by:"
@@ -3459,7 +3459,6 @@ msgstr ""
 #, c-format
 msgid "^BG%s^F3 has left the queue after idling for %s seconds"
 msgstr ""
-"^BG%s^F3 a quitté la file d'attente après une inactivité de %s secondes"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3496,7 +3495,7 @@ msgstr "^BG%s^F3 est maintenant^BG spectateur"
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
 msgid "^BG%s^F3 has left the queue"
-msgstr "^BG%s^F3 a quitté la file d'attente"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
@@ -3595,11 +3594,11 @@ msgstr "^F1Les survivants^BG remportent la manche"
 
 #: qcsrc/common/notifications/all.inc:458
 msgid "^BGYou cannot change to a larger team"
-msgstr "^BGVous ne pouvez pas aller dans une équipe plus grande"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:459
 msgid "^BGYou are not allowed to change teams"
-msgstr "^BGVous n'êtes pas autorisé à changer d'équipe"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -4605,17 +4604,16 @@ msgstr "^K1Impossible de rejoindre cette session de mini jeux !"
 
 #: qcsrc/common/notifications/all.inc:724
 msgid "^BGYou are now queued to join the game."
-msgstr "^BGVous êtes maintenant en file d'attente pour rejoindre la partie."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou are now queued to join on ^TC^TT^BG team."
-msgstr "^BGVous êtes maintenant en file d'attente dans l'équipe ^TC^TT^BG."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
 msgstr ""
-"^K2Veuillez choisir une autre équipe ! %s^K2 a choisi ^TC^TT^K2 en premier."
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYou picked up the ball"
@@ -7576,7 +7574,7 @@ msgstr "Auteur :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:64
 msgid "Game types:"
-msgstr "Types de jeu :"
+msgstr "Modes de jeu :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
@@ -7593,7 +7591,7 @@ msgstr "Informations sur la carte"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:63
 msgid "MUT^None"
-msgstr "Aucun"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
@@ -9043,7 +9041,7 @@ msgstr "Afficher des marqueurs pour les objectifs sur la carte"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:67
 msgid "Show various gametype specific waypoints"
-msgstr "Afficher divers repères spécifiques au type de jeu"
+msgstr "Afficher divers repères spécifiques au mode de jeu"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:73
 msgid "Control transparency of the waypoints"
@@ -9724,19 +9722,19 @@ msgstr "Limite de bande passante :"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
-msgstr "Afficher la vitesse de votre réseau"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
-msgstr "ADSL lent"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Fast ADSL"
-msgstr "ADSL rapide"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 msgid "Broadband"
-msgstr "Très haut débit"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
 msgid "Local latency:"
@@ -10496,8 +10494,8 @@ msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again."
 msgstr ""
-"Hein ? Impossible de lancer cette partie (type de jeu non valide). Re-"
-"filtrer pour que cela n'arrive plus."
+"Hein ? Impossible de lancer cette partie (mode de jeu invalide). Re-filtrer "
+"pour que cela n'arrive plus."
 
 #: qcsrc/menu/xonotic/playerlist.qc:110
 msgid "spectator"
@@ -10541,7 +10539,7 @@ msgstr "Carte"
 
 #: qcsrc/menu/xonotic/serverlist.qc:757
 msgid "Type"
-msgstr "Type"
+msgstr "Mode"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1054
 #, c-format
@@ -10826,3 +10824,92 @@ msgstr "Par défaut"
 #: qcsrc/menu/xonotic/util.qc:792
 msgid "Team Color:"
 msgstr "Couleur de l'équipe :"
+
+#, c-format
+#~ msgid "%s^K2 chose ^TC^TT^K2 first."
+#~ msgstr "%s^K2 a choisi ^TC^TT^K2 en premier."
+
+#, c-format
+#~ msgid "%s^K2 chose your preferred team first."
+#~ msgstr "%s^K2 a choisi votre équipe préférée en premier."
+
+#~ msgid "Show all"
+#~ msgstr "Tout afficher"
+
+#~ msgid "Show all available gametypes"
+#~ msgstr "Afficher tous les modes de jeu disponibles"
+
+#~ msgid "Teams are too unbalanced."
+#~ msgstr "Les équipes sont trop déséquilibrées."
+
+#~ msgid "Teams are unbalanced!"
+#~ msgstr "Les équipes ne sont pas équilibrées !"
+
+#~ msgid "Warmup: teams unbalanced!"
+#~ msgstr "Échauffement : équipes déséquilibrées !"
+
+#~ msgid "Warmup: too few players!"
+#~ msgstr "Échauffement : trop peu de joueurs !"
+
+#~ msgid "^2You're queued to join any available team"
+#~ msgstr ""
+#~ "^2Vous êtes en file d'attente pour rejoindre n'importe quelle équipe "
+#~ "disponible"
+
+#, c-format
+#~ msgid "^BG%s^F3 has left the join queue"
+#~ msgstr "^BG%s^F3 a quitté la file d'attente"
+
+#, c-format
+#~ msgid "^BG%s^F3 has left the join queue after idling for %s seconds"
+#~ msgstr ""
+#~ "^BG%s^F3 a quitté la file d'attente après une inactivité de %s secondes"
+
+#~ msgid "^BGYou're now playing on ^TC^TT^BG team!"
+#~ msgstr "^BGVous jouez maintenant dans l'équipe ^TC^TT^BG !"
+
+#~ msgid "^BGYou're queued to join any available team."
+#~ msgstr ""
+#~ "^BGVous êtes en file d'attente pour rejoindre n'importe quelle équipe "
+#~ "disponible."
+
+#~ msgid "^BGYou're queued to join the ^TC^TT^BG team."
+#~ msgstr "^BGVous êtes en file d'attente pour rejoindre l'équipe ^TC^TT^BG."
+
+#~ msgid "^F1The teams are now unlocked."
+#~ msgstr "^F1Les équipes sont maintenant déverrouillées."
+
+#~ msgid "^F2Spectating isn't allowed at this time!"
+#~ msgstr "^F2Les spectateurs ne sont pas autorisés pour l'instant !"
+
+#~ msgid "^F4The teams are now locked."
+#~ msgstr "^F4Les équipes sont maintenant verrouillées."
+
+#~ msgid "^K1Your Xonotic version is incompatible with the server's version!"
+#~ msgstr ""
+#~ "^K1Votre version de Xonotic est incompatible avec la version du serveur !"
+
+#~ msgid ""
+#~ "^K2Teams are locked, you can't join or change teams until they're "
+#~ "unlocked or the map changes."
+#~ msgstr ""
+#~ "^K2Les équipes sont verrouillées, vous ne pouvez pas rejoindre ou changer "
+#~ "d'équipe avant qu'elles ne soient déverrouillées ou que la carte ne "
+#~ "change."
+
+#~ msgid "^K2You're already on that team!"
+#~ msgstr "^K2Vous êtes déjà dans cette équipe !"
+
+#~ msgid "^K2You're not allowed to change teams!"
+#~ msgstr "^K2Vous n'êtes pas autorisé à changer d'équipe !"
+
+#~ msgid "^K2You're not allowed to join a larger team!"
+#~ msgstr "^K2Vous n'êtes pas autorisé à rejoindre une équipe plus grande !"
+
+#~ msgid "^K2You're now playing on ^TC^TT^K2 team!"
+#~ msgstr "^K2Vous jouez maintenant dans l'équipe ^TC^TT^K2 !"
+
+#~ msgid "^K2You're queued to join any available team."
+#~ msgstr ""
+#~ "^2Vous êtes en file d'attente pour rejoindre n'importe quelle équipe "
+#~ "disponible."

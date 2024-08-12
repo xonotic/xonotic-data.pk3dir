@@ -217,7 +217,7 @@ msgstr "^2Для завершения разминки — ^3%s^2"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Команды не равны по составу!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -1180,7 +1180,7 @@ msgstr "Разминка"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr "Разминка: слишком мало игроков"
+msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
@@ -3428,7 +3428,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 has left the queue after idling for %s seconds"
-msgstr "^BG%s^F3 покинул очередь из-за бездействия протяжённостью %s секунд"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3463,7 +3463,7 @@ msgstr "^BG%s^F3 теперь^BG зритель"
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
 msgid "^BG%s^F3 has left the queue"
-msgstr "^BG%s^F3 покинул очередь"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
@@ -3555,11 +3555,11 @@ msgstr "^F1Выжившие^BG победили в раунде"
 
 #: qcsrc/common/notifications/all.inc:458
 msgid "^BGYou cannot change to a larger team"
-msgstr "^BGВы не можете сменить команду на большую"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:459
 msgid "^BGYou are not allowed to change teams"
-msgstr "^BGВы не можете сменить команду"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -4548,16 +4548,16 @@ msgstr "^K1Невозможно присоединиться к данной с�
 
 #: qcsrc/common/notifications/all.inc:724
 msgid "^BGYou are now queued to join the game."
-msgstr "^BGВы теперь в очереди для присоединения к игре."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou are now queued to join on ^TC^TT^BG team."
-msgstr "^BGВы теперь в очереди для присоединения к команде ^TC^TT^BG."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
-msgstr "^K2Пожалуйста, выберите другую команду! %s^K2 выбрал ^TC^TT^K2 первым."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYou picked up the ball"
@@ -7524,7 +7524,7 @@ msgstr "Сведения об арене"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:63
 msgid "MUT^None"
-msgstr "Отсутствуют"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
@@ -9634,19 +9634,19 @@ msgstr "Предел ширины канала:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
-msgstr "Выберите скорость вашей сети"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
-msgstr "Медленный ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Fast ADSL"
-msgstr "Быстрый ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 msgid "Broadband"
-msgstr "Широкополосный"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
 msgid "Local latency:"

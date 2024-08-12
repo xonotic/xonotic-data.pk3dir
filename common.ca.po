@@ -200,7 +200,7 @@ msgstr "^2Prem ^3%s^2 per acabar l'escalfament"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Els números d'equip estan desequilibrats!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -1162,7 +1162,7 @@ msgstr "Escalfament"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr "Escalfament: pocs jugadors"
+msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"

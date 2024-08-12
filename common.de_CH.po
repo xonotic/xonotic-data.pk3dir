@@ -226,7 +226,7 @@ msgstr "^2Drücke ^3%s^2, um die Aufwärmphase zu beenden"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Die Teams sind unausgeglichen!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -1191,7 +1191,7 @@ msgstr "Aufwärmphase"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr "Aufwärmphase: Zu wenige Spieler"
+msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
@@ -3465,7 +3465,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 has left the queue after idling for %s seconds"
-msgstr "^BG%s^F3 hat nach %s Sekunden Inaktivität die Warteliste verlassen"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3499,7 +3499,7 @@ msgstr "^BG%s^F3 schaut nun zu"
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
 msgid "^BG%s^F3 has left the queue"
-msgstr "^BG%s^F3 hat die Warteliste verlassen"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
@@ -3597,11 +3597,11 @@ msgstr "^F1Überlebende^BG gewinnen die Runde"
 
 #: qcsrc/common/notifications/all.inc:458
 msgid "^BGYou cannot change to a larger team"
-msgstr "^BGDu kannst nicht in ein grösseres Team wechseln"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:459
 msgid "^BGYou are not allowed to change teams"
-msgstr "^BGDu darfst nicht das Team wechseln"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -4610,16 +4610,16 @@ msgstr "^K1Der angegebenen Minispielsitzung kann nicht beigetreten werden!"
 
 #: qcsrc/common/notifications/all.inc:724
 msgid "^BGYou are now queued to join the game."
-msgstr "^BGDu stehst nun in der Warteliste zum Spielbeitritt."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou are now queued to join on ^TC^TT^BG team."
-msgstr "^BGDu stehst nun in der Warteliste zum Beitritt im Team ^TC^TT^BG."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
-msgstr "^K2Wähle bitte ein anderes Team! %s^K2 wählte ^TC^TT^K2 zuerst."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYou picked up the ball"
@@ -7595,7 +7595,7 @@ msgstr "Karten-Information"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:63
 msgid "MUT^None"
-msgstr "MUT^Keine"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
@@ -9736,19 +9736,19 @@ msgstr "Bandbreitenlimit:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
-msgstr "Leg deine Netzwerkgeschwindigkeit fest"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
-msgstr "Langsames ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Fast ADSL"
-msgstr "Schnelles ADSL"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 msgid "Broadband"
-msgstr "Breitband"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
 msgid "Local latency:"

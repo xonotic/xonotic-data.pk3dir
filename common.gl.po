@@ -199,7 +199,7 @@ msgstr "^2Prema ^3 %s ^2 para rematar o quecemento"
 
 #: qcsrc/client/hud/panel/infomessages.qc:206
 msgid "Teamnumbers are unbalanced!"
-msgstr "Os números de equipo están desequilibrados!"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
@@ -1164,7 +1164,7 @@ msgstr "Quecemento"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players"
-msgstr "Quecemento: moi poucos xogadores"
+msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: no time limit"
@@ -3422,7 +3422,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^F3 has left the queue after idling for %s seconds"
-msgstr "^BG%s^F3 deixou a cola despois de estar inactivo %s segundos"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
@@ -3455,7 +3455,7 @@ msgstr "^BG%s^F3 esta agora^BG en modo espectador"
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
 msgid "^BG%s^F3 has left the queue"
-msgstr "^BG%s^F3 deixou a cola"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:437
 #, c-format
@@ -3548,11 +3548,11 @@ msgstr "^F1Supervivintes^BG gañan a rolda"
 
 #: qcsrc/common/notifications/all.inc:458
 msgid "^BGYou cannot change to a larger team"
-msgstr "^BGNon podes cambiar a un equipo máis grande"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:459
 msgid "^BGYou are not allowed to change teams"
-msgstr "^BGNon tes permiso para cambiar de equipo"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:461
 #, c-format
@@ -4546,17 +4546,16 @@ msgstr "^K1Non se pode unir a unha sesión de minixogo determinada!"
 
 #: qcsrc/common/notifications/all.inc:724
 msgid "^BGYou are now queued to join the game."
-msgstr "^BGAgora estás na cola para unirte ao xogo."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGYou are now queued to join on ^TC^TT^BG team."
-msgstr "^BGAgora estás na cola para unirte ao equipo ^TC^TT^BG."
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^K2Please choose a different team! %s^K2 chose ^TC^TT^K2 first."
 msgstr ""
-"^K2Por favor escolle un equipo diferente! %s^K2 escolleu ^TC^TT^K2 primeiro."
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYou picked up the ball"
@@ -7530,7 +7529,7 @@ msgstr "Map Información"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:63
 msgid "MUT^None"
-msgstr "MUT^Ningún"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:118
 msgid "Gameplay mutators:"
@@ -9658,19 +9657,19 @@ msgstr "Límite de ancho de banda:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Specify your network speed"
-msgstr "Especifique a velocidade da súa rede"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Slow ADSL"
-msgstr "ADSL lento"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Fast ADSL"
-msgstr "ADSL rápido"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 msgid "Broadband"
-msgstr "Banda ancha"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
 msgid "Local latency:"
@@ -10757,3 +10756,85 @@ msgstr "Usar por defecto"
 #: qcsrc/menu/xonotic/util.qc:792
 msgid "Team Color:"
 msgstr "Cor do equipo:"
+
+#, c-format
+#~ msgid "%s^K2 chose ^TC^TT^K2 first."
+#~ msgstr "%s^K2 escolleu ^TC^TT^K2 primeiro."
+
+#, c-format
+#~ msgid "%s^K2 chose your preferred team first."
+#~ msgstr "%s^K2 escolleu o teu equipo preferido primeiro."
+
+#~ msgid "Show all"
+#~ msgstr "Amosa todo"
+
+#~ msgid "Show all available gametypes"
+#~ msgstr "Amosa todos os tipos de xogo dispoñibles"
+
+#~ msgid "Teams are too unbalanced."
+#~ msgstr "Os equipos están demasiado descompensados."
+
+#~ msgid "Teams are unbalanced!"
+#~ msgstr "Os equipos están descompensados!"
+
+#~ msgid "Warmup: teams unbalanced!"
+#~ msgstr "Quentamento: equipos descompensados!"
+
+#~ msgid "Warmup: too few players!"
+#~ msgstr "Quentamento: poucos xogadores!"
+
+#~ msgid "^2You're queued to join any available team"
+#~ msgstr "^2Estás en cola para unirte a calquera equipo dispoñible"
+
+#, c-format
+#~ msgid "^BG%s^F3 has left the join queue"
+#~ msgstr "^BG%s^F3 deixou a cola de unión"
+
+#, c-format
+#~ msgid "^BG%s^F3 has left the join queue after idling for %s seconds"
+#~ msgstr ""
+#~ "^BG%s^F3 deixou a cola de unión despois de estar inactivo durante %s "
+#~ "segundos"
+
+#~ msgid "^BGYou're now playing on ^TC^TT^BG team!"
+#~ msgstr "^BGAgora estás xogando no equipo ^TC^TT^BG!"
+
+#~ msgid "^BGYou're queued to join any available team."
+#~ msgstr "^BGEstás en cola para unirte a calquera equipo dispoñible."
+
+#~ msgid "^BGYou're queued to join the ^TC^TT^BG team."
+#~ msgstr "^BGEstás en cola para unirte ao equipo ^TC^TT^BG."
+
+#~ msgid "^F1The teams are now unlocked."
+#~ msgstr "^F1Os equipos agora están desbloqueados."
+
+#~ msgid "^F2Spectating isn't allowed at this time!"
+#~ msgstr "^F2Non está permitido observar neste momento!"
+
+#~ msgid "^F4The teams are now locked."
+#~ msgstr "^F4Os equipos agora están bloqueados."
+
+#~ msgid "^K1Your Xonotic version is incompatible with the server's version!"
+#~ msgstr "^K1A túa versión de Xonotic é incompatible coa versión do servidor!"
+
+#~ msgid ""
+#~ "^K2Teams are locked, you can't join or change teams until they're "
+#~ "unlocked or the map changes."
+#~ msgstr ""
+#~ "^K2Os equipos están bloqueados, non podes unirte nin cambiar de equipo "
+#~ "ata que se desbloqueen ou cambie o mapa."
+
+#~ msgid "^K2You're already on that team!"
+#~ msgstr "^K2Xa estás nese equipo!"
+
+#~ msgid "^K2You're not allowed to change teams!"
+#~ msgstr "^K2Non che está permitido cambiar de equipo!"
+
+#~ msgid "^K2You're not allowed to join a larger team!"
+#~ msgstr "^K2Non che está permitido unirte a un equipo máis grande!"
+
+#~ msgid "^K2You're now playing on ^TC^TT^K2 team!"
+#~ msgstr "^K2Agora estás xogando no equipo ^TC^TT^K2!"
+
+#~ msgid "^K2You're queued to join any available team."
+#~ msgstr "^K2Estás na cola para unirte a calquera equipo dispoñible."
