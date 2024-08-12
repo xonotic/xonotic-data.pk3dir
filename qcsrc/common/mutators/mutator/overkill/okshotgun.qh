@@ -60,6 +60,6 @@ CLASS(OverkillShotgun, Weapon)
 #undef X
 
 ENDCLASS(OverkillShotgun)
-REGISTER_WEAPON(OVERKILL_SHOTGUN, okshotgun, NEW(OverkillShotgun));
+REGISTER_WEAPON(OVERKILL_SHOTGUN, NEW(OverkillShotgun));
 
 //SPAWNFUNC_WEAPON(weapon_okshotgun, WEP_OVERKILL_SHOTGUN)

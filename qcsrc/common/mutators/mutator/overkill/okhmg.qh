@@ -59,7 +59,7 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 #undef X
 
 ENDCLASS(OverkillHeavyMachineGun)
-REGISTER_WEAPON(OVERKILL_HMG, okhmg, NEW(OverkillHeavyMachineGun));
+REGISTER_WEAPON(OVERKILL_HMG, NEW(OverkillHeavyMachineGun));
 
 //SPAWNFUNC_WEAPON(weapon_okhmg, WEP_OVERKILL_HMG)
 //SPAWNFUNC_WEAPON(weapon_hmg, WEP_OVERKILL_HMG)
