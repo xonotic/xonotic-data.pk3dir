@@ -140,9 +140,9 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 	if ((WEP_CVAR_SEC(WEP_OVERKILL_NEX, refire_type) == 1) && (fire & 2) && (time >= actor.jump_interval))
 	{
 		// Secondary uses it's own refire timer if refire_type is 1.
-		actor.jump_interval = time + WEP_CVAR_SEC(WEP_BLASTER, refire) * W_WeaponRateFactor(actor);
+		actor.jump_interval = time + WEP_CVAR_PRI(WEP_BLASTER, refire) * W_WeaponRateFactor(actor);
 		makevectors(actor.v_angle);
-		W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
+		W_Blaster_Attack(actor, weaponentity);
 		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
@@ -177,13 +177,13 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 	if ((fire & 2) && (WEP_CVAR(WEP_OVERKILL_NEX, secondary) == 2) && (WEP_CVAR_SEC(WEP_OVERKILL_NEX, refire_type) == 0))
 	{
 		// Secondary attack
-		if (!weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_BLASTER, refire)))
+		if (!weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_PRI(WEP_BLASTER, refire)))
 		{
 			return;
 		}
 		makevectors(actor.v_angle);
-		W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
-		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_BLASTER, animtime), w_ready);
+		W_Blaster_Attack(actor, weaponentity);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_PRI(WEP_BLASTER, animtime), w_ready);
 		return;
 	}
 
@@ -199,10 +199,10 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 			{
 				if(WEP_CVAR_SEC(WEP_OVERKILL_NEX, chargepool))
 				{
-					if(WEP_CVAR_SEC(WEP_BLASTER, ammo))
+					if(WEP_CVAR_PRI(WEP_BLASTER, ammo))
 					{
 						// always deplete if secondary is held
-						actor.(weaponentity).oknex_chargepool_ammo = max(0, actor.(weaponentity).oknex_chargepool_ammo - WEP_CVAR_SEC(WEP_BLASTER, ammo) * dt);
+						actor.(weaponentity).oknex_chargepool_ammo = max(0, actor.(weaponentity).oknex_chargepool_ammo - WEP_CVAR_PRI(WEP_BLASTER, ammo) * dt);
 
 						dt = min(dt, (1 - actor.(weaponentity).oknex_charge) / WEP_CVAR(WEP_OVERKILL_NEX, charge_rate));
 						actor.oknex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(WEP_OVERKILL_NEX, chargepool_pause_regen);
@@ -213,7 +213,7 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 					}
 				}
 
-				else if(WEP_CVAR_SEC(WEP_BLASTER, ammo))
+				else if(WEP_CVAR_PRI(WEP_BLASTER, ammo))
 				{
 					if(fire & 2) // only eat ammo when the button is pressed
 					{
@@ -223,21 +223,21 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 							// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 							if(autocvar_g_balance_vortex_reload_ammo)
 							{
-								dt = min(dt, (actor.(weaponentity).clip_load - WEP_CVAR_PRI(WEP_OVERKILL_NEX, ammo)) / WEP_CVAR_SEC(WEP_BLASTER, ammo));
+								dt = min(dt, (actor.(weaponentity).clip_load - WEP_CVAR_PRI(WEP_OVERKILL_NEX, ammo)) / WEP_CVAR_PRI(WEP_BLASTER, ammo));
 								dt = max(0, dt);
 								if(dt > 0)
 								{
-									actor.(weaponentity).clip_load = max(WEP_CVAR_SEC(WEP_BLASTER, ammo), actor.(weaponentity).clip_load - WEP_CVAR_SEC(WEP_BLASTER, ammo) * dt);
+									actor.(weaponentity).clip_load = max(WEP_CVAR_PRI(WEP_BLASTER, ammo), actor.(weaponentity).clip_load - WEP_CVAR_PRI(WEP_BLASTER, ammo) * dt);
 								}
 								actor.(weaponentity).(weapon_load[WEP_OVERKILL_NEX.m_id]) = actor.(weaponentity).clip_load;
 							}
 							else
 							{
-								dt = min(dt, (actor.(thiswep.ammo_field) - WEP_CVAR_PRI(WEP_OVERKILL_NEX, ammo)) / WEP_CVAR_SEC(WEP_BLASTER, ammo));
+								dt = min(dt, (actor.(thiswep.ammo_field) - WEP_CVAR_PRI(WEP_OVERKILL_NEX, ammo)) / WEP_CVAR_PRI(WEP_BLASTER, ammo));
 								dt = max(0, dt);
 								if(dt > 0)
 								{
-									actor.(thiswep.ammo_field) = max(WEP_CVAR_SEC(WEP_BLASTER, ammo), actor.(thiswep.ammo_field) - WEP_CVAR_SEC(WEP_BLASTER, ammo) * dt);
+									actor.(thiswep.ammo_field) = max(WEP_CVAR_PRI(WEP_BLASTER, ammo), actor.(thiswep.ammo_field) - WEP_CVAR_PRI(WEP_BLASTER, ammo) * dt);
 								}
 							}
 						}
@@ -254,10 +254,10 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 		}
 		else if(WEP_CVAR(WEP_OVERKILL_NEX, secondary))
 		{
-			if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(WEP_BLASTER, refire)))
+			if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_BLASTER, refire)))
 			{
 				W_OverkillNex_Attack(thiswep, actor, weaponentity, 1);
-				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(WEP_BLASTER, animtime), w_ready);
+				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_BLASTER, animtime), w_ready);
 			}
 		}
 	}
@@ -281,8 +281,8 @@ METHOD(OverkillNex, wr_checkammo2, bool(entity thiswep, entity actor, .entity we
 	if (WEP_CVAR(WEP_OVERKILL_NEX, secondary))
 	{
 		// don't allow charging if we don't have enough ammo
-		float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(WEP_BLASTER, ammo);
-		ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(WEP_BLASTER, ammo);
+		float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(WEP_BLASTER, ammo);
+		ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(WEP_BLASTER, ammo);
 		return ammo_amount;
 	}
 	else

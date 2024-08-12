@@ -249,13 +249,13 @@ METHOD(Vaporizer, wr_aim, void(entity thiswep, entity actor, .entity weaponentit
     if((actor.items & IT_UNLIMITED_AMMO) || GetResource(actor, thiswep.ammo_type) > 0)
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 1, false, true);
     else
-        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_SEC(WEP_BLASTER, speed), 0, WEP_CVAR_SEC(WEP_BLASTER, lifetime), false, true); // WEAPONTODO: replace with proper vaporizer cvars
+        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_BLASTER, speed), 0, WEP_CVAR_PRI(WEP_BLASTER, lifetime), false, true);
 }
 METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(WEP_VAPORIZER, ammo));
     // if the laser uses load, we also consider its ammo for reloading
-    if(WEP_CVAR(WEP_VAPORIZER, reload_ammo) && WEP_CVAR_SEC(WEP_BLASTER, ammo) && actor.(weaponentity).clip_load < min(vaporizer_ammo, WEP_CVAR_SEC(WEP_BLASTER, ammo))) { // forced reload
+    if(WEP_CVAR(WEP_VAPORIZER, reload_ammo) && WEP_CVAR_PRI(WEP_BLASTER, ammo) && actor.(weaponentity).clip_load < min(vaporizer_ammo, WEP_CVAR_PRI(WEP_BLASTER, ammo))) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
         actor.(weaponentity).hagar_load = false; // rocket minsta exclusive var
         return;
@@ -298,17 +298,17 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
         else if (actor.(weaponentity).jump_interval <= time)
         {
             // handle refire manually, so that primary and secondary can be fired without conflictions (important for instagib)
-            actor.(weaponentity).jump_interval = time + WEP_CVAR_SEC(WEP_BLASTER, refire) * W_WeaponRateFactor(actor);
+            actor.(weaponentity).jump_interval = time + WEP_CVAR_PRI(WEP_BLASTER, refire) * W_WeaponRateFactor(actor);
 
             // decrease ammo for the laser?
-            if(WEP_CVAR_SEC(WEP_BLASTER, ammo))
-                W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(WEP_BLASTER, ammo), weaponentity);
+            if(WEP_CVAR_PRI(WEP_BLASTER, ammo))
+                W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(WEP_BLASTER, ammo), weaponentity);
 
             makevectors(actor.v_angle);
-            W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
+            W_Blaster_Attack(actor, weaponentity);
 
             // now do normal refire
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_BLASTER, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_PRI(WEP_BLASTER, animtime), w_ready);
         }
     }
     else
@@ -327,10 +327,10 @@ METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weap
 }
 METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(!WEP_CVAR_SEC(WEP_BLASTER, ammo))
+    if(!WEP_CVAR_PRI(WEP_BLASTER, ammo))
         return true;
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(WEP_BLASTER, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(WEP_BLASTER, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(WEP_BLASTER, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(WEP_BLASTER, ammo);
     return ammo_amount;
 }
 METHOD(Vaporizer, wr_resetplayer, void(entity thiswep, entity actor))
@@ -341,8 +341,8 @@ METHOD(Vaporizer, wr_reload, void(entity thiswep, entity actor, .entity weaponen
 {
     float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(WEP_VAPORIZER, ammo));
     float used_ammo;
-    if(WEP_CVAR_SEC(WEP_BLASTER, ammo))
-        used_ammo = min(vaporizer_ammo, WEP_CVAR_SEC(WEP_BLASTER, ammo));
+    if(WEP_CVAR_PRI(WEP_BLASTER, ammo))
+        used_ammo = min(vaporizer_ammo, WEP_CVAR_PRI(WEP_BLASTER, ammo));
     else
         used_ammo = vaporizer_ammo;
 
