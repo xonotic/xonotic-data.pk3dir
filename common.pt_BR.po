@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-12 16:09+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2024\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -157,7 +157,7 @@ msgstr "^2Você está na fila para entrar na equipe %s%s^2"
 
 #: qcsrc/client/hud/panel/infomessages.qc:137
 msgid "^2You're queued to join any available team"
-msgstr ""
+msgstr "^2Você está na fila para entrar em qualquer equipe disponível"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -210,7 +210,7 @@ msgstr "^2Aperte ^3%s^2 para terminar o aquecimento"
 
 #: qcsrc/client/hud/panel/infomessages.qc:202
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "As equipes estão desequilibradas!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:205
 #, c-format
@@ -1176,11 +1176,11 @@ msgstr "Aquecimento"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players!"
-msgstr ""
+msgstr "Aquecimento: faltam jogadores!"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: teams unbalanced!"
-msgstr ""
+msgstr "Aquecimento: equipes desequilibradas!"
 
 #: qcsrc/client/hud/panel/timer.qc:135
 msgid "Warmup: no time limit"
@@ -2706,7 +2706,7 @@ msgstr "^F4Contagem regressiva parada!"
 #: qcsrc/common/notifications/all.inc:275
 #: qcsrc/common/notifications/all.inc:560
 msgid "Teams are too unbalanced."
-msgstr ""
+msgstr "As equipes estão desequilibradas demais."
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
@@ -3453,7 +3453,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^F3 has left the join queue after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 saiu da fila por inatividade por %s segundos"
 
 #: qcsrc/common/notifications/all.inc:431
 #, c-format
@@ -3488,7 +3488,7 @@ msgstr "^BG%s^F3 está assistindo^BG agora"
 #: qcsrc/common/notifications/all.inc:436
 #, c-format
 msgid "^BG%s^F3 has left the join queue"
-msgstr ""
+msgstr "^BG%s^F3 saiu da fila de espera"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -3586,12 +3586,12 @@ msgstr "^F1Sobreviventes^BG vencem a rodada"
 #: qcsrc/common/notifications/all.inc:459
 #: qcsrc/common/notifications/all.inc:820
 msgid "^K2You're not allowed to join a larger team!"
-msgstr ""
+msgstr "^K2Você não pode entrar numa equipe maior!"
 
 #: qcsrc/common/notifications/all.inc:460
 #: qcsrc/common/notifications/all.inc:821
 msgid "^K2You're not allowed to change teams!"
-msgstr ""
+msgstr "^K2Você não pode trocar de equipe!"
 
 #: qcsrc/common/notifications/all.inc:461
 #: qcsrc/common/notifications/all.inc:822
@@ -3599,19 +3599,21 @@ msgid ""
 "^K2Teams are locked, you can't join or change teams until they're unlocked "
 "or the map changes."
 msgstr ""
+"^K2As equipes estão trancadas, você não pode entrar ou trocar de equipe até "
+"serem destrancadas ou o mapa mudar."
 
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on that team!"
-msgstr ""
+msgstr "^K2Você já está nessa equipe!"
 
 #: qcsrc/common/notifications/all.inc:464
 msgid "^F4The teams are now locked."
-msgstr ""
+msgstr "^F4Agora as equipes estão trancadas."
 
 #: qcsrc/common/notifications/all.inc:465
 msgid "^F1The teams are now unlocked."
-msgstr ""
+msgstr "^F1Agora as equipes estão destrancadas."
 
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
@@ -4580,7 +4582,7 @@ msgstr "^BGVocê pegou a ^F1Mochila a Jato"
 
 #: qcsrc/common/notifications/all.inc:727
 msgid "^K1Your Xonotic version is incompatible with the server's version!"
-msgstr ""
+msgstr "^K1Sua versão de Xonotic é incompatível com a versão do servidor!"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid ""
@@ -4609,33 +4611,33 @@ msgstr "^K1Não foi possível entrar nesta sessão de minijogo!"
 
 #: qcsrc/common/notifications/all.inc:732
 msgid "^BGYou're queued to join any available team."
-msgstr ""
+msgstr "^BGVocê está na fila para entrar em qualquer equipe disponível."
 
 #: qcsrc/common/notifications/all.inc:733
 msgid "^BGYou're queued to join the ^TC^TT^BG team."
-msgstr ""
+msgstr "^BGVocê está na fila para entrar na equipe ^TC^TT^BG."
 
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
 msgid "%s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "%s^K2 escolheu ^TC^TT^K2 primeiro."
 
 #: qcsrc/common/notifications/all.inc:734
 msgid "^K2You're queued to join any available team."
-msgstr ""
+msgstr "^K2Você está na fila para entrar em qualquer equipe disponível."
 
 #: qcsrc/common/notifications/all.inc:735
 #, c-format
 msgid "%s^K2 chose your preferred team first."
-msgstr ""
+msgstr "%s^K2 escolheu sua equipe preferida primeiro."
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^K2You're now playing on ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Você está jogando agora na equipe ^TC^TT^K2!"
 
 #: qcsrc/common/notifications/all.inc:736
 msgid "^BGYou're now playing on ^TC^TT^BG team!"
-msgstr ""
+msgstr "^BGVocê está jogando agora na equipe ^TC^TT^BG!"
 
 #: qcsrc/common/notifications/all.inc:740
 msgid "^BGYou picked up the ball"
@@ -4902,7 +4904,7 @@ msgstr "^BGSó falta(m) %s^BG..."
 
 #: qcsrc/common/notifications/all.inc:805
 msgid "^F2Spectating isn't allowed at this time!"
-msgstr ""
+msgstr "^F2Espectadores não são permitidos neste momento!"
 
 #: qcsrc/common/notifications/all.inc:807
 msgid "^F2Superweapons have broken down"
@@ -7420,11 +7422,11 @@ msgstr "Modo de jogo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "Show all"
-msgstr ""
+msgstr "Exibir todos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
 msgid "Show all available gametypes"
-msgstr ""
+msgstr "Exibir todos os modos de jogo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 msgid "Time limit:"
