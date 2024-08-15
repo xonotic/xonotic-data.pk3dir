@@ -405,7 +405,8 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e,
 		return;
 	}
 
-	if(uid2name(myuid) == "^1Unregistered Player")
+	if(CS_CVAR(e).cvar_cl_allow_uidtracking != 1 || CS_CVAR(e).cvar_cl_allow_uid2name != 1
+	   || uid2name(myuid) == "^1Unregistered Player")
 	{
 		if(showmessage)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_MISSING_NAME, mynetname, t);
