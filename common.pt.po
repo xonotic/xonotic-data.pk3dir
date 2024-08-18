@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-12 16:09+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Rui <xymarior@yandex.com>, 2018\n"
+"Last-Translator: lecalam, 2024\n"
 "Language-Team: Portuguese (http://app.transifex.com/team-xonotic/xonotic/"
 "language/pt/)\n"
 "Language: pt\n"
@@ -161,6 +161,7 @@ msgstr "^2Estás em fila de espera para te juntares à equipa %s%s^2"
 #: qcsrc/client/hud/panel/infomessages.qc:137
 msgid "^2You're queued to join any available team"
 msgstr ""
+"^2Estás em fila de espera para te juntares a qualquer equipa disponível"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -214,7 +215,7 @@ msgstr "^2Pressiona ^3%s^2 para terminar o aquecimento"
 
 #: qcsrc/client/hud/panel/infomessages.qc:202
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "As equipas estão desequilibradas!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:205
 #, c-format
@@ -1184,11 +1185,11 @@ msgstr "Aquecimento"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players!"
-msgstr ""
+msgstr "Aquecimento: demasiado poucos jogadores!"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: teams unbalanced!"
-msgstr ""
+msgstr "Aquecimento: equipas desequilibradas!"
 
 #: qcsrc/client/hud/panel/timer.qc:135
 msgid "Warmup: no time limit"
@@ -2717,7 +2718,7 @@ msgstr "^F4A contagem decrescente parou!"
 #: qcsrc/common/notifications/all.inc:275
 #: qcsrc/common/notifications/all.inc:560
 msgid "Teams are too unbalanced."
-msgstr ""
+msgstr "As equipas são demasiado desequilibradas."
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
@@ -3468,6 +3469,8 @@ msgstr ""
 #, c-format
 msgid "^BG%s^F3 has left the join queue after idling for %s seconds"
 msgstr ""
+"^BG%s^F3 saiu da fila de espera depois de ter estado inativo durante %s "
+"segundos"
 
 #: qcsrc/common/notifications/all.inc:431
 #, c-format
@@ -3503,7 +3506,7 @@ msgstr "^BG%s^F3 é agora^BG espetador"
 #: qcsrc/common/notifications/all.inc:436
 #, c-format
 msgid "^BG%s^F3 has left the join queue"
-msgstr ""
+msgstr "^BG%s^F3 saiu da fila de espera"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -3601,12 +3604,12 @@ msgstr "^F1Os sobreviventes^BG ganharam a rodada"
 #: qcsrc/common/notifications/all.inc:459
 #: qcsrc/common/notifications/all.inc:820
 msgid "^K2You're not allowed to join a larger team!"
-msgstr ""
+msgstr "^K2Não é permitido juntares-te a uma equipa maior!"
 
 #: qcsrc/common/notifications/all.inc:460
 #: qcsrc/common/notifications/all.inc:821
 msgid "^K2You're not allowed to change teams!"
-msgstr ""
+msgstr "^K2Não podes mudar de equipas!"
 
 #: qcsrc/common/notifications/all.inc:461
 #: qcsrc/common/notifications/all.inc:822
@@ -3614,19 +3617,21 @@ msgid ""
 "^K2Teams are locked, you can't join or change teams until they're unlocked "
 "or the map changes."
 msgstr ""
+"^K2As equipas estão bloqueadas, não é possível entrares ou mudares de equipa "
+"até estas serem desbloqueadas ou o mapa mudar."
 
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on that team!"
-msgstr ""
+msgstr "^K2Já fazes parte dessa equipa!"
 
 #: qcsrc/common/notifications/all.inc:464
 msgid "^F4The teams are now locked."
-msgstr ""
+msgstr "^F4As equipas estão agora bloqueadas."
 
 #: qcsrc/common/notifications/all.inc:465
 msgid "^F1The teams are now unlocked."
-msgstr ""
+msgstr "^F1As equipas estão agora desbloqueadas."
 
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
@@ -4603,7 +4608,7 @@ msgstr "^BGtens a ^F1mochila a jato"
 
 #: qcsrc/common/notifications/all.inc:727
 msgid "^K1Your Xonotic version is incompatible with the server's version!"
-msgstr ""
+msgstr "^K1A tua versão de Xonotic é incompatível com a versão do servidor!"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid ""
@@ -4633,10 +4638,11 @@ msgstr "^K1Não foi possível entrar na sessão de mini-jogo!"
 #: qcsrc/common/notifications/all.inc:732
 msgid "^BGYou're queued to join any available team."
 msgstr ""
+"^BGEstás em fila de espera para te juntares a qualquer equipa disponível."
 
 #: qcsrc/common/notifications/all.inc:733
 msgid "^BGYou're queued to join the ^TC^TT^BG team."
-msgstr ""
+msgstr "^BGEstás em fila de espera para te juntares à equipa ^TC^TT^BG."
 
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
@@ -4646,19 +4652,20 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:734
 msgid "^K2You're queued to join any available team."
 msgstr ""
+"^K2Estás em fila de espera para te juntares a qualquer equipa disponível."
 
 #: qcsrc/common/notifications/all.inc:735
 #, c-format
 msgid "%s^K2 chose your preferred team first."
-msgstr ""
+msgstr "%s^K2 escolhe primeiro a tua equipa preferida."
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^K2You're now playing on ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Estás agora a jogar na equipa ^TC^TT^K2!"
 
 #: qcsrc/common/notifications/all.inc:736
 msgid "^BGYou're now playing on ^TC^TT^BG team!"
-msgstr ""
+msgstr "^BGEstás agora a jogar na equipa ^TC^TT^BG!"
 
 #: qcsrc/common/notifications/all.inc:740
 msgid "^BGYou picked up the ball"
@@ -4923,7 +4930,7 @@ msgstr "^BGSó falta(m) %s^BG..."
 
 #: qcsrc/common/notifications/all.inc:805
 msgid "^F2Spectating isn't allowed at this time!"
-msgstr ""
+msgstr "^F2Não é permitido assistir nesta altura!"
 
 #: qcsrc/common/notifications/all.inc:807
 msgid "^F2Superweapons have broken down"
@@ -7437,11 +7444,11 @@ msgstr "Modo de jogo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "Show all"
-msgstr ""
+msgstr "Mostrar todos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
 msgid "Show all available gametypes"
-msgstr ""
+msgstr "Mostrar todos os tipos de jogo disponíveis"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 msgid "Time limit:"
@@ -9930,9 +9937,9 @@ msgid ""
 "While connected language changes will be applied only to the menu, full "
 "language changes will take effect starting from the next game"
 msgstr ""
-"Enquanto estiver conectado alterações no idioma serão aplicadas somente no "
-"menu, alterações completas de idioma surtirão efeito a partir da próxima "
-"partida."
+"Enquanto estiveres conectado, as alterações linguísticas serão aplicadas "
+"apenas ao menu. As alterações linguísticas completas entrarão em vigor "
+"apenas no próximo jogo"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"

@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-12 16:09+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: oblector o, 2022\n"
+"Last-Translator: oblector o, 2022-2024\n"
 "Language-Team: Latin (http://app.transifex.com/team-xonotic/xonotic/language/"
 "la/)\n"
 "Language: la\n"
@@ -149,7 +149,7 @@ msgstr "^2Nunc exspecta ut advoceris ad manum %s%sm^2"
 
 #: qcsrc/client/hud/panel/infomessages.qc:137
 msgid "^2You're queued to join any available team"
-msgstr ""
+msgstr "^2Nunc exspecta ut advoceris ad aliquam manum"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -201,7 +201,7 @@ msgstr "^3%s^2 preme ut exercitium finias"
 
 #: qcsrc/client/hud/panel/infomessages.qc:202
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "Manus dispares sunt numeris!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:205
 #, c-format
@@ -1159,11 +1159,11 @@ msgstr "Exercitium"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players!"
-msgstr ""
+msgstr "Exercitium: ludentibus eget!"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: teams unbalanced!"
-msgstr ""
+msgstr "Exercitium: manus dispares!"
 
 #: qcsrc/client/hud/panel/timer.qc:135
 msgid "Warmup: no time limit"
@@ -2673,7 +2673,7 @@ msgstr "^F4Numeratio regrediens intermissa!"
 #: qcsrc/common/notifications/all.inc:275
 #: qcsrc/common/notifications/all.inc:560
 msgid "Teams are too unbalanced."
-msgstr ""
+msgstr "Manus nimis dispares sunt."
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
@@ -3042,12 +3042,12 @@ msgstr "^BG%s^K1 Turriola E-Rota deletus est%s%s"
 #: qcsrc/common/notifications/all.inc:341
 #, c-format
 msgid "^BG%s^K1 got caught up in the FLAC turret fire%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Antaërii missilibus offensus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:342
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Hellion turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Turriola Infernali deletus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
@@ -3062,7 +3062,7 @@ msgstr "^BG%s^K1 Polyboli Turriola continenter foratus est%s%s"
 #: qcsrc/common/notifications/all.inc:345
 #, c-format
 msgid "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Turriola Multimistrice liquefactus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:346
 #, c-format
@@ -3409,7 +3409,7 @@ msgstr "^BG%s^F3 in^BG spectatores^F3 motus est quia otiosus %s secunda fuit"
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^F3 has left the join queue after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 non iam advocabitur ad ludum quia otiosus %s secunda fuit"
 
 #: qcsrc/common/notifications/all.inc:431
 #, c-format
@@ -3442,7 +3442,7 @@ msgstr "^BG%s^F3 iam^BG spectat"
 #: qcsrc/common/notifications/all.inc:436
 #, c-format
 msgid "^BG%s^F3 has left the join queue"
-msgstr ""
+msgstr "^BG%s^F3 non iam advocabitur ad ludum"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -3541,12 +3541,12 @@ msgstr "^F1Superstites^BG tempore vincunt"
 #: qcsrc/common/notifications/all.inc:459
 #: qcsrc/common/notifications/all.inc:820
 msgid "^K2You're not allowed to join a larger team!"
-msgstr ""
+msgstr "^K2Ire in manum maiorem non potes!"
 
 #: qcsrc/common/notifications/all.inc:460
 #: qcsrc/common/notifications/all.inc:821
 msgid "^K2You're not allowed to change teams!"
-msgstr ""
+msgstr "^K2Ire in aliam manum non potes!"
 
 #: qcsrc/common/notifications/all.inc:461
 #: qcsrc/common/notifications/all.inc:822
@@ -3554,19 +3554,21 @@ msgid ""
 "^K2Teams are locked, you can't join or change teams until they're unlocked "
 "or the map changes."
 msgstr ""
+"^K2Manus praeclusae sunt, ire in aliquam aut aliam manum non potes antequam "
+"manus adaperiuntur."
 
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on that team!"
-msgstr ""
+msgstr "^K2Iam es in manum istam!"
 
 #: qcsrc/common/notifications/all.inc:464
 msgid "^F4The teams are now locked."
-msgstr ""
+msgstr "^F4Nunc manus praecluduntur."
 
 #: qcsrc/common/notifications/all.inc:465
 msgid "^F1The teams are now unlocked."
-msgstr ""
+msgstr "^F1Nunc manus adaperiuntur."
 
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
@@ -4447,7 +4449,7 @@ msgid ""
 "^K1Teams unbalanced!\n"
 "^BGMoving %s^BG to spectators in ^COUNT..."
 msgstr ""
-"^K1Manus non aequatae!\n"
+"^K1Manus dispares!\n"
 "^BGIn spectatores %s^BG fertur ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:694
@@ -4520,6 +4522,8 @@ msgstr "^F1Sarcinam Volatilem^BG tenes"
 #: qcsrc/common/notifications/all.inc:727
 msgid "^K1Your Xonotic version is incompatible with the server's version!"
 msgstr ""
+"^K1Tui clientis computatralis Xonoticus non intelligit moderatri Xonoticum, "
+"vel non intelligitur!"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid ""
@@ -4548,33 +4552,33 @@ msgstr "^K1Ludi parvi sessio incipi non potuit!"
 
 #: qcsrc/common/notifications/all.inc:732
 msgid "^BGYou're queued to join any available team."
-msgstr ""
+msgstr "^BGNunc exspecta ut advoceris ad aliquam manum."
 
 #: qcsrc/common/notifications/all.inc:733
 msgid "^BGYou're queued to join the ^TC^TT^BG team."
-msgstr ""
+msgstr "^BGNunc exspecta ut advoceris ad manum ^TC^TTm^BG."
 
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
 msgid "%s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "%s^K2 eandem ^TC^TTm^K2 iam elegit."
 
 #: qcsrc/common/notifications/all.inc:734
 msgid "^K2You're queued to join any available team."
-msgstr ""
+msgstr "^K2Nunc exspecta ut advoceris ad aliquam manum."
 
 #: qcsrc/common/notifications/all.inc:735
 #, c-format
 msgid "%s^K2 chose your preferred team first."
-msgstr ""
+msgstr "%s^K2 eandem manum quam praefers iam elegit."
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^K2You're now playing on ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Nunc pro manu ^TC^TT^K2 ludis!"
 
 #: qcsrc/common/notifications/all.inc:736
 msgid "^BGYou're now playing on ^TC^TT^BG team!"
-msgstr ""
+msgstr "^BGNunc pro manu ^TC^TT^BG ludis!"
 
 #: qcsrc/common/notifications/all.inc:740
 msgid "^BGYou picked up the ball"
@@ -4837,7 +4841,7 @@ msgstr "^BGModo %s^BG plura facienda..."
 
 #: qcsrc/common/notifications/all.inc:805
 msgid "^F2Spectating isn't allowed at this time!"
-msgstr ""
+msgstr "^F2Nunc spectare vetatur!"
 
 #: qcsrc/common/notifications/all.inc:807
 msgid "^F2Superweapons have broken down"
@@ -5238,11 +5242,11 @@ msgstr "E-Rota"
 
 #: qcsrc/common/turrets/turret/flac.qh:13
 msgid "FLAC Cannon"
-msgstr ""
+msgstr "Tormentum Antaërium"
 
 #: qcsrc/common/turrets/turret/flac_weapon.qh:7
 msgid "FLAC"
-msgstr ""
+msgstr "Antaërium"
 
 #: qcsrc/common/turrets/turret/fusionreactor.qh:11
 msgid "Fusion Reactor"
@@ -5250,11 +5254,11 @@ msgstr "Reactrum Fusorium"
 
 #: qcsrc/common/turrets/turret/hellion.qh:13
 msgid "Hellion Missile Turret"
-msgstr ""
+msgstr "Turriola Infernalis Missilium"
 
 #: qcsrc/common/turrets/turret/hellion_weapon.qh:7
 msgid "Hellion"
-msgstr ""
+msgstr "Infernalis"
 
 #: qcsrc/common/turrets/turret/hk.qh:15
 msgid "Hunter-Killer Turret"
@@ -5274,11 +5278,11 @@ msgstr "Polybolus"
 
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
-msgstr ""
+msgstr "Turriola Multimistrix"
 
 #: qcsrc/common/turrets/turret/mlrs_weapon.qh:7
 msgid "MLRS"
-msgstr ""
+msgstr "Multimistrix"
 
 #: qcsrc/common/turrets/turret/phaser.qh:13
 msgid "Phaser Cannon"
@@ -7347,11 +7351,11 @@ msgstr "Ludi modus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "Show all"
-msgstr ""
+msgstr "Videre omnes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
 msgid "Show all available gametypes"
-msgstr ""
+msgstr "Videre omnes ludi modos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 msgid "Time limit:"
