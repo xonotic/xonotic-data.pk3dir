@@ -6,19 +6,19 @@ export LC_ALL=C.UTF-8
 # This script creates / updates the _mod.qc / _mod.qh / _mod.inc files based on
 # the qc / qh files present in the qcsrc folder.
 
-cd ${0%/*}
+cd "${0%/*}"
 cd ..
 ROOT=$PWD/
 
 MOD=_mod
 
 function hash() {
-	git hash-object $1
+	git hash-object "$1"
 }
 
 function genmod() {
 	# use context to work around cmake issue #12619
-	CTX="${PWD#$ROOT}/"
+	CTX="${PWD#"$ROOT"}/"
 	if [ -f ${MOD}.inc ]; then
 		oldHashC=$(hash ${MOD}.inc)
 		oldTimeC=$(stat -c "%Y" ${MOD}.inc)
@@ -57,9 +57,9 @@ function genmod() {
 		fi
 	fi; done
 	newHashC=$(hash ${MOD}.inc)
-	if [[ $newHashC == $oldHashC ]]; then touch -d @$oldTimeC ${MOD}.inc; fi
+	if [[ $newHashC == "$oldHashC" ]]; then touch -d @"$oldTimeC" ${MOD}.inc; fi
 	newHashH=$(hash ${MOD}.qh)
-	if [[ $newHashH == $oldHashH ]]; then touch -d @$oldTimeH ${MOD}.qh; fi
+	if [[ $newHashH == "$oldHashH" ]]; then touch -d @"$oldTimeH" ${MOD}.qh; fi
 }
 
 (cd lib; genmod)
