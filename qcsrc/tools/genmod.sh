@@ -29,6 +29,8 @@ function genmod() {
 	fi
 	echo '// generated file; do not modify' > ${MOD}.inc
 	echo '// generated file; do not modify' > ${MOD}.qh
+	# TODO: replace ls with something else
+	# Use find instead of ls to better handle non-alphanumeric filenames.
 	for f in $(ls | sed -e "s/^cl_//" -e "s/^sv_//" -e "s/^ui_//" | sort -u); do
 		if [[ "$f" != *.qc ]]; then continue; fi
 		if [[ -f "$f" ]]; then echo -e "#include <${CTX}$f>" >> ${MOD}.inc; fi
