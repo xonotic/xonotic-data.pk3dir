@@ -17,7 +17,7 @@
 # NaitLee, 2022
 # Nait Lee, 2022
 # NaitLee, 2022
-# NaitLee, 2022
+# NaitLee, 2022,2024
 # sapphireliu <balancedliu@gmail.com>, 2014
 # CodingJellyfish <dumaosen_main01@outlook.com>, 2018-2020
 # CodingJellyfish <dumaosen_main01@outlook.com>, 2018
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-12 16:09+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
+"Last-Translator: NaitLee, 2022,2024\n"
 "Language-Team: Chinese (China) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -166,7 +166,7 @@ msgstr "^2您在加入%s%s队^2的队列中"
 
 #: qcsrc/client/hud/panel/infomessages.qc:137
 msgid "^2You're queued to join any available team"
-msgstr ""
+msgstr "^2你将加入任意可用的团队"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -218,7 +218,7 @@ msgstr "^2按下 ^3%s^2 来结束热身"
 
 #: qcsrc/client/hud/panel/infomessages.qc:202
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "队伍不平衡！"
 
 #: qcsrc/client/hud/panel/infomessages.qc:205
 #, c-format
@@ -1166,11 +1166,11 @@ msgstr "热身"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players!"
-msgstr ""
+msgstr "热身：玩家太少！"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: teams unbalanced!"
-msgstr ""
+msgstr "热身：队伍不平衡！"
 
 #: qcsrc/client/hud/panel/timer.qc:135
 msgid "Warmup: no time limit"
@@ -2667,7 +2667,7 @@ msgstr "^F4倒计时已停止！"
 #: qcsrc/common/notifications/all.inc:275
 #: qcsrc/common/notifications/all.inc:560
 msgid "Teams are too unbalanced."
-msgstr ""
+msgstr "队伍严重不平衡。"
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
@@ -3403,7 +3403,7 @@ msgstr "^BG%s^F3 在挂机 %s 秒后被移到^BG旁观者^F3中"
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^F3 has left the join queue after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 在挂机 %s 秒后被移出队列"
 
 #: qcsrc/common/notifications/all.inc:431
 #, c-format
@@ -3434,7 +3434,7 @@ msgstr "^BG%s^F3 现在正在^BG旁观"
 #: qcsrc/common/notifications/all.inc:436
 #, c-format
 msgid "^BG%s^F3 has left the join queue"
-msgstr ""
+msgstr "^BG%s^F3 离开了队列"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -3522,32 +3522,32 @@ msgstr "^F1生存者^BG赢得此局！"
 #: qcsrc/common/notifications/all.inc:459
 #: qcsrc/common/notifications/all.inc:820
 msgid "^K2You're not allowed to join a larger team!"
-msgstr ""
+msgstr "^K2你不可以加入人数多的团队！"
 
 #: qcsrc/common/notifications/all.inc:460
 #: qcsrc/common/notifications/all.inc:821
 msgid "^K2You're not allowed to change teams!"
-msgstr ""
+msgstr "^K2不允许更换团队！"
 
 #: qcsrc/common/notifications/all.inc:461
 #: qcsrc/common/notifications/all.inc:822
 msgid ""
 "^K2Teams are locked, you can't join or change teams until they're unlocked "
 "or the map changes."
-msgstr ""
+msgstr "^K2团队已锁定，在解锁或更换地图前不可以加入或变更团队。"
 
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on that team!"
-msgstr ""
+msgstr "^K2已在此团队中！"
 
 #: qcsrc/common/notifications/all.inc:464
 msgid "^F4The teams are now locked."
-msgstr ""
+msgstr "^F4团队现已锁定。"
 
 #: qcsrc/common/notifications/all.inc:465
 msgid "^F1The teams are now unlocked."
-msgstr ""
+msgstr "^F1团队现已解除锁定。"
 
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
@@ -4490,7 +4490,7 @@ msgstr "^BG你得到了^F1喷气背包"
 
 #: qcsrc/common/notifications/all.inc:727
 msgid "^K1Your Xonotic version is incompatible with the server's version!"
-msgstr ""
+msgstr "^K1你的 Xonotic 版本与服务器不兼容！"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid ""
@@ -4519,33 +4519,33 @@ msgstr "^K1无法加入指定的小游戏！"
 
 #: qcsrc/common/notifications/all.inc:732
 msgid "^BGYou're queued to join any available team."
-msgstr ""
+msgstr "^BG你将加入任意可用的团队。"
 
 #: qcsrc/common/notifications/all.inc:733
 msgid "^BGYou're queued to join the ^TC^TT^BG team."
-msgstr ""
+msgstr "^BG你将加入^TC^TT^BG队。"
 
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
 msgid "%s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "%s^K2 率先选择了^TC^TT^BG队。"
 
 #: qcsrc/common/notifications/all.inc:734
 msgid "^K2You're queued to join any available team."
-msgstr ""
+msgstr "^K2你将加入任意可用的团队。"
 
 #: qcsrc/common/notifications/all.inc:735
 #, c-format
 msgid "%s^K2 chose your preferred team first."
-msgstr ""
+msgstr "%s^K2 率先选择了你想加入的团队。"
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^K2You're now playing on ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2你加入^TC^TT^K2队游玩！"
 
 #: qcsrc/common/notifications/all.inc:736
 msgid "^BGYou're now playing on ^TC^TT^BG team!"
-msgstr ""
+msgstr "^BG你加入^TC^TT^BG队游玩！"
 
 #: qcsrc/common/notifications/all.inc:740
 msgid "^BGYou picked up the ball"
@@ -4808,7 +4808,7 @@ msgstr "^BG还剩 %s^BG 个……"
 
 #: qcsrc/common/notifications/all.inc:805
 msgid "^F2Spectating isn't allowed at this time!"
-msgstr ""
+msgstr "^F2此时不允许旁观！"
 
 #: qcsrc/common/notifications/all.inc:807
 msgid "^F2Superweapons have broken down"
@@ -7312,11 +7312,11 @@ msgstr "游戏模式"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "Show all"
-msgstr ""
+msgstr "显示所有"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
 msgid "Show all available gametypes"
-msgstr ""
+msgstr "显示所有可用的游戏类型"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 msgid "Time limit:"

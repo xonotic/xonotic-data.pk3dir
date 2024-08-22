@@ -160,7 +160,7 @@ msgstr "^2您在加入%s%s隊^2的隊列中"
 
 #: qcsrc/client/hud/panel/infomessages.qc:137
 msgid "^2You're queued to join any available team"
-msgstr ""
+msgstr "^2你將加入任意可用的團隊"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -212,7 +212,7 @@ msgstr "^2按下 ^3%s^2 來結束熱身"
 
 #: qcsrc/client/hud/panel/infomessages.qc:202
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "隊伍不平衡！"
 
 #: qcsrc/client/hud/panel/infomessages.qc:205
 #, c-format
@@ -1160,11 +1160,11 @@ msgstr "熱身"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players!"
-msgstr ""
+msgstr "熱身：玩家太少！"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: teams unbalanced!"
-msgstr ""
+msgstr "熱身：隊伍不平衡！"
 
 #: qcsrc/client/hud/panel/timer.qc:135
 msgid "Warmup: no time limit"
@@ -2661,7 +2661,7 @@ msgstr "^F4倒計時已停止！"
 #: qcsrc/common/notifications/all.inc:275
 #: qcsrc/common/notifications/all.inc:560
 msgid "Teams are too unbalanced."
-msgstr ""
+msgstr "隊伍嚴重不平衡。"
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
@@ -3397,7 +3397,7 @@ msgstr "^BG%s^F3 在掛機 %s 秒後被移到^BG旁觀者^F3中"
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^F3 has left the join queue after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 在掛機 %s 秒後被移出隊列"
 
 #: qcsrc/common/notifications/all.inc:431
 #, c-format
@@ -3428,7 +3428,7 @@ msgstr "^BG%s^F3 現在正在^BG旁觀"
 #: qcsrc/common/notifications/all.inc:436
 #, c-format
 msgid "^BG%s^F3 has left the join queue"
-msgstr ""
+msgstr "^BG%s^F3 離開了隊列"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -3516,32 +3516,32 @@ msgstr "^F1生存者^BG贏得此局！"
 #: qcsrc/common/notifications/all.inc:459
 #: qcsrc/common/notifications/all.inc:820
 msgid "^K2You're not allowed to join a larger team!"
-msgstr ""
+msgstr "^K2你不可以加入人數多的團隊！"
 
 #: qcsrc/common/notifications/all.inc:460
 #: qcsrc/common/notifications/all.inc:821
 msgid "^K2You're not allowed to change teams!"
-msgstr ""
+msgstr "^K2不允許更換團隊！"
 
 #: qcsrc/common/notifications/all.inc:461
 #: qcsrc/common/notifications/all.inc:822
 msgid ""
 "^K2Teams are locked, you can't join or change teams until they're unlocked "
 "or the map changes."
-msgstr ""
+msgstr "^K2團隊已鎖定，在解鎖或更換地圖前不可以加入或變更團隊。"
 
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on that team!"
-msgstr ""
+msgstr "^K2已在此團隊中！"
 
 #: qcsrc/common/notifications/all.inc:464
 msgid "^F4The teams are now locked."
-msgstr ""
+msgstr "^F4團隊現已鎖定。"
 
 #: qcsrc/common/notifications/all.inc:465
 msgid "^F1The teams are now unlocked."
-msgstr ""
+msgstr "^F1團隊現已解除鎖定。"
 
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
@@ -4484,7 +4484,7 @@ msgstr "^BG你得到了^F1噴氣揹包"
 
 #: qcsrc/common/notifications/all.inc:727
 msgid "^K1Your Xonotic version is incompatible with the server's version!"
-msgstr ""
+msgstr "^K1你的 Xonotic 版本與服務器不兼容！"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid ""
@@ -4513,33 +4513,33 @@ msgstr "^K1無法加入指定的小遊戲！"
 
 #: qcsrc/common/notifications/all.inc:732
 msgid "^BGYou're queued to join any available team."
-msgstr ""
+msgstr "^BG你將加入任意可用的團隊。"
 
 #: qcsrc/common/notifications/all.inc:733
 msgid "^BGYou're queued to join the ^TC^TT^BG team."
-msgstr ""
+msgstr "^BG你將加入^TC^TT^BG隊。"
 
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
 msgid "%s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "%s^K2 率先選擇了^TC^TT^BG隊。"
 
 #: qcsrc/common/notifications/all.inc:734
 msgid "^K2You're queued to join any available team."
-msgstr ""
+msgstr "^K2你將加入任意可用的團隊。"
 
 #: qcsrc/common/notifications/all.inc:735
 #, c-format
 msgid "%s^K2 chose your preferred team first."
-msgstr ""
+msgstr "%s^K2 率先選擇了你想加入的團隊。"
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^K2You're now playing on ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2你加入^TC^TT^K2隊遊玩！"
 
 #: qcsrc/common/notifications/all.inc:736
 msgid "^BGYou're now playing on ^TC^TT^BG team!"
-msgstr ""
+msgstr "^BG你加入^TC^TT^BG隊遊玩！"
 
 #: qcsrc/common/notifications/all.inc:740
 msgid "^BGYou picked up the ball"
@@ -4802,7 +4802,7 @@ msgstr "^BG還剩 %s^BG 個……"
 
 #: qcsrc/common/notifications/all.inc:805
 msgid "^F2Spectating isn't allowed at this time!"
-msgstr ""
+msgstr "^F2此時不允許旁觀！"
 
 #: qcsrc/common/notifications/all.inc:807
 msgid "^F2Superweapons have broken down"
@@ -7306,11 +7306,11 @@ msgstr "遊戲模式"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "Show all"
-msgstr ""
+msgstr "顯示所有"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
 msgid "Show all available gametypes"
-msgstr ""
+msgstr "顯示所有可用的遊戲類型"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 msgid "Time limit:"

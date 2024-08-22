@@ -8,7 +8,7 @@ es    "Spanish" "Español" 98%
 fr    "French" "Français" 100%
 gl    "Galician" "Galego" 100%
 ga    "Irish" "Irish" 28%
-it    "Italian" "Italiano" 98%
+it    "Italian" "Italiano" 100%
 la    "Latin" "Lingua Latina" 100%
 hu    "Hungarian" "Magyar" 44%
 nl    "Dutch" "Nederlands" 61%
@@ -26,8 +26,8 @@ bg    "Bulgarian" "Български" 69%
 ru    "Russian" "Русский" 99%
 sr    "Serbian" "Српски" 57%
 uk    "Ukrainian" "Українська" 57%
-zh_TW "Chinese (Taiwan)" "中文（正體字）" 98%
-zh_CN "Chinese (China)" "中文（简体字）" 98%
-zh_HK "Chinese (Hong Kong)" "中文（香港字）" 98%
+zh_TW "Chinese (Taiwan)" "中文（正體字）" 100%
+zh_CN "Chinese (China)" "中文（简体字）" 100%
+zh_HK "Chinese (Hong Kong)" "中文（香港字）" 100%
 ja_JP "Japanese" "日本語" 98%
 ko    "Korean" "한국의" 34%

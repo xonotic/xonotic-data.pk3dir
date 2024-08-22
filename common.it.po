@@ -155,7 +155,7 @@ msgstr "^2Sei in coda per unirti alla squadra %s%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:137
 msgid "^2You're queued to join any available team"
-msgstr ""
+msgstr "^2Sei in coda per unirti a una qualsiasi squadra disponibile"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -207,7 +207,7 @@ msgstr "^2Premi ^3%s^2 per terminare il warmup"
 
 #: qcsrc/client/hud/panel/infomessages.qc:202
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "Le squadre sono sbilanciate!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:205
 #, c-format
@@ -1174,11 +1174,11 @@ msgstr "Warmup"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players!"
-msgstr ""
+msgstr "Warmup: troppo pochi giocatori!"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: teams unbalanced!"
-msgstr ""
+msgstr "Warmup: squadre sbilanciate!"
 
 #: qcsrc/client/hud/panel/timer.qc:135
 msgid "Warmup: no time limit"
@@ -2710,7 +2710,7 @@ msgstr "^F4Conto alla rovescia fermato!"
 #: qcsrc/common/notifications/all.inc:275
 #: qcsrc/common/notifications/all.inc:560
 msgid "Teams are too unbalanced."
-msgstr ""
+msgstr "Le squadre sono troppo sbilanciate!"
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
@@ -3335,12 +3335,12 @@ msgstr "^BG%s^F3 si è connesso"
 #: qcsrc/common/notifications/all.inc:394
 #, c-format
 msgid "^BG%s^F3 is now playing"
-msgstr "^BG%s^F3 sta giocando adesso"
+msgstr "^BG%s^F3 ora sta giocando"
 
 #: qcsrc/common/notifications/all.inc:395
 #, c-format
 msgid "^BG%s^F3 is now playing on the ^TC^TT team"
-msgstr "^BG%s^F3 sta giocando adesso nella ^TCsquadra ^TT"
+msgstr "^BG%s^F3 ora sta giocando nella ^TCsquadra ^TT"
 
 #: qcsrc/common/notifications/all.inc:396
 #, c-format
@@ -3480,7 +3480,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^F3 has left the join queue after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 ha abbandonato la coda perché inattivo per %s secondi"
 
 #: qcsrc/common/notifications/all.inc:431
 #, c-format
@@ -3513,12 +3513,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
 msgid "^BG%s^F3 is now^BG spectating"
-msgstr "^BG%s^F3 adesso è uno^BG spettatore"
+msgstr "^BG%s^F3 ora è uno^BG spettatore"
 
 #: qcsrc/common/notifications/all.inc:436
 #, c-format
 msgid "^BG%s^F3 has left the join queue"
-msgstr ""
+msgstr "^BG%s^F3 ha abbandonato la coda"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -3617,12 +3617,12 @@ msgstr "^BGI ^K1sopravvissuti ^BG hanno vinto il round"
 #: qcsrc/common/notifications/all.inc:459
 #: qcsrc/common/notifications/all.inc:820
 msgid "^K2You're not allowed to join a larger team!"
-msgstr ""
+msgstr "^K2Non ti è consentito unirti a una squadra più numerosa!"
 
 #: qcsrc/common/notifications/all.inc:460
 #: qcsrc/common/notifications/all.inc:821
 msgid "^K2You're not allowed to change teams!"
-msgstr ""
+msgstr "^K2Non ti è consentito cambiare squadra!"
 
 #: qcsrc/common/notifications/all.inc:461
 #: qcsrc/common/notifications/all.inc:822
@@ -3630,19 +3630,21 @@ msgid ""
 "^K2Teams are locked, you can't join or change teams until they're unlocked "
 "or the map changes."
 msgstr ""
+"^K2Le squadre sono bloccate, non puoi unirti a o cambiare squadre finché "
+"sono bloccate o la mappa cambia."
 
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on that team!"
-msgstr ""
+msgstr "^K2Sei già in quella squadra!"
 
 #: qcsrc/common/notifications/all.inc:464
 msgid "^F4The teams are now locked."
-msgstr ""
+msgstr "^F4Le squadre sono bloccate ora!"
 
 #: qcsrc/common/notifications/all.inc:465
 msgid "^F1The teams are now unlocked."
-msgstr ""
+msgstr "^F1Le squadre sono sbloccate ora."
 
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
@@ -4084,7 +4086,7 @@ msgid ""
 "^BGfor ^F2too many unsuccessful attempts^BG to capture.\n"
 "^BGMake some defensive scores before trying again."
 msgstr ""
-"^BGSei adesso ^F1scudato^BG dalla/le bandiera/e\n"
+"^BGSei ora ^F1scudato^BG dalla/le bandiera/e\n"
 "^BGper ^F2troppi vani tentativi^BG di cattura.\n"
 "^BGFai qualche punto in difesa prima di provare di nuovo."
 
@@ -4230,7 +4232,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:605
 #: qcsrc/common/notifications/all.inc:751
 msgid "^BGEnemies can now see you on radar!"
-msgstr "^BGI nemici adesso possono vederti nel radar!"
+msgstr "^BGOra i nemici possono vederti nel radar!"
 
 #: qcsrc/common/notifications/all.inc:606
 msgid "^BGYou returned the ^TC^TT^BG flag!"
@@ -4628,6 +4630,7 @@ msgstr "^BGHai preso il ^F1Jetpack"
 #: qcsrc/common/notifications/all.inc:727
 msgid "^K1Your Xonotic version is incompatible with the server's version!"
 msgstr ""
+"^K1La tua versione di Xonotic è incompatibile con la versione del server!"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid ""
@@ -4656,33 +4659,33 @@ msgstr "^K1Non puoi partecipare alla data sessione di minigame!"
 
 #: qcsrc/common/notifications/all.inc:732
 msgid "^BGYou're queued to join any available team."
-msgstr ""
+msgstr "^BGSei in coda per unirti a una qualsiasi squadra disponibile"
 
 #: qcsrc/common/notifications/all.inc:733
 msgid "^BGYou're queued to join the ^TC^TT^BG team."
-msgstr ""
+msgstr "^BGSei in coda per unirti alla squadra ^TC^TT^BG."
 
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
 msgid "%s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "%s^K2 ha scelto ^TC^TT^K2 prima di te."
 
 #: qcsrc/common/notifications/all.inc:734
 msgid "^K2You're queued to join any available team."
-msgstr ""
+msgstr "^K2Sei in coda per unirti a una qualsiasi squadra disponibile."
 
 #: qcsrc/common/notifications/all.inc:735
 #, c-format
 msgid "%s^K2 chose your preferred team first."
-msgstr ""
+msgstr "%s^K2 ha scelto la tua squadra preferita prima di te."
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^K2You're now playing on ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Ora stai giocando nella squadra ^TC^TT^K2!"
 
 #: qcsrc/common/notifications/all.inc:736
 msgid "^BGYou're now playing on ^TC^TT^BG team!"
-msgstr ""
+msgstr "^BGOra stai giocando nella squadra ^TC^TT^BG!"
 
 #: qcsrc/common/notifications/all.inc:740
 msgid "^BGYou picked up the ball"
@@ -4805,7 +4808,7 @@ msgstr "^BG La squadra ^TC^TT^BG ha catturato un punto di controllo"
 
 #: qcsrc/common/notifications/all.inc:769
 msgid "^BGThis control point currently cannot be captured"
-msgstr "^BGQuesto punto di controllo adesso non può essere catturato"
+msgstr "^BGQuesto punto di controllo ora non può essere catturato"
 
 #: qcsrc/common/notifications/all.inc:770
 msgid ""
@@ -4947,7 +4950,7 @@ msgstr "^BGAltre %s^BG sequenze ti aspettano..."
 
 #: qcsrc/common/notifications/all.inc:805
 msgid "^F2Spectating isn't allowed at this time!"
-msgstr ""
+msgstr "^F2Non è consentito osservare il gioco in questo momento!"
 
 #: qcsrc/common/notifications/all.inc:807
 msgid "^F2Superweapons have broken down"
@@ -7459,11 +7462,11 @@ msgstr "Tipo di gioco"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "Show all"
-msgstr ""
+msgstr "Mostra tutti"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
 msgid "Show all available gametypes"
-msgstr ""
+msgstr "Mostra tutti i tipi di gioco disponibili"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 msgid "Time limit:"
