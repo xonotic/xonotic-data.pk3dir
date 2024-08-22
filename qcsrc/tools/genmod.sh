@@ -41,7 +41,7 @@ function genmod() {
 	for f in $(ls | sed -e "s/^cl_//" -e "s/^sv_//" -e "s/^ui_//" | sort -u)
 	do
 		# skip all files which aren't .qc files
-		if [[ "$f" != *.qc ]];        then continue; fi
+		if [[ "$f" != *.qc ]]; then continue; fi
 
 		# Print the following line:
 		#
@@ -49,8 +49,8 @@ function genmod() {
 		#
 		# file.qc into _mod.inc
 		# file.qh into _mod.qh
-		if [[ -f "$f" ]];             then printf "#include <%s>\n" "${CTX}$f"          >> ${MOD}.inc; fi
-		if [[ -f "${f%.qc}.qh" ]];    then printf "#include <%s>\n" "${CTX}${f%.qc}.qh" >> ${MOD}.qh;  fi
+		if [[ -f "$f"          ]]; then printf "#include <%s>\n" "${CTX}$f"          >> ${MOD}.inc; fi
+		if [[ -f "${f%.qc}.qh" ]]; then printf "#include <%s>\n" "${CTX}${f%.qc}.qh" >> ${MOD}.qh;  fi
 
 		# Print the following template:
 		#
@@ -61,17 +61,17 @@ function genmod() {
 		# CSQC
 		# cl_file.qc into _mod.inc
 		# cl_file.qh into _mod.qh
-		if [[ -f "cl_$f" ]];          then printf "#ifdef %s\n\t#include <%s>\n#endif\n"   CSQC "${CTX}cl_$f"          >> ${MOD}.inc; fi
+		if [[ -f "cl_$f"          ]]; then printf "#ifdef %s\n\t#include <%s>\n#endif\n"   CSQC "${CTX}cl_$f"          >> ${MOD}.inc; fi
 		if [[ -f "cl_${f%.qc}.qh" ]]; then printf "#ifdef %s\n\t#include <%s>\n#endif\n"   CSQC "${CTX}cl_${f%.qc}.qh" >> ${MOD}.qh;  fi
 		# SVQC
 		# cl_file.qc into _mod.inc
 		# cl_file.qh into _mod.qh
-		if [[ -f "sv_$f" ]];          then printf "#ifdef %s\n\t#include <%s>\n#endif\n"   SVQC "${CTX}sv_$f"          >> ${MOD}.inc; fi
+		if [[ -f "sv_$f"          ]]; then printf "#ifdef %s\n\t#include <%s>\n#endif\n"   SVQC "${CTX}sv_$f"          >> ${MOD}.inc; fi
 		if [[ -f "sv_${f%.qc}.qh" ]]; then printf "#ifdef %s\n\t#include <%s>\n#endif\n"   SVQC "${CTX}sv_${f%.qc}.qh" >> ${MOD}.qh;  fi
 		# MENUQC
 		# cl_file.qc into _mod.inc
 		# cl_file.qh into _mod.qh
-		if [[ -f "ui_$f" ]];          then printf "#ifdef %s\n\t#include <%s>\n#endif\n" MENUQC "${CTX}ui_$f"          >> ${MOD}.inc; fi
+		if [[ -f "ui_$f"          ]]; then printf "#ifdef %s\n\t#include <%s>\n#endif\n" MENUQC "${CTX}ui_$f"          >> ${MOD}.inc; fi
 		if [[ -f "ui_${f%.qc}.qh" ]]; then printf "#ifdef %s\n\t#include <%s>\n#endif\n" MENUQC "${CTX}ui_${f%.qc}.qh" >> ${MOD}.qh;  fi
 	done
 
