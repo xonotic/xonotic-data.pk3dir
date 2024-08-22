@@ -9,7 +9,7 @@ export LC_ALL=C.UTF-8
 cd "${0%/*}" # Move to qcsrc/tools
 cd .. # Move to qcsrc
 
-ROOT=$PWD/
+ROOT="$PWD/"
 
 MOD=_mod
 
@@ -21,19 +21,19 @@ function genmod() {
 	# use context to work around cmake issue #12619
 	CTX="${PWD#"$ROOT"}/"
 
-	if [ -f ${MOD}.inc ]
+	if [ -f "${MOD}.inc" ]
 	then
-		oldHashC=$(hash ${MOD}.inc)
-		oldTimeC=$(stat -c "%Y" ${MOD}.inc)
+		oldHashC="$(hash ${MOD}.inc)"
+		oldTimeC="$(stat -c "%Y" ${MOD}.inc)"
 	fi
-	if [ -f ${MOD}.qh ]
+	if [ -f "${MOD}.qh" ]
 	then
-		oldHashH=$(hash ${MOD}.qh)
-		oldTimeH=$(stat -c "%Y" ${MOD}.qh)
+		oldHashH="$(hash ${MOD}.qh)"
+		oldTimeH="$(stat -c "%Y" ${MOD}.qh)"
 	fi
 
-	echo '// generated file; do not modify' > ${MOD}.inc
-	echo '// generated file; do not modify' > ${MOD}.qh
+	echo '// generated file; do not modify' > "${MOD}.inc"
+	echo '// generated file; do not modify' > "${MOD}.qh"
 
 	# Dr. Jaska: TODO: replace ls with something else
 	# LSP note: "Use find instead of ls to better handle non-alphanumeric filenames."
@@ -43,9 +43,15 @@ function genmod() {
 		# skip .qc files
 		if [[ "$f" != *.qc ]];        then continue; fi
 
+		# #include <"$1">
 		if [[ -f "$f" ]];             then printf "#include <%s>\n" "${CTX}$f"          >> ${MOD}.inc; fi
 		if [[ -f "${f%.qc}.qh" ]];    then printf "#include <%s>\n" "${CTX}${f%.qc}.qh" >> ${MOD}.qh;  fi
 
+		# Print the following template:
+		#
+		# #ifdef "$1"
+		# 	#include <"$2">
+		# #endif
 		if [[ -f "cl_$f" ]];          then printf "#ifdef %s\n\t#include <%s>\n#endif\n"   CSQC "${CTX}cl_$f"          >> ${MOD}.inc; fi
 		if [[ -f "cl_${f%.qc}.qh" ]]; then printf "#ifdef %s\n\t#include <%s>\n#endif\n"   CSQC "${CTX}cl_${f%.qc}.qh" >> ${MOD}.qh;  fi
 		if [[ -f "sv_$f" ]];          then printf "#ifdef %s\n\t#include <%s>\n#endif\n"   SVQC "${CTX}sv_$f"          >> ${MOD}.inc; fi
@@ -81,24 +87,24 @@ function genmod() {
 					mod=_all
 				fi
 
-				echo "#include <${CTX}$f/${mod}.inc>" >> ${MOD}.inc
-				echo "#include <${CTX}$f/${mod}.qh>" >> ${MOD}.qh
+				echo "#include <${CTX}$f/${mod}.inc>" >> "${MOD}.inc"
+				echo "#include <${CTX}$f/${mod}.qh>"  >> "${MOD}.qh"
 			fi
 		fi
 	done
 
-	newHashC=$(hash ${MOD}.inc)
+	newHashC="$(hash ${MOD}.inc)"
 
-	if [[ $newHashC == "$oldHashC" ]]
+	if [[ "$newHashC" == "$oldHashC" ]]
 	then
-		touch -d @"$oldTimeC" ${MOD}.inc
+		touch -d @"$oldTimeC" "${MOD}.inc"
 	fi
 
-	newHashH=$(hash ${MOD}.qh)
+	newHashH="$(hash ${MOD}.qh)"
 
-	if [[ $newHashH == "$oldHashH" ]]
+	if [[ "$newHashH" == "$oldHashH" ]]
 	then
-		touch -d @"$oldTimeH" ${MOD}.qh
+		touch -d @"$oldTimeH" "${MOD}.qh"
 	fi
 }
 
