@@ -46,12 +46,12 @@ function genmod() {
 		if [[ -f "$f" ]];             then printf "#include <%s>\n"                            "${CTX}$f"             >> ${MOD}.inc; fi
 		if [[ -f "${f%.qc}.qh" ]];    then printf "#include <%s>\n"                            "${CTX}${f%.qc}.qh"    >> ${MOD}.qh;  fi
 
-		if [[ -f "cl_$f" ]];          then printf "#ifdef CSQC\n    #include <%s>\n#endif\n"   "${CTX}cl_$f"          >> ${MOD}.inc; fi
-		if [[ -f "cl_${f%.qc}.qh" ]]; then printf "#ifdef CSQC\n    #include <%s>\n#endif\n"   "${CTX}cl_${f%.qc}.qh" >> ${MOD}.qh;  fi
-		if [[ -f "sv_$f" ]];          then printf "#ifdef SVQC\n    #include <%s>\n#endif\n"   "${CTX}sv_$f"          >> ${MOD}.inc; fi
-		if [[ -f "sv_${f%.qc}.qh" ]]; then printf "#ifdef SVQC\n    #include <%s>\n#endif\n"   "${CTX}sv_${f%.qc}.qh" >> ${MOD}.qh;  fi
-		if [[ -f "ui_$f" ]];          then printf "#ifdef MENUQC\n    #include <%s>\n#endif\n" "${CTX}ui_$f"          >> ${MOD}.inc; fi
-		if [[ -f "ui_${f%.qc}.qh" ]]; then printf "#ifdef MENUQC\n    #include <%s>\n#endif\n" "${CTX}ui_${f%.qc}.qh" >> ${MOD}.qh;  fi
+		if [[ -f "cl_$f" ]];          then printf "#ifdef CSQC\n	#include <%s>\n#endif\n"   "${CTX}cl_$f"          >> ${MOD}.inc; fi
+		if [[ -f "cl_${f%.qc}.qh" ]]; then printf "#ifdef CSQC\n	#include <%s>\n#endif\n"   "${CTX}cl_${f%.qc}.qh" >> ${MOD}.qh;  fi
+		if [[ -f "sv_$f" ]];          then printf "#ifdef SVQC\n	#include <%s>\n#endif\n"   "${CTX}sv_$f"          >> ${MOD}.inc; fi
+		if [[ -f "sv_${f%.qc}.qh" ]]; then printf "#ifdef SVQC\n	#include <%s>\n#endif\n"   "${CTX}sv_${f%.qc}.qh" >> ${MOD}.qh;  fi
+		if [[ -f "ui_$f" ]];          then printf "#ifdef MENUQC\n	#include <%s>\n#endif\n" "${CTX}ui_$f"          >> ${MOD}.inc; fi
+		if [[ -f "ui_${f%.qc}.qh" ]]; then printf "#ifdef MENUQC\n	#include <%s>\n#endif\n" "${CTX}ui_${f%.qc}.qh" >> ${MOD}.qh;  fi
 	done
 
 	declare -l rec=1
