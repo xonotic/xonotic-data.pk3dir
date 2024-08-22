@@ -6,8 +6,9 @@ export LC_ALL=C.UTF-8
 # This script creates / updates the _mod.qc / _mod.qh / _mod.inc files based on
 # the qc / qh files present in the qcsrc folder.
 
-cd "${0%/*}"
-cd ..
+cd "${0%/*}" # Move to qcsrc/tools
+cd .. # Move to qcsrc
+
 ROOT=$PWD/
 
 MOD=_mod
@@ -19,49 +20,84 @@ function hash() {
 function genmod() {
 	# use context to work around cmake issue #12619
 	CTX="${PWD#"$ROOT"}/"
-	if [ -f ${MOD}.inc ]; then
+
+	if [ -f ${MOD}.inc ]
+	then
 		oldHashC=$(hash ${MOD}.inc)
 		oldTimeC=$(stat -c "%Y" ${MOD}.inc)
 	fi
-	if [ -f ${MOD}.qh ]; then
+	if [ -f ${MOD}.qh ]
+	then
 		oldHashH=$(hash ${MOD}.qh)
 		oldTimeH=$(stat -c "%Y" ${MOD}.qh)
 	fi
+
 	echo '// generated file; do not modify' > ${MOD}.inc
 	echo '// generated file; do not modify' > ${MOD}.qh
-	# TODO: replace ls with something else
-	# Use find instead of ls to better handle non-alphanumeric filenames.
-	for f in $(ls | sed -e "s/^cl_//" -e "s/^sv_//" -e "s/^ui_//" | sort -u); do
-		if [[ "$f" != *.qc ]]; then continue; fi
-		if [[ -f "$f" ]]; then echo -e "#include <${CTX}$f>" >> ${MOD}.inc; fi
-		if [[ -f "${f%.qc}.qh" ]]; then echo -e "#include <${CTX}${f%.qc}.qh>" >> ${MOD}.qh; fi
-		if [[ -f "cl_$f" ]]; then echo -e "#ifdef CSQC\n    #include <${CTX}cl_$f>\n#endif" >> ${MOD}.inc; fi
-		if [[ -f "cl_${f%.qc}.qh" ]]; then echo -e "#ifdef CSQC\n    #include <${CTX}cl_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
-		if [[ -f "sv_$f" ]]; then echo -e "#ifdef SVQC\n    #include <${CTX}sv_$f>\n#endif" >> ${MOD}.inc; fi
-		if [[ -f "sv_${f%.qc}.qh" ]]; then echo -e "#ifdef SVQC\n    #include <${CTX}sv_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
-		if [[ -f "ui_$f" ]]; then echo -e "#ifdef MENUQC\n    #include <${CTX}ui_$f>\n#endif" >> ${MOD}.inc; fi
+
+	# Dr. Jaska: TODO: replace ls with something else
+	# LSP note: "Use find instead of ls to better handle non-alphanumeric filenames."
+	# Dr. Jaska: find without some configuration would prefix everything with ./ which is likely unwanted
+	for f in $(ls | sed -e "s/^cl_//" -e "s/^sv_//" -e "s/^ui_//" | sort -u)
+	do
+		if [[ "$f" != *.qc ]];        then continue; fi
+
+		if [[ -f "$f" ]];             then echo -e "#include <${CTX}$f>"                                        >> ${MOD}.inc; fi
+		if [[ -f "${f%.qc}.qh" ]];    then echo -e "#include <${CTX}${f%.qc}.qh>"                               >> ${MOD}.qh; fi
+		if [[ -f "cl_$f" ]];          then echo -e "#ifdef CSQC\n    #include <${CTX}cl_$f>\n#endif"            >> ${MOD}.inc; fi
+		if [[ -f "cl_${f%.qc}.qh" ]]; then echo -e "#ifdef CSQC\n    #include <${CTX}cl_${f%.qc}.qh>\n#endif"   >> ${MOD}.qh; fi
+		if [[ -f "sv_$f" ]];          then echo -e "#ifdef SVQC\n    #include <${CTX}sv_$f>\n#endif"            >> ${MOD}.inc; fi
+		if [[ -f "sv_${f%.qc}.qh" ]]; then echo -e "#ifdef SVQC\n    #include <${CTX}sv_${f%.qc}.qh>\n#endif"   >> ${MOD}.qh; fi
+		if [[ -f "ui_$f" ]];          then echo -e "#ifdef MENUQC\n    #include <${CTX}ui_$f>\n#endif"          >> ${MOD}.inc; fi
 		if [[ -f "ui_${f%.qc}.qh" ]]; then echo -e "#ifdef MENUQC\n    #include <${CTX}ui_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
 	done
+
 	declare -l rec=1
-	if [[ -f "_all.inc" ]]; then rec=0; fi
-	for f in *; do if [ -d "$f" ]; then
-		(cd -- "$f" && genmod)
-		if [[ $rec == 1 ]]; then
-			rec=2
-			echo >> ${MOD}.inc
-			echo >> ${MOD}.qh
+
+	if [[ -f "_all.inc" ]]
+	then
+		rec=0
+	fi
+
+	for f in *
+	do
+		if [ -d "$f" ]
+		then
+			(cd -- "$f" && genmod)
+			if [[ $rec == 1 ]]
+			then
+				rec=2
+				echo >> ${MOD}.inc
+				echo >> ${MOD}.qh
+			fi
+			if [[ $rec != 0 ]]
+			then
+				declare -l mod=_mod
+
+				if [[ -f "$f/_all.inc" ]]
+				then
+					mod=_all
+				fi
+
+				echo "#include <${CTX}$f/${mod}.inc>" >> ${MOD}.inc
+				echo "#include <${CTX}$f/${mod}.qh>" >> ${MOD}.qh
+			fi
 		fi
-		if [[ $rec != 0 ]]; then
-			declare -l mod=_mod
-			if [[ -f "$f/_all.inc" ]]; then mod=_all; fi
-			echo "#include <${CTX}$f/${mod}.inc>" >> ${MOD}.inc
-			echo "#include <${CTX}$f/${mod}.qh>" >> ${MOD}.qh
-		fi
-	fi; done
+	done
+
 	newHashC=$(hash ${MOD}.inc)
-	if [[ $newHashC == "$oldHashC" ]]; then touch -d @"$oldTimeC" ${MOD}.inc; fi
+
+	if [[ $newHashC == "$oldHashC" ]]
+	then
+		touch -d @"$oldTimeC" ${MOD}.inc
+	fi
+
 	newHashH=$(hash ${MOD}.qh)
-	if [[ $newHashH == "$oldHashH" ]]; then touch -d @"$oldTimeH" ${MOD}.qh; fi
+
+	if [[ $newHashH == "$oldHashH" ]]
+	then
+		touch -d @"$oldTimeH" ${MOD}.qh
+	fi
 }
 
 (cd lib; genmod)
