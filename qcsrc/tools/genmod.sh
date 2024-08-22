@@ -40,16 +40,18 @@ function genmod() {
 	# Dr. Jaska: find without some configuration would prefix everything with ./ which is likely unwanted
 	for f in $(ls | sed -e "s/^cl_//" -e "s/^sv_//" -e "s/^ui_//" | sort -u)
 	do
+		# skip .qc files
 		if [[ "$f" != *.qc ]];        then continue; fi
 
-		if [[ -f "$f" ]];             then echo -e "#include <${CTX}$f>"                                        >> ${MOD}.inc; fi
-		if [[ -f "${f%.qc}.qh" ]];    then echo -e "#include <${CTX}${f%.qc}.qh>"                               >> ${MOD}.qh; fi
-		if [[ -f "cl_$f" ]];          then echo -e "#ifdef CSQC\n    #include <${CTX}cl_$f>\n#endif"            >> ${MOD}.inc; fi
-		if [[ -f "cl_${f%.qc}.qh" ]]; then echo -e "#ifdef CSQC\n    #include <${CTX}cl_${f%.qc}.qh>\n#endif"   >> ${MOD}.qh; fi
-		if [[ -f "sv_$f" ]];          then echo -e "#ifdef SVQC\n    #include <${CTX}sv_$f>\n#endif"            >> ${MOD}.inc; fi
-		if [[ -f "sv_${f%.qc}.qh" ]]; then echo -e "#ifdef SVQC\n    #include <${CTX}sv_${f%.qc}.qh>\n#endif"   >> ${MOD}.qh; fi
-		if [[ -f "ui_$f" ]];          then echo -e "#ifdef MENUQC\n    #include <${CTX}ui_$f>\n#endif"          >> ${MOD}.inc; fi
-		if [[ -f "ui_${f%.qc}.qh" ]]; then echo -e "#ifdef MENUQC\n    #include <${CTX}ui_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
+		if [[ -f "$f" ]];             then printf "#include <%s>\n"                            "${CTX}$f"             >> ${MOD}.inc; fi
+		if [[ -f "${f%.qc}.qh" ]];    then printf "#include <%s>\n"                            "${CTX}${f%.qc}.qh"    >> ${MOD}.qh;  fi
+
+		if [[ -f "cl_$f" ]];          then printf "#ifdef CSQC\n    #include <%s>\n#endif\n"   "${CTX}cl_$f"          >> ${MOD}.inc; fi
+		if [[ -f "cl_${f%.qc}.qh" ]]; then printf "#ifdef CSQC\n    #include <%s>\n#endif\n"   "${CTX}cl_${f%.qc}.qh" >> ${MOD}.qh;  fi
+		if [[ -f "sv_$f" ]];          then printf "#ifdef SVQC\n    #include <%s>\n#endif\n"   "${CTX}sv_$f"          >> ${MOD}.inc; fi
+		if [[ -f "sv_${f%.qc}.qh" ]]; then printf "#ifdef SVQC\n    #include <%s>\n#endif\n"   "${CTX}sv_${f%.qc}.qh" >> ${MOD}.qh;  fi
+		if [[ -f "ui_$f" ]];          then printf "#ifdef MENUQC\n    #include <%s>\n#endif\n" "${CTX}ui_$f"          >> ${MOD}.inc; fi
+		if [[ -f "ui_${f%.qc}.qh" ]]; then printf "#ifdef MENUQC\n    #include <%s>\n#endif\n" "${CTX}ui_${f%.qc}.qh" >> ${MOD}.qh;  fi
 	done
 
 	declare -l rec=1
