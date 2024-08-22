@@ -2,7 +2,7 @@
 #include <server/command/banning.qc>
 #include <server/command/cmd.qc>
 #ifdef SVQC
-    #include <server/command/sv_cmd.qc>
+	#include <server/command/sv_cmd.qc>
 #endif
 #include <server/command/common.qc>
 #include <server/command/getreplies.qc>

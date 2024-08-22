@@ -5,10 +5,10 @@
 #include <common/turrets/targettrigger.qc>
 #include <common/turrets/turrets.qc>
 #ifdef CSQC
-    #include <common/turrets/cl_turrets.qc>
+	#include <common/turrets/cl_turrets.qc>
 #endif
 #ifdef SVQC
-    #include <common/turrets/sv_turrets.qc>
+	#include <common/turrets/sv_turrets.qc>
 #endif
 #include <common/turrets/util.qc>
 

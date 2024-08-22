@@ -2,12 +2,12 @@
 #include <lib/csqcmodel/interpolate.qh>
 #include <lib/csqcmodel/model.qh>
 #ifdef CSQC
-    #include <lib/csqcmodel/cl_model.qh>
+	#include <lib/csqcmodel/cl_model.qh>
 #endif
 #ifdef SVQC
-    #include <lib/csqcmodel/sv_model.qh>
+	#include <lib/csqcmodel/sv_model.qh>
 #endif
 #include <lib/csqcmodel/player.qh>
 #ifdef CSQC
-    #include <lib/csqcmodel/cl_player.qh>
+	#include <lib/csqcmodel/cl_player.qh>
 #endif

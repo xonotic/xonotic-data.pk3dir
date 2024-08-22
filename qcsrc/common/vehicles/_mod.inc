@@ -2,10 +2,10 @@
 #include <common/vehicles/all.qc>
 #include <common/vehicles/vehicles.qc>
 #ifdef CSQC
-    #include <common/vehicles/cl_vehicles.qc>
+	#include <common/vehicles/cl_vehicles.qc>
 #endif
 #ifdef SVQC
-    #include <common/vehicles/sv_vehicles.qc>
+	#include <common/vehicles/sv_vehicles.qc>
 #endif
 
 #include <common/vehicles/vehicle/_mod.inc>

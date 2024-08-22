@@ -2,8 +2,8 @@
 #include <ecs/systems/input.qc>
 #include <ecs/systems/physics.qc>
 #ifdef CSQC
-    #include <ecs/systems/cl_physics.qc>
+	#include <ecs/systems/cl_physics.qc>
 #endif
 #ifdef SVQC
-    #include <ecs/systems/sv_physics.qc>
+	#include <ecs/systems/sv_physics.qc>
 #endif
