@@ -30,7 +30,7 @@ float autocvar_sv_gibhealth;
 .float CopyBody_nextthink;
 .void(entity this) CopyBody_think;
 void CopyBody_Think(entity this);
-void CopyBody(entity this, float keepvelocity);
+entity CopyBody(entity this, float keepvelocity);
 
 void player_setupanimsformodel(entity this);
 

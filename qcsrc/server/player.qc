@@ -61,10 +61,10 @@ void CopyBody_Think(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 	this.nextthink = time;
 }
-void CopyBody(entity this, float keepvelocity)
+entity CopyBody(entity this, float keepvelocity)
 {
 	if (this.effects & EF_NODRAW)
-		return;
+		return NULL;
 	entity clone = new(body);
 	clone.enemy = this;
 	clone.lip = this.lip;
@@ -141,6 +141,8 @@ void CopyBody(entity this, float keepvelocity)
 	IL_PUSH(g_clones, clone);
 
 	MUTATOR_CALLHOOK(CopyBody, this, clone, keepvelocity);
+
+	return clone;
 }
 
 void player_setupanimsformodel(entity this)
