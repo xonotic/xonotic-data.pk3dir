@@ -5,19 +5,54 @@
 // enable to debug melee range
 //#define SHOTGUN_MELEEDEBUG
 
-void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float isprimary, float ammocount, float damage, float bullets, float spread, float solidpenetration, float force, entity bullet_trail_effect)
+void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity,
+                      float isprimary, float ammocount, float damage,
+                      float falloff_halflife, float falloff_mindist, float falloff_maxdist,
+                      float bullets, float spread,
+                      float spread_pattern, float spread_pattern_scale,
+                      float solidpenetration,
+                      float force, float falloff_forcehalflife,
+                      entity bullet_trail_effect)
 {
 	W_DecreaseAmmo(thiswep, actor, ammocount, weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), damage * bullets, thiswep.m_id);
+	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE,
+		((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), damage * bullets, thiswep.m_id);
 
-	// TRICK: do the antilag outside the regular fireBullet function, so it isn't performed unnecessarily on every single bullet!
+	// TRICK: do the antilag outside the regular fireBullet function,
+	// so it isn't performed unnecessarily on every single bullet!
 	float lag = antilag_getlag(actor);
 	if(lag && bullets > 0)
 		antilag_takeback_all(actor, lag);
 
-	for(int sc = 0;sc < bullets;sc = sc + 1)
-		fireBullet_antilag(actor, weaponentity, w_shotorg, w_shotdir, spread, solidpenetration, damage, 0, force, thiswep.m_id, bullet_trail_effect, false);
+	if (spread_pattern && spread_pattern_scale > 0)
+	{
+		vector right, up;
+		right = v_right;
+		up = v_up;
+
+		float fixed_spread_factor = (spread * autocvar_g_weaponspreadfactor) / spread_pattern_scale;
+
+		for(int sc = 0; sc < bullets; ++sc)
+		{
+			vector s = W_CalculateSpreadPattern(spread_pattern, sc, bullets);
+			s = s * fixed_spread_factor;
+			fireBullet_falloff(actor, weaponentity,
+			                   w_shotorg, w_shotdir + right * s.y + up * s.z,
+			                   0, solidpenetration, damage,
+			                   falloff_halflife, falloff_mindist, falloff_maxdist,
+			                   0, force, falloff_forcehalflife,
+			                   thiswep.m_id, bullet_trail_effect, false);
+		}
+	}
+	else
+		for(int sc = 0; sc < bullets; ++sc)
+			fireBullet_falloff(actor, weaponentity,
+				w_shotorg, w_shotdir,
+				spread, solidpenetration, damage,
+				falloff_halflife, falloff_mindist, falloff_maxdist,
+				0, force, falloff_forcehalflife,
+				thiswep.m_id, bullet_trail_effect, false);
 
 	if(lag && bullets > 0)
 		antilag_restore_all(actor);
@@ -28,7 +63,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 	if(autocvar_g_casings >= 1)
 	{
 		makevectors(actor.v_angle); // for some reason, this is lost
-		//for(int sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
+		//for(int sc = 0; sc < WEP_CVAR_PRI(shotgun, ammo); ++sc)
 			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), vectoangles(v_forward), 1, actor, weaponentity);
 	}
 }
@@ -163,10 +198,16 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity
 	W_Shotgun_Attack(thiswep, actor, weaponentity, true,
 		WEP_CVAR_PRI(shotgun, ammo),
 		WEP_CVAR_PRI(shotgun, damage),
+		WEP_CVAR_PRI(shotgun, damagefalloff_halflife),
+		WEP_CVAR_PRI(shotgun, damagefalloff_mindist),
+		WEP_CVAR_PRI(shotgun, damagefalloff_maxdist),
 		WEP_CVAR_PRI(shotgun, bullets),
 		WEP_CVAR_PRI(shotgun, spread),
+		WEP_CVAR_PRI(shotgun, spread_pattern),
+		WEP_CVAR_PRI(shotgun, spread_pattern_scale),
 		WEP_CVAR_PRI(shotgun, solidpenetration),
 		WEP_CVAR_PRI(shotgun, force),
+		WEP_CVAR_PRI(shotgun, damagefalloff_forcehalflife),
 		EFFECT_BULLET_WEAK); // actually is secondary, but we trick the last shot into playing full reload sound
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
 }
@@ -183,10 +224,16 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 	W_Shotgun_Attack(thiswep, actor, weaponentity, false,
 		WEP_CVAR_PRI(shotgun, ammo),
 		WEP_CVAR_PRI(shotgun, damage),
+		WEP_CVAR_PRI(shotgun, damagefalloff_halflife),
+		WEP_CVAR_PRI(shotgun, damagefalloff_mindist),
+		WEP_CVAR_PRI(shotgun, damagefalloff_maxdist),
 		WEP_CVAR_PRI(shotgun, bullets),
 		WEP_CVAR_PRI(shotgun, spread),
+		WEP_CVAR_PRI(shotgun, spread_pattern),
+		WEP_CVAR_PRI(shotgun, spread_pattern_scale),
 		WEP_CVAR_PRI(shotgun, solidpenetration),
 		WEP_CVAR_PRI(shotgun, force),
+		WEP_CVAR_PRI(shotgun, damagefalloff_forcehalflife),
 		EFFECT_BULLET_WEAK);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame2);
 }
@@ -224,10 +271,16 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
                     W_Shotgun_Attack(thiswep, actor, weaponentity, true,
 						WEP_CVAR_PRI(shotgun, ammo),
 						WEP_CVAR_PRI(shotgun, damage),
+						WEP_CVAR_PRI(shotgun, damagefalloff_halflife),
+						WEP_CVAR_PRI(shotgun, damagefalloff_mindist),
+						WEP_CVAR_PRI(shotgun, damagefalloff_maxdist),
 						WEP_CVAR_PRI(shotgun, bullets),
 						WEP_CVAR_PRI(shotgun, spread),
+						WEP_CVAR_PRI(shotgun, spread_pattern),
+						WEP_CVAR_PRI(shotgun, spread_pattern_scale),
 						WEP_CVAR_PRI(shotgun, solidpenetration),
 						WEP_CVAR_PRI(shotgun, force),
+						WEP_CVAR_PRI(shotgun, damagefalloff_forcehalflife),
 						EFFECT_BULLET_WEAK);
                     actor.(weaponentity).shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
@@ -244,10 +297,16 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
                     W_Shotgun_Attack(thiswep, actor, weaponentity, false,
 						WEP_CVAR_PRI(shotgun, ammo),
 						WEP_CVAR_PRI(shotgun, damage),
+						WEP_CVAR_PRI(shotgun, damagefalloff_halflife),
+						WEP_CVAR_PRI(shotgun, damagefalloff_mindist),
+						WEP_CVAR_PRI(shotgun, damagefalloff_maxdist),
 						WEP_CVAR_PRI(shotgun, bullets),
 						WEP_CVAR_PRI(shotgun, spread),
+						WEP_CVAR_PRI(shotgun, spread_pattern),
+						WEP_CVAR_PRI(shotgun, spread_pattern_scale),
 						WEP_CVAR_PRI(shotgun, solidpenetration),
 						WEP_CVAR_PRI(shotgun, force),
+						WEP_CVAR_PRI(shotgun, damagefalloff_forcehalflife),
 						EFFECT_BULLET_WEAK);
                     actor.(weaponentity).shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);

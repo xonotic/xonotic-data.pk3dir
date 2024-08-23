@@ -1,6 +1,7 @@
 #include "racetimer.qh"
 
 #include <client/draw.qh>
+#include <common/ent_cs.qh>
 
 // Race timer (#8)
 
@@ -173,6 +174,25 @@ void HUD_RaceTimer ()
 					s = MakeRaceString(race_checkpoint, 0, -1, 0, 0, race_previousbestname);
 				if(race_time)
 					forcetime = TIME_ENCODED_TOSTRING(race_time, false);
+
+				// store checkpoint splits string for later printing
+				// check if we advanced to next cp
+				if (!entcs_IsSpectating(player_localnum) && race_checkpoint_splits_previous != race_checkpoint)
+				{
+					// are we somehow overwriting something? how?
+					if (race_checkpoint_splits[race_checkpoint_splits_previous+1])
+					{
+						LOG_WARNF("race_checkpoint_splits: overwriting #%f %s\n",
+							race_checkpoint_splits_previous+1,
+							race_checkpoint_splits[race_checkpoint_splits_previous+1]);
+						strfree(race_checkpoint_splits[race_checkpoint_splits_previous+1]);
+					}
+
+					strcpy(race_checkpoint_splits[race_checkpoint_splits_previous+1], sprintf("%s %s", forcetime, s));
+
+					// don't use ++ in case that checkpoints have jumps like 10th to 20th
+					race_checkpoint_splits_previous = race_checkpoint;
+				}
 			}
 		}
 		else

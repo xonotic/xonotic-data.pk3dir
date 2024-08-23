@@ -1114,11 +1114,13 @@ void bd_hud_board(vector pos, vector mySize)
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
 			victory_text, winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
-		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'0.3 0.3 1',0.8,DRAWFLAG_ADDITIVE);
+		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'0.3 0.3 1',0.8*panel_fg_alpha,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
 			victory_text, winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
+
+	minigame_show_allspecs(bd_boardpos, bd_boardsize);
 }
 
 
@@ -1142,9 +1144,9 @@ void bd_hud_status(vector pos, vector mySize)
 	if(minigame_self.team != BD_SPECTATOR_TEAM)
 	{
 		mypos = pos;
-		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5*panel_fg_alpha,DRAWFLAG_ADDITIVE);
 		mypos_y += player_fontsize_y;
-		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25*panel_fg_alpha,DRAWFLAG_ADDITIVE);
 	}
 
 	entity e;

@@ -209,7 +209,7 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
 
     // Convert from dgr / sec to dgr / tic
     it.tur_head.aim_speed = (autocvar_g_turrets_unit_ewheel_turnrate);
-    it.tur_head.aim_speed = it.tur_head.aim_speed / (1 / it.ticrate);
+    it.tur_head.aim_speed = it.tur_head.aim_speed / (1 / frametime);
 }
 
 #endif // SVQC

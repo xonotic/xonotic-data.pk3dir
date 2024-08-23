@@ -36,22 +36,9 @@ float autocvar_g_onslaught_teleport_radius;
 float autocvar_g_onslaught_spawn_choose;
 float autocvar_g_onslaught_click_radius;
 
-entity cam;
-
 // =======================
 // CaptureShield Functions
 // =======================
-
-bool clientcamera_send(entity this, entity to, int sf)
-{
-	WriteHeader(MSG_ENTITY, ENT_ONSCAMERA);
-
-	WriteVector(MSG_ENTITY, this.origin);
-
-	WriteAngleVector(MSG_ENTITY, this.angles);
-
-	return true;
-}
 
 bool ons_CaptureShield_Customize(entity this, entity client)
 {
@@ -327,14 +314,15 @@ int ons_ControlPoint_CanBeLinked(entity cp, int teamnum)
 	return 0;
 }
 
+// return values:
+// -2: SAME TEAM, attackable by enemy!
+// -1: SAME TEAM!
+// 0: off limits
+// 1: attack it
+// 2: touch it
+// 3: attack it (HIGH PRIO)
+// 4: touch it (HIGH PRIO)
 int ons_ControlPoint_Attackable(entity cp, int teamnum)
-	// -2: SAME TEAM, attackable by enemy!
-	// -1: SAME TEAM!
-	// 0: off limits
-	// 1: attack it
-	// 2: touch it
-	// 3: attack it (HIGH PRIO)
-	// 4: touch it (HIGH PRIO)
 {
 	int a;
 
@@ -555,6 +543,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 		sound(this, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILT, VOL_BASE, ATTEN_NORM);
 		this.owner.iscaptured = true;
 		this.solid = SOLID_BBOX;
+		setorigin(this, this.origin); // setorigin after change to solid field to ensure area grid linking
 
 		Send_Effect(EFFECT_CAP(this.owner.team), this.owner.origin, '0 0 0', 1);
 
@@ -601,13 +590,13 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 {
 	entity e = new(onslaught_controlpoint_icon);
 
+	e.solid = SOLID_NOT; // before setsize/setorigin to prevent area grid linking
 	setsize(e, CPICON_MIN, CPICON_MAX);
 	setorigin(e, cp.origin + CPICON_OFFSET);
 
 	e.owner = cp;
 	e.max_health = autocvar_g_onslaught_cp_health;
 	SetResourceExplicit(e, RES_HEALTH, autocvar_g_onslaught_cp_buildhealth);
-	e.solid = SOLID_NOT;
 	e.takedamage = DAMAGE_AIM;
 	e.bot_attack = true;
 	IL_PUSH(g_bot_targets, e);
@@ -803,7 +792,7 @@ void ons_ControlPoint_Setup(entity cp)
 	{
 		setorigin(cp, cp.origin + '0 0 20');
 		cp.noalign = false;
-		droptofloor(cp);
+		DropToFloor_QC_DelayedInit(cp);
 		set_movetype(cp, MOVETYPE_TOSS);
 	}
 
@@ -851,6 +840,15 @@ void ons_Generator_UpdateSprite(entity e)
 		}
 		WaypointSprite_Ping(e.sprite);
 	}
+}
+
+entity cam;
+bool clientcamera_send(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_ONSCAMERA);
+	WriteVector(MSG_ENTITY, this.origin);
+	WriteAngleVector(MSG_ENTITY, this.angles);
+	return true;
 }
 
 void ons_camSetup(entity this)
@@ -1103,7 +1101,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.colormap = 1024 + (teamnum - 1) * 17;
 
 	// generator placement
-	droptofloor(gen);
+	DropToFloor_QC_DelayedInit(gen);
 
 	// waypointsprites
 	WaypointSprite_SpawnFixed(WP_Null, gen.origin + CPGEN_WAYPOINT_OFFSET, gen, sprite, RADARICON_NONE);
@@ -1196,7 +1194,7 @@ bool Onslaught_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
-		TeamScore_AddToTeam(winner_team, ST_ONS_CAPS, +1);
+		TeamScore_AddToTeam(winner_team, ST_ONS_GENS, +1);
 	}
 	else if(winner_team == -1)
 	{
@@ -1590,7 +1588,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 	for(i = 0; i < 16; ++i)
 	{
 		iteration_scale -= i / 16;
-		theta = random() * 2 * M_PI;
+		theta = random() * (2 * M_PI);
 		loc_y = sin(theta);
 		loc_x = cos(theta);
 		loc_z = 0;
@@ -2134,7 +2132,7 @@ void ons_ScoreRules()
 	int teams = TeamBalance_GetAllowedTeams(balance);
 	TeamBalance_Destroy(balance);
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-	    field_team(ST_ONS_CAPS, "destroyed", SFL_SORT_PRIO_PRIMARY);
+	    field_team(ST_ONS_GENS, "generators", SFL_SORT_PRIO_PRIMARY);
 	    field(SP_ONS_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
 	    field(SP_ONS_TAKES,	"takes", 0);
 	});

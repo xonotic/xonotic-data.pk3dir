@@ -2,7 +2,9 @@
 
 #include "net.qh"
 
+#ifdef GAMEQC
 REGISTER_NET_TEMP(registry)
+#endif
 
 #ifdef CSQC
 NET_HANDLE(registry, bool isnew)

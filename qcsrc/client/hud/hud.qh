@@ -122,7 +122,7 @@ float weapontime;
 float weaponprevtime;
 
 float timer;
-float teamnagger;
+int teamnagger;
 
 int hudShiftState;
 const int S_SHIFT = 1;

@@ -279,8 +279,7 @@ SOUND(SPAWN, "misc/spawn");
 SOUND(TALK, "misc/talk");
 SOUND(TALK2, "misc/talk2");
 
+SOUND(BLIND, "misc/blind");
 SOUND(TELEPORT, "misc/teleport");
-
 SOUND(INVSHOT, "misc/invshot");
-
 SOUND(JETPACK_FLY, "misc/jetpack_fly");

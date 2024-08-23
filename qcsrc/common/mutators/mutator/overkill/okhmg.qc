@@ -80,10 +80,10 @@ METHOD(OverkillHeavyMachineGun, wr_think, void(entity thiswep, entity actor, .en
 			animdecide_setaction(actor, ANIMACTION_SHOOT, true);
 		}
 	}
-    if (WEP_CVAR(okhmg, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR_PRI(okhmg, ammo))
+	if (WEP_CVAR(okhmg, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR_PRI(okhmg, ammo))
 	{
 		// Forced reload.
-        thiswep.wr_reload(thiswep, actor, weaponentity);
+		thiswep.wr_reload(thiswep, actor, weaponentity);
 		return;
 	}
 	if (fire & 1) // Primary attack
@@ -130,20 +130,20 @@ METHOD(OverkillHeavyMachineGun, wr_checkammo2, bool(entity thiswep, entity actor
 
 METHOD(OverkillHeavyMachineGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, weaponentity, WEP_CVAR_PRI(okhmg, ammo), SND_RELOAD);
+	W_Reload(actor, weaponentity, WEP_CVAR_PRI(okhmg, ammo), SND_RELOAD);
 }
 
 METHOD(OverkillHeavyMachineGun, wr_suicidemessage, Notification(entity thiswep))
 {
-    return WEAPON_THINKING_WITH_PORTALS;
+	return WEAPON_THINKING_WITH_PORTALS;
 }
 
 METHOD(OverkillHeavyMachineGun, wr_killmessage, Notification(entity thiswep))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-        return WEAPON_OVERKILL_HMG_MURDER_SNIPE;
-    else
-        return WEAPON_OVERKILL_HMG_MURDER_SPRAY;
+	if(w_deathtype & HITTYPE_SECONDARY)
+		return WEAPON_OVERKILL_HMG_MURDER_SNIPE;
+	else
+		return WEAPON_OVERKILL_HMG_MURDER_SPRAY;
 }
 
 #endif
@@ -151,10 +151,10 @@ METHOD(OverkillHeavyMachineGun, wr_killmessage, Notification(entity thiswep))
 
 METHOD(OverkillHeavyMachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2 = w_org + w_backoff * 2;
-    pointparticles(EFFECT_MACHINEGUN_IMPACT, org2, w_backoff * 1000, 1);
-    if(!w_issilent)
-        sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
+	vector org2 = w_org + w_backoff * 2;
+	pointparticles(EFFECT_MACHINEGUN_IMPACT, org2, w_backoff * 1000, 1);
+	if(!w_issilent)
+		sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
 }
 
 #endif

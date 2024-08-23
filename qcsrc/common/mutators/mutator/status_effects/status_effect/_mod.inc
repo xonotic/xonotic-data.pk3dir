@@ -1,4 +1,5 @@
 // generated file; do not modify
 #include <common/mutators/mutator/status_effects/status_effect/burning.qc>
 #include <common/mutators/mutator/status_effects/status_effect/spawnshield.qc>
+#include <common/mutators/mutator/status_effects/status_effect/stunned.qc>
 #include <common/mutators/mutator/status_effects/status_effect/superweapons.qc>

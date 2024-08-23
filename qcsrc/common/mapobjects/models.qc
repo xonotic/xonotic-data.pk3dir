@@ -44,12 +44,20 @@ void g_clientmodel_use(entity this, entity actor, entity trigger)
 	if (this.antiwall_flag == 1)
 	{
 		this.inactive = 1;
-		this.solid = SOLID_NOT;
+		if (this.solid != SOLID_NOT)
+		{
+			this.solid = SOLID_NOT;
+			setorigin(this, this.origin); // unlink
+		}
 	}
 	else if (this.antiwall_flag == 2)
 	{
 		this.inactive = 0;
-		this.solid = this.default_solid;
+		if (this.solid != this.default_solid)
+		{
+			this.solid = this.default_solid;
+			setorigin(this, this.origin); // link
+		}
 	}
 	g_clientmodel_setcolormaptoactivator(this, actor, trigger);
 }
@@ -167,25 +175,29 @@ void g_model_init(entity ent, float sol)
 {
 	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS);
 	if(!ent.scale) ent.scale = ent.modelscale;
-	SetBrushEntityModel(ent,true);
-	ent.use = g_model_setcolormaptoactivator;
-	InitializeEntity(ent, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR);
+
 	if(!ent.solid) ent.solid = (sol);
 	else if(ent.solid < 0) ent.solid = SOLID_NOT;
+	SetBrushEntityModel(ent,true); // called after setting .solid to ensure correct area grid linking/unlinking
+
+	ent.use = g_model_setcolormaptoactivator;
+	InitializeEntity(ent, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR);
 }
 
 void g_clientmodel_init(entity ent, float sol)
 {
 	if(ent.geomtype && autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS);
 	if(!ent.scale) ent.scale = ent.modelscale;
-	SetBrushEntityModel(ent,true);
+
+	if(!ent.solid) ent.solid = (sol);
+	else if(ent.solid < 0) ent.solid = SOLID_NOT;
+	SetBrushEntityModel(ent,true); // called after setting .solid to ensure correct area grid linking/unlinking
+
 	ent.use = g_clientmodel_use;
 	setthink(ent, g_clientmodel_think);
 	ent.nextthink = time;
 	ent.oldorigin = ent.origin; // don't run an initial double update
 	InitializeEntity(ent, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR);
-	if(!ent.solid) ent.solid = (sol);
-	else if(ent.solid < 0) ent.solid = SOLID_NOT;
 	if(!ent.bgmscriptsustain) ent.bgmscriptsustain = 1;
 	else if(ent.bgmscriptsustain < 0) ent.bgmscriptsustain = 0;
 	Net_LinkEntity(ent, true, 0, g_clientmodel_genericsendentity);
@@ -230,8 +242,6 @@ void Ent_Wall_PreDraw(entity this)
 			{
 				if (vdist(player_dist_math, >=, this.fade_start))
 					alph = 0;
-				else
-					alph = 1;
 			}
 			else
 			{
@@ -241,13 +251,12 @@ void Ent_Wall_PreDraw(entity this)
 							   / (this.fade_end - this.fade_start), 1)) / 100.0;
 			}
 		}
-		else
-		{
-			alph = 1;
-		}
 	}
 	this.alpha = alph;
-	this.drawmask = (alph <= 0) ? 0 : MASK_NORMAL;
+	if(this.alpha >= ALPHA_MIN_VISIBLE)
+		this.drawmask = MASK_NORMAL;
+	else
+		this.drawmask = 0;
 }
 
 void Ent_Wall_Draw(entity this)
@@ -278,11 +287,6 @@ void Ent_Wall_Draw(entity this)
 	}
 	else
 		this.alpha = 1;
-
-	if(this.alpha >= ALPHA_MIN_VISIBLE)
-		this.drawmask = MASK_NORMAL;
-	else
-		this.drawmask = 0;
 }
 
 void Ent_Wall_Remove(entity this)

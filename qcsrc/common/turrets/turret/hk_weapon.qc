@@ -33,7 +33,6 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
         missile.velocity = actor.tur_shotdir_updated * (actor.shot_speed * 0.75);
         missile.angles = vectoangles(missile.velocity);
         missile.cnt = time + 30;
-        missile.ticrate = max(autocvar_sys_ticrate, 0.05);
         missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_AI;
 
         if (!isPlayer)
@@ -53,7 +52,7 @@ void turret_hk_missile_think(entity this)
     float pt_seek;  // Pitch of Trace SEEK (How mutch to angele left, right up, down trace towards v_forward)
     float myspeed;
 
-    this.nextthink = time + this.ticrate;
+    this.nextthink = time;
 
     //if (this.cnt < time)
     //	turret_hk_missile_explode();

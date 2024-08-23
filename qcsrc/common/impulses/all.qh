@@ -14,6 +14,11 @@ REGISTRY_CHECK(IMPULSES)
 .void(entity this) impulse_handle;
 
 #if defined(CSQC)
+void Impulse_Send(entity imp)
+{
+	localcmd(sprintf("\nimpulse %d\n", imp.impulse));
+}
+
 #define IMPULSE_ALIAS(alias, id) localcmd("\nalias " #alias " \"", id ,"\"\n")
 #else
 #define IMPULSE_ALIAS(alias, id)

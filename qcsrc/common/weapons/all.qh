@@ -390,7 +390,7 @@ ENUMCLASS_END(WFRAME)
     #define G_SHOOTFROMFIXEDORIGIN autocvar_cl_shootfromfixedorigin
 #endif
 
-vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
+vector shotorg_adjust(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
 
 REPLICATE_INIT(int, cvar_cl_gunalign);

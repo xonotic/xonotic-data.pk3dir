@@ -309,11 +309,15 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 			this.colormap = 1024 + autocvar_cl_forcemyplayercolors;
 		else if (autocvar_cl_forceuniqueplayercolors && !islocalplayer && !gametype.m_1v1)
 		{
-			// Assign each enemy unique colors
+			// Assign each enemy an unique color combination
 			// pick colors from 0 to 14 since 15 is the rainbow color
 			// pl01 0 1, pl02 1 2, ..., pl14 13 14, pl15 14 0
 			// pl16 0 2, pl17 1 3, ..., pl29 13  0, pl30 14 1
-			int num = this.entnum - 1;
+			int num;
+			if (this.isplayermodel & ISPLAYER_CLIENT)
+				num = this.entnum - 1;
+			else
+				num = this.sv_entnum - 1;
 			int c1 = num % 15;
 			int q = floor(num / 15);
 			int c2 = (c1 + 1 + q) % 15;
@@ -570,6 +574,11 @@ void CSQCModel_Effects_Apply(entity this)
 	{
 		boxparticles(particleeffectnum(EFFECT_EF_FLAME), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
 		//pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', bound(0, frametime, 0.1));
+	}
+	if(eff & EF_SHOCK)
+	{
+		boxparticles(particleeffectnum(EFFECT_ARC_LIGHTNING), this, this.absmin, this.absmax, '0 0 0', '0 0 0', bound(0, frametime, 0.1), 0);
+		//pointparticles(EFFECT_ARC_LIGHTNING, this.origin, '0 0 0', bound(0, frametime, 0.1));
 	}
 	if(eff & EF_STARDUST)
 	{
