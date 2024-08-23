@@ -707,24 +707,6 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		mirrordamage = M_ARGV(5, float);
 		force = M_ARGV(6, vector);
 
-		// Dr. Jaska:
-		// Quake 3 DeFRaG's cpm physic's rocketlauncher has 1.2x horizontal force multiplier
-		// This aims to reproduce it in Quake 3 DeFRaG cpm and XDF physics if damagepush_speedfactor is 0
-		// CPMA cpm physics should be active in .arena maps and Quake 3 DeFRaG cpm physics in .defi maps
-		// It is only intended to be used with 250 base force for devastator which matches Q3 if our
-		// target's damageforcescale is also 2
-		if(force)
-		if(q3compat & Q3COMPAT_DEFI)
-		if(autocvar_g_balance_damagepush_speedfactor == 0)
-		if(attacker.(weaponentity).m_weapon == WEP_DEVASTATOR)
-		if(autocvar_g_balance_devastator_force == 250)
-		if(targ.damageforcescale == 2)
-		if((cvar_string("g_mod_physics") == "CPMA") || (cvar_string("g_mod_physics") == "XDF"))
-		{
-			force.x *= 1.2;
-			force.y *= 1.2;
-		}
-
 		if(IS_PLAYER(targ) && damage > 0 && attacker)
 		{
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
@@ -885,7 +867,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 // Returns total damage applies to creatures
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
-								float inflictorselfdamage, float forceintensity, float forcezscale, int deathtype, .entity weaponentity, entity directhitentity)
+								float inflictorselfdamage, float forceintensity, vector forcexyzscale, int deathtype, .entity weaponentity, entity directhitentity)
 {
 	entity	targ;
 	vector	force;
@@ -969,10 +951,10 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					force = force * (finaldmg / coredamage) * forceintensity;
 					hitloc = nearest;
 
-					// apply special scaling along the z axis if set
-					// NOTE: 0 value is not allowed for compatibility, in the case of weapon cvars not being set
-					if(forcezscale)
-						force.z *= forcezscale;
+					// apply special force scalings
+					force.x *= forcexyzscale.x;
+					force.y *= forcexyzscale.y;
+					force.z *= forcexyzscale.z;
 
 					if(targ != directhitentity)
 					{
@@ -1076,7 +1058,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 float RadiusDamage(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 {
 	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, 
-									cantbe, mustbe, false, forceintensity, 1, deathtype, weaponentity, directhitentity);
+									cantbe, mustbe, false, forceintensity, '1 1 1', deathtype, weaponentity, directhitentity);
 }
 
 bool Heal(entity targ, entity inflictor, float amount, float limit)
