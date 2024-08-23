@@ -225,19 +225,11 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 			IL_REMOVE(g_damagedbycontents, this);
 		this.damagedbycontents = false;
 
-		if (autocvar_g_respawn_ghosts)
+		if(autocvar_g_respawn_ghosts
+		&& autocvar_g_respawn_ghosts_gib
+		&& !(this.effects & EF_NODRAW)) // only spawn one ghost
 		{
-			//this.solid = SOLID_NOT; // already set above
-			//this.takedamage = DAMAGE_NO;
-			//this.damagedbycontents = false;
-			set_movetype(this, MOVETYPE_FLY);
-			this.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
-			this.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
-			this.effects |= CSQCMODEL_EF_RESPAWNGHOST;
-			this.alpha = min(this.alpha, autocvar_g_respawn_ghosts_alpha);
-			Send_Effect(EFFECT_RESPAWN_GHOST, this.origin, '0 0 0', 1);
-			if(autocvar_g_respawn_ghosts_time > 0)
-				SUB_SetFade(this, time + autocvar_g_respawn_ghosts_time, autocvar_g_respawn_ghosts_fadetime);
+			SpawnGhost(this);
 
 			CopyBody(this, 1);
 			this.effects |= EF_NODRAW; // prevent another CopyBody and 2nd ghost spawns
@@ -634,6 +626,25 @@ bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 
 	GiveResourceWithLimit(targ, RES_HEALTH, amount, limit);
 	return true;
+}
+
+void SpawnGhost(entity this)
+{
+	// effects are disabled or one ghost was already spawned
+	if (this.effects & EF_NODRAW)
+		return;
+
+	this.solid = SOLID_NOT;
+	this.takedamage = DAMAGE_NO;
+	this.damagedbycontents = false;
+	set_movetype(this, MOVETYPE_FLY);
+	this.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
+	this.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
+	this.effects |= CSQCMODEL_EF_RESPAWNGHOST;
+	this.alpha = min(this.alpha, autocvar_g_respawn_ghosts_alpha);
+	Send_Effect(EFFECT_RESPAWN_GHOST, this.origin, '0 0 0', 1);
+	if(autocvar_g_respawn_ghosts_time > 0)
+		SUB_SetFade(this, time + autocvar_g_respawn_ghosts_time, autocvar_g_respawn_ghosts_fadetime);
 }
 
 void precache_playermodel(string m)
