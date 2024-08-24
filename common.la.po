@@ -1671,12 +1671,12 @@ msgstr "Superstes"
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
 msgstr ""
-"Supertites et venatores discerne, posteriores occide, ne omnes collegae tui "
+"Superstites et venatores discerne, posteriores occide, ne omnes collegae tui "
 "moriantur"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Survival"
-msgstr "Supertites"
+msgstr "Superstites"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"

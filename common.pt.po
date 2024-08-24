@@ -4647,7 +4647,7 @@ msgstr "^BGEstás em fila de espera para te juntares à equipa ^TC^TT^BG."
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
 msgid "%s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "%s^K2 escolheu primeiro ^TC^TT^K2."
 
 #: qcsrc/common/notifications/all.inc:734
 msgid "^K2You're queued to join any available team."
