@@ -602,28 +602,6 @@ bool PM_check_specialcommand(entity this, int buttons)
 	return false;
 }
 
-void PM_check_nickspam(entity this)
-{
-#ifdef SVQC
-	if (time >= this.nickspamtime)
-		return;
-	if (this.nickspamcount >= autocvar_g_nick_flood_penalty_yellow)
-	{
-		// slight annoyance for nick change scripts
-		PHYS_CS(this).movement = -1 * PHYS_CS(this).movement;
-		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = PHYS_INPUT_BUTTON_HOOK(this) = PHYS_INPUT_BUTTON_USE(this) = false;
-
-		if (this.nickspamcount >= autocvar_g_nick_flood_penalty_red) // if you are persistent and the slight annoyance above does not stop you, I'll show you!
-		{
-			this.v_angle_x = random() * 360;
-			this.v_angle_y = random() * 360;
-			// at least I'm not forcing retardedview by also assigning to angles_z
-			this.fixangle = true;
-		}
-	}
-#endif
-}
-
 void PM_check_punch(entity this, float dt)
 {
 #ifdef SVQC

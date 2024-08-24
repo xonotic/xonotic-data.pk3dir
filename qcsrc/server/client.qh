@@ -316,10 +316,6 @@ bool independent_players;
 
 .int killcount;
 
-//flood fields
-.float nickspamtime; // time of last nick change
-.float nickspamcount;
-
 void SendWelcomeMessage(entity this, int msg_type);
 
 // respawning
