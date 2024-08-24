@@ -74,7 +74,7 @@ fi
 # make sure progs are latest
 make "-j$(nproc)" qc
 
-HASH="$(git rev-parse --short=7 HEAD)"
+HASH="$(git describe --tags --dirty='~')"
 BRANCH="$(git branch --show-current | sed 's#/#-#g')"
 [ -z "$BRANCH" ] && BRANCH="headless"
 
@@ -85,6 +85,7 @@ packagercleanup() {
 
 	rm -fv "csprogs-$HASH.dat"
 	rm -fv "progs-$HASH.dat"
+	rm -fv "autoexec/csprogs-$HASH.cfg"
 	rm -fv progs.txt
 	rm -fv changes.diff
 
@@ -96,6 +97,7 @@ trap 'packagercleanup' EXIT INT QUIT TERM
 cp -v "$PWD/csprogs.dat" "csprogs-$HASH.dat"
 cp -v "$PWD/progs.dat" "progs-$HASH.dat"
 printf "%s\n" "$HASH" > progs.txt
+printf "%s\n" "set csqc_progname csprogs-$HASH.dat" > "autoexec/csprogs-$HASH.cfg"
 
 # find list of edited cfg files since last stable release
 # this doesn't handle deleted files and they will not be overridden. FIXME?
@@ -117,7 +119,7 @@ fi
 
 # zip everything into z-git-progspk3.zip
 # shellcheck disable=SC2086 # Intended splitting of EDITEDCFGS
-zip z-git-progspk3.zip csprogs.dat progs.dat menu.dat progs.txt "csprogs-$HASH.dat" "progs-$HASH.dat" $EDITEDCFGS changes.diff
+zip z-git-progspk3.zip csprogs.dat progs.dat menu.dat "autoexec/csprogs-$HASH.cfg" progs.txt "csprogs-$HASH.dat" "progs-$HASH.dat" $EDITEDCFGS changes.diff
 
 # Move the package to Downloads directory for easy sharing and house keeping
 if [ "$(xdg-user-dir DOWNLOAD)" != "$HOME" ] && [ -d "$(xdg-user-dir DOWNLOAD)" ]
