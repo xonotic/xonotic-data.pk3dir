@@ -1473,7 +1473,7 @@ void respawn(entity this)
 		if(autocvar_g_respawn_ghosts
 		&& !(this.effects & EF_NODRAW)) // only spawn one ghost
 		{
-			SpawnGhost(this);
+			TransmuteToGhost(this);
 		}
 		else
 			SUB_SetFade (this, time, 1); // fade out the corpse immediately

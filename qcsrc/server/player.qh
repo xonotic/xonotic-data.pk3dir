@@ -44,7 +44,7 @@ bool PlayerHeal(entity targ, entity inflictor, float amount, float limit);
 
 void precache_all_playermodels(string pattern);
 
-void SpawnGhost(entity this);
+void TransmuteToGhost(entity this);
 
 IntrusiveList g_clones;
 STATIC_INIT(g_clones) { g_clones = IL_NEW(); }

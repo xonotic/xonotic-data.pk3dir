@@ -231,7 +231,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 		&& autocvar_g_respawn_ghosts_gib
 		&& !(this.effects & EF_NODRAW)) // only spawn one ghost
 		{
-			SpawnGhost(this);
+			TransmuteToGhost(this);
 
 			CopyBody(this, 1);
 			this.effects |= EF_NODRAW; // prevent another CopyBody and 2nd ghost spawns
@@ -630,7 +630,7 @@ bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 	return true;
 }
 
-void SpawnGhost(entity this)
+void TransmuteToGhost(entity this)
 {
 	// effects are disabled or one ghost was already spawned
 	if (this.effects & EF_NODRAW)
