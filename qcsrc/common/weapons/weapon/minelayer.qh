@@ -54,7 +54,7 @@ CLASS(MineLayer, Weapon)
     W_PROPS(X, MineLayer, minelayer)
 #undef X
 ENDCLASS(MineLayer)
-REGISTER_WEAPON(MINE_LAYER, minelayer, NEW(MineLayer));
+REGISTER_WEAPON(MINE_LAYER, NEW(MineLayer));
 
 SPAWNFUNC_WEAPON(weapon_minelayer, WEP_MINE_LAYER)
 

@@ -1054,11 +1054,6 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 		force *= 1.5;
 		damage = 0;
 	}
-	else if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY))
-	{
-		force *= 0.5; // too much
-		damage = 0;
-	}
 	else if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) || DEATH_ISWEAPON(deathtype, WEP_OVERKILL_NEX))
 	{
 		force *= 6;

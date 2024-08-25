@@ -39,7 +39,7 @@ CLASS(Tuba, Weapon)
     W_PROPS(X, Tuba, tuba)
 #undef X
 ENDCLASS(Tuba)
-REGISTER_WEAPON(TUBA, tuba, NEW(Tuba));
+REGISTER_WEAPON(TUBA, NEW(Tuba));
 
 SPAWNFUNC_WEAPON(weapon_tuba, WEP_TUBA)
 

@@ -65,7 +65,7 @@ CLASS(Devastator, Weapon)
 #undef X
 
 ENDCLASS(Devastator)
-REGISTER_WEAPON(DEVASTATOR, devastator, NEW(Devastator));
+REGISTER_WEAPON(DEVASTATOR, NEW(Devastator));
 
 SPAWNFUNC_WEAPON(weapon_devastator, WEP_DEVASTATOR)
 SPAWNFUNC_WEAPON(weapon_rocketlauncher, WEP_DEVASTATOR)
