@@ -26,9 +26,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-26 07:22+0200\n"
+"POT-Creation-Date: 2024-08-27 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Темак, 2024\n"
+"Last-Translator: Andrei Stepanov, 2014-2024\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -50,9 +50,8 @@ msgid "^1Couldn't write to %s"
 msgstr "^1Не удалось записать в %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
-#, c-format
-msgid "Title at %s"
-msgstr "Заголовок в %s"
+msgid "Title"
+msgstr ""
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -165,11 +164,11 @@ msgstr "сведения о сервере"
 #: qcsrc/client/hud/panel/infomessages.qc:134
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr "^2Вы помещены в очередь для присоединения к команде %s%s^2"
+msgstr "^2Вы помещены в очередь присоединения к команде %s%s^2"
 
 #: qcsrc/client/hud/panel/infomessages.qc:137
 msgid "^2You're queued to join any available team"
-msgstr "^2Вы помещены в очередь для присоединения к любой доступной команде"
+msgstr "^2Вы помещены в очередь присоединения к любой доступной команде"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -177,7 +176,7 @@ msgid "^1Press ^3%s^1 to join"
 msgstr "^1Для входа в игру — ^3%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139 qcsrc/client/main.qc:1449
-#: qcsrc/common/notifications/all.qh:443
+#: qcsrc/common/notifications/all.qh:446
 msgid "jump"
 msgstr "прыжок"
 
@@ -1528,7 +1527,7 @@ msgid "The amount of captures needed before the match will end"
 msgstr "Число захватов, необходимых для завершения матча"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:179
 msgid "Rankings"
 msgstr "Рейтинг"
 
@@ -1667,11 +1666,11 @@ msgstr "Захватите контрольные точки и уничтожь
 msgid "Onslaught"
 msgstr "Натиск"
 
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:96
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:97
 msgid "Personal best"
 msgstr "Личный рекорд"
 
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:106
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:107
 msgid "Server best"
 msgstr "Рекорд сервера"
 
@@ -1785,21 +1784,21 @@ msgstr "Большая аптечка"
 msgid "Mega health"
 msgstr "Мега-аптечка"
 
-#: qcsrc/common/items/item/jetpack.qh:38 qcsrc/common/items/item/jetpack.qh:41
+#: qcsrc/common/items/item/jetpack.qh:42 qcsrc/common/items/item/jetpack.qh:45
 #: qcsrc/common/util.qc:263
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:123
 msgid "Jetpack"
 msgstr "Реактивный ранец"
 
-#: qcsrc/common/items/item/jetpack.qh:71
+#: qcsrc/common/items/item/jetpack.qh:75
 msgid "Fuel"
 msgstr "Топливо"
 
-#: qcsrc/common/items/item/jetpack.qh:96
+#: qcsrc/common/items/item/jetpack.qh:109
 msgid "Fuel regenerator"
 msgstr "Топливный восстановитель"
 
-#: qcsrc/common/items/item/jetpack.qh:99
+#: qcsrc/common/items/item/jetpack.qh:112
 msgid "Fuel regen"
 msgstr "Топливный восстановитель"
 
@@ -3182,8 +3181,8 @@ msgstr "^BG%s^K1 был предан ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
-msgid "^BG%s^BG%s^BG (%s %s every %s seconds)"
-msgstr "^BG%s^BG%s^BG (%s %s каждые %s секунд(ы))"
+msgid "(%s every %s seconds)"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
@@ -3451,7 +3450,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^F3 has left the join queue after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 покинул очередь из-за бездействия в течении %s секунд"
 
 #: qcsrc/common/notifications/all.inc:431
 #, c-format
@@ -3486,7 +3485,7 @@ msgstr "^BG%s^F3 теперь^BG зритель"
 #: qcsrc/common/notifications/all.inc:436
 #, c-format
 msgid "^BG%s^F3 has left the join queue"
-msgstr ""
+msgstr "^BG%s^F3 покинул очередь присоединения"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -3580,12 +3579,12 @@ msgstr "^F1Выжившие^BG победили в раунде"
 #: qcsrc/common/notifications/all.inc:459
 #: qcsrc/common/notifications/all.inc:819
 msgid "^K2You're not allowed to join a larger team!"
-msgstr ""
+msgstr "^K2Вы не можете присоединиться к большей команде!"
 
 #: qcsrc/common/notifications/all.inc:460
 #: qcsrc/common/notifications/all.inc:820
 msgid "^K2You're not allowed to change teams!"
-msgstr ""
+msgstr "^K2Вы не можете сменить команду!"
 
 #: qcsrc/common/notifications/all.inc:461
 #: qcsrc/common/notifications/all.inc:821
@@ -3593,19 +3592,21 @@ msgid ""
 "^K2Teams are locked, you can't join or change teams until they're unlocked "
 "or the map changes."
 msgstr ""
+"^K2Команды закрыты, вы не можете присоединиться или сменить команду, пока "
+"они не откроются, или не изменится карта."
 
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:822
 msgid "^K2You're already on that team!"
-msgstr ""
+msgstr "^K2Вы уже находить в этой команде!"
 
 #: qcsrc/common/notifications/all.inc:464
 msgid "^F4The teams are now locked."
-msgstr ""
+msgstr "^F4Команды теперь закрыты."
 
 #: qcsrc/common/notifications/all.inc:465
 msgid "^F1The teams are now unlocked."
-msgstr ""
+msgstr "^F1Команды теперь открыты."
 
 #: qcsrc/common/notifications/all.inc:467
 #, c-format
@@ -4559,7 +4560,7 @@ msgstr "^BGВы взяли ^F1Реактивный ранец"
 
 #: qcsrc/common/notifications/all.inc:726
 msgid "^K1Your Xonotic version is incompatible with the server's version!"
-msgstr ""
+msgstr "^K1Ваша версия Xonotic несовместима с версией сервера!!"
 
 #: qcsrc/common/notifications/all.inc:727
 msgid ""
@@ -4588,33 +4589,33 @@ msgstr "^K1Невозможно присоединиться к данной с�
 
 #: qcsrc/common/notifications/all.inc:731
 msgid "^BGYou're queued to join any available team."
-msgstr ""
+msgstr "^2Вы помещены в очередь присоединения к любой доступной команде."
 
 #: qcsrc/common/notifications/all.inc:732
 msgid "^BGYou're queued to join the ^TC^TT^BG team."
-msgstr ""
+msgstr "^BGВы помещены в очередь присоединения к команде ^TC^TT^BG."
 
 #: qcsrc/common/notifications/all.inc:733
 #, c-format
 msgid "%s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "%s^K2 выбрал ^TC^TT^K2 первым."
 
 #: qcsrc/common/notifications/all.inc:733
 msgid "^K2You're queued to join any available team."
-msgstr ""
+msgstr "^K2Вы помещены в очередь присоединения к любой доступной команде."
 
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
 msgid "%s^K2 chose your preferred team first."
-msgstr ""
+msgstr "%s^K2 выбрал желаемую вами команду первым."
 
 #: qcsrc/common/notifications/all.inc:734
 msgid "^K2You're now playing on ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Вы теперь играете в команде ^TC^TT^K2!"
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^BGYou're now playing on ^TC^TT^BG team!"
-msgstr ""
+msgstr "^BGВы теперь играете в команде ^TC^TT^BG!"
 
 #: qcsrc/common/notifications/all.inc:739
 msgid "^BGYou picked up the ball"
@@ -4879,7 +4880,7 @@ msgstr "^BGОсталось всего лишь %s^BG…"
 
 #: qcsrc/common/notifications/all.inc:804
 msgid "^F2Spectating isn't allowed at this time!"
-msgstr ""
+msgstr "^F2В это время наблюдение не разрешено!"
 
 #: qcsrc/common/notifications/all.inc:806
 msgid "^F2Superweapons have broken down"
@@ -4966,144 +4967,145 @@ msgid "^K1You aren't allowed to vote because you are banned in this server"
 msgstr ""
 "^K1Вы не можете голосовать, потому что вы заблокированы на этом сервере"
 
-#: qcsrc/common/notifications/all.qh:421 qcsrc/common/notifications/all.qh:422
+#: qcsrc/common/notifications/all.qh:424 qcsrc/common/notifications/all.qh:425
 #, c-format
 msgid " (near %s)"
 msgstr " (возле %s)"
 
-#: qcsrc/common/notifications/all.qh:429 qcsrc/common/notifications/all.qh:430
+#: qcsrc/common/notifications/all.qh:432 qcsrc/common/notifications/all.qh:433
 msgid "primary"
 msgstr "основной"
 
-#: qcsrc/common/notifications/all.qh:429 qcsrc/common/notifications/all.qh:430
+#: qcsrc/common/notifications/all.qh:432 qcsrc/common/notifications/all.qh:433
 msgid "secondary"
 msgstr "альтернативный"
 
-#: qcsrc/common/notifications/all.qh:432
-msgid "point"
-msgstr "очко"
+#: qcsrc/common/notifications/all.qh:435
+#, c-format
+msgid "%d points"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:432
-msgid "points"
-msgstr "очки"
+#: qcsrc/common/notifications/all.qh:435
+msgid "1 point"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:441
+#: qcsrc/common/notifications/all.qh:444
 msgid "drop flag"
 msgstr "сбросить флаг"
 
-#: qcsrc/common/notifications/all.qh:442
+#: qcsrc/common/notifications/all.qh:445
 msgid "throw nade"
 msgstr "бросить гранату"
 
-#: qcsrc/common/notifications/all.qh:468
+#: qcsrc/common/notifications/all.qh:471
 #, c-format
-msgid "%s^K1 made a TRIPLE FRAG! %s^BG"
-msgstr "%s^K1 совершил ТРОЙНОЕ УБИЙСТВО! %s^BG"
-
-#: qcsrc/common/notifications/all.qh:468
-#, c-format
-msgid "%s^K1 made a TRIPLE SCORE! %s^BG"
-msgstr "%s^K1 набрал ТРИ ОЧКА! %s^BG"
-
-#: qcsrc/common/notifications/all.qh:468
-msgid "TRIPLE FRAG! "
-msgstr "ТРОЙНОЕ УБИЙСТВО! "
-
-#: qcsrc/common/notifications/all.qh:469
-#, c-format
-msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 набрал ПЯТЬ ОЧКОВ ПОДРЯД! %s^BG"
-
-#: qcsrc/common/notifications/all.qh:469
-#, c-format
-msgid "%s^K1 unlocked RAGE! %s^BG"
-msgstr "%s^K1 высвободил свою ЯРОСТЬ! %s^BG"
-
-#: qcsrc/common/notifications/all.qh:469
-msgid "RAGE! "
-msgstr "ЯРОСТЬ! "
-
-#: qcsrc/common/notifications/all.qh:470
-#, c-format
-msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 набрал ДЕСЯТЬ ОЧКОВ ПОДРЯД! %s^BG"
-
-#: qcsrc/common/notifications/all.qh:470
-#, c-format
-msgid "%s^K1 started a MASSACRE! %s^BG"
-msgstr "%s^K1 начал РЕЗНЮ! %s^BG"
-
-#: qcsrc/common/notifications/all.qh:470
-msgid "MASSACRE! "
-msgstr "РЕЗНЯ! "
+msgid "%s^K1 made a TRIPLE FRAG!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:471
 #, c-format
-msgid "%s^K1 executed MAYHEM! %s^BG"
-msgstr "%s^K1 творит БЕСПРЕДЕЛ! %s^BG"
+msgid "%s^K1 made a TRIPLE SCORE!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:471
-#, c-format
-msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 набрал ПЯТНАДЦАТЬ ОЧКОВ ПОДРЯД! %s^BG"
-
-#: qcsrc/common/notifications/all.qh:471
-msgid "MAYHEM! "
-msgstr "БЕСПРЕДЕЛ! "
+msgid "TRIPLE FRAG!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:472
 #, c-format
-msgid "%s^K1 is a BERSERKER! %s^BG"
-msgstr "%s^K1 БЕРСЕРК! %s^BG"
+msgid "%s^K1 made FIVE SCORES IN A ROW!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:472
 #, c-format
-msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 набрал ДВАДЦАТЬ ОЧКОВ ПОДРЯД! %s^BG"
+msgid "%s^K1 unlocked RAGE!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:472
-msgid "BERSERKER! "
-msgstr "БЕРСЕРК! "
+msgid "RAGE!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:473
 #, c-format
-msgid "%s^K1 inflicts CARNAGE! %s^BG"
-msgstr "%s^K1 начинает БОЙНЮ! %s^BG"
+msgid "%s^K1 made TEN SCORES IN A ROW!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:473
 #, c-format
-msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 набрал ДВАДЦАТЬ ПЯТЬ ОЧКОВ ПОДРЯД! %s^BG"
+msgid "%s^K1 started a MASSACRE!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:473
-msgid "CARNAGE! "
-msgstr "БОЙНЯ! "
+msgid "MASSACRE!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:474
 #, c-format
-msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 набрал ТРИДЦАТЬ ОЧКОВ ПОДРЯД! %s^BG"
+msgid "%s^K1 executed MAYHEM!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:474
 #, c-format
-msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
-msgstr "%s^K1 предрекает АРМАГЕДДОН! %s^BG"
+msgid "%s^K1 made FIFTEEN SCORES IN A ROW!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:474
-msgid "ARMAGEDDON! "
-msgstr "АРМАГЕДДОН! "
+msgid "MAYHEM!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:481
+#: qcsrc/common/notifications/all.qh:475
+#, c-format
+msgid "%s^K1 is a BERSERKER!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:475
+#, c-format
+msgid "%s^K1 made TWENTY SCORES IN A ROW!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:475
+msgid "BERSERKER!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:476
+#, c-format
+msgid "%s^K1 inflicts CARNAGE!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:476
+#, c-format
+msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:476
+msgid "CARNAGE!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:477
+#, c-format
+msgid "%s^K1 made THIRTY SCORES IN A ROW!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:477
+#, c-format
+msgid "%s^K1 unleashes ARMAGEDDON!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:477
+msgid "ARMAGEDDON!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:484
 #, c-format
 msgid "%s(^F1Bot^BG)"
 msgstr "%s(^F1Бот^BG)"
 
-#: qcsrc/common/notifications/all.qh:483
+#: qcsrc/common/notifications/all.qh:486
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
 msgstr "%s(Отклик ^F1%d^BG)"
 
-#: qcsrc/common/notifications/all.qh:490
+#: qcsrc/common/notifications/all.qh:493
 #, c-format
 msgid ""
 "\n"
@@ -5112,7 +5114,7 @@ msgstr ""
 "\n"
 "(Здоровье ^1%d^BG / Броня ^2%d^BG)%s"
 
-#: qcsrc/common/notifications/all.qh:492
+#: qcsrc/common/notifications/all.qh:495
 #, c-format
 msgid ""
 "\n"
@@ -5121,73 +5123,73 @@ msgstr ""
 "\n"
 "(^F4Мёртв^BG)%s"
 
-#: qcsrc/common/notifications/all.qh:513 qcsrc/common/notifications/all.qh:526
+#: qcsrc/common/notifications/all.qh:517 qcsrc/common/notifications/all.qh:530
 #, c-format
-msgid "%d score spree! "
-msgstr "Серия очков — %d! "
+msgid "%d score spree!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:525
+#: qcsrc/common/notifications/all.qh:529
 #, c-format
-msgid "%d frag spree! "
-msgstr "Серия фрагов: %d! "
-
-#: qcsrc/common/notifications/all.qh:538
-msgid "First blood! "
-msgstr "Первая кровь! "
-
-#: qcsrc/common/notifications/all.qh:538
-msgid "First score! "
-msgstr "Первое очко! "
+msgid "%d frag spree!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:542
-msgid "First casualty! "
-msgstr "Первая смерть! "
+msgid "First blood!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:542
-msgid "First victim! "
-msgstr "Первая жертва! "
+msgid "First score!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:583
+#: qcsrc/common/notifications/all.qh:546
+msgid "First casualty!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:546
+msgid "First victim!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:589
 #, c-format
-msgid "%s^K1 has %d frags in a row! %s^BG"
-msgstr "%s^K1 совершил %d фрагов подряд! %s^BG"
+msgid "%s^K1 has %d frags in a row!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:584
+#: qcsrc/common/notifications/all.qh:590
 #, c-format
-msgid "%s^K1 made %d scores in a row! %s^BG"
-msgstr "%s^K1 набрал %d очков подряд! %s^BG"
+msgid "%s^K1 made %d scores in a row!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:602
+#: qcsrc/common/notifications/all.qh:608
 #, c-format
-msgid "%s^K1 drew first blood! %s^BG"
-msgstr "%s^K1 пролил первую кровь! %s^BG"
+msgid "%s^K1 drew first blood!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:603
+#: qcsrc/common/notifications/all.qh:609
 #, c-format
-msgid "%s^K1 got the first score! %s^BG"
-msgstr "%s^K1 заработал первое очко! %s^BG"
+msgid "%s^K1 got the first score!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:619
+#: qcsrc/common/notifications/all.qh:625
 #, c-format
 msgid ", ending their %d frag spree"
 msgstr ", прервав серию из %d убийств"
 
-#: qcsrc/common/notifications/all.qh:620
+#: qcsrc/common/notifications/all.qh:626
 #, c-format
 msgid ", ending their %d score spree"
 msgstr ", прервав серию из %d очков"
 
-#: qcsrc/common/notifications/all.qh:634
+#: qcsrc/common/notifications/all.qh:640
 #, c-format
 msgid ", losing their %d frag spree"
 msgstr ", прервав серию из %d убийств"
 
-#: qcsrc/common/notifications/all.qh:635
+#: qcsrc/common/notifications/all.qh:641
 #, c-format
 msgid ", losing their %d score spree"
 msgstr ", прервав серию из %d очков"
 
-#: qcsrc/common/notifications/all.qh:661
+#: qcsrc/common/notifications/all.qh:668
 #, c-format
 msgid " with %d %s"
 msgstr " с %d %s"
@@ -7390,11 +7392,11 @@ msgstr "Режим игры"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "Show all"
-msgstr ""
+msgstr "Показать все"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
 msgid "Show all available gametypes"
-msgstr ""
+msgstr "Показать все доступные режимы игры"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 msgid "Time limit:"

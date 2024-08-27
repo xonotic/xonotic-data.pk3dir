@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-26 07:22+0200\n"
+"POT-Creation-Date: 2024-08-27 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021,2024\n"
 "Language-Team: Japanese (Japan) (http://app.transifex.com/team-xonotic/"
@@ -37,9 +37,8 @@ msgid "^1Couldn't write to %s"
 msgstr "^1%sへの書き込みは失敗しました"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
-#, c-format
-msgid "Title at %s"
-msgstr "%s 秒でタイトル"
+msgid "Title"
+msgstr ""
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -163,7 +162,7 @@ msgid "^1Press ^3%s^1 to join"
 msgstr "^1参加するために ^3%s ^1を押して"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139 qcsrc/client/main.qc:1449
-#: qcsrc/common/notifications/all.qh:443
+#: qcsrc/common/notifications/all.qh:446
 msgid "jump"
 msgstr "ジャンプ"
 
@@ -1506,7 +1505,7 @@ msgid "The amount of captures needed before the match will end"
 msgstr "試合が終了する前に必要な取れの量"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:178
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:179
 msgid "Rankings"
 msgstr "ランキング"
 
@@ -1641,11 +1640,11 @@ msgstr "コントロールポイントを取れて、敵のジェネレーター
 msgid "Onslaught"
 msgstr "猛攻撃 (ONSLAUGHT)"
 
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:96
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:97
 msgid "Personal best"
 msgstr "自己最高"
 
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:106
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:107
 msgid "Server best"
 msgstr "最高のサーバー"
 
@@ -1758,21 +1757,21 @@ msgstr "大きな健康"
 msgid "Mega health"
 msgstr "メガ健康"
 
-#: qcsrc/common/items/item/jetpack.qh:38 qcsrc/common/items/item/jetpack.qh:41
+#: qcsrc/common/items/item/jetpack.qh:42 qcsrc/common/items/item/jetpack.qh:45
 #: qcsrc/common/util.qc:263
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:123
 msgid "Jetpack"
 msgstr "ジェットパック"
 
-#: qcsrc/common/items/item/jetpack.qh:71
+#: qcsrc/common/items/item/jetpack.qh:75
 msgid "Fuel"
 msgstr "燃料"
 
-#: qcsrc/common/items/item/jetpack.qh:96
+#: qcsrc/common/items/item/jetpack.qh:109
 msgid "Fuel regenerator"
 msgstr "燃料再生器"
 
-#: qcsrc/common/items/item/jetpack.qh:99
+#: qcsrc/common/items/item/jetpack.qh:112
 msgid "Fuel regen"
 msgstr "燃料再生"
 
@@ -3146,8 +3145,8 @@ msgstr "^BG%s^K1 は ^BG%s^K1%s%s に裏切られた"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
-msgid "^BG%s^BG%s^BG (%s %s every %s seconds)"
-msgstr "^BG%s^BG%s^BG (%s %s、%s 秒ごと)"
+msgid "(%s every %s seconds)"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
@@ -4918,144 +4917,145 @@ msgstr "^K1このサーバーでは禁止されているため、投票するこ
 msgid "^K1You aren't allowed to vote because you are banned in this server"
 msgstr "^K1このサーバーでは禁止されているため、投票することは許されていません"
 
-#: qcsrc/common/notifications/all.qh:421 qcsrc/common/notifications/all.qh:422
+#: qcsrc/common/notifications/all.qh:424 qcsrc/common/notifications/all.qh:425
 #, c-format
 msgid " (near %s)"
 msgstr " ( %s に近い)"
 
-#: qcsrc/common/notifications/all.qh:429 qcsrc/common/notifications/all.qh:430
+#: qcsrc/common/notifications/all.qh:432 qcsrc/common/notifications/all.qh:433
 msgid "primary"
 msgstr "一次"
 
-#: qcsrc/common/notifications/all.qh:429 qcsrc/common/notifications/all.qh:430
+#: qcsrc/common/notifications/all.qh:432 qcsrc/common/notifications/all.qh:433
 msgid "secondary"
 msgstr "二次"
 
-#: qcsrc/common/notifications/all.qh:432
-msgid "point"
-msgstr "ポイント"
+#: qcsrc/common/notifications/all.qh:435
+#, c-format
+msgid "%d points"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:432
-msgid "points"
-msgstr "ポイント"
+#: qcsrc/common/notifications/all.qh:435
+msgid "1 point"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:441
+#: qcsrc/common/notifications/all.qh:444
 msgid "drop flag"
 msgstr "旗を落とす"
 
-#: qcsrc/common/notifications/all.qh:442
+#: qcsrc/common/notifications/all.qh:445
 msgid "throw nade"
 msgstr "手榴弾を投げる"
 
-#: qcsrc/common/notifications/all.qh:468
+#: qcsrc/common/notifications/all.qh:471
 #, c-format
-msgid "%s^K1 made a TRIPLE FRAG! %s^BG"
-msgstr "%s^K1 がトリプル削除をした! %s^BG"
-
-#: qcsrc/common/notifications/all.qh:468
-#, c-format
-msgid "%s^K1 made a TRIPLE SCORE! %s^BG"
-msgstr "%s^K1 がトリプル得点をした！ %s^BG"
-
-#: qcsrc/common/notifications/all.qh:468
-msgid "TRIPLE FRAG! "
-msgstr "トリプル削除! "
-
-#: qcsrc/common/notifications/all.qh:469
-#, c-format
-msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 は5得点を一列にした! %s^BG"
-
-#: qcsrc/common/notifications/all.qh:469
-#, c-format
-msgid "%s^K1 unlocked RAGE! %s^BG"
-msgstr "%s^K1 が激怒を解除した! %s^BG"
-
-#: qcsrc/common/notifications/all.qh:469
-msgid "RAGE! "
-msgstr "激怒! "
-
-#: qcsrc/common/notifications/all.qh:470
-#, c-format
-msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 は10得点を一列にした! %s^BG"
-
-#: qcsrc/common/notifications/all.qh:470
-#, c-format
-msgid "%s^K1 started a MASSACRE! %s^BG"
-msgstr "%s^K1 が虐殺を開始した! %s^BG"
-
-#: qcsrc/common/notifications/all.qh:470
-msgid "MASSACRE! "
-msgstr "虐殺! "
+msgid "%s^K1 made a TRIPLE FRAG!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:471
 #, c-format
-msgid "%s^K1 executed MAYHEM! %s^BG"
-msgstr "%s^K1 が暴力を実行した! %s^BG"
+msgid "%s^K1 made a TRIPLE SCORE!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:471
-#, c-format
-msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 は15得点を一列にした! %s^BG"
-
-#: qcsrc/common/notifications/all.qh:471
-msgid "MAYHEM! "
-msgstr "暴力! "
+msgid "TRIPLE FRAG!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:472
 #, c-format
-msgid "%s^K1 is a BERSERKER! %s^BG"
-msgstr "%s^K1 はバーサーカーだ! %s^BG"
+msgid "%s^K1 made FIVE SCORES IN A ROW!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:472
 #, c-format
-msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 は20得点を一列にした! %s^BG"
+msgid "%s^K1 unlocked RAGE!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:472
-msgid "BERSERKER! "
-msgstr "バーサーカー! "
+msgid "RAGE!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:473
 #, c-format
-msgid "%s^K1 inflicts CARNAGE! %s^BG"
-msgstr "%s^K1 は大虐殺をやった! %s^BG"
+msgid "%s^K1 made TEN SCORES IN A ROW!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:473
 #, c-format
-msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 は25得点を一列にした! %s^BG"
+msgid "%s^K1 started a MASSACRE!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:473
-msgid "CARNAGE! "
-msgstr "大虐殺! "
+msgid "MASSACRE!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:474
 #, c-format
-msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
-msgstr "%s^K1 は30得点を一列にした! %s^BG"
+msgid "%s^K1 executed MAYHEM!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:474
 #, c-format
-msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
-msgstr "%s^K1 はアルマゲドンを解放する! %s^BG"
+msgid "%s^K1 made FIFTEEN SCORES IN A ROW!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:474
-msgid "ARMAGEDDON! "
-msgstr "アルマゲドン! "
+msgid "MAYHEM!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:481
+#: qcsrc/common/notifications/all.qh:475
+#, c-format
+msgid "%s^K1 is a BERSERKER!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:475
+#, c-format
+msgid "%s^K1 made TWENTY SCORES IN A ROW!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:475
+msgid "BERSERKER!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:476
+#, c-format
+msgid "%s^K1 inflicts CARNAGE!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:476
+#, c-format
+msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:476
+msgid "CARNAGE!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:477
+#, c-format
+msgid "%s^K1 made THIRTY SCORES IN A ROW!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:477
+#, c-format
+msgid "%s^K1 unleashes ARMAGEDDON!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:477
+msgid "ARMAGEDDON!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:484
 #, c-format
 msgid "%s(^F1Bot^BG)"
 msgstr "%s(^F1ボット^BG)"
 
-#: qcsrc/common/notifications/all.qh:483
+#: qcsrc/common/notifications/all.qh:486
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
 msgstr "%s(PING ^F1%d^BG)"
 
-#: qcsrc/common/notifications/all.qh:490
+#: qcsrc/common/notifications/all.qh:493
 #, c-format
 msgid ""
 "\n"
@@ -5064,7 +5064,7 @@ msgstr ""
 "\n"
 "（健康 ^1%d^BG / 鎧 ^2%d^BG）%s"
 
-#: qcsrc/common/notifications/all.qh:492
+#: qcsrc/common/notifications/all.qh:495
 #, c-format
 msgid ""
 "\n"
@@ -5073,73 +5073,73 @@ msgstr ""
 "\n"
 "( ^F4^死んだBG )%s"
 
-#: qcsrc/common/notifications/all.qh:513 qcsrc/common/notifications/all.qh:526
+#: qcsrc/common/notifications/all.qh:517 qcsrc/common/notifications/all.qh:530
 #, c-format
-msgid "%d score spree! "
-msgstr "連続 %d 得点! "
+msgid "%d score spree!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:525
+#: qcsrc/common/notifications/all.qh:529
 #, c-format
-msgid "%d frag spree! "
-msgstr "連続 %d 削除! "
-
-#: qcsrc/common/notifications/all.qh:538
-msgid "First blood! "
-msgstr "初殺! "
-
-#: qcsrc/common/notifications/all.qh:538
-msgid "First score! "
-msgstr "初得点! "
+msgid "%d frag spree!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:542
-msgid "First casualty! "
-msgstr "初敗北! "
+msgid "First blood!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:542
-msgid "First victim! "
-msgstr "初犠牲者! "
+msgid "First score!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:583
+#: qcsrc/common/notifications/all.qh:546
+msgid "First casualty!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:546
+msgid "First victim!"
+msgstr ""
+
+#: qcsrc/common/notifications/all.qh:589
 #, c-format
-msgid "%s^K1 has %d frags in a row! %s^BG"
-msgstr "%s^K1 には %d の削除が連続している! %s^BG"
+msgid "%s^K1 has %d frags in a row!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:584
+#: qcsrc/common/notifications/all.qh:590
 #, c-format
-msgid "%s^K1 made %d scores in a row! %s^BG"
-msgstr "%s^K1 が %d 得点を連続して獲得した! %s^BG"
+msgid "%s^K1 made %d scores in a row!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:602
+#: qcsrc/common/notifications/all.qh:608
 #, c-format
-msgid "%s^K1 drew first blood! %s^BG"
-msgstr "%s^K1 が初殺を引きた! %s^BG"
+msgid "%s^K1 drew first blood!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:603
+#: qcsrc/common/notifications/all.qh:609
 #, c-format
-msgid "%s^K1 got the first score! %s^BG"
-msgstr "%s^K1 が初得点を獲得した! %s^BG"
+msgid "%s^K1 got the first score!"
+msgstr ""
 
-#: qcsrc/common/notifications/all.qh:619
+#: qcsrc/common/notifications/all.qh:625
 #, c-format
 msgid ", ending their %d frag spree"
 msgstr "、連続 %d 削除を終了中"
 
-#: qcsrc/common/notifications/all.qh:620
+#: qcsrc/common/notifications/all.qh:626
 #, c-format
 msgid ", ending their %d score spree"
 msgstr "、連続 %d 得点を終了中"
 
-#: qcsrc/common/notifications/all.qh:634
+#: qcsrc/common/notifications/all.qh:640
 #, c-format
 msgid ", losing their %d frag spree"
 msgstr "、連続 %d 削除を失い中"
 
-#: qcsrc/common/notifications/all.qh:635
+#: qcsrc/common/notifications/all.qh:641
 #, c-format
 msgid ", losing their %d score spree"
 msgstr "、連続 %d 得点を失い中"
 
-#: qcsrc/common/notifications/all.qh:661
+#: qcsrc/common/notifications/all.qh:668
 #, c-format
 msgid " with %d %s"
 msgstr " の %d %s"
