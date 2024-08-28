@@ -60,7 +60,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		rr = RACE_RECORD;
 	float t = stof(db_get(ClientProgsDB, strcat(mi_shortname, rr, "time")));
 
-	if(score && (score < t || !t)) {
+	if(score && (score < t || !t) && !isdemo()) {
 		db_put(ClientProgsDB, strcat(mi_shortname, rr, "time"), ftos(score));
 		if(autocvar_cl_autodemo_delete_keeprecords)
 		{
