@@ -51,7 +51,7 @@ msgstr "^1Не удалось записать в %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 msgid "Title"
-msgstr ""
+msgstr "Заголовок"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -3182,7 +3182,7 @@ msgstr "^BG%s^K1 был предан ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
 msgid "(%s every %s seconds)"
-msgstr ""
+msgstr "(%s каждые %s секунд(ы))"
 
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
@@ -4983,11 +4983,11 @@ msgstr "альтернативный"
 #: qcsrc/common/notifications/all.qh:435
 #, c-format
 msgid "%d points"
-msgstr ""
+msgstr "%d очков"
 
 #: qcsrc/common/notifications/all.qh:435
 msgid "1 point"
-msgstr ""
+msgstr "1 очко"
 
 #: qcsrc/common/notifications/all.qh:444
 msgid "drop flag"
@@ -5000,30 +5000,30 @@ msgstr "бросить гранату"
 #: qcsrc/common/notifications/all.qh:471
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG!"
-msgstr ""
+msgstr "%s^K1 совершил ТРОЙНОЕ УБИЙСТВО!"
 
 #: qcsrc/common/notifications/all.qh:471
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE!"
-msgstr ""
+msgstr "%s^K1 набрал ТРИ ОЧКА!"
 
 #: qcsrc/common/notifications/all.qh:471
 msgid "TRIPLE FRAG!"
-msgstr ""
+msgstr "ТРОЙНОЕ УБИЙСТВО!"
 
 #: qcsrc/common/notifications/all.qh:472
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 набрал ПЯТЬ ОЧКОВ ПОДРЯД!"
 
 #: qcsrc/common/notifications/all.qh:472
 #, c-format
 msgid "%s^K1 unlocked RAGE!"
-msgstr ""
+msgstr "%s^K1 явил свою ЯРОСТЬ!"
 
 #: qcsrc/common/notifications/all.qh:472
 msgid "RAGE!"
-msgstr ""
+msgstr "ЯРОСТЬ!"
 
 #: qcsrc/common/notifications/all.qh:473
 #, c-format

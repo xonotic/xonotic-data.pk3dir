@@ -45,7 +45,7 @@ msgstr "^1Impossible d'écrire dans %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 msgid "Title"
-msgstr ""
+msgstr "Titre"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -3213,7 +3213,7 @@ msgstr "^BG%s^K1 a été trahi par ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
 msgid "(%s every %s seconds)"
-msgstr ""
+msgstr "(%s toutes les %s secondes)"
 
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
@@ -5051,11 +5051,11 @@ msgstr "secondaire"
 #: qcsrc/common/notifications/all.qh:435
 #, c-format
 msgid "%d points"
-msgstr ""
+msgstr "%d points"
 
 #: qcsrc/common/notifications/all.qh:435
 msgid "1 point"
-msgstr ""
+msgstr "1 point"
 
 #: qcsrc/common/notifications/all.qh:444
 msgid "drop flag"
@@ -5068,100 +5068,100 @@ msgstr "lancer la grenade"
 #: qcsrc/common/notifications/all.qh:471
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG!"
-msgstr ""
+msgstr "%s^K1 a fait un TRIPLE FRAG !"
 
 #: qcsrc/common/notifications/all.qh:471
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE!"
-msgstr ""
+msgstr "%s^K1 a fait un TRIPLE SCORE !"
 
 #: qcsrc/common/notifications/all.qh:471
 msgid "TRIPLE FRAG!"
-msgstr ""
+msgstr "TRIPLE FRAG !"
 
 #: qcsrc/common/notifications/all.qh:472
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 a marqué CINQ POINTS D'AFFILÉE !"
 
 #: qcsrc/common/notifications/all.qh:472
 #, c-format
 msgid "%s^K1 unlocked RAGE!"
-msgstr ""
+msgstr "%s^K1 est ENRAGÉ !"
 
 #: qcsrc/common/notifications/all.qh:472
 msgid "RAGE!"
-msgstr ""
+msgstr "RAGE !"
 
 #: qcsrc/common/notifications/all.qh:473
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 a marqué DIX POINTS D'AFFILÉE !"
 
 #: qcsrc/common/notifications/all.qh:473
 #, c-format
 msgid "%s^K1 started a MASSACRE!"
-msgstr ""
+msgstr "%s^K1 a commencé un MASSACRE !"
 
 #: qcsrc/common/notifications/all.qh:473
 msgid "MASSACRE!"
-msgstr ""
+msgstr "MASSACRE !"
 
 #: qcsrc/common/notifications/all.qh:474
 #, c-format
 msgid "%s^K1 executed MAYHEM!"
-msgstr ""
+msgstr "%s^K1 fait du GRABUGE !"
 
 #: qcsrc/common/notifications/all.qh:474
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 a marqué QUINZE POINTS D'AFFILÉE !"
 
 #: qcsrc/common/notifications/all.qh:474
 msgid "MAYHEM!"
-msgstr ""
+msgstr "GRABUGE !"
 
 #: qcsrc/common/notifications/all.qh:475
 #, c-format
 msgid "%s^K1 is a BERSERKER!"
-msgstr ""
+msgstr "%s^K1 est un FOU FURIEUX !"
 
 #: qcsrc/common/notifications/all.qh:475
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 a marqué VINGT POINTS D'AFFILÉE !"
 
 #: qcsrc/common/notifications/all.qh:475
 msgid "BERSERKER!"
-msgstr ""
+msgstr "FOU FURIEUX !"
 
 #: qcsrc/common/notifications/all.qh:476
 #, c-format
 msgid "%s^K1 inflicts CARNAGE!"
-msgstr ""
+msgstr "%s^K1 fait un CARNAGE !"
 
 #: qcsrc/common/notifications/all.qh:476
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 a marqué VINGT-CINQ POINTS D'AFFILÉE !"
 
 #: qcsrc/common/notifications/all.qh:476
 msgid "CARNAGE!"
-msgstr ""
+msgstr "CARNAGE !"
 
 #: qcsrc/common/notifications/all.qh:477
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 a marqué TRENTE POINTS D'AFFILÉE !"
 
 #: qcsrc/common/notifications/all.qh:477
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON!"
-msgstr ""
+msgstr "%s^K1 déclenche L'ARMAGEDDON !"
 
 #: qcsrc/common/notifications/all.qh:477
 msgid "ARMAGEDDON!"
-msgstr ""
+msgstr "ARMAGEDDON !"
 
 #: qcsrc/common/notifications/all.qh:484
 #, c-format
@@ -5194,48 +5194,48 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:517 qcsrc/common/notifications/all.qh:530
 #, c-format
 msgid "%d score spree!"
-msgstr ""
+msgstr "%d points d'affilée !"
 
 #: qcsrc/common/notifications/all.qh:529
 #, c-format
 msgid "%d frag spree!"
-msgstr ""
+msgstr "%d frags d'affilée !"
 
 #: qcsrc/common/notifications/all.qh:542
 msgid "First blood!"
-msgstr ""
+msgstr "Premier sang !"
 
 #: qcsrc/common/notifications/all.qh:542
 msgid "First score!"
-msgstr ""
+msgstr "Premier point !"
 
 #: qcsrc/common/notifications/all.qh:546
 msgid "First casualty!"
-msgstr ""
+msgstr "Première victime !"
 
 #: qcsrc/common/notifications/all.qh:546
 msgid "First victim!"
-msgstr ""
+msgstr "Première victime !"
 
 #: qcsrc/common/notifications/all.qh:589
 #, c-format
 msgid "%s^K1 has %d frags in a row!"
-msgstr ""
+msgstr "%s^K1 a marqué %d frags d'affilée !"
 
 #: qcsrc/common/notifications/all.qh:590
 #, c-format
 msgid "%s^K1 made %d scores in a row!"
-msgstr ""
+msgstr "%s^K1 a marqué %d points d'affilée !"
 
 #: qcsrc/common/notifications/all.qh:608
 #, c-format
 msgid "%s^K1 drew first blood!"
-msgstr ""
+msgstr "%s^K1 a versé le premier sang !"
 
 #: qcsrc/common/notifications/all.qh:609
 #, c-format
 msgid "%s^K1 got the first score!"
-msgstr ""
+msgstr "%s^K1 a marqué le premier point !"
 
 #: qcsrc/common/notifications/all.qh:625
 #, c-format
