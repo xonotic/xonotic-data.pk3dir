@@ -58,7 +58,7 @@ CLASS(Vaporizer, Weapon)
 #undef X
 
 ENDCLASS(Vaporizer)
-REGISTER_WEAPON(VAPORIZER, vaporizer, NEW(Vaporizer));
+REGISTER_WEAPON(VAPORIZER, NEW(Vaporizer));
 
 SPAWNFUNC_WEAPON(weapon_vaporizer, WEP_VAPORIZER)
 SPAWNFUNC_WEAPON(weapon_minstanex, WEP_VAPORIZER)

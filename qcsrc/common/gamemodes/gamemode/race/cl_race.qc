@@ -13,11 +13,12 @@ float race_status_time;
 int race_status_prev;
 string race_status_name_prev;
 
-// Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
+// Check if the given name already exists in race rankings?
+// In that case, where? (otherwise return 0)
 int race_CheckName(string net_name)
 {
 	int rank = 0;
-	string zoned_name = strzone(strdecolorize(entcs_GetName(player_localnum)));
+	string zoned_name = strzone(strdecolorize(net_name));
 	for (int i = RANKINGS_CNT - 1; i >= 0; --i)
 		if (strdecolorize(grecordholder[i]) == zoned_name)
 		{

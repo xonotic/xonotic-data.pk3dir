@@ -160,6 +160,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 	string fullmsgstr = msgstr;
 	string fullcmsgstr = cmsgstr;
+	float mod_time = 0;
 
 	// FLOOD CONTROL
 	int flood = 0;
@@ -188,15 +189,17 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			flood_lmax = autocvar_g_chat_flood_lmax;
 			flood_field = floodcontrol_chat;
 		}
+		// to match cvar descriptions, a value of 3 must allow three-line bursts and not four!
 		flood_burst = max(0, flood_burst - 1);
-		// to match explanation in default.cfg, a value of 3 must allow three-line bursts and not four!
 
+		int lines = -1;
+		mod_time = gettime(GETTIME_FRAMESTART) + flood_burst * flood_spl;
 		// do flood control for the default line size
 		if(msgstr != "")
 		{
 			getWrappedLine_remaining = msgstr;
 			msgstr = "";
-			int lines = 0;
+			lines = 0;
 			while(getWrappedLine_remaining && (!flood_lmax || lines <= flood_lmax))
 			{
 				msgstr = strcat(msgstr, " ", getWrappedLineLen(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
@@ -209,27 +212,20 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				msgstr = strcat(msgstr, "\n");
 				flood = 2;
 			}
+		}
 
-			if (time >= source.(flood_field))
-			{
-				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + lines * flood_spl;
-			}
-			else
-			{
-				flood = 1;
-				msgstr = fullmsgstr;
-			}
+		if (mod_time >= source.(flood_field))
+		{
+			if (lines > 1)
+				flood_spl *= lines;
+			source.(flood_field) = max(gettime(GETTIME_FRAMESTART), source.(flood_field)) + flood_spl;
 		}
 		else
 		{
-			if (time >= source.(flood_field))
-				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + flood_spl;
-			else
-				flood = 1;
+			if (lines >= 0) // if true msgstr was modified
+				msgstr = fullmsgstr;
+			flood = 1;
 		}
-
-		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
-			source.(flood_field) = flood = 0;
 	}
 
 	string sourcemsgstr, sourcecmsgstr;
@@ -276,7 +272,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	{
 		if (autocvar_g_chat_flood_notify_flooder)
 		{
-			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
+			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1",
+				ftos(source.(flood_field) - mod_time), "^3 seconds\n"));
 			ret = 0;
 		}
 		else

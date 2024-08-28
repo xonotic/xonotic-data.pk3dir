@@ -194,7 +194,7 @@ void HUD_CenterPrint()
 		{
 			if (highlightedPanel == panel)
 			{
-				centerprint_SetTitle(sprintf(_("Title at %s"), seconds_tostring(hud_configure_cp_generation_time)));
+				centerprint_SetTitle(_("Title"));
 
 				float r;
 				r = random();

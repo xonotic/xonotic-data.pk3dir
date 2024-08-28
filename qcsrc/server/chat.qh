@@ -26,8 +26,6 @@ float nearest_length[NUM_NEAREST_ENTITIES];
 .float floodcontrol_chat;
 .float floodcontrol_chatteam;
 .float floodcontrol_chattell;
-.float floodcontrol_voice;
-.float floodcontrol_voiceteam;
 
 #define CHAT_NOSPECTATORS() ((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
 

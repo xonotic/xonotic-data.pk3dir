@@ -80,7 +80,7 @@ CLASS(Arc, Weapon)
 #undef X
 
 ENDCLASS(Arc)
-REGISTER_WEAPON(ARC, arc, NEW(Arc));
+REGISTER_WEAPON(ARC, NEW(Arc));
 
 SPAWNFUNC_WEAPON(weapon_arc, WEP_ARC)
 

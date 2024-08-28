@@ -361,7 +361,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MULTITEAM_INFO(DEATH_TEAMKILL,                          N_CONSOLE,  3, 1, "s1 s2 s3loc spree_end", "s2 s1",     "notify_teamkill_%s",   _("^BG%s^K1 was betrayed by ^BG%s^K1%s%s"), "", NAME)
 
-    MSG_INFO_NOTIF(DOMINATION_CAPTURE_TIME,                 N_CONSOLE,  2, 2, "s1 s2 f1 f1points f2", "",       "",     _("^BG%s^BG%s^BG (%s %s every %s seconds)"), "")
+    MSG_INFO_NOTIF(DOMINATION_CAPTURE_TIME,                 N_CONSOLE,  2, 2, "s1 s2 f1points f2", "",       "",     strcat("^BG%s^BG%s^BG ", _("(%s every %s seconds)")), "") // example for translators: Red Team has captured the Strength control point (2 points every 5 seconds)
 
     MSG_INFO_NOTIF(FREEZETAG_FREEZE,                        N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^K1 was frozen by ^BG%s"), "")
     MSG_INFO_NOTIF(FREEZETAG_REVIVED,                       N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^K3 was revived by ^BG%s"), "")
@@ -506,7 +506,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(WEAPON_MORTAR_MURDER_EXPLODE,            N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weapongrenadelauncher",    _("^BG%s%s^K1 ate ^BG%s^K1's Mortar grenade%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_MORTAR_SUICIDE_BOUNCE,            N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weapongrenadelauncher",    _("^BG%s^K1 didn't see their own Mortar grenade%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_MORTAR_SUICIDE_EXPLODE,           N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weapongrenadelauncher",    _("^BG%s^K1 blew themself up with their own Mortar%s%s"), "")
-    MSG_INFO_NOTIF(WEAPON_OVERKILL_HMG_MURDER_SNIPE,        N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponhmg",                _("^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_OVERKILL_HMG_MURDER_SPRAY,        N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponhmg",                _("^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_OVERKILL_MACHINEGUN_MURDER,       N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponuzi",                _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_OVERKILL_NEX_MURDER,              N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponnex",                _("^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"), "")
@@ -721,7 +720,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(ITEM_WEAPON_DROP,                  N_ENABLE,    0, 2, "item_wepname item_wepammo",          CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_GOT,                   N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_NOAMMO,                N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou don't have enough ammo for the ^F1%s"), "")
-    MSG_CENTER_NOTIF(ITEM_WEAPON_PRIMORSEC,             N_ENABLE,    0, 3, "item_wepname f2primsec f3primsec",   CPID_ITEM, "item_centime 0", _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "")
+    MSG_CENTER_NOTIF(ITEM_WEAPON_PRIMORSEC,             N_ENABLE,    0, 3, "item_wepname f2primsec f3primsec",   CPID_ITEM, "item_centime 0", _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "") // example for translators: Electro primary is unable to fire, but its secondary can
     MSG_CENTER_NOTIF(ITEM_WEAPON_UNAVAILABLE,           N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^F1%s^BG is ^F4not available^BG on this map"), "")
 
     MSG_CENTER_NOTIF(JOIN_PREVENT_VERSIONMISMATCH,      N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K1Your Xonotic version is incompatible with the server's version!"), "")
@@ -990,7 +989,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(WEAPON_MORTAR_MURDER_EXPLODE,       N_ENABLE,  NULL,           INFO_WEAPON_MORTAR_MURDER_EXPLODE,      NULL)
     MSG_MULTI_NOTIF(WEAPON_MORTAR_SUICIDE_BOUNCE,       N_ENABLE,  NULL,           INFO_WEAPON_MORTAR_SUICIDE_BOUNCE,      CENTER_DEATH_SELF_GENERIC)
     MSG_MULTI_NOTIF(WEAPON_MORTAR_SUICIDE_EXPLODE,      N_ENABLE,  NULL,           INFO_WEAPON_MORTAR_SUICIDE_EXPLODE,     CENTER_DEATH_SELF_GENERIC)
-    MSG_MULTI_NOTIF(WEAPON_OVERKILL_HMG_MURDER_SNIPE,   N_ENABLE,  NULL,           INFO_WEAPON_OVERKILL_HMG_MURDER_SNIPE,  NULL)
     MSG_MULTI_NOTIF(WEAPON_OVERKILL_HMG_MURDER_SPRAY,   N_ENABLE,  NULL,           INFO_WEAPON_OVERKILL_HMG_MURDER_SPRAY,  NULL)
     MSG_MULTI_NOTIF(WEAPON_OVERKILL_MACHINEGUN_MURDER,  N_ENABLE,  NULL,           INFO_WEAPON_OVERKILL_MACHINEGUN_MURDER, NULL)
     MSG_MULTI_NOTIF(WEAPON_OVERKILL_NEX_MURDER,         N_ENABLE,  NULL,           INFO_WEAPON_OVERKILL_NEX_MURDER,        NULL)
