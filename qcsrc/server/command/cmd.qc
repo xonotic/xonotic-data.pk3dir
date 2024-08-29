@@ -32,6 +32,7 @@
 #include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
+#include <server/race.qh>
 #include <server/scores.qh>
 #include <server/teamplay.qh>
 #include <server/world.qh>
@@ -95,6 +96,26 @@ void ClientCommand_clear_ignores(entity caller, int request)
 		{
 			sprint(caller, "\nUsage:^3 cmd clear_ignores\n");
 			sprint(caller, "  Removes all existing ignored clients whose are kept out of personal chat log.\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_clear_bestcptimes(entity caller, int request)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			race_ClearPlayerRecords(caller);
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd clear_bestcptimes\n");
+			sprint(caller, "  Clear all your checkpoint times for this game.\n");
 			return;
 		}
 	}
@@ -925,6 +946,7 @@ void ClientCommand_(entity caller, int request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 CLIENT_COMMAND(autoswitch, "Whether or not to switch automatically when getting a better weapon") { ClientCommand_autoswitch(caller, request, arguments); }
+CLIENT_COMMAND(clear_bestcptimes, "Clear all your best checkpoint times for this Race/CTS match") { ClientCommand_clear_bestcptimes(caller, request); }
 CLIENT_COMMAND(clear_ignores, "Remove all existing ignores of players") { ClientCommand_clear_ignores(caller, request); }
 CLIENT_COMMAND(clientversion, "Release version of the game") { ClientCommand_clientversion(caller, request, arguments); }
 CLIENT_COMMAND(ignore, "Ignore a player in the game keeping them out of your personal chat log") { ClientCommand_ignore(caller, request, arguments, command); }

@@ -1218,6 +1218,12 @@ spawnfunc(info_player_race)
 		race_lowest_place_spawn = this.race_place;
 }
 
+void race_ClearPlayerRecords(entity player)
+{
+	for(int i = 0; i < MAX_CHECKPOINTS; ++i)
+		player.race_checkpoint_record[i] = 0;
+}
+
 void race_ClearRecords()
 {
 	for(int j = 0; j < MAX_CHECKPOINTS; ++j)
