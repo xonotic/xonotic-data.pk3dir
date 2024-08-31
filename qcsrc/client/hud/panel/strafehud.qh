@@ -8,7 +8,6 @@ int autocvar_hud_panel_strafehud_mode = 0;
 float autocvar_hud_panel_strafehud_range = 90;
 int autocvar_hud_panel_strafehud_style = 2;
 bool autocvar_hud_panel_strafehud_unit_show = true;
-bool autocvar_hud_panel_strafehud_uncapped = false;
 bool autocvar_hud_panel_strafehud_bar_preaccel = true;
 vector autocvar_hud_panel_strafehud_bar_neutral_color = '1 1 1';
 float autocvar_hud_panel_strafehud_bar_neutral_alpha = 0.1;

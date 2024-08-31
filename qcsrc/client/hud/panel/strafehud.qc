@@ -206,7 +206,7 @@ void HUD_StrafeHUD()
 			mode = STRAFEHUD_MODE_VIEW_CENTERED;
 
 		// there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
-		float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10), 0);
+		float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10), 1);
 
 		if(onground)
 		{
@@ -252,9 +252,6 @@ void HUD_StrafeHUD()
 			movespeed = maxspeed;
 		else
 			movespeed = min(movespeed, maxspeed);
-
-		if(!autocvar_hud_panel_strafehud_uncapped)
-			arrow_size = max(arrow_size, 1);
 
 		// determine frametime
 		if((csqcplayer_status == CSQCPLAYERSTATUS_PREDICTED) && (input_timelength > 0))
@@ -580,25 +577,10 @@ void HUD_StrafeHUD()
 		hidden_width = (360 - hudangle) / hudangle * panel_size.x;
 
 		// current angle
-		currentangle_size.x = autocvar_hud_panel_strafehud_angle_width;
-		currentangle_size.y = autocvar_hud_panel_strafehud_angle_height;
+		currentangle_size.x = max(panel_size.x * min(autocvar_hud_panel_strafehud_angle_width, 10), 1);
+		currentangle_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_height, 10), 1);
 		currentangle_size.z = 0;
-		if(!autocvar_hud_panel_strafehud_uncapped)
-		{
-			currentangle_size.x = min(currentangle_size.x, 10);
-			currentangle_size.y = min(currentangle_size.y, 10);
-		}
-		currentangle_size.x *= panel_size.x;
-		currentangle_size.y *= panel_size.y;
-		if(!autocvar_hud_panel_strafehud_uncapped)
-		{
-			currentangle_size.x = max(currentangle_size.x, 1);
-			currentangle_size.y = max(currentangle_size.y, 1);
-		}
-		else
-		{
-			currentangle_size.y = max(currentangle_size.y, 0);
-		}
+
 		if(mode == STRAFEHUD_MODE_VIEW_CENTERED)
 			currentangle_offset = angle / hudangle * panel_size.x;
 		else
@@ -607,9 +589,7 @@ void HUD_StrafeHUD()
 		// best strafe acceleration angle
 		bestangle_offset        =  bestangle / hudangle * panel_size.x + panel_size.x / 2;
 		switch_bestangle_offset = -bestangle / hudangle * panel_size.x + panel_size.x / 2;
-		bestangle_width = panel_size.x * autocvar_hud_panel_strafehud_switch_width;
-		if(!autocvar_hud_panel_strafehud_uncapped)
-			bestangle_width = max(bestangle_width, 1);
+		bestangle_width = max(panel_size.x * autocvar_hud_panel_strafehud_switch_width, 1);
 
 		if((angle > -wishangle && direction == STRAFEHUD_DIRECTION_LEFT) || (angle < -wishangle && direction == STRAFEHUD_DIRECTION_RIGHT))
 		{
@@ -619,11 +599,7 @@ void HUD_StrafeHUD()
 		}
 		// direction indicator
 		direction_size_vertical.x = autocvar_hud_panel_strafehud_direction_width;
-		if(!autocvar_hud_panel_strafehud_uncapped)
-			direction_size_vertical.x = min(direction_size_vertical.x, 1);
-		direction_size_vertical.x *= panel_size.y;
-		if(!autocvar_hud_panel_strafehud_uncapped)
-			direction_size_vertical.x = max(direction_size_vertical.x, 1);
+		direction_size_vertical.x = max(panel_size.y * min(direction_size_vertical.x, 1), 1);
 		direction_size_vertical.y = panel_size.y + direction_size_vertical.x * 2;
 		direction_size_vertical.z = 0;
 		direction_size_horizontal.x = panel_size.x * min(autocvar_hud_panel_strafehud_direction_length, .5);
@@ -806,9 +782,7 @@ void HUD_StrafeHUD()
 		}
 
 		// slick detector
-		slickdetector_height = max(autocvar_hud_panel_strafehud_slickdetector_height, 0);
-		if(!autocvar_hud_panel_strafehud_uncapped)
-			slickdetector_height = min(slickdetector_height, 1);
+		slickdetector_height = bound(0, autocvar_hud_panel_strafehud_slickdetector_height, 1);
 		slickdetector_height *= panel_size.y;
 		if(autocvar_hud_panel_strafehud_slickdetector &&
 		   autocvar_hud_panel_strafehud_slickdetector_range > 0 &&
@@ -816,11 +790,9 @@ void HUD_StrafeHUD()
 		   slickdetector_height > 0 &&
 		   panel_size.x > 0)
 		{
-			float slicksteps = max(autocvar_hud_panel_strafehud_slickdetector_granularity, 0);
+			float slicksteps = bound(0, autocvar_hud_panel_strafehud_slickdetector_granularity, 4);
 			bool slickdetected = false;
 
-			if(!autocvar_hud_panel_strafehud_uncapped)
-				slicksteps = min(slicksteps, 4);
 			slicksteps = 90 / 2 ** slicksteps;
 
 			slickdetected = real_onslick; // don't need to traceline if already touching slick
