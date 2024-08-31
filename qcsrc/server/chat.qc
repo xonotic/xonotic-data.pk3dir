@@ -480,13 +480,26 @@ string PlayerHealth(entity this)
 string WeaponNameFromWeaponentity(entity this, .entity weaponentity)
 {
 	entity wepent = this.(weaponentity);
-	if(!wepent)
-		return "none";
+	if(!wepent || !IS_PLAYER(this))
+		return "N/A";
 	else if(wepent.m_weapon != WEP_Null)
 		return wepent.m_weapon.m_name;
 	else if(wepent.m_switchweapon != WEP_Null)
 		return wepent.m_switchweapon.m_name;
 	return "none"; //REGISTRY_GET(Weapons, wepent.cnt).m_name;
+}
+
+string AmmoNameFromWeaponentity(entity this, .entity weaponentity)
+{
+	entity wepent = this.(weaponentity);
+	string fallback = "N/A";
+	if(!wepent || !IS_PLAYER(this))
+		return fallback;
+	else if(wepent.m_weapon.ammo_type != RES_NONE)
+		return wepent.m_weapon.ammo_type.m_name;
+	else if(wepent.m_switchweapon.ammo_type != RES_NONE)
+		return wepent.m_switchweapon.ammo_type.m_name;
+	return fallback; // REGISTRY_GET(Weapons, wepent.cnt).ammo_type.m_name;
 }
 
 string formatmessage(entity this, string msg)
@@ -549,7 +562,7 @@ string formatmessage(entity this, string msg)
 			case "o": replacement = vtos(this.origin); break;
 			case "O": replacement = sprintf("'%f %f %f'", this.origin.x, this.origin.y, this.origin.z); break;
 			case "w": replacement = WeaponNameFromWeaponentity(this, weaponentity); break;
-			case "W": replacement = GetAmmoName(this.(weaponentity).m_weapon.ammo_type); break;
+			case "W": replacement = AmmoNameFromWeaponentity(this, weaponentity); break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
 			case "S": replacement = ftos(vlen(this.velocity)); break;
