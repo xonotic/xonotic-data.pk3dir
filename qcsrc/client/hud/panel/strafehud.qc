@@ -170,12 +170,12 @@ void HUD_StrafeHUD()
 		vector currentangle_size;
 		float  bestangle;
 		float  prebestangle;
-		float  odd_bestangle;
+		float  opposite_bestangle;
 		float  bestangle_offset;
-		float  switch_bestangle_offset;
-		bool   odd_angles                    = false;
-		float  odd_bestangle_offset          = 0;
-		float  switch_odd_bestangle_offset   = 0;
+		float  changeangle_offset;
+		bool   opposite_direction            = false;
+		float  opposite_bestangle_offset     = 0;
+		float  opposite_changeangle_offset   = 0;
 		float  bestangle_width;
 		float  accelzone_left_offset;
 		float  accelzone_right_offset;
@@ -560,16 +560,16 @@ void HUD_StrafeHUD()
 		// best angle to strafe at
 		// in case of ground friction we may decelerate if the acceleration is smaller than the speed loss from friction
 		real_bestangle = bestangle = (strafespeed > bestspeed ? acos(bestspeed / strafespeed) * RAD2DEG : 0);
-		odd_bestangle = -bestangle;
+		opposite_bestangle = -bestangle;
 		real_prebestangle = prebestangle = (strafespeed > movespeed ? acos(movespeed / strafespeed) * RAD2DEG : 0);
 		if(direction == STRAFEHUD_DIRECTION_LEFT) // the angle becomes negative in case we strafe left
 		{
 			bestangle *= -1;
-			odd_bestangle *= -1;
+			opposite_bestangle *= -1;
 			prebestangle *= -1;
 		}
 		bestangle -= wishangle;
-		odd_bestangle -= wishangle;
+		opposite_bestangle -= wishangle;
 		prebestangle -= wishangle;
 
 		// various offsets and size calculations of hud indicator elements
@@ -587,15 +587,15 @@ void HUD_StrafeHUD()
 			currentangle_offset = bound(-hudangle / 2, angle, hudangle / 2) / hudangle * panel_size.x + panel_size.x / 2;
 
 		// best strafe acceleration angle
-		bestangle_offset        =  bestangle / hudangle * panel_size.x + panel_size.x / 2;
-		switch_bestangle_offset = -bestangle / hudangle * panel_size.x + panel_size.x / 2;
+		bestangle_offset   =  bestangle / hudangle * panel_size.x + panel_size.x / 2;
+		changeangle_offset = -bestangle / hudangle * panel_size.x + panel_size.x / 2;
 		bestangle_width = max(panel_size.x * autocvar_hud_panel_strafehud_switch_width, 1);
 
 		if((angle > -wishangle && direction == STRAFEHUD_DIRECTION_LEFT) || (angle < -wishangle && direction == STRAFEHUD_DIRECTION_RIGHT))
 		{
-			odd_angles = true;
-			odd_bestangle_offset = odd_bestangle / hudangle * panel_size.x + panel_size.x / 2;
-			switch_odd_bestangle_offset = (odd_bestangle + bestangle * 2) / hudangle * panel_size.x + panel_size.x / 2;
+			opposite_direction = true;
+			opposite_bestangle_offset = opposite_bestangle / hudangle * panel_size.x + panel_size.x / 2;
+			opposite_changeangle_offset = (opposite_bestangle + bestangle * 2) / hudangle * panel_size.x + panel_size.x / 2;
 		}
 		// direction indicator
 		direction_size_vertical.x = autocvar_hud_panel_strafehud_direction_width;
@@ -669,9 +669,9 @@ void HUD_StrafeHUD()
 			{
 				shift_offset = -currentangle_offset;
 				bestangle_offset += shift_offset;
-				switch_bestangle_offset += shift_offset;
-				odd_bestangle_offset += shift_offset;
-				switch_odd_bestangle_offset += shift_offset;
+				changeangle_offset += shift_offset;
+				opposite_bestangle_offset += shift_offset;
+				opposite_changeangle_offset += shift_offset;
 			}
 			if(direction == STRAFEHUD_DIRECTION_LEFT)
 				shift_offset += -360 / hudangle * panel_size.x;
@@ -741,31 +741,31 @@ void HUD_StrafeHUD()
 			// only draw indicators if minspeed is reached
 			if(autocvar_hud_panel_strafehud_switch && speed >= minspeed && bestangle_width > 0 && autocvar_hud_panel_strafehud_switch_alpha > 0)
 			{
-				// draw the switch indicator(s)
-				float offset = !odd_angles ? bestangle_offset : odd_bestangle_offset;
-				float switch_offset = !odd_angles ? switch_bestangle_offset : switch_odd_bestangle_offset;
+				// draw the change indicator(s)
+				float offset = !opposite_direction ? changeangle_offset : opposite_changeangle_offset;
+				float opposite_offset = !opposite_direction ? bestangle_offset : opposite_bestangle_offset;
 
 				offset = StrafeHUD_projectOffset(offset, hudangle, false);
-				switch_offset = StrafeHUD_projectOffset(switch_offset, hudangle, false);
+				opposite_offset = StrafeHUD_projectOffset(opposite_offset, hudangle, false);
 
-				// remove switch indicator width from offset
+				// remove change indicator width from offset
 				if(direction == STRAFEHUD_DIRECTION_LEFT)
 				{
-					if(!odd_angles)
-						offset -= bestangle_width;
+					if(!opposite_direction)
+						opposite_offset -= bestangle_width;
 					else
-						switch_offset -= bestangle_width;
+						offset -= bestangle_width;
 				}
 				else
 				{
-					if(!odd_angles)
-						switch_offset -= bestangle_width;
-					else
+					if(!opposite_direction)
 						offset -= bestangle_width;
+					else
+						opposite_offset -= bestangle_width;
 				}
 
 				HUD_Panel_DrawStrafeHUD(
-					switch_offset, bestangle_width, hidden_width,
+					offset, bestangle_width, hidden_width,
 					autocvar_hud_panel_strafehud_switch_color,
 					autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha,
 					STRAFEHUD_STYLE_DRAWFILL, STRAFEHUD_GRADIENT_NONE,
@@ -773,7 +773,7 @@ void HUD_StrafeHUD()
 
 				if(direction == STRAFEHUD_DIRECTION_NONE)
 					HUD_Panel_DrawStrafeHUD(
-						offset, bestangle_width, hidden_width,
+						opposite_offset, bestangle_width, hidden_width,
 						autocvar_hud_panel_strafehud_switch_color,
 						autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha,
 						STRAFEHUD_STYLE_DRAWFILL, STRAFEHUD_GRADIENT_NONE,
@@ -852,7 +852,7 @@ void HUD_StrafeHUD()
 			bool indicator_direction = direction == STRAFEHUD_DIRECTION_LEFT;
 			// invert left/right when strafing backwards or when strafing towards the opposite side indicated by the direction variable
 			// if both conditions are true then it's inverted twice hence not inverted at all
-			if(!fwd != odd_angles)
+			if(!fwd != opposite_direction)
 				indicator_direction = !indicator_direction;
 
 			// draw the direction indicator caps at the sides of the hud
@@ -964,7 +964,7 @@ void HUD_StrafeHUD()
 		float angleheight_offset = currentangle_size.y;
 		float ghost_offset = 0;
 		if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
-			ghost_offset = bound(0, (odd_angles ? odd_bestangle_offset : bestangle_offset), panel_size.x);
+			ghost_offset = bound(0, (opposite_direction ? opposite_bestangle_offset : bestangle_offset), panel_size.x);
 
 		currentangle_offset = StrafeHUD_projectOffset(currentangle_offset, hudangle, false);
 		ghost_offset = StrafeHUD_projectOffset(ghost_offset, hudangle, false);
