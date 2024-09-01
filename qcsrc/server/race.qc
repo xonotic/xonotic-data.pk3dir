@@ -56,13 +56,11 @@ string uid2name(string myuid)
 
 void write_recordmarker(entity pl, float tstart, float dt)
 {
-    GameLogEcho(strcat(":recordset:", ftos(pl.playerid), ":", ftos(dt)));
-
-    // also write a marker into demo files for demotc-race-record-extractor to find
-    stuffcmd(pl,
-             strcat(
-                 strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt), false)),
-                 " ", ftos(tstart), " ", ftos(dt), "\n"));
+	GameLogEcho(strcat(":recordset:", ftos(pl.playerid), ":", ftos(dt)));
+	// also write a marker into demo files for demotc-race-record-extractor to find
+	stuffcmd(pl,
+		sprintf("//%s RECORD SET %s %f %f\n", strconv(2, 0, 0, GetGametype()),
+			TIME_ENCODED_TOSTRING(TIME_ENCODE(dt), false), tstart, dt));
 }
 
 IntrusiveList g_race_targets;
