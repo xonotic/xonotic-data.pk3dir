@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-27 07:22+0200\n"
+"POT-Creation-Date: 2024-09-01 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: vegiburger <v3gagames@yahoo.com>, 2014\n"
 "Language-Team: Dutch (Belgium) (http://app.transifex.com/team-xonotic/"
@@ -1673,23 +1673,23 @@ msgstr ""
 msgid "Team Mayhem"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:56
+#: qcsrc/common/items/item/ammo.qh:56 qcsrc/common/resources/all.inc:29
 msgid "Shells"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:92
+#: qcsrc/common/items/item/ammo.qh:92 qcsrc/common/resources/all.inc:37
 msgid "Bullets"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:124
+#: qcsrc/common/items/item/ammo.qh:124 qcsrc/common/resources/all.inc:45
 msgid "Rockets"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:156
+#: qcsrc/common/items/item/ammo.qh:156 qcsrc/common/resources/all.inc:53
 msgid "Cells"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:188
+#: qcsrc/common/items/item/ammo.qh:188 qcsrc/common/resources/all.inc:61
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
 msgstr ""
@@ -1732,7 +1732,7 @@ msgstr ""
 msgid "Jetpack"
 msgstr ""
 
-#: qcsrc/common/items/item/jetpack.qh:75
+#: qcsrc/common/items/item/jetpack.qh:75 qcsrc/common/resources/all.inc:72
 msgid "Fuel"
 msgstr ""
 
@@ -5025,7 +5025,7 @@ msgstr ""
 msgid ", losing their %d score spree"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:668
+#: qcsrc/common/notifications/all.qh:658
 #, c-format
 msgid " with %d %s"
 msgstr ""
@@ -7212,7 +7212,7 @@ msgid "Default"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:43
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "Unlimited"
 msgstr ""
 
@@ -8307,10 +8307,6 @@ msgstr ""
 msgid "Often"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:188
-msgid "Debug info about sounds"
-msgstr ""
-
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:11
 msgid "Are you sure you want to reset all key bindings?"
 msgstr ""
@@ -8323,376 +8319,353 @@ msgstr ""
 msgid "Quality preset:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:45
-msgid "PRE^OMG!"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:48
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:43
 msgid "PRE^Low"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:50
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:45
 msgid "PRE^Medium"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:52
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:47
 msgid "PRE^Normal"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:54
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:49
 msgid "PRE^High"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:56
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:51
 msgid "PRE^Ultra"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:60
-msgid "PRE^Ultimate"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:55
 msgid "Geometry detail:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:67
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:57
 msgid "Change the smoothness of the curves on the map"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:68
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:58
 msgid "DET^Lowest"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:69
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:59
 msgid "DET^Low"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:70
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:60
 msgid "DET^Normal"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:71
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:61
 msgid "DET^Good"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:72
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:62
 msgid "DET^Best"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:73
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:63
 msgid "DET^Insane"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:77
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:67
 msgid "Player detail:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:79
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:69
 msgid "PDET^Low"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:80
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:70
 msgid "PDET^Medium"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:81
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:71
 msgid "PDET^Normal"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:82
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:72
 msgid "PDET^Good"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:83
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:73
 msgid "PDET^Best"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:87
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:77
 msgid "Texture resolution:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:91
-msgid "RES^Leet"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:92
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:80
 msgid "RES^Lowest"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:93
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:81
 msgid "RES^Very low"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:94
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:82
 msgid "RES^Low"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:95
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:83
 msgid "RES^Normal"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:96
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:84
 msgid "RES^Good"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:97
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:85
 msgid "RES^Best"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:110
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:115
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:120
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:98
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:103
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:108
 msgid "Avoid lossy texture compression"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:117
 msgid "Disable sky for performance and visibility"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:117
 msgid "Show sky"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
-msgid "Show surfaces"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:133
-msgid ""
-"Disable textures completely for very slow hardware. This gives a huge "
-"performance boost, but looks very ugly."
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:136
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:119
 msgid "Use lightmaps"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:137
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:120
 msgid ""
 "Use high resolution lightmaps, which will look pretty but use up some extra "
 "video memory"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:139
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:122
 msgid "Deluxe mapping"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:140
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:123
 msgid "Use per-pixel lighting effects"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:142
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:125
 msgid "Gloss"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:143
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:126
 msgid "Enable the use of glossmaps on textures supporting it"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:146
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Offset mapping"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:147
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:130
 msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:149
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
 msgid "Relief mapping"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:150
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:133
 msgid ""
 "Higher quality offset mapping, which also has a huge impact on performance"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:153
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:136
 msgid "Reflections:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:154
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:137
 msgid ""
 "Reflection and refraction quality, has a huge impact on performance on maps "
 "with reflecting surfaces"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:157
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:140
 msgid "Resolution of reflections/refractions"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:158
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:141
 msgid "Blurred"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:159
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:142
 msgid "REFL^Good"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:160
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:143
 msgid "Sharp"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:164
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:147
 msgid "Decals"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:165
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:148
 msgid "Enable decals (bullet holes and blood)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:166
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:149
 msgid "Decals on models"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:170
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:251
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:153
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:234
 msgid "Distance:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:173
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:156
 msgid "Decals further away than this will not be drawn"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:177
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:160
 msgid "Time:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:180
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:163
 msgid "Time in seconds before decals fade away"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:184
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:167
 msgid "Damage effects:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:186
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:169
 msgid "DMGFX^Disabled"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:187
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:170
 msgid "Skeletal"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:188
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:171
 msgid "DMGFX^All"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:175
 msgid "Realtime dynamic lights"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:193
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:176
 msgid ""
 "Temporary realtime light sources such as explosions, rockets and powerups"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:195
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:178
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:184
 msgid "Shadows"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:196
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:179
 msgid "Shadows cast by realtime dynamic lights"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:182
 msgid "Realtime world lights"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:183
 msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:185
 msgid "Shadows cast by realtime world lights"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:189
 msgid "Use normal maps"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:207
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:190
 msgid ""
 "Directional shading of certain textures to simulate interaction of realtime "
 "light with a bumpy surface"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:209
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Soft shadows"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:195
 msgid "Corona brightness:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:197
 msgid "Flare effects around certain lights"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:217
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
 msgid "Fade coronas according to visibility"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:218
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
 msgid "Corona fading using occlusion queries"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:205
 msgid "Bloom"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:223
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
 msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance."
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:224
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:207
 msgid "Extra postprocessing effects"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:225
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:208
 msgid ""
 "Enables special postprocessing effects for when damaged or under water or "
 "using a powerup"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:230
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:213
 msgid "Motion blur strength - 0.4 recommended"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:231
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid "Motion blur:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:237
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:220
 msgid "Particles"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:238
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:221
 msgid "Spawnpoint effects"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:239
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
 msgid "Particles effects at all spawn points and whenever a player spawns"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:244
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:227
 msgid "Quality:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:247
-#: qcsrc/menu/xonotic/slider_particles.qc:13
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:230
 msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:254
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:237
 msgid "Particles further away than this will not be drawn"
 msgstr ""
 
@@ -8972,7 +8945,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:76
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:92
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:111
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:104
 msgid "Other"
 msgstr ""
 
@@ -9459,105 +9432,97 @@ msgstr ""
 msgid "Use encryption (AES) when available"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
-msgid "Local latency:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:53
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:46
 msgid "HTTP downloads"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:55
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Simultaneous:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Maximum number of concurrent HTTP downloads"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:59
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:52
 msgid "Bandwidth limit:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:73
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Framerate"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:75
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:68
 msgid "Show frames per second"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:76
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
 msgid "Show your rendered frames per second"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:71
 msgid "Maximum:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:85
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "MAXFPS^Unlimited"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:88
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:81
 msgid "Target:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:90
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:83
 msgid "TRGT^Disabled"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:101
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:94
 msgid "Idle limit:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:107
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:100
 msgid "IDLFPS^Unlimited"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:113
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:106
 msgid "Menu tooltips:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:115
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:108
 msgid ""
 "Menu tooltips: disabled, standard or advanced (also shows cvar or console "
 "command bound to the menu item)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:116
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:109
 msgid "TLTIP^Disabled"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:117
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:110
 msgid "TLTIP^Standard"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:118
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:111
 msgid "TLTIP^Advanced"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:121
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:114
 msgid "Show current date and time"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:122
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:115
 msgid "Show current date and time of day, useful on screenshots"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:125
-msgid "Enable developer mode"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:130
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:120
 msgid "Advanced settings..."
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:131
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:121
 msgid "Advanced settings where you can tweak every single variable of the game"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:137
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:127
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
 msgid "Factory reset"
 msgstr ""
@@ -9864,22 +9829,6 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:158
 msgid "Use OpenGL 2.0 shaders (GLSL)"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:164
-msgid "Flip view horizontally"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:165
-msgid "Poor man's left handed mode"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:167
-msgid "Psycho coloring (easter egg)"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:171
-msgid "Trippy vertices (easter egg)"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:149
@@ -10316,34 +10265,6 @@ msgstr ""
 #: qcsrc/menu/xonotic/slider_decibels.qc:82
 #, c-format
 msgid "%s dB"
-msgstr ""
-
-#: qcsrc/menu/xonotic/slider_particles.qc:14
-msgid "PART^OMG"
-msgstr ""
-
-#: qcsrc/menu/xonotic/slider_particles.qc:15
-msgid "PARTQUAL^Low"
-msgstr ""
-
-#: qcsrc/menu/xonotic/slider_particles.qc:16
-msgid "PARTQUAL^Medium"
-msgstr ""
-
-#: qcsrc/menu/xonotic/slider_particles.qc:17
-msgid "PARTQUAL^Normal"
-msgstr ""
-
-#: qcsrc/menu/xonotic/slider_particles.qc:18
-msgid "PARTQUAL^High"
-msgstr ""
-
-#: qcsrc/menu/xonotic/slider_particles.qc:19
-msgid "PARTQUAL^Ultra"
-msgstr ""
-
-#: qcsrc/menu/xonotic/slider_particles.qc:20
-msgid "PARTQUAL^Ultimate"
 msgstr ""
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:13
