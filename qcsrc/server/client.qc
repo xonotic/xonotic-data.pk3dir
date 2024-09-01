@@ -1557,7 +1557,7 @@ void player_powerups(entity this)
 			else
 			{
 				play_countdown(this, StatusEffects_gettime(STATUSEFFECT_Superweapons, this), SND_POWEROFF);
-				if (time > StatusEffects_gettime(STATUSEFFECT_Superweapons, this))
+				if (time >= StatusEffects_gettime(STATUSEFFECT_Superweapons, this))
 				{
 					this.items = this.items - (this.items & IT_SUPERWEAPON);
 					STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;
