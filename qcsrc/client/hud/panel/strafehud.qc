@@ -90,11 +90,14 @@ void HUD_StrafeHUD()
 
 		// does not get changed by ground timeout and is not affected by jump input
 		bool real_onground = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
+
 		// does not get changed by ground timeout
 		bool real_onslick = false;
+
 		// if jump is held assume we are in air, avoids flickering of the hud when hitting the ground
 		bool onground = real_onground && !jumpheld;
 		bool onslick = real_onslick;
+
 		// the hud will not work well while swimming
 		float strafe_waterlevel = DetectWaterLevel(strafeplayer);
 		bool swimming = strafe_waterlevel >= WATERLEVEL_SWIMMING;
@@ -295,8 +298,8 @@ void HUD_StrafeHUD()
 				break;
 		}
 
-		static bool turn = false;
 		// detect air strafe turning
+		static bool turn = false;
 		if((!strafekeys && vlen(vec2(movement)) > 0) || onground || autocvar__hud_configure)
 		{
 			turn = false;
@@ -486,13 +489,13 @@ void HUD_StrafeHUD()
 
 		// best angle to strafe at
 		// in case of ground friction we may decelerate if the acceleration is smaller than the speed loss from friction
-		float bestangle = (strafespeed > bestspeed ? acos(bestspeed / strafespeed) * RAD2DEG : 0);
-		float opposite_bestangle = -bestangle;
+		float bestangle    = (strafespeed > bestspeed ? acos(bestspeed / strafespeed) * RAD2DEG : 0);
 		float prebestangle = (strafespeed > movespeed ? acos(movespeed / strafespeed) * RAD2DEG : 0);
+		float opposite_bestangle = -bestangle;
 
-		// real_* variables which are always positive with no wishangle offset
-		float real_bestangle = bestangle;
-		float real_prebestangle = prebestangle;
+		// absolute_* variables which are always positive with no wishangle offset
+		float absolute_bestangle = bestangle;
+		float absolute_prebestangle = prebestangle;
 
 		if(direction == STRAFEHUD_DIRECTION_LEFT) // the angle becomes negative in case we strafe left
 		{
@@ -500,6 +503,7 @@ void HUD_StrafeHUD()
 			opposite_bestangle *= -1;
 			prebestangle *= -1;
 		}
+
 		bestangle -= wishangle;
 		opposite_bestangle -= wishangle;
 		prebestangle -= wishangle;
@@ -570,6 +574,7 @@ void HUD_StrafeHUD()
 			else
 				preaccelzone_offsetangle = 0;
 			accelzone_offsetangle = 90 - fabs(bestangle + wishangle);
+
 			float neutral_startangle;
 			float neutral_endangle = 180 - accelzone_offsetangle * 2 - preaccelzone_offsetangle * 2;
 
@@ -781,6 +786,7 @@ void HUD_StrafeHUD()
 		direction_size_vertical.x = max(panel_size.y * min(direction_size_vertical.x, 1), 1);
 		direction_size_vertical.y = panel_size.y + direction_size_vertical.x * 2;
 		direction_size_vertical.z = 0;
+
 		vector direction_size_horizontal;
 		direction_size_horizontal.x = panel_size.x * min(autocvar_hud_panel_strafehud_direction_length, .5);
 		direction_size_horizontal.y = direction_size_vertical.x;
@@ -858,16 +864,16 @@ void HUD_StrafeHUD()
 				strafe_ratio *= -1;
 			}
 			// player gains speed by strafing
-			else if(moveangle >= real_bestangle)
+			else if(moveangle >= absolute_bestangle)
 			{
 				currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
-				strafe_ratio = (90 - moveangle) / (90 - real_bestangle);
+				strafe_ratio = (90 - moveangle) / (90 - absolute_bestangle);
 			}
-			else if(moveangle >= real_prebestangle)
+			else if(moveangle >= absolute_prebestangle)
 			{
 				if(autocvar_hud_panel_strafehud_bar_preaccel)
 					currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
-				strafe_ratio = (moveangle - real_prebestangle) / (real_bestangle - real_prebestangle);
+				strafe_ratio = (moveangle - absolute_prebestangle) / (absolute_bestangle - absolute_prebestangle);
 			}
 
 			if(autocvar_hud_panel_strafehud_style == STRAFEHUD_STYLE_GRADIENT)
