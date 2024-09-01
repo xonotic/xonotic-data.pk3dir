@@ -54,7 +54,7 @@ CLASS(Fireball, Weapon)
 #undef X
 
 ENDCLASS(Fireball)
-REGISTER_WEAPON(FIREBALL, fireball, NEW(Fireball));
+REGISTER_WEAPON(FIREBALL, NEW(Fireball));
 
 SPAWNFUNC_WEAPON(weapon_fireball, WEP_FIREBALL)
 

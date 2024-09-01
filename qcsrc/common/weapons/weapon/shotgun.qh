@@ -60,5 +60,5 @@ CLASS(Shotgun, Weapon)
 #undef X
 
 ENDCLASS(Shotgun)
-REGISTER_WEAPON(SHOTGUN, shotgun, NEW(Shotgun));
+REGISTER_WEAPON(SHOTGUN, NEW(Shotgun));
 

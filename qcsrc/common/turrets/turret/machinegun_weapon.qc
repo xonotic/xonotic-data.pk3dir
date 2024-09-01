@@ -8,7 +8,7 @@ METHOD(MachineGunTurretAttack, wr_think, void(entity thiswep, entity actor, .ent
 {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(machinegun, sustained_refire))) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(WEP_MACHINEGUN, sustained_refire))) {
         if (isPlayer) {
             turret_initparams(actor);
             W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_MachineGunTurretAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_MACHINEGUN.m_id);

@@ -405,7 +405,8 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e,
 		return;
 	}
 
-	if(uid2name(myuid) == "^1Unregistered Player")
+	if(CS_CVAR(e).cvar_cl_allow_uidtracking != 1 || CS_CVAR(e).cvar_cl_allow_uid2name != 1
+	   || uid2name(myuid) == "^1Unregistered Player")
 	{
 		if(showmessage)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_MISSING_NAME, mynetname, t);
@@ -1215,6 +1216,12 @@ spawnfunc(info_player_race)
 		race_highest_place_spawn = this.race_place;
 	if(this.race_place < race_lowest_place_spawn)
 		race_lowest_place_spawn = this.race_place;
+}
+
+void race_ClearPlayerRecords(entity player)
+{
+	for(int i = 0; i < MAX_CHECKPOINTS; ++i)
+		player.race_checkpoint_record[i] = 0;
 }
 
 void race_ClearRecords()

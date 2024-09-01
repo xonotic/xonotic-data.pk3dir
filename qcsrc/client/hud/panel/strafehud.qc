@@ -1218,7 +1218,7 @@ void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float ori
 	float color_ratio, alpha1, alpha2;
 	vector segment_size = size;
 	alpha1 = bound(0, alpha, 1);
-	alpha2 = bound(0, autocvar_hud_panel_strafehud_bar_neutral_alpha, 1);
+	alpha2 = bound(0, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, 1);
 	if((alpha1 + alpha2) == 0) return;
 	color_ratio = alpha1 / (alpha1 + alpha2);
 	for(int i = 0; i < size.x; ++i)
