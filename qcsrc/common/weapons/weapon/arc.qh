@@ -4,7 +4,7 @@ CLASS(Arc, Weapon)
 /* spawnfunc */ ATTRIB(Arc, m_canonical_spawnfunc, string, "weapon_arc");
 /* ammotype  */ ATTRIB(Arc, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Arc, impulse, int, 3);
-/* flags     */ ATTRIB(Arc, spawnflags, int, WEP_TYPE_HITSCAN);
+/* flags     */ ATTRIB(Arc, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Arc, wpcolor, vector, '1 1 1');
 /* modelname */ ATTRIB(Arc, mdl, string, "arc");
