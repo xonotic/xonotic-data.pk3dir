@@ -68,6 +68,11 @@ void HUD_Mod_Race(vector pos, vector mySize)
 			f &= ~1;
 			cvar_set("cl_autodemo_delete", ftos(f)); // don't delete demo with new record!
 		}
+		localcmd("\ncl_hook_race_pb \"",
+			TIME_ENCODED_TOSTRING(score, false), "\" \"",
+			TIME_ENCODED_TOSTRING(t, false), "\" \"",
+			(t ?  TIME_ENCODED_TOSTRING(t-score, false) : "0"), "\" \"",
+			sprintf("%d", race_myrank), "\"\n");
 	}
 
 	if(t != crecordtime_prev) {
