@@ -89,6 +89,7 @@ float StrafeHUD_projectOffset(float, float, bool);
 float StrafeHUD_projectWidth(float, float, float);
 float StrafeHUD_angleToOffset(float, float);
 float StrafeHUD_offsetToAngle(float, float);
+float DetectWaterLevel(entity);
 
 const int STRAFEHUD_MODE_VIEW_CENTERED = 0;
 const int STRAFEHUD_MODE_VELOCITY_CENTERED = 1;
