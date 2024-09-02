@@ -22,8 +22,10 @@ bool autocvar_developer_csqcentities;
 // or the release after it to support the old-stable release
 // this can't be done now as players would lack these from their configs then
 bool autocvar_cl_race_checkpoint_splits_console;
+bool autocvar_cl_race_checkpoint_splits_hud;
 #else
 AUTOCVAR_SAVE(cl_race_checkpoint_splits_console, bool, 1, "Print checkpoint splits to console");
+AUTOCVAR_SAVE(cl_race_checkpoint_splits_hud, bool, 1, "Show race checkpoint splits on HUD in infomessages");
 #endif
 bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
 bool autocvar_cl_race_cptimes_showself = false;
