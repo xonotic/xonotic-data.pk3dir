@@ -76,7 +76,7 @@ void W_Electro_ExplodeCombo(entity this)
 	if (!this.velocity)
 		this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
 
-	if(WEP_CVAR(electro, combo_duration))
+	if(WEP_CVAR(WEP_ELECTRO, combo_duration))
 	{
 		this.projectiledeathtype = WEP_ELECTRO.m_id | HITTYPE_BOUNCE; // use THIS type for a combo because primary can't bounce
 		this.event_damage = func_null;
@@ -85,10 +85,10 @@ void W_Electro_ExplodeCombo(entity this)
 
 		setthink(this, W_Electro_ExplodeComboThink);
 		this.nextthink = time;
-		this.dmg = WEP_CVAR(electro, combo_damage);
-		this.dmg_edge = WEP_CVAR(electro, combo_edgedamage);
-		this.dmg_radius = WEP_CVAR(electro, combo_radius);
-		this.dmg_duration = WEP_CVAR(electro, combo_duration);
+		this.dmg = WEP_CVAR(WEP_ELECTRO, combo_damage);
+		this.dmg_edge = WEP_CVAR(WEP_ELECTRO, combo_edgedamage);
+		this.dmg_radius = WEP_CVAR(WEP_ELECTRO, combo_radius);
+		this.dmg_duration = WEP_CVAR(WEP_ELECTRO, combo_duration);
 		this.teleport_time = time;
 		set_movetype(this, MOVETYPE_NONE);
 
