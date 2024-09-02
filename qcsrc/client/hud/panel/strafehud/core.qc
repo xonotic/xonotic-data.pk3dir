@@ -54,7 +54,8 @@ void StrafeHUD_DrawStrafeMeter(
 		accelzone_offsetangle = 90 - absolute_bestangle;
 
 		float neutral_startangle;
-		float neutral_endangle = 180 - accelzone_offsetangle * 2 - preaccelzone_offsetangle * 2;
+		float overturn_offsetangle = 180;
+		float neutral_endangle = 360 - accelzone_offsetangle * 2 - preaccelzone_offsetangle * 2 - overturn_offsetangle;
 
 		{
 			float current_offsetangle = 0;
@@ -65,7 +66,7 @@ void StrafeHUD_DrawStrafeMeter(
 			current_offsetangle += accelzone_offsetangle;
 
 			overturn_startangle = current_offsetangle;
-			current_offsetangle += 180; // overturning area spans 180°
+			current_offsetangle += overturn_offsetangle;
 
 			accelzone_left_startangle = current_offsetangle;
 			current_offsetangle += accelzone_offsetangle;
@@ -124,7 +125,7 @@ void StrafeHUD_DrawStrafeMeter(
 		//   acceleration decreases at 90 degrees but speed loss happens a little bit after 90 degrees,
 		//   however due to sv_airstopaccelerate that's hard to calculate
 		HUD_Panel_drawStrafeHUD(
-			overturn_startangle, 180, // overturning area spans 180°
+			overturn_startangle, overturn_offsetangle,
 			autocvar_hud_panel_strafehud_bar_overturn_color,
 			autocvar_hud_panel_strafehud_bar_overturn_alpha * panel_fg_alpha,
 			autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_BOTH,
