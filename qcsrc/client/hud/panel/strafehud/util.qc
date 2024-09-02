@@ -4,9 +4,14 @@
 #include <common/physics/player.qh>
 #include <common/physics/movetypes/movetypes.qh>
 
+float StrafeHUD_angleToWidth(float angle, float range)
+{
+	return angle / range * panel_size.x;
+}
+
 float StrafeHUD_angleToOffset(float angle, float range)
 {
-	return angle / range * panel_size.x + panel_size.x / 2;
+	return StrafeHUD_angleToWidth(angle, range) + panel_size.x / 2;
 }
 
 float StrafeHUD_offsetToAngle(float offset, float range)
@@ -265,4 +270,21 @@ float StrafeHUD_determineDirection(float angle, float wishangle, float antiflick
 		else
 			return STRAFEHUD_DIRECTION_NONE;
 	}
+}
+
+// try to ignore if track_canjump is enabled, does not work in spectator mode if spectated player uses +jetpack or cl_movement_track_canjump
+bool DetectJumpHeld(entity e, int keys, bool islocal)
+{
+	if(islocal)
+	{
+		if((PHYS_INPUT_BUTTON_JUMP(e) || PHYS_INPUT_BUTTON_JETPACK(e)) && !PHYS_CL_TRACK_CANJUMP(e))
+			return true;
+	}
+	else
+	{
+		if((keys & KEY_JUMP) && !PHYS_TRACK_CANJUMP(e))
+			return true;
+	}
+
+	return false;
 }

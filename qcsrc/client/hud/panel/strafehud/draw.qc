@@ -3,17 +3,10 @@
 #include <client/draw.qh>
 
 // functions to make hud elements align perfectly in the hud area
-void HUD_Panel_drawStrafeHUD(float fromangle, float toangle, vector color, float alpha, int type, int gradientType, bool doProject, float range)
+void HUD_Panel_drawStrafeHUD(float startangle, float offsetangle, vector color, float alpha, int type, int gradientType, bool doProject, float range)
 {
-	if(toangle < fromangle)
-	{
-		float tmp = fromangle;
-		fromangle = toangle;
-		toangle = tmp;
-	}
-
-	float offset = StrafeHUD_angleToOffset(fromangle % 360, range);
-	float width = StrafeHUD_angleToOffset(toangle, range) - StrafeHUD_angleToOffset(fromangle, range);
+	float offset = StrafeHUD_angleToOffset(startangle % 360, range);
+	float width = StrafeHUD_angleToWidth(offsetangle, range);
 
 	float mirror_offset, mirror_width;
 	vector size = panel_size;

@@ -68,19 +68,7 @@ void HUD_StrafeHUD()
 	if(csqcplayer && strafeplayer)
 	{
 		int keys = STAT(PRESSED_KEYS);
-
-		// try to ignore if track_canjump is enabled, does not work in spectator mode if spectated player uses +jetpack or cl_movement_track_canjump
-		bool jumpheld = false;
-		if(islocal)
-		{
-			if((PHYS_INPUT_BUTTON_JUMP(strafeplayer) || PHYS_INPUT_BUTTON_JETPACK(strafeplayer)) && !PHYS_CL_TRACK_CANJUMP(strafeplayer))
-				jumpheld = true;
-		}
-		else
-		{
-			if((keys & KEY_JUMP) && !PHYS_TRACK_CANJUMP(strafeplayer))
-				jumpheld = true;
-		}
+		bool jumpheld = DetectJumpHeld(strafeplayer, keys, islocal);
 
 		// does not get changed by ground timeout and is not affected by jump input
 		bool real_onground = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
