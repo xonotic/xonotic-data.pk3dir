@@ -30,6 +30,8 @@ CLASS(Resource, Object)
 #ifdef GAMEQC
 	ATTRIB(Resource, m_field, .float, health);
 #endif
+	ATTRIB(Resource, m_name, string, "");
+	ATTRIB(Resource, m_icon, string, "");
 ENDCLASS(Resource)
 
 #define REGISTER_RESOURCE(id, inst) REGISTER(Resources, RES, id, m_id, inst)

@@ -1122,9 +1122,6 @@ void ClientConnect(entity this)
 	TRANSMUTE(Client, this);
 	CS(this).version_nagtime = time + 10 + random() * 10;
 
-	entity store = IS_CLIENT(this) ? CS(this) : this;
-	store.cmd_floodtime = -999999;
-
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_CONNECT, this.netname);
 
 	bot_clientconnect(this);
@@ -1560,7 +1557,7 @@ void player_powerups(entity this)
 			else
 			{
 				play_countdown(this, StatusEffects_gettime(STATUSEFFECT_Superweapons, this), SND_POWEROFF);
-				if (time > StatusEffects_gettime(STATUSEFFECT_Superweapons, this))
+				if (time >= StatusEffects_gettime(STATUSEFFECT_Superweapons, this))
 				{
 					this.items = this.items - (this.items & IT_SUPERWEAPON);
 					STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;
@@ -2402,7 +2399,7 @@ bool PlayerThink(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(WEP_CVAR(vortex, charge_always))
+			if(WEP_CVAR(WEP_VORTEX, charge_always))
 				W_Vortex_Charge(this, weaponentity, frametime);
 			W_WeaponFrame(this, weaponentity);
 		}
@@ -2415,8 +2412,8 @@ bool PlayerThink(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
-				this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+			if (WEP_CVAR(WEP_VORTEX, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(WEP_VORTEX, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
+				this.(weaponentity).vortex_charge = bound(WEP_CVAR(WEP_VORTEX, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(WEP_VORTEX, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
 		}
 
 		player_regen(this);

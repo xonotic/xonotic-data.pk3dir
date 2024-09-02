@@ -73,7 +73,7 @@ CLASS(Shockwave, Weapon)
 #undef X
 
 ENDCLASS(Shockwave)
-REGISTER_WEAPON(SHOCKWAVE, shockwave, NEW(Shockwave));
+REGISTER_WEAPON(SHOCKWAVE, NEW(Shockwave));
 
 SPAWNFUNC_WEAPON(weapon_shockwave, WEP_SHOCKWAVE)
 
