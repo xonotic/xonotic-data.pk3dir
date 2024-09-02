@@ -16,6 +16,7 @@ bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
+bool autocvar_g_instagib_allow_jetpacks;
 
 /// \brief Returns a random classname of the instagib item.
 /// \param[in] prefix Prefix of the cvars that hold probabilities.
@@ -212,20 +213,17 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 
 		if(IS_PLAYER(frag_attacker) && DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
 		{
-			if(frag_deathtype & HITTYPE_SECONDARY)
+			if(!autocvar_g_instagib_blaster_keepdamage || frag_attacker == frag_target)
 			{
-				if(!autocvar_g_instagib_blaster_keepdamage || frag_attacker == frag_target)
-				{
-					frag_damage = 0;
-					if(!autocvar_g_instagib_mirrordamage)
-						frag_mirrordamage = 0; // never do mirror damage on enemies
-				}
+				frag_damage = 0;
+				if(!autocvar_g_instagib_mirrordamage)
+					frag_mirrordamage = 0; // never do mirror damage on enemies
+			}
 
-				if(frag_target != frag_attacker)
-				{
-					if(!autocvar_g_instagib_blaster_keepforce)
-						frag_force = '0 0 0';
-				}
+			if(frag_target != frag_attacker)
+			{
+				if(!autocvar_g_instagib_blaster_keepforce)
+					frag_force = '0 0 0';
 			}
 		}
 	}
@@ -344,6 +342,9 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 			if(autocvar_g_instagib_ammo_convert_bullets)
 				instagib_replace_item_with(item, ITEM_VaporizerCells);
 			return true;
+		case ITEM_Jetpack:
+		case ITEM_JetpackRegen:
+			return !autocvar_g_instagib_allow_jetpacks;
 	}
 
 	switch (item.weapon)

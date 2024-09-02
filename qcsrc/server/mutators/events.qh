@@ -1190,12 +1190,6 @@ enum {
     MUT_FUSREAC_TARG_INVALID // return this flag to make the function return false (invalid target)
 };
 
-/** return true to hide the 'teamnumbers are imbalanced' message */
-#define EV_HideTeamNagger(i, o) \
-    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
-    /**/
-MUTATOR_HOOKABLE(HideTeamNagger, EV_HideTeamNagger);
-
 /** return true to show a waypoint while the item is spawning */
 #define EV_Item_ScheduleRespawn(i, o) \
     /** item */             i(entity, MUTATOR_ARGV_0_entity) \

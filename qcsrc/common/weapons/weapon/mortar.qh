@@ -55,7 +55,7 @@ CLASS(Mortar, Weapon)
     W_PROPS(X, Mortar, mortar)
 #undef X
 ENDCLASS(Mortar)
-REGISTER_WEAPON(MORTAR, mortar, NEW(Mortar));
+REGISTER_WEAPON(MORTAR, NEW(Mortar));
 
 SPAWNFUNC_WEAPON(weapon_mortar, WEP_MORTAR)
 SPAWNFUNC_WEAPON(weapon_grenadelauncher, WEP_MORTAR)

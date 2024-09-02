@@ -224,10 +224,6 @@ string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 string W_FixWeaponOrder_ForceComplete(string order);
 WepSet W_RandomWeapons(entity e, WepSet remaining, int n);
 
-string GetAmmoPicture(Resource ammotype);
-
-string GetAmmoName(Resource ammotype);
-
 entity GetAmmoItem(Resource ammotype);
 
 #ifdef CSQC

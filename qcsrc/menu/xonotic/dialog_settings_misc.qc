@@ -43,22 +43,6 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 1, "crypto_aeslevel", _("Use encryption (AES) when available")));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bandwidth limit:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("_cl_rate",
-			_("Specify your network speed")));
-			e.addValue(e, _("Slow ADSL"), "20000");
-			e.addValue(e, _("Fast ADSL"), "40000");
-			e.addValue(e, _("Broadband"), "66666");
-			e.configureXonoticTextSliderValues(e);
-	if(cvar("developer") > 0)
-	{
-		me.TR(me);
-		me.TR(me);
-			me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Local latency:")));
-			me.TD(me, 1, 2, e = makeXonoticSlider(0, 1000, 25, "cl_netlocalping"));
-	}
-	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 3.25, e = makeXonoticHeaderLabel(_("HTTP downloads")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Simultaneous:")));
@@ -86,13 +70,11 @@ void XonoticMiscSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Maximum:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_maxfps"));
-			ADDVALUE_FPS(60);
-			ADDVALUE_FPS(100);
-			ADDVALUE_FPS(125);
-			ADDVALUE_FPS(150);
-			ADDVALUE_FPS(200);
-			ADDVALUE_FPS(250);
-			ADDVALUE_FPS(400);
+			ADDVALUE_FPS(128);
+			ADDVALUE_FPS(256);
+			ADDVALUE_FPS(512);
+			ADDVALUE_FPS(1024);
+			ADDVALUE_FPS(2048);
 			e.addValue(e, ZCTX(_("MAXFPS^Unlimited")), "0");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
@@ -111,10 +93,10 @@ void XonoticMiscSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Idle limit:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_maxidlefps"));
-			ADDVALUE_FPS(10);
-			ADDVALUE_FPS(20);
-			ADDVALUE_FPS(30);
-			ADDVALUE_FPS(60);
+			ADDVALUE_FPS(16);
+			ADDVALUE_FPS(32);
+			ADDVALUE_FPS(64);
+			ADDVALUE_FPS(128);
 			e.addValue(e, ZCTX(_("IDLFPS^Unlimited")), "0");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
@@ -133,9 +115,6 @@ void XonoticMiscSettingsTab_fill(entity me)
 			_("Show current date and time of day, useful on screenshots")));
 			makeMulti(e, "showdate");
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "developer", _("Enable developer mode")));
-			e.applyButton = miscApplyButton;
-
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton_T(_("Advanced settings..."), '0 0 0',

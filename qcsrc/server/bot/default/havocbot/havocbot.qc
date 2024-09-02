@@ -615,7 +615,7 @@ void havocbot_movetogoal(entity this)
 	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
 	if (skill > 6 && !(IS_ONGROUND(this)))
 	{
-		#define ROCKETJUMP_DAMAGE() WEP_CVAR(devastator, damage) * 0.8 \
+		#define ROCKETJUMP_DAMAGE() WEP_CVAR(WEP_DEVASTATOR, damage) * 0.8 \
 			* ((StatusEffects_active(STATUSEFFECT_Strength, this)) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
 			* ((StatusEffects_active(STATUSEFFECT_Shield, this)) ? autocvar_g_balance_powerup_invincible_takedamage : 1)
 
@@ -706,7 +706,7 @@ void havocbot_movetogoal(entity this)
 						this.(weaponentity).m_switchweapon = WEP_DEVASTATOR;
 						this.v_angle_x = 90;
 						PHYS_INPUT_BUTTON_ATCK(this) = true;
-						this.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
+						this.rocketjumptime = time + WEP_CVAR(WEP_DEVASTATOR, detonatedelay);
 						return;
 					}
 				}

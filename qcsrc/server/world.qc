@@ -528,13 +528,15 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_commands");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
-		BADVALUE("sys_ticrate", "0.0166667");
-		BADVALUE("sys_ticrate", "0.0333333");
+		BADVALUE("sys_ticrate", "0.0078125");
+		BADVALUE("sys_ticrate", "0.015625");
+		BADVALUE("sys_ticrate", "0.03125");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup");
 		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
+		BADCVAR("sv_teamnagger");
 
 		BADPRESUFFIXVALUE("g_", "_weaponarena", "most");
 		BADPRESUFFIXVALUE("g_", "_weaponarena", "most_available");
@@ -2389,6 +2391,13 @@ void DropToFloor_QC(entity this)
 		else if (nudgeresult > 0)
 			LOG_WARNF("DropToFloor_QC at \"%v\": FIXED badly placed entity \"%s\" before drop", this.origin, this.classname);
 	}
+	else if (!autocvar_sv_mapformat_is_quake3 && !autocvar_sv_mapformat_is_quake2) // Quake
+	{
+		if (this.flags & FL_ITEM)
+			this.origin.z += 6;
+		else
+			this.origin.z += 1; // monsters 1, misc_explobox 2 but we don't support those currently
+	}
 
 	vector end = this.origin;
 	if (autocvar_sv_mapformat_is_quake3)
@@ -2401,10 +2410,15 @@ void DropToFloor_QC(entity this)
 
 	if (!autocvar_sv_mapformat_is_quake3 && !autocvar_sv_mapformat_is_quake2 && (trace_allsolid || trace_fraction == 1)) // Quake
 	{
-		// Quake games just delete badly placed entities...
-		LOG_WARNF("DropToFloor_QC at \"%v\" (Quake compat): DELETING badly placed entity \"%s\"", this.origin, this.classname);
-		delete(this);
-		return;
+		// Quake games just delete badly placed items (and misc_explobox)...
+		if (this.flags & FL_ITEM)
+		{
+			LOG_WARNF("DropToFloor_QC at \"%v\" (Quake compat): DELETING badly placed item \"%s\"", this.origin, this.classname);
+			delete(this);
+			return;
+		}
+		// ...not monsters though...
+		LOG_WARNF("DropToFloor_QC at \"%v\" (Quake compat): badly placed entity \"%s\"", this.origin, this.classname);
 	}
 	else if ((Q3COMPAT_COMMON || autocvar_sv_mapformat_is_quake2) && trace_startsolid) // Q3, Q2
 	{

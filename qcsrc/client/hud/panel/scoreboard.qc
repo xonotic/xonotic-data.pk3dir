@@ -596,6 +596,25 @@ void Scoreboard_UpdatePlayerTeams()
 		print(strcat("PNUM: ", ftos(num), "\n"));
 	lastpnum = num;
 	*/
+
+	// update the smallest and largest team sizes
+	if (!teamplay || !teams.sort_next)
+		ts_min = ts_max = 0;
+	else
+	{
+		ts_min = 255, ts_max = 0;
+
+		for (entity tm = teams.sort_next; tm; tm = tm.sort_next)
+		{
+			if (tm.team == NUM_SPECTATOR)
+				continue;
+
+			if (ts_min > tm.team_size)
+				ts_min = tm.team_size;
+			if (ts_max < tm.team_size)
+				ts_max = tm.team_size;
+		}
+	}
 }
 
 int Scoreboard_CompareScore(int vl, int vr, int f)

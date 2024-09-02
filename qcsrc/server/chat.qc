@@ -160,6 +160,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 	string fullmsgstr = msgstr;
 	string fullcmsgstr = cmsgstr;
+	float mod_time = 0;
 
 	// FLOOD CONTROL
 	int flood = 0;
@@ -188,15 +189,17 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			flood_lmax = autocvar_g_chat_flood_lmax;
 			flood_field = floodcontrol_chat;
 		}
+		// to match cvar descriptions, a value of 3 must allow three-line bursts and not four!
 		flood_burst = max(0, flood_burst - 1);
-		// to match explanation in default.cfg, a value of 3 must allow three-line bursts and not four!
 
+		int lines = -1;
+		mod_time = gettime(GETTIME_FRAMESTART) + flood_burst * flood_spl;
 		// do flood control for the default line size
 		if(msgstr != "")
 		{
 			getWrappedLine_remaining = msgstr;
 			msgstr = "";
-			int lines = 0;
+			lines = 0;
 			while(getWrappedLine_remaining && (!flood_lmax || lines <= flood_lmax))
 			{
 				msgstr = strcat(msgstr, " ", getWrappedLineLen(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
@@ -209,27 +212,20 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				msgstr = strcat(msgstr, "\n");
 				flood = 2;
 			}
+		}
 
-			if (time >= source.(flood_field))
-			{
-				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + lines * flood_spl;
-			}
-			else
-			{
-				flood = 1;
-				msgstr = fullmsgstr;
-			}
+		if (mod_time >= source.(flood_field))
+		{
+			if (lines > 1)
+				flood_spl *= lines;
+			source.(flood_field) = max(gettime(GETTIME_FRAMESTART), source.(flood_field)) + flood_spl;
 		}
 		else
 		{
-			if (time >= source.(flood_field))
-				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + flood_spl;
-			else
-				flood = 1;
+			if (lines >= 0) // if true msgstr was modified
+				msgstr = fullmsgstr;
+			flood = 1;
 		}
-
-		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
-			source.(flood_field) = flood = 0;
 	}
 
 	string sourcemsgstr, sourcecmsgstr;
@@ -276,7 +272,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	{
 		if (autocvar_g_chat_flood_notify_flooder)
 		{
-			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
+			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1",
+				ftos(source.(flood_field) - mod_time), "^3 seconds\n"));
 			ret = 0;
 		}
 		else
@@ -483,13 +480,26 @@ string PlayerHealth(entity this)
 string WeaponNameFromWeaponentity(entity this, .entity weaponentity)
 {
 	entity wepent = this.(weaponentity);
-	if(!wepent)
-		return "none";
+	if(!wepent || !IS_PLAYER(this))
+		return "N/A";
 	else if(wepent.m_weapon != WEP_Null)
 		return wepent.m_weapon.m_name;
 	else if(wepent.m_switchweapon != WEP_Null)
 		return wepent.m_switchweapon.m_name;
 	return "none"; //REGISTRY_GET(Weapons, wepent.cnt).m_name;
+}
+
+string AmmoNameFromWeaponentity(entity this, .entity weaponentity)
+{
+	entity wepent = this.(weaponentity);
+	string fallback = "N/A";
+	if(!wepent || !IS_PLAYER(this))
+		return fallback;
+	else if(wepent.m_weapon.ammo_type != RES_NONE)
+		return wepent.m_weapon.ammo_type.m_name;
+	else if(wepent.m_switchweapon.ammo_type != RES_NONE)
+		return wepent.m_switchweapon.ammo_type.m_name;
+	return fallback; // REGISTRY_GET(Weapons, wepent.cnt).ammo_type.m_name;
 }
 
 string formatmessage(entity this, string msg)
@@ -552,7 +562,7 @@ string formatmessage(entity this, string msg)
 			case "o": replacement = vtos(this.origin); break;
 			case "O": replacement = sprintf("'%f %f %f'", this.origin.x, this.origin.y, this.origin.z); break;
 			case "w": replacement = WeaponNameFromWeaponentity(this, weaponentity); break;
-			case "W": replacement = GetAmmoName(this.(weaponentity).m_weapon.ammo_type); break;
+			case "W": replacement = AmmoNameFromWeaponentity(this, weaponentity); break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
 			case "S": replacement = ftos(vlen(this.velocity)); break;

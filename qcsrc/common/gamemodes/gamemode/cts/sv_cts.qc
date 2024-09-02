@@ -386,11 +386,6 @@ MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
 		ClientKill_Silent(player, autocvar_g_cts_finish_kill_delay);
 }
 
-MUTATOR_HOOKFUNCTION(cts, HideTeamNagger)
-{
-	return true; // doesn't work so well (but isn't cts a teamless mode?)
-}
-
 MUTATOR_HOOKFUNCTION(cts, FixClientCvars)
 {
 	entity player = M_ARGV(0, entity);
