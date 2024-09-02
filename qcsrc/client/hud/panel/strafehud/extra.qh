@@ -1,0 +1,10 @@
+#pragma once
+#include "../strafehud.qh"
+
+float StrafeHUD_drawJumpHeight(entity, bool, bool, float);
+float StrafeHUD_drawStrafeEfficiency(float, float);
+float StrafeHUD_drawStartSpeed(float, float);
+float StrafeHUD_drawVerticalAngle(float);
+void StrafeHUD_Sonar(float, string);
+string StrafeHUD_UpdateSonarSound();
+float StrafeHUD_DrawSlickDetector(entity, bool);

@@ -1,5 +1,9 @@
 #pragma once
 #include "../panel.qh"
+#include "strafehud/util.qh"
+#include "strafehud/draw.qh"
+#include "strafehud/core.qh"
+#include "strafehud/extra.qh"
 
 int autocvar_hud_panel_strafehud = 3;
 bool autocvar__hud_panel_strafehud_demo = false;
@@ -75,21 +79,6 @@ float autocvar_hud_panel_strafehud_vangle_size = 1;
 bool autocvar_hud_panel_strafehud_strafeefficiency = false;
 float autocvar_hud_panel_strafehud_strafeefficiency_size = 1;
 int autocvar_hud_panel_strafehud_projection = 0;
-
-void HUD_Panel_DrawStrafeHUD(float, float, vector, float, int, int, bool, float);
-vector StrafeHUD_mixColors(vector, vector, float);
-void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, float, int, bool, float);
-float GetLengthUnitFactor(int);
-string GetLengthUnit(int);
-void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool, float);
-bool StrafeHUD_drawTextIndicator(string, float, vector, float, float, float, int);
-float StrafeHUD_project(float, float, bool);
-float StrafeHUD_projectAngle(float, float, bool);
-float StrafeHUD_projectOffset(float, float, bool);
-float StrafeHUD_projectWidth(float, float, float);
-float StrafeHUD_angleToOffset(float, float);
-float StrafeHUD_offsetToAngle(float, float);
-float DetectWaterLevel(entity);
 
 const int STRAFEHUD_MODE_VIEW_CENTERED = 0;
 const int STRAFEHUD_MODE_VELOCITY_CENTERED = 1;

@@ -1,0 +1,5 @@
+// generated file; do not modify
+#include <client/hud/panel/strafehud/core.qh>
+#include <client/hud/panel/strafehud/draw.qh>
+#include <client/hud/panel/strafehud/extra.qh>
+#include <client/hud/panel/strafehud/util.qh>
