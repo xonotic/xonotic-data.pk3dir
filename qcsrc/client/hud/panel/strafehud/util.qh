@@ -9,7 +9,7 @@ float StrafeHUD_projectOffset(float, float, bool);
 float StrafeHUD_projectWidth(float, float, float);
 float StrafeHUD_angleToWidth(float, float);
 float StrafeHUD_angleToOffset(float, float);
-float StrafeHUD_offsetToAngle(float, float);
+float StrafeHUD_widthToAngle(float, float);
 float DetectWaterLevel(entity);
 float DetectFrameTime();
 float DetectWishAngle(vector, int, bool);

@@ -53,9 +53,9 @@ void StrafeHUD_DrawStrafeMeter(
 
 		accelzone_offsetangle = 90 - absolute_bestangle;
 
-		float neutral_startangle;
 		float overturn_offsetangle = 180;
-		float neutral_endangle = 360 - accelzone_offsetangle * 2 - preaccelzone_offsetangle * 2 - overturn_offsetangle;
+		float neutral_offsetangle = 360 - accelzone_offsetangle * 2 - preaccelzone_offsetangle * 2 - overturn_offsetangle;
+		float neutral_startangle;
 
 		{
 			float current_offsetangle = 0;
@@ -78,7 +78,7 @@ void StrafeHUD_DrawStrafeMeter(
 		}
 
 		// calculate how far off-center the strafe zones currently are
-		shift_angle += neutral_endangle / 2 - wishangle;
+		shift_angle += neutral_offsetangle / 2 - wishangle;
 
 		// shift strafe zones into correct place
 		neutral_startangle += shift_angle;
@@ -89,7 +89,7 @@ void StrafeHUD_DrawStrafeMeter(
 		overturn_startangle += shift_angle;
 
 		// draw left acceleration zone
-		HUD_Panel_drawStrafeHUD(
+		StrafeHUD_drawStrafeHUD(
 			accelzone_left_startangle, accelzone_offsetangle,
 			autocvar_hud_panel_strafehud_bar_accel_color,
 			autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
@@ -97,7 +97,7 @@ void StrafeHUD_DrawStrafeMeter(
 			true, hudangle);
 
 		if(autocvar_hud_panel_strafehud_bar_preaccel)
-			HUD_Panel_drawStrafeHUD(
+			StrafeHUD_drawStrafeHUD(
 				preaccelzone_left_startangle, preaccelzone_offsetangle,
 				autocvar_hud_panel_strafehud_bar_accel_color,
 				autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
@@ -105,7 +105,7 @@ void StrafeHUD_DrawStrafeMeter(
 				true, hudangle);
 
 		// draw right acceleration zone
-		HUD_Panel_drawStrafeHUD(
+		StrafeHUD_drawStrafeHUD(
 			accelzone_right_startangle, accelzone_offsetangle,
 			autocvar_hud_panel_strafehud_bar_accel_color,
 			autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
@@ -113,7 +113,7 @@ void StrafeHUD_DrawStrafeMeter(
 			true, hudangle);
 
 		if(autocvar_hud_panel_strafehud_bar_preaccel)
-			HUD_Panel_drawStrafeHUD(
+			StrafeHUD_drawStrafeHUD(
 				preaccelzone_right_startangle, preaccelzone_offsetangle,
 				autocvar_hud_panel_strafehud_bar_accel_color,
 				autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
@@ -124,7 +124,7 @@ void StrafeHUD_DrawStrafeMeter(
 		//   this is technically incorrect
 		//   acceleration decreases at 90 degrees but speed loss happens a little bit after 90 degrees,
 		//   however due to sv_airstopaccelerate that's hard to calculate
-		HUD_Panel_drawStrafeHUD(
+		StrafeHUD_drawStrafeHUD(
 			overturn_startangle, overturn_offsetangle,
 			autocvar_hud_panel_strafehud_bar_overturn_color,
 			autocvar_hud_panel_strafehud_bar_overturn_alpha * panel_fg_alpha,
@@ -132,8 +132,8 @@ void StrafeHUD_DrawStrafeMeter(
 			true, hudangle);
 
 		// draw neutral zone
-		HUD_Panel_drawStrafeHUD(
-			neutral_startangle, neutral_endangle,
+		StrafeHUD_drawStrafeHUD(
+			neutral_startangle, neutral_offsetangle,
 			autocvar_hud_panel_strafehud_bar_neutral_color,
 			autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha,
 			autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_NONE,
@@ -153,28 +153,28 @@ void StrafeHUD_DrawStrafeMeter(
 			if(direction == STRAFEHUD_DIRECTION_LEFT)
 			{
 				if(!opposite_direction)
-					opposite_offsetangle -= StrafeHUD_offsetToAngle(bestangle_width, hudangle);
+					opposite_offsetangle -= StrafeHUD_widthToAngle(bestangle_width, hudangle);
 				else
-					offsetangle -= StrafeHUD_offsetToAngle(bestangle_width, hudangle);
+					offsetangle -= StrafeHUD_widthToAngle(bestangle_width, hudangle);
 			}
 			else
 			{
 				if(!opposite_direction)
-					offsetangle -= StrafeHUD_offsetToAngle(bestangle_width, hudangle);
+					offsetangle -= StrafeHUD_widthToAngle(bestangle_width, hudangle);
 				else
-					opposite_offsetangle -= StrafeHUD_offsetToAngle(bestangle_width, hudangle);
+					opposite_offsetangle -= StrafeHUD_widthToAngle(bestangle_width, hudangle);
 			}
 
-			HUD_Panel_drawStrafeHUD(
-				offsetangle, StrafeHUD_offsetToAngle(bestangle_width, hudangle),
+			StrafeHUD_drawStrafeHUD(
+				offsetangle, StrafeHUD_widthToAngle(bestangle_width, hudangle),
 				autocvar_hud_panel_strafehud_switch_color,
 				autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha,
 				STRAFEHUD_STYLE_DRAWFILL, STRAFEHUD_GRADIENT_NONE,
 				false, hudangle);
 
 			if(direction == STRAFEHUD_DIRECTION_NONE)
-				HUD_Panel_drawStrafeHUD(
-					opposite_offsetangle, StrafeHUD_offsetToAngle(bestangle_width, hudangle),
+				StrafeHUD_drawStrafeHUD(
+					opposite_offsetangle, StrafeHUD_widthToAngle(bestangle_width, hudangle),
 					autocvar_hud_panel_strafehud_switch_color,
 					autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha,
 					STRAFEHUD_STYLE_DRAWFILL, STRAFEHUD_GRADIENT_NONE,
