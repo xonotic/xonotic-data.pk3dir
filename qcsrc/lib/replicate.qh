@@ -1,10 +1,5 @@
 #pragma once
 
-#ifdef SVQC
-// copies a string to a tempstring (so one can strunzone it)
-string strcat1(string s) = #115; // FRIK_FILE
-#endif
-
 #if defined(CSQC)
 const int REPLICATEVARS_SEND_ALL = -1; // sync all cvars with the server (init)
 const int REPLICATEVARS_CHECK = 0; // check if any cvar has changed and sync it with the server
@@ -68,12 +63,13 @@ const int REPLICATEVARS_DESTROY = 1; // destroy data associated with cvars (shut
 		{ strfree(field); }, \
 		{ \
 			/* also initialize to the default value of func when requesting cvars */ \
-			string s = func(this, strcat1(field)); \
+			string s = func(this, strcat(field)); \
 			if (s != field) \
 			{ \
 				strcpy(field, s); \
 			} \
 		})
+		#define REPLICATE_vector(fld, var, func) REPLICATE_7(fld, vector, var, func, { field = stov(it); },          , )
 		#define REPLICATE_float(fld, var, func) REPLICATE_7(fld, float, var, func,  { field = stof(it); },          , )
 		#define REPLICATE_bool(fld, var, func) REPLICATE_7(fld, bool, var, func,   { field = boolean(stoi(it)); }, , )
 		#define REPLICATE_int(fld, var, func) REPLICATE_7(fld, int, var, func,    { field = stoi(it); },          , )
@@ -100,6 +96,7 @@ const int REPLICATEVARS_DESTROY = 1; // destroy data associated with cvars (shut
 				store.fld = field; \
 			}
 	#elif defined(CSQC)
+		#define REPLICATE_vector(fld, var, func) REPLICATE_7(fld, vector, var, func, (fld != stov(cvar_string(var))), { fld = stov(cvar_string(var)); }, )
 		#define REPLICATE_string(fld, var, func) REPLICATE_7(fld, float, var, func, (fld != cvar_string(var)), { strcpy(fld, cvar_string(var)); }, { strfree(fld); })
 		#define REPLICATE_float(fld, var, func) REPLICATE_7(fld, float, var, func, (fld != cvar(var)), { fld = cvar(var); }, )
 		#define REPLICATE_bool(fld, var, func) REPLICATE_7(fld, bool, var, func, (fld != cvar(var)), { fld = cvar(var); }, )

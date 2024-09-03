@@ -101,10 +101,10 @@ void nmm_spawn_tile_square( entity minig, int offset, int skip )
 {
 	int letter = offset;
 	int number = offset;
-	for ( int i = 0; i < 3; i++ )
+	for ( int i = 0; i < 3; ++i )
 	{
 		number = offset;
-		for ( int j = 0; j < 3; j++ )
+		for ( int j = 0; j < 3; ++j )
 		{
 			if ( i != 1 || j != 1 )
 				nmm_spawn_tile(strzone(minigame_tile_buildname(letter,number)),minig, skip+1);
@@ -175,7 +175,7 @@ bool nmm_tile_canmove(entity tile)
 bool nmm_in_mill_string(entity tile, string s)
 {
 	int argc = tokenize(s);
-	for ( int i = 0; i < argc; i++ )
+	for ( int i = 0; i < argc; ++i )
 	{
 		entity e = nmm_find_tile(tile.owner,argv(i));
 		if ( !e || !e.nmm_tile_piece || e.nmm_tile_piece.team != tile.nmm_tile_piece.team )
@@ -223,7 +223,7 @@ int nmm_server_event(entity minigame, string event, ...)
 		minigame.minigame_flags = NMM_TURN_PLACE|NMM_TURN_TEAM1;
 		nmm_init_tiles(minigame);
 		entity e;
-		for ( int i = 0; i < 7; i++ )
+		for ( int i = 0; i < 7; ++i )
 		{
 			e = msle_spawn(minigame,new(minigame_board_piece));
 			e.team = 1;
@@ -495,6 +495,8 @@ void nmm_hud_board(vector pos, vector mySize)
 			sprintf(_("%s^7 won the game!"), pname),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
+
+	minigame_show_allspecs(nmm_boardpos, nmm_boardsize);
 }
 
 // Required function, draw the game status panel

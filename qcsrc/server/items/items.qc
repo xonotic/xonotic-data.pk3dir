@@ -36,6 +36,24 @@ bool ItemSend(entity this, entity to, int sf)
 	else
 		sf &= ~ISF_DROP;
 
+	// if this item is being spawned (in CSQC's perspective)
+	// reuse ISF_SIZE and ISF_SIZE2 to also tell CSQC its bbox size
+	if(sf & ISF_SIZE)
+	{
+		if(this.maxs == ITEM_S_MAXS) // Small
+		{
+			sf |= ISF_SIZE;
+			sf &= ~ISF_SIZE2;
+		}
+		else if(this.maxs == ITEM_L_MAXS) // Large
+		{
+			sf &= ~ISF_SIZE;
+			sf |= ISF_SIZE2;
+		}
+		else // Default
+			sf |= ISF_SIZE | ISF_SIZE2;
+	}
+
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_ITEM);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -50,13 +68,10 @@ bool ItemSend(entity this, entity to, int sf)
 		WriteAngleVector(MSG_ENTITY, this.angles);
 	}
 
-	// sets size on the client, unused on server
-	//if(sf & ISF_SIZE)
-
 	if(sf & ISF_STATUS)
 		WriteByte(MSG_ENTITY, this.ItemStatus);
 
-	if(sf & ISF_MODEL)
+	if(sf & ISF_SIZE || sf & ISF_SIZE2) // always true when it's spawned (in CSQC's perspective)
 	{
 		WriteShort(MSG_ENTITY, bound(0, this.fade_end, 32767));
 
@@ -589,7 +604,7 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.strength_finished)
 	{
 		pickedup = true;
-		float t = max(StatusEffects_gettime(STATUSEFFECT_Strength, player), time);
+		float t = StatusEffects_gettime(STATUSEFFECT_Strength, player);
 		if (autocvar_g_powerups_stack)
 			t += item.strength_finished;
 		else
@@ -599,7 +614,7 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.invincible_finished)
 	{
 		pickedup = true;
-		float t = max(StatusEffects_gettime(STATUSEFFECT_Shield, player), time);
+		float t = StatusEffects_gettime(STATUSEFFECT_Shield, player);
 		if (autocvar_g_powerups_stack)
 			t += item.invincible_finished;
 		else
@@ -609,7 +624,7 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.speed_finished)
 	{
 		pickedup = true;
-		float t = max(StatusEffects_gettime(STATUSEFFECT_Speed, player), time);
+		float t = StatusEffects_gettime(STATUSEFFECT_Speed, player);
 		if (autocvar_g_powerups_stack)
 			t += item.speed_finished;
 		else
@@ -619,7 +634,7 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.invisibility_finished)
 	{
 		pickedup = true;
-		float t = max(StatusEffects_gettime(STATUSEFFECT_Invisibility, player), time);
+		float t = StatusEffects_gettime(STATUSEFFECT_Invisibility, player);
 		if (autocvar_g_powerups_stack)
 			t += item.invisibility_finished;
 		else
@@ -629,7 +644,8 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.superweapons_finished)
 	{
 		pickedup = true;
-		StatusEffects_apply(STATUSEFFECT_Superweapons, player, max(StatusEffects_gettime(STATUSEFFECT_Superweapons, player), time) + item.superweapons_finished, 0);
+		float t = StatusEffects_gettime(STATUSEFFECT_Superweapons, player);
+		StatusEffects_apply(STATUSEFFECT_Superweapons, player, t + item.superweapons_finished, 0);
 	}
 
 	// always eat teamed entities
@@ -1046,6 +1062,9 @@ void StartItem(entity this, entity def)
 			this.nextthink = max(this.strength_finished, this.invincible_finished, this.superweapons_finished);
 		}
 
+		// most loot items have a bigger horizontal size than a player
+		nudgeoutofsolid(this);
+
 		// don't drop if in a NODROP zone (such as lava)
 		traceline(this.origin, this.origin, MOVE_NORMAL, this);
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
@@ -1082,11 +1101,19 @@ void StartItem(entity this, entity def)
 		if(this.angles != '0 0 0')
 			this.SendFlags |= ISF_ANGLES;
 
-		if(q3compat && !this.team)
+		if(q3compat)
 		{
-			string t = GetField_fullspawndata(this, "team");
-			// bones_was_here: this hack is cheaper than changing to a .string strcmp()
-			if(t) this.team = crc16(false, t);
+			if (!this.team)
+			{
+				string t = GetField_fullspawndata(this, "team", false);
+				// bones_was_here: this hack is cheaper than changing to a .string strcmp()
+				if(t) this.team = crc16(false, t);
+			}
+
+			// In Q3 the origin is in the middle of the bbox ("radius" 15), in Xon it's at the bottom
+			// so we need to offset vertically (only for items placed by the mapper).
+			this.origin.z += -15 - this.mins.z;
+			setorigin(this, this.origin);
 		}
 
 		// it's a level item
@@ -1099,11 +1126,8 @@ void StartItem(entity this, entity def)
 		// do item filtering according to game mode and other things
 		if (this.noalign <= 0)
 		{
-			// first nudge it off the floor a little bit to avoid math errors
-			setorigin(this, this.origin + '0 0 1');
-			// note droptofloor returns false if stuck/or would fall too far
 			if (!this.noalign)
-				droptofloor(this);
+				DropToFloor_QC_DelayedInit(this);
 			waypoint_spawnforitem(this);
 		}
 
@@ -1251,7 +1275,7 @@ void setItemGroup(entity this)
 
 void setItemGroupCount()
 {
-	for (int k = 1; k <= group_count; k++)
+	for (int k = 1; k <= group_count; ++k)
 	{
 		int count = 0;
 		IL_EACH(g_items, IS_SMALL(it.itemdef) && it.item_group == k, { count++; });
@@ -1443,17 +1467,17 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 bool GiveBuff(entity e, Buff thebuff, int op, int val)
 {
 	bool had_buff = StatusEffects_active(thebuff, e);
-	float new_buff_time = ((had_buff) ? StatusEffects_gettime(thebuff, e) : 0);
+	float new_buff_time = ((had_buff) ? StatusEffects_gettime(thebuff, e) : time);
 	switch (op)
 	{
 		case OP_SET:
-			new_buff_time = val;
+			new_buff_time = time + val;
 			break;
 		case OP_MIN:
-			new_buff_time = max(new_buff_time, val);
+			new_buff_time = max(new_buff_time, time + val);
 			break;
 		case OP_MAX:
-			new_buff_time = min(new_buff_time, val);
+			new_buff_time = min(new_buff_time, time + val);
 			break;
 		case OP_PLUS:
 			new_buff_time += val;
@@ -1462,7 +1486,7 @@ bool GiveBuff(entity e, Buff thebuff, int op, int val)
 			new_buff_time -= val;
 			break;
 	}
-	if(new_buff_time <= 0)
+	if(new_buff_time <= time)
 	{
 		if(had_buff) // only trigger removal mechanics if there is an effect to remove!
 			StatusEffects_remove(thebuff, e, STATUSEFFECT_REMOVE_NORMAL);
@@ -1519,17 +1543,17 @@ bool GiveResourceValue(entity e, Resource res_type, int op, int val)
 bool GiveStatusEffect(entity e, StatusEffects this, int op, float val)
 {
 	bool had_eff = StatusEffects_active(this, e);
-	float new_eff_time = ((had_eff) ? StatusEffects_gettime(this, e) : 0);
+	float new_eff_time = ((had_eff) ? StatusEffects_gettime(this, e) : time);
 	switch (op)
 	{
 		case OP_SET:
-			new_eff_time = val;
+			new_eff_time = time + val;
 			break;
 		case OP_MIN:
-			new_eff_time = max(new_eff_time, val);
+			new_eff_time = max(new_eff_time, time + val);
 			break;
 		case OP_MAX:
-			new_eff_time = min(new_eff_time, val);
+			new_eff_time = min(new_eff_time, time + val);
 			break;
 		case OP_PLUS:
 			new_eff_time += val;
@@ -1538,7 +1562,7 @@ bool GiveStatusEffect(entity e, StatusEffects this, int op, float val)
 			new_eff_time -= val;
 			break;
 	}
-	if(new_eff_time <= 0)
+	if(new_eff_time <= time)
 	{
 		if(had_eff) // only trigger removal mechanics if there is an effect to remove!
 			StatusEffects_remove(this, e, STATUSEFFECT_REMOVE_NORMAL);
@@ -1570,14 +1594,6 @@ float GiveItems(entity e, float beginarg, float endarg)
 			if(e.(weaponentity).m_switchweapon == w_getbestweapon(e, weaponentity))
 				_switchweapon |= BIT(slot);
 		}
-	}
-
-	if(e.statuseffects)
-	{
-		FOREACH(StatusEffect, true,
-		{
-			e.statuseffects.statuseffect_time[it.m_id] = max(0, e.statuseffects.statuseffect_time[it.m_id] - time);
-		});
 	}
 
 	PREGIVE(e, items);
@@ -1707,8 +1723,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 					break;
 				});
 				FOREACH(Weapons, it != WEP_Null && (cmd == it.netname || cmd == it.m_deprecated_netname), {
-                    got += GiveWeapon(e, it.m_id, op, val);
-                    break;
+					got += GiveWeapon(e, it.m_id, op, val);
+					break;
 				});
 				break;
 		}
@@ -1741,22 +1757,13 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	if(!StatusEffects_active(STATUSEFFECT_Superweapons, e))
 	{
-		if(!g_weaponarena && (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
-			StatusEffects_apply(STATUSEFFECT_Superweapons, e, autocvar_g_balance_superweapons_time, 0);
+		// also give default superweapon time if player had no superweapons and just got one
+		if(!g_weaponarena && !(save_weapons & WEPSET_SUPERWEAPONS) && (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
+			StatusEffects_apply(STATUSEFFECT_Superweapons, e, time + autocvar_g_balance_superweapons_time, 0);
 	}
 
 	if(e.statuseffects)
-	{
-		FOREACH(StatusEffect, true,
-		{
-			if(e.statuseffects.statuseffect_time[it.m_id] <= 0)
-				e.statuseffects.statuseffect_time[it.m_id] = 0;
-			else
-				e.statuseffects.statuseffect_time[it.m_id] += time;
-		});
-			
 		StatusEffects_update(e);
-	}
 
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{

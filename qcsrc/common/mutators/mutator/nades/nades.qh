@@ -136,10 +136,7 @@ REGISTRY_DEFINE_GET(Nades, NADE_TYPE_Null)
 Nade Nade_FromProjectile(int proj)
 {
     FOREACH(Nades, true, {
-        for (int j = 0; j < 2; j++)
-        {
-            if (it.m_projectile[j] == proj) return it;
-        }
+        if (it.m_projectile[0] == proj || it.m_projectile[1] == proj) return it;
     });
     return NADE_TYPE_Null;
 }

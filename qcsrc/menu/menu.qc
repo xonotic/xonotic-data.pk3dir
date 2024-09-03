@@ -17,6 +17,7 @@
 
 #include "xonotic/util.qh"
 
+#include <common/checkextension.qh>
 #include <common/items/_mod.qh>
 #include <common/weapons/_all.qh>
 #include <common/mapinfo.qh>
@@ -76,16 +77,7 @@ void m_init()
 		LOG_TRACEF("^4MQC Build information: ^1%s", WATERMARK);
 #endif
 
-	// list all game dirs (TEST)
-	if (cvar("developer") > 0)
-	{
-		for (int i = 0; ; ++i)
-		{
-			string s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
-			if (!s) break;
-			LOG_TRACE(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
-		}
-	}
+	CheckEngineExtensions();
 
 	registercvar("_menu_cmd_closemenu_available", "0", 0);
 	cvar_set("_menu_cmd_closemenu_available", "1");
@@ -917,6 +909,10 @@ void m_toggle(int mode)
 	if (Menu_Active)
 	{
 		if (mode == 1) return;
+		// when togglemenu is called without arguments (mode is -1)
+		// the menu is closed only when connected
+		if (mode == -1 && !(gamestatus & GAME_CONNECTED)) return;
+		// togglemenu 0 always closes the menu
 		m_hide();
 	}
 	else

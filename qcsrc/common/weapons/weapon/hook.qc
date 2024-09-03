@@ -30,12 +30,12 @@ void W_Hook_Explode2(entity this)
 
 	setthink(this, W_Hook_ExplodeThink);
 	this.nextthink = time;
-	this.dmg = WEP_CVAR_SEC(hook, damage);
-	this.dmg_edge = WEP_CVAR_SEC(hook, edgedamage);
-	this.dmg_radius = WEP_CVAR_SEC(hook, radius);
-	this.dmg_force = WEP_CVAR_SEC(hook, force);
-	this.dmg_power = WEP_CVAR_SEC(hook, power);
-	this.dmg_duration = WEP_CVAR_SEC(hook, duration);
+	this.dmg = WEP_CVAR_SEC(WEP_HOOK, damage);
+	this.dmg_edge = WEP_CVAR_SEC(WEP_HOOK, edgedamage);
+	this.dmg_radius = WEP_CVAR_SEC(WEP_HOOK, radius);
+	this.dmg_force = WEP_CVAR_SEC(WEP_HOOK, force);
+	this.dmg_power = WEP_CVAR_SEC(WEP_HOOK, power);
+	this.dmg_duration = WEP_CVAR_SEC(WEP_HOOK, duration);
 	this.teleport_time = time;
 	this.dmg_last = 1;
 	set_movetype(this, MOVETYPE_NONE);
@@ -68,13 +68,13 @@ void W_Hook_Touch2(entity this, entity toucher)
 
 void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	//W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
-	W_SetupShot(actor, weaponentity, false, 4, SND_HOOKBOMB_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hook, damage), WEP_HOOK.m_id | HITTYPE_SECONDARY);
+	//W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(WEP_HOOK, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
+	W_SetupShot(actor, weaponentity, false, 4, SND_HOOKBOMB_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(WEP_HOOK, damage), WEP_HOOK.m_id | HITTYPE_SECONDARY);
 
 	entity gren = new(hookbomb);
 	gren.owner = gren.realowner = actor;
 	gren.bot_dodge = true;
-	gren.bot_dodgerating = WEP_CVAR_SEC(hook, damage);
+	gren.bot_dodgerating = WEP_CVAR_SEC(WEP_HOOK, damage);
 	set_movetype(gren, MOVETYPE_TOSS);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_HOOK.m_id | HITTYPE_SECONDARY;
@@ -82,24 +82,24 @@ void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
 
-	gren.nextthink = time + WEP_CVAR_SEC(hook, lifetime);
+	gren.nextthink = time + WEP_CVAR_SEC(WEP_HOOK, lifetime);
 	setthink(gren, adaptor_think2use_hittype_splash);
 	gren.use = W_Hook_Explode2_use;
 	settouch(gren, W_Hook_Touch2);
 
 	gren.takedamage = DAMAGE_YES;
-	SetResourceExplicit(gren, RES_HEALTH, WEP_CVAR_SEC(hook, health));
-	gren.damageforcescale = WEP_CVAR_SEC(hook, damageforcescale);
+	SetResourceExplicit(gren, RES_HEALTH, WEP_CVAR_SEC(WEP_HOOK, health));
+	gren.damageforcescale = WEP_CVAR_SEC(WEP_HOOK, damageforcescale);
 	gren.event_damage = W_Hook_Damage;
 	gren.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, gren);
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 
-	gren.velocity = '0 0 1' * WEP_CVAR_SEC(hook, speed);
+	gren.velocity = '0 0 1' * WEP_CVAR_SEC(WEP_HOOK, speed);
 	if (autocvar_g_projectiles_newton_style)
 		gren.velocity = gren.velocity + actor.velocity;
 
-	gren.gravity = WEP_CVAR_SEC(hook, gravity);
+	gren.gravity = WEP_CVAR_SEC(WEP_HOOK, gravity);
 	//W_SetupProjVelocity_Basic(gren); // just falling down!
 
 	gren.angles = '0 0 0';
@@ -120,10 +120,10 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
         if(time > actor.(weaponentity).hook_refire)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, -1))
         {
-            W_DecreaseAmmo(thiswep, actor, thiswep.ammo_factor * WEP_CVAR_PRI(hook, ammo), weaponentity);
+            W_DecreaseAmmo(thiswep, actor, thiswep.ammo_factor * WEP_CVAR_PRI(WEP_HOOK, ammo), weaponentity);
             actor.(weaponentity).hook_state |= HOOK_FIRING;
             actor.(weaponentity).hook_state |= HOOK_WAITING_FOR_RELEASE;
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_HOOK, animtime), w_ready);
         }
     } else {
         actor.(weaponentity).hook_state |= HOOK_REMOVING;
@@ -132,17 +132,17 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 
     if(fire & 2)
     {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(hook, refire)))
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_HOOK, refire)))
         {
             W_Hook_Attack2(thiswep, actor, weaponentity);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_HOOK, animtime), w_ready);
         }
     }
 
     if(actor.(weaponentity).hook)
     {
         // if hooked, no bombs, and increase the timer
-        actor.(weaponentity).hook_refire = max(actor.(weaponentity).hook_refire, time + WEP_CVAR_PRI(hook, refire) * W_WeaponRateFactor(actor));
+        actor.(weaponentity).hook_refire = max(actor.(weaponentity).hook_refire, time + WEP_CVAR_PRI(WEP_HOOK, refire) * W_WeaponRateFactor(actor));
 
         // hook also inhibits health regeneration, but only for 1 second
         if(!(actor.items & IT_UNLIMITED_AMMO))
@@ -151,14 +151,14 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 
     if(actor.(weaponentity).hook && actor.(weaponentity).hook.state == 1)
     {
-        float hooked_time_max = WEP_CVAR_PRI(hook, hooked_time_max);
+        float hooked_time_max = WEP_CVAR_PRI(WEP_HOOK, hooked_time_max);
         if(hooked_time_max > 0)
         {
             if( time > actor.(weaponentity).hook_time_hooked + hooked_time_max )
                 actor.(weaponentity).hook_state |= HOOK_REMOVING;
         }
 
-        float hooked_fuel = thiswep.ammo_factor * WEP_CVAR_PRI(hook, hooked_ammo);
+        float hooked_fuel = thiswep.ammo_factor * WEP_CVAR_PRI(WEP_HOOK, hooked_ammo);
         if(hooked_fuel > 0)
         {
             if( time > actor.(weaponentity).hook_time_fueldecrease )
@@ -185,7 +185,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
     else
     {
         actor.(weaponentity).hook_time_hooked = time;
-        actor.(weaponentity).hook_time_fueldecrease = time + WEP_CVAR_PRI(hook, hooked_time_free);
+        actor.(weaponentity).hook_time_fueldecrease = time + WEP_CVAR_PRI(WEP_HOOK, hooked_time_free);
     }
 
     actor.(weaponentity).hook_state = BITSET(actor.(weaponentity).hook_state, HOOK_PULLING, (!PHYS_INPUT_BUTTON_CROUCH(actor) || !autocvar_g_balance_grapplehook_crouchslide));
@@ -216,12 +216,12 @@ METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor, .entity weaponentit
     if(actor.(weaponentity).hook)
     	return GetResource(actor, RES_FUEL) > 0;
 
-    return GetResource(actor, RES_FUEL) >= WEP_CVAR_PRI(hook, ammo);
+    return GetResource(actor, RES_FUEL) >= WEP_CVAR_PRI(WEP_HOOK, ammo);
 }
 METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor, .entity weaponentity))
 {
     // infinite ammo for now
-    return true; // actor.ammo_cells >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above
+    return true; // actor.ammo_cells >= WEP_CVAR_SEC(WEP_HOOK, ammo); // WEAPONTODO: see above
 }
 METHOD(Hook, wr_resetplayer, void(entity thiswep, entity actor))
 {

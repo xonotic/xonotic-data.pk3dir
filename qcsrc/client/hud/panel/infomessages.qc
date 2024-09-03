@@ -1,4 +1,6 @@
 #include "infomessages.qh"
+#include "racetimer.qh" // for race_checkpoint_splits
+#include <common/gamemodes/gamemode/race/race.qh> // for ISGAMETYPE(RACE)
 
 #include <client/draw.qh>
 #include <common/ent_cs.qh>
@@ -127,7 +129,16 @@ void HUD_InfoMessages()
 
 			if(!mutator_returnvalue)
 			{
-				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
+				int tm = entcs_GetWantsJoin(current_player);
+				if(tm > 0)
+				{
+					tm = Team_IndexToTeam(tm);
+					s = sprintf(_("^2You're queued to join the %s%s^2 team"), Team_ColorCode(tm), Team_ColorName(tm));
+				}
+				else if (tm < 0)
+					s = sprintf(_("^2You're queued to join any available team"));
+				else
+					s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
 				InfoMessage(s);
 			}
 		}
@@ -151,11 +162,9 @@ void HUD_InfoMessages()
 			InfoMessage(_("^2Currently in ^1warmup^2 stage!"));
 
 			int players_needed = 0;
+			Scoreboard_UpdatePlayerTeams(); // ensure numplayers, ts_min, ts_max are current
 			if(STAT(WARMUP_TIMELIMIT) <= 0 && srv_minplayers)
-			{
-				Scoreboard_UpdatePlayerTeams(); // ensure numplayers is current
 				players_needed = srv_minplayers - numplayers;
-			}
 
 			if(players_needed > 0)
 			{
@@ -164,6 +173,11 @@ void HUD_InfoMessages()
 				else
 					s = sprintf(_("^3%d^2 more players are needed for the match to start."), players_needed);
 				InfoMessage(s);
+			}
+			else if(teamnagger && (ts_max - ts_min) >= teamnagger)
+			{
+				// ready won't end warmup so don't display that message
+				// see below for unbalanced teams warning
 			}
 			else if(!spectatee_status)
 			{
@@ -180,29 +194,22 @@ void HUD_InfoMessages()
 			}
 		}
 
-		if(teamplay && !spectatee_status && teamnagger)
+		if (teamplay && numplayers > 1 && teamnagger)
 		{
-			float ts_min = 0, ts_max = 0;
-			entity tm = teams.sort_next;
-			if (tm)
+			if (!warmup_stage) // in warmup this was done above
+				Scoreboard_UpdatePlayerTeams();
+
+			if ((ts_max - ts_min) >= teamnagger)
 			{
-				for (; tm.sort_next; tm = tm.sort_next)
-				{
-					if(!tm.team_size || tm.team == NUM_SPECTATOR)
-						continue;
-					if(!ts_min) ts_min = tm.team_size;
-					else ts_min = min(ts_min, tm.team_size);
-					if(!ts_max) ts_max = tm.team_size;
-					else ts_max = max(ts_max, tm.team_size);
-				}
-				if ((ts_max - ts_min) > 1)
-				{
-					s = strcat(blinkcolor, _("Teamnumbers are unbalanced!"));
-					tm = GetTeam(myteam, false);
-					if (tm && tm.team != NUM_SPECTATOR && tm.team_size == ts_max)
-						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey(_("team selection"), "team_selection_show"), blinkcolor));
-					InfoMessage(s);
-				}
+				s = strcat(blinkcolor, _("Teams are unbalanced!"));
+				entity tm = GetTeam(myteam, false);
+				if (tm && tm.team != NUM_SPECTATOR && tm.team_size == ts_max)
+					s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey(_("team selection"), "team_selection_show"), blinkcolor));
+				fontsize *= 1.125; // perfect float
+				draw_beginBoldFont();
+				InfoMessage(s);
+				draw_endBoldFont();
+				fontsize /= 1.125;
 			}
 		}
 
@@ -222,6 +229,37 @@ void HUD_InfoMessages()
 					s = strcat("^7", entcs_GetName(slot));
 				InfoMessage(s);
 			}
+		}
+		if(autocvar_cl_race_checkpoint_splits_hud && !spectatee_status) {
+			int lines[6];
+			int ln = 5;
+			// show up to race_nextcheckpoint (not including) or everything
+			// if you are before start (0 or 254)
+			// (except race_laptime != 0 for race, means next is
+			// start+finish so don't show previous lap finish)
+			int i;
+			if (race_checkpoint != 0 && race_checkpoint != 254)
+			{ // middle of run/race
+				i = race_checkpoint;
+			}
+			else if (ISGAMETYPE(RACE) && race_nextcheckpoint == 0)
+			{ // before start, but on race, so don't keep old finish visible
+				i = 253;
+			}
+			else
+			{ // before start, not on race (cts), keep old run cps visible
+				i = 255;
+			}
+			for (; ln >= 0 && i >= 0; --i)
+			{
+				if (race_checkpoint_splits[i])
+				{
+					lines[ln] = i;
+					--ln;
+				}
+			}
+			for (int j = 0; j < 6; ++j)
+				InfoMessage(race_checkpoint_splits[lines[j]]);
 		}
 	}
 	else

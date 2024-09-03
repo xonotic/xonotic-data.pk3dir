@@ -365,11 +365,17 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		// or when a dead player gets stuck in the jumppad for some reason
 		if(!already_pushed && this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
 		{
-			// flash when activated
-			Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);
+			if (Q3COMPAT_COMMON && this.classname == "target_push")
+				this.pushltime = time + 1.5;
+			else
+			{
+				// flash when activated
+				Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);
+				this.pushltime = time + 0.2;
+			}
 			_sound (targ, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
-			this.pushltime = time + 0.2;
 		}
+
 		if(IS_REAL_CLIENT(targ) || IS_BOT_CLIENT(targ))
 		{
 			bool found = false;
@@ -567,8 +573,9 @@ float trigger_push_get_push_time(entity this, vector endpos)
 }
 #endif
 
-/// if (item != NULL) returns true if the item can be reached by using this jumppad, false otherwise
-/// if (item == NULL) tests jumppad's trajectory and eventually spawns waypoints for it (return value doesn't matter)
+// if (item != NULL) returns true if the item can be reached by using this jumppad, false otherwise
+// if (item == NULL) tests jumppad's trajectory and eventually spawns waypoints for it (return value doesn't matter)
+// NOTE: for simplicity's sake it improperly tests jumppad bboxes instead of bmodels
 bool trigger_push_test(entity this, entity item)
 {
 #ifdef SVQC
@@ -803,7 +810,7 @@ void trigger_push_velocity_link(entity this)
  *            or OUTSIDE (negative) of the jump trajectory. General rule: use
  *            positive values for targets mounted on the floor, and use negative
  *            values to target a point on the ceiling.
- *   movedir: if target is not set, this * speed * 10 is the velocity to be reached.
+ *   movedir: if target is not set, movedir * speed * 10 is the velocity to be reached.
  */
 spawnfunc(trigger_push)
 {
@@ -891,20 +898,40 @@ void target_push_init(entity this)
 	target_push_link(this);
 }
 
-void target_push_init2(entity this)
-{
-	if(this.target && this.target != "") // we have an old style pusher!
-	{
-		InitializeEntity(this, trigger_push_findtarget, INITPRIO_FINDTARGET);
-		this.use = target_push_use;
-	}
-
-	target_push_init(this); // normal push target behaviour can be combined with a legacy pusher?
-}
-
 spawnfunc(target_push)
 {
-	target_push_init2(this);
+	target_push_init(this); // normal push target behaviour can be combined with a legacy pusher?
+	this.use = target_push_use;
+
+	if(this.target && this.target != "") // Q3 or old style Nexuiz pusher
+	{
+		entity trigger_ent = findchain(target, this.targetname);
+		if (trigger_ent)
+		{
+			// apply size of its trigger entity so that it can be tested like a conventional
+			// trigger_push jumppad and spawn an usable box waypoyint
+			this.absmin = trigger_ent.absmin;
+			this.absmax = trigger_ent.absmax;
+		}
+		IL_PUSH(g_jumppads, this);
+		InitializeEntity(this, trigger_push_findtarget, INITPRIO_FINDTARGET);
+	}
+	else // Q3 .angles and .speed pusher
+	{
+		if (!this.speed)
+			this.speed = 1000;
+		SetMovedir(this); // this clears .angles so it must be after target_push_init()
+		this.movedir *= this.speed;
+	}
+
+	if (!this.noise)
+	{
+		if (Q3COMPAT_COMMON && !(this.spawnflags & Q3_TARGET_PUSH_JUMPPAD))
+			this.noise = "sound/misc/windfly.wav"; // Q3 mappers provide this, it's not in pak0
+		else
+			this.noise = "misc/jumppad.wav";
+	}
+	precache_sound (this.noise);
 }
 
 spawnfunc(info_notnull)

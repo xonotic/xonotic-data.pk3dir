@@ -2,7 +2,9 @@
 
 REGISTER_MUTATOR(waypointsprites, true);
 
+#ifdef GAMEQC
 REGISTER_NET_LINKED(waypointsprites)
+#endif
 
 #ifdef SVQC
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)

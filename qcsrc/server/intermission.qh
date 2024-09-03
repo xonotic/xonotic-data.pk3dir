@@ -10,6 +10,8 @@ bool intermission_running;
 float intermission_exittime;
 bool alreadychangedlevel;
 
+int maplist_buffer;
+
 string GetGametype();
 
 string GetMapname();
@@ -22,11 +24,11 @@ void GotoNextMap(float reinit);
 
 bool Map_IsRecent(string m);
 
-bool Map_Check(int position, float pass);
+bool Map_Check(string m, float pass);
 
-string GetNextMap();
-
-void ShuffleMaplist();
+int Maplist_Init(void);
+void Maplist_Close();
+string GetNextMap(void);
 
 void Map_Goto_SetStr(string nextmapname);
 

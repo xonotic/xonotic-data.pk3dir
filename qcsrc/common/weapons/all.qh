@@ -120,13 +120,7 @@ STATIC_INIT_LATE(W_PROP_reloader)
 }
 #endif
 
-#define REGISTER_WEAPON(...) EVAL_REGISTER_WEAPON(OVERLOAD(REGISTER_WEAPON, __VA_ARGS__))
-#define EVAL_REGISTER_WEAPON(...) __VA_ARGS__
-#define REGISTER_WEAPON_2(id, inst) REGISTER(Weapons, WEP, id, m_id, inst)
-/** TODO: deprecated - remove */
-#define REGISTER_WEAPON_3(id, sname, inst) \
-    REGISTER_WEAPON_2(id, inst); \
-    [[alias("WEP_" #id)]] Weapon _wep_##sname
+#define REGISTER_WEAPON(id, inst) REGISTER(Weapons, WEP, id, m_id, inst)
 
 REGISTER_WEAPON(Null, NEW(Weapon));
 REGISTRY_DEFINE_GET(Weapons, WEP_Null)
@@ -296,10 +290,10 @@ const .float reloading_time = reload_time;
 
 // read cvars from weapon settings
 // cvars are created as such: g_balance_wepname_name
-#define WEP_CVAR(wepname, name) (_wep_##wepname.wepvar_##name)
-#define WEP_CVAR_PRI(wepname, name) WEP_CVAR(wepname, primary_##name)
-#define WEP_CVAR_SEC(wepname, name) WEP_CVAR(wepname, secondary_##name)
-#define WEP_CVAR_BOTH(wepname, isprimary, name) ((isprimary) ? WEP_CVAR_PRI(wepname, name) : WEP_CVAR_SEC(wepname, name))
+#define WEP_CVAR(wep, name) (wep.wepvar_##name)
+#define WEP_CVAR_PRI(wep, name) WEP_CVAR(wep, primary_##name)
+#define WEP_CVAR_SEC(wep, name) WEP_CVAR(wep, secondary_##name)
+#define WEP_CVAR_BOTH(wep, isprimary, name) ((isprimary) ? WEP_CVAR_PRI(wep, name) : WEP_CVAR_SEC(wep, name))
 
 const int WEP_FIRST = 1;
 #define WEP_LAST (REGISTRY_COUNT(Weapons) - 1)
@@ -390,7 +384,7 @@ ENUMCLASS_END(WFRAME)
     #define G_SHOOTFROMFIXEDORIGIN autocvar_cl_shootfromfixedorigin
 #endif
 
-vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
+vector shotorg_adjust(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
 
 REPLICATE_INIT(int, cvar_cl_gunalign);

@@ -16,6 +16,7 @@
 #include <common/debug.qh>
 #include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>
+#include <common/impulses/all.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/target/music.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
@@ -39,7 +40,6 @@
 #include <lib/warpzone/client.qh>
 #include <lib/warpzone/common.qh>
 
-float autocvar_cl_viewmodel_scale;
 float autocvar_cl_viewmodel_alpha = 1;
 
 bool autocvar_cl_bobmodel;
@@ -217,6 +217,7 @@ vector bobmodel_ofs(entity view)
 	vector gunorg = '0 0 0';
 	static float bobmodel_scale = 0;
 	static float time_ofs = 0; // makes the effect always restart in the same way
+	static float avg_xyspeed = 0; // makes the effect always restart in the same way
 	if (clonground)
 	{
 		if (time - hitgroundtime > 0.05)
@@ -225,13 +226,27 @@ vector bobmodel_ofs(entity view)
 	else
 		bobmodel_scale = max(0, bobmodel_scale - frametime * 5);
 
-	float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
-	if (bobmodel_scale && xyspeed)
+	if (bobmodel_scale)
 	{
-		float bspeed = xyspeed * 0.01 * autocvar_cl_viewmodel_scale * bobmodel_scale;
-		float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
-		gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
-		gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
+		float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
+		// smooth speed changes to get rid of weapon stuttering on direction changes
+		const float avg_time = 0.1;
+		float frac = 1 - exp(-frametime / max(0.001, avg_time));
+		avg_xyspeed = frac * xyspeed + (1 - frac) * avg_xyspeed;
+		// stop bobbing at a very low value of avg_xyspeed instead of 0
+		// since the averaging formula takes a very long time to reach exactly 0
+		if (avg_xyspeed < 1)
+			time_ofs = time;
+		else
+		{
+			if (avg_xyspeed < 400) // reduce bob frequency too when player walks crouching
+				time_ofs += frametime * map_bound_ranges(avg_xyspeed, 150, 400, 0.08, 0);
+
+			float bspeed = avg_xyspeed * 0.01 * bobmodel_scale;
+			float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
+			gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
+			gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
+		}
 	}
 	else
 		time_ofs = time;
@@ -481,7 +496,7 @@ vector GetCurrentFov(float fov)
 		}
 	}
 
-	if(almost_equals(current_viewzoom, 1))
+	if(zoomfactor == 1 || current_viewzoom > 0.999) // zoomfactor check prevents a division by 0
 		current_zoomfraction = 0;
 	else if(almost_equals(current_viewzoom, 1/zoomfactor))
 		current_zoomfraction = 1;
@@ -523,20 +538,20 @@ vector GetCurrentFov(float fov)
 		velocityzoom = 1;
 
 	float frustumx, frustumy, fovx, fovy;
-	frustumy = tan(fov * M_PI / 360.0) * 0.75 * current_viewzoom * velocityzoom;
+	frustumy = tan(fov * (M_PI / 360)) * 0.75 * current_viewzoom * velocityzoom;
 	frustumx = frustumy * vid_width / vid_height / vid_pixelheight;
-	fovx = atan2(frustumx, 1) / M_PI * 360.0;
-	fovy = atan2(frustumy, 1) / M_PI * 360.0;
+	fovx = atan2(frustumx, 1) * (360 / M_PI);
+	fovy = atan2(frustumy, 1) * (360 / M_PI);
 
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
 vector GetViewLocationFOV(float fov)
 {
-	float frustumy = tan(fov * M_PI / 360.0) * 0.75;
+	float frustumy = tan(fov * (M_PI / 360)) * 0.75;
 	float frustumx = frustumy * vid_width / vid_height / vid_pixelheight;
-	float fovx = atan2(frustumx, 1) / M_PI * 360.0;
-	float fovy = atan2(frustumy, 1) / M_PI * 360.0;
+	float fovx = atan2(frustumx, 1) * (360 / M_PI);
+	float fovy = atan2(frustumy, 1) * (360 / M_PI);
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
@@ -613,8 +628,24 @@ int WantEventchase(entity this, bool want_vehiclechase)
 	return 0;
 }
 
+bool waiting_CAMERA_SPECTATOR_update;
 void View_EventChase(entity this)
 {
+	if(spectatee_status > 0 && autocvar_chase_active > 0)
+	{
+		// if chase_active is enabled by the user, spectator camera never switches to 1st person
+		// that means CAMERA_SPECTATOR 1 behaves as 0 and is redundant, so we forcedly skip it
+		if (STAT(CAMERA_SPECTATOR) == 1)
+		{
+			if (!waiting_CAMERA_SPECTATOR_update)
+			{
+				Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR 2
+				waiting_CAMERA_SPECTATOR_update = true;
+			}
+		}
+		else waiting_CAMERA_SPECTATOR_update = false;
+	}
+
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
@@ -860,7 +891,10 @@ void HUD_Draw(entity this)
 	{
 		if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 		{
-			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
+			vector col = M_ARGV(0, vector);
+			float alpha_multipl = M_ARGV(1, float);
+			if (alpha_multipl > 0)
+				drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_multipl, DRAWFLAG_ADDITIVE);
 		}
 		else if(STAT(FROZEN))
 		{
@@ -1533,7 +1567,7 @@ void View_UpdateFov()
 	setproperty(VF_FOV, fov);
 }
 
-void CSQC_UpdateView(entity this, float w, float h)
+void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 {
 	TC(int, w); TC(int, h);
 

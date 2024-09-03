@@ -29,19 +29,11 @@ CLASS(OverkillMachineGun, Weapon)
 		P(class, prefix, spread_add, float, PRI) \
 		P(class, prefix, spread_max, float, PRI) \
 		P(class, prefix, spread_min, float, PRI) \
-		P(class, prefix, animtime, float, SEC) \
-		P(class, prefix, damage, float, SEC) \
-		P(class, prefix, delay, float, SEC) \
-		P(class, prefix, edgedamage, float, SEC) \
-		P(class, prefix, force, float, SEC) \
-		P(class, prefix, force_zscale, float, SEC) \
-		P(class, prefix, lifetime, float, SEC) \
-		P(class, prefix, radius, float, SEC) \
-		P(class, prefix, refire, float, SEC) \
 		P(class, prefix, refire_type, float, SEC) \
-		P(class, prefix, shotangle, float, SEC) \
-		P(class, prefix, speed, float, SEC) \
-		P(class, prefix, spread, float, SEC) \
+		P(class, prefix, damagefalloff_forcehalflife, float, NONE) \
+		P(class, prefix, damagefalloff_halflife, float, NONE) \
+		P(class, prefix, damagefalloff_maxdist, float, NONE) \
+		P(class, prefix, damagefalloff_mindist, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
@@ -55,6 +47,6 @@ CLASS(OverkillMachineGun, Weapon)
 #undef X
 
 ENDCLASS(OverkillMachineGun)
-REGISTER_WEAPON(OVERKILL_MACHINEGUN, okmachinegun, NEW(OverkillMachineGun));
+REGISTER_WEAPON(OVERKILL_MACHINEGUN, NEW(OverkillMachineGun));
 
 //SPAWNFUNC_WEAPON(weapon_okmachinegun, WEP_OVERKILL_MACHINEGUN)

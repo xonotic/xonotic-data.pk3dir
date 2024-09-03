@@ -1,5 +1,6 @@
 #include "world.qh"
 
+#include <common/checkextension.qh>
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/gamemodes/_mod.qh>
@@ -118,12 +119,7 @@ void GotoFirstMap(entity this)
 	{
 		// cvar_set("_sv_init", "0");
 		// we do NOT set this to 0 any more, so someone "accidentally" changing
-		// to this "init" map on a dedicated server will cause no permanent
-		// harm
-		if(autocvar_g_maplist_shuffle)
-			ShuffleMaplist();
-		n = tokenizebyseparator(autocvar_g_maplist, " ");
-		cvar_set("g_maplist_index", ftos(n - 1)); // jump to map 0 in GotoNextMap
+		// to this "init" map on a dedicated server will cause no permanent harm
 
 		MapInfo_Enumerate();
 		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -337,8 +333,11 @@ void cvar_changes_init()
 
 		if(adding)
 		{
+			if (cvar_changes == "")
+				cvar_changes = "// this server runs at modified server settings:\n";
+
 			cvar_changes = strcat(cvar_changes, k, " \"", v, "\" // \"", d, "\"\n");
-			if(strlen(cvar_changes) > 16384)
+			if(strlen(cvar_changes) >= VM_TEMPSTRING_MAXSIZE)
 			{
 				cvar_changes = "// too many settings have been changed to show them here\n";
 				adding = 0;
@@ -433,6 +432,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
 		BADPRESUFFIX("g_", "_round_timelimit");
+		BADPRESUFFIX("g_", "_round_enddelay");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
@@ -451,6 +451,9 @@ void cvar_changes_init()
 		BADCVAR("gametype");
 		BADCVAR("g_antilag");
 		BADCVAR("g_balance_teams");
+		BADCVAR("g_balance_teams_queue");
+		BADCVAR("g_balance_teams_remove");
+		BADCVAR("g_balance_teams_remove_wait");
 		BADCVAR("g_balance_teams_prevent_imbalance");
 		BADCVAR("g_balance_teams_scorefactor");
 		BADCVAR("g_ban_sync_trusted_servers");
@@ -525,13 +528,15 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_commands");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
-		BADVALUE("sys_ticrate", "0.0166667");
-		BADVALUE("sys_ticrate", "0.0333333");
+		BADVALUE("sys_ticrate", "0.0078125");
+		BADVALUE("sys_ticrate", "0.015625");
+		BADVALUE("sys_ticrate", "0.03125");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup");
 		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
+		BADCVAR("sv_teamnagger");
 
 		BADPRESUFFIXVALUE("g_", "_weaponarena", "most");
 		BADPRESUFFIXVALUE("g_", "_weaponarena", "most_available");
@@ -551,8 +556,11 @@ void cvar_changes_init()
 
 		if(pureadding)
 		{
+			if (cvar_purechanges == "")
+				cvar_purechanges = "// this server runs at modified gameplay settings:\n";
+
 			cvar_purechanges = strcat(cvar_purechanges, k, " \"", v, "\" // \"", d, "\"\n");
-			if(strlen(cvar_purechanges) > 16384)
+			if(strlen(cvar_purechanges) >= VM_TEMPSTRING_MAXSIZE)
 			{
 				cvar_purechanges = "// too many settings have been changed to show them here\n";
 				pureadding = 0;
@@ -567,15 +575,13 @@ void cvar_changes_init()
 		// though.
 	}
 	buf_del(h);
+
 	if(cvar_changes == "")
 		cvar_changes = "// this server runs at default server settings\n";
-	else
-		cvar_changes = strcat("// this server runs at modified server settings:\n", cvar_changes);
 	cvar_changes = strzone(cvar_changes);
+
 	if(cvar_purechanges == "")
 		cvar_purechanges = "// this server runs at default gameplay settings\n";
-	else
-		cvar_purechanges = strcat("// this server runs at modified gameplay settings:\n", cvar_purechanges);
 	cvar_purechanges = strzone(cvar_purechanges);
 }
 
@@ -736,7 +742,9 @@ void InitGameplayMode()
 
 	MapInfo_ClearTemps();
 
-	gamemode_name = MapInfo_Type_ToText(MapInfo_LoadedGametype);
+	strcpy(loaded_gametype_custom_string, autocvar__sv_vote_gametype_custom);
+	gametype_custom_enabled = (loaded_gametype_custom_string != "");
+	cvar_set("_sv_vote_gametype_custom", ""); // clear it immediately so it can't get stuck
 
 	cache_mutatormsg = strzone("");
 	cache_lastmutatormsg = strzone("");
@@ -747,6 +755,8 @@ void InitGameplayMode()
 bool world_already_spawned;
 spawnfunc(worldspawn)
 {
+	CheckEngineExtensions();
+
 	cvar_set("_endmatch", "0");
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
@@ -926,18 +936,12 @@ spawnfunc(worldspawn)
 	q3compat = BITSET(q3compat, Q3COMPAT_DEFI, _MapInfo_FindArenaFile(mapname, ".defi") != "");
 
 	// quake 3 music support
-	if(world.music || world.noise)
-	{
+	// bones_was_here: Q3 doesn't support .noise but the Nexuiz _MapInfo_Generate() does.
+	// TODO: Q3 supports an optional intro file: "music/intro.wav music/loop.wav"
+	string music = GetField_fullspawndata(world, "music", true);
+	if (music || world.noise)
 		// prefer .music over .noise
-		string chosen_music;
-		if(world.music)
-			chosen_music = world.music;
-		else
-			chosen_music = world.noise;
-
-		string newstuff = strcat(clientstuff, "cd loop \"", chosen_music, "\"\n");
-		strcpy(clientstuff, newstuff);
-	}
+		strcpy(clientstuff, strcat(clientstuff, "cd loop \"", (music ? music : world.noise), "\"\n"));
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
@@ -1321,6 +1325,40 @@ void DumpStats(float final)
 	}
 }
 
+// it should be called by gametypes where players can join a team but have to wait before playing
+// it puts players who joined too late (without being able to play) back to spectators
+// if prev_team_field is not team it also puts players who previously switched team (without being
+// able to play on the new team) back to previous team
+void MatchEnd_RestoreSpectatorAndTeamStatus(.int prev_team_field)
+{
+	bool fix_team = (teamplay && prev_team_field != team);
+	FOREACH_CLIENT(true,
+	{
+		if (!IS_PLAYER(it) && INGAME_JOINING(it))
+		{
+			INGAME_STATUS_CLEAR(it);
+			PutObserverInServer(it, true, false);
+			bprint(playername(it.netname, it.team, false), " has been moved back to spectator");
+			it.winning = false;
+		}
+		else if (fix_team && INGAME_JOINED(it) && it.(prev_team_field) && it.team != it.(prev_team_field))
+		{
+			Player_SetForcedTeamIndex(it, TEAM_FORCE_DEFAULT);
+			if (MoveToTeam(it, Team_TeamToIndex(it.(prev_team_field)), 6))
+			{
+				string pl_name = playername(it.netname, it.team, false);
+				bprint(pl_name, " has been moved back to the ", Team_ColoredFullName(it.team));
+			}
+			it.winning = (it.team == WinningConditionHelper_winnerteam);
+		}
+	});
+}
+
+void MatchEnd_RestoreSpectatorStatus()
+{
+	MatchEnd_RestoreSpectatorAndTeamStatus(team);
+}
+
 /*
 go to the next level for deathmatch
 only called if a time or frag limit has expired
@@ -1347,6 +1385,8 @@ void NextLevel()
 	//pos = FindIntermission ();
 
 	VoteReset(true);
+
+	MUTATOR_CALLHOOK(MatchEnd_BeforeScores);
 
 	DumpStats(true);
 
@@ -1780,7 +1820,7 @@ void CheckRules_World()
 	}
 }
 
-float want_weapon(entity weaponinfo, float allguns)
+int want_weapon(entity weaponinfo, int allguns)
 {
 	int d = 0;
 	bool allow_mutatorblocked = false;
@@ -1790,10 +1830,12 @@ float want_weapon(entity weaponinfo, float allguns)
 
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(WantWeapon, weaponinfo, d, allguns, allow_mutatorblocked);
 	d = M_ARGV(1, float);
-	allguns = M_ARGV(2, bool);
+	allguns = M_ARGV(2, int);
 	allow_mutatorblocked = M_ARGV(3, bool);
 
-	if(allguns)
+	if(allguns == 1)
+		d = boolean(!(weaponinfo.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
+	else if(allguns == 2)
 		d = boolean((weaponinfo.spawnflags & WEP_FLAG_NORMAL) && !(weaponinfo.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
 	else if(!mutator_returnvalue)
 		d = !(!weaponinfo.weaponstart);
@@ -2301,14 +2343,60 @@ void InitializeEntitiesRun()
 	delete_fn = remove_unsafely;
 }
 
-// deferred dropping
-// ported from VM_SV_droptofloor TODO: make a common function for the client-side?
-void DropToFloor_Handler(entity this)
+// originally ported from DP's droptofloor() builtin
+// TODO: make a common function for the client-side?
+// bones_was_here: when we have a use case for it, yes
+void DropToFloor_QC(entity this)
 {
+	int nudgeresult;
+
 	if(!this || wasfreed(this))
 	{
-		// no modifying free entities
+		LOG_WARN("DropToFloor_QC: can not modify free entity");
 		return;
+	}
+
+	/* Prior to sv_legacy_bbox_expand 0, both droptofloor and nudgeoutofsolid were done for items
+	 * using box '-16 -16 0' '16 16 48' (without the FL_ITEM expansion applied),
+	 * which often resulted in bboxes partially in solids once expansion was applied.
+	 * We don't want bboxes in solids (bad for gameplay and culling),
+	 * but we also don't want items to land on a "skirting board" or the base of a sloping wall.
+	 * For initial nudgeoutofsolid and droptofloor stages we use a small box
+	 * so they fall as far and in the same place as they traditionally would,
+	 * then we nudge the full size box out of solid, in a direction appropriate for the plane(s).
+	 */
+	vector saved_mins = this.mins; // gmqcc's used-uninitialized check doesn't handle
+	vector saved_maxs = this.maxs; // making these assignments FL_ITEM conditional.
+	if (this.flags & FL_ITEM)
+	{
+		// Using the Q3 bbox for best compatibility with all maps, except...
+		this.mins.x = -15;
+		this.mins.y = -15;
+		this.maxs.x = 15;
+		this.maxs.y = 15;
+		this.maxs.z = this.mins.z + 30; // ...Nex, Xon and Quake use a different vertical offset, see also: StartItem()
+	}
+
+	/* NOTE: sv_gameplayfix_droptofloorstartsolid_nudgetocorrect isn't checked, so it won't need to be networked to CSQC.
+	 * It was enabled by default in all Xonotic releases and in Nexuiz, so now certain maps depend on it.
+	 * Example: on erbium 0.8.6 the shards @ crylink are too low (in collision with the floor),
+	 * so without this those fall through the floor.
+	 * Q3, Q2 and Quake don't try to move items out of solid.
+	 */
+	if(!Q3COMPAT_COMMON && autocvar_sv_mapformat_is_quake3) // Xonotic, Nexuiz
+	{
+		nudgeresult = nudgeoutofsolid(this);
+		if (!nudgeresult)
+			LOG_WARNF("DropToFloor_QC at \"%v\": COULD NOT FIX badly placed entity \"%s\" before drop", this.origin, this.classname);
+		else if (nudgeresult > 0)
+			LOG_WARNF("DropToFloor_QC at \"%v\": FIXED badly placed entity \"%s\" before drop", this.origin, this.classname);
+	}
+	else if (!autocvar_sv_mapformat_is_quake3 && !autocvar_sv_mapformat_is_quake2) // Quake
+	{
+		if (this.flags & FL_ITEM)
+			this.origin.z += 6;
+		else
+			this.origin.z += 1; // monsters 1, misc_explobox 2 but we don't support those currently
 	}
 
 	vector end = this.origin;
@@ -2318,69 +2406,73 @@ void DropToFloor_Handler(entity this)
 		end.z -= 128;
 	else
 		end.z -= 256; // Quake, QuakeWorld
+	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NOMONSTERS, this);
 
-	// NOTE: SV_NudgeOutOfSolid is used in the engine here
-	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+	if (!autocvar_sv_mapformat_is_quake3 && !autocvar_sv_mapformat_is_quake2 && (trace_allsolid || trace_fraction == 1)) // Quake
 	{
-		_Movetype_UnstickEntity(this);
-		move_out_of_solid(this);
+		// Quake games just delete badly placed items (and misc_explobox)...
+		if (this.flags & FL_ITEM)
+		{
+			LOG_WARNF("DropToFloor_QC at \"%v\" (Quake compat): DELETING badly placed item \"%s\"", this.origin, this.classname);
+			delete(this);
+			return;
+		}
+		// ...not monsters though...
+		LOG_WARNF("DropToFloor_QC at \"%v\" (Quake compat): badly placed entity \"%s\"", this.origin, this.classname);
+	}
+	else if ((Q3COMPAT_COMMON || autocvar_sv_mapformat_is_quake2) && trace_startsolid) // Q3, Q2
+	{
+		// ...but we can't do that on Q3 maps like jamdm1
+		// because our tracebox hits things Q3's trace doesn't (patches?).
+		LOG_WARNF("DropToFloor_QC at \"%v\" (Quake 3 compat): badly placed entity \"%s\"", this.origin, this.classname);
 	}
 
-	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
+	/* NOTE: sv_gameplayfix_droptofloorstartsolid (fallback from tracebox to traceline) isn't implemented.
+	 * It was disabled by default in all Xonotic releases and in Nexuiz.
+	 * Q3 doesn't support it (always uses its '-15 -15 -15' '15 15 15' box when dropping items), neither does Quake or Q2.
+	 */
 
-	if(trace_startsolid && autocvar_sv_gameplayfix_droptofloorstartsolid)
+	if (!autocvar_sv_mapformat_is_quake2) // Quake, Q3, Nexuiz, Xonotic
+		// allow to ride movers (or unset if in freefall)
+		this.groundentity = trace_ent;
+
+	if (!autocvar_sv_mapformat_is_quake3)
+		// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+		// bones_was_here: is this for Q1BSP only? Which maps use it? Do we need it at all? Intentions unclear in DP...
+		this.move_suspendedinair = true;
+
+	if (trace_fraction)
+		this.origin = trace_endpos;
+
+	if (this.flags & FL_ITEM)
 	{
-		vector offset, org;
-		offset = 0.5 * (this.mins + this.maxs);
-		offset.z = this.mins.z;
-		org = this.origin + offset;
-		traceline(org, end, MOVE_NORMAL, this);
-		trace_endpos = trace_endpos - offset;
-		if(trace_startsolid)
-		{
-			LOG_DEBUGF("DropToFloor_Handler: %v could not fix badly placed entity", this.origin);
-			_Movetype_LinkEdict(this, false);
-			SET_ONGROUND(this);
-			this.groundentity = NULL;
-		}
-		else if(trace_fraction < 1)
-		{
-			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
-			setorigin(this, trace_endpos);
-			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
-			{
-				_Movetype_UnstickEntity(this);
-				move_out_of_solid(this);
-			}
-			SET_ONGROUND(this);
-			this.groundentity = trace_ent;
-			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
-			this.move_suspendedinair = true;
-		}
+		this.mins = saved_mins;
+		this.maxs = saved_maxs;
+
+		// A side effect of using a small box to drop items (and do the initial nudge) is
+		// the full size box can end up in collision with a sloping floor or terrain model.
+		nudgeresult = nudgeoutofsolid(this);
+		// No warns for successful nudge because it would spam about items on slopes/terrain.
+	}
+	else if (trace_allsolid && trace_fraction) // dropped using "proper" bbox but never left solid
+	{
+		nudgeresult = nudgeoutofsolid(this);
+		if (nudgeresult > 0)
+			LOG_WARNF("DropToFloor_QC at \"%v\": FIXED badly placed entity \"%s\" after drop", this.origin, this.classname);
 	}
 	else
-	{
-		if(!trace_allsolid && trace_fraction < 1)
-		{
-			setorigin(this, trace_endpos);
-			SET_ONGROUND(this);
-			this.groundentity = trace_ent;
-			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
-			this.move_suspendedinair = true;
-		}
-		else
-		{
-			// if we can't get the entity out of solid, mark it as on ground so physics doesn't attempt to drop it
-			// hacky workaround for #2774
-			SET_ONGROUND(this);
-		}
-	}
-	this.dropped_origin = this.origin;
+		nudgeresult = -1;
+
+	if (!nudgeresult)
+	if (!Q3COMPAT_COMMON) // to be expected on Q3 maps like gu3-pewter because we use bigger final bboxes
+		LOG_WARNF("DropToFloor_QC at \"%v\": COULD NOT FIX stuck entity \"%s\" after drop", this.origin, this.classname);
+
+	setorigin(this, this.dropped_origin = this.origin);
 }
 
-void droptofloor(entity this)
+void DropToFloor_QC_DelayedInit(entity this)
 {
-	InitializeEntity(this, DropToFloor_Handler, INITPRIO_DROPTOFLOOR);
+	InitializeEntity(this, DropToFloor_QC, INITPRIO_DROPTOFLOOR);
 }
 
 bool autocvar_sv_gameplayfix_multiplethinksperframe = true;
@@ -2393,7 +2485,7 @@ void RunThink(entity this, float dt)
 
 	float oldtime = time; // do we need to save this?
 
-	for (int iterations = 0; iterations < 128 && !wasfreed(this); iterations++)
+	for (int iterations = 0; iterations < 128 && !wasfreed(this); ++iterations)
 	{
 		time = max(oldtime, this.nextthink);
 		this.nextthink = 0;
@@ -2604,6 +2696,7 @@ void Shutdown()
 		MapInfo_Shutdown();
 
 		strfree(sv_termsofservice_url_escaped);
+		strfree(loaded_gametype_custom_string);
 	}
 	else if(world_initialized == 0)
 	{

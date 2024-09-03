@@ -13,7 +13,7 @@ const int polyline_length = 16;
 .vector polyline[polyline_length];
 void Porto_Draw(entity this)
 {
-	if (spectatee_status || intermission == 1 || intermission == 2 || STAT(HEALTH) <= 0 || WEP_CVAR(porto, secondary)) return;
+	if (spectatee_status || intermission == 1 || intermission == 2 || STAT(HEALTH) <= 0 || WEP_CVAR(WEP_PORTO, secondary)) return;
 
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -118,9 +118,10 @@ void W_Porto_Fail(entity this, float failhard)
 
 	if(this.cnt < 0 && !failhard && this.realowner.playerid == this.playerid && !IS_DEAD(this.realowner) && !(STAT(WEAPONS, this.realowner) & WEPSET(PORTO)))
 	{
-		setsize(this, '-16 -16 0', '16 16 48');
+		// FIXME: item properties should be obtained from the registry
+		setsize(this, ITEM_D_MINS, ITEM_D_MAXS);
 		setorigin(this, this.origin + trace_plane_normal);
-		if(move_out_of_solid(this))
+		if(nudgeoutofsolid(this))
 		{
 			this.flags = FL_ITEM;
 			IL_PUSH(g_items, this);
@@ -302,15 +303,15 @@ void W_Porto_Attack(Weapon thiswep, entity actor, .entity weaponentity, float ty
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
 
-	gren.nextthink = time + WEP_CVAR_BOTH(porto, (type <= 0), lifetime);
+	gren.nextthink = time + WEP_CVAR_BOTH(WEP_PORTO, (type <= 0), lifetime);
 	setthink(gren, W_Porto_Think);
 	settouch(gren, W_Porto_Touch);
 
 	// TODO: handle as mutator effect
 	if(StatusEffects_active(STATUSEFFECT_Strength, actor))
-		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed) * autocvar_g_balance_powerup_strength_force, 0);
+		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(WEP_PORTO, (type <= 0), speed) * autocvar_g_balance_powerup_strength_force, 0);
 	else
-		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed), 0);
+		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(WEP_PORTO, (type <= 0), speed), 0);
 
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
@@ -337,30 +338,30 @@ METHOD(PortoLaunch, wr_aim, void(entity thiswep, entity actor, .entity weaponent
 {
     PHYS_INPUT_BUTTON_ATCK(actor) = false;
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;
-    if(!WEP_CVAR(porto, secondary))
-        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false, true))
+    if(!WEP_CVAR(WEP_PORTO, secondary))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_PORTO, speed), 0, WEP_CVAR_PRI(WEP_PORTO, lifetime), false, true))
             PHYS_INPUT_BUTTON_ATCK(actor) = true;
 }
 METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(porto, secondary))
+    if(WEP_CVAR(WEP_PORTO, secondary))
     {
         if(fire & 1)
         if(!actor.porto_current)
         if(!actor.porto_forbidden)
-        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_PORTO, refire)))
         {
             W_Porto_Attack(thiswep, actor, weaponentity, 0);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_PORTO, animtime), w_ready);
         }
 
         if(fire & 2)
         if(!actor.porto_current)
         if(!actor.porto_forbidden)
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(porto, refire)))
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_PORTO, refire)))
         {
             W_Porto_Attack(thiswep, actor, weaponentity, 1);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_PORTO, animtime), w_ready);
         }
     }
     else
@@ -384,10 +385,10 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(fire & 1)
         if(!actor.porto_current)
         if(!actor.porto_forbidden)
-        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_PORTO, refire)))
         {
             W_Porto_Attack(thiswep, actor, weaponentity, -1);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_PORTO, animtime), w_ready);
         }
     }
 }

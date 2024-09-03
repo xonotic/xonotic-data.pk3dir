@@ -1,6 +1,8 @@
 #include "vaporizer.qh"
 
+#ifdef GAMEQC
 REGISTER_NET_TEMP(TE_CSQC_VAPORBEAMPARTICLE)
+#endif
 
 #if defined(SVQC)
 void SendCSQCVaporizerBeamParticle(entity player, int hit) {
@@ -115,7 +117,7 @@ void W_RocketMinsta_Explosion(entity actor, .entity weaponentity, vector loc)
 void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	bool flying = IsFlying(actor); // do this BEFORE to make the trace values from FireRailgunBullet last
-	float vaporizer_damage = ((WEP_CVAR_PRI(vaporizer, damage) > 0) ? WEP_CVAR_PRI(vaporizer, damage) : 10000);
+	float vaporizer_damage = ((WEP_CVAR_PRI(WEP_VAPORIZER, damage) > 0) ? WEP_CVAR_PRI(WEP_VAPORIZER, damage) : 10000);
 
 	W_SetupShot(actor, weaponentity, true, 0, SND_Null, CH_WEAPON_A, vaporizer_damage, thiswep.m_id);
 	// handle sound separately so we can change the volume
@@ -124,7 +126,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	yoda = 0;
 	impressive_hits = 0;
-	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, vaporizer_damage, true, WEP_CVAR_PRI(vaporizer, force), 0, 0, 0, 0, thiswep.m_id);
+	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, vaporizer_damage, true, WEP_CVAR_PRI(WEP_VAPORIZER, force), WEP_CVAR_PRI(WEP_VAPORIZER, damagefalloff_mindist), WEP_CVAR_PRI(WEP_VAPORIZER, damagefalloff_maxdist), WEP_CVAR_PRI(WEP_VAPORIZER, damagefalloff_halflife), WEP_CVAR_PRI(WEP_VAPORIZER, damagefalloff_forcehalflife), thiswep.m_id);
 
 	// do this now, as goodhits is disabled below
 	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
@@ -145,7 +147,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 		W_RocketMinsta_Explosion(actor, weaponentity, trace_endpos);
 
-	W_DecreaseAmmo(thiswep, actor, ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)), weaponentity);
+	W_DecreaseAmmo(thiswep, actor, ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(WEP_VAPORIZER, ammo)), weaponentity);
 }
 
 void W_RocketMinsta_Laser_Damage(entity this, entity directhitentity)
@@ -199,7 +201,7 @@ void W_RocketMinsta_Attack(entity actor, .entity weaponentity, int mode)
 	// uses electro effects
 	W_MuzzleFlash(WEP_ELECTRO, actor, weaponentity, w_shotorg, w_shotdir);
 
-	for (int counter = 0; counter < total; counter++)
+	for (int counter = 0; counter < total; ++counter)
 	{
 		proj = new(plasma_prim);
 		proj.owner = proj.realowner = actor;
@@ -247,27 +249,27 @@ METHOD(Vaporizer, wr_aim, void(entity thiswep, entity actor, .entity weaponentit
     if((actor.items & IT_UNLIMITED_AMMO) || GetResource(actor, thiswep.ammo_type) > 0)
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 1, false, true);
     else
-        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false, true); // WEAPONTODO: replace with proper vaporizer cvars
+        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_BLASTER, speed), 0, WEP_CVAR_PRI(WEP_BLASTER, lifetime), false, true);
 }
 METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
+    float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(WEP_VAPORIZER, ammo));
     // if the laser uses load, we also consider its ammo for reloading
-    if(WEP_CVAR(vaporizer, reload_ammo) && WEP_CVAR_SEC(vaporizer, ammo) && actor.(weaponentity).clip_load < min(vaporizer_ammo, WEP_CVAR_SEC(vaporizer, ammo))) { // forced reload
+    if(WEP_CVAR(WEP_VAPORIZER, reload_ammo) && WEP_CVAR_PRI(WEP_BLASTER, ammo) && actor.(weaponentity).clip_load < min(vaporizer_ammo, WEP_CVAR_PRI(WEP_BLASTER, ammo))) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
         actor.(weaponentity).hagar_load = false; // rocket minsta exclusive var
         return;
-    } else if(WEP_CVAR(vaporizer, reload_ammo) && actor.(weaponentity).clip_load < vaporizer_ammo) { // forced reload
+    } else if(WEP_CVAR(WEP_VAPORIZER, reload_ammo) && actor.(weaponentity).clip_load < vaporizer_ammo) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
         actor.(weaponentity).hagar_load = false; // rocket minsta exclusive var
         return;
     }
     if((fire & 1) && (GetResource(actor, RES_CELLS) || !autocvar_g_rm) && !weaponLocked(actor))
     {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vaporizer, refire)))
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_VAPORIZER, refire)))
         {
             W_Vaporizer_Attack(thiswep, actor, weaponentity);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_VAPORIZER, animtime), w_ready);
         }
     }
     if((fire & 2) || ((fire & 1) && !GetResource(actor, RES_CELLS) && autocvar_g_rm))
@@ -296,17 +298,17 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
         else if (actor.(weaponentity).jump_interval <= time)
         {
             // handle refire manually, so that primary and secondary can be fired without conflictions (important for instagib)
-            actor.(weaponentity).jump_interval = time + WEP_CVAR_SEC(vaporizer, refire) * W_WeaponRateFactor(actor);
+            actor.(weaponentity).jump_interval = time + WEP_CVAR_PRI(WEP_BLASTER, refire) * W_WeaponRateFactor(actor);
 
             // decrease ammo for the laser?
-            if(WEP_CVAR_SEC(vaporizer, ammo))
-                W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(vaporizer, ammo), weaponentity);
+            if(WEP_CVAR_PRI(WEP_BLASTER, ammo))
+                W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(WEP_BLASTER, ammo), weaponentity);
 
             makevectors(actor.v_angle);
-            W_Blaster_Attack(actor, weaponentity, WEP_BLASTER.m_id | HITTYPE_SECONDARY);
+            W_Blaster_Attack(actor, weaponentity);
 
             // now do normal refire
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_PRI(WEP_BLASTER, animtime), w_ready);
         }
     }
     else
@@ -318,17 +320,17 @@ METHOD(Vaporizer, wr_setup, void(entity thiswep, entity actor, .entity weaponent
 }
 METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
+    float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(WEP_VAPORIZER, ammo));
     float ammo_amount = GetResource(actor, thiswep.ammo_type) >= vaporizer_ammo;
     ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= vaporizer_ammo;
     return ammo_amount;
 }
 METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(!WEP_CVAR_SEC(vaporizer, ammo))
+    if(!WEP_CVAR_PRI(WEP_BLASTER, ammo))
         return true;
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(vaporizer, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(vaporizer, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(WEP_BLASTER, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(WEP_BLASTER, ammo);
     return ammo_amount;
 }
 METHOD(Vaporizer, wr_resetplayer, void(entity thiswep, entity actor))
@@ -337,10 +339,10 @@ METHOD(Vaporizer, wr_resetplayer, void(entity thiswep, entity actor))
 }
 METHOD(Vaporizer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
+    float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(WEP_VAPORIZER, ammo));
     float used_ammo;
-    if(WEP_CVAR_SEC(vaporizer, ammo))
-        used_ammo = min(vaporizer_ammo, WEP_CVAR_SEC(vaporizer, ammo));
+    if(WEP_CVAR_PRI(WEP_BLASTER, ammo))
+        used_ammo = min(vaporizer_ammo, WEP_CVAR_PRI(WEP_BLASTER, ammo));
     else
         used_ammo = vaporizer_ammo;
 
@@ -360,17 +362,10 @@ METHOD(Vaporizer, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Vaporizer, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2 = w_org + w_backoff * 2;
-    if(w_deathtype & HITTYPE_SECONDARY)
-    {
-        pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
-        if(!w_issilent) { sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
-    }
-    else
-    {
-        pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
-        if(!w_issilent) { sound(actor, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM); }
-    }
+	vector org2 = w_org + w_backoff * 2;
+	pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
+	if(!w_issilent)
+		sound(actor, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
 }
 METHOD(Vaporizer, wr_init, void(entity thiswep))
 {

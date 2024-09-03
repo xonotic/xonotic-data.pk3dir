@@ -17,6 +17,16 @@ bool autocvar_hud_showbinds;
 bool autocvar_hud_showbinds_limit;
 bool autocvar__hud_showbinds_reload;
 bool autocvar_developer_csqcentities;
+#if 0
+// TODO: change this path after next (0.9) release
+// or the release after it to support the old-stable release
+// this can't be done now as players would lack these from their configs then
+bool autocvar_cl_race_checkpoint_splits_console;
+bool autocvar_cl_race_checkpoint_splits_hud;
+#else
+AUTOCVAR_SAVE(cl_race_checkpoint_splits_console, bool, 1, "Print checkpoint splits to console");
+AUTOCVAR_SAVE(cl_race_checkpoint_splits_hud, bool, 1, "Show race checkpoint splits on HUD in infomessages");
+#endif
 bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
 bool autocvar_cl_race_cptimes_showself = false;
 bool autocvar_cl_welcome = true;
@@ -30,6 +40,7 @@ string minimapname;
 
 bool postinit;
 entity gametype;
+string gametype_custom_name;
 // temporary hack
 #define ISGAMETYPE(NAME) (gametype == MAPINFO_TYPE_##NAME)
 
@@ -178,7 +189,7 @@ int binddb;
 // -1 - observing
 // 0 - playing
 // >0 - id of spectated player
-float spectatee_status;
+int spectatee_status = -1; ///< the -1 disables HUD panels before CSQC receives necessary data
 float spectatee_status_changed_time;
 
 #define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
