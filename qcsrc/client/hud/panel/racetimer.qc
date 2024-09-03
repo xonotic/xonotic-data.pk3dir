@@ -217,11 +217,18 @@ void HUD_RaceTimer ()
 				}
 				else
 				{
+					float speed_conversion_factor;
+					string speed_text = string_null;
+					if(autocvar_cl_race_cptimes_showspeed)
+					{
+						speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
+						speed_text = sprintf(" @%d%s",vlen(vec2(csqcplayer.velocity)) * speed_conversion_factor, autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "");
+					}
 					// build checkpoint split strings
 					if(race_time && race_previousbesttime)
-						s = MakeRaceString(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, ((race_mypreviousbesttime) ? TIME_DECODE(race_time) - TIME_DECODE(race_mypreviousbesttime) : 0), 0, race_previousbestname);
+						s = strcat(MakeRaceString(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, ((race_mypreviousbesttime) ? TIME_DECODE(race_time) - TIME_DECODE(race_mypreviousbesttime) : 0), 0, race_previousbestname), speed_text);
 					else
-						s = MakeRaceString(race_checkpoint, 0, -1, 0, 0, race_previousbestname);
+						s = strcat(MakeRaceString(race_checkpoint, 0, -1, 0, 0, race_previousbestname), speed_text);
 					if(race_time)
 						forcetime = TIME_ENCODED_TOSTRING(race_time, false);
 
