@@ -10,6 +10,21 @@
 #include <server/scores_rules.qh>
 #include <server/world.qh>
 
+void Send_NextMap_To_Player(entity pl)
+{
+	stuffcmd(pl, sprintf("\nsettemp _nextmap %s\n", get_nextmap()));
+}
+
+void Set_NextMap(string mapname)
+{
+	if (mapname != "")
+		strcpy(_nextmap, mapname);
+	else
+		strfree(_nextmap);
+
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), { Send_NextMap_To_Player(it); });
+}
+
 string GetGametype()
 {
 	return MapInfo_Type_ToString(MapInfo_LoadedGametype);
@@ -356,11 +371,12 @@ float DoNextMapOverride(float reinit)
 		alreadychangedlevel = true;
 		return true;
 	}
-	if(autocvar_nextmap != "")
+	if(get_nextmap() != "")
 	{
 		string m;
-		m = GameTypeVote_MapInfo_FixName(autocvar_nextmap);
-		cvar_set("nextmap",m);
+		m = GameTypeVote_MapInfo_FixName(get_nextmap());
+		if (m != get_nextmap())
+			Set_NextMap(m);
 
 		if(!m || gametypevote)
 			return false;
@@ -411,12 +427,13 @@ string GotoMap(string m)
 	if (!m)
 		return "The map you suggested is not available on this server.";
 	if (!autocvar_sv_vote_gametype)
-	if(!MapInfo_CheckMap(m))
+	if (!MapInfo_CheckMap(m))
 		return "The map you suggested does not support the current game mode.";
-	cvar_set("nextmap", m);
+	if (m != get_nextmap())
+		Set_NextMap(m);
 	if (!intermission_running)
 		cvar_set("_endmatch", "1");
-	if(mapvote_initialized || alreadychangedlevel)
+	if (mapvote_initialized || alreadychangedlevel)
 	{
 		if(DoNextMapOverride(0))
 			return "Map switch initiated.";

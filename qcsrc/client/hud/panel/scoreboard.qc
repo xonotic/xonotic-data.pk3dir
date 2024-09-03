@@ -2439,6 +2439,14 @@ void Scoreboard_Draw()
 	sb_gameinfo_type_fontsize = hud_fontsize * 2.5;
 	sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
 
+	if (GET_NEXTMAP() != "")
+	{
+		// NOTE: nextmap is drawn before title to avoid covering title in case of long map name
+		str = strcat("^7", _("Next map:"), " ^9", GET_NEXTMAP());
+		drawcolorcodedstring(pos + vec2(hud_fontsize.x * 0.5, sb_gameinfo_type_fontsize.y - hud_fontsize.y * 1.25),
+			str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+
 	// Game Info: Game Type
 	if (scoreboard_ui_enabled == 2)
 		str = _("Team Selection");
