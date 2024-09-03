@@ -2,7 +2,7 @@
 #include "../strafehud.qh"
 
 void StrafeHUD_drawStrafeHUD(float, float, vector, float, int, int, bool, float);
-void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, float, int, bool, float);
+void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, float, int, float);
 void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool, float);
 bool StrafeHUD_drawTextIndicator(string, float, vector, float, float, float, int);
 vector StrafeHUD_mixColors(vector, vector, float);

@@ -86,7 +86,6 @@ void HUD_StrafeHUD()
 
 		static float onground_lasttime = 0;
 		static bool onslick_last = false;
-
 		if(onground)
 		{
 			if(PHYS_FRICTION(strafeplayer) == 0)
@@ -140,8 +139,6 @@ void HUD_StrafeHUD()
 			movespeed = maxspeed;
 		else
 			movespeed = min(movespeed, maxspeed);
-
-		float dt = DetectFrameTime();
 
 		// determine whether the player is pressing forwards or backwards keys
 		int keys_fwd;
@@ -217,16 +214,19 @@ void HUD_StrafeHUD()
 			}
 		}
 
+		float dt = DetectFrameTime();
+
 		maxaccel *= dt * movespeed;
 		float bestspeed = max(movespeed - maxaccel, 0); // target speed to gain maximum acceleration
 
 		// use local csqcmodel entity for this even when spectating, flickers too much otherwise
 		float speed = !autocvar__hud_configure ? vlen(vec2(csqcplayer.velocity)) : 1337;
+		bool moving = speed > 0;
 
 		float frictionspeed; // speed lost from friction
 		float strafespeed; // speed minus friction
 
-		if((speed > 0) && onground)
+		if(moving && onground)
 		{
 			float strafefriction = onslick ? PHYS_FRICTION_SLICK(strafeplayer) : PHYS_FRICTION(strafeplayer);
 
@@ -239,19 +239,13 @@ void HUD_StrafeHUD()
 			strafespeed = speed;
 		}
 
-		float minspeed = autocvar_hud_panel_strafehud_switch_minspeed;
-		if(minspeed < 0)
-			minspeed = bestspeed + frictionspeed;
-
 		// get current strafing angle ranging from -180° to +180°
 		float angle;
 		bool fwd;
-		bool straight_overturn = false;
-		float antiflicker_angle = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
 
 		if(!autocvar__hud_configure)
 		{
-			if(speed > 0)
+			if(moving)
 			{
 				// change the range from 0° - 360° to -180° - 180° to match how view_angle represents angles
 				float vel_angle = vectoangles(strafeplayer.velocity).y - (vectoangles(strafeplayer.velocity).y > 180 ? 360 : 0);
@@ -294,10 +288,6 @@ void HUD_StrafeHUD()
 					else
 						angle -= 180;
 				}
-
-				// do not make the angle indicator switch side too much at ±180° if anti flicker is turned on
-				if(angle > (180 - antiflicker_angle) || angle < (-180 + antiflicker_angle))
-					straight_overturn = true;
 			}
 			else
 			{
@@ -354,6 +344,7 @@ void HUD_StrafeHUD()
 		float absolute_bestangle = bestangle;
 		float absolute_prebestangle = prebestangle;
 
+		float antiflicker_angle = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
 		float direction = StrafeHUD_determineDirection(angle, wishangle, antiflicker_angle);
 
 		if(direction == STRAFEHUD_DIRECTION_LEFT) // the angle becomes negative in case we strafe left
@@ -375,7 +366,6 @@ void HUD_StrafeHUD()
 
 		// best strafe acceleration angle
 		float changeangle = -bestangle;
-		float bestangle_width = max(panel_size.x * autocvar_hud_panel_strafehud_switch_width, 1);
 
 		bool opposite_direction = false;
 		float opposite_changeangle = 0;
@@ -385,33 +375,21 @@ void HUD_StrafeHUD()
 			opposite_changeangle = opposite_bestangle + bestangle * 2;
 		}
 
-		bool immobile = speed <= 0;
-
-		float currentangle = angle;
-		if(mode == STRAFEHUD_MODE_VELOCITY_CENTERED)
-			currentangle = bound(-hudangle / 2, currentangle, hudangle / 2);
-
 		// shift hud if operating in view angle centered mode
 		float shift_angle = 0;
 		if(mode == STRAFEHUD_MODE_VIEW_CENTERED)
 		{
-			shift_angle = -currentangle;
+			shift_angle = -angle;
 			bestangle += shift_angle;
 			changeangle += shift_angle;
 			opposite_bestangle += shift_angle;
 			opposite_changeangle += shift_angle;
 		}
 
-		if(mode == STRAFEHUD_MODE_VIEW_CENTERED || straight_overturn)
-			currentangle = 0;
-
-		currentangle = StrafeHUD_projectAngle(currentangle, hudangle, false);
-
 		StrafeHUD_DrawStrafeMeter(
-			speed, minspeed, shift_angle, wishangle, currentangle, changeangle, bestangle,
-			bestangle_width, absolute_bestangle, absolute_prebestangle,
-			opposite_bestangle, opposite_changeangle, immobile,
-			opposite_direction, direction, hudangle);
+			speed, bestspeed, frictionspeed, shift_angle, wishangle, changeangle, bestangle,
+			absolute_bestangle, absolute_prebestangle, opposite_bestangle, opposite_changeangle,
+			moving, opposite_direction, direction, hudangle);
 
 		float text_offset_top;
 		float text_offset_bottom;
@@ -420,9 +398,9 @@ void HUD_StrafeHUD()
 		StrafeHUD_DrawDirectionIndicator(direction, opposite_direction, fwd);
 
 		vector angle_indicator_info = StrafeHUD_DrawAngleIndicator(
-			angle, wishangle, currentangle, bestangle, absolute_bestangle,
-			absolute_prebestangle, opposite_bestangle, immobile,
-			opposite_direction, direction, hudangle);
+			angle, wishangle, bestangle, absolute_bestangle,
+			absolute_prebestangle, opposite_bestangle, antiflicker_angle,
+			moving, opposite_direction, direction, mode, hudangle);
 
 		// unpack return value from vector
 		float strafe_ratio = angle_indicator_info.x;

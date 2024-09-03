@@ -2,12 +2,11 @@
 #include "../strafehud.qh"
 
 vector StrafeHUD_DrawAngleIndicatorArrow(
-    float, vector, vector, float, float, int, float);
+	float, vector, vector, float, float, int, float);
 vector StrafeHUD_DrawAngleIndicator(
-    float, float, float, float, float, float,
-    float, bool, bool, int, float);
+	float, float, float, float, float,
+	float, float, bool, bool, int, int, float);
 void StrafeHUD_DrawDirectionIndicator(int, bool, bool);
 void StrafeHUD_DrawStrafeMeter(
-    float, float, float, float, float, float,
-    float, float, float, float, float, float,
-    bool, bool, int, float);
+	float, float, float, float, float, float, float,
+	float, float, float, float, bool, bool, int, float);

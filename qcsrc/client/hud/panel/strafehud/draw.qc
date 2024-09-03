@@ -3,25 +3,26 @@
 #include <client/draw.qh>
 
 // functions to make hud elements align perfectly in the hud area
-void StrafeHUD_drawStrafeHUD(float startangle, float offsetangle, vector color, float alpha, int type, int gradientType, bool doProject, float range)
+void StrafeHUD_drawStrafeHUD(float startangle, float offsetangle, vector color, float alpha, int type, int gradientType, bool projectWidth, float range)
 {
 	float offset = StrafeHUD_angleToOffset(startangle % 360, range);
 	float width = StrafeHUD_angleToWidth(offsetangle, range);
+	float mirror_offset;
+	float mirror_width;
 
-	float mirror_offset, mirror_width;
-	vector size = panel_size;
-	vector mirror_size = panel_size;
-	float overflow_width = 0, overflow_mirror_width = 0;
-	float original_width = width; // required for gradient
-
-	if(type == STRAFEHUD_STYLE_GRADIENT && gradientType == STRAFEHUD_GRADIENT_NONE)
-		type = STRAFEHUD_STYLE_DRAWFILL;
+	if(type == STRAFEHUD_STYLE_GRADIENT)
+	{
+		projectWidth = true; // must be fully projected for gradients
+		if(gradientType == STRAFEHUD_GRADIENT_NONE)
+			type = STRAFEHUD_STYLE_DRAWFILL;
+	}
 
 	if(alpha <= 0 && type != STRAFEHUD_STYLE_GRADIENT || width <= 0)
 		return;
 
 	// how much is hidden by the current hud angle
 	float hidden_width = (360 - range) / range * panel_size.x;
+	float original_width = width; // required for gradient
 
 	if(offset < 0)
 	{
@@ -36,20 +37,21 @@ void StrafeHUD_drawStrafeHUD(float startangle, float offsetangle, vector color, 
 		mirror_offset = max(offset - panel_size.x - hidden_width, 0);
 	}
 
+	float overflow_width = 0;
 	width = max(width, 0);
 	if((offset + width) > panel_size.x)
 	{
 		overflow_width = (offset + width) - panel_size.x;
 		width = panel_size.x - offset;
 	}
+	vector size = panel_size;
 	size.x = width;
 
 	float original_offset = offset;
-	if(doProject)
-	{
-		if(size.x > 0) size.x = StrafeHUD_projectWidth(offset, size.x, range);
-		offset = StrafeHUD_projectOffset(offset, range, false);
-	}
+	if(projectWidth && size.x > 0)
+		size.x = StrafeHUD_projectWidth(offset, size.x, range);
+
+	offset = StrafeHUD_projectOffset(offset, range, false);
 
 	if(mirror_offset < 0)
 	{
@@ -57,20 +59,21 @@ void StrafeHUD_drawStrafeHUD(float startangle, float offsetangle, vector color, 
 		mirror_offset = 0;
 	}
 
+	float overflow_mirror_width = 0;
 	mirror_width = max(mirror_width, 0);
 	if((mirror_offset + mirror_width) > panel_size.x)
 	{
 		overflow_mirror_width = (mirror_offset + mirror_width) - panel_size.x;
 		mirror_width = panel_size.x - mirror_offset;
 	}
+	vector mirror_size = panel_size;
 	mirror_size.x = mirror_width;
 
 	float original_mirror_offset = mirror_offset;
-	if(doProject)
-	{
-		if(mirror_size.x > 0) mirror_size.x = StrafeHUD_projectWidth(mirror_offset, mirror_size.x, range);
-		mirror_offset = StrafeHUD_projectOffset(mirror_offset, range, false);
-	}
+	if(projectWidth && mirror_size.x > 0)
+		mirror_size.x = StrafeHUD_projectWidth(mirror_offset, mirror_size.x, range);
+
+	mirror_offset = StrafeHUD_projectOffset(mirror_offset, range, false);
 
 	switch(type)
 	{
@@ -127,12 +130,12 @@ void StrafeHUD_drawStrafeHUD(float startangle, float offsetangle, vector color, 
 			StrafeHUD_drawGradient(
 				color, autocvar_hud_panel_strafehud_bar_neutral_color,
 				mirror_size, original_width, mirror_offset, original_mirror_offset,
-				alpha, gradient_mirror_offset, gradientType, doProject, range);
+				alpha, gradient_mirror_offset, gradientType, range);
 
 			StrafeHUD_drawGradient(
 				color, autocvar_hud_panel_strafehud_bar_neutral_color,
 				size, original_width, offset, original_offset,
-				alpha, gradient_offset, gradientType, doProject, range);
+				alpha, gradient_offset, gradientType, range);
 	}
 }
 
@@ -147,7 +150,8 @@ vector StrafeHUD_mixColors(vector color1, vector color2, float ratio)
 	return mixedColor;
 }
 
-void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float original_width, float offset, float original_offset, float alpha, float gradientOffset, int gradientType, bool doProject, float range)
+// FIXME: this is very bad for performance, there should be a better way to draw gradients
+void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float original_width, float offset, float original_offset, float alpha, float gradientOffset, int gradientType, float range)
 {
 	float color_ratio, alpha1, alpha2;
 	vector segment_size = size;
@@ -161,8 +165,7 @@ void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float ori
 		segment_size.x = min(size.x - i, 1); // each gradient segment is 1 unit wide except if there is less than 1 unit of gradient remaining
 		segment_offset = offset + i;
 		ratio_offset = segment_offset + segment_size.x / 2;
-		if(doProject)
-			ratio_offset = StrafeHUD_projectOffset(ratio_offset, range, true);
+		ratio_offset = StrafeHUD_projectOffset(ratio_offset, range, true);
 		ratio_offset += gradientOffset;
 		ratio = (ratio_offset - original_offset) / original_width * (gradientType == STRAFEHUD_GRADIENT_BOTH ? 2 : 1);
 		if(ratio > 1) ratio = 2 - ratio;

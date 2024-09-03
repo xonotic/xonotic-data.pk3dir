@@ -158,9 +158,9 @@ float DetectFrameTime()
 	return dt;
 }
 
+// determine player wishdir
 float DetectWishAngle(vector movement, int keys, bool islocal)
 {
-	// determine player wishdir
 	float wishangle;
 	if(islocal) // if entity is local player
 	{

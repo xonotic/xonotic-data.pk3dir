@@ -12,9 +12,9 @@
 #include <lib/csqcmodel/common.qh> // for IS_PLAYER() macro
 #include <common/resources/cl_resources.qh> // IS_DEAD() macro
 
+// slick detector
 float StrafeHUD_DrawSlickDetector(entity e, bool onslick)
 {
-	// slick detector
 	float slickdetector_height = bound(0, autocvar_hud_panel_strafehud_slickdetector_height, 1);
 	slickdetector_height *= panel_size.y;
 	if(autocvar_hud_panel_strafehud_slickdetector &&
@@ -30,7 +30,7 @@ float StrafeHUD_DrawSlickDetector(entity e, bool onslick)
 
 		slickdetected = onslick; // do not need to traceline if already touching slick
 
-		// traceline into every direction
+		// traceline downwards into every direction
 		trace_dphitq3surfaceflags = 0;
 		vector traceorigin = e.origin + eZ * e.mins.z;
 		for(float i = 0; i < 90 && !slickdetected; i += slicksteps)

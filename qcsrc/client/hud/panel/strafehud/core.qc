@@ -3,17 +3,17 @@
 #include <client/draw.qh>
 
 void StrafeHUD_DrawStrafeMeter(
-	float speed, float minspeed, float shift_angle, float wishangle,
-	float currentangle, float changeangle, float bestangle, float bestangle_width,
-	float absolute_bestangle, float absolute_prebestangle,
-	float opposite_bestangle, float opposite_changeangle,
-	bool immobile, bool opposite_direction, int direction, float hudangle)
+	float speed, float bestspeed, float frictionspeed, float shift_angle, float wishangle,
+	float changeangle, float bestangle, float absolute_bestangle,
+	float absolute_prebestangle, float opposite_bestangle,
+	float opposite_changeangle, bool moving, bool opposite_direction,
+	int direction, float hudangle)
 {
 	// the neutral zone fills the whole strafe bar
-	if(immobile)
+	if(!moving)
 	{
 		// draw neutral zone
-		if(panel_size.x > 0 && panel_size.y > 0 && autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha > 0)
+		if(panel_size.x > 0 && panel_size.y > 0 && autocvar_hud_panel_strafehud_bar_neutral_alpha > 0)
 		{
 			switch(autocvar_hud_panel_strafehud_style)
 			{
@@ -37,45 +37,42 @@ void StrafeHUD_DrawStrafeMeter(
 	}
 	else
 	{
+		// calculate various zones of the strafe-o-meter
 		float accelzone_left_startangle;
 		float accelzone_right_startangle;
-		float accelzone_offsetangle;
 		float preaccelzone_left_startangle;
 		float preaccelzone_right_startangle;
-		float preaccelzone_offsetangle;
+		float neutral_startangle;
 		float overturn_startangle;
 
-		// calculate various zones of the strafe-o-meter
-		if(autocvar_hud_panel_strafehud_bar_preaccel)
-			preaccelzone_offsetangle = absolute_bestangle - absolute_prebestangle;
-		else
+		float accelzone_offsetangle = 90 - absolute_bestangle;
+		float preaccelzone_offsetangle = absolute_bestangle - absolute_prebestangle;
+		float neutral_offsetangle = 360;
+		float overturn_offsetangle = 180;
+
+		if(!autocvar_hud_panel_strafehud_bar_preaccel)
 			preaccelzone_offsetangle = 0;
 
-		accelzone_offsetangle = 90 - absolute_bestangle;
+		// assign starting angles and shift the current offset for every element
+		float current_startangle = 0;
 
-		float overturn_offsetangle = 180;
-		float neutral_offsetangle = 360 - accelzone_offsetangle * 2 - preaccelzone_offsetangle * 2 - overturn_offsetangle;
-		float neutral_startangle;
+		preaccelzone_right_startangle = current_startangle;
+		current_startangle += preaccelzone_offsetangle;
 
-		{
-			float current_offsetangle = 0;
-			preaccelzone_right_startangle = current_offsetangle;
-			current_offsetangle += preaccelzone_offsetangle;
+		accelzone_right_startangle = current_startangle;
+		current_startangle += accelzone_offsetangle;
 
-			accelzone_right_startangle = current_offsetangle;
-			current_offsetangle += accelzone_offsetangle;
+		overturn_startangle = current_startangle;
+		current_startangle += overturn_offsetangle;
 
-			overturn_startangle = current_offsetangle;
-			current_offsetangle += overturn_offsetangle;
+		accelzone_left_startangle = current_startangle;
+		current_startangle += accelzone_offsetangle;
 
-			accelzone_left_startangle = current_offsetangle;
-			current_offsetangle += accelzone_offsetangle;
+		preaccelzone_left_startangle = current_startangle;
+		current_startangle += preaccelzone_offsetangle;
 
-			preaccelzone_left_startangle = current_offsetangle;
-			current_offsetangle += preaccelzone_offsetangle;
-
-			neutral_startangle = current_offsetangle;
-		}
+		neutral_startangle = current_startangle;
+		neutral_offsetangle = 360 - current_startangle;
 
 		// calculate how far off-center the strafe zones currently are
 		shift_angle += neutral_offsetangle / 2 - wishangle;
@@ -139,15 +136,18 @@ void StrafeHUD_DrawStrafeMeter(
 			autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_NONE,
 			true, hudangle);
 
+		float minspeed = autocvar_hud_panel_strafehud_switch_minspeed;
+		if(minspeed < 0)
+			minspeed = bestspeed + frictionspeed;
+
 		// only draw indicators if minspeed is reached
-		if(autocvar_hud_panel_strafehud_switch && speed >= minspeed && bestangle_width > 0 && autocvar_hud_panel_strafehud_switch_alpha > 0)
+		if(autocvar_hud_panel_strafehud_switch && speed >= minspeed && autocvar_hud_panel_strafehud_switch_alpha > 0)
 		{
 			// draw the change indicator(s)
-			float offsetangle = !opposite_direction ? changeangle : opposite_changeangle;
-			float opposite_offsetangle = !opposite_direction ? bestangle : opposite_bestangle;
+			float offsetangle = opposite_direction ? opposite_changeangle : changeangle;
+			float opposite_offsetangle = opposite_direction ? opposite_bestangle : bestangle;
 
-			offsetangle = StrafeHUD_projectAngle(offsetangle, hudangle, false);
-			opposite_offsetangle = StrafeHUD_projectAngle(opposite_offsetangle, hudangle, false);
+			float bestangle_width = max(panel_size.x * autocvar_hud_panel_strafehud_switch_width, 1);
 
 			// remove change indicator width from offset
 			if(direction == STRAFEHUD_DIRECTION_LEFT)
@@ -184,14 +184,25 @@ void StrafeHUD_DrawStrafeMeter(
 }
 
 // draw the actual strafe angle
-vector StrafeHUD_DrawAngleIndicator(float angle, float wishangle, float currentangle,
+// TODO: break this apart so that each angle indicator is drawn in an individual function call
+vector StrafeHUD_DrawAngleIndicator(float angle, float wishangle,
 	float bestangle, float absolute_bestangle, float absolute_prebestangle,
-	float opposite_bestangle, bool immobile, bool opposite_direction, int direction,
-	float hudangle)
+	float opposite_bestangle, float antiflicker_angle, bool moving, bool opposite_direction, int direction,
+	int mode, float hudangle)
 {
+	float currentangle = 0;
+	if(mode == STRAFEHUD_MODE_VELOCITY_CENTERED)
+	{
+		// avoid switching side too much at ±180° if within anti flicker is triggered
+		if(fabs(angle) <= (180 - antiflicker_angle))
+			// bound to HUD area
+			currentangle = bound(-hudangle / 2, angle, hudangle / 2);
+			currentangle = StrafeHUD_projectAngle(currentangle, hudangle, false);
+	}
+
 	vector currentangle_color = autocvar_hud_panel_strafehud_angle_neutral_color;
 	float strafe_ratio = 0;
-	if(!immobile)
+	if(moving)
 	{
 		float moveangle = fabs(angle + wishangle);
 
@@ -289,6 +300,7 @@ vector StrafeHUD_DrawAngleIndicator(float angle, float wishangle, float currenta
 }
 
 // draw the arrows on the angle indicator
+// TODO: break this apart so that each angle indicator is drawn in an individual function call
 vector StrafeHUD_DrawAngleIndicatorArrow(float currentangle, vector currentangle_size,
 	vector currentangle_color, float ghost_angle, float angleheight_offset,
 	int direction, float hudangle)
@@ -365,9 +377,10 @@ void StrafeHUD_DrawDirectionIndicator(int direction, bool opposite_direction, bo
 	if(autocvar_hud_panel_strafehud_direction &&
 	   direction != STRAFEHUD_DIRECTION_NONE &&
 	   direction_size_vertical.x > 0 &&
-	   autocvar_hud_panel_strafehud_direction_alpha * panel_fg_alpha > 0)
+	   autocvar_hud_panel_strafehud_direction_alpha > 0)
 	{
 		bool indicator_direction = direction == STRAFEHUD_DIRECTION_LEFT;
+
 		// invert left/right when strafing backwards or when strafing towards the opposite side indicated by the direction variable
 		// if both conditions are true then it's inverted twice hence not inverted at all
 		if(!fwd != opposite_direction)
