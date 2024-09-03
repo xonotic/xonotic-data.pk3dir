@@ -1222,6 +1222,9 @@ void ClientConnect(entity this)
 			setpause(0);
 		localcmd("\nsv_hook_firstjoin\n");
 	}
+
+	if (get_nextmap() != "")
+		Send_NextMap_To_Player(this);
 }
 
 .string shootfromfixedorigin;
