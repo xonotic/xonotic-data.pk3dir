@@ -2305,7 +2305,9 @@ bool PlayerThink(entity this)
 	if (frametime && autocvar_sv_show_entnum) show_entnum(this);
 
 	if (IS_DEAD(this)) {
-		if (this.personal && g_race_qualifying) {
+		if (this.personal && g_race_qualifying
+		&& (autocvar_g_allow_checkpoints || CheatsAllowed(this, CHIMPULSE_SPEEDRUN.impulse, 0, 0, false, true)))
+		{
 			if (time > this.respawn_time) {
 				STAT(RESPAWN_TIME, this) = this.respawn_time = time + 1; // only retry once a second
 				respawn(this);
