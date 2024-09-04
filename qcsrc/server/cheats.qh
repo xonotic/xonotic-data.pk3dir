@@ -11,6 +11,7 @@ float cheatcount_total;
 .float cheatcount;
 void CheatInit();
 void CheatShutdown();
+float CheatsAllowed(entity this, float impulse, int argc, float cheatframe, bool logattempt, bool ignoredead);
 float CheatImpulse(entity this, int imp);
 float CheatCommand(entity this, int argc);
 float CheatFrame(entity this);
