@@ -377,94 +377,104 @@ void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int
 
 METHOD(Hagar, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(random()>0.15)
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_HAGAR, speed), 0, WEP_CVAR_PRI(WEP_HAGAR, lifetime), false, true);
-    else // not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
-        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_HAGAR, speed), 0, WEP_CVAR_PRI(WEP_HAGAR, lifetime), false, true);
+	if(random()>0.15)
+		PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_HAGAR, speed), 0, WEP_CVAR_PRI(WEP_HAGAR, lifetime), false, true);
+	else // not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
+		PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_HAGAR, speed), 0, WEP_CVAR_PRI(WEP_HAGAR, lifetime), false, true);
 }
+
 METHOD(Hagar, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    float loadable_secondary;
-    loadable_secondary = (WEP_CVAR_SEC(WEP_HAGAR, load) && WEP_CVAR(WEP_HAGAR, secondary));
+	float loadable_secondary;
+	loadable_secondary = (WEP_CVAR_SEC(WEP_HAGAR, load) && WEP_CVAR(WEP_HAGAR, secondary));
 
-    if(loadable_secondary)
-        W_Hagar_Attack2_Load(thiswep, actor, weaponentity); // must always run each frame
-    if(autocvar_g_balance_hagar_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(WEP_HAGAR, ammo), WEP_CVAR_SEC(WEP_HAGAR, ammo))) { // forced reload
-        thiswep.wr_reload(thiswep, actor, weaponentity);
-    }
-    else if((fire & 1) && !actor.(weaponentity).hagar_load && !actor.(weaponentity).hagar_loadblock) // not while secondary is loaded or awaiting reset
+	if(loadable_secondary)
+		W_Hagar_Attack2_Load(thiswep, actor, weaponentity); // must always run each frame
+	if(autocvar_g_balance_hagar_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(WEP_HAGAR, ammo), WEP_CVAR_SEC(WEP_HAGAR, ammo))) { // forced reload
+		thiswep.wr_reload(thiswep, actor, weaponentity);
+	}
+	else if((fire & 1) && !actor.(weaponentity).hagar_load && !actor.(weaponentity).hagar_loadblock) // not while secondary is loaded or awaiting reset
 	{
 		if(weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
 			W_Hagar_Attack_Auto(thiswep, actor, weaponentity, fire);
 	}
-    else if((fire & 2) && !loadable_secondary && WEP_CVAR(WEP_HAGAR, secondary))
-    {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_HAGAR, refire)))
-        {
-            W_Hagar_Attack2(thiswep, actor, weaponentity);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_HAGAR, refire), w_ready);
-        }
-    }
+	else if((fire & 2) && !loadable_secondary && WEP_CVAR(WEP_HAGAR, secondary))
+	{
+		if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_HAGAR, refire)))
+		{
+			W_Hagar_Attack2(thiswep, actor, weaponentity);
+			weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_HAGAR, refire), w_ready);
+		}
+	}
 }
+
 METHOD(Hagar, wr_gonethink, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    // we lost the weapon and want to prepare switching away
-    if(actor.(weaponentity).hagar_load)
-    {
-    	actor.(weaponentity).state = WS_READY;
-    	W_Hagar_Attack2_Load_Release(thiswep, actor, weaponentity);
-    }
+	// we lost the weapon and want to prepare switching away
+	if(actor.(weaponentity).hagar_load)
+	{
+		actor.(weaponentity).state = WS_READY;
+		W_Hagar_Attack2_Load_Release(thiswep, actor, weaponentity);
+	}
 }
+
 METHOD(Hagar, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    actor.(weaponentity).hagar_loadblock = false;
-    if(actor.(weaponentity).hagar_load)
-    {
-    	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(WEP_HAGAR, ammo) * actor.(weaponentity).hagar_load * -1, weaponentity); // give back ammo if necessary
-    	actor.(weaponentity).hagar_load = 0;
-    }
+	actor.(weaponentity).hagar_loadblock = false;
+	if(actor.(weaponentity).hagar_load)
+	{
+		W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(WEP_HAGAR, ammo) * actor.(weaponentity).hagar_load * -1, weaponentity); // give back ammo if necessary
+		actor.(weaponentity).hagar_load = 0;
+	}
 }
+
 METHOD(Hagar, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(WEP_HAGAR, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(WEP_HAGAR, ammo);
-    return ammo_amount;
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(WEP_HAGAR, ammo);
+	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(WEP_HAGAR, ammo);
+	return ammo_amount;
 }
+
 METHOD(Hagar, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(WEP_HAGAR, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(WEP_HAGAR, ammo);
-    return ammo_amount;
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(WEP_HAGAR, ammo);
+	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(WEP_HAGAR, ammo);
+	return ammo_amount;
 }
+
 METHOD(Hagar, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-    	.entity weaponentity = weaponentities[slot];
-    	actor.(weaponentity).hagar_load = 0;
-    }
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		actor.(weaponentity).hagar_load = 0;
+	}
 }
+
 METHOD(Hagar, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    // if we have any rockets loaded when we die, release them
-    if(actor.(weaponentity).hagar_load && WEP_CVAR_SEC(WEP_HAGAR, load_releasedeath))
-    	W_Hagar_Attack2_Load_Release(thiswep, actor, weaponentity);
+	// if we have any rockets loaded when we die, release them
+	if(actor.(weaponentity).hagar_load && WEP_CVAR_SEC(WEP_HAGAR, load_releasedeath))
+		W_Hagar_Attack2_Load_Release(thiswep, actor, weaponentity);
 }
+
 METHOD(Hagar, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(!actor.(weaponentity).hagar_load) // require releasing loaded rockets first
-        W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(WEP_HAGAR, ammo), WEP_CVAR_SEC(WEP_HAGAR, ammo)), SND_RELOAD);
+	if(!actor.(weaponentity).hagar_load) // require releasing loaded rockets first
+		W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(WEP_HAGAR, ammo), WEP_CVAR_SEC(WEP_HAGAR, ammo)), SND_RELOAD);
 }
+
 METHOD(Hagar, wr_suicidemessage, Notification(entity thiswep))
 {
-    return WEAPON_HAGAR_SUICIDE;
+	return WEAPON_HAGAR_SUICIDE;
 }
+
 METHOD(Hagar, wr_killmessage, Notification(entity thiswep))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-        return WEAPON_HAGAR_MURDER_BURST;
-    else
-        return WEAPON_HAGAR_MURDER_SPRAY;
+	if(w_deathtype & HITTYPE_SECONDARY)
+		return WEAPON_HAGAR_MURDER_BURST;
+	else
+		return WEAPON_HAGAR_MURDER_SPRAY;
 }
 
 #endif
@@ -472,17 +482,17 @@ METHOD(Hagar, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Hagar, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2 = w_org + w_backoff * 2;
-    pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
-    if(!w_issilent)
-    {
-        if(w_random<0.15)
-            sound(actor, CH_SHOTS, SND_HAGEXP1, VOL_BASE, ATTN_NORM);
-        else if(w_random<0.7)
-            sound(actor, CH_SHOTS, SND_HAGEXP2, VOL_BASE, ATTN_NORM);
-        else
-            sound(actor, CH_SHOTS, SND_HAGEXP3, VOL_BASE, ATTN_NORM);
-    }
+	vector org2 = w_org + w_backoff * 2;
+	pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
+	if(!w_issilent)
+	{
+		if(w_random<0.15)
+			sound(actor, CH_SHOTS, SND_HAGEXP1, VOL_BASE, ATTN_NORM);
+		else if(w_random<0.7)
+			sound(actor, CH_SHOTS, SND_HAGEXP2, VOL_BASE, ATTN_NORM);
+		else
+			sound(actor, CH_SHOTS, SND_HAGEXP3, VOL_BASE, ATTN_NORM);
+	}
 }
 
 #endif

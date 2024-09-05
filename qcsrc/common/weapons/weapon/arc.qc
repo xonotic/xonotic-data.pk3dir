@@ -571,187 +571,187 @@ void Arc_Smoke(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 
 METHOD(Arc, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(WEP_CVAR(WEP_ARC, beam_botaimspeed))
-    {
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(
-        	actor,
-        	weaponentity,
-            WEP_CVAR(WEP_ARC, beam_botaimspeed),
-            0,
-            WEP_CVAR(WEP_ARC, beam_botaimlifetime),
-            false, true
-        );
-    }
-    else
-    {
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(
-        	actor,
-        	weaponentity,
-            1000000,
-            0,
-            0.001,
-            false, true
-        );
-    }
+	if(WEP_CVAR(WEP_ARC, beam_botaimspeed))
+	{
+		PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(
+			actor,
+			weaponentity,
+			WEP_CVAR(WEP_ARC, beam_botaimspeed),
+			0,
+			WEP_CVAR(WEP_ARC, beam_botaimlifetime),
+			false, true
+		);
+	}
+	else
+	{
+		PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(
+			actor,
+			weaponentity,
+			1000000,
+			0,
+			0.001,
+			false, true
+		);
+	}
 }
 METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    Arc_Player_SetHeat(actor, weaponentity);
-    Arc_Smoke(thiswep, actor, weaponentity, fire);
+	Arc_Player_SetHeat(actor, weaponentity);
+	Arc_Smoke(thiswep, actor, weaponentity, fire);
 
-    bool beam_fire2 = ((fire & 2) && !WEP_CVAR(WEP_ARC, bolt));
+	bool beam_fire2 = ((fire & 2) && !WEP_CVAR(WEP_ARC, bolt));
 
-    if (time >= actor.arc_overheat)
-    if ((fire & 1) || beam_fire2 || actor.(weaponentity).arc_beam.beam_bursting)
-    {
-    	#if 0
-        if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
-        {
-            #if 0
-            if(actor.animstate_startframe == actor.anim_shoot.x && actor.animstate_numframes == actor.anim_shoot.y)
-                weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
-            else
-            #endif
-                weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(WEP_ARC, beam_animtime), w_ready);
-        }
-        #endif
+	if (time >= actor.arc_overheat)
+	if ((fire & 1) || beam_fire2 || actor.(weaponentity).arc_beam.beam_bursting)
+	{
+	#if 0
+		if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
+		{
+			#if 0
+			if(actor.animstate_startframe == actor.anim_shoot.x && actor.animstate_numframes == actor.anim_shoot.y)
+				weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
+			else
+			#endif
+				weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(WEP_ARC, beam_animtime), w_ready);
+		}
+		#endif
 
-        if((!actor.(weaponentity).arc_beam) || wasfreed(actor.(weaponentity).arc_beam))
-        {
-            if(weapon_prepareattack(thiswep, actor, weaponentity, boolean(beam_fire2), 0))
-            {
-                W_Arc_Beam(boolean(beam_fire2), actor, weaponentity);
+		if((!actor.(weaponentity).arc_beam) || wasfreed(actor.(weaponentity).arc_beam))
+		{
+			if(weapon_prepareattack(thiswep, actor, weaponentity, boolean(beam_fire2), 0))
+			{
+				W_Arc_Beam(boolean(beam_fire2), actor, weaponentity);
 
-                if(!actor.(weaponentity).arc_BUTTON_ATCK_prev)
-                {
-                	actor.(weaponentity).wframe = WFRAME_FIRE1;
-                    weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(WEP_ARC, beam_animtime), W_Arc_Attack);
-                    actor.(weaponentity).arc_BUTTON_ATCK_prev = true;
-                }
-            }
-        }
+				if(!actor.(weaponentity).arc_BUTTON_ATCK_prev)
+				{
+					actor.(weaponentity).wframe = WFRAME_FIRE1;
+					weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(WEP_ARC, beam_animtime), W_Arc_Attack);
+					actor.(weaponentity).arc_BUTTON_ATCK_prev = true;
+				}
+			}
+		}
 
-        return;
-    }
-    else if(fire & 2)
-    {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
-        {
-            if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
-            if(!(actor.items & IT_UNLIMITED_AMMO))
-            {
-                W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
-                w_ready(thiswep, actor, weaponentity, fire);
-                return;
-            }
-            float ammo_available = GetResource(actor, thiswep.ammo_type);
-            // We don't want to shoot 3 rounds if there's 2 left in the mag, so we'll use a fraction.
-            // Also keep the fraction <= 1 otherwise we'd mag dump in one burst.
-            float burst_fraction = min(1, ammo_available / WEP_CVAR(WEP_ARC, bolt_ammo));
-            int to_shoot = floor(WEP_CVAR(WEP_ARC, bolt_count) * burst_fraction);
+		return;
+	}
+	else if(fire & 2)
+	{
+		if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
+		{
+			if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
+			if(!(actor.items & IT_UNLIMITED_AMMO))
+			{
+				W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
+				w_ready(thiswep, actor, weaponentity, fire);
+				return;
+			}
+			float ammo_available = GetResource(actor, thiswep.ammo_type);
+			// We don't want to shoot 3 rounds if there's 2 left in the mag, so we'll use a fraction.
+			// Also keep the fraction <= 1 otherwise we'd mag dump in one burst.
+			float burst_fraction = min(1, ammo_available / WEP_CVAR(WEP_ARC, bolt_ammo));
+			int to_shoot = floor(WEP_CVAR(WEP_ARC, bolt_count) * burst_fraction);
 
-            // We also don't want to use 3 rounds if there's only 2 left.
-            int to_use = min(WEP_CVAR(WEP_ARC, bolt_ammo), ammo_available);
-            W_DecreaseAmmo(thiswep, actor, to_use, weaponentity);
+			// We also don't want to use 3 rounds if there's only 2 left.
+			int to_use = min(WEP_CVAR(WEP_ARC, bolt_ammo), ammo_available);
+			W_DecreaseAmmo(thiswep, actor, to_use, weaponentity);
 
-            // Bursting counts up to 0 from a negative.
-            actor.(weaponentity).misc_bulletcounter = -to_shoot;
-            W_Arc_Attack_Bolt(thiswep, actor, weaponentity, fire);
-        }
-    }
+			// Bursting counts up to 0 from a negative.
+			actor.(weaponentity).misc_bulletcounter = -to_shoot;
+			W_Arc_Attack_Bolt(thiswep, actor, weaponentity, fire);
+		}
+	}
 
-    if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
-    {
-        sound(actor, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
-        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_ARC, beam_animtime), w_ready);
-        ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(WEP_ARC, beam_refire) * W_WeaponRateFactor(actor);
-    }
-    actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
+	if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
+	{
+		sound(actor, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_ARC, beam_animtime), w_ready);
+		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(WEP_ARC, beam_refire) * W_WeaponRateFactor(actor);
+	}
+	actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
 
-    #if 0
-    if(fire & 2)
-    if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_arc_secondary_refire))
-    {
-        W_Arc_Attack2();
-        actor.arc_count = autocvar_g_balance_arc_secondary_count;
-        weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
-        actor.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor(actor);
-    }
-    #endif
+	#if 0
+	if(fire & 2)
+	if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_arc_secondary_refire))
+	{
+		W_Arc_Attack2();
+		actor.arc_count = autocvar_g_balance_arc_secondary_count;
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
+		actor.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor(actor);
+	}
+	#endif
 }
 METHOD(Arc, wr_suicidemessage, Notification(entity thiswep))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-        return WEAPON_ARC_SUICIDE_BOLT;
-    else
-    	return WEAPON_THINKING_WITH_PORTALS;
+	if(w_deathtype & HITTYPE_SECONDARY)
+		return WEAPON_ARC_SUICIDE_BOLT;
+	else
+		return WEAPON_THINKING_WITH_PORTALS;
 }
 METHOD(Arc, wr_init, void(entity thiswep))
 {
-    if(!arc_shotorigin[0])
-    {
-    	vector vecs = CL_Weapon_GetShotOrg(WEP_ARC.m_id);
-        arc_shotorigin[0] = shotorg_adjust(vecs, false, false, 1);
-        arc_shotorigin[1] = shotorg_adjust(vecs, false, false, 2);
-        arc_shotorigin[2] = shotorg_adjust(vecs, false, false, 3);
-        arc_shotorigin[3] = shotorg_adjust(vecs, false, false, 4);
-    }
+	if(!arc_shotorigin[0])
+	{
+		vector vecs = CL_Weapon_GetShotOrg(WEP_ARC.m_id);
+		arc_shotorigin[0] = shotorg_adjust(vecs, false, false, 1);
+		arc_shotorigin[1] = shotorg_adjust(vecs, false, false, 2);
+		arc_shotorigin[2] = shotorg_adjust(vecs, false, false, 3);
+		arc_shotorigin[3] = shotorg_adjust(vecs, false, false, 4);
+	}
 }
 METHOD(Arc, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    return ((!WEP_CVAR(WEP_ARC, beam_ammo)) || (GetResource(actor, thiswep.ammo_type) > 0));
+	return ((!WEP_CVAR(WEP_ARC, beam_ammo)) || (GetResource(actor, thiswep.ammo_type) > 0));
 }
 METHOD(Arc, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(WEP_CVAR(WEP_ARC, bolt))
-    {
-        float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(WEP_ARC, bolt_ammo);
-        ammo_amount += actor.(weaponentity).(weapon_load[WEP_ARC.m_id]) >= WEP_CVAR(WEP_ARC, bolt_ammo);
-        return ammo_amount;
-    }
-    else
-        return WEP_CVAR(WEP_ARC, overheat_max) > 0 &&
-            ((!WEP_CVAR(WEP_ARC, burst_ammo)) || (GetResource(actor, thiswep.ammo_type) > 0));
+	if(WEP_CVAR(WEP_ARC, bolt))
+	{
+		float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(WEP_ARC, bolt_ammo);
+		ammo_amount += actor.(weaponentity).(weapon_load[WEP_ARC.m_id]) >= WEP_CVAR(WEP_ARC, bolt_ammo);
+		return ammo_amount;
+	}
+	else
+		return WEP_CVAR(WEP_ARC, overheat_max) > 0 &&
+			((!WEP_CVAR(WEP_ARC, burst_ammo)) || (GetResource(actor, thiswep.ammo_type) > 0));
 }
 METHOD(Arc, wr_killmessage, Notification(entity thiswep))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-        return WEAPON_ARC_MURDER_SPRAY;
-    else
-        return WEAPON_ARC_MURDER;
+	if(w_deathtype & HITTYPE_SECONDARY)
+		return WEAPON_ARC_MURDER_SPRAY;
+	else
+		return WEAPON_ARC_MURDER;
 }
 METHOD(Arc, wr_drop, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    weapon_dropevent_item.arc_overheat = actor.arc_overheat;
-    weapon_dropevent_item.arc_cooldown = actor.arc_cooldown;
-    actor.arc_overheat = 0;
-    actor.arc_cooldown = 0;
-    actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
+	weapon_dropevent_item.arc_overheat = actor.arc_overheat;
+	weapon_dropevent_item.arc_cooldown = actor.arc_cooldown;
+	actor.arc_overheat = 0;
+	actor.arc_cooldown = 0;
+	actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
 }
 METHOD(Arc, wr_pickup, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if ( !client_hasweapon(actor, thiswep, weaponentity, false, false) &&
-        weapon_dropevent_item.arc_overheat > time )
-    {
-        actor.arc_overheat = weapon_dropevent_item.arc_overheat;
-        actor.arc_cooldown = weapon_dropevent_item.arc_cooldown;
-    }
+	if ( !client_hasweapon(actor, thiswep, weaponentity, false, false) &&
+		weapon_dropevent_item.arc_overheat > time )
+	{
+		actor.arc_overheat = weapon_dropevent_item.arc_overheat;
+		actor.arc_cooldown = weapon_dropevent_item.arc_cooldown;
+	}
 }
 METHOD(Arc, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    actor.arc_overheat = 0;
-    actor.arc_cooldown = 0;
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-    	.entity weaponentity = weaponentities[slot];
-    	actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
-    }
+	actor.arc_overheat = 0;
+	actor.arc_cooldown = 0;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
+	}
 }
 METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    actor.arc_overheat = 0;
-    actor.arc_cooldown = 0;
-    actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
+	actor.arc_overheat = 0;
+	actor.arc_cooldown = 0;
+	actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
 }
 #endif
 #ifdef CSQC
@@ -762,12 +762,12 @@ bool autocvar_cl_arcbeam_simple = true;
 
 METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-    {
-        vector org2 = w_org + w_backoff * 2;
-        pointparticles(EFFECT_ELECTRO_IMPACT, org2, w_backoff * 1000, 1);
-        if(!w_issilent) { sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTN_NORM); }
-    }
+	if(w_deathtype & HITTYPE_SECONDARY)
+	{
+		vector org2 = w_org + w_backoff * 2;
+		pointparticles(EFFECT_ELECTRO_IMPACT, org2, w_backoff * 1000, 1);
+		if(!w_issilent) { sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTN_NORM); }
+	}
 }
 
 void Draw_ArcBeam_callback(vector start, vector hit, vector end)

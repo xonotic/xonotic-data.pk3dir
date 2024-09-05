@@ -12,8 +12,13 @@ void W_HLAC_Touch(entity this, entity toucher)
 
 	isprimary = !(this.projectiledeathtype & HITTYPE_SECONDARY);
 
-	RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(WEP_HLAC, isprimary, damage), WEP_CVAR_BOTH(WEP_HLAC, isprimary, edgedamage), WEP_CVAR_BOTH(WEP_HLAC, isprimary, radius),
-						NULL, NULL, WEP_CVAR_BOTH(WEP_HLAC, isprimary, force), this.projectiledeathtype, this.weaponentity_fld, toucher);
+	RadiusDamage(this, this.realowner,
+	             WEP_CVAR_BOTH(WEP_HLAC, isprimary, damage),
+	             WEP_CVAR_BOTH(WEP_HLAC, isprimary, edgedamage),
+	             WEP_CVAR_BOTH(WEP_HLAC, isprimary, radius),
+	             NULL, NULL,
+	             WEP_CVAR_BOTH(WEP_HLAC, isprimary, force),
+	             this.projectiledeathtype, this.weaponentity_fld, toucher);
 
 	delete(this);
 }
@@ -153,54 +158,60 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 
 METHOD(HLAC, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_HLAC, speed), 0, WEP_CVAR_PRI(WEP_HLAC, lifetime), false, true);
+	PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_HLAC, speed), 0, WEP_CVAR_PRI(WEP_HLAC, lifetime), false, true);
 }
+
 METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(autocvar_g_balance_hlac_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(WEP_HLAC, ammo), WEP_CVAR_SEC(WEP_HLAC, ammo))) { // forced reload
-        thiswep.wr_reload(thiswep, actor, weaponentity);
-    } else if(fire & 1)
-    {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_HLAC, refire)))
-        {
-            actor.(weaponentity).misc_bulletcounter = 0;
-            W_HLAC_Attack(thiswep, actor, weaponentity);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_HLAC, refire), W_HLAC_Attack_Frame);
-        }
-    }
+	if(autocvar_g_balance_hlac_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(WEP_HLAC, ammo), WEP_CVAR_SEC(WEP_HLAC, ammo))) { // forced reload
+		thiswep.wr_reload(thiswep, actor, weaponentity);
+	} else if(fire & 1)
+	{
+		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_HLAC, refire)))
+		{
+			actor.(weaponentity).misc_bulletcounter = 0;
+			W_HLAC_Attack(thiswep, actor, weaponentity);
+			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_HLAC, refire), W_HLAC_Attack_Frame);
+		}
+	}
 
-    else if((fire & 2) && WEP_CVAR(WEP_HLAC, secondary))
-    {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_HLAC, refire)))
-        {
-            W_HLAC_Attack2(thiswep, actor, weaponentity);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_HLAC, animtime), w_ready);
-        }
-    }
+	else if((fire & 2) && WEP_CVAR(WEP_HLAC, secondary))
+	{
+		if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_HLAC, refire)))
+		{
+			W_HLAC_Attack2(thiswep, actor, weaponentity);
+			weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_HLAC, animtime), w_ready);
+		}
+	}
 }
+
 METHOD(HLAC, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(WEP_HLAC, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(WEP_HLAC, ammo);
-    return ammo_amount;
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(WEP_HLAC, ammo);
+	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(WEP_HLAC, ammo);
+	return ammo_amount;
 }
+
 METHOD(HLAC, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(WEP_HLAC, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(WEP_HLAC, ammo);
-    return ammo_amount;
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(WEP_HLAC, ammo);
+	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(WEP_HLAC, ammo);
+	return ammo_amount;
 }
+
 METHOD(HLAC, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(WEP_HLAC, ammo), WEP_CVAR_SEC(WEP_HLAC, ammo)), SND_RELOAD);
+	W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(WEP_HLAC, ammo), WEP_CVAR_SEC(WEP_HLAC, ammo)), SND_RELOAD);
 }
+
 METHOD(HLAC, wr_suicidemessage, Notification(entity thiswep))
 {
-    return WEAPON_HLAC_SUICIDE;
+	return WEAPON_HLAC_SUICIDE;
 }
+
 METHOD(HLAC, wr_killmessage, Notification(entity thiswep))
 {
-    return WEAPON_HLAC_MURDER;
+	return WEAPON_HLAC_MURDER;
 }
 
 #endif
@@ -208,10 +219,10 @@ METHOD(HLAC, wr_killmessage, Notification(entity thiswep))
 
 METHOD(HLAC, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2 = w_org + w_backoff * 2;
-    pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
-    if(!w_issilent)
-        sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM);
+	vector org2 = w_org + w_backoff * 2;
+	pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
+	if(!w_issilent)
+		sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM);
 }
 
 #endif

@@ -342,152 +342,159 @@ bool W_MineLayer_PlacedMines(entity this, .entity weaponentity, bool detonate)
 
 METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    // aim and decide to fire if appropriate
-    int minecount = W_MineLayer_Count(actor, weaponentity);
-    if(minecount >= WEP_CVAR(WEP_MINE_LAYER, limit))
-        PHYS_INPUT_BUTTON_ATCK(actor) = false;
-    else
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(WEP_MINE_LAYER, speed), 0, WEP_CVAR(WEP_MINE_LAYER, lifetime), false, false);
-    if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
-    {
-        // decide whether to detonate mines
-        float edgedamage, coredamage, edgeradius, recipricoledgeradius;
-        float selfdamage, teamdamage, enemydamage;
-        edgedamage = WEP_CVAR(WEP_MINE_LAYER, edgedamage);
-        coredamage = WEP_CVAR(WEP_MINE_LAYER, damage);
-        edgeradius = WEP_CVAR(WEP_MINE_LAYER, radius);
-        recipricoledgeradius = 1 / edgeradius;
-        selfdamage = 0;
-        teamdamage = 0;
-        enemydamage = 0;
+	// aim and decide to fire if appropriate
+	int minecount = W_MineLayer_Count(actor, weaponentity);
+	if(minecount >= WEP_CVAR(WEP_MINE_LAYER, limit))
+		PHYS_INPUT_BUTTON_ATCK(actor) = false;
+	else
+		PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(WEP_MINE_LAYER, speed), 0, WEP_CVAR(WEP_MINE_LAYER, lifetime), false, false);
+	if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
+	{
+		// decide whether to detonate mines
+		float edgedamage, coredamage, edgeradius, recipricoledgeradius;
+		float selfdamage, teamdamage, enemydamage;
+		edgedamage = WEP_CVAR(WEP_MINE_LAYER, edgedamage);
+		coredamage = WEP_CVAR(WEP_MINE_LAYER, damage);
+		edgeradius = WEP_CVAR(WEP_MINE_LAYER, radius);
+		recipricoledgeradius = 1 / edgeradius;
+		selfdamage = 0;
+		teamdamage = 0;
+		enemydamage = 0;
 
-        IL_EACH(g_mines, it.realowner == actor,
-        {
-        	entity mine = it;
-        	IL_EACH(g_bot_targets, it.bot_attack,
-        	{
-        		float d = vlen(it.origin + (it.mins + it.maxs) * 0.5 - mine.origin);
-        		d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
-                // count potential damage according to type of target
-                if(it == actor)
-                    selfdamage = selfdamage + d;
-                else if(SAME_TEAM(it, actor))
-                    teamdamage = teamdamage + d;
-                else if(bot_shouldattack(actor, it))
-                    enemydamage = enemydamage + d;
-        	});
-        });
+		IL_EACH(g_mines, it.realowner == actor,
+		{
+			entity mine = it;
+			IL_EACH(g_bot_targets, it.bot_attack,
+			{
+				float d = vlen(it.origin + (it.mins + it.maxs) * 0.5 - mine.origin);
+				d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
+				// count potential damage according to type of target
+				if(it == actor)
+					selfdamage = selfdamage + d;
+				else if(SAME_TEAM(it, actor))
+					teamdamage = teamdamage + d;
+				else if(bot_shouldattack(actor, it))
+					enemydamage = enemydamage + d;
+			});
+		});
 
-        float desirabledamage;
-        desirabledamage = enemydamage;
-        if(StatusEffects_active(STATUSEFFECT_Shield, actor) && !StatusEffects_active(STATUSEFFECT_SpawnShield, actor))
-            desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
-        if(teamplay && actor.team)
-            desirabledamage = desirabledamage - teamdamage;
+		float desirabledamage;
+		desirabledamage = enemydamage;
+		if(StatusEffects_active(STATUSEFFECT_Shield, actor) && !StatusEffects_active(STATUSEFFECT_SpawnShield, actor))
+			desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
+		if(teamplay && actor.team)
+			desirabledamage = desirabledamage - teamdamage;
 
-        makevectors(actor.v_angle);
-        IL_EACH(g_mines, it.realowner == actor,
-        {
-            if(skill > 9) // normal players only do this for the target they are tracking
-            {
-	            entity mine = it;
-	            IL_EACH(g_bot_targets, it.bot_attack,
-	            {
-	            	if((v_forward * normalize(mine.origin - it.origin) < 0.1)
-	                    && desirabledamage > 0.1 * coredamage
-	                    ) PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-	            });
-	        }
-	        else
-	        {
-                //As the distance gets larger, a correct detonation gets near imposible
-                //Bots are assumed to use the mine spawnfunc_light to see if the mine gets near a player
-                if((v_forward * normalize(it.origin - actor.enemy.origin) < 0.1)
-                	&& IS_PLAYER(actor.enemy)
-                	&& (desirabledamage >= 0.1 * coredamage)
-                	)
-                {
-                	float distance = bound(300, vlen(actor.origin - actor.enemy.origin), 30000);
-                	if(random() / distance * 300 > frametime * bound(0, (10 - skill) * 0.2, 1))
-                		PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-                }
-	        }
-        });
+		makevectors(actor.v_angle);
+		IL_EACH(g_mines, it.realowner == actor,
+		{
+			if(skill > 9) // normal players only do this for the target they are tracking
+			{
+				entity mine = it;
+				IL_EACH(g_bot_targets, it.bot_attack,
+				{
+					if((v_forward * normalize(mine.origin - it.origin) < 0.1)
+						&& desirabledamage > 0.1 * coredamage
+						) PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+				});
+			}
+			else
+			{
+				//As the distance gets larger, a correct detonation gets near imposible
+				//Bots are assumed to use the mine spawnfunc_light to see if the mine gets near a player
+				if((v_forward * normalize(it.origin - actor.enemy.origin) < 0.1)
+					&& IS_PLAYER(actor.enemy)
+					&& (desirabledamage >= 0.1 * coredamage)
+					)
+				{
+					float distance = bound(300, vlen(actor.origin - actor.enemy.origin), 30000);
+					if(random() / distance * 300 > frametime * bound(0, (10 - skill) * 0.2, 1))
+						PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+				}
+			}
+		});
 
-        // if we would be doing at X percent of the core damage, detonate it
-        // but don't fire a new shot at the same time!
-        if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
-            PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-        if((skill > 6.5) && (selfdamage > GetResource(actor, RES_HEALTH)))
-            PHYS_INPUT_BUTTON_ATCK2(actor) = false;
-        //if(PHYS_INPUT_BUTTON_ATCK2(actor) == true)
-        //	dprint(ftos(desirabledamage),"\n");
-        if(PHYS_INPUT_BUTTON_ATCK2(actor)) PHYS_INPUT_BUTTON_ATCK(actor) = false;
-    }
+		// if we would be doing at X percent of the core damage, detonate it
+		// but don't fire a new shot at the same time!
+		if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
+			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+		if((skill > 6.5) && (selfdamage > GetResource(actor, RES_HEALTH)))
+			PHYS_INPUT_BUTTON_ATCK2(actor) = false;
+		//if(PHYS_INPUT_BUTTON_ATCK2(actor) == true)
+		//	dprint(ftos(desirabledamage),"\n");
+		if(PHYS_INPUT_BUTTON_ATCK2(actor)) PHYS_INPUT_BUTTON_ATCK(actor) = false;
+	}
 }
+
 METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	actor.(weaponentity).minelayer_mines = W_MineLayer_Count(actor, weaponentity);
 
-    if(autocvar_g_balance_minelayer_reload_ammo && actor.(weaponentity).clip_load < WEP_CVAR(WEP_MINE_LAYER, ammo)) // forced reload
-    {
-        // not if we're holding the minelayer without enough ammo, but can detonate existing mines
-        if(!(W_MineLayer_PlacedMines(actor, weaponentity, false) && GetResource(actor, thiswep.ammo_type) < WEP_CVAR(WEP_MINE_LAYER, ammo))) {
-            thiswep.wr_reload(thiswep, actor, weaponentity);
-        }
-    }
-    else if(fire & 1)
-    {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(WEP_MINE_LAYER, refire)))
-        {
-            W_MineLayer_Attack(thiswep, actor, weaponentity);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_MINE_LAYER, animtime), w_ready);
-        }
-    }
+	if(autocvar_g_balance_minelayer_reload_ammo && actor.(weaponentity).clip_load < WEP_CVAR(WEP_MINE_LAYER, ammo)) // forced reload
+	{
+		// not if we're holding the minelayer without enough ammo, but can detonate existing mines
+		if(!(W_MineLayer_PlacedMines(actor, weaponentity, false) && GetResource(actor, thiswep.ammo_type) < WEP_CVAR(WEP_MINE_LAYER, ammo))) {
+			thiswep.wr_reload(thiswep, actor, weaponentity);
+		}
+	}
+	else if(fire & 1)
+	{
+		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(WEP_MINE_LAYER, refire)))
+		{
+			W_MineLayer_Attack(thiswep, actor, weaponentity);
+			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_MINE_LAYER, animtime), w_ready);
+		}
+	}
 
-    if(fire & 2)
-    {
-        if(W_MineLayer_PlacedMines(actor, weaponentity, true))
-            sound(actor, CH_WEAPON_B, SND_MINE_DET, VOL_BASE, ATTN_NORM);
-    }
+	if(fire & 2)
+	{
+		if(W_MineLayer_PlacedMines(actor, weaponentity, true))
+			sound(actor, CH_WEAPON_B, SND_MINE_DET, VOL_BASE, ATTN_NORM);
+	}
 }
+
 METHOD(MineLayer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    // actually do // don't switch while placing a mine
-    //if(ATTACK_FINISHED(actor, weaponentity) <= time || PS(actor).m_weapon != WEP_MINE_LAYER)
-    //{
-        float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(WEP_MINE_LAYER, ammo);
-        ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(WEP_MINE_LAYER, ammo);
-        return ammo_amount;
-    //}
-    //return true;
+	// actually do // don't switch while placing a mine
+	//if(ATTACK_FINISHED(actor, weaponentity) <= time || PS(actor).m_weapon != WEP_MINE_LAYER)
+	//{
+		float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(WEP_MINE_LAYER, ammo);
+		ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(WEP_MINE_LAYER, ammo);
+		return ammo_amount;
+	//}
+	//return true;
 }
+
 METHOD(MineLayer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(W_MineLayer_PlacedMines(actor, weaponentity, false))
-        return true;
-    else
-        return false;
+	if(W_MineLayer_PlacedMines(actor, weaponentity, false))
+		return true;
+	else
+		return false;
 }
+
 METHOD(MineLayer, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-    	.entity weaponentity = weaponentities[slot];
-    	actor.(weaponentity).minelayer_mines = 0;
-    }
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		actor.(weaponentity).minelayer_mines = 0;
+	}
 }
+
 METHOD(MineLayer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, weaponentity, WEP_CVAR(WEP_MINE_LAYER, ammo), SND_RELOAD);
+	W_Reload(actor, weaponentity, WEP_CVAR(WEP_MINE_LAYER, ammo), SND_RELOAD);
 }
+
 METHOD(MineLayer, wr_suicidemessage, Notification(entity thiswep))
 {
-    return WEAPON_MINELAYER_SUICIDE;
+	return WEAPON_MINELAYER_SUICIDE;
 }
+
 METHOD(MineLayer, wr_killmessage, Notification(entity thiswep))
 {
-    return WEAPON_MINELAYER_MURDER;
+	return WEAPON_MINELAYER_MURDER;
 }
 
 #endif
@@ -495,10 +502,10 @@ METHOD(MineLayer, wr_killmessage, Notification(entity thiswep))
 
 METHOD(MineLayer, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2 = w_org + w_backoff * 2;
-    pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
-    if(!w_issilent)
-        sound(actor, CH_SHOTS, SND_MINE_EXP, VOL_BASE, ATTN_NORM);
+	vector org2 = w_org + w_backoff * 2;
+	pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
+	if(!w_issilent)
+		sound(actor, CH_SHOTS, SND_MINE_EXP, VOL_BASE, ATTN_NORM);
 }
 
 #endif
