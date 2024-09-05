@@ -173,7 +173,7 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
 {
 	// forced reload - wait until the bulletcounter is 0 so a burst loop can finish
 	if (WEP_CVAR(WEP_MACHINEGUN, reload_ammo)
-	&& actor.(weaponentity).clip_load < min(max(WEP_CVAR(WEP_MACHINEGUN, sustained_ammo), WEP_CVAR(WEP_MACHINEGUN, first_ammo)), WEP_CVAR(WEP_MACHINEGUN, burst_ammo))
+	&& actor.(weaponentity).clip_load < min(min(WEP_CVAR(WEP_MACHINEGUN, sustained_ammo), WEP_CVAR(WEP_MACHINEGUN, first_ammo)), WEP_CVAR(WEP_MACHINEGUN, burst_ammo))
 	&& actor.(weaponentity).misc_bulletcounter >= 0)
 	{
 		thiswep.wr_reload(thiswep, actor, weaponentity);
@@ -251,7 +251,7 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
 METHOD(MachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount;
-	if(WEP_CVAR(WEP_MACHINEGUN, mode) == 1)
+	if(WEP_CVAR(WEP_MACHINEGUN, mode) == 1 || actor.(weaponentity).misc_bulletcounter != 1)
 		ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(WEP_MACHINEGUN, sustained_ammo);
 	else
 		ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(WEP_MACHINEGUN, first_ammo);
@@ -292,7 +292,7 @@ METHOD(MachineGun, wr_reload, void(entity thiswep, entity actor, .entity weapone
 {
 	if(actor.(weaponentity).misc_bulletcounter < 0)
 		return;
-	W_Reload(actor, weaponentity, min(max(WEP_CVAR(WEP_MACHINEGUN, sustained_ammo), WEP_CVAR(WEP_MACHINEGUN, first_ammo)), WEP_CVAR(WEP_MACHINEGUN, burst_ammo)), SND_RELOAD);
+	W_Reload(actor, weaponentity, min(min(WEP_CVAR(WEP_MACHINEGUN, sustained_ammo), WEP_CVAR(WEP_MACHINEGUN, first_ammo)), WEP_CVAR(WEP_MACHINEGUN, burst_ammo)), SND_RELOAD);
 }
 
 METHOD(MachineGun, wr_suicidemessage, Notification(entity thiswep))
