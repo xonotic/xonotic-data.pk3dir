@@ -68,7 +68,7 @@ int g_magic_stats_hole = 0;
 	void stats_get() {}
 	#define STAT(...) EVAL_STAT(OVERLOAD(STAT, __VA_ARGS__))
 	#define EVAL_STAT(...) __VA_ARGS__
-    #define STAT_1(id) (RVALUE, _STAT(id))
+	#define STAT_1(id) (RVALUE, _STAT(id))
 	#define STAT_2(id, cl) STAT_1(id)
 
 	#define getstat_int(id) getstati(id, 0, 24)
@@ -96,13 +96,13 @@ int g_magic_stats_hole = 0;
 		}
 	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT_2(x, T)
 #elif defined(SVQC)
-    /** Internal use only */
-    entity STATS;
+	/** Internal use only */
+	entity STATS;
 	/** Add all registered stats, access with `STAT(ID, player)` or `.type stat = _STAT(ID); player.stat` */
 	void stats_add() {}
 	#define STAT(...) EVAL_STAT(OVERLOAD_(STAT, __VA_ARGS__))
-    #define EVAL_STAT(...) __VA_ARGS__
-    #define STAT_1(id) (RVALUE, STAT_2(id, STATS))
+	#define EVAL_STAT(...) __VA_ARGS__
+	#define STAT_1(id) (RVALUE, STAT_2(id, STATS))
 	#define STAT_2(id, cl) (cl)._STAT(id)
 
 	#define addstat_int(id, fld) addstat(id, AS_INT, fld)
@@ -153,15 +153,15 @@ int g_magic_stats_hole = 0;
 		}
 	void GlobalStats_update(entity this) {}
 	void GlobalStats_updateglobal() {}
-    /** TODO: do we want the global copy to update? */
-    #define REGISTER_STAT_3(id, T, expr) \
-    	REGISTER_STAT_2(id, T); \
-    	ACCUMULATE void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
-    	ACCUMULATE void GlobalStats_updateglobal() { entity this = STATS; STAT(id, this) = (expr); } \
-    	STATIC_INIT(worldstat_##id) { entity this = STATS; STAT(id, this) = (expr); }
+	/** TODO: do we want the global copy to update? */
+	#define REGISTER_STAT_3(id, T, expr) \
+		REGISTER_STAT_2(id, T); \
+		ACCUMULATE void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
+		ACCUMULATE void GlobalStats_updateglobal() { entity this = STATS; STAT(id, this) = (expr); } \
+		STATIC_INIT(worldstat_##id) { entity this = STATS; STAT(id, this) = (expr); }
 #else
 	#define REGISTER_STAT_2(id, type)
-    #define REGISTER_STAT_3(id, T, expr)
+	#define REGISTER_STAT_3(id, T, expr)
 #endif
 
 REGISTRY(Stats, 256 - STATS_ENGINE_RESERVE)
