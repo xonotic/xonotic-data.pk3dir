@@ -148,25 +148,26 @@ void StrafeHUD_DrawStrafeMeter(
 			float opposite_offsetangle = opposite_direction ? opposite_bestangle : bestangle;
 
 			float bestangle_width = max(panel_size.x * autocvar_hud_panel_strafehud_switch_width, 1);
+			bestangle_width = StrafeHUD_widthToAngle(bestangle_width, hudangle);
 
 			// remove change indicator width from offset
 			if(direction == STRAFEHUD_DIRECTION_LEFT)
 			{
 				if(!opposite_direction)
-					opposite_offsetangle -= StrafeHUD_widthToAngle(bestangle_width, hudangle);
+					opposite_offsetangle -= bestangle_width;
 				else
-					offsetangle -= StrafeHUD_widthToAngle(bestangle_width, hudangle);
+					offsetangle -= bestangle_width;
 			}
 			else
 			{
 				if(!opposite_direction)
-					offsetangle -= StrafeHUD_widthToAngle(bestangle_width, hudangle);
+					offsetangle -= bestangle_width;
 				else
-					opposite_offsetangle -= StrafeHUD_widthToAngle(bestangle_width, hudangle);
+					opposite_offsetangle -= bestangle_width;
 			}
 
 			StrafeHUD_drawStrafeHUD(
-				offsetangle, StrafeHUD_widthToAngle(bestangle_width, hudangle),
+				offsetangle, bestangle_width,
 				autocvar_hud_panel_strafehud_switch_color,
 				autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha,
 				STRAFEHUD_STYLE_DRAWFILL, STRAFEHUD_GRADIENT_NONE,
@@ -174,7 +175,7 @@ void StrafeHUD_DrawStrafeMeter(
 
 			if(direction == STRAFEHUD_DIRECTION_NONE)
 				StrafeHUD_drawStrafeHUD(
-					opposite_offsetangle, StrafeHUD_widthToAngle(bestangle_width, hudangle),
+					opposite_offsetangle, bestangle_width,
 					autocvar_hud_panel_strafehud_switch_color,
 					autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha,
 					STRAFEHUD_STYLE_DRAWFILL, STRAFEHUD_GRADIENT_NONE,
@@ -193,12 +194,15 @@ vector StrafeHUD_DrawAngleIndicator(float angle, float wishangle,
 	float currentangle = 0;
 	if(mode == STRAFEHUD_MODE_VELOCITY_CENTERED)
 	{
-		// avoid switching side too much at ±180° if within anti flicker is triggered
+		// avoid switching side too much at ±180° if anti flicker is triggered
 		if(fabs(angle) <= (180 - antiflicker_angle))
+		{
 			// bound to HUD area
 			currentangle = bound(-hudangle / 2, angle, hudangle / 2);
 			currentangle = StrafeHUD_projectAngle(currentangle, hudangle, false);
+		}
 	}
+	float currentangle_offset = StrafeHUD_angleToOffset(currentangle, hudangle);
 
 	vector currentangle_color = autocvar_hud_panel_strafehud_angle_neutral_color;
 	float strafe_ratio = 0;
@@ -240,9 +244,12 @@ vector StrafeHUD_DrawAngleIndicator(float angle, float wishangle,
 	float angleheight_offset = currentangle_size.y;
 	float ghost_angle = 0;
 	if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
+	{
+		// bound to HUD area
 		ghost_angle = bound(-hudangle / 2, (opposite_direction ? opposite_bestangle : bestangle), hudangle / 2);
-
-	ghost_angle = StrafeHUD_projectAngle(ghost_angle, hudangle, false);
+		ghost_angle = StrafeHUD_projectAngle(ghost_angle, hudangle, false);
+	}
+	float ghost_offset = StrafeHUD_angleToOffset(ghost_angle, hudangle);
 
 	switch(autocvar_hud_panel_strafehud_angle_style)
 	{
@@ -251,12 +258,12 @@ vector StrafeHUD_DrawAngleIndicator(float angle, float wishangle,
 			{
 				if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
 					drawfill(
-						panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (StrafeHUD_angleToOffset(ghost_angle, hudangle) - currentangle_size.x / 2),
+						panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (ghost_offset - currentangle_size.x / 2),
 						currentangle_size, autocvar_hud_panel_strafehud_bestangle_color,
 						autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha,
 						DRAWFLAG_NORMAL);
 				drawfill(
-					panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (StrafeHUD_angleToOffset(currentangle, hudangle) - currentangle_size.x / 2),
+					panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x / 2),
 					currentangle_size, currentangle_color,
 					autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha,
 					DRAWFLAG_NORMAL);
@@ -273,11 +280,11 @@ vector StrafeHUD_DrawAngleIndicator(float angle, float wishangle,
 						line_size.y = currentangle_size.y - i;
 					if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
 						drawfill(
-							panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (StrafeHUD_angleToOffset(ghost_angle, hudangle) - line_size.x / 2),
+							panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (ghost_offset - line_size.x / 2),
 							line_size, autocvar_hud_panel_strafehud_bestangle_color,
 							autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 					drawfill(
-						panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (StrafeHUD_angleToOffset(currentangle, hudangle) - line_size.x / 2),
+						panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (currentangle_offset - line_size.x / 2),
 						line_size, currentangle_color,
 						autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 				}
@@ -291,7 +298,7 @@ vector StrafeHUD_DrawAngleIndicator(float angle, float wishangle,
 	}
 
 	vector angle_indicator_info = StrafeHUD_DrawAngleIndicatorArrow(
-		currentangle, currentangle_size, currentangle_color, ghost_angle,
+		currentangle_offset, currentangle_size, currentangle_color, ghost_offset,
 		angleheight_offset, direction, hudangle);
 
 	// return infomration about the angle indicator packed into a vector
@@ -301,8 +308,8 @@ vector StrafeHUD_DrawAngleIndicator(float angle, float wishangle,
 
 // draw the arrows on the angle indicator
 // TODO: break this apart so that each angle indicator is drawn in an individual function call
-vector StrafeHUD_DrawAngleIndicatorArrow(float currentangle, vector currentangle_size,
-	vector currentangle_color, float ghost_angle, float angleheight_offset,
+vector StrafeHUD_DrawAngleIndicatorArrow(float currentangle_offset, vector currentangle_size,
+	vector currentangle_color, float ghost_offset, float angleheight_offset,
 	int direction, float hudangle)
 {
 	float angle_offset_top = 0, angle_offset_bottom = 0;
@@ -326,11 +333,11 @@ vector StrafeHUD_DrawAngleIndicatorArrow(float currentangle, vector currentangle
 			{
 				if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
 					StrafeHUD_drawStrafeArrow(
-						panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * StrafeHUD_angleToOffset(ghost_angle, hudangle),
+						panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * ghost_offset,
 						arrow_size, autocvar_hud_panel_strafehud_bestangle_color,
 						autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, true, currentangle_size.x);
 				StrafeHUD_drawStrafeArrow(
-					panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * StrafeHUD_angleToOffset(currentangle, hudangle),
+					panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * currentangle_offset,
 					arrow_size, currentangle_color,
 					autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, true, currentangle_size.x);
 
@@ -340,11 +347,11 @@ vector StrafeHUD_DrawAngleIndicatorArrow(float currentangle, vector currentangle
 			{
 				if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
 					StrafeHUD_drawStrafeArrow(
-						panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * StrafeHUD_angleToOffset(ghost_angle, hudangle),
+						panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * ghost_offset,
 						arrow_size, autocvar_hud_panel_strafehud_bestangle_color,
 						autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, false, currentangle_size.x);
 				StrafeHUD_drawStrafeArrow(
-					panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * StrafeHUD_angleToOffset(currentangle, hudangle),
+					panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * currentangle_offset,
 					arrow_size, currentangle_color,
 					autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, false, currentangle_size.x);
 

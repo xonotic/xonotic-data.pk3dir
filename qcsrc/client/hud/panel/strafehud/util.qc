@@ -57,6 +57,9 @@ float StrafeHUD_project(float ratio, float range, bool reverse)
 
 float StrafeHUD_projectAngle(float angle, float range, bool reverse)
 {
+	if(autocvar_hud_panel_strafehud_projection == STRAFEHUD_PROJECTION_LINEAR)
+		return angle;
+
 	float ratio = (angle % 360) / (range / 2);
 	ratio = StrafeHUD_project(ratio, range, reverse);
 	angle = ratio * (range / 2);
@@ -65,6 +68,9 @@ float StrafeHUD_projectAngle(float angle, float range, bool reverse)
 
 float StrafeHUD_projectOffset(float offset, float range, bool reverse)
 {
+	if(autocvar_hud_panel_strafehud_projection == STRAFEHUD_PROJECTION_LINEAR)
+		return offset;
+
 	float ratio = (offset - (panel_size.x / 2)) / (panel_size.x / 2);
 	ratio = StrafeHUD_project(ratio, range, reverse);
 	offset = ratio * (panel_size.x / 2) + (panel_size.x / 2);
@@ -73,6 +79,9 @@ float StrafeHUD_projectOffset(float offset, float range, bool reverse)
 
 float StrafeHUD_projectWidth(float offset, float width, float range)
 {
+	if(autocvar_hud_panel_strafehud_projection == STRAFEHUD_PROJECTION_LINEAR)
+		return width;
+
 	return StrafeHUD_projectOffset(offset + width, range, false) - StrafeHUD_projectOffset(offset, range, false);
 }
 

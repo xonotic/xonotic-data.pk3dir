@@ -22,28 +22,30 @@ void StrafeHUD_drawStrafeHUD(float startangle, float offsetangle, vector color, 
 
 	// how much is hidden by the current hud angle
 	float hidden_width = (360 - range) / range * panel_size.x;
+	float total_width = panel_size.x + hidden_width;
 	float original_width = width; // required for gradient
 
 	if(offset < 0)
 	{
 		mirror_width = min(fabs(offset), width);
-		mirror_offset = panel_size.x + hidden_width - fabs(offset);
+		mirror_offset = offset + total_width;
 		width += offset;
 		offset = 0;
 	}
 	else
 	{
-		mirror_width = min(offset + width - panel_size.x - hidden_width, width);
-		mirror_offset = max(offset - panel_size.x - hidden_width, 0);
+		mirror_offset = offset - total_width;
+		mirror_width = min(mirror_offset + width, width);
+		if(mirror_offset < 0) mirror_offset = 0;
 	}
 
-	float overflow_width = 0;
+	float overflow_width = offset + width - panel_size.x;
 	width = max(width, 0);
-	if((offset + width) > panel_size.x)
-	{
-		overflow_width = (offset + width) - panel_size.x;
+	if(overflow_width > 0)
 		width = panel_size.x - offset;
-	}
+	else
+		overflow_width = 0;
+
 	vector size = panel_size;
 	size.x = width;
 
@@ -59,13 +61,13 @@ void StrafeHUD_drawStrafeHUD(float startangle, float offsetangle, vector color, 
 		mirror_offset = 0;
 	}
 
-	float overflow_mirror_width = 0;
+	float overflow_mirror_width = mirror_offset + mirror_width - panel_size.x;
 	mirror_width = max(mirror_width, 0);
-	if((mirror_offset + mirror_width) > panel_size.x)
-	{
-		overflow_mirror_width = (mirror_offset + mirror_width) - panel_size.x;
+	if(overflow_mirror_width > 0)
 		mirror_width = panel_size.x - mirror_offset;
-	}
+	else
+		overflow_mirror_width = 0;
+
 	vector mirror_size = panel_size;
 	mirror_size.x = mirror_width;
 
