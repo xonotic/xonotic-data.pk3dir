@@ -869,7 +869,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 // Returns total damage applies to creatures
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
-								float inflictorselfdamage, float forceintensity, float forcezscale, int deathtype, .entity weaponentity, entity directhitentity)
+								float inflictorselfdamage, float forceintensity, vector forcexyzscale, int deathtype, .entity weaponentity, entity directhitentity)
 {
 	entity	targ;
 	vector	force;
@@ -1001,10 +1001,10 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					force = force * (finaldmg / max(coredamage, edgedamage)) * forceintensity;
 					hitloc = nearest;
 
-					// apply special scaling along the z axis if set
-					// NOTE: 0 value is not allowed for compatibility, in the case of weapon cvars not being set
-					if(forcezscale)
-						force.z *= forcezscale;
+					// apply special force scalings
+					force.x *= forcexyzscale.x;
+					force.y *= forcexyzscale.y;
+					force.z *= forcexyzscale.z;
 
 					if(targ != directhitentity)
 					{
@@ -1109,7 +1109,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 float RadiusDamage(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 {
 	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad,
-									cantbe, mustbe, false, forceintensity, 1, deathtype, weaponentity, directhitentity);
+									cantbe, mustbe, false, forceintensity, '1 1 1', deathtype, weaponentity, directhitentity);
 }
 
 bool Heal(entity targ, entity inflictor, float amount, float limit)
