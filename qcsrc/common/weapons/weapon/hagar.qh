@@ -22,39 +22,39 @@ CLASS(Hagar, Weapon)
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
 		P(class, prefix, ammo, float, BOTH) \
-        P(class, prefix, damageforcescale, float, BOTH) \
-        P(class, prefix, damage, float, BOTH) \
-        P(class, prefix, edgedamage, float, BOTH) \
-        P(class, prefix, force, float, BOTH) \
-        P(class, prefix, health, float, BOTH) \
-        P(class, prefix, lifetime, float, PRI) \
-        P(class, prefix, lifetime_min, float, SEC) \
-        P(class, prefix, lifetime_rand, float, SEC) \
-        P(class, prefix, load, float, SEC) \
-        P(class, prefix, load_abort, float, SEC) \
-        P(class, prefix, load_animtime, float, SEC) \
-        P(class, prefix, load_hold, float, SEC) \
-        P(class, prefix, load_linkexplode, float, SEC) \
-        P(class, prefix, load_max, float, SEC) \
-        P(class, prefix, load_releasedeath, float, SEC) \
-        P(class, prefix, load_speed, float, SEC) \
-        P(class, prefix, load_spread, float, SEC) \
-        P(class, prefix, load_spread_bias, float, SEC) \
-        P(class, prefix, radius, float, BOTH) \
-        P(class, prefix, refire, float, BOTH) \
-        P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-        P(class, prefix, secondary, float, NONE) \
-        P(class, prefix, speed, float, BOTH) \
-        P(class, prefix, spread, float, BOTH) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, damageforcescale, float, BOTH) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, edgedamage, float, BOTH) \
+		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, health, float, BOTH) \
+		P(class, prefix, lifetime, float, PRI) \
+		P(class, prefix, lifetime_min, float, SEC) \
+		P(class, prefix, lifetime_rand, float, SEC) \
+		P(class, prefix, load, float, SEC) \
+		P(class, prefix, load_abort, float, SEC) \
+		P(class, prefix, load_animtime, float, SEC) \
+		P(class, prefix, load_hold, float, SEC) \
+		P(class, prefix, load_linkexplode, float, SEC) \
+		P(class, prefix, load_max, float, SEC) \
+		P(class, prefix, load_releasedeath, float, SEC) \
+		P(class, prefix, load_speed, float, SEC) \
+		P(class, prefix, load_spread, float, SEC) \
+		P(class, prefix, load_spread_bias, float, SEC) \
+		P(class, prefix, radius, float, BOTH) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, reload_ammo, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, secondary, float, NONE) \
+		P(class, prefix, speed, float, BOTH) \
+		P(class, prefix, spread, float, BOTH) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Hagar, hagar)
+	W_PROPS(X, Hagar, hagar)
 #undef X
 
 ENDCLASS(Hagar)

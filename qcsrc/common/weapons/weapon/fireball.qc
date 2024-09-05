@@ -338,74 +338,80 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 
 METHOD(Fireball, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    PHYS_INPUT_BUTTON_ATCK(actor) = false;
-    PHYS_INPUT_BUTTON_ATCK2(actor) = false;
-    if(actor.bot_primary_fireballmooth == 0)
-    {
-        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_FIREBALL, speed), 0, WEP_CVAR_PRI(WEP_FIREBALL, lifetime), false, false))
-        {
-            PHYS_INPUT_BUTTON_ATCK(actor) = true;
-            if(random() < 0.02) actor.bot_primary_fireballmooth = 1;
-        }
-    }
-    else
-    {
-        if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(WEP_FIREBALL, speed), WEP_CVAR_SEC(WEP_FIREBALL, speed_up), WEP_CVAR_SEC(WEP_FIREBALL, lifetime), true, false))
-        {
-            PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-            if(random() < 0.01) actor.bot_primary_fireballmooth = 0;
-        }
-    }
+	PHYS_INPUT_BUTTON_ATCK(actor) = false;
+	PHYS_INPUT_BUTTON_ATCK2(actor) = false;
+	if(actor.bot_primary_fireballmooth == 0)
+	{
+		if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_FIREBALL, speed), 0, WEP_CVAR_PRI(WEP_FIREBALL, lifetime), false, false))
+		{
+			PHYS_INPUT_BUTTON_ATCK(actor) = true;
+			if(random() < 0.02) actor.bot_primary_fireballmooth = 1;
+		}
+	}
+	else
+	{
+		if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(WEP_FIREBALL, speed), WEP_CVAR_SEC(WEP_FIREBALL, speed_up), WEP_CVAR_SEC(WEP_FIREBALL, lifetime), true, false))
+		{
+			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+			if(random() < 0.01) actor.bot_primary_fireballmooth = 0;
+		}
+	}
 }
+
 METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(fire & 1)
-    {
-        if(time >= actor.(weaponentity).fireball_primarytime)
-        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_FIREBALL, refire)))
-        {
-            W_Fireball_Attack1_Frame0(thiswep, actor, weaponentity, fire);
-            actor.(weaponentity).fireball_primarytime = time + WEP_CVAR_PRI(WEP_FIREBALL, refire2) * W_WeaponRateFactor(actor);
-        }
-    }
-    else if(fire & 2)
-    {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_FIREBALL, refire)))
-        {
-            W_Fireball_Attack2(actor, weaponentity);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_FIREBALL, animtime), w_ready);
-        }
-    }
+	if(fire & 1)
+	{
+		if(time >= actor.(weaponentity).fireball_primarytime)
+		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_FIREBALL, refire)))
+		{
+			W_Fireball_Attack1_Frame0(thiswep, actor, weaponentity, fire);
+			actor.(weaponentity).fireball_primarytime = time + WEP_CVAR_PRI(WEP_FIREBALL, refire2) * W_WeaponRateFactor(actor);
+		}
+	}
+	else if(fire & 2)
+	{
+		if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_FIREBALL, refire)))
+		{
+			W_Fireball_Attack2(actor, weaponentity);
+			weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_FIREBALL, animtime), w_ready);
+		}
+	}
 }
+
 METHOD(Fireball, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    return true; // infinite ammo
+	return true; // infinite ammo
 }
+
 METHOD(Fireball, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    return true; // fireball has infinite ammo
+	return true; // fireball has infinite ammo
 }
+
 METHOD(Fireball, wr_resetplayer, void(entity thiswep, entity actor))
 {
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
-    	actor.(weaponentity).fireball_primarytime = time;
+		actor.(weaponentity).fireball_primarytime = time;
 	}
 }
+
 METHOD(Fireball, wr_suicidemessage, Notification(entity thiswep))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-        return WEAPON_FIREBALL_SUICIDE_FIREMINE;
-    else
-        return WEAPON_FIREBALL_SUICIDE_BLAST;
+	if(w_deathtype & HITTYPE_SECONDARY)
+		return WEAPON_FIREBALL_SUICIDE_FIREMINE;
+	else
+		return WEAPON_FIREBALL_SUICIDE_BLAST;
 }
+
 METHOD(Fireball, wr_killmessage, Notification(entity thiswep))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-        return WEAPON_FIREBALL_MURDER_FIREMINE;
-    else
-        return WEAPON_FIREBALL_MURDER_BLAST;
+	if(w_deathtype & HITTYPE_SECONDARY)
+		return WEAPON_FIREBALL_MURDER_FIREMINE;
+	else
+		return WEAPON_FIREBALL_MURDER_BLAST;
 }
 
 #endif
@@ -413,17 +419,17 @@ METHOD(Fireball, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Fireball, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-    {
-        // firemine goes out silently
-    }
-    else
-    {
-        vector org2 = w_org + w_backoff * 2;
-        pointparticles(EFFECT_FIREBALL_EXPLODE, org2, '0 0 0', 1);
-        if(!w_issilent)
-            sound(actor, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM * 0.25); // long range boom
-    }
+	if(w_deathtype & HITTYPE_SECONDARY)
+	{
+		// firemine goes out silently
+	}
+	else
+	{
+		vector org2 = w_org + w_backoff * 2;
+		pointparticles(EFFECT_FIREBALL_EXPLODE, org2, '0 0 0', 1);
+		if(!w_issilent)
+			sound(actor, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM * 0.25); // long range boom
+	}
 }
 
 #endif
