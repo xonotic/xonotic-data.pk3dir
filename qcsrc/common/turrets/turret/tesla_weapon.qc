@@ -7,14 +7,14 @@ SOUND(TeslaCoilTurretAttack_FIRE, W_Sound("electro_fire"));
 METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_ELECTRO, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
             W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_TeslaCoilTurretAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_TESLA.m_id);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_ELECTRO, animtime), w_ready);
         }
 
         float d = actor.shot_dmg;
@@ -73,7 +73,8 @@ entity toast(entity actor, entity from, float range, float damage)
     if (etarget)
     {
         te_csqc_lightningarc(from.origin, etarget.origin);
-        Damage(etarget, actor, actor, damage, DEATH_TURRET_TESLA.m_id, DMG_NOWEP, etarget.origin, '0 0 0');
+        if (etarget != actor.realowner)
+            Damage(etarget, actor, actor, damage, DEATH_TURRET_TESLA.m_id, DMG_NOWEP, etarget.origin, '0 0 0');
         etarget.railgunhit = true;
         IL_PUSH(g_railgunhit, etarget);
     }

@@ -39,7 +39,7 @@ int mv_columns;
 int mv_mouse_selection;
 int mv_selection_keyboard;
 
-float gametypevote;
+bool gametypevote;
 string mapvote_chosenmap;
 vector gtv_text_size;
 vector gtv_text_size_small;
@@ -512,6 +512,17 @@ void MapVote_Draw()
 		else
 			DrawItem(pos + MapVote_GridVec(dist, i, mv_columns), dist.y, dist.x, map, "", tmp, i);
 	}
+
+	if(mv_abstain)
+		++mv_num_maps;
+
+	if(mv_abstain && i < mv_num_maps) {
+		tmp = mv_votes[i];
+		pos.y = ymax + abstain_spacing;
+		pos.x = (xmax + xmin) * 0.5;
+		MapVote_DrawAbstain(pos, dist.x, xmax - xmin, tmp, i);
+	}
+
 	if (mv_winner)
 	{
 		// expand winner map image
@@ -535,16 +546,6 @@ void MapVote_Draw()
 		vector img_size = endsize * f + startsize * (1 - f);
 
 		MapVote_DrawMapPicture(mv_pics[mv_winner - 1], img_pos, img_size, theAlpha);
-	}
-
-	if(mv_abstain)
-		++mv_num_maps;
-
-	if(mv_abstain && i < mv_num_maps) {
-		tmp = mv_votes[i];
-		pos.y = ymax + abstain_spacing;
-		pos.x = (xmax+xmin)*0.5;
-		MapVote_DrawAbstain(pos, dist.x, xmax - xmin, tmp, i);
 	}
 }
 
@@ -732,14 +733,10 @@ void MapVote_Init()
 	mv_ownvote = -1;
 	mv_timeout = ReadCoord();
 
-	gametypevote = ReadByte();
-
-	if(gametypevote)
-	{
+	int gametypevote_flags = ReadByte();
+	gametypevote = boolean(gametypevote_flags & BIT(0));
+	if(gametypevote_flags)
 		mapvote_chosenmap = strzone(ReadString());
-		if ( gametypevote == 2 )
-			gametypevote = 0;
-	}
 
 	MapVote_ReadMask();
 	int i;

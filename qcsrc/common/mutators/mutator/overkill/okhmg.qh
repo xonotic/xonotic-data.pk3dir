@@ -32,20 +32,7 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 		P(class, prefix, spread_add, float, PRI) \
 		P(class, prefix, spread_max, float, PRI) \
 		P(class, prefix, spread_min, float, PRI) \
-		P(class, prefix, ammo, float, SEC) \
-		P(class, prefix, animtime, float, SEC) \
-		P(class, prefix, damage, float, SEC) \
-		P(class, prefix, delay, float, SEC) \
-		P(class, prefix, edgedamage, float, SEC) \
-		P(class, prefix, force, float, SEC) \
-		P(class, prefix, force_zscale, float, SEC) \
-		P(class, prefix, lifetime, float, SEC) \
-		P(class, prefix, radius, float, SEC) \
-		P(class, prefix, refire, float, SEC) \
 		P(class, prefix, refire_type, float, SEC) \
-		P(class, prefix, shotangle, float, SEC) \
-		P(class, prefix, speed, float, SEC) \
-		P(class, prefix, spread, float, SEC) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
@@ -54,12 +41,12 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 		P(class, prefix, weaponstartoverride, float, NONE) \
 		P(class, prefix, weaponstart, float, NONE) \
 		P(class, prefix, weaponthrowable, float, NONE) \
-    END()
-    W_PROPS(X, OverkillHeavyMachineGun, okhmg)
+	END()
+	W_PROPS(X, OverkillHeavyMachineGun, okhmg)
 #undef X
 
 ENDCLASS(OverkillHeavyMachineGun)
-REGISTER_WEAPON(OVERKILL_HMG, okhmg, NEW(OverkillHeavyMachineGun));
+REGISTER_WEAPON(OVERKILL_HMG, NEW(OverkillHeavyMachineGun));
 
 //SPAWNFUNC_WEAPON(weapon_okhmg, WEP_OVERKILL_HMG)
 //SPAWNFUNC_WEAPON(weapon_hmg, WEP_OVERKILL_HMG)

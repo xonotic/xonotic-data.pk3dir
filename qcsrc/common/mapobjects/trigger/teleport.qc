@@ -40,7 +40,7 @@ bool Teleport_Active(entity this, entity player)
 			return false;
 
 	// no need to call IS_OBSERVER(), observers never call use/touch functions which means this is never an observer
-	if(this.classname == "trigger_teleport" && this.spawnflags & TELEPORT_OBSERVERS_ONLY)
+	if(this.classname == "trigger_teleport" && (this.spawnflags & TELEPORT_OBSERVERS_ONLY))
 		return false;
 
 	return true;
@@ -122,7 +122,6 @@ spawnfunc(trigger_teleport)
 	this.angles = '0 0 0';
 
 	this.active = ACTIVE_ACTIVE;
-	//trigger_init(this); // only for predicted triggers?
 	EXACTTRIGGER_INIT;
 	this.use = trigger_teleport_use;
 

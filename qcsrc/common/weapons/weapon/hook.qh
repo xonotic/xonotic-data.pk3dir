@@ -39,29 +39,29 @@ CLASS(Hook, Weapon)
 		P(class, prefix, radius, float, SEC) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, speed, float, SEC) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Hook, hook)
+	W_PROPS(X, Hook, hook)
 #undef X
 
 ENDCLASS(Hook)
-REGISTER_WEAPON(HOOK, hook, NEW(Hook));
+REGISTER_WEAPON(HOOK, NEW(Hook));
 
 SPAWNFUNC_WEAPON(weapon_hook, WEP_HOOK)
 
 CLASS(OffhandHook, OffhandWeapon)
 #ifdef SVQC
-    METHOD(OffhandHook, offhand_think, void(OffhandHook this, entity actor, bool key_pressed))
-    {
-    	Weapon wep = WEP_HOOK;
-    	.entity weaponentity = weaponentities[1];
-    	wep.wr_think(wep, actor, weaponentity, key_pressed ? 1 : 0);
-    }
+	METHOD(OffhandHook, offhand_think, void(OffhandHook this, entity actor, bool key_pressed))
+	{
+		Weapon wep = WEP_HOOK;
+		.entity weaponentity = weaponentities[1];
+		wep.wr_think(wep, actor, weaponentity, key_pressed ? 1 : 0);
+	}
 #endif
 ENDCLASS(OffhandHook)
 OffhandHook OFFHAND_HOOK;

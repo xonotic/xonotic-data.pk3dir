@@ -5,6 +5,7 @@
 #include <client/mapvoting.qh>
 #include <common/ent_cs.qh>
 #include <common/minigames/cl_minigames.qh>
+#include <client/view.qh>
 
 // QuickMenu (#23)
 
@@ -84,6 +85,7 @@ void QuickMenu_Page_ClearEntry(int i)
 bool HUD_QuickMenu_Forbidden()
 {
 	return (mv_active
+		|| intermission_time == time // close upon game over, can still be opened during intermission
 		|| scoreboard_ui_enabled
 		|| (hud_configure_prev && hud_configure_prev != -1)
 		|| HUD_MinigameMenu_IsOpened()

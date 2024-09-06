@@ -1,6 +1,6 @@
 #pragma once
 
-void Cmd_Scoreboard_SetFields(int);
+void Cmd_Scoreboard_SetFields(int argc);
 void Cmd_Scoreboard_Help();
 void ConsoleCommand_macro_init();
 

@@ -66,12 +66,14 @@ void HUD_Vote()
 	a = vote_alpha * (vote_highlighted ? autocvar_hud_panel_vote_alreadyvoted_alpha : 1);
 	if(a <= 0)
 		return;
-	//panel_fade_alpha *= a;
-	// nothing can hide this panel, not even the menu
+
+	// menu can't hide this panel, unless:
+	// 1) the uid2name menu dialog is open (replaces this panel)
+	// 2) the settings menu of another panel is open (hud_config mode)
 	float hud_fade_alpha_save = hud_fade_alpha;
 	if(uid2name_dialog && autocvar__menu_alpha)
 		hud_fade_alpha = 0;
-	else
+	else if(!(hud_configure_menu_open == 2 && highlightedPanel != panel))
 		hud_fade_alpha = a;
 	HUD_Panel_LoadCvars();
 	hud_fade_alpha = hud_fade_alpha_save;

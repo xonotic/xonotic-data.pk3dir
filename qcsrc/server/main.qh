@@ -48,7 +48,7 @@ float servertime, serverprevtime, serverframetime;
 
 .float contents_damagetime;
 
-string GetField_fullspawndata(entity e, string f, ...);
+string GetField_fullspawndata(entity e, string fieldname, bool vfspath);
 
 /*
 ==================

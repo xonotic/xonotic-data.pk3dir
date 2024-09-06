@@ -6,6 +6,6 @@ CLASS(XonoticLanguageWarningDialog, XonoticDialog)
 	ATTRIB(XonoticLanguageWarningDialog, title, string, _("Warning"));
 	ATTRIB(XonoticLanguageWarningDialog, color, vector, SKINCOLOR_DIALOG_HUDCONFIRM);
 	ATTRIB(XonoticLanguageWarningDialog, intendedWidth, float, 0.6);
-	ATTRIB(XonoticLanguageWarningDialog, rows, float, 5);
+	ATTRIB(XonoticLanguageWarningDialog, rows, float, 4);
 	ATTRIB(XonoticLanguageWarningDialog, columns, float, 4);
 ENDCLASS(XonoticLanguageWarningDialog)

@@ -141,7 +141,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 			continue;
 
 		// Check if the item can be picked up safely
-		if(Item_IsLoot(it))
+		if(ITEM_IS_LOOT(it))
 		{
 			if(!IS_ONGROUND(it))
 				continue;

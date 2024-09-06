@@ -5,7 +5,6 @@
 float autocvar_g_monsters;
 bool autocvar_g_monsters_edit;
 bool autocvar_g_monsters_sounds;
-float autocvar_g_monsters_think_delay;
 int autocvar_g_monsters_max;
 int autocvar_g_monsters_max_perplayer;
 float autocvar_g_monsters_damageforcescale = 0.8;

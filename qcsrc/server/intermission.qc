@@ -10,6 +10,21 @@
 #include <server/scores_rules.qh>
 #include <server/world.qh>
 
+void Send_NextMap_To_Player(entity pl)
+{
+	stuffcmd(pl, sprintf("\nsettemp _nextmap %s\n", get_nextmap()));
+}
+
+void Set_NextMap(string mapname)
+{
+	if (mapname != "")
+		strcpy(_nextmap, mapname);
+	else
+		strfree(_nextmap);
+
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), { Send_NextMap_To_Player(it); });
+}
+
 string GetGametype()
 {
 	return MapInfo_Type_ToString(MapInfo_LoadedGametype);
@@ -20,8 +35,7 @@ string GetMapname()
 	return mapname;
 }
 
-float Map_Count, Map_Current;
-string Map_Current_Name;
+int Map_Count, Map_Current;
 
 // NOTE: this now expects the map list to be already tokenized and the count in Map_Count
 int GetMaplistPosition()
@@ -33,7 +47,7 @@ int GetMaplistPosition()
 	{
 		if(idx < Map_Count)
 		{
-			if(map == argv(idx))
+			if(map == bufstr_get(maplist_buffer, idx))
 			{
 				return idx;
 			}
@@ -42,7 +56,7 @@ int GetMaplistPosition()
 
 	for(int pos = 0; pos < Map_Count; ++pos)
 	{
-		if(map == argv(pos))
+		if(map == bufstr_get(maplist_buffer, pos))
 			return pos;
 	}
 
@@ -100,9 +114,9 @@ bool MapHasRightSize(string map)
 	return true;
 }
 
-string Map_Filename(int position)
+string Map_Filename(string m)
 {
-	return strcat("maps/", argv(position), ".bsp");
+	return strcat("maps/", m, ".bsp");
 }
 
 void Map_MarkAsRecent(string m)
@@ -112,30 +126,34 @@ void Map_MarkAsRecent(string m)
 
 bool Map_IsRecent(string m)
 {
+	if(autocvar_g_maplist_mostrecent == "")
+		return false;
 	return strhasword(autocvar_g_maplist_mostrecent, m);
 }
 
-bool Map_Check(int position, float pass)
+bool Map_Check(string m, int pass)
 {
-	string filename;
-	string map_next;
-	map_next = argv(position);
 	if(pass <= 1)
 	{
-		if(Map_IsRecent(map_next))
+		if(Map_IsRecent(m))
 			return false;
 	}
-	filename = Map_Filename(position);
-	if(MapInfo_CheckMap(map_next))
+	if(MapInfo_CheckMap(m))
 	{
 		if(pass == 2)
 			return true;
-		if(MapHasRightSize(map_next))
+		// MapInfo_Map_flags was set by MapInfo_CheckMap()
+		if (MapInfo_Map_flags & MAPINFO_FLAG_DONOTWANT)
+			return false;
+		if(MapHasRightSize(m))
 			return true;
 		return false;
 	}
 	else
+	{
+		string filename = Map_Filename(m);
 		LOG_DEBUG( "Couldn't select '", filename, "'..." );
+	}
 
 	return false;
 }
@@ -150,10 +168,11 @@ void Map_Goto_SetStr(string nextmapname)
 		getmapname_stored = strzone(nextmapname);
 }
 
-void Map_Goto_SetFloat(float position)
+void Map_Goto_SetIndex(int position)
 {
+	Map_Current = position;
 	cvar_set("g_maplist_index", ftos(position));
-	Map_Goto_SetStr(argv(position));
+	Map_Goto_SetStr(bufstr_get(maplist_buffer, position));
 }
 
 void Map_Goto(float reinit)
@@ -164,37 +183,43 @@ void Map_Goto(float reinit)
 // return codes of map selectors:
 //   -1 = temporary failure (that is, try some method that is guaranteed to succeed)
 //   -2 = permanent failure
-float MaplistMethod_Iterate() // usual method
+int MaplistMethod_Iterate(void) // usual method
 {
-	float pass, i;
+	int attempts = 42; // skip advanced checks if this many maps fail
 
 	LOG_TRACE("Trying MaplistMethod_Iterate");
 
-	for(pass = 1; pass <= 2; ++pass)
+	for(int i = 1; i < Map_Count; ++i)
 	{
-		for(i = 1; i < Map_Count; ++i)
+		int mapindex = (i + Map_Current) % Map_Count;
+		if(Map_Check(bufstr_get(maplist_buffer, mapindex), 1))
+			return mapindex;
+
+		attempts -= 1;
+		if(attempts <= 0)
 		{
-			float mapindex;
-			mapindex = (i + Map_Current) % Map_Count;
-			if(Map_Check(mapindex, pass))
-				return mapindex;
+			LOG_DEBUG("MaplistMethod_Iterate: Couldn't find a suitable map, falling back to next valid");
+			break;
 		}
 	}
-	return -1;
+
+	// failing that, just accept the next map in the list
+	int mapindex = (1 + Map_Current) % Map_Count;
+	return mapindex;
 }
 
-float MaplistMethod_Repeat() // fallback method
+int MaplistMethod_Repeat(void) // fallback method
 {
 	LOG_TRACE("Trying MaplistMethod_Repeat");
 
-	if(Map_Check(Map_Current, 2))
+	if(Map_Check(bufstr_get(maplist_buffer, Map_Current), 2))
 		return Map_Current;
 	return -2;
 }
 
-float MaplistMethod_Random() // random map selection
+int MaplistMethod_Random(void) // random map selection
 {
-	float i, imax;
+	int i, imax;
 
 	LOG_TRACE("Trying MaplistMethod_Random");
 
@@ -202,97 +227,105 @@ float MaplistMethod_Random() // random map selection
 
 	for(i = 0; i <= imax; ++i)
 	{
-		float mapindex;
+		int mapindex;
 		mapindex = (Map_Current + floor(random() * (Map_Count - 1) + 1)) % Map_Count; // any OTHER map
-		if(Map_Check(mapindex, 1))
+		if(Map_Check(bufstr_get(maplist_buffer, mapindex), 1))
 			return mapindex;
 	}
 	return -1;
 }
 
-float MaplistMethod_Shuffle(float exponent) // more clever shuffling
-// the exponent sets a bias on the map selection:
-// the higher the exponent, the less likely "shortly repeated" same maps are
+// NOTE: call Maplist_Close when you're done!
+int Maplist_Init(void)
 {
-	float i, j, imax, insertpos;
-
-	LOG_TRACE("Trying MaplistMethod_Shuffle");
-
-	imax = 42;
-
-	for(i = 0; i <= imax; ++i)
-	{
-		string newlist;
-
-		// now reinsert this at another position
-		insertpos = (random() ** (1 / exponent));       // ]0, 1]
-		insertpos = insertpos * (Map_Count - 1);       // ]0, Map_Count - 1]
-		insertpos = ceil(insertpos) + 1;               // {2, 3, 4, ..., Map_Count}
-		LOG_TRACE("SHUFFLE: insert pos = ", ftos(insertpos));
-
-		// insert the current map there
-		newlist = "";
-		for(j = 1; j < insertpos; ++j)                 // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above
-			newlist = strcat(newlist, " ", argv(j));
-		newlist = strcat(newlist, " ", argv(0));       // now insert the just selected map
-		for(j = insertpos; j < Map_Count; ++j)         // i == Map_Count: no loop, has just been inserted as last
-			newlist = strcat(newlist, " ", argv(j));
-		newlist = substring(newlist, 1, strlen(newlist) - 1);
-		cvar_set("g_maplist", newlist);
-		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
-
-		// NOTE: the selected map has just been inserted at (insertpos-1)th position
-		Map_Current = insertpos - 1; // this is not really valid, but this way the fallback has a chance of working
-		if(Map_Check(Map_Current, 1))
-			return Map_Current;
-	}
-	return -1;
-}
-
-void Maplist_Init()
-{
-	float i = Map_Count = 0;
+	bool have_maps = false;
 	if(autocvar_g_maplist != "")
 	{
-		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
-		for (i = 0; i < Map_Count; ++i)
+		// make sure there is at least one playable map in the list
+		bool needtrim = false;
+		FOREACH_WORD(autocvar_g_maplist, true,
 		{
-			if (Map_Check(i, 2))
+			if(!fexists(Map_Filename(it)))
+			{
+				needtrim = true;
+				if(have_maps)
+					break;
+				continue;
+			}
+			if(have_maps || !Map_Check(it, 2))
+				continue;
+			have_maps = true;
+			if(needtrim)
 				break;
+		});
+
+		// additionally trim any non-existent maps
+		if(needtrim)
+		{
+			int trimmedmaps = 0;
+			string newmaplist = "";
+			FOREACH_WORD(autocvar_g_maplist, true,
+			{
+				if(!fexists(Map_Filename(it)))
+				{
+					trimmedmaps += 1;
+					continue;
+				}
+				newmaplist = cons(newmaplist, it);
+			});
+			cvar_set("g_maplist", newmaplist);
+			LOG_DEBUGF("Maplist_Init: trimmed %d missing maps from the list", trimmedmaps);
 		}
 	}
 
-	if (i == Map_Count)
+	if (!have_maps)
 	{
 		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags() | MAPINFO_FLAG_NOAUTOMAPLIST));
-		if(autocvar_g_maplist_shuffle)
-			ShuffleMaplist();
+		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
 		if(!server_is_dedicated)
 			localcmd("\nmenu_cmd sync\n");
-		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
 	}
+
+	maplist_buffer = buf_create();
+
+	int _cnt = 0;
+	FOREACH_WORD(autocvar_g_maplist, Map_Check(it, 2),
+	{
+		// NOTE: inlined maplist_shuffle function to avoid a second buffer, keep both in sync
+		if(autocvar_g_maplist_shuffle)
+		{
+			int _j = floor(random() * (_cnt + 1));
+			if(_j != _cnt)
+				bufstr_set(maplist_buffer, _cnt, bufstr_get(maplist_buffer, _j));
+			bufstr_set(maplist_buffer, _j, it);
+			++_cnt;
+		}
+		else
+			bufstr_set(maplist_buffer, i, it);
+	});
+
+	Map_Count = buf_getsize(maplist_buffer);
+
 	if(Map_Count == 0)
 		error("empty maplist, cannot select a new map");
+
 	Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
 
-	strcpy(Map_Current_Name, argv(Map_Current)); // will be automatically freed on exit thanks to DP
-	// this may or may not be correct, but who cares, in the worst case a map
-	// isn't chosen in the first pass that should have been
+	return Map_Count;
 }
 
-string GetNextMap()
+void Maplist_Close()
 {
-	Maplist_Init();
-	float nextMap = -1;
+	buf_del(maplist_buffer);
+}
 
-	if(nextMap == -1)
-		if(autocvar_g_maplist_shuffle > 0)
-			nextMap = MaplistMethod_Shuffle(autocvar_g_maplist_shuffle + 1);
+// NOTE: call Maplist_Init() before making GetNextMap() call(s)
+string GetNextMap(void)
+{
+	int nextMap = -1;
 
-	if(nextMap == -1)
-		if(autocvar_g_maplist_selectrandom)
-			nextMap = MaplistMethod_Random();
+	if(nextMap == -1 && autocvar_g_maplist_selectrandom)
+		nextMap = MaplistMethod_Random();
 
 	if(nextMap == -1)
 		nextMap = MaplistMethod_Iterate();
@@ -302,7 +335,7 @@ string GetNextMap()
 
 	if(nextMap >= 0)
 	{
-		Map_Goto_SetFloat(nextMap);
+		Map_Goto_SetIndex(nextMap);
 		return getmapname_stored;
 	}
 
@@ -338,11 +371,12 @@ float DoNextMapOverride(float reinit)
 		alreadychangedlevel = true;
 		return true;
 	}
-	if(autocvar_nextmap != "")
+	if(get_nextmap() != "")
 	{
 		string m;
-		m = GameTypeVote_MapInfo_FixName(autocvar_nextmap);
-		cvar_set("nextmap",m);
+		m = GameTypeVote_MapInfo_FixName(get_nextmap());
+		if (m != get_nextmap())
+			Set_NextMap(m);
 
 		if(!m || gametypevote)
 			return false;
@@ -379,15 +413,12 @@ void GotoNextMap(float reinit)
 		return;
 	alreadychangedlevel = true;
 
+	Maplist_Init();
 	string nextMap = GetNextMap();
+	Maplist_Close();
 	if(nextMap == "")
 		error("Everything is broken - cannot find a next map. Please report this to the developers.");
 	Map_Goto(reinit);
-}
-
-void ShuffleMaplist()
-{
-	cvar_set("g_maplist", shufflewords(autocvar_g_maplist));
 }
 
 string GotoMap(string m)
@@ -396,12 +427,13 @@ string GotoMap(string m)
 	if (!m)
 		return "The map you suggested is not available on this server.";
 	if (!autocvar_sv_vote_gametype)
-	if(!MapInfo_CheckMap(m))
+	if (!MapInfo_CheckMap(m))
 		return "The map you suggested does not support the current game mode.";
-	cvar_set("nextmap", m);
+	if (m != get_nextmap())
+		Set_NextMap(m);
 	if (!intermission_running)
 		cvar_set("_endmatch", "1");
-	if(mapvote_initialized || alreadychangedlevel)
+	if (mapvote_initialized || alreadychangedlevel)
 	{
 		if(DoNextMapOverride(0))
 			return "Map switch initiated.";
@@ -434,9 +466,32 @@ void IntermissionThink(entity this)
 		this.autoscreenshot = -1;
 		if(IS_REAL_CLIENT(this))
 		{
-			string num = strftime_s(); // strftime(false, "%s") isn't reliable, see strftime_s description
-			stuffcmd(this, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; "
-				"echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), num));
+			// in old clients "cl_autoscreenshot_screenshot_s %s %s;" takes the screenshot
+			// "cl_autoscreenshot_screenshot %s %s;" does nothing because the cl_autoscreenshot_screenshot alias
+			// doesn't exist; the cl_autoscreenshot_screenshot dummy cvar is created
+			// so that "cl_autoscreenshot_screenshot %s %s" doesn't print any warning in console
+
+			// in new clients "cl_autoscreenshot_screenshot %s %s;" takes the screenshot
+			// even if the cl_autoscreenshot_screenshot cvar is created, only the cl_autoscreenshot_screenshot alias
+			// is executed since only the alias is executed if a cvar with the same name exists
+			// cl_autoscreenshot_screenshot_s is not run as cl_autoscreenshot_screenshot alias clears it
+			// (it doesn't delete it so that "unalias cl_autoscreenshot_screenshot_s;" doesn't print any warning)
+
+			// this stuffcmd is needed only for Xonotic 0.8.6 or lower
+			// the s in cl_autoscreenshot_screenshot_s stands for server alias (alias name can't be longer than 32)
+			stuffcmd(this, sprintf("\n"
+				"alias cl_autoscreenshot_screenshot_s \"screenshot screenshots/autoscreenshot/%s-%s.jpg\";"
+				"set cl_autoscreenshot_screenshot 0;", GetMapname(), matchid));
+
+			// keep only this stuffcmd after the next release
+			stuffcmd(this, sprintf("\ncl_autoscreenshot_screenshot %s %s;"
+				"echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), matchid));
+
+			// this stuffcmd is needed only for Xonotic 0.8.6 or lower
+			stuffcmd(this, "\n"
+				"cl_autoscreenshot_screenshot_s %s %s;"
+				"unset cl_autoscreenshot_screenshot;"
+				"unalias cl_autoscreenshot_screenshot_s;");
 		}
 		return;
 	}
@@ -455,7 +510,7 @@ void FixIntermissionClient(entity e)
 {
 	if(!e.autoscreenshot) // initial call
 	{
-		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
+		e.autoscreenshot = time + 0.1;
 		SetResourceExplicit(e, RES_HEALTH, -2342); // health in the first intermission phase
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{

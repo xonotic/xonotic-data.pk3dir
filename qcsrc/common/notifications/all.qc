@@ -1181,7 +1181,7 @@ void Local_Notification_centerprint_Add(
 }
 
 void Local_Notification_Queue_Run(MSG net_type, entity notif)
-{		
+{
 	switch (net_type)
 	{
 		case MSG_ANNCE:
@@ -1193,7 +1193,7 @@ void Local_Notification_Queue_Run(MSG net_type, entity notif)
 }
 
 void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time)
-{	
+{
 	// Guess length if required
 	if(queue_time == 0)
 		queue_time = soundlength(AnnouncerFilename(notif.nent_snd));
@@ -1205,11 +1205,11 @@ void Local_Notification_Queue_Add(MSG net_type, entity notif, float queue_time)
 	} else {
 		// Put in queue
 		if(notif_queue_length >= NOTIF_QUEUE_MAX) return;
-	
+
 		notif_queue_type[notif_queue_length] = net_type;
 		notif_queue_entity[notif_queue_length] = notif;
 		notif_queue_time[notif_queue_length] = notif_queue_next_time;
-		
+
 		notif_queue_next_time += queue_time;
 		++notif_queue_length;
 	}
@@ -1224,7 +1224,7 @@ void Local_Notification_Queue_Process()
 
 	// Shift queue to the left
 	--notif_queue_length;
-	for (int j = 0; j < notif_queue_length; j++) {
+	for (int j = 0; j < notif_queue_length; ++j) {
 		notif_queue_type[j] = notif_queue_type[j+1];
 		notif_queue_entity[j] = notif_queue_entity[j+1];
 		notif_queue_time[j] = notif_queue_time[j+1];
@@ -1262,10 +1262,10 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		return;
 	}
 
-	string s1 = CCR((notif.nent_stringcount > 0) ? ...(0, string) : "");
-	string s2 = CCR((notif.nent_stringcount > 1) ? ...(1, string) : "");
-	string s3 = CCR((notif.nent_stringcount > 2) ? ...(2, string) : "");
-	string s4 = CCR((notif.nent_stringcount > 3) ? ...(3, string) : "");
+	string s1 = (notif.nent_stringcount > 0) ? ...(0, string) : "";
+	string s2 = (notif.nent_stringcount > 1) ? ...(1, string) : "";
+	string s3 = (notif.nent_stringcount > 2) ? ...(2, string) : "";
+	string s4 = (notif.nent_stringcount > 3) ? ...(3, string) : "";
 	float f1 =  ((notif.nent_floatcount  > 0) ? ...((notif.nent_stringcount + 0), float) : 0);
 	float f2 =  ((notif.nent_floatcount  > 1) ? ...((notif.nent_stringcount + 1), float) : 0);
 	float f3 =  ((notif.nent_floatcount  > 2) ? ...((notif.nent_stringcount + 2), float) : 0);
