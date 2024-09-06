@@ -61,8 +61,18 @@ int g_magic_stats_hole = 0;
 	it.m_id += g_magic_stats_hole; \
 	MAGIC_STATS(MAGIC_STATS_FIX_MANUAL, it) { MAGIC_STATS(MAGIC_STATS_FIX_AUTO, it) }
 
+// REGISTER_STAT_INT and REGISTER_STAT_BOOL exist because REGISTER_STAT can't create a proper
+// int / bool STAT due to int and bool types being expanded to float when REGISTER_STAT gets called
+
+#define REGISTER_STAT_BOOL(...) EVAL_REGISTER_STAT_BOOL(OVERLOAD(REGISTER_STAT_BOOL, __VA_ARGS__))
+#define EVAL_REGISTER_STAT_BOOL(...) __VA_ARGS__
+
+#define REGISTER_STAT_INT(...) EVAL_REGISTER_STAT_INT(OVERLOAD(REGISTER_STAT_INT, __VA_ARGS__))
+#define EVAL_REGISTER_STAT_INT(...) __VA_ARGS__
+
 #define REGISTER_STAT(...) EVAL_REGISTER_STAT(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
 #define EVAL_REGISTER_STAT(...) __VA_ARGS__
+
 #if defined(CSQC)
 	/** Get all stats and store them as globals, access with `STAT(ID)` */
 	void stats_get() {}
@@ -78,6 +88,33 @@ int g_magic_stats_hole = 0;
 	#define getstat_vectori(id) vec3(getstat_int(id + 0), getstat_int(id + 1), getstat_int(id + 2))
 
 	#define _STAT(id) g_stat_##id
+
+	// mostly duplicate of REGISTER_STAT_2
+	#define REGISTER_STAT_BOOL_2(id, T) \
+		T _STAT(id); \
+		/* T CAT(_STAT(id), _prev); */ \
+		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) {} \
+		ACCUMULATE void stats_get() \
+		{ \
+			T it = getstat_bool(STAT_##id.m_id); \
+			/* if (it != CAT(_STAT(id), _prev)) \
+				CAT(_STAT(id), _prev) = */ _STAT(id) = it; \
+		}
+	#define REGISTER_STAT_BOOL_3(id, T, expr) REGISTER_STAT_BOOL_2(id, T)
+
+	// mostly duplicate of REGISTER_STAT_2
+	#define REGISTER_STAT_INT_2(id, T) \
+		T _STAT(id); \
+		/* T CAT(_STAT(id), _prev); */ \
+		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) {} \
+		ACCUMULATE void stats_get() \
+		{ \
+			T it = getstat_int(STAT_##id.m_id); \
+			/* if (it != CAT(_STAT(id), _prev)) \
+				CAT(_STAT(id), _prev) = */ _STAT(id) = it; \
+		}
+	#define REGISTER_STAT_INT_3(id, T, expr) REGISTER_STAT_INT_2(id, T)
+
 	#define REGISTER_STAT_2(id, T) \
 		T _STAT(id); \
 		/* T CAT(_STAT(id), _prev); */ \
@@ -94,7 +131,7 @@ int g_magic_stats_hole = 0;
 			/* if (it != CAT(_STAT(id), _prev)) \
 				CAT(_STAT(id), _prev) = */ _STAT(id) = it; \
 		}
-	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT_2(x, T)
+	#define REGISTER_STAT_3(id, T, expr) REGISTER_STAT_2(id, T)
 #elif defined(SVQC)
 	/** Internal use only */
 	entity STATS;
@@ -137,6 +174,27 @@ int g_magic_stats_hole = 0;
 	}
 
 	#define _STAT(id) stat_##id
+
+	// mostly duplicate of REGISTER_STAT_2
+	#define REGISTER_STAT_BOOL_2(id, T) \
+		.T _STAT(id); \
+		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) {} \
+		ACCUMULATE void stats_add() \
+		{ \
+			.T fld = _STAT(id); \
+			addstat_int(STAT_##id.m_id, fld); \
+		}
+
+	// mostly duplicate of REGISTER_STAT_2
+	#define REGISTER_STAT_INT_2(id, T) \
+		.T _STAT(id); \
+		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) {} \
+		ACCUMULATE void stats_add() \
+		{ \
+			.T fld = _STAT(id); \
+			addstat_int(STAT_##id.m_id, fld); \
+		}
+
 	#define REGISTER_STAT_2(id, T) \
 		.T _STAT(id); \
 		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
@@ -153,15 +211,31 @@ int g_magic_stats_hole = 0;
 		}
 	void GlobalStats_update(entity this) {}
 	void GlobalStats_updateglobal() {}
-	/** TODO: do we want the global copy to update? */
-	#define REGISTER_STAT_3(id, T, expr) \
-		REGISTER_STAT_2(id, T); \
+
+	#define _REGISTER_STAT_2(id, expr) \
 		ACCUMULATE void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
 		ACCUMULATE void GlobalStats_updateglobal() { entity this = STATS; STAT(id, this) = (expr); } \
 		STATIC_INIT(worldstat_##id) { entity this = STATS; STAT(id, this) = (expr); }
+
+	/** TODO: do we want the global copy to update? */
+	#define REGISTER_STAT_BOOL_3(id, T, expr) \
+		REGISTER_STAT_BOOL_2(id, T); \
+		_REGISTER_STAT_2(id, expr)
+
+	#define REGISTER_STAT_INT_3(id, T, expr) \
+		REGISTER_STAT_INT_2(id, T); \
+		_REGISTER_STAT_2(id, expr)
+
+	#define REGISTER_STAT_3(id, T, expr) \
+		REGISTER_STAT_2(id, T); \
+		_REGISTER_STAT_2(id, expr)
 #else
-	#define REGISTER_STAT_2(id, type)
+	#define REGISTER_STAT_2(id, T)
 	#define REGISTER_STAT_3(id, T, expr)
+	#define REGISTER_STAT_INT_2(id, T)
+	#define REGISTER_STAT_INT_3(id, T, expr)
+	#define REGISTER_STAT_BOOL_2(id, T)
+	#define REGISTER_STAT_BOOL_3(id, T, expr)
 #endif
 
 REGISTRY(Stats, 256 - STATS_ENGINE_RESERVE)
