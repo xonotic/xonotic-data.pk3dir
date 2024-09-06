@@ -20,7 +20,7 @@ void updateSensSlider(entity field, entity slider)
 void updateSensField(entity slider, entity field)
 {
 	if (slider.value)
-		SUPER(XonoticInputBox).setText(field, ftos_mindecimals(stof((sprintf("%0.4f", slider.value)))));
+		SUPER(XonoticInputBox).setText(field, ftos_mindecimals(slider.value));
 	// don't use that to avoid infinite onChange looping, just steal its content
 	//XonoticInputBox_setText(field, ftos(slider.value));
 }
@@ -89,6 +89,7 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticInputBox_T(0, "sensitivity",
 			_("Mouse speed multiplier")));
 			e.saveImmediately = 1;
+			e.allowedCharacters = "0.123456789";
 			linkSensitivities(sensitivitySlider, e);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "m_filter", _("Smooth aiming"),
