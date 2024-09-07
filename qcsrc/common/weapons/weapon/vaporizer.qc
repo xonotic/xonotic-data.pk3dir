@@ -24,6 +24,7 @@ string Draw_VaporizerBeam_trace_callback_tex;
 float Draw_VaporizerBeam_trace_callback_rnd;
 vector Draw_VaporizerBeam_trace_callback_rgb;
 float Draw_VaporizerBeam_trace_callback_a;
+
 void Draw_VaporizerBeam_trace_callback(vector start, vector hit, vector end)
 {
 	float i;
@@ -246,115 +247,131 @@ void W_RocketMinsta_Attack(entity actor, .entity weaponentity, int mode)
 
 METHOD(Vaporizer, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if((actor.items & IT_UNLIMITED_AMMO) || GetResource(actor, thiswep.ammo_type) > 0)
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 1, false, true);
-    else
-        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_BLASTER, speed), 0, WEP_CVAR_PRI(WEP_BLASTER, lifetime), false, true);
+	if((actor.items & IT_UNLIMITED_AMMO) || GetResource(actor, thiswep.ammo_type) > 0)
+		PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 1, false, true);
+	else
+		PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_BLASTER, speed), 0, WEP_CVAR_PRI(WEP_BLASTER, lifetime), false, true);
 }
+
 METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(WEP_VAPORIZER, ammo));
-    // if the laser uses load, we also consider its ammo for reloading
-    if(WEP_CVAR(WEP_VAPORIZER, reload_ammo) && WEP_CVAR_PRI(WEP_BLASTER, ammo) && actor.(weaponentity).clip_load < min(vaporizer_ammo, WEP_CVAR_PRI(WEP_BLASTER, ammo))) { // forced reload
-        thiswep.wr_reload(thiswep, actor, weaponentity);
-        actor.(weaponentity).hagar_load = false; // rocket minsta exclusive var
-        return;
-    } else if(WEP_CVAR(WEP_VAPORIZER, reload_ammo) && actor.(weaponentity).clip_load < vaporizer_ammo) { // forced reload
-        thiswep.wr_reload(thiswep, actor, weaponentity);
-        actor.(weaponentity).hagar_load = false; // rocket minsta exclusive var
-        return;
-    }
-    if((fire & 1) && (GetResource(actor, RES_CELLS) || !autocvar_g_rm) && !weaponLocked(actor))
-    {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_VAPORIZER, refire)))
-        {
-            W_Vaporizer_Attack(thiswep, actor, weaponentity);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_VAPORIZER, animtime), w_ready);
-        }
-    }
-    if((fire & 2) || ((fire & 1) && !GetResource(actor, RES_CELLS) && autocvar_g_rm))
-    {
-        if((autocvar_g_rm && autocvar_g_rm_laser) || autocvar_g_rm_laser == 2)
-        {
-            bool rapid = autocvar_g_rm_laser_rapid;
-            //hagar_load was previously named held_down
-            if(actor.(weaponentity).jump_interval <= time && !actor.(weaponentity).hagar_load)
-            {
-                if(rapid)
-                    actor.(weaponentity).hagar_load = true;
-                actor.(weaponentity).jump_interval = time + autocvar_g_rm_laser_refire;
-                actor.(weaponentity).jump_interval2 = time + autocvar_g_rm_laser_rapid_delay;
-                impressive_hits = 0;
-                W_RocketMinsta_Attack(actor, weaponentity, 0);
-            }
-            else if(rapid && actor.(weaponentity).jump_interval2 <= time && actor.(weaponentity).hagar_load)
-            {
-                actor.(weaponentity).jump_interval2 = time + autocvar_g_rm_laser_rapid_refire;
-                impressive_hits = 0;
-                W_RocketMinsta_Attack(actor, weaponentity, 1);
-                //weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_rm_laser_rapid_animtime, w_ready);
-            }
-        }
-        else if (actor.(weaponentity).jump_interval <= time)
-        {
-            // handle refire manually, so that primary and secondary can be fired without conflictions (important for instagib)
-            actor.(weaponentity).jump_interval = time + WEP_CVAR_PRI(WEP_BLASTER, refire) * W_WeaponRateFactor(actor);
+	float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(WEP_VAPORIZER, ammo));
+	// if the laser uses load, we also consider its ammo for reloading
+	if (WEP_CVAR(WEP_VAPORIZER, reload_ammo)
+	&& WEP_CVAR_PRI(WEP_BLASTER, ammo)
+	&& actor.(weaponentity).clip_load < min(vaporizer_ammo, WEP_CVAR_PRI(WEP_BLASTER, ammo)))
+	{ // forced reload
+		thiswep.wr_reload(thiswep, actor, weaponentity);
+		actor.(weaponentity).hagar_load = false; // rocket minsta exclusive var
+		return;
+	}
+	if(WEP_CVAR(WEP_VAPORIZER, reload_ammo)
+	&& actor.(weaponentity).clip_load < vaporizer_ammo)
+	{ // forced reload
+		thiswep.wr_reload(thiswep, actor, weaponentity);
+		actor.(weaponentity).hagar_load = false; // rocket minsta exclusive var
+		return;
+	}
 
-            // decrease ammo for the laser?
-            if(WEP_CVAR_PRI(WEP_BLASTER, ammo))
-                W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(WEP_BLASTER, ammo), weaponentity);
+	if((fire & 1) && (GetResource(actor, RES_CELLS) || !autocvar_g_rm) && !weaponLocked(actor))
+	{
+		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_VAPORIZER, refire)))
+		{
+			W_Vaporizer_Attack(thiswep, actor, weaponentity);
+			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_VAPORIZER, animtime), w_ready);
+		}
+	}
 
-            makevectors(actor.v_angle);
-            W_Blaster_Attack(actor, weaponentity);
+	if((fire & 2) || ((fire & 1) && !GetResource(actor, RES_CELLS) && autocvar_g_rm))
+	{
+		if((autocvar_g_rm && autocvar_g_rm_laser) || autocvar_g_rm_laser == 2)
+		{
+			bool rapid = autocvar_g_rm_laser_rapid;
+			//hagar_load was previously named held_down
+			if(actor.(weaponentity).jump_interval <= time && !actor.(weaponentity).hagar_load)
+			{
+				if(rapid)
+					actor.(weaponentity).hagar_load = true;
+				actor.(weaponentity).jump_interval = time + autocvar_g_rm_laser_refire;
+				actor.(weaponentity).jump_interval2 = time + autocvar_g_rm_laser_rapid_delay;
+				impressive_hits = 0;
+				W_RocketMinsta_Attack(actor, weaponentity, 0);
+			}
+			else if(rapid && actor.(weaponentity).jump_interval2 <= time && actor.(weaponentity).hagar_load)
+			{
+				actor.(weaponentity).jump_interval2 = time + autocvar_g_rm_laser_rapid_refire;
+				impressive_hits = 0;
+				W_RocketMinsta_Attack(actor, weaponentity, 1);
+				//weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_rm_laser_rapid_animtime, w_ready);
+			}
+		}
+		else if (actor.(weaponentity).jump_interval <= time)
+		{
+			// handle refire manually, so that primary and secondary can be fired without conflictions (important for instagib)
+			actor.(weaponentity).jump_interval = time + WEP_CVAR_PRI(WEP_BLASTER, refire) * W_WeaponRateFactor(actor);
 
-            // now do normal refire
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_PRI(WEP_BLASTER, animtime), w_ready);
-        }
-    }
-    else
-        actor.(weaponentity).hagar_load = false;
+			// decrease ammo for the laser?
+			if(WEP_CVAR_PRI(WEP_BLASTER, ammo))
+				W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(WEP_BLASTER, ammo), weaponentity);
+
+			makevectors(actor.v_angle);
+			W_Blaster_Attack(actor, weaponentity);
+
+			// now do normal refire
+			weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_PRI(WEP_BLASTER, animtime), w_ready);
+		}
+	}
+	else
+		actor.(weaponentity).hagar_load = false;
 }
+
 METHOD(Vaporizer, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    actor.vaporizer_lasthit = 0;
+	actor.vaporizer_lasthit = 0;
 }
+
 METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(WEP_VAPORIZER, ammo));
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= vaporizer_ammo;
-    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= vaporizer_ammo;
-    return ammo_amount;
+	float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(WEP_VAPORIZER, ammo));
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= vaporizer_ammo;
+	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= vaporizer_ammo;
+	return ammo_amount;
 }
+
 METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(!WEP_CVAR_PRI(WEP_BLASTER, ammo))
-        return true;
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(WEP_BLASTER, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(WEP_BLASTER, ammo);
-    return ammo_amount;
+	if(!WEP_CVAR_PRI(WEP_BLASTER, ammo))
+		return true;
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(WEP_BLASTER, ammo);
+	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(WEP_BLASTER, ammo);
+	return ammo_amount;
 }
+
 METHOD(Vaporizer, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    actor.vaporizer_lasthit = 0;
+	actor.vaporizer_lasthit = 0;
 }
+
 METHOD(Vaporizer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(WEP_VAPORIZER, ammo));
-    float used_ammo;
-    if(WEP_CVAR_PRI(WEP_BLASTER, ammo))
-        used_ammo = min(vaporizer_ammo, WEP_CVAR_PRI(WEP_BLASTER, ammo));
-    else
-        used_ammo = vaporizer_ammo;
+	float vaporizer_ammo = ((autocvar_g_instagib) ? 1 : WEP_CVAR_PRI(WEP_VAPORIZER, ammo));
+	float used_ammo;
+	if(WEP_CVAR_PRI(WEP_BLASTER, ammo))
+		used_ammo = min(vaporizer_ammo, WEP_CVAR_PRI(WEP_BLASTER, ammo));
+	else
+		used_ammo = vaporizer_ammo;
 
-    W_Reload(actor, weaponentity, used_ammo, SND_RELOAD);
+	W_Reload(actor, weaponentity, used_ammo, SND_RELOAD);
 }
+
 METHOD(Vaporizer, wr_suicidemessage, Notification(entity thiswep))
 {
-    return WEAPON_THINKING_WITH_PORTALS;
+	return WEAPON_THINKING_WITH_PORTALS;
 }
+
 METHOD(Vaporizer, wr_killmessage, Notification(entity thiswep))
 {
-    return WEAPON_VAPORIZER_MURDER;
+	return WEAPON_VAPORIZER_MURDER;
 }
 
 #endif
@@ -367,24 +384,26 @@ METHOD(Vaporizer, wr_impacteffect, void(entity thiswep, entity actor))
 	if(!w_issilent)
 		sound(actor, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
 }
+
 METHOD(Vaporizer, wr_init, void(entity thiswep))
 {
-    if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
-    {
-        precache_pic("gfx/reticle_nex");
-    }
+	if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
+	{
+		precache_pic("gfx/reticle_nex");
+	}
 }
+
 METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))
 {
-    if(button_zoom || zoomscript_caught)
-    {
-        return true;
-    }
-    else
-    {
-        // no weapon specific image for this weapon
-        return false;
-    }
+	if(button_zoom || zoomscript_caught)
+	{
+		return true;
+	}
+	else
+	{
+		// no weapon specific image for this weapon
+		return false;
+	}
 }
 
 #endif
