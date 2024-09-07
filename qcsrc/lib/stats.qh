@@ -66,6 +66,14 @@ int g_magic_stats_hole = 0;
 #define type_VECTOR  vector
 #define type_VECTORI vector
 
+#define _REGISTRY_RESERVE_INT(Stats, m_id, id)
+#define _REGISTRY_RESERVE_BOOL(Stats, m_id, id)
+#define _REGISTRY_RESERVE_FLOAT(Stats, m_id, id)
+#define _REGISTRY_RESERVE_VECTOR(Stats, m_id, id) \
+	REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
+	REGISTRY_RESERVE(Stats, m_id, STAT_##id, z);
+#define _REGISTRY_RESERVE_VECTORI(Stats, m_id, id) _REGISTRY_RESERVE_VECTOR(Stats, m_id, id)
+
 #define REGISTER_STAT(...) EVAL_REGISTER_STAT(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
 #define EVAL_REGISTER_STAT(...) __VA_ARGS__
 #if defined(CSQC)
@@ -88,10 +96,7 @@ int g_magic_stats_hole = 0;
 		/* T CAT(_STAT(id), _prev); */ \
 		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
 		{ \
-			if (#T == "VECTOR" || #T == "VECTORI") { \
-				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
-				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
-			} \
+			_REGISTRY_RESERVE_##T(Stats, m_id, id) \
 		} \
 		ACCUMULATE void stats_get() \
 		{ \
@@ -146,10 +151,7 @@ int g_magic_stats_hole = 0;
 		.type_##T _STAT(id); \
 		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
 		{ \
-			if (#T == "VECTOR" || #T == "VECTORI") { \
-				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
-				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
-			} \
+			_REGISTRY_RESERVE_##T(Stats, m_id, id) \
 		} \
 		ACCUMULATE void stats_add() \
 		{ \
