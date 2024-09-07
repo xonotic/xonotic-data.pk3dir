@@ -70,11 +70,11 @@ void write_recordmarker(entity pl, float newpos, float tstart, float dt)
     // also write a marker into demo files for demotc-race-record-extractor to find
     if (pl.crypto_idfp != "") {
 		stuffcmd(pl,
-			sprintf("//%s RECORD SET %s %f %f %f %f %s\n", strconv(2, 0, 0, GetGametype()),
+			sprintf("//%s RECORD SET %s %f %f %f %d %s\n", strconv(2, 0, 0, GetGametype()),
 				TIME_ENCODED_TOSTRING(TIME_ENCODE(dt), false), tstart, dt, newpos, pl.crypto_idfp));
 	} else {
 		stuffcmd(pl,
-			sprintf("//%s RECORD SET %s %f %f %f %f ANONYMOUS\n", strconv(2, 0, 0, GetGametype()),
+			sprintf("//%s RECORD SET %s %f %f %f %d ANONYMOUS\n", strconv(2, 0, 0, GetGametype()),
 				TIME_ENCODED_TOSTRING(TIME_ENCODE(dt), false), tstart, dt, newpos));
 	}
 }
