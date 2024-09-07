@@ -1078,7 +1078,7 @@ msgstr "ratio"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2445
 msgid "Next map:"
-msgstr ""
+msgstr "Harena posterior:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2452
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
