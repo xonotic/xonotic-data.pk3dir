@@ -1,4 +1,5 @@
 #include "racetimer.qh"
+#include "physics.qh"
 
 #include <client/draw.qh>
 #include <common/ent_cs.qh>
