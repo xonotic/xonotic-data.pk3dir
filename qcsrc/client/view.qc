@@ -628,7 +628,8 @@ int WantEventchase(entity this, bool want_vehiclechase)
 	return 0;
 }
 
-bool waiting_CAMERA_SPECTATOR_update;
+int waiting_CAMERA_SPECTATOR_update;
+bool camera_spectator_3rd_person;
 void View_EventChase(entity this)
 {
 	if(spectatee_status > 0 && autocvar_chase_active > 0)
@@ -640,10 +641,30 @@ void View_EventChase(entity this)
 			if (!waiting_CAMERA_SPECTATOR_update)
 			{
 				Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR 2
-				waiting_CAMERA_SPECTATOR_update = true;
+				waiting_CAMERA_SPECTATOR_update = 1;
 			}
 		}
-		else waiting_CAMERA_SPECTATOR_update = false;
+		else waiting_CAMERA_SPECTATOR_update = 0;
+		camera_spectator_3rd_person = true;
+	}
+
+	// chase_active disabled by the user?
+	if(spectatee_status > 0 && camera_spectator_3rd_person && autocvar_chase_active == 0)
+	{
+		if (STAT(CAMERA_SPECTATOR) >= 1)
+		{
+			if (waiting_CAMERA_SPECTATOR_update != STAT(CAMERA_SPECTATOR))
+			{
+				Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR (2 and) 0
+				waiting_CAMERA_SPECTATOR_update = STAT(CAMERA_SPECTATOR);
+			}
+		}
+		else
+		{
+			waiting_CAMERA_SPECTATOR_update = 0;
+			camera_spectator_3rd_person = false;
+		}
+		return;
 	}
 
 	// event chase camera
@@ -653,20 +674,27 @@ void View_EventChase(entity this)
 		{
 			if(spectatee_status > 0)
 			{
-				if(!autocvar_chase_active)
+				if(!camera_spectator_3rd_person)
 				{
 					cvar_set("chase_active", "-2");
+					camera_spectator_3rd_person = true;
 					return;
 				}
 			}
-			else if(autocvar_chase_active == -2)
+			else if(camera_spectator_3rd_person)
+			{
 				cvar_set("chase_active", "0");
+				camera_spectator_3rd_person = false;
+			}
 
 			if(autocvar_chase_active == -2)
 				return;
 		}
-		else if(autocvar_chase_active == -2)
+		else if(camera_spectator_3rd_person)
+		{
 			cvar_set("chase_active", "0");
+			camera_spectator_3rd_person = false;
+		}
 
 		bool vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 
