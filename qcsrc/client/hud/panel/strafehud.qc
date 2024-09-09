@@ -471,6 +471,35 @@ void HUD_StrafeHUD()
 		{
 			bool angle_indicator_visible = false;
 
+		// minimum speed for change indicators
+		float minspeed = autocvar_hud_panel_strafehud_switch_minspeed;
+		if(minspeed < 0)
+			minspeed = bestspeed + frictionspeed;
+
+			// only draw change indicators if minspeed is reached
+			if(autocvar_hud_panel_strafehud_switch && speed >= minspeed)
+			{
+				// draw the change indicator(s)
+				float current_changeangle = opposite_direction ? opposite_changeangle : changeangle;
+				float opposite_changeangle = opposite_direction ? opposite_bestangle : bestangle;
+
+				StrafeHUD_DrawAngleIndicator(
+					current_changeangle, currentangle_size, arrow_size, num_dashes,
+					has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_switch_color,
+					autocvar_hud_panel_strafehud_switch_alpha, hudangle);
+
+				if(direction == STRAFEHUD_DIRECTION_NONE)
+				{
+					StrafeHUD_DrawAngleIndicator(
+						opposite_changeangle, currentangle_size, arrow_size, num_dashes,
+						has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_switch_color,
+						autocvar_hud_panel_strafehud_switch_alpha, hudangle);
+				}
+
+				if(autocvar_hud_panel_strafehud_switch_alpha > 0)
+					angle_indicator_visible = true;
+			}
+
 			if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
 			{
 				float ghostangle = opposite_direction ? opposite_bestangle : bestangle;

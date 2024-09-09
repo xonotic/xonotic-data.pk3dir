@@ -14,11 +14,6 @@ float StrafeHUD_angleToOffset(float angle, float range)
 	return StrafeHUD_angleToWidth(angle, range) + panel_size.x / 2;
 }
 
-float StrafeHUD_widthToAngle(float offset, float range)
-{
-	return offset / panel_size.x * range;
-}
-
 float StrafeHUD_project(float ratio, float range, bool reverse)
 {
 	range *= DEG2RAD / 2;

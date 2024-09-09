@@ -135,52 +135,6 @@ void StrafeHUD_DrawStrafeMeter(
 			autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha,
 			autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_NONE,
 			true, hudangle);
-
-		float minspeed = autocvar_hud_panel_strafehud_switch_minspeed;
-		if(minspeed < 0)
-			minspeed = bestspeed + frictionspeed;
-
-		// only draw indicators if minspeed is reached
-		if(autocvar_hud_panel_strafehud_switch && speed >= minspeed && autocvar_hud_panel_strafehud_switch_alpha > 0)
-		{
-			// draw the change indicator(s)
-			float offsetangle = opposite_direction ? opposite_changeangle : changeangle;
-			float opposite_offsetangle = opposite_direction ? opposite_bestangle : bestangle;
-
-			float bestangle_width = max(panel_size.x * autocvar_hud_panel_strafehud_switch_width, 1);
-			bestangle_width = StrafeHUD_widthToAngle(bestangle_width, hudangle);
-
-			// remove change indicator width from offset
-			if(direction == STRAFEHUD_DIRECTION_LEFT)
-			{
-				if(!opposite_direction)
-					opposite_offsetangle -= bestangle_width;
-				else
-					offsetangle -= bestangle_width;
-			}
-			else
-			{
-				if(!opposite_direction)
-					offsetangle -= bestangle_width;
-				else
-					opposite_offsetangle -= bestangle_width;
-			}
-
-			StrafeHUD_drawStrafeHUD(
-				offsetangle, bestangle_width,
-				autocvar_hud_panel_strafehud_switch_color,
-				autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha,
-				STRAFEHUD_STYLE_DRAWFILL, STRAFEHUD_GRADIENT_NONE,
-				false, hudangle);
-
-			if(direction == STRAFEHUD_DIRECTION_NONE)
-				StrafeHUD_drawStrafeHUD(
-					opposite_offsetangle, bestangle_width,
-					autocvar_hud_panel_strafehud_switch_color,
-					autocvar_hud_panel_strafehud_switch_alpha * panel_fg_alpha,
-					STRAFEHUD_STYLE_DRAWFILL, STRAFEHUD_GRADIENT_NONE,
-					false, hudangle);
-		}
 	}
 }
 
