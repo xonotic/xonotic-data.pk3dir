@@ -3,11 +3,8 @@
 #include <client/draw.qh>
 
 void StrafeHUD_DrawStrafeMeter(
-	float speed, float bestspeed, float frictionspeed, float shift_angle, float wishangle,
-	float changeangle, float bestangle, float absolute_bestangle,
-	float absolute_prebestangle, float opposite_bestangle,
-	float opposite_changeangle, bool moving, bool opposite_direction,
-	int direction, float hudangle)
+	float shiftangle, float wishangle, float absolute_bestangle,
+	float absolute_prebestangle, bool moving, float hudangle)
 {
 	// the neutral zone fills the whole strafe bar
 	if(!moving)
@@ -75,15 +72,15 @@ void StrafeHUD_DrawStrafeMeter(
 		neutral_offsetangle = 360 - current_startangle;
 
 		// calculate how far off-center the strafe zones currently are
-		shift_angle += neutral_offsetangle / 2 - wishangle;
+		shiftangle += neutral_offsetangle / 2 - wishangle;
 
 		// shift strafe zones into correct place
-		neutral_startangle += shift_angle;
-		accelzone_left_startangle += shift_angle;
-		accelzone_right_startangle += shift_angle;
-		preaccelzone_left_startangle += shift_angle;
-		preaccelzone_right_startangle += shift_angle;
-		overturn_startangle += shift_angle;
+		neutral_startangle += shiftangle;
+		accelzone_left_startangle += shiftangle;
+		accelzone_right_startangle += shiftangle;
+		preaccelzone_left_startangle += shiftangle;
+		preaccelzone_right_startangle += shiftangle;
+		overturn_startangle += shiftangle;
 
 		// draw left acceleration zone
 		StrafeHUD_drawStrafeHUD(
@@ -147,9 +144,9 @@ void StrafeHUD_DrawAngleIndicator(
 
 	// bound to HUD area
 	angle = bound(-hudangle / 2, angle, hudangle / 2);
-	angle = StrafeHUD_projectAngle(angle, hudangle, false);
 
 	float offset = StrafeHUD_angleToOffset(angle, hudangle);
+	offset = StrafeHUD_projectOffset(offset, hudangle, false);
 
 	StrafeHUD_DrawAngleIndicatorLine(line_size, offset, num_dashes, color, alpha);
 

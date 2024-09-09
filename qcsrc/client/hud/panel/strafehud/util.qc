@@ -50,17 +50,6 @@ float StrafeHUD_project(float ratio, float range, bool reverse)
 	return ratio;
 }
 
-float StrafeHUD_projectAngle(float angle, float range, bool reverse)
-{
-	if(autocvar_hud_panel_strafehud_projection == STRAFEHUD_PROJECTION_LINEAR)
-		return angle;
-
-	float ratio = (angle % 360) / (range / 2);
-	ratio = StrafeHUD_project(ratio, range, reverse);
-	angle = ratio * (range / 2);
-	return angle;
-}
-
 float StrafeHUD_projectOffset(float offset, float range, bool reverse)
 {
 	if(autocvar_hud_panel_strafehud_projection == STRAFEHUD_PROJECTION_LINEAR)
@@ -139,7 +128,7 @@ float DetectFrameTime()
 	{
 		float dt_client = input_timelength;
 
-		if(dt_client > .05) // server splits frames longer than 50 ms into two moves
+		if(dt_client > .05) // server splits frames longer than 50 ms into two moves (DarkPlaces behaviour)
 			dt_client /= 2; // does not ensure frames are smaller than 50 ms, just splits large frames in half, matches server behaviour
 
 		// calculate average frametime

@@ -4,7 +4,6 @@
 float GetLengthUnitFactor(int);
 string GetLengthUnit(int);
 float StrafeHUD_project(float, float, bool);
-float StrafeHUD_projectAngle(float, float, bool);
 float StrafeHUD_projectOffset(float, float, bool);
 float StrafeHUD_projectWidth(float, float, float);
 float StrafeHUD_angleToWidth(float, float);

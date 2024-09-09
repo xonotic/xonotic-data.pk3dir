@@ -5,6 +5,4 @@ void StrafeHUD_DrawAngleIndicator(float, vector, float, int, bool, bool, vector,
 void StrafeHUD_DrawAngleIndicatorLine(vector, float, int, vector, float);
 void StrafeHUD_DrawAngleIndicatorArrow(float, float, vector, vector, float, bool);
 void StrafeHUD_DrawDirectionIndicator(int, bool, bool);
-void StrafeHUD_DrawStrafeMeter(
-	float, float, float, float, float, float, float,
-	float, float, float, float, bool, bool, int, float);
+void StrafeHUD_DrawStrafeMeter(float, float, float, float, bool, float);

@@ -376,20 +376,17 @@ void HUD_StrafeHUD()
 		}
 
 		// shift hud if operating in view angle centered mode
-		float shift_angle = 0;
+		float shiftangle = 0;
 		if(mode == STRAFEHUD_MODE_VIEW_CENTERED)
 		{
-			shift_angle = -angle;
-			bestangle += shift_angle;
-			changeangle += shift_angle;
-			opposite_bestangle += shift_angle;
-			opposite_changeangle += shift_angle;
+			shiftangle = -angle;
+			bestangle += shiftangle;
+			changeangle += shiftangle;
+			opposite_bestangle += shiftangle;
+			opposite_changeangle += shiftangle;
 		}
 
-		StrafeHUD_DrawStrafeMeter(
-			speed, bestspeed, frictionspeed, shift_angle, wishangle, changeangle, bestangle,
-			absolute_bestangle, absolute_prebestangle, opposite_bestangle, opposite_changeangle,
-			moving, opposite_direction, direction, hudangle);
+		StrafeHUD_DrawStrafeMeter(shiftangle, wishangle, absolute_bestangle, absolute_prebestangle, moving, hudangle);
 
 		float text_offset_top;
 		float text_offset_bottom;
