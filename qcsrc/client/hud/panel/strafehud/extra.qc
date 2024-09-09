@@ -160,8 +160,8 @@ string StrafeHUD_UpdateSonarSound()
 }
 
 // show height achieved by a single jump
-// FIXME: checking z position differences is unreliable (warpzones, teleporter, kill, etc) but using velocity to calculate jump height would be
-//        inaccurate in hud code (possibly different tick rate than physics, does not run when hud is not drawn, rounding errors)
+// FIXME: checking z position differences is unreliable (warpzones, teleporter, kill, etc), use velocity to calculate jump height instead
+// FIXME: move capturing the jump height value out of the HUD
 float StrafeHUD_drawJumpHeight(entity e, bool onground, bool swimming, float text_offset_top)
 {
 	float length_conversion_factor = GetLengthUnitFactor(autocvar_hud_speed_unit);
@@ -232,6 +232,7 @@ float StrafeHUD_drawStrafeEfficiency(float strafe_ratio, float text_offset_top)
 }
 
 // show speed when crossing the start trigger
+// FIXME: move capturing the race start speed value out of the HUD
 float StrafeHUD_drawStartSpeed(float speed, float text_offset_bottom)
 {
 	static float startspeed = 0, starttime = 0; // displayed value and timestamp for fade out
