@@ -138,6 +138,8 @@ string StrafeHUD_UpdateSonarSound()
 	static string sonarsound = string_null;
 	if(newsound == "")
 	{
+		strfree(cursound);
+		strfree(sonarsound);
 		cursound = sonarsound = string_null;
 	}
 	else if(newsound != cursound)
