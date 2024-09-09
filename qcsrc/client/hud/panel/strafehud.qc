@@ -397,19 +397,132 @@ void HUD_StrafeHUD()
 
 		StrafeHUD_DrawDirectionIndicator(direction, opposite_direction, fwd);
 
-		vector angle_indicator_info = StrafeHUD_DrawAngleIndicator(
-			angle, wishangle, bestangle, absolute_bestangle,
-			absolute_prebestangle, opposite_bestangle, antiflicker_angle,
-			moving, opposite_direction, direction, mode, hudangle);
+		// determine the strafing ratio and the angle indicator color
+		vector currentangle_color = autocvar_hud_panel_strafehud_angle_neutral_color;
+		float strafe_ratio = 0;
+		if(moving)
+		{
+			float moveangle = fabs(angle + wishangle);
 
-		// unpack return value from vector
-		float strafe_ratio = angle_indicator_info.x;
-		float angle_offset_top = angle_indicator_info.y;
-		float angle_offset_bottom = angle_indicator_info.z;
+			// player is overturning
+			if(moveangle >= 90)
+			{
+				currentangle_color = autocvar_hud_panel_strafehud_angle_overturn_color;
+				strafe_ratio = (moveangle - 90) / 90;
+				if(strafe_ratio > 1) strafe_ratio = 2 - strafe_ratio;
+				strafe_ratio *= -1;
+			}
+			// player gains speed by strafing
+			else if(moveangle >= absolute_bestangle)
+			{
+				currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
+				strafe_ratio = (90 - moveangle) / (90 - absolute_bestangle);
+			}
+			else if(moveangle >= absolute_prebestangle)
+			{
+				if(autocvar_hud_panel_strafehud_bar_preaccel)
+					currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
+				strafe_ratio = (moveangle - absolute_prebestangle) / (absolute_bestangle - absolute_prebestangle);
+			}
 
-		// make sure text does not draw inside the strafehud bar
-		text_offset_top = max(angle_offset_top, text_offset_top);
-		text_offset_bottom = max(angle_offset_bottom, text_offset_bottom);
+			if(autocvar_hud_panel_strafehud_style == STRAFEHUD_STYLE_GRADIENT)
+				currentangle_color = StrafeHUD_mixColors(
+					autocvar_hud_panel_strafehud_angle_neutral_color,
+					currentangle_color, fabs(strafe_ratio));
+		}
+
+		float currentangle = 0;
+		if(mode == STRAFEHUD_MODE_VELOCITY_CENTERED)
+		{
+			// avoid switching side too much at ±180° if anti flicker is triggered
+			if(fabs(angle) <= 180 - antiflicker_angle)
+				currentangle = angle;
+		}
+
+		// current angle size calculation
+		vector currentangle_size;
+		currentangle_size.x = max(panel_size.x * min(autocvar_hud_panel_strafehud_angle_width, 10), 1);
+		currentangle_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_height, 10), 1);
+		currentangle_size.z = 0;
+
+		float num_dashes = nearbyint(autocvar_hud_panel_strafehud_angle_dashes);
+
+		// adjust angle indicator line depending on style
+		switch(autocvar_hud_panel_strafehud_angle_style)
+		{
+			case STRAFEHUD_INDICATOR_DASHED:
+				break;
+			case STRAFEHUD_INDICATOR_SOLID:
+				num_dashes = 1;
+				break;
+			case STRAFEHUD_INDICATOR_NONE:
+			default:
+				num_dashes = 0;
+				break;
+		}
+
+		bool has_top_arrow = autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3;
+		bool has_bottom_arrow = autocvar_hud_panel_strafehud_angle_arrow >= 2;
+
+		// there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
+		float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10), 1);
+
+		if(num_dashes > 0 || has_top_arrow || has_bottom_arrow)
+		{
+			bool angle_indicator_visible = false;
+
+			if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
+			{
+				float ghostangle = opposite_direction ? opposite_bestangle : bestangle;
+
+				StrafeHUD_DrawAngleIndicator(
+					ghostangle, currentangle_size, arrow_size, num_dashes,
+					has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_bestangle_color,
+					autocvar_hud_panel_strafehud_bestangle_alpha, hudangle);
+
+				if(autocvar_hud_panel_strafehud_bestangle_alpha > 0)
+					angle_indicator_visible = true;
+			}
+
+			StrafeHUD_DrawAngleIndicator(
+				currentangle, currentangle_size, arrow_size, num_dashes,
+				has_top_arrow, has_bottom_arrow, currentangle_color,
+				autocvar_hud_panel_strafehud_angle_alpha, hudangle);
+
+			if(autocvar_hud_panel_strafehud_angle_alpha > 0)
+				angle_indicator_visible = true;
+
+			// offset text by amount the angle indicator extrudes from the strafehud bar
+			if(angle_indicator_visible)
+			{
+				float line_height_offset = currentangle_size.y;
+
+				// amount line extrudes from the strafehud bar
+				line_height_offset = (line_height_offset - panel_size.y) / 2;
+
+				// further offset the top text offset if the top arrow is drawn
+				float angle_offset_top;
+				if(has_top_arrow)
+					angle_offset_top = line_height_offset + arrow_size;
+				else if(num_dashes > 0)
+					angle_offset_top = line_height_offset;
+				else
+					angle_offset_top = 0;
+
+				// further offset the bottom text offset if the bottom arrow is drawn
+				float angle_offset_bottom;
+				if(has_bottom_arrow)
+					angle_offset_bottom = line_height_offset + arrow_size;
+				else if(num_dashes > 0)
+					angle_offset_bottom = line_height_offset;
+				else
+					angle_offset_bottom = 0;
+
+				// make sure text does not draw inside the strafehud bar
+				text_offset_top = max(angle_offset_top, text_offset_top);
+				text_offset_bottom = max(angle_offset_bottom, text_offset_bottom);
+			}
+		}
 
 		text_offset_bottom += StrafeHUD_drawVerticalAngle(text_offset_bottom);
 

@@ -184,187 +184,65 @@ void StrafeHUD_DrawStrafeMeter(
 	}
 }
 
-// draw the actual strafe angle
-// TODO: break this apart so that each angle indicator is drawn in an individual function call
-vector StrafeHUD_DrawAngleIndicator(float angle, float wishangle,
-	float bestangle, float absolute_bestangle, float absolute_prebestangle,
-	float opposite_bestangle, float antiflicker_angle, bool moving, bool opposite_direction, int direction,
-	int mode, float hudangle)
+// draw the actual strafe angle indicator
+void StrafeHUD_DrawAngleIndicator(
+	float angle, vector line_size, float arrow_size, int num_dashes,
+	bool has_top_arrow, bool has_bottom_arrow, vector color, float alpha, float hudangle)
 {
-	float currentangle = 0;
-	if(mode == STRAFEHUD_MODE_VELOCITY_CENTERED)
+	if(alpha <= 0) return;
+
+	// bound to HUD area
+	angle = bound(-hudangle / 2, angle, hudangle / 2);
+	angle = StrafeHUD_projectAngle(angle, hudangle, false);
+
+	float offset = StrafeHUD_angleToOffset(angle, hudangle);
+
+	StrafeHUD_DrawAngleIndicatorLine(line_size, offset, num_dashes, color, alpha);
+
+	if(has_top_arrow)
+		StrafeHUD_DrawAngleIndicatorArrow(arrow_size, offset, line_size, color, alpha, true);
+
+	if(has_bottom_arrow)
+		StrafeHUD_DrawAngleIndicatorArrow(arrow_size, offset, line_size, color, alpha, false);
+}
+
+// draw the line of the angle indicator
+void StrafeHUD_DrawAngleIndicatorLine(vector size, float offset, int num_dashes, vector color, float alpha)
+{
+	if(num_dashes <= 0 || size.x <= 0 || size.y <= 0) return;
+
+	vector segment_size = size;
+	segment_size.y = size.y / (bound(1, num_dashes, size.y) * 2 - 1);
+
+	for(float i = 0; i < size.y; i += segment_size.y * 2)
 	{
-		// avoid switching side too much at ±180° if anti flicker is triggered
-		if(fabs(angle) <= (180 - antiflicker_angle))
-		{
-			// bound to HUD area
-			currentangle = bound(-hudangle / 2, angle, hudangle / 2);
-			currentangle = StrafeHUD_projectAngle(currentangle, hudangle, false);
-		}
+		// check if last iteration
+		if(i + segment_size.y * 2 >= size.y)
+			segment_size.y = size.y - i;
+
+		drawfill(
+			panel_pos - eY * ((size.y - panel_size.y) / 2 - i) + eX * (offset - segment_size.x / 2),
+			segment_size, color, alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	float currentangle_offset = StrafeHUD_angleToOffset(currentangle, hudangle);
-
-	vector currentangle_color = autocvar_hud_panel_strafehud_angle_neutral_color;
-	float strafe_ratio = 0;
-	if(moving)
-	{
-		float moveangle = fabs(angle + wishangle);
-
-		// player is overturning
-		if(moveangle >= 90)
-		{
-			currentangle_color = autocvar_hud_panel_strafehud_angle_overturn_color;
-			strafe_ratio = (moveangle - 90) / 90;
-			if(strafe_ratio > 1) strafe_ratio = 2 - strafe_ratio;
-			strafe_ratio *= -1;
-		}
-		// player gains speed by strafing
-		else if(moveangle >= absolute_bestangle)
-		{
-			currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
-			strafe_ratio = (90 - moveangle) / (90 - absolute_bestangle);
-		}
-		else if(moveangle >= absolute_prebestangle)
-		{
-			if(autocvar_hud_panel_strafehud_bar_preaccel)
-				currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
-			strafe_ratio = (moveangle - absolute_prebestangle) / (absolute_bestangle - absolute_prebestangle);
-		}
-
-		if(autocvar_hud_panel_strafehud_style == STRAFEHUD_STYLE_GRADIENT)
-			currentangle_color = StrafeHUD_mixColors(autocvar_hud_panel_strafehud_angle_neutral_color, currentangle_color, fabs(strafe_ratio));
-	}
-
-	// current angle size calculation
-	vector currentangle_size;
-	currentangle_size.x = max(panel_size.x * min(autocvar_hud_panel_strafehud_angle_width, 10), 1);
-	currentangle_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_height, 10), 1);
-	currentangle_size.z = 0;
-
-	float angleheight_offset = currentangle_size.y;
-	float ghost_angle = 0;
-	if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
-	{
-		// bound to HUD area
-		ghost_angle = bound(-hudangle / 2, (opposite_direction ? opposite_bestangle : bestangle), hudangle / 2);
-		ghost_angle = StrafeHUD_projectAngle(ghost_angle, hudangle, false);
-	}
-	float ghost_offset = StrafeHUD_angleToOffset(ghost_angle, hudangle);
-
-	switch(autocvar_hud_panel_strafehud_angle_style)
-	{
-		case STRAFEHUD_INDICATOR_SOLID:
-			if(currentangle_size.x > 0 && currentangle_size.y > 0)
-			{
-				if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
-					drawfill(
-						panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (ghost_offset - currentangle_size.x / 2),
-						currentangle_size, autocvar_hud_panel_strafehud_bestangle_color,
-						autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha,
-						DRAWFLAG_NORMAL);
-				drawfill(
-					panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2) + eX * (currentangle_offset - currentangle_size.x / 2),
-					currentangle_size, currentangle_color,
-					autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha,
-					DRAWFLAG_NORMAL);
-			}
-			break;
-		case STRAFEHUD_INDICATOR_DASHED:
-			if(currentangle_size.x > 0 && currentangle_size.y > 0)
-			{
-				vector line_size = currentangle_size;
-				line_size.y = currentangle_size.y / (bound(2, autocvar_hud_panel_strafehud_angle_dashes, currentangle_size.y) * 2 - 1);
-				for(float i = 0; i < currentangle_size.y; i += line_size.y * 2)
-				{
-					if(i + line_size.y * 2 >= currentangle_size.y)
-						line_size.y = currentangle_size.y - i;
-					if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
-						drawfill(
-							panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (ghost_offset - line_size.x / 2),
-							line_size, autocvar_hud_panel_strafehud_bestangle_color,
-							autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-					drawfill(
-						panel_pos - eY * ((currentangle_size.y - panel_size.y) / 2 - i) + eX * (currentangle_offset - line_size.x / 2),
-						line_size, currentangle_color,
-						autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-				}
-			}
-			break;
-		case STRAFEHUD_INDICATOR_NONE:
-		default:
-			// do not offset text and arrows if the angle indicator line is not drawn
-			angleheight_offset = panel_size.y;
-			currentangle_size = '0 0 0';
-	}
-
-	vector angle_indicator_info = StrafeHUD_DrawAngleIndicatorArrow(
-		currentangle_offset, currentangle_size, currentangle_color, ghost_offset,
-		angleheight_offset, direction, hudangle);
-
-	// return infomration about the angle indicator packed into a vector
-	angle_indicator_info.x = strafe_ratio;
-	return angle_indicator_info;
 }
 
 // draw the arrows on the angle indicator
-// TODO: break this apart so that each angle indicator is drawn in an individual function call
-vector StrafeHUD_DrawAngleIndicatorArrow(float currentangle_offset, vector currentangle_size,
-	vector currentangle_color, float ghost_offset, float angleheight_offset,
-	int direction, float hudangle)
+void StrafeHUD_DrawAngleIndicatorArrow(float size, float offset, vector line_size, vector color, float alpha, bool top)
 {
-	float angle_offset_top = 0, angle_offset_bottom = 0;
+	if(size <= 0) return;
 
-	// offset text if any angle indicator is drawn
-	if((autocvar_hud_panel_strafehud_angle_alpha > 0) ||
-	   (autocvar_hud_panel_strafehud_bestangle && autocvar_hud_panel_strafehud_bestangle_alpha > 0))
+	if(top)
 	{
-		// offset text by amount the angle indicator extrudes from the strafehud bar
-		angle_offset_top = angle_offset_bottom = (angleheight_offset - panel_size.y) / 2;
+		StrafeHUD_drawStrafeArrow(
+			panel_pos + eY * ((panel_size.y - line_size.y) / 2) + eX * offset,
+			size, color, alpha * panel_fg_alpha, true, line_size.x);
 	}
-
-	if(autocvar_hud_panel_strafehud_angle_arrow > 0)
+	else
 	{
-		// there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
-		float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10), 1);
-
-		if(arrow_size > 0)
-		{
-			if(autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3)
-			{
-				if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
-					StrafeHUD_drawStrafeArrow(
-						panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * ghost_offset,
-						arrow_size, autocvar_hud_panel_strafehud_bestangle_color,
-						autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, true, currentangle_size.x);
-				StrafeHUD_drawStrafeArrow(
-					panel_pos + eY * ((panel_size.y - angleheight_offset) / 2) + eX * currentangle_offset,
-					arrow_size, currentangle_color,
-					autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, true, currentangle_size.x);
-
-				angle_offset_top += arrow_size; // further offset the top text offset if the top arrow is drawn
-			}
-			if(autocvar_hud_panel_strafehud_angle_arrow >= 2)
-			{
-				if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
-					StrafeHUD_drawStrafeArrow(
-						panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * ghost_offset,
-						arrow_size, autocvar_hud_panel_strafehud_bestangle_color,
-						autocvar_hud_panel_strafehud_bestangle_alpha * panel_fg_alpha, false, currentangle_size.x);
-				StrafeHUD_drawStrafeArrow(
-					panel_pos + eY * ((panel_size.y - angleheight_offset) / 2 + angleheight_offset) + eX * currentangle_offset,
-					arrow_size, currentangle_color,
-					autocvar_hud_panel_strafehud_angle_alpha * panel_fg_alpha, false, currentangle_size.x);
-
-				angle_offset_bottom += arrow_size; // further offset the bottom text offset if the bottom arrow is drawn
-			}
-		}
+		StrafeHUD_drawStrafeArrow(
+			panel_pos + eY * ((panel_size.y - line_size.y) / 2 + line_size.y) + eX * offset,
+			size, color, alpha * panel_fg_alpha, false, line_size.x);
 	}
-
-	// return top and bottom angle offsets packed into a vector
-	vector angle_offsets = '0 0 0';
-	angle_offsets.y = angle_offset_top;
-	angle_offsets.z = angle_offset_bottom;
-	return angle_offsets;
 }
 
 // direction indicator
