@@ -118,9 +118,9 @@ void HUD_Vote()
 	}
 	mySize = newSize;
 
-	s = CCR(_("^BGA vote has been called for:"));
+	s = strcat(CCR("^BG"), _("A vote has been called for:"));
 	if(uid2name_dialog)
-		s = CCR(_("^BGAllow servers to store and display your name?"));
+		s = strcat(CCR("^BG"), _("Allow servers to store and display your name?"));
 	drawcolorcodedstring_aspect(pos, s, vec2(mySize.x, (2/8) * mySize.y), panel_fg_alpha, DRAWFLAG_NORMAL);
 	s = textShortenToWidth(ColorTranslateRGB(vote_called_vote), mySize.x, '1 1 0' * mySize.y * (1/8), stringwidth_colors);
 	if(autocvar__hud_configure)

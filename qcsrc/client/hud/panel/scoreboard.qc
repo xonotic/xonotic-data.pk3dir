@@ -1790,7 +1790,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	float weapon_height = hud_fontsize.y * 2.3 / aspect;
 	float height = weapon_height + hud_fontsize.y;
 
-	drawcolorcodedstring(pos + eX * panel_bg_padding, sprintf(CCR(_("^BGAccuracy stats (average %d%%)")), average_accuracy), hud_fontsize, panel_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos + eX * panel_bg_padding, strcat(CCR("^BG"), sprintf(_("Accuracy stats (average %d%%)"), average_accuracy)), hud_fontsize, panel_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
@@ -1947,7 +1947,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	float item_height = hud_fontsize.y * 2.3;
 	float height = item_height + hud_fontsize.y;
 
-	drawcolorcodedstring(pos + eX * panel_bg_padding, CCR(_("^BGItem stats")), hud_fontsize, panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos + eX * panel_bg_padding, strcat(CCR("^BG"), _("Item stats")), hud_fontsize, panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
@@ -2058,7 +2058,7 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 		return pos;
 
 	//  draw table header
-	drawcolorcodedstring(pos + eX * panel_bg_padding, CCR(_("^BGMap stats:")), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos + eX * panel_bg_padding, strcat(CCR("^BG"), _("Map stats:")), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;

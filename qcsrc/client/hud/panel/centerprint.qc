@@ -208,7 +208,7 @@ void HUD_CenterPrint()
 			}
 			else
 			{
-				centerprint_Add(0, CCR(_("^BGGeneric message")), 10, 0);
+				centerprint_Add(0, strcat(CCR("^BG"), _("Generic message")), 10, 0);
 				hud_configure_cp_generation_time = time + 10 - random()*3;
 			}
 		}
@@ -300,7 +300,7 @@ void HUD_CenterPrint()
 			drawcolorcodedstring(pos, centerprint_title_left, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			pos.x = duel_title_pos.x + max_rl_width + padding * 3;
-			drawcolorcodedstring(pos, CCR(_("^BGvs")), fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, strcat(CCR("^BG"), _("vs")), fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			pos.x = duel_title_pos.x + width - padding - max_rl_width;
 			if (left_width >= right_width)
