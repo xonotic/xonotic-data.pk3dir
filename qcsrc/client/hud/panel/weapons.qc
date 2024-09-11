@@ -553,23 +553,26 @@ void HUD_Weapons()
 			drawpic_aspect_skin(weapon_pos_real, it.model2, weapon_size_real, '1 1 1', weapon_alpha_real, DRAWFLAG_NORMAL);
 
 			// draw weapon label string
+			string label_str = "";
 			switch(autocvar_hud_panel_weapons_label)
 			{
 				case 1: // weapon number
-					drawstring(weapon_pos, ftos(weapon_id), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					label_str = strcat(CCR("^BG"), ftos(weapon_id));
 					break;
 
 				case 2: // bind
-					drawstring(weapon_pos, getcommandkey(ftos(weapon_id), strcat("weapon_group_", ftos(weapon_id))), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					label_str = strcat(CCR("^BG"), getcommandkey(ftos(weapon_id), strcat("weapon_group_", ftos(weapon_id))));
 					break;
 
 				case 3: // weapon name
-					drawstring(weapon_pos, strtolower(it.m_name), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					label_str = strcat(CCR("^BG"), strtolower(it.m_name));
 					break;
 
 				default: // nothing
 					break;
 			}
+			if(label_str != "")
+				drawcolorcodedstring(weapon_pos, label_str, label_size, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw ammo status bar
 			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_type != RES_NONE))
@@ -637,9 +640,10 @@ void HUD_Weapons()
 				s = _("Unavailable");
 				color = stov(autocvar_hud_panel_weapons_complainbubble_color_unavailable);
 			}
+			s = strcat(CCR("^BG"), s);
 			float padding = autocvar_hud_panel_weapons_complainbubble_padding;
 			drawpic_aspect_skin(weapon_pos + '1 1 0' * padding, "weapon_complainbubble", weapon_size - '2 2 0' * padding, color, a * panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring_aspect(weapon_pos + '1 1 0' * padding, s, weapon_size - '2 2 0' * padding, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring_aspect(weapon_pos + '1 1 0' * padding, s, weapon_size - '2 2 0' * padding, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
 		#if 0
@@ -647,7 +651,7 @@ void HUD_Weapons()
 		if(!autocvar_hud_panel_weapons_onlyowned)
 		{
 			drawfill(weapon_pos + '1 1 0', weapon_size - '2 2 0', '1 1 1', panel_fg_alpha * 0.2, DRAWFLAG_NORMAL);
-			drawstring(weapon_pos, ftos(i + 1), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(weapon_pos, strcat(CCR("^BG"), ftos(i + 1)), label_size, panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		#endif
 

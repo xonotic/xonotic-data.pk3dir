@@ -1790,7 +1790,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	float weapon_height = hud_fontsize.y * 2.3 / aspect;
 	float height = weapon_height + hud_fontsize.y;
 
-	drawstring(pos + eX * panel_bg_padding, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos + eX * panel_bg_padding, sprintf(CCR(_("^BGAccuracy stats (average %d%%)")), average_accuracy), hud_fontsize, panel_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
@@ -1947,7 +1947,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	float item_height = hud_fontsize.y * 2.3;
 	float height = item_height + hud_fontsize.y;
 
-	drawstring(pos + eX * panel_bg_padding, _("Item stats"), hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos + eX * panel_bg_padding, CCR(_("^BGItem stats")), hud_fontsize, panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
@@ -2003,9 +2003,9 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 		//n = 1 + floor(i * 3 + 4.8) % 7; // debug: display a value for each item
 		if (n <= 0) continue;
 		drawpic_aspect_skin(tmpos, it.m_icon, eX * item_width + eY * item_height, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
-		string s = ftos(n);
+		string s = strcat(CCR("^BG"), ftos(n));
 		float padding = (item_width - stringwidth(s, false, hud_fontsize)) / 2;
-		drawstring(tmpos + vec2(padding, item_height), s, hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(tmpos + vec2(padding, item_height), s, hud_fontsize, panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 		tmpos.x += item_width * rows;
 		pos.x += item_width * rows;
 		if (rows == 2 && column == columns - 1) {
@@ -2024,9 +2024,9 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 vector MapStats_DrawKeyValue(vector pos, string key, string value) {
 	float px = pos.x;
 	pos.x += hud_fontsize.x * 0.25;
-	drawstring(pos, key, hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos, strcat(CCR("^BG"), key), hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
 	pos.x = panel_pos.x + panel_size.x - stringwidth(value, false, hud_fontsize) - hud_fontsize.x * 0.25;
-	drawstring(pos, value, hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos, strcat(CCR("^BG"), value), hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
 	pos.x = px;
 	pos.y += hud_fontsize.y;
 
@@ -2058,7 +2058,7 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 		return pos;
 
 	//  draw table header
-	drawstring(pos + eX * panel_bg_padding, _("Map stats:"), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos + eX * panel_bg_padding, CCR(_("^BGMap stats:")), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
@@ -2117,7 +2117,7 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 	vector scoreboard_selected_hl_pos = pos;
 
-	drawstring(pos + eX * panel_bg_padding, ranktitle, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos + eX * panel_bg_padding, strcat(CCR("^BG"), ranktitle), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
 	if(panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
@@ -2195,9 +2195,9 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 		else if(!((j + rankings_start_column + column) & 1) && sbt_highlight)
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
-		str = count_ordinal(i+1);
-		drawstring(pos + text_ofs, str, hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + text_ofs + eX * ranksize, TIME_ENCODED_TOSTRING(t, true), hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+		str = strcat(CCR("^BG"), count_ordinal(i+1));
+		drawcolorcodedstring(pos + text_ofs, str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + text_ofs + eX * ranksize, strcat(CCR("^BG"), TIME_ENCODED_TOSTRING(t, true)), hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		str = ColorTranslateRGB(grecordholder[i]);
 		if(cut)
 			str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
@@ -2305,9 +2305,9 @@ vector Scoreboard_Spectators_Draw(vector pos) {
 			for(tm = teams.sort_next; tm; tm = tm.sort_next)
 				if(tm.team == NUM_SPECTATOR)
 					break;
-			str = sprintf("%s (%d)", _("Spectators"), tm.team_size);
+			str = sprintf(CCR("^BG%s (%d)"), _("Spectators"), tm.team_size);
 			draw_beginBoldFont();
-			drawstring(pos, str, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			draw_endBoldFont();
 			pos.y += 1.25 * hud_fontsize.y;
 
@@ -2601,7 +2601,7 @@ void Scoreboard_Draw()
 				drawstring(str_pos, str, hud_fontsize * 1.5, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 				str_pos += eX * stringwidth(str, true, hud_fontsize * 1.5) + eY * hud_fontsize.y * .5;
 				str = sprintf("/%d", team_size_total);
-				drawstring(str_pos, str, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(str_pos, strcat(CCR("^BG"), str), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 
 

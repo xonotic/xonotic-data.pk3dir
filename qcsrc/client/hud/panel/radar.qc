@@ -336,11 +336,11 @@ void HUD_Radar()
 
 	if ( hud_panel_radar_mouse )
 	{
-		string message = _("Click to select teleport destination");
+		string message = CCR(_("^BGClick to select teleport destination"));
 
 		if ( STAT(HEALTH) <= 0 )
 		{
-			message = _("Click to select spawn location");
+			message = CCR(_("^BGClick to select spawn location"));
 		}
 
 		drawcolorcodedstring(pos + '0.5 0 0' * (mySize_x - stringwidth(message, true, hud_fontsize)) - '0 1 0' * hud_fontsize_y * 2,

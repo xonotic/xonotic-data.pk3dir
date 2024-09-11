@@ -203,12 +203,12 @@ void HUD_CenterPrint()
 				else if (r > 0.55)
 					centerprint_Add(0, sprintf(CCR(_("^F4Multiline message at time %s that\n^BOLDlasts longer than normal")), seconds_tostring(time)), 20, 0);
 				else
-					centerprint_AddStandard(sprintf(_("Message at time %s"), seconds_tostring(time)));
+					centerprint_AddStandard(sprintf(CCR(_("^BGMessage at time %s")), seconds_tostring(time)));
 				hud_configure_cp_generation_time = time + 1 + random()*4;
 			}
 			else
 			{
-				centerprint_Add(0, _("Generic message"), 10, 0);
+				centerprint_Add(0, CCR(_("^BGGeneric message")), 10, 0);
 				hud_configure_cp_generation_time = time + 10 - random()*3;
 			}
 		}
@@ -300,7 +300,7 @@ void HUD_CenterPrint()
 			drawcolorcodedstring(pos, centerprint_title_left, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			pos.x = duel_title_pos.x + max_rl_width + padding * 3;
-			drawstring(pos, _("vs"), fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, CCR(_("^BGvs")), fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			pos.x = duel_title_pos.x + width - padding - max_rl_width;
 			if (left_width >= right_width)

@@ -190,16 +190,15 @@ void HUD_RaceTimer ()
 
 	if(autocvar__hud_configure)
 	{
-		s = "0:13:37";
+		s = CCR("^BG0:13:37");
 		draw_beginBoldFont();
 		str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '1 1 0' * 0.6 * mySize.y));
-		drawstring(str_pos, s, '1 1 0' * 0.6 * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.6 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
 		s = strcat(CCR("^C1"), sprintf(_("Intermediate %d"), 1), " (+15.42)");
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
-		s = sprintf(_("PENALTY: %.1f (%s)"), 2, _("missing a checkpoint"));
-		s = strcat(CCR("^C1"), s);
+		s = strcat(CCR("^C1"), sprintf(_("PENALTY: %.1f (%s)"), 2, _("missing a checkpoint")));
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
@@ -274,9 +273,10 @@ void HUD_RaceTimer ()
 
 		if(forcetime != "")
 		{
+			forcetime = strcat(CCR("^BG"), forcetime);
 			a = bound(0, (time - race_checkpointtime) / 0.5, 1);
 			str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(forcetime, false, '1 1 0' * 0.6 * mySize.y));
-			drawstring_expanding(str_pos, forcetime, '1 1 0' * 0.6 * mySize.y, '1 1 1', panel_fg_alpha, 0, a);
+			drawcolorcodedstring_expanding(str_pos, forcetime, '1 1 0' * 0.6 * mySize.y, panel_fg_alpha, 0, a);
 		}
 		else
 			a = 1;
@@ -284,8 +284,9 @@ void HUD_RaceTimer ()
 		if(race_laptime && race_checkpoint != 255)
 		{
 			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime), false);
+			s = strcat(CCR("^BG"), s);
 			str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '0.6 0.6 0' * mySize.y));
-			drawstring(str_pos, s, '0.6 0.6 0' * mySize.y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(str_pos, s, '0.6 0.6 0' * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
 		draw_endBoldFont();

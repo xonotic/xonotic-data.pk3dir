@@ -92,7 +92,8 @@ void HUD_Pickup()
 					str_timer = "13:02";
 				else
 					str_timer = seconds_tostring(HUD_Pickup_Time(last_pickup_time));
-				drawstring(pos, str_timer, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				str_timer = strcat(CCR("^BG"), str_timer);
+				drawcolorcodedstring(pos, str_timer, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				pos.x += stringwidth(str_timer, false, fontsize) + fontsize.x * 0.25;
 			}
 		}
@@ -100,6 +101,7 @@ void HUD_Pickup()
 		drawpic(pos - eY * ((iconsize.y - fontsize.y) / 2), icon, sz2, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		pos.x += sz2.x + fontsize.x * 0.25;
 		str_name = textShortenToWidth(str_name, mySize.x - (pos.x - panel_pos.x), fontsize, stringwidth_nocolors);
-		drawstring(pos, str_name, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		str_name = strcat(CCR("^BG"), str_name);
+		drawcolorcodedstring(pos, str_name, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	}
 }

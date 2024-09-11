@@ -11,14 +11,14 @@ void HUD_Timer_Export(int fh)
 	// allow saving cvars that aesthetically change the panel into hud skin files
 }
 
-vector HUD_Timer_Color(float timeleft)
+string HUD_Timer_Color(float timeleft)
 {
 	if(timeleft <= 60)
-		return '1 0 0'; // red
+		return "^C1"; // red
 	else if(timeleft <= 300)
-		return '1 1 0'; // yellow
+		return "^C2"; // yellow
 	else
-		return '1 1 1'; // white
+		return "^BG"; // white
 }
 
 float HUD_Timer_TimeElapsed(float curtime, float starttime)
@@ -67,8 +67,8 @@ void HUD_Timer()
 	string subtext = string_null;
 	float curtime, timelimit, timeleft;
 	vector timer_size, subtext_size, subtimer_size;
-	vector timer_color = '1 1 1';
-	vector subtimer_color = '1 1 1';
+	string timer_color = "^BG";
+	string subtimer_color = "^BG";
 	bool swap = (autocvar_hud_panel_timer_secondary == 2 && STAT(ROUNDSTARTTIME));
 
 	// Use real or frozen time and get the time limit
@@ -94,7 +94,7 @@ void HUD_Timer()
 		if(STAT(ROUNDSTARTTIME) == -1) {
 			// Round can't start
 			subtimer_str = "--:--";
-			subtimer_color = '1 0 0';
+			subtimer_color = "^C1";
 		} else {
 			float round_curtime, round_timelimit, round_timeleft;
 
@@ -155,17 +155,19 @@ void HUD_Timer()
 	if(subtimer_str) {
 		float subtimer_padding = subtimer_size.y / 5;
 		timer_size.x -= subtimer_size.x;
-		drawstring_aspect(pos + eX * timer_size.x + eY * subtimer_padding,
-			(swap ? timer_str : subtimer_str), subtimer_size - eY * 2 * subtimer_padding,
-			(swap ? timer_color : subtimer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring_aspect(pos + eX * timer_size.x + eY * subtimer_padding,
+			strcat(CCR(swap ? timer_color : subtimer_color), swap ? timer_str : subtimer_str),
+			subtimer_size - eY * 2 * subtimer_padding, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	drawstring_aspect(pos,
-		(swap ? subtimer_str : timer_str), timer_size,
-		(swap ? subtimer_color : timer_color), panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring_aspect(pos,
+		strcat(CCR(swap ? subtimer_color : timer_color), swap ? subtimer_str : timer_str),
+		timer_size, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	if(subtext)
-		drawstring_aspect(pos + eY * timer_size.y, subtext, subtext_size, '0 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring_aspect(pos + eY * timer_size.y,
+			strcat(CCR("^F1"), subtext),
+			subtext_size, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	draw_endBoldFont();
 }
