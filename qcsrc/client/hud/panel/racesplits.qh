@@ -1,0 +1,8 @@
+#pragma once
+#include "../panel.qh"
+
+bool autocvar_hud_panel_racesplits;
+bool autocvar_hud_panel_racesplits_dynamichud = false;
+bool autocvar_hud_panel_racesplits_flip;
+int autocvar_hud_panel_racesplits_lines;
+
