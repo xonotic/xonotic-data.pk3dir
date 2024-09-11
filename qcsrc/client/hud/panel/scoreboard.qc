@@ -2327,7 +2327,7 @@ string Scoreboard_Fraglimit_Draw(float limit, bool is_leadlimit)
 {
 	string s_label = (teamplay) ? teamscores_label(ts_primary) : scores_label(ps_primary);
 	int s_flags = (teamplay) ? teamscores_flags(ts_primary) : scores_flags(ps_primary);
-	return sprintf((is_leadlimit ? _("^2+%s %s") : _("^5%s %s")), ScoreString(s_flags, limit, 0),
+	return sprintf(CCR(is_leadlimit ? _("^F1+%s %s") : _("^F5%s %s")), ScoreString(s_flags, limit, 0),
 		(s_label == "score") ? CTX(_("SCO^points")) :
 		(s_label == "fastest") ? "" : TranslateScoresLabel(s_label));
 }
@@ -2442,7 +2442,7 @@ void Scoreboard_Draw()
 	if (GET_NEXTMAP() != "")
 	{
 		// NOTE: nextmap is drawn before title to avoid covering title in case of long map name
-		str = strcat("^7", _("Next map:"), " ^9", GET_NEXTMAP());
+		str = strcat(CCR("^BG"), _("Next map:"), CCR(" ^G2"), GET_NEXTMAP());
 		drawcolorcodedstring(pos + vec2(hud_fontsize.x * 0.5, sb_gameinfo_type_fontsize.y - hud_fontsize.y * 1.25),
 			str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
@@ -2463,13 +2463,13 @@ void Scoreboard_Draw()
 	if (scoreboard_ui_enabled == 2)
 	{
 		if (scoreboard_selected_team)
-			str = sprintf(_("^7Press ^3%s^7 to join the selected team"), translate_key("SPACE"));
+			str = sprintf(CCR(_("^BGPress ^F2%s^BG to join the selected team")), translate_key("SPACE"));
 		else
-			str = sprintf(_("^7Press ^3%s^7 to auto-select a team and join"), translate_key("SPACE"));
+			str = sprintf(CCR(_("^BGPress ^F2%s^BG to auto-select a team and join")), translate_key("SPACE"));
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;
-		str = sprintf(_("^7Press ^3%s ^7to select a specific team"), translate_key("TAB"));
+		str = sprintf(CCR(_("^BGPress ^F2%s ^BGto select a specific team")), translate_key("TAB"));
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else
@@ -2480,13 +2480,13 @@ void Scoreboard_Draw()
 		float ll_and_fl = STAT(LEADLIMIT_AND_FRAGLIMIT);
 		str = "";
 		if(tl > 0)
-			str = strcat(str, sprintf(_("^3%1.0f minutes"), tl));
+			str = strcat(str, sprintf(CCR(_("^F2%1.0f minutes")), tl));
 		if(!gametype.m_hidelimits)
 		{
 			if(fl > 0)
 			{
 				if(tl > 0)
-					str = strcat(str, "^7 / "); // delimiter
+					str = strcat(str, CCR("^BG / ")); // delimiter
 				str = strcat(str, Scoreboard_Fraglimit_Draw(fl, false));
 			}
 			if(ll > 0)
@@ -2495,9 +2495,9 @@ void Scoreboard_Draw()
 				{
 					// delimiter
 					if (ll_and_fl && fl > 0)
-						str = strcat(str, "^7 & ");
+						str = strcat(str, CCR("^BG & "));
 					else
-						str = strcat(str, "^7 / ");
+						str = strcat(str, CCR("^BG / "));
 				}
 				str = strcat(str, Scoreboard_Fraglimit_Draw(ll, true));
 			}
@@ -2507,8 +2507,8 @@ void Scoreboard_Draw()
 		if (campaign)
 			str = "";
 		else
-			str = sprintf(_("^5%d^7/^5%d ^7players"), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
-		str = strcat("^7", _("Map:"), " ^2", mi_shortname, "    ", str); // reusing "Map:" translatable string
+			str = sprintf(CCR(_("^F5%d^BG/^F5%d ^BGplayers")), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
+		str = strcat(CCR("^BG"), _("Map:"), CCR(" ^F1"), mi_shortname, "    ", str); // reusing "Map:" translatable string
 		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	}
 	// End of Game Info Section
@@ -2675,11 +2675,11 @@ void Scoreboard_Draw()
 			if(race_speedaward)
 			{
 				name = textShortenToWidth(ColorTranslateRGB(race_speedaward_holder), namesize, hud_fontsize, stringwidth_colors);
-				str = sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward * conversion_factor, unit, name);
+				str = sprintf(CCR(_("Speed award: %d%s ^BG(%s^BG)")), race_speedaward * conversion_factor, unit, name);
 				str = strcat(str, " / ");
 			}
 			name = textShortenToWidth(ColorTranslateRGB(race_speedaward_alltimebest_holder), namesize, hud_fontsize, stringwidth_colors);
-			str = strcat(str, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest * conversion_factor, unit, name));
+			str = strcat(str, sprintf(CCR(_("All-time fastest: %d%s ^BG(%s^BG)")), race_speedaward_alltimebest * conversion_factor, unit, name));
 			drawcolorcodedstring(pos, str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y; // line height + line spacing
 		}
@@ -2713,7 +2713,7 @@ void Scoreboard_Draw()
 			if(respawn_time < time) // it happens for a few frames when server is respawning the player
 				str = ""; // draw an empty string to not change suddenly scoreboard_bottom
 			else
-				str = sprintf(_("^1Respawning in ^3%s^1..."),
+				str = sprintf(CCR(_("^F4Respawning in ^F2%s^F4...")),
 					(autocvar_hud_panel_scoreboard_respawntime_decimals ?
 						count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
 						:
@@ -2723,7 +2723,7 @@ void Scoreboard_Draw()
 		}
 		else if(time < respawn_time)
 		{
-			str = sprintf(_("You are dead, wait ^3%s^7 before respawning"),
+			str = sprintf(CCR(_("You are dead, wait ^F2%s^BG before respawning")),
 				(autocvar_hud_panel_scoreboard_respawntime_decimals ?
 					count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
 					:
@@ -2732,7 +2732,7 @@ void Scoreboard_Draw()
 			);
 		}
 		else if(time >= respawn_time)
-			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey("jump", "+jump"));
+			str = sprintf(CCR(_("You are dead, press ^F1%s^BG to respawn")), getcommandkey("jump", "+jump"));
 
 		pos.y += 1.2 * hud_fontsize.y;
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);

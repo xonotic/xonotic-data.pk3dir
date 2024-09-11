@@ -199,9 +199,9 @@ void HUD_CenterPrint()
 				float r;
 				r = random();
 				if (r > 0.8)
-					centerprint_Add(floor(r*1000), sprintf(_("^3Countdown message at time %s, seconds left: ^COUNT"), seconds_tostring(time)), 1, 10);
+					centerprint_Add(floor(r*1000), sprintf(CCR(_("^F2Countdown message at time %s, seconds left: ^COUNT")), seconds_tostring(time)), 1, 10);
 				else if (r > 0.55)
-					centerprint_Add(0, sprintf(_("^1Multiline message at time %s that\n^BOLDlasts longer than normal"), seconds_tostring(time)), 20, 0);
+					centerprint_Add(0, sprintf(CCR(_("^F4Multiline message at time %s that\n^BOLDlasts longer than normal")), seconds_tostring(time)), 20, 0);
 				else
 					centerprint_AddStandard(sprintf(_("Message at time %s"), seconds_tostring(time)));
 				hud_configure_cp_generation_time = time + 1 + random()*4;

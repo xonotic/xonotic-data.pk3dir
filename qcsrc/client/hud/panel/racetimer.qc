@@ -20,7 +20,7 @@ void HUD_RaceTimer_Export(int fh)
 string MakeRaceString(int cp, float mytime, float theirtime, float othertime, float lapdelta, string theirname)
 {
 	TC(int, cp);
-	string cpname, lapstr = "", timestr = "", col = "^7", othercol = "^7", othertimestr = "";
+	string cpname, lapstr = "", timestr = "", col = "^BG", othercol = "^BG", othertimestr = "";
 	if(theirname == "" || !autocvar_cl_race_cptimes_showself)
 		othertime = 0; // don't count personal time
 
@@ -29,44 +29,44 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 		if(mytime > 0)
 		{
 			timestr = strcat("+", ftos_decimals(+mytime, TIME_DECIMALS));
-			col = "^1";
+			col = "^C1";
 		}
 		else if(mytime == 0)
 		{
 			timestr = "+0.0";
-			col = "^3";
+			col = "^C2";
 		}
 		else
 		{
 			timestr = strcat("-", ftos_decimals(-mytime, TIME_DECIMALS));
-			col = "^2";
+			col = "^C3";
 		}
 
 		if(othertime > 0)
 		{
 			othertimestr = strcat("+", ftos_decimals(+othertime, TIME_DECIMALS));
-			othercol = "^1";
+			othercol = "^C1";
 		}
 		else if(othertime == 0)
 		{
 			othertimestr = "+0.0";
-			othercol = "^3";
+			othercol = "^C2";
 		}
 		else
 		{
 			othertimestr = strcat("-", ftos_decimals(-othertime, TIME_DECIMALS));
-			othercol = "^2";
+			othercol = "^C3";
 		}
 
 		if(lapdelta > 0)
 		{
 			lapstr = sprintf(_(" (-%dL)"), lapdelta);
-			col = "^2";
+			col = "^C3";
 		}
 		else if(lapdelta < 0)
 		{
 			lapstr = sprintf(_(" (+%dL)"), -lapdelta);
-			col = "^1";
+			col = "^C1";
 		}
 	}
 	else if(theirtime > 0) // anticipation
@@ -75,13 +75,16 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 			timestr = strcat("+", ftos_decimals(mytime - theirtime, TIME_DECIMALS));
 		else
 			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(theirtime), false);
-		col = "^3";
+		col = "^C2";
 		if(mytime >= othertime)
 			othertimestr = strcat("+", ftos_decimals(mytime - othertime, TIME_DECIMALS));
 		else
 			othertimestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(othertime), false);
-		othercol = "^7";
+		othercol = "^BG";
 	}
+
+	col = CCR(col);
+	othercol = CCR(othercol);
 
 	if(cp == 254)
 		cpname = _("Start line");
@@ -192,11 +195,11 @@ void HUD_RaceTimer ()
 		str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '1 1 0' * 0.6 * mySize.y));
 		drawstring(str_pos, s, '1 1 0' * 0.6 * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
-		s = strcat("^1", sprintf(_("Intermediate %d"), 1), " (+15.42)");
+		s = strcat(CCR("^C1"), sprintf(_("Intermediate %d"), 1), " (+15.42)");
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 		s = sprintf(_("PENALTY: %.1f (%s)"), 2, _("missing a checkpoint"));
-		s = strcat("^1", s);
+		s = strcat(CCR("^C1"), s);
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
@@ -261,7 +264,7 @@ void HUD_RaceTimer ()
 			if(a > 0)
 			{
 				s = sprintf(_("PENALTY: %.1f (%s)"), race_penaltytime * 0.1, race_penaltyreason);
-				s = strcat("^1", s);
+				s = strcat(CCR("^C1"), s);
 				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
@@ -317,15 +320,15 @@ void HUD_RaceTimer ()
 				if(time < t)
 				{
 					t = (t - time) * 0.1;
-					col = "^1";
+					col = "^C1";
 				}
 				else
 				{
 					t = 0;
-					col = "^2";
+					col = "^C3";
 				}
 				s = sprintf(_("PENALTY: %.1f (%s)"), t, race_penaltyreason);
-				s = strcat(col, s);
+				s = strcat(CCR(col), s);
 				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}

@@ -201,16 +201,29 @@ string ColorTranslateRGB(string s)
 #ifdef GAMEQC
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors
-string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
-string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow // secondary priority (items, locations, numbers, etc)
-string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
-string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red    // notice/attention grabbing texting
+string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green      // primary priority (important names, etc)
+string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow     // secondary priority (items, locations, numbers, etc)
+string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue       // tertiary priority or relatively inconsequential text
+string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red        // notice/attention grabbing text
+string autocvar_hud_colorset_foreground_5 = "5"; // F4 - Light Blue // secondary attention grabbing text
 // "kill" colors
-string autocvar_hud_colorset_kill_1 = "1";       // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
-string autocvar_hud_colorset_kill_2 = "3";       // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
-string autocvar_hud_colorset_kill_3 = "4";       // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
+string autocvar_hud_colorset_kill_1 = "1";       // K1 - Red        // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
+string autocvar_hud_colorset_kill_2 = "3";       // K2 - Yellow     // similar to above, but less important... OR, a highlight out of above message type
+string autocvar_hud_colorset_kill_3 = "4";       // K3 - Blue       // "good" or "beneficial" text (you fragging someone, etc)
+// comparison colors
+string autocvar_hud_colorset_compare_1 = "1";    // C1 - Red        // "bad"/"no" in terms of some comparison (slower time in race, vote no, etc)
+string autocvar_hud_colorset_compare_2 = "3";    // C2 - Yellow     // "neutral" in terms of some comparison (same time in race, etc)
+string autocvar_hud_colorset_compare_3 = "2";    // C3 - Green      // "good"/"yes" in terms of some comparison (faster time in race, vote yes, etc)
+// relativity colors (alternatives to comparison colors)
+string autocvar_hud_colorset_relative_1 = "5";   // R1 - Light Blue // "better" in terms of another comparison (faster speed in race, etc)
+string autocvar_hud_colorset_relative_2 = "3";   // R2 - Yellow     // "neutral" in terms of another comparison (same speed in race, etc)
+string autocvar_hud_colorset_relative_3 = "6";   // R3 - Pink       // "worse" in terms of another comparison (slower speed in race, etc)
 // background color
-string autocvar_hud_colorset_background = "7";   // BG - White // neutral/unimportant text
+string autocvar_hud_colorset_background = "7";   // BG - White      // neutral/unimportant text
+// grey shades
+string autocvar_hud_colorset_grey_1 = "8";       // G1 - Light Grey // light grey text (less important text, etc)
+string autocvar_hud_colorset_grey_2 = "9";       // G2 - Grey       // grey text
+string autocvar_hud_colorset_grey_3 = "0";       // G3 - Dark Grey  // dark grey text
 
 /** color code replace, place inside of sprintf and parse the string */
 string CCR(string input)
@@ -220,15 +233,32 @@ string CCR(string input)
 	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input);
 	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input);
 	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input);
+	input = strreplace("^F5", strcat("^", autocvar_hud_colorset_foreground_5), input);
 
 	// "kill" colors
 	input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
 	input = strreplace("^K2", strcat("^", autocvar_hud_colorset_kill_2), input);
 	input = strreplace("^K3", strcat("^", autocvar_hud_colorset_kill_3), input);
 
+	// comparison colors
+	input = strreplace("^C1", strcat("^", autocvar_hud_colorset_compare_1), input);
+	input = strreplace("^C2", strcat("^", autocvar_hud_colorset_compare_2), input);
+	input = strreplace("^C3", strcat("^", autocvar_hud_colorset_compare_3), input);
+
+	// relativity colors
+	input = strreplace("^R1", strcat("^", autocvar_hud_colorset_relative_1), input);
+	input = strreplace("^R2", strcat("^", autocvar_hud_colorset_relative_2), input);
+	input = strreplace("^R3", strcat("^", autocvar_hud_colorset_relative_3), input);
+
 	// background colors
 	input = strreplace("^BG", strcat("^", autocvar_hud_colorset_background), input);
 	input = strreplace("^N", "^7", input);  // "none"-- reset to white...
+
+	// grey shades
+	input = strreplace("^G1", strcat("^", autocvar_hud_colorset_grey_1), input);
+	input = strreplace("^G2", strcat("^", autocvar_hud_colorset_grey_2), input);
+	input = strreplace("^G3", strcat("^", autocvar_hud_colorset_grey_3), input);
+
 	return input;
 }
 #endif
