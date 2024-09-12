@@ -192,7 +192,7 @@ void HUD_RaceTimer ()
 	{
 		s = CCR("^BG0:13:37");
 		draw_beginBoldFont();
-		str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '1 1 0' * 0.6 * mySize.y));
+		str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.6 * mySize.y));
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.6 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
 		s = strcat(CCR("^C1"), sprintf(_("Intermediate %d"), 1), " (+15.42)");
@@ -275,7 +275,7 @@ void HUD_RaceTimer ()
 		{
 			forcetime = strcat(CCR("^BG"), forcetime);
 			a = bound(0, (time - race_checkpointtime) / 0.5, 1);
-			str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(forcetime, false, '1 1 0' * 0.6 * mySize.y));
+			str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(forcetime, true, '1 1 0' * 0.6 * mySize.y));
 			drawcolorcodedstring_expanding(str_pos, forcetime, '1 1 0' * 0.6 * mySize.y, panel_fg_alpha, 0, a);
 		}
 		else
@@ -285,7 +285,7 @@ void HUD_RaceTimer ()
 		{
 			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime), false);
 			s = strcat(CCR("^BG"), s);
-			str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '0.6 0.6 0' * mySize.y));
+			str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, true, '0.6 0.6 0' * mySize.y));
 			drawcolorcodedstring(str_pos, s, '0.6 0.6 0' * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 

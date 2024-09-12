@@ -94,14 +94,14 @@ void HUD_Pickup()
 					str_timer = seconds_tostring(HUD_Pickup_Time(last_pickup_time));
 				str_timer = strcat(CCR("^BG"), str_timer);
 				drawcolorcodedstring(pos, str_timer, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				pos.x += stringwidth(str_timer, false, fontsize) + fontsize.x * 0.25;
+				pos.x += stringwidth(str_timer, true, fontsize) + fontsize.x * 0.25;
 			}
 		}
 
 		drawpic(pos - eY * ((iconsize.y - fontsize.y) / 2), icon, sz2, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		pos.x += sz2.x + fontsize.x * 0.25;
-		str_name = textShortenToWidth(str_name, mySize.x - (pos.x - panel_pos.x), fontsize, stringwidth_nocolors);
 		str_name = strcat(CCR("^BG"), str_name);
+		str_name = textShortenToWidth(str_name, mySize.x - (pos.x - panel_pos.x), fontsize, stringwidth_colors);
 		drawcolorcodedstring(pos, str_name, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	}
 }
