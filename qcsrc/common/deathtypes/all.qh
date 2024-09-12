@@ -23,13 +23,12 @@ REGISTRY_DEFINE_GET(Deathtypes, NULL)
 
 const int DEATH_WEAPONMASK = BITS(8);
 const int HITTYPE_SECONDARY = BITS(1) << 8;
-/** automatically set by RadiusDamage */
-const int HITTYPE_SPLASH = BITS(1) << 9;
-const int HITTYPE_BOUNCE = BITS(1) << 10;
-const int HITTYPE_ARMORPIERCE = BITS(1) << 11;
-const int HITTYPE_SOUND = BITS(1) << 12;
-const int HITTYPE_TERTIARY = BITS(1) << 13;
-const int DEATH_HITTYPEMASK = HITTYPE_SECONDARY | HITTYPE_SPLASH | HITTYPE_BOUNCE | HITTYPE_ARMORPIERCE | HITTYPE_SOUND | HITTYPE_TERTIARY;
+const int HITTYPE_SPLASH = BITS(1) << 9; // automatically set by RadiusDamage
+const int HITTYPE_BOUNCE = BITS(1) << 10; // set manually after projectile has bounced
+const int HITTYPE_ARMORPIERCE = BITS(1) << 11; // ignore armor calculations
+const int HITTYPE_SOUND = BITS(1) << 12; // cause bleeding from ears
+const int HITTYPE_SPAM = BITS(1) << 13; // set manually after first RadiusDamage, stops effect spam
+const int DEATH_HITTYPEMASK = HITTYPE_SECONDARY | HITTYPE_SPLASH | HITTYPE_BOUNCE | HITTYPE_ARMORPIERCE | HITTYPE_SOUND | HITTYPE_SPAM;
 // normal deaths begin
 const int DT_FIRST = BIT(14);
 

@@ -79,11 +79,6 @@ REGISTER_WEAPON(ELECTRO, NEW(Electro));
 SPAWNFUNC_WEAPON(weapon_electro, WEP_ELECTRO)
 
 #ifdef SVQC
-.float dmg;
-.float dmg_edge;
-.float dmg_radius;
-.float dmg_duration;
-
 IntrusiveList LimitedElectroBallRubbleList;
 .float electro_count;
 .float electro_secondarytime;

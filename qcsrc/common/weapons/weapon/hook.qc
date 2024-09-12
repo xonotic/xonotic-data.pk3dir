@@ -13,7 +13,7 @@ void W_Hook_ExplodeThink(entity this)
 	this.dmg_last = dmg_remaining_next;
 
 	RadiusDamage(this, this.realowner, this.dmg * f, this.dmg_edge * f, this.dmg_radius, this.realowner, NULL, this.dmg_force * f, this.projectiledeathtype, this.weaponentity_fld, NULL);
-	this.projectiledeathtype |= HITTYPE_BOUNCE;
+	this.projectiledeathtype |= HITTYPE_SPAM;
 	//RadiusDamage(this, NULL, this.dmg * f, this.dmg_edge * f, this.dmg_radius, NULL, NULL, this.dmg_force * f, this.projectiledeathtype, NULL);
 
 	if(dt < this.dmg_duration)
