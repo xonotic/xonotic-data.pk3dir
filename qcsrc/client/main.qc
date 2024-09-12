@@ -1424,9 +1424,9 @@ bool net_handle_ServerWelcome()
 		// (that client doesn't know) by replacing the keyword _LEVEL_DESC
 		string key = getcommandkey(_("jump"), "+jump");
 		string msg = strcat(
-			CCR("^F1"), sprintf(_("Level %d:"), campaign_level),
-			sprintf(CCR(" ^BG%s\n\n"), "_LEVEL_DESC"),
-			sprintf(CCR(_("^BGPress ^F2%s^BG to enter the game")), key));
+			CCR_F1, sprintf(_("Level %d:"), campaign_level), " ",
+			CCR_BG, sprintf("%s\n\n", "_LEVEL_DESC"),
+			CCR_BG, sprintf(CCR(_("Press ^F2%s^BG to enter the game")), key));
 		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
 		string welcomedialog_args = strcat("CAMPAIGN ", itos(campaign_level), " \"", msg, "\"");
 
