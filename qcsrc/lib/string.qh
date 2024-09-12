@@ -225,39 +225,60 @@ string autocvar_hud_colorset_grey_1 = "8";       // G1 - Light Grey // light gre
 string autocvar_hud_colorset_grey_2 = "9";       // G2 - Grey       // grey text
 string autocvar_hud_colorset_grey_3 = "0";       // G3 - Dark Grey  // dark grey text
 
+/** color code replace macros for efficiency over the CCR function */
+#define CCR_F1 strcat("^", autocvar_hud_colorset_foreground_1)
+#define CCR_F2 strcat("^", autocvar_hud_colorset_foreground_2)
+#define CCR_F3 strcat("^", autocvar_hud_colorset_foreground_3)
+#define CCR_F4 strcat("^", autocvar_hud_colorset_foreground_4)
+#define CCR_F5 strcat("^", autocvar_hud_colorset_foreground_5)
+#define CCR_K1 strcat("^", autocvar_hud_colorset_kill_1)
+#define CCR_K2 strcat("^", autocvar_hud_colorset_kill_2)
+#define CCR_K3 strcat("^", autocvar_hud_colorset_kill_3)
+#define CCR_C1 strcat("^", autocvar_hud_colorset_compare_1)
+#define CCR_C2 strcat("^", autocvar_hud_colorset_compare_2)
+#define CCR_C3 strcat("^", autocvar_hud_colorset_compare_3)
+#define CCR_R1 strcat("^", autocvar_hud_colorset_relative_1)
+#define CCR_R2 strcat("^", autocvar_hud_colorset_relative_2)
+#define CCR_R3 strcat("^", autocvar_hud_colorset_relative_3)
+#define CCR_BG strcat("^", autocvar_hud_colorset_background)
+#define CCR_N  "^7"
+#define CCR_G1 strcat("^", autocvar_hud_colorset_grey_1)
+#define CCR_G2 strcat("^", autocvar_hud_colorset_grey_2)
+#define CCR_G3 strcat("^", autocvar_hud_colorset_grey_3)
+
 /** color code replace, place inside of sprintf and parse the string */
 string CCR(string input)
 {
 	// foreground/normal colors
-	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input);
-	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input);
-	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input);
-	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input);
-	input = strreplace("^F5", strcat("^", autocvar_hud_colorset_foreground_5), input);
+	input = strreplace("^F1", CCR_F1, input);
+	input = strreplace("^F2", CCR_F2, input);
+	input = strreplace("^F3", CCR_F3, input);
+	input = strreplace("^F4", CCR_F4, input);
+	input = strreplace("^F5", CCR_F5, input);
 
 	// "kill" colors
-	input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
-	input = strreplace("^K2", strcat("^", autocvar_hud_colorset_kill_2), input);
-	input = strreplace("^K3", strcat("^", autocvar_hud_colorset_kill_3), input);
+	input = strreplace("^K1", CCR_K1, input);
+	input = strreplace("^K2", CCR_K2, input);
+	input = strreplace("^K3", CCR_K3, input);
 
 	// comparison colors
-	input = strreplace("^C1", strcat("^", autocvar_hud_colorset_compare_1), input);
-	input = strreplace("^C2", strcat("^", autocvar_hud_colorset_compare_2), input);
-	input = strreplace("^C3", strcat("^", autocvar_hud_colorset_compare_3), input);
+	input = strreplace("^C1", CCR_C1, input);
+	input = strreplace("^C2", CCR_C2, input);
+	input = strreplace("^C3", CCR_C3, input);
 
 	// relativity colors
-	input = strreplace("^R1", strcat("^", autocvar_hud_colorset_relative_1), input);
-	input = strreplace("^R2", strcat("^", autocvar_hud_colorset_relative_2), input);
-	input = strreplace("^R3", strcat("^", autocvar_hud_colorset_relative_3), input);
+	input = strreplace("^R1", CCR_R1, input);
+	input = strreplace("^R2", CCR_R2, input);
+	input = strreplace("^R3", CCR_R3, input);
 
 	// background colors
-	input = strreplace("^BG", strcat("^", autocvar_hud_colorset_background), input);
-	input = strreplace("^N", "^7", input);  // "none"-- reset to white...
+	input = strreplace("^BG", CCR_BG, input);
+	input = strreplace("^N",  CCR_N,  input); // "none" -- reset to white...
 
 	// grey shades
-	input = strreplace("^G1", strcat("^", autocvar_hud_colorset_grey_1), input);
-	input = strreplace("^G2", strcat("^", autocvar_hud_colorset_grey_2), input);
-	input = strreplace("^G3", strcat("^", autocvar_hud_colorset_grey_3), input);
+	input = strreplace("^G1", CCR_G1, input);
+	input = strreplace("^G2", CCR_G2, input);
+	input = strreplace("^G3", CCR_G3, input);
 
 	return input;
 }

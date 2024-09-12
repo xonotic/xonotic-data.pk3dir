@@ -164,7 +164,7 @@ void HUD_Physics()
 		//else
 			//tmp_offset_x = 0;
 		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
-		drawcolorcodedstring_aspect(panel_pos + speed_offset + tmp_offset, strcat(CCR("^BG"), ftos(discrete_speed)), tmp_size, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring_aspect(panel_pos + speed_offset + tmp_offset, strcat(CCR_BG, ftos(discrete_speed)), tmp_size, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		//draw speed unit
 		if (speed_baralign)
@@ -178,7 +178,7 @@ void HUD_Physics()
 			tmp_size.y = panel_size.y * 0.4 * text_scale;
 			tmp_offset.y = (panel_size.y * 0.4 - tmp_size.y) / 2;
 			string unit = GetSpeedUnit(autocvar_hud_speed_unit);
-			drawcolorcodedstring_aspect(panel_pos + speed_offset + tmp_offset, strcat(CCR("^BG"), unit), tmp_size, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring_aspect(panel_pos + speed_offset + tmp_offset, strcat(CCR_BG, unit), tmp_size, panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}
 
@@ -237,7 +237,7 @@ void HUD_Physics()
 			tmp_size.x = panel_size.x * (1 - 0.75);
 			tmp_size.y = (panel_size.y - tmp_offset.y) * text_scale;
 			tmp_offset.y += (panel_size.y - tmp_offset.y - tmp_size.y) / 2;
-			drawcolorcodedstring_aspect(panel_pos + speed_offset + tmp_offset, strcat(CCR("^F4"), ftos(top_speed)), tmp_size, f * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring_aspect(panel_pos + speed_offset + tmp_offset, strcat(CCR_F4, ftos(top_speed)), tmp_size, f * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		else
 			top_speed = 0;
@@ -285,7 +285,7 @@ void HUD_Physics()
 		tmp_offset.x = 0;
 		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
 
-		drawcolorcodedstring_aspect(panel_pos + acceleration_offset + tmp_offset, strcat(CCR("^BG"), ftos_decimals(discrete_acceleration, acc_decimals), "g"), tmp_size, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring_aspect(panel_pos + acceleration_offset + tmp_offset, strcat(CCR_BG, ftos_decimals(discrete_acceleration, acc_decimals), "g"), tmp_size, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	draw_endBoldFont();

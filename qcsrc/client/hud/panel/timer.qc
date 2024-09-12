@@ -14,11 +14,11 @@ void HUD_Timer_Export(int fh)
 string HUD_Timer_Color(float timeleft)
 {
 	if(timeleft <= 60)
-		return "^C1"; // red
+		return CCR_C1; // red
 	else if(timeleft <= 300)
-		return "^C2"; // yellow
+		return CCR_C2; // yellow
 	else
-		return "^BG"; // white
+		return CCR_BG; // white
 }
 
 float HUD_Timer_TimeElapsed(float curtime, float starttime)
@@ -67,8 +67,8 @@ void HUD_Timer()
 	string subtext = string_null;
 	float curtime, timelimit, timeleft;
 	vector timer_size, subtext_size, subtimer_size;
-	string timer_color = "^BG";
-	string subtimer_color = "^BG";
+	string timer_color = CCR_BG;
+	string subtimer_color = CCR_BG;
 	bool swap = (autocvar_hud_panel_timer_secondary == 2 && STAT(ROUNDSTARTTIME));
 
 	// Use real or frozen time and get the time limit
@@ -94,7 +94,7 @@ void HUD_Timer()
 		if(STAT(ROUNDSTARTTIME) == -1) {
 			// Round can't start
 			subtimer_str = "--:--";
-			subtimer_color = "^C1";
+			subtimer_color = CCR_C1;
 		} else {
 			float round_curtime, round_timelimit, round_timeleft;
 
@@ -156,17 +156,17 @@ void HUD_Timer()
 		float subtimer_padding = subtimer_size.y / 5;
 		timer_size.x -= subtimer_size.x;
 		drawcolorcodedstring_aspect(pos + eX * timer_size.x + eY * subtimer_padding,
-			strcat(CCR(swap ? timer_color : subtimer_color), swap ? timer_str : subtimer_str),
+			strcat((swap ? timer_color : subtimer_color), swap ? timer_str : subtimer_str),
 			subtimer_size - eY * 2 * subtimer_padding, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	drawcolorcodedstring_aspect(pos,
-		strcat(CCR(swap ? subtimer_color : timer_color), swap ? subtimer_str : timer_str),
+		strcat((swap ? subtimer_color : timer_color), swap ? subtimer_str : timer_str),
 		timer_size, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	if(subtext)
 		drawcolorcodedstring_aspect(pos + eY * timer_size.y,
-			strcat(CCR("^F1"), subtext),
+			strcat(CCR_F1, subtext),
 			subtext_size, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	draw_endBoldFont();

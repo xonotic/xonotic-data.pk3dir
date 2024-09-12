@@ -343,7 +343,7 @@ void HUD_Radar()
 			message = _("Click to select spawn location");
 		}
 		
-		message = strcat(CCR("^BG"), message);
+		message = strcat(CCR_BG, message);
 		drawcolorcodedstring(pos + '0.5 0 0' * (mySize_x - stringwidth(message, true, hud_fontsize)) - '0 1 0' * hud_fontsize_y * 2,
 							 message, hud_fontsize, hud_panel_radar_foreground_alpha, DRAWFLAG_NORMAL);
 

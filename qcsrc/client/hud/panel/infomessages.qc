@@ -91,9 +91,10 @@ void HUD_InfoMessages()
 		if(spectatee_status)
 		{
 			if(spectatee_status == -1)
-				s = CCR(_("^F4Observing"));
+				s = _("Observing");
 			else
-				s = sprintf(CCR(_("^F4Spectating: ^BG%s")), entcs_GetName(current_player));
+				s = sprintf(CCR(_("Spectating: ^BG%s")), entcs_GetName(current_player));
+			s = strcat(CCR_F4, s);
 			InfoMessage(s);
 
 			if(autocvar_hud_panel_infomessages_group0)
@@ -104,22 +105,23 @@ void HUD_InfoMessages()
 					default:
 					case 0:
 						if(spectatee_status == -1)
-							s = sprintf(CCR(_("^F4Press ^F2%s^F4 to spectate")), getcommandkey(_("primary fire"), "+fire"));
+							s = sprintf(CCR(_("Press ^F2%s^F4 to spectate")), getcommandkey(_("primary fire"), "+fire"));
 						else
-							s = sprintf(CCR(_("^F4Press ^F2%s^F4 or ^F2%s^F4 for next or previous player")), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
+							s = sprintf(CCR(_("Press ^F2%s^F4 or ^F2%s^F4 for next or previous player")), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
 						break;
 					case 1:
 						if(spectatee_status == -1)
-							s = sprintf(CCR(_("^F4Use ^F2%s^F4 or ^F2%s^F4 to change the speed")), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
+							s = sprintf(CCR(_("Use ^F2%s^F4 or ^F2%s^F4 to change the speed")), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
 						else if(!observe_blocked)
-							s = sprintf(CCR(_("^F4Press ^F2%s^F4 to observe, ^F2%s^F4 to change camera mode")), getcommandkey(_("secondary fire"), "+fire2"), getcommandkey(_("drop weapon"), "dropweapon"));
+							s = sprintf(CCR(_("Press ^F2%s^F4 to observe, ^F2%s^F4 to change camera mode")), getcommandkey(_("secondary fire"), "+fire2"), getcommandkey(_("drop weapon"), "dropweapon"));
 						else
-							s = sprintf(CCR(_("^F4Press ^F2%s^F4 to change camera mode")), getcommandkey(_("drop weapon"), "dropweapon"));
+							s = sprintf(CCR(_("Press ^F2%s^F4 to change camera mode")), getcommandkey(_("drop weapon"), "dropweapon"));
 						break;
 					case 2:
-						s = sprintf(CCR(_("^F4Press ^F2%s^F4 for gamemode info")), getcommandkey(_("server info"), "+show_info"));
+						s = sprintf(CCR(_("Press ^F2%s^F4 for gamemode info")), getcommandkey(_("server info"), "+show_info"));
 						break;
 				}
+				s = strcat(CCR_F4, s);
 				InfoMessage(s);
 			}
 
@@ -133,12 +135,12 @@ void HUD_InfoMessages()
 				if(tm > 0)
 				{
 					tm = Team_IndexToTeam(tm);
-					s = sprintf(CCR(_("^F1You're queued to join the %s%s^F1 team")), Team_ColorCode(tm), Team_ColorName(tm));
+					s = strcat(CCR_F1, sprintf(CCR(_("You're queued to join the %s%s^F1 team")), Team_ColorCode(tm), Team_ColorName(tm)));
 				}
 				else if (tm < 0)
-					s = sprintf(CCR(_("^F1You're queued to join any available team")));
+					s = strcat(CCR_F1, sprintf(_("You're queued to join any available team")));
 				else
-					s = sprintf(CCR(_("^F4Press ^F2%s^F4 to join")), getcommandkey(_("jump"), "+jump"));
+					s = strcat(CCR_F4, sprintf(CCR(_("Press ^F2%s^F4 to join")), getcommandkey(_("jump"), "+jump")));
 				InfoMessage(s);
 			}
 		}
@@ -147,20 +149,19 @@ void HUD_InfoMessages()
 		{
 			//we need to ceil, otherwise the countdown would be off by .5 when using round()
 			float countdown = ceil(STAT(GAMESTARTTIME) - time);
-			s = sprintf(CCR(_("^F4Game starts in ^F2%d^F4 seconds")), countdown);
+			s = strcat(CCR_F4, sprintf(CCR(_("Game starts in ^F2%d^F4 seconds")), countdown));
 			InfoMessage(s);
 		}
 
 		string blinkcolor;
 		if(time % 1 >= 0.5)
-			blinkcolor = "^F4";
+			blinkcolor = CCR_F4;
 		else
-			blinkcolor = "^F2";
-		blinkcolor = CCR(blinkcolor);
+			blinkcolor = CCR_F2;
 
 		if(warmup_stage)
 		{
-			InfoMessage(CCR(_("^F1Currently in ^F4warmup^F1 stage!")));
+			InfoMessage(strcat(CCR_F1, CCR(_("Currently in ^F4warmup^F1 stage!"))));
 
 			int players_needed = 0;
 			Scoreboard_UpdatePlayerTeams(); // ensure numplayers, ts_min, ts_max are current
@@ -170,9 +171,10 @@ void HUD_InfoMessages()
 			if(players_needed > 0)
 			{
 				if(players_needed == 1)
-					s = CCR(_("^F21^F1 more player is needed for the match to start."));
+					s = CCR(_("1^F1 more player is needed for the match to start."));
 				else
-					s = sprintf(CCR(_("^F2%d^F1 more players are needed for the match to start.")), players_needed);
+					s = sprintf(CCR(_("%d^F1 more players are needed for the match to start.")), players_needed);
+				s = strcat(CCR_F2, s);
 				InfoMessage(s);
 			}
 			else if(teamnagger && (ts_max - ts_min) >= teamnagger)
@@ -187,10 +189,10 @@ void HUD_InfoMessages()
 					if(ready_waiting_for_me)
 						s = sprintf(CCR(_("%sPress ^F2%s%s to end warmup")), blinkcolor, getcommandkey(_("ready"), "ready"), blinkcolor);
 					else
-						s = CCR(_("^F1Waiting for others to ready up to end warmup..."));
+						s = strcat(CCR_F1, _("Waiting for others to ready up to end warmup..."));
 				}
 				else
-					s = sprintf(CCR(_("^F1Press ^F2%s^F1 to end warmup")), getcommandkey(_("ready"), "ready"));
+					s = strcat(CCR_F1, sprintf(CCR(_("Press ^F2%s^F1 to end warmup")), getcommandkey(_("ready"), "ready")));
 				InfoMessage(s);
 			}
 		}
@@ -218,16 +220,16 @@ void HUD_InfoMessages()
 		if(num_spectators)
 		//if(spectatee_status != -1)
 		{
-			s = CCR((spectatee_status) ? _("^F4Spectating this player:") : _("^F4Spectating you:"));
+			s = strcat(CCR_F4, (spectatee_status) ? _("Spectating this player:") : _("Spectating you:"));
 			// InfoMessage(s)
 			int limit = min(num_spectators, MAX_SPECTATORS);
 			for(int i = 0; i < limit; ++i)
 			{
 				float slot = spectatorlist[i];
 				if(i == 0)
-					s = strcat(s, CCR(" ^BG"), entcs_GetName(slot));
+					s = strcat(s, " ", CCR_BG, entcs_GetName(slot));
 				else
-					s = strcat(CCR("^BG"), entcs_GetName(slot));
+					s = strcat(CCR_BG, entcs_GetName(slot));
 				InfoMessage(s);
 			}
 		}
@@ -265,9 +267,9 @@ void HUD_InfoMessages()
 	}
 	else
 	{
-		InfoMessage(CCR(_("^BGPress ^F2ESC ^BGto show HUD options.")));
-		InfoMessage(CCR(_("^F2Doubleclick ^BGa panel for panel-specific options.")));
-		InfoMessage(CCR(_("^F2CTRL ^BGto disable collision testing, ^F2SHIFT ^BGand")));
-		InfoMessage(CCR(_("^F2ALT ^BG+ ^F2ARROW KEYS ^BGfor fine adjustments.")));
+		InfoMessage(strcat(CCR_BG, CCR(_("Press ^F2ESC ^BGto show HUD options."))));
+		InfoMessage(strcat(CCR_F2, CCR(_("Doubleclick ^BGa panel for panel-specific options."))));
+		InfoMessage(strcat(CCR_F2, CCR(_("CTRL ^BGto disable collision testing, ^F2SHIFT ^BGand"))));
+		InfoMessage(strcat(CCR_F2, CCR(_("ALT ^BG+ ^F2ARROW KEYS ^BGfor fine adjustments."))));
 	}
 }

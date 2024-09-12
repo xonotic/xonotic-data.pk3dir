@@ -557,15 +557,15 @@ void HUD_Weapons()
 			switch(autocvar_hud_panel_weapons_label)
 			{
 				case 1: // weapon number
-					label_str = strcat(CCR("^BG"), ftos(weapon_id));
+					label_str = strcat(CCR_BG, ftos(weapon_id));
 					break;
 
 				case 2: // bind
-					label_str = strcat(CCR("^BG"), getcommandkey(ftos(weapon_id), strcat("weapon_group_", ftos(weapon_id))));
+					label_str = strcat(CCR_BG, getcommandkey(ftos(weapon_id), strcat("weapon_group_", ftos(weapon_id))));
 					break;
 
 				case 3: // weapon name
-					label_str = strcat(CCR("^BG"), strtolower(it.m_name));
+					label_str = strcat(CCR_BG, strtolower(it.m_name));
 					break;
 
 				default: // nothing
@@ -640,7 +640,7 @@ void HUD_Weapons()
 				s = _("Unavailable");
 				color = stov(autocvar_hud_panel_weapons_complainbubble_color_unavailable);
 			}
-			s = strcat(CCR("^BG"), s);
+			s = strcat(CCR_BG, s);
 			float padding = autocvar_hud_panel_weapons_complainbubble_padding;
 			drawpic_aspect_skin(weapon_pos + '1 1 0' * padding, "weapon_complainbubble", weapon_size - '2 2 0' * padding, color, a * panel_fg_alpha, DRAWFLAG_NORMAL);
 			drawcolorcodedstring_aspect(weapon_pos + '1 1 0' * padding, s, weapon_size - '2 2 0' * padding, panel_fg_alpha * a, DRAWFLAG_NORMAL);
@@ -651,7 +651,7 @@ void HUD_Weapons()
 		if(!autocvar_hud_panel_weapons_onlyowned)
 		{
 			drawfill(weapon_pos + '1 1 0', weapon_size - '2 2 0', '1 1 1', panel_fg_alpha * 0.2, DRAWFLAG_NORMAL);
-			drawcolorcodedstring(weapon_pos, strcat(CCR("^BG"), ftos(i + 1)), label_size, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(weapon_pos, strcat(CCR_BG, ftos(i + 1)), label_size, panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		#endif
 

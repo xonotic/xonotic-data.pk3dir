@@ -20,7 +20,7 @@ void HUD_RaceTimer_Export(int fh)
 string MakeRaceString(int cp, float mytime, float theirtime, float othertime, float lapdelta, string theirname)
 {
 	TC(int, cp);
-	string cpname, lapstr = "", timestr = "", col = "^BG", othercol = "^BG", othertimestr = "";
+	string cpname, lapstr = "", timestr = "", col = CCR_BG, othercol = CCR_BG, othertimestr = "";
 	if(theirname == "" || !autocvar_cl_race_cptimes_showself)
 		othertime = 0; // don't count personal time
 
@@ -29,44 +29,44 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 		if(mytime > 0)
 		{
 			timestr = strcat("+", ftos_decimals(+mytime, TIME_DECIMALS));
-			col = "^C1";
+			col = CCR_C1;
 		}
 		else if(mytime == 0)
 		{
 			timestr = "+0.0";
-			col = "^C2";
+			col = CCR_C2;
 		}
 		else
 		{
 			timestr = strcat("-", ftos_decimals(-mytime, TIME_DECIMALS));
-			col = "^C3";
+			col = CCR_C3;
 		}
 
 		if(othertime > 0)
 		{
 			othertimestr = strcat("+", ftos_decimals(+othertime, TIME_DECIMALS));
-			othercol = "^C1";
+			othercol = CCR_C1;
 		}
 		else if(othertime == 0)
 		{
 			othertimestr = "+0.0";
-			othercol = "^C2";
+			othercol = CCR_C2;
 		}
 		else
 		{
 			othertimestr = strcat("-", ftos_decimals(-othertime, TIME_DECIMALS));
-			othercol = "^C3";
+			othercol = CCR_C3;
 		}
 
 		if(lapdelta > 0)
 		{
 			lapstr = sprintf(_(" (-%dL)"), lapdelta);
-			col = "^C3";
+			col = CCR_C3;
 		}
 		else if(lapdelta < 0)
 		{
 			lapstr = sprintf(_(" (+%dL)"), -lapdelta);
-			col = "^C1";
+			col = CCR_C1;
 		}
 	}
 	else if(theirtime > 0) // anticipation
@@ -75,16 +75,13 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 			timestr = strcat("+", ftos_decimals(mytime - theirtime, TIME_DECIMALS));
 		else
 			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(theirtime), false);
-		col = "^C2";
+		col = CCR_C2;
 		if(mytime >= othertime)
 			othertimestr = strcat("+", ftos_decimals(mytime - othertime, TIME_DECIMALS));
 		else
 			othertimestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(othertime), false);
-		othercol = "^BG";
+		othercol = CCR_BG;
 	}
-
-	col = CCR(col);
-	othercol = CCR(othercol);
 
 	if(cp == 254)
 		cpname = _("Start line");
@@ -190,15 +187,15 @@ void HUD_RaceTimer ()
 
 	if(autocvar__hud_configure)
 	{
-		s = CCR("^BG0:13:37");
+		s = strcat(CCR_BG, "0:13:37");
 		draw_beginBoldFont();
 		str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.6 * mySize.y));
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.6 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
-		s = strcat(CCR("^C1"), sprintf(_("Intermediate %d"), 1), " (+15.42)");
+		s = strcat(CCR_C1, sprintf(_("Intermediate %d"), 1), " (+15.42)");
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
-		s = strcat(CCR("^C1"), sprintf(_("PENALTY: %.1f (%s)"), 2, _("missing a checkpoint")));
+		s = strcat(CCR_C1, sprintf(_("PENALTY: %.1f (%s)"), 2, _("missing a checkpoint")));
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
@@ -262,8 +259,7 @@ void HUD_RaceTimer ()
 			a = bound(0, 2 - (time - race_penaltyeventtime), 1);
 			if(a > 0)
 			{
-				s = sprintf(_("PENALTY: %.1f (%s)"), race_penaltytime * 0.1, race_penaltyreason);
-				s = strcat(CCR("^C1"), s);
+				s = strcat(CCR_C1, sprintf(_("PENALTY: %.1f (%s)"), race_penaltytime * 0.1, race_penaltyreason));
 				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
@@ -273,7 +269,7 @@ void HUD_RaceTimer ()
 
 		if(forcetime != "")
 		{
-			forcetime = strcat(CCR("^BG"), forcetime);
+			forcetime = strcat(CCR_BG, forcetime);
 			a = bound(0, (time - race_checkpointtime) / 0.5, 1);
 			str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(forcetime, true, '1 1 0' * 0.6 * mySize.y));
 			drawcolorcodedstring_expanding(str_pos, forcetime, '1 1 0' * 0.6 * mySize.y, panel_fg_alpha, 0, a);
@@ -284,7 +280,7 @@ void HUD_RaceTimer ()
 		if(race_laptime && race_checkpoint != 255)
 		{
 			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime), false);
-			s = strcat(CCR("^BG"), s);
+			s = strcat(CCR_BG, s);
 			str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, true, '0.6 0.6 0' * mySize.y));
 			drawcolorcodedstring(str_pos, s, '0.6 0.6 0' * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
@@ -321,15 +317,14 @@ void HUD_RaceTimer ()
 				if(time < t)
 				{
 					t = (t - time) * 0.1;
-					col = "^C1";
+					col = CCR_C1;
 				}
 				else
 				{
 					t = 0;
-					col = "^C3";
+					col = CCR_C3;
 				}
-				s = sprintf(_("PENALTY: %.1f (%s)"), t, race_penaltyreason);
-				s = strcat(CCR(col), s);
+				s = strcat(col, sprintf(_("PENALTY: %.1f (%s)"), t, race_penaltyreason));
 				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}

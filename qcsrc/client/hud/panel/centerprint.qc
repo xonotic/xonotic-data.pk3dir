@@ -199,16 +199,16 @@ void HUD_CenterPrint()
 				float r;
 				r = random();
 				if (r > 0.8)
-					centerprint_Add(floor(r*1000), sprintf(CCR(_("^F2Countdown message at time %s, seconds left: ^COUNT")), seconds_tostring(time)), 1, 10);
+					centerprint_Add(floor(r*1000), strcat(CCR_F2, sprintf(_("Countdown message at time %s, seconds left: ^COUNT"), seconds_tostring(time))), 1, 10);
 				else if (r > 0.55)
-					centerprint_Add(0, sprintf(CCR(_("^F4Multiline message at time %s that\n^BOLDlasts longer than normal")), seconds_tostring(time)), 20, 0);
+					centerprint_Add(0, strcat(CCR_F4, sprintf(_("Multiline message at time %s that\n^BOLDlasts longer than normal"), seconds_tostring(time))), 20, 0);
 				else
-					centerprint_AddStandard(sprintf(CCR(_("^BGMessage at time %s")), seconds_tostring(time)));
+					centerprint_AddStandard(strcat(CCR_BG, sprintf(_("Message at time %s"), seconds_tostring(time))));
 				hud_configure_cp_generation_time = time + 1 + random()*4;
 			}
 			else
 			{
-				centerprint_Add(0, strcat(CCR("^BG"), _("Generic message")), 10, 0);
+				centerprint_Add(0, strcat(CCR_BG, _("Generic message")), 10, 0);
 				hud_configure_cp_generation_time = time + 10 - random()*3;
 			}
 		}
@@ -300,7 +300,7 @@ void HUD_CenterPrint()
 			drawcolorcodedstring(pos, centerprint_title_left, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			pos.x = duel_title_pos.x + max_rl_width + padding * 3;
-			drawcolorcodedstring(pos, strcat(CCR("^BG"), _("vs")), fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, strcat(CCR_BG, _("vs")), fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			pos.x = duel_title_pos.x + width - padding - max_rl_width;
 			if (left_width >= right_width)
