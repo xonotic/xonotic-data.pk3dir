@@ -557,22 +557,25 @@ void HUD_Weapons()
 			switch(autocvar_hud_panel_weapons_label)
 			{
 				case 1: // weapon number
-					label_str = strcat(CCR_BG, ftos(weapon_id));
+					label_str = ftos(weapon_id);
 					break;
 
 				case 2: // bind
-					label_str = strcat(CCR_BG, getcommandkey(ftos(weapon_id), strcat("weapon_group_", ftos(weapon_id))));
+					label_str = getcommandkey(ftos(weapon_id), strcat("weapon_group_", ftos(weapon_id)));
 					break;
 
 				case 3: // weapon name
-					label_str = strcat(CCR_BG, strtolower(it.m_name));
+					label_str = strtolower(it.m_name);
 					break;
 
 				default: // nothing
 					break;
 			}
 			if(label_str != "")
+			{
+				label_str = strcat(CCR_BG, label_str);
 				drawcolorcodedstring(weapon_pos, label_str, label_size, panel_fg_alpha, DRAWFLAG_NORMAL);
+			}
 
 			// draw ammo status bar
 			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_type != RES_NONE))

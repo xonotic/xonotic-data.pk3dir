@@ -161,7 +161,7 @@ void centerprint_SetDuelTitle(string left, string right)
 void centerprint_SetTitle(string title)
 {
 	if(title != centerprint_title)
-		strcpy(centerprint_title, CCR(title));
+		strcpy(centerprint_title, title);
 }
 
 void centerprint_ClearTitle()
@@ -290,7 +290,8 @@ void HUD_CenterPrint()
 			else
 				max_rl_width = right_width;
 
-			width = max_rl_width * 2 + padding * 6 + stringwidth(_("vs"), false, fontsize);
+			string str_vs = strcat(CCR_BG, _("vs"));
+			width = max_rl_width * 2 + padding * 6 + stringwidth(str_vs, true, fontsize);
 			pos.x += (panel_size.x - width) * align;
 			duel_title_pos = pos;
 
@@ -300,7 +301,7 @@ void HUD_CenterPrint()
 			drawcolorcodedstring(pos, centerprint_title_left, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			pos.x = duel_title_pos.x + max_rl_width + padding * 3;
-			drawcolorcodedstring(pos, strcat(CCR_BG, _("vs")), fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, str_vs, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			pos.x = duel_title_pos.x + width - padding - max_rl_width;
 			if (left_width >= right_width)

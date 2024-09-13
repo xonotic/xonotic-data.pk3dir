@@ -2463,13 +2463,13 @@ void Scoreboard_Draw()
 	if (scoreboard_ui_enabled == 2)
 	{
 		if (scoreboard_selected_team)
-			str = strcat(CCR_BG, sprintf(CCR(_("Press ^F2%s^BG to join the selected team")), translate_key("SPACE")));
+			str = strcat(CCR_BG, sprintf(_("Press %s to join the selected team"), strcat(CCR_F2, translate_key("SPACE"), CCR_BG)));
 		else
-			str = strcat(CCR_BG, sprintf(CCR(_("Press ^F2%s^BG to auto-select a team and join")), translate_key("SPACE")));
+			str = strcat(CCR_BG, sprintf(_("Press %s to auto-select a team and join"), strcat(CCR_F2, translate_key("SPACE"), CCR_BG)));
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;
-		str = strcat(CCR_BG, sprintf(CCR(_("Press ^F2%s ^BGto select a specific team")), translate_key("TAB")));
+		str = strcat(CCR_BG, sprintf(_("Press %s to select a specific team"), strcat(CCR_F2, translate_key("TAB"), CCR_BG)));
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else
@@ -2507,7 +2507,7 @@ void Scoreboard_Draw()
 		if (campaign)
 			str = "";
 		else
-			str = sprintf(CCR(_("^F5%d^BG/^F5%d ^BGplayers")), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
+			str = sprintf(_("%s/%s players"), strcat(CCR_F5, ftos_decimals(numplayers, 0), CCR_BG), strcat(CCR_F5, ftos_decimals((srv_maxplayers ? srv_maxplayers : maxclients), 0), CCR_BG));
 		str = strcat(CCR_BG, _("Map:"), " ", CCR_F1, mi_shortname, "    ", str); // reusing "Map:" translatable string
 		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	}
@@ -2675,11 +2675,11 @@ void Scoreboard_Draw()
 			if(race_speedaward)
 			{
 				name = textShortenToWidth(ColorTranslateRGB(race_speedaward_holder), namesize, hud_fontsize, stringwidth_colors);
-				str = sprintf(CCR(_("Speed award: %d%s ^BG(%s^BG)")), race_speedaward * conversion_factor, unit, name);
-				str = strcat(str, " / ");
+				str = sprintf(_("Speed award: %d%s %s"), race_speedaward * conversion_factor, unit, strcat(CCR_BG, "(", name, CCR_BG, ")"));
+				str = strcat(CCR_BG, str, " / ");
 			}
 			name = textShortenToWidth(ColorTranslateRGB(race_speedaward_alltimebest_holder), namesize, hud_fontsize, stringwidth_colors);
-			str = strcat(str, sprintf(CCR(_("All-time fastest: %d%s ^BG(%s^BG)")), race_speedaward_alltimebest * conversion_factor, unit, name));
+			str = strcat(str, CCR_BG, sprintf(_("All-time fastest: %d%s %s"), race_speedaward_alltimebest * conversion_factor, unit, strcat(CCR_BG, "(", name, CCR_BG, ")")));
 			drawcolorcodedstring(pos, str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y; // line height + line spacing
 		}
@@ -2713,26 +2713,26 @@ void Scoreboard_Draw()
 			if(respawn_time < time) // it happens for a few frames when server is respawning the player
 				str = ""; // draw an empty string to not change suddenly scoreboard_bottom
 			else
-				str = strcat(CCR_F4, sprintf(CCR(_("Respawning in ^F2%s^F4...")),
+				str = strcat(CCR_F4, sprintf(_("Respawning in %s..."), strcat(CCR_F2,
 					(autocvar_hud_panel_scoreboard_respawntime_decimals ?
 						count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
 						:
 						count_seconds(ceil(respawn_time - time))
-					)
+					), CCR_F4)
 				));
 		}
 		else if(time < respawn_time)
 		{
-			str = sprintf(CCR(_("You are dead, wait ^F2%s^BG before respawning")),
+			str = strcat(CCR_BG, sprintf(_("You are dead, wait %s before respawning"), strcat(CCR_F2,
 				(autocvar_hud_panel_scoreboard_respawntime_decimals ?
 					count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
 					:
 					count_seconds(ceil(respawn_time - time))
-				)
-			);
+				), CCR_BG)
+			));
 		}
 		else if(time >= respawn_time)
-			str = sprintf(CCR(_("You are dead, press ^F1%s^BG to respawn")), getcommandkey("jump", "+jump"));
+			str = strcat(CCR_BG, sprintf(_("You are dead, press %s to respawn"), strcat(CCR_F1, getcommandkey("jump", "+jump"), CCR_BG)));
 
 		pos.y += 1.2 * hud_fontsize.y;
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);

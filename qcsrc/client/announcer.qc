@@ -160,7 +160,7 @@ void Announcer_Gamestart()
 				if (gametype.m_1v1)
 					Announcer_Duel();
 				else
-					centerprint_SetTitle(strcat("^BG", MapInfo_Type_ToText(gametype))); // Show game type as title
+					centerprint_SetTitle(strcat(CCR_BG, MapInfo_Type_ToText(gametype))); // Show game type as title
 
 				if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
 					Local_Notification(MSG_ANNCE, ANNCE_PREPARE);

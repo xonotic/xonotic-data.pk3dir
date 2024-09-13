@@ -1426,7 +1426,7 @@ bool net_handle_ServerWelcome()
 		string msg = strcat(
 			CCR_F1, sprintf(_("Level %d:"), campaign_level), " ",
 			CCR_BG, sprintf("%s\n\n", "_LEVEL_DESC"),
-			CCR_BG, sprintf(CCR(_("Press ^F2%s^BG to enter the game")), key));
+			CCR_BG, sprintf(_("Press %s to enter the game"), strcat(CCR_F2, key, CCR_BG)));
 		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
 		string welcomedialog_args = strcat("CAMPAIGN ", itos(campaign_level), " \"", msg, "\"");
 

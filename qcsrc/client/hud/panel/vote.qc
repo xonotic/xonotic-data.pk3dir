@@ -30,7 +30,7 @@ void HUD_Vote()
 			LOG_INFO(_("^1You must answer before entering hud configure mode"));
 			cvar_set("_hud_configure", "0");
 		}
-		strcpy(vote_called_vote, strcat(CCR_F1, CCR(_("Name ^BGinstead of \"^F4Anonymous player^BG\" in stats"))));
+		strcpy(vote_called_vote, strcat(CCR_F1, sprintf(_("Name%s instead of \"%sAnonymous player%s\" in stats"), CCR_BG, CCR_F4, CCR_BG)));
 		uid2name_dialog = 1;
 	}
 
@@ -118,9 +118,10 @@ void HUD_Vote()
 	}
 	mySize = newSize;
 
-	s = strcat(CCR_BG, _("A vote has been called for:"));
 	if(uid2name_dialog)
 		s = strcat(CCR_BG, _("Allow servers to store and display your name?"));
+	else
+		s = strcat(CCR_BG, _("A vote has been called for:"));
 	drawcolorcodedstring_aspect(pos, s, vec2(mySize.x, (2/8) * mySize.y), panel_fg_alpha, DRAWFLAG_NORMAL);
 	s = textShortenToWidth(ColorTranslateRGB(vote_called_vote), mySize.x, '1 1 0' * mySize.y * (1/8), stringwidth_colors);
 	if(autocvar__hud_configure)
@@ -128,9 +129,9 @@ void HUD_Vote()
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize.y, s, vec2(mySize.x, (1.75/8) * mySize.y), panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
-	s = strcat(CCR_C3, sprintf(CCR("%s ^BG(%d)"), getcommandkey_forcename(_("Yes"), "vyes"), vote_yescount));
+	s = sprintf("%s%s %s(%d)", CCR_C3, getcommandkey_forcename(_("Yes"), "vyes"), CCR_BG, vote_yescount);
 	drawcolorcodedstring_aspect(pos + eY * (4/8) * mySize.y, s, vec2(0.5 * mySize.x, (1.5/8) * mySize.y), panel_fg_alpha, DRAWFLAG_NORMAL);
-	s = strcat(CCR_C1, sprintf(CCR("%s ^BG(%d)"), getcommandkey_forcename(_("No"), "vno"), vote_nocount));
+	s = sprintf("%s%s %s(%d)", CCR_C1, getcommandkey_forcename(_("No"), "vno"), CCR_BG, vote_nocount);
 	drawcolorcodedstring_aspect(pos + vec2(0.5 * mySize.x, (4/8) * mySize.y), s, vec2(0.5 * mySize.x, (1.5/8) * mySize.y), panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	pos.y += (5/8) * mySize.y;
