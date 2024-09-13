@@ -172,7 +172,7 @@ else
 		fi
 	fi
 fi
-export ENGINE="$ENGINE -noconfig -nohome"
+export ENGINE="$ENGINE -noconfig -nohome +sys_stdout_blocks 1"
 
 make qc || exit 1
 
