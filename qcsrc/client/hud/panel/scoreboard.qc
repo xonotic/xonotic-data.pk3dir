@@ -2507,7 +2507,7 @@ void Scoreboard_Draw()
 		if (campaign)
 			str = "";
 		else
-			str = sprintf(_("%s/%s players"), strcat(CCR_F5, ftos_decimals(numplayers, 0), CCR_BG), strcat(CCR_F5, ftos_decimals((srv_maxplayers ? srv_maxplayers : maxclients), 0), CCR_BG));
+			str = sprintf(_("%s/%s players"), strcat(CCR_F5, ftos(numplayers), CCR_BG), strcat(CCR_F5, ftos(srv_maxplayers ? srv_maxplayers : maxclients), CCR_BG));
 		str = strcat(CCR_BG, _("Map:"), " ", CCR_F1, mi_shortname, "    ", str); // reusing "Map:" translatable string
 		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	}
@@ -2675,11 +2675,11 @@ void Scoreboard_Draw()
 			if(race_speedaward)
 			{
 				name = textShortenToWidth(ColorTranslateRGB(race_speedaward_holder), namesize, hud_fontsize, stringwidth_colors);
-				str = sprintf(_("Speed award: %d%s %s"), race_speedaward * conversion_factor, unit, strcat(CCR_BG, "(", name, CCR_BG, ")"));
+				str = sprintf(_("Speed award: %s"), strcat(ftos(race_speedaward * conversion_factor), unit, " ", CCR_BG, "(", name, CCR_BG, ")"));
 				str = strcat(CCR_BG, str, " / ");
 			}
 			name = textShortenToWidth(ColorTranslateRGB(race_speedaward_alltimebest_holder), namesize, hud_fontsize, stringwidth_colors);
-			str = strcat(str, CCR_BG, sprintf(_("All-time fastest: %d%s %s"), race_speedaward_alltimebest * conversion_factor, unit, strcat(CCR_BG, "(", name, CCR_BG, ")")));
+			str = strcat(str, CCR_BG, sprintf(_("All-time fastest: %s"), strcat(ftos(race_speedaward_alltimebest * conversion_factor), unit, " ", CCR_BG, "(", name, CCR_BG, ")")));
 			drawcolorcodedstring(pos, str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y; // line height + line spacing
 		}

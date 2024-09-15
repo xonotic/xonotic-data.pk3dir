@@ -30,7 +30,7 @@ void HUD_Vote()
 			LOG_INFO(_("^1You must answer before entering hud configure mode"));
 			cvar_set("_hud_configure", "0");
 		}
-		strcpy(vote_called_vote, strcat(CCR_F1, sprintf(_("Name%s instead of \"%sAnonymous player%s\" in stats"), CCR_BG, CCR_F4, CCR_BG)));
+		strcpy(vote_called_vote, _("^2Name ^7instead of \"^1Anonymous player^7\" in stats"));
 		uid2name_dialog = 1;
 	}
 

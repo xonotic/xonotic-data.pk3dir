@@ -149,7 +149,7 @@ void HUD_InfoMessages()
 		{
 			//we need to ceil, otherwise the countdown would be off by .5 when using round()
 			float countdown = ceil(STAT(GAMESTARTTIME) - time);
-			s = strcat(CCR_F4, sprintf(_("Game starts in %s seconds"), strcat(CCR_F2, ftos_decimals(countdown, 0), CCR_F4)));
+			s = strcat(CCR_F4, sprintf(_("Game starts in %s seconds"), strcat(CCR_F2, ftos(countdown), CCR_F4)));
 			InfoMessage(s);
 		}
 
@@ -171,9 +171,10 @@ void HUD_InfoMessages()
 			if(players_needed > 0)
 			{
 				if(players_needed == 1)
-					s = sprintf(_("%s more player is needed for the match to start."), strcat(CCR_F2, "1", CCR_F1));
+					s = sprintf(_("%s more player is needed for the match to start."), strcat("1", CCR_F1));
 				else
-					s = sprintf(_("%s more players are needed for the match to start."), strcat(CCR_F2, ftos_decimals(players_needed, 0), CCR_F1));
+					s = sprintf(_("%s more players are needed for the match to start."), strcat(ftos(players_needed), CCR_F1));
+				s = strcat(CCR_F2, s);
 				InfoMessage(s);
 			}
 			else if(teamnagger && (ts_max - ts_min) >= teamnagger)
@@ -267,8 +268,8 @@ void HUD_InfoMessages()
 	else
 	{
 		InfoMessage(strcat(CCR_BG, sprintf(_("Press %s to show HUD options."), strcat(CCR_F2, "ESC", CCR_BG))));
-		InfoMessage(sprintf(_("%s a panel for panel-specific options."), strcat(CCR_F2, "Doubleclick", CCR_BG)));
-		InfoMessage(sprintf(_("%s to disable collision testing, %s and"), strcat(CCR_F2, "CTRL", CCR_BG), strcat(CCR_F2, "SHIFT", CCR_BG)));
-		InfoMessage(sprintf(_("%s + %s for fine adjustments."), strcat(CCR_F2, "ALT", CCR_BG), strcat(CCR_F2, "ARROW KEYS", CCR_BG)));
+		InfoMessage(strcat(CCR_F2, sprintf(_("%s a panel for panel-specific options."), strcat("Doubleclick", CCR_BG))));
+		InfoMessage(strcat(CCR_F2, sprintf(_("%s to disable collision testing, %s and"), strcat("CTRL", CCR_BG), strcat(CCR_F2, "SHIFT", CCR_BG))));
+		InfoMessage(strcat(CCR_F2, sprintf(_("%s + %s for fine adjustments."), strcat("ALT", CCR_BG), strcat(CCR_F2, "ARROW KEYS", CCR_BG))));
 	}
 }
