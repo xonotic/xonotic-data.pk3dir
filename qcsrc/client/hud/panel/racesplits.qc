@@ -67,7 +67,7 @@ void HUD_RaceSplits()
 		//	RaceSplit(_("Splits not supported while spectating"));
 		}
 
-		if(autocvar_cl_race_checkpoint_splits_hud && !spectatee_status)
+		if(!spectatee_status)
 		{
 			int mlines[HUD_RACESPLITS_MAX_NRLINES];
 			int ln = nrlines -1;
