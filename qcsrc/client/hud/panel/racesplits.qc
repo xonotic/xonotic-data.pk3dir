@@ -102,9 +102,23 @@ void HUD_RaceSplits()
 	}
 	else
 	{
-		string col[4]; col[0] = "^7"; col[1] = "^1"; col[2] = "^3"; col[3] = "^2";
-		for (int j = 0; j < nrlines; ++j)
-			// strcat to use same string as racetimer does, ugly but it's just for hud_configure
-			RaceSplit(sprintf(strcat("%s",_("Intermediate %d"),"..."), col[j%4], j+1));
+		string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
+		float speed_conv_f = GetSpeedUnitFactor(autocvar_hud_speed_unit);
+		int j;
+		for(j = 0; j < nrlines && j < 4; ++j)
+		{
+			string timestr     = TIME_ENCODED_TOSTRING(TIME_ENCODE(18.7 + (j-1) * 5.33), false);
+			string time_split  = j == 0 ? "+0.39" : j == 1 ? "+0.0" : j == 2 ? "-0.14" : "-0.08";
+			string col         = j == 0 ? "^1" : j == 1 ? "^3" : "^2";
+			float speed_split  = speed_conv_f * (1086 + (j-1) * 119);
+			float speed_diff   = speed_conv_f * (j == 0 ? -34 : j == 1 ? 86 : j == 2 ? 25 : 0);
+			string speed_color = rgb_to_hexcolor(j == 0 ? autocvar_hud_progressbar_acceleration_neg_color : autocvar_hud_progressbar_acceleration_color);
+			if(j == 3)
+				speed_color = "^3";
+			RaceSplit(sprintf(strcat("%s %s", _("Intermediate %d"), " (%s) ^7%d%s %s"), timestr, col, j+1, time_split, speed_split, units_text, sprintf("%s(%+d%s)", speed_color, speed_diff, units_text)));
+		}
+		for(; j < nrlines; ++j)
+			RaceSplit(sprintf(strcat("%s ^7", _("Intermediate %d"), " ^7%d%s"), TIME_ENCODED_TOSTRING(TIME_ENCODE(j*9.37), false), j+1, (1100 + j*63) * speed_conv_f, units_text));
+
 	}
 }
