@@ -1,5 +1,6 @@
 #include "racesplits.qh"
 #include "racetimer.qh" // for race_checkpoint_splits
+#include "physics.qh" // for autocvar_hud_progressbar_acceleration_neg_color
 #include <common/gamemodes/gamemode/race/race.qh> // for ISGAMETYPE(RACE)
 
 #include <client/draw.qh>
