@@ -234,7 +234,7 @@ void HUD_RaceTimer ()
 							race_checkpoint_splits_speed[race_checkpoint] = speed;
 						}
 						if(race_time && race_previousbesttime)
-							speed_text = sprintf(" ^7%d%s %s(%+d%s)", speed * speed_conversion_factor, units_text, speed_color, speed_diff, units_text);
+							speed_text = sprintf(" ^7%d%s %s(%+d%s)", speed * speed_conversion_factor, units_text, speed_color, speed_diff * speed_conversion_factor, units_text);
 						else
 							speed_text = sprintf(" ^7%d%s", speed * speed_conversion_factor, units_text);
 					}
