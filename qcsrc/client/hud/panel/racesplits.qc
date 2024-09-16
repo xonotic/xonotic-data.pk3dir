@@ -64,43 +64,35 @@ void HUD_RaceSplits()
 	string s;
 	if(!autocvar__hud_configure)
 	{
-		if(spectatee_status)
-		{
-		//	RaceSplit(_("Splits not supported while spectating"));
+		int mlines[HUD_RACESPLITS_MAX_NRLINES];
+		int ln = nrlines -1;
+		// show up to race_nextcheckpoint (not including) or everything
+		// if you are before start (0 or 254)
+		// (except race_laptime != 0 for race, means next is
+		// start+finish so don't show previous lap finish)
+		int i;
+		if (race_checkpoint != 0 && race_checkpoint != 254)
+		{ // middle of run/race
+			i = race_checkpoint;
 		}
-
-		if(!spectatee_status)
+		else if (ISGAMETYPE(RACE) && race_nextcheckpoint == 0)
+		{ // before start, but on race, so don't keep old finish visible
+			i = 253;
+		}
+		else
+		{ // before start, not on race (cts), keep old run cps visible
+			i = 255;
+		}
+		for (; ln >= 0 && i >= 0; --i)
 		{
-			int mlines[HUD_RACESPLITS_MAX_NRLINES];
-			int ln = nrlines -1;
-			// show up to race_nextcheckpoint (not including) or everything
-			// if you are before start (0 or 254)
-			// (except race_laptime != 0 for race, means next is
-			// start+finish so don't show previous lap finish)
-			int i;
-			if (race_checkpoint != 0 && race_checkpoint != 254)
-			{ // middle of run/race
-				i = race_checkpoint;
-			}
-			else if (ISGAMETYPE(RACE) && race_nextcheckpoint == 0)
-			{ // before start, but on race, so don't keep old finish visible
-				i = 253;
-			}
-			else
-			{ // before start, not on race (cts), keep old run cps visible
-				i = 255;
-			}
-			for (; ln >= 0 && i >= 0; --i)
+			if (race_checkpoint_splits[i])
 			{
-				if (race_checkpoint_splits[i])
-				{
-					mlines[ln] = i;
-					--ln;
-				}
+				mlines[ln] = i;
+				--ln;
 			}
-			for (int j = 0; j < nrlines; ++j)
-				RaceSplit(race_checkpoint_splits[mlines[j]]);
 		}
+		for (int j = 0; j < nrlines; ++j)
+			RaceSplit(race_checkpoint_splits[mlines[j]]);
 	}
 	else
 	{
