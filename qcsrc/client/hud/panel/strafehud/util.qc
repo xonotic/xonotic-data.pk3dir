@@ -203,7 +203,7 @@ float StrafeHUD_DetermineWishAngle(vector movement, int keys, bool islocal)
 	return wishangle;
 }
 
-float StrafeHUD_DetermineHudAngle(float range_minangle)
+float StrafeHUD_DetermineHudAngle(float wishangle)
 {
 	float hudangle;
 	if(isnan(autocvar_hud_panel_strafehud_range))
@@ -213,9 +213,19 @@ float StrafeHUD_DetermineHudAngle(float range_minangle)
 	else if(autocvar_hud_panel_strafehud_range == 0)
 	{
 		if(autocvar__hud_configure)
+		{
 			hudangle = 90;
+		}
 		else
+		{
+			// determine minimum required angle to display full strafe range
+			float range_minangle = fabs(wishangle) % 90; // maximum range is 90 degree
+			if(range_minangle > 45) range_minangle = 45 - fabs(wishangle) % 45; // minimum angle range is 45
+			range_minangle = 90 - range_minangle; // calculate value which is never >90 or <45
+			range_minangle *= 2; // multiply to accommodate for both sides of the hud
+
 			hudangle = range_minangle; // use minimum angle required if dynamically setting hud angle
+		}
 	}
 	else if(autocvar_hud_panel_strafehud_range < 0)
 	{

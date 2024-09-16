@@ -164,13 +164,7 @@ void HUD_StrafeHUD()
 		float wishangle = StrafeHUD_DetermineWishAngle(movement, keys, islocal);
 		bool strafekeys = fabs(wishangle) > 45;
 
-		// determine minimum required angle to display full strafe range
-		float range_minangle = fabs(wishangle) % 90; // maximum range is 90 degree
-		if(range_minangle > 45) range_minangle = 45 - fabs(wishangle) % 45; // minimum angle range is 45
-		range_minangle = 90 - range_minangle; // calculate value which is never >90 or <45
-		range_minangle *= 2; // multiply to accommodate for both sides of the hud
-
-		float hudangle = StrafeHUD_DetermineHudAngle(range_minangle);
+		float hudangle = StrafeHUD_DetermineHudAngle(wishangle);
 
 		// detect air strafe turning
 		static bool turn = false;
