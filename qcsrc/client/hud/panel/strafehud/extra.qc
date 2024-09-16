@@ -81,7 +81,7 @@ float StrafeHUD_DrawSlickDetector(entity e, bool onslick)
 }
 
 // vertical angle for weapon jumps
-float StrafeHUD_drawVerticalAngle(float text_offset_bottom)
+float StrafeHUD_DrawVerticalAngle(float text_offset_bottom)
 {
 	if(autocvar_hud_panel_strafehud_vangle)
 	{
@@ -89,7 +89,7 @@ float StrafeHUD_drawVerticalAngle(float text_offset_bottom)
 		float vangle_height = autocvar_hud_panel_strafehud_vangle_size * panel_size.y;
 		string vangle_text = strcat(ftos_decimals(vangle, 2), "°");
 
-		bool was_drawn = StrafeHUD_drawTextIndicator(
+		bool was_drawn = StrafeHUD_DrawTextIndicator(
 			vangle_text, vangle_height,
 			autocvar_hud_panel_strafehud_vangle_color, 1,
 			time, text_offset_bottom, STRAFEHUD_TEXT_BOTTOM);
@@ -162,9 +162,9 @@ string StrafeHUD_UpdateSonarSound()
 // show height achieved by a single jump
 // FIXME: checking z position differences is unreliable (warpzones, teleporter, kill, etc), use velocity to calculate jump height instead
 // FIXME: move capturing the jump height value out of the HUD
-float StrafeHUD_drawJumpHeight(entity e, bool onground, bool swimming, float text_offset_top)
+float StrafeHUD_DrawJumpHeight(entity e, bool onground, bool swimming, float text_offset_top)
 {
-	float length_conversion_factor = GetLengthUnitFactor(autocvar_hud_speed_unit);
+	float length_conversion_factor = StrafeHUD_GetLengthUnitFactor(autocvar_hud_speed_unit);
 	static float height_min = 0, height_max = 0; // ground and peak of jump z coordinates
 	static float jumpheight = 0, jumptime = 0;   // displayed value and timestamp for fade out
 
@@ -193,9 +193,9 @@ float StrafeHUD_drawJumpHeight(entity e, bool onground, bool swimming, float tex
 		float jumpheight_height = autocvar_hud_panel_strafehud_jumpheight_size * panel_size.y;
 		string jumpheight_text = ftos_decimals(jumpheight * length_conversion_factor, length_decimals);
 		if(autocvar_hud_panel_strafehud_unit_show)
-			jumpheight_text = strcat(jumpheight_text, GetLengthUnit(autocvar_hud_speed_unit));
+			jumpheight_text = strcat(jumpheight_text, StrafeHUD_GetLengthUnit(autocvar_hud_speed_unit));
 
-		bool was_drawn = StrafeHUD_drawTextIndicator(
+		bool was_drawn = StrafeHUD_DrawTextIndicator(
 			jumpheight_text, jumpheight_height,
 			autocvar_hud_panel_strafehud_jumpheight_color,
 			autocvar_hud_panel_strafehud_jumpheight_fade,
@@ -209,7 +209,7 @@ float StrafeHUD_drawJumpHeight(entity e, bool onground, bool swimming, float tex
 }
 
 // strafe efficiency
-float StrafeHUD_drawStrafeEfficiency(float strafe_ratio, float text_offset_top)
+float StrafeHUD_DrawStrafeEfficiency(float strafe_ratio, float text_offset_top)
 {
 	{
 		if(autocvar_hud_panel_strafehud_strafeefficiency)
@@ -218,7 +218,7 @@ float StrafeHUD_drawStrafeEfficiency(float strafe_ratio, float text_offset_top)
 			string strafeeff_text = strcat(ftos_decimals(strafe_ratio * 100, 2), "%");
 			vector strafeeff_color = '1 1 1' - (strafe_ratio > 0 ? '1 0 1' : '0 1 1') * fabs(strafe_ratio);
 
-			bool was_drawn = StrafeHUD_drawTextIndicator(
+			bool was_drawn = StrafeHUD_DrawTextIndicator(
 				strafeeff_text, strafeeff_height,
 				strafeeff_color, 1,
 				time, text_offset_top, STRAFEHUD_TEXT_TOP);
@@ -233,7 +233,7 @@ float StrafeHUD_drawStrafeEfficiency(float strafe_ratio, float text_offset_top)
 
 // show speed when crossing the start trigger
 // FIXME: move capturing the race start speed value out of the HUD
-float StrafeHUD_drawStartSpeed(float speed, float text_offset_bottom)
+float StrafeHUD_DrawStartSpeed(float speed, float text_offset_bottom)
 {
 	static float startspeed = 0, starttime = 0; // displayed value and timestamp for fade out
 
@@ -255,7 +255,7 @@ float StrafeHUD_drawStartSpeed(float speed, float text_offset_bottom)
 		if(autocvar_hud_panel_strafehud_unit_show)
 			startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_speed_unit));
 
-		bool was_drawn = StrafeHUD_drawTextIndicator(
+		bool was_drawn = StrafeHUD_DrawTextIndicator(
 			startspeed_text, startspeed_height,
 			autocvar_hud_panel_strafehud_startspeed_color,
 			autocvar_hud_panel_strafehud_startspeed_fade,

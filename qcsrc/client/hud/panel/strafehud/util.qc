@@ -4,17 +4,17 @@
 #include <common/physics/player.qh>
 #include <common/physics/movetypes/movetypes.qh>
 
-float StrafeHUD_angleToWidth(float angle, float range)
+float StrafeHUD_AngleToWidth(float angle, float range)
 {
 	return angle / range * panel_size.x;
 }
 
-float StrafeHUD_angleToOffset(float angle, float range)
+float StrafeHUD_AngleToOffset(float angle, float range)
 {
-	return StrafeHUD_angleToWidth(angle, range) + panel_size.x / 2;
+	return StrafeHUD_AngleToWidth(angle, range) + panel_size.x / 2;
 }
 
-float StrafeHUD_project(float ratio, float range, bool reverse)
+float StrafeHUD_Project(float ratio, float range, bool reverse)
 {
 	range *= DEG2RAD / 2;
 	switch(autocvar_hud_panel_strafehud_projection)
@@ -50,27 +50,27 @@ float StrafeHUD_project(float ratio, float range, bool reverse)
 	return ratio;
 }
 
-float StrafeHUD_projectOffset(float offset, float range, bool reverse)
+float StrafeHUD_ProjectOffset(float offset, float range, bool reverse)
 {
 	if(autocvar_hud_panel_strafehud_projection == STRAFEHUD_PROJECTION_LINEAR)
 		return offset;
 
 	float ratio = (offset - (panel_size.x / 2)) / (panel_size.x / 2);
-	ratio = StrafeHUD_project(ratio, range, reverse);
+	ratio = StrafeHUD_Project(ratio, range, reverse);
 	offset = ratio * (panel_size.x / 2) + (panel_size.x / 2);
 	return offset;
 }
 
-float StrafeHUD_projectWidth(float offset, float width, float range)
+float StrafeHUD_ProjectWidth(float offset, float width, float range)
 {
 	if(autocvar_hud_panel_strafehud_projection == STRAFEHUD_PROJECTION_LINEAR)
 		return width;
 
-	return StrafeHUD_projectOffset(offset + width, range, false) - StrafeHUD_projectOffset(offset, range, false);
+	return StrafeHUD_ProjectOffset(offset + width, range, false) - StrafeHUD_ProjectOffset(offset, range, false);
 }
 
 // length unit conversion (km and miles are only included to match the GetSpeedUnit* functions)
-float GetLengthUnitFactor(int length_unit)
+float StrafeHUD_GetLengthUnitFactor(int length_unit)
 {
 	switch(length_unit)
 	{
@@ -83,7 +83,7 @@ float GetLengthUnitFactor(int length_unit)
 	}
 }
 
-string GetLengthUnit(int length_unit)
+string StrafeHUD_GetLengthUnit(int length_unit)
 {
 	switch(length_unit)
 	{
@@ -98,7 +98,7 @@ string GetLengthUnit(int length_unit)
 }
 
 // check the player waterlevel without affecting the player entity, this way we can fetch waterlevel even if client prediction is disabled
-float DetectWaterLevel(entity e)
+float StrafeHUD_DetermineWaterLevel(entity e)
 {
 	// store old values
 	void old_contentstransition(int, int) = e.contentstransition;
@@ -118,7 +118,7 @@ float DetectWaterLevel(entity e)
 }
 
 // determine frametime
-float DetectFrameTime()
+float StrafeHUD_DetermineFrameTime()
 {
 	static float dt_update = 0;
 	static int dt_time = 0;
@@ -152,7 +152,7 @@ float DetectFrameTime()
 }
 
 // determine player wishdir
-float DetectWishAngle(vector movement, int keys, bool islocal)
+float StrafeHUD_DetermineWishAngle(vector movement, int keys, bool islocal)
 {
 	float wishangle;
 	if(islocal) // if entity is local player
@@ -203,7 +203,7 @@ float DetectWishAngle(vector movement, int keys, bool islocal)
 	return wishangle;
 }
 
-float StrafeHUD_determineHudAngle(float range_minangle)
+float StrafeHUD_DetermineHudAngle(float range_minangle)
 {
 	float hudangle;
 	if(isnan(autocvar_hud_panel_strafehud_range))
@@ -244,7 +244,7 @@ float StrafeHUD_determineHudAngle(float range_minangle)
 }
 
 // determine whether the player is strafing left or right
-float StrafeHUD_determineDirection(float angle, float wishangle, float antiflicker_angle)
+float StrafeHUD_DetermineDirection(float angle, float wishangle, float antiflicker_angle)
 {
 	if(wishangle > 0)
 	{
@@ -266,7 +266,7 @@ float StrafeHUD_determineDirection(float angle, float wishangle, float antiflick
 }
 
 // try to ignore if track_canjump is enabled, does not work in spectator mode if spectated player uses +jetpack or cl_movement_track_canjump
-bool DetectJumpHeld(entity e, int keys, bool islocal)
+bool StrafeHUD_DetermineJumpHeld(entity e, int keys, bool islocal)
 {
 	if(islocal)
 	{
@@ -280,4 +280,15 @@ bool DetectJumpHeld(entity e, int keys, bool islocal)
 	}
 
 	return false;
+}
+
+vector StrafeHUD_MixColors(vector color1, vector color2, float ratio)
+{
+	vector mixedColor;
+	if(ratio <= 0) return color1;
+	if(ratio >= 1) return color2;
+	mixedColor.x = color1.x + (color2.x - color1.x) * ratio;
+	mixedColor.y = color1.y + (color2.y - color1.y) * ratio;
+	mixedColor.z = color1.z + (color2.z - color1.z) * ratio;
+	return mixedColor;
 }

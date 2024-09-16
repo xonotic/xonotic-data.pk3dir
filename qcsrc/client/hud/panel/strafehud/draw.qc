@@ -3,10 +3,10 @@
 #include <client/draw.qh>
 
 // functions to make hud elements align perfectly in the hud area
-void StrafeHUD_drawStrafeHUD(float startangle, float offsetangle, vector color, float alpha, int type, int gradientType, bool projectWidth, float range)
+void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, float alpha, int type, int gradientType, bool projectWidth, float range)
 {
-	float offset = StrafeHUD_angleToOffset(startangle % 360, range);
-	float width = StrafeHUD_angleToWidth(offsetangle, range);
+	float offset = StrafeHUD_AngleToOffset(startangle % 360, range);
+	float width = StrafeHUD_AngleToWidth(offsetangle, range);
 	float mirror_offset;
 	float mirror_width;
 
@@ -51,9 +51,9 @@ void StrafeHUD_drawStrafeHUD(float startangle, float offsetangle, vector color, 
 
 	float original_offset = offset;
 	if(projectWidth && size.x > 0)
-		size.x = StrafeHUD_projectWidth(offset, size.x, range);
+		size.x = StrafeHUD_ProjectWidth(offset, size.x, range);
 
-	offset = StrafeHUD_projectOffset(offset, range, false);
+	offset = StrafeHUD_ProjectOffset(offset, range, false);
 
 	if(mirror_offset < 0)
 	{
@@ -73,9 +73,9 @@ void StrafeHUD_drawStrafeHUD(float startangle, float offsetangle, vector color, 
 
 	float original_mirror_offset = mirror_offset;
 	if(projectWidth && mirror_size.x > 0)
-		mirror_size.x = StrafeHUD_projectWidth(mirror_offset, mirror_size.x, range);
+		mirror_size.x = StrafeHUD_ProjectWidth(mirror_offset, mirror_size.x, range);
 
-	mirror_offset = StrafeHUD_projectOffset(mirror_offset, range, false);
+	mirror_offset = StrafeHUD_ProjectOffset(mirror_offset, range, false);
 
 	switch(type)
 	{
@@ -129,31 +129,20 @@ void StrafeHUD_drawStrafeHUD(float startangle, float offsetangle, vector color, 
 					gradient_mirror_offset = 0;
 			}
 
-			StrafeHUD_drawGradient(
+			StrafeHUD_DrawGradient(
 				color, autocvar_hud_panel_strafehud_bar_neutral_color,
 				mirror_size, original_width, mirror_offset, original_mirror_offset,
 				alpha, gradient_mirror_offset, gradientType, range);
 
-			StrafeHUD_drawGradient(
+			StrafeHUD_DrawGradient(
 				color, autocvar_hud_panel_strafehud_bar_neutral_color,
 				size, original_width, offset, original_offset,
 				alpha, gradient_offset, gradientType, range);
 	}
 }
 
-vector StrafeHUD_mixColors(vector color1, vector color2, float ratio)
-{
-	vector mixedColor;
-	if(ratio <= 0) return color1;
-	if(ratio >= 1) return color2;
-	mixedColor.x = color1.x + (color2.x - color1.x) * ratio;
-	mixedColor.y = color1.y + (color2.y - color1.y) * ratio;
-	mixedColor.z = color1.z + (color2.z - color1.z) * ratio;
-	return mixedColor;
-}
-
 // FIXME: this is very bad for performance, there should be a better way to draw gradients
-void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float original_width, float offset, float original_offset, float alpha, float gradientOffset, int gradientType, float range)
+void StrafeHUD_DrawGradient(vector color1, vector color2, vector size, float original_width, float offset, float original_offset, float alpha, float gradientOffset, int gradientType, float range)
 {
 	float color_ratio, alpha1, alpha2;
 	vector segment_size = size;
@@ -167,7 +156,7 @@ void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float ori
 		segment_size.x = min(size.x - i, 1); // each gradient segment is 1 unit wide except if there is less than 1 unit of gradient remaining
 		segment_offset = offset + i;
 		ratio_offset = segment_offset + segment_size.x / 2;
-		ratio_offset = StrafeHUD_projectOffset(ratio_offset, range, true);
+		ratio_offset = StrafeHUD_ProjectOffset(ratio_offset, range, true);
 		ratio_offset += gradientOffset;
 		ratio = (ratio_offset - original_offset) / original_width * (gradientType == STRAFEHUD_GRADIENT_BOTH ? 2 : 1);
 		if(ratio > 1) ratio = 2 - ratio;
@@ -181,14 +170,14 @@ void StrafeHUD_drawGradient(vector color1, vector color2, vector size, float ori
 			drawfill(
 				panel_pos + eX * segment_offset,
 				segment_size,
-				StrafeHUD_mixColors(color1, color2, ratio),
+				StrafeHUD_MixColors(color1, color2, ratio),
 				alpha_ratio,
 				DRAWFLAG_NORMAL);
 	}
 }
 
 // draw the strafe arrows (inspired by drawspritearrow() in common/mutators/mutator/waypoints/waypointsprites.qc)
-void StrafeHUD_drawStrafeArrow(vector origin, float size, vector color, float alpha, bool flipped, float connection_width)
+void StrafeHUD_DrawStrafeArrow(vector origin, float size, vector color, float alpha, bool flipped, float connection_width)
 {
 	origin = HUD_Shift(origin);
 	float width = HUD_ScaleX(size * 2 + connection_width);
@@ -210,7 +199,7 @@ void StrafeHUD_drawStrafeArrow(vector origin, float size, vector color, float al
 }
 
 // draw a fading text indicator above or below the strafe meter, return true if something was displayed
-bool StrafeHUD_drawTextIndicator(string text, float height, vector color, float fadetime, float lasttime, float offset, int position)
+bool StrafeHUD_DrawTextIndicator(string text, float height, vector color, float fadetime, float lasttime, float offset, int position)
 {
 	if((height <= 0) || (lasttime <= 0) || (fadetime <= 0) || ((time - lasttime) >= fadetime))
 		return false;

@@ -68,7 +68,7 @@ void HUD_StrafeHUD()
 	if(csqcplayer && strafeplayer)
 	{
 		int keys = STAT(PRESSED_KEYS);
-		bool jumpheld = DetectJumpHeld(strafeplayer, keys, islocal);
+		bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, islocal);
 
 		// does not get changed by ground timeout and is not affected by jump input
 		bool real_onground = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
@@ -81,7 +81,7 @@ void HUD_StrafeHUD()
 		bool onslick = real_onslick;
 
 		// the hud will not work well while swimming
-		float strafe_waterlevel = DetectWaterLevel(strafeplayer);
+		float strafe_waterlevel = StrafeHUD_DetermineWaterLevel(strafeplayer);
 		bool swimming = strafe_waterlevel >= WATERLEVEL_SWIMMING;
 
 		static float onground_lasttime = 0;
@@ -161,7 +161,7 @@ void HUD_StrafeHUD()
 				keys_fwd = STRAFEHUD_KEYS_NONE;
 		}
 
-		float wishangle = DetectWishAngle(movement, keys, islocal);
+		float wishangle = StrafeHUD_DetermineWishAngle(movement, keys, islocal);
 		bool strafekeys = fabs(wishangle) > 45;
 
 		// determine minimum required angle to display full strafe range
@@ -170,7 +170,7 @@ void HUD_StrafeHUD()
 		range_minangle = 90 - range_minangle; // calculate value which is never >90 or <45
 		range_minangle *= 2; // multiply to accommodate for both sides of the hud
 
-		float hudangle = StrafeHUD_determineHudAngle(range_minangle);
+		float hudangle = StrafeHUD_DetermineHudAngle(range_minangle);
 
 		// detect air strafe turning
 		static bool turn = false;
@@ -214,7 +214,7 @@ void HUD_StrafeHUD()
 			}
 		}
 
-		float dt = DetectFrameTime();
+		float dt = StrafeHUD_DetermineFrameTime();
 
 		maxaccel *= dt * movespeed;
 		float bestspeed = max(movespeed - maxaccel, 0); // target speed to gain maximum acceleration
@@ -345,7 +345,7 @@ void HUD_StrafeHUD()
 		float absolute_prebestangle = prebestangle;
 
 		float antiflicker_angle = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
-		float direction = StrafeHUD_determineDirection(angle, wishangle, antiflicker_angle);
+		float direction = StrafeHUD_DetermineDirection(angle, wishangle, antiflicker_angle);
 
 		if(direction == STRAFEHUD_DIRECTION_LEFT) // the angle becomes negative in case we strafe left
 		{
@@ -423,7 +423,7 @@ void HUD_StrafeHUD()
 			}
 
 			if(autocvar_hud_panel_strafehud_style == STRAFEHUD_STYLE_GRADIENT)
-				currentangle_color = StrafeHUD_mixColors(
+				currentangle_color = StrafeHUD_MixColors(
 					autocvar_hud_panel_strafehud_angle_neutral_color,
 					currentangle_color, fabs(strafe_ratio));
 		}
@@ -468,10 +468,10 @@ void HUD_StrafeHUD()
 		{
 			bool angle_indicator_visible = false;
 
-		// minimum speed for change indicators
-		float minspeed = autocvar_hud_panel_strafehud_switch_minspeed;
-		if(minspeed < 0)
-			minspeed = bestspeed + frictionspeed;
+			// minimum speed for change indicators
+			float minspeed = autocvar_hud_panel_strafehud_switch_minspeed;
+			if(minspeed < 0)
+				minspeed = bestspeed + frictionspeed;
 
 			// only draw change indicators if minspeed is reached
 			if(autocvar_hud_panel_strafehud_switch && speed >= minspeed)
@@ -550,12 +550,12 @@ void HUD_StrafeHUD()
 			}
 		}
 
-		text_offset_bottom += StrafeHUD_drawVerticalAngle(text_offset_bottom);
+		text_offset_bottom += StrafeHUD_DrawVerticalAngle(text_offset_bottom);
 
 		draw_beginBoldFont();
-		text_offset_bottom += StrafeHUD_drawStartSpeed(speed, text_offset_bottom);
-		text_offset_top += StrafeHUD_drawStrafeEfficiency(strafe_ratio, text_offset_top);
-		text_offset_top += StrafeHUD_drawJumpHeight(strafeplayer, real_onground, swimming, text_offset_top);
+		text_offset_bottom += StrafeHUD_DrawStartSpeed(speed, text_offset_bottom);
+		text_offset_top += StrafeHUD_DrawStrafeEfficiency(strafe_ratio, text_offset_top);
+		text_offset_top += StrafeHUD_DrawJumpHeight(strafeplayer, real_onground, swimming, text_offset_top);
 		draw_endBoldFont();
 
 		StrafeHUD_Sonar(strafe_ratio, StrafeHUD_UpdateSonarSound());
