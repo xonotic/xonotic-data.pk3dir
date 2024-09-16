@@ -11,6 +11,7 @@ void HUD_RaceSplits_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
 	HUD_Write_Cvar("hud_panel_racesplits_flip");
+	HUD_Write_Cvar("hud_panel_racesplits_lines");
 }
 
 vector RaceSplits_drawstring(string s, vector pos, vector sz, float a, vector fontsize)
@@ -58,7 +59,7 @@ void HUD_RaceSplits()
 	}
 
 	#define HUD_RACESPLITS_MAX_NRLINES 50 // feels like twice more than enough
-	int nrlines = autocvar_hud_panel_racesplits_lines <= HUD_RACESPLITS_MAX_NRLINES ? autocvar_hud_panel_racesplits_lines : HUD_RACESPLITS_MAX_NRLINES;
+	int nrlines = min(HUD_RACESPLITS_MAX_NRLINES, autocvar_hud_panel_racesplits_lines);
 	vector fontsize = '0.8 1 0' * (mySize.y / (nrlines+2));
 	string s;
 	if(!autocvar__hud_configure)
