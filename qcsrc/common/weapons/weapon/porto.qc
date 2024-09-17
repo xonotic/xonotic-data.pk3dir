@@ -1,6 +1,7 @@
 #include "porto.qh"
 
 #ifdef CSQC
+
 STATIC_INIT(Porto)
 {
 	entity e = new_pure(porto);
@@ -77,9 +78,11 @@ void Porto_Draw(entity this)
 		}
 	}
 }
+
 #endif
 
 #ifdef SVQC
+
 #include <common/mapobjects/trigger/jumppads.qh>
 #include <server/weapons/throwing.qh>
 
@@ -336,79 +339,87 @@ void W_Porto_Attack(Weapon thiswep, entity actor, .entity weaponentity, float ty
 
 METHOD(PortoLaunch, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    PHYS_INPUT_BUTTON_ATCK(actor) = false;
-    PHYS_INPUT_BUTTON_ATCK2(actor) = false;
-    if(!WEP_CVAR(WEP_PORTO, secondary))
-        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_PORTO, speed), 0, WEP_CVAR_PRI(WEP_PORTO, lifetime), false, true))
-            PHYS_INPUT_BUTTON_ATCK(actor) = true;
+	PHYS_INPUT_BUTTON_ATCK(actor) = false;
+	PHYS_INPUT_BUTTON_ATCK2(actor) = false;
+	if(!WEP_CVAR(WEP_PORTO, secondary))
+		if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_PORTO, speed), 0, WEP_CVAR_PRI(WEP_PORTO, lifetime), false, true))
+			PHYS_INPUT_BUTTON_ATCK(actor) = true;
 }
+
 METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(WEP_PORTO, secondary))
-    {
-        if(fire & 1)
-        if(!actor.porto_current)
-        if(!actor.porto_forbidden)
-        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_PORTO, refire)))
-        {
-            W_Porto_Attack(thiswep, actor, weaponentity, 0);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_PORTO, animtime), w_ready);
-        }
+	if(WEP_CVAR(WEP_PORTO, secondary))
+	{
+		if(fire & 1)
+		if(!actor.porto_current)
+		if(!actor.porto_forbidden)
+		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_PORTO, refire)))
+		{
+			W_Porto_Attack(thiswep, actor, weaponentity, 0);
+			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_PORTO, animtime), w_ready);
+		}
 
-        if(fire & 2)
-        if(!actor.porto_current)
-        if(!actor.porto_forbidden)
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_PORTO, refire)))
-        {
-            W_Porto_Attack(thiswep, actor, weaponentity, 1);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_PORTO, animtime), w_ready);
-        }
-    }
-    else
-    {
-        if(actor.(weaponentity).porto_v_angle_held)
-        {
-            if(!(fire & 2))
-                actor.(weaponentity).porto_v_angle_held = 0;
-        }
-        else
-        {
-            if(fire & 2)
-            {
-                actor.(weaponentity).porto_v_angle = actor.v_angle;
-                actor.(weaponentity).porto_v_angle_held = 1;
-            }
-        }
-        if(actor.(weaponentity).porto_v_angle_held)
-            makevectors(actor.(weaponentity).porto_v_angle); // override the previously set angles
+		if(fire & 2)
+		if(!actor.porto_current)
+		if(!actor.porto_forbidden)
+		if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_PORTO, refire)))
+		{
+			W_Porto_Attack(thiswep, actor, weaponentity, 1);
+			weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_PORTO, animtime), w_ready);
+		}
+	}
+	else
+	{
+		if(actor.(weaponentity).porto_v_angle_held)
+		{
+			if(!(fire & 2))
+				actor.(weaponentity).porto_v_angle_held = 0;
+		}
+		else
+		{
+			if(fire & 2)
+			{
+				actor.(weaponentity).porto_v_angle = actor.v_angle;
+				actor.(weaponentity).porto_v_angle_held = 1;
+			}
+		}
+		if(actor.(weaponentity).porto_v_angle_held)
+			makevectors(actor.(weaponentity).porto_v_angle); // override the previously set angles
 
-        if(fire & 1)
-        if(!actor.porto_current)
-        if(!actor.porto_forbidden)
-        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_PORTO, refire)))
-        {
-            W_Porto_Attack(thiswep, actor, weaponentity, -1);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_PORTO, animtime), w_ready);
-        }
-    }
+		if(fire & 1)
+		if(!actor.porto_current)
+		if(!actor.porto_forbidden)
+		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_PORTO, refire)))
+		{
+			W_Porto_Attack(thiswep, actor, weaponentity, -1);
+			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_PORTO, animtime), w_ready);
+		}
+	}
 }
+
 METHOD(PortoLaunch, wr_checkammo1, bool(entity thiswep, entity this, .entity weaponentity))
 {
-    // always allow infinite ammo
-    return true;
+	// always allow infinite ammo
+	return true;
 }
+
 METHOD(PortoLaunch, wr_checkammo2, bool(entity thiswep, entity this, .entity weaponentity))
 {
-    // always allow infinite ammo
-    return true;
+	// always allow infinite ammo
+	return true;
 }
+
 METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    actor.porto_current = NULL;
+	actor.porto_current = NULL;
 }
+
 #endif
+
 #ifdef CSQC
+
 METHOD(PortoLaunch, wr_impacteffect, void(entity this, entity actor)) {
-    LOG_WARN("Since when does Porto send DamageInfo?");
+	LOG_WARN("Since when does Porto send DamageInfo?");
 }
+
 #endif

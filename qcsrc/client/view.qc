@@ -589,6 +589,79 @@ vector myhealth_gentlergb;
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
+bool View_SpectatorCamera()
+{
+	static int waiting_CAMERA_SPECTATOR_update;
+	static bool camera_spectator_3rd_person;
+	if(spectatee_status > 0)
+	{
+		if(autocvar_chase_active > 0)
+		{
+			// if chase_active is enabled by the user, spectator camera never switches to 1st person
+			// that means CAMERA_SPECTATOR 1 behaves as 0 and is redundant, so we forcedly skip it
+			if (STAT(CAMERA_SPECTATOR) == 1)
+			{
+				if (!waiting_CAMERA_SPECTATOR_update)
+				{
+					Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR 2
+					waiting_CAMERA_SPECTATOR_update = 1;
+				}
+			}
+			else waiting_CAMERA_SPECTATOR_update = 0;
+			camera_spectator_3rd_person = true;
+		}
+
+		// chase_active disabled by the user?
+		if(camera_spectator_3rd_person && autocvar_chase_active == 0)
+		{
+			if (STAT(CAMERA_SPECTATOR) >= 1)
+			{
+				if (waiting_CAMERA_SPECTATOR_update != STAT(CAMERA_SPECTATOR))
+				{
+					Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR (2 and) 0
+					waiting_CAMERA_SPECTATOR_update = STAT(CAMERA_SPECTATOR);
+				}
+			}
+			else
+			{
+				waiting_CAMERA_SPECTATOR_update = 0;
+				camera_spectator_3rd_person = false;
+			}
+			return true;
+		}
+	}
+
+	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
+	{
+		if(STAT(CAMERA_SPECTATOR))
+		{
+			if(spectatee_status > 0)
+			{
+				if(!camera_spectator_3rd_person)
+				{
+					cvar_set("chase_active", "-2");
+					camera_spectator_3rd_person = true;
+					return true;
+				}
+			}
+			else if(camera_spectator_3rd_person)
+			{
+				cvar_set("chase_active", "0");
+				camera_spectator_3rd_person = false;
+			}
+
+			if(autocvar_chase_active == -2)
+				return true;
+		}
+		else if(camera_spectator_3rd_person)
+		{
+			cvar_set("chase_active", "0");
+			camera_spectator_3rd_person = false;
+		}
+	}
+	return false;
+}
+
 float eventchase_current_distance;
 float eventchase_running;
 int WantEventchase(entity this, bool want_vehiclechase)
@@ -628,46 +701,11 @@ int WantEventchase(entity this, bool want_vehiclechase)
 	return 0;
 }
 
-bool waiting_CAMERA_SPECTATOR_update;
 void View_EventChase(entity this)
 {
-	if(spectatee_status > 0 && autocvar_chase_active > 0)
-	{
-		// if chase_active is enabled by the user, spectator camera never switches to 1st person
-		// that means CAMERA_SPECTATOR 1 behaves as 0 and is redundant, so we forcedly skip it
-		if (STAT(CAMERA_SPECTATOR) == 1)
-		{
-			if (!waiting_CAMERA_SPECTATOR_update)
-			{
-				Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR 2
-				waiting_CAMERA_SPECTATOR_update = true;
-			}
-		}
-		else waiting_CAMERA_SPECTATOR_update = false;
-	}
-
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if(STAT(CAMERA_SPECTATOR))
-		{
-			if(spectatee_status > 0)
-			{
-				if(!autocvar_chase_active)
-				{
-					cvar_set("chase_active", "-2");
-					return;
-				}
-			}
-			else if(autocvar_chase_active == -2)
-				cvar_set("chase_active", "0");
-
-			if(autocvar_chase_active == -2)
-				return;
-		}
-		else if(autocvar_chase_active == -2)
-			cvar_set("chase_active", "0");
-
 		bool vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 
 		float vehicle_viewdist = 0;
@@ -1633,7 +1671,8 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	if(!local_player)
 		local_player = this; // fall back!
 
-	View_EventChase(local_player);
+	if (!View_SpectatorCamera())
+		View_EventChase(local_player);
 
 	// do lockview after event chase camera so that it still applies whenever necessary.
 	View_Lock();

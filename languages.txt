@@ -8,7 +8,7 @@ es    "Spanish" "Español" 97%
 fr    "French" "Français" 100%
 gl    "Galician" "Galego" 98%
 ga    "Irish" "Irish" 28%
-it    "Italian" "Italiano" 98%
+it    "Italian" "Italiano" 100%
 la    "Latin" "Lingua Latina" 100%
 hu    "Hungarian" "Magyar" 44%
 nl    "Dutch" "Nederlands" 60%
@@ -17,12 +17,12 @@ pt    "Portuguese" "Português" 98%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
 ro    "Romanian" "Romana" 68%
 fi    "Finnish" "Suomi" 95%
-sv    "Swedish" "Svenska" 97%
+sv    "Swedish" "Svenska" 96%
 tr    "Turkish" "Türkçe" 54%
 cs    "Czech" "Čeština" 30%
 el    "Greek" "Ελληνική" 43%
 be    "Belarusian" "Беларуская" 48%
-bg    "Bulgarian" "Български" 68%
+bg    "Bulgarian" "Български" 67%
 ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 56%
 uk    "Ukrainian" "Українська" 56%

@@ -3,6 +3,12 @@
 #include <client/draw.qh>
 #include <common/ent_cs.qh>
 
+// used for caching the string after passing through a checkpoint
+float racetimer_lastcheckpoint;
+string racetimer_checkpoint_comparison;
+string racetimer_checkpoint_time;
+bool racetimer_have_stored_splits;
+
 // Race timer (#8)
 
 void HUD_RaceTimer_Export(int fh)
@@ -96,6 +102,41 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(ColorTranslateRGB(theirname), col, lapstr)));
 }
 
+void ClearRaceSplits() {
+	bool once = true;
+	racetimer_lastcheckpoint = 0;
+	for (int i = 0; i <= 255; ++i)
+	{
+		if(race_checkpoint_splits[i]
+		&& autocvar_cl_race_checkpoint_splits_console)
+		{
+			if(once)
+			{
+				LOG_HELP(_("Checkpoint times:"));
+				once = false;
+			}
+			LOG_HELP(race_checkpoint_splits[i]);
+		}
+		strfree(race_checkpoint_splits[i]);
+	}
+	racetimer_have_stored_splits = false;
+}
+
+void StoreRaceSplits(float race_checkpoint, string forcetime, string s) {
+	// store checkpoint splits string for later printing
+	if (!entcs_IsSpectating(player_localnum))
+	{
+		// 0 or 255 go to 255 as finish, strcpy does the free if needed
+		strcpy(race_checkpoint_splits[race_checkpoint ? race_checkpoint : 255], (forcetime != "") ? sprintf("%s %s", forcetime, s) : s);
+	}
+
+	// cache
+	racetimer_lastcheckpoint = race_checkpoint;
+	strcpy(racetimer_checkpoint_comparison, s);
+	strcpy(racetimer_checkpoint_time, forcetime);
+	racetimer_have_stored_splits = true;
+}
+
 void HUD_RaceTimer ()
 {
 	if(!autocvar__hud_configure)
@@ -164,35 +205,34 @@ void HUD_RaceTimer ()
 		a = bound(0, 2 - (time - race_checkpointtime), 1);
 		s = "";
 		forcetime = "";
-		if(a > 0) // just hit a checkpoint?
+		if(a > 0) // display a frozen split for the just reached checkpoint
 		{
-			if(race_checkpoint != 254)
+			if(race_checkpoint != 254 && race_time != 0)
 			{
-				if(race_time && race_previousbesttime)
-					s = MakeRaceString(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, ((race_mypreviousbesttime) ? TIME_DECODE(race_time) - TIME_DECODE(race_mypreviousbesttime) : 0), 0, race_previousbestname);
-				else
-					s = MakeRaceString(race_checkpoint, 0, -1, 0, 0, race_previousbestname);
-				if(race_time)
-					forcetime = TIME_ENCODED_TOSTRING(race_time, false);
-
-				// store checkpoint splits string for later printing
-				// check if we advanced to next cp
-				if (!entcs_IsSpectating(player_localnum) && race_checkpoint_splits_previous != race_checkpoint)
+				if (race_checkpoint == racetimer_lastcheckpoint)
 				{
-					// are we somehow overwriting something? how?
-					if (race_checkpoint_splits[race_checkpoint_splits_previous+1])
-					{
-						LOG_WARNF("race_checkpoint_splits: overwriting #%f %s\n",
-							race_checkpoint_splits_previous+1,
-							race_checkpoint_splits[race_checkpoint_splits_previous+1]);
-						strfree(race_checkpoint_splits[race_checkpoint_splits_previous+1]);
-					}
-
-					strcpy(race_checkpoint_splits[race_checkpoint_splits_previous+1], sprintf("%s %s", forcetime, s));
-
-					// don't use ++ in case that checkpoints have jumps like 10th to 20th
-					race_checkpoint_splits_previous = race_checkpoint;
+					// use cached strings
+					s = racetimer_checkpoint_comparison;
+					forcetime = racetimer_checkpoint_time;
 				}
+				else
+				{
+					// build checkpoint split strings
+					if(race_time && race_previousbesttime)
+						s = MakeRaceString(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, ((race_mypreviousbesttime) ? TIME_DECODE(race_time) - TIME_DECODE(race_mypreviousbesttime) : 0), 0, race_previousbestname);
+					else
+						s = MakeRaceString(race_checkpoint, 0, -1, 0, 0, race_previousbestname);
+					if(race_time)
+						forcetime = TIME_ENCODED_TOSTRING(race_time, false);
+
+					StoreRaceSplits(race_checkpoint, forcetime, s);
+				}
+			}
+			else
+			{
+				// clean cp splits on start
+				if(racetimer_have_stored_splits && race_time == 0)
+					ClearRaceSplits();
 			}
 		}
 		else
@@ -249,6 +289,9 @@ void HUD_RaceTimer ()
 	}
 	else
 	{
+		if(racetimer_have_stored_splits && (race_time == 0 || time < STAT(GAMESTARTTIME)))
+			ClearRaceSplits();
+
 		if(race_mycheckpointtime)
 		{
 			a = bound(0, 2 - (time - race_mycheckpointtime), 1);

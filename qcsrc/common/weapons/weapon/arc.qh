@@ -23,60 +23,60 @@ CLASS(Arc, Weapon)
 	BEGIN(class) \
 		P(class, prefix, bolt, float, NONE) \
 		P(class, prefix, bolt_ammo, float, NONE) \
-        P(class, prefix, bolt_bounce_count, float, NONE) \
-        P(class, prefix, bolt_bounce_explode, float, NONE) \
-        P(class, prefix, bolt_bounce_lifetime, float, NONE) \
-        P(class, prefix, bolt_count, float, NONE) \
-        P(class, prefix, bolt_damageforcescale, float, NONE) \
-        P(class, prefix, bolt_damage, float, NONE) \
-        P(class, prefix, bolt_edgedamage, float, NONE) \
-        P(class, prefix, bolt_force, float, NONE) \
-        P(class, prefix, bolt_health, float, NONE) \
-        P(class, prefix, bolt_lifetime, float, NONE) \
-        P(class, prefix, bolt_radius, float, NONE) \
-        P(class, prefix, bolt_refire, float, NONE) \
-        P(class, prefix, bolt_refire2, float, NONE) \
-        P(class, prefix, bolt_speed, float, NONE) \
-        P(class, prefix, bolt_spread, float, NONE) \
+		P(class, prefix, bolt_bounce_count, float, NONE) \
+		P(class, prefix, bolt_bounce_explode, float, NONE) \
+		P(class, prefix, bolt_bounce_lifetime, float, NONE) \
+		P(class, prefix, bolt_count, float, NONE) \
+		P(class, prefix, bolt_damageforcescale, float, NONE) \
+		P(class, prefix, bolt_damage, float, NONE) \
+		P(class, prefix, bolt_edgedamage, float, NONE) \
+		P(class, prefix, bolt_force, float, NONE) \
+		P(class, prefix, bolt_health, float, NONE) \
+		P(class, prefix, bolt_lifetime, float, NONE) \
+		P(class, prefix, bolt_radius, float, NONE) \
+		P(class, prefix, bolt_refire, float, NONE) \
+		P(class, prefix, bolt_refire2, float, NONE) \
+		P(class, prefix, bolt_speed, float, NONE) \
+		P(class, prefix, bolt_spread, float, NONE) \
 		P(class, prefix, beam_ammo, float, NONE) \
-        P(class, prefix, beam_animtime, float, NONE) \
-        P(class, prefix, beam_botaimlifetime, float, NONE) \
-        P(class, prefix, beam_botaimspeed, float, NONE) \
-        P(class, prefix, beam_damage, float, NONE) \
-        P(class, prefix, beam_degreespersegment, float, NONE) \
-        P(class, prefix, beam_distancepersegment, float, NONE) \
-        P(class, prefix, beam_falloff_halflifedist, float, NONE) \
-        P(class, prefix, beam_falloff_maxdist, float, NONE) \
-        P(class, prefix, beam_falloff_mindist, float, NONE) \
-        P(class, prefix, beam_force, float, NONE) \
-        P(class, prefix, beam_healing_amax, float, NONE) \
-        P(class, prefix, beam_healing_aps, float, NONE) \
-        P(class, prefix, beam_healing_hmax, float, NONE) \
-        P(class, prefix, beam_healing_hps, float, NONE) \
-        P(class, prefix, beam_heat, float, NONE) /* heat increase per second (primary) */ \
-        P(class, prefix, beam_maxangle, float, NONE) \
-        P(class, prefix, beam_nonplayerdamage, float, NONE) \
-        P(class, prefix, beam_range, float, NONE) \
-        P(class, prefix, beam_refire, float, NONE) \
-        P(class, prefix, beam_returnspeed, float, NONE) \
-        P(class, prefix, beam_tightness, float, NONE) \
-        P(class, prefix, burst_ammo, float, NONE) \
-        P(class, prefix, burst_damage, float, NONE) \
-        P(class, prefix, burst_healing_aps, float, NONE) \
-        P(class, prefix, burst_healing_hps, float, NONE) \
-        P(class, prefix, burst_heat, float, NONE) /* heat increase per second (secondary) */ \
-        P(class, prefix, cooldown, float, NONE) /* heat decrease per second when resting */ \
-        P(class, prefix, cooldown_release, float, NONE) /* delay weapon re-use when releasing button */ \
-        P(class, prefix, overheat_max, float, NONE) /* maximum heat before jamming */ \
-        P(class, prefix, overheat_min, float, NONE) /* minimum heat to wait for cooldown */ \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-    END()
-    W_PROPS(X, Arc, arc)
+		P(class, prefix, beam_animtime, float, NONE) \
+		P(class, prefix, beam_botaimlifetime, float, NONE) \
+		P(class, prefix, beam_botaimspeed, float, NONE) \
+		P(class, prefix, beam_damage, float, NONE) \
+		P(class, prefix, beam_degreespersegment, float, NONE) \
+		P(class, prefix, beam_distancepersegment, float, NONE) \
+		P(class, prefix, beam_falloff_halflifedist, float, NONE) \
+		P(class, prefix, beam_falloff_maxdist, float, NONE) \
+		P(class, prefix, beam_falloff_mindist, float, NONE) \
+		P(class, prefix, beam_force, float, NONE) \
+		P(class, prefix, beam_healing_amax, float, NONE) \
+		P(class, prefix, beam_healing_aps, float, NONE) \
+		P(class, prefix, beam_healing_hmax, float, NONE) \
+		P(class, prefix, beam_healing_hps, float, NONE) \
+		P(class, prefix, beam_heat, float, NONE) /* heat increase per second (primary) */ \
+		P(class, prefix, beam_maxangle, float, NONE) \
+		P(class, prefix, beam_nonplayerdamage, float, NONE) \
+		P(class, prefix, beam_range, float, NONE) \
+		P(class, prefix, beam_refire, float, NONE) \
+		P(class, prefix, beam_returnspeed, float, NONE) \
+		P(class, prefix, beam_tightness, float, NONE) \
+		P(class, prefix, burst_ammo, float, NONE) \
+		P(class, prefix, burst_damage, float, NONE) \
+		P(class, prefix, burst_healing_aps, float, NONE) \
+		P(class, prefix, burst_healing_hps, float, NONE) \
+		P(class, prefix, burst_heat, float, NONE) /* heat increase per second (secondary) */ \
+		P(class, prefix, cooldown, float, NONE) /* heat decrease per second when resting */ \
+		P(class, prefix, cooldown_release, float, NONE) /* delay weapon re-use when releasing button */ \
+		P(class, prefix, overheat_max, float, NONE) /* maximum heat before jamming */ \
+		P(class, prefix, overheat_min, float, NONE) /* minimum heat to wait for cooldown */ \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+	W_PROPS(X, Arc, arc)
 #undef X
 
 ENDCLASS(Arc)
