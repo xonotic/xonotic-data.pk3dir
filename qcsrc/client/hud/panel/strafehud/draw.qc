@@ -10,14 +10,14 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 	float mirror_offset;
 	float mirror_width;
 
-	if(type == STRAFEHUD_STYLE_GRADIENT)
+	if(type == STRAFEHUD_STYLE_GRADIENT || type == STRAFEHUD_STYLE_FAST_GRADIENT)
 	{
 		projectWidth = true; // must be fully projected for gradients
 		if(gradientType == STRAFEHUD_GRADIENT_NONE)
 			type = STRAFEHUD_STYLE_DRAWFILL;
 	}
 
-	if(alpha <= 0 && type != STRAFEHUD_STYLE_GRADIENT || width <= 0)
+	if(alpha <= 0 && type != STRAFEHUD_STYLE_GRADIENT && type != STRAFEHUD_STYLE_FAST_GRADIENT || width <= 0)
 		return;
 
 	// how much is hidden by the current hud angle
@@ -101,6 +101,7 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 			break;
 
 		case STRAFEHUD_STYLE_GRADIENT: // gradient style (types: 1 = left, 2 = right, 3 = both)
+		case STRAFEHUD_STYLE_FAST_GRADIENT:
 			// determine whether the gradient starts in the mirrored or the non-mirrored area
 			int gradient_start;
 			float gradient_offset, gradient_mirror_offset;
@@ -129,21 +130,38 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 					gradient_mirror_offset = 0;
 			}
 
-			StrafeHUD_DrawGradient(
-				color, autocvar_hud_panel_strafehud_bar_neutral_color,
-				mirror_size, original_width, mirror_offset, original_mirror_offset,
-				alpha, gradient_mirror_offset, gradientType, range);
+			if(type == STRAFEHUD_STYLE_FAST_GRADIENT && autocvar_hud_panel_strafehud_projection == STRAFEHUD_PROJECTION_LINEAR)
+			{
+				StrafeHUD_DrawGradientFast(
+					color, autocvar_hud_panel_strafehud_bar_neutral_color,
+					mirror_size, original_width, mirror_offset, alpha,
+					gradient_mirror_offset, gradientType);
 
-			StrafeHUD_DrawGradient(
-				color, autocvar_hud_panel_strafehud_bar_neutral_color,
-				size, original_width, offset, original_offset,
-				alpha, gradient_offset, gradientType, range);
+				StrafeHUD_DrawGradientFast(
+					color, autocvar_hud_panel_strafehud_bar_neutral_color,
+					size, original_width, offset, alpha,
+					gradient_offset, gradientType);
+			}
+			else
+			{
+				StrafeHUD_DrawGradient(
+					color, autocvar_hud_panel_strafehud_bar_neutral_color,
+					mirror_size, original_width, mirror_offset, original_mirror_offset,
+					alpha, gradient_mirror_offset, gradientType, range);
+
+				StrafeHUD_DrawGradient(
+					color, autocvar_hud_panel_strafehud_bar_neutral_color,
+					size, original_width, offset, original_offset,
+					alpha, gradient_offset, gradientType, range);
+			}
 	}
 }
 
-// FIXME: this is very bad for performance, there should be a better way to draw gradients
+// slow gradient, required for projection modes other than linear
 void StrafeHUD_DrawGradient(vector color1, vector color2, vector size, float original_width, float offset, float original_offset, float alpha, float gradientOffset, int gradientType, float range)
 {
+	if(size.x <= 0) return;
+
 	float color_ratio, alpha1, alpha2;
 	vector segment_size = size;
 	alpha1 = bound(0, alpha, 1);
@@ -174,6 +192,61 @@ void StrafeHUD_DrawGradient(vector color1, vector color2, vector size, float ori
 				alpha_ratio,
 				DRAWFLAG_NORMAL);
 	}
+}
+
+// optimized gradient, does not work with projection modes other than linear, decreased visual fidelity
+void StrafeHUD_DrawGradientFast(vector color1, vector color2, vector size, float original_width, float offset, float alpha, float gradientOffset, int gradientType)
+{
+	if(size.x <= 0) return;
+
+	if(gradientType == STRAFEHUD_GRADIENT_BOTH)
+	{
+		original_width /= 2;
+
+		vector size1 = size;
+		size1.x = bound(0, original_width - gradientOffset, size.x);
+
+		vector size2 = size;
+		size2.x = size.x - size1.x;
+
+		if(size1.x > 0)
+			StrafeHUD_DrawGradientFast(color1, color2, size1, original_width, offset, alpha, gradientOffset, STRAFEHUD_GRADIENT_LEFT);
+
+		if(size2.x > 0)
+			StrafeHUD_DrawGradientFast(color1, color2, size2, original_width, offset + size1.x, alpha, max(0, gradientOffset - original_width), STRAFEHUD_GRADIENT_RIGHT);
+
+		return;
+	}
+
+	float alpha1 = bound(0, alpha, 1);
+	float alpha2 = bound(0, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, 1);
+	if((alpha1 + alpha2) == 0) return;
+
+	float ratio1 = gradientOffset / original_width;
+	if(gradientType == STRAFEHUD_GRADIENT_LEFT)
+		ratio1 = 1 - ratio1;
+
+	float ratio2 = (gradientOffset + size.x) / original_width;
+	if(gradientType == STRAFEHUD_GRADIENT_LEFT)
+		ratio2 = 1 - ratio2;
+
+	vector origin = HUD_Shift(panel_pos);
+	offset = HUD_ScaleX(offset);
+	size = HUD_Scale(size);
+
+	R_BeginPolygon("", DRAWFLAG_NORMAL, true);
+	R_PolygonVertex(origin + eX *  offset,                         '0 0 0', color1, alpha1 * (1 - ratio1));
+	R_PolygonVertex(origin + eX *  offset           + eY * size.y, '0 0 0', color1, alpha1 * (1 - ratio1));
+	R_PolygonVertex(origin + eX * (offset + size.x) + eY * size.y, '0 0 0', color1, alpha1 * (1 - ratio2));
+	R_PolygonVertex(origin + eX * (offset + size.x),               '0 0 0', color1, alpha1 * (1 - ratio2));
+	R_EndPolygon();
+
+	R_BeginPolygon("", DRAWFLAG_NORMAL, true);
+	R_PolygonVertex(origin + eX *  offset,                         '0 0 0', color2, alpha2 * ratio1);
+	R_PolygonVertex(origin + eX *  offset           + eY * size.y, '0 0 0', color2, alpha2 * ratio1);
+	R_PolygonVertex(origin + eX * (offset + size.x) + eY * size.y, '0 0 0', color2, alpha2 * ratio2);
+	R_PolygonVertex(origin + eX * (offset + size.x),               '0 0 0', color2, alpha2 * ratio2);
+	R_EndPolygon();
 }
 
 // draw the strafe arrows (inspired by drawspritearrow() in common/mutators/mutator/waypoints/waypointsprites.qc)
