@@ -218,13 +218,17 @@ float StrafeHUD_DetermineHudAngle(float wishangle)
 		}
 		else
 		{
-			// determine minimum required angle to display full strafe range
-			float range_minangle = fabs(wishangle) % 90; // maximum range is 90 degree
-			if(range_minangle > 45) range_minangle = 45 - fabs(wishangle) % 45; // minimum angle range is 45
-			range_minangle = 90 - range_minangle; // calculate value which is never >90 or <45
-			range_minangle *= 2; // multiply to accommodate for both sides of the hud
-
-			hudangle = range_minangle; // use minimum angle required if dynamically setting hud angle
+			// determine the minimal required HUD angle to contain the full strafing angle range
+			// this is useful for the velocity centered mode where the zones do not follow the strafing angle
+			// how it works:
+			//   the angle where the most acceleration occurs moves relative to the player velocity
+			//   from 0 - wishangle to 90 - wishangle
+			//   the angle farther away from the center is the maximum the optimal strafing angle can
+			//   diverge from the direction of velocity
+			//   this angle has to be multiplied by two since the HUD extends in both directions which
+			//   halves the amount it extends in a single direction
+			float absolute_wishangle = fabs(wishangle);
+			hudangle = max(absolute_wishangle, 90 - absolute_wishangle) * 2;
 		}
 	}
 	else if(autocvar_hud_panel_strafehud_range < 0)
