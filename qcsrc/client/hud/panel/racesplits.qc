@@ -10,6 +10,7 @@
 void HUD_RaceSplits_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_racesplits_align");
 	HUD_Write_Cvar("hud_panel_racesplits_flip");
 	HUD_Write_Cvar("hud_panel_racesplits_lines");
 }
@@ -21,13 +22,13 @@ vector RaceSplits_drawstring(string s, vector pos, vector sz, float a, vector fo
 	while(getWrappedLine_remaining)
 	{
 		s = getWrappedLine(sz.x - offset, fontsize, stringwidth_colors);
-		if(autocvar_hud_panel_racesplits_flip)
+		if(autocvar_hud_panel_racesplits_align)
 			offset = sz.x - stringwidth_colors(s, fontsize) - offset;
 		drawcolorcodedstring(pos + eX * offset, s, fontsize, a, DRAWFLAG_NORMAL);
 		pos.y += fontsize.y;
 		offset = fontsize.x;
 	}
-	pos.y += fontsize.y * 0.25;
+	pos.y += fontsize.y * (offset ? 0.25 : 1.25);
 	return pos;
 }
 
@@ -60,7 +61,9 @@ void HUD_RaceSplits()
 
 	#define HUD_RACESPLITS_MAX_NRLINES 50 // feels like twice more than enough
 	int nrlines = min(HUD_RACESPLITS_MAX_NRLINES, autocvar_hud_panel_racesplits_lines);
-	vector fontsize = '0.8 1 0' * (mySize.y / (nrlines+2));
+	vector fontsize = '0.8 1 0' * (mySize.y / (nrlines*1.25));
+
+
 	string s;
 	if(!autocvar__hud_configure)
 	{
@@ -92,13 +95,14 @@ void HUD_RaceSplits()
 			}
 		}
 		for (int j = 0; j < nrlines; ++j)
-			RaceSplit(race_checkpoint_splits[mlines[j]]);
+			RaceSplit(race_checkpoint_splits[mlines[autocvar_hud_panel_racesplits_flip ? nrlines - 1 -j : j]]);
 	}
 	else
 	{
 		string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
 		float speed_conv_f = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 		int j;
+		string demolines[HUD_RACESPLITS_MAX_NRLINES];
 		for(j = 0; j < nrlines && j < 4; ++j)
 		{
 			string timestr     = TIME_ENCODED_TOSTRING(TIME_ENCODE(18.7 + (j-1) * 5.33), false);
@@ -109,10 +113,12 @@ void HUD_RaceSplits()
 			string speed_color = rgb_to_hexcolor(j == 0 ? autocvar_hud_progressbar_acceleration_neg_color : autocvar_hud_progressbar_acceleration_color);
 			if(j == 3)
 				speed_color = "^3";
-			RaceSplit(sprintf(strcat("%s %s", _("Intermediate %d"), " (%s) ^7%d%s %s"), timestr, col, j+1, time_split, speed_split, units_text, sprintf("%s(%+d%s)", speed_color, speed_diff, units_text)));
+			demolines[j] = sprintf(strcat("%s %s", _("Intermediate %d"), " (%s) ^7%d%s %s"), timestr, col, j+1, time_split, speed_split, units_text, sprintf("%s(%+d%s)", speed_color, speed_diff, units_text));
 		}
 		for(; j < nrlines; ++j)
-			RaceSplit(sprintf(strcat("%s ^7", _("Intermediate %d"), " ^7%d%s"), TIME_ENCODED_TOSTRING(TIME_ENCODE(j*9.37), false), j+1, (1100 + j*63) * speed_conv_f, units_text));
+			demolines[j] = sprintf(strcat("%s ^7", _("Intermediate %d"), " ^7%d%s"), TIME_ENCODED_TOSTRING(TIME_ENCODE(j*9.37), false), j+1, (1100 + j*63) * speed_conv_f, units_text);
+		for (int j = 0; j < nrlines; ++j)
+			RaceSplit(demolines[autocvar_hud_panel_racesplits_flip ? nrlines - 1 -j : j]);
 
 	}
 }
