@@ -164,26 +164,25 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 // slow gradient, required for projection modes other than linear
 void StrafeHUD_DrawGradient(vector color1, vector color2, vector size, float original_width, float offset, float original_offset, float alpha, float gradientOffset, int gradientType, float range)
 {
-	float color_ratio, alpha1, alpha2;
-	vector segment_size = size;
-	alpha1 = bound(0, alpha, 1);
-	alpha2 = bound(0, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, 1);
+	float alpha1 = bound(0, alpha, 1);
+	float alpha2 = bound(0, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, 1);
 	if((alpha1 + alpha2) == 0) return;
-	color_ratio = alpha1 / (alpha1 + alpha2);
+
+	float color_ratio = alpha1 / (alpha1 + alpha2);
+	vector segment_size = size;
 	for(int i = 0; i < size.x; ++i)
 	{
-		float ratio, ratio_offset, alpha_ratio, combine_ratio1, combine_ratio2, segment_offset;
 		segment_size.x = min(size.x - i, 1); // each gradient segment is 1 unit wide except if there is less than 1 unit of gradient remaining
-		segment_offset = offset + i;
-		ratio_offset = segment_offset + segment_size.x / 2;
+		float segment_offset = offset + i;
+		float ratio_offset = segment_offset + segment_size.x / 2;
 		ratio_offset = StrafeHUD_ProjectOffset(ratio_offset, range, true);
 		ratio_offset += gradientOffset;
-		ratio = (ratio_offset - original_offset) / original_width * (gradientType == STRAFEHUD_GRADIENT_BOTH ? 2 : 1);
+		float ratio = (ratio_offset - original_offset) / original_width * (gradientType == STRAFEHUD_GRADIENT_BOTH ? 2 : 1);
 		if(ratio > 1) ratio = 2 - ratio;
 		if(gradientType != STRAFEHUD_GRADIENT_RIGHT) ratio = 1 - ratio;
-		alpha_ratio = alpha1 - (alpha1 - alpha2) * ratio;
-		combine_ratio1 = ratio * (1 - color_ratio);
-		combine_ratio2 = (1 - ratio) * color_ratio;
+		float alpha_ratio = alpha1 - (alpha1 - alpha2) * ratio;
+		float combine_ratio1 = ratio * (1 - color_ratio);
+		float combine_ratio2 = (1 - ratio) * color_ratio;
 		ratio = (combine_ratio1 + combine_ratio2) == 0 ? 1 : combine_ratio1 / (combine_ratio1 + combine_ratio2);
 
 		if(alpha_ratio > 0)

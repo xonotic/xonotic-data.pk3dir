@@ -200,8 +200,7 @@ void StrafeHUD_DrawAngleIndicatorArrow(float size, float offset, vector line_siz
 void StrafeHUD_DrawDirectionIndicator(int direction, bool opposite_direction, bool fwd)
 {
 	vector direction_size_vertical;
-	direction_size_vertical.x = autocvar_hud_panel_strafehud_direction_width;
-	direction_size_vertical.x = max(panel_size.y * min(direction_size_vertical.x, 1), 1);
+	direction_size_vertical.x = max(panel_size.y * min(autocvar_hud_panel_strafehud_direction_width, 1), 1);
 	direction_size_vertical.y = panel_size.y + direction_size_vertical.x * 2;
 	direction_size_vertical.z = 0;
 
