@@ -298,11 +298,7 @@ bool StrafeHUD_DetermineJumpHeld(entity e, int keys, bool islocal)
 
 vector StrafeHUD_MixColors(vector color1, vector color2, float ratio)
 {
-	vector mixedColor;
 	if(ratio <= 0) return color1;
 	if(ratio >= 1) return color2;
-	mixedColor.x = color1.x + (color2.x - color1.x) * ratio;
-	mixedColor.y = color1.y + (color2.y - color1.y) * ratio;
-	mixedColor.z = color1.z + (color2.z - color1.z) * ratio;
-	return mixedColor;
+	return color1 + (color2 - color1) * ratio;
 }
