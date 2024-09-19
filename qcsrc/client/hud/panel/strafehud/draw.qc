@@ -132,27 +132,31 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 
 			if(type == STRAFEHUD_STYLE_FAST_GRADIENT && autocvar_hud_panel_strafehud_projection == STRAFEHUD_PROJECTION_LINEAR)
 			{
-				StrafeHUD_DrawGradientFast(
-					color, autocvar_hud_panel_strafehud_bar_neutral_color,
-					mirror_size, original_width, mirror_offset, alpha,
-					gradient_mirror_offset, gradientType);
+				if(mirror_size.x > 0)
+					StrafeHUD_DrawGradientFast(
+						color, autocvar_hud_panel_strafehud_bar_neutral_color,
+						mirror_size, original_width, mirror_offset, alpha,
+						gradient_mirror_offset, gradientType);
 
-				StrafeHUD_DrawGradientFast(
-					color, autocvar_hud_panel_strafehud_bar_neutral_color,
-					size, original_width, offset, alpha,
-					gradient_offset, gradientType);
+				if(size.x > 0)
+					StrafeHUD_DrawGradientFast(
+						color, autocvar_hud_panel_strafehud_bar_neutral_color,
+						size, original_width, offset, alpha,
+						gradient_offset, gradientType);
 			}
 			else
 			{
-				StrafeHUD_DrawGradient(
-					color, autocvar_hud_panel_strafehud_bar_neutral_color,
-					mirror_size, original_width, mirror_offset, original_mirror_offset,
-					alpha, gradient_mirror_offset, gradientType, range);
+				if(mirror_size.x > 0)
+					StrafeHUD_DrawGradient(
+						color, autocvar_hud_panel_strafehud_bar_neutral_color,
+						mirror_size, original_width, mirror_offset, original_mirror_offset,
+						alpha, gradient_mirror_offset, gradientType, range);
 
-				StrafeHUD_DrawGradient(
-					color, autocvar_hud_panel_strafehud_bar_neutral_color,
-					size, original_width, offset, original_offset,
-					alpha, gradient_offset, gradientType, range);
+				if(size.x > 0)
+					StrafeHUD_DrawGradient(
+						color, autocvar_hud_panel_strafehud_bar_neutral_color,
+						size, original_width, offset, original_offset,
+						alpha, gradient_offset, gradientType, range);
 			}
 	}
 }
@@ -160,8 +164,6 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 // slow gradient, required for projection modes other than linear
 void StrafeHUD_DrawGradient(vector color1, vector color2, vector size, float original_width, float offset, float original_offset, float alpha, float gradientOffset, int gradientType, float range)
 {
-	if(size.x <= 0) return;
-
 	float color_ratio, alpha1, alpha2;
 	vector segment_size = size;
 	alpha1 = bound(0, alpha, 1);
@@ -197,8 +199,6 @@ void StrafeHUD_DrawGradient(vector color1, vector color2, vector size, float ori
 // optimized gradient, does not work with projection modes other than linear, decreased visual fidelity
 void StrafeHUD_DrawGradientFast(vector color1, vector color2, vector size, float original_width, float offset, float alpha, float gradientOffset, int gradientType)
 {
-	if(size.x <= 0) return;
-
 	if(gradientType == STRAFEHUD_GRADIENT_BOTH)
 	{
 		original_width /= 2;
