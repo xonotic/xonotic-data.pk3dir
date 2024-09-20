@@ -714,7 +714,7 @@ void ClientCommand_spectate(entity caller, int request)
 				if (argv(2) == "FORFEIT" || warmup_stage)
 					caller_wants_to_forfeit = true; // player replied that they want to forfeit
 
-				if (IS_PLAYER(caller) && !caller_wants_to_forfeit)
+				if (IS_PLAYER(caller) && !caller_wants_to_forfeit && caller.cvar__menu_forfeit_dialog_available)
 				{
 					// ask player if they want to forfeit
 					stuffcmd(caller, "menu_showforfeitdialog\n");
@@ -737,11 +737,11 @@ void ClientCommand_spectate(entity caller, int request)
 
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN_FORFEIT)
 				{
-					if (caller_wants_to_forfeit)
+					if (caller_wants_to_forfeit || !caller.cvar__menu_forfeit_dialog_available)
 						mutator_returnvalue = MUT_SPECCMD_FORCE;
 					else
 					{
-						stuffcmd(caller, "menu_showobservedialog\n");
+						stuffcmd(caller, "menu_showforfeitdialog\n");
 						return;
 					}
 				}

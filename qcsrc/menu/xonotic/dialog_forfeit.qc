@@ -4,8 +4,16 @@
 #include "commandbutton.qh"
 #include "textlabel.qh"
 
+void XonoticForfeitDialog_destroy(entity me)
+{
+	cvar_set("_menu_forfeit_dialog_available", "0");
+}
+
 void XonoticForfeitDialog_fill(entity me)
 {
+	registercvar("_menu_forfeit_dialog_available", "0", 0);
+	cvar_set("_menu_forfeit_dialog_available", "1");
+
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 2, makeXonoticTextLabel(0.5, _("Are you sure you want to observe and quit current match?")));
