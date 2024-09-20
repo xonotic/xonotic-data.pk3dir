@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dialog.qh"
+#include "rootdialog.qh"
 CLASS(XonoticForfeitDialog, XonoticRootDialog)
 	METHOD(XonoticForfeitDialog, fill, void(entity));
 	ATTRIB(XonoticForfeitDialog, title, string, _("Forfeit"));

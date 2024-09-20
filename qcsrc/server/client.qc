@@ -2429,23 +2429,28 @@ bool PlayerThink(entity this)
 	return true;
 }
 
-.bool would_spectate;
+.int new_CAMERA_SPECTATOR;
 // merged SpectatorThink and ObserverThink (old names are here so you can grep for them)
 void ObserverOrSpectatorThink(entity this)
 {
 	bool is_spec = IS_SPEC(this);
+
 	if ( CS(this).impulse )
 	{
 		int r = MinigameImpulse(this, CS(this).impulse);
 		if (!is_spec || r)
 			CS(this).impulse = 0;
+	}
 
-		if (is_spec && CS(this).impulse == IMP_weapon_drop.impulse)
+	if (is_spec)
+	{
+		if (PHYS_INPUT_BUTTON_ATCK2(this))
 		{
-			STAT(CAMERA_SPECTATOR, this) = (STAT(CAMERA_SPECTATOR, this) + 1) % 3;
-			CS(this).impulse = 0;
-			return;
+			if (this.new_CAMERA_SPECTATOR == STAT(CAMERA_SPECTATOR, this))
+				this.new_CAMERA_SPECTATOR = (STAT(CAMERA_SPECTATOR, this) + 1) % 3;
 		}
+		else if (STAT(CAMERA_SPECTATOR, this) != this.new_CAMERA_SPECTATOR)
+			STAT(CAMERA_SPECTATOR, this) = this.new_CAMERA_SPECTATOR;
 	}
 
 	if (frametime && autocvar_sv_show_entnum) show_entnum(this);
@@ -2490,13 +2495,6 @@ void ObserverOrSpectatorThink(entity this)
 					PutClientInServer(this);
 				}
 				CS(this).impulse = 0;
-			} else if(PHYS_INPUT_BUTTON_ATCK2(this)) {
-				if(!observe_blocked_if_eliminated || !INGAME(this)) {
-					this.would_spectate = false;
-					this.flags &= ~FL_JUMPRELEASED;
-					TRANSMUTE(Observer, this);
-					PutClientInServer(this);
-				}
 			} else if(!SpectateUpdate(this) && !SpectateNext(this)) {
 				PutObserverInServer(this, false, true);
 				this.would_spectate = true;
@@ -2510,7 +2508,7 @@ void ObserverOrSpectatorThink(entity this)
 			set_movetype(this, preferred_movetype);
 		}
 	} else { // jump pressed
-		if ((is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)))
+		if ((is_spec && !(PHYS_INPUT_BUTTON_ATCK(this)))
 			|| (!is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this)))) {
 			this.flags |= FL_JUMPRELEASED;
 			// primary attack pressed
