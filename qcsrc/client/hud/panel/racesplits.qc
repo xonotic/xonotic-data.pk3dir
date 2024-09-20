@@ -44,6 +44,10 @@ void HUD_RaceSplits()
 	}
 
 	HUD_Panel_LoadCvars();
+	// default values for <= 0.8.6 cna be removed after next release
+	registercvar("hud_panel_racesplits_pos", "0.700000 0.190000");
+	registercvar("hud_panel_racesplits_size", "0.250000 0.170000");
+
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
