@@ -64,13 +64,13 @@ function genmod() {
 		if [[ -f "cl_$f"          ]]; then printf "#ifdef %s\n\t#include <%s>\n#endif\n"   CSQC "${CTX}cl_$f"          >> ${MOD}.inc; fi
 		if [[ -f "cl_${f%.qc}.qh" ]]; then printf "#ifdef %s\n\t#include <%s>\n#endif\n"   CSQC "${CTX}cl_${f%.qc}.qh" >> ${MOD}.qh;  fi
 		# SVQC
-		# cl_file.qc into _mod.inc
-		# cl_file.qh into _mod.qh
+		# sv_file.qc into _mod.inc
+		# sv_file.qh into _mod.qh
 		if [[ -f "sv_$f"          ]]; then printf "#ifdef %s\n\t#include <%s>\n#endif\n"   SVQC "${CTX}sv_$f"          >> ${MOD}.inc; fi
 		if [[ -f "sv_${f%.qc}.qh" ]]; then printf "#ifdef %s\n\t#include <%s>\n#endif\n"   SVQC "${CTX}sv_${f%.qc}.qh" >> ${MOD}.qh;  fi
 		# MENUQC
-		# cl_file.qc into _mod.inc
-		# cl_file.qh into _mod.qh
+		# ui_file.qc into _mod.inc
+		# ui_file.qh into _mod.qh
 		if [[ -f "ui_$f"          ]]; then printf "#ifdef %s\n\t#include <%s>\n#endif\n" MENUQC "${CTX}ui_$f"          >> ${MOD}.inc; fi
 		if [[ -f "ui_${f%.qc}.qh" ]]; then printf "#ifdef %s\n\t#include <%s>\n#endif\n" MENUQC "${CTX}ui_${f%.qc}.qh" >> ${MOD}.qh;  fi
 	done
