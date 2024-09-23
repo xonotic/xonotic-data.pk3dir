@@ -248,6 +248,7 @@ entity SelectObservePoint(entity this)
 	return RandomSelection_chosen_ent;
 }
 
+.entity spot_save;
 /** putting a client as observer in the server */
 void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 {
@@ -282,6 +283,10 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 			spot = SelectSpawnPoint(this, true);
 		if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
 
+		// in case a spectator becomes observer because the spectated player disconnects
+		// the engine will revert the angles we set here, so we have to save spot and
+		// apply angles later in this frame again
+		this.spot_save = spot;
 		this.angles = vec2(spot.angles);
 		// offset it so that the spectator spawns higher off the ground, looks better this way
 		setorigin(this, spot.origin + (is_observepoint ? '0 0 0' : autocvar_sv_player_viewoffset));
@@ -3033,6 +3038,13 @@ void PlayerFrame (entity this)
 	if (this.waypointsprite_attachedforcarrier) {
 		float hp = healtharmor_maxdamage(GetResource(this, RES_HEALTH), GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x;
 		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, hp);
+	}
+
+	if (this.spot_save && IS_OBSERVER(this))
+	{
+		this.angles = vec2(this.spot_save.angles);
+		this.fixangle = true;
+		this.spot_save = NULL;
 	}
 }
 
