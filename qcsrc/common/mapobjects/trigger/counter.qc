@@ -63,22 +63,6 @@ void counter_use(entity this, entity actor, entity trigger)
 		SUB_UseTargets(this, actor, trigger);
 }
 
-void counter_setactive(entity this, int act)
-{
-	int old_status = this.active;
-	if(act == ACTIVE_TOGGLE)
-		this.active = (this.active == ACTIVE_ACTIVE) ? ACTIVE_NOT : ACTIVE_ACTIVE;
-	else
-		this.active = act;
-
-	if(this.active != old_status && this.active == ACTIVE_ACTIVE)
-	{
-		// perform a complete reset upon reactivation
-		if(this.reset)
-			this.reset(this);
-	}
-}
-
 void counter_reset(entity this)
 {
 	setthink(this, func_null);
@@ -112,6 +96,5 @@ spawnfunc(trigger_counter)
 	this.use = counter_use;
 	this.reset = counter_reset;
 	this.active = ACTIVE_ACTIVE;
-	this.setactive = counter_setactive;
 }
 #endif
