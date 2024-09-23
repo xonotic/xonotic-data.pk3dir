@@ -370,7 +370,12 @@ void FixClientCvars(entity e);
 .void(entity this, entity player) init_for_player;
 
 IntrusiveList g_initforplayer;
-STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
+IntrusiveList g_observepoints;
+STATIC_INIT(client_lists)
+{
+    g_initforplayer = IL_NEW();
+    g_observepoints = IL_NEW();
+}
 
 void play_countdown(entity this, float finished, Sound samp);
 void player_powerups_remove_all(entity this);
