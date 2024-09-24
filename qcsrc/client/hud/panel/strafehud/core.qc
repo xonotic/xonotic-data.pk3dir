@@ -4,7 +4,7 @@
 
 void StrafeHUD_DrawStrafeMeter(
 	float shiftangle, float wishangle, float absolute_bestangle,
-	float absolute_prebestangle, float absolute_overturn_angle,
+	float absolute_prebestangle, float absolute_overturnangle,
 	bool moving, float hudangle)
 {
 	// the neutral zone fills the whole strafe bar
@@ -43,10 +43,10 @@ void StrafeHUD_DrawStrafeMeter(
 		float neutral_startangle;
 		float overturn_startangle;
 
-		float accelzone_offsetangle = absolute_overturn_angle - absolute_bestangle;
+		float accelzone_offsetangle = absolute_overturnangle - absolute_bestangle;
 		float preaccelzone_offsetangle = fabs(absolute_bestangle - absolute_prebestangle);
 		float neutral_offsetangle = 360;
-		float overturn_offsetangle = 360 - absolute_overturn_angle * 2;
+		float overturn_offsetangle = 360 - absolute_overturnangle * 2;
 
 		if(!autocvar_hud_panel_strafehud_bar_preaccel)
 			preaccelzone_offsetangle = 0;

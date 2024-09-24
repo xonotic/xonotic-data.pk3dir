@@ -203,19 +203,19 @@ float StrafeHUD_DetermineWishAngle(vector movement, int keys, bool islocal)
 	return wishangle;
 }
 
-float StrafeHUD_DetermineHudAngle(float absolute_wishangle, float absolute_overturn_angle, float strafity)
+float StrafeHUD_DetermineHudAngle(float absolute_wishangle, float absolute_overturnangle, float strafity)
 {
 
 	// determine the minimal required HUD angle to contain the full strafing angle range
 	// this is useful for the velocity centered mode where the zones do not follow the strafing angle
 	// how it works:
 	//   the angle where the most acceleration occurs moves relative to the player velocity
-	//   from 0 - wishangle to absolute_overturn_angle - wishangle
+	//   from 0 - wishangle to absolute_overturnangle - wishangle
 	//   the angle farther away from the center is the maximum the optimal strafing angle can
 	//   diverge from the direction of velocity
 	//   this angle has to be multiplied by two since the HUD extends in both directions which
 	//   halves the amount it extends in a single direction
-	float range_minangle = max(absolute_wishangle, absolute_overturn_angle - absolute_wishangle) * 2;
+	float range_minangle = max(absolute_wishangle, absolute_overturnangle - absolute_wishangle) * 2;
 
 	float range_normal = autocvar_hud_panel_strafehud_range;
 	float range_side   = autocvar_hud_panel_strafehud_range_sidestrafe;

@@ -336,12 +336,12 @@ void HUD_StrafeHUD()
 	// best angle to strafe at
 	float bestangle;
 	float prebestangle;
-	float overturn_angle;
+	float overturnangle;
 	if(!moving)
 	{
 		// these are unused (neutral fills whole strafe bar)
 		prebestangle = bestangle = 0;
-		overturn_angle = 180;
+		overturnangle = 180;
 	}
 	else if(onground && autocvar_hud_panel_strafehud_onground_friction)
 	{
@@ -367,12 +367,12 @@ void HUD_StrafeHUD()
 			float overturn_numer = speed * speed - strafespeed * strafespeed - maxaccel * maxaccel;
 			float overturn_denom = 2 * maxaccel * strafespeed;
 			// delta_max = acos((v^2 - v_f^2 - a^2) / (2av_f)), or just acos(-a / 2v) if in air
-			overturn_angle = overturn_denom > fabs(overturn_numer)
+			overturnangle = overturn_denom > fabs(overturn_numer)
 				? acos(overturn_numer / overturn_denom) * RAD2DEG // case 1
 				: (overturn_numer < 0 ? 180 : 0); // case 2 : case 3
 			// case 1: normal. case 2: low speed, turning anywhere will gain speed. case 3: landed at high speed, turning anywhere will lose speed (due to friction)
 		}
-		if(overturn_angle < bestangle || bestangle < prebestangle)
+		if(overturnangle < bestangle || bestangle < prebestangle)
 		{
 			// these conditions occur when you land at high speed (above max onground speed), such that every wishangle will result in a speed loss due to friction
 			if(autocvar_hud_panel_strafehud_onground_mode == STRAFEHUD_ONGROUND_OVERTURN)
@@ -380,7 +380,7 @@ void HUD_StrafeHUD()
 				// make overturn fill the whole strafe bar
 				// most correct option by the true definition of accel, since every angle results in deceleration
 				prebestangle = bestangle = 0;
-				overturn_angle = 0;
+				overturnangle = 0;
 			}
 			else if(autocvar_hud_panel_strafehud_onground_mode == STRAFEHUD_ONGROUND_GROUND)
 			{
@@ -391,7 +391,7 @@ void HUD_StrafeHUD()
 				 * overall showing it accurately is just confusing and unnecessary to add
 				 * thankfully the bestangle formula is unchanged, so the least confusing option is likely as follows:
 				 */
-				overturn_angle = bestangle;
+				overturnangle = bestangle;
 				prebestangle = bestangle;
 			}
 			else
@@ -400,7 +400,7 @@ void HUD_StrafeHUD()
 				// no need to check if numerator < denominator, since all numerators < max onground speed < speed = all denominators
 				bestangle = acos(bestspeed / speed) * RAD2DEG;
 				prebestangle = acos(movespeed / speed) * RAD2DEG;
-				overturn_angle = acos(-(airstopaccel * maxaccel / 2) / speed) * RAD2DEG;
+				overturnangle = acos(-(airstopaccel * maxaccel / 2) / speed) * RAD2DEG;
 			}
 		}
 	}
@@ -414,14 +414,14 @@ void HUD_StrafeHUD()
 			? acos(movespeed / speed) * RAD2DEG
 			: 0;
 		// with airstopaccel, delta_max = acos(airstopaccel * -a / 2v), only in air
-		overturn_angle = speed > airstopaccel * maxaccel / 2
+		overturnangle = speed > airstopaccel * maxaccel / 2
 			? acos(-(airstopaccel * maxaccel / 2) / speed) * RAD2DEG
 			: 180;
 	}
 	// absolute_* variables which are always positive with no wishangle offset
 	float absolute_bestangle = bestangle;
 	float absolute_prebestangle = prebestangle;
-	float absolute_overturn_angle = overturn_angle;
+	float absolute_overturnangle = overturnangle;
 
 	float aircontrol = PHYS_AIRCONTROL(strafeplayer);
 	bool aircontrol_backwards = PHYS_AIRCONTROL_BACKWARDS(strafeplayer) == 1;
@@ -490,7 +490,7 @@ void HUD_StrafeHUD()
 			: -45;
 	}
 
-	float hudangle = StrafeHUD_DetermineHudAngle(absolute_wishangle, absolute_overturn_angle, strafity);
+	float hudangle = StrafeHUD_DetermineHudAngle(absolute_wishangle, absolute_overturnangle, strafity);
 
 	float antiflicker_angle = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
 	float direction = StrafeHUD_DetermineDirection(angle, wishangle, antiflicker_angle);
@@ -500,7 +500,7 @@ void HUD_StrafeHUD()
 		n_bestangle *= -1;
 		bestangle *= -1;
 		prebestangle *= -1;
-		overturn_angle *= -1;
+		overturnangle *= -1;
 	}
 	float opposite_bestangle = -bestangle;
 	float n_opposite_bestangle = -n_bestangle;
@@ -509,7 +509,7 @@ void HUD_StrafeHUD()
 	opposite_bestangle -= wishangle;
 	n_opposite_bestangle -= wishangle;
 	prebestangle -= wishangle;
-	overturn_angle -= wishangle;
+	overturnangle -= wishangle;
 
 	int mode;
 	if(autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1)
@@ -556,7 +556,7 @@ void HUD_StrafeHUD()
 		wturn_right_bestangle += shiftangle;
 	}
 
-	StrafeHUD_DrawStrafeMeter(shiftangle, wishangle, absolute_bestangle, absolute_prebestangle, absolute_overturn_angle, moving, hudangle);
+	StrafeHUD_DrawStrafeMeter(shiftangle, wishangle, absolute_bestangle, absolute_prebestangle, absolute_overturnangle, moving, hudangle);
 
 	float text_offset_top;
 	float text_offset_bottom;
@@ -574,15 +574,15 @@ void HUD_StrafeHUD()
 		if(moveangle > 180) moveangle = 360 - moveangle; // restricted to between 0 and 180
 
 		// player is overturning
-		if(moveangle >= absolute_overturn_angle)
+		if(moveangle >= absolute_overturnangle)
 		{
-			if(moveangle == absolute_overturn_angle && absolute_overturn_angle == 180)
+			if(moveangle == absolute_overturnangle && absolute_overturnangle == 180)
 					; // everywhere gives acceleration, keep strafe_ratio as 0
 			else
 			{
 					currentangle_color = autocvar_hud_panel_strafehud_angle_overturn_color;
-					strafe_ratio = (moveangle - absolute_overturn_angle) / (180 - absolute_overturn_angle);
-					// moveangle is always <= 180, so this code won't run if absolute_overturn_angle == 180
+					strafe_ratio = (moveangle - absolute_overturnangle) / (180 - absolute_overturnangle);
+					// moveangle is always <= 180, so this code won't run if absolute_overturnangle == 180
 					strafe_ratio *= -1;
 			}
 		}
@@ -590,8 +590,8 @@ void HUD_StrafeHUD()
 		else if(moveangle >= absolute_bestangle)
 		{
 			currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
-			strafe_ratio = (absolute_overturn_angle - moveangle) / (absolute_overturn_angle - absolute_bestangle);
-			// if absolute_overturn_angle == absolute_bestangle, this code won't run, no need to check if their difference is 0
+			strafe_ratio = (absolute_overturnangle - moveangle) / (absolute_overturnangle - absolute_bestangle);
+			// if absolute_overturnangle == absolute_bestangle, this code won't run, no need to check if their difference is 0
 		}
 		else if(moveangle >= absolute_prebestangle)
 		{
