@@ -774,15 +774,20 @@ void HUD_QuickMenu()
 	} \
 }
 
-#define QUICKMENU_SMENU_PL(submenu,eng_submenu,command,teamplayers,without_me) { \
-	if(QuickMenu_Buffer_Size + 3 < QUICKMENU_BUFFER_MAXENTRIES) {\
-		QUICKMENU_SMENU(submenu,eng_submenu) \
-		QuickMenu_Buffer_Set(QM_TAG_TITLE, strcat(ftos(teamplayers), ftos(without_me))); \
+#define QUICKMENU_ENTRY_PL(title,command) { \
+	if(QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES) \
+	{ \
+		QuickMenu_Buffer_Set(QM_TAG_TITLE, title); \
 		++QuickMenu_Buffer_Size; \
 		QuickMenu_Buffer_Set(QM_TAG_PLCOMMAND, command); \
-		++QuickMenu_Buffer_Size; \
-		QUICKMENU_SMENU(submenu,eng_submenu) \
 	} \
+	++QuickMenu_Buffer_Size; \
+}
+
+#define QUICKMENU_SMENU_PL(submenu,eng_submenu,command,teamplayers,without_me) { \
+	QUICKMENU_SMENU(submenu,eng_submenu) \
+	QUICKMENU_ENTRY_PL(strcat(ftos(teamplayers), ftos(without_me)), command) \
+	QUICKMENU_SMENU(submenu,eng_submenu) \
 }
 
 
@@ -843,6 +848,9 @@ void QuickMenu_Default(string target_submenu)
 
 	QUICKMENU_SMENU(_("Chat"), "Chat")
 		QUICKMENU_SMENU_PL(CTX(_("QMCMD^Send public message to")), "Send public message to", "commandmode say %s:^7", 0, 1)
+		QUICKMENU_SMENU_PL(CTX(_("QMCMD^Send team message to")), "Send team message to", "commandmode say_team %s:^7", 1, 1)
+		QUICKMENU_SMENU_PL(CTX(_("QMCMD^Send private message to")), "Send private message to", "commandmode tell \"%s^7\"", 0, 1)
+
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
@@ -870,8 +878,6 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop flag/key, icon")), "say_team %s; g_waypointsprite_team_here; wait; use", "dropped flag/key %w^7 (l:%l^7)", CTX(_("QMCMD^dropped flag/key %w^7 (l:%l^7)")))
 	QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
 	}
-
-	QUICKMENU_SMENU_PL(CTX(_("QMCMD^Send private message to")), "Send private message to", "commandmode tell \"%s^7\"", 0, 1)
 
 	QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
 		QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")), "View/HUD settings")
