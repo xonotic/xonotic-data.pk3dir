@@ -64,7 +64,7 @@ void HUD_Physics()
 	if (autocvar_hud_panel_physics_text_scale <= 0)
 		text_scale = 1;
 	else
-		text_scale = min(autocvar_hud_panel_physics_text_scale, 1);
+		text_scale = min(autocvar_hud_panel_physics_text_scale, 5);
 
 	//compute speed
 	float speed, conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
@@ -189,7 +189,7 @@ void HUD_Physics()
 				tmp_offset.x = panel_size.x * speed_size;
 			tmp_size.x   =  panel_size.x * (1 - speed_size);
 			tmp_size.y   =  panel_size.y * unit_size * text_scale;
-			tmp_offset.y = (panel_size.y * unit_size - tmp_size.y) / 2;
+			tmp_offset.y = (panel_size.y * unit_size * (1 - max(0, text_scale - 1)) - tmp_size.y) / 2;
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(jump_speed), tmp_size, '0 1 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
 			drew_jump_speed = true;
 		}
@@ -219,7 +219,7 @@ void HUD_Physics()
 		{
 			tmp_size.x   =  panel_size.x * (1 - speed_size);
 			tmp_size.y   =  panel_size.y * unit_size * text_scale;
-			tmp_offset.y = (panel_size.y * unit_size - tmp_size.y) / 2;
+			tmp_offset.y = (panel_size.y * unit_size * (1 - max(0, text_scale - 1)) - tmp_size.y) / 2;
 			string unit = GetSpeedUnit(autocvar_hud_speed_unit);
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, unit, tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
@@ -279,7 +279,7 @@ void HUD_Physics()
 			tmp_offset.y  =  panel_size.y * unit_size;
 			tmp_size.x    =  panel_size.x * (1 - speed_size);
 			tmp_size.y    =  panel_size.y * (1 - unit_size) * text_scale;
-			tmp_offset.y += (panel_size.y * (1 - unit_size) - tmp_size.y) / 2;
+			tmp_offset.y += (panel_size.y * (1 - unit_size) * max(1, text_scale) - tmp_size.y) / 2;
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(top_speed), tmp_size, '1 0 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		else
