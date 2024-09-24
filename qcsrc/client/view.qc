@@ -603,7 +603,7 @@ bool View_SpectatorCamera()
 			{
 				if (!waiting_CAMERA_SPECTATOR_update)
 				{
-					localcmd("\n+attack2; wait; -attack2\n"); // switch to CAMERA_SPECTATOR 2
+					Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR 2
 					waiting_CAMERA_SPECTATOR_update = 1;
 				}
 			}
@@ -618,7 +618,7 @@ bool View_SpectatorCamera()
 			{
 				if (waiting_CAMERA_SPECTATOR_update != STAT(CAMERA_SPECTATOR))
 				{
-					localcmd("\n+attack2; wait; -attack2\n"); // switch to CAMERA_SPECTATOR (2 and) 0
+					Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR (2 and) 0
 					waiting_CAMERA_SPECTATOR_update = STAT(CAMERA_SPECTATOR);
 				}
 			}

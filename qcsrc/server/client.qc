@@ -2429,7 +2429,9 @@ bool PlayerThink(entity this)
 	return true;
 }
 
-.int new_CAMERA_SPECTATOR;
+#define IS_WEAPNEXT_IMPULSE(imp) (imp == 10 || imp == 15 || imp == 18 || (imp >= 200 && imp <= 209))
+#define IS_WEAPPREV_IMPULSE(imp) (imp == 12 || imp == 16 || imp == 19 || (imp >= 220 && imp <= 229))
+
 // merged SpectatorThink and ObserverThink (old names are here so you can grep for them)
 void ObserverOrSpectatorThink(entity this)
 {
@@ -2440,17 +2442,12 @@ void ObserverOrSpectatorThink(entity this)
 		int r = MinigameImpulse(this, CS(this).impulse);
 		if (!is_spec || r)
 			CS(this).impulse = 0;
-	}
-
-	if (is_spec)
-	{
-		if (PHYS_INPUT_BUTTON_ATCK2(this))
+		if (is_spec && CS(this).impulse == IMP_weapon_drop.impulse)
 		{
-			if (this.new_CAMERA_SPECTATOR == STAT(CAMERA_SPECTATOR, this))
-				this.new_CAMERA_SPECTATOR = (STAT(CAMERA_SPECTATOR, this) + 1) % 3;
+			STAT(CAMERA_SPECTATOR, this) = (STAT(CAMERA_SPECTATOR, this) + 1) % 3;
+			CS(this).impulse = 0;
+			return;
 		}
-		else if (STAT(CAMERA_SPECTATOR, this) != this.new_CAMERA_SPECTATOR)
-			STAT(CAMERA_SPECTATOR, this) = this.new_CAMERA_SPECTATOR;
 	}
 
 	if (frametime && autocvar_sv_show_entnum) show_entnum(this);
@@ -2472,7 +2469,7 @@ void ObserverOrSpectatorThink(entity this)
 		if (PHYS_INPUT_BUTTON_JUMP(this) && (joinAllowed(this, this.wants_join) || time < CS(this).jointime + MIN_SPEC_TIME)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
-		} else if((is_spec && (PHYS_INPUT_BUTTON_ATCK(this) || CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18 || (CS(this).impulse >= 200 && CS(this).impulse <= 209)))
+		} else if((is_spec && (PHYS_INPUT_BUTTON_ATCK(this) || IS_WEAPNEXT_IMPULSE(CS(this).impulse)))
 			|| (!is_spec && ((PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch) || this.would_spectate))) {
 			this.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext(this)) {
@@ -2486,7 +2483,7 @@ void ObserverOrSpectatorThink(entity this)
 			if (is_spec)
 				CS(this).impulse = 0;
 		} else if (is_spec) {
-			if(CS(this).impulse == 12 || CS(this).impulse == 16  || CS(this).impulse == 19 || (CS(this).impulse >= 220 && CS(this).impulse <= 229)) {
+			if(PHYS_INPUT_BUTTON_ATCK2(this) || IS_WEAPPREV_IMPULSE(CS(this).impulse)) {
 				this.flags &= ~FL_JUMPRELEASED;
 				if(SpectatePrev(this)) {
 					TRANSMUTE(Spectator, this);
@@ -2508,7 +2505,7 @@ void ObserverOrSpectatorThink(entity this)
 			set_movetype(this, preferred_movetype);
 		}
 	} else { // jump pressed
-		if ((is_spec && !(PHYS_INPUT_BUTTON_ATCK(this)))
+		if ((is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)))
 			|| (!is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this)))) {
 			this.flags |= FL_JUMPRELEASED;
 			// primary attack pressed
@@ -2528,6 +2525,8 @@ void ObserverOrSpectatorThink(entity this)
 	if (is_spec)
 		this.flags |= FL_CLIENT | FL_NOTARGET;
 }
+#undef IS_WEAPNEXT_IMPULSE
+#undef IS_WEAPPREV_IMPULSE
 
 void PlayerUseKey(entity this)
 {
