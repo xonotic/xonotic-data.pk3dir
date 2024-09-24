@@ -2,6 +2,8 @@
 
 #include <client/draw.qh>
 #include <lib/csqcmodel/cl_player.qh>
+#include <common/physics/player.qh>
+#include <common/physics/movetypes/movetypes.qh>
 
 // jump speed
 #include <lib/csqcmodel/common.qh> // for IS_PLAYER() macro
@@ -17,7 +19,10 @@ void HUD_Physics_Export(int fh)
 	HUD_Write_Cvar("hud_panel_physics_speed_vertical");
 	HUD_Write_Cvar("hud_panel_physics_topspeed");
 	HUD_Write_Cvar("hud_panel_physics_topspeed_time");
+	HUD_Write_Cvar("hud_panel_physics_jumpspeed");
+	HUD_Write_Cvar("hud_panel_physics_jumpspeed_time");
 	HUD_Write_Cvar("hud_panel_physics_acceleration_max");
+	HUD_Write_Cvar("hud_panel_physics_acceleration_max_slick");
 	HUD_Write_Cvar("hud_panel_physics_acceleration_vertical");
 	HUD_Write_Cvar("hud_panel_physics_flip");
 	HUD_Write_Cvar("hud_panel_physics_baralign");
