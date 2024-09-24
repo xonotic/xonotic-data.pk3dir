@@ -427,9 +427,6 @@ void HUD_StrafeHUD()
 	bool aircontrol_backwards = PHYS_AIRCONTROL_BACKWARDS(strafeplayer) == 1;
 	bool airaccel_qw = PHYS_AIRACCEL_QW(strafeplayer) == 1;
 
-	float wturn_bestangle = 0;
-	float absolute_wturn_bestangle = 0;
-
 	/*
 	 * k9er: proper W-turn angle assuming sv_aircontrol_power == 2 is acos(-speed/a * (cos((acos(V) + M_PI * 2) / 3) * 2 + 1)) rad,
 	 * ... where a=dt*32*aircontrol, and V=1-(a*a)/(speed*speed),
@@ -448,6 +445,8 @@ void HUD_StrafeHUD()
 	bool wturning    = !onground && wishangle == 0 && (keys_fwd == STRAFEHUD_KEYS_FORWARD || (aircontrol_backwards && keys_fwd == STRAFEHUD_KEYS_BACKWARD));
 	bool wturn_valid = aircontrol && PHYS_AIRCONTROL_PENALTY(strafeplayer) == 0 && (airaccel_qw || autocvar_hud_panel_strafehud_wturn_unrestricted == 1);
 	bool wturn_check = autocvar_hud_panel_strafehud_wturn && moving && wturn_valid;
+
+	float wturn_bestangle = 0;
 	if(wturn_check)
 	{
 		float wturn_power = PHYS_AIRCONTROL_POWER(strafeplayer);
@@ -459,12 +458,10 @@ void HUD_StrafeHUD()
 				wturn_bestangle = acos(-speed / wturn_a * (cos((acos(wturn_V) + M_PI * 2) / 3) * 2 + 1)) * RAD2DEG;
 			else
 				wturn_bestangle = ACOS_SQRT2_3_DEG;
-			absolute_wturn_bestangle = wturn_bestangle;
 		}
 		else if(!autocvar_hud_panel_strafehud_wturn_proper && wturn_power >= 0)
 		{
 			wturn_bestangle = acos(sqrt(wturn_power / (wturn_power + 1))) * RAD2DEG;
-			absolute_wturn_bestangle = wturn_bestangle;
 		}
 		else
 		{
@@ -472,6 +469,7 @@ void HUD_StrafeHUD()
 			wturn_check = false;
 		}
 	}
+	float absolute_wturn_bestangle = wturn_bestangle;
 
 	float n_bestangle = 0;
 
@@ -674,8 +672,7 @@ void HUD_StrafeHUD()
 				angle_indicator_visible = true;
 		}
 
-		bool draw_bestangle = autocvar_hud_panel_strafehud_bestangle && (autocvar_hud_panel_strafehud_bestangle == 1 || turn) && direction != STRAFEHUD_DIRECTION_NONE;
-		if(draw_bestangle)
+		if(autocvar_hud_panel_strafehud_bestangle && (autocvar_hud_panel_strafehud_bestangle == 1 || turn) && direction != STRAFEHUD_DIRECTION_NONE)
 		{
 			float ghostangle = opposite_direction ? opposite_bestangle : bestangle;
 
