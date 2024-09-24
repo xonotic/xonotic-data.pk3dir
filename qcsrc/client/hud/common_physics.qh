@@ -1,0 +1,51 @@
+#pragma once
+
+// Shared by panel/strafehud.qc and panel/physics.qc, since hud some elements require the same variables/calculations
+// All PHYS_* macro calls are localised here
+// All csqcplayer related calls are also localised here
+
+void HUD_Physics_Init();
+
+entity strafeplayer;
+bool   islocal;
+bool   csqc_and_strafe_player;
+bool   predicted;
+
+float  strafe_waterlevel;
+vector movement_phys;
+int    keys;
+bool   jumpheld;
+bool   real_onground;
+bool   real_onslick;
+bool   onground;
+bool   onslick;
+bool   swimming;
+vector vel_phys; // NOTE: physics hud previously did this: vector vel = (csqcplayer ? csqcplayer.velocity : pmove_vel);
+float  speed_phys;
+float  speed3d_phys;
+bool   immobile;
+float  maxspeed_ground;
+float  maxspeed_air;
+float  maxspeed_airstrafe;
+float  maxaccel_ground;
+float  maxaccel_air;
+float  maxaccel_airstrafe;
+float  maxspeed_mod;
+float  maxspeed_phys;
+float  maxspeed;
+float  maxaccel_phys;
+float  maxaccel;
+float  stopspeed;
+float  airstopaccel;
+float  aircontrol;
+bool   aircontrol_backwards;
+float  aircontrol_power;
+float  aircontrol_penalty;
+bool   airaccel_qw;
+float  friction_phys;
+float  vel_angle;
+float  view_angle;
+float  onground_lasttime = 0;
+bool   onslick_last      = false;
+float  strafefriction;
+bool   alive_player;

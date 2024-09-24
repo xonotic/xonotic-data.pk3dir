@@ -370,3 +370,6 @@ NET_HANDLE(setpause, bool)
 	return true;
 }
 #endif
+
+// used elsewhere, like in strafehud
+float GeomLerp(float, float, float);

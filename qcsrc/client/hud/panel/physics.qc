@@ -1,9 +1,7 @@
 #include "physics.qh"
+#include <client/hud/common_physics.qh>
 
 #include <client/draw.qh>
-#include <lib/csqcmodel/cl_player.qh>
-#include <common/physics/player.qh>
-#include <common/physics/movetypes/movetypes.qh>
 
 // Physics (#15)
 
@@ -30,7 +28,7 @@ void HUD_Physics_Export(int fh)
 	HUD_Write_Cvar("hud_panel_physics_text_scale");
 }
 
-vector acc_prevspeed;
+vector acc_prev_vel;
 float acc_prevtime, acc_avg, top_speed, top_speed_time, jump_speed, jump_speed_time, prev_vel_z = 0;
 float physics_update_time, discrete_speed, discrete_acceleration;
 void HUD_Physics()
@@ -55,20 +53,10 @@ void HUD_Physics()
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	draw_beginBoldFont();
+	if(!csqc_and_strafe_player)
+		return;
 
-	bool onslick = false;
-	if(IS_ONGROUND(csqcplayer))
-	{
-		if(PHYS_FRICTION(csqcplayer) == 0)
-			onslick = true;
-		else // don't use IS_ONSLICK(), it only works for the local player and only if client prediction is enabled
-		{
-			trace_dphitq3surfaceflags = 0;
-			tracebox(csqcplayer.origin, csqcplayer.mins, csqcplayer.maxs, csqcplayer.origin - '0 0 1', MOVE_NOMONSTERS, csqcplayer);
-			onslick = trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK;
-		}
-	}
+	draw_beginBoldFont();
 
 	float acceleration_progressbar_scale = 0;
 	if(autocvar_hud_panel_physics_progressbar && autocvar_hud_panel_physics_acceleration_progressbar_scale > 1)
@@ -82,15 +70,16 @@ void HUD_Physics()
 
 	//compute speed
 	float speed, conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
-	vector vel = (csqcplayer ? csqcplayer.velocity : pmove_vel);
-
 	float max_speed = floor( autocvar_hud_panel_physics_speed_max * conversion_factor + 0.5 );
 	if (autocvar__hud_configure)
+	{
 		speed = floor( max_speed * 0.65 + 0.5 );
+		immobile = speed <= 0;
+	}
 	else if(autocvar_hud_panel_physics_speed_vertical)
-		speed = floor( vlen(vel) * conversion_factor + 0.5 );
+		speed = floor( speed3d_phys * conversion_factor + 0.5 );
 	else
-		speed = floor( vlen(vel - vel.z * '0 0 1') * conversion_factor + 0.5 );
+		speed = floor( speed_phys * conversion_factor + 0.5 );
 
 	//compute acceleration
 	float acceleration, f;
@@ -98,16 +87,15 @@ void HUD_Physics()
 		acceleration = 0.45; //use a hardcoded value so that the hud responds to hud_panel_physics_acceleration_max changing
 	else
 	{
-		// 1 m/s = 0.0254 qu/s; 1 g = 9.80665 m/s^2
 		f = time - acc_prevtime;
 		if(autocvar_hud_panel_physics_acceleration_vertical)
-			acceleration = (vlen(vel) - vlen(acc_prevspeed));
+			acceleration = (speed3d_phys - vlen(acc_prev_vel));
 		else
-			acceleration = (vlen(vel - '0 0 1' * vel.z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed.z));
+			acceleration = (speed_phys - vlen(vec2(acc_prev_vel)));
 
-		acceleration = acceleration * (1 / max(0.0001, f)) * (0.0254 / 9.80665);
+		acceleration = acceleration * (1 / max(0.0001, f)) * ACCEL2GRAV;
 
-		acc_prevspeed = vel;
+		acc_prev_vel = vel_phys;
 		acc_prevtime = time;
 
 		if(autocvar_hud_panel_physics_acceleration_movingaverage)
@@ -177,22 +165,22 @@ void HUD_Physics()
 	{
 		if (autocvar__hud_configure)
 		{
-			top_speed = floor( max_speed * speed_size * 0.9 + 0.5 ); // slightly less than top speed text
+			top_speed = floor( max_speed * speed_size * 0.9 + 0.5 ); //slightly less than top speed text
 			f = 1;
 		}
 		else
 		{
-			if(vel.z > prev_vel_z && !IS_DEAD(csqcplayer) && IS_PLAYER(csqcplayer))
+			if(vel_phys.z > prev_vel_z && jumpheld && !onground && !swimming && alive_player)
 			{
-				// FIXME: this includes some situations where the player doesn't explicitly jump (e.g. bouncing on ramp, jumppad)
-				// maybe these can be left in?
+				//NOTE: this includes some situations where the player doesn't explicitly jump (e.g. jumppad, weapon kb)
+				//excluding them would be difficult. maybe they can be left in?
 				jump_speed = speed;
 				jump_speed_time = time;
 			}		
 			f = max(1, autocvar_hud_panel_physics_jumpspeed_time);
 			// divide by f to make it start from 1
 			f = cos( ((time - jump_speed_time) / f) * PI/2 );
-			prev_vel_z = vel.z;
+			prev_vel_z = vel_phys.z;
 		}
 		if (f > 0)
 		{
@@ -210,7 +198,7 @@ void HUD_Physics()
 	}
 
 	//draw speed
-	if(speed)
+	if(!immobile)
 	if(autocvar_hud_panel_physics_progressbar == 1 || autocvar_hud_panel_physics_progressbar == 2)
 		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed/max_speed, 0, speed_baralign, autocvar_hud_progressbar_speed_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 2)

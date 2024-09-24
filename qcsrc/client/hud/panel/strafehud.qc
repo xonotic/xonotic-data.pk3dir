@@ -1,21 +1,18 @@
 // Author: Juhu
 
 #include "strafehud.qh"
+#include <client/hud/common_physics.qh>
 
 #include <client/draw.qh>
-#include <lib/csqcmodel/cl_player.qh>
-#include <common/physics/player.qh>
-#include <common/physics/movetypes/movetypes.qh>
 
 // non-essential
 #include <client/view.qh> // for v_flipped state
 
-// non-local players
-#include <common/animdecide.qh> // anim_implicit_state
-#include <common/ent_cs.qh> // CSQCModel_server2csqc()
-
 // start speed
 #include <client/hud/panel/racetimer.qh> // checkpoint information (race_*)
+
+// GeomLerp
+#include <common/physics/player.qh>
 
 // StrafeHUD (#25)
 
@@ -24,13 +21,9 @@ void HUD_StrafeHUD_Export(int fh)
 	// allow saving cvars that aesthetically change the panel into hud skin files
 }
 
-float GeomLerp(float a, float _lerp, float b); // declare GeomLerp here since there's no header file for it
-
 void HUD_StrafeHUD()
 {
 	static float hud_lasttime = 0;
-	entity strafeplayer;
-	bool islocal;
 
 	// generic hud routines
 	if(!autocvar__hud_configure)
@@ -55,134 +48,73 @@ void HUD_StrafeHUD()
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	// find out whether the local csqcmodel entity is valid
-	if(spectatee_status > 0 || isdemo())
-	{
-		islocal = false;
-		strafeplayer = CSQCModel_server2csqc(player_localentnum - 1);
-	}
-	else
-	{
-		islocal = true;
-		strafeplayer = csqcplayer;
-	}
-
 	// draw strafehud
-	if(csqcplayer && strafeplayer)
+	if(csqc_and_strafe_player)
 	{
-		float strafe_waterlevel;
+		float friction  = friction_phys;
+		float speed     = speed_phys;
+		vector movement = movement_phys;
 
-		// check the player waterlevel without affecting the player entity, this way we can fetch waterlevel even if client prediction is disabled
+		if(autocvar__hud_configure)
 		{
-			// store old values
-			void old_contentstransition(int, int) = strafeplayer.contentstransition;
-			float old_watertype = strafeplayer.watertype;
-			float old_waterlevel = strafeplayer.waterlevel;
-
-			strafeplayer.contentstransition = func_null; // unset the contentstransition function if present
-			_Movetype_CheckWater(strafeplayer);
-			strafe_waterlevel = strafeplayer.waterlevel; // store the player waterlevel
-
-			// restore old values
-			strafeplayer.contentstransition = old_contentstransition;
-			strafeplayer.watertype = old_watertype;
-			strafeplayer.waterlevel = old_waterlevel;
-		}
-
-		int keys = STAT(PRESSED_KEYS);
-		// try to ignore if track_canjump is enabled, doesn't work in spectator mode if spectated player uses +jetpack or cl_movement_track_canjump
-		bool jumpheld = false;
-		if(islocal)
-		{
-			if((PHYS_INPUT_BUTTON_JUMP(strafeplayer) || PHYS_INPUT_BUTTON_JETPACK(strafeplayer)) && !PHYS_CL_TRACK_CANJUMP(strafeplayer))
-				jumpheld = true;
-		}
-		else
-		{
-			if((keys & KEY_JUMP) && !PHYS_TRACK_CANJUMP(strafeplayer))
-				jumpheld = true;
+			speed    = 1337;
+			immobile = false;
+			maxspeed = 320;
+			maxaccel = 1;
 		}
 
 		// persistent
-		static float onground_lasttime       = 0;
-		static bool  onslick_last            = false;
-		static float turn_lasttime           = 0;
-		static bool  turn                    = false;
+		static float turn_lasttime          = 0;
+		static bool  turn                   = false;
 		static float turnangle;
-		static float dt_update               = 0;
-		static int   dt_time                 = 0;
-		static float dt_sum                  = 0;
-		static float dt                      = 0;
+		static float dt_update              = 0;
+		static int   dt_time                = 0;
+		static float dt_sum                 = 0;
+		static float dt                     = 0;
 
 		// physics
-		// doesn't get changed by ground timeout and isn't affected by jump input
-		bool   real_onground                 = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
-		// doesn't get changed by ground timeout
-		bool   real_onslick                  = false;
-		// if jump is held assume we are in air, avoids flickering of the hud when hitting the ground
-		bool   onground                      = real_onground && !jumpheld;
-		bool   onslick                       = real_onslick;
 		bool   onground_expired;
 		bool   strafekeys;
-		// the hud will not work well while swimming
-		bool   swimming                      = strafe_waterlevel >= WATERLEVEL_SWIMMING;
-		// use local csqcmodel entity for this even when spectating, flickers too much otherwise
-		float  speed                         = !autocvar__hud_configure ? vlen(vec2(csqcplayer.velocity)) : 1337;
-		// only the local csqcplayer entity contains this information even when spectating
-		float  maxspeed_mod                  = IS_DUCKED(csqcplayer) ? .5 : 1;
-		float  maxspeed_phys                 = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
-		float  maxspeed                      = !autocvar__hud_configure ? maxspeed_phys * maxspeed_mod : 320;
 		float  movespeed;
 		float  bestspeed;
-		float  maxaccel_phys                 = onground ? PHYS_ACCELERATE(strafeplayer) : PHYS_AIRACCELERATE(strafeplayer);
-		float  maxaccel                      = !autocvar__hud_configure ? maxaccel_phys : 1;
-		float  airstopaccel                  = PHYS_AIRSTOPACCELERATE(strafeplayer);
-		float  aircontrol                    = PHYS_AIRCONTROL(strafeplayer);
-		bool   aircontrol_backwards          = PHYS_AIRCONTROL_BACKWARDS(strafeplayer) == 1;
-		bool   airaccel_qw                   = PHYS_AIRACCEL_QW(strafeplayer) == 1;
-		// change the range from 0° - 360° to -180° - 180° to match how view_angle represents angles
-		float  vel_angle                     = vectoangles(strafeplayer.velocity).y - (vectoangles(strafeplayer.velocity).y > 180 ? 360 : 0);
-		float  view_angle                    = PHYS_INPUT_ANGLES(strafeplayer).y;
 		float  angle;
-		vector movement                      = PHYS_INPUT_MOVEVALUES(strafeplayer);
 		bool   fwd; // left & right variables are flipped when !fwd
 		int    keys_fwd;
 		float  wishangle;
 		int    direction;
-		float  strafity                      = 0;
+		float  strafity                     = 0;
 
 		// HUD
 		int    mode;
-		float  speed_conversion_factor       = GetSpeedUnitFactor(autocvar_hud_speed_unit);
-		float  length_conversion_factor      = GetLengthUnitFactor(autocvar_hud_speed_unit);
+		float  speed_conversion_factor      = GetSpeedUnitFactor(autocvar_hud_speed_unit);
+		float  length_conversion_factor     = GetLengthUnitFactor(autocvar_hud_speed_unit);
 		// use more decimals when displaying km or miles
-		int    length_decimals               = autocvar_hud_speed_unit >= 3 && autocvar_hud_speed_unit <= 5 ? 6 : 2;
-		float  antiflicker_angle             = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
+		int    length_decimals              = autocvar_hud_speed_unit >= 3 && autocvar_hud_speed_unit <= 5 ? 6 : 2;
+		float  antiflicker_angle            = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
 		float  minspeed;
-		float  shift_offset                  = 0;
-		bool   straight_overturn             = false;
-		bool   immobile                      = speed <= 0;
+		float  shift_offset                 = 0;
+		bool   straight_overturn            = false;
 		float  hudangle;
 		float  hidden_width;
 		float  neutral_offset;
 		float  neutral_width;
-		vector currentangle_color            = autocvar_hud_panel_strafehud_angle_neutral_color;
+		vector currentangle_color           = autocvar_hud_panel_strafehud_angle_neutral_color;
 		float  currentangle_offset;
 		vector currentangle_size;
 		float  bestangle;
 		float  prebestangle;
 		float  overturn_angle;
 		float  odd_bestangle;
-		float  bestangle_offset              = 0;
-		float  switch_bestangle_offset       = 0;
-		bool   odd_angles                    = false;
-		float  odd_bestangle_offset          = 0;
-		float  switch_odd_bestangle_offset   = 0;
-		float  switch_bestangle_width        = 0;
-		float  wturn_bestangle               = 0;
-		float  wturn_left_bestangle_offset   = 0;
-		float  wturn_right_bestangle_offset  = 0;
-		float  wturn_bestangle_width         = 0;
+		float  bestangle_offset             = 0;
+		float  switch_bestangle_offset      = 0;
+		bool   odd_angles                   = false;
+		float  odd_bestangle_offset         = 0;
+		float  switch_odd_bestangle_offset  = 0;
+		float  switch_bestangle_width       = 0;
+		float  wturn_bestangle              = 0;
+		float  wturn_left_bestangle_offset  = 0;
+		float  wturn_right_bestangle_offset = 0;
+		float  wturn_bestangle_width        = 0;
 		float  accelzone_left_offset;
 		float  accelzone_right_offset;
 		float  accelzone_width;
@@ -192,17 +124,17 @@ void HUD_StrafeHUD()
 		float  overturn_offset;
 		float  overturn_width;
 		float  slickdetector_height;
-		vector direction_size_vertical       = '0 0 0';
-		vector direction_size_horizontal     = '0 0 0';
+		vector direction_size_vertical      = '0 0 0';
+		vector direction_size_horizontal    = '0 0 0';
 		float  range_minangle;
-		float  text_offset_top               = 0;
-		float  text_offset_bottom            = 0;
+		float  text_offset_top              = 0;
+		float  text_offset_bottom           = 0;
 
 		// real_* variables which are always positive with no wishangle offset
 		float  real_bestangle;
 		float  real_prebestangle;
 		float  real_overturn_angle;
-		float  real_wturn_bestangle          = 0;
+		float  real_wturn_bestangle         = 0;
 
 		if(autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1)
 			mode = autocvar_hud_panel_strafehud_mode;
@@ -211,28 +143,6 @@ void HUD_StrafeHUD()
 
 		// there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
 		float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10), 0);
-
-		if(onground)
-		{
-			if(PHYS_FRICTION(strafeplayer) == 0)
-			{
-				onslick = true;
-			}
-			else // don't use IS_ONSLICK(), it only works for the local player and only if client prediction is enabled
-			{
-				trace_dphitq3surfaceflags = 0;
-				tracebox(strafeplayer.origin, strafeplayer.mins, strafeplayer.maxs, strafeplayer.origin - '0 0 1', MOVE_NOMONSTERS, strafeplayer);
-				onslick = trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK;
-			}
-			real_onslick = onslick;
-
-			onground_lasttime = time;
-			onslick_last = onslick;
-		}
-		else if(jumpheld || swimming)
-		{
-			onground_lasttime = 0;
-		}
 
 		if(onground_lasttime == 0)
 			onground_expired = true;
@@ -246,8 +156,8 @@ void HUD_StrafeHUD()
 
 			if(!autocvar__hud_configure)
 			{
-				maxspeed = PHYS_MAXSPEED(strafeplayer) * maxspeed_mod;
-				maxaccel = PHYS_ACCELERATE(strafeplayer);
+				maxspeed = maxspeed_ground * maxspeed_mod;
+				maxaccel = maxaccel_ground;
 			}
 		}
 
@@ -261,7 +171,7 @@ void HUD_StrafeHUD()
 			arrow_size = max(arrow_size, 1);
 
 		// determine frametime
-		if((csqcplayer_status == CSQCPLAYERSTATUS_PREDICTED) && (input_timelength > 0))
+		if(predicted && (input_timelength > 0))
 		{
 			float dt_client = input_timelength;
 
@@ -383,13 +293,13 @@ void HUD_StrafeHUD()
 				// calculate the maximum air strafe speed and acceleration
 				strafity = 1 - (90 - fabs(wishangle)) / 45;
 
-				if(PHYS_MAXAIRSTRAFESPEED(strafeplayer) != 0)
-					maxspeed = min(maxspeed, GeomLerp(PHYS_MAXAIRSPEED(strafeplayer), strafity, PHYS_MAXAIRSTRAFESPEED(strafeplayer)));
+				if(maxspeed_airstrafe != 0)
+					maxspeed = min(maxspeed, GeomLerp(maxspeed_air, strafity, maxspeed_airstrafe));
 
 				movespeed = min(movespeed, maxspeed);
 
-				if(PHYS_AIRSTRAFEACCELERATE(strafeplayer) != 0)
-					maxaccel = GeomLerp(PHYS_AIRACCELERATE(strafeplayer), strafity, PHYS_AIRSTRAFEACCELERATE(strafeplayer));
+				if(maxaccel_airstrafe != 0)
+					maxaccel = GeomLerp(maxaccel_air, strafity, maxaccel_airstrafe);
 			}
 		}
 
@@ -401,9 +311,7 @@ void HUD_StrafeHUD()
 
 		if((speed > 0) && onground)
 		{
-			float strafefriction = onslick ? PHYS_FRICTION_SLICK(strafeplayer) : PHYS_FRICTION(strafeplayer);
-
-			frictionspeed = speed * dt * strafefriction * max(PHYS_STOPSPEED(strafeplayer) / speed, 1);
+			frictionspeed = speed * dt * strafefriction * max(stopspeed / speed, 1);
 			strafespeed = max(speed - frictionspeed, 0);
 		}
 		else
@@ -633,11 +541,11 @@ void HUD_StrafeHUD()
 		 * this doesn't have support for sv_aircontrol_sideways == 1
 		 */
 		bool wturning    = !onground && wishangle == 0 && (keys_fwd == STRAFEHUD_KEYS_FORWARD || (aircontrol_backwards && keys_fwd == STRAFEHUD_KEYS_BACKWARD));
-		bool wturn_valid = aircontrol && PHYS_AIRCONTROL_PENALTY(strafeplayer) == 0 && (airaccel_qw || autocvar_hud_panel_strafehud_wturn_unrestricted == 1);
+		bool wturn_valid = aircontrol && aircontrol_penalty == 0 && (airaccel_qw || autocvar_hud_panel_strafehud_wturn_unrestricted == 1);
 		bool wturn_check = autocvar_hud_panel_strafehud_wturn && !immobile && wturn_valid;
 		if(wturn_check)
 		{
-			float wturn_power = PHYS_AIRCONTROL_POWER(strafeplayer);
+			float wturn_power = aircontrol_power;
 			if(wturn_power == 2)
 			{
 				float wturn_a = 32 * aircontrol * dt;
@@ -672,9 +580,9 @@ void HUD_StrafeHUD()
 		if(draw_normal)
 		{
 			// recalculate bestangle as if strafing normally
-			float n_maxspeed  = PHYS_MAXAIRSPEED(strafeplayer) * maxspeed_mod;
+			float n_maxspeed  = maxspeed_air * maxspeed_mod;
 			float n_movespeed = n_maxspeed;
-			float n_maxaccel  = PHYS_AIRACCELERATE(strafeplayer) * dt * n_movespeed;
+			float n_maxaccel  = maxaccel_air * dt * n_movespeed;
 			float n_bestspeed = max(n_movespeed - n_maxaccel, 0);
 			n_bestangle = speed > n_bestspeed
 				? acos(n_bestspeed / speed) * RAD2DEG - 45
@@ -1004,7 +912,7 @@ void HUD_StrafeHUD()
 					slickoffset.y = cos(j) * slickrotate;
 
 					traceline(traceorigin, traceorigin + slickoffset, MOVE_NOMONSTERS, strafeplayer);
-					if((PHYS_FRICTION(strafeplayer) == 0 && trace_fraction < 1)
+					if((friction == 0 && trace_fraction < 1)
 					|| (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK))
 						slickdetected = true;
 					if(i == 0)
@@ -1271,7 +1179,7 @@ void HUD_StrafeHUD()
 			static float jumpheight = 0, jumptime = 0;   // displayed value and timestamp for fade out
 
 			// tries to catch kill and spectate but those are not reliable
-			if((strafeplayer.velocity.z <= 0) || real_onground || swimming || IS_DEAD(strafeplayer) || !IS_PLAYER(strafeplayer))
+			if((strafeplayer.velocity.z <= 0) || real_onground || swimming || !alive_player)
 			{
 				height_min = height_max = strafeplayer.origin.z;
 			}

@@ -27,3 +27,7 @@ float autocvar_hud_panel_physics_jumpspeed_time = 1;
 vector autocvar_hud_progressbar_acceleration_color;
 vector autocvar_hud_progressbar_acceleration_neg_color;
 vector autocvar_hud_progressbar_speed_color;
+
+// 1 m/s^2 = 0.0254 qu/s^2; 1 g = 9.80665 m/s^2
+const float ACCEL2GRAV = 0.00259007918096393775; // converts qu/s^2 acceleration to m/s^2, relative to real-world gravity
+// equivalent to 0.0254 / 9.80665
