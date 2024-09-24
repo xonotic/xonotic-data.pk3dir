@@ -221,23 +221,25 @@ float StrafeHUD_DetermineHudAngle(float absolute_wishangle, float absolute_overt
 	float range_side   = autocvar_hud_panel_strafehud_range_sidestrafe;
 	float range_used;
 
-	if(isnan(range_normal) || isnan(range_side)) return 0;
+	float hfov = getproperty(VF_FOVX);
+	if(isnan(range_normal) || isnan(range_side) || isnan(hfov)) return 360;
 
-	if(range_normal == 0)
-		range_normal = autocvar__hud_configure ? 90 : range_minangle; // use minimum angle required if dynamically setting hud angle
-	else if(range_normal < 0)
-	{
-		float hfov = getproperty(VF_FOVX);
-		if(isnan(hfov)) hfov = 0;
-
+	// negative values enable different behaviour
+	// no exact matching so that all negative values are caught
+	if(range_normal == 0) // range = 0, use minimum angle required if dynamically setting hud angle
+		range_normal = autocvar__hud_configure ? 90 : range_minangle;
+	else if(range_normal < 0) // range = -1, use the current field of view
 		range_normal = hfov;
-	}
-	if(range_side == -1) // use the normal range
+
+	if(range_side < -1) // range = -2, use the normal range
 		range_used = range_normal;
 	else
 	{
-		if(range_side == 0)
+		if(range_side == 0)  // range = 0, use minimum angle required if dynamically setting hud angle
 			range_side = autocvar__hud_configure ? 90 : range_minangle;
+		else if(range_side < 0) // range = -1, use the current field of view
+			range_side = hfov;
+
 		range_used = GeomLerp(range_normal, strafity, range_side);
 	}
 	float hudangle = bound(0, fabs(range_used), 360); // limit HUD range to 360 degrees, higher values don't make sense
