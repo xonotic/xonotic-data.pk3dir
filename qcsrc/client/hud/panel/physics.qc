@@ -81,7 +81,7 @@ void HUD_Physics()
 	//compute acceleration
 	float acceleration, f;
 	if (autocvar__hud_configure)
-		acceleration = autocvar_hud_panel_physics_acceleration_max * 0.3;
+		acceleration = 0.45; //use a hardcoded value so that the hud responds to hud_panel_physics_acceleration_max changing
 	else
 	{
 		// 1 m/s = 0.0254 qu/s; 1 g = 9.80665 m/s^2
