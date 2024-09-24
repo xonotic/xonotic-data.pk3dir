@@ -179,9 +179,10 @@ float 	vlen(vector v)			= #9;
 float  	vectoyaw(vector v)		= #10;
 vector 	vectoangles(vector v)		= #11;
 
-float	random(void)  = #12;
+float	random(void)  = #12; // Returns a random number > 0 and < 1
 
 void	cmd(string command, ...) = #13;
+void localcmd(string command, ...) = #13;
 
 // cvar cmds
 
@@ -246,7 +247,7 @@ string	fgets(float fhandle)  = #50;
 void	fputs(float fhandle, string s)  = #51;
 
 float	strlen(string s)  = #52;
-string	strcat(string s1,string s2,...)  = #53;
+string	strcat(string s, string...)  = #53;
 string	substring(string s, float start, float length)  = #54;
 
 vector	stov(string s)  = #55;
@@ -476,6 +477,16 @@ string(string digest, string data, ...) digest_hex = #639;
 //only the "MD4" digest is always supported!
 //if the given digest is not supported, string_null is returned
 //the digest string is matched case sensitively, use "MD4", not "md4"!
+
+//DP_QC_WHICHPACK
+//idea: divVerent
+//darkplaces implementation: divVerent
+//builtin definitions:
+string(string filename) whichpack = #503;
+//description:
+//for files in a pak/pk3/whatever, returns the pack's file name in FRIK_FILE name space.
+//for physical files, returns "".
+//in case of error, returns string_null.
 
 //DP_QC_URI_ESCAPE
 //idea: div0

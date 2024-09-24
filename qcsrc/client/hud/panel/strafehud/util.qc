@@ -190,7 +190,7 @@ float StrafeHUD_DetermineWishAngle(vector movement, int keys, bool islocal)
 	}
 	else // alternatively calculate wishdir by querying pressed keys
 	{
-		if(keys & KEY_FORWARD || keys & KEY_BACKWARD)
+		if((keys & KEY_FORWARD) || (keys & KEY_BACKWARD))
 			wishangle = 45;
 		else
 			wishangle = 90;
@@ -203,45 +203,44 @@ float StrafeHUD_DetermineWishAngle(vector movement, int keys, bool islocal)
 	return wishangle;
 }
 
-float StrafeHUD_DetermineHudAngle(float wishangle)
+float StrafeHUD_DetermineHudAngle(float absolute_wishangle, float absolute_overturn_angle, float strafity)
 {
-	float hudangle;
-	if(isnan(autocvar_hud_panel_strafehud_range))
-	{
-		hudangle = 0;
-	}
-	else if(autocvar_hud_panel_strafehud_range == 0)
-	{
-		if(autocvar__hud_configure)
-		{
-			hudangle = 90;
-		}
-		else
-		{
-			// determine the minimal required HUD angle to contain the full strafing angle range
-			// this is useful for the velocity centered mode where the zones do not follow the strafing angle
-			// how it works:
-			//   the angle where the most acceleration occurs moves relative to the player velocity
-			//   from 0 - wishangle to 90 - wishangle
-			//   the angle farther away from the center is the maximum the optimal strafing angle can
-			//   diverge from the direction of velocity
-			//   this angle has to be multiplied by two since the HUD extends in both directions which
-			//   halves the amount it extends in a single direction
-			float absolute_wishangle = fabs(wishangle);
-			hudangle = max(absolute_wishangle, 90 - absolute_wishangle) * 2;
-		}
-	}
-	else if(autocvar_hud_panel_strafehud_range < 0)
+
+	// determine the minimal required HUD angle to contain the full strafing angle range
+	// this is useful for the velocity centered mode where the zones do not follow the strafing angle
+	// how it works:
+	//   the angle where the most acceleration occurs moves relative to the player velocity
+	//   from 0 - wishangle to absolute_overturn_angle - wishangle
+	//   the angle farther away from the center is the maximum the optimal strafing angle can
+	//   diverge from the direction of velocity
+	//   this angle has to be multiplied by two since the HUD extends in both directions which
+	//   halves the amount it extends in a single direction
+	float range_minangle = max(absolute_wishangle, absolute_overturn_angle - absolute_wishangle) * 2;
+
+	float range_normal = autocvar_hud_panel_strafehud_range;
+	float range_side   = autocvar_hud_panel_strafehud_range_sidestrafe;
+	float range_used;
+
+	if(isnan(range_normal) || isnan(range_side)) return 0;
+
+	if(range_normal == 0)
+		range_normal = autocvar__hud_configure ? 90 : range_minangle; // use minimum angle required if dynamically setting hud angle
+	else if(range_normal < 0)
 	{
 		float hfov = getproperty(VF_FOVX);
 		if(isnan(hfov)) hfov = 0;
 
-		hudangle = hfov;
+		range_normal = hfov;
 	}
+	if(range_side == -1) // use the normal range
+		range_used = range_normal;
 	else
 	{
-		hudangle = bound(0, fabs(autocvar_hud_panel_strafehud_range), 360); // limit HUD range to 360 degrees, higher values do not make sense
+		if(range_side == 0)
+			range_side = autocvar__hud_configure ? 90 : range_minangle;
+		range_used = GeomLerp(range_normal, strafity, range_side);
 	}
+	float hudangle = bound(0, fabs(range_used), 360); // limit HUD range to 360 degrees, higher values don't make sense
 
 	// limit strafe-meter angle to values suitable for the current projection mode
 	switch(autocvar_hud_panel_strafehud_projection)

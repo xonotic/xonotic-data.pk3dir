@@ -7,12 +7,16 @@ bool autocvar_teamplay_lockonrestart;
 
 bool autocvar_g_balance_teams;
 bool autocvar_g_balance_teams_prevent_imbalance;
+bool autocvar_g_balance_teams_queue;
+bool autocvar_g_balance_teams_remove;
+int autocvar_g_balance_teams_remove_wait;
 
 string autocvar_g_forced_team_otherwise;
 
 bool lockteams;
 
 .int team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
+
 
 // ========================== Global teams API ================================
 
@@ -113,6 +117,8 @@ enum
 	TEAM_CHANGE_SPECTATOR = 4 ///< Player is joining spectators. //TODO: Remove?
 };
 
+bool QueuedPlayersReady(entity this, bool checkspecificteam);
+
 /// \brief Sets the team of the player.
 /// \param[in,out] player Player to adjust.
 /// \param[in] team_index Index of the team to set.
@@ -182,6 +188,19 @@ void TeamBalance_Destroy(entity balance);
 /// \param[in] balance Team balance entity.
 /// \return Bitmask of allowed teams.
 int TeamBalance_GetAllowedTeams(entity balance);
+
+/// Returns the size difference between the largest and smallest team (bots included).
+int TeamBalance_SizeDifference(entity ignore);
+
+bool TeamBalance_AreEqual(entity ignore, bool would_leave);
+void TeamBalance_RemoveExcessPlayers(entity ignore);
+/** Joins queued player(s) to team(s) with a shortage,
+ * this should be more robust than only replacing the player that left.
+ * Chooses players with a specific team preference first
+ * to increase chances of everyone getting what they want.
+ * Returns true if the teams are now balanced.
+ */
+bool TeamBalance_QueuedPlayersTagIn(entity ignore);
 
 /// \brief Returns whether the team change to the specified team is allowed.
 /// \param[in] balance Team balance entity.
@@ -339,3 +358,6 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_index_b,
 /// \param[in,out] player Player that requested a new color.
 /// \param[in] new_color Requested color.
 void SV_ChangeTeam(entity player, int new_color);
+
+
+bool QueueNeeded(entity ignore);

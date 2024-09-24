@@ -229,6 +229,25 @@ GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to <program>_cmd
 	}
 }
 
+string maplist_shuffle(string input)
+{
+	int buf = buf_create();
+
+	int _cnt = 0;
+	FOREACH_WORD(input, true,
+	{
+		int _j = floor(random() * (_cnt + 1));
+		if(_j != _cnt)
+			bufstr_set(buf, _cnt, bufstr_get(buf, _j));
+		bufstr_set(buf, _j, it);
+		++_cnt;
+	});
+
+	string output = buf_implode(buf, " ");
+	buf_del(buf);
+	return substring(output, 1, -1);
+}
+
 void GenericCommand_maplist(int request, int argc)
 {
 	switch(request)
@@ -274,11 +293,13 @@ void GenericCommand_maplist(int request, int argc)
 				{
 					if(argc == 3)
 					{
+						// save argv(2) from being overridden by tokenize engine call
+						string del_map_name = argv(2);
 						argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
 
 						tmp_string = "";
 						for(i = 0; i < argc; ++i)
-							if(argv(i) != argv(2))
+							if(argv(i) != del_map_name)
 								tmp_string = strcat(tmp_string, " ", argv(i));
 
 						tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);
@@ -291,7 +312,7 @@ void GenericCommand_maplist(int request, int argc)
 
 				case "shuffle": // randomly shuffle the maplist
 				{
-					cvar_set("g_maplist", shufflewords(cvar_string("g_maplist")));
+					cvar_set("g_maplist", maplist_shuffle(cvar_string("g_maplist")));
 					return;
 				}
 

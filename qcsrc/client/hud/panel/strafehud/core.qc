@@ -4,7 +4,8 @@
 
 void StrafeHUD_DrawStrafeMeter(
 	float shiftangle, float wishangle, float absolute_bestangle,
-	float absolute_prebestangle, bool moving, float hudangle)
+	float absolute_prebestangle, float absolute_overturn_angle,
+	bool moving, float hudangle)
 {
 	// the neutral zone fills the whole strafe bar
 	if(!moving)
@@ -42,10 +43,10 @@ void StrafeHUD_DrawStrafeMeter(
 		float neutral_startangle;
 		float overturn_startangle;
 
-		float accelzone_offsetangle = 90 - absolute_bestangle;
-		float preaccelzone_offsetangle = absolute_bestangle - absolute_prebestangle;
+		float accelzone_offsetangle = absolute_overturn_angle - absolute_bestangle;
+		float preaccelzone_offsetangle = fabs(absolute_bestangle - absolute_prebestangle);
 		float neutral_offsetangle = 360;
-		float overturn_offsetangle = 180;
+		float overturn_offsetangle = 360 - absolute_overturn_angle * 2;
 
 		if(!autocvar_hud_panel_strafehud_bar_preaccel)
 			preaccelzone_offsetangle = 0;
@@ -83,55 +84,56 @@ void StrafeHUD_DrawStrafeMeter(
 		overturn_startangle += shiftangle;
 
 		// draw left acceleration zone
-		StrafeHUD_DrawStrafeHUD(
-			accelzone_left_startangle, accelzone_offsetangle,
-			autocvar_hud_panel_strafehud_bar_accel_color,
-			autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
-			autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_LEFT,
-			true, hudangle);
-
-		if(autocvar_hud_panel_strafehud_bar_preaccel)
+		if(accelzone_offsetangle > 0)
 			StrafeHUD_DrawStrafeHUD(
-				preaccelzone_left_startangle, preaccelzone_offsetangle,
-				autocvar_hud_panel_strafehud_bar_accel_color,
-				autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
-				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_RIGHT,
-				true, hudangle);
-
-		// draw right acceleration zone
-		StrafeHUD_DrawStrafeHUD(
-			accelzone_right_startangle, accelzone_offsetangle,
-			autocvar_hud_panel_strafehud_bar_accel_color,
-			autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
-			autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_RIGHT,
-			true, hudangle);
-
-		if(autocvar_hud_panel_strafehud_bar_preaccel)
-			StrafeHUD_DrawStrafeHUD(
-				preaccelzone_right_startangle, preaccelzone_offsetangle,
+				accelzone_left_startangle, accelzone_offsetangle,
 				autocvar_hud_panel_strafehud_bar_accel_color,
 				autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
 				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_LEFT,
 				true, hudangle);
 
+		if(autocvar_hud_panel_strafehud_bar_preaccel && preaccelzone_offsetangle > 0)
+			StrafeHUD_DrawStrafeHUD(
+				preaccelzone_left_startangle, preaccelzone_offsetangle,
+				autocvar_hud_panel_strafehud_bar_preaccel_color,
+				autocvar_hud_panel_strafehud_bar_preaccel_alpha * panel_fg_alpha,
+				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_RIGHT,
+				true, hudangle);
+
+		// draw right acceleration zone
+		if(accelzone_offsetangle > 0)
+			StrafeHUD_DrawStrafeHUD(
+				accelzone_right_startangle, accelzone_offsetangle,
+				autocvar_hud_panel_strafehud_bar_accel_color,
+				autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
+				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_RIGHT,
+				true, hudangle);
+
+		if(autocvar_hud_panel_strafehud_bar_preaccel && preaccelzone_offsetangle > 0)
+			StrafeHUD_DrawStrafeHUD(
+				preaccelzone_right_startangle, preaccelzone_offsetangle,
+				autocvar_hud_panel_strafehud_bar_preaccel_color,
+				autocvar_hud_panel_strafehud_bar_preaccel_alpha * panel_fg_alpha,
+				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_LEFT,
+				true, hudangle);
+
 		// draw overturn zone
-		//   this is technically incorrect
-		//   acceleration decreases at 90 degrees but speed loss happens a little bit after 90 degrees,
-		//   however due to sv_airstopaccelerate that's hard to calculate
-		StrafeHUD_DrawStrafeHUD(
-			overturn_startangle, overturn_offsetangle,
-			autocvar_hud_panel_strafehud_bar_overturn_color,
-			autocvar_hud_panel_strafehud_bar_overturn_alpha * panel_fg_alpha,
-			autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_BOTH,
-			true, hudangle);
+		if(overturn_offsetangle > 0)
+			StrafeHUD_DrawStrafeHUD(
+				overturn_startangle, overturn_offsetangle,
+				autocvar_hud_panel_strafehud_bar_overturn_color,
+				autocvar_hud_panel_strafehud_bar_overturn_alpha * panel_fg_alpha,
+				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_BOTH,
+				true, hudangle);
 
 		// draw neutral zone
-		StrafeHUD_DrawStrafeHUD(
-			neutral_startangle, neutral_offsetangle,
-			autocvar_hud_panel_strafehud_bar_neutral_color,
-			autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha,
-			autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_NONE,
-			true, hudangle);
+		if(neutral_offsetangle > 0)
+			StrafeHUD_DrawStrafeHUD(
+				neutral_startangle, neutral_offsetangle,
+				autocvar_hud_panel_strafehud_bar_neutral_color,
+				autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha,
+				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_NONE,
+				true, hudangle);
 	}
 }
 
@@ -209,8 +211,7 @@ void StrafeHUD_DrawDirectionIndicator(int direction, bool opposite_direction, bo
 	direction_size_horizontal.y = direction_size_vertical.x;
 	direction_size_horizontal.z = 0;
 
-	if(autocvar_hud_panel_strafehud_direction &&
-	   direction != STRAFEHUD_DIRECTION_NONE &&
+	if(direction != STRAFEHUD_DIRECTION_NONE &&
 	   direction_size_vertical.x > 0 &&
 	   autocvar_hud_panel_strafehud_direction_alpha > 0)
 	{

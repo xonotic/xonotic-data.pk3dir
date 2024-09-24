@@ -163,12 +163,12 @@ void HUD_StrafeHUD()
 	}
 
 	float wishangle = StrafeHUD_DetermineWishAngle(movement, keys, islocal);
+	float absolute_wishangle = fabs(wishangle); // unmodified by side strafing code
 	bool strafekeys = fabs(wishangle) > 45;
-
-	float hudangle = StrafeHUD_DetermineHudAngle(wishangle);
 
 	// detect air strafe turning
 	static bool turn = false;
+	float strafity = 0;
 	if((!strafekeys && vlen(vec2(movement)) > 0) || onground || autocvar__hud_configure)
 	{
 		turn = false;
@@ -184,7 +184,7 @@ void HUD_StrafeHUD()
 		else if(turn_expired)
 			turn = false;
 
-		if(turn) // CPMA turning
+		if(turn) // side strafing (A/D)
 		{
 			if(strafekeys)
 			{
@@ -197,7 +197,7 @@ void HUD_StrafeHUD()
 			}
 
 			// calculate the maximum air strafe speed and acceleration
-			float strafity = 1 - (90 - fabs(wishangle)) / 45;
+			strafity = 1 - (90 - fabs(wishangle)) / 45;
 
 			if(PHYS_MAXAIRSTRAFESPEED(strafeplayer) != 0)
 				maxspeed = min(maxspeed, GeomLerp(PHYS_MAXAIRSPEED(strafeplayer), strafity, PHYS_MAXAIRSTRAFESPEED(strafeplayer)));
@@ -236,7 +236,7 @@ void HUD_StrafeHUD()
 
 	// get current strafing angle ranging from -180° to +180°
 	float angle;
-	bool fwd;
+	bool fwd; // left & right variables are flipped when !fwd
 
 	if(!autocvar__hud_configure)
 	{
@@ -329,29 +329,187 @@ void HUD_StrafeHUD()
 		wishangle *= -1;
 	}
 
-	// best angle to strafe at
-	// in case of ground friction we may decelerate if the acceleration is smaller than the speed loss from friction
-	float bestangle    = (strafespeed > bestspeed ? acos(bestspeed / strafespeed) * RAD2DEG : 0);
-	float prebestangle = (strafespeed > movespeed ? acos(movespeed / strafespeed) * RAD2DEG : 0);
-	float opposite_bestangle = -bestangle;
+	float airstopaccel = PHYS_AIRSTOPACCELERATE(strafeplayer);
+	if(airstopaccel == 0)
+		airstopaccel = 1; // values of 0 are equivalent to 1
 
+	// best angle to strafe at
+	float bestangle;
+	float prebestangle;
+	float overturn_angle;
+	if(!moving)
+	{
+		// these are unused (neutral fills whole strafe bar)
+		prebestangle = bestangle = 0;
+		overturn_angle = 180;
+	}
+	else if(onground && autocvar_hud_panel_strafehud_onground_friction)
+	{
+		// draw ground angles
+		{
+			// delta_opt = acos((s - a) / v_f), same in air
+			bestangle = strafespeed > bestspeed
+				? acos(bestspeed / strafespeed) * RAD2DEG // case 1
+				: 0; // case 2
+			// case 1: normal. case 2: low speed, best angle is forwards
+		}
+		{
+			// needed later if autocvar_hud_panel_strafehud_wturn != STRAFEHUD_WTURN_NONE,
+			// ... so calculate even if autocvar_hud_panel_strafehud_bar_preaccel == 0
+			float prebestangle_sqrt = movespeed * movespeed + strafespeed * strafespeed - speed * speed;
+			// delta_min = acos(sqrt(s^2 - v_f^2 + v^2) / v_f), or just acos(s / v) in air
+			prebestangle = (prebestangle_sqrt > 0 && strafespeed > sqrt(prebestangle_sqrt))
+				? acos(sqrt(prebestangle_sqrt) / strafespeed) * RAD2DEG // case 1
+				: (prebestangle_sqrt > 0 ? 0 : 90); // case 2 : case 3
+			// case 1: normal. case 2: low speed, best angle is forwards. case 3: landed at high speed, neutral zone is very large (see explanation below)
+		}
+		{
+			float overturn_numer = speed * speed - strafespeed * strafespeed - maxaccel * maxaccel;
+			float overturn_denom = 2 * maxaccel * strafespeed;
+			// delta_max = acos((v^2 - v_f^2 - a^2) / (2av_f)), or just acos(-a / 2v) if in air
+			overturn_angle = overturn_denom > fabs(overturn_numer)
+				? acos(overturn_numer / overturn_denom) * RAD2DEG // case 1
+				: (overturn_numer < 0 ? 180 : 0); // case 2 : case 3
+			// case 1: normal. case 2: low speed, turning anywhere will gain speed. case 3: landed at high speed, turning anywhere will lose speed (due to friction)
+		}
+		if(overturn_angle < bestangle || bestangle < prebestangle)
+		{
+			// these conditions occur when you land at high speed (above max onground speed), such that every wishangle will result in a speed loss due to friction
+			if(autocvar_hud_panel_strafehud_onground_mode == STRAFEHUD_ONGROUND_OVERTURN)
+			{
+				// make overturn fill the whole strafe bar
+				// most correct option by the true definition of accel, since every angle results in deceleration
+				prebestangle = bestangle = 0;
+				overturn_angle = 0;
+			}
+			else if(autocvar_hud_panel_strafehud_onground_mode == STRAFEHUD_ONGROUND_GROUND)
+			{
+				/* k9er: these aren't the true angles -- the real ones are very convoluted and difficult to understand
+				 * essentially the prior definitions of the zones now overlap,
+				 * ... with the overturn zone extending below bestangle, and eventually covering the whole hud
+				 * ... and somehow the neutral zone extends above bestangle, and eventually covers the whole hud (i think)
+				 * overall showing it accurately is just confusing and unnecessary to add
+				 * thankfully the bestangle formula is unchanged, so the least confusing option is likely as follows:
+				 */
+				overturn_angle = bestangle;
+				prebestangle = bestangle;
+			}
+			else
+			{
+				// use angles as if in air
+				// no need to check if numerator < denominator, since all numerators < max onground speed < speed = all denominators
+				bestangle = acos(bestspeed / speed) * RAD2DEG;
+				prebestangle = acos(movespeed / speed) * RAD2DEG;
+				overturn_angle = acos(-(airstopaccel * maxaccel / 2) / speed) * RAD2DEG;
+			}
+		}
+	}
+	else
+	{
+		// draw airborne angles. see above for documentation
+		bestangle = speed > bestspeed
+			? acos(bestspeed / speed) * RAD2DEG
+			: 0;
+		prebestangle = speed > movespeed
+			? acos(movespeed / speed) * RAD2DEG
+			: 0;
+		// with airstopaccel, delta_max = acos(airstopaccel * -a / 2v), only in air
+		overturn_angle = speed > airstopaccel * maxaccel / 2
+			? acos(-(airstopaccel * maxaccel / 2) / speed) * RAD2DEG
+			: 180;
+	}
 	// absolute_* variables which are always positive with no wishangle offset
 	float absolute_bestangle = bestangle;
 	float absolute_prebestangle = prebestangle;
+	float absolute_overturn_angle = overturn_angle;
+
+	float aircontrol = PHYS_AIRCONTROL(strafeplayer);
+	bool aircontrol_backwards = PHYS_AIRCONTROL_BACKWARDS(strafeplayer) == 1;
+	bool airaccel_qw = PHYS_AIRACCEL_QW(strafeplayer) == 1;
+
+	float wturn_bestangle = 0;
+	float absolute_wturn_bestangle = 0;
+
+	/*
+	 * k9er: proper W-turn angle assuming sv_aircontrol_power == 2 is acos(-speed/a * (cos((acos(V) + M_PI * 2) / 3) * 2 + 1)) rad,
+	 * ... where a=dt*32*aircontrol, and V=1-(a*a)/(speed*speed),
+	 * ... but this very quickly loses accuracy -- should be a strictly decreasing function, yet it increases at only speed=722 with 125 fps
+	 * also note this is only valid when such angle is not in the accelzone, formula taking acceleration into account is unfathomably complicated
+	 * afaik there's no simplified version of this formula that doesn't involve complex numbers, other than one valid for only speed<27.1 roughly
+	 * furthermore, this function quite rapidly approaches its asymptote of ~35.26, e.g. being ~0.68 away when at only speed=600
+	 * this asymptote is independent of whether the player is crouching or has haste, although they must be airborne
+	 * thus, the best option is to just draw the asymptote (acos(sqrt(2/3))),
+	 * ... but the proper angle can be drawn too if the player wants (hud_panel_strafehud_wturn_proper 1)
+	 * this is only enabled if sv_airaccel_qw == 1 since otherwise W-turning gives acceleration, unless hud_panel_strafehud_wturn_unrestricted 1
+	 * when sv_aircontrol_power != 2 (abbr. "p"), the asymptote is instead acos(sqrt(p/(p+1))). full formula is too difficult to calculate,
+	 * ... so the angle will only be shown with hud_panel_strafehud_wturn_proper 0
+	 * this doesn't have support for sv_aircontrol_sideways == 1
+	 */
+	bool wturning    = !onground && wishangle == 0 && (keys_fwd == STRAFEHUD_KEYS_FORWARD || (aircontrol_backwards && keys_fwd == STRAFEHUD_KEYS_BACKWARD));
+	bool wturn_valid = aircontrol && PHYS_AIRCONTROL_PENALTY(strafeplayer) == 0 && (airaccel_qw || autocvar_hud_panel_strafehud_wturn_unrestricted == 1);
+	bool wturn_check = autocvar_hud_panel_strafehud_wturn && moving && wturn_valid;
+	if(wturn_check)
+	{
+		float wturn_power = PHYS_AIRCONTROL_POWER(strafeplayer);
+		if(wturn_power == 2)
+		{
+			float wturn_a = 32 * aircontrol * dt;
+			float wturn_V = 1 - (wturn_a * wturn_a) / (speed * speed);
+			if(autocvar_hud_panel_strafehud_wturn_proper && wturn_a > 1 && wturn_V < 1 && wturn_V > -1)
+				wturn_bestangle = acos(-speed / wturn_a * (cos((acos(wturn_V) + M_PI * 2) / 3) * 2 + 1)) * RAD2DEG;
+			else
+				wturn_bestangle = ACOS_SQRT2_3_DEG;
+			absolute_wturn_bestangle = wturn_bestangle;
+		}
+		else if(!autocvar_hud_panel_strafehud_wturn_proper && wturn_power >= 0)
+		{
+			wturn_bestangle = acos(sqrt(wturn_power / (wturn_power + 1))) * RAD2DEG;
+			absolute_wturn_bestangle = wturn_bestangle;
+		}
+		else
+		{
+			wturn_valid = false;
+			wturn_check = false;
+		}
+	}
+
+	float n_bestangle = 0;
+
+	// draw the switch indicators as if strafing normally (W+A style), while W-turning or side strafing
+	bool draw_normal = ((autocvar_hud_panel_strafehud_switch >= STRAFEHUD_SWITCH_NORMAL && wturning)
+		|| (autocvar_hud_panel_strafehud_switch == STRAFEHUD_SWITCH_SIDESTRAFE && turn));
+	if(draw_normal)
+	{
+		// recalculate bestangle as if strafing normally
+		float n_maxspeed  = PHYS_MAXAIRSPEED(strafeplayer) * maxspeed_mod;
+		float n_movespeed = n_maxspeed;
+		float n_maxaccel  = PHYS_AIRACCELERATE(strafeplayer) * dt * n_movespeed;
+		float n_bestspeed = max(n_movespeed - n_maxaccel, 0);
+		n_bestangle = speed > n_bestspeed
+			? acos(n_bestspeed / speed) * RAD2DEG - 45
+			: -45;
+	}
+
+	float hudangle = StrafeHUD_DetermineHudAngle(absolute_wishangle, absolute_overturn_angle, strafity);
 
 	float antiflicker_angle = bound(0, autocvar_hud_panel_strafehud_antiflicker_angle, 180);
 	float direction = StrafeHUD_DetermineDirection(angle, wishangle, antiflicker_angle);
 
 	if(direction == STRAFEHUD_DIRECTION_LEFT) // the angle becomes negative in case we strafe left
 	{
+		n_bestangle *= -1;
 		bestangle *= -1;
-		opposite_bestangle *= -1;
 		prebestangle *= -1;
+		overturn_angle *= -1;
 	}
+	float opposite_bestangle = -bestangle;
+	float n_opposite_bestangle = -n_bestangle;
 
 	bestangle -= wishangle;
 	opposite_bestangle -= wishangle;
+	n_opposite_bestangle -= wishangle;
 	prebestangle -= wishangle;
+	overturn_angle -= wishangle;
 
 	int mode;
 	if(autocvar_hud_panel_strafehud_mode >= 0 && autocvar_hud_panel_strafehud_mode <= 1)
@@ -361,6 +519,13 @@ void HUD_StrafeHUD()
 
 	// best strafe acceleration angle
 	float changeangle = -bestangle;
+	float n_changeangle = -n_bestangle;
+	float n_opposite_changeangle = n_opposite_bestangle + n_bestangle * 2;
+
+	// minimum speed for change indicators
+	float minspeed = autocvar_hud_panel_strafehud_switch_minspeed;
+	if(minspeed < 0)
+		minspeed = bestspeed + frictionspeed;
 
 	bool opposite_direction = false;
 	float opposite_changeangle = 0;
@@ -369,6 +534,10 @@ void HUD_StrafeHUD()
 		opposite_direction = true;
 		opposite_changeangle = opposite_bestangle + bestangle * 2;
 	}
+
+	// best angle to aim at when W-turning to maximally rotate velocity vector
+	float wturn_left_bestangle = wturn_bestangle;
+	float wturn_right_bestangle = -wturn_bestangle;
 
 	// shift hud if operating in view angle centered mode
 	float shiftangle = 0;
@@ -379,15 +548,22 @@ void HUD_StrafeHUD()
 		changeangle += shiftangle;
 		opposite_bestangle += shiftangle;
 		opposite_changeangle += shiftangle;
+		n_bestangle += shiftangle;
+		n_changeangle += shiftangle;
+		n_opposite_bestangle += shiftangle;
+		n_opposite_changeangle += shiftangle;
+		wturn_left_bestangle += shiftangle;
+		wturn_right_bestangle += shiftangle;
 	}
 
-	StrafeHUD_DrawStrafeMeter(shiftangle, wishangle, absolute_bestangle, absolute_prebestangle, moving, hudangle);
+	StrafeHUD_DrawStrafeMeter(shiftangle, wishangle, absolute_bestangle, absolute_prebestangle, absolute_overturn_angle, moving, hudangle);
 
 	float text_offset_top;
 	float text_offset_bottom;
 	text_offset_top = text_offset_bottom = StrafeHUD_DrawSlickDetector(strafeplayer, real_onslick);
 
-	StrafeHUD_DrawDirectionIndicator(direction, opposite_direction, fwd);
+	if(autocvar_hud_panel_strafehud_direction)
+		StrafeHUD_DrawDirectionIndicator(direction, opposite_direction, fwd);
 
 	// determine the strafing ratio and the angle indicator color
 	vector currentangle_color = autocvar_hud_panel_strafehud_angle_neutral_color;
@@ -395,25 +571,32 @@ void HUD_StrafeHUD()
 	if(moving)
 	{
 		float moveangle = fabs(angle + wishangle);
+		if(moveangle > 180) moveangle = 360 - moveangle; // restricted to between 0 and 180
 
 		// player is overturning
-		if(moveangle >= 90)
+		if(moveangle >= absolute_overturn_angle)
 		{
-			currentangle_color = autocvar_hud_panel_strafehud_angle_overturn_color;
-			strafe_ratio = (moveangle - 90) / 90;
-			if(strafe_ratio > 1) strafe_ratio = 2 - strafe_ratio;
-			strafe_ratio *= -1;
+			if(moveangle == absolute_overturn_angle && absolute_overturn_angle == 180)
+					; // everywhere gives acceleration, keep strafe_ratio as 0
+			else
+			{
+					currentangle_color = autocvar_hud_panel_strafehud_angle_overturn_color;
+					strafe_ratio = (moveangle - absolute_overturn_angle) / (180 - absolute_overturn_angle);
+					// moveangle is always <= 180, so this code won't run if absolute_overturn_angle == 180
+					strafe_ratio *= -1;
+			}
 		}
 		// player gains speed by strafing
 		else if(moveangle >= absolute_bestangle)
 		{
 			currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
-			strafe_ratio = (90 - moveangle) / (90 - absolute_bestangle);
+			strafe_ratio = (absolute_overturn_angle - moveangle) / (absolute_overturn_angle - absolute_bestangle);
+			// if absolute_overturn_angle == absolute_bestangle, this code won't run, no need to check if their difference is 0
 		}
 		else if(moveangle >= absolute_prebestangle)
 		{
 			if(autocvar_hud_panel_strafehud_bar_preaccel)
-				currentangle_color = autocvar_hud_panel_strafehud_angle_accel_color;
+				currentangle_color = autocvar_hud_panel_strafehud_angle_preaccel_color;
 			strafe_ratio = (moveangle - absolute_prebestangle) / (absolute_bestangle - absolute_prebestangle);
 		}
 
@@ -463,24 +646,23 @@ void HUD_StrafeHUD()
 	{
 		bool angle_indicator_visible = false;
 
-		// minimum speed for change indicators
-		float minspeed = autocvar_hud_panel_strafehud_switch_minspeed;
-		if(minspeed < 0)
-			minspeed = bestspeed + frictionspeed;
-
-		// only draw change indicators if minspeed is reached
-		if(autocvar_hud_panel_strafehud_switch && speed >= minspeed)
+		// only draw switch indicators if minspeed is reached
+		if(autocvar_hud_panel_strafehud_switch && autocvar_hud_panel_strafehud_switch_alpha > 0 && speed >= minspeed)
 		{
 			// draw the change indicator(s)
-			float current_changeangle = opposite_direction ? opposite_changeangle : changeangle;
-			float opposite_changeangle = opposite_direction ? opposite_bestangle : bestangle;
+			float current_changeangle = draw_normal
+				? (opposite_direction ? n_opposite_changeangle : n_changeangle)
+				: (opposite_direction ? opposite_changeangle : changeangle);
+			float opposite_changeangle = draw_normal
+				? (opposite_direction ? n_opposite_bestangle : n_bestangle)
+				: (opposite_direction ? opposite_bestangle : bestangle);
 
 			StrafeHUD_DrawAngleIndicator(
 				current_changeangle, currentangle_size, arrow_size, num_dashes,
 				has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_switch_color,
 				autocvar_hud_panel_strafehud_switch_alpha, hudangle);
 
-			if(direction == STRAFEHUD_DIRECTION_NONE)
+			if(direction == STRAFEHUD_DIRECTION_NONE || draw_normal)
 			{
 				StrafeHUD_DrawAngleIndicator(
 					opposite_changeangle, currentangle_size, arrow_size, num_dashes,
@@ -492,7 +674,8 @@ void HUD_StrafeHUD()
 				angle_indicator_visible = true;
 		}
 
-		if(autocvar_hud_panel_strafehud_bestangle && direction != STRAFEHUD_DIRECTION_NONE)
+		bool draw_bestangle = autocvar_hud_panel_strafehud_bestangle && (autocvar_hud_panel_strafehud_bestangle == 1 || turn) && direction != STRAFEHUD_DIRECTION_NONE;
+		if(draw_bestangle)
 		{
 			float ghostangle = opposite_direction ? opposite_bestangle : bestangle;
 
@@ -503,6 +686,24 @@ void HUD_StrafeHUD()
 
 			if(autocvar_hud_panel_strafehud_bestangle_alpha > 0)
 				angle_indicator_visible = true;
+		}
+
+		// only draw wturn indicators if conditions were met
+		bool wturn_show = autocvar_hud_panel_strafehud_wturn == STRAFEHUD_WTURN_SIDESTRAFE ? (fwd || aircontrol_backwards)
+			: autocvar_hud_panel_strafehud_wturn == STRAFEHUD_WTURN_NORMAL ? ((fwd || aircontrol_backwards) && !turn)
+			: autocvar_hud_panel_strafehud_wturn == STRAFEHUD_WTURN_NONE ? false
+			: wturning;
+		if(wturn_check && wturn_show && absolute_wturn_bestangle < absolute_prebestangle && !onground && autocvar_hud_panel_strafehud_wturn && autocvar_hud_panel_strafehud_wturn_alpha > 0)
+		{
+			// draw the wturn indicators
+			StrafeHUD_DrawAngleIndicator(
+				wturn_left_bestangle, currentangle_size, arrow_size, num_dashes,
+				has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_wturn_color,
+				autocvar_hud_panel_strafehud_wturn_alpha, hudangle);
+			StrafeHUD_DrawAngleIndicator(
+				wturn_right_bestangle, currentangle_size, arrow_size, num_dashes,
+				has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_wturn_color,
+				autocvar_hud_panel_strafehud_wturn_alpha, hudangle);
 		}
 
 		StrafeHUD_DrawAngleIndicator(

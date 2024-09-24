@@ -145,7 +145,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 #ifdef SVQC
 	// prevent further teleports back
-	float dt = (o1 - o10) * v1 * (1 / (v1 * v1));
+	float dt = (v1 != '0 0 0') ? (o1 - o10) * v1 * (1 / (v1 * v1)) : 0;
 	if(dt < PHYS_INPUT_FRAMETIME)
 		player.warpzone_teleport_finishtime += PHYS_INPUT_FRAMETIME - dt;
 #endif
@@ -193,11 +193,10 @@ void WarpZone_Touch(entity this, entity toucher)
 	if(toucher.move_movetype == MOVETYPE_NONE || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_entity)
 		return;
 
-	if(WarpZoneLib_ExactTrigger_Touch(this, toucher))
-		return;
-
 	if(WarpZone_PlaneDist(this, toucher.origin + toucher.view_ofs) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
 		return;
+
+	EXACTTRIGGER_TOUCH(this, toucher);
 
 	float f;
 	// number of frames we need to go back:
@@ -703,19 +702,9 @@ spawnfunc(trigger_warpzone)
 		this.scale = this.modelscale;
 	if(!this.scale)
 		this.scale = 1;
-	string m;
-	m = this.model;
-	WarpZoneLib_ExactTrigger_Init(this);
- 	if(m != "")
- 	{
- 		precache_model(m);
- 		_setmodel(this, m); // no precision needed
-	}
-	setorigin(this, this.origin);
-	if(this.scale)
-		setsize(this, this.mins * this.scale, this.maxs * this.scale);
-	else
-		setsize(this, this.mins, this.maxs);
+
+	WarpZoneLib_ExactTrigger_Init(this, false);
+
 	setSendEntity(this, WarpZone_Send);
 	this.SendFlags = 0xFFFFFF;
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
@@ -809,14 +798,13 @@ void WarpZone_StartFrame()
 		if(warpzone_warpzones_exist)
 			WarpZone_StoreProjectileData(it); // TODO: not actually needed
 
-		if(IS_OBSERVER(it) || it.solid == SOLID_NOT)
-		if(IS_CLIENT(it)) // we don't care about it being a bot
+		if((IS_OBSERVER(it) || it.solid == SOLID_NOT))
 		{
 			// warpzones
 			if (warpzone_warpzones_exist) {
 				entity e = WarpZone_Find(it.origin + it.mins, it.origin + it.maxs);
 				if (e)
-				if (!WarpZoneLib_ExactTrigger_Touch(e, it))
+				if (WarpZoneLib_ExactTrigger_Touch(e, it, false))
 				if (WarpZone_PlaneDist(e, it.origin + it.view_ofs) <= 0)
 					WarpZone_Teleport(e, it, -1, 0); // NOT triggering targets by this!
 			}
@@ -826,7 +814,7 @@ void WarpZone_StartFrame()
 			{
 				entity ent = Teleport_Find(it.origin + it.mins, it.origin + it.maxs);
 				if (ent)
-				if (!WarpZoneLib_ExactTrigger_Touch(ent, it))
+				if (WarpZoneLib_ExactTrigger_Touch(ent, it, false))
 					Simple_TeleportPlayer(ent, it); // NOT triggering targets by this!
 			}
 		}

@@ -45,8 +45,8 @@ const float KH_KEY_XYSPEED = 45;
 #endif
 const float KH_KEY_WP_ZSHIFT = 20;
 
-const vector KH_KEY_MIN = '-10 -10 -46';
-const vector KH_KEY_MAX = '10 10 3';
+const vector KH_KEY_MIN = '-25 -25 -46'; // 0.8.6 used '-10 -10 -46' with sv_legacy_bbox_expand 1 and FL_ITEM
+const vector KH_KEY_MAX = '25 25 4';     // 0.8.6 used '10 10 3'     with sv_legacy_bbox_expand 1 and FL_ITEM
 const float KH_KEY_BRIGHTNESS = 2;
 
 bool kh_no_radar_circles;
@@ -90,7 +90,7 @@ void kh_ScoreRules(int teams)
         field_team(ST_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
         field(SP_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
         field(SP_KH_PUSHES, "pushes", 0);
-        field(SP_KH_DESTROYS, "destroyed", SFL_LOWER_IS_BETTER);
+        field(SP_KH_DESTRUCTIONS, "destructions", SFL_LOWER_IS_BETTER);
         field(SP_KH_PICKUPS, "pickups", 0);
         field(SP_KH_KCKILLS, "kckills", 0);
         field(SP_KH_LOSSES, "losses", SFL_LOWER_IS_BETTER);
@@ -215,6 +215,7 @@ vector kh_AttachedOrigin(entity e)  // runs when a team captures the flag, it ca
 
 void kh_Key_Attach(entity key)  // runs when a player picks up a key and several times when a key is assigned to a player at the start of a round
 {
+	key.solid = SOLID_NOT; // before setorigin to prevent area grid linking
 #ifdef KH_PLAYER_USE_ATTACHMENT
 	entity first = key.owner.kh_next;
 	if(key == first)
@@ -248,7 +249,6 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 	key.flags = 0;
 	if(IL_CONTAINS(g_items, key))
 		IL_REMOVE(g_items, key);
-	key.solid = SOLID_NOT;
 	set_movetype(key, MOVETYPE_NONE);
 	key.team = key.owner.team;
 	key.nextthink = time;
@@ -260,6 +260,7 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 
 void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs several times times when all the keys are captured
 {
+	key.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 #ifdef KH_PLAYER_USE_ATTACHMENT
 	entity first = key.owner.kh_next;
 	if(key == first)
@@ -289,8 +290,8 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.flags = FL_ITEM;
 	if(!IL_CONTAINS(g_items, key))
 		IL_PUSH(g_items, key);
-	key.solid = SOLID_TRIGGER;
 	set_movetype(key, MOVETYPE_TOSS);
+	nudgeoutofsolid(key); // a key has a bigger bbox than a player
 	key.pain_finished = time + autocvar_g_balance_keyhunt_delay_return;
 	key.damageforcescale = autocvar_g_balance_keyhunt_damageforcescale;
 	key.takedamage = DAMAGE_YES;
@@ -454,6 +455,8 @@ void kh_Key_Touch(entity this, entity toucher)  // runs many, many times when a 
 		return;
 	if(IS_DEAD(toucher))
 		return;
+	if(IS_INDEPENDENT_PLAYER(toucher))
+		return;
 	if(toucher == this.enemy)
 		if(time < this.kh_droptime + autocvar_g_balance_keyhunt_delay_collect)
 			return;  // you just dropped it!
@@ -606,7 +609,7 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 			// don't actually GIVE them the -nn points, just log
 
 		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
-			GameRules_scoring_add(lostkey.kh_previous_owner, KH_DESTROYS, 1);
+			GameRules_scoring_add(lostkey.kh_previous_owner, KH_DESTRUCTIONS, 1);
 
 		DistributeEvenly_Init(autocvar_g_balance_keyhunt_score_destroyed, keys * of + players);
 

@@ -16,6 +16,9 @@ bool autocvar_g_balance_falldamage_onlyvertical;
 #define autocvar_slowmo cvar("slowmo")
 float autocvar_sys_ticrate;
 
+bool autocvar_sv_autopause;
+void Pause_TryPause_Dedicated(entity this);
+
 bool dropclient_schedule(entity this);
 
 /** print(), but only print if the server is not local */
@@ -45,7 +48,7 @@ float servertime, serverprevtime, serverframetime;
 
 .float contents_damagetime;
 
-string GetField_fullspawndata(entity e, string f, ...);
+string GetField_fullspawndata(entity e, string fieldname, bool vfspath);
 
 /*
 ==================

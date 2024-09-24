@@ -50,7 +50,7 @@ float autocvar_g_ctf_flag_damageforcescale;
 bool autocvar_g_ctf_flag_dropped_waypoint;
 bool autocvar_g_ctf_flag_dropped_floatinwater;
 bool autocvar_g_ctf_flag_glowtrails;
-int autocvar_g_ctf_flag_health;
+float autocvar_g_ctf_flag_health;
 bool autocvar_g_ctf_flag_return;
 bool autocvar_g_ctf_flag_return_carrying;
 float autocvar_g_ctf_flag_return_carried_radius;
@@ -165,7 +165,20 @@ void ctf_FlagcarrierWaypoints(entity player)
 	{
 		if(!player.wps_enemyflagcarrier)
 		{
-			entity wp = WaypointSprite_Spawn(((ctf_oneflag) ? WP_FlagCarrier : WP_FlagCarrierEnemy), 0, 0, player, FLAG_WAYPOINT_OFFSET, NULL, 0, player, wps_enemyflagcarrier, true, RADARICON_FLAG);
+			entity base_wp = WP_FlagCarrier;
+			if (!ctf_oneflag)
+			{
+				switch (player.team)
+				{
+					case NUM_TEAM_1: base_wp = WP_FlagCarrierEnemyRed; break;
+					case NUM_TEAM_2: base_wp = WP_FlagCarrierEnemyBlue; break;
+					case NUM_TEAM_3: base_wp = WP_FlagCarrierEnemyYellow; break;
+					case NUM_TEAM_4: base_wp = WP_FlagCarrierEnemyPink; break;
+					default: base_wp = WP_FlagCarrierEnemyNeutral; break;
+				}
+			}
+			entity wp = WaypointSprite_Spawn(base_wp, 0, 0, player, FLAG_WAYPOINT_OFFSET, NULL,
+				0, player, wps_enemyflagcarrier, true, RADARICON_FLAG);
 			wp.colormod = WPCOLOR_ENEMYFC(player.team);
 			setcefc(wp, ctf_Stalemate_Customize);
 
@@ -354,11 +367,18 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	set_movetype(flag, MOVETYPE_TOSS);
 	flag.takedamage = DAMAGE_YES;
 	flag.angles = '0 0 0';
+
+	flag.max_health = ((autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health > 0) ? autocvar_g_ctf_flag_health : 100);
 	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
+
 	flag.ctf_droptime = time;
 	flag.ctf_landtime = 0;
 	flag.ctf_dropper = player;
 	flag.ctf_status = FLAG_DROPPED;
+
+	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
+	if(flag.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, flag);
 
 	// messages and sounds
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_NUM(flag.team, INFO_CTF_LOST), player.netname);
@@ -371,11 +391,22 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 
 	// waypoints
 	if(autocvar_g_ctf_flag_dropped_waypoint) {
-		entity wp = WaypointSprite_Spawn(WP_FlagDropped, 0, 0, flag, FLAG_WAYPOINT_OFFSET, NULL, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, true, RADARICON_FLAG);
+		entity base_wp;
+		switch (flag.team)
+		{
+			case NUM_TEAM_1: base_wp = WP_FlagDroppedRed; break;
+			case NUM_TEAM_2: base_wp = WP_FlagDroppedBlue; break;
+			case NUM_TEAM_3: base_wp = WP_FlagDroppedYellow; break;
+			case NUM_TEAM_4: base_wp = WP_FlagDroppedPink; break;
+			default: base_wp = WP_FlagDroppedNeutral; break;
+		}
+		int wp_team = ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team);
+		entity wp = WaypointSprite_Spawn(base_wp, 0, 0, flag, FLAG_WAYPOINT_OFFSET, NULL,
+			wp_team, flag, wps_flagdropped, true, RADARICON_FLAG);
 		wp.colormod = WPCOLOR_DROPPEDFLAG(flag.team);
 	}
 
-	if(autocvar_g_ctf_flag_return_time || (autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health))
+	if(autocvar_g_ctf_flag_return_time > 0 || autocvar_g_ctf_flag_return_damage)
 	{
 		WaypointSprite_UpdateMaxHealth(flag.wps_flagdropped, flag.max_health);
 		WaypointSprite_UpdateHealth(flag.wps_flagdropped, GetResource(flag, RES_HEALTH));
@@ -401,6 +432,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	GameRules_scoring_vip(player, true);
 
 	// reset flag
+	flag.solid = SOLID_NOT; // before setorigin to prevent area grid linking
 	if(player.vehicle)
 	{
 		setattachment(flag, player.vehicle, "");
@@ -414,7 +446,6 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	}
 	set_movetype(flag, MOVETYPE_NONE);
 	flag.takedamage = DAMAGE_NO;
-	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
 	flag.ctf_status = FLAG_CARRY;
 
@@ -467,11 +498,18 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	// reset the flag
 	setattachment(flag, NULL, "");
 	tracebox(player.origin - FLAG_DROP_OFFSET, flag.m_mins, flag.m_maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
+	flag.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 	setorigin(flag, trace_endpos);
+	if (trace_startsolid && !nudgeoutofsolid(flag)) // TODO: trace_allsolid would perform better but isn't 100% reliable yet
+	{
+		// the flag's bbox doesn't fit but we can assume the player's current bbox does
+		tracebox(player.origin - FLAG_DROP_OFFSET, player.mins, player.maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
+		flag.origin = trace_endpos;
+		setsize(flag, player.mins, player.maxs); // this allows physics to move the flag somewhere its think func can resize it
+	}
 	flag.owner.flagcarried = NULL;
 	GameRules_scoring_vip(flag.owner, false);
 	flag.owner = NULL;
-	flag.solid = SOLID_TRIGGER;
 	flag.ctf_dropper = player;
 	flag.ctf_droptime = time;
 	flag.ctf_landtime = 0;
@@ -689,6 +727,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	flag.owner = player;
 	player.flagcarried = flag;
 	GameRules_scoring_vip(player, true);
+	flag.solid = SOLID_NOT; // before setorigin to prevent area grid linking
 	if(player.vehicle)
 	{
 		setattachment(flag, player.vehicle, "");
@@ -704,9 +743,14 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	// flag setup
 	set_movetype(flag, MOVETYPE_NONE);
 	flag.takedamage = DAMAGE_NO;
-	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
 	flag.ctf_status = FLAG_CARRY;
+
+	flag.damagedbycontents = false;
+	if(IL_CONTAINS(g_damagedbycontents, flag))
+		IL_REMOVE(g_damagedbycontents, flag);
+
+	StatusEffects_removeall(flag, STATUSEFFECT_REMOVE_CLEAR);
 
 	switch(pickuptype)
 	{
@@ -755,7 +799,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 
 		case PICKUP_DROPPED:
 		{
-			pickup_dropped_score = (autocvar_g_ctf_flag_return_time ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_return_time) - time) / autocvar_g_ctf_flag_return_time, 1) : 1);
+			pickup_dropped_score = (autocvar_g_ctf_flag_return_time > 0 ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_return_time) - time) / autocvar_g_ctf_flag_return_time, 1) : 1);
 			pickup_dropped_score = floor((autocvar_g_ctf_score_pickup_dropped_late * (1 - pickup_dropped_score) + autocvar_g_ctf_score_pickup_dropped_early * pickup_dropped_score) + 0.5);
 			LOG_TRACE("pickup_dropped_score is ", ftos(pickup_dropped_score));
 			GameRules_scoring_add_team(player, SCORE, pickup_dropped_score);
@@ -792,9 +836,14 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 {
 	if((flag.ctf_status == FLAG_DROPPED) || (flag.ctf_status == FLAG_PASSING))
 	{
-		if(flag.wps_flagdropped) { WaypointSprite_UpdateHealth(flag.wps_flagdropped, GetResource(flag, RES_HEALTH)); }
+		if (flag.wps_flagdropped
+		&& (autocvar_g_ctf_flag_return_time > 0 || autocvar_g_ctf_flag_return_damage))
+		{
+			WaypointSprite_UpdateHealth(flag.wps_flagdropped, GetResource(flag, RES_HEALTH));
+		}
 
-		if((GetResource(flag, RES_HEALTH) <= 0) || (time >= flag.ctf_droptime + autocvar_g_ctf_flag_return_time))
+		if((GetResource(flag, RES_HEALTH) <= 0)
+			|| (autocvar_g_ctf_flag_return_time > 0 && time >= flag.ctf_droptime + autocvar_g_ctf_flag_return_time))
 		{
 			switch(returntype)
 			{
@@ -882,7 +931,20 @@ void ctf_CheckStalemate()
 		{
 			if((tmp_entity.owner) && (!tmp_entity.owner.wps_enemyflagcarrier))
 			{
-				entity wp = WaypointSprite_Spawn(((ctf_oneflag) ? WP_FlagCarrier : WP_FlagCarrierEnemy), 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, NULL, 0, tmp_entity.owner, wps_enemyflagcarrier, true, RADARICON_FLAG);
+				entity base_wp = WP_FlagCarrier;
+				if (!ctf_oneflag)
+				{
+					switch (tmp_entity.owner.team)
+					{
+						case NUM_TEAM_1: base_wp = WP_FlagCarrierEnemyRed; break;
+						case NUM_TEAM_2: base_wp = WP_FlagCarrierEnemyBlue; break;
+						case NUM_TEAM_3: base_wp = WP_FlagCarrierEnemyYellow; break;
+						case NUM_TEAM_4: base_wp = WP_FlagCarrierEnemyPink; break;
+						default: base_wp = WP_FlagCarrierEnemyNeutral; break;
+					}
+				}
+				entity wp = WaypointSprite_Spawn(base_wp, 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, NULL,
+					0, tmp_entity.owner, wps_enemyflagcarrier, true, RADARICON_FLAG);
 				wp.colormod = WPCOLOR_ENEMYFC(tmp_entity.owner.team);
 				setcefc(tmp_entity.owner.wps_enemyflagcarrier, ctf_Stalemate_Customize);
 			}
@@ -932,7 +994,6 @@ void ctf_FlagThink(entity this)
 
 	// sanity checks
 	if(this.mins != this.m_mins || this.maxs != this.m_maxs) { // reset the flag boundaries in case it got squished
-		LOG_TRACE("wtf the flag got squashed?");
 		tracebox(this.origin, this.m_mins, this.m_maxs, this.origin, MOVE_NOMONSTERS, this);
 		if(!trace_startsolid || this.noalign) // can we resize it without getting stuck?
 			setsize(this, this.m_mins, this.m_maxs);
@@ -989,7 +1050,7 @@ void ctf_FlagThink(entity this)
 				ctf_CheckFlagReturn(this, RETURN_NEEDKILL);
 				return;
 			}
-			else if(autocvar_g_ctf_flag_return_time)
+			else if(autocvar_g_ctf_flag_return_time > 0)
 			{
 				TakeResource(this, RES_HEALTH, (this.max_health / autocvar_g_ctf_flag_return_time) * FLAG_THINKRATE);
 				ctf_CheckFlagReturn(this, RETURN_TIMEOUT);
@@ -1078,7 +1139,8 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 	}
 
 	// special touch behaviors
-	if(STAT(FROZEN, toucher)) { return; }
+	if(IS_INDEPENDENT_PLAYER(toucher)) { return; }
+	else if(STAT(FROZEN, toucher)) { return; }
 	else if(IS_VEHICLE(toucher))
 	{
 		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)
@@ -1160,15 +1222,9 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 	}
 }
 
-.float last_respawn;
 void ctf_RespawnFlag(entity flag)
 {
 	flag.watertype = CONTENT_EMPTY; // TODO: it is unclear why this workaround is needed, likely many other potential breakage points!!
-	// check for flag respawn being called twice in a row
-	if(flag.last_respawn > time - 0.5)
-		{ backtrace("flag respawn called twice quickly! please notify Samual about this..."); }
-
-	flag.last_respawn = time;
 
 	// reset the player (if there is one)
 	if((flag.owner) && (flag.owner.flagcarried == flag))
@@ -1192,16 +1248,22 @@ void ctf_RespawnFlag(entity flag)
 
 	// reset the flag
 	setattachment(flag, NULL, "");
+	flag.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 	setorigin(flag, flag.ctf_spawnorigin);
 
 	//set_movetype(flag, ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS)); // would be desired, except maps that want floating flags have it set to fall!
 	set_movetype(flag, MOVETYPE_NONE); // match the initial setup handling (flag doesn't move when spawned)
 	flag.takedamage = DAMAGE_NO;
 	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
-	flag.solid = SOLID_TRIGGER;
 	flag.velocity = '0 0 0';
 	flag.angles = flag.mangle;
 	flag.flags = FL_ITEM | FL_NOTARGET;
+
+	flag.damagedbycontents = false;
+	if(IL_CONTAINS(g_damagedbycontents, flag))
+		IL_REMOVE(g_damagedbycontents, flag);
+
+	StatusEffects_removeall(flag, STATUSEFFECT_REMOVE_CLEAR);
 
 	flag.ctf_status = FLAG_BASE;
 	flag.owner = NULL;
@@ -1288,16 +1350,17 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	flag.solid = SOLID_TRIGGER;
 	flag.takedamage = DAMAGE_NO;
 	flag.damageforcescale = autocvar_g_ctf_flag_damageforcescale;
-	flag.max_health = ((autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health) ? autocvar_g_ctf_flag_health : 100);
+
+	flag.max_health = ((autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health > 0) ? autocvar_g_ctf_flag_health : 100);
 	SetResourceExplicit(flag, RES_HEALTH, flag.max_health);
+
 	flag.event_damage = ctf_FlagDamage;
 	flag.pushable = true;
 	flag.teleportable = TELEPORT_NORMAL;
 	flag.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 	flag.damagedbytriggers = autocvar_g_ctf_flag_return_when_unreachable;
-	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
-	if(flag.damagedbycontents)
-		IL_PUSH(g_damagedbycontents, flag);
+	flag.damagedbycontents = false; // can be damaged by contents only when dropped
+
 	flag.velocity = '0 0 0';
 	flag.mangle = flag.angles;
 	flag.reset = ctf_Reset;
@@ -1305,6 +1368,11 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	setthink(flag, ctf_FlagThink);
 	flag.nextthink = time + FLAG_THINKRATE;
 	flag.ctf_status = FLAG_BASE;
+
+	// set correct team colors
+	flag.glowmod = Team_ColorRGB(teamnum);
+	flag.colormap = (teamnum) ? (teamnum - 1) * 0x11 : 0x00;
+	flag.colormap |= BIT(10); // RENDER_COLORMAPPED
 
 	// crudely force them all to 0
 	if(autocvar_g_ctf_score_ignore_fields)
@@ -1338,7 +1406,8 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 
 	// appearence
 	_setmodel(flag, flag.model); // precision set below
-	setsize(flag, CTF_FLAG.m_mins * flag.scale, CTF_FLAG.m_maxs * flag.scale);
+	// 0.8.6 with sv_legacy_bbox_expand 1 did this FL_ITEM expansion in DP
+	setsize(flag, CTF_FLAG.m_mins * flag.scale - '15 15 1', CTF_FLAG.m_maxs * flag.scale + '15 15 1');
 	flag.m_mins = flag.mins; // store these for squash checks
 	flag.m_maxs = flag.maxs;
 	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));
@@ -1381,7 +1450,7 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	else // drop to floor, automatically find a platform and set that as spawn origin
 	{
 		flag.noalign = false;
-		droptofloor(flag);
+		DropToFloor_QC_DelayedInit(flag);
 		set_movetype(flag, MOVETYPE_NONE);
 	}
 
@@ -2341,7 +2410,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 
 			while(head) // find the closest acceptable target to pass to
 			{
-				if(IS_PLAYER(head) && !IS_DEAD(head))
+				if(IS_PLAYER(head) && !IS_DEAD(head) && !IS_INDEPENDENT_PLAYER(head))
 				if(head != player && SAME_TEAM(head, player))
 				if(!head.speedrunning && !head.vehicle)
 				{

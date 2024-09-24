@@ -5,8 +5,9 @@
 #include "okrpc.qh"
 
 bool autocvar_g_overkill_powerups_replace;
-
 bool autocvar_g_overkill_itemwaypoints = true;
+bool autocvar_g_overkill_blaster_keepforce = false;
+bool autocvar_g_overkill_blaster_keepdamage = false;
 
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
 
@@ -69,20 +70,21 @@ MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 		if(frag_attacker != frag_target)
 		if(!STAT(FROZEN, frag_target))
 		if(!IS_DEAD(frag_target))
-		{
+		if(!autocvar_g_overkill_blaster_keepforce)
 			M_ARGV(6, vector) = '0 0 0'; // force
-		}
 
-		M_ARGV(4, float) = 0; // damage
+		if(!autocvar_g_overkill_blaster_keepdamage)
+			M_ARGV(4, float) = 0; // damage
 	}
 }
 
-void ok_DropItem(entity this, entity targ)
+void ok_DropItem(entity this, entity attacker, entity e)
 {
-	entity e = spawn();
 	e.ok_item = true;
-	Item_InitializeLoot(e, "item_armor_small", this.origin + '0 0 32',
-		'0 0 200' + normalize(targ.origin - this.origin) * 500, 5);
+	e.itemdef = ITEM_ArmorSmall;
+	e.origin = this.origin + '0 0 32';
+	e.velocity = '0 0 200' + normalize(attacker.origin - this.origin) * 500;
+	e.lifetime = 5;
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerDies)
@@ -90,9 +92,10 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 
-	entity targ = ((IS_PLAYER(frag_attacker)) ? frag_attacker : frag_target);
-
-	ok_DropItem(frag_target, targ);
+	entity attacker = ((IS_PLAYER(frag_attacker)) ? frag_attacker : frag_target);
+	entity item = spawn();
+	ok_DropItem(frag_target, attacker, item);
+	Item_Initialise(item);
 
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -105,14 +108,10 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 MUTATOR_HOOKFUNCTION(ok, MonsterDropItem)
 {
 	entity mon = M_ARGV(0, entity);
-	entity olditem = M_ARGV(1, entity);
+	entity item = M_ARGV(1, entity);
 	entity frag_attacker = M_ARGV(2, entity);
 
-	delete(olditem);
-
-	M_ARGV(1, entity) = NULL;
-
-	ok_DropItem(mon, frag_attacker);
+	ok_DropItem(mon, frag_attacker, item);
 }
 
 MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
@@ -226,22 +225,26 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	}
 	if (item.classname == "item_strength")
 	{
-		entity wep = new(weapon_okhmg);
+		entity wep = spawn();
 		Item_CopyFields(item, wep);
 		wep.ok_item = true;
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
-		Item_Initialize(wep, "weapon_okhmg"); // doesn't actually use spawnfunc
+		wep.itemdef = WEP_OVERKILL_HMG;
+		wep.lifetime = -1;
+		Item_Initialise(wep);
 		return true;
 	}
 	else if (item.classname == "item_shield")
 	{
-		entity wep = new(weapon_okrpc);
+		entity wep = spawn();
 		Item_CopyFields(item, wep);
 		wep.ok_item = true;
 		wep.respawntime = g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
-		Item_Initialize(wep, "weapon_okrpc"); // doesn't actually use spawnfunc
+		wep.itemdef = WEP_OVERKILL_RPC;
+		wep.lifetime = -1;
+		Item_Initialise(wep);
 		return true;
 	}
 	return true;

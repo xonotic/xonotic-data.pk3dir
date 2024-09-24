@@ -38,8 +38,9 @@ const int IT_SPEED						= BIT(13);
 const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
 
 // item networking
+const int ISF_REMOVEFX          = BIT(0); // technically unnecessary (after the kludge in Item_Think() is reverted), but cheaper and cleaner than using ITS_AVAILABLE
 const int ISF_LOCATION          = BIT(1);
-const int ISF_MODEL             = BIT(2);
+const int ISF_SIZE2             = BIT(2);
 const int ISF_STATUS            = BIT(3);
 const int ISF_COLORMAP          = BIT(4);
 const int ISF_DROP              = BIT(5);
@@ -57,6 +58,22 @@ const int ITS_AVAILABLE         = BIT(3);
 const int ITS_ALLOWFB           = BIT(4);
 const int ITS_ALLOWSI           = BIT(5);
 const int ITS_GLOW              = BIT(6);
+const int ITS_EXPIRING          = BIT(7);
+
+// enough to notice it's about to despawn and circle jump to grab it
+const float IT_DESPAWNFX_TIME = 1.5;
+
+// 2hz probably enough to correct a desync caused by serious lag
+// FIXME but updating faster applies the kludge in Item_Think() sooner so it's less noticeable
+const float IT_UPDATE_INTERVAL = 0.0625;
+
+// item bboxes for sv_legacy_bbox_expand 0
+// Small, Default and Large (large maxs are used with default mins)
+const vector ITEM_S_MINS = '-24 -24 0';
+const vector ITEM_S_MAXS = '24 24 48';
+const vector ITEM_D_MINS = '-30 -30 0'; // 0.8.6 set '-16 -16 0' then DP subtracted '15 15 1' but NetRadiant used '-30 -30 0'
+const vector ITEM_D_MAXS = '30 30 48';  // 0.8.6 set '16 16 48' then DP added '15 15 1' but NetRadiant used '30 30 32'
+const vector ITEM_L_MAXS = '30 30 70';  // 0.8.6 set '16 16 80' for powerups, '16 16 70' for megas, '16 16 60' for buffs
 
 .float fade_start;
 .float fade_end;

@@ -394,19 +394,66 @@ entity havocbot_select_an_item_of_group(entity this, int gr)
 	return selected;
 }
 
+// Check for water/slime/lava and dangerous edges
+// (only when the bot is on the ground or jumping intentionally)
+// returns a number > 0 for danger
+int havocbot_checkdanger(entity this, vector dst_ahead)
+{
+	vector dst_down = dst_ahead - '0 0 3000';
+	traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
+
+	float s = CONTENT_SOLID;
+	if (trace_fraction == 1 && !this.jumppadcount
+		&& !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
+		&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
+	if ((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || (this.aistatus & AI_STATUS_ROAMING) || PHYS_INPUT_BUTTON_JUMP(this))
+	{
+		// Look downwards
+		traceline(dst_ahead , dst_down, true, NULL);
+		//te_lightning2(NULL, this.origin + this.view_ofs, dst_ahead); // Draw "ahead" look
+		//te_lightning2(NULL, dst_ahead, trace_endpos); // Draw "downwards" look
+		if (trace_endpos.z < this.origin.z + this.mins.z)
+		{
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+				return 1;
+			else if (trace_endpos.z < min(this.origin.z + this.mins.z, this.goalcurrent.origin.z) - 100)
+				return 2;
+			else
+			{
+				s = pointcontents(trace_endpos + '0 0 1');
+				if (s != CONTENT_SOLID)
+				{
+					if (s == CONTENT_LAVA || s == CONTENT_SLIME)
+						return 3;
+					else if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+					{
+						// the traceline check isn't enough but is good as optimization,
+						// when not true (most of the time) this tracebox call is avoided
+						tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
+						if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+						{
+							return 4;
+						}
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
 void havocbot_movetogoal(entity this)
 {
 	vector diff;
 	vector dir;
 	vector flatdir;
 	float dodge_enemy_factor = 1;
-	float maxspeed;
+	float maxspeed = autocvar_sv_maxspeed;
 	//float dist;
 	vector dodge;
 	//if (this.goalentity)
 	//	te_lightning2(this, this.origin, (this.goalentity.absmin + this.goalentity.absmax) * 0.5);
 	CS(this).movement = '0 0 0';
-	maxspeed = autocvar_sv_maxspeed;
 
 	PHYS_INPUT_BUTTON_CROUCH(this) = boolean(this.goalcurrent.wpflags & WAYPOINTFLAG_CROUCH);
 
@@ -414,7 +461,7 @@ void havocbot_movetogoal(entity this)
 	// Jetpack navigation
 	if(this.navigation_jetpack_goal)
 	if(this.goalcurrent==this.navigation_jetpack_goal)
-	if(GetResource(this, RES_FUEL))
+	if(GetResource(this, RES_FUEL) > 0 || (this.items & IT_UNLIMITED_AMMO))
 	{
 		if(autocvar_bot_debug_goalstack)
 		{
@@ -530,7 +577,7 @@ void havocbot_movetogoal(entity this)
 					}
 				}
 				vector gco = (this.goalcurrent.absmin + this.goalcurrent.absmax) * 0.5;
-				if (this.origin.z > gco.z && vdist(vec2(this.velocity), <, autocvar_sv_maxspeed))
+				if (this.origin.z > gco.z && vdist(vec2(this.velocity), <, maxspeed))
 				{
 					if (this.velocity.z < 0)
 						this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
@@ -549,7 +596,7 @@ void havocbot_movetogoal(entity this)
 			if(this.velocity.z > 0 && this.origin.z - this.lastteleport_origin.z > (this.maxs.z - this.mins.z) * 0.5)
 			{
 				vector velxy = this.velocity; velxy_z = 0;
-				if(vdist(velxy, <, autocvar_sv_maxspeed * 0.2))
+				if(vdist(velxy, <, maxspeed * 0.2))
 				{
 					LOG_TRACE("Warning: ", this.netname, " got stuck on a jumppad (velocity in xy is ", vtos(velxy), "), trying to get out of it now");
 					this.aistatus |= AI_STATUS_OUT_JUMPPAD;
@@ -568,7 +615,7 @@ void havocbot_movetogoal(entity this)
 	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
 	if (skill > 6 && !(IS_ONGROUND(this)))
 	{
-		#define ROCKETJUMP_DAMAGE() WEP_CVAR(devastator, damage) * 0.8 \
+		#define ROCKETJUMP_DAMAGE() WEP_CVAR(WEP_DEVASTATOR, damage) * 0.8 \
 			* ((StatusEffects_active(STATUSEFFECT_Strength, this)) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
 			* ((StatusEffects_active(STATUSEFFECT_Shield, this)) ? autocvar_g_balance_powerup_invincible_takedamage : 1)
 
@@ -578,7 +625,7 @@ void havocbot_movetogoal(entity this)
 		if (this.items & IT_JETPACK)
 			action_for_trigger_hurt = 1;
 		else if (!this.jumppadcount && !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
-			&& !(this.goalcurrent_prev && this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)
+			&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP))
 			&& GetResource(this, RES_HEALTH) + GetResource(this, RES_ARMOR) > ROCKETJUMP_DAMAGE())
 		{
 			action_for_trigger_hurt = 2;
@@ -659,7 +706,7 @@ void havocbot_movetogoal(entity this)
 						this.(weaponentity).m_switchweapon = WEP_DEVASTATOR;
 						this.v_angle_x = 90;
 						PHYS_INPUT_BUTTON_ATCK(this) = true;
-						this.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
+						this.rocketjumptime = time + WEP_CVAR(WEP_DEVASTATOR, detonatedelay);
 						return;
 					}
 				}
@@ -754,7 +801,7 @@ void havocbot_movetogoal(entity this)
 			{
 				if (IS_DEAD(this.goalcurrent))
 				{
-					IL_EACH(g_items, it.enemy == this.goalcurrent && Item_IsLoot(it),
+					IL_EACH(g_items, it.enemy == this.goalcurrent && ITEM_IS_LOOT(it),
 					{
 						if (vdist(it.origin - this.goalcurrent.death_origin, <, 50))
 						{
@@ -767,7 +814,7 @@ void havocbot_movetogoal(entity this)
 						}
 					});
 				}
-				if (!Item_IsLoot(this.goalcurrent))
+				if (!ITEM_IS_LOOT(this.goalcurrent))
 				{
 					navigation_goalrating_timeout_force(this);
 					return;
@@ -836,7 +883,7 @@ void havocbot_movetogoal(entity this)
 
 	bool bunnyhop_forbidden = false;
 	vector destorg = get_closer_dest(this.goalcurrent, this.origin);
-	if (this.jumppadcount && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
+	if (this.jumppadcount && (this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
 	{
 		// if bot used the jumppad, push towards jumppad origin until jumppad waypoint gets removed
 		destorg = this.goalcurrent.origin;
@@ -921,7 +968,7 @@ void havocbot_movetogoal(entity this)
 		}
 		else
 		{
-			float s;
+			float s = 0;
 			vector offset;
 			if(this.aistatus & AI_STATUS_OUT_WATER)
 				this.aistatus &= ~AI_STATUS_OUT_WATER;
@@ -1087,55 +1134,21 @@ void havocbot_movetogoal(entity this)
 
 			// Check for water/slime/lava and dangerous edges
 			// (only when the bot is on the ground or jumping intentionally)
-
 			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.2 : flatdir * 32);
 			vector dst_ahead = this.origin + this.view_ofs + offset;
-			vector dst_down = dst_ahead - '0 0 3000';
-			traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
-
 			bool unreachable = false;
-			s = CONTENT_SOLID;
-			if (trace_fraction == 1 && !this.jumppadcount
-				&& !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
-				&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
-			if((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || (this.aistatus & AI_STATUS_ROAMING) || PHYS_INPUT_BUTTON_JUMP(this))
+			int r = havocbot_checkdanger(this, dst_ahead);
+			if (r > 0 && r < 4)
+				danger_detected = true;
+			else if (r == 4)
 			{
-				// Look downwards
-				traceline(dst_ahead , dst_down, true, NULL);
-				//te_lightning2(NULL, this.origin + this.view_ofs, dst_ahead); // Draw "ahead" look
-				//te_lightning2(NULL, dst_ahead, trace_endpos); // Draw "downwards" look
-				if(trace_endpos.z < this.origin.z + this.mins.z)
+				if (destorg.z > this.origin.z + jumpstepheightvec.z)
 				{
-					if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-						danger_detected = true;
-					else if (trace_endpos.z < min(this.origin.z + this.mins.z, this.goalcurrent.origin.z) - 100)
-						danger_detected = true;
-					else
-					{
-						s = pointcontents(trace_endpos + '0 0 1');
-						if (s != CONTENT_SOLID)
-						{
-							if (s == CONTENT_LAVA || s == CONTENT_SLIME)
-								danger_detected = true;
-							else if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
-							{
-								// the traceline check isn't enough but is good as optimization,
-								// when not true (most of the time) this tracebox call is avoided
-								tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
-								if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
-								{
-									if (destorg.z > this.origin.z + jumpstepheightvec.z)
-									{
-										// the goal is probably on an upper platform, assume bot can't get there
-										unreachable = true;
-									}
-									else
-										danger_detected = true;
-								}
-							}
-						}
-					}
+					// the goal is probably on an upper platform, assume bot can't get there
+					unreachable = true;
 				}
+				else
+					danger_detected = true;
 			}
 
 			dir = flatdir;
@@ -1171,14 +1184,23 @@ void havocbot_movetogoal(entity this)
 		dodge = havocbot_dodge(this);
 		if (dodge)
 			dodge *= bound(0, 0.5 + (skill + this.bot_dodgeskill) * 0.1, 1);
+		// midair sets moveskill to 0 so avoid jumping when dodging in midair mutator
+		if (dodge.z > 0 && this.bot_moveskill == 0)
+			dodge.z = 0;
 		if (this.enemy)
 		{
 			traceline(this.origin, (this.enemy.absmin + this.enemy.absmax) * 0.5, true, NULL);
 			if (IS_PLAYER(trace_ent))
 				dodge_enemy_factor = bound(0, (skill + this.bot_dodgeskill) / 7, 1);
 		}
-	//	this.bot_dodgevector = dir;
-	//	this.bot_dodgevector_jumpbutton = PHYS_INPUT_BUTTON_JUMP(this);
+		//this.bot_dodgevector = dir;
+		//this.bot_dodgevector_jumpbutton = PHYS_INPUT_BUTTON_JUMP(this);
+
+		// don't dodge to danger
+		if (havocbot_checkdanger(this, this.origin + this.view_ofs + dodge * 32))
+		{
+			dodge = '0 0 0';
+		}
 	}
 
 	float ladder_zdir = 0;
@@ -1254,6 +1276,36 @@ void havocbot_movetogoal(entity this)
 	CS(this).movement_y = dir * v_right * maxspeed;
 	CS(this).movement_z = dir * v_up * maxspeed;
 
+	// when high enough skill bots engage in combat they move randomly
+	if (SUPERBOT && this.aistatus == AI_STATUS_ATTACKING && !dodge)
+	{
+		if (!this.randomdirectiontime || this.randomdirectiontime + 0.35 < time)
+		{
+			// 75% chance to generate a random direction to follow for
+			// 0.3 seconds, there's a 15% chance to fail the generation
+			// and only generation attempt one every 0.35s so bots move
+			// towards their goal slightly
+			if (random() < 0.15)
+				this.randomdirection = '0 0 0';
+			else
+			{
+				// random values from -1 to 1
+				this.randomdirection.x = crandom() * maxspeed;
+				this.randomdirection.y = crandom() * maxspeed;
+				//this.randomdirection.z = crandom() * maxspeed;
+			}
+
+			this.randomdirectiontime = time;
+		}
+		if (this.randomdirectiontime + 0.3 >= time && this.randomdirection)
+		{
+			CS(this).movement_x = this.randomdirection.x;
+			CS(this).movement_y = this.randomdirection.y;
+			// no random vertical direction
+		}
+	}
+
+
 	// Emulate keyboard interface
 	if (skill < 10)
 		havocbot_keyboard_movement(this, destorg);
@@ -1269,7 +1321,12 @@ void havocbot_movetogoal(entity this)
 		if (dodge * v_up > 0 && random() * frametime >= 0.2 * bound(0, (10 - skill - this.bot_dodgeskill) * 0.1, 1))
 			PHYS_INPUT_BUTTON_JUMP(this) = true;
 		if (dodge * v_up < 0 && random() * frametime >= 0.5 * bound(0, (10 - skill - this.bot_dodgeskill) * 0.1, 1))
+		{
+			if(IS_ONGROUND(this))
+				PHYS_INPUT_BUTTON_JUMP(this) = false;
 			this.havocbot_ducktime = time + 0.3 / bound(0.1, skill + this.bot_dodgeskill, 10);
+			PHYS_INPUT_BUTTON_CROUCH(this) = true;
+		}
 	}
 }
 
@@ -1308,7 +1365,12 @@ void havocbot_chooseenemy(entity this)
 	}
 	if (time < this.havocbot_chooseenemy_finished)
 		return;
-	this.havocbot_chooseenemy_finished = time + autocvar_bot_ai_enemydetectioninterval;
+	// don't limit the detection interval to several seconds for bots with enough skill
+	if (SUPERBOT)
+		this.havocbot_chooseenemy_finished = time + 0.1;
+	else
+		this.havocbot_chooseenemy_finished = time + autocvar_bot_ai_enemydetectioninterval;
+
 	vector eye = this.origin + this.view_ofs;
 	entity best = NULL;
 	float bestrating = autocvar_bot_ai_enemydetectionradius ** 2;
@@ -1341,14 +1403,37 @@ void havocbot_chooseenemy(entity this)
 				continue;
 
 			vector v = (it.absmin + it.absmax) * 0.5;
-			float rating = vlen2(v - eye);
-			if (rating < bestrating && bot_shouldattack(this, it))
+			float distance = vlen2(v - eye);
+
+			if (SUPERBOT)
 			{
-				traceline(eye, v, true, this);
-				if (trace_ent == it || trace_fraction >= 1)
+				if (bot_shouldattack(this, it))
 				{
-					best = it;
-					bestrating = rating;
+					// skilled enough bots take account target health and distance
+					float health = GetResource(it, RES_HEALTH);
+					float armor  = GetResource(it, RES_ARMOR);
+					float rating = bound(50, health + armor, 250) * distance;
+					if (!best || (rating < bestrating))
+					{
+						traceline(eye, v, true, this);
+						if (trace_ent == it || trace_fraction >= 1)
+						{
+							best = it;
+							bestrating = rating;
+						}
+					}
+				}
+			}
+			else
+			{
+				if (distance < bestrating && bot_shouldattack(this, it))
+				{
+					traceline(eye, v, true, this);
+					if (trace_ent == it || trace_fraction >= 1)
+					{
+						best = it;
+						bestrating = distance;
+					}
 				}
 			}
 		});
@@ -1358,6 +1443,7 @@ void havocbot_chooseenemy(entity this)
 			scan_secondary_targets = true;
 			// restart the loop
 			bestrating = autocvar_bot_ai_enemydetectionradius ** 2;
+
 			goto scan_targets;
 		}
 
@@ -1383,7 +1469,7 @@ void havocbot_chooseenemy(entity this)
 		this.havocbot_stickenemy_time = 0;
 }
 
-float havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int new_weapon)
+bool havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int new_weapon)
 {
 	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
 	// so skip this for them, or they'll never get to reload their weapons at all.
@@ -1394,6 +1480,8 @@ float havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int n
 	// if this weapon is scheduled for reloading, don't switch to it during combat
 	if (this.(weaponentity).weapon_load[new_weapon] < 0)
 	{
+		if(this.items & IT_UNLIMITED_AMMO)
+			return true;
 		FOREACH(Weapons, it != WEP_Null, {
 			if(it.wr_checkammo1(it, this, weaponentity) + it.wr_checkammo2(it, this, weaponentity))
 				return true; // other weapon available
@@ -1406,6 +1494,7 @@ float havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int n
 void havocbot_chooseweapon(entity this, .entity weaponentity)
 {
 	int i;
+	float w;
 
 	// ;)
 	if(g_weaponarena_weapons == WEPSET(TUBA))
@@ -1415,17 +1504,33 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 	}
 
 	// TODO: clean this up by moving it to weapon code
-	if(this.enemy==NULL)
+	if (this.enemy == NULL)
 	{
-		// If no weapon was chosen get the first available weapon
-		if(this.(weaponentity).m_weapon==WEP_Null)
-		FOREACH(Weapons, it != WEP_Null, {
-			if(client_hasweapon(this, it, weaponentity, true, false))
+		// Choose the first available weapon from medium range weaponlist
+		// TODO: don't do this but don't make bots hold out a blaster out either
+		for (i = 0; i < REGISTRY_COUNT(Weapons) && bot_weapons_mid[i] != -1 ; ++i){
+			w = bot_weapons_mid[i];
+			if (bot_custom_weapon)
 			{
-				this.(weaponentity).m_switchweapon = it;
-				return;
+				if (client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false))
+				{
+					if ((this.(weaponentity).m_weapon == WEP_Null) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
+						continue;
+					this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, w);
+					return;
+				}
 			}
-		});
+		}
+
+		// If no weapon was chosen get the first available weapon
+		if (this.(weaponentity).m_weapon == WEP_Null)
+			FOREACH(Weapons, it != WEP_Null, {
+				if (client_hasweapon(this, it, weaponentity, true, false))
+				{
+					this.(weaponentity).m_switchweapon = it;
+					return;
+				}
+			});
 		return;
 	}
 
@@ -1434,7 +1539,6 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 	if(f < 1)
 		return;
 
-	float w;
 	float distance; distance=bound(10,vlen(this.origin-this.enemy.origin)-200,10000);
 
 	// Should it do a weapon combo?
@@ -1672,8 +1776,11 @@ void havocbot_setupbot(entity this)
 vector havocbot_dodge(entity this)
 {
 	// LordHavoc: disabled because this is too expensive
-	return '0 0 0';
-#if 0
+	// Dr. Jaska: re-enable this but only for bots with high enough skill
+	if (!SUPERBOT)
+		return '0 0 0';
+
+#if 1
 	entity head;
 	vector dodge, v, n;
 	float danger, bestdanger, vl, d;
@@ -1694,7 +1801,8 @@ vector havocbot_dodge(entity this)
 				if (d > (0 - head.bot_dodgerating))
 				if (d < (vl * 0.2 + head.bot_dodgerating))
 				{
-					// calculate direction and distance from the flight path, by removing the forward axis
+					// calculate direction and distance from the
+					// flight path by removing the forward axis
 					v = v - (n * (v * n));
 					danger = head.bot_dodgerating - vlen(v);
 					if (bestdanger < danger)
@@ -1718,5 +1826,7 @@ vector havocbot_dodge(entity this)
 		head = head.chain;
 	}
 	return dodge;
+#else
+	return '0 0 0';
 #endif
 }

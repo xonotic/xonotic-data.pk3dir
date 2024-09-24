@@ -209,7 +209,7 @@ void walker_fire_rocket(entity this, vector org)
 
     entity rocket = new(walker_rocket);
     setorigin(rocket, org);
-
+    rocket.solid			  = SOLID_BBOX; // before setsize so it will be linked to the area grid
     sound (this, CH_WEAPON_A, SND_HAGAR_FIRE, VOL_BASE, ATTEN_NORM);
     setsize (rocket, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
@@ -238,7 +238,6 @@ void walker_fire_rocket(entity this, vector org)
     rocket.flags = FL_PROJECTILE;
     IL_PUSH(g_projectiles, rocket);
     IL_PUSH(g_bot_dodge, rocket);
-    rocket.solid			  = SOLID_BBOX;
     rocket.max_health		 = time + 9;
     rocket.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
 
@@ -570,8 +569,6 @@ METHOD(WalkerTurret, tr_death, void(WalkerTurret this, entity it))
 }
 METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
 {
-    it.ticrate = 0.05;
-
     // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
     if(it.move_movetype == MOVETYPE_WALK)
     {

@@ -10,7 +10,7 @@ string MapInfo_Map_description;
 string MapInfo_Map_author;
 string MapInfo_Map_clientstuff; // not in cache, only for map load
 string MapInfo_Map_fog; // not in cache, only for map load
-int MapInfo_Map_supportedGametypes;
+vector MapInfo_Map_supportedGametypes;
 int MapInfo_Map_supportedFeatures;
 int MapInfo_Map_flags;
 vector MapInfo_Map_mins; // these are '0 0 0' if not supported!
@@ -24,8 +24,11 @@ const int GAMETYPE_FLAG_HIDELIMITS      = BIT(4); // don't display a score limit
 const int GAMETYPE_FLAG_WEAPONARENA     = BIT(5); // gametype has a forced weapon arena, weapon arena mutators should disable themselves when this is set
 const int GAMETYPE_FLAG_1V1             = BIT(6); // 1v1 gameplay
 
-int MAPINFO_TYPE_ALL;
-.int m_flags;
+vector MAPINFO_TYPE_ALL;
+.vector gametype_flags;
+
+// must be defined before the registry
+vector _GametypeFlags_FromGametype(int a);
 
 CLASS(Gametype, Object)
     ATTRIB(Gametype, m_id, int, 0);
@@ -115,19 +118,24 @@ CLASS(Gametype, Object)
         this.m_hidelimits = (gflags & GAMETYPE_FLAG_HIDELIMITS);
         this.m_weaponarena = (gflags & GAMETYPE_FLAG_WEAPONARENA);
         this.m_1v1 = (gflags & GAMETYPE_FLAG_1V1);
-
-        // same as `1 << m_id`
-        MAPINFO_TYPE_ALL |= this.items = this.m_flags = (MAPINFO_TYPE_ALL + 1);
     }
 ENDCLASS(Gametype)
 
 REGISTRY(Gametypes, 32)
 REGISTER_REGISTRY(Gametypes)
-REGISTRY_SORT(Gametypes);
+REGISTRY_SORT(Gametypes)
 REGISTRY_CHECK(Gametypes)
 
 REGISTRY_DEFINE_GET(Gametypes, NULL)
-STATIC_INIT(Gametypes_renumber) { FOREACH(Gametypes, true, it.m_id = i); }
+STATIC_INIT(Gametypes_renumber)
+{
+    FOREACH(Gametypes, true,
+    {
+        it.m_id = i;
+        vector set = it.gametype_flags = _GametypeFlags_FromGametype(it.m_id);
+        MAPINFO_TYPE_ALL |= set;
+    });
+}
 #define REGISTER_GAMETYPE(NAME, inst) REGISTER(Gametypes, MAPINFO_TYPE, NAME, m_id, inst)
 
 #ifndef CSQC
@@ -143,7 +151,7 @@ const int MAPINFO_FEATURE_MONSTERS      = 8;
 const int MAPINFO_FLAG_HIDDEN           = 1; // not in lsmaps/menu/vcall/etc., can just be changed to manually
 const int MAPINFO_FLAG_FORBIDDEN        = 2; // don't even allow the map by a cvar setting that allows hidden maps
 const int MAPINFO_FLAG_FRUSTRATING      = 4; // this map is near impossible to play, enable at your own risk
-const int MAPINFO_FLAG_NOAUTOMAPLIST    = 8; // do not include when automatically building maplist (counts as hidden for maplist building purposes)
+const int MAPINFO_FLAG_DONOTWANT        = 8; // do not include in GUI voting screen or select in GotoNextMap()/GetNextMap(), unless added with `suggestmap` or required as a fallback
 
 float MapInfo_count;
 
@@ -154,7 +162,7 @@ void MapInfo_Enumerate();
 // filter the info by game type mask (updates MapInfo_count)
 float MapInfo_progress;
 float MapInfo_FilterGametype(Gametype gametypeFlags, float features, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate); // 1 on success, 0 on temporary failure (call it again next frame then; use MapInfo_progress as progress indicator)
-float _MapInfo_FilterGametype(int gametypeFlags, float features, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate); // 1 on success, 0 on temporary failure (call it again next frame then; use MapInfo_progress as progress indicator)
+float _MapInfo_FilterGametype(vector gametypeFlags, float features, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate); // 1 on success, 0 on temporary failure (call it again next frame then; use MapInfo_progress as progress indicator)
 void MapInfo_FilterString(string sf); // filter _MapInfo_filtered (created by MapInfo_FilterGametype) with keyword
 int MapInfo_CurrentFeatures(); // retrieves currently required features from cvars
 Gametype MapInfo_CurrentGametype(); // retrieves current gametype from cvars

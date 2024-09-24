@@ -60,7 +60,7 @@ float movement_oddity(vector m0, vector m1)
 	float cosangle = normalize(m0) * normalize(m1);
 	if(cosangle >= 0)
 		return 0;
-	return 0.5 - 0.5 * cos(cosangle * cosangle * 4 * M_PI);
+	return 0.5 - 0.5 * cos(cosangle * cosangle * (4 * M_PI));
 		// returns 0 for: -1, -sqrt(0.5), 0 (angles that commonly happen with kbd)
 }
 

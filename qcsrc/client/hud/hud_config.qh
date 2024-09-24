@@ -4,6 +4,7 @@ bool autocvar__hud_configure;
 bool autocvar_hud_configure_checkcollisions;
 bool autocvar_hud_configure_grid;
 float autocvar_hud_configure_grid_alpha;
+string autocvar_hud_configure_vertical_lines = "0.5";
 bool autocvar_hud_configure_teamcolorforced;
 
 const int S_MOUSE1 = 1;
@@ -19,6 +20,7 @@ float hud_configure_checkcollisions;
 vector hud_configure_gridSize;
 vector hud_configure_realGridSize;
 float hud_configure_menu_open; // 1 showing the entire HUD, 2 showing only the clicked panel
+float hud_configure_centerline_time;
 
 void HUD_Panel_ExportCfg(string cfgname);
 

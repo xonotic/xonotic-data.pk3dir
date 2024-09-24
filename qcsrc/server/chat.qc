@@ -3,10 +3,12 @@
 #include <common/gamemodes/_mod.qh>
 #include <common/mapobjects/target/location.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/notifications/all.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
 #include <common/weapons/weapon.qh>
 #include <common/wepent.qh>
+#include <server/command/cmd.qh>
 #include <server/command/common.qh>
 #include <server/gamelog.qh>
 #include <server/main.qh>
@@ -24,6 +26,30 @@
  */
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol)
 {
+	if(!autocvar_g_chat_allowed && IS_REAL_CLIENT(source))
+	{
+		Send_Notification(NOTIF_ONE_ONLY, source, MSG_INFO, INFO_CHAT_DISABLED);
+		return 0;
+	}
+
+	if(!autocvar_g_chat_private_allowed && privatesay)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, source, MSG_INFO, INFO_CHAT_PRIVATE_DISABLED);
+		return 0;
+	}
+
+	if(!autocvar_g_chat_spectator_allowed && IS_OBSERVER(source))
+	{
+		Send_Notification(NOTIF_ONE_ONLY, source, MSG_INFO, INFO_CHAT_SPECTATOR_DISABLED);
+		return 0;
+	}
+
+	if(!autocvar_g_chat_team_allowed && teamsay)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, source, MSG_INFO, INFO_CHAT_TEAM_DISABLED);
+		return 0;
+	}
+
 	if (!teamsay && !privatesay && substring(msgin, 0, 1) == " ")
 		msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 
@@ -63,6 +89,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	string namestr = "";
 	if (source)
 		namestr = playername(source.netname, source.team, (autocvar_g_chat_teamcolors && IS_PLAYER(source)));
+
+	if (autocvar_g_chat_show_playerid)
+		namestr = strcat(namestr, " ^9#", itos(etof(source)), "^7");
 
 	string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
 
@@ -131,6 +160,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 	string fullmsgstr = msgstr;
 	string fullcmsgstr = cmsgstr;
+	float mod_time = 0;
 
 	// FLOOD CONTROL
 	int flood = 0;
@@ -159,15 +189,17 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			flood_lmax = autocvar_g_chat_flood_lmax;
 			flood_field = floodcontrol_chat;
 		}
+		// to match cvar descriptions, a value of 3 must allow three-line bursts and not four!
 		flood_burst = max(0, flood_burst - 1);
-		// to match explanation in default.cfg, a value of 3 must allow three-line bursts and not four!
 
+		int lines = -1;
+		mod_time = gettime(GETTIME_FRAMESTART) + flood_burst * flood_spl;
 		// do flood control for the default line size
 		if(msgstr != "")
 		{
 			getWrappedLine_remaining = msgstr;
 			msgstr = "";
-			int lines = 0;
+			lines = 0;
 			while(getWrappedLine_remaining && (!flood_lmax || lines <= flood_lmax))
 			{
 				msgstr = strcat(msgstr, " ", getWrappedLineLen(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
@@ -180,27 +212,20 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				msgstr = strcat(msgstr, "\n");
 				flood = 2;
 			}
+		}
 
-			if (time >= source.(flood_field))
-			{
-				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + lines * flood_spl;
-			}
-			else
-			{
-				flood = 1;
-				msgstr = fullmsgstr;
-			}
+		if (mod_time >= source.(flood_field))
+		{
+			if (lines > 1)
+				flood_spl *= lines;
+			source.(flood_field) = max(gettime(GETTIME_FRAMESTART), source.(flood_field)) + flood_spl;
 		}
 		else
 		{
-			if (time >= source.(flood_field))
-				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + flood_spl;
-			else
-				flood = 1;
+			if (lines >= 0) // if true msgstr was modified
+				msgstr = fullmsgstr;
+			flood = 1;
 		}
-
-		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
-			source.(flood_field) = flood = 0;
 	}
 
 	string sourcemsgstr, sourcecmsgstr;
@@ -247,7 +272,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	{
 		if (autocvar_g_chat_flood_notify_flooder)
 		{
-			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
+			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1",
+				ftos(source.(flood_field) - mod_time), "^3 seconds\n"));
 			ret = 0;
 		}
 		else
@@ -283,6 +309,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			if(!MUTATOR_CALLHOOK(ChatMessageTo, privatesay, source))
 			{
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, privatesay)) // check ignored players from personal chat log (from "ignore" command)
+					return -1; // no sending to this player, thank you very much
+
 				sprint(privatesay, msgstr);
 				if(cmsgstr != "")
 					centerprint(privatesay, cmsgstr);
@@ -293,6 +322,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, it)) // check ignored players from personal chat log (from "ignore" command)
+					continue; // no sending to this player, thank you very much
+
 				sprint(it, msgstr);
 			});
 			event_log_msg = sprintf(":chat_minigame:%d:%s:%s", source.playerid, CS(source).active_minigame.netname, msgin);
@@ -305,6 +337,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
 			FOREACH_CLIENT((IS_PLAYER(it) || INGAME(it)) && IS_REAL_CLIENT(it) && it != source && it.team == source.team && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, it)) // check ignored players from personal chat log (from "ignore" command)
+					continue; // no sending to this player, thank you very much
+
 				sprint(it, msgstr);
 				if(cmsgstr != "")
 					centerprint(it, cmsgstr);
@@ -316,6 +351,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
 			FOREACH_CLIENT(!(IS_PLAYER(it) || INGAME(it)) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, it)) // check ignored players from personal chat log (from "ignore" command)
+					continue; // no sending to this player, thank you very much
+
 				sprint(it, msgstr);
 			});
 			event_log_msg = sprintf(":chat_spec:%d:%s", source.playerid, strreplace("\n", " ", msgin));
@@ -328,6 +366,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				MX_Say(strcat(playername(source.netname, source.team, IS_PLAYER(source)), "^7: ", msgin));
 			}
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, it)) // check ignored players from personal chat log (from "ignore" command)
+					continue; // no sending to this player, thank you very much
+
 				sprint(it, msgstr);
 			});
 			event_log_msg = sprintf(":chat:%d:%s", source.playerid, strreplace("\n", " ", msgin));
@@ -348,7 +389,7 @@ entity findnearest(vector point, bool checkitems, vector axismod)
 
     IL_EACH(((checkitems) ? g_items : g_locations), ((checkitems) ? (it.target == "###item###") : (it.classname == "target_location")),
     {
-    	if ((it.items == IT_KEY1 || it.items == IT_KEY2) && it.target == "###item###")
+        if ((it.items == IT_KEY1 || it.items == IT_KEY2) && it.target == "###item###")
             dist = it.oldorigin;
         else
             dist = it.origin;
@@ -439,13 +480,26 @@ string PlayerHealth(entity this)
 string WeaponNameFromWeaponentity(entity this, .entity weaponentity)
 {
 	entity wepent = this.(weaponentity);
-	if(!wepent)
-		return "none";
+	if(!wepent || !IS_PLAYER(this))
+		return "N/A";
 	else if(wepent.m_weapon != WEP_Null)
 		return wepent.m_weapon.m_name;
 	else if(wepent.m_switchweapon != WEP_Null)
 		return wepent.m_switchweapon.m_name;
 	return "none"; //REGISTRY_GET(Weapons, wepent.cnt).m_name;
+}
+
+string AmmoNameFromWeaponentity(entity this, .entity weaponentity)
+{
+	entity wepent = this.(weaponentity);
+	string fallback = "N/A";
+	if(!wepent || !IS_PLAYER(this))
+		return fallback;
+	else if(wepent.m_weapon.ammo_type != RES_NONE)
+		return wepent.m_weapon.ammo_type.m_name;
+	else if(wepent.m_switchweapon.ammo_type != RES_NONE)
+		return wepent.m_switchweapon.ammo_type.m_name;
+	return fallback; // REGISTRY_GET(Weapons, wepent.cnt).ammo_type.m_name;
 }
 
 string formatmessage(entity this, string msg)
@@ -505,8 +559,10 @@ string formatmessage(entity this, string msg)
 			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
+			case "o": replacement = vtos(this.origin); break;
+			case "O": replacement = sprintf("'%f %f %f'", this.origin.x, this.origin.y, this.origin.z); break;
 			case "w": replacement = WeaponNameFromWeaponentity(this, weaponentity); break;
-			case "W": replacement = GetAmmoName(this.(weaponentity).m_weapon.ammo_type); break;
+			case "W": replacement = AmmoNameFromWeaponentity(this, weaponentity); break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
 			case "S": replacement = ftos(vlen(this.velocity)); break;

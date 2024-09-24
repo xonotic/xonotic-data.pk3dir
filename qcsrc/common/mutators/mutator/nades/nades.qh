@@ -6,8 +6,10 @@
 bool autocvar_g_nades;
 bool autocvar_g_nades_override_dropweapon = true;
 vector autocvar_g_nades_throw_offset;
-bool autocvar_g_nades_spawn;
+bool autocvar_g_nades_onspawn;
 int autocvar_g_nades_spawn_count;
+float autocvar_g_nades_spawn_health_respawn;
+float autocvar_g_nades_spawn_destroy_damage = 25;
 bool autocvar_g_nades_client_select;
 bool autocvar_g_nades_pickup = true;
 float autocvar_g_nades_pickup_time = 2;
@@ -21,6 +23,7 @@ float autocvar_g_nades_nade_edgedamage;
 float autocvar_g_nades_nade_radius;
 float autocvar_g_nades_nade_force;
 int autocvar_g_nades_nade_newton_style;
+bool autocvar_g_nades_napalm;
 int autocvar_g_nades_napalm_ball_count;
 float autocvar_g_nades_napalm_ball_spread;
 float autocvar_g_nades_napalm_ball_damage;
@@ -50,20 +53,37 @@ int autocvar_g_nades_bonus_score_low;
 int autocvar_g_nades_bonus_score_high;
 int autocvar_g_nades_bonus_score_medium;
 int autocvar_g_nades_bonus_score_spree;
+bool autocvar_g_nades_ice = true;
 float autocvar_g_nades_ice_freeze_time;
 float autocvar_g_nades_ice_health;
 bool autocvar_g_nades_ice_explode;
 bool autocvar_g_nades_ice_teamcheck;
+bool autocvar_g_nades_translocate = true;
+float autocvar_g_nades_translocate_destroy_damage = 25;
+bool autocvar_g_nades_spawn = true;
+bool autocvar_g_nades_heal = true;
 float autocvar_g_nades_heal_time;
 float autocvar_g_nades_heal_rate;
 float autocvar_g_nades_heal_friend;
 float autocvar_g_nades_heal_foe;
+bool autocvar_g_nades_entrap;
 float autocvar_g_nades_entrap_strength = 0.01;
 float autocvar_g_nades_entrap_speed = 0.5;
 float autocvar_g_nades_entrap_radius = 500;
 float autocvar_g_nades_entrap_time = 10;
+bool autocvar_g_nades_veil;
 float autocvar_g_nades_veil_time = 8;
 float autocvar_g_nades_veil_radius = 300;
+bool autocvar_g_nades_ammo;
+float autocvar_g_nades_ammo_time;
+float autocvar_g_nades_ammo_rate;
+float autocvar_g_nades_ammo_friend;
+float autocvar_g_nades_ammo_foe;
+bool autocvar_g_nades_darkness;
+bool autocvar_g_nades_darkness_explode;
+bool autocvar_g_nades_darkness_teamcheck;
+float autocvar_g_nades_darkness_time;
+bool autocvar_g_nades_pokenade;
 string autocvar_g_nades_pokenade_monster_type;
 float autocvar_g_nades_pokenade_monster_lifetime;
 #endif
@@ -86,6 +106,10 @@ const int PROJECTILE_NADE_ENTRAP = 84;
 const int PROJECTILE_NADE_ENTRAP_BURN = 85;
 const int PROJECTILE_NADE_VEIL = 86;
 const int PROJECTILE_NADE_VEIL_BURN = 87;
+const int PROJECTILE_NADE_AMMO = 88;
+const int PROJECTILE_NADE_AMMO_BURN = 89;
+const int PROJECTILE_NADE_DARKNESS = 90;
+const int PROJECTILE_NADE_DARKNESS_BURN = 91;
 
 REGISTRY(Nades, BITS(4))
 REGISTER_REGISTRY(Nades)
@@ -112,10 +136,7 @@ REGISTRY_DEFINE_GET(Nades, NADE_TYPE_Null)
 Nade Nade_FromProjectile(int proj)
 {
     FOREACH(Nades, true, {
-        for (int j = 0; j < 2; j++)
-        {
-            if (it.m_projectile[j] == proj) return it;
-        }
+        if (it.m_projectile[0] == proj || it.m_projectile[1] == proj) return it;
     });
     return NADE_TYPE_Null;
 }
@@ -142,11 +163,15 @@ REPLICATE_INIT(string, cvar_cl_pokenade_type);
 .float nade_special_time;
 .string pokenade_type;
 .entity nade_damage_target;
+.float cvar_cl_nade_type;
+.string cvar_cl_pokenade_type;
 .float toss_time;
 .float nade_show_particles;
 .float nade_veil_time;
 .float nade_veil_prevalpha;
 .float nade_entrap_time;
+.float nade_ammo_time;
+.float nade_darkness_time;
 
 bool orb_send(entity this, entity to, int sf);
 

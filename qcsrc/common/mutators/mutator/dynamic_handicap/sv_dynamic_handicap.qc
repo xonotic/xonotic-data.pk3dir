@@ -58,7 +58,8 @@ void DynamicHandicap_UpdateHandicap()
 			handicap = 1 / (fabs(handicap) + 1);
 		}
 		handicap = DynamicHandicap_ClampHandicap(handicap);
-		Handicap_SetForcedHandicap(it, handicap);
+		Handicap_SetForcedHandicap(it, handicap, false);
+		Handicap_SetForcedHandicap(it, handicap, true);
 	});
 }
 

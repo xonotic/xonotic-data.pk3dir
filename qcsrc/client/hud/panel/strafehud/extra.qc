@@ -26,27 +26,28 @@ float StrafeHUD_DrawSlickDetector(entity e, bool onslick)
 		float slicksteps = bound(0, autocvar_hud_panel_strafehud_slickdetector_granularity, 4);
 		bool slickdetected = false;
 
-		slicksteps = 90 / 2 ** slicksteps;
+		slicksteps = 90 * DEG2RAD / 2 ** slicksteps;
 
 		slickdetected = onslick; // do not need to traceline if already touching slick
 
 		// traceline downwards into every direction
 		trace_dphitq3surfaceflags = 0;
 		vector traceorigin = e.origin + eZ * e.mins.z;
-		for(float i = 0; i < 90 && !slickdetected; i += slicksteps)
+		for(float i = 0; i < 90 * DEG2RAD - 0.00001 && !slickdetected; i += slicksteps)
 		{
 			vector slickoffset;
 			float slickrotate;
-			slickoffset.z = -cos(i * DEG2RAD) * autocvar_hud_panel_strafehud_slickdetector_range;
-			slickrotate = sin(i * DEG2RAD) * autocvar_hud_panel_strafehud_slickdetector_range;
+			slickoffset.z = -cos(i) * autocvar_hud_panel_strafehud_slickdetector_range;
+			slickrotate = sin(i) * autocvar_hud_panel_strafehud_slickdetector_range;
 
-			for(float j = 0; j < 360 && !slickdetected; j += slicksteps)
+			for(float j = 0; j < 360 * DEG2RAD - 0.00001 && !slickdetected; j += slicksteps)
 			{
-				slickoffset.x = sin(j * DEG2RAD) * slickrotate;
-				slickoffset.y = cos(j * DEG2RAD) * slickrotate;
+				slickoffset.x = sin(j) * slickrotate;
+				slickoffset.y = cos(j) * slickrotate;
 
 				traceline(traceorigin, traceorigin + slickoffset, MOVE_NOMONSTERS, e);
-				if((PHYS_FRICTION(e) == 0 && trace_fraction < 1) || trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
+				if((PHYS_FRICTION(e) == 0 && trace_fraction < 1)
+				|| (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK))
 					slickdetected = true;
 				if(i == 0)
 					break;

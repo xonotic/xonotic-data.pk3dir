@@ -242,14 +242,12 @@ void buff_Touch(entity this, entity toucher)
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	sound(toucher, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
-	float oldtime = StatusEffects_gettime(thebuff, toucher);
 	float bufftime = ((this.buffs_finished) ? this.buffs_finished : thebuff.m_time(thebuff));
 
 	buff_RemoveAll(toucher, STATUSEFFECT_REMOVE_NORMAL); // remove previous buffs so that a new one may be added
-	if(bufftime)
-		StatusEffects_apply(thebuff, toucher, min(time + bufftime, max(oldtime, time) + bufftime), 0);
-	else
-		StatusEffects_apply(thebuff, toucher, time + 999, 0); // HACK: zero timer means "infinite"!
+	if(!bufftime)
+		bufftime = 999;
+	StatusEffects_apply(thebuff, toucher, time + bufftime, 0);
 
 	STAT(LAST_PICKUP, toucher) = time;
 }
@@ -314,7 +312,7 @@ void buff_Think(entity this)
 		this.skin = buff.m_skin;
 
 		setmodel(this, MDL_BUFF);
-		setsize(this, BUFF_MIN, BUFF_MAX);
+		setsize(this, ITEM_D_MINS, ITEM_L_MAXS);
 
 		if(this.buff_waypoint)
 		{
@@ -440,7 +438,7 @@ void buff_Init(entity this)
 	setthink(this, buff_Think);
 	settouch(this, buff_Touch);
 	setmodel(this, MDL_BUFF);
-	setsize(this, BUFF_MIN, BUFF_MAX);
+	setsize(this, ITEM_D_MINS, ITEM_L_MAXS);
 	this.reset = buff_Reset;
 	this.nextthink = time + 0.1;
 	this.gravity = 1;
@@ -490,7 +488,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 {
 	setorigin(ent, old.origin);
 	ent.angles = old.angles;
-	ent.noalign = Item_ShouldKeepPosition(old);
+	ent.noalign = ITEM_SHOULD_KEEP_POSITION(old);
 
 	buff_Init(ent);
 }
@@ -533,21 +531,6 @@ METHOD(Buff, m_remove, void(StatusEffects this, entity actor, int removal_type))
 	if(IS_PLAYER(actor))
 		actor.effects &= ~EF_NOSHADOW;
 	SUPER(Buff).m_remove(this, actor, removal_type);
-}
-
-METHOD(Disabled, m_tick, void(StatusEffects this, entity actor))
-{
-	if(time >= actor.disabled_effect_time)
-	{
-		Send_Effect(EFFECT_SMOKING, actor.origin + ((actor.mins + actor.maxs) * 0.5), '0 0 0', 1);
-		actor.disabled_effect_time = time + 0.5;
-	}
-	SUPER(Disabled).m_tick(this, actor);
-}
-METHOD(Disabled, m_remove, void(StatusEffects this, entity actor, int removal_type))
-{
-	actor.disabled_effect_time = 0;
-	SUPER(Disabled).m_remove(this, actor, removal_type);
 }
 
 METHOD(AmmoBuff, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
@@ -709,7 +692,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 
 	if(StatusEffects_active(BUFF_DISABILITY, frag_attacker))
 	if(frag_target != frag_attacker)
-		StatusEffects_apply(STATUSEFFECT_Disabled, frag_target, time + autocvar_g_buffs_disability_slowtime, 0);
+		StatusEffects_apply(STATUSEFFECT_Stunned, frag_target, time + autocvar_g_buffs_disability_slowtime, 0);
 
 	if(StatusEffects_active(BUFF_INFERNO, frag_target))
 	{
@@ -763,7 +746,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics_UpdateStats)
 	entity player = M_ARGV(0, entity);
 	// these automatically reset, no need to worry
 
-	if(StatusEffects_active(STATUSEFFECT_Disabled, player))
+	if(StatusEffects_active(STATUSEFFECT_Stunned, player))
 		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_buffs_disability_speed;
 }
 
@@ -780,7 +763,7 @@ MUTATOR_HOOKFUNCTION(buffs, MonsterMove)
 {
 	entity mon = M_ARGV(0, entity);
 
-	if(StatusEffects_active(STATUSEFFECT_Disabled, mon))
+	if(StatusEffects_active(STATUSEFFECT_Stunned, mon))
 	{
 		M_ARGV(1, float) *= autocvar_g_buffs_disability_speed; // run speed
 		M_ARGV(2, float) *= autocvar_g_buffs_disability_speed; // walk speed
@@ -917,7 +900,7 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponRateFactor)
 {
 	entity player = M_ARGV(1, entity);
 
-	if(StatusEffects_active(STATUSEFFECT_Disabled, player))
+	if(StatusEffects_active(STATUSEFFECT_Stunned, player))
 		M_ARGV(0, float) *= autocvar_g_buffs_disability_rate;
 }
 
@@ -925,7 +908,7 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 {
 	entity player = M_ARGV(1, entity);
 
-	if(StatusEffects_active(STATUSEFFECT_Disabled, player))
+	if(StatusEffects_active(STATUSEFFECT_Stunned, player))
 		M_ARGV(0, float) *= autocvar_g_buffs_disability_weaponspeed;
 }
 
