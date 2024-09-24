@@ -56,6 +56,19 @@ void HUD_Physics()
 
 	draw_beginBoldFont();
 
+	bool onslick = false;
+	if(IS_ONGROUND(csqcplayer))
+	{
+		if(PHYS_FRICTION(csqcplayer) == 0)
+			onslick = true;
+		else // don't use IS_ONSLICK(), it only works for the local player and only if client prediction is enabled
+		{
+			trace_dphitq3surfaceflags = 0;
+			tracebox(csqcplayer.origin, csqcplayer.mins, csqcplayer.maxs, csqcplayer.origin - '0 0 1', MOVE_NOMONSTERS, csqcplayer);
+			onslick = trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK;
+		}
+	}
+
 	float acceleration_progressbar_scale = 0;
 	if(autocvar_hud_panel_physics_progressbar && autocvar_hud_panel_physics_acceleration_progressbar_scale > 1)
 		acceleration_progressbar_scale = autocvar_hud_panel_physics_acceleration_progressbar_scale;
@@ -296,7 +309,10 @@ void HUD_Physics()
 		else
 			progressbar_color = autocvar_hud_progressbar_acceleration_color;
 
-		f = acceleration/autocvar_hud_panel_physics_acceleration_max;
+		float acceleration_max = onslick && autocvar_hud_panel_physics_acceleration_max_slick != -1
+			? autocvar_hud_panel_physics_acceleration_max_slick
+			: autocvar_hud_panel_physics_acceleration_max;
+		f = acceleration / acceleration_max;
 		if (autocvar_hud_panel_physics_acceleration_progressbar_nonlinear)
 			f = (f >= 0 ? sqrt(f) : -sqrt(-f));
 
