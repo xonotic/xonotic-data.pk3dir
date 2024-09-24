@@ -3,6 +3,10 @@
 #include <client/draw.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
+// jump speed
+#include <lib/csqcmodel/common.qh> // for IS_PLAYER() macro
+#include <common/resources/cl_resources.qh> // IS_DEAD() macro
+
 // Physics (#15)
 
 void HUD_Physics_Export(int fh)
@@ -26,7 +30,7 @@ void HUD_Physics_Export(int fh)
 }
 
 vector acc_prevspeed;
-float acc_prevtime, acc_avg, top_speed, top_speed_time;
+float acc_prevtime, acc_avg, top_speed, top_speed_time, jump_speed, jump_speed_time, prev_vel_z = 0;
 float physics_update_time, discrete_speed, discrete_acceleration;
 void HUD_Physics()
 {
@@ -39,8 +43,6 @@ void HUD_Physics()
 
 	HUD_Panel_LoadCvars();
 
-	draw_beginBoldFont();
-
 	if (autocvar_hud_panel_physics_dynamichud)
 		HUD_Scale_Enable();
 	else
@@ -51,6 +53,8 @@ void HUD_Physics()
 		panel_pos += '1 1 0' * panel_bg_padding;
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
+
+	draw_beginBoldFont();
 
 	float acceleration_progressbar_scale = 0;
 	if(autocvar_hud_panel_physics_progressbar && autocvar_hud_panel_physics_acceleration_progressbar_scale > 1)
@@ -150,19 +154,59 @@ void HUD_Physics()
 	if (autocvar_hud_panel_physics_acceleration_progressbar_mode == 0)
 		acceleration_baralign = 3; //override hud_panel_physics_baralign value for acceleration
 
+	//draw jump speed
+	vector tmp_offset = '0 0 0', tmp_size = '0 0 0';
+	float speed_size = 0.75, unit_size = 0.4;
+	bool drew_jump_speed = false;
+	if (autocvar_hud_panel_physics_jumpspeed)
+	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 2)
+	{
+		if (autocvar__hud_configure)
+		{
+			top_speed = floor( max_speed * speed_size * 0.9 + 0.5 ); // slightly less than top speed text
+			f = 1;
+		}
+		else
+		{
+			if(vel.z > prev_vel_z && !IS_DEAD(csqcplayer) && IS_PLAYER(csqcplayer))
+			{
+				// FIXME: this includes some situations where the player doesn't explicitly jump (e.g. bouncing on ramp, jumppad)
+				// maybe these can be left in?
+				jump_speed = speed;
+				jump_speed_time = time;
+			}		
+			f = max(1, autocvar_hud_panel_physics_jumpspeed_time);
+			// divide by f to make it start from 1
+			f = cos( ((time - jump_speed_time) / f) * PI/2 );
+			prev_vel_z = vel.z;
+		}
+		if (f > 0)
+		{
+			unit_size = 0.5; //make the jump speed and top speed text the same size		
+			if (speed_baralign)
+				tmp_offset.x = 0;
+			else
+				tmp_offset.x = panel_size.x * speed_size;
+			tmp_size.x   =  panel_size.x * (1 - speed_size);
+			tmp_size.y   =  panel_size.y * unit_size * text_scale;
+			tmp_offset.y = (panel_size.y * unit_size - tmp_size.y) / 2;
+			drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(jump_speed), tmp_size, '0 1 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drew_jump_speed = true;
+		}
+	}
+
 	//draw speed
 	if(speed)
 	if(autocvar_hud_panel_physics_progressbar == 1 || autocvar_hud_panel_physics_progressbar == 2)
 		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed/max_speed, 0, speed_baralign, autocvar_hud_progressbar_speed_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-	vector tmp_offset = '0 0 0', tmp_size = '0 0 0';
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 2)
 	{
-		tmp_size.x = panel_size.x * 0.75;
+		tmp_size.x = panel_size.x * speed_size;
 		tmp_size.y = panel_size.y * text_scale;
 		if (speed_baralign)
-			tmp_offset.x = panel_size.x - tmp_size.x;
-		//else
-			//tmp_offset_x = 0;
+			tmp_offset.x = panel_size.x * (1 - speed_size);
+		else
+			tmp_offset.x = 0;
 		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
 		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(discrete_speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
@@ -170,13 +214,12 @@ void HUD_Physics()
 		if (speed_baralign)
 			tmp_offset.x = 0;
 		else
-			tmp_offset.x = tmp_size.x;
-		if (autocvar_hud_panel_physics_speed_unit_show)
+			tmp_offset.x = panel_size.x * speed_size;
+		if (autocvar_hud_panel_physics_speed_unit_show && !drew_jump_speed)
 		{
-			//tmp_offset_y = 0;
-			tmp_size.x = panel_size.x * (1 - 0.75);
-			tmp_size.y = panel_size.y * 0.4 * text_scale;
-			tmp_offset.y = (panel_size.y * 0.4 - tmp_size.y) / 2;
+			tmp_size.x   =  panel_size.x * (1 - speed_size);
+			tmp_size.y   =  panel_size.y * unit_size * text_scale;
+			tmp_offset.y = (panel_size.y * unit_size - tmp_size.y) / 2;
 			string unit = GetSpeedUnit(autocvar_hud_speed_unit);
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, unit, tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
@@ -188,7 +231,7 @@ void HUD_Physics()
 	{
 		if (autocvar__hud_configure)
 		{
-			top_speed = floor( max_speed * 0.75 + 0.5 );
+			top_speed = floor( max_speed * speed_size + 0.5 );
 			f = 1;
 		}
 		else
@@ -233,10 +276,10 @@ void HUD_Physics()
 			}
 
 			//top speed
-			tmp_offset.y = panel_size.y * 0.4;
-			tmp_size.x = panel_size.x * (1 - 0.75);
-			tmp_size.y = (panel_size.y - tmp_offset.y) * text_scale;
-			tmp_offset.y += (panel_size.y - tmp_offset.y - tmp_size.y) / 2;
+			tmp_offset.y  =  panel_size.y * unit_size;
+			tmp_size.x    =  panel_size.x * (1 - speed_size);
+			tmp_size.y    =  panel_size.y * (1 - unit_size) * text_scale;
+			tmp_offset.y += (panel_size.y * (1 - unit_size) - tmp_size.y) / 2;
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(top_speed), tmp_size, '1 0 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		else
