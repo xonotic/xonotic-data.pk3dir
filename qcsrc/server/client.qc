@@ -2442,6 +2442,7 @@ void ObserverOrSpectatorThink(entity this)
 		int r = MinigameImpulse(this, CS(this).impulse);
 		if (!is_spec || r)
 			CS(this).impulse = 0;
+
 		if (is_spec && CS(this).impulse == IMP_weapon_drop.impulse)
 		{
 			STAT(CAMERA_SPECTATOR, this) = (STAT(CAMERA_SPECTATOR, this) + 1) % 3;
