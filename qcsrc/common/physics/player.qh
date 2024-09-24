@@ -2,6 +2,12 @@
 
 // Client/server mappings
 
+#ifdef CSQC
+	#include <client/csqcmodel_hooks.qh> // for .isplayermodel, .csqcmodel_isdead
+	#include <common/resources/cl_resources.qh> // for GetResource
+	#include <lib/csqcmodel/common.qh> // for ISPLAYER_CLIENT, ISPLAYER_PLAYER
+#endif
+
 #ifdef SVQC
 // TODO: get rid of this random dumb include!
 	#include <common/state.qh>
@@ -208,7 +214,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 .float teleport_time;
 
 #ifdef CSQC
-
 	#define PHYS_FIXANGLE(s) ('0 0 0')
 
 	string autocvar_cl_jumpspeedcap_min;

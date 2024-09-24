@@ -5,10 +5,6 @@
 #include <common/physics/player.qh>
 #include <common/physics/movetypes/movetypes.qh>
 
-// jump speed
-#include <lib/csqcmodel/common.qh> // for IS_PLAYER() macro
-#include <common/resources/cl_resources.qh> // IS_DEAD() macro
-
 // Physics (#15)
 
 void HUD_Physics_Export(int fh)
