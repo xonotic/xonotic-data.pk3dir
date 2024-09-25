@@ -29,7 +29,8 @@ void HUD_Physics_Export(int fh)
 }
 
 vector acc_prev_vel;
-float acc_prevtime, acc_avg, top_speed, top_speed_time, jump_speed, jump_speed_time, prev_vel_z = 0;
+float acc_prevtime, acc_avg, top_speed, top_speed_time, jump_speed, jump_speed_time;
+float prev_vel_z = 0, prev_speed2d = 0;
 float physics_update_time, discrete_speed, discrete_acceleration;
 void HUD_Physics()
 {
@@ -69,17 +70,23 @@ void HUD_Physics()
 		text_scale = min(autocvar_hud_panel_physics_text_scale, 5);
 
 	// compute speed
-	float speed, conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
+	float conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
+	float speed, speed2d;
 	float max_speed = floor(autocvar_hud_panel_physics_speed_max * conversion_factor + 0.5);
 	if (autocvar__hud_configure)
 	{
-		speed = floor(max_speed * 0.65 + 0.5);
+		speed2d = floor(max_speed * 0.65 + 0.5);
+		speed = speed2d; // just ignore vertical speed in hud configure
 		immobile = speed <= 0;
 	}
-	else if (autocvar_hud_panel_physics_speed_vertical)
-		speed = floor(speed3d_phys * conversion_factor + 0.5);
 	else
-		speed = floor(speed_phys * conversion_factor + 0.5);
+	{
+		speed2d = floor(speed_phys * conversion_factor + 0.5);
+		if (autocvar_hud_panel_physics_speed_vertical)
+			speed = floor(speed3d_phys * conversion_factor + 0.5);
+		else
+			speed = speed2d;
+	}
 
 	// compute acceleration
 	float acceleration, f;
@@ -165,7 +172,7 @@ void HUD_Physics()
 	{
 		if (autocvar__hud_configure)
 		{
-			top_speed = floor(max_speed * speed_size * 0.9 + 0.5); // slightly less than top speed text
+			jump_speed = floor(max_speed * speed_size * 0.9 + 0.5); // slightly less than top speed text
 			f = 1;
 		}
 		else
@@ -174,9 +181,11 @@ void HUD_Physics()
 			{
 				// NOTE: this includes some situations where the player doesn't explicitly jump (e.g. jumppad, weapon kb)
 				// excluding them would be difficult. maybe they can be left in?
-				jump_speed = speed;
+				jump_speed = prev_speed2d;
 				jump_speed_time = time;
 			}
+			prev_vel_z = vel_phys.z;
+			prev_speed2d = speed2d;
 			float time_frac = (time - jump_speed_time) / max(1, autocvar_hud_panel_physics_jumpspeed_time);
 			f = time_frac > 1 ? 0 : cos(time_frac * PI / 2);
 		}
