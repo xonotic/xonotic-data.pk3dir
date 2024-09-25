@@ -40,6 +40,11 @@ const int PHYSICS_PROGRESSBAR_BOTH = 1;
 const int PHYSICS_PROGRESSBAR_SPEED = 2;
 const int PHYSICS_PROGRESSBAR_ACCEL = 3;
 
+const int PHYSICS_TEXT_NONE = 0;
+const int PHYSICS_TEXT_BOTH = 1;
+const int PHYSICS_TEXT_SPEED = 2;
+const int PHYSICS_TEXT_ACCEL = 3;
+
 // 1 m/s^2 = 0.0254 qu/s^2; 1 g = 9.80665 m/s^2
 const float ACCEL2GRAV = 0.00259007918096393775; // converts qu/s^2 acceleration to m/s^2, relative to real-world gravity
 // equivalent to 0.0254 / 9.80665
