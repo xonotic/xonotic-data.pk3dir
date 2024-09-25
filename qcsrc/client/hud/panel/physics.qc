@@ -32,7 +32,7 @@ void HUD_Physics_Export(int fh)
 vector acc_prev_vel;
 float acc_prevtime, acc_avg, top_speed, top_speed_time, jump_speed, jump_speed_time;
 float prev_vel_z = 0, prev_speed2d = 0;
-float physics_update_time, discrete_speed, discrete_acceleration;
+float physics_update_time, discrete_speed, discrete_accel;
 void HUD_Physics()
 {
 	if (!autocvar__hud_configure)
@@ -60,9 +60,9 @@ void HUD_Physics()
 
 	draw_beginBoldFont();
 
-	float acceleration_progressbar_scale = 0;
+	float accel_progressbar_scale = 0;
 	if (autocvar_hud_panel_physics_progressbar && autocvar_hud_panel_physics_acceleration_progressbar_scale > 1)
-		acceleration_progressbar_scale = autocvar_hud_panel_physics_acceleration_progressbar_scale;
+		accel_progressbar_scale = autocvar_hud_panel_physics_acceleration_progressbar_scale;
 
 	float text_scale;
 	if (autocvar_hud_panel_physics_text_scale <= 0)
@@ -90,18 +90,18 @@ void HUD_Physics()
 	}
 
 	// compute acceleration
-	float acceleration, f;
+	float accel, f;
 	if (autocvar__hud_configure)
-		acceleration = 0.45; // use a hardcoded value so that the hud responds to hud_panel_physics_acceleration_max changing
+		accel = 0.45; // use a hardcoded value so that the hud responds to hud_panel_physics_acceleration_max changing
 	else
 	{
 		f = time - acc_prevtime;
 		if (autocvar_hud_panel_physics_acceleration_vertical)
-			acceleration = (speed3d_phys - vlen(acc_prev_vel));
+			accel = (speed3d_phys - vlen(acc_prev_vel));
 		else
-			acceleration = (speed_phys - vlen(vec2(acc_prev_vel)));
+			accel = (speed_phys - vlen(vec2(acc_prev_vel)));
 
-		acceleration = acceleration * (1 / max(0.0001, f)) * ACCEL2GRAV;
+		accel *= (1 / max(0.0001, f)) * ACCEL2GRAV;
 
 		acc_prev_vel = vel_phys;
 		acc_prevtime = time;
@@ -109,18 +109,18 @@ void HUD_Physics()
 		if (autocvar_hud_panel_physics_acceleration_movingaverage)
 		{
 			f = bound(0, f * autocvar_hud_panel_physics_acceleration_movingaverage_strength, 1);
-			acc_avg = acc_avg * (1 - f) + acceleration * f;
-			acceleration = acc_avg;
+			acc_avg = acc_avg * (1 - f) + accel * f;
+			accel = acc_avg;
 		}
 	}
 
 	const int acc_decimals = 2;
 	if (time > physics_update_time)
 	{
-		discrete_acceleration = acceleration;
+		discrete_accel = accel;
 		// workaround for ftos_decimals returning a negative 0
-		if (discrete_acceleration > -1 / (10 ** acc_decimals) && discrete_acceleration < 0)
-			discrete_acceleration = 0;
+		if (discrete_accel > -1 / (10 ** acc_decimals) && discrete_accel < 0)
+			discrete_accel = 0;
 		discrete_speed = speed;
 		physics_update_time += autocvar_hud_panel_physics_update_interval;
 		if (physics_update_time < time)
@@ -129,15 +129,15 @@ void HUD_Physics()
 
 	// compute layout
 	float panel_ar = panel_size.x / panel_size.y;
-	vector speed_offset = '0 0 0', acceleration_offset = '0 0 0';
+	vector speed_offset = '0 0 0', accel_offset = '0 0 0';
 	if (autocvar_hud_panel_physics_force_layout == PHYSICS_LAYOUT_HORIZONTAL
-		|| (autocvar_hud_panel_physics_force_layout != PHYSICS_LAYOUT_VERTICAL && panel_ar >= 5 && !acceleration_progressbar_scale))
+		|| (autocvar_hud_panel_physics_force_layout != PHYSICS_LAYOUT_VERTICAL && panel_ar >= 5 && !accel_progressbar_scale))
 	{
 		panel_size.x *= 0.5;
 		if (autocvar_hud_panel_physics_flip)
 			speed_offset.x = panel_size.x;
 		else
-			acceleration_offset.x = panel_size.x;
+			accel_offset.x = panel_size.x;
 	}
 	else // speed and accel are drawn on top of one another (vvv), rather than side by side (^^^)
 	{
@@ -145,25 +145,25 @@ void HUD_Physics()
 		if (autocvar_hud_panel_physics_flip)
 			speed_offset.y = panel_size.y;
 		else
-			acceleration_offset.y = panel_size.y;
+			accel_offset.y = panel_size.y;
 	}
-	int speed_baralign, acceleration_baralign;
+	int speed_baralign, accel_baralign;
 	if (autocvar_hud_panel_physics_baralign == PHYSICS_BARALIGN_RIGHT)
-		acceleration_baralign = speed_baralign = 1;
+		accel_baralign = speed_baralign = 1;
 	else if (autocvar_hud_panel_physics_baralign == PHYSICS_BARALIGN_CENTER)
-		acceleration_baralign = speed_baralign = 2;
+		accel_baralign = speed_baralign = 2;
 	else if (autocvar_hud_panel_physics_flip)
 	{
-		acceleration_baralign = (autocvar_hud_panel_physics_baralign == PHYSICS_BARALIGN_ONLY_LEFT);
+		accel_baralign = (autocvar_hud_panel_physics_baralign == PHYSICS_BARALIGN_ONLY_LEFT);
 		speed_baralign = (autocvar_hud_panel_physics_baralign == PHYSICS_BARALIGN_ONLY_RIGHT);
 	}
 	else
 	{
 		speed_baralign = (autocvar_hud_panel_physics_baralign == PHYSICS_BARALIGN_ONLY_LEFT);
-		acceleration_baralign = (autocvar_hud_panel_physics_baralign == PHYSICS_BARALIGN_ONLY_RIGHT);
+		accel_baralign = (autocvar_hud_panel_physics_baralign == PHYSICS_BARALIGN_ONLY_RIGHT);
 	}
 	if (autocvar_hud_panel_physics_acceleration_progressbar_mode == 0)
-		acceleration_baralign = 3; // override hud_panel_physics_baralign value for acceleration
+		accel_baralign = 3; // override hud_panel_physics_baralign value for acceleration
 
 	// draw jump speed
 	vector tmp_offset = '0 0 0', tmp_size = '0 0 0';
@@ -301,29 +301,29 @@ void HUD_Physics()
 	}
 
 	// draw acceleration
-	if (acceleration)
+	if (accel)
 	if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH || autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_ACCEL)
 	{
 		vector progressbar_color;
-		if (acceleration < 0)
+		if (accel < 0)
 			progressbar_color = autocvar_hud_progressbar_acceleration_neg_color;
 		else
 			progressbar_color = autocvar_hud_progressbar_acceleration_color;
 
-		float acceleration_max = onslick && autocvar_hud_panel_physics_acceleration_max_slick != -1
+		float accel_max = onslick && autocvar_hud_panel_physics_acceleration_max_slick != -1
 			? autocvar_hud_panel_physics_acceleration_max_slick
 			: autocvar_hud_panel_physics_acceleration_max;
-		f = acceleration / acceleration_max;
+		f = accel / accel_max;
 		if (autocvar_hud_panel_physics_acceleration_progressbar_nonlinear)
 			f = (f >= 0 ? sqrt(f) : -sqrt(-f));
 
-		if (acceleration_progressbar_scale) // allow progressbar to go out of panel bounds
+		if (accel_progressbar_scale) // allow progressbar to go out of panel bounds
 		{
-			tmp_size = acceleration_progressbar_scale * panel_size.x * eX + panel_size.y * eY;
+			tmp_size = accel_progressbar_scale * panel_size.x * eX + panel_size.y * eY;
 
-			if (acceleration_baralign == 1)
+			if (accel_baralign == 1)
 				tmp_offset.x = panel_size.x - tmp_size.x;
-			else if (acceleration_baralign == 2 || acceleration_baralign == 3)
+			else if (accel_baralign == 2 || accel_baralign == 3)
 				tmp_offset.x = (panel_size.x - tmp_size.x) / 2;
 			else
 				tmp_offset.x = 0;
@@ -335,7 +335,7 @@ void HUD_Physics()
 			tmp_offset = '0 0 0';
 		}
 
-		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset + tmp_offset, tmp_size, "accelbar", f, 0, acceleration_baralign,
+		HUD_Panel_DrawProgressBar(panel_pos + accel_offset + tmp_offset, tmp_size, "accelbar", f, 0, accel_baralign,
 			progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
@@ -345,7 +345,7 @@ void HUD_Physics()
 		tmp_size.y = panel_size.y * text_scale;
 		tmp_offset.x = 0;
 		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
-		drawstring_aspect(panel_pos + acceleration_offset + tmp_offset, strcat(ftos_decimals(discrete_acceleration, acc_decimals), "g"), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(panel_pos + accel_offset + tmp_offset, strcat(ftos_decimals(discrete_accel, acc_decimals), "g"), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	draw_endBoldFont();
