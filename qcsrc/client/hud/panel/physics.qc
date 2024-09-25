@@ -167,8 +167,8 @@ void HUD_Physics()
 
 	// draw jump speed
 	vector tmp_offset = '0 0 0', tmp_size = '0 0 0';
-	float speed_size = 0.75, unit_size = 0.4;
-	bool drew_jump_speed = false;
+	float speed_size = 0.75, upper_text_size = 0.4;
+	bool drew_upper_text = false;
 	if (autocvar_hud_panel_physics_jumpspeed)
 	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
 	{
@@ -193,16 +193,16 @@ void HUD_Physics()
 		}
 		if (f > 0)
 		{
-			unit_size = 0.5; // make the jump speed and top speed text the same size
+			upper_text_size = 0.5; // make the jump speed and top speed text the same size
 			if (speed_baralign)
 				tmp_offset.x = 0;
 			else
 				tmp_offset.x = panel_size.x * speed_size;
 			tmp_size.x   =  panel_size.x * (1 - speed_size);
-			tmp_size.y   =  panel_size.y * unit_size * text_scale;
-			tmp_offset.y = (panel_size.y * unit_size - tmp_size.y) / 2;
+			tmp_size.y   =  panel_size.y * upper_text_size * text_scale;
+			tmp_offset.y = (panel_size.y * upper_text_size - tmp_size.y) / 2;
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(jump_speed), tmp_size, '0 1 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
-			drew_jump_speed = true;
+			drew_upper_text = true;
 		}
 	}
 
@@ -227,13 +227,14 @@ void HUD_Physics()
 			tmp_offset.x = 0;
 		else
 			tmp_offset.x = panel_size.x * speed_size;
-		if (autocvar_hud_panel_physics_speed_unit_show && !drew_jump_speed)
+		if (autocvar_hud_panel_physics_speed_unit_show && !drew_upper_text)
 		{
 			tmp_size.x   =  panel_size.x * (1 - speed_size);
-			tmp_size.y   =  panel_size.y * unit_size * text_scale;
-			tmp_offset.y = (panel_size.y * unit_size - tmp_size.y) / 2;
+			tmp_size.y   =  panel_size.y * upper_text_size * text_scale;
+			tmp_offset.y = (panel_size.y * upper_text_size - tmp_size.y) / 2;
 			string unit = GetSpeedUnit(autocvar_hud_speed_unit);
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, unit, tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drew_upper_text = true;
 		}
 	}
 
@@ -290,10 +291,16 @@ void HUD_Physics()
 			}
 
 			// top speed
-			tmp_offset.y  =  panel_size.y * unit_size;
+			if (!drew_upper_text)
+			{
+				upper_text_size = 0.2; // neither upper text (jumpspeed/unit) was drawn, make topspeed larger
+				tmp_offset.y = panel_size.y * upper_text_size / 2;
+			}
+			else
+				tmp_offset.y = panel_size.y * upper_text_size;
 			tmp_size.x    =  panel_size.x * (1 - speed_size);
-			tmp_size.y    =  panel_size.y * (1 - unit_size) * text_scale;
-			tmp_offset.y += (panel_size.y * (1 - unit_size) - tmp_size.y) / 2;
+			tmp_size.y    =  panel_size.y * (1 - upper_text_size) * text_scale;
+			tmp_offset.y += (panel_size.y * (1 - upper_text_size) - tmp_size.y) / 2;
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(top_speed), tmp_size, '1 0 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		else
