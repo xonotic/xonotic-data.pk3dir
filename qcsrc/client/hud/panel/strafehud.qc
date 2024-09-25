@@ -436,9 +436,6 @@ void HUD_StrafeHUD()
 				direction = STRAFEHUD_DIRECTION_NONE;
 		}
 
-		if(airstopaccel == 0)
-			airstopaccel = 1; // values of 0 are equivalent to 1
-
 		// best angle to strafe at
 		if(immobile)
 		{
@@ -545,8 +542,7 @@ void HUD_StrafeHUD()
 		bool wturn_check = autocvar_hud_panel_strafehud_wturn && !immobile && wturn_valid;
 		if(wturn_check)
 		{
-			float wturn_power = aircontrol_power;
-			if(wturn_power == 2)
+			if(aircontrol_power == 2)
 			{
 				float wturn_a = 32 * aircontrol * dt;
 				float wturn_V = 1 - (wturn_a * wturn_a) / (speed * speed);
@@ -556,9 +552,9 @@ void HUD_StrafeHUD()
 					wturn_bestangle = ACOS_SQRT2_3_DEG;
 				real_wturn_bestangle = wturn_bestangle;
 			}
-			else if(!autocvar_hud_panel_strafehud_wturn_proper && wturn_power >= 0)
+			else if(!autocvar_hud_panel_strafehud_wturn_proper && aircontrol_power >= 0)
 			{
-				wturn_bestangle = acos(sqrt(wturn_power / (wturn_power + 1))) * RAD2DEG;
+				wturn_bestangle = acos(sqrt(aircontrol_power / (aircontrol_power + 1))) * RAD2DEG;
 				real_wturn_bestangle = wturn_bestangle;
 			}
 			else

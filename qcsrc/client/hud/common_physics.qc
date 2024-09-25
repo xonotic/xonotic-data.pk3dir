@@ -5,8 +5,8 @@
 #include <common/physics/movetypes/movetypes.qh>
 
 // non-local players
-#include <common/animdecide.qh> // anim_implicit_state
-#include <common/ent_cs.qh> // CSQCModel_server2csqc()
+#include <common/animdecide.qh> // for anim_implicit_state
+#include <common/ent_cs.qh> // for CSQCModel_server2csqc()
 
 void HUD_Physics_Init()
 {
@@ -66,44 +66,47 @@ void HUD_Physics_Init()
 	}
 
 	// doesn't get changed by ground timeout and isn't affected by jump input
-	real_onground                 = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
+	real_onground        = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
 	// doesn't get changed by ground timeout
-	real_onslick                  = false;
+	real_onslick         = false;
 	// if jump is held assume we are in air, avoids flickering of the hud when hitting the ground
-	onground                      = (real_onground && !jumpheld);
-	onslick                       = real_onslick;
+	onground             = (real_onground && !jumpheld);
+	onslick              = real_onslick;
 	// the hud will not work well while swimming
-	swimming                      = strafe_waterlevel >= WATERLEVEL_SWIMMING;
+	swimming             = strafe_waterlevel >= WATERLEVEL_SWIMMING;
 	// use local csqcmodel entity for this even when spectating, flickers too much otherwise
-	vel_phys                      = csqcplayer.velocity;
-	speed_phys                    = vlen(vec2(vel_phys));
-	speed3d_phys                  = vlen(vel_phys);
-	immobile                      = speed_phys <= 0;
+	vel_phys             = csqcplayer.velocity;
+	speed_phys           = vlen(vec2(vel_phys));
+	speed3d_phys         = vlen(vel_phys);
+	immobile             = speed_phys <= 0;
 
-	maxspeed_ground               = PHYS_MAXSPEED(strafeplayer);
-	maxspeed_air                  = PHYS_MAXAIRSPEED(strafeplayer);
-	maxspeed_airstrafe            = PHYS_MAXAIRSTRAFESPEED(strafeplayer);
-	maxaccel_ground               = PHYS_ACCELERATE(strafeplayer);
-	maxaccel_air                  = PHYS_AIRACCELERATE(strafeplayer);
-	maxaccel_airstrafe            = PHYS_AIRSTRAFEACCELERATE(strafeplayer);
+	maxspeed_ground      = PHYS_MAXSPEED(strafeplayer);
+	maxspeed_air         = PHYS_MAXAIRSPEED(strafeplayer);
+	maxspeed_airstrafe   = PHYS_MAXAIRSTRAFESPEED(strafeplayer);
+	maxaccel_ground      = PHYS_ACCELERATE(strafeplayer);
+	maxaccel_air         = PHYS_AIRACCELERATE(strafeplayer);
+	maxaccel_airstrafe   = PHYS_AIRSTRAFEACCELERATE(strafeplayer);
 	// only the local csqcplayer entity contains this information even when spectating
-	maxspeed_mod                  = IS_DUCKED(csqcplayer) ? .5 : 1;
-	maxspeed_phys                 = onground ? maxspeed_ground : maxspeed_air;
-	maxspeed                      = maxspeed_phys * maxspeed_mod;
-	maxaccel_phys                 = onground ? maxaccel_ground : maxaccel_air;
-	maxaccel                      = maxaccel_phys;
-	stopspeed                     = PHYS_STOPSPEED(strafeplayer);
-	airstopaccel                  = PHYS_AIRSTOPACCELERATE(strafeplayer);
-	aircontrol                    = PHYS_AIRCONTROL(strafeplayer);
-	aircontrol_backwards          = PHYS_AIRCONTROL_BACKWARDS(strafeplayer) == 1;
-	aircontrol_power              = PHYS_AIRCONTROL_POWER(strafeplayer);
-	aircontrol_penalty            = PHYS_AIRCONTROL_PENALTY(strafeplayer);
-	airaccel_qw                   = PHYS_AIRACCEL_QW(strafeplayer) == 1;
-	friction_phys                 = PHYS_FRICTION(strafeplayer);
+	maxspeed_mod         = IS_DUCKED(csqcplayer) ? .5 : 1;
+	maxspeed_phys        = onground ? maxspeed_ground : maxspeed_air;
+	maxspeed             = maxspeed_phys * maxspeed_mod;
+	maxaccel_phys        = onground ? maxaccel_ground : maxaccel_air;
+	maxaccel             = maxaccel_phys;
+	stopspeed            = PHYS_STOPSPEED(strafeplayer);
+	airstopaccel         = PHYS_AIRSTOPACCELERATE(strafeplayer);
+	aircontrol           = PHYS_AIRCONTROL(strafeplayer);
+	aircontrol_backwards = PHYS_AIRCONTROL_BACKWARDS(strafeplayer) == 1;
+	aircontrol_power     = PHYS_AIRCONTROL_POWER(strafeplayer);
+	aircontrol_penalty   = PHYS_AIRCONTROL_PENALTY(strafeplayer);
+	airaccel_qw          = PHYS_AIRACCEL_QW(strafeplayer) == 1;
+	friction_phys        = PHYS_FRICTION(strafeplayer);
 
 	// change the range from 0° - 360° to -180° - 180° to match how view_angle represents angles
-	vel_angle                     = vectoangles(strafeplayer.velocity).y - (vectoangles(strafeplayer.velocity).y > 180 ? 360 : 0);
-	view_angle                    = PHYS_INPUT_ANGLES(strafeplayer).y;
+	vel_angle            = vectoangles(strafeplayer.velocity).y - (vectoangles(strafeplayer.velocity).y > 180 ? 360 : 0);
+	view_angle           = PHYS_INPUT_ANGLES(strafeplayer).y;
+
+	if(!airstopaccel)
+		airstopaccel = 1; // values of 0 are equivalent to 1
 
 	if(onground)
 	{

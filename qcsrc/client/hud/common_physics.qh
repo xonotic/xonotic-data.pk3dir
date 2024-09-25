@@ -1,8 +1,9 @@
 #pragma once
 
-// Shared by panel/strafehud.qc and panel/physics.qc, since hud some elements require the same variables/calculations
+// Shared by panel/strafehud.qc and panel/physics.qc, since some hud elements require the same variables/calculations
 // All PHYS_* macro calls are localised here
 // All csqcplayer related calls are also localised here
+// These variables are all recomputed every time HUD_Main is called, since they could change during any frame
 
 void HUD_Physics_Init();
 
