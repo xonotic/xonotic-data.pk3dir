@@ -26,6 +26,7 @@ void HUD_Physics_Export(int fh)
 	HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_nonlinear");
 	HUD_Write_Cvar("hud_panel_physics_text");
 	HUD_Write_Cvar("hud_panel_physics_text_scale");
+	HUD_Write_Cvar("hud_panel_physics_force_layout");
 }
 
 vector acc_prev_vel;
@@ -129,7 +130,8 @@ void HUD_Physics()
 	// compute layout
 	float panel_ar = panel_size.x / panel_size.y;
 	vector speed_offset = '0 0 0', acceleration_offset = '0 0 0';
-	if (panel_ar >= 5 && !acceleration_progressbar_scale) // speed and accel are drawn side-by-side
+	if (autocvar_hud_panel_physics_force_layout == PHYSICS_LAYOUT_HORIZONTAL
+		|| (autocvar_hud_panel_physics_force_layout != PHYSICS_LAYOUT_VERTICAL && panel_ar >= 5 && !acceleration_progressbar_scale))
 	{
 		panel_size.x *= 0.5;
 		if (autocvar_hud_panel_physics_flip)
@@ -137,7 +139,7 @@ void HUD_Physics()
 		else
 			acceleration_offset.x = panel_size.x;
 	}
-	else
+	else // speed and accel are drawn on top of one another (vvv), rather than side by side (^^^)
 	{
 		panel_size.y *= 0.5;
 		if (autocvar_hud_panel_physics_flip)

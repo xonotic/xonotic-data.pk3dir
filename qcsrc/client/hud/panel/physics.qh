@@ -24,6 +24,7 @@ bool autocvar_hud_panel_physics_topspeed;
 float autocvar_hud_panel_physics_topspeed_time;
 bool autocvar_hud_panel_physics_jumpspeed = false;
 float autocvar_hud_panel_physics_jumpspeed_time = 1;
+int autocvar_hud_panel_physics_force_layout = 0;
 
 vector autocvar_hud_progressbar_acceleration_color;
 vector autocvar_hud_progressbar_acceleration_neg_color;
@@ -44,6 +45,10 @@ const int PHYSICS_TEXT_NONE = 0;
 const int PHYSICS_TEXT_BOTH = 1;
 const int PHYSICS_TEXT_SPEED = 2;
 const int PHYSICS_TEXT_ACCEL = 3;
+
+const int PHYSICS_LAYOUT_AUTOMATIC = 0;
+const int PHYSICS_LAYOUT_HORIZONTAL = 1;
+const int PHYSICS_LAYOUT_VERTICAL = 2;
 
 // 1 m/s^2 = 0.0254 qu/s^2; 1 g = 9.80665 m/s^2
 const float ACCEL2GRAV = 0.00259007918096393775; // converts qu/s^2 acceleration to m/s^2, relative to real-world gravity
