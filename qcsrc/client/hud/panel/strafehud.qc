@@ -741,7 +741,7 @@ void HUD_StrafeHUD()
 		}
 	}
 
-	text_offset_bottom += StrafeHUD_DrawVerticalAngle(text_offset_bottom);
+	text_offset_bottom += StrafeHUD_DrawVerticalAngle(strafeplayer, text_offset_bottom);
 
 	draw_beginBoldFont();
 	text_offset_bottom += StrafeHUD_DrawStartSpeed(speed, text_offset_bottom);

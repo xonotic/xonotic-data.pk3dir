@@ -101,11 +101,11 @@ float StrafeHUD_DrawSlickDetector(entity e, bool onslick)
 }
 
 // vertical angle for weapon jumps
-float StrafeHUD_DrawVerticalAngle(float text_offset_bottom)
+float StrafeHUD_DrawVerticalAngle(entity e, float text_offset_bottom)
 {
 	if(autocvar_hud_panel_strafehud_vangle)
 	{
-		float vangle = -PHYS_INPUT_ANGLES(strafeplayer).x;
+		float vangle = -PHYS_INPUT_ANGLES(e).x;
 		float vangle_height = autocvar_hud_panel_strafehud_vangle_size * panel_size.y;
 		string vangle_text = strcat(ftos_decimals(vangle, 2), "°");
 

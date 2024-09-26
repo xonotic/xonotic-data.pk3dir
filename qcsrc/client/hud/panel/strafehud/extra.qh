@@ -2,7 +2,7 @@
 #include "../strafehud.qh"
 
 float StrafeHUD_DrawSlickDetector(entity, bool);
-float StrafeHUD_DrawVerticalAngle(float);
+float StrafeHUD_DrawVerticalAngle(entity, float);
 void StrafeHUD_Sonar(float, string);
 string StrafeHUD_UpdateSonarSound();
 float StrafeHUD_DrawJumpHeight(entity, bool, bool, float);
