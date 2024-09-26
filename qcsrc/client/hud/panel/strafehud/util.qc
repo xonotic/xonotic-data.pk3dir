@@ -4,16 +4,19 @@
 #include <common/physics/player.qh>
 #include <common/physics/movetypes/movetypes.qh>
 
+// convert a strafe angle into a HUD width value
 float StrafeHUD_AngleToWidth(float angle, float range)
 {
 	return angle / range * panel_size.x;
 }
 
+// convert a strafe angle into a centered HUD offset value
 float StrafeHUD_AngleToOffset(float angle, float range)
 {
 	return StrafeHUD_AngleToWidth(angle, range) + panel_size.x / 2;
 }
 
+// turn a ratio into a projected ratio based on the total angular distance
 float StrafeHUD_Project(float ratio, float range, bool reverse)
 {
 	range *= DEG2RAD / 2;
@@ -50,6 +53,7 @@ float StrafeHUD_Project(float ratio, float range, bool reverse)
 	return ratio;
 }
 
+// project a centered HUD offset value
 float StrafeHUD_ProjectOffset(float offset, float range, bool reverse)
 {
 	if(autocvar_hud_panel_strafehud_projection == STRAFEHUD_PROJECTION_LINEAR)
@@ -61,6 +65,7 @@ float StrafeHUD_ProjectOffset(float offset, float range, bool reverse)
 	return offset;
 }
 
+// project a HUD width value
 float StrafeHUD_ProjectWidth(float offset, float width, float range)
 {
 	if(autocvar_hud_panel_strafehud_projection == STRAFEHUD_PROJECTION_LINEAR)
@@ -117,7 +122,7 @@ float StrafeHUD_DetermineWaterLevel(entity e)
 	return new_waterlevel;
 }
 
-// determine frametime
+// determine frametime, to avoid jitter, average the frametime in case client prediction is used
 float StrafeHUD_DetermineFrameTime()
 {
 	static float dt_update = 0;
@@ -132,8 +137,13 @@ float StrafeHUD_DetermineFrameTime()
 			dt_client /= 2; // does not ensure frames are smaller than 50 ms, just splits large frames in half, matches server behaviour
 
 		// calculate average frametime
-		dt_sum += dt_client * dt_client;
-		dt_time += dt_client;
+		// calculated using a weighted arithmetic mean, where the weighting is equal to the frametime itself
+		// for example, given a 1 ms frame and a 9 ms frame we have:
+		//   a total time of 10 ms
+		//   a weighted sum of 1 ms * 1 ms + 9 ms * 9 ms = 82 ms^2
+		//   the final result is 82 ms^2 / 10 ms = 8.2 ms
+		dt_sum += dt_client * dt_client; // weighted sum of all frametimes (mean numerator)
+		dt_time += dt_client; // time spent averaging (mean denominator)
 
 		if(((time - dt_update) > autocvar_hud_panel_strafehud_fps_update) || (dt_update == 0))
 		{
@@ -151,7 +161,7 @@ float StrafeHUD_DetermineFrameTime()
 	return dt;
 }
 
-// determine player wishdir
+// determine player wishdir, non-local player movement is limited to 45 degree steps
 float StrafeHUD_DetermineWishAngle(vector movement, int keys, bool islocal)
 {
 	float wishangle;
@@ -247,6 +257,8 @@ float StrafeHUD_DetermineHudAngle(float absolute_wishangle, float absolute_overt
 	// limit strafe-meter angle to values suitable for the current projection mode
 	switch(autocvar_hud_panel_strafehud_projection)
 	{
+		// those limits are a little less than the maximal FOV the game allows
+		// however, they suffice for all realistic use cases
 		case STRAFEHUD_PROJECTION_PERSPECTIVE:
 			hudangle = min(hudangle, 170);
 			break;
@@ -280,7 +292,9 @@ float StrafeHUD_DetermineDirection(float angle, float wishangle, float antiflick
 	}
 }
 
-// try to ignore if track_canjump is enabled, does not work in spectator mode if spectated player uses +jetpack or cl_movement_track_canjump
+// determine whether the player holds the jump key
+// try to ignore if track_canjump is enabled
+// does not work in spectator mode if the spectated player uses +jetpack or cl_movement_track_canjump
 bool StrafeHUD_DetermineJumpHeld(entity e, int keys, bool islocal)
 {
 	if(islocal)
@@ -297,6 +311,7 @@ bool StrafeHUD_DetermineJumpHeld(entity e, int keys, bool islocal)
 	return false;
 }
 
+// mix two colors based on a ratio
 vector StrafeHUD_MixColors(vector color1, vector color2, float ratio)
 {
 	if(ratio <= 0) return color1;

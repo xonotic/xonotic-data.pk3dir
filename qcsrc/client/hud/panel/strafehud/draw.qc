@@ -2,7 +2,9 @@
 
 #include <client/draw.qh>
 
-// functions to make hud elements align perfectly in the hud area
+// draw the strafe-o-meter bar
+// aligns HUD elements perfectly in the hud area
+// also deals with wrapping around on edges, different HUD styles, etc
 void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, float alpha, int type, int gradientType, bool projectWidth, float range)
 {
 	float offset = StrafeHUD_AngleToOffset(startangle % 360, range);

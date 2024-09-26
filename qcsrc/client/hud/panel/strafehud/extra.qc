@@ -18,6 +18,8 @@
 #define SLICKDETECT_STEPS_EPSILON 0.00001
 
 // slick detector
+// scans for slick in every direction downwards from the player's feet
+// may cause performance issues on slower machines
 float StrafeHUD_DrawSlickDetector(entity e, bool onslick)
 {
 	float slickdetector_height = bound(0, autocvar_hud_panel_strafehud_slickdetector_height, 1);
@@ -121,7 +123,7 @@ float StrafeHUD_DrawVerticalAngle(entity e, float text_offset_bottom)
 	return 0;
 }
 
-// strafe sonar
+// strafe sonar for audible feedback when strafing
 void StrafeHUD_Sonar(float strafe_ratio, string sonarsound)
 {
 	static float sonar_time = 0;
@@ -151,6 +153,7 @@ void StrafeHUD_Sonar(float strafe_ratio, string sonarsound)
 	}
 }
 
+// update and precache the sonar sound and store the proper sound path
 string StrafeHUD_UpdateSonarSound()
 {
 	string newsound = autocvar_hud_panel_strafehud_sonar_audio;
@@ -228,7 +231,8 @@ float StrafeHUD_DrawJumpHeight(entity e, bool onground, bool swimming, float tex
 	return 0;
 }
 
-// strafe efficiency
+// strafe efficiency, percentage of how far away the current angle is from the optimal angle
+// the percentage changes linearly with angular distance
 float StrafeHUD_DrawStrafeEfficiency(float strafe_ratio, float text_offset_top)
 {
 	{
