@@ -21,8 +21,6 @@ void HUD_StrafeHUD_Export(int fh)
 	// allow saving cvars that aesthetically change the panel into hud skin files
 }
 
-float GeomLerp(float a, float _lerp, float b); // declare GeomLerp here since there's no header file for it
-
 void HUD_StrafeHUD()
 {
 	static float hud_lasttime = 0;
