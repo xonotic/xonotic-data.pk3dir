@@ -97,10 +97,6 @@ STATIC_METHOD(Client, Remove, void(Client this))
     ClientDisconnect(this);
 }
 
-void send_CSQC_teamnagger() {
-	WriteHeader(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
-}
-
 int CountSpectators(entity player, entity to)
 {
 	if(!player) { return 0; } // not sure how, but best to be safe
@@ -144,6 +140,8 @@ bool ClientData_Send(entity this, entity to, int sf)
 	                                sf |= BIT(3); // observing blocked
 	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
 	                                sf |= BIT(4); // show spectators
+	if (autocvar_sv_teamnagger && teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
+						  sf |= (autocvar_sv_teamnagger & 0x03) << 5; // BIT(5) | BIT(6)
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
@@ -260,7 +258,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 		{
 			if (vote_called) { VoteCount(false); }
 			this.ready = false;
-			if (warmup_stage || game_starttime > time) recount_ready = true;
+			if (warmup_stage || game_starttime > time) /* warmup OR countdown */ recount_ready = true;
 		}
 		entcs_update_players(this);
 	}
@@ -310,8 +308,6 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
 
 	TRANSMUTE(Observer, this);
-
-	if(recount_ready) ReadyCount(); // FIXME: please add comment about why this is delayed
 
 	WaypointSprite_PlayerDead(this);
 	accuracy_resend(this);
@@ -414,6 +410,9 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 
 	if (CS(this).just_joined)
 		CS(this).just_joined = false;
+
+	if (recount_ready)
+		ReadyCount(); // must be called after SetPlayerTeam() and TRANSMUTE(Observer
 }
 
 int player_getspecies(entity this)
@@ -553,16 +552,23 @@ void GiveWarmupResources(entity this)
 
 void PutPlayerInServer(entity this)
 {
+	if (MUTATOR_CALLHOOK(ForbidSpawn, this))
+		return;
+
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
 
 	PlayerState_attach(this);
 	accuracy_resend(this);
 
-	if (teamplay && this.bot_forced_team)
-		SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
-
-	if (this.team < 0)
-		TeamBalance_JoinBestTeam(this);
+	if (teamplay)
+	{
+		if (this.bot_forced_team)
+			SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
+		else if (this.wants_join > 0)
+			SetPlayerTeam(this, this.wants_join, TEAM_CHANGE_MANUAL);
+		else if (this.team <= 0 || this.wants_join < 0 || autocvar_g_campaign)
+			TeamBalance_JoinBestTeam(this);
+	}
 
 	entity spot = SelectSpawnPoint(this, false);
 	if (!spot) {
@@ -643,8 +649,9 @@ void PutPlayerInServer(entity this)
 	this.respawn_flags = 0;
 	this.respawn_time = 0;
 	STAT(RESPAWN_TIME, this) = 0;
-	// DP model scaling uses 1/16 accuracy and 13/16 is closest to 56/69
-	this.scale = ((q3compat && autocvar_sv_q3compat_changehitbox) ? 0.8125 : autocvar_sv_player_scale);
+	this.scale = ((q3compat && autocvar_sv_q3compat_changehitbox) || !autocvar_sv_mapformat_is_quake3)
+		? 0.8125 // DP model scaling uses 1/16 accuracy and 13/16 is closest to 56/69
+		: autocvar_sv_player_scale;
 	this.fade_time = 0;
 	this.pain_finished = 0;
 	this.pushltime = 0;
@@ -821,7 +828,7 @@ void PutPlayerInServer(entity this)
 
 	antilag_clear(this, CS(this));
 
-	if (warmup_stage < 0 || warmup_stage > 1)
+	if (warmup_stage)
 		ReadyCount();
 }
 
@@ -1041,16 +1048,31 @@ void ClientPreConnect(entity this)
 // also note that they aren't all registered mutators, e.g. jetpack, low gravity
 void SendWelcomeMessage(entity this, int msg_type)
 {
-	WriteByte(msg_type, boolean(autocvar_g_campaign));
 	if (boolean(autocvar_g_campaign))
 	{
+		WriteByte(msg_type, 1);
 		WriteByte(msg_type, Campaign_GetLevelNum());
 		return;
 	}
+
+	int flags = 0;
+	if (CS(this).version_mismatch)
+		flags |= 2;
+	if (CS(this).version < autocvar_gameversion)
+		flags |= 4;
+	MapInfo_Get_ByName(mi_shortname, 0, NULL);
+	if (MapInfo_Map_author != "")
+		flags |= 8;
+	WriteByte(msg_type, flags);
+
 	WriteString(msg_type, autocvar_hostname);
 	WriteString(msg_type, autocvar_g_xonoticversion);
-	WriteByte(msg_type, CS(this).version_mismatch);
-	WriteByte(msg_type, (CS(this).version < autocvar_gameversion));
+
+	WriteString(msg_type, MapInfo_Map_titlestring);
+	if (flags & 8)
+		WriteString(msg_type, MapInfo_Map_author);
+	MapInfo_ClearTemps();
+
 	WriteByte(msg_type, autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers);
 	WriteByte(msg_type, GetPlayerLimit());
 
@@ -1087,6 +1109,7 @@ void SendWelcomeMessage(entity this, int msg_type)
 ClientConnect
 
 Called when a client connects to the server
+Do not send temp entity headers directly here, they may arrive before CSQC is ready.
 =============
 */
 void ClientConnect(entity this)
@@ -1119,6 +1142,7 @@ void ClientConnect(entity this)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? GameLog_ProcessIP(this.netaddress) : "bot"), ":", playername(this.netname, this.team, false)));
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
+	this.wants_join = 0;
 
 	stuffcmd(this, clientstuff, "\n");
 	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -1144,10 +1168,9 @@ void ClientConnect(entity this)
 	bot_relinkplayerlist();
 
 	CS(this).spectatortime = time;
-	if (blockSpectators)
-	{
+	if (!autocvar_sv_spectate)
+		// no centreprint here: player forced to join, or informed of why they can't via centreprint
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-	}
 
 	CS(this).jointime = time;
 
@@ -1165,10 +1188,6 @@ void ClientConnect(entity this)
 
 	if (!autocvar_sv_foginterval && world.fog != "")
 		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
-
-	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
-		if(!MUTATOR_CALLHOOK(HideTeamNagger, this))
-			send_CSQC_teamnagger();
 
 	CSQCMODEL_AUTOINIT(this);
 
@@ -1203,7 +1222,15 @@ void ClientConnect(entity this)
 			setpause(0);
 		localcmd("\nsv_hook_firstjoin\n");
 	}
+
+	if (get_nextmap() != "")
+		Send_NextMap_To_Player(this);
 }
+
+.string shootfromfixedorigin;
+.entity chatbubbleentity;
+void player_powerups_remove_all(entity this);
+
 /*
 =============
 ClientDisconnect
@@ -1211,9 +1238,6 @@ ClientDisconnect
 Called when a client disconnects from the server
 =============
 */
-.entity chatbubbleentity;
-void player_powerups_remove_all(entity this);
-
 void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
@@ -1257,6 +1281,8 @@ void ClientDisconnect(entity this)
 
 	RemoveGrapplingHooks(this);
 
+	strfree(this.shootfromfixedorigin);
+
 	// Here, everything has been done that requires this player to be a client.
 
 	this.flags &= ~FL_CLIENT;
@@ -1277,7 +1303,7 @@ void ClientDisconnect(entity this)
 	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
-	if (warmup_stage || game_starttime > time) ReadyCount();
+	if (warmup_stage || game_starttime > time) /* warmup OR countdown */ ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
 
 	player_powerups_remove_all(this); // stop powerup sound
@@ -1286,6 +1312,10 @@ void ClientDisconnect(entity this)
 
 	if (player_count == 0)
 		localcmd("\nsv_hook_lastleave\n");
+
+	if (!TeamBalance_QueuedPlayersTagIn(this))
+	if (autocvar_g_balance_teams_remove)
+		TeamBalance_RemoveExcessPlayers(NULL);
 }
 
 void ChatBubbleThink(entity this)
@@ -1301,7 +1331,7 @@ void ChatBubbleThink(entity this)
 
 	this.mdl = "";
 
-	if ( !IS_DEAD(this.owner) && IS_PLAYER(this.owner) )
+	if ( !IS_DEAD(this.owner) && IS_PLAYER(this.owner) && !MUTATOR_CALLHOOK(ShowChatBubble, this.owner, this) )
 	{
 		if ( CS(this.owner).active_minigame && PHYS_INPUT_BUTTON_MINIGAME(this.owner) )
 			this.mdl = "models/sprites/minigame_busy.iqm";
@@ -1530,7 +1560,7 @@ void player_powerups(entity this)
 			else
 			{
 				play_countdown(this, StatusEffects_gettime(STATUSEFFECT_Superweapons, this), SND_POWEROFF);
-				if (time > StatusEffects_gettime(STATUSEFFECT_Superweapons, this))
+				if (time >= StatusEffects_gettime(STATUSEFFECT_Superweapons, this))
 				{
 					this.items = this.items - (this.items & IT_SUPERWEAPON);
 					STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;
@@ -1854,8 +1884,26 @@ void SetSpectatee_status(entity this, int spectatee_num)
 			CS(this).pressedkeys = 0;
 			STAT(PRESSED_KEYS, this) = 0;
 		}
+
 		ClientData_Touch(this);
-		if (g_race || g_cts) race_InitSpectator();
+
+		// init or clear race data
+		if ((g_race || g_cts) && g_race_qualifying && IS_REAL_CLIENT(this))
+		{
+			msg_entity = this;
+
+			if (this.enemy && this.enemy.race_laptime)
+			{
+				// init
+				race_SendNextCheckpoint(this.enemy, 1);
+			}
+			else
+			{
+				// send reset to this spectator
+				WriteHeader(MSG_ONE, TE_CSQC_RACE);
+				WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_CLEAR);
+			}
+		}
 	}
 }
 
@@ -1981,40 +2029,75 @@ void ShowRespawnCountdown(entity this)
 	}
 }
 
-.bool team_selected;
 bool ShowTeamSelection(entity this)
 {
 	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
+		return false;
+	if (QueuedPlayersReady(this, true))
 		return false;
 	if (frametime) // once per frame is more than enough
 		stuffcmd(this, "_scoreboard_team_selection 1\n");
 	return true;
 }
-void Join(entity this)
+
+/// it's assumed this isn't called for bots (campaign_bots_may_start, centreprints)
+void Join(entity this, bool queued_join)
 {
+	entity player_with_dibs = NULL;
+
 	if (autocvar_g_campaign && !campaign_bots_may_start && !game_stopped && time >= game_starttime)
 		ReadyRestart(true);
 
-	TRANSMUTE(Player, this);
+	if(queued_join
+	&& TeamBalance_AreEqual(this, true)) // if a player couldn't tag in for balance, don't join them here as it would cause a stack
+	{
+		// First we must join player(s) queued for specific team(s) (they chose first)
+		// so TeamBalance_JoinBestTeam() (if necessary) won't select the same team(s).
+		// Relies on `this` skipping the queue (this.team already set, this.wants_join not set) or using autoselect.
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && it.wants_join > 0,
+		{
+			// detect any conflict between `this` and a queued player (queuePlayer() handles other conflicts)
+			if (this.team < 0 && this.team_selected > 0 // `this` can't have their preference
+			&& it.wants_join == this.team_selected) // `it` is the player who already chose the team `this` wanted
+				player_with_dibs = it;
 
-	if(!this.team_selected)
-	if(autocvar_g_campaign || autocvar_g_balance_teams)
-		TeamBalance_JoinBestTeam(this);
+			Join(it, false);
+		});
+
+		// Second pass: queued players whose team will be autoselected
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && it.wants_join < 0,
+		{
+			Join(it, false);
+		});
+	}
 
 	if(autocvar_g_campaign)
 		campaign_bots_may_start = true;
 
 	Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
+	TRANSMUTE(Player, this);
 	PutClientInServer(this);
 
-	if(IS_PLAYER(this))
-	if(teamplay && this.team != -1)
+	if(IS_PLAYER(this)) // could be false due to PutClientInServer() mutator hook
 	{
+		if (!teamplay)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
+		else if (player_with_dibs)
+			// limitation: notifications support only 1 translated team name
+			// so the team `this` preferred can't be mentioned, only the team they got assigned to.
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_JOIN_PLAY_TEAM_QUEUECONFLICT), player_with_dibs.netname);
+		else if (this.wants_join)
+		{
+			// Get queued player's attention
+			if (game_starttime <= time) // No countdown in progress
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_ANNCE, ANNCE_BEGIN);
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_JOIN_PLAY_TEAM));
+		}
 	}
-	else
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
-	this.team_selected = false;
+
+	this.team_selected = 0;
+	this.wants_join = 0;
 }
 
 int GetPlayerLimit()
@@ -2087,14 +2170,89 @@ int nJoinAllowed(entity this, entity ignore)
 	return free_slots;
 }
 
-bool joinAllowed(entity this)
+// Callsites other than ClientCommand_selectteam() should pass this.wants_join as team_index
+// so the player won't accidentally reset a specific preference by pressing +jump
+// and will see the centreprint with their current preference each time they press +jump.
+bool queuePlayer(entity this, int team_index)
 {
-	if (CS(this).version_mismatch) return false;
+	if (IS_BOT_CLIENT(this) || !QueueNeeded(this))
+		return false;
+
+	// check if a queued player already chose the selected team
+	if (team_index > 0)
+	{
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && it.wants_join == team_index,
+		{
+			if (QueuedPlayersReady(this, false))
+			{
+				// Join() will handle the notification so it can mention the team `player` will actually get
+				this.team = -1; // force autoselect in Join() (last player skips queue)
+				this.team_selected = team_index; // tell it which team to check for to find the conflict
+			}
+			else // > 2 teams
+			{
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(Team_IndexToTeam(team_index), CENTER_JOIN_PREVENT_QUEUE_TEAM_CONFLICT), it.netname);
+				this.wants_join = -1; // force autoselect in Join()
+				this.team_selected = -1; // prevents clobbering by CENTER_JOIN_PREVENT_QUEUE
+			}
+			return true;
+		});
+	}
+
+	if (QueuedPlayersReady(this, false))
+		return false;
+
+	if (team_index <= 0) // team auto select deferred until Join()
+	{
+		if (team_index != this.wants_join || !this.wants_join) // prevents chatcon spam
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_WANTS, this.netname);
+		if (this.team_selected >= 0) // prevents CENTER_JOIN_PREVENT_QUEUE_TEAM_CONFLICT getting clobbered
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT_QUEUE);
+		this.wants_join = -1;
+		this.team_selected = 0;
+	}
+	else
+	{
+		int team_num = Team_IndexToTeam(team_index);
+		if (team_index != this.wants_join) // prevents chatcon spam
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(team_num, INFO_JOIN_WANTS_TEAM), this.netname);
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(team_num, CENTER_JOIN_PREVENT_QUEUE_TEAM));
+		this.wants_join = team_index; // Player queued to join
+		this.team_selected = team_index;
+	}
+
+	return true;
+}
+
+bool joinAllowed(entity this, int team_index)
+{
+	if (CS(this).version_mismatch)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT_VERSIONMISMATCH);
+		return false;
+	}
 	if (time < CS(this).jointime + MIN_SPEC_TIME) return false;
-	if (!nJoinAllowed(this, this)) return false;
-	if (teamplay && lockteams) return false;
-	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
-	if (ShowTeamSelection(this)) return false;
+	if (teamplay && lockteams)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_LOCKED);
+		return false;
+	}
+
+	if (QueueNeeded(this))
+	{
+		if (team_index == 0) // so ClientCommand_selectteam() can check joinAllowed() before calling SetPlayerTeam() without chicken/egg problem
+			if (ShowTeamSelection(this)) return false; // only needed by callsites other than selectteam
+		// queuePlayer called here so that only conditions above block queuing (g_maxplayers shouldn't)
+		if (queuePlayer(this, team_index)) return false;
+		if (!nJoinAllowed(this, this)) return false;
+	}
+	else
+	{
+		if (!nJoinAllowed(this, this)) return false;
+		if (team_index == 0) // so ClientCommand_selectteam() can check joinAllowed() before calling SetPlayerTeam() without chicken/egg problem
+			if (ShowTeamSelection(this)) return false; // only needed by callsites other than selectteam
+	}
+
 	return true;
 }
 
@@ -2124,7 +2282,6 @@ void show_entnum(entity this)
 		this.wp_aimed = ent;
 }
 
-.string shootfromfixedorigin;
 .bool dualwielding_prev;
 bool PlayerThink(entity this)
 {
@@ -2226,7 +2383,7 @@ bool PlayerThink(entity this)
 	FixPlayermodel(this);
 
 	if (this.shootfromfixedorigin != autocvar_g_shootfromfixedorigin) {
-		this.shootfromfixedorigin = autocvar_g_shootfromfixedorigin;
+		strcpy(this.shootfromfixedorigin, autocvar_g_shootfromfixedorigin);
 		stuffcmd(this, sprintf("\ncl_shootfromfixedorigin \"%s\"\n", autocvar_g_shootfromfixedorigin));
 	}
 
@@ -2245,7 +2402,7 @@ bool PlayerThink(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(WEP_CVAR(vortex, charge_always))
+			if(WEP_CVAR(WEP_VORTEX, charge_always))
 				W_Vortex_Charge(this, weaponentity, frametime);
 			W_WeaponFrame(this, weaponentity);
 		}
@@ -2258,8 +2415,8 @@ bool PlayerThink(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
-				this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+			if (WEP_CVAR(WEP_VORTEX, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(WEP_VORTEX, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
+				this.(weaponentity).vortex_charge = bound(WEP_CVAR(WEP_VORTEX, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(WEP_VORTEX, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
 		}
 
 		player_regen(this);
@@ -2307,7 +2464,7 @@ void ObserverOrSpectatorThink(entity this)
 	}
 
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && (joinAllowed(this) || time < CS(this).jointime + MIN_SPEC_TIME)) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && (joinAllowed(this, this.wants_join) || time < CS(this).jointime + MIN_SPEC_TIME)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if((is_spec && (PHYS_INPUT_BUTTON_ATCK(this) || CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18 || (CS(this).impulse >= 200 && CS(this).impulse <= 209)))
@@ -2360,8 +2517,8 @@ void ObserverOrSpectatorThink(entity this)
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				if(joinAllowed(this))
-					Join(this);
+				if(joinAllowed(this, this.wants_join))
+					Join(this, teamplay);
 				else if(time < CS(this).jointime + MIN_SPEC_TIME)
 					CS(this).autojoin_checked = -1;
 				return;
@@ -2423,134 +2580,22 @@ void PlayerUseKey(entity this)
 =============
 PlayerPreThink
 
-Called every frame for each client before the physics are run
+Called every frame for each real client by DP (and for each bot by StartFrame()),
+and when executing every asynchronous move, so only include things that MUST be done then.
+Use PlayerFrame() instead for code that only needs to run once per server frame.
+frametime == 0 in the asynchronous code path.
+
+TODO: move more stuff from here and PlayerThink() and ObserverOrSpectatorThink() to PlayerFrame() (frametime is always set there)
 =============
 */
 .float last_vehiclecheck;
 void PlayerPreThink (entity this)
 {
-	STAT(GUNALIGN, this) = CS_CVAR(this).cvar_cl_gunalign; // TODO
-	STAT(MOVEVARS_CL_TRACK_CANJUMP, this) = CS_CVAR(this).cvar_cl_movement_track_canjump;
-
 	WarpZone_PlayerPhysics_FixVAngle(this);
-
-	if (frametime) {
-		// physics frames: update anticheat stuff
-		anticheat_prethink(this);
-
-		// WORKAROUND: only use dropclient in server frames (frametime set).
-		// Never use it in cl_movement frames (frametime zero).
-		if (blockSpectators && IS_REAL_CLIENT(this)
-			&& (IS_SPEC(this) || IS_OBSERVER(this)) && !INGAME(this)
-			&& time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime))
-		{
-			if (dropclient_schedule(this))
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
-		}
-	}
 
 	zoomstate_set = false;
 
-	// Check for nameless players
-	if (this.netname == "" || this.netname != CS(this).netname_previous)
-	{
-		bool assume_unchanged = (CS(this).netname_previous == "");
-		if (autocvar_sv_name_maxlength > 0 && strlennocol(this.netname) > autocvar_sv_name_maxlength)
-		{
-			int new_length = textLengthUpToLength(this.netname, autocvar_sv_name_maxlength, strlennocol);
-			this.netname = strzone(strcat(substring(this.netname, 0, new_length), "^7"));
-			sprint(this, sprintf("Warning: your name is longer than %d characters, it has been truncated.\n", autocvar_sv_name_maxlength));
-			assume_unchanged = false;
-			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
-		}
-		if (isInvisibleString(this.netname))
-		{
-			this.netname = strzone(sprintf("Player#%d", this.playerid));
-			sprint(this, "Warning: invisible names are not allowed.\n");
-			assume_unchanged = false;
-			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
-		}
-		if (!assume_unchanged && autocvar_sv_eventlog)
-			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this.netname, this.team, false)));
-		strcpy(CS(this).netname_previous, this.netname);
-	}
-
-	// version nagging
-	if (CS(this).version_nagtime && CS_CVAR(this).cvar_g_xonoticversion && time > CS(this).version_nagtime) {
-        CS(this).version_nagtime = 0;
-        if (strstrofs(CS_CVAR(this).cvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(CS_CVAR(this).cvar_g_xonoticversion, "autobuild", 0) >= 0) {
-            // git client
-        } else if (strstrofs(autocvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(autocvar_g_xonoticversion, "autobuild", 0) >= 0) {
-            // git server
-            Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
-        } else {
-            int r = vercmp(CS_CVAR(this).cvar_g_xonoticversion, autocvar_g_xonoticversion);
-            if (r < 0) { // old client
-                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
-            } else if (r > 0) { // old server
-                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
-            }
-        }
-    }
-
-	// GOD MODE info
-	if (!(this.flags & FL_GODMODE) && this.max_armorvalue)
-	{
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_GODMODE_OFF, this.max_armorvalue);
-		this.max_armorvalue = 0;
-	}
-
-	if (frametime && IS_PLAYER(this) && time >= game_starttime)
-	{
-		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
-		{
-			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
-			SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
-			if (this.iceblock)
-				this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
-
-			if (STAT(REVIVE_PROGRESS, this) >= 1)
-				Unfreeze(this, false);
-		}
-		else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
-		{
-			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
-			SetResourceExplicit(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
-
-			if (GetResource(this, RES_HEALTH) < 1)
-			{
-				if (this.vehicle)
-					vehicles_exit(this.vehicle, VHEF_RELEASE);
-				if(this.event_damage)
-					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
-			}
-			else if (STAT(REVIVE_PROGRESS, this) <= 0)
-				Unfreeze(this, false);
-		}
-	}
-
 	MUTATOR_CALLHOOK(PlayerPreThink, this);
-
-	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !game_stopped && !this.vehicle)
-	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
-	{
-		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it) && !IS_DEAD(it) && it.takedamage != DAMAGE_NO,
-		{
-			if(!it.owner)
-			{
-				if(!it.team || SAME_TEAM(this, it))
-					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
-				else if(autocvar_g_vehicles_steal)
-					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
-			}
-			else if((it.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(it.owner, this))
-			{
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
-			}
-		});
-
-		this.last_vehiclecheck = time + 1;
-	}
 
 	if(PHYS_INPUT_BUTTON_USE(this) && !CS(this).usekeypressed)
 		PlayerUseKey(this);
@@ -2577,8 +2622,8 @@ void PlayerPreThink (entity this)
 			|| (!(autocvar_sv_spectate || autocvar_g_campaign || (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
 				&& (!teamplay || autocvar_g_balance_teams)))
 		{
-			if(joinAllowed(this))
-				Join(this);
+			if(joinAllowed(this, this.wants_join))
+				Join(this, teamplay);
 			return;
 		}
 	}
@@ -2599,6 +2644,7 @@ void PlayerPreThink (entity this)
 		SetZoomState(this, PHYS_INPUT_BUTTON_ZOOM(this) || PHYS_INPUT_BUTTON_ZOOMSCRIPT(this) || wep_zoomed);
 	}
 
+	// Voice sound effects
 	if (CS(this).teamkill_soundtime && time > CS(this).teamkill_soundtime)
 	{
 		CS(this).teamkill_soundtime = 0;
@@ -2669,17 +2715,203 @@ void Player_Physics(entity this)
 =============
 PlayerPostThink
 
-Called every frame for each client after the physics are run
+Called every frame for each real client by DP (and for each bot by StartFrame()),
+and when executing every asynchronous move, so only include things that MUST be done then.
+Use PlayerFrame() instead for code that only needs to run once per server frame.
+frametime == 0 in the asynchronous code path.
 =============
 */
 void PlayerPostThink (entity this)
 {
 	Player_Physics(this);
 
-	if (autocvar_sv_maxidle > 0 || (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0))
-	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
+	if (IS_PLAYER(this)) {
+		if(this.death_time == time && IS_DEAD(this))
+		{
+			// player's bbox gets resized now, instead of in the damage event that killed the player,
+			// once all the damage events of this frame have been processed with normal size
+			float h = ceil((this.mins.z + this.maxs.z) * PL_CORPSE_SCALE * 10) / 10;
+			this.maxs.z = max(h, this.mins.z + 1);
+			setsize(this, this.mins, this.maxs);
+		}
+		DrownPlayer(this);
+		UpdateChatBubble(this);
+		if (CS(this).impulse) ImpulseCommands(this);
+		GetPressedKeys(this);
+		if (game_stopped)
+		{
+			CSQCMODEL_AUTOUPDATE(this);
+			return;
+		}
+	}
+	else if (IS_OBSERVER(this) && STAT(PRESSED_KEYS, this))
+	{
+		CS(this).pressedkeys = 0;
+		STAT(PRESSED_KEYS, this) = 0;
+	}
+
+	CSQCMODEL_AUTOUPDATE(this);
+}
+
+/*
+=============
+PlayerFrame
+
+Called every frame for each client by StartFrame().
+Use this for code that only needs to run once per server frame.
+frametime is always set here.
+=============
+*/
+void PlayerFrame (entity this)
+{
+// formerly PreThink code
+
+	if (this.score_frame_dmg)
+	{
+		GameRules_scoring_add(this, DMG, this.score_frame_dmg);
+		this.score_frame_dmg = 0;
+	}
+	if (this.score_frame_dmgtaken)
+	{
+		GameRules_scoring_add(this, DMGTAKEN, this.score_frame_dmgtaken);
+		this.score_frame_dmgtaken = 0;
+	}
+
+	STAT(GUNALIGN, this) = CS_CVAR(this).cvar_cl_gunalign; // TODO
+	STAT(MOVEVARS_CL_TRACK_CANJUMP, this) = CS_CVAR(this).cvar_cl_movement_track_canjump;
+
+	// physics frames: update anticheat stuff
+	anticheat_prethink(this);
+
+	// Check if spectating is allowed
+	if (!autocvar_sv_spectate && IS_REAL_CLIENT(this)
+	&& (IS_SPEC(this) || IS_OBSERVER(this)) && !INGAME(this))
+	{
+		float cutoff = CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime;
+		if (time > cutoff + MIN_SPEC_TIME * 0.5)
+		{
+			// sv_spectate was disabled recently (or the server was stalled far too long)
+			CS(this).spectatortime = time; // reset the grace period
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+		}
+		else if (time > cutoff)
+			if (dropclient_schedule(this))
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
+	}
+
+	// Check for nameless players
+	if (this.netname == "" || this.netname != CS(this).netname_previous)
+	{
+		bool assume_unchanged = (CS(this).netname_previous == "");
+		if (autocvar_sv_name_maxlength > 0 && strlennocol(this.netname) > autocvar_sv_name_maxlength)
+		{
+			int new_length = textLengthUpToLength(this.netname, autocvar_sv_name_maxlength, strlennocol);
+			this.netname = strzone(strcat(substring(this.netname, 0, new_length), "^7"));
+			sprint(this, sprintf("Warning: your name is longer than %d characters, it has been truncated.\n", autocvar_sv_name_maxlength));
+			assume_unchanged = false;
+			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
+		}
+		if (isInvisibleString(this.netname))
+		{
+			this.netname = strzone(sprintf("Player#%d", this.playerid));
+			sprint(this, "Warning: invisible names are not allowed.\n");
+			assume_unchanged = false;
+			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
+		}
+		if (!assume_unchanged && autocvar_sv_eventlog)
+			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this.netname, this.team, false)));
+		strcpy(CS(this).netname_previous, this.netname);
+	}
+
+	// version nagging
+	if (CS(this).version_nagtime && CS_CVAR(this).cvar_g_xonoticversion && time > CS(this).version_nagtime)
+	{
+		CS(this).version_nagtime = 0;
+		if (strstrofs(CS_CVAR(this).cvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(CS_CVAR(this).cvar_g_xonoticversion, "autobuild", 0) >= 0)
+		{
+			// git client
+		}
+		else if (strstrofs(autocvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(autocvar_g_xonoticversion, "autobuild", 0) >= 0)
+		{
+			// git server
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
+		}
+		else
+		{
+			int r = vercmp(CS_CVAR(this).cvar_g_xonoticversion, autocvar_g_xonoticversion);
+			if (r < 0) // old client
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
+			else if (r > 0) // old server
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
+		}
+	}
+
+	// GOD MODE info
+	if (!(this.flags & FL_GODMODE) && this.max_armorvalue)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_GODMODE_OFF, this.max_armorvalue);
+		this.max_armorvalue = 0;
+	}
+
+	// FreezeTag
+	if (IS_PLAYER(this) && time >= game_starttime)
+	{
+		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
+		{
+			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
+			SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
+			if (this.iceblock)
+				this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
+
+			if (STAT(REVIVE_PROGRESS, this) >= 1)
+				Unfreeze(this, false);
+		}
+		else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
+		{
+			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
+			SetResourceExplicit(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
+
+			if (GetResource(this, RES_HEALTH) < 1)
+			{
+				if (this.vehicle)
+					vehicles_exit(this.vehicle, VHEF_RELEASE);
+				if(this.event_damage)
+					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			}
+			else if (STAT(REVIVE_PROGRESS, this) <= 0)
+				Unfreeze(this, false);
+		}
+	}
+
+	// Vehicles
+	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !game_stopped && !this.vehicle)
+	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
+	{
+		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it) && !IS_DEAD(it) && it.takedamage != DAMAGE_NO,
+		{
+			if(!it.owner)
+			{
+				if(!it.team || SAME_TEAM(this, it))
+					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
+				else if(autocvar_g_vehicles_steal)
+					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+			}
+			else if((it.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(it.owner, this))
+			{
+				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
+			}
+		});
+
+		this.last_vehiclecheck = time + 1;
+	}
+
+
+
+// formerly PostThink code
+	if (autocvar_sv_maxidle > 0 || ((IS_PLAYER(this) || this.wants_join) && autocvar_sv_maxidle_playertospectator > 0))
 	if (IS_REAL_CLIENT(this))
-	if (IS_PLAYER(this) || autocvar_sv_maxidle_alsokickspectators)
+	if (IS_PLAYER(this) || this.wants_join || autocvar_sv_maxidle_alsokickspectators)
 	if (!intermission_running) // NextLevel() kills all centerprints after setting this true
 	{
 		int totalClients = 0;
@@ -2696,7 +2928,7 @@ void PlayerPostThink (entity this)
 					totalClients = 0;
 			}
 		}
-		else if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+		else if ((IS_PLAYER(this) || this.wants_join) && autocvar_sv_maxidle_playertospectator > 0)
 		{
 			FOREACH_CLIENT(IS_REAL_CLIENT(it),
 			{
@@ -2720,22 +2952,39 @@ void PlayerPostThink (entity this)
 		else
 		{
 			float maxidle_time = autocvar_sv_maxidle;
-			if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+			if ((IS_PLAYER(this) || this.wants_join)
+			&& autocvar_sv_maxidle_playertospectator > 0)
 				maxidle_time = autocvar_sv_maxidle_playertospectator;
 			float timeleft = ceil(maxidle_time - (time - CS(this).parm_idlesince));
 			float countdown_time = max(min(10, maxidle_time - 1), ceil(maxidle_time * 0.33)); // - 1 to support maxidle_time <= 10
 			if (timeleft == countdown_time && !CS(this).idlekick_lasttimeleft)
 			{
-				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
-					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOVETOSPEC_IDLING, timeleft);
+				if ((IS_PLAYER(this) || this.wants_join) && autocvar_sv_maxidle_playertospectator > 0)
+				{
+					if (!this.wants_join) // no countdown centreprint when getting kicked off the join queue
+						Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOVETOSPEC_IDLING, timeleft);
+				}
 				else
 					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
 			}
-			if (timeleft <= 0) {
-				if (IS_PLAYER(this) && autocvar_sv_maxidle_playertospectator > 0)
+			if (timeleft <= 0)
+			{
+				if ((IS_PLAYER(this) || this.wants_join)
+				&& autocvar_sv_maxidle_playertospectator > 0)
 				{
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
+					if (this.wants_join)
+						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING_QUEUE, this.netname, maxidle_time);
+					else
+						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_MOVETOSPEC_IDLING, this.netname, maxidle_time);
 					PutObserverInServer(this, true, true);
+					// Can't do this in PutObserverInServer() or SetPlayerTeam() cos it causes
+					// mouse2 (change spectate mode) to kick the player off the join queue.
+					this.wants_join = 0;
+					this.team_selected = 0;
+					// when the player is kicked off the server, these are called in ClientDisconnect()
+					if (!TeamBalance_QueuedPlayersTagIn(this))
+					if (autocvar_g_balance_teams_remove)
+						TeamBalance_RemoveExcessPlayers(this);
 				}
 				else
 				{
@@ -2744,7 +2993,9 @@ void PlayerPostThink (entity this)
 				}
 				return;
 			}
-			else if (timeleft <= countdown_time) {
+			else if (timeleft <= countdown_time
+			&& !this.wants_join) // no countdown bangs when getting kicked off the join queue
+			{
 				if (timeleft != CS(this).idlekick_lasttimeleft)
 					play2(this, SND(TALK2));
 				CS(this).idlekick_lasttimeleft = timeleft;
@@ -2764,36 +3015,10 @@ void PlayerPostThink (entity this)
 		CS(this).teamkill_soundsource = NULL;
 	}
 
-	if (IS_PLAYER(this)) {
-		if(this.death_time == time && IS_DEAD(this))
-		{
-			// player's bbox gets resized now, instead of in the damage event that killed the player,
-			// once all the damage events of this frame have been processed with normal size
-			this.maxs.z = 5;
-			setsize(this, this.mins, this.maxs);
-		}
-		DrownPlayer(this);
-		UpdateChatBubble(this);
-		if (CS(this).impulse) ImpulseCommands(this);
-		GetPressedKeys(this);
-		if (game_stopped)
-		{
-			CSQCMODEL_AUTOUPDATE(this);
-			return;
-		}
-	}
-	else if (IS_OBSERVER(this) && STAT(PRESSED_KEYS, this))
-	{
-		CS(this).pressedkeys = 0;
-		STAT(PRESSED_KEYS, this) = 0;
-	}
-
 	if (this.waypointsprite_attachedforcarrier) {
 		float hp = healtharmor_maxdamage(GetResource(this, RES_HEALTH), GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id).x;
 		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, hp);
 	}
-
-	CSQCMODEL_AUTOUPDATE(this);
 }
 
 // hack to copy the button fields from the client entity to the Client State

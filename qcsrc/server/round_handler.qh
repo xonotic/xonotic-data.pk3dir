@@ -8,6 +8,7 @@ entity round_handler;
 			// reaches 0 when the round starts
 .float round_timelimit;
 .float round_endtime;
+.float round_enddelaytime;
 .bool() canRoundStart;
 .bool() canRoundEnd;
 .void() roundStart;
@@ -22,3 +23,6 @@ void round_handler_Remove();
 #define round_handler_CountdownRunning() (!round_handler.wait && round_handler.cnt)
 #define round_handler_IsRoundStarted() (!round_handler.wait && !round_handler.cnt)
 #define round_handler_GetEndTime() (round_handler.round_endtime)
+#define round_handler_GetEndDelayTime() (round_handler.round_enddelaytime)
+#define round_handler_SetEndDelayTime(t) (round_handler.round_enddelaytime = t)
+#define round_handler_ResetEndDelayTime() (round_handler.round_enddelaytime = -1)

@@ -145,7 +145,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 #ifdef SVQC
 	// prevent further teleports back
-	float dt = (o1 - o10) * v1 * (1 / (v1 * v1));
+	float dt = (v1 != '0 0 0') ? (o1 - o10) * v1 * (1 / (v1 * v1)) : 0;
 	if(dt < PHYS_INPUT_FRAMETIME)
 		player.warpzone_teleport_finishtime += PHYS_INPUT_FRAMETIME - dt;
 #endif
@@ -193,10 +193,10 @@ void WarpZone_Touch(entity this, entity toucher)
 	if(toucher.move_movetype == MOVETYPE_NONE || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_entity)
 		return;
 
-	EXACTTRIGGER_TOUCH(this, toucher);
-
 	if(WarpZone_PlaneDist(this, toucher.origin + toucher.view_ofs) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
 		return;
+
+	EXACTTRIGGER_TOUCH(this, toucher);
 
 	float f;
 	// number of frames we need to go back:

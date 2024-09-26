@@ -25,7 +25,7 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 	Resource ammotype = info.ammo_type;
 
 	entity wep = spawn();
-	Item_SetLoot(wep, true);
+	ITEM_SET_LOOT(wep, true);
 	setorigin(wep, org);
 	wep.velocity = velo;
 	wep.owner = wep.enemy = own;
@@ -38,7 +38,7 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 
 	if(WepSet_FromWeapon(REGISTRY_GET(Weapons, wpn)) & WEPSET_SUPERWEAPONS)
 	{
-		Item_SetExpiring(wep, true);
+		ITEM_SET_EXPIRING(wep, true);
 		if(own.items & IT_UNLIMITED_SUPERWEAPONS)
 		{
 			wep.superweapons_finished = time + autocvar_g_balance_superweapons_time;

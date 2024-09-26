@@ -4,6 +4,9 @@
 #include "sort.qh"
 #include "oo.qh"
 
+// this is not exactly 16KiB (16384 bytes) because one byte is reserved for the \0 terminator
+#define VM_TEMPSTRING_MAXSIZE 16383
+
 // string logic
 //
 // true: is truthy
@@ -294,10 +297,9 @@ string substring_range(string s, float b, float e)
 ERASEABLE
 string swapwords(string str, float i, float j)
 {
-	float n;
 	string s1, s2, s3, s4, s5;
 	float si, ei, sj, ej, s0, en;
-	n = tokenizebyseparator(str, " ");  // must match g_maplist processing in ShuffleMaplist and "shuffle"
+	int n = tokenizebyseparator(str, " ");
 	si = argv_start_index(i);
 	sj = argv_start_index(j);
 	ei = argv_end_index(i);
@@ -305,9 +307,9 @@ string swapwords(string str, float i, float j)
 	s0 = argv_start_index(0);
 	en = argv_end_index(n - 1);
 	s1 = substring_range(str, s0, si);
-	s2 = substring_range(str, si, ei);
+	s2 = argv(i);
 	s3 = substring_range(str, ei, sj);
-	s4 = substring_range(str, sj, ej);
+	s4 = argv(j);
 	s5 = substring_range(str, ej, en);
 	return strcat(s1, s4, s3, s2, s5);
 }
@@ -567,7 +569,7 @@ vector checkColorCode(string theText, int text_len, int pos, bool check_at_the_e
 	int ofs = cc_len;
 	if (!check_at_the_end)
 		ofs--;
-	for (; ofs >= 1; ofs--)
+	for (; ofs >= 1; --ofs)
 	{
 		if (!(pos >= ofs && text_len >= pos + (cc_len - ofs)))
 			continue;

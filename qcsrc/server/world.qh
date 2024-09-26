@@ -7,7 +7,7 @@ bool autocvar__endmatch;
 bool autocvar_g_use_ammunition;
 bool autocvar_g_jetpack;
 int autocvar_g_warmup;
-bool autocvar_g_warmup_allguns;
+int autocvar_g_warmup_allguns;
 bool autocvar_g_warmup_allow_timeout;
 #define autocvar_g_weaponarena cvar_string("g_weaponarena")
 string autocvar_quit_and_redirect;
@@ -28,8 +28,6 @@ float autocvar_timelimit_max;
 float autocvar_timelimit_overtime;
 int autocvar_timelimit_overtimes;
 float autocvar_timelimit_suddendeath;
-bool autocvar_sv_gameplayfix_droptofloorstartsolid;
-bool autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect;
 
 bool autocvar_sv_mapformat_is_quake3;
 bool autocvar_sv_mapformat_is_quake2;
@@ -50,7 +48,9 @@ float cvar_purechanges_count;
 
 string modname;
 
-string gamemode_name;
+string autocvar__sv_vote_gametype_custom;
+bool gametype_custom_enabled;
+string loaded_gametype_custom_string;
 
 string record_type;
 
@@ -117,7 +117,7 @@ float warmup_start_health;
 float warmup_start_armorvalue;
 float g_weapon_stay;
 
-float want_weapon(entity weaponinfo, float allguns); // WEAPONTODO: what still needs done?
+int want_weapon(entity weaponinfo, int allguns); // WEAPONTODO: what still needs done?
 
 float g_grappling_hook;
 int warmup_stage;
@@ -156,18 +156,17 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 void CheckRules_World();
 float RedirectionThink();
 
-// quake 3 music compatibility
-.string music;
-.string noise;
-
 void readplayerstartcvars();
 
 void readlevelcvars();
 
 .vector dropped_origin;
-void droptofloor(entity this);
+void DropToFloor_QC_DelayedInit(entity this);
 
 IntrusiveList g_moveables;
 STATIC_INIT(g_moveables) { g_moveables = IL_NEW(); }
 
 bool observe_blocked_if_eliminated = false; // forbids eliminated players from observing
+
+void MatchEnd_RestoreSpectatorAndTeamStatus(.int prev_team_field);
+void MatchEnd_RestoreSpectatorStatus();

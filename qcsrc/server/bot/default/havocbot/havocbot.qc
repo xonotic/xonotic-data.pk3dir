@@ -461,7 +461,7 @@ void havocbot_movetogoal(entity this)
 	// Jetpack navigation
 	if(this.navigation_jetpack_goal)
 	if(this.goalcurrent==this.navigation_jetpack_goal)
-	if(GetResource(this, RES_FUEL))
+	if(GetResource(this, RES_FUEL) > 0 || (this.items & IT_UNLIMITED_AMMO))
 	{
 		if(autocvar_bot_debug_goalstack)
 		{
@@ -615,7 +615,7 @@ void havocbot_movetogoal(entity this)
 	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
 	if (skill > 6 && !(IS_ONGROUND(this)))
 	{
-		#define ROCKETJUMP_DAMAGE() WEP_CVAR(devastator, damage) * 0.8 \
+		#define ROCKETJUMP_DAMAGE() WEP_CVAR(WEP_DEVASTATOR, damage) * 0.8 \
 			* ((StatusEffects_active(STATUSEFFECT_Strength, this)) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
 			* ((StatusEffects_active(STATUSEFFECT_Shield, this)) ? autocvar_g_balance_powerup_invincible_takedamage : 1)
 
@@ -625,7 +625,7 @@ void havocbot_movetogoal(entity this)
 		if (this.items & IT_JETPACK)
 			action_for_trigger_hurt = 1;
 		else if (!this.jumppadcount && !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
-			&& !(this.goalcurrent_prev && this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)
+			&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP))
 			&& GetResource(this, RES_HEALTH) + GetResource(this, RES_ARMOR) > ROCKETJUMP_DAMAGE())
 		{
 			action_for_trigger_hurt = 2;
@@ -706,7 +706,7 @@ void havocbot_movetogoal(entity this)
 						this.(weaponentity).m_switchweapon = WEP_DEVASTATOR;
 						this.v_angle_x = 90;
 						PHYS_INPUT_BUTTON_ATCK(this) = true;
-						this.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
+						this.rocketjumptime = time + WEP_CVAR(WEP_DEVASTATOR, detonatedelay);
 						return;
 					}
 				}
@@ -801,7 +801,7 @@ void havocbot_movetogoal(entity this)
 			{
 				if (IS_DEAD(this.goalcurrent))
 				{
-					IL_EACH(g_items, it.enemy == this.goalcurrent && Item_IsLoot(it),
+					IL_EACH(g_items, it.enemy == this.goalcurrent && ITEM_IS_LOOT(it),
 					{
 						if (vdist(it.origin - this.goalcurrent.death_origin, <, 50))
 						{
@@ -814,7 +814,7 @@ void havocbot_movetogoal(entity this)
 						}
 					});
 				}
-				if (!Item_IsLoot(this.goalcurrent))
+				if (!ITEM_IS_LOOT(this.goalcurrent))
 				{
 					navigation_goalrating_timeout_force(this);
 					return;
@@ -883,7 +883,7 @@ void havocbot_movetogoal(entity this)
 
 	bool bunnyhop_forbidden = false;
 	vector destorg = get_closer_dest(this.goalcurrent, this.origin);
-	if (this.jumppadcount && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
+	if (this.jumppadcount && (this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
 	{
 		// if bot used the jumppad, push towards jumppad origin until jumppad waypoint gets removed
 		destorg = this.goalcurrent.origin;
@@ -1469,7 +1469,7 @@ void havocbot_chooseenemy(entity this)
 		this.havocbot_stickenemy_time = 0;
 }
 
-float havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int new_weapon)
+bool havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int new_weapon)
 {
 	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
 	// so skip this for them, or they'll never get to reload their weapons at all.
@@ -1480,6 +1480,8 @@ float havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int n
 	// if this weapon is scheduled for reloading, don't switch to it during combat
 	if (this.(weaponentity).weapon_load[new_weapon] < 0)
 	{
+		if(this.items & IT_UNLIMITED_AMMO)
+			return true;
 		FOREACH(Weapons, it != WEP_Null, {
 			if(it.wr_checkammo1(it, this, weaponentity) + it.wr_checkammo2(it, this, weaponentity))
 				return true; // other weapon available

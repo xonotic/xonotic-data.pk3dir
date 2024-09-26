@@ -277,6 +277,8 @@ void ttt_hud_board(vector pos, vector mySize)
 					tile_size, '1 1 1'*icon_color, panel_fg_alpha, DRAWFLAG_NORMAL );
 		}
 	}
+
+	minigame_show_allspecs(ttt_boardpos, ttt_boardsize);
 }
 
 
@@ -317,7 +319,7 @@ void ttt_hud_status(vector pos, vector mySize)
 			mypos_x += tile_size_x;
 
 			drawstring(mypos,ftos(e.minigame_flags),tile_size,
-					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					'0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}
 }
@@ -430,7 +432,7 @@ int ttt_ai_random(int piecemask)
 
 	RandomSelection_Init();
 
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = 0; i < 9; ++i )
 	{
 		if ( piecemask & f )
 			RandomSelection_AddFloat(f, 1, 1);
@@ -506,9 +508,9 @@ void ttt_aimove(entity minigame)
 		int piecemask_free = 0;
 		int pieceflag = 1;
 		string pos;
-		for ( int i = 0; i < 3; i++ )
+		for ( int i = 0; i < 3; ++i )
 		{
-			for ( int j = 0; j < 3; j++ )
+			for ( int j = 0; j < 3; ++j )
 			{
 				pos = minigame_tile_buildname(i,j);
 				entity piece = ttt_find_piece(minigame,pos);

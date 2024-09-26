@@ -44,6 +44,9 @@
 //   bits above 14 are defined in lib/csqcmodel/common.qh
 #define CSQCMODEL_EXTRAPROPERTIES \
 	CSQCMODEL_PROPERTY(BIT(0), int, ReadShort, WriteShort, colormap) \
+	CSQCMODEL_IF(!isplayer) \
+		CSQCMODEL_PROPERTY(BIT(0), int, ReadByte, WriteByte, sv_entnum) \
+	CSQCMODEL_ENDIF \
 	CSQCMODEL_PROPERTY(BIT(1), int, ReadInt24_t, WriteInt24_t, effects) \
 	CSQCMODEL_PROPERTY(BIT(2), int, ReadByte, WriteByte, modelflags) \
 	CSQCMODEL_PROPERTY(BIT(2), int, ReadByte, WriteByte, skin) \

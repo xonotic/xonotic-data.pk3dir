@@ -13,11 +13,12 @@ float race_status_time;
 int race_status_prev;
 string race_status_name_prev;
 
-// Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
+// Check if the given name already exists in race rankings?
+// In that case, where? (otherwise return 0)
 int race_CheckName(string net_name)
 {
 	int rank = 0;
-	string zoned_name = strzone(strdecolorize(entcs_GetName(player_localnum)));
+	string zoned_name = strzone(strdecolorize(net_name));
 	for (int i = RANKINGS_CNT - 1; i >= 0; --i)
 		if (strdecolorize(grecordholder[i]) == zoned_name)
 		{
@@ -59,7 +60,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		rr = RACE_RECORD;
 	float t = stof(db_get(ClientProgsDB, strcat(mi_shortname, rr, "time")));
 
-	if(score && (score < t || !t)) {
+	if(score && (score < t || !t) && !isdemo()) {
 		db_put(ClientProgsDB, strcat(mi_shortname, rr, "time"), ftos(score));
 		if(autocvar_cl_autodemo_delete_keeprecords)
 		{
@@ -67,6 +68,11 @@ void HUD_Mod_Race(vector pos, vector mySize)
 			f &= ~1;
 			cvar_set("cl_autodemo_delete", ftos(f)); // don't delete demo with new record!
 		}
+		localcmd("\ncl_hook_race_pb \"",
+			TIME_ENCODED_TOSTRING(score, false), "\" \"",
+			TIME_ENCODED_TOSTRING(t, false), "\" \"",
+			(t ?  TIME_ENCODED_TOSTRING(t-score, false) : "0"), "\" \"",
+			sprintf("%d", race_myrank), "\"\n");
 	}
 
 	if(t != crecordtime_prev) {

@@ -1,7 +1,5 @@
 #pragma once
 
-#define droptofloor builtin_droptofloor
-
 #define IT_SHOTGUN          _IT_SHOTGUN /* BIT(0) */
 #define IT_SUPER_SHOTGUN    _IT_SUPER_SHOTGUN /* BIT(1) */
 #define IT_NAILGUN          _IT_NAILGUN /* BIT(2) */
