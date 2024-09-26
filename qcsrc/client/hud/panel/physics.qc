@@ -90,12 +90,12 @@ void HUD_Physics()
 	}
 
 	// compute acceleration
-	float accel, f;
+	float accel;
 	if (autocvar__hud_configure)
 		accel = 0.45; // use a hardcoded value so that the hud responds to hud_panel_physics_acceleration_max changing
 	else
 	{
-		f = time - acc_prevtime;
+		float f = time - acc_prevtime;
 		if (autocvar_hud_panel_physics_acceleration_vertical)
 			accel = (speed3d_phys - vlen(acc_prev_vel));
 		else
@@ -165,17 +165,39 @@ void HUD_Physics()
 	if (autocvar_hud_panel_physics_acceleration_progressbar_mode == 0)
 		accel_baralign = 3; // override hud_panel_physics_baralign value for acceleration
 
-	// draw jump speed
 	vector tmp_offset = '0 0 0', tmp_size = '0 0 0';
-	float speed_size = 0.75, upper_text_size = 0.4;
-	bool drew_upper_text = false;
+	float speed_size = 0.75;
+	int text_bits = BITS(0); // describes which texts may be drawn. BIT(0) = top speed, BIT(1) = jump speed, BIT(2) = speed unit
+	// ordered by decreasing priority -- jump speed overrides speed unit, and top speed takes priority over jump speed in the lower spot
+	// if only one may be drawn, it'll be large and centered
+
+	// draw speed
+	if (!immobile)
+	if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH || autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_SPEED)
+		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed / max_speed, 0, speed_baralign,
+			autocvar_hud_progressbar_speed_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
+	{
+		tmp_size.x   = panel_size.x * speed_size;
+		tmp_size.y   = panel_size.y * text_scale;
+		tmp_offset.x = speed_baralign ? panel_size.x * (1 - speed_size) : 0;
+		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
+		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(discrete_speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+		if (autocvar_hud_panel_physics_speed_unit_show)
+			text_bits |= BIT(2); // set
+	}
+
+	// compute jump speed text
+	float jump_speed_f = 0;
 	if (autocvar_hud_panel_physics_jumpspeed)
 	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
 	{
+		text_bits |= BIT(1); // set
 		if (autocvar__hud_configure)
 		{
 			jump_speed = floor(max_speed * 0.59 + 0.5); // slightly less than current speed text
-			f = 1;
+			jump_speed_f = 1;
 		}
 		else
 		{
@@ -189,63 +211,20 @@ void HUD_Physics()
 			prev_vel_z = vel_phys.z;
 			prev_speed2d = speed2d;
 			float time_frac = (time - jump_speed_time) / max(1, autocvar_hud_panel_physics_jumpspeed_time);
-			f = time_frac > 1 ? 0 : cos(time_frac * PI / 2);
-		}
-		if (f > 0)
-		{
-			upper_text_size = 0.5; // make the jump speed and top speed text the same size
-			if (speed_baralign)
-				tmp_offset.x = 0;
-			else
-				tmp_offset.x = panel_size.x * speed_size;
-			tmp_size.x   =  panel_size.x * (1 - speed_size);
-			tmp_size.y   =  panel_size.y * upper_text_size * text_scale;
-			tmp_offset.y = (panel_size.y * upper_text_size - tmp_size.y) / 2;
-			drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(jump_speed), tmp_size, '0 1 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
-			drew_upper_text = true;
-		}
-	}
-
-	// draw speed
-	if (!immobile)
-	if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH || autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_SPEED)
-		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed / max_speed, 0, speed_baralign,
-			autocvar_hud_progressbar_speed_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
-	{
-		tmp_size.x = panel_size.x * speed_size;
-		tmp_size.y = panel_size.y * text_scale;
-		if (speed_baralign)
-			tmp_offset.x = panel_size.x * (1 - speed_size);
-		else
-			tmp_offset.x = 0;
-		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
-		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(discrete_speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-
-		// draw speed unit
-		if (speed_baralign)
-			tmp_offset.x = 0;
-		else
-			tmp_offset.x = panel_size.x * speed_size;
-		if (autocvar_hud_panel_physics_speed_unit_show && !drew_upper_text)
-		{
-			tmp_size.x   =  panel_size.x * (1 - speed_size);
-			tmp_size.y   =  panel_size.y * upper_text_size * text_scale;
-			tmp_offset.y = (panel_size.y * upper_text_size - tmp_size.y) / 2;
-			string unit = GetSpeedUnit(autocvar_hud_speed_unit);
-			drawstring_aspect(panel_pos + speed_offset + tmp_offset, unit, tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-			drew_upper_text = true;
+			jump_speed_f = time_frac > 1 ? 0 : cos(time_frac * PI / 2);
 		}
 	}
 
 	// compute and draw top speed
+	float top_speed_f = 0;
 	if (autocvar_hud_panel_physics_topspeed)
 	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
 	{
+		text_bits |= BIT(0); // set
 		if (autocvar__hud_configure)
 		{
 			top_speed = floor(max_speed * 0.73 + 0.5);
-			f = 1;
+			top_speed_f = 1;
 		}
 		else
 		{
@@ -255,56 +234,38 @@ void HUD_Physics()
 				top_speed_time = time;
 			}
 			if (top_speed == 0) // hide top speed 0
-				f = 0;
+				top_speed_f = 0;
 			else
 			{
 				float time_frac = (time - top_speed_time) / max(1, autocvar_hud_panel_physics_topspeed_time);
-				f = time_frac > 1 ? 0 : cos(time_frac * PI / 2);
+				top_speed_f = time_frac > 1 ? 0 : cos(time_frac * PI / 2);
 			}
 		}
-		if (f > 0)
+		// top speed progressbar peak
+		if (top_speed_f > 0 && speed < top_speed)
+		if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH || autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_SPEED)
 		{
-			// top speed progressbar peak
-			if (speed < top_speed)
-			if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH || autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_SPEED)
+			float peak_offsetX;
+			vector peak_size = '0 0 0';
+			if (speed_baralign == 0)
+				peak_offsetX = min(top_speed, max_speed) / max_speed * panel_size.x;
+			else if (speed_baralign == 1)
+				peak_offsetX = (1 - min(top_speed, max_speed) / max_speed) * panel_size.x;
+			else //if (speed_baralign == 2)
+				peak_offsetX = min(top_speed, max_speed) / max_speed * panel_size.x * 0.5;
+			peak_size.x = floor(panel_size.x * 0.01 + 1.5);
+			peak_size.y = panel_size.y;
+			if (speed_baralign == 2) // draw two peaks, on both sides
 			{
-				float peak_offsetX;
-				vector peak_size = '0 0 0';
-				if (speed_baralign == 0)
-					peak_offsetX = min(top_speed, max_speed) / max_speed * panel_size.x;
-				else if (speed_baralign == 1)
-					peak_offsetX = (1 - min(top_speed, max_speed) / max_speed) * panel_size.x;
-				else //if (speed_baralign == 2)
-					peak_offsetX = min(top_speed, max_speed) / max_speed * panel_size.x * 0.5;
-				peak_size.x = floor(panel_size.x * 0.01 + 1.5);
-				peak_size.y = panel_size.y;
-				if (speed_baralign == 2) // draw two peaks, on both sides
-				{
-					drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x + peak_offsetX - peak_size.x), peak_size,
-						autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-					drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x - peak_offsetX + peak_size.x), peak_size,
-						autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-				}
-				else
-					drawfill(panel_pos + speed_offset + eX * (peak_offsetX - peak_size.x), peak_size,
-						autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-			}
-
-			// top speed
-			if (!drew_upper_text)
-			{
-				upper_text_size = 0.2; // neither upper text (jumpspeed/unit) was drawn, make topspeed larger
-				tmp_offset.y = panel_size.y * upper_text_size / 2;
+				drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x + peak_offsetX - peak_size.x), peak_size,
+					autocvar_hud_progressbar_speed_color, top_speed_f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x - peak_offsetX + peak_size.x), peak_size,
+					autocvar_hud_progressbar_speed_color, top_speed_f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			else
-				tmp_offset.y = panel_size.y * upper_text_size;
-			tmp_size.x    =  panel_size.x * (1 - speed_size);
-			tmp_size.y    =  panel_size.y * (1 - upper_text_size) * text_scale;
-			tmp_offset.y += (panel_size.y * (1 - upper_text_size) - tmp_size.y) / 2;
-			drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(top_speed), tmp_size, '1 0 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawfill(panel_pos + speed_offset + eX * (peak_offsetX - peak_size.x), peak_size,
+					autocvar_hud_progressbar_speed_color, top_speed_f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
-		else
-			top_speed = 0;
 	}
 
 	// draw acceleration
@@ -320,7 +281,7 @@ void HUD_Physics()
 		float accel_max = onslick && autocvar_hud_panel_physics_acceleration_max_slick != -1
 			? autocvar_hud_panel_physics_acceleration_max_slick
 			: autocvar_hud_panel_physics_acceleration_max;
-		f = accel / accel_max;
+		float f = accel / accel_max;
 		if (autocvar_hud_panel_physics_acceleration_progressbar_nonlinear)
 			f = (f >= 0 ? sqrt(f) : -sqrt(-f));
 
@@ -346,6 +307,7 @@ void HUD_Physics()
 			progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
+	// draw acceleration text
 	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_ACCEL)
 	{
 		tmp_size.x = panel_size.x;
@@ -353,6 +315,58 @@ void HUD_Physics()
 		tmp_offset.x = 0;
 		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
 		drawstring_aspect(panel_pos + accel_offset + tmp_offset, strcat(ftos_decimals(discrete_accel, acc_decimals), "g"), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+
+	tmp_size.x   = panel_size.x * (1 - speed_size);
+	tmp_offset.x = speed_baralign ? 0 : panel_size.x * speed_size;
+	float top_speed_y = 0, jump_speed_y = 0, main_text_size; // speed unit is not main text
+
+	// draw speed unit text
+	if ((text_bits & BIT(2)) && text_bits != BITS(3)) // can't draw all 3 texts at once, speed unit has the lowest priority
+	{
+		if (text_bits == BIT(2)) // it's the only text drawn, so make it large and centered
+		{
+			main_text_size = 1 - 0.8; // make the main text small, so the non-main text (speed unit) is large
+			tmp_offset.y = panel_size.y * main_text_size / 2; // offset halved to center text
+		}
+		else
+		{
+			main_text_size = 0.6; // make the main text slightly larger, since it's more important
+			tmp_offset.y = 0;
+			top_speed_y  = panel_size.y * (1 - main_text_size);
+			jump_speed_y = top_speed_y;
+		}
+		tmp_size.y    =  panel_size.y * (1 - main_text_size) * text_scale;
+		tmp_offset.y += (panel_size.y * (1 - main_text_size) - tmp_size.y) / 2;
+		drawstring_aspect(panel_pos + speed_offset + tmp_offset, GetSpeedUnit(autocvar_hud_speed_unit), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+	else if (text_bits == BIT(0) || text_bits == BIT(1)) // only one text is drawn, make it large and centered
+	{
+		main_text_size = 0.8;
+		top_speed_y  = panel_size.y * (1 - main_text_size) / 2; // offset halved to center text
+		jump_speed_y = top_speed_y;
+	}
+	else // both top speed and jump speed are drawn
+	{
+		main_text_size = 0.5; // make them equal size
+		top_speed_y  = panel_size.y * (1 - main_text_size); // put top speed in the lower slot
+		jump_speed_y = 0; // put jump speed in the upper slot
+	}
+
+	// draw jump speed text
+	tmp_size.y = panel_size.y * main_text_size * text_scale;
+	if ((text_bits & BIT(1)) && jump_speed_f > 0)
+	{
+		jump_speed_y += (panel_size.y * main_text_size - tmp_size.y) / 2;
+		tmp_offset.y  = jump_speed_y;
+		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(jump_speed), tmp_size, '0 1 0', jump_speed_f * panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+	// draw top speed text
+	if ((text_bits & BIT(0)) && top_speed_f > 0)
+	{
+		top_speed_y += (panel_size.y * main_text_size - tmp_size.y) / 2;
+		tmp_offset.y = top_speed_y;
+		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(top_speed), tmp_size, '1 0 0', top_speed_f * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	draw_endBoldFont();
