@@ -12,6 +12,11 @@
 #include <lib/csqcmodel/common.qh> // for IS_PLAYER() macro
 #include <common/resources/cl_resources.qh> // IS_DEAD() macro
 
+// epsilon value for the slick detector steps to avoid
+// an infinite loop due to floating point rounding errors
+// (works with current limits as long as uncapped mode is not used)
+#define SLICKDETECT_STEPS_EPSILON 0.00001
+
 // slick detector
 float StrafeHUD_DrawSlickDetector(entity e, bool onslick)
 {
@@ -24,33 +29,47 @@ float StrafeHUD_DrawSlickDetector(entity e, bool onslick)
 	   panel_size.x > 0)
 	{
 		float slicksteps = bound(0, autocvar_hud_panel_strafehud_slickdetector_granularity, 4);
+		bool allslick = PHYS_FRICTION(e) == 0;
 		bool slickdetected = false;
 
 		slicksteps = 90 * DEG2RAD / 2 ** slicksteps;
 
-		slickdetected = onslick; // do not need to traceline if already touching slick
+		// don't need to traceline if already touching slick
+		slickdetected = onslick;
+
+		// coordinates at the bottom center of the player bbox
+		vector traceorigin = e.origin + eZ * e.mins.z;
 
 		// traceline downwards into every direction
 		trace_dphitq3surfaceflags = 0;
-		vector traceorigin = e.origin + eZ * e.mins.z;
-		for(float i = 0; i < 90 * DEG2RAD - 0.00001 && !slickdetected; i += slicksteps)
+		for(float i = 0; i < 90 * DEG2RAD - SLICKDETECT_STEPS_EPSILON && !slickdetected; i += slicksteps)
 		{
 			vector slickoffset;
 			float slickrotate;
+
+			// creates a vector angled 'i' degrees relative to the Z vector
+			// negative cosine value to face downwards
 			slickoffset.z = -cos(i) * autocvar_hud_panel_strafehud_slickdetector_range;
 			slickrotate = sin(i) * autocvar_hud_panel_strafehud_slickdetector_range;
 
-			for(float j = 0; j < 360 * DEG2RAD - 0.00001 && !slickdetected; j += slicksteps)
+			for(float j = 0; j < 360 * DEG2RAD - SLICKDETECT_STEPS_EPSILON && !slickdetected; j += slicksteps)
 			{
+				// adjusts the vector so that it rotates 'j' degrees around the Z vector
 				slickoffset.x = sin(j) * slickrotate;
 				slickoffset.y = cos(j) * slickrotate;
 
+				// trace a line, we hit slick if:
+				//  - it hits something and surface friction is disabled
+				//  - the slick surface flag got set
+				// note: it is not guaranteed that the detected surface is actually
+				//       a zero friction surface if PHYS_FRICTION_SLICK() does not equal zero
 				traceline(traceorigin, traceorigin + slickoffset, MOVE_NOMONSTERS, e);
-				if((PHYS_FRICTION(e) == 0 && trace_fraction < 1)
+				if((allslick && trace_fraction < 1)
 				|| (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK))
 					slickdetected = true;
-				if(i == 0)
-					break;
+
+				// rotation does nothing when we are perpendicular to the ground, hence only one iteration
+				if(i == 0) break;
 			}
 		}
 
