@@ -238,6 +238,16 @@ void setplayermodel(entity e, string modelname)
 		UpdatePlayerSounds(e);
 }
 
+entity SelectObservePoint(entity this)
+{
+	RandomSelection_Init();
+	IL_EACH(g_observepoints, true,
+	{
+		RandomSelection_AddEnt(it, 1, 1);
+	});
+	return RandomSelection_chosen_ent;
+}
+
 /** putting a client as observer in the server */
 void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 {
@@ -265,11 +275,16 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 
 	if (use_spawnpoint)
 	{
-		entity spot = SelectSpawnPoint(this, true);
+		// first try to find a random "nice" location to view from
+		entity spot = SelectObservePoint(this);
+		bool is_observepoint = (spot != NULL);
+		if(!spot) // otherwise just use the player spawn points
+			spot = SelectSpawnPoint(this, true);
 		if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
+
 		this.angles = vec2(spot.angles);
 		// offset it so that the spectator spawns higher off the ground, looks better this way
-		setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
+		setorigin(this, spot.origin + (is_observepoint ? '0 0 0' : autocvar_sv_player_viewoffset));
 	}
 	else // change origin to restore previous view origin
 		setorigin(this, this.origin + STAT(PL_VIEW_OFS, this) - STAT(PL_CROUCH_VIEW_OFS, this));

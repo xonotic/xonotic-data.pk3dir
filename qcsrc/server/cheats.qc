@@ -21,6 +21,7 @@
 #include <lib/warpzone/anglestransform.qh>
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
+#include <server/client.qh>
 #include <server/clientkill.qh>
 #include <server/damage.qh>
 #include <server/main.qh>
@@ -125,6 +126,10 @@ spawnfunc(info_autoscreenshot)
 	}
 	if(this.target != "")
 		InitializeEntity(this, info_autoscreenshot_findtarget, INITPRIO_FINDTARGET);
+
+	tracebox(this.origin, PL_CROUCH_MIN_CONST, PL_CROUCH_MAX_CONST, this.origin, MOVE_WORLDONLY, this);
+	if(!trace_startsolid)
+		IL_PUSH(g_observepoints, this);
 }
 
 float CheatImpulse(entity this, int imp)

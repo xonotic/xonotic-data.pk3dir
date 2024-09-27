@@ -253,7 +253,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 	// force reload weapon when clip is empty or insufficent
 	if(WEP_CVAR(WEP_SHOTGUN, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR_PRI(WEP_SHOTGUN, ammo))
 	{
-		if(actor.(weaponentity).clip_load >= 0 && GetResource(actor, thiswep.ammo_type) > 0)
+		if(actor.(weaponentity).clip_load >= 0 && (GetResource(actor, thiswep.ammo_type) > 0 || (actor.items & IT_UNLIMITED_AMMO)))
 		{
 			thiswep.wr_reload(thiswep, actor, weaponentity);
 			return;

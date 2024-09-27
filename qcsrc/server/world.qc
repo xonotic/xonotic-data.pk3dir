@@ -2067,30 +2067,18 @@ void readplayerstartcvars()
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
 
-	if(start_items & IT_UNLIMITED_AMMO)
-	{
-		start_ammo_shells = 999;
-		start_ammo_nails = 999;
-		start_ammo_rockets = 999;
-		start_ammo_cells = 999;
-		start_ammo_plasma = 999;
-		start_ammo_fuel = 999;
-	}
-	else
-	{
-		start_ammo_shells = cvar("g_start_ammo_shells");
-		start_ammo_nails = cvar("g_start_ammo_nails");
-		start_ammo_rockets = cvar("g_start_ammo_rockets");
-		start_ammo_cells = cvar("g_start_ammo_cells");
-		start_ammo_plasma = cvar("g_start_ammo_plasma");
-		start_ammo_fuel = cvar("g_start_ammo_fuel");
-		random_start_weapons_count = cvar("g_random_start_weapons_count");
-		SetResource(random_start_ammo, RES_SHELLS, cvar("g_random_start_shells"));
-		SetResource(random_start_ammo, RES_BULLETS, cvar("g_random_start_bullets"));
-		SetResource(random_start_ammo, RES_ROCKETS, cvar("g_random_start_rockets"));
-		SetResource(random_start_ammo, RES_CELLS, cvar("g_random_start_cells"));
-		SetResource(random_start_ammo, RES_PLASMA, cvar("g_random_start_plasma"));
-	}
+	start_ammo_shells = cvar("g_start_ammo_shells");
+	start_ammo_nails = cvar("g_start_ammo_nails");
+	start_ammo_rockets = cvar("g_start_ammo_rockets");
+	start_ammo_cells = cvar("g_start_ammo_cells");
+	start_ammo_plasma = cvar("g_start_ammo_plasma");
+	start_ammo_fuel = cvar("g_start_ammo_fuel");
+	random_start_weapons_count = cvar("g_random_start_weapons_count");
+	SetResource(random_start_ammo, RES_SHELLS, cvar("g_random_start_shells"));
+	SetResource(random_start_ammo, RES_BULLETS, cvar("g_random_start_bullets"));
+	SetResource(random_start_ammo, RES_ROCKETS, cvar("g_random_start_rockets"));
+	SetResource(random_start_ammo, RES_CELLS, cvar("g_random_start_cells"));
+	SetResource(random_start_ammo, RES_PLASMA, cvar("g_random_start_plasma"));
 
 	warmup_start_ammo_shells = start_ammo_shells;
 	warmup_start_ammo_nails = start_ammo_nails;
