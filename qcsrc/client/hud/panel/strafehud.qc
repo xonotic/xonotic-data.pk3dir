@@ -139,27 +139,7 @@ void HUD_StrafeHUD()
 	else
 		movespeed = min(movespeed, maxspeed);
 
-	// determine whether the player is pressing forwards or backwards keys
-	int keys_fwd;
-	if(islocal) // if entity is local player
-	{
-		if(movement.x > 0)
-			keys_fwd = STRAFEHUD_KEYS_FORWARD;
-		else if(movement.x < 0)
-			keys_fwd = STRAFEHUD_KEYS_BACKWARD;
-		else
-			keys_fwd = STRAFEHUD_KEYS_NONE;
-	}
-	else // alternatively determine direction by querying pressed keys
-	{
-		if((keys & KEY_FORWARD) && !(keys & KEY_BACKWARD))
-			keys_fwd = STRAFEHUD_KEYS_FORWARD;
-		else if(!(keys & KEY_FORWARD) && (keys & KEY_BACKWARD))
-			keys_fwd = STRAFEHUD_KEYS_BACKWARD;
-		else
-			keys_fwd = STRAFEHUD_KEYS_NONE;
-	}
-
+	int keys_fwd = StrafeHUD_DetermineForwardKeys(movement, keys, islocal);
 	float wishangle = StrafeHUD_DetermineWishAngle(movement, keys, islocal);
 	float absolute_wishangle = fabs(wishangle); // unmodified by side strafing code
 	bool strafekeys = fabs(wishangle) > 45;

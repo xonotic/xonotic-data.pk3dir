@@ -213,6 +213,29 @@ float StrafeHUD_DetermineWishAngle(vector movement, int keys, bool islocal)
 	return wishangle;
 }
 
+// determine whether the player is pressing forwards or backwards keys
+int StrafeHUD_DetermineForwardKeys(vector movement, int keys, bool islocal)
+{
+	if(islocal) // if entity is local player
+	{
+		if(movement.x > 0)
+			return STRAFEHUD_KEYS_FORWARD;
+		else if(movement.x < 0)
+			return STRAFEHUD_KEYS_BACKWARD;
+		else
+			return STRAFEHUD_KEYS_NONE;
+	}
+	else // alternatively determine direction by querying pressed keys
+	{
+		if((keys & KEY_FORWARD) && !(keys & KEY_BACKWARD))
+			return STRAFEHUD_KEYS_FORWARD;
+		else if(!(keys & KEY_FORWARD) && (keys & KEY_BACKWARD))
+			return STRAFEHUD_KEYS_BACKWARD;
+		else
+			return STRAFEHUD_KEYS_NONE;
+	}
+}
+
 float StrafeHUD_DetermineHudAngle(float absolute_wishangle, float absolute_overturnangle, float strafity)
 {
 
