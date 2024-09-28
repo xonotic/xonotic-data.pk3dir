@@ -250,6 +250,7 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 		if(!spec)
 			WriteInt24_t(MSG_ONE, myrecordtime);
 		WriteString(MSG_ONE, recordholder);
+		// All speeds networked as floats to have decimal precision
 		WriteFloat(MSG_ONE, recordspeed);
 		if(!spec)
 			WriteFloat(MSG_ONE, myrecordspeed);
@@ -590,6 +591,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 						WriteInt24_t(MSG_ONE, recordtime); // previously best time
 						WriteInt24_t(MSG_ONE, ((tvalid) ? it.race_checkpoint_record[cp] : 0)); // previously best time
 						WriteString(MSG_ONE, recordholder); // record holder
+						// All speeds networked as floats to have decimal precision
 						WriteFloat(MSG_ONE, vlen(vec2(e.velocity))); // speed of cp hit
 						WriteFloat(MSG_ONE, recordtimespeed); // speed of previous best cp hit
 						WriteFloat(MSG_ONE, ((tvalid) ? it.race_checkpoint_recordspeed[cp] : 0)); // speed of my previous best cp hit
