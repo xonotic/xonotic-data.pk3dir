@@ -142,9 +142,9 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
 		{
 			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
-				this.velocity_z -= grav * 0.5;
+				this.velocity += grav * 0.5 * normalize(PHYS_GRAVITY_DIR(this));
 			else
-				this.velocity_z -= grav;
+				this.velocity += grav * normalize(PHYS_GRAVITY_DIR(this));
 		}
 	}
 
@@ -324,7 +324,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
 		{
 			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
-				this.velocity_z -= grav * 0.5f;
+				this.velocity += grav * 0.5f * normalize(PHYS_GRAVITY_DIR(this));
 		}
 	}
 

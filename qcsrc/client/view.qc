@@ -1692,6 +1692,41 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
 	view_angles = getpropertyvec(VF_ANGLES);
+
+	/*{
+		vector grav_angles = vectoangles(PHYS_GRAVITY_DIR(this));
+
+		// model is already facing the floor, no need to tilt 90 degrees
+		PITCH(grav_angles) += 90;
+
+		// adjust roll and pitch depending on grav direction
+		float pitch_ratio = cos((YAW(grav_angles) - YAW(view_angles)) * DEG2RAD);
+		float roll_ratio = sin((YAW(grav_angles) - YAW(view_angles)) * DEG2RAD);
+		ROLL(view_angles) = PITCH(grav_angles) * roll_ratio + ROLL(grav_angles) * pitch_ratio;
+	}*/
+
+	{
+		vector grav_dir = PHYS_GRAVITY_DIR(this);
+		bool upside_down = grav_dir.z > 0;
+
+		if (upside_down) grav_dir.z = -grav_dir.z;
+
+		vector grav_angles = vectoangles(grav_dir);
+
+		// model is already facing the floor, no need to tilt 90 degrees
+		PITCH(grav_angles) += 90;
+		PITCH(grav_angles) = PITCH(grav_angles) % 360;
+
+		if (upside_down) YAW(grav_angles) += 180;
+
+		// adjust roll and pitch depending on grav direction
+		float pitch_ratio = cos((YAW(grav_angles) - YAW(view_angles)) * DEG2RAD);
+		float roll_ratio = sin((YAW(grav_angles) - YAW(view_angles)) * DEG2RAD);
+		ROLL(view_angles) = PITCH(grav_angles) * roll_ratio + ROLL(grav_angles) * pitch_ratio;
+
+		if (upside_down) ROLL(view_angles) += 180;
+	}
+
 	MAKE_VECTORS(view_angles, view_forward, view_right, view_up);
 
 #ifdef BLURTEST

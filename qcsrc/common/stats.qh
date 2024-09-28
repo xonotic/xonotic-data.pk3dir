@@ -415,12 +415,14 @@ REGISTER_STAT(ROUND_TIMELIMIT, float, round_limit)
 #ifdef SVQC
 float autocvar_sv_wallfriction;
 #define autocvar_sv_gravity cvar("sv_gravity")
+vector autocvar_sv_gravity_dir = '0 0 -1';
 float autocvar_sv_stepheight;
 #endif
 REGISTER_STAT(MOVEVARS_WALLFRICTION, int, autocvar_sv_wallfriction)
 REGISTER_STAT(MOVEVARS_TICRATE, float, autocvar_sys_ticrate)
 REGISTER_STAT(MOVEVARS_TIMESCALE, float, autocvar_slowmo)
 REGISTER_STAT(MOVEVARS_GRAVITY, float, autocvar_sv_gravity)
+REGISTER_STAT(MOVEVARS_GRAVITY_DIR, vector, autocvar_sv_gravity_dir)
 REGISTER_STAT(MOVEVARS_STOPSPEED, float)
 REGISTER_STAT(MOVEVARS_MAXSPEED, float)
 REGISTER_STAT(MOVEVARS_ACCELERATE, float)

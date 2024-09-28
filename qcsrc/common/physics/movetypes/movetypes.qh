@@ -52,6 +52,7 @@ const int WATERLEVEL_SUBMERGED = 3;
 
 	#define PHYS_GRAVITY(s)                     STAT(MOVEVARS_GRAVITY, s)
 	// FIXME: 0 doesn't mean zero gravity
+	#define PHYS_GRAVITY_DIR(s)                 STAT(MOVEVARS_GRAVITY_DIR, s)
 	#define PHYS_ENTGRAVITY(s)                  STAT(MOVEVARS_ENTGRAVITY, s)
 
 	#define TICRATE                             ticrate
@@ -63,6 +64,7 @@ const int WATERLEVEL_SUBMERGED = 3;
 	#define GAMEPLAYFIX_Q2AIRACCELERATE             autocvar_sv_gameplayfix_q2airaccelerate
 
 	#define PHYS_GRAVITY(s)                     autocvar_sv_gravity
+	#define PHYS_GRAVITY_DIR(s)                 autocvar_sv_gravity_dir
 	#define PHYS_ENTGRAVITY(s)                  ((s).gravity)
 
 	#define TICRATE sys_frametime

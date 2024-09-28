@@ -384,6 +384,8 @@ bool PlayerJump(entity this)
 
 	bool doublejump = false;
 	float mjumpheight = ((PHYS_JUMPVELOCITY_CROUCH(this) && IS_DUCKED(this)) ? PHYS_JUMPVELOCITY_CROUCH(this) : PHYS_JUMPVELOCITY(this));
+	vector grav_dir = normalize(PHYS_GRAVITY_DIR(this));
+	float velocity_up = this.velocity * -grav_dir;
 	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
 
 	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, doublejump))
@@ -402,7 +404,7 @@ bool PlayerJump(entity this)
 		}
 		else
 		{
-			this.velocity_z = PHYS_MAXSPEED(this) * 0.7;
+			this.velocity = PHYS_MAXSPEED(this) * 0.7 * -grav_dir;
 			return true;
 		}
 	}
@@ -426,8 +428,8 @@ bool PlayerJump(entity this)
 	{
 		float minjumpspeed = mjumpheight * stof(PHYS_JUMPSPEEDCAP_MIN);
 
-		if (this.velocity_z < minjumpspeed)
-			mjumpheight += minjumpspeed - this.velocity_z;
+		if (velocity_up < minjumpspeed)
+			mjumpheight += minjumpspeed - velocity_up;
 	}
 
 	if(PHYS_JUMPSPEEDCAP_MAX != "")
@@ -439,8 +441,8 @@ bool PlayerJump(entity this)
 		{
 			float maxjumpspeed = mjumpheight * stof(PHYS_JUMPSPEEDCAP_MAX);
 
-			if (this.velocity_z > maxjumpspeed)
-				mjumpheight -= this.velocity_z - maxjumpspeed;
+			if (velocity_up > maxjumpspeed)
+				mjumpheight -= velocity_up - maxjumpspeed;
 		}
 	}
 
@@ -463,7 +465,7 @@ bool PlayerJump(entity this)
 #endif
 	}
 
-	this.velocity_z += mjumpheight;
+	this.velocity += mjumpheight * -grav_dir;
 
 	UNSET_ONGROUND(this);
 	UNSET_ONSLICK(this);

@@ -87,6 +87,46 @@ void sys_phys_update(entity this, float dt)
 		CheckPlayerJump(this);
 	}
 
+	// make the player model face the ground relative to the current gravity direction
+	{
+	    float saved_yaw = YAW(this.angles);
+	    vector grav_dir = PHYS_GRAVITY_DIR(this);
+	    bool upside_down = grav_dir.z > 0;
+
+        if (upside_down) {
+            grav_dir.z = -grav_dir.z;
+        }
+
+        this.angles = vectoangles(grav_dir);
+
+        // model is already facing the floor, no need to tilt 90 degrees
+	    PITCH(this.angles) += 90;
+	    PITCH(this.angles) = PITCH(this.angles) % 360;
+
+        if (upside_down) YAW(this.angles) += 180;
+
+        // adjust roll and pitch depending on grav direction
+        float saved_pitch = PITCH(this.angles);
+        float saved_roll = ROLL(this.angles);
+        float pitch_ratio = cos((YAW(this.angles) - saved_yaw) * DEG2RAD);
+        float roll_ratio = sin((YAW(this.angles) - saved_yaw) * DEG2RAD);
+        PITCH(this.angles) = saved_pitch * pitch_ratio + saved_roll * roll_ratio;
+        ROLL(this.angles) = saved_pitch * roll_ratio + saved_roll * pitch_ratio;
+	    YAW(this.angles) = saved_yaw;
+
+        if (upside_down) ROLL(this.angles) += 180;
+
+	    // pitch can't be >= 90, transform to something usable
+	    if (fabs(PITCH(this.angles)) >= 91) {
+		    PITCH(this.angles) = copysign(180, PITCH(this.angles)) - PITCH(this.angles);
+		    YAW(this.angles) += 180;
+		    ROLL(this.angles) += 180;
+	    }
+	    else if (fabs(PITCH(this.angles)) > 89) {
+		    PITCH(this.angles) = copysign(89, PITCH(this.angles));
+	    }
+	}
+
 	if (this.flags & FL_WATERJUMP) {
 		this.velocity_x = this.movedir.x;
 		this.velocity_y = this.movedir.y;
