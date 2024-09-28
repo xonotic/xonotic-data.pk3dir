@@ -30,9 +30,9 @@ void HUD_Physics_Export(int fh)
 }
 
 vector acc_prev_vel;
-float acc_prevtime, acc_avg, top_speed, top_speed_time, jump_speed, jump_speed_time;
+float acc_prev_time, acc_avg, top_speed, top_speed_time, jump_speed, jump_speed_time;
 float prev_vel_z = 0, prev_speed2d = 0;
-float physics_update_time, discrete_speed, discrete_accel;
+float physics_update_time, discrete_speed, discrete_top_speed, discrete_accel; // not done for jump speed
 void HUD_Physics()
 {
 	if (!autocvar__hud_configure)
@@ -95,7 +95,7 @@ void HUD_Physics()
 		accel = 0.45; // use a hardcoded value so that the hud responds to hud_panel_physics_acceleration_max changing
 	else
 	{
-		float f = time - acc_prevtime;
+		float f = time - acc_prev_time;
 		if (autocvar_hud_panel_physics_acceleration_vertical)
 			accel = (speed3d_phys - vlen(acc_prev_vel));
 		else
@@ -103,8 +103,8 @@ void HUD_Physics()
 
 		accel *= (1 / max(0.0001, f)) * ACCEL2GRAV;
 
-		acc_prev_vel = vel_phys;
-		acc_prevtime = time;
+		acc_prev_vel  = vel_phys;
+		acc_prev_time = time;
 
 		if (autocvar_hud_panel_physics_acceleration_movingaverage)
 		{
@@ -112,19 +112,6 @@ void HUD_Physics()
 			acc_avg = acc_avg * (1 - f) + accel * f;
 			accel = acc_avg;
 		}
-	}
-
-	const int acc_decimals = 2;
-	if (time > physics_update_time)
-	{
-		discrete_accel = accel;
-		// workaround for ftos_decimals returning a negative 0
-		if (discrete_accel > -1 / (10 ** acc_decimals) && discrete_accel < 0)
-			discrete_accel = 0;
-		discrete_speed = speed;
-		physics_update_time += autocvar_hud_panel_physics_update_interval;
-		if (physics_update_time < time)
-			physics_update_time = time + autocvar_hud_panel_physics_update_interval;
 	}
 
 	// compute layout
@@ -176,17 +163,6 @@ void HUD_Physics()
 	if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH || autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_SPEED)
 		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed / max_speed, 0, speed_baralign,
 			autocvar_hud_progressbar_speed_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
-	{
-		tmp_size.x   = panel_size.x * speed_size;
-		tmp_size.y   = panel_size.y * text_scale;
-		tmp_offset.x = speed_baralign ? panel_size.x * (1 - speed_size) : 0;
-		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
-		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(discrete_speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-
-		if (autocvar_hud_panel_physics_speed_unit_show)
-			text_bits |= BIT(2);
-	}
 
 	// compute jump speed text
 	float jump_speed_f = 0;
@@ -271,6 +247,33 @@ void HUD_Physics()
 		}
 		else
 			top_speed = 0;
+	}
+
+	const int acc_decimals = 2;
+	if (time > physics_update_time)
+	{
+		discrete_speed      = speed;
+		discrete_top_speed  = top_speed;
+		discrete_accel      = accel;
+		// workaround for ftos_decimals returning a negative 0
+		if (discrete_accel > -1 / (10 ** acc_decimals) && discrete_accel < 0)
+			discrete_accel = 0;
+		physics_update_time += autocvar_hud_panel_physics_update_interval;
+		if (physics_update_time < time)
+			physics_update_time = time + autocvar_hud_panel_physics_update_interval;
+	}
+
+	// draw speed text
+	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
+	{
+		tmp_size.x   = panel_size.x * speed_size;
+		tmp_size.y   = panel_size.y * text_scale;
+		tmp_offset.x = speed_baralign ? panel_size.x * (1 - speed_size) : 0;
+		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
+		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(discrete_speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+		if (autocvar_hud_panel_physics_speed_unit_show)
+			text_bits |= BIT(2);
 	}
 
 	// draw acceleration
@@ -371,7 +374,7 @@ void HUD_Physics()
 	{
 		top_speed_y += (panel_size.y * main_text_size - tmp_size.y) / 2;
 		tmp_offset.y = top_speed_y;
-		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(top_speed), tmp_size, '1 0 0', top_speed_f * panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(discrete_top_speed), tmp_size, '1 0 0', top_speed_f * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	draw_endBoldFont();
