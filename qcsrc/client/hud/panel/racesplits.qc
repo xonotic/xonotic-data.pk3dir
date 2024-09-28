@@ -1,11 +1,12 @@
 #include "racesplits.qh"
 #include "racetimer.qh" // for race_checkpoint_splits
 #include "physics.qh" // for autocvar_hud_progressbar_acceleration_neg_color
-#include <common/gamemodes/gamemode/race/race.qh> // for ISGAMETYPE(RACE)
 
+#include <common/gamemodes/gamemode/race/race.qh> // for ISGAMETYPE(RACE)
 #include <client/draw.qh>
 #include <common/ent_cs.qh>
 
+#define HUD_RACESPLITS_MAX_NRLINES 50 // feels like twice more than enough
 
 void HUD_RaceSplits_Export(int fh)
 {
@@ -44,7 +45,7 @@ void HUD_RaceSplits()
 	}
 
 	HUD_Panel_LoadCvars();
-	// default values for <= 0.8.6 cna be removed after next release
+	// default values for <= 0.8.6 can be removed after next release
 	registercvar("hud_panel_racesplits_pos", "0.700000 0.190000");
 	registercvar("hud_panel_racesplits_size", "0.250000 0.170000");
 
@@ -63,7 +64,6 @@ void HUD_RaceSplits()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	#define HUD_RACESPLITS_MAX_NRLINES 50 // feels like twice more than enough
 	int nrlines = min(HUD_RACESPLITS_MAX_NRLINES, autocvar_hud_panel_racesplits_lines);
 	vector fontsize = '0.8 1 0' * (mySize.y / (nrlines*1.25));
 
@@ -109,10 +109,10 @@ void HUD_RaceSplits()
 		string demolines[HUD_RACESPLITS_MAX_NRLINES];
 		for(j = 0; j < nrlines && j < 4; ++j)
 		{
-			string timestr     = TIME_ENCODED_TOSTRING(TIME_ENCODE(18.7 + (j-1) * 5.33), false);
+			string timestr     = TIME_ENCODED_TOSTRING(TIME_ENCODE(18.7 + j * 5.33), false);
 			string time_split  = j == 0 ? "+0.39" : j == 1 ? "+0.0" : j == 2 ? "-0.14" : "-0.08";
 			string col         = j == 0 ? "^1" : j == 1 ? "^3" : "^2";
-			float speed_split  = speed_conv_f * (1086 + (j-1) * 119);
+			float speed_split  = speed_conv_f * (1086 + j * 51);
 			float speed_diff   = speed_conv_f * (j == 0 ? -34 : j == 1 ? 86 : j == 2 ? 25 : 0);
 			string speed_color = rgb_to_hexcolor(j == 0 ? autocvar_hud_progressbar_acceleration_neg_color : autocvar_hud_progressbar_acceleration_color);
 			if(j == 3)
