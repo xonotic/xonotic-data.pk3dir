@@ -237,7 +237,7 @@ void HUD_RaceTimer ()
 						string speed_color = rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_neg_color);
 						float speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 						float speed = vlen(vec2(csqcplayer.velocity));
-						float speed_diff = speed - race_checkpoint_splits_speed[race_checkpoint];
+						float speed_diff = rint(speed - race_checkpoint_splits_speed[race_checkpoint]);
 						string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
 						if(speed_diff > 0) speed_color = rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_color);
 						else if (speed_diff == 0) speed_color = "^3";
