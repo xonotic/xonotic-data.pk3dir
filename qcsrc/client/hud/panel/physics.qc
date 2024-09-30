@@ -177,10 +177,9 @@ void HUD_Physics()
 		}
 		else
 		{
-			if (vel_phys.z > prev_vel_z && jumpheld && !swimming && alive_player)
+			if (vel_phys.z > prev_vel_z)
 			{
-				// NOTE: this includes some situations where the player doesn't explicitly jump (e.g. jumppad, weapon kb)
-				// excluding them would be difficult. maybe they can be left in?
+				// NOTE: this includes some situations where the player doesn't explicitly jump
 				jump_speed = prev_speed2d;
 				jump_speed_time = time;
 			}
