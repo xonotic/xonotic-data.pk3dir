@@ -537,8 +537,8 @@ void HUD_StrafeHUD()
 		 * ... so the angle will only be shown with hud_panel_strafehud_wturn_proper 0
 		 * this doesn't have support for sv_aircontrol_sideways == 1
 		 */
-		bool wturning    = !onground && wishangle == 0 && (keys_fwd == STRAFEHUD_KEYS_FORWARD || (aircontrol_backwards && keys_fwd == STRAFEHUD_KEYS_BACKWARD));
-		bool wturn_valid = aircontrol && aircontrol_penalty == 0 && (airaccel_qw || autocvar_hud_panel_strafehud_wturn_unrestricted == 1);
+		bool wturning    = !onground && wishangle == 0 && (keys_fwd == STRAFEHUD_KEYS_FORWARD || (aircontrol_backwards == 1 && keys_fwd == STRAFEHUD_KEYS_BACKWARD));
+		bool wturn_valid = aircontrol && aircontrol_penalty == 0 && (airaccel_qw == 1 || autocvar_hud_panel_strafehud_wturn_unrestricted == 1);
 		bool wturn_check = autocvar_hud_panel_strafehud_wturn && !immobile && wturn_valid;
 		if(wturn_check)
 		{
