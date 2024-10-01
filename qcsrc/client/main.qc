@@ -706,7 +706,15 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		)
 			prev_p_health = -1;
 		else if(spectatee_status && !newspectatee_status) //before observing/spectating, now playing
+		{
 			prev_health = -1;
+			if(autocvar_cl_autodemo_delete_keepmatches)
+			{
+				float del = autocvar_cl_autodemo_delete;
+				del &= ~1;
+				cvar_set("cl_autodemo_delete", ftos(del)); //don't delete demo where the player joined the match
+			}
+		}
 	}
 	spectatee_status = newspectatee_status;
 
