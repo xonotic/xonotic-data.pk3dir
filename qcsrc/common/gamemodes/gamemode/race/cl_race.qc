@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <common/mutators/base.qh>
+#include <lib/json.qh>
 
 // Race/CTS HUD mod icons
 float crecordtime_prev; // last remembered crecordtime
@@ -39,6 +40,66 @@ void race_showTime(string text, vector pos, vector timeText_ofs, float theTime, 
 	}
 }
 
+void race_LoadPb()
+{
+		string json_times =  db_get(ClientProgsDB, strcat(mi_shortname, (ISGAMETYPE(CTS) ? CTS_RECORD : RACE_RECORD), "cptimes"));
+		string json_speeds = db_get(ClientProgsDB, strcat(mi_shortname, (ISGAMETYPE(CTS) ? CTS_RECORD : RACE_RECORD), "cpspeeds"));
+
+		int buf = json_parse(json_times, _json_parse_object);
+		if(buf == -1)
+		{
+			// FIXME: log error parsing if != ""
+			return;
+		}
+		for (int cp = 0; cp <= 255; cp++)
+			race_checkpoint_pb_times[cp] = stof(json_get(buf, sprintf("cptimes.%d", cp)));
+
+		buf = json_parse(json_speeds, _json_parse_object);
+		if(buf == -1)
+		{
+			// FIXME: log error parsing if != ""
+			return;
+		}
+		for (int cp = 0; cp <= 255; cp++)
+			race_checkpoint_pb_speeds[cp] = stof(json_get(buf, sprintf("cpspeeds.%d", cp)));
+}
+
+void race_SavePb(float pbtime)
+{
+
+		string json_times = "{ \"cptimes\": {";
+		string json_speeds = "{ \"cpspeeds\": {";
+		string comma_times = "";
+		string comma_speeds = "";
+
+		for(int cp = 0; cp <= 255; cp++)
+		{
+			race_checkpoint_pb_speeds[cp] = race_checkpoint_current_speeds[cp];
+			race_checkpoint_pb_times[cp] = race_checkpoint_current_times[cp];
+		}
+		for(int cp = 0; cp <= 255; cp++)
+		{
+			if(race_checkpoint_pb_times[cp])
+			{
+				json_times = strcat(json_times, sprintf("%s\"%d\": %d", comma_times, cp, race_checkpoint_pb_times[cp]));
+				comma_times = ",";
+			}
+			if(race_checkpoint_pb_speeds[cp])
+			{
+				json_speeds = strcat(json_speeds, sprintf("%s\"%d\": %d", comma_speeds, cp, race_checkpoint_pb_speeds[cp]));
+				comma_speeds = ",";
+			}
+			if(race_checkpoint_pb_times[cp] == pbtime) // finish cp, we can leave
+				break;
+		}
+		json_times = strcat(json_times, "} }");
+		json_speeds = strcat(json_speeds, "} }");
+
+		db_put(ClientProgsDB, strcat(mi_shortname, (ISGAMETYPE(CTS) ? CTS_RECORD : RACE_RECORD), "time"), ftos(pbtime));
+		db_put(ClientProgsDB, strcat(mi_shortname, (ISGAMETYPE(CTS) ? CTS_RECORD : RACE_RECORD), "cptimes"), json_times);
+		db_put(ClientProgsDB, strcat(mi_shortname, (ISGAMETYPE(CTS) ? CTS_RECORD : RACE_RECORD), "cpspeeds"), json_speeds);
+}
+
 void HUD_Mod_Race(vector pos, vector mySize)
 {
 	entity me = playerslots[player_localnum];
@@ -53,15 +114,17 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	mod_active = 1;
 
 	// clientside personal record
-	string rr;
-	if(ISGAMETYPE(CTS))
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-	float t = stof(db_get(ClientProgsDB, strcat(mi_shortname, rr, "time")));
+	float t = stof(db_get(ClientProgsDB, strcat(mi_shortname, (ISGAMETYPE(CTS) ? CTS_RECORD : RACE_RECORD), "time")));
+	static bool pbloaded = false;
+
+	if(!pbloaded)
+	{
+		race_LoadPb();
+		pbloaded = true; // loaded or not we tried once
+	}
 
 	if(score && (score < t || !t) && !isdemo()) {
-		db_put(ClientProgsDB, strcat(mi_shortname, rr, "time"), ftos(score));
+		race_SavePb(score);
 		if(autocvar_cl_autodemo_delete_keeprecords)
 		{
 			float f = autocvar_cl_autodemo_delete;

@@ -1119,6 +1119,8 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				strcpy(race_previousbestname, pbestname);
 
 			race_checkpointtime = time;
+			race_checkpoint_current_times[race_checkpoint] = race_time;
+			race_checkpoint_current_speeds[race_checkpoint] = race_timespeed;
 
 			if(race_checkpoint == 0 || race_checkpoint == 254)
 			{
