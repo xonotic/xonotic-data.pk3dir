@@ -31,7 +31,7 @@ bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
 bool autocvar_cl_race_cptimes_showself = false;
 bool autocvar_cl_welcome = true;
 bool autocvar_cl_autodemo_delete;
-bool autocvar_cl_autodemo_delete_keepmatches = false;
+bool autocvar_cl_autodemo_delete_keepmatches;
 bool autocvar_menu_gamemenu = true;
 
 // Map coordinate base calculations need these
