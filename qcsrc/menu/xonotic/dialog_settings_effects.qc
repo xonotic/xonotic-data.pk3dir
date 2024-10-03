@@ -127,7 +127,10 @@ void XonoticEffectsSettingsTab_fill(entity me)
 				setDependent(e, "mod_q3bsp_nolightmaps", 0, 0);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_shadow_gloss", _("Gloss"),
 			_("Enable the use of glossmaps on textures supporting it")));
-			setDependentAND3(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0, "r_glsl_deluxemapping", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependentAND3(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0, "r_glsl_deluxemapping", 1, 1);
+			else
+				setDependentAND(e, "mod_q3bsp_nolightmaps", 0, 0, "r_glsl_deluxemapping", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_offsetmapping", _("Offset mapping"),
 			_("Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface")));
