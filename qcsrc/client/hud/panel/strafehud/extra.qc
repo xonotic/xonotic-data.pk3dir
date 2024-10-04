@@ -103,7 +103,7 @@ float StrafeHUD_DrawSlickDetector(entity e, bool onslick)
 }
 
 // vertical angle for weapon jumps
-float StrafeHUD_DrawVerticalAngle(entity e, float text_offset_bottom)
+void StrafeHUD_DrawVerticalAngle(entity e, float text_offset_top, float text_offset_bottom)
 {
 	if(autocvar_hud_panel_strafehud_vangle)
 	{
@@ -111,16 +111,12 @@ float StrafeHUD_DrawVerticalAngle(entity e, float text_offset_bottom)
 		float vangle_height = autocvar_hud_panel_strafehud_vangle_size * panel_size.y;
 		string vangle_text = strcat(ftos_decimals(vangle, 2), "°");
 
-		bool was_drawn = StrafeHUD_DrawTextIndicator(
+		StrafeHUD_DrawTextIndicator(
 			vangle_text, vangle_height,
 			autocvar_hud_panel_strafehud_vangle_color, 1,
-			time, text_offset_bottom, STRAFEHUD_TEXT_BOTTOM);
-
-		if(was_drawn)
-			return vangle_height;
+			time, autocvar_hud_panel_strafehud_vangle_pos,
+			text_offset_top, text_offset_bottom);
 	}
-
-	return 0;
 }
 
 // strafe sonar for audible feedback when strafing
@@ -185,7 +181,7 @@ string StrafeHUD_UpdateSonarSound()
 // show height achieved by a single jump
 // FIXME: checking z position differences is unreliable (warpzones, teleporter, kill, etc), use velocity to calculate jump height instead
 // FIXME: move capturing the jump height value out of the HUD
-float StrafeHUD_DrawJumpHeight(entity e, bool onground, bool swimming, float text_offset_top)
+void StrafeHUD_DrawJumpHeight(entity e, bool onground, bool swimming, float text_offset_top, float text_offset_bottom)
 {
 	float length_conversion_factor = StrafeHUD_GetLengthUnitFactor(autocvar_hud_speed_unit);
 	static float height_min = 0, height_max = 0; // ground and peak of jump z coordinates
@@ -218,46 +214,36 @@ float StrafeHUD_DrawJumpHeight(entity e, bool onground, bool swimming, float tex
 		if(autocvar_hud_panel_strafehud_unit_show)
 			jumpheight_text = strcat(jumpheight_text, StrafeHUD_GetLengthUnit(autocvar_hud_speed_unit));
 
-		bool was_drawn = StrafeHUD_DrawTextIndicator(
+		StrafeHUD_DrawTextIndicator(
 			jumpheight_text, jumpheight_height,
 			autocvar_hud_panel_strafehud_jumpheight_color,
 			autocvar_hud_panel_strafehud_jumpheight_fade,
-			jumptime, text_offset_top, STRAFEHUD_TEXT_TOP);
-
-		if(was_drawn)
-			return jumpheight_height;
+			jumptime, autocvar_hud_panel_strafehud_jumpheight_pos,
+			text_offset_top, text_offset_bottom);
 	}
-
-	return 0;
 }
 
 // strafe efficiency, percentage of how far away the current angle is from the optimal angle
 // the percentage changes linearly with angular distance
-float StrafeHUD_DrawStrafeEfficiency(float strafe_ratio, float text_offset_top)
+void StrafeHUD_DrawStrafeEfficiency(float strafe_ratio, float text_offset_top, float text_offset_bottom)
 {
+	if(autocvar_hud_panel_strafehud_strafeefficiency)
 	{
-		if(autocvar_hud_panel_strafehud_strafeefficiency)
-		{
-			float strafeeff_height = autocvar_hud_panel_strafehud_strafeefficiency_size * panel_size.y;
-			string strafeeff_text = strcat(ftos_decimals(strafe_ratio * 100, 2), "%");
-			vector strafeeff_color = '1 1 1' - (strafe_ratio > 0 ? '1 0 1' : '0 1 1') * fabs(strafe_ratio);
+		float strafeeff_height = autocvar_hud_panel_strafehud_strafeefficiency_size * panel_size.y;
+		string strafeeff_text = strcat(ftos_decimals(strafe_ratio * 100, 2), "%");
+		vector strafeeff_color = '1 1 1' - (strafe_ratio > 0 ? '1 0 1' : '0 1 1') * fabs(strafe_ratio);
 
-			bool was_drawn = StrafeHUD_DrawTextIndicator(
-				strafeeff_text, strafeeff_height,
-				strafeeff_color, 1,
-				time, text_offset_top, STRAFEHUD_TEXT_TOP);
-
-			if(was_drawn)
-				return strafeeff_height;
-		}
+		StrafeHUD_DrawTextIndicator(
+			strafeeff_text, strafeeff_height,
+			strafeeff_color, 1,
+			time, autocvar_hud_panel_strafehud_strafeefficiency_pos,
+			text_offset_top, text_offset_bottom);
 	}
-
-	return 0;
 }
 
 // show speed when crossing the start trigger
 // FIXME: move capturing the race start speed value out of the HUD
-float StrafeHUD_DrawStartSpeed(float speed, float text_offset_bottom)
+void StrafeHUD_DrawStartSpeed(float speed, float text_offset_top, float text_offset_bottom)
 {
 	static float startspeed = 0, starttime = 0; // displayed value and timestamp for fade out
 
@@ -279,15 +265,11 @@ float StrafeHUD_DrawStartSpeed(float speed, float text_offset_bottom)
 		if(autocvar_hud_panel_strafehud_unit_show)
 			startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_speed_unit));
 
-		bool was_drawn = StrafeHUD_DrawTextIndicator(
+		StrafeHUD_DrawTextIndicator(
 			startspeed_text, startspeed_height,
 			autocvar_hud_panel_strafehud_startspeed_color,
 			autocvar_hud_panel_strafehud_startspeed_fade,
-			starttime, text_offset_bottom, STRAFEHUD_TEXT_BOTTOM);
-
-		if(was_drawn)
-			return startspeed_height;
+			starttime, autocvar_hud_panel_strafehud_startspeed_pos,
+			text_offset_top, text_offset_bottom);
 	}
-
-	return 0;
 }

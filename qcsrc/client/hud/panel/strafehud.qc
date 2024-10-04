@@ -719,12 +719,12 @@ void HUD_StrafeHUD()
 		}
 	}
 
-	text_offset_bottom += StrafeHUD_DrawVerticalAngle(strafeplayer, text_offset_bottom);
+	StrafeHUD_DrawVerticalAngle(strafeplayer, text_offset_top, text_offset_bottom);
 
 	draw_beginBoldFont();
-	text_offset_bottom += StrafeHUD_DrawStartSpeed(speed, text_offset_bottom);
-	text_offset_top += StrafeHUD_DrawStrafeEfficiency(strafe_ratio, text_offset_top);
-	text_offset_top += StrafeHUD_DrawJumpHeight(strafeplayer, real_onground, swimming, text_offset_top);
+	StrafeHUD_DrawStartSpeed(speed, text_offset_top, text_offset_bottom);
+	StrafeHUD_DrawStrafeEfficiency(strafe_ratio, text_offset_top, text_offset_bottom);
+	StrafeHUD_DrawJumpHeight(strafeplayer, real_onground, swimming, text_offset_top, text_offset_bottom);
 	draw_endBoldFont();
 
 	StrafeHUD_Sonar(strafe_ratio, StrafeHUD_UpdateSonarSound());

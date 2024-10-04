@@ -61,11 +61,13 @@ float autocvar_hud_panel_strafehud_slickdetector_height = 0.125;
 bool autocvar_hud_panel_strafehud_startspeed = true;
 float autocvar_hud_panel_strafehud_startspeed_fade = 4;
 vector autocvar_hud_panel_strafehud_startspeed_color = '1 0.75 0';
+vector autocvar_hud_panel_strafehud_startspeed_pos = '0 -1 0';
 float autocvar_hud_panel_strafehud_startspeed_size = 1.5;
 bool autocvar_hud_panel_strafehud_jumpheight = false;
 float autocvar_hud_panel_strafehud_jumpheight_fade = 4;
 float autocvar_hud_panel_strafehud_jumpheight_min = 50;
 vector autocvar_hud_panel_strafehud_jumpheight_color = '0 1 0.75';
+vector autocvar_hud_panel_strafehud_jumpheight_pos = '0 -2 0';
 float autocvar_hud_panel_strafehud_jumpheight_size = 1.5;
 float autocvar_hud_panel_strafehud_timeout_ground = 0.1;
 float autocvar_hud_panel_strafehud_timeout_turn = 0.1;
@@ -85,8 +87,10 @@ float autocvar_hud_panel_strafehud_sonar_pitch_range = 0.1;
 float autocvar_hud_panel_strafehud_sonar_pitch_exponent = 1;
 bool autocvar_hud_panel_strafehud_vangle = false;
 vector autocvar_hud_panel_strafehud_vangle_color = '0.75 0.75 0.75';
+vector autocvar_hud_panel_strafehud_vangle_pos = '-0.25 1 0';
 float autocvar_hud_panel_strafehud_vangle_size = 1;
 bool autocvar_hud_panel_strafehud_strafeefficiency = false;
+vector autocvar_hud_panel_strafehud_strafeefficiency_pos = '0.25 1 0';
 float autocvar_hud_panel_strafehud_strafeefficiency_size = 1;
 int autocvar_hud_panel_strafehud_projection = 0;
 
@@ -128,9 +132,6 @@ const int STRAFEHUD_GRADIENT_BOTH = 3;
 const int STRAFEHUD_INDICATOR_NONE = 0;
 const int STRAFEHUD_INDICATOR_SOLID = 1;
 const int STRAFEHUD_INDICATOR_DASHED = 2;
-
-const int STRAFEHUD_TEXT_TOP = 0;
-const int STRAFEHUD_TEXT_BOTTOM = 1;
 
 const int STRAFEHUD_PROJECTION_LINEAR = 0;
 const int STRAFEHUD_PROJECTION_PERSPECTIVE = 1;
