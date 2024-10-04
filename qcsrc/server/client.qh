@@ -378,7 +378,7 @@ STATIC_INIT(client_lists)
 }
 
 void play_countdown(entity this, float finished, Sound samp);
-void player_powerups_remove_all(entity this);
+void player_powerups_remove_all(entity this, bool allow_poweroff_sound);
 
 // NOTE: current type is Resource (avoiding circular includes!)
 void RotRegen(entity this, entity current, float limit_mod,

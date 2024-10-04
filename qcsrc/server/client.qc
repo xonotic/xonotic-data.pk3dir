@@ -255,6 +255,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	bool recount_ready = false;
 	PlayerState_detach(this);
 
+	bool was_player = false;
 	if (IS_PLAYER(this))
 	{
 		if(GetResource(this, RES_HEALTH) >= 1)
@@ -271,6 +272,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 			if (warmup_stage || game_starttime > time) /* warmup OR countdown */ recount_ready = true;
 		}
 		entcs_update_players(this);
+		was_player = true;
 	}
 
 	if (use_spawnpoint)
@@ -378,7 +380,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	this.revival_time = 0;
 	this.draggable = drag_undraggable;
 
-	player_powerups_remove_all(this);
+	player_powerups_remove_all(this, was_player);
 	this.items = 0;
 	STAT(WEAPONS, this) = '0 0 0';
 	this.drawonlytoclient = this;
@@ -1244,7 +1246,7 @@ void ClientConnect(entity this)
 
 .string shootfromfixedorigin;
 .entity chatbubbleentity;
-void player_powerups_remove_all(entity this);
+void player_powerups_remove_all(entity this, bool allow_poweroff_sound);
 
 /*
 =============
@@ -1321,7 +1323,7 @@ void ClientDisconnect(entity this)
 	if (warmup_stage || game_starttime > time) /* warmup OR countdown */ ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
 
-	player_powerups_remove_all(this); // stop powerup sound
+	player_powerups_remove_all(this, IS_PLAYER(this)); // stop powerup sound
 
 	ONREMOVE(this);
 
@@ -1522,12 +1524,12 @@ void play_countdown(entity this, float finished, Sound samp)
 }
 
 // it removes special powerups not handled by StatusEffects
-void player_powerups_remove_all(entity this)
+void player_powerups_remove_all(entity this, bool allow_poweroff_sound)
 {
 	if (this.items & (IT_SUPERWEAPON | IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS))
 	{
 		// don't play the poweroff sound when the game restarts or the player disconnects
-		if (time > game_starttime + 1 && IS_CLIENT(this)
+		if (allow_poweroff_sound && time > game_starttime + 1 && IS_CLIENT(this)
 			&& !(start_items & (IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS)))
 		{
 			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
@@ -1548,7 +1550,7 @@ void player_powerups(entity this)
 	this.effects &= ~EF_NODEPTHTEST;
 
 	if (IS_DEAD(this))
-		player_powerups_remove_all(this);
+		player_powerups_remove_all(this, true);
 
 	if((this.alpha < 0 || IS_DEAD(this)) && !this.vehicle) // don't apply the flags if the player is gibbed
 		return;
