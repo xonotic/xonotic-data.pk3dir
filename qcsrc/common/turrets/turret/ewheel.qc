@@ -73,10 +73,9 @@ void ewheel_move_enemy(entity this)
         }
         else if (this.tur_head.spawnshieldtime < 2)
         {
-
             newframe = ewheel_anim_fwd_slow;
             movelib_move_simple(this, v_forward, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
-       }
+        }
         else
         {
             newframe = ewheel_anim_fwd_slow;
@@ -207,9 +206,7 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
     it.frame					= it.tur_head.frame = 1;
     it.ammo_flags				= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
 
-    // Convert from dgr / sec to dgr / tic
-    it.tur_head.aim_speed = (autocvar_g_turrets_unit_ewheel_turnrate);
-    it.tur_head.aim_speed = it.tur_head.aim_speed / (1 / frametime);
+    it.tur_head.aim_speed = autocvar_g_turrets_unit_ewheel_turnrate * frametime;
 }
 
 #endif // SVQC
