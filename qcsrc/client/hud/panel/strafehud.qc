@@ -402,7 +402,8 @@ void HUD_StrafeHUD()
 	float absolute_overturnangle = overturnangle;
 
 	float aircontrol = PHYS_AIRCONTROL(strafeplayer);
-	bool aircontrol_backwards = PHYS_AIRCONTROL_BACKWARDS(strafeplayer) == 1;
+	bool aircontrol_backwards = PHYS_AIRCONTROL_BACKWARDS(strafeplayer);
+	bool is_aircontrol_keys = keys_fwd == STRAFEHUD_KEYS_FORWARD || (aircontrol_backwards && keys_fwd == STRAFEHUD_KEYS_BACKWARD);
 	bool is_aircontrol_direction = fwd || aircontrol_backwards;
 	bool airaccel_qw = PHYS_AIRACCEL_QW(strafeplayer) == 1;
 
@@ -421,7 +422,7 @@ void HUD_StrafeHUD()
 	 * ... so the angle will only be shown with hud_panel_strafehud_wturn_proper 0
 	 * this doesn't have support for sv_aircontrol_sideways == 1
 	 */
-	bool wturning = (wishangle == 0) && !onground && is_aircontrol_direction;
+	bool wturning = (wishangle == 0) && !onground && is_aircontrol_keys;
 	bool wturn_valid = false;
 	float wturn_bestangle = 0;
 	if(autocvar_hud_panel_strafehud_wturn && moving &&
@@ -449,9 +450,10 @@ void HUD_StrafeHUD()
 
 	// draw the switch indicators as if strafing normally (W+A style), while W-turning or side strafing
 	float n_bestangle = 0;
+	float absolute_n_prebestangle = 0; // also needed for W-turn angles
 	bool draw_normal = ((autocvar_hud_panel_strafehud_switch >= STRAFEHUD_SWITCH_NORMAL && wturning)
 		|| (autocvar_hud_panel_strafehud_switch == STRAFEHUD_SWITCH_SIDESTRAFE && turn));
-	if(draw_normal)
+	if(draw_normal || wturn_valid)
 	{
 		// recalculate bestangle as if strafing normally
 		float n_maxspeed  = PHYS_MAXAIRSPEED(strafeplayer) * maxspeed_mod;
@@ -461,6 +463,9 @@ void HUD_StrafeHUD()
 		n_bestangle = speed > n_bestspeed
 			? acos(n_bestspeed / speed) * RAD2DEG - 45
 			: -45;
+		absolute_n_prebestangle = speed > n_movespeed
+			? acos(n_movespeed / speed) * RAD2DEG
+			: 0;
 	}
 
 	float hudangle = StrafeHUD_DetermineHudAngle(absolute_wishangle, absolute_overturnangle, strafity);
@@ -661,9 +666,9 @@ void HUD_StrafeHUD()
 		}
 
 		// only draw wturn indicators if conditions were met
-		if(wturn_valid && is_aircontrol_direction && !onground &&
+		if(wturn_valid && !onground && is_aircontrol_direction &&
 			autocvar_hud_panel_strafehud_wturn_alpha > 0 &&
-			absolute_wturn_bestangle < absolute_prebestangle &&
+			absolute_wturn_bestangle < absolute_n_prebestangle &&
 			((autocvar_hud_panel_strafehud_wturn && wturning) ||
 			(autocvar_hud_panel_strafehud_wturn == STRAFEHUD_WTURN_NORMAL && !turn) ||
 			(autocvar_hud_panel_strafehud_wturn == STRAFEHUD_WTURN_SIDESTRAFE)))
