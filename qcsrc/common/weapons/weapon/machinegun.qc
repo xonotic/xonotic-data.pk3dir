@@ -6,14 +6,14 @@
 .float spreadUpdateTime;
 
 ERASEABLE
-void MachineGun_Update_Spread(entity actor, .entity weaponentity, float spreadSpectrumMin, float spreadSpectrumMax)
+void MachineGun_Update_Spread(entity actor, .entity weaponentity)
 {
 	float spread_accum = actor.(weaponentity).machinegun_spread_accumulation;
 
 	// time based spread decay
 	if (WEP_CVAR(WEP_MACHINEGUN, spread_decay))
 	{
-		float spreadSpectrumDistance = fabs(spreadSpectrumMax - spreadSpectrumMin);
+		float spreadSpectrumDistance = fabs(WEP_CVAR(WEP_MACHINEGUN, spread_max) - WEP_CVAR(WEP_MACHINEGUN, spread_min));
 		float timediff = time - actor.(weaponentity).spreadUpdateTime;
 		spread_accum = bound(0,
 			spread_accum - (timediff * WEP_CVAR(WEP_MACHINEGUN, spread_decay)),
@@ -134,7 +134,7 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	MachineGun_Update_Spread(actor, weaponentity, WEP_CVAR(WEP_MACHINEGUN, spread_min), WEP_CVAR(WEP_MACHINEGUN, spread_max));
+	MachineGun_Update_Spread(actor, weaponentity);
 
 	float spread_accum = actor.(weaponentity).machinegun_spread_accumulation;
 
@@ -183,7 +183,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	MachineGun_Update_Spread(actor, weaponentity, WEP_CVAR(WEP_MACHINEGUN, spread_min), WEP_CVAR(WEP_MACHINEGUN, spread_max));
+	MachineGun_Update_Spread(actor, weaponentity);
 
 	float spread_accum = actor.(weaponentity).machinegun_spread_accumulation;
 
