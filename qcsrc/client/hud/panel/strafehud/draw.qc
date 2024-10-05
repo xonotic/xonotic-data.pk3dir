@@ -273,26 +273,39 @@ void StrafeHUD_DrawStrafeArrow(vector origin, float size, vector color, float al
 }
 
 // draw a fading text indicator above or below the strafe meter, return true if something was displayed
-bool StrafeHUD_DrawTextIndicator(string text, float height, vector color, float fadetime, float lasttime, float offset, int position)
+void StrafeHUD_DrawTextIndicator(string text, float height, vector color, float fadetime, float lasttime, vector pos, float offset_top, float offset_bottom)
 {
 	if((height <= 0) || (lasttime <= 0) || (fadetime <= 0) || ((time - lasttime) >= fadetime))
-		return false;
+		return;
 
 	float alpha = cos(((time - lasttime) / fadetime) * M_PI_2); // fade non-linear like the physics panel does
 	vector size = panel_size;
 	size.y = height;
 
-	switch(position)
+	if(pos.y >= 1)
 	{
-		case STRAFEHUD_TEXT_TOP:
-			offset += size.y;
-			offset *= -1;
-			break;
-		case STRAFEHUD_TEXT_BOTTOM:
-			offset += panel_size.y;
-			break;
+		pos.y--; // for calculations the position should not start at +1
+		pos = StrafeHUD_CalculateTextIndicatorPosition(pos);
+		pos.y += size.y + offset_top;
+		pos.y *= -1; // it's more intuitive for up to be positive
 	}
+	else if(pos.y <= -1)
+	{
+		pos.y++; // for calculations the position should not start at -1
+		pos = StrafeHUD_CalculateTextIndicatorPosition(pos);
+		pos.y *= -1; // it's more intuitive for down to be negative
+		pos.y += panel_size.y + offset_bottom;
+	}
+	else return;
 
-	drawstring_aspect(panel_pos + eY * offset, text, size, color, alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-	return true;
+	drawstring_aspect(panel_pos + pos, text, size, color, alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
+vector StrafeHUD_CalculateTextIndicatorPosition(vector pos)
+{
+	pos.x *= panel_size.x / 2; // more intuitive since we start in the middle, this turns the range from -0.5 to +0.5 into -1 to +1
+	pos.y *= panel_size.y;
+	pos.z = 0;
+
+	return pos;
 }
