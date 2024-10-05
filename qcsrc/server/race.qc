@@ -572,7 +572,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 						WriteHeader(MSG_ONE, TE_CSQC_RACE);
 						WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
 						WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
-						WriteInt24_t(MSG_ONE, t); // time to that intermediate
+						WriteInt24_t(MSG_ONE, t); // time to that checkpoint
 						WriteInt24_t(MSG_ONE, recordtime); // previously best time
 						WriteInt24_t(MSG_ONE, ((tvalid) ? it.race_checkpoint_record[cp] : 0)); // previously best time
 						WriteString(MSG_ONE, recordholder); // record holder
