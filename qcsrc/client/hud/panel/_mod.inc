@@ -13,6 +13,7 @@
 #include <client/hud/panel/powerups.qc>
 #include <client/hud/panel/pressedkeys.qc>
 #include <client/hud/panel/quickmenu.qc>
+#include <client/hud/panel/racesplits.qc>
 #include <client/hud/panel/racetimer.qc>
 #include <client/hud/panel/radar.qc>
 #include <client/hud/panel/score.qc>

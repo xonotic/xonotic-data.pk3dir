@@ -3,6 +3,7 @@
 #include <common/animdecide.qc>
 #include <common/campaign_file.qc>
 #include <common/campaign_setup.qc>
+#include <common/checkextension.qc>
 #include <common/ent_cs.qc>
 #include <common/mapinfo.qc>
 #include <common/net_notice.qc>
