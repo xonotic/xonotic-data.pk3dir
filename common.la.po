@@ -863,7 +863,7 @@ msgstr "Quot temporibus vicit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:176
 msgid "SCO^rounds won"
-msgstr "SCO^quot vicit"
+msgstr "victoriae"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "Number of rounds played"
@@ -871,7 +871,7 @@ msgstr "Quot temporibus lusit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:177
 msgid "SCO^rounds played"
-msgstr "quot lusit"
+msgstr "tempora"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:178
 msgid "SCO^score"
@@ -1039,7 +1039,7 @@ msgstr "N/A"
 #: qcsrc/client/hud/panel/scoreboard.qc:1793
 #, c-format
 msgid "Accuracy stats (average %d%%)"
-msgstr "Accuratiae statistica (media %d%%)"
+msgstr "Accurationis statistica (media %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1950
 msgid "Item stats"
@@ -1303,7 +1303,7 @@ msgstr "Est %s"
 
 #: qcsrc/client/main.qc:1403
 msgid "Your client version is outdated."
-msgstr "Nimis vetus cliens computatralis tuum est."
+msgstr "Nimis vetus cliens computatralis tuus est."
 
 #: qcsrc/client/main.qc:1404
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
@@ -1311,7 +1311,7 @@ msgstr "### MODERATRO HOC LUDERE NON POTES ###"
 
 #: qcsrc/client/main.qc:1405
 msgid "Please update!"
-msgstr "Novius inveni!"
+msgstr "Noviorem inveni!"
 
 #: qcsrc/client/main.qc:1408
 msgid "This server is using an outdated Xonotic version."
@@ -3857,13 +3857,13 @@ msgstr ""
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s"
 msgstr ""
-"^BG%s%s^K1, ex ^BG%s^K1 Sclopeti Pungentis missilium pluvia, effugire non "
+"^BG%s%s^K1, ex ^BG%s^K1 Sclopeti Pungentis missilium pluvia, effugere non "
 "potuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:521
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s"
-msgstr "^BG%s%s^K1, ex ^BG%s^K1 Sclopeto Pungenti, effugire non potuit%s%s"
+msgstr "^BG%s%s^K1, ex ^BG%s^K1 Sclopeto Pungenti, effugere non potuit%s%s"
 
 #: qcsrc/common/notifications/all.inc:522
 #, c-format
@@ -4262,7 +4262,7 @@ msgstr "^K1Temet occidisti!"
 
 #: qcsrc/common/notifications/all.inc:658
 msgid "^K1You need to be more careful!"
-msgstr "^K1Magis curare debiturus fuisti!"
+msgstr "^K1Maior cura tua necesse est!"
 
 #: qcsrc/common/notifications/all.inc:659
 msgid "^K1You couldn't stand the heat!"
@@ -4270,7 +4270,7 @@ msgstr "^K1Ardorem non passus es!"
 
 #: qcsrc/common/notifications/all.inc:660
 msgid "^K1You need to watch out for monsters!"
-msgstr "^K1A beluis cauturus fuisti!"
+msgstr "^K1A beluis cavere necesse est!"
 
 #: qcsrc/common/notifications/all.inc:660
 msgid "^K1You were killed by a monster!"
@@ -4314,7 +4314,7 @@ msgstr "^K1Nimis senuisti nec medicamentum tuum sumpsisti"
 
 #: qcsrc/common/notifications/all.inc:666
 msgid "^K1You need to preserve your health"
-msgstr "^K1Tuam sanitatem conservaturus fuisti"
+msgstr "^K1Tuam sanitatem conservare necesse est"
 
 #: qcsrc/common/notifications/all.inc:667
 msgid "^K1You became a shooting star!"
@@ -5863,7 +5863,7 @@ msgstr "Electrum"
 
 #: qcsrc/common/weapons/weapon/fireball.qh:20
 msgid "Fireball"
-msgstr "Globum Igneum"
+msgstr "Globus Igneus"
 
 #: qcsrc/common/weapons/weapon/hagar.qh:20
 msgid "Hagar"
@@ -6721,7 +6721,7 @@ msgstr "Nuntia scribere in iussorum loco quoque"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:23
 msgid "Flip notify order"
-msgstr "Nuntiorum ordo inversa"
+msgstr "Nuntiorum ordo inversus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:26
 msgid "Entry lifetime:"
@@ -7128,7 +7128,7 @@ msgstr "Proportio Nominis:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:66
 msgid "Show Accuracy"
-msgstr "Accuratiam Videre"
+msgstr "Accurationem Videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:67
 msgid "Show Ammo"
@@ -7487,7 +7487,7 @@ msgid ""
 "Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-"
 "Delete to clear; Enter when done."
 msgstr ""
-"Hic clicca vel Ctrl-F preme ut verbum scribe et videas modo nomina quae eum "
+"Hic clicca vel Ctrl-F preme ut verbum scribas et videas modo nomina quae id "
 "verbum contineantur. Ctrl-Delete ut verbum obliviscatur; Enter ut finias."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
@@ -7621,7 +7621,7 @@ msgid ""
 "Projectiles can't be destroyed. However, you can still explode Electro orbs "
 "with the Electro primary fire"
 msgstr ""
-"Missilia missilia delere non possunt, nisi Electri orbes, qui Electri "
+"Missilia missilibus deleri non possunt, nisi Electri orbes, qui Electri "
 "emissione primaria delentur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:133
@@ -7701,7 +7701,7 @@ msgid ""
 "switch to another weapon."
 msgstr ""
 "Xonoticus sine utilibus - non sunt utilia colligenda, sed ludentes aequa "
-"arma habent. Post aliquod tempus, numeratio regredientis fiet, et postea pro "
+"arma habent. Post aliquod tempus, numeratio regrediens fiet, et postea pro "
 "eis armis alia arma aequa commutabuntur."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:201
@@ -7981,7 +7981,7 @@ msgstr "Series cantuum:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:55
 msgid "Random order"
-msgstr "Ordo mixta"
+msgstr "Ordo mixtus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:60
 msgid "MUSICPL^Stop"
@@ -8935,7 +8935,7 @@ msgstr "Versus/columnas illuminatas videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:53
 msgid "Show accuracy underneath scoreboard"
-msgstr "Accuratiam sub rationario videre"
+msgstr "Accurationem sub rationario videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:55
 msgid "Show team sizes:"
@@ -9080,11 +9080,11 @@ msgstr "Caedium series videre modo si insignes sunt"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:34
 msgid "Show spree information in centerprints"
-msgstr "Caedium series scriptae in media parte"
+msgstr "Caedium series scribere in media parte"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:38
 msgid "Show spree information in death messages"
-msgstr "Caedium series scriptae in mortuorum notis"
+msgstr "Caedium series scribere in mortuorum notis"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:43
 msgid "Sprees in info messages:"
@@ -9150,7 +9150,7 @@ msgstr "Ludentium condiciones in locutorii loco videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:86
 msgid "Powerup notifications"
-msgstr "Potestatium nuntia"
+msgstr "Potestatum nuntia"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:89
 msgid "Weapon centerprint notifications"
@@ -9166,7 +9166,7 @@ msgstr "Nuntiatores"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:98
 msgid "Respawn countdown sounds"
-msgstr "Soni numerationis regrendientis cum renascitur"
+msgstr "Soni numerationis regredientis cum renascitur"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:101
 msgid "Killstreak sounds"
@@ -9409,13 +9409,13 @@ msgstr "Deorsum"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:49
 msgid "Use priority list for weapon cycling"
-msgstr "Hac ordine armorum uteris cum arma tenta permutas"
+msgstr "Hoc ordine armorum uteris cum arma tenta permutas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:50
 msgid ""
 "Make use of the list above when cycling through weapons with the mouse wheel"
 msgstr ""
-"Hac ordine armorum secundum praecedentias uteris cum arma tenta permutas, "
+"Hoc ordine armorum secundum praecedentias uteris cum arma tenta permutas, "
 "per muris rotam vel aliam clavem quam elegisti"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:52
