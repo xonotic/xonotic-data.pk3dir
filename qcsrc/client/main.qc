@@ -706,15 +706,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		)
 			prev_p_health = -1;
 		else if(spectatee_status && !newspectatee_status) //before observing/spectating, now playing
-		{
 			prev_health = -1;
-			if(autocvar_cl_autodemo_delete_keepmatches)
-			{
-				float del = autocvar_cl_autodemo_delete;
-				del &= ~1;
-				cvar_set("cl_autodemo_delete", ftos(del)); //don't delete demo where the player joined the match
-			}
-		}
 	}
 	spectatee_status = newspectatee_status;
 
@@ -913,6 +905,13 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 	// local spawn actions
 	if(is_new && (!entnum || (entnum == player_localentnum)))
 	{
+		if(autocvar_cl_autodemo_delete_keepmatches >= 2 || (!warmup_stage && autocvar_cl_autodemo_delete_keepmatches == 1))
+		{
+			float del = autocvar_cl_autodemo_delete;
+			del &= ~1;
+			cvar_set("cl_autodemo_delete", ftos(del)); // don't delete demo where the player joined the match
+		}
+
 		if(autocvar_cl_spawnzoom && !autocvar_cl_lockview)
 		{
 			zoomin_effect = 1;
