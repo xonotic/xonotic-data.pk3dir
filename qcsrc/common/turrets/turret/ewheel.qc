@@ -151,7 +151,9 @@ METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
     real_angle = shortangle_vxy(real_angle, it.tur_head.angles);
 
     it.tur_head.spawnshieldtime = fabs(real_angle_y);
-    real_angle_y  = bound(-it.tur_head.aim_speed, real_angle_y, it.tur_head.aim_speed);
+
+    float f = it.tur_head.aim_speed * frametime;
+    real_angle_y = bound(-f, real_angle_y, f);
     it.angles_y = (it.angles_y + real_angle_y);
 
     if(it.enemy)
@@ -206,7 +208,7 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
     it.frame					= it.tur_head.frame = 1;
     it.ammo_flags				= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
 
-    it.tur_head.aim_speed = autocvar_g_turrets_unit_ewheel_turnrate * frametime;
+    it.tur_head.aim_speed = autocvar_g_turrets_unit_ewheel_turnrate;
 }
 
 #endif // SVQC
