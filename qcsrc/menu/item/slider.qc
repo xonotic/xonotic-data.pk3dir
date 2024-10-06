@@ -18,6 +18,9 @@
 			me.setSliderValue(me, val);
 		}
 		me.value = val;
+
+		if(me.onChange)
+			me.onChange(me, me.onChangeEntity);
 	}
 	void Slider_setValue_noAnim(entity me, float val)
 	{
@@ -263,6 +266,9 @@
 		if (me.valueMax > me.valueMin) // valid?
 			me.setText(me, me.valueToText(me, me.value));
 		draw_alpha = save;
-		SUPER(Slider).draw(me);
+		if (me.textSpace > 0)
+		{
+			SUPER(Slider).draw(me);
+		}
 		me.text = string_null;  // TEMPSTRING!
 	}

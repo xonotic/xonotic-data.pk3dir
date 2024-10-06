@@ -110,7 +110,10 @@
 	{
 		int len = strlen(ch);
 		for (int i = 0; i < len; ++i)
+		{
 			if (strstrofs(me.forbiddenCharacters, substring(ch, i, 1), 0) > -1) return;
+			if (strstrofs(me.allowedCharacters, substring(ch, i, 1), 0) == -1) return;
+		}
 		if (me.maxLength > 0)
 		{
 			if (len + strlen(me.text) > me.maxLength) return;
