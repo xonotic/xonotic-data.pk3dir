@@ -508,7 +508,8 @@ string formatmessage(entity this, string msg)
 	float n;
 	vector cursor = '0 0 0';
 	entity cursor_ent = NULL;
-	string escape;
+	string escape,escape_token;
+	bool warn_slash = false;
 	string replacement;
 	p = 0;
 	n = 7;
@@ -545,37 +546,51 @@ string formatmessage(entity this, string msg)
 		}
 
 		replacement = substring(msg, p, 2);
+		escape_token = substring(msg, p, 1);
 		escape = substring(msg, p + 1, 1);
 
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
+#define ON_SLASH() MACRO_BEGIN warn_slash = false; if(escape_token != "\\") break; MACRO_END
+#define NO_SLASH() MACRO_BEGIN if(escape_token == "\\") break; MACRO_END
+// TODO: remove warn_slash before next release (xonotic-v0.9.0)
+// this is only to warn users of backslash expansions for anything other than '\%', '\\' and '\n'
+		if(escape_token == "\\")
+			warn_slash = true;
+		else
+			warn_slash = false;
 		switch(escape)
 		{
-			case "%": replacement = "%"; break;
-			case "\\":replacement = "\\"; break;
-			case "n": replacement = "\n"; break;
-			case "a": replacement = ftos(floor(GetResource(this, RES_ARMOR))); break;
-			case "h": replacement = PlayerHealth(this); break;
-			case "l": replacement = NearestLocation(this.origin); break;
-			case "y": replacement = NearestLocation(cursor); break;
-			case "d": replacement = NearestLocation(this.death_origin); break;
-			case "o": replacement = vtos(this.origin); break;
-			case "O": replacement = sprintf("'%f %f %f'", this.origin.x, this.origin.y, this.origin.z); break;
-			case "w": replacement = WeaponNameFromWeaponentity(this, weaponentity); break;
-			case "W": replacement = AmmoNameFromWeaponentity(this, weaponentity); break;
-			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
-			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
-			case "S": replacement = ftos(vlen(this.velocity)); break;
-			case "t": replacement = seconds_tostring(ceil(max(0, autocvar_timelimit * 60 + game_starttime - time))); break;
-			case "T": replacement = seconds_tostring(floor(time - game_starttime)); break;
+			case "%":             replacement = "%"; warn_slash = false; break;
+			case "\\":ON_SLASH(); replacement = "\\"; break;
+			case "n": ON_SLASH(); replacement = "\n"; break;
+			case "a": NO_SLASH(); replacement = ftos(floor(GetResource(this, RES_ARMOR))); break;
+			case "h": NO_SLASH(); replacement = PlayerHealth(this); break;
+			case "l": NO_SLASH(); replacement = NearestLocation(this.origin); break;
+			case "y": NO_SLASH(); replacement = NearestLocation(cursor); break;
+			case "d": NO_SLASH(); replacement = NearestLocation(this.death_origin); break;
+			case "o": NO_SLASH(); replacement = vtos(this.origin); break;
+			case "O": NO_SLASH(); replacement = sprintf("'%f %f %f'", this.origin.x, this.origin.y, this.origin.z); break;
+			case "w": NO_SLASH(); replacement = WeaponNameFromWeaponentity(this, weaponentity); break;
+			case "W": NO_SLASH(); replacement = AmmoNameFromWeaponentity(this, weaponentity); break;
+			case "x": NO_SLASH(); replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
+			case "s": NO_SLASH(); replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
+			case "S": NO_SLASH(); replacement = ftos(vlen(this.velocity)); break;
+			case "t": NO_SLASH(); replacement = seconds_tostring(ceil(max(0, autocvar_timelimit * 60 + game_starttime - time))); break;
+			case "T": NO_SLASH(); replacement = seconds_tostring(floor(time - game_starttime)); break;
 			default:
 			{
+				warn_slash = false; // too noisy
+				NO_SLASH();
 				MUTATOR_CALLHOOK(FormatMessage, this, escape, replacement, msg);
 				replacement = M_ARGV(2, string);
 				break;
 			}
 		}
-
+#undef ON_SLASH
+#undef NO_SLASH
+		if(warn_slash)
+			PrintToChat(this, sprintf("^3WARNING: unsupported \"\\%s\" expansion, use \"%%%s\"", escape, escape));
 		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
 		p = p + strlen(replacement);
 	}
