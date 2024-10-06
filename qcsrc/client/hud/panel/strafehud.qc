@@ -592,136 +592,171 @@ void HUD_StrafeHUD()
 			currentangle = angle;
 	}
 
-	// current angle size calculation
-	vector currentangle_size;
-	currentangle_size.x = max(panel_size.x * min(autocvar_hud_panel_strafehud_angle_width, 10), 1);
-	currentangle_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_height, 10), 1);
-	currentangle_size.z = 0;
+	float max_line_height = 0;
+	float max_top_arrow_size = 0;
+	float max_bottom_arrow_size = 0;
 
-	float num_dashes = nearbyint(autocvar_hud_panel_strafehud_angle_dashes);
-
-	// adjust angle indicator line depending on style
-	switch(autocvar_hud_panel_strafehud_angle_style)
+	// only draw switch indicators if minspeed is reached
+	if(autocvar_hud_panel_strafehud_switch && autocvar_hud_panel_strafehud_switch_alpha > 0 && speed >= minspeed)
 	{
-		case STRAFEHUD_INDICATOR_DASHED:
-			break;
-		case STRAFEHUD_INDICATOR_SOLID:
-			num_dashes = 1;
-			break;
-		case STRAFEHUD_INDICATOR_NONE:
-		default:
-			num_dashes = 0;
-			break;
-	}
+		// change angle indicator style
+		vector indicator_size;
+		indicator_size.x = max(panel_size.x * min(autocvar_hud_panel_strafehud_switch_line_width, 10), 1);
+		indicator_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_switch_line_height, 10), 1);
+		indicator_size.z = 0;
 
-	bool has_top_arrow = autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3;
-	bool has_bottom_arrow = autocvar_hud_panel_strafehud_angle_arrow >= 2;
+		float num_dashes = nearbyint(autocvar_hud_panel_strafehud_switch_line);
+		bool has_top_arrow = autocvar_hud_panel_strafehud_switch_arrow == 1 || autocvar_hud_panel_strafehud_switch_arrow >= 3;
+		bool has_bottom_arrow = autocvar_hud_panel_strafehud_switch_arrow >= 2;
 
-	// there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
-	float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10), 1);
+		// there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
+		float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_switch_arrow_size, 10), 1);
 
-	if(num_dashes > 0 || has_top_arrow || has_bottom_arrow)
-	{
-		bool angle_indicator_visible = false;
+		if(num_dashes > 0)
+			max_line_height = max(max_line_height, indicator_size.y);
+		if(has_top_arrow)
+			max_top_arrow_size = max(max_top_arrow_size, arrow_size);
+		if(has_bottom_arrow)
+			max_bottom_arrow_size = max(max_bottom_arrow_size, arrow_size);
 
-		// only draw switch indicators if minspeed is reached
-		if(autocvar_hud_panel_strafehud_switch && autocvar_hud_panel_strafehud_switch_alpha > 0 && speed >= minspeed)
-		{
-			// draw the change indicator(s)
-			float current_changeangle = draw_normal
-				? (opposite_direction ? n_opposite_changeangle : n_changeangle)
-				: (opposite_direction ? opposite_changeangle : changeangle);
-			float opposite_changeangle = draw_normal
-				? (opposite_direction ? n_opposite_bestangle : n_bestangle)
-				: (opposite_direction ? opposite_bestangle : bestangle);
-
-			StrafeHUD_DrawAngleIndicator(
-				current_changeangle, currentangle_size, arrow_size, num_dashes,
-				has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_switch_color,
-				autocvar_hud_panel_strafehud_switch_alpha, hudangle);
-
-			if(direction == STRAFEHUD_DIRECTION_NONE || draw_normal)
-			{
-				StrafeHUD_DrawAngleIndicator(
-					opposite_changeangle, currentangle_size, arrow_size, num_dashes,
-					has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_switch_color,
-					autocvar_hud_panel_strafehud_switch_alpha, hudangle);
-			}
-
-			if(autocvar_hud_panel_strafehud_switch_alpha > 0)
-				angle_indicator_visible = true;
-		}
-
-		if(autocvar_hud_panel_strafehud_bestangle && (autocvar_hud_panel_strafehud_bestangle == 1 || turn) && direction != STRAFEHUD_DIRECTION_NONE)
-		{
-			float ghostangle = opposite_direction ? opposite_bestangle : bestangle;
-
-			StrafeHUD_DrawAngleIndicator(
-				ghostangle, currentangle_size, arrow_size, num_dashes,
-				has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_bestangle_color,
-				autocvar_hud_panel_strafehud_bestangle_alpha, hudangle);
-
-			if(autocvar_hud_panel_strafehud_bestangle_alpha > 0)
-				angle_indicator_visible = true;
-		}
-
-		// only draw wturn indicators if conditions were met
-		if(wturn_valid && !onground && is_aircontrol_direction &&
-			autocvar_hud_panel_strafehud_wturn_alpha > 0 &&
-			absolute_wturn_bestangle < absolute_n_prebestangle &&
-			((autocvar_hud_panel_strafehud_wturn && wturning) ||
-			(autocvar_hud_panel_strafehud_wturn == STRAFEHUD_WTURN_NORMAL && !turn) ||
-			(autocvar_hud_panel_strafehud_wturn == STRAFEHUD_WTURN_SIDESTRAFE)))
-		{
-			// draw the wturn indicators
-			StrafeHUD_DrawAngleIndicator(
-				wturn_left_bestangle, currentangle_size, arrow_size, num_dashes,
-				has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_wturn_color,
-				autocvar_hud_panel_strafehud_wturn_alpha, hudangle);
-			StrafeHUD_DrawAngleIndicator(
-				wturn_right_bestangle, currentangle_size, arrow_size, num_dashes,
-				has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_wturn_color,
-				autocvar_hud_panel_strafehud_wturn_alpha, hudangle);
-		}
+		// draw the change indicator(s)
+		float current_changeangle = draw_normal
+			? (opposite_direction ? n_opposite_changeangle : n_changeangle)
+			: (opposite_direction ? opposite_changeangle : changeangle);
+		float opposite_changeangle = draw_normal
+			? (opposite_direction ? n_opposite_bestangle : n_bestangle)
+			: (opposite_direction ? opposite_bestangle : bestangle);
 
 		StrafeHUD_DrawAngleIndicator(
-			currentangle, currentangle_size, arrow_size, num_dashes,
+			current_changeangle, indicator_size, arrow_size, num_dashes,
+			has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_switch_color,
+			autocvar_hud_panel_strafehud_switch_alpha, hudangle);
+
+		if(direction == STRAFEHUD_DIRECTION_NONE || draw_normal)
+		{
+			StrafeHUD_DrawAngleIndicator(
+				opposite_changeangle, indicator_size, arrow_size, num_dashes,
+				has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_switch_color,
+				autocvar_hud_panel_strafehud_switch_alpha, hudangle);
+		}
+	}
+
+	if(autocvar_hud_panel_strafehud_bestangle && autocvar_hud_panel_strafehud_bestangle_alpha > 0 &&
+		(autocvar_hud_panel_strafehud_bestangle == 1 || turn) && direction != STRAFEHUD_DIRECTION_NONE)
+	{
+		// best angle indicator style
+		vector indicator_size;
+		indicator_size.x = max(panel_size.x * min(autocvar_hud_panel_strafehud_bestangle_line_width, 10), 1);
+		indicator_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_bestangle_line_height, 10), 1);
+		indicator_size.z = 0;
+
+		float num_dashes = nearbyint(autocvar_hud_panel_strafehud_bestangle_line);
+		bool has_top_arrow = autocvar_hud_panel_strafehud_bestangle_arrow == 1 || autocvar_hud_panel_strafehud_bestangle_arrow >= 3;
+		bool has_bottom_arrow = autocvar_hud_panel_strafehud_bestangle_arrow >= 2;
+
+		// there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
+		float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_bestangle_arrow_size, 10), 1);
+
+		if(num_dashes > 0)
+			max_line_height = max(max_line_height, indicator_size.y);
+		if(has_top_arrow)
+			max_top_arrow_size = max(max_top_arrow_size, arrow_size);
+		if(has_bottom_arrow)
+			max_bottom_arrow_size = max(max_bottom_arrow_size, arrow_size);
+
+		float ghostangle = opposite_direction ? opposite_bestangle : bestangle;
+
+		StrafeHUD_DrawAngleIndicator(
+			ghostangle, indicator_size, arrow_size, num_dashes,
+			has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_bestangle_color,
+			autocvar_hud_panel_strafehud_bestangle_alpha, hudangle);
+	}
+
+	// only draw wturn indicators if conditions were met
+	if(wturn_valid && !onground && is_aircontrol_direction &&
+		autocvar_hud_panel_strafehud_wturn_alpha > 0 &&
+		absolute_wturn_bestangle < absolute_n_prebestangle &&
+		((autocvar_hud_panel_strafehud_wturn && wturning) ||
+		(autocvar_hud_panel_strafehud_wturn == STRAFEHUD_WTURN_NORMAL && !turn) ||
+		(autocvar_hud_panel_strafehud_wturn == STRAFEHUD_WTURN_SIDESTRAFE)))
+	{
+		// wturn angle indicator style
+		vector indicator_size;
+		indicator_size.x = max(panel_size.x * min(autocvar_hud_panel_strafehud_wturn_line_width, 10), 1);
+		indicator_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_wturn_line_height, 10), 1);
+		indicator_size.z = 0;
+
+		float num_dashes = nearbyint(autocvar_hud_panel_strafehud_wturn_line);
+		bool has_top_arrow = autocvar_hud_panel_strafehud_wturn_arrow == 1 || autocvar_hud_panel_strafehud_wturn_arrow >= 3;
+		bool has_bottom_arrow = autocvar_hud_panel_strafehud_wturn_arrow >= 2;
+
+		// there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
+		float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_wturn_arrow_size, 10), 1);
+
+		if(num_dashes > 0)
+			max_line_height = max(max_line_height, indicator_size.y);
+		if(has_top_arrow)
+			max_top_arrow_size = max(max_top_arrow_size, arrow_size);
+		if(has_bottom_arrow)
+			max_bottom_arrow_size = max(max_bottom_arrow_size, arrow_size);
+
+		// draw the wturn indicators
+		StrafeHUD_DrawAngleIndicator(
+			wturn_left_bestangle, indicator_size, arrow_size, num_dashes,
+			has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_wturn_color,
+			autocvar_hud_panel_strafehud_wturn_alpha, hudangle);
+		StrafeHUD_DrawAngleIndicator(
+			wturn_right_bestangle, indicator_size, arrow_size, num_dashes,
+			has_top_arrow, has_bottom_arrow, autocvar_hud_panel_strafehud_wturn_color,
+			autocvar_hud_panel_strafehud_wturn_alpha, hudangle);
+	}
+
+	if(autocvar_hud_panel_strafehud_angle_alpha > 0)
+	{
+		// current angle indicator style
+		vector indicator_size;
+		indicator_size.x = max(panel_size.x * min(autocvar_hud_panel_strafehud_angle_line_width, 10), 1);
+		indicator_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_line_height, 10), 1);
+		indicator_size.z = 0;
+
+		float num_dashes = nearbyint(autocvar_hud_panel_strafehud_angle_line);
+		bool has_top_arrow = autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3;
+		bool has_bottom_arrow = autocvar_hud_panel_strafehud_angle_arrow >= 2;
+
+		// there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
+		float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10), 1);
+
+		if(num_dashes > 0)
+			max_line_height = max(max_line_height, indicator_size.y);
+		if(has_top_arrow)
+			max_top_arrow_size = max(max_top_arrow_size, arrow_size);
+		if(has_bottom_arrow)
+			max_bottom_arrow_size = max(max_bottom_arrow_size, arrow_size);
+
+		StrafeHUD_DrawAngleIndicator(
+			currentangle, indicator_size, arrow_size, num_dashes,
 			has_top_arrow, has_bottom_arrow, currentangle_color,
 			autocvar_hud_panel_strafehud_angle_alpha, hudangle);
+	}
 
-		if(autocvar_hud_panel_strafehud_angle_alpha > 0)
-			angle_indicator_visible = true;
+	// offset text by amount the angle indicator extrudes from the strafehud bar
+	{
+		float line_height_offset = max_line_height;
 
-		// offset text by amount the angle indicator extrudes from the strafehud bar
-		if(angle_indicator_visible)
-		{
-			float line_height_offset = currentangle_size.y;
+		// amount line extrudes from the strafehud bar
+		line_height_offset = (line_height_offset - panel_size.y) / 2;
 
-			// amount line extrudes from the strafehud bar
-			line_height_offset = (line_height_offset - panel_size.y) / 2;
+		// further offset the top text offset if the top arrow is drawn
+		float angle_offset_top;
+		angle_offset_top = line_height_offset + max_top_arrow_size;
 
-			// further offset the top text offset if the top arrow is drawn
-			float angle_offset_top;
-			if(has_top_arrow)
-				angle_offset_top = line_height_offset + arrow_size;
-			else if(num_dashes > 0)
-				angle_offset_top = line_height_offset;
-			else
-				angle_offset_top = 0;
+		// further offset the bottom text offset if the bottom arrow is drawn
+		float angle_offset_bottom;
+		angle_offset_bottom = line_height_offset + max_bottom_arrow_size;
 
-			// further offset the bottom text offset if the bottom arrow is drawn
-			float angle_offset_bottom;
-			if(has_bottom_arrow)
-				angle_offset_bottom = line_height_offset + arrow_size;
-			else if(num_dashes > 0)
-				angle_offset_bottom = line_height_offset;
-			else
-				angle_offset_bottom = 0;
-
-			// make sure text does not draw inside the strafehud bar
-			text_offset_top = max(angle_offset_top, text_offset_top);
-			text_offset_bottom = max(angle_offset_bottom, text_offset_bottom);
-		}
+		// make sure text does not draw inside the strafehud bar
+		text_offset_top = max(angle_offset_top, text_offset_top);
+		text_offset_bottom = max(angle_offset_bottom, text_offset_bottom);
 	}
 
 	StrafeHUD_DrawVerticalAngle(strafeplayer, text_offset_top, text_offset_bottom);
