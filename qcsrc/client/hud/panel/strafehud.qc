@@ -594,26 +594,11 @@ void HUD_StrafeHUD()
 
 	// current angle size calculation
 	vector currentangle_size;
-	currentangle_size.x = max(panel_size.x * min(autocvar_hud_panel_strafehud_angle_width, 10), 1);
-	currentangle_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_height, 10), 1);
+	currentangle_size.x = max(panel_size.x * min(autocvar_hud_panel_strafehud_angle_line_width, 10), 1);
+	currentangle_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_line_height, 10), 1);
 	currentangle_size.z = 0;
 
-	float num_dashes = nearbyint(autocvar_hud_panel_strafehud_angle_dashes);
-
-	// adjust angle indicator line depending on style
-	switch(autocvar_hud_panel_strafehud_angle_style)
-	{
-		case STRAFEHUD_INDICATOR_DASHED:
-			break;
-		case STRAFEHUD_INDICATOR_SOLID:
-			num_dashes = 1;
-			break;
-		case STRAFEHUD_INDICATOR_NONE:
-		default:
-			num_dashes = 0;
-			break;
-	}
-
+	float num_dashes = nearbyint(autocvar_hud_panel_strafehud_angle_line);
 	bool has_top_arrow = autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3;
 	bool has_bottom_arrow = autocvar_hud_panel_strafehud_angle_arrow >= 2;
 
