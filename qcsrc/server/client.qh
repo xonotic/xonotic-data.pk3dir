@@ -68,7 +68,7 @@ float autocvar_sv_player_scale;
 .float alivetime; // time of being alive
 
 .bool wasplayer;
-
+.bool would_spectate;
 .int spectatee_status;
 .bool zoomstate;
 
