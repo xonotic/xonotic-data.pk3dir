@@ -905,6 +905,14 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 	// local spawn actions
 	if(is_new && (!entnum || (entnum == player_localentnum)))
 	{
+		if(!spectatee_status)
+		if(autocvar_cl_autodemo_delete_keepmatches >= 2 || (!warmup_stage && autocvar_cl_autodemo_delete_keepmatches == 1))
+		{
+			float del = autocvar_cl_autodemo_delete;
+			del &= ~1;
+			cvar_set("cl_autodemo_delete", ftos(del)); // don't delete demo where the player joined the match
+		}
+
 		if(autocvar_cl_spawnzoom && !autocvar_cl_lockview)
 		{
 			zoomin_effect = 1;
