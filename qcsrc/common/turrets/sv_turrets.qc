@@ -11,7 +11,6 @@
 // Generic aiming
 vector turret_aim_generic(entity this)
 {
-
 	vector pre_pos, prep;
 	float distance, impact_time = 0, i, mintime;
 
@@ -67,7 +66,7 @@ vector turret_aim_generic(entity this)
 	return pre_pos;
 }
 
-float turret_targetscore_support(entity _turret,entity _target)
+float turret_targetscore_support(entity _turret, entity _target)
 {
 	float score;		// Total score
 	float s_score = 0, d_score;
@@ -183,7 +182,7 @@ void turret_die(entity this)
 	this.deadflag		  = DEAD_DEAD;
 	this.tur_head.deadflag = this.deadflag;
 
-// Unsolidify and hide real parts
+	// Unsolidify and hide real parts
 	this.solid			 = SOLID_NOT;
 	this.tur_head.solid	 = this.solid;
 
@@ -193,7 +192,7 @@ void turret_die(entity this)
 
 	SetResourceExplicit(this, RES_HEALTH, 0);
 
-// Go boom
+	// Go boom
 	//RadiusDamage (this,this, min(this.ammo,50),min(this.ammo,50) * 0.25,250,NULL,min(this.ammo,50)*5,DEATH_TURRET,NULL);
 
 	Turret tur = get_turretinfo(this.m_id);
@@ -319,7 +318,7 @@ void turrets_setframe(entity this, float _frame, float client_only)
 		this.anim_start_time = time;
 	}
 
-	 if(client_only)
+	if(client_only)
 		this.clientframe = _frame;
 	else
 		this.frame = _frame;
@@ -427,7 +426,6 @@ void load_unit_settings(entity ent, bool is_reload)
 
 void turret_projectile_explode(entity this)
 {
-
 	this.takedamage = DAMAGE_NO;
 	this.event_damage = func_null;
 #ifdef TURRET_DEBUG
@@ -572,10 +570,10 @@ void turret_track(entity this)
 	switch(this.track_type)
 	{
 		case TFL_TRACKTYPE_STEPMOTOR:
-			f_tmp = this.aim_speed * frametime; // dgr/sec -> dgr/tic
+			f_tmp = this.aim_speed * frametime;
 			if (this.track_flags & TFL_TRACK_PITCH)
 			{
-				this.tur_head.angles_x += bound(-f_tmp,move_angle_x, f_tmp);
+				this.tur_head.angles_x += bound(-f_tmp, move_angle_x, f_tmp);
 				if(this.tur_head.angles_x > this.aim_maxpitch)
 					this.tur_head.angles_x = this.aim_maxpitch;
 
@@ -599,7 +597,7 @@ void turret_track(entity this)
 			return;
 
 		case TFL_TRACKTYPE_FLUIDINERTIA:
-			f_tmp = this.aim_speed * frametime; // dgr/sec -> dgr/tic
+			f_tmp = this.aim_speed * frametime;
 			move_angle_x = bound(-this.aim_speed, move_angle_x * this.track_accel_pitch * f_tmp, this.aim_speed);
 			move_angle_y = bound(-this.aim_speed, move_angle_y * this.track_accel_rot * f_tmp, this.aim_speed);
 			move_angle = (this.tur_head.avelocity * this.track_blendrate) + (move_angle * (1 - this.track_blendrate));
@@ -1184,7 +1182,7 @@ void turret_think(entity this)
 */
 void turret_use(entity this, entity actor, entity trigger)
 {
-	LOG_TRACE("Turret ",this.netname, " used by ", actor.classname);
+	LOG_TRACE("Turret ", this.netname, " used by ", actor.classname);
 
 	this.team = actor.team;
 
@@ -1192,7 +1190,6 @@ void turret_use(entity this, entity actor, entity trigger)
 		this.active = ACTIVE_NOT;
 	else
 		this.active = ACTIVE_ACTIVE;
-
 }
 
 void turret_link(entity this)
