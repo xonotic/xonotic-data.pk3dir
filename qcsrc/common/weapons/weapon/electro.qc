@@ -68,6 +68,28 @@ void W_Electro_ExplodeComboThink(entity this)
 	this.projectiledeathtype |= HITTYPE_SPAM; // ensure it doesn't spam its effect
 }
 
+void W_Electro_Orb_ExplodeOverTime(entity this)
+{
+	entity newproj = spawn();
+	newproj.classname = this.classname;
+	newproj.solid = this.solid;
+	setorigin(newproj, this.origin);
+	setmodel(newproj, MDL_PROJECTILE_ELECTRO);
+	setsize(newproj, this.mins, this.maxs);
+	newproj.owner = this.owner;
+	newproj.realowner = this.realowner;
+	newproj.weaponentity_fld = this.weaponentity_fld;
+	newproj.projectiledeathtype = WEP_ELECTRO.m_id | HITTYPE_BOUNCE; // use THIS type for a combo because primary can't bounce
+
+	setthink(newproj, W_Electro_ExplodeComboThink);
+	newproj.nextthink = time;
+	newproj.ltime = time + WEP_CVAR(WEP_ELECTRO, combo_duration);
+	set_movetype(newproj, MOVETYPE_NONE);
+
+	// fire the first damage tick immediately
+	getthink(newproj)(newproj);
+}
+
 void W_Electro_ExplodeCombo(entity this)
 {
 	W_Electro_TriggerCombo(this.origin, WEP_CVAR(WEP_ELECTRO, combo_comboradius), this.realowner);
@@ -78,18 +100,9 @@ void W_Electro_ExplodeCombo(entity this)
 
 	if(WEP_CVAR(WEP_ELECTRO, combo_duration))
 	{
-		this.projectiledeathtype = WEP_ELECTRO.m_id | HITTYPE_BOUNCE; // use THIS type for a combo because primary can't bounce
-		this.event_damage = func_null;
-		settouch(this, func_null);
-		this.effects |= EF_NODRAW; // hide the orb, rely only on the effect
+		W_Electro_Orb_ExplodeOverTime(this);
 
-		setthink(this, W_Electro_ExplodeComboThink);
-		this.nextthink = time;
-		this.ltime = time + WEP_CVAR(WEP_ELECTRO, combo_duration);
-		set_movetype(this, MOVETYPE_NONE);
-
-		// fire the first damage tick immediately
-		getthink(this)(this);
+		delete(this);
 		return;
 	}
 
