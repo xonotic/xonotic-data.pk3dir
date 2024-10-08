@@ -51,6 +51,8 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 	}
 }
 
+float ExplodeOverTime_eff_interval;
+.float ltime2;
 void W_Electro_ExplodeComboThink(entity this)
 {
 	if(time >= this.ltime)
@@ -64,6 +66,17 @@ void W_Electro_ExplodeComboThink(entity this)
 	float damage = WEP_CVAR(WEP_ELECTRO, combo_damage) * PHYS_INPUT_TIMELENGTH;
 	float edgedamage = WEP_CVAR(WEP_ELECTRO, combo_edgedamage) * PHYS_INPUT_TIMELENGTH;
 
+	if (time > this.ltime2) // show explosion effect every ExplodeOverTime_eff_interval seconds
+	{
+		this.projectiledeathtype &= ~HITTYPE_SPAM;
+		if (!this.ltime2)
+		{
+			ExplodeOverTime_eff_interval = (this.ltime - time) / ceil(((this.ltime - time) + 0.01) / 0.9);
+			this.ltime2 = time + ExplodeOverTime_eff_interval;
+		}
+		else
+			this.ltime2 += ExplodeOverTime_eff_interval;
+	}
 	RadiusDamage(this, this.realowner, damage, edgedamage, WEP_CVAR(WEP_ELECTRO, combo_radius), NULL, NULL, 0, this.projectiledeathtype, this.weaponentity_fld, NULL);
 	this.projectiledeathtype |= HITTYPE_SPAM; // ensure it doesn't spam its effect
 }
