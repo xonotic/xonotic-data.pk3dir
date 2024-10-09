@@ -7,5 +7,6 @@
 #include <menu/anim/_mod.inc>
 #include <menu/command/_mod.inc>
 #include <menu/item/_mod.inc>
+#include <menu/modules/_mod.inc>
 #include <menu/mutators/_mod.inc>
 #include <menu/xonotic/_mod.inc>

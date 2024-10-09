@@ -33,6 +33,7 @@
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/interpolate.qh>
 #include <lib/warpzone/client.qh>
+#include <menu/modules/chat/interface.qh>
 
 // --------------------------------------------------------------------------
 // BEGIN REQUIRED CSQC FUNCTIONS
@@ -1040,11 +1041,35 @@ void CSQC_Parse_StuffCmd(string strMessage)
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_StuffCmd(\"%s\")", strMessage);
 	localcmd(strMessage);
 }
+
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
 void CSQC_Parse_Print(string strMessage)
 {
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_Print(\"%s\")", strMessage);
-	print(ColorTranslateRGB(strMessage));
+	if (autocvar__cl_hook_print != "") {
+		int flags = NOTICE_SILENT;
+		for (int i = 0, n = tokenizebyseparator(strMessage, "\n"); i < n; ++i) {
+			string s = substring(argv(i), 0, -1);
+			int c = str2chr(s, 0);
+			if (c == 1 || c == 2 || c == 3) {
+				s = substring(s, 1, -1);
+				if (c == 1) {
+					flags &= ~NOTICE_SILENT;
+					if (str2chr(s, 0) == '\r') {
+						s = substring(s, 1, -1);
+						flags |= NOTICE_PRIVATE;
+					}
+				}
+				if (c != 2) {
+					flags |= NOTICE_CHAT;
+				}
+				s = strcat("^3", s);
+			}
+			localcmd("\n", autocvar__cl_hook_print, " ", console_encode(s), " ", itos(flags), "\n");
+		}
+	} else {
+		print(ColorTranslateRGB(strMessage));
+	}
 }
 
 // CSQC_Parse_CenterPrint : Provides the centerprint_AddStandard string in the first parameter that the server provided.
