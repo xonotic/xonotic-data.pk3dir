@@ -61,10 +61,10 @@ void CopyBody_Think(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 	this.nextthink = time;
 }
-void CopyBody(entity this, float keepvelocity)
+entity CopyBody(entity this, float keepvelocity)
 {
 	if (this.effects & EF_NODRAW)
-		return;
+		return NULL;
 	entity clone = new(body);
 	clone.enemy = this;
 	clone.lip = this.lip;
@@ -141,6 +141,8 @@ void CopyBody(entity this, float keepvelocity)
 	IL_PUSH(g_clones, clone);
 
 	MUTATOR_CALLHOOK(CopyBody, this, clone, keepvelocity);
+
+	return clone;
 }
 
 void player_setupanimsformodel(entity this)
@@ -218,12 +220,23 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 		this.view_ofs = '0 0 4';
 
 		Violence_GibSplash(this, 1, 1, attacker);
-		this.alpha = -1;
+		//this.alpha = -1; //postpone after potential ghost spawn to avoid temp storing
 		this.solid = SOLID_NOT; // restore later
 		this.takedamage = DAMAGE_NO; // restore later
 		if(this.damagedbycontents)
 			IL_REMOVE(g_damagedbycontents, this);
 		this.damagedbycontents = false;
+
+		if(autocvar_g_respawn_ghosts
+		&& autocvar_g_respawn_ghosts_gib
+		&& !(this.effects & EF_NODRAW)) // only spawn one ghost
+		{
+			TransmuteToGhost(this);
+
+			CopyBody(this, 1);
+			this.effects |= EF_NODRAW; // prevent another CopyBody and 2nd ghost spawns
+		}
+		this.alpha = -1;
 	}
 }
 
@@ -615,6 +628,25 @@ bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 
 	GiveResourceWithLimit(targ, RES_HEALTH, amount, limit);
 	return true;
+}
+
+void TransmuteToGhost(entity this)
+{
+	// effects are disabled or one ghost was already spawned
+	if (this.effects & EF_NODRAW)
+		return;
+
+	this.solid = SOLID_NOT;
+	this.takedamage = DAMAGE_NO;
+	this.damagedbycontents = false;
+	set_movetype(this, MOVETYPE_FLY);
+	this.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
+	this.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
+	this.effects |= CSQCMODEL_EF_RESPAWNGHOST;
+	this.alpha = min(this.alpha, autocvar_g_respawn_ghosts_alpha);
+	Send_Effect(EFFECT_RESPAWN_GHOST, this.origin, '0 0 0', 1);
+	if(autocvar_g_respawn_ghosts_time > 0)
+		SUB_SetFade(this, time + autocvar_g_respawn_ghosts_time, autocvar_g_respawn_ghosts_fadetime);
 }
 
 void precache_playermodel(string m)

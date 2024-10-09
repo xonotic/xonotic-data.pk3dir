@@ -26,6 +26,7 @@ int autocvar_g_respawn_delay_large_count;
 float autocvar_g_respawn_delay_max;
 bool autocvar_g_respawn_delay_forced;
 bool autocvar_g_respawn_ghosts;
+bool autocvar_g_respawn_ghosts_gib;
 float autocvar_g_respawn_ghosts_alpha = 1;
 float autocvar_g_respawn_ghosts_fadetime = 1.5;
 float autocvar_g_respawn_ghosts_time = 4.5;
