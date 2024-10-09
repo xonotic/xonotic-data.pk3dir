@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-08 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Stuart Young <cefiar@gmail.com>, 2016\n"
+"Last-Translator: k9 er, 2024\n"
 "Language-Team: English (Australia) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/en_AU/)\n"
 "Language: en_AU\n"
@@ -563,7 +563,7 @@ msgstr "Finish line"
 #: qcsrc/client/hud/panel/racetimer.qc:195
 #, c-format
 msgid "Checkpoint %d"
-msgstr ""
+msgstr "Checkpoint %d"
 
 #: qcsrc/client/hud/panel/racetimer.qc:198
 #: qcsrc/client/hud/panel/racetimer.qc:263
@@ -2050,7 +2050,7 @@ msgstr "Jump a piece over another to capture it"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
-msgstr "Tic Tac Toe"
+msgstr "Noughts and Crosses"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:701
 msgid "Single Player"
@@ -8809,7 +8809,7 @@ msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance."
 msgstr ""
-"Enable bloom effect, which brightens the neighboring pixels of very bright "
+"Enable bloom effect, which brightens the neighbouring pixels of very bright "
 "pixels. Has a big impact on performance."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:221

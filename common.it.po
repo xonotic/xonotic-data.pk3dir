@@ -562,7 +562,7 @@ msgstr "Linea d'arrivo"
 #: qcsrc/client/hud/panel/racetimer.qc:195
 #, c-format
 msgid "Checkpoint %d"
-msgstr ""
+msgstr "Checkpoint %d"
 
 #: qcsrc/client/hud/panel/racetimer.qc:198
 #: qcsrc/client/hud/panel/racetimer.qc:263

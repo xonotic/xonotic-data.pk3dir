@@ -3,12 +3,12 @@ id_ID "Indonesian" "Bahasa Indonesia" 39%
 de    "German" "Deutsch" 97%
 de_CH "German (Switzerland)" "Deutsch (Schweiz)" 97%
 en    "English" "English" 100%
-en_AU "English (Australia)" "English (Australia)" 99%
+en_AU "English (Australia)" "English (Australia)" 100%
 es    "Spanish" "Español" 96%
-fr    "French" "Français" 99%
+fr    "French" "Français" 100%
 gl    "Galician" "Galego" 98%
 ga    "Irish" "Irish" 28%
-it    "Italian" "Italiano" 99%
+it    "Italian" "Italiano" 100%
 la    "Latin" "Lingua Latina" 99%
 hu    "Hungarian" "Magyar" 43%
 nl    "Dutch" "Nederlands" 60%
@@ -19,11 +19,12 @@ ro    "Romanian" "Romana" 68%
 fi    "Finnish" "Suomi" 95%
 sv    "Swedish" "Svenska" 96%
 tr    "Turkish" "Türkçe" 54%
+en_GB "en_GB" "en_GB" 100%
 cs    "Czech" "Čeština" 30%
 el    "Greek" "Ελληνική" 43%
 be    "Belarusian" "Беларуская" 47%
 bg    "Bulgarian" "Български" 67%
-ru    "Russian" "Русский" 99%
+ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 56%
 uk    "Ukrainian" "Українська" 56%
 zh_TW "Chinese (Taiwan)" "中文（正體字）" 98%
