@@ -1189,6 +1189,9 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_previousbesttime = ReadInt24_t();
 			race_mypreviousbesttime = ReadInt24_t();
 			string pbestname = ReadString();
+			race_timespeed = ReadFloat();
+			race_timebestspeed = ReadFloat();
+			race_mybestspeed = ReadFloat();
 			if(autocvar_cl_race_cptimes_onlyself)
 			{
 				race_previousbesttime = race_mypreviousbesttime;
@@ -1223,10 +1226,15 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			if(b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING) // not while spectating (matches server)
 				race_mybesttime = ReadInt24_t();
 			string newname = ReadString();
+			race_nextbestspeed = ReadFloat();
+			if(b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING) // not while spectating (matches server)
+				race_mybestspeed = ReadFloat();
 			if(autocvar_cl_race_cptimes_onlyself && b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING)
 			{
 				race_nextbesttime = race_mybesttime;
+				race_nextbestspeed = race_mybestspeed;
 				race_mybesttime = 0;
+				race_mybestspeed = 0;
 				strcpy(race_nextbestname, "");
 			}
 			else

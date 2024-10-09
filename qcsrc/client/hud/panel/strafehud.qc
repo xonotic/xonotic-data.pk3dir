@@ -1245,7 +1245,7 @@ void HUD_StrafeHUD()
 				if((race_checkpointtime > 0) && (starttime != race_checkpointtime))
 				{
 					starttime = race_checkpointtime;
-					startspeed = speed;
+					startspeed = race_timespeed;
 				}
 			}
 
