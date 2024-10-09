@@ -4,7 +4,7 @@ CLASS(Shockwave, Weapon)
 /* spawnfunc */ ATTRIB(Shockwave, m_canonical_spawnfunc, string, "weapon_shockwave");
 /* ammotype  */ //ATTRIB(Shockwave, ammo_type, Resource, RES_NONE);
 /* impulse   */ ATTRIB(Shockwave, impulse, int, 2);
-/* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_FLAG_HIDDEN | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_TYPE_MELEE_SEC);
+/* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Shockwave, bot_pickupbasevalue, float, 3000);
 /* color     */ ATTRIB(Shockwave, wpcolor, vector, '0.5 0.25 0');
 /* modelname */ ATTRIB(Shockwave, mdl, string, "shotgun");
@@ -63,17 +63,17 @@ CLASS(Shockwave, Weapon)
 		P(class, prefix, melee_time, float, NONE) \
 		P(class, prefix, melee_traces, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Shockwave, shockwave)
+	W_PROPS(X, Shockwave, shockwave)
 #undef X
 
 ENDCLASS(Shockwave)
-REGISTER_WEAPON(SHOCKWAVE, shockwave, NEW(Shockwave));
+REGISTER_WEAPON(SHOCKWAVE, NEW(Shockwave));
 
 SPAWNFUNC_WEAPON(weapon_shockwave, WEP_SHOCKWAVE)
 

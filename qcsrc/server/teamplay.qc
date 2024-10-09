@@ -274,11 +274,11 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 
 		if (team_index != -1)
 		{
-			if (!queuePlayer(player, team_index))
-			{
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
-				player.team_selected = true; // no autoselect in Join()
-			}
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
+			player.team_selected = team_index; // no autoselect in Join()
+
+			if (warmup_stage)
+				ReadyCount(); // teams might be balanced now
 		}
 	}
 
@@ -309,11 +309,12 @@ void Player_SetTeamIndexChecked(entity player, int team_index)
 	{
 		return;
 	}
-	if ((autocvar_g_campaign) || (autocvar_g_changeteam_banned &&
-		CS(player).wasplayer))
+
+	// TODO: this is in ClientCommand_selectteam(), shouldn't be necessary to have it here too (refactor SV_ChangeTeam ?)
+	if ((autocvar_g_campaign) || (autocvar_g_changeteam_banned && CS(player).wasplayer))
 	{
-		Send_Notification(NOTIF_ONE, player, MSG_INFO,
-			INFO_TEAMCHANGE_NOTALLOWED);
+		Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
+		Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_TEAMCHANGE_NOTALLOWED);
 		return;
 	}
 	entity balance = TeamBalance_CheckAllowedTeams(player);
@@ -333,32 +334,21 @@ void Player_SetTeamIndexChecked(entity player, int team_index)
 	{
 		team_index = 1;
 	}
-	// autocvar_g_balance_teams_prevent_imbalance only makes sense if autocvar_g_balance_teams is on, as it makes the team selection dialog pointless
-	if (autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
+
+	// TODO: this is in ClientCommand_selectteam(), shouldn't be necessary to have it here too (refactor SV_ChangeTeam ?)
+	if (autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
 	{
 		TeamBalance_GetTeamCounts(balance, player);
 		if ((Team_IndexToBit(team_index) & TeamBalance_FindBestTeams(balance,
 			player, false)) == 0)
 		{
-			Send_Notification(NOTIF_ONE, player, MSG_INFO,
-				INFO_TEAMCHANGE_LARGERTEAM);
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
 			TeamBalance_Destroy(balance);
 			return;
 		}
 	}
 	TeamBalance_Destroy(balance);
-
-	// g_balance_teams_queue: before joining the queue,
-	// check if a queued player already chose the selected team
-	if (!IS_BOT_CLIENT(player) && IS_QUEUE_NEEDED(player))
-	{
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != player && it.wants_join == team_index,
-		{
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_NUM(Team_IndexToTeam(team_index), CENTER_JOIN_PREVENT_QUEUE_TEAM_FAIL), it.netname);
-			player.team_selected = false;
-			return;
-		});
-	}
 
 	SetPlayerTeam(player, team_index, TEAM_CHANGE_MANUAL);
 }
@@ -697,6 +687,29 @@ int TeamBalance_GetAllowedTeams(entity balance)
 	return result;
 }
 
+int TeamBalance_SizeDifference(entity ignore)
+{
+	if (!teamplay)
+		return 0;
+
+	entity balance = TeamBalance_CheckAllowedTeams(ignore);
+	TeamBalance_GetTeamCounts(balance, ignore);
+
+	int ts_min = 255, ts_max = 0;
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
+	{
+		int ts = TeamBalance_GetTeamFromIndex(balance, i).m_num_players;
+		if (ts_min > ts)
+			ts_min = ts;
+		if (ts_max < ts)
+			ts_max = ts;
+	}
+
+	TeamBalance_Destroy(balance);
+
+	return ts_max - ts_min;
+}
+
 bool TeamBalance_AreEqual(entity ignore, bool would_leave)
 {
 	entity balance = TeamBalance_CheckAllowedTeams(ignore);
@@ -915,7 +928,7 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			}
 			if (it.wants_join)
 			{
-				continue; // Queued players aren't actually in the game.
+				continue; // Queued players aren't actually in the game (and shouldn't have .team set).
 			}
 			int team_num;
 			// TODO: Reconsider when the player is truly on the team.
@@ -1095,7 +1108,7 @@ int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
 void TeamBalance_AutoBalanceBots()
 {
 	// checks disabled because we always want auto-balanced bots
-	//if (!(autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance))
+	//if (!autocvar_g_balance_teams_prevent_imbalance)
 	//	return;
 
 	if (intermission_running) return;
@@ -1363,4 +1376,18 @@ void SV_ChangeTeam(entity player, int new_color)
 		return;
 	}
 	Player_SetTeamIndexChecked(player, Team_TeamToIndex((new_color & 0x0F) + 1));
+}
+
+bool QueueNeeded(entity ignore)
+{
+	if (!teamplay || warmup_stage || !autocvar_g_balance_teams_queue || autocvar_g_campaign)
+		return false;
+
+	int human_clients = 0;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		if (++human_clients > 1)
+			return TeamBalance_AreEqual(ignore, true);
+	});
+	return false;
 }

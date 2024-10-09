@@ -22,15 +22,15 @@ REGISTRY_DEFINE_GET(Deathtypes, NULL)
     }
 
 const int DEATH_WEAPONMASK = BITS(8);
-const int HITTYPE_SECONDARY = BITS(1) << 8;
-/** automatically set by RadiusDamage */
-const int HITTYPE_SPLASH = BITS(1) << 9;
-const int HITTYPE_BOUNCE = BITS(1) << 10;
-const int HITTYPE_ARMORPIERCE = BITS(1) << 11;
-const int HITTYPE_SOUND = BITS(1) << 12;
-const int DEATH_HITTYPEMASK = HITTYPE_SECONDARY | HITTYPE_SPLASH | HITTYPE_BOUNCE | HITTYPE_ARMORPIERCE | HITTYPE_SOUND;
+const int HITTYPE_SECONDARY =   BIT(8);
+const int HITTYPE_SPLASH =      BIT(9); // automatically set by RadiusDamage
+const int HITTYPE_BOUNCE =      BIT(10); // set manually after projectile has bounced
+const int HITTYPE_ARMORPIERCE = BIT(11); // ignore armor calculations
+const int HITTYPE_SOUND =       BIT(12); // cause bleeding from ears
+const int HITTYPE_SPAM =        BIT(13); // set manually after first RadiusDamage, stops effect spam
+const int DEATH_HITTYPEMASK = HITTYPE_SECONDARY | HITTYPE_SPLASH | HITTYPE_BOUNCE | HITTYPE_ARMORPIERCE | HITTYPE_SOUND | HITTYPE_SPAM;
 // normal deaths begin
-const int DT_FIRST = BIT(13);
+const int DT_FIRST = BIT(14);
 
 #define DEATH_ISSPECIAL(t)      (t >= DT_FIRST)
 #define DEATH_IS(t, dt)         (DEATH_ISSPECIAL(t) && (REGISTRY_GET(Deathtypes, t - DT_FIRST)) == dt)

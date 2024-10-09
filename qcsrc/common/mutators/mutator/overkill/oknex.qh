@@ -46,33 +46,20 @@ CLASS(OverkillNex, Weapon)
 		P(class, prefix, refire, float, PRI) \
 		P(class, prefix, secondary, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-		P(class, prefix, ammo, float, SEC) \
-		P(class, prefix, animtime, float, SEC) \
-		P(class, prefix, damage, float, SEC) \
-		P(class, prefix, delay, float, SEC) \
-		P(class, prefix, edgedamage, float, SEC) \
-		P(class, prefix, force, float, SEC) \
-		P(class, prefix, force_zscale, float, SEC) \
-		P(class, prefix, lifetime, float, SEC) \
-		P(class, prefix, radius, float, SEC) \
-		P(class, prefix, refire, float, SEC) \
+		P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 		P(class, prefix, refire_type, float, SEC) \
-		P(class, prefix, shotangle, float, SEC) \
-		P(class, prefix, speed, float, SEC) \
-		P(class, prefix, spread, float, SEC) \
 	END()
-    W_PROPS(X, OverkillNex, oknex)
+	W_PROPS(X, OverkillNex, oknex)
 #undef X
 
 ENDCLASS(OverkillNex)
-REGISTER_WEAPON(OVERKILL_NEX, oknex, NEW(OverkillNex));
+REGISTER_WEAPON(OVERKILL_NEX, NEW(OverkillNex));
 
 
 //SPAWNFUNC_WEAPON(weapon_oknex, WEP_OVERKILL_NEX)

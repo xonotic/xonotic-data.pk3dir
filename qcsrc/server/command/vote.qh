@@ -59,6 +59,7 @@ string vote_parsed_display; // visual string which is fixed after being parsed
 void VoteThink();
 void VoteReset(bool verbose);
 void VoteCommand(int request, entity caller, int argc, string vote_command);
+string ValidateMap(string validated_map, entity caller);
 
 // warmup and nagger stuff
 const float RESTART_COUNTDOWN = 10;

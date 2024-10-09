@@ -112,7 +112,6 @@
 #include <menu/xonotic/skinlist.qc>
 #include <menu/xonotic/slider.qc>
 #include <menu/xonotic/slider_decibels.qc>
-#include <menu/xonotic/slider_particles.qc>
 #include <menu/xonotic/slider_picmip.qc>
 #include <menu/xonotic/slider_resolution.qc>
 #include <menu/xonotic/slider_sbfadetime.qc>

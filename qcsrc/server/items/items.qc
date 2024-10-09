@@ -604,7 +604,7 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.strength_finished)
 	{
 		pickedup = true;
-		float t = max(StatusEffects_gettime(STATUSEFFECT_Strength, player), time);
+		float t = StatusEffects_gettime(STATUSEFFECT_Strength, player);
 		if (autocvar_g_powerups_stack)
 			t += item.strength_finished;
 		else
@@ -614,7 +614,7 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.invincible_finished)
 	{
 		pickedup = true;
-		float t = max(StatusEffects_gettime(STATUSEFFECT_Shield, player), time);
+		float t = StatusEffects_gettime(STATUSEFFECT_Shield, player);
 		if (autocvar_g_powerups_stack)
 			t += item.invincible_finished;
 		else
@@ -624,7 +624,7 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.speed_finished)
 	{
 		pickedup = true;
-		float t = max(StatusEffects_gettime(STATUSEFFECT_Speed, player), time);
+		float t = StatusEffects_gettime(STATUSEFFECT_Speed, player);
 		if (autocvar_g_powerups_stack)
 			t += item.speed_finished;
 		else
@@ -634,7 +634,7 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.invisibility_finished)
 	{
 		pickedup = true;
-		float t = max(StatusEffects_gettime(STATUSEFFECT_Invisibility, player), time);
+		float t = StatusEffects_gettime(STATUSEFFECT_Invisibility, player);
 		if (autocvar_g_powerups_stack)
 			t += item.invisibility_finished;
 		else
@@ -644,7 +644,8 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.superweapons_finished)
 	{
 		pickedup = true;
-		StatusEffects_apply(STATUSEFFECT_Superweapons, player, max(StatusEffects_gettime(STATUSEFFECT_Superweapons, player), time) + item.superweapons_finished, 0);
+		float t = StatusEffects_gettime(STATUSEFFECT_Superweapons, player);
+		StatusEffects_apply(STATUSEFFECT_Superweapons, player, t + item.superweapons_finished, 0);
 	}
 
 	// always eat teamed entities
@@ -1466,17 +1467,17 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 bool GiveBuff(entity e, Buff thebuff, int op, int val)
 {
 	bool had_buff = StatusEffects_active(thebuff, e);
-	float new_buff_time = ((had_buff) ? StatusEffects_gettime(thebuff, e) : 0);
+	float new_buff_time = ((had_buff) ? StatusEffects_gettime(thebuff, e) : time);
 	switch (op)
 	{
 		case OP_SET:
-			new_buff_time = val;
+			new_buff_time = time + val;
 			break;
 		case OP_MIN:
-			new_buff_time = max(new_buff_time, val);
+			new_buff_time = max(new_buff_time, time + val);
 			break;
 		case OP_MAX:
-			new_buff_time = min(new_buff_time, val);
+			new_buff_time = min(new_buff_time, time + val);
 			break;
 		case OP_PLUS:
 			new_buff_time += val;
@@ -1485,7 +1486,7 @@ bool GiveBuff(entity e, Buff thebuff, int op, int val)
 			new_buff_time -= val;
 			break;
 	}
-	if(new_buff_time <= 0)
+	if(new_buff_time <= time)
 	{
 		if(had_buff) // only trigger removal mechanics if there is an effect to remove!
 			StatusEffects_remove(thebuff, e, STATUSEFFECT_REMOVE_NORMAL);
@@ -1542,17 +1543,17 @@ bool GiveResourceValue(entity e, Resource res_type, int op, int val)
 bool GiveStatusEffect(entity e, StatusEffects this, int op, float val)
 {
 	bool had_eff = StatusEffects_active(this, e);
-	float new_eff_time = ((had_eff) ? StatusEffects_gettime(this, e) : 0);
+	float new_eff_time = ((had_eff) ? StatusEffects_gettime(this, e) : time);
 	switch (op)
 	{
 		case OP_SET:
-			new_eff_time = val;
+			new_eff_time = time + val;
 			break;
 		case OP_MIN:
-			new_eff_time = max(new_eff_time, val);
+			new_eff_time = max(new_eff_time, time + val);
 			break;
 		case OP_MAX:
-			new_eff_time = min(new_eff_time, val);
+			new_eff_time = min(new_eff_time, time + val);
 			break;
 		case OP_PLUS:
 			new_eff_time += val;
@@ -1561,7 +1562,7 @@ bool GiveStatusEffect(entity e, StatusEffects this, int op, float val)
 			new_eff_time -= val;
 			break;
 	}
-	if(new_eff_time <= 0)
+	if(new_eff_time <= time)
 	{
 		if(had_eff) // only trigger removal mechanics if there is an effect to remove!
 			StatusEffects_remove(this, e, STATUSEFFECT_REMOVE_NORMAL);
@@ -1593,14 +1594,6 @@ float GiveItems(entity e, float beginarg, float endarg)
 			if(e.(weaponentity).m_switchweapon == w_getbestweapon(e, weaponentity))
 				_switchweapon |= BIT(slot);
 		}
-	}
-
-	if(e.statuseffects)
-	{
-		FOREACH(StatusEffect, true,
-		{
-			e.statuseffects.statuseffect_time[it.m_id] = max(0, e.statuseffects.statuseffect_time[it.m_id] - time);
-		});
 	}
 
 	PREGIVE(e, items);
@@ -1655,7 +1648,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveResourceValue(e, RES_HEALTH, op, val);
 				got += GiveResourceValue(e, RES_ARMOR, op, val);
 			case "allweapons":
-				FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)), got += GiveWeapon(e, it.m_id, op, val));
+				FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)), got += GiveWeapon(e, it.m_id, op, val));
 			//case "allbuffs": // all buffs makes a player god, do not want!
 				//FOREACH(StatusEffect, it.instanceOfBuff, got += GiveBuff(e, it, op, val));
 			case "allammo":
@@ -1730,8 +1723,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 					break;
 				});
 				FOREACH(Weapons, it != WEP_Null && (cmd == it.netname || cmd == it.m_deprecated_netname), {
-                    got += GiveWeapon(e, it.m_id, op, val);
-                    break;
+					got += GiveWeapon(e, it.m_id, op, val);
+					break;
 				});
 				break;
 		}
@@ -1764,22 +1757,13 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	if(!StatusEffects_active(STATUSEFFECT_Superweapons, e))
 	{
-		if(!g_weaponarena && (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
-			StatusEffects_apply(STATUSEFFECT_Superweapons, e, autocvar_g_balance_superweapons_time, 0);
+		// also give default superweapon time if player had no superweapons and just got one
+		if(!g_weaponarena && !(save_weapons & WEPSET_SUPERWEAPONS) && (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
+			StatusEffects_apply(STATUSEFFECT_Superweapons, e, time + autocvar_g_balance_superweapons_time, 0);
 	}
 
 	if(e.statuseffects)
-	{
-		FOREACH(StatusEffect, true,
-		{
-			if(e.statuseffects.statuseffect_time[it.m_id] <= 0)
-				e.statuseffects.statuseffect_time[it.m_id] = 0;
-			else
-				e.statuseffects.statuseffect_time[it.m_id] += time;
-		});
-			
 		StatusEffects_update(e);
-	}
 
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
