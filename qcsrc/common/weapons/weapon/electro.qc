@@ -55,12 +55,6 @@ float ExplodeOverTime_eff_interval;
 .float ltime2;
 void W_Electro_ExplodeComboThink(entity this)
 {
-	if(time >= this.ltime)
-	{
-		delete(this);
-		return;
-	}
-
 	this.nextthink = time;
 
 	float damage = WEP_CVAR(WEP_ELECTRO, combo_damage) * PHYS_INPUT_TIMELENGTH;
@@ -77,8 +71,18 @@ void W_Electro_ExplodeComboThink(entity this)
 		else
 			this.ltime2 += ExplodeOverTime_eff_interval;
 	}
+
+	if(time >= this.ltime)
+		this.projectiledeathtype &= ~HITTYPE_SPAM;
+
 	RadiusDamage(this, this.realowner, damage, edgedamage, WEP_CVAR(WEP_ELECTRO, combo_radius), NULL, NULL, 0, this.projectiledeathtype, this.weaponentity_fld, NULL);
 	this.projectiledeathtype |= HITTYPE_SPAM; // ensure it doesn't spam its effect
+
+	if(time >= this.ltime)
+	{
+		delete(this);
+		return;
+	}
 }
 
 void W_Electro_Orb_ExplodeOverTime(entity this)
