@@ -738,7 +738,6 @@ void nade_ammo_touch(entity this, entity toucher)
 	float ambullets = GetResource(toucher, RES_BULLETS);
 	float amrockets = GetResource(toucher, RES_ROCKETS);
 	float amcells = GetResource(toucher, RES_CELLS);
-	float amplasma = GetResource(toucher, RES_PLASMA);
 	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
 	if(!IS_DEAD(toucher))
 	if(!STAT(FROZEN, toucher))
@@ -761,7 +760,6 @@ void nade_ammo_touch(entity this, entity toucher)
 			CHECK_AMMO_RESOURCE_LIMIT(ambullets, RES_BULLETS);
 			CHECK_AMMO_RESOURCE_LIMIT(amrockets, RES_ROCKETS);
 			CHECK_AMMO_RESOURCE_LIMIT(amcells,   RES_CELLS);
-			CHECK_AMMO_RESOURCE_LIMIT(amplasma,  RES_PLASMA);
 
 			if (this.nade_show_particles)
 				Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
@@ -773,7 +771,6 @@ void nade_ammo_touch(entity this, entity toucher)
 			DROP_AMMO_RESOURCE(ambullets, RES_BULLETS);
 			DROP_AMMO_RESOURCE(amrockets, RES_ROCKETS);
 			DROP_AMMO_RESOURCE(amcells,   RES_CELLS);
-			DROP_AMMO_RESOURCE(amplasma,  RES_PLASMA);
 
 			return;
 		}

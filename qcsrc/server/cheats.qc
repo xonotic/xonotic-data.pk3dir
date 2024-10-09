@@ -151,7 +151,6 @@ float CheatImpulse(entity this, int imp)
 			SetResource(this.personal, RES_ROCKETS, GetResource(this, RES_ROCKETS));
 			SetResource(this.personal, RES_BULLETS, GetResource(this, RES_BULLETS));
 			SetResource(this.personal, RES_CELLS, GetResource(this, RES_CELLS));
-			SetResource(this.personal, RES_PLASMA, GetResource(this, RES_PLASMA));
 			SetResource(this.personal, RES_SHELLS, GetResource(this, RES_SHELLS));
 			SetResource(this.personal, RES_FUEL, GetResource(this, RES_FUEL));
 			SetResource(this.personal, RES_HEALTH, max(1, GetResource(this, RES_HEALTH)));
@@ -209,7 +208,6 @@ float CheatImpulse(entity this, int imp)
 				SetResource(this, RES_ROCKETS, GetResource(this.personal, RES_ROCKETS));
 				SetResource(this, RES_BULLETS, GetResource(this.personal, RES_BULLETS));
 				SetResource(this, RES_CELLS, GetResource(this.personal, RES_CELLS));
-				SetResource(this, RES_PLASMA, GetResource(this.personal, RES_PLASMA));
 				SetResource(this, RES_SHELLS, GetResource(this.personal, RES_SHELLS));
 				SetResource(this, RES_FUEL, GetResource(this.personal, RES_FUEL));
 				SetResource(this, RES_HEALTH, GetResource(this.personal, RES_HEALTH));
