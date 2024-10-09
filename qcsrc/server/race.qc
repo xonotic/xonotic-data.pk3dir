@@ -157,12 +157,14 @@ const float MAX_CHECKPOINTS = 255;
 .entity sprite;
 
 float race_checkpoint_records[MAX_CHECKPOINTS];
+float race_checkpoint_recordspeeds[MAX_CHECKPOINTS];
 string race_checkpoint_recordholders[MAX_CHECKPOINTS];
 float race_checkpoint_lasttimes[MAX_CHECKPOINTS];
 float race_checkpoint_lastlaps[MAX_CHECKPOINTS];
 entity race_checkpoint_lastplayers[MAX_CHECKPOINTS];
 
 .float race_checkpoint_record[MAX_CHECKPOINTS];
+.float race_checkpoint_recordspeed[MAX_CHECKPOINTS];
 
 float race_highest_checkpoint;
 float race_timed_checkpoint;
@@ -211,13 +213,17 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 
 	int cp = e.race_checkpoint;
 	float recordtime;
+	float recordspeed;
 	float myrecordtime = e.race_checkpoint_record[cp];
+	float myrecordspeed = e.race_checkpoint_recordspeed[cp];
 	string recordholder;
 	if (autocvar_g_race_cptimes_onlyself) {
 		recordtime = myrecordtime;
+		recordspeed = myrecordspeed;
 		recordholder = "";
 	} else {
 		recordtime = race_checkpoint_records[cp];
+		recordspeed = race_checkpoint_recordspeeds[cp];
 		recordholder = race_checkpoint_recordholders[cp];
 
 		if(recordholder == e.netname)
@@ -244,6 +250,10 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 		if(!spec)
 			WriteInt24_t(MSG_ONE, myrecordtime);
 		WriteString(MSG_ONE, recordholder);
+		// All speeds networked as floats to have decimal precision
+		WriteFloat(MSG_ONE, recordspeed);
+		if(!spec)
+			WriteFloat(MSG_ONE, myrecordspeed);
 	});
 }
 
@@ -514,6 +524,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 	if(g_race_qualifying)
 	{
 		float recordtime;
+		float recordtimespeed;
 		string recordholder;
 
 		if(tvalid)
@@ -522,11 +533,13 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			{
 				// return their own checkpoint time
 				recordtime = e.race_checkpoint_record[cp];
+				recordtimespeed = e.race_checkpoint_recordspeed[cp];
 				recordholder = "";
 			}
 			else
 			{
 				recordtime = race_checkpoint_records[cp];
+				recordtimespeed = race_checkpoint_recordspeeds[cp];
 				// make a tempstring copy, as we'll possibly strunzone it
 				recordholder = strcat(race_checkpoint_recordholders[cp]);
 
@@ -545,6 +558,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 				if(t < recordtime || recordtime == 0)
 				{
 					race_checkpoint_records[cp] = t;
+					race_checkpoint_recordspeeds[cp] = vlen(vec2(e.velocity));
 					strcpy(race_checkpoint_recordholders[cp], e.netname);
 					if(g_race_qualifying)
 						FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.race_checkpoint == cp, { race_SendNextCheckpoint(it, 0); });
@@ -557,6 +571,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			// dummies
 			t = 0;
 			recordtime = 0;
+			recordtimespeed = 0;
 			recordholder = "";
 		}
 
@@ -576,6 +591,10 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 						WriteInt24_t(MSG_ONE, recordtime); // previously best time
 						WriteInt24_t(MSG_ONE, ((tvalid) ? it.race_checkpoint_record[cp] : 0)); // previously best time
 						WriteString(MSG_ONE, recordholder); // record holder
+						// All speeds networked as floats to have decimal precision
+						WriteFloat(MSG_ONE, vlen(vec2(e.velocity))); // speed of cp hit
+						WriteFloat(MSG_ONE, recordtimespeed); // speed of previous best cp hit
+						WriteFloat(MSG_ONE, ((tvalid) ? it.race_checkpoint_recordspeed[cp] : 0)); // speed of my previous best cp hit
 					}
 				});
 			}
@@ -586,7 +605,10 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			float myrecordtime = e.race_checkpoint_record[cp];
 			if(t != 0)
 				if(t < myrecordtime || myrecordtime == 0)
+				{
 					e.race_checkpoint_record[cp] = t;
+					e.race_checkpoint_recordspeed[cp] = vlen(vec2(e.velocity));
+				}
 		}
 	}
 	else // RACE! Not Qualifying
@@ -1219,7 +1241,10 @@ spawnfunc(info_player_race)
 void race_ClearPlayerRecords(entity player)
 {
 	for(int i = 0; i < MAX_CHECKPOINTS; ++i)
+	{
 		player.race_checkpoint_record[i] = 0;
+		player.race_checkpoint_recordspeed[i] = 0;
+	}
 }
 
 void race_ClearRecords()
@@ -1227,6 +1252,7 @@ void race_ClearRecords()
 	for(int j = 0; j < MAX_CHECKPOINTS; ++j)
 	{
 		race_checkpoint_records[j] = 0;
+		race_checkpoint_recordspeeds[j] = 0;
 		strfree(race_checkpoint_recordholders[j]);
 	}
 
