@@ -713,7 +713,13 @@ void checkpoint_passed(entity this, entity player)
 	{
 		if(this.race_checkpoint == -2)
 		{
-			this.race_checkpoint = player.race_checkpoint;
+			// duplicate targetname target_checkpoints get the same cp nr
+			IL_EACH(g_race_targets, it.classname == "target_checkpoint" && it.targetname == this.targetname, {
+				if(it.race_checkpoint >= 0)
+					this.race_checkpoint = it.race_checkpoint;
+			});
+			if(this.race_checkpoint == -2)
+				this.race_checkpoint = player.race_checkpoint;
 		}
 
 		int cp_amount = 0, largest_cp_id = 0;
