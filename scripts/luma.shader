@@ -22,17 +22,6 @@ a_cells_luma
 	}
 }
 
-a_plasma_luma
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/items/a_plasma_luma
-		blendfunc blend
-	}
-}
-
 a_rockets_luma
 {
 	deformVertexes autosprite

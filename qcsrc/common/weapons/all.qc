@@ -206,7 +206,6 @@ int GetAmmoStat(Resource ammotype)
 		case RES_BULLETS: return STAT_NAILS;
 		case RES_ROCKETS: return STAT_ROCKETS;
 		case RES_CELLS: return STAT_CELLS;
-		case RES_PLASMA: return STAT_PLASMA.m_id;
 		case RES_FUEL: return STAT_FUEL.m_id;
 		default: return -1;
 	}
