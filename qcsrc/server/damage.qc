@@ -284,7 +284,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 						break;
 					}
 					case DEATH_HURTTRIGGER:
-						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, inflictor.message, deathlocation, CS(targ).killcount, 0, 0);
+						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
 						break;
 					default:
 					{
@@ -436,8 +436,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			{
 				Obituary_SpecialDeath(targ, false, deathtype,
 					targ.netname,
-					inflictor.message,
 					deathlocation,
+					"",
 					CS(targ).killcount,
 					0,
 					0);

@@ -357,7 +357,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(DEATH_SELF_VH_SPID_ROCKET,               N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_VH_WAKI_DEATH,                N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 got caught in the blast of a Racer explosion%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_VH_WAKI_ROCKET,               N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"), "")
-    MSG_INFO_NOTIF(DEATH_SELF_VOID,                         N_CONSOLE,  3, 1, "s1 s2 s3loc spree_lost", "s1",   "notify_void",            "^BG%s^K1 %s^K1%s%s", "")
+    MSG_INFO_NOTIF(DEATH_SELF_VOID,                         N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_void",          _("^BG%s^K1 ended up in the wrong place%s%s"), "")
 
     MULTITEAM_INFO(DEATH_TEAMKILL,                          N_CONSOLE,  3, 1, "s1 s2 s3loc spree_end", "s2 s1",     "notify_teamkill_%s",   _("^BG%s^K1 was betrayed by ^BG%s^K1%s%s"), "", NAME)
 
