@@ -351,6 +351,7 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 	s1-s4: string arguments to be literally swapped into sprintf
 	s2loc: s2 string of locations of deaths or other events
 	s3loc: s3 string of locations of deaths or other events
+	s4loc: s4 string of locations of deaths or other events
 	f1-f4: float arguments expanded into strings to be swapped into sprintf
 	f1dtime: f1 float to string with 2 decimal places
 	f2dtime: f2 float to string with 2 decimal places
@@ -423,6 +424,7 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS_SV_HA,  "s4",            s4) \
 	ARG_CASE(ARG_CS_SV,     "s2loc",         ((autocvar_notification_show_location && (s2 != "")) ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s2) : "")) \
 	ARG_CASE(ARG_CS_SV,     "s3loc",         ((autocvar_notification_show_location && (s3 != "")) ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s3) : "")) \
+	ARG_CASE(ARG_CS_SV,     "s4loc",         ((autocvar_notification_show_location && (s4 != "")) ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s4) : "")) \
 	ARG_CASE(ARG_CS_SV_DC,  "f1",            ftos(f1)) \
 	ARG_CASE(ARG_CS_SV_DC,  "f2",            ftos(f2)) \
 	ARG_CASE(ARG_CS_SV,     "f3",            ftos(f3)) \
