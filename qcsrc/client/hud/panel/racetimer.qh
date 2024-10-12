@@ -12,6 +12,7 @@ float race_timebestspeed;
 float race_laptime;
 float race_checkpointtime;
 string race_checkpoint_splits[256];
+float race_checkpoint_splits_speed[256];
 float race_previousbesttime;
 float race_mypreviousbesttime;
 string race_previousbestname;
