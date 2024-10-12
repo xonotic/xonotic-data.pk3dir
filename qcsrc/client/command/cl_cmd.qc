@@ -451,6 +451,34 @@ void LocalCommand_print_cptimes(int request)
 	}
 }
 
+void LocalCommand_print_pbcptimes(int request)
+{
+	float speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
+	string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			LOG_HELP(_("Persoal Best checkpoint times:"));
+			LOG_HELP(strcat(_("Start line"), " ", sprintf(" %d%s", race_checkpoint_pb_speeds[254]*speed_conversion_factor, units_text)));
+			for (int i = 1; i <= 253; ++i)
+			{
+				if (race_checkpoint_pb_times[i])
+					LOG_HELP(strcat(sprintf(_("Intermediate %d"), i), " ", TIME_ENCODED_TOSTRING(race_checkpoint_pb_times[i] , false), sprintf(" %d%s", race_checkpoint_pb_speeds[i]*speed_conversion_factor, units_text)));
+			}
+			LOG_HELP(strcat(_("Finish line"), " ", TIME_ENCODED_TOSTRING(race_checkpoint_pb_times[255] , false), sprintf(" %d%s", race_checkpoint_pb_speeds[255]*speed_conversion_factor, units_text)));
+			return;
+		}
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 cl_cmd print_pbcptimes");
+			LOG_HELP("  No arguments required, will show Persoal Best run checkpoint times.");
+			return;
+		}
+	}
+}
+
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void LocalCommand_(int request)
@@ -489,6 +517,7 @@ CLIENT_COMMAND(hud, "Commands regarding/controlling the HUD system") { LocalComm
 CLIENT_COMMAND(localprint, "Create your own centerprint sent to yourself") { LocalCommand_localprint(request, arguments); }
 CLIENT_COMMAND(mv_download, "Retrieve mapshot picture from the server") { LocalCommand_mv_download(request, arguments); }
 CLIENT_COMMAND(print_cptimes, "Print the stored checkpoint times for current or last run") { LocalCommand_print_cptimes(request); }
+CLIENT_COMMAND(print_pbcptimes, "Print the stored checkpoint times for Personal Best run") { LocalCommand_print_pbcptimes(request); }
 CLIENT_COMMAND(sendcvar, "Send a cvar to the server (like cl_weaponpriority)") { LocalCommand_sendcvar(request, arguments); }
 
 void LocalCommand_macro_help()
