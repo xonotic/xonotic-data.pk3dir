@@ -28,6 +28,7 @@ CLASS(InputBox, Label)
 	ATTRIB(InputBox, pressed, float, 0);
 	ATTRIB(InputBox, editColorCodes, float, 1);
 	ATTRIB(InputBox, forbiddenCharacters, string, "");
+	ATTRIB(InputBox, allowedCharacters, string, "");
 	ATTRIB(InputBox, color, vector, '1 1 1');
 	ATTRIB(InputBox, colorF, vector, '1 1 1');
 	ATTRIB(InputBox, maxLength, float, 255);  // if negative, it counts bytes, not chars
