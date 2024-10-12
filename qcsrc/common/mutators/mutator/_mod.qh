@@ -16,6 +16,7 @@
 #include <common/mutators/mutator/invincibleproj/_mod.qh>
 #include <common/mutators/mutator/itemstime/_mod.qh>
 #include <common/mutators/mutator/kick_teamkiller/_mod.qh>
+#include <common/mutators/mutator/killers_spawn_faster/_mod.qh>
 #include <common/mutators/mutator/melee_only/_mod.qh>
 #include <common/mutators/mutator/midair/_mod.qh>
 #include <common/mutators/mutator/multijump/_mod.qh>
