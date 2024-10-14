@@ -429,7 +429,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			{
 				if (DEATH_ENT(deathtype) == DEATH_HURTTRIGGER)
 				{
-					// FIXME if # is present inside .message2 then it is should be replaced with attacker's name
 					bool msg_from_ent = (inflictor && inflictor.message2 != "");
 					Obituary_SpecialDeath(targ, true, msg_from_ent, deathtype,
 						targ.netname,

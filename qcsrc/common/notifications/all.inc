@@ -304,7 +304,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(DEATH_MURDER_VH_WAKI_GUN,                N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"), "")
     MSG_INFO_NOTIF(DEATH_MURDER_VH_WAKI_ROCKET,             N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"), "")
     MSG_INFO_NOTIF(DEATH_MURDER_VOID,                       N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_void",          _("^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"), "")
-    MSG_INFO_NOTIF(DEATH_MURDER_VOID_ENT,                   N_CONSOLE,  4, 2, "spree_inf s1 s3 s2 s4loc spree_end", "s2 s1",            "notify_void",            "^BG%s%s^K1 %s ^BG%s^K1%s%s", "")
+    MSG_INFO_NOTIF(DEATH_MURDER_VOID_ENT,                   N_CONSOLE,  4, 2, "spree_inf s1 s3#s2 #s2 s4loc spree_end", "s2 s1",        "notify_void",            "^BG%s%s^K1 %s%s%s%s", "")
 
     MSG_INFO_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,               N_CONSOLE,  2, 1, "s1 death_team s2loc", "",        "",                     _("^BG%s^K1 was moved into the %s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_BETRAYAL,                     N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_teamkill_red",  _("^BG%s^K1 became enemies with the Lord of Teamplay%s%s"), "")
