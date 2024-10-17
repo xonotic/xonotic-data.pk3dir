@@ -22,8 +22,6 @@ float autocvar_sv_gibhealth;
 .float pushltime;
 .bool istypefrag;
 
-.float death_time;
-
 .float score_frame_dmg;
 .float score_frame_dmgtaken;
 
