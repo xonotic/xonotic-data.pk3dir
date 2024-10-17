@@ -4,7 +4,7 @@ CLASS(Electro, Weapon)
 /* spawnfunc */ ATTRIB(Electro, m_canonical_spawnfunc, string, "weapon_electro");
 /* ammotype  */ ATTRIB(Electro, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Electro, impulse, int, 5);
-/* flags     */ ATTRIB(Electro, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* flags     */ ATTRIB(Electro, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Electro, bot_pickupbasevalue, float, 5000);
 /* color     */ ATTRIB(Electro, wpcolor, vector, '0 0.5 1');
 /* modelname */ ATTRIB(Electro, mdl, string, "electro");
@@ -29,6 +29,7 @@ CLASS(Electro, Weapon)
 		P(class, prefix, combo_comboradius, float, NONE) \
 		P(class, prefix, combo_comboradius_thruwall, float, NONE) \
 		P(class, prefix, combo_damage, float, NONE) \
+		P(class, prefix, combo_duration, float, NONE) \
 		P(class, prefix, combo_edgedamage, float, NONE) \
 		P(class, prefix, combo_force, float, NONE) \
 		P(class, prefix, combo_radius, float, NONE) \
