@@ -42,7 +42,8 @@ void XonoticTextBox_setText(entity me, string txt)
 		getWrappedLine_remaining = t;
 		while (getWrappedLine_remaining)
 		{
-			t = getWrappedLine(1, me.realFontSize, (me.allowColors) ? draw_TextWidth_WithColors : draw_TextWidth_WithoutColors);
+			t = getWrappedLine(1 - me.controlWidth, me.realFontSize,
+				(me.allowColors) ? draw_TextWidth_WithColors : draw_TextWidth_WithoutColors);
 			bufstr_set(buf, line, t);
 			line++;
 		}
