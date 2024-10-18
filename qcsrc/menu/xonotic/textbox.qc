@@ -16,15 +16,18 @@ void XonoticTextBox_destroy(entity me)
 		buf_del(me.stringList);
 		me.stringList = -1;
 	}
+	strfree(me.text);
 }
 
-void XonoticTextBox_setText(entity me, string text)
+void XonoticTextBox_setText(entity me, string txt)
 {
 	if (me.stringList >= 0)
 	{
 		buf_del(me.stringList);
 		me.stringList = -1;
 	}
+
+	strcpy(me.text, txt);
 
 	int buf;
 	int line = 0;
@@ -33,7 +36,7 @@ void XonoticTextBox_setText(entity me, string text)
 
 	buf = buf_create();
 	string separator = (me.escapedNewLines) ? "\\n" : "\n";
-	for (int i = 0, n = tokenizebyseparator(text, separator); i < n; ++i)
+	for (int i = 0, n = tokenizebyseparator(txt, separator); i < n; ++i)
 	{
 		t = substring(argv(i), 0, -1);
 		getWrappedLine_remaining = t;
@@ -58,8 +61,6 @@ string XonoticTextBox_getTextBoxLine(entity me, int i)
 	return string_null;
 }
 
-// mostly copied from playerlist
-// FIXME: is this really needed
 void XonoticTextBox_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.itemAbsSize = '0 0 0';
@@ -69,19 +70,7 @@ void XonoticTextBox_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
-	string temp = string_null;
-	for (int i = 0; i < me.nItems; ++i)
-	{
-		if (!temp)
-		{
-			temp = me.getTextBoxLine(me, i);
-		}
-		else
-		{
-			temp = strcat(temp, "\n", me.getTextBoxLine(me, i));
-		}
-	}
-	me.setText(me, temp);
+	me.setText(me, strcat(me.text)); // rewrap
 }
 
 void XonoticTextBox_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
