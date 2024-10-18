@@ -261,7 +261,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems, CBC_ORDER_LAST)
 	start_ammo_shells  = warmup_start_ammo_shells  = 0;
 	start_ammo_nails   = warmup_start_ammo_nails   = 0;
 	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_instagib_ammo_start");
-	start_ammo_plasma  = warmup_start_ammo_plasma  = 0;
 	start_ammo_rockets = warmup_start_ammo_rockets = 0;
 	//start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
 
