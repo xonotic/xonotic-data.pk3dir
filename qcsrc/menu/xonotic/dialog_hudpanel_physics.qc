@@ -14,7 +14,7 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_physics"));
 			e.addValue(e, _("Disable"), "0");
 			e.addValue(e, _("Enable"), "1");
-			e.addValue(e, _("Enable even observing"), "2");
+			e.addValue(e, _("Enable even if observing"), "2");
 			e.addValue(e, _("Enable only in Race/CTS"), "3");
 			e.configureXonoticTextSliderValues(e);
 
@@ -52,6 +52,11 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 		me.TD(me, 1, 3.8/2, e = makeXonoticCheckBox(0, "hud_panel_physics_topspeed", _("Top speed")));
 		me.TD(me, 1, 3.8/2, e = makeXonoticSlider(1, 10, 1, "hud_panel_physics_topspeed_time"));
 			setDependent(e, "hud_panel_physics_topspeed", 1, 1);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 3.8/2, e = makeXonoticCheckBox(0, "hud_panel_physics_jumpspeed", _("Jump speed")));
+		me.TD(me, 1, 3.8/2, e = makeXonoticSlider(1, 10, 1, "hud_panel_physics_jumpspeed_time"));
+			setDependent(e, "hud_panel_physics_jumpspeed", 1, 1);
 
 //acceleration
 	me.TR(me);
