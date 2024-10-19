@@ -23,21 +23,50 @@ void CvarList_Load(entity me, string filter)
 	if(me.handle < 0)
 		return;
 
-	buf_cvarlist(me.handle, filter, "_"); // cvars starting with "_" are excluded
-	me.nItems = buf_getsize(me.handle);
-	if(autocvar_menu_cvarlist_onlymodified)
+	if(!autocvar_menu_cvarlist_onlymodified
+		&& (!autocvar_menu_cvarlist_descriptions || filter == ""))
 	{
-		float newbuf = buf_create();
-		for (int i = 0; i < me.nItems; ++i)
-		{
-			string k = bufstr_get(me.handle, i);
-			if(cvar_string(k) != cvar_defstring(k))
-				bufstr_add(newbuf, k, false);
-		}
-		buf_del(me.handle);
-		me.handle = newbuf;
+		// simplest case where we filter only cvar names (or no filter at all)
+		buf_cvarlist(me.handle, filter, "_"); // cvars starting with "_" are excluded
 		me.nItems = buf_getsize(me.handle);
+		return;
 	}
+
+	// get full cvar list will be filtered in the next loop
+	buf_cvarlist(me.handle, "", "_"); // cvars starting with "_" are excluded
+	me.nItems = buf_getsize(me.handle);
+
+	// MATCHPATTERN_CVARLIST replicates buf_cvarlist filtering:
+	//   *aa* finds aa anywhere in the cvar name
+	//   *aa finds aa in the end of the cvar name
+	//   aa* finds aa in the beginning of the cvar name
+	//   aa finds aa in the beginning of the cvar name (not anywhere!)
+	// NOTE: using strstrofs(s, filter, 0) == 0 instead of strncmp(s, filter, strlen(s))
+	// because it's slightly more efficient
+	#define MATCHPATTERN_CVARLIST(s, filter, ispattern) \
+		(ispattern ? matchpattern(s, filter, MATCH_AUTO) : (strstrofs(s, filter, 0) == 0))
+
+	bool ispattern = ((strstrofs(filter, "*", 0) >= 0) || (strstrofs(filter, "?", 0) >= 0));
+	float newbuf = buf_create();
+	for (int i = 0; i < me.nItems; ++i)
+	{
+		string cvar_name = bufstr_get(me.handle, i);
+		if(autocvar_menu_cvarlist_onlymodified && cvar_string(cvar_name) == cvar_defstring(cvar_name))
+		{
+			continue;
+		}
+		if (filter != "" && !MATCHPATTERN_CVARLIST(cvar_name, filter, ispattern)
+			&& (!autocvar_menu_cvarlist_descriptions
+				|| !MATCHPATTERN_CVARLIST(cvar_description(cvar_name), filter, ispattern)))
+		{
+			continue;
+		}
+		bufstr_add(newbuf, cvar_name, false);
+	}
+	#undef MATCHPATTERN_CVARLIST
+	buf_del(me.handle);
+	me.handle = newbuf;
+	me.nItems = buf_getsize(me.handle);
 }
 void XonoticCvarList_showNotify(entity me)
 {
@@ -141,6 +170,13 @@ void CvarList_Filter_ModifiedCvars(entity box, entity me)
 {
 	cvar_set("menu_cvarlist_onlymodified", ftos(!autocvar_menu_cvarlist_onlymodified));
 	box.setChecked(box, autocvar_menu_cvarlist_onlymodified);
+	CvarList_Load(me, me.controlledTextbox.text);
+	me.setSelected(me, 0);
+}
+void CvarList_Filter_Descriptions(entity box, entity me)
+{
+	cvar_set("menu_cvarlist_descriptions", ftos(!autocvar_menu_cvarlist_descriptions));
+	box.setChecked(box, autocvar_menu_cvarlist_descriptions);
 	CvarList_Load(me, me.controlledTextbox.text);
 	me.setSelected(me, 0);
 }
