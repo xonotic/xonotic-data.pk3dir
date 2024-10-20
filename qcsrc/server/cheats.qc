@@ -55,14 +55,15 @@ void CheatShutdown()
 {
 }
 
-float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets passed as argument for possible future ACL checking
+// the cheat gets passed as argument for possible future ACL checking
+float CheatsAllowed(entity this, float imp, int argc, float cheatframe, bool logattempt, bool ignoredead)
 {
-	if(IS_DEAD(this))
+	if(!ignoredead && IS_DEAD(this))
 		return 0;
 	if(gamestart_sv_cheats < 2 && !IS_PLAYER(this))
 		return 0;
 
-	if(i == CHIMPULSE_CLONE_MOVING.impulse || i == CHIMPULSE_CLONE_STANDING.impulse)
+	if(imp == CHIMPULSE_CLONE_MOVING.impulse || imp == CHIMPULSE_CLONE_STANDING.impulse)
 		if(this.lip < autocvar_sv_clones)
 			return 1;
 
@@ -73,16 +74,18 @@ float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets 
 	if(gamestart_sv_cheats && autocvar_sv_cheats)
 		return 1;
 
-	// if we get here, player is not allowed to cheat. Log it.
-	if(i)
-		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this.netname, this.team, false), i);
-	else if(argc)
-		bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this.netname, this.team, false), argv(0));
-	else if(fr)
-		bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this.netname, this.team, false), fr);
-	else
-		bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this.netname, this.team, false));
-
+	if (logattempt)
+	{
+		// if we get here, player is not allowed to cheat. Log it.
+		if(imp)
+			bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this.netname, this.team, false), imp);
+		else if(argc)
+			bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this.netname, this.team, false), argv(0));
+		else if(cheatframe)
+			bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this.netname, this.team, false), cheatframe);
+		else
+			bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this.netname, this.team, false));
+	}
 	return 0;
 }
 
@@ -97,7 +100,7 @@ float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets 
 	ADD_CHEATS(this, cheating); \
 	return attempting
 #define IS_CHEAT(ent,i,argc,fr) \
-	if((++attempting, !CheatsAllowed(ent,i,argc,fr))) \
+	if((++attempting, !CheatsAllowed(ent,i,argc,fr,true,false))) \
 		break
 
 float num_autoscreenshot;
