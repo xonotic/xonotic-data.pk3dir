@@ -5,6 +5,11 @@ bool autocvar_cl_deathscoreboard;
 string autocvar_scoreboard_columns;
 float autocvar_hud_panel_scoreboard_namesize = 15;
 
+string autocvar__nextmap;
+// no reason for get_nextmap to be a function for now
+// macro to not have an unnecessary function call stackframe
+#define GET_NEXTMAP() autocvar__nextmap
+
 bool sb_showscores; // set by +showscores engine command
 
 bool scoreboard_active;

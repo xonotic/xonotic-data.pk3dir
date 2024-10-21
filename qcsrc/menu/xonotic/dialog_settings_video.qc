@@ -158,20 +158,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_gl20", _("Use OpenGL 2.0 shaders (GLSL)")));
 			e.applyButton = videoApplyButton;
 	}
-	if(cvar("developer") > 0)
-	{
-		me.TR(me);
-			me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "v_flipped", _("Flip view horizontally"),
-				_("Poor man's left handed mode")));
-		me.TR(me);
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_psycho", _("Psycho coloring (easter egg)")));
-			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
-				setDependent(e, "vid_gl20", 1, 1);
-		me.TR(me);
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "r_trippy", _("Trippy vertices (easter egg)")));
-			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
-				setDependent(e, "vid_gl20", 1, 1);
-	}
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, videoApplyButton);
