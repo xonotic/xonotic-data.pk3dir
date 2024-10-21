@@ -701,7 +701,7 @@ void DrawReticle(entity this)
 	// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 	// It must be a persisted float for fading out to work properly (you let go of the zoom button for
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
-	if(spectatee_status || is_dead || hud != HUD_NORMAL || this.viewloc)
+	if(spectatee_status || is_dead || hud != HUD_NORMAL || this.viewloc || (autocvar_chase_active != 0 && !autocvar_cl_reticle_chase))
 	{
 		// no zoom reticle while dead
 		reticle_type = 0;
