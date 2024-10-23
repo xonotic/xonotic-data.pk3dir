@@ -12,6 +12,8 @@ void target_voicescript_clear(entity pl)
 
 void target_voicescript_use(entity this, entity actor, entity trigger)
 {
+	if(this.active != ACTIVE_ACTIVE)
+		return;
 	if(actor.voicescript != this)
 	{
 		actor.voicescript = this;
@@ -28,6 +30,11 @@ void target_voicescript_next(entity pl)
 	vs = pl.voicescript;
 	if(!vs)
 		return;
+	if(vs.active != ACTIVE_ACTIVE)
+	{
+		pl.voicescript = NULL;
+		return;
+	}
 	if(vs.message == "")
 		return;
 	if (!IS_PLAYER(pl))
@@ -74,6 +81,11 @@ void target_voicescript_next(entity pl)
 	}
 }
 
+void target_voicescript_reset(entity this)
+{
+	this.active = ACTIVE_ACTIVE;
+}
+
 spawnfunc(target_voicescript)
 {
 	// netname: directory of the sound files
@@ -86,6 +98,8 @@ spawnfunc(target_voicescript)
 
 	float i, n;
 	this.use = target_voicescript_use;
+	this.active = ACTIVE_ACTIVE;
+	this.reset = target_voicescript_reset;
 
 	n = tokenize_console(this.message);
 	this.cnt = n / 2;
