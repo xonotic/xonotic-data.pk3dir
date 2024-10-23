@@ -78,9 +78,11 @@ void Surv_UpdateScores(bool timed_out)
 	});
 }
 
+float autocvar_g_survival_round_enddelay = 1;
 float Surv_CheckWinner()
 {
-	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
+	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
+		&& autocvar_g_survival_round_enddelay == -1)
 	{
 		// if the match times out, survivors win too!
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_SURVIVAL_SURVIVOR_WIN);
@@ -110,7 +112,27 @@ float Surv_CheckWinner()
 	});
 	if(survivor_count > 0 && hunter_count > 0)
 	{
+		// Dr. Jaska:
+		// reset delay time here only for consistency
+		// Survival players currently have no known ways to resurrect
+		round_handler_ResetEndDelayTime();
 		return 0;
+	}
+
+	// delay round ending a bit
+	if (autocvar_g_survival_round_enddelay
+		&& round_handler_GetEndTime() > 0
+		&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
+	{
+		if (round_handler_GetEndDelayTime() == -1)
+		{
+			round_handler_SetEndDelayTime(min(time + autocvar_g_survival_round_enddelay, round_handler_GetEndTime()));
+			return 0;
+		}
+		else if (round_handler_GetEndDelayTime() >= time)
+		{
+			return 0;
+		}
 	}
 
 	if(hunter_count > 0) // hunters win

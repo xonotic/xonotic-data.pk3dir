@@ -24,6 +24,9 @@ float autocvar_sv_gibhealth;
 
 .float death_time;
 
+.float score_frame_dmg;
+.float score_frame_dmgtaken;
+
 .float CopyBody_nextthink;
 .void(entity this) CopyBody_think;
 void CopyBody_Think(entity this);

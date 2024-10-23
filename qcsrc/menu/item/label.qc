@@ -75,7 +75,10 @@
 
 			draw_fontscale = dfs;
 
-			me.realOrigin_y = 0.5 * (1 - lines * me.realFontSize.y);
+			float text_height = lines * me.realFontSize.y;
+			if (lines > 1)
+				text_height += (lines - 1) * me.realFontSize.y * me.allowWrap_spacing;
+			me.realOrigin_y = 0.5 * (1 - text_height);
 		}
 
 		if (me.isBold) draw_endBoldFont();
@@ -150,7 +153,7 @@
 						if (me.allowColors) t = getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight), fs, draw_TextWidth_WithColors);
 						else t = getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight), fs, draw_TextWidth_WithoutColors);
 						draw_Text(o, t, fs, me.colorL, me.alpha, me.allowColors);
-						o.y += me.realFontSize.y;
+						o.y += me.realFontSize.y * (1 + me.allowWrap_spacing);
 					}
 				}
 				else

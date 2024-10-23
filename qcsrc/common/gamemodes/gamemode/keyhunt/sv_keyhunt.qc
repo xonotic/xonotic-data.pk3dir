@@ -455,6 +455,8 @@ void kh_Key_Touch(entity this, entity toucher)  // runs many, many times when a 
 		return;
 	if(IS_DEAD(toucher))
 		return;
+	if(IS_INDEPENDENT_PLAYER(toucher))
+		return;
 	if(toucher == this.enemy)
 		if(time < this.kh_droptime + autocvar_g_balance_keyhunt_delay_collect)
 			return;  // you just dropped it!

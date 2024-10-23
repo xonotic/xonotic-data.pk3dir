@@ -36,13 +36,13 @@ CLASS(TeamKeepaway, Gametype)
         if(cvar("g_tka_on_ka_maps"))
         {
             // if this is set, all KA maps support TKA too
-            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_KEEPAWAY.m_flags))
+            if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_KEEPAWAY.gametype_flags))
                 return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
         }
         if(cvar("g_tka_on_tdm_maps"))
         {
             // if this is set, all TDM maps support TKA too
-            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.m_flags))
+            if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.gametype_flags))
                 return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
         }
         return false;

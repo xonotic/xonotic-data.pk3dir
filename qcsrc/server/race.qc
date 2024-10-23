@@ -56,13 +56,11 @@ string uid2name(string myuid)
 
 void write_recordmarker(entity pl, float tstart, float dt)
 {
-    GameLogEcho(strcat(":recordset:", ftos(pl.playerid), ":", ftos(dt)));
-
-    // also write a marker into demo files for demotc-race-record-extractor to find
-    stuffcmd(pl,
-             strcat(
-                 strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt), false)),
-                 " ", ftos(tstart), " ", ftos(dt), "\n"));
+	GameLogEcho(strcat(":recordset:", ftos(pl.playerid), ":", ftos(dt)));
+	// also write a marker into demo files for demotc-race-record-extractor to find
+	stuffcmd(pl,
+		sprintf("//%s RECORD SET %s %f %f\n", strconv(2, 0, 0, GetGametype()),
+			TIME_ENCODED_TOSTRING(TIME_ENCODE(dt), false), tstart, dt));
 }
 
 IntrusiveList g_race_targets;
@@ -212,11 +210,19 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 		return;
 
 	int cp = e.race_checkpoint;
-	float recordtime = race_checkpoint_records[cp];
+	float recordtime;
 	float myrecordtime = e.race_checkpoint_record[cp];
-	string recordholder = race_checkpoint_recordholders[cp];
-	if(recordholder == e.netname)
+	string recordholder;
+	if (autocvar_g_race_cptimes_onlyself) {
+		recordtime = myrecordtime;
 		recordholder = "";
+	} else {
+		recordtime = race_checkpoint_records[cp];
+		recordholder = race_checkpoint_recordholders[cp];
+
+		if(recordholder == e.netname)
+			recordholder = "";
+	}
 
 	if(!IS_REAL_CLIENT(e))
 		return;
@@ -397,7 +403,8 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e,
 		return;
 	}
 
-	if(uid2name(myuid) == "^1Unregistered Player")
+	if(CS_CVAR(e).cvar_cl_allow_uidtracking != 1 || CS_CVAR(e).cvar_cl_allow_uid2name != 1
+	   || uid2name(myuid) == "^1Unregistered Player")
 	{
 		if(showmessage)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_MISSING_NAME, mynetname, t);
@@ -511,10 +518,21 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 
 		if(tvalid)
 		{
-			recordtime = race_checkpoint_records[cp];
-			recordholder = strcat(race_checkpoint_recordholders[cp]); // make a tempstring copy, as we'll possibly strunzone it!
-			if(recordholder == e.netname)
+			if (autocvar_g_race_cptimes_onlyself)
+			{
+				// return their own checkpoint time
+				recordtime = e.race_checkpoint_record[cp];
 				recordholder = "";
+			}
+			else
+			{
+				recordtime = race_checkpoint_records[cp];
+				// make a tempstring copy, as we'll possibly strunzone it
+				recordholder = strcat(race_checkpoint_recordholders[cp]);
+
+				if(recordholder == e.netname)
+					recordholder = "";
+			}
 
 			if(t != 0)
 			{
@@ -1196,6 +1214,12 @@ spawnfunc(info_player_race)
 		race_highest_place_spawn = this.race_place;
 	if(this.race_place < race_lowest_place_spawn)
 		race_lowest_place_spawn = this.race_place;
+}
+
+void race_ClearPlayerRecords(entity player)
+{
+	for(int i = 0; i < MAX_CHECKPOINTS; ++i)
+		player.race_checkpoint_record[i] = 0;
 }
 
 void race_ClearRecords()

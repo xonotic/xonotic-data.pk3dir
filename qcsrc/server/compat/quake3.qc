@@ -258,12 +258,29 @@ spawnfunc(target_score)
 	this.use = score_use;
 }
 
+#define FRAGSFILTER_REMOVER BIT(0)
+#define FRAGSFILTER_RUNONCE BIT(1) // introduced but now unused by q3df
+#define FRAGSFILTER_SILENT  BIT(2)
+#define FRAGSFILTER_RESET   BIT(3)
+
 void fragsfilter_use(entity this, entity actor, entity trigger)
 {
 	if(!IS_PLAYER(actor))
 		return;
 	if(actor.fragsfilter_cnt >= this.frags)
+	{
+		if(this.spawnflags & FRAGSFILTER_RESET)
+			actor.fragsfilter_cnt = 0;
+		else if(this.spawnflags & FRAGSFILTER_REMOVER)
+			actor.fragsfilter_cnt -= this.frags;
 		SUB_UseTargets(this, actor, trigger);
+	}
+	else if(!(this.spawnflags & FRAGSFILTER_SILENT))
+	{
+		int req_frags = this.frags - actor.fragsfilter_cnt;
+		centerprint(actor, sprintf("%d more frag%s needed", req_frags, req_frags > 1 ? "s" : ""));
+		play2(actor, SND(TALK));
+	}
 }
 spawnfunc(target_fragsFilter)
 {

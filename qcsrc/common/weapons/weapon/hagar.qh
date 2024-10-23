@@ -58,6 +58,6 @@ CLASS(Hagar, Weapon)
 #undef X
 
 ENDCLASS(Hagar)
-REGISTER_WEAPON(HAGAR, hagar, NEW(Hagar));
+REGISTER_WEAPON(HAGAR, NEW(Hagar));
 
 SPAWNFUNC_WEAPON(weapon_hagar, WEP_HAGAR)

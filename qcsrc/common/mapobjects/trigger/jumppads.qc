@@ -573,8 +573,9 @@ float trigger_push_get_push_time(entity this, vector endpos)
 }
 #endif
 
-/// if (item != NULL) returns true if the item can be reached by using this jumppad, false otherwise
-/// if (item == NULL) tests jumppad's trajectory and eventually spawns waypoints for it (return value doesn't matter)
+// if (item != NULL) returns true if the item can be reached by using this jumppad, false otherwise
+// if (item == NULL) tests jumppad's trajectory and eventually spawns waypoints for it (return value doesn't matter)
+// NOTE: for simplicity's sake it improperly tests jumppad bboxes instead of bmodels
 bool trigger_push_test(entity this, entity item)
 {
 #ifdef SVQC
@@ -903,7 +904,18 @@ spawnfunc(target_push)
 	this.use = target_push_use;
 
 	if(this.target && this.target != "") // Q3 or old style Nexuiz pusher
+	{
+		entity trigger_ent = findchain(target, this.targetname);
+		if (trigger_ent)
+		{
+			// apply size of its trigger entity so that it can be tested like a conventional
+			// trigger_push jumppad and spawn an usable box waypoyint
+			this.absmin = trigger_ent.absmin;
+			this.absmax = trigger_ent.absmax;
+		}
+		IL_PUSH(g_jumppads, this);
 		InitializeEntity(this, trigger_push_findtarget, INITPRIO_FINDTARGET);
+	}
 	else // Q3 .angles and .speed pusher
 	{
 		if (!this.speed)

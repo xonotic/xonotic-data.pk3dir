@@ -83,7 +83,7 @@ CLASS(Seeker, Weapon)
 	W_PROPS(X, Seeker, seeker)
 #undef X
 ENDCLASS(Seeker)
-REGISTER_WEAPON(SEEKER, seeker, NEW(Seeker));
+REGISTER_WEAPON(SEEKER, NEW(Seeker));
 
 SPAWNFUNC_WEAPON(weapon_seeker, WEP_SEEKER)
 

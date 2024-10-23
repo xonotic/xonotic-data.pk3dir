@@ -361,8 +361,8 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 	s2loc: s2 string of locations of deaths or other events
 	s3loc: s3 string of locations of deaths or other events
 	f1-f4: float arguments expanded into strings to be swapped into sprintf
-	f1p2dec: f1 float to string with 2 decimal places
-	f2p2dec: f2 float to string with 2 decimal places
+	f1dtime: f1 float to string with 2 decimal places
+	f2dtime: f2 float to string with 2 decimal places
 	f2primsec: f2 float primary or secondary selection for weapons
 	f3primsec: f3 float primary or secondary selection for weapons
 	f1secs: count_seconds of f1
@@ -371,11 +371,13 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 	f1time: process_time of f1
 	f1race_time: TIME_ENCODED_TOSTRING of f1
 	f2race_time: TIME_ENCODED_TOSTRING of f2
+	f3race_time: TIME_ENCODED_TOSTRING of f3
 	race_col: color of race time/position (i.e. good or bad)
 	race_diff: show time difference between f2 and f3
 	missing_teams: show which teams still need players
 	pass_key: find the keybind for "passing" or "dropping" in CTF game mode
 	nade_key: find the keybind for nade throwing
+	join_key: find the keybind for joining the game
 	frag_ping: show the ping of a player
 	frag_stats: show health/armor/ping of a player
 	frag_pos: show score status and position in the match of a player
@@ -386,7 +388,8 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 	item_wepname: return full name of a weapon from weaponid
 	item_wepammo: ammo display for weapon from f1 and f2
 	item_centime: amount of time to display weapon message in centerprint
-	item_buffname: return full name of a buff from buffid
+	item_buffname: return full name of a buff from buffid f1
+	f3buffname: return full name of a buff from buffid f3
 	death_team: show the full name of the team a player is switching from
 	minigame1_name: return human readable name of a minigame from its id(s1)
 	minigame1_d: return descriptor name of a minigame from its id(s1)
@@ -438,14 +441,14 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS,        "f2primsec",     (f2 ? _("secondary") : _("primary"))) \
 	ARG_CASE(ARG_CS,        "f3primsec",     (f3 ? _("secondary") : _("primary"))) \
 	ARG_CASE(ARG_CS,        "f1secs",        count_seconds(f1)) \
-	ARG_CASE(ARG_CS,        "f1points",      (f1 == 1 ? _("point") : _("points"))) \
+	ARG_CASE(ARG_CS,        "f1points",      (f1 == 1 ? _("1 point") : sprintf(_("%d points"), f1))) \
 	ARG_CASE(ARG_CS_SV,     "f1ord",         count_ordinal(f1)) \
 	ARG_CASE(ARG_CS_SV,     "f1time",        process_time(2, f1)) \
 	ARG_CASE(ARG_CS_SV_HA,  "f1race_time",   TIME_ENCODED_TOSTRING(f1, true)) \
 	ARG_CASE(ARG_CS_SV_HA,  "f2race_time",   TIME_ENCODED_TOSTRING(f2, true)) \
 	ARG_CASE(ARG_CS_SV_HA,  "f3race_time",   TIME_ENCODED_TOSTRING(f3, true)) \
-	ARG_CASE(ARG_CS_SV,     "race_col",      CCR(((f1 == 1) ? "^F1" : "^F2"))) \
-	ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf(CCR("^1[+%s]"), TIME_ENCODED_TOSTRING(f2 - f3, true)) : sprintf(CCR("^2[-%s]"), TIME_ENCODED_TOSTRING(f3 - f2, true)))) \
+	ARG_CASE(ARG_CS_SV,     "race_col",      CCR((f1 == 1) ? "^F1" : "^F2")) \
+	ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf("^1[+%s]", TIME_ENCODED_TOSTRING(f2 - f3, true)) : sprintf("^2[-%s]", TIME_ENCODED_TOSTRING(f3 - f2, true)))) \
 	ARG_CASE(ARG_CS,        "missing_teams", notif_arg_missing_teams(f1)) \
 	ARG_CASE(ARG_CS,        "pass_key",      getcommandkey(_("drop flag"), "+use")) \
 	ARG_CASE(ARG_CS,        "nade_key",      getcommandkey(_("throw nade"), "dropweapon")) \
@@ -474,13 +477,13 @@ MACRO_END
 #define NOTIF_HIT_UNKNOWN(token,funcname) { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
 
 #define KILL_SPREE_LIST \
-	SPREE_ITEM(3, 03, _("TRIPLE FRAG! "), _("%s^K1 made a TRIPLE FRAG! %s^BG"), _("%s^K1 made a TRIPLE SCORE! %s^BG")) \
-	SPREE_ITEM(5, 05, _("RAGE! "), _("%s^K1 unlocked RAGE! %s^BG"), _("%s^K1 made FIVE SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(10, 10, _("MASSACRE! "), _("%s^K1 started a MASSACRE! %s^BG"), _("%s^K1 made TEN SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(15, 15, _("MAYHEM! "), _("%s^K1 executed MAYHEM! %s^BG"), _("%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(20, 20, _("BERSERKER! "), _("%s^K1 is a BERSERKER! %s^BG"), _("%s^K1 made TWENTY SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(25, 25, _("CARNAGE! "), _("%s^K1 inflicts CARNAGE! %s^BG"), _("%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG")) \
-	SPREE_ITEM(30, 30, _("ARMAGEDDON! "), _("%s^K1 unleashes ARMAGEDDON! %s^BG"), _("%s^K1 made THIRTY SCORES IN A ROW! %s^BG"))
+	SPREE_ITEM(3,  03, _("TRIPLE FRAG!"), _("%s^K1 made a TRIPLE FRAG!"),   _("%s^K1 made a TRIPLE SCORE!")) \
+	SPREE_ITEM(5,  05, _("RAGE!"),        _("%s^K1 unlocked RAGE!"),        _("%s^K1 made FIVE SCORES IN A ROW!")) \
+	SPREE_ITEM(10, 10, _("MASSACRE!"),    _("%s^K1 started a MASSACRE!"),   _("%s^K1 made TEN SCORES IN A ROW!")) \
+	SPREE_ITEM(15, 15, _("MAYHEM!"),      _("%s^K1 executed MAYHEM!"),      _("%s^K1 made FIFTEEN SCORES IN A ROW!")) \
+	SPREE_ITEM(20, 20, _("BERSERKER!"),   _("%s^K1 is a BERSERKER!"),       _("%s^K1 made TWENTY SCORES IN A ROW!")) \
+	SPREE_ITEM(25, 25, _("CARNAGE!"),     _("%s^K1 inflicts CARNAGE!"),     _("%s^K1 made TWENTY FIVE SCORES IN A ROW!")) \
+	SPREE_ITEM(30, 30, _("ARMAGEDDON!"),  _("%s^K1 unleashes ARMAGEDDON!"), _("%s^K1 made THIRTY SCORES IN A ROW!"))
 
 #ifdef CSQC
 string notif_arg_frag_ping(bool newline, float fping)
@@ -519,7 +522,8 @@ string notif_arg_spree_cen(float spree)
 		if(spree > 1)
 		{
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
-				case counta: { return normal_or_gentle(center, sprintf(_("%d score spree! "), spree)); }
+				case counta: \
+					return strcat(normal_or_gentle(center, sprintf(_("%d score spree!"), spree)), " ");
 
 			switch(spree)
 			{
@@ -530,10 +534,10 @@ string notif_arg_spree_cen(float spree)
 					{
 						return
 							sprintf(
-								normal_or_gentle(
-									_("%d frag spree! "),
-									_("%d score spree! ")
-								),
+								strcat(normal_or_gentle(
+									_("%d frag spree!"),
+									_("%d score spree!")
+									), " "),
 								spree);
 					}
 					else { return ""; } // don't show spree information if it isn't an achievement
@@ -544,11 +548,11 @@ string notif_arg_spree_cen(float spree)
 		}
 		else if(spree == -1) // first blood
 		{
-			return normal_or_gentle(_("First blood! "), _("First score! "));
+			return strcat(normal_or_gentle(_("First blood!"), _("First score!")), " ");
 		}
 		else if(spree == -2) // first victim
 		{
-			return normal_or_gentle(_("First victim! "), _("First casualty! "));
+			return strcat(normal_or_gentle(_("First victim!"), _("First casualty!")), " ");
 		}
 	}
 	return "";
@@ -577,7 +581,9 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 				if(spree > 1)
 				{
 					#define SPREE_ITEM(counta,countb,center,normal,gentle) \
-						case counta: { return sprintf(CCR(normal_or_gentle(normal, gentle)), player, spree_newline); }
+						case counta: \
+							return sprintf(CCR(strcat(normal_or_gentle(normal, gentle), " %s^BG")), \
+								player, spree_newline);
 
 					switch(spree)
 					{
@@ -588,10 +594,10 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 							{
 								return
 									sprintf(
-										CCR(normal_or_gentle(
-											_("%s^K1 has %d frags in a row! %s^BG"),
-											_("%s^K1 made %d scores in a row! %s^BG")
-										)),
+										CCR(strcat(normal_or_gentle(
+											_("%s^K1 has %d frags in a row!"),
+											_("%s^K1 made %d scores in a row!")
+											), " %s^BG")),
 										player,
 										spree,
 										spree_newline
@@ -607,10 +613,10 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 				{
 					return
 						sprintf(
-							CCR(normal_or_gentle(
-								_("%s^K1 drew first blood! %s^BG"),
-								_("%s^K1 got the first score! %s^BG")
-							)),
+							CCR(strcat(normal_or_gentle(
+								_("%s^K1 drew first blood!"),
+								_("%s^K1 got the first score!")
+								), " %s^BG")),
 							player,
 							spree_newline
 						);
@@ -654,20 +660,11 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 
 string notif_arg_item_wepammo(float f1, float f2)
 {
-	string ammoitems = "";
 	Weapon wep = REGISTRY_GET(Weapons, f1);
-	// TODO: registry handles
-	switch (wep.ammo_type)
-	{
-		case RES_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
-		case RES_BULLETS: ammoitems = ITEM_Bullets.m_name;     break;
-		case RES_ROCKETS: ammoitems = ITEM_Rockets.m_name;     break;
-		case RES_CELLS:   ammoitems = ITEM_Cells.m_name;       break;
-		case RES_PLASMA:  ammoitems = ITEM_Plasma.m_name;      break;
-		case RES_FUEL:    ammoitems = ITEM_JetpackFuel.m_name; break;
-		default: return ""; // doesn't use ammo
-	}
-	return sprintf(_(" with %d %s"), f2, strtolower(ammoitems));
+	if(wep.ammo_type == RES_NONE)
+		return ""; // doesn't use ammo
+	// example for translators: You dropped the Vortex with 5 cells
+	return sprintf(_(" with %d %s"), f2, strtolower(wep.ammo_type.m_name));
 }
 
 

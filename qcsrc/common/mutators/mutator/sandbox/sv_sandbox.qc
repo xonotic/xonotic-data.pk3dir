@@ -68,7 +68,7 @@ void sandbox_ObjectFunction_Touch(entity this, entity toucher)
 void sandbox_ObjectFunction_Think(entity this)
 {
 	// decide if and how this object can be grabbed
-	if(autocvar_g_sandbox_readonly)
+	if(autocvar_g_sandbox_readonly || MUTATOR_CALLHOOK(Sandbox_DragAllowed, this))
 		this.grab = 0; // no grabbing
 	else if(autocvar_g_sandbox_editor_free < 2 && this.crypto_idfp)
 		this.grab = 1; // owner only
@@ -353,7 +353,7 @@ entity sandbox_ObjectPort_Load(entity this, string s, float database)
 			parent = e; // mark parent objects as such
 		}
 		// properties stored for all objects
-		SANDBOX_GETARG; _setmodel(e, arg);
+		SANDBOX_GETARG; precache_model(arg); _setmodel(e, arg);
 		SANDBOX_GETARG; e.skin = stof(arg);
 		SANDBOX_GETARG; e.alpha = stof(arg);
 		SANDBOX_GETARG; e.colormod = stov(arg);
@@ -389,6 +389,9 @@ entity sandbox_ObjectPort_Load(entity this, string s, float database)
 
 void sandbox_Database_Save()
 {
+	if(MUTATOR_CALLHOOK(Sandbox_SaveAllowed))
+		return;
+
 	// saves all objects to the database file
 	string file_name;
 	float file_get;
@@ -418,6 +421,7 @@ void sandbox_Database_Load()
 	{
 		if(autocvar_g_sandbox_info > 0)
 			LOG_INFO("^3SANDBOX - SERVER: ^7could not find storage file ^3", file_name, "^7, no objects were loaded");
+		return;
 	}
 	else
 	{
@@ -458,7 +462,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 
 	if(cmd_name == "g_sandbox")
 	{
-		if(autocvar_g_sandbox_readonly)
+		if(autocvar_g_sandbox_readonly || MUTATOR_CALLHOOK(Sandbox_EditAllowed, player))
 		{
 			print_to(player, "^2SANDBOX - INFO: ^7Sandbox mode is active, but in read-only mode. Sandbox commands cannot be used");
 			return true;
@@ -531,6 +535,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 				}
 
 				e = sandbox_ObjectSpawn(player, false);
+				precache_model(argv(2));
 				_setmodel(e, argv(2));
 
 				if(autocvar_g_sandbox_info > 0)

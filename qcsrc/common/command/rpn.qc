@@ -191,9 +191,9 @@ void GenericCommand_rpn(int request, int argc, string command)
 						f = rpn_popf();
 						rpn_setf(!rpn_getf() != !f);
 					} else if(rpncmd == "bitnot") {
-						rpn_setf(~rpn_popf());
+						rpn_setf(~rpn_getf());
 					} else if(rpncmd == "not") {
-						rpn_setf(!rpn_popf());
+						rpn_setf(!rpn_getf());
 					} else if(rpncmd == "abs") {
 						rpn_setf(fabs(rpn_getf()));
 					} else if(rpncmd == "sgn") {
@@ -571,7 +571,7 @@ LABEL(skip_difference)
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " rpn <expression>");
-			LOG_HELP("    Operator description (x: string, s: set, f: float):");
+			LOG_HELP("  ^2Operations:");
 			LOG_HELP("    x pop ----------------------------->     : removes the top");
 			LOG_HELP("    x dup -----------------------------> x x : duplicates the top");
 			LOG_HELP("    x x exch --------------------------> x x : swap the top two");
@@ -588,23 +588,28 @@ LABEL(skip_difference)
 			LOG_HELP("    s s union|intersection|difference -> s   : set operations");
 			LOG_HELP("    s shuffle -------------------------> s   : randomly arrange elements");
 			LOG_HELP("    /key /value put ------------------->     : set a database key");
-			LOG_HELP("    /key get --------------------------> s   : get a database value");
+			LOG_HELP("    /key get --------------------------> x   : get a database value");
 			LOG_HELP("    x dbpush -------------------------->     : pushes the top onto the database");
 			LOG_HELP("    dbpop|dbget -----------------------> x   : removes/reads DB's top");
 			LOG_HELP("    dblen|dbat ------------------------> f   : gets the DB's size/cursor pos");
 			LOG_HELP("    dbclr ----------------------------->     : clear the DB");
-			LOG_HELP("    s dbsave|dbload-------------------->     : save/load the DB to/from a file");
+			LOG_HELP("    x dbsave|dbload-------------------->     : save/load the DB to/from a file");
 			LOG_HELP("    x dbins --------------------------->     : moves the top into the DB");
 			LOG_HELP("    dbext|dbread ----------------------> x   : extract/get from the DB's cursor");
 			LOG_HELP("    f dbmov|dbgoto -------------------->     : move or set the DB's cursor");
-			LOG_HELP("    s localtime -----------------------> s   : formats the current local time");
-			LOG_HELP("    s gmtime --------------------------> s   : formats the current UTC time");
+			LOG_HELP("    x localtime -----------------------> x   : formats the current local time");
+			LOG_HELP("    x gmtime --------------------------> x   : formats the current UTC time");
 			LOG_HELP("    time ------------------------------> f   : seconds since VM start");
-			LOG_HELP("    s /MD4 digest ---------------------> s   : MD4 digest");
-			LOG_HELP("    s /SHA256 digest ------------------> s   : SHA256 digest");
-			LOG_HELP("    s /formatstring sprintf1s ---------> s   : sprintf with 1 string (pad, cut)");
-			LOG_HELP("    s eval ---------------------------->     : does something eval");
-			LOG_HELP("    Set operations operate on 'such''strings'.");
+			LOG_HELP("    x /MD4 digest ---------------------> x   : MD4 digest");
+			LOG_HELP("    x /SHA256 digest ------------------> x   : SHA256 digest");
+			LOG_HELP("    x /formatstring sprintf1s ---------> x   : sprintf with 1 string (pad, cut)");
+			LOG_HELP("    x fexists -------------------------> f   : checks if a file exists");
+			LOG_HELP("    x eval ---------------------------->     : does something eval");
+			LOG_HELP("");
+			LOG_HELP("  ^2Notes:");
+			LOG_HELP("    f: float");
+			LOG_HELP("    x: string defined like this: /abc or \"/abc def\"");
+			LOG_HELP("    s: string defined like x and containing a set of space-separated strings");
 			LOG_HELP("    Unknown tokens insert their cvar value.");
 			return;
 		}

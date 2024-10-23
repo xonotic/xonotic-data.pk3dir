@@ -154,7 +154,8 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 {
 	if((prefix == "") || PS_GR_OUT_DB < 0) { return 0; }
 
-	string key = sprintf("%s:%s", prefix, event_id);
+	// use a cheaper strcat here since this function is called often in game
+	string key = strcat(prefix, ":", event_id);
 	float val = stof(db_get(PS_GR_OUT_DB, key));
 	val += value;
 	db_put(PS_GR_OUT_DB, key, ftos(val));

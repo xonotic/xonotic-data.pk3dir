@@ -219,14 +219,14 @@ void IL_INIT(IntrusiveList this)
 {
 	.entity nextfld, prevfld;
 	for (int i = il_links_ptr; i < il_links_ptr + IL_MAX; ++i) {
-		int idx = i;
-		if (idx >= IL_MAX) idx -= IL_MAX;
-		int id = idx;
-		idx *= 2;
-		if (!il_links[idx]) {
-			il_links[idx] = this;
-			nextfld = il_links_flds[idx + 0];
-			prevfld = il_links_flds[idx + 1];
+		int id = i;
+		if (id >= IL_MAX) id -= IL_MAX;
+
+		if (!il_links[id]) {
+			il_links[id] = this;
+			int flds_idx = id * 2;
+			nextfld = il_links_flds[flds_idx + 0];
+			prevfld = il_links_flds[flds_idx + 1];
 			this.il_id = id;
 			int bit = IL_FLOOR(id / IL_LISTS_PER_BIT);
 			if (bit < (1 * 24)) this.il_listmask = '1 0 0' * (1 << (bit - (0 * 24)));

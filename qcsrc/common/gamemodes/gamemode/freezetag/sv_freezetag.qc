@@ -86,9 +86,11 @@ bool freezetag_CheckTeams()
 void nades_Clear(entity);
 void nades_GiveBonus(entity player, float score);
 
+float autocvar_g_freezetag_round_enddelay = 1;
 bool freezetag_CheckWinner()
 {
-	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
+	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
+		&& round_handler_GetEndDelayTime() == -1)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
@@ -104,7 +106,26 @@ bool freezetag_CheckWinner()
 
 	int winner_team = Team_GetWinnerAliveTeam();
 	if (!winner_team)
+	{
+		round_handler_ResetEndDelayTime();
 		return false;
+	}
+
+	// delay round ending a bit
+	if (autocvar_g_freezetag_round_enddelay
+		&& round_handler_GetEndTime() > 0
+		&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
+	{
+		if (round_handler_GetEndDelayTime() == -1)
+		{
+			round_handler_SetEndDelayTime(min(time + autocvar_g_freezetag_round_enddelay, round_handler_GetEndTime()));
+			return 0;
+		}
+		else if (round_handler_GetEndDelayTime() >= time)
+		{
+			return 0;
+		}
+	}
 
 	if(winner_team > 0)
 	{

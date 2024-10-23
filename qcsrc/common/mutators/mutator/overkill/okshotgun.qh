@@ -32,19 +32,9 @@ CLASS(OverkillShotgun, Weapon)
 		P(class, prefix, refire, float, PRI) \
 		P(class, prefix, solidpenetration, float, PRI) \
 		P(class, prefix, spread, float, PRI) \
-		P(class, prefix, animtime, float, SEC) \
-		P(class, prefix, damage, float, SEC) \
-		P(class, prefix, delay, float, SEC) \
-		P(class, prefix, edgedamage, float, SEC) \
-		P(class, prefix, force, float, SEC) \
-		P(class, prefix, force_zscale, float, SEC) \
-		P(class, prefix, lifetime, float, SEC) \
-		P(class, prefix, radius, float, SEC) \
-		P(class, prefix, refire, float, SEC) \
+		P(class, prefix, spread_pattern, float, PRI) \
+		P(class, prefix, spread_pattern_scale, float, PRI) \
 		P(class, prefix, refire_type, float, SEC) \
-		P(class, prefix, shotangle, float, SEC) \
-		P(class, prefix, speed, float, SEC) \
-		P(class, prefix, spread, float, SEC) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
@@ -58,6 +48,6 @@ CLASS(OverkillShotgun, Weapon)
 #undef X
 
 ENDCLASS(OverkillShotgun)
-REGISTER_WEAPON(OVERKILL_SHOTGUN, okshotgun, NEW(OverkillShotgun));
+REGISTER_WEAPON(OVERKILL_SHOTGUN, NEW(OverkillShotgun));
 
 //SPAWNFUNC_WEAPON(weapon_okshotgun, WEP_OVERKILL_SHOTGUN)
