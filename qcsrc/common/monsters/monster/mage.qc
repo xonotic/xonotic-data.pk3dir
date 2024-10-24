@@ -100,7 +100,6 @@ bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 		case 1:
 		{
 			return ((GetResource(targ, RES_CELLS) && GetResource(targ, RES_CELLS) < g_pickup_cells_max)
-				||  (GetResource(targ, RES_PLASMA) && GetResource(targ, RES_PLASMA) < g_pickup_plasma_max)
 				||  (GetResource(targ, RES_ROCKETS) && GetResource(targ, RES_ROCKETS) < g_pickup_rockets_max)
 				||  (GetResource(targ, RES_BULLETS) && GetResource(targ, RES_BULLETS) < g_pickup_nails_max)
 				||  (GetResource(targ, RES_SHELLS) && GetResource(targ, RES_SHELLS) < g_pickup_shells_max)
@@ -237,7 +236,6 @@ void M_Mage_Defend_Heal(entity this)
 				case 1:
 				{
 					if(GetResource(it, RES_CELLS)) GiveResourceWithLimit(it, RES_CELLS, 1, g_pickup_cells_max);
-					if(GetResource(it, RES_PLASMA)) GiveResourceWithLimit(it, RES_PLASMA, 1, g_pickup_plasma_max);
 					if(GetResource(it, RES_ROCKETS)) GiveResourceWithLimit(it, RES_ROCKETS, 1, g_pickup_rockets_max);
 					if(GetResource(it, RES_SHELLS)) GiveResourceWithLimit(it, RES_SHELLS, 2, g_pickup_shells_max);
 					if(GetResource(it, RES_BULLETS)) GiveResourceWithLimit(it, RES_BULLETS, 5, g_pickup_nails_max);

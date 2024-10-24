@@ -560,7 +560,6 @@ void GiveWarmupResources(entity this)
 	SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
 	SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
 	SetResource(this, RES_CELLS, warmup_start_ammo_cells);
-	SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
 	SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
 	SetResource(this, RES_HEALTH, warmup_start_health);
 	SetResource(this, RES_ARMOR, warmup_start_armorvalue);
@@ -624,7 +623,6 @@ void PutPlayerInServer(entity this)
 		SetResource(this, RES_BULLETS, start_ammo_nails);
 		SetResource(this, RES_ROCKETS, start_ammo_rockets);
 		SetResource(this, RES_CELLS, start_ammo_cells);
-		SetResource(this, RES_PLASMA, start_ammo_plasma);
 		SetResource(this, RES_FUEL, start_ammo_fuel);
 		SetResource(this, RES_HEALTH, start_health);
 		SetResource(this, RES_ARMOR, start_armorvalue);
@@ -1792,7 +1790,6 @@ void SpectateCopy(entity this, entity spectatee)
 	this.armortype = spectatee.armortype;
 	SetResourceExplicit(this, RES_ARMOR, GetResource(spectatee, RES_ARMOR));
 	SetResourceExplicit(this, RES_CELLS, GetResource(spectatee, RES_CELLS));
-	SetResourceExplicit(this, RES_PLASMA, GetResource(spectatee, RES_PLASMA));
 	SetResourceExplicit(this, RES_SHELLS, GetResource(spectatee, RES_SHELLS));
 	SetResourceExplicit(this, RES_BULLETS, GetResource(spectatee, RES_BULLETS));
 	SetResourceExplicit(this, RES_ROCKETS, GetResource(spectatee, RES_ROCKETS));
