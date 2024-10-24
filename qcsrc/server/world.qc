@@ -1067,6 +1067,11 @@ spawnfunc(worldspawn)
 		// INITPRIO_LAST is too soon: bots either didn't join yet or didn't leave yet, see: bot_fixcount()
 		defer(this, 5, Pause_TryPause_Dedicated);
 
+	// load entity data outputted by create_scrshot_ent
+	string filename = strcat("data/", mapname, "_scrshot_ent.txt");
+	if(!find(NULL, classname, "info_autoscreenshot") && fexists(filename))
+		loadfromfile(filename);
+
 	world_initialized = 1;
 	__spawnfunc_spawn_all();
 }
