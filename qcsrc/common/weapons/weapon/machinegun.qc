@@ -13,7 +13,7 @@ void MachineGun_Update_Spread(entity actor, .entity weaponentity)
 	// time based spread decay
 	if (WEP_CVAR(WEP_MACHINEGUN, spread_decay))
 	{
-		float spreadSpectrumDistance = WEP_CVAR(WEP_MACHINEGUN, spread_max) - WEP_CVAR(WEP_MACHINEGUN, spread_min);
+		float spreadSpectrumDistance = fabs(WEP_CVAR(WEP_MACHINEGUN, spread_max) - WEP_CVAR(WEP_MACHINEGUN, spread_min));
 		float timediff = time - actor.(weaponentity).spreadUpdateTime;
 		spread_accum = bound(0,
 			spread_accum - (timediff * WEP_CVAR(WEP_MACHINEGUN, spread_decay)),
@@ -138,7 +138,11 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 
 	float spread_accum = actor.(weaponentity).machinegun_spread_accumulation;
 
-	float spread_accuracy = WEP_CVAR(WEP_MACHINEGUN, spread_min) + spread_accum;
+	float spread_accuracy;
+	if (WEP_CVAR(WEP_MACHINEGUN, spread_min) < WEP_CVAR(WEP_MACHINEGUN, spread_max))
+		spread_accuracy = WEP_CVAR(WEP_MACHINEGUN, spread_min) + spread_accum;
+	else // inverted
+		spread_accuracy = WEP_CVAR(WEP_MACHINEGUN, spread_min) - spread_accum;
 
 	fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir,
 	                   spread_accuracy,
