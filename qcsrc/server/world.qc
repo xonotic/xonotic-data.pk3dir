@@ -2560,6 +2560,14 @@ void EndFrame()
 		it.hitsound_damage_dealt = 0;
 		it.killsound = false;
 		antilag_record(it, CS(it), altime);
+		if(it.death_time == time && IS_PLAYER(it) && IS_DEAD(it))
+		{
+			// player's bbox gets resized now, instead of in the damage event that killed the player,
+			// once all the damage events of this frame have been processed with normal size
+			float h = ceil((it.mins.z + it.maxs.z) * PL_CORPSE_SCALE * 10) / 10;
+			it.maxs.z = max(h, it.mins.z + 1);
+			setsize(it, it.mins, it.maxs);
+		}
 	});
 	IL_EACH(g_monsters, true,
 	{
