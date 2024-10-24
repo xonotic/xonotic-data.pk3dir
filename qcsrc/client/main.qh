@@ -116,7 +116,7 @@ bool spectatorbutton_zoom;
 bool observe_blocked;
 bool button_attack2;
 
-float current_viewzoom;
+float current_viewzoom = 1;
 float zoomin_effect;
 bool warmup_stage;
 
