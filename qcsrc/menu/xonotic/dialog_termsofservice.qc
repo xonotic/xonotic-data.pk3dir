@@ -37,13 +37,11 @@ void XonoticToS_OnGet(entity fh, entity me, int status)
 		}
 		case URL_READY_ERROR:
 		{
-			me.text = strzone("Error reading ToS");
-			me.textBox.setText(me.textBox, me.text);
+			me.textBox.setText(me.textBox, "Error reading ToS");
 			break;
 		}
 		case URL_READY_CANREAD:
 		{
-			strfree(me.text);
 			string temp = "";
 			for (string s; (s = url_fgets(fh)); )
 			{
@@ -53,8 +51,7 @@ void XonoticToS_OnGet(entity fh, entity me, int status)
 					temp = s;
 			}
 			url_fclose(fh);
-			me.text = strzone(temp);
-			me.textBox.setText(me.textBox, me.text);
+			me.textBox.setText(me.textBox, temp);
 			break;
 		}
 		default:
