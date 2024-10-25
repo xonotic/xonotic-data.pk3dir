@@ -22,45 +22,45 @@ CLASS(Crylink, Weapon)
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
 		P(class, prefix, ammo, float, BOTH) \
-        P(class, prefix, animtime, float, BOTH) \
-        P(class, prefix, bouncedamagefactor, float, BOTH) \
-        P(class, prefix, bounces, float, BOTH) \
-        P(class, prefix, damage, float, BOTH) \
-        P(class, prefix, edgedamage, float, BOTH) \
-        P(class, prefix, force, float, BOTH) \
-        P(class, prefix, joindelay, float, BOTH) \
-        P(class, prefix, joinexplode, float, BOTH) \
-        P(class, prefix, joinexplode_damage, float, BOTH) \
-        P(class, prefix, joinexplode_edgedamage, float, BOTH) \
-        P(class, prefix, joinexplode_force, float, BOTH) \
-        P(class, prefix, joinexplode_radius, float, BOTH) \
-        P(class, prefix, joinspread, float, BOTH) \
-        P(class, prefix, linkexplode, float, BOTH) \
-        P(class, prefix, middle_fadetime, float, BOTH) \
-        P(class, prefix, middle_lifetime, float, BOTH) \
-        P(class, prefix, other_fadetime, float, BOTH) \
-        P(class, prefix, other_lifetime, float, BOTH) \
-        P(class, prefix, radius, float, BOTH) \
-        P(class, prefix, refire, float, BOTH) \
-        P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-        P(class, prefix, secondary, float, NONE) \
-        P(class, prefix, shots, float, BOTH) \
-        P(class, prefix, speed, float, BOTH) \
-        P(class, prefix, spreadtype, float, SEC) \
-        P(class, prefix, spread, float, BOTH) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, bouncedamagefactor, float, BOTH) \
+		P(class, prefix, bounces, float, BOTH) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, edgedamage, float, BOTH) \
+		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, joindelay, float, BOTH) \
+		P(class, prefix, joinexplode, float, BOTH) \
+		P(class, prefix, joinexplode_damage, float, BOTH) \
+		P(class, prefix, joinexplode_edgedamage, float, BOTH) \
+		P(class, prefix, joinexplode_force, float, BOTH) \
+		P(class, prefix, joinexplode_radius, float, BOTH) \
+		P(class, prefix, joinspread, float, BOTH) \
+		P(class, prefix, linkexplode, float, BOTH) \
+		P(class, prefix, middle_fadetime, float, BOTH) \
+		P(class, prefix, middle_lifetime, float, BOTH) \
+		P(class, prefix, other_fadetime, float, BOTH) \
+		P(class, prefix, other_lifetime, float, BOTH) \
+		P(class, prefix, radius, float, BOTH) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, reload_ammo, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, secondary, float, NONE) \
+		P(class, prefix, shots, float, BOTH) \
+		P(class, prefix, speed, float, BOTH) \
+		P(class, prefix, spreadtype, float, SEC) \
+		P(class, prefix, spread, float, BOTH) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
 	W_PROPS(X, Crylink, crylink)
 #undef X
 
 ENDCLASS(Crylink)
-REGISTER_WEAPON(CRYLINK, crylink, NEW(Crylink));
+REGISTER_WEAPON(CRYLINK, NEW(Crylink));
 
 SPAWNFUNC_WEAPON(weapon_crylink, WEP_CRYLINK)
 

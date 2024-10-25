@@ -90,6 +90,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if (source)
 		namestr = playername(source.netname, source.team, (autocvar_g_chat_teamcolors && IS_PLAYER(source)));
 
+	if (autocvar_g_chat_show_playerid)
+		namestr = strcat(namestr, " ^9#", itos(etof(source)), "^7");
+
 	string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
 
 	string msgstr = "", cmsgstr = "";
@@ -157,6 +160,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 	string fullmsgstr = msgstr;
 	string fullcmsgstr = cmsgstr;
+	float mod_time = 0;
 
 	// FLOOD CONTROL
 	int flood = 0;
@@ -185,15 +189,17 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			flood_lmax = autocvar_g_chat_flood_lmax;
 			flood_field = floodcontrol_chat;
 		}
+		// to match cvar descriptions, a value of 3 must allow three-line bursts and not four!
 		flood_burst = max(0, flood_burst - 1);
-		// to match explanation in default.cfg, a value of 3 must allow three-line bursts and not four!
 
+		int lines = -1;
+		mod_time = gettime(GETTIME_FRAMESTART) + flood_burst * flood_spl;
 		// do flood control for the default line size
 		if(msgstr != "")
 		{
 			getWrappedLine_remaining = msgstr;
 			msgstr = "";
-			int lines = 0;
+			lines = 0;
 			while(getWrappedLine_remaining && (!flood_lmax || lines <= flood_lmax))
 			{
 				msgstr = strcat(msgstr, " ", getWrappedLineLen(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
@@ -206,27 +212,20 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				msgstr = strcat(msgstr, "\n");
 				flood = 2;
 			}
+		}
 
-			if (time >= source.(flood_field))
-			{
-				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + lines * flood_spl;
-			}
-			else
-			{
-				flood = 1;
-				msgstr = fullmsgstr;
-			}
+		if (mod_time >= source.(flood_field))
+		{
+			if (lines > 1)
+				flood_spl *= lines;
+			source.(flood_field) = max(gettime(GETTIME_FRAMESTART), source.(flood_field)) + flood_spl;
 		}
 		else
 		{
-			if (time >= source.(flood_field))
-				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + flood_spl;
-			else
-				flood = 1;
+			if (lines >= 0) // if true msgstr was modified
+				msgstr = fullmsgstr;
+			flood = 1;
 		}
-
-		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
-			source.(flood_field) = flood = 0;
 	}
 
 	string sourcemsgstr, sourcecmsgstr;
@@ -273,7 +272,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	{
 		if (autocvar_g_chat_flood_notify_flooder)
 		{
-			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
+			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1",
+				ftos(source.(flood_field) - mod_time), "^3 seconds\n"));
 			ret = 0;
 		}
 		else
@@ -480,13 +480,26 @@ string PlayerHealth(entity this)
 string WeaponNameFromWeaponentity(entity this, .entity weaponentity)
 {
 	entity wepent = this.(weaponentity);
-	if(!wepent)
-		return "none";
+	if(!wepent || !IS_PLAYER(this))
+		return "N/A";
 	else if(wepent.m_weapon != WEP_Null)
 		return wepent.m_weapon.m_name;
 	else if(wepent.m_switchweapon != WEP_Null)
 		return wepent.m_switchweapon.m_name;
 	return "none"; //REGISTRY_GET(Weapons, wepent.cnt).m_name;
+}
+
+string AmmoNameFromWeaponentity(entity this, .entity weaponentity)
+{
+	entity wepent = this.(weaponentity);
+	string fallback = "N/A";
+	if(!wepent || !IS_PLAYER(this))
+		return fallback;
+	else if(wepent.m_weapon.ammo_type != RES_NONE)
+		return wepent.m_weapon.ammo_type.m_name;
+	else if(wepent.m_switchweapon.ammo_type != RES_NONE)
+		return wepent.m_switchweapon.ammo_type.m_name;
+	return fallback; // REGISTRY_GET(Weapons, wepent.cnt).ammo_type.m_name;
 }
 
 string formatmessage(entity this, string msg)
@@ -495,7 +508,8 @@ string formatmessage(entity this, string msg)
 	float n;
 	vector cursor = '0 0 0';
 	entity cursor_ent = NULL;
-	string escape;
+	string escape,escape_token;
+	bool warn_slash = false;
 	string replacement;
 	p = 0;
 	n = 7;
@@ -532,37 +546,51 @@ string formatmessage(entity this, string msg)
 		}
 
 		replacement = substring(msg, p, 2);
+		escape_token = substring(msg, p, 1);
 		escape = substring(msg, p + 1, 1);
 
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
+#define ON_SLASH() MACRO_BEGIN warn_slash = false; if(escape_token != "\\") break; MACRO_END
+#define NO_SLASH() MACRO_BEGIN if(escape_token == "\\") break; MACRO_END
+// TODO: remove warn_slash before next release (xonotic-v0.9.0)
+// this is only to warn users of backslash expansions for anything other than '\%', '\\' and '\n'
+		if(escape_token == "\\")
+			warn_slash = true;
+		else
+			warn_slash = false;
 		switch(escape)
 		{
-			case "%": replacement = "%"; break;
-			case "\\":replacement = "\\"; break;
-			case "n": replacement = "\n"; break;
-			case "a": replacement = ftos(floor(GetResource(this, RES_ARMOR))); break;
-			case "h": replacement = PlayerHealth(this); break;
-			case "l": replacement = NearestLocation(this.origin); break;
-			case "y": replacement = NearestLocation(cursor); break;
-			case "d": replacement = NearestLocation(this.death_origin); break;
-			case "o": replacement = vtos(this.origin); break;
-			case "O": replacement = sprintf("'%f %f %f'", this.origin.x, this.origin.y, this.origin.z); break;
-			case "w": replacement = WeaponNameFromWeaponentity(this, weaponentity); break;
-			case "W": replacement = GetAmmoName(this.(weaponentity).m_weapon.ammo_type); break;
-			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
-			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
-			case "S": replacement = ftos(vlen(this.velocity)); break;
-			case "t": replacement = seconds_tostring(ceil(max(0, autocvar_timelimit * 60 + game_starttime - time))); break;
-			case "T": replacement = seconds_tostring(floor(time - game_starttime)); break;
+			case "%":             replacement = "%"; warn_slash = false; break;
+			case "\\":ON_SLASH(); replacement = "\\"; break;
+			case "n": ON_SLASH(); replacement = "\n"; break;
+			case "a": NO_SLASH(); replacement = ftos(floor(GetResource(this, RES_ARMOR))); break;
+			case "h": NO_SLASH(); replacement = PlayerHealth(this); break;
+			case "l": NO_SLASH(); replacement = NearestLocation(this.origin); break;
+			case "y": NO_SLASH(); replacement = NearestLocation(cursor); break;
+			case "d": NO_SLASH(); replacement = NearestLocation(this.death_origin); break;
+			case "o": NO_SLASH(); replacement = vtos(this.origin); break;
+			case "O": NO_SLASH(); replacement = sprintf("'%f %f %f'", this.origin.x, this.origin.y, this.origin.z); break;
+			case "w": NO_SLASH(); replacement = WeaponNameFromWeaponentity(this, weaponentity); break;
+			case "W": NO_SLASH(); replacement = AmmoNameFromWeaponentity(this, weaponentity); break;
+			case "x": NO_SLASH(); replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
+			case "s": NO_SLASH(); replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
+			case "S": NO_SLASH(); replacement = ftos(vlen(this.velocity)); break;
+			case "t": NO_SLASH(); replacement = seconds_tostring(ceil(max(0, autocvar_timelimit * 60 + game_starttime - time))); break;
+			case "T": NO_SLASH(); replacement = seconds_tostring(floor(time - game_starttime)); break;
 			default:
 			{
+				warn_slash = false; // too noisy
+				NO_SLASH();
 				MUTATOR_CALLHOOK(FormatMessage, this, escape, replacement, msg);
 				replacement = M_ARGV(2, string);
 				break;
 			}
 		}
-
+#undef ON_SLASH
+#undef NO_SLASH
+		if(warn_slash)
+			PrintToChat(this, sprintf("^3WARNING: unsupported \"\\%s\" expansion, use \"%%%s\"", escape, escape));
 		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
 		p = p + strlen(replacement);
 	}

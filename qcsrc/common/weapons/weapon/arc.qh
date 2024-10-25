@@ -4,7 +4,7 @@ CLASS(Arc, Weapon)
 /* spawnfunc */ ATTRIB(Arc, m_canonical_spawnfunc, string, "weapon_arc");
 /* ammotype  */ ATTRIB(Arc, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Arc, impulse, int, 3);
-/* flags     */ ATTRIB(Arc, spawnflags, int, WEP_TYPE_HITSCAN);
+/* flags     */ ATTRIB(Arc, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Arc, wpcolor, vector, '1 1 1');
 /* modelname */ ATTRIB(Arc, mdl, string, "arc");
@@ -23,64 +23,64 @@ CLASS(Arc, Weapon)
 	BEGIN(class) \
 		P(class, prefix, bolt, float, NONE) \
 		P(class, prefix, bolt_ammo, float, NONE) \
-        P(class, prefix, bolt_bounce_count, float, NONE) \
-        P(class, prefix, bolt_bounce_explode, float, NONE) \
-        P(class, prefix, bolt_bounce_lifetime, float, NONE) \
-        P(class, prefix, bolt_count, float, NONE) \
-        P(class, prefix, bolt_damageforcescale, float, NONE) \
-        P(class, prefix, bolt_damage, float, NONE) \
-        P(class, prefix, bolt_edgedamage, float, NONE) \
-        P(class, prefix, bolt_force, float, NONE) \
-        P(class, prefix, bolt_health, float, NONE) \
-        P(class, prefix, bolt_lifetime, float, NONE) \
-        P(class, prefix, bolt_radius, float, NONE) \
-        P(class, prefix, bolt_refire, float, NONE) \
-        P(class, prefix, bolt_refire2, float, NONE) \
-        P(class, prefix, bolt_speed, float, NONE) \
-        P(class, prefix, bolt_spread, float, NONE) \
+		P(class, prefix, bolt_bounce_count, float, NONE) \
+		P(class, prefix, bolt_bounce_explode, float, NONE) \
+		P(class, prefix, bolt_bounce_lifetime, float, NONE) \
+		P(class, prefix, bolt_count, float, NONE) \
+		P(class, prefix, bolt_damageforcescale, float, NONE) \
+		P(class, prefix, bolt_damage, float, NONE) \
+		P(class, prefix, bolt_edgedamage, float, NONE) \
+		P(class, prefix, bolt_force, float, NONE) \
+		P(class, prefix, bolt_health, float, NONE) \
+		P(class, prefix, bolt_lifetime, float, NONE) \
+		P(class, prefix, bolt_radius, float, NONE) \
+		P(class, prefix, bolt_refire, float, NONE) \
+		P(class, prefix, bolt_refire2, float, NONE) \
+		P(class, prefix, bolt_speed, float, NONE) \
+		P(class, prefix, bolt_spread, float, NONE) \
 		P(class, prefix, beam_ammo, float, NONE) \
-        P(class, prefix, beam_animtime, float, NONE) \
-        P(class, prefix, beam_botaimlifetime, float, NONE) \
-        P(class, prefix, beam_botaimspeed, float, NONE) \
-        P(class, prefix, beam_damage, float, NONE) \
-        P(class, prefix, beam_degreespersegment, float, NONE) \
-        P(class, prefix, beam_distancepersegment, float, NONE) \
-        P(class, prefix, beam_falloff_halflifedist, float, NONE) \
-        P(class, prefix, beam_falloff_maxdist, float, NONE) \
-        P(class, prefix, beam_falloff_mindist, float, NONE) \
-        P(class, prefix, beam_force, float, NONE) \
-        P(class, prefix, beam_healing_amax, float, NONE) \
-        P(class, prefix, beam_healing_aps, float, NONE) \
-        P(class, prefix, beam_healing_hmax, float, NONE) \
-        P(class, prefix, beam_healing_hps, float, NONE) \
-        P(class, prefix, beam_heat, float, NONE) /* heat increase per second (primary) */ \
-        P(class, prefix, beam_maxangle, float, NONE) \
-        P(class, prefix, beam_nonplayerdamage, float, NONE) \
-        P(class, prefix, beam_range, float, NONE) \
-        P(class, prefix, beam_refire, float, NONE) \
-        P(class, prefix, beam_returnspeed, float, NONE) \
-        P(class, prefix, beam_tightness, float, NONE) \
-        P(class, prefix, burst_ammo, float, NONE) \
-        P(class, prefix, burst_damage, float, NONE) \
-        P(class, prefix, burst_healing_aps, float, NONE) \
-        P(class, prefix, burst_healing_hps, float, NONE) \
-        P(class, prefix, burst_heat, float, NONE) /* heat increase per second (secondary) */ \
-        P(class, prefix, cooldown, float, NONE) /* heat decrease per second when resting */ \
-        P(class, prefix, cooldown_release, float, NONE) /* delay weapon re-use when releasing button */ \
-        P(class, prefix, overheat_max, float, NONE) /* maximum heat before jamming */ \
-        P(class, prefix, overheat_min, float, NONE) /* minimum heat to wait for cooldown */ \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-    END()
-    W_PROPS(X, Arc, arc)
+		P(class, prefix, beam_animtime, float, NONE) \
+		P(class, prefix, beam_botaimlifetime, float, NONE) \
+		P(class, prefix, beam_botaimspeed, float, NONE) \
+		P(class, prefix, beam_damage, float, NONE) \
+		P(class, prefix, beam_degreespersegment, float, NONE) \
+		P(class, prefix, beam_distancepersegment, float, NONE) \
+		P(class, prefix, beam_falloff_halflifedist, float, NONE) \
+		P(class, prefix, beam_falloff_maxdist, float, NONE) \
+		P(class, prefix, beam_falloff_mindist, float, NONE) \
+		P(class, prefix, beam_force, float, NONE) \
+		P(class, prefix, beam_healing_amax, float, NONE) \
+		P(class, prefix, beam_healing_aps, float, NONE) \
+		P(class, prefix, beam_healing_hmax, float, NONE) \
+		P(class, prefix, beam_healing_hps, float, NONE) \
+		P(class, prefix, beam_heat, float, NONE) /* heat increase per second (primary) */ \
+		P(class, prefix, beam_maxangle, float, NONE) \
+		P(class, prefix, beam_nonplayerdamage, float, NONE) \
+		P(class, prefix, beam_range, float, NONE) \
+		P(class, prefix, beam_refire, float, NONE) \
+		P(class, prefix, beam_returnspeed, float, NONE) \
+		P(class, prefix, beam_tightness, float, NONE) \
+		P(class, prefix, burst_ammo, float, NONE) \
+		P(class, prefix, burst_damage, float, NONE) \
+		P(class, prefix, burst_healing_aps, float, NONE) \
+		P(class, prefix, burst_healing_hps, float, NONE) \
+		P(class, prefix, burst_heat, float, NONE) /* heat increase per second (secondary) */ \
+		P(class, prefix, cooldown, float, NONE) /* heat decrease per second when resting */ \
+		P(class, prefix, cooldown_release, float, NONE) /* delay weapon re-use when releasing button */ \
+		P(class, prefix, overheat_max, float, NONE) /* maximum heat before jamming */ \
+		P(class, prefix, overheat_min, float, NONE) /* minimum heat to wait for cooldown */ \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+	W_PROPS(X, Arc, arc)
 #undef X
 
 ENDCLASS(Arc)
-REGISTER_WEAPON(ARC, arc, NEW(Arc));
+REGISTER_WEAPON(ARC, NEW(Arc));
 
 SPAWNFUNC_WEAPON(weapon_arc, WEP_ARC)
 
@@ -102,7 +102,7 @@ const int ARC_BT_BURST_HEAL =  0x12;
 const int ARC_BT_BURST_HIT =   0x13;
 const int ARC_BT_BURSTMASK =   0x10;
 
-const int ARC_SF_SETTINGS =    BIT(0);
+const int ARC_SF_UPDATE =      BIT(0);
 const int ARC_SF_START =       BIT(1);
 const int ARC_SF_WANTDIR =     BIT(2);
 const int ARC_SF_BEAMDIR =     BIT(3);
@@ -113,14 +113,14 @@ const int ARC_SF_LOCALMASK =   ARC_SF_START | ARC_SF_WANTDIR | ARC_SF_BEAMDIR;
 .entity arc_beam;
 .bool arc_BUTTON_ATCK_prev; // for better animation control
 .float beam_prev;
-.float beam_initialized;
-.float beam_bursting;
+.bool beam_initialized;
+.bool beam_bursting;
 .float beam_teleporttime;
 .float beam_heat; // (beam) amount of heat produced
 .float arc_overheat; // (dropped arc/player) time during which it's too hot
 .float arc_cooldown; // (dropped arc/player) cooling speed
 .float arc_heat_percent;
-.float arc_smoke_sound;
+.bool arc_smoke_sound;
 #endif
 #ifdef CSQC
 
@@ -136,14 +136,8 @@ const int ARC_SF_LOCALMASK =   ARC_SF_START | ARC_SF_WANTDIR | ARC_SF_BEAMDIR;
 
 .entity beam_muzzleentity;
 
-.float beam_degreespersegment;
-.float beam_distancepersegment;
 .float beam_usevieworigin;
-.float beam_initialized;
-.float beam_maxangle;
-.float beam_range;
-.float beam_returnspeed;
-.float beam_tightness;
+.bool beam_initialized;
 .vector beam_shotorigin;
 
 entity Draw_ArcBeam_callback_entity;

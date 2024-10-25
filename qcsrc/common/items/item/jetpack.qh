@@ -16,9 +16,13 @@ MODEL(Jetpack_ITEM, Item_Model("g_jetpack.md3"));
 #endif
 
 #ifdef SVQC
+bool autocvar_g_powerups_jetpack = true;
 PROPERTY(int, g_pickup_fuel_jetpack);
-void powerup_jetpack_init(Pickup this, entity item)
+void powerup_jetpack_init(Pickup def, entity item)
 {
+    if(!autocvar_g_powerups || !autocvar_g_powerups_jetpack)
+        def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+
     if(!GetResource(item, RES_FUEL))
         SetResourceExplicit(item, RES_FUEL, g_pickup_fuel_jetpack);
 }
@@ -83,13 +87,22 @@ SPAWNFUNC_ITEM(item_fuel, ITEM_JetpackFuel)
 MODEL(JetpackRegen_ITEM, Item_Model("g_fuelregen.md3"));
 #endif
 
+#ifdef SVQC
+bool autocvar_g_powerups_fuelregen = true;
+void powerup_fuelregen_init(Pickup def, entity item)
+{
+    if(!autocvar_g_powerups || !autocvar_g_powerups_fuelregen)
+        def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+}
+#endif
+
 CLASS(JetpackRegen, Powerup)
 ENDCLASS(JetpackRegen)
 
 REGISTER_ITEM(JetpackRegen, JetpackRegen) {
     this.m_canonical_spawnfunc = "item_fuel_regen";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
+	this.spawnflags             = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_JetpackRegen_ITEM;
 #endif
     this.netname                =   "fuel_regen";
@@ -102,6 +115,7 @@ REGISTER_ITEM(JetpackRegen, JetpackRegen) {
     this.m_botvalue             =   3000;
     this.m_itemid               =   IT_FUEL_REGEN;
     this.m_pickupevalfunc       =   ammo_pickupevalfunc;
+    this.m_iteminit             =   powerup_fuelregen_init;
 #endif
 }
 

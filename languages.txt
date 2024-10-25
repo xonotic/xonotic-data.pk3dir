@@ -1,32 +1,34 @@
-ast   "Asturian" "Asturianu" 72%
+ast   "Asturian" "Asturianu" 71%
 id_ID "Indonesian" "Bahasa Indonesia" 39%
-de    "German" "Deutsch" 99%
-de_CH "German (Switzerland)" "Deutsch (Schweiz)" 99%
+de    "German" "Deutsch" 97%
+de_CH "German (Switzerland)" "Deutsch (Schweiz)" 97%
 en    "English" "English" 100%
-en_AU "English (Australia)" "English (Australia)" 68%
-es    "Spanish" "Español" 99%
-fr    "French" "Français" 99%
-ga    "Irish" "Irish" 29%
-it    "Italian" "Italiano" 99%
-la    "Latin" "Lingua Latina" 99%
-hu    "Hungarian" "Magyar" 44%
-nl    "Dutch" "Nederlands" 62%
-pl    "Polish" "Polski" 78%
-pt    "Portuguese" "Português" 76%
-pt_BR "Portuguese (Brazil)" "Português (Brasil)" 99%
-ro    "Romanian" "Romana" 67%
-fi    "Finnish" "Suomi" 98%
-sv    "Swedish" "Svenska" 99%
+en_AU "English (Australia)" "English (Australia)" 100%
+es    "Spanish" "Español" 96%
+fr    "French" "Français" 100%
+gl    "Galician" "Galego" 100%
+ga    "Irish" "Irish" 28%
+it    "Italian" "Italiano" 100%
+la    "Latin" "Lingua Latina" 100%
+hu    "Hungarian" "Magyar" 43%
+nl    "Dutch" "Nederlands" 60%
+pl    "Polish" "Polski" 76%
+pt    "Portuguese" "Português" 100%
+pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
+ro    "Romanian" "Romana" 68%
+fi    "Finnish" "Suomi" 95%
+sv    "Swedish" "Svenska" 96%
 tr    "Turkish" "Türkçe" 54%
+en_GB "en_GB" "en_GB" 100%
 cs    "Czech" "Čeština" 30%
 el    "Greek" "Ελληνική" 43%
-be    "Belarusian" "Беларуская" 48%
-bg    "Bulgarian" "Български" 70%
-ru    "Russian" "Русский" 99%
-sr    "Serbian" "Српски" 57%
-uk    "Ukrainian" "Українська" 57%
-zh_TW "Chinese (Taiwan)" "中文（正體字）" 99%
-zh_CN "Chinese (China)" "中文（简体字）" 99%
-zh_HK "Chinese (Hong Kong)" "中文（香港字）" 99%
-ja_JP "Japanese" "日本語" 99%
+be    "Belarusian" "Беларуская" 47%
+bg    "Bulgarian" "Български" 67%
+ru    "Russian" "Русский" 100%
+sr    "Serbian" "Српски" 56%
+uk    "Ukrainian" "Українська" 56%
+zh_TW "Chinese (Taiwan)" "中文（正體字）" 98%
+zh_CN "Chinese (China)" "中文（简体字）" 98%
+zh_HK "Chinese (Hong Kong)" "中文（香港字）" 98%
+ja_JP "Japanese" "日本語" 97%
 ko    "Korean" "한국의" 34%

@@ -74,7 +74,13 @@ MUTATOR_HOOKFUNCTION(status_effects, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	StatusEffects_removeall(player, STATUSEFFECT_REMOVE_NORMAL); // just to get rid of the pickup sound
+	// don't delete possible spectatee's effects!
+	if(player.statuseffects && player.statuseffects.owner == player)
+	{
+		// just to get rid of the pickup sound
+		StatusEffects_removeall(player, STATUSEFFECT_REMOVE_NORMAL);
+	}
+
 	return true;
 }
 
@@ -82,8 +88,15 @@ MUTATOR_HOOKFUNCTION(status_effects, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	// no need to network updates, as there is no statuseffects object attached
-	StatusEffects_removeall(player, STATUSEFFECT_REMOVE_NORMAL); // just to get rid of the pickup sound
+	// don't delete spectatee's effects!
+	if(player.statuseffects && player.statuseffects.owner == player)
+	{
+		// just to get rid of the pickup sound
+		// no need to network updates, as there is no statuseffects object attached
+		StatusEffects_removeall(player, STATUSEFFECT_REMOVE_NORMAL);
+	}
+
+	// spectator has their own ent
 	StatusEffects_clearall(player.statuseffects_store);
 
 	// don't delete spectatee's effects!

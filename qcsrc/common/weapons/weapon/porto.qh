@@ -24,17 +24,17 @@ CLASS(PortoLaunch, Weapon)
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, secondary, float, NONE) \
 		P(class, prefix, speed, float, BOTH) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, PortoLaunch, porto)
+	W_PROPS(X, PortoLaunch, porto)
 #undef X
 ENDCLASS(PortoLaunch)
-REGISTER_WEAPON(PORTO, porto, NEW(PortoLaunch));
+REGISTER_WEAPON(PORTO, NEW(PortoLaunch));
 
 SPAWNFUNC_WEAPON(weapon_porto, WEP_PORTO)
 
