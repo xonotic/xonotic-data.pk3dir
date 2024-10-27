@@ -115,7 +115,7 @@ void KeyBinds_BuildList()
 	KEYBIND_HEADER(_("Teamplay"));
 	KEYBIND_DEF("team_auto"                             , _("auto-join team"));
 	KEYBIND_DEF("team_selection_show"                   , _("team selection"));
-	KEYBIND_DEF("spec"                                  , _("observe"));
+	KEYBIND_DEF("spec_ask_forfeit"                      , _("observe"));
 	KEYBIND_EMPTY_LINE();
 
 	KEYBIND_HEADER(_("Misc"));
@@ -178,6 +178,14 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 	replace_bind("impulse 8", "weapon_group_8");
 	replace_bind("impulse 9", "weapon_group_9");
 	replace_bind("impulse 14", "weapon_group_0");
+
+	// Xonotic 0.9.0 update
+	// TODO remove cvar and this code in a later Xonotic version
+	if (!cvar("_spec_ask_forfeit_bindupdate"))
+	{
+		replace_bind("spec", "spec_ask_forfeit");
+		cvar_set("_spec_ask_forfeit_bindupdate", "1");
+	}
 }
 void XonoticKeyBinder_loadKeyBinds(entity me)
 {
