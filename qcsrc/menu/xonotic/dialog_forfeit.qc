@@ -1,6 +1,7 @@
 #include "dialog_forfeit.qh"
 
 #include "button.qh"
+#include "checkbox.qh"
 #include "commandbutton.qh"
 #include "textlabel.qh"
 
@@ -23,4 +24,7 @@ void XonoticForfeitDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticButton(_("No"), '0 1 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(1, "menu_ask_forfeit", _("Never ask again")));
 }

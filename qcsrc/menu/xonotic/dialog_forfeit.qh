@@ -6,7 +6,7 @@ CLASS(XonoticForfeitDialog, XonoticRootDialog)
 	ATTRIB(XonoticForfeitDialog, title, string, _("Forfeit"));
 	ATTRIB(XonoticForfeitDialog, name, string, "Forfeit");
 	ATTRIB(XonoticForfeitDialog, color, vector, SKINCOLOR_DIALOG_QUIT);
-	ATTRIB(XonoticForfeitDialog, intendedWidth, float, 0.5);
-	ATTRIB(XonoticForfeitDialog, rows, float, 3);
+	ATTRIB(XonoticForfeitDialog, intendedWidth, float, 0.6);
+	ATTRIB(XonoticForfeitDialog, rows, float, 5);
 	ATTRIB(XonoticForfeitDialog, columns, float, 2);
 ENDCLASS(XonoticForfeitDialog)

@@ -115,7 +115,7 @@ void KeyBinds_BuildList()
 	KEYBIND_HEADER(_("Teamplay"));
 	KEYBIND_DEF("team_auto"                             , _("auto-join team"));
 	KEYBIND_DEF("team_selection_show"                   , _("team selection"));
-	KEYBIND_DEF("spec_ask_forfeit"                      , _("observe"));
+	KEYBIND_DEF("spec_forfeit"                          , _("observe / forfeit"));
 	KEYBIND_EMPTY_LINE();
 
 	KEYBIND_HEADER(_("Misc"));
@@ -181,10 +181,10 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 
 	// Xonotic 0.9.0 update
 	// TODO remove cvar and this code in a later Xonotic version
-	if (!cvar("_spec_ask_forfeit_bindupdate"))
+	if (!cvar("_spec_forfeit_bindupdate"))
 	{
-		replace_bind("spec", "spec_ask_forfeit");
-		cvar_set("_spec_ask_forfeit_bindupdate", "1");
+		replace_bind("spec", "spec_forfeit");
+		cvar_set("_spec_forfeit_bindupdate", "1");
 	}
 }
 void XonoticKeyBinder_loadKeyBinds(entity me)
