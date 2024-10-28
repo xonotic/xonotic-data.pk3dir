@@ -756,10 +756,11 @@ void ClientCommand_spectate(entity caller, int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd spectate [<client>] [FORFEIT]\n");
+			sprint(caller, "\nUsage:^3 cmd spectate [<client>] [ASK_FORFEIT]\n");
 			sprint(caller, "  Where <client> can be the player to spectate.\n");
 			sprint(caller, "  If <client> is \"\" or not specified, caller becomes observer.\n");
-			sprint(caller, "  If <client> is \"\", FORFEIT makes so that caller forcedly quits current game.\n");
+			sprint(caller, "  If <client> is \"\", ASK_FORFEIT means caller will be asked"
+			                 " to confirm forfeiting the current game.\n");
 			return;
 		}
 	}
