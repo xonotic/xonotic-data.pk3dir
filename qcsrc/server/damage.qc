@@ -1002,9 +1002,12 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					hitloc = nearest;
 
 					// apply special force scalings
-					force.x *= forcexyzscale.x;
-					force.y *= forcexyzscale.y;
-					force.z *= forcexyzscale.z;
+					if(forcexyzscale.x)
+						force.x *= forcexyzscale.x;
+					if(forcexyzscale.y)
+						force.y *= forcexyzscale.y;
+					if(forcexyzscale.z)
+						force.z *= forcexyzscale.z;
 
 					if(targ != directhitentity)
 					{
