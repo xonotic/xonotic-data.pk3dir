@@ -4,6 +4,7 @@
 #
 # Translators:
 # k9 er, 2024
+# k9 er, 2024
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
