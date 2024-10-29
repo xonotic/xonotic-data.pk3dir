@@ -710,7 +710,8 @@ void ClientCommand_spectate(entity caller, int request)
 					return;
 				}
 
-				bool forfeit_now = (warmup_stage || argv(2) != "ASK_FORFEIT");
+				bool forfeit_now =
+					(warmup_stage || !caller.cvar_spec_forfeit_ask || argv(2) != "ASK_FORFEIT");
 
 				if (IS_PLAYER(caller) && !forfeit_now && caller.cvar__menu_forfeit_dialog_available)
 				{

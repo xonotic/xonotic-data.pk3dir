@@ -26,5 +26,5 @@ void XonoticForfeitDialog_fill(entity me)
 			e.onClickEntity = me;
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(1, "menu_ask_forfeit", _("Never ask again")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(1, "spec_forfeit_ask", _("Never ask again")));
 }
