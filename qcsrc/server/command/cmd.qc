@@ -32,15 +32,77 @@
 #include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
+#include <server/race.qh>
 #include <server/scores.qh>
 #include <server/teamplay.qh>
 #include <server/world.qh>
 
-// =========================================================
-//  Server side networked commands code, reworked by Samual
-//  Last updated: December 28th, 2011
-// =========================================================
+string ignore_removefromlist(entity list, entity ignore)
+{
+	if(ignore.crypto_idfp && ignore.crypto_idfp != "" && list.crypto_idfp && list.crypto_idfp != "")
+	{
+		for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
+		{
+			string pos = db_get(ServerProgsDB, strcat("/ignore/", list.crypto_idfp, "/", ftos(j)));
+			if(pos == ignore.crypto_idfp)
+			{
+				db_remove(ServerProgsDB, strcat("/ignore/", list.crypto_idfp, "/", ftos(j)));
+				return string_null;
+			}
+		}
+		// should this fall back? we know advanced mode is being used
+	}
 
+	string newlist = "";
+	string theid = ftos(etof(ignore));
+
+	FOREACH_WORD(list.ignore_list, it != theid,
+	{
+		newlist = cons(newlist, it);
+	});
+
+	if(newlist == "")
+		return string_null;
+	else
+		return newlist;
+}
+
+bool ignore_playerinlist(entity sender, entity targ)
+{
+	// TODO: optimize this by saving it to .ignore_list?
+	if(targ.crypto_idfp && targ.crypto_idfp != "" && sender.crypto_idfp && sender.crypto_idfp != "")
+	{
+		string thelist = "";
+		for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
+		{
+			string pos = db_get(ServerProgsDB, strcat("/ignore/", targ.crypto_idfp, "/", ftos(j)));
+			thelist = cons(thelist, pos);
+		}
+
+		return ((thelist != "") ? PlayerInList(sender, thelist) : false);
+	}
+	else if(!targ.ignore_list || targ.ignore_list == "")
+		return false;
+
+	string theid = ftos(etof(sender));
+
+	FOREACH_WORD(targ.ignore_list, it == theid,
+	{
+		return true;
+	});
+
+	return false;
+}
+
+void ignore_clearall(entity this)
+{
+	for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
+	{
+		string pos = db_get(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
+		if(pos != "")
+			db_remove(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
+	}
+}
 
 // =======================
 //  Command Sub-Functions
@@ -95,6 +157,26 @@ void ClientCommand_clear_ignores(entity caller, int request)
 		{
 			sprint(caller, "\nUsage:^3 cmd clear_ignores\n");
 			sprint(caller, "  Removes all existing ignored clients whose are kept out of personal chat log.\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_clear_bestcptimes(entity caller, int request)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			race_ClearPlayerRecords(caller);
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd clear_bestcptimes\n");
+			sprint(caller, "  Clear all your checkpoint times for this game.\n");
 			return;
 		}
 	}
@@ -925,6 +1007,7 @@ void ClientCommand_(entity caller, int request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 CLIENT_COMMAND(autoswitch, "Whether or not to switch automatically when getting a better weapon") { ClientCommand_autoswitch(caller, request, arguments); }
+CLIENT_COMMAND(clear_bestcptimes, "Clear all your best checkpoint times for this Race/CTS match") { ClientCommand_clear_bestcptimes(caller, request); }
 CLIENT_COMMAND(clear_ignores, "Remove all existing ignores of players") { ClientCommand_clear_ignores(caller, request); }
 CLIENT_COMMAND(clientversion, "Release version of the game") { ClientCommand_clientversion(caller, request, arguments); }
 CLIENT_COMMAND(ignore, "Ignore a player in the game keeping them out of your personal chat log") { ClientCommand_ignore(caller, request, arguments, command); }

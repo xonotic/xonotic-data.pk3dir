@@ -16,9 +16,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-27 07:22+0200\n"
+"POT-Creation-Date: 2024-10-08 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2024\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -27,6 +27,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
 "1000000 == 0 ? 1 : 2;\n"
+
+#: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:115
+msgid "Checkpoint times:"
+msgstr "Tempos dos pontos de checagem:"
 
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
@@ -40,7 +44,7 @@ msgstr "^1Não foi possível escrever para %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -79,171 +83,171 @@ msgstr "^3Jogador^7: Isto é a área do bate-papo."
 msgid "FPS: %.*f"
 msgstr "FPS: %.*f"
 
-#: qcsrc/client/hud/panel/infomessages.qc:92
+#: qcsrc/client/hud/panel/infomessages.qc:94
 msgid "^1Observing"
 msgstr "^1Observando"
 
-#: qcsrc/client/hud/panel/infomessages.qc:94
+#: qcsrc/client/hud/panel/infomessages.qc:96
 #, c-format
 msgid "^1Spectating: ^7%s"
 msgstr "^1Assistindo: ^7%s"
 
-#: qcsrc/client/hud/panel/infomessages.qc:105
+#: qcsrc/client/hud/panel/infomessages.qc:107
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
 msgstr "^1Aperte ^3%s^1 para assistir"
 
-#: qcsrc/client/hud/panel/infomessages.qc:105
+#: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/menu/xonotic/keybinder.qc:50
 msgid "primary fire"
 msgstr "disparo primário"
 
-#: qcsrc/client/hud/panel/infomessages.qc:107
+#: qcsrc/client/hud/panel/infomessages.qc:109
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
 msgstr "^1Aperte ^3%s^1 ou ^3%s^1 para o jogador seguinte ou anterior"
 
-#: qcsrc/client/hud/panel/infomessages.qc:107
-#: qcsrc/client/hud/panel/infomessages.qc:111
+#: qcsrc/client/hud/panel/infomessages.qc:109
+#: qcsrc/client/hud/panel/infomessages.qc:113
 msgid "next weapon"
 msgstr "arma seguinte"
 
-#: qcsrc/client/hud/panel/infomessages.qc:107
-#: qcsrc/client/hud/panel/infomessages.qc:111
+#: qcsrc/client/hud/panel/infomessages.qc:109
+#: qcsrc/client/hud/panel/infomessages.qc:113
 msgid "previous weapon"
 msgstr "arma anterior"
 
-#: qcsrc/client/hud/panel/infomessages.qc:111
+#: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
 msgstr "^1Use ^3%s^1 ou ^3%s^1 para alterar a velocidade"
 
-#: qcsrc/client/hud/panel/infomessages.qc:113
+#: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
 msgstr "^1Aperte ^3%s^1 para observar e ^3%s^1 para alterar o modo da câmera"
 
-#: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/client/hud/panel/infomessages.qc:115
+#: qcsrc/client/hud/panel/infomessages.qc:117
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 msgid "drop weapon"
 msgstr "largar arma"
 
-#: qcsrc/client/hud/panel/infomessages.qc:113
+#: qcsrc/client/hud/panel/infomessages.qc:115
 #: qcsrc/menu/xonotic/keybinder.qc:51
 msgid "secondary fire"
 msgstr "disparo secundário"
 
-#: qcsrc/client/hud/panel/infomessages.qc:115
+#: qcsrc/client/hud/panel/infomessages.qc:117
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
 msgstr "^1Aperte ^3%s^1 para alterar o modo da câmera"
 
-#: qcsrc/client/hud/panel/infomessages.qc:118
+#: qcsrc/client/hud/panel/infomessages.qc:120
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
 msgstr "^1Aperte ^3%s^1 para ver as informações do modo de jogo"
 
-#: qcsrc/client/hud/panel/infomessages.qc:118
+#: qcsrc/client/hud/panel/infomessages.qc:120
 #: qcsrc/menu/xonotic/keybinder.qc:106
 msgid "server info"
 msgstr "informações do servidor"
 
-#: qcsrc/client/hud/panel/infomessages.qc:134
+#: qcsrc/client/hud/panel/infomessages.qc:136
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
 msgstr "^2Você está na fila para entrar na equipe %s%s^2"
 
-#: qcsrc/client/hud/panel/infomessages.qc:137
+#: qcsrc/client/hud/panel/infomessages.qc:139
 msgid "^2You're queued to join any available team"
 msgstr "^2Você está na fila para entrar em qualquer equipe disponível"
 
-#: qcsrc/client/hud/panel/infomessages.qc:139
+#: qcsrc/client/hud/panel/infomessages.qc:141
 #, c-format
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Aperte ^3%s^1 para entrar no jogo"
 
-#: qcsrc/client/hud/panel/infomessages.qc:139 qcsrc/client/main.qc:1449
+#: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1425
 #: qcsrc/common/notifications/all.qh:446
 msgid "jump"
 msgstr "saltar"
 
-#: qcsrc/client/hud/panel/infomessages.qc:148
+#: qcsrc/client/hud/panel/infomessages.qc:150
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
 msgstr "^1A partida iniciará em ^3%d^1 segundo(s)"
 
-#: qcsrc/client/hud/panel/infomessages.qc:160
+#: qcsrc/client/hud/panel/infomessages.qc:162
 msgid "^2Currently in ^1warmup^2 stage!"
 msgstr "^2Atualmente em fase de ^1aquecimento^2!"
 
-#: qcsrc/client/hud/panel/infomessages.qc:170
+#: qcsrc/client/hud/panel/infomessages.qc:172
 msgid "^31^2 more player is needed for the match to start."
 msgstr "^2Precisa-se de mais ^31^2 jogador para iniciar a partida."
 
-#: qcsrc/client/hud/panel/infomessages.qc:172
+#: qcsrc/client/hud/panel/infomessages.qc:174
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
 msgstr "^2Precisa-se de mais ^3%d^2 jogadores para iniciar a partida."
 
-#: qcsrc/client/hud/panel/infomessages.qc:185
+#: qcsrc/client/hud/panel/infomessages.qc:187
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr "%sAperte ^3%s%s para terminar o aquecimento"
 
-#: qcsrc/client/hud/panel/infomessages.qc:185
-#: qcsrc/client/hud/panel/infomessages.qc:190
+#: qcsrc/client/hud/panel/infomessages.qc:187
+#: qcsrc/client/hud/panel/infomessages.qc:192
 #: qcsrc/menu/xonotic/keybinder.qc:102
 msgid "ready"
 msgstr "pronto"
 
-#: qcsrc/client/hud/panel/infomessages.qc:187
+#: qcsrc/client/hud/panel/infomessages.qc:189
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr ""
 "^2Aguardando outros jogadores ficarem prontos para terminar o aquecimento..."
 
-#: qcsrc/client/hud/panel/infomessages.qc:190
+#: qcsrc/client/hud/panel/infomessages.qc:192
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr "^2Aperte ^3%s^2 para terminar o aquecimento"
 
-#: qcsrc/client/hud/panel/infomessages.qc:202
+#: qcsrc/client/hud/panel/infomessages.qc:204
 msgid "Teams are unbalanced!"
 msgstr "As equipes estão desequilibradas!"
 
-#: qcsrc/client/hud/panel/infomessages.qc:205
+#: qcsrc/client/hud/panel/infomessages.qc:207
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr " Aperte ^3%s%s para ajustar"
 
-#: qcsrc/client/hud/panel/infomessages.qc:205
+#: qcsrc/client/hud/panel/infomessages.qc:207
 #: qcsrc/menu/xonotic/keybinder.qc:117
 msgid "team selection"
 msgstr "seleção de equipe"
 
-#: qcsrc/client/hud/panel/infomessages.qc:218
+#: qcsrc/client/hud/panel/infomessages.qc:220
 msgid "^1Spectating this player:"
 msgstr "^1Assistindo a este jogador:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:218
+#: qcsrc/client/hud/panel/infomessages.qc:220
 msgid "^1Spectating you:"
 msgstr "^1Assistindo você:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:234
+#: qcsrc/client/hud/panel/infomessages.qc:267
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr "^7Aperte ^3ESC ^7para exibir as opções de interface."
 
-#: qcsrc/client/hud/panel/infomessages.qc:235
+#: qcsrc/client/hud/panel/infomessages.qc:268
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr ""
 "^3Clique duas vezes ^7em um painel para abrir sua janela de opções "
 "específicas."
 
-#: qcsrc/client/hud/panel/infomessages.qc:236
+#: qcsrc/client/hud/panel/infomessages.qc:269
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr "Use ^3CTRL ^7para desligar o teste de colisão, e ^3SHIFT ^7e"
 
-#: qcsrc/client/hud/panel/infomessages.qc:237
+#: qcsrc/client/hud/panel/infomessages.qc:270
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "^3ALT ^7+ ^3TECLAS DIRECIONAIS ^7para pequenos ajustes."
 
@@ -253,326 +257,326 @@ msgstr "^3ALT ^7+ ^3TECLAS DIRECIONAIS ^7para pequenos ajustes."
 msgid "Player %d"
 msgstr "Jogador %d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:204
+#: qcsrc/client/hud/panel/quickmenu.qc:220
 msgid "Standard quick menu"
 msgstr "Menu rápido padrão"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:636
-#: qcsrc/client/hud/panel/quickmenu.qc:638
+#: qcsrc/client/hud/panel/quickmenu.qc:660
+#: qcsrc/client/hud/panel/quickmenu.qc:662
 #, c-format
 msgid "Submenu%d"
 msgstr "Submenu%d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:643
+#: qcsrc/client/hud/panel/quickmenu.qc:667
 #, c-format
 msgid "Command%d"
 msgstr "Comando%d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:669
+#: qcsrc/client/hud/panel/quickmenu.qc:693
 msgid "Continue..."
 msgstr "Continuar..."
 
-#: qcsrc/client/hud/panel/quickmenu.qc:820
-#: qcsrc/client/hud/panel/quickmenu.qc:827
+#: qcsrc/client/hud/panel/quickmenu.qc:844
+#: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "Chat"
 msgstr "Bate-papo"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:821
+#: qcsrc/client/hud/panel/quickmenu.qc:845
 msgid "QMCMD^Send public message to"
 msgstr "Enviar mensagem pública para"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:822
+#: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "QMCMD^:-) / nice one"
 msgstr ":-) / Boa jogada"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:822
+#: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "QMCMD^nice one"
 msgstr "Boa jogada"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:823
+#: qcsrc/client/hud/panel/quickmenu.qc:847
 msgid "QMCMD^good game"
 msgstr "Bom jogo"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:824
+#: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^hi / good luck"
 msgstr "Olá / Boa sorte"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:824
+#: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^hi / good luck and have fun"
 msgstr "Olá / Boa sorte e divirta-se"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:826
+#: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Send in English"
 msgstr "Enviar em inglês"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:831
-#: qcsrc/client/hud/panel/quickmenu.qc:847
+#: qcsrc/client/hud/panel/quickmenu.qc:855
+#: qcsrc/client/hud/panel/quickmenu.qc:871
 msgid "QMCMD^Team chat"
 msgstr "Bate-papo de equipe"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:832
+#: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^strength soon"
 msgstr "Força em breve"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:833
+#: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^free item %x^7 (l:%y^7)"
 msgstr "Item livre %x^7 (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:833
+#: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^free item, icon"
 msgstr "Item livre, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:834
+#: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^took item (l:%l^7)"
 msgstr "Item pego (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:834
+#: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^took item, icon"
 msgstr "Item pego, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:835
+#: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^negative"
 msgstr "Negativo"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:836
+#: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^positive"
 msgstr "Positivo"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:837
+#: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "Preciso de ajuda (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:837
+#: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^need help, icon"
 msgstr "Preciso de ajuda, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:838
+#: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^enemy seen (l:%y^7)"
 msgstr "Inimigo avistado (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:838
+#: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^enemy seen, icon"
 msgstr "Inimigo avistado, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:839
+#: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^flag seen (l:%y^7)"
 msgstr "Bandeira avistada (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:839
+#: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^flag seen, icon"
 msgstr "Bandeira avistada, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:840
+#: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "Defendendo (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:840
+#: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^defending, icon"
 msgstr "Defendendo, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:841
+#: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "Patrulhando (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:841
+#: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^roaming, icon"
 msgstr "Patrulhando, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:842
+#: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "Atacando (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:842
+#: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "QMCMD^attacking, icon"
 msgstr "Atacando, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:843
+#: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
 msgstr "Portador de bandeira aniquilado (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:843
+#: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "QMCMD^killed flagcarrier, icon"
 msgstr "Portador de bandeira aniquilado, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:844
+#: qcsrc/client/hud/panel/quickmenu.qc:868
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
 msgstr "Bandeira largada (l:%d^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:844
+#: qcsrc/client/hud/panel/quickmenu.qc:868
 msgid "QMCMD^dropped flag, icon"
 msgstr "Bandeira largada, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:845
+#: qcsrc/client/hud/panel/quickmenu.qc:869
 msgid "QMCMD^drop weapon, icon"
 msgstr "Largar arma, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:845
+#: qcsrc/client/hud/panel/quickmenu.qc:869
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
 msgstr "Arma largada %w^7 (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:846
+#: qcsrc/client/hud/panel/quickmenu.qc:870
 msgid "QMCMD^drop flag/key, icon"
 msgstr "Largar bandeira/chave, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:846
+#: qcsrc/client/hud/panel/quickmenu.qc:870
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
 msgstr "Bandeira/Chave largada %w^7 (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:850
+#: qcsrc/client/hud/panel/quickmenu.qc:874
 msgid "QMCMD^Send private message to"
 msgstr "Enviar mensagem privada para"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:852
-#: qcsrc/client/hud/panel/quickmenu.qc:882
+#: qcsrc/client/hud/panel/quickmenu.qc:876
+#: qcsrc/client/hud/panel/quickmenu.qc:906
 msgid "QMCMD^Settings"
 msgstr "Configurações"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:853
-#: qcsrc/client/hud/panel/quickmenu.qc:860
+#: qcsrc/client/hud/panel/quickmenu.qc:877
+#: qcsrc/client/hud/panel/quickmenu.qc:884
 msgid "QMCMD^View/HUD settings"
 msgstr "Configurações de exibição/interface"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:854
+#: qcsrc/client/hud/panel/quickmenu.qc:878
 msgid "QMCMD^3rd person view"
 msgstr "Visão em 3ª pessoa"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:855
+#: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "QMCMD^Player models like mine"
 msgstr "Modelos de jogadores como o meu"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:856
+#: qcsrc/client/hud/panel/quickmenu.qc:880
 msgid "QMCMD^Names above players"
 msgstr "Nomes sobre jogadores"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:857
+#: qcsrc/client/hud/panel/quickmenu.qc:881
 msgid "QMCMD^Crosshair per weapon"
 msgstr "Retículo por arma"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:858
+#: qcsrc/client/hud/panel/quickmenu.qc:882
 msgid "QMCMD^FPS"
 msgstr "FPS"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:859
+#: qcsrc/client/hud/panel/quickmenu.qc:883
 msgid "QMCMD^Net graph"
 msgstr "Gráfico da rede"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:862
-#: qcsrc/client/hud/panel/quickmenu.qc:865
+#: qcsrc/client/hud/panel/quickmenu.qc:886
+#: qcsrc/client/hud/panel/quickmenu.qc:889
 msgid "QMCMD^Sound settings"
 msgstr "Configurações de som"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:863
+#: qcsrc/client/hud/panel/quickmenu.qc:887
 msgid "QMCMD^Hit sound"
 msgstr "Som de acerto"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:864
+#: qcsrc/client/hud/panel/quickmenu.qc:888
 msgid "QMCMD^Chat sound"
 msgstr "Som do bate-papo"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:869
+#: qcsrc/client/hud/panel/quickmenu.qc:893
 msgid "QMCMD^Change spectator camera"
 msgstr "Alterar câmera de espectador"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:874
-#: qcsrc/client/hud/panel/quickmenu.qc:878
+#: qcsrc/client/hud/panel/quickmenu.qc:898
+#: qcsrc/client/hud/panel/quickmenu.qc:902
 msgid "QMCMD^Observer camera"
 msgstr "Câmera de observador"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:875
+#: qcsrc/client/hud/panel/quickmenu.qc:899
 msgid "QMCMD^Increase speed"
 msgstr "Aumentar velocidade"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:876
+#: qcsrc/client/hud/panel/quickmenu.qc:900
 msgid "QMCMD^Decrease speed"
 msgstr "Reduzir velocidade"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:877
+#: qcsrc/client/hud/panel/quickmenu.qc:901
 msgid "QMCMD^Wall collision"
 msgstr "Colisão de parede"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:881
+#: qcsrc/client/hud/panel/quickmenu.qc:905
 msgid "QMCMD^Fullscreen"
 msgstr "Tela cheia"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:884
-#: qcsrc/client/hud/panel/quickmenu.qc:894
+#: qcsrc/client/hud/panel/quickmenu.qc:908
+#: qcsrc/client/hud/panel/quickmenu.qc:918
 msgid "QMCMD^Call a vote"
 msgstr "Iniciar uma votação"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:885
+#: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "QMCMD^Restart the map"
 msgstr "Reiniciar o mapa"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:886
+#: qcsrc/client/hud/panel/quickmenu.qc:910
 msgid "QMCMD^End match"
 msgstr "Terminar a partida"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:889
+#: qcsrc/client/hud/panel/quickmenu.qc:913
 msgid "QMCMD^Reduce match time"
 msgstr "Reduzir tempo de partida"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:890
+#: qcsrc/client/hud/panel/quickmenu.qc:914
 msgid "QMCMD^Extend match time"
 msgstr "Estender tempo de partida"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:893
+#: qcsrc/client/hud/panel/quickmenu.qc:917
 msgid "QMCMD^Shuffle teams"
 msgstr "Misturar as equipes"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:898
+#: qcsrc/client/hud/panel/quickmenu.qc:922
 msgid "Server quick menu"
 msgstr "Menu rápido do servidor"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:900
+#: qcsrc/client/hud/panel/quickmenu.qc:924
 msgid "Waypoint editor menu"
 msgstr "Menu do editor de ponto de interesse"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:903
+#: qcsrc/client/hud/panel/quickmenu.qc:927
 msgid "Waypoint editor menu as default"
 msgstr "Menu do editor de ponto de interesse como padrão"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:905
+#: qcsrc/client/hud/panel/quickmenu.qc:929
 msgid "Server quick menu as default"
 msgstr "Menu rápido do servidor como padrão"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:911
+#: qcsrc/client/hud/panel/quickmenu.qc:935
 msgid "QMCMD^Spectate a player"
 msgstr "Assistir a um jogador"
 
-#: qcsrc/client/hud/panel/racetimer.qc:57
+#: qcsrc/client/hud/panel/racetimer.qc:63
 #, c-format
 msgid " (-%dL)"
 msgstr " (-%dL)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:62
+#: qcsrc/client/hud/panel/racetimer.qc:68
 #, c-format
 msgid " (+%dL)"
 msgstr " (+%dL)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:81
+#: qcsrc/client/hud/panel/racetimer.qc:87
 msgid "Start line"
 msgstr "Linha de partida"
 
-#: qcsrc/client/hud/panel/racetimer.qc:83
-#: qcsrc/client/hud/panel/racetimer.qc:87
+#: qcsrc/client/hud/panel/racetimer.qc:89
+#: qcsrc/client/hud/panel/racetimer.qc:93
 msgid "Finish line"
 msgstr "Linha de chegada"
 
-#: qcsrc/client/hud/panel/racetimer.qc:85
-#: qcsrc/client/hud/panel/racetimer.qc:154
+#: qcsrc/client/hud/panel/racetimer.qc:91
+#: qcsrc/client/hud/panel/racetimer.qc:195
 #, c-format
-msgid "Intermediate %d"
-msgstr "Intermediário %d"
+msgid "Checkpoint %d"
+msgstr "Ponto de checagem %d"
 
-#: qcsrc/client/hud/panel/racetimer.qc:157
-#: qcsrc/client/hud/panel/racetimer.qc:223
-#: qcsrc/client/hud/panel/racetimer.qc:284
+#: qcsrc/client/hud/panel/racetimer.qc:198
+#: qcsrc/client/hud/panel/racetimer.qc:263
+#: qcsrc/client/hud/panel/racetimer.qc:327
 #, c-format
 msgid "PENALTY: %.1f (%s)"
 msgstr "PENALIDADE: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:157 qcsrc/client/main.qc:1286
+#: qcsrc/client/hud/panel/racetimer.qc:198 qcsrc/client/main.qc:1262
 msgid "missing a checkpoint"
 msgstr "falta um ponto de checagem"
 
@@ -584,384 +588,384 @@ msgstr "Clique para selecionar o destino do teletransporte"
 msgid "Click to select spawn location"
 msgstr "Clique para selecionar o local de surgimento"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
+#: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "Number of ball carrier kills"
 msgstr "Número de vítimas de portador de bola"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:140
+#: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "SCO^bckills"
 msgstr "pblvítimas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^bctime"
 msgstr "pbltempo"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Total amount of time holding the ball in Keepaway"
 msgstr "Tempo total segurando a bola em Keepaway"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
 msgstr ""
 "Quão frequente uma bandeira (CTF) ou uma chave (Caça a Chaves) foi capturada"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:142
+#: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^caps"
 msgstr "capturas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^captime"
 msgstr "tempo de captura"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:143
+#: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "Time of fastest capture (CTF)"
 msgstr "Tempo da captura mais rápida (CTF)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Number of deaths"
 msgstr "Número de mortes"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:144
+#: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^deaths"
 msgstr "mortes"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of keys destroyed by pushing them into void"
 msgstr "Número de chaves destruídas ao empurrá-las para o vazio"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:145
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^destructions"
 msgstr "destruições"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^damage dealt"
 msgstr "dano causado"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:146
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "The total damage dealt"
 msgstr "O dano total causado"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:147
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^damage taken"
 msgstr "dano recebido"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:147
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "The total damage taken"
 msgstr "O dano total recebido"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "Number of flag drops"
 msgstr "Quantas vezes a bandeira foi largada"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^drops"
 msgstr "quedas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Player ELO"
 msgstr "ELO do jogador"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^elo"
 msgstr "elo"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^fastest"
 msgstr "mais rápido"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:150
+#: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Time of fastest lap (Race/CTS)"
 msgstr "Tempo da volta mais rápida (Corrida/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:151
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Number of faults committed"
 msgstr "Faltas cometidas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:151
+#: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^faults"
 msgstr "faltas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Number of flag carrier kills"
 msgstr "Número de vítimas de portador de bandeira"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:152
+#: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^fckills"
 msgstr "pbndvítimas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "FPS"
 msgstr "FPS"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:153
+#: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^fps"
 msgstr "fps"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of kills minus suicides"
 msgstr "Vítimas menos suicídios"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:154
+#: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^frags"
 msgstr "execuções"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of generators destroyed"
 msgstr "Número de geradores destruídos"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^generators"
 msgstr "geradores"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of goals scored"
 msgstr "Gols"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:156
+#: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^goals"
 msgstr "gols"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
+#: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of hunts (Survival)"
 msgstr "Número de caças (Sobrevivência)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:157
+#: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^hunts"
 msgstr "caças"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of keys carrier kills"
 msgstr "Número de vítimas de portador de chave"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:158
+#: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kckills"
 msgstr "pcvítimas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
+#: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^k/d"
 msgstr "v/m"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:159
-#: qcsrc/client/hud/panel/scoreboard.qc:160
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:148
+#: qcsrc/client/hud/panel/scoreboard.qc:149
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "The kill-death ratio"
 msgstr "A taxa de vítimas/mortes"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:160
+#: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^kdr"
 msgstr "fmr"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:161
+#: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^kdratio"
 msgstr "taxa de v/m"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of kills"
 msgstr "Número de vítimas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:162
+#: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^kills"
 msgstr "vítimas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of laps finished (Race/CTS)"
 msgstr "Voltas concluídas (Corrida/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:163
+#: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^laps"
 msgstr "voltas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "Number of lives (LMS)"
 msgstr "Número de vidas (LMS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:164
+#: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^lives"
 msgstr "vidas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Number of times a key was lost"
 msgstr "Vezes em que uma chave foi perdida"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:165
+#: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^losses"
 msgstr "derrotas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:155
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Player name"
 msgstr "Nome do jogador"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:166
+#: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^name"
 msgstr "nome"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:167
+#: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^nick"
 msgstr "apelido"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "Number of objectives destroyed"
 msgstr "Objetivos destruídos"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "SCO^objectives"
 msgstr "objetivos"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr ""
 "Quão frequente uma bandeira (CTF), uma chave (Caça a Chaves) ou uma bola "
 "(Keepaway) foi coletada"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pickups"
 msgstr "coletas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Ping time"
 msgstr "Tempo de ping"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^ping"
 msgstr "ping"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Packet loss"
 msgstr "Perda de pacotes"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^pl"
 msgstr "pp"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of players pushed into void"
 msgstr "Número de jogadores empurrados para o vazio"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^pushes"
 msgstr "empurrões"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:173
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "Player rank"
 msgstr "Classificação do jogador"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:173
+#: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "SCO^rank"
 msgstr "classificação"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:174
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Number of flag returns"
 msgstr "Número de retornos da bandeira"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:174
+#: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^returns"
 msgstr "retornos"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:175
+#: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "Number of revivals"
 msgstr "Reanimações"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:175
+#: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^revivals"
 msgstr "reanimações"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:176
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "Number of rounds won"
 msgstr "Rodadas vencidas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:176
+#: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "SCO^rounds won"
 msgstr "rodadas vencidas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:177
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "Number of rounds played"
 msgstr "Número de rodadas jogadas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:177
+#: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "SCO^rounds played"
 msgstr "rodadas jogadas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:178
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "SCO^score"
 msgstr "pontuação"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:178
+#: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "Total score"
 msgstr "Pontuação total"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:179
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of suicides"
 msgstr "Número de suicídios"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:179
+#: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^suicides"
 msgstr "suicídios"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:180
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of kills minus deaths"
 msgstr "Vítimas menos mortes"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:180
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^sum"
 msgstr "soma"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:181
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "Number of survivals"
 msgstr "Número de sobrevivências"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:181
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^survivals"
 msgstr "sobrevivências"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:182
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "Number of domination points taken (Domination)"
 msgstr "Pontos de dominação capturados (Dominação)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:182
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "SCO^takes"
 msgstr "tomadas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:183
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of teamkills"
 msgstr "Número de vítimas de equipe"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:183
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^teamkills"
 msgstr "vítimas de equipe"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:184
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of ticks (Domination)"
 msgstr "Número de tiques (Dominação)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:184
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "SCO^ticks"
 msgstr "ticks"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:185
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "SCO^time"
 msgstr "tempo"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:185
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "Total time raced (Race/CTS)"
 msgstr "Tempo total em corridas (Corrida/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:733
+#: qcsrc/client/hud/panel/scoreboard.qc:722
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
 "É possível modificar o placar usando o comando ^2scoreboard_columns_set."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:734
+#: qcsrc/client/hud/panel/scoreboard.qc:723
 msgid "Usage:"
 msgstr "Uso:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:736
+#: qcsrc/client/hud/panel/scoreboard.qc:725
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr "^2scoreboard_columns_set ^3field1 field2..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:737
+#: qcsrc/client/hud/panel/scoreboard.qc:726
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
@@ -969,7 +973,7 @@ msgstr ""
 "^2scoreboard_columns_set ^7sem argumentos lê os argumentos do cvar "
 "scoreboard_columns"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:738
+#: qcsrc/client/hud/panel/scoreboard.qc:727
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
@@ -977,7 +981,7 @@ msgstr ""
 "  ^5Observação: ^7scoreboard_columns_set sem argumentos é executado sempre "
 "que um mapa é iniciado"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:739
+#: qcsrc/client/hud/panel/scoreboard.qc:728
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
@@ -985,17 +989,17 @@ msgstr ""
 "^2scoreboard_columns_set ^3expand_default ^7carrega o layout padrão e o "
 "expande no cvar scoreboard_columns para ficar editável"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:740
+#: qcsrc/client/hud/panel/scoreboard.qc:729
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr "É possível usar um ^3|^7 para iniciar os campos alinhados à direita."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:741
+#: qcsrc/client/hud/panel/scoreboard.qc:730
 msgid "The following field names are recognized (case insensitive):"
 msgstr ""
 "Os seguintes nomes de campo são reconhecidos (maiúsculas e minúsculas não "
 "diferem):"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:747
+#: qcsrc/client/hud/panel/scoreboard.qc:736
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -1009,7 +1013,7 @@ msgstr ""
 "Também é possível especificar a palavra \"all\" como um\n"
 "campo para exibir todos os campos disponíveis para o modo de jogo atual."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:753
+#: qcsrc/client/hud/panel/scoreboard.qc:742
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
@@ -1017,11 +1021,11 @@ msgstr ""
 "É possível usar os nomes especiais de modos de jogo \"teams\" e \"noteams\"\n"
 "para incluir/excluir TODOS os modos de jogo de equipe/sem equipe."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:757
+#: qcsrc/client/hud/panel/scoreboard.qc:746
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr "Exemplo: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:758
+#: qcsrc/client/hud/panel/scoreboard.qc:747
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
@@ -1029,7 +1033,7 @@ msgstr ""
 "exibirá o nome, ping e pp alinhados à esquerda e os campos\n"
 "à direita da barra vertical alinhada à direita."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:760
+#: qcsrc/client/hud/panel/scoreboard.qc:749
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
@@ -1037,10 +1041,10 @@ msgstr ""
 "\"field3\" só aparecerá em CTF e 'field4' aparecerá em todos\n"
 "os outros modos de jogo, exceto MM."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1058
-#: qcsrc/client/hud/panel/scoreboard.qc:1073
-#: qcsrc/client/hud/panel/scoreboard.qc:1143
-#: qcsrc/client/hud/panel/scoreboard.qc:1154 qcsrc/common/util.qc:385
+#: qcsrc/client/hud/panel/scoreboard.qc:1047
+#: qcsrc/client/hud/panel/scoreboard.qc:1062
+#: qcsrc/client/hud/panel/scoreboard.qc:1132
+#: qcsrc/client/hud/panel/scoreboard.qc:1143 qcsrc/common/util.qc:385
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -1049,123 +1053,127 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1793
+#: qcsrc/client/hud/panel/scoreboard.qc:1782
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Estatísticas de precisão (média %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1950
+#: qcsrc/client/hud/panel/scoreboard.qc:1939
 msgid "Item stats"
 msgstr "Estatísticas de item"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2061
+#: qcsrc/client/hud/panel/scoreboard.qc:2050
 msgid "Map stats:"
 msgstr "Estatísticas do mapa:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2091
+#: qcsrc/client/hud/panel/scoreboard.qc:2080
 msgid "Monsters killed:"
 msgstr "Monstros mortos:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2098
+#: qcsrc/client/hud/panel/scoreboard.qc:2087
 msgid "Secrets found:"
 msgstr "Segredos encontrados:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2308
+#: qcsrc/client/hud/panel/scoreboard.qc:2297
 #, c-format
 msgid "Spectators"
 msgstr "Espectadores"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2330
+#: qcsrc/client/hud/panel/scoreboard.qc:2319
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2330
+#: qcsrc/client/hud/panel/scoreboard.qc:2319
 #, c-format
 msgid "^5%s %s"
 msgstr "^5%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2331
+#: qcsrc/client/hud/panel/scoreboard.qc:2320
 msgid "SCO^points"
 msgstr "pontos"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2444
+#: qcsrc/client/hud/panel/scoreboard.qc:2434
+msgid "Next map:"
+msgstr "Próximo mapa:"
+
+#: qcsrc/client/hud/panel/scoreboard.qc:2441
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "Seleção de Equipe"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2458
+#: qcsrc/client/hud/panel/scoreboard.qc:2455
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^7Aperte ^3%s^7 para entrar na equipe selecionada"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2460
+#: qcsrc/client/hud/panel/scoreboard.qc:2457
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr "^7Aperte ^3%s^7 para autosselecionar uma equipe e entrar"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2464
+#: qcsrc/client/hud/panel/scoreboard.qc:2461
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7Aperte ^3%s^7 para especificar uma equipe"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2475
+#: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f minutos"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2502
+#: qcsrc/client/hud/panel/scoreboard.qc:2499
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7jogadores"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2503 qcsrc/client/main.qc:1478
+#: qcsrc/client/hud/panel/scoreboard.qc:2500 qcsrc/client/main.qc:1454
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Mapa:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2670
+#: qcsrc/client/hud/panel/scoreboard.qc:2667
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Prêmio de velocidade: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2674
+#: qcsrc/client/hud/panel/scoreboard.qc:2671
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "O mais rápido de todos: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2708
+#: qcsrc/client/hud/panel/scoreboard.qc:2705
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Ressurgindo em ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2718
+#: qcsrc/client/hud/panel/scoreboard.qc:2715
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Você morreu. Espere ^3%s^7 antes de ressurgir"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2727
+#: qcsrc/client/hud/panel/scoreboard.qc:2724
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Você morreu. Aperte ^2%s^7 para ressurgir"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1313
+#: qcsrc/client/hud/panel/strafehud.qc:1542
 msgid "qu"
 msgstr "qu"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1314
+#: qcsrc/client/hud/panel/strafehud.qc:1543
 msgid "m"
 msgstr "m"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1315
+#: qcsrc/client/hud/panel/strafehud.qc:1544
 msgid "km"
 msgstr "km"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1316
+#: qcsrc/client/hud/panel/strafehud.qc:1545
 msgid "mi"
 msgstr "mi"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1317
+#: qcsrc/client/hud/panel/strafehud.qc:1546
 msgid "nmi"
 msgstr "nmi"
 
@@ -1282,121 +1290,117 @@ msgstr "mph"
 msgid "knots"
 msgstr "nós"
 
-#: qcsrc/client/main.qc:1208
-msgid "Checkpoint times:"
-msgstr "Tempos dos pontos de checagem:"
-
-#: qcsrc/client/main.qc:1397
+#: qcsrc/client/main.qc:1373
 msgid "All Weapons Arena"
 msgstr "Arena com Todas as Armas"
 
-#: qcsrc/client/main.qc:1398
+#: qcsrc/client/main.qc:1374
 msgid "All Available Weapons Arena"
 msgstr "Arena com Todas as Armas Disponíveis"
 
-#: qcsrc/client/main.qc:1399
+#: qcsrc/client/main.qc:1375
 msgid "Most Weapons Arena"
 msgstr "Arena com Maioria das Armas"
 
-#: qcsrc/client/main.qc:1400
+#: qcsrc/client/main.qc:1376
 msgid "Most Available Weapons Arena"
 msgstr "Arena com Maioria das Armas Disponíveis"
 
-#: qcsrc/client/main.qc:1403 qcsrc/client/main.qc:1417
+#: qcsrc/client/main.qc:1379 qcsrc/client/main.qc:1393
 msgid "No Weapons Arena"
 msgstr "Arena sem Armas"
 
-#: qcsrc/client/main.qc:1415
+#: qcsrc/client/main.qc:1391
 #, c-format
 msgid "%s Arena"
 msgstr "Arena de %s"
 
-#: qcsrc/client/main.qc:1426 qcsrc/client/main.qc:1431
+#: qcsrc/client/main.qc:1402 qcsrc/client/main.qc:1407
 #, c-format
 msgid "This is %s"
 msgstr "Isto é %s"
 
-#: qcsrc/client/main.qc:1427
+#: qcsrc/client/main.qc:1403
 msgid "Your client version is outdated."
 msgstr "A versão de seu cliente está desatualizada."
 
-#: qcsrc/client/main.qc:1428
+#: qcsrc/client/main.qc:1404
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### NÃO PODERÁ JOGAR NESTE SERVIDOR ###"
 
-#: qcsrc/client/main.qc:1429
+#: qcsrc/client/main.qc:1405
 msgid "Please update!"
 msgstr "Por favor atualizar!"
 
-#: qcsrc/client/main.qc:1432
+#: qcsrc/client/main.qc:1408
 msgid "This server is using an outdated Xonotic version."
 msgstr "Este servidor usa uma versão desatualizada de Xonotic."
 
-#: qcsrc/client/main.qc:1433
+#: qcsrc/client/main.qc:1409
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### ESTE SERVIDOR É INCOMPATÍVEL, LOGO NÃO PODE ENTRAR ###"
 
-#: qcsrc/client/main.qc:1435
+#: qcsrc/client/main.qc:1411
 #, c-format
 msgid "Welcome to %s"
 msgstr "Boas-vindas a %s"
 
-#: qcsrc/client/main.qc:1451 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1427 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Nível %d:"
 
-#: qcsrc/client/main.qc:1453
+#: qcsrc/client/main.qc:1429
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGAperte ^F2%s^BG para entrar no jogo"
 
-#: qcsrc/client/main.qc:1476
+#: qcsrc/client/main.qc:1452
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Modo de jogo:"
 
-#: qcsrc/client/main.qc:1480
+#: qcsrc/client/main.qc:1456
 msgid "by:"
 msgstr "por:"
 
-#: qcsrc/client/main.qc:1484
+#: qcsrc/client/main.qc:1460
 msgid "This match supports"
 msgstr "Esta partida suporta"
 
-#: qcsrc/client/main.qc:1486
+#: qcsrc/client/main.qc:1462
 #, c-format
 msgid "%d players"
 msgstr "%d jogadores"
 
-#: qcsrc/client/main.qc:1488
+#: qcsrc/client/main.qc:1464
 #, c-format
 msgid "%d to %d players"
 msgstr "de %d a %d jogadores"
 
-#: qcsrc/client/main.qc:1490
+#: qcsrc/client/main.qc:1466
 #, c-format
 msgid "%d players maximum"
 msgstr "%d jogadores no máximo"
 
-#: qcsrc/client/main.qc:1492
+#: qcsrc/client/main.qc:1468
 #, c-format
 msgid "%d players minimum"
 msgstr "%d jogadores no mínimo"
 
-#: qcsrc/client/main.qc:1497
+#: qcsrc/client/main.qc:1473
 msgid "Active modifications:"
 msgstr "Modificações ativas:"
 
-#: qcsrc/client/main.qc:1500
+#: qcsrc/client/main.qc:1476
 msgid "Special gameplay tips:"
 msgstr "Dicas de jogo especial:"
 
-#: qcsrc/client/main.qc:1507
+#: qcsrc/client/main.qc:1483
 msgid "Server's message"
 msgstr "Mensagem do servidor"
 
-#: qcsrc/client/main.qc:1601
+#: qcsrc/client/main.qc:1577
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (não tem atalho definido)"
@@ -1439,15 +1443,15 @@ msgstr "^1Erro:^7 Não foi possível encontrar o índice do pak."
 msgid "Requesting preview..."
 msgstr "Solicitando prévia..."
 
-#: qcsrc/client/view.qc:917
+#: qcsrc/client/view.qc:955
 msgid "Nade timer"
 msgstr "Temporizador de granada"
 
-#: qcsrc/client/view.qc:922
+#: qcsrc/client/view.qc:960
 msgid "Capture progress"
 msgstr "Progresso de captura"
 
-#: qcsrc/client/view.qc:927
+#: qcsrc/client/view.qc:965
 msgid "Revival progress"
 msgstr "Progresso de reanimação"
 
@@ -1522,7 +1526,7 @@ msgid "The amount of captures needed before the match will end"
 msgstr "A quantidade de capturas necessária para acabar a partida"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:179
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:184
 msgid "Rankings"
 msgstr "Classificações"
 
@@ -1657,11 +1661,11 @@ msgstr "Capture pontos de controle para alcançar e destruir o gerador inimigo"
 msgid "Onslaught"
 msgstr "Massacre"
 
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:97
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:102
 msgid "Personal best"
 msgstr "Recorde pessoal"
 
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:107
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:112
 msgid "Server best"
 msgstr "Recorde do servidor"
 
@@ -1723,23 +1727,23 @@ msgstr ""
 msgid "Team Mayhem"
 msgstr "Mayhem por Equipe"
 
-#: qcsrc/common/items/item/ammo.qh:56
+#: qcsrc/common/items/item/ammo.qh:56 qcsrc/common/resources/all.inc:29
 msgid "Shells"
 msgstr "Cartuchos"
 
-#: qcsrc/common/items/item/ammo.qh:92
+#: qcsrc/common/items/item/ammo.qh:92 qcsrc/common/resources/all.inc:37
 msgid "Bullets"
 msgstr "Balas"
 
-#: qcsrc/common/items/item/ammo.qh:124
+#: qcsrc/common/items/item/ammo.qh:124 qcsrc/common/resources/all.inc:45
 msgid "Rockets"
 msgstr "Foguetes"
 
-#: qcsrc/common/items/item/ammo.qh:156
+#: qcsrc/common/items/item/ammo.qh:156 qcsrc/common/resources/all.inc:53
 msgid "Cells"
 msgstr "Células"
 
-#: qcsrc/common/items/item/ammo.qh:188
+#: qcsrc/common/items/item/ammo.qh:188 qcsrc/common/resources/all.inc:61
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
 msgstr "Plasma"
@@ -1782,7 +1786,7 @@ msgstr "Mega saúde"
 msgid "Jetpack"
 msgstr "Mochila a jato"
 
-#: qcsrc/common/items/item/jetpack.qh:75
+#: qcsrc/common/items/item/jetpack.qh:75 qcsrc/common/resources/all.inc:72
 msgid "Fuel"
 msgstr "Combustível"
 
@@ -3181,7 +3185,7 @@ msgstr "^BG%s^K1 foi traído por ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
 msgid "(%s every %s seconds)"
-msgstr ""
+msgstr "(%s a cada %s segundos)"
 
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
@@ -5002,11 +5006,11 @@ msgstr "secundário"
 #: qcsrc/common/notifications/all.qh:435
 #, c-format
 msgid "%d points"
-msgstr ""
+msgstr "%d pontos"
 
 #: qcsrc/common/notifications/all.qh:435
 msgid "1 point"
-msgstr ""
+msgstr "1 ponto"
 
 #: qcsrc/common/notifications/all.qh:444
 msgid "drop flag"
@@ -5019,100 +5023,100 @@ msgstr "arremessar granada"
 #: qcsrc/common/notifications/all.qh:471
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG!"
-msgstr ""
+msgstr "%s^K1 fez uma EXECUÇÃO TRIPLA!"
 
 #: qcsrc/common/notifications/all.qh:471
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE!"
-msgstr ""
+msgstr "%s^K1 fez uma PONTUAÇÃO TRIPLA!"
 
 #: qcsrc/common/notifications/all.qh:471
 msgid "TRIPLE FRAG!"
-msgstr ""
+msgstr "EXECUÇÃO TRIPLA!"
 
 #: qcsrc/common/notifications/all.qh:472
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 fez CINCO PONTUAÇÕES SEGUIDAS!"
 
 #: qcsrc/common/notifications/all.qh:472
 #, c-format
 msgid "%s^K1 unlocked RAGE!"
-msgstr ""
+msgstr "%s^K1 desbloqueou a FÚRIA!"
 
 #: qcsrc/common/notifications/all.qh:472
 msgid "RAGE!"
-msgstr ""
+msgstr "FÚRIA!"
 
 #: qcsrc/common/notifications/all.qh:473
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 fez DEZ PONTUAÇÕES SEGUIDAS!"
 
 #: qcsrc/common/notifications/all.qh:473
 #, c-format
 msgid "%s^K1 started a MASSACRE!"
-msgstr ""
+msgstr "%s^K1 começou um MASSACRE!"
 
 #: qcsrc/common/notifications/all.qh:473
 msgid "MASSACRE!"
-msgstr ""
+msgstr "MASSACRE!"
 
 #: qcsrc/common/notifications/all.qh:474
 #, c-format
 msgid "%s^K1 executed MAYHEM!"
-msgstr ""
+msgstr "%s^K1 executou uma MUTILAÇÃO!"
 
 #: qcsrc/common/notifications/all.qh:474
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 fez QUINZE PONTUAÇÕES SEGUIDAS!"
 
 #: qcsrc/common/notifications/all.qh:474
 msgid "MAYHEM!"
-msgstr ""
+msgstr "MUTILAÇÃO!"
 
 #: qcsrc/common/notifications/all.qh:475
 #, c-format
 msgid "%s^K1 is a BERSERKER!"
-msgstr ""
+msgstr "%s^K1 é um BERSERKER!"
 
 #: qcsrc/common/notifications/all.qh:475
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 fez VINTE PONTUAÇÕES SEGUIDAS!"
 
 #: qcsrc/common/notifications/all.qh:475
 msgid "BERSERKER!"
-msgstr ""
+msgstr "BERSERKER!"
 
 #: qcsrc/common/notifications/all.qh:476
 #, c-format
 msgid "%s^K1 inflicts CARNAGE!"
-msgstr ""
+msgstr "%s^K1 está infligindo CARNIFICINA!"
 
 #: qcsrc/common/notifications/all.qh:476
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 fez VINTE E CINCO PONTUAÇÕES SEGUIDAS!"
 
 #: qcsrc/common/notifications/all.qh:476
 msgid "CARNAGE!"
-msgstr ""
+msgstr "CARNIFICINA!"
 
 #: qcsrc/common/notifications/all.qh:477
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 fez TRINTA PONTUAÇÕES SEGUIDAS!"
 
 #: qcsrc/common/notifications/all.qh:477
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON!"
-msgstr ""
+msgstr "%s^K1 desencadeou o ARMAGEDOM!"
 
 #: qcsrc/common/notifications/all.qh:477
 msgid "ARMAGEDDON!"
-msgstr ""
+msgstr "ARMAGEDOM!"
 
 #: qcsrc/common/notifications/all.qh:484
 #, c-format
@@ -5145,48 +5149,48 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:517 qcsrc/common/notifications/all.qh:530
 #, c-format
 msgid "%d score spree!"
-msgstr ""
+msgstr "%d pontuações seguidas!"
 
 #: qcsrc/common/notifications/all.qh:529
 #, c-format
 msgid "%d frag spree!"
-msgstr ""
+msgstr "%d execuções seguidas!"
 
 #: qcsrc/common/notifications/all.qh:542
 msgid "First blood!"
-msgstr ""
+msgstr "Primeira morte!"
 
 #: qcsrc/common/notifications/all.qh:542
 msgid "First score!"
-msgstr ""
+msgstr "Primeiro ponto!"
 
 #: qcsrc/common/notifications/all.qh:546
 msgid "First casualty!"
-msgstr ""
+msgstr "Primeira baixa!"
 
 #: qcsrc/common/notifications/all.qh:546
 msgid "First victim!"
-msgstr ""
+msgstr "Primeira vítima!"
 
 #: qcsrc/common/notifications/all.qh:589
 #, c-format
 msgid "%s^K1 has %d frags in a row!"
-msgstr ""
+msgstr "%s^K1 tem %d execuções seguidas!"
 
 #: qcsrc/common/notifications/all.qh:590
 #, c-format
 msgid "%s^K1 made %d scores in a row!"
-msgstr ""
+msgstr "%s^K1 fez %d pontos seguidos!"
 
 #: qcsrc/common/notifications/all.qh:608
 #, c-format
 msgid "%s^K1 drew first blood!"
-msgstr ""
+msgstr "%s^K1 foi o primeiro a matar alguém!"
 
 #: qcsrc/common/notifications/all.qh:609
 #, c-format
 msgid "%s^K1 got the first score!"
-msgstr ""
+msgstr "%s^K1 foi o primeiro a pontuar!"
 
 #: qcsrc/common/notifications/all.qh:625
 #, c-format
@@ -5208,7 +5212,7 @@ msgstr ", perdendo sua cadeia de %d execuções"
 msgid ", losing their %d score spree"
 msgstr ", perdendo sua cadeia de %d pontuações"
 
-#: qcsrc/common/notifications/all.qh:668
+#: qcsrc/common/notifications/all.qh:658
 #, c-format
 msgid " with %d %s"
 msgstr " com %d %s"
@@ -7406,7 +7410,7 @@ msgid "Default"
 msgstr "Padrão"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:43
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "Unlimited"
 msgstr "Ilimitado"
 
@@ -8546,10 +8550,6 @@ msgstr "Às vezes"
 msgid "Often"
 msgstr "Frequentemente"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:188
-msgid "Debug info about sounds"
-msgstr "Depurar informações sobre sons"
-
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:11
 msgid "Are you sure you want to reset all key bindings?"
 msgstr "Deseja mesmo redefinir todas as teclas de atalho para o padrão?"
@@ -8562,153 +8562,129 @@ msgstr "Redefinir teclas de atalho"
 msgid "Quality preset:"
 msgstr "Predefinição de qualidade:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:45
-msgid "PRE^OMG!"
-msgstr "MEU DEUS!"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:48
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:43
 msgid "PRE^Low"
 msgstr "Baixa"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:50
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:45
 msgid "PRE^Medium"
 msgstr "Média"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:52
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:47
 msgid "PRE^Normal"
 msgstr "Normal"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:54
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:49
 msgid "PRE^High"
 msgstr "Alta"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:56
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:51
 msgid "PRE^Ultra"
 msgstr "Ultra"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:60
-msgid "PRE^Ultimate"
-msgstr "Máxima"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:55
 msgid "Geometry detail:"
 msgstr "Detalhes da geometria:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:67
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:57
 msgid "Change the smoothness of the curves on the map"
 msgstr "Altera a suavização das curvas no mapa."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:68
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:58
 msgid "DET^Lowest"
 msgstr "Mínimo"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:69
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:59
 msgid "DET^Low"
 msgstr "Baixo"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:70
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:60
 msgid "DET^Normal"
 msgstr "Normal"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:71
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:61
 msgid "DET^Good"
 msgstr "Bom"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:72
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:62
 msgid "DET^Best"
 msgstr "Melhor"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:73
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:63
 msgid "DET^Insane"
 msgstr "Insano"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:77
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:67
 msgid "Player detail:"
 msgstr "Detalhes do jogador:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:79
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:69
 msgid "PDET^Low"
 msgstr "Baixo"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:80
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:70
 msgid "PDET^Medium"
 msgstr "Médio"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:81
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:71
 msgid "PDET^Normal"
 msgstr "Normal"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:82
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:72
 msgid "PDET^Good"
 msgstr "Bom"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:83
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:73
 msgid "PDET^Best"
 msgstr "Melhor"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:87
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:77
 msgid "Texture resolution:"
 msgstr "Resolução das texturas:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:91
-msgid "RES^Leet"
-msgstr "Elite"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:92
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:80
 msgid "RES^Lowest"
 msgstr "Mínima"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:93
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:81
 msgid "RES^Very low"
 msgstr "Muito baixa"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:94
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:82
 msgid "RES^Low"
 msgstr "Baixa"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:95
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:83
 msgid "RES^Normal"
 msgstr "Normal"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:96
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:84
 msgid "RES^Good"
 msgstr "Boa"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:97
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:85
 msgid "RES^Best"
 msgstr "Melhor"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:110
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:115
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:120
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:98
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:103
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:108
 msgid "Avoid lossy texture compression"
 msgstr "Evitar compressão de texturas com perdas"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:117
 msgid "Disable sky for performance and visibility"
 msgstr "Desativar céu para ganhar desempenho e visibilidade"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:117
 msgid "Show sky"
 msgstr "Exibir céu"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
-msgid "Show surfaces"
-msgstr "Exibir superfícies"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:133
-msgid ""
-"Disable textures completely for very slow hardware. This gives a huge "
-"performance boost, but looks very ugly."
-msgstr ""
-"Desativa completamente as texturas para sistemas muito lentos. Isso garante "
-"uma alto ganho de desempenho, mas deixa o jogo muito feio."
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:136
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:119
 msgid "Use lightmaps"
 msgstr "Usar lightmaps"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:137
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:120
 msgid ""
 "Use high resolution lightmaps, which will look pretty but use up some extra "
 "video memory"
@@ -8716,27 +8692,27 @@ msgstr ""
 "Usa lightmaps de alta resolução. O jogo ficará bonito, mas isso exigirá mais "
 "memória de vídeo."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:139
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:122
 msgid "Deluxe mapping"
 msgstr "Mapeamento deluxe"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:140
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:123
 msgid "Use per-pixel lighting effects"
 msgstr "Usa efeitos de iluminação por pixel."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:142
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:128
 msgid "Gloss"
 msgstr "Lustro"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:143
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Enable the use of glossmaps on textures supporting it"
 msgstr "Ativa glossmaps em texturas que suportam esse recurso."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:146
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:135
 msgid "Offset mapping"
 msgstr "Mapeamento por paralaxe"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:147
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:136
 msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
@@ -8744,22 +8720,22 @@ msgstr ""
 "Efeito de mapeamento por paralaxe que faz as texturas com bumpmaps parecerem "
 "que estão \"saindo\" da superfície plana em 2D."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:149
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:139
 msgid "Relief mapping"
 msgstr "Mapeamento de relevo"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:150
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:140
 msgid ""
 "Higher quality offset mapping, which also has a huge impact on performance"
 msgstr ""
 "Mapeamento por paralaxe de maior qualidade, o que também impacta bastante o "
 "desempenho."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:153
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:146
 msgid "Reflections:"
 msgstr "Reflexos:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:154
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:147
 msgid ""
 "Reflection and refraction quality, has a huge impact on performance on maps "
 "with reflecting surfaces"
@@ -8767,92 +8743,92 @@ msgstr ""
 "Qualidade dos reflexos e refrações. Impacta bastante o desempenho em mapas "
 "com superfícies refletoras."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:157
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:151
 msgid "Resolution of reflections/refractions"
 msgstr "Resolução dos reflexos e refrações."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:158
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:152
 msgid "Blurred"
 msgstr "Borrados"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:159
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:153
 msgid "REFL^Good"
 msgstr "Boa"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:160
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:154
 msgid "Sharp"
 msgstr "Alta"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:164
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:161
 msgid "Decals"
 msgstr "Decalques"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:165
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:162
 msgid "Enable decals (bullet holes and blood)"
 msgstr "Ativa decalques (buracos de bala e sangue)."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:166
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:163
 msgid "Decals on models"
 msgstr "Decalques em modelos"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:170
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:251
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:167
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:249
 msgid "Distance:"
 msgstr "Distância:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:173
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:170
 msgid "Decals further away than this will not be drawn"
 msgstr "Os decalques mais distantes que isso não serão desenhados."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:177
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:174
 msgid "Time:"
 msgstr "Tempo:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:180
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:177
 msgid "Time in seconds before decals fade away"
 msgstr "Tempo em segundos antes dos decalques desaparecerem."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:184
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:181
 msgid "Damage effects:"
 msgstr "Efeitos de dano:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:186
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:183
 msgid "DMGFX^Disabled"
 msgstr "Desabilitado"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:187
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:184
 msgid "Skeletal"
 msgstr "Esquelético"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:188
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:185
 msgid "DMGFX^All"
 msgstr "Todos"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:189
 msgid "Realtime dynamic lights"
 msgstr "Luzes dinâmicas em tempo real"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:193
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:190
 msgid ""
 "Temporary realtime light sources such as explosions, rockets and powerups"
 msgstr ""
 "Fontes temporárias de luz em tempo real como explosões, foguetes e "
 "potencializadores"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:195
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:198
 msgid "Shadows"
 msgstr "Sombras"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:196
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:193
 msgid "Shadows cast by realtime dynamic lights"
 msgstr "Sombras a luzes dinâmicas em tempo real"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:196
 msgid "Realtime world lights"
 msgstr "Luzes do mundo em tempo real"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:197
 msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
@@ -8860,15 +8836,15 @@ msgstr ""
 "Fontes de luz em tempo real incluídas em certos mapas. Pode muito impactar o "
 "desempenho."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
 msgid "Shadows cast by realtime world lights"
 msgstr "Sombras a luzes do mundo em tempo real"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:203
 msgid "Use normal maps"
 msgstr "Usar normal maps"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:207
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:204
 msgid ""
 "Directional shading of certain textures to simulate interaction of realtime "
 "light with a bumpy surface"
@@ -8876,31 +8852,31 @@ msgstr ""
 "Sombrear direcionalmente certas texturas para simular luz em tempo real "
 "interagindo com superfícies ásperas"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:209
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
 msgid "Soft shadows"
 msgstr "Sombras suaves"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:209
 msgid "Corona brightness:"
 msgstr "Brilho coronal:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:211
 msgid "Flare effects around certain lights"
 msgstr "Efeitos de clarão perto de certas luzes"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:217
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid "Fade coronas according to visibility"
 msgstr "Desvanecer as coronas de acordo com a visibilidade"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:218
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:215
 msgid "Corona fading using occlusion queries"
 msgstr "Desvanecer coronas por meio de consulta de oclusões"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:219
 msgid "Bloom"
 msgstr "Bloom"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:223
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:220
 msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance."
@@ -8908,11 +8884,11 @@ msgstr ""
 "Ativa o efeito bloom, que ilumina os pixeis próximos a pixeis muito "
 "brilhantes. Impacta bastante o desempenho."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:224
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:221
 msgid "Extra postprocessing effects"
 msgstr "Efeitos extras de pós-processamento"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:225
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
 msgid ""
 "Enables special postprocessing effects for when damaged or under water or "
 "using a powerup"
@@ -8920,34 +8896,33 @@ msgstr ""
 "Ativa efeitos especiais de pós-processamento ao receber dano, estar debaixo "
 "d'água ou usar potencializadores."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:230
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:228
 msgid "Motion blur strength - 0.4 recommended"
 msgstr "Intensidade do desfoque de movimento - 0.4 recomendado"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:231
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:229
 msgid "Motion blur:"
 msgstr "Desfoque de movimento:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:237
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:235
 msgid "Particles"
 msgstr "Partículas"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:238
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:236
 msgid "Spawnpoint effects"
 msgstr "Efeitos de ponto de surgimento"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:239
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:237
 msgid "Particles effects at all spawn points and whenever a player spawns"
 msgstr ""
 "Efeitos de partículas em todos os pontos de surgimento e sempre que um "
 "jogador nascer"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:244
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:242
 msgid "Quality:"
 msgstr "Qualidade:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:247
-#: qcsrc/menu/xonotic/slider_particles.qc:13
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:245
 msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
@@ -8955,7 +8930,7 @@ msgstr ""
 "Multiplicador para a quantidade de partículas. Menos significa menos "
 "partículas, o que resulta em um melhor desempenho."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:254
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:252
 msgid "Particles further away than this will not be drawn"
 msgstr "As partículas mais distantes que isso não serão desenhadas."
 
@@ -9244,7 +9219,7 @@ msgstr "Exibir nome do ladrão da bandeira em Capture a Bandeira"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:76
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:92
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:111
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:104
 msgid "Other"
 msgstr "Outros"
 
@@ -9740,67 +9715,63 @@ msgstr "Compensação de erro de previsão de movimento"
 msgid "Use encryption (AES) when available"
 msgstr "Usar encriptação (AES) quando disponível"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
-msgid "Local latency:"
-msgstr "Latência local:"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:53
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:46
 msgid "HTTP downloads"
 msgstr "Downloads HTTP"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:55
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
 msgid "Simultaneous:"
 msgstr "Simultâneos:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 msgid "Maximum number of concurrent HTTP downloads"
 msgstr "Número máximo de downloads simultâneos via HTTP"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:59
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:52
 msgid "Bandwidth limit:"
 msgstr "Limite de largura de banda:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:73
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:66
 msgid "Framerate"
 msgstr "Taxa de Quadros por Segundo (FPS)"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:75
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:68
 msgid "Show frames per second"
 msgstr "Exibir taxa de quadros por segundo"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:76
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
 msgid "Show your rendered frames per second"
 msgstr "Exibe a sua taxa de quadros por segundo"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:71
 msgid "Maximum:"
 msgstr "Máximo:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:85
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "MAXFPS^Unlimited"
 msgstr "Ilimitada"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:88
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:81
 msgid "Target:"
 msgstr "Alvo:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:90
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:83
 msgid "TRGT^Disabled"
 msgstr "Desabilitado"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:101
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:94
 msgid "Idle limit:"
 msgstr "Em segundo plano:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:107
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:100
 msgid "IDLFPS^Unlimited"
 msgstr "Ilimitado"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:113
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:106
 msgid "Menu tooltips:"
 msgstr "Dicas de menu:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:115
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:108
 msgid ""
 "Menu tooltips: disabled, standard or advanced (also shows cvar or console "
 "command bound to the menu item)"
@@ -9808,40 +9779,36 @@ msgstr ""
 "Dicas de menu: desabilitado, padrão ou avançado (também mostra a cvar ou "
 "comando de console ligado ao item de menu)"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:116
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:109
 msgid "TLTIP^Disabled"
 msgstr "Desabilitado"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:117
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:110
 msgid "TLTIP^Standard"
 msgstr "Padrão"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:118
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:111
 msgid "TLTIP^Advanced"
 msgstr "Avançado"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:121
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:114
 msgid "Show current date and time"
 msgstr "Exibir data e hora atual"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:122
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:115
 msgid "Show current date and time of day, useful on screenshots"
 msgstr "Exibe a data e hora atual, útil para capturas de tela"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:125
-msgid "Enable developer mode"
-msgstr "Habilitar modo de desenvolvedor"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:130
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:120
 msgid "Advanced settings..."
 msgstr "Configurações avançadas..."
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:131
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:121
 msgid "Advanced settings where you can tweak every single variable of the game"
 msgstr ""
 "Definições avançadas onde você poderá ajustar cada uma das variáveis do jogo"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:137
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:127
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
 msgid "Factory reset"
 msgstr "Configurações padrões"
@@ -10171,22 +10138,6 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:158
 msgid "Use OpenGL 2.0 shaders (GLSL)"
 msgstr "Usar shaders de OpenGL 2.0 (GLSL)"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:164
-msgid "Flip view horizontally"
-msgstr "Girar a visão horizontalmente"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:165
-msgid "Poor man's left handed mode"
-msgstr "Modo canhoto do pobre coitado."
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:167
-msgid "Psycho coloring (easter egg)"
-msgstr "Cores 'Psycho' (easter egg)"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:171
-msgid "Trippy vertices (easter egg)"
-msgstr "Vértices 'Trip' (easter egg)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:149
 msgid "Instant action! (random map with bots)"
@@ -10635,34 +10586,6 @@ msgstr "DESLIGADO"
 #, c-format
 msgid "%s dB"
 msgstr "%s dB"
-
-#: qcsrc/menu/xonotic/slider_particles.qc:14
-msgid "PART^OMG"
-msgstr "MEUDEUS"
-
-#: qcsrc/menu/xonotic/slider_particles.qc:15
-msgid "PARTQUAL^Low"
-msgstr "Baixa"
-
-#: qcsrc/menu/xonotic/slider_particles.qc:16
-msgid "PARTQUAL^Medium"
-msgstr "Média"
-
-#: qcsrc/menu/xonotic/slider_particles.qc:17
-msgid "PARTQUAL^Normal"
-msgstr "Normal"
-
-#: qcsrc/menu/xonotic/slider_particles.qc:18
-msgid "PARTQUAL^High"
-msgstr "Alta"
-
-#: qcsrc/menu/xonotic/slider_particles.qc:19
-msgid "PARTQUAL^Ultra"
-msgstr "Ultra"
-
-#: qcsrc/menu/xonotic/slider_particles.qc:20
-msgid "PARTQUAL^Ultimate"
-msgstr "Extrema"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:13
 msgid ""

@@ -1,0 +1,5 @@
+#pragma once
+
+string autocvar_g_spawn_unique;
+
+.entity su_last_point;

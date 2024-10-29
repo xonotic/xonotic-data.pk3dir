@@ -651,21 +651,11 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 
 string notif_arg_item_wepammo(float f1, float f2)
 {
-	string ammotype = "";
 	Weapon wep = REGISTRY_GET(Weapons, f1);
-	// TODO: registry handles
-	switch (wep.ammo_type)
-	{
-		case RES_SHELLS:  ammotype = ITEM_Shells.m_name;      break;
-		case RES_BULLETS: ammotype = ITEM_Bullets.m_name;     break;
-		case RES_ROCKETS: ammotype = ITEM_Rockets.m_name;     break;
-		case RES_CELLS:   ammotype = ITEM_Cells.m_name;       break;
-		case RES_PLASMA:  ammotype = ITEM_Plasma.m_name;      break;
-		case RES_FUEL:    ammotype = ITEM_JetpackFuel.m_name; break;
-		default: return ""; // doesn't use ammo
-	}
+	if(wep.ammo_type == RES_NONE)
+		return ""; // doesn't use ammo
 	// example for translators: You dropped the Vortex with 5 cells
-	return sprintf(_(" with %d %s"), f2, strtolower(ammotype));
+	return sprintf(_(" with %d %s"), f2, strtolower(wep.ammo_type.m_name));
 }
 
 

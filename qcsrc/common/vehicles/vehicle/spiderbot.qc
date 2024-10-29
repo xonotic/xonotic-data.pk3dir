@@ -20,7 +20,6 @@ float autocvar_g_vehicle_spiderbot_respawntime = 45;
 float autocvar_g_vehicle_spiderbot_speed_stop = 50;
 float autocvar_g_vehicle_spiderbot_speed_strafe = 400;
 float autocvar_g_vehicle_spiderbot_speed_walk = 500;
-float autocvar_g_vehicle_spiderbot_speed_run = 700;
 float autocvar_g_vehicle_spiderbot_turnspeed = 90;
 float autocvar_g_vehicle_spiderbot_turnspeed_strafe = 300;
 float autocvar_g_vehicle_spiderbot_movement_inertia = 0.15;
@@ -201,7 +200,7 @@ bool spiderbot_frame(entity this, float dt)
 					}
 					CS(this).movement_y = 0;
 					float oldvelz = vehic.velocity_z;
-					movelib_move_simple(vehic, normalize(v_forward * CS(this).movement_x),((PHYS_INPUT_BUTTON_JUMP(this)) ? autocvar_g_vehicle_spiderbot_speed_run : autocvar_g_vehicle_spiderbot_speed_walk),autocvar_g_vehicle_spiderbot_movement_inertia);
+					movelib_move_simple(vehic, normalize(v_forward * CS(this).movement_x), autocvar_g_vehicle_spiderbot_speed_walk, autocvar_g_vehicle_spiderbot_movement_inertia);
 					vehic.velocity_z = oldvelz;
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(vehic.velocity_z <= 20) // not while jumping

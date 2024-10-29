@@ -427,26 +427,50 @@ void LocalCommand_sendcvar(int request, int argc)
 	}
 }
 
+void LocalCommand_print_cptimes(int request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			LOG_HELP(_("Checkpoint times:"));
+			for (int i = 0; i <= 255; ++i)
+			{
+				if (race_checkpoint_splits[i])
+					LOG_HELP(race_checkpoint_splits[i]);
+			}
+			return;
+		}
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 cl_cmd print_cptimes");
+			LOG_HELP("  No arguments required, will show current or last run checkpoint times.");
+			return;
+		}
+	}
+}
+
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void LocalCommand_(int request)
 {
-    switch(request)
-    {
-        case CMD_REQUEST_COMMAND:
-        {
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
 
-            return;
-        }
+			return;
+		}
 
-        default:
-        case CMD_REQUEST_USAGE:
-        {
-            LOG_HELP("Usage:^3 cl_cmd ");
-            LOG_HELP("  No arguments required.");
-            return;
-        }
-    }
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 cl_cmd ");
+			LOG_HELP("  No arguments required.");
+			return;
+		}
+	}
 }
 */
 
@@ -464,6 +488,7 @@ CLIENT_COMMAND(handlevote, "System to handle selecting a vote or option") { Loca
 CLIENT_COMMAND(hud, "Commands regarding/controlling the HUD system") { LocalCommand_hud(request, arguments); }
 CLIENT_COMMAND(localprint, "Create your own centerprint sent to yourself") { LocalCommand_localprint(request, arguments); }
 CLIENT_COMMAND(mv_download, "Retrieve mapshot picture from the server") { LocalCommand_mv_download(request, arguments); }
+CLIENT_COMMAND(print_cptimes, "Print the stored checkpoint times for current or last run") { LocalCommand_print_cptimes(request); }
 CLIENT_COMMAND(sendcvar, "Send a cvar to the server (like cl_weaponpriority)") { LocalCommand_sendcvar(request, arguments); }
 
 void LocalCommand_macro_help()

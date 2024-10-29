@@ -62,17 +62,6 @@ float sbt_highlight_alpha;
 float sbt_highlight_alpha_self;
 float sbt_highlight_alpha_eliminated;
 
-// provide basic panel cvars to old clients
-// TODO remove them after a future release (0.8.2+)
-noref string autocvar_hud_panel_scoreboard_pos = "0.150000 0.150000";
-noref string autocvar_hud_panel_scoreboard_size = "0.700000 0.700000";
-noref string autocvar_hud_panel_scoreboard_bg = "border_default";
-noref string autocvar_hud_panel_scoreboard_bg_color = "0 0.3 0.5";
-noref string autocvar_hud_panel_scoreboard_bg_color_team = "";
-noref string autocvar_hud_panel_scoreboard_bg_alpha = "0.7";
-noref string autocvar_hud_panel_scoreboard_bg_border = "";
-noref string autocvar_hud_panel_scoreboard_bg_padding = "";
-
 float autocvar_hud_panel_scoreboard_fadeinspeed = 10;
 float autocvar_hud_panel_scoreboard_fadeoutspeed = 5;
 float autocvar_hud_panel_scoreboard_respawntime_decimals = 1;
@@ -2438,6 +2427,14 @@ void Scoreboard_Draw()
 	// Begin of Game Info Section
 	sb_gameinfo_type_fontsize = hud_fontsize * 2.5;
 	sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
+
+	if (GET_NEXTMAP() != "")
+	{
+		// NOTE: nextmap is drawn before title to avoid covering title in case of long map name
+		str = strcat("^7", _("Next map:"), " ^9", GET_NEXTMAP());
+		drawcolorcodedstring(pos + vec2(hud_fontsize.x * 0.5, sb_gameinfo_type_fontsize.y - hud_fontsize.y * 1.25),
+			str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
 
 	// Game Info: Game Type
 	if (scoreboard_ui_enabled == 2)

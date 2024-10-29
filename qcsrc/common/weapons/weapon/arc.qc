@@ -18,15 +18,8 @@ bool W_Arc_Beam_Send(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, sf);
 	WriteByte(MSG_ENTITY, weaponslot(this.weaponentity_fld));
 
-	if(sf & ARC_SF_SETTINGS) // settings information
+	if(sf & ARC_SF_UPDATE)
 	{
-		WriteShort(MSG_ENTITY, WEP_CVAR(WEP_ARC, beam_degreespersegment));
-		WriteShort(MSG_ENTITY, WEP_CVAR(WEP_ARC, beam_distancepersegment));
-		WriteShort(MSG_ENTITY, WEP_CVAR(WEP_ARC, beam_maxangle));
-		WriteCoord(MSG_ENTITY, WEP_CVAR(WEP_ARC, beam_range));
-		WriteShort(MSG_ENTITY, WEP_CVAR(WEP_ARC, beam_returnspeed));
-		WriteByte(MSG_ENTITY, WEP_CVAR(WEP_ARC, beam_tightness) * 10);
-
 		WriteByte(MSG_ENTITY, drawlocal);
 		WriteByte(MSG_ENTITY, etof(this.owner));
 	}
@@ -205,7 +198,7 @@ void W_Arc_Beam_Think(entity this)
 		return;
 	}
 
-	float burst = 0;
+	int burst = 0;
 	if( (PHYS_INPUT_BUTTON_ATCK2(own) && !WEP_CVAR(WEP_ARC, bolt)) || this.beam_bursting)
 	{
 		if(!this.beam_bursting)
@@ -327,20 +320,17 @@ void W_Arc_Beam_Think(entity this)
 	if(this.beam_dir != w_shotdir)
 	{
 		// calculate how much we're going to move the end of the beam to the want position
-		// WEAPONTODO (server and client):
-		// blendfactor never actually becomes 0 in this situation, which is a problem
-		// regarding precision... this means that this.beam_dir and w_shotdir approach
-		// eachother, however they never actually become the same value with this method.
-		// Perhaps we should do some form of rounding/snapping?
 		float angle = vlen(w_shotdir - this.beam_dir) * RAD2DEG;
-		float max_blendfactor = 1;
-		if(angle && (angle > WEP_CVAR(WEP_ARC, beam_maxangle)))
-			max_blendfactor = WEP_CVAR(WEP_ARC, beam_maxangle) / angle;
-		float blendfactor = bound(0, (1 - (WEP_CVAR(WEP_ARC, beam_returnspeed) * frametime)), max_blendfactor);
-		if(vdist(this.beam_dir - w_shotdir, <, 0.01))
-			this.beam_dir = w_shotdir;
+		if (angle < 0.01) // snap only when very close so it's impossible to notice
+			this.beam_dir = w_shotdir; // snap otherwise vectors will never actually be the same
 		else
+		{
+			float max_blendfactor = 1;
+			if(angle && (angle > WEP_CVAR(WEP_ARC, beam_maxangle)))
+				max_blendfactor = WEP_CVAR(WEP_ARC, beam_maxangle) / angle;
+			float blendfactor = bound(0, (1 - (WEP_CVAR(WEP_ARC, beam_returnspeed) * frametime)), max_blendfactor);
 			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+		}
 
 		// network information: beam direction
 		this.SendFlags |= ARC_SF_BEAMDIR;
@@ -361,12 +351,13 @@ void W_Arc_Beam_Think(entity this)
 	}
 
 	vector beam_endpos = (w_shotorg + (this.beam_dir * WEP_CVAR(WEP_ARC, beam_range)));
-	vector beam_controlpoint = w_shotorg + w_shotdir * (WEP_CVAR(WEP_ARC, beam_range) * (1 - WEP_CVAR(WEP_ARC, beam_tightness)));
+	float beam_controlpoint_dist = WEP_CVAR(WEP_ARC, beam_range) * bound(0.001, 1 - WEP_CVAR(WEP_ARC, beam_tightness), 1);
+	vector beam_controlpoint = w_shotorg + w_shotdir * beam_controlpoint_dist;
 
-	float i;
-	float new_beam_type = 0;
+	int new_beam_type = 0;
 	vector last_origin = w_shotorg;
-	for(i = 1; i <= segments; ++i)
+	vector last_origin_prev = '0 0 0';
+	for(int i = 1; i <= segments; ++i)
 	{
 		// WEAPONTODO (client):
 		// In order to do nice fading and pointing on the starting segment, we must always
@@ -379,31 +370,32 @@ void W_Arc_Beam_Think(entity this)
 			beam_controlpoint,
 			beam_endpos,
 			i / segments);
-		vector new_dir = normalize(new_origin - last_origin);
 
 		WarpZone_traceline_antilag(
 			own,
 			last_origin,
 			new_origin,
 			MOVE_NORMAL,
-			own,
+			NULL,
 			ANTILAG_LATENCY(own)
 		);
 
-		// Do all the transforms for warpzones right now, as we already
-		// "are" in the post-trace system (if we hit a player, that's
-		// always BEHIND the last passed wz).
+		last_origin_prev = last_origin; // used later to calculate damage force direction
 		last_origin = trace_endpos;
+
+		// Do all the transforms for warpzones right now, as we already "are" in the post-trace
+		// system (if we hit a player, that's always BEHIND the last passed wz).
 		w_shotorg = WarpZone_TransformOrigin(WarpZone_trace_transform, w_shotorg);
-		beam_controlpoint = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_controlpoint);
-		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
-		new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
+
+		if(trace_fraction == 1)
+		{
+			beam_controlpoint = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_controlpoint);
+			beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
+			continue;
+		}
 
 		if(!trace_ent)
 		{
-			if(trace_fraction == 1)
-				continue;
-
 			// we collided with geometry
 			new_beam_type = ARC_BT_WALL;
 			break;
@@ -411,7 +403,7 @@ void W_Arc_Beam_Think(entity this)
 
 		// we collided with an entity
 		bool is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
-		if(SAME_TEAM(own, trace_ent))
+		if(trace_ent != own && SAME_TEAM(own, trace_ent))
 		{
 			float roothealth = ((burst) ? WEP_CVAR(WEP_ARC, burst_healing_hps) : WEP_CVAR(WEP_ARC, beam_healing_hps));
 			float rootarmor = ((burst) ? WEP_CVAR(WEP_ARC, burst_healing_aps) : WEP_CVAR(WEP_ARC, beam_healing_aps));
@@ -459,6 +451,8 @@ void W_Arc_Beam_Think(entity this)
 				accuracy_add(own, WEP_ARC, 0, rootdamage * coefficient * falloff);
 			}
 
+			vector new_dir = normalize(new_origin - last_origin_prev);
+			new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
 			Damage(
 				trace_ent,
 				own,
@@ -467,7 +461,7 @@ void W_Arc_Beam_Think(entity this)
 				WEP_ARC.m_id,
 				weaponentity,
 				hitorigin,
-				WEP_CVAR(WEP_ARC, beam_force) * new_dir * coefficient * falloff
+				WEP_CVAR(WEP_ARC, beam_force) * coefficient * falloff * new_dir
 			);
 
 			new_beam_type = ARC_BT_HIT;
@@ -491,9 +485,8 @@ void W_Arc_Beam_Think(entity this)
 	this.nextthink = time;
 }
 
-void W_Arc_Beam(float burst, entity actor, .entity weaponentity)
+void W_Arc_Beam(bool burst, entity actor, .entity weaponentity)
 {
-
 	// only play fire sound if 1 sec has passed since player let go the fire button
 	if(time - actor.(weaponentity).beam_prev > 1)
 		sound(actor, CH_WEAPON_A, SND_ARC_FIRE, VOL_BASE, ATTN_NORM);
@@ -507,7 +500,7 @@ void W_Arc_Beam(float burst, entity actor, .entity weaponentity)
 	beam.bot_dodge = true;
 	IL_PUSH(g_bot_dodge, beam);
 	beam.bot_dodgerating = WEP_CVAR(WEP_ARC, beam_damage);
-	beam.beam_bursting = burst;
+	beam.beam_bursting = boolean(burst);
 	Net_LinkEntity(beam, false, 0, W_Arc_Beam_Send);
 
 	getthink(beam)(beam);
@@ -547,7 +540,7 @@ void Arc_Smoke(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 			Send_Effect(EFFECT_ARC_OVERHEAT_FIRE, smoke_origin, w_shotdir, 1 );
 			if ( !actor.arc_smoke_sound )
 			{
-				actor.arc_smoke_sound = 1;
+				actor.arc_smoke_sound = true;
 				sound(actor, CH_SHOTS_SINGLE, SND_ARC_LOOP_OVERHEAT, VOL_BASE, ATTN_NORM);
 			}
 		}
@@ -564,194 +557,198 @@ void Arc_Smoke(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 	bool stop_smoke_sound = actor.arc_overheat <= time || !attacking;
 	if ((actor.arc_smoke_sound && stop_smoke_sound) || actor.(weaponentity).m_switchweapon != thiswep)
 	{
-		actor.arc_smoke_sound = 0;
+		actor.arc_smoke_sound = false;
 		sound(actor, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 	}
 }
 
 METHOD(Arc, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(WEP_CVAR(WEP_ARC, beam_botaimspeed))
-    {
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(
-        	actor,
-        	weaponentity,
-            WEP_CVAR(WEP_ARC, beam_botaimspeed),
-            0,
-            WEP_CVAR(WEP_ARC, beam_botaimlifetime),
-            false, true
-        );
-    }
-    else
-    {
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(
-        	actor,
-        	weaponentity,
-            1000000,
-            0,
-            0.001,
-            false, true
-        );
-    }
+	if(WEP_CVAR(WEP_ARC, beam_botaimspeed))
+	{
+		PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(
+			actor,
+			weaponentity,
+			WEP_CVAR(WEP_ARC, beam_botaimspeed),
+			0,
+			WEP_CVAR(WEP_ARC, beam_botaimlifetime),
+			false, true
+		);
+	}
+	else
+	{
+		PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(
+			actor,
+			weaponentity,
+			1000000,
+			0,
+			0.001,
+			false, true
+		);
+	}
 }
 METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    Arc_Player_SetHeat(actor, weaponentity);
-    Arc_Smoke(thiswep, actor, weaponentity, fire);
+	Arc_Player_SetHeat(actor, weaponentity);
+	Arc_Smoke(thiswep, actor, weaponentity, fire);
 
-    bool beam_fire2 = ((fire & 2) && !WEP_CVAR(WEP_ARC, bolt));
+	bool beam_fire2 = ((fire & 2) && !WEP_CVAR(WEP_ARC, bolt));
 
-    if (time >= actor.arc_overheat)
-    if ((fire & 1) || beam_fire2 || actor.(weaponentity).arc_beam.beam_bursting)
-    {
-    	#if 0
-        if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
-        {
-            #if 0
-            if(actor.animstate_startframe == actor.anim_shoot.x && actor.animstate_numframes == actor.anim_shoot.y)
-                weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
-            else
-            #endif
-                weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(WEP_ARC, beam_animtime), w_ready);
-        }
-        #endif
+	if (time >= actor.arc_overheat)
+	if ((fire & 1) || beam_fire2 || actor.(weaponentity).arc_beam.beam_bursting)
+	{
+	#if 0
+		if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
+		{
+			#if 0
+			if(actor.animstate_startframe == actor.anim_shoot.x && actor.animstate_numframes == actor.anim_shoot.y)
+				weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
+			else
+			#endif
+				weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(WEP_ARC, beam_animtime), w_ready);
+		}
+		#endif
 
-        if((!actor.(weaponentity).arc_beam) || wasfreed(actor.(weaponentity).arc_beam))
-        {
-            if(weapon_prepareattack(thiswep, actor, weaponentity, boolean(beam_fire2), 0))
-            {
-                W_Arc_Beam(boolean(beam_fire2), actor, weaponentity);
+		if((!actor.(weaponentity).arc_beam) || wasfreed(actor.(weaponentity).arc_beam))
+		{
+			if(weapon_prepareattack(thiswep, actor, weaponentity, boolean(beam_fire2), 0))
+			{
+				W_Arc_Beam(boolean(beam_fire2), actor, weaponentity);
 
-                if(!actor.(weaponentity).arc_BUTTON_ATCK_prev)
-                {
-                	actor.(weaponentity).wframe = WFRAME_FIRE1;
-                    weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(WEP_ARC, beam_animtime), W_Arc_Attack);
-                    actor.(weaponentity).arc_BUTTON_ATCK_prev = true;
-                }
-            }
-        }
+				if(!actor.(weaponentity).arc_BUTTON_ATCK_prev)
+				{
+					actor.(weaponentity).wframe = WFRAME_FIRE1;
+					weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(WEP_ARC, beam_animtime), W_Arc_Attack);
+					actor.(weaponentity).arc_BUTTON_ATCK_prev = true;
+				}
+			}
+		}
 
-        return;
-    }
-    else if(fire & 2)
-    {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
-        {
-            if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
-            if(!(actor.items & IT_UNLIMITED_AMMO))
-            {
-                W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
-                w_ready(thiswep, actor, weaponentity, fire);
-                return;
-            }
-            float ammo_available = GetResource(actor, thiswep.ammo_type);
-            // We don't want to shoot 3 rounds if there's 2 left in the mag, so we'll use a fraction.
-            // Also keep the fraction <= 1 otherwise we'd mag dump in one burst.
-            float burst_fraction = min(1, ammo_available / WEP_CVAR(WEP_ARC, bolt_ammo));
-            int to_shoot = floor(WEP_CVAR(WEP_ARC, bolt_count) * burst_fraction);
+		return;
+	}
+	else if(fire & 2)
+	{
+		if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
+		{
+			if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
+			if(!(actor.items & IT_UNLIMITED_AMMO))
+			{
+				W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
+				w_ready(thiswep, actor, weaponentity, fire);
+				return;
+			}
+			int to_shoot = WEP_CVAR(WEP_ARC, bolt_count);
+			if(!(actor.items & IT_UNLIMITED_AMMO))
+			{
+				float ammo_available = GetResource(actor, thiswep.ammo_type);
+				// We don't want to shoot 3 rounds if there's 2 left in the mag, so we'll use a fraction.
+				// Also keep the fraction <= 1 otherwise we'd mag dump in one burst.
+				float burst_fraction = min(1, ammo_available / WEP_CVAR(WEP_ARC, bolt_ammo));
+				to_shoot = floor(to_shoot * burst_fraction);
 
-            // We also don't want to use 3 rounds if there's only 2 left.
-            int to_use = min(WEP_CVAR(WEP_ARC, bolt_ammo), ammo_available);
-            W_DecreaseAmmo(thiswep, actor, to_use, weaponentity);
+				// We also don't want to use 3 rounds if there's only 2 left.
+				int to_use = min(WEP_CVAR(WEP_ARC, bolt_ammo), ammo_available);
+				W_DecreaseAmmo(thiswep, actor, to_use, weaponentity);
+			}
 
-            // Bursting counts up to 0 from a negative.
-            actor.(weaponentity).misc_bulletcounter = -to_shoot;
-            W_Arc_Attack_Bolt(thiswep, actor, weaponentity, fire);
-        }
-    }
+			// Bursting counts up to 0 from a negative.
+			actor.(weaponentity).misc_bulletcounter = -to_shoot;
+			W_Arc_Attack_Bolt(thiswep, actor, weaponentity, fire);
+		}
+	}
 
-    if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
-    {
-        sound(actor, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
-        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_ARC, beam_animtime), w_ready);
-        ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(WEP_ARC, beam_refire) * W_WeaponRateFactor(actor);
-    }
-    actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
+	if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
+	{
+		sound(actor, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_ARC, beam_animtime), w_ready);
+		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(WEP_ARC, beam_refire) * W_WeaponRateFactor(actor);
+	}
+	actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
 
-    #if 0
-    if(fire & 2)
-    if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_arc_secondary_refire))
-    {
-        W_Arc_Attack2();
-        actor.arc_count = autocvar_g_balance_arc_secondary_count;
-        weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
-        actor.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor(actor);
-    }
-    #endif
+	#if 0
+	if(fire & 2)
+	if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_arc_secondary_refire))
+	{
+		W_Arc_Attack2();
+		actor.arc_count = autocvar_g_balance_arc_secondary_count;
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
+		actor.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor(actor);
+	}
+	#endif
 }
 METHOD(Arc, wr_suicidemessage, Notification(entity thiswep))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-        return WEAPON_ARC_SUICIDE_BOLT;
-    else
-    	return WEAPON_THINKING_WITH_PORTALS;
+	if(w_deathtype & HITTYPE_SECONDARY)
+		return WEAPON_ARC_SUICIDE_BOLT;
+	else
+		return WEAPON_THINKING_WITH_PORTALS;
 }
 METHOD(Arc, wr_init, void(entity thiswep))
 {
-    if(!arc_shotorigin[0])
-    {
-    	vector vecs = CL_Weapon_GetShotOrg(WEP_ARC.m_id);
-        arc_shotorigin[0] = shotorg_adjust(vecs, false, false, 1);
-        arc_shotorigin[1] = shotorg_adjust(vecs, false, false, 2);
-        arc_shotorigin[2] = shotorg_adjust(vecs, false, false, 3);
-        arc_shotorigin[3] = shotorg_adjust(vecs, false, false, 4);
-    }
+	if(!arc_shotorigin[0])
+	{
+		vector vecs = CL_Weapon_GetShotOrg(WEP_ARC.m_id);
+		arc_shotorigin[0] = shotorg_adjust(vecs, false, false, 1);
+		arc_shotorigin[1] = shotorg_adjust(vecs, false, false, 2);
+		arc_shotorigin[2] = shotorg_adjust(vecs, false, false, 3);
+		arc_shotorigin[3] = shotorg_adjust(vecs, false, false, 4);
+	}
 }
 METHOD(Arc, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    return ((!WEP_CVAR(WEP_ARC, beam_ammo)) || (GetResource(actor, thiswep.ammo_type) > 0));
+	return ((!WEP_CVAR(WEP_ARC, beam_ammo)) || (GetResource(actor, thiswep.ammo_type) > 0));
 }
 METHOD(Arc, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(WEP_CVAR(WEP_ARC, bolt))
-    {
-        float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(WEP_ARC, bolt_ammo);
-        ammo_amount += actor.(weaponentity).(weapon_load[WEP_ARC.m_id]) >= WEP_CVAR(WEP_ARC, bolt_ammo);
-        return ammo_amount;
-    }
-    else
-        return WEP_CVAR(WEP_ARC, overheat_max) > 0 &&
-            ((!WEP_CVAR(WEP_ARC, burst_ammo)) || (GetResource(actor, thiswep.ammo_type) > 0));
+	if(WEP_CVAR(WEP_ARC, bolt))
+	{
+		float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(WEP_ARC, bolt_ammo);
+		ammo_amount += actor.(weaponentity).(weapon_load[WEP_ARC.m_id]) >= WEP_CVAR(WEP_ARC, bolt_ammo);
+		return ammo_amount;
+	}
+	else
+		return WEP_CVAR(WEP_ARC, overheat_max) > 0 &&
+			((!WEP_CVAR(WEP_ARC, burst_ammo)) || (GetResource(actor, thiswep.ammo_type) > 0));
 }
 METHOD(Arc, wr_killmessage, Notification(entity thiswep))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-        return WEAPON_ARC_MURDER_SPRAY;
-    else
-        return WEAPON_ARC_MURDER;
+	if(w_deathtype & HITTYPE_SECONDARY)
+		return WEAPON_ARC_MURDER_SPRAY;
+	else
+		return WEAPON_ARC_MURDER;
 }
 METHOD(Arc, wr_drop, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    weapon_dropevent_item.arc_overheat = actor.arc_overheat;
-    weapon_dropevent_item.arc_cooldown = actor.arc_cooldown;
-    actor.arc_overheat = 0;
-    actor.arc_cooldown = 0;
-    actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
+	weapon_dropevent_item.arc_overheat = actor.arc_overheat;
+	weapon_dropevent_item.arc_cooldown = actor.arc_cooldown;
+	actor.arc_overheat = 0;
+	actor.arc_cooldown = 0;
+	actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
 }
 METHOD(Arc, wr_pickup, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if ( !client_hasweapon(actor, thiswep, weaponentity, false, false) &&
-        weapon_dropevent_item.arc_overheat > time )
-    {
-        actor.arc_overheat = weapon_dropevent_item.arc_overheat;
-        actor.arc_cooldown = weapon_dropevent_item.arc_cooldown;
-    }
+	if ( !client_hasweapon(actor, thiswep, weaponentity, false, false) &&
+		weapon_dropevent_item.arc_overheat > time )
+	{
+		actor.arc_overheat = weapon_dropevent_item.arc_overheat;
+		actor.arc_cooldown = weapon_dropevent_item.arc_cooldown;
+	}
 }
 METHOD(Arc, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    actor.arc_overheat = 0;
-    actor.arc_cooldown = 0;
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-    	.entity weaponentity = weaponentities[slot];
-    	actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
-    }
+	actor.arc_overheat = 0;
+	actor.arc_cooldown = 0;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
+	}
 }
 METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    actor.arc_overheat = 0;
-    actor.arc_cooldown = 0;
-    actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
+	actor.arc_overheat = 0;
+	actor.arc_cooldown = 0;
+	actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
 }
 #endif
 #ifdef CSQC
@@ -762,27 +759,21 @@ bool autocvar_cl_arcbeam_simple = true;
 
 METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-    {
-        vector org2 = w_org + w_backoff * 2;
-        pointparticles(EFFECT_ELECTRO_IMPACT, org2, w_backoff * 1000, 1);
-        if(!w_issilent) { sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTN_NORM); }
-    }
+	if(w_deathtype & HITTYPE_SECONDARY)
+	{
+		vector org2 = w_org + w_backoff * 2;
+		pointparticles(EFFECT_ELECTRO_IMPACT, org2, w_backoff * 1000, 1);
+		if(!w_issilent) { sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTN_NORM); }
+	}
 }
 
 void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 {
 	entity beam = Draw_ArcBeam_callback_entity;
-	vector transformed_view_org;
-	transformed_view_org = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
-
-	// Thickdir shall be perpendicular to the beam and to the view-to-beam direction (WEAPONTODO: WHY)
-	// WEAPONTODO: Wouldn't it be better to be perpendicular to the beam and to the view FORWARD direction?
-	vector thickdir = normalize(cross(normalize(start - hit), transformed_view_org - start));
+	vector transformed_view_org = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
 
 	vector hitorigin;
 
-	// draw segment
 	#if 0
 	if(trace_fraction != 1)
 	{
@@ -798,20 +789,24 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	hitorigin = hit;
 	#endif
 
-	// decide upon thickness
 	float thickness = beam.beam_thickness;
-
-	// draw primary beam render
-	vector top    = hitorigin + (thickdir * thickness);
-	vector bottom = hitorigin - (thickdir * thickness);
-
-	vector last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
-	vector last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
 
 	if(autocvar_cl_arcbeam_simple)
 		Draw_CylindricLine(start, hit, thickness, beam.beam_image, 0.25, -time * 3, beam.beam_color, beam.beam_alpha, DRAWFLAG_NORMAL, transformed_view_org);
 	else
 	{
+		// Thickdir shall be perpendicular to the beam and to the view-to-beam direction (WEAPONTODO: WHY)
+		// WEAPONTODO: Wouldn't it be better to be perpendicular to the beam and to the view FORWARD direction?
+		vector thickdir = normalize(cross(normalize(start - hit), transformed_view_org - start));
+
+		// draw primary beam render
+		vector top    = hitorigin + (thickdir * thickness);
+		vector bottom = hitorigin - (thickdir * thickness);
+
+		vector last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
+		vector last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
+
+		// draw segment
 		R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL, false); // DRAWFLAG_ADDITIVE
 		R_PolygonVertex(
 			top,
@@ -838,6 +833,11 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 			beam.beam_alpha
 		);
 		R_EndPolygon();
+
+		// set up for the next
+		Draw_ArcBeam_callback_last_thickness = thickness;
+		Draw_ArcBeam_callback_last_top = WarpZone_UnTransformOrigin(WarpZone_trace_transform, top);
+		Draw_ArcBeam_callback_last_bottom = WarpZone_UnTransformOrigin(WarpZone_trace_transform, bottom);
 	}
 
 	// draw trailing particles
@@ -848,11 +848,6 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	{
 		trailparticles(beam, beam.beam_traileffect, start, hitorigin);
 	}
-
-	// set up for the next
-	Draw_ArcBeam_callback_last_thickness = thickness;
-	Draw_ArcBeam_callback_last_top = WarpZone_UnTransformOrigin(WarpZone_trace_transform, top);
-	Draw_ArcBeam_callback_last_bottom = WarpZone_UnTransformOrigin(WarpZone_trace_transform, bottom);
 }
 
 void Reset_ArcBeam()
@@ -938,7 +933,7 @@ void Draw_ArcBeam(entity this)
 		// trace forward with an estimation
 		WarpZone_TraceLine(
 			start_pos_saved,
-			start_pos_saved + forward * this.beam_range,
+			start_pos_saved + forward * WEP_CVAR(WEP_ARC, beam_range),
 			MOVE_NOMONSTERS,
 			this
 		);
@@ -984,30 +979,30 @@ void Draw_ArcBeam(entity this)
 		if(this.beam_dir != wantdir)
 		{
 			// calculate how much we're going to move the end of the beam to the want position
-			// WEAPONTODO (server and client):
-			// blendfactor never actually becomes 0 in this situation, which is a problem
-			// regarding precision... this means that this.beam_dir and w_shotdir approach
-			// eachother, however they never actually become the same value with this method.
-			// Perhaps we should do some form of rounding/snapping?
 			float angle = vlen(wantdir - this.beam_dir) * RAD2DEG;
-			float max_blendfactor = 1;
-			if(angle && (angle > this.beam_maxangle))
-				max_blendfactor = this.beam_maxangle / angle;
-			float blendfactor = bound(0, (1 - (this.beam_returnspeed * dt)), max_blendfactor);
-			this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
-
-			// calculate how many segments are needed
-			float max_allowed_segments = ARC_MAX_SEGMENTS;
-			if(this.beam_distancepersegment)
+			if (angle < 0.01) // snap only when very close so it's impossible to notice
+				this.beam_dir = wantdir; // snap otherwise vectors will never actually be the same
+			else
 			{
-				max_allowed_segments = 1 + (vlen(wantdir / this.beam_distancepersegment));
-				max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
-			}
+				float max_blendfactor = 1;
+				if(angle && (angle > WEP_CVAR(WEP_ARC, beam_maxangle)))
+					max_blendfactor = WEP_CVAR(WEP_ARC, beam_maxangle) / angle;
+				float blendfactor = bound(0, (1 - (WEP_CVAR(WEP_ARC, beam_returnspeed) * dt)), max_blendfactor);
+				this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 
-			if(this.beam_degreespersegment)
-			{
-				segments = min(angle, this.beam_maxangle) / this.beam_degreespersegment;
-				segments = bound(1, segments, max_allowed_segments);
+				// calculate how many segments are needed
+				float max_allowed_segments = ARC_MAX_SEGMENTS;
+				if(WEP_CVAR(WEP_ARC, beam_distancepersegment))
+				{
+					max_allowed_segments = 1 + (vlen(wantdir / WEP_CVAR(WEP_ARC, beam_distancepersegment)));
+					max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
+				}
+
+				if(WEP_CVAR(WEP_ARC, beam_degreespersegment))
+				{
+					segments = min(angle, WEP_CVAR(WEP_ARC, beam_maxangle)) / WEP_CVAR(WEP_ARC, beam_degreespersegment);
+					segments = bound(1, segments, max_allowed_segments);
+				}
 			}
 		}
 
@@ -1033,15 +1028,15 @@ void Draw_ArcBeam(entity this)
 
 			// calculate how many segments are needed
 			float max_allowed_segments = ARC_MAX_SEGMENTS;
-			if(this.beam_distancepersegment)
+			if(WEP_CVAR(WEP_ARC, beam_distancepersegment))
 			{
-				max_allowed_segments = 1 + (vlen(wantdir / this.beam_distancepersegment));
+				max_allowed_segments = 1 + (vlen(wantdir / WEP_CVAR(WEP_ARC, beam_distancepersegment)));
 				max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
 			}
 
-			if(this.beam_degreespersegment)
+			if(WEP_CVAR(WEP_ARC, beam_degreespersegment))
 			{
-				segments = min(angle, this.beam_maxangle) / this.beam_degreespersegment;
+				segments = min(angle, WEP_CVAR(WEP_ARC, beam_maxangle)) / WEP_CVAR(WEP_ARC, beam_degreespersegment);
 				segments = bound(1, segments, max_allowed_segments);
 			}
 		}
@@ -1050,19 +1045,22 @@ void Draw_ArcBeam(entity this)
 	setorigin(this, start_pos);
 	this.beam_muzzleentity.angles_z = random() * 360; // WEAPONTODO: use avelocity instead?
 
-	vector beam_endpos = (start_pos + (beamdir * this.beam_range));
-	vector beam_controlpoint = start_pos + wantdir * (this.beam_range * (1 - this.beam_tightness));
+	vector beam_endpos = (start_pos + (beamdir * WEP_CVAR(WEP_ARC, beam_range)));
+	float beam_controlpoint_dist = WEP_CVAR(WEP_ARC, beam_range) * bound(0.001, 1 - WEP_CVAR(WEP_ARC, beam_tightness), 1);
+	vector beam_controlpoint = start_pos + wantdir * beam_controlpoint_dist;
 
 	Draw_ArcBeam_callback_entity = this;
-	Draw_ArcBeam_callback_last_thickness = 0;
-	Draw_ArcBeam_callback_last_top = start_pos;
-	Draw_ArcBeam_callback_last_bottom = start_pos;
+	if(!autocvar_cl_arcbeam_simple)
+	{
+		Draw_ArcBeam_callback_last_thickness = 0;
+		Draw_ArcBeam_callback_last_top = start_pos;
+		Draw_ArcBeam_callback_last_bottom = start_pos;
+	}
 
 	vector last_origin = start_pos;
 	vector original_start_pos = start_pos;
 
-	float i;
-	for(i = 1; i <= segments; ++i)
+	for(int i = 1; i <= segments; ++i)
 	{
 		// WEAPONTODO (client):
 		// In order to do nice fading and pointing on the starting segment, we must always
@@ -1087,17 +1085,22 @@ void Draw_ArcBeam(entity this)
 			Draw_ArcBeam_callback
 		);
 
+		last_origin = trace_endpos;
+
+		if(trace_fraction < 1)
+			break; // hit something
+
 		// Do all the transforms for warpzones right now, as we already "are" in the post-trace
 		// system (if we hit a player, that's always BEHIND the last passed wz).
-		last_origin = trace_endpos;
 		start_pos = WarpZone_TransformOrigin(WarpZone_trace_transform, start_pos);
 		beam_controlpoint = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_controlpoint);
 		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
 		beamdir = WarpZone_TransformVelocity(WarpZone_trace_transform, beamdir);
-		Draw_ArcBeam_callback_last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
-		Draw_ArcBeam_callback_last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
-
-		if(trace_fraction < 1) { break; }
+		if(!autocvar_cl_arcbeam_simple)
+		{
+			Draw_ArcBeam_callback_last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
+			Draw_ArcBeam_callback_last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
+		}
 	}
 
 	// visual effects for startpoint and endpoint
@@ -1106,7 +1109,7 @@ void Draw_ArcBeam(entity this)
 		pointparticles(
 			this.beam_hiteffect,
 			last_origin,
-			beamdir * -1,
+			-WarpZone_TransformVelocity(WarpZone_trace_transform, beamdir),
 			dt * 2
 		);
 	}
@@ -1146,9 +1149,12 @@ void Draw_ArcBeam(entity this)
 
 	// cleanup
 	Draw_ArcBeam_callback_entity = NULL;
-	Draw_ArcBeam_callback_last_thickness = 0;
-	Draw_ArcBeam_callback_last_top = '0 0 0';
-	Draw_ArcBeam_callback_last_bottom = '0 0 0';
+	if(!autocvar_cl_arcbeam_simple)
+	{
+		Draw_ArcBeam_callback_last_thickness = 0;
+		Draw_ArcBeam_callback_last_top = '0 0 0';
+		Draw_ArcBeam_callback_last_bottom = '0 0 0';
+	}
 }
 
 void Remove_ArcBeam(entity this)
@@ -1194,16 +1200,9 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		flash = this.beam_muzzleentity;
 	}
 
-	if(sf & ARC_SF_SETTINGS) // settings information
+	if(sf & ARC_SF_UPDATE)
 	{
-		this.beam_degreespersegment = ReadShort();
-		this.beam_distancepersegment = ReadShort();
-		this.beam_maxangle = ReadShort();
-		this.beam_range = ReadCoord();
-		this.beam_returnspeed = ReadShort();
-		this.beam_tightness = (ReadByte() / 10);
-
-		if(ReadByte())
+		if(ReadByte()) // drawlocal?
 		{
 			this.beam_usevieworigin = (autocvar_chase_active) ? 1 : 2;
 		}
