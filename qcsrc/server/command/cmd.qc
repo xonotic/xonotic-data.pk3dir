@@ -710,7 +710,8 @@ void ClientCommand_spectate(entity caller, int request)
 					return;
 				}
 
-				bool forfeit_ask = (!warmup_stage && stof(argv(2)));
+				// here we are intentionally checking if argv(2) is exactly 1
+				bool forfeit_ask = (!warmup_stage && stof(argv(2)) == 1);
 
 				if (IS_PLAYER(caller) && forfeit_ask)
 				{
@@ -759,7 +760,7 @@ void ClientCommand_spectate(entity caller, int request)
 			sprint(caller, "\nUsage:^3 cmd spectate [<client>] [<ask_forfeit>]\n");
 			sprint(caller, "  Where <client> can be the player to spectate.\n");
 			sprint(caller, "  If <client> is \"\" or not specified, caller becomes observer.\n");
-			sprint(caller, "  If <client> is \"\" and forfeit_ask is not 0 caller will be asked"
+			sprint(caller, "  If <client> is \"\" and forfeit_ask is 1 caller will be asked"
 			                 " to confirm forfeiting the current game.\n");
 			return;
 		}
