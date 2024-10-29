@@ -3,8 +3,6 @@
 // TODO: Remove cvar_cl_handicap vector after 0.9 release
 
 #ifdef GAMEQC
-REPLICATE_INIT(bool, cvar_spec_forfeit_ask);
-REPLICATE_INIT(bool, cvar__menu_forfeit_dialog_available);
 REPLICATE_INIT(bool, cvar_cl_autoswitch);
 REPLICATE_INIT(int, cvar_cl_autoscreenshot);
 REPLICATE_INIT(bool, cvar_cl_clippedspectating);
@@ -14,8 +12,6 @@ REPLICATE_INIT(float, cvar_cl_handicap_damage_given);
 REPLICATE_INIT(float, cvar_cl_handicap_damage_taken);
 REPLICATE_INIT(bool, cvar_cl_noantilag);
 REPLICATE_INIT(string, cvar_g_xonoticversion);
-REPLICATE(cvar_spec_forfeit_ask, bool, "spec_forfeit_ask");
-REPLICATE(cvar__menu_forfeit_dialog_available, bool, "_menu_forfeit_dialog_available");
 REPLICATE(cvar_cl_autoswitch, bool, "cl_autoswitch");
 REPLICATE(cvar_cl_autoscreenshot, int, "cl_autoscreenshot");
 REPLICATE(cvar_cl_clippedspectating, bool, "cl_clippedspectating");

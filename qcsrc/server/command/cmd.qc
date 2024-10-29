@@ -710,10 +710,9 @@ void ClientCommand_spectate(entity caller, int request)
 					return;
 				}
 
-				bool forfeit_now =
-					(warmup_stage || !caller.cvar_spec_forfeit_ask || argv(2) != "ASK_FORFEIT");
+				bool forfeit_ask = (!warmup_stage && stof(argv(2)));
 
-				if (IS_PLAYER(caller) && !forfeit_now && caller.cvar__menu_forfeit_dialog_available)
+				if (IS_PLAYER(caller) && forfeit_ask)
 				{
 					// ask player to confirm the forfeit
 					stuffcmd(caller, "menu_showforfeitdialog\n");
@@ -736,7 +735,7 @@ void ClientCommand_spectate(entity caller, int request)
 
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN_FORFEIT)
 				{
-					if (forfeit_now || !caller.cvar__menu_forfeit_dialog_available)
+					if (!forfeit_ask)
 						mutator_returnvalue = MUT_SPECCMD_FORCE;
 					else
 					{
@@ -757,10 +756,10 @@ void ClientCommand_spectate(entity caller, int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd spectate [<client>] [ASK_FORFEIT]\n");
+			sprint(caller, "\nUsage:^3 cmd spectate [<client>] [<ask_forfeit>]\n");
 			sprint(caller, "  Where <client> can be the player to spectate.\n");
 			sprint(caller, "  If <client> is \"\" or not specified, caller becomes observer.\n");
-			sprint(caller, "  If <client> is \"\", ASK_FORFEIT means caller will be asked"
+			sprint(caller, "  If <client> is \"\" and forfeit_ask is not 0 caller will be asked"
 			                 " to confirm forfeiting the current game.\n");
 			return;
 		}
