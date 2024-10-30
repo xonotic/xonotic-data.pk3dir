@@ -1544,7 +1544,7 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 	// Should it do a weapon combo?
 	float af, ct, combo_time, combo;
 
-	af = ATTACK_FINISHED(this, weaponentity);
+	af = this.(weaponentity) == WEP_Null ? 0.0 : ATTACK_FINISHED(this, weaponentity);
 	ct = autocvar_bot_ai_weapon_combo_threshold;
 
 	// Bots with no skill will be 4 times more slower than "godlike" bots when doing weapon combos
