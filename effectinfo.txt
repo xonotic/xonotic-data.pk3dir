@@ -1318,7 +1318,7 @@ effect electro_combo
 effect electro_combo
 	type static
 	airfriction 6
-	alpha 156 156 156
+	alpha 156 156 100
 	bounce 2
 	color 0x2030FF 0x80C0FF
 	count 5
@@ -1329,17 +1329,17 @@ effect electro_combo
 	velocityjitter 512 512 512
 effect electro_combo
 	type spark
-	alpha 444 512 700
+	alpha 444 512 500
 	bounce 1.600000
 	color 0xa9cacf 0x0054ff
 	count 32
-	gravity 0.300000
 	originjitter 1 1 1
 	size 2 4
 	stretchfactor 2
 	tex 41 41
-	velocityjitter 312 312 312
-	velocitymultiplier 3
+	velocityjitter 128 128 128
+	velocitymultiplier 0.300000
+	rotate -180 180 4000 -4000
 effect electro_combo
 	type smoke
 	alpha 256 256 256
@@ -1351,11 +1351,10 @@ effect electro_combo
 	velocityjitter 32 32 32
 effect electro_combo
 	type smoke
-	alpha 40 40 100
+	alpha 40 40 20
 	color 0xa9cacf 0x0054ff
 	countabsolute 1
-	sizeincrease 600
-	size 30 30
+	size 120 120
 	tex 33 33
 	velocitymultiplier 0.300000
 effect crylink_muzzleflash
