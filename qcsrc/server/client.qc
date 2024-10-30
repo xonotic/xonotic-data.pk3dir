@@ -1941,7 +1941,7 @@ void SetSpectatee(entity this, entity spectatee)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(old_spectatee.(weaponentity).arc_beam)
-				old_spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
+				old_spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_UPDATE;
 		}
 	}
 	if(spectatee)
@@ -1950,7 +1950,7 @@ void SetSpectatee(entity this, entity spectatee)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(spectatee.(weaponentity).arc_beam)
-				spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
+				spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_UPDATE;
 		}
 	}
 
@@ -2322,7 +2322,9 @@ bool PlayerThink(entity this)
 	if (frametime && autocvar_sv_show_entnum) show_entnum(this);
 
 	if (IS_DEAD(this)) {
-		if (this.personal && g_race_qualifying) {
+		if (this.personal && g_race_qualifying
+		&& (autocvar_g_allow_checkpoints || CheatsAllowed(this, CHIMPULSE_SPEEDRUN.impulse, 0, 0, false, true)))
+		{
 			if (time > this.respawn_time) {
 				STAT(RESPAWN_TIME, this) = this.respawn_time = time + 1; // only retry once a second
 				respawn(this);
@@ -2743,14 +2745,6 @@ void PlayerPostThink (entity this)
 	Player_Physics(this);
 
 	if (IS_PLAYER(this)) {
-		if(this.death_time == time && IS_DEAD(this))
-		{
-			// player's bbox gets resized now, instead of in the damage event that killed the player,
-			// once all the damage events of this frame have been processed with normal size
-			float h = ceil((this.mins.z + this.maxs.z) * PL_CORPSE_SCALE * 10) / 10;
-			this.maxs.z = max(h, this.mins.z + 1);
-			setsize(this, this.mins, this.maxs);
-		}
 		DrownPlayer(this);
 		UpdateChatBubble(this);
 		if (CS(this).impulse) ImpulseCommands(this);
