@@ -1351,7 +1351,7 @@ effect electro_combo
 	velocityjitter 32 32 32
 effect electro_combo
 	type smoke
-	alpha 40 40 20
+	alpha 64 64 40
 	color 0xa9cacf 0x0054ff
 	countabsolute 1
 	size 120 120

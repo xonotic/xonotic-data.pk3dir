@@ -2235,9 +2235,9 @@ SUB(electro_combo) {
 }
 // shockwave
 SUB(electro_combo) {
-	MY(alpha_min) = 40;
-	MY(alpha_max) = 40;
-	MY(alpha_fade) = 20;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 40;
 	MY(color_min) = "0xa9cacf";
 	MY(color_max) = "0x0054ff";
 	MY(countabsolute) = 1;
