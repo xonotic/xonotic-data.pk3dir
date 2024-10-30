@@ -408,7 +408,7 @@ entity findnearest(vector point, bool checkitems, vector axismod)
         //   INSERTION SORT! YOU'VE SEEN IT! RUN!
         if (l < NUM_NEAREST_ENTITIES)
         {
-            for (int j = NUM_NEAREST_ENTITIES - 1; j >= l; --j)
+            for (int j = NUM_NEAREST_ENTITIES - 2; j >= l; --j)
             {
                 nearest_length[j + 1] = nearest_length[j];
                 nearest_entity[j + 1] = nearest_entity[j];
