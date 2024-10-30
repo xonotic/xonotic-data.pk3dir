@@ -72,6 +72,5 @@ REGISTER_RESOURCE(FUEL, NEW(AmmoResource)) {
 	this.m_name = _("Fuel");
 	this.m_icon = "ammo_fuel";
 #ifdef CSQC
-	this.m_hidden = true; // displayed in a separate panel
 #endif
 }

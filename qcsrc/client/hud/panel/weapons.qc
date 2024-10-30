@@ -121,7 +121,7 @@ void HUD_Weapons()
 	// declarations
 	WepSet weapons_stat = WepSet_GetFromStat();
 	int i;
-	float f, a;
+	float f;
 	float screen_ar;
 	vector center = '0 0 0';
 	int weapon_count, weapon_id;
@@ -575,9 +575,9 @@ void HUD_Weapons()
 			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_type != RES_NONE))
 			{
 				float ammo_full;
-				a = getstati(GetAmmoStat(it.ammo_type)); // how much ammo do we have?
+				float ammo = GetAmmoStat(it.ammo_type);
 
-				if(a > 0)
+				if(ammo > 0)
 				{
 					// TODO: registry handles
 					switch (it.ammo_type)
@@ -594,7 +594,7 @@ void HUD_Weapons()
 					drawsetcliparea(
 						weapon_pos.x + baroffset.x,
 						weapon_pos.y + baroffset.y,
-						barsize.x * bound(0, a/ammo_full, 1),
+						barsize.x * bound(0, ammo / ammo_full, 1),
 						barsize.y
 					);
 
@@ -619,6 +619,7 @@ void HUD_Weapons()
 		// draw the complain message
 		if(it == complain_weapon)
 		{
+			float a;
 			if(fadetime)
 				a = ((complain_weapon_time + when > time) ? 1 : bound(0, (complain_weapon_time + when + fadetime - time) / fadetime, 1));
 			else
