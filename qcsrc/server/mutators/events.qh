@@ -256,7 +256,7 @@ MUTATOR_HOOKABLE(WeaponRateFactor, EV_WeaponRateFactor);
     /**/
 MUTATOR_HOOKABLE(WeaponSpeedFactor, EV_WeaponSpeedFactor);
 
-/** adjusts {warmup_}start_{items,weapons,ammo_{cells,plasma,rockets,nails,shells,fuel}} */
+/** adjusts {warmup_}start_{items,weapons,ammo_{cells,rockets,nails,shells,fuel}} */
 MUTATOR_HOOKABLE(SetStartItems, EV_NO_ARGS);
 
 /** called every frame. customizes the waypoint for spectators */
