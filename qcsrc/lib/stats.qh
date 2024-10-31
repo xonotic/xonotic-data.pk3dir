@@ -6,7 +6,6 @@
 #include "sort.qh"
 
 .int m_id;
-USING(vectori, vector);
 
 const int STATS_ENGINE_RESERVE = 32;
 // must be listed in ascending order
@@ -61,6 +60,12 @@ int g_magic_stats_hole = 0;
 	it.m_id += g_magic_stats_hole; \
 	MAGIC_STATS(MAGIC_STATS_FIX_MANUAL, it) { MAGIC_STATS(MAGIC_STATS_FIX_AUTO, it) }
 
+#define type_INT     int
+#define type_BOOL    bool
+#define type_FLOAT   float
+#define type_VECTOR  vector
+#define type_VECTORI vector
+
 #define REGISTER_STAT(...) EVAL_REGISTER_STAT(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
 #define EVAL_REGISTER_STAT(...) __VA_ARGS__
 #if defined(CSQC)
@@ -71,30 +76,30 @@ int g_magic_stats_hole = 0;
 	#define STAT_1(id) (RVALUE, _STAT(id))
 	#define STAT_2(id, cl) STAT_1(id)
 
-	#define getstat_int(id) getstati(id, 0, 24)
-	#define getstat_bool(id) boolean(getstati(id))
-	#define getstat_float(id) getstatf(id)
-	#define getstat_vector(id) vec3(getstat_float(id + 0), getstat_float(id + 1), getstat_float(id + 2))
-	#define getstat_vectori(id) vec3(getstat_int(id + 0), getstat_int(id + 1), getstat_int(id + 2))
+	#define getstat_INT(id) getstati(id, 0, 24)
+	#define getstat_BOOL(id) boolean(getstati(id))
+	#define getstat_FLOAT(id) getstatf(id)
+	#define getstat_VECTOR(id) vec3(getstat_FLOAT(id + 0), getstat_FLOAT(id + 1), getstat_FLOAT(id + 2))
+	#define getstat_VECTORI(id) vec3(getstat_INT(id + 0), getstat_INT(id + 1), getstat_INT(id + 2))
 
 	#define _STAT(id) g_stat_##id
 	#define REGISTER_STAT_2(id, T) \
-		T _STAT(id); \
+		type_##T _STAT(id); \
 		/* T CAT(_STAT(id), _prev); */ \
 		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
 		{ \
-			if (#T == "vector" || #T == "vectori") { \
+			if (#T == "VECTOR" || #T == "VECTORI") { \
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
 			} \
 		} \
 		ACCUMULATE void stats_get() \
 		{ \
-			T it = getstat_##T(STAT_##id.m_id); \
+			type_##T it = getstat_##T(STAT_##id.m_id); \
 			/* if (it != CAT(_STAT(id), _prev)) \
 				CAT(_STAT(id), _prev) = */ _STAT(id) = it; \
 		}
-	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT_2(x, T)
+	#define REGISTER_STAT_3(id, T, expr) REGISTER_STAT_2(id, T)
 #elif defined(SVQC)
 	/** Internal use only */
 	entity STATS;
@@ -105,18 +110,18 @@ int g_magic_stats_hole = 0;
 	#define STAT_1(id) (RVALUE, STAT_2(id, STATS))
 	#define STAT_2(id, cl) (cl)._STAT(id)
 
-	#define addstat_int(id, fld) addstat(id, AS_INT, fld)
-	#define addstat_bool(id, fld) addstat(id, AS_INT, fld)
-	#define addstat_float(id, fld) addstat(id, AS_FLOAT, fld)
-	#define addstat_vector(id, fld) MACRO_BEGIN \
-		addstat_float(id + 0, fld##_x); \
-		addstat_float(id + 1, fld##_y); \
-		addstat_float(id + 2, fld##_z); \
+	#define addstat_INT(id, fld) addstat(id, AS_INT, fld)
+	#define addstat_BOOL(id, fld) addstat(id, AS_INT, fld)
+	#define addstat_FLOAT(id, fld) addstat(id, AS_FLOAT, fld)
+	#define addstat_VECTOR(id, fld) MACRO_BEGIN \
+		addstat_FLOAT(id + 0, fld##_x); \
+		addstat_FLOAT(id + 1, fld##_y); \
+		addstat_FLOAT(id + 2, fld##_z); \
 	MACRO_END
-	#define addstat_vectori(id, fld) MACRO_BEGIN \
-		addstat_int(id + 0, fld##_x); \
-		addstat_int(id + 1, fld##_y); \
-		addstat_int(id + 2, fld##_z); \
+	#define addstat_VECTORI(id, fld) MACRO_BEGIN \
+		addstat_INT(id + 0, fld##_x); \
+		addstat_INT(id + 1, fld##_y); \
+		addstat_INT(id + 2, fld##_z); \
 	MACRO_END
 	const int AS_STRING = 1;
 	const int AS_INT = 2;
@@ -138,17 +143,17 @@ int g_magic_stats_hole = 0;
 
 	#define _STAT(id) stat_##id
 	#define REGISTER_STAT_2(id, T) \
-		.T _STAT(id); \
+		.type_##T _STAT(id); \
 		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
 		{ \
-			if (#T == "vector" || #T == "vectori") { \
+			if (#T == "VECTOR" || #T == "VECTORI") { \
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
 			} \
 		} \
 		ACCUMULATE void stats_add() \
 		{ \
-			.T fld = _STAT(id); \
+			.type_##T fld = _STAT(id); \
 			addstat_##T(STAT_##id.m_id, fld); \
 		}
 	void GlobalStats_update(entity this) {}
@@ -160,7 +165,7 @@ int g_magic_stats_hole = 0;
 		ACCUMULATE void GlobalStats_updateglobal() { entity this = STATS; STAT(id, this) = (expr); } \
 		STATIC_INIT(worldstat_##id) { entity this = STATS; STAT(id, this) = (expr); }
 #else
-	#define REGISTER_STAT_2(id, type)
+	#define REGISTER_STAT_2(id, T)
 	#define REGISTER_STAT_3(id, T, expr)
 #endif
 
