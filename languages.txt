@@ -3,6 +3,7 @@ id_ID "Indonesian" "Bahasa Indonesia" 39%
 de    "German" "Deutsch" 97%
 de_CH "German (Switzerland)" "Deutsch (Schweiz)" 97%
 en    "English" "English" 100%
+en_GB "English (United Kingdom)" "English (United Kingdom)" 100%
 en_AU "English (Australia)" "English (Australia)" 100%
 es    "Spanish" "Español" 96%
 fr    "French" "Français" 100%
@@ -19,7 +20,6 @@ ro    "Romanian" "Romana" 68%
 fi    "Finnish" "Suomi" 95%
 sv    "Swedish" "Svenska" 96%
 tr    "Turkish" "Türkçe" 54%
-en_GB "en_GB" "en_GB" 100%
 cs    "Czech" "Čeština" 30%
 el    "Greek" "Ελληνική" 43%
 be    "Belarusian" "Беларуская" 47%
