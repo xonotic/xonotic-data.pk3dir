@@ -1394,12 +1394,11 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players, int tea
 			if (i % 2)
 				drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
-		drawstring(pos + text_offset + text_offset_center, title_str, hud_fontsize, title_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
-
 		vector prev_drawfontscale = drawfontscale;
 		if (sbt_field_title_condense_factor[i])
 			drawfontscale.x *= sbt_field_title_condense_factor[i];
-		drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
+		//drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + text_offset + text_offset_center, title_str, hud_fontsize, title_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		if (sbt_field_title_condense_factor[i])
 		{
 			drawfontscale.x *= sbt_field_title_condense_factor[i];
