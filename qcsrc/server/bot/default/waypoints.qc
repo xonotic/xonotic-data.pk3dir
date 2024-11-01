@@ -245,7 +245,7 @@ vector waypoint_getSymmetricalPoint(vector org, int ctf_flags)
 		if (autocvar_g_waypointeditor_symmetrical == -1)
 			map_center = autocvar_g_waypointeditor_symmetrical_origin;
 
-		new_org = Rotate(org - map_center, 360 * DEG2RAD / ctf_flags) + map_center;
+		new_org = Rotate(org - map_center, 2 * M_PI / ctf_flags) + map_center;
 	}
 	else if (fabs(autocvar_g_waypointeditor_symmetrical) == 2)
 	{

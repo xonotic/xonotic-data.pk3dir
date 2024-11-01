@@ -7,7 +7,6 @@ bool autocvar_hud_panel_weapons_ammo;
 float autocvar_hud_panel_weapons_ammo_alpha;
 string autocvar_hud_panel_weapons_ammo_color;
 int autocvar_hud_panel_weapons_ammo_full_cells;
-int autocvar_hud_panel_weapons_ammo_full_plasma;
 int autocvar_hud_panel_weapons_ammo_full_fuel;
 int autocvar_hud_panel_weapons_ammo_full_nails;
 int autocvar_hud_panel_weapons_ammo_full_rockets;

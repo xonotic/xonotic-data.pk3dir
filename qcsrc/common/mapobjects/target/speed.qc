@@ -3,7 +3,7 @@
 // bones_was_here: TODO implement subscript support for vectors in gmqcc
 // or _something_ so code like this can be cheaper...
 #define ARRAY_AS_VECTOR(a) vec3((a)[0], (a)[1], (a)[2])
-#define VECTOR_TO_ARRAY(a, e) (a)[0] = (e).x, (a)[1] = (e).y, (a)[2] = (e).z
+#define VECTOR_TO_ARRAY(a, e) { vector v = (e); (a)[0] = v.x; (a)[1] = v.y; (a)[2] = v.z; }
 vector target_speed_calculatevelocity(entity this, float speed, entity pushed_entity)
 {
 	bool is_percentage = boolean(this.spawnflags & SPEED_PERCENTAGE);
@@ -27,7 +27,7 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 	}
 
 	float pushvel[3];
-	VECTOR_TO_ARRAY(pushvel, pushed_entity.velocity);
+	VECTOR_TO_ARRAY(pushvel, pushed_entity.velocity)
 
 	for(int i = 0; i < 3; ++i)
 	{
@@ -98,20 +98,20 @@ vector target_speed_calculatevelocity(entity this, float speed, entity pushed_en
 	}
 
 	float oldvel[3];
-	VECTOR_TO_ARRAY(oldvel, pushed_entity.velocity);
+	VECTOR_TO_ARRAY(oldvel, pushed_entity.velocity)
 
 	if(is_launcher)
 	{
 		// launcher will always launch you in the correct direction
 		// even if speed is set to a negative value, fabs() is correct
-		VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * fabs(launcherspeed));
+		VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * fabs(launcherspeed))
 	}
 	else
 	{
 		if(!is_add)
-			VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * speed);
+			VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * speed)
 		else
-			VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * speed + ARRAY_AS_VECTOR(oldvel));
+			VECTOR_TO_ARRAY(pushvel, normalize(ARRAY_AS_VECTOR(pushvel)) * speed + ARRAY_AS_VECTOR(oldvel))
 	}
 
 	for(int i = 0; i < 3; ++i)
@@ -160,7 +160,7 @@ spawnfunc(target_speed)
 	this.reset = target_speed_reset;
 
 	// support a 0 speed setting AND a default
-	string s = GetField_fullspawndata(this, "speed");
+	string s = GetField_fullspawndata(this, "speed", false);
 	if (!s || s == "")
 		this.speed = 100;
 

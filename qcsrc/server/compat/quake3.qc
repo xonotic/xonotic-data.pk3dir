@@ -37,6 +37,9 @@
  item_health_small           Q3A    health.qh
  item_health_mega            Q3A    health.qh
  item_regen                  Q3A    buffs/all.inc
+ item_key_gold               QL     keys.qc
+ item_key_silver             QL     keys.qc
+ item_key_master             QL     keys.qc
  weapon_machinegun           Q3A    machinegun.qh
  weapon_grenadelauncher      Q3A    mortar.qh
  weapon_rocketlauncher       Q3A    devastator.qh
@@ -55,9 +58,8 @@ SPAWNFUNC_Q3AMMO_COND(ammo_bullets, (q3compat & Q3COMPAT_ARENA), WEP_SHOTGUN, WE
 // GL -> Mortar
 SPAWNFUNC_Q3AMMO(ammo_grenades, WEP_MORTAR)
 
-// Team Arena Proximity Launcher -> Mortar
-// It's more accurate to spawn Mine Layer but players prefer Mortar, and weapon_grenadelauncher is usually disabled by "notta" and weapon_prox_launcher placed at the same origin
-SPAWNFUNC_Q3(weapon_prox_launcher, ammo_mines, WEP_MORTAR)
+// Team Arena Proximity Launcher -> Mine Layer
+SPAWNFUNC_Q3(weapon_prox_launcher, ammo_mines, WEP_MINE_LAYER)
 
 // Team Arena Chaingun -> HLAC
 SPAWNFUNC_Q3(weapon_chaingun, ammo_belt, WEP_HLAC)
@@ -150,7 +152,6 @@ void target_init_use(entity this, entity actor, entity trigger)
 			SetResource(actor, RES_BULLETS, 0);
 			SetResource(actor, RES_ROCKETS, 0);
 			SetResource(actor, RES_CELLS, 0);
-			SetResource(actor, RES_PLASMA, 0);
 			SetResource(actor, RES_FUEL, 0);
 
 			STAT(WEAPONS, actor) = WEPSET(SHOTGUN);
@@ -161,7 +162,6 @@ void target_init_use(entity this, entity actor, entity trigger)
 			SetResource(actor, RES_BULLETS, start_ammo_nails);
 			SetResource(actor, RES_ROCKETS, start_ammo_rockets);
 			SetResource(actor, RES_CELLS, start_ammo_cells);
-			SetResource(actor, RES_PLASMA, start_ammo_plasma);
 			SetResource(actor, RES_FUEL, start_ammo_fuel);
 
 			STAT(WEAPONS, actor) = start_weapons;
@@ -256,12 +256,29 @@ spawnfunc(target_score)
 	this.use = score_use;
 }
 
+#define FRAGSFILTER_REMOVER BIT(0)
+#define FRAGSFILTER_RUNONCE BIT(1) // introduced but now unused by q3df
+#define FRAGSFILTER_SILENT  BIT(2)
+#define FRAGSFILTER_RESET   BIT(3)
+
 void fragsfilter_use(entity this, entity actor, entity trigger)
 {
 	if(!IS_PLAYER(actor))
 		return;
 	if(actor.fragsfilter_cnt >= this.frags)
+	{
+		if(this.spawnflags & FRAGSFILTER_RESET)
+			actor.fragsfilter_cnt = 0;
+		else if(this.spawnflags & FRAGSFILTER_REMOVER)
+			actor.fragsfilter_cnt -= this.frags;
 		SUB_UseTargets(this, actor, trigger);
+	}
+	else if(!(this.spawnflags & FRAGSFILTER_SILENT))
+	{
+		int req_frags = this.frags - actor.fragsfilter_cnt;
+		centerprint(actor, sprintf("%d more frag%s needed", req_frags, req_frags > 1 ? "s" : ""));
+		play2(actor, SND(TALK));
+	}
 }
 spawnfunc(target_fragsFilter)
 {
@@ -331,62 +348,101 @@ spawnfunc(target_smallprint)
 	spawnfunc_target_print(this);
 }
 
-.bool notteam;
-.bool notsingle;
-.bool notfree;
-.bool notta;
-.bool notvq3;
-.bool notcpm;
 .string gametype;
+.string not_gametype;
 bool DoesQ3ARemoveThisEntity(entity this)
 {
 	// Q3 style filters (DO NOT USE, THIS IS COMPAT ONLY)
+
+	if (!this.classname)
+		return true;
 
 	// DeFRaG mappers use "notcpm" or "notvq3" to disable an entity in CPM or VQ3 physics
 	// Xonotic is usually played with a CPM-based physics so we default to CPM mode
 	if(cvar_string("g_mod_physics") == "Q3")
 	{
-		if(this.notvq3)
+		if(stof(GetField_fullspawndata(this, "notvq3", false)))
 			return true;
 	}
-	else if(this.notcpm)
+	else if(stof(GetField_fullspawndata(this, "notcpm", false)))
 		return true;
 
 	// Q3 mappers use "notq3a" or "notta" to disable an entity in Q3A or Q3TA
 	// Xonotic has ~equivalent features to Team Arena
-	if(this.notta)
+	if(stof(GetField_fullspawndata(this, "notta", false)))
 		return true;
 
-	// FIXME: singleplayer does not use maxclients 1 as that would prevent bots
-	if(this.notsingle)
-		if(maxclients == 1)
+	// FIXME: singleplayer does not use maxclients 1 as that would prevent bots,
+	// this is the case in Q3 also, it uses another method to block clients.
+	// Only accessible in VQ3, via the `spmap` command.
+	if(stof(GetField_fullspawndata(this, "notsingle", false)))
+		if(maxclients == 1 && IS_GAMETYPE(DEATHMATCH))
 			return true;
 
-	if(this.notteam)
+	if(stof(GetField_fullspawndata(this, "notteam", false)))
 		if(teamplay)
 			return true;
 
-	if(this.notfree)
+	if(stof(GetField_fullspawndata(this, "notfree", false)))
 		if(!teamplay)
 			return true;
 
-	if(this.gametype)
+	if(this.gametype || this.not_gametype)
 	{
-		string gametypename;
-		// From ioq3 g_spawn.c: static char *gametypeNames[] = {"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk", "harvester"};
-		gametypename = "ffa";
+		// Q3 checks these with strstr(): case-sensitive, no gametype can be a substring of another,
+		// any separator is allowed (conventions are: spaces, commas, or commas with spaces).
+		// QL's entities.def says they're space delineated.
+
+		// Q3 gametype entity fields: ffa tournament single team ctf oneflag obelisk  harvester    (game/g_spawn.c)
+		// Q3 arena file 'type' key:  ffa tourney                ctf oneflag overload harvester    (ui/ui_gameinfo.c)
+
+		// QL gametype entity fields: ffa duel tdm ca ft rr ctf ad dom har 1f      race ob
+		// QL arena file 'type' key:  ffa duel tdm ca ft rr ctf ad dom har oneflag race
+
+		string gametypename_q3, gametypename_ql;
+
+		// One of these will apply if our gametype has no Q3/QL equivalent
 		if(teamplay)
-			gametypename = "team";
+		{
+			gametypename_q3 = "team";
+			gametypename_ql = "tdm";
+		}
+		else
+			gametypename_q3 = gametypename_ql = "ffa";
+
 		if(g_ctf)
-			gametypename = "ctf";
-		if(g_ctf && ctf_oneflag)
-			gametypename = "oneflag";
-		if(g_duel)
-			gametypename = "tournament";
-		if(maxclients == 1)
-			gametypename = "single";
-		// we do not have the other types (obelisk, harvester)
-		if(strstrofs(this.gametype, gametypename, 0) < 0)
+		{
+			if (ctf_oneflag)
+			{
+				gametypename_q3 = "oneflag";
+				gametypename_ql = "1f";
+			}
+			else
+				gametypename_q3 = gametypename_ql = "ctf";
+		}
+		else if(g_duel)
+		{
+			gametypename_q3 = "tournament";
+			gametypename_ql = "duel";
+		}
+		else if(IS_GAMETYPE(DEATHMATCH) && maxclients == 1)
+			gametypename_q3 = "single";
+		else if(g_ca)
+			gametypename_ql = "ql";
+		else if(IS_GAMETYPE(FREEZETAG))
+			gametypename_ql = "ft";
+		else if(IS_GAMETYPE(DOMINATION))
+			gametypename_ql = "dom";
+		else if(g_race || g_cts)
+			gametypename_ql = "race";
+
+		if(this.gametype)
+		if(strstrofs(this.gametype, gametypename_q3, 0) < 0
+		&& strstrofs(this.gametype, gametypename_ql, 0) < 0)
+			return true;
+
+		// Only supported by QL
+		if(strstrofs(this.not_gametype, gametypename_ql, 0) >= 0)
 			return true;
 	}
 

@@ -19,19 +19,38 @@ void ClientKill_Now_TeamChange(entity this)
 {
 	if (this.killindicator_teamchange == -1)
 	{
-		TeamBalance_JoinBestTeam(this);
+		if (this.team > 0)
+			// ensure team is valid immediately so ClientKill_Now() -> Damage() can update score without error
+			TeamBalance_JoinBestTeam(this);
+		else
+		{
+			// defer autoselect to Join(), after any queued players were joined to avoid 2 players on same team
+			// when the first player(s) chose specific teams and the last player chose autoselect (they skip the queue)
+			this.team = -1;
+			this.team_selected = -1; // don't stop at ShowTeamSelection()
+		}
 	}
 	else if (this.killindicator_teamchange == -2)
 	{
-		if (blockSpectators)
+		if (!autocvar_sv_spectate)
+			// shouldn't get here because of condition in ClientCommand_spectate()
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 
 		if (this.wants_join)
+		{
+			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, this.netname);
 			SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
+			// Can't do this in PutObserverInServer() or SetPlayerTeam() cos it causes
+			// mouse2 (change spectate mode) to kick the player off the join queue.
+			this.wants_join = 0;
+			this.team_selected = 0;
+		}
 		else
 		{
 			PutObserverInServer(this, false, true);
-			if(autocvar_g_balance_teams_remove)
+			if (!TeamBalance_QueuedPlayersTagIn(this))
+			if (autocvar_g_balance_teams_remove)
 				TeamBalance_RemoveExcessPlayers(this);
 		}
 	}
@@ -203,7 +222,9 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 
 void ClientKill_Silent(entity this, float _delay)
 {
-	this.killindicator = new(killindicator);
+	// overrides queued silent killindicators
+	if (!this.killindicator || this.killindicator.count != 1)
+		this.killindicator = new(killindicator);
 	this.killindicator.owner = this;
 	setthink(this.killindicator, KillIndicator_Think);
 	this.killindicator.nextthink = time + (this.lip) * 0.05;

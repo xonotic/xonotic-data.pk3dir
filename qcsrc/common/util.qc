@@ -227,11 +227,19 @@ bool mut_is_active(int mut)
 		return (active_mutators[0] & BIT(mut));
 }
 
-// if s == "" (MENUQC) builds the mutator list for the Mutators dialog based on local cvar values
-// otherwise (CSQC) translates the mutator list (s) that client has received from server
-// NOTE: this function merges MENUQC and CSQC code in order to avoid duplicating and separating strings
+// MENUQC: it builds the mutator list based on local cvars (for the Mutators dialog)
+// CSQC: it translates the mutator list received from server (for the Welcome dialog)
+// MENUQC and CSQC code is merged in order to avoid duplicating and separating strings
 string build_mutator_list(string s)
 {
+	#ifdef CSQC
+	if (s == "") return "";
+	#endif
+
+	#ifdef MENUQC
+	if (s != "") s = "";
+	#endif
+
 	int i = -1, n = 0; // allow only 1 iteration in the following for loop if (s == "")
 	if (s != "")
 	{
@@ -457,10 +465,11 @@ vector decompressShortVector(int data)
 	}
 	else
 	{
-		q = .19634954084936207740 * q;
-		p = .19634954084936207740 * p - 1.57079632679489661922;
-		out.x = cos(q) *  cos(p);
-		out.y = sin(q) *  cos(p);
+		q = M_PI / 16 * q;
+		p = M_PI / 16 * p - M_PI_2;
+		float cos_p = cos(p);
+		out.x = cos(q) *  cos_p;
+		out.y = sin(q) *  cos_p;
 		out.z =          -sin(p);
 	}
 
@@ -484,7 +493,7 @@ float compressShortVector(vector vec)
 		error("BOGUS vectoangles");
 	//print("angles: ", vtos(ang), "\n");
 
-	p = floor(0.5 + (ang.x + 90) * 16 / 180) & 15; // -90..90 to 0..14
+	p = floor(0.5 + (ang.x + 90) * (16 / 180)) & 15; // -90..90 to 0..14
 	if(p == 0)
 	{
 		if(vec.z < 0)
@@ -493,7 +502,7 @@ float compressShortVector(vector vec)
 			y = 30;
 	}
 	else
-		y = floor(0.5 + ang.y * 32 / 360) & 31; // 0..360 to 0..32
+		y = floor(0.5 + ang.y * (32 / 360)) & 31; // 0..360 to 0..32
 	len = invertLengthLog(vlen(vec));
 
 	//print("compressed: p:", ftos(p)); print(" y:", ftos(y)); print(" len:", ftos(len), "\n");

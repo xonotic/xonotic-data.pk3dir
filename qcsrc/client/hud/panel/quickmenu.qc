@@ -5,6 +5,7 @@
 #include <client/mapvoting.qh>
 #include <common/ent_cs.qh>
 #include <common/minigames/cl_minigames.qh>
+#include <client/view.qh>
 
 // QuickMenu (#23)
 
@@ -40,20 +41,28 @@ float QuickMenu_TimeOut;
 #define QM_TAG_TITLE "T"
 #define QM_TAG_SUBMENU "S"
 #define QM_TAG_COMMAND "C"
+#define QM_TAG_KCOMMAND "K"
 #define QM_TAG_PLCOMMAND "P"
+
+// QuickMenu_Page_Command_Type
+#define QM_PCT_NONE 0
+#define QM_PCT_TOGGLE 1
+#define QM_PCT_KEEP 2
 
 #define QuickMenu_Buffer_Set(tag, string) bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat(tag, string))
 #define QuickMenu_Buffer_Get() bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index)
 
-#define QUICKMENU_ENTRY(title,command) { \
+#define QUICKMENU_ENTRY_TAG(title, command, tag) { \
 	if(QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES) \
 	{ \
 		QuickMenu_Buffer_Set(QM_TAG_TITLE, title); \
 		++QuickMenu_Buffer_Size; \
-		QuickMenu_Buffer_Set(QM_TAG_COMMAND, command); \
+		QuickMenu_Buffer_Set(tag, command); \
 	} \
 	++QuickMenu_Buffer_Size; \
 }
+
+#define QUICKMENU_ENTRY(title, command) QUICKMENU_ENTRY_TAG(title, command, QM_TAG_COMMAND)
 
 // special entries are shown with a different color
 #define QUICKMENU_ENTRY_SPECIAL(title, command) QUICKMENU_ENTRY(title, strcat("\n", command))
@@ -84,6 +93,7 @@ void QuickMenu_Page_ClearEntry(int i)
 bool HUD_QuickMenu_Forbidden()
 {
 	return (mv_active
+		|| intermission_time == time // close upon game over, can still be opened during intermission
 		|| scoreboard_ui_enabled
 		|| (hud_configure_prev && hud_configure_prev != -1)
 		|| HUD_MinigameMenu_IsOpened()
@@ -168,6 +178,14 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 				QuickMenu_Buffer_Set(QM_TAG_TITLE, argv(0));
 				++QuickMenu_Buffer_Size;
 				QuickMenu_Buffer_Set(QM_TAG_COMMAND, argv(1));
+			}
+			else if(argc == 3 && argv(2) == "KEEP_OPEN")
+			{
+				if(argv(1) == "")
+					continue;
+				QuickMenu_Buffer_Set(QM_TAG_TITLE, argv(0));
+				++QuickMenu_Buffer_Size;
+				QuickMenu_Buffer_Set(QM_TAG_KCOMMAND, argv(1));
 			}
 			else if(argc == 3)
 			{
@@ -380,7 +398,15 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 				cmd = QuickMenu_Buffer_Get();
 				string command_code = substring(cmd, 0, 1);
 				if(command_code == QM_TAG_COMMAND)
+				{
 					cmd = substring(cmd, 1, -1);
+					QuickMenu_Page_Command_Type[QuickMenu_Page_Entries] = QM_PCT_NONE;
+				}
+				else if(command_code == QM_TAG_KCOMMAND)
+				{
+					cmd = substring(cmd, 1, -1);
+					QuickMenu_Page_Command_Type[QuickMenu_Page_Entries] = QM_PCT_KEEP;
+				}
 				else if(command_code == QM_TAG_PLCOMMAND)
 				{
 					// throw away the current quickmenu buffer and load a new one
@@ -393,7 +419,8 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 				}
 
 				tokenize_console(cmd);
-				QuickMenu_Page_Command_Type[QuickMenu_Page_Entries] = (argv(1) && argv(0) == "toggle");
+				if(argv(1) && argv(0) == "toggle")
+					QuickMenu_Page_Command_Type[QuickMenu_Page_Entries] = QM_PCT_TOGGLE;
 
 				QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), cmd);
 			}
@@ -434,7 +461,10 @@ bool QuickMenu_ActionForNumber(int num)
 		QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
 		localcmd(strcat("\n", QuickMenu_Page_Command[num], "\n"));
 		QuickMenu_TimeOut_Set();
-		return true;
+		if(QuickMenu_Page_Command_Type[num] == QM_PCT_TOGGLE || QuickMenu_Page_Command_Type[num] == QM_PCT_KEEP)
+			return false;
+		else
+			return true;
 	}
 	if (QuickMenu_Page_Description[num] != "")
 		QuickMenu_Page_Load(QuickMenu_Page_Description[num], 0);
@@ -448,11 +478,7 @@ void QuickMenu_Page_ActiveEntry(int entry_num)
 	if(QuickMenu_Page_Command[QuickMenu_Page_ActivatedEntry])
 	{
 		bool f = QuickMenu_ActionForNumber(QuickMenu_Page_ActivatedEntry);
-		// toggle commands don't close the quickmenu
-		if(QuickMenu_Page_Command_Type[QuickMenu_Page_ActivatedEntry] == 1)
-			QuickMenu_Page_ActivatedEntry_Close = false;
-		else
-			QuickMenu_Page_ActivatedEntry_Close = (f && !(hudShiftState & S_CTRL));
+		QuickMenu_Page_ActivatedEntry_Close = (hudShiftState & S_CTRL) ? !f : f;
 	}
 	else
 		QuickMenu_Page_ActivatedEntry_Close = (!(hudShiftState & S_CTRL));
@@ -684,7 +710,7 @@ void HUD_QuickMenu()
 				color = "^6"; // special command
 			else
 				color = "^3";
-			if(QuickMenu_Page_Command_Type[i] == 1) // toggle command
+			if(QuickMenu_Page_Command_Type[i] == QM_PCT_TOGGLE) // toggle command
 			{
 				int end = strstrofs(QuickMenu_Page_Command[i], ";", 0);
 				if(end < 0)
@@ -867,14 +893,14 @@ void QuickMenu_Default(string target_submenu)
 
 		if(spectatee_status > 0)
 		{
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Change spectator camera")), "dropweapon")
+		QUICKMENU_ENTRY_TAG(CTX(_("QMCMD^Change spectator camera")), "dropweapon", QM_TAG_KCOMMAND)
 		}
 
 		if(spectatee_status == -1)
 		{
 		QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Increase speed")), "weapnext")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Decrease speed")), "weapprev")
+			QUICKMENU_ENTRY_TAG(CTX(_("QMCMD^Increase speed")), "weapnext", QM_TAG_KCOMMAND)
+			QUICKMENU_ENTRY_TAG(CTX(_("QMCMD^Decrease speed")), "weapprev", QM_TAG_KCOMMAND)
 			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision")), "toggle cl_clippedspectating")
 		QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
 		}

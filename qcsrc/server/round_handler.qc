@@ -74,6 +74,7 @@ void round_handler_Think(entity this)
 			round_delaytime = time;
 			this.wait = true;
 			this.nextthink = time + this.delay;
+			round_handler_ResetEndDelayTime();
 		}
 		else
 		{
@@ -114,6 +115,7 @@ void round_handler_Spawn(bool() canRoundStart_func, bool() canRoundEnd_func, voi
 	this.canRoundEnd = canRoundEnd_func;
 	this.roundStart = roundStart_func;
 	this.wait = false;
+	round_handler_ResetEndDelayTime();
 	round_handler_Init(5, 5, 180);
 
 	ScoreInfo_SetLabel_PlayerScore(SP_ROUNDS_PL, "rounds_pl", 0);
@@ -137,6 +139,7 @@ void round_handler_Reset(float next_think)
 {
 	entity this = round_handler;
 	this.wait = false;
+	round_handler_ResetEndDelayTime();
 	if (this.count)
 		if (this.cnt < this.count + 1) this.cnt = this.count + 1;
 	this.nextthink = next_think;

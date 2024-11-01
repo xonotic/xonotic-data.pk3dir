@@ -11,30 +11,28 @@ void nades_Clear(entity player);
 entity survivalStatuses;
 void SurvivalStatuses_Init();
 
-void SurvivalStatuses_Send()
-{
-	// SendFlags can be set to anything != 0, SurvivalStatuses_SendEntity won't use its value
-	// Dr. Jaska: this was a lie, the flags were not reset until now
-	survivalStatuses.SendFlags = 1;
-}
+#define STATUS_SEND_RESET   1
+#define STATUS_SEND_HUNTERS 2
 
 bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
 {
 	Stream out = MSG_ENTITY;
 	WriteHeader(out, ENT_CLIENT_SURVIVALSTATUSES);
 
-	// TODO: optimize this instead of always setting it on
-	sendflags = BIT(0); // reset all flags and make all players survivors
-
-	if ((dest.survival_status == SURV_STATUS_HUNTER) || round_handler_AwaitingNextRound())
-		sendflags |= BIT(1); // send hunter statuses
+	// always send hunters their own status and their allies
+	if (dest.survival_status == SURV_STATUS_HUNTER)
+		sendflags |= STATUS_SEND_HUNTERS;
 
 	serialize(byte, out, sendflags);
-	if (sendflags & BIT(1)) {
-		for (int i = 1; i <= maxclients; i += 8) {
+	if (sendflags & STATUS_SEND_HUNTERS)
+	{
+		for (int i = 1; i <= maxclients; i += 8)
+		{
 			int f = 0;
 			entity e = edict_num(i);
-			for (int b = 0; b < 8; ++b, e = nextent(e)) {
+
+			for (int b = 0; b < 8; ++b, e = nextent(e))
+			{
 				bool is_hunter = (INGAME(e) && e.survival_status == SURV_STATUS_HUNTER);
 				if (is_hunter)
 					f |= BIT(b);
@@ -78,9 +76,11 @@ void Surv_UpdateScores(bool timed_out)
 	});
 }
 
+float autocvar_g_survival_round_enddelay = 1;
 float Surv_CheckWinner()
 {
-	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
+	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
+		&& autocvar_g_survival_round_enddelay == -1)
 	{
 		// if the match times out, survivors win too!
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_SURVIVAL_SURVIVOR_WIN);
@@ -96,7 +96,7 @@ float Surv_CheckWinner()
 		allowed_to_spawn = false;
 		game_stopped = true;
 		round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
-		SurvivalStatuses_Send();
+		survivalStatuses.SendFlags = STATUS_SEND_HUNTERS;
 		return 1;
 	}
 
@@ -110,7 +110,27 @@ float Surv_CheckWinner()
 	});
 	if(survivor_count > 0 && hunter_count > 0)
 	{
+		// Dr. Jaska:
+		// reset delay time here only for consistency
+		// Survival players currently have no known ways to resurrect
+		round_handler_ResetEndDelayTime();
 		return 0;
+	}
+
+	// delay round ending a bit
+	if (autocvar_g_survival_round_enddelay
+		&& round_handler_GetEndTime() > 0
+		&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
+	{
+		if (round_handler_GetEndDelayTime() == -1)
+		{
+			round_handler_SetEndDelayTime(min(time + autocvar_g_survival_round_enddelay, round_handler_GetEndTime()));
+			return 0;
+		}
+		else if (round_handler_GetEndDelayTime() >= time)
+		{
+			return 0;
+		}
 	}
 
 	if(hunter_count > 0) // hunters win
@@ -134,7 +154,7 @@ float Surv_CheckWinner()
 	allowed_to_spawn = false;
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
-	SurvivalStatuses_Send();
+	survivalStatuses.SendFlags = STATUS_SEND_HUNTERS;
 
 	FOREACH_CLIENT(true,
 	{
@@ -169,7 +189,7 @@ void Surv_RoundStart()
 		total_hunters++;
 		it.survival_status = SURV_STATUS_HUNTER;
 	});
-	SurvivalStatuses_Send();
+	survivalStatuses.SendFlags = STATUS_SEND_RESET;
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
@@ -313,13 +333,19 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 		}
 	});
 	bot_relinkplayerlist();
-	SurvivalStatuses_Send();
+	survivalStatuses.SendFlags = STATUS_SEND_RESET;
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(surv, reset_map_global)
 {
 	allowed_to_spawn = true;
+	return true;
+}
+
+MUTATOR_HOOKFUNCTION(surv, MatchEnd_BeforeScores)
+{
+	MatchEnd_RestoreSpectatorStatus();
 	return true;
 }
 

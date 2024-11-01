@@ -1316,10 +1316,10 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		return;
 	}
 
-	string s1 = CCR((notif.nent_stringcount > 0) ? ...(0, string) : "");
-	string s2 = CCR((notif.nent_stringcount > 1) ? ...(1, string) : "");
-	string s3 = CCR((notif.nent_stringcount > 2) ? ...(2, string) : "");
-	string s4 = CCR((notif.nent_stringcount > 3) ? ...(3, string) : "");
+	string s1 = (notif.nent_stringcount > 0) ? ...(0, string) : "";
+	string s2 = (notif.nent_stringcount > 1) ? ...(1, string) : "";
+	string s3 = (notif.nent_stringcount > 2) ? ...(2, string) : "";
+	string s4 = (notif.nent_stringcount > 3) ? ...(3, string) : "";
 	float f1 =  ((notif.nent_floatcount  > 0) ? ...((notif.nent_stringcount + 0), float) : 0);
 	float f2 =  ((notif.nent_floatcount  > 1) ? ...((notif.nent_stringcount + 1), float) : 0);
 	float f3 =  ((notif.nent_floatcount  > 2) ? ...((notif.nent_stringcount + 2), float) : 0);

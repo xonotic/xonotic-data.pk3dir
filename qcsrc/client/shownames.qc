@@ -138,6 +138,9 @@ void Draw_ShowNames(entity this)
 	}
 	if (MUTATOR_CALLHOOK(ShowNames_Draw, this, a)) return;
 	a = M_ARGV(1, float);
+
+	if (a < ALPHA_MIN_VISIBLE) return;
+
 	float dist = -1; // dist will be calculated only when really needed to avoid wasting a vlen call
 	if (autocvar_hud_shownames_maxdistance)
 	{

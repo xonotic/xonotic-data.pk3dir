@@ -47,12 +47,12 @@ bool havocbot_goalrating_item_can_be_left_to_teammate(entity this, entity player
 	if (GetResource(item, RES_HEALTH) && GetResource(player, RES_HEALTH) <= GetResource(this, RES_HEALTH)) {return true;}
 	if (GetResource(item, RES_ARMOR) && GetResource(player, RES_ARMOR) <= GetResource(this, RES_ARMOR)) {return true;}
 	if (STAT(WEAPONS, item) && !(STAT(WEAPONS, player) & STAT(WEAPONS, item))) {return true;}
+	if (item.itemdef.instanceOfPowerup) {return true;}
+	if (this.items & IT_UNLIMITED_AMMO) {return true;}
 	if (GetResource(item, RES_SHELLS) && GetResource(player, RES_SHELLS) <= GetResource(this, RES_SHELLS)) {return true;}
 	if (GetResource(item, RES_BULLETS) && GetResource(player, RES_BULLETS) <= GetResource(this, RES_BULLETS)) {return true;}
 	if (GetResource(item, RES_ROCKETS) && GetResource(player, RES_ROCKETS) <= GetResource(this, RES_ROCKETS)) {return true;}
 	if (GetResource(item, RES_CELLS) && GetResource(player, RES_CELLS) <= GetResource(this, RES_CELLS)) {return true;}
-	if (GetResource(item, RES_PLASMA) && GetResource(player, RES_PLASMA) <= GetResource(this, RES_PLASMA)) {return true;}
-	if (item.itemdef.instanceOfPowerup) {return true;}
 
 	return false;
 };

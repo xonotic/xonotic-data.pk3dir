@@ -124,11 +124,7 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 	wep.event_damage = physical_item_damage;
 
 	if(!wep.cnt)
-	{
-		// fix the spawn origin
-		setorigin(wep, wep.origin + '0 0 1');
-		droptofloor(wep);
-	}
+		DropToFloor_QC_DelayedInit(wep);
 
 	wep.spawn_origin = wep.origin;
 	wep.spawn_angles = item.angles;

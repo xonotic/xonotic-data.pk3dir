@@ -92,6 +92,7 @@ void tka_TouchEvent(entity this, entity toucher) // runs any time that the ball 
 		return;
 	}
 	if(toucher.ballcarried) { return; }
+	if(IS_INDEPENDENT_PLAYER(toucher)) { return; }
 	if(IS_DEAD(toucher)) { return; }
 	if(STAT(FROZEN, toucher)) { return; }
 	if (!IS_PLAYER(toucher))

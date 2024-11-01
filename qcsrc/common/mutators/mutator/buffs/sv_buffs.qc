@@ -242,14 +242,12 @@ void buff_Touch(entity this, entity toucher)
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	sound(toucher, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
-	float oldtime = StatusEffects_gettime(thebuff, toucher);
 	float bufftime = ((this.buffs_finished) ? this.buffs_finished : thebuff.m_time(thebuff));
 
 	buff_RemoveAll(toucher, STATUSEFFECT_REMOVE_NORMAL); // remove previous buffs so that a new one may be added
-	if(bufftime)
-		StatusEffects_apply(thebuff, toucher, min(time + bufftime, max(oldtime, time) + bufftime), 0);
-	else
-		StatusEffects_apply(thebuff, toucher, time + 999, 0); // HACK: zero timer means "infinite"!
+	if(!bufftime)
+		bufftime = 999;
+	StatusEffects_apply(thebuff, toucher, time + bufftime, 0);
 
 	STAT(LAST_PICKUP, toucher) = time;
 }

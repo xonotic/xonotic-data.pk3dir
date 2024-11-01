@@ -160,9 +160,10 @@ ENTCS_PROP(RANK, true, rank, rank, ENTCS_SET_NORMAL,
 	{ WriteString(chan, ent.rank); },
 	{ strcpy(ent.rank, ReadString()); })
 
+// index of join queue team selection, max 127 because -1 means any available team
 ENTCS_PROP(WANTSJOIN, true, wants_join, wants_join, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, ent.wants_join); },
-	{ ent.wants_join = ReadByte(); })
+	{ WriteChar(chan, ent.wants_join); },
+	{ ent.wants_join = ReadChar(); })
 
 // use sv_solid to avoid changing solidity state of entcs entities
 ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
@@ -232,7 +233,7 @@ ENTCS_PROP(ACTIVEWEPID, false, activewepid, activewepid, ENTCS_SET_NORMAL,
 
 	void entcs_think(entity this)
 	{
-		this.nextthink = time + 0.033333333333;  // TODO: increase this to like 0.15 once the client can do smoothing
+		this.nextthink = time + 0.015625;  // TODO: increase this to like 0.125 once the client can do smoothing
 		entity player = this.owner;
 		FOREACH(EntCSProps, it.m_check(this, player),
 		{

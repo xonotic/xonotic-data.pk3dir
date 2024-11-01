@@ -17,6 +17,7 @@ bool autocvar_g_chat_team_allowed;
 int autocvar_g_chat_nospectators;
 bool autocvar_g_chat_teamcolors;
 bool autocvar_g_chat_tellprivacy;
+bool autocvar_g_chat_show_playerid;
 
 bool autocvar_sv_chat_sounds;
 float autocvar_sv_chat_sounds_flood;

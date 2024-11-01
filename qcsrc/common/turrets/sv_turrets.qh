@@ -25,7 +25,6 @@ TR_PROPS_COMMON(X, , )
 .float shot_volly_refire; // refire after completed volly
 */
 
-.float ticrate; // interal ai think rate
 .entity tur_head; // top part of the turret
 .entity tur_defend; // defend this entity
 .vector tur_shotorg; // shot origin

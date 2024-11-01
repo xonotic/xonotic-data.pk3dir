@@ -39,12 +39,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	float n;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Quality preset:")));
-		n = 5 + 2 * boolean(cvar("developer") > 0);
-		if(cvar("developer") > 0)
-		{
-			me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^OMG!")), '1 0 1', "exec effects-omg.cfg", 0));
-				e.applyButton = effectsApplyButton;
-		}
+		n = 5;
 		me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Low")), '0 0 0', "exec effects-low.cfg", 0));
 			e.applyButton = effectsApplyButton;
 		me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Medium")), '0 0 0', "exec effects-med.cfg", 0));
@@ -55,11 +50,6 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.applyButton = effectsApplyButton;
 		me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Ultra")), '0 0 0', "exec effects-ultra.cfg", 0));
 			e.applyButton = effectsApplyButton;
-		if(cvar("developer") > 0)
-		{
-			me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Ultimate")), '0.5 0 0', "exec effects-ultimate.cfg", 0));
-				e.applyButton = effectsApplyButton;
-		}
 
 	me.gotoRC(me, 1.25, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Geometry detail:")));
@@ -87,9 +77,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Texture resolution:")));
 			setDependent(e, "r_showsurfaces", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());
-			if(cvar("developer") > 0)
-				e.addValue(e, ZCTX(_("RES^Leet")), "1337");
-			e.addValue(e, ZCTX(_("RES^Lowest")), "3");
+			e.addValue(e, ZCTX(_("RES^Lowest")), "1337");
 			e.addValue(e, ZCTX(_("RES^Very low")), "2");
 			e.addValue(e, ZCTX(_("RES^Low")), "1");
 			e.addValue(e, ZCTX(_("RES^Normal")), "0");
@@ -127,39 +115,48 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticCheckBoxEx_T(1, 0, "r_sky", _("Show sky"), _("Disable sky for performance and visibility")));
-		if(cvar("developer") > 0)
-		{
-			me.TD(me, 1, 1, e = makeXonoticCheckBoxEx_T(3, 0, "r_showsurfaces", _("Show surfaces"),
-				_("Disable textures completely for very slow hardware. This gives a huge performance boost, but looks very ugly.")));
-		}
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(1, "mod_q3bsp_nolightmaps", _("Use lightmaps"),
 			_("Use high resolution lightmaps, which will look pretty but use up some extra video memory")));
 			e.applyButton = effectsApplyButton;
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_deluxemapping", _("Deluxe mapping"),
 			_("Use per-pixel lighting effects")));
-			setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
+			else
+				setDependent(e, "mod_q3bsp_nolightmaps", 0, 0);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_shadow_gloss", _("Gloss"),
 			_("Enable the use of glossmaps on textures supporting it")));
-			setDependentAND3(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0, "r_glsl_deluxemapping", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependentAND3(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0, "r_glsl_deluxemapping", 1, 1);
+			else
+				setDependentAND(e, "mod_q3bsp_nolightmaps", 0, 0, "r_glsl_deluxemapping", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_offsetmapping", _("Offset mapping"),
 			_("Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface")));
-			setDependent(e, "vid_gl20", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping"),
 			_("Higher quality offset mapping, which also has a huge impact on performance")));
-			setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
+			else
+				setDependent(e, "r_glsl_offsetmapping", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_water", _("Reflections:"),
 			_("Reflection and refraction quality, has a huge impact on performance on maps with reflecting surfaces")));
-			setDependent(e, "vid_gl20", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("r_water_resolutionmultiplier",
 			_("Resolution of reflections/refractions")));
 			e.addValue(e, _("Blurred"), "0.25");
 			e.addValue(e, ZCTX(_("REFL^Good")), "0.5");
 			e.addValue(e, _("Sharp"), "1");
 			e.configureXonoticTextSliderValues(e);
-			setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);
+			else
+				setDependent(e, "r_water", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "cl_decals", _("Decals"),
 			_("Enable decals (bullet holes and blood)")));
@@ -224,7 +221,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx_T(0.5, 0, "hud_postprocessing_maxbluralpha", _("Extra postprocessing effects"),
 			_("Enables special postprocessing effects for when damaged or under water or using a powerup")));
 			makeMulti(e, "hud_powerup");
-			setDependent(e, "vid_gl20", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		s = makeXonoticSlider_T(0.1, 1, 0.1, "r_motionblur",
 			_("Motion blur strength - 0.4 recommended"));

@@ -57,6 +57,8 @@ const vector PL_MIN_CONST = '-16 -16 -24';
 const vector PL_CROUCH_MAX_CONST = '16 16 25';
 const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
 
+const float PL_CORPSE_SCALE = 0.235; // average hitbox height is scaled by this when the player dies
+
 // gametype vote flags
 const int GTV_FORBIDDEN = 0; // Cannot be voted
 const int GTV_AVAILABLE = 1; // Can be voted
@@ -65,27 +67,27 @@ const int GTV_CUSTOM    = 2; // Custom entry
 // generic entity flags
 // engine flags can't be redefined as they are used by the engine (unfortunately), they are listed here for posterity
 #ifdef CSQC
-const int FL_FLY					= 1; /* BIT(0) */
-const int FL_SWIM					= 2; /* BIT(1) */
-const int FL_CLIENT					= 8; /* BIT(2) */	// set for all client edicts
-const int FL_INWATER				= 16; /* BIT(3) */	// for enter / leave water splash
-const int FL_MONSTER				= 32; /* BIT(4) */
-const int FL_GODMODE				= 64; /* BIT(5) */	// player cheat
-const int FL_NOTARGET				= 128; /* BIT(6) */	// player cheat
-const int FL_ITEM					= 256; /* BIT(7) */	// extra wide size for bonus items IF sv_legacy_bbox_expand is 1
-const int FL_ONGROUND				= 512; /* BIT(8) */	// standing on something
-const int FL_PARTIALGROUND			= 1024; /* BIT(9) */	// not all corners are valid
-const int FL_WATERJUMP				= 2048; /* BIT(10) */	// player jumping out of water
-const int FL_JUMPRELEASED			= 4096; /* BIT(11) */	// for jump debouncing
+const int FL_FLY					= 1;    /* BIT(0) */
+const int FL_SWIM					= 2;    /* BIT(1) */
+const int FL_CLIENT					= 8;    /* BIT(3) */ // set for all client edicts
+const int FL_INWATER				= 16;   /* BIT(4) */ // for enter / leave water splash
+const int FL_MONSTER				= 32;   /* BIT(5) */
+const int FL_GODMODE				= 64;   /* BIT(6) */ // player cheat
+const int FL_NOTARGET				= 128;  /* BIT(7) */ // player cheat
+const int FL_ITEM					= 256;  /* BIT(8) */ // extra wide size for bonus items IF sv_legacy_bbox_expand is 1
+const int FL_ONGROUND				= 512;  /* BIT(9) */ // standing on something
+const int FL_PARTIALGROUND			= 1024; /* BIT(10) */ // not all corners are valid
+const int FL_WATERJUMP				= 2048; /* BIT(11) */ // player jumping out of water
+const int FL_JUMPRELEASED			= 4096; /* BIT(12) */ // for jump debouncing
 #endif
-const int FL_WEAPON 				= BIT(12);
-const int FL_POWERUP 				= BIT(13);
-const int FL_PROJECTILE 			= BIT(14);
-const int FL_TOSSED 				= BIT(15);
-const int FL_SPAWNING 				= BIT(16);
-const int FL_PICKUPITEMS 			= BIT(17);
-const int FL_DUCKED 				= BIT(18);
-const int FL_ONSLICK 				= BIT(19);
+const int FL_WEAPON 				= BIT(13);
+const int FL_POWERUP 				= BIT(14);
+const int FL_PROJECTILE 			= BIT(15);
+const int FL_TOSSED 				= BIT(16);
+const int FL_SPAWNING 				= BIT(17);
+const int FL_PICKUPITEMS 			= BIT(18);
+const int FL_DUCKED 				= BIT(19);
+const int FL_ONSLICK 				= BIT(20);
 
 // initialization stages
 const int INITPRIO_FIRST 				= 0;

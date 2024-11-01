@@ -9,3 +9,4 @@ const int DTFLAG_BIG_ARMOR = BIT(2);
 const int DTFLAG_BIG_POTENTIAL = BIT(3);
 const int DTFLAG_NO_ARMOR = BIT(4);
 const int DTFLAG_NO_POTENTIAL = BIT(5);
+const int DTFLAG_STOP_ACCUMULATION = BIT(6);

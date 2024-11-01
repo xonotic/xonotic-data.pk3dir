@@ -3,6 +3,7 @@
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
 #include <common/net_linked.qh>
+#include <common/notifications/all.qh>
 #include <common/physics/player.qh>
 #include <common/stats.qh>
 #include <common/teams.qh>
@@ -52,6 +53,8 @@ entity bot_spawn()
 		ClientConnect(bot);
 		bot_setclientfields(bot);
 		PutClientInServer(bot);
+		if (!teamplay)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, bot.netname);
 	}
 	return bot;
 }

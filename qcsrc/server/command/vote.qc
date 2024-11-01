@@ -385,7 +385,7 @@ void reset_map(bool is_fake_round_start)
 			continue;
 		if (STAT(FROZEN, it))
 			Unfreeze(it, false);
-		player_powerups_remove_all(it);
+		player_powerups_remove_all(it, true);
 		entity store = PS(it);
 		if (store)
 		{
@@ -563,23 +563,33 @@ void ReadyCount()
 	// map_minplayers can only be > 0 if g_warmup was -1 at worldspawn
 	int minplayers = autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers;
 
-	if (total_players < minplayers)
+	// This allows warmup to end with zero players to prevent complaints
+	// of server never changing map with legacy config (sv_autopause 0).
+	bool badteams = (teamplay && total_players && autocvar_sv_teamnagger)
+		? TeamBalance_SizeDifference(NULL) >= autocvar_sv_teamnagger
+		: false;
+
+	if (total_players < minplayers || badteams)
 	{
 		if (game_starttime > time) // someone bailed during countdown, back to warmup
 		{
 			warmup_stage = autocvar_g_warmup; // CAN change it AFTER calling Nagger_ReadyCounted() this frame
 			game_starttime = time;
-			Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP, minplayers);
+			if (total_players < minplayers)
+				Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP_MINPLAYERS, minplayers);
+			else
+				Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP_BADTEAMS);
 			if (!sv_ready_restart_after_countdown) // if we ran reset_map() at start of countdown
 				FOREACH_CLIENT(IS_PLAYER(it), { ResetPlayerResources(it); });
 		}
-		if (warmup_limit > 0)
-			warmup_limit = -1;
-		return; // don't ReadyRestart if players are ready but too few
+		warmup_limit = -1;
+		return; // don't ReadyRestart if players are ready but too few or teams are bad
 	}
-	else if (minplayers && warmup_limit <= 0)
+	else if (warmup_limit <= 0
+	&& game_starttime <= time) // No countdown in progress, check prevents early countdown end if only player leaves
 	{
-		// there's enough players now but we're still in infinite warmup
+		// there's enough players now and teams are ok
+		// but we're still in infinite warmup and may need to switch to timed warmup
 		warmup_limit = cvar("g_warmup_limit");
 		if (warmup_limit == 0)
 			warmup_limit = autocvar_timelimit * 60;

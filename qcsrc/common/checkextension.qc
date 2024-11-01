@@ -45,6 +45,9 @@ void CheckEngineExtensions(void)
 		// DP_QC_NUDGEOUTOFSOLID fixes many cases WarpZoneLib_MoveOutOfSolid() can't, usually in less CPU time
 		nudgeoutofsolid = WarpZoneLib_MoveOutOfSolid;
 	}
+
+	if (!world.fullspawndata)
+		LOG_WARN("Engine lacks entity fullspawndata, on Quake 3 maps some entities will malfunction.");
 #endif
 
 #ifdef GAMEQC

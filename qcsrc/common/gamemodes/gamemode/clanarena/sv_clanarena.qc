@@ -9,10 +9,10 @@ float autocvar_g_ca_start_ammo_shells = 60;
 float autocvar_g_ca_start_ammo_nails = 320;
 float autocvar_g_ca_start_ammo_rockets = 160;
 float autocvar_g_ca_start_ammo_cells = 180;
-float autocvar_g_ca_start_ammo_plasma = 180;
 float autocvar_g_ca_start_ammo_fuel = 0;
 
 .float ca_damage_counter;
+.int prev_team;
 
 void CA_count_alive_players()
 {
@@ -160,6 +160,7 @@ int CA_PreventStalemate()
 	return -2; // Equality. Can't avoid the stalemate.
 }
 
+float autocvar_g_ca_round_enddelay = 1;
 float CA_CheckWinner()
 {
 	int winner_team = 0;
@@ -180,7 +181,29 @@ float CA_CheckWinner()
 	if (!winner_team)
 		winner_team = Team_GetWinnerAliveTeam();
 	if (!winner_team)
+	{
+		// Dr. Jaska:
+		// reset delay time here only for consistency
+		// CA players currently have no known ways to resurrect
+		round_handler_ResetEndDelayTime();
 		return 0;
+	}
+
+	// delay round ending a bit
+	if (autocvar_g_ca_round_enddelay
+		&& round_handler_GetEndTime() > 0
+		&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
+	{
+		if (round_handler_GetEndDelayTime() == -1)
+		{
+			round_handler_SetEndDelayTime(min(time + autocvar_g_ca_round_enddelay, round_handler_GetEndTime()));
+			return 0;
+		}
+		else if (round_handler_GetEndDelayTime() >= time)
+		{
+			return 0;
+		}
+	}
 
 	bool perfect = false;
 	if(winner_team > 0)
@@ -242,6 +265,8 @@ float CA_CheckWinner()
 void CA_RoundStart()
 {
 	allowed_to_spawn = boolean(warmup_stage);
+	if (!warmup_stage)
+		FOREACH_CLIENT(IS_PLAYER(it), it.prev_team = it.team);
 }
 
 bool CA_CheckTeams()
@@ -363,6 +388,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
 			PutClientInServer(it);
 		}
+		it.prev_team = 0;
 	});
 	return true;
 }
@@ -376,6 +402,12 @@ MUTATOR_HOOKFUNCTION(ca, Scores_CountFragsRemaining)
 MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 {
 	allowed_to_spawn = true;
+	return true;
+}
+
+MUTATOR_HOOKFUNCTION(ca, MatchEnd_BeforeScores)
+{
+	MatchEnd_RestoreSpectatorAndTeamStatus(prev_team);
 	return true;
 }
 
@@ -489,7 +521,6 @@ MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_ca_start_ammo_nails;
 	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_ca_start_ammo_rockets;
 	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_ca_start_ammo_cells;
-	start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_ca_start_ammo_plasma;
 	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_ca_start_ammo_fuel;
 }
 
@@ -662,11 +693,6 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 	}
 
 	return MUT_SPECCMD_CONTINUE;
-}
-
-MUTATOR_HOOKFUNCTION(ca, HideTeamNagger)
-{
-	return true; // doesn't work well with the whole spectator as player thing
 }
 
 MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)

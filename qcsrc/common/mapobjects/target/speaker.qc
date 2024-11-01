@@ -85,7 +85,8 @@ spawnfunc(target_speaker)
 
 	if(!this.atten && (this.spawnflags & SPEAKER_GLOBAL) && !(this.spawnflags & 3)) // special check for quake 3: looped sounds are never global
 	{
-		LOG_WARN("target_speaker uses legacy spawnflag GLOBAL (BIT(2)), please set atten to -1 instead");
+		if (!Q3COMPAT_COMMON)
+			LOG_WARN("target_speaker uses legacy spawnflag GLOBAL (BIT(2)), please set atten to -1 instead");
 		this.atten = -1;
 	}
 

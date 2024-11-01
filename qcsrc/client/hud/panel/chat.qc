@@ -162,14 +162,16 @@ void HUD_Chat()
 	//vector chatsize = '1 1 0' * autocvar_con_chatsize;
 	if(autocvar__hud_configure)
 	{
+		float alpha = 1; // engine can display chat only at full alpha
+		if (hud_configure_menu_open == 2 && highlightedPanel != panel)
+			alpha = hud_fade_alpha; // fade only when the settings menu of another panel is open
 		vector chatsize = '1 1 0' * autocvar_con_chatsize;
 		if (cvar_string("con_chatrect_x") != "9001")
 			cvar_set("con_chatrect_x", "9001"); // over 9000, we'll fake it instead for more control over alpha and such
 		string str = textShortenToWidth(_("^3Player^7: This is the chat area."), mySize.x, chatsize, stringwidth_colors);
 		for(int i = 0; i < autocvar_con_chat; ++i)
 		{
-			// engine displays chat text at full alpha
-			drawcolorcodedstring(pos, str, chatsize, 1, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, str, chatsize, alpha, DRAWFLAG_NORMAL);
 			pos.y += chatsize.y;
 		}
 	}

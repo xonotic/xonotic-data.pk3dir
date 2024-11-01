@@ -926,19 +926,18 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 	total_damage_to_creatures = 0;
 
-	if(deathtype != (WEP_HOOK.m_id | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) // only send gravity bomb damage once
-		if(!(deathtype & HITTYPE_SOUND)) // do not send radial sound damage (bandwidth hog)
-		{
-			force = inflictorvelocity;
-			if(force == '0 0 0')
-				force = '0 0 -1';
-			else
-				force = normalize(force);
-			if(forceintensity >= 0)
-				Damage_DamageInfo(inflictororigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
-			else
-				Damage_DamageInfo(inflictororigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
-		}
+	if(!(deathtype & HITTYPE_SOUND) && !(deathtype & HITTYPE_SPAM)) // do not send bandwidth-hogging radial spam attacks
+	{
+		force = inflictorvelocity;
+		if(force == '0 0 0')
+			force = '0 0 -1';
+		else
+			force = normalize(force);
+		if(forceintensity >= 0)
+			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
+		else
+			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
+	}
 
 	stat_damagedone = 0;
 

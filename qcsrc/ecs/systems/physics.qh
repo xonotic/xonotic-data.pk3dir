@@ -1,6 +1,6 @@
 #pragma once
 
-SYSTEM(phys, 30, 10);
+SYSTEM(phys, 32, 10);
 
 void sys_phys_fix(entity this, float dt);
 bool sys_phys_override(entity this, float dt);

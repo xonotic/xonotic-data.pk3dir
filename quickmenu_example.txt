@@ -14,6 +14,12 @@
 	"Sound settings"
 		"Hit sound" "toggle cl_hitsound"
 		"Chat sound" "toggle cl_chatsound"
+		// KEEP_OPEN menu option to increase/decrease volumes and stay
+		// the same menu
+		// Holding CTRL while selecting the number inverts the default
+		// keep behavior for an entry
+		"+Volume" "rpn /mastervolume mastervolume 0.1 + =" KEEP_OPEN
+		"-Volume" "rpn /mastervolume mastervolume 0.1 - =" KEEP_OPEN
 	"Sound settings"
 
 	// A toggle command displays a checkbox showing the current cvar's state

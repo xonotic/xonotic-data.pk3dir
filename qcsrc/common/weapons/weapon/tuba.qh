@@ -36,10 +36,10 @@ CLASS(Tuba, Weapon)
 		P(class, prefix, weaponstart, float, NONE) \
 		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Tuba, tuba)
+	W_PROPS(X, Tuba, tuba)
 #undef X
 ENDCLASS(Tuba)
-REGISTER_WEAPON(TUBA, tuba, NEW(Tuba));
+REGISTER_WEAPON(TUBA, NEW(Tuba));
 
 SPAWNFUNC_WEAPON(weapon_tuba, WEP_TUBA)
 
