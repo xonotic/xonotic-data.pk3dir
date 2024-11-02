@@ -12,8 +12,8 @@ void electro_orb_draw(entity this)
 	if(dt <= 0)
 		return;
 
-	this.alpha = bound(0, (this.ltime - time) * 4, 1);
-	this.scale = (WEP_CVAR(WEP_ELECTRO, combo_radius) * 0.05) * this.alpha;
+	float myscale = bound(0, (this.ltime - time) * 4, 1);
+	this.scale = (WEP_CVAR(WEP_ELECTRO, combo_radius) * 0.05) * myscale;
 	this.angles = this.angles + dt * this.avelocity;
 }
 
@@ -31,6 +31,7 @@ void electro_orb_setup(entity e)
 	e.solid = SOLID_NOT;
 	e.avelocity = '7 0 11';
 	e.drawmask = MASK_NORMAL;
+	e.alpha = 0.7;
 }
 #endif
 
