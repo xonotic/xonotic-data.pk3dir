@@ -1,5 +1,9 @@
 #pragma once
 
+// For some reason, GMQCC _requires_ this code to overwrite builtin globals,
+// while FTEQCC bans the same. Fine...
+#ifndef GMQCC
+
 #ifdef GAMEQC
 var entity(vector mins, vector maxs, .entity tofield) findbox_tofield_CheckedEngineExtensions = findbox_tofield;
 #define findbox_tofield findbox_tofield_CheckedEngineExtensions
@@ -10,6 +14,8 @@ var entity(vector mins, vector maxs) findbox_CheckedEngineExtensions = findbox;
 #ifdef SVQC // change to GAMEQC if/when we use nudgeoutofsolid in CSQC
 var float(entity ent) nudgeoutofsolid_CheckedEngineExtensions = nudgeoutofsolid;
 #define nudgeoutofsolid nudgeoutofsolid_CheckedEngineExtensions
+#endif
+
 #endif
 
 void CheckEngineExtensions(void);
