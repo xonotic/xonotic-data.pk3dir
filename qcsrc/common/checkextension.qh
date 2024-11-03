@@ -1,3 +1,15 @@
 #pragma once
 
+#ifdef GAMEQC
+var entity(vector mins, vector maxs, .entity tofield) findbox_tofield_CheckedEngineExtensions = findbox_tofield;
+#define findbox_tofield findbox_tofield_CheckedEngineExtensions
+var entity(vector mins, vector maxs) findbox_CheckedEngineExtensions = findbox;
+#define findbox findbox_CheckedEngineExtensions
+#endif
+
+#ifdef SVQC // change to GAMEQC if/when we use nudgeoutofsolid in CSQC
+var float(entity ent) nudgeoutofsolid_CheckedEngineExtensions = nudgeoutofsolid;
+#define nudgeoutofsolid nudgeoutofsolid_CheckedEngineExtensions
+#endif
+
 void CheckEngineExtensions(void);
