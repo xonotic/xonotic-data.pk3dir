@@ -1,5 +1,6 @@
 #include "sv_monsters.qh"
 
+#include <common/checkextension.qh>
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>
@@ -1543,7 +1544,7 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 		setorigin(this, trace_endpos);
 	}
 
-	if (!nudgeoutofsolid(this))
+	if (!nudgeoutofsolid_OrFallback(this))
 	{
 		// Stuck and not fixable
 		Monster_Remove(this);
