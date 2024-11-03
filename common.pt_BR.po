@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-02 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2024\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -3175,7 +3175,7 @@ msgstr "^BG%s^K1 não conseguiu escapar do foguete de um Racer%s%s"
 #: qcsrc/common/notifications/all.inc:361
 #, c-format
 msgid "^BG%s^K1 ended up in the wrong place%s%s"
-msgstr ""
+msgstr "^BG%s^K1 acabou no lugar errado%s%s"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
