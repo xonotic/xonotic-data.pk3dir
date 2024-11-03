@@ -1,31 +1,12 @@
 #pragma once
 
-// TODO: when https://github.com/graphitemaster/gmqcc/issues/211 is fixed,
-// remove the _usebuiltin functions and pre-initialize the variables directly.
-// Doing so already works in FTEQCC but not in GMQCC.
-//
-// The _usebuiltin functions are declared here so that the preprocessors based
-// remapping does not impact them yet.
-
 #ifdef GAMEQC
-var entity(vector mins, vector maxs, .entity tofield) findbox_tofield_CheckedEngineExtensions;
-void findbox_tofield_CheckedEngineExtensions_usebuiltin() {
-	findbox_tofield_CheckedEngineExtensions = findbox_tofield;
-}
-#define findbox_tofield findbox_tofield_CheckedEngineExtensions
-var entity(vector mins, vector maxs) findbox_CheckedEngineExtensions;
-void findbox_CheckedEngineExtensions_usebuiltin() {
-	findbox_CheckedEngineExtensions = findbox;
-}
-#define findbox findbox_CheckedEngineExtensions
+var entity(vector mins, vector maxs, .entity tofield) findbox_tofield_OrFallback = nil;
+var entity(vector mins, vector maxs) findbox_OrFallback = nil;
 #endif
 
 #ifdef SVQC // change to GAMEQC if/when we use nudgeoutofsolid in CSQC
-var float(entity ent) nudgeoutofsolid_CheckedEngineExtensions;
-void nudgeoutofsolid_CheckedEngineExtensions_usebuiltin() {
-	nudgeoutofsolid_CheckedEngineExtensions = nudgeoutofsolid;
-}
-#define nudgeoutofsolid nudgeoutofsolid_CheckedEngineExtensions
+var float(entity ent) nudgeoutofsolid_OrFallback = nil;
 #endif
 
 void CheckEngineExtensions(void);

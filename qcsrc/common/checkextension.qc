@@ -41,13 +41,13 @@ void CheckEngineExtensions(void)
 #ifdef SVQC // change to GAMEQC if/when we use nudgeoutofsolid in CSQC
 	if (checkextension("DP_QC_NUDGEOUTOFSOLID"))
 	{
-		nudgeoutofsolid_CheckedEngineExtensions_usebuiltin();
+		nudgeoutofsolid_OrFallback = nudgeoutofsolid;
 	}
 	else
 	{
 		LOG_WARN("Engine lacks DP_QC_NUDGEOUTOFSOLID, falling back to WarpZoneLib_MoveOutOfSolid().");
 		// DP_QC_NUDGEOUTOFSOLID fixes many cases WarpZoneLib_MoveOutOfSolid() can't, usually in less CPU time
-		nudgeoutofsolid = WarpZoneLib_MoveOutOfSolid;
+		nudgeoutofsolid_OrFallback = WarpZoneLib_MoveOutOfSolid;
 	}
 
 	if (!world.fullspawndata)
@@ -57,14 +57,14 @@ void CheckEngineExtensions(void)
 #ifdef GAMEQC
 	if (checkextension("DP_QC_FINDBOX"))
 	{
-		findbox_CheckedEngineExtensions_usebuiltin();
-		findbox_tofield_CheckedEngineExtensions_usebuiltin();
+		findbox_OrFallback = findbox;
+		findbox_tofield_OrFallback = findbox_tofield;
 	}
 	else
 	{
 		LOG_WARN("Engine lacks DP_QC_FINDBOX, performance will be suboptimal.");
-		findbox = findbox_Fallback;
-		findbox_tofield = findbox_tofield_Fallback;
+		findbox_OrFallback = findbox_Fallback;
+		findbox_tofield_OrFallback = findbox_tofield_Fallback;
 	}
 #endif
 
