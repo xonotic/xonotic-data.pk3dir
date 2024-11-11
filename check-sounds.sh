@@ -1,12 +1,19 @@
 #!/bin/sh
 
-allidentifiers=`grep "^		_VOICEMSG" qcsrc/server/defs.qh | sed "s/.*(//; s/).*//;"`
 
-allsounds=`find sound -name .svn -prune -o \( -name \*.ogg -o -name \*.wav \) -print`
-for S in $allsounds; do
+
+# find all sound identifier keys:
+# attackinfive coverme defend freelance incoming meet needhelp seenflag taunt teamshoot flagcarriertakingdamage
+# getflag affirmative attacking defending roaming onmyway droppedflag negative seenenemy
+allidentifiers=$(grep "^REGISTER_VOICEMSG(" qcsrc/common/effects/qc/globalsound.qh | sed -e 's#.*(##' -e 's#,.*##')
+
+allsounds=$(find sound -name .svn -prune -o \( -name \*.ogg -o -name \*.wav \) -print)
+for S in $allsounds
+do
 	SND=${S#sound/}
 	SND=${SND%.*}
-	if [ -f "sound/$SND.ogg" ] && [ -f "sound/$SND.wav" ]; then
+	if [ -f "sound/$SND.ogg" ] && [ -f "sound/$SND.wav" ]
+	then
 		echo "$SND exists twice"
 	fi
 	case "$SND" in
@@ -33,7 +40,12 @@ for S in $allsounds; do
 		misc/talk*) # engine
 			;;
 		*)
-			if ! grep -Er '"'$SND'\.(ogg|wav)"' qcsrc/server >/dev/null; then
+			# FIXME: this requires updating to our macroes.
+			# Atm this looks for sounds such as misc/typehit
+			# only in qcsrc/server and is completely unaware of
+			# qcsrc/common and SOUND macro there.
+			if ! grep -Er '"'"$SND"'\.(ogg|wav)"' qcsrc/server >/dev/null
+			then
 				echo "$S ($SND) is unused by the code"
 			fi
 			;;
@@ -42,7 +54,7 @@ done
 
 LF="
 "
-allsounds="$LF`find sound/player -mindepth 2 -name .svn -prune -o \( -name \*.ogg -o -name \*.wav \) -print`$LF"
+allsounds="$LF$(find sound/player -mindepth 2 -name .svn -prune -o \( -name \*.ogg -o -name \*.wav \) -print)$LF"
 remainingsounds=$allsounds
 psoundfile()
 {
@@ -52,6 +64,7 @@ psoundfile()
 		*$pat*)
 			case "$remainingsounds" in
 				*$pat*)
+					# shellcheck disable=SC2295
 					remainingsounds=${remainingsounds%%$pat*}$LF${remainingsounds#*$pat}
 					;;
 			esac
@@ -70,25 +83,30 @@ psoundtry()
 psound()
 {
 	s=$1
-	if psoundtry "$s"; then
-		:
-	else
+	if ! psoundtry "$s"
+	then
 		echo "$S references nonexisting sound $s"
 	fi
 }
 
-for S in models/player/*.sounds sound/player/default.sounds; do
-	if [ "$S" = "sound/player/default.sounds" ] || [ -f "${S#.sounds}" ]; then
+for S in models/player/*.sounds sound/player/default.sounds
+do
+	if [ "$S" = "sound/player/default.sounds" ] || [ -f "${S#.sounds}" ]
+	then
 		{
 			identifiers_seen=
-			while read -r TITLE SOUND COUNT; do
+			# shellcheck disable=SC2034
+			while read -r TITLE SOUND COUNT GENTLECOUNT
+			do
 				case "$TITLE" in
 					//TAG*)
 						;;
 					//*)
 						identifiers_seen="$identifiers_seen ${TITLE#//}"
-						for X in $allidentifiers; do
-							if [ "$X" = "${TITLE#//}" ]; then
+						for X in $allidentifiers
+						do
+							if [ "$X" = "${TITLE#//}" ]
+							then
 								good=true
 							fi
 						done
@@ -96,19 +114,23 @@ for S in models/player/*.sounds sound/player/default.sounds; do
 							good=false
 							case "$COUNT" in
 								0)
-									if psoundtry "$SOUND"; then
+									if psoundtry "$SOUND"
+									then
 										good=false
 									fi
 									;;
 								*)
-									for i in `seq 1 $COUNT`; do
-										if psoundtry "$SOUND$i"; then
+									for i in $(seq 1 "$COUNT")
+									do
+										if psoundtry "$SOUND$i"
+										then
 											good=true
 										fi
 									done
 									;;
 							esac
-							if $good; then
+							if $good
+							then
 								echo "$S references existing sound $SOUND but commented out"
 							else
 								echo "$S does not have a sound for ${TITLE#//} yet"
@@ -122,47 +144,60 @@ for S in models/player/*.sounds sound/player/default.sounds; do
 								psound "$SOUND"
 								;;
 							*)
-								for i in `seq 1 $COUNT`; do
+								for i in $(seq 1 "$COUNT")
+								do
 									psound "$SOUND$i"
 								done
 								;;
 						esac
-
 						;;
 				esac
 			done
-			missing=`
+
+			missing=$(
 				{
-					for X in $identifiers_seen; do
+					for X in $identifiers_seen
+					do
 						echo "$X"
 						echo "$X"
 					done
-					for X in $allidentifiers; do
+					for X in $allidentifiers
+					do
 						echo "$X"
 					done
 				} | sort | uniq -u
-			`
-			invalid=`
+			)
+
+			invalid=$(
 				{
-					for X in $identifiers_seen; do
+					for X in $identifiers_seen
+					do
 						echo "$X"
 					done
-					for X in $allidentifiers; do
+					for X in $allidentifiers
+					do
 						echo "$X"
 						echo "$X"
 					done
 				} | sort | uniq -u
-			`
-			[ -z "$invalid" ] || echo "$S specifies invalid sound identifiers `echo $invalid`"
-			[ -z "$missing" ] || echo "$S lacks sound identifiers `echo $missing`"
+			)
+			# shellcheck disable=SC2116 disable=SC2086 # this removes newlines between identifiers
+			[ -z "$invalid" ] || echo "$S specifies invalid sound identifiers $(echo $invalid)"
+			# shellcheck disable=SC2116 disable=SC2086 # this removes newlines between identifiers
+			[ -z "$missing" ] || echo "$S lacks sound identifiers $(echo $missing)"
 		} < "$S"
 	else
 		echo "$S exists for nonexisting player model"
 	fi
 done
-for S in $remainingsounds; do
+for S in $remainingsounds
+do
 	echo "$S is not used by any player model"
 done
 
 # tag check
-for S in models/player/*.sounds; do echo -n `head -n 1 "$S"`"  "; md5sum "$S"; done | sort
+for S in models/player/*.sounds
+do
+	printf "%s  " "$(head -n 1 "$S")"
+	md5sum "$S"
+done | sort
