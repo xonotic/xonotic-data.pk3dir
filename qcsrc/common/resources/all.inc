@@ -53,17 +53,6 @@ REGISTER_RESOURCE(CELLS, NEW(AmmoResource)) {
 	this.m_name = _("Cells");
 	this.m_icon = "ammo_cells";
 }
-REGISTER_RESOURCE(PLASMA, NEW(AmmoResource)) {
-	this.netname = "plasma";
-#ifdef GAMEQC
-	this.m_field = ammo_plasma;
-#endif
-	this.m_name = _("Plasma");
-	this.m_icon = "ammo_plasma";
-#ifdef CSQC
-	this.m_hidden = true; // WIP ammo type
-#endif
-}
 REGISTER_RESOURCE(FUEL, NEW(AmmoResource)) {
 	this.netname = "fuel";
 #ifdef GAMEQC

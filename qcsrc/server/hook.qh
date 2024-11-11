@@ -20,9 +20,8 @@ bool autocvar_g_balance_grapplehook_crouchslide;
 void GrapplingHookThink(entity this);
 void RemoveGrapplingHooks(entity pl);
 void RemoveHook(entity this);
-// (note: you can change the hook impulse #'s to whatever you please)
-.float hook_time;
 
+.float hook_time;
 .float hook_length;
 
 const float HOOK_FIRING = BIT(0);

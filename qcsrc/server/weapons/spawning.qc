@@ -123,7 +123,6 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 				case RES_BULLETS: ammo = cvar("g_pickup_nails_weapon");   break;
 				case RES_ROCKETS: ammo = cvar("g_pickup_rockets_weapon"); break;
 				case RES_CELLS:   ammo = cvar("g_pickup_cells_weapon");   break;
-				case RES_PLASMA:  ammo = cvar("g_pickup_plasma_weapon");  break;
 				case RES_FUEL:    ammo = cvar("g_pickup_fuel_weapon");    break;
 			}
 		}

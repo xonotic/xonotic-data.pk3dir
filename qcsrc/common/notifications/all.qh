@@ -360,6 +360,7 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 	s1-s4: string arguments to be literally swapped into sprintf
 	s2loc: s2 string of locations of deaths or other events
 	s3loc: s3 string of locations of deaths or other events
+	s4loc: s4 string of locations of deaths or other events
 	f1-f4: float arguments expanded into strings to be swapped into sprintf
 	f1dtime: f1 float to string with 2 decimal places
 	f2dtime: f2 float to string with 2 decimal places
@@ -409,6 +410,24 @@ float notif_queue_next_time;
 int notif_queue_length;
 
 void Local_Notification_Queue_Process();
+
+// replaces # with attacker_name in ent_msg (if not found attacker_name is appended)
+string hash_replace(string full_msg, int ent_msg_num, string ent_msg, string attacker_name)
+{
+	int s_ofs = 0;
+	while (--ent_msg_num >= 0)
+		s_ofs += strstrofs(full_msg, "%s", s_ofs);
+	string col = find_last_color_code(substring(full_msg, 0, s_ofs));
+
+	int hash_ofs = strstrofs(ent_msg, "#", 0);
+	if (hash_ofs < 0)
+		ent_msg = strcat(ent_msg, " ", CCR("^BG"), attacker_name, col);
+	else
+		ent_msg = strreplace("#", strcat(CCR("^BG"), attacker_name, col), ent_msg);
+	return ent_msg;
+}
+
+#define HASH_REPLACE(full_msg, num, attacker_name) hash_replace(input, num, s##num, attacker_name)
 #endif
 
 string arg_slot[NOTIF_MAX_ARGS];
@@ -432,6 +451,7 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS_SV_HA,  "s4",            s4) \
 	ARG_CASE(ARG_CS_SV,     "s2loc",         ((autocvar_notification_show_location && (s2 != "")) ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s2) : "")) \
 	ARG_CASE(ARG_CS_SV,     "s3loc",         ((autocvar_notification_show_location && (s3 != "")) ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s3) : "")) \
+	ARG_CASE(ARG_CS_SV,     "s4loc",         ((autocvar_notification_show_location && (s4 != "")) ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s4) : "")) \
 	ARG_CASE(ARG_CS_SV_DC,  "f1",            ftos(f1)) \
 	ARG_CASE(ARG_CS_SV_DC,  "f2",            ftos(f2)) \
 	ARG_CASE(ARG_CS_SV,     "f3",            ftos(f3)) \
@@ -467,6 +487,10 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_DC,        "item_centime",  ftos(autocvar_notification_item_centerprinttime)) \
 	ARG_CASE(ARG_SV,        "death_team",    Team_ColoredFullName(f1)) \
 	ARG_CASE(ARG_CS,        "death_team",    Team_ColoredFullName(f1 - 1)) \
+	ARG_CASE(ARG_SV,        "s3#s2",         s3) \
+	ARG_CASE(ARG_SV,        "#s2",           s2) \
+	ARG_CASE(ARG_CS,        "s3#s2",         HASH_REPLACE(input, 3, s2)) \
+	ARG_CASE(ARG_CS,        "#s2",           "") \
 	ARG_CASE(ARG_CS_SV_HA,  "minigame1_name",find(NULL,netname,s1).descriptor.message) \
 	ARG_CASE(ARG_CS_SV_HA,  "minigame1_d",   find(NULL,netname,s1).descriptor.netname)
 

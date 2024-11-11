@@ -1,37 +1,54 @@
 #pragma once
 
 #ifndef QCC_SUPPORT_ACCUMULATE
-	#ifdef GMQCC
+	//#ifdef GMQCC
 		#define QCC_SUPPORT_ACCUMULATE
-	#endif
+	//#endif
 #endif
 
 #ifndef QCC_SUPPORT_NIL
-	#ifdef GMQCC
+	//#ifdef GMQCC
 		#define QCC_SUPPORT_NIL
-	#endif
+	//#endif
 #endif
 
 #ifndef QCC_SUPPORT_ERASEABLE
-	#ifdef GMQCC
+	//#ifdef GMQCC
 		#define QCC_SUPPORT_ERASEABLE
-	#endif
+	//#endif
 #endif
 
 #ifndef QCC_SUPPORT_ALIAS
-	#ifdef GMQCC
+	//#ifdef GMQCC
 		#define QCC_SUPPORT_ALIAS
-	#endif
+	//#endif
 #endif
 
 #ifndef QCC_SUPPORT_POW
-    #ifdef GMQCC
-        #define QCC_SUPPORT_POW
-    #endif
+	//#ifdef GMQCC
+		#define QCC_SUPPORT_POW
+	//#endif
 #endif
 
-#ifdef GMQCC
-    #define LABEL(id) :id
-#else
-    #define LABEL(id) id:
+//#ifdef GMQCC
+	#define LABEL(id) :id
+//#else
+//	#define LABEL(id) id:
+//#endif
+
+#ifdef FTEQCC
+	// Note: setting these warnings to "enable" makes them still show,
+	// but permits them with -Werror.
+
+	// Potentially uninitialised variable
+	#pragma warning enable F302
+
+	// Local "..." hides global with same name and type
+	#pragma warning enable F306
+
+	// sprintf: %d requires float at arg 4 (got __bfloat)
+	#pragma warning enable F324
+
+	// addstat: indicated type ev_integer does not match passed field type .float
+	#pragma warning enable F333
 #endif
