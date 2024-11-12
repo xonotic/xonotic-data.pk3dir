@@ -1,5 +1,7 @@
 #pragma once
 
+#include <client/main.qh>
+
 bool autocvar_cl_polytrails = true;
 
 CLASS(PolyTrail, Object)
