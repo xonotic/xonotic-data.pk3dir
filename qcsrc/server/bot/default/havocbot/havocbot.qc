@@ -1535,23 +1535,19 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 	}
 
 	// Do not change weapon during the next second after a combo
-	float f = time - this.lastcombotime;
-	if(f < 1)
+	if(time - this.lastcombotime < 1)
 		return;
 
-	float distance; distance=bound(10,vlen(this.origin-this.enemy.origin)-200,10000);
-
 	// Should it do a weapon combo?
-	float af, ct, combo_time, combo;
 
-	af = ATTACK_FINISHED(this, weaponentity);
-	ct = autocvar_bot_ai_weapon_combo_threshold;
+	float af = ((this.weaponentity.m_weapon == WEP_Null) ? 0 : ATTACK_FINISHED(this, weaponentity));
+	float ct = autocvar_bot_ai_weapon_combo_threshold;
 
-	// Bots with no skill will be 4 times more slower than "godlike" bots when doing weapon combos
+	// Bots with no skill will be 4 times slower than "godlike" bots when doing weapon combos
 	// Ideally this 4 should be calculated as longest_weapon_refire / bot_ai_weapon_combo_threshold
-	combo_time = time + ct + (ct * ((-0.3*(skill+this.bot_weaponskill))+3));
+	float combo_time = time + ct * (4 - 0.3 * (skill + this.bot_weaponskill));
 
-	combo = false;
+	bool combo = false;
 
 	if(autocvar_bot_ai_weapon_combo)
 	if(this.(weaponentity).m_weapon.m_id == this.(weaponentity).lastfiredweapon)
@@ -1561,10 +1557,11 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 		this.lastcombotime = time;
 	}
 
-	distance *= (2 ** this.bot_rangepreference);
-
 	// Custom weapon list based on distance to the enemy
-	if(bot_custom_weapon){
+	if(bot_custom_weapon)
+	{
+		float distance = bound(10, vlen(this.origin - this.enemy.origin) - 200, 10000);
+		distance *= (2 ** this.bot_rangepreference);
 
 		// Choose weapons for far distance
 		if ( distance > bot_distance_far ) {

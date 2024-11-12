@@ -10,15 +10,19 @@ REGISTRY_DEFINE_GET(Deathtypes, NULL)
 
 .entity death_msgself;
 .entity death_msgmurder;
+.entity death_msg_ent_self;
+.entity death_msg_ent_murder;
 .string death_msgextra;
 
-#define REGISTER_DEATHTYPE(id, msg_death, msg_death_by, extra) \
+#define REGISTER_DEATHTYPE(id, msg_death, msg_death_by, msg_death_ent, msg_death_ent_by, extra) \
     REGISTER(Deathtypes, DEATH, id, m_id, new_pure(deathtype)) { \
         this.m_id += DT_FIRST; \
         this.nent_name = #id; \
         this.death_msgextra = extra; \
         this.death_msgself = msg_death; \
         this.death_msgmurder = msg_death_by; \
+        this.death_msg_ent_self = msg_death_ent; \
+        this.death_msg_ent_murder = msg_death_ent_by; \
     }
 
 const int DEATH_WEAPONMASK = BITS(8);

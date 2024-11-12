@@ -53,7 +53,6 @@ bool havocbot_goalrating_item_can_be_left_to_teammate(entity this, entity player
 	if (GetResource(item, RES_BULLETS) && GetResource(player, RES_BULLETS) <= GetResource(this, RES_BULLETS)) {return true;}
 	if (GetResource(item, RES_ROCKETS) && GetResource(player, RES_ROCKETS) <= GetResource(this, RES_ROCKETS)) {return true;}
 	if (GetResource(item, RES_CELLS) && GetResource(player, RES_CELLS) <= GetResource(this, RES_CELLS)) {return true;}
-	if (GetResource(item, RES_PLASMA) && GetResource(player, RES_PLASMA) <= GetResource(this, RES_PLASMA)) {return true;}
 
 	return false;
 };
