@@ -51,7 +51,7 @@ void Trail_draw(entity this)
 		vector to = this.polytrail_bufpos[idx];
 		to += lerpvratio('0 0 0', this.polytrail_bufnoise[idx], rtime);
 		vector rgb = lerpv3ratio(this.polytrail_rgb[0], this.polytrail_rgb[1], this.polytrail_rgb[2], rtime);
-		float a = lerp3ratio(this.polytrail_alpha[0], this.polytrail_thickness[1], this.polytrail_alpha[2], rtime);
+		float a = lerp3ratio(this.polytrail_alpha[0], this.polytrail_alpha[1], this.polytrail_alpha[2], rtime);
 		int thickness = lerp3ratio(this.polytrail_thickness[0], this.polytrail_thickness[1], this.polytrail_thickness[2], rtime);
 		vector thickdir = normalize(cross(normalize(to - from), view_origin - from)) * (thickness / 2);
 		vector A = from + thickdir;
