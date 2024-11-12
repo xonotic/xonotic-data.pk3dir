@@ -1,0 +1,42 @@
+#pragma once
+
+bool autocvar_cl_polytrails = true;
+
+CLASS(PolyTrail, Object)
+	ATTRIB(PolyTrail, polytrail_follow, entity, NULL);
+	ATTRIB(PolyTrail, polytrail_tex, string, string_null);
+	/** Lifetime per segment */
+	ATTRIB(PolyTrail, polytrail_lifetime, float, 0.2);
+	ATTRIB(PolyTrail, polytrail_noise, float, 0);
+	ATTRIB(PolyTrail, polytrail_segmentsize, float, 10);
+	ATTRIB(PolyTrail, polytrail_noisefunc, string, "chaotic");
+	ATTRIBARRAY(PolyTrail, polytrail_rgb, vector, 3);
+	ATTRIBARRAY(PolyTrail, polytrail_alpha, float, 3);
+	ATTRIBARRAY(PolyTrail, polytrail_thickness, float, 3);
+
+	/**
+	 * Increase as necessary if the buffer is overflowing
+	 * symptom: tail of trail is wrong
+	 * cause: projectiles are too fast for the segment size
+	 */
+	const int POLYTRAIL_BUFSIZE = 1 << 7;
+	/** One or more positional points */
+	ATTRIBARRAY(PolyTrail, polytrail_bufpos, vector, POLYTRAIL_BUFSIZE);
+	/** Noise for ending position */
+	ATTRIBARRAY(PolyTrail, polytrail_bufnoise, vector, POLYTRAIL_BUFSIZE);
+	/** Time of input */
+	ATTRIBARRAY(PolyTrail, polytrail_buftime, float, POLYTRAIL_BUFSIZE);
+	/** Current read index */
+	ATTRIB(PolyTrail, polytrail_bufidx, float, -1);
+	/** Counts positions stored */
+	ATTRIB(PolyTrail, polytrail_cnt, float, 0);
+
+	void Trail_draw(entity this);
+	void Trail_recreate(entity this);
+	ATTRIB(PolyTrail, draw, void(entity this), Trail_draw);
+	CONSTRUCTOR(PolyTrail, entity _follow) {
+		CONSTRUCT(PolyTrail);
+		this.polytrail_follow = _follow;
+		IL_PUSH(g_drawables, this);
+	}
+ENDCLASS(PolyTrail)

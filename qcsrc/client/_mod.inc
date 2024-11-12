@@ -6,6 +6,7 @@
 #include <client/main.qc>
 #include <client/mapvoting.qc>
 #include <client/player_skeleton.qc>
+#include <client/polytrails.qc>
 #include <client/shownames.qc>
 #include <client/teamradar.qc>
 #include <client/view.qc>

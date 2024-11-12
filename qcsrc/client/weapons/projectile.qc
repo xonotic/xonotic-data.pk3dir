@@ -1,6 +1,7 @@
 #include "projectile.qh"
 
 #include <client/mutators/_mod.qh>
+#include <client/polytrails.qh>
 #include <common/constants.qh>
 #include <common/effects/all.qh>
 #include <common/effects/effect.qh>
@@ -360,6 +361,25 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				settouch(this, func_null);
 				this.bouncefactor = WEP_CVAR_SEC(WEP_ELECTRO, bouncefactor);
 				this.bouncestop = WEP_CVAR_SEC(WEP_ELECTRO, bouncestop);
+				if(autocvar_cl_polytrails)
+				{
+					this.traileffect = EFFECT_Null.m_id;
+					PolyTrail t = NEW(PolyTrail, this);
+					t.polytrail_tex = "particles/lgbeam.tga";
+					t.polytrail_rgb[0] = '0.8 0.8 1';
+					t.polytrail_rgb[1] = '0.5 0.5 1';
+					t.polytrail_rgb[2] = '0.1 0.1 0.7';
+					t.polytrail_alpha[0] = 1;
+					t.polytrail_alpha[1] = 0.5;
+					t.polytrail_alpha[2] = 0;
+					t.polytrail_thickness[0] = 15;
+					t.polytrail_thickness[1] = 7;
+					t.polytrail_thickness[2] = 0;
+					t.polytrail_lifetime = 0.18;
+					t.polytrail_segmentsize = 10;
+					t.polytrail_noise = 10;
+					t.polytrail_noisefunc = "chaotic";
+				}
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
@@ -408,6 +428,25 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_CRYLINK_BOUNCING:
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
+				if(autocvar_cl_polytrails)
+				{
+					this.traileffect = EFFECT_Null.m_id;
+					PolyTrail t = NEW(PolyTrail, this);
+					t.polytrail_tex = "gfx/crosshair_ring.tga"; // TODO: dedicated texture
+					t.polytrail_rgb[0] = '0.7 0 1';
+					t.polytrail_rgb[1] = '0.5 0 1';
+					t.polytrail_rgb[2] = '0.1 0 0.8';
+					t.polytrail_alpha[0] = 0.5;
+					t.polytrail_alpha[1] = 0.2;
+					t.polytrail_alpha[2] = 0;
+					t.polytrail_thickness[0] = 5;
+					t.polytrail_thickness[1] = 3;
+					t.polytrail_thickness[2] = 3;
+					t.polytrail_lifetime = 0.15;
+					t.polytrail_segmentsize = 80;
+					t.polytrail_noise = 0;
+					t.polytrail_noisefunc = "none";
+				}
 				break;
 			case PROJECTILE_FIREBALL:
 				loopsound(this, CH_SHOTS_SINGLE, SND_FIREBALL_FLY2, VOL_BASE, ATTEN_NORM);
@@ -451,6 +490,48 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				break;
 			case PROJECTILE_WAKIROCKET:
 				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				break;
+			case PROJECTILE_ELECTRO_BEAM:
+				if(autocvar_cl_polytrails)
+				{
+					this.traileffect = EFFECT_Null.m_id;
+					PolyTrail t = NEW(PolyTrail, this);
+					t.polytrail_tex = "particles/lgbeam.tga";
+					t.polytrail_rgb[0] = '0.75 0.75 1';
+					t.polytrail_rgb[1] = '0.45 0.45 1';
+					t.polytrail_rgb[2] = '0.1 0.1 0.75';
+					t.polytrail_alpha[0] = 1;
+					t.polytrail_alpha[1] = 0.5;
+					t.polytrail_alpha[2] = 0;
+					t.polytrail_thickness[0] = 5;
+					t.polytrail_thickness[1] = 5;
+					t.polytrail_thickness[2] = 0;
+					t.polytrail_lifetime = 0.27;
+					t.polytrail_segmentsize = 10;
+					t.polytrail_noise = 5;
+					t.polytrail_noisefunc = "chaotic";
+				}
+				break;
+			case PROJECTILE_CRYLINK:
+				if(autocvar_cl_polytrails)
+				{
+					this.traileffect = EFFECT_Null.m_id;
+					PolyTrail t = NEW(PolyTrail, this);
+					t.polytrail_tex = "gfx/crosshair_ring.tga"; // TODO: dedicated texture
+					t.polytrail_rgb[0] = '0.7 0 1';
+					t.polytrail_rgb[1] = '0.5 0 1';
+					t.polytrail_rgb[2] = '0.1 0 0.8';
+					t.polytrail_alpha[0] = 0.75;
+					t.polytrail_alpha[1] = 0.2;
+					t.polytrail_alpha[2] = 0;
+					t.polytrail_thickness[0] = 5;
+					t.polytrail_thickness[1] = 3;
+					t.polytrail_thickness[2] = 3;
+					t.polytrail_lifetime = 0.15;
+					t.polytrail_segmentsize = 80;
+					t.polytrail_noise = 0;
+					t.polytrail_noisefunc = "none";
+				}
 				break;
 			/*
 			case PROJECTILE_WAKICANNON:
