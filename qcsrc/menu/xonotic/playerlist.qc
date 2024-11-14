@@ -108,7 +108,7 @@ void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	}
 
 	if(is_bot)
-		name = cons("^9(^8bot^9)^7 ", name);
+		name = cons("^9(bot)^7", name);
 
 	if (is_spectator)
 	{
