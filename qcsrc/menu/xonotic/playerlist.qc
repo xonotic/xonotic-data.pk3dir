@@ -107,12 +107,10 @@ void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 			is_spectator = true;
 	}
 
-	if (is_bot)
-	{
-		score = _("bot");
-		rgb = '0.5 0.5 0.5';
-	}
-	else if (is_spectator)
+	if(is_bot)
+		name = cons("^9(^8bot^9)^7 ", name);
+
+	if (is_spectator)
 	{
 		score = _("spectator");
 		rgb = '0.3 0.3 0.3';
