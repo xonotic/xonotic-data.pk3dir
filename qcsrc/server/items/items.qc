@@ -555,7 +555,6 @@ bool Item_GiveTo(entity item, entity player)
 	pickedup |= Item_GiveAmmoTo(item, player, RES_BULLETS, g_pickup_nails_max);
 	pickedup |= Item_GiveAmmoTo(item, player, RES_ROCKETS, g_pickup_rockets_max);
 	pickedup |= Item_GiveAmmoTo(item, player, RES_CELLS, g_pickup_cells_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_PLASMA, g_pickup_plasma_max);
 	pickedup |= Item_GiveAmmoTo(item, player, RES_FUEL, g_pickup_fuel_max);
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
@@ -1413,7 +1412,6 @@ spawnfunc(target_items)
 		res = GetResource(this, RES_BULLETS); if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "nails");
 		res = GetResource(this, RES_ROCKETS); if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "rockets");
 		res = GetResource(this, RES_CELLS);   if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "cells");
-		res = GetResource(this, RES_PLASMA);  if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "plasma");
 		res = GetResource(this, RES_FUEL);    if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "fuel");
 		res = GetResource(this, RES_HEALTH);  if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "health");
 		res = GetResource(this, RES_ARMOR);   if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "armor");
@@ -1605,7 +1603,6 @@ float GiveItems(entity e, float beginarg, float endarg)
 	//PREGIVE_STATUSEFFECT(e, STATUSEFFECT_Superweapons);
 	PREGIVE_RESOURCE(e, RES_BULLETS);
 	PREGIVE_RESOURCE(e, RES_CELLS);
-	PREGIVE_RESOURCE(e, RES_PLASMA);
 	PREGIVE_RESOURCE(e, RES_SHELLS);
 	PREGIVE_RESOURCE(e, RES_ROCKETS);
 	PREGIVE_RESOURCE(e, RES_FUEL);
@@ -1648,12 +1645,11 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveResourceValue(e, RES_HEALTH, op, val);
 				got += GiveResourceValue(e, RES_ARMOR, op, val);
 			case "allweapons":
-				FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)), got += GiveWeapon(e, it.m_id, op, val));
+				FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)), got += GiveWeapon(e, it.m_id, op, val));
 			//case "allbuffs": // all buffs makes a player god, do not want!
 				//FOREACH(StatusEffect, it.instanceOfBuff, got += GiveBuff(e, it, op, val));
 			case "allammo":
 				got += GiveResourceValue(e, RES_CELLS, op, val);
-				got += GiveResourceValue(e, RES_PLASMA, op, val);
 				got += GiveResourceValue(e, RES_SHELLS, op, val);
 				got += GiveResourceValue(e, RES_BULLETS, op, val);
 				got += GiveResourceValue(e, RES_ROCKETS, op, val);
@@ -1693,9 +1689,6 @@ float GiveItems(entity e, float beginarg, float endarg)
 				break;
 			case "cells":
 				got += GiveResourceValue(e, RES_CELLS, op, val);
-				break;
-			case "plasma":
-				got += GiveResourceValue(e, RES_PLASMA, op, val);
 				break;
 			case "shells":
 				got += GiveResourceValue(e, RES_SHELLS, op, val);
@@ -1748,7 +1741,6 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_STATUSEFFECT(e, STATUSEFFECT_Invisibility, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_RESOURCE(e, RES_BULLETS, 0, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_RESOURCE(e, RES_CELLS, 0, SND_ITEMPICKUP, SND_Null);
-	POSTGIVE_RESOURCE(e, RES_PLASMA, 0, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_RESOURCE(e, RES_SHELLS, 0, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_RESOURCE(e, RES_ROCKETS, 0, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_RES_ROT(e, RES_FUEL, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, SND_ITEMPICKUP, SND_Null);

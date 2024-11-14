@@ -4,7 +4,7 @@ CLASS(Arc, Weapon)
 /* spawnfunc */ ATTRIB(Arc, m_canonical_spawnfunc, string, "weapon_arc");
 /* ammotype  */ ATTRIB(Arc, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Arc, impulse, int, 3);
-/* flags     */ ATTRIB(Arc, spawnflags, int, WEP_TYPE_HITSCAN);
+/* flags     */ ATTRIB(Arc, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Arc, wpcolor, vector, '1 1 1');
 /* modelname */ ATTRIB(Arc, mdl, string, "arc");
@@ -102,7 +102,7 @@ const int ARC_BT_BURST_HEAL =  0x12;
 const int ARC_BT_BURST_HIT =   0x13;
 const int ARC_BT_BURSTMASK =   0x10;
 
-const int ARC_SF_SETTINGS =    BIT(0);
+const int ARC_SF_UPDATE =      BIT(0);
 const int ARC_SF_START =       BIT(1);
 const int ARC_SF_WANTDIR =     BIT(2);
 const int ARC_SF_BEAMDIR =     BIT(3);
@@ -113,14 +113,14 @@ const int ARC_SF_LOCALMASK =   ARC_SF_START | ARC_SF_WANTDIR | ARC_SF_BEAMDIR;
 .entity arc_beam;
 .bool arc_BUTTON_ATCK_prev; // for better animation control
 .float beam_prev;
-.float beam_initialized;
-.float beam_bursting;
+.bool beam_initialized;
+.bool beam_bursting;
 .float beam_teleporttime;
 .float beam_heat; // (beam) amount of heat produced
 .float arc_overheat; // (dropped arc/player) time during which it's too hot
 .float arc_cooldown; // (dropped arc/player) cooling speed
 .float arc_heat_percent;
-.float arc_smoke_sound;
+.bool arc_smoke_sound;
 #endif
 #ifdef CSQC
 
@@ -136,14 +136,8 @@ const int ARC_SF_LOCALMASK =   ARC_SF_START | ARC_SF_WANTDIR | ARC_SF_BEAMDIR;
 
 .entity beam_muzzleentity;
 
-.float beam_degreespersegment;
-.float beam_distancepersegment;
 .float beam_usevieworigin;
-.float beam_initialized;
-.float beam_maxangle;
-.float beam_range;
-.float beam_returnspeed;
-.float beam_tightness;
+.bool beam_initialized;
 .vector beam_shotorigin;
 
 entity Draw_ArcBeam_callback_entity;

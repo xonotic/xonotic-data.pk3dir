@@ -2,17 +2,17 @@
 
 #define CREDITS(TITLE, FUNCTION, PERSON, PERSON_, NL) \
 	TITLE(_("Core Team")) \
-		PERSON(Rudolf "divVerent" Polzer) \
 		PERSON(Ant "Antibody" Zucaro) \
 		PERSON(Antonio "terencehill" Piu) \
-		PERSON(Marvin "Mirio" Beck) \
 		PERSON(Merlijn Hofstra) \
+		PERSON(Rudolf "divVerent" Polzer) \
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
 		PERSON(Tyler "-z-" Mulligan) \
 	NL() \
 	TITLE(_("Extended Team")) \
 		PERSON(bones_was_here) \
 		PERSON(David "Cloudwalk" Knapp) \
+		PERSON(Dr. Jaska) \
 		PERSON(Freddy) \
 		PERSON(Halogene) \
 		PERSON(Jan "zykure" Behrens) \
@@ -39,19 +39,21 @@
 		PERSON(Jan "zykure" Behrens) \
 	NL() \
 	FUNCTION(_("Art")) \
-		PERSON(Severin "sev" Meyer) \
-		PERSON(Sahil "DiaboliK" Singhal) \
-		PERSON(Peter "Morphed" Pielak) \
-		PERSON(Sam "LJFHutch" Hutchinson) \
-		PERSON(Pearce "theShadow" Michal) \
 		PERSON(KingPimpCommander) \
+		PERSON(Pearce "theShadow" Michal) \
+		PERSON(Peter "Morphed" Pielak) \
+		PERSON(Sahil "DiaboliK" Singhal) \
+		PERSON(Sam "LJFHutch" Hutchinson) \
+		PERSON(Severin "sev" Meyer) \
 	NL() \
 	FUNCTION(_("Animation")) \
-		PERSON(Sahil "DiaboliK" Singhal) \
 		PERSON(nifrek) \
+		PERSON(Sahil "DiaboliK" Singhal) \
 	NL() \
 	FUNCTION(_("Campaign")) \
+		PERSON(Dr. Jaska) \
 		PERSON(Marvin "Mirio" Beck) \
+		PERSON(Yannick "SpiKe" Le Guen) \
 	NL() \
 	FUNCTION(_("Level Design")) \
 		PERSON(Amadeusz "amade/proraide" Sławiński) \
@@ -63,9 +65,9 @@
 		PERSON(Hugo "Calinou" Locurcio) \
 		PERSON(Jakob "tZork" Markström Gröhn) \
 		PERSON(Konrad "Justin" Slawinski) \
-		PERSON(Maddin) \
 		PERSON(L0) \
 		PERSON(Łukasz "kuniu the frogg" Polek) \
+		PERSON(Maddin) \
 		PERSON(Maik "SavageX" Merten) \
 		PERSON(Marvin "Mirio" Beck) \
 		PERSON(MintOX) \
@@ -97,11 +99,13 @@
 	FUNCTION(_("Game Code")) \
 		PERSON(Antonio "terencehill" Piu) \
 		PERSON(bones_was_here) \
+		PERSON(Des) \
 		PERSON(Dr. Jaska) \
 		PERSON(Jakob "tZork" Markström Gröhn) \
+		PERSON(Juhu) \
 		PERSON(martin-t) \
-		PERSON(Mattia "Melanosuchus" Basaglia) \
 		PERSON(Matthias "matthiaskrgr" Krüger) \
+		PERSON(Mattia "Melanosuchus" Basaglia) \
 		PERSON(Rasmus "FruitieX" Eskola) \
 		PERSON(Rudolf "divVerent" Polzer) \
 		PERSON(Samual "Ares" Lenks) \
@@ -111,14 +115,14 @@
 		PERSON(Zac "Mario" Jardine) \
 	NL() \
 	FUNCTION(_("Marketing / PR")) \
-		PERSON(Tyler "-z-" Mulligan) \
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
 		PERSON(Samual "Ares" Lenks) \
 		PERSON(Saulo "mand1nga" Gil) \
+		PERSON(Tyler "-z-" Mulligan) \
 	NL() \
 	FUNCTION(_("Legal")) \
-		PERSON(Rudolf "divVerent" Polzer) \
 		PERSON(Merlijn Hofstra) \
+		PERSON(Rudolf "divVerent" Polzer) \
 	NL() \
 	NL() \
 	TITLE(_("Game Engine")) \
@@ -126,6 +130,7 @@
 			PERSON(Ashley Rose "LadyHavoc" Hale) \
 		NL() \
 		FUNCTION(_("Engine Additions")) \
+			PERSON(bones_was_here) \
 			PERSON(David "Cloudwalk" Knapp) \
 			PERSON(Rudolf "divVerent" Polzer) \
 			PERSON(Samual "Ares" Lenks) \
@@ -133,15 +138,9 @@
 	NL() \
 	TITLE(_("Compiler")) \
 		FUNCTION("GMQCC") \
-			PERSON(Wolfgang "Blub\0" Bumiller) \
 			PERSON(Dale "graphitemaster" Weiler) \
+			PERSON(Wolfgang "Blub\0" Bumiller) \
 		NL() \
-	NL() \
-	TITLE(_("Other Active Contributors")) \
-		PERSON(Jeff) \
-		PERSON(Mircea "Taoki" Kitsune) \
-		PERSON(Penguinum) \
-		PERSON(slava) \
 	NL() \
 	NL() \
 	TITLE(_("Translators")) \
@@ -417,8 +416,8 @@
 	NL() \
 	TITLE(_("Past Contributors")) \
 		PERSON(Akari) \
-		PERSON(Alexander "naryl" Suhoverhov) \
 		PERSON(Alexander "motorsep" Zubov) \
+		PERSON(Alexander "naryl" Suhoverhov) \
 		PERSON(Amos "torus" Dudley) \
 		PERSON(Andreas "Black" Kirsch) \
 		PERSON(Attila "WW3" Houtkooper) \
@@ -449,6 +448,7 @@
 		PERSON(Gottfried "Toddd" Hofmann) \
 		PERSON(Henning "Tymo" Janssen) \
 		PERSON(Innovati) \
+		PERSON(Jeff) \
 		PERSON(JH0nny) \
 		PERSON(Jitspoe) \
 		PERSON(Jody Gallagher) \
@@ -467,26 +467,29 @@
 		PERSON(magorian) \
 		PERSON(Marius "GreEn`mArine" Shekow) \
 		PERSON(Marko "Urre" Permanto) \
+		PERSON(Marvin "Mirio" Beck) \
 		PERSON(Mathieu "Elric" Olivier) \
 		PERSON(Mattrew "Tronyn" Rye) \
 		PERSON(MauveBib) \
 		PERSON(Mephisto) \
+		PERSON(Mepper) \
 		PERSON(michaelb) \
 		PERSON(Michael "Tenshihan" Quinn) \
-		PERSON(Mepper) \
+		PERSON(Mircea "Taoki" Kitsune) \
 		PERSON(Munyul) \
 		PERSON(Netzwerg) \
 		PERSON(NoelCower) \
+		PERSON(Oleh "BlaXpirit" Prypin) \
 		PERSON(Parapraxis) \
 		PERSON(parasti) \
-		PERSON(Paul "Strahlemann" Evers) \
 		PERSON(Paul Scott) \
+		PERSON(Paul "Strahlemann" Evers) \
+		PERSON(Penguinum) \
 		PERSON(Petithomme) \
 		PERSON(PlasmaSheep) \
 		PERSON(Przemysław "atheros" Grzywacz) \
 		PERSON(Q1 Retexturing Project) \
 		PERSON(Qantourisc) \
-		PERSON(Oleh "BlaXpirit" Prypin) \
 		PERSON(Rick "Rat" Kelley) \
 		PERSON(Robert "ai" Kuroto) \
 		PERSON(Ronan) \
@@ -497,6 +500,7 @@
 		PERSON(Shank) \
 		PERSON(s1lence) \
 		PERSON(Simon O’Callaghan) \
+		PERSON(slava) \
 		PERSON(Soelen) \
 		PERSON(SomeGuy) \
 		PERSON(SoulKeeper_p) \

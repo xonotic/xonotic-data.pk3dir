@@ -48,11 +48,6 @@ float GetResourceLimit(entity e, Resource res_type)
 			limit = g_pickup_cells_max;
 			break;
 		}
-		case RES_PLASMA:
-		{
-			limit = g_pickup_plasma_max;
-			break;
-		}
 		case RES_FUEL:
 		{
 			limit = autocvar_g_balance_fuel_limit;
