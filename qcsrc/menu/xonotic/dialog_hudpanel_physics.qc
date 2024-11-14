@@ -14,7 +14,7 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_physics"));
 			e.addValue(e, _("Disable"), "0");
 			e.addValue(e, _("Enable"), "1");
-			e.addValue(e, _("Enable even if observing"), "2");
+			e.addValue(e, _("Enable even observing"), "2");
 			e.addValue(e, _("Enable only in Race/CTS"), "3");
 			e.configureXonoticTextSliderValues(e);
 
