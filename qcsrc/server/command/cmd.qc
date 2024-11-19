@@ -32,15 +32,77 @@
 #include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
+#include <server/race.qh>
 #include <server/scores.qh>
 #include <server/teamplay.qh>
 #include <server/world.qh>
 
-// =========================================================
-//  Server side networked commands code, reworked by Samual
-//  Last updated: December 28th, 2011
-// =========================================================
+string ignore_removefromlist(entity list, entity ignore)
+{
+	if(ignore.crypto_idfp && ignore.crypto_idfp != "" && list.crypto_idfp && list.crypto_idfp != "")
+	{
+		for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
+		{
+			string pos = db_get(ServerProgsDB, strcat("/ignore/", list.crypto_idfp, "/", ftos(j)));
+			if(pos == ignore.crypto_idfp)
+			{
+				db_remove(ServerProgsDB, strcat("/ignore/", list.crypto_idfp, "/", ftos(j)));
+				return string_null;
+			}
+		}
+		// should this fall back? we know advanced mode is being used
+	}
 
+	string newlist = "";
+	string theid = ftos(etof(ignore));
+
+	FOREACH_WORD(list.ignore_list, it != theid,
+	{
+		newlist = cons(newlist, it);
+	});
+
+	if(newlist == "")
+		return string_null;
+	else
+		return newlist;
+}
+
+bool ignore_playerinlist(entity sender, entity targ)
+{
+	// TODO: optimize this by saving it to .ignore_list?
+	if(targ.crypto_idfp && targ.crypto_idfp != "" && sender.crypto_idfp && sender.crypto_idfp != "")
+	{
+		string thelist = "";
+		for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
+		{
+			string pos = db_get(ServerProgsDB, strcat("/ignore/", targ.crypto_idfp, "/", ftos(j)));
+			thelist = cons(thelist, pos);
+		}
+
+		return ((thelist != "") ? PlayerInList(sender, thelist) : false);
+	}
+	else if(!targ.ignore_list || targ.ignore_list == "")
+		return false;
+
+	string theid = ftos(etof(sender));
+
+	FOREACH_WORD(targ.ignore_list, it == theid,
+	{
+		return true;
+	});
+
+	return false;
+}
+
+void ignore_clearall(entity this)
+{
+	for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
+	{
+		string pos = db_get(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
+		if(pos != "")
+			db_remove(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
+	}
+}
 
 // =======================
 //  Command Sub-Functions
@@ -95,6 +157,26 @@ void ClientCommand_clear_ignores(entity caller, int request)
 		{
 			sprint(caller, "\nUsage:^3 cmd clear_ignores\n");
 			sprint(caller, "  Removes all existing ignored clients whose are kept out of personal chat log.\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_clear_bestcptimes(entity caller, int request)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			race_ClearPlayerRecords(caller);
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd clear_bestcptimes\n");
+			sprint(caller, "  Clear all your checkpoint times for this game.\n");
 			return;
 		}
 	}
@@ -925,6 +1007,7 @@ void ClientCommand_(entity caller, int request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 CLIENT_COMMAND(autoswitch, "Whether or not to switch automatically when getting a better weapon") { ClientCommand_autoswitch(caller, request, arguments); }
+CLIENT_COMMAND(clear_bestcptimes, "Clear all your best checkpoint times for this Race/CTS match") { ClientCommand_clear_bestcptimes(caller, request); }
 CLIENT_COMMAND(clear_ignores, "Remove all existing ignores of players") { ClientCommand_clear_ignores(caller, request); }
 CLIENT_COMMAND(clientversion, "Release version of the game") { ClientCommand_clientversion(caller, request, arguments); }
 CLIENT_COMMAND(ignore, "Ignore a player in the game keeping them out of your personal chat log") { ClientCommand_ignore(caller, request, arguments, command); }
@@ -1046,26 +1129,23 @@ void SV_ParseClientCommand(entity this, string command)
 			// else fall through to default: flood control
 		default:
 			LABEL(flood_control)
-			if (!timeout_status)  // not while paused
-			{
-				if(MUTATOR_CALLHOOK(ClientCommand_FloodControl, this, strtolower(argv(0)), argc, command))
-					break; // a mutator has prevented flood control
+			if(MUTATOR_CALLHOOK(ClientCommand_FloodControl, this, strtolower(argv(0)), argc, command))
+				break; // a mutator has prevented flood control
 
-				// this is basically the same as the chat flood control
-				entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
-				// NOTE: using mod_time instead of time here to avoid initializing both this.cmd_floodtime
-				// and CS(this).cmd_floodtime to -(antispam_count * antispam_time) (or -999999)
-				float mod_time = time + autocvar_sv_clientcommand_antispam_count * autocvar_sv_clientcommand_antispam_time;
-				if (mod_time < store.cmd_floodtime)
-				{
-					sprint(this, strcat("^3CMD FLOOD CONTROL: wait ^1", ftos(store.cmd_floodtime - mod_time),
-						"^3 seconds, command was: ", command, "\n"));
-					return;  // too much spam, halt
-				}
-				else
-					// micro-optimization: replaced mod_time - max_delay with time here as they are equal
-					store.cmd_floodtime = max(time, store.cmd_floodtime) + autocvar_sv_clientcommand_antispam_time;
+			// this is basically the same as the chat flood control
+			entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
+			// NOTE: using mod_time instead of time here to avoid initializing both this.cmd_floodtime
+			// and CS(this).cmd_floodtime to -(antispam_count * antispam_time) (or -999999)
+			float mod_time = gettime(GETTIME_FRAMESTART) + autocvar_sv_clientcommand_antispam_count * autocvar_sv_clientcommand_antispam_time;
+			if (mod_time < store.cmd_floodtime)
+			{
+				sprint(this, strcat("^3CMD FLOOD CONTROL: wait ^1", ftos(store.cmd_floodtime - mod_time),
+					"^3 seconds, command was: ", command, "\n"));
+				return;  // too much spam, halt
 			}
+			else
+				// micro-optimization: replaced mod_time - max_delay with time here as they are equal
+				store.cmd_floodtime = max(gettime(GETTIME_FRAMESTART), store.cmd_floodtime) + autocvar_sv_clientcommand_antispam_time;
 			break;  // continue, as we're not flooding yet
 	}
 

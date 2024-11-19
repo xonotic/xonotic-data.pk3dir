@@ -66,7 +66,7 @@ float autocvar_sv_player_scale;
 .float jointime; // time of connecting
 .float startplaytime; // time of switching from spectator to player
 .float alivetime; // time of being alive
-
+.float death_time;
 .bool wasplayer;
 
 .int spectatee_status;
@@ -316,10 +316,6 @@ bool independent_players;
 
 .int killcount;
 
-//flood fields
-.float nickspamtime; // time of last nick change
-.float nickspamcount;
-
 void SendWelcomeMessage(entity this, int msg_type);
 
 // respawning
@@ -374,10 +370,15 @@ void FixClientCvars(entity e);
 .void(entity this, entity player) init_for_player;
 
 IntrusiveList g_initforplayer;
-STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
+IntrusiveList g_observepoints;
+STATIC_INIT(client_lists)
+{
+    g_initforplayer = IL_NEW();
+    g_observepoints = IL_NEW();
+}
 
 void play_countdown(entity this, float finished, Sound samp);
-void player_powerups_remove_all(entity this);
+void player_powerups_remove_all(entity this, bool allow_poweroff_sound);
 
 // NOTE: current type is Resource (avoiding circular includes!)
 void RotRegen(entity this, entity current, float limit_mod,

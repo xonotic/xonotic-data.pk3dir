@@ -310,7 +310,6 @@ void cvar_changes_init()
 		BADCVAR("g_tmayhem_teams");
 		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
-		BADCVAR("nextmap");
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
 		BADCVAR("g_mapinfo_q3compat");
@@ -920,8 +919,6 @@ spawnfunc(worldspawn)
 	if(autocvar_sv_eventlog)
 		GameLogInit(); // requires matchid to be set
 
-	cvar_set("nextmap", "");
-
 	SetDefaultAlpha();
 
 	if(autocvar_g_campaign)
@@ -1069,6 +1066,11 @@ spawnfunc(worldspawn)
 	if (autocvar_sv_autopause && server_is_dedicated && !wantrestart)
 		// INITPRIO_LAST is too soon: bots either didn't join yet or didn't leave yet, see: bot_fixcount()
 		defer(this, 5, Pause_TryPause_Dedicated);
+
+	// load entity data outputted by create_scrshot_ent
+	string filename = strcat("data/", mapname, "_scrshot_ent.txt");
+	if(!find(NULL, classname, "info_autoscreenshot") && fexists(filename))
+		loadfromfile(filename);
 
 	world_initialized = 1;
 	__spawnfunc_spawn_all();
@@ -1875,7 +1877,7 @@ WepSet weapons_all()
 {
 	WepSet ret = '0 0 0';
 	FOREACH(Weapons, it != WEP_Null, {
-		if (!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)))
+		if (!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)))
 			ret |= it.m_wepset;
 	});
 	return ret;
@@ -1951,7 +1953,6 @@ void readplayerstartcvars()
 	start_ammo_nails = 0;
 	start_ammo_rockets = 0;
 	start_ammo_cells = 0;
-	start_ammo_plasma = 0;
 	if (random_start_ammo == NULL)
 	{
 		random_start_ammo = new_pure(random_start_ammo);
@@ -2070,36 +2071,21 @@ void readplayerstartcvars()
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
 
-	if(start_items & IT_UNLIMITED_AMMO)
-	{
-		start_ammo_shells = 999;
-		start_ammo_nails = 999;
-		start_ammo_rockets = 999;
-		start_ammo_cells = 999;
-		start_ammo_plasma = 999;
-		start_ammo_fuel = 999;
-	}
-	else
-	{
-		start_ammo_shells = cvar("g_start_ammo_shells");
-		start_ammo_nails = cvar("g_start_ammo_nails");
-		start_ammo_rockets = cvar("g_start_ammo_rockets");
-		start_ammo_cells = cvar("g_start_ammo_cells");
-		start_ammo_plasma = cvar("g_start_ammo_plasma");
-		start_ammo_fuel = cvar("g_start_ammo_fuel");
-		random_start_weapons_count = cvar("g_random_start_weapons_count");
-		SetResource(random_start_ammo, RES_SHELLS, cvar("g_random_start_shells"));
-		SetResource(random_start_ammo, RES_BULLETS, cvar("g_random_start_bullets"));
-		SetResource(random_start_ammo, RES_ROCKETS, cvar("g_random_start_rockets"));
-		SetResource(random_start_ammo, RES_CELLS, cvar("g_random_start_cells"));
-		SetResource(random_start_ammo, RES_PLASMA, cvar("g_random_start_plasma"));
-	}
+	start_ammo_shells = cvar("g_start_ammo_shells");
+	start_ammo_nails = cvar("g_start_ammo_nails");
+	start_ammo_rockets = cvar("g_start_ammo_rockets");
+	start_ammo_cells = cvar("g_start_ammo_cells");
+	start_ammo_fuel = cvar("g_start_ammo_fuel");
+	random_start_weapons_count = cvar("g_random_start_weapons_count");
+	SetResource(random_start_ammo, RES_SHELLS, cvar("g_random_start_shells"));
+	SetResource(random_start_ammo, RES_BULLETS, cvar("g_random_start_bullets"));
+	SetResource(random_start_ammo, RES_ROCKETS, cvar("g_random_start_rockets"));
+	SetResource(random_start_ammo, RES_CELLS, cvar("g_random_start_cells"));
 
 	warmup_start_ammo_shells = start_ammo_shells;
 	warmup_start_ammo_nails = start_ammo_nails;
 	warmup_start_ammo_rockets = start_ammo_rockets;
 	warmup_start_ammo_cells = start_ammo_cells;
-	warmup_start_ammo_plasma = start_ammo_plasma;
 	warmup_start_ammo_fuel = start_ammo_fuel;
 	warmup_start_health = start_health;
 	warmup_start_armorvalue = start_armorvalue;
@@ -2113,7 +2099,6 @@ void readplayerstartcvars()
 		warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");
 		warmup_start_ammo_rockets = cvar("g_warmup_start_ammo_rockets");
 		warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
-		warmup_start_ammo_plasma = cvar("g_warmup_start_ammo_plasma");
 		warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
 		warmup_start_health = cvar("g_warmup_start_health");
 		warmup_start_armorvalue = cvar("g_warmup_start_armor");
@@ -2148,19 +2133,16 @@ void readplayerstartcvars()
 	start_ammo_nails = max(0, start_ammo_nails);
 	start_ammo_rockets = max(0, start_ammo_rockets);
 	start_ammo_cells = max(0, start_ammo_cells);
-	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
 	SetResource(random_start_ammo, RES_SHELLS, max(0, GetResource(random_start_ammo, RES_SHELLS)));
 	SetResource(random_start_ammo, RES_BULLETS, max(0, GetResource(random_start_ammo, RES_BULLETS)));
 	SetResource(random_start_ammo, RES_ROCKETS, max(0, GetResource(random_start_ammo, RES_ROCKETS)));
 	SetResource(random_start_ammo, RES_CELLS, max(0, GetResource(random_start_ammo, RES_CELLS)));
-	SetResource(random_start_ammo, RES_PLASMA, max(0, GetResource(random_start_ammo, RES_PLASMA)));
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
 	warmup_start_ammo_rockets = max(0, warmup_start_ammo_rockets);
 	warmup_start_ammo_cells = max(0, warmup_start_ammo_cells);
-	warmup_start_ammo_plasma = max(0, warmup_start_ammo_plasma);
 	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
 }
 
@@ -2225,8 +2207,6 @@ void readlevelcvars()
 	g_pickup_rockets_max = cvar("g_pickup_rockets_max");
 	g_pickup_cells = cvar("g_pickup_cells");
 	g_pickup_cells_max = cvar("g_pickup_cells_max");
-	g_pickup_plasma = cvar("g_pickup_plasma");
-	g_pickup_plasma_max = cvar("g_pickup_plasma_max");
 	g_pickup_fuel = cvar("g_pickup_fuel");
 	g_pickup_fuel_jetpack = cvar("g_pickup_fuel_jetpack");
 	g_pickup_fuel_max = cvar("g_pickup_fuel_max");
@@ -2391,6 +2371,13 @@ void DropToFloor_QC(entity this)
 		else if (nudgeresult > 0)
 			LOG_WARNF("DropToFloor_QC at \"%v\": FIXED badly placed entity \"%s\" before drop", this.origin, this.classname);
 	}
+	else if (!autocvar_sv_mapformat_is_quake3 && !autocvar_sv_mapformat_is_quake2) // Quake
+	{
+		if (this.flags & FL_ITEM)
+			this.origin.z += 6;
+		else
+			this.origin.z += 1; // monsters 1, misc_explobox 2 but we don't support those currently
+	}
 
 	vector end = this.origin;
 	if (autocvar_sv_mapformat_is_quake3)
@@ -2403,10 +2390,15 @@ void DropToFloor_QC(entity this)
 
 	if (!autocvar_sv_mapformat_is_quake3 && !autocvar_sv_mapformat_is_quake2 && (trace_allsolid || trace_fraction == 1)) // Quake
 	{
-		// Quake games just delete badly placed entities...
-		LOG_WARNF("DropToFloor_QC at \"%v\" (Quake compat): DELETING badly placed entity \"%s\"", this.origin, this.classname);
-		delete(this);
-		return;
+		// Quake games just delete badly placed items (and misc_explobox)...
+		if (this.flags & FL_ITEM)
+		{
+			LOG_WARNF("DropToFloor_QC at \"%v\" (Quake compat): DELETING badly placed item \"%s\"", this.origin, this.classname);
+			delete(this);
+			return;
+		}
+		// ...not monsters though...
+		LOG_WARNF("DropToFloor_QC at \"%v\" (Quake compat): badly placed entity \"%s\"", this.origin, this.classname);
 	}
 	else if ((Q3COMPAT_COMMON || autocvar_sv_mapformat_is_quake2) && trace_startsolid) // Q3, Q2
 	{
@@ -2563,6 +2555,14 @@ void EndFrame()
 		it.hitsound_damage_dealt = 0;
 		it.killsound = false;
 		antilag_record(it, CS(it), altime);
+		if(it.death_time == time && IS_PLAYER(it) && IS_DEAD(it))
+		{
+			// player's bbox gets resized now, instead of in the damage event that killed the player,
+			// once all the damage events of this frame have been processed with normal size
+			float h = ceil((it.mins.z + it.maxs.z) * PL_CORPSE_SCALE * 10) / 10;
+			it.maxs.z = max(h, it.mins.z + 1);
+			setsize(it, it.mins, it.maxs);
+		}
 	});
 	IL_EACH(g_monsters, true,
 	{

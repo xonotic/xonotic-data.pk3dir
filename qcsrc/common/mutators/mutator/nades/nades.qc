@@ -8,7 +8,7 @@ bool autocvar_g_nades_nade_small;
 float autocvar_g_nades_spread = 0.04;
 #endif
 
-REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
+REGISTER_STAT(NADES_SMALL, INT, autocvar_g_nades_nade_small)
 
 #ifdef GAMEQC
 
@@ -738,7 +738,6 @@ void nade_ammo_touch(entity this, entity toucher)
 	float ambullets = GetResource(toucher, RES_BULLETS);
 	float amrockets = GetResource(toucher, RES_ROCKETS);
 	float amcells = GetResource(toucher, RES_CELLS);
-	float amplasma = GetResource(toucher, RES_PLASMA);
 	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
 	if(!IS_DEAD(toucher))
 	if(!STAT(FROZEN, toucher))
@@ -761,7 +760,6 @@ void nade_ammo_touch(entity this, entity toucher)
 			CHECK_AMMO_RESOURCE_LIMIT(ambullets, RES_BULLETS);
 			CHECK_AMMO_RESOURCE_LIMIT(amrockets, RES_ROCKETS);
 			CHECK_AMMO_RESOURCE_LIMIT(amcells,   RES_CELLS);
-			CHECK_AMMO_RESOURCE_LIMIT(amplasma,  RES_PLASMA);
 
 			if (this.nade_show_particles)
 				Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
@@ -773,7 +771,6 @@ void nade_ammo_touch(entity this, entity toucher)
 			DROP_AMMO_RESOURCE(ambullets, RES_BULLETS);
 			DROP_AMMO_RESOURCE(amrockets, RES_ROCKETS);
 			DROP_AMMO_RESOURCE(amcells,   RES_CELLS);
-			DROP_AMMO_RESOURCE(amplasma,  RES_PLASMA);
 
 			return;
 		}
@@ -1052,11 +1049,6 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	else if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
 	{
 		force *= 1.5;
-		damage = 0;
-	}
-	else if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY))
-	{
-		force *= 0.5; // too much
 		damage = 0;
 	}
 	else if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) || DEATH_ISWEAPON(deathtype, WEP_OVERKILL_NEX))

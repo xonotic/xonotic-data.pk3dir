@@ -53,7 +53,7 @@ CLASS(Rifle, Weapon)
 	W_PROPS(X, Rifle, rifle)
 #undef X
 ENDCLASS(Rifle)
-REGISTER_WEAPON(RIFLE, rifle, NEW(Rifle));
+REGISTER_WEAPON(RIFLE, NEW(Rifle));
 
 SPAWNFUNC_WEAPON(weapon_rifle, WEP_RIFLE)
 SPAWNFUNC_WEAPON(weapon_campingrifle, WEP_RIFLE)

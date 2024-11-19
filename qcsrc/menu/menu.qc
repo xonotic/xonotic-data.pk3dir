@@ -79,17 +79,6 @@ void m_init()
 
 	CheckEngineExtensions();
 
-	// list all game dirs (TEST)
-	if (cvar("developer") > 0)
-	{
-		for (int i = 0; ; ++i)
-		{
-			string s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
-			if (!s) break;
-			LOG_TRACE(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
-		}
-	}
-
 	registercvar("_menu_cmd_closemenu_available", "0", 0);
 	cvar_set("_menu_cmd_closemenu_available", "1");
 

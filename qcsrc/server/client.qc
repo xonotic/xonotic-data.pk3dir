@@ -238,6 +238,16 @@ void setplayermodel(entity e, string modelname)
 		UpdatePlayerSounds(e);
 }
 
+entity SelectObservePoint(entity this)
+{
+	RandomSelection_Init();
+	IL_EACH(g_observepoints, true,
+	{
+		RandomSelection_AddEnt(it, 1, 1);
+	});
+	return RandomSelection_chosen_ent;
+}
+
 /** putting a client as observer in the server */
 void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 {
@@ -245,6 +255,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	bool recount_ready = false;
 	PlayerState_detach(this);
 
+	bool was_player = false;
 	if (IS_PLAYER(this))
 	{
 		if(GetResource(this, RES_HEALTH) >= 1)
@@ -261,15 +272,21 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 			if (warmup_stage || game_starttime > time) /* warmup OR countdown */ recount_ready = true;
 		}
 		entcs_update_players(this);
+		was_player = true;
 	}
 
 	if (use_spawnpoint)
 	{
-		entity spot = SelectSpawnPoint(this, true);
+		// first try to find a random "nice" location to view from
+		entity spot = SelectObservePoint(this);
+		bool is_observepoint = (spot != NULL);
+		if(!spot) // otherwise just use the player spawn points
+			spot = SelectSpawnPoint(this, true);
 		if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
+
 		this.angles = vec2(spot.angles);
 		// offset it so that the spectator spawns higher off the ground, looks better this way
-		setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
+		setorigin(this, spot.origin + (is_observepoint ? '0 0 0' : autocvar_sv_player_viewoffset));
 	}
 	else // change origin to restore previous view origin
 		setorigin(this, this.origin + STAT(PL_VIEW_OFS, this) - STAT(PL_CROUCH_VIEW_OFS, this));
@@ -363,7 +380,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	this.revival_time = 0;
 	this.draggable = drag_undraggable;
 
-	player_powerups_remove_all(this);
+	player_powerups_remove_all(this, was_player);
 	this.items = 0;
 	STAT(WEAPONS, this) = '0 0 0';
 	this.drawonlytoclient = this;
@@ -543,7 +560,6 @@ void GiveWarmupResources(entity this)
 	SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
 	SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
 	SetResource(this, RES_CELLS, warmup_start_ammo_cells);
-	SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
 	SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
 	SetResource(this, RES_HEALTH, warmup_start_health);
 	SetResource(this, RES_ARMOR, warmup_start_armorvalue);
@@ -607,7 +623,6 @@ void PutPlayerInServer(entity this)
 		SetResource(this, RES_BULLETS, start_ammo_nails);
 		SetResource(this, RES_ROCKETS, start_ammo_rockets);
 		SetResource(this, RES_CELLS, start_ammo_cells);
-		SetResource(this, RES_PLASMA, start_ammo_plasma);
 		SetResource(this, RES_FUEL, start_ammo_fuel);
 		SetResource(this, RES_HEALTH, start_health);
 		SetResource(this, RES_ARMOR, start_armorvalue);
@@ -1222,11 +1237,14 @@ void ClientConnect(entity this)
 			setpause(0);
 		localcmd("\nsv_hook_firstjoin\n");
 	}
+
+	if (get_nextmap() != "")
+		Send_NextMap_To_Player(this);
 }
 
 .string shootfromfixedorigin;
 .entity chatbubbleentity;
-void player_powerups_remove_all(entity this);
+void player_powerups_remove_all(entity this, bool allow_poweroff_sound);
 
 /*
 =============
@@ -1303,7 +1321,7 @@ void ClientDisconnect(entity this)
 	if (warmup_stage || game_starttime > time) /* warmup OR countdown */ ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
 
-	player_powerups_remove_all(this); // stop powerup sound
+	player_powerups_remove_all(this, IS_PLAYER(this)); // stop powerup sound
 
 	ONREMOVE(this);
 
@@ -1487,12 +1505,12 @@ void play_countdown(entity this, float finished, Sound samp)
 }
 
 // it removes special powerups not handled by StatusEffects
-void player_powerups_remove_all(entity this)
+void player_powerups_remove_all(entity this, bool allow_poweroff_sound)
 {
 	if (this.items & (IT_SUPERWEAPON | IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS))
 	{
 		// don't play the poweroff sound when the game restarts or the player disconnects
-		if (time > game_starttime + 1 && IS_CLIENT(this)
+		if (allow_poweroff_sound && time > game_starttime + 1 && IS_CLIENT(this)
 			&& !(start_items & (IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS)))
 		{
 			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
@@ -1513,7 +1531,7 @@ void player_powerups(entity this)
 	this.effects &= ~EF_NODEPTHTEST;
 
 	if (IS_DEAD(this))
-		player_powerups_remove_all(this);
+		player_powerups_remove_all(this, true);
 
 	if((this.alpha < 0 || IS_DEAD(this)) && !this.vehicle) // don't apply the flags if the player is gibbed
 		return;
@@ -1540,7 +1558,7 @@ void player_powerups(entity this)
 			else
 			{
 				play_countdown(this, StatusEffects_gettime(STATUSEFFECT_Superweapons, this), SND_POWEROFF);
-				if (time > StatusEffects_gettime(STATUSEFFECT_Superweapons, this))
+				if (time >= StatusEffects_gettime(STATUSEFFECT_Superweapons, this))
 				{
 					this.items = this.items - (this.items & IT_SUPERWEAPON);
 					STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;
@@ -1755,7 +1773,6 @@ void SpectateCopy(entity this, entity spectatee)
 	this.armortype = spectatee.armortype;
 	SetResourceExplicit(this, RES_ARMOR, GetResource(spectatee, RES_ARMOR));
 	SetResourceExplicit(this, RES_CELLS, GetResource(spectatee, RES_CELLS));
-	SetResourceExplicit(this, RES_PLASMA, GetResource(spectatee, RES_PLASMA));
 	SetResourceExplicit(this, RES_SHELLS, GetResource(spectatee, RES_SHELLS));
 	SetResourceExplicit(this, RES_BULLETS, GetResource(spectatee, RES_BULLETS));
 	SetResourceExplicit(this, RES_ROCKETS, GetResource(spectatee, RES_ROCKETS));
@@ -1904,7 +1921,7 @@ void SetSpectatee(entity this, entity spectatee)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(old_spectatee.(weaponentity).arc_beam)
-				old_spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
+				old_spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_UPDATE;
 		}
 	}
 	if(spectatee)
@@ -1913,7 +1930,7 @@ void SetSpectatee(entity this, entity spectatee)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(spectatee.(weaponentity).arc_beam)
-				spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
+				spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_UPDATE;
 		}
 	}
 
@@ -2285,7 +2302,9 @@ bool PlayerThink(entity this)
 	if (frametime && autocvar_sv_show_entnum) show_entnum(this);
 
 	if (IS_DEAD(this)) {
-		if (this.personal && g_race_qualifying) {
+		if (this.personal && g_race_qualifying
+		&& (autocvar_g_allow_checkpoints || CheatsAllowed(this, CHIMPULSE_SPEEDRUN.impulse, 0, 0, false, true)))
+		{
 			if (time > this.respawn_time) {
 				STAT(RESPAWN_TIME, this) = this.respawn_time = time + 1; // only retry once a second
 				respawn(this);
@@ -2382,7 +2401,7 @@ bool PlayerThink(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(WEP_CVAR(vortex, charge_always))
+			if(WEP_CVAR(WEP_VORTEX, charge_always))
 				W_Vortex_Charge(this, weaponentity, frametime);
 			W_WeaponFrame(this, weaponentity);
 		}
@@ -2395,8 +2414,8 @@ bool PlayerThink(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
-				this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+			if (WEP_CVAR(WEP_VORTEX, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(WEP_VORTEX, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
+				this.(weaponentity).vortex_charge = bound(WEP_CVAR(WEP_VORTEX, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(WEP_VORTEX, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
 		}
 
 		player_regen(this);
@@ -2706,14 +2725,6 @@ void PlayerPostThink (entity this)
 	Player_Physics(this);
 
 	if (IS_PLAYER(this)) {
-		if(this.death_time == time && IS_DEAD(this))
-		{
-			// player's bbox gets resized now, instead of in the damage event that killed the player,
-			// once all the damage events of this frame have been processed with normal size
-			float h = ceil((this.mins.z + this.maxs.z) * PL_CORPSE_SCALE * 10) / 10;
-			this.maxs.z = max(h, this.mins.z + 1);
-			setsize(this, this.mins, this.maxs);
-		}
 		DrownPlayer(this);
 		UpdateChatBubble(this);
 		if (CS(this).impulse) ImpulseCommands(this);

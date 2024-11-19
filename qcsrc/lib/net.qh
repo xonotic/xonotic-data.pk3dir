@@ -114,6 +114,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 #ifdef SVQC
 	const int MSG_ENTITY = 5;
 
+	// If SendFlags is set to non-0 it is networked
 	.int SendFlags;
 
 	IntrusiveList g_uncustomizables;

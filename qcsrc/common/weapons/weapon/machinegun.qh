@@ -40,28 +40,31 @@ CLASS(MachineGun, Weapon)
 		P(class, prefix, first_spread, float, NONE) \
 		P(class, prefix, mode, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, solidpenetration, float, NONE) \
 		P(class, prefix, spread_add, float, NONE) \
+		P(class, prefix, spread_decay, float, NONE) \
 		P(class, prefix, spread_max, float, NONE) \
 		P(class, prefix, spread_min, float, NONE) \
+		P(class, prefix, spread_cold_damagemultiplier, float, NONE) \
+		P(class, prefix, spread_heat_damagemultiplier, float, NONE) \
 		P(class, prefix, sustained_ammo, float, NONE) \
 		P(class, prefix, sustained_damage, float, NONE) \
 		P(class, prefix, sustained_force, float, NONE) \
 		P(class, prefix, sustained_refire, float, NONE) \
 		P(class, prefix, sustained_spread, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, MachineGun, machinegun)
+	W_PROPS(X, MachineGun, machinegun)
 #undef X
 
 ENDCLASS(MachineGun)
-REGISTER_WEAPON(MACHINEGUN, machinegun, NEW(MachineGun));
+REGISTER_WEAPON(MACHINEGUN, NEW(MachineGun));
 
 SPAWNFUNC_WEAPON(weapon_machinegun, WEP_MACHINEGUN)
 SPAWNFUNC_WEAPON(weapon_uzi, WEP_MACHINEGUN)

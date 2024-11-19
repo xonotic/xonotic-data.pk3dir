@@ -186,62 +186,26 @@ WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 	return result;
 }
 
-// TODO: registry handles for below functions
-string GetAmmoPicture(Resource ammotype)
-{
-	switch (ammotype)
-	{
-		case RES_SHELLS:  return ITEM_Shells.m_icon;
-		case RES_BULLETS: return ITEM_Bullets.m_icon;
-		case RES_ROCKETS: return ITEM_Rockets.m_icon;
-		case RES_CELLS:   return ITEM_Cells.m_icon;
-		case RES_PLASMA:  return ITEM_Plasma.m_icon;
-		case RES_FUEL:    return ITEM_JetpackFuel.m_icon;
-		default: return "";  // wtf, no ammo type?
-	}
-}
-
-string GetAmmoName(Resource ammotype)
-{
-	switch (ammotype)
-	{
-		case RES_SHELLS:  return ITEM_Shells.m_name;
-		case RES_BULLETS: return ITEM_Bullets.m_name;
-		case RES_ROCKETS: return ITEM_Rockets.m_name;
-		case RES_CELLS:   return ITEM_Cells.m_name;
-		case RES_PLASMA:  return ITEM_Plasma.m_name;
-		case RES_FUEL:    return ITEM_JetpackFuel.m_name;
-		default:          return "batteries";
-	}
-}
-
 entity GetAmmoItem(Resource ammotype)
 {
-	switch (ammotype)
+	FOREACH(Items, it.netname == ammotype.netname,
 	{
-		case RES_SHELLS:  return ITEM_Shells;
-		case RES_BULLETS: return ITEM_Bullets;
-		case RES_ROCKETS: return ITEM_Rockets;
-		case RES_CELLS:   return ITEM_Cells;
-		case RES_PLASMA:  return ITEM_Plasma;
-		case RES_FUEL:    return ITEM_JetpackFuel;
-	}
+		return it;
+	});
 	LOG_WARNF("Invalid ammo type %d ", ammotype.m_id);
 	return NULL;
-	// WEAPONTODO: use this generic func to reduce duplication ?
-	// GetAmmoPicture  GetAmmoName  notif_arg_item_wepammo  ammo_pickupevalfunc ?
 }
 
 #ifdef CSQC
 int GetAmmoStat(Resource ammotype)
 {
+	// TODO: handle networking via resources
 	switch (ammotype)
 	{
 		case RES_SHELLS: return STAT_SHELLS;
 		case RES_BULLETS: return STAT_NAILS;
 		case RES_ROCKETS: return STAT_ROCKETS;
 		case RES_CELLS: return STAT_CELLS;
-		case RES_PLASMA: return STAT_PLASMA.m_id;
 		case RES_FUEL: return STAT_FUEL.m_id;
 		default: return -1;
 	}
