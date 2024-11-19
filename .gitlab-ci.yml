@@ -36,7 +36,7 @@ test_compilation_units:
 test_sv_game:
   stage: test
   script:
-    - export EXPECT=e67187c8446f97a8b062a431dccb89e0
+    - export EXPECT=1b80629ffd60bdd46befff04559d1fb9
     - qcsrc/tools/sv_game-hashtest.sh
     - exit $?
 

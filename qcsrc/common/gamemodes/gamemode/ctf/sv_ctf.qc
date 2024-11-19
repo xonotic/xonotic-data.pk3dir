@@ -1360,6 +1360,8 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	flag.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 	flag.damagedbytriggers = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.damagedbycontents = false; // can be damaged by contents only when dropped
+	if(IL_CONTAINS(g_damagedbycontents, flag))
+		IL_REMOVE(g_damagedbycontents, flag);
 
 	flag.velocity = '0 0 0';
 	flag.mangle = flag.angles;

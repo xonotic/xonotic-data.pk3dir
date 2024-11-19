@@ -1469,15 +1469,7 @@ void respawn(entity this)
 {
 	bool damagedbycontents_prev = this.damagedbycontents;
 	if(this.alpha >= 0)
-	{
-		if(autocvar_g_respawn_ghosts
-		&& !(this.effects & EF_NODRAW)) // only spawn one ghost
-		{
-			TransmuteToGhost(this);
-		}
-		else
-			SUB_SetFade (this, time, 1); // fade out the corpse immediately
-	}
+		SUB_SetFade (this, time, 1); // fade out the corpse immediately
 
 	CopyBody(this, 1);
 	this.damagedbycontents = damagedbycontents_prev;
