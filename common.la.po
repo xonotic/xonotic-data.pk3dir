@@ -3135,7 +3135,7 @@ msgstr "^BG%s^K1 a Cursoris missili igneo perfugium non invenit%s%s"
 #: qcsrc/common/notifications/all.inc:361
 #, c-format
 msgid "^BG%s^K1 ended up in the wrong place%s%s"
-msgstr ""
+msgstr "^BG%s^K1 pererravit et perivit%s%s"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
