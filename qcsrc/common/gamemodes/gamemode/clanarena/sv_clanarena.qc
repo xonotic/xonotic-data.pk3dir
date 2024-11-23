@@ -104,7 +104,7 @@ int CA_PreventStalemate()
 			{
 				if (IS_DEAD(it))
 					continue;
-				teamHealth += GetResource(it, RES_HEALTH) + GetResource(it, RES_ARMOR);
+				teamHealth += floor(GetResource(it, RES_HEALTH)) + floor(GetResource(it, RES_ARMOR));
 			});
 
 			// Set the winner teams
