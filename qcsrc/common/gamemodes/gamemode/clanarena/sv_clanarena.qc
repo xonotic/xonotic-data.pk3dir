@@ -108,7 +108,7 @@ int CA_PreventStalemate()
 			});
 
 			// Round the resulting team health just in case
-			teamHealth = floor(teamHealth + 0.5);
+			teamHealth = rint(teamHealth);
 
 			// Set the winner teams
 			if(!winnerTeam || teamHealth > winnerTeamHealth)
