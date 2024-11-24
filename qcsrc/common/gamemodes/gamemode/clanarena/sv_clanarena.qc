@@ -107,6 +107,9 @@ int CA_PreventStalemate()
 				teamHealth += floor(GetResource(it, RES_HEALTH)) + floor(GetResource(it, RES_ARMOR));
 			});
 
+			// Round the resulting team health just in case
+			teamHealth = floor(teamHealth + 0.5);
+
 			// Set the winner teams
 			if(!winnerTeam || teamHealth > winnerTeamHealth)
 			{
