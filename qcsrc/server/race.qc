@@ -950,8 +950,8 @@ void trigger_race_checkpoint_verify(entity this)
 				}
 				for (entity cp = NULL; (cp = find(cp, classname, "target_checkpoint"));) {
 					if (argv(0) == cp.targetname) {
-						if(cp.race_checkpoint != -2 && cp.race_checkpoint != stof(argv(1))) { // cp had been previously set with diff order nr defragcp file is broken
-							broken_defragcp = true;
+						if(cp.race_checkpoint != -2 && cp.race_checkpoint != stof(argv(1))) {
+							broken_defragcp = true; // cp had been previously set with diff order nr defragcp file is broken
 							break;
 						}
 						cp.race_checkpoint = stof(argv(1));
