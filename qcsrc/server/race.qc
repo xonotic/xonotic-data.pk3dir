@@ -937,6 +937,7 @@ void trigger_race_checkpoint_verify(entity this)
 		// check if a defragcp file already exists, then read it and apply the checkpoint order
 		float fh;
 		float len;
+		bool broken_defragcp = false;
 		string l;
 
 		defragcpexists = fh = fopen(strcat("maps/", GetMapname(), ".defragcp"), FILE_READ);
@@ -944,16 +945,29 @@ void trigger_race_checkpoint_verify(entity this)
 			while ((l = fgets(fh))) {
 				len = tokenize_console(l);
 				if (len != 2) {
-					defragcpexists = -1; // something's wrong in the defrag cp file, set defragcpexists to -1 so that it will be rewritten when someone finishes
-					continue;
+					broken_defragcp = true;
+					break;
 				}
 				for (entity cp = NULL; (cp = find(cp, classname, "target_checkpoint"));) {
 					if (argv(0) == cp.targetname) {
+						if(cp.race_checkpoint != -2 && cp.race_checkpoint != stof(argv(1))) { // cp had been previously set with diff order nr defragcp file is broken
+							broken_defragcp = true;
+							break;
+						}
 						cp.race_checkpoint = stof(argv(1));
 					}
 				}
+				if(broken_defragcp) break; // no point to keep going we'll rebuild the whole order
 			}
 			fclose(fh);
+			if(broken_defragcp) {
+				// something's wrong in the defrag cp file, set defragcpexists to -1 so that it will be rewritten when someone finishes
+				// also clear any set cp order to make sure map is completable
+				defragcpexists = -1;
+				for (entity cp = NULL; (cp = find(cp, classname, "target_checkpoint"));) {
+					cp.race_checkpoint = -2;
+				}
+			}
 		}
 	}
 
