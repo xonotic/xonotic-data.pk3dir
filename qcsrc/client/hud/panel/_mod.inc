@@ -21,3 +21,5 @@
 #include <client/hud/panel/timer.qc>
 #include <client/hud/panel/vote.qc>
 #include <client/hud/panel/weapons.qc>
+
+#include <client/hud/panel/strafehud/_mod.inc>

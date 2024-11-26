@@ -1,64 +1,93 @@
 #pragma once
 #include "../panel.qh"
+#include "strafehud/util.qh"
+#include "strafehud/draw.qh"
+#include "strafehud/core.qh"
+#include "strafehud/extra.qh"
 
 AUTOCVAR_SAVE(hud_panel_strafehud, int, 3, "enable this panel, 1 = show if not observing, 2 = show always, 3 = show only in race/cts if not observing");
 AUTOCVAR_SAVE(_hud_panel_strafehud_demo, bool, false, "strafehud changes angle during configure");
 AUTOCVAR_SAVE(hud_panel_strafehud_dynamichud, bool, true, "apply the dynamic hud effects to this panel");
-AUTOCVAR_SAVE(hud_panel_strafehud_mode, int, 0, "strafehud mode which controls whether the strafehud is centered at \"0\" = view angle, \"1\" = velocity angle");
-AUTOCVAR_SAVE(hud_panel_strafehud_range, float, 90, "the angle range up to 360 degrees displayed on the strafehud, \"-1\" = current fov, \"0\" = dynamic (chooses the minimum range required to still see the whole area needed for accelerating)");
-AUTOCVAR_SAVE(hud_panel_strafehud_style, int, 2, "\"0\" = no styling, \"1\" = progress bar style for the strafe bar, \"2\" = gradient for the strafe bar");
+AUTOCVAR_SAVE(hud_panel_strafehud_mode, int, 0, "strafehud mode which controls whether the strafehud is centered at 0 = view angle, 1 = velocity angle");
+AUTOCVAR_SAVE(hud_panel_strafehud_range, float, 90, "the angle range up to 360 degrees displayed on the strafehud, -1 = current fov, 0 = dynamic (chooses the minimum range required to still see the whole area needed for accelerating)");
+AUTOCVAR_SAVE(hud_panel_strafehud_range_sidestrafe, float, -2, "the angle range up to 360 degrees displayed on the strafehud when side strafing, 0 = dynamic (chooses the minimum range required to still see the whole area needed for accelerating), -1 = current fov, -2 = same as the normal range");
+AUTOCVAR_SAVE(hud_panel_strafehud_style, int, 2, "0 = no styling, 1 = progress bar style for the strafe bar, 2 = gradient for the strafe bar, 3 = fast gradient for the strafe bar (requires linear projection mode)");
 AUTOCVAR_SAVE(hud_panel_strafehud_unit_show, bool, true, "show units");
-AUTOCVAR_SAVE(hud_panel_strafehud_uncapped, bool, false, "set to \"1\" to remove some safety restrictions, useful to set thinner indicator lines down to 1px or for trying out higher values for some performance degrading operations (warning: elements may turn invisible if too thin, other configurations may crash your game or look horribly ugly)");
-AUTOCVAR_SAVE(hud_panel_strafehud_bar_preaccel, bool, true, "set to \"1\" to extend the acceleration zone by the strafe meter zone before full acceleration can be achieved");
+AUTOCVAR_SAVE(hud_panel_strafehud_onground_mode, int, 2, "handling of landing at speeds where friction is higher than optimal acceleration, 0 = fill the whole hud with overturn, 1 = show zones regardless, 2 = show the zones as if airborne (useful for quake2 and quake3 physics)");
+AUTOCVAR_SAVE(hud_panel_strafehud_onground_friction, bool, true, "set to 1 to account for friction in calculations");
+AUTOCVAR_SAVE(hud_panel_strafehud_bar_preaccel, bool, true, "set to 1 to extend the acceleration zone by the strafe meter zone before full acceleration can be achieved");
+AUTOCVAR_SAVE(hud_panel_strafehud_bar_preaccel_color, vector, '0 1 0', "color of the strafe meter pre-acceleration zone");
+AUTOCVAR_SAVE(hud_panel_strafehud_bar_preaccel_alpha, float, 0.5, "opacity of the strafe meter pre-acceleration zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_neutral_color, vector, '1 1 1', "color of the strafe meter neutral zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_neutral_alpha, float, 0.1, "opacity of the strafe meter neutral zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_accel_color, vector, '0 1 0', "color of the strafe meter acceleration zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_accel_alpha, float, 0.5, "opacity of the strafe meter acceleration zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_overturn_color, vector, '1 0 1', "color of the strafe meter overturn zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_bar_overturn_alpha, float, 0.5, "opacity of the strafe meter overturn zone");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_style, int, 0, "set the angle indicator style: 0 = none, 1 = solid line, 2 = dashed line");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_dashes, int, 4, "determines the amount of dashes if the angle indicator uses a dashed line");
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_alpha, float, 0.8, "opacity of the indicator showing the player's current angle");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_height, float, 1, "height of the indicator showing the player's current angle (relative to the panel height)");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_width, float, 0.001, "width of the indicator showing the player's current angle (relative to the panel width)");
+AUTOCVAR_SAVE(hud_panel_strafehud_angle_preaccel_color, vector, '0 1 1', "color of the indicator showing the player's current angle if it is within the pre-acceleration zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_neutral_color, vector, '1 1 0', "color of the indicator showing the player's current angle if it is within the neutral zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_accel_color, vector, '0 1 1', "color of the indicator showing the player's current angle if it is within the acceleration zone");
 AUTOCVAR_SAVE(hud_panel_strafehud_angle_overturn_color, vector, '1 0 1', "color of the indicator showing the player's current angle if it is within the overturn zone");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_arrow, int, 1, "set the angle indicator's arrow style: 0 = none, 1 = top, 2 = bottom, 3 = both");
-AUTOCVAR_SAVE(hud_panel_strafehud_angle_arrow_size, float, 0.5, "size of the arrow (relative to the panel height)");
-AUTOCVAR_SAVE(hud_panel_strafehud_bestangle, bool, true, "set to \"1\" to enable a ghost angle indicator showing the best angle to gain maximum acceleration");
+AUTOCVAR_SAVE(hud_panel_strafehud_angle_line, int, 0, "defines the number of dashes of the indicator line showing the player's current angle (set to 0 to disable or 1 for a solid line)");
+AUTOCVAR_SAVE(hud_panel_strafehud_angle_line_width, float, 0.001, "width of the indicator line showing the player's current angle (relative to the panel width)");
+AUTOCVAR_SAVE(hud_panel_strafehud_angle_line_height, float, 1, "height of the indicator line showing the player's current angle (relative to the panel height)");
+AUTOCVAR_SAVE(hud_panel_strafehud_angle_arrow, int, 1, arrow style of the angle indicator showing the player's current angle (0 = none, 1 = top, 2 = bottom, 3 = both)");
+AUTOCVAR_SAVE(hud_panel_strafehud_angle_arrow_size, float, 0.5, "arrow size of the indicator showing the player's current angle (relative to the panel height)");
+AUTOCVAR_SAVE(hud_panel_strafehud_bestangle, int, 1, "set to 1 to enable a ghost angle indicator showing the best angle to gain maximum acceleration, 2 = only when side strafing");
 AUTOCVAR_SAVE(hud_panel_strafehud_bestangle_color, vector, '1 1 1', "color of the indicator showing the best angle to gain maximum acceleration");
 AUTOCVAR_SAVE(hud_panel_strafehud_bestangle_alpha, float, 0.5, "opacity of the indicator showing the best angle to gain maximum acceleration");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch, bool, true, "set to \"1\" to enable the switch indicator showing the angle to move to when switching sides");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_minspeed, float, -1, "minimum speed in qu/s at which switch indicator(s) which are used to aid changing strafe direction will be shown (set to -1 for dynamic minspeed)");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_color, vector, '1 1 0', "color of the switch indicator");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_alpha, float, 1, "opacity of the switch indicator");
-AUTOCVAR_SAVE(hud_panel_strafehud_switch_width, float, 0.003, "width of the strafe angle indicator(s) (relative to the strafe bar width)");
-AUTOCVAR_SAVE(hud_panel_strafehud_direction, bool, false, "set to \"1\" to enable the direction caps to see in which direction you are currently strafing");
+AUTOCVAR_SAVE(hud_panel_strafehud_bestangle_line, int, 0, "defines the number of dashes of the best angle indicator line (set to 0 to disable or 1 for a solid line)");
+AUTOCVAR_SAVE(hud_panel_strafehud_bestangle_line_width, float, 0.001, "width of the best angle indicator line (relative to the panel width)");
+AUTOCVAR_SAVE(hud_panel_strafehud_bestangle_line_height, float, 1, "height of the best angle indicator line (relative to the panel height)");
+AUTOCVAR_SAVE(hud_panel_strafehud_bestangle_arrow, int, 1, "arrow style of the best angle indicator (0 = none, 1 = top, 2 = bottom, 3 = both)");
+AUTOCVAR_SAVE(hud_panel_strafehud_bestangle_arrow_size, float, 0.5, "arrow size of the best angle indicator (relative to the panel height)");
+AUTOCVAR_SAVE(hud_panel_strafehud_switch, int, 1, "set to 1 to enable the strafe angle indicator showing the angle to move to when changing side, 2 = show the normal switch indicators when W-turning, 3 = also while side strafing");
+AUTOCVAR_SAVE(hud_panel_strafehud_switch_minspeed, float, -1, "minimum speed in qu/s at which angle indicator(s) which are used to aid changing strafe direction will be shown (set to -1 for dynamic minspeed)");
+AUTOCVAR_SAVE(hud_panel_strafehud_switch_color, vector, '1 1 0', "color of the strafe angle indicators for changing strafe direction");
+AUTOCVAR_SAVE(hud_panel_strafehud_switch_alpha, float, 0.5, "opacity of the strafe angle indicators for changing strafe direction");
+AUTOCVAR_SAVE(hud_panel_strafehud_switch_line, int, 0, "defines the number of dashes of the change angle indicator line (set to 0 to disable or 1 for a solid line)");
+AUTOCVAR_SAVE(hud_panel_strafehud_switch_line_width, float, 0.001, "width of the change angle indicator line (relative to the panel width)");
+AUTOCVAR_SAVE(hud_panel_strafehud_switch_line_height, float, 1, "height of the change angle indicator line (relative to the panel height)");
+AUTOCVAR_SAVE(hud_panel_strafehud_switch_arrow, int, 1, "arrow style of the change angle indicator (0 = none, 1 = top, 2 = bottom, 3 = both)");
+AUTOCVAR_SAVE(hud_panel_strafehud_switch_arrow_size, float, 0.5, "arrow size of the change angle indicator (relative to the panel height)");
+AUTOCVAR_SAVE(hud_panel_strafehud_wturn, int, 1, "enable the W-turn indicators showing the angle to rotate your velocity as fast as possible, 1 = only if W-turning, 2 = also while strafing normally, 3 = also while side strafing");
+AUTOCVAR_SAVE(hud_panel_strafehud_wturn_color, vector, '0 0 1', "color of the W-turn indicators");
+AUTOCVAR_SAVE(hud_panel_strafehud_wturn_alpha, float, 0.5, "opacity of the W-turn indicators");
+AUTOCVAR_SAVE(hud_panel_strafehud_wturn_proper, bool, false, "use the proper formula to calculate W-turn indicators (warning: loses accuracy at high speeds)");
+AUTOCVAR_SAVE(hud_panel_strafehud_wturn_unrestricted, bool, false, "set to 1 to enable the W-turn indicators even when W-turning gives acceleration (warning: not completely accurate)");
+AUTOCVAR_SAVE(hud_panel_strafehud_wturn_line, int, 0, "defines the number of dashes of the W-turn angle indicator line (set to 0 to disable or 1 for a solid line)");
+AUTOCVAR_SAVE(hud_panel_strafehud_wturn_line_width, float, 0.001, "width of the W-turn angle indicator line (relative to the panel width)");
+AUTOCVAR_SAVE(hud_panel_strafehud_wturn_line_height, float, 1, "height of the W-turn angle indicator line (relative to the panel height)");
+AUTOCVAR_SAVE(hud_panel_strafehud_wturn_arrow, int, 1, "arrow style of the W-turn angle indicator (0 = none, 1 = top, 2 = bottom, 3 = both)");
+AUTOCVAR_SAVE(hud_panel_strafehud_wturn_arrow_size, float, 0.5, "arrow size of the W-turn angle indicator (relative to the panel height)");
+AUTOCVAR_SAVE(hud_panel_strafehud_direction, bool, false, "set to 1 to enable the direction caps to see in which direction you are currently strafing");
 AUTOCVAR_SAVE(hud_panel_strafehud_direction_color, vector, '0 0.5 1', "color of the direction caps which indicate the direction the player is currently strafing towards");
 AUTOCVAR_SAVE(hud_panel_strafehud_direction_alpha, float, 1, "opacity of the direction caps which indicate the direction the player is currently strafing towards");
 AUTOCVAR_SAVE(hud_panel_strafehud_direction_width, float, 0.25, "stroke width of the direction caps which indicate the direction the player is currently strafing towards (relative to the panel height)");
 AUTOCVAR_SAVE(hud_panel_strafehud_direction_length, float, 0.02, "length of the horizontal component of the direction caps which indicate the direction the player is currently strafing towards (relative to the panel width)");
-AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector, bool, true, "set to \"1\" to enable the slick detector which notifies you if there is slick near you");
+AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector, bool, true, "set to 1 to enable the slick detector which notifies you if there is slick near you");
 AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_range, float, 200, "range of the slick detector in qu");
 AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_granularity, int, 1, "value from 0 to 4 which defines how exact the search for slick should be, higher values may yield better results but require more computation");
 AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_color, vector, '0 1 1', "color of the slick detector indicator");
 AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_alpha, float, 0.5, "opacity of the slick detector indicator");
 AUTOCVAR_SAVE(hud_panel_strafehud_slickdetector_height, float, 0.125, "height of the slick detector indicator (relative to the panel height)");
-AUTOCVAR_SAVE(hud_panel_strafehud_startspeed, bool, true, "set to \"1\" to enable the start speed indicator which shows you the speed you had while passing the start trigger of a race map");
+AUTOCVAR_SAVE(hud_panel_strafehud_startspeed, bool, true, "set to 1 to enable the start speed indicator which shows you the speed you had while passing the start trigger of a race map");
 AUTOCVAR_SAVE(hud_panel_strafehud_startspeed_fade, float, 4, "fade time (in seconds) of the start speed text");
 AUTOCVAR_SAVE(hud_panel_strafehud_startspeed_color, vector, '1 0.75 0', "color of the start speed text");
+AUTOCVAR_SAVE(hud_panel_strafehud_startspeed_pos, vector, '0 -1 0', "position of the start speed text (relative to the panel), the Y coordinate must be <= -1 (below) or >= 1 (above) the panel");
 AUTOCVAR_SAVE(hud_panel_strafehud_startspeed_size, float, 1.5, "size of the start speed text (relative to the panel height)");
-AUTOCVAR_SAVE(hud_panel_strafehud_jumpheight, bool, false, "set to \"1\" to enable the jump height indicator which tells you how high you jumped");
+AUTOCVAR_SAVE(hud_panel_strafehud_jumpheight, bool, false, "set to 1 to enable the jump height indicator which tells you how high you jumped");
 AUTOCVAR_SAVE(hud_panel_strafehud_jumpheight_fade, float, 4, "fade time (in seconds) of the jump height text");
 AUTOCVAR_SAVE(hud_panel_strafehud_jumpheight_min, float, 50, "minimum jump height to display in the selected unit");
 AUTOCVAR_SAVE(hud_panel_strafehud_jumpheight_color, vector, '0 1 0.75', "color of the jump height text");
+AUTOCVAR_SAVE(hud_panel_strafehud_jumpheight_pos, vector, '0 -2 0', "position of the jump height text (relative to the panel), the Y coordinate must be <= -1 (below) or >= 1 (above) the panel");
 AUTOCVAR_SAVE(hud_panel_strafehud_jumpheight_size, float, 1.5, "size of the jump height text (relative to the panel height)");
 AUTOCVAR_SAVE(hud_panel_strafehud_timeout_ground, float, 0.1, "time (in seconds) after take off before changing to air strafe physics when not jumping (visually more consistent hud while on slick downwards ramps)");
 AUTOCVAR_SAVE(hud_panel_strafehud_timeout_turn, float, 0.1, "time (in seconds) after releasing the strafe keys before changing mode (visually more consistent hud while switching between left/right strafe turning)");
 AUTOCVAR_SAVE(hud_panel_strafehud_antiflicker_angle, float, 0.01, "how many degrees from 0° to 180° the hud ignores if it could cause visual disturbances otherwise (and to counter rounding errors)");
 AUTOCVAR_SAVE(hud_panel_strafehud_fps_update, float, 0.5, "update interval (in seconds) of the frametime to calculate the optimal angle, smaller values may cause flickering");
-AUTOCVAR_SAVE(hud_panel_strafehud_sonar, bool, false, "set to \"1\" to enable the strafe sonar");
+AUTOCVAR_SAVE(hud_panel_strafehud_sonar, bool, false, "set to 1 to enable the strafe sonar");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_audio, string, "misc/talk", "audio to play for sonar");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_start, float, 0.5, "how optimal from 0 to 1 your strafing angle has to be for the strafe sonar to activate");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_interval_start, float, 0.333333, "strafe sonar sound interval in seconds");
@@ -70,29 +99,35 @@ AUTOCVAR_SAVE(hud_panel_strafehud_sonar_volume_exponent, float, 1, "exponent of 
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_start, float, 0.9, "playback speed of the strafe sonar");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_range, float, 0.1, "dynamic playback speed range of the strafe sonar as you approach the optimal angle");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_exponent, float, 1, "exponent of the dynamic playback speed range of the strafe sonar");
-AUTOCVAR_SAVE(hud_panel_strafehud_vangle, bool, false, "set to \"1\" to enable the vertical angle indicator");
+AUTOCVAR_SAVE(hud_panel_strafehud_vangle, bool, false, "set to 1 to enable the vertical angle indicator");
 AUTOCVAR_SAVE(hud_panel_strafehud_vangle_color, vector, '0.75 0.75 0.75', "color of the vertical angle text");
+AUTOCVAR_SAVE(hud_panel_strafehud_vangle_pos, vector, '-0.25 1 0', "position of the vertical angle text (relative to the panel), the Y coordinate must be <= -1 (below) or >= 1 (above) the panel");
 AUTOCVAR_SAVE(hud_panel_strafehud_vangle_size, float, 1, "size of the vertical angle text (relative to the panel height)");
-AUTOCVAR_SAVE(hud_panel_strafehud_projection, int, 0, "strafehud projection mode, \"0\" = linear, \"1\" = perspective, \"2\" = panoramic");
-AUTOCVAR_SAVE(hud_panel_strafehud_strafeefficiency, bool, false, "set to \"1\" to enable the strafe efficiency indicator");
+AUTOCVAR_SAVE(hud_panel_strafehud_strafeefficiency, bool, false, "set to 1 to enable the strafe efficiency indicator");
+AUTOCVAR_SAVE(hud_panel_strafehud_strafeefficiency_pos, vector, '0.25 1 0', "size of the strafe efficiency text (relative to the panel), the Y coordinate must be <= -1 (below) or >= 1 (above) the panel");
 AUTOCVAR_SAVE(hud_panel_strafehud_strafeefficiency_size, float, 1, "size of the strafe efficiency text (relative to the panel height)");
-
-void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int, bool, float);
-vector StrafeHUD_mixColors(vector, vector, float);
-void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, float, int, bool, float);
-float GetLengthUnitFactor(int);
-string GetLengthUnit(int);
-void StrafeHUD_drawStrafeArrow(vector, float, vector, float, bool, float);
-bool StrafeHUD_drawTextIndicator(string, float, vector, float, float, float, int);
-float StrafeHUD_projectOffset(float, float, bool);
-float StrafeHUD_projectWidth(float, float, float);
+AUTOCVAR_SAVE(hud_panel_strafehud_projection, int, 0, "strafehud projection mode, 0 = linear, 1 = perspective, 2 = panoramic");
 
 const int STRAFEHUD_MODE_VIEW_CENTERED = 0;
 const int STRAFEHUD_MODE_VELOCITY_CENTERED = 1;
 
+const int STRAFEHUD_ONGROUND_OVERTURN = 0;
+const int STRAFEHUD_ONGROUND_GROUND = 1;
+const int STRAFEHUD_ONGROUND_AIR = 2;
+
 const int STRAFEHUD_DIRECTION_NONE = 0;
 const int STRAFEHUD_DIRECTION_LEFT = 1;
 const int STRAFEHUD_DIRECTION_RIGHT = 2;
+
+const int STRAFEHUD_SWITCH_NONE = 0;
+const int STRAFEHUD_SWITCH_ACTUAL = 1;
+const int STRAFEHUD_SWITCH_NORMAL = 2;
+const int STRAFEHUD_SWITCH_SIDESTRAFE = 3;
+
+const int STRAFEHUD_WTURN_NONE = 0;
+const int STRAFEHUD_WTURN_ONLY = 1;
+const int STRAFEHUD_WTURN_NORMAL = 2;
+const int STRAFEHUD_WTURN_SIDESTRAFE = 3;
 
 const int STRAFEHUD_KEYS_NONE = 0;
 const int STRAFEHUD_KEYS_FORWARD = 1;
@@ -101,19 +136,17 @@ const int STRAFEHUD_KEYS_BACKWARD = 2;
 const int STRAFEHUD_STYLE_DRAWFILL = 0;
 const int STRAFEHUD_STYLE_PROGRESSBAR = 1;
 const int STRAFEHUD_STYLE_GRADIENT = 2;
+const int STRAFEHUD_STYLE_FAST_GRADIENT = 3;
 
 const int STRAFEHUD_GRADIENT_NONE = 0;
 const int STRAFEHUD_GRADIENT_LEFT = 1;
 const int STRAFEHUD_GRADIENT_RIGHT = 2;
 const int STRAFEHUD_GRADIENT_BOTH = 3;
 
-const int STRAFEHUD_INDICATOR_NONE = 0;
-const int STRAFEHUD_INDICATOR_SOLID = 1;
-const int STRAFEHUD_INDICATOR_DASHED = 2;
-
-const int STRAFEHUD_TEXT_TOP = 0;
-const int STRAFEHUD_TEXT_BOTTOM = 1;
-
 const int STRAFEHUD_PROJECTION_LINEAR = 0;
 const int STRAFEHUD_PROJECTION_PERSPECTIVE = 1;
 const int STRAFEHUD_PROJECTION_PANORAMIC = 2;
+
+const float ACOS_SQRT2_3_DEG = 35.2643896827546543153;  /* acos(sqrt(2/3)) * RAD2DEG */
+
+float GeomLerp(float a, float _lerp, float b); // declare GeomLerp here since there's no header file for it
