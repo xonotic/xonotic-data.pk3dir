@@ -152,7 +152,6 @@ void target_init_use(entity this, entity actor, entity trigger)
 			SetResource(actor, RES_BULLETS, 0);
 			SetResource(actor, RES_ROCKETS, 0);
 			SetResource(actor, RES_CELLS, 0);
-			SetResource(actor, RES_PLASMA, 0);
 			SetResource(actor, RES_FUEL, 0);
 
 			STAT(WEAPONS, actor) = WEPSET(SHOTGUN);
@@ -163,7 +162,6 @@ void target_init_use(entity this, entity actor, entity trigger)
 			SetResource(actor, RES_BULLETS, start_ammo_nails);
 			SetResource(actor, RES_ROCKETS, start_ammo_rockets);
 			SetResource(actor, RES_CELLS, start_ammo_cells);
-			SetResource(actor, RES_PLASMA, start_ammo_plasma);
 			SetResource(actor, RES_FUEL, start_ammo_fuel);
 
 			STAT(WEAPONS, actor) = start_weapons;
