@@ -241,11 +241,6 @@ MODEL(SEEKER_VIEW,                      W_Model("h_seeker.iqm"));
 MODEL(SEEKER_WORLD,                     W_Model("v_seeker.md3"));
 MODEL(SEEKER_ITEM,                      W_Model("g_seeker.md3"));
 
-MODEL(SHOCKWAVE_MUZZLEFLASH,            "models/uziflash.md3");
-MODEL(SHOCKWAVE_VIEW,                   W_Model("h_shotgun.iqm"));
-MODEL(SHOCKWAVE_WORLD,                  W_Model("v_shotgun.md3"));
-MODEL(SHOCKWAVE_ITEM,                   W_Model("g_shotgun.md3"));
-
 MODEL(ARC_MUZZLEFLASH,                  "models/flash.md3");
 MODEL(ARC_VIEW,                         W_Model("h_arc.iqm"));
 MODEL(ARC_WORLD,                        W_Model("v_arc.md3"));
