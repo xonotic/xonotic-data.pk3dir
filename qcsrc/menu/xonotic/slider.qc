@@ -36,6 +36,9 @@ void XonoticSlider_setValue(entity me, float val)
 	{
 		SUPER(XonoticSlider).setValue( me, val );
 		me.saveCvars(me);
+
+		if(me.onChange)
+			me.onChange(me, me.onChangeEntity);
 	}
 }
 void XonoticSlider_setValue_noAnim(entity me, float val)
@@ -44,6 +47,9 @@ void XonoticSlider_setValue_noAnim(entity me, float val)
 	{
 		SUPER(XonoticSlider).setValue_noAnim(me, val);
 		me.saveCvars(me);
+
+		if(me.onChange)
+			me.onChange(me, me.onChangeEntity);
 	}
 }
 void XonoticSlider_loadCvars(entity me)

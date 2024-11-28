@@ -384,85 +384,89 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 entity findnearest(vector point, bool checkitems, vector axismod)
 {
-    vector dist;
-    int num_nearest = 0;
+	vector dist;
+	int num_nearest = 0;
 
-    IL_EACH(((checkitems) ? g_items : g_locations), ((checkitems) ? (it.target == "###item###") : (it.classname == "target_location")),
-    {
-        if ((it.items == IT_KEY1 || it.items == IT_KEY2) && it.target == "###item###")
-            dist = it.oldorigin;
-        else
-            dist = it.origin;
-        dist = dist - point;
-        dist = dist.x * axismod.x * '1 0 0' + dist.y * axismod.y * '0 1 0' + dist.z * axismod.z * '0 0 1';
-        float len = vlen2(dist);
+	IntrusiveList list = ((checkitems) ? g_items : g_locations);
+	IL_EACH(list, (checkitems ? (it.target == "###item###") : (it.classname == "target_location")),
+	{
+		if ((it.items == IT_KEY1 || it.items == IT_KEY2) && it.target == "###item###")
+			dist = it.oldorigin;
+		else
+			dist = it.origin;
+		dist = dist - point;
+		dist = vec3(dist.x * axismod.x, dist.y * axismod.y, dist.z * axismod.z);
+		float len = vlen2(dist);
 
-        int l;
-        for (l = 0; l < num_nearest; ++l)
-        {
-            if (len < nearest_length[l])
-                break;
-        }
+		int l;
+		for (l = 0; l < num_nearest; ++l)
+		{
+			if (len < nearest_length[l])
+				break;
+		}
 
-        // now i tells us where to insert at
-        //   INSERTION SORT! YOU'VE SEEN IT! RUN!
-        if (l < NUM_NEAREST_ENTITIES)
-        {
-            for (int j = NUM_NEAREST_ENTITIES - 1; j >= l; --j)
-            {
-                nearest_length[j + 1] = nearest_length[j];
-                nearest_entity[j + 1] = nearest_entity[j];
-            }
-            nearest_length[l] = len;
-            nearest_entity[l] = it;
-            if (num_nearest < NUM_NEAREST_ENTITIES)
-                num_nearest = num_nearest + 1;
-        }
-    });
+		// now i tells us where to insert at
+		//	 INSERTION SORT! YOU'VE SEEN IT! RUN!
+		if (l < NUM_NEAREST_ENTITIES)
+		{
+			for (int j = NUM_NEAREST_ENTITIES - 2; j >= l; --j)
+			{
+				nearest_length[j + 1] = nearest_length[j];
+				nearest_entity[j + 1] = nearest_entity[j];
+			}
+			nearest_length[l] = len;
+			nearest_entity[l] = it;
+			if (num_nearest < NUM_NEAREST_ENTITIES)
+				num_nearest = num_nearest + 1;
+		}
+	});
 
-    // now use the first one from our list that we can see
-    for (int j = 0; j < num_nearest; ++j)
-    {
-        traceline(point, nearest_entity[j].origin, true, NULL);
-        if (trace_fraction == 1)
-        {
-            if (j != 0)
-                LOG_TRACEF("Nearest point (%s) is not visible, using a visible one.", nearest_entity[0].netname);
-            return nearest_entity[j];
-        }
-    }
+	// now use the first one from our list that we can see
+	for (int j = 0; j < num_nearest; ++j)
+	{
+		traceline(point, nearest_entity[j].origin, true, NULL);
+		if (trace_fraction == 1)
+		{
+			if (j != 0)
+			{
+				LOG_TRACEF("Nearest point (%s) is not visible, using a visible one.",
+					nearest_entity[0].netname);
+			}
+			return nearest_entity[j];
+		}
+	}
 
-    if (num_nearest == 0)
-        return NULL;
+	if (num_nearest == 0)
+		return NULL;
 
-    LOG_TRACE("Not seeing any location point, using nearest as fallback.");
-    /* DEBUGGING CODE:
-    dprint("Candidates were: ");
-    for(j = 0; j < num_nearest; ++j)
-    {
-    	if(j != 0)
-    		dprint(", ");
-    	dprint(nearest_entity[j].netname);
-    }
-    dprint("\n");
-    */
+	LOG_TRACE("Not seeing any location point, using nearest as fallback.");
+	/* DEBUGGING CODE:
+	dprint("Candidates were: ");
+	for(j = 0; j < num_nearest; ++j)
+	{
+		if(j != 0)
+			dprint(", ");
+		dprint(nearest_entity[j].netname);
+	}
+	dprint("\n");
+	*/
 
-    return nearest_entity[0];
+	return nearest_entity[0];
 }
 
 string NearestLocation(vector p)
 {
-    string ret = "somewhere";
-    entity loc = findnearest(p, false, '1 1 1');
-    if (loc)
-        ret = loc.message;
-    else
-    {
-        loc = findnearest(p, true, '1 1 4');
-        if (loc)
-            ret = loc.netname;
-    }
-    return ret;
+	string ret = "somewhere";
+	entity loc = findnearest(p, false, '1 1 1');
+	if (loc)
+		ret = loc.message;
+	else
+	{
+		loc = findnearest(p, true, '1 1 4');
+		if (loc)
+			ret = loc.netname;
+	}
+	return ret;
 }
 
 string PlayerHealth(entity this)

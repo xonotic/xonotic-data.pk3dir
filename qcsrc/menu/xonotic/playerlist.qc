@@ -88,7 +88,9 @@ void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 
 	string name = me.getPlayerList(me, i, PLAYERPARM_NAME);
 	string score = me.getPlayerList(me, i, PLAYERPARM_SCORE);
+	string ping = me.getPlayerList(me, i, PLAYERPARM_PING);
 
+	bool is_bot = (ping == "0");
 	bool is_spectator = false;
 	if(substring(score, strlen(score) - 10, 10) == ":spectator")
 	{
@@ -104,6 +106,9 @@ void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		if(stof(score) == FRAGS_SPECTATOR)
 			is_spectator = true;
 	}
+
+	if(is_bot)
+		name = cons("^9(bot)^7", name);
 
 	if (is_spectator)
 	{
