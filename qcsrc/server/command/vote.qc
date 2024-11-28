@@ -375,7 +375,7 @@ void reset_map(bool is_fake_round_start)
 			continue;
 		if (STAT(FROZEN, it))
 			Unfreeze(it, false);
-		player_powerups_remove_all(it);
+		player_powerups_remove_all(it, true);
 		entity store = PS(it);
 		if (store)
 		{

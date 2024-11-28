@@ -309,6 +309,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		attacker = this.pusher;
 		this.pushltime = max(this.pushltime, time + 0.6);
 	}
+	else if(IS_MONSTER(attacker) && IS_PLAYER(attacker.realowner))
+	{
+		attacker = attacker.realowner;
+		this.istypefrag = 0;
+	}
 	else
 	{
 		this.pushltime = 0;

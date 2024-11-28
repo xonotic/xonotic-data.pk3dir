@@ -1067,6 +1067,11 @@ spawnfunc(worldspawn)
 		// INITPRIO_LAST is too soon: bots either didn't join yet or didn't leave yet, see: bot_fixcount()
 		defer(this, 5, Pause_TryPause_Dedicated);
 
+	// load entity data outputted by create_scrshot_ent
+	string filename = strcat("data/", mapname, "_scrshot_ent.txt");
+	if(!find(NULL, classname, "info_autoscreenshot") && fexists(filename))
+		loadfromfile(filename);
+
 	world_initialized = 1;
 	__spawnfunc_spawn_all();
 }
@@ -1872,7 +1877,7 @@ WepSet weapons_all()
 {
 	WepSet ret = '0 0 0';
 	FOREACH(Weapons, it != WEP_Null, {
-		if (!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)))
+		if (!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)))
 			ret |= it.m_wepset;
 	});
 	return ret;
@@ -1948,7 +1953,6 @@ void readplayerstartcvars()
 	start_ammo_nails = 0;
 	start_ammo_rockets = 0;
 	start_ammo_cells = 0;
-	start_ammo_plasma = 0;
 	if (random_start_ammo == NULL)
 	{
 		random_start_ammo = new_pure(random_start_ammo);
@@ -2071,20 +2075,17 @@ void readplayerstartcvars()
 	start_ammo_nails = cvar("g_start_ammo_nails");
 	start_ammo_rockets = cvar("g_start_ammo_rockets");
 	start_ammo_cells = cvar("g_start_ammo_cells");
-	start_ammo_plasma = cvar("g_start_ammo_plasma");
 	start_ammo_fuel = cvar("g_start_ammo_fuel");
 	random_start_weapons_count = cvar("g_random_start_weapons_count");
 	SetResource(random_start_ammo, RES_SHELLS, cvar("g_random_start_shells"));
 	SetResource(random_start_ammo, RES_BULLETS, cvar("g_random_start_bullets"));
 	SetResource(random_start_ammo, RES_ROCKETS, cvar("g_random_start_rockets"));
 	SetResource(random_start_ammo, RES_CELLS, cvar("g_random_start_cells"));
-	SetResource(random_start_ammo, RES_PLASMA, cvar("g_random_start_plasma"));
 
 	warmup_start_ammo_shells = start_ammo_shells;
 	warmup_start_ammo_nails = start_ammo_nails;
 	warmup_start_ammo_rockets = start_ammo_rockets;
 	warmup_start_ammo_cells = start_ammo_cells;
-	warmup_start_ammo_plasma = start_ammo_plasma;
 	warmup_start_ammo_fuel = start_ammo_fuel;
 	warmup_start_health = start_health;
 	warmup_start_armorvalue = start_armorvalue;
@@ -2098,7 +2099,6 @@ void readplayerstartcvars()
 		warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");
 		warmup_start_ammo_rockets = cvar("g_warmup_start_ammo_rockets");
 		warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
-		warmup_start_ammo_plasma = cvar("g_warmup_start_ammo_plasma");
 		warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
 		warmup_start_health = cvar("g_warmup_start_health");
 		warmup_start_armorvalue = cvar("g_warmup_start_armor");
@@ -2133,19 +2133,16 @@ void readplayerstartcvars()
 	start_ammo_nails = max(0, start_ammo_nails);
 	start_ammo_rockets = max(0, start_ammo_rockets);
 	start_ammo_cells = max(0, start_ammo_cells);
-	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
 	SetResource(random_start_ammo, RES_SHELLS, max(0, GetResource(random_start_ammo, RES_SHELLS)));
 	SetResource(random_start_ammo, RES_BULLETS, max(0, GetResource(random_start_ammo, RES_BULLETS)));
 	SetResource(random_start_ammo, RES_ROCKETS, max(0, GetResource(random_start_ammo, RES_ROCKETS)));
 	SetResource(random_start_ammo, RES_CELLS, max(0, GetResource(random_start_ammo, RES_CELLS)));
-	SetResource(random_start_ammo, RES_PLASMA, max(0, GetResource(random_start_ammo, RES_PLASMA)));
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
 	warmup_start_ammo_rockets = max(0, warmup_start_ammo_rockets);
 	warmup_start_ammo_cells = max(0, warmup_start_ammo_cells);
-	warmup_start_ammo_plasma = max(0, warmup_start_ammo_plasma);
 	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
 }
 
@@ -2210,8 +2207,6 @@ void readlevelcvars()
 	g_pickup_rockets_max = cvar("g_pickup_rockets_max");
 	g_pickup_cells = cvar("g_pickup_cells");
 	g_pickup_cells_max = cvar("g_pickup_cells_max");
-	g_pickup_plasma = cvar("g_pickup_plasma");
-	g_pickup_plasma_max = cvar("g_pickup_plasma_max");
 	g_pickup_fuel = cvar("g_pickup_fuel");
 	g_pickup_fuel_jetpack = cvar("g_pickup_fuel_jetpack");
 	g_pickup_fuel_max = cvar("g_pickup_fuel_max");
@@ -2560,6 +2555,14 @@ void EndFrame()
 		it.hitsound_damage_dealt = 0;
 		it.killsound = false;
 		antilag_record(it, CS(it), altime);
+		if(it.death_time == time && IS_PLAYER(it) && IS_DEAD(it))
+		{
+			// player's bbox gets resized now, instead of in the damage event that killed the player,
+			// once all the damage events of this frame have been processed with normal size
+			float h = ceil((it.mins.z + it.maxs.z) * PL_CORPSE_SCALE * 10) / 10;
+			it.maxs.z = max(h, it.mins.z + 1);
+			setsize(it, it.mins, it.maxs);
+		}
 	});
 	IL_EACH(g_monsters, true,
 	{

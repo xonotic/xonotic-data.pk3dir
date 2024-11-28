@@ -222,7 +222,9 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 
 void ClientKill_Silent(entity this, float _delay)
 {
-	this.killindicator = new(killindicator);
+	// overrides queued silent killindicators
+	if (!this.killindicator || this.killindicator.count != 1)
+		this.killindicator = new(killindicator);
 	this.killindicator.owner = this;
 	setthink(this.killindicator, KillIndicator_Think);
 	this.killindicator.nextthink = time + (this.lip) * 0.05;
