@@ -9,7 +9,6 @@ float autocvar_g_ca_start_ammo_shells = 60;
 float autocvar_g_ca_start_ammo_nails = 320;
 float autocvar_g_ca_start_ammo_rockets = 160;
 float autocvar_g_ca_start_ammo_cells = 180;
-float autocvar_g_ca_start_ammo_plasma = 180;
 float autocvar_g_ca_start_ammo_fuel = 0;
 
 .float ca_damage_counter;
@@ -105,8 +104,11 @@ int CA_PreventStalemate()
 			{
 				if (IS_DEAD(it))
 					continue;
-				teamHealth += GetResource(it, RES_HEALTH) + GetResource(it, RES_ARMOR);
+				teamHealth += floor(GetResource(it, RES_HEALTH)) + floor(GetResource(it, RES_ARMOR));
 			});
+
+			// Round the resulting team health just in case
+			teamHealth = rint(teamHealth);
 
 			// Set the winner teams
 			if(!winnerTeam || teamHealth > winnerTeamHealth)
@@ -460,7 +462,6 @@ MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_ca_start_ammo_nails;
 	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_ca_start_ammo_rockets;
 	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_ca_start_ammo_cells;
-	start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_ca_start_ammo_plasma;
 	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_ca_start_ammo_fuel;
 }
 

@@ -38,6 +38,9 @@ sv:
 pk3:
 	$(MAKE) -C qcsrc pk3
 
-.PHONY: test
+COMPTESTS = test-server test-client test-menu
+.PHONY: test $(COMPTESTS)
 test:
 	$(MAKE) -C qcsrc test
+$(COMPTESTS):
+	$(MAKE) -C qcsrc $@

@@ -425,8 +425,20 @@ void buff_Init(entity this)
 
 	entity buff = this.buffdef;
 
-	if(!buff || !buff_Available(buff))
+	// item_buff_random provides a null type so force randomization in that case
+	// otherwise replace the buff type if it's unavailable and the option is enabled
+	if(!buff || (autocvar_g_buffs_replace_available && !buff_Available(buff)))
+	{
 		buff_NewType(this);
+		buff = this.buffdef;
+	}
+
+	// the buff type is still invalid or unavailable, simply delete the item
+	if(!buff || !buff_Available(buff))
+	{
+		delete(this);
+		return;
+	}
 
 	this.classname = "item_buff";
 	this.solid = SOLID_TRIGGER;
