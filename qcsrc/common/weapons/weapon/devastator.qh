@@ -29,6 +29,7 @@ CLASS(Devastator, Weapon)
 		P(class, prefix, detonatedelay, float, NONE) \
 		P(class, prefix, edgedamage, float, NONE) \
 		P(class, prefix, force, float, NONE) \
+		P(class, prefix, force_xyscale, float, NONE) \
 		P(class, prefix, guidedelay, float, NONE) \
 		P(class, prefix, guidegoal, float, NONE) \
 		P(class, prefix, guideratedelay, float, NONE) \
