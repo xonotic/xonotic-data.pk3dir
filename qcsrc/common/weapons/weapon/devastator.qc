@@ -28,15 +28,23 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage(
+	vector force_xyzscale = '1 1 1';
+	force_xyzscale.x = WEP_CVAR(WEP_DEVASTATOR, force_xyscale);
+	force_xyzscale.y = WEP_CVAR(WEP_DEVASTATOR, force_xyscale);
+
+	RadiusDamageForSource(
 		this,
+		this.origin,
+		this.velocity,
 		this.realowner,
 		WEP_CVAR(WEP_DEVASTATOR, damage),
 		WEP_CVAR(WEP_DEVASTATOR, edgedamage),
 		WEP_CVAR(WEP_DEVASTATOR, radius),
 		NULL,
 		NULL,
+		false,
 		WEP_CVAR(WEP_DEVASTATOR, force),
+		force_xyzscale,
 		this.projectiledeathtype,
 		this.weaponentity_fld,
 		directhitentity
