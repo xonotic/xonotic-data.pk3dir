@@ -222,17 +222,22 @@ void HUD_RaceTimer ()
 					string speed_text = string_null;
 					if(autocvar_cl_race_cptimes_showspeed)
 					{
-						string speed_color = rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_neg_color);
 						float speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 						float speed = race_timespeed; //vlen(vec2(csqcplayer.velocity));
 						float speed_diff = rint(speed - race_checkpoint_splits_speed[race_checkpoint]);
 						string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
+
+						// figure out color
+						string speed_color = rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_neg_color);
 						if(speed_diff > 0) speed_color = rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_color);
 						else if (speed_diff == 0) speed_color = "^3";
+
+						// if fastest cp time, store speed for later comparison
 						if((TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime)) < 0 || !race_checkpoint_splits_speed[race_checkpoint])
 						{
 							race_checkpoint_splits_speed[race_checkpoint] = speed;
 						}
+
 						if(race_time && race_previousbesttime)
 							speed_text = sprintf(" ^7%d%s %s(%+d%s)", speed * speed_conversion_factor, units_text, speed_color, speed_diff, units_text);
 						else
