@@ -232,16 +232,17 @@ void HUD_RaceTimer ()
 						if(speed_diff > 0) speed_color = rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_color);
 						else if (speed_diff == 0) speed_color = "^3";
 
+						if(race_time && race_previousbesttime && race_checkpoint_splits_speed[race_checkpoint])
+							speed_text = sprintf(" ^7%d%s %s(%+d%s)", speed * speed_conversion_factor, units_text, speed_color, speed_diff, units_text);
+						else
+							speed_text = sprintf(" ^7%d%s", speed * speed_conversion_factor, units_text);
+
 						// if fastest cp time, store speed for later comparison
 						if((TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime)) < 0 || !race_checkpoint_splits_speed[race_checkpoint])
 						{
 							race_checkpoint_splits_speed[race_checkpoint] = speed;
 						}
 
-						if(race_time && race_previousbesttime)
-							speed_text = sprintf(" ^7%d%s %s(%+d%s)", speed * speed_conversion_factor, units_text, speed_color, speed_diff, units_text);
-						else
-							speed_text = sprintf(" ^7%d%s", speed * speed_conversion_factor, units_text);
 					}
 					// build checkpoint split strings
 					if(race_time && race_previousbesttime)
