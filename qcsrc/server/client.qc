@@ -560,7 +560,6 @@ void GiveWarmupResources(entity this)
 	SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
 	SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
 	SetResource(this, RES_CELLS, warmup_start_ammo_cells);
-	SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
 	SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
 	SetResource(this, RES_HEALTH, warmup_start_health);
 	SetResource(this, RES_ARMOR, warmup_start_armorvalue);
@@ -624,7 +623,6 @@ void PutPlayerInServer(entity this)
 		SetResource(this, RES_BULLETS, start_ammo_nails);
 		SetResource(this, RES_ROCKETS, start_ammo_rockets);
 		SetResource(this, RES_CELLS, start_ammo_cells);
-		SetResource(this, RES_PLASMA, start_ammo_plasma);
 		SetResource(this, RES_FUEL, start_ammo_fuel);
 		SetResource(this, RES_HEALTH, start_health);
 		SetResource(this, RES_ARMOR, start_armorvalue);
@@ -1792,7 +1790,6 @@ void SpectateCopy(entity this, entity spectatee)
 	this.armortype = spectatee.armortype;
 	SetResourceExplicit(this, RES_ARMOR, GetResource(spectatee, RES_ARMOR));
 	SetResourceExplicit(this, RES_CELLS, GetResource(spectatee, RES_CELLS));
-	SetResourceExplicit(this, RES_PLASMA, GetResource(spectatee, RES_PLASMA));
 	SetResourceExplicit(this, RES_SHELLS, GetResource(spectatee, RES_SHELLS));
 	SetResourceExplicit(this, RES_BULLETS, GetResource(spectatee, RES_BULLETS));
 	SetResourceExplicit(this, RES_ROCKETS, GetResource(spectatee, RES_ROCKETS));
@@ -1941,7 +1938,7 @@ void SetSpectatee(entity this, entity spectatee)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(old_spectatee.(weaponentity).arc_beam)
-				old_spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
+				old_spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_UPDATE;
 		}
 	}
 	if(spectatee)
@@ -1950,7 +1947,7 @@ void SetSpectatee(entity this, entity spectatee)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(spectatee.(weaponentity).arc_beam)
-				spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
+				spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_UPDATE;
 		}
 	}
 
@@ -2322,7 +2319,9 @@ bool PlayerThink(entity this)
 	if (frametime && autocvar_sv_show_entnum) show_entnum(this);
 
 	if (IS_DEAD(this)) {
-		if (this.personal && g_race_qualifying) {
+		if (this.personal && g_race_qualifying
+		&& (autocvar_g_allow_checkpoints || CheatsAllowed(this, CHIMPULSE_SPEEDRUN.impulse, 0, 0, false, true)))
+		{
 			if (time > this.respawn_time) {
 				STAT(RESPAWN_TIME, this) = this.respawn_time = time + 1; // only retry once a second
 				respawn(this);
@@ -2743,14 +2742,6 @@ void PlayerPostThink (entity this)
 	Player_Physics(this);
 
 	if (IS_PLAYER(this)) {
-		if(this.death_time == time && IS_DEAD(this))
-		{
-			// player's bbox gets resized now, instead of in the damage event that killed the player,
-			// once all the damage events of this frame have been processed with normal size
-			float h = ceil((this.mins.z + this.maxs.z) * PL_CORPSE_SCALE * 10) / 10;
-			this.maxs.z = max(h, this.mins.z + 1);
-			setsize(this, this.mins, this.maxs);
-		}
 		DrownPlayer(this);
 		UpdateChatBubble(this);
 		if (CS(this).impulse) ImpulseCommands(this);

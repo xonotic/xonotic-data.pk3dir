@@ -163,35 +163,3 @@ REGISTER_ITEM(Cells, Ammo) {
 }
 
 SPAWNFUNC_ITEM(item_cells, ITEM_Cells)
-
-
-// ammo type #5: plasma
-#ifdef GAMEQC
-MODEL(Plasma_ITEM, Item_Model("a_cells.md3"));
-#endif
-
-#ifdef SVQC
-PROPERTY(int, g_pickup_plasma);
-void ammo_plasma_init(Pickup this, entity item)
-{
-    if(!GetResource(item, RES_PLASMA))
-        SetResourceExplicit(item, RES_PLASMA, g_pickup_plasma);
-}
-#endif
-REGISTER_ITEM(Plasma, Ammo) {
-    this.m_canonical_spawnfunc = "item_plasma";
-#ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model    = MDL_Plasma_ITEM;
-#endif
-    this.netname    = "plasma";
-    this.m_name     = _("Plasma");
-    this.m_icon     = "ammo_plasma";
-#ifdef SVQC
-    this.m_botvalue = 1500;
-    this.m_itemid   = IT_RESOURCE;
-    this.m_iteminit = ammo_plasma_init;
-#endif
-}
-
-SPAWNFUNC_ITEM(item_plasma, ITEM_Plasma)

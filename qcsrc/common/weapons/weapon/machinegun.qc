@@ -2,6 +2,59 @@
 
 #ifdef SVQC
 
+.float machinegun_spread_accumulation;
+.float spreadUpdateTime;
+
+ERASEABLE
+void MachineGun_Update_Spread(entity actor, .entity weaponentity)
+{
+	float spread_accum = actor.(weaponentity).machinegun_spread_accumulation;
+
+	// time based spread decay
+	if (WEP_CVAR(WEP_MACHINEGUN, spread_decay))
+	{
+		float spreadSpectrumDistance = fabs(WEP_CVAR(WEP_MACHINEGUN, spread_max) - WEP_CVAR(WEP_MACHINEGUN, spread_min));
+		float timediff = time - actor.(weaponentity).spreadUpdateTime;
+		spread_accum = bound(0,
+			spread_accum - (timediff * WEP_CVAR(WEP_MACHINEGUN, spread_decay)),
+			spreadSpectrumDistance);
+	}
+	else // legacy behavior for Nexuiz weapon balance
+	{
+		spread_accum = bound(WEP_CVAR(WEP_MACHINEGUN, spread_min),
+			(WEP_CVAR(WEP_MACHINEGUN, spread_add) * actor.(weaponentity).misc_bulletcounter),
+			WEP_CVAR(WEP_MACHINEGUN, spread_max));
+	}
+
+	actor.(weaponentity).machinegun_spread_accumulation = spread_accum;
+	actor.(weaponentity).spreadUpdateTime = time;
+}
+
+ERASEABLE
+float MachineGun_Heat(float spread_accum)
+{
+	// function for reducing mg's damage with no spread and adding damage with
+	// heated up barrel or vice versa depending on the values of exposed cvars
+	float heatMultiplierApplicationPercent = 0.5;
+	float coldMultiplierApplicationPercent = 0.5;
+
+	float spreadSpectrumDistance = fabs(WEP_CVAR(WEP_MACHINEGUN, spread_max) - WEP_CVAR(WEP_MACHINEGUN, spread_min));
+
+	if (spreadSpectrumDistance > 0) // avoid division by 0, can never be < 0 either due to how it is set when defined
+	{
+		heatMultiplierApplicationPercent = spread_accum / spreadSpectrumDistance;
+		coldMultiplierApplicationPercent = 1 - heatMultiplierApplicationPercent;
+	}
+
+	// example where low end has halved damage and high end has tripled damage:
+	// with 50% spread accumulation: heat = (0.5 * 0.5) + (0.5 * 3) = 0.25 + 1.5 = 1.75 damage multiplier
+	// with 90% spread accumulation: heat = (0.1 * 0.5) + (0.9 * 3) = 0.05 + 2.7 = 2.75 damage multiplier
+	float heat = (coldMultiplierApplicationPercent * WEP_CVAR(WEP_MACHINEGUN, spread_cold_damagemultiplier))
+	           + (heatMultiplierApplicationPercent * WEP_CVAR(WEP_MACHINEGUN, spread_heat_damagemultiplier));
+
+	return heat;
+}
+
 void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponentity)
 {
 	W_SetupShot(actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, ((actor.(weaponentity).misc_bulletcounter == 1) ? WEP_CVAR(WEP_MACHINEGUN, first_damage) : WEP_CVAR(WEP_MACHINEGUN, sustained_damage)), deathtype);
@@ -72,7 +125,7 @@ void W_MachineGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentit
 			w_ready(thiswep, actor, weaponentity, fire);
 			return;
 		}
-		actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
+		++actor.(weaponentity).misc_bulletcounter;
 		W_MachineGun_Attack(thiswep, thiswep.m_id, actor, weaponentity);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_MACHINEGUN, sustained_refire), W_MachineGun_Attack_Frame);
 	}
@@ -83,8 +136,6 @@ void W_MachineGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentit
 
 void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	float machinegun_spread;
-
 	if(!(fire & 1) || !weapon_prepareattack_check(thiswep, actor, weaponentity, false, -1))
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -108,12 +159,35 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	machinegun_spread = bound(WEP_CVAR(WEP_MACHINEGUN, spread_min), WEP_CVAR(WEP_MACHINEGUN, spread_min) + (WEP_CVAR(WEP_MACHINEGUN, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR(WEP_MACHINEGUN, spread_max));
-	fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir, machinegun_spread, WEP_CVAR(WEP_MACHINEGUN, solidpenetration), WEP_CVAR(WEP_MACHINEGUN, sustained_damage),
-		WEP_CVAR(WEP_MACHINEGUN, damagefalloff_halflife), WEP_CVAR(WEP_MACHINEGUN, damagefalloff_mindist), WEP_CVAR(WEP_MACHINEGUN, damagefalloff_maxdist), 0,
-		WEP_CVAR(WEP_MACHINEGUN, sustained_force), WEP_CVAR(WEP_MACHINEGUN, damagefalloff_forcehalflife), thiswep.m_id, EFFECT_BULLET, true);
+	MachineGun_Update_Spread(actor, weaponentity);
 
-	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
+	float spread_accum = actor.(weaponentity).machinegun_spread_accumulation;
+
+	float heat = MachineGun_Heat(spread_accum);
+
+	float spread_accuracy;
+	if (WEP_CVAR(WEP_MACHINEGUN, spread_min) < WEP_CVAR(WEP_MACHINEGUN, spread_max))
+		spread_accuracy = WEP_CVAR(WEP_MACHINEGUN, spread_min) + spread_accum;
+	else // inverted
+		spread_accuracy = WEP_CVAR(WEP_MACHINEGUN, spread_min) - spread_accum;
+
+	fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir,
+	                   spread_accuracy,
+	                   WEP_CVAR(WEP_MACHINEGUN, solidpenetration),
+	                   WEP_CVAR(WEP_MACHINEGUN, sustained_damage) * heat,
+	                   WEP_CVAR(WEP_MACHINEGUN, damagefalloff_halflife),
+	                   WEP_CVAR(WEP_MACHINEGUN, damagefalloff_mindist),
+	                   WEP_CVAR(WEP_MACHINEGUN, damagefalloff_maxdist),
+	                   0,
+	                   WEP_CVAR(WEP_MACHINEGUN, sustained_force),
+	                   WEP_CVAR(WEP_MACHINEGUN, damagefalloff_forcehalflife),
+	                   thiswep.m_id, EFFECT_BULLET, true);
+
+	++actor.(weaponentity).misc_bulletcounter;
+
+	spread_accum += WEP_CVAR(WEP_MACHINEGUN, spread_add);
+
+	actor.(weaponentity).machinegun_spread_accumulation = spread_accum;
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
@@ -136,9 +210,23 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(WEP_MACHINEGUN, burst_spread), WEP_CVAR(WEP_MACHINEGUN, solidpenetration), WEP_CVAR(WEP_MACHINEGUN, sustained_damage),
-		WEP_CVAR(WEP_MACHINEGUN, damagefalloff_halflife), WEP_CVAR(WEP_MACHINEGUN, damagefalloff_mindist), WEP_CVAR(WEP_MACHINEGUN, damagefalloff_maxdist), 0,
-		WEP_CVAR(WEP_MACHINEGUN, sustained_force), WEP_CVAR(WEP_MACHINEGUN, damagefalloff_forcehalflife), thiswep.m_id, EFFECT_BULLET, true);
+	MachineGun_Update_Spread(actor, weaponentity);
+
+	float spread_accum = actor.(weaponentity).machinegun_spread_accumulation;
+
+	float heat = MachineGun_Heat(spread_accum);
+
+	fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir,
+	                   WEP_CVAR(WEP_MACHINEGUN, burst_spread),
+	                   WEP_CVAR(WEP_MACHINEGUN, solidpenetration),
+	                   WEP_CVAR(WEP_MACHINEGUN, sustained_damage) * heat,
+	                   WEP_CVAR(WEP_MACHINEGUN, damagefalloff_halflife),
+	                   WEP_CVAR(WEP_MACHINEGUN, damagefalloff_mindist),
+	                   WEP_CVAR(WEP_MACHINEGUN, damagefalloff_maxdist),
+	                   0,
+	                   WEP_CVAR(WEP_MACHINEGUN, sustained_force),
+	                   WEP_CVAR(WEP_MACHINEGUN, damagefalloff_forcehalflife),
+	                   thiswep.m_id, EFFECT_BULLET, true);
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
@@ -148,7 +236,11 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), vectoangles(v_forward), 3, actor, weaponentity);
 	}
 
-	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
+	spread_accum += WEP_CVAR(WEP_MACHINEGUN, spread_add);
+
+	actor.(weaponentity).machinegun_spread_accumulation = spread_accum;
+
+	++actor.(weaponentity).misc_bulletcounter;
 	if(actor.(weaponentity).misc_bulletcounter == 0)
 	{
 		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(WEP_MACHINEGUN, burst_refire2) * W_WeaponRateFactor(actor);
