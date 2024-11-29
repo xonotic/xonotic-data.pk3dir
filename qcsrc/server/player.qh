@@ -28,7 +28,7 @@ float autocvar_sv_gibhealth;
 .float CopyBody_nextthink;
 .void(entity this) CopyBody_think;
 void CopyBody_Think(entity this);
-void CopyBody(entity this, float keepvelocity);
+entity CopyBody(entity this, float keepvelocity);
 
 void player_setupanimsformodel(entity this);
 
@@ -41,6 +41,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 bool PlayerHeal(entity targ, entity inflictor, float amount, float limit);
 
 void precache_all_playermodels(string pattern);
+
+void TransmuteToGhost(entity this);
 
 IntrusiveList g_clones;
 STATIC_INIT(g_clones) { g_clones = IL_NEW(); }

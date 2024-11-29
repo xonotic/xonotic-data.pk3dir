@@ -61,10 +61,10 @@ void CopyBody_Think(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 	this.nextthink = time;
 }
-void CopyBody(entity this, float keepvelocity)
+entity CopyBody(entity this, float keepvelocity)
 {
 	if (this.effects & EF_NODRAW)
-		return;
+		return NULL;
 	entity clone = new(body);
 	clone.enemy = this;
 	clone.lip = this.lip;
@@ -141,6 +141,8 @@ void CopyBody(entity this, float keepvelocity)
 	IL_PUSH(g_clones, clone);
 
 	MUTATOR_CALLHOOK(CopyBody, this, clone, keepvelocity);
+
+	return clone;
 }
 
 void player_setupanimsformodel(entity this)
@@ -608,6 +610,15 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 				}
 			});
 		}
+
+		if (autocvar_g_respawn_ghosts)
+		{
+			// spawn a ghost as the player died
+			//entity oldbody = CopyBody(this, 1);
+			CopyBody(this, 1);
+			TransmuteToGhost(this);
+		}
+
 		MUTATOR_CALLHOOK(PlayerDied, this);
 	}
 }
@@ -620,6 +631,27 @@ bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 
 	GiveResourceWithLimit(targ, RES_HEALTH, amount, limit);
 	return true;
+}
+
+void TransmuteToGhost(entity this)
+{
+	// effects are disabled or one ghost was already spawned
+	if (this.effects & EF_NODRAW)
+		return;
+
+	this.solid = SOLID_NOT;
+	this.takedamage = DAMAGE_NO;
+	if(this.damagedbycontents)
+		IL_REMOVE(g_damagedbycontents, this);
+	this.damagedbycontents = false;
+	set_movetype(this, MOVETYPE_FLY);
+	this.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
+	this.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
+	this.effects |= CSQCMODEL_EF_RESPAWNGHOST;
+	this.alpha = autocvar_g_respawn_ghosts_alpha;
+	Send_Effect(EFFECT_RESPAWN_GHOST, this.origin, '0 0 0', 1);
+	if(autocvar_g_respawn_ghosts_time > 0)
+		SUB_SetFade(this, time + autocvar_g_respawn_ghosts_time, autocvar_g_respawn_ghosts_fadetime);
 }
 
 void precache_playermodel(string m)
