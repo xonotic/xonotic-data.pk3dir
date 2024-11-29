@@ -561,16 +561,22 @@ vector WarpZone_UnTransformAngles(entity wz, vector v)
 
 vector WarpZone_UnTransformVAngles(entity wz, vector ang)
 {
+#ifdef KEEP_ROLL
 	float roll;
-
 	roll = ang.z;
 	ang.z = 0;
+#endif
 
 	ang = AnglesTransform_ApplyToVAngles(AnglesTransform_Invert(wz.warpzone_transform), ang);
+
+#ifdef KEEP_ROLL
 	ang = AnglesTransform_Normalize(ang, true);
 	ang = AnglesTransform_CancelRoll(ang);
-
 	ang.z = roll;
+#else
+	ang = AnglesTransform_Normalize(ang, false);
+#endif
+
 	return ang;
 }
 

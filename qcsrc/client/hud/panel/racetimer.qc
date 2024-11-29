@@ -91,7 +91,7 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 	else if(cp == 255)
 		cpname = _("Finish line");
 	else if(cp)
-		cpname = sprintf(_("Intermediate %d"), cp);
+		cpname = sprintf(_("Checkpoint %d"), cp);
 	else
 		cpname = _("Finish line");
 
@@ -203,7 +203,7 @@ void HUD_RaceTimer ()
 		draw_endBoldFont();
 		float speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 		string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
-		s = strcat("^1", sprintf(_("Intermediate %d"), 1), " (+15.42)", autocvar_cl_race_cptimes_showspeed ? sprintf(" ^7%d%s %s(%+d%s)", 345 * speed_conversion_factor, units_text, rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_color), 123 * speed_conversion_factor, units_text) : ""); 
+		s = strcat("^1", sprintf(_("Checkpoint %d"), 1), " (+15.42)", autocvar_cl_race_cptimes_showspeed ? sprintf(" ^7%d%s %s(%+d%s)", 345 * speed_conversion_factor, units_text, rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_color), 123 * speed_conversion_factor, units_text) : ""); 
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 		s = sprintf(_("PENALTY: %.1f (%s)"), 2, _("missing a checkpoint"));
@@ -234,17 +234,22 @@ void HUD_RaceTimer ()
 					string speed_text = string_null;
 					if(autocvar_cl_race_cptimes_showspeed)
 					{
-						string speed_color = rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_neg_color);
 						float speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
-						float speed = vlen(vec2(csqcplayer.velocity));
+						float speed = race_timespeed; //vlen(vec2(csqcplayer.velocity));
 						float speed_diff = rint(speed - race_checkpoint_splits_speed[race_checkpoint]);
 						string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
+
+						// figure out color
+						string speed_color = rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_neg_color);
 						if(speed_diff > 0) speed_color = rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_color);
 						else if (speed_diff == 0) speed_color = "^3";
+
 						if(race_time && race_previousbesttime && race_checkpoint_splits_speed[race_checkpoint])
 							speed_text = sprintf(" ^7%d%s %s(%+d%s)", speed * speed_conversion_factor, units_text, speed_color, speed_diff * speed_conversion_factor, units_text);
 						else
 							speed_text = sprintf(" ^7%d%s", speed * speed_conversion_factor, units_text);
+
+						// if fastest cp time, store speed for later comparison
 						if((TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime)) < 0 || !race_checkpoint_splits_speed[race_checkpoint])
 						{
 							race_checkpoint_splits_speed[race_checkpoint] = speed;

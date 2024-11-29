@@ -16,7 +16,6 @@ float autocvar_g_ft_start_ammo_shells = 60;
 float autocvar_g_ft_start_ammo_nails = 320;
 float autocvar_g_ft_start_ammo_rockets = 160;
 float autocvar_g_ft_start_ammo_cells = 180;
-float autocvar_g_ft_start_ammo_plasma = 180;
 float autocvar_g_ft_start_ammo_fuel = 0;
 
 void freezetag_count_alive_players()
@@ -718,7 +717,6 @@ MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_ft_start_ammo_nails;
 	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_ft_start_ammo_rockets;
 	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_ft_start_ammo_cells;
-	start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_ft_start_ammo_plasma;
 	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_ft_start_ammo_fuel;
 }
 

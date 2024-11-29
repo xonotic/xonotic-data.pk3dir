@@ -89,9 +89,10 @@ void LogDeath(string mode, int deathtype, entity killer, entity killed);
 
 void Obituary_SpecialDeath(
 	entity notif_target,
-	float murder,
+	bool murder,
+	bool msg_from_ent,
 	int deathtype,
-	string s1, string s2, string s3,
+	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3);
 
 float w_deathtype;
@@ -131,7 +132,7 @@ int autocvar_g_player_damageplayercenter;
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 
 float RadiusDamage_running;
-float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, float forcezscale, int deathtype, .entity weaponentity, entity directhitentity);
+float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, vector forcexyzscale, int deathtype, .entity weaponentity, entity directhitentity);
 	// Returns total damage applies to creatures
 
 float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity);

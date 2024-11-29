@@ -21,6 +21,7 @@
 #include <lib/warpzone/anglestransform.qh>
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
+#include <server/client.qh>
 #include <server/clientkill.qh>
 #include <server/damage.qh>
 #include <server/main.qh>
@@ -54,14 +55,15 @@ void CheatShutdown()
 {
 }
 
-float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets passed as argument for possible future ACL checking
+// the cheat gets passed as argument for possible future ACL checking
+float CheatsAllowed(entity this, float imp, int argc, float cheatframe, bool logattempt, bool ignoredead)
 {
-	if(IS_DEAD(this))
+	if(!ignoredead && IS_DEAD(this))
 		return 0;
 	if(gamestart_sv_cheats < 2 && !IS_PLAYER(this))
 		return 0;
 
-	if(i == CHIMPULSE_CLONE_MOVING.impulse || i == CHIMPULSE_CLONE_STANDING.impulse)
+	if(imp == CHIMPULSE_CLONE_MOVING.impulse || imp == CHIMPULSE_CLONE_STANDING.impulse)
 		if(this.lip < autocvar_sv_clones)
 			return 1;
 
@@ -72,16 +74,18 @@ float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets 
 	if(gamestart_sv_cheats && autocvar_sv_cheats)
 		return 1;
 
-	// if we get here, player is not allowed to cheat. Log it.
-	if(i)
-		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this.netname, this.team, false), i);
-	else if(argc)
-		bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this.netname, this.team, false), argv(0));
-	else if(fr)
-		bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this.netname, this.team, false), fr);
-	else
-		bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this.netname, this.team, false));
-
+	if (logattempt)
+	{
+		// if we get here, player is not allowed to cheat. Log it.
+		if(imp)
+			bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this.netname, this.team, false), imp);
+		else if(argc)
+			bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this.netname, this.team, false), argv(0));
+		else if(cheatframe)
+			bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this.netname, this.team, false), cheatframe);
+		else
+			bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this.netname, this.team, false));
+	}
 	return 0;
 }
 
@@ -96,7 +100,7 @@ float CheatsAllowed(entity this, float i, int argc, float fr) // the cheat gets 
 	ADD_CHEATS(this, cheating); \
 	return attempting
 #define IS_CHEAT(ent,i,argc,fr) \
-	if((++attempting, !CheatsAllowed(ent,i,argc,fr))) \
+	if((++attempting, !CheatsAllowed(ent,i,argc,fr,true,false))) \
 		break
 
 float num_autoscreenshot;
@@ -125,6 +129,10 @@ spawnfunc(info_autoscreenshot)
 	}
 	if(this.target != "")
 		InitializeEntity(this, info_autoscreenshot_findtarget, INITPRIO_FINDTARGET);
+
+	tracebox(this.origin, PL_CROUCH_MIN_CONST, PL_CROUCH_MAX_CONST, this.origin, MOVE_WORLDONLY, this);
+	if(!trace_startsolid)
+		IL_PUSH(g_observepoints, this);
 }
 
 float CheatImpulse(entity this, int imp)
@@ -146,7 +154,6 @@ float CheatImpulse(entity this, int imp)
 			SetResource(this.personal, RES_ROCKETS, GetResource(this, RES_ROCKETS));
 			SetResource(this.personal, RES_BULLETS, GetResource(this, RES_BULLETS));
 			SetResource(this.personal, RES_CELLS, GetResource(this, RES_CELLS));
-			SetResource(this.personal, RES_PLASMA, GetResource(this, RES_PLASMA));
 			SetResource(this.personal, RES_SHELLS, GetResource(this, RES_SHELLS));
 			SetResource(this.personal, RES_FUEL, GetResource(this, RES_FUEL));
 			SetResource(this.personal, RES_HEALTH, max(1, GetResource(this, RES_HEALTH)));
@@ -204,7 +211,6 @@ float CheatImpulse(entity this, int imp)
 				SetResource(this, RES_ROCKETS, GetResource(this.personal, RES_ROCKETS));
 				SetResource(this, RES_BULLETS, GetResource(this.personal, RES_BULLETS));
 				SetResource(this, RES_CELLS, GetResource(this.personal, RES_CELLS));
-				SetResource(this, RES_PLASMA, GetResource(this.personal, RES_PLASMA));
 				SetResource(this, RES_SHELLS, GetResource(this.personal, RES_SHELLS));
 				SetResource(this, RES_FUEL, GetResource(this.personal, RES_FUEL));
 				SetResource(this, RES_HEALTH, GetResource(this.personal, RES_HEALTH));

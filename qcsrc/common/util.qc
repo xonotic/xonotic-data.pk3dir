@@ -227,11 +227,19 @@ bool mut_is_active(int mut)
 		return (active_mutators[0] & BIT(mut));
 }
 
-// if s == "" (MENUQC) builds the mutator list for the Mutators dialog based on local cvar values
-// otherwise (CSQC) translates the mutator list (s) that client has received from server
-// NOTE: this function merges MENUQC and CSQC code in order to avoid duplicating and separating strings
+// MENUQC: it builds the mutator list based on local cvars (for the Mutators dialog)
+// CSQC: it translates the mutator list received from server (for the Welcome dialog)
+// MENUQC and CSQC code is merged in order to avoid duplicating and separating strings
 string build_mutator_list(string s)
 {
+	#ifdef CSQC
+	if (s == "") return "";
+	#endif
+
+	#ifdef MENUQC
+	if (s != "") s = "";
+	#endif
+
 	int i = -1, n = 0; // allow only 1 iteration in the following for loop if (s == "")
 	if (s != "")
 	{
