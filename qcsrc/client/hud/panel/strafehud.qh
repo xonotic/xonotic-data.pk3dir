@@ -6,10 +6,15 @@ bool autocvar__hud_panel_strafehud_demo = false;
 bool autocvar_hud_panel_strafehud_dynamichud = true;
 int autocvar_hud_panel_strafehud_mode = 0;
 float autocvar_hud_panel_strafehud_range = 90;
+float autocvar_hud_panel_strafehud_range_sidestrafe = -1;
 int autocvar_hud_panel_strafehud_style = 2;
 bool autocvar_hud_panel_strafehud_unit_show = true;
 bool autocvar_hud_panel_strafehud_uncapped = false;
+int autocvar_hud_panel_strafehud_onground_mode = 2;
+bool autocvar_hud_panel_strafehud_onground_friction = true;
 bool autocvar_hud_panel_strafehud_bar_preaccel = true;
+vector autocvar_hud_panel_strafehud_bar_preaccel_color = '0 1 0';
+float autocvar_hud_panel_strafehud_bar_preaccel_alpha = 0.5;
 vector autocvar_hud_panel_strafehud_bar_neutral_color = '1 1 1';
 float autocvar_hud_panel_strafehud_bar_neutral_alpha = 0.1;
 vector autocvar_hud_panel_strafehud_bar_accel_color = '0 1 0';
@@ -21,19 +26,26 @@ int autocvar_hud_panel_strafehud_angle_dashes = 4;
 float autocvar_hud_panel_strafehud_angle_alpha = 0.8;
 float autocvar_hud_panel_strafehud_angle_height = 1;
 float autocvar_hud_panel_strafehud_angle_width = 0.001;
+vector autocvar_hud_panel_strafehud_angle_preaccel_color = '0 1 1';
 vector autocvar_hud_panel_strafehud_angle_neutral_color = '1 1 0';
 vector autocvar_hud_panel_strafehud_angle_accel_color = '0 1 1';
 vector autocvar_hud_panel_strafehud_angle_overturn_color = '1 0 1';
 int autocvar_hud_panel_strafehud_angle_arrow = 1;
 float autocvar_hud_panel_strafehud_angle_arrow_size = 0.5;
-bool autocvar_hud_panel_strafehud_bestangle = true;
+int autocvar_hud_panel_strafehud_bestangle = 1;
 vector autocvar_hud_panel_strafehud_bestangle_color = '1 1 1';
 float autocvar_hud_panel_strafehud_bestangle_alpha = 0.5;
-bool autocvar_hud_panel_strafehud_switch = true;
+int autocvar_hud_panel_strafehud_switch = 1;
 float autocvar_hud_panel_strafehud_switch_minspeed = -1;
 vector autocvar_hud_panel_strafehud_switch_color = '1 1 0';
 float autocvar_hud_panel_strafehud_switch_alpha = 1;
 float autocvar_hud_panel_strafehud_switch_width = 0.003;
+int autocvar_hud_panel_strafehud_wturn = 1;
+vector autocvar_hud_panel_strafehud_wturn_color = '0 1 1';
+float autocvar_hud_panel_strafehud_wturn_alpha = 1;
+float autocvar_hud_panel_strafehud_wturn_width = 0.003;
+bool autocvar_hud_panel_strafehud_wturn_proper = false;
+bool autocvar_hud_panel_strafehud_wturn_unrestricted = false;
 bool autocvar_hud_panel_strafehud_direction = false;
 vector autocvar_hud_panel_strafehud_direction_color = '0 0.5 1';
 float autocvar_hud_panel_strafehud_direction_alpha = 1;
@@ -59,7 +71,7 @@ float autocvar_hud_panel_strafehud_timeout_turn = 0.1;
 float autocvar_hud_panel_strafehud_antiflicker_angle = 0.01;
 float autocvar_hud_panel_strafehud_fps_update = 0.5;
 
-void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int);
+void HUD_Panel_DrawStrafeHUD(float, float, float, vector, float, int, int, bool);
 vector StrafeHUD_mixColors(vector, vector, float);
 void StrafeHUD_drawGradient(vector, vector, vector, float, float, float, float, int);
 float GetLengthUnitFactor(int);
@@ -70,9 +82,23 @@ bool StrafeHUD_drawTextIndicator(string, float, vector, float, float, float, int
 const int STRAFEHUD_MODE_VIEW_CENTERED = 0;
 const int STRAFEHUD_MODE_VELOCITY_CENTERED = 1;
 
+const int STRAFEHUD_ONGROUND_OVERTURN = 0;
+const int STRAFEHUD_ONGROUND_GROUND = 1;
+const int STRAFEHUD_ONGROUND_AIR = 2;
+
 const int STRAFEHUD_DIRECTION_NONE = 0;
 const int STRAFEHUD_DIRECTION_LEFT = 1;
 const int STRAFEHUD_DIRECTION_RIGHT = 2;
+
+const int STRAFEHUD_SWITCH_NONE = 0;
+const int STRAFEHUD_SWITCH_ACTUAL = 1;
+const int STRAFEHUD_SWITCH_NORMAL = 2;
+const int STRAFEHUD_SWITCH_SIDESTRAFE = 3;
+
+const int STRAFEHUD_WTURN_NONE = 0;
+const int STRAFEHUD_WTURN_ONLY = 1;
+const int STRAFEHUD_WTURN_NORMAL = 2;
+const int STRAFEHUD_WTURN_SIDESTRAFE = 3;
 
 const int STRAFEHUD_KEYS_NONE = 0;
 const int STRAFEHUD_KEYS_FORWARD = 1;
@@ -93,3 +119,5 @@ const int STRAFEHUD_INDICATOR_DASHED = 2;
 
 const int STRAFEHUD_TEXT_TOP = 0;
 const int STRAFEHUD_TEXT_BOTTOM = 1;
+
+const float ACOS_SQRT2_3_DEG = 35.2643896827546543153;  /* acos(sqrt(2/3)) * RAD2DEG */

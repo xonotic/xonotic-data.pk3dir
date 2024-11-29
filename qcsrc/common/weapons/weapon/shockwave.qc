@@ -74,9 +74,9 @@ void W_Shockwave_Melee_Think(entity this)
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove this if necessary
-			&& (trace_ent.takedamage == DAMAGE_AIM)
-			&& (trace_ent != this.swing_alreadyhit)
-			&& (is_player || WEP_CVAR(WEP_SHOCKWAVE, melee_nonplayerdamage)))
+		&& (trace_ent.takedamage == DAMAGE_AIM)
+		&& (trace_ent != this.swing_alreadyhit)
+		&& (is_player || WEP_CVAR(WEP_SHOCKWAVE, melee_nonplayerdamage)))
 		{
 			target_victim = trace_ent; // so it persists through other calls
 
@@ -623,54 +623,59 @@ void W_Shockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 METHOD(Shockwave, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(vdist(actor.origin - actor.enemy.origin, <=, WEP_CVAR(WEP_SHOCKWAVE, melee_range)))
-        { PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, false); }
-    else
-        { PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, false); }
+	if(vdist(actor.origin - actor.enemy.origin, <=, WEP_CVAR(WEP_SHOCKWAVE, melee_range)))
+		{ PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, false); }
+	else
+		{ PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, false); }
 }
+
 METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(fire & 1)
-    {
-        if(time >= actor.(weaponentity).shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
-        {
-            if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(WEP_SHOCKWAVE, blast_animtime)))
-            {
-                W_Shockwave_Attack(thiswep, actor, weaponentity);
-                actor.(weaponentity).shockwave_blasttime = time + WEP_CVAR(WEP_SHOCKWAVE, blast_refire) * W_WeaponRateFactor(actor);
-                weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_SHOCKWAVE, blast_animtime), w_ready);
-            }
-        }
-    }
-    else if(fire & 2)
-    {
-        //if(actor.clip_load >= 0) // we are not currently reloading
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(WEP_SHOCKWAVE, melee_refire)))
-        {
-            // attempt forcing playback of the anim by switching to another anim (that we never play) here...
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Shockwave_Melee);
-        }
-    }
+	if(fire & 1)
+	{
+		if(time >= actor.(weaponentity).shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
+		{
+			if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(WEP_SHOCKWAVE, blast_animtime)))
+			{
+				W_Shockwave_Attack(thiswep, actor, weaponentity);
+				actor.(weaponentity).shockwave_blasttime = time + WEP_CVAR(WEP_SHOCKWAVE, blast_refire) * W_WeaponRateFactor(actor);
+				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_SHOCKWAVE, blast_animtime), w_ready);
+			}
+		}
+	}
+	else if(fire & 2)
+	{
+		//if(actor.clip_load >= 0) // we are not currently reloading
+		if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(WEP_SHOCKWAVE, melee_refire)))
+		{
+			// attempt forcing playback of the anim by switching to another anim (that we never play) here...
+			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Shockwave_Melee);
+		}
+	}
 }
+
 METHOD(Shockwave, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    return true; // infinite ammo
+	return true; // infinite ammo
 }
+
 METHOD(Shockwave, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    // shockwave has infinite ammo
-    return true;
+	// shockwave has infinite ammo
+	return true;
 }
+
 METHOD(Shockwave, wr_suicidemessage, Notification(entity thiswep))
 {
-    return WEAPON_THINKING_WITH_PORTALS;
+	return WEAPON_THINKING_WITH_PORTALS;
 }
+
 METHOD(Shockwave, wr_killmessage, Notification(entity thiswep))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-        return WEAPON_SHOCKWAVE_MURDER_SLAP;
-    else
-        return WEAPON_SHOCKWAVE_MURDER;
+	if(w_deathtype & HITTYPE_SECONDARY)
+		return WEAPON_SHOCKWAVE_MURDER_SLAP;
+	else
+		return WEAPON_SHOCKWAVE_MURDER;
 }
 
 #endif
@@ -802,9 +807,9 @@ void Net_ReadShockwaveParticle()
 
 METHOD(Shockwave, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    // handled by Net_ReadShockwaveParticle
-    //vector org2 = w_org + w_backoff * 2;
-    //pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
+	// handled by Net_ReadShockwaveParticle
+	//vector org2 = w_org + w_backoff * 2;
+	//pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
 }
 
 #endif

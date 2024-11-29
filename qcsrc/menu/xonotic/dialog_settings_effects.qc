@@ -121,28 +121,42 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.applyButton = effectsApplyButton;
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_deluxemapping", _("Deluxe mapping"),
 			_("Use per-pixel lighting effects")));
-			setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
+			else
+				setDependent(e, "mod_q3bsp_nolightmaps", 0, 0);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_shadow_gloss", _("Gloss"),
 			_("Enable the use of glossmaps on textures supporting it")));
-			setDependentAND3(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0, "r_glsl_deluxemapping", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependentAND3(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0, "r_glsl_deluxemapping", 1, 1);
+			else
+				setDependentAND(e, "mod_q3bsp_nolightmaps", 0, 0, "r_glsl_deluxemapping", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_offsetmapping", _("Offset mapping"),
 			_("Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface")));
-			setDependent(e, "vid_gl20", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping"),
 			_("Higher quality offset mapping, which also has a huge impact on performance")));
-			setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
+			else
+				setDependent(e, "r_glsl_offsetmapping", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_water", _("Reflections:"),
 			_("Reflection and refraction quality, has a huge impact on performance on maps with reflecting surfaces")));
-			setDependent(e, "vid_gl20", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("r_water_resolutionmultiplier",
 			_("Resolution of reflections/refractions")));
 			e.addValue(e, _("Blurred"), "0.25");
 			e.addValue(e, ZCTX(_("REFL^Good")), "0.5");
 			e.addValue(e, _("Sharp"), "1");
 			e.configureXonoticTextSliderValues(e);
-			setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);
+			else
+				setDependent(e, "r_water", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "cl_decals", _("Decals"),
 			_("Enable decals (bullet holes and blood)")));
@@ -207,7 +221,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx_T(0.5, 0, "hud_postprocessing_maxbluralpha", _("Extra postprocessing effects"),
 			_("Enables special postprocessing effects for when damaged or under water or using a powerup")));
 			makeMulti(e, "hud_powerup");
-			setDependent(e, "vid_gl20", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		s = makeXonoticSlider_T(0.1, 1, 0.1, "r_motionblur",
 			_("Motion blur strength - 0.4 recommended"));

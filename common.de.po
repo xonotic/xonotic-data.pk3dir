@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-01 07:22+0200\n"
+"POT-Creation-Date: 2024-09-04 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
 "Language-Team: German (http://app.transifex.com/team-xonotic/xonotic/"
@@ -45,6 +45,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:115
+msgid "Checkpoint times:"
+msgstr "Kontrollpunktzeiten:"
 
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
@@ -99,169 +103,169 @@ msgstr "^3Spieler^7: Dies ist der Chat-Bereich."
 msgid "FPS: %.*f"
 msgstr "FPS: %.*f"
 
-#: qcsrc/client/hud/panel/infomessages.qc:92
+#: qcsrc/client/hud/panel/infomessages.qc:94
 msgid "^1Observing"
 msgstr "^1Beobachten"
 
-#: qcsrc/client/hud/panel/infomessages.qc:94
+#: qcsrc/client/hud/panel/infomessages.qc:96
 #, c-format
 msgid "^1Spectating: ^7%s"
 msgstr "^1Zuschauen bei: ^7%s"
 
-#: qcsrc/client/hud/panel/infomessages.qc:105
+#: qcsrc/client/hud/panel/infomessages.qc:107
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
 msgstr "^1Drücke ^3%s^1, um jemandem zuzuschauen"
 
-#: qcsrc/client/hud/panel/infomessages.qc:105
+#: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/menu/xonotic/keybinder.qc:50
 msgid "primary fire"
 msgstr "Primärfeuer"
 
-#: qcsrc/client/hud/panel/infomessages.qc:107
+#: qcsrc/client/hud/panel/infomessages.qc:109
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
 msgstr "^1Drücke ^3%s^1 oder ^3%s^1 für den nächsten oder vorherigen Spieler"
 
-#: qcsrc/client/hud/panel/infomessages.qc:107
-#: qcsrc/client/hud/panel/infomessages.qc:111
+#: qcsrc/client/hud/panel/infomessages.qc:109
+#: qcsrc/client/hud/panel/infomessages.qc:113
 msgid "next weapon"
 msgstr "nächste Waffe"
 
-#: qcsrc/client/hud/panel/infomessages.qc:107
-#: qcsrc/client/hud/panel/infomessages.qc:111
+#: qcsrc/client/hud/panel/infomessages.qc:109
+#: qcsrc/client/hud/panel/infomessages.qc:113
 msgid "previous weapon"
 msgstr "vorherige Waffe"
 
-#: qcsrc/client/hud/panel/infomessages.qc:111
+#: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
 msgstr "^1Benutze ^3%s^1 oder ^3%s^1 zum Ändern der Geschwindigkeit"
 
-#: qcsrc/client/hud/panel/infomessages.qc:113
+#: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
 msgstr "^1Drücke ^3%s^1 zum Zuschauen, ^3%s^1, um den Kameramodus zu wechseln"
 
-#: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/client/hud/panel/infomessages.qc:115
+#: qcsrc/client/hud/panel/infomessages.qc:117
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 msgid "drop weapon"
 msgstr "Waffe wegwerfen"
 
-#: qcsrc/client/hud/panel/infomessages.qc:113
+#: qcsrc/client/hud/panel/infomessages.qc:115
 #: qcsrc/menu/xonotic/keybinder.qc:51
 msgid "secondary fire"
 msgstr "Sekundärfeuer"
 
-#: qcsrc/client/hud/panel/infomessages.qc:115
+#: qcsrc/client/hud/panel/infomessages.qc:117
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
 msgstr "^1Drücke ^3%s^1 um den Kameramodus zu wechseln"
 
-#: qcsrc/client/hud/panel/infomessages.qc:118
+#: qcsrc/client/hud/panel/infomessages.qc:120
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
 msgstr "^1Drücke ^3%s^1 für Spielmodus-Info"
 
-#: qcsrc/client/hud/panel/infomessages.qc:118
+#: qcsrc/client/hud/panel/infomessages.qc:120
 #: qcsrc/menu/xonotic/keybinder.qc:106
 msgid "server info"
 msgstr "Serverinfo anzeigen"
 
-#: qcsrc/client/hud/panel/infomessages.qc:134
+#: qcsrc/client/hud/panel/infomessages.qc:136
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
 msgstr "^2Du wartest darauf, dem Team %s%s^2 beizutreten"
 
-#: qcsrc/client/hud/panel/infomessages.qc:137
+#: qcsrc/client/hud/panel/infomessages.qc:139
 msgid "^2You're queued to join any available team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:139
+#: qcsrc/client/hud/panel/infomessages.qc:141
 #, c-format
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Drücke ^3%s^1 zum Mitspielen"
 
-#: qcsrc/client/hud/panel/infomessages.qc:139 qcsrc/client/main.qc:1449
+#: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1425
 #: qcsrc/common/notifications/all.qh:446
 msgid "jump"
 msgstr "springen"
 
-#: qcsrc/client/hud/panel/infomessages.qc:148
+#: qcsrc/client/hud/panel/infomessages.qc:150
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
 msgstr "^1Das Spiel beginnt in ^3%d^1 Sekunden"
 
-#: qcsrc/client/hud/panel/infomessages.qc:160
+#: qcsrc/client/hud/panel/infomessages.qc:162
 msgid "^2Currently in ^1warmup^2 stage!"
 msgstr "^2Momentan in der ^1Aufwärmphase^2!"
 
-#: qcsrc/client/hud/panel/infomessages.qc:170
+#: qcsrc/client/hud/panel/infomessages.qc:172
 msgid "^31^2 more player is needed for the match to start."
 msgstr "^31^2 weiterer Spieler wird für den Beginn des Spiels benötigt."
 
-#: qcsrc/client/hud/panel/infomessages.qc:172
+#: qcsrc/client/hud/panel/infomessages.qc:174
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
 msgstr "^3%d^2 weitere Spieler werden für den Beginn des Spiels benötigt."
 
-#: qcsrc/client/hud/panel/infomessages.qc:185
+#: qcsrc/client/hud/panel/infomessages.qc:187
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr "%sDrücke ^3%s%s, um die Aufwärmphase zu beenden"
 
-#: qcsrc/client/hud/panel/infomessages.qc:185
-#: qcsrc/client/hud/panel/infomessages.qc:190
+#: qcsrc/client/hud/panel/infomessages.qc:187
+#: qcsrc/client/hud/panel/infomessages.qc:192
 #: qcsrc/menu/xonotic/keybinder.qc:102
 msgid "ready"
 msgstr "Bereit"
 
-#: qcsrc/client/hud/panel/infomessages.qc:187
+#: qcsrc/client/hud/panel/infomessages.qc:189
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr ""
 "^2Es wird auf andere Spieler gewartet, um die Aufwärmphase zu beenden..."
 
-#: qcsrc/client/hud/panel/infomessages.qc:190
+#: qcsrc/client/hud/panel/infomessages.qc:192
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr "^2Drücke ^3%s^2, um die Aufwärmphase zu beenden"
 
-#: qcsrc/client/hud/panel/infomessages.qc:202
+#: qcsrc/client/hud/panel/infomessages.qc:204
 msgid "Teams are unbalanced!"
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:205
+#: qcsrc/client/hud/panel/infomessages.qc:207
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr " Drücke ^3%s%s zum Anpassen"
 
-#: qcsrc/client/hud/panel/infomessages.qc:205
+#: qcsrc/client/hud/panel/infomessages.qc:207
 #: qcsrc/menu/xonotic/keybinder.qc:117
 msgid "team selection"
 msgstr "Teamauswahl"
 
-#: qcsrc/client/hud/panel/infomessages.qc:218
+#: qcsrc/client/hud/panel/infomessages.qc:220
 msgid "^1Spectating this player:"
 msgstr "^1Du schaust diesem Spieler zu:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:218
+#: qcsrc/client/hud/panel/infomessages.qc:220
 msgid "^1Spectating you:"
 msgstr "^1Dir schaut zu:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:234
+#: qcsrc/client/hud/panel/infomessages.qc:267
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr "^7Drücke ^3ESC^7, um die HUD-Optionen anzuzeigen."
 
-#: qcsrc/client/hud/panel/infomessages.qc:235
+#: qcsrc/client/hud/panel/infomessages.qc:268
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr "^3Doppelklicke ^7ein Panel für Panel-spezifische Optionen."
 
-#: qcsrc/client/hud/panel/infomessages.qc:236
+#: qcsrc/client/hud/panel/infomessages.qc:269
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr "^3STRG^7, um Kollisionstests zu deaktivieren, ^3UMSCHALT ^7und"
 
-#: qcsrc/client/hud/panel/infomessages.qc:237
+#: qcsrc/client/hud/panel/infomessages.qc:270
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "^3ALT ^7+ ^3PFEILTASTEN ^7für Feinjustierungen."
 
@@ -558,39 +562,39 @@ msgstr "Server Schnellmenü als Standard"
 msgid "QMCMD^Spectate a player"
 msgstr "QMCMD^Einem Spieler zuschauen"
 
-#: qcsrc/client/hud/panel/racetimer.qc:57
+#: qcsrc/client/hud/panel/racetimer.qc:63
 #, c-format
 msgid " (-%dL)"
 msgstr " (-%dR)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:62
+#: qcsrc/client/hud/panel/racetimer.qc:68
 #, c-format
 msgid " (+%dL)"
 msgstr " (+%dR)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:81
+#: qcsrc/client/hud/panel/racetimer.qc:87
 msgid "Start line"
 msgstr "Startlinie"
 
-#: qcsrc/client/hud/panel/racetimer.qc:83
-#: qcsrc/client/hud/panel/racetimer.qc:87
+#: qcsrc/client/hud/panel/racetimer.qc:89
+#: qcsrc/client/hud/panel/racetimer.qc:93
 msgid "Finish line"
 msgstr "Ziellinie"
 
-#: qcsrc/client/hud/panel/racetimer.qc:85
-#: qcsrc/client/hud/panel/racetimer.qc:154
+#: qcsrc/client/hud/panel/racetimer.qc:91
+#: qcsrc/client/hud/panel/racetimer.qc:195
 #, c-format
 msgid "Intermediate %d"
 msgstr "Zwischenzeit %d"
 
-#: qcsrc/client/hud/panel/racetimer.qc:157
-#: qcsrc/client/hud/panel/racetimer.qc:223
-#: qcsrc/client/hud/panel/racetimer.qc:284
+#: qcsrc/client/hud/panel/racetimer.qc:198
+#: qcsrc/client/hud/panel/racetimer.qc:263
+#: qcsrc/client/hud/panel/racetimer.qc:327
 #, c-format
 msgid "PENALTY: %.1f (%s)"
 msgstr "STRAFE: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:157 qcsrc/client/main.qc:1286
+#: qcsrc/client/hud/panel/racetimer.qc:198 qcsrc/client/main.qc:1262
 msgid "missing a checkpoint"
 msgstr "einen Kontrollpunkt verpasst"
 
@@ -1108,62 +1112,66 @@ msgstr "^5%s %s"
 msgid "SCO^points"
 msgstr "SCO^punkte"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2444
+#: qcsrc/client/hud/panel/scoreboard.qc:2445
+msgid "Next map:"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:2452
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "Teamauswahl"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2458
+#: qcsrc/client/hud/panel/scoreboard.qc:2466
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^7Drücke ^3%s^7, um dem ausgewählten Team beizutreten"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2460
+#: qcsrc/client/hud/panel/scoreboard.qc:2468
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr "^7Drücke ^3%s^7, um ein Team automatisch auszuwählen und beizutreten"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2464
+#: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7Drücke ^3%s^7, um einem bestimmten Team beizutreten"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2475
+#: qcsrc/client/hud/panel/scoreboard.qc:2483
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f Minuten"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2502
+#: qcsrc/client/hud/panel/scoreboard.qc:2510
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7Spieler"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2503 qcsrc/client/main.qc:1478
+#: qcsrc/client/hud/panel/scoreboard.qc:2511 qcsrc/client/main.qc:1454
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Karte:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2670
+#: qcsrc/client/hud/panel/scoreboard.qc:2678
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Geschwindigkeitspreis: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2674
+#: qcsrc/client/hud/panel/scoreboard.qc:2682
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Rekordtempo: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2708
+#: qcsrc/client/hud/panel/scoreboard.qc:2716
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Erneut spawnen in ^3%s^1 …"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2718
+#: qcsrc/client/hud/panel/scoreboard.qc:2726
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Du bist tot, warte ^3%s^7 bis zum Respawn"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2727
+#: qcsrc/client/hud/panel/scoreboard.qc:2735
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Du bist tot, drücke ^2%s^7, um neu zu spawnen"
@@ -1299,122 +1307,118 @@ msgstr "mil/h"
 msgid "knots"
 msgstr "kn"
 
-#: qcsrc/client/main.qc:1208
-msgid "Checkpoint times:"
-msgstr "Kontrollpunktzeiten:"
-
-#: qcsrc/client/main.qc:1397
+#: qcsrc/client/main.qc:1373
 msgid "All Weapons Arena"
 msgstr "Alle-Waffen-Arena"
 
-#: qcsrc/client/main.qc:1398
+#: qcsrc/client/main.qc:1374
 msgid "All Available Weapons Arena"
 msgstr "Alle-Verfügbare-Waffen-Arena"
 
-#: qcsrc/client/main.qc:1399
+#: qcsrc/client/main.qc:1375
 msgid "Most Weapons Arena"
 msgstr "Viele-Waffen-Arena"
 
-#: qcsrc/client/main.qc:1400
+#: qcsrc/client/main.qc:1376
 msgid "Most Available Weapons Arena"
 msgstr "Meiste-Verfügbare-Waffen-Arena"
 
-#: qcsrc/client/main.qc:1403 qcsrc/client/main.qc:1417
+#: qcsrc/client/main.qc:1379 qcsrc/client/main.qc:1393
 msgid "No Weapons Arena"
 msgstr "Keine-Waffen-Arena"
 
-#: qcsrc/client/main.qc:1415
+#: qcsrc/client/main.qc:1391
 #, c-format
 msgid "%s Arena"
 msgstr "%s-Arena"
 
-#: qcsrc/client/main.qc:1426 qcsrc/client/main.qc:1431
+#: qcsrc/client/main.qc:1402 qcsrc/client/main.qc:1407
 #, c-format
 msgid "This is %s"
 msgstr "Dies ist %s"
 
-#: qcsrc/client/main.qc:1427
+#: qcsrc/client/main.qc:1403
 msgid "Your client version is outdated."
 msgstr "Deine Client-Version ist veraltet."
 
-#: qcsrc/client/main.qc:1428
+#: qcsrc/client/main.qc:1404
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### DU WIRST AUF DIESEM SERVER NICHT SPIELEN KÖNNEN ###"
 
-#: qcsrc/client/main.qc:1429
+#: qcsrc/client/main.qc:1405
 msgid "Please update!"
 msgstr "Bitte aktualisieren!"
 
-#: qcsrc/client/main.qc:1432
+#: qcsrc/client/main.qc:1408
 msgid "This server is using an outdated Xonotic version."
 msgstr "Dieser Server benutzt eine veraltete Xonotic-Version."
 
-#: qcsrc/client/main.qc:1433
+#: qcsrc/client/main.qc:1409
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr ""
 "### DIESER SERVER IST INKOMPATIBEL UND DU KANNST DAHER NICHT BEITRETEN ###"
 
-#: qcsrc/client/main.qc:1435
+#: qcsrc/client/main.qc:1411
 #, c-format
 msgid "Welcome to %s"
 msgstr "Willkommen bei %s"
 
-#: qcsrc/client/main.qc:1451 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1427 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Level %d:"
 
-#: qcsrc/client/main.qc:1453
+#: qcsrc/client/main.qc:1429
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGDrücke ^F2%s^BG, um das Spiel zu betreten"
 
-#: qcsrc/client/main.qc:1476
+#: qcsrc/client/main.qc:1452
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Spieltyp:"
 
-#: qcsrc/client/main.qc:1480
+#: qcsrc/client/main.qc:1456
 msgid "by:"
 msgstr "von:"
 
-#: qcsrc/client/main.qc:1484
+#: qcsrc/client/main.qc:1460
 msgid "This match supports"
 msgstr "Dieses Spiel unterstützt"
 
-#: qcsrc/client/main.qc:1486
+#: qcsrc/client/main.qc:1462
 #, c-format
 msgid "%d players"
 msgstr "%d Spieler"
 
-#: qcsrc/client/main.qc:1488
+#: qcsrc/client/main.qc:1464
 #, c-format
 msgid "%d to %d players"
 msgstr "%d bis %d Spieler"
 
-#: qcsrc/client/main.qc:1490
+#: qcsrc/client/main.qc:1466
 #, c-format
 msgid "%d players maximum"
 msgstr "höchstens %d Spieler"
 
-#: qcsrc/client/main.qc:1492
+#: qcsrc/client/main.qc:1468
 #, c-format
 msgid "%d players minimum"
 msgstr "mindestens %d Spieler"
 
-#: qcsrc/client/main.qc:1497
+#: qcsrc/client/main.qc:1473
 msgid "Active modifications:"
 msgstr "Aktive Modifikationen:"
 
-#: qcsrc/client/main.qc:1500
+#: qcsrc/client/main.qc:1476
 msgid "Special gameplay tips:"
 msgstr "Besondere Spieltipps:"
 
-#: qcsrc/client/main.qc:1507
+#: qcsrc/client/main.qc:1483
 msgid "Server's message"
 msgstr "Servernachricht"
 
-#: qcsrc/client/main.qc:1601
+#: qcsrc/client/main.qc:1577
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (nicht zugewiesen)"
@@ -1541,7 +1545,7 @@ msgid "The amount of captures needed before the match will end"
 msgstr "Die Anzahl der benötigten Flaggeneroberungen, bevor das Spiel endet"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:179
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:184
 msgid "Rankings"
 msgstr "Platzierungen"
 
@@ -1682,11 +1686,11 @@ msgstr ""
 msgid "Onslaught"
 msgstr "Onslaught"
 
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:97
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:102
 msgid "Personal best"
 msgstr "Persönliche Bestzeit"
 
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:107
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:112
 msgid "Server best"
 msgstr "Server-Bestzeit"
 

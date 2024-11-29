@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-01 07:22+0200\n"
+"POT-Creation-Date: 2024-09-04 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Ihor <ihor@noleron.com>, 2021\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
@@ -36,6 +36,10 @@ msgstr ""
 "11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:115
+msgid "Checkpoint times:"
+msgstr ""
 
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
@@ -86,172 +90,172 @@ msgstr "^3Гравець^7: Це зона чату."
 msgid "FPS: %.*f"
 msgstr "FPS: %.*f"
 
-#: qcsrc/client/hud/panel/infomessages.qc:92
+#: qcsrc/client/hud/panel/infomessages.qc:94
 msgid "^1Observing"
 msgstr "^1Вільний огляд"
 
-#: qcsrc/client/hud/panel/infomessages.qc:94
+#: qcsrc/client/hud/panel/infomessages.qc:96
 #, c-format
 msgid "^1Spectating: ^7%s"
 msgstr "^1Спостерігаєте за: ^7%s"
 
-#: qcsrc/client/hud/panel/infomessages.qc:105
+#: qcsrc/client/hud/panel/infomessages.qc:107
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
 msgstr "^1Натисніть^3%s^1 для спостередження"
 
-#: qcsrc/client/hud/panel/infomessages.qc:105
+#: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/menu/xonotic/keybinder.qc:50
 msgid "primary fire"
 msgstr "основний вогонь"
 
-#: qcsrc/client/hud/panel/infomessages.qc:107
+#: qcsrc/client/hud/panel/infomessages.qc:109
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
 msgstr ""
 "^1Натисніть ^3%s^1 або ^3%s^1 щоб перейти до наступного чи попереднього "
 "гравця"
 
-#: qcsrc/client/hud/panel/infomessages.qc:107
-#: qcsrc/client/hud/panel/infomessages.qc:111
+#: qcsrc/client/hud/panel/infomessages.qc:109
+#: qcsrc/client/hud/panel/infomessages.qc:113
 msgid "next weapon"
 msgstr "Наступна зброя"
 
-#: qcsrc/client/hud/panel/infomessages.qc:107
-#: qcsrc/client/hud/panel/infomessages.qc:111
+#: qcsrc/client/hud/panel/infomessages.qc:109
+#: qcsrc/client/hud/panel/infomessages.qc:113
 msgid "previous weapon"
 msgstr "попередня зброя"
 
-#: qcsrc/client/hud/panel/infomessages.qc:111
+#: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
 msgstr "^1Використовуйте ^3%s^1 чи ^3%s^1 щоб змінити швидкість"
 
-#: qcsrc/client/hud/panel/infomessages.qc:113
+#: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
 msgstr "^1Натисніть ^3%s^1 щоб спостерігати, ^3%s^1 щоб змінити перспективу"
 
-#: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/client/hud/panel/infomessages.qc:115
+#: qcsrc/client/hud/panel/infomessages.qc:117
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 msgid "drop weapon"
 msgstr "викинути зброю"
 
-#: qcsrc/client/hud/panel/infomessages.qc:113
+#: qcsrc/client/hud/panel/infomessages.qc:115
 #: qcsrc/menu/xonotic/keybinder.qc:51
 msgid "secondary fire"
 msgstr "альтернативний вогонь"
 
-#: qcsrc/client/hud/panel/infomessages.qc:115
+#: qcsrc/client/hud/panel/infomessages.qc:117
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
 msgstr "^1Натисніть ^3%s^1 для зміни режиму огляду"
 
-#: qcsrc/client/hud/panel/infomessages.qc:118
+#: qcsrc/client/hud/panel/infomessages.qc:120
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
 msgstr "^1Натисніть ^3%s^1 для показу інформації про режим гри"
 
-#: qcsrc/client/hud/panel/infomessages.qc:118
+#: qcsrc/client/hud/panel/infomessages.qc:120
 #: qcsrc/menu/xonotic/keybinder.qc:106
 msgid "server info"
 msgstr "відомості про сервер"
 
-#: qcsrc/client/hud/panel/infomessages.qc:134
+#: qcsrc/client/hud/panel/infomessages.qc:136
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
 msgstr "^2Ти в черзі на приєднання до %s%s^2 команди"
 
-#: qcsrc/client/hud/panel/infomessages.qc:137
+#: qcsrc/client/hud/panel/infomessages.qc:139
 msgid "^2You're queued to join any available team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:139
+#: qcsrc/client/hud/panel/infomessages.qc:141
 #, c-format
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Натисніть ^3%s^1 щоб приєднатися"
 
-#: qcsrc/client/hud/panel/infomessages.qc:139 qcsrc/client/main.qc:1449
+#: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1425
 #: qcsrc/common/notifications/all.qh:446
 msgid "jump"
 msgstr "стрибок"
 
-#: qcsrc/client/hud/panel/infomessages.qc:148
+#: qcsrc/client/hud/panel/infomessages.qc:150
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
 msgstr "^1Гра почнеться через ^3%d^1 секунд"
 
-#: qcsrc/client/hud/panel/infomessages.qc:160
+#: qcsrc/client/hud/panel/infomessages.qc:162
 msgid "^2Currently in ^1warmup^2 stage!"
 msgstr "^2Зараз  ^1розминка^2!"
 
-#: qcsrc/client/hud/panel/infomessages.qc:170
+#: qcsrc/client/hud/panel/infomessages.qc:172
 msgid "^31^2 more player is needed for the match to start."
 msgstr "^31^2 гравець потрібен, щоб почати матч."
 
-#: qcsrc/client/hud/panel/infomessages.qc:172
+#: qcsrc/client/hud/panel/infomessages.qc:174
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
 msgstr "^3%d^2 гравців потрібно, щоб розпочати матч."
 
-#: qcsrc/client/hud/panel/infomessages.qc:185
+#: qcsrc/client/hud/panel/infomessages.qc:187
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr "%sНатисніть ^3%s%s щоб завершити розминку"
 
-#: qcsrc/client/hud/panel/infomessages.qc:185
-#: qcsrc/client/hud/panel/infomessages.qc:190
+#: qcsrc/client/hud/panel/infomessages.qc:187
+#: qcsrc/client/hud/panel/infomessages.qc:192
 #: qcsrc/menu/xonotic/keybinder.qc:102
 msgid "ready"
 msgstr "готовий"
 
-#: qcsrc/client/hud/panel/infomessages.qc:187
+#: qcsrc/client/hud/panel/infomessages.qc:189
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr "^2Чекаємо на готовність інших для завершення розминки..."
 
-#: qcsrc/client/hud/panel/infomessages.qc:190
+#: qcsrc/client/hud/panel/infomessages.qc:192
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr "^2Натисніть ^3%s^2 щоб завершити розминку"
 
-#: qcsrc/client/hud/panel/infomessages.qc:202
+#: qcsrc/client/hud/panel/infomessages.qc:204
 msgid "Teams are unbalanced!"
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:205
+#: qcsrc/client/hud/panel/infomessages.qc:207
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr "Натисніть ^3%s%s для налаштування"
 
-#: qcsrc/client/hud/panel/infomessages.qc:205
+#: qcsrc/client/hud/panel/infomessages.qc:207
 #: qcsrc/menu/xonotic/keybinder.qc:117
 msgid "team selection"
 msgstr "вибір команди"
 
-#: qcsrc/client/hud/panel/infomessages.qc:218
+#: qcsrc/client/hud/panel/infomessages.qc:220
 msgid "^1Spectating this player:"
 msgstr "^1Спостерігаєте за:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:218
+#: qcsrc/client/hud/panel/infomessages.qc:220
 msgid "^1Spectating you:"
 msgstr "^1Спостерігають за тобою:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:234
+#: qcsrc/client/hud/panel/infomessages.qc:267
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr "^7Натисніть ^3ESC ^7щоб показати опції HUD"
 
-#: qcsrc/client/hud/panel/infomessages.qc:235
+#: qcsrc/client/hud/panel/infomessages.qc:268
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr "^3Клацніть двічі ^7a панель щоб побачити її опції."
 
-#: qcsrc/client/hud/panel/infomessages.qc:236
+#: qcsrc/client/hud/panel/infomessages.qc:269
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr ""
 "^3CTRL ^7для відключення тесту колізій,\n"
 "^3SHIFT ^7і"
 
-#: qcsrc/client/hud/panel/infomessages.qc:237
+#: qcsrc/client/hud/panel/infomessages.qc:270
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "^3ALT ^7+ ^3СТРІЛКИ ^7для точного налаштування"
 
@@ -548,39 +552,39 @@ msgstr ""
 msgid "QMCMD^Spectate a player"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:57
+#: qcsrc/client/hud/panel/racetimer.qc:63
 #, c-format
 msgid " (-%dL)"
 msgstr "(-%dL)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:62
+#: qcsrc/client/hud/panel/racetimer.qc:68
 #, c-format
 msgid " (+%dL)"
 msgstr "(+%dL)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:81
+#: qcsrc/client/hud/panel/racetimer.qc:87
 msgid "Start line"
 msgstr "Старт"
 
-#: qcsrc/client/hud/panel/racetimer.qc:83
-#: qcsrc/client/hud/panel/racetimer.qc:87
+#: qcsrc/client/hud/panel/racetimer.qc:89
+#: qcsrc/client/hud/panel/racetimer.qc:93
 msgid "Finish line"
 msgstr "Фініш"
 
-#: qcsrc/client/hud/panel/racetimer.qc:85
-#: qcsrc/client/hud/panel/racetimer.qc:154
+#: qcsrc/client/hud/panel/racetimer.qc:91
+#: qcsrc/client/hud/panel/racetimer.qc:195
 #, c-format
 msgid "Intermediate %d"
 msgstr "Середнє %d"
 
-#: qcsrc/client/hud/panel/racetimer.qc:157
-#: qcsrc/client/hud/panel/racetimer.qc:223
-#: qcsrc/client/hud/panel/racetimer.qc:284
+#: qcsrc/client/hud/panel/racetimer.qc:198
+#: qcsrc/client/hud/panel/racetimer.qc:263
+#: qcsrc/client/hud/panel/racetimer.qc:327
 #, c-format
 msgid "PENALTY: %.1f (%s)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:157 qcsrc/client/main.qc:1286
+#: qcsrc/client/hud/panel/racetimer.qc:198 qcsrc/client/main.qc:1262
 msgid "missing a checkpoint"
 msgstr ""
 
@@ -1073,62 +1077,66 @@ msgstr ""
 msgid "SCO^points"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2444
+#: qcsrc/client/hud/panel/scoreboard.qc:2445
+msgid "Next map:"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:2452
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "Вибір команди"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2458
+#: qcsrc/client/hud/panel/scoreboard.qc:2466
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2460
+#: qcsrc/client/hud/panel/scoreboard.qc:2468
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2464
+#: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2475
+#: qcsrc/client/hud/panel/scoreboard.qc:2483
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f хвилин"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2502
+#: qcsrc/client/hud/panel/scoreboard.qc:2510
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7гравців"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2503 qcsrc/client/main.qc:1478
+#: qcsrc/client/hud/panel/scoreboard.qc:2511 qcsrc/client/main.qc:1454
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Мапа:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2670
+#: qcsrc/client/hud/panel/scoreboard.qc:2678
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Нагорода за швидкість: %d%s^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2674
+#: qcsrc/client/hud/panel/scoreboard.qc:2682
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Найшвидший за весь час: %d%s^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2708
+#: qcsrc/client/hud/panel/scoreboard.qc:2716
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Повернення до гри через ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2718
+#: qcsrc/client/hud/panel/scoreboard.qc:2726
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Ви загинули, почекайте ще ^3%s^7 перед поверненням у гру"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2727
+#: qcsrc/client/hud/panel/scoreboard.qc:2735
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Ви загинули, натисніть ^2%s^7 щоб повернутися до гри"
@@ -1264,121 +1272,117 @@ msgstr "милі"
 msgid "knots"
 msgstr "вузли"
 
-#: qcsrc/client/main.qc:1208
-msgid "Checkpoint times:"
-msgstr ""
-
-#: qcsrc/client/main.qc:1397
+#: qcsrc/client/main.qc:1373
 msgid "All Weapons Arena"
 msgstr "Арена зі всією зброєю"
 
-#: qcsrc/client/main.qc:1398
+#: qcsrc/client/main.qc:1374
 msgid "All Available Weapons Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1399
+#: qcsrc/client/main.qc:1375
 msgid "Most Weapons Arena"
 msgstr "Арена з більшістю зброї"
 
-#: qcsrc/client/main.qc:1400
+#: qcsrc/client/main.qc:1376
 msgid "Most Available Weapons Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1403 qcsrc/client/main.qc:1417
+#: qcsrc/client/main.qc:1379 qcsrc/client/main.qc:1393
 msgid "No Weapons Arena"
 msgstr "Без використання зброї"
 
-#: qcsrc/client/main.qc:1415
+#: qcsrc/client/main.qc:1391
 #, c-format
 msgid "%s Arena"
 msgstr "%s Арена"
 
-#: qcsrc/client/main.qc:1426 qcsrc/client/main.qc:1431
+#: qcsrc/client/main.qc:1402 qcsrc/client/main.qc:1407
 #, c-format
 msgid "This is %s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1427
+#: qcsrc/client/main.qc:1403
 msgid "Your client version is outdated."
 msgstr "Твоя версія клієнта не актуальна."
 
-#: qcsrc/client/main.qc:1428
+#: qcsrc/client/main.qc:1404
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### ВИ НЕ ЗМОЖЕТЕ ПОГРАТИ НА ЦЬОМУ СЕРВЕРІ ###"
 
-#: qcsrc/client/main.qc:1429
+#: qcsrc/client/main.qc:1405
 msgid "Please update!"
 msgstr "Будь-ласка оновіться!"
 
-#: qcsrc/client/main.qc:1432
+#: qcsrc/client/main.qc:1408
 msgid "This server is using an outdated Xonotic version."
 msgstr "Цей сервер використовує застарілу версію Xonotic."
 
-#: qcsrc/client/main.qc:1433
+#: qcsrc/client/main.qc:1409
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### НЕСУМІСНА ВЕРСІЯ СЕРВЕРУ, ВИ НЕ МОЖЕТЕ ПРИЄДНАТИСЬ ###"
 
-#: qcsrc/client/main.qc:1435
+#: qcsrc/client/main.qc:1411
 #, c-format
 msgid "Welcome to %s"
 msgstr "Ласкаво просимо до %s"
 
-#: qcsrc/client/main.qc:1451 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1427 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Рівень %d:"
 
-#: qcsrc/client/main.qc:1453
+#: qcsrc/client/main.qc:1429
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGНатисніть ^F2%s^BG щоб увійти до гри"
 
-#: qcsrc/client/main.qc:1476
+#: qcsrc/client/main.qc:1452
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Тип гри:"
 
-#: qcsrc/client/main.qc:1480
+#: qcsrc/client/main.qc:1456
 msgid "by:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1484
+#: qcsrc/client/main.qc:1460
 msgid "This match supports"
 msgstr "Цей матч підтримує"
 
-#: qcsrc/client/main.qc:1486
+#: qcsrc/client/main.qc:1462
 #, c-format
 msgid "%d players"
 msgstr "%d гравців"
 
-#: qcsrc/client/main.qc:1488
+#: qcsrc/client/main.qc:1464
 #, c-format
 msgid "%d to %d players"
 msgstr "%d до %d гравців"
 
-#: qcsrc/client/main.qc:1490
+#: qcsrc/client/main.qc:1466
 #, c-format
 msgid "%d players maximum"
 msgstr "%d максимальна кількість гравців"
 
-#: qcsrc/client/main.qc:1492
+#: qcsrc/client/main.qc:1468
 #, c-format
 msgid "%d players minimum"
 msgstr "%d мінімальна кількість гравців"
 
-#: qcsrc/client/main.qc:1497
+#: qcsrc/client/main.qc:1473
 msgid "Active modifications:"
 msgstr "Активні модифікації:"
 
-#: qcsrc/client/main.qc:1500
+#: qcsrc/client/main.qc:1476
 msgid "Special gameplay tips:"
 msgstr "Особливі поради до ігроладу:"
 
-#: qcsrc/client/main.qc:1507
+#: qcsrc/client/main.qc:1483
 msgid "Server's message"
 msgstr "Повідомлення від серверу"
 
-#: qcsrc/client/main.qc:1601
+#: qcsrc/client/main.qc:1577
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (не пов'язані)"
@@ -1504,7 +1508,7 @@ msgid "The amount of captures needed before the match will end"
 msgstr "Кількість захоплень прапора до закінчення матчу"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:179
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:184
 msgid "Rankings"
 msgstr "Ранг"
 
@@ -1637,11 +1641,11 @@ msgstr ""
 msgid "Onslaught"
 msgstr "Onslaught"
 
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:97
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:102
 msgid "Personal best"
 msgstr "Власний найкращий результат"
 
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:107
+#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:112
 msgid "Server best"
 msgstr "Найкращий результат на сервері"
 

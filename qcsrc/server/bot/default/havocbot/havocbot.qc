@@ -461,7 +461,7 @@ void havocbot_movetogoal(entity this)
 	// Jetpack navigation
 	if(this.navigation_jetpack_goal)
 	if(this.goalcurrent==this.navigation_jetpack_goal)
-	if(GetResource(this, RES_FUEL))
+	if(GetResource(this, RES_FUEL) > 0 || (this.items & IT_UNLIMITED_AMMO))
 	{
 		if(autocvar_bot_debug_goalstack)
 		{
@@ -1469,7 +1469,7 @@ void havocbot_chooseenemy(entity this)
 		this.havocbot_stickenemy_time = 0;
 }
 
-float havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int new_weapon)
+bool havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int new_weapon)
 {
 	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
 	// so skip this for them, or they'll never get to reload their weapons at all.
@@ -1480,6 +1480,8 @@ float havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int n
 	// if this weapon is scheduled for reloading, don't switch to it during combat
 	if (this.(weaponentity).weapon_load[new_weapon] < 0)
 	{
+		if(this.items & IT_UNLIMITED_AMMO)
+			return true;
 		FOREACH(Weapons, it != WEP_Null, {
 			if(it.wr_checkammo1(it, this, weaponentity) + it.wr_checkammo2(it, this, weaponentity))
 				return true; // other weapon available
