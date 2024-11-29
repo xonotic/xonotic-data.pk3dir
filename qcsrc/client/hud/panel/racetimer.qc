@@ -203,7 +203,7 @@ void HUD_RaceTimer ()
 		draw_endBoldFont();
 		float speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 		string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
-		s = strcat("^1", sprintf(_("Checkpoint %d"), 1), " (+15.42)", autocvar_cl_race_cptimes_showspeed ? sprintf(" ^7%d%s %s(%+d%s)", 345 * speed_conversion_factor, units_text, rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_color), 123 * speed_conversion_factor, units_text) : ""); 
+		s = strcat("^1", sprintf(_("Checkpoint %d"), 1), " (+15.42)", autocvar_cl_race_cptimes_showspeed ? sprintf(" ^7%d%s %s(%+d%s)", 345 * speed_conversion_factor, units_text, rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_color), 123 * speed_conversion_factor, units_text) : "");
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 		s = sprintf(_("PENALTY: %.1f (%s)"), 2, _("missing a checkpoint"));
