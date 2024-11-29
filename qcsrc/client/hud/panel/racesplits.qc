@@ -117,10 +117,10 @@ void HUD_RaceSplits()
 			string speed_color = rgb_to_hexcolor(j == 0 ? autocvar_hud_progressbar_acceleration_neg_color : autocvar_hud_progressbar_acceleration_color);
 			if(j == 3)
 				speed_color = "^3";
-			demolines[j] = sprintf(strcat("%s %s", _("Intermediate %d"), " (%s) ^7%d%s %s"), timestr, col, j+1, time_split, speed_split, units_text, sprintf("%s(%+d%s)", speed_color, speed_diff, units_text));
+			demolines[j] = sprintf(strcat("%s %s", _("Checkpoint %d"), " (%s) ^7%d%s %s"), timestr, col, j+1, time_split, speed_split, units_text, sprintf("%s(%+d%s)", speed_color, speed_diff, units_text));
 		}
 		for(; j < nrlines; ++j)
-			demolines[j] = sprintf(strcat("%s ^7", _("Intermediate %d"), " ^7%d%s"), TIME_ENCODED_TOSTRING(TIME_ENCODE(j*9.37), false), j+1, (1100 + j*63) * speed_conv_f, units_text);
+			demolines[j] = sprintf(strcat("%s ^7", _("Checkpoint %d"), " ^7%d%s"), TIME_ENCODED_TOSTRING(TIME_ENCODE(j*9.37), false), j+1, (1100 + j*63) * speed_conv_f, units_text);
 		for (int j = 0; j < nrlines; ++j)
 			RaceSplit(demolines[autocvar_hud_panel_racesplits_flip ? nrlines - 1 -j : j]);
 
