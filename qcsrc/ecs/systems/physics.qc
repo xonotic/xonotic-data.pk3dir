@@ -271,9 +271,6 @@ void sys_phys_simulate(entity this, float dt)
 
 	// same as wishdir = normalize(wishvel); but cheaper
 	const vector wishdir = (wishvel_len ? wishvel / wishvel_len : '0 0 0');
-	vector wishdir2 = normalize(wishvel);
-	if (wishdir2 - wishdir)
-		LOG_INFOF("^x0f8 diff = %v\n", wishdir2 - wishdir);
 
 	if (this.com_phys_air) {
 		if (!(this.flags & FL_WATERJUMP)) {
