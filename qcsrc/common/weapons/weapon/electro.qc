@@ -1,5 +1,76 @@
 #include "electro.qh"
 
+#ifdef GAMEQC
+
+#ifdef CSQC
+
+.float ltime;
+void electro_orb_draw(entity this)
+{
+	float dt = time - this.move_time;
+	this.move_time = time;
+	if(dt <= 0)
+		return;
+
+	float myscale = bound(0, (this.ltime - time) * 4, 1);
+	this.scale = (WEP_CVAR(WEP_ELECTRO, combo_radius) * 0.05) * myscale;
+	this.angles = this.angles + dt * this.avelocity;
+}
+
+void electro_orb_setup(entity e)
+{
+	setmodel(e, MDL_PROJECTILE_ELECTRO);
+	setsize(e, '-4 -4 -4', '4 4 4');
+
+	setorigin(e, e.origin);
+
+	e.draw = electro_orb_draw;
+	IL_PUSH(g_drawables, e);
+	SetResourceExplicit(e, RES_HEALTH, 255);
+	set_movetype(e, MOVETYPE_NONE);
+	e.solid = SOLID_NOT;
+	e.avelocity = '7 0 11';
+	e.drawmask = MASK_NORMAL;
+	e.alpha = 0.7;
+}
+#endif
+
+REGISTER_NET_LINKED(Electro_Orb)
+
+#ifdef CSQC
+NET_HANDLE(Electro_Orb, bool isNew)
+{
+	Net_Accept(Electro_Orb);
+	int sf = ReadByte();
+	if (sf & 1) {
+		this.origin = ReadVector();
+		setorigin(this, this.origin);
+		this.ltime = time + ReadByte()/10.0;
+		// this.ltime = time + this.orb_lifetime;
+		electro_orb_setup(this);
+	}
+	return true;
+}
+#endif
+
+#ifdef SVQC
+bool electro_orb_send(entity this, entity to, int sf)
+{
+	int channel = MSG_ENTITY;
+	WriteHeader(channel, Electro_Orb);
+	WriteByte(channel, sf);
+	if (sf & 1) {
+		WriteVector(channel, this.origin);
+
+		// round time delta to a 1/10th of a second
+		WriteByte(channel, (this.ltime - time)*10.0+0.5);
+	}
+	return true;
+}
+#endif
+
+#endif
+
 #ifdef SVQC
 #include <common/effects/qc/_mod.qh>
 
@@ -51,6 +122,48 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 	}
 }
 
+void W_Electro_ExplodeComboThink(entity this)
+{
+	if(time >= this.ltime)
+	{
+		delete(this);
+		return;
+	}
+
+	this.nextthink = time;
+
+	float damage = WEP_CVAR(WEP_ELECTRO, combo_damage) * PHYS_INPUT_TIMELENGTH;
+	float edgedamage = WEP_CVAR(WEP_ELECTRO, combo_edgedamage) * PHYS_INPUT_TIMELENGTH;
+
+	RadiusDamage(this, this.realowner, damage, edgedamage, WEP_CVAR(WEP_ELECTRO, combo_radius), NULL, NULL, 0, this.projectiledeathtype, this.weaponentity_fld, NULL);
+	this.projectiledeathtype |= HITTYPE_SPAM; // ensure it doesn't spam its effect
+}
+
+void W_Electro_Orb_ExplodeOverTime(entity this)
+{
+	entity newproj = spawn();
+	newproj.classname = this.classname;
+	newproj.solid = this.solid;
+	setorigin(newproj, this.origin);
+	setmodel(newproj, MDL_PROJECTILE_ELECTRO);
+	setsize(newproj, this.mins, this.maxs);
+	newproj.owner = this.owner;
+	newproj.realowner = this.realowner;
+	newproj.weaponentity_fld = this.weaponentity_fld;
+	newproj.projectiledeathtype = WEP_ELECTRO.m_id | HITTYPE_BOUNCE; // use THIS type for a combo because primary can't bounce
+
+	setthink(newproj, W_Electro_ExplodeComboThink);
+	newproj.nextthink = time;
+	newproj.ltime = time + WEP_CVAR(WEP_ELECTRO, combo_duration);
+	set_movetype(newproj, MOVETYPE_NONE);
+
+	Net_LinkEntity(newproj, true, 0, electro_orb_send);
+	newproj.SendFlags |= 1;
+
+	// fire the first damage tick immediately
+	getthink(newproj)(newproj);
+}
+
 void W_Electro_ExplodeCombo(entity this)
 {
 	W_Electro_TriggerCombo(this.origin, WEP_CVAR(WEP_ELECTRO, combo_comboradius), this.realowner);
@@ -58,6 +171,14 @@ void W_Electro_ExplodeCombo(entity this)
 	this.event_damage = func_null;
 	if (!this.velocity)
 		this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
+
+	if(WEP_CVAR(WEP_ELECTRO, combo_duration))
+	{
+		W_Electro_Orb_ExplodeOverTime(this);
+
+		delete(this);
+		return;
+	}
 
 	RadiusDamage(
 		this,
