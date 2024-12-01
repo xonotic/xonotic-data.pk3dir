@@ -219,6 +219,8 @@ void door_use(entity this, entity actor, entity trigger)
 
 	if (!this.owner)
 		return;
+	if (this.owner.active != ACTIVE_ACTIVE)
+		return;
 	this = this.owner;
 
 	if (this.spawnflags & DOOR_TOGGLE)
@@ -297,6 +299,10 @@ void door_touch(entity this, entity toucher)
 		return;
 	if (this.owner.door_finished > time)
 		return;
+#ifdef SVQC
+	if (this.owner.active != ACTIVE_ACTIVE)
+		return;
+#endif
 
 	this.owner.door_finished = time + 2;
 
@@ -364,6 +370,10 @@ void door_trigger_touch(entity this, entity toucher)
 		if(!((IS_CLIENT(toucher) || toucher.classname == "ENT_CLIENT_PROJECTILE") && !IS_DEAD(toucher)))
 #endif
 			return;
+#ifdef SVQC
+	if (this.owner.active != ACTIVE_ACTIVE)
+		return;
+#endif
 
 	if (this.owner.state == STATE_UP)
 		return;
@@ -641,6 +651,7 @@ void door_reset(entity this)
 	setorigin(this, this.pos1);
 	this.velocity = '0 0 0';
 	this.state = STATE_BOTTOM;
+	this.active = ACTIVE_ACTIVE;
 	setthink(this, func_null);
 	this.nextthink = 0;
 
@@ -771,6 +782,7 @@ spawnfunc(func_door)
 
 	setblocked(this, door_blocked);
 	this.use = door_use;
+	this.active = ACTIVE_ACTIVE;
 
 	if(this.spawnflags & DOOR_NONSOLID)
 		this.solid = SOLID_NOT;
