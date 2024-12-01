@@ -231,7 +231,13 @@ void HUD_RaceTimer ()
 				{
 					if (racetimer_have_stored_splits && racetimer_have_stored_splits_player != (current_player + 1)) // we changed player
 						ClearRaceSplits(true);
-					string speed_text = string_null;
+
+					// build checkpoint split strings
+					if(race_time && race_previousbesttime)
+						s = MakeRaceString(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, ((race_mypreviousbesttime) ? TIME_DECODE(race_time) - TIME_DECODE(race_mypreviousbesttime) : 0), 0, race_previousbestname);
+					else
+						s = MakeRaceString(race_checkpoint, 0, -1, 0, 0, race_previousbestname);
+
 					if(autocvar_cl_race_cptimes_showspeed)
 					{
 						float speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
@@ -245,9 +251,9 @@ void HUD_RaceTimer ()
 						else if (speed_diff == 0) speed_color = "^3";
 
 						if(race_time && race_previousbesttime && race_checkpoint_splits_speed[race_checkpoint])
-							speed_text = sprintf(" ^7%d%s %s(%+d%s)", speed * speed_conversion_factor, units_text, speed_color, speed_diff * speed_conversion_factor, units_text);
+							s = sprintf("%s ^7%d%s %s(%+d%s)", s, speed * speed_conversion_factor, units_text, speed_color, speed_diff * speed_conversion_factor, units_text);
 						else
-							speed_text = sprintf(" ^7%d%s", speed * speed_conversion_factor, units_text);
+							s = sprintf("%s ^7%d%s", s, speed * speed_conversion_factor, units_text);
 
 						// if fastest cp time, store speed for later comparison
 						if((TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime)) < 0 || !race_checkpoint_splits_speed[race_checkpoint])
@@ -255,11 +261,6 @@ void HUD_RaceTimer ()
 							race_checkpoint_splits_speed[race_checkpoint] = speed;
 						}
 					}
-					// build checkpoint split strings
-					if(race_time && race_previousbesttime)
-						s = strcat(MakeRaceString(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, ((race_mypreviousbesttime) ? TIME_DECODE(race_time) - TIME_DECODE(race_mypreviousbesttime) : 0), 0, race_previousbestname), speed_text);
-					else
-						s = strcat(MakeRaceString(race_checkpoint, 0, -1, 0, 0, race_previousbestname), speed_text);
 					if(race_time)
 						forcetime = TIME_ENCODED_TOSTRING(race_time, false);
 
