@@ -733,24 +733,6 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		mirrordamage = M_ARGV(5, float);
 		force = M_ARGV(6, vector);
 
-		// Dr. Jaska:
-		// Quake 3 DeFRaG's cpm physic's rocketlauncher has 1.2x horizontal force multiplier
-		// This aims to reproduce it in Quake 3 DeFRaG cpm and XDF physics if damagepush_speedfactor is 0
-		// CPMA cpm physics should be active in .arena maps and Quake 3 DeFRaG cpm physics in .defi maps
-		// It is only intended to be used with 250 base force for devastator which matches Q3 if our
-		// target's damageforcescale is also 2
-		if(force)
-		if(q3compat & Q3COMPAT_DEFI)
-		if(autocvar_g_balance_damagepush_speedfactor == 0)
-		if(attacker.(weaponentity).m_weapon == WEP_DEVASTATOR)
-		if(autocvar_g_balance_devastator_force == 250)
-		if(targ.damageforcescale == 2)
-		if((cvar_string("g_mod_physics") == "CPMA") || (cvar_string("g_mod_physics") == "XDF"))
-		{
-			force.x *= 1.2;
-			force.y *= 1.2;
-		}
-
 		if(IS_PLAYER(targ) && damage > 0 && attacker)
 		{
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
