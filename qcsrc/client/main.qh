@@ -26,7 +26,7 @@ bool autocvar_cl_race_cptimes_showspeed = false;
 bool autocvar_cl_race_cptimes_showspeed_unit = true;
 #else
 AUTOCVAR_SAVE(cl_race_checkpoint_splits_console, bool, 1, "Print checkpoint splits to console");
-AUTOCVAR_SAVE(cl_race_cptimes_showspeed, bool, 0, "Show race checkpoint speed");
+AUTOCVAR_SAVE(cl_race_cptimes_showspeed, bool, 0, "Show race checkpoint speed (NOTE: ignores vertical speed)");
 AUTOCVAR_SAVE(cl_race_cptimes_showspeed_unit, bool, 1, "Show race checkpoint speed units");
 #endif
 bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
