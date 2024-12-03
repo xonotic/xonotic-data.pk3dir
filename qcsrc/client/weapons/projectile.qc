@@ -1,6 +1,7 @@
 #include "projectile.qh"
 
 #include <client/mutators/_mod.qh>
+#include <client/polytrails.qh>
 #include <common/constants.qh>
 #include <common/effects/all.qh>
 #include <common/effects/effect.qh>
@@ -360,6 +361,25 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				settouch(this, func_null);
 				this.bouncefactor = WEP_CVAR_SEC(WEP_ELECTRO, bouncefactor);
 				this.bouncestop = WEP_CVAR_SEC(WEP_ELECTRO, bouncestop);
+				if(autocvar_cl_polytrails && autocvar_cl_polytrails_electro_orb)
+				{
+					this.traileffect = EFFECT_Null.m_id;
+					PolyTrail t = NEW(PolyTrail, this);
+					t.polytrail_tex = "particles/lgbeam.tga";
+					t.polytrail_rgb[0] = autocvar_cl_polytrails_electro_orb_rgb0;
+					t.polytrail_rgb[1] = autocvar_cl_polytrails_electro_orb_rgb1;
+					t.polytrail_rgb[2] = autocvar_cl_polytrails_electro_orb_rgb2;
+					t.polytrail_alpha[0] = autocvar_cl_polytrails_electro_orb_alpha0;
+					t.polytrail_alpha[1] = autocvar_cl_polytrails_electro_orb_alpha1;
+					t.polytrail_alpha[2] = autocvar_cl_polytrails_electro_orb_alpha2;
+					t.polytrail_thickness[0] = autocvar_cl_polytrails_electro_orb_thickness0;
+					t.polytrail_thickness[1] = autocvar_cl_polytrails_electro_orb_thickness1;
+					t.polytrail_thickness[2] = autocvar_cl_polytrails_electro_orb_thickness2;
+					t.polytrail_lifetime = autocvar_cl_polytrails_electro_orb_lifetime;
+					t.polytrail_segmentsize = autocvar_cl_polytrails_electro_orb_segmentsize;
+					t.polytrail_noise = autocvar_cl_polytrails_electro_orb_noise;
+					t.polytrail_noisefunc = autocvar_cl_polytrails_electro_orb_noisefunc;
+				}
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
@@ -408,6 +428,25 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_CRYLINK_BOUNCING:
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
+				if(autocvar_cl_polytrails && autocvar_cl_polytrails_crylink_bouncing)
+				{
+					this.traileffect = EFFECT_Null.m_id;
+					PolyTrail t = NEW(PolyTrail, this);
+					t.polytrail_tex = "gfx/crosshair_ring.tga"; // TODO: dedicated texture
+					t.polytrail_rgb[0] = autocvar_cl_polytrails_crylink_bouncing_rgb0;
+					t.polytrail_rgb[1] = autocvar_cl_polytrails_crylink_bouncing_rgb1;
+					t.polytrail_rgb[2] = autocvar_cl_polytrails_crylink_bouncing_rgb2;
+					t.polytrail_alpha[0] = autocvar_cl_polytrails_crylink_bouncing_alpha0;
+					t.polytrail_alpha[1] = autocvar_cl_polytrails_crylink_bouncing_alpha1;
+					t.polytrail_alpha[2] = autocvar_cl_polytrails_crylink_bouncing_alpha2;
+					t.polytrail_thickness[0] = autocvar_cl_polytrails_crylink_bouncing_thickness0;
+					t.polytrail_thickness[1] = autocvar_cl_polytrails_crylink_bouncing_thickness1;
+					t.polytrail_thickness[2] = autocvar_cl_polytrails_crylink_bouncing_thickness2;
+					t.polytrail_lifetime = autocvar_cl_polytrails_crylink_bouncing_lifetime;
+					t.polytrail_segmentsize = autocvar_cl_polytrails_crylink_bouncing_segmentsize;
+					t.polytrail_noise = autocvar_cl_polytrails_crylink_bouncing_noise;
+					t.polytrail_noisefunc = autocvar_cl_polytrails_crylink_bouncing_noisefunc;
+				}
 				break;
 			case PROJECTILE_FIREBALL:
 				loopsound(this, CH_SHOTS_SINGLE, SND_FIREBALL_FLY2, VOL_BASE, ATTEN_NORM);
@@ -451,6 +490,48 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				break;
 			case PROJECTILE_WAKIROCKET:
 				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				break;
+			case PROJECTILE_ELECTRO_BEAM:
+				if(autocvar_cl_polytrails && autocvar_cl_polytrails_electro_bolt)
+				{
+					this.traileffect = EFFECT_Null.m_id;
+					PolyTrail t = NEW(PolyTrail, this);
+					t.polytrail_tex = "particles/lgbeam.tga";
+					t.polytrail_rgb[0] = autocvar_cl_polytrails_electro_bolt_rgb0;
+					t.polytrail_rgb[1] = autocvar_cl_polytrails_electro_bolt_rgb1;
+					t.polytrail_rgb[2] = autocvar_cl_polytrails_electro_bolt_rgb2;
+					t.polytrail_alpha[0] = autocvar_cl_polytrails_electro_bolt_alpha0;
+					t.polytrail_alpha[1] = autocvar_cl_polytrails_electro_bolt_alpha1;
+					t.polytrail_alpha[2] = autocvar_cl_polytrails_electro_bolt_alpha2;
+					t.polytrail_thickness[0] = autocvar_cl_polytrails_electro_bolt_thickness0;
+					t.polytrail_thickness[1] = autocvar_cl_polytrails_electro_bolt_thickness1;
+					t.polytrail_thickness[2] = autocvar_cl_polytrails_electro_bolt_thickness2;
+					t.polytrail_lifetime = autocvar_cl_polytrails_electro_bolt_lifetime;
+					t.polytrail_segmentsize = autocvar_cl_polytrails_electro_bolt_segmentsize;
+					t.polytrail_noise = autocvar_cl_polytrails_electro_bolt_noise;
+					t.polytrail_noisefunc = autocvar_cl_polytrails_electro_bolt_noisefunc;
+				}
+				break;
+			case PROJECTILE_CRYLINK:
+				if(autocvar_cl_polytrails && autocvar_cl_polytrails_crylink_bolt)
+				{
+					this.traileffect = EFFECT_Null.m_id;
+					PolyTrail t = NEW(PolyTrail, this);
+					t.polytrail_tex = "gfx/crosshair_ring.tga"; // TODO: dedicated texture
+					t.polytrail_rgb[0] = autocvar_cl_polytrails_crylink_bolt_rgb0;
+					t.polytrail_rgb[1] = autocvar_cl_polytrails_crylink_bolt_rgb1;
+					t.polytrail_rgb[2] = autocvar_cl_polytrails_crylink_bolt_rgb2;
+					t.polytrail_alpha[0] = autocvar_cl_polytrails_crylink_bolt_alpha0;
+					t.polytrail_alpha[1] = autocvar_cl_polytrails_crylink_bolt_alpha1;
+					t.polytrail_alpha[2] = autocvar_cl_polytrails_crylink_bolt_alpha2;
+					t.polytrail_thickness[0] = autocvar_cl_polytrails_crylink_bolt_thickness0;
+					t.polytrail_thickness[1] = autocvar_cl_polytrails_crylink_bolt_thickness1;
+					t.polytrail_thickness[2] = autocvar_cl_polytrails_crylink_bolt_thickness2;
+					t.polytrail_lifetime = autocvar_cl_polytrails_crylink_bolt_lifetime;
+					t.polytrail_segmentsize = autocvar_cl_polytrails_crylink_bolt_segmentsize;
+					t.polytrail_noise = autocvar_cl_polytrails_crylink_bolt_noise;
+					t.polytrail_noisefunc = autocvar_cl_polytrails_crylink_bolt_noisefunc;
+				}
 				break;
 			/*
 			case PROJECTILE_WAKICANNON:

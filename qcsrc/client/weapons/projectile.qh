@@ -31,3 +31,64 @@ void Projectile_Draw(entity this);
 void loopsound(entity e, int ch, Sound samp, float vol, float attn);
 
 void Ent_RemoveProjectile(entity this);
+
+// projectile polytrails
+bool autocvar_cl_polytrails_crylink_bouncing = true;
+vector autocvar_cl_polytrails_crylink_bouncing_rgb0 = '0.7 0 1';
+vector autocvar_cl_polytrails_crylink_bouncing_rgb1 = '0.5 0 1';
+vector autocvar_cl_polytrails_crylink_bouncing_rgb2 = '0.1 0 0.8';
+float autocvar_cl_polytrails_crylink_bouncing_alpha0 = 0.5;
+float autocvar_cl_polytrails_crylink_bouncing_alpha1 = 0.2;
+float autocvar_cl_polytrails_crylink_bouncing_alpha2 = 0;
+float autocvar_cl_polytrails_crylink_bouncing_thickness0 = 5;
+float autocvar_cl_polytrails_crylink_bouncing_thickness1 = 3;
+float autocvar_cl_polytrails_crylink_bouncing_thickness2 = 3;
+float autocvar_cl_polytrails_crylink_bouncing_lifetime = 0.15;
+float autocvar_cl_polytrails_crylink_bouncing_segmentsize = 80;
+float autocvar_cl_polytrails_crylink_bouncing_noise = 0;
+string autocvar_cl_polytrails_crylink_bouncing_noisefunc = "none";
+
+bool autocvar_cl_polytrails_crylink_bolt = true;
+vector autocvar_cl_polytrails_crylink_bolt_rgb0 = '0.7 0 1';
+vector autocvar_cl_polytrails_crylink_bolt_rgb1 = '0.5 0 1';
+vector autocvar_cl_polytrails_crylink_bolt_rgb2 = '0.1 0 0.8';
+float autocvar_cl_polytrails_crylink_bolt_alpha0 = 0.75;
+float autocvar_cl_polytrails_crylink_bolt_alpha1 = 0.2;
+float autocvar_cl_polytrails_crylink_bolt_alpha2 = 0;
+float autocvar_cl_polytrails_crylink_bolt_thickness0 = 5;
+float autocvar_cl_polytrails_crylink_bolt_thickness1 = 3;
+float autocvar_cl_polytrails_crylink_bolt_thickness2 = 3;
+float autocvar_cl_polytrails_crylink_bolt_lifetime = 0.15;
+float autocvar_cl_polytrails_crylink_bolt_segmentsize = 80;
+float autocvar_cl_polytrails_crylink_bolt_noise = 0;
+string autocvar_cl_polytrails_crylink_bolt_noisefunc = "none";
+
+bool autocvar_cl_polytrails_electro_bolt = true;
+vector autocvar_cl_polytrails_electro_bolt_rgb0 = '0.75 0.75 1';
+vector autocvar_cl_polytrails_electro_bolt_rgb1 = '0.45 0.45 1';
+vector autocvar_cl_polytrails_electro_bolt_rgb2 = '0.1 0.1 0.75';
+float autocvar_cl_polytrails_electro_bolt_alpha0 = 1;
+float autocvar_cl_polytrails_electro_bolt_alpha1 = 0.5;
+float autocvar_cl_polytrails_electro_bolt_alpha2 = 0;
+float autocvar_cl_polytrails_electro_bolt_thickness0 = 5;
+float autocvar_cl_polytrails_electro_bolt_thickness1 = 5;
+float autocvar_cl_polytrails_electro_bolt_thickness2 = 0;
+float autocvar_cl_polytrails_electro_bolt_lifetime = 0.27;
+float autocvar_cl_polytrails_electro_bolt_segmentsize = 10;
+float autocvar_cl_polytrails_electro_bolt_noise = 5;
+string autocvar_cl_polytrails_electro_bolt_noisefunc = "chaotic";
+
+bool autocvar_cl_polytrails_electro_orb = true;
+vector autocvar_cl_polytrails_electro_orb_rgb0 = '0.8 0.8 1';
+vector autocvar_cl_polytrails_electro_orb_rgb1 = '0.5 0.5 1';
+vector autocvar_cl_polytrails_electro_orb_rgb2 = '0.1 0.1 0.7';
+float autocvar_cl_polytrails_electro_orb_alpha0 = 1;
+float autocvar_cl_polytrails_electro_orb_alpha1 = 0.5;
+float autocvar_cl_polytrails_electro_orb_alpha2 = 0;
+float autocvar_cl_polytrails_electro_orb_thickness0 = 15;
+float autocvar_cl_polytrails_electro_orb_thickness1 = 7;
+float autocvar_cl_polytrails_electro_orb_thickness2 = 0;
+float autocvar_cl_polytrails_electro_orb_lifetime = 0.18;
+float autocvar_cl_polytrails_electro_orb_segmentsize = 10;
+float autocvar_cl_polytrails_electro_orb_noise = 10;
+string autocvar_cl_polytrails_electro_orb_noisefunc = "chaotic";
