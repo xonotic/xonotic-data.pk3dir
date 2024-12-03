@@ -166,6 +166,8 @@ void XonoticMutatorsDialog_fill(entity me)
 		w = REGISTRY_GET(Weapons, i);
 		if (w.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK))
 			continue;
+		if (w.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+			continue;
 		if ((j % 3) == 0)
 		{
 			me.TR(me);
