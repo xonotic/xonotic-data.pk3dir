@@ -45,7 +45,7 @@ void HUD_RaceSplits()
 	}
 
 	HUD_Panel_LoadCvars();
-	// default values for <= 0.8.6 can be removed after next release
+	// XONRELEASE: default values for <= 0.8.6 can be removed after next release
 	registercvar("hud_panel_racesplits_pos", "0.700000 0.190000");
 	registercvar("hud_panel_racesplits_size", "0.250000 0.170000");
 
@@ -123,6 +123,5 @@ void HUD_RaceSplits()
 			demolines[j] = sprintf(strcat("%s ^7", _("Checkpoint %d"), " ^7%d%s"), TIME_ENCODED_TOSTRING(TIME_ENCODE(j*9.37), false), j+1, (1100 + j*63) * speed_conv_f, units_text);
 		for (int j = 0; j < nrlines; ++j)
 			RaceSplit(demolines[autocvar_hud_panel_racesplits_flip ? nrlines - 1 -j : j]);
-
 	}
 }
