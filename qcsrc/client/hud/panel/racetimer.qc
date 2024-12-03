@@ -3,7 +3,6 @@
 
 #include <client/draw.qh>
 #include <common/ent_cs.qh>
-#include <lib/csqcmodel/cl_player.qh>
 
 // used for caching the string after passing through a checkpoint
 float racetimer_lastcheckpoint;
@@ -228,7 +227,7 @@ void HUD_RaceTimer ()
 					if(autocvar_cl_race_cptimes_showspeed)
 					{
 						float speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
-						float speed = race_timespeed; //vlen(vec2(csqcplayer.velocity));
+						float speed = race_timespeed;
 						float speed_diff = rint(speed - race_checkpoint_splits_speed[race_checkpoint]);
 						string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
 
