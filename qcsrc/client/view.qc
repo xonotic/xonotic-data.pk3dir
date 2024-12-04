@@ -293,13 +293,16 @@ void viewmodel_animate(entity this)
 
 void viewmodel_draw(entity this)
 {
-	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
-	float a;
+	// alpha calculations
+	float a = this.m_alpha;
+	float a_max = min(autocvar_cl_viewmodel_alpha, 1);
+	float a_min = -1;
 	if (autocvar_cl_viewmodel_alpha_min)
-		a = bound(autocvar_cl_viewmodel_alpha_min, this.m_alpha, autocvar_cl_viewmodel_alpha);
-	else
-		a = autocvar_cl_viewmodel_alpha;
-	a = bound(-1, a, this.m_alpha);
+		a_min = max(autocvar_cl_viewmodel_alpha_min, -1);
+	a = max(a_min, a); // NOT DP BOUND, thus avoids:
+	a = min(a, a_max); // bound(0.75, 0.25, 0.50) -> 0.75 which isn't 0.5
+
+	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	int wepskin = this.m_skin;
 	bool invehicle = player_localentnum > maxclients;
 	if (invehicle) a = -1;
