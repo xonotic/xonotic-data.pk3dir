@@ -6,6 +6,8 @@
 #include <client/draw.qh>
 #include <common/ent_cs.qh>
 
+// Race Splits (#27)
+
 #define HUD_RACESPLITS_MAX_NRLINES 50 // feels like twice more than enough
 
 void HUD_RaceSplits_Export(int fh)

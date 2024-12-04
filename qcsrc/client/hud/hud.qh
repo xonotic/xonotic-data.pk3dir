@@ -260,7 +260,6 @@ REGISTER_HUD_PANEL(TIMER,           HUD_Timer,          PANEL_CONFIG_MAIN | PANE
 REGISTER_HUD_PANEL(RADAR,           HUD_Radar,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // RADAR
 REGISTER_HUD_PANEL(SCORE,           HUD_Score,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // SCORE
 REGISTER_HUD_PANEL(RACETIMER,       HUD_RaceTimer,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // RACETIMER
-REGISTER_HUD_PANEL(RACESPLITS,      HUD_RaceSplits,     PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // RACESPLITS
 REGISTER_HUD_PANEL(VOTE,            HUD_Vote,           PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // VOTE
 REGISTER_HUD_PANEL(MODICONS,        HUD_ModIcons,       PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                            | PANEL_SHOW_WITH_SB) // MODICONS
 REGISTER_HUD_PANEL(PRESSEDKEYS,     HUD_PressedKeys,    PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // PRESSEDKEYS
@@ -279,7 +278,9 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      PANEL_CONFIG_MAIN       
 REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // SCOREBOARD
 REGISTER_HUD_PANEL(STRAFEHUD,       HUD_StrafeHUD,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // STRAFEHUD
 REGISTER_HUD_PANEL(PICKUP,          HUD_Pickup,         PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // PICKUP
-// always add new panels to the end of list
+REGISTER_HUD_PANEL(RACESPLITS,      HUD_RaceSplits,     PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // RACESPLITS
+// always add new panels to the end of list and add a comment in the form of
+// "// Panel Name (#nr)" with the relative panel nr in your main panelname.qc
 
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:
 // ----------------------
