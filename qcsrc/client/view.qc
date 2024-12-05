@@ -41,6 +41,7 @@
 #include <lib/warpzone/common.qh>
 
 float autocvar_cl_viewmodel_alpha = 1;
+float autocvar_cl_viewmodel_alpha_min;
 
 bool autocvar_cl_bobmodel;
 float autocvar_cl_bobmodel_speed;
@@ -292,8 +293,18 @@ void viewmodel_animate(entity this)
 
 void viewmodel_draw(entity this)
 {
+	// alpha calculations
+	float a = this.m_alpha;
+	float a_max = min(autocvar_cl_viewmodel_alpha, 1);
+	float a_min = -1;
+	if (autocvar_cl_viewmodel_alpha_min)
+		a_min = max(autocvar_cl_viewmodel_alpha_min, -1);
+	if (a_min >= a_max)
+		a = a_max;
+	else
+		a = bound(a_min, a, a_max);
+
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
-	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
 	int wepskin = this.m_skin;
 	bool invehicle = player_localentnum > maxclients;
 	if (invehicle) a = -1;
