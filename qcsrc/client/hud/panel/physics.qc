@@ -51,7 +51,7 @@ void HUD_Physics()
 	HUD_Panel_DrawBg();
 	if (panel_bg_padding)
 	{
-		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_pos  += '1 1 0' * panel_bg_padding;
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
@@ -118,7 +118,7 @@ void HUD_Physics()
 	float panel_ar = panel_size.x / panel_size.y;
 	vector speed_offset = '0 0 0', accel_offset = '0 0 0';
 	if (autocvar_hud_panel_physics_force_layout == PHYSICS_LAYOUT_HORIZONTAL
-		|| (autocvar_hud_panel_physics_force_layout != PHYSICS_LAYOUT_VERTICAL && panel_ar >= 5 && !accel_progressbar_scale))
+	|| (autocvar_hud_panel_physics_force_layout != PHYSICS_LAYOUT_VERTICAL && panel_ar >= 5 && !accel_progressbar_scale))
 	{
 		panel_size.x *= 0.5;
 		if (autocvar_hud_panel_physics_flip)
@@ -160,14 +160,16 @@ void HUD_Physics()
 
 	// draw speed
 	if (!immobile)
-	if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH || autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_SPEED)
+	if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH
+	||  autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_SPEED)
 		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed / max_speed, 0, speed_baralign,
 			autocvar_hud_progressbar_speed_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// compute jumpspeed text
 	float jump_speed_f = 0;
 	if (autocvar_hud_panel_physics_jumpspeed)
-	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
+	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH
+	||  autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
 	{
 		text_bits |= BIT(1);
 		if (autocvar__hud_configure)
@@ -193,7 +195,8 @@ void HUD_Physics()
 	// compute and draw topspeed
 	float top_speed_f = 0;
 	if (autocvar_hud_panel_physics_topspeed)
-	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
+	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH
+	||  autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
 	{
 		text_bits |= BIT(0);
 		if (autocvar__hud_configure)
@@ -220,7 +223,8 @@ void HUD_Physics()
 		if (top_speed_f > 0)
 		{
 			if (speed < top_speed)
-			if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH || autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_SPEED)
+			if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH
+			||  autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_SPEED)
 			{
 				float peak_offsetX;
 				vector peak_size = '0 0 0';
@@ -263,7 +267,8 @@ void HUD_Physics()
 	}
 
 	// draw speed text
-	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
+	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH
+	||  autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
 	{
 		tmp_size.x   = panel_size.x * speed_size;
 		tmp_size.y   = panel_size.y * text_scale;
@@ -277,7 +282,8 @@ void HUD_Physics()
 
 	// draw acceleration
 	if (accel)
-	if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH || autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_ACCEL)
+	if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH
+	||  autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_ACCEL)
 	{
 		vector progressbar_color;
 		if (accel < 0)
@@ -315,7 +321,8 @@ void HUD_Physics()
 	}
 
 	// draw acceleration text
-	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_ACCEL)
+	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH
+	||  autocvar_hud_panel_physics_text == PHYSICS_TEXT_ACCEL)
 	{
 		tmp_size.x = panel_size.x;
 		tmp_size.y = panel_size.y * text_scale;

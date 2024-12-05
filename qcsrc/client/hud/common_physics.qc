@@ -11,7 +11,7 @@
 void HUD_Physics_Init()
 {
 	// find out whether the local csqcmodel entity is valid
-	if(spectatee_status > 0 || isdemo())
+	if (spectatee_status > 0 || isdemo())
 	{
 		islocal = false;
 		strafeplayer = CSQCModel_server2csqc(player_localentnum - 1);
@@ -22,14 +22,9 @@ void HUD_Physics_Init()
 		strafeplayer = csqcplayer;
 	}
 
-	if(csqcplayer && strafeplayer)
-		csqc_and_strafe_player = true;
-	else
-	{
-		csqc_and_strafe_player = false;
-		// Since both huds return (essentially) when this is false, no variables beyond this point need to be computed
-		return;
-	}
+	csqc_and_strafe_player = (csqcplayer && strafeplayer);
+	if (!csqc_and_strafe_player)
+		return; // Since both huds return (essentially) when this is false, no variables beyond this point need to be computed
 
 	predicted = csqcplayer_status == CSQCPLAYERSTATUS_PREDICTED;
 
@@ -54,14 +49,14 @@ void HUD_Physics_Init()
 	keys = STAT(PRESSED_KEYS);
 	// try to ignore if track_canjump is enabled, doesn't work in spectator mode if spectated player uses +jetpack or cl_movement_track_canjump
 	jumpheld = false;
-	if(islocal)
+	if (islocal)
 	{
-		if((PHYS_INPUT_BUTTON_JUMP(strafeplayer) || PHYS_INPUT_BUTTON_JETPACK(strafeplayer)) && !PHYS_CL_TRACK_CANJUMP(strafeplayer))
+		if ((PHYS_INPUT_BUTTON_JUMP(strafeplayer) || PHYS_INPUT_BUTTON_JETPACK(strafeplayer)) && !PHYS_CL_TRACK_CANJUMP(strafeplayer))
 			jumpheld = true;
 	}
 	else
 	{
-		if((keys & KEY_JUMP) && !PHYS_TRACK_CANJUMP(strafeplayer))
+		if ((keys & KEY_JUMP) && !PHYS_TRACK_CANJUMP(strafeplayer))
 			jumpheld = true;
 	}
 
@@ -92,15 +87,13 @@ void HUD_Physics_Init()
 	view_angle    = PHYS_INPUT_ANGLES(strafeplayer).y;
 
 	airstopaccel  = PHYS_AIRSTOPACCELERATE(strafeplayer);
-	if(!airstopaccel)
+	if (!airstopaccel)
 		airstopaccel = 1; // values of 0 are equivalent to 1
 
-	if(onground)
+	if (onground)
 	{
-		if(friction_phys == 0)
-		{
+		if (friction_phys == 0)
 			onslick = true;
-		}
 		else // don't use IS_ONSLICK(), it only works for the local player and only if client prediction is enabled
 		{
 			trace_dphitq3surfaceflags = 0;
@@ -112,10 +105,8 @@ void HUD_Physics_Init()
 		onground_lasttime = time;
 		onslick_last = onslick;
 	}
-	else if(jumpheld || swimming)
-	{
+	else if (jumpheld || swimming)
 		onground_lasttime = 0;
-	}
 
 	strafefriction = onslick ? friction_slick : friction_phys;
 	alive_player   = (!IS_DEAD(strafeplayer) && IS_PLAYER(strafeplayer));
