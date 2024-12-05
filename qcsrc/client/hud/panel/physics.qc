@@ -188,7 +188,7 @@ void HUD_Physics()
 			prev_vel_z = vel_phys.z;
 			prev_speed2d = speed2d;
 			float time_frac = (time - jump_speed_time) / max(1, autocvar_hud_panel_physics_jumpspeed_time);
-			jump_speed_f = time_frac > 1 ? 0 : cos(time_frac * PI / 2);
+			jump_speed_f = time_frac > 1 ? 0 : cos(time_frac * M_PI_2);
 		}
 	}
 
@@ -216,7 +216,7 @@ void HUD_Physics()
 			else
 			{
 				float time_frac = (time - top_speed_time) / max(1, autocvar_hud_panel_physics_topspeed_time);
-				top_speed_f = time_frac > 1 ? 0 : cos(time_frac * PI / 2);
+				top_speed_f = time_frac > 1 ? 0 : cos(time_frac * M_PI_2);
 			}
 		}
 		// topspeed progressbar peak
