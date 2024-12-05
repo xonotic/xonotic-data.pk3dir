@@ -177,7 +177,7 @@ void HUD_Physics()
 		}
 		else
 		{
-			if (vel_phys.z > prev_vel_z)
+			if (floor(vel_phys.z + 0.5) > floor(prev_vel_z + 0.5))
 			{
 				// NOTE: this includes some situations where the player doesn't explicitly jump
 				jump_speed = prev_speed2d;
