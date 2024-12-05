@@ -299,8 +299,10 @@ void viewmodel_draw(entity this)
 	float a_min = -1;
 	if (autocvar_cl_viewmodel_alpha_min)
 		a_min = max(autocvar_cl_viewmodel_alpha_min, -1);
-	a = max(a_min, a); // NOT DP BOUND, thus avoids:
-	a = min(a, a_max); // bound(0.75, 0.25, 0.50) -> 0.75 which isn't 0.5
+	if (a_min >= a_max)
+		a = a_max;
+	else
+		a = bound(a_min, a, a_max);
 
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	int wepskin = this.m_skin;
