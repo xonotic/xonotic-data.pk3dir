@@ -270,7 +270,7 @@ void race_send_speedaward(float msg)
 	// send the best speed of the round
 	WriteHeader(msg, TE_CSQC_RACE);
 	WriteByte(msg, RACE_NET_SPEED_AWARD);
-	WriteInt24_t(msg, floor(speedaward_speed+0.5));
+	WriteInt24_t(msg, rint(speedaward_speed));
 	WriteString(msg, speedaward_holder);
 }
 
@@ -279,7 +279,7 @@ void race_send_speedaward_alltimebest(float msg)
 	// send the best speed
 	WriteHeader(msg, TE_CSQC_RACE);
 	WriteByte(msg, RACE_NET_SPEED_AWARD_BEST);
-	WriteInt24_t(msg, floor(speedaward_alltimebest+0.5));
+	WriteInt24_t(msg, rint(speedaward_alltimebest));
 	WriteString(msg, speedaward_alltimebest_holder);
 }
 

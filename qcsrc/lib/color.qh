@@ -184,8 +184,8 @@ string rgb_to_hexcolor(vector rgb)
 {
 	return strcat(
 		"^x",
-		DEC_TO_HEXDIGIT(floor(rgb.x * 15 + 0.5)),
-		DEC_TO_HEXDIGIT(floor(rgb.y * 15 + 0.5)),
-		DEC_TO_HEXDIGIT(floor(rgb.z * 15 + 0.5))
+		DEC_TO_HEXDIGIT(rint(rgb.x * 15)),
+		DEC_TO_HEXDIGIT(rint(rgb.y * 15)),
+		DEC_TO_HEXDIGIT(rint(rgb.z * 15))
 	             );
 }

@@ -44,7 +44,7 @@ void soundtoat(int to, entity e, vector o, int chan, string samp, float vol, flo
 	attenu = floor(attenu * 64);
 	vol = floor(vol * 255);
 	int sflags = 0;
-	int speed4000 = floor((_pitch * 0.01) * 4000 + 0.5);
+	int speed4000 = rint((_pitch * 0.01) * 4000);
 	if (vol != 255) sflags |= SND_VOLUME;
 	if (attenu != 64) sflags |= SND_ATTENUATION;
 	if (entno >= 8192 || chan < 0 || chan > 7) sflags |= SND_LARGEENTITY;

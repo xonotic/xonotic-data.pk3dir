@@ -48,7 +48,7 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, in
 		if (layout == 2) // average pps
 			drawstring_aspect(myPos + eX * mySize.y, ftos_decimals(stat, 2), vec2((2/3) * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		else // percentage of average pps
-			drawstring_aspect(myPos + eX * mySize.y, strcat( ftos(floor(pps_ratio*100 + 0.5)), "%" ), vec2((2/3) * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(myPos + eX * mySize.y, strcat( ftos(rint(pps_ratio*100)), "%" ), vec2((2/3) * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	//draw the icon

@@ -176,8 +176,8 @@ void HUD_Panel_SetPos(vector pos)
 
 	if(autocvar_hud_configure_grid)
 	{
-		pos.x = floor((pos.x/vid_conwidth)/hud_configure_gridSize.x + 0.5) * hud_configure_realGridSize.x;
-		pos.y = floor((pos.y/vid_conheight)/hud_configure_gridSize.y + 0.5) * hud_configure_realGridSize.y;
+		pos.x = rint((pos.x/vid_conwidth)/hud_configure_gridSize.x) * hud_configure_realGridSize.x;
+		pos.y = rint((pos.y/vid_conheight)/hud_configure_gridSize.y) * hud_configure_realGridSize.y;
 	}
 
 	if(hud_configure_checkcollisions)
@@ -353,8 +353,8 @@ void HUD_Panel_SetPosSize(vector mySize)
 	// before checkresize, otherwise panel can be snapped partially inside another panel or panel aspect ratio can be broken
 	if(autocvar_hud_configure_grid)
 	{
-		mySize.x = floor((mySize.x/vid_conwidth)/hud_configure_gridSize.x + 0.5) * hud_configure_realGridSize.x;
-		mySize.y = floor((mySize.y/vid_conheight)/hud_configure_gridSize.y + 0.5) * hud_configure_realGridSize.y;
+		mySize.x = rint((mySize.x/vid_conwidth)/hud_configure_gridSize.x) * hud_configure_realGridSize.x;
+		mySize.y = rint((mySize.y/vid_conheight)/hud_configure_gridSize.y) * hud_configure_realGridSize.y;
 	}
 
 	if(hud_configure_checkcollisions)

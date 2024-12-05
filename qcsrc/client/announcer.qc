@@ -70,7 +70,7 @@ void Announcer_Countdown(entity this)
 
 	bool inround = (roundstarttime && time >= starttime);
 	float countdown = (inround ? roundstarttime - time : starttime - time);
-	float countdown_rounded = floor(0.5 + countdown);
+	float countdown_rounded = rint(countdown);
 
 	if (starttime != prev_starttime || roundstarttime != prev_roundstarttime || prev_inround != inround)
 		this.skin = 0; // restart centerprint countdown

@@ -84,7 +84,7 @@ string build_mutator_list(string s);
 // for each element, funcPre is called first, then funcPre and funcPost for all its children, and funcPost last
 void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass);
 
-#define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.5)
+#define TIME_TO_NTHS(t,n) rint((t) * (n))
 
 const int TIME_DECIMALS = 2;
 const float TIME_FACTOR = 100;

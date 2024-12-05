@@ -66,13 +66,13 @@ void HUD_Physics()
 	float speed, conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 	vector vel = (csqcplayer ? csqcplayer.velocity : pmove_vel);
 
-	float max_speed = floor( autocvar_hud_panel_physics_speed_max * conversion_factor + 0.5 );
+	float max_speed = rint( autocvar_hud_panel_physics_speed_max * conversion_factor );
 	if (autocvar__hud_configure)
-		speed = floor( max_speed * 0.65 + 0.5 );
+		speed = rint( max_speed * 0.65 );
 	else if(autocvar_hud_panel_physics_speed_vertical)
-		speed = floor( vlen(vel) * conversion_factor + 0.5 );
+		speed = rint( vlen(vel) * conversion_factor );
 	else
-		speed = floor( vlen(vel - vel.z * '0 0 1') * conversion_factor + 0.5 );
+		speed = rint( vlen(vel - vel.z * '0 0 1') * conversion_factor );
 
 	//compute acceleration
 	float acceleration, f;
@@ -188,7 +188,7 @@ void HUD_Physics()
 	{
 		if (autocvar__hud_configure)
 		{
-			top_speed = floor( max_speed * 0.75 + 0.5 );
+			top_speed = rint( max_speed * 0.75 );
 			f = 1;
 		}
 		else
@@ -221,7 +221,7 @@ void HUD_Physics()
 					peak_offsetX = (1 - min(top_speed, max_speed)/max_speed) * panel_size.x;
 				else // if (speed_baralign == 2)
 					peak_offsetX = min(top_speed, max_speed)/max_speed * panel_size.x * 0.5;
-				peak_size.x = floor(panel_size.x * 0.01 + 1.5);
+				peak_size.x = rint(panel_size.x * 0.01) + 1;
 				peak_size.y = panel_size.y;
 				if (speed_baralign == 2) // draw two peaks, on both sides
 				{

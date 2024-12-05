@@ -162,7 +162,7 @@
 				// there's no need to round min and max value... also if we did, v could be set
 				// to an out of bounds value due to precision errors
 				if (f > 0 && f < 1 && me.valueStep)
-					v = floor(0.5 + v / me.valueStep) * me.valueStep;
+					v = rint(v / me.valueStep) * me.valueStep;
 				me.setValue_noAnim(me, v);
 				if(me.applyButton)
 				if(me.previousValue != me.value)
