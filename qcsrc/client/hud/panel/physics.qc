@@ -32,7 +32,7 @@ void HUD_Physics_Export(int fh)
 vector acc_prev_vel;
 float acc_prev_time, acc_avg, top_speed, top_speed_time, jump_speed, jump_speed_time;
 float prev_vel_z = 0, prev_speed2d = 0;
-float physics_update_time, discrete_speed, discrete_top_speed, discrete_accel; // not done for jump speed
+float physics_update_time, discrete_speed, discrete_top_speed, discrete_accel; // not done for jumpspeed
 void HUD_Physics()
 {
 	if (!autocvar__hud_configure)
@@ -154,9 +154,9 @@ void HUD_Physics()
 
 	vector tmp_offset = '0 0 0', tmp_size = '0 0 0';
 	float speed_size = 0.75;
-	int text_bits = BITS(0); // describes which texts may be drawn. BIT(0) = top speed, BIT(1) = jump speed, BIT(2) = speed unit
+	int text_bits = BITS(0); // describes which texts may be drawn. BIT(0) = topspeed, BIT(1) = jumpspeed, BIT(2) = speed unit
 	// ordered by decreasing priority -- speed unit isn't drawn if the other two are,
-	// ... and top speed takes priority over jump speed in the lower spot
+	// ... and topspeed takes priority over jumpspeed in the lower spot
 
 	// draw speed
 	if (!immobile)
@@ -164,7 +164,7 @@ void HUD_Physics()
 		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed / max_speed, 0, speed_baralign,
 			autocvar_hud_progressbar_speed_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 
-	// compute jump speed text
+	// compute jumpspeed text
 	float jump_speed_f = 0;
 	if (autocvar_hud_panel_physics_jumpspeed)
 	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
@@ -190,7 +190,7 @@ void HUD_Physics()
 		}
 	}
 
-	// compute and draw top speed
+	// compute and draw topspeed
 	float top_speed_f = 0;
 	if (autocvar_hud_panel_physics_topspeed)
 	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH || autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
@@ -208,7 +208,7 @@ void HUD_Physics()
 				top_speed = speed;
 				top_speed_time = time;
 			}
-			if (top_speed == 0) // hide top speed 0
+			if (top_speed == 0) // hide topspeed 0
 				top_speed_f = 0;
 			else
 			{
@@ -216,7 +216,7 @@ void HUD_Physics()
 				top_speed_f = time_frac > 1 ? 0 : cos(time_frac * PI / 2);
 			}
 		}
-		// top speed progressbar peak
+		// topspeed progressbar peak
 		if (top_speed_f > 0)
 		{
 			if (speed < top_speed)
@@ -353,14 +353,14 @@ void HUD_Physics()
 		top_speed_y  = panel_size.y * (1 - main_text_size) / 2; // offset halved to center text
 		jump_speed_y = top_speed_y;
 	}
-	else // both top speed and jump speed are drawn
+	else // both topspeed and jumpspeed are drawn
 	{
 		main_text_size = 0.5; // make them equal size
-		top_speed_y  = panel_size.y * (1 - main_text_size); // put top speed in the lower slot
-		jump_speed_y = 0; // put jump speed in the upper slot
+		top_speed_y  = panel_size.y * (1 - main_text_size); // put topspeed in the lower slot
+		jump_speed_y = 0; // put jumpspeed in the upper slot
 	}
 
-	// draw jump speed text
+	// draw jumpspeed text
 	tmp_size.y = panel_size.y * main_text_size * text_scale;
 	if ((text_bits & BIT(1)) && jump_speed_f > 0)
 	{
@@ -368,7 +368,7 @@ void HUD_Physics()
 		tmp_offset.y  = jump_speed_y;
 		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(jump_speed), tmp_size, '0 1 0', jump_speed_f * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	// draw top speed text
+	// draw topspeed text
 	if ((text_bits & BIT(0)) && top_speed_f > 0)
 	{
 		top_speed_y += (panel_size.y * main_text_size - tmp_size.y) / 2;
