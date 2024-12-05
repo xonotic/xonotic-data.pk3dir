@@ -106,9 +106,9 @@ void HUD_Physics()
 		acc_prev_vel  = vel_phys;
 		acc_prev_time = time;
 
-		if (autocvar_hud_panel_physics_acceleration_movingaverage)
+		if (autocvar_hud_panel_physics_acceleration_movingaverage > 0)
 		{
-			f = bound(0, f * autocvar_hud_panel_physics_acceleration_movingaverage_strength, 1);
+			f = bound(0, f * 10 / autocvar_hud_panel_physics_acceleration_movingaverage, 1);
 			acc_avg = acc_avg * (1 - f) + accel * f;
 			accel = acc_avg;
 		}

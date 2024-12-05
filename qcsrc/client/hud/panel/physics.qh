@@ -3,7 +3,6 @@
 
 bool autocvar_hud_panel_physics;
 float autocvar_hud_panel_physics_acceleration_movingaverage = 1;
-float autocvar_hud_panel_physics_acceleration_movingaverage_strength = 10;
 float autocvar_hud_panel_physics_acceleration_progressbar_mode;
 float autocvar_hud_panel_physics_acceleration_progressbar_scale;
 float autocvar_hud_panel_physics_acceleration_progressbar_nonlinear;
