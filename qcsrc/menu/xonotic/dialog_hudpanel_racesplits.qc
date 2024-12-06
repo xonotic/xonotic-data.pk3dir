@@ -3,6 +3,7 @@
 #include "textlabel.qh"
 #include "checkbox.qh"
 #include "slider.qh"
+#include "radiobutton.qh"
 
 void XonoticHUDRaceSplitsDialog_fill(entity me)
 {
