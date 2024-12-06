@@ -22,11 +22,12 @@ vector RaceSplits_drawstring(string s, vector pos, vector sz, float a, vector fo
 {
 	getWrappedLine_remaining = s;
 	float offset = 0;
+	float align = bound(0, autocvar_hud_panel_racesplits_align, 1);
 	while(getWrappedLine_remaining)
 	{
 		s = getWrappedLine(sz.x - offset, fontsize, stringwidth_colors);
 		if(autocvar_hud_panel_racesplits_align)
-			offset = sz.x - stringwidth_colors(s, fontsize) - offset;
+			offset = (sz.x - stringwidth_colors(s, fontsize) - offset) * align;
 		drawcolorcodedstring(pos + eX * offset, s, fontsize, a, DRAWFLAG_NORMAL);
 		pos.y += fontsize.y;
 		offset = fontsize.x;
