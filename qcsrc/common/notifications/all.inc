@@ -709,6 +709,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MULTITEAM_CENTER(ROUND_TEAM_WIN,                    N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^TC^TT^BG team wins the round"), "", NAME)
     MSG_CENTER_NOTIF(ROUND_PLAYER_WIN,                  N_ENABLE,    1, 0, "s1",             CPID_ROUND,             "0 0",  _("^BG%s^BG wins the round"), "")
 
+    MSG_CENTER_NOTIF(FREEZETAG_LIVES_REMAINING,         N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^F2Lives remaining: ^K1%s"), "")
     MSG_CENTER_NOTIF(FREEZETAG_SELF,                    N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1You froze yourself"), "")
     MSG_CENTER_NOTIF(FREEZETAG_SPAWN_LATE,              N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Round already started, you spawn as frozen"), "")
 
