@@ -294,15 +294,9 @@ void viewmodel_animate(entity this)
 void viewmodel_draw(entity this)
 {
 	// alpha calculations
-	float a = this.m_alpha;
-	float a_max = min(autocvar_cl_viewmodel_alpha, 1);
-	float a_min = -1;
-	if (autocvar_cl_viewmodel_alpha_min)
-		a_min = max(autocvar_cl_viewmodel_alpha_min, -1);
-	if (a_min >= a_max)
-		a = a_max;
-	else
-		a = bound(a_min, a, a_max);
+	float amax = (autocvar_cl_viewmodel_alpha != 0) ? autocvar_cl_viewmodel_alpha : 1;
+	float amin = (autocvar_cl_viewmodel_alpha_min != 0) ? autocvar_cl_viewmodel_alpha_min : -1;
+	float a = (amin >= amax) ? amax : bound(amin, this.m_alpha, amax);
 
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	int wepskin = this.m_skin;
