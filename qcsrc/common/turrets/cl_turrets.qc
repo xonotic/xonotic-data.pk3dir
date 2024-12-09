@@ -181,7 +181,7 @@ void turret_draw2d(entity this)
 
 	if(draw_healthbar || draw_text) // make sure it's actually being drawn
 	{
-		o = drawspritearrow(o, M_PI, rgb, a, SPRITE_ARROW_SCALE * t);
+		o = drawspritearrow(o, M_PI, rgb, a, SPRITE_ARROW_SCALE * t, false);
 	}
 	if(draw_text)
 	{
