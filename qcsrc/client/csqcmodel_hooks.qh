@@ -5,6 +5,7 @@ int autocvar_cl_playerdetailreduction;
 int autocvar_cl_modeldetailreduction;
 float autocvar_cl_loddistance1 = 768;
 float autocvar_cl_loddistance2 = 2048;
+bool autocvar_cl_hideotherplayers = false;
 bool autocvar_cl_forceplayermodels;
 bool autocvar_cl_forceplayercolors;
 bool autocvar_cl_forceuniqueplayercolors;
