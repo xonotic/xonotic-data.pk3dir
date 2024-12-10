@@ -832,7 +832,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 						}
 					}
 				}
-				else if (IS_PLAYER(attacker) && !STAT(FROZEN, victim)) // same team
+				else if (IS_PLAYER(attacker) && !STAT(FROZEN, victim) && !(deathtype & HITTYPE_SPAM)) // same team
 				{
 					if (deathtype != DEATH_FIRE.m_id)
 					{
