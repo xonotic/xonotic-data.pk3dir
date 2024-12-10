@@ -214,18 +214,19 @@ void sys_phys_simulate(entity this, float dt)
 	}
 
 	vector forward, right, up;
-	MAKE_VECTORS(vmul(this.v_angle, (this.com_phys_vel_2d ? '0 1 0' : '1 1 1')), forward, right, up);
+	vector v_tmp = (this.com_phys_vel_2d ? vec3(0, this.v_angle.y, 0) : this.v_angle);
+	MAKE_VECTORS(v_tmp, forward, right, up);
 	// wishvel = forward * PHYS_CS(this).movement.x + right * PHYS_CS(this).movement.y + up * PHYS_CS(this).movement.z;
 	vector wishvel = forward * PHYS_CS(this).movement.x
 		+ right * PHYS_CS(this).movement.y
-		+ '0 0 1' * (PHYS_CS(this).movement.z * (this.com_phys_vel_2d ? 0 : 1));
+		+ '0 0 1' * (this.com_phys_vel_2d ? 0 : PHYS_CS(this).movement.z);
 	if (this.com_phys_water) {
 		if (PHYS_FROZEN(this))
 		{
 			if(this.waterlevel >= WATERLEVEL_SUBMERGED && this.velocity.z >= -70) // don't change the speed too abruptally
 				wishvel = '0 0 160'; // resurface
 			else if(this.waterlevel >= WATERLEVEL_SWIMMING && this.velocity.z > 0)
-				wishvel = eZ * 1.3 * min(this.velocity.z, 160); // resurface a bit more above the surface
+				wishvel = eZ * (1.3 * min(this.velocity.z, 160)); // resurface a bit more above the surface
 		}
 		else
 		{
@@ -263,9 +264,13 @@ void sys_phys_simulate(entity this, float dt)
 			}
 		}
 	}
+
 	// acceleration
-	const vector wishdir = normalize(wishvel);
-	float wishspeed = min(vlen(wishvel), this.com_phys_vel_max);
+	float wishvel_len = vlen(wishvel);
+	float wishspeed = min(wishvel_len, this.com_phys_vel_max);
+
+	// same as wishdir = normalize(wishvel); but cheaper
+	const vector wishdir = (wishvel_len ? wishvel / wishvel_len : '0 0 0');
 
 	if (this.com_phys_air) {
 		if (!(this.flags & FL_WATERJUMP)) {
@@ -452,22 +457,22 @@ void sys_phys_simulate_simple(entity this, float dt)
 				FOREACH_ENTITY_RADIUS_ORDERED(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true, {
 					if (it.solid != SOLID_TRIGGER || it == this) continue;
 					if (gettouch(it) && boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax)) {
-					    // SV_LinkEdict_TouchAreaGrid_Call
-					    trace_allsolid = false;
-					    trace_startsolid = false;
-					    trace_fraction = 1;
-					    trace_inwater = false;
-					    trace_inopen = true;
-					    trace_endpos = it.origin;
-					    trace_plane_normal = '0 0 1';
-					    trace_plane_dist = 0;
-					    trace_ent = this;
-					    trace_dpstartcontents = 0;
-					    trace_dphitcontents = 0;
-					    trace_dphitq3surfaceflags = 0;
-					    trace_dphittexturename = string_null;
-					    gettouch(it)(this, it);
-					    vel = this.velocity;
+						// SV_LinkEdict_TouchAreaGrid_Call
+						trace_allsolid = false;
+						trace_startsolid = false;
+						trace_fraction = 1;
+						trace_inwater = false;
+						trace_inopen = true;
+						trace_endpos = it.origin;
+						trace_plane_normal = '0 0 1';
+						trace_plane_dist = 0;
+						trace_ent = this;
+						trace_dpstartcontents = 0;
+						trace_dphitcontents = 0;
+						trace_dphitq3surfaceflags = 0;
+						trace_dphittexturename = string_null;
+						gettouch(it)(this, it);
+						vel = this.velocity;
 					}
 				});
 			}
