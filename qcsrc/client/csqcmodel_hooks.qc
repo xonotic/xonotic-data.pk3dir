@@ -147,6 +147,10 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 	if(MUTATOR_CALLHOOK(ForcePlayermodels_Skip, this, islocalplayer))
 		goto skipforcemodels;
 
+	//LOG_INFOF("e: %d, model \"%s\",  isplayermodel: %d, ISPLAYER_CLIENT: %d, islocalplayer: %d", this.entnum, this.model, this.isplayermodel, ISPLAYER_CLIENT, islocalplayer);
+	if (this.isplayermodel && !islocalplayer && autocvar_cl_hideotherplayers)
+		this.csqcmodel_effects |= EF_NODRAW;
+
 	// FORCEMODEL
 	// which one is ALWAYS good?
 	if (!forceplayermodels_goodmodel)
