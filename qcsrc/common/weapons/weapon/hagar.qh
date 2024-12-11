@@ -6,7 +6,7 @@ CLASS(Hagar, Weapon)
 /* impulse   */ ATTRIB(Hagar, impulse, int, 8);
 /* flags     */ ATTRIB(Hagar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Hagar, bot_pickupbasevalue, float, 6000);
-/* color     */ ATTRIB(Hagar, wpcolor, vector, '1 1 0.5');
+/* color     */ ATTRIB(Hagar, wpcolor, vector, '0.890 0.569 0.376');
 /* modelname */ ATTRIB(Hagar, mdl, string, "hagar");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Hagar, m_model, Model, MDL_HAGAR_ITEM);

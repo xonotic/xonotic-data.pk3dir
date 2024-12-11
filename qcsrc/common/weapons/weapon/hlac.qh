@@ -6,7 +6,7 @@ CLASS(HLAC, Weapon)
 /* impulse   */ ATTRIB(HLAC, impulse, int, 6);
 /* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, 4000);
-/* color     */ ATTRIB(HLAC, wpcolor, vector, '0 1 0');
+/* color     */ ATTRIB(HLAC, wpcolor, vector, '0.898 0.588 0.357');
 /* modelname */ ATTRIB(HLAC, mdl, string, "hlac");
 #ifdef GAMEQC
 /* model     */ ATTRIB(HLAC, m_model, Model, MDL_HLAC_ITEM);

@@ -8,7 +8,7 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 /* impulse   */ ATTRIB(OverkillHeavyMachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(OverkillHeavyMachineGun, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON | WEP_FLAG_PENETRATEWALLS);
 /* rating    */ ATTRIB(OverkillHeavyMachineGun, bot_pickupbasevalue, float, 10000);
-/* color     */ ATTRIB(OverkillHeavyMachineGun, wpcolor, vector, '0.5 0.5 0');
+/* color     */ ATTRIB(OverkillHeavyMachineGun, wpcolor, vector, '0.992 0.471 0.396');
 /* modelname */ ATTRIB(OverkillHeavyMachineGun, mdl, string, "ok_hmg");
 #ifdef GAMEQC
 /* model     */ ATTRIB(OverkillHeavyMachineGun, m_model, Model, MDL_HMG_ITEM);
