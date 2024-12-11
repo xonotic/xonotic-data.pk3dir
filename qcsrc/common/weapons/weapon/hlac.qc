@@ -220,7 +220,7 @@ METHOD(HLAC, wr_killmessage, Notification(entity thiswep))
 METHOD(HLAC, wr_impacteffect, void(entity thiswep, entity actor))
 {
 	vector org2 = w_org + w_backoff * 2;
-	pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
+	pointparticles(EFFECT_HLAC_IMPACT(), org2, w_backoff * 1000, 1);
 	if(!w_issilent)
 		sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM);
 }

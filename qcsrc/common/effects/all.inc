@@ -49,6 +49,21 @@ EFFECT(0, CRYLINK_IMPACT2,          "crylink_impact")
 EFFECT(0, CRYLINK_JOINEXPLODE,      "crylink_joinexplode")
 EFFECT(0, CRYLINK_MUZZLEFLASH,      "crylink_muzzleflash")
 
+EFFECT(0, GREEN_HLAC_IMPACT,        "hlac_impact")
+EFFECT(0, GREEN_HLAC_MUZZLEFLASH,   "hlac_muzzleflash")
+entity EFFECT_HLAC_IMPACT()
+{
+    return (particleeffectnum(EFFECT_GREEN_HLAC_IMPACT) < 0)
+		? EFFECT_BLASTER_IMPACT
+		: EFFECT_GREEN_HLAC_IMPACT;
+}
+entity EFFECT_HLAC_MUZZLEFLASH()
+{
+    return (particleeffectnum(EFFECT_GREEN_HLAC_MUZZLEFLASH) < 0)
+		? EFFECT_BLASTER_MUZZLEFLASH
+		: EFFECT_GREEN_HLAC_MUZZLEFLASH;
+}
+
 EFFECT(0, VORTEX_BEAM,              "nex_beam")
 EFFECT(0, VORTEX_BEAM_OLD,          "TE_TEI_G3")
 EFFECT(0, VORTEX_IMPACT,            "nex_impact")
