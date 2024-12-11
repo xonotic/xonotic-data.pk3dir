@@ -960,7 +960,7 @@ void defrag_waypointsprites(entity targeted, entity checkpoint)
 			t.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 		}
 
-		if (t.targetname)
+		if (t.targetname && t != checkpoint)
 			defrag_waypointsprites(t, checkpoint);
 	}
 }
