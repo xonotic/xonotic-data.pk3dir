@@ -4,6 +4,7 @@
 #include <client/hud/hud_config.qh>
 #include <client/hud/panel/chat.qh>
 #include <client/hud/panel/scoreboard.qh>
+#include <client/hud/common_physics.qh>
 #include <client/items/items.qh>
 #include <client/mapvoting.qh>
 #include <client/teamradar.qh>
@@ -701,6 +702,7 @@ void HUD_Main()
 		prev_myteam = myteam;
 	}
 
+	HUD_Physics_Init();
 	HUD_Configure_Frame();
 
 	if(scoreboard_fade_alpha == 1)
