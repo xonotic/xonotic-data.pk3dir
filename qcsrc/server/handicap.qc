@@ -88,3 +88,9 @@ float Handicap_GetTotalHandicap(entity player, bool receiving)
 	return Handicap_GetForcedHandicap(player, receiving) *
 		Handicap_GetVoluntaryHandicap(player, receiving);
 }
+
+float Handicap_GetTotalBidirectionalHandicap(entity player)
+{
+	return Handicap_GetTotalHandicap(player, true) *
+		Handicap_GetTotalHandicap(player, false);
+}
