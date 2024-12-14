@@ -46,7 +46,11 @@ void Handicap_SetForcedHandicap(entity player, float value, bool receiving);
 /// \return Total handicap of the player.
 float Handicap_GetTotalHandicap(entity player, bool receiving);
 
-/// \brief Returns the total both-ways handicap of the player.
+/// \brief Updates .handicap_level for the player.
 /// \param[in] player Player to check.
-/// \return Total handicap of the player accounting for damage given and taken.
-float Handicap_GetTotalBidirectionalHandicap(entity player);
+void Handicap_UpdateHandicapLevel(entity player);
+
+.int handicap_level;
+// This int ranges 0 to 255, 0 meaning no handicap, 1-255 representing handicap "levels"
+// ... mapped from 1.0 to 5.0, using given * taken (i.e. both-ways handicap)
+// It is networked to the client
