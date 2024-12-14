@@ -45,3 +45,8 @@ void Handicap_SetForcedHandicap(entity player, float value, bool receiving);
 /// \param[in] receiving Whether handicap is for receiving or dealing.
 /// \return Total handicap of the player.
 float Handicap_GetTotalHandicap(entity player, bool receiving);
+
+/// \brief Returns the total both-ways handicap of the player.
+/// \param[in] player Player to check.
+/// \return Total handicap of the player accounting for damage given and taken.
+float Handicap_GetTotalBidirectionalHandicap(entity player);
