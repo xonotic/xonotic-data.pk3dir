@@ -20,6 +20,7 @@
 #include "dialog_hudpanel_timer.qh"
 #include "dialog_hudpanel_vote.qh"
 #include "dialog_hudpanel_weapons.qh"
+#include "dialog_hudpanel_pickup.qh"
 #include "dialog_hudpanel_engineinfo.qh"
 #include "dialog_hudpanel_infomessages.qh"
 #include "dialog_hudpanel_physics.qh"
@@ -155,6 +156,10 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	i = NEW(XonoticHUDEngineInfoDialog);
+	i.configureDialog(i);
+	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	i = NEW(XonoticHUDPickupDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 

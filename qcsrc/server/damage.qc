@@ -125,8 +125,9 @@ void LogDeath(string mode, int deathtype, entity killer, entity killed)
 void Obituary_SpecialDeath(
 	entity notif_target,
 	float murder,
+	bool msg_from_ent,
 	int deathtype,
-	string s1, string s2, string s3,
+	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3)
 {
 	if(!DEATH_ISSPECIAL(deathtype))
@@ -146,6 +147,8 @@ void Obituary_SpecialDeath(
 		return; // TODO: somehow put this in CTS gamemode file!
 
 	Notification death_message = (murder) ? deathent.death_msgmurder : deathent.death_msgself;
+	if (msg_from_ent)
+		death_message = (murder) ? deathent.death_msg_ent_murder : deathent.death_msg_ent_self;
 	if(death_message)
 	{
 		Send_Notification_WOCOVA(
@@ -153,7 +156,7 @@ void Obituary_SpecialDeath(
 			notif_target,
 			MSG_MULTI,
 			death_message,
-			s1, s2, s3, "",
+			s1, s2, s3, s4,
 			f1, f2, f3, 0
 		);
 		Send_Notification_WOCOVA(
@@ -161,7 +164,7 @@ void Obituary_SpecialDeath(
 			notif_target,
 			MSG_INFO,
 			death_message.nent_msginfo,
-			s1, s2, s3, "",
+			s1, s2, s3, s4,
 			f1, f2, f3, 0
 		);
 	}
@@ -245,8 +248,10 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 	if (MUTATOR_CALLHOOK(ClientObituary, inflictor, attacker, targ, deathtype, attacker.(weaponentity))) { CS(targ).killcount = 0; return; }
 	notif_anonymous = M_ARGV(5, bool);
 
+	// TODO: Replace "???" with a translatable "Anonymous player" string
+	// https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/2839
 	if(notif_anonymous)
-		attacker_name = "Anonymous player";
+		attacker_name = "???";
 
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(
@@ -270,7 +275,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 		{
 			if(deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 			{
-				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.team, 0, 0);
+				Obituary_SpecialDeath(targ, false, 0, deathtype, targ.netname, deathlocation, "", "", targ.team, 0, 0);
 			}
 			else
 			{
@@ -278,15 +283,20 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 				{
 					case DEATH_MIRRORDAMAGE:
 					{
-						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
+						Obituary_SpecialDeath(targ, false, 0, deathtype, targ.netname, deathlocation, "", "", CS(targ).killcount, 0, 0);
 						break;
 					}
 					case DEATH_HURTTRIGGER:
-						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, inflictor.message, deathlocation, CS(targ).killcount, 0, 0);
+						bool msg_from_ent = (inflictor && inflictor.message != "");
+						Obituary_SpecialDeath(targ, false, msg_from_ent, deathtype,
+							targ.netname,
+							(msg_from_ent ? inflictor.message : deathlocation),
+							(msg_from_ent ? deathlocation : ""),
+							"", CS(targ).killcount, 0, 0);
 						break;
 					default:
 					{
-						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
+						Obituary_SpecialDeath(targ, false, 0, deathtype, targ.netname, deathlocation, "", "", CS(targ).killcount, 0, 0);
 						break;
 					}
 				}
@@ -416,7 +426,20 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 				f3 = buff_FirstFromFlags(attacker).m_id;
 
 			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker))
-				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
+			{
+				if (DEATH_ENT(deathtype) == DEATH_HURTTRIGGER)
+				{
+					bool msg_from_ent = (inflictor && inflictor.message2 != "");
+					Obituary_SpecialDeath(targ, true, msg_from_ent, deathtype,
+						targ.netname,
+						attacker_name,
+						(msg_from_ent ? inflictor.message2 : deathlocation),
+						(msg_from_ent ? deathlocation : ""),
+						CS(targ).killcount, kill_count_to_attacker, f3);
+				}
+				else
+					Obituary_SpecialDeath(targ, true, 0, deathtype, targ.netname, attacker_name, deathlocation, "", CS(targ).killcount, kill_count_to_attacker, f3);
+			}
 		}
 	}
 
@@ -432,10 +455,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			// and there will be a REAL DEATH_VOID implementation which mappers will use.
 			case DEATH_HURTTRIGGER:
 			{
-				Obituary_SpecialDeath(targ, false, deathtype,
+				bool msg_from_ent = (inflictor && inflictor.message != "");
+				Obituary_SpecialDeath(targ, false, msg_from_ent, deathtype,
 					targ.netname,
-					inflictor.message,
-					deathlocation,
+					(msg_from_ent ? inflictor.message : deathlocation),
+					(msg_from_ent ? deathlocation : ""),
+					"",
 					CS(targ).killcount,
 					0,
 					0);
@@ -444,10 +469,11 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 
 			case DEATH_CUSTOM:
 			{
-				Obituary_SpecialDeath(targ, false, deathtype,
+				Obituary_SpecialDeath(targ, false, 0, deathtype,
 					targ.netname,
 					((strstrofs(deathmessage, "%", 0) < 0) ? strcat("%s ", deathmessage) : deathmessage),
 					deathlocation,
+					"",
 					CS(targ).killcount,
 					0,
 					0);
@@ -456,7 +482,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 
 			default:
 			{
-				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
+				Obituary_SpecialDeath(targ, false, 0, deathtype, targ.netname, deathlocation, "", "", CS(targ).killcount, 0, 0);
 				break;
 			}
 		}
@@ -531,11 +557,11 @@ void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(it.(weaponentity).hook.aiment == targ)
-	    		RemoveHook(it.(weaponentity).hook);
-	    }
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(it.(weaponentity).hook.aiment == targ)
+				RemoveHook(it.(weaponentity).hook);
+		}
 	});
 
 	// add waypoint
@@ -565,11 +591,11 @@ void Unfreeze(entity targ, bool reset_health)
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(it.(weaponentity).hook.aiment == targ)
-	    		RemoveHook(it.(weaponentity).hook);
-	    }
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(it.(weaponentity).hook.aiment == targ)
+				RemoveHook(it.(weaponentity).hook);
+		}
 	});
 
 	// remove the ice block
@@ -608,7 +634,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 		// These are ALWAYS lethal
 		// No damage modification here
-		// Instead, prepare the victim for his death...
+		// Instead, prepare the victim for their death...
 		if(deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 		{
 			SetResourceExplicit(targ, RES_ARMOR, 0);
@@ -710,11 +736,11 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		if(IS_PLAYER(targ) && damage > 0 && attacker)
 		{
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		    {
-		    	.entity went = weaponentities[slot];
-		    	if(targ.(went).hook && targ.(went).hook.aiment == attacker)
-		    		RemoveHook(targ.(went).hook);
-		    }
+			{
+				.entity went = weaponentities[slot];
+				if(targ.(went).hook && targ.(went).hook.aiment == attacker)
+					RemoveHook(targ.(went).hook);
+			}
 		}
 
 		if(STAT(FROZEN, targ) && !ITEM_DAMAGE_NEEDKILL(deathtype)
@@ -806,7 +832,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 						}
 					}
 				}
-				else if (IS_PLAYER(attacker) && !STAT(FROZEN, victim)) // same team
+				else if (IS_PLAYER(attacker) && !STAT(FROZEN, victim) && !(deathtype & HITTYPE_SPAM)) // same team
 				{
 					if (deathtype != DEATH_FIRE.m_id)
 					{
@@ -867,7 +893,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 // Returns total damage applies to creatures
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
-								float inflictorselfdamage, float forceintensity, float forcezscale, int deathtype, .entity weaponentity, entity directhitentity)
+								float inflictorselfdamage, float forceintensity, vector forcexyzscale, int deathtype, .entity weaponentity, entity directhitentity)
 {
 	entity	targ;
 	vector	force;
@@ -893,19 +919,18 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 	total_damage_to_creatures = 0;
 
-	if(deathtype != (WEP_HOOK.m_id | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) // only send gravity bomb damage once
-		if(!(deathtype & HITTYPE_SOUND)) // do not send radial sound damage (bandwidth hog)
-		{
-			force = inflictorvelocity;
-			if(force == '0 0 0')
-				force = '0 0 -1';
-			else
-				force = normalize(force);
-			if(forceintensity >= 0)
-				Damage_DamageInfo(inflictororigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
-			else
-				Damage_DamageInfo(inflictororigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
-		}
+	if(!(deathtype & HITTYPE_SOUND) && !(deathtype & HITTYPE_SPAM)) // do not send bandwidth-hogging radial spam attacks
+	{
+		force = inflictorvelocity;
+		if(force == '0 0 0')
+			force = '0 0 -1';
+		else
+			force = normalize(force);
+		if(forceintensity >= 0)
+			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
+		else
+			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
+	}
 
 	stat_damagedone = 0;
 
@@ -917,13 +942,17 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 		if (((cantbe != targ) && !mustbe) || (mustbe == targ))
 		if (targ.takedamage)
 		{
-			// measure distance from nearest point on target (not origin)
-			// to nearest point on inflictor (not origin)
+			// calculate distance from nearest point on target to nearest point on inflictor
+			// instead of origin to ensure full damage on impacts
+
 			vector nearest = targ.WarpZone_findradius_nearest;
+
+			// optimize code by getting inflictororigin_wz from WarpZone_FindRadius calculations instead of
+			//vector inflictororigin_wz = WarpZone_TransformOrigin(targ, inflictororigin);
+
+			vector inflictororigin_wz = targ.WarpZone_findradius_nearest + targ.WarpZone_findradius_dist;
 			vector inflictornearest = NearestPointOnBoundingBox(
-				inflictororigin - (inflictor.maxs - inflictor.mins) * 0.5,
-				inflictororigin + (inflictor.maxs - inflictor.mins) * 0.5,
-				nearest);
+				inflictororigin_wz + inflictor.mins, inflictororigin_wz + inflictor.maxs, nearest);
 			vector diff = inflictornearest - nearest;
 
 			// round up a little on the damage to ensure full damage on impacts
@@ -939,22 +968,69 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					float a;
 					float c;
 					vector hitloc;
-					vector myblastorigin;
-					vector center;
-
-					myblastorigin = WarpZone_TransformOrigin(targ, inflictororigin);
 
 					// if it's a player, use the view origin as reference
-					center = CENTER_OR_VIEWOFS(targ);
+					vector center = CENTER_OR_VIEWOFS(targ);
 
-					force = normalize(center - myblastorigin);
-					force = force * (finaldmg / coredamage) * forceintensity;
+					if (autocvar_g_player_damageplayercenter)
+					{
+						if (targ != attacker)
+						{
+							// always use target's bbox centerpoint
+							center = targ.origin + ((targ.mins + targ.maxs) * 0.5);
+						}
+						else // targ == attacker
+						{
+						#if 0
+							// code stolen from W_SetupShot_Dir_ProjectileSize_Range()
+							vector md = targ.(weaponentity).movedir;
+							vector dv = v_right * -md.y + v_up * md.z;
+							vector mi = '0 0 0', ma = '0 0 0';
+
+							if(IS_CLIENT(targ)) // no antilag for non-clients!
+							{
+								if(CS(targ).antilag_debug)
+									tracebox_antilag(targ, center, mi, ma, center + dv, MOVE_NORMAL, targ, CS(targ).antilag_debug);
+								else
+									tracebox_antilag(targ, center, mi, ma, center + dv, MOVE_NORMAL, targ, ANTILAG_LATENCY(targ));
+							}
+							else
+								tracebox(center, mi, ma, center + dv, MOVE_NORMAL, targ);
+
+							center.z = trace_endpos.z;
+						#else
+							// very cheap way but it skips move into solid checks which is fine most of the time for now AFAIK
+							// this should only really be an issue with some rare edge cases where
+							// shot origin was prevented from going into a ceiling but it still explodes at the ceiling
+							// shot origin wasn't raised as high as possible and the shooter gets upwards knockback
+							// TL;DR: no bugs if vertical shot origin is always within player bbox
+							center.z = center.z + targ.(weaponentity).movedir.z;
+						#endif
+						}
+					}
+
+					/* debug prints
+					print(sprintf("origin  vec %v\n", targ.origin));
+					print(sprintf("movedir vec %v\n", targ.(weaponentity).movedir));
+					print(sprintf("old def vec %v\n", CENTER_OR_VIEWOFS(targ)));
+					print(sprintf("origin+vofs %v\n", targ.origin + targ.view_ofs));
+					print(sprintf("bbox center %v\n", (targ.origin + ((targ.mins + targ.maxs) * 0.5))));
+					print(sprintf("center  vec %v\n", center));
+					print(sprintf("shotorg vec %v\n", w_shotorg));
+					print("\n");
+					*/
+
+					force = normalize(center - inflictororigin_wz);
+					force = force * (finaldmg / max(coredamage, edgedamage)) * forceintensity;
 					hitloc = nearest;
 
-					// apply special scaling along the z axis if set
-					// NOTE: 0 value is not allowed for compatibility, in the case of weapon cvars not being set
-					if(forcezscale)
-						force.z *= forcezscale;
+					// apply special force scalings
+					if(forcexyzscale.x)
+						force.x *= forcexyzscale.x;
+					if(forcexyzscale.y)
+						force.y *= forcexyzscale.y;
+					if(forcexyzscale.z)
+						force.z *= forcexyzscale.z;
 
 					if(targ != directhitentity)
 					{
@@ -1018,14 +1094,15 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 						if(autocvar_g_throughfloor_debug)
 							LOG_INFOF(" D=%f F=%f", finaldmg, vlen(force));
+
+						/*if (targ == attacker)
+						{
+							print("hits ", ftos(hits), " / ", ftos(total));
+							print(" finaldmg ", ftos(finaldmg), " force ", ftos(vlen(force)));
+							print(" (", vtos(force), ") (", ftos(a), ")\n");
+						}*/
 					}
 
-					//if (targ == attacker)
-					//{
-					//	print("hits ", ftos(hits), " / ", ftos(total));
-					//	print(" finaldmg ", ftos(finaldmg), " force ", vtos(force));
-					//	print(" (", ftos(a), ")\n");
-					//}
 					if(finaldmg || force)
 					{
 						if(targ.iscreature)
@@ -1050,15 +1127,15 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	RadiusDamage_running = 0;
 
 	if(!DEATH_ISSPECIAL(deathtype))
-		accuracy_add(attacker, DEATH_WEAPONOF(deathtype), 0, min(coredamage, stat_damagedone));
+		accuracy_add(attacker, DEATH_WEAPONOF(deathtype), 0, min(max(coredamage, edgedamage), stat_damagedone));
 
 	return total_damage_to_creatures;
 }
 
 float RadiusDamage(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity)
 {
-	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, 
-									cantbe, mustbe, false, forceintensity, 1, deathtype, weaponentity, directhitentity);
+	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad,
+									cantbe, mustbe, false, forceintensity, '1 1 1', deathtype, weaponentity, directhitentity);
 }
 
 bool Heal(entity targ, entity inflictor, float amount, float limit)

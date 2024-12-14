@@ -240,7 +240,7 @@ void W_Tuba_NoteThink(entity this)
 		return;
 	}
 	this.nextthink = time;
-	dist_mult = WEP_CVAR(tuba, attenuation) / autocvar_snd_soundradius;
+	dist_mult = WEP_CVAR(WEP_TUBA, attenuation) / autocvar_snd_soundradius;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this.realowner, {
 		v = this.origin - (it.origin + it.view_ofs);
 		vol0 = max(0, 1 - vlen(v) * dist_mult);
@@ -273,7 +273,7 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 	if(actor.(weaponentity).tuba_instrument & 2)
 		hittype |= HITTYPE_BOUNCE;
 
-	W_SetupShot(actor, weaponentity, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage), hittype | WEP_TUBA.m_id);
+	W_SetupShot(actor, weaponentity, false, 2, SND_Null, 0, WEP_CVAR(WEP_TUBA, damage), hittype | WEP_TUBA.m_id);
 
 	if(actor.(weaponentity).tuba_note)
 	{
@@ -297,10 +297,10 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 		Net_LinkEntity(note, false, 0, W_Tuba_NoteSendEntity);
 	}
 
-	actor.(weaponentity).tuba_note.teleport_time = time + WEP_CVAR(tuba, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely
+	actor.(weaponentity).tuba_note.teleport_time = time + WEP_CVAR(WEP_TUBA, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely
 
 	//sound(actor, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
-	RadiusDamage(actor, actor, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), NULL, NULL, WEP_CVAR(tuba, force), hittype | WEP_TUBA.m_id, weaponentity, NULL);
+	RadiusDamage(actor, actor, WEP_CVAR(WEP_TUBA, damage), WEP_CVAR(WEP_TUBA, edgedamage), WEP_CVAR(WEP_TUBA, radius), NULL, NULL, WEP_CVAR(WEP_TUBA, force), hittype | WEP_TUBA.m_id, weaponentity, NULL);
 
 	if(time > actor.(weaponentity).tuba_smoketime)
 	{
@@ -322,7 +322,7 @@ METHOD(Tuba, wr_aim, void(Tuba this, entity actor, .entity weaponentity))
 {
 	// bots cannot play the Tuba well yet
 	// I think they should start with the recorder first
-	if (vdist((actor.origin - actor.enemy.origin), <, WEP_CVAR(tuba, radius)))
+	if (vdist((actor.origin - actor.enemy.origin), <, WEP_CVAR(WEP_TUBA, radius)))
 	{
 		if (random() > 0.5)
 			PHYS_INPUT_BUTTON_ATCK(actor) = true;
@@ -334,16 +334,16 @@ METHOD(Tuba, wr_aim, void(Tuba this, entity actor, .entity weaponentity))
 METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int fire))
 {
 	if (fire & 1)
-	if (weapon_prepareattack(this, actor, weaponentity, false, WEP_CVAR(tuba, refire)))
+	if (weapon_prepareattack(this, actor, weaponentity, false, WEP_CVAR(WEP_TUBA, refire)))
 	{
 		W_Tuba_NoteOn(actor, weaponentity, 0);
-		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
+		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(WEP_TUBA, animtime), w_ready);
 	}
 	if (fire & 2)
-	if (weapon_prepareattack(this, actor, weaponentity, true, WEP_CVAR(tuba, refire)))
+	if (weapon_prepareattack(this, actor, weaponentity, true, WEP_CVAR(WEP_TUBA, refire)))
 	{
 		W_Tuba_NoteOn(actor, weaponentity, HITTYPE_SECONDARY);
-		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
+		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(WEP_TUBA, animtime), w_ready);
 	}
 	if (actor.(weaponentity).tuba_note)
 	{

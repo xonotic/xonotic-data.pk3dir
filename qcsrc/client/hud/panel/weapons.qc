@@ -499,11 +499,9 @@ void HUD_Weapons()
 		}
 		else
 		{
-			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)
-				&& !(weapons_stat & WepSet_FromWeapon(it)))
-			{
+			if ((it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK))
+			&& !(weapons_stat & WepSet_FromWeapon(it)))
 				continue;
-			}
 		}
 
 		// figure out the drawing position of weapon
@@ -588,7 +586,6 @@ void HUD_Weapons()
 						case RES_BULLETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
 						case RES_ROCKETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
 						case RES_CELLS:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
-						case RES_PLASMA:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
 						case RES_FUEL:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
 						default: ammo_full = 60;
 					}

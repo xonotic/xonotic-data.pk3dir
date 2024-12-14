@@ -18,6 +18,7 @@ CLASS(Mortar, Weapon)
 /* wepimg    */ ATTRIB(Mortar, model2, string, "weapongrenadelauncher");
 /* refname   */ ATTRIB(Mortar, netname, string, "mortar");
 /* wepname   */ ATTRIB(Mortar, m_name, string, _("Mortar"));
+/* legacy    */ ATTRIB(Mortar, m_deprecated_netname, string, "grenadelauncher");
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
@@ -51,10 +52,10 @@ CLASS(Mortar, Weapon)
 		P(class, prefix, weaponstart, float, NONE) \
 		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Mortar, mortar)
+	W_PROPS(X, Mortar, mortar)
 #undef X
 ENDCLASS(Mortar)
-REGISTER_WEAPON(MORTAR, mortar, NEW(Mortar));
+REGISTER_WEAPON(MORTAR, NEW(Mortar));
 
 SPAWNFUNC_WEAPON(weapon_mortar, WEP_MORTAR)
 SPAWNFUNC_WEAPON(weapon_grenadelauncher, WEP_MORTAR)

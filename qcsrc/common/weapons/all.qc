@@ -107,21 +107,6 @@ string W_NameWeaponOrder_MapFunc(string s)
 	return s;
 }
 
-string W_UndeprecateName(string s)
-{
-	switch (s)
-	{
-		case "nex": return "vortex";
-		case "rocketlauncher": return "devastator";
-		case "laser": return "blaster";
-		case "minstanex": return "vaporizer";
-		case "grenadelauncher": return "mortar";
-		case "uzi": return "machinegun";
-		case "hmg": return "okhmg";
-		case "rpc": return "okrpc";
-		default: return s;
-	}
-}
 string W_NameWeaponOrder(string order)
 {
 	return mapPriorityList(order, W_NameWeaponOrder_MapFunc);
@@ -129,8 +114,7 @@ string W_NameWeaponOrder(string order)
 string W_NumberWeaponOrder_MapFunc(string s)
 {
 	if (s == "0" || stof(s)) return s;
-	s = W_UndeprecateName(s);
-	FOREACH(Weapons, it != WEP_Null && it.netname == s, return ftos(i));
+	FOREACH(Weapons, it != WEP_Null && (it.netname == s || it.m_deprecated_netname == s), return ftos(i));
 	return s;
 }
 string W_NumberWeaponOrder(string order)
@@ -202,76 +186,26 @@ WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 	return result;
 }
 
-// TODO: registry handles for below functions
-string GetAmmoPicture(Resource ammotype)
-{
-	switch (ammotype)
-	{
-		case RES_SHELLS:  return ITEM_Shells.m_icon;
-		case RES_BULLETS: return ITEM_Bullets.m_icon;
-		case RES_ROCKETS: return ITEM_Rockets.m_icon;
-		case RES_CELLS:   return ITEM_Cells.m_icon;
-		case RES_PLASMA:  return ITEM_Plasma.m_icon;
-		case RES_FUEL:    return ITEM_JetpackFuel.m_icon;
-		default: return "";  // wtf, no ammo type?
-	}
-}
-
-string GetAmmoName(Resource ammotype)
-{
-	switch (ammotype)
-	{
-		case RES_SHELLS:  return ITEM_Shells.m_name;
-		case RES_BULLETS: return ITEM_Bullets.m_name;
-		case RES_ROCKETS: return ITEM_Rockets.m_name;
-		case RES_CELLS:   return ITEM_Cells.m_name;
-		case RES_PLASMA:  return ITEM_Plasma.m_name;
-		case RES_FUEL:    return ITEM_JetpackFuel.m_name;
-		default:          return "batteries";
-	}
-}
-
 entity GetAmmoItem(Resource ammotype)
 {
-	switch (ammotype)
+	FOREACH(Items, it.netname == ammotype.netname,
 	{
-		case RES_SHELLS:  return ITEM_Shells;
-		case RES_BULLETS: return ITEM_Bullets;
-		case RES_ROCKETS: return ITEM_Rockets;
-		case RES_CELLS:   return ITEM_Cells;
-		case RES_PLASMA:  return ITEM_Plasma;
-		case RES_FUEL:    return ITEM_JetpackFuel;
-	}
+		return it;
+	});
 	LOG_WARNF("Invalid ammo type %d ", ammotype.m_id);
 	return NULL;
-	// WEAPONTODO: use this generic func to reduce duplication ?
-	// GetAmmoPicture  GetAmmoName  notif_arg_item_wepammo  ammo_pickupevalfunc ?
 }
 
 #ifdef CSQC
-Resource GetAmmoTypeFromNum(int i)
-{
-	switch (i)
-	{
-		case 0: return RES_SHELLS;
-		case 1: return RES_BULLETS;
-		case 2: return RES_ROCKETS;
-		case 3: return RES_CELLS;
-		case 4: return RES_PLASMA;
-		case 5: return RES_FUEL;
-		default: return RES_NONE;
-	}
-}
-
 int GetAmmoStat(Resource ammotype)
 {
+	// TODO: handle networking via resources
 	switch (ammotype)
 	{
 		case RES_SHELLS: return STAT_SHELLS;
 		case RES_BULLETS: return STAT_NAILS;
 		case RES_ROCKETS: return STAT_ROCKETS;
 		case RES_CELLS: return STAT_CELLS;
-		case RES_PLASMA: return STAT_PLASMA.m_id;
 		case RES_FUEL: return STAT_FUEL.m_id;
 		default: return -1;
 	}
@@ -315,7 +249,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
 	return vecs;
 }
 
-vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn)
+vector shotorg_adjust(vector vecs, bool y_is_right, bool visual, int algn)
 {
 	string s;
 	if (visual)
@@ -347,7 +281,6 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
 	return vecs;
 }
 
-#define shotorg_adjust shotorg_adjust_values
 
 /**
  * supported formats:
@@ -394,6 +327,7 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
  *   this.origin, this.angles
  *   this.weaponchild
  *   this.movedir, this.view_ofs, this.movedir_aligned
+ *   this.spawnorigin (SVQC only)
  *   attachment stuff
  *   anim stuff
  * to free:
@@ -410,7 +344,9 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		if (this.weaponchild) delete(this.weaponchild);
 		this.weaponchild = NULL;
 		this.movedir = '0 0 0';
+#ifdef SVQC
 		this.spawnorigin = '0 0 0';
+#endif
 		this.oldorigin = '0 0 0';
 		this.anim_fire1  = '0 1 0.01';
 		this.anim_fire2  = '0 1 0.01';
@@ -482,6 +418,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 				this.movedir = '0 0 0';
 			}
 		}
+#ifdef SVQC
 		{
 			int idx = 0;
 			// v_ model attached to invisible h_ model
@@ -501,6 +438,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 				this.spawnorigin = this.movedir;
 			}
 		}
+#endif
 		if (v_shot_idx)
 		{
 			this.oldorigin = '0 0 0';  // use regular attachment
@@ -547,17 +485,40 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		vector v = this.movedir;
 		this.movedir = shotorg_adjust(v, false, false, algn);
 		this.movedir_aligned = shotorg_adjust(v, false, true, algn);
-		this.view_ofs = shotorg_adjust(v, false, true, algn) - v;
+		this.view_ofs = this.movedir_aligned - v;
 	}
-	int compressed_shotorg = compressShotOrigin(this.movedir);
-	// make them match perfectly
-#ifdef SVQC
-	// null during init
-	if (this.owner) STAT(SHOTORG, this.owner) = compressed_shotorg;
-#endif
-	this.movedir = decompressShotOrigin(compressed_shotorg);
 
+	// shotorg_adjust can give negative .x from shootfromfixedorigin
+	// recheck .x here due to it
+	if (this.movedir.x >= 0)
+	{
+		int compressed_shotorg = compressShotOrigin(this.movedir);
+		// make them match perfectly
+	#ifdef SVQC
+		// null during init
+		if (this.owner) STAT(SHOTORG, this.owner) = compressed_shotorg;
+	#endif
+		this.movedir = decompressShotOrigin(compressed_shotorg);
+	}
+	else
+	{
+		// don't support negative x shotorgs
+		this.movedir = '0 0 0';
+
+		// reset _aligned here too even though as a side effect
+		// g_shootfromfixedorigin can make it reset
+		// it'd be only slightly better if it was checked individually
+		this.movedir_aligned = '0 0 0';
+
+	#ifdef SVQC
+		// null during init
+		if (this.owner) STAT(SHOTORG, this.owner) = 0;
+	#endif
+	}
+
+#ifdef SVQC
 	this.spawnorigin += this.view_ofs;  // offset the casings origin by the same amount
+#endif
 
 	// check if an instant weapon switch occurred
 	setorigin(this, this.view_ofs);
@@ -809,8 +770,7 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 		rlplayer = csqcplayer; // fall back to the global
 
 	vector md = wepent.movedir_aligned;
-	vector vecs = ((md.x > 0) ? md : '0 0 0');
-	vector dv = forward * vecs.x + right * -vecs.y + up * vecs.z;
+	vector dv = forward * md.x + right * -md.y + up * md.z;
 	vector org = rlplayer.origin + rlplayer.view_ofs + dv;
 
 	pointparticles(thiswep.m_muzzleeffect, org, forward * 1000, 1);

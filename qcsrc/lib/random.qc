@@ -85,7 +85,7 @@ float gsl_ran_gaussian(float sigma)
 	}
 	else
 	{
-		float a = random() * 2 * M_PI;
+		float a = random() * (2 * M_PI);
 		float b = sqrt(-2 * log(random()));
 		gsl_ran_gaussian_lastvalue = cos(a) * b;
 		gsl_ran_gaussian_lastvalue_set = 1;

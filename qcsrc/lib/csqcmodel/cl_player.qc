@@ -108,8 +108,11 @@ void CSQCPlayer_SetMinsMaxs(entity this)
 	{
 		this.mins = PHYS_PL_MIN(this);
 		this.maxs = PHYS_PL_MAX(this);
-		if (IS_DEAD(this))
-			this.maxs.z = 5;
+		if(IS_DEAD(this))
+		{
+			float h = ceil((this.mins.z + this.maxs.z) * PL_CORPSE_SCALE * 10) / 10;
+			this.maxs.z = max(h, this.mins.z + 1);
+		}
 		this.view_ofs = PHYS_PL_VIEWOFS(this);
 	}
 }
@@ -526,6 +529,18 @@ vector CSQCPlayer_ApplyChase(entity this, vector v)
 
 void CSQCPlayer_CalcRefdef(entity this)
 {
+	if(use_engine_refdef)
+	{
+		int refdefflags = 0;
+		if (this.csqcmodel_teleported) refdefflags |= REFDEFFLAG_TELEPORTED;
+		if (input_buttons & BIT(1)) refdefflags |= REFDEFFLAG_JUMPING;
+		// note: these two only work in WIP2, but are harmless in WIP1
+		if (PHYS_HEALTH(NULL) <= 0 && PHYS_HEALTH(NULL) != -666 && PHYS_HEALTH(NULL) != -2342) refdefflags |= REFDEFFLAG_DEAD;
+		if (intermission) refdefflags |= REFDEFFLAG_INTERMISSION;
+		V_CalcRefdef(this, refdefflags); // TODO? uses .health stat in the engine when this isn't called here, may be broken!
+		return;
+	}
+
 	vector vieworg = this.origin;
 	if(intermission)
 	{
@@ -553,8 +568,6 @@ void CSQCPlayer_CalcRefdef(entity this)
 	setproperty(VF_ORIGIN, vieworg);
 	setproperty(VF_ANGLES, view_angles);
 }
-
-bool autocvar_cl_useenginerefdef = false;
 
 /** Called once per CSQC_UpdateView() */
 void CSQCPlayer_SetCamera()
@@ -637,20 +650,7 @@ void CSQCPlayer_SetCamera()
 			InterpolateOrigin_Do(view);
 			view.view_ofs = '0 0 1' * vh;
 		}
-		if(autocvar_cl_useenginerefdef)
-		{
-			int refdefflags = 0;
-			if (view.csqcmodel_teleported) refdefflags |= REFDEFFLAG_TELEPORTED;
-			if (input_buttons & BIT(1)) refdefflags |= REFDEFFLAG_JUMPING;
-			// note: these two only work in WIP2, but are harmless in WIP1
-			if (PHYS_HEALTH(NULL) <= 0 && PHYS_HEALTH(NULL) != -666 && PHYS_HEALTH(NULL) != -2342) refdefflags |= REFDEFFLAG_DEAD;
-			if (intermission) refdefflags |= REFDEFFLAG_INTERMISSION;
-			V_CalcRefdef(view, refdefflags); // TODO? uses .health stat in the engine when this isn't called here, may be broken!
-		}
-		else
-		{
-			CSQCPlayer_CalcRefdef(view);
-		}
+		CSQCPlayer_CalcRefdef(view);
 	}
 	else
 	{

@@ -71,6 +71,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
      * @param i zero indexed player
      */
     .int frags;
+    .int wants_join;
 	const int ENTCS_SPEC_PURE = 1; // real spectator
 	const int ENTCS_SPEC_IN_SCOREBOARD = 2; // spectator but still in game (can be in a team)
 	#define entcs_IsSpectating(i) boolean(entcs_GetSpecState(i))
@@ -79,7 +80,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	{
 		bool unconnected = !playerslots[i].gotscores;
 		entity e = entcs_receiver(i);
-		int fr = ((e) ? e.frags : stof(getplayerkeyvalue(i, "frags")));
+		int fr = ((e) ? e.frags : 0);
 		if (unconnected || fr == FRAGS_SPECTATOR)
 			return ENTCS_SPEC_PURE;
 		int sol = ((e) ? e.sv_solid : SOLID_NOT);
@@ -91,10 +92,19 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	/**
      * @param i zero indexed player
      */
+	int entcs_GetWantsJoin(int i)
+	{
+		entity e = entcs_receiver(i);
+		return e.wants_join;
+	}
+
+	/**
+     * @param i zero indexed player
+     */
 	int entcs_GetClientColors(int i)
 	{
 		entity e = entcs_receiver(i);
-		return e ? e.colormap : stof(getplayerkeyvalue(i, "colors"));
+		return e ? e.colormap : 0;
 	}
 
 	/**
@@ -130,7 +140,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	string entcs_GetName(int i)
 	{
 		entity e = entcs_receiver(i);
-		return ColorTranslateRGB(e ? e.netname : getplayerkeyvalue(i, "name"));
+		return e ? ColorTranslateRGB(e.netname) : "";
 	}
 
     /**

@@ -9,7 +9,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_ELECTRO, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
             W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_PhaserTurretAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_PHASER.m_id);
@@ -17,10 +17,9 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
             actor.shot_speed = 1;
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_ELECTRO, animtime), w_ready);
         }
         entity beam = new(PhaserTurret_beam);
-        beam.ticrate = 0.1; //autocvar_sys_ticrate;
         setmodel(beam, MDL_TUR_PHASER_BEAM);
         beam.effects = EF_LOWPRECISION;
         beam.solid = SOLID_NOT;
@@ -29,7 +28,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
         beam.shot_spread = time + 2;
         beam.nextthink = time;
         beam.owner = actor;
-        beam.shot_dmg = actor.shot_dmg / (actor.shot_speed / beam.ticrate);
+        beam.shot_dmg = actor.shot_dmg / (actor.shot_speed / frametime);
         beam.scale = actor.target_range / 256;
         set_movetype(beam, MOVETYPE_NONE);
         beam.enemy = actor.enemy;
@@ -72,7 +71,7 @@ void beam_think(entity this)
         sound (this, CH_SHOTS_SINGLE, SND_TUR_PHASER, VOL_BASE, ATTEN_NORM);
     }
 
-    this.nextthink = time + this.ticrate;
+    this.nextthink = time;
 
     actor.attack_finished_single[0] = time + frametime;
     FireImoBeam (   actor, actor.tur_shotorg,

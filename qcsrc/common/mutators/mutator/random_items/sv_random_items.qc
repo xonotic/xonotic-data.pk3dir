@@ -266,37 +266,18 @@ entity RandomItems_ReplaceMapItem(entity item)
 		return NULL;
 	}
 	random_items_is_spawning = true;
-	entity new_item;
-	if (!MUTATOR_IS_ENABLED(ok))
-	{
-		new_item = Item_Create(strzone(new_classname), item.origin,
-			Item_ShouldKeepPosition(item));
-		random_items_is_spawning = false;
-		if (new_item == NULL)
-		{
-			return NULL;
-		}
-	}
-	else
-	{
-		new_item = spawn();
-		new_item.classname = strzone(new_classname);
-		new_item.spawnfunc_checked = true;
-		new_item.noalign = Item_ShouldKeepPosition(item);
+
+	entity new_item = spawn();
+	Item_CopyFields(item, new_item);
+	new_item.classname = strzone(new_classname);
+	new_item.lifetime = -1; // permanent (not loot)
+	if (MUTATOR_IS_ENABLED(ok))
 		new_item.ok_item = true;
-		Item_Initialize(new_item, new_classname);
-		random_items_is_spawning = false;
-		if (wasfreed(new_item))
-		{
-			return NULL;
-		}
-		setorigin(new_item, item.origin);
-	}
-	if (item.team)
-	{
-		new_item.team = item.team;
-	}
-	return new_item;
+	Item_Initialise(new_item);
+
+	random_items_is_spawning = false;
+
+	return wasfreed(new_item) ? NULL : new_item;
 }
 
 /// \brief Spawns a random loot item.
@@ -313,19 +294,16 @@ void RandomItems_SpawnLootItem(vector position)
 	spread.z = autocvar_g_random_loot_spread / 2;
 	spread += randomvec() * autocvar_g_random_loot_spread;
 	random_items_is_spawning = true;
-	if (!MUTATOR_IS_ENABLED(ok))
-	{
-		Item_CreateLoot(class_name, position, spread,
-			autocvar_g_random_loot_time);
-	}
-	else
-	{
-		entity item = spawn();
+
+	entity item = spawn();
+	item.classname = class_name;
+	item.origin = position;
+	item.velocity = spread;
+	item.lifetime = autocvar_g_random_loot_time;
+	if (MUTATOR_IS_ENABLED(ok))
 		item.ok_item = true;
-		item.classname = class_name;
-		Item_InitializeLoot(item, class_name, position, spread,
-			autocvar_g_random_loot_time);
-	}
+	Item_Initialise(item);
+
 	random_items_is_spawning = false;
 }
 
@@ -354,7 +332,7 @@ MUTATOR_HOOKFUNCTION(random_items, FilterItem, CBC_ORDER_LAST)
 		return false;
 	}
 	entity item = M_ARGV(0, entity);
-	if (Item_IsLoot(item))
+	if (ITEM_IS_LOOT(item))
 	{
 		return false;
 	}
@@ -374,7 +352,7 @@ MUTATOR_HOOKFUNCTION(random_items, ItemTouched, CBC_ORDER_LAST)
 		return;
 	}
 	entity item = M_ARGV(0, entity);
-	if (Item_IsLoot(item))
+	if (ITEM_IS_LOOT(item))
 	{
 		return;
 	}

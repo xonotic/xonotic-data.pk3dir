@@ -108,7 +108,6 @@ SLIST_FIELDS
 
 float autocvar_menu_slist_categories;
 float autocvar_menu_slist_categories_onlyifmultiple;
-float autocvar_menu_slist_purethreshold;
 float autocvar_menu_slist_modimpurity;
 float autocvar_menu_slist_maxping = 300;
 float autocvar_menu_slist_recommendations;

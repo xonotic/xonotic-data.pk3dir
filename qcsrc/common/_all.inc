@@ -1,5 +1,7 @@
 noref float autocvar_net_connecttimeout = 30;
 
+#include "checkextension.qc"
+
 #ifdef GAMEQC
 #include "anim.qc"
 #include "animdecide.qc"

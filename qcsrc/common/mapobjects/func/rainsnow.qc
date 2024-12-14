@@ -134,9 +134,9 @@ NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
 	this.maxs    =  0.5 * this.maxs;
 	this.origin  = this.origin - this.mins;
 
+	this.solid = SOLID_NOT; // before setorigin/setsize to prevent area grid linking
 	setorigin(this, this.origin);
 	setsize(this, this.mins, this.maxs);
-	this.solid = SOLID_NOT;
 	if (isnew) IL_PUSH(g_drawables, this);
 	this.draw = Draw_RainSnow;
 }

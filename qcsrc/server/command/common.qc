@@ -244,13 +244,6 @@ void timeout_handler_think(entity this)
 				// set the slowmo value to the timeout default slowmo value
 				cvar_set("slowmo", ftos(TIMEOUT_SLOWMO_VALUE));
 
-				// reset all the flood variables
-				FOREACH_CLIENT(true, {
-					it.nickspamcount = it.nickspamtime = it.floodcontrol_chat =
-						it.floodcontrol_chatteam = it.floodcontrol_chattell =
-							it.floodcontrol_voice = it.floodcontrol_voiceteam = 0;
-				});
-
 				// copy .v_angle to .lastV_angle for every player in order to fix their view during pause (see PlayerPreThink)
 				FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 					it.lastV_angle = it.v_angle;

@@ -98,6 +98,14 @@
 #define N_GNTLOFF 1
 #define N__ALWAYS 2
 
+// default time for announcer queue (time to wait before the next announcer is played)
+// -1 = bypass queue and play the announcer immediately
+// 0 = use the announcer sound length
+// >0 = use the specified time in seconds
+#define ANNCE_INSTANT -1
+#define ANNCE_LENGTH 0
+#define ANNCE_DEFTIME 2
+
 #define MULTITEAM_ANNCE(prefix, defaultvalue, sound, channel, volume, position) \
     NOTIF_ADD_AUTOCVAR(ANNCE_##prefix, defaultvalue) \
     MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), channel, volume, position) \
@@ -106,101 +114,101 @@
     MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, defaultvalue, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), channel, volume, position)
 
 // MSG_ANNCE_NOTIFICATIONS
-    MSG_ANNCE_NOTIF(ACHIEVEMENT_AIRSHOT,        N_GNTLOFF, "airshot",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(ACHIEVEMENT_AMAZING,        N_GNTLOFF, "amazing",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(ACHIEVEMENT_AWESOME,        N_GNTLOFF, "awesome",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(ACHIEVEMENT_BOTLIKE,        N_GNTLOFF, "botlike",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(ACHIEVEMENT_ELECTROBITCH,   N__ALWAYS, "electrobitch",      CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(ACHIEVEMENT_IMPRESSIVE,     N_GNTLOFF, "impressive",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(ACHIEVEMENT_YODA,           N_GNTLOFF, "yoda",              CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(ACHIEVEMENT_AIRSHOT,        N_GNTLOFF, "airshot",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(ACHIEVEMENT_AMAZING,        N_GNTLOFF, "amazing",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(ACHIEVEMENT_AWESOME,        N_GNTLOFF, "awesome",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(ACHIEVEMENT_BOTLIKE,        N_GNTLOFF, "botlike",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(ACHIEVEMENT_ELECTROBITCH,   N__ALWAYS, "electrobitch",      CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(ACHIEVEMENT_IMPRESSIVE,     N_GNTLOFF, "impressive",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(ACHIEVEMENT_YODA,           N_GNTLOFF, "yoda",              CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 
-    MSG_ANNCE_NOTIF(BEGIN,                      N__ALWAYS, "begin",             CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(BEGIN,                      N__ALWAYS, "begin",             CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
 
-    MSG_ANNCE_NOTIF(HEADSHOT,                   N__ALWAYS, "headshot",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(HEADSHOT,                   N__ALWAYS, "headshot",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 
-    MSG_ANNCE_NOTIF(KILLSTREAK_03,              N_GNTLOFF, "03kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(KILLSTREAK_05,              N_GNTLOFF, "05kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(KILLSTREAK_10,              N_GNTLOFF, "10kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(KILLSTREAK_15,              N_GNTLOFF, "15kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(KILLSTREAK_20,              N_GNTLOFF, "20kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(KILLSTREAK_25,              N_GNTLOFF, "25kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(KILLSTREAK_30,              N_GNTLOFF, "30kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(KILLSTREAK_03,              N_GNTLOFF, "03kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(KILLSTREAK_05,              N_GNTLOFF, "05kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(KILLSTREAK_10,              N_GNTLOFF, "10kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(KILLSTREAK_15,              N_GNTLOFF, "15kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(KILLSTREAK_20,              N_GNTLOFF, "20kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(KILLSTREAK_25,              N_GNTLOFF, "25kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(KILLSTREAK_30,              N_GNTLOFF, "30kills",           CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 
-    MSG_ANNCE_NOTIF(INSTAGIB_LASTSECOND,        N_GNTLOFF, "lastsecond",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(INSTAGIB_NARROWLY,          N_GNTLOFF, "narrowly",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(INSTAGIB_TERMINATED,        N_GNTLOFF, "terminated",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(INSTAGIB_LASTSECOND,        N_GNTLOFF, "lastsecond",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(INSTAGIB_NARROWLY,          N_GNTLOFF, "narrowly",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(INSTAGIB_TERMINATED,        N_GNTLOFF, "terminated",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 
-    MSG_ANNCE_NOTIF(MULTIFRAG,                  N___NEVER, "multifrag",         CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(MULTIFRAG,                  N___NEVER, "multifrag",         CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 
-    MSG_ANNCE_NOTIF(NUM_1,                      N__ALWAYS, "1",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_2,                      N__ALWAYS, "2",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_3,                      N__ALWAYS, "3",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_4,                      N__ALWAYS, "4",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_5,                      N__ALWAYS, "5",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_6,                      N__ALWAYS, "6",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_7,                      N__ALWAYS, "7",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_8,                      N__ALWAYS, "8",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_9,                      N__ALWAYS, "9",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_10,                     N__ALWAYS, "10",                CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(NUM_1,                      N__ALWAYS, "1",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_2,                      N__ALWAYS, "2",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_3,                      N__ALWAYS, "3",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_4,                      N__ALWAYS, "4",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_5,                      N__ALWAYS, "5",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_6,                      N__ALWAYS, "6",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_7,                      N__ALWAYS, "7",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_8,                      N__ALWAYS, "8",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_9,                      N__ALWAYS, "9",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_10,                     N__ALWAYS, "10",                CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
 
-    MSG_ANNCE_NOTIF(NUM_GAMESTART_1,            N__ALWAYS, "1",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_GAMESTART_2,            N__ALWAYS, "2",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_GAMESTART_3,            N__ALWAYS, "3",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_GAMESTART_4,            N__ALWAYS, "4",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_GAMESTART_5,            N__ALWAYS, "5",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_GAMESTART_6,            N___NEVER, "6",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_GAMESTART_7,            N___NEVER, "7",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_GAMESTART_8,            N___NEVER, "8",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_GAMESTART_9,            N___NEVER, "9",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_GAMESTART_10,           N___NEVER, "10",                CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(NUM_GAMESTART_1,            N__ALWAYS, "1",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_GAMESTART_2,            N__ALWAYS, "2",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_GAMESTART_3,            N__ALWAYS, "3",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_GAMESTART_4,            N__ALWAYS, "4",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_GAMESTART_5,            N__ALWAYS, "5",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_GAMESTART_6,            N___NEVER, "6",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_GAMESTART_7,            N___NEVER, "7",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_GAMESTART_8,            N___NEVER, "8",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_GAMESTART_9,            N___NEVER, "9",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_GAMESTART_10,           N___NEVER, "10",                CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
 
-    MSG_ANNCE_NOTIF(NUM_KILL_1,                 N___NEVER, "1",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_KILL_2,                 N___NEVER, "2",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_KILL_3,                 N___NEVER, "3",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_KILL_4,                 N___NEVER, "4",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_KILL_5,                 N___NEVER, "5",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_KILL_6,                 N___NEVER, "6",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_KILL_7,                 N___NEVER, "7",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_KILL_8,                 N___NEVER, "8",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_KILL_9,                 N___NEVER, "9",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_KILL_10,                N___NEVER, "10",                CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(NUM_KILL_1,                 N___NEVER, "1",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_KILL_2,                 N___NEVER, "2",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_KILL_3,                 N___NEVER, "3",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_KILL_4,                 N___NEVER, "4",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_KILL_5,                 N___NEVER, "5",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_KILL_6,                 N___NEVER, "6",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_KILL_7,                 N___NEVER, "7",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_KILL_8,                 N___NEVER, "8",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_KILL_9,                 N___NEVER, "9",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_KILL_10,                N___NEVER, "10",                CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
 
-    MSG_ANNCE_NOTIF(NUM_RESPAWN_1,              N___NEVER, "1",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_RESPAWN_2,              N___NEVER, "2",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_RESPAWN_3,              N___NEVER, "3",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_RESPAWN_4,              N___NEVER, "4",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_RESPAWN_5,              N___NEVER, "5",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_RESPAWN_6,              N___NEVER, "6",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_RESPAWN_7,              N___NEVER, "7",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_RESPAWN_8,              N___NEVER, "8",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_RESPAWN_9,              N___NEVER, "9",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_RESPAWN_10,             N___NEVER, "10",                CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(NUM_RESPAWN_1,              N___NEVER, "1",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_RESPAWN_2,              N___NEVER, "2",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_RESPAWN_3,              N___NEVER, "3",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_RESPAWN_4,              N___NEVER, "4",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_RESPAWN_5,              N___NEVER, "5",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_RESPAWN_6,              N___NEVER, "6",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_RESPAWN_7,              N___NEVER, "7",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_RESPAWN_8,              N___NEVER, "8",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_RESPAWN_9,              N___NEVER, "9",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_RESPAWN_10,             N___NEVER, "10",                CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
 
-    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_1,           N__ALWAYS, "1",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_2,           N__ALWAYS, "2",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_3,           N__ALWAYS, "3",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_4,           N___NEVER, "4",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_5,           N___NEVER, "5",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_6,           N___NEVER, "6",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_7,           N___NEVER, "7",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_8,           N___NEVER, "8",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_9,           N___NEVER, "9",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_10,          N___NEVER, "10",                CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_1,           N__ALWAYS, "1",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_2,           N__ALWAYS, "2",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_3,           N__ALWAYS, "3",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_4,           N___NEVER, "4",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_5,           N___NEVER, "5",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_6,           N___NEVER, "6",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_7,           N___NEVER, "7",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_8,           N___NEVER, "8",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_9,           N___NEVER, "9",                 CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
+    MSG_ANNCE_NOTIF(NUM_ROUNDSTART_10,          N___NEVER, "10",                CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
 
-    MSG_ANNCE_NOTIF(PREPARE,                    N__ALWAYS, "prepareforbattle",  CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(PREPARE,                    N__ALWAYS, "prepareforbattle",  CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 
-    MSG_ANNCE_NOTIF(REMAINING_FRAG_1,           N_GNTLOFF, "1fragleft",         CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(REMAINING_FRAG_2,           N_GNTLOFF, "2fragsleft",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(REMAINING_FRAG_3,           N_GNTLOFF, "3fragsleft",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(REMAINING_FRAG_1,           N_GNTLOFF, "1fragleft",         CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(REMAINING_FRAG_2,           N_GNTLOFF, "2fragsleft",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(REMAINING_FRAG_3,           N_GNTLOFF, "3fragsleft",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 
-    MSG_ANNCE_NOTIF(REMAINING_MIN_1,            N__ALWAYS, "1minuteremains",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(REMAINING_MIN_5,            N__ALWAYS, "5minutesremain",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(REMAINING_MIN_1,            N__ALWAYS, "1minuteremains",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(REMAINING_MIN_5,            N__ALWAYS, "5minutesremain",    CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 
-    MSG_ANNCE_NOTIF(TIMEOUT,                    N__ALWAYS, "timeoutcalled",     CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(TIMEOUT,                    N__ALWAYS, "timeoutcalled",     CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_INSTANT)
 
-    MSG_ANNCE_NOTIF(VOTE_ACCEPT,                N__ALWAYS, "voteaccept",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(VOTE_CALL,                  N__ALWAYS, "votecall",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
-    MSG_ANNCE_NOTIF(VOTE_FAIL,                  N__ALWAYS, "votefail",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
+    MSG_ANNCE_NOTIF(VOTE_ACCEPT,                N__ALWAYS, "voteaccept",        CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(VOTE_CALL,                  N__ALWAYS, "votecall",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
+    MSG_ANNCE_NOTIF(VOTE_FAIL,                  N__ALWAYS, "votefail",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE, ANNCE_DEFTIME)
 
 #undef N___NEVER
 #undef N_GNTLOFF
@@ -223,7 +231,11 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, defaultvalue, strnum, flnum, args, hudargs, multiteam_info_sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, type, 4), TCR(gentle, type, 4))
 
 // MSG_INFO_NOTIFICATIONS
+    MSG_INFO_NOTIF(CHAT_DISABLED,                           N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGChat is currently disabled on this server"), "")
     MSG_INFO_NOTIF(CHAT_NOSPECTATORS,                       N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGSpectator chat is not sent to players during the match"), "")
+    MSG_INFO_NOTIF(CHAT_PRIVATE_DISABLED,                   N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGPrivate chat is currently disabled on this server"), "")
+    MSG_INFO_NOTIF(CHAT_SPECTATOR_DISABLED,                 N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGSpectator chat is currently disabled on this server"), "")
+    MSG_INFO_NOTIF(CHAT_TEAM_DISABLED,                      N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGTeam chat is currently disabled on this server"), "")
 
     MULTITEAM_INFO(CTF_CAPTURE,                             N_CONSOLE,  1, 0, "s1", "s1",                       "notify_%s_captured",       _("^BG%s^BG captured the ^TC^TT^BG flag"), "", FLAG)
     MULTITEAM_INFO(CTF_CAPTURE_BROKEN,                      N_CONSOLE,  2, 2, "s1 f1dtime s2 f2dtime", "s1",    "notify_%s_captured",       _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG%s^BG's previous record of ^F2%s^BG seconds"), "", FLAG)
@@ -259,7 +271,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(CA_LEAVE,                                N_CONSOLE,  0, 0, "", "",       "",     _("^F2You will spectate in the next round"), "")
 
     MSG_INFO_NOTIF(COUNTDOWN_RESTART,                       N_CHATCON,  0, 0, "", "",       "",     _("^F2Match is restarting..."), "")
-    MSG_INFO_NOTIF(COUNTDOWN_STOP,                          N_CHATCON,  0, 0, "", "",       "",     _("^F4Countdown stopped!"), "")
+    MSG_INFO_NOTIF(COUNTDOWN_STOP_MINPLAYERS,               N_CHATCON,  0, 1, "f1", "",     "",     strcat(_("^F4Countdown stopped!"), "\n^BG", _("%s players are needed for this match.")), "")
+    MSG_INFO_NOTIF(COUNTDOWN_STOP_BADTEAMS,                 N_CHATCON,  0, 0, "", "",       "",     strcat(_("^F4Countdown stopped!"), "\n^BG", _("Teams are too unbalanced.")), "")
 
     MSG_INFO_NOTIF(DEATH_MURDER_BUFF,                       N_CONSOLE,  3, 3, "spree_inf s1 s2 f3buffname s3loc spree_end", "s2 s1",    "notify_death",         _("^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"), _("^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"))
     MSG_INFO_NOTIF(DEATH_MURDER_CHEAT,                      N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"), "")
@@ -291,6 +304,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(DEATH_MURDER_VH_WAKI_GUN,                N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"), "")
     MSG_INFO_NOTIF(DEATH_MURDER_VH_WAKI_ROCKET,             N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"), "")
     MSG_INFO_NOTIF(DEATH_MURDER_VOID,                       N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_void",          _("^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"), "")
+    MSG_INFO_NOTIF(DEATH_MURDER_VOID_ENT,                   N_CONSOLE,  4, 2, "spree_inf s1 s3#s2 #s2 s4loc spree_end", "s2 s1",        "notify_void",            "^BG%s%s^K1 %s%s%s%s", "")
 
     MSG_INFO_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,               N_CONSOLE,  2, 1, "s1 death_team s2loc", "",        "",                     _("^BG%s^K1 was moved into the %s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_BETRAYAL,                     N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_teamkill_red",  _("^BG%s^K1 became enemies with the Lord of Teamplay%s%s"), "")
@@ -344,11 +358,12 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(DEATH_SELF_VH_SPID_ROCKET,               N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_VH_WAKI_DEATH,                N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 got caught in the blast of a Racer explosion%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_VH_WAKI_ROCKET,               N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"), "")
-    MSG_INFO_NOTIF(DEATH_SELF_VOID,                         N_CONSOLE,  3, 1, "s1 s2 s3loc spree_lost", "s1",   "notify_void",            "^BG%s^K1 %s^K1%s%s", "")
+    MSG_INFO_NOTIF(DEATH_SELF_VOID,                         N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_void",          _("^BG%s^K1 ended up in the wrong place%s%s"), "")
+    MSG_INFO_NOTIF(DEATH_SELF_VOID_ENT,                     N_CONSOLE,  3, 1, "s1 s2 s3loc spree_lost", "s1",   "notify_void",            "^BG%s^K1 %s%s%s", "")
 
     MULTITEAM_INFO(DEATH_TEAMKILL,                          N_CONSOLE,  3, 1, "s1 s2 s3loc spree_end", "s2 s1",     "notify_teamkill_%s",   _("^BG%s^K1 was betrayed by ^BG%s^K1%s%s"), "", NAME)
 
-    MSG_INFO_NOTIF(DOMINATION_CAPTURE_TIME,                 N_CONSOLE,  2, 2, "s1 s2 f1 f1points f2", "",       "",     _("^BG%s^BG%s^BG (%s %s every %s seconds)"), "")
+    MSG_INFO_NOTIF(DOMINATION_CAPTURE_TIME,                 N_CONSOLE,  2, 2, "s1 s2 f1points f2", "",       "",     strcat("^BG%s^BG%s^BG ", _("(%s every %s seconds)")), "") // example for translators: Red Team has captured the Strength control point (2 points every 5 seconds)
 
     MSG_INFO_NOTIF(FREEZETAG_FREEZE,                        N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^K1 was frozen by ^BG%s"), "")
     MSG_INFO_NOTIF(FREEZETAG_REVIVED,                       N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^K3 was revived by ^BG%s"), "")
@@ -380,6 +395,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(JOIN_CONNECT,                            N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 connected"), "")
     MSG_INFO_NOTIF(JOIN_PLAY,                               N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 is now playing"), "")
     MULTITEAM_INFO(JOIN_PLAY_TEAM,                          N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 is now playing on the ^TC^TT team"), "", NAME)
+    MULTITEAM_INFO(JOIN_WANTS_TEAM,                         N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 wants to play on the ^TC^TT team"), "", NAME)
+    MSG_INFO_NOTIF(JOIN_WANTS,                              N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 wants to play"), "")
 
     MSG_INFO_NOTIF(KEEPAWAY_DROPPED,                        N_CONSOLE,  1, 0, "s1", "s1",       "notify_balldropped",       _("^BG%s^BG has dropped the ball!"), "")
     MSG_INFO_NOTIF(KEEPAWAY_PICKUP,                         N_CONSOLE,  1, 0, "s1", "s1",       "notify_ballpickedup",      _("^BG%s^BG has picked up the ball!"), "")
@@ -391,7 +408,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MULTITEAM_INFO(KEYHUNT_DESTROYED,                       N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^BG destroyed the ^TC^TT Key"), "", KEY)
     MULTITEAM_INFO(KEYHUNT_PICKUP,                          N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^BG picked up the ^TC^TT Key"), "", KEY)
 
-    MSG_INFO_NOTIF(LMS_FORFEIT,                             N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 forfeited"), "")
     MSG_INFO_NOTIF(LMS_NOLIVES,                             N_CONSOLE,  1, 0, "s1", "",         "",     _("^BG%s^F3 has no more lives left"), "")
 
     MSG_INFO_NOTIF(MONSTERS_DISABLED,                       N_CONSOLE,  0, 0, "", "",           "",     _("^BGMonsters are currently disabled"), "")
@@ -413,9 +429,13 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(QUIT_DISCONNECT,                         N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 disconnected"), "")
     MSG_INFO_NOTIF(QUIT_KICK_IDLING,                        N_CHATCON,  1, 1, "s1 f1", "",      "",             _("^BG%s^F3 was kicked after idling for %s seconds"), "")
     MSG_INFO_NOTIF(MOVETOSPEC_IDLING,                       N_CHATCON,  1, 1, "s1 f1", "",      "",             _("^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"), "")
+    MSG_INFO_NOTIF(MOVETOSPEC_IDLING_QUEUE,                 N_CHATCON,  1, 1, "s1 f1", "",      "",             _("^BG%s^F3 has left the join queue after idling for %s seconds"), "")
+    MSG_INFO_NOTIF(MOVETOSPEC_REMOVE,                       N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was moved to^BG spectators^F3 for balance reasons"), "")
     MSG_INFO_NOTIF(QUIT_KICK_SPECTATING,                    N_CONSOLE,  0, 0, "", "",           "",             _("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment."), "")
     MSG_INFO_NOTIF(QUIT_KICK_TEAMKILL,                      N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was kicked for excessive teamkilling"), "")
+    MSG_INFO_NOTIF(QUIT_PLAYBAN_TEAMKILL,                   N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 was forced to spectate for excessive teamkilling"), "")
     MSG_INFO_NOTIF(QUIT_SPECTATE,                           N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 is now^BG spectating"), "")
+    MSG_INFO_NOTIF(QUIT_QUEUE,                              N_CHATCON,  1, 0, "s1", "",         "",             _("^BG%s^F3 has left the join queue"), "")
 
     MSG_INFO_NOTIF(RACE_ABANDONED,                          N_CONSOLE,  1, 0, "s1", "",                                                                     "",                         _("^BG%s^BG has abandoned the race"), "")
     MSG_INFO_NOTIF(RACE_FAIL_RANKED,                        N_CONSOLE,  1, 3, "s1 race_col f1ord race_col f3race_time race_diff", "s1 f3race_time",         "race_newfail",             _("^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"), "")
@@ -435,12 +455,20 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_INFO_NOTIF(SUPERWEAPON_PICKUP,                      N_CONSOLE,  1, 0, "s1", "s1",       "superweapons",         _("^BG%s^K1 picked up a Superweapon"), "")
 
-    MSG_INFO_NOTIF(TEAMCHANGE_LARGERTEAM,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^BGYou cannot change to a larger team"), "")
-    MSG_INFO_NOTIF(TEAMCHANGE_NOTALLOWED,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^BGYou are not allowed to change teams"), "")
+    MSG_INFO_NOTIF(SURVIVAL_HUNTER_WIN,                     N_CONSOLE,  0, 0, "", "",           "",                     _("^K1Hunters^BG win the round"), "")
+    MSG_INFO_NOTIF(SURVIVAL_SURVIVOR_WIN,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^F1Survivors^BG win the round"), "")
+
+    MSG_INFO_NOTIF(TEAMCHANGE_LARGERTEAM,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^K2You're not allowed to join a larger team!"), "")
+    MSG_INFO_NOTIF(TEAMCHANGE_NOTALLOWED,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^K2You're not allowed to change teams!"), "")
+    MSG_INFO_NOTIF(TEAMCHANGE_LOCKED,                       N_CONSOLE,  0, 0, "", "",           "",                     _("^K2Teams are locked, you can't join or change teams until they're unlocked or the map changes."), "")
+    MSG_INFO_NOTIF(TEAMCHANGE_SAME,                         N_CONSOLE,  0, 0, "", "",           "",                     _("^K2You're already on that team!"), "")
+
+    MSG_INFO_NOTIF(TEAMS_LOCKED,                            N_CHATCON,  0, 0, "", "",           "",                     _("^F4The teams are now locked."), "")
+    MSG_INFO_NOTIF(TEAMS_UNLOCKED,                          N_CHATCON,  0, 0, "", "",           "",                     _("^F1The teams are now unlocked."), "")
 
     MSG_INFO_NOTIF(VERSION_BETA,                            N_CONSOLE,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s"), "")
     MSG_INFO_NOTIF(VERSION_OLD,                             N_CHATCON,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"), "")
-    MSG_INFO_NOTIF(VERSION_OUTDATED,                        N_CHATCON,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!"), "")
+    MSG_INFO_NOTIF(VERSION_OUTDATED,                        N_CHATCON,  2, 0, "s1 s2", "",      "",                     _("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3https://xonotic.org^BG!"), "")
 
     MSG_INFO_NOTIF(WEAPON_ACCORDEON_MURDER,                 N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weapontuba",               _("^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_ACCORDEON_SUICIDE,                N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weapontuba",               _("^BG%s^K1 hurt their own ears with the @!#%%'n Accordeon%s%s"), "")
@@ -480,7 +508,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(WEAPON_MORTAR_MURDER_EXPLODE,            N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weapongrenadelauncher",    _("^BG%s%s^K1 ate ^BG%s^K1's Mortar grenade%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_MORTAR_SUICIDE_BOUNCE,            N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weapongrenadelauncher",    _("^BG%s^K1 didn't see their own Mortar grenade%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_MORTAR_SUICIDE_EXPLODE,           N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weapongrenadelauncher",    _("^BG%s^K1 blew themself up with their own Mortar%s%s"), "")
-    MSG_INFO_NOTIF(WEAPON_OVERKILL_HMG_MURDER_SNIPE,        N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponhmg",                _("^BG%s%s^K1 was sniped by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_OVERKILL_HMG_MURDER_SPRAY,        N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponhmg",                _("^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_OVERKILL_MACHINEGUN_MURDER,       N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponuzi",                _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_OVERKILL_NEX_MURDER,              N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponnex",                _("^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"), "")
@@ -530,7 +557,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(ASSAULT_DEFENDING,                 N_ENABLE,    0, 0, "",               CPID_ASSAULT_ROLE,      "0 0",  _("^BGYou are defending!"), "")
     MSG_CENTER_NOTIF(ASSAULT_OBJ_DESTROYED,             N_ENABLE,    0, 1, "f1time",         CPID_ASSAULT_ROLE,      "0 0",  _("^BGObjective destroyed in ^F4%s^BG!"), "")
 
-    MSG_CENTER_NOTIF(COUNTDOWN_STOP,                    N_ENABLE,    0, 1, "f1",             CPID_MISSING_PLAYERS,   "4 0",  strcat(BOLD(_("^F4Countdown stopped!")), "\n^BG", _("%s players are needed for this match.")), "")
+    MSG_CENTER_NOTIF(COUNTDOWN_STOP_MINPLAYERS,         N_ENABLE,    0, 1, "f1",             CPID_MISSING_PLAYERS,   "4 0",  strcat(BOLD(_("^F4Countdown stopped!")), "\n^BG", _("%s players are needed for this match.")), "")
+    MSG_CENTER_NOTIF(COUNTDOWN_STOP_BADTEAMS,           N_ENABLE,    0, 0, "",               CPID_MISSING_PLAYERS,   "0 0",  strcat(BOLD(_("^F4Countdown stopped!")), "\n^BG", _("Teams are too unbalanced.")), "")
     MSG_CENTER_NOTIF(COUNTDOWN_BEGIN,                   N_ENABLE,    0, 0, "",               CPID_ROUND,             "2 0",  BOLD(_("^BGBegin!")), "")
     MSG_CENTER_NOTIF(COUNTDOWN_GAMESTART,               N_ENABLE,    0, 1, "",               CPID_ROUND,             "1 f1", strcat(_("^BGGame starts in"), "\n", BOLD("^COUNT")), "")
     MSG_CENTER_NOTIF(COUNTDOWN_ROUNDSTART,              N_ENABLE,    0, 2, "f1",             CPID_ROUND,             "1 f2", strcat(_("^BGRound %s starts in"), "\n", BOLD("^COUNT")), "")
@@ -567,6 +595,10 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(CTF_PICKUP_ENEMY_NEUTRAL_VERBOSE,  N_ENABLE,    2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy (^BG%s%s)^BG got the flag! Retrieve it!"), "")
     MSG_CENTER_NOTIF(CTF_PICKUP_ENEMY_TEAM,             N_ENABLE,    1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy^BG got their flag! Retrieve it!"), "")
     MSG_CENTER_NOTIF(CTF_PICKUP_ENEMY_TEAM_VERBOSE,     N_ENABLE,    2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy (^BG%s%s)^BG got their flag! Retrieve it!"), "")
+    MULTITEAM_CENTER(CTF_PICKUP_ENEMY_OTHER,            N_ENABLE,    1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"), "", FLAG)
+    MULTITEAM_CENTER(CTF_PICKUP_ENEMY_OTHER_VERBOSE,    N_ENABLE,    2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"), "", FLAG)
+    MSG_CENTER_NOTIF(CTF_PICKUP_ENEMY_OTHER_NEUTRAL,    N_ENABLE,    1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy^BG got the flag! Retrieve it!"), "")
+    MSG_CENTER_NOTIF(CTF_PICKUP_ENEMY_OTHER_VERBOSE_NEUTRAL, N_ENABLE,    2, 0, "s1 s2 s1",  CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy (^BG%s%s)^BG got the flag! Retrieve it!"), "")
     MULTITEAM_CENTER(CTF_PICKUP_TEAM,                   N_ENABLE,    1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate^BG got the ^TC^TT^BG flag! Protect them!"), "", FLAG)
     MULTITEAM_CENTER(CTF_PICKUP_TEAM_VERBOSE,           N_ENABLE,    2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"), "", FLAG)
     MSG_CENTER_NOTIF(CTF_PICKUP_TEAM_NEUTRAL,           N_ENABLE,    1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate^BG got the flag! Protect them!"), "")
@@ -658,6 +690,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_CENTER_NOTIF(DISCONNECT_IDLING,                 N_ENABLE,    0, 1, "",               CPID_IDLING,            "1 f1", BOLD(_("^K1Stop idling!\n^BGDisconnecting in ^COUNT...")), "")
     MSG_CENTER_NOTIF(MOVETOSPEC_IDLING,                 N_ENABLE,    0, 1, "",               CPID_IDLING,            "1 f1", BOLD(_("^K1Stop idling!\n^BGMoving to spectators in ^COUNT...")), "")
+    MSG_CENTER_NOTIF(MOVETOSPEC_REMOVE,                 N_ENABLE,    1, 1, "s1",             CPID_REMOVE,            "1 f1", BOLD(_("^K1Teams unbalanced!\n^BGMoving %s^BG to spectators in ^COUNT...")), "")
 
     MSG_CENTER_NOTIF(DOOR_LOCKED_NEED,                  N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^BGYou need %s^BG!"), "")
     MSG_CENTER_NOTIF(DOOR_LOCKED_ALSONEED,              N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  _("^BGYou also need %s^BG!"), "")
@@ -689,16 +722,24 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(ITEM_WEAPON_DROP,                  N_ENABLE,    0, 2, "item_wepname item_wepammo",          CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_GOT,                   N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1%s"), "")
     MSG_CENTER_NOTIF(ITEM_WEAPON_NOAMMO,                N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou don't have enough ammo for the ^F1%s"), "")
-    MSG_CENTER_NOTIF(ITEM_WEAPON_PRIMORSEC,             N_ENABLE,    0, 3, "item_wepname f2primsec f3primsec",   CPID_ITEM, "item_centime 0", _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "")
+    MSG_CENTER_NOTIF(ITEM_WEAPON_PRIMORSEC,             N_ENABLE,    0, 3, "item_wepname f2primsec f3primsec",   CPID_ITEM, "item_centime 0", _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "") // example for translators: Electro primary is unable to fire, but its secondary can
     MSG_CENTER_NOTIF(ITEM_WEAPON_UNAVAILABLE,           N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^F1%s^BG is ^F4not available^BG on this map"), "")
 
+    MSG_CENTER_NOTIF(JOIN_PREVENT_VERSIONMISMATCH,      N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K1Your Xonotic version is incompatible with the server's version!"), "")
     MSG_CENTER_NOTIF(JOIN_NOSPAWNS,                     N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K1No spawnpoints available!\nHope your team can fix it..."), "")
+    MSG_CENTER_NOTIF(JOIN_PLAYBAN,                      N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  BOLD(_("^K1You aren't allowed to play because you are banned in this server")), "")
     MSG_CENTER_NOTIF(JOIN_PREVENT,                      N_ENABLE,    0, 1, "f1",             CPID_PREVENT_JOIN,      "0 0",  _("^K1You may not join the game at this time.\nThis match is limited to ^F2%s^BG players."), "")
+    MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
+    MSG_CENTER_NOTIF(JOIN_PREVENT_QUEUE,                N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^BGYou're queued to join any available team."), "")
+    MULTITEAM_CENTER(JOIN_PREVENT_QUEUE_TEAM,           N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^BGYou're queued to join the ^TC^TT^BG team."), "", NAME)
+    MULTITEAM_CENTER(JOIN_PREVENT_QUEUE_TEAM_CONFLICT,  N_ENABLE,    1, 0, "s1",             CPID_PREVENT_JOIN,      "0 0",  strcat(_("^K2You're queued to join any available team."), "\n", _("%s^K2 chose ^TC^TT^K2 first.")), "", NAME)
+    MULTITEAM_CENTER(JOIN_PLAY_TEAM_QUEUECONFLICT,      N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  strcat(_("^K2You're now playing on ^TC^TT^K2 team!"), "\n", _("%s^K2 chose your preferred team first.")), "", NAME)
+    MULTITEAM_CENTER(JOIN_PLAY_TEAM,                    N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGYou're now playing on ^TC^TT^BG team!"), "", NAME)
 
     MSG_CENTER_NOTIF(KEEPAWAY_DROPPED,                  N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has dropped the ball!"), "")
     MSG_CENTER_NOTIF(KEEPAWAY_PICKUP,                   N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has picked up the ball!"), "")
     MSG_CENTER_NOTIF(KEEPAWAY_PICKUP_SELF,              N_ENABLE,    0, 0, "",               CPID_KEEPAWAY,          "0 0",  _("^BGYou picked up the ball"), "")
-    MSG_CENTER_NOTIF(KEEPAWAY_WARN,                     N_ENABLE,    0, 0, "",               CPID_KEEPAWAY_WARN,     "0 0",  _("^BGKilling people while you don't have the ball gives no points!"), "")
+    MSG_CENTER_NOTIF(KEEPAWAY_WARN,                     N_ENABLE,    0, 0, "",               CPID_KEEPAWAY_WARN,     "0 0",  _("^BGGet the ball to score points for frags!"), "")
 
     MSG_CENTER_NOTIF(KEYHUNT_HELP,                      N_ENABLE,    0, 0, "",               CPID_KEYHUNT,           "0 0",  _("^BGAll keys are in your team's hands!\nHelp the key carriers to meet!"), "")
     MULTITEAM_CENTER(KEYHUNT_INTERFERE,                 N_ENABLE,    0, 0, "",               CPID_KEYHUNT,           "0 0",  _("^BGAll keys are in ^TC^TT team^BG's hands!\nInterfere ^F4NOW^BG!"), "", NAME)
@@ -708,7 +749,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MULTITEAM_CENTER(KEYHUNT_START,                     N_ENABLE,    0, 0, "",               CPID_KEYHUNT,           "0 0",  _("^BGYou are starting with the ^TC^TT Key"), "", KEY)
 
     MSG_CENTER_NOTIF(LMS_NOLIVES,                       N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGYou have no lives left, you must wait until the next match"), "")
-    MSG_CENTER_NOTIF(LMS_SPECWARN,                      N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^F4WARNING:^BG you can't rejoin this match after spectating.\nUse the same command again to spectate anyway."), "")
     MSG_CENTER_NOTIF(LMS_VISIBLE_LEADER,                N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGEnemies can now see you on radar!"), "")
     MSG_CENTER_NOTIF(LMS_VISIBLE_OTHER,                 N_ENABLE,    0, 0, "",               CPID_LMS,               "0 0",  _("^BGLeaders can now be seen by enemies on radar!"), "")
 
@@ -754,31 +794,46 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(POWERUP_INVISIBILITY,              N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2You are invisible"), "")
     MSG_CENTER_NOTIF(POWERDOWN_INVISIBILITY,            N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Invisibility has worn off"), "")
 
+    MSG_CENTER_NOTIF(QUIT_PLAYBAN_TEAMKILL,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You are forced to spectate and you aren't allowed to play because you are banned in this server")), "")
+
     MSG_CENTER_NOTIF(RACE_FINISHLAP,                    N_ENABLE,    0, 0, "",               CPID_RACE_FINISHLAP,    "0 0",  _("^F2The race is over, finish your lap!"), "")
 
     MSG_CENTER_NOTIF(SEQUENCE_COMPLETED,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGSequence completed!"), "")
     MSG_CENTER_NOTIF(SEQUENCE_COUNTER,                  N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGThere are more to go..."), "")
     MSG_CENTER_NOTIF(SEQUENCE_COUNTER_FEWMORE,          N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^BGOnly %s^BG more to go..."), "")
 
+    MSG_CENTER_NOTIF(SPECTATE_WARNING,                  N_ENABLE,    0, 1, "f1secs",         CPID_PREVENT_JOIN,      "0 0",  _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!"), "") // same string as INFO_SPECTATE_WARNING
+    MSG_CENTER_NOTIF(SPECTATE_NOTALLOWED,               N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F2Spectating isn't allowed at this time!"), "")
+
     MSG_CENTER_NOTIF(SUPERWEAPON_BROKEN,                N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have broken down"), "")
     MSG_CENTER_NOTIF(SUPERWEAPON_LOST,                  N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have been lost"), "")
     MSG_CENTER_NOTIF(SUPERWEAPON_PICKUP,                N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2You now have a superweapon"), "")
+
+    MSG_CENTER_NOTIF(SURVIVAL_HUNTER,                   N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  BOLD(_("^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising suspicion!")), "")
+    MSG_CENTER_NOTIF(SURVIVAL_HUNTER_WIN,               N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^K1Hunters^BG win the round"), "")
+    MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR,                 N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  BOLD(_("^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!")), "")
+    MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR_WIN,             N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^F1Survivors^BG win the round"), "")
 
     MULTITEAM_CENTER(TEAMCHANGE,                        N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Changing to ^TC^TT^K1 in ^COUNT"), "", NAME)
     MSG_CENTER_NOTIF(TEAMCHANGE_AUTO,                   N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Changing team in ^COUNT"), "")
     MSG_CENTER_NOTIF(TEAMCHANGE_SPECTATE,               N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Spectating in ^COUNT"), "")
     MSG_CENTER_NOTIF(TEAMCHANGE_SUICIDE,                N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Suicide in ^COUNT"), "")
+    MSG_CENTER_NOTIF(TEAMCHANGE_LARGERTEAM,             N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2You're not allowed to join a larger team!"), "")
+    MSG_CENTER_NOTIF(TEAMCHANGE_NOTALLOWED,             N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2You're not allowed to change teams!"), "")
+    MSG_CENTER_NOTIF(TEAMCHANGE_LOCKED,                 N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2Teams are locked, you can't join or change teams until they're unlocked or the map changes."), "")
+    MSG_CENTER_NOTIF(TEAMCHANGE_SAME,                   N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2You're already on that team!"), "")
 
     MSG_CENTER_NOTIF(TIMEOUT_BEGINNING,                 N_ENABLE,    0, 1, "",               CPID_TIMEOUT,           "1 f1", _("^F4Timeout begins in ^COUNT"), "")
     MSG_CENTER_NOTIF(TIMEOUT_ENDING,                    N_ENABLE,    0, 1, "",               CPID_TIMEIN,            "1 f1", _("^F4Timeout ends in ^COUNT"), "")
-
-    MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
 
     MSG_CENTER_NOTIF(VEHICLE_ENTER,                     N_ENABLE,    0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to enter/exit the vehicle"), "")
     MSG_CENTER_NOTIF(VEHICLE_ENTER_GUNNER,              N_ENABLE,    0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to enter the vehicle gunner"), "")
     MSG_CENTER_NOTIF(VEHICLE_ENTER_STEAL,               N_ENABLE,    0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to steal this vehicle"), "")
     MSG_CENTER_NOTIF(VEHICLE_STEAL,                     N_ENABLE,    0, 0, "",               CPID_VEHICLES_OTHER,    "0 0",  _("^F2The enemy is stealing one of your vehicles!\n^F4Stop them!"), "")
     MSG_CENTER_NOTIF(VEHICLE_STEAL_SELF,                N_ENABLE,    0, 0, "",               CPID_VEHICLES_OTHER,    "4 0",  _("^F2Intruder detected, disabling shields!"), "")
+
+    MSG_CENTER_NOTIF(VOTEBAN,                           N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You aren't allowed to call a vote because you are banned in this server")), "")
+    MSG_CENTER_NOTIF(VOTEBANYN,                         N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You aren't allowed to vote because you are banned in this server")), "")
 
     MSG_CENTER_NOTIF(WEAPON_MINELAYER_LIMIT,            N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^BGYou cannot place more than ^F2%s^BG mines at a time"), "")
 
@@ -798,7 +853,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
 // MSG_MULTI_NOTIFICATIONS
     MSG_MULTI_NOTIF(COUNTDOWN_BEGIN,                    N_ENABLE,  ANNCE_BEGIN,    NULL,                                   CENTER_COUNTDOWN_BEGIN)
-    MSG_MULTI_NOTIF(COUNTDOWN_STOP,                     N_ENABLE,  NULL,           INFO_COUNTDOWN_STOP,                    CENTER_COUNTDOWN_STOP)
+    MSG_MULTI_NOTIF(COUNTDOWN_STOP_MINPLAYERS,          N_ENABLE,  NULL,           INFO_COUNTDOWN_STOP_MINPLAYERS,         CENTER_COUNTDOWN_STOP_MINPLAYERS)
+    MSG_MULTI_NOTIF(COUNTDOWN_STOP_BADTEAMS,            N_ENABLE,  NULL,           INFO_COUNTDOWN_STOP_BADTEAMS,           CENTER_COUNTDOWN_STOP_BADTEAMS)
 
     MSG_MULTI_NOTIF(DEATH_MURDER_BUFF,                  N_ENABLE,  NULL,           INFO_DEATH_MURDER_BUFF,                 NULL)
     MSG_MULTI_NOTIF(DEATH_MURDER_CHEAT,                 N_ENABLE,  NULL,           INFO_DEATH_MURDER_CHEAT,                NULL)
@@ -830,6 +886,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(DEATH_MURDER_VH_WAKI_GUN,           N_ENABLE,  NULL,           INFO_DEATH_MURDER_VH_WAKI_GUN,          NULL)
     MSG_MULTI_NOTIF(DEATH_MURDER_VH_WAKI_ROCKET,        N_ENABLE,  NULL,           INFO_DEATH_MURDER_VH_WAKI_ROCKET,       NULL)
     MSG_MULTI_NOTIF(DEATH_MURDER_VOID,                  N_ENABLE,  NULL,           INFO_DEATH_MURDER_VOID,                 NULL)
+    MSG_MULTI_NOTIF(DEATH_MURDER_VOID_ENT,              N_ENABLE,  NULL,           INFO_DEATH_MURDER_VOID_ENT,             NULL)
 
     MSG_MULTI_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,          N_ENABLE,  NULL,           INFO_DEATH_SELF_AUTOTEAMCHANGE,         CENTER_DEATH_SELF_AUTOTEAMCHANGE)
     MSG_MULTI_NOTIF(DEATH_SELF_BETRAYAL,                N_ENABLE,  NULL,           INFO_DEATH_SELF_BETRAYAL,               CENTER_DEATH_SELF_BETRAYAL)
@@ -884,6 +941,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(DEATH_SELF_VH_WAKI_DEATH,           N_ENABLE,  NULL,           INFO_DEATH_SELF_VH_WAKI_DEATH,          CENTER_DEATH_SELF_VH_WAKI_DEATH)
     MSG_MULTI_NOTIF(DEATH_SELF_VH_WAKI_ROCKET,          N_ENABLE,  NULL,           INFO_DEATH_SELF_VH_WAKI_ROCKET,         CENTER_DEATH_SELF_VH_WAKI_ROCKET)
     MSG_MULTI_NOTIF(DEATH_SELF_VOID,                    N_ENABLE,  NULL,           INFO_DEATH_SELF_VOID,                   CENTER_DEATH_SELF_VOID)
+    MSG_MULTI_NOTIF(DEATH_SELF_VOID_ENT,                N_ENABLE,  NULL,           INFO_DEATH_SELF_VOID_ENT,               CENTER_DEATH_SELF_VOID)
 
     MSG_MULTI_NOTIF(ITEM_BUFF_DROP,                     N_ENABLE,  NULL,           INFO_ITEM_BUFF_DROP,                    CENTER_ITEM_BUFF_DROP)
     MSG_MULTI_NOTIF(ITEM_BUFF_GOT,                      N_ENABLE,  NULL,           INFO_ITEM_BUFF_GOT,                     CENTER_ITEM_BUFF_GOT)
@@ -935,7 +993,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(WEAPON_MORTAR_MURDER_EXPLODE,       N_ENABLE,  NULL,           INFO_WEAPON_MORTAR_MURDER_EXPLODE,      NULL)
     MSG_MULTI_NOTIF(WEAPON_MORTAR_SUICIDE_BOUNCE,       N_ENABLE,  NULL,           INFO_WEAPON_MORTAR_SUICIDE_BOUNCE,      CENTER_DEATH_SELF_GENERIC)
     MSG_MULTI_NOTIF(WEAPON_MORTAR_SUICIDE_EXPLODE,      N_ENABLE,  NULL,           INFO_WEAPON_MORTAR_SUICIDE_EXPLODE,     CENTER_DEATH_SELF_GENERIC)
-    MSG_MULTI_NOTIF(WEAPON_OVERKILL_HMG_MURDER_SNIPE,   N_ENABLE,  NULL,           INFO_WEAPON_OVERKILL_HMG_MURDER_SNIPE,  NULL)
     MSG_MULTI_NOTIF(WEAPON_OVERKILL_HMG_MURDER_SPRAY,   N_ENABLE,  NULL,           INFO_WEAPON_OVERKILL_HMG_MURDER_SPRAY,  NULL)
     MSG_MULTI_NOTIF(WEAPON_OVERKILL_MACHINEGUN_MURDER,  N_ENABLE,  NULL,           INFO_WEAPON_OVERKILL_MACHINEGUN_MURDER, NULL)
     MSG_MULTI_NOTIF(WEAPON_OVERKILL_NEX_MURDER,         N_ENABLE,  NULL,           INFO_WEAPON_OVERKILL_NEX_MURDER,        NULL)
@@ -989,10 +1046,12 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MULTITEAM_CHOICE(CTF_CAPTURE_TIME,          N_VERBOSE, A_ALWAYS,  MSG_INFO,   INFO_CTF_CAPTURE,                   INFO_CTF_CAPTURE_TIME)
     MULTITEAM_CHOICE(CTF_CAPTURE_UNBROKEN,      N_VERBOSE, A_ALWAYS,  MSG_INFO,   INFO_CTF_CAPTURE,                   INFO_CTF_CAPTURE_UNBROKEN)
     MULTITEAM_CHOICE(CTF_PICKUP_TEAM,           N__NORMAL, A_ALWAYS,  MSG_CENTER, CENTER_CTF_PICKUP_TEAM,             CENTER_CTF_PICKUP_TEAM_VERBOSE)
+    MULTITEAM_CHOICE(CTF_PICKUP_ENEMY_OTHER,    N__NORMAL, A_ALWAYS,  MSG_CENTER, CENTER_CTF_PICKUP_ENEMY_OTHER,      CENTER_CTF_PICKUP_ENEMY_OTHER_VERBOSE)
     MSG_CHOICE_NOTIF(CTF_PICKUP_TEAM_NEUTRAL,   N__NORMAL, A_ALWAYS,  MSG_CENTER, CENTER_CTF_PICKUP_TEAM_NEUTRAL,     CENTER_CTF_PICKUP_TEAM_VERBOSE_NEUTRAL)
     MSG_CHOICE_NOTIF(CTF_PICKUP_ENEMY,          N__NORMAL, A_ALWAYS,  MSG_CENTER, CENTER_CTF_PICKUP_ENEMY,            CENTER_CTF_PICKUP_ENEMY_VERBOSE)
     MSG_CHOICE_NOTIF(CTF_PICKUP_ENEMY_NEUTRAL,  N__NORMAL, A_ALWAYS,  MSG_CENTER, CENTER_CTF_PICKUP_ENEMY_NEUTRAL,    CENTER_CTF_PICKUP_ENEMY_NEUTRAL_VERBOSE)
     MSG_CHOICE_NOTIF(CTF_PICKUP_ENEMY_TEAM,     N__NORMAL, A_ALWAYS,  MSG_CENTER, CENTER_CTF_PICKUP_ENEMY_TEAM,       CENTER_CTF_PICKUP_ENEMY_TEAM_VERBOSE)
+    MSG_CHOICE_NOTIF(CTF_PICKUP_ENEMY_OTHER_NEUTRAL, N__NORMAL, A_ALWAYS, MSG_CENTER, CENTER_CTF_PICKUP_ENEMY_OTHER_NEUTRAL, CENTER_CTF_PICKUP_ENEMY_OTHER_VERBOSE_NEUTRAL)
     MSG_CHOICE_NOTIF(FRAG,                      N__NORMAL, A_WARMUP,  MSG_CENTER, CENTER_DEATH_MURDER_FRAG,           CENTER_DEATH_MURDER_FRAG_VERBOSE)
     MSG_CHOICE_NOTIF(FRAGGED,                   N__NORMAL, A_WARMUP,  MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED,        CENTER_DEATH_MURDER_FRAGGED_VERBOSE)
     MSG_CHOICE_NOTIF(FRAG_FIRE,                 N__NORMAL, A_WARMUP,  MSG_CENTER, CENTER_DEATH_MURDER_FRAG_FIRE,      CENTER_DEATH_MURDER_FRAG_FIRE_VERBOSE)

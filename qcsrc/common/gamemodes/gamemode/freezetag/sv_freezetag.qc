@@ -16,7 +16,6 @@ float autocvar_g_ft_start_ammo_shells = 60;
 float autocvar_g_ft_start_ammo_nails = 320;
 float autocvar_g_ft_start_ammo_rockets = 160;
 float autocvar_g_ft_start_ammo_cells = 180;
-float autocvar_g_ft_start_ammo_plasma = 180;
 float autocvar_g_ft_start_ammo_fuel = 0;
 
 void freezetag_count_alive_players()
@@ -86,9 +85,11 @@ bool freezetag_CheckTeams()
 void nades_Clear(entity);
 void nades_GiveBonus(entity player, float score);
 
+float autocvar_g_freezetag_round_enddelay = 1;
 bool freezetag_CheckWinner()
 {
-	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
+	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
+		&& round_handler_GetEndDelayTime() == -1)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
@@ -104,7 +105,26 @@ bool freezetag_CheckWinner()
 
 	int winner_team = Team_GetWinnerAliveTeam();
 	if (!winner_team)
+	{
+		round_handler_ResetEndDelayTime();
 		return false;
+	}
+
+	// delay round ending a bit
+	if (autocvar_g_freezetag_round_enddelay
+		&& round_handler_GetEndTime() > 0
+		&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
+	{
+		if (round_handler_GetEndDelayTime() == -1)
+		{
+			round_handler_SetEndDelayTime(min(time + autocvar_g_freezetag_round_enddelay, round_handler_GetEndTime()));
+			return 0;
+		}
+		else if (round_handler_GetEndDelayTime() >= time)
+		{
+			return 0;
+		}
+	}
 
 	if(winner_team > 0)
 	{
@@ -167,8 +187,11 @@ void freezetag_Add_Score(entity targ, entity attacker)
 	{
 		// got frozen by an enemy
 		// counted as "kill" and "death" already
+		if(SAME_TEAM(attacker, targ))
+			GameRules_scoring_add(attacker, SCORE, -1);
+		else
+			GameRules_scoring_add(attacker, SCORE, +1);
 		GameRules_scoring_add(targ, SCORE, -1);
-		GameRules_scoring_add(attacker, SCORE, +1);
 	}
 	// else nothing - got frozen by the game type rules themselves
 }
@@ -351,30 +374,42 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	frag_target.respawn_time = time + 1;
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 
-	// Cases DEATH_TEAMCHANGE and DEATH_AUTOTEAMCHANGE are needed to fix a bug whe
-	// you succeed changing team through the menu: you both really die (gibbing) and get frozen
-	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype)
-		|| frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
+	// let the player die, they will be automatically frozen when they respawn
+	// it fixes a bug where you both really die (gibbing) and get frozen
+	// if you succeed changing team through the menu
+	if (frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 	{
-		// let the player die, he will be automatically frozen when he respawns
-		if (STAT(FROZEN, frag_target) != FROZEN_NORMAL)
-		{
-			freezetag_Add_Score(frag_target, frag_attacker);
-			freezetag_count_alive_players();
-			freezetag_LastPlayerForTeam_Notify(frag_target);
-			frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
-		}
-		else
-		{
-			float t = frag_target.freezetag_frozen_timeout;
-			float t2 = frag_target.freezetag_frozen_time;
-			Unfreeze(frag_target, false); // remove ice
-			// keep timeout value so it can be restored when player will be refrozen on respawn
-			// NOTE this can't be exactly -2 since game starts from time 2
-			frag_target.freezetag_frozen_timeout = -t;
-			frag_target.freezetag_frozen_time = t2;
-		}
+		freezetag_Add_Score(frag_target, frag_attacker);
+		freezetag_count_alive_players();
+		freezetag_LastPlayerForTeam_Notify(frag_target);
+		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		return true;
+	}
+
+	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype))
+	{
+		// can't use freezetag_Add_Score here since it doesn't assign any points
+		// if the attacker is not a player (e.g. triggerhurt) by design
+		if ((STAT(FROZEN, frag_target) != FROZEN_NORMAL) && !IS_PLAYER(frag_attacker))
+			GameRules_scoring_add(frag_target, SCORE, -1);
+
+		// by restoring some health right after player death (soft-kill)
+		// weapons and ammo won't be reset
+		SetResourceExplicit(frag_target, RES_HEALTH, 1);
+		// restore armor as it was removed in PlayerDamage
+		SetResourceExplicit(frag_target, RES_ARMOR, frag_target.freezetag_frozen_armor);
+
+		// relocate
+		entity spot = SelectSpawnPoint(frag_target, true);
+		setorigin(frag_target, spot.origin);
+		frag_target.oldorigin = frag_target.origin;
+		frag_target.fixangle = true; // turn this way immediately
+		frag_target.angles = vec2(spot.angles);
+		frag_target.velocity = '0 0 0';
+		frag_target.oldvelocity = frag_target.velocity; // prevents fall damage, see CreatureFrame_FallDamage
+		frag_target.avelocity = '0 0 0';
+		frag_target.punchangle = '0 0 0';
+		frag_target.punchvector = '0 0 0';
 	}
 
 	if (STAT(FROZEN, frag_target) == FROZEN_NORMAL)
@@ -406,14 +441,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 
 	if(player.freezetag_frozen_timeout <= -2) // player was dead
 	{
-		float t = player.freezetag_frozen_timeout;
-		float t2 = player.freezetag_frozen_time;
 		freezetag_Freeze(player, NULL);
-		if (t < -2)
-		{
-			player.freezetag_frozen_timeout = -t;
-			player.freezetag_frozen_time = t2;
-		}
 		return true;
 	}
 
@@ -427,6 +455,11 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 	}
 
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(ft, PutClientInServer)
+{
+	eliminatedPlayers.SendFlags |= 1;
 }
 
 MUTATOR_HOOKFUNCTION(ft, reset_map_players)
@@ -462,6 +495,8 @@ MUTATOR_HOOKFUNCTION(ft, Damage_Calculate)
 	//float frag_deathtype = M_ARGV(3, float);
 	//float frag_damage = M_ARGV(4, float);
 	vector frag_force = M_ARGV(6, vector);
+
+	frag_target.freezetag_frozen_armor = GetResource(frag_target, RES_ARMOR);
 
 	if (STAT(FROZEN, frag_target) == FROZEN_NORMAL && autocvar_g_freezetag_revive_auto_reducible
 		&& autocvar_g_freezetag_frozen_maxtime > 0 && autocvar_g_freezetag_revive_auto)
@@ -682,7 +717,6 @@ MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_ft_start_ammo_nails;
 	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_ft_start_ammo_rockets;
 	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_ft_start_ammo_cells;
-	start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_ft_start_ammo_plasma;
 	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_ft_start_ammo_fuel;
 }
 

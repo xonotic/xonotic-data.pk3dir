@@ -27,6 +27,7 @@ bool autocvar_g_buffs_random_location;
 int autocvar_g_buffs_random_location_attempts;
 int autocvar_g_buffs_spawn_count;
 bool autocvar_g_buffs_replace_powerups;
+bool autocvar_g_buffs_replace_available = true;
 bool autocvar_g_buffs_drop = false;
 float autocvar_g_buffs_cooldown_activate;
 float autocvar_g_buffs_cooldown_respawn;
@@ -73,9 +74,6 @@ float autocvar_g_buffs_luck_damagemultiplier = 3;
 .entity oldbuffs; // for updating effects
 .float buff_shield; // delay for players to keep them from spamming buff pickups
 .entity buff_model; // controls effects (TODO: make csqc)
-
-const vector BUFF_MIN = ('-16 -16 0');
-const vector BUFF_MAX = ('16 16 60');
 
 float buff_Available(entity buff);
 

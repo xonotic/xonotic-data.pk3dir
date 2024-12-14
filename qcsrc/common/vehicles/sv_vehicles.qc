@@ -819,8 +819,6 @@ void vehicles_exit(entity vehic, bool eject)
 			WriteAngle(MSG_ONE, 0);
 		}
 
-		setsize(player, STAT(PL_MIN, player), STAT(PL_MAX, player));
-
 		player.takedamage		= DAMAGE_AIM;
 		player.solid			= SOLID_SLIDEBOX;
 		set_movetype(player, MOVETYPE_WALK);
@@ -840,6 +838,7 @@ void vehicles_exit(entity vehic, bool eject)
 		}
 		player.last_vehiclecheck = time + 3;
 		player.vehicle_enter_delay = time + 2;
+		setsize(player, STAT(PL_MIN, player), STAT(PL_MAX, player));
 
 		CSQCVehicleSetup(player, HUD_NORMAL);
 

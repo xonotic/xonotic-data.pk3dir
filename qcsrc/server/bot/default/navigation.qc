@@ -225,8 +225,8 @@ bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector 
 	IL_EACH(g_ladders, true,
 	{
 		if(it.bot_pickup)
-		if(boxesoverlap(org + m1 + '-1 -1 -1', org + m2 + '1 1 1', it.absmin, it.absmax))
-		if(boxesoverlap(end, end2, it.absmin + vec2(m1) + '-1 -1 0', it.absmax + vec2(m2) + '1 1 0'))
+		if(boxesoverlap(org + m1, org + m2, it.absmin, it.absmax))
+		if(boxesoverlap(end, end2, it.absmin + vec2(m1), it.absmax + vec2(m2)))
 		{
 			vector top = org;
 			top.z = it.absmax.z + (PL_MAX_CONST.z - PL_MIN_CONST.z);
@@ -1738,7 +1738,7 @@ int navigation_poptouchedgoals(entity this)
 
 				navigation_poproute(this);
 				++removed_goals;
-				if(this.goalcurrent && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
+				if(this.goalcurrent && (this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
 					return removed_goals;
 			}
 		}

@@ -80,7 +80,7 @@ void XonoticMapList_draw(entity me)
 {
 	if(me.startButton)
 		me.startButton.disabled = ((me.selectedItem < 0) || (me.selectedItem >= me.nItems)
-			|| (gamestatus & (GAME_ISSERVER | GAME_CONNECTED) && cvar("g_campaign")));
+			|| ((gamestatus & (GAME_ISSERVER | GAME_CONNECTED)) && cvar("g_campaign")));
 	SUPER(XonoticMapList).draw(me);
 }
 
@@ -234,7 +234,7 @@ void MapList_Add_Shown(entity btn, entity me)
 {
 	float i, n;
 	n = strlen(me.g_maplistCache);
-	for (i = 0 ; i < n; i++)
+	for (i = 0 ; i < n; ++i)
 	{
 		if (!me.g_maplistCacheQuery(me, i))
 			me.g_maplistCacheToggle(me, i);
@@ -246,7 +246,7 @@ void MapList_Remove_Shown(entity btn, entity me)
 {
 	float i, n;
 	n = strlen(me.g_maplistCache);
-	for (i = 0 ; i < n; i++)
+	for (i = 0 ; i < n; ++i)
 	{
 		if (me.g_maplistCacheQuery(me, i))
 			me.g_maplistCacheToggle(me, i);
@@ -261,8 +261,8 @@ void MapList_Add_All(entity btn, entity me)
 	_MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
 	s = "";
 	for(i = 0; i < MapInfo_count; ++i)
-		s = strcat(s, " ", MapInfo_BSPName_ByID(i));
-	cvar_set("g_maplist", substring(s, 1, strlen(s) - 1));
+		s = cons(s, MapInfo_BSPName_ByID(i));
+	cvar_set("g_maplist", s);
 	me.refilter(me);
 }
 

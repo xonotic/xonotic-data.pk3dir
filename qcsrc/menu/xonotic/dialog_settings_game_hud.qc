@@ -160,6 +160,15 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 
 	me.TR(me);
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Speed unit:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_speed_unit"));
+			e.addValue(e, _("qu/s") , "1");
+			e.addValue(e, _("m/s")  , "2");
+			e.addValue(e, _("km/h") , "3");
+			e.addValue(e, _("mph")  , "4");
+			e.addValue(e, _("knots"), "5");
+			e.configureXonoticTextSliderValues(e);
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Damage overlay:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
 	me.TR(me);

@@ -38,3 +38,5 @@ void Curl_URI_Get_Callback(int id, float status, string data);
 int curl_uri_get_pos;
 float curl_uri_get_exec[URI_GET_CURL_END - URI_GET_CURL + 1];
 string curl_uri_get_cvar[URI_GET_CURL_END - URI_GET_CURL + 1];
+
+string maplist_shuffle(string input);
