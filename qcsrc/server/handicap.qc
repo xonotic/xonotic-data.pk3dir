@@ -6,6 +6,8 @@
 /// \copyright GNU GPLv2 or any later version.
 
 #include <common/state.qh>
+#include <common/ent_cs.qh> // for .handicap_total
+#include <lib/replicate.qh> // for REPLICATE_APPLYCHANGE
 #include <server/client.qh>
 
 .float m_handicap_give; ///< Holds the forced handicap value.
@@ -16,6 +18,8 @@ void Handicap_Initialize(entity player)
 	// forced handicap defaults
 	CS(player).m_handicap_give = 1;
 	CS(player).m_handicap_take = 1;
+
+	Handicap_UpdateHandicapLevel(player);
 }
 
 float Handicap_GetVoluntaryHandicap(entity player, bool receiving)
@@ -60,7 +64,6 @@ float Handicap_GetVoluntaryHandicap(entity player, bool receiving)
 
 	return bound(1.0, handicap_value, 10.0);
 #endif
-
 }
 
 float Handicap_GetForcedHandicap(entity player, bool receiving)
@@ -69,7 +72,6 @@ float Handicap_GetForcedHandicap(entity player, bool receiving)
 		return (CS(player)) ? CS(player).m_handicap_take : 1;
 	else
 		return (CS(player)) ? CS(player).m_handicap_give : 1;
-
 }
 
 void Handicap_SetForcedHandicap(entity player, float value, bool receiving)
@@ -81,6 +83,8 @@ void Handicap_SetForcedHandicap(entity player, float value, bool receiving)
 		CS(player).m_handicap_take = value;
 	else
 		CS(player).m_handicap_give = value;
+
+	Handicap_UpdateHandicapLevel(player);
 }
 
 float Handicap_GetTotalHandicap(entity player, bool receiving)
@@ -89,8 +93,16 @@ float Handicap_GetTotalHandicap(entity player, bool receiving)
 		Handicap_GetVoluntaryHandicap(player, receiving);
 }
 
-float Handicap_GetTotalBidirectionalHandicap(entity player)
+void Handicap_UpdateHandicapLevel(entity player)
 {
-	return Handicap_GetTotalHandicap(player, true) *
+	float handicap_total = Handicap_GetTotalHandicap(player, true) *
 		Handicap_GetTotalHandicap(player, false);
+	if (handicap_total <= 1)
+		player.handicap_level = 0;
+	else
+		player.handicap_level = map_bound_ranges(handicap_total, 1, 5, 1, 255);
 }
+
+REPLICATE_APPLYCHANGE("cl_handicap_damage_given", { Handicap_UpdateHandicapLevel(this); });
+REPLICATE_APPLYCHANGE("cl_handicap_damage_taken", { Handicap_UpdateHandicapLevel(this); });
+
