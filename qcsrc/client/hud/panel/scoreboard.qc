@@ -1010,8 +1010,8 @@ string Scoreboard_GetName(entity pl)
 	if (handicap_lvl != 0)
 	{
 		sbt_field_icon_extra1 = "gfx/scoreboard/player_handicap";
-		sbt_field_icon_extra1_rgb = '1 0 0' + '0 1 1' * ((255 - handicap_lvl) / 254);
-		// goes from white to red over level 1 to 255
+		sbt_field_icon_extra1_rgb = '1 0 0' + '0 1 1' * ((16 - handicap_lvl) / 15);
+		// goes from white to red over level 1 to 16
 	}
 	return entcs_GetName(pl.sv_entnum);
 }
