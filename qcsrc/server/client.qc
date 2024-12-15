@@ -2816,11 +2816,13 @@ void PlayerFrame (entity this)
 
 	if (this.score_frame_dmg)
 	{
+		this.handicap_avg_given_sum += this.score_frame_dmg * Handicap_GetTotalHandicap(this, false);
 		GameRules_scoring_add(this, DMG, this.score_frame_dmg);
 		this.score_frame_dmg = 0;
 	}
 	if (this.score_frame_dmgtaken)
 	{
+		this.handicap_avg_taken_sum += this.score_frame_dmgtaken * Handicap_GetTotalHandicap(this, true);
 		GameRules_scoring_add(this, DMGTAKEN, this.score_frame_dmgtaken);
 		this.score_frame_dmgtaken = 0;
 	}
