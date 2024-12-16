@@ -762,7 +762,7 @@ void HUD_StrafeHUD()
 	StrafeHUD_DrawVerticalAngle(strafeplayer, text_offset_top, text_offset_bottom);
 
 	draw_beginBoldFont();
-	StrafeHUD_DrawStartSpeed(speed, text_offset_top, text_offset_bottom);
+	StrafeHUD_DrawStartSpeed(race_timespeed, text_offset_top, text_offset_bottom);
 	StrafeHUD_DrawStrafeEfficiency(strafe_ratio, text_offset_top, text_offset_bottom);
 	StrafeHUD_DrawJumpHeight(strafeplayer, real_onground, swimming, text_offset_top, text_offset_bottom);
 	draw_endBoldFont();
