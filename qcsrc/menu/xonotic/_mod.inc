@@ -56,6 +56,7 @@
 #include <menu/xonotic/dialog_multiplayer_media_demo.qc>
 #include <menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc>
 #include <menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc>
+#include <menu/xonotic/dialog_multiplayer_media_guide.qc>
 #include <menu/xonotic/dialog_multiplayer_media_musicplayer.qc>
 #include <menu/xonotic/dialog_multiplayer_media_screenshot.qc>
 #include <menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc>

@@ -1,13 +1,12 @@
 #include "dialog_multiplayer_media.qh"
 
 #include "demolist.qh"
+#include "dialog_multiplayer_media_guide.qh"
 #include "dialog_multiplayer_media_demo.qh"
 #include "dialog_multiplayer_media_screenshot.qh"
 #include "dialog_multiplayer_media_musicplayer.qh"
 #include "dialog_multiplayer_media_demo_timeconfirm.qh"
 #include "dialog_multiplayer_media_demo_startconfirm.qh"
-
-#include <menu/xonotic/guide/tab.qh>
 
 #include "tabcontroller.qh"
 
