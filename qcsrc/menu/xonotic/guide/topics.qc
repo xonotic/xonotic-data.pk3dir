@@ -8,7 +8,8 @@ void XonoticTopicList_clickListBoxItem(entity this, float i, vector where)
 }
 
 string XonoticTopicList_cb_name, XonoticTopicList_cb_icon;
-void XonoticTopicList_cb(string _name, string _icon) {
+void XonoticTopicList_cb(string _name, string _icon)
+{
 	XonoticTopicList_cb_name = _name;
 	XonoticTopicList_cb_icon = _icon;
 }

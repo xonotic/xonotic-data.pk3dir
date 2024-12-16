@@ -4,16 +4,15 @@ CLASS(GuidePage, Object);
 	ATTRIB(GuidePage, m_id, int, 0);
 	ATTRIB(GuidePage, m_title, string, "");
 	ATTRIB(GuidePage, m_description, string, "");
-	METHOD(GuidePage, describe, string(GuidePage this)) {
-		return this.m_description;
-	}
-	METHOD(GuidePage, display, void(GuidePage this, void(string name, string icon) returns)) {
-		returns(this.m_title, "nopreview_map");
-	}
+
+	METHOD(GuidePage, describe, string(GuidePage));
+	METHOD(GuidePage, display, void(GuidePage this, void(string name, string icon) returns));
+
 	CONSTRUCTOR(GuidePage, string _title) {
 		CONSTRUCT(GuidePage);
 		this.m_title = _title;
 	}
+
 ENDCLASS(GuidePage)
 
 REGISTRY(GuidePages, 16)
