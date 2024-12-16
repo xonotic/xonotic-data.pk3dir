@@ -12,7 +12,7 @@ void HUD_Mod_FreezeTag_Export(int fh);
 CLASS(FreezeTag, Gametype)
     INIT(FreezeTag)
     {
-        this.gametype_init(this, _("Freeze Tag"),"ft","g_freezetag",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=10 teams=2 leadlimit=6",_("Kill enemies to freeze them, stand next to frozen teammates to revive them; freeze all enemies to win"));
+        this.gametype_init(this, _("Freeze Tag"),"ft","g_freezetag",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=10 teams=2 leadlimit=6");
     }
     METHOD(FreezeTag, m_parse_mapinfo, bool(string k, string v))
     {
@@ -41,6 +41,11 @@ CLASS(FreezeTag, Gametype)
     {
         TC(Gametype, this);
         returns(menu, _("Round limit:"),     5,  100,  5, "fraglimit_override",        "g_freezetag_teams_override",   _("The amount of rounds won needed before the match will end"));
+    }
+    METHOD(FreezeTag, describe, string(FreezeTag this))
+    {
+        TC(FreezeTag, this);
+        return _("Kill enemies to freeze them, stand next to frozen teammates to revive them; freeze all enemies to win");
     }
 #ifdef CSQC
     ATTRIB(FreezeTag, m_modicons, void(vector pos, vector mySize), HUD_Mod_FreezeTag);
