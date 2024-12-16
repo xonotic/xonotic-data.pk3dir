@@ -51,8 +51,16 @@ void XonoticGuideTab_topicChangeNotify(entity, entity this)
 	int i = topics.selectedItem;
 	int idx = 0;
 	entity found = NULL;
-	#define TOPIC(src, name, icon) if (idx++ == i) { static entity e; if (!e) e = src; found = e; break; }
-	do { TOPICS(TOPIC); } while (0);
+	#define TOPIC(src, name, icon) \
+		if (idx++ == i) \
+		{ \
+			static entity e; \
+			if (!e) e = src; \
+			found = e; \
+			break; \
+		}
+	do { TOPICS(TOPIC); }
+	while (0);
 	#undef TOPIC
 	entries.source = found;
 	entries.refilter(entries);
@@ -65,6 +73,7 @@ void XonoticGuideTab_entryChangeNotify(entity, entity this)
 	entity entries = this.entryList;
 	entity e = entries.source.getEntry(entries.source, entries.selectedItem, func_null);
 	string s = e.describe(e);
-	if (cvar("developer")) { s = sprintf("entity %i\n%s", e, s); }
+	if (cvar("developer"))
+		s = sprintf("entity %i\n%s", e, s);
 	desc.setDescription(desc, s);
 }

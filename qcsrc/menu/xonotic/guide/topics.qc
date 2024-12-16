@@ -19,9 +19,10 @@ void XonoticTopicList_drawListBoxItem(entity this, int i, vector absSize, bool i
 	if (!this.source.getEntry(this.source, i, XonoticTopicList_cb)) return;
 	string icon = XonoticTopicList_cb_icon;
 	string name = XonoticTopicList_cb_name;
-	if (isSelected) {
+	if (isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	} else if (isFocused) {
+	else if (isFocused)
+	{
 		this.focusedItemAlpha = getFadedAlpha(this.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, this.focusedItemAlpha);
 	}
@@ -37,7 +38,8 @@ void XonoticTopicList_drawListBoxItem(entity this, int i, vector absSize, bool i
 
 bool XonoticTopicList_keyDown(entity this, float scan, float ascii, float shift)
 {
-	if (scan == K_ENTER || scan == K_KP_ENTER) {
+	if (scan == K_ENTER || scan == K_KP_ENTER)
+	{
 		m_play_click_sound(MENU_SOUND_EXECUTE);
 		return true;
 	}
