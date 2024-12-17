@@ -130,7 +130,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_new_toys", _("New Toys"),
-			_("Some weapon spawns will be randomly replaced with new weapons: Heavy Laser Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker")));
+			_("Allow additional weapons to spawn, such as the Arc, the Heavy Laser Assault Cannon, the Mine Layer, the Rifle or the T.A.G. Seeker")));
 			setDependentWeird(e, checkCompatibility_newtoys);
 	me.TR(me);
 		me.TDempty(me, 0.2);
