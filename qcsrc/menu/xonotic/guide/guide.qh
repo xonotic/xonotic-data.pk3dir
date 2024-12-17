@@ -8,7 +8,7 @@
 #define TOPICS(X) \
 	X(NEW(FreetextSource),  _("Guide"),     "gametype_tdm") \
 	X(NEW(GametypeSource),  _("Gametypes"), "gametype_dm") \
-	X(NEW(WeaponSource),    _("Weapons"),   "gametype_ka") \
+	X(NEW(WeaponSource),    _("Weapons"),   "gametype_duel") \
 	X(NEW(ItemSource),      _("Items"),     "gametype_kh") \
 	X(NEW(BuffSource),      _("Buffs"),     "gametype_dom") \
 	X(NEW(NadeSource),      _("Nades"),     "gametype_ft") \
