@@ -164,7 +164,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
 	{
 		w = REGISTRY_GET(Weapons, i);
-		if (w.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK))
+		if (w.spawnflags & WEP_FLAG_HIDDEN)
 			continue;
 		if ((j % 3) == 0)
 		{
