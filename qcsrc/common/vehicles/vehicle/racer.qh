@@ -20,5 +20,11 @@ CLASS(Racer, Vehicle)
 /* netname    */ ATTRIB(Racer, netname, string, "racer");
 /* fullname   */ ATTRIB(Racer, vehicle_name, string, _("Racer"));
 /* icon       */ ATTRIB(Racer, m_icon, string, "vehicle_racer");
+METHOD(Racer, describe, string(Racer this)) {
+	TC(Racer, this);
+	return _("The Racer vehicle looks like a jet, but does not fly uwpards very well. It seats only one passenger, who becomes the pilot\n\n"
+	         "It can be accelerated by pressing the \"+jump\" bind, which consumes power from the same source as the primary weapon\n\n"
+	         "The Racer's primary weapon is a laser and the secondary weapon is energy balls that explode on impact");
+}
 ENDCLASS(Racer)
 REGISTER_VEHICLE(RACER, NEW(Racer));
