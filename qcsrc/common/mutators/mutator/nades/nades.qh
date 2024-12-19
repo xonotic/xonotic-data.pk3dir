@@ -115,7 +115,7 @@ REGISTRY(Nades, BITS(4))
 REGISTER_REGISTRY(Nades)
 REGISTRY_CHECK(Nades)
 
-#define REGISTER_NADE(id) REGISTER(Nades, NADE_TYPE, id, m_id, NEW(Nade))
+#define REGISTER_NADE(id, class) REGISTER(Nades, NADE_TYPE, id, m_id, NEW(class))
 
 CLASS(Nade, Object)
     ATTRIB(Nade, m_id, int, 0);
@@ -127,6 +127,10 @@ CLASS(Nade, Object)
     ATTRIBARRAY(Nade, m_trail, entity, 2);
     METHOD(Nade, display, void(entity this, void(string name, string icon) returns)) {
         returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon));
+    }
+    METHOD(Nade, describe, string(Nade this)) {
+        TC(Nade, this);
+        return SUPER(Object).describe(this);
     }
 ENDCLASS(Nade)
 
