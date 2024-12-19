@@ -74,6 +74,6 @@ void XonoticGuideTab_entryChangeNotify(entity, entity this)
 	entity e = entries.source.getEntry(entries.source, entries.selectedItem, func_null);
 	string s = e.describe(e);
 	if (gamestatus & GAME_DEVELOPER)
-		s = sprintf("entity %i\n%s", e, s);
+		s = sprintf("entity %i\n\n%s", e, s);
 	desc.setDescription(desc, s);
 }
