@@ -79,3 +79,6 @@ const vector COLOR_STATUSEFFECT_BURNING     = '1 0.62 0';
 const vector COLOR_STATUSEFFECT_SPAWNSHIELD = '0.36 1 0.07';
 const vector COLOR_STATUSEFFECT_STUNNED     = '0.67 0.84 1';
 const vector COLOR_STATUSEFFECT_WEBBED      = '0.94 0.3 1';
+
+// Useful macro for the guide
+#define COLORED_NAME(class) strcat(rgb_to_hexcolor(NEW(class).m_color), NEW(class).m_name, "^7")

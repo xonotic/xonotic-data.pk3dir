@@ -3,7 +3,7 @@
 void XonoticGuideDescription_drawListBoxItem(entity this, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	tokenizebyseparator(this.descriptionWrapped, "\n");
-	draw_Text(this.realUpperMargin * eY, argv(i), this.realFontSize, '1 1 1', 1, 0);
+	draw_Text(this.realUpperMargin * eY, argv(i), this.realFontSize, '1 1 1', 1, true);
 }
 
 void XonoticGuideDescription_setDescription(entity this, string desc)
