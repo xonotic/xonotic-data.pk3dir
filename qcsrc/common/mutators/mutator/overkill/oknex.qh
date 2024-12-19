@@ -58,6 +58,14 @@ CLASS(OverkillNex, Weapon)
 	W_PROPS(X, OverkillNex, oknex)
 #undef X
 
+METHOD(OverkillNex, describe, string(OverkillNex this)) {
+	TC(OverkillNex, this);
+	return _("The Overkill Nex fires harmful beams of energy that traverse the map instantaneously and deal a significant chunk of damage on impact\n\n"
+	         "Like with all Overkill weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around\n\n"
+	         "The primary fire consumes Cells ammo, although you spawn with an infinite amount of it in Overkill. "
+	         "It has a limited magazine size, so needs reloading after several shots\n\n"
+	         "Since it is the only Overkill weapon with no spread, the Overkill Nex stands out at long ranges");
+}
 ENDCLASS(OverkillNex)
 REGISTER_WEAPON(OVERKILL_NEX, NEW(OverkillNex));
 

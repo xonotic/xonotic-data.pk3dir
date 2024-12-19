@@ -47,6 +47,14 @@ CLASS(OverkillShotgun, Weapon)
 	W_PROPS(X, OverkillShotgun, okshotgun)
 #undef X
 
+METHOD(OverkillShotgun, describe, string(OverkillShotgun this)) {
+	TC(OverkillShotgun, this);
+	return _("The Overkill Shotgun fires a single shotgun round which spreads into multiple pellets upon exiting the barrel, dealing a deadly blow if up close\n\n"
+	         "Like with all Overkill weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around\n\n"
+	         "The primary fire consumes Shells ammo, although you spawn with an infinite amount of it in Overkill. "
+	         "It has a limited magazine size, so needs reloading after several shots\n\n"
+	         "The Shotgun's damage drops off quickly as the range increases, so it is only useful for close combat or sometimes medium range combat");
+}
 ENDCLASS(OverkillShotgun)
 REGISTER_WEAPON(OVERKILL_SHOTGUN, NEW(OverkillShotgun));
 

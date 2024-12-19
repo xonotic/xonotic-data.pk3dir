@@ -72,6 +72,13 @@ CLASS(Shockwave, Weapon)
 	W_PROPS(X, Shockwave, shockwave)
 #undef X
 
+METHOD(Shockwave, describe, string(Shockwave this)) {
+	TC(Shockwave, this);
+	return _("The Shockwave is a unique weapon, firing shockwave blasts that deal damage over a short range\n\n"
+	         "Similar to the Shotgun, the secondary fire swings the Shockwave, slapping players close enough with the head of the weapon\n\n"
+	         "It doesn't require ammo to work\n\n"
+	         "The Shockwave can only deal damage over a short range, so it is not useful for medium and long range combat");
+}
 ENDCLASS(Shockwave)
 REGISTER_WEAPON(SHOCKWAVE, NEW(Shockwave));
 

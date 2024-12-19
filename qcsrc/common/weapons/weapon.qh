@@ -129,6 +129,10 @@ CLASS(Weapon, Object)
 	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
 		returns(this.m_name, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
 	}
+	METHOD(Weapon, describe, string(Weapon this)) {
+		TC(Weapon, this);
+		return SUPER(Object).describe(this);
+	}
 ENDCLASS(Weapon)
 
 #ifdef SVQC

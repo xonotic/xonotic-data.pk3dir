@@ -57,6 +57,15 @@ CLASS(Hagar, Weapon)
 	W_PROPS(X, Hagar, hagar)
 #undef X
 
+METHOD(Hagar, describe, string(Hagar this)) {
+	TC(Hagar, this);
+	return _("The Hagar rapidly fires small propelled rockets forwards, dealing some splash damage on impact\n\n"
+	         "When the secondary fire is held, multiple rockets are loaded up, and they're shot at the same time when released. "
+	         "These rockets can't be held forever, so it will fire itself after some time (after a warning beep) if the secondary fire isn't released\n\n"
+	         "It consumes Rockets ammo for each rocket\n\n"
+	         "The Hagar works best over close to medium ranges, since it's hard to land hits at a long distance. "
+	         "A common usage is fully loading the secondary fire before turning a corner, so you can surprise any enemies around the corner with a bunch of rockets to the face");
+}
 ENDCLASS(Hagar)
 REGISTER_WEAPON(HAGAR, NEW(Hagar));
 
