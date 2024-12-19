@@ -52,8 +52,9 @@ CLASS(Rifle, Weapon)
 	END()
 	W_PROPS(X, Rifle, rifle)
 #undef X
-
-METHOD(Rifle, describe, string(Rifle this)) {
+#ifdef MENUQC
+METHOD(Rifle, describe, string(Rifle this))
+{
 	TC(Rifle, this);
 	return _("The Rifle fires bullets that traverse the map instantaneously and deal a significant chunk of damage on impact\n\n"
 	         "The secondary fire shoots a few less powerful bullets at once with a bit of scatter\n\n"
@@ -62,6 +63,7 @@ METHOD(Rifle, describe, string(Rifle this)) {
 	         "Also, it needs to be reloaded after its magazine is emptied\n\n"
 	         "Similar to the Vortex, the Rifle can be used at any range, but it stands out at long ranges");
 }
+#endif
 ENDCLASS(Rifle)
 REGISTER_WEAPON(RIFLE, NEW(Rifle));
 

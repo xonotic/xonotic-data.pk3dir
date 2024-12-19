@@ -59,6 +59,7 @@ CLASS(Speed, Powerups)
     ATTRIB(Speed, m_name, string, _("Speed"));
     ATTRIB(Speed, m_color, vector, '0.1 1 0.84');
     ATTRIB(Speed, m_icon, string, "buff_speed");
+#ifdef MENUQC
     METHOD(Speed, describe, string(Speed this))
     {
         TC(Speed, this);
@@ -66,5 +67,6 @@ CLASS(Speed, Powerups)
                  "However, it also makes you a bit more vulnerable to incoming attacks\n\n"
                  "Since it is a powerup, it will drop if you die while holding it");
     }
+#endif
 ENDCLASS(Speed)
 REGISTER_STATUSEFFECT(Speed, NEW(Speed));

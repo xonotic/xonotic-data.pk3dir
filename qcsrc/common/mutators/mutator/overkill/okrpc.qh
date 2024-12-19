@@ -49,14 +49,16 @@ CLASS(OverkillRocketPropelledChainsaw, Weapon)
 	END()
 	W_PROPS(X, OverkillRocketPropelledChainsaw, okrpc)
 #undef X
-
-METHOD(OverkillRocketPropelledChainsaw, describe, string(OverkillRocketPropelledChainsaw this)) {
+#ifdef MENUQC
+METHOD(OverkillRocketPropelledChainsaw, describe, string(OverkillRocketPropelledChainsaw this))
+{
 	TC(OverkillRocketPropelledChainsaw, this);
 	return _("As the name suggests, the Overkill Rocket Propelled Chainsaw fires a rocket propelled chainsaw which explodes on impact, dealing a lot of splash damage to any players close by\n\n"
 	         "Like with all Overkill weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around\n\n"
 	         "The primary fire consumes Rockets ammo, although you spawn with an infinite amount of it in Overkill\n\n"
 	         "Since it is the only Overkill weapon which deals splash damage, the Overkill Rocket Propelled Chainsaw is a good choice of weapon for attacking groups of enemies");
 }
+#endif
 ENDCLASS(OverkillRocketPropelledChainsaw)
 REGISTER_WEAPON(OVERKILL_RPC, NEW(OverkillRocketPropelledChainsaw));
 

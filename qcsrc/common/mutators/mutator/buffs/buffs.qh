@@ -31,10 +31,12 @@ CLASS(Buff, StatusEffects)
 		return cvar(strcat("g_buffs_", this.netname, "_time"));
 	}
 #endif
+#ifdef MENUQC
 	METHOD(Buff, describe, string(Buff this)) {
 		TC(Buff, this);
 		return SUPER(Object).describe(this);
 	}
+#endif
 ENDCLASS(Buff)
 
 STATIC_INIT(REGISTER_BUFFS) {

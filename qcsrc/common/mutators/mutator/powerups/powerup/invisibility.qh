@@ -58,6 +58,7 @@ CLASS(Invisibility, Powerups)
     ATTRIB(Invisibility, m_name, string, _("Invisibility"));
     ATTRIB(Invisibility, m_color, vector, '0.5 0.5 1');
     ATTRIB(Invisibility, m_icon, string, "buff_invisible");
+#ifdef MENUQC
     METHOD(Invisibility, describe, string(Invisibility this))
     {
         TC(Invisibility, this);
@@ -65,5 +66,6 @@ CLASS(Invisibility, Powerups)
                  "This powerup is often present in InstaGib\n\n"
                  "Since it is a powerup, it will drop if you die while holding it");
     }
+#endif
 ENDCLASS(Invisibility)
 REGISTER_STATUSEFFECT(Invisibility, NEW(Invisibility));

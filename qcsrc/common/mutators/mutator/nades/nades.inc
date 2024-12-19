@@ -6,12 +6,14 @@ MACRO_END
 #endif
 
 CLASS(NormalNade, Nade)
+#ifdef MENUQC
     METHOD(NormalNade, describe, string(NormalNade this))
     {
         TC(NormalNade, this);
         return _("The (normal) Grenade explodes after a short delay, dealing damage to nearby players\n\n"
                  "Make sure you remember to throw it, or else it will blow up in your hands!");
     }
+#endif
 ENDCLASS(NormalNade)
 REGISTER_NADE(NORMAL, NEW(NormalNade)) {
     this.m_color = '1 1 1';
@@ -22,12 +24,14 @@ REGISTER_NADE(NORMAL, NEW(NormalNade)) {
 }
 
 CLASS(NapalmNade, Nade)
+#ifdef MENUQC
     METHOD(NapalmNade, describe, string(NapalmNade this))
     {
         TC(NapalmNade, this);
         return _("The Napalm grenade explodes after a short delay, spreading fiery napalm globs around in the fountain. "
                  "The napalm fire balls burn for a while, and damage players who get too close");
     }
+#endif
 ENDCLASS(NapalmNade)
 REGISTER_NADE(NAPALM, NEW(NapalmNade)) {
     this.m_color = '2 0.5 0';
@@ -40,12 +44,14 @@ REGISTER_NADE(NAPALM, NEW(NapalmNade)) {
 }
 
 CLASS(IceNade, Nade)
+#ifdef MENUQC
     METHOD(IceNade, describe, string(IceNade this))
     {
         TC(IceNade, this);
         return _("The Ice grenade detonates after a short delay, freezing any enemies who walk within the explosion radius for a few seconds after the explosion. "
                  "While frozen, enemies are progressively dealt damage");
     }
+#endif
 ENDCLASS(IceNade)
 REGISTER_NADE(ICE, NEW(IceNade)) {
     this.m_color = '0 0.5 2';
@@ -58,11 +64,13 @@ REGISTER_NADE(ICE, NEW(IceNade)) {
 }
 
 CLASS(TranslocateNade, Nade)
+#ifdef MENUQC
     METHOD(TranslocateNade, describe, string(TranslocateNade this))
     {
         TC(TranslocateNade, this);
         return _("The Translocate grenade detonates after a short delay, teleporting you to where it detonated");
     }
+#endif
 ENDCLASS(TranslocateNade)
 REGISTER_NADE(TRANSLOCATE, NEW(TranslocateNade)) {
     this.m_color = '1 0 1';
@@ -75,12 +83,14 @@ REGISTER_NADE(TRANSLOCATE, NEW(TranslocateNade)) {
 }
 
 CLASS(SpawnNade, Nade)
+#ifdef MENUQC
     METHOD(SpawnNade, describe, string(SpawnNade this))
     {
         TC(SpawnNade, this);
         return _("The Spawn grenade detonates after a short delay, temporarily setting your spawn point to where it detonated. "
                  "It is useful for cases where you want to go back to some point on the map after you die");
     }
+#endif
 ENDCLASS(SpawnNade)
 REGISTER_NADE(SPAWN, NEW(SpawnNade)) {
     this.m_color = '1 0.9 0';
@@ -93,12 +103,14 @@ REGISTER_NADE(SPAWN, NEW(SpawnNade)) {
 }
 
 CLASS(HealNade, Nade)
+#ifdef MENUQC
     METHOD(HealNade, describe, string(HealNade this))
     {
         TC(HealNade, this);
         return _("The Heal grenade detonates after a short delay, temporarily creating a healing orb around the point where it detonated for several seconds. "
                  "If your team members enter the orb they will recover health, and if enemies enter the sphere they will be harmed");
     }
+#endif
 ENDCLASS(HealNade)
 REGISTER_NADE(HEAL, NEW(HealNade)) {
     this.m_color = '1 0 0';
@@ -111,11 +123,13 @@ REGISTER_NADE(HEAL, NEW(HealNade)) {
 }
 
 CLASS(MonsterNade, Nade)
+#ifdef MENUQC
     METHOD(MonsterNade, describe, string(MonsterNade this))
     {
         TC(MonsterNade, this);
         return _("The Monster grenade explodes after a short delay, spawning one of four monster types");
     }
+#endif
 ENDCLASS(MonsterNade)
 REGISTER_NADE(MONSTER, NEW(MonsterNade)) {
     this.m_color = '0.25 0.75 0';
@@ -128,12 +142,14 @@ REGISTER_NADE(MONSTER, NEW(MonsterNade)) {
 }
 
 CLASS(EntrapNade, Nade)
+#ifdef MENUQC
     METHOD(EntrapNade, describe, string(EntrapNade this))
     {
         TC(EntrapNade, this);
         return _("The Entrap grenade detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
                  "Players and projectiles that enter the sphere will be slowed down, including yourself");
     }
+#endif
 ENDCLASS(EntrapNade)
 REGISTER_NADE(ENTRAP, NEW(EntrapNade)) {
     this.m_color = '0.15 0.85 0';
@@ -146,12 +162,14 @@ REGISTER_NADE(ENTRAP, NEW(EntrapNade)) {
 }
 
 CLASS(VeilNade, Nade)
+#ifdef MENUQC
     METHOD(VeilNade, describe, string(VeilNade this))
     {
         TC(VeilNade, this);
         return _("The Veil grenade detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
                  "Players inside the orb will be invisible to those outside it");
     }
+#endif
 ENDCLASS(VeilNade)
 REGISTER_NADE(VEIL, NEW(VeilNade)) {
     this.m_color = '0.65 0.85 0.65';
@@ -165,6 +183,7 @@ REGISTER_NADE(VEIL, NEW(VeilNade)) {
 }
 
 CLASS(AmmoNade, Nade)
+#ifdef MENUQC
     METHOD(AmmoNade, describe, string(AmmoNade this))
     {
         TC(AmmoNade, this);
@@ -172,6 +191,7 @@ CLASS(AmmoNade, Nade)
                  "If your team members enter the orb they will recover ammo, and if enemies enter the sphere they will lose ammo\n\n"
                  "This does not impact weapon magazines, so it won't reload your weapons for you");
     }
+#endif
 ENDCLASS(AmmoNade)
 REGISTER_NADE(AMMO, NEW(AmmoNade)) {
     this.m_color = '0.66 0.33 0';
@@ -184,11 +204,13 @@ REGISTER_NADE(AMMO, NEW(AmmoNade)) {
 }
 
 CLASS(DarknessNade, Nade)
+#ifdef MENUQC
     METHOD(DarknessNade, describe, string(DarknessNade this))
     {
         TC(DarknessNade, this);
         return _("The Darkness grenade detonates after a short delay, creating a dark field which temporarily blinds enemies who enter it");
     }
+#endif
 ENDCLASS(DarknessNade)
 REGISTER_NADE(DARKNESS, NEW(DarknessNade)) {
     this.m_color = '0.23 0 0.23';

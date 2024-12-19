@@ -55,8 +55,9 @@ CLASS(Monster, Object)
     METHOD(Monster, mr_pain, float(Monster this, entity actor, float damage_take, entity attacker, float deathtype)) { TC(Monster, this); return damage_take; }
     /** (BOTH?) sets animations for monster */
     METHOD(Monster, mr_anim, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
-
+#ifdef MENUQC
     METHOD(Monster, describe, string(Monster this)) { TC(Monster, this); return SUPER(Object).describe(this); }
+#endif
 ENDCLASS(Monster)
 
 

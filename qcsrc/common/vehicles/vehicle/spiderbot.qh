@@ -20,7 +20,9 @@ CLASS(Spiderbot, Vehicle)
 /* netname    */ ATTRIB(Spiderbot, netname, string, "spiderbot");
 /* fullname   */ ATTRIB(Spiderbot, vehicle_name, string, _("Spiderbot"));
 /* icon       */ ATTRIB(Spiderbot, m_icon, string, "vehicle_spider");
-METHOD(Spiderbot, describe, string(Spiderbot this)) {
+#ifdef MENUQC
+METHOD(Spiderbot, describe, string(Spiderbot this))
+{
 	TC(Spiderbot, this);
 	return _("The Spiderbot vehicle walks and jumps around, and takes only one rider\n\n"
 	         "It can jump from very high altitudes while protecting the rider\n\n"
@@ -29,6 +31,7 @@ METHOD(Spiderbot, describe, string(Spiderbot this)) {
 	         "The secondary weapon shoots rockets towards the white reticle. "
 	         "The white reticle points to the front of the vehicle, while the green reticle also points to the front, with a bit of delay when the Spiderbot rotates");
 }
+#endif
 ENDCLASS(Spiderbot)
 
 REGISTER_VEHICLE(SPIDERBOT, NEW(Spiderbot));

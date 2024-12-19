@@ -23,11 +23,13 @@ CLASS(Ammo, Pickup)
     ATTRIB(Ammo, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_ammo));
     ATTRIB(Ammo, m_pickupanyway, float(), GET(g_pickup_ammo_anyway));
 #endif
+#ifdef MENUQC
     METHOD(Ammo, describe, string(Ammo this))
     {
         TC(Ammo, this);
         return SUPER(Pickup).describe(this);
     }
+#endif
 ENDCLASS(Ammo)
 
 
@@ -49,11 +51,13 @@ void ammo_shells_init(Pickup this, entity item)
 #endif
 
 CLASS(Shells, Ammo)
+#ifdef MENUQC
     METHOD(Shells, describe, string(Shells this))
     {
         TC(Shells, this);
         return _("The Shells ammo type is used by the Shotgun and Overkill Shotgun");
     }
+#endif
 ENDCLASS(Shells)
 
 REGISTER_ITEM(Shells, NEW(Shells)) {
@@ -90,11 +94,13 @@ void ammo_bullets_init(Pickup this, entity item)
 #endif
 
 CLASS(Bullets, Ammo)
+#ifdef MENUQC
     METHOD(Bullets, describe, string(Bullets this))
     {
         TC(Bullets, this);
         return _("The Bullets ammo type is used by the MachineGun, Rifle, Overkill MachineGun, and Overkill Heavy Machine Gun");
     }
+#endif
 ENDCLASS(Bullets)
 
 REGISTER_ITEM(Bullets, NEW(Bullets)) {
@@ -131,11 +137,13 @@ void ammo_rockets_init(Pickup this, entity item)
 #endif
 
 CLASS(Rockets, Ammo)
+#ifdef MENUQC
     METHOD(Rockets, describe, string(Rockets this))
     {
         TC(Rockets, this);
         return _("The Rockets ammo type is used by the Devastator, Mortar, Mine Layer, Hagar, T.A.G. Seeker, and Overkill Rocket Propelled Chainsaw");
     }
+#endif
 ENDCLASS(Rockets)
 
 REGISTER_ITEM(Rockets, NEW(Rockets)) {
@@ -172,11 +180,13 @@ void ammo_cells_init(Pickup this, entity item)
 #endif
 
 CLASS(Cells, Ammo)
+#ifdef MENUQC
     METHOD(Cells, describe, string(Cells this))
     {
         TC(Cells, this);
         return _("The Cells ammo type is used by the Vortex, Crylink, Electro, Heavy Laser Assault Cannon, Arc, and Vaporizer");
     }
+#endif
 ENDCLASS(Cells)
 
 REGISTER_ITEM(Cells, NEW(Cells)) {

@@ -55,6 +55,7 @@ CLASS(Shield, Powerups)
     ATTRIB(Shield, netname, string, "invincible"); // NOTE: referring to as invincible so that it matches the powerup item
     ATTRIB(Shield, m_name, string, _("Shield"));
     ATTRIB(Shield, m_icon, string, "shield");
+#ifdef MENUQC
     METHOD(Shield, describe, string(Shield this))
     {
         TC(Shield, this);
@@ -62,5 +63,6 @@ CLASS(Shield, Powerups)
                  "It also makes you more resistant to knockback\n\n"
                  "Since it is a powerup, it will drop if you die while holding it");
     }
+#endif
 ENDCLASS(Shield)
 REGISTER_STATUSEFFECT(Shield, NEW(Shield));

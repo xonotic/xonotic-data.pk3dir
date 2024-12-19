@@ -43,8 +43,9 @@ CLASS(Vaporizer, Weapon)
 	END()
 	W_PROPS(X, Vaporizer, vaporizer)
 #undef X
-
-METHOD(Vaporizer, describe, string(Vaporizer this)) {
+#ifdef MENUQC
+METHOD(Vaporizer, describe, string(Vaporizer this))
+{
 	TC(Vaporizer, this);
 	return _("The Vaporizer is unique weapon, firing a deadly beam of energy dealing a huge amount of damage. "
 	         "In InstaGib, the beam has the ability to instantly kill enemies with a single shot, unless they have an Extra Life\n\n"
@@ -52,6 +53,7 @@ METHOD(Vaporizer, describe, string(Vaporizer this)) {
 	         "It is a superweapon, so isn't often found in game, except in InstaGib where all players spawn with it\n\n"
 	         "It consumes some Cells ammo with each shot");
 }
+#endif
 ENDCLASS(Vaporizer)
 REGISTER_WEAPON(VAPORIZER, NEW(Vaporizer));
 

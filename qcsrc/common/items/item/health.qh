@@ -31,12 +31,14 @@ void item_healthsmall_init(Pickup this, entity item)
 #endif
 
 CLASS(HealthSmall, Health)
+#ifdef MENUQC
     METHOD(HealthSmall, describe, string(HealthSmall this))
     {
         TC(HealthSmall, this);
         return _("The Small health restores a small amount of health when picked up, "
                  "helping you recover from damage taken during combat");
     }
+#endif
 ENDCLASS(HealthSmall)
 
 REGISTER_ITEM(HealthSmall, NEW(HealthSmall)) {
@@ -85,12 +87,14 @@ void item_healthmedium_init(Pickup this, entity item)
 #endif
 
 CLASS(HealthMedium, Health)
+#ifdef MENUQC
     METHOD(HealthMedium, describe, string(HealthMedium this))
     {
         TC(HealthMedium, this);
         return _("The Medium health restores a medium amount of health when picked up, "
                  "helping you recover from damage taken during combat");
     }
+#endif
 ENDCLASS(HealthMedium)
 
 REGISTER_ITEM(HealthMedium, NEW(HealthMedium)) {
@@ -139,12 +143,14 @@ void item_healthbig_init(Pickup this, entity item)
 #endif
 
 CLASS(HealthBig, Health)
+#ifdef MENUQC
     METHOD(HealthBig, describe, string(HealthBig this))
     {
         TC(HealthBig, this);
         return _("The Big health restores a large amount of health when picked up, "
                  "helping you recover from damage taken during combat");
     }
+#endif
 ENDCLASS(HealthBig)
 
 REGISTER_ITEM(HealthBig, NEW(HealthBig)) {
@@ -192,6 +198,7 @@ void item_healthmega_init(Pickup this, entity item)
 #endif
 
 CLASS(HealthMega, Health)
+#ifdef MENUQC
     METHOD(HealthMega, describe, string(HealthMega this))
     {
         TC(HealthMega, this);
@@ -199,6 +206,7 @@ CLASS(HealthMega, Health)
                  "helping you recover from damage taken during combat\n\n"
 		         "It tends to be one of the most highly contested items on a map, particularly in game modes like Duel");
     }
+#endif
 ENDCLASS(HealthMega)
 
 REGISTER_ITEM(HealthMega, NEW(HealthMega)) {

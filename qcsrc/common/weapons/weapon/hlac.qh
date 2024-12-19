@@ -48,8 +48,9 @@ CLASS(HLAC, Weapon)
 	END()
 	W_PROPS(X, HLAC, hlac)
 #undef X
-
-METHOD(HLAC, describe, string(HLAC this)) {
+#ifdef MENUQC
+METHOD(HLAC, describe, string(HLAC this))
+{
 	TC(HLAC, this);
 	return _("The Heavy Assualt Laser Cannon (or HLAC for short) fires lasers in quick succession. "
 	         "The projectiles it fires are similar to those of the Blaster\n\n"
@@ -60,6 +61,7 @@ METHOD(HLAC, describe, string(HLAC this)) {
 	         "This means releasing primary fire every now and then is important to restore accuracy. "
 	         "Also, the HLAC has less spread when used while crouching");
 }
+#endif
 ENDCLASS(HLAC)
 REGISTER_WEAPON(HLAC, NEW(HLAC));
 

@@ -72,8 +72,9 @@ CLASS(Electro, Weapon)
 	END()
 	W_PROPS(X, Electro, electro)
 #undef X
-
-METHOD(Electro, describe, string(Electro this)) {
+#ifdef MENUQC
+METHOD(Electro, describe, string(Electro this))
+{
 	TC(Electro, this);
 	return _("The Electro shoots electric balls forwards, dealing some splash damage when they burst on impact\n\n"
 	         "The secondary fire launches similar balls that are influenced by gravity, "
@@ -83,6 +84,7 @@ METHOD(Electro, describe, string(Electro this)) {
 	         "The Electro is one of the best spam weapons to use in crowded areas, since combos can deal tons of damage, if the enemy is close enough. "
 	         "Since the primary fire doesn't travel particularly fast, the Electro is not useful in many other situations");
 }
+#endif
 ENDCLASS(Electro)
 REGISTER_WEAPON(ELECTRO, NEW(Electro));
 

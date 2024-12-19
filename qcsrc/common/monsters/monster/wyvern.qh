@@ -15,6 +15,7 @@ CLASS(Wyvern, Monster)
 #endif
     ATTRIB(Wyvern, netname, string, "wyvern");
     ATTRIB(Wyvern, monster_name, string, _("Wyvern"));
+#ifdef MENUQC
     METHOD(Wyvern, describe, string(Wyvern this))
     {
         TC(Wyvern, this);
@@ -22,6 +23,7 @@ CLASS(Wyvern, Monster)
                  "The alleged marine variant had a fishtail instead of the spiny dragon tail\n\n"
                  "Wyvern flies around the map and chases and attacks his opponents with fireballs");
     }
+#endif
 ENDCLASS(Wyvern)
 
 REGISTER_MONSTER(WYVERN, NEW(Wyvern));

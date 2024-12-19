@@ -24,11 +24,13 @@ void ammo_vaporizercells_init(Pickup this, entity item)
 #endif
 
 CLASS(VaporizerCells, Ammo)
+#ifdef MENUQC
     METHOD(VaporizerCells, describe, string(VaporizerCells this))
     {
         TC(VaporizerCells, this);
         return _("The Vaporizer ammo is sometimes present on maps when InstaGib is enabled, providing ammo for the Vaporizer");
     }
+#endif
 ENDCLASS(VaporizerCells)
 
 REGISTER_ITEM(VaporizerCells, NEW(VaporizerCells)) {
@@ -59,12 +61,14 @@ SOUND(ExtraLife, Item_Sound("megahealth"));
 #endif
 
 CLASS(ExtraLife, Powerup)
+#ifdef MENUQC
     METHOD(ExtraLife, describe, string(ExtraLife this))
     {
         TC(ExtraLife, this);
         return _("The Extra Life powerup acts as armor in InstaGib. "
                  "If a player is shot while having one or more Extra Lives, they will survive the shot but suffer strong knockback");
     }
+#endif
 ENDCLASS(ExtraLife)
 
 REGISTER_ITEM(ExtraLife, NEW(ExtraLife)) {

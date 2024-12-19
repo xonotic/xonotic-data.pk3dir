@@ -31,12 +31,14 @@ void item_armorsmall_init(Pickup this, entity item)
 #endif
 
 CLASS(ArmorSmall, Armor)
+#ifdef MENUQC
     METHOD(ArmorSmall, describe, string(ArmorSmall this))
     {
         TC(ArmorSmall, this);
         return _("The Small armor provides you a small amount of armor when picked up, "
                  "protecting you from damage by absorbing incoming hits until it is depleted");
     }
+#endif
 ENDCLASS(ArmorSmall)
 
 REGISTER_ITEM(ArmorSmall, NEW(ArmorSmall)) {
@@ -85,12 +87,14 @@ void item_armormedium_init(Pickup this, entity item)
 #endif
 
 CLASS(ArmorMedium, Armor)
+#ifdef MENUQC
     METHOD(ArmorMedium, describe, string(ArmorMedium this))
     {
         TC(ArmorMedium, this);
         return _("The Medium armor provides you a medium amount of armor when picked up, "
                  "protecting you from damage by absorbing incoming hits until it is depleted");
     }
+#endif
 ENDCLASS(ArmorMedium)
 
 REGISTER_ITEM(ArmorMedium, NEW(ArmorMedium)) {
@@ -139,12 +143,14 @@ void item_armorbig_init(Pickup this, entity item)
 #endif
 
 CLASS(ArmorBig, Armor)
+#ifdef MENUQC
     METHOD(ArmorBig, describe, string(ArmorBig this))
     {
         TC(ArmorBig, this);
         return _("The Big armor provides you a large amount of armor when picked up, "
                  "protecting you from damage by absorbing incoming hits until it is depleted");
     }
+#endif
 ENDCLASS(ArmorBig)
 
 REGISTER_ITEM(ArmorBig, NEW(ArmorBig)) {
@@ -193,6 +199,7 @@ void item_armormega_init(Pickup this, entity item)
 #endif
 
 CLASS(ArmorMega, Armor)
+#ifdef MENUQC
     METHOD(ArmorMega, describe, string(ArmorMega this))
     {
         TC(ArmorMega, this);
@@ -200,6 +207,7 @@ CLASS(ArmorMega, Armor)
                  "protecting you from damage by absorbing incoming hits until it is depleted\n\n"
 		         "It tends to be one of the most highly contested items on a map, particularly in game modes like Duel");
     }
+#endif
 ENDCLASS(ArmorMega)
 
 REGISTER_ITEM(ArmorMega, NEW(ArmorMega)) {

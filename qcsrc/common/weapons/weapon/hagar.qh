@@ -56,8 +56,9 @@ CLASS(Hagar, Weapon)
 	END()
 	W_PROPS(X, Hagar, hagar)
 #undef X
-
-METHOD(Hagar, describe, string(Hagar this)) {
+#ifdef MENUQC
+METHOD(Hagar, describe, string(Hagar this))
+{
 	TC(Hagar, this);
 	return _("The Hagar rapidly fires small propelled rockets forwards, dealing some splash damage on impact\n\n"
 	         "When the secondary fire is held, multiple rockets are loaded up, and they're shot at the same time when released. "
@@ -66,6 +67,7 @@ METHOD(Hagar, describe, string(Hagar this)) {
 	         "The Hagar works best over close to medium ranges, since it's hard to land hits at a long distance. "
 	         "A common usage is fully loading the secondary fire before turning a corner, so you can surprise any enemies around the corner with a bunch of rockets to the face");
 }
+#endif
 ENDCLASS(Hagar)
 REGISTER_WEAPON(HAGAR, NEW(Hagar));
 

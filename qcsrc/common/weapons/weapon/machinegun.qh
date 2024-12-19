@@ -62,8 +62,9 @@ CLASS(MachineGun, Weapon)
 	END()
 	W_PROPS(X, MachineGun, machinegun)
 #undef X
-
-METHOD(MachineGun, describe, string(MachineGun this)) {
+#ifdef MENUQC
+METHOD(MachineGun, describe, string(MachineGun this))
+{
 	TC(MachineGun, this);
 	return _("The MachineGun quickly fires bullets with a small degree of spread\n\n"
 	         "The secondary fire fires a quick burst of bullets faster than the primary fire and with no spread, but there's a short delay until it can be used again\n\n"
@@ -71,6 +72,7 @@ METHOD(MachineGun, describe, string(MachineGun this)) {
 	         "The MachineGun can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously. "
 	         "Since the secondary fire has no spread, it's the better option when firing over a long range");
 }
+#endif
 ENDCLASS(MachineGun)
 REGISTER_WEAPON(MACHINEGUN, NEW(MachineGun));
 

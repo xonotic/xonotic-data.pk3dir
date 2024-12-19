@@ -44,8 +44,9 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 	END()
 	W_PROPS(X, OverkillHeavyMachineGun, okhmg)
 #undef X
-
-METHOD(OverkillHeavyMachineGun, describe, string(OverkillHeavyMachineGun this)) {
+#ifdef MENUQC
+METHOD(OverkillHeavyMachineGun, describe, string(OverkillHeavyMachineGun this))
+{
 	TC(OverkillHeavyMachineGun, this);
 	return _("The Overkill Heavy Machine Gun is a superweapon that rapidly fires harmful bullets with a small degree of spread\n\n"
 	         "Like with all Overkill weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around\n\n"
@@ -55,6 +56,7 @@ METHOD(OverkillHeavyMachineGun, describe, string(OverkillHeavyMachineGun this)) 
 	         "The Overkill Heavy Machine Gun can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously\n\n"
 	         "Since its bullets deal a lot more damage than the Overkill MachineGun's bullets, it is often heavily contested when it spawns in");
 }
+#endif
 ENDCLASS(OverkillHeavyMachineGun)
 REGISTER_WEAPON(OVERKILL_HMG, NEW(OverkillHeavyMachineGun));
 

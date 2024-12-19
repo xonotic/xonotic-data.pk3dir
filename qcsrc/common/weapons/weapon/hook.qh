@@ -48,8 +48,9 @@ CLASS(Hook, Weapon)
 	END()
 	W_PROPS(X, Hook, hook)
 #undef X
-
-METHOD(Hook, describe, string(Hook this)) {
+#ifdef MENUQC
+METHOD(Hook, describe, string(Hook this))
+{
 	TC(Hook, this);
 	return _("The Grappling Hook is a unique weapon, firing a chain forwards which pulls you in once it latches onto something\n\n"
 	         "The secondary fire usually drops a gravity bomb that affects enemies, also releasing light a smoke like a flashbang\n\n"
@@ -58,6 +59,7 @@ METHOD(Hook, describe, string(Hook this)) {
 	         "making both surprise ambushes and miraculous escapes possible\n\n"
 	         "It isn't available very often on maps, unless the Grappling Hook mutator is active, in which all players have it on their offhand, used with the +hook bind");
 }
+#endif
 ENDCLASS(Hook)
 REGISTER_WEAPON(HOOK, NEW(Hook));
 
