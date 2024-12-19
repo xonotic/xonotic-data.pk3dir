@@ -15,6 +15,13 @@ CLASS(Wyvern, Monster)
 #endif
     ATTRIB(Wyvern, netname, string, "wyvern");
     ATTRIB(Wyvern, monster_name, string, _("Wyvern"));
+    METHOD(Wyvern, describe, string(Wyvern this))
+    {
+        TC(Wyvern, this);
+        return _("The Wyvern is a dragon that was said to breathe fire or to possess a poisonous breath, a reptilian body, two legs or sometimes none, and a spiked tail. "
+                 "The alleged marine variant had a fishtail instead of the spiny dragon tail\n\n"
+                 "Wyvern flies around the map and chases and attacks his opponents with fireballs");
+    }
 ENDCLASS(Wyvern)
 
 REGISTER_MONSTER(WYVERN, NEW(Wyvern));
