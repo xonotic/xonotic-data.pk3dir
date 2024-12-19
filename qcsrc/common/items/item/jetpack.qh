@@ -5,6 +5,7 @@
 #endif
 
 #include "ammo.qh"
+#include <common/colors.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 
 #ifndef SVQC
@@ -51,7 +52,7 @@ REGISTER_ITEM(Jetpack, NEW(Jetpack)) {
     this.netname                =   "jetpack";
     this.m_name                 =   _("Jetpack");
     this.m_icon                 =   "jetpack";
-    this.m_color                =   '0.5 0.5 0.5';
+    this.m_color                =   COLOR_ITEM_JETPACK;
     this.m_waypoint             =   _("Jetpack");
     this.m_waypointblink        =   2;
 #ifdef SVQC
@@ -139,7 +140,7 @@ REGISTER_ITEM(JetpackRegen, NEW(JetpackRegen)) {
     this.netname                =   "fuel_regen";
     this.m_name                 =   _("Fuel regenerator");
     this.m_icon                 =   "fuelregen";
-    this.m_color                =   '1 0.5 0';
+    this.m_color                =   COLOR_POWERUP_JETPACKREGEN;
     this.m_waypoint             =   _("Fuel regen");
     this.m_waypointblink        =   2;
 #ifdef SVQC

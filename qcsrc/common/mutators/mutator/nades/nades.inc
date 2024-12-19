@@ -1,3 +1,5 @@
+#include <common/colors.qh>
+
 #ifdef GAMEQC
 #define NADE_PROJECTILE(i, projectile, trail) MACRO_BEGIN \
     this.m_projectile[i] = projectile; \
@@ -16,7 +18,7 @@ CLASS(NormalNade, Nade)
 #endif
 ENDCLASS(NormalNade)
 REGISTER_NADE(NORMAL, NEW(NormalNade)) {
-    this.m_color = '1 1 1';
+    this.m_color = COLOR_NADE_NORMAL;
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE, EFFECT_Null);
     NADE_PROJECTILE(1, PROJECTILE_NADE_BURN, EFFECT_Null);
@@ -34,7 +36,7 @@ CLASS(NapalmNade, Nade)
 #endif
 ENDCLASS(NapalmNade)
 REGISTER_NADE(NAPALM, NEW(NapalmNade)) {
-    this.m_color = '2 0.5 0';
+    this.m_color = COLOR_NADE_NAPALM;
     this.m_name = _("Napalm grenade");
     this.m_icon = "nade_napalm";
 #ifdef GAMEQC
@@ -54,7 +56,7 @@ CLASS(IceNade, Nade)
 #endif
 ENDCLASS(IceNade)
 REGISTER_NADE(ICE, NEW(IceNade)) {
-    this.m_color = '0 0.5 2';
+    this.m_color = COLOR_NADE_ICE;
     this.m_name = _("Ice grenade");
     this.m_icon = "nade_ice";
 #ifdef GAMEQC
@@ -73,7 +75,7 @@ CLASS(TranslocateNade, Nade)
 #endif
 ENDCLASS(TranslocateNade)
 REGISTER_NADE(TRANSLOCATE, NEW(TranslocateNade)) {
-    this.m_color = '1 0 1';
+    this.m_color = COLOR_NADE_TRANSLOCATE;
     this.m_name = _("Translocate grenade");
     this.m_icon = "nade_translocate";
 #ifdef GAMEQC
@@ -93,7 +95,7 @@ CLASS(SpawnNade, Nade)
 #endif
 ENDCLASS(SpawnNade)
 REGISTER_NADE(SPAWN, NEW(SpawnNade)) {
-    this.m_color = '1 0.9 0';
+    this.m_color = COLOR_NADE_SPAWN;
     this.m_name = _("Spawn grenade");
     this.m_icon = "nade_spawn";
 #ifdef GAMEQC
@@ -113,7 +115,7 @@ CLASS(HealNade, Nade)
 #endif
 ENDCLASS(HealNade)
 REGISTER_NADE(HEAL, NEW(HealNade)) {
-    this.m_color = '1 0 0';
+    this.m_color = COLOR_NADE_HEAL;
     this.m_name = _("Heal grenade");
     this.m_icon = "nade_heal";
 #ifdef GAMEQC
@@ -132,7 +134,7 @@ CLASS(MonsterNade, Nade)
 #endif
 ENDCLASS(MonsterNade)
 REGISTER_NADE(MONSTER, NEW(MonsterNade)) {
-    this.m_color = '0.25 0.75 0';
+    this.m_color = COLOR_NADE_MONSTER;
     this.m_name = _("Monster grenade");
     this.m_icon = "nade_monster";
 #ifdef GAMEQC
@@ -152,7 +154,7 @@ CLASS(EntrapNade, Nade)
 #endif
 ENDCLASS(EntrapNade)
 REGISTER_NADE(ENTRAP, NEW(EntrapNade)) {
-    this.m_color = '0.15 0.85 0';
+    this.m_color = COLOR_NADE_ENTRAP;
     this.m_name = _("Entrap grenade");
     this.m_icon = "nade_entrap";
 #ifdef GAMEQC
@@ -172,7 +174,7 @@ CLASS(VeilNade, Nade)
 #endif
 ENDCLASS(VeilNade)
 REGISTER_NADE(VEIL, NEW(VeilNade)) {
-    this.m_color = '0.65 0.85 0.65';
+    this.m_color = COLOR_NADE_VEIL;
     this.m_name = _("Veil grenade");
     this.m_icon = "nade_veil";
     this.m_alpha = 0.45;
@@ -194,7 +196,7 @@ CLASS(AmmoNade, Nade)
 #endif
 ENDCLASS(AmmoNade)
 REGISTER_NADE(AMMO, NEW(AmmoNade)) {
-    this.m_color = '0.66 0.33 0';
+    this.m_color = COLOR_NADE_AMMO;
     this.m_name = _("Ammo grenade");
     this.m_icon = "nade_ammo";
 #ifdef GAMEQC
@@ -213,7 +215,7 @@ CLASS(DarknessNade, Nade)
 #endif
 ENDCLASS(DarknessNade)
 REGISTER_NADE(DARKNESS, NEW(DarknessNade)) {
-    this.m_color = '0.23 0 0.23';
+    this.m_color = COLOR_NADE_DARKNESS;
     this.m_name = _("Darkness grenade");
     this.m_icon = "nade_darkness";
 #ifdef GAMEQC

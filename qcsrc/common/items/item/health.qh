@@ -1,5 +1,7 @@
 #pragma once
 
+#include <common/colors.qh>
+
 #include "pickup.qh"
 CLASS(Health, Pickup)
 #ifdef SVQC
@@ -163,7 +165,7 @@ REGISTER_ITEM(HealthBig, NEW(HealthBig)) {
     this.netname                =   "health_big";
     this.m_name                 =   _("Big health");
     this.m_icon                 =   "health_big";
-    this.m_color                =   '1 0 0';
+    this.m_color                =   COLOR_ITEM_HEALTH;
     this.m_waypoint             =   _("Big health");
 #ifdef CSQC
     if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
@@ -223,7 +225,7 @@ REGISTER_ITEM(HealthMega, NEW(HealthMega)) {
     if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
         this.m_icon             =   "item_mega_health"; // compatible with Xonotic v0.8.2 or lower
 #endif
-    this.m_color                =   '1 0 0';
+    this.m_color                =   COLOR_ITEM_HEALTH;
     this.m_waypoint             =   _("Mega health");
     this.m_waypointblink        =   2;
 #ifdef SVQC

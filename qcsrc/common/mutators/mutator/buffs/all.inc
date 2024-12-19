@@ -1,3 +1,5 @@
+#include <common/colors.qh>
+
 string Buff_CompatName(string buffname)
 {
     switch(buffname)
@@ -20,7 +22,7 @@ CLASS(AmmoBuff, Buff)
     ATTRIB(AmmoBuff, netname, string, "ammo");
     ATTRIB(AmmoBuff, m_icon, string, "buff_ammo");
     ATTRIB(AmmoBuff, m_skin, int, 3);
-    ATTRIB(AmmoBuff, m_color, vector, '0.76 1 0.1');
+    ATTRIB(AmmoBuff, m_color, vector, COLOR_BUFF_AMMO);
 #ifdef MENUQC
     METHOD(AmmoBuff, describe, string(AmmoBuff this))
     {
@@ -38,7 +40,7 @@ CLASS(ResistanceBuff, Buff)
     ATTRIB(ResistanceBuff, netname, string, "resistance");
     ATTRIB(ResistanceBuff, m_icon, string, "buff_resistance");
     ATTRIB(ResistanceBuff, m_skin, int, 0);
-    ATTRIB(ResistanceBuff, m_color, vector, '0.36 1 0.07');
+    ATTRIB(ResistanceBuff, m_color, vector, COLOR_BUFF_RESISTANCE);
 #ifdef MENUQC
     METHOD(ResistanceBuff, describe, string(ResistanceBuff this))
     {
@@ -56,7 +58,7 @@ CLASS(MedicBuff, Buff)
     ATTRIB(MedicBuff, netname, string, "medic");
     ATTRIB(MedicBuff, m_icon, string, "buff_medic");
     ATTRIB(MedicBuff, m_skin, int, 1);
-    ATTRIB(MedicBuff, m_color, vector, '1 0.12 0');
+    ATTRIB(MedicBuff, m_color, vector, COLOR_BUFF_MEDIC);
 #ifdef MENUQC
     METHOD(MedicBuff, describe, string(MedicBuff this))
     {
@@ -76,7 +78,7 @@ CLASS(BashBuff, Buff)
     ATTRIB(BashBuff, netname, string, "bash");
     ATTRIB(BashBuff, m_icon, string, "buff_bash");
     ATTRIB(BashBuff, m_skin, int, 5);
-    ATTRIB(BashBuff, m_color, vector, '1 0.39 0');
+    ATTRIB(BashBuff, m_color, vector, COLOR_BUFF_BASH);
 #ifdef MENUQC
     METHOD(BashBuff, describe, string(BashBuff this))
     {
@@ -95,7 +97,7 @@ CLASS(VampireBuff, Buff)
     ATTRIB(VampireBuff, netname, string, "vampire");
     ATTRIB(VampireBuff, m_icon, string, "buff_vampire");
     ATTRIB(VampireBuff, m_skin, int, 2);
-    ATTRIB(VampireBuff, m_color, vector, '1 0 0.24');
+    ATTRIB(VampireBuff, m_color, vector, COLOR_BUFF_VAMPIRE);
 #ifdef MENUQC
     METHOD(VampireBuff, describe, string(VampireBuff this))
     {
@@ -113,7 +115,7 @@ CLASS(DisabilityBuff, Buff)
     ATTRIB(DisabilityBuff, netname, string, "disability");
     ATTRIB(DisabilityBuff, m_icon, string, "buff_disability");
     ATTRIB(DisabilityBuff, m_skin, int, 7);
-    ATTRIB(DisabilityBuff, m_color, vector, '0.94 0.3 1');
+    ATTRIB(DisabilityBuff, m_color, vector, COLOR_BUFF_DISABILITY);
 #ifdef MENUQC
     METHOD(DisabilityBuff, describe, string(DisabilityBuff this))
     {
@@ -131,7 +133,7 @@ CLASS(VengeanceBuff, Buff)
     ATTRIB(VengeanceBuff, netname, string, "vengeance");
     ATTRIB(VengeanceBuff, m_icon, string, "buff_vengeance");
     ATTRIB(VengeanceBuff, m_skin, int, 15);
-    ATTRIB(VengeanceBuff, m_color, vector, '1 0.23 0.61');
+    ATTRIB(VengeanceBuff, m_color, vector, COLOR_BUFF_VENGEANCE);
 #ifdef MENUQC
     METHOD(VengeanceBuff, describe, string(VengeanceBuff this))
     {
@@ -149,7 +151,7 @@ CLASS(JumpBuff, Buff)
     ATTRIB(JumpBuff, netname, string, "jump");
     ATTRIB(JumpBuff, m_icon, string, "buff_jump");
     ATTRIB(JumpBuff, m_skin, int, 10);
-    ATTRIB(JumpBuff, m_color, vector, '0.24 0.78 1');
+    ATTRIB(JumpBuff, m_color, vector, COLOR_BUFF_JUMP);
 #ifdef MENUQC
     METHOD(JumpBuff, describe, string(JumpBuff this))
     {
@@ -167,7 +169,7 @@ CLASS(InfernoBuff, Buff)
     ATTRIB(InfernoBuff, netname, string, "inferno");
     ATTRIB(InfernoBuff, m_icon, string, "buff_inferno");
     ATTRIB(InfernoBuff, m_skin, int, 16);
-    ATTRIB(InfernoBuff, m_color, vector, '1 0.62 0');
+    ATTRIB(InfernoBuff, m_color, vector, COLOR_BUFF_INFERNO);
 #ifdef MENUQC
     METHOD(InfernoBuff, describe, string(InfernoBuff this))
     {
@@ -185,7 +187,7 @@ CLASS(SwapperBuff, Buff)
     ATTRIB(SwapperBuff, netname, string, "swapper");
     ATTRIB(SwapperBuff, m_icon, string, "buff_swapper");
     ATTRIB(SwapperBuff, m_skin, int, 17);
-    ATTRIB(SwapperBuff, m_color, vector, '0.63 0.36 1');
+    ATTRIB(SwapperBuff, m_color, vector, COLOR_BUFF_SWAPPER);
 #ifdef MENUQC
     METHOD(SwapperBuff, describe, string(SwapperBuff this))
     {
@@ -204,7 +206,7 @@ CLASS(MagnetBuff, Buff)
     ATTRIB(MagnetBuff, netname, string, "magnet");
     ATTRIB(MagnetBuff, m_icon, string, "buff_magnet");
     ATTRIB(MagnetBuff, m_skin, int, 18);
-    ATTRIB(MagnetBuff, m_color, vector, '1 0.95 0.18');
+    ATTRIB(MagnetBuff, m_color, vector, COLOR_BUFF_MAGNET);
 #ifdef MENUQC
     METHOD(MagnetBuff, describe, string(MagnetBuff this))
     {
@@ -221,7 +223,7 @@ CLASS(LuckBuff, Buff)
     ATTRIB(LuckBuff, netname, string, "luck");
     ATTRIB(LuckBuff, m_icon, string, "buff_luck");
     ATTRIB(LuckBuff, m_skin, int, 19);
-    ATTRIB(LuckBuff, m_color, vector, '1 0.23 0.44');
+    ATTRIB(LuckBuff, m_color, vector, COLOR_BUFF_LUCK);
 #ifdef MENUQC
     METHOD(LuckBuff, describe, string(LuckBuff this))
     {
@@ -238,7 +240,7 @@ CLASS(FlightBuff, Buff)
     ATTRIB(FlightBuff, netname, string, "flight");
     ATTRIB(FlightBuff, m_icon, string, "buff_flight");
     ATTRIB(FlightBuff, m_skin, int, 11);
-    ATTRIB(FlightBuff, m_color, vector, '0.23 0.44 1');
+    ATTRIB(FlightBuff, m_color, vector, COLOR_BUFF_FLIGHT);
 #ifdef MENUQC
     METHOD(FlightBuff, describe, string(FlightBuff this))
     {

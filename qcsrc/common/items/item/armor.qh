@@ -1,5 +1,7 @@
 #pragma once
 
+#include <common/colors.qh>
+
 #include "pickup.qh"
 CLASS(Armor, Pickup)
 #ifdef SVQC
@@ -167,7 +169,7 @@ REGISTER_ITEM(ArmorBig, NEW(ArmorBig)) {
     if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
         this.m_icon             =   "armor"; // compatible with Xonotic v0.8.2 or lower
 #endif
-    this.m_color                =   '0 1 0';
+    this.m_color                =   COLOR_ITEM_ARMOR;
     this.m_waypoint             =   _("Big armor");
 #ifdef SVQC
     this.m_itemid               =   IT_RESOURCE;
@@ -224,7 +226,7 @@ REGISTER_ITEM(ArmorMega, NEW(ArmorMega)) {
     if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
         this.m_icon             =   "item_large_armor"; // compatible with Xonotic v0.8.2 or lower
 #endif
-    this.m_color                =   '0 1 0';
+    this.m_color                =   COLOR_ITEM_ARMOR;
     this.m_waypoint             =   _("Mega armor");
     this.m_waypointblink        =   2;
 #ifdef SVQC

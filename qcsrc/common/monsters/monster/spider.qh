@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../all.qh"
+#include <common/colors.qh>
 
 #ifdef GAMEQC
 MODEL(MON_SPIDER, M_Model("spider.dpm"));
@@ -47,7 +48,7 @@ CLASS(Webbed, StatusEffects)
     ATTRIB(Webbed, m_name, string, _("Webbed"));
     ATTRIB(Webbed, m_icon, string, "buff_disability");
 #endif
-    ATTRIB(Webbed, m_color, vector, '0.94 0.3 1');
+    ATTRIB(Webbed, m_color, vector, COLOR_STATUSEFFECT_WEBBED);
     ATTRIB(Webbed, m_hidden, bool, true);
     ATTRIB(Webbed, m_lifetime, float, 10);
 ENDCLASS(Webbed)

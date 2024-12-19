@@ -221,7 +221,7 @@ float spritelookupblinkvalue(entity this, string s)
 
 vector spritelookupcolor(entity this, string s, vector def)
 {
-    if (s == WP_Weapon.netname  || s == RADARICON_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).wpcolor;
+    if (s == WP_Weapon.netname  || s == RADARICON_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).m_color;
     if (s == WP_Item.netname    || s == RADARICON_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_color;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
