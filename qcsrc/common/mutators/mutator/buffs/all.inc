@@ -27,7 +27,7 @@ CLASS(AmmoBuff, Buff)
         return _("The Ammo Buff gives you infinite ammo until the buff expires, so you don't need to worry about running out of ammo");
     }
 ENDCLASS(AmmoBuff)
-REGISTER_BUFF(AMMO, AmmoBuff);
+REGISTER_BUFF(AMMO, NEW(AmmoBuff));
 BUFF_SPAWNFUNCS(ammo, BUFF_AMMO)
 BUFF_SPAWNFUNC_Q3COMPAT(item_ammoregen, BUFF_AMMO)
 
@@ -43,7 +43,7 @@ CLASS(ResistanceBuff, Buff)
         return _("The Resistance Buff greatly reduces your damage taken while the buff is active");
     }
 ENDCLASS(ResistanceBuff)
-REGISTER_BUFF(RESISTANCE, ResistanceBuff);
+REGISTER_BUFF(RESISTANCE, NEW(ResistanceBuff));
 BUFF_SPAWNFUNCS(resistance, BUFF_RESISTANCE)
 BUFF_SPAWNFUNC_Q3COMPAT(item_guard, BUFF_RESISTANCE)
 
@@ -60,7 +60,7 @@ CLASS(MedicBuff, Buff)
                  "It also gives you a chance to survive a fatal hit, with a small amount of health left over");
     }
 ENDCLASS(MedicBuff)
-REGISTER_BUFF(MEDIC, MedicBuff);
+REGISTER_BUFF(MEDIC, NEW(MedicBuff));
 BUFF_SPAWNFUNCS(medic, BUFF_MEDIC)
 BUFF_SPAWNFUNC_Q3COMPAT(item_regen, BUFF_MEDIC)
 BUFF_SPAWNFUNC_Q3COMPAT(item_revival, BUFF_MEDIC)
@@ -78,7 +78,7 @@ CLASS(BashBuff, Buff)
                  "It also slightly increases knockback you deal to yourself");
     }
 ENDCLASS(BashBuff)
-REGISTER_BUFF(BASH, BashBuff);
+REGISTER_BUFF(BASH, NEW(BashBuff));
 BUFF_SPAWNFUNCS(bash, BUFF_BASH)
 BUFF_SPAWNFUNC_Q3COMPAT(item_scout, BUFF_BASH)
 
@@ -94,7 +94,7 @@ CLASS(VampireBuff, Buff)
         return _("The Vampire Buff converts some of the damage you deal to enemies and monsters into health for yourself, until the buff expires");
     }
 ENDCLASS(VampireBuff)
-REGISTER_BUFF(VAMPIRE, VampireBuff);
+REGISTER_BUFF(VAMPIRE, NEW(VampireBuff));
 BUFF_SPAWNFUNCS(vampire, BUFF_VAMPIRE)
 BUFF_SPAWNFUNC_Q3COMPAT(holdable_invulnerability, BUFF_VAMPIRE)
 
@@ -111,7 +111,7 @@ CLASS(DisabilityBuff, Buff)
                  "This is particularly useful against speedy players, especially in Capture The Flag");
     }
 ENDCLASS(DisabilityBuff)
-REGISTER_BUFF(DISABILITY, DisabilityBuff);
+REGISTER_BUFF(DISABILITY, NEW(DisabilityBuff));
 BUFF_SPAWNFUNCS(disability, BUFF_DISABILITY)
 
 CLASS(VengeanceBuff, Buff)
@@ -126,7 +126,7 @@ CLASS(VengeanceBuff, Buff)
         return _("The Vengeance Buff reciprocates a portion of the damage enemies deal to you onto them, until the buff expires");
     }
 ENDCLASS(VengeanceBuff)
-REGISTER_BUFF(VENGEANCE, VengeanceBuff);
+REGISTER_BUFF(VENGEANCE, NEW(VengeanceBuff));
 BUFF_SPAWNFUNCS(vengeance, BUFF_VENGEANCE)
 BUFF_SPAWNFUNC_Q3COMPAT(holdable_kamikaze, BUFF_VENGEANCE)
 
@@ -142,7 +142,7 @@ CLASS(JumpBuff, Buff)
         return _("The Jump Buff greatly increases your jump height, while the buff is active");
     }
 ENDCLASS(JumpBuff)
-REGISTER_BUFF(JUMP, JumpBuff);
+REGISTER_BUFF(JUMP, NEW(JumpBuff));
 BUFF_SPAWNFUNCS(jump, BUFF_JUMP)
 BUFF_SPAWNFUNC_Q3COMPAT(item_jumper, BUFF_JUMP)
 
@@ -158,7 +158,7 @@ CLASS(InfernoBuff, Buff)
         return _("The Inferno Buff sets any enemies or monsters you attack alight, dealing burn damage to them for several seconds until the buff expires");
     }
 ENDCLASS(InfernoBuff)
-REGISTER_BUFF(INFERNO, InfernoBuff);
+REGISTER_BUFF(INFERNO, NEW(InfernoBuff));
 BUFF_SPAWNFUNCS(inferno, BUFF_INFERNO)
 BUFF_SPAWNFUNC_Q3COMPAT(item_doubler, BUFF_INFERNO)
 
@@ -175,7 +175,7 @@ CLASS(SwapperBuff, Buff)
                  "A common usage of this Buff is to jump over the map's void, then swap with an enemy, to cause them to fall into the void");
     }
 ENDCLASS(SwapperBuff)
-REGISTER_BUFF(SWAPPER, SwapperBuff);
+REGISTER_BUFF(SWAPPER, NEW(SwapperBuff));
 BUFF_SPAWNFUNCS(swapper, BUFF_SWAPPER)
 BUFF_SPAWNFUNC_Q3COMPAT(holdable_teleporter, BUFF_SWAPPER)
 
@@ -191,7 +191,7 @@ CLASS(MagnetBuff, Buff)
         return _("The Magnet Buff greatly increases your item pickup range, collecting nearby items for you while the buff is active");
     }
 ENDCLASS(MagnetBuff)
-REGISTER_BUFF(MAGNET, MagnetBuff);
+REGISTER_BUFF(MAGNET, NEW(MagnetBuff));
 BUFF_SPAWNFUNCS(magnet, BUFF_MAGNET)
 
 CLASS(LuckBuff, Buff)
@@ -206,7 +206,7 @@ CLASS(LuckBuff, Buff)
         return _("While you have the Luck Buff, each attack has a chance of being a critical hit with greatly increased damage");
     }
 ENDCLASS(LuckBuff)
-REGISTER_BUFF(LUCK, LuckBuff);
+REGISTER_BUFF(LUCK, NEW(LuckBuff));
 BUFF_SPAWNFUNCS(luck, BUFF_LUCK)
 
 CLASS(FlightBuff, Buff)
@@ -221,6 +221,6 @@ CLASS(FlightBuff, Buff)
         return _("While you have the Flight Buff, you can crouch while midair to switch your gravity, allowing flight");
     }
 ENDCLASS(FlightBuff)
-REGISTER_BUFF(FLIGHT, FlightBuff);
+REGISTER_BUFF(FLIGHT, NEW(FlightBuff));
 BUFF_SPAWNFUNCS(flight, BUFF_FLIGHT)
 BUFF_SPAWNFUNC_Q3COMPAT(item_flight, BUFF_FLIGHT)

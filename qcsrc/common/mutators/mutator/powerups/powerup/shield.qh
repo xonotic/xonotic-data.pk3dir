@@ -27,7 +27,7 @@ void powerup_shield_init(Pickup def, entity item)
         item.invincible_finished = (item.count) ? item.count : autocvar_g_balance_powerup_invincible_time;
 }
 #endif
-REGISTER_ITEM(Shield, Powerup) {
+REGISTER_ITEM(Shield, NEW(Powerup)) {
     this.m_canonical_spawnfunc = "item_shield";
 #ifdef SVQC
     this.m_iteminit         =   powerup_shield_init;

@@ -31,7 +31,7 @@ CLASS(VaporizerCells, Ammo)
     }
 ENDCLASS(VaporizerCells)
 
-REGISTER_ITEM(VaporizerCells, VaporizerCells) {
+REGISTER_ITEM(VaporizerCells, NEW(VaporizerCells)) {
     this.m_canonical_spawnfunc = "item_vaporizer_cells";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
@@ -67,7 +67,7 @@ CLASS(ExtraLife, Powerup)
     }
 ENDCLASS(ExtraLife)
 
-REGISTER_ITEM(ExtraLife, ExtraLife) {
+REGISTER_ITEM(ExtraLife, NEW(ExtraLife)) {
     this.m_canonical_spawnfunc = "item_extralife";
 #ifdef GAMEQC
 	this.m_model                =   MDL_ExtraLife_ITEM;

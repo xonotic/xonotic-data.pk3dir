@@ -13,7 +13,7 @@ CLASS(NormalNade, Nade)
                  "Make sure you remember to throw it, or else it will blow up in your hands!");
     }
 ENDCLASS(NormalNade)
-REGISTER_NADE(NORMAL, NormalNade) {
+REGISTER_NADE(NORMAL, NEW(NormalNade)) {
     this.m_color = '1 1 1';
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE, EFFECT_Null);
@@ -29,7 +29,7 @@ CLASS(NapalmNade, Nade)
                  "The napalm fire balls burn for a while, and damage players who get too close");
     }
 ENDCLASS(NapalmNade)
-REGISTER_NADE(NAPALM, NapalmNade) {
+REGISTER_NADE(NAPALM, NEW(NapalmNade)) {
     this.m_color = '2 0.5 0';
     this.m_name = _("Napalm grenade");
     this.m_icon = "nade_napalm";
@@ -47,7 +47,7 @@ CLASS(IceNade, Nade)
                  "While frozen, enemies are progressively dealt damage");
     }
 ENDCLASS(IceNade)
-REGISTER_NADE(ICE, IceNade) {
+REGISTER_NADE(ICE, NEW(IceNade)) {
     this.m_color = '0 0.5 2';
     this.m_name = _("Ice grenade");
     this.m_icon = "nade_ice";
@@ -64,7 +64,7 @@ CLASS(TranslocateNade, Nade)
         return _("The Translocate grenade detonates after a short delay, teleporting you to where it detonated");
     }
 ENDCLASS(TranslocateNade)
-REGISTER_NADE(TRANSLOCATE, TranslocateNade) {
+REGISTER_NADE(TRANSLOCATE, NEW(TranslocateNade)) {
     this.m_color = '1 0 1';
     this.m_name = _("Translocate grenade");
     this.m_icon = "nade_translocate";
@@ -82,7 +82,7 @@ CLASS(SpawnNade, Nade)
                  "It is useful for cases where you want to go back to some point on the map after you die");
     }
 ENDCLASS(SpawnNade)
-REGISTER_NADE(SPAWN, SpawnNade) {
+REGISTER_NADE(SPAWN, NEW(SpawnNade)) {
     this.m_color = '1 0.9 0';
     this.m_name = _("Spawn grenade");
     this.m_icon = "nade_spawn";
@@ -100,7 +100,7 @@ CLASS(HealNade, Nade)
                  "If your team members enter the orb they will recover health, and if enemies enter the sphere they will be harmed");
     }
 ENDCLASS(HealNade)
-REGISTER_NADE(HEAL, HealNade) {
+REGISTER_NADE(HEAL, NEW(HealNade)) {
     this.m_color = '1 0 0';
     this.m_name = _("Heal grenade");
     this.m_icon = "nade_heal";
@@ -117,7 +117,7 @@ CLASS(MonsterNade, Nade)
         return _("The Monster grenade explodes after a short delay, spawning one of four monster types");
     }
 ENDCLASS(MonsterNade)
-REGISTER_NADE(MONSTER, MonsterNade) {
+REGISTER_NADE(MONSTER, NEW(MonsterNade)) {
     this.m_color = '0.25 0.75 0';
     this.m_name = _("Monster grenade");
     this.m_icon = "nade_monster";
@@ -135,7 +135,7 @@ CLASS(EntrapNade, Nade)
                  "Players and projectiles that enter the sphere will be slowed down, including yourself");
     }
 ENDCLASS(EntrapNade)
-REGISTER_NADE(ENTRAP, EntrapNade) {
+REGISTER_NADE(ENTRAP, NEW(EntrapNade)) {
     this.m_color = '0.15 0.85 0';
     this.m_name = _("Entrap grenade");
     this.m_icon = "nade_entrap";
@@ -153,7 +153,7 @@ CLASS(VeilNade, Nade)
                  "Players inside the orb will be invisible to those outside it");
     }
 ENDCLASS(VeilNade)
-REGISTER_NADE(VEIL, VeilNade) {
+REGISTER_NADE(VEIL, NEW(VeilNade)) {
     this.m_color = '0.65 0.85 0.65';
     this.m_name = _("Veil grenade");
     this.m_icon = "nade_veil";
@@ -173,7 +173,7 @@ CLASS(AmmoNade, Nade)
                  "This does not impact weapon magazines, so it won't reload your weapons for you");
     }
 ENDCLASS(AmmoNade)
-REGISTER_NADE(AMMO, AmmoNade) {
+REGISTER_NADE(AMMO, NEW(AmmoNade)) {
     this.m_color = '0.66 0.33 0';
     this.m_name = _("Ammo grenade");
     this.m_icon = "nade_ammo";
@@ -190,7 +190,7 @@ CLASS(DarknessNade, Nade)
         return _("The Darkness grenade detonates after a short delay, creating a dark field which temporarily blinds enemies who enter it");
     }
 ENDCLASS(DarknessNade)
-REGISTER_NADE(DARKNESS, DarknessNade) {
+REGISTER_NADE(DARKNESS, NEW(DarknessNade)) {
     this.m_color = '0.23 0 0.23';
     this.m_name = _("Darkness grenade");
     this.m_icon = "nade_darkness";

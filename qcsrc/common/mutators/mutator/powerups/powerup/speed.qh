@@ -29,7 +29,7 @@ void powerup_speed_init(Pickup def, entity item)
         item.speed_finished = (item.count) ? item.count : autocvar_g_balance_powerup_speed_time;
 }
 #endif
-REGISTER_ITEM(Speed, Powerup) {
+REGISTER_ITEM(Speed, NEW(Powerup)) {
     this.m_canonical_spawnfunc = "item_speed";
 #ifdef SVQC
     this.m_iteminit         =   powerup_speed_init;

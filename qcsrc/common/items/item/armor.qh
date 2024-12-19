@@ -39,7 +39,7 @@ CLASS(ArmorSmall, Armor)
     }
 ENDCLASS(ArmorSmall)
 
-REGISTER_ITEM(ArmorSmall, ArmorSmall) {
+REGISTER_ITEM(ArmorSmall, NEW(ArmorSmall)) {
     this.m_canonical_spawnfunc = "item_armor_small";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -93,7 +93,7 @@ CLASS(ArmorMedium, Armor)
     }
 ENDCLASS(ArmorMedium)
 
-REGISTER_ITEM(ArmorMedium, ArmorMedium) {
+REGISTER_ITEM(ArmorMedium, NEW(ArmorMedium)) {
     this.m_canonical_spawnfunc = "item_armor_medium";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -147,7 +147,7 @@ CLASS(ArmorBig, Armor)
     }
 ENDCLASS(ArmorBig)
 
-REGISTER_ITEM(ArmorBig, ArmorBig) {
+REGISTER_ITEM(ArmorBig, NEW(ArmorBig)) {
     this.m_canonical_spawnfunc = "item_armor_big";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -202,7 +202,7 @@ CLASS(ArmorMega, Armor)
     }
 ENDCLASS(ArmorMega)
 
-REGISTER_ITEM(ArmorMega, ArmorMega) {
+REGISTER_ITEM(ArmorMega, NEW(ArmorMega)) {
     this.m_canonical_spawnfunc = "item_armor_mega";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;

@@ -39,7 +39,7 @@ CLASS(HealthSmall, Health)
     }
 ENDCLASS(HealthSmall)
 
-REGISTER_ITEM(HealthSmall, HealthSmall) {
+REGISTER_ITEM(HealthSmall, NEW(HealthSmall)) {
     this.m_canonical_spawnfunc = "item_health_small";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -93,7 +93,7 @@ CLASS(HealthMedium, Health)
     }
 ENDCLASS(HealthMedium)
 
-REGISTER_ITEM(HealthMedium, HealthMedium) {
+REGISTER_ITEM(HealthMedium, NEW(HealthMedium)) {
     this.m_canonical_spawnfunc = "item_health_medium";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -147,7 +147,7 @@ CLASS(HealthBig, Health)
     }
 ENDCLASS(HealthBig)
 
-REGISTER_ITEM(HealthBig, HealthBig) {
+REGISTER_ITEM(HealthBig, NEW(HealthBig)) {
     this.m_canonical_spawnfunc = "item_health_big";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -201,7 +201,7 @@ CLASS(HealthMega, Health)
     }
 ENDCLASS(HealthMega)
 
-REGISTER_ITEM(HealthMega, HealthMega) {
+REGISTER_ITEM(HealthMega, NEW(HealthMega)) {
     this.m_canonical_spawnfunc = "item_health_mega";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;

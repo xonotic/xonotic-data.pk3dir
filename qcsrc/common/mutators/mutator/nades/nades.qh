@@ -115,7 +115,7 @@ REGISTRY(Nades, BITS(4))
 REGISTER_REGISTRY(Nades)
 REGISTRY_CHECK(Nades)
 
-#define REGISTER_NADE(id, class) REGISTER(Nades, NADE_TYPE, id, m_id, NEW(class))
+#define REGISTER_NADE(id, inst) REGISTER(Nades, NADE_TYPE, id, m_id, inst)
 
 CLASS(Nade, Object)
     ATTRIB(Nade, m_id, int, 0);
