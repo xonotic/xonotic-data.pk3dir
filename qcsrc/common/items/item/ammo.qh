@@ -23,6 +23,11 @@ CLASS(Ammo, Pickup)
     ATTRIB(Ammo, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_ammo));
     ATTRIB(Ammo, m_pickupanyway, float(), GET(g_pickup_ammo_anyway));
 #endif
+    METHOD(Ammo, describe, string(Ammo this))
+    {
+        TC(Ammo, this);
+        return SUPER(Pickup).describe(this);
+    }
 ENDCLASS(Ammo)
 
 
@@ -44,6 +49,11 @@ void ammo_shells_init(Pickup this, entity item)
 #endif
 
 CLASS(Shells, Ammo)
+    METHOD(Shells, describe, string(Shells this))
+    {
+        TC(Shells, this);
+        return _("The Shells ammo type is used by the Shotgun and Overkill Shotgun");
+    }
 ENDCLASS(Shells)
 
 REGISTER_ITEM(Shells, Shells) {
@@ -80,6 +90,11 @@ void ammo_bullets_init(Pickup this, entity item)
 #endif
 
 CLASS(Bullets, Ammo)
+    METHOD(Bullets, describe, string(Bullets this))
+    {
+        TC(Bullets, this);
+        return _("The Bullets ammo type is used by the MachineGun, Rifle, Overkill MachineGun, and Overkill Heavy Machine Gun");
+    }
 ENDCLASS(Bullets)
 
 REGISTER_ITEM(Bullets, Bullets) {
@@ -114,7 +129,16 @@ void ammo_rockets_init(Pickup this, entity item)
         SetResourceExplicit(item, RES_ROCKETS, g_pickup_rockets);
 }
 #endif
-REGISTER_ITEM(Rockets, Ammo) {
+
+CLASS(Rockets, Ammo)
+    METHOD(Rockets, describe, string(Rockets this))
+    {
+        TC(Rockets, this);
+        return _("The Rockets ammo type is used by the Devastator, Mortar, Mine Layer, Hagar, T.A.G. Seeker, and Overkill Rocket Propelled Chainsaw");
+    }
+ENDCLASS(Rockets)
+
+REGISTER_ITEM(Rockets, Rockets) {
     this.m_canonical_spawnfunc = "item_rockets";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -146,7 +170,16 @@ void ammo_cells_init(Pickup this, entity item)
         SetResourceExplicit(item, RES_CELLS, g_pickup_cells);
 }
 #endif
-REGISTER_ITEM(Cells, Ammo) {
+
+CLASS(Cells, Ammo)
+    METHOD(Cells, describe, string(Cells this))
+    {
+        TC(Cells, this);
+        return _("The Cells ammo type is used by the Vortex, Crylink, Electro, Heavy Laser Assault Cannon, Arc, and Vaporizer");
+    }
+ENDCLASS(Cells)
+
+REGISTER_ITEM(Cells, Cells) {
     this.m_canonical_spawnfunc = "item_cells";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;

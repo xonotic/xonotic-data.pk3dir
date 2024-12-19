@@ -21,8 +21,13 @@ CLASS(AmmoBuff, Buff)
     ATTRIB(AmmoBuff, m_icon, string, "buff_ammo");
     ATTRIB(AmmoBuff, m_skin, int, 3);
     ATTRIB(AmmoBuff, m_color, vector, '0.76 1 0.1');
+    METHOD(AmmoBuff, describe, string(AmmoBuff this))
+    {
+        TC(AmmoBuff, this);
+        return _("The Ammo Buff gives you infinite ammo until the buff expires, so you don't need to worry about running out of ammo");
+    }
 ENDCLASS(AmmoBuff)
-REGISTER_BUFF(AMMO, NEW(AmmoBuff));
+REGISTER_BUFF(AMMO, AmmoBuff);
 BUFF_SPAWNFUNCS(ammo, BUFF_AMMO)
 BUFF_SPAWNFUNC_Q3COMPAT(item_ammoregen, BUFF_AMMO)
 
@@ -32,8 +37,13 @@ CLASS(ResistanceBuff, Buff)
     ATTRIB(ResistanceBuff, m_icon, string, "buff_resistance");
     ATTRIB(ResistanceBuff, m_skin, int, 0);
     ATTRIB(ResistanceBuff, m_color, vector, '0.36 1 0.07');
+    METHOD(ResistanceBuff, describe, string(ResistanceBuff this))
+    {
+        TC(ResistanceBuff, this);
+        return _("The Resistance Buff greatly reduces your damage taken while the buff is active");
+    }
 ENDCLASS(ResistanceBuff)
-REGISTER_BUFF(RESISTANCE, NEW(ResistanceBuff));
+REGISTER_BUFF(RESISTANCE, ResistanceBuff);
 BUFF_SPAWNFUNCS(resistance, BUFF_RESISTANCE)
 BUFF_SPAWNFUNC_Q3COMPAT(item_guard, BUFF_RESISTANCE)
 
@@ -43,8 +53,14 @@ CLASS(MedicBuff, Buff)
     ATTRIB(MedicBuff, m_icon, string, "buff_medic");
     ATTRIB(MedicBuff, m_skin, int, 1);
     ATTRIB(MedicBuff, m_color, vector, '1 0.12 0');
+    METHOD(MedicBuff, describe, string(MedicBuff this))
+    {
+        TC(MedicBuff, this);
+        return _("The Medic Buff increases health regeneration speed, increases the maximum health you can have before health starts to rot, and reduces health rot speed until the buff expires\n\n"
+                 "It also gives you a chance to survive a fatal hit, with a small amount of health left over");
+    }
 ENDCLASS(MedicBuff)
-REGISTER_BUFF(MEDIC, NEW(MedicBuff));
+REGISTER_BUFF(MEDIC, MedicBuff);
 BUFF_SPAWNFUNCS(medic, BUFF_MEDIC)
 BUFF_SPAWNFUNC_Q3COMPAT(item_regen, BUFF_MEDIC)
 BUFF_SPAWNFUNC_Q3COMPAT(item_revival, BUFF_MEDIC)
@@ -55,8 +71,14 @@ CLASS(BashBuff, Buff)
     ATTRIB(BashBuff, m_icon, string, "buff_bash");
     ATTRIB(BashBuff, m_skin, int, 5);
     ATTRIB(BashBuff, m_color, vector, '1 0.39 0');
+    METHOD(BashBuff, describe, string(BashBuff this))
+    {
+        TC(BashBuff, this);
+        return _("The Bash Buff increases knockback force you deal, and makes you immune to knockback while the buff is active\n\n"
+                 "It also slightly increases knockback you deal to yourself");
+    }
 ENDCLASS(BashBuff)
-REGISTER_BUFF(BASH, NEW(BashBuff));
+REGISTER_BUFF(BASH, BashBuff);
 BUFF_SPAWNFUNCS(bash, BUFF_BASH)
 BUFF_SPAWNFUNC_Q3COMPAT(item_scout, BUFF_BASH)
 
@@ -66,8 +88,13 @@ CLASS(VampireBuff, Buff)
     ATTRIB(VampireBuff, m_icon, string, "buff_vampire");
     ATTRIB(VampireBuff, m_skin, int, 2);
     ATTRIB(VampireBuff, m_color, vector, '1 0 0.24');
+    METHOD(VampireBuff, describe, string(VampireBuff this))
+    {
+        TC(VampireBuff, this);
+        return _("The Vampire Buff converts some of the damage you deal to enemies and monsters into health for yourself, until the buff expires");
+    }
 ENDCLASS(VampireBuff)
-REGISTER_BUFF(VAMPIRE, NEW(VampireBuff));
+REGISTER_BUFF(VAMPIRE, VampireBuff);
 BUFF_SPAWNFUNCS(vampire, BUFF_VAMPIRE)
 BUFF_SPAWNFUNC_Q3COMPAT(holdable_invulnerability, BUFF_VAMPIRE)
 
@@ -77,8 +104,14 @@ CLASS(DisabilityBuff, Buff)
     ATTRIB(DisabilityBuff, m_icon, string, "buff_disability");
     ATTRIB(DisabilityBuff, m_skin, int, 7);
     ATTRIB(DisabilityBuff, m_color, vector, '0.94 0.3 1');
+    METHOD(DisabilityBuff, describe, string(DisabilityBuff this))
+    {
+        TC(DisabilityBuff, this);
+        return _("The Disability Buff causes your enemies and monsters to slow down for a few seconds when you attack them, while the buff is active\n\n"
+                 "This is particularly useful against speedy players, especially in Capture The Flag");
+    }
 ENDCLASS(DisabilityBuff)
-REGISTER_BUFF(DISABILITY, NEW(DisabilityBuff));
+REGISTER_BUFF(DISABILITY, DisabilityBuff);
 BUFF_SPAWNFUNCS(disability, BUFF_DISABILITY)
 
 CLASS(VengeanceBuff, Buff)
@@ -87,8 +120,13 @@ CLASS(VengeanceBuff, Buff)
     ATTRIB(VengeanceBuff, m_icon, string, "buff_vengeance");
     ATTRIB(VengeanceBuff, m_skin, int, 15);
     ATTRIB(VengeanceBuff, m_color, vector, '1 0.23 0.61');
+    METHOD(VengeanceBuff, describe, string(VengeanceBuff this))
+    {
+        TC(VengeanceBuff, this);
+        return _("The Vengeance Buff reciprocates a portion of the damage enemies deal to you onto them, until the buff expires");
+    }
 ENDCLASS(VengeanceBuff)
-REGISTER_BUFF(VENGEANCE, NEW(VengeanceBuff));
+REGISTER_BUFF(VENGEANCE, VengeanceBuff);
 BUFF_SPAWNFUNCS(vengeance, BUFF_VENGEANCE)
 BUFF_SPAWNFUNC_Q3COMPAT(holdable_kamikaze, BUFF_VENGEANCE)
 
@@ -98,8 +136,13 @@ CLASS(JumpBuff, Buff)
     ATTRIB(JumpBuff, m_icon, string, "buff_jump");
     ATTRIB(JumpBuff, m_skin, int, 10);
     ATTRIB(JumpBuff, m_color, vector, '0.24 0.78 1');
+    METHOD(JumpBuff, describe, string(JumpBuff this))
+    {
+        TC(JumpBuff, this);
+        return _("The Jump Buff greatly increases your jump height, while the buff is active");
+    }
 ENDCLASS(JumpBuff)
-REGISTER_BUFF(JUMP, NEW(JumpBuff));
+REGISTER_BUFF(JUMP, JumpBuff);
 BUFF_SPAWNFUNCS(jump, BUFF_JUMP)
 BUFF_SPAWNFUNC_Q3COMPAT(item_jumper, BUFF_JUMP)
 
@@ -109,8 +152,13 @@ CLASS(InfernoBuff, Buff)
     ATTRIB(InfernoBuff, m_icon, string, "buff_inferno");
     ATTRIB(InfernoBuff, m_skin, int, 16);
     ATTRIB(InfernoBuff, m_color, vector, '1 0.62 0');
+    METHOD(InfernoBuff, describe, string(InfernoBuff this))
+    {
+        TC(InfernoBuff, this);
+        return _("The Inferno Buff sets any enemies or monsters you attack alight, dealing burn damage to them for several seconds until the buff expires");
+    }
 ENDCLASS(InfernoBuff)
-REGISTER_BUFF(INFERNO, NEW(InfernoBuff));
+REGISTER_BUFF(INFERNO, InfernoBuff);
 BUFF_SPAWNFUNCS(inferno, BUFF_INFERNO)
 BUFF_SPAWNFUNC_Q3COMPAT(item_doubler, BUFF_INFERNO)
 
@@ -120,8 +168,14 @@ CLASS(SwapperBuff, Buff)
     ATTRIB(SwapperBuff, m_icon, string, "buff_swapper");
     ATTRIB(SwapperBuff, m_skin, int, 17);
     ATTRIB(SwapperBuff, m_color, vector, '0.63 0.36 1');
+    METHOD(SwapperBuff, describe, string(SwapperBuff this))
+    {
+        TC(SwapperBuff, this);
+        return _("The Swapper Buff allows you to press the \"dropweapon\" bind to switch places with a nearby enemy once\n\n"
+                 "A common usage of this Buff is to jump over the map's void, then swap with an enemy, to cause them to fall into the void");
+    }
 ENDCLASS(SwapperBuff)
-REGISTER_BUFF(SWAPPER, NEW(SwapperBuff));
+REGISTER_BUFF(SWAPPER, SwapperBuff);
 BUFF_SPAWNFUNCS(swapper, BUFF_SWAPPER)
 BUFF_SPAWNFUNC_Q3COMPAT(holdable_teleporter, BUFF_SWAPPER)
 
@@ -131,8 +185,13 @@ CLASS(MagnetBuff, Buff)
     ATTRIB(MagnetBuff, m_icon, string, "buff_magnet");
     ATTRIB(MagnetBuff, m_skin, int, 18);
     ATTRIB(MagnetBuff, m_color, vector, '1 0.95 0.18');
+    METHOD(MagnetBuff, describe, string(MagnetBuff this))
+    {
+        TC(MagnetBuff, this);
+        return _("The Magnet Buff greatly increases your item pickup range, collecting nearby items for you while the buff is active");
+    }
 ENDCLASS(MagnetBuff)
-REGISTER_BUFF(MAGNET, NEW(MagnetBuff));
+REGISTER_BUFF(MAGNET, MagnetBuff);
 BUFF_SPAWNFUNCS(magnet, BUFF_MAGNET)
 
 CLASS(LuckBuff, Buff)
@@ -141,8 +200,13 @@ CLASS(LuckBuff, Buff)
     ATTRIB(LuckBuff, m_icon, string, "buff_luck");
     ATTRIB(LuckBuff, m_skin, int, 19);
     ATTRIB(LuckBuff, m_color, vector, '1 0.23 0.44');
+    METHOD(LuckBuff, describe, string(LuckBuff this))
+    {
+        TC(LuckBuff, this);
+        return _("While you have the Luck Buff, each attack has a chance of being a critical hit with greatly increased damage");
+    }
 ENDCLASS(LuckBuff)
-REGISTER_BUFF(LUCK, NEW(LuckBuff));
+REGISTER_BUFF(LUCK, LuckBuff);
 BUFF_SPAWNFUNCS(luck, BUFF_LUCK)
 
 CLASS(FlightBuff, Buff)
@@ -151,7 +215,12 @@ CLASS(FlightBuff, Buff)
     ATTRIB(FlightBuff, m_icon, string, "buff_flight");
     ATTRIB(FlightBuff, m_skin, int, 11);
     ATTRIB(FlightBuff, m_color, vector, '0.23 0.44 1');
+    METHOD(FlightBuff, describe, string(FlightBuff this))
+    {
+        TC(FlightBuff, this);
+        return _("While you have the Flight Buff, you can crouch while midair to switch your gravity, allowing flight");
+    }
 ENDCLASS(FlightBuff)
-REGISTER_BUFF(FLIGHT, NEW(FlightBuff));
+REGISTER_BUFF(FLIGHT, FlightBuff);
 BUFF_SPAWNFUNCS(flight, BUFF_FLIGHT)
 BUFF_SPAWNFUNC_Q3COMPAT(item_flight, BUFF_FLIGHT)

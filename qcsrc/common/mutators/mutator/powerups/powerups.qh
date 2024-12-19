@@ -16,4 +16,9 @@ CLASS(Powerups, StatusEffects)
 #ifdef GAMEQC
     ATTRIB(Powerups, m_sound_rm, Sound, SND_POWEROFF);
 #endif
+    METHOD(Powerups, describe, string(Powerups this))
+    {
+        TC(Powerups, this);
+        return SUPER(Object).describe(this);
+    }
 ENDCLASS(Powerups)

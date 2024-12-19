@@ -12,6 +12,7 @@ ENDCLASS(Health)
     #include <server/items/items.qh>
 #endif
 
+// small health
 #ifdef GAMEQC
 MODEL(HealthSmall_ITEM, Item_Model("g_h1.md3"));
 SOUND(HealthSmall, Item_Sound("minihealth"));
@@ -29,7 +30,16 @@ void item_healthsmall_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(HealthSmall, Health) {
+CLASS(HealthSmall, Health)
+    METHOD(HealthSmall, describe, string(HealthSmall this))
+    {
+        TC(HealthSmall, this);
+        return _("The Small health restores a small amount of health when picked up, "
+                 "helping you recover from damage taken during combat");
+    }
+ENDCLASS(HealthSmall)
+
+REGISTER_ITEM(HealthSmall, HealthSmall) {
     this.m_canonical_spawnfunc = "item_health_small";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -51,12 +61,12 @@ REGISTER_ITEM(HealthSmall, Health) {
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_health_small);
     this.m_pickupanyway         =   GET(g_pickup_healthsmall_anyway);
     this.m_iteminit             =   item_healthsmall_init;
-
 #endif
 }
 
 SPAWNFUNC_ITEM(item_health_small, ITEM_HealthSmall)
 
+// medium health
 #ifdef GAMEQC
 MODEL(HealthMedium_ITEM, Item_Model("g_h25.md3"));
 SOUND(HealthMedium, Item_Sound("mediumhealth"));
@@ -74,7 +84,16 @@ void item_healthmedium_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(HealthMedium, Health) {
+CLASS(HealthMedium, Health)
+    METHOD(HealthMedium, describe, string(HealthMedium this))
+    {
+        TC(HealthMedium, this);
+        return _("The Medium health restores a medium amount of health when picked up, "
+                 "helping you recover from damage taken during combat");
+    }
+ENDCLASS(HealthMedium)
+
+REGISTER_ITEM(HealthMedium, HealthMedium) {
     this.m_canonical_spawnfunc = "item_health_medium";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -101,6 +120,7 @@ REGISTER_ITEM(HealthMedium, Health) {
 
 SPAWNFUNC_ITEM(item_health_medium, ITEM_HealthMedium)
 
+// big health
 #ifdef GAMEQC
 MODEL(HealthBig_ITEM, Item_Model("g_h50.md3"));
 SOUND(HealthBig, Item_Sound("mediumhealth"));
@@ -118,7 +138,16 @@ void item_healthbig_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(HealthBig, Health) {
+CLASS(HealthBig, Health)
+    METHOD(HealthBig, describe, string(HealthBig this))
+    {
+        TC(HealthBig, this);
+        return _("The Big health restores a large amount of health when picked up, "
+                 "helping you recover from damage taken during combat");
+    }
+ENDCLASS(HealthBig)
+
+REGISTER_ITEM(HealthBig, HealthBig) {
     this.m_canonical_spawnfunc = "item_health_big";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -162,7 +191,17 @@ void item_healthmega_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(HealthMega, Health) {
+CLASS(HealthMega, Health)
+    METHOD(HealthMega, describe, string(HealthMega this))
+    {
+        TC(HealthMega, this);
+        return _("The Mega health restores a huge amount of health when picked up, "
+                 "helping you recover from damage taken during combat\n\n"
+		         "It tends to be one of the most highly contested items on a map, particularly in game modes like Duel");
+    }
+ENDCLASS(HealthMega)
+
+REGISTER_ITEM(HealthMega, HealthMega) {
     this.m_canonical_spawnfunc = "item_health_mega";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;

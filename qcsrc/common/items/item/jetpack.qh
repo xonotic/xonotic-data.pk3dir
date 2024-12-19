@@ -11,6 +11,7 @@
 .int m_itemid;
 #endif
 
+// jetpack powerup
 #ifdef GAMEQC
 MODEL(Jetpack_ITEM, Item_Model("g_jetpack.md3"));
 #endif
@@ -29,6 +30,13 @@ void powerup_jetpack_init(Pickup def, entity item)
 #endif
 
 CLASS(Jetpack, Powerup)
+    METHOD(Jetpack, describe, string(Jetpack this))
+    {
+        TC(Jetpack, this);
+        return _("The Jetpack allows you to fly around the map for a short period, "
+                 "providing increased mobility, maneuverability, and the ability to reach higher ground\n\n"
+                 "It consumes Fuel ammo while operating, so make sure you don't run out when you're high up!");
+    }
 ENDCLASS(Jetpack)
 
 REGISTER_ITEM(Jetpack, Jetpack) {
@@ -53,9 +61,18 @@ REGISTER_ITEM(Jetpack, Jetpack) {
 
 SPAWNFUNC_ITEM(item_jetpack, ITEM_Jetpack)
 
+// fuel ammo
 #ifdef GAMEQC
 MODEL(JetpackFuel_ITEM, Item_Model("g_fuel.md3"));
 #endif
+
+CLASS(JetpackFuel, Ammo)
+    METHOD(JetpackFuel, describe, string(JetpackFuel this))
+    {
+        TC(JetpackFuel, this);
+        return _("The Fuel ammo type is used by the Jetpack");
+    }
+ENDCLASS(JetpackFuel)
 
 #ifdef SVQC
 PROPERTY(int, g_pickup_fuel);
@@ -65,7 +82,7 @@ void ammo_fuel_init(Pickup this, entity item)
         SetResourceExplicit(item, RES_FUEL, g_pickup_fuel);
 }
 #endif
-REGISTER_ITEM(JetpackFuel, Ammo) {
+REGISTER_ITEM(JetpackFuel, JetpackFuel) {
     this.m_canonical_spawnfunc = "item_fuel";
 #ifdef GAMEQC
 	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -83,6 +100,7 @@ REGISTER_ITEM(JetpackFuel, Ammo) {
 
 SPAWNFUNC_ITEM(item_fuel, ITEM_JetpackFuel)
 
+// fuel regenerator powerup
 #ifdef GAMEQC
 MODEL(JetpackRegen_ITEM, Item_Model("g_fuelregen.md3"));
 #endif
@@ -97,6 +115,13 @@ void powerup_fuelregen_init(Pickup def, entity item)
 #endif
 
 CLASS(JetpackRegen, Powerup)
+    METHOD(JetpackRegen, describe, string(JetpackRegen this))
+    {
+        TC(JetpackRegen, this);
+        return _("The Fuel Regenerator powerup regenerates Fuel needed for the Jetpack until the powerup expires, "
+                 "so you can continue flying around for longer"
+                 "Since it is a powerup, it will drop if you die while holding it");
+    }
 ENDCLASS(JetpackRegen)
 
 REGISTER_ITEM(JetpackRegen, JetpackRegen) {

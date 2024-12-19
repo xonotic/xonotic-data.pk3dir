@@ -22,7 +22,16 @@ void ammo_vaporizercells_init(Pickup this, entity item)
         SetResourceExplicit(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
 }
 #endif
-REGISTER_ITEM(VaporizerCells, Ammo) {
+
+CLASS(VaporizerCells, Ammo)
+    METHOD(VaporizerCells, describe, string(VaporizerCells this))
+    {
+        TC(VaporizerCells, this);
+        return _("The Vaporizer ammo is sometimes present on maps when InstaGib is enabled, providing ammo for the Vaporizer");
+    }
+ENDCLASS(VaporizerCells)
+
+REGISTER_ITEM(VaporizerCells, VaporizerCells) {
     this.m_canonical_spawnfunc = "item_vaporizer_cells";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
@@ -49,7 +58,16 @@ MODEL(ExtraLife_ITEM, Item_Model("g_h100.md3"));
 SOUND(ExtraLife, Item_Sound("megahealth"));
 #endif
 
-REGISTER_ITEM(ExtraLife, Powerup) {
+CLASS(ExtraLife, Powerup)
+    METHOD(ExtraLife, describe, string(ExtraLife this))
+    {
+        TC(ExtraLife, this);
+        return _("The Extra Life powerup acts as armor in InstaGib. "
+                 "If a player is shot while having one or more Extra Lives, they will survive the shot but suffer strong knockback");
+    }
+ENDCLASS(ExtraLife)
+
+REGISTER_ITEM(ExtraLife, ExtraLife) {
     this.m_canonical_spawnfunc = "item_extralife";
 #ifdef GAMEQC
 	this.m_model                =   MDL_ExtraLife_ITEM;

@@ -8,8 +8,7 @@
 #include <common/mutators/mutator/waypoints/all.qh>
 #endif
 
-#define REGISTER_BUFF(id, inst) \
-    REGISTER(StatusEffect, BUFF_##id, m_id, inst)
+#define REGISTER_BUFF(id, class) REGISTER(StatusEffect, BUFF_##id, m_id, NEW(class))
 
 #include <common/mutators/mutator/status_effects/_mod.qh>
 CLASS(Buff, StatusEffects)
@@ -28,8 +27,14 @@ CLASS(Buff, StatusEffects)
 	}
 #ifdef SVQC
 	METHOD(Buff, m_time, float(Buff this))
-	{ return cvar(strcat("g_buffs_", this.netname, "_time")); }
+	{
+		return cvar(strcat("g_buffs_", this.netname, "_time"));
+	}
 #endif
+	METHOD(Buff, describe, string(Buff this)) {
+		TC(Buff, this);
+		return SUPER(Object).describe(this);
+	}
 ENDCLASS(Buff)
 
 STATIC_INIT(REGISTER_BUFFS) {

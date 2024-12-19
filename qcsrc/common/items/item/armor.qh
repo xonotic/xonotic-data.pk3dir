@@ -12,6 +12,7 @@ ENDCLASS(Armor)
     #include <server/items/items.qh>
 #endif
 
+// small armor
 #ifdef GAMEQC
 MODEL(ArmorSmall_ITEM, Item_Model("item_armor_small.md3"));
 SOUND(ArmorSmall, Item_Sound("armor1"));
@@ -29,7 +30,16 @@ void item_armorsmall_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(ArmorSmall, Armor) {
+CLASS(ArmorSmall, Armor)
+    METHOD(ArmorSmall, describe, string(ArmorSmall this))
+    {
+        TC(ArmorSmall, this);
+        return _("The Small armor provides you a small amount of armor when picked up, "
+                 "protecting you from damage by absorbing incoming hits until it is depleted");
+    }
+ENDCLASS(ArmorSmall)
+
+REGISTER_ITEM(ArmorSmall, ArmorSmall) {
     this.m_canonical_spawnfunc = "item_armor_small";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -56,6 +66,7 @@ REGISTER_ITEM(ArmorSmall, Armor) {
 
 SPAWNFUNC_ITEM(item_armor_small, ITEM_ArmorSmall)
 
+// medium armor
 #ifdef GAMEQC
 MODEL(ArmorMedium_ITEM, Item_Model("item_armor_medium.md3"));
 SOUND(ArmorMedium, Item_Sound("armor10"));
@@ -73,7 +84,16 @@ void item_armormedium_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(ArmorMedium, Armor) {
+CLASS(ArmorMedium, Armor)
+    METHOD(ArmorMedium, describe, string(ArmorMedium this))
+    {
+        TC(ArmorMedium, this);
+        return _("The Medium armor provides you a medium amount of armor when picked up, "
+                 "protecting you from damage by absorbing incoming hits until it is depleted");
+    }
+ENDCLASS(ArmorMedium)
+
+REGISTER_ITEM(ArmorMedium, ArmorMedium) {
     this.m_canonical_spawnfunc = "item_armor_medium";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -100,6 +120,7 @@ REGISTER_ITEM(ArmorMedium, Armor) {
 
 SPAWNFUNC_ITEM(item_armor_medium, ITEM_ArmorMedium)
 
+// big armor
 #ifdef GAMEQC
 MODEL(ArmorBig_ITEM, Item_Model("item_armor_big.md3"));
 SOUND(ArmorBig, Item_Sound("armor17_5"));
@@ -117,7 +138,16 @@ void item_armorbig_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(ArmorBig, Armor) {
+CLASS(ArmorBig, Armor)
+    METHOD(ArmorBig, describe, string(ArmorBig this))
+    {
+        TC(ArmorBig, this);
+        return _("The Big armor provides you a large amount of armor when picked up, "
+                 "protecting you from damage by absorbing incoming hits until it is depleted");
+    }
+ENDCLASS(ArmorBig)
+
+REGISTER_ITEM(ArmorBig, ArmorBig) {
     this.m_canonical_spawnfunc = "item_armor_big";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -144,6 +174,7 @@ REGISTER_ITEM(ArmorBig, Armor) {
 
 SPAWNFUNC_ITEM(item_armor_big, ITEM_ArmorBig)
 
+// mega armor
 #ifdef GAMEQC
 MODEL(ArmorMega_ITEM, Item_Model("item_armor_large.md3"));
 SOUND(ArmorMega, Item_Sound("armor25"));
@@ -161,7 +192,17 @@ void item_armormega_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(ArmorMega, Armor) {
+CLASS(ArmorMega, Armor)
+    METHOD(ArmorMega, describe, string(ArmorMega this))
+    {
+        TC(ArmorMega, this);
+        return _("The Mega armor provides you a huge amount of armor when picked up, "
+                 "protecting you from damage by absorbing incoming hits until it is depleted\n\n"
+		         "It tends to be one of the most highly contested items on a map, particularly in game modes like Duel");
+    }
+ENDCLASS(ArmorMega)
+
+REGISTER_ITEM(ArmorMega, ArmorMega) {
     this.m_canonical_spawnfunc = "item_armor_mega";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
