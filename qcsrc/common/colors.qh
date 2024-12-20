@@ -80,5 +80,7 @@ const vector COLOR_STATUSEFFECT_SPAWNSHIELD = '0.36 1 0.07';
 const vector COLOR_STATUSEFFECT_STUNNED     = '0.67 0.84 1';
 const vector COLOR_STATUSEFFECT_WEBBED      = '0.94 0.3 1';
 
-// Useful macro for the guide
+// Useful macros for the guide
 #define COLORED_NAME(class) strcat(rgb_to_hexcolor(NEW(class).m_color), NEW(class).m_name, "^7")
+#define COLORED_NAME_WITH_CONCAT(class, concat) strcat(rgb_to_hexcolor(NEW(class).m_color), NEW(class).m_name, " ", concat, "^7")
+// These can't be used everywhere, or else it would cause circular includes by including "class"
