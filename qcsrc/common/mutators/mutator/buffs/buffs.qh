@@ -18,7 +18,7 @@ CLASS(Buff, StatusEffects)
 	ATTRIB(Buff, netname, string, "buff");
 	ATTRIB(Buff, m_icon, string, "buff");
 	ATTRIB(Buff, m_color, vector, '1 1 1');
-	ATTRIB(Buff, m_name, string, "Buff");
+	ATTRIB(Buff, m_name, string, _("Buff"));
 	ATTRIB(Buff, m_skin, int, 0);
 	ATTRIB(Buff, m_lifetime, float, 60);
 	ATTRIB(Buff, m_sprite, string, "");
