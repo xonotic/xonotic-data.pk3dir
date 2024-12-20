@@ -1,12 +1,14 @@
 #pragma once
 
+#include <common/colors.qh>
+
 CLASS(Seeker, Weapon)
 /* spawnfunc */ ATTRIB(Seeker, m_canonical_spawnfunc, string, "weapon_seeker");
 /* ammotype  */ ATTRIB(Seeker, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Seeker, impulse, int, 8);
 /* flags     */ ATTRIB(Seeker, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Seeker, bot_pickupbasevalue, float, 5000);
-/* color     */ ATTRIB(Seeker, wpcolor, vector, '0.5 1 0');
+/* color     */ ATTRIB(Seeker, m_color, vector, COLOR_WEP_SEEKER);
 /* modelname */ ATTRIB(Seeker, mdl, string, "seeker");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Seeker, m_model, Model, MDL_SEEKER_ITEM);
@@ -82,6 +84,19 @@ CLASS(Seeker, Weapon)
 	END()
 	W_PROPS(X, Seeker, seeker)
 #undef X
+#ifdef MENUQC
+METHOD(Seeker, describe, string(Seeker this))
+{
+	TC(Seeker, this);
+	return sprintf(_("The %s is a unique weapon, firing a \"tag\" which then launches a few homing missiles if it collides with a player. "
+		"The homing isn't perfect, so sometimes the missiles can hit an object or a corner\n\n"
+		"The secondary fire launches a rapid barrage of scattered explosives that travel only a short distance\n\n"
+		"It consumes %s ammo, even when the tag doesn't land\n\n"
+		"The %s primary fire deals quite a lot of damage when a tag lands, although it requires skill to aim effectively. "
+		"The secondary fire is only useful in close range combat, and sometimes the explosives can damage yourself too"),
+	COLORED_NAME(Seeker), COLORED_NAME(Rockets), COLORED_NAME(Seeker));
+}
+#endif
 ENDCLASS(Seeker)
 REGISTER_WEAPON(SEEKER, NEW(Seeker));
 

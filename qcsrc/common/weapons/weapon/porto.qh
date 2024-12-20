@@ -1,12 +1,14 @@
 #pragma once
 
+#include <common/colors.qh>
+
 CLASS(PortoLaunch, Weapon)
 /* spawnfunc */ ATTRIB(PortoLaunch, m_canonical_spawnfunc, string, "weapon_porto");
 /* ammotype  */ ATTRIB(PortoLaunch, ammo_type, Resource, RES_NONE);
 /* impulse   */ ATTRIB(PortoLaunch, impulse, int, 0);
 /* flags     */ ATTRIB(PortoLaunch, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON | WEP_FLAG_NODUAL | WEP_FLAG_NOTRUEAIM);
 /* rating    */ ATTRIB(PortoLaunch, bot_pickupbasevalue, float, 0);
-/* color     */ ATTRIB(PortoLaunch, wpcolor, vector, '0.5 0.5 0.5');
+/* color     */ ATTRIB(PortoLaunch, m_color, vector, COLOR_WEP_PORTO);
 /* modelname */ ATTRIB(PortoLaunch, mdl, string, "porto");
 #ifdef GAMEQC
 /* model     */ ATTRIB(PortoLaunch, m_model, Model, MDL_PORTO_ITEM);
@@ -33,6 +35,18 @@ CLASS(PortoLaunch, Weapon)
 	END()
 	W_PROPS(X, PortoLaunch, porto)
 #undef X
+#ifdef MENUQC
+METHOD(PortoLaunch, describe, string(PortoLaunch this))
+{
+	TC(PortoLaunch, this);
+	return sprintf(_("The %s is a unique gun that creates one-way portals between flat surfaces on the map, that immediately teleport players and projectiles\n\n"
+		"The secondary fire is used to shoot the out-portal, while the primary fire shoots the in-portal\n\n"
+		"It doesn't require ammo, but it is destroyed after some time\n\n"
+		"The portals will close either after the player who shot them dies or after some time period"
+		"The %s isn't often placed on maps, but if used well it can make for some interesting gameplay"),
+	COLORED_NAME(PortoLaunch), COLORED_NAME(PortoLaunch));
+}
+#endif
 ENDCLASS(PortoLaunch)
 REGISTER_WEAPON(PORTO, NEW(PortoLaunch));
 

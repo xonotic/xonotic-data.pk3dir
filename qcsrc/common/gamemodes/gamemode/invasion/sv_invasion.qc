@@ -379,7 +379,7 @@ MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
 	mon.monster_skill = inv_monsterskill;
 
 	if(mon.monsterdef.spawnflags & MON_FLAG_SUPERMONSTER)
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, mon.monster_name);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, mon.m_name);
 }
 
 MUTATOR_HOOKFUNCTION(inv, SV_StartFrame)

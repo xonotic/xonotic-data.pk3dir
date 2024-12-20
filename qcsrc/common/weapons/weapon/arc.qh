@@ -1,12 +1,14 @@
 #pragma once
 
+#include <common/colors.qh>
+
 CLASS(Arc, Weapon)
 /* spawnfunc */ ATTRIB(Arc, m_canonical_spawnfunc, string, "weapon_arc");
 /* ammotype  */ ATTRIB(Arc, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Arc, impulse, int, 3);
 /* flags     */ ATTRIB(Arc, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, 8000);
-/* color     */ ATTRIB(Arc, wpcolor, vector, '1 1 1');
+/* color     */ ATTRIB(Arc, m_color, vector, COLOR_WEP_ARC);
 /* modelname */ ATTRIB(Arc, mdl, string, "arc");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Arc, m_model, Model, MDL_ARC_ITEM);
@@ -78,7 +80,17 @@ CLASS(Arc, Weapon)
 	END()
 	W_PROPS(X, Arc, arc)
 #undef X
-
+#ifdef MENUQC
+METHOD(Arc, describe, string(Arc this))
+{
+	TC(Arc, this);
+	return sprintf(_("The %s fires a continuous stream of electricity, steadily dealing damage to any enemies that cross its path\n\n"
+		"The secondary fire rapidly shoots electro balls forward, exploding on impact and dealing some splash damage\n\n"
+		"It consumes %s ammo, steadily churning through your supply to maintain the stream\n\n"
+		"The %s is quite a versatile weapon, however it is more effective at close to medium ranges, since the stream is not instantaneous"),
+	COLORED_NAME(Arc), COLORED_NAME(Cells), COLORED_NAME(Arc));
+}
+#endif
 ENDCLASS(Arc)
 REGISTER_WEAPON(ARC, NEW(Arc));
 

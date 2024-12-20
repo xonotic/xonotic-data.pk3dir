@@ -1,6 +1,10 @@
 #pragma once
 
 #include <common/weapons/all.qh>
+#include <common/colors.qh>
+#ifdef MENUQC
+	#include "okmachinegun.qh" // for its color
+#endif
 
 CLASS(OverkillHeavyMachineGun, Weapon)
 /* spawnfunc */ ATTRIB(OverkillHeavyMachineGun, m_canonical_spawnfunc, string, "weapon_okhmg");
@@ -8,7 +12,7 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 /* impulse   */ ATTRIB(OverkillHeavyMachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(OverkillHeavyMachineGun, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON | WEP_FLAG_PENETRATEWALLS);
 /* rating    */ ATTRIB(OverkillHeavyMachineGun, bot_pickupbasevalue, float, 10000);
-/* color     */ ATTRIB(OverkillHeavyMachineGun, wpcolor, vector, '0.5 0.5 0');
+/* color     */ ATTRIB(OverkillHeavyMachineGun, m_color, vector, COLOR_WEP_OKHMG);
 /* modelname */ ATTRIB(OverkillHeavyMachineGun, mdl, string, "ok_hmg");
 #ifdef GAMEQC
 /* model     */ ATTRIB(OverkillHeavyMachineGun, m_model, Model, MDL_HMG_ITEM);
@@ -44,7 +48,20 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 	END()
 	W_PROPS(X, OverkillHeavyMachineGun, okhmg)
 #undef X
-
+#ifdef MENUQC
+METHOD(OverkillHeavyMachineGun, describe, string(OverkillHeavyMachineGun this))
+{
+	TC(OverkillHeavyMachineGun, this);
+	return sprintf(_("The %s is a superweapon that rapidly fires harmful bullets with a small degree of spread\n\n"
+		"Like with all Overkill weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around\n\n"
+		"It is a superweapon found on some maps, meaning that it breaks down after some time\n\n"
+		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in Overkill. "
+		"It has a limited magazine size, so needs reloading after several shots\n\n"
+		"The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously\n\n"
+		"Since its bullets deal a lot more damage than the %s's bullets, it is often heavily contested when it spawns in"),
+	COLORED_NAME(OverkillHeavyMachineGun), COLORED_NAME(Bullets), COLORED_NAME(OverkillHeavyMachineGun), COLORED_NAME(OverkillMachineGun));
+}
+#endif
 ENDCLASS(OverkillHeavyMachineGun)
 REGISTER_WEAPON(OVERKILL_HMG, NEW(OverkillHeavyMachineGun));
 

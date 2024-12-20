@@ -1,6 +1,7 @@
 #pragma once
 
 #include <common/mutators/mutator/status_effects/all.qh>
+#include <common/colors.qh>
 
 #ifdef SVQC
 //void Shock_ApplyDamage(entity e);
@@ -16,7 +17,7 @@ CLASS(Stunned, StatusEffects)
     ATTRIB(Stunned, m_name, string, _("Stunned"));
     ATTRIB(Stunned, m_icon, string, "buff_disability");
 #endif
-    ATTRIB(Stunned, m_color, vector, '0.67 0.84 1');
+    ATTRIB(Stunned, m_color, vector, COLOR_STATUSEFFECT_STUNNED);
     ATTRIB(Stunned, m_hidden, bool, true);
     ATTRIB(Stunned, m_lifetime, float, 10);
 #ifdef GAMEQC

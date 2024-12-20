@@ -1,0 +1,91 @@
+#pragma once
+
+#include <menu/xonotic/guide/_mod.qh>
+#include <common/items/item.qh>
+#include <menu/anim/animhost.qh>
+#include <menu/xonotic/datasource.qh>
+
+#define TOPICS(X) \
+	X(NEW(FreetextSource),  _("Guide"),     "gametype_tdm") \
+	X(NEW(GametypeSource),  _("Gametypes"), "gametype_dm") \
+	X(NEW(WeaponSource),    _("Weapons"),   "gametype_duel") \
+	X(NEW(ItemSource),      _("Items"),     "gametype_kh") \
+	X(NEW(BuffSource),      _("Buffs"),     "gametype_dom") \
+	X(NEW(NadeSource),      _("Nades"),     "gametype_ft") \
+	X(NEW(MonsterSource),   _("Monsters"),  "gametype_lms") \
+	X(NEW(VehicleSource),   _("Vehicles"),  "gametype_rc") \
+	X(NEW(TurretSource),    _("Turrets"),   "gametype_as") \
+	X(NEW(MutatorSource),   _("Mutators"),  "gametype_nb") \
+	X(NEW(MapSource),       _("Maps"),      "gametype_ctf") \
+	if (gamestatus & GAME_DEVELOPER) X(NEW(DebugSource), _("Debug"), "gametype_ons") \
+	/**/
+CLASS(TopicSource, DataSource)
+	METHOD(TopicSource, getEntry, entity(TopicSource this, int i, void(string, string) returns));
+	METHOD(TopicSource, reload, int(TopicSource this, string filter));
+ENDCLASS(TopicSource)
+
+CLASS(DebugSource, DataSource)
+	.entity nextdebug;
+	string DebugSource_activeFilter = "";
+	METHOD(DebugSource, getEntry, entity(DebugSource this, int i, void(string, string) returns));
+	METHOD(DebugSource, reload, int(DebugSource this, string filter));
+ENDCLASS(DebugSource)
+
+.bool m_hidden;
+
+#define REGISTRY_SOURCE(id, arr) \
+ArrayList arr##_MENU; \
+int arr##_MENU_COUNT; \
+STATIC_INIT_LATE(arr##_MENU) \
+{ \
+	AL_NEW(arr##_MENU, arr##_MAX, NULL, e); \
+	FOREACH(arr, !it.m_hidden, { \
+		AL_sete(arr##_MENU, arr##_MENU_COUNT, it); \
+		arr##_MENU_COUNT++; \
+	}); \
+} \
+CLASS(id, DataSource) \
+	METHOD(id, getEntry, entity(id this, int i, void(string, string) returns)) { \
+		entity e = AL_gete(arr##_MENU, i); \
+		if (returns) \
+			e.display(e, returns); \
+		return e; \
+	} \
+	METHOD(id, reload, int(id this, string filter)) { return arr##_MENU_COUNT; } \
+ENDCLASS(id)
+
+REGISTRY_SOURCE(FreetextSource, GuidePages)
+
+#include <common/mapinfo.qh>
+REGISTRY_SOURCE(GametypeSource, Gametypes)
+
+#include <common/items/all.qh>
+REGISTRY_SOURCE(ItemSource, Items)
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+REGISTRY_SOURCE(BuffSource, StatusEffect)
+
+#include <common/mutators/mutator/nades/nades.qh>
+REGISTRY_SOURCE(NadeSource, Nades)
+
+#include <common/weapons/all.qh>
+REGISTRY_SOURCE(WeaponSource, Weapons)
+
+#include <common/monsters/all.qh>
+REGISTRY_SOURCE(MonsterSource, Monsters)
+
+#include <common/vehicles/all.qh>
+REGISTRY_SOURCE(VehicleSource, Vehicles)
+
+#include <common/turrets/all.qh>
+REGISTRY_SOURCE(TurretSource, Turrets)
+
+#include <common/mutators/base.qh>
+REGISTRY_SOURCE(MutatorSource, Mutators)
+
+CLASS(MapSource, DataSource)
+	METHOD(MapSource, getEntry, entity(MapSource this, int i, void(string, string) returns));
+	METHOD(MapSource, indexOf, int(MapSource this, string s));
+	METHOD(MapSource, reload, int(MapSource this, string s));
+	METHOD(MapSource, destroy, void(MapSource));
+ENDCLASS(MapSource)

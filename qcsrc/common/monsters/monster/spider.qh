@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../all.qh"
+#include <common/colors.qh>
 
 #ifdef GAMEQC
 MODEL(MON_SPIDER, M_Model("spider.dpm"));
@@ -14,7 +15,15 @@ CLASS(Spider, Monster)
     ATTRIB(Spider, m_model, Model, MDL_MON_SPIDER);
 #endif
     ATTRIB(Spider, netname, string, "spider");
-    ATTRIB(Spider, monster_name, string, _("Spider"));
+    ATTRIB(Spider, m_name, string, _("Spider"));
+#ifdef MENUQC
+    METHOD(Spider, describe, string(Spider this))
+    {
+        TC(Spider, this);
+        return _("The Spider is a big arachnid that walks with 8 legs only on the ground, traveling faster than other monsters\n\n"
+                 "When an opponent approaches a Spider, it will spit cobweb energy balls to slow down prey, then attack nearby opponents with its chelicerae");
+    }
+#endif
 ENDCLASS(Spider)
 
 REGISTER_MONSTER(SPIDER, NEW(Spider));
@@ -39,7 +48,7 @@ CLASS(Webbed, StatusEffects)
     ATTRIB(Webbed, m_name, string, _("Webbed"));
     ATTRIB(Webbed, m_icon, string, "buff_disability");
 #endif
-    ATTRIB(Webbed, m_color, vector, '0.94 0.3 1');
+    ATTRIB(Webbed, m_color, vector, COLOR_STATUSEFFECT_WEBBED);
     ATTRIB(Webbed, m_hidden, bool, true);
     ATTRIB(Webbed, m_lifetime, float, 10);
 ENDCLASS(Webbed)

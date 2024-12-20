@@ -2,6 +2,7 @@
 
 #include <common/items/all.qh>
 #include <common/mutators/mutator/powerups/powerups.qh>
+#include <common/colors.qh>
 #ifdef SVQC
     // For FL_POWERUP
     #include <common/constants.qh>
@@ -29,7 +30,7 @@ void powerup_speed_init(Pickup def, entity item)
         item.speed_finished = (item.count) ? item.count : autocvar_g_balance_powerup_speed_time;
 }
 #endif
-REGISTER_ITEM(Speed, Powerup) {
+REGISTER_ITEM(Speed, NEW(Powerup)) {
     this.m_canonical_spawnfunc = "item_speed";
 #ifdef SVQC
     this.m_iteminit         =   powerup_speed_init;
@@ -46,7 +47,7 @@ REGISTER_ITEM(Speed, Powerup) {
     this.netname            =   "speed";
     this.m_name             =   _("Speed");
     this.m_icon             =   "buff_speed";
-    this.m_color            =   '0.1 1 0.84';
+    this.m_color            =   COLOR_POWERUP_SPEED;
     this.m_waypoint         =   _("Speed");
     this.m_waypointblink    =   2;
 }
@@ -57,7 +58,17 @@ SPAWNFUNC_ITEM(item_buff_speed, ITEM_Speed)
 CLASS(Speed, Powerups)
     ATTRIB(Speed, netname, string, "speed");
     ATTRIB(Speed, m_name, string, _("Speed"));
-    ATTRIB(Speed, m_color, vector, '0.1 1 0.84');
+    ATTRIB(Speed, m_color, vector, COLOR_POWERUP_SPEED);
     ATTRIB(Speed, m_icon, string, "buff_speed");
+#ifdef MENUQC
+    METHOD(Speed, describe, string(Speed this))
+    {
+        TC(Speed, this);
+        return sprintf(_("The %s powerup increases your movement speed, attack speed, and health regeneration speed while the powerup is active. "
+            "However, it also makes you a bit more vulnerable to incoming attacks\n\n"
+            "Since it is a powerup, it will drop if you die while holding it"),
+        COLORED_NAME(Speed));
+    }
+#endif
 ENDCLASS(Speed)
 REGISTER_STATUSEFFECT(Speed, NEW(Speed));

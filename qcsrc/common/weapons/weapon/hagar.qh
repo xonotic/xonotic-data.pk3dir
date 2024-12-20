@@ -1,12 +1,14 @@
 #pragma once
 
+#include <common/colors.qh>
+
 CLASS(Hagar, Weapon)
 /* spawnfunc */ ATTRIB(Hagar, m_canonical_spawnfunc, string, "weapon_hagar");
 /* ammotype  */ ATTRIB(Hagar, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Hagar, impulse, int, 8);
 /* flags     */ ATTRIB(Hagar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Hagar, bot_pickupbasevalue, float, 6000);
-/* color     */ ATTRIB(Hagar, wpcolor, vector, '1 1 0.5');
+/* color     */ ATTRIB(Hagar, m_color, vector, COLOR_WEP_HAGAR);
 /* modelname */ ATTRIB(Hagar, mdl, string, "hagar");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Hagar, m_model, Model, MDL_HAGAR_ITEM);
@@ -56,7 +58,19 @@ CLASS(Hagar, Weapon)
 	END()
 	W_PROPS(X, Hagar, hagar)
 #undef X
-
+#ifdef MENUQC
+METHOD(Hagar, describe, string(Hagar this))
+{
+	TC(Hagar, this);
+	return sprintf(_("The %s rapidly fires small propelled rockets forwards, dealing some splash damage on impact\n\n"
+		"When the secondary fire is held, multiple rockets are loaded up, and they're shot at the same time when released. "
+		"These rockets can't be held forever, so it will fire itself after some time (after a warning beep) if the secondary fire isn't released\n\n"
+		"It consumes %s ammo for each rocket\n\n"
+		"The %s works best over close to medium ranges, since it's hard to land hits at a long distance. "
+		"A common usage is fully loading the secondary fire before turning a corner, so you can surprise any enemies around the corner with a bunch of rockets to the face"),
+	COLORED_NAME(Hagar), COLORED_NAME(Rockets), COLORED_NAME(Hagar));
+}
+#endif
 ENDCLASS(Hagar)
 REGISTER_WEAPON(HAGAR, NEW(Hagar));
 

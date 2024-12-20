@@ -1,6 +1,7 @@
 #pragma once
 
 #include <common/weapons/all.qh>
+#include <common/colors.qh>
 
 CLASS(OverkillRocketPropelledChainsaw, Weapon)
 /* spawnfunc */ ATTRIB(OverkillRocketPropelledChainsaw, m_canonical_spawnfunc, string, "weapon_okrpc");
@@ -8,7 +9,7 @@ CLASS(OverkillRocketPropelledChainsaw, Weapon)
 /* impulse   */ ATTRIB(OverkillRocketPropelledChainsaw, impulse, int, 9);
 /* flags     */ ATTRIB(OverkillRocketPropelledChainsaw, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON);
 /* rating    */ ATTRIB(OverkillRocketPropelledChainsaw, bot_pickupbasevalue, float, 10000);
-/* color     */ ATTRIB(OverkillRocketPropelledChainsaw, wpcolor, vector, '0.5 0.5 0');
+/* color     */ ATTRIB(OverkillRocketPropelledChainsaw, m_color, vector, COLOR_WEP_OKRPC);
 /* modelname */ ATTRIB(OverkillRocketPropelledChainsaw, mdl, string, "ok_rl");
 #ifdef GAMEQC
 /* model     */ ATTRIB(OverkillRocketPropelledChainsaw, m_model, Model, MDL_RPC_ITEM);
@@ -49,7 +50,18 @@ CLASS(OverkillRocketPropelledChainsaw, Weapon)
 	END()
 	W_PROPS(X, OverkillRocketPropelledChainsaw, okrpc)
 #undef X
-
+#ifdef MENUQC
+METHOD(OverkillRocketPropelledChainsaw, describe, string(OverkillRocketPropelledChainsaw this))
+{
+	TC(OverkillRocketPropelledChainsaw, this);
+	return sprintf(_("As the name suggests, the %s is a superweapon that fires a rocket propelled chainsaw which explodes on impact, dealing a lot of splash damage to any players close by\n\n"
+		"Like with all Overkill weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around\n\n"
+		"It is a superweapon found on some maps, meaning that it breaks down after some time\n\n"
+		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in Overkill\n\n"
+		"Since it is the only Overkill weapon which deals splash damage, the %s is a good choice of weapon for attacking groups of enemies"),
+	COLORED_NAME(OverkillRocketPropelledChainsaw), COLORED_NAME(Rockets), COLORED_NAME(OverkillRocketPropelledChainsaw));
+}
+#endif
 ENDCLASS(OverkillRocketPropelledChainsaw)
 REGISTER_WEAPON(OVERKILL_RPC, NEW(OverkillRocketPropelledChainsaw));
 

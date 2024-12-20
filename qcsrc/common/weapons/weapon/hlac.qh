@@ -1,12 +1,17 @@
 #pragma once
 
+#include <common/colors.qh>
+#ifdef MENUQC
+	#include "blaster.qh"
+#endif
+
 CLASS(HLAC, Weapon)
 /* spawnfunc */ ATTRIB(HLAC, m_canonical_spawnfunc, string, "weapon_hlac");
 /* ammotype  */ ATTRIB(HLAC, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(HLAC, impulse, int, 6);
 /* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, 4000);
-/* color     */ ATTRIB(HLAC, wpcolor, vector, '0 1 0');
+/* color     */ ATTRIB(HLAC, m_color, vector, COLOR_WEP_HLAC);
 /* modelname */ ATTRIB(HLAC, mdl, string, "hlac");
 #ifdef GAMEQC
 /* model     */ ATTRIB(HLAC, m_model, Model, MDL_HLAC_ITEM);
@@ -48,7 +53,21 @@ CLASS(HLAC, Weapon)
 	END()
 	W_PROPS(X, HLAC, hlac)
 #undef X
-
+#ifdef MENUQC
+METHOD(HLAC, describe, string(HLAC this))
+{
+	TC(HLAC, this);
+	return sprintf(_("The %s (or HLAC for short) fires lasers in quick succession. "
+		"The projectiles it fires are similar to those of the %s\n\n"
+		"The secondary fire shoots a randomly scattered burst of multiple lasers at once\n\n"
+		"Unlike the %s, it consumes %s ammo for each laser shot, meaning that it cannot be used infinitely\n\n"
+		"The %s works best in close ranges, but the primary fire is also useful in medium ranges\n\n"
+		"A unique aspect of the %s is that the longer the primary fire is held, the more that the lasers will start to spread out. "
+		"This means releasing primary fire every now and then is important to restore accuracy. "
+		"Also, the %s has less spread when used while crouching"),
+	COLORED_NAME(HLAC), COLORED_NAME(Blaster), COLORED_NAME(Blaster), COLORED_NAME(Cells), COLORED_NAME(HLAC), COLORED_NAME(HLAC), COLORED_NAME(HLAC));
+}
+#endif
 ENDCLASS(HLAC)
 REGISTER_WEAPON(HLAC, NEW(HLAC));
 

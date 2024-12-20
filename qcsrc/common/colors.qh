@@ -1,0 +1,86 @@
+#pragma once
+
+/* 
+ * This file holds all m_color vals for the following,
+ * to avoid duplicate values, since some are referenced in multiple places
+ * (e.g. Vortex m_color in common/weapons/weapon/vortex.qh and in the describe method of ./rifle.qh):
+ *  - Weapons
+ *  - Items
+ *  - Buffs, powerups
+ *  - Nades
+ *  - Status effects
+ * Perhaps in future this file can be converted to something like gfx/menu/luma/skinvalues.txt
+ */
+
+const vector COLOR_WEP_ARC          = '1 1 1';
+const vector COLOR_WEP_BLASTER      = '1 0.5 0.5';
+const vector COLOR_WEP_CRYLINK      = '1 0.5 1';
+const vector COLOR_WEP_DEVASTATOR   = '1 1 0';
+const vector COLOR_WEP_ELECTRO      = '0 0.5 1';
+const vector COLOR_WEP_FIREBALL     = '1 0.5 0';
+const vector COLOR_WEP_HAGAR        = '1 1 0.5';
+const vector COLOR_WEP_HLAC         = '0 1 0';
+const vector COLOR_WEP_HOOK         = '0 0.5 0';
+const vector COLOR_WEP_MACHINEGUN   = '1 1 0';
+const vector COLOR_WEP_MINELAYER    = '0.75 1 0';
+const vector COLOR_WEP_MORTAR       = '1 0 0';
+const vector COLOR_WEP_PORTO        = '0.5 0.5 0.5';
+const vector COLOR_WEP_RIFLE        = '0.5 1 0';
+const vector COLOR_WEP_SEEKER       = '0.5 1 0';
+const vector COLOR_WEP_SHOCKWAVE    = '0.5 0.25 0';
+const vector COLOR_WEP_SHOTGUN      = '0.5 0.25 0';
+const vector COLOR_WEP_TUBA         = '0 1 0';
+const vector COLOR_WEP_VAPORIZER    = '0.5 1 1';
+const vector COLOR_WEP_VORTEX       = '0.5 1 1';
+const vector COLOR_WEP_OKHMG        = '0.5 0.5 0';
+const vector COLOR_WEP_OKMACHINEGUN = '1 1 0';
+const vector COLOR_WEP_OKNEX        = '0.5 1 1';
+const vector COLOR_WEP_OKRPC        = '0.5 0.5 0';
+const vector COLOR_WEP_OKSHOTGUN    = '0.5 0.25 0';
+
+const vector COLOR_ITEM_ARMOR   = '0 1 0';
+const vector COLOR_ITEM_HEALTH  = '1 0 0';
+const vector COLOR_ITEM_JETPACK = '0.5 0.5 0.5';
+
+const vector COLOR_POWERUP_JETPACKREGEN = '1 0.5 0';
+const vector COLOR_POWERUP_EXTRALIFE    = '1 0 0';
+const vector COLOR_POWERUP_INVISIBILITY = '0.5 0.5 1';
+const vector COLOR_POWERUP_SHIELD       = '1 0 1';
+const vector COLOR_POWERUP_SPEED        = '0.1 1 0.84';
+const vector COLOR_POWERUP_STRENGTH     = '0 0 1';
+
+const vector COLOR_BUFF_AMMO       = '0.76 1 0.1';
+const vector COLOR_BUFF_RESISTANCE = '0.36 0 0.07';
+const vector COLOR_BUFF_MEDIC      = '1 0.12 0';
+const vector COLOR_BUFF_BASH       = '1 0.39 0';
+const vector COLOR_BUFF_VAMPIRE    = '1 0 0.24';
+const vector COLOR_BUFF_DISABILITY = '0.94 0.3 1';
+const vector COLOR_BUFF_VENGEANCE  = '1 0.23 0.61';
+const vector COLOR_BUFF_JUMP       = '0.24 0.78 1';
+const vector COLOR_BUFF_INFERNO    = '1 0.62 0';
+const vector COLOR_BUFF_SWAPPER    = '0.63 0.36 1';
+const vector COLOR_BUFF_MAGNET     = '1 0.95 0.18';
+const vector COLOR_BUFF_LUCK       = '1 0.23 0.44';
+const vector COLOR_BUFF_FLIGHT     = '0.23 0.44 1';
+
+const vector COLOR_NADE_NORMAL      = '1 1 1';
+const vector COLOR_NADE_NAPALM      = '2 0.5 0';
+const vector COLOR_NADE_ICE         = '0 0.5 2';
+const vector COLOR_NADE_TRANSLOCATE = '1 0 1';
+const vector COLOR_NADE_SPAWN       = '1 0.9 0';
+const vector COLOR_NADE_HEAL        = '1 0 0';
+const vector COLOR_NADE_MONSTER     = '0.25 0.75 0';
+const vector COLOR_NADE_ENTRAP      = '0.15 0.85 0';
+const vector COLOR_NADE_VEIL        = '0.65 0.85 0.65';
+const vector COLOR_NADE_AMMO        = '0.66 0.33 0';
+const vector COLOR_NADE_DARKNESS    = '0.23 0 0.23';
+
+const vector COLOR_STATUSEFFECT_BURNING     = '1 0.62 0';
+const vector COLOR_STATUSEFFECT_SPAWNSHIELD = '0.36 1 0.07';
+const vector COLOR_STATUSEFFECT_STUNNED     = '0.67 0.84 1';
+const vector COLOR_STATUSEFFECT_WEBBED      = '0.94 0.3 1';
+
+// Useful macros for the guide
+#define COLORED_NAME(class) strcat(rgb_to_hexcolor(NEW(class).m_color), NEW(class).m_name, "^7")
+#define COLORED_NAME_WITH_CONCAT(class, concat) strcat(rgb_to_hexcolor(NEW(class).m_color), NEW(class).m_name, " ", concat, "^7")
+// These can't be used everywhere, or else it would cause circular includes by including "class"
