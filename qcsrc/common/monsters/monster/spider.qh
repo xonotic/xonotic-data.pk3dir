@@ -15,7 +15,7 @@ CLASS(Spider, Monster)
     ATTRIB(Spider, m_model, Model, MDL_MON_SPIDER);
 #endif
     ATTRIB(Spider, netname, string, "spider");
-    ATTRIB(Spider, monster_name, string, _("Spider"));
+    ATTRIB(Spider, m_name, string, _("Spider"));
 #ifdef MENUQC
     METHOD(Spider, describe, string(Spider this))
     {
