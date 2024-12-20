@@ -29,30 +29,35 @@ void item_armorsmall_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(ArmorSmall, NEW(Armor)) {
-    this.m_canonical_spawnfunc = "item_armor_small";
+CLASS(ArmorSmall, Armor)
+/* spawnfunc    */ ATTRIB(ArmorSmall, m_canonical_spawnfunc, string, "item_armor_small");
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model                =   MDL_ArmorSmall_ITEM;
-    this.m_sound                =   SND_ArmorSmall;
+/* spawnflags   */ ATTRIB(ArmorSmall, spawnflags, int, ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE);
+/* model        */ ATTRIB(ArmorSmall, m_model, Model, MDL_ArmorSmall_ITEM);
+/* sound        */ ATTRIB(ArmorSmall, m_sound, Sound, SND_ArmorSmall);
 #endif
-    this.netname                =   "armor_small";
-    this.m_name                 =   _("Small armor");
-    this.m_icon                 =   "armor_small";
+/* refname      */ ATTRIB(ArmorSmall, netname, string, "armor_small");
+/* itemname     */ ATTRIB(ArmorSmall, m_name, string, _("Small armor"));
+/* icon         */ ATTRIB(ArmorSmall, m_icon, string, // ...
 #ifdef CSQC
-    if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
-        this.m_icon             =   "armor"; // compatible with Xonotic v0.8.2 or lower
+    (precache_pic(strcat("gfx/hud/luma/", "health_small")) == "")
+        ? "armor" // compatible with Xonotic v0.8.2 or lower
+        : "armor_small"
+#else
+    "armor_small"
 #endif
+);
 #ifdef SVQC
-    this.m_mins                 =   ITEM_S_MINS;
-    this.m_maxs                 =   ITEM_S_MAXS;
-    this.m_itemid               =   IT_RESOURCE;
-    this.m_respawntime          =   GET(g_pickup_respawntime_armor_small);
-    this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_armor_small);
-    this.m_pickupanyway         =   GET(g_pickup_armorsmall_anyway);
-    this.m_iteminit             =   item_armorsmall_init;
+/* minsize      */ ATTRIB(ArmorSmall, m_mins, vector, ITEM_S_MINS);
+/* maxsize      */ ATTRIB(ArmorSmall, m_maxs, vector, ITEM_S_MAXS);
+/* itemid       */ ATTRIB(ArmorSmall, m_itemid, int, IT_RESOURCE);
+/* respawntime  */ ATTRIB(ArmorSmall, m_respawntime, float, GET(g_pickup_respawntime_armor_small));
+/*              */ ATTRIB(ArmorSmall, m_respawntimejitter, float, GET(g_pickup_respawntimejitter_armor_small));
+/* pickupanyway */ ATTRIB(ArmorSmall, m_pickupanyway, float, GET(g_pickup_armorsmall_anyway));
+/* iteminit     */ ATTRIB(ArmorSmall, m_iteminit, void(Pickup this, entity item), item_armorsmall_init);
 #endif
-}
+ENDCLASS(ArmorSmall)
+REGISTER_ITEM(ArmorSmall, NEW(ArmorSmall));
 
 SPAWNFUNC_ITEM(item_armor_small, ITEM_ArmorSmall)
 
@@ -73,30 +78,35 @@ void item_armormedium_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(ArmorMedium, NEW(Armor)) {
-    this.m_canonical_spawnfunc = "item_armor_medium";
+CLASS(ArmorMedium, Armor)
+/* spawnfunc    */ ATTRIB(ArmorMedium, m_canonical_spawnfunc, string, "item_armor_medium");
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model                =   MDL_ArmorMedium_ITEM;
-    this.m_sound                =   SND_ArmorMedium;
+/* spawnflags   */ ATTRIB(ArmorMedium, spawnflags, int, ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE);
+/* model        */ ATTRIB(ArmorMedium, m_model, Model, MDL_ArmorMedium_ITEM);
+/* sound        */ ATTRIB(ArmorMedium, m_sound, Sound, SND_ArmorMedium);
 #endif
-    this.netname                =   "armor_medium";
-    this.m_name                 =   _("Medium armor");
-    this.m_icon                 =   "armor_medium";
+/* refname      */ ATTRIB(ArmorMedium, netname, string, "armor_medium");
+/* itemname     */ ATTRIB(ArmorMedium, m_name, string, _("Medium armor"));
+/* icon         */ ATTRIB(ArmorMedium, m_icon, string, // ...
 #ifdef CSQC
-    if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
-        this.m_icon             =   "armor"; // compatible with Xonotic v0.8.2 or lower
+    (precache_pic(strcat("gfx/hud/luma/", "armor_medium")) == "")
+        ? "armor" // compatible with Xonotic v0.8.2 or lower
+        : "armor_medium"
+#else
+    "armor_medium"
 #endif
+);
 #ifdef SVQC
-    this.m_mins                 =   ITEM_S_MINS;
-    this.m_maxs                 =   ITEM_S_MAXS;
-    this.m_itemid               =   IT_RESOURCE;
-    this.m_respawntime          =   GET(g_pickup_respawntime_armor_medium);
-    this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_armor_medium);
-    this.m_pickupanyway         =   GET(g_pickup_armormedium_anyway);
-    this.m_iteminit             =   item_armormedium_init;
+/* minsize      */ ATTRIB(ArmorMedium, m_mins, vector, ITEM_S_MINS);
+/* maxsize      */ ATTRIB(ArmorMedium, m_maxs, vector, ITEM_S_MAXS);
+/* itemid       */ ATTRIB(ArmorMedium, m_itemid, int, IT_RESOURCE);
+/* respawntime  */ ATTRIB(ArmorMedium, m_respawntime, float, GET(g_pickup_respawntime_armor_medium));
+/*              */ ATTRIB(ArmorMedium, m_respawntimejitter, float, GET(g_pickup_respawntimejitter_armor_medium));
+/* pickupanyway */ ATTRIB(ArmorMedium, m_pickupanyway, float, GET(g_pickup_armormedium_anyway));
+/* iteminit     */ ATTRIB(ArmorMedium, m_iteminit, void(Pickup this, entity item), item_armormedium_init);
 #endif
-}
+ENDCLASS(ArmorMedium)
+REGISTER_ITEM(ArmorMedium, NEW(ArmorMedium));
 
 SPAWNFUNC_ITEM(item_armor_medium, ITEM_ArmorMedium)
 
@@ -117,30 +127,35 @@ void item_armorbig_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(ArmorBig, NEW(Armor)) {
-    this.m_canonical_spawnfunc = "item_armor_big";
+CLASS(ArmorBig, Armor)
+/* spawnfunc    */ ATTRIB(ArmorBig, m_canonical_spawnfunc, string, "item_armor_big");
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model                =   MDL_ArmorBig_ITEM;
-    this.m_sound                =   SND_ArmorBig;
+/* spawnflags   */ ATTRIB(ArmorBig, spawnflags, int, ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE);
+/* model        */ ATTRIB(ArmorBig, m_model, Model, MDL_ArmorBig_ITEM);
+/* sound        */ ATTRIB(ArmorBig, m_sound, Sound, SND_ArmorBig);
 #endif
-    this.netname                =   "armor_big";
-    this.m_name                 =   _("Big armor");
-    this.m_icon                 =   "armor_big";
+/* refname      */ ATTRIB(ArmorBig, netname, string, "armor_big");
+/* itemname     */ ATTRIB(ArmorBig, m_name, string, _("Big armor"));
+/* icon         */ ATTRIB(ArmorBig, m_icon, string, // ...
 #ifdef CSQC
-    if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
-        this.m_icon             =   "armor"; // compatible with Xonotic v0.8.2 or lower
+    (precache_pic(strcat("gfx/hud/luma/", "armor_big")) == "")
+        ? "armor" // compatible with Xonotic v0.8.2 or lower
+        : "armor_big"
+#else
+    "armor_big"
 #endif
-    this.m_color                =   '0 1 0';
-    this.m_waypoint             =   _("Big armor");
+);
+/* color        */ ATTRIB(ArmorBig, m_color, vector, '0 1 0');
+/* wptext       */ ATTRIB(ArmorBig, m_waypoint, string, _("Big armor"));
 #ifdef SVQC
-    this.m_itemid               =   IT_RESOURCE;
-    this.m_respawntime          =   GET(g_pickup_respawntime_armor_big);
-    this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_armor_big);
-    this.m_pickupanyway         =   GET(g_pickup_armorbig_anyway);
-    this.m_iteminit             =   item_armorbig_init;
+/* itemid       */ ATTRIB(ArmorBig, m_itemid, int, IT_RESOURCE);
+/* respawntime  */ ATTRIB(ArmorBig, m_respawntime, float, GET(g_pickup_respawntime_armor_big));
+/*              */ ATTRIB(ArmorBig, m_respawntimejitter, float, GET(g_pickup_respawntimejitter_armor_big));
+/* pickupanyway */ ATTRIB(ArmorBig, m_pickupanyway, float, GET(g_pickup_armorbig_anyway));
+/* iteminit     */ ATTRIB(ArmorBig, m_iteminit, void(Pickup this, entity item), item_armorbig_init);
 #endif
-}
+ENDCLASS(ArmorBig)
+REGISTER_ITEM(ArmorBig, NEW(ArmorBig));
 
 SPAWNFUNC_ITEM(item_armor_big, ITEM_ArmorBig)
 
@@ -161,31 +176,36 @@ void item_armormega_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(ArmorMega, NEW(Armor)) {
-    this.m_canonical_spawnfunc = "item_armor_mega";
+CLASS(ArmorMega, Armor)
+/* spawnfunc    */ ATTRIB(ArmorMega, m_canonical_spawnfunc, string, "item_armor_mega");
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model                =   MDL_ArmorMega_ITEM;
-    this.m_sound                =   SND_ArmorMega;
+/* spawnflags   */ ATTRIB(ArmorMega, spawnflags, int, ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE);
+/* model        */ ATTRIB(ArmorMega, m_model, Model, MDL_ArmorMega_ITEM);
+/* sound        */ ATTRIB(ArmorMega, m_sound, Sound, SND_ArmorMega);
 #endif
-    this.netname                =   "armor_mega";
-    this.m_name                 =   _("Mega armor");
-    this.m_icon                 =   "armor_mega";
+/* refname      */ ATTRIB(ArmorMega, netname, string, "armor_mega");
+/* itemname     */ ATTRIB(ArmorMega, m_name, string, _("Mega armor"));
+/* icon         */ ATTRIB(ArmorMega, m_icon, string, // ...
 #ifdef CSQC
-    if(precache_pic(strcat("gfx/hud/luma/", this.m_icon)) == "")
-        this.m_icon             =   "item_large_armor"; // compatible with Xonotic v0.8.2 or lower
+    (precache_pic(strcat("gfx/hud/luma/", "armor_mega")) == "")
+        ? "item_large_armor" // compatible with Xonotic v0.8.2 or lower
+        : "armor_mega"
+#else
+    "armor_mega"
 #endif
-    this.m_color                =   '0 1 0';
-    this.m_waypoint             =   _("Mega armor");
-    this.m_waypointblink        =   2;
+);
+/* color        */ ATTRIB(ArmorMega, m_color, vector, '0 1 0');
+/* wptext       */ ATTRIB(ArmorMega, m_waypoint, string, _("Mega armor"));
+/* wpblink      */ ATTRIB(ArmorMega, m_waypointblink, int, 2);
 #ifdef SVQC
-    this.m_maxs                 =   ITEM_L_MAXS;
-    this.m_itemid               =   IT_RESOURCE;
-    this.m_respawntime          =   GET(g_pickup_respawntime_armor_mega);
-    this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_armor_mega);
-    this.m_pickupanyway         =   GET(g_pickup_armormega_anyway);
-    this.m_iteminit             =   item_armormega_init;
+/* maxsize      */ ATTRIB(ArmorMega, m_maxs, vector, ITEM_L_MAXS);
+/* itemid       */ ATTRIB(ArmorMega, m_itemid, int, IT_RESOURCE);
+/* respawntime  */ ATTRIB(ArmorMega, m_respawntime, float, GET(g_pickup_respawntime_armor_mega));
+/*              */ ATTRIB(ArmorMega, m_respawntimejitter, float, GET(g_pickup_respawntimejitter_armor_mega));
+/* pickupanyway */ ATTRIB(ArmorMega, m_pickupanyway, float, GET(g_pickup_armormega_anyway));
+/* iteminit     */ ATTRIB(ArmorMega, m_iteminit, void(Pickup this, entity item), item_armormega_init);
 #endif
-}
+ENDCLASS(ArmorMega)
+REGISTER_ITEM(ArmorMega, NEW(ArmorMega));
 
 SPAWNFUNC_ITEM(item_armor_mega, ITEM_ArmorMega)
