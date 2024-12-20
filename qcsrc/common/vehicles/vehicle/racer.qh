@@ -1,6 +1,9 @@
 #pragma once
 
 #include "racer_weapon.qh"
+#ifdef MENUQC
+	#include <common/colors.qh>
+#endif
 
 CLASS(Racer, Vehicle)
 /* spawnflags */ ATTRIB(Racer, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
@@ -24,9 +27,11 @@ CLASS(Racer, Vehicle)
 METHOD(Racer, describe, string(Racer this))
 {
 	TC(Racer, this);
-	return _("The Racer vehicle looks like a jet, but does not fly uwpards very well. It seats only one passenger, who becomes the pilot\n\n"
-	         "It can be accelerated by pressing the \"+jump\" bind, which consumes power from the same source as the primary weapon\n\n"
-	         "The Racer's primary weapon is a laser and the secondary weapon is energy balls that explode on impact");
+	return sprintf(_("The %s vehicle looks like a jet, but does not fly uwpards very well. "
+		"It seats only one passenger, who becomes the pilot\n\n"
+		"It can be accelerated by pressing the ^3+jump^7 bind, which consumes power from the same source as the primary weapon\n\n"
+		"The %s's primary weapon is a laser and the secondary weapon is energy balls that explode on impact"),
+	COLORED_NAME(Racer), COLORED_NAME(Racer));
 }
 #endif
 ENDCLASS(Racer)

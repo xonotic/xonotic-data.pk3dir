@@ -1,6 +1,9 @@
 #pragma once
 
 #include <common/colors.qh>
+#ifdef MENUQC
+	#include "blaster.qh"
+#endif
 
 CLASS(HLAC, Weapon)
 /* spawnfunc */ ATTRIB(HLAC, m_canonical_spawnfunc, string, "weapon_hlac");
@@ -54,14 +57,15 @@ CLASS(HLAC, Weapon)
 METHOD(HLAC, describe, string(HLAC this))
 {
 	TC(HLAC, this);
-	return _("The Heavy Assualt Laser Cannon (or HLAC for short) fires lasers in quick succession. "
-	         "The projectiles it fires are similar to those of the Blaster\n\n"
-	         "The secondary fire shoots a randomly scattered burst of multiple lasers at once\n\n"
-	         "Unlike the Blaster, it consumes Cells ammo for each laser shot, meaning that it cannot be used infinitely\n\n"
-	         "The HLAC works best in close ranges, but the primary fire is also useful in medium ranges\n\n"
-	         "A unique aspect of the HLAC is that the longer the primary fire is held, the more that the lasers will start to spread out. "
-	         "This means releasing primary fire every now and then is important to restore accuracy. "
-	         "Also, the HLAC has less spread when used while crouching");
+	return sprintf(_("The %s (or HLAC for short) fires lasers in quick succession. "
+		"The projectiles it fires are similar to those of the %s\n\n"
+		"The secondary fire shoots a randomly scattered burst of multiple lasers at once\n\n"
+		"Unlike the %s, it consumes %s ammo for each laser shot, meaning that it cannot be used infinitely\n\n"
+		"The %s works best in close ranges, but the primary fire is also useful in medium ranges\n\n"
+		"A unique aspect of the %s is that the longer the primary fire is held, the more that the lasers will start to spread out. "
+		"This means releasing primary fire every now and then is important to restore accuracy. "
+		"Also, the %s has less spread when used while crouching"),
+	COLORED_NAME(HLAC), COLORED_NAME(Blaster), COLORED_NAME(Blaster), COLORED_NAME(Cells), COLORED_NAME(HLAC), COLORED_NAME(HLAC), COLORED_NAME(HLAC));
 }
 #endif
 ENDCLASS(HLAC)

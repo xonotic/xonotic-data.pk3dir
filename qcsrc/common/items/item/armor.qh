@@ -4,9 +4,10 @@
 
 #include "pickup.qh"
 CLASS(Armor, Pickup)
+/* color      */ ATTRIB(Armor, m_color, vector, COLOR_ITEM_ARMOR);
 #ifdef SVQC
-    ATTRIB(Armor, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
-    ATTRIB(Armor, m_botvalue, int, 5000);
+/* pickupfunc */ ATTRIB(Armor, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
+/* botvalue   */ ATTRIB(Armor, m_botvalue, int, 5000);
 #endif
 ENDCLASS(Armor)
 
@@ -63,8 +64,9 @@ CLASS(ArmorSmall, Armor)
 METHOD(ArmorSmall, describe, string(ArmorSmall this))
 {
     TC(ArmorSmall, this);
-    return _("The Small armor provides you a small amount of armor when picked up, "
-             "protecting you from damage by absorbing incoming hits until it is depleted");
+    return sprintf(_("The %s provides you a small amount of armor when picked up, "
+        "protecting you from damage by absorbing incoming hits until it is depleted"),
+    COLORED_NAME(ArmorSmall));
 }
 #endif
 ENDCLASS(ArmorSmall)
@@ -121,8 +123,9 @@ CLASS(ArmorMedium, Armor)
 METHOD(ArmorMedium, describe, string(ArmorMedium this))
 {
     TC(ArmorMedium, this);
-    return _("The Medium armor provides you a medium amount of armor when picked up, "
-             "protecting you from damage by absorbing incoming hits until it is depleted");
+    return sprintf(_("The %s provides you a medium amount of armor when picked up, "
+        "protecting you from damage by absorbing incoming hits until it is depleted"),
+    COLORED_NAME(ArmorMedium));
 }
 #endif
 ENDCLASS(ArmorMedium)
@@ -166,7 +169,6 @@ CLASS(ArmorBig, Armor)
     "armor_big"
 #endif
 );
-/* color        */ ATTRIB(ArmorBig, m_color, vector, COLOR_ITEM_ARMOR);
 /* wptext       */ ATTRIB(ArmorBig, m_waypoint, string, _("Big armor"));
 #ifdef SVQC
 /* itemid       */ ATTRIB(ArmorBig, m_itemid, int, IT_RESOURCE);
@@ -179,8 +181,9 @@ CLASS(ArmorBig, Armor)
 METHOD(ArmorBig, describe, string(ArmorBig this))
 {
     TC(ArmorBig, this);
-    return _("The Big armor provides you a large amount of armor when picked up, "
-             "protecting you from damage by absorbing incoming hits until it is depleted");
+    return sprintf(_("The %s provides you a large amount of armor when picked up, "
+        "protecting you from damage by absorbing incoming hits until it is depleted"),
+    COLORED_NAME(ArmorBig));
 }
 #endif
 ENDCLASS(ArmorBig)
@@ -224,7 +227,6 @@ CLASS(ArmorMega, Armor)
     "armor_mega"
 #endif
 );
-/* color        */ ATTRIB(ArmorMega, m_color, vector, COLOR_ITEM_ARMOR);
 /* wptext       */ ATTRIB(ArmorMega, m_waypoint, string, _("Mega armor"));
 /* wpblink      */ ATTRIB(ArmorMega, m_waypointblink, int, 2);
 #ifdef SVQC
@@ -239,9 +241,10 @@ CLASS(ArmorMega, Armor)
 METHOD(ArmorMega, describe, string(ArmorMega this))
 {
     TC(ArmorMega, this);
-    return _("The Mega armor provides you a huge amount of armor when picked up, "
-             "protecting you from damage by absorbing incoming hits until it is depleted\n\n"
-             "It tends to be one of the most highly contested items on a map, particularly in game modes like Duel");
+    return sprintf(_("The %s provides you a huge amount of armor when picked up, "
+        "protecting you from damage by absorbing incoming hits until it is depleted\n\n"
+        "It tends to be one of the most highly contested items on a map, particularly in game modes like Duel"),
+    COLORED_NAME(ArmorMega));
 }
 #endif
 ENDCLASS(ArmorMega)

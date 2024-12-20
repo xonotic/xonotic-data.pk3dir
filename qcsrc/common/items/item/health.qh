@@ -4,9 +4,10 @@
 
 #include "pickup.qh"
 CLASS(Health, Pickup)
+/* color      */ ATTRIB(Health, m_color, vector, COLOR_ITEM_HEALTH);
 #ifdef SVQC
-    ATTRIB(Health, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
-    ATTRIB(Health, m_botvalue, int, 5000);
+/* pickupfunc */ ATTRIB(Health, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
+/* botvalue   */ ATTRIB(Health, m_botvalue, int, 5000);
 #endif
 ENDCLASS(Health)
 
@@ -63,8 +64,9 @@ CLASS(HealthSmall, Health)
 METHOD(HealthSmall, describe, string(HealthSmall this))
 {
     TC(HealthSmall, this);
-    return _("The Small health restores a small amount of health when picked up, "
-             "helping you recover from damage taken during combat");
+    return sprintf(_("The %s restores a small amount of health when picked up, "
+        "helping you recover from damage taken during combat"),
+    COLORED_NAME(HealthSmall));
 }
 #endif
 ENDCLASS(HealthSmall)
@@ -121,8 +123,9 @@ CLASS(HealthMedium, Health)
 METHOD(HealthMedium, describe, string(HealthMedium this))
 {
     TC(HealthMedium, this);
-    return _("The Medium health restores a medium amount of health when picked up, "
-             "helping you recover from damage taken during combat");
+    return sprintf(_("The %s restores a medium amount of health when picked up, "
+        "helping you recover from damage taken during combat"),
+    COLORED_NAME(HealthMedium));
 }
 #endif
 ENDCLASS(HealthMedium)
@@ -166,7 +169,6 @@ CLASS(HealthBig, Health)
     "health_big"
 #endif
 );
-/* color        */ ATTRIB(HealthBig, m_color, vector, COLOR_ITEM_HEALTH);
 /* wptext       */ ATTRIB(HealthBig, m_waypoint, string, _("Big health"));
 #ifdef SVQC
 /* itemid       */ ATTRIB(HealthBig, m_itemid, int, IT_RESOURCE);
@@ -179,8 +181,9 @@ CLASS(HealthBig, Health)
 METHOD(HealthBig, describe, string(HealthBig this))
 {
     TC(HealthBig, this);
-    return _("The Big health restores a large amount of health when picked up, "
-             "helping you recover from damage taken during combat");
+    return sprintf(_("The %s restores a large amount of health when picked up, "
+        "helping you recover from damage taken during combat"),
+    COLORED_NAME(HealthBig));
 }
 #endif
 ENDCLASS(HealthBig)
@@ -223,7 +226,6 @@ CLASS(HealthMega, Health)
     "health_mega"
 #endif
 );
-/* color        */ ATTRIB(HealthMega, m_color, vector, COLOR_ITEM_HEALTH);
 /* wptext       */ ATTRIB(HealthMega, m_waypoint, string, _("Mega health"));
 /* wpblink      */ ATTRIB(HealthMega, m_waypointblink, int, 2);
 #ifdef SVQC
@@ -238,9 +240,10 @@ CLASS(HealthMega, Health)
 METHOD(HealthMega, describe, string(HealthMega this))
 {
     TC(HealthMega, this);
-    return _("The Mega health restores a huge amount of health when picked up, "
-             "helping you recover from damage taken during combat\n\n"
-             "It tends to be one of the most highly contested items on a map, particularly in game modes like Duel");
+    return sprintf(_("The %s restores a huge amount of health when picked up, "
+        "helping you recover from damage taken during combat\n\n"
+        "It tends to be one of the most highly contested items on a map, particularly in game modes like Duel"),
+    COLORED_NAME(HealthMega));
 }
 #endif
 ENDCLASS(HealthMega)

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <common/colors.qh>
+#ifdef MENUQC
+	#include "rifle.qh" // for its color
+#endif
 
 CLASS(Vortex, Weapon)
 /* spawnfunc */ ATTRIB(Vortex, m_canonical_spawnfunc, string, "weapon_vortex");
@@ -67,12 +70,13 @@ CLASS(Vortex, Weapon)
 METHOD(Vortex, describe, string(Vortex this))
 {
 	TC(Vortex, this);
-	return _("The Vortex fires harmful beams of energy that traverse the map instantaneously and deal a significant chunk of damage on impact\n\n"
-	         "The secondary fire zooms in when held, allowing for ease of aiming\n\n"
-	         "It consumes Cells ammo for each bullet shot\n\n"
-	         "Unlike the Rifle, the Vortex doesn't need to be reloaded manually, although you have to wait a couple seconds between shots. "
-	         "Uniquely, the Vortex can be fired slightly before it finishes completely reloading, albeit dealing slightly less damage\n\n"
-	         "Similar to the Rifle, the Vortex can be used at any range, but it stands out at long ranges");
+	return sprintf(_("The %s fires harmful beams of energy that traverse the map instantaneously and deal a significant chunk of damage on impact\n\n"
+		"The secondary fire zooms in when held, allowing for ease of aiming\n\n"
+		"It consumes %s ammo for each bullet shot\n\n"
+		"Unlike the %s, the %s doesn't need to be reloaded manually, although you have to wait a couple seconds between shots. "
+		"Uniquely, the %s can be fired slightly before it finishes completely reloading, albeit dealing slightly less damage\n\n"
+		"Similar to the %s, the %s can be used at any range, but it stands out at long ranges"),
+	COLORED_NAME(Vortex), COLORED_NAME(Cells), COLORED_NAME(Rifle), COLORED_NAME(Vortex), COLORED_NAME(Vortex), COLORED_NAME(Rifle), COLORED_NAME(Vortex));
 }
 #endif
 ENDCLASS(Vortex)

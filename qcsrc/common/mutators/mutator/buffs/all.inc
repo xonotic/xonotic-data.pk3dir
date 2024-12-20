@@ -27,7 +27,8 @@ CLASS(AmmoBuff, Buff)
     METHOD(AmmoBuff, describe, string(AmmoBuff this))
     {
         TC(AmmoBuff, this);
-        return _("The Ammo Buff gives you infinite ammo until the buff expires, so you don't need to worry about running out of ammo");
+        return sprintf(_("The %s gives you infinite ammo until the buff expires, so you don't need to worry about running out of ammo"),
+        COLORED_NAME_WITH_CONCAT(AmmoBuff, _("Buff")));
     }
 #endif
 ENDCLASS(AmmoBuff)
@@ -45,7 +46,9 @@ CLASS(ResistanceBuff, Buff)
     METHOD(ResistanceBuff, describe, string(ResistanceBuff this))
     {
         TC(ResistanceBuff, this);
-        return _("The Resistance Buff greatly reduces your damage taken while the buff is active");
+        return sprintf(_("The %s greatly reduces your damage taken while the buff is active\n\n"
+            "This also impacts the damage you deal to yourself"),
+        COLORED_NAME_WITH_CONCAT(ResistanceBuff, _("Buff")));
     }
 #endif
 ENDCLASS(ResistanceBuff)
@@ -63,8 +66,9 @@ CLASS(MedicBuff, Buff)
     METHOD(MedicBuff, describe, string(MedicBuff this))
     {
         TC(MedicBuff, this);
-        return _("The Medic Buff increases health regeneration speed, increases the maximum health you can have before health starts to rot, and reduces health rot speed until the buff expires\n\n"
-                 "It also gives you a chance to survive a fatal hit, with a small amount of health left over");
+        return sprintf(_("The %s increases health regeneration speed, increases the maximum health you can have before health starts to rot, and reduces health rot speed until the buff expires\n\n"
+            "It also gives you a chance to survive a fatal hit, with a small amount of health left over"),
+        COLORED_NAME_WITH_CONCAT(MedicBuff, _("Buff")));
     }
 #endif
 ENDCLASS(MedicBuff)
@@ -83,8 +87,9 @@ CLASS(BashBuff, Buff)
     METHOD(BashBuff, describe, string(BashBuff this))
     {
         TC(BashBuff, this);
-        return _("The Bash Buff increases knockback force you deal, and makes you immune to knockback while the buff is active\n\n"
-                 "It also slightly increases knockback you deal to yourself");
+        return sprintf(_("The %s increases knockback force you deal, and makes you immune to knockback while the buff is active\n\n"
+            "It also slightly increases knockback you deal to yourself"),
+        COLORED_NAME_WITH_CONCAT(BashBuff, _("Buff")));
     }
 #endif
 ENDCLASS(BashBuff)
@@ -102,7 +107,8 @@ CLASS(VampireBuff, Buff)
     METHOD(VampireBuff, describe, string(VampireBuff this))
     {
         TC(VampireBuff, this);
-        return _("The Vampire Buff converts some of the damage you deal to enemies and monsters into health for yourself, until the buff expires");
+        return sprintf(_("The %s converts some of the damage you deal to enemies and monsters into health for yourself, until the buff expires"),
+        COLORED_NAME_WITH_CONCAT(VampireBuff, _("Buff")));
     }
 #endif
 ENDCLASS(VampireBuff)
@@ -120,8 +126,9 @@ CLASS(DisabilityBuff, Buff)
     METHOD(DisabilityBuff, describe, string(DisabilityBuff this))
     {
         TC(DisabilityBuff, this);
-        return _("The Disability Buff causes your enemies and monsters to slow down for a few seconds when you attack them, while the buff is active\n\n"
-                 "This is particularly useful against speedy players, especially in Capture The Flag");
+        return sprintf(_("The %s causes your enemies and monsters to slow down for a few seconds when you attack them, while the buff is active\n\n"
+            "This is particularly useful against speedy players, especially in Capture The Flag"),
+        COLORED_NAME_WITH_CONCAT(DisabilityBuff, _("Buff")));
     }
 #endif
 ENDCLASS(DisabilityBuff)
@@ -138,7 +145,8 @@ CLASS(VengeanceBuff, Buff)
     METHOD(VengeanceBuff, describe, string(VengeanceBuff this))
     {
         TC(VengeanceBuff, this);
-        return _("The Vengeance Buff reciprocates a portion of the damage enemies deal to you onto them, until the buff expires");
+        return sprintf(_("The %s reciprocates a portion of the damage enemies deal to you onto them, until the buff expires"),
+        COLORED_NAME_WITH_CONCAT(VengeanceBuff, _("Buff")));
     }
 #endif
 ENDCLASS(VengeanceBuff)
@@ -156,7 +164,8 @@ CLASS(JumpBuff, Buff)
     METHOD(JumpBuff, describe, string(JumpBuff this))
     {
         TC(JumpBuff, this);
-        return _("The Jump Buff greatly increases your jump height, while the buff is active");
+        return sprintf(_("The %s greatly increases your jump height, while the buff is active"),
+        COLORED_NAME_WITH_CONCAT(JumpBuff, _("Buff")));
     }
 #endif
 ENDCLASS(JumpBuff)
@@ -174,7 +183,8 @@ CLASS(InfernoBuff, Buff)
     METHOD(InfernoBuff, describe, string(InfernoBuff this))
     {
         TC(InfernoBuff, this);
-        return _("The Inferno Buff sets any enemies or monsters you attack alight, dealing burn damage to them for several seconds until the buff expires");
+        return sprintf(_("The %s sets any enemies or monsters you attack alight, dealing burn damage to them for several seconds until the buff expires"),
+        COLORED_NAME_WITH_CONCAT(InfernoBuff, _("Buff")));
     }
 #endif
 ENDCLASS(InfernoBuff)
@@ -192,8 +202,9 @@ CLASS(SwapperBuff, Buff)
     METHOD(SwapperBuff, describe, string(SwapperBuff this))
     {
         TC(SwapperBuff, this);
-        return _("The Swapper Buff allows you to press the \"dropweapon\" bind to switch places with a nearby enemy once\n\n"
-                 "A common usage of this Buff is to jump over the map's void, then swap with an enemy, to cause them to fall into the void");
+        return sprintf(_("The %s allows you to press the ^3dropweapon^7 bind to switch places with a nearby enemy once\n\n"
+            "A common usage of this Buff is to jump over the map's void, then swap with an enemy, to cause them to fall into the void"),
+        COLORED_NAME_WITH_CONCAT(SwapperBuff, _("Buff")));
     }
 #endif
 ENDCLASS(SwapperBuff)
@@ -211,7 +222,8 @@ CLASS(MagnetBuff, Buff)
     METHOD(MagnetBuff, describe, string(MagnetBuff this))
     {
         TC(MagnetBuff, this);
-        return _("The Magnet Buff greatly increases your item pickup range, collecting nearby items for you while the buff is active");
+        return sprintf(_("The %s greatly increases your item pickup range, collecting nearby items for you while the buff is active"),
+        COLORED_NAME_WITH_CONCAT(MagnetBuff, _("Buff")));
     }
 #endif
 ENDCLASS(MagnetBuff)
@@ -228,7 +240,8 @@ CLASS(LuckBuff, Buff)
     METHOD(LuckBuff, describe, string(LuckBuff this))
     {
         TC(LuckBuff, this);
-        return _("While you have the Luck Buff, each attack has a chance of being a critical hit with greatly increased damage");
+        return sprintf(_("While you have the %s, each attack has a chance of being a critical hit with greatly increased damage"),
+        COLORED_NAME_WITH_CONCAT(LuckBuff, _("Buff")));
     }
 #endif
 ENDCLASS(LuckBuff)
@@ -245,7 +258,8 @@ CLASS(FlightBuff, Buff)
     METHOD(FlightBuff, describe, string(FlightBuff this))
     {
         TC(FlightBuff, this);
-        return _("While you have the Flight Buff, you can crouch while midair to switch your gravity, allowing flight");
+        return sprintf(_("While you have the %s, you can crouch while midair to switch your gravity, allowing flight"),
+        COLORED_NAME_WITH_CONCAT(FlightBuff, _("Buff")));
     }
 #endif
 ENDCLASS(FlightBuff)
