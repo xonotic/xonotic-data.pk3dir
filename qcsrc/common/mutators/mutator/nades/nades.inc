@@ -8,6 +8,9 @@ MACRO_END
 #endif
 
 CLASS(NormalNade, Nade)
+    ATTRIB(NormalNade, m_color, vector, COLOR_NADE_NORMAL);
+    ATTRIB(NormalNade, m_name, string, _("Grenade"));
+    ATTRIB(NormalNade, m_icon, string, "nade_normal");
 #ifdef MENUQC
     METHOD(NormalNade, describe, string(NormalNade this))
     {
@@ -18,7 +21,6 @@ CLASS(NormalNade, Nade)
 #endif
 ENDCLASS(NormalNade)
 REGISTER_NADE(NORMAL, NEW(NormalNade)) {
-    this.m_color = COLOR_NADE_NORMAL;
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE, EFFECT_Null);
     NADE_PROJECTILE(1, PROJECTILE_NADE_BURN, EFFECT_Null);
@@ -26,6 +28,9 @@ REGISTER_NADE(NORMAL, NEW(NormalNade)) {
 }
 
 CLASS(NapalmNade, Nade)
+    ATTRIB(NapalmNade, m_color, vector, COLOR_NADE_NAPALM);
+    ATTRIB(NapalmNade, m_name, string, _("Napalm grenade"));
+    ATTRIB(NapalmNade, m_icon, string, "nade_napalm");
 #ifdef MENUQC
     METHOD(NapalmNade, describe, string(NapalmNade this))
     {
@@ -36,9 +41,6 @@ CLASS(NapalmNade, Nade)
 #endif
 ENDCLASS(NapalmNade)
 REGISTER_NADE(NAPALM, NEW(NapalmNade)) {
-    this.m_color = COLOR_NADE_NAPALM;
-    this.m_name = _("Napalm grenade");
-    this.m_icon = "nade_napalm";
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE_NAPALM, EFFECT_TR_ROCKET);
     NADE_PROJECTILE(1, PROJECTILE_NADE_NAPALM_BURN, EFFECT_SPIDERBOT_ROCKET_TRAIL);
@@ -46,6 +48,9 @@ REGISTER_NADE(NAPALM, NEW(NapalmNade)) {
 }
 
 CLASS(IceNade, Nade)
+    ATTRIB(IceNade, m_color, vector, COLOR_NADE_ICE);
+    ATTRIB(IceNade, m_name, string, _("Ice grenade"));
+    ATTRIB(IceNade, m_icon, string, "nade_ice");
 #ifdef MENUQC
     METHOD(IceNade, describe, string(IceNade this))
     {
@@ -56,9 +61,6 @@ CLASS(IceNade, Nade)
 #endif
 ENDCLASS(IceNade)
 REGISTER_NADE(ICE, NEW(IceNade)) {
-    this.m_color = COLOR_NADE_ICE;
-    this.m_name = _("Ice grenade");
-    this.m_icon = "nade_ice";
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE_ICE, EFFECT_TR_NEXUIZPLASMA);
     NADE_PROJECTILE(1, PROJECTILE_NADE_ICE_BURN, EFFECT_RACER_ROCKET_TRAIL);
@@ -66,6 +68,9 @@ REGISTER_NADE(ICE, NEW(IceNade)) {
 }
 
 CLASS(TranslocateNade, Nade)
+    ATTRIB(TranslocateNade, m_color, vector, COLOR_NADE_TRANSLOCATE);
+    ATTRIB(TranslocateNade, m_name, string, _("Translocate grenade"));
+    ATTRIB(TranslocateNade, m_icon, string, "nade_translocate");
 #ifdef MENUQC
     METHOD(TranslocateNade, describe, string(TranslocateNade this))
     {
@@ -75,9 +80,6 @@ CLASS(TranslocateNade, Nade)
 #endif
 ENDCLASS(TranslocateNade)
 REGISTER_NADE(TRANSLOCATE, NEW(TranslocateNade)) {
-    this.m_color = COLOR_NADE_TRANSLOCATE;
-    this.m_name = _("Translocate grenade");
-    this.m_icon = "nade_translocate";
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE_TRANSLOCATE, EFFECT_TR_CRYLINKPLASMA);
     NADE_PROJECTILE(1, PROJECTILE_NADE_TRANSLOCATE, EFFECT_TR_CRYLINKPLASMA);
@@ -85,6 +87,9 @@ REGISTER_NADE(TRANSLOCATE, NEW(TranslocateNade)) {
 }
 
 CLASS(SpawnNade, Nade)
+    ATTRIB(SpawnNade, m_color, vector, COLOR_NADE_SPAWN);
+    ATTRIB(SpawnNade, m_name, string, _("Spawn grenade"));
+    ATTRIB(SpawnNade, m_icon, string, "nade_spawn");
 #ifdef MENUQC
     METHOD(SpawnNade, describe, string(SpawnNade this))
     {
@@ -95,9 +100,6 @@ CLASS(SpawnNade, Nade)
 #endif
 ENDCLASS(SpawnNade)
 REGISTER_NADE(SPAWN, NEW(SpawnNade)) {
-    this.m_color = COLOR_NADE_SPAWN;
-    this.m_name = _("Spawn grenade");
-    this.m_icon = "nade_spawn";
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE_SPAWN, EFFECT_NADE_TRAIL_YELLOW);
     NADE_PROJECTILE(1, PROJECTILE_NADE_SPAWN, EFFECT_NADE_TRAIL_YELLOW);
@@ -105,6 +107,9 @@ REGISTER_NADE(SPAWN, NEW(SpawnNade)) {
 }
 
 CLASS(HealNade, Nade)
+    ATTRIB(HealNade, m_color, vector, COLOR_NADE_HEAL);
+    ATTRIB(HealNade, m_name, string, _("Heal grenade"));
+    ATTRIB(HealNade, m_icon, string, "nade_heal");
 #ifdef MENUQC
     METHOD(HealNade, describe, string(HealNade this))
     {
@@ -115,9 +120,6 @@ CLASS(HealNade, Nade)
 #endif
 ENDCLASS(HealNade)
 REGISTER_NADE(HEAL, NEW(HealNade)) {
-    this.m_color = COLOR_NADE_HEAL;
-    this.m_name = _("Heal grenade");
-    this.m_icon = "nade_heal";
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE_HEAL, EFFECT_NADE_TRAIL_RED);
     NADE_PROJECTILE(1, PROJECTILE_NADE_HEAL_BURN, EFFECT_NADE_TRAIL_BURN_RED);
@@ -125,6 +127,9 @@ REGISTER_NADE(HEAL, NEW(HealNade)) {
 }
 
 CLASS(MonsterNade, Nade)
+    ATTRIB(MonsterNade, m_color, vector, COLOR_NADE_MONSTER);
+    ATTRIB(MonsterNade, m_name, string, _("Monster grenade"));
+    ATTRIB(MonsterNade, m_icon, string, "nade_monster");
 #ifdef MENUQC
     METHOD(MonsterNade, describe, string(MonsterNade this))
     {
@@ -134,9 +139,6 @@ CLASS(MonsterNade, Nade)
 #endif
 ENDCLASS(MonsterNade)
 REGISTER_NADE(MONSTER, NEW(MonsterNade)) {
-    this.m_color = COLOR_NADE_MONSTER;
-    this.m_name = _("Monster grenade");
-    this.m_icon = "nade_monster";
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE_MONSTER, EFFECT_NADE_TRAIL_RED);
     NADE_PROJECTILE(1, PROJECTILE_NADE_MONSTER_BURN, EFFECT_NADE_TRAIL_BURN_RED);
@@ -144,6 +146,9 @@ REGISTER_NADE(MONSTER, NEW(MonsterNade)) {
 }
 
 CLASS(EntrapNade, Nade)
+    ATTRIB(EntrapNade, m_color, vector, COLOR_NADE_ENTRAP);
+    ATTRIB(EntrapNade, m_name, string, _("Entrap grenade"));
+    ATTRIB(EntrapNade, m_icon, string, "nade_entrap");
 #ifdef MENUQC
     METHOD(EntrapNade, describe, string(EntrapNade this))
     {
@@ -154,9 +159,6 @@ CLASS(EntrapNade, Nade)
 #endif
 ENDCLASS(EntrapNade)
 REGISTER_NADE(ENTRAP, NEW(EntrapNade)) {
-    this.m_color = COLOR_NADE_ENTRAP;
-    this.m_name = _("Entrap grenade");
-    this.m_icon = "nade_entrap";
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE_ENTRAP, EFFECT_NADE_TRAIL_YELLOW);
     NADE_PROJECTILE(1, PROJECTILE_NADE_ENTRAP_BURN, EFFECT_NADE_TRAIL_BURN_YELLOW);
@@ -164,6 +166,10 @@ REGISTER_NADE(ENTRAP, NEW(EntrapNade)) {
 }
 
 CLASS(VeilNade, Nade)
+    ATTRIB(VeilNade, m_color, vector, COLOR_NADE_VEIL);
+    ATTRIB(VeilNade, m_name, string, _("Veil grenade"));
+    ATTRIB(VeilNade, m_icon, string, "nade_veil");
+    ATTRIB(VeilNade, m_alpha, float, 0.45);
 #ifdef MENUQC
     METHOD(VeilNade, describe, string(VeilNade this))
     {
@@ -174,10 +180,6 @@ CLASS(VeilNade, Nade)
 #endif
 ENDCLASS(VeilNade)
 REGISTER_NADE(VEIL, NEW(VeilNade)) {
-    this.m_color = COLOR_NADE_VEIL;
-    this.m_name = _("Veil grenade");
-    this.m_icon = "nade_veil";
-    this.m_alpha = 0.45;
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE_VEIL, EFFECT_NADE_TRAIL_NEUTRAL);
     NADE_PROJECTILE(1, PROJECTILE_NADE_VEIL_BURN, EFFECT_NADE_TRAIL_BURN_NEUTRAL);
@@ -185,6 +187,9 @@ REGISTER_NADE(VEIL, NEW(VeilNade)) {
 }
 
 CLASS(AmmoNade, Nade)
+    ATTRIB(AmmoNade, m_color, vector, COLOR_NADE_AMMO);
+    ATTRIB(AmmoNade, m_name, string, _("Ammo grenade"));
+    ATTRIB(AmmoNade, m_icon, string, "nade_ammo");
 #ifdef MENUQC
     METHOD(AmmoNade, describe, string(AmmoNade this))
     {
@@ -196,9 +201,6 @@ CLASS(AmmoNade, Nade)
 #endif
 ENDCLASS(AmmoNade)
 REGISTER_NADE(AMMO, NEW(AmmoNade)) {
-    this.m_color = COLOR_NADE_AMMO;
-    this.m_name = _("Ammo grenade");
-    this.m_icon = "nade_ammo";
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE_AMMO, EFFECT_NADE_TRAIL_BROWN);
     NADE_PROJECTILE(1, PROJECTILE_NADE_AMMO_BURN, EFFECT_NADE_TRAIL_BURN_BROWN);
@@ -206,6 +208,9 @@ REGISTER_NADE(AMMO, NEW(AmmoNade)) {
 }
 
 CLASS(DarknessNade, Nade)
+    ATTRIB(DarknessNade, m_color, vector, COLOR_NADE_DARKNESS);
+    ATTRIB(DarknessNade, m_name, string, _("Darkness grenade"));
+    ATTRIB(DarknessNade, m_icon, string, "nade_darkness");
 #ifdef MENUQC
     METHOD(DarknessNade, describe, string(DarknessNade this))
     {
@@ -215,9 +220,6 @@ CLASS(DarknessNade, Nade)
 #endif
 ENDCLASS(DarknessNade)
 REGISTER_NADE(DARKNESS, NEW(DarknessNade)) {
-    this.m_color = COLOR_NADE_DARKNESS;
-    this.m_name = _("Darkness grenade");
-    this.m_icon = "nade_darkness";
 #ifdef GAMEQC
     NADE_PROJECTILE(0, PROJECTILE_NADE_DARKNESS, EFFECT_NADE_TRAIL_PURPLE);
     NADE_PROJECTILE(1, PROJECTILE_NADE_DARKNESS_BURN, EFFECT_NADE_TRAIL_BURN_PURPLE);

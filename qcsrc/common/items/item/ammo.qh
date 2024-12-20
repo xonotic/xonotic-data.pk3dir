@@ -51,30 +51,28 @@ void ammo_shells_init(Pickup this, entity item)
 #endif
 
 CLASS(Shells, Ammo)
+/* spawnfunc  */ ATTRIB(Shells, m_canonical_spawnfunc, string, "item_shells");
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(Shells, spawnflags, int, ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE);
+/* model      */ ATTRIB(Shells, m_model, Model, MDL_Shells_ITEM);
+#endif
+/* refname    */ ATTRIB(Shells, netname, string, "shells");
+/* itemname   */ ATTRIB(Shells, m_name, string, _("Shells"));
+/* icon       */ ATTRIB(Shells, m_icon, string, "ammo_shells");
+#ifdef SVQC
+/* botvalue   */ ATTRIB(Shells, m_botvalue, int, 1000);
+/* itemid     */ ATTRIB(Shells, m_itemid, int, IT_RESOURCE);
+/* iteminit   */ ATTRIB(Shells, m_iteminit, void(Pickup this, entity item), ammo_shells_init);
+#endif
 #ifdef MENUQC
-    METHOD(Shells, describe, string(Shells this))
-    {
-        TC(Shells, this);
-        return _("The Shells ammo type is used by the Shotgun and Overkill Shotgun");
-    }
+METHOD(Shells, describe, string(Shells this))
+{
+    TC(Shells, this);
+    return _("The Shells ammo type is used by the Shotgun and Overkill Shotgun");
+}
 #endif
 ENDCLASS(Shells)
-
-REGISTER_ITEM(Shells, NEW(Shells)) {
-    this.m_canonical_spawnfunc = "item_shells";
-#ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model    = MDL_Shells_ITEM;
-#endif
-    this.netname    = "shells";
-    this.m_name     = _("Shells");
-    this.m_icon     = "ammo_shells";
-#ifdef SVQC
-    this.m_botvalue = 1000;
-    this.m_itemid   = IT_RESOURCE;
-    this.m_iteminit = ammo_shells_init;
-#endif
-}
+REGISTER_ITEM(Shells, NEW(Shells));
 
 SPAWNFUNC_ITEM(item_shells, ITEM_Shells)
 
@@ -94,30 +92,28 @@ void ammo_bullets_init(Pickup this, entity item)
 #endif
 
 CLASS(Bullets, Ammo)
+/* spawnfunc  */ ATTRIB(Bullets, m_canonical_spawnfunc, string, "item_bullets");
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(Bullets, spawnflags, int, ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE);
+/* model      */ ATTRIB(Bullets, m_model, Model, MDL_Bullets_ITEM);
+#endif
+/* refname    */ ATTRIB(Bullets, netname, string, "bullets");
+/* itemname   */ ATTRIB(Bullets, m_name, string, _("Bullets"));
+/* icon       */ ATTRIB(Bullets, m_icon, string, "ammo_bullets");
+#ifdef SVQC
+/* botvalue   */ ATTRIB(Bullets, m_botvalue, int, 1500);
+/* itemid     */ ATTRIB(Bullets, m_itemid, int, IT_RESOURCE);
+/* iteminit   */ ATTRIB(Bullets, m_iteminit, void(Pickup this, entity item), ammo_bullets_init);
+#endif
 #ifdef MENUQC
-    METHOD(Bullets, describe, string(Bullets this))
-    {
-        TC(Bullets, this);
-        return _("The Bullets ammo type is used by the MachineGun, Rifle, Overkill MachineGun, and Overkill Heavy Machine Gun");
-    }
+METHOD(Bullets, describe, string(Bullets this))
+{
+    TC(Bullets, this);
+    return _("The Bullets ammo type is used by the MachineGun, Rifle, Overkill MachineGun, and Overkill Heavy Machine Gun");
+}
 #endif
 ENDCLASS(Bullets)
-
-REGISTER_ITEM(Bullets, NEW(Bullets)) {
-    this.m_canonical_spawnfunc = "item_bullets";
-#ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model    = MDL_Bullets_ITEM;
-#endif
-    this.netname    = "bullets";
-    this.m_name     = _("Bullets");
-    this.m_icon     = "ammo_bullets";
-#ifdef SVQC
-    this.m_botvalue = 1500;
-    this.m_itemid   = IT_RESOURCE;
-    this.m_iteminit = ammo_bullets_init;
-#endif
-}
+REGISTER_ITEM(Bullets, NEW(Bullets));
 
 SPAWNFUNC_ITEM(item_bullets, ITEM_Bullets)
 
@@ -137,30 +133,28 @@ void ammo_rockets_init(Pickup this, entity item)
 #endif
 
 CLASS(Rockets, Ammo)
+/* spawnfunc  */ ATTRIB(Rockets, m_canonical_spawnfunc, string, "item_rockets");
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(Rockets, spawnflags, int, ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE);
+/* model      */ ATTRIB(Rockets, m_model, Model, MDL_Rockets_ITEM);
+#endif
+/* refname    */ ATTRIB(Rockets, netname, string, "rockets");
+/* itename    */ ATTRIB(Rockets, m_name, string, _("Rockets"));
+/* icon       */ ATTRIB(Rockets, m_icon, string, "ammo_rockets");
+#ifdef SVQC
+/* botvalue   */ ATTRIB(Rockets, m_botvalue, int, 1500);
+/* itemid     */ ATTRIB(Rockets, m_itemid, int, IT_RESOURCE);
+/* iteminit   */ ATTRIB(Rockets, m_iteminit, void(Pickup this, entity item), ammo_rockets_init);
+#endif
 #ifdef MENUQC
-    METHOD(Rockets, describe, string(Rockets this))
-    {
-        TC(Rockets, this);
-        return _("The Rockets ammo type is used by the Devastator, Mortar, Mine Layer, Hagar, T.A.G. Seeker, and Overkill Rocket Propelled Chainsaw");
-    }
+METHOD(Rockets, describe, string(Rockets this))
+{
+    TC(Rockets, this);
+    return _("The Rockets ammo type is used by the Devastator, Mortar, Mine Layer, Hagar, T.A.G. Seeker, and Overkill Rocket Propelled Chainsaw");
+}
 #endif
 ENDCLASS(Rockets)
-
-REGISTER_ITEM(Rockets, NEW(Rockets)) {
-    this.m_canonical_spawnfunc = "item_rockets";
-#ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model    = MDL_Rockets_ITEM;
-#endif
-    this.netname    = "rockets";
-    this.m_name     = _("Rockets");
-    this.m_icon     = "ammo_rockets";
-#ifdef SVQC
-    this.m_botvalue = 1500;
-    this.m_itemid   = IT_RESOURCE;
-    this.m_iteminit = ammo_rockets_init;
-#endif
-}
+REGISTER_ITEM(Rockets, NEW(Rockets));
 
 SPAWNFUNC_ITEM(item_rockets, ITEM_Rockets)
 
@@ -180,29 +174,27 @@ void ammo_cells_init(Pickup this, entity item)
 #endif
 
 CLASS(Cells, Ammo)
+/* spawnfunc  */ ATTRIB(Cells, m_canonical_spawnfunc, string, "item_cells");
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(Cells, spawnflags, int, ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE);
+/* model      */ ATTRIB(Cells, m_model, Model, MDL_Cells_ITEM);
+#endif
+/* refname    */ ATTRIB(Cells, netname, string, "cells");
+/* itemname   */ ATTRIB(Cells, m_name, string, _("Cells"));
+/* icon       */ ATTRIB(Cells, m_icon, string, "ammo_cells");
+#ifdef SVQC
+/* botvalue   */ ATTRIB(Cells, m_botvalue, int, 1500);
+/* itemid     */ ATTRIB(Cells, m_itemid, int, IT_RESOURCE);
+/* iteminit   */ ATTRIB(Cells, m_iteminit, void(Pickup this, entity item), ammo_cells_init);
+#endif
 #ifdef MENUQC
-    METHOD(Cells, describe, string(Cells this))
-    {
-        TC(Cells, this);
-        return _("The Cells ammo type is used by the Vortex, Crylink, Electro, Heavy Laser Assault Cannon, Arc, and Vaporizer");
-    }
+METHOD(Cells, describe, string(Cells this))
+{
+    TC(Cells, this);
+    return _("The Cells ammo type is used by the Vortex, Crylink, Electro, Heavy Laser Assault Cannon, Arc, and Vaporizer");
+}
 #endif
 ENDCLASS(Cells)
-
-REGISTER_ITEM(Cells, NEW(Cells)) {
-    this.m_canonical_spawnfunc = "item_cells";
-#ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model    = MDL_Cells_ITEM;
-#endif
-    this.netname    = "cells";
-    this.m_name     = _("Cells");
-    this.m_icon     = "ammo_cells";
-#ifdef SVQC
-    this.m_botvalue = 1500;
-    this.m_itemid   = IT_RESOURCE;
-    this.m_iteminit = ammo_cells_init;
-#endif
-}
+REGISTER_ITEM(Cells, NEW(Cells));
 
 SPAWNFUNC_ITEM(item_cells, ITEM_Cells)
