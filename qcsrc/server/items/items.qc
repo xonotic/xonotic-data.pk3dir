@@ -529,21 +529,22 @@ bool Item_GiveTo(entity item, entity player)
 {
 	// if nothing happens to player, just return without taking the item
 	int _switchweapon = 0;
-	// in case the player has autoswitch enabled do the following:
+	// in case the player has cl_autoswitch enabled do the following:
 	// if the player is using their best weapon before items are given, they
 	// probably want to switch to an even better weapon after items are given
 
-	if(CS_CVAR(player).cvar_cl_autoswitch)
+	bool use_cts_autoswitch = (g_cts && item.itemdef.instanceOfWeaponPickup);
+	if (CS_CVAR(player).cvar_cl_autoswitch && (!use_cts_autoswitch || !CS_CVAR(player).cvar_cl_autoswitch_cts))
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
+			if (player.(weaponentity).m_weapon != WEP_Null || slot == 0)
 			{
-				if(player.(weaponentity).m_switchweapon == w_getbestweapon(player, weaponentity))
+				if (player.(weaponentity).m_switchweapon == w_getbestweapon(player, weaponentity))
 					_switchweapon |= BIT(slot);
 
-				if(!(STAT(WEAPONS, player) & WepSet_FromWeapon(player.(weaponentity).m_switchweapon)))
+				if (!(STAT(WEAPONS, player) & WepSet_FromWeapon(player.(weaponentity).m_switchweapon)))
 					_switchweapon |= BIT(slot);
 			}
 		}
@@ -654,26 +655,32 @@ bool Item_GiveTo(entity item, entity player)
 	if (!pickedup)
 		return false;
 
-	// crude hack to enforce switching weapons
-	if(g_cts && item.itemdef.instanceOfWeaponPickup && !CS_CVAR(player).cvar_cl_cts_noautoswitch)
+	if(use_cts_autoswitch && CS_CVAR(player).cvar_cl_autoswitch_cts != 0)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		// CTS handling: always switch (1), never switch (2)
+		if(CS_CVAR(player).cvar_cl_autoswitch_cts == 1)
 		{
-			.entity weaponentity = weaponentities[slot];
-			if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
-				W_SwitchWeapon_Force(player, REGISTRY_GET(Weapons, item.weapon), weaponentity);
+			// crude hack to enforce switching weapons
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
+					W_SwitchWeapon_Force(player, REGISTRY_GET(Weapons, item.weapon), weaponentity);
+			}
 		}
-		return true;
 	}
-
-	if(_switchweapon)
+	else if(_switchweapon)
 	{
+		// non-CTS handling: weaponpriority-based autoswitch
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(_switchweapon & BIT(slot))
-			if(player.(weaponentity).m_switchweapon != w_getbestweapon(player, weaponentity))
-				W_SwitchWeapon_Force(player, w_getbestweapon(player, weaponentity), weaponentity);
+			{
+				Weapon best_wep = w_getbestweapon(player, weaponentity);
+				if(player.(weaponentity).m_switchweapon != best_wep)
+					W_SwitchWeapon_Force(player, best_wep, weaponentity);
+			}
 		}
 	}
 
@@ -1583,7 +1590,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	int _switchweapon = 0;
 
-	if(CS_CVAR(e).cvar_cl_autoswitch)
+	bool use_cts_autoswitch = g_cts;
+	if(CS_CVAR(e).cvar_cl_autoswitch && (!use_cts_autoswitch || !CS_CVAR(e).cvar_cl_autoswitch_cts))
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -1609,6 +1617,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	PREGIVE_RESOURCE(e, RES_ARMOR);
 	PREGIVE_RESOURCE(e, RES_HEALTH);
 
+	Weapon last_wep = WEP_Null;
 	for(i = beginarg; i < endarg; ++i)
 	{
 		cmd = argv(i);
@@ -1717,6 +1726,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				});
 				FOREACH(Weapons, it != WEP_Null && (cmd == it.netname || cmd == it.m_deprecated_netname), {
 					got += GiveWeapon(e, it.m_id, op, val);
+					last_wep = it;
 					break;
 				});
 				break;
@@ -1757,24 +1767,35 @@ float GiveItems(entity e, float beginarg, float endarg)
 	if(e.statuseffects)
 		StatusEffects_update(e);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	if(last_wep != WEP_Null && use_cts_autoswitch && CS_CVAR(e).cvar_cl_autoswitch_cts != 0)
 	{
-		.entity weaponentity = weaponentities[slot];
-		if(e.(weaponentity).m_weapon != WEP_Null || slot == 0)
-		if(!(STAT(WEAPONS, e) & WepSet_FromWeapon(e.(weaponentity).m_switchweapon)))
-			_switchweapon |= BIT(slot);
+		// CTS handling: always switch (1), never switch (2)
+		if(CS_CVAR(e).cvar_cl_autoswitch_cts == 1)
+		{
+			// crude hack to enforce switching weapons
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				if(e.(weaponentity).m_weapon != WEP_Null || slot == 0)
+					W_SwitchWeapon_Force(e, last_wep, weaponentity);
+			}
+		}
 	}
-
-	if(_switchweapon)
+	else
 	{
+		// non-CTS handling: weaponpriority-based autoswitch
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
+			if(e.(weaponentity).m_weapon != WEP_Null || slot == 0)
+			if(!(STAT(WEAPONS, e) & WepSet_FromWeapon(e.(weaponentity).m_switchweapon)))
+				_switchweapon |= BIT(slot);
+
 			if(_switchweapon & BIT(slot))
 			{
-				Weapon wep = w_getbestweapon(e, weaponentity);
-				if(wep != e.(weaponentity).m_switchweapon)
-					W_SwitchWeapon_Force(e, wep, weaponentity);
+				Weapon best_wep = w_getbestweapon(e, weaponentity);
+				if(e.(weaponentity).m_switchweapon != best_wep)
+					W_SwitchWeapon_Force(e, best_wep, weaponentity);
 			}
 		}
 	}
