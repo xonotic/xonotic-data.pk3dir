@@ -27,33 +27,35 @@ void powerup_shield_init(Pickup def, entity item)
         item.invincible_finished = (item.count) ? item.count : autocvar_g_balance_powerup_invincible_time;
 }
 #endif
-REGISTER_ITEM(Shield, NEW(Powerup)) {
-    this.m_canonical_spawnfunc = "item_shield";
+
+CLASS(ShieldItem, Powerup)
+    ATTRIB(ShieldItem, m_canonical_spawnfunc, string, "item_shield");
 #ifdef SVQC
-    this.m_iteminit         =   powerup_shield_init;
+    ATTRIB(ShieldItem, m_iteminit, void(Pickup def, entity item), powerup_shield_init);
 #endif
 #ifdef GAMEQC
-    this.spawnflags         =   ITEM_FLAG_NORMAL;
-    this.m_itemid           =   IT_INVINCIBLE;
-    this.m_model            =   MDL_Shield_ITEM;
-    this.m_sound            =   SND_Shield;
-    this.m_glow             =   true;
-    this.m_respawnsound     =   SND_SHIELD_RESPAWN;
+    ATTRIB(ShieldItem, spawnflags, int, ITEM_FLAG_NORMAL);
+    ATTRIB(ShieldItem, m_itemid, int, IT_INVINCIBLE);
+    ATTRIB(ShieldItem, m_model, Model, MDL_Shield_ITEM);
+    ATTRIB(ShieldItem, m_sound, Sound, SND_Shield);
+    ATTRIB(ShieldItem, m_glow, bool, true);
+    ATTRIB(ShieldItem, m_respawnsound, Sound, SND_SHIELD_RESPAWN);
 #endif
-    this.netname            =   "invincible";
-    this.m_name             =   _("Shield");
-    this.m_icon             =   "shield";
-    this.m_color            =   '1 0 1';
-    this.m_waypoint         =   _("Shield");
-    this.m_waypointblink    =   2;
-}
+    ATTRIB(ShieldItem, netname, string, "invincible");
+    ATTRIB(ShieldItem, m_name, string, _("Shield"));
+    ATTRIB(ShieldItem, m_icon, string, "shield");
+    ATTRIB(ShieldItem, m_color, vector, '1 0 1');
+    ATTRIB(ShieldItem, m_waypoint, string, _("Shield"));
+    ATTRIB(ShieldItem, m_waypointblink, int, 2);
+ENDCLASS(ShieldItem)
+REGISTER_ITEM(Shield, NEW(ShieldItem));
 
 SPAWNFUNC_ITEM(item_shield, ITEM_Shield)
 SPAWNFUNC_ITEM(item_invincible, ITEM_Shield)
 
-CLASS(Shield, Powerups)
-    ATTRIB(Shield, netname, string, "invincible"); // NOTE: referring to as invincible so that it matches the powerup item
-    ATTRIB(Shield, m_name, string, _("Shield"));
-    ATTRIB(Shield, m_icon, string, "shield");
-ENDCLASS(Shield)
-REGISTER_STATUSEFFECT(Shield, NEW(Shield));
+CLASS(ShieldStatusEffect, Powerups)
+    ATTRIB(ShieldStatusEffect, netname, string, "invincible"); // NOTE: referring to as invincible so that it matches the powerup item
+    ATTRIB(ShieldStatusEffect, m_name, string, _("Shield"));
+    ATTRIB(ShieldStatusEffect, m_icon, string, "shield");
+ENDCLASS(ShieldStatusEffect)
+REGISTER_STATUSEFFECT(Shield, NEW(ShieldStatusEffect));
