@@ -32,13 +32,13 @@ ENDCLASS(DebugSource)
 
 .bool m_hidden;
 
-#define REGISTRY_SOURCE(id, arr) \
+#define _REGISTRY_SOURCE(id, arr, cond) \
 ArrayList arr##_MENU; \
 int arr##_MENU_COUNT; \
 STATIC_INIT_LATE(arr##_MENU) \
 { \
 	AL_NEW(arr##_MENU, arr##_MAX, NULL, e); \
-	FOREACH(arr, !it.m_hidden, { \
+	FOREACH(arr, !it.m_hidden && (cond), { \
 		AL_sete(arr##_MENU, arr##_MENU_COUNT, it); \
 		arr##_MENU_COUNT++; \
 	}); \
@@ -53,6 +53,10 @@ CLASS(id, DataSource) \
 	METHOD(id, reload, int(id this, string filter)) { return arr##_MENU_COUNT; } \
 ENDCLASS(id)
 
+#define REGISTRY_SOURCE(...) EVAL(OVERLOAD(REGISTRY_SOURCE, __VA_ARGS__))
+#define REGISTRY_SOURCE_2(id, arr) _REGISTRY_SOURCE(id, arr, true)
+#define REGISTRY_SOURCE_3(id, arr, cond) _REGISTRY_SOURCE(id, arr, cond)
+
 REGISTRY_SOURCE(FreetextSource, GuidePages)
 
 #include <common/mapinfo.qh>
@@ -64,8 +68,8 @@ REGISTRY_SOURCE(ItemSource, Items)
 // The descriptions for these are in common/items/item/*.qc and common/mutators/mutator/instagib/items.qc
 
 #include <common/mutators/mutator/buffs/buffs.qh>
-REGISTRY_SOURCE(BuffSource, StatusEffect)
-// The descriptions for these are in common/mutators/mutator/buffs/all.inc and common/mutators/mutator/powerups/powerup/*.qc
+REGISTRY_SOURCE(BuffSource, StatusEffect, it.instanceOfBuff)
+// The descriptions for these are in common/mutators/mutator/buffs/all.inc
 
 #include <common/mutators/mutator/nades/nades.qh>
 REGISTRY_SOURCE(NadeSource, Nades)
