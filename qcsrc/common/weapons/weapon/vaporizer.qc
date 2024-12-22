@@ -408,6 +408,9 @@ METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
+#include "blaster.qh"
+#include <common/mutators/mutator/instagib/items.qh>
+#include <common/items/item/ammo.qh>
 
 METHOD(Vaporizer, describe, string(Vaporizer this))
 {
@@ -417,7 +420,7 @@ METHOD(Vaporizer, describe, string(Vaporizer this))
 		"The secondary fire fires a laser similar to that fired by the %s, with very strong knockback\n\n"
 		"It is a superweapon, so isn't often found in game, except in InstaGib where all players spawn with it\n\n"
 		"It consumes some %s ammo with each shot"),
-	COLORED_NAME(Vaporizer), COLORED_NAME(ExtraLife), COLORED_NAME(Blaster), COLORED_NAME(Cells));
+	COLORED_NAME(this), COLORED_NAME(ITEM_ExtraLife), COLORED_NAME(WEP_BLASTER), COLORED_NAME(ITEM_Cells));
 }
 
 #endif

@@ -55,6 +55,6 @@ METHOD(Shield, describe, string(Shield this))
     return sprintf(_("The %s powerup greatly decreases the damage you take until the powerup expires, having a compounding effect with armor. "
         "It also makes you more resistant to knockback\n\n"
         "Since it is a powerup, it will drop if you die while holding it"),
-    COLORED_NAME(Shield));
+    COLORED_NAME(STATUSEFFECT_Shield));
 }
 #endif

@@ -1,10 +1,6 @@
 #pragma once
 
 #include <common/colors.qh>
-#ifdef MENUQC
-	#include "blaster.qh" // for its color
-	#include <common/mutators/mutator/instagib/items.qh> // for ExtraLife color
-#endif
 
 CLASS(Vaporizer, Weapon)
 /* spawnfunc */ ATTRIB(Vaporizer, m_canonical_spawnfunc, string, "weapon_vaporizer");

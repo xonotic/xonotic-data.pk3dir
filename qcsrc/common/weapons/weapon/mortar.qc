@@ -373,6 +373,7 @@ METHOD(Mortar, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
+#include <common/items/item/ammo.qh>
 
 METHOD(Mortar, describe, string(Mortar this))
 {
@@ -382,7 +383,7 @@ METHOD(Mortar, describe, string(Mortar this))
 		"It consumes %s ammo for every grenade launched\n\n"
 		"The %s works best at close to medium ranges, but it's quite tricky to hit an enemy if they're airborne. "
 		"Since the secondary fire grenade bounces before exploding, it can be bounced against walls to damage enemies lurking around a corner"),
-	COLORED_NAME(Mortar), COLORED_NAME(Rockets), COLORED_NAME(Mortar));
+	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(this));
 }
 
 #endif

@@ -232,6 +232,7 @@ METHOD(OverkillRocketPropelledChainsaw, wr_impacteffect, void(entity thiswep, en
 
 #endif
 #ifdef MENUQC
+#include <common/items/item/ammo.qh>
 
 METHOD(OverkillRocketPropelledChainsaw, describe, string(OverkillRocketPropelledChainsaw this))
 {
@@ -241,7 +242,7 @@ METHOD(OverkillRocketPropelledChainsaw, describe, string(OverkillRocketPropelled
 		"It is a superweapon found on some maps, meaning that it breaks down after some time\n\n"
 		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in Overkill\n\n"
 		"Since it is the only Overkill weapon which deals splash damage, the %s is a good choice of weapon for attacking groups of enemies"),
-	COLORED_NAME(OverkillRocketPropelledChainsaw), COLORED_NAME(Rockets), COLORED_NAME(OverkillRocketPropelledChainsaw));
+	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(this));
 }
 
 #endif

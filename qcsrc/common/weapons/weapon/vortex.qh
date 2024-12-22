@@ -1,9 +1,6 @@
 #pragma once
 
 #include <common/colors.qh>
-#ifdef MENUQC
-	#include "rifle.qh" // for its color
-#endif
 
 CLASS(Vortex, Weapon)
 /* spawnfunc */ ATTRIB(Vortex, m_canonical_spawnfunc, string, "weapon_vortex");

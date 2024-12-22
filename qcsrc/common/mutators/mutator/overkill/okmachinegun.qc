@@ -156,6 +156,7 @@ METHOD(OverkillMachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
+#include <common/items/item/ammo.qh>
 
 METHOD(OverkillMachineGun, describe, string(OverkillMachineGun this))
 {
@@ -165,7 +166,7 @@ METHOD(OverkillMachineGun, describe, string(OverkillMachineGun this))
 		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in Overkill. "
 		"It has a limited magazine size, so needs reloading after several shots\n\n"
 		"The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously"),
-	COLORED_NAME(OverkillMachineGun), COLORED_NAME(Bullets), COLORED_NAME(OverkillMachineGun));
+	COLORED_NAME(this), COLORED_NAME(ITEM_Bullets), COLORED_NAME(this));
 }
 
 #endif

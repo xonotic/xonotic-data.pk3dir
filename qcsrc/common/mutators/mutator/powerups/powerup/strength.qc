@@ -56,6 +56,6 @@ METHOD(Strength, describe, string(Strength this))
         "It also increases the knockback that your attacks deal\n\n"
         "The damage and knockback you deal to yourself also increases but by a smaller amount\n\n"
         "Since it is a powerup, it will drop if you die while holding it"),
-    COLORED_NAME(Strength));
+    COLORED_NAME(STATUSEFFECT_Strength));
 }
 #endif

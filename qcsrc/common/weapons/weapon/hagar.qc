@@ -497,6 +497,7 @@ METHOD(Hagar, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
+#include <common/items/item/ammo.qh>
 
 METHOD(Hagar, describe, string(Hagar this))
 {
@@ -507,7 +508,7 @@ METHOD(Hagar, describe, string(Hagar this))
 		"It consumes %s ammo for each rocket\n\n"
 		"The %s works best over close to medium ranges, since it's hard to land hits at a long distance. "
 		"A common usage is fully loading the secondary fire before turning a corner, so you can surprise any enemies around the corner with a bunch of rockets to the face"),
-	COLORED_NAME(Hagar), COLORED_NAME(Rockets), COLORED_NAME(Hagar));
+	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(this));
 }
 
 #endif

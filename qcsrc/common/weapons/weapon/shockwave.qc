@@ -814,6 +814,7 @@ METHOD(Shockwave, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
+#include "shotgun.qh"
 
 METHOD(Shockwave, describe, string(Shockwave this))
 {
@@ -822,7 +823,7 @@ METHOD(Shockwave, describe, string(Shockwave this))
 		"Similar to the %s, the secondary fire swings the %s, slapping players close enough with the head of the weapon\n\n"
 		"It doesn't require ammo to work\n\n"
 		"The %s can only deal damage over a short range, so it is not useful for medium and long range combat"),
-	COLORED_NAME(Shockwave), COLORED_NAME(Shotgun), COLORED_NAME(Shockwave), COLORED_NAME(Shockwave));
+	COLORED_NAME(this), COLORED_NAME(WEP_SHOTGUN), COLORED_NAME(this), COLORED_NAME(this));
 }
 
 #endif

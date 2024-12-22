@@ -163,7 +163,7 @@ METHOD(Blaster, describe, string(Blaster this))
 		"The %s is always available so ends up being used a lot when players spawn in, but it's difficult to master when used over a medium to long range\n\n"
 		"One of the most common uses of the %s is \"laser jumping,\" where you can gain height by aiming down, jumping, then firing to boost yourself up. "
 		"Because it does a lot of knockback, another common usage is alternating between a high damage weapon and the %s to throw the enemy's aim off"),
-	COLORED_NAME(Blaster), COLORED_NAME(Blaster), COLORED_NAME(Blaster), COLORED_NAME(Blaster));
+	COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this));
 }
 
 #endif

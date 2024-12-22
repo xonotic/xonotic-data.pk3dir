@@ -607,6 +607,8 @@ METHOD(Devastator, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
+#include "vortex.qh"
+#include <common/items/item/ammo.qh>
 
 METHOD(Devastator, describe, string(Devastator this))
 {
@@ -619,7 +621,7 @@ METHOD(Devastator, describe, string(Devastator this))
 		"It can be used in almost any scenario, working best in medium range combat. "
 		"In close range combat, the large splash radius means often rockets can damage yourself as well as the enemy\n\n"
 		"Due to the ability to remotely detonate rockets, a common usage is \"rocket flying\", where you fire a rocket and immediately detonate it to boost yourself while mid-air"),
-	COLORED_NAME(Devastator), COLORED_NAME(Rockets), COLORED_NAME(Vortex), COLORED_NAME(Devastator));
+	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this));
 }
 
 #endif

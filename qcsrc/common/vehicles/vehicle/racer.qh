@@ -1,9 +1,6 @@
 #pragma once
 
 #include "racer_weapon.qh"
-#ifdef MENUQC
-	#include <common/colors.qh>
-#endif
 
 CLASS(Racer, Vehicle)
 /* spawnflags */ ATTRIB(Racer, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);

@@ -513,6 +513,7 @@ METHOD(MineLayer, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
+#include <common/items/item/ammo.qh>
 
 METHOD(MineLayer, describe, string(MineLayer this))
 {
@@ -523,7 +524,7 @@ METHOD(MineLayer, describe, string(MineLayer this))
 		"It consumes %s ammo for each mine laid\n\n"
 		"The mines are not launched very far before they hit the ground, so the %s isn't very effective at medium to long ranges. "
 		"It is often used to protect important areas of the map such as the flag in Capture The Flag, control points in Onslaught, or checkpoints in Assault"),
-	COLORED_NAME(MineLayer), COLORED_NAME(Rockets), COLORED_NAME(MineLayer));
+	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(this));
 }
 
 #endif

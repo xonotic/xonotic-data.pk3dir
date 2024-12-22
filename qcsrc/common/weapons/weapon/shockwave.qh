@@ -1,9 +1,6 @@
 #pragma once
 
 #include <common/colors.qh>
-#ifdef MENUQC
-	#include "shotgun.qh" // for its color
-#endif
 
 CLASS(Shockwave, Weapon)
 /* spawnfunc */ ATTRIB(Shockwave, m_canonical_spawnfunc, string, "weapon_shockwave");

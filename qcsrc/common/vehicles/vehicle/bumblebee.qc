@@ -1,10 +1,12 @@
 #include "bumblebee.qh"
 
-#ifdef GAMEQC
-
-#ifdef SVQC
+#if defined(SVQC)
 	#include <common/mutators/mutator/instagib/sv_instagib.qh>
+#elif defined(MENUQC)
+	#include <common/colors.qh>
 #endif
+
+#ifdef GAMEQC
 
 const float BRG_SETUP = 2;
 const float BRG_START = 4;
@@ -986,7 +988,7 @@ METHOD(Bumblebee, describe, string(Bumblebee this))
         "The first player can also shoot a green healing wave to heal other teammates on the ground\n\n"
         "The second player to enter is the right gunner and the third player to enter is the left gunner\n\n"
         "When the pilot exits the vehicle, the players switch roles by moving up in position"),
-    COLORED_NAME(Bumblebee));
+    COLORED_NAME(this));
 }
 
 #endif

@@ -354,6 +354,8 @@ METHOD(Vortex, wr_zoomdir, bool(entity thiswep))
 
 #endif
 #ifdef MENUQC
+#include "rifle.qh"
+#include <common/items/item/ammo.qh>
 
 METHOD(Vortex, describe, string(Vortex this))
 {
@@ -364,7 +366,7 @@ METHOD(Vortex, describe, string(Vortex this))
 		"Unlike the %s, the %s doesn't need to be reloaded manually, although you have to wait a couple seconds between shots. "
 		"Uniquely, the %s can be fired slightly before it finishes completely reloading, albeit dealing slightly less damage\n\n"
 		"Similar to the %s, the %s can be used at any range, but it stands out at long ranges"),
-	COLORED_NAME(Vortex), COLORED_NAME(Cells), COLORED_NAME(Rifle), COLORED_NAME(Vortex), COLORED_NAME(Vortex), COLORED_NAME(Rifle), COLORED_NAME(Vortex));
+	COLORED_NAME(this), COLORED_NAME(ITEM_Cells), COLORED_NAME(WEP_RIFLE), COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(WEP_RIFLE), COLORED_NAME(this));
 }
 
 #endif

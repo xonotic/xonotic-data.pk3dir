@@ -1,7 +1,6 @@
 #pragma once
 
 #include <common/colors.qh>
-#include "vortex.qh" // for its color
 
 CLASS(Devastator, Weapon)
 /* spawnfunc */ ATTRIB(Devastator, m_canonical_spawnfunc, string, "weapon_devastator");

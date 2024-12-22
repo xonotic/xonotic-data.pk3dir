@@ -7,10 +7,6 @@
     #include <common/resources/sv_resources.qh>
     #include <server/items/items.qh>
 #endif
-#ifdef MENUQC
-    #include <common/colors.qh>
-    // can't include common/weapons/weapon/_mod.qh and common/mutators/mutator/overkill/_mod.qh or else circular includes
-#endif
 
 #ifdef GAMEQC
 .int spawnflags;

@@ -156,6 +156,8 @@ METHOD(OverkillHeavyMachineGun, wr_impacteffect, void(entity thiswep, entity act
 
 #endif
 #ifdef MENUQC
+#include <common/items/item/ammo.qh>
+#include "okmachinegun.qh"
 
 METHOD(OverkillHeavyMachineGun, describe, string(OverkillHeavyMachineGun this))
 {
@@ -167,7 +169,7 @@ METHOD(OverkillHeavyMachineGun, describe, string(OverkillHeavyMachineGun this))
 		"It has a limited magazine size, so needs reloading after several shots\n\n"
 		"The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously\n\n"
 		"Since its bullets deal a lot more damage than the %s's bullets, it is often heavily contested when it spawns in"),
-	COLORED_NAME(OverkillHeavyMachineGun), COLORED_NAME(Bullets), COLORED_NAME(OverkillHeavyMachineGun), COLORED_NAME(OverkillMachineGun));
+	COLORED_NAME(this), COLORED_NAME(ITEM_Bullets), COLORED_NAME(this), COLORED_NAME(WEP_OVERKILL_MACHINEGUN));
 }
 
 #endif

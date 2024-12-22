@@ -3,6 +3,8 @@
 #if defined(SVQC)
 	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 	#include <common/mapobjects/trigger/impulse.qh>
+#elif defined(MENUQC)
+	#include <common/colors.qh>
 #endif
 
 #ifdef GAMEQC
@@ -650,7 +652,7 @@ METHOD(Racer, describe, string(Racer this))
         "It seats only one passenger, who becomes the pilot\n\n"
         "It can be accelerated by pressing the ^3+jump^7 bind, which consumes power from the same source as the primary weapon\n\n"
         "The %s's primary weapon is a laser and the secondary weapon is energy balls that explode on impact"),
-    COLORED_NAME(Racer), COLORED_NAME(Racer));
+    COLORED_NAME(this), COLORED_NAME(this));
 }
 
 #endif

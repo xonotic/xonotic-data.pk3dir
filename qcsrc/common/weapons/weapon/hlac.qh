@@ -1,9 +1,6 @@
 #pragma once
 
 #include <common/colors.qh>
-#ifdef MENUQC
-	#include "blaster.qh"
-#endif
 
 CLASS(HLAC, Weapon)
 /* spawnfunc */ ATTRIB(HLAC, m_canonical_spawnfunc, string, "weapon_hlac");

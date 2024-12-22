@@ -413,6 +413,7 @@ METHOD(MachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
+#include <common/items/item/ammo.qh>
 
 METHOD(MachineGun, describe, string(MachineGun this))
 {
@@ -422,7 +423,7 @@ METHOD(MachineGun, describe, string(MachineGun this))
 		"It consumes %s ammo for each bullet shot, until the whole magazine is emptied\n\n"
 		"The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously. "
 		"Since the secondary fire has no spread, it's the better option when firing over a long range"),
-	COLORED_NAME(MachineGun), COLORED_NAME(Bullets), COLORED_NAME(MachineGun));
+	COLORED_NAME(this), COLORED_NAME(ITEM_Bullets), COLORED_NAME(this));
 }
 
 #endif

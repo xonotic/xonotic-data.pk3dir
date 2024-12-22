@@ -17,7 +17,7 @@ CLASS(NormalNade, Nade)
         TC(NormalNade, this);
         return sprintf(_("The (normal) %s explodes after a short delay, dealing damage to nearby players\n\n"
             "Make sure you remember to throw it with ^3dropweapon^7, or else it will blow up in your hands!"),
-        COLORED_NAME(NormalNade));
+        COLORED_NAME(this));
     }
 #endif
 ENDCLASS(NormalNade)
@@ -38,7 +38,7 @@ CLASS(NapalmNade, Nade)
         TC(NapalmNade, this);
         return sprintf(_("The %s explodes after a short delay, spreading fiery napalm globs around in the fountain. "
             "The napalm fire balls burn for a while, and damage players who get too close"),
-        COLORED_NAME(NapalmNade));
+        COLORED_NAME(this));
     }
 #endif
 ENDCLASS(NapalmNade)
@@ -59,7 +59,7 @@ CLASS(IceNade, Nade)
         TC(IceNade, this);
         return sprintf(_("The %s detonates after a short delay, freezing any enemies who walk within the explosion radius for a few seconds after the explosion. "
             "While frozen, enemies are progressively dealt damage"),
-        COLORED_NAME(IceNade));
+        COLORED_NAME(this));
     }
 #endif
 ENDCLASS(IceNade)
@@ -79,7 +79,7 @@ CLASS(TranslocateNade, Nade)
     {
         TC(TranslocateNade, this);
         return sprintf(_("The %s detonates after a short delay, teleporting you to where it detonated"),
-        COLORED_NAME(TranslocateNade));
+        COLORED_NAME(this));
     }
 #endif
 ENDCLASS(TranslocateNade)
@@ -100,7 +100,7 @@ CLASS(SpawnNade, Nade)
         TC(SpawnNade, this);
         return sprintf(_("The %s detonates after a short delay, temporarily setting your spawn point to where it detonated. "
             "It is useful for cases where you want to go back to some point on the map after you die"),
-        COLORED_NAME(SpawnNade));
+        COLORED_NAME(this));
     }
 #endif
 ENDCLASS(SpawnNade)
@@ -121,7 +121,7 @@ CLASS(HealNade, Nade)
         TC(HealNade, this);
         return sprintf(_("The %s detonates after a short delay, temporarily creating a healing orb around the point where it detonated for several seconds. "
             "If your team members enter the orb they will recover health, and if enemies enter the sphere they will be harmed"),
-        COLORED_NAME(HealNade));
+        COLORED_NAME(this));
     }
 #endif
 ENDCLASS(HealNade)
@@ -141,7 +141,7 @@ CLASS(MonsterNade, Nade)
     {
         TC(MonsterNade, this);
         return sprintf(_("The %s explodes after a short delay, spawning one of four monster types"),
-        COLORED_NAME(MonsterNade));
+        COLORED_NAME(this));
     }
 #endif
 ENDCLASS(MonsterNade)
@@ -162,7 +162,7 @@ CLASS(EntrapNade, Nade)
         TC(EntrapNade, this);
         return sprintf(_("The %s detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
             "Players and projectiles that enter the sphere will be slowed down, including yourself"),
-        COLORED_NAME(EntrapNade));
+        COLORED_NAME(this));
     }
 #endif
 ENDCLASS(EntrapNade)
@@ -184,7 +184,7 @@ CLASS(VeilNade, Nade)
         TC(VeilNade, this);
         return sprintf(_("The Veil grenade detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
             "Players inside the orb will be invisible to those outside it"),
-        COLORED_NAME(VeilNade));
+        COLORED_NAME(this));
     }
 #endif
 ENDCLASS(VeilNade)
@@ -206,7 +206,7 @@ CLASS(AmmoNade, Nade)
         return sprintf(_("The %s detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
             "If your team members enter the orb they will recover ammo, and if enemies enter the sphere they will lose ammo\n\n"
             "This does not impact weapon magazines, so it won't reload your weapons for you"),
-        COLORED_NAME(AmmoNade));
+        COLORED_NAME(this));
     }
 #endif
 ENDCLASS(AmmoNade)
@@ -226,7 +226,7 @@ CLASS(DarknessNade, Nade)
     {
         TC(DarknessNade, this);
         return sprintf(_("The %s detonates after a short delay, creating a dark field which temporarily blinds enemies who enter it"),
-        COLORED_NAME(DarknessNade));
+        COLORED_NAME(this));
     }
 #endif
 ENDCLASS(DarknessNade)

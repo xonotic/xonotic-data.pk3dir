@@ -1,9 +1,6 @@
 #pragma once
 
 #include "bumblebee_weapons.qh"
-#ifdef MENUQC
-	#include <common/colors.qh>
-#endif
 
 CLASS(Bumblebee, Vehicle)
 /* spawnflags */ ATTRIB(Bumblebee, spawnflags, int, VHF_DMGSHAKE);

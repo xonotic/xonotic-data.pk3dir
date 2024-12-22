@@ -2,6 +2,9 @@
 
 #if defined(SVQC)
 	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#elif defined(MENUQC)
+	#include <common/colors.qh>
+	#include "raptor.qh"
 #endif
 
 #ifdef GAMEQC
@@ -655,7 +658,7 @@ METHOD(Spiderbot, describe, string(Spiderbot this))
         "The primary weapon is a machine gun, and is shot toward the green reticle. "
         "The secondary weapon shoots rockets towards the white reticle. "
         "The white reticle points to the front of the vehicle, while the green reticle also points to the front, with a bit of delay when the %s rotates"),
-    COLORED_NAME(Spiderbot), COLORED_NAME(Raptor), COLORED_NAME(Spiderbot));
+    COLORED_NAME(this), COLORED_NAME(VEH_RAPTOR), COLORED_NAME(this));
 }
 
 #endif

@@ -386,6 +386,7 @@ METHOD(Shotgun, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
+#include <common/items/item/ammo.qh>
 
 METHOD(Shotgun, describe, string(Shotgun this))
 {
@@ -395,7 +396,7 @@ METHOD(Shotgun, describe, string(Shotgun this))
 		"Since the slap takes a moment to land, timing this well is difficult\n\n"
 		"The primary fire consumes %s ammo, although if you spawn in with the %s you will already have some\n\n"
 		"The %s's damage drops off quickly as the range increases, so it is only useful for close combat or sometimes medium range combat"),
-	COLORED_NAME(Shotgun), COLORED_NAME(Shotgun), COLORED_NAME(Shells), COLORED_NAME(Shotgun), COLORED_NAME(Shotgun));
+	COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(ITEM_Shells), COLORED_NAME(this), COLORED_NAME(this));
 }
 
 #endif

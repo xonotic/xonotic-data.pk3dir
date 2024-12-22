@@ -604,7 +604,7 @@ METHOD(Tuba, describe, string(Tuba this))
 		"Since your enemies need to be close by to hear your awful music, the %s is only effective at very close ranges\n\n"
 		"The pitch the %s plays depends on the movement keys pressed. "
 		"Reloading the weapon switches its model and notes played"),
-	COLORED_NAME(Tuba), COLORED_NAME(Tuba), COLORED_NAME(Tuba));
+	COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this));
 }
 
 #endif

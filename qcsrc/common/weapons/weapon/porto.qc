@@ -433,7 +433,7 @@ METHOD(PortoLaunch, describe, string(PortoLaunch this))
 		"It doesn't require ammo, but it is destroyed after some time\n\n"
 		"The portals will close either after the player who shot them dies or after some time period"
 		"The %s isn't often placed on maps, but if used well it can make for some interesting gameplay"),
-	COLORED_NAME(PortoLaunch), COLORED_NAME(PortoLaunch));
+	COLORED_NAME(this), COLORED_NAME(this));
 }
 
 #endif

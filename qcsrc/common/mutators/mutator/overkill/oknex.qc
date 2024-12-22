@@ -363,6 +363,7 @@ METHOD(OverkillNex, wr_zoomdir, bool(entity thiswep))
 
 #endif
 #ifdef MENUQC
+#include <common/items/item/ammo.qh>
 
 METHOD(OverkillNex, describe, string(OverkillNex this))
 {
@@ -372,7 +373,7 @@ METHOD(OverkillNex, describe, string(OverkillNex this))
 		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in Overkill. "
 		"It has a limited magazine size, so needs reloading after several shots\n\n"
 		"Since it is the only Overkill weapon with no spread, the %s stands out at long ranges"),
-	COLORED_NAME(OverkillNex), COLORED_NAME(Cells), COLORED_NAME(OverkillNex));
+	COLORED_NAME(this), COLORED_NAME(ITEM_Cells), COLORED_NAME(this));
 }
 
 #endif

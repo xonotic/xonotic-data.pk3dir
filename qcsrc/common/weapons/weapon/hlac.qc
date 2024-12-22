@@ -227,6 +227,8 @@ METHOD(HLAC, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
+#include "blaster.qh"
+#include <common/items/item/ammo.qh>
 
 METHOD(HLAC, describe, string(HLAC this))
 {
@@ -239,7 +241,7 @@ METHOD(HLAC, describe, string(HLAC this))
 		"A unique aspect of the %s is that the longer the primary fire is held, the more that the lasers will start to spread out. "
 		"This means releasing primary fire every now and then is important to restore accuracy. "
 		"Also, the %s has less spread when used while crouching"),
-	COLORED_NAME(HLAC), COLORED_NAME(Blaster), COLORED_NAME(Blaster), COLORED_NAME(Cells), COLORED_NAME(HLAC), COLORED_NAME(HLAC), COLORED_NAME(HLAC));
+	COLORED_NAME(this), COLORED_NAME(WEP_BLASTER), COLORED_NAME(WEP_BLASTER), COLORED_NAME(ITEM_Cells), COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this));
 }
 
 #endif

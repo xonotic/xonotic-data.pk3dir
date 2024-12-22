@@ -1,9 +1,6 @@
 #pragma once
 
 #include "raptor_weapons.qh"
-#ifdef MENUQC
-	#include <common/colors.qh>
-#endif
 
 CLASS(Raptor, Vehicle)
 /* spawnflags */ ATTRIB(Raptor, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);

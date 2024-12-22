@@ -1,10 +1,6 @@
 #pragma once
 
 #include "spiderbot_weapons.qh"
-#ifdef MENUQC
-	#include <common/colors.qh>
-	#include "raptor.qh"
-#endif
 
 CLASS(Spiderbot, Vehicle)
 /* spawnflags */ ATTRIB(Spiderbot, spawnflags, int, VHF_DMGSHAKE);
