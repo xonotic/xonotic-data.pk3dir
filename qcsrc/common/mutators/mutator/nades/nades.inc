@@ -16,7 +16,7 @@ CLASS(NormalNade, Nade)
     {
         TC(NormalNade, this);
         return sprintf(_("The (normal) %s explodes after a short delay, dealing damage to nearby players\n\n"
-            "Make sure you remember to throw it with ^3dropweapon^7, or else it will blow up in your hands!"),
+            "Make sure you remember to throw it with ^3drop weapon^7, or else it will blow up in your hands!"),
         COLORED_NAME(this));
     }
 #endif
