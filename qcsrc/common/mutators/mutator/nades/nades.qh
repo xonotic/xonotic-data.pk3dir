@@ -145,7 +145,7 @@ Nade Nade_FromProjectile(int proj)
 #include "effects.inc"
 #endif
 
-#include "nades.inc"
+#include "all.inc"
 
 .float orb_lifetime;
 .float orb_radius;
