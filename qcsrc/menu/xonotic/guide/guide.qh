@@ -64,17 +64,17 @@ REGISTRY_SOURCE(FreetextSource, Guide, GuidePages)
 REGISTRY_SOURCE(GametypeSource, Gametypes, Gametypes)
 // The descriptions for these are in common/gamemodes/gamemode/*/*.qh
 
-#include <common/items/all.qh>
-REGISTRY_SOURCE(ItemSource, Items, Items, !it.instanceOfPowerup)
-// The descriptions for these are in common/items/item/*.qc and common/mutators/mutator/instagib/items.qc
+#include <common/mutators/mutator/buffs/buffs.qh>
+REGISTRY_SOURCE(BuffSource, Buffs, StatusEffect, it.instanceOfBuff)
+// The descriptions for these are in common/mutators/mutator/buffs/all.inc
 
 #include <common/mutators/mutator/powerups/powerup/_mod.qh>
 REGISTRY_SOURCE(PowerupSource, Powerups, Items, it.instanceOfPowerup)
 // The descriptions for these are in common/mutators/mutator/powerups/powerup/*.qc and common/items/item/jetpack.qc
 
-#include <common/mutators/mutator/buffs/buffs.qh>
-REGISTRY_SOURCE(BuffSource, Buffs, StatusEffect, it.instanceOfBuff)
-// The descriptions for these are in common/mutators/mutator/buffs/all.inc
+#include <common/items/all.qh>
+REGISTRY_SOURCE(ItemSource, Items, Items, !it.instanceOfPowerup)
+// The descriptions for these are in common/items/item/*.qc and common/mutators/mutator/instagib/items.qc
 
 #include <common/mutators/mutator/nades/nades.qh>
 REGISTRY_SOURCE(NadeSource, Nades, Nades)
