@@ -20,7 +20,7 @@ METHOD(JetpackRegen, m_spawnfunc_hookreplace, GameItem(JetpackRegen this, entity
 METHOD(Jetpack, describe, string(Jetpack this))
 {
 	TC(Jetpack, this);
-	return sprintf(_("The %s allows you to fly around the map for a short period, "
+	return sprintf(_("The %s powerup allows you to fly around the map for a short period, "
 		"providing increased mobility, maneuverability, and the ability to reach higher ground\n\n"
 		"It consumes Fuel ammo while operating, so make sure you don't run out when you're high up!"),
 	COLORED_NAME(this));

@@ -10,7 +10,8 @@
 	X(NEW(GametypeSource),  _("Gametypes"), "gametype_dm") \
 	X(NEW(WeaponSource),    _("Weapons"),   "gametype_duel") \
 	X(NEW(ItemSource),      _("Items"),     "gametype_kh") \
-	X(NEW(BuffSource),      _("Buffs"),     "gametype_dom") \
+	X(NEW(PowerupSource),   _("Powerups"),  "gametype_dom") \
+	X(NEW(BuffSource),      _("Buffs"),     "gametype_ka") \
 	X(NEW(NadeSource),      _("Nades"),     "gametype_ft") \
 	X(NEW(MonsterSource),   _("Monsters"),  "gametype_lms") \
 	X(NEW(VehicleSource),   _("Vehicles"),  "gametype_rc") \
@@ -32,66 +33,70 @@ ENDCLASS(DebugSource)
 
 .bool m_hidden;
 
-#define _REGISTRY_SOURCE(id, arr, cond) \
-ArrayList arr##_MENU; \
-int arr##_MENU_COUNT; \
-STATIC_INIT_LATE(arr##_MENU) \
+#define _REGISTRY_SOURCE(id, arr_name, register_arr, cond) \
+ArrayList arr_name##_MENU; \
+int arr_name##_MENU_COUNT; \
+STATIC_INIT_LATE(arr_name##_MENU) \
 { \
-	AL_NEW(arr##_MENU, arr##_MAX, NULL, e); \
-	FOREACH(arr, !it.m_hidden && (cond), { \
-		AL_sete(arr##_MENU, arr##_MENU_COUNT, it); \
-		arr##_MENU_COUNT++; \
+	AL_NEW(arr_name##_MENU, register_arr##_MAX, NULL, e); \
+	FOREACH(register_arr, !it.m_hidden && (cond), { \
+		AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
+		arr_name##_MENU_COUNT++; \
 	}); \
 } \
 CLASS(id, DataSource) \
 	METHOD(id, getEntry, entity(id this, int i, void(string, string) returns)) { \
-		entity e = AL_gete(arr##_MENU, i); \
+		entity e = AL_gete(arr_name##_MENU, i); \
 		if (returns) \
 			e.display(e, returns); \
 		return e; \
 	} \
-	METHOD(id, reload, int(id this, string filter)) { return arr##_MENU_COUNT; } \
+	METHOD(id, reload, int(id this, string filter)) { return arr_name##_MENU_COUNT; } \
 ENDCLASS(id)
 
 #define REGISTRY_SOURCE(...) EVAL(OVERLOAD(REGISTRY_SOURCE, __VA_ARGS__))
-#define REGISTRY_SOURCE_2(id, arr) _REGISTRY_SOURCE(id, arr, true)
-#define REGISTRY_SOURCE_3(id, arr, cond) _REGISTRY_SOURCE(id, arr, cond)
+#define REGISTRY_SOURCE_3(id, arr_name, register_arr)       _REGISTRY_SOURCE(id, arr_name, register_arr, true)
+#define REGISTRY_SOURCE_4(id, arr_name, register_arr, cond) _REGISTRY_SOURCE(id, arr_name, register_arr, cond)
 
-REGISTRY_SOURCE(FreetextSource, GuidePages)
+REGISTRY_SOURCE(FreetextSource, Guide, GuidePages)
 
 #include <common/mapinfo.qh>
-REGISTRY_SOURCE(GametypeSource, Gametypes)
+REGISTRY_SOURCE(GametypeSource, Gametypes, Gametypes)
 // The descriptions for these are in common/gamemodes/gamemode/*/*.qh
 
 #include <common/items/all.qh>
-REGISTRY_SOURCE(ItemSource, Items)
+REGISTRY_SOURCE(ItemSource, Items, Items, !it.instanceOfPowerup)
 // The descriptions for these are in common/items/item/*.qc and common/mutators/mutator/instagib/items.qc
 
+#include <common/mutators/mutator/powerups/powerup/_mod.qh>
+REGISTRY_SOURCE(PowerupSource, Powerups, Items, it.instanceOfPowerup)
+// The descriptions for these are in common/mutators/mutator/powerups/powerup/*.qc and common/items/item/jetpack.qc
+
 #include <common/mutators/mutator/buffs/buffs.qh>
-REGISTRY_SOURCE(BuffSource, StatusEffect, it.instanceOfBuff)
+REGISTRY_SOURCE(BuffSource, Buffs, StatusEffect, it.instanceOfBuff)
 // The descriptions for these are in common/mutators/mutator/buffs/all.inc
 
 #include <common/mutators/mutator/nades/nades.qh>
-REGISTRY_SOURCE(NadeSource, Nades)
+REGISTRY_SOURCE(NadeSource, Nades, Nades)
 // The descriptions for these are in common/mutators/mutator/nades/all.inc
 
 #include <common/weapons/all.qh>
-REGISTRY_SOURCE(WeaponSource, Weapons)
+REGISTRY_SOURCE(WeaponSource, Weapons, Weapons)
 // The descriptions for these are in common/weapons/weapon/*.qc and common/mutators/mutator/overkill/ok*.qc
 
 #include <common/monsters/all.qh>
-REGISTRY_SOURCE(MonsterSource, Monsters)
+REGISTRY_SOURCE(MonsterSource, Monsters, Monsters)
 // The descriptions for these are in common/monsters/monster/*.qc
 
 #include <common/vehicles/all.qh>
-REGISTRY_SOURCE(VehicleSource, Vehicles)
+REGISTRY_SOURCE(VehicleSource, Vehicles, Vehicles)
 // The descriptions for these are in common/vehicles/vehicle/*.qc
 
 #include <common/turrets/all.qh>
-REGISTRY_SOURCE(TurretSource, Turrets)
+REGISTRY_SOURCE(TurretSource, Turrets, Turrets)
 
 #include <common/mutators/base.qh>
-REGISTRY_SOURCE(MutatorSource, Mutators)
+REGISTRY_SOURCE(MutatorSource, Mutators, Mutators)
 
 CLASS(MapSource, DataSource)
 	METHOD(MapSource, getEntry, entity(MapSource this, int i, void(string, string) returns));
