@@ -2,34 +2,39 @@
 
 #ifdef MENUQC
 #include <common/colors.qh>
-#include <common/weapons/weapon/_mod.qh>
-#include <common/mutators/mutator/overkill/_mod.qh>
+#include <common/weapons/all.qh>
+
+string _Ammo_generate_description(entity ammo_type_ent, Resource ammo_res)
+{
+    string s = sprintf(_("The %s ammo type is used by the:"), COLORED_NAME(ammo_type_ent));
+    FOREACH(Weapons, true, {
+        if (it.ammo_type == ammo_res)
+            s = strcat(s, "\n", COLORED_NAME(it));
+    });
+    return s;
+}
 
 METHOD(Shells, describe, string(Shells this))
 {
     TC(Shells, this);
-    return sprintf(_("The %s ammo type is used by the %s and %s"),
-    COLORED_NAME(this), COLORED_NAME(WEP_SHOTGUN), COLORED_NAME(WEP_OVERKILL_SHOTGUN));
+    return _Ammo_generate_description(this, RES_SHELLS);
 }
 
 METHOD(Bullets, describe, string(Bullets this))
 {
     TC(Bullets, this);
-    return sprintf(_("The %s ammo type is used by the %s, %s, %s, and %s"),
-    COLORED_NAME(this), COLORED_NAME(WEP_MACHINEGUN), COLORED_NAME(WEP_RIFLE), COLORED_NAME(WEP_OVERKILL_MACHINEGUN), COLORED_NAME(WEP_OVERKILL_HMG));
+    return _Ammo_generate_description(this, RES_BULLETS);
 }
 
 METHOD(Rockets, describe, string(Rockets this))
 {
     TC(Rockets, this);
-    return sprintf(_("The %s ammo type is used by the %s, %s, %s, %s, %s, and %s"),
-    COLORED_NAME(this), COLORED_NAME(WEP_DEVASTATOR), COLORED_NAME(WEP_MORTAR), COLORED_NAME(WEP_HAGAR), COLORED_NAME(WEP_MINE_LAYER), COLORED_NAME(WEP_SEEKER), COLORED_NAME(WEP_OVERKILL_RPC));
+    return _Ammo_generate_description(this, RES_ROCKETS);
 }
 
 METHOD(Cells, describe, string(Cells this))
 {
     TC(Cells, this);
-    return sprintf(_("The %s ammo type is used by the %s, %s, %s, %s, %s, and %s"),
-    COLORED_NAME(this), COLORED_NAME(WEP_VORTEX), COLORED_NAME(WEP_CRYLINK), COLORED_NAME(WEP_ELECTRO), COLORED_NAME(WEP_HLAC), COLORED_NAME(WEP_VAPORIZER), COLORED_NAME(WEP_ARC));
+    return _Ammo_generate_description(this, RES_CELLS);
 }
 #endif
