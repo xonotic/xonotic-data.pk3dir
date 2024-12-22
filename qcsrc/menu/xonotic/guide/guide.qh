@@ -57,24 +57,31 @@ REGISTRY_SOURCE(FreetextSource, GuidePages)
 
 #include <common/mapinfo.qh>
 REGISTRY_SOURCE(GametypeSource, Gametypes)
+// The descriptions for these are in common/gamemodes/gamemode/*/*.qh
 
 #include <common/items/all.qh>
 REGISTRY_SOURCE(ItemSource, Items)
+// The descriptions for these are in common/items/item/*.qc and common/mutators/mutator/instagib/items.qc
 
 #include <common/mutators/mutator/buffs/buffs.qh>
 REGISTRY_SOURCE(BuffSource, StatusEffect)
+// The descriptions for these are in common/mutators/mutator/buffs/all.inc and common/mutators/mutator/powerups/powerup/*.qc
 
 #include <common/mutators/mutator/nades/nades.qh>
 REGISTRY_SOURCE(NadeSource, Nades)
+// The descriptions for these are in common/mutators/mutator/nades/all.inc
 
 #include <common/weapons/all.qh>
 REGISTRY_SOURCE(WeaponSource, Weapons)
+// The descriptions for these are in common/weapons/weapon/*.qc and common/mutators/mutator/overkill/ok*.qc
 
 #include <common/monsters/all.qh>
 REGISTRY_SOURCE(MonsterSource, Monsters)
+// The descriptions for these are in common/monsters/monster/*.qc
 
 #include <common/vehicles/all.qh>
 REGISTRY_SOURCE(VehicleSource, Vehicles)
+// The descriptions for these are in common/vehicles/vehicle/*.qc
 
 #include <common/turrets/all.qh>
 REGISTRY_SOURCE(TurretSource, Turrets)
