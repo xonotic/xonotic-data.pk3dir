@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(CRYLINK_VIEW, W_Model("h_crylink.iqm"));
+MODEL(CRYLINK_WORLD, W_Model("v_crylink.md3"));
+MODEL(CRYLINK_ITEM, W_Model("g_crylink.md3"));
+#endif
+
 CLASS(Crylink, Weapon)
 /* spawnfunc */ ATTRIB(Crylink, m_canonical_spawnfunc, string, "weapon_crylink");
 /* ammotype  */ ATTRIB(Crylink, ammo_type, Resource, RES_CELLS);

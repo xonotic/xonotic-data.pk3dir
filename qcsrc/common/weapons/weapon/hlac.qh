@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(HLAC_VIEW, W_Model("h_hlac.iqm"));
+MODEL(HLAC_WORLD, W_Model("v_hlac.md3"));
+MODEL(HLAC_ITEM, W_Model("g_hlac.md3"));
+#endif
+
 CLASS(HLAC, Weapon)
 /* spawnfunc */ ATTRIB(HLAC, m_canonical_spawnfunc, string, "weapon_hlac");
 /* ammotype  */ ATTRIB(HLAC, ammo_type, Resource, RES_CELLS);

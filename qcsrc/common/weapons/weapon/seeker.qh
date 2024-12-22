@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(SEEKER_VIEW, W_Model("h_seeker.iqm"));
+MODEL(SEEKER_WORLD, W_Model("v_seeker.md3"));
+MODEL(SEEKER_ITEM, W_Model("g_seeker.md3"));
+#endif
+
 CLASS(Seeker, Weapon)
 /* spawnfunc */ ATTRIB(Seeker, m_canonical_spawnfunc, string, "weapon_seeker");
 /* ammotype  */ ATTRIB(Seeker, ammo_type, Resource, RES_ROCKETS);

@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(ELECTRO_VIEW, W_Model("h_electro.iqm"));
+MODEL(ELECTRO_WORLD, W_Model("v_electro.md3"));
+MODEL(ELECTRO_ITEM, W_Model("g_electro.md3"));
+#endif
+
 CLASS(Electro, Weapon)
 /* spawnfunc */ ATTRIB(Electro, m_canonical_spawnfunc, string, "weapon_electro");
 /* ammotype  */ ATTRIB(Electro, ammo_type, Resource, RES_CELLS);

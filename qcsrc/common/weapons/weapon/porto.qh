@@ -1,5 +1,12 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(PORTAL, "models/portal.md3");
+MODEL(PORTO_VIEW, W_Model("h_porto.iqm"));
+MODEL(PORTO_WORLD, W_Model("v_porto.md3"));
+MODEL(PORTO_ITEM, W_Model("g_porto.md3"));
+#endif
+
 CLASS(PortoLaunch, Weapon)
 /* spawnfunc */ ATTRIB(PortoLaunch, m_canonical_spawnfunc, string, "weapon_porto");
 /* ammotype  */ ATTRIB(PortoLaunch, ammo_type, Resource, RES_NONE);

@@ -1,5 +1,12 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(FIREBALL_SPHERE, "models/sphere/sphere.md3");
+MODEL(FIREBALL_VIEW, W_Model("h_fireball.iqm"));
+MODEL(FIREBALL_WORLD, W_Model("v_fireball.md3"));
+MODEL(FIREBALL_ITEM, W_Model("g_fireball.md3"));
+#endif
+
 CLASS(Fireball, Weapon)
 /* spawnfunc */ ATTRIB(Fireball, m_canonical_spawnfunc, string, "weapon_fireball");
 /* ammotype  */ //ATTRIB(Fireball, ammo_type, Resource, RES_NONE);

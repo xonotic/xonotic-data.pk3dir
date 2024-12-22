@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(RIFLE_VIEW, W_Model("h_campingrifle.iqm"));
+MODEL(RIFLE_WORLD, W_Model("v_campingrifle.md3"));
+MODEL(RIFLE_ITEM, W_Model("g_campingrifle.md3"));
+#endif
+
 CLASS(Rifle, Weapon)
 /* spawnfunc */ ATTRIB(Rifle, m_canonical_spawnfunc, string, "weapon_rifle");
 /* ammotype  */ ATTRIB(Rifle, ammo_type, Resource, RES_BULLETS);

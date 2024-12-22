@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(MORTAR_VIEW, W_Model("h_gl.iqm"));
+MODEL(MORTAR_WORLD, W_Model("v_gl.md3"));
+MODEL(MORTAR_ITEM, W_Model("g_gl.md3"));
+#endif
+
 CLASS(Mortar, Weapon)
 /* spawnfunc */ ATTRIB(Mortar, m_canonical_spawnfunc, string, "weapon_mortar");
 /* ammotype  */ ATTRIB(Mortar, ammo_type, Resource, RES_ROCKETS);

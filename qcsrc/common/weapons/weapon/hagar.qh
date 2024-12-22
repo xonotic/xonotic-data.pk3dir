@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(HAGAR_VIEW, W_Model("h_hagar.iqm"));
+MODEL(HAGAR_WORLD, W_Model("v_hagar.md3"));
+MODEL(HAGAR_ITEM, W_Model("g_hagar.md3"));
+#endif
+
 CLASS(Hagar, Weapon)
 /* spawnfunc */ ATTRIB(Hagar, m_canonical_spawnfunc, string, "weapon_hagar");
 /* ammotype  */ ATTRIB(Hagar, ammo_type, Resource, RES_ROCKETS);

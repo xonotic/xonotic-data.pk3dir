@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(BLASTER_VIEW, W_Model("h_laser.iqm"));
+MODEL(BLASTER_WORLD, W_Model("v_laser.md3"));
+MODEL(BLASTER_ITEM, W_Model("g_laser.md3"));
+#endif
+
 CLASS(Blaster, Weapon)
 /* spawnfunc */ ATTRIB(Blaster, m_canonical_spawnfunc, string, "weapon_blaster");
 /* ammotype  */ //ATTRIB(Blaster, ammo_type, Resource, RES_NONE);

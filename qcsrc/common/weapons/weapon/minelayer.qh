@@ -1,5 +1,13 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(MINELAYER_MUZZLEFLASH, "models/flash.md3");
+MODEL(MINELAYER_MINE, "models/mine.md3");
+MODEL(MINELAYER_VIEW, W_Model("h_minelayer.iqm"));
+MODEL(MINELAYER_WORLD, W_Model("v_minelayer.md3"));
+MODEL(MINELAYER_ITEM, W_Model("g_minelayer.md3"));
+#endif
+
 CLASS(MineLayer, Weapon)
 /* spawnfunc */ ATTRIB(MineLayer, m_canonical_spawnfunc, string, "weapon_minelayer");
 /* ammotype  */ ATTRIB(MineLayer, ammo_type, Resource, RES_ROCKETS);

@@ -1,5 +1,12 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(DEVASTATOR_MUZZLEFLASH, "models/flash.md3");
+MODEL(DEVASTATOR_VIEW, W_Model("h_rl.iqm"));
+MODEL(DEVASTATOR_WORLD, W_Model("v_rl.md3"));
+MODEL(DEVASTATOR_ITEM, W_Model("g_rl.md3"));
+#endif
+
 CLASS(Devastator, Weapon)
 /* spawnfunc */ ATTRIB(Devastator, m_canonical_spawnfunc, string, "weapon_devastator");
 /* ammotype  */ ATTRIB(Devastator, ammo_type, Resource, RES_ROCKETS);

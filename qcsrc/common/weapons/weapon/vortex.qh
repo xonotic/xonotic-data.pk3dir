@@ -1,5 +1,12 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(VORTEX_MUZZLEFLASH, "models/nexflash.md3");
+MODEL(VORTEX_VIEW, W_Model("h_nex.iqm"));
+MODEL(VORTEX_WORLD, W_Model("v_nex.md3"));
+MODEL(VORTEX_ITEM, W_Model("g_nex.md3"));
+#endif
+
 CLASS(Vortex, Weapon)
 /* spawnfunc */ ATTRIB(Vortex, m_canonical_spawnfunc, string, "weapon_vortex");
 /* ammotype  */ ATTRIB(Vortex, ammo_type, Resource, RES_CELLS);
