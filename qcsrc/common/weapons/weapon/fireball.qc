@@ -433,3 +433,18 @@ METHOD(Fireball, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+
+METHOD(Fireball, describe, string(Fireball this))
+{
+	TC(Fireball, this);
+	return sprintf(_("The %s supercharges then fires a massive fireball in a straight line, dealing heaps of splash damage over a large radius on impact\n\n"
+		"The secondary fire launches flaming balls that set nearby players alight\n\n"
+		"It is a superweapon, so isn't often found in game\n\n"
+		"It doesn't require ammo, but it is destroyed after some time\n\n"
+		"Since the %s takes a moment to charge and the fireball travels slowly, using it effectively may be difficult, "
+		"but if done properly it can deal a ton of damage"),
+	COLORED_NAME(Fireball), COLORED_NAME(Fireball));
+}
+
+#endif

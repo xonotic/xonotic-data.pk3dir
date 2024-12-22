@@ -41,17 +41,6 @@ CLASS(VaporizerCells, Ammo)
 /*             */ ATTRIB(VaporizerCells, m_respawntimejitter, float, GET(instagib_respawntimejitter_ammo));
 /* iteminit    */ ATTRIB(VaporizerCells, m_iteminit, void(Pickup this, entity item), ammo_vaporizercells_init);
 #endif
-#ifdef MENUQC
-METHOD(VaporizerCells, describe, string(VaporizerCells this))
-{
-    // can't include common/weapons/weapon/vaporizer.qh or else circular includes
-#define VAPORIZER_COLOR strcat(rgb_to_hexcolor(COLOR_WEP_VAPORIZER), _("Vaporizer"), "^7")
-    TC(VaporizerCells, this);
-    return sprintf(_("The %s is sometimes present on maps when InstaGib is enabled, providing ammo for the %s"),
-    COLORED_NAME(VaporizerCells), VAPORIZER_COLOR);
-#undef VORTEX_COLOR
-}
-#endif
 ENDCLASS(VaporizerCells)
 REGISTER_ITEM(VaporizerCells, NEW(VaporizerCells));
 
@@ -77,15 +66,6 @@ CLASS(ExtraLife, Powerup)
 /* wpblink   */ ATTRIB(ExtraLife, m_waypointblink, int, 2);
 #ifdef SVQC
 /* itemid    */ ATTRIB(ExtraLife, m_itemid, int, IT_RESOURCE);
-#endif
-#ifdef MENUQC
-METHOD(ExtraLife, describe, string(ExtraLife this))
-{
-    TC(ExtraLife, this);
-    return sprintf(_("The %s powerup acts as armor in InstaGib. "
-        "If a player is shot while having one or more extra lives, they will survive the shot but suffer strong knockback"),
-    COLORED_NAME(ExtraLife));
-}
 #endif
 ENDCLASS(ExtraLife)
 REGISTER_ITEM(ExtraLife, NEW(ExtraLife));

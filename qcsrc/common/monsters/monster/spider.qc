@@ -235,3 +235,11 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
     return true;
 }
 #endif
+#ifdef MENUQC
+METHOD(Spider, describe, string(Spider this))
+{
+    TC(Spider, this);
+    return _("The Spider is a big arachnid that walks with 8 legs only on the ground, traveling faster than other monsters\n\n"
+             "When an opponent approaches a Spider, it will spit cobweb energy balls to slow down prey, then attack nearby opponents with its chelicerae");
+}
+#endif

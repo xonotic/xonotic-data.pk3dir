@@ -813,3 +813,16 @@ METHOD(Shockwave, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+
+METHOD(Shockwave, describe, string(Shockwave this))
+{
+	TC(Shockwave, this);
+	return sprintf(_("The %s is a unique weapon, firing shockwave blasts that deal damage over a short range\n\n"
+		"Similar to the %s, the secondary fire swings the %s, slapping players close enough with the head of the weapon\n\n"
+		"It doesn't require ammo to work\n\n"
+		"The %s can only deal damage over a short range, so it is not useful for medium and long range combat"),
+	COLORED_NAME(Shockwave), COLORED_NAME(Shotgun), COLORED_NAME(Shockwave), COLORED_NAME(Shockwave));
+}
+
+#endif

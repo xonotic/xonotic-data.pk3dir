@@ -23,16 +23,5 @@ CLASS(Racer, Vehicle)
 /* netname    */ ATTRIB(Racer, netname, string, "racer");
 /* fullname   */ ATTRIB(Racer, m_name, string, _("Racer"));
 /* icon       */ ATTRIB(Racer, m_icon, string, "vehicle_racer");
-#ifdef MENUQC
-METHOD(Racer, describe, string(Racer this))
-{
-	TC(Racer, this);
-	return sprintf(_("The %s vehicle looks like a jet, but does not fly uwpards very well. "
-		"It seats only one passenger, who becomes the pilot\n\n"
-		"It can be accelerated by pressing the ^3+jump^7 bind, which consumes power from the same source as the primary weapon\n\n"
-		"The %s's primary weapon is a laser and the secondary weapon is energy balls that explode on impact"),
-	COLORED_NAME(Racer), COLORED_NAME(Racer));
-}
-#endif
 ENDCLASS(Racer)
 REGISTER_VEHICLE(RACER, NEW(Racer));

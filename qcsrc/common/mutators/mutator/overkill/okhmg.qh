@@ -48,20 +48,6 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 	END()
 	W_PROPS(X, OverkillHeavyMachineGun, okhmg)
 #undef X
-#ifdef MENUQC
-METHOD(OverkillHeavyMachineGun, describe, string(OverkillHeavyMachineGun this))
-{
-	TC(OverkillHeavyMachineGun, this);
-	return sprintf(_("The %s is a superweapon that rapidly fires harmful bullets with a small degree of spread\n\n"
-		"Like with all Overkill weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around\n\n"
-		"It is a superweapon found on some maps, meaning that it breaks down after some time\n\n"
-		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in Overkill. "
-		"It has a limited magazine size, so needs reloading after several shots\n\n"
-		"The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously\n\n"
-		"Since its bullets deal a lot more damage than the %s's bullets, it is often heavily contested when it spawns in"),
-	COLORED_NAME(OverkillHeavyMachineGun), COLORED_NAME(Bullets), COLORED_NAME(OverkillHeavyMachineGun), COLORED_NAME(OverkillMachineGun));
-}
-#endif
 ENDCLASS(OverkillHeavyMachineGun)
 REGISTER_WEAPON(OVERKILL_HMG, NEW(OverkillHeavyMachineGun));
 

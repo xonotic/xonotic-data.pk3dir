@@ -48,3 +48,13 @@ METHOD(Shield, m_tick, void(StatusEffects this, entity actor))
     addPowerupItem(this.m_name, this.m_icon, autocvar_hud_progressbar_shield_color, currentTime, this.m_lifetime, (actor.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_PERSISTENT));
 }
 #endif
+#ifdef MENUQC
+METHOD(Shield, describe, string(Shield this))
+{
+    TC(Shield, this);
+    return sprintf(_("The %s powerup greatly decreases the damage you take until the powerup expires, having a compounding effect with armor. "
+        "It also makes you more resistant to knockback\n\n"
+        "Since it is a powerup, it will drop if you die while holding it"),
+    COLORED_NAME(Shield));
+}
+#endif

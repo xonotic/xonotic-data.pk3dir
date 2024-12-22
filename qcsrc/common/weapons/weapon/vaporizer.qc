@@ -407,3 +407,17 @@ METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+
+METHOD(Vaporizer, describe, string(Vaporizer this))
+{
+	TC(Vaporizer, this);
+	return sprintf(_("The %s is unique weapon, firing a deadly beam of energy dealing a huge amount of damage. "
+		"In InstaGib, the beam has the ability to instantly kill enemies with a single shot, unless they have an %s\n\n"
+		"The secondary fire fires a laser similar to that fired by the %s, with very strong knockback\n\n"
+		"It is a superweapon, so isn't often found in game, except in InstaGib where all players spawn with it\n\n"
+		"It consumes some %s ammo with each shot"),
+	COLORED_NAME(Vaporizer), COLORED_NAME(ExtraLife), COLORED_NAME(Blaster), COLORED_NAME(Cells));
+}
+
+#endif

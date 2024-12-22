@@ -42,3 +42,13 @@ METHOD(Invisibility, m_tick, void(StatusEffects this, entity actor))
     SUPER(Invisibility).m_tick(this, actor);
 }
 #endif
+#ifdef MENUQC
+METHOD(Invisibility, describe, string(Invisibility this))
+{
+    TC(Invisibility, this);
+    return sprintf(_("The %s powerup increases your translucency while the powerup is active, making it more difficult for enemies to see you. "
+        "This powerup is often present in InstaGib\n\n"
+        "Since it is a powerup, it will drop if you die while holding it"),
+    COLORED_NAME(Invisibility));
+}
+#endif

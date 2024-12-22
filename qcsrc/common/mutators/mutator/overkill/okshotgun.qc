@@ -120,3 +120,17 @@ METHOD(OverkillShotgun, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+
+METHOD(OverkillShotgun, describe, string(OverkillShotgun this))
+{
+	TC(OverkillShotgun, this);
+	return sprintf(_("The %s fires a single shotgun round which spreads into multiple pellets upon exiting the barrel, dealing a deadly blow if up close\n\n"
+		"Like with all Overkill weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around\n\n"
+		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in Overkill. "
+		"It has a limited magazine size, so needs reloading after several shots\n\n"
+		"The %s's damage drops off quickly as the range increases, so it is only useful for close combat or sometimes medium range combat"),
+	COLORED_NAME(OverkillShotgun), COLORED_NAME(Shells), COLORED_NAME(OverkillShotgun));
+}
+
+#endif

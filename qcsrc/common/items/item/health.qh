@@ -60,15 +60,6 @@ CLASS(HealthSmall, Health)
 /* pickupanyway */ ATTRIB(HealthSmall, m_pickupanyway, float, GET(g_pickup_healthsmall_anyway));
 /* iteminit     */ ATTRIB(HealthSmall, m_iteminit, void(Pickup this, entity item), item_healthsmall_init);
 #endif
-#ifdef MENUQC
-METHOD(HealthSmall, describe, string(HealthSmall this))
-{
-    TC(HealthSmall, this);
-    return sprintf(_("The %s restores a small amount of health when picked up, "
-        "helping you recover from damage taken during combat"),
-    COLORED_NAME(HealthSmall));
-}
-#endif
 ENDCLASS(HealthSmall)
 REGISTER_ITEM(HealthSmall, NEW(HealthSmall));
 
@@ -119,15 +110,6 @@ CLASS(HealthMedium, Health)
 /* pickupanyway */ ATTRIB(HealthMedium, m_pickupanyway, float, GET(g_pickup_healthmedium_anyway));
 /* iteminit     */ ATTRIB(HealthMedium, m_iteminit, void(Pickup this, entity item), item_healthmedium_init);
 #endif
-#ifdef MENUQC
-METHOD(HealthMedium, describe, string(HealthMedium this))
-{
-    TC(HealthMedium, this);
-    return sprintf(_("The %s restores a medium amount of health when picked up, "
-        "helping you recover from damage taken during combat"),
-    COLORED_NAME(HealthMedium));
-}
-#endif
 ENDCLASS(HealthMedium)
 REGISTER_ITEM(HealthMedium, NEW(HealthMedium));
 
@@ -176,15 +158,6 @@ CLASS(HealthBig, Health)
 /*              */ ATTRIB(HealthBig, m_respawntimejitter, float, GET(g_pickup_respawntimejitter_health_big));
 /* pickupanyway */ ATTRIB(HealthBig, m_pickupanyway, float, GET(g_pickup_healthbig_anyway));
 /* iteminit     */ ATTRIB(HealthBig, m_iteminit, void(Pickup this, entity item), item_healthbig_init);
-#endif
-#ifdef MENUQC
-METHOD(HealthBig, describe, string(HealthBig this))
-{
-    TC(HealthBig, this);
-    return sprintf(_("The %s restores a large amount of health when picked up, "
-        "helping you recover from damage taken during combat"),
-    COLORED_NAME(HealthBig));
-}
 #endif
 ENDCLASS(HealthBig)
 REGISTER_ITEM(HealthBig, NEW(HealthBig));
@@ -235,16 +208,6 @@ CLASS(HealthMega, Health)
 /*              */ ATTRIB(HealthMega, m_respawntimejitter, float, GET(g_pickup_respawntimejitter_health_mega));
 /* pickupanyway */ ATTRIB(HealthMega, m_pickupanyway, float, GET(g_pickup_healthmega_anyway));
 /* iteminit     */ ATTRIB(HealthMega, m_iteminit, void(Pickup this, entity item), item_healthmega_init);
-#endif
-#ifdef MENUQC
-METHOD(HealthMega, describe, string(HealthMega this))
-{
-    TC(HealthMega, this);
-    return sprintf(_("The %s restores a huge amount of health when picked up, "
-        "helping you recover from damage taken during combat\n\n"
-        "It tends to be one of the most highly contested items on a map, particularly in game modes like Duel"),
-    COLORED_NAME(HealthMega));
-}
 #endif
 ENDCLASS(HealthMega)
 REGISTER_ITEM(HealthMega, NEW(HealthMega));

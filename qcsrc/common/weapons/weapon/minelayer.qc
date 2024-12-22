@@ -512,3 +512,18 @@ METHOD(MineLayer, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+
+METHOD(MineLayer, describe, string(MineLayer this))
+{
+	TC(MineLayer, this);
+	return sprintf(_("The %s places mines on the ground when fired, which detonate and damage enemies if stepped on. "
+		"Only a couple mines can be placed at any time, and after several seconds they will self-detonate\n\n"
+		"The secondary fire instantaneously detonates any mines fired by the primary fire, first waiting until you're far enough away\n\n"
+		"It consumes %s ammo for each mine laid\n\n"
+		"The mines are not launched very far before they hit the ground, so the %s isn't very effective at medium to long ranges. "
+		"It is often used to protect important areas of the map such as the flag in Capture The Flag, control points in Onslaught, or checkpoints in Assault"),
+	COLORED_NAME(MineLayer), COLORED_NAME(Rockets), COLORED_NAME(MineLayer));
+}
+
+#endif

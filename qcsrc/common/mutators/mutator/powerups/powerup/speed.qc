@@ -30,3 +30,13 @@ METHOD(Speed, m_tick, void(StatusEffects this, entity actor))
     SUPER(Speed).m_tick(this, actor);
 }
 #endif
+#ifdef MENUQC
+METHOD(Speed, describe, string(Speed this))
+{
+    TC(Speed, this);
+    return sprintf(_("The %s powerup increases your movement speed, attack speed, and health regeneration speed while the powerup is active. "
+        "However, it also makes you a bit more vulnerable to incoming attacks\n\n"
+        "Since it is a powerup, it will drop if you die while holding it"),
+    COLORED_NAME(Speed));
+}
+#endif

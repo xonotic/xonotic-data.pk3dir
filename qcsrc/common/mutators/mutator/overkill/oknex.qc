@@ -362,3 +362,17 @@ METHOD(OverkillNex, wr_zoomdir, bool(entity thiswep))
 }
 
 #endif
+#ifdef MENUQC
+
+METHOD(OverkillNex, describe, string(OverkillNex this))
+{
+	TC(OverkillNex, this);
+	return sprintf(_("The %s fires harmful beams of energy that traverse the map instantaneously and deal a significant chunk of damage on impact\n\n"
+		"Like with all Overkill weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around\n\n"
+		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in Overkill. "
+		"It has a limited magazine size, so needs reloading after several shots\n\n"
+		"Since it is the only Overkill weapon with no spread, the %s stands out at long ranges"),
+	COLORED_NAME(OverkillNex), COLORED_NAME(Cells), COLORED_NAME(OverkillNex));
+}
+
+#endif

@@ -74,20 +74,6 @@ CLASS(Electro, Weapon)
 	END()
 	W_PROPS(X, Electro, electro)
 #undef X
-#ifdef MENUQC
-METHOD(Electro, describe, string(Electro this))
-{
-	TC(Electro, this);
-	return sprintf(_("The %s shoots electric balls forwards, dealing some splash damage when they burst on impact\n\n"
-		"The secondary fire launches similar balls that are influenced by gravity, "
-		"so they can be laid around the map at high traffic locations (like the flag in Capture The Flag) to damage enemies that walk by. "
-		"The balls burst after some time, and can be forced to burst in a \"combo\" if a primary fire ball bursts near them\n\n"
-		"It consumes some %s ammo for each ball\n\n"
-		"The %s is one of the best spam weapons to use in crowded areas, since combos can deal tons of damage, if the enemy is close enough. "
-		"Since the primary fire doesn't travel particularly fast, the %s is not useful in many other situations"),
-	COLORED_NAME(Electro), COLORED_NAME(Cells), COLORED_NAME(Electro), COLORED_NAME(Electro));
-}
-#endif
 ENDCLASS(Electro)
 REGISTER_WEAPON(ELECTRO, NEW(Electro));
 

@@ -839,3 +839,20 @@ METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 #endif
 
 #endif
+#ifdef MENUQC
+
+METHOD(Raptor, describe, string(Raptor this))
+{
+    // can't include ./spiderbot.qh or else circular includes
+#define SPIDERBOT_COLOR strcat(rgb_to_hexcolor('1 1 1'), _("Spiderbot"), "^7")
+    TC(Raptor, this);
+    return sprintf(_("The %s vehicle is a flying vehicle that takes only one pilot, who can also opearate two weapons\n\n"
+        "The two weapons have different reticles for them similar to the %s. "
+        "The primary weapon is laser-based, and is shot toward the white reticle. "
+        "The secondary weapon drops bombs to the ground, aiming towards the green reticle. "
+        "The white reticle always points at the head of the vehicle, while the green reticle's location is determined by the momentum of the vehicle"),
+    COLORED_NAME(Raptor), SPIDERBOT_COLOR);
+#undef SPIDERBOT_COLOR
+}
+
+#endif

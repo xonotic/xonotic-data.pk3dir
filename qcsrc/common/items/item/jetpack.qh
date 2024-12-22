@@ -48,16 +48,6 @@ CLASS(Jetpack, Powerup)
 /* pickupfunc */ ATTRIB(Jetpack, m_pickupevalfunc, float(entity player, entity item), ammo_pickupevalfunc);
 /* iteminit   */ ATTRIB(Jetpack, m_iteminit, void(Pickup this, entity item), powerup_jetpack_init);
 #endif
-#ifdef MENUQC
-METHOD(Jetpack, describe, string(Jetpack this))
-{
-    TC(Jetpack, this);
-    return sprintf(_("The %s allows you to fly around the map for a short period, "
-        "providing increased mobility, maneuverability, and the ability to reach higher ground\n\n"
-        "It consumes Fuel ammo while operating, so make sure you don't run out when you're high up!"),
-    COLORED_NAME(Jetpack));
-}
-#endif
 ENDCLASS(Jetpack)
 REGISTER_ITEM(Jetpack, NEW(Jetpack));
 
@@ -90,14 +80,6 @@ CLASS(JetpackFuel, Ammo)
 /* botvlaue   */ ATTRIB(JetpackFuel, m_botvalue, int, 2000);
 /* itemid     */ ATTRIB(JetpackFuel, m_itemid, int, IT_RESOURCE);
 /* iteminit   */ ATTRIB(JetpackFuel, m_iteminit, void(Pickup this, entity item), ammo_fuel_init);
-#endif
-#ifdef MENUQC
-METHOD(JetpackFuel, describe, string(JetpackFuel this))
-{
-    TC(JetpackFuel, this);
-    return sprintf(_("The %s ammo type is used by the %s"),
-    COLORED_NAME(JetpackFuel), COLORED_NAME(Jetpack));
-}
 #endif
 ENDCLASS(JetpackFuel)
 REGISTER_ITEM(JetpackFuel, NEW(JetpackFuel));
@@ -135,16 +117,6 @@ CLASS(JetpackRegen, Powerup)
 /* itemid     */ ATTRIB(JetpackRegen, m_itemid, int, IT_FUEL_REGEN);
 /* pickupfunc */ ATTRIB(JetpackRegen, m_pickupevalfunc, float(entity player, entity item), ammo_pickupevalfunc);
 /* iteminit   */ ATTRIB(JetpackRegen, m_iteminit, void(Pickup this, entity item), powerup_fuelregen_init);
-#endif
-#ifdef MENUQC
-METHOD(JetpackRegen, describe, string(JetpackRegen this))
-{
-    TC(JetpackRegen, this);
-    return sprintf(_("The %s powerup regenerates %s needed for the %s until the powerup expires, "
-        "so you can continue flying around for longer\n\n"
-        "Since it is a powerup, it will drop if you die while holding it"),
-    COLORED_NAME(JetpackRegen), COLORED_NAME(JetpackFuel), COLORED_NAME(Jetpack));
-}
 #endif
 ENDCLASS(JetpackRegen)
 REGISTER_ITEM(JetpackRegen, NEW(JetpackRegen));

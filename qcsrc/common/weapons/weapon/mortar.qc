@@ -372,3 +372,17 @@ METHOD(Mortar, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+
+METHOD(Mortar, describe, string(Mortar this))
+{
+	TC(Mortar, this);
+	return sprintf(_("The %s launches a grenade that explodes immediately on impact, dealing a medium amount of splash damage\n\n"
+		"The secondary fire shoots a similar grenade that explodes shortly after bouncing\n\n"
+		"It consumes %s ammo for every grenade launched\n\n"
+		"The %s works best at close to medium ranges, but it's quite tricky to hit an enemy if they're airborne. "
+		"Since the secondary fire grenade bounces before exploding, it can be bounced against walls to damage enemies lurking around a corner"),
+	COLORED_NAME(Mortar), COLORED_NAME(Rockets), COLORED_NAME(Mortar));
+}
+
+#endif

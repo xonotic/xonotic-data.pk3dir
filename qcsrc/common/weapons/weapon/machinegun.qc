@@ -412,3 +412,17 @@ METHOD(MachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+
+METHOD(MachineGun, describe, string(MachineGun this))
+{
+	TC(MachineGun, this);
+	return sprintf(_("The %s quickly fires bullets with a small degree of spread\n\n"
+		"The secondary fire fires a quick burst of bullets faster than the primary fire and with no spread, but there's a short delay until it can be used again\n\n"
+		"It consumes %s ammo for each bullet shot, until the whole magazine is emptied\n\n"
+		"The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously. "
+		"Since the secondary fire has no spread, it's the better option when firing over a long range"),
+	COLORED_NAME(MachineGun), COLORED_NAME(Bullets), COLORED_NAME(MachineGun));
+}
+
+#endif

@@ -48,3 +48,14 @@ METHOD(Strength, m_tick, void(StatusEffects this, entity actor))
     addPowerupItem(this.m_name, this.m_icon, autocvar_hud_progressbar_strength_color, currentTime, this.m_lifetime, (actor.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_PERSISTENT));
 }
 #endif
+#ifdef MENUQC
+METHOD(Strength, describe, string(Strength this))
+{
+    TC(Strength, this);
+    return sprintf(_("The %s powerup greatly increases the damage you deal, until the powerup expires. "
+        "It also increases the knockback that your attacks deal\n\n"
+        "The damage and knockback you deal to yourself also increases but by a smaller amount\n\n"
+        "Since it is a powerup, it will drop if you die while holding it"),
+    COLORED_NAME(Strength));
+}
+#endif
