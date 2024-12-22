@@ -73,18 +73,18 @@ void HUD_Physics()
 	// compute speed
 	float conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 	float speed, speed2d;
-	float max_speed = rint(autocvar_hud_panel_physics_speed_max * conversion_factor);
+	float max_speed = floor(autocvar_hud_panel_physics_speed_max * conversion_factor + 0.5);
 	if (autocvar__hud_configure)
 	{
-		speed2d = rint(max_speed * 0.65);
+		speed2d = floor(max_speed * 0.65 + 0.5);
 		speed = speed2d; // just ignore vertical speed in hud configure
 		immobile = speed <= 0;
 	}
 	else
 	{
-		speed2d = rint(speed_phys * conversion_factor);
+		speed2d = floor(speed_phys * conversion_factor + 0.5);
 		if (autocvar_hud_panel_physics_speed_vertical)
-			speed = rint(speed3d_phys * conversion_factor);
+			speed = floor(speed3d_phys * conversion_factor + 0.5);
 		else
 			speed = speed2d;
 	}
@@ -174,7 +174,7 @@ void HUD_Physics()
 		text_bits |= BIT(1);
 		if (autocvar__hud_configure)
 		{
-			jump_speed = rint(max_speed * 0.59); // slightly less than current speed text
+			jump_speed = floor(max_speed * 0.59 + 0.5); // slightly less than current speed text
 			jump_speed_f = 1;
 		}
 		else
@@ -201,7 +201,7 @@ void HUD_Physics()
 		text_bits |= BIT(0);
 		if (autocvar__hud_configure)
 		{
-			top_speed = rint(max_speed * 0.73);
+			top_speed = floor(max_speed * 0.73 + 0.5);
 			top_speed_f = 1;
 		}
 		else
@@ -234,7 +234,7 @@ void HUD_Physics()
 					peak_offsetX = (1 - min(top_speed, max_speed) / max_speed) * panel_size.x;
 				else //if (speed_baralign == 2)
 					peak_offsetX = min(top_speed, max_speed) / max_speed * panel_size.x * 0.5;
-				peak_size.x = rint(panel_size.x * 0.01) + 1;
+				peak_size.x = floor(panel_size.x * 0.01 + 1.5);
 				peak_size.y = panel_size.y;
 				if (speed_baralign == 2) // draw two peaks, on both sides
 				{
