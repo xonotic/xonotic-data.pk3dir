@@ -38,7 +38,7 @@ ArrayList arr_name##_MENU; \
 int arr_name##_MENU_COUNT; \
 STATIC_INIT_LATE(arr_name##_MENU) \
 { \
-	AL_NEW(arr_name##_MENU, register_arr##_MAX, NULL, e); \
+	AL_NEW(arr_name##_MENU, REGISTRY_MAX(register_arr), NULL, e); \
 	FOREACH(register_arr, !it.m_hidden && (cond), { \
 		AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
 		arr_name##_MENU_COUNT++; \
