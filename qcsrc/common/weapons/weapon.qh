@@ -220,21 +220,3 @@ const int WEP_FLAG_SPECIALATTACK  =  BIT(16); // marked as a special attack (not
 
 // variables:
 string weaponorder_byid;
-
-// functions:
-string W_FixWeaponOrder(string order, float complete);
-string W_NameWeaponOrder(string order);
-string W_NumberWeaponOrder(string order);
-string W_FixWeaponOrder_BuildImpulseList(string o);
-string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
-string W_FixWeaponOrder_ForceComplete(string order);
-WepSet W_RandomWeapons(entity e, WepSet remaining, int n);
-
-entity GetAmmoItem(Resource ammotype);
-
-#ifdef CSQC
-int GetAmmoStat(Resource ammotype);
-#endif
-
-string W_Sound(string w_snd);
-string W_Model(string w_mdl);

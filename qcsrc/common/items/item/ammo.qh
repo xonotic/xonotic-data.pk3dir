@@ -23,13 +23,6 @@ CLASS(Ammo, Pickup)
     ATTRIB(Ammo, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_ammo));
     ATTRIB(Ammo, m_pickupanyway, float(), GET(g_pickup_ammo_anyway));
 #endif
-#ifdef MENUQC
-    METHOD(Ammo, describe, string(Ammo this))
-    {
-        TC(Ammo, this);
-        return SUPER(Pickup).describe(this);
-    }
-#endif
 ENDCLASS(Ammo)
 
 
