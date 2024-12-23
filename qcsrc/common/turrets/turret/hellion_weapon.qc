@@ -10,7 +10,7 @@ SOUND(HellionAttack_FIRE, W_Sound("rocket_fire"));
 METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_ELECTRO, refire))) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 1)) {
         if (isPlayer) {
             turret_initparams(actor);
             W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_HellionAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_HELLION.m_id);
@@ -18,7 +18,7 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
             actor.shot_radius = 500;
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_ELECTRO, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0.5, w_ready);
         }
         if (!isPlayer) {
             if (actor.tur_head.frame != 0)

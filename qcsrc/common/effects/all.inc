@@ -237,11 +237,17 @@ EFFECT(0, ITEM_PICKUP,              "item_pickup")
 EFFECT(0, ITEM_RESPAWN,             "item_respawn")
 EFFECT(0, ITEM_DESPAWN,             "item_despawn")
 
+// FIXME: needs custom effect
+EFFECT(0, ONS_ELECTRICITY_EXPLODE,  "electro_ballexplode")
 EFFECT(0, ONS_GENERATOR_DAMAGED,    "torch_small")
 EFFECT(0, ONS_GENERATOR_GIB,        "onslaught_generator_gib_explode")
 EFFECT(0, ONS_GENERATOR_EXPLODE,    "onslaught_generator_smallexplosion")
 EFFECT(0, ONS_GENERATOR_EXPLODE2,   "onslaught_generator_finalexplosion")
+// FIXME: needs custom effect
+EFFECT(0, ONS_SHOCKWAVE,            "electro_combo")
 
+// FIXME: needs custom effect
+EFFECT(0, KA_BALL_RESPAWN,          "electro_combo")
 
 
 EFFECT(0, LASER_DEADLY,             "laser_deadly")

@@ -34,7 +34,7 @@ Sound SND_RIC_RANDOM() {
     return REGISTRY_GET(Sounds, SND_RIC1.m_id + rint(random() * 2));
 }
 
-SOUND(ROCKET_IMPACT, W_Sound("rocket_impact"));
+SOUND(ROCKET_IMPACT, W_Sound("rocket_impact")); // heavily used as a generic explosion sound
 SOUND(STRENGTH_FIRE, W_Sound("strength_fire"));
 SOUND(UNAVAILABLE, W_Sound("unavailable"));
 SOUND(WEAPONPICKUP, W_Sound("weaponpickup"));
