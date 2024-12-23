@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(OK_SHOTGUN_VIEW, W_Model("h_ok_shotgun.iqm"));
+MODEL(OK_SHOTGUN_WORLD, W_Model("v_ok_shotgun.md3"));
+MODEL(OK_SHOTGUN_ITEM, W_Model("g_ok_shotgun.md3"));
+#endif
+
 CLASS(OverkillShotgun, Weapon)
 /* spawnfunc */ ATTRIB(OverkillShotgun, m_canonical_spawnfunc, string, "weapon_okshotgun");
 /* ammotype  */ ATTRIB(OverkillShotgun, ammo_type, Resource, RES_SHELLS);

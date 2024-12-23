@@ -5,6 +5,9 @@ MODEL(SHOTGUN_MUZZLEFLASH, "models/uziflash.md3");
 MODEL(SHOTGUN_VIEW, W_Model("h_shotgun.iqm"));
 MODEL(SHOTGUN_WORLD, W_Model("v_shotgun.md3"));
 MODEL(SHOTGUN_ITEM, W_Model("g_shotgun.md3"));
+
+SOUND(SHOTGUN_FIRE, W_Sound("shotgun_fire"));
+SOUND(SHOTGUN_MELEE, W_Sound("shotgun_melee"));
 #endif
 
 CLASS(Shotgun, Weapon)

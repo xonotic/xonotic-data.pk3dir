@@ -4,6 +4,13 @@
 MODEL(ELECTRO_VIEW, W_Model("h_electro.iqm"));
 MODEL(ELECTRO_WORLD, W_Model("v_electro.md3"));
 MODEL(ELECTRO_ITEM, W_Model("g_electro.md3"));
+
+SOUND(ELECTRO_BOUNCE, W_Sound("electro_bounce"));
+SOUND(ELECTRO_FIRE2, W_Sound("electro_fire2"));
+SOUND(ELECTRO_FIRE, W_Sound("electro_fire"));
+SOUND(ELECTRO_FLY, W_Sound("electro_fly"));
+SOUND(ELECTRO_IMPACT, W_Sound("electro_impact"));
+SOUND(ELECTRO_IMPACT_COMBO, W_Sound("electro_impact_combo"));
 #endif
 
 CLASS(Electro, Weapon)

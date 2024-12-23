@@ -3,7 +3,7 @@
 #ifdef SVQC
 
 void turret_flac_projectile_think_explode(entity this);
-SOUND(FlacAttack_FIRE, W_Sound("electro_fire"));
+SOUND(FlacAttack_FIRE, W_Sound("hagar_fire"));
 METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
@@ -20,7 +20,7 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponen
 
         turret_tag_fire_update(actor);
 
-        entity proj = turret_projectile(actor, SND_HAGAR_FIRE, 5, 0, DEATH_TURRET_FLAC.m_id, PROJECTILE_HAGAR, true, true);
+        entity proj = turret_projectile(actor, SND_FlacAttack_FIRE, 5, 0, DEATH_TURRET_FLAC.m_id, PROJECTILE_HAGAR, true, true);
         proj.missile_flags = MIF_SPLASH | MIF_PROXY;
         setthink(proj, turret_flac_projectile_think_explode);
         proj.nextthink  = time + actor.tur_impacttime + (random() * 0.01 - random() * 0.01);

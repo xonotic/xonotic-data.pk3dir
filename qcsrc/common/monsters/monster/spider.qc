@@ -43,7 +43,7 @@ MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
 	}
 }
 
-SOUND(SpiderAttack_FIRE, W_Sound("electro_fire"));
+SOUND(SpiderAttack_FIRE, W_Sound("electro_fire2"));
 METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity weaponentity, int fire))
 {
     TC(SpiderAttack, thiswep);
@@ -108,7 +108,7 @@ void M_Spider_Attack_Web_Touch(entity this, entity toucher)
 
 void M_Spider_Attack_Web(entity this)
 {
-	sound(this, CH_SHOTS, SND_ELECTRO_FIRE2, VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS, SND_SpiderAttack_FIRE, VOL_BASE, ATTEN_NORM);
 
 	entity proj = new(plasma);
 	proj.owner = proj.realowner = this;

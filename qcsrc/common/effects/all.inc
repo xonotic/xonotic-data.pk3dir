@@ -31,7 +31,7 @@ EFFECT(0, ARC_OVERHEAT,             "arc_overheat")
 EFFECT(0, ARC_OVERHEAT_FIRE,        "arc_overheat_fire")
 EFFECT(0, ARC_SMOKE,                "arc_smoke")
 EFFECT(0, ARC_LIGHTNING,            "arc_lightning")
-EFFECT(0, ARC_LIGHTNING2,           "electro_lightning")
+//EFFECT(0, ARC_LIGHTNING2,           "electro_lightning")
 
 EFFECT(0, MACHINEGUN_IMPACT,        "machinegun_impact")
 EFFECT(0, MACHINEGUN_MUZZLEFLASH,   "uzi_muzzleflash")

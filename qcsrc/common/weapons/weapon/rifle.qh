@@ -4,6 +4,9 @@
 MODEL(RIFLE_VIEW, W_Model("h_campingrifle.iqm"));
 MODEL(RIFLE_WORLD, W_Model("v_campingrifle.md3"));
 MODEL(RIFLE_ITEM, W_Model("g_campingrifle.md3"));
+
+SOUND(RIFLE_FIRE2, W_Sound("campingrifle_fire2"));
+SOUND(RIFLE_FIRE, W_Sound("campingrifle_fire"));
 #endif
 
 CLASS(Rifle, Weapon)

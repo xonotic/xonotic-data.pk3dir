@@ -4,6 +4,11 @@
 MODEL(MORTAR_VIEW, W_Model("h_gl.iqm"));
 MODEL(MORTAR_WORLD, W_Model("v_gl.md3"));
 MODEL(MORTAR_ITEM, W_Model("g_gl.md3"));
+
+SOUND(MORTAR_DET, W_Sound("rocket_det"));
+SOUND(MORTAR_FIRE, W_Sound("grenade_fire"));
+SOUND(MORTAR_IMPACT, W_Sound("grenade_impact"));
+SOUND(MORTAR_STICK, W_Sound("grenade_stick"));
 #endif
 
 CLASS(Mortar, Weapon)

@@ -95,7 +95,7 @@ void generator_draw(entity this)
 	if(random() < 0.25)
 	{
 		te_explosion(this.origin);
-		sound(this, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+		sound(this, CH_TRIGGER, SND_ONS_GENERATOR_EXPLODE, VOL_BASE, ATTEN_NORM);
 	}
 
 	// Particles

@@ -7,6 +7,8 @@ MODEL(RPC_MUZZLEFLASH, "models/flash.md3");
 MODEL(RPC_VIEW, W_Model("h_ok_rl.iqm"));
 MODEL(RPC_WORLD, W_Model("v_ok_rl.md3"));
 MODEL(RPC_ITEM, W_Model("g_ok_rl.md3"));
+
+SOUND(RPC_FIRE, W_Sound("rocket_fire"));
 #endif
 
 CLASS(OverkillRocketPropelledChainsaw, Weapon)

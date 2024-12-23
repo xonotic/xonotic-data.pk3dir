@@ -363,7 +363,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_DEVASTATOR_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
 				break;
@@ -430,7 +430,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.maxs = '2 2 2';
 				break;
 			case PROJECTILE_SEEKER:
-				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_SEEKER_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				break;
@@ -447,25 +447,11 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_RAPTORCANNON:
 				break;
 			case PROJECTILE_SPIDERROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_VEH_SPIDERBOT_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				break;
 			case PROJECTILE_WAKIROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_VEH_RACER_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				break;
-			/*
-			case PROJECTILE_WAKICANNON:
-			    break;
-			case PROJECTILE_BUMBLE_GUN:
-			    // only new engines support sound moving with object
-			    loopsound(this, CH_SHOTS_SINGLE, SND_ELECTRO_FLY, VOL_BASE, ATTEN_NORM);
-			    this.mins = '0 0 -4';
-			    this.maxs = '0 0 -4';
-			    this.move_movetype = MOVETYPE_BOUNCE;
-			    settouch(this, func_null);
-			    this.bouncefactor = WEP_CVAR_SEC(WEP_ELECTRO, bouncefactor);
-			    this.bouncestop = WEP_CVAR_SEC(WEP_ELECTRO, bouncestop);
-			    break;
-			*/
 			default:
 				break;
 		}

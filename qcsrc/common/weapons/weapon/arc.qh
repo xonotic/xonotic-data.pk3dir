@@ -5,6 +5,13 @@ MODEL(ARC_MUZZLEFLASH, "models/flash.md3");
 MODEL(ARC_VIEW, W_Model("h_arc.iqm"));
 MODEL(ARC_WORLD, W_Model("v_arc.md3"));
 MODEL(ARC_ITEM, W_Model("g_arc.md3"));
+
+SOUND(ARC_BOLT_FIRE, W_Sound("electro_fire2"));
+SOUND(ARC_BOLT_IMPACT, W_Sound("electro_impact"));
+SOUND(ARC_FIRE, W_Sound("arc_fire"));
+SOUND(ARC_LOOP, W_Sound("arc_loop"));
+SOUND(ARC_LOOP_OVERHEAT, W_Sound("arc_loop_overheat"));
+SOUND(ARC_STOP, W_Sound("arc_stop"));
 #endif
 
 CLASS(Arc, Weapon)

@@ -3,7 +3,7 @@
 #ifdef SVQC
 
 void turret_initparams(entity);
-SOUND(EWheelAttack_FIRE, W_Sound("electro_fire"));
+SOUND(EWheelAttack_FIRE, W_Sound("lasergun_fire"));
 METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
@@ -19,7 +19,7 @@ METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, .entity weapon
 
         turret_do_updates(actor);
 
-        entity missile = turret_projectile(actor, SND_LASERGUN_FIRE, 1, 0, DEATH_TURRET_EWHEEL.m_id, PROJECTILE_BLASTER, true, true);
+        entity missile = turret_projectile(actor, SND_EWheelAttack_FIRE, 1, 0, DEATH_TURRET_EWHEEL.m_id, PROJECTILE_BLASTER, true, true);
         missile.missile_flags = MIF_SPLASH;
 
         Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);

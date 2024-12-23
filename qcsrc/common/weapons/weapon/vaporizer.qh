@@ -5,6 +5,9 @@ MODEL(VAPORIZER_MUZZLEFLASH, "models/nexflash.md3");
 MODEL(VAPORIZER_VIEW, W_Model("h_minstanex.iqm"));
 MODEL(VAPORIZER_WORLD, W_Model("v_minstanex.md3"));
 MODEL(VAPORIZER_ITEM, W_Model("g_minstanex.md3"));
+
+SOUND(VAPORIZER_FIRE, W_Sound("minstanexfire"));
+SOUND(VAPORIZER_IMPACT, W_Sound("neximpact"));
 #endif
 
 CLASS(Vaporizer, Weapon)

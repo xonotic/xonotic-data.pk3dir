@@ -5,6 +5,7 @@ void beam_think(entity this);
 
 .int fireflag;
 SOUND(PhaserTurretAttack_FIRE, W_Sound("electro_fire"));
+SOUND(PhaserTurretAttack_IMPACT, W_Sound("neximpact"));
 METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     bool isPlayer = IS_PLAYER(actor);
@@ -43,7 +44,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 
         setattachment(beam, actor.tur_head, "tag_fire");
 
-        soundat (actor, trace_endpos, CH_SHOTS, SND(NEXIMPACT), VOL_BASE, ATTEN_NORM);
+        soundat (actor, trace_endpos, CH_SHOTS, SND(PhaserTurretAttack_IMPACT), VOL_BASE, ATTEN_NORM);
         if (!isPlayer)
         if (actor.tur_head.frame == 0)
             actor.tur_head.frame = 1;

@@ -20,22 +20,6 @@ MODEL(KH_KEY,                           "models/keyhunt/key.md3");
 MODEL(KH_KEY_CARRIED,                   "models/keyhunt/key-carried.md3");
 #endif
 
-MODEL(OK_HMG,                           W_Model("g_ok_hmg.md3"));
-
-MODEL(OK_RPC,                           W_Model("g_ok_rl.md3"));
-
-MODEL(OK_MG_VIEW,                       W_Model("h_ok_mg.iqm"));
-MODEL(OK_MG_WORLD,                      W_Model("v_ok_mg.md3"));
-MODEL(OK_MG_ITEM,                       W_Model("g_ok_mg.md3"));
-
-MODEL(OK_SHOTGUN_VIEW,                  W_Model("h_ok_shotgun.iqm"));
-MODEL(OK_SHOTGUN_WORLD,                 W_Model("v_ok_shotgun.md3"));
-MODEL(OK_SHOTGUN_ITEM,                  W_Model("g_ok_shotgun.md3"));
-
-MODEL(OK_SNIPER_VIEW,                   W_Model("h_ok_sniper.iqm"));
-MODEL(OK_SNIPER_WORLD,                  W_Model("v_ok_sniper.md3"));
-MODEL(OK_SNIPER_ITEM,                   W_Model("g_ok_sniper.md3"));
-
 MODEL(ONS_CP,                           "models/onslaught/controlpoint_icon.md3");
 MODEL(ONS_CP_SHIELD,                    "models/onslaught/controlpoint_shield.md3");
 MODEL(ONS_CP_PAD1,                      "models/onslaught/controlpoint_pad.md3");

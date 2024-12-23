@@ -1,7 +1,7 @@
 #include "plasma_weapon.qh"
 
 #ifdef SVQC
-SOUND(PlasmaAttack_FIRE, W_Sound("electro_fire"));
+SOUND(PlasmaAttack_FIRE, W_Sound("hagar_fire"));
 METHOD(PlasmaAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
 	bool isPlayer = IS_PLAYER(actor);
 	if (fire & 1)
@@ -14,7 +14,7 @@ METHOD(PlasmaAttack, wr_think, void(entity thiswep, entity actor, .entity weapon
             actor.tur_head = actor;
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_ELECTRO, animtime), w_ready);
         }
-        entity missile = turret_projectile(actor, SND_HAGAR_FIRE, 1, 0, DEATH_TURRET_PLASMA.m_id, PROJECTILE_ELECTRO_BEAM, true, true);
+        entity missile = turret_projectile(actor, SND_PlasmaAttack_FIRE, 1, 0, DEATH_TURRET_PLASMA.m_id, PROJECTILE_ELECTRO_BEAM, true, true);
         missile.missile_flags = MIF_SPLASH;
         Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);
 	}

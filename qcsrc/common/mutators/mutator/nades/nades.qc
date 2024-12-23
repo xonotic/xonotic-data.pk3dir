@@ -99,7 +99,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 
 	if (proj.cnt == PROJECTILE_NAPALM_FOUNTAIN)
 	{
-		loopsound(proj, CH_SHOTS_SINGLE, SND_FIREBALL_FLY2, VOL_BASE, ATTEN_NORM);
+		loopsound(proj, CH_SHOTS_SINGLE, SND_NADE_NAPALM_FLY, VOL_BASE, ATTEN_NORM);
 		proj.mins = '-16 -16 -16';
 		proj.maxs = '16 16 16';
 	}
@@ -309,7 +309,7 @@ void nade_napalm_ball(entity this)
 	entity proj;
 	vector kick;
 
-	spamsound(this, CH_SHOTS, SND_FIREBALL_FIRE, VOL_BASE, ATTEN_NORM);
+	spamsound(this, CH_SHOTS, SND_NADE_NAPALM_FIRE, VOL_BASE, ATTEN_NORM);
 
 	proj = new(grenade);
 	proj.owner = this.owner;

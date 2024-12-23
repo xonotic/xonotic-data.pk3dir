@@ -6,7 +6,7 @@ float autocvar_g_turrets_unit_hellion_shot_speed_gain;
 float autocvar_g_turrets_unit_hellion_shot_speed_max;
 
 void turret_hellion_missile_think(entity this);
-SOUND(HellionAttack_FIRE, W_Sound("electro_fire"));
+SOUND(HellionAttack_FIRE, W_Sound("rocket_fire"));
 METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
@@ -27,7 +27,7 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
                 actor.tur_shotorg = gettaginfo(actor.tur_head, gettagindex(actor.tur_head, "tag_fire2"));
         }
 
-        entity missile = turret_projectile(actor, SND_ROCKET_FIRE, 6, 10, DEATH_TURRET_HELLION.m_id, PROJECTILE_ROCKET, false, false);
+        entity missile = turret_projectile(actor, SND_HellionAttack_FIRE, 6, 10, DEATH_TURRET_HELLION.m_id, PROJECTILE_ROCKET, false, false);
         te_explosion (missile.origin);
         setthink(missile, turret_hellion_missile_think);
         missile.nextthink	= time;

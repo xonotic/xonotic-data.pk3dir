@@ -5,6 +5,13 @@ MODEL(FIREBALL_SPHERE, "models/sphere/sphere.md3");
 MODEL(FIREBALL_VIEW, W_Model("h_fireball.iqm"));
 MODEL(FIREBALL_WORLD, W_Model("v_fireball.md3"));
 MODEL(FIREBALL_ITEM, W_Model("g_fireball.md3"));
+
+SOUND(FIREBALL_FIRE2, W_Sound("fireball_fire2"));
+SOUND(FIREBALL_FIRE, W_Sound("fireball_fire"));
+SOUND(FIREBALL_FLY2, W_Sound("fireball_fly2"));
+SOUND(FIREBALL_FLY, W_Sound("fireball_fly"));
+SOUND(FIREBALL_IMPACT2, W_Sound("fireball_impact2"));
+SOUND(FIREBALL_PREFIRE2, W_Sound("fireball_prefire2"));
 #endif
 
 CLASS(Fireball, Weapon)

@@ -5,6 +5,13 @@ MODEL(PORTAL, "models/portal.md3");
 MODEL(PORTO_VIEW, W_Model("h_porto.iqm"));
 MODEL(PORTO_WORLD, W_Model("v_porto.md3"));
 MODEL(PORTO_ITEM, W_Model("g_porto.md3"));
+
+SOUND(PORTO_BOUNCE, "porto/bounce");
+SOUND(PORTO_CREATE, "porto/create");
+SOUND(PORTO_EXPIRE, "porto/expire");
+SOUND(PORTO_EXPLODE, "porto/explode");
+SOUND(PORTO_FIRE, "porto/fire");
+SOUND(PORTO_UNSUPPORTED, "porto/unsupported");
 #endif
 
 CLASS(PortoLaunch, Weapon)

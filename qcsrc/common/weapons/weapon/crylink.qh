@@ -4,6 +4,12 @@
 MODEL(CRYLINK_VIEW, W_Model("h_crylink.iqm"));
 MODEL(CRYLINK_WORLD, W_Model("v_crylink.md3"));
 MODEL(CRYLINK_ITEM, W_Model("g_crylink.md3"));
+
+SOUND(CRYLINK_FIRE2, W_Sound("crylink_fire2"));
+SOUND(CRYLINK_FIRE, W_Sound("crylink_fire"));
+SOUND(CRYLINK_IMPACT2, W_Sound("crylink_impact2"));
+SOUND(CRYLINK_IMPACT, W_Sound("crylink_impact"));
+SOUND(CRYLINK_LINKJOIN, W_Sound("crylink_linkjoin"));
 #endif
 
 CLASS(Crylink, Weapon)

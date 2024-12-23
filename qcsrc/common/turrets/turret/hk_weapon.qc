@@ -10,7 +10,7 @@ float autocvar_g_turrets_unit_hk_shot_speed_max;
 float autocvar_g_turrets_unit_hk_shot_speed_turnrate;
 
 void turret_hk_missile_think(entity this);
-SOUND(HunterKillerAttack_FIRE, W_Sound("electro_fire"));
+SOUND(HunterKillerAttack_FIRE, W_Sound("rocket_fire"));
 METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	bool isPlayer = IS_PLAYER(actor);
@@ -24,7 +24,7 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
             actor.tur_head = actor;
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_ELECTRO, animtime), w_ready);
         }
-        entity missile = turret_projectile(actor, SND_ROCKET_FIRE, 6, 10, DEATH_TURRET_HK.m_id, PROJECTILE_ROCKET, false, false);
+        entity missile = turret_projectile(actor, SND_HunterKillerAttack_FIRE, 6, 10, DEATH_TURRET_HK.m_id, PROJECTILE_ROCKET, false, false);
         te_explosion (missile.origin);
 
         setthink(missile, turret_hk_missile_think);
