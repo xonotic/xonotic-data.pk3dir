@@ -1,8 +1,7 @@
 #pragma once
 
-#include <client/main.qh>
-
 bool autocvar_cl_polytrails = true;
+bool autocvar_cl_polytrails_teamcolor = false;
 
 CLASS(PolyTrail, Object)
 	ATTRIB(PolyTrail, polytrail_follow, entity, NULL);
@@ -12,9 +11,15 @@ CLASS(PolyTrail, Object)
 	ATTRIB(PolyTrail, polytrail_noise, float, 0);
 	ATTRIB(PolyTrail, polytrail_segmentsize, float, 10);
 	ATTRIB(PolyTrail, polytrail_noisefunc, string, "chaotic");
-	ATTRIBARRAY(PolyTrail, polytrail_rgb, vector, 3);
-	ATTRIBARRAY(PolyTrail, polytrail_alpha, float, 3);
-	ATTRIBARRAY(PolyTrail, polytrail_thickness, float, 3);
+	ATTRIB(PolyTrail, polytrail_head_alpha, float, 1);
+	ATTRIB(PolyTrail, polytrail_head_color, vector, '1 0 0');
+	ATTRIB(PolyTrail, polytrail_head_thickness, float, 10);
+	ATTRIB(PolyTrail, polytrail_body_alpha, float, 0.5);
+	ATTRIB(PolyTrail, polytrail_body_color, vector, '0 1 0');
+	ATTRIB(PolyTrail, polytrail_body_thickness, float, 5);
+	ATTRIB(PolyTrail, polytrail_tail_alpha, float, 0);
+	ATTRIB(PolyTrail, polytrail_tail_color, vector, '0 0 1');
+	ATTRIB(PolyTrail, polytrail_tail_thickness, float, 0);
 
 	/**
 	 * Increase as necessary if the buffer is overflowing
@@ -35,10 +40,6 @@ CLASS(PolyTrail, Object)
 
 	void Trail_draw(entity this);
 	void Trail_recreate(entity this);
+	void PolyTrail_Spawn(entity this, entity _follow);
 	ATTRIB(PolyTrail, draw, void(entity this), Trail_draw);
-	CONSTRUCTOR(PolyTrail, entity _follow) {
-		CONSTRUCT(PolyTrail);
-		this.polytrail_follow = _follow;
-		IL_PUSH(g_drawables, this);
-	}
 ENDCLASS(PolyTrail)

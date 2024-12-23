@@ -15,7 +15,6 @@
 #include <client/weapons/projectile.qh>
 #include <common/checkextension.qh>
 #include <common/deathtypes/all.qh>
-#include <common/effects/all.inc>
 #include <common/effects/all.qh>
 #include <common/effects/effect.qh>
 #include <common/effects/qc/_mod.qh>

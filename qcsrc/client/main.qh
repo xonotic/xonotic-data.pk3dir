@@ -1,7 +1,6 @@
 #pragma once
 
 #include <common/constants.qh>
-#include <common/weapons/_all.qh>
 
 bool autocvar_cl_db_saveasdump;
 bool autocvar_cl_spawn_event_particles;

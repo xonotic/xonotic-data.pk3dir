@@ -23,6 +23,10 @@ WepSet ReadWepSet();
 #include <common/effects/all.qh>
 #endif
 
+#ifdef CSQC
+#include <client/polytrails.qh>
+#endif
+
 #include <common/util.qh>
 
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.

@@ -4,7 +4,6 @@
 #include <client/player_skeleton.qh>
 #include <client/weapons/projectile.qh>
 #include <common/animdecide.qh>
-#include <common/effects/all.inc>
 #include <common/effects/all.qh>
 #include <common/ent_cs.qh>
 #include <common/gamemodes/_mod.qh>

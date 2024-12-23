@@ -76,3 +76,67 @@ SPAWNFUNC_WEAPON(weapon_crylink, WEP_CRYLINK)
 
 void W_Crylink_Dequeue(entity e);
 #endif
+
+#ifdef CSQC
+bool autocvar_cl_polytrails_crylink_bouncing = true;
+float autocvar_cl_polytrails_crylink_bouncing_head_alpha = 0.5;
+vector autocvar_cl_polytrails_crylink_bouncing_head_color = '0.7 0 1';
+float autocvar_cl_polytrails_crylink_bouncing_head_thickness = 5;
+float autocvar_cl_polytrails_crylink_bouncing_body_alpha = 0.2;
+vector autocvar_cl_polytrails_crylink_bouncing_body_color = '0.5 0 1';
+float autocvar_cl_polytrails_crylink_bouncing_body_thickness = 3;
+float autocvar_cl_polytrails_crylink_bouncing_tail_alpha = 0;
+vector autocvar_cl_polytrails_crylink_bouncing_tail_color = '0.1 0 0.8';
+float autocvar_cl_polytrails_crylink_bouncing_tail_thickness = 13;
+float autocvar_cl_polytrails_crylink_bouncing_lifetime = 0.15;
+float autocvar_cl_polytrails_crylink_bouncing_segmentsize = 80;
+float autocvar_cl_polytrails_crylink_bouncing_noise = 0;
+string autocvar_cl_polytrails_crylink_bouncing_noisefunc = "none";
+CLASS(CrylinkBouncingTrail, PolyTrail)
+	ATTRIB(CrylinkBouncingTrail, polytrail_tex, string, "gfx/crosshair_ring.tga"); // TODO: dedicated texture
+	ATTRIB(CrylinkBouncingTrail, polytrail_lifetime, float, autocvar_cl_polytrails_crylink_bouncing_lifetime);
+	ATTRIB(CrylinkBouncingTrail, polytrail_noise, float, autocvar_cl_polytrails_crylink_bouncing_noise);
+	ATTRIB(CrylinkBouncingTrail, polytrail_segmentsize, float, autocvar_cl_polytrails_crylink_bouncing_segmentsize);
+	ATTRIB(CrylinkBouncingTrail, polytrail_noisefunc, string, autocvar_cl_polytrails_crylink_bouncing_noisefunc);
+	ATTRIB(CrylinkBouncingTrail, polytrail_head_alpha, float, autocvar_cl_polytrails_crylink_bouncing_head_alpha);
+	ATTRIB(CrylinkBouncingTrail, polytrail_head_color, vector, autocvar_cl_polytrails_crylink_bouncing_head_color);
+	ATTRIB(CrylinkBouncingTrail, polytrail_head_thickness, float, autocvar_cl_polytrails_crylink_bouncing_head_thickness);
+	ATTRIB(CrylinkBouncingTrail, polytrail_body_alpha, float, autocvar_cl_polytrails_crylink_bouncing_body_alpha);
+	ATTRIB(CrylinkBouncingTrail, polytrail_body_color, vector, autocvar_cl_polytrails_crylink_bouncing_body_color);
+	ATTRIB(CrylinkBouncingTrail, polytrail_body_thickness, float, autocvar_cl_polytrails_crylink_bouncing_body_thickness);
+	ATTRIB(CrylinkBouncingTrail, polytrail_tail_alpha, float, autocvar_cl_polytrails_crylink_bouncing_tail_alpha);
+	ATTRIB(CrylinkBouncingTrail, polytrail_tail_color, vector, autocvar_cl_polytrails_crylink_bouncing_tail_color);
+	ATTRIB(CrylinkBouncingTrail, polytrail_tail_thickness, float, autocvar_cl_polytrails_crylink_bouncing_tail_thickness);
+ENDCLASS(CrylinkBouncingTrail)
+
+bool autocvar_cl_polytrails_crylink_bolt = true;
+float autocvar_cl_polytrails_crylink_bolt_head_alpha = 0.75;
+vector autocvar_cl_polytrails_crylink_bolt_head_color = '0.7 0 1';
+float autocvar_cl_polytrails_crylink_bolt_head_thickness = 5;
+float autocvar_cl_polytrails_crylink_bolt_body_alpha = 0.2;
+vector autocvar_cl_polytrails_crylink_bolt_body_color = '0.5 0 1';
+float autocvar_cl_polytrails_crylink_bolt_body_thickness = 3;
+float autocvar_cl_polytrails_crylink_bolt_tail_alpha = 0;
+vector autocvar_cl_polytrails_crylink_bolt_tail_color = '0.1 0 0.8';
+float autocvar_cl_polytrails_crylink_bolt_tail_thickness = 3;
+float autocvar_cl_polytrails_crylink_bolt_lifetime = 0.15;
+float autocvar_cl_polytrails_crylink_bolt_segmentsize = 80;
+float autocvar_cl_polytrails_crylink_bolt_noise = 0;
+string autocvar_cl_polytrails_crylink_bolt_noisefunc = "none";
+CLASS(CrylinkBoltTrail, PolyTrail)
+	ATTRIB(CrylinkBoltTrail, polytrail_tex, string, "gfx/crosshair_ring.tga"); // TODO: dedicated texture
+	ATTRIB(CrylinkBoltTrail, polytrail_lifetime, float, autocvar_cl_polytrails_crylink_bolt_lifetime);
+	ATTRIB(CrylinkBoltTrail, polytrail_noise, float, autocvar_cl_polytrails_crylink_bolt_noise);
+	ATTRIB(CrylinkBoltTrail, polytrail_segmentsize, float, autocvar_cl_polytrails_crylink_bolt_segmentsize);
+	ATTRIB(CrylinkBoltTrail, polytrail_noisefunc, string, autocvar_cl_polytrails_crylink_bolt_noisefunc);
+	ATTRIB(CrylinkBoltTrail, polytrail_head_alpha, float, autocvar_cl_polytrails_crylink_bolt_head_alpha);
+	ATTRIB(CrylinkBoltTrail, polytrail_head_color, vector, autocvar_cl_polytrails_crylink_bolt_head_color);
+	ATTRIB(CrylinkBoltTrail, polytrail_head_thickness, float, autocvar_cl_polytrails_crylink_bolt_head_thickness);
+	ATTRIB(CrylinkBoltTrail, polytrail_body_alpha, float, autocvar_cl_polytrails_crylink_bolt_body_alpha);
+	ATTRIB(CrylinkBoltTrail, polytrail_body_color, vector, autocvar_cl_polytrails_crylink_bolt_body_color);
+	ATTRIB(CrylinkBoltTrail, polytrail_body_thickness, float, autocvar_cl_polytrails_crylink_bolt_body_thickness);
+	ATTRIB(CrylinkBoltTrail, polytrail_tail_alpha, float, autocvar_cl_polytrails_crylink_bolt_tail_alpha);
+	ATTRIB(CrylinkBoltTrail, polytrail_tail_color, vector, autocvar_cl_polytrails_crylink_bolt_tail_color);
+	ATTRIB(CrylinkBoltTrail, polytrail_tail_thickness, float, autocvar_cl_polytrails_crylink_bolt_tail_thickness);
+ENDCLASS(CrylinkBoltTrail)
+#endif

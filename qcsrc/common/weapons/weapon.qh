@@ -8,6 +8,10 @@
 #include <common/effects/qc/_mod.qh>
 #endif
 
+#ifdef CSQC
+#include <client/polytrails.qh>
+#endif
+
 USING(WepSet, vector);
 
 const int MAX_WEAPONSLOTS = 2;

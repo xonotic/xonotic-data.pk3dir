@@ -83,3 +83,67 @@ IntrusiveList LimitedElectroBallRubbleList;
 .float electro_secondarytime;
 void W_Electro_ExplodeCombo(entity this);
 #endif
+
+#ifdef CSQC
+bool autocvar_cl_polytrails_electro_bolt = true;
+float autocvar_cl_polytrails_electro_bolt_head_alpha = 1;
+vector autocvar_cl_polytrails_electro_bolt_head_color = '0.75 0.75 1';
+float autocvar_cl_polytrails_electro_bolt_head_thickness = 5;
+float autocvar_cl_polytrails_electro_bolt_body_alpha = 0.5;
+vector autocvar_cl_polytrails_electro_bolt_body_color = '0.45 0.45 1';
+float autocvar_cl_polytrails_electro_bolt_body_thickness = 5;
+float autocvar_cl_polytrails_electro_bolt_tail_alpha = 0;
+vector autocvar_cl_polytrails_electro_bolt_tail_color = '0.1 0.1 0.75';
+float autocvar_cl_polytrails_electro_bolt_tail_thickness = 0;
+float autocvar_cl_polytrails_electro_bolt_lifetime = 0.27;
+float autocvar_cl_polytrails_electro_bolt_segmentsize = 10;
+float autocvar_cl_polytrails_electro_bolt_noise = 5;
+string autocvar_cl_polytrails_electro_bolt_noisefunc = "chaotic";
+CLASS(ElectroBoltTrail, PolyTrail)
+	ATTRIB(ElectroBoltTrail, polytrail_tex, string, "particles/lgbeam.tga");
+	ATTRIB(ElectroBoltTrail, polytrail_lifetime, float, autocvar_cl_polytrails_electro_bolt_lifetime);
+	ATTRIB(ElectroBoltTrail, polytrail_noise, float, autocvar_cl_polytrails_electro_bolt_noise);
+	ATTRIB(ElectroBoltTrail, polytrail_segmentsize, float, autocvar_cl_polytrails_electro_bolt_segmentsize);
+	ATTRIB(ElectroBoltTrail, polytrail_noisefunc, string, autocvar_cl_polytrails_electro_bolt_noisefunc);
+	ATTRIB(ElectroBoltTrail, polytrail_head_alpha, float, autocvar_cl_polytrails_electro_bolt_head_alpha);
+	ATTRIB(ElectroBoltTrail, polytrail_head_color, vector, autocvar_cl_polytrails_electro_bolt_head_color);
+	ATTRIB(ElectroBoltTrail, polytrail_head_thickness, float, autocvar_cl_polytrails_electro_bolt_head_thickness);
+	ATTRIB(ElectroBoltTrail, polytrail_body_alpha, float, autocvar_cl_polytrails_electro_bolt_body_alpha);
+	ATTRIB(ElectroBoltTrail, polytrail_body_color, vector, autocvar_cl_polytrails_electro_bolt_body_color);
+	ATTRIB(ElectroBoltTrail, polytrail_body_thickness, float, autocvar_cl_polytrails_electro_bolt_body_thickness);
+	ATTRIB(ElectroBoltTrail, polytrail_tail_alpha, float, autocvar_cl_polytrails_electro_bolt_tail_alpha);
+	ATTRIB(ElectroBoltTrail, polytrail_tail_color, vector, autocvar_cl_polytrails_electro_bolt_tail_color);
+	ATTRIB(ElectroBoltTrail, polytrail_tail_thickness, float, autocvar_cl_polytrails_electro_bolt_tail_thickness);
+ENDCLASS(ElectroBoltTrail)
+
+bool autocvar_cl_polytrails_electro_orb = true;
+float autocvar_cl_polytrails_electro_orb_head_alpha = 1;
+vector autocvar_cl_polytrails_electro_orb_head_color = '0.8 0.8 1';
+float autocvar_cl_polytrails_electro_orb_head_thickness = 15;
+float autocvar_cl_polytrails_electro_orb_body_alpha = 0.5;
+vector autocvar_cl_polytrails_electro_orb_body_color = '0.5 0.5 1';
+float autocvar_cl_polytrails_electro_orb_body_thickness = 7;
+float autocvar_cl_polytrails_electro_orb_tail_alpha = 0;
+vector autocvar_cl_polytrails_electro_orb_tail_color = '0.1 0.1 0.7';
+float autocvar_cl_polytrails_electro_orb_tail_thickness = 0;
+float autocvar_cl_polytrails_electro_orb_lifetime = 0.18;
+float autocvar_cl_polytrails_electro_orb_segmentsize = 10;
+float autocvar_cl_polytrails_electro_orb_noise = 10;
+string autocvar_cl_polytrails_electro_orb_noisefunc = "chaotic";
+CLASS(ElectroOrbTrail, PolyTrail)
+	ATTRIB(ElectroOrbTrail, polytrail_tex, string, "particles/lgbeam.tga");
+	ATTRIB(ElectroOrbTrail, polytrail_lifetime, float, autocvar_cl_polytrails_electro_orb_lifetime);
+	ATTRIB(ElectroOrbTrail, polytrail_noise, float, autocvar_cl_polytrails_electro_orb_noise);
+	ATTRIB(ElectroOrbTrail, polytrail_segmentsize, float, autocvar_cl_polytrails_electro_orb_segmentsize);
+	ATTRIB(ElectroOrbTrail, polytrail_noisefunc, string, autocvar_cl_polytrails_electro_orb_noisefunc);
+	ATTRIB(ElectroOrbTrail, polytrail_head_alpha, float, autocvar_cl_polytrails_electro_orb_head_alpha);
+	ATTRIB(ElectroOrbTrail, polytrail_head_color, vector, autocvar_cl_polytrails_electro_orb_head_color);
+	ATTRIB(ElectroOrbTrail, polytrail_head_thickness, float, autocvar_cl_polytrails_electro_orb_head_thickness);
+	ATTRIB(ElectroOrbTrail, polytrail_body_alpha, float, autocvar_cl_polytrails_electro_orb_body_alpha);
+	ATTRIB(ElectroOrbTrail, polytrail_body_color, vector, autocvar_cl_polytrails_electro_orb_body_color);
+	ATTRIB(ElectroOrbTrail, polytrail_body_thickness, float, autocvar_cl_polytrails_electro_orb_body_thickness);
+	ATTRIB(ElectroOrbTrail, polytrail_tail_alpha, float, autocvar_cl_polytrails_electro_orb_tail_alpha);
+	ATTRIB(ElectroOrbTrail, polytrail_tail_color, vector, autocvar_cl_polytrails_electro_orb_tail_color);
+	ATTRIB(ElectroOrbTrail, polytrail_tail_thickness, float, autocvar_cl_polytrails_electro_orb_tail_thickness);
+ENDCLASS(ElectroOrbTrail)
+#endif
