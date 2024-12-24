@@ -1918,7 +1918,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 
 	int disowned_cnt = 0;
 	int uninteresting_cnt = 0;
-	IL_EACH(default_order_items, true, {
+	IL_EACH(Items_sorted_by_type, true, {
 		int q = g_inventory.inv_items[it.m_id];
 		//q = 1; // debug: display all items
 		if (is_item_filtered(it))
@@ -1987,7 +1987,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 	vector tmpos = pos;
 
 	int column = 0;
-	IL_EACH(default_order_items, !is_item_filtered(it), {
+	IL_EACH(Items_sorted_by_type, !is_item_filtered(it), {
 		int n = g_inventory.inv_items[it.m_id];
 		//n = 1 + floor(i * 3 + 4.8) % 7; // debug: display a value for each item
 		if (n <= 0) continue;
@@ -2263,7 +2263,7 @@ bool Scoreboard_ItemStats_WouldDraw(float ypos)
 
 	if (!have_item_stats)
 	{
-		IL_EACH(default_order_items, true, {
+		IL_EACH(Items_sorted_by_type, true, {
 			if (!is_item_filtered(it))
 			{
 				int q = g_inventory.inv_items[it.m_id];

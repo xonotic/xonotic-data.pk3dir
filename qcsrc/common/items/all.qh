@@ -13,14 +13,30 @@ REGISTER_REGISTRY(Items)
 #define REGISTER_ITEM(id, inst) REGISTER(Items, ITEM, id, m_id, inst)
 
 #ifndef SVQC
-// Copy Items registry here before it gets sorted alphabetically by REGISTRY_SORT
-// so we can keep items sorted by categories (as they appear in the code)
-IntrusiveList default_order_items;
-STATIC_INIT(default_order_items)
+.bool instanceOfAmmo;
+.bool instanceOfHealth;
+.bool instanceOfArmor;
+.bool instanceOfPowerup;
+// Items in Items_sorted_by_type are sorted by type and weigth / importance (as they appear in the code)
+//  e.g. Small Armor, Medium Armor, Big Armor, Mega Armor
+//  whereas items in Items are sorted alphabetically by REGISTRY_SORT, regardless of type
+// Sorting by type is needed to fix positions of a few items that aren't defined together with other
+//  items of the same type, e.g. Fuel
+IntrusiveList Items_sorted_by_type;
+STATIC_INIT(Items_sorted_by_type)
 {
-	default_order_items = IL_NEW();
-	FOREACH(Items, true, {
-		IL_PUSH(default_order_items, it);
+	Items_sorted_by_type = IL_NEW();
+	FOREACH(Items, it.instanceOfAmmo, {
+		IL_PUSH(Items_sorted_by_type, it);
+	});
+	FOREACH(Items, it.instanceOfHealth, {
+		IL_PUSH(Items_sorted_by_type, it);
+	});
+	FOREACH(Items, it.instanceOfArmor, {
+		IL_PUSH(Items_sorted_by_type, it);
+	});
+	FOREACH(Items, it.instanceOfPowerup, {
+		IL_PUSH(Items_sorted_by_type, it);
 	});
 }
 #endif

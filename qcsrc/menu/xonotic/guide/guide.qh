@@ -84,11 +84,11 @@ REGISTRY_SOURCE(BuffSource, Buffs, StatusEffect, it.instanceOfBuff)
 // The descriptions for these are in common/mutators/mutator/buffs/all.inc
 
 #include <common/mutators/mutator/powerups/powerup/_mod.qh>
-IL_SOURCE(PowerupSource, Powerups, default_order_items, it.instanceOfPowerup)
+IL_SOURCE(PowerupSource, Powerups, Items_sorted_by_type, it.instanceOfPowerup)
 // The descriptions for these are in common/mutators/mutator/powerups/powerup/*.qc and common/items/item/jetpack.qc
 
 #include <common/items/all.qh>
-IL_SOURCE(ItemSource, Items, default_order_items, !it.instanceOfPowerup)
+IL_SOURCE(ItemSource, Items, Items_sorted_by_type, !it.instanceOfPowerup)
 // The descriptions for these are in common/items/item/*.qc and common/mutators/mutator/instagib/items.qc
 
 #include <common/mutators/mutator/nades/nades.qh>
