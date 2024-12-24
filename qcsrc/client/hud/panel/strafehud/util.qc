@@ -162,10 +162,10 @@ float StrafeHUD_DetermineFrameTime()
 }
 
 // determine player wishdir, non-local player movement is limited to 45 degree steps
-float StrafeHUD_DetermineWishAngle(vector movement, int keys, bool islocal)
+float StrafeHUD_DetermineWishAngle(vector movement, int keys, bool is_local)
 {
 	float wishangle;
-	if(islocal) // if entity is local player
+	if(is_local) // if entity is local player
 	{
 		if(movement.x == 0)
 		{
@@ -214,9 +214,9 @@ float StrafeHUD_DetermineWishAngle(vector movement, int keys, bool islocal)
 }
 
 // determine whether the player is pressing forwards or backwards keys
-int StrafeHUD_DetermineForwardKeys(vector movement, int keys, bool islocal)
+int StrafeHUD_DetermineForwardKeys(vector movement, int keys, bool is_local)
 {
-	if(islocal) // if entity is local player
+	if(is_local) // if entity is local player
 	{
 		if(movement.x > 0)
 			return STRAFEHUD_KEYS_FORWARD;
@@ -318,9 +318,9 @@ float StrafeHUD_DetermineDirection(float angle, float wishangle, float antiflick
 // determine whether the player holds the jump key
 // try to ignore if track_canjump is enabled
 // does not work in spectator mode if the spectated player uses +jetpack or cl_movement_track_canjump
-bool StrafeHUD_DetermineJumpHeld(entity e, int keys, bool islocal)
+bool StrafeHUD_DetermineJumpHeld(entity e, int keys, bool is_local)
 {
-	if(islocal)
+	if(is_local)
 	{
 		if((PHYS_INPUT_BUTTON_JUMP(e) || PHYS_INPUT_BUTTON_JETPACK(e)) && !PHYS_CL_TRACK_CANJUMP(e))
 			return true;

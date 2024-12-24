@@ -25,7 +25,7 @@ void HUD_StrafeHUD()
 {
 	static float hud_lasttime = 0;
 	entity strafeplayer;
-	bool islocal;
+	bool is_local;
 
 	// generic hud routines
 	if(!autocvar__hud_configure)
@@ -53,12 +53,12 @@ void HUD_StrafeHUD()
 	// find out whether the local csqcmodel entity is valid
 	if(spectatee_status > 0 || isdemo())
 	{
-		islocal = false;
+		is_local = false;
 		strafeplayer = CSQCModel_server2csqc(player_localentnum - 1);
 	}
 	else
 	{
-		islocal = true;
+		is_local = true;
 		strafeplayer = csqcplayer;
 	}
 
@@ -67,10 +67,10 @@ void HUD_StrafeHUD()
 	// draw strafehud
 
 	int keys = STAT(PRESSED_KEYS);
-	bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, islocal);
+	bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, is_local);
 
 	// does not get changed by ground timeout and is not affected by jump input
-	bool real_onground = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
+	bool real_onground = is_local ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
 
 	// does not get changed by ground timeout
 	bool real_onslick = false;
@@ -139,8 +139,8 @@ void HUD_StrafeHUD()
 	else
 		movespeed = min(movespeed, maxspeed);
 
-	int keys_fwd = StrafeHUD_DetermineForwardKeys(movement, keys, islocal);
-	float wishangle = StrafeHUD_DetermineWishAngle(movement, keys, islocal);
+	int keys_fwd = StrafeHUD_DetermineForwardKeys(movement, keys, is_local);
+	float wishangle = StrafeHUD_DetermineWishAngle(movement, keys, is_local);
 	float absolute_wishangle = fabs(wishangle); // unmodified by side strafing code
 	bool strafekeys = fabs(wishangle) > 45;
 
