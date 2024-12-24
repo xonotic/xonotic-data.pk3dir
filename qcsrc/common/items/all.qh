@@ -12,7 +12,7 @@ REGISTRY_DEPENDS(Items, Models)
 REGISTER_REGISTRY(Items)
 #define REGISTER_ITEM(id, inst) REGISTER(Items, ITEM, id, m_id, inst)
 
-#ifdef CSQC
+#ifndef SVQC
 // Copy Items registry here before it gets sorted alphabetically by REGISTRY_SORT
 // so we can keep items sorted by categories (as they appear in the code)
 IntrusiveList default_order_items;

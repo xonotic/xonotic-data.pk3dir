@@ -33,13 +33,23 @@ ENDCLASS(DebugSource)
 
 .bool m_hidden;
 
-#define _REGISTRY_SOURCE(id, arr_name, register_arr, cond) \
+#define _REGISTRY_SOURCE_FOREACH FOREACH
+#define _REGISTRY_SOURCE_MAX(register_arr) // empty since register_arr##_MAX is already defined
+
+#define _IL_SOURCE_FOREACH IL_EACH
+#define _IL_SOURCE_MAX(il_arr) \
+	int il_arr##_MAX = 0; \
+	IL_EACH(il_arr, !it.m_hidden, { il_arr##_MAX++; });
+
+#define _LIST_SOURCE(id, arr_name, list_arr, cond, _LIST_SOURCE_MAX, _LIST_SOURCE_FOREACH) \
 ArrayList arr_name##_MENU; \
 int arr_name##_MENU_COUNT; \
 STATIC_INIT_LATE(arr_name##_MENU) \
 { \
-	AL_NEW(arr_name##_MENU, register_arr##_MAX, NULL, e); \
-	FOREACH(register_arr, !it.m_hidden && (cond), { \
+	_LIST_SOURCE_MAX(list_arr) \
+	\
+	AL_NEW(arr_name##_MENU, list_arr##_MAX, NULL, e); \
+	_LIST_SOURCE_FOREACH(list_arr, !it.m_hidden && (cond), { \
 		AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
 		arr_name##_MENU_COUNT++; \
 	}); \
@@ -55,8 +65,13 @@ CLASS(id, DataSource) \
 ENDCLASS(id)
 
 #define REGISTRY_SOURCE(...) EVAL(OVERLOAD(REGISTRY_SOURCE, __VA_ARGS__))
-#define REGISTRY_SOURCE_3(id, arr_name, register_arr)       _REGISTRY_SOURCE(id, arr_name, register_arr, true)
-#define REGISTRY_SOURCE_4(id, arr_name, register_arr, cond) _REGISTRY_SOURCE(id, arr_name, register_arr, cond)
+#define REGISTRY_SOURCE_3(id, arr_name, register_arr)       _LIST_SOURCE(id, arr_name, register_arr, true, _REGISTRY_SOURCE_MAX, _REGISTRY_SOURCE_FOREACH)
+#define REGISTRY_SOURCE_4(id, arr_name, register_arr, cond) _LIST_SOURCE(id, arr_name, register_arr, cond, _REGISTRY_SOURCE_MAX, _REGISTRY_SOURCE_FOREACH)
+
+#define IL_SOURCE(...) EVAL(OVERLOAD(IL_SOURCE, __VA_ARGS__))
+#define IL_SOURCE_3(id, arr_name, il_arr)       _LIST_SOURCE(id, arr_name, il_arr, true, _IL_SOURCE_MAX, _IL_SOURCE_FOREACH)
+#define IL_SOURCE_4(id, arr_name, il_arr, cond) _LIST_SOURCE(id, arr_name, il_arr, cond, _IL_SOURCE_MAX, _IL_SOURCE_FOREACH)
+
 
 REGISTRY_SOURCE(FreetextSource, Guide, GuidePages)
 
@@ -69,11 +84,11 @@ REGISTRY_SOURCE(BuffSource, Buffs, StatusEffect, it.instanceOfBuff)
 // The descriptions for these are in common/mutators/mutator/buffs/all.inc
 
 #include <common/mutators/mutator/powerups/powerup/_mod.qh>
-REGISTRY_SOURCE(PowerupSource, Powerups, Items, it.instanceOfPowerup)
+IL_SOURCE(PowerupSource, Powerups, default_order_items, it.instanceOfPowerup)
 // The descriptions for these are in common/mutators/mutator/powerups/powerup/*.qc and common/items/item/jetpack.qc
 
 #include <common/items/all.qh>
-REGISTRY_SOURCE(ItemSource, Items, Items, !it.instanceOfPowerup)
+IL_SOURCE(ItemSource, Items, default_order_items, !it.instanceOfPowerup)
 // The descriptions for these are in common/items/item/*.qc and common/mutators/mutator/instagib/items.qc
 
 #include <common/mutators/mutator/nades/nades.qh>
