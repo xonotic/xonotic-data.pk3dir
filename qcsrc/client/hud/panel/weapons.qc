@@ -278,16 +278,16 @@ void HUD_Weapons()
 		{
 			// maximum number of columns that allows to display items with the desired aspect ratio
 			int max_columns = floor(panel_size.x / (weapon_size.y * aspect));
-			rows = min(rows, ceil(weapon_count / max_columns));
-			columns = ceil(weapon_count / rows);
+			rows = min(rows, ceil((weapon_count + offhands.x) / max_columns));
+			columns = ceil((weapon_count + offhands.x) / rows);
 			weapon_size.x = min(panel_size.x / columns, aspect * weapon_size.y);
 			weapon_size.y = min(panel_size.y / rows, weapon_size.x / aspect);
 		}
 		else
 		{
 			int max_rows = floor(panel_size.y / (weapon_size.x / aspect));
-			columns = min(columns, ceil(weapon_count / max_rows));
-			rows = ceil(weapon_count / columns);
+			columns = min(columns, ceil((weapon_count + offhands.x) / max_rows));
+			rows = ceil((weapon_count + offhands.x) / columns);
 			weapon_size.y = min(panel_size.y / rows, weapon_size.x / aspect);
 			weapon_size.x = min(panel_size.x / columns, aspect * weapon_size.y);
 		}
@@ -351,7 +351,7 @@ vector Weapons_GetOffhands()
 		bits |= BIT(2);
 		++total;
 	}
-	else if (mut_is_active(MUT_GRAPPLING_HOOK))
+	else if (mut_is_active(MUT_GRAPPLING_HOOK)) // overridden by blaster
 	{
 		bits |= BIT(1);
 		++total;
