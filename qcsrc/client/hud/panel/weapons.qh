@@ -23,6 +23,7 @@ bool autocvar_hud_panel_weapons_dynamichud      = true;
 bool autocvar_hud_panel_weapons_hide_ondeath      = false;
 int autocvar_hud_panel_weapons_label;
 float autocvar_hud_panel_weapons_label_scale = 0.5;
+int autocvar_hud_panel_weapons_offhand = 2;
 int autocvar_hud_panel_weapons_onlyowned;
 float autocvar_hud_panel_weapons_noncurrent_alpha = 1;
 float autocvar_hud_panel_weapons_noncurrent_scale = 1;
@@ -50,5 +51,7 @@ void Accuracy_LoadLevels();
 void Accuracy_LoadColors();
 vector Accuracy_GetColor(float accuracy);
 
-void Weapons_Fade(vector);
-void Weapons_Draw(entity, WepSet, vector, vector, float, float, int, int, float, bool);
+vector Weapons_GetOffhands();
+void Weapons_Fade();
+void Weapons_Draw(vector, vector, float, int, int, bool);
+bool Weapons_DrawWeaponOrOffhand(entity, vector, vector, vector, vector, vector, float, int);
