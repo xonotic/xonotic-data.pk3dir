@@ -6,6 +6,7 @@
 #include <lib/csqcmodel/cl_player.qh>
 #include <common/physics/player.qh>
 #include <common/physics/movetypes/movetypes.qh>
+#include "racetimer.qh"
 
 // non-essential
 #include <client/view.qh> // for v_flipped state
