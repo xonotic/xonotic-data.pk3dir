@@ -1,4 +1,5 @@
 #include "racetimer.qh"
+#include "physics.qh"
 
 #include <client/draw.qh>
 #include <common/ent_cs.qh>
@@ -21,6 +22,7 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 {
 	TC(int, cp);
 	string cpname, lapstr = "", timestr = "", col = "^7", othercol = "^7", othertimestr = "";
+	float namesize = autocvar_cl_race_cptimes_namesize * hud_fontsize.x;
 	if(theirname == "" || !autocvar_cl_race_cptimes_showself)
 		othertime = 0; // don't count personal time
 
@@ -92,14 +94,17 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 	else
 		cpname = _("Finish line");
 
+	if(theirname != "" && theirtime >= 0)
+		theirname = textShortenToWidth(ColorTranslateRGB(theirname), namesize, hud_fontsize, stringwidth_colors);
+
 	if(theirtime < 0)
 		return strcat(col, cpname);
 	else if(theirname == "")
 		return strcat(col, sprintf("%s (%s)", cpname, timestr));
 	else if(othertime)
-		return strcat(col, sprintf("%s %s(%s)%s (%s %s)", cpname, othercol, othertimestr, col, timestr, strcat(ColorTranslateRGB(theirname), col, lapstr)));
+		return strcat(col, sprintf("%s %s(%s)%s (%s %s)", cpname, othercol, othertimestr, col, timestr, strcat(theirname, col, lapstr)));
 	else
-		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(ColorTranslateRGB(theirname), col, lapstr)));
+		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(theirname, col, lapstr)));
 }
 
 void ClearRaceSplits() {
@@ -222,6 +227,31 @@ void HUD_RaceTimer ()
 						s = MakeRaceString(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, ((race_mypreviousbesttime) ? TIME_DECODE(race_time) - TIME_DECODE(race_mypreviousbesttime) : 0), 0, race_previousbestname);
 					else
 						s = MakeRaceString(race_checkpoint, 0, -1, 0, 0, race_previousbestname);
+
+					if(autocvar_cl_race_cptimes_showspeed)
+					{
+						float speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
+						float speed = race_timespeed;
+						float speed_diff = rint(speed - race_checkpoint_splits_speed[race_checkpoint]);
+						string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
+
+						// figure out color
+						string speed_color = rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_neg_color);
+						if(speed_diff > 0) speed_color = rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_color);
+						else if (speed_diff == 0) speed_color = "^3";
+
+						if(race_time && race_previousbesttime && race_checkpoint_splits_speed[race_checkpoint])
+							s = sprintf("%s ^7%d%s %s(%+d%s)", s, speed * speed_conversion_factor, units_text, speed_color, speed_diff * speed_conversion_factor, units_text);
+						else
+							s = sprintf("%s ^7%d%s", s, speed * speed_conversion_factor, units_text);
+
+						// if fastest cp time, store speed for later comparison
+						if((TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime)) < 0 || !race_checkpoint_splits_speed[race_checkpoint])
+						{
+							race_checkpoint_splits_speed[race_checkpoint] = speed;
+						}
+
+					}
 					if(race_time)
 						forcetime = TIME_ENCODED_TOSTRING(race_time, false);
 
