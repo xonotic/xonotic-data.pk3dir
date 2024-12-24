@@ -12,7 +12,7 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 	float mirror_offset;
 	float mirror_width;
 
-	if(type == STRAFEHUD_STYLE_GRADIENT || type == STRAFEHUD_STYLE_FAST_GRADIENT)
+	if(type == STRAFEHUD_STYLE_GRADIENT)
 	{
 		project_width = true; // must be fully projected for gradients
 		if(gradient_type == STRAFEHUD_GRADIENT_NONE)
@@ -52,10 +52,15 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 	size.x = width;
 
 	float original_offset = offset;
-	if(project_width && size.x > 0)
-		size.x = StrafeHUD_ProjectWidth(offset, size.x, range);
 
-	offset = StrafeHUD_ProjectOffset(offset, range, false);
+	// the fast gradient does the projection later
+	if(type != STRAFEHUD_STYLE_FAST_GRADIENT)
+	{
+		if(project_width && size.x > 0)
+			size.x = StrafeHUD_ProjectWidth(offset, size.x, range);
+
+		offset = StrafeHUD_ProjectOffset(offset, range, false);
+	}
 
 	if(mirror_offset < 0)
 	{
@@ -74,10 +79,15 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 	mirror_size.x = mirror_width;
 
 	float original_mirror_offset = mirror_offset;
-	if(project_width && mirror_size.x > 0)
-		mirror_size.x = StrafeHUD_ProjectWidth(mirror_offset, mirror_size.x, range);
 
-	mirror_offset = StrafeHUD_ProjectOffset(mirror_offset, range, false);
+	// the fast gradient does the projection later
+	if(type != STRAFEHUD_STYLE_FAST_GRADIENT)
+	{
+		if(project_width && mirror_size.x > 0)
+			mirror_size.x = StrafeHUD_ProjectWidth(mirror_offset, mirror_size.x, range);
+
+		mirror_offset = StrafeHUD_ProjectOffset(mirror_offset, range, false);
+	}
 
 	switch(type)
 	{
@@ -132,19 +142,19 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 					gradient_mirror_offset = 0;
 			}
 
-			if(type == STRAFEHUD_STYLE_FAST_GRADIENT && autocvar_hud_panel_strafehud_projection == STRAFEHUD_PROJECTION_LINEAR)
+			if(type == STRAFEHUD_STYLE_FAST_GRADIENT)
 			{
 				if(mirror_size.x > 0)
 					StrafeHUD_DrawGradientFast(
 						color, autocvar_hud_panel_strafehud_bar_neutral_color,
 						mirror_size, original_width, mirror_offset, alpha,
-						gradient_mirror_offset, gradient_type);
+						gradient_mirror_offset, gradient_type, range);
 
 				if(size.x > 0)
 					StrafeHUD_DrawGradientFast(
 						color, autocvar_hud_panel_strafehud_bar_neutral_color,
 						size, original_width, offset, alpha,
-						gradient_offset, gradient_type);
+						gradient_offset, gradient_type, range);
 			}
 			else
 			{
@@ -198,7 +208,7 @@ void StrafeHUD_DrawGradient(vector color1, vector color2, vector size, float ori
 }
 
 // optimized gradient, does not work with projection modes other than linear, decreased visual fidelity
-void StrafeHUD_DrawGradientFast(vector color1, vector color2, vector size, float original_width, float offset, float alpha, float gradient_offset, int gradient_type)
+void StrafeHUD_DrawGradientFast(vector color1, vector color2, vector size, float original_width, float offset, float alpha, float gradient_offset, int gradient_type, float range)
 {
 	if(gradient_type == STRAFEHUD_GRADIENT_BOTH)
 	{
@@ -211,13 +221,19 @@ void StrafeHUD_DrawGradientFast(vector color1, vector color2, vector size, float
 		size2.x = size.x - size1.x;
 
 		if(size1.x > 0)
-			StrafeHUD_DrawGradientFast(color1, color2, size1, original_width, offset, alpha, gradient_offset, STRAFEHUD_GRADIENT_LEFT);
+			StrafeHUD_DrawGradientFast(color1, color2, size1, original_width, offset, alpha, gradient_offset, STRAFEHUD_GRADIENT_LEFT, range);
 
 		if(size2.x > 0)
-			StrafeHUD_DrawGradientFast(color1, color2, size2, original_width, offset + size1.x, alpha, max(0, gradient_offset - original_width), STRAFEHUD_GRADIENT_RIGHT);
+			StrafeHUD_DrawGradientFast(color1, color2, size2, original_width, offset + size1.x, alpha, max(0, gradient_offset - original_width), STRAFEHUD_GRADIENT_RIGHT, range);
 
 		return;
 	}
+
+	vector gradient_start = eX * offset;
+	float gradient_width = StrafeHUD_ProjectWidth(gradient_start.x, size.x, range);
+	gradient_start.x = StrafeHUD_ProjectOffset(gradient_start.x, range, false);
+	vector gradient_end = gradient_start + eX * gradient_width;
+	vector gradient_height = eY * size.y;
 
 	float alpha1 = bound(0, alpha, 1);
 	float alpha2 = bound(0, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, 1);
@@ -232,21 +248,22 @@ void StrafeHUD_DrawGradientFast(vector color1, vector color2, vector size, float
 		ratio2 = 1 - ratio2;
 
 	vector origin = HUD_Shift(panel_pos);
-	offset = HUD_ScaleX(offset);
-	size = HUD_Scale(size);
+	gradient_start.x = HUD_ScaleX(gradient_start.x);
+	gradient_end.x = HUD_ScaleX(gradient_end.x);
+	gradient_height.y = HUD_ScaleY(gradient_height.y);
 
 	R_BeginPolygon("", DRAWFLAG_NORMAL, true);
-	R_PolygonVertex(origin + eX *  offset,                         '0 0 0', color1, alpha1 * (1 - ratio1));
-	R_PolygonVertex(origin + eX *  offset           + eY * size.y, '0 0 0', color1, alpha1 * (1 - ratio1));
-	R_PolygonVertex(origin + eX * (offset + size.x) + eY * size.y, '0 0 0', color1, alpha1 * (1 - ratio2));
-	R_PolygonVertex(origin + eX * (offset + size.x),               '0 0 0', color1, alpha1 * (1 - ratio2));
+	R_PolygonVertex(origin + gradient_start,                   '0 0 0', color1, alpha1 * (1 - ratio1));
+	R_PolygonVertex(origin + gradient_start + gradient_height, '0 0 0', color1, alpha1 * (1 - ratio1));
+	R_PolygonVertex(origin + gradient_end   + gradient_height, '0 0 0', color1, alpha1 * (1 - ratio2));
+	R_PolygonVertex(origin + gradient_end,                     '0 0 0', color1, alpha1 * (1 - ratio2));
 	R_EndPolygon();
 
 	R_BeginPolygon("", DRAWFLAG_NORMAL, true);
-	R_PolygonVertex(origin + eX *  offset,                         '0 0 0', color2, alpha2 * ratio1);
-	R_PolygonVertex(origin + eX *  offset           + eY * size.y, '0 0 0', color2, alpha2 * ratio1);
-	R_PolygonVertex(origin + eX * (offset + size.x) + eY * size.y, '0 0 0', color2, alpha2 * ratio2);
-	R_PolygonVertex(origin + eX * (offset + size.x),               '0 0 0', color2, alpha2 * ratio2);
+	R_PolygonVertex(origin + gradient_start,                   '0 0 0', color2, alpha2 * ratio1);
+	R_PolygonVertex(origin + gradient_start + gradient_height, '0 0 0', color2, alpha2 * ratio1);
+	R_PolygonVertex(origin + gradient_end   + gradient_height, '0 0 0', color2, alpha2 * ratio2);
+	R_PolygonVertex(origin + gradient_end,                     '0 0 0', color2, alpha2 * ratio2);
 	R_EndPolygon();
 }
 
