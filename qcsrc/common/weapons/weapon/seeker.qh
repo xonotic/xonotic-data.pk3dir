@@ -6,7 +6,7 @@ CLASS(Seeker, Weapon)
 /* impulse   */ ATTRIB(Seeker, impulse, int, 8);
 /* flags     */ ATTRIB(Seeker, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Seeker, bot_pickupbasevalue, float, 5000);
-/* color     */ ATTRIB(Seeker, wpcolor, vector, '0.969 0.443 0.482');
+/* color     */ ATTRIB(Seeker, wpcolor, vector, '0.957 0.439 0.533');
 /* modelname */ ATTRIB(Seeker, mdl, string, "seeker");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Seeker, m_model, Model, MDL_SEEKER_ITEM);
