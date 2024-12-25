@@ -1,10 +1,8 @@
 #pragma once
 
-#include <common/colors.qh>
-
 #include "pickup.qh"
 CLASS(Armor, Pickup)
-/* color      */ ATTRIB(Armor, m_color, vector, COLOR_ITEM_ARMOR);
+/* color      */ ATTRIB(Armor, m_color, vector, '0 1 0');
 #ifdef SVQC
 /* pickupfunc */ ATTRIB(Armor, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
 /* botvalue   */ ATTRIB(Armor, m_botvalue, int, 5000);

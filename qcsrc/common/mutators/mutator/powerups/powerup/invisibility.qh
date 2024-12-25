@@ -2,7 +2,6 @@
 
 #include <common/items/all.qh>
 #include <common/mutators/mutator/powerups/powerups.qh>
-#include <common/colors.qh>
 #ifdef SVQC
     // For FL_POWERUP
     #include <common/constants.qh>
@@ -47,7 +46,7 @@ CLASS(InvisibilityItem, Powerup)
     ATTRIB(InvisibilityItem, netname, string, "invisibility");
     ATTRIB(InvisibilityItem, m_name, string, _("Invisibility"));
     ATTRIB(InvisibilityItem, m_icon, string, "buff_invisible");
-    ATTRIB(InvisibilityItem, m_color, vector, COLOR_POWERUP_INVISIBILITY);
+    ATTRIB(InvisibilityItem, m_color, vector, '0.5 0.5 1');
     ATTRIB(InvisibilityItem, m_waypoint, string, _("Invisibility"));
     ATTRIB(InvisibilityItem, m_waypointblink, int, 2);
 ENDCLASS(InvisibilityItem)
@@ -59,7 +58,7 @@ SPAWNFUNC_ITEM(item_buff_invisibility, ITEM_Invisibility)
 CLASS(InvisibilityStatusEffect, Powerups)
     ATTRIB(InvisibilityStatusEffect, netname, string, "invisibility");
     ATTRIB(InvisibilityStatusEffect, m_name, string, _("Invisibility"));
-    ATTRIB(InvisibilityStatusEffect, m_color, vector, COLOR_POWERUP_INVISIBILITY);
+    ATTRIB(InvisibilityStatusEffect, m_color, vector, '0.5 0.5 1');
     ATTRIB(InvisibilityStatusEffect, m_icon, string, "buff_invisible");
 ENDCLASS(InvisibilityStatusEffect)
 REGISTER_STATUSEFFECT(Invisibility, NEW(InvisibilityStatusEffect));

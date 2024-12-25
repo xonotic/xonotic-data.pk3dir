@@ -1,7 +1,6 @@
 #pragma once
 
 #include <common/mutators/mutator/status_effects/all.qh>
-#include <common/colors.qh>
 
 CLASS(SpawnShield, StatusEffects)
     ATTRIB(SpawnShield, netname, string, "spawnshield");
@@ -11,7 +10,7 @@ CLASS(SpawnShield, StatusEffects)
     ATTRIB(SpawnShield, m_name, string, _("Spawn Shield"));
     ATTRIB(SpawnShield, m_icon, string, "shield");
 #endif
-    ATTRIB(SpawnShield, m_color, vector, COLOR_STATUSEFFECT_SPAWNSHIELD);
+    ATTRIB(SpawnShield, m_color, vector, '0.36 1 0.07');
     ATTRIB(SpawnShield, m_hidden, bool, true);
     ATTRIB(SpawnShield, m_lifetime, float, 10);
 ENDCLASS(SpawnShield)

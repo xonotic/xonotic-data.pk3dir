@@ -814,6 +814,7 @@ METHOD(Shockwave, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
+#include <lib/color.qh>
 #include "shotgun.qh"
 
 METHOD(Shockwave, describe, string(Shockwave this))

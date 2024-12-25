@@ -424,6 +424,7 @@ METHOD(PortoLaunch, wr_impacteffect, void(entity this, entity actor)) {
 
 #endif
 #ifdef MENUQC
+#include <lib/color.qh>
 
 METHOD(PortoLaunch, describe, string(PortoLaunch this))
 {

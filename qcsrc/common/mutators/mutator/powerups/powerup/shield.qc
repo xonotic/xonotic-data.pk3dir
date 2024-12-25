@@ -49,6 +49,8 @@ METHOD(ShieldStatusEffect, m_tick, void(StatusEffects this, entity actor))
 }
 #endif
 #ifdef MENUQC
+#include <lib/color.qh>
+
 METHOD(ShieldItem, describe, string(ShieldItem this))
 {
     TC(ShieldItem, this);

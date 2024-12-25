@@ -2,7 +2,6 @@
 
 #include <common/items/all.qh>
 #include <common/mutators/mutator/powerups/powerups.qh>
-#include <common/colors.qh>
 #ifdef SVQC
     // For FL_POWERUP
     #include <common/constants.qh>
@@ -45,7 +44,7 @@ CLASS(ShieldItem, Powerup)
     ATTRIB(ShieldItem, netname, string, "invincible");
     ATTRIB(ShieldItem, m_name, string, _("Shield"));
     ATTRIB(ShieldItem, m_icon, string, "shield");
-    ATTRIB(ShieldItem, m_color, vector, COLOR_POWERUP_SHIELD);
+    ATTRIB(ShieldItem, m_color, vector, '1 0 1');
     ATTRIB(ShieldItem, m_waypoint, string, _("Shield"));
     ATTRIB(ShieldItem, m_waypointblink, int, 2);
 ENDCLASS(ShieldItem)

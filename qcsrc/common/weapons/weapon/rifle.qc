@@ -260,8 +260,9 @@ METHOD(Rifle, wr_zoomdir, bool(entity thiswep))
 
 #endif
 #ifdef MENUQC
-#include "vortex.qh"
+#include <lib/color.qh>
 #include <common/items/item/ammo.qh>
+#include "vortex.qh"
 
 METHOD(Rifle, describe, string(Rifle this))
 {

@@ -363,6 +363,7 @@ METHOD(OverkillNex, wr_zoomdir, bool(entity thiswep))
 
 #endif
 #ifdef MENUQC
+#include <lib/color.qh>
 #include <common/items/item/ammo.qh>
 
 METHOD(OverkillNex, describe, string(OverkillNex this))

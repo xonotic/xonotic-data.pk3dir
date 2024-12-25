@@ -354,8 +354,9 @@ METHOD(Vortex, wr_zoomdir, bool(entity thiswep))
 
 #endif
 #ifdef MENUQC
-#include "rifle.qh"
+#include <lib/color.qh>
 #include <common/items/item/ammo.qh>
+#include "rifle.qh"
 
 METHOD(Vortex, describe, string(Vortex this))
 {

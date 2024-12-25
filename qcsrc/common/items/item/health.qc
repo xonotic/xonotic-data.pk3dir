@@ -1,6 +1,8 @@
 #include "health.qh"
 
 #ifdef MENUQC
+#include <lib/color.qh>
+
 METHOD(HealthSmall, describe, string(HealthSmall this))
 {
     TC(HealthSmall, this);

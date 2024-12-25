@@ -189,3 +189,7 @@ string rgb_to_hexcolor(vector rgb)
 		DEC_TO_HEXDIGIT(floor(bound(0, rgb.z, 1) * 15 + 0.5))
 	             );
 }
+
+// useful macros for the guide
+#define COLORED_NAME(this)                     strcat(rgb_to_hexcolor(this.m_color), this.m_name, "^7")
+#define COLORED_NAME_WITH_CONCAT(this, concat) strcat(rgb_to_hexcolor(this.m_color), this.m_name, " ", concat, "^7")

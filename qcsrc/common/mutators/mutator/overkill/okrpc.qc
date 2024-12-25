@@ -232,6 +232,7 @@ METHOD(OverkillRocketPropelledChainsaw, wr_impacteffect, void(entity thiswep, en
 
 #endif
 #ifdef MENUQC
+#include <lib/color.qh>
 #include <common/items/item/ammo.qh>
 
 METHOD(OverkillRocketPropelledChainsaw, describe, string(OverkillRocketPropelledChainsaw this))

@@ -3,7 +3,7 @@
 #if defined(SVQC)
 	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #elif defined(MENUQC)
-	#include <common/colors.qh>
+	#include <lib/color.qh>
 	#include "spiderbot.qh"
 #endif
 

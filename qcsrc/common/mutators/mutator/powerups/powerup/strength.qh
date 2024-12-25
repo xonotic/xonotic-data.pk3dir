@@ -2,7 +2,6 @@
 
 #include <common/items/all.qh>
 #include <common/mutators/mutator/powerups/powerups.qh>
-#include <common/colors.qh>
 #ifdef SVQC
     // For FL_POWERUP
     #include <common/constants.qh>
@@ -47,7 +46,7 @@ CLASS(StrengthItem, Powerup)
     ATTRIB(StrengthItem, netname, string, "strength");
     ATTRIB(StrengthItem, m_name, string, _("Strength"));
     ATTRIB(StrengthItem, m_icon, string, "strength");
-    ATTRIB(StrengthItem, m_color, vector, COLOR_POWERUP_STRENGTH);
+    ATTRIB(StrengthItem, m_color, vector, '0 0 1');
     ATTRIB(StrengthItem, m_waypoint, string, _("Strength"));
     ATTRIB(StrengthItem, m_waypointblink, int, 2);
 ENDCLASS(StrengthItem)

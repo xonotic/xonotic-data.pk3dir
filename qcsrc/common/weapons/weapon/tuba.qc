@@ -594,6 +594,7 @@ PRECACHE(Tuba)
 
 #endif
 #ifdef MENUQC
+#include <lib/color.qh>
 
 METHOD(Tuba, describe, string(Tuba this))
 {

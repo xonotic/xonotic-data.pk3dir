@@ -3,7 +3,6 @@
 #include <common/items/_mod.qh>
 #include <common/items/item/ammo.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
-#include <common/colors.qh>
 
 float instagib_respawntime_ammo = 45;
 float instagib_respawntimejitter_ammo = 0;
@@ -61,7 +60,7 @@ CLASS(ExtraLife, Powerup)
 /* refname   */ ATTRIB(ExtraLife, netname, string, "extralife");
 /* itemname  */ ATTRIB(ExtraLife, m_name, string, _("Extra life"));
 /* icon      */ ATTRIB(ExtraLife, m_icon, string, "item_mega_health");
-/* color     */ ATTRIB(ExtraLife, m_color, vector, COLOR_POWERUP_EXTRALIFE);
+/* color     */ ATTRIB(ExtraLife, m_color, vector, '1 0 0');
 /* wptext    */ ATTRIB(ExtraLife, m_waypoint, string, _("Extra life"));
 /* wpblink   */ ATTRIB(ExtraLife, m_waypointblink, int, 2);
 #ifdef SVQC

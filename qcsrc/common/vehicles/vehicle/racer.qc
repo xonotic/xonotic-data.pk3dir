@@ -4,7 +4,7 @@
 	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 	#include <common/mapobjects/trigger/impulse.qh>
 #elif defined(MENUQC)
-	#include <common/colors.qh>
+	#include <lib/color.qh>
 #endif
 
 #ifdef GAMEQC

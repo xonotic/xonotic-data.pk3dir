@@ -1,4 +1,4 @@
-#include <common/colors.qh>
+#include <lib/color.qh>
 
 #ifdef GAMEQC
 #define NADE_PROJECTILE(i, projectile, trail) MACRO_BEGIN \
@@ -8,7 +8,7 @@ MACRO_END
 #endif
 
 CLASS(NormalNade, Nade)
-    ATTRIB(NormalNade, m_color, vector, COLOR_NADE_NORMAL);
+    ATTRIB(NormalNade, m_color, vector, '1 1 1');
     ATTRIB(NormalNade, m_name, string, _("Grenade"));
     ATTRIB(NormalNade, m_icon, string, "nade_normal");
 #ifdef MENUQC
@@ -29,7 +29,7 @@ REGISTER_NADE(NORMAL, NEW(NormalNade)) {
 }
 
 CLASS(NapalmNade, Nade)
-    ATTRIB(NapalmNade, m_color, vector, COLOR_NADE_NAPALM);
+    ATTRIB(NapalmNade, m_color, vector, '2 0.5 0');
     ATTRIB(NapalmNade, m_name, string, _("Napalm grenade"));
     ATTRIB(NapalmNade, m_icon, string, "nade_napalm");
 #ifdef MENUQC
@@ -50,7 +50,7 @@ REGISTER_NADE(NAPALM, NEW(NapalmNade)) {
 }
 
 CLASS(IceNade, Nade)
-    ATTRIB(IceNade, m_color, vector, COLOR_NADE_ICE);
+    ATTRIB(IceNade, m_color, vector, '0 0.5 2');
     ATTRIB(IceNade, m_name, string, _("Ice grenade"));
     ATTRIB(IceNade, m_icon, string, "nade_ice");
 #ifdef MENUQC
@@ -71,7 +71,7 @@ REGISTER_NADE(ICE, NEW(IceNade)) {
 }
 
 CLASS(TranslocateNade, Nade)
-    ATTRIB(TranslocateNade, m_color, vector, COLOR_NADE_TRANSLOCATE);
+    ATTRIB(TranslocateNade, m_color, vector, '1 0 1');
     ATTRIB(TranslocateNade, m_name, string, _("Translocate grenade"));
     ATTRIB(TranslocateNade, m_icon, string, "nade_translocate");
 #ifdef MENUQC
@@ -91,7 +91,7 @@ REGISTER_NADE(TRANSLOCATE, NEW(TranslocateNade)) {
 }
 
 CLASS(SpawnNade, Nade)
-    ATTRIB(SpawnNade, m_color, vector, COLOR_NADE_SPAWN);
+    ATTRIB(SpawnNade, m_color, vector, '1 0.9 0');
     ATTRIB(SpawnNade, m_name, string, _("Spawn grenade"));
     ATTRIB(SpawnNade, m_icon, string, "nade_spawn");
 #ifdef MENUQC
@@ -112,7 +112,7 @@ REGISTER_NADE(SPAWN, NEW(SpawnNade)) {
 }
 
 CLASS(HealNade, Nade)
-    ATTRIB(HealNade, m_color, vector, COLOR_NADE_HEAL);
+    ATTRIB(HealNade, m_color, vector, '1 0 0');
     ATTRIB(HealNade, m_name, string, _("Heal grenade"));
     ATTRIB(HealNade, m_icon, string, "nade_heal");
 #ifdef MENUQC
@@ -133,7 +133,7 @@ REGISTER_NADE(HEAL, NEW(HealNade)) {
 }
 
 CLASS(MonsterNade, Nade)
-    ATTRIB(MonsterNade, m_color, vector, COLOR_NADE_MONSTER);
+    ATTRIB(MonsterNade, m_color, vector, '0.25 0.75 0');
     ATTRIB(MonsterNade, m_name, string, _("Monster grenade"));
     ATTRIB(MonsterNade, m_icon, string, "nade_monster");
 #ifdef MENUQC
@@ -153,7 +153,7 @@ REGISTER_NADE(MONSTER, NEW(MonsterNade)) {
 }
 
 CLASS(EntrapNade, Nade)
-    ATTRIB(EntrapNade, m_color, vector, COLOR_NADE_ENTRAP);
+    ATTRIB(EntrapNade, m_color, vector, '0.15 0.85 0');
     ATTRIB(EntrapNade, m_name, string, _("Entrap grenade"));
     ATTRIB(EntrapNade, m_icon, string, "nade_entrap");
 #ifdef MENUQC
@@ -174,7 +174,7 @@ REGISTER_NADE(ENTRAP, NEW(EntrapNade)) {
 }
 
 CLASS(VeilNade, Nade)
-    ATTRIB(VeilNade, m_color, vector, COLOR_NADE_VEIL);
+    ATTRIB(VeilNade, m_color, vector, '0.65 0.85 0.65');
     ATTRIB(VeilNade, m_name, string, _("Veil grenade"));
     ATTRIB(VeilNade, m_icon, string, "nade_veil");
     ATTRIB(VeilNade, m_alpha, float, 0.45);
@@ -196,7 +196,7 @@ REGISTER_NADE(VEIL, NEW(VeilNade)) {
 }
 
 CLASS(AmmoNade, Nade)
-    ATTRIB(AmmoNade, m_color, vector, COLOR_NADE_AMMO);
+    ATTRIB(AmmoNade, m_color, vector, '0.66 0.33 0');
     ATTRIB(AmmoNade, m_name, string, _("Ammo grenade"));
     ATTRIB(AmmoNade, m_icon, string, "nade_ammo");
 #ifdef MENUQC
@@ -218,7 +218,7 @@ REGISTER_NADE(AMMO, NEW(AmmoNade)) {
 }
 
 CLASS(DarknessNade, Nade)
-    ATTRIB(DarknessNade, m_color, vector, COLOR_NADE_DARKNESS);
+    ATTRIB(DarknessNade, m_color, vector, '0.23 0 0.23');
     ATTRIB(DarknessNade, m_name, string, _("Darkness grenade"));
     ATTRIB(DarknessNade, m_icon, string, "nade_darkness");
 #ifdef MENUQC

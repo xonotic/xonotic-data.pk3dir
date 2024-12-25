@@ -2,7 +2,6 @@
 
 #include <common/items/all.qh>
 #include <common/mutators/mutator/powerups/powerups.qh>
-#include <common/colors.qh>
 #ifdef SVQC
     // For FL_POWERUP
     #include <common/constants.qh>
@@ -48,7 +47,7 @@ CLASS(SpeedItem, Powerup)
     ATTRIB(SpeedItem, netname, string, "speed");
     ATTRIB(SpeedItem, m_name, string, _("Speed"));
     ATTRIB(SpeedItem, m_icon, string, "buff_speed");
-    ATTRIB(SpeedItem, m_color, vector, COLOR_POWERUP_SPEED);
+    ATTRIB(SpeedItem, m_color, vector, '0.1 1 0.84');
     ATTRIB(SpeedItem, m_waypoint, string, _("Speed"));
     ATTRIB(SpeedItem, m_waypointblink, int, 2);
 ENDCLASS(SpeedItem)
@@ -60,7 +59,7 @@ SPAWNFUNC_ITEM(item_buff_speed, ITEM_Speed)
 CLASS(SpeedStatusEffect, Powerups)
     ATTRIB(SpeedStatusEffect, netname, string, "speed");
     ATTRIB(SpeedStatusEffect, m_name, string, _("Speed"));
-    ATTRIB(SpeedStatusEffect, m_color, vector, COLOR_POWERUP_SPEED);
+    ATTRIB(SpeedStatusEffect, m_color, vector, '0.1 1 0.84');
     ATTRIB(SpeedStatusEffect, m_icon, string, "buff_speed");
 ENDCLASS(SpeedStatusEffect)
 REGISTER_STATUSEFFECT(Speed, NEW(SpeedStatusEffect));

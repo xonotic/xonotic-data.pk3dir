@@ -156,6 +156,7 @@ METHOD(OverkillHeavyMachineGun, wr_impacteffect, void(entity thiswep, entity act
 
 #endif
 #ifdef MENUQC
+#include <lib/color.qh>
 #include <common/items/item/ammo.qh>
 #include "okmachinegun.qh"
 

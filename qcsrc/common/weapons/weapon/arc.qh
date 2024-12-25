@@ -1,14 +1,12 @@
 #pragma once
 
-#include <common/colors.qh>
-
 CLASS(Arc, Weapon)
 /* spawnfunc */ ATTRIB(Arc, m_canonical_spawnfunc, string, "weapon_arc");
 /* ammotype  */ ATTRIB(Arc, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Arc, impulse, int, 3);
 /* flags     */ ATTRIB(Arc, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, 8000);
-/* color     */ ATTRIB(Arc, m_color, vector, COLOR_WEP_ARC);
+/* color     */ ATTRIB(Arc, m_color, vector, '1 1 1');
 /* modelname */ ATTRIB(Arc, mdl, string, "arc");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Arc, m_model, Model, MDL_ARC_ITEM);

@@ -1,7 +1,7 @@
 #include "ammo.qh"
 
 #ifdef MENUQC
-#include <common/colors.qh>
+#include <lib/color.qh>
 #include <common/weapons/all.qh>
 
 METHOD(Ammo, describe, string(Ammo this))

@@ -31,6 +31,8 @@ METHOD(SpeedStatusEffect, m_tick, void(StatusEffects this, entity actor))
 }
 #endif
 #ifdef MENUQC
+#include <lib/color.qh>
+
 METHOD(SpeedItem, describe, string(SpeedItem this))
 {
     TC(SpeedItem, this);

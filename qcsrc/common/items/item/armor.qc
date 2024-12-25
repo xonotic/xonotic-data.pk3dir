@@ -1,6 +1,8 @@
 #include "armor.qh"
 
 #ifdef MENUQC
+#include <lib/color.qh>
+
 METHOD(ArmorSmall, describe, string(ArmorSmall this))
 {
     TC(ArmorSmall, this);

@@ -607,8 +607,9 @@ METHOD(Devastator, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
-#include "vortex.qh"
+#include <lib/color.qh>
 #include <common/items/item/ammo.qh>
+#include "vortex.qh"
 
 METHOD(Devastator, describe, string(Devastator this))
 {

@@ -3,7 +3,7 @@
 #if defined(SVQC)
 	#include <common/mutators/mutator/instagib/sv_instagib.qh>
 #elif defined(MENUQC)
-	#include <common/colors.qh>
+	#include <lib/color.qh>
 #endif
 
 #ifdef GAMEQC
