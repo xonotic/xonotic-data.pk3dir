@@ -6,7 +6,7 @@
 
 void buffs_Initialize();
 
-AUTOCVAR(g_buffs, int, -1, "Enable buffs, -1: enabled but no auto location or replacing powerups, 1: enabled and can replace them");
+int autocvar_g_buffs = -1;
 
 REGISTER_MUTATOR(buffs, autocvar_g_buffs)
 {

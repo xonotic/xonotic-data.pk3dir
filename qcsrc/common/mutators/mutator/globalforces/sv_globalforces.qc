@@ -1,9 +1,9 @@
 #include "sv_globalforces.qh"
 
-AUTOCVAR(g_globalforces, float, false, "Global forces: knockback affects everyone");
-AUTOCVAR(g_globalforces_noself, bool, true, "Global forces: ignore self damage");
-AUTOCVAR(g_globalforces_self, float, 1, "Global forces: knockback self scale");
-AUTOCVAR(g_globalforces_range, float, 1000, "Global forces: max range of effect");
+float autocvar_g_globalforces = 0;
+bool autocvar_g_globalforces_noself = true;
+float autocvar_g_globalforces_self = 1;
+float autocvar_g_globalforces_range = 1000;
 REGISTER_MUTATOR(mutator_globalforces, autocvar_g_globalforces);
 
 MUTATOR_HOOKFUNCTION(mutator_globalforces, BuildMutatorsString) {

@@ -1,6 +1,6 @@
 #include "sv_damagetext.qh"
 
-AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: visible to spectators, >= 2: visible to attacker, >= 3: all players see everyone's damage");
+int autocvar_sv_damagetext = 2;
 
 REGISTER_MUTATOR(damagetext, true);
 
