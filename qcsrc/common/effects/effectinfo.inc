@@ -2407,7 +2407,7 @@ SUB(hlac_muzzleflash) {
 	MY(alpha_max) = 512;
 	MY(alpha_fade) = 6280;
 	MY(color_min) = "0x42ff00";
-	MY(color_max) = "0x42ff00";
+	MY(color_max) = "0x00ff00";
 	MY(count) = 6;
 	MY(originjitter) = '2.0 2.0 2.0';
 	MY(sizeincrease) = -100;
