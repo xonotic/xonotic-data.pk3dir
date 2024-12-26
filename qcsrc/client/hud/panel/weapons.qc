@@ -678,10 +678,8 @@ bool Weapons_DrawWeaponOrOffhand(
 	}
 
 	vector pos_real = pos;
-	if (offhand_bit > BIT(0))
-		size_real *= 0.8; // make it obvious that it's an offhand weapon
-	else if (offhand_bit == BIT(0))
-		size_real *= 0.9; // make the grenade a bit smaller so it's similar to the offhand weapons
+	if (offhand_bit)
+		size_real *= 0.8; // make it obvious that it's an offhand weapon/nade
 	pos_real.x = pos.x + (size.x - size_real.x) / 2;
 	pos_real.y = pos.y + (size.y - size_real.y) / 2;
 
