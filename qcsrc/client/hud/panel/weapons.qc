@@ -535,7 +535,7 @@ void Weapons_Draw(
 		{
 			if (!(offhands.y & BIT(0)))
 				continue;
-			wep_or_offhand = NADE_TYPE_ICE; // nade TODO!!!
+			wep_or_offhand = REGISTRY_GET(Nades, STAT(NADE_OFFHAND_TYPE)); // nade
 			offhand_bit = BIT(0);
 		}
 		else if (i == -2 || i == WEP_LAST-WEP_FIRST + 2)

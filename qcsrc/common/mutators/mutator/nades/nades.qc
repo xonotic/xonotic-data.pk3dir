@@ -1338,6 +1338,7 @@ void nade_prime(entity this)
 	{
 		ntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_nade_type : autocvar_g_nades_nade_type);
 		pntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		STAT(NADE_OFFHAND_TYPE, this) = ntype; // used for weapons HUD
 	}
 
 	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype);
