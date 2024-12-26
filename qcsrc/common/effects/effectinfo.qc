@@ -1,5 +1,3 @@
-#if ENABLE_EFFECTINFO
-
 #include "effectinfo.qh"
 #define EFFECTINFO_PARSER(on, MY) \
     on(type,                                        MY(type) \
@@ -49,6 +47,10 @@
     on(lightradius,                                 MY(lightradius) \
     ,{ demand(n == 1 && "lightradius");             MY(lightradius) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(lightradius)) \
+    )) \
+    on(lightshadow,                                 MY(lightshadow) \
+    ,{ demand(n == 1 && "lightshadow");             MY(lightshadow) = stof(argv(1)); \
+    }, sprintf(" %s",                               ftos(MY(lightshadow)) \
     )) \
     on(lighttime,                                   MY(lighttime) \
     ,{ demand(n == 1 && "lighttime");               MY(lighttime) = stof(argv(1)); \
@@ -149,6 +151,7 @@ CLASS(EffectInfo, Object)
 
     #define FIELDS(MY) \
     MY(airfriction, float, 0) \
+    MY(alpha, vector, '0 0 0') \
     MY(alpha_min, float, 0) \
     MY(alpha_max, float, 0) \
     MY(alpha_fade, float, 0) \
@@ -162,6 +165,7 @@ CLASS(EffectInfo, Object)
     MY(lightcolor, vector, '0 0 0') \
     MY(lightradiusfade, float, 0) \
     MY(lightradius, float, 0) \
+    MY(lightshadow, float, 0) \
     MY(lighttime, float, 0) \
     MY(liquidfriction, float, 0) \
     MY(notunderwater, bool, false) \
@@ -345,5 +349,3 @@ REGISTRY_DEFINE_GET(EffectInfos, NULL)
 #undef MY
 #undef DEF
 #undef SUB
-
-#endif

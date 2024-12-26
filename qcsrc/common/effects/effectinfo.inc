@@ -4463,8 +4463,8 @@ SUB(tr_bullet) {
 	MY(sizeincrease) = -3;
 	MY(size_min) = 0.6;
 	MY(size_max) = 0.8;
-	my(tex_min) = 200;
-	my(tex_max) = 200;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
 	MY(type) = "beam";
 }
 SUB(tr_bullet) {
@@ -9042,8 +9042,8 @@ SUB(tr_bullet_weak) {
 	MY(sizeincrease) = -3;
 	MY(size_min) = 0.6;
 	MY(size_max) = 0.8;
-	my(tex_min) = 200;
-	my(tex_max) = 200;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
 	MY(type) = "beam";
 }
 SUB(tr_bullet_weak) {
@@ -9162,9 +9162,9 @@ SUB(item_despawn) {
 	MY(tex_max) = 55;
 	MY(velocityjitter) = '16 16 32';
 	MY(lightradius) = 48;
-	MY(lightradiusfade) 64;
-	MY(lightcolor) '1 0.75 0.36';
-	MY(lightshadow) 1;
+	MY(lightradiusfade) = 64;
+	MY(lightcolor) = '1 0.75 0.36';
+	MY(lightshadow) = 1;
 }
 
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
