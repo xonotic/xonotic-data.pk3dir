@@ -141,7 +141,6 @@ const noref vector default_vector = '0 0 0';
 
 //pseudo prototypes:
 // void AUTOCVAR(<cvar_name>, <qc_var_type>, default_cvar_value, string desc)
-// void AUTOCVAR_SAVE(<cvar_name>, <qc_var_type>, default_cvar_value, string desc)
 //  where default_cvar_value has type <qc_var_type>
 //  e.g.: AUTOCVAR(mycvar, float, 2.5, "cvar description")
 
@@ -157,5 +156,4 @@ const noref vector default_vector = '0 0 0';
 	__AUTOCVAR(file, archive, var, type, desc, default)
 #define _AUTOCVAR(...) EVAL__AUTOCVAR(OVERLOAD(AUTOCVAR, __FILE__, __VA_ARGS__))
 #define EVAL__AUTOCVAR(...) __VA_ARGS__
-#define AUTOCVAR_SAVE(...) _AUTOCVAR(true, __VA_ARGS__)
 #define AUTOCVAR(...) _AUTOCVAR(false, __VA_ARGS__)
