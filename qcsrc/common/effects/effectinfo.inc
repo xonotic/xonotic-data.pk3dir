@@ -2187,7 +2187,7 @@ SUB(electro_combo) {
 	MY(airfriction) = 6;
 	MY(alpha_min) = 156;
 	MY(alpha_max) = 156;
-	MY(alpha_fade) = 156;
+	MY(alpha_fade) = 100;
 	MY(bounce) = 2;
 	MY(color_min) = "0x2030FF";
 	MY(color_max) = "0x80C0FF";
@@ -2212,6 +2212,10 @@ SUB(electro_combo) {
 	MY(size_min) = 2;
 	MY(size_max) = 4;
 	MY(stretchfactor) = 2;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 4000;
+	MY(spin_max) = -4000;
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
@@ -4456,7 +4460,9 @@ SUB(flac_explode) {
 // bullet trail (somewhat like a tracer)
 DEF(tr_bullet);
 SUB(tr_bullet) {
-	MY(alpha) = '500 600 10000';
+	MY(alpha_min) = 500;
+	MY(alpha_max) = 600;
+	MY(alpha_fade) = 10000;
 	MY(color_min) = "0xf03000";
 	MY(color_max) = "0xff6010";
 	MY(countabsolute) = 1;
@@ -4469,7 +4475,9 @@ SUB(tr_bullet) {
 }
 SUB(tr_bullet) {
 	MY(airfriction) = -4;
-	MY(alpha) = '256 256 350';
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 350;
 	MY(color_min) = "0x202020";
 	MY(color_max) = "0x404040";
 	MY(notunderwater) = true;
@@ -9035,7 +9043,9 @@ SUB(arc_bolt_explode) {
 // weak bullet trail (somewhat like a tracer)
 DEF(tr_bullet_weak);
 SUB(tr_bullet_weak) {
-	MY(alpha) = '75 100 3000';
+	MY(alpha_min) = 75;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 3000;
 	MY(color_min) = "0xf03000";
 	MY(color_max) = "0xff6010";
 	MY(countabsolute) = 1;
@@ -9048,7 +9058,9 @@ SUB(tr_bullet_weak) {
 }
 SUB(tr_bullet_weak) {
 	MY(airfriction) = -4;
-	MY(alpha) = '256 256 350';
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 350;
 	MY(color_min) = "0x202020";
 	MY(color_max) = "0x404040";
 	MY(notunderwater) = true;
@@ -9126,8 +9138,8 @@ SUB(TE_TEI_G3_HIT) {
 // respawn ghosts effect
 DEF(respawn_ghost);
 SUB(respawn_ghost) {
-	MY(count) = 75;
 	MY(type) = "static";
+	MY(count) = 75;
 	MY(color_min) = "0xA0A0A0";
 	MY(color_max) = "0xFFFFFF";
 	MY(size_min) = 2;
