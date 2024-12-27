@@ -1481,7 +1481,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (!IS_PLAYER(player)) { return; }
+	if (!IS_PLAYER(player))
+		return;
 
 	if (player.nade && (player.offhand != OFFHAND_NADE || (STAT(WEAPONS, player) & WEPSET(HOOK))))
 		OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
@@ -1503,60 +1504,55 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		}
 	}
 
-	if(IS_PLAYER(player))
+	if (autocvar_g_nades_client_select)
+		STAT(NADE_OFFHAND_TYPE, player) = CS_CVAR(player).cvar_cl_nade_type;
+	else
+		STAT(NADE_OFFHAND_TYPE, player) = autocvar_g_nades_nade_type;
+
+	if (autocvar_g_nades_bonus && autocvar_g_nades)
 	{
-		if (autocvar_g_nades_client_select)
-			STAT(NADE_OFFHAND_TYPE, player) = CS_CVAR(player).cvar_cl_nade_type;
+		entity key;
+		float key_count = 0;
+		FOR_EACH_KH_KEY(key) if(key.owner == player) { ++key_count; }
+
+		float time_score;
+		if (GameRules_scoring_is_vip(player))
+			time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
 		else
-			STAT(NADE_OFFHAND_TYPE, player) = autocvar_g_nades_nade_type;
+			time_score = autocvar_g_nades_bonus_score_time;
 
-		if ( autocvar_g_nades_bonus && autocvar_g_nades )
+		if (key_count)
+			time_score = autocvar_g_nades_bonus_score_time_flagcarrier * key_count; // multiply by the number of keys the player is holding
+
+		if (autocvar_g_nades_bonus_client_select)
 		{
-			entity key;
-			float key_count = 0;
-			FOR_EACH_KH_KEY(key) if(key.owner == player) { ++key_count; }
-
-			float time_score;
-			if(GameRules_scoring_is_vip(player))
-				time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
-			else
-				time_score = autocvar_g_nades_bonus_score_time;
-
-			if(key_count)
-				time_score = autocvar_g_nades_bonus_score_time_flagcarrier * key_count; // multiply by the number of keys the player is holding
-
-			if(autocvar_g_nades_bonus_client_select)
-			{
-				STAT(NADE_BONUS_TYPE, player) = nades_CheckTypes(player, CS_CVAR(player).cvar_cl_nade_type);
-				player.pokenade_type = CS_CVAR(player).cvar_cl_pokenade_type;
-			}
-			else
-			{
-				STAT(NADE_BONUS_TYPE, player) = autocvar_g_nades_bonus_type;
-				player.pokenade_type = autocvar_g_nades_pokenade_monster_type;
-			}
-
-			STAT(NADE_BONUS_TYPE, player) = bound(1, STAT(NADE_BONUS_TYPE, player), Nades_COUNT);
-
-			if(STAT(NADE_BONUS_SCORE, player) >= 0 && autocvar_g_nades_bonus_score_max)
-				nades_GiveBonus(player, time_score / autocvar_g_nades_bonus_score_max);
+			STAT(NADE_BONUS_TYPE, player) = nades_CheckTypes(player, CS_CVAR(player).cvar_cl_nade_type);
+			player.pokenade_type = CS_CVAR(player).cvar_cl_pokenade_type;
 		}
 		else
 		{
-			STAT(NADE_BONUS, player) = STAT(NADE_BONUS_SCORE, player) = 0;
+			STAT(NADE_BONUS_TYPE, player) = autocvar_g_nades_bonus_type;
+			player.pokenade_type = autocvar_g_nades_pokenade_monster_type;
 		}
 
-		if(player.nade_veil_time && player.nade_veil_time <= time)
-		{
-			player.nade_veil_time = 0;
-			if(player.vehicle)
-				player.vehicle.alpha = player.vehicle.nade_veil_prevalpha;
-			else
-				player.alpha = player.nade_veil_prevalpha;
-		}
+		STAT(NADE_BONUS_TYPE, player) = bound(1, STAT(NADE_BONUS_TYPE, player), Nades_COUNT);
+
+		if (STAT(NADE_BONUS_SCORE, player) >= 0 && autocvar_g_nades_bonus_score_max)
+			nades_GiveBonus(player, time_score / autocvar_g_nades_bonus_score_max);
+	}
+	else
+		STAT(NADE_BONUS, player) = STAT(NADE_BONUS_SCORE, player) = 0;
+
+	if (player.nade_veil_time && player.nade_veil_time <= time)
+	{
+		player.nade_veil_time = 0;
+		if (player.vehicle)
+			player.vehicle.alpha = player.vehicle.nade_veil_prevalpha;
+		else
+			player.alpha = player.nade_veil_prevalpha;
 	}
 
-	if (!(frametime && IS_PLAYER(player)))
+	if (!frametime)
 		return true;
 
 	entity revivers_last = NULL;
