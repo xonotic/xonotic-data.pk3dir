@@ -104,18 +104,14 @@ int weaponorder_cmp(int i, int j, entity pass)
 }
 
 #define HUD_WEAPONS_GET_FULL_LAYOUT() MACRO_BEGIN \
-	{ \
-		int nHidden = 0; \
-		FOREACH(Weapons, it != WEP_Null, { \
-			if (weapons_stat & WepSet_FromWeapon(it)) continue; \
-			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)) nHidden += 1; \
-		}); \
-		{ \
-			vector table_size = HUD_GetTableSize_BestItemAR((REGISTRY_COUNT(Weapons) - 1) - nHidden + offhands.x, panel_size, aspect); \
-			columns = table_size.x; \
-			rows = table_size.y; \
-		} \
-	} \
+	int nHidden = 0; \
+	FOREACH(Weapons, it != WEP_Null, { \
+		if (weapons_stat & WepSet_FromWeapon(it)) continue; \
+		if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)) ++nHidden; \
+	}); \
+	vector table_size = HUD_GetTableSize_BestItemAR((REGISTRY_COUNT(Weapons) - 1) - nHidden + offhands.x, panel_size, aspect); \
+	columns = table_size.x; \
+	rows = table_size.y; \
 	weapon_size.x = panel_size.x / columns; \
 	weapon_size.y = panel_size.y / rows; \
 MACRO_END
