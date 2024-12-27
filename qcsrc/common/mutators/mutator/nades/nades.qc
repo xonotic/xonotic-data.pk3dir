@@ -14,6 +14,7 @@ REGISTER_STAT(NADES_SMALL, INT, autocvar_g_nades_nade_small)
 
 REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
 REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
+REPLICATE(cvar_g_nades_bonus_only, bool, "g_nades_bonus_only");
 
 entity Nade_TrailEffect(int proj, int nade_team)
 {
@@ -1338,7 +1339,6 @@ void nade_prime(entity this)
 	{
 		ntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_nade_type : autocvar_g_nades_nade_type);
 		pntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
-		STAT(NADE_OFFHAND_TYPE, this) = ntype; // used for weapons HUD
 	}
 
 	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype);
@@ -1505,6 +1505,11 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 	if(IS_PLAYER(player))
 	{
+		if (autocvar_g_nades_client_select)
+			STAT(NADE_OFFHAND_TYPE, player) = CS_CVAR(player).cvar_cl_nade_type;
+		else
+			STAT(NADE_OFFHAND_TYPE, player) = autocvar_g_nades_nade_type;
+
 		if ( autocvar_g_nades_bonus && autocvar_g_nades )
 		{
 			entity key;

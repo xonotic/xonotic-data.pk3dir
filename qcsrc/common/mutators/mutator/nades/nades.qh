@@ -153,6 +153,7 @@ Nade Nade_FromProjectile(int proj)
 #ifdef GAMEQC
 REPLICATE_INIT(int, cvar_cl_nade_type);
 REPLICATE_INIT(string, cvar_cl_pokenade_type);
+REPLICATE_INIT(bool, cvar_g_nades_bonus_only);
 #endif
 
 #ifdef SVQC

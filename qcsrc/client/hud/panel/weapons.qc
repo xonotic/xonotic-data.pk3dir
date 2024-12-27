@@ -341,7 +341,7 @@ vector Weapons_GetOffhands()
 	// TODO: make this dynamic with an OffhandWeapon registry or something of the sorts
 	int bits = 0; // BIT(0) = nade, BIT(1) = hook, BIT(2) = blaster
 	int total = 0;
-	if (mut_is_active(MUT_NADES))
+	if (mut_is_active(MUT_NADES) && !cvar_g_nades_bonus_only)
 	{
 		bits |= BIT(0);
 		++total;
