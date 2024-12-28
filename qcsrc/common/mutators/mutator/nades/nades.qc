@@ -14,7 +14,6 @@ REGISTER_STAT(NADES_SMALL, INT, autocvar_g_nades_nade_small)
 
 REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
 REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
-REPLICATE(cvar_g_nades_bonus_only, bool, "g_nades_bonus_only");
 
 entity Nade_TrailEffect(int proj, int nade_team)
 {
@@ -1539,9 +1538,14 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 		if (STAT(NADE_BONUS_SCORE, player) >= 0 && autocvar_g_nades_bonus_score_max)
 			nades_GiveBonus(player, time_score / autocvar_g_nades_bonus_score_max);
+
+		STAT(NADE_BONUS_ONLY, player) = autocvar_g_nades_bonus_only;
 	}
 	else
+	{
 		STAT(NADE_BONUS, player) = STAT(NADE_BONUS_SCORE, player) = 0;
+		STAT(NADE_BONUS_ONLY, player) = false;
+	}
 
 	if (player.nade_veil_time && player.nade_veil_time <= time)
 	{
