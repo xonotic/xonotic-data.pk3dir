@@ -1,5 +1,8 @@
 #include "all.qh"
 
+const int EFF_NET_VELOCITY = BIT(0);
+const int EFF_NET_COLOR = BIT(1);
+
 REGISTER_NET_TEMP(net_effect)
 #ifdef CSQC
 NET_HANDLE(net_effect, bool isNew)
@@ -10,20 +13,31 @@ NET_HANDLE(net_effect, bool isNew)
 
 	vector vel = '0 0 0';
 	int eff_cnt = 1;
+	int eff_flags = 0;
 	bool eff_trail = eff.eent_eff_trail;
 	vector v = ReadVector();
+	int extraflags = ReadByte();
 
-	bool use_vel = ReadByte();
-	if(use_vel)
+	if(extraflags & EFF_NET_VELOCITY)
 		vel = ReadVector();
+
+	if(extraflags & EFF_NET_COLOR)
+	{
+		vector col;
+		col.x = ReadByte() / 16;
+		col.y = ReadByte() / 16;
+		col.z = ReadByte() / 16;
+		particles_colormin = particles_colormax = col;
+		eff_flags |= PARTICLES_USECOLOR;
+	}
 
 	if(!eff_trail)
 		eff_cnt = ReadByte();
 
 	if(eff_trail)
-		WarpZone_TrailParticles(NULL, particleeffectnum(eff), v, vel);
+		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(eff), v, vel, 1, eff_flags);
 	else
-		pointparticles(eff, v, vel, eff_cnt);
+		boxparticles(particleeffectnum(eff), NULL, v, v, vel, vel, 1, eff_flags);
 	return true;
 }
 #endif
@@ -39,19 +53,31 @@ bool Net_Write_Effect(entity this, entity client, int sf)
 	: WriteByte(channel, this.m_id);
 	WriteVector(channel, this.eent_net_location);
 
-	// attempt to save a tiny bit more bandwidth by not sending velocity if it isn't set
+	int extraflags = 0;
 	if(this.eent_net_velocity)
-	{
-		WriteByte(channel, true);
+		extraflags |= EFF_NET_VELOCITY;
+	if(this.eent_net_color)
+		extraflags |= EFF_NET_COLOR;
+
+	WriteByte(channel, extraflags);
+
+	// attempt to save a tiny bit more bandwidth by not sending velocity if it isn't set
+	if(extraflags & EFF_NET_VELOCITY)
 		WriteVector(channel, this.eent_net_velocity);
+
+	if(extraflags & EFF_NET_COLOR)
+	{
+		vector col = this.eent_net_color;
+		WriteByte(channel, rint(bound(0, 16 * col.x, 255)));
+		WriteByte(channel, rint(bound(0, 16 * col.y, 255)));
+		WriteByte(channel, rint(bound(0, 16 * col.z, 255)));
 	}
-	else { WriteByte(channel, false); }
 
 	if(!this.eent_eff_trail) { WriteByte(channel, this.eent_net_count); }
 	return true;
 }
 
-void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt, entity ignore)
+void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt, vector eff_col, entity ignore)
 {
 	if(!eff) { return; }
 	if(!eff.eent_eff_trail && !eff_cnt) { return; } // effect has no count!
@@ -62,6 +88,7 @@ void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt,
 	net_eff.eent_net_velocity = eff_vel;
 	net_eff.eent_net_location = eff_loc;
 	net_eff.eent_net_count = eff_cnt;
+	net_eff.eent_net_color = eff_col;
 	net_eff.eent_eff_trail = eff.eent_eff_trail;
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != ignore && !(IS_SPEC(it) && it.enemy && it.enemy == ignore), Net_Write_Effect(net_eff, it, 0));
@@ -70,7 +97,7 @@ void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt,
 
 void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 {
-	Send_Effect_Except(eff, eff_loc, eff_vel, eff_cnt, NULL);
+	Send_Effect_Except(eff, eff_loc, eff_vel, eff_cnt, '0 0 0', NULL);
 }
 
 void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)

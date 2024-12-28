@@ -193,6 +193,12 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 
 .entity nade_spawnloc;
 
+vector nades_PlayerColor(entity this)
+{
+	vector expcol = (teamplay) ? Team_ColorRGB(this.team)
+							   : colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : this.clientcolors) & 0x0F, true);
+	return expcol;
+}
 
 void nade_timer_think(entity this)
 {
@@ -433,8 +439,9 @@ void nade_ice_think(entity this)
 	{
 		if ( autocvar_g_nades_ice_explode )
 		{
-			entity expef = EFFECT_NADE_EXPLODE(this.realowner.team);
-			Send_Effect(expef, this.origin + '0 0 1', '0 0 0', 1);
+			vector expcol = nades_PlayerColor(this.realowner);
+			entity expef = EFFECT_NADE_EXPLODE_NEUTRAL;
+			Send_Effect_Except(expef, this.origin + '0 0 1', '0 0 0', 1, expcol, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			normal_nade_boom(this);
@@ -806,8 +813,9 @@ void nade_darkness_think(entity this)
 	{
 		if ( autocvar_g_nades_darkness_explode )
 		{
-			entity expef = EFFECT_NADE_EXPLODE(this.realowner.team);
-			Send_Effect(expef, this.origin + '0 0 1', '0 0 0', 1);
+			vector expcol = nades_PlayerColor(this.realowner);
+			entity expef = EFFECT_NADE_EXPLODE_NEUTRAL;
+			Send_Effect_Except(expef, this.origin + '0 0 1', '0 0 0', 1, expcol, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			normal_nade_boom(this);
@@ -898,40 +906,34 @@ void nade_boom(entity this)
 {
 	entity expef = NULL;
 	bool nade_blast = true;
+	vector expcol = '0 0 0';
 
-#define GET_NADE_TYPE_SPAWN_EFFECT(team_owner) \
-	((team_owner) == NUM_TEAM_1 ? EFFECT_SPAWN_RED : \
-	((team_owner) == NUM_TEAM_2 ? EFFECT_SPAWN_BLUE : \
-	((team_owner) == NUM_TEAM_3 ? EFFECT_SPAWN_YELLOW : \
-	((team_owner) == NUM_TEAM_4 ? EFFECT_SPAWN_PINK : \
-	EFFECT_SPAWN_NEUTRAL))))
-
-#define SET_NADE_EFFECT(nade_type, blast, exp_effect) \
+#define SET_NADE_EFFECT(nade_type, blast, exp_effect, exp_color) \
 	case nade_type: \
 		nade_blast = blast; \
 		expef = exp_effect; \
+		expcol = exp_color; \
 		break
 
 	switch ( REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this)) )
 	{
-		SET_NADE_EFFECT(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm_blast, EFFECT_EXPLOSION_MEDIUM);
-		SET_NADE_EFFECT(NADE_TYPE_ICE,         false,                         EFFECT_ELECTRO_COMBO /* hookbomb_explode electro_combo bigplasma_impact */);
-		SET_NADE_EFFECT(NADE_TYPE_TRANSLOCATE, false,                         NULL);
-		SET_NADE_EFFECT(NADE_TYPE_MONSTER,     true,                          (!autocvar_g_monsters) ? EFFECT_NADE_EXPLODE(this.realowner.team) : NULL);
-		SET_NADE_EFFECT(NADE_TYPE_SPAWN,       false,                         GET_NADE_TYPE_SPAWN_EFFECT(this.realowner.team));
-		SET_NADE_EFFECT(NADE_TYPE_HEAL,        false,                         EFFECT_SPAWN_RED);
-		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      false,                         EFFECT_SPAWN_YELLOW);
-		SET_NADE_EFFECT(NADE_TYPE_VEIL,        false,                         EFFECT_SPAWN_NEUTRAL);
-		SET_NADE_EFFECT(NADE_TYPE_AMMO,        false,                         EFFECT_SPAWN_BROWN);
-		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    false,                         EFFECT_EXPLOSION_MEDIUM);
-		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      true,                          EFFECT_NADE_EXPLODE(this.realowner.team));
-		default: expef = EFFECT_NADE_EXPLODE(this.realowner.team); break;
+		SET_NADE_EFFECT(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm_blast, EFFECT_EXPLOSION_MEDIUM, 										'0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_ICE,         false,                         EFFECT_ELECTRO_COMBO, 										'0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_TRANSLOCATE, false,                         NULL, 														'0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_MONSTER,     true,                          (!autocvar_g_monsters) ? EFFECT_NADE_EXPLODE_NEUTRAL : NULL, 	nades_PlayerColor(this.realowner));
+		SET_NADE_EFFECT(NADE_TYPE_SPAWN,       false,                         EFFECT_SPAWN_NEUTRAL, 										nades_PlayerColor(this.realowner));
+		SET_NADE_EFFECT(NADE_TYPE_HEAL,        false,                         EFFECT_SPAWN_NEUTRAL, 										'1 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      false,                         EFFECT_SPAWN_NEUTRAL, 										'1 1 0');
+		SET_NADE_EFFECT(NADE_TYPE_VEIL,        false,                         EFFECT_SPAWN_NEUTRAL, 										'0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_AMMO,        false,                         EFFECT_SPAWN_NEUTRAL, 										'0.66 0.33 0');
+		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    false,                         EFFECT_EXPLOSION_MEDIUM, 										'0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      true,                          EFFECT_NADE_EXPLODE_NEUTRAL, 									nades_PlayerColor(this.realowner));
+		default: expef = EFFECT_NADE_EXPLODE_NEUTRAL; expcol = nades_PlayerColor(this.realowner); break;
 	}
-#undef GET_NADE_TYPE_SPAWN_EFFECT
 #undef SET_NADE_EFFECT
 
 	if(expef)
-		Send_Effect(expef, findbetterlocation(this.origin, 8), '0 0 0', 1);
+		Send_Effect_Except(expef, findbetterlocation(this.origin, 8), '0 0 0', 1, expcol, NULL);
 
 	sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
