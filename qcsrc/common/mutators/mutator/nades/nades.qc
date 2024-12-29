@@ -43,7 +43,6 @@ entity Nade_TrailEffect(int proj, int nade_team)
 #ifdef CSQC
 #include <client/draw.qh>
 #include <client/hud/hud.qh>
-#include <lib/color.qh>
 
 bool darkness_fadealpha;
 
