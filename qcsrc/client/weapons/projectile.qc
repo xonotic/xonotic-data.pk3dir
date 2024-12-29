@@ -30,7 +30,6 @@ void Projectile_DrawTrail(entity this, vector to)
 {
 	vector from = this.trail_oldorigin;
 	// float t0 = this.trail_oldtime;
-	vector tcolor = (this.colormod != '0 0 0') ? this.colormod : '1 1 1';
 	this.trail_oldorigin = to;
 	this.trail_oldtime = time;
 
@@ -41,10 +40,15 @@ void Projectile_DrawTrail(entity this, vector to)
 
 	if (this.traileffect)
 	{
+		int eff_flags = PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL;
 		particles_alphamin = particles_alphamax = particles_fade = sqrt(this.alpha);
-		particles_colormin = particles_colormax = tcolor;
+		if (this.colormod != '0 0 0')
+		{
+			particles_colormin = particles_colormax = this.colormod;
+			eff_flags |= PARTICLES_USECOLOR;
+		}
 		entity eff = REGISTRY_GET(Effects, this.traileffect);
-		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL | PARTICLES_USECOLOR);
+		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, eff_flags);
 	}
 }
 
