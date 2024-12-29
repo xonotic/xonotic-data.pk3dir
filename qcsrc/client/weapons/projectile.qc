@@ -30,6 +30,7 @@ void Projectile_DrawTrail(entity this, vector to)
 {
 	vector from = this.trail_oldorigin;
 	// float t0 = this.trail_oldtime;
+	vector tcolor = (this.colormod != '0 0 0') ? this.colormod : '1 1 1';
 	this.trail_oldorigin = to;
 	this.trail_oldtime = time;
 
@@ -41,8 +42,9 @@ void Projectile_DrawTrail(entity this, vector to)
 	if (this.traileffect)
 	{
 		particles_alphamin = particles_alphamax = particles_fade = sqrt(this.alpha);
+		particles_colormin = particles_colormax = tcolor;
 		entity eff = REGISTRY_GET(Effects, this.traileffect);
-		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
+		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL | PARTICLES_USECOLOR);
 	}
 }
 
@@ -332,7 +334,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 			HANDLE(RPC)                this.traileffect = EFFECT_TR_ROCKET.m_id; break;
 
-			HANDLE(ROCKETMINSTA_LASER) this.traileffect = EFFECT_ROCKETMINSTA_LASER(this.team).m_id; break;
+			HANDLE(ROCKETMINSTA_LASER) this.traileffect = EFFECT_ROCKETMINSTA_LASER_NEUTRAL.m_id; break;
 #undef HANDLE
 			default:
 				if (MUTATOR_CALLHOOK(Ent_Projectile, this))
@@ -451,6 +453,10 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				break;
 			case PROJECTILE_WAKIROCKET:
 				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				break;
+			case PROJECTILE_ROCKETMINSTA_LASER:
+				if(this.colormap > 0)
+					this.colormod = colormapPaletteColor(this.colormap & 0x0F, true);
 				break;
 			/*
 			case PROJECTILE_WAKICANNON:

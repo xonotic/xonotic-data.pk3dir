@@ -13,7 +13,6 @@ void SendCSQCVaporizerBeamParticle(entity player, int hit) {
 	WriteVector(MSG_BROADCAST, v);
 	WriteByte(MSG_BROADCAST, hit);
 	WriteByte(MSG_BROADCAST, etof(player));
-	WriteByte(MSG_BROADCAST, player.team);
 }
 #elif defined(CSQC)
 bool autocvar_cl_vaporizerbeam_particle = false;
@@ -86,13 +85,14 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	int myowner = ReadByte();
 	this.owner = playerslots[myowner - 1];
 	this.sv_entnum = myowner;
-	this.team = ReadByte() - 1;
 
 	//pointparticles(EFFECT_VORTEX_MUZZLEFLASH, this.vorg1, normalize(this.vorg2 - this.vorg1) * 1000, 1);
 
 	if(autocvar_cl_vaporizerbeam_particle)
 	{
-		WarpZone_TrailParticles(NULL, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT(this.team) : EFFECT_VAPORIZER(this.team))), this.vorg1, this.vorg2);
+		vector rgb = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
+		particles_colormin = particles_colormax = rgb;
+		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT_NEUTRAL : EFFECT_VAPORIZER_NEUTRAL)), this.vorg1, this.vorg2, 1, PARTICLES_USECOLOR);
 		this.draw = func_null;
 		this.drawmask = MASK_NORMAL;
 		delete(this);
