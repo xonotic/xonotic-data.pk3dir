@@ -4,10 +4,10 @@
 //REGISTER_STAT(WEP_CVAR_vortex_charge_animlimit, float, WEP_CVAR(WEP_VORTEX, charge_animlimit))
 
 #if defined(GAMEQC)
-METHOD(Vortex, wr_glow, vector(Vortex this, int actor_colors, entity wepent))
+vector vortex_glowcolor(int actor_colors, float charge)
 {
 	if (!WEP_CVAR(WEP_VORTEX, charge)) return '0 0 0';
-	float charge = max(0.25, wepent.vortex_charge);
+
 	float animlimit = WEP_CVAR(WEP_VORTEX, charge_animlimit);
 	float f = min(1, charge / animlimit);
 	vector mycolors = colormapPaletteColor(actor_colors & 0x0F, true);
@@ -20,7 +20,13 @@ METHOD(Vortex, wr_glow, vector(Vortex this, int actor_colors, entity wepent))
 	// transition color can't be '0 0 0' as it defaults to player model glow color
 	if (g == '0 0 0')
 		g = '0 0 0.000001';
+
 	return g;
+}
+
+METHOD(Vortex, wr_glow, vector(Vortex this, int actor_colors, entity wepent))
+{
+	return vortex_glowcolor(actor_colors, max(0.25, wepent.vortex_charge));
 }
 #endif
 
@@ -29,34 +35,45 @@ REGISTER_NET_TEMP(TE_CSQC_VORTEXBEAMPARTICLE)
 #endif
 
 #if defined(SVQC)
-void SendCSQCVortexBeamParticle(float charge) {
+void SendCSQCVortexBeamParticle(entity player, float charge) {
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	WriteHeader(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);
 	WriteVector(MSG_BROADCAST, w_shotorg);
 	WriteVector(MSG_BROADCAST, v);
 	WriteByte(MSG_BROADCAST, bound(0, 255 * charge, 255));
+	WriteByte(MSG_BROADCAST, etof(player));
 }
 #elif defined(CSQC)
+bool autocvar_cl_vortexbeam_teamcolor = true;
 NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 {
 	float charge;
 	vector shotorg = ReadVector();
 	vector endpos = ReadVector();
 	charge = ReadByte() / 255.0;
+	int myowner = ReadByte();
+
+	int eff_flags = PARTICLES_USEALPHA | PARTICLES_USEFADE;
 
 	//pointparticles(EFFECT_VORTEX_MUZZLEFLASH, shotorg, normalize(endpos - shotorg) * 1000, 1);
 
 	//draw either the old v2.3 beam or the new beam
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
 	particles_alphamin = particles_alphamax = particles_fade = charge;
+	if(autocvar_cl_vortexbeam_teamcolor)
+	{
+		vector rgb = vortex_glowcolor(entcs_GetClientColors(myowner - 1), max(0.25, charge));
+		particles_colormin = particles_colormax = rgb;
+		eff_flags |= PARTICLES_USECOLOR;
+	}
 
 	if(!MUTATOR_CALLHOOK(Particles_VortexBeam, shotorg, endpos))
 	{
 		if(autocvar_cl_particles_oldvortexbeam)
-			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), shotorg, endpos, 1, eff_flags);
 		else
-			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+			WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM), shotorg, endpos, 1, eff_flags);
 	}
 	return true;
 }
@@ -144,7 +161,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	//beam done on client
 	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, normalize(v - w_shotorg));
-	SendCSQCVortexBeamParticle(charge);
+	SendCSQCVortexBeamParticle(actor, charge);
 
 	W_DecreaseAmmo(thiswep, actor, myammo, weaponentity);
 }
@@ -324,7 +341,7 @@ METHOD(Vortex, wr_impacteffect, void(entity thiswep, entity actor))
 {
 	entity this = actor;
 	vector org2 = w_org + w_backoff * 2;
-	pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
+	boxparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), NULL, org2, org2, '0 0 0', '0 0 0', 1, ((autocvar_cl_vortexbeam_teamcolor) ? PARTICLES_USECOLOR : 0));
 	if(!w_issilent)
 		sound(this, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
 }
