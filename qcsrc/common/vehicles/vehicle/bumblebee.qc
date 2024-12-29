@@ -1,9 +1,7 @@
 #include "bumblebee.qh"
 
-#if defined(SVQC)
+#ifdef SVQC
 	#include <common/mutators/mutator/instagib/sv_instagib.qh>
-#elif defined(MENUQC)
-	#include <lib/color.qh>
 #endif
 
 #ifdef GAMEQC

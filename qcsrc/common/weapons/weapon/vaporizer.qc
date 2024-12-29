@@ -408,7 +408,6 @@ METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
-#include <lib/color.qh>
 #include <common/mutators/mutator/instagib/items.qh>
 #include <common/items/item/ammo.qh>
 #include "blaster.qh"

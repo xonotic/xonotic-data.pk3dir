@@ -1510,7 +1510,6 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 #endif
 #ifdef MENUQC
-#include <lib/color.qh>
 #include <common/items/item/ammo.qh>
 
 METHOD(Arc, describe, string(Arc this))

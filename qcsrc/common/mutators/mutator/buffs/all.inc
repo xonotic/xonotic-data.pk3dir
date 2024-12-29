@@ -1,5 +1,3 @@
-#include <lib/color.qh>
-
 string Buff_CompatName(string buffname)
 {
     switch(buffname)

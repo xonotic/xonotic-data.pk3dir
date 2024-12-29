@@ -434,7 +434,6 @@ METHOD(Fireball, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
-#include <lib/color.qh>
 
 METHOD(Fireball, describe, string(Fireball this))
 {

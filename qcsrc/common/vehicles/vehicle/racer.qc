@@ -1,10 +1,8 @@
 #include "racer.qh"
 
-#if defined(SVQC)
+#ifdef SVQC
 	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 	#include <common/mapobjects/trigger/impulse.qh>
-#elif defined(MENUQC)
-	#include <lib/color.qh>
 #endif
 
 #ifdef GAMEQC

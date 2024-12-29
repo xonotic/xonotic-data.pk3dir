@@ -43,8 +43,6 @@ METHOD(InvisibilityStatusEffect, m_tick, void(StatusEffects this, entity actor))
 }
 #endif
 #ifdef MENUQC
-#include <lib/color.qh>
-
 METHOD(InvisibilityItem, describe, string(InvisibilityItem this))
 {
     TC(InvisibilityItem, this);

@@ -49,8 +49,6 @@ METHOD(StrengthStatusEffect, m_tick, void(StatusEffects this, entity actor))
 }
 #endif
 #ifdef MENUQC
-#include <lib/color.qh>
-
 METHOD(StrengthItem, describe, string(StrengthItem this))
 {
     TC(StrengthItem, this);

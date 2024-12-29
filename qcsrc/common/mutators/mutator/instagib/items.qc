@@ -1,7 +1,6 @@
 #include "items.qh"
 
 #ifdef MENUQC
-#include <lib/color.qh>
 #include <common/weapons/weapon/vaporizer.qh>
 
 METHOD(VaporizerCells, describe, string(VaporizerCells this))

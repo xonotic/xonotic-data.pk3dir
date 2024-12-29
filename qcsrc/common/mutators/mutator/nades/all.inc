@@ -1,5 +1,3 @@
-#include <lib/color.qh>
-
 #ifdef GAMEQC
 #define NADE_PROJECTILE(i, projectile, trail) MACRO_BEGIN \
     this.m_projectile[i] = projectile; \

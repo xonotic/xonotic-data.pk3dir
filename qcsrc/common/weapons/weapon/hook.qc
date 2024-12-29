@@ -511,7 +511,6 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 // TODO: hook: temporarily transform this.origin for drawing the model along warpzones!
 #endif
 #ifdef MENUQC
-#include <lib/color.qh>
 #include <common/items/item/jetpack.qh>
 
 METHOD(Hook, describe, string(Hook this))

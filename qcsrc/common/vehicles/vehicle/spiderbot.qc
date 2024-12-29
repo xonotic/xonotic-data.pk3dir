@@ -3,7 +3,6 @@
 #if defined(SVQC)
 	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #elif defined(MENUQC)
-	#include <lib/color.qh>
 	#include "raptor.qh"
 #endif
 

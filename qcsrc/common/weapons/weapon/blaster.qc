@@ -153,7 +153,6 @@ METHOD(Blaster, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
-#include <lib/color.qh>
 
 METHOD(Blaster, describe, string(Blaster this))
 {

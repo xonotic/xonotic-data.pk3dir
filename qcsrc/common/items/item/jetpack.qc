@@ -17,8 +17,6 @@ METHOD(JetpackRegen, m_spawnfunc_hookreplace, GameItem(JetpackRegen this, entity
 #endif
 
 #ifdef MENUQC
-#include <lib/color.qh>
-
 METHOD(Jetpack, describe, string(Jetpack this))
 {
 	TC(Jetpack, this);
