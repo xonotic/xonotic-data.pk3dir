@@ -8,7 +8,7 @@ SUB(particlegibs_damage_hit) {
     MY(alpha_fade) = 428;
     MY(bounce) = -1;
     MY(color_min) = "0xA8FFFF";
-    MY(color_max) = "0xA8FFFFF";
+    MY(color_max) = "0xA8FFFF";
     MY(count) = 0.500000;
     MY(gravity) = 1;
     MY(liquidfriction) = 6;
@@ -30,7 +30,7 @@ SUB(particlegibs_damage_hit) {
     MY(alpha_fade) = 328;
     MY(bounce) = -1;
     MY(color_min) = "0xA8FFFF";
-    MY(color_max) = "0xA8FFFFF";
+    MY(color_max) = "0xA8FFFF";
     MY(count) = 0.100000;
     MY(gravity) = 0.500000;
     MY(liquidfriction) = 3;
@@ -55,7 +55,7 @@ SUB(particlegibs_damage_hit) {
     MY(alpha_fade) = 328;
     MY(bounce) = -1;
     MY(color_min) = "0xA8FFFF";
-    MY(color_max) = "0xA8FFFFF";
+    MY(color_max) = "0xA8FFFF";
     MY(count) = 0.100000;
     MY(gravity) = 1;
     MY(liquidfriction) = 3;
@@ -106,7 +106,7 @@ SUB(particlegibs_damage_dissolve) {
     MY(alpha_fade) = 528;
     MY(bounce) = -1;
     MY(color_min) = "0xA8FFFF";
-    MY(color_max) = "0xA8FFFFF";
+    MY(color_max) = "0xA8FFFF";
     MY(count) = 12;
     MY(gravity) = 2;
     MY(liquidfriction) = 6;
@@ -129,7 +129,7 @@ SUB(particlegibs_damage_dissolve) {
     MY(alpha_fade) = 328;
     MY(bounce) = -1;
     MY(color_min) = "0xA8FFFF";
-    MY(color_max) = "0xA8FFFFF";
+    MY(color_max) = "0xA8FFFF";
     MY(count) = 32;
     MY(gravity) = 0.500000;
     MY(liquidfriction) = 3;
@@ -155,7 +155,7 @@ SUB(particlegibs_damage_dissolve) {
     MY(alpha_fade) = 328;
     MY(bounce) = -1;
     MY(color_min) = "0xA8FFFF";
-    MY(color_max) = "0xA8FFFFF";
+    MY(color_max) = "0xA8FFFF";
     MY(count) = 32;
     MY(gravity) = 1;
     MY(liquidfriction) = 3;
@@ -180,7 +180,7 @@ SUB(particlegibs_damage_dissolve) {
     MY(alpha_max) = 256;
     MY(alpha_fade) = 328;
     MY(color_min) = "0xA8FFFF";
-    MY(color_max) = "0xA8FFFFF";
+    MY(color_max) = "0xA8FFFF";
     MY(count) = 75;
     MY(gravity) = 1;
     MY(liquidfriction) = 3;

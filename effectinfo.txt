@@ -590,7 +590,7 @@ effect blood
 	alpha 1560 2560 7000
 	blend invmod
 	bounce -1
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	count 0.400000
 	sizeincrease 20
 	size 5 11
@@ -3013,7 +3013,7 @@ effect bloodshower
 	alpha 156 656 1664
 	blend invmod
 	bounce -1
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	count 125
 	gravity 1
 	liquidfriction 4
@@ -3028,7 +3028,7 @@ effect bloodshower
 	type smoke
 	alpha 156 656 1664
 	blend invmod
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	countabsolute 0.100000
 	originjitter 50 50 50
 	sizeincrease 300
@@ -3038,7 +3038,7 @@ effect bloodshower
 	type smoke
 	alpha 156 656 1664
 	blend invmod
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	countabsolute 0.100000
 	originjitter 50 50 50
 	sizeincrease 300
@@ -3445,7 +3445,7 @@ effect particlegibs_damage_hit
 	airfriction 3
 	alpha 256 256 428
 	bounce -1
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	count 0.500000
 	gravity 1
 	liquidfriction 6
@@ -3459,7 +3459,7 @@ effect particlegibs_damage_hit
 	airfriction 1
 	alpha 256 256 328
 	bounce -1
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	count 0.100000
 	gravity 0.500000
 	liquidfriction 3
@@ -3475,7 +3475,7 @@ effect particlegibs_damage_hit
 	airfriction 1
 	alpha 256 256 328
 	bounce -1
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	count 0.100000
 	gravity 1
 	liquidfriction 3
@@ -3506,7 +3506,7 @@ effect particlegibs_damage_dissolve
 	airfriction 2
 	alpha 256 256 528
 	bounce -1
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	count 12
 	gravity 2
 	liquidfriction 6
@@ -3521,7 +3521,7 @@ effect particlegibs_damage_dissolve
 	airfriction 1
 	alpha 256 256 328
 	bounce -1
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	count 32
 	gravity 0.500000
 	liquidfriction 3
@@ -3538,7 +3538,7 @@ effect particlegibs_damage_dissolve
 	airfriction 1
 	alpha 256 256 328
 	bounce -1
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	count 32
 	gravity 1
 	liquidfriction 3
@@ -3554,7 +3554,7 @@ effect particlegibs_damage_dissolve
 	type blood
 	airfriction 1.500000
 	alpha 256 256 328
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	count 75
 	gravity 1
 	liquidfriction 3
@@ -5609,7 +5609,7 @@ effect impact_flesh
 	airfriction 1
 	alpha 256 256 64
 	bounce -1
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	count 0.300000
 	liquidfriction 4
 	size 2 6
@@ -5672,7 +5672,7 @@ effect damage_shotgun
 	airfriction 1
 	alpha 256 256 64
 	bounce -1
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	count 0.600000
 	liquidfriction 4
 	size 2 4
@@ -5738,7 +5738,7 @@ effect damage_machinegun
 	airfriction 1
 	alpha 256 256 64
 	bounce -1
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	count 0.300000
 	liquidfriction 4
 	size 2 4
@@ -6059,7 +6059,7 @@ effect damage_rifle
 	airfriction 1
 	alpha 256 256 64
 	bounce -1
-	color 0xA8FFFF 0xA8FFFFF
+	color 0xA8FFFF 0xA8FFFF
 	count 0.300000
 	liquidfriction 4
 	size 2 4

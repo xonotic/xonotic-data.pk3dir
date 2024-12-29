@@ -1004,7 +1004,7 @@ SUB(blood) {
 	MY(blend) = "invmod";
 	MY(bounce) = -1;
 	MY(color_min) = "0xA8FFFF";
-	MY(color_max) = "0xA8FFFFF";
+	MY(color_max) = "0xA8FFFF";
 	MY(count) = 0.400000;
 	MY(sizeincrease) = 20;
 	MY(size_min) = 5;
@@ -1021,7 +1021,7 @@ SUB(blood) {
 	MY(type) = "spark";
 	MY(velocityjitter) = '99.0 99.0 55.0';
 }
-//blood mist
+// blood mist
 SUB(blood) {
 	MY(alpha_min) = 100;
 	MY(alpha_max) = 256;
@@ -4887,7 +4887,7 @@ SUB(bloodshower) {
 	MY(blend) = "invmod";
 	MY(bounce) = -1;
 	MY(color_min) = "0xA8FFFF";
-	MY(color_max) = "0xA8FFFFF";
+	MY(color_max) = "0xA8FFFF";
 	MY(count) = 125;
 	MY(gravity) = 1;
 	MY(liquidfriction) = 4;
@@ -4912,7 +4912,7 @@ SUB(bloodshower) {
 	MY(alpha_fade) = 1664;
 	MY(blend) = "invmod";
 	MY(color_min) = "0xA8FFFF";
-	MY(color_max) = "0xA8FFFFF";
+	MY(color_max) = "0xA8FFFF";
 	MY(countabsolute) = 0.100000;
 	MY(originjitter) = '50.0 50.0 50.0';
 	MY(sizeincrease) = 300;
@@ -4956,7 +4956,7 @@ SUB(bloodshower) {
 	MY(alpha_fade) = 1664;
 	MY(blend) = "invmod";
 	MY(color_min) = "0xA8FFFF";
-	MY(color_max) = "0xA8FFFFF";
+	MY(color_max) = "0xA8FFFF";
 	MY(countabsolute) = 0.100000;
 	MY(originjitter) = '50.0 50.0 50.0';
 	MY(sizeincrease) = 300;
@@ -7118,7 +7118,7 @@ SUB(impact_flesh) {
 	MY(alpha_fade) = 64;
 	MY(bounce) = -1;
 	MY(color_min) = "0xA8FFFF";
-	MY(color_max) = "0xA8FFFFF";
+	MY(color_max) = "0xA8FFFF";
 	MY(count) = 0.300000;
 	MY(liquidfriction) = 4;
 	MY(size_min) = 2;
@@ -7225,7 +7225,7 @@ SUB(damage_shotgun) {
 	MY(alpha_fade) = 64;
 	MY(bounce) = -1;
 	MY(color_min) = "0xA8FFFF";
-	MY(color_max) = "0xA8FFFFF";
+	MY(color_max) = "0xA8FFFF";
 	MY(count) = 0.600000;
 	MY(liquidfriction) = 4;
 	MY(size_min) = 2;
@@ -7342,7 +7342,7 @@ SUB(damage_machinegun) {
 	MY(alpha_fade) = 64;
 	MY(bounce) = -1;
 	MY(color_min) = "0xA8FFFF";
-	MY(color_max) = "0xA8FFFFF";
+	MY(color_max) = "0xA8FFFF";
 	MY(count) = 0.300000;
 	MY(liquidfriction) = 4;
 	MY(size_min) = 2;
@@ -7888,7 +7888,7 @@ SUB(damage_rifle) {
 	MY(alpha_fade) = 64;
 	MY(bounce) = -1;
 	MY(color_min) = "0xA8FFFF";
-	MY(color_max) = "0xA8FFFFF";
+	MY(color_max) = "0xA8FFFF";
 	MY(count) = 0.300000;
 	MY(liquidfriction) = 4;
 	MY(size_min) = 2;
