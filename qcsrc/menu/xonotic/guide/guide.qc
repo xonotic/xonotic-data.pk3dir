@@ -25,6 +25,7 @@ METHOD(TopicSource, reload, int(TopicSource this, string filter))
 	return n;
 }
 
+/*
 entity DebugSource_find_debug()
 {
 	entity head = NULL, tail = NULL;
@@ -70,6 +71,7 @@ METHOD(DebugSource, reload, int(DebugSource this, string filter))
 	}
 	return idx;
 }
+*/
 
 METHOD(MapSource, getEntry, entity(MapSource this, int i, void(string, string) returns))
 {

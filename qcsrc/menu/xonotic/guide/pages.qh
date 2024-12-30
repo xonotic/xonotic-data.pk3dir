@@ -12,7 +12,6 @@ CLASS(GuidePage, Object);
 		CONSTRUCT(GuidePage);
 		this.m_title = _title;
 	}
-
 ENDCLASS(GuidePage)
 
 REGISTRY(GuidePages, 16)
@@ -20,4 +19,10 @@ REGISTRY(GuidePages, 16)
 	REGISTER(GuidePages, GUIDE_PAGE, id, m_id, NEW(GuidePage, title))
 REGISTER_REGISTRY(GuidePages)
 
-REGISTER_GUIDE_PAGE(0, _("Intro")) { this.m_description = _("Welcome to Xonotic"); }
+REGISTER_GUIDE_PAGE(0, _("Introduction")) {
+	this.m_description = _("Welcome to Xonotic, the free and fast arena shooter!\n\n"
+		"Keep in mind all values and descriptions in this guide are based on the default game settings, so it may differ from the experience when playing on some modified servers");
+}
+REGISTER_GUIDE_PAGE(1, _("Movement")) {
+	this.m_description = _("In Xonotic to move quickly you will have to airstrafe and bunnyhop"); // TODO
+}
