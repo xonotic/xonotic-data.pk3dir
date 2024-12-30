@@ -73,6 +73,7 @@ METHOD(DebugSource, reload, int(DebugSource this, string filter))
 }
 */
 
+#if 0
 METHOD(MapSource, getEntry, entity(MapSource this, int i, void(string, string) returns))
 {
 	if (!MapInfo_Get_ByID(i))
@@ -100,3 +101,4 @@ METHOD(MapSource, destroy, void(MapSource this))
 {
 	MapInfo_Shutdown();
 }
+#endif

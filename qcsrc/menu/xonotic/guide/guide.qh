@@ -17,7 +17,7 @@
 	X(NEW(VehicleSource),   _("Vehicles"),  "gametype_rc") \
 	X(NEW(TurretSource),    _("Turrets"),   "gametype_as") \
 	X(NEW(MutatorSource),   _("Mutators"),  "gametype_nb") \
-	X(NEW(MapSource),       _("Maps"),      "gametype_ctf") \
+	/*X(NEW(MapSource),       _("Maps"),      "gametype_ctf")*/ \
 	/*if (gamestatus & GAME_DEVELOPER) X(NEW(DebugSource), _("Debug"), "gametype_ons")*/ \
 	/**/
 CLASS(TopicSource, DataSource)
@@ -101,9 +101,11 @@ REGISTRY_SOURCE(TurretSource, Turrets, Turrets)
 #include <common/mutators/base.qh>
 REGISTRY_SOURCE(MutatorSource, Mutators, Mutators)
 
+#if 0
 CLASS(MapSource, DataSource)
 	METHOD(MapSource, getEntry, entity(MapSource this, int i, void(string, string) returns));
 	METHOD(MapSource, indexOf, int(MapSource this, string s));
 	METHOD(MapSource, reload, int(MapSource this, string s));
 	METHOD(MapSource, destroy, void(MapSource));
 ENDCLASS(MapSource)
+#endif
