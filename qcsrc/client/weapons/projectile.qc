@@ -40,9 +40,14 @@ void Projectile_DrawTrail(entity this, vector to)
 
 	if (this.traileffect)
 	{
-		particles_alphamin = particles_alphamax = particles_fade = sqrt(this.alpha);
+		int eff_flags = PARTICLES_DRAWASTRAIL;
+		if(this.alpha != 1)
+		{
+			particles_alphamin = particles_alphamax = particles_fade = this.alpha;
+			eff_flags |= (PARTICLES_USEALPHA | PARTICLES_USEFADE);
+		}
 		entity eff = REGISTRY_GET(Effects, this.traileffect);
-		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
+		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, eff_flags);
 	}
 }
 
