@@ -601,7 +601,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	int sf = ReadShort();
 	int lf = ReadShort();
 	FOREACH(Scores, true, {
-		int p = 1 << (i % 16);
+		int p = BIT(i % 16);
 		if (sf & p)
 		{
 			if (lf & p)
