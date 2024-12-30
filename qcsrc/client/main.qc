@@ -876,12 +876,11 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 	{
 		this.origin = ReadVector();
 
+		int teamnum = ReadByte() - 1;
 		int particlesAndOrSound = ReadByte();
 
 		if(is_new)
 		{
-			float teamnum = entcs_GetTeam(entnum - 1);
-
 			if(autocvar_cl_spawn_event_particles && (particlesAndOrSound & BIT(0)))
 			{
 				switch(teamnum)
