@@ -164,7 +164,7 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 		FOREACH(Weapons, it != WEP_Null, {
 			if(i != weaponwant)
 			if(it.impulse == imp || imp < 0)
-			if((STAT(WEAPONS, this) & (it.m_wepset)) || (weaponsInMap & (it.m_wepset)))
+			if((STAT(WEAPONS, this) | weaponsInMap) & it.m_wepset)
 				have_other = true;
 		});
 
@@ -220,7 +220,7 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 			FOREACH(Weapons, it != WEP_Null, {
 				if(i != weaponwant)
 				if(it.impulse == imp || imp < 0)
-				if((STAT(WEAPONS, this) & (it.m_wepset)) || (weaponsInMap & (it.m_wepset)))
+				if((STAT(WEAPONS, this) | weaponsInMap) & it.m_wepset)
 					have_other = true;
 			});
 

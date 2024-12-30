@@ -535,7 +535,7 @@ void Arc_Smoke(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 	{
 		if ( random() < actor.(weaponentity).arc_heat_percent )
 			Send_Effect(EFFECT_ARC_SMOKE, smoke_origin, '0 0 0', 1 );
-		if ( (fire & 1) || (fire & 2) )
+		if ( fire & 3 ) // & (1 | 2)
 		{
 			Send_Effect(EFFECT_ARC_OVERHEAT_FIRE, smoke_origin, w_shotdir, 1 );
 			if ( !actor.arc_smoke_sound )

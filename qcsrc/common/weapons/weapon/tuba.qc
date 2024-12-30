@@ -347,7 +347,7 @@ METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int f
 	}
 	if (actor.(weaponentity).tuba_note)
 	{
-		if (!(fire & 1) && !(fire & 2))
+		if (!(fire & 3)) // & (1 | 2)
 		{
 			W_Tuba_NoteOff(actor.(weaponentity).tuba_note);
 		}

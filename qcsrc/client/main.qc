@@ -517,10 +517,10 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		if(nPrimary == K_TAB) hudShiftState |= S_TAB;
 	}
 	else {
-		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
-		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
-		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
-		if(nPrimary == K_TAB) hudShiftState -= (hudShiftState & S_TAB);
+		if(nPrimary == K_ALT) hudShiftState &= ~S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState &= ~S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState &= ~S_SHIFT;
+		if(nPrimary == K_TAB) hudShiftState &= ~S_TAB;
 	}
 
 	// NOTE: Shift-Escape must be filtered out because it's the hardcoded console shortcut
