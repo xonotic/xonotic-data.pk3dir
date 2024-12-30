@@ -444,7 +444,7 @@ void nade_ice_think(entity this)
 		{
 			vector expcol_min = nades_PlayerColor(this.realowner, false);
 			vector expcol_max = nades_PlayerColor(this.realowner, true);
-			entity expef = EFFECT_NADE_EXPLODE_NEUTRAL;
+			entity expef = EFFECT_NADE_EXPLODE;
 			Send_Effect_Except(expef, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
@@ -819,14 +819,14 @@ void nade_darkness_think(entity this)
 		{
 			vector expcol_min = nades_PlayerColor(this.realowner, false);
 			vector expcol_max = nades_PlayerColor(this.realowner, true);
-			entity expef = EFFECT_NADE_EXPLODE_NEUTRAL;
+			entity expef = EFFECT_NADE_EXPLODE;
 			Send_Effect_Except(expef, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			normal_nade_boom(this);
 		}
 		else
-			Send_Effect(EFFECT_SPAWN_PURPLE, this.origin + '0 0 1', '0 0 0', 1);
+			Send_Effect_Except(EFFECT_SPAWN, this.origin + '0 0 1', '0 0 0', 1, '0.5 0 0.5', '0.5 0 0.5', NULL);
 
 		delete(this);
 		return;
@@ -926,15 +926,15 @@ void nade_boom(entity this)
 		SET_NADE_EFFECT(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm_blast, EFFECT_EXPLOSION_MEDIUM, 										'0 0 0', '0 0 0');
 		SET_NADE_EFFECT(NADE_TYPE_ICE,         false,                         EFFECT_ELECTRO_COMBO, 										'0 0 0', '0 0 0');
 		SET_NADE_EFFECT(NADE_TYPE_TRANSLOCATE, false,                         NULL, 														'0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_MONSTER,     true,                          (!autocvar_g_monsters) ? EFFECT_NADE_EXPLODE_NEUTRAL : NULL, 	nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
-		SET_NADE_EFFECT(NADE_TYPE_SPAWN,       false,                         EFFECT_SPAWN_NEUTRAL, 										nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
-		SET_NADE_EFFECT(NADE_TYPE_HEAL,        false,                         EFFECT_SPAWN_NEUTRAL, 										'1 0 0', '1 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      false,                         EFFECT_SPAWN_NEUTRAL, 										'1 1 0', '1 1 0');
-		SET_NADE_EFFECT(NADE_TYPE_VEIL,        false,                         EFFECT_SPAWN_NEUTRAL, 										'0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_AMMO,        false,                         EFFECT_SPAWN_NEUTRAL, 										'0.66 0.33 0', '0.66 0.33 0');
+		SET_NADE_EFFECT(NADE_TYPE_MONSTER,     true,                          (!autocvar_g_monsters) ? EFFECT_NADE_EXPLODE : NULL, 			nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		SET_NADE_EFFECT(NADE_TYPE_SPAWN,       false,                         EFFECT_SPAWN, 												nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		SET_NADE_EFFECT(NADE_TYPE_HEAL,        false,                         EFFECT_SPAWN, 												'1 0 0', '1 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      false,                         EFFECT_SPAWN, 												'1 1 0', '1 1 0');
+		SET_NADE_EFFECT(NADE_TYPE_VEIL,        false,                         EFFECT_SPAWN, 												'0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_AMMO,        false,                         EFFECT_SPAWN, 												'0.66 0.33 0', '0.66 0.33 0');
 		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    false,                         EFFECT_EXPLOSION_MEDIUM, 										'0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      true,                          EFFECT_NADE_EXPLODE_NEUTRAL, 									nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
-		default: expef = EFFECT_NADE_EXPLODE_NEUTRAL; expcol_min = nades_PlayerColor(this.realowner, false); expcol_max = nades_PlayerColor(this.realowner, true); break;
+		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      true,                          EFFECT_NADE_EXPLODE, 											nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		default: expef = EFFECT_NADE_EXPLODE; expcol_min = nades_PlayerColor(this.realowner, false); expcol_max = nades_PlayerColor(this.realowner, true); break;
 	}
 #undef SET_NADE_EFFECT
 

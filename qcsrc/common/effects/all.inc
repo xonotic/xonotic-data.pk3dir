@@ -54,36 +54,8 @@ EFFECT(0, VORTEX_BEAM_OLD,          "TE_TEI_G3")
 EFFECT(0, VORTEX_IMPACT,            "nex_impact")
 EFFECT(0, VORTEX_MUZZLEFLASH,       "nex_muzzleflash")
 
-EFFECT(1, VAPORIZER_RED,            "TE_TEI_G3RED")
-EFFECT(1, VAPORIZER_HIT_RED,        "TE_TEI_G3RED_HIT")
-EFFECT(1, VAPORIZER_BLUE,           "TE_TEI_G3BLUE")
-EFFECT(1, VAPORIZER_HIT_BLUE,       "TE_TEI_G3BLUE_HIT")
-EFFECT(1, VAPORIZER_YELLOW,         "TE_TEI_G3YELLOW")
-EFFECT(1, VAPORIZER_HIT_YELLOW,     "TE_TEI_G3YELLOW_HIT")
-EFFECT(1, VAPORIZER_PINK,           "TE_TEI_G3PINK")
-EFFECT(1, VAPORIZER_HIT_PINK,       "TE_TEI_G3PINK_HIT")
-EFFECT(1, VAPORIZER_NEUTRAL,        "TE_TEI_G3")
-EFFECT(1, VAPORIZER_HIT_NEUTRAL,    "TE_TEI_G3_HIT")
-entity EFFECT_VAPORIZER(int teamid)
-{
-    switch (teamid) {
-        case NUM_TEAM_1:    return EFFECT_VAPORIZER_RED;
-        case NUM_TEAM_2:    return EFFECT_VAPORIZER_BLUE;
-        case NUM_TEAM_3:    return EFFECT_VAPORIZER_YELLOW;
-        case NUM_TEAM_4:    return EFFECT_VAPORIZER_PINK;
-        default:            return EFFECT_VAPORIZER_NEUTRAL;
-    }
-}
-entity EFFECT_VAPORIZER_HIT(int teamid)
-{
-    switch (teamid) {
-        case NUM_TEAM_1:    return EFFECT_VAPORIZER_HIT_RED;
-        case NUM_TEAM_2:    return EFFECT_VAPORIZER_HIT_BLUE;
-        case NUM_TEAM_3:    return EFFECT_VAPORIZER_HIT_YELLOW;
-        case NUM_TEAM_4:    return EFFECT_VAPORIZER_HIT_PINK;
-        default:            return EFFECT_VAPORIZER_HIT_NEUTRAL;
-    }
-}
+EFFECT(1, VAPORIZER_BEAM,           "TE_TEI_G3")
+EFFECT(1, VAPORIZER_BEAM_HIT,       "TE_TEI_G3_HIT")
 
 EFFECT(0, RIFLE_IMPACT,             "machinegun_impact")
 EFFECT(0, RIFLE_MUZZLEFLASH,        "rifle_muzzleflash")
@@ -140,40 +112,8 @@ EFFECT(0, BIGPLASMA_MUZZLEFLASH,    "bigplasma_muzzleflash")
 
 EFFECT(0, TELEPORT,                 "teleport")
 
-EFFECT(0, SPAWNPOINT_RED,           "spawn_point_red")
-EFFECT(0, SPAWNPOINT_BLUE,          "spawn_point_blue")
-EFFECT(0, SPAWNPOINT_YELLOW,        "spawn_point_yellow")
-EFFECT(0, SPAWNPOINT_PINK,          "spawn_point_pink")
-EFFECT(0, SPAWNPOINT_NEUTRAL,       "spawn_point_neutral")
-entity EFFECT_SPAWNPOINT(int teamid)
-{
-    switch (teamid) {
-        case NUM_TEAM_1:    return EFFECT_SPAWNPOINT_RED;
-        case NUM_TEAM_2:    return EFFECT_SPAWNPOINT_BLUE;
-        case NUM_TEAM_3:    return EFFECT_SPAWNPOINT_YELLOW;
-        case NUM_TEAM_4:    return EFFECT_SPAWNPOINT_PINK;
-        default:            return EFFECT_SPAWNPOINT_NEUTRAL;
-    }
-}
-
-EFFECT(0, SPAWN_RED,                "spawn_event_red")
-EFFECT(0, SPAWN_BLUE,               "spawn_event_blue")
-EFFECT(0, SPAWN_YELLOW,             "spawn_event_yellow")
-EFFECT(0, SPAWN_PINK,               "spawn_event_pink")
-EFFECT(0, SPAWN_NEUTRAL,            "spawn_event_neutral")
-EFFECT(0, SPAWN_GREEN,              "spawn_event_green")
-EFFECT(0, SPAWN_BROWN,              "spawn_event_brown")
-EFFECT(0, SPAWN_PURPLE,             "spawn_event_purple")
-entity EFFECT_SPAWN(int teamid)
-{
-    switch (teamid) {
-        case NUM_TEAM_1:    return EFFECT_SPAWN_RED;
-        case NUM_TEAM_2:    return EFFECT_SPAWN_BLUE;
-        case NUM_TEAM_3:    return EFFECT_SPAWN_YELLOW;
-        case NUM_TEAM_4:    return EFFECT_SPAWN_PINK;
-        default:            return EFFECT_SPAWN_NEUTRAL;
-    }
-}
+EFFECT(0, SPAWNPOINT,               "spawn_point_neutral")
+EFFECT(0, SPAWN,                    "spawn_event_neutral")
 
 EFFECT(0, DARKFIELD,                "darkfield")
 EFFECT(0, ICEORGLASS,               "iceorglass")
@@ -185,6 +125,7 @@ EFFECT(0, AMMO_REGEN,               "ammoregen_fx")
 EFFECT(1, LASER_BEAM_FAST,          "nex242_misc_laser_beam_fast")
 EFFECT(0, RESPAWN_GHOST,            "respawn_ghost")
 
+// TODO: ctf effects are server side (BAD)
 EFFECT(0, FLAG_TOUCH_RED,           "redflag_touch")
 EFFECT(0, FLAG_TOUCH_BLUE,          "blueflag_touch")
 EFFECT(0, FLAG_TOUCH_YELLOW,        "yellowflag_touch")
@@ -272,21 +213,4 @@ EFFECT(1, TR_KNIGHTSPIKE,           "TR_KNIGHTSPIKE")
 EFFECT(1, TR_VORESPIKE,             "TR_VORESPIKE")
 EFFECT(0, TE_SPARK,                 "TE_SPARK")
 
-EFFECT(1, ROCKETMINSTA_LASER_RED,       "rocketminsta_laser_red")
-EFFECT(1, ROCKETMINSTA_LASER_BLUE,      "rocketminsta_laser_blue")
-EFFECT(1, ROCKETMINSTA_LASER_YELLOW,    "rocketminsta_laser_yellow")
-EFFECT(1, ROCKETMINSTA_LASER_PINK,      "rocketminsta_laser_pink")
-EFFECT(1, ROCKETMINSTA_LASER_NEUTRAL,   "rocketminsta_laser_neutral")
-entity EFFECT_ROCKETMINSTA_LASER(int teamid)
-{
-    entity e;
-    switch (teamid) {
-        case NUM_TEAM_1:    e = EFFECT_ROCKETMINSTA_LASER_RED; break;
-        case NUM_TEAM_2:    e = EFFECT_ROCKETMINSTA_LASER_BLUE; break;
-        case NUM_TEAM_3:    e = EFFECT_ROCKETMINSTA_LASER_YELLOW; break;
-        case NUM_TEAM_4:    e = EFFECT_ROCKETMINSTA_LASER_PINK; break;
-        default:            e = EFFECT_ROCKETMINSTA_LASER_NEUTRAL; break;
-    }
-    if (particleeffectnum(e) < 0 || !Team_IsValidTeam(teamid)) { e = EFFECT_TR_NEXUIZPLASMA; }
-    return e;
-}
+EFFECT(1, ROCKETMINSTA_LASER,       "rocketminsta_laser_neutral")

@@ -92,7 +92,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	{
 		vector rgb = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
 		particles_colormin = particles_colormax = rgb;
-		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT_NEUTRAL : EFFECT_VAPORIZER_NEUTRAL)), this.vorg1, this.vorg2, 1, PARTICLES_USECOLOR);
+		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_BEAM_HIT : EFFECT_VAPORIZER_BEAM)), this.vorg1, this.vorg2, 1, PARTICLES_USECOLOR);
 		this.draw = func_null;
 		this.drawmask = MASK_NORMAL;
 		delete(this);
