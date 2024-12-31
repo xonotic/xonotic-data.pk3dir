@@ -3,7 +3,7 @@
 void XonoticGuideDescription_drawListBoxItem(entity this, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	tokenizebyseparator(this.descriptionWrapped, "\n");
-	draw_Text(this.realUpperMargin * eY, argv(i), this.realFontSize, '1 1 1', 1, true);
+	draw_Text(this.realFontSize.x * eX + this.realUpperMargin * eY, argv(i), this.realFontSize, '1 1 1', 1, true);
 }
 
 void XonoticGuideDescription_setDescription(entity this, string desc)
@@ -16,13 +16,16 @@ void XonoticGuideDescription_setDescription(entity this, string desc)
 	string currentWrapped = this.descriptionWrapped;
 	if (currentWrapped)
 		strunzone(currentWrapped);
+
 	string wrapped = "";
+	// horizontal padding is this.realFontSize.x on both sides
+	float maxWidth = 1 - 2 * this.realFontSize.x;
 	for (int i = 0, n = tokenizebyseparator(desc, "\n"); i < n; ++i)
 	{
 		string line = "";
 		for (getWrappedLine_remaining = argv(i); getWrappedLine_remaining; )
 		{
-			string s = getWrappedLine(1, this.realFontSize, draw_TextWidth_WithColors);
+			string s = getWrappedLine(maxWidth, this.realFontSize, draw_TextWidth_WithColors);
 			line = strcat(line, "\n", s);
 		}
 		wrapped = strcat(wrapped, line);
