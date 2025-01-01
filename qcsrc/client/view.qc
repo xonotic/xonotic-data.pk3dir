@@ -419,7 +419,7 @@ STATIC_INIT(fpscounter_init)
 float zoomfactor_multiplier;
 float GetCurrentFov_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
-	if(!button_zoom || !autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_speed == 0)
+	if(!button_zoom || !autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0)
 		return false;
 
 	if(bInputType == 3)
@@ -435,15 +435,15 @@ float GetCurrentFov_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	bool key_pressed = (bInputType == 0);
 
 	// allow negatives so that players can scroll the other way, biggest change allowed is +100%
-	float zoomscroll_speed = 1 + min(fabs(autocvar_cl_zoomscroll_speed), 100) / 100;
+	float zoomscroll_scale = 1 + min(fabs(autocvar_cl_zoomscroll_scale), 100) / 100;
 	if(nPrimary == K_MWHEELUP)
 	{
 		if(key_pressed)
 		{
-			if(autocvar_cl_zoomscroll_speed < 0)
-				zoomfactor_multiplier /= zoomscroll_speed;
+			if(autocvar_cl_zoomscroll_scale < 0)
+				zoomfactor_multiplier /= zoomscroll_scale;
 			else
-				zoomfactor_multiplier *= zoomscroll_speed;
+				zoomfactor_multiplier *= zoomscroll_scale;
 		}
 		return true;
 	}
@@ -451,10 +451,10 @@ float GetCurrentFov_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	{
 		if(key_pressed)
 		{
-			if(autocvar_cl_zoomscroll_speed < 0)
-				zoomfactor_multiplier *= zoomscroll_speed;
+			if(autocvar_cl_zoomscroll_scale < 0)
+				zoomfactor_multiplier *= zoomscroll_scale;
 			else
-				zoomfactor_multiplier /= zoomscroll_speed;
+				zoomfactor_multiplier /= zoomscroll_scale;
 		}
 		return true;
 	}

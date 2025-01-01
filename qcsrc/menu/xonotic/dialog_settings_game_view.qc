@@ -102,7 +102,7 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Scale"))));
 			setDependent(e, "cl_zoomscroll", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider(-100, 100, 10, "cl_zoomscroll_speed"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(-100, 100, 10, "cl_zoomscroll_scale"));
 			setDependent(e, "cl_zoomscroll", 1, 1);
 	me.TR(me);
 	me.TR(me);
