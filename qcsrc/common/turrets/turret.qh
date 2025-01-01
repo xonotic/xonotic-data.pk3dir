@@ -8,7 +8,9 @@ CLASS(Turret, Object)
     /** short name */
     ATTRIB(Turret, netname, string);
     /** human readable name */
-    ATTRIB(Turret, turret_name, string, _("Turret"));
+    ATTRIB(Turret, m_name, string, _("Turret"));
+    /** color */
+    ATTRIB(Turret, m_color, vector, '1 1 1');
     /** currently a copy of the model */
     ATTRIB(Turret, mdl, string);
     /** full name of model */
@@ -23,7 +25,7 @@ CLASS(Turret, Object)
     ATTRIB(Turret, m_maxs, vector, '0 0 0');
 
     METHOD(Turret, display, void(Turret this, void(string name, string icon) returns)) {
-        returns(this.turret_name, string_null);
+        returns(this.m_name, string_null);
     }
     /** (BOTH) setup turret data */
     METHOD(Turret, tr_setup, void(Turret this, entity it)) {
@@ -52,6 +54,13 @@ CLASS(Turret, Object)
 #endif
 	/** (SERVER) dump turret cvars to config in data directory (see: sv_cmd dumpturrets) */
 	METHOD(Turret, tr_config, void(Turret this)) { }
+
+#ifdef MENUQC
+    METHOD(Turret, describe, string(Turret this)) {
+        TC(Turret, this);
+        return SUPER(Object).describe(this);
+    }
+#endif
 ENDCLASS(Turret)
 
 // fields:

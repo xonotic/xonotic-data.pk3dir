@@ -85,4 +85,15 @@ bool turret_tesla_firecheck(entity this)
     return false;
 }
 
-#endif
+#endif // SVQC
+#ifdef MENUQC
+
+METHOD(TeslaCoil, describe, string(TeslaCoil this))
+{
+    TC(TeslaCoil, this);
+    return sprintf(_("The %s is a turret that electrocutes all who dare come near it, sending powerful high-voltage arcs of lightning to strike its targets\n\n"
+        "Since the arcs of lightning can jump between nearby targets, it is best to just stay away from the %s"),
+    COLORED_NAME(this), COLORED_NAME(this));
+}
+
+#endif // MENUQC
