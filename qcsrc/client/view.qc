@@ -465,7 +465,8 @@ float GetCurrentFov_InputEvent(int bInputType, float nPrimary, float nSecondary)
 float avgspeed;
 vector GetCurrentFov(float fov)
 {
-	float zoomsensitivity, zoomspeed, zoomfactor, zoomdir;
+#define MAX_ZOOMFACTOR 30
+	float zoomsensitivity, zoomspeed, zoomfactor, og_zoomfactor, zoomdir;
 	float velocityzoom, curspeed;
 	vector v;
 
@@ -475,9 +476,10 @@ vector GetCurrentFov(float fov)
 
 	zoomsensitivity = autocvar_cl_zoomsensitivity;
 	zoomfactor = autocvar_cl_zoomfactor;
-	if(zoomfactor < 1 || zoomfactor > 30)
+	if(zoomfactor < 1 || zoomfactor > MAX_ZOOMFACTOR)
 		zoomfactor = 2.5;
-	zoomfactor_multiplier = bound(1 / zoomfactor, zoomfactor_multiplier, 30 / zoomfactor);
+	zoomfactor_multiplier = bound(1 / zoomfactor, zoomfactor_multiplier, MAX_ZOOMFACTOR / zoomfactor);
+	og_zoomfactor = zoomfactor;
 	zoomfactor *= zoomfactor_multiplier;
 	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
@@ -522,7 +524,7 @@ vector GetCurrentFov(float fov)
 	}
 	else if(autocvar_cl_spawnzoom && zoomin_effect)
 	{
-		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 30);
+		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, MAX_ZOOMFACTOR);
 
 		current_viewzoom += (autocvar_cl_spawnzoom_speed * (spawnzoomfactor - current_viewzoom) * drawframetime);
 		current_viewzoom = bound(1 / spawnzoomfactor, current_viewzoom, 1);
@@ -548,10 +550,10 @@ vector GetCurrentFov(float fov)
 
 	if(zoomfactor == 1 || current_viewzoom > 0.999) // zoomfactor check prevents a division by 0
 		current_zoomfraction = 0;
-	else if(almost_equals(current_viewzoom, 1/zoomfactor))
+	else if(almost_equals(current_viewzoom, 1/og_zoomfactor))
 		current_zoomfraction = 1;
 	else
-		current_zoomfraction = (current_viewzoom - 1) / (1/zoomfactor - 1);
+		current_zoomfraction = (current_viewzoom - 1) / (1/og_zoomfactor - 1); // consequently it can be out of the 0..1 range
 
 	if(zoomsensitivity < 1)
 		setsensitivityscale(current_viewzoom ** (1 - zoomsensitivity));
@@ -594,6 +596,7 @@ vector GetCurrentFov(float fov)
 	fovy = atan2(frustumy, 1) * (360 / M_PI);
 
 	return '1 0 0' * fovx + '0 1 0' * fovy;
+#undef MAX_ZOOMFACTOR
 }
 
 vector GetViewLocationFOV(float fov)
