@@ -39,6 +39,7 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 	{
 		WriteByte(MSG_ENTITY, etof(this.owner));
 		WriteVector(MSG_ENTITY, this.owner.origin);
+		WriteByte(MSG_ENTITY, this.owner.team);
 		WriteByte(MSG_ENTITY, autocvar_g_spawn_alloweffects);
 		send = true;
 	}
