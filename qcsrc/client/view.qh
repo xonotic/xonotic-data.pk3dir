@@ -32,6 +32,8 @@ float autocvar_cl_velocityzoom_time;
 float autocvar_cl_zoomfactor;
 float autocvar_cl_zoomsensitivity;
 float autocvar_cl_zoomspeed;
+bool autocvar_cl_zoomscroll;
+float autocvar_cl_zoomscroll_speed;
 float autocvar_fov;
 float autocvar_hud_colorflash_alpha;
 bool autocvar_hud_contents;
@@ -127,3 +129,5 @@ float blurtest_time0, blurtest_time1, blurtest_radius, blurtest_power;
 
 float intermission_time;
 float game_stopped_time;
+
+float GetCurrentFov_InputEvent(float bInputType, float nPrimary, float nSecondary);

@@ -416,6 +416,52 @@ STATIC_INIT(fpscounter_init)
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
+float zoomfactor_multiplier;
+float GetCurrentFov_InputEvent(int bInputType, float nPrimary, float nSecondary)
+{
+	if(!button_zoom || !autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_speed == 0)
+		return false;
+
+	if(bInputType == 3)
+	{
+		mousepos.x = nPrimary;
+		mousepos.y = nSecondary;
+		return true;
+	}
+	if(bInputType == 2)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	// allow negatives so that players can scroll the other way, biggest change allowed is +100%
+	float zoomscroll_speed = 1 + min(fabs(autocvar_cl_zoomscroll_speed), 100) / 100;
+	if(nPrimary == K_MWHEELUP)
+	{
+		if(key_pressed)
+		{
+			if(autocvar_cl_zoomscroll_speed < 0)
+				zoomfactor_multiplier /= zoomscroll_speed;
+			else
+				zoomfactor_multiplier *= zoomscroll_speed;
+		}
+		return true;
+	}
+	else if(nPrimary == K_MWHEELDOWN)
+	{
+		if(key_pressed)
+		{
+			if(autocvar_cl_zoomscroll_speed < 0)
+				zoomfactor_multiplier *= zoomscroll_speed;
+			else
+				zoomfactor_multiplier /= zoomscroll_speed;
+		}
+		return true;
+	}
+
+	return false;
+}
+
 float avgspeed;
 vector GetCurrentFov(float fov)
 {
@@ -423,15 +469,19 @@ vector GetCurrentFov(float fov)
 	float velocityzoom, curspeed;
 	vector v;
 
+	zoomdir = button_zoom;
+	if(zoomfactor_multiplier <= 0 || !zoomdir)
+		zoomfactor_multiplier = 1; // reset to 1
+
 	zoomsensitivity = autocvar_cl_zoomsensitivity;
 	zoomfactor = autocvar_cl_zoomfactor;
 	if(zoomfactor < 1 || zoomfactor > 30)
 		zoomfactor = 2.5;
+	zoomfactor_multiplier = bound(1 / zoomfactor, zoomfactor_multiplier, 30 / zoomfactor);
+	zoomfactor *= zoomfactor_multiplier;
 	zoomspeed = autocvar_cl_zoomspeed;
-	if (zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
+	if(zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
 		zoomspeed = 3.5;
-
-	zoomdir = button_zoom;
 
 	if(hud == HUD_NORMAL && !spectatee_status)
 	{
