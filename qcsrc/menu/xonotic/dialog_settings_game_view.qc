@@ -97,6 +97,15 @@ void XonoticGameViewSettingsTab_fill(entity me)
 			_("How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)")));
 	me.TR(me);
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_zoomscroll", _("Zoom scrolling")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Scale"))));
+			setDependent(e, "cl_zoomscroll", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticSlider(-100, 100, 10, "cl_zoomscroll_speed"));
+			setDependent(e, "cl_zoomscroll", 1, 1);
+	me.TR(me);
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_velocityzoom_enabled", _("Velocity zoom")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(3, 1, "cl_velocityzoom_type", _("Forward movement only")));
 			setDependent(e, "cl_velocityzoom_enabled", 1, 1);
