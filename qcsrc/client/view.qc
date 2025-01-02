@@ -456,7 +456,7 @@ bool IsZooming(bool for_scrolling)
 }
 
 float zoomfactor_multiplier;
-float GetCurrentFov_InputEvent(int bInputType, float nPrimary, float nSecondary)
+float View_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
 	if(!IsZooming(true))
 		return false;
