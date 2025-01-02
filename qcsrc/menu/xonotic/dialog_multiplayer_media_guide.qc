@@ -4,50 +4,50 @@
 #include "maplist.qh"
 #include "textlabel.qh"
 
-void XonoticGuideTab_fill(entity this)
+void XonoticGuideTab_fill(entity me)
 {
-	entity topics = this.topicList;
+	entity topics = me.topicList;
 		topics.onChange = XonoticGuideTab_topicChangeNotify;
-		topics.onChangeEntity = this;
-	entity entries = this.entryList;
+		topics.onChangeEntity = me;
+	entity entries = me.entryList;
 		entries.onChange = XonoticGuideTab_entryChangeNotify;
-		entries.onChangeEntity = this;
+		entries.onChangeEntity = me;
 	entity filter = entries.stringFilterBox = makeXonoticInputBox(false, string_null);
 		filter.keyDown = MapList_StringFilterBox_keyDown;
 		filter.onChange = MapList_StringFilterBox_Change;
 		filter.onChangeEntity = entries;
 	entries.controlledTextbox = filter;
-	entity description = this.descriptionPane;
+	entity description = me.descriptionPane;
 
 	int
 	col = 0, width = 1.5;
-	this.gotoRC(this, 0, col);
-		this.TD(this, 1, width, makeXonoticHeaderLabel(_("Topic")));
-	this.TR(this);
-		this.TD(this, this.rows - 1, width, topics);
+	me.gotoRC(me, 0, col);
+		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Topic")));
+	me.TR(me);
+		me.TD(me, me.rows - 1, width, topics);
 
 	col += width, width = 2;
-	this.gotoRC(this, 0, col); this.setFirstColumn(this, this.currentColumn);
-		this.TD(this, 1, width, makeXonoticHeaderLabel(_("Entry")));
-	this.TR(this);
-		this.TD(this, this.rows - 1 - 1, width, entries);
-	this.gotoRC(this, this.rows - 1, col);
-		this.TD(this, 1, 0.3, makeXonoticTextLabel(0, _("Filter:")));
-		this.TD(this, 1, width - 0.3, filter);
+	me.gotoRC(me, 0, col); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Entry")));
+	me.TR(me);
+		me.TD(me, me.rows - 1 - 1, width, entries);
+	me.gotoRC(me, me.rows - 1, col);
+		me.TD(me, 1, 0.3, makeXonoticTextLabel(0, _("Filter:")));
+		me.TD(me, 1, width - 0.3, filter);
 
 	col += width, width = 2.5;
-	this.gotoRC(this, 0, col); this.setFirstColumn(this, this.currentColumn);
-		this.TD(this, 1, width, makeXonoticHeaderLabel(_("Description")));
-	this.TR(this);
-		this.TD(this, this.rows - 1, width, description);
+	me.gotoRC(me, 0, col); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Description")));
+	me.TR(me);
+		me.TD(me, me.rows - 1, width, description);
 
-	this.topicChangeNotify(topics, this);
+	me.topicChangeNotify(topics, me);
 }
 
-void XonoticGuideTab_topicChangeNotify(entity, entity this)
+void XonoticGuideTab_topicChangeNotify(entity, entity me)
 {
-	entity topics = this.topicList;
-	entity entries = this.entryList;
+	entity topics = me.topicList;
+	entity entries = me.entryList;
 	int i = topics.selectedItem;
 	int idx = 0;
 	entity found = NULL;
@@ -67,10 +67,10 @@ void XonoticGuideTab_topicChangeNotify(entity, entity this)
 	entries.setSelected(entries, 0);
 }
 
-void XonoticGuideTab_entryChangeNotify(entity, entity this)
+void XonoticGuideTab_entryChangeNotify(entity, entity me)
 {
-	entity desc = this.descriptionPane;
-	entity entries = this.entryList;
+	entity desc = me.descriptionPane;
+	entity entries = me.entryList;
 	entity e = entries.source.getEntry(entries.source, entries.selectedItem, func_null);
 	string s = e.describe(e);
 	if (gamestatus & GAME_DEVELOPER)
