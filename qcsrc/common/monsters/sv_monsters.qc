@@ -164,10 +164,10 @@ entity Monster_FindTarget(entity this)
 
 void monster_setupcolors(entity this)
 {
-	if(IS_PLAYER(this.realowner))
-		this.colormap = this.realowner.colormap;
-	else if(teamplay && this.team)
+	if(teamplay && this.team)
 		this.colormap = 1024 + (this.team - 1) * 17;
+	else if(IS_PLAYER(this.realowner))
+		this.colormap = this.realowner.colormap;
 	else
 	{
 		if(this.monster_skill <= MONSTER_SKILL_EASY)
