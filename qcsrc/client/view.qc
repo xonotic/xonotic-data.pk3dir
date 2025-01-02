@@ -518,7 +518,7 @@ vector GetCurrentFov(float fov)
 	if(zoomfactor < 1 || zoomfactor > MAX_ZOOMFACTOR)
 		zoomfactor = 2.5;
 	zoomfactor_multiplier = bound(1 / zoomfactor, zoomfactor_multiplier, MAX_ZOOMFACTOR / zoomfactor);
-	og_zoomfactor = zoomfactor;
+	og_zoomfactor = zoomfactor; // original zoomfactor
 	zoomfactor *= zoomfactor_multiplier;
 	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
@@ -562,7 +562,7 @@ vector GetCurrentFov(float fov)
 		}
 	}
 
-	if(zoomfactor == 1 || current_viewzoom > 0.999) // zoomfactor check prevents a division by 0
+	if(og_zoomfactor == 1 || current_viewzoom > 0.999) // zoomfactor check prevents a division by 0
 		current_zoomfraction = 0;
 	else if(almost_equals(current_viewzoom, 1/og_zoomfactor))
 		current_zoomfraction = 1;
