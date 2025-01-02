@@ -416,10 +416,49 @@ STATIC_INIT(fpscounter_init)
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
+// for_scrolling is true if we're checking for the purpose of determining whether the player can zoom scroll currently
+// this isn't always just "whenever they're zooming", due to cl_zoomscroll 2
+bool IsZooming(bool for_scrolling)
+{
+	if(for_scrolling && (!autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0))
+		return false;
+
+	bool zoomdir = button_zoom;
+
+	if((!for_scrolling || autocvar_cl_zoomscroll != 2) && hud == HUD_NORMAL && !spectatee_status)
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			entity wepent = viewmodels[slot];
+			if(wepent.switchweapon != wepent.activeweapon)
+				continue;
+			Weapon wep = wepent.activeweapon;
+			if(wep != WEP_Null && wep.wr_zoomdir)
+			{
+				bool do_zoom = wep.wr_zoomdir(wep); // TODO: merge this with wr_zoom?
+				zoomdir += do_zoom;
+			}
+		}
+	}
+	if(spectatee_status > 0 || isdemo())
+	{
+		if(spectatorbutton_zoom)
+		{
+			if(zoomdir)
+				zoomdir = 0;
+			else
+				zoomdir = 1;
+		}
+		// fteqcc failed twice here already, don't optimize this
+	}
+
+	return zoomdir;
+}
+
 float zoomfactor_multiplier;
 float GetCurrentFov_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
-	if(!button_zoom || !autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0)
+	if(!IsZooming(true))
 		return false;
 
 	if(bInputType == 3)
@@ -470,7 +509,7 @@ vector GetCurrentFov(float fov)
 	float velocityzoom, curspeed;
 	vector v;
 
-	zoomdir = button_zoom;
+	zoomdir = IsZooming(false);
 	if(zoomfactor_multiplier <= 0 || !zoomdir)
 		zoomfactor_multiplier = 1; // reset to 1
 
@@ -485,34 +524,8 @@ vector GetCurrentFov(float fov)
 	if(zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
 		zoomspeed = 3.5;
 
-	if(hud == HUD_NORMAL && !spectatee_status)
-	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			entity wepent = viewmodels[slot];
-			if(wepent.switchweapon != wepent.activeweapon)
-				continue;
-			Weapon wep = wepent.activeweapon;
-			if(wep != WEP_Null && wep.wr_zoomdir)
-			{
-				bool do_zoom = wep.wr_zoomdir(wep); // TODO: merge this with wr_zoom?
-				zoomdir += do_zoom;
-			}
-		}
-	}
-	if(spectatee_status > 0 || isdemo())
-	{
-		if(spectatorbutton_zoom)
-		{
-			if(zoomdir)
-				zoomdir = 0;
-			else
-				zoomdir = 1;
-		}
-		// fteqcc failed twice here already, don't optimize this
-	}
-
-	if(zoomdir) { zoomin_effect = 0; }
+	if(zoomdir)
+		zoomin_effect = 0;
 
 	if (spectatee_status > 0 && STAT(CAMERA_SPECTATOR) == 2)
 	{
@@ -528,7 +541,8 @@ vector GetCurrentFov(float fov)
 
 		current_viewzoom += (autocvar_cl_spawnzoom_speed * (spawnzoomfactor - current_viewzoom) * drawframetime);
 		current_viewzoom = bound(1 / spawnzoomfactor, current_viewzoom, 1);
-		if(current_viewzoom == 1) { zoomin_effect = 0; }
+		if(current_viewzoom == 1)
+			zoomin_effect = 0;
 	}
 	else
 	{

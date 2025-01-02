@@ -32,7 +32,7 @@ float autocvar_cl_velocityzoom_time;
 float autocvar_cl_zoomfactor;
 float autocvar_cl_zoomsensitivity;
 float autocvar_cl_zoomspeed;
-bool autocvar_cl_zoomscroll;
+int autocvar_cl_zoomscroll;
 float autocvar_cl_zoomscroll_scale = 10;
 float autocvar_fov;
 float autocvar_hud_colorflash_alpha;
