@@ -5,7 +5,7 @@ cd "${0%/*}" # move to qcsrc/tools
 cd ../..
 
 CONFIG_EXT=".cfg"
-SCRIPT_IGNORE='\/\/[^\/"]*\bscript-ignore\b[^\/"]*$'
+SCRIPT_IGNORE=' \/\/ script-ignore( [^"]+)?$'
 # can add `// script-ignore` to the end of lines to ignore
 # e.g. set g_ca 0 "Clan Arena: played in rounds, once you're dead you're out! The team with survivors wins the round" // script-ignore
 # the script would otherwise change "Clan" -> "clan", and other changes
@@ -13,7 +13,7 @@ START='^(([[:space:]]*\/\/)?[[:space:]]*seta?[[:space:]]+(\w+|"\w+")[[:space:]]+
 END='("[[:space:]]*(\/\/.*)?)$'
 # selects all properly formatted set/seta lines, including commented out ones, excluding the script-ignore ones
 LINE_SELECTOR="/$SCRIPT_IGNORE/!"
-# combined regex: /^((\s*\/\/)?\s*seta?\s+(\w+|"\w+")\s+([^"\s]+|"[^"]*")\s+").*("\s*(\/\/.*)?)$/, ignoring /\/\/[^\/"]*\bscript-ignore\b[^\/"]*$/
+# combined regex: /^((\s*\/\/)?\s*seta?\s+(\w+|"\w+")\s+([^"\s]+|"[^"]*")\s+").*("\s*(\/\/.*)?)$/, ignoring / \/\/ script-ignore( [^"]+)?$/
 #                   +~~~~~~~~~------------~~~~~~~~~~~---~~~~~~~~~~~~~~~~~----+  +-------------+
 #                    +-------+            +---- \1 -+   +---------------+           \digit
 #                       \2                    \4               \3
