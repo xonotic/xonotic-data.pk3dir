@@ -71,7 +71,7 @@ bool ItemSend(entity this, entity to, int sf)
 	if(sf & ISF_STATUS)
 		WriteByte(MSG_ENTITY, this.ItemStatus);
 
-	if(sf & ISF_SIZE || sf & ISF_SIZE2) // always true when it's spawned (in CSQC's perspective)
+	if(sf & (ISF_SIZE | ISF_SIZE2)) // always true when it's spawned (in CSQC's perspective)
 	{
 		WriteShort(MSG_ENTITY, bound(0, this.fade_end, 32767));
 
@@ -591,7 +591,7 @@ bool Item_GiveTo(entity item, entity player)
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ITEM_JETPACK_GOT);
 	}
 
-	int its = (item.items - (item.items & player.items)) & IT_PICKUPMASK;
+	int its = item.items & ~(player.items) & IT_PICKUPMASK;
 	if (its)
 	{
 		pickedup = true;
