@@ -163,7 +163,7 @@ REPLICATE_INIT(string, cvar_cl_pokenade_type);
 .float nade_special_time;
 .string pokenade_type;
 .entity nade_damage_target;
-.float cvar_cl_nade_type;
+.int cvar_cl_nade_type;
 .string cvar_cl_pokenade_type;
 .float toss_time;
 .float nade_show_particles;
