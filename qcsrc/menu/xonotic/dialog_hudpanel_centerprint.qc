@@ -3,12 +3,14 @@
 #include "checkbox.qh"
 #include "textlabel.qh"
 #include "slider.qh"
+#include "textslider.qh"
 #include "radiobutton.qh"
 
 void XonoticHUDCenterprintDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "centerprint";
+	float i;
 
 	dialog_hudpanel_main_checkbox(me, panelname);
 
@@ -23,7 +25,16 @@ void XonoticHUDCenterprintDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Fade time:")));
-		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 1, 0.05, "hud_panel_centerprint_fade_out"));
+		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_centerprint_fade_out"));
+			e.addValue(e, ZCTX(_("FADESPEED^Instant")), "0");
+			int dps = 2;
+			for(i = 1; i <= 19; ++i)
+			{
+				e.addValue(e, strzone(ftos_decimals(i / 20, 2)), strzone(ftos_decimals(i / 20, dps)));
+				dps = 3 - dps; // alternate between 2 and 1
+			}
+			e.addValue(e, "1.00", "1");
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Font scale:")));
