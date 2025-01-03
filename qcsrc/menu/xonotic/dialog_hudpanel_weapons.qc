@@ -42,11 +42,15 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Noncurrent alpha:")));
+			setDependent(e, "hud_panel_weapons_onlyowned", 0, 0);
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_weapons_noncurrent_alpha"));
+			setDependent(e, "hud_panel_weapons_onlyowned", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Noncurrent scale:")));
+			setDependent(e, "hud_panel_weapons_onlyowned", 0, 0);
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_weapons_noncurrent_scale"));
+			setDependent(e, "hud_panel_weapons_onlyowned", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Show weapon ID as:")));
