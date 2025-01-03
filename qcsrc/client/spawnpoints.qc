@@ -14,7 +14,11 @@ void Spawn_Draw(entity this)
 	}
 
 	if(dodraw)
-		pointparticles(((!teamplay) ? EFFECT_SPAWNPOINT_NEUTRAL : EFFECT_SPAWNPOINT(this.team - 1)), this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
+	{
+		vector org = this.origin + '0 0 28'; // ofset so it appears in the "middle" of the spawn instead of on the ground
+		particles_colormin = particles_colormax = Team_ColorRGB(this.team - 1);
+		boxparticles(particleeffectnum(EFFECT_SPAWNPOINT), this, org, org, '0 0 2', '0 0 2', bound(0, frametime, 0.1), PARTICLES_USECOLOR);
+	}
 }
 
 NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
@@ -51,14 +55,9 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 		{
 			if(autocvar_cl_spawn_event_particles && (particlesAndOrSound & BIT(0)))
 			{
-				switch(teamnum)
-				{
-					case NUM_TEAM_1: pointparticles(EFFECT_SPAWN_RED, this.origin, '0 0 0', 1); break;
-					case NUM_TEAM_2: pointparticles(EFFECT_SPAWN_BLUE, this.origin, '0 0 0', 1); break;
-					case NUM_TEAM_3: pointparticles(EFFECT_SPAWN_YELLOW, this.origin, '0 0 0', 1); break;
-					case NUM_TEAM_4: pointparticles(EFFECT_SPAWN_PINK, this.origin, '0 0 0', 1); break;
-					default: pointparticles(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1); break;
-				}
+				vector tcolor = (teamplay) ? Team_ColorRGB(teamnum) : entcs_GetColor(entnum - 1);
+				particles_colormin = particles_colormax = tcolor;
+				boxparticles(particleeffectnum(EFFECT_SPAWN), this, this.origin, this.origin, '0 0 0', '0 0 0', 1, PARTICLES_USECOLOR);
 			}
 
 			if(autocvar_cl_spawn_event_sound && (particlesAndOrSound & BIT(1)))
