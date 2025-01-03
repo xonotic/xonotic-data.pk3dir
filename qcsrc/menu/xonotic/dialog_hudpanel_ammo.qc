@@ -32,4 +32,13 @@ void XonoticHUDAmmoDialog_fill(entity me)
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Align icon:")));
 			me.TD(me, 1, 2.6/2, e = makeXonoticRadioButton(2, "hud_panel_ammo_iconalign", "0", _("Left")));
 			me.TD(me, 1, 2.6/2, e = makeXonoticRadioButton(2, "hud_panel_ammo_iconalign", "1", _("Right")));
+
+	me.TR(me);
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_ammo_progressbar", _("Enable status bar")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, ZCTX(_("PROGRESSBAR^Filled by ammo:"))));
+			setDependent(e, "hud_panel_ammo_progressbar", 1, 1);
+		me.TD(me, 1, 2.6, e = makeXonoticSlider(20, 320, 20, "hud_panel_ammo_maxammo"));
+			setDependent(e, "hud_panel_ammo_progressbar", 1, 1);
 }

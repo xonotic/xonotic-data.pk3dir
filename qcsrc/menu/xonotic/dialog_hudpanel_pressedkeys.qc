@@ -22,4 +22,10 @@ void XonoticHUDPressedKeysDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Forced aspect:")));
 			me.TD(me, 1, 2.6, e = makeXonoticSlider(0.2, 4, 0.1, "hud_panel_pressedkeys_aspect"));
+
+	me.TR(me);
+		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Pressed keys:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_pressedkeys_attack", _("Show attack keys")));
 }
