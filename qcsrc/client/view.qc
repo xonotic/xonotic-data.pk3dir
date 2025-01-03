@@ -422,7 +422,6 @@ STATIC_INIT(fpscounter_init)
 }
 
 // for_scrolling is true if we're checking for the purpose of determining whether the player can zoom scroll currently
-// this isn't always just "whenever they're zooming", due to cl_zoomscroll 2
 bool IsZooming(bool for_scrolling)
 {
 	if(for_scrolling && (!autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0))
@@ -430,7 +429,7 @@ bool IsZooming(bool for_scrolling)
 
 	bool zoomdir = button_zoom;
 
-	if((!for_scrolling || autocvar_cl_zoomscroll != 2) && hud == HUD_NORMAL && !spectatee_status)
+	if(hud == HUD_NORMAL && !spectatee_status)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
