@@ -3,6 +3,7 @@
 #include <client/hud/hud.qh>
 #include <client/main.qh>
 #include <client/view.qh>
+#include <common/ent_cs.qh>
 
 void Spawn_Draw(entity this)
 {
