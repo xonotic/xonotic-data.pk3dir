@@ -439,7 +439,7 @@ int c4_client_event(entity minigame, string event, ...)
 		{
 			bool event_blocked = ((event == "key_released")
 				|| ((minigame.minigame_flags & C4_TURN_TEAM) != minigame_self.team));
-			if (!(minigame.minigame_flags & C4_TURN_WIN) && !(minigame.minigame_flags & C4_TURN_DRAW))
+			if (!(minigame.minigame_flags & (C4_TURN_WIN | C4_TURN_DRAW)))
 			{
 				switch ( ...(0,int) )
 				{
