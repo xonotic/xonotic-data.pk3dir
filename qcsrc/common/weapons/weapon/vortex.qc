@@ -45,7 +45,6 @@ void SendCSQCVortexBeamParticle(entity player, float charge) {
 	WriteByte(MSG_BROADCAST, etof(player));
 }
 #elif defined(CSQC)
-bool autocvar_cl_vortexbeam_teamcolor = false;
 NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 {
 	float charge;
@@ -60,7 +59,7 @@ NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
 	particles_alphamin = particles_alphamax = particles_fade = charge;
-	if(autocvar_cl_vortexbeam_teamcolor)
+	if((teamplay && autocvar_cl_tracers_teamcolor == 1) || autocvar_cl_tracers_teamcolor == 2)
 	{
 		float mycolors = entcs_GetClientColors(myowner - 1);
 		vector rgb = vortex_glowcolor(mycolors, max(0.25, charge));
@@ -344,7 +343,8 @@ METHOD(Vortex, wr_impacteffect, void(entity thiswep, entity actor))
 {
 	entity this = actor;
 	vector org2 = w_org + w_backoff * 2;
-	boxparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), NULL, org2, org2, '0 0 0', '0 0 0', 1, ((autocvar_cl_vortexbeam_teamcolor) ? PARTICLES_USECOLOR : 0));
+	bool usecolor = ((teamplay && autocvar_cl_tracers_teamcolor == 1) || autocvar_cl_tracers_teamcolor == 2);
+	boxparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), NULL, org2, org2, '0 0 0', '0 0 0', 1, ((usecolor) ? PARTICLES_USECOLOR : 0));
 	if(!w_issilent)
 		sound(this, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
 }

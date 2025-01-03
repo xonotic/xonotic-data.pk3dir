@@ -193,6 +193,10 @@ ENDCLASS(OffhandWeapon)
 int max_shot_distance = 32768; // determined by world mins/maxs when map loads
 #endif
 
+#ifdef CSQC
+int autocvar_cl_tracers_teamcolor;
+#endif
+
 // weapon flags
 const int WEP_TYPE_OTHER          =  BIT(0); // not for damaging people
 const int WEP_TYPE_SPLASH         =  BIT(1); // splash damage
