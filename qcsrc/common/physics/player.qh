@@ -53,7 +53,7 @@ bool autocvar_g_footsteps;
 
 .float gravity;
 .float swamp_slowdown;
-.float lastflags;
+.int lastflags;
 .float lastground;
 .bool wasFlying;
 

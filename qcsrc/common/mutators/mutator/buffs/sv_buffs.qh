@@ -58,7 +58,7 @@ float autocvar_g_buffs_luck_chance = 0.15;
 float autocvar_g_buffs_luck_damagemultiplier = 3;
 
 // ammo
-.float buff_ammo_prev_infitems;
+.int buff_ammo_prev_infitems;
 .int buff_ammo_prev_clipload;
 // flight
 .float buff_flight_oldgravity;
