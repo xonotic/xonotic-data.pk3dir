@@ -690,12 +690,9 @@ bool Weapons_DrawWeaponOrOffhand(
 			bind_str = getcommandkey(_("drop weapon"), "dropweapon");
 			break;
 		case BIT(1):
-			icon_str = it.model2;
-			bind_str = getcommandkey(_("off-hand hook"), "+hook");
-			break;
 		case BIT(2):
 			icon_str = it.model2;
-			bind_str = "";
+			bind_str = getcommandkey(_("off-hand hook"), "+hook");
 			break;
 		default:
 			icon_str = it.model2;
