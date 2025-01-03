@@ -58,12 +58,15 @@ NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 
 	//pointparticles(EFFECT_VORTEX_MUZZLEFLASH, shotorg, normalize(endpos - shotorg) * 1000, 1);
 
-	//draw either the old v2.3 beam or the new beam
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
 	particles_alphamin = particles_alphamax = particles_fade = charge;
 	if(autocvar_cl_vortexbeam_teamcolor)
 	{
-		vector rgb = vortex_glowcolor(entcs_GetClientColors(myowner - 1), max(0.25, charge));
+		float mycolors = entcs_GetClientColors(myowner - 1);
+		vector rgb = vortex_glowcolor(mycolors, max(0.25, charge));
+		// in the event of charging being turned off, fall back to player colours
+		if(rgb == '0 0 0')
+			rgb = colormapPaletteColor(mycolors & 0x0F, true);
 		particles_colormin = particles_colormax = rgb;
 		eff_flags |= PARTICLES_USECOLOR;
 	}
