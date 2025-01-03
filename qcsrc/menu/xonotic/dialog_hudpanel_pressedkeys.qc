@@ -1,5 +1,6 @@
 #include "dialog_hudpanel_pressedkeys.qh"
 
+#include "checkbox.qh"
 #include "textslider.qh"
 #include "slider.qh"
 #include "textlabel.qh"

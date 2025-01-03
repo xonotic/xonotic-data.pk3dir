@@ -3,6 +3,7 @@
 #include "textlabel.qh"
 #include "checkbox.qh"
 #include "slider.qh"
+#include "textslider.qh"
 
 void XonoticHUDInfoMessagesDialog_fill(entity me)
 {
