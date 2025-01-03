@@ -54,9 +54,9 @@ nade(red,       "0xff0000", "0xff3c00", "0xff0000", "0xffa2a2")
 nade(yellow,    "0xFFFF0F", "0xFFFF0F", "0xFFFF0F", "0xFFFF0F")
 nade(pink,      "0xFF0FFF", "0xFF0FFF", "0xFF0FFF", "0xFF0FFF")
 nade(neutral,   "0xFFFFFF", "0xFFFFFF", "0xFFFFFF", "0xFFFFFF")
-nade(green,     "0x40ff9b", "0x40ff9b", "0x40ff9b", "0xffa2a2")
-nade(brown,     "0xa85400", "0xa85400", "0xa85400", "0xffa2a2")
-nade(purple,    "0x540054", "0x540054", "0x540054", "0xffa2a2")
+nade(green,     "0x40ff9b", "0x40ff9b", "0xff0000", "0xffa2a2")
+nade(brown,     "0xa85400", "0xa85400", "0xff0000", "0xffa2a2")
+nade(purple,    "0x540054", "0x540054", "0xff0000", "0xffa2a2")
 #undef nade
 
 #define nade_burn(name, colormin1, colormax1, colormin2, colormax2) \
@@ -135,9 +135,9 @@ nade_burn(blue,     "0x006cff", "0x0600ff", "0x0600ff", "0x9794ff")
 nade_burn(yellow,   "0xFFFF0F", "0xFFFF0F", "0xFFFF0F", "0xFFFF0F")
 nade_burn(pink,     "0xFF0FFF", "0xFF0FFF", "0xFF0FFF", "0xFF0FFF")
 nade_burn(neutral,  "0xFFFFFF", "0xFFFFFF", "0xFFFFFF", "0xFFFFFF")
-//nade_burn(green,    "0x40ff9b", "0x40ff9b", "0x40ff9b", "0xffa2a2")
-nade_burn(brown,    "0xa85400", "0xa85400", "0xa85400", "0xffa2a2")
-nade_burn(purple,   "0x540054", "0x540054", "0x540054", "0xffa2a2")
+//nade_burn(green,    "0x40ff9b", "0xff3c00", "0xff0000", "0xffa2a2")
+nade_burn(brown,    "0xa85400", "0xff3c00", "0xff0000", "0xffa2a2")
+nade_burn(purple,   "0x540054", "0xff3c00", "0xff0000", "0xffa2a2")
 #undef nade_burn
 
 #define nade_explode(name, colorlight, colormin1, colormax1, colormin2, colormax2, colormin3, colormax3) \
@@ -319,7 +319,7 @@ nade_explode(red,       '100.0 20.0 20.0', "0xff0000", "0xffa2a2", "0xff0000", "
 nade_explode(yellow,    '100.0 20.0 20.0', "0xff0000", "0xffa2a2", "0xFFFF0F", "0xFFFF0F", "0xff0000", "0xffa2a2")
 nade_explode(pink,      '100.0 20.0 20.0', "0xff0000", "0xffa2a2", "0xFF0FFF", "0xFF0FFF", "0xff0000", "0xffa2a2")
 nade_explode(neutral,   '100.0 20.0 20.0', "0xff0000", "0xffa2a2", "0xFFFFFF", "0xFFFFFF", "0xff0000", "0xffa2a2")
-nade_explode(green,     '100.0 20.0 20.0', "0x40ff9b", "0xffa2a2", "0x40ff9b", "0x40ff9b", "0xff0000", "0xffa2a2")
-nade_explode(brown,     '100.0 20.0 20.0', "0xa85400", "0xffa2a2", "0xa85400", "0xa85400", "0xff0000", "0xffa2a2")
-nade_explode(purple,    '100.0 20.0 20.0', "0x540054", "0xffa2a2", "0x540054", "0x540054", "0xff0000", "0xffa2a2")
+nade_explode(green,     '100.0 20.0 20.0', "0xff0000", "0xffa2a2", "0x40ff9b", "0x40ff9b", "0xff0000", "0xffa2a2")
+nade_explode(brown,     '100.0 20.0 20.0', "0xff0000", "0xffa2a2", "0xa85400", "0xa85400", "0xff0000", "0xffa2a2")
+nade_explode(purple,    '100.0 20.0 20.0', "0xff0000", "0xffa2a2", "0x540054", "0x540054", "0xff0000", "0xffa2a2")
 #undef nade_explode
