@@ -20,8 +20,12 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 
 	dialog_hudpanel_main_settings(me, panelname);
 
+//physics (speed and acceleration
 	me.TR(me);
-		me.TD(me, 1, 1.4, e = makeXonoticCheckBox(0, "hud_panel_physics_progressbar", _("Status bar")));
+		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Physics:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "hud_panel_physics_progressbar", _("Status bar")));
 		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_physics_baralign"));
 			e.addValue(e, _("Left align")   , "0");
 			e.addValue(e, _("Right align")  , "1");
@@ -30,7 +34,8 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "hud_panel_physics_progressbar", 1, 3);
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_physics_flip", _("Flip speed/acceleration positions")));
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_physics_flip", _("Flip speed/acceleration positions")));
 
 //speed
 	me.TR(me);
