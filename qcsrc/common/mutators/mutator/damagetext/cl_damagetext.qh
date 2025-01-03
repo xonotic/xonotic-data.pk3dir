@@ -6,6 +6,7 @@ bool autocvar_cl_damagetext_format_verbose;
 bool autocvar_cl_damagetext_format_hide_redundant;
 vector autocvar_cl_damagetext_color;
 bool autocvar_cl_damagetext_color_per_weapon;
+float autocvar_cl_damagetext_lifetime = -1;
 float autocvar_cl_damagetext_size_min;
 float autocvar_cl_damagetext_size_min_damage;
 float autocvar_cl_damagetext_size_max;
@@ -15,6 +16,7 @@ float autocvar_cl_damagetext_alpha_lifetime;
 vector autocvar_cl_damagetext_velocity_world;
 vector autocvar_cl_damagetext_offset_world;
 float autocvar_cl_damagetext_accumulate_alpha_rel;
+float autocvar_cl_damagetext_accumulate_lifetime = -1;
 int autocvar_cl_damagetext_friendlyfire;
 vector autocvar_cl_damagetext_friendlyfire_color;
 
@@ -29,14 +31,3 @@ float autocvar_cl_damagetext_2d_close_range;
 bool autocvar_cl_damagetext_2d_out_of_view;
 vector autocvar_cl_damagetext_velocity_screen;
 vector autocvar_cl_damagetext_offset_screen;
-
-// TODO: remove the value init and sort them above properly after next (0.9) release
-// or the release after it to support the old-stable release
-// this can't be done now as players would lack these from their configs then
-#if 0
-float autocvar_cl_damagetext_lifetime = -1;
-float autocvar_cl_damagetext_accumulate_lifetime = -1;
-#else
-AUTOCVAR_SAVE(cl_damagetext_lifetime,             float,  -1,  "Damage text lifetime, edit this if you wish for damage text to disappear before it fades out");
-AUTOCVAR_SAVE(cl_damagetext_accumulate_lifetime,  float,  -1,  "Only update existing damage text when it is younger than this many seconds, negative always updates");
-#endif

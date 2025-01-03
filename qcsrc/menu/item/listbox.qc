@@ -335,9 +335,9 @@
 			}
 		}
 	}
-	AUTOCVAR(menu_scroll_averaging_time, float, 0.16, "smooth scroll averaging time");
+	float autocvar_menu_scroll_averaging_time = 0.16;
 	// scroll faster while dragging the scrollbar
-	AUTOCVAR(menu_scroll_averaging_time_pressed, float, 0.06, "smooth scroll averaging time when dragging the scrollbar");
+	float autocvar_menu_scroll_averaging_time_pressed = 0.06;
 	void ListBox_draw(entity me)
 	{
 		vector fillSize = '0 0 0';

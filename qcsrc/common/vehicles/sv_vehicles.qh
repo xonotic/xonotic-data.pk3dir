@@ -6,10 +6,10 @@
 
 // vehicle cvars
 bool autocvar_g_vehicles = true;
-AUTOCVAR(g_vehicles_enter, bool, false, "require pressing use key to enter a vehicle");
+bool autocvar_g_vehicles_enter = false;
 float autocvar_g_vehicles_enter_radius = 250;
-AUTOCVAR(g_vehicles_steal, bool, true, "allow stealing enemy vehicles in teamplay modes");
-AUTOCVAR(g_vehicles_steal_show_waypoint, bool, true, "show a waypoint above the thief");
+bool autocvar_g_vehicles_steal = true;
+bool autocvar_g_vehicles_steal_show_waypoint = true;
 float autocvar_g_vehicles_crush_dmg = 70;
 float autocvar_g_vehicles_crush_force = 50;
 float autocvar_g_vehicles_crush_minspeed = 100;
@@ -19,7 +19,7 @@ float autocvar_g_vehicles_allow_bots;
 int autocvar_g_vehicles_exit_attempts = 25;
 float autocvar_g_vehicles_thinkrate = 0.1;
 
-AUTOCVAR(g_vehicles_teams, bool, true, "allow team specific vehicles");
+bool autocvar_g_vehicles_teams = true;
 float autocvar_g_vehicles_teleportable;
 float autocvar_g_vehicles_vortex_damagerate = 0.75;
 float autocvar_g_vehicles_machinegun_damagerate = 0.75;

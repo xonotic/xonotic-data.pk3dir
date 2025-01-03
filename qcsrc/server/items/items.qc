@@ -355,9 +355,9 @@ void Item_ScheduleRespawnIn(entity e, float t)
 	}
 }
 
-AUTOCVAR(g_pickup_respawntime_scaling_reciprocal, float, 0.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `reciprocal` (with `offset` and `linear` set to 0) can be used to achieve a constant number of items spawned *per player*");
-AUTOCVAR(g_pickup_respawntime_scaling_offset, float, 0.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `offset` offsets the curve left or right - the results are not intuitive and I recommend plotting the respawn time and the number of items per player to see what's happening");
-AUTOCVAR(g_pickup_respawntime_scaling_linear, float, 1.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `linear` can be used to simply scale the respawn time linearly");
+float autocvar_g_pickup_respawntime_scaling_reciprocal = 0;
+float autocvar_g_pickup_respawntime_scaling_offset = 0;
+float autocvar_g_pickup_respawntime_scaling_linear = 1;
 
 /// Adjust respawn time according to the number of players.
 float adjust_respawntime(float normal_respawntime) {
@@ -405,8 +405,7 @@ void Item_ScheduleRespawn(entity e)
 		Item_Show(e, -1);
 }
 
-AUTOCVAR(g_pickup_respawntime_initial_random, int, 1,
-	"For items that don't start spawned: 0: spawn after their normal respawntime; 1: spawn after `random * respawntime` with the *same* random; 2: same as 1 but each item has separate random");
+int autocvar_g_pickup_respawntime_initial_random = 1;
 
 void Item_ScheduleInitialRespawn(entity e)
 {
