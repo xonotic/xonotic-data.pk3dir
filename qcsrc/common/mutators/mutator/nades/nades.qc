@@ -149,9 +149,18 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 	float bonusNades    = STAT(NADE_BONUS);
 	float bonusProgress = STAT(NADE_BONUS_SCORE);
 	float bonusType     = STAT(NADE_BONUS_TYPE);
-	Nade def = REGISTRY_GET(Nades, bonusType);
-	vector nadeColor    = def.m_color;
-	string nadeIcon     = def.m_icon;
+	Nade def = REGISTRY_GET(Nades, max(1, bonusType));
+	string nadeIcon = def.m_icon; // use the Normal Nade icon for the random nade, and draw it as rainbow
+	vector nadeColor;
+	if(bonusType)
+		nadeColor = def.m_color;
+	else
+	{
+		nadeColor.x = time % (M_PI * 2);
+		nadeColor.y = 1;
+		nadeColor.z = 1;
+		nadeColor = hsv_to_rgb(nadeColor);
+	}
 
 	vector iconPos, textPos;
 
@@ -174,9 +183,9 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 			drawstring_aspect(textPos, ftos(bonusNades), vec2((2/3) * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if(draw_expanding)
-			drawpic_aspect_skin_expanding(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, expand_time);
+			drawpic_aspect_skin_expanding(iconPos, nadeIcon, '1 1 0' * mySize.y, (bonusType ? '1 1 1' : nadeColor), panel_fg_alpha, DRAWFLAG_NORMAL, expand_time);
 
-		drawpic_aspect_skin(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(iconPos, nadeIcon, '1 1 0' * mySize.y, (bonusType ? '1 1 1' : nadeColor), panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 }
 #endif
@@ -1275,7 +1284,9 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 
 	n.pokenade_type = pntype;
 
-	Nade def = REGISTRY_GET(Nades, max(1, ntype));
+	if(ntype == 0) // random nade
+		ntype = floor(random() * (REGISTRY_COUNT(Nades) - 1)) + 1;
+	Nade def = REGISTRY_GET(Nades, ntype);
 	if(def == NADE_TYPE_Null)
 		def = NADE_TYPE_NORMAL;
 
@@ -1407,6 +1418,7 @@ int nades_CheckTypes(entity player, int cl_ntype)
 
 	switch (cl_ntype)
 	{
+		case 0: return 0; // random nade
 		CL_NADE_TYPE_CHECK(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_ICE,         autocvar_g_nades_ice);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_TRANSLOCATE, autocvar_g_nades_translocate);
@@ -1538,7 +1550,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 				player.pokenade_type = autocvar_g_nades_pokenade_monster_type;
 			}
 
-			STAT(NADE_BONUS_TYPE, player) = bound(1, STAT(NADE_BONUS_TYPE, player), Nades_COUNT);
+			STAT(NADE_BONUS_TYPE, player) = bound(0, STAT(NADE_BONUS_TYPE, player), REGISTRY_COUNT(Nades));
 
 			if(STAT(NADE_BONUS_SCORE, player) >= 0 && autocvar_g_nades_bonus_score_max)
 				nades_GiveBonus(player, time_score / autocvar_g_nades_bonus_score_max);

@@ -132,6 +132,7 @@ spawnfunc(func_door_rotating)
 
 	setblocked(this, door_blocked);
 	this.use = door_use;
+	this.active = ACTIVE_ACTIVE;
 
 	this.pos1 = '0 0 0';
 	this.pos2 = this.movedir;
