@@ -45,8 +45,8 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Show offhands:")));
 		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_weapons_offhand"));
-			e.addValue(e, _("Disable"), "0");
 			e.addValue(e, _("Prepend"), "1");
+			e.addValue(e, _("Disable"), "0");
 			e.addValue(e, _("Append"), "2");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
