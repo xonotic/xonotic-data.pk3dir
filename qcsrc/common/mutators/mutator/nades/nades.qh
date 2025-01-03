@@ -163,7 +163,7 @@ REPLICATE_INIT(string, cvar_cl_pokenade_type);
 .float nade_special_time;
 .string pokenade_type;
 .entity nade_damage_target;
-.float cvar_cl_nade_type;
+.int cvar_cl_nade_type;
 .string cvar_cl_pokenade_type;
 .float toss_time;
 .float nade_show_particles;
@@ -199,5 +199,6 @@ MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
 #ifdef CSQC
 bool Projectile_isnade(int proj); // TODO: remove
 
+vector nades_GetColor(entity def, int type_num);
 void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator
 #endif

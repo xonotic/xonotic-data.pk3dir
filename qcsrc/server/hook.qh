@@ -29,7 +29,7 @@ const float HOOK_REMOVING = BIT(1);
 const float HOOK_PULLING = BIT(2);
 const float HOOK_RELEASING = BIT(3);
 const float HOOK_WAITING_FOR_RELEASE = BIT(4);
-.float hook_state;
+.int hook_state;
 .int state;
 
 vector hook_shotorigin[4];

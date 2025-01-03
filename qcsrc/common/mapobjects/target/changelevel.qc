@@ -7,6 +7,8 @@ void target_changelevel_use(entity this, entity actor, entity trigger)
 {
 	if(game_stopped)
 		return;
+	if(this.active != ACTIVE_ACTIVE)
+		return;
 
 	if(this.spawnflags & CHANGELEVEL_MULTIPLAYER)
 	{
@@ -40,6 +42,11 @@ void target_changelevel_use(entity this, entity actor, entity trigger)
 		changelevel(this.chmap);
 }
 
+void target_changelevel_reset(entity this)
+{
+	this.active = ACTIVE_ACTIVE;
+}
+
 /*target_changelevel
 Target to change/end level
 KEYS:
@@ -53,6 +60,8 @@ CHANGELEVEL_MULTIPLAYER: multiplayer support
 spawnfunc(target_changelevel)
 {
 	this.use = target_changelevel_use;
+	this.active = ACTIVE_ACTIVE;
+	this.reset = target_changelevel_reset;
 
 	if(!this.count)
 	{

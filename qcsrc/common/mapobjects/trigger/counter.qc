@@ -23,8 +23,8 @@ void counter_use(entity this, entity actor, entity trigger)
 			IL_PUSH(g_counters, mycounter);
 			mycounter.owner = this;
 			mycounter.realowner = actor;
-			mycounter.reset = counter_reset; // NOTE: this may be useless as the player deletes their counters upon respawning
 			mycounter.counter_cnt = 0;
+			// NOTE: will be deleted when the player respawns or match resets
 		}
 		store = mycounter;
 	}
@@ -69,6 +69,12 @@ void counter_reset(entity this)
 	this.nextthink = 0;
 	this.counter_cnt = 0;
 	this.active = ACTIVE_ACTIVE;
+
+	// remove any per-player counters
+	IL_EACH(g_counters, it.owner == this,
+	{
+		delete(it);
+	});
 }
 
 /*QUAKED spawnfunc_trigger_counter (.5 .5 .5) ? nomessage COUNTER_FIRE_AT_COUNT

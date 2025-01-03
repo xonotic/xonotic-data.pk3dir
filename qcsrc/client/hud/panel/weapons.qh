@@ -54,4 +54,4 @@ vector Accuracy_GetColor(float accuracy);
 vector Weapons_GetOffhands();
 void Weapons_Fade();
 void Weapons_Draw(vector, vector, float, int, int, bool);
-bool Weapons_DrawWeaponOrOffhand(entity, vector, vector, vector, vector, vector, float, int);
+bool Weapons_DrawWeaponOrOffhand(entity, vector, vector, vector, vector, vector, vector, float, int);

@@ -1,0 +1,6 @@
+#pragma once
+
+bool autocvar_cl_spawn_event_particles;
+bool autocvar_cl_spawn_event_sound = true;
+bool autocvar_cl_spawn_point_particles;
+float autocvar_cl_spawn_point_dist_max = 1200;

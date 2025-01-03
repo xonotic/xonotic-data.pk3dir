@@ -195,7 +195,7 @@ void HUD_Weapons()
 		{
 			int j = 0;
 			FOREACH(Weapons, it != WEP_Null && it.impulse >= 0 && (it.impulse % 3 != 0) && j < 6, {
-				if (!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_SPECIALATTACK))
+				if (!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)))
 				{
 					if (!panel_switchweapon || j < 4)
 						panel_switchweapon = it;
@@ -526,12 +526,15 @@ void Weapons_Draw(
 	for (int i = start_idx; i <= end_idx; ++i)
 	{
 		entity wep_or_offhand;
+		vector offhand_color = '1 1 1';
 		int offhand_bit;
 		if (i == -1 || i == WEP_LAST-WEP_FIRST + 1)
 		{
 			if (!(offhands.y & BIT(0)))
 				continue;
-			wep_or_offhand = REGISTRY_GET(Nades, STAT(NADE_OFFHAND_TYPE)); // nade
+			int nade_type = STAT(NADE_OFFHAND_TYPE);
+			wep_or_offhand = REGISTRY_GET(Nades, max(1, nade_type)); // nade
+			offhand_color = nades_GetColor(wep_or_offhand, nade_type);
 			offhand_bit = BIT(0);
 		}
 		else if (i == -2 || i == WEP_LAST-WEP_FIRST + 2)
@@ -556,7 +559,7 @@ void Weapons_Draw(
 
 		// figure out the drawing position of weapon
 		vector weapon_pos = panel_pos + vec2(column * weapon_size.x, row * weapon_size.y);
-		if (!Weapons_DrawWeaponOrOffhand(wep_or_offhand, weapon_size, weapon_pos, barsize, baroffset, ammo_color, ammo_alpha, offhand_bit))
+		if (!Weapons_DrawWeaponOrOffhand(wep_or_offhand, offhand_color, weapon_size, weapon_pos, barsize, baroffset, ammo_color, ammo_alpha, offhand_bit))
 			continue;
 
 		// continue with new position for the next weapon
@@ -583,7 +586,7 @@ void Weapons_Draw(
 
 // returns continue bool
 bool Weapons_DrawWeaponOrOffhand(
-	entity it, vector size, vector pos,
+	entity it, vector offhand_color, vector size, vector pos,
 	vector barsize, vector baroffset, vector ammo_color, float ammo_alpha,
 	int offhand_bit)
 {
@@ -704,7 +707,7 @@ bool Weapons_DrawWeaponOrOffhand(
 	if (offhand_bit || weapons_stat & WepSet_FromWeapon(it))
 	{
 		// draw the weapon/offhand image
-		drawpic_aspect_skin(pos_real, icon_str, size_real, '1 1 1', alpha_real, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos_real, icon_str, size_real, offhand_color, alpha_real, DRAWFLAG_NORMAL);
 
 		// draw weapon/offhand label string
 		switch (autocvar_hud_panel_weapons_label)
