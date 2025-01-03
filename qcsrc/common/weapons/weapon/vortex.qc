@@ -45,7 +45,7 @@ void SendCSQCVortexBeamParticle(entity player, float charge) {
 	WriteByte(MSG_BROADCAST, etof(player));
 }
 #elif defined(CSQC)
-bool autocvar_cl_vortexbeam_teamcolor = true;
+bool autocvar_cl_vortexbeam_teamcolor = false;
 NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 {
 	float charge;
