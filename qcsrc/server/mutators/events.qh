@@ -992,6 +992,7 @@ MUTATOR_HOOKABLE(ClientCommand_Spectate, EV_ClientCommand_Spectate);
 enum {
     MUT_SPECCMD_CONTINUE, // return this flag to make the function continue as normal
     MUT_SPECCMD_RETURN, // return this flag to make the function return (don't spectate)
+    MUT_SPECCMD_RETURN_FORFEIT, // like MUT_SPECCMD_RETURN and ask player if they want to forfeit
     MUT_SPECCMD_FORCE // return this flag to force the player to spectate, even if they're not a player
 };
 

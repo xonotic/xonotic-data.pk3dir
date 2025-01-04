@@ -771,9 +771,40 @@ void ClientCommand_spectate(entity caller, int request)
 					return;
 				}
 
+				// here we are intentionally checking if argv(2) is exactly 1
+				bool forfeit_ask = (!warmup_stage && stof(argv(2)) == 1);
+
+				if (IS_PLAYER(caller) && forfeit_ask)
+				{
+					// ask player to confirm the forfeit
+					stuffcmd(caller, "menu_showforfeitdialog\n");
+					return;
+				}
+
+				if (IS_SPEC(caller) && (!observe_blocked_if_eliminated || !INGAME(caller)))
+				{
+					// turn spectator into observer
+					caller.would_spectate = false;
+					TRANSMUTE(Observer, caller);
+					PutClientInServer(caller);
+					caller.flags |= FL_CLIENT | FL_NOTARGET;
+					return;
+				}
+
 				int mutator_returnvalue = MUTATOR_CALLHOOK(ClientCommand_Spectate, caller);
 
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN) return;
+
+				if (mutator_returnvalue == MUT_SPECCMD_RETURN_FORFEIT)
+				{
+					if (!forfeit_ask)
+						mutator_returnvalue = MUT_SPECCMD_FORCE;
+					else
+					{
+						stuffcmd(caller, "menu_showforfeitdialog\n");
+						return;
+					}
+				}
 
 				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE || caller.wants_join))
 				if (autocvar_sv_spectate)
@@ -787,8 +818,11 @@ void ClientCommand_spectate(entity caller, int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd spectate [<client>]\n");
+			sprint(caller, "\nUsage:^3 cmd spectate [<client>] [<ask_forfeit>]\n");
 			sprint(caller, "  Where <client> can be the player to spectate.\n");
+			sprint(caller, "  If <client> is \"\" or not specified, caller becomes observer.\n");
+			sprint(caller, "  If <client> is \"\" and forfeit_ask is 1 caller will be asked"
+			                 " to confirm forfeiting the current game.\n");
 			return;
 		}
 	}
