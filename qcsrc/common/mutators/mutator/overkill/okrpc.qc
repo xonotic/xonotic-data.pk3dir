@@ -204,7 +204,7 @@ METHOD(OverkillRocketPropelledChainsaw, wr_reload, void(entity thiswep, entity a
 
 METHOD(OverkillRocketPropelledChainsaw, wr_suicidemessage, Notification(entity thiswep))
 {
-	if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
+	if(w_deathtype & (HITTYPE_BOUNCE | HITTYPE_SPLASH))
 		return WEAPON_OVERKILL_RPC_SUICIDE_SPLASH;
 	else
 		return WEAPON_OVERKILL_RPC_SUICIDE_DIRECT;
@@ -212,7 +212,7 @@ METHOD(OverkillRocketPropelledChainsaw, wr_suicidemessage, Notification(entity t
 
 METHOD(OverkillRocketPropelledChainsaw, wr_killmessage, Notification(entity thiswep))
 {
-	if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
+	if(w_deathtype & (HITTYPE_BOUNCE | HITTYPE_SPLASH))
 		return WEAPON_OVERKILL_RPC_MURDER_SPLASH;
 	else
 		return WEAPON_OVERKILL_RPC_MURDER_DIRECT;

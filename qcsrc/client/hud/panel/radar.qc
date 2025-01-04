@@ -79,14 +79,14 @@ float HUD_Radar_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		if(key_pressed)
 			mouseClicked |= S_MOUSE1;
 		else
-			mouseClicked -= (mouseClicked & S_MOUSE1);
+			mouseClicked &= ~S_MOUSE1;
 	}
 	else if(nPrimary == K_MOUSE2)
 	{
 		if(key_pressed)
 			mouseClicked |= S_MOUSE2;
 		else
-			mouseClicked -= (mouseClicked & S_MOUSE2);
+			mouseClicked &= ~S_MOUSE2;
 	}
 	else if (nPrimary == K_ESCAPE && key_pressed)
 	{
