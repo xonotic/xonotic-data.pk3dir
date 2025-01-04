@@ -2185,7 +2185,13 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
 		str = count_ordinal(i+1);
-		drawstring(pos + text_ofs, str, hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+		if(i == 0)
+			str = strcat("^xEB3", str); // gold
+		else if(i == 1)
+			str = strcat("^xAAA", str); // silver
+		else if(i == 2)
+			str = strcat("^xC74", str); // bronze
+		drawcolorcodedstring(pos + text_ofs, str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + text_ofs + eX * ranksize, TIME_ENCODED_TOSTRING(t, true), hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
 		str = ColorTranslateRGB(grecordholder[i]);
 		if(cut)
