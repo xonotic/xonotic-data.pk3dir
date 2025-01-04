@@ -22,7 +22,7 @@ void XonoticMixedSlider_setValue(entity me, float val)
 {
 	if (val != me.value)
 	{
-		SUPER(XonoticMixedSlider).setValueFromNumberIdentifier(me, me.valueToNumberIdentifier(me, val));
+		SUPER(XonoticMixedSlider).setValue(me, val);
 		me.saveCvars(me);
 	}
 }
@@ -30,7 +30,7 @@ void XonoticMixedSlider_setValue_noAnim(entity me, float val)
 {
 	if (val != me.value)
 	{
-		SUPER(XonoticMixedSlider).setValueFromNumberIdentifier_noAnim(me, me.valueToNumberIdentifier(me, val));
+		SUPER(XonoticMixedSlider).setValue_noAnim(me, val);
 		me.saveCvars(me);
 	}
 }
@@ -39,7 +39,8 @@ void XonoticMixedSlider_loadCvars(entity me)
 	if (!me.controlledCvar)
 		return;
 
-	me.setValue_noAnim(me, cvar(me.controlledCvar));
+	// don't call setValue_noAnim or else it will call saveCvars
+	me.setValueFromNumberIdentifier_noAnim(me, cvar(me.controlledCvar));
 }
 void XonoticMixedSlider_saveCvars(entity me)
 {
@@ -52,6 +53,6 @@ void XonoticMixedSlider_saveCvars(entity me)
 }
 void XonoticMixedSlider_configureXonoticMixedSliderValues(entity me)
 {
-	me.configureMixedSliderValues(me, string_null);
+	me.configureMixedSliderValues(me, 0);
 	me.loadCvars(me);
 }

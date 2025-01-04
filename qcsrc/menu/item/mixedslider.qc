@@ -59,8 +59,9 @@
 		me.adjustDigitsForStep(me, theValueStep);
 		for (float id = theValueMin; id <= theValueMax + theValueStep / 2; id += theValueStep)
 		{ // plus half to prevent almost all floating point errors
-			me.(valueStrings[me.nValues]) = strzone(me.rangedIdentifierToText(me, id));
-			me.(valueNumberIdentifiers[me.nValues]) = id;
+			string rounded_id_str = me.rangedIdentifierToText(me, id);
+			me.(valueStrings[me.nValues]) = strzone(rounded_id_str);
+			me.(valueNumberIdentifiers[me.nValues]) = stof(rounded_id_str);
 			me.nValues += 1;
 		}
 	}
@@ -84,8 +85,9 @@
 		}
 		for (float id = theValueMin; id <= theValueMax + theValueStep / 2; id += theValueStep)
 		{
-			me.(valueStrings[pos]) = strzone(me.rangedIdentifierToText(me, id));
-			me.(valueNumberIdentifiers[pos]) = id;
+			string rounded_id_str = me.rangedIdentifierToText(me, id);
+			me.(valueStrings[pos]) = strzone(rounded_id_str);
+			me.(valueNumberIdentifiers[pos]) = stof(rounded_id_str);
 			pos += 1;
 		}
 	}
@@ -104,5 +106,4 @@
 	{
 		me.configureSliderValues(me, 0, 0, me.nValues - 1, 1, 1, 1);
 		me.setValueFromNumberIdentifier_noAnim(me, theDefault);
-		me.valueDigits = 0;
 	}
