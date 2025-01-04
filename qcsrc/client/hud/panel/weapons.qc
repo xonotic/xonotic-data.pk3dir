@@ -107,7 +107,7 @@ int weaponorder_cmp(int i, int j, entity pass)
 	int nHidden = 0; \
 	FOREACH(Weapons, it != WEP_Null, { \
 		if (weapons_stat & WepSet_FromWeapon(it)) continue; \
-		if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)) ++nHidden; \
+		if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED)) ++nHidden; \
 	}); \
 	vector table_size = HUD_GetTableSize_BestItemAR((REGISTRY_COUNT(Weapons) - 1) - nHidden + offhands.x, panel_size, aspect); \
 	columns = table_size.x; \
@@ -635,7 +635,7 @@ bool Weapons_DrawWeaponOrOffhand(
 		}
 		else
 		{
-			if ((it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK))
+			if ((it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED))
 			&& !(weapons_stat & WepSet_FromWeapon(it)))
 				return false;
 		}
