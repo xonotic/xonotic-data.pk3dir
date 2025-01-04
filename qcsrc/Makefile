@@ -59,9 +59,19 @@ pk3: csprogs-$(VER).pk3
 
 
 
+DIFFTESTS = test-genmod test-cvar-spelling
 COMPTESTS = test-server test-client test-menu
-.PHONY: test $(COMPTESTS)
-test: $(COMPTESTS)
+.PHONY: test test-diff $(DIFFTESTS) test-comp $(COMPTESTS)
+
+test: $(DIFFTESTS) $(COMPTESTS)
+
+test-diff: test-genmod test-cvar-spelling
+test-genmod:
+	tools/scripts-diff-test-wrapper.sh genmod.sh
+test-cvar-spelling:
+	tools/scripts-diff-test-wrapper.sh cvar-standardize.sh
+
+test-comp: $(COMPTESTS)
 $(COMPTESTS):
 	tools/compilationunits.sh $@
 
