@@ -1101,7 +1101,7 @@ void bd_hud_board(vector pos, vector mySize)
 		}
 	}
 
-	if ( (active_minigame.minigame_flags & BD_TURN_LOSS) || (active_minigame.minigame_flags & BD_TURN_WIN) )
+	if(active_minigame.minigame_flags & (BD_TURN_LOSS | BD_TURN_WIN))
 	{
 		vector winfs = hud_fontsize*2;
 		string victory_text = _("Game over!");
@@ -1277,7 +1277,7 @@ int bd_client_event(entity minigame, string event, ...)
 		{
 			bool event_blocked = ((event == "key_released")
 				|| !(minigame.minigame_flags & BD_TURN_MOVE) || (minigame_self.team == BD_SPECTATOR_TEAM));
-			if (!(minigame.minigame_flags & BD_TURN_WIN) && !(minigame.minigame_flags & BD_TURN_LOSS))
+			if (!(minigame.minigame_flags & (BD_TURN_WIN | BD_TURN_LOSS)))
 			{
 				switch ( ...(0,int) )
 				{
