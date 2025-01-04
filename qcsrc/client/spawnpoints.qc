@@ -16,9 +16,8 @@ void Spawn_Draw(entity this)
 
 	if(dodraw)
 	{
-		vector org = this.origin + '0 0 28'; // ofset so it appears in the "middle" of the spawn instead of on the ground
 		particles_colormin = particles_colormax = Team_ColorRGB(this.team - 1);
-		boxparticles(particleeffectnum(EFFECT_SPAWNPOINT), this, org, org, '0 0 2', '0 0 2', bound(0, frametime, 0.1), PARTICLES_USECOLOR);
+		boxparticles(particleeffectnum(EFFECT_SPAWNPOINT), this, this.absmin, this.absmax, '0 0 2', '0 0 2', bound(0, frametime, 0.1), PARTICLES_USECOLOR);
 	}
 }
 
