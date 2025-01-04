@@ -6,7 +6,7 @@ CLASS(Vaporizer, Weapon)
 /* impulse   */ ATTRIB(Vaporizer, impulse, int, 7);
 /* flags     */ ATTRIB(Vaporizer, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Vaporizer, bot_pickupbasevalue, float, 10000);
-/* color     */ ATTRIB(Vaporizer, wpcolor, vector, '0.5 1 1');
+/* color     */ ATTRIB(Vaporizer, wpcolor, vector, '0.592 0.557 0.824');
 /* modelname */ ATTRIB(Vaporizer, mdl, string, "minstanex");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Vaporizer, m_model, Model, MDL_VAPORIZER_ITEM);

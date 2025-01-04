@@ -6,7 +6,7 @@ CLASS(Blaster, Weapon)
 /* impulse   */ ATTRIB(Blaster, impulse, int, 1);
 /* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
-/* color     */ ATTRIB(Blaster, wpcolor, vector, '1 0.5 0.5');
+/* color     */ ATTRIB(Blaster, wpcolor, vector, '0.969 0.443 0.482');
 /* modelname */ ATTRIB(Blaster, mdl, string, "laser");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Blaster, m_model, Model, MDL_BLASTER_ITEM);
