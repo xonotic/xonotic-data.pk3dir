@@ -9171,80 +9171,59 @@ DEF(hlac_muzzleflash);
 // glow and light
 SUB(hlac_muzzleflash) {
 	MY(airfriction) = 10;
-	MY(alpha_min) = 256;
-	MY(alpha_max) = 512;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
 	MY(alpha_fade) = 6280;
 	MY(color_min) = "0x00cc00";
 	MY(color_max) = "0x00ff00";
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '0.1 3.0 0.1';
+	MY(lightcolor) = '0.6 0.8 0.2';
 	MY(lightradiusfade) = 2000;
-	MY(lightradius) = 200;
+	MY(lightradius) = 100;
 	MY(sizeincrease) = -100;
-	MY(size_min) = 10;
-	MY(size_max) = 15;
+	MY(size_min) = 2;
+	MY(size_max) = 5;
 	MY(stretchfactor) = 2;
-	MY(tex_min) = 65;
-	MY(tex_max) = 65;
+	MY(tex_min) = 70;
+	MY(tex_max) = 70;
 	MY(type) = "smoke";
 }
 // electricity
 SUB(hlac_muzzleflash) {
-	MY(airfriction) = 10;
-	MY(alpha_min) = 256;
-	MY(alpha_max) = 512;
-	MY(alpha_fade) = 6280;
-	MY(color_min) = "0x42b415";
-	MY(color_max) = "0x00ff00";
-	MY(count) = 3;
-	MY(originjitter) = '2.0 2.0 2.0';
+	MY(airfriction) = 12;
+	MY(alpha_min) = 0;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xade244";
+	MY(color_max) = "0x64f42a";
+	MY(count) = 15;
+	MY(originjitter) = '1.0 1.0 1.0';
 	MY(startangle_min) = -180;
 	MY(startangle_max) = 180;
-	MY(spin_min) = 4000;
-	MY(spin_max) = -4000;
-	MY(sizeincrease) = -100;
-	MY(size_min) = 5;
-	MY(size_max) = 7;
-	MY(stretchfactor) = 2.300000;
-	MY(tex_min) = 43;
-	MY(tex_max) = 43;
-	MY(type) = "spark";
-	MY(velocityjitter) = '150.0 150.0 150.0';
-	MY(velocitymultiplier) = 0.200000;
-}
-// fire
-SUB(hlac_muzzleflash) {
-	MY(airfriction) = 12;
-	MY(alpha_min) = 256;
-	MY(alpha_max) = 512;
-	MY(alpha_fade) = 6280;
-	MY(color_min) = "0x42ff00";
-	MY(color_max) = "0x00ff00";
-	MY(count) = 6;
-	MY(originjitter) = '2.0 2.0 2.0';
-	MY(sizeincrease) = -100;
-	MY(size_min) = 7;
-	MY(size_max) = 9;
+	MY(spin_min) = -400;
+	MY(spin_max) = 400;
+	MY(size_min) = 2;
+	MY(size_max) = 5;
 	MY(stretchfactor) = 2;
-	MY(tex_min) = 8;
-	MY(tex_max) = 15;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
 	MY(type) = "spark";
-	MY(velocityjitter) = '100.0 100.0 100.0';
-	MY(velocitymultiplier) = 0.200000;
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocitymultiplier) = 0.500000;
 }
 
 DEF(hlac_impact);
 // decal
 SUB(hlac_impact) {
-	MY(alpha_min) = 256;
-	MY(alpha_max) = 256;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '0.4 8.0 0.4';
+	MY(lightcolor) = '0.6 0.8 0.2';
 	MY(lightradiusfade) = 500;
-	MY(lightradius) = 200;
+	MY(lightradius) = 150;
 	MY(originjitter) = '14.0 14.0 14.0';
-	MY(size_min) = 24;
-	MY(size_max) = 24;
+	MY(size_min) = 12;
+	MY(size_max) = 12;
 	MY(tex_min) = 47;
 	MY(tex_max) = 47;
 	MY(type) = "decal";
@@ -9254,43 +9233,45 @@ SUB(hlac_impact) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(alpha_fade) = 1024;
-	MY(color_min) = "0x20FF10";
-	MY(color_max) = "0x20FF10";
+	MY(color_min) = "0x1be508";
+	MY(color_max) = "0xd5f0a1";
 	MY(countabsolute) = 1;
 	MY(size_min) = 24;
 	MY(size_max) = 24;
-	MY(tex_min) = 39;
-	MY(tex_max) = 39;
+	MY(tex_min) = 46;
+	MY(tex_max) = 46;
 	MY(type) = "static";
 }
 // sparks that rapidly expand and rapidly slow down to form an interesting spherical effect
 SUB(hlac_impact) {
-	MY(airfriction) = 6;
+	MY(airfriction) = 8;
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(alpha_fade) = 1024;
-	MY(color_min) = "0x008000";
-	MY(color_max) = "0x80FF20";
+	MY(color_min) = "0xade244";
+	MY(color_max) = "0x54e51a";
 	MY(count) = 128;
-	MY(liquidfriction) = 6;
+	MY(liquidfriction) = 2;
 	MY(size_min) = 4;
 	MY(size_max) = 4;
+	MY(tex_min) = 45;
+	MY(tex_max) = 45;
 	MY(type) = "spark";
 	MY(velocityjitter) = '256.0 256.0 256.0';
 }
 SUB(hlac_impact) {
-	MY(alpha_min) = 128;
+	MY(alpha_min) = 64;
 	MY(alpha_max) = 256;
 	MY(alpha_fade) = 256;
-	MY(color_min) = "0x008000";
-	MY(color_max) = "0x80FF20";
+	MY(color_min) = "0xade244";
+	MY(color_max) = "0xd5f0a1";
 	MY(count) = 4;
 	MY(originjitter) = '1.0 1.0 1.0';
 	MY(sizeincrease) = 6;
 	MY(size_min) = 12;
 	MY(size_max) = 12;
-	MY(tex_min) = 48;
-	MY(tex_max) = 55;
+	MY(tex_min) = 4;
+	MY(tex_max) = 6;
 	MY(type) = "smoke";
 	MY(velocityjitter) = '16.0 16.0 16.0';
 	MY(velocitymultiplier) = 0.010000;

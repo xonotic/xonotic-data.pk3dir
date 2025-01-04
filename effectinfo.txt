@@ -8928,77 +8928,64 @@ effect item_despawn
 effect hlac_muzzleflash
 	type smoke
 	airfriction 10
-	alpha 256 512 6280
+	alpha 128 256 6280
 	color 0x00cc00 0x00ff00
 	countabsolute 1
-	lightcolor 0.1 3 0.1
+	lightcolor 0.6 0.8 0.2
 	lightradiusfade 2000
-	lightradius 200
+	lightradius 100
 	sizeincrease -100
-	size 10 15
+	size 2 5
 	stretchfactor 2
-	tex 65 65
-effect hlac_muzzleflash
-	type spark
-	airfriction 10
-	alpha 256 512 6280
-	color 0x42b415 0x00ff00
-	count 3
-	originjitter 2 2 2
-	rotate -180 180 4000 -4000
-	sizeincrease -100
-	size 5 7
-	stretchfactor 2.300000
-	tex 43 43
-	velocityjitter 150 150 150
-	velocitymultiplier 0.200000
+	tex 70 70
 effect hlac_muzzleflash
 	type spark
 	airfriction 12
-	alpha 256 512 6280
-	color 0x42ff00 0x00ff00
-	count 6
-	originjitter 2 2 2
-	sizeincrease -100
-	size 7 9
+	alpha 0 128 1024
+	color 0xade244 0x64f42a
+	count 15
+	originjitter 1 1 1
+	rotate -180 180 -400 400
+	size 2 5
 	stretchfactor 2
-	tex 8 15
-	velocityjitter 100 100 100
-	velocitymultiplier 0.200000
+	tex 48 55
+	velocityjitter 200 200 200
+	velocitymultiplier 0.500000
 effect hlac_impact
 	type decal
-	alpha 256 256 0
+	alpha 128 128 0
 	countabsolute 1
-	lightcolor 0.4 8 0.4
+	lightcolor 0.6 0.8 0.2
 	lightradiusfade 500
-	lightradius 200
+	lightradius 150
 	originjitter 14 14 14
-	size 24 24
+	size 12 12
 	tex 47 47
 effect hlac_impact
 	type static
 	alpha 256 256 1024
-	color 0x20FF10 0x20FF10
+	color 0x1be508 0xd5f0a1
 	countabsolute 1
 	size 24 24
-	tex 39 39
+	tex 46 46
 effect hlac_impact
 	type spark
-	airfriction 6
+	airfriction 8
 	alpha 256 256 1024
-	color 0x008000 0x80FF20
+	color 0xade244 0x54e51a
 	count 128
-	liquidfriction 6
+	liquidfriction 2
 	size 4 4
+	tex 45 45
 	velocityjitter 256 256 256
 effect hlac_impact
 	type smoke
-	alpha 128 256 256
-	color 0x008000 0x80FF20
+	alpha 64 256 256
+	color 0xade244 0xd5f0a1
 	count 4
 	originjitter 1 1 1
 	sizeincrease 6
 	size 12 12
-	tex 48 55
+	tex 4 6
 	velocityjitter 16 16 16
 	velocitymultiplier 0.010000
