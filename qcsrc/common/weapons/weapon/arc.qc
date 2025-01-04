@@ -136,7 +136,7 @@ void W_Arc_Bolt_Touch(entity this, entity toucher)
 
 void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_SetupShot(actor, weaponentity, false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, WEP_CVAR(WEP_ARC, bolt_damage), thiswep.m_id | HITTYPE_SECONDARY);
+	W_SetupShot(actor, weaponentity, false, 2, SND_ARC_BOLT_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_ARC, bolt_damage), thiswep.m_id | HITTYPE_SECONDARY);
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
@@ -763,7 +763,7 @@ METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
 	{
 		vector org2 = w_org + w_backoff * 2;
 		pointparticles(EFFECT_ELECTRO_IMPACT, org2, w_backoff * 1000, 1);
-		if(!w_issilent) { sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTN_NORM); }
+		if(!w_issilent) { sound(actor, CH_SHOTS, SND_ARC_BOLT_IMPACT, VOL_BASE, ATTN_NORM); }
 	}
 }
 

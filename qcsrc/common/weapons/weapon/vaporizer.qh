@@ -1,5 +1,15 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(VAPORIZER_MUZZLEFLASH, "models/nexflash.md3");
+MODEL(VAPORIZER_VIEW, W_Model("h_minstanex.iqm"));
+MODEL(VAPORIZER_WORLD, W_Model("v_minstanex.md3"));
+MODEL(VAPORIZER_ITEM, W_Model("g_minstanex.md3"));
+
+SOUND(VAPORIZER_FIRE, W_Sound("minstanexfire"));
+SOUND(VAPORIZER_IMPACT, W_Sound("neximpact"));
+#endif
+
 CLASS(Vaporizer, Weapon)
 /* spawnfunc */ ATTRIB(Vaporizer, m_canonical_spawnfunc, string, "weapon_vaporizer");
 /* ammotype  */ ATTRIB(Vaporizer, ammo_type, Resource, RES_CELLS);

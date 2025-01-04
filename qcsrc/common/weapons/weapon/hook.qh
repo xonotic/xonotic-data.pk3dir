@@ -1,5 +1,17 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(HOOK, "models/hook.md3");
+MODEL(HOOK_VIEW, W_Model("h_hookgun.iqm"));
+MODEL(HOOK_WORLD, W_Model("v_hookgun.md3"));
+MODEL(HOOK_ITEM, W_Model("g_hookgun.md3"));
+
+SOUND(HOOKBOMB_FIRE, W_Sound("hookbomb_fire"));
+SOUND(HOOKBOMB_IMPACT, W_Sound("hookbomb_impact"));
+SOUND(HOOK_FIRE, W_Sound("hook_fire"));
+SOUND(HOOK_IMPACT, W_Sound("hook_impact"));
+#endif
+
 CLASS(Hook, Weapon)
 /* spawnfunc */ ATTRIB(Hook, m_canonical_spawnfunc, string, "weapon_hook");
 /* ammotype  */ ATTRIB(Hook, ammo_type, Resource, RES_FUEL);
