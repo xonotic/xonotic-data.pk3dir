@@ -270,6 +270,8 @@ bool target_spawn_cancreate(entity this)
 
 void target_spawn_use(entity this, entity actor, entity trigger)
 {
+	if(this.active != ACTIVE_ACTIVE)
+		return;
 	if(this.target == "")
 	{
 		// spawn new entity
@@ -331,10 +333,18 @@ void initialize_field_db()
 	}
 }
 
+void target_spawn_reset(entity this)
+{
+	// TODO call "spawn first" again?
+	this.active = ACTIVE_ACTIVE;
+}
+
 spawnfunc(target_spawn)
 {
 	initialize_field_db();
 	this.use = target_spawn_use;
+	this.active = ACTIVE_ACTIVE;
+	this.reset = target_spawn_reset;
 	this.message = strzone(strreplace("'", "\"", this.message));
 	this.target_spawn_id = ++target_spawn_count;
 	InitializeEntity(this, target_spawn_spawnfirst, INITPRIO_LAST);
