@@ -194,7 +194,7 @@ int max_shot_distance = 32768; // determined by world mins/maxs when map loads
 #endif
 
 #ifdef CSQC
-int autocvar_cl_tracers_teamcolor = 1;
+int autocvar_cl_tracers_teamcolor;
 #endif
 
 // weapon flags
