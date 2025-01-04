@@ -775,3 +775,20 @@ METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+
+METHOD(Electro, describe, string(Electro this))
+{
+	TC(Electro, this);
+	return sprintf(_("The %s shoots electric balls forwards, dealing some splash damage when they burst on impact\n\n"
+		"The secondary fire launches similar balls that are influenced by gravity, "
+		"so they can be laid around the map at high traffic locations (like the flag in Capture The Flag) to damage enemies that walk by. "
+		"The balls burst after some time, and can be forced to burst in a \"combo\" if a primary fire ball bursts near them\n\n"
+		"It consumes some %s ammo for each ball\n\n"
+		"The %s is one of the best spam weapons to use in crowded areas, since combos can deal tons of damage, if the enemy is close enough. "
+		"Since the primary fire doesn't travel particularly fast, the %s is not useful in many other situations"),
+	COLORED_NAME(this), COLORED_NAME(ITEM_Cells), COLORED_NAME(this), COLORED_NAME(this));
+}
+
+#endif

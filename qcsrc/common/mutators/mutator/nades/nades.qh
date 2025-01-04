@@ -115,7 +115,7 @@ REGISTRY(Nades, BITS(4))
 REGISTER_REGISTRY(Nades)
 REGISTRY_CHECK(Nades)
 
-#define REGISTER_NADE(id) REGISTER(Nades, NADE_TYPE, id, m_id, NEW(Nade))
+#define REGISTER_NADE(id, inst) REGISTER(Nades, NADE_TYPE, id, m_id, inst)
 
 CLASS(Nade, Object)
     ATTRIB(Nade, m_id, int, 0);
@@ -128,9 +128,18 @@ CLASS(Nade, Object)
     METHOD(Nade, display, void(entity this, void(string name, string icon) returns)) {
         returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon));
     }
+#ifdef MENUQC
+    METHOD(Nade, describe, string(Nade this)) {
+        TC(Nade, this);
+        return SUPER(Object).describe(this);
+    }
+#endif
 ENDCLASS(Nade)
 
-REGISTER_NADE(Null);
+CLASS(NullNade, Nade)
+    ATTRIB(NullNade, m_hidden, bool, true);
+ENDCLASS(NullNade)
+REGISTER(Nades, NADE_TYPE, Null, m_id, NEW(NullNade));
 REGISTRY_DEFINE_GET(Nades, NADE_TYPE_Null)
 
 Nade Nade_FromProjectile(int proj)
@@ -145,7 +154,7 @@ Nade Nade_FromProjectile(int proj)
 #include "effects.inc"
 #endif
 
-#include "nades.inc"
+#include "all.inc"
 
 .float orb_lifetime;
 .float orb_radius;

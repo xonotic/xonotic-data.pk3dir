@@ -6,7 +6,7 @@
 CLASS(TeamDeathmatch, Gametype)
     INIT(TeamDeathmatch)
     {
-        this.gametype_init(this, _("Team Deathmatch"),"tdm","g_tdm",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0",_("Help your team score the most frags against the enemy team"));
+        this.gametype_init(this, _("Team Deathmatch"),"tdm","g_tdm",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0");
     }
     METHOD(TeamDeathmatch, m_parse_mapinfo, bool(string k, string v))
     {
@@ -45,6 +45,11 @@ CLASS(TeamDeathmatch, Gametype)
     {
         TC(Gametype, this);
         returns(menu, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit",         "g_tdm_teams_override",         _("The amount of points needed before the match will end"));
+    }
+    METHOD(TeamDeathmatch, describe, string(TeamDeathmatch this))
+    {
+        TC(TeamDeathmatch, this);
+        return _("Help your team score the most frags against the enemy team");
     }
     ATTRIB(TeamDeathmatch, m_legacydefaults, string, "50 20 2 0");
 ENDCLASS(TeamDeathmatch)

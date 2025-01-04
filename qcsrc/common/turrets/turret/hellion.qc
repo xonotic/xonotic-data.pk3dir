@@ -20,4 +20,16 @@ METHOD(Hellion, tr_setup, void(Hellion this, entity it))
     it.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
 }
 
-#endif
+#endif // SVQC
+#ifdef MENUQC
+#include <common/weapons/weapon/devastator.qh>
+
+METHOD(Hellion, describe, string(Hellion this))
+{
+    TC(Hellion, this);
+    return sprintf(_("The %s fires homing missiles similar to those of the %s towards its targets\n\n"
+        "Although the missiles usually deal less damage than a %s rocket, the %s has two cannons so it can dish out quite the punch"),
+    COLORED_NAME(this), COLORED_NAME(WEP_DEVASTATOR), COLORED_NAME(WEP_DEVASTATOR), COLORED_NAME(this));
+}
+
+#endif // MENUQC

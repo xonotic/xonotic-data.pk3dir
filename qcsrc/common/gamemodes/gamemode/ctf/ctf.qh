@@ -9,7 +9,7 @@ void HUD_Mod_CTF_Reset();
 CLASS(CaptureTheFlag, Gametype)
     INIT(CaptureTheFlag)
     {
-        this.gametype_init(this, _("Capture the Flag"),"ctf","g_ctf",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=20 caplimit=10 leadlimit=6",_("Find and bring the enemy flag to your base to capture it, defend your base from the other team"));
+        this.gametype_init(this, _("Capture the Flag"),"ctf","g_ctf",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=20 caplimit=10 leadlimit=6");
     }
     METHOD(CaptureTheFlag, m_generate_mapinfo, void(Gametype this, string v))
     {
@@ -28,6 +28,11 @@ CLASS(CaptureTheFlag, Gametype)
     {
         TC(Gametype, this);
         returns(menu, _("Capture limit:"),   1,   20,  1, "capturelimit_override",     string_null,                    _("The amount of captures needed before the match will end"));
+    }
+    METHOD(CaptureTheFlag, describe, string(CaptureTheFlag this))
+    {
+        TC(CaptureTheFlag, this);
+        return _("Find and bring the enemy flag to your base to capture it, defend your base from the other team");
     }
 #ifdef CSQC
     ATTRIB(CaptureTheFlag, m_modicons, void(vector pos, vector mySize), HUD_Mod_CTF);

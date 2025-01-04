@@ -9,7 +9,7 @@ void HUD_Mod_Dom_Export(int fh);
 CLASS(Domination, Gametype)
     INIT(Domination)
     {
-        this.gametype_init(this, _("Domination"),"dom","g_domination",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=200 teams=2 leadlimit=0",_("Capture and defend all the control points to win"));
+        this.gametype_init(this, _("Domination"),"dom","g_domination",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=200 teams=2 leadlimit=0");
     }
     METHOD(Domination, m_parse_mapinfo, bool(string k, string v))
     {
@@ -33,6 +33,11 @@ CLASS(Domination, Gametype)
     {
         TC(Gametype, this);
         returns(menu, _("Point limit:"),    50,  500, 10, "g_domination_point_limit",  "g_domination_teams_override",  _("The amount of points needed before the match will end"));
+    }
+    METHOD(Domination, describe, string(Domination this))
+    {
+        TC(Domination, this);
+        return _("Capture and defend all the control points to win");
     }
 #ifdef CSQC
     ATTRIB(Domination, m_modicons, void(vector pos, vector mySize), HUD_Mod_Dom);

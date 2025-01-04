@@ -353,3 +353,20 @@ METHOD(Vortex, wr_zoomdir, bool(entity thiswep))
 }
 
 #endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+#include "rifle.qh"
+
+METHOD(Vortex, describe, string(Vortex this))
+{
+	TC(Vortex, this);
+	return sprintf(_("The %s fires harmful beams of energy that traverse the map instantaneously and deal a significant chunk of damage on impact\n\n"
+		"The secondary fire zooms in when held, allowing for ease of aiming\n\n"
+		"It consumes %s ammo for each bullet shot\n\n"
+		"Unlike the %s, the %s doesn't need to be reloaded manually, although you have to wait a couple seconds between shots. "
+		"Uniquely, the %s can be fired slightly before it finishes completely reloading, albeit dealing slightly less damage\n\n"
+		"Similar to the %s, the %s can be used at any range, but it stands out at long ranges"),
+	COLORED_NAME(this), COLORED_NAME(ITEM_Cells), COLORED_NAME(WEP_RIFLE), COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(WEP_RIFLE), COLORED_NAME(this));
+}
+
+#endif

@@ -33,9 +33,11 @@ CLASS(Monster, Object)
     /** attributes */
     ATTRIB(Monster, spawnflags, int, 0);
     /** human readable name */
-    ATTRIB(Monster, monster_name, string, "Monster");
+    ATTRIB(Monster, m_name, string, _("Monster"));
     /** short name */
     ATTRIB(Monster, netname, string, "");
+    /** color */
+    ATTRIB(Monster, m_color, vector, '1 1 1');
     /** model */
     ATTRIB(Monster, m_model, entity);
     /** hitbox size */
@@ -55,7 +57,9 @@ CLASS(Monster, Object)
     METHOD(Monster, mr_pain, float(Monster this, entity actor, float damage_take, entity attacker, float deathtype)) { TC(Monster, this); return damage_take; }
     /** (BOTH?) sets animations for monster */
     METHOD(Monster, mr_anim, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
-
+#ifdef MENUQC
+    METHOD(Monster, describe, string(Monster this)) { TC(Monster, this); return SUPER(Object).describe(this); }
+#endif
 ENDCLASS(Monster)
 
 

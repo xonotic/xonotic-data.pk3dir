@@ -10,7 +10,7 @@ CLASS(PlasmaTurret, Turret)
 /* model      */ ATTRIB_STRZONE(PlasmaTurret, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(PlasmaTurret, head_model, string, strcat("models/turrets/", "plasma.md3"));
 /* netname    */ ATTRIB(PlasmaTurret, netname, string, "plasma");
-/* fullname   */ ATTRIB(PlasmaTurret, turret_name, string, _("Plasma Cannon"));
+/* fullname   */ ATTRIB(PlasmaTurret, m_name, string, _("Plasma Cannon"));
     ATTRIB(PlasmaTurret, m_weapon, Weapon, WEP_PLASMA);
 
 #define X(BEGIN, P, END, class, prefix) \
