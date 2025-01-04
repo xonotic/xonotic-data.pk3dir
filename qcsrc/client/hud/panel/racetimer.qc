@@ -22,6 +22,7 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 {
 	TC(int, cp);
 	string cpname, lapstr = "", timestr = "", col = "^7", othercol = "^7", othertimestr = "";
+	float namesize = autocvar_cl_race_cptimes_namesize * hud_fontsize.x;
 	if(theirname == "" || !autocvar_cl_race_cptimes_showself)
 		othertime = 0; // don't count personal time
 
@@ -93,14 +94,17 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 	else
 		cpname = _("Finish line");
 
+	if(theirname != "" && theirtime >= 0)
+		theirname = textShortenToWidth(ColorTranslateRGB(theirname), namesize, hud_fontsize, stringwidth_colors);
+
 	if(theirtime < 0)
 		return strcat(col, cpname);
 	else if(theirname == "")
 		return strcat(col, sprintf("%s (%s)", cpname, timestr));
 	else if(othertime)
-		return strcat(col, sprintf("%s %s(%s)%s (%s %s)", cpname, othercol, othertimestr, col, timestr, strcat(ColorTranslateRGB(theirname), col, lapstr)));
+		return strcat(col, sprintf("%s %s(%s)%s (%s %s)", cpname, othercol, othertimestr, col, timestr, strcat(theirname, col, lapstr)));
 	else
-		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(ColorTranslateRGB(theirname), col, lapstr)));
+		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(theirname, col, lapstr)));
 }
 
 void ClearRaceSplits() {
