@@ -74,6 +74,7 @@ REGISTER_ITEM(JetpackFuel, Ammo) {
     this.netname    =   "fuel";
     this.m_name     =   _("Fuel");
     this.m_icon     =   "ammo_fuel";
+    this.m_color    =   '0.984 0.878 0.506';
 #ifdef SVQC
     this.m_botvalue =   2000;
     this.m_itemid   =   IT_RESOURCE;
