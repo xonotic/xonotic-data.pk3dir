@@ -26,12 +26,8 @@ void XonoticHUDNotificationDialog_fill(entity me)
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Entry fadetime:")));
 		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_notify_fadetime"));
 			e.addValue(e, ZCTX(_("FADESPEED^Instant")), "0");
-			int dps = 1;
 			for(i = 1; i <= 10; ++i)
-			{
-				e.addValue(e, strzone(ftos_decimals(i / 2, 1)), strzone(ftos_decimals(i / 2, dps)));
-				dps = 1 - dps; // alternate between 1 and 0
-			}
+				e.addValue(e, strzone(ftos_decimals(i / 2, 1)), strzone(ftos_mindecimals(i / 2)));
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
