@@ -478,7 +478,7 @@ float View_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	bool key_pressed = (bInputType == 0);
 
 	// allow negatives so that players can scroll the other way, biggest change allowed is +100%
-	float zoomscroll_scale = 1 + min(fabs(autocvar_cl_zoomscroll_scale), 100) / 100;
+	float zoomscroll_scale = 1 + min(fabs(autocvar_cl_zoomscroll_scale), 1);
 	if(nPrimary == K_MWHEELUP)
 	{
 		if(key_pressed)
