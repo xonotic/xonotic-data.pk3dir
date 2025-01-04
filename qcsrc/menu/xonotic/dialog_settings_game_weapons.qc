@@ -86,6 +86,13 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 				e.addValue(e, "100%", "1");
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Apply team colors to weapon beam effects:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+			me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "cl_tracers_teamcolor", "0", _("Never")));
+			me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "cl_tracers_teamcolor", "1", _("In team games")));
+			me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "cl_tracers_teamcolor", "2", _("Always")));
+	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "cl_followmodel", _("Gun model swaying"), "-"));
