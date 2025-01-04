@@ -508,7 +508,7 @@ float View_InputEvent(int bInputType, float nPrimary, float nSecondary)
 float avgspeed;
 vector GetCurrentFov(float fov)
 {
-#define MAX_ZOOMFACTOR 30
+	const float MAX_ZOOMFACTOR = 30;
 	float zoomsensitivity, zoomspeed, zoomfactor, og_zoomfactor, zoomdir;
 	float velocityzoom, curspeed;
 	vector v;
@@ -614,7 +614,6 @@ vector GetCurrentFov(float fov)
 	fovy = atan2(frustumy, 1) * (360 / M_PI);
 
 	return '1 0 0' * fovx + '0 1 0' * fovy;
-#undef MAX_ZOOMFACTOR
 }
 
 vector GetViewLocationFOV(float fov)
