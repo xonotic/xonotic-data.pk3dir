@@ -71,6 +71,8 @@ test-genmod:
 test-cvar-spelling:
 	tools/scripts-diff-test-wrapper.sh cvar-standardize.sh
 
+.NOTPARALLEL: $(DIFFTESTS)
+
 test-comp: $(COMPTESTS)
 $(COMPTESTS):
 	tools/compilationunits.sh $@
