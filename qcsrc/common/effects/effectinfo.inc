@@ -1,7 +1,7 @@
 // docs: https://www.quakewiki.net/darkplaces-wiki/effectinfo-scripting-reference/
 // use `cl_particles_reloadeffects` to reload effects without restarting engine
 // use `chase_active 1` and `cl_lockview 1` to see effects from different perspectives
-// `dumpeffectinfo` currently doesn't work so edit effectinfo.txt manually, just try to keep the files in sync
+
 // always add new effects to the bottom of the list
 
 // `tex` are indices into particles/particlefont.tga (see particles/particlefont-template.tga for numbers)
