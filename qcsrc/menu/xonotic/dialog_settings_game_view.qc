@@ -2,7 +2,7 @@
 
 #include "textlabel.qh"
 #include "checkbox.qh"
-#include "textslider.qh"
+#include "mixedslider.qh"
 #include "slider.qh"
 #include "radiobutton.qh"
 
@@ -78,18 +78,11 @@ void XonoticGameViewSettingsTab_fill(entity me)
 	me.TR(me);
 		//me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom speed:"))));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("cl_zoomspeed",
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("cl_zoomspeed",
 			_("How fast the view will be zoomed, disable to zoom instantly")));
-			e.addValue(e, "1", "1"); // Samual: for() loop doesn't work here, even though it would make sense.
-			e.addValue(e, "2", "2");
-			e.addValue(e, "3", "3");
-			e.addValue(e, "4", "4");
-			e.addValue(e, "5", "5");
-			e.addValue(e, "6", "6");
-			e.addValue(e, "7", "7");
-			e.addValue(e, "8", "8");
-			e.addValue(e, ZCTX(_("ZOOM^Instant")), "-1");
-			e.configureXonoticTextSliderValues(e);
+			e.addRange(e, 1, 8, 1);
+			e.addText(e, ZCTX(_("ZOOM^Instant")), -1);
+			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		//me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom sensitivity:"))));

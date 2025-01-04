@@ -3,7 +3,7 @@
 #include "checkbox.qh"
 #include "textlabel.qh"
 #include "slider.qh"
-#include "textslider.qh"
+#include "mixedslider.qh"
 #include "radiobutton.qh"
 
 void XonoticHUDPickupDialog_fill(entity me)
@@ -25,12 +25,10 @@ void XonoticHUDPickupDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Fade time:")));
-		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_pickup_fade_out"));
-			e.addValue(e, ZCTX(_("FADESPEED^Instant")), "0");
-			for(i = 1; i <= 19; ++i)
-				e.addValue(e, strzone(ftos_decimals(i / 20, 2)), strzone(ftos_mindecimals(i / 20)));
-			e.addValue(e, "1.00", "1");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_pickup_fade_out"));
+			e.addText(e, ZCTX(_("FADESPEED^Instant")), 0);
+			e.addRange(e, 0.05, 1, 0.05);
+			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Icon size scale:")));
