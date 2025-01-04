@@ -356,7 +356,7 @@ void XonoticKeyBinder_doubleClickListBoxItem(entity me, float i, vector where)
 void XonoticKeyBinder_setSelected(entity me, int i)
 {
 	// handling of "unselectable" items
-	i = floor(0.5 + bound(0, i, me.nItems - 1));
+	i = rint(bound(0, i, me.nItems - 1));
 	if (KEYBIND_IS_SPECIAL(KeyBinds_Functions[i]))
 	{
 		if (i > 0 && KeyBinds_Descriptions[i] == KeyBinds_Descriptions[i - 1])

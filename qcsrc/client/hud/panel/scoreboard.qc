@@ -1878,7 +1878,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	});
 
 	if (weapons_with_stats)
-		average_accuracy = floor((average_accuracy * 100 / weapons_with_stats) + 0.5);
+		average_accuracy = rint(average_accuracy * 100 / weapons_with_stats);
 
 	panel_size.x += panel_bg_padding * 2; // restore initial width
 

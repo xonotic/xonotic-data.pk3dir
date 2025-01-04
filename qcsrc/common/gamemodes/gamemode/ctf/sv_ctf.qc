@@ -800,7 +800,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 		case PICKUP_DROPPED:
 		{
 			pickup_dropped_score = (autocvar_g_ctf_flag_return_time > 0 ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_return_time) - time) / autocvar_g_ctf_flag_return_time, 1) : 1);
-			pickup_dropped_score = floor((autocvar_g_ctf_score_pickup_dropped_late * (1 - pickup_dropped_score) + autocvar_g_ctf_score_pickup_dropped_early * pickup_dropped_score) + 0.5);
+			pickup_dropped_score = rint(autocvar_g_ctf_score_pickup_dropped_late * (1 - pickup_dropped_score) + autocvar_g_ctf_score_pickup_dropped_early * pickup_dropped_score);
 			LOG_TRACE("pickup_dropped_score is ", ftos(pickup_dropped_score));
 			GameRules_scoring_add_team(player, SCORE, pickup_dropped_score);
 			ctf_EventLog("pickup", flag.team, player);
