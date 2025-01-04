@@ -54,7 +54,7 @@
 	{
 		me.nValues = 0;
 	}
-	void MixedSlider_addNumberRange(entity me, float theValueMin, float theValueMax, float theValueStep)
+	void MixedSlider_addRange(entity me, float theValueMin, float theValueMax, float theValueStep)
 	{
 		me.adjustDigitsForStep(me, theValueStep);
 		for (float id = theValueMin; id <= theValueMax + theValueStep / 2; id += theValueStep)
@@ -65,13 +65,13 @@
 			me.nValues += 1;
 		}
 	}
-	void MixedSlider_addNumberText(entity me, string theString, float theIdentifier)
+	void MixedSlider_addText(entity me, string theString, float theIdentifier)
 	{
 		me.(valueStrings[me.nValues]) = theString;
 		me.(valueNumberIdentifiers[me.nValues]) = theIdentifier;
 		me.nValues += 1;
 	}
-	void MixedSlider_insertNumberRange(entity me, int pos, float theValueMin, float theValueMax, float theValueStep)
+	void MixedSlider_insertRange(entity me, int pos, float theValueMin, float theValueMax, float theValueStep)
 	{
 		me.adjustDigitsForStep(me, theValueStep);
 		// calculate insertedCount first to prevent needing to duplicate valueStrings and valueNumberIdentifiers
@@ -91,7 +91,7 @@
 			pos += 1;
 		}
 	}
-	void MixedSlider_insertNumberText(entity me, int pos, string theString, float theIdentifier)
+	void MixedSlider_insertText(entity me, int pos, string theString, float theIdentifier)
 	{
 		me.nValues += 1;
 		for (int i = me.nValues - 1; i > pos; --i)

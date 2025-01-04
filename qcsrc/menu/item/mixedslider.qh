@@ -2,8 +2,8 @@
 
 // Note:
 //   this is a numeric slider allowing replacement of some numbers with text, hence a "mixed" slider
-//   that's why addNumberText takes a string (the text) and a float (the corresponding number)
-//   to use this, you FIRST call configureSliderVisuals, then multiple times addNumberRange and/or addNumberText, then configureMixedSlider
+//   that's why addText takes a string (the text) and a float (the corresponding number)
+//   to use this, you FIRST call configureSliderVisuals, then multiple times addRange and/or addText, then configureMixedSlider
 #include "slider.qh"
 CLASS(MixedSlider, Slider)
 	METHOD(MixedSlider, valueToText, string(entity, int));
@@ -15,10 +15,10 @@ CLASS(MixedSlider, Slider)
 	METHOD(MixedSlider, rangedIdentifierToText, string(entity, float));
 	METHOD(MixedSlider, adjustDigitsForStep, void(entity, float));
 	METHOD(MixedSlider, clearValues, void(entity));
-	METHOD(MixedSlider, addNumberRange, void(entity, float, float, float));
-	METHOD(MixedSlider, addNumberText, void(entity, string, float));
-	METHOD(MixedSlider, insertNumberRange, void(entity, int, float, float, float));
-	METHOD(MixedSlider, insertNumberText, void(entity, int, string, float));
+	METHOD(MixedSlider, addRange, void(entity, float, float, float));
+	METHOD(MixedSlider, addText, void(entity, string, float));
+	METHOD(MixedSlider, insertRange, void(entity, int, float, float, float));
+	METHOD(MixedSlider, insertText, void(entity, int, string, float));
 	METHOD(MixedSlider, configureMixedSliderValues, void(entity, float));
 	ATTRIBARRAY(MixedSlider, valueStrings, string, 256);
 	ATTRIBARRAY(MixedSlider, valueNumberIdentifiers, float, 256);
