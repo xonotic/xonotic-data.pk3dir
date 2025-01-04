@@ -808,6 +808,14 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 				for(i = 0; i <= 10; ++i)
 					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
 				e.configureXonoticTextSliderValues(e);
+
+	string hide_ondeath = strcat("hud_panel_", panelname, "_hide_ondeath");
+	if(cvar_type(hide_ondeath) & CVAR_TYPEFLAG_EXISTS)
+	{
+		me.TR(me);
+			me.TDempty(me, 0.2);
+			me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, strzone(hide_ondeath), _("Hide on death")));
+	}
 }
 
 bool isServerSingleplayer()

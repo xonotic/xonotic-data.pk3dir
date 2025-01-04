@@ -6,6 +6,7 @@
 #include "slider.qh"
 #include "textlabel.qh"
 #include "textslider.qh"
+#include "radiobutton.qh"
 
 void StrafeHUD_ColorReset(entity btn, entity me)
 {
@@ -23,6 +24,7 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "strafehud";
+	int i;
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_strafehud"));
@@ -36,22 +38,23 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("StrafeHUD mode:")));
-
-		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_strafehud_mode"));
-			e.addValue(e, _("View angle centered"), "0");
-			e.addValue(e, _("Velocity angle centered"), "1");
-			e.configureXonoticTextSliderValues(e);
+			me.TD(me, 1, 2.6/2, e = makeXonoticRadioButton(2, "hud_panel_strafehud_mode", "0", _("View angle centered")));
+			me.TD(me, 1, 2.6/2, e = makeXonoticRadioButton(2, "hud_panel_strafehud_mode", "1", _("Velocity angle centered")));
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("StrafeHUD style:")));
-
-		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_strafehud_style"));
-			e.addValue(e, _("no styling"), "0");
-			e.addValue(e, _("progress bar"), "1");
-			e.addValue(e, _("gradient"), "2");
-			e.configureXonoticTextSliderValues(e);
+			me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(3, "hud_panel_strafehud_style", "0", _("No styling")));
+			me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(3, "hud_panel_strafehud_style", "1", _("Status bar")));
+			me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(3, "hud_panel_strafehud_style", "2", _("Gradient")));
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Range:")));
-		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 360, 5, "hud_panel_strafehud_range"));
+		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_strafehud_range"));
+			e.addValue(e, _("Dynamic"), "0");
+			for(i = 10; i <= 360; i += 10)
+			{
+				string i_str = strzone(itos(i));
+				e.addValue(e, i_str, i_str);
+			}
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1.9, e = makeXonoticCheckBox(0, "_hud_panel_strafehud_demo", _("Demo mode")));
 
