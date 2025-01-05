@@ -459,7 +459,7 @@ bool IsZooming(bool for_scrolling)
 	return zoomdir;
 }
 
-float zoomfactor_multiplier;
+float zoomfactor_multiplier_target;
 float View_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
 	if(!IsZooming(true))
@@ -484,9 +484,9 @@ float View_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		if(key_pressed)
 		{
 			if(autocvar_cl_zoomscroll_scale < 0)
-				zoomfactor_multiplier /= zoomscroll_scale;
+				zoomfactor_multiplier_target /= zoomscroll_scale;
 			else
-				zoomfactor_multiplier *= zoomscroll_scale;
+				zoomfactor_multiplier_target *= zoomscroll_scale;
 		}
 		return true;
 	}
@@ -495,9 +495,9 @@ float View_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		if(key_pressed)
 		{
 			if(autocvar_cl_zoomscroll_scale < 0)
-				zoomfactor_multiplier *= zoomscroll_scale;
+				zoomfactor_multiplier_target *= zoomscroll_scale;
 			else
-				zoomfactor_multiplier /= zoomscroll_scale;
+				zoomfactor_multiplier_target /= zoomscroll_scale;
 		}
 		return true;
 	}
@@ -514,31 +514,28 @@ vector GetCurrentFov(float fov)
 	vector v;
 
 	zoomdir = IsZooming(false);
-	if(zoomfactor_multiplier <= 0 || !zoomdir)
-		zoomfactor_multiplier = 1; // reset to 1
 
-	zoomsensitivity = autocvar_cl_zoomsensitivity;
-	zoomfactor = autocvar_cl_zoomfactor;
-	if(zoomfactor < 1 || zoomfactor > MAX_ZOOMFACTOR)
-		zoomfactor = 2.5;
-	zoomfactor_multiplier = bound(1 / zoomfactor, zoomfactor_multiplier, MAX_ZOOMFACTOR / zoomfactor);
-	og_zoomfactor = zoomfactor; // original zoomfactor
-	zoomfactor *= zoomfactor_multiplier;
 	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
 		zoomspeed = 3.5;
+	zoomsensitivity = autocvar_cl_zoomsensitivity;
+
+	zoomfactor = autocvar_cl_zoomfactor;
+	if(zoomfactor < 1 || zoomfactor > MAX_ZOOMFACTOR)
+		zoomfactor = 2.5;
+	og_zoomfactor = zoomfactor; // original zoomfactor
+	if(zoomfactor_multiplier_target <= 0 || !zoomdir)
+		zoomfactor_multiplier_target = 1; // reset to 1
+	zoomfactor_multiplier_target = bound(1 / zoomfactor, zoomfactor_multiplier_target, MAX_ZOOMFACTOR / zoomfactor);
+	zoomfactor *= zoomfactor_multiplier_target;
 
 	if(zoomdir)
 		zoomin_effect = 0;
 
 	if (spectatee_status > 0 && STAT(CAMERA_SPECTATOR) == 2)
-	{
 		current_viewzoom = 1;
-	}
 	else if (camera_active)
-	{
 		current_viewzoom = min(1, current_viewzoom + drawframetime);
-	}
 	else if(autocvar_cl_spawnzoom && zoomin_effect)
 	{
 		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, MAX_ZOOMFACTOR);
@@ -559,10 +556,16 @@ vector GetCurrentFov(float fov)
 		}
 		else
 		{
+			float used_speed = zoomspeed;
 			if(zoomdir)
-				current_viewzoom = 1 / bound(1, 1 / current_viewzoom + drawframetime * zoomspeed * (zoomfactor - 1), zoomfactor);
-			else
-				current_viewzoom = bound(1 / zoomfactor, current_viewzoom + drawframetime * zoomspeed * (1 - 1 / zoomfactor), 1);
+			{
+				if(current_viewzoom > 1 / zoomfactor) // must be zooming or scrolling in
+					current_viewzoom = 1 / bound(1, 1 / current_viewzoom + drawframetime * used_speed * (zoomfactor - 1), zoomfactor);
+				else if(current_viewzoom < 1 / zoomfactor) // must be scrolling out
+					current_viewzoom = bound(1 / MAX_ZOOMFACTOR, current_viewzoom + drawframetime * used_speed * (1 - 1 / zoomfactor), 1 / zoomfactor);
+			}
+			else if(current_viewzoom < 1) // must be unzooming
+				current_viewzoom = bound(1 / MAX_ZOOMFACTOR, current_viewzoom + drawframetime * used_speed * (1 - 1 / zoomfactor), 1);
 		}
 	}
 
