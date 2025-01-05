@@ -39,7 +39,7 @@ CLASS(ResistanceBuff, Buff)
     ATTRIB(ResistanceBuff, netname, string, "resistance");
     ATTRIB(ResistanceBuff, m_icon, string, "buff_resistance");
     ATTRIB(ResistanceBuff, m_skin, int, 0);
-    ATTRIB(ResistanceBuff, m_color, vector, '0.36 0 0.07');
+    ATTRIB(ResistanceBuff, m_color, vector, '0.36 1 0.07');
 #ifdef MENUQC
     METHOD(ResistanceBuff, describe, string(ResistanceBuff this))
     {
