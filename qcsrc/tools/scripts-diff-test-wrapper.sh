@@ -6,7 +6,9 @@ set -eu
 # Check that we got an argument
 if [ -z "${1-}" ]
 then
+	echo
 	echo "$0: No argument provided"
+	echo
 	exit 1
 fi
 
@@ -15,7 +17,9 @@ fi
 STATE="$(git diff)"
 if [ -n "$STATE" ]
 then
+	echo
 	echo "$0: Do not run this script with changes in git index"
+	echo
 	exit 2
 fi
 
@@ -25,7 +29,9 @@ if [ -x "${0%/*}/$1" ]
 then
 	# Run the given script
 	"${0%/*}/$1" || {
+		echo
 		echo "$0: ${0%/*}/$1 ran into an error while executing"
+		echo
 		exit 3
 	}
 else
@@ -38,8 +44,12 @@ fi
 STATE="$(git diff)"
 if [ -n "$STATE" ]
 then
-	printf "\n%s\n\n\n%s\n\n\n" \
-		"$0: ${0%/*}/$1 produced a change in the repository:" \
-		"$STATE"
+	echo
+	echo "$0: ${0%/*}/$1 produced a change in the repository:"
+	echo
+	echo
+	echo "$STATE"
+	echo
+	echo
 	exit 5
 fi
