@@ -275,8 +275,20 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 		if (f & 0x20)
 		{
-			this.fade_time = time + ReadByte() * ticrate;
-			this.fade_rate = 1 / (ReadByte() * ticrate);
+			float fadetime = ReadByte();
+			float faderate = ReadByte();
+
+			// workaround for division by 0
+			if(ticrate <= 0)
+			{
+				this.fade_time = 0;
+				this.fade_rate = 0;
+			}
+			else
+			{
+				this.fade_time = time + fadetime * ticrate;
+				this.fade_rate = 1 / (faderate * ticrate);
+			}
 		}
 		else
 		{
