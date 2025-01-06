@@ -8,7 +8,7 @@ void HUD_Mod_KH(vector pos, vector mySize);
 CLASS(KeyHunt, Gametype)
     INIT(KeyHunt)
     {
-        this.gametype_init(this, _("Key Hunt"),"kh","g_keyhunt",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=1000 teams=3 leadlimit=0");
+        this.gametype_init(this, _("Key Hunt"),"kh","g_keyhunt",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=1000 teams=3 leadlimit=0",_("Gather all the keys to win the round"));
     }
     METHOD(KeyHunt, m_parse_mapinfo, bool(string k, string v))
     {
@@ -37,11 +37,6 @@ CLASS(KeyHunt, Gametype)
     {
         TC(Gametype, this);
         returns(menu, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit",     "g_keyhunt_teams_override",     _("The amount of points needed before the match will end"));
-    }
-    METHOD(KeyHunt, describe, string(KeyHunt this))
-    {
-        TC(KeyHunt, this);
-        return _("Gather all the keys to win the round");
     }
 #ifdef CSQC
     ATTRIB(KeyHunt, m_modicons, void(vector pos, vector mySize), HUD_Mod_KH);

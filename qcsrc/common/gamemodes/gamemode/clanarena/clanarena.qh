@@ -9,7 +9,7 @@ void HUD_Mod_CA_Export(int fh);
 CLASS(ClanArena, Gametype)
     INIT(ClanArena)
     {
-        this.gametype_init(this, _("Clan Arena"),"ca","g_ca",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=10 teams=2 leadlimit=6");
+        this.gametype_init(this, _("Clan Arena"),"ca","g_ca",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=10 teams=2 leadlimit=6",_("Kill all enemy teammates to win the round"));
     }
     METHOD(ClanArena, m_parse_mapinfo, bool(string k, string v))
     {
@@ -38,11 +38,6 @@ CLASS(ClanArena, Gametype)
     {
         TC(Gametype, this);
         returns(menu, _("Round limit:"),     5,  100,  5, "fraglimit_override",        "g_ca_teams_override",          _("The amount of rounds won needed before the match will end"));
-    }
-    METHOD(ClanArena, describe, string(ClanArena this))
-    {
-        TC(ClanArena, this);
-        return _("Kill all enemy teammates to win the round");
     }
 #ifdef CSQC
     ATTRIB(ClanArena, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);

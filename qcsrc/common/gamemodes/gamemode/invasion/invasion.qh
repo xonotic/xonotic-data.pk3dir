@@ -5,7 +5,7 @@
 CLASS(Invasion, Gametype)
     INIT(Invasion)
     {
-        this.gametype_init(this, _("Invasion"),"inv","g_invasion",GAMETYPE_FLAG_USEPOINTS,"","pointlimit=50 type=0");
+        this.gametype_init(this, _("Invasion"),"inv","g_invasion",GAMETYPE_FLAG_USEPOINTS,"","pointlimit=50 type=0",_("Survive against waves of monsters"));
     }
     METHOD(Invasion, m_parse_mapinfo, bool(string k, string v))
     {
@@ -25,11 +25,6 @@ CLASS(Invasion, Gametype)
     {
         TC(Gametype, this);
         returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
-    }
-    METHOD(Invasion, describe, string(Invasion this))
-    {
-        TC(Invasion, this);
-        return _("Survive against waves of monsters");
     }
 ENDCLASS(Invasion)
 REGISTER_GAMETYPE(INVASION, NEW(Invasion));

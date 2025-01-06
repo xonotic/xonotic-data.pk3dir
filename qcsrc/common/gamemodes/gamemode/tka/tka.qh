@@ -10,7 +10,7 @@
 CLASS(TeamKeepaway, Gametype)
     INIT(TeamKeepaway)
     {
-        this.gametype_init(this, _("Team Keepaway"),"tka","g_tka",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0");
+        this.gametype_init(this, _("Team Keepaway"),"tka","g_tka",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0",_("Keep the ball in your team's possession to get points for kills"));
     }
     METHOD(TeamKeepaway, m_parse_mapinfo, bool(string k, string v))
     {
@@ -50,11 +50,6 @@ CLASS(TeamKeepaway, Gametype)
     METHOD(TeamKeepaway, m_setTeams, void(string sa))
     {
         cvar_set("g_tka_teams", sa);
-    }
-    METHOD(TeamKeepaway, describe, string(TeamKeepaway this))
-    {
-        TC(TeamKeepaway, this);
-        return _("Keep the ball in your team's possession to get points for kills");
     }
 #ifdef CSQC
     ATTRIB(TeamKeepaway, m_modicons, void(vector pos, vector mySize), HUD_Mod_TeamKeepaway);

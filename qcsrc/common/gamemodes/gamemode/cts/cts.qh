@@ -8,7 +8,7 @@
 CLASS(RaceCTS, Gametype)
     INIT(RaceCTS)
     {
-        this.gametype_init(this, _("Race CTS"),"cts","g_cts",0,"cloaked","timelimit=20");
+        this.gametype_init(this, _("Race CTS"),"cts","g_cts",0,"cloaked","timelimit=20",_("Race to the finish line for fastest time"));
     }
     METHOD(RaceCTS, m_generate_mapinfo, void(Gametype this, string v))
     {
@@ -26,11 +26,6 @@ CLASS(RaceCTS, Gametype)
     {
         TC(Gametype, this);
         returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
-    }
-    METHOD(RaceCTS, describe, string(RaceCTS this))
-    {
-        TC(RaceCTS, this);
-        return _("Race for fastest time.");
     }
 #ifdef CSQC
     ATTRIB(RaceCTS, m_modicons, void(vector pos, vector mySize), HUD_Mod_Race);

@@ -8,7 +8,7 @@ void HUD_Mod_Race(vector pos, vector mySize);
 CLASS(Race, Gametype)
     INIT(Race)
     {
-        this.gametype_init(this, _("Race"),"rc","g_race",GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0");
+        this.gametype_init(this, _("Race"),"rc","g_race",GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0",_("Race against other players to the finish line"));
     }
     METHOD(Race, m_parse_mapinfo, bool(string k, string v))
     {
@@ -36,11 +36,6 @@ CLASS(Race, Gametype)
     {
         TC(Gametype, this);
         returns(menu, _("Laps:"),            1,   25,  1, "g_race_laps_limit",         string_null,                    string_null);
-    }
-    METHOD(Race, describe, string(Race this))
-    {
-        TC(Race, this);
-        return _("Race against other players to the finish line");
     }
 #ifdef CSQC
     ATTRIB(Race, m_modicons, void(vector pos, vector mySize), HUD_Mod_Race);

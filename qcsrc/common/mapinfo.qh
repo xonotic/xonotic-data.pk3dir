@@ -40,6 +40,9 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, mdl, string);
     /** human readable name */
     ATTRIB(Gametype, message, string);
+    ATTRIB(Gametype, m_name, string);
+    /** color */
+    ATTRIB(Gametype, m_color, vector, '1 1 1');
     /** does this gametype support teamplay? */
     ATTRIB(Gametype, team, bool, false);
     /** does this gametype use a point limit? */
@@ -52,6 +55,8 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, m_1v1, bool, false);
     /** game type defaults */
     ATTRIB(Gametype, model2, string);
+    /** game type description */
+    ATTRIB(Gametype, m_description, string);
     /** game type priority in random selections */
     ATTRIB(Gametype, m_priority, int, 0);
 #ifdef CSQC
@@ -90,14 +95,16 @@ CLASS(Gametype, Object)
         returns(menu, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        string_null,                    _("The amount of frags needed before the match will end"));
     }
 
-    /* game type description
-     * previously stored in a .string gametype_description ATTRIB
+#ifdef MENUQC
+    /* game type guide description
+     * this description is used in the guide, the description stored in .m_description is shorter and used for things like the mapvoting dialog
 	 */
     METHOD(Gametype, describe, string(Gametype this))
     {
         TC(Gametype, this);
 		return SUPER(Object).describe(this);
     }
+#endif
 
     METHOD(Gametype, display, void(Gametype this, void(string name, string icon) returns))
     {
@@ -105,14 +112,16 @@ CLASS(Gametype, Object)
         returns(this.message, strcat("gametype_", this.mdl));
     }
 
-    METHOD(Gametype, gametype_init, void(Gametype this, string hname, string sname, string g_name, int gflags, string mutators, string defaults))
+    METHOD(Gametype, gametype_init, void(Gametype this, string hname, string sname, string g_name, int gflags, string mutators, string defaults, string gdescription))
     {
         this.netname = g_name;
         this.mdl = sname;
         this.message = hname;
+        this.m_name = hname;
         this.team = (gflags & GAMETYPE_FLAG_TEAMPLAY);
         this.m_mutators = cons(sname, mutators);
         this.model2 = defaults;
+        this.m_description = gdescription;
         this.frags = (gflags & GAMETYPE_FLAG_USEPOINTS);
         this.m_priority = ((gflags & GAMETYPE_FLAG_PREFERRED) ? 2 : ((gflags & GAMETYPE_FLAG_PRIORITY) ? 1 : 0));
         this.m_hidelimits = (gflags & GAMETYPE_FLAG_HIDELIMITS);

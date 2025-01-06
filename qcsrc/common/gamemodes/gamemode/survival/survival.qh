@@ -9,7 +9,7 @@ void HUD_Mod_Survival(vector pos, vector mySize);
 CLASS(Survival, Gametype)
     INIT(Survival)
     {
-        this.gametype_init(this, _("Survival"), "surv", "g_survival", GAMETYPE_FLAG_USEPOINTS, "", "timelimit=20 pointlimit=12");
+        this.gametype_init(this, _("Survival"), "surv", "g_survival", GAMETYPE_FLAG_USEPOINTS, "", "timelimit=20 pointlimit=12",_("Identify and eliminate all the hunters before all your allies are gone"));
     }
     METHOD(Survival, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
@@ -24,11 +24,6 @@ CLASS(Survival, Gametype)
                 return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
         }
         return false;
-    }
-    METHOD(Survival, describe, string(Survival this))
-    {
-        TC(Survival, this);
-        return _("Identify and eliminate all the hunters before all your allies are gone");
     }
 #ifdef CSQC
     ATTRIB(Survival, m_modicons, void(vector pos, vector mySize), HUD_Mod_Survival);
