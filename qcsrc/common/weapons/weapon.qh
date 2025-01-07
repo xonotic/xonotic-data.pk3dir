@@ -53,7 +53,7 @@ CLASS(Weapon, Object)
 	/** M: rating    : bot weapon priority */
 	ATTRIB(Weapon, bot_pickupbasevalue, float, 0);
 	/** M: color     : waypointsprite color */
-	ATTRIB(Weapon, wpcolor, vector, '0 0 0');
+	ATTRIB(Weapon, m_color, vector, '0 0 0');
 	/** M: modelname : name of model (without g_ v_ or h_ prefixes) */
 	ATTRIB(Weapon, mdl, string, "");
 #ifdef GAMEQC
