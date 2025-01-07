@@ -6,6 +6,7 @@
 #include "leavematchbutton.qh"
 #include "radiobutton.qh"
 #include "textlabel.qh"
+#include "mainwindow.qh"
 #include "campaign.qh"
 
 void InstantAction_LoadMap(entity btn, entity dummy)
@@ -145,10 +146,13 @@ void XonoticSingleplayerDialog_fill(entity me)
 	entity e, btnPrev, btnNext, lblTitle;
 
 	me.TR(me);
-		me.TDempty(me, (me.columns - 3) / 2);
-		me.TD(me, 2, 3, e = makeXonoticBigButton(_("Instant action! (random map with bots)"), '0 0 0'));
+		me.TDempty(me, (me.columns / 2) - 2);
+		me.TD(me, 2, 2, e = makeXonoticBigButton(_("Instant action with bots!"), '0 0 0'));
 			e.onClick = InstantAction_LoadMap;
 			e.onClickEntity = NULL;
+		me.TD(me, 2, 2, e = makeXonoticBigButton(_("Guide"), '0 0 0'));
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.guideDialog;
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);

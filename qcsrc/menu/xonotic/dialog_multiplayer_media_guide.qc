@@ -4,7 +4,7 @@
 #include "textlabel.qh"
 #include <menu/xonotic/guide/entries.qh>
 
-void XonoticGuideTab_fill(entity me)
+void XonoticGuideDialog_fill(entity me)
 {
 	entity e;
 
@@ -13,7 +13,7 @@ void XonoticGuideTab_fill(entity me)
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Topic")));
 	me.TR(me);
 		me.TD(me, me.rows - 1, width, e = me.topicList);
-			e.onChange = XonoticGuideTab_topicChangeNotify;
+			e.onChange = XonoticGuideDialog_topicChangeNotify;
 			e.onChangeEntity = me;
 
 	col += width, width = 2;
@@ -21,7 +21,7 @@ void XonoticGuideTab_fill(entity me)
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Entry")));
 	me.TR(me);
 		me.TD(me, me.rows - 1 - 1, width, e = me.entryList);
-			e.onChange = XonoticGuideTab_entryChangeNotify;
+			e.onChange = XonoticGuideDialog_entryChangeNotify;
 			e.onChangeEntity = me;
 	me.gotoRC(me, me.rows - 1, col);
 		me.entryList.stringFilterBox = makeXonoticInputBox_T(false, string_null,
@@ -41,7 +41,7 @@ void XonoticGuideTab_fill(entity me)
 	me.topicChangeNotify(me.topicList, me);
 }
 
-void XonoticGuideTab_topicChangeNotify(entity, entity me)
+void XonoticGuideDialog_topicChangeNotify(entity, entity me)
 {
 	entity topics = me.topicList;
 	entity entries = me.entryList;
@@ -63,8 +63,7 @@ void XonoticGuideTab_topicChangeNotify(entity, entity me)
 	entries.refilter(entries);
 	entries.setSelected(entries, 0);
 }
-
-void XonoticGuideTab_entryChangeNotify(entity, entity me)
+void XonoticGuideDialog_entryChangeNotify(entity, entity me)
 {
 	entity desc = me.descriptionPane;
 	entity entries = me.entryList;
