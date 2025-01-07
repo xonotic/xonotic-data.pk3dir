@@ -1,4 +1,4 @@
-#include "dialog_multiplayer_media_guide.qh"
+#include "dialog_singleplayer_guide.qh"
 
 #include "inputbox.qh"
 #include "textlabel.qh"

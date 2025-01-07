@@ -56,7 +56,6 @@
 #include <menu/xonotic/dialog_multiplayer_media_demo.qc>
 #include <menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc>
 #include <menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc>
-#include <menu/xonotic/dialog_multiplayer_media_guide.qc>
 #include <menu/xonotic/dialog_multiplayer_media_musicplayer.qc>
 #include <menu/xonotic/dialog_multiplayer_media_screenshot.qc>
 #include <menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc>
@@ -84,6 +83,7 @@
 #include <menu/xonotic/dialog_settings_user_languagewarning.qc>
 #include <menu/xonotic/dialog_settings_video.qc>
 #include <menu/xonotic/dialog_singleplayer.qc>
+#include <menu/xonotic/dialog_singleplayer_guide.qc>
 #include <menu/xonotic/dialog_singleplayer_winner.qc>
 #include <menu/xonotic/dialog_teamselect.qc>
 #include <menu/xonotic/dialog_termsofservice.qc>
