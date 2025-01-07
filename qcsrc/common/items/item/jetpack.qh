@@ -31,7 +31,7 @@ void powerup_jetpack_init(Pickup def, entity item)
 CLASS(Jetpack, Powerup)
 ENDCLASS(Jetpack)
 
-REGISTER_ITEM(Jetpack, Jetpack) {
+REGISTER_ITEM(Jetpack, NEW(Jetpack)) {
     this.m_canonical_spawnfunc = "item_jetpack";
 #ifdef GAMEQC
 	this.spawnflags = ITEM_FLAG_NORMAL;
@@ -65,7 +65,7 @@ void ammo_fuel_init(Pickup this, entity item)
         SetResourceExplicit(item, RES_FUEL, g_pickup_fuel);
 }
 #endif
-REGISTER_ITEM(JetpackFuel, Ammo) {
+REGISTER_ITEM(JetpackFuel, NEW(Ammo)) {
     this.m_canonical_spawnfunc = "item_fuel";
 #ifdef GAMEQC
 	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -99,7 +99,7 @@ void powerup_fuelregen_init(Pickup def, entity item)
 CLASS(JetpackRegen, Powerup)
 ENDCLASS(JetpackRegen)
 
-REGISTER_ITEM(JetpackRegen, JetpackRegen) {
+REGISTER_ITEM(JetpackRegen, NEW(JetpackRegen)) {
     this.m_canonical_spawnfunc = "item_fuel_regen";
 #ifdef GAMEQC
 	this.spawnflags             = ITEM_FLAG_NORMAL;

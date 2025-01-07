@@ -22,7 +22,7 @@ void ammo_vaporizercells_init(Pickup this, entity item)
         SetResourceExplicit(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
 }
 #endif
-REGISTER_ITEM(VaporizerCells, Ammo) {
+REGISTER_ITEM(VaporizerCells, NEW(Ammo)) {
     this.m_canonical_spawnfunc = "item_vaporizer_cells";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
@@ -49,7 +49,7 @@ MODEL(ExtraLife_ITEM, Item_Model("g_h100.md3"));
 SOUND(ExtraLife, Item_Sound("megahealth"));
 #endif
 
-REGISTER_ITEM(ExtraLife, Powerup) {
+REGISTER_ITEM(ExtraLife, NEW(Powerup)) {
     this.m_canonical_spawnfunc = "item_extralife";
 #ifdef GAMEQC
 	this.m_model                =   MDL_ExtraLife_ITEM;

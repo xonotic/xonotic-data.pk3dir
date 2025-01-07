@@ -8,8 +8,7 @@
 #include <common/mutators/mutator/waypoints/all.qh>
 #endif
 
-#define REGISTER_BUFF(id, inst) \
-    REGISTER(StatusEffect, BUFF_##id, m_id, inst)
+#define REGISTER_BUFF(id, inst) REGISTER(StatusEffect, BUFF_##id, m_id, inst)
 
 #include <common/mutators/mutator/status_effects/_mod.qh>
 CLASS(Buff, StatusEffects)

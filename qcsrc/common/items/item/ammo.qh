@@ -46,7 +46,7 @@ void ammo_shells_init(Pickup this, entity item)
 CLASS(Shells, Ammo)
 ENDCLASS(Shells)
 
-REGISTER_ITEM(Shells, Shells) {
+REGISTER_ITEM(Shells, NEW(Shells)) {
     this.m_canonical_spawnfunc = "item_shells";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -82,7 +82,7 @@ void ammo_bullets_init(Pickup this, entity item)
 CLASS(Bullets, Ammo)
 ENDCLASS(Bullets)
 
-REGISTER_ITEM(Bullets, Bullets) {
+REGISTER_ITEM(Bullets, NEW(Bullets)) {
     this.m_canonical_spawnfunc = "item_bullets";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -114,7 +114,7 @@ void ammo_rockets_init(Pickup this, entity item)
         SetResourceExplicit(item, RES_ROCKETS, g_pickup_rockets);
 }
 #endif
-REGISTER_ITEM(Rockets, Ammo) {
+REGISTER_ITEM(Rockets, NEW(Ammo)) {
     this.m_canonical_spawnfunc = "item_rockets";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -146,7 +146,7 @@ void ammo_cells_init(Pickup this, entity item)
         SetResourceExplicit(item, RES_CELLS, g_pickup_cells);
 }
 #endif
-REGISTER_ITEM(Cells, Ammo) {
+REGISTER_ITEM(Cells, NEW(Ammo)) {
     this.m_canonical_spawnfunc = "item_cells";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;

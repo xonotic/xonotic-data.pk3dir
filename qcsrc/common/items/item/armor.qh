@@ -29,7 +29,7 @@ void item_armorsmall_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(ArmorSmall, Armor) {
+REGISTER_ITEM(ArmorSmall, NEW(Armor)) {
     this.m_canonical_spawnfunc = "item_armor_small";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -73,7 +73,7 @@ void item_armormedium_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(ArmorMedium, Armor) {
+REGISTER_ITEM(ArmorMedium, NEW(Armor)) {
     this.m_canonical_spawnfunc = "item_armor_medium";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -117,7 +117,7 @@ void item_armorbig_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(ArmorBig, Armor) {
+REGISTER_ITEM(ArmorBig, NEW(Armor)) {
     this.m_canonical_spawnfunc = "item_armor_big";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
@@ -161,7 +161,7 @@ void item_armormega_init(Pickup this, entity item)
 }
 #endif
 
-REGISTER_ITEM(ArmorMega, Armor) {
+REGISTER_ITEM(ArmorMega, NEW(Armor)) {
     this.m_canonical_spawnfunc = "item_armor_mega";
 #ifdef GAMEQC
     this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
