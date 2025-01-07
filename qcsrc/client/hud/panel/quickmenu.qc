@@ -513,11 +513,11 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	}
 	else
 	{
-		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
-		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
-		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
-		if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
-		if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
+		if(nPrimary == K_ALT) hudShiftState &= ~S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState &= ~S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState &= ~S_SHIFT;
+		if(nPrimary == K_MOUSE1) mouseClicked &= ~S_MOUSE1;
+		if(nPrimary == K_MOUSE2) mouseClicked &= ~S_MOUSE2;
 	}
 
 	if(nPrimary == K_ESCAPE && key_pressed)

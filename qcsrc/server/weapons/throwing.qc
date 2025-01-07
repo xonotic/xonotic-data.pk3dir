@@ -48,7 +48,7 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 			int superweapons = 1;
 			FOREACH(Weapons, it != WEP_Null, {
 				WepSet set = it.m_wepset;
-				if((set & WEPSET_SUPERWEAPONS) && (STAT(WEAPONS, own) & set)) ++superweapons;
+				if((WEPSET_SUPERWEAPONS & STAT(WEAPONS, own)) & set) ++superweapons;
 			});
 			if(superweapons <= 1)
 			{

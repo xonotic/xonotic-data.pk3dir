@@ -868,9 +868,9 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	}
 	else
 	{
-		if (nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
-		if (nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
-		if (nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+		if (nPrimary == K_ALT) hudShiftState &= ~S_ALT;
+		if (nPrimary == K_CTRL) hudShiftState &= ~S_CTRL;
+		if (nPrimary == K_SHIFT) hudShiftState &= ~S_SHIFT;
 
 		if (nPrimary == K_CTRL)
 			first_digit = 0;

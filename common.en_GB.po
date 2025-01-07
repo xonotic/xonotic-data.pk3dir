@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# k9er, 2024
 # k9 er, 2024
 # k9er, 2024
 # k9er, 2024

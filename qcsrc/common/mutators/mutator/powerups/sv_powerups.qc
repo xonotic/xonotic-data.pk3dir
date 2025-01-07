@@ -114,7 +114,7 @@ void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
 	{
 		case STATUSEFFECT_Strength:     e.itemdef = ITEM_Strength;     e.strength_finished = finished;     maxtime = autocvar_g_balance_powerup_strength_time;   break;
 		case STATUSEFFECT_Shield:       e.itemdef = ITEM_Shield;       e.invincible_finished = finished;   maxtime = autocvar_g_balance_powerup_invincible_time; break;
-		case STATUSEFFECT_Invisibility: e.itemdef = ITEM_Invisibility; e.invisibility_finished = finished; maxtime = autocvar_g_balance_powerup_invincible_time; break;
+		case STATUSEFFECT_Invisibility: e.itemdef = ITEM_Invisibility; e.invisibility_finished = finished; maxtime = autocvar_g_balance_powerup_invisibility_time; break;
 		case STATUSEFFECT_Speed:        e.itemdef = ITEM_Speed;        e.speed_finished = finished;        maxtime = autocvar_g_balance_powerup_speed_time;      break;
 		default: delete(e); return;
 	}

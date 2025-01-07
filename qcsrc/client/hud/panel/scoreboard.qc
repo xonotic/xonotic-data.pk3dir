@@ -281,10 +281,10 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 		if(nPrimary == K_TAB) hudShiftState |= S_TAB;
 	}
 	else {
-		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
-		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
-		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
-		if(nPrimary == K_TAB) hudShiftState -= (hudShiftState & S_TAB);
+		if(nPrimary == K_ALT) hudShiftState &= ~S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState &= ~S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState &= ~S_SHIFT;
+		if(nPrimary == K_TAB) hudShiftState &= ~S_TAB;
 	}
 
 	if(nPrimary == K_TAB)
@@ -1760,7 +1760,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		}
 		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
 		{
-			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK))
+			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED))
 				++nHidden;
 			else
 				++disownedcnt;

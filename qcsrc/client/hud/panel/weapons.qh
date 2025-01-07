@@ -45,8 +45,10 @@ vector acc_col[MAX_ACCURACY_LEVELS];
 float acc_col_loadtime;
 int acc_levels;
 string acc_color_levels;
+
 void Accuracy_LoadLevels();
-
 void Accuracy_LoadColors();
-
 vector Accuracy_GetColor(float accuracy);
+
+void Weapons_Fade(vector);
+void Weapons_Draw(entity, WepSet, vector, vector, float, float, int, int, float, bool);

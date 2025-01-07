@@ -1564,7 +1564,7 @@ void player_powerups(entity this)
 			if (!(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
 			{
 				StatusEffects_remove(STATUSEFFECT_Superweapons, this, STATUSEFFECT_REMOVE_NORMAL);
-				this.items = this.items - (this.items & IT_SUPERWEAPON);
+				this.items &= ~IT_SUPERWEAPON;
 				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_LOST, this.netname);
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_LOST);
 			}
@@ -1577,7 +1577,7 @@ void player_powerups(entity this)
 				play_countdown(this, StatusEffects_gettime(STATUSEFFECT_Superweapons, this), SND_POWEROFF);
 				if (time >= StatusEffects_gettime(STATUSEFFECT_Superweapons, this))
 				{
-					this.items = this.items - (this.items & IT_SUPERWEAPON);
+					this.items &= ~IT_SUPERWEAPON;
 					STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;
 					//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_BROKEN, this.netname);
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_BROKEN);
@@ -1588,7 +1588,7 @@ void player_powerups(entity this)
 		{
 			if (time < StatusEffects_gettime(STATUSEFFECT_Superweapons, this) || (this.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
-				this.items = this.items | IT_SUPERWEAPON;
+				this.items |= IT_SUPERWEAPON;
 				if(!(this.items & IT_UNLIMITED_SUPERWEAPONS))
 				{
 					if(!g_cts)
@@ -1610,10 +1610,10 @@ void player_powerups(entity this)
 	}
 
 	if(autocvar_g_nodepthtestplayers)
-		this.effects = this.effects | EF_NODEPTHTEST;
+		this.effects |= EF_NODEPTHTEST;
 
 	if(autocvar_g_fullbrightplayers)
-		this.effects = this.effects | EF_FULLBRIGHT;
+		this.effects |= EF_FULLBRIGHT;
 
 	MUTATOR_CALLHOOK(PlayerPowerups, this, items_prev);
 }

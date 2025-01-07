@@ -149,9 +149,18 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 	float bonusNades    = STAT(NADE_BONUS);
 	float bonusProgress = STAT(NADE_BONUS_SCORE);
 	float bonusType     = STAT(NADE_BONUS_TYPE);
-	Nade def = REGISTRY_GET(Nades, bonusType);
-	vector nadeColor    = def.m_color;
-	string nadeIcon     = def.m_icon;
+	Nade def = REGISTRY_GET(Nades, max(1, bonusType));
+	string nadeIcon = def.m_icon; // use the Normal Nade icon for the random nade, and draw it as rainbow
+	vector nadeColor;
+	if(bonusType)
+		nadeColor = def.m_color;
+	else
+	{
+		nadeColor.x = time % (M_PI * 2);
+		nadeColor.y = 1;
+		nadeColor.z = 1;
+		nadeColor = hsv_to_rgb(nadeColor);
+	}
 
 	vector iconPos, textPos;
 
@@ -174,9 +183,9 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 			drawstring_aspect(textPos, ftos(bonusNades), vec2((2/3) * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if(draw_expanding)
-			drawpic_aspect_skin_expanding(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, expand_time);
+			drawpic_aspect_skin_expanding(iconPos, nadeIcon, '1 1 0' * mySize.y, (bonusType ? '1 1 1' : nadeColor), panel_fg_alpha, DRAWFLAG_NORMAL, expand_time);
 
-		drawpic_aspect_skin(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(iconPos, nadeIcon, '1 1 0' * mySize.y, (bonusType ? '1 1 1' : nadeColor), panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 }
 #endif
@@ -193,6 +202,15 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 
 .entity nade_spawnloc;
 
+vector nades_PlayerColor(entity this, bool isPants)
+{
+	if(teamplay)
+		return Team_ColorRGB(this.team);
+
+	// logic copied from Scoreboard_GetName
+	int col = (this.colormap >= 1024) ? this.colormap - 1024 : this.clientcolors;
+	return (isPants) ? colormapPaletteColor(col % 16, true) : colormapPaletteColor(floor(col / 16), false);
+}
 
 void nade_timer_think(entity this)
 {
@@ -433,8 +451,10 @@ void nade_ice_think(entity this)
 	{
 		if ( autocvar_g_nades_ice_explode )
 		{
-			entity expef = EFFECT_NADE_EXPLODE(this.realowner.team);
-			Send_Effect(expef, this.origin + '0 0 1', '0 0 0', 1);
+			vector expcol_min = nades_PlayerColor(this.realowner, false);
+			vector expcol_max = nades_PlayerColor(this.realowner, true);
+			entity expef = EFFECT_NADE_EXPLODE_NEUTRAL;
+			Send_Effect_Except(expef, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			normal_nade_boom(this);
@@ -806,8 +826,10 @@ void nade_darkness_think(entity this)
 	{
 		if ( autocvar_g_nades_darkness_explode )
 		{
-			entity expef = EFFECT_NADE_EXPLODE(this.realowner.team);
-			Send_Effect(expef, this.origin + '0 0 1', '0 0 0', 1);
+			vector expcol_min = nades_PlayerColor(this.realowner, false);
+			vector expcol_max = nades_PlayerColor(this.realowner, true);
+			entity expef = EFFECT_NADE_EXPLODE_NEUTRAL;
+			Send_Effect_Except(expef, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			normal_nade_boom(this);
@@ -898,40 +920,35 @@ void nade_boom(entity this)
 {
 	entity expef = NULL;
 	bool nade_blast = true;
+	vector expcol_min = '0 0 0', expcol_max = '0 0 0';
 
-#define GET_NADE_TYPE_SPAWN_EFFECT(team_owner) \
-	((team_owner) == NUM_TEAM_1 ? EFFECT_SPAWN_RED : \
-	((team_owner) == NUM_TEAM_2 ? EFFECT_SPAWN_BLUE : \
-	((team_owner) == NUM_TEAM_3 ? EFFECT_SPAWN_YELLOW : \
-	((team_owner) == NUM_TEAM_4 ? EFFECT_SPAWN_PINK : \
-	EFFECT_SPAWN_NEUTRAL))))
-
-#define SET_NADE_EFFECT(nade_type, blast, exp_effect) \
+#define SET_NADE_EFFECT(nade_type, blast, exp_effect, exp_color_min, exp_color_max) \
 	case nade_type: \
 		nade_blast = blast; \
 		expef = exp_effect; \
+		expcol_min = exp_color_min; \
+		expcol_max = exp_color_max; \
 		break
 
 	switch ( REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this)) )
 	{
-		SET_NADE_EFFECT(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm_blast, EFFECT_EXPLOSION_MEDIUM);
-		SET_NADE_EFFECT(NADE_TYPE_ICE,         false,                         EFFECT_ELECTRO_COMBO /* hookbomb_explode electro_combo bigplasma_impact */);
-		SET_NADE_EFFECT(NADE_TYPE_TRANSLOCATE, false,                         NULL);
-		SET_NADE_EFFECT(NADE_TYPE_MONSTER,     true,                          (!autocvar_g_monsters) ? EFFECT_NADE_EXPLODE(this.realowner.team) : NULL);
-		SET_NADE_EFFECT(NADE_TYPE_SPAWN,       false,                         GET_NADE_TYPE_SPAWN_EFFECT(this.realowner.team));
-		SET_NADE_EFFECT(NADE_TYPE_HEAL,        false,                         EFFECT_SPAWN_RED);
-		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      false,                         EFFECT_SPAWN_YELLOW);
-		SET_NADE_EFFECT(NADE_TYPE_VEIL,        false,                         EFFECT_SPAWN_NEUTRAL);
-		SET_NADE_EFFECT(NADE_TYPE_AMMO,        false,                         EFFECT_SPAWN_BROWN);
-		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    false,                         EFFECT_EXPLOSION_MEDIUM);
-		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      true,                          EFFECT_NADE_EXPLODE(this.realowner.team));
-		default: expef = EFFECT_NADE_EXPLODE(this.realowner.team); break;
+		SET_NADE_EFFECT(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm_blast, EFFECT_EXPLOSION_MEDIUM, 										'0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_ICE,         false,                         EFFECT_ELECTRO_COMBO, 										'0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_TRANSLOCATE, false,                         NULL, 														'0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_MONSTER,     true,                          (!autocvar_g_monsters) ? EFFECT_NADE_EXPLODE_NEUTRAL : NULL, 	nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		SET_NADE_EFFECT(NADE_TYPE_SPAWN,       false,                         EFFECT_SPAWN_NEUTRAL, 										nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		SET_NADE_EFFECT(NADE_TYPE_HEAL,        false,                         EFFECT_SPAWN_NEUTRAL, 										'1 0 0', '1 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      false,                         EFFECT_SPAWN_NEUTRAL, 										'1 1 0', '1 1 0');
+		SET_NADE_EFFECT(NADE_TYPE_VEIL,        false,                         EFFECT_SPAWN_NEUTRAL, 										'0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_AMMO,        false,                         EFFECT_SPAWN_NEUTRAL, 										'0.66 0.33 0', '0.66 0.33 0');
+		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    false,                         EFFECT_EXPLOSION_MEDIUM, 										'0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      true,                          EFFECT_NADE_EXPLODE_NEUTRAL, 									nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		default: expef = EFFECT_NADE_EXPLODE_NEUTRAL; expcol_min = nades_PlayerColor(this.realowner, false); expcol_max = nades_PlayerColor(this.realowner, true); break;
 	}
-#undef GET_NADE_TYPE_SPAWN_EFFECT
 #undef SET_NADE_EFFECT
 
 	if(expef)
-		Send_Effect(expef, findbetterlocation(this.origin, 8), '0 0 0', 1);
+		Send_Effect_Except(expef, findbetterlocation(this.origin, 8), '0 0 0', 1, expcol_min, expcol_max, NULL);
 
 	sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
@@ -1267,7 +1284,9 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 
 	n.pokenade_type = pntype;
 
-	Nade def = REGISTRY_GET(Nades, max(1, ntype));
+	if(ntype == 0) // random nade
+		ntype = floor(random() * (REGISTRY_COUNT(Nades) - 1)) + 1;
+	Nade def = REGISTRY_GET(Nades, ntype);
 	if(def == NADE_TYPE_Null)
 		def = NADE_TYPE_NORMAL;
 
@@ -1399,6 +1418,7 @@ int nades_CheckTypes(entity player, int cl_ntype)
 
 	switch (cl_ntype)
 	{
+		case 0: return 0; // random nade
 		CL_NADE_TYPE_CHECK(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_ICE,         autocvar_g_nades_ice);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_TRANSLOCATE, autocvar_g_nades_translocate);
@@ -1530,7 +1550,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 				player.pokenade_type = autocvar_g_nades_pokenade_monster_type;
 			}
 
-			STAT(NADE_BONUS_TYPE, player) = bound(1, STAT(NADE_BONUS_TYPE, player), Nades_COUNT);
+			STAT(NADE_BONUS_TYPE, player) = bound(0, STAT(NADE_BONUS_TYPE, player), REGISTRY_COUNT(Nades));
 
 			if(STAT(NADE_BONUS_SCORE, player) >= 0 && autocvar_g_nades_bonus_score_max)
 				nades_GiveBonus(player, time_score / autocvar_g_nades_bonus_score_max);

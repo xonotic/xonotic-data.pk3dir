@@ -406,7 +406,7 @@ int havocbot_checkdanger(entity this, vector dst_ahead)
 	if (trace_fraction == 1 && !this.jumppadcount
 		&& !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
 		&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
-	if ((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || (this.aistatus & AI_STATUS_ROAMING) || PHYS_INPUT_BUTTON_JUMP(this))
+	if ((IS_ONGROUND(this)) || (this.aistatus & (AI_STATUS_RUNNING | AI_STATUS_ROAMING)) || PHYS_INPUT_BUTTON_JUMP(this))
 	{
 		// Look downwards
 		traceline(dst_ahead , dst_down, true, NULL);
