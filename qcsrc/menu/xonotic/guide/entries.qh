@@ -10,6 +10,7 @@ CLASS(XonoticEntryList, XonoticListBox)
 	ATTRIB(XonoticEntryList, realUpperMargin1, float, 0);
 	ATTRIB(XonoticEntryList, realUpperMargin2, float, 0);
 	ATTRIB(XonoticEntryList, rowsPerItem, float, 4);
+
 	ATTRIB(XonoticEntryList, stringFilterBox, entity, NULL);
 	ATTRIB(XonoticEntryList, stringFilter, string, string_null);
 	ATTRIB(XonoticEntryList, typeToSearchString, string, string_null);
@@ -33,3 +34,5 @@ CLASS(XonoticEntryList, XonoticListBox)
 	}
 
 ENDCLASS(XonoticEntryList)
+void EntryList_StringFilterBox_Change(entity box, entity me);
+float EntryList_StringFilterBox_keyDown(entity me, float key, float ascii, float shift);

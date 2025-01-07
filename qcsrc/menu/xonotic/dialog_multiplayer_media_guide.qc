@@ -1,47 +1,44 @@
 #include "dialog_multiplayer_media_guide.qh"
 
 #include "inputbox.qh"
-#include "maplist.qh"
 #include "textlabel.qh"
+#include <menu/xonotic/guide/entries.qh>
 
 void XonoticGuideTab_fill(entity me)
 {
-	entity topics = me.topicList;
-		topics.onChange = XonoticGuideTab_topicChangeNotify;
-		topics.onChangeEntity = me;
-	entity entries = me.entryList;
-		entries.onChange = XonoticGuideTab_entryChangeNotify;
-		entries.onChangeEntity = me;
-	entity filter = entries.stringFilterBox = makeXonoticInputBox(false, string_null);
-		filter.keyDown = MapList_StringFilterBox_keyDown;
-		filter.onChange = MapList_StringFilterBox_Change;
-		filter.onChangeEntity = entries;
-	entries.controlledTextbox = filter;
-	entity description = me.descriptionPane;
+	entity e;
 
-	int
-	col = 0, width = 1.5;
+	int col = 0, width = 1.5;
 	me.gotoRC(me, 0, col);
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Topic")));
 	me.TR(me);
-		me.TD(me, me.rows - 1, width, topics);
+		me.TD(me, me.rows - 1, width, e = me.topicList);
+			e.onChange = XonoticGuideTab_topicChangeNotify;
+			e.onChangeEntity = me;
 
 	col += width, width = 2;
 	me.gotoRC(me, 0, col); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Entry")));
 	me.TR(me);
-		me.TD(me, me.rows - 1 - 1, width, entries);
+		me.TD(me, me.rows - 1 - 1, width, e = me.entryList);
+			e.onChange = XonoticGuideTab_entryChangeNotify;
+			e.onChangeEntity = me;
 	me.gotoRC(me, me.rows - 1, col);
+		me.entryList.stringFilterBox = makeXonoticInputBox_T(false, string_null,
+			_("Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-Delete to clear; Enter when done."));
 		me.TD(me, 1, 0.3, makeXonoticTextLabel(0, _("Filter:")));
-		me.TD(me, 1, width - 0.3, filter);
+		me.TD(me, 1, width - 0.3, e = me.entryList.stringFilterBox);
+			e.onChange = EntryList_StringFilterBox_Change;
+			e.keyDown = EntryList_StringFilterBox_keyDown;
+			e.onChangeEntity = me.entryList;
 
 	col += width, width = 2.5;
 	me.gotoRC(me, 0, col); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Description")));
 	me.TR(me);
-		me.TD(me, me.rows - 1, width, description);
+		me.TD(me, me.rows - 1, width, me.descriptionPane);
 
-	me.topicChangeNotify(topics, me);
+	me.topicChangeNotify(me.topicList, me);
 }
 
 void XonoticGuideTab_topicChangeNotify(entity, entity me)

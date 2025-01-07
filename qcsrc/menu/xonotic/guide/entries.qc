@@ -11,6 +11,12 @@ void XonoticEntryList_cb(string _name, string _icon)
 	XonoticEntryList_cb_icon = _icon;
 }
 
+entity EntryList_Set_StringFilterBox(entity me, entity e)
+{
+	me.stringFilterBox = e;
+	return e;
+}
+
 void XonoticEntryList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	if (!me.source) return;
@@ -63,17 +69,37 @@ METHOD(XonoticEntryList, keyDown, float(entity this, float scan, float ascii, fl
 				this.setSelected(this, idx);
 		}
 	}
-	else if (shift & S_CTRL && scan == 'f')
+	else if ((shift & S_CTRL) && scan == 'f') // ctrl-f (as in "F"ind)
+	{
 		this.parent.setFocus(this.parent, this.stringFilterBox);
-	else if (shift & S_CTRL && scan == 'u')
+	}
+	else if ((shift & S_CTRL) && scan == 'u') // ctrl-u (remove stringFilter line)
 	{
 		this.stringFilterBox.setText(this.stringFilterBox, "");
-		if (this.stringFilter)
-			strunzone(this.stringFilter);
-		this.stringFilter = string_null;
-		this.refilter(this);
+		EntryList_StringFilterBox_Change(this.stringFilterBox, this);
 	}
 	return SUPER(XonoticEntryList).keyDown(this, scan, ascii, shift);
+}
+
+float EntryList_StringFilterBox_keyDown(entity me, float scan, float ascii, float shift)
+{
+	// in this section, note that onChangeEntity has the ref to entryList
+	// we make use of that, instead of extending a class to add one more attrib
+	switch(scan)
+	{
+		case K_KP_ENTER:
+		case K_ENTER:
+			// move the focus to the entryList
+			me.onChangeEntity.parent.setFocus(me.onChangeEntity.parent, me.onChangeEntity);
+			return 1;
+		case K_KP_UPARROW:
+		case K_UPARROW:
+		case K_KP_DOWNARROW:
+		case K_DOWNARROW:
+			// pass the event to the entryList (to scroll up and down)
+			return me.onChangeEntity.keyDown(me.onChangeEntity, scan, ascii, shift);
+	}
+	return SUPER(XonoticInputBox).keyDown(me, scan, ascii, shift);
 }
 
 void XonoticEntryList_refilter(entity me)
@@ -87,6 +113,15 @@ void XonoticEntryList_refilter(entity me)
 	for (int i = 0, n = me.nItems; i < n; ++i)
 		if (me.source.getEntry(me.source, i, XonoticEntryList_cb))
 			draw_PreloadPicture(XonoticEntryList_cb_icon);
+}
+
+void EntryList_StringFilterBox_Change(entity box, entity me)
+{
+	strfree(me.stringFilter);
+	if(box.text != "")
+		me.stringFilter = strzone(box.text);
+
+	me.refilter(me);
 }
 
 void XonoticEntryList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
