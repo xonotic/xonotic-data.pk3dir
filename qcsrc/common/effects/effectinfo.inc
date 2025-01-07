@@ -9177,7 +9177,7 @@ SUB(hlac_muzzleflash) {
 	MY(color_min) = "0x00cc00";
 	MY(color_max) = "0x00ff00";
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '0.6 0.8 0.2';
+	MY(lightcolor) = '0.4 0.8 0.2';
 	MY(lightradiusfade) = 2000;
 	MY(lightradius) = 100;
 	MY(sizeincrease) = -100;
@@ -9194,7 +9194,7 @@ SUB(hlac_muzzleflash) {
 	MY(alpha_min) = 0;
 	MY(alpha_max) = 128;
 	MY(alpha_fade) = 1024;
-	MY(color_min) = "0xade244";
+	MY(color_min) = "0x92e045";
 	MY(color_max) = "0x64f42a";
 	MY(count) = 15;
 	MY(originjitter) = '1.0 1.0 1.0';
@@ -9218,7 +9218,7 @@ SUB(hlac_impact) {
 	MY(alpha_min) = 128;
 	MY(alpha_max) = 128;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '0.6 0.8 0.2';
+	MY(lightcolor) = '0.4 0.8 0.2';
 	MY(lightradiusfade) = 500;
 	MY(lightradius) = 150;
 	MY(originjitter) = '14.0 14.0 14.0';
@@ -9248,7 +9248,7 @@ SUB(hlac_impact) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(alpha_fade) = 1024;
-	MY(color_min) = "0xade244";
+	MY(color_min) = "0x92e045";
 	MY(color_max) = "0x54e51a";
 	MY(count) = 128;
 	MY(liquidfriction) = 2;
@@ -9263,8 +9263,8 @@ SUB(hlac_impact) {
 	MY(alpha_min) = 64;
 	MY(alpha_max) = 256;
 	MY(alpha_fade) = 256;
-	MY(color_min) = "0xade244";
-	MY(color_max) = "0xd5f0a1";
+	MY(color_min) = "0x92e045";
+	MY(color_max) = "0xc7eda1";
 	MY(count) = 4;
 	MY(originjitter) = '1.0 1.0 1.0';
 	MY(sizeincrease) = 6;

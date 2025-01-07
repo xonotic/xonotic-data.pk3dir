@@ -8931,7 +8931,7 @@ effect hlac_muzzleflash
 	alpha 128 256 6280
 	color 0x00cc00 0x00ff00
 	countabsolute 1
-	lightcolor 0.6 0.8 0.2
+	lightcolor 0.4 0.8 0.2
 	lightradiusfade 2000
 	lightradius 100
 	sizeincrease -100
@@ -8942,7 +8942,7 @@ effect hlac_muzzleflash
 	type spark
 	airfriction 12
 	alpha 0 128 1024
-	color 0xade244 0x64f42a
+	color 0x92e045 0x64f42a
 	count 15
 	originjitter 1 1 1
 	rotate -180 180 -400 400
@@ -8955,7 +8955,7 @@ effect hlac_impact
 	type decal
 	alpha 128 128 0
 	countabsolute 1
-	lightcolor 0.6 0.8 0.2
+	lightcolor 0.4 0.8 0.2
 	lightradiusfade 500
 	lightradius 150
 	originjitter 14 14 14
@@ -8972,7 +8972,7 @@ effect hlac_impact
 	type spark
 	airfriction 8
 	alpha 256 256 1024
-	color 0xade244 0x54e51a
+	color 0x92e045 0x54e51a
 	count 128
 	liquidfriction 2
 	size 4 4
@@ -8981,7 +8981,7 @@ effect hlac_impact
 effect hlac_impact
 	type smoke
 	alpha 64 256 256
-	color 0xade244 0xd5f0a1
+	color 0x92e045 0xc7eda1
 	count 4
 	originjitter 1 1 1
 	sizeincrease 6
