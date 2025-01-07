@@ -521,7 +521,7 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 	// note: for a win by destroying the key, this should NOT be applied
 	FOR_EACH_KH_KEY(key)
 	{
-		float f = DistributeEvenly_Get(1);
+		float f = DistributeEvenly_GetRounded(1);
 		kh_Scores_Event(key.owner, key, "capture", f, 0);
 		GameRules_scoring_add_team(key.owner, KH_CAPS, 1);
 		nades_GiveBonus(key.owner, autocvar_g_nades_bonus_score_high);
@@ -616,11 +616,11 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 		FOR_EACH_KH_KEY(key)
 			if(key.owner && key.team != loser_team)
 			{
-				f = DistributeEvenly_Get(of);
+				f = DistributeEvenly_GetRounded(of);
 				kh_Scores_Event(key.owner, NULL, "destroyed_holdingkey", f, 0);
 			}
 
-		int fragsleft = DistributeEvenly_Get(players);
+		int fragsleft = DistributeEvenly_GetRounded(players);
 
 		// Now distribute these among all other teams...
 		int j = NumTeams(kh_teams) - 1;
@@ -634,11 +634,11 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, { ++players; });
 
 			DistributeEvenly_Init(fragsleft, j);
-			fragsleft = DistributeEvenly_Get(j - 1);
-			DistributeEvenly_Init(DistributeEvenly_Get(1), players);
+			fragsleft = DistributeEvenly_GetRounded(j - 1);
+			DistributeEvenly_Init(DistributeEvenly_GetRounded(1), players);
 
 			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, {
-				f = DistributeEvenly_Get(1);
+				f = DistributeEvenly_GetRounded(1);
 				kh_Scores_Event(it, NULL, "destroyed", f, 0);
 			});
 
