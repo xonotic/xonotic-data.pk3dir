@@ -1,7 +1,7 @@
 #include "cloaked.qh"
 
 #ifdef MENUQC
-#include <common/mutators/mutator/powerups/powerup/invisibility.qh>
+#include "../powerups/powerup/invisibility.qh"
 
 METHOD(MutatorCloaked, describe, string(MutatorCloaked this))
 {

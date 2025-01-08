@@ -1,7 +1,7 @@
 #include "dodging.qh"
 
 #ifdef MENUQC
-#include <common/mutators/mutator/overkill/overkill.qh>
+#include "../overkill/overkill.qh"
 
 METHOD(MutatorDodging, describe, string(MutatorDodging this))
 {

@@ -1,7 +1,7 @@
 #include "hook.qh"
 
 #ifdef MENUQC
-#include <common/mutators/mutator/offhand_blaster/offhand_blaster.qh>
+#include "../offhand_blaster/offhand_blaster.qh"
 #include <common/weapons/weapon/hook.qh>
 
 METHOD(MutatorGrapplingHook, describe, string(MutatorGrapplingHook this))

@@ -20,8 +20,8 @@ bool nt_IsNewToy(int w)
 }
 
 #ifdef MENUQC
-#include <common/mutators/mutator/instagib/instagib.qh>
-#include <common/mutators/mutator/overkill/overkill.qh>
+#include "../instagib/instagib.qh"
+#include "../overkill/overkill.qh"
 
 METHOD(MutatorNewToys, describe, string(MutatorNewToys this))
 {

@@ -1804,9 +1804,9 @@ MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 
 #endif
 #ifdef MENUQC
-#include <common/mutators/mutator/hook/hook.qh>
-#include <common/mutators/mutator/offhand_blaster/offhand_blaster.qh>
-#include <common/mutators/mutator/overkill/overkill.qh>
+#include "../hook/hook.qh"
+#include "../offhand_blaster/offhand_blaster.qh"
+#include "../overkill/overkill.qh"
 
 METHOD(MutatorNades, describe, string(MutatorNades this))
 {

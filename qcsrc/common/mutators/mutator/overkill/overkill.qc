@@ -6,8 +6,8 @@
 #include "okmachinegun.qh"
 #include "okrpc.qh"
 #include "okshotgun.qh"
-#include <common/mutators/mutator/dodging/dodging.qh>
-#include <common/mutators/mutator/nades/nades.qh>
+#include "../dodging/dodging.qh"
+#include "../nades/nades.qh"
 
 METHOD(MutatorOverkill, describe, string(MutatorOverkill this))
 {

@@ -1,7 +1,7 @@
 #include "vampire.qh"
 
 #ifdef MENUQC
-#include <common/mutators/mutator/buffs/buffs.qh>
+#include "../buffs/buffs.qh"
 
 METHOD(MutatorVampire, describe, string(MutatorVampire this))
 {
