@@ -155,11 +155,21 @@ USING(mutatorfunc_t, bool(int));
 CLASS(Mutator, Object)
     ATTRIB(Mutator, m_id, int, 0);
     ATTRIB(Mutator, m_name, string);
+    ATTRIB(Mutator, m_color, vector, '1 1 1');
+    ATTRIB(Mutator, m_icon, string);
+    ATTRIB(Mutator, mutatorname, string);
     ATTRIB(Mutator, mutatorfunc, mutatorfunc_t);
     ATTRIB(Mutator, mutatorcheck, bool());
+    METHOD(Mutator, describe, string(entity this)) {
+        TC(Mutator, this);
+        return SUPER(Mutator).describe(this);
+    }
+    METHOD(Mutator, display, void(entity this, void(string name, string icon) returns)) {
+        returns(this.m_name, this.m_icon);
+    }
     CONSTRUCTOR(Mutator, string _name, mutatorfunc_t func) {
         CONSTRUCT(Mutator);
-        this.m_name = _name;
+        this.mutatorname = _name;
         this.mutatorfunc = func;
     }
 ENDCLASS(Mutator)
@@ -226,7 +236,7 @@ bool Mutator_Add(Mutator mut)
     mutatorfunc_t func = mut.mutatorfunc;
     if (!func(MUTATOR_ADDING)) {
         // good
-        if (mutator_log) LOG_TRACEF("Mutator: added %s", mut.m_name);
+        if (mutator_log) LOG_TRACEF("Mutator: added %s", mut.mutatorname);
 #ifdef SVQC
         Net_LinkEntity(mut, false, 0, Mutator_SendEntity);
 #endif
@@ -254,22 +264,26 @@ void Mutator_Remove(Mutator mut)
         // baaaaad
         error("Mutator_Remove: removing mutator failed");
     }
-    if (mutator_log) LOG_TRACEF("Mutator: removed %s", mut.m_name);
+    if (mutator_log) LOG_TRACEF("Mutator: removed %s", mut.mutatorname);
 #ifdef SVQC
     Net_UnlinkEntity(mut);
 #endif
 }
 
-#define REGISTER_MUTATOR(id, dependence) \
+#define _REGISTER_MUTATOR(id, dependence, cname) \
     bool MUTATORFUNC_##id##_hooks(int mode) { return = false; } \
     bool MUTATORFUNC_##id(int mode) { \
         return = false; \
         bool ret = MUTATORFUNC_##id##_hooks(mode); if (ret) return ret; \
     } \
     bool MUTATOR_##id##_check() { return dependence; } \
-    REGISTER(Mutators, MUTATOR, id, m_id, NEW(Mutator, #id, MUTATORFUNC_##id)) \
+    REGISTER(Mutators, MUTATOR, id, m_id, NEW(cname, #id, MUTATORFUNC_##id)) \
     { this.mutatorcheck = MUTATOR_##id##_check; } \
     ACCUMULATE bool MUTATORFUNC_##id(int mode)
+
+#define REGISTER_MUTATOR(...) EVAL(OVERLOAD(REGISTER_MUTATOR, __VA_ARGS__))
+#define REGISTER_MUTATOR_2(id, dependence)        _REGISTER_MUTATOR(id, dependence, Mutator)
+#define REGISTER_MUTATOR_3(id, dependence, cname) _REGISTER_MUTATOR(id, dependence, cname)
 
 STATIC_INIT(Mutators) {
     RegisterHooks();
