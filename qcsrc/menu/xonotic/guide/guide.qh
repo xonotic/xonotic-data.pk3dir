@@ -65,7 +65,7 @@ REGISTRY_SOURCE(FreetextSource, Guide, GuidePages)
 
 #include <common/mapinfo.qh>
 REGISTRY_SOURCE(GametypeSource, Gametypes, Gametypes)
-// The descriptions for these are in common/gamemodes/gamemode/*/*.qh
+// The descriptions for these are in common/gamemodes/gamemode/*/*.qc
 
 #include <common/mutators/mutator/buffs/buffs.qh>
 REGISTRY_SOURCE(BuffSource, Buffs, StatusEffect, it.instanceOfBuff)
@@ -97,6 +97,7 @@ REGISTRY_SOURCE(VehicleSource, Vehicles, Vehicles)
 
 #include <common/turrets/all.qh>
 REGISTRY_SOURCE(TurretSource, Turrets, Turrets)
+// The descriptions for these are in common/turrets/turret/*.qc
 
 #include <common/mutators/base.qh>
 REGISTRY_SOURCE(MutatorSource, Mutators, Mutators)
