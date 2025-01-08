@@ -35,17 +35,32 @@ ENDCLASS(DebugSource)
 */
 
 .bool m_hidden;
+.bool instanceOfAmmo;
+.bool instanceOfHealth;
+.bool instanceOfArmor;
+.bool instanceOfPowerup;
 
-#define _REGISTRY_SOURCE(id, arr_name, register_arr, cond) \
+#define _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, cond3, num_conds) \
 ArrayList arr_name##_MENU; \
 int arr_name##_MENU_COUNT; \
 STATIC_INIT_LATE(arr_name##_MENU) \
 { \
 	AL_NEW(arr_name##_MENU, REGISTRY_MAX(register_arr), NULL, e); \
-	FOREACH(register_arr, !it.m_hidden && (cond), { \
-		AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
-		arr_name##_MENU_COUNT++; \
-	}); \
+	if (num_conds >= 1) \
+		FOREACH(register_arr, !it.m_hidden && (cond1), { \
+			AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
+			arr_name##_MENU_COUNT++; \
+		}); \
+	if (num_conds >= 2) \
+		FOREACH(register_arr, !it.m_hidden && (cond2), { \
+			AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
+			arr_name##_MENU_COUNT++; \
+		}); \
+	if (num_conds >= 3) \
+		FOREACH(register_arr, !it.m_hidden && (cond3), { \
+			AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
+			arr_name##_MENU_COUNT++; \
+		}); \
 } \
 CLASS(id, DataSource) \
 	METHOD(id, getEntry, entity(id this, int i, void(string, string) returns)) { \
@@ -58,8 +73,10 @@ CLASS(id, DataSource) \
 ENDCLASS(id)
 
 #define REGISTRY_SOURCE(...) EVAL(OVERLOAD(REGISTRY_SOURCE, __VA_ARGS__))
-#define REGISTRY_SOURCE_3(id, arr_name, register_arr)       _REGISTRY_SOURCE(id, arr_name, register_arr, true)
-#define REGISTRY_SOURCE_4(id, arr_name, register_arr, cond) _REGISTRY_SOURCE(id, arr_name, register_arr, cond)
+#define REGISTRY_SOURCE_3(id, arr_name, register_arr)                      _REGISTRY_SOURCE(id, arr_name, register_arr,  true, false, false, 1)
+#define REGISTRY_SOURCE_4(id, arr_name, register_arr, cond1)               _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, false, false, 1)
+#define REGISTRY_SOURCE_5(id, arr_name, register_arr, cond1, cond2)        _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, false, 2)
+#define REGISTRY_SOURCE_6(id, arr_name, register_arr, cond1, cond2, cond3) _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, cond3, 3)
 
 REGISTRY_SOURCE(FreetextSource, Guide, GuidePages)
 
@@ -76,7 +93,10 @@ REGISTRY_SOURCE(PowerupSource, Powerups, Items, it.instanceOfPowerup)
 // The descriptions for these are in common/mutators/mutator/powerups/powerup/*.qc and common/items/item/jetpack.qc
 
 #include <common/items/all.qh>
-REGISTRY_SOURCE(ItemSource, Items, Items, !it.instanceOfPowerup)
+REGISTRY_SOURCE(ItemSource, Items, Items,
+	!it.instanceOfPowerup && it.instanceOfAmmo,
+	!it.instanceOfPowerup && it.instanceOfHealth,
+	!it.instanceOfPowerup && it.instanceOfArmor)
 // The descriptions for these are in common/items/item/*.qc and common/mutators/mutator/instagib/items.qc
 
 #include <common/mutators/mutator/nades/nades.qh>
