@@ -504,6 +504,10 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 					PolyTrail_Spawn(NEW(CrylinkBoltTrail), this);
 				}
 				break;
+			case PROJECTILE_BLASTER:
+				if(autocvar_cl_polytrails && autocvar_cl_polytrails_blaster_bolt)
+					PolyTrail_Spawn(NEW(BlasterBoltTrail), this);
+				break;
 			/*
 			case PROJECTILE_WAKICANNON:
 			    break;

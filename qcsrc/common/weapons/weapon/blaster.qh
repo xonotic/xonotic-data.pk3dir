@@ -54,3 +54,36 @@ CLASS(OffhandBlaster, OffhandWeapon)
 ENDCLASS(OffhandBlaster)
 OffhandBlaster OFFHAND_BLASTER;
 STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
+
+#ifdef CSQC
+bool autocvar_cl_polytrails_blaster_bolt = true;
+float autocvar_cl_polytrails_blaster_bolt_head_alpha = 0.75;
+vector autocvar_cl_polytrails_blaster_bolt_head_color = '1 0.25 0.25';
+float autocvar_cl_polytrails_blaster_bolt_head_thickness = 5;
+float autocvar_cl_polytrails_blaster_bolt_body_alpha = 0.2;
+vector autocvar_cl_polytrails_blaster_bolt_body_color = '1 0.3 0.3';
+float autocvar_cl_polytrails_blaster_bolt_body_thickness = 2;
+float autocvar_cl_polytrails_blaster_bolt_tail_alpha = 0;
+vector autocvar_cl_polytrails_blaster_bolt_tail_color = '1 0 0';
+float autocvar_cl_polytrails_blaster_bolt_tail_thickness = 0;
+float autocvar_cl_polytrails_blaster_bolt_lifetime = 0.05;
+float autocvar_cl_polytrails_blaster_bolt_segmentsize = 0.25;
+float autocvar_cl_polytrails_blaster_bolt_noise = 0;
+string autocvar_cl_polytrails_blaster_bolt_noisefunc = "none";
+CLASS(BlasterBoltTrail, PolyTrail)
+	ATTRIB(BlasterBoltTrail, polytrail_tex, string, "particles/laserbeam.tga");
+	ATTRIB(BlasterBoltTrail, polytrail_lifetime, float, autocvar_cl_polytrails_blaster_bolt_lifetime);
+	ATTRIB(BlasterBoltTrail, polytrail_noise, float, autocvar_cl_polytrails_blaster_bolt_noise);
+	ATTRIB(BlasterBoltTrail, polytrail_segmentsize, float, autocvar_cl_polytrails_blaster_bolt_segmentsize);
+	ATTRIB(BlasterBoltTrail, polytrail_noisefunc, string, autocvar_cl_polytrails_blaster_bolt_noisefunc);
+	ATTRIB(BlasterBoltTrail, polytrail_head_alpha, float, autocvar_cl_polytrails_blaster_bolt_head_alpha);
+	ATTRIB(BlasterBoltTrail, polytrail_head_color, vector, autocvar_cl_polytrails_blaster_bolt_head_color);
+	ATTRIB(BlasterBoltTrail, polytrail_head_thickness, float, autocvar_cl_polytrails_blaster_bolt_head_thickness);
+	ATTRIB(BlasterBoltTrail, polytrail_body_alpha, float, autocvar_cl_polytrails_blaster_bolt_body_alpha);
+	ATTRIB(BlasterBoltTrail, polytrail_body_color, vector, autocvar_cl_polytrails_blaster_bolt_body_color);
+	ATTRIB(BlasterBoltTrail, polytrail_body_thickness, float, autocvar_cl_polytrails_blaster_bolt_body_thickness);
+	ATTRIB(BlasterBoltTrail, polytrail_tail_alpha, float, autocvar_cl_polytrails_blaster_bolt_tail_alpha);
+	ATTRIB(BlasterBoltTrail, polytrail_tail_color, vector, autocvar_cl_polytrails_blaster_bolt_tail_color);
+	ATTRIB(BlasterBoltTrail, polytrail_tail_thickness, float, autocvar_cl_polytrails_blaster_bolt_tail_thickness);
+ENDCLASS(BlasterBoltTrail)
+#endif
