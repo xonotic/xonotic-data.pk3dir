@@ -167,11 +167,6 @@ CLASS(Mutator, Object)
     METHOD(Mutator, display, void(entity this, void(string name, string icon) returns)) {
         returns(this.m_name, this.m_icon);
     }
-    CONSTRUCTOR(Mutator, string _name, mutatorfunc_t func) {
-        CONSTRUCT(Mutator);
-        this.mutatorname = _name;
-        this.mutatorfunc = func;
-    }
 ENDCLASS(Mutator)
 
 REGISTRY(Mutators, BITS(7))
@@ -277,8 +272,12 @@ void Mutator_Remove(Mutator mut)
         bool ret = MUTATORFUNC_##id##_hooks(mode); if (ret) return ret; \
     } \
     bool MUTATOR_##id##_check() { return dependence; } \
-    REGISTER(Mutators, MUTATOR, id, m_id, NEW(cname, #id, MUTATORFUNC_##id)) \
-    { this.mutatorcheck = MUTATOR_##id##_check; } \
+    REGISTER(Mutators, MUTATOR, id, m_id, NEW(cname)) \
+    { \
+        this.mutatorname = #id; \
+        this.mutatorfunc = MUTATORFUNC_##id; \
+        this.mutatorcheck = MUTATOR_##id##_check; \
+    } \
     ACCUMULATE bool MUTATORFUNC_##id(int mode)
 
 #define REGISTER_MUTATOR(...) EVAL(OVERLOAD(REGISTER_MUTATOR, __VA_ARGS__))
