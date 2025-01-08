@@ -31,7 +31,15 @@ WepSet ReadWepSet();
 
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
 REGISTER_REGISTRY(Weapons)
-STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, it.m_pickup = NEW(WeaponPickup, it)); }
+STATIC_INIT(WeaponPickup)
+{
+	FOREACH(Weapons, true,
+	{
+		if ((it.spawnflags & WEP_FLAG_SPECIALATTACK) && !(it.spawnflags & WEP_FLAG_HIDDEN))
+			error(sprintf("Special attack \"%s\" without WEP_FLAG_HIDDEN flag set.", it.m_name));
+		it.m_pickup = NEW(WeaponPickup, it);
+	});
+}
 
 #ifdef SVQC
 #include <server/bot/api.qh>

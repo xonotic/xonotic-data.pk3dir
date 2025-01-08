@@ -8,6 +8,7 @@
 #include <client/player_skeleton.qc>
 #include <client/polytrails.qc>
 #include <client/shownames.qc>
+#include <client/spawnpoints.qc>
 #include <client/teamradar.qc>
 #include <client/view.qc>
 

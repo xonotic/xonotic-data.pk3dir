@@ -42,11 +42,35 @@ void Projectile_DrawTrail(entity this, vector to)
 		if (from == to)
 			from.z += 1;
 
-	if (this.traileffect)
+	// Note: alpha value 0 actually means 1 on entities.
+	// This can be relevant when coming from CSQCModel_Effects_Apply.
+	float a = (this.alpha == 0) ? 1 : this.alpha;
+
+	// TODO: Do we actually need alpha support? Consider removing this
+	// support entirely and instead making necessary adjustments in
+	// effectinfo.
+	//
+	// Right now (2024-12-30), only Crylink can generate alpha via
+	// fade_rate/fade_time, and only PROJECTILE_PORTO_* set a fixed alpha
+	// (and reuse the Arc's TE_WIZSPIKE).
+	if (this.traileffect && a > 0)
 	{
-		particles_alphamin = particles_alphamax = particles_fade = sqrt(this.alpha);
+		float f = PARTICLES_DRAWASTRAIL;
+		if (a < 1)
+		{
+			// Do some of the fading using particle count, and some of it using alpha.
+			// Fading by particle count is less smooth but also cheaper to render.
+			// A higher power here performs more of the fading using particle count.
+			const float fade_power = 0.5;
+			particles_fade = pow(a, fade_power);
+			particles_alphamin = particles_alphamax = a / particles_fade;  // == pow(a, 1 - fade_power)
+			f |= PARTICLES_USEALPHA | PARTICLES_USEFADE;
+			//LOG_INFOF("particle fade: %f alpha: %f", particles_fade, particles_alphamin);
+		}
+		//else
+		//	LOG_INFOF("particle fade skipped");
 		entity eff = REGISTRY_GET(Effects, this.traileffect);
-		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
+		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, f);
 	}
 }
 

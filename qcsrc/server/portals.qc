@@ -331,7 +331,7 @@ void Portal_Touch(entity this, entity toucher)
 	if(Portal_TeleportPlayer(this, toucher, this.aiment))
 		if(toucher.classname == "porto")
 			if(toucher.effects & EF_RED)
-				toucher.effects += EF_BLUE - EF_RED;
+				toucher.effects = (toucher.effects & ~EF_RED) | EF_BLUE;
 }
 
 void Portal_MakeBrokenPortal(entity portal)
