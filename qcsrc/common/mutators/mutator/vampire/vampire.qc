@@ -1,0 +1,14 @@
+#include "vampire.qh"
+
+#ifdef MENUQC
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+METHOD(MutatorVampire, describe, string(MutatorVampire this))
+{
+	TC(MutatorVampire, this);
+	return sprintf(_("The %s mutator gives all players a permanent version of the %s. "
+		"However, unlike the normal %s, when this mutator is enabled players' health can go way above the usual limit of 200\n\n"
+		"Additionally the amount of health players get is equal to the damage they deal, which isn't normaly the case with the %s"),
+	COLORED_NAME(this), COLORED_NAME_WITH_CONCAT(BUFF_VAMPIRE, _("Buff")), COLORED_NAME_WITH_CONCAT(BUFF_VAMPIRE, _("Buff")), COLORED_NAME_WITH_CONCAT(BUFF_VAMPIRE, _("Buff")));
+}
+#endif

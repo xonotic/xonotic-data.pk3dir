@@ -157,19 +157,20 @@ METHOD(OverkillHeavyMachineGun, wr_impacteffect, void(entity thiswep, entity act
 #endif
 #ifdef MENUQC
 #include <common/items/item/ammo.qh>
+#include <common/mutators/mutator/overkill/overkill.qh>
 #include "okmachinegun.qh"
 
 METHOD(OverkillHeavyMachineGun, describe, string(OverkillHeavyMachineGun this))
 {
 	TC(OverkillHeavyMachineGun, this);
 	return sprintf(_("The %s is a superweapon that rapidly fires harmful bullets with a small degree of spread\n\n"
-		"Like with all Overkill weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around\n\n"
+		"Like with all %s weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around\n\n"
 		"It is a superweapon found on some maps, meaning that it breaks down after some time\n\n"
-		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in Overkill. "
+		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s. "
 		"It has a limited magazine size, so needs reloading after several shots\n\n"
 		"The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously\n\n"
 		"Since its bullets deal a lot more damage than the %s's bullets, it is often heavily contested when it spawns in"),
-	COLORED_NAME(this), COLORED_NAME(ITEM_Bullets), COLORED_NAME(this), COLORED_NAME(WEP_OVERKILL_MACHINEGUN));
+	COLORED_NAME(this), COLORED_NAME(MUTATOR_ok), COLORED_NAME(ITEM_Bullets), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this), COLORED_NAME(WEP_OVERKILL_MACHINEGUN));
 }
 
 #endif

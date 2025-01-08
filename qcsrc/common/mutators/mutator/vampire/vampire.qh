@@ -1,0 +1,9 @@
+#pragma once
+
+#ifdef MENUQC
+CLASS(MutatorVampire, Mutator)
+	ATTRIB(MutatorVampire, m_name, string, _("Vampire"));
+ENDCLASS(MutatorVampire)
+
+REGISTER_MUTATOR(vampire, true, MutatorVampire);
+#endif

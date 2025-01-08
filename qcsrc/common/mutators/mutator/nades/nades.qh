@@ -210,3 +210,11 @@ bool Projectile_isnade(int proj); // TODO: remove
 
 void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator
 #endif
+
+#ifdef MENUQC
+CLASS(MutatorNades, Mutator)
+	ATTRIB(MutatorNades, m_name, string, _("Nades"));
+ENDCLASS(MutatorNades)
+
+REGISTER_MUTATOR(nades, true, MutatorNades);
+#endif

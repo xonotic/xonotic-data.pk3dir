@@ -1,0 +1,9 @@
+#pragma once
+
+#ifdef MENUQC
+CLASS(MutatorNIX, Mutator)
+	ATTRIB(MutatorNIX, m_name, string, _("NIX"));
+ENDCLASS(MutatorNIX)
+
+REGISTER_MUTATOR(nix, true, MutatorNIX);
+#endif
