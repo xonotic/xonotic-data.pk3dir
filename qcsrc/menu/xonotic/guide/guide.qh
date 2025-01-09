@@ -79,6 +79,7 @@ ENDCLASS(id)
 #define REGISTRY_SOURCE_6(id, arr_name, register_arr, cond1, cond2, cond3) _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, cond3, 3)
 
 REGISTRY_SOURCE(FreetextSource, Guide, GuidePages)
+// The descriptions for these are in menu/xonotic/guide/pages.qh
 
 #include <common/mapinfo.qh>
 REGISTRY_SOURCE(GametypeSource, Gametypes, Gametypes)
@@ -105,7 +106,7 @@ REGISTRY_SOURCE(NadeSource, Nades, Nades)
 
 #include <common/weapons/all.qh>
 REGISTRY_SOURCE(WeaponSource, Weapons, Weapons)
-// The descriptions for these are in common/weapons/weapon/*.qc and common/mutators/mutator/overkill/ok*.qc
+// The descriptions for these are in common/weapons/weapon/*.qc and common/mutators/mutator/overkill/ok*.qc (weapon files)
 
 #include <common/monsters/all.qh>
 REGISTRY_SOURCE(MonsterSource, Monsters, Monsters)
@@ -121,6 +122,7 @@ REGISTRY_SOURCE(TurretSource, Turrets, Turrets)
 
 #include <common/mutators/base.qh>
 REGISTRY_SOURCE(MutatorSource, Mutators, Mutators)
+// The descriptions for these are in common/mutators/mutator/*.qc (not the cl_* or sv_* files)
 
 #if 0
 CLASS(MapSource, DataSource)
