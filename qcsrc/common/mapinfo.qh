@@ -98,11 +98,11 @@ CLASS(Gametype, Object)
 #ifdef MENUQC
     /* game type guide description
      * this description is used in the guide, the description stored in .m_description is shorter and used for things like the mapvoting dialog
-	 */
+     */
     METHOD(Gametype, describe, string(Gametype this))
     {
         TC(Gametype, this);
-		return SUPER(Gametype).describe(this);
+        return SUPER(Gametype).describe(this);
     }
 #endif
     METHOD(Gametype, display, void(Gametype this, void(string name, string icon) returns))
