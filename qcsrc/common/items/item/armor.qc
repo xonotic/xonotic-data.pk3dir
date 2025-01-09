@@ -1,6 +1,8 @@
 #include "armor.qh"
 
 #ifdef MENUQC
+#include <common/gamemodes/gamemode/duel/duel.qh>
+
 METHOD(ArmorSmall, describe, string(ArmorSmall this))
 {
     TC(ArmorSmall, this);
@@ -30,7 +32,7 @@ METHOD(ArmorMega, describe, string(ArmorMega this))
     TC(ArmorMega, this);
     return sprintf(_("The %s provides you a huge amount of armor when picked up, "
         "protecting you from damage by absorbing incoming hits until it is depleted\n\n"
-        "It tends to be one of the most highly contested items on a map, particularly in game modes like Duel"),
-    COLORED_NAME(this));
+        "It tends to be one of the most highly contested items on a map, particularly in game modes like %s"),
+    COLORED_NAME(this), COLORED_NAME(MAPINFO_TYPE_DUEL));
 }
 #endif

@@ -1,3 +1,5 @@
+#include <common/gamemodes/gamemode/ctf/ctf.qh>
+
 string Buff_CompatName(string buffname)
 {
     switch(buffname)
@@ -126,8 +128,8 @@ CLASS(DisabilityBuff, Buff)
     {
         TC(DisabilityBuff, this);
         return sprintf(_("The %s causes your enemies and monsters to slow down for a few seconds when you attack them, while the buff is active\n\n"
-            "This is particularly useful against speedy players, especially in Capture The Flag"),
-        COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+            "This is particularly useful against speedy players, especially in %s"),
+        COLORED_NAME_WITH_CONCAT(this, _("Buff")), COLORED_NAME(MAPINFO_TYPE_CTF));
     }
 #endif
 ENDCLASS(DisabilityBuff)
@@ -202,7 +204,7 @@ CLASS(SwapperBuff, Buff)
     {
         TC(SwapperBuff, this);
         return sprintf(_("The %s allows you to press the ^3drop weapon^7 bind to switch places with a nearby enemy once\n\n"
-            "A common usage of this Buff is to jump over the map's void, then swap with an enemy, to cause them to fall into the void"),
+            "A common usage of this buff is to jump over the map's void, then swap with an enemy, to cause them to fall into the void"),
         COLORED_NAME_WITH_CONCAT(this, _("Buff")));
     }
 #endif
