@@ -125,13 +125,14 @@ CLASS(Nade, Object)
     ATTRIB(Nade, m_alpha, float, 1);
     ATTRIBARRAY(Nade, m_projectile, int, 2);
     ATTRIBARRAY(Nade, m_trail, entity, 2);
-    METHOD(Nade, display, void(entity this, void(string name, string icon) returns)) {
-        returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon));
+    METHOD(Nade, display, void(Nade this, void(string name, string icon) returns)) {
+        TC(Nade, this);
+        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
     }
 #ifdef MENUQC
     METHOD(Nade, describe, string(Nade this)) {
         TC(Nade, this);
-        return SUPER(Object).describe(this);
+        return SUPER(Nade).describe(this);
     }
 #endif
 ENDCLASS(Nade)

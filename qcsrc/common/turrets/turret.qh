@@ -5,6 +5,8 @@
 CLASS(Turret, Object)
     ATTRIB(Turret, m_id, int, 0);
 
+    /** icon */
+    ATTRIB(Turret, m_icon, string);
     /** short name */
     ATTRIB(Turret, netname, string);
     /** human readable name */
@@ -25,7 +27,8 @@ CLASS(Turret, Object)
     ATTRIB(Turret, m_maxs, vector, '0 0 0');
 
     METHOD(Turret, display, void(Turret this, void(string name, string icon) returns)) {
-        returns(this.m_name, string_null);
+        TC(Turret, this);
+        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
     }
     /** (BOTH) setup turret data */
     METHOD(Turret, tr_setup, void(Turret this, entity it)) {
@@ -58,7 +61,7 @@ CLASS(Turret, Object)
 #ifdef MENUQC
     METHOD(Turret, describe, string(Turret this)) {
         TC(Turret, this);
-        return SUPER(Object).describe(this);
+        return SUPER(Turret).describe(this);
     }
 #endif
 ENDCLASS(Turret)

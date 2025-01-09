@@ -126,13 +126,14 @@ CLASS(Weapon, Object)
 	METHOD(Weapon, wr_pickup, void(Weapon this, entity actor, .entity weaponentity)) {}
 	/** (SERVER) update cvar based properties */
 	METHOD(Weapon, wr_update, void(Weapon this)) {}
-	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
+	METHOD(Weapon, display, void(Weapon this, void(string name, string icon) returns)) {
+		TC(Weapon, this);
 		returns(this.m_name, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
 	}
 #ifdef MENUQC
 	METHOD(Weapon, describe, string(Weapon this)) {
 		TC(Weapon, this);
-		return SUPER(Object).describe(this);
+		return SUPER(Weapon).describe(this);
 	}
 #endif
 ENDCLASS(Weapon)

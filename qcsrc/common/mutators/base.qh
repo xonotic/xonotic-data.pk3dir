@@ -160,12 +160,13 @@ CLASS(Mutator, Object)
     ATTRIB(Mutator, mutatorname, string);
     ATTRIB(Mutator, mutatorfunc, mutatorfunc_t);
     ATTRIB(Mutator, mutatorcheck, bool());
-    METHOD(Mutator, describe, string(entity this)) {
+    METHOD(Mutator, describe, string(Mutator this)) {
         TC(Mutator, this);
         return SUPER(Mutator).describe(this);
     }
-    METHOD(Mutator, display, void(entity this, void(string name, string icon) returns)) {
-        returns(this.m_name, this.m_icon);
+    METHOD(Mutator, display, void(Mutator this, void(string name, string icon) returns)) {
+        TC(Mutator, this);
+        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
     }
 ENDCLASS(Mutator)
 

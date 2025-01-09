@@ -136,7 +136,7 @@ CLASS(GameItem, Object)
     METHOD(GameItem, describe, string(GameItem this))
     {
         TC(GameItem, this);
-        return SUPER(Object).describe(this);
+        return SUPER(GameItem).describe(this);
     }
 #endif
     METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))

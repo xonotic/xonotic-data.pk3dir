@@ -58,8 +58,15 @@ CLASS(Monster, Object)
     /** (BOTH?) sets animations for monster */
     METHOD(Monster, mr_anim, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
 #ifdef MENUQC
-    METHOD(Monster, describe, string(Monster this)) { TC(Monster, this); return SUPER(Object).describe(this); }
+    METHOD(Monster, describe, string(Monster this)) {
+        TC(Monster, this);
+        return SUPER(Monster).describe(this);
+    }
 #endif
+    METHOD(Monster, display, void(Monster this, void(string name, string icon) returns)) {
+        TC(Monster, this);
+        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
+    }
 ENDCLASS(Monster)
 
 

@@ -13,7 +13,7 @@ CLASS(Powerup, Pickup)
     METHOD(Powerup, describe, string(Powerup this))
     {
         TC(Powerup, this);
-        return SUPER(Object).describe(this);
+        return SUPER(Powerup).describe(this);
     }
 #endif
 ENDCLASS(Powerup)

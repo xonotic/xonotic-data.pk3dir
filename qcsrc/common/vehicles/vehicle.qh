@@ -40,10 +40,11 @@ CLASS(Vehicle, Object)
 #ifdef MENUQC
     METHOD(Vehicle, describe, string(Vehicle this)) {
         TC(Vehicle, this);
-        return SUPER(Object).describe(this);
+        return SUPER(Vehicle).describe(this);
     }
 #endif
-    METHOD(Vehicle, display, void(entity this, void(string name, string icon) returns)) {
+    METHOD(Vehicle, display, void(Vehicle this, void(string name, string icon) returns)) {
+        TC(Vehicle, this);
         returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
     }
 
