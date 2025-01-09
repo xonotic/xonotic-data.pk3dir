@@ -2,7 +2,7 @@
 
 #ifdef MENUQC
 CLASS(MutatorRocketFlying, Mutator)
-	ATTRIB(MutatorRocketFlying, m_name, string, _("Rocket Flying"));
+	ATTRIB(MutatorRocketFlying, message, string, _("Rocket Flying"));
 ENDCLASS(MutatorRocketFlying)
 
 REGISTER_MUTATOR(rocketflying, true, MutatorRocketFlying);

@@ -2,7 +2,7 @@
 
 #ifdef MENUQC
 CLASS(MutatorTouchExplode, Mutator)
-	ATTRIB(MutatorTouchExplode, m_name, string, _("Touch explode"));
+	ATTRIB(MutatorTouchExplode, message, string, _("Touch explode"));
 ENDCLASS(MutatorTouchExplode)
 
 REGISTER_MUTATOR(touchexplode, true, MutatorTouchExplode);

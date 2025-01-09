@@ -2,7 +2,7 @@
 
 #ifdef MENUQC
 CLASS(MutatorInstagib, Mutator)
-	ATTRIB(MutatorInstagib, m_name, string, _("InstaGib"));
+	ATTRIB(MutatorInstagib, message, string, _("InstaGib"));
 ENDCLASS(MutatorInstagib)
 
 REGISTER_MUTATOR(mutator_instagib, true, MutatorInstagib);

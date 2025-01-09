@@ -40,7 +40,6 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, mdl, string);
     /** human readable name */
     ATTRIB(Gametype, message, string);
-    ATTRIB(Gametype, m_name, string);
     /** color */
     ATTRIB(Gametype, m_color, vector, '1 1 1');
     /** does this gametype support teamplay? */
@@ -108,7 +107,7 @@ CLASS(Gametype, Object)
     METHOD(Gametype, display, void(Gametype this, void(string name, string icon) returns))
     {
         TC(Gametype, this);
-        returns(this.m_name, this.mdl ? strcat("gametype_", this.mdl) : string_null);
+        returns(this.message, this.mdl ? strcat("gametype_", this.mdl) : string_null);
     }
 
     METHOD(Gametype, gametype_init, void(Gametype this, string hname, string sname, string g_name, int gflags, string mutators, string defaults, string gdescription))
@@ -116,7 +115,6 @@ CLASS(Gametype, Object)
         this.netname = g_name;
         this.mdl = sname;
         this.message = hname;
-        this.m_name = hname;
         this.team = (gflags & GAMETYPE_FLAG_TEAMPLAY);
         this.m_mutators = cons(sname, mutators);
         this.model2 = defaults;

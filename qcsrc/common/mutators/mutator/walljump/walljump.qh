@@ -2,7 +2,7 @@
 
 #ifdef MENUQC
 CLASS(MutatorWallJump, Mutator)
-	ATTRIB(MutatorWallJump, m_name, string, _("Wall jumping"));
+	ATTRIB(MutatorWallJump, message, string, _("Wall jumping"));
 ENDCLASS(MutatorWallJump)
 
 REGISTER_MUTATOR(walljump, true, MutatorWallJump);

@@ -216,7 +216,7 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 #include <common/mutators/base.qh>
 
 CLASS(MutatorNades, Mutator)
-	ATTRIB(MutatorNades, m_name, string, _("Nades"));
+	ATTRIB(MutatorNades, message, string, _("Nades"));
 ENDCLASS(MutatorNades)
 
 REGISTER_MUTATOR(nades, true, MutatorNades);

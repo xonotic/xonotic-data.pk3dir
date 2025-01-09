@@ -2,7 +2,7 @@
 
 #ifdef MENUQC
 CLASS(MutatorOverkill, Mutator)
-	ATTRIB(MutatorOverkill, m_name, string, _("Overkill"));
+	ATTRIB(MutatorOverkill, message, string, _("Overkill"));
 ENDCLASS(MutatorOverkill)
 
 REGISTER_MUTATOR(ok, true, MutatorOverkill);

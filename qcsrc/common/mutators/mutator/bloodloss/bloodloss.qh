@@ -2,7 +2,7 @@
 
 #ifdef MENUQC
 CLASS(MutatorBloodLoss, Mutator)
-	ATTRIB(MutatorBloodLoss, m_name, string, _("Blood loss"));
+	ATTRIB(MutatorBloodLoss, message, string, _("Blood loss"));
 ENDCLASS(MutatorBloodLoss)
 
 REGISTER_MUTATOR(bloodloss, true, MutatorBloodLoss);

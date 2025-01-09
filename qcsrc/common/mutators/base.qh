@@ -154,10 +154,10 @@ USING(mutatorfunc_t, bool(int));
 
 CLASS(Mutator, Object)
     ATTRIB(Mutator, m_id, int, 0);
-    ATTRIB(Mutator, m_name, string);
+    ATTRIB(Mutator, message, string);
     ATTRIB(Mutator, m_color, vector, '1 1 1');
     ATTRIB(Mutator, m_icon, string);
-    ATTRIB(Mutator, mutatorname, string);
+    ATTRIB(Mutator, m_name, string);
     ATTRIB(Mutator, mutatorfunc, mutatorfunc_t);
     ATTRIB(Mutator, mutatorcheck, bool());
     METHOD(Mutator, describe, string(Mutator this)) {
@@ -166,7 +166,7 @@ CLASS(Mutator, Object)
     }
     METHOD(Mutator, display, void(Mutator this, void(string name, string icon) returns)) {
         TC(Mutator, this);
-        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
+        returns(this.message, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
     }
 ENDCLASS(Mutator)
 
@@ -232,7 +232,7 @@ bool Mutator_Add(Mutator mut)
     mutatorfunc_t func = mut.mutatorfunc;
     if (!func(MUTATOR_ADDING)) {
         // good
-        if (mutator_log) LOG_TRACEF("Mutator: added %s", mut.mutatorname);
+        if (mutator_log) LOG_TRACEF("Mutator: added %s", mut.m_name);
 #ifdef SVQC
         Net_LinkEntity(mut, false, 0, Mutator_SendEntity);
 #endif
@@ -260,7 +260,7 @@ void Mutator_Remove(Mutator mut)
         // baaaaad
         error("Mutator_Remove: removing mutator failed");
     }
-    if (mutator_log) LOG_TRACEF("Mutator: removed %s", mut.mutatorname);
+    if (mutator_log) LOG_TRACEF("Mutator: removed %s", mut.m_name);
 #ifdef SVQC
     Net_UnlinkEntity(mut);
 #endif
@@ -275,7 +275,7 @@ void Mutator_Remove(Mutator mut)
     bool MUTATOR_##id##_check() { return dependence; } \
     REGISTER(Mutators, MUTATOR, id, m_id, NEW(cname)) \
     { \
-        this.mutatorname = #id; \
+        this.m_name = #id; \
         this.mutatorfunc = MUTATORFUNC_##id; \
         this.mutatorcheck = MUTATOR_##id##_check; \
     } \

@@ -2,7 +2,7 @@
 
 #ifdef MENUQC
 CLASS(MutatorGrapplingHook, Mutator)
-	ATTRIB(MutatorGrapplingHook, m_name, string, _("Hook"));
+	ATTRIB(MutatorGrapplingHook, message, string, _("Hook"));
 ENDCLASS(MutatorGrapplingHook)
 
 REGISTER_MUTATOR(hook, true, MutatorGrapplingHook);

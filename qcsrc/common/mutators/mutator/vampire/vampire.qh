@@ -2,7 +2,7 @@
 
 #ifdef MENUQC
 CLASS(MutatorVampire, Mutator)
-	ATTRIB(MutatorVampire, m_name, string, _("Vampire"));
+	ATTRIB(MutatorVampire, message, string, _("Vampire"));
 ENDCLASS(MutatorVampire)
 
 REGISTER_MUTATOR(vampire, true, MutatorVampire);
