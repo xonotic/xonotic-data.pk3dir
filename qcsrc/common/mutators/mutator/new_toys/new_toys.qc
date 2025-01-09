@@ -31,7 +31,7 @@ METHOD(MutatorNewToys, describe, string(MutatorNewToys this))
 		"The current %s weapons are:"), // do it like this so that the string doesn't need to change when the list is updated
 	COLORED_NAME(this), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this), COLORED_NAME(this));
     FOREACH(Weapons, nt_IsNewToy(it.m_id), {
-        s = strcat(s, "\n", COLORED_NAME(it));
+        s = strcat(s, "\n  ", COLORED_NAME(it));
     });
 	return s;
 }
