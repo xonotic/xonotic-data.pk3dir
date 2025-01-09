@@ -40,7 +40,7 @@ CLASS(ArmorSmall, Armor)
 /* itemname     */ ATTRIB(ArmorSmall, m_name, string, _("Small armor"));
 /* icon         */ ATTRIB(ArmorSmall, m_icon, string, // ...
 #ifdef CSQC
-    (precache_pic(strcat("gfx/hud/luma/", "health_small")) == "")
+    (precache_pic(strcat("gfx/hud/luma/", "armor_small")) == "")
         ? "armor" // compatible with Xonotic v0.8.2 or lower
         : "armor_small"
 #else

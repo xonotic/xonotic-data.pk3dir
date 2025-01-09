@@ -35,7 +35,7 @@ CLASS(Jetpack, Powerup)
 /* model      */ ATTRIB(Jetpack, m_model, Model, MDL_Jetpack_ITEM);
 /* sound      */ ATTRIB(Jetpack, m_itemid, Sound, IT_JETPACK);
 #endif
-/* refnmae    */ ATTRIB(Jetpack, netname, string, "jetpack");
+/* refname    */ ATTRIB(Jetpack, netname, string, "jetpack");
 /* itemname   */ ATTRIB(Jetpack, m_name, string, _("Jetpack"));
 /* icon       */ ATTRIB(Jetpack, m_icon, string, "jetpack");
 /* color      */ ATTRIB(Jetpack, m_color, vector, '0.5 0.5 0.5');

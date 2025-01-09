@@ -46,7 +46,7 @@ CLASS(StrengthItem, Powerup)
     ATTRIB(StrengthItem, netname, string, "strength");
     ATTRIB(StrengthItem, m_name, string, _("Strength"));
     ATTRIB(StrengthItem, m_icon, string, "strength");
-    ATTRIB(StrengthItem, m_color, vector, '1 0 0');
+    ATTRIB(StrengthItem, m_color, vector, '0 0 1');
     ATTRIB(StrengthItem, m_waypoint, string, _("Strength"));
     ATTRIB(StrengthItem, m_waypointblink, int, 2);
 ENDCLASS(StrengthItem)
