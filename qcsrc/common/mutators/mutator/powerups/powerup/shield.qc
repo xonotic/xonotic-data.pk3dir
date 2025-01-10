@@ -1,7 +1,7 @@
 #include "shield.qh"
 
 #ifdef SVQC
-METHOD(ShieldStatusEffect, m_remove, void(StatusEffects this, entity actor, int removal_type))
+METHOD(ShieldStatusEffect, m_remove, void(StatusEffect this, entity actor, int removal_type))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(removal_type == STATUSEFFECT_REMOVE_TIMEOUT && wasactive && IS_PLAYER(actor))
@@ -14,7 +14,7 @@ METHOD(ShieldStatusEffect, m_remove, void(StatusEffects this, entity actor, int 
     actor.effects &= ~(EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
     SUPER(ShieldStatusEffect).m_remove(this, actor, removal_type);
 }
-METHOD(ShieldStatusEffect, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+METHOD(ShieldStatusEffect, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(!wasactive && IS_PLAYER(actor))
@@ -25,7 +25,7 @@ METHOD(ShieldStatusEffect, m_apply, void(StatusEffects this, entity actor, float
     }
     SUPER(ShieldStatusEffect).m_apply(this, actor, eff_time, eff_flags);
 }
-METHOD(ShieldStatusEffect, m_tick, void(StatusEffects this, entity actor))
+METHOD(ShieldStatusEffect, m_tick, void(StatusEffect this, entity actor))
 {
     play_countdown(actor, StatusEffects_gettime(this, actor), SND_POWEROFF);
     actor.effects |= (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
@@ -33,13 +33,13 @@ METHOD(ShieldStatusEffect, m_tick, void(StatusEffects this, entity actor))
 }
 #endif
 #ifdef CSQC
-METHOD(ShieldStatusEffect, m_active, bool(StatusEffects this, entity actor))
+METHOD(ShieldStatusEffect, m_active, bool(StatusEffect this, entity actor))
 {
     if(autocvar__hud_configure)
         return true;
     return SUPER(ShieldStatusEffect).m_active(this, actor);
 }
-METHOD(ShieldStatusEffect, m_tick, void(StatusEffects this, entity actor))
+METHOD(ShieldStatusEffect, m_tick, void(StatusEffect this, entity actor))
 {
     if(this.m_hidden)
         return;

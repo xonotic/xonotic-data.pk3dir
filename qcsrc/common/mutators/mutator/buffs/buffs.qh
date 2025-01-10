@@ -8,10 +8,10 @@
 #include <common/mutators/mutator/waypoints/all.qh>
 #endif
 
-#define REGISTER_BUFF(id, inst) REGISTER(StatusEffect, BUFF_##id, m_id, inst)
+#define REGISTER_BUFF(id, inst) REGISTER(StatusEffects, BUFF_##id, m_id, inst)
 
 #include <common/mutators/mutator/status_effects/_mod.qh>
-CLASS(Buff, StatusEffects)
+CLASS(Buff, StatusEffect)
 #ifdef GAMEQC
 	ATTRIB(Buff, m_itemid, int, IT_BUFF);
 #endif
@@ -32,7 +32,7 @@ CLASS(Buff, StatusEffects)
 ENDCLASS(Buff)
 
 STATIC_INIT(REGISTER_BUFFS) {
-	FOREACH(StatusEffect, it.instanceOfBuff, {
+	FOREACH(StatusEffects, it.instanceOfBuff, {
 		it.m_sprite = strzone(strcat("buff-", it.netname));
 	});
 }

@@ -170,7 +170,7 @@ void target_init_use(entity this, entity actor, entity trigger)
 
 	if (!(this.spawnflags & 8))
 	{
-		FOREACH(StatusEffect, it.instanceOfPowerups,
+		FOREACH(StatusEffects, it.instanceOfPowerupStatusEffect,
 		{
 			it.m_remove(it, actor, STATUSEFFECT_REMOVE_NORMAL);
 		});

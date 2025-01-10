@@ -55,10 +55,10 @@ REGISTER_ITEM(Invisibility, NEW(InvisibilityItem));
 SPAWNFUNC_ITEM(item_invisibility, ITEM_Invisibility)
 SPAWNFUNC_ITEM(item_buff_invisibility, ITEM_Invisibility)
 
-CLASS(InvisibilityStatusEffect, Powerups)
-    ATTRIB(InvisibilityStatusEffect, netname, string, "invisibility");
-    ATTRIB(InvisibilityStatusEffect, m_name, string, _("Invisibility"));
-    ATTRIB(InvisibilityStatusEffect, m_color, vector, '0.5 0.5 1');
-    ATTRIB(InvisibilityStatusEffect, m_icon, string, "buff_invisible");
+CLASS(InvisibilityStatusEffect, PowerupStatusEffect)
+	ATTRIB(InvisibilityStatusEffect, netname, string, "invisibility");
+	ATTRIB(InvisibilityStatusEffect, m_name, string, _("Invisibility"));
+	ATTRIB(InvisibilityStatusEffect, m_color, vector, '0.5 0.5 1');
+	ATTRIB(InvisibilityStatusEffect, m_icon, string, "buff_invisible");
 ENDCLASS(InvisibilityStatusEffect)
 REGISTER_STATUSEFFECT(Invisibility, NEW(InvisibilityStatusEffect));

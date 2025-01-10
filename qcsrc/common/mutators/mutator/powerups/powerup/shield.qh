@@ -53,9 +53,9 @@ REGISTER_ITEM(Shield, NEW(ShieldItem));
 SPAWNFUNC_ITEM(item_shield, ITEM_Shield)
 SPAWNFUNC_ITEM(item_invincible, ITEM_Shield)
 
-CLASS(ShieldStatusEffect, Powerups)
-    ATTRIB(ShieldStatusEffect, netname, string, "invincible"); // NOTE: referring to as invincible so that it matches the powerup item
-    ATTRIB(ShieldStatusEffect, m_name, string, _("Shield"));
-    ATTRIB(ShieldStatusEffect, m_icon, string, "shield");
+CLASS(ShieldStatusEffect, PowerupStatusEffect)
+	ATTRIB(ShieldStatusEffect, netname, string, "invincible"); // NOTE: referring to as invincible so that it matches the powerup item
+	ATTRIB(ShieldStatusEffect, m_name, string, _("Shield"));
+	ATTRIB(ShieldStatusEffect, m_icon, string, "shield");
 ENDCLASS(ShieldStatusEffect)
 REGISTER_STATUSEFFECT(Shield, NEW(ShieldStatusEffect));

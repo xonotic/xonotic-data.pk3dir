@@ -1,7 +1,7 @@
 #include "speed.qh"
 
 #ifdef SVQC
-METHOD(SpeedStatusEffect, m_remove, void(StatusEffects this, entity actor, int removal_type))
+METHOD(SpeedStatusEffect, m_remove, void(StatusEffect this, entity actor, int removal_type))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(removal_type == STATUSEFFECT_REMOVE_TIMEOUT && wasactive && IS_PLAYER(actor))
@@ -13,7 +13,7 @@ METHOD(SpeedStatusEffect, m_remove, void(StatusEffects this, entity actor, int r
         stopsound(actor, CH_TRIGGER_SINGLE); // get rid of the pickup sound
     SUPER(SpeedStatusEffect).m_remove(this, actor, removal_type);
 }
-METHOD(SpeedStatusEffect, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+METHOD(SpeedStatusEffect, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(!wasactive && IS_PLAYER(actor))
@@ -24,7 +24,7 @@ METHOD(SpeedStatusEffect, m_apply, void(StatusEffects this, entity actor, float 
     }
     SUPER(SpeedStatusEffect).m_apply(this, actor, eff_time, eff_flags);
 }
-METHOD(SpeedStatusEffect, m_tick, void(StatusEffects this, entity actor))
+METHOD(SpeedStatusEffect, m_tick, void(StatusEffect this, entity actor))
 {
     play_countdown(actor, StatusEffects_gettime(this, actor), SND_POWEROFF);
     SUPER(SpeedStatusEffect).m_tick(this, actor);
