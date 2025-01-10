@@ -85,7 +85,7 @@ CLASS(DamageText, Object)
 			if (autocvar_cl_damagetext_color_per_weapon)
 			{
 				Weapon w = DEATH_WEAPONOF(this.m_deathtype);
-				if (w != WEP_Null) rgb = w.wpcolor;
+				if (w != WEP_Null) rgb = w.m_color;
 			}
 
 			vector drawfontscale_save = drawfontscale;
