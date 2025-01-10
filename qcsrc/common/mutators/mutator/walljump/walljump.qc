@@ -73,3 +73,13 @@ MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 }
 
 #endif
+#ifdef MENUQC
+METHOD(MutatorWallJump, describe, string(MutatorWallJump this))
+{
+	TC(MutatorWallJump, this);
+	return sprintf(_("%s is a mutator that enables jumping off walls for added mobility. "
+		"To do a wall jump, tap ^3+jump^7 when against a wall\n\n"
+		"This mutator adds a bit of versatility, allowing for more dynamic and unpredictable movement"),
+	COLORED_NAME(this));
+}
+#endif

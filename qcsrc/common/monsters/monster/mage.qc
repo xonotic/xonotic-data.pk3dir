@@ -486,3 +486,12 @@ METHOD(Mage, mr_setup, bool(Mage this, entity actor))
     return true;
 }
 #endif
+#ifdef MENUQC
+METHOD(Mage, describe, string(Mage this))
+{
+    TC(Mage, this);
+    return _("Mages are capable of developing magic with their powerful knowledge that they learn and practice during their spell sciences. "
+             "Sometimes the Mage can give regeneration to the owner and sometimes makes the owner pay the health for his needs to be with him\n\n"
+             "The Mage attacks by launching magic balls. This spell attack is known as \"Mage spike\"");
+}
+#endif

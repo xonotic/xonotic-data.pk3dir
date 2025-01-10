@@ -1,0 +1,9 @@
+#pragma once
+
+#ifdef MENUQC
+CLASS(MutatorInstagib, Mutator)
+	ATTRIB(MutatorInstagib, message, string, _("InstaGib"));
+ENDCLASS(MutatorInstagib)
+
+REGISTER_MUTATOR(mutator_instagib, true, MutatorInstagib);
+#endif

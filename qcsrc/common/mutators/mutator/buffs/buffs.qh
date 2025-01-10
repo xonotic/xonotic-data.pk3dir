@@ -8,8 +8,7 @@
 #include <common/mutators/mutator/waypoints/all.qh>
 #endif
 
-#define REGISTER_BUFF(id, inst) \
-    REGISTER(StatusEffect, BUFF_##id, m_id, inst)
+#define REGISTER_BUFF(id, inst) REGISTER(StatusEffect, BUFF_##id, m_id, inst)
 
 #include <common/mutators/mutator/status_effects/_mod.qh>
 CLASS(Buff, StatusEffects)
@@ -19,16 +18,24 @@ CLASS(Buff, StatusEffects)
 	ATTRIB(Buff, netname, string, "buff");
 	ATTRIB(Buff, m_icon, string, "buff");
 	ATTRIB(Buff, m_color, vector, '1 1 1');
-	ATTRIB(Buff, m_name, string, "Buff");
+	ATTRIB(Buff, m_name, string, _("Buff"));
 	ATTRIB(Buff, m_skin, int, 0);
 	ATTRIB(Buff, m_lifetime, float, 60);
 	ATTRIB(Buff, m_sprite, string, "");
-	METHOD(Buff, display, void(entity this, void(string name, string icon) returns)) {
-		returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon));
+	METHOD(Buff, display, void(Buff this, void(string name, string icon) returns)) {
+		TC(Buff, this);
+		returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
 	}
 #ifdef SVQC
-	METHOD(Buff, m_time, float(Buff this))
-	{ return cvar(strcat("g_buffs_", this.netname, "_time")); }
+	METHOD(Buff, m_time, float(Buff this)) {
+		return cvar(strcat("g_buffs_", this.netname, "_time"));
+	}
+#endif
+#ifdef MENUQC
+	METHOD(Buff, describe, string(Buff this)) {
+		TC(Buff, this);
+		return SUPER(Buff).describe(this);
+	}
 #endif
 ENDCLASS(Buff)
 

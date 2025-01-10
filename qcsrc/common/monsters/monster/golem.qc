@@ -280,3 +280,11 @@ METHOD(Golem, mr_setup, bool(Golem this, entity actor))
     return true;
 }
 #endif
+#ifdef MENUQC
+METHOD(Golem, describe, string(Golem this))
+{
+    TC(Golem, this);
+    return _("Golems are truly a force to be feared. They tend to have an immense amount of health and take only half the damage from explosions\n\n"
+             "His pride and joy is his lightning energy attack. His attacks are throwing electro balls, and if the prey is near him he will attack with his claws");
+}
+#endif

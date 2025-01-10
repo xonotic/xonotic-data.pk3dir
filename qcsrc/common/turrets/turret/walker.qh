@@ -12,7 +12,7 @@ CLASS(WalkerTurret, Turret)
 /* model      */ ATTRIB_STRZONE(WalkerTurret, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(WalkerTurret, head_model, string, strcat("models/turrets/", "walker_head_minigun.md3"));
 /* netname    */ ATTRIB(WalkerTurret, netname, string, "walker");
-/* fullname   */ ATTRIB(WalkerTurret, turret_name, string, _("Walker Turret"));
+/* fullname   */ ATTRIB(WalkerTurret, m_name, string, _("Walker Turret"));
     ATTRIB(WalkerTurret, m_weapon, Weapon, WEP_WALKER);
 
 #define X(BEGIN, P, END, class, prefix) \

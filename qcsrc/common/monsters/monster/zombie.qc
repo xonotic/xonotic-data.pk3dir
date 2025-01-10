@@ -171,3 +171,13 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
     return true;
 }
 #endif
+#ifdef MENUQC
+METHOD(Zombie, describe, string(Zombie this))
+{
+    TC(Zombie, this);
+    return _("The Zombie is an undead human that tears chunks of flesh from its head, hindquarters, and crotch before proceeding to toss them at the player character for minor damage\n\n"
+             "When an opponent comes too close to the Zombie, it will start chasing then launch to attack with a bite\n\n"
+             "When a Zombie is close to death, it will stand in a \"dead pose,\" from which it can be revived. "
+             "To properly kill one, you will need to damage the Zombie when it is in a dead pose");
+}
+#endif

@@ -10,7 +10,7 @@ CLASS(Flac, Turret)
 /* model      */ ATTRIB_STRZONE(Flac, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(Flac, head_model, string, strcat("models/turrets/", "flac.md3"));
 /* netname    */ ATTRIB(Flac, netname, string, "flac");
-/* fullname   */ ATTRIB(Flac, turret_name, string, _("FLAC Cannon"));
+/* fullname   */ ATTRIB(Flac, m_name, string, _("FLAC Cannon"));
     ATTRIB(Flac, m_weapon, Weapon, WEP_FLAC);
 
 #define X(BEGIN, P, END, class, prefix) \

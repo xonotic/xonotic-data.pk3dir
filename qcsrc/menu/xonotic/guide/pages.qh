@@ -1,0 +1,41 @@
+#pragma once
+
+CLASS(GuidePage, Object);
+	ATTRIB(GuidePage, m_id, int, 0);
+	ATTRIB(GuidePage, m_name, string, "");
+	ATTRIB(GuidePage, m_icon, string);
+	ATTRIB(GuidePage, m_description, string, "");
+
+	METHOD(GuidePage, describe, string(GuidePage this))
+	{
+		TC(GuidePage, this);
+		return this.m_description;
+	}
+	METHOD(GuidePage, display, void(GuidePage this, void(string name, string icon) returns))
+	{
+		TC(GuidePage, this);
+		returns(this.m_name, this.m_icon ? this.m_icon : string_null);
+	}
+
+	CONSTRUCTOR(GuidePage, string _name, string _icon) {
+		CONSTRUCT(GuidePage);
+		this.m_name = _name;
+		this.m_icon = _icon;
+	}
+ENDCLASS(GuidePage)
+
+REGISTRY(GuidePages, 16)
+#define REGISTER_GUIDE_PAGE(id, name, icon) \
+	REGISTER(GuidePages, GUIDE_PAGE, id, m_id, NEW(GuidePage, name, icon))
+REGISTER_REGISTRY(GuidePages)
+
+REGISTER_GUIDE_PAGE(0, _("Introduction"), "gametype_dm")
+{
+	this.m_description = _("Welcome to Xonotic, the free and fast arena shooter!\n\n"
+		"Keep in mind all values and descriptions in this guide are based on the default game settings, so it may differ from the experience when playing on some modified servers");
+}
+
+REGISTER_GUIDE_PAGE(1, _("Movement"), "gametype_inv")
+{
+	this.m_description = _("In Xonotic to move quickly you will have to airstrafe and bunnyhop"); // TODO
+}
