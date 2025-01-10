@@ -2,7 +2,7 @@
 
 #include "commandbutton.qh"
 #include "textlabel.qh"
-#include "textslider.qh"
+#include "mixedslider.qh"
 #include "checkbox.qh"
 #include "slider.qh"
 #include "slider_resolution.qh"
@@ -35,25 +35,25 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.applyButton = videoApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Font/UI size:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_vid_scale"));
-			e.addValue(e, ZCTX(_("SZ^Unreadable")), "-1");
-			e.addValue(e, ZCTX(_("SZ^Tiny")), "-0.75");
-			e.addValue(e, ZCTX(_("SZ^Little")), "-0.5");
-			e.addValue(e, ZCTX(_("SZ^Small")), "-0.25");
-			e.addValue(e, ZCTX(_("SZ^Medium")), "0");
-			e.addValue(e, ZCTX(_("SZ^Large")), "0.25");
-			e.addValue(e, ZCTX(_("SZ^Huge")), "0.5");
-			e.addValue(e, ZCTX(_("SZ^Gigantic")), "0.75");
-			e.addValue(e, ZCTX(_("SZ^Colossal")), "1");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("menu_vid_scale"));
+			e.addText(e, ZCTX(_("SZ^Unreadable")), -1);
+			e.addText(e, ZCTX(_("SZ^Tiny")), -0.75);
+			e.addText(e, ZCTX(_("SZ^Little")), -0.5);
+			e.addText(e, ZCTX(_("SZ^Small")), -0.25);
+			e.addText(e, ZCTX(_("SZ^Medium")), 0);
+			e.addText(e, ZCTX(_("SZ^Large")), 0.25);
+			e.addText(e, ZCTX(_("SZ^Huge")), 0.5);
+			e.addText(e, ZCTX(_("SZ^Gigantic")), 0.75);
+			e.addText(e, ZCTX(_("SZ^Colossal")), 1);
+			e.configureXonoticMixedSliderValues(e);
 			e.applyButton = videoApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Color depth:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("vid_bitsperpixel",
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("vid_bitsperpixel",
 			_("How many bits per pixel (BPP) to render at, 32 is recommended")));
-			e.addValue(e, _("16bit"), "16");
-			e.addValue(e, _("32bit"), "32");
-			e.configureXonoticTextSliderValues(e);
+			e.addText(e, _("16bit"), 16);
+			e.addText(e, _("32bit"), 32);
+			e.configureXonoticMixedSliderValues(e);
 			e.applyButton = videoApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));
@@ -71,12 +71,12 @@ void XonoticVideoSettingsTab_fill(entity me)
 	{
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Antialiasing:")));
 			setDependent(e, "r_viewfbo", 0, 0);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("vid_samples",
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("vid_samples",
 			_("Enable antialiasing, which smooths the edges of 3D geometry. Note that it might decrease performance by quite a lot")));
-			e.addValue(e, ZCTX(_("AA^Disabled")), "1");
-			e.addValue(e, _("2x"), "2");
-			e.addValue(e, _("4x"), "4");
-			e.configureXonoticTextSliderValues(e);
+			e.addText(e, ZCTX(_("AA^Disabled")), 1);
+			e.addText(e, _("2x"), 2);
+			e.addText(e, _("4x"), 4);
+			e.configureXonoticMixedSliderValues(e);
 			setDependent(e, "r_viewfbo", 0, 0);
 			e.applyButton = videoApplyButton;
 	}
@@ -88,24 +88,24 @@ void XonoticVideoSettingsTab_fill(entity me)
 	}
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Anisotropy:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("gl_texture_anisotropy",
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("gl_texture_anisotropy",
 			_("Anisotropic filtering quality")));
-			e.addValue(e, ZCTX(_("ANISO^Disabled")), "1");
-			e.addValue(e, _("2x"), "2");
-			e.addValue(e, _("4x"), "4");
-			e.addValue(e, _("8x"), "8");
-			e.addValue(e, _("16x"), "16");
-			e.configureXonoticTextSliderValues(e);
+			e.addText(e, ZCTX(_("ANISO^Disabled")), 1);
+			e.addText(e, _("2x"), 2);
+			e.addText(e, _("4x"), 4);
+			e.addText(e, _("8x"), 8);
+			e.addText(e, _("16x"), 16);
+			e.configureXonoticMixedSliderValues(e);
 
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Depth first:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("r_depthfirst",
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("r_depthfirst",
 			_("Eliminate overdraw by rendering a depth-only version of the scene before the normal rendering starts")));
-			e.addValue(e, ZCTX(_("DF^Disabled")), "0");
-			e.addValue(e, ZCTX(_("DF^World")), "1");
-			e.addValue(e, ZCTX(_("DF^All")), "2");
-			e.configureXonoticTextSliderValues(e);
+			e.addText(e, ZCTX(_("DF^Disabled")), 0);
+			e.addText(e, ZCTX(_("DF^World")), 1);
+			e.addText(e, ZCTX(_("DF^All")), 2);
+			e.configureXonoticMixedSliderValues(e);
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Brightness:")));

@@ -1,7 +1,7 @@
 #include "dialog_hudpanel_physics.qh"
 
 #include "textlabel.qh"
-#include "textslider.qh"
+#include "mixedslider.qh"
 #include "checkbox.qh"
 #include "slider.qh"
 
@@ -11,12 +11,12 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 	string panelname = "physics";
 
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_physics"));
-			e.addValue(e, _("Disable"), "0");
-			e.addValue(e, _("Enable"), "1");
-			e.addValue(e, _("Enable even observing"), "2");
-			e.addValue(e, _("Enable only in Race/CTS"), "3");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 4, e = makeXonoticMixedSlider("hud_panel_physics"));
+			e.addText(e, _("Disable"), 0);
+			e.addText(e, _("Enable"), 1);
+			e.addText(e, _("Enable even observing"), 2);
+			e.addText(e, _("Enable only in Race/CTS"), 3);
+			e.configureXonoticMixedSliderValues(e);
 
 	dialog_hudpanel_main_settings(me, panelname);
 
@@ -26,12 +26,12 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "hud_panel_physics_progressbar", _("Status bar")));
-		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_physics_baralign"));
-			e.addValue(e, _("Left align")   , "0");
-			e.addValue(e, _("Right align")  , "1");
-			e.addValue(e, _("Inward align") , "2");
-			e.addValue(e, _("Outward align"), "3");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_physics_baralign"));
+			e.addText(e, _("Left align"),    0);
+			e.addText(e, _("Right align"),   1);
+			e.addText(e, _("Inward align"),  2);
+			e.addText(e, _("Outward align"), 3);
+			e.configureXonoticMixedSliderValues(e);
 			setDependent(e, "hud_panel_physics_progressbar", 1, 3);
 	me.TR(me);
 		me.TDempty(me, 0.2);
