@@ -145,6 +145,7 @@ void Projectile_Draw(entity this)
 		}
 	}
 
+	// negation used to ensure a zero fade_(time/rate) does not affect opacity
 	a = 1 - (time - this.fade_time) * this.fade_rate;
 	this.alpha = bound(0, this.alphamod * a, 1);
 	if (this.alpha <= 0)
@@ -275,8 +276,21 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 		if (f & 0x20)
 		{
-			this.fade_time = time + ReadByte() * ticrate;
-			this.fade_rate = 1 / (ReadByte() * ticrate);
+			float fadetime = ReadByte();
+			float faderate = ReadByte();
+
+			// workaround for division by 0
+			// TODO: apply fade settings WITHOUT ticrate here and multiply during use cases
+			if(ticrate <= 0)
+			{
+				this.fade_time = 0;
+				this.fade_rate = 0;
+			}
+			else
+			{
+				this.fade_time = time + fadetime * ticrate;
+				this.fade_rate = 1 / (faderate * ticrate);
+			}
 		}
 		else
 		{
