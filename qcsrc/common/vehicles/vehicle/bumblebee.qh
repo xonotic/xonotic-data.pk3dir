@@ -18,7 +18,7 @@ CLASS(Bumblebee, Vehicle)
 /* tags       */ ATTRIB(Bumblebee, tag_view, string, "tag_viewport");
 #endif
 /* netname    */ ATTRIB(Bumblebee, netname, string, "bumblebee");
-/* fullname   */ ATTRIB(Bumblebee, vehicle_name, string, _("Bumblebee"));
+/* fullname   */ ATTRIB(Bumblebee, m_name, string, _("Bumblebee"));
 /* icon       */ ATTRIB(Bumblebee, m_icon, string, "vehicle_bumble");
 ENDCLASS(Bumblebee)
 REGISTER_VEHICLE(BUMBLEBEE, NEW(Bumblebee));

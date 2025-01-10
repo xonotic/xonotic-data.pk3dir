@@ -65,13 +65,13 @@ void Dump_Turret_Settings()
 		heapsort(TUR_CONFIG_COUNT, T_Config_Queue_Swap, T_Config_Queue_Compare, NULL);
 
 		// step 4: write queue
-		TUR_CONFIG_WRITETOFILE(sprintf("// {{{ #%d: %s\n", i, it.turret_name));
+		TUR_CONFIG_WRITETOFILE(sprintf("// {{{ #%d: %s\n", i, it.m_name));
 		for (int j = 0; j < TUR_CONFIG_COUNT; ++j)
 			TUR_CONFIG_WRITETOFILE(config_queue[j]);
 		TUR_CONFIG_WRITETOFILE("// }}}\n");
 
 		// step 5: debug info
-		LOG_INFOF("#%d: %s: %d settings...", i, it.turret_name, TUR_CONFIG_COUNT);
+		LOG_INFOF("#%d: %s: %d settings...", i, it.m_name, TUR_CONFIG_COUNT);
 		totalsettings += TUR_CONFIG_COUNT;
 	});
 	#undef TUR_CONFIG_WRITETOFILE

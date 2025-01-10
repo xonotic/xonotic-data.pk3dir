@@ -341,11 +341,11 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 
-					string mon_oldname = mon.monster_name;
+					string mon_oldname = mon.m_name;
 
-					mon.monster_name = argument;
+					mon.m_name = argument;
 					if (mon.sprite)   WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null); // TODO: the new name is never actually sent to CSQC!
-					print_to(caller, sprintf("Your pet '%s' is now known as '%s'", mon_oldname, mon.monster_name));
+					print_to(caller, sprintf("Your pet '%s' is now known as '%s'", mon_oldname, mon.m_name));
 					return;
 				}
 				case "spawn":
@@ -386,7 +386,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					totalspawned += 1;
 					WarpZone_TraceBox(CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, true, caller);
 					mon = spawnmonster(spawn(), arg_lower, MON_Null, caller, caller, trace_endpos, false, false, moveflag);
-					print_to(caller, strcat("Spawned ", mon.monster_name));
+					print_to(caller, strcat("Spawned ", mon.m_name));
 					return;
 				}
 				case "kill":
@@ -396,7 +396,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 
 					Damage(mon, NULL, NULL, GetResource(mon, RES_HEALTH) + mon.max_health + 200, DEATH_KILL.m_id, DMG_NOWEP, mon.origin, '0 0 0');
-					print_to(caller, strcat("Your pet '", mon.monster_name, "' has been brutally mutilated"));
+					print_to(caller, strcat("Your pet '", mon.m_name, "' has been brutally mutilated"));
 					return;
 				}
 				case "skin":

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "bits.qh"
 #include "iter.qh"
 #include "test.qh"
 
@@ -229,9 +230,9 @@ void IL_INIT(IntrusiveList this)
 			prevfld = il_links_flds[flds_idx + 1];
 			this.il_id = id;
 			int bit = IL_FLOOR(id / IL_LISTS_PER_BIT);
-			if (bit < (1 * 24)) this.il_listmask = '1 0 0' * (1 << (bit - (0 * 24)));
-			else if (bit < (2 * 24)) this.il_listmask = '0 1 0' * (1 << (bit - (1 * 24)));
-			else if (bit < (3 * 24)) this.il_listmask = '0 0 1' * (1 << (bit - (2 * 24)));
+			if (bit < (1 * 24)) this.il_listmask = '1 0 0' * BIT(bit - (0 * 24));
+			else if (bit < (2 * 24)) this.il_listmask = '0 1 0' * BIT(bit - (1 * 24));
+			else if (bit < (3 * 24)) this.il_listmask = '0 0 1' * BIT(bit - (2 * 24));
 			else assert(false);
 			il_links_ptr = id + 1;
 			if (il_links_ptr >= IL_MAX) il_links_ptr -= IL_MAX;
