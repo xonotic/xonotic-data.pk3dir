@@ -40,27 +40,30 @@ ENDCLASS(DebugSource)
 .bool instanceOfArmor;
 .bool instanceOfPowerup;
 
+#define _REGISTRY_SOURCE_FILL(arr_name, register_arr, cond1, cond2, cond3, num_conds, filter_cond) \
+if (num_conds >= 1) \
+	FOREACH(register_arr, !it.m_hidden && (cond1) && (filter_cond), { \
+		AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
+		++arr_name##_MENU_COUNT; \
+	}); \
+if (num_conds >= 2) \
+	FOREACH(register_arr, !it.m_hidden && (cond2) && (filter_cond), { \
+		AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
+		++arr_name##_MENU_COUNT; \
+	}); \
+if (num_conds >= 3) \
+	FOREACH(register_arr, !it.m_hidden && (cond3) && (filter_cond), { \
+		AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
+		++arr_name##_MENU_COUNT; \
+	});
+
 #define _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, cond3, num_conds) \
 ArrayList arr_name##_MENU; \
 int arr_name##_MENU_COUNT; \
 STATIC_INIT_LATE(arr_name##_MENU) \
 { \
 	AL_NEW(arr_name##_MENU, REGISTRY_MAX(register_arr), NULL, e); \
-	if (num_conds >= 1) \
-		FOREACH(register_arr, !it.m_hidden && (cond1), { \
-			AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
-			arr_name##_MENU_COUNT++; \
-		}); \
-	if (num_conds >= 2) \
-		FOREACH(register_arr, !it.m_hidden && (cond2), { \
-			AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
-			arr_name##_MENU_COUNT++; \
-		}); \
-	if (num_conds >= 3) \
-		FOREACH(register_arr, !it.m_hidden && (cond3), { \
-			AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
-			arr_name##_MENU_COUNT++; \
-		}); \
+	_REGISTRY_SOURCE_FILL(arr_name, register_arr, cond1, cond2, cond3, num_conds, true); \
 } \
 CLASS(id, DataSource) \
 	METHOD(id, getEntry, entity(id this, int i, void(string, string) returns)) { \
@@ -69,7 +72,11 @@ CLASS(id, DataSource) \
 			e.display(e, returns); \
 		return e; \
 	} \
-	METHOD(id, reload, int(id this, string filter)) { return arr_name##_MENU_COUNT; } \
+	METHOD(id, reload, int(id this, string filter)) { \
+		arr_name##_MENU_COUNT = 0; \
+		_REGISTRY_SOURCE_FILL(arr_name, register_arr, cond1, cond2, cond3, num_conds, filter == "" ? true : (strstrofs(strtolower(it.m_name), strtolower(filter), 0) >= 0)); \
+		return arr_name##_MENU_COUNT; \
+	} \
 ENDCLASS(id)
 
 #define REGISTRY_SOURCE(...) EVAL(OVERLOAD(REGISTRY_SOURCE, __VA_ARGS__))

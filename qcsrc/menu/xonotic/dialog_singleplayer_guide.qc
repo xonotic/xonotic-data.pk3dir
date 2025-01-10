@@ -60,16 +60,18 @@ void XonoticGuideDialog_topicChangeNotify(entity, entity me)
 	while (0);
 	#undef TOPIC
 	entries.source = found;
-	entries.refilter(entries);
-	entries.setSelected(entries, 0);
+	entries.selectedItem = -1; // signal that the source has changed
+	entries.stringFilterBox.setText(entries.stringFilterBox, "");
+	EntryList_StringFilterBox_Change(entries.stringFilterBox, entries); // this calls entries.refilter, which calls entries.setSelected, which calls entryChangeNotify
 }
 void XonoticGuideDialog_entryChangeNotify(entity, entity me)
 {
-	entity desc = me.descriptionPane;
 	entity entries = me.entryList;
+	if (entries.nItems <= 0)
+		return;
 	entity e = entries.source.getEntry(entries.source, entries.selectedItem, func_null);
 	string s = e.describe(e);
 	if (gamestatus & GAME_DEVELOPER)
 		s = sprintf("entity %i\n\n%s", e, s);
-	desc.setDescription(desc, s);
+	me.descriptionPane.setDescription(me.descriptionPane, s);
 }

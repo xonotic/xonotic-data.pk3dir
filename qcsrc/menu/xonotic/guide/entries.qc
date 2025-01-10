@@ -109,10 +109,25 @@ void XonoticEntryList_refilter(entity me)
 		me.nItems = 0;
 		return;
 	}
+	string oldName;
+	int newSelectedItem = 0;
+	if (me.selectedItem >= 0) // if negative we just switched source
+	{
+		me.source.getEntry(me.source, me.selectedItem, XonoticEntryList_cb);
+		oldName = XonoticEntryList_cb_name; // keep oldName selected if still present
+	}
+	else
+		oldName = "";
+
 	me.nItems = me.source.reload(me.source, me.stringFilter);
 	for (int i = 0, n = me.nItems; i < n; ++i)
 		if (me.source.getEntry(me.source, i, XonoticEntryList_cb))
+		{
 			draw_PreloadPicture(XonoticEntryList_cb_icon);
+			if (XonoticEntryList_cb_name == oldName)
+				newSelectedItem = i;
+		}
+	me.setSelected(me, newSelectedItem);
 }
 
 void EntryList_StringFilterBox_Change(entity box, entity me)
