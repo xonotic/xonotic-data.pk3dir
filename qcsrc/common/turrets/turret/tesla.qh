@@ -10,7 +10,7 @@ CLASS(TeslaCoil, Turret)
 /* model      */ ATTRIB_STRZONE(TeslaCoil, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(TeslaCoil, head_model, string, strcat("models/turrets/", "tesla_head.md3"));
 /* netname    */ ATTRIB(TeslaCoil, netname, string, "tesla");
-/* fullname   */ ATTRIB(TeslaCoil, turret_name, string, _("Tesla Coil"));
+/* fullname   */ ATTRIB(TeslaCoil, m_name, string, _("Tesla Coil"));
     ATTRIB(TeslaCoil, m_weapon, Weapon, WEP_TESLA);
 
 #define X(BEGIN, P, END, class, prefix) \

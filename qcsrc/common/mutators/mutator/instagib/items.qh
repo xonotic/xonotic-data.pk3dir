@@ -22,25 +22,27 @@ void ammo_vaporizercells_init(Pickup this, entity item)
         SetResourceExplicit(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
 }
 #endif
-REGISTER_ITEM(VaporizerCells, Ammo) {
-    this.m_canonical_spawnfunc = "item_vaporizer_cells";
+
+CLASS(VaporizerCells, Ammo)
+/* spawnfunc   */ ATTRIB(VaporizerCells, m_canonical_spawnfunc, string, "item_vaporizer_cells");
 #ifdef GAMEQC
-    this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
-    this.m_model                =   MDL_VaporizerCells_ITEM;
-    this.m_sound                =   SND_VaporizerCells;
+/* spawnflags  */ ATTRIB(VaporizerCells, spawnflags, int, ITEM_FLAG_MUTATORBLOCKED);
+/* model       */ ATTRIB(VaporizerCells, m_model, Model, MDL_VaporizerCells_ITEM);
+/* sound       */ ATTRIB(VaporizerCells, m_sound, Sound, SND_VaporizerCells);
 #endif
-    this.netname                =   "vaporizer_cells";
-    this.m_name                 =   _("Vaporizer ammo");
-    this.m_icon                 =   "ammo_supercells";
-    this.m_color                =   '0.816 0.941 0.541';
+/* refname     */ ATTRIB(VaporizerCells, netname, string, "vaporizer_cells");
+/* itemname    */ ATTRIB(VaporizerCells, m_name, string, _("Vaporizer ammo"));
+/* icon        */ ATTRIB(VaporizerCells, m_icon, string, "ammo_supercells");
+/* icon        */ ATTRIB(VaporizerCells, m_color, vector, '0.816 0.941 0.541');
 #ifdef SVQC
-    this.m_botvalue             =   2000;
-    this.m_itemid               =   IT_RESOURCE;
-    this.m_respawntime          =   GET(instagib_respawntime_ammo);
-    this.m_respawntimejitter    =   GET(instagib_respawntimejitter_ammo);
-    this.m_iteminit             =   ammo_vaporizercells_init;
+/* botvalue    */ ATTRIB(VaporizerCells, m_botvalue, int, 2000);
+/* itemid      */ ATTRIB(VaporizerCells, m_itemid, int, IT_RESOURCE);
+/* respawntime */ ATTRIB(VaporizerCells, m_respawntime, float, GET(instagib_respawntime_ammo));
+/*             */ ATTRIB(VaporizerCells, m_respawntimejitter, float, GET(instagib_respawntimejitter_ammo));
+/* iteminit    */ ATTRIB(VaporizerCells, m_iteminit, void(Pickup this, entity item), ammo_vaporizercells_init);
 #endif
-}
+ENDCLASS(VaporizerCells)
+REGISTER_ITEM(VaporizerCells, NEW(VaporizerCells));
 
 SPAWNFUNC_ITEM(item_vaporizer_cells, ITEM_VaporizerCells)
 SPAWNFUNC_ITEM(item_minst_cells, ITEM_VaporizerCells)
@@ -50,21 +52,22 @@ MODEL(ExtraLife_ITEM, Item_Model("g_h100.md3"));
 SOUND(ExtraLife, Item_Sound("megahealth"));
 #endif
 
-REGISTER_ITEM(ExtraLife, Powerup) {
-    this.m_canonical_spawnfunc = "item_extralife";
+CLASS(ExtraLife, Powerup)
+/* spawnfunc */ ATTRIB(ExtraLife, m_canonical_spawnfun, string, "item_extralife");
 #ifdef GAMEQC
-	this.m_model                =   MDL_ExtraLife_ITEM;
-    this.m_sound                =   SND_ExtraLife;
+/* model     */ ATTRIB(ExtraLife, m_model, Model, MDL_ExtraLife_ITEM);
+/* sound     */ ATTRIB(ExtraLife, m_sound, Sound, SND_ExtraLife);
 #endif
-    this.netname                =   "extralife";
-    this.m_name                 =   _("Extra life");
-    this.m_icon                 =   "item_mega_health";
-    this.m_color                =   '1 0 0';
-    this.m_waypoint             =   _("Extra life");
-    this.m_waypointblink        =   2;
+/* refname   */ ATTRIB(ExtraLife, netname, string, "extralife");
+/* itemname  */ ATTRIB(ExtraLife, m_name, string, _("Extra life"));
+/* icon      */ ATTRIB(ExtraLife, m_icon, string, "item_mega_health");
+/* color     */ ATTRIB(ExtraLife, m_color, vector, '1 0 0');
+/* wptext    */ ATTRIB(ExtraLife, m_waypoint, string, _("Extra life"));
+/* wpblink   */ ATTRIB(ExtraLife, m_waypointblink, int, 2);
 #ifdef SVQC
-    this.m_itemid               =   IT_RESOURCE;
+/* itemid    */ ATTRIB(ExtraLife, m_itemid, int, IT_RESOURCE);
 #endif
-}
+ENDCLASS(ExtraLife)
+REGISTER_ITEM(ExtraLife, NEW(ExtraLife));
 
 SPAWNFUNC_ITEM(item_extralife, ITEM_ExtraLife)

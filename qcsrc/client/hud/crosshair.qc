@@ -179,7 +179,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 		{
 			if(this != WEP_Null && hud == HUD_NORMAL)
 			{
-				wcross_color = this.wpcolor;
+				wcross_color = this.m_color;
 				break;
 			}
 			else { goto normalcolor; }

@@ -29,27 +29,25 @@ void powerup_jetpack_init(Pickup def, entity item)
 #endif
 
 CLASS(Jetpack, Powerup)
-ENDCLASS(Jetpack)
-
-REGISTER_ITEM(Jetpack, Jetpack) {
-    this.m_canonical_spawnfunc = "item_jetpack";
+/* spawnfunc  */ ATTRIB(Jetpack, m_canonical_spawnfunc, string, "item_jetpack");
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL;
-    this.m_model                =   MDL_Jetpack_ITEM;
-    this.m_itemid               =   IT_JETPACK;
+/* spawnflags */ ATTRIB(Jetpack, spawnflags, int, ITEM_FLAG_NORMAL);
+/* model      */ ATTRIB(Jetpack, m_model, Model, MDL_Jetpack_ITEM);
+/* sound      */ ATTRIB(Jetpack, m_itemid, Sound, IT_JETPACK);
 #endif
-    this.netname                =   "jetpack";
-    this.m_name                 =   _("Jetpack");
-    this.m_icon                 =   "jetpack";
-    this.m_color                =   '0.5 0.5 0.5';
-    this.m_waypoint             =   _("Jetpack");
-    this.m_waypointblink        =   2;
+/* refname    */ ATTRIB(Jetpack, netname, string, "jetpack");
+/* itemname   */ ATTRIB(Jetpack, m_name, string, _("Jetpack"));
+/* icon       */ ATTRIB(Jetpack, m_icon, string, "jetpack");
+/* color      */ ATTRIB(Jetpack, m_color, vector, '0.5 0.5 0.5');
+/* wptext     */ ATTRIB(Jetpack, m_waypoint, string, _("Jetpack"));
+/* wpblink    */ ATTRIB(Jetpack, m_waypointblink, int, 2);
 #ifdef SVQC
-    this.m_botvalue             =   3000;
-    this.m_pickupevalfunc       =   ammo_pickupevalfunc;
-    this.m_iteminit             =   powerup_jetpack_init;
+/* botvalue   */ ATTRIB(Jetpack, m_botvalue, int, 3000);
+/* pickupfunc */ ATTRIB(Jetpack, m_pickupevalfunc, float(entity player, entity item), ammo_pickupevalfunc);
+/* iteminit   */ ATTRIB(Jetpack, m_iteminit, void(Pickup this, entity item), powerup_jetpack_init);
 #endif
-}
+ENDCLASS(Jetpack)
+REGISTER_ITEM(Jetpack, NEW(Jetpack));
 
 SPAWNFUNC_ITEM(item_jetpack, ITEM_Jetpack)
 
@@ -65,22 +63,24 @@ void ammo_fuel_init(Pickup this, entity item)
         SetResourceExplicit(item, RES_FUEL, g_pickup_fuel);
 }
 #endif
-REGISTER_ITEM(JetpackFuel, Ammo) {
-    this.m_canonical_spawnfunc = "item_fuel";
+
+CLASS(JetpackFuel, Ammo)
+/* spawnfunc  */ ATTRIB(JetpackFuel, m_canonical_spawnfunc, string, "item_fuel");
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE;
-    this.m_model    =   MDL_JetpackFuel_ITEM;
+/* spawnflags */ ATTRIB(JetpackFuel, spawnflags, int, ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE);
+/* model      */ ATTRIB(JetpackFuel, m_model, Model, MDL_JetpackFuel_ITEM);
 #endif
-    this.netname    =   "fuel";
-    this.m_name     =   _("Fuel");
-    this.m_icon     =   "ammo_fuel";
-    this.m_color    =   '0.984 0.878 0.506';
+/* refname    */ ATTRIB(JetpackFuel, netname, string, "fuel");
+/* itemname   */ ATTRIB(JetpackFuel, m_name, string, _("Fuel"));
+/* icon       */ ATTRIB(JetpackFuel, m_icon, string, "ammo_fuel");
+/* color      */ ATTRIB(JetpackFuel, m_color, vector, '0.984 0.878 0.506');
 #ifdef SVQC
-    this.m_botvalue =   2000;
-    this.m_itemid   =   IT_RESOURCE;
-    this.m_iteminit =   ammo_fuel_init;
+/* botvlaue   */ ATTRIB(JetpackFuel, m_botvalue, int, 2000);
+/* itemid     */ ATTRIB(JetpackFuel, m_itemid, int, IT_RESOURCE);
+/* iteminit   */ ATTRIB(JetpackFuel, m_iteminit, void(Pickup this, entity item), ammo_fuel_init);
 #endif
-}
+ENDCLASS(JetpackFuel)
+REGISTER_ITEM(JetpackFuel, NEW(JetpackFuel));
 
 SPAWNFUNC_ITEM(item_fuel, ITEM_JetpackFuel)
 
@@ -98,26 +98,24 @@ void powerup_fuelregen_init(Pickup def, entity item)
 #endif
 
 CLASS(JetpackRegen, Powerup)
-ENDCLASS(JetpackRegen)
-
-REGISTER_ITEM(JetpackRegen, JetpackRegen) {
-    this.m_canonical_spawnfunc = "item_fuel_regen";
+/* spawnfunc  */ ATTRIB(JetpackRegen, m_canonical_spawnfunc, string, "item_fuel_regen");
 #ifdef GAMEQC
-	this.spawnflags             = ITEM_FLAG_NORMAL;
-    this.m_model                =   MDL_JetpackRegen_ITEM;
+/* spawnflags */ ATTRIB(JetpackRegen, spawnflags, int, ITEM_FLAG_NORMAL);
+/* model      */ ATTRIB(JetpackRegen, m_model, Model, MDL_JetpackRegen_ITEM);
 #endif
-    this.netname                =   "fuel_regen";
-    this.m_name                 =   _("Fuel regenerator");
-    this.m_icon                 =   "fuelregen";
-    this.m_color                =   '1 0.5 0';
-    this.m_waypoint             =   _("Fuel regen");
-    this.m_waypointblink        =   2;
+/* refname    */ ATTRIB(JetpackRegen, netname, string, "fuel_regen");
+/* itemname   */ ATTRIB(JetpackRegen, m_name, string, _("Fuel regenerator"));
+/* icon       */ ATTRIB(JetpackRegen, m_icon, string, "fuelregen");
+/* color      */ ATTRIB(JetpackRegen, m_color, vector, '1 0.5 0');
+/* wptext     */ ATTRIB(JetpackRegen, m_waypoint, string, _("Fuel regen"));
+/* wpblink    */ ATTRIB(JetpackRegen, m_waypointblink, int, 2);
 #ifdef SVQC
-    this.m_botvalue             =   3000;
-    this.m_itemid               =   IT_FUEL_REGEN;
-    this.m_pickupevalfunc       =   ammo_pickupevalfunc;
-    this.m_iteminit             =   powerup_fuelregen_init;
+/* botvalue   */ ATTRIB(JetpackRegen, m_botvalue, int, 3000);
+/* itemid     */ ATTRIB(JetpackRegen, m_itemid, int, IT_FUEL_REGEN);
+/* pickupfunc */ ATTRIB(JetpackRegen, m_pickupevalfunc, float(entity player, entity item), ammo_pickupevalfunc);
+/* iteminit   */ ATTRIB(JetpackRegen, m_iteminit, void(Pickup this, entity item), powerup_fuelregen_init);
 #endif
-}
+ENDCLASS(JetpackRegen)
+REGISTER_ITEM(JetpackRegen, NEW(JetpackRegen));
 
 SPAWNFUNC_ITEM(item_fuel_regen, ITEM_JetpackRegen)
