@@ -26,4 +26,4 @@ CLASS(XonoticMixedSlider, MixedSlider)
 	ATTRIB(XonoticMixedSlider, disabledAlpha, float, SKINALPHA_DISABLED);
 ENDCLASS(XonoticMixedSlider)
 entity makeXonoticMixedSlider_T(string, string theTooltip);
-entity makeXonoticMixedSlider(string);  // note: you still need to call addNumberRange, addNumberText, and configureXonoticMixedSliderValues!
+entity makeXonoticMixedSlider(string);  // note: you still need to call addRange, addText, and configureXonoticMixedSliderValues!
