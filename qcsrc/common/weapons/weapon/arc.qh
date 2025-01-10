@@ -6,7 +6,7 @@ CLASS(Arc, Weapon)
 /* impulse   */ ATTRIB(Arc, impulse, int, 3);
 /* flags     */ ATTRIB(Arc, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, 8000);
-/* color     */ ATTRIB(Arc, wpcolor, vector, '1 1 1');
+/* color     */ ATTRIB(Arc, m_color, vector, '1 1 1');
 /* modelname */ ATTRIB(Arc, mdl, string, "arc");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Arc, m_model, Model, MDL_ARC_ITEM);
