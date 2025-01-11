@@ -1,0 +1,4 @@
+#pragma once
+
+.int buff_ammo_prev_infitems;
+.int buff_ammo_prev_clipload;

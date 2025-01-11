@@ -1,0 +1,10 @@
+#pragma once
+
+float autocvar_g_buffs_inferno_burntime_factor;
+float autocvar_g_buffs_inferno_burntime_min_time;
+float autocvar_g_buffs_inferno_burntime_target_damage;
+float autocvar_g_buffs_inferno_burntime_target_time;
+float autocvar_g_buffs_inferno_damagemultiplier;
+
+float buff_Inferno_CalculateTime(float dmg);
+float buff_Inferno_CalculateDamage(float frag_damage);

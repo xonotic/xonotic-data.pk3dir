@@ -1,9 +1,11 @@
 #include "sv_buffs.qh"
 
 #include <common/mapobjects/target/music.qh>
-#include <common/mutators/mutator/powerups/_mod.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/gamemodes/_mod.qh>
 #include <server/items/items.qh>
+
+#include "buff/_mod.qh"
 
 bool buffs_BuffModel_Customize(entity this, entity client)
 {
@@ -505,25 +507,11 @@ void buff_SpawnReplacement(entity ent, entity old)
 	buff_Init(ent);
 }
 
-void buff_Vengeance_DelayedDamage(entity this)
-{
-	if(this.enemy)
-		Damage(this.enemy, this.owner, this.owner, this.dmg, DEATH_BUFF.m_id, DMG_NOWEP, this.enemy.origin, '0 0 0');
-
-	delete(this);
-	return;
-}
-
-float buff_Inferno_CalculateTime(float damg, float offset_x, float offset_y, float intersect_x, float intersect_y, float base)
-{
-	return offset_y + (intersect_y - offset_y) * logn(((damg - offset_x) * ((base - 1) / intersect_x)) + 1, base);
-}
-
 METHOD(Buff, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
-    if(IS_PLAYER(actor))
-    	actor.effects |= EF_NOSHADOW; // does not play well with buff icon
-    SUPER(Buff).m_apply(this, actor, eff_time, eff_flags);
+	if(IS_PLAYER(actor))
+		actor.effects |= EF_NOSHADOW; // does not play well with buff icon
+	SUPER(Buff).m_apply(this, actor, eff_time, eff_flags);
 }
 METHOD(Buff, m_remove, void(StatusEffect this, entity actor, int removal_type))
 {
@@ -545,107 +533,6 @@ METHOD(Buff, m_remove, void(StatusEffect this, entity actor, int removal_type))
 	SUPER(Buff).m_remove(this, actor, removal_type);
 }
 
-METHOD(AmmoBuff, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
-{
-    bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
-    if(!wasactive)
-    {
-        actor.buff_ammo_prev_infitems = (actor.items & IT_UNLIMITED_AMMO);
-        actor.items |= IT_UNLIMITED_AMMO;
-        for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-			if(!actor.(weaponentity))
-				continue;
-			if(actor.(weaponentity).clip_load)
-				actor.(weaponentity).buff_ammo_prev_clipload = actor.(weaponentity).clip_load;
-			if(actor.(weaponentity).clip_size)
-				actor.(weaponentity).clip_load = actor.(weaponentity).(weapon_load[actor.(weaponentity).m_switchweapon.m_id]) = actor.(weaponentity).clip_size;
-		}
-    }
-    SUPER(AmmoBuff).m_apply(this, actor, eff_time, eff_flags);
-}
-METHOD(AmmoBuff, m_remove, void(StatusEffect this, entity actor, int removal_type))
-{
-	bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
-	if(wasactive)
-	{
-		actor.items = BITSET(actor.items, IT_UNLIMITED_AMMO, actor.buff_ammo_prev_infitems);
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-			if(!actor.(weaponentity))
-				continue;
-			if(actor.(weaponentity).buff_ammo_prev_clipload)
-			{
-				actor.(weaponentity).clip_load = actor.(weaponentity).buff_ammo_prev_clipload;
-				actor.(weaponentity).buff_ammo_prev_clipload = 0;
-			}
-		}
-	}
-	actor.buff_ammo_prev_infitems = 0;
-	SUPER(AmmoBuff).m_remove(this, actor, removal_type);
-}
-METHOD(AmmoBuff, m_tick, void(StatusEffect this, entity actor))
-{
-	if(IS_PLAYER(actor))
-	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-			if(actor.(weaponentity).clip_size)
-				actor.(weaponentity).clip_load = actor.(weaponentity).(weapon_load[actor.(weaponentity).m_switchweapon.m_id]) = actor.(weaponentity).clip_size;
-		}
-	}
-
-	SUPER(AmmoBuff).m_tick(this, actor);
-}
-
-
-METHOD(FlightBuff, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
-{
-    bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
-    if(!wasactive)
-    {
-        actor.buff_flight_oldgravity = actor.gravity;
-		if(!actor.gravity)
-			actor.gravity = 1;
-    }
-    SUPER(FlightBuff).m_apply(this, actor, eff_time, eff_flags);
-}
-METHOD(FlightBuff, m_remove, void(StatusEffect this, entity actor, int removal_type))
-{
-	bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
-	if(wasactive)
-	{
-		actor.gravity = ((actor.trigger_gravity_check) ? actor.trigger_gravity_check.enemy.gravity : actor.buff_flight_oldgravity);
-	}
-	actor.buff_flight_oldgravity = 0;
-	SUPER(FlightBuff).m_remove(this, actor, removal_type);
-}
-
-METHOD(MagnetBuff, m_tick, void(StatusEffect this, entity actor))
-{
-	if(IS_PLAYER(actor))
-	{
-		vector pickup_size;
-		IL_EACH(g_items, it.itemdef,
-		{
-			if(it.buffdef)
-				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_buff;
-			else
-				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
-
-			if(boxesoverlap(actor.absmin - pickup_size, actor.absmax + pickup_size, it.absmin, it.absmax))
-			{
-				if(gettouch(it))
-					gettouch(it)(it, actor);
-			}
-		});
-	}
-
-	SUPER(MagnetBuff).m_tick(this, actor);
-}
 
 // mutator hooks
 MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
@@ -659,21 +546,16 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	if(frag_deathtype == DEATH_BUFF.m_id) { return; }
 
 	if(StatusEffects_active(BUFF_RESISTANCE, frag_target))
-	{
-		float reduced = frag_damage * autocvar_g_buffs_resistance_blockpercent;
-		frag_damage = bound(0, frag_damage - reduced, frag_damage);
-	}
+		frag_damage = buff_Resistance_CalculateDamage(frag_damage);
 
 	if(StatusEffects_active(BUFF_MEDIC, frag_target))
 	if((GetResource(frag_target, RES_HEALTH) - frag_damage) <= 0)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
-	if(random() <= autocvar_g_buffs_medic_survive_chance)
-		frag_damage = max(5, GetResource(frag_target, RES_HEALTH) - autocvar_g_buffs_medic_survive_health);
+		frag_damage = buff_Medic_CalculateSurviveDamage(frag_damage, GetResource(frag_target, RES_HEALTH));
 
 	if(StatusEffects_active(BUFF_JUMP, frag_target))
-	if(frag_deathtype == DEATH_FALL.m_id)
-		frag_damage = 0;
+		frag_damage = buff_Jump_ChangeDamage(frag_damage, frag_deathtype);
 
 	if(StatusEffects_active(BUFF_VENGEANCE, frag_target))
 	if(frag_attacker)
@@ -682,7 +564,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	{
 		entity dmgent = new_pure(dmgent);
 
-		dmgent.dmg = frag_damage * autocvar_g_buffs_vengeance_damage_multiplier;
+		dmgent.dmg = buff_Vengeance_CalculateDamage(frag_damage);
 		dmgent.enemy = frag_attacker;
 		dmgent.owner = frag_target;
 		setthink(dmgent, buff_Vengeance_DelayedDamage);
@@ -690,21 +572,13 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	}
 
 	if(StatusEffects_active(BUFF_BASH, frag_target))
-	if(frag_attacker != frag_target)
-		frag_force = '0 0 0';
+		frag_force = buff_Bash_TargetCalculateForce(frag_force, frag_target, frag_attacker);
 
 	if(StatusEffects_active(BUFF_BASH, frag_attacker))
-	if(frag_force)
-	{
-		if(frag_attacker == frag_target)
-			frag_force *= autocvar_g_buffs_bash_force_self;
-		else
-			frag_force *= autocvar_g_buffs_bash_force;
-	}
+		frag_force = buff_Bash_AttackerCalculateForce(frag_force, frag_target, frag_attacker);
 
 	if(StatusEffects_active(BUFF_DISABILITY, frag_attacker))
-	if(frag_target != frag_attacker)
-		StatusEffects_apply(STATUSEFFECT_Stunned, frag_target, time + autocvar_g_buffs_disability_slowtime, 0);
+		buff_Disability_ApplyStunned(frag_target, frag_attacker);
 
 	if(StatusEffects_active(BUFF_INFERNO, frag_target))
 	{
@@ -716,70 +590,16 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 
 	if(StatusEffects_active(BUFF_LUCK, frag_attacker))
 	if(frag_attacker != frag_target)
-	if(autocvar_g_buffs_luck_damagemultiplier > 0)
-	if(random() <= autocvar_g_buffs_luck_chance)
-		frag_damage *= autocvar_g_buffs_luck_damagemultiplier;
+		frag_damage = buff_Luck_CalculateDamage(frag_damage);
 
 	if(StatusEffects_active(BUFF_INFERNO, frag_attacker))
 	if(frag_target != frag_attacker) {
-		float btime = buff_Inferno_CalculateTime(
-			frag_damage,
-			0,
-			autocvar_g_buffs_inferno_burntime_min_time,
-			autocvar_g_buffs_inferno_burntime_target_damage,
-			autocvar_g_buffs_inferno_burntime_target_time,
-			autocvar_g_buffs_inferno_burntime_factor
-		);
-		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier), btime, DEATH_BUFF.m_id);
+		float btime = buff_Inferno_CalculateTime(frag_damage);
+		Fire_AddDamage(frag_target, frag_attacker, buff_Inferno_CalculateDamage(frag_damage), btime, DEATH_BUFF.m_id);
 	}
 
 	M_ARGV(4, float) = frag_damage;
 	M_ARGV(6, vector) = frag_force;
-}
-
-MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
-{
-	// NOTE: vampire PlayerDamage_SplitHealthArmor code is similar
-	entity frag_attacker = M_ARGV(1, entity);
-	entity frag_target = M_ARGV(2, entity);
-	if(!StatusEffects_active(BUFF_VAMPIRE, frag_attacker))
-		return;
-	float health_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
-
-	if (!StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) && frag_target != frag_attacker
-		&& IS_PLAYER(frag_attacker) && !IS_DEAD(frag_target) && !STAT(FROZEN, frag_target))
-	{
-		GiveResource(frag_attacker, RES_HEALTH, autocvar_g_buffs_vampire_damage_steal * health_take);
-	}
-}
-
-MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics_UpdateStats)
-{
-	entity player = M_ARGV(0, entity);
-	// these automatically reset, no need to worry
-
-	if(StatusEffects_active(STATUSEFFECT_Stunned, player))
-		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_buffs_disability_speed;
-}
-
-MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics)
-{
-	entity player = M_ARGV(0, entity);
-	// these automatically reset, no need to worry
-
-	if(StatusEffects_active(BUFF_JUMP, player))
-		STAT(MOVEVARS_JUMPVELOCITY, player) = autocvar_g_buffs_jump_height;
-}
-
-MUTATOR_HOOKFUNCTION(buffs, MonsterMove)
-{
-	entity mon = M_ARGV(0, entity);
-
-	if(StatusEffects_active(STATUSEFFECT_Stunned, mon))
-	{
-		M_ARGV(1, float) *= autocvar_g_buffs_disability_speed; // run speed
-		M_ARGV(2, float) *= autocvar_g_buffs_disability_speed; // walk speed
-	}
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
@@ -800,85 +620,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 		player.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
 		sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		return true;
-	}
-}
-
-MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
-{
-	if(MUTATOR_RETURNVALUE || game_stopped) return;
-	entity player = M_ARGV(0, entity);
-
-	if(StatusEffects_active(BUFF_SWAPPER, player))
-	{
-		float best_distance = autocvar_g_buffs_swapper_range;
-		entity closest = NULL;
-		FOREACH_CLIENT(IS_PLAYER(it), {
-			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
-			if(DIFF_TEAM(it, player))
-			{
-				float test = vlen2(player.origin - it.origin);
-				if(test <= best_distance * best_distance)
-				{
-					best_distance = sqrt(test);
-					closest = it;
-				}
-			}
-		});
-
-		if(closest)
-		{
-			vector my_org, my_vel, my_ang, their_org, their_vel, their_ang;
-
-			my_org = player.origin;
-			my_vel = player.velocity;
-			my_ang = player.angles;
-			their_org = closest.origin;
-			their_vel = closest.velocity;
-			their_ang = closest.angles;
-
-			Drop_Special_Items(closest);
-
-			MUTATOR_CALLHOOK(PortalTeleport, player); // initiate flag dropper
-
-			setorigin(player, their_org);
-			setorigin(closest, my_org);
-
-			closest.velocity = my_vel;
-			closest.angles = my_ang;
-			if (IS_BOT_CLIENT(closest))
-			{
-				closest.v_angle = closest.angles;
-				bot_aim_reset(closest);
-			}
-			closest.fixangle = true;
-			closest.oldorigin = my_org;
-			closest.oldvelocity = my_vel;
-			player.velocity = their_vel;
-			player.angles = their_ang;
-			if (IS_BOT_CLIENT(player))
-			{
-				player.v_angle = player.angles;
-				bot_aim_reset(player);
-			}
-			player.fixangle = true;
-			player.oldorigin = their_org;
-			player.oldvelocity = their_vel;
-
-			// set pusher so player gets the kill if they fall into void
-			closest.pusher = player;
-			closest.pushltime = time + autocvar_g_maxpushtime;
-			closest.istypefrag = PHYS_INPUT_BUTTON_CHAT(closest);
-
-			Send_Effect(EFFECT_ELECTRO_COMBO, their_org, '0 0 0', 1);
-			Send_Effect(EFFECT_ELECTRO_COMBO, my_org, '0 0 0', 1);
-
-			sound(player, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
-			sound(closest, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
-
-			// TODO: add a counter to handle how many times one can teleport, and a delay to prevent spam
-			buff_RemoveAll(player, STATUSEFFECT_REMOVE_NORMAL);
-			return true;
-		}
 	}
 }
 
@@ -908,22 +649,6 @@ MUTATOR_HOOKFUNCTION(buffs, FilterItem)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs, WeaponRateFactor)
-{
-	entity player = M_ARGV(1, entity);
-
-	if(StatusEffects_active(STATUSEFFECT_Stunned, player))
-		M_ARGV(0, float) *= autocvar_g_buffs_disability_rate;
-}
-
-MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
-{
-	entity player = M_ARGV(1, entity);
-
-	if(StatusEffects_active(STATUSEFFECT_Stunned, player))
-		M_ARGV(0, float) *= autocvar_g_buffs_disability_weaponspeed;
-}
-
 MUTATOR_HOOKFUNCTION(buffs, Freeze)
 {
 	entity targ = M_ARGV(0, entity);
@@ -950,18 +675,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 	if(IS_PLAYER(player))
 		buffs_BuffModel_Update(player);
-}
-
-MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
-{
-	entity player = M_ARGV(0, entity);
-
-	if(StatusEffects_active(BUFF_MEDIC, player))
-	{
-		M_ARGV(3, float) = autocvar_g_buffs_medic_rot; // rot_mod
-		M_ARGV(4, float) = M_ARGV(1, float) = autocvar_g_buffs_medic_max; // limit_mod = max_mod
-		M_ARGV(2, float) = autocvar_g_buffs_medic_regen; // regen_mod
-	}
 }
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsString)

@@ -1,0 +1,4 @@
+#pragma once
+
+float autocvar_g_buffs_magnet_range_item;
+float autocvar_g_buffs_magnet_range_buff = 200;

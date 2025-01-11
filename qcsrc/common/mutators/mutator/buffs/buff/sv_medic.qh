@@ -1,0 +1,9 @@
+#pragma once
+
+float autocvar_g_buffs_medic_survive_chance;
+float autocvar_g_buffs_medic_survive_health;
+float autocvar_g_buffs_medic_rot;
+float autocvar_g_buffs_medic_max;
+float autocvar_g_buffs_medic_regen;
+
+float buff_Medic_CalculateSurviveDamage(float frag_damage, float health);

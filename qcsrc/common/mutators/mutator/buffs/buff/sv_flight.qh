@@ -1,0 +1,4 @@
+#pragma once
+
+.float buff_flight_oldgravity;
+.bool buff_flight_crouchheld;
