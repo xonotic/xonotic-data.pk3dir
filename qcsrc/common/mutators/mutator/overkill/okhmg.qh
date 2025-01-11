@@ -8,7 +8,7 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 /* impulse   */ ATTRIB(OverkillHeavyMachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(OverkillHeavyMachineGun, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON | WEP_FLAG_PENETRATEWALLS);
 /* rating    */ ATTRIB(OverkillHeavyMachineGun, bot_pickupbasevalue, float, 10000);
-/* color     */ ATTRIB(OverkillHeavyMachineGun, wpcolor, vector, '0.5 0.5 0');
+/* color     */ ATTRIB(OverkillHeavyMachineGun, m_color, vector, '0.5 0.5 0');
 /* modelname */ ATTRIB(OverkillHeavyMachineGun, mdl, string, "ok_hmg");
 #ifdef GAMEQC
 /* model     */ ATTRIB(OverkillHeavyMachineGun, m_model, Model, MDL_HMG_ITEM);
@@ -32,20 +32,7 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 		P(class, prefix, spread_add, float, PRI) \
 		P(class, prefix, spread_max, float, PRI) \
 		P(class, prefix, spread_min, float, PRI) \
-		P(class, prefix, ammo, float, SEC) \
-		P(class, prefix, animtime, float, SEC) \
-		P(class, prefix, damage, float, SEC) \
-		P(class, prefix, delay, float, SEC) \
-		P(class, prefix, edgedamage, float, SEC) \
-		P(class, prefix, force, float, SEC) \
-		P(class, prefix, force_zscale, float, SEC) \
-		P(class, prefix, lifetime, float, SEC) \
-		P(class, prefix, radius, float, SEC) \
-		P(class, prefix, refire, float, SEC) \
 		P(class, prefix, refire_type, float, SEC) \
-		P(class, prefix, shotangle, float, SEC) \
-		P(class, prefix, speed, float, SEC) \
-		P(class, prefix, spread, float, SEC) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
@@ -59,7 +46,7 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 #undef X
 
 ENDCLASS(OverkillHeavyMachineGun)
-REGISTER_WEAPON(OVERKILL_HMG, okhmg, NEW(OverkillHeavyMachineGun));
+REGISTER_WEAPON(OVERKILL_HMG, NEW(OverkillHeavyMachineGun));
 
 //SPAWNFUNC_WEAPON(weapon_okhmg, WEP_OVERKILL_HMG)
 //SPAWNFUNC_WEAPON(weapon_hmg, WEP_OVERKILL_HMG)

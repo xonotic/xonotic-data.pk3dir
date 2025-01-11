@@ -152,7 +152,6 @@ void target_init_use(entity this, entity actor, entity trigger)
 			SetResource(actor, RES_BULLETS, 0);
 			SetResource(actor, RES_ROCKETS, 0);
 			SetResource(actor, RES_CELLS, 0);
-			SetResource(actor, RES_PLASMA, 0);
 			SetResource(actor, RES_FUEL, 0);
 
 			STAT(WEAPONS, actor) = WEPSET(SHOTGUN);
@@ -163,7 +162,6 @@ void target_init_use(entity this, entity actor, entity trigger)
 			SetResource(actor, RES_BULLETS, start_ammo_nails);
 			SetResource(actor, RES_ROCKETS, start_ammo_rockets);
 			SetResource(actor, RES_CELLS, start_ammo_cells);
-			SetResource(actor, RES_PLASMA, start_ammo_plasma);
 			SetResource(actor, RES_FUEL, start_ammo_fuel);
 
 			STAT(WEAPONS, actor) = start_weapons;
@@ -172,7 +170,7 @@ void target_init_use(entity this, entity actor, entity trigger)
 
 	if (!(this.spawnflags & 8))
 	{
-		FOREACH(StatusEffect, it.instanceOfPowerups,
+		FOREACH(StatusEffects, it.instanceOfPowerupStatusEffect,
 		{
 			it.m_remove(it, actor, STATUSEFFECT_REMOVE_NORMAL);
 		});
@@ -258,12 +256,29 @@ spawnfunc(target_score)
 	this.use = score_use;
 }
 
+#define FRAGSFILTER_REMOVER BIT(0)
+#define FRAGSFILTER_RUNONCE BIT(1) // introduced but now unused by q3df
+#define FRAGSFILTER_SILENT  BIT(2)
+#define FRAGSFILTER_RESET   BIT(3)
+
 void fragsfilter_use(entity this, entity actor, entity trigger)
 {
 	if(!IS_PLAYER(actor))
 		return;
 	if(actor.fragsfilter_cnt >= this.frags)
+	{
+		if(this.spawnflags & FRAGSFILTER_RESET)
+			actor.fragsfilter_cnt = 0;
+		else if(this.spawnflags & FRAGSFILTER_REMOVER)
+			actor.fragsfilter_cnt -= this.frags;
 		SUB_UseTargets(this, actor, trigger);
+	}
+	else if(!(this.spawnflags & FRAGSFILTER_SILENT))
+	{
+		int req_frags = this.frags - actor.fragsfilter_cnt;
+		centerprint(actor, sprintf("%d more frag%s needed", req_frags, req_frags > 1 ? "s" : ""));
+		play2(actor, SND(TALK));
+	}
 }
 spawnfunc(target_fragsFilter)
 {

@@ -8,6 +8,7 @@ float race_teams;
 const float ST_RACE_LAPS = 1;
 
 int autocvar_g_cts_send_rankings_cnt = 15;
+bool autocvar_g_race_cptimes_onlyself = false;
 
 int g_race_qualifying;
 
@@ -47,6 +48,7 @@ string race_readUID(string map, float pos);
 string race_readName(string map, float pos);
 
 void race_checkAndWriteName(entity player);
+void race_ClearPlayerRecords(entity player);
 void race_ClearRecords();
 void race_SendNextCheckpoint(entity e, float spec);
 void race_PreparePlayer(entity this);

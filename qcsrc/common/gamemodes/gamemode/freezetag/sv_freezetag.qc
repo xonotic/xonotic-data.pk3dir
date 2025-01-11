@@ -16,7 +16,6 @@ float autocvar_g_ft_start_ammo_shells = 60;
 float autocvar_g_ft_start_ammo_nails = 320;
 float autocvar_g_ft_start_ammo_rockets = 160;
 float autocvar_g_ft_start_ammo_cells = 180;
-float autocvar_g_ft_start_ammo_plasma = 180;
 float autocvar_g_ft_start_ammo_fuel = 0;
 
 void freezetag_count_alive_players()
@@ -86,9 +85,11 @@ bool freezetag_CheckTeams()
 void nades_Clear(entity);
 void nades_GiveBonus(entity player, float score);
 
+float autocvar_g_freezetag_round_enddelay = 1;
 bool freezetag_CheckWinner()
 {
-	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
+	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
+		&& round_handler_GetEndDelayTime() == -1)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
@@ -104,7 +105,26 @@ bool freezetag_CheckWinner()
 
 	int winner_team = Team_GetWinnerAliveTeam();
 	if (!winner_team)
+	{
+		round_handler_ResetEndDelayTime();
 		return false;
+	}
+
+	// delay round ending a bit
+	if (autocvar_g_freezetag_round_enddelay
+		&& round_handler_GetEndTime() > 0
+		&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
+	{
+		if (round_handler_GetEndDelayTime() == -1)
+		{
+			round_handler_SetEndDelayTime(min(time + autocvar_g_freezetag_round_enddelay, round_handler_GetEndTime()));
+			return 0;
+		}
+		else if (round_handler_GetEndDelayTime() >= time)
+		{
+			return 0;
+		}
+	}
 
 	if(winner_team > 0)
 	{
@@ -697,7 +717,6 @@ MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_ft_start_ammo_nails;
 	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_ft_start_ammo_rockets;
 	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_ft_start_ammo_cells;
-	start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_ft_start_ammo_plasma;
 	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_ft_start_ammo_fuel;
 }
 

@@ -1,16 +1,16 @@
 #include "sv_status_effects.qh"
 
-METHOD(StatusEffects, m_active, bool(StatusEffects this, entity actor))
+METHOD(StatusEffect, m_active, bool(StatusEffect this, entity actor))
 {
-	TC(StatusEffects, this);
+	TC(StatusEffect, this);
 	if(!actor.statuseffects)
 		return false; // safety net
 	return (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE);
 }
 
-METHOD(StatusEffects, m_tick, void(StatusEffects this, entity actor))
+METHOD(StatusEffect, m_tick, void(StatusEffect this, entity actor))
 {
-	StatusEffects data = actor.statuseffects;
+	StatusEffect data = actor.statuseffects;
 	.int flg = statuseffect_flags[this.m_id];
 	int oldflag = data.(flg);
 	data.(flg) = BITSET(data.(flg), STATUSEFFECT_FLAG_PERSISTENT, this.m_persistent(this, actor));
@@ -26,7 +26,7 @@ METHOD(StatusEffects, m_tick, void(StatusEffects this, entity actor))
 	}
 }
 
-METHOD(StatusEffects, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+METHOD(StatusEffect, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
 	if(!actor.statuseffects)
 		StatusEffects_new(actor);
@@ -37,9 +37,9 @@ METHOD(StatusEffects, m_apply, void(StatusEffects this, entity actor, float eff_
 	StatusEffects_update(actor);
 }
 
-METHOD(StatusEffects, m_remove, void(StatusEffects this, entity actor, int removal_type))
+METHOD(StatusEffect, m_remove, void(StatusEffect this, entity actor, int removal_type))
 {
-	StatusEffects data = actor.statuseffects;
+	StatusEffect data = actor.statuseffects;
 	if(!data)
 		return;
 	// NOTE: persistent effects do not make a sound on removal, this is intended as a workaround for #2620
@@ -74,7 +74,13 @@ MUTATOR_HOOKFUNCTION(status_effects, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	StatusEffects_removeall(player, STATUSEFFECT_REMOVE_NORMAL); // just to get rid of the pickup sound
+	// don't delete possible spectatee's effects!
+	if(player.statuseffects && player.statuseffects.owner == player)
+	{
+		// just to get rid of the pickup sound
+		StatusEffects_removeall(player, STATUSEFFECT_REMOVE_NORMAL);
+	}
+
 	return true;
 }
 
@@ -82,8 +88,15 @@ MUTATOR_HOOKFUNCTION(status_effects, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	// no need to network updates, as there is no statuseffects object attached
-	StatusEffects_removeall(player, STATUSEFFECT_REMOVE_NORMAL); // just to get rid of the pickup sound
+	// don't delete spectatee's effects!
+	if(player.statuseffects && player.statuseffects.owner == player)
+	{
+		// just to get rid of the pickup sound
+		// no need to network updates, as there is no statuseffects object attached
+		StatusEffects_removeall(player, STATUSEFFECT_REMOVE_NORMAL);
+	}
+
+	// spectator has their own ent
 	StatusEffects_clearall(player.statuseffects_store);
 
 	// don't delete spectatee's effects!

@@ -1,6 +1,6 @@
 #include "sv_damagetext.qh"
 
-AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: visible to spectators, >= 2: visible to attacker, >= 3: all players see everyone's damage");
+AUTOCVAR(sv_damagetext, int, 2, "\\\"0\\\" = disable damage text, \\\"1\\\" = show damage text to spectators, \\\"2\\\" = also to the attacker, \\\"3\\\" = show damage text to all players");
 
 REGISTER_MUTATOR(damagetext, true);
 
@@ -14,7 +14,11 @@ REGISTER_MUTATOR(damagetext, true);
 .float dent_net_health;
 .float dent_net_armor;
 .float dent_net_potential;
-.entity dent_attackers;
+
+const int BITS_PER_INT = 24;
+const int DENT_ATTACKERS_SIZE = 11; // ceil(255 / BITS_PER_INT)
+// where 255 is the max number of clients that the engine can support
+.int dent_attackers[DENT_ATTACKERS_SIZE];
 
 bool write_damagetext(entity this, entity client, int sf)
 {
@@ -63,7 +67,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 	float armor = M_ARGV(3, float);
 	int deathtype = M_ARGV(5, int);
 	float potential_damage = M_ARGV(6, float);
-	if(DEATH_WEAPONOF(deathtype) == WEP_VAPORIZER) return;
+	if(MUTATOR_IS_ENABLED(mutator_instagib) && DEATH_WEAPONOF(deathtype) == WEP_VAPORIZER) return;
 
 	static entity net_text_prev;
 	static float net_damagetext_prev_time;
@@ -97,11 +101,17 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 		net_text_prev.dent_net_potential = potential_damage;
 		return;
 	}
-	else if (!IL_CONTAINS(hit.dent_attackers, attacker))
+	else if (attacker)
 	{
-		// player is hit for the first time after respawn by this attacker
-		IL_PUSH(hit.dent_attackers, attacker);
-		flags |= DTFLAG_STOP_ACCUMULATION; // forcedly stop client-side damage accumulation
+		int attacker_id = etof(attacker) - 1;
+		int idx = floor(attacker_id / BITS_PER_INT);
+		int bit = attacker_id % BITS_PER_INT;
+		if (!(hit.dent_attackers[idx] & BIT(bit)))
+		{
+			// player is hit for the first time after respawn by this attacker
+			hit.dent_attackers[idx] |= BIT(bit);
+			flags |= DTFLAG_STOP_ACCUMULATION; // forcedly stop client-side damage accumulation
+		}
 	}
 
 	entity net_text = new_pure(net_damagetext);
@@ -125,21 +135,18 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 MUTATOR_HOOKFUNCTION(damagetext, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
-	if (player.dent_attackers)
-		IL_DELETE(player.dent_attackers);
-
-	// NOTE this player is automatically removed from dent_attackers lists of other players
-	// by intrusive list's ONREMOVE
+	int player_id = etof(player) - 1;
+	int idx = floor(player_id / BITS_PER_INT);
+	int bit = player_id % BITS_PER_INT;
+	// remove from attacker list of all players
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		it.dent_attackers[idx] &= ~BIT(bit);
+	});
 }
 
 MUTATOR_HOOKFUNCTION(damagetext, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
-	if (player.dent_attackers == NULL)
-	{
-		player.dent_attackers = IL_NEW();
-		return true;
-	}
-
-	IL_CLEAR(player.dent_attackers);
+	for (int i = 0; i < DENT_ATTACKERS_SIZE; ++i)
+		player.dent_attackers[i] = 0;
 }

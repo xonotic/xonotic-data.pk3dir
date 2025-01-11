@@ -33,7 +33,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	this.classname = wpn.m_canonical_spawnfunc;
 	if (!ITEM_IS_LOOT(this) && !this.m_isreplaced)
 	{
-		if (wpn.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+		if (wpn.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN))
 		{
 			//LOG_WARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
 			startitem_failed = true;
@@ -123,7 +123,6 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 				case RES_BULLETS: ammo = cvar("g_pickup_nails_weapon");   break;
 				case RES_ROCKETS: ammo = cvar("g_pickup_rockets_weapon"); break;
 				case RES_CELLS:   ammo = cvar("g_pickup_cells_weapon");   break;
-				case RES_PLASMA:  ammo = cvar("g_pickup_plasma_weapon");  break;
 				case RES_FUEL:    ammo = cvar("g_pickup_fuel_weapon");    break;
 			}
 		}
@@ -151,7 +150,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 		this.pickup_anyway = true;
 
 	if(!this.owner)
-		this.glowmod = wpn.wpcolor;
+		this.glowmod = wpn.m_color;
 	else
 		this.glowmod = colormapPaletteColor(this.owner.clientcolors & 0x0F, true);
 

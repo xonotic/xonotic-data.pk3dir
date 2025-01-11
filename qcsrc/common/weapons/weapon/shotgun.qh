@@ -6,7 +6,7 @@ CLASS(Shotgun, Weapon)
 /* impulse   */ ATTRIB(Shotgun, impulse, int, 2);
 /* flags     */ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC | WEP_FLAG_BLEED);
 /* rating    */ ATTRIB(Shotgun, bot_pickupbasevalue, float, 6000);
-/* color     */ ATTRIB(Shotgun, wpcolor, vector, '0.5 0.25 0');
+/* color     */ ATTRIB(Shotgun, m_color, vector, '0.5 0.25 0');
 /* modelname */ ATTRIB(Shotgun, mdl, string, "shotgun");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Shotgun, m_model, Model, MDL_SHOTGUN_ITEM);
@@ -32,6 +32,7 @@ CLASS(Shotgun, Weapon)
 		P(class, prefix, damagefalloff_maxdist, float, PRI) \
 		P(class, prefix, damagefalloff_mindist, float, PRI) \
 		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, melee_blockedbyfiring, bool, SEC) \
 		P(class, prefix, melee_delay, float, SEC) \
 		P(class, prefix, melee_multihit, float, SEC) \
 		P(class, prefix, melee_nonplayerdamage, float, SEC) \
@@ -43,20 +44,22 @@ CLASS(Shotgun, Weapon)
 		P(class, prefix, melee_traces, float, SEC) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, secondary, float, NONE) \
 		P(class, prefix, solidpenetration, float, PRI) \
 		P(class, prefix, spread, float, PRI) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, spread_pattern, float, PRI) \
+		P(class, prefix, spread_pattern_scale, float, PRI) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Shotgun, shotgun)
+	W_PROPS(X, Shotgun, shotgun)
 #undef X
 
 ENDCLASS(Shotgun)
-REGISTER_WEAPON(SHOTGUN, shotgun, NEW(Shotgun));
+REGISTER_WEAPON(SHOTGUN, NEW(Shotgun));
 

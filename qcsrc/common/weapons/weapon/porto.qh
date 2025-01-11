@@ -6,7 +6,7 @@ CLASS(PortoLaunch, Weapon)
 /* impulse   */ ATTRIB(PortoLaunch, impulse, int, 0);
 /* flags     */ ATTRIB(PortoLaunch, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON | WEP_FLAG_NODUAL | WEP_FLAG_NOTRUEAIM);
 /* rating    */ ATTRIB(PortoLaunch, bot_pickupbasevalue, float, 0);
-/* color     */ ATTRIB(PortoLaunch, wpcolor, vector, '0.5 0.5 0.5');
+/* color     */ ATTRIB(PortoLaunch, m_color, vector, '0.5 0.5 0.5');
 /* modelname */ ATTRIB(PortoLaunch, mdl, string, "porto");
 #ifdef GAMEQC
 /* model     */ ATTRIB(PortoLaunch, m_model, Model, MDL_PORTO_ITEM);
@@ -24,17 +24,17 @@ CLASS(PortoLaunch, Weapon)
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, secondary, float, NONE) \
 		P(class, prefix, speed, float, BOTH) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, PortoLaunch, porto)
+	W_PROPS(X, PortoLaunch, porto)
 #undef X
 ENDCLASS(PortoLaunch)
-REGISTER_WEAPON(PORTO, porto, NEW(PortoLaunch));
+REGISTER_WEAPON(PORTO, NEW(PortoLaunch));
 
 SPAWNFUNC_WEAPON(weapon_porto, WEP_PORTO)
 

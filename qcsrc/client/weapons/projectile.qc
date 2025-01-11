@@ -38,11 +38,35 @@ void Projectile_DrawTrail(entity this, vector to)
 		if (from == to)
 			from.z += 1;
 
-	if (this.traileffect)
+	// Note: alpha value 0 actually means 1 on entities.
+	// This can be relevant when coming from CSQCModel_Effects_Apply.
+	float a = (this.alpha == 0) ? 1 : this.alpha;
+
+	// TODO: Do we actually need alpha support? Consider removing this
+	// support entirely and instead making necessary adjustments in
+	// effectinfo.
+	//
+	// Right now (2024-12-30), only Crylink can generate alpha via
+	// fade_rate/fade_time, and only PROJECTILE_PORTO_* set a fixed alpha
+	// (and reuse the Arc's TE_WIZSPIKE).
+	if (this.traileffect && a > 0)
 	{
-		particles_alphamin = particles_alphamax = particles_fade = sqrt(this.alpha);
+		float f = PARTICLES_DRAWASTRAIL;
+		if (a < 1)
+		{
+			// Do some of the fading using particle count, and some of it using alpha.
+			// Fading by particle count is less smooth but also cheaper to render.
+			// A higher power here performs more of the fading using particle count.
+			const float fade_power = 0.5;
+			particles_fade = pow(a, fade_power);
+			particles_alphamin = particles_alphamax = a / particles_fade;  // == pow(a, 1 - fade_power)
+			f |= PARTICLES_USEALPHA | PARTICLES_USEFADE;
+			//LOG_INFOF("particle fade: %f alpha: %f", particles_fade, particles_alphamin);
+		}
+		//else
+		//	LOG_INFOF("particle fade skipped");
 		entity eff = REGISTRY_GET(Effects, this.traileffect);
-		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
+		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, f);
 	}
 }
 
@@ -121,6 +145,7 @@ void Projectile_Draw(entity this)
 		}
 	}
 
+	// negation used to ensure a zero fade_(time/rate) does not affect opacity
 	a = 1 - (time - this.fade_time) * this.fade_rate;
 	this.alpha = bound(0, this.alphamod * a, 1);
 	if (this.alpha <= 0)
@@ -251,8 +276,21 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 		if (f & 0x20)
 		{
-			this.fade_time = time + ReadByte() * ticrate;
-			this.fade_rate = 1 / (ReadByte() * ticrate);
+			float fadetime = ReadByte();
+			float faderate = ReadByte();
+
+			// workaround for division by 0
+			// TODO: apply fade settings WITHOUT ticrate here and multiply during use cases
+			if(ticrate <= 0)
+			{
+				this.fade_time = 0;
+				this.fade_rate = 0;
+			}
+			else
+			{
+				this.fade_time = time + fadetime * ticrate;
+				this.fade_rate = 1 / (faderate * ticrate);
+			}
 		}
 		else
 		{
@@ -358,8 +396,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.maxs = '4 4 4';
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
-				this.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
-				this.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
+				this.bouncefactor = WEP_CVAR_SEC(WEP_ELECTRO, bouncefactor);
+				this.bouncestop = WEP_CVAR_SEC(WEP_ELECTRO, bouncestop);
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
@@ -376,8 +414,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.maxs = '3 3 3';
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
-				this.bouncefactor = WEP_CVAR(mortar, bouncefactor);
-				this.bouncestop = WEP_CVAR(mortar, bouncestop);
+				this.bouncefactor = WEP_CVAR(WEP_MORTAR, bouncefactor);
+				this.bouncestop = WEP_CVAR(WEP_MORTAR, bouncestop);
 				break;
 			case PROJECTILE_GOLEM_LIGHTNING:
 				this.mins = '-8 -8 -8';
@@ -462,8 +500,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			    this.maxs = '0 0 -4';
 			    this.move_movetype = MOVETYPE_BOUNCE;
 			    settouch(this, func_null);
-			    this.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
-			    this.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
+			    this.bouncefactor = WEP_CVAR_SEC(WEP_ELECTRO, bouncefactor);
+			    this.bouncestop = WEP_CVAR_SEC(WEP_ELECTRO, bouncestop);
 			    break;
 			*/
 			default:

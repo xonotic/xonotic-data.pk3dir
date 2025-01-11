@@ -40,8 +40,8 @@
 #include <lib/warpzone/client.qh>
 #include <lib/warpzone/common.qh>
 
-float autocvar_cl_viewmodel_scale;
 float autocvar_cl_viewmodel_alpha = 1;
+float autocvar_cl_viewmodel_alpha_min;
 
 bool autocvar_cl_bobmodel;
 float autocvar_cl_bobmodel_speed;
@@ -218,6 +218,7 @@ vector bobmodel_ofs(entity view)
 	vector gunorg = '0 0 0';
 	static float bobmodel_scale = 0;
 	static float time_ofs = 0; // makes the effect always restart in the same way
+	static float avg_xyspeed = 0; // makes the effect always restart in the same way
 	if (clonground)
 	{
 		if (time - hitgroundtime > 0.05)
@@ -226,13 +227,27 @@ vector bobmodel_ofs(entity view)
 	else
 		bobmodel_scale = max(0, bobmodel_scale - frametime * 5);
 
-	float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
-	if (bobmodel_scale && xyspeed)
+	if (bobmodel_scale)
 	{
-		float bspeed = xyspeed * 0.01 * autocvar_cl_viewmodel_scale * bobmodel_scale;
-		float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
-		gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
-		gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
+		float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
+		// smooth speed changes to get rid of weapon stuttering on direction changes
+		const float avg_time = 0.1;
+		float frac = 1 - exp(-frametime / max(0.001, avg_time));
+		avg_xyspeed = frac * xyspeed + (1 - frac) * avg_xyspeed;
+		// stop bobbing at a very low value of avg_xyspeed instead of 0
+		// since the averaging formula takes a very long time to reach exactly 0
+		if (avg_xyspeed < 1)
+			time_ofs = time;
+		else
+		{
+			if (avg_xyspeed < 400) // reduce bob frequency too when player walks crouching
+				time_ofs += frametime * map_bound_ranges(avg_xyspeed, 150, 400, 0.08, 0);
+
+			float bspeed = avg_xyspeed * 0.01 * bobmodel_scale;
+			float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
+			gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
+			gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
+		}
 	}
 	else
 		time_ofs = time;
@@ -278,8 +293,12 @@ void viewmodel_animate(entity this)
 
 void viewmodel_draw(entity this)
 {
+	// alpha calculations
+	float amax = (autocvar_cl_viewmodel_alpha != 0) ? autocvar_cl_viewmodel_alpha : 1;
+	float amin = (autocvar_cl_viewmodel_alpha_min != 0) ? autocvar_cl_viewmodel_alpha_min : -1;
+	float a = (amin >= amax) ? amax : bound(amin, this.m_alpha, amax);
+
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
-	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
 	int wepskin = this.m_skin;
 	bool invehicle = player_localentnum > maxclients;
 	if (invehicle) a = -1;
@@ -575,6 +594,79 @@ vector myhealth_gentlergb;
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
+bool View_SpectatorCamera()
+{
+	static int waiting_CAMERA_SPECTATOR_update;
+	static bool camera_spectator_3rd_person;
+	if(spectatee_status > 0)
+	{
+		if(autocvar_chase_active > 0)
+		{
+			// if chase_active is enabled by the user, spectator camera never switches to 1st person
+			// that means CAMERA_SPECTATOR 1 behaves as 0 and is redundant, so we forcedly skip it
+			if (STAT(CAMERA_SPECTATOR) == 1)
+			{
+				if (!waiting_CAMERA_SPECTATOR_update)
+				{
+					Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR 2
+					waiting_CAMERA_SPECTATOR_update = 1;
+				}
+			}
+			else waiting_CAMERA_SPECTATOR_update = 0;
+			camera_spectator_3rd_person = true;
+		}
+
+		// chase_active disabled by the user?
+		if(camera_spectator_3rd_person && autocvar_chase_active == 0)
+		{
+			if (STAT(CAMERA_SPECTATOR) >= 1)
+			{
+				if (waiting_CAMERA_SPECTATOR_update != STAT(CAMERA_SPECTATOR))
+				{
+					Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR (2 and) 0
+					waiting_CAMERA_SPECTATOR_update = STAT(CAMERA_SPECTATOR);
+				}
+			}
+			else
+			{
+				waiting_CAMERA_SPECTATOR_update = 0;
+				camera_spectator_3rd_person = false;
+			}
+			return true;
+		}
+	}
+
+	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
+	{
+		if(STAT(CAMERA_SPECTATOR))
+		{
+			if(spectatee_status > 0)
+			{
+				if(!camera_spectator_3rd_person)
+				{
+					cvar_set("chase_active", "-2");
+					camera_spectator_3rd_person = true;
+					return true;
+				}
+			}
+			else if(camera_spectator_3rd_person)
+			{
+				cvar_set("chase_active", "0");
+				camera_spectator_3rd_person = false;
+			}
+
+			if(autocvar_chase_active == -2)
+				return true;
+		}
+		else if(camera_spectator_3rd_person)
+		{
+			cvar_set("chase_active", "0");
+			camera_spectator_3rd_person = false;
+		}
+	}
+	return false;
+}
+
 float eventchase_current_distance;
 float eventchase_running;
 int WantEventchase(entity this, bool want_vehiclechase)
@@ -614,46 +706,11 @@ int WantEventchase(entity this, bool want_vehiclechase)
 	return 0;
 }
 
-bool waiting_CAMERA_SPECTATOR_update;
 void View_EventChase(entity this)
 {
-	if(spectatee_status > 0 && autocvar_chase_active > 0)
-	{
-		// if chase_active is enabled by the user, spectator camera never switches to 1st person
-		// that means CAMERA_SPECTATOR 1 behaves as 0 and is redundant, so we forcedly skip it
-		if (STAT(CAMERA_SPECTATOR) == 1)
-		{
-			if (!waiting_CAMERA_SPECTATOR_update)
-			{
-				Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR 2
-				waiting_CAMERA_SPECTATOR_update = true;
-			}
-		}
-		else waiting_CAMERA_SPECTATOR_update = false;
-	}
-
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if(STAT(CAMERA_SPECTATOR))
-		{
-			if(spectatee_status > 0)
-			{
-				if(!autocvar_chase_active)
-				{
-					cvar_set("chase_active", "-2");
-					return;
-				}
-			}
-			else if(autocvar_chase_active == -2)
-				cvar_set("chase_active", "0");
-
-			if(autocvar_chase_active == -2)
-				return;
-		}
-		else if(autocvar_chase_active == -2)
-			cvar_set("chase_active", "0");
-
 		bool vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 
 		float vehicle_viewdist = 0;
@@ -1249,7 +1306,7 @@ void View_PostProcessing()
 
 		// edge detection postprocess handling done second (used by hud_powerup)
 		float sharpen_intensity = 0;
-		FOREACH(StatusEffect, it.instanceOfPowerups,
+		FOREACH(StatusEffects, it.instanceOfPowerupStatusEffect,
 		{
 			float powerup_finished = StatusEffects_gettime(it, g_statuseffects) - time;
 			if(powerup_finished > 0)
@@ -1619,7 +1676,8 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	if(!local_player)
 		local_player = this; // fall back!
 
-	View_EventChase(local_player);
+	if (!View_SpectatorCamera())
+		View_EventChase(local_player);
 
 	// do lockview after event chase camera so that it still applies whenever necessary.
 	View_Lock();

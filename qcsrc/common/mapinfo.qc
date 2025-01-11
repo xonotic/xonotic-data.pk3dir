@@ -17,6 +17,23 @@ int autocvar_g_mapinfo_q3compat = 1;
 	#define WARN_COND false
 #endif
 
+vector _GametypeFlags_FromGametype(int a)
+{
+	if (REGISTRY_MAX(Gametypes) > 24)
+		if (a >= 24)
+		{
+			a -= 24;
+			if (REGISTRY_MAX(Gametypes) > 48)
+				if (a >= 24)
+				{
+					a -= 24;
+					return '0 0 1' * BIT(a);
+				}
+			return '0 1 0' * BIT(a);
+		}
+	return '1 0 0' * BIT(a);
+}
+
 // generic string stuff
 
 int _MapInfo_Cache_Active;
@@ -71,7 +88,7 @@ void MapInfo_Cache_Store()
 	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, MapInfo_Map_titlestring);
 	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, MapInfo_Map_description);
 	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, MapInfo_Map_author);
-	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, ftos(MapInfo_Map_supportedGametypes));
+	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, vtos(MapInfo_Map_supportedGametypes));
 	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, ftos(MapInfo_Map_supportedFeatures));
 	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, ftos(MapInfo_Map_flags));
 }
@@ -94,7 +111,7 @@ float MapInfo_Cache_Retrieve(string map)
 	MapInfo_Map_titlestring = bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i);
 	MapInfo_Map_description = bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i);
 	MapInfo_Map_author = bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i);
-	MapInfo_Map_supportedGametypes = stof(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
+	MapInfo_Map_supportedGametypes = stov(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
 	MapInfo_Map_supportedFeatures = stof(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
 	MapInfo_Map_flags = stof(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
 
@@ -159,9 +176,9 @@ float _MapInfo_FilterList_cmp(float i, float j, entity pass)
 
 float MapInfo_FilterGametype(Gametype pGametype, int pFeatures, int pFlagsRequired, int pFlagsForbidden, bool pAbortOnGenerate)
 {
-	return _MapInfo_FilterGametype(pGametype.m_flags, pFeatures, pFlagsRequired, pFlagsForbidden, pAbortOnGenerate);
+	return _MapInfo_FilterGametype(pGametype.gametype_flags, pFeatures, pFlagsRequired, pFlagsForbidden, pAbortOnGenerate);
 }
-float _MapInfo_FilterGametype(int pGametype, int pFeatures, int pFlagsRequired, int pFlagsForbidden, bool pAbortOnGenerate)
+float _MapInfo_FilterGametype(vector pGametype, int pFeatures, int pFlagsRequired, int pFlagsForbidden, bool pAbortOnGenerate)
 {
 	float i, j;
 	if (!_MapInfo_filtered_allocated)
@@ -179,7 +196,7 @@ float _MapInfo_FilterGametype(int pGametype, int pFeatures, int pFlagsRequired, 
 				MapInfo_progress = i / _MapInfo_globcount;
 				return 0;
 			}
-		if((MapInfo_Map_supportedGametypes & pGametype) != 0)
+		if(MapInfo_Map_supportedGametypes & pGametype)
 		if((MapInfo_Map_supportedFeatures & pFeatures) == pFeatures)
 		if((MapInfo_Map_flags & pFlagsForbidden) == 0)
 		if((MapInfo_Map_flags & pFlagsRequired) == pFlagsRequired)
@@ -397,27 +414,27 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	}
 	diameter = vlen(mapMaxs - mapMins);
 
-	int twoBaseModes = 0;
-	FOREACH(Gametypes, it.m_isTwoBaseMode(), twoBaseModes |= it.m_flags);
+	vector twoBaseModes = '0 0 0';
+	FOREACH(Gametypes, it.m_isTwoBaseMode(), twoBaseModes |= it.gametype_flags);
 	if(twoBaseModes && (twoBaseModes &= MapInfo_Map_supportedGametypes))
 	{
 		// we have a symmetrical map, don't add the modes without bases
 	}
 	else if(!is_q3df_map)
 	{
-		FOREACH(Gametypes, it.m_isAlwaysSupported(it, spawnpoints, diameter), MapInfo_Map_supportedGametypes |= it.m_flags);
+		FOREACH(Gametypes, it.m_isAlwaysSupported(it, spawnpoints, diameter), MapInfo_Map_supportedGametypes |= it.gametype_flags);
 	}
 
-	if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RACE.m_flags)
+	if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RACE.gametype_flags)
 	if(!spawnplaces)
 	{
-		MapInfo_Map_supportedGametypes &= ~MAPINFO_TYPE_RACE.m_flags;
-		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTS.m_flags;
+		MapInfo_Map_supportedGametypes &= ~MAPINFO_TYPE_RACE.gametype_flags;
+		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTS.gametype_flags;
 	}
 
 	LOG_TRACE("-> diameter ",    ftos(diameter));
 	LOG_TRACE(";  spawnpoints ", ftos(spawnpoints));
-	LOG_TRACE(";  modes ",       ftos(MapInfo_Map_supportedGametypes));
+	LOG_TRACE(";  modes ",       vtos(MapInfo_Map_supportedGametypes));
 
 	fclose(fh);
 
@@ -430,7 +447,7 @@ void _MapInfo_Map_Reset()
 	MapInfo_Map_titlestring = "<TITLE>";
 	MapInfo_Map_description = "<DESCRIPTION>";
 	MapInfo_Map_author = "<AUTHOR>";
-	MapInfo_Map_supportedGametypes = 0;
+	MapInfo_Map_supportedGametypes = '0 0 0';
 	MapInfo_Map_supportedFeatures = 0;
 	MapInfo_Map_flags = 0;
 	MapInfo_Map_clientstuff = "";
@@ -447,8 +464,8 @@ string _MapInfo_GetDefault(Gametype t)
 void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisType, int load_default)
 {
 	string sa;
-	MapInfo_Map_supportedGametypes |= pThisType.m_flags;
-	if(!(pThisType.m_flags & pWantedType.m_flags))
+	MapInfo_Map_supportedGametypes |= pThisType.gametype_flags;
+	if(!(pThisType.gametype_flags & pWantedType.gametype_flags))
 		return;
 
 	if(load_default)
@@ -526,8 +543,8 @@ float _MapInfo_GetTeamPlayBool(Gametype t)
 
 void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThisType)
 {
-	MapInfo_Map_supportedGametypes |= pThisType.m_flags;
-	if (!(pThisType.m_flags & pWantedType.m_flags))
+	MapInfo_Map_supportedGametypes |= pThisType.gametype_flags;
+	if (!(pThisType.gametype_flags & pWantedType.gametype_flags))
 		return;
 
 	// reset all the cvars to their defaults
@@ -633,7 +650,7 @@ Gametype MapInfo_Type_FromString(string gtype, bool dowarn, bool is_q3compat)
 
 string MapInfo_Type_Description(Gametype t)
 {
-	return t ? t.gametype_description : "";
+	return t ? t.m_description : "";
 }
 
 string MapInfo_Type_ToString(Gametype t)
@@ -815,7 +832,7 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 	string stored_Map_description = "";
 	string stored_Map_title = "";
 	string stored_Map_author = "";
-	int stored_supportedGametypes = 0;
+	vector stored_supportedGametypes = '0 0 0';
 	int stored_supportedFeatures = 0;
 	int stored_flags = 0;
 	string t, s;
@@ -862,7 +879,7 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 					MapInfo_Map_supportedGametypes |= stored_supportedGametypes;
 				else
 				{
-					FOREACH(Gametypes, it.m_flags & stored_supportedGametypes,
+					FOREACH(Gametypes, it.gametype_flags & stored_supportedGametypes,
 					{
 						_MapInfo_Map_ApplyGametype ("", pGametypeToSet, it, true);
 					});
@@ -877,7 +894,7 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 				stored_Map_description = "";
 				stored_Map_title = "";
 				stored_Map_author = "";
-				stored_supportedGametypes = 0;
+				stored_supportedGametypes = '0 0 0';
 				stored_supportedFeatures = 0;
 				stored_flags = 0;
 				continue;
@@ -935,14 +952,14 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 			{
 				Gametype f = MapInfo_Type_FromString(it, false, true);
 				if(f)
-					stored_supportedGametypes |= f.m_flags;
+					stored_supportedGametypes |= f.gametype_flags;
 			});
 		}
 		else if(t == "style" && isdefi)
 		{
 			// we have a defrag map on our hands, add CTS!
 			// TODO: styles
-			stored_supportedGametypes |= MAPINFO_TYPE_CTS.m_flags;
+			stored_supportedGametypes |= MAPINFO_TYPE_CTS.gametype_flags;
 		}
 		else if(t == "map")
 		{
@@ -1118,7 +1135,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			if(MapInfo_Map_flags & MAPINFO_FLAG_FRUSTRATING)
 				fputs(fh, "frustrating\n");
 
-			FOREACH(Gametypes, MapInfo_Map_supportedGametypes & it.m_flags, {
+			FOREACH(Gametypes, MapInfo_Map_supportedGametypes & it.gametype_flags, {
 				fputs(fh, sprintf("gametype %s // defaults: %s\n", MapInfo_Type_ToString(it), _MapInfo_GetDefaultEx(it)));
 			});
 
@@ -1266,7 +1283,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			Gametype f = NULL;
 			if(all || (f = MapInfo_Type_FromString(t, true, false)))
 			{
-				if((all ? MAPINFO_TYPE_ALL : f.m_flags) & pGametypeToSet.m_flags)
+				if((all ? MAPINFO_TYPE_ALL : f.gametype_flags) & pGametypeToSet.gametype_flags)
 				{
 					_MapInfo_Parse_Settemp(pFilename, acl, 0, s, 1);
 				}
@@ -1283,7 +1300,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			Gametype f = NULL;
 			if(all || (f = MapInfo_Type_FromString(t, true, false)))
 			{
-				if((all ? MAPINFO_TYPE_ALL : f.m_flags) & pGametypeToSet.m_flags)
+				if((all ? MAPINFO_TYPE_ALL : f.gametype_flags) & pGametypeToSet.gametype_flags)
 				{
 					_MapInfo_Parse_Settemp(pFilename, acl, 1, s, 1);
 				}
@@ -1359,7 +1376,7 @@ LABEL(mapinfo_handled)
 		MapInfo_Map_author = ""; // don't display "<AUTHOR>" in the UI (we do write it to .mapinfo files)
 
 	MapInfo_Cache_Store();
-	if(MapInfo_Map_supportedGametypes != 0)
+	if(MapInfo_Map_supportedGametypes != '0 0 0')
 		return r;
 	if (WARN_COND)
 		LOG_WARN("Map ", pFilename, " supports no game types, ignored");
@@ -1373,7 +1390,7 @@ int MapInfo_Get_ByName(string pFilename, float pAllowGenerate, Gametype pGametyp
 
 	if(pGametypeToSet)
 	{
-		if(!(MapInfo_Map_supportedGametypes & pGametypeToSet.m_flags))
+		if(!(MapInfo_Map_supportedGametypes & pGametypeToSet.gametype_flags))
 		{
 			error("Can't select the requested game type. This should never happen as the caller should prevent it!\n");
 			//_MapInfo_Map_ApplyGametypeEx("", pGametypeToSet, MAPINFO_TYPE_DEATHMATCH);
@@ -1476,7 +1493,7 @@ float _MapInfo_CheckMap(string s, bool gametype_only) // returns 0 if the map ca
 {
 	if(!MapInfo_Get_ByName(s, 1, NULL))
 		return 0;
-	if((MapInfo_Map_supportedGametypes & MapInfo_CurrentGametype().m_flags) == 0)
+	if(!(MapInfo_Map_supportedGametypes & MapInfo_CurrentGametype().gametype_flags))
 		return 0;
 	if (gametype_only)
 		return 1;
@@ -1500,12 +1517,12 @@ void MapInfo_SwitchGameType(Gametype t)
 
 void MapInfo_LoadMap(string s, float reinit)
 {
-	MapInfo_Map_supportedGametypes = 0;
+	MapInfo_Map_supportedGametypes = '0 0 0';
 	// we shouldn't need this, as LoadMapSettings already fixes the gametype
 	//if(!MapInfo_CheckMap(s))
 	//{
 	//	print("EMERGENCY: can't play the selected map in the given game mode. Falling back to DM.\n");
-	//	MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH.m_flags);
+	//	MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH.gametype_flags);
 	//}
 
 	LOG_INFO("Switching to map ", s);
@@ -1569,12 +1586,12 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 			return; // do not call Get_ByName!
 		}
 
-		if(MapInfo_Map_supportedGametypes == 0)
+		if(MapInfo_Map_supportedGametypes == '0 0 0')
 		{
 			RandomSelection_Init();
 			FOREACH(Gametypes, it.m_priority == 2, 
 			{
-				MapInfo_Map_supportedGametypes |= it.m_flags;
+				MapInfo_Map_supportedGametypes |= it.gametype_flags;
 				RandomSelection_AddEnt(it, 1, 1);
 			});
 			if(RandomSelection_chosen_ent)
@@ -1597,7 +1614,7 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 #endif
 		RandomSelection_Init();
 		Gametype t_prev = t;
-		FOREACH(Gametypes, MapInfo_Map_supportedGametypes & it.m_flags,
+		FOREACH(Gametypes, MapInfo_Map_supportedGametypes & it.gametype_flags,
 		{
 			RandomSelection_AddEnt(it, 1, it.m_priority);
 		});
@@ -1622,7 +1639,7 @@ void MapInfo_ClearTemps()
 	MapInfo_Map_description = string_null;
 	MapInfo_Map_author = string_null;
 	MapInfo_Map_clientstuff = string_null;
-	MapInfo_Map_supportedGametypes = 0;
+	MapInfo_Map_supportedGametypes = '0 0 0';
 	MapInfo_Map_supportedFeatures = 0;
 }
 

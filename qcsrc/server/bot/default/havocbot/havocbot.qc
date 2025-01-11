@@ -406,7 +406,7 @@ int havocbot_checkdanger(entity this, vector dst_ahead)
 	if (trace_fraction == 1 && !this.jumppadcount
 		&& !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
 		&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
-	if ((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || (this.aistatus & AI_STATUS_ROAMING) || PHYS_INPUT_BUTTON_JUMP(this))
+	if ((IS_ONGROUND(this)) || (this.aistatus & (AI_STATUS_RUNNING | AI_STATUS_ROAMING)) || PHYS_INPUT_BUTTON_JUMP(this))
 	{
 		// Look downwards
 		traceline(dst_ahead , dst_down, true, NULL);
@@ -461,7 +461,7 @@ void havocbot_movetogoal(entity this)
 	// Jetpack navigation
 	if(this.navigation_jetpack_goal)
 	if(this.goalcurrent==this.navigation_jetpack_goal)
-	if(GetResource(this, RES_FUEL))
+	if(GetResource(this, RES_FUEL) > 0 || (this.items & IT_UNLIMITED_AMMO))
 	{
 		if(autocvar_bot_debug_goalstack)
 		{
@@ -615,7 +615,7 @@ void havocbot_movetogoal(entity this)
 	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
 	if (skill > 6 && !(IS_ONGROUND(this)))
 	{
-		#define ROCKETJUMP_DAMAGE() WEP_CVAR(devastator, damage) * 0.8 \
+		#define ROCKETJUMP_DAMAGE() WEP_CVAR(WEP_DEVASTATOR, damage) * 0.8 \
 			* ((StatusEffects_active(STATUSEFFECT_Strength, this)) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
 			* ((StatusEffects_active(STATUSEFFECT_Shield, this)) ? autocvar_g_balance_powerup_invincible_takedamage : 1)
 
@@ -706,7 +706,7 @@ void havocbot_movetogoal(entity this)
 						this.(weaponentity).m_switchweapon = WEP_DEVASTATOR;
 						this.v_angle_x = 90;
 						PHYS_INPUT_BUTTON_ATCK(this) = true;
-						this.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
+						this.rocketjumptime = time + WEP_CVAR(WEP_DEVASTATOR, detonatedelay);
 						return;
 					}
 				}
@@ -1469,7 +1469,7 @@ void havocbot_chooseenemy(entity this)
 		this.havocbot_stickenemy_time = 0;
 }
 
-float havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int new_weapon)
+bool havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int new_weapon)
 {
 	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
 	// so skip this for them, or they'll never get to reload their weapons at all.
@@ -1480,6 +1480,8 @@ float havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int n
 	// if this weapon is scheduled for reloading, don't switch to it during combat
 	if (this.(weaponentity).weapon_load[new_weapon] < 0)
 	{
+		if(this.items & IT_UNLIMITED_AMMO)
+			return true;
 		FOREACH(Weapons, it != WEP_Null, {
 			if(it.wr_checkammo1(it, this, weaponentity) + it.wr_checkammo2(it, this, weaponentity))
 				return true; // other weapon available
@@ -1533,23 +1535,19 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 	}
 
 	// Do not change weapon during the next second after a combo
-	float f = time - this.lastcombotime;
-	if(f < 1)
+	if(time - this.lastcombotime < 1)
 		return;
 
-	float distance; distance=bound(10,vlen(this.origin-this.enemy.origin)-200,10000);
-
 	// Should it do a weapon combo?
-	float af, ct, combo_time, combo;
 
-	af = ATTACK_FINISHED(this, weaponentity);
-	ct = autocvar_bot_ai_weapon_combo_threshold;
+	float af = ((this.weaponentity.m_weapon == WEP_Null) ? 0 : ATTACK_FINISHED(this, weaponentity));
+	float ct = autocvar_bot_ai_weapon_combo_threshold;
 
-	// Bots with no skill will be 4 times more slower than "godlike" bots when doing weapon combos
+	// Bots with no skill will be 4 times slower than "godlike" bots when doing weapon combos
 	// Ideally this 4 should be calculated as longest_weapon_refire / bot_ai_weapon_combo_threshold
-	combo_time = time + ct + (ct * ((-0.3*(skill+this.bot_weaponskill))+3));
+	float combo_time = time + ct * (4 - 0.3 * (skill + this.bot_weaponskill));
 
-	combo = false;
+	bool combo = false;
 
 	if(autocvar_bot_ai_weapon_combo)
 	if(this.(weaponentity).m_weapon.m_id == this.(weaponentity).lastfiredweapon)
@@ -1559,10 +1557,11 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 		this.lastcombotime = time;
 	}
 
-	distance *= (2 ** this.bot_rangepreference);
-
 	// Custom weapon list based on distance to the enemy
-	if(bot_custom_weapon){
+	if(bot_custom_weapon)
+	{
+		float distance = bound(10, vlen(this.origin - this.enemy.origin) - 200, 10000);
+		distance *= (2 ** this.bot_rangepreference);
 
 		// Choose weapons for far distance
 		if ( distance > bot_distance_far ) {

@@ -242,14 +242,12 @@ void buff_Touch(entity this, entity toucher)
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	sound(toucher, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
-	float oldtime = StatusEffects_gettime(thebuff, toucher);
 	float bufftime = ((this.buffs_finished) ? this.buffs_finished : thebuff.m_time(thebuff));
 
 	buff_RemoveAll(toucher, STATUSEFFECT_REMOVE_NORMAL); // remove previous buffs so that a new one may be added
-	if(bufftime)
-		StatusEffects_apply(thebuff, toucher, min(time + bufftime, max(oldtime, time) + bufftime), 0);
-	else
-		StatusEffects_apply(thebuff, toucher, time + 999, 0); // HACK: zero timer means "infinite"!
+	if(!bufftime)
+		bufftime = 999;
+	StatusEffects_apply(thebuff, toucher, time + bufftime, 0);
 
 	STAT(LAST_PICKUP, toucher) = time;
 }
@@ -270,7 +268,7 @@ float buff_Available(entity buff)
 void buff_NewType(entity ent)
 {
 	RandomSelection_Init();
-	FOREACH(StatusEffect, it.instanceOfBuff && buff_Available(it),
+	FOREACH(StatusEffects, it.instanceOfBuff && buff_Available(it),
 	{
 		// if it's already been chosen, give it a lower priority
 		float myseencount = (it.buff_seencount > 0) ? it.buff_seencount : 1; // no division by zero please!
@@ -287,7 +285,7 @@ void buff_RemoveAll(entity actor, int removal_type)
 {
 	if(!actor.statuseffects)
 		return;
-	FOREACH(StatusEffect, it.instanceOfBuff,
+	FOREACH(StatusEffects, it.instanceOfBuff,
 	{
 		it.m_remove(it, actor, removal_type);
 	});
@@ -297,7 +295,7 @@ entity buff_FirstFromFlags(entity actor)
 {
 	if(!actor.statuseffects)
 		return NULL;
-	FOREACH(StatusEffect, it.instanceOfBuff && it.m_active(it, actor), { return it; });
+	FOREACH(StatusEffects, it.instanceOfBuff && it.m_active(it, actor), { return it; });
 	return NULL;
 }
 
@@ -427,8 +425,20 @@ void buff_Init(entity this)
 
 	entity buff = this.buffdef;
 
-	if(!buff || !buff_Available(buff))
+	// item_buff_random provides a null type so force randomization in that case
+	// otherwise replace the buff type if it's unavailable and the option is enabled
+	if(!buff || (autocvar_g_buffs_replace_available && !buff_Available(buff)))
+	{
 		buff_NewType(this);
+		buff = this.buffdef;
+	}
+
+	// the buff type is still invalid or unavailable, simply delete the item
+	if(!buff || !buff_Available(buff))
+	{
+		delete(this);
+		return;
+	}
 
 	this.classname = "item_buff";
 	this.solid = SOLID_TRIGGER;
@@ -509,13 +519,13 @@ float buff_Inferno_CalculateTime(float damg, float offset_x, float offset_y, flo
 	return offset_y + (intersect_y - offset_y) * logn(((damg - offset_x) * ((base - 1) / intersect_x)) + 1, base);
 }
 
-METHOD(Buff, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+METHOD(Buff, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
     if(IS_PLAYER(actor))
     	actor.effects |= EF_NOSHADOW; // does not play well with buff icon
     SUPER(Buff).m_apply(this, actor, eff_time, eff_flags);
 }
-METHOD(Buff, m_remove, void(StatusEffects this, entity actor, int removal_type))
+METHOD(Buff, m_remove, void(StatusEffect this, entity actor, int removal_type))
 {
 	bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
 	if(wasactive)
@@ -535,7 +545,7 @@ METHOD(Buff, m_remove, void(StatusEffects this, entity actor, int removal_type))
 	SUPER(Buff).m_remove(this, actor, removal_type);
 }
 
-METHOD(AmmoBuff, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+METHOD(AmmoBuff, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(!wasactive)
@@ -555,7 +565,7 @@ METHOD(AmmoBuff, m_apply, void(StatusEffects this, entity actor, float eff_time,
     }
     SUPER(AmmoBuff).m_apply(this, actor, eff_time, eff_flags);
 }
-METHOD(AmmoBuff, m_remove, void(StatusEffects this, entity actor, int removal_type))
+METHOD(AmmoBuff, m_remove, void(StatusEffect this, entity actor, int removal_type))
 {
 	bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
 	if(wasactive)
@@ -576,7 +586,7 @@ METHOD(AmmoBuff, m_remove, void(StatusEffects this, entity actor, int removal_ty
 	actor.buff_ammo_prev_infitems = 0;
 	SUPER(AmmoBuff).m_remove(this, actor, removal_type);
 }
-METHOD(AmmoBuff, m_tick, void(StatusEffects this, entity actor))
+METHOD(AmmoBuff, m_tick, void(StatusEffect this, entity actor))
 {
 	if(IS_PLAYER(actor))
 	{
@@ -592,7 +602,7 @@ METHOD(AmmoBuff, m_tick, void(StatusEffects this, entity actor))
 }
 
 
-METHOD(FlightBuff, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+METHOD(FlightBuff, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(!wasactive)
@@ -603,7 +613,7 @@ METHOD(FlightBuff, m_apply, void(StatusEffects this, entity actor, float eff_tim
     }
     SUPER(FlightBuff).m_apply(this, actor, eff_time, eff_flags);
 }
-METHOD(FlightBuff, m_remove, void(StatusEffects this, entity actor, int removal_type))
+METHOD(FlightBuff, m_remove, void(StatusEffect this, entity actor, int removal_type))
 {
 	bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
 	if(wasactive)
@@ -614,7 +624,7 @@ METHOD(FlightBuff, m_remove, void(StatusEffects this, entity actor, int removal_
 	SUPER(FlightBuff).m_remove(this, actor, removal_type);
 }
 
-METHOD(MagnetBuff, m_tick, void(StatusEffects this, entity actor))
+METHOD(MagnetBuff, m_tick, void(StatusEffect this, entity actor))
 {
 	if(IS_PLAYER(actor))
 	{

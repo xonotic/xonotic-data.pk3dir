@@ -8,7 +8,7 @@ CLASS(OverkillRocketPropelledChainsaw, Weapon)
 /* impulse   */ ATTRIB(OverkillRocketPropelledChainsaw, impulse, int, 9);
 /* flags     */ ATTRIB(OverkillRocketPropelledChainsaw, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON);
 /* rating    */ ATTRIB(OverkillRocketPropelledChainsaw, bot_pickupbasevalue, float, 10000);
-/* color     */ ATTRIB(OverkillRocketPropelledChainsaw, wpcolor, vector, '0.5 0.5 0');
+/* color     */ ATTRIB(OverkillRocketPropelledChainsaw, m_color, vector, '0.5 0.5 0');
 /* modelname */ ATTRIB(OverkillRocketPropelledChainsaw, mdl, string, "ok_rl");
 #ifdef GAMEQC
 /* model     */ ATTRIB(OverkillRocketPropelledChainsaw, m_model, Model, MDL_RPC_ITEM);
@@ -37,20 +37,7 @@ CLASS(OverkillRocketPropelledChainsaw, Weapon)
 		P(class, prefix, refire, float, PRI) \
 		P(class, prefix, speedaccel, float, PRI) \
 		P(class, prefix, speed, float, PRI) \
-		P(class, prefix, ammo, float, SEC) \
-		P(class, prefix, animtime, float, SEC) \
-		P(class, prefix, damage, float, SEC) \
-		P(class, prefix, delay, float, SEC) \
-		P(class, prefix, edgedamage, float, SEC) \
-		P(class, prefix, force, float, SEC) \
-		P(class, prefix, force_zscale, float, SEC) \
-		P(class, prefix, lifetime, float, SEC) \
-		P(class, prefix, radius, float, SEC) \
-		P(class, prefix, refire, float, SEC) \
 		P(class, prefix, refire_type, float, SEC) \
-		P(class, prefix, shotangle, float, SEC) \
-		P(class, prefix, speed, float, SEC) \
-		P(class, prefix, spread, float, SEC) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
@@ -64,7 +51,7 @@ CLASS(OverkillRocketPropelledChainsaw, Weapon)
 #undef X
 
 ENDCLASS(OverkillRocketPropelledChainsaw)
-REGISTER_WEAPON(OVERKILL_RPC, okrpc, NEW(OverkillRocketPropelledChainsaw));
+REGISTER_WEAPON(OVERKILL_RPC, NEW(OverkillRocketPropelledChainsaw));
 
 //SPAWNFUNC_WEAPON(weapon_okrpc, WEP_OVERKILL_RPC)
 //SPAWNFUNC_WEAPON(weapon_rpc, WEP_OVERKILL_RPC)

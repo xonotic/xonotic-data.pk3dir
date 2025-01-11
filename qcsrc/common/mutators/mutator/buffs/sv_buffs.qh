@@ -6,7 +6,7 @@
 
 void buffs_Initialize();
 
-AUTOCVAR(g_buffs, int, -1, "Enable buffs, -1: enabled but no auto location or replacing powerups, 1: enabled and can replace them");
+AUTOCVAR(g_buffs, int, -1, "enable buffs; \\\"-1\\\" = enabled but no auto location or replacing powerups, \\\"1\\\" = enabled and can replace them");
 
 REGISTER_MUTATOR(buffs, autocvar_g_buffs)
 {
@@ -27,6 +27,7 @@ bool autocvar_g_buffs_random_location;
 int autocvar_g_buffs_random_location_attempts;
 int autocvar_g_buffs_spawn_count;
 bool autocvar_g_buffs_replace_powerups;
+bool autocvar_g_buffs_replace_available = true;
 bool autocvar_g_buffs_drop = false;
 float autocvar_g_buffs_cooldown_activate;
 float autocvar_g_buffs_cooldown_respawn;
@@ -57,7 +58,7 @@ float autocvar_g_buffs_luck_chance = 0.15;
 float autocvar_g_buffs_luck_damagemultiplier = 3;
 
 // ammo
-.float buff_ammo_prev_infitems;
+.int buff_ammo_prev_infitems;
 .int buff_ammo_prev_clipload;
 // flight
 .float buff_flight_oldgravity;

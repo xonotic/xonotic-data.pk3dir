@@ -843,37 +843,37 @@ void Dump_Notifications(int fh, bool alsoprint)
 	NOTIF_WRITE(sprintf("\n// MSG_ANNCE notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_ANNCE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
-			"0 = disabled, 1 = enabled if gentle mode is off, 2 = always enabled"
+			"\\\"0\\\" = disabled, \\\"1\\\" = enabled if gentle mode is off, \\\"2\\\" = always enabled"
 		);
 	});
 
 	NOTIF_WRITE(sprintf("\n// MSG_INFO notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_INFO && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
-			"0 = off, 1 = print to console, "
-			"2 = print to console and chatbox (if notification_allow_chatboxprint is enabled)"
+			"\\\"0\\\" = off, \\\"1\\\" = print to console, "
+			"\\\"2\\\" = print to console and chatbox (if notification_allow_chatboxprint is enabled)"
 		);
 	});
 
 	NOTIF_WRITE(sprintf("\n// MSG_CENTER notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_CENTER && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
-			"0 = off, 1 = centerprint"
+			"\\\"0\\\" = off, \\\"1\\\" = centerprint"
 		);
 	});
 
 	NOTIF_WRITE(sprintf("\n// MSG_MULTI notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_MULTI && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
-			"Enable this multiple notification"
+			"enable this multiple notification"
 		);
 	});
 
 	NOTIF_WRITE(sprintf("\n// MSG_CHOICE notifications:\n"));
 	FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY_CHOICE(it,
-			"Choice for this notification 0 = off, 1 = default message, 2 = verbose message",
-			"Allow choice for this notification 0 = off, 1 = only in warmup mode, 2 = always"
+			"choice for this notification; \\\"0\\\" = off, \\\"1\\\" = default message, \\\"2\\\" = verbose message",
+			"allow choice for this notification; \\\"0\\\" = off, \\\"1\\\" = only in warmup-stage, \\\"2\\\" = always"
 		);
 	});
 
@@ -882,86 +882,86 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	NOTIF_WRITE_HARDCODED(
 		"allow_chatboxprint", "1",
-		"Allow INFO notifications to be printed to chat box "
-		"0 = do not allow, "
-		"1 = allow only if allowed by individual notification_INFO* cvars, "
-		"2 = force all INFO notifications to be printed to the chatbox"
+		"allow INFO notifications to be printed to chat box; "
+		"\\\"0\\\" = do not allow, "
+		"\\\"1\\\" = allow only if allowed by individual notification_INFO* cvars, "
+		"\\\"2\\\" = force all INFO notifications to be printed to the chatbox"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"debug", "0",
-		"Print extra debug information on all notification function calls "
-		"(Requires -DNOTIFICATIONS_DEBUG flag to be enabled on QCSRC compilation)... "
-		"0 = disabled, 1 = dprint, 2 = print"
+		"print extra debug information on all notification function calls "
+		"(REQUIRES: -DNOTIFICATIONS_DEBUG flag to be enabled on QCSRC compilation); "
+		"\\\"0\\\" = disabled, \\\"1\\\" = dprint, \\\"2\\\" = print"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"errors_are_fatal", "1",
-		"If a notification fails upon initialization, cause a Host_Error to stop the program"
+		"if a notification fails upon initialization, cause a Host_Error to stop the program"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"item_centerprinttime", "1.5",
-		"How long to show item information centerprint messages (like 'You got the Electro' or such)"
+		"how long to show item information centerprint messages (like 'You got the Electro' or such)"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"lifetime_mapload", "10",
-		"Amount of time that notification entities last immediately at mapload (in seconds) "
+		"amount of time that notification entities last immediately at mapload (in seconds) "
 		"to help prevent notifications from being lost on early init (like gamestart countdown)"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"lifetime_runtime", "0.5",
-		"Amount of time that notification entities last on the server during runtime (In seconds)"
+		"amount of time that notification entities last on the server during runtime (in seconds)"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"server_allows_location", "1",
-		"Server side cvar for allowing death messages to show location information too"
+		"server side cvar for allowing death messages to show location information too"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"show_location", "0",
-		"Append location information to MSG_INFO death/kill messages"
+		"append location information to MSG_INFO death/kill messages"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"show_location_string", "",
-		"Replacement string piped into sprintf, "
-		"so you can do different messages like this: ' at the %s' or ' (near %s)'"
+		"replacement string piped into sprintf, "
+		"so you can do different messages like ' at the %s' or ' (near %s)'"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"show_sprees", "1",
-		"Print information about sprees in death/kill messages"
+		"print information about sprees in death/kill messages"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"show_sprees_center", "1",
-		"Show spree information in MSG_CENTER messages... "
-		"0 = off, 1 = target (but only for first victim) and attacker"
+		"show spree information in MSG_CENTER messages; "
+		"\\\"0\\\" = off, \\\"1\\\" = target (but only for first victim) and attacker"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"show_sprees_center_specialonly", "1",
-		"Don't show spree information in MSG_CENTER messages if it isn't an achievement"
+		"do not show spree information in MSG_CENTER messages if it is not an achievement"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"show_sprees_info", "3",
-		"Show spree information in MSG_INFO messages... "
-		"0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker"
+		"show spree information in MSG_INFO messages; "
+		"\\\"0\\\" = off, \\\"1\\\" = target only, \\\"2\\\" = attacker only, \\\"3\\\" = target and attacker"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"show_sprees_info_newline", "1",
-		"Show attacker spree information for MSG_INFO messages on a separate line than the death notification itself"
+		"show attacker spree information for MSG_INFO messages on a separate line than the death notification itself"
 	);
 
 	NOTIF_WRITE_HARDCODED(
 		"show_sprees_info_specialonly", "1",
-		"Don't show attacker spree information in MSG_INFO messages if it isn't an achievement"
+		"do not show attacker spree information in MSG_INFO messages if it is not an achievement"
 	);
 
 	LOG_INFOF("Notification counts (total = %d): "
@@ -1262,10 +1262,10 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		return;
 	}
 
-	string s1 = CCR((notif.nent_stringcount > 0) ? ...(0, string) : "");
-	string s2 = CCR((notif.nent_stringcount > 1) ? ...(1, string) : "");
-	string s3 = CCR((notif.nent_stringcount > 2) ? ...(2, string) : "");
-	string s4 = CCR((notif.nent_stringcount > 3) ? ...(3, string) : "");
+	string s1 = (notif.nent_stringcount > 0) ? ...(0, string) : "";
+	string s2 = (notif.nent_stringcount > 1) ? ...(1, string) : "";
+	string s3 = (notif.nent_stringcount > 2) ? ...(2, string) : "";
+	string s4 = (notif.nent_stringcount > 3) ? ...(3, string) : "";
 	float f1 =  ((notif.nent_floatcount  > 0) ? ...((notif.nent_stringcount + 0), float) : 0);
 	float f2 =  ((notif.nent_floatcount  > 1) ? ...((notif.nent_stringcount + 1), float) : 0);
 	float f3 =  ((notif.nent_floatcount  > 2) ? ...((notif.nent_stringcount + 2), float) : 0);

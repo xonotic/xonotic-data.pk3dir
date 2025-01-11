@@ -10,7 +10,7 @@ string MapInfo_Map_description;
 string MapInfo_Map_author;
 string MapInfo_Map_clientstuff; // not in cache, only for map load
 string MapInfo_Map_fog; // not in cache, only for map load
-int MapInfo_Map_supportedGametypes;
+vector MapInfo_Map_supportedGametypes;
 int MapInfo_Map_supportedFeatures;
 int MapInfo_Map_flags;
 vector MapInfo_Map_mins; // these are '0 0 0' if not supported!
@@ -24,8 +24,11 @@ const int GAMETYPE_FLAG_HIDELIMITS      = BIT(4); // don't display a score limit
 const int GAMETYPE_FLAG_WEAPONARENA     = BIT(5); // gametype has a forced weapon arena, weapon arena mutators should disable themselves when this is set
 const int GAMETYPE_FLAG_1V1             = BIT(6); // 1v1 gameplay
 
-int MAPINFO_TYPE_ALL;
-.int m_flags;
+vector MAPINFO_TYPE_ALL;
+.vector gametype_flags;
+
+// must be defined before the registry
+vector _GametypeFlags_FromGametype(int a);
 
 CLASS(Gametype, Object)
     ATTRIB(Gametype, m_id, int, 0);
@@ -50,7 +53,7 @@ CLASS(Gametype, Object)
     /** game type defaults */
     ATTRIB(Gametype, model2, string);
     /** game type description */
-    ATTRIB(Gametype, gametype_description, string);
+    ATTRIB(Gametype, m_description, string);
     /** game type priority in random selections */
     ATTRIB(Gametype, m_priority, int, 0);
 #ifdef CSQC
@@ -92,7 +95,7 @@ CLASS(Gametype, Object)
     METHOD(Gametype, describe, string(Gametype this))
     {
         TC(Gametype, this);
-        return this.gametype_description;
+        return this.m_description;
     }
 
     METHOD(Gametype, display, void(Gametype this, void(string name, string icon) returns))
@@ -109,15 +112,12 @@ CLASS(Gametype, Object)
         this.team = (gflags & GAMETYPE_FLAG_TEAMPLAY);
         this.m_mutators = cons(sname, mutators);
         this.model2 = defaults;
-        this.gametype_description = gdescription;
+        this.m_description = gdescription;
         this.frags = (gflags & GAMETYPE_FLAG_USEPOINTS);
         this.m_priority = ((gflags & GAMETYPE_FLAG_PREFERRED) ? 2 : ((gflags & GAMETYPE_FLAG_PRIORITY) ? 1 : 0));
         this.m_hidelimits = (gflags & GAMETYPE_FLAG_HIDELIMITS);
         this.m_weaponarena = (gflags & GAMETYPE_FLAG_WEAPONARENA);
         this.m_1v1 = (gflags & GAMETYPE_FLAG_1V1);
-
-        // same as `1 << m_id`
-        MAPINFO_TYPE_ALL |= this.items = this.m_flags = (MAPINFO_TYPE_ALL + 1);
     }
 ENDCLASS(Gametype)
 
@@ -127,7 +127,15 @@ REGISTRY_SORT(Gametypes)
 REGISTRY_CHECK(Gametypes)
 
 REGISTRY_DEFINE_GET(Gametypes, NULL)
-STATIC_INIT(Gametypes_renumber) { FOREACH(Gametypes, true, it.m_id = i); }
+STATIC_INIT(Gametypes_renumber)
+{
+    FOREACH(Gametypes, true,
+    {
+        it.m_id = i;
+        vector set = it.gametype_flags = _GametypeFlags_FromGametype(it.m_id);
+        MAPINFO_TYPE_ALL |= set;
+    });
+}
 #define REGISTER_GAMETYPE(NAME, inst) REGISTER(Gametypes, MAPINFO_TYPE, NAME, m_id, inst)
 
 #ifndef CSQC
@@ -154,7 +162,7 @@ void MapInfo_Enumerate();
 // filter the info by game type mask (updates MapInfo_count)
 float MapInfo_progress;
 float MapInfo_FilterGametype(Gametype gametypeFlags, float features, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate); // 1 on success, 0 on temporary failure (call it again next frame then; use MapInfo_progress as progress indicator)
-float _MapInfo_FilterGametype(int gametypeFlags, float features, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate); // 1 on success, 0 on temporary failure (call it again next frame then; use MapInfo_progress as progress indicator)
+float _MapInfo_FilterGametype(vector gametypeFlags, float features, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate); // 1 on success, 0 on temporary failure (call it again next frame then; use MapInfo_progress as progress indicator)
 void MapInfo_FilterString(string sf); // filter _MapInfo_filtered (created by MapInfo_FilterGametype) with keyword
 int MapInfo_CurrentFeatures(); // retrieves currently required features from cvars
 Gametype MapInfo_CurrentGametype(); // retrieves current gametype from cvars

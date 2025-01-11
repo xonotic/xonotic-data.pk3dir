@@ -6,7 +6,7 @@ CLASS(MachineGun, Weapon)
 /* impulse   */ ATTRIB(MachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(MachineGun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_BLEED);
 /* rating    */ ATTRIB(MachineGun, bot_pickupbasevalue, float, 7000);
-/* color     */ ATTRIB(MachineGun, wpcolor, vector, '1 1 0');
+/* color     */ ATTRIB(MachineGun, m_color, vector, '1 1 0');
 /* modelname */ ATTRIB(MachineGun, mdl, string, "uzi");
 #ifdef GAMEQC
 /* model     */ ATTRIB(MachineGun, m_model, Model, MDL_MACHINEGUN_ITEM);
@@ -40,28 +40,31 @@ CLASS(MachineGun, Weapon)
 		P(class, prefix, first_spread, float, NONE) \
 		P(class, prefix, mode, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, solidpenetration, float, NONE) \
 		P(class, prefix, spread_add, float, NONE) \
+		P(class, prefix, spread_decay, float, NONE) \
 		P(class, prefix, spread_max, float, NONE) \
 		P(class, prefix, spread_min, float, NONE) \
+		P(class, prefix, spread_cold_damagemultiplier, float, NONE) \
+		P(class, prefix, spread_heat_damagemultiplier, float, NONE) \
 		P(class, prefix, sustained_ammo, float, NONE) \
 		P(class, prefix, sustained_damage, float, NONE) \
 		P(class, prefix, sustained_force, float, NONE) \
 		P(class, prefix, sustained_refire, float, NONE) \
 		P(class, prefix, sustained_spread, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, MachineGun, machinegun)
+	W_PROPS(X, MachineGun, machinegun)
 #undef X
 
 ENDCLASS(MachineGun)
-REGISTER_WEAPON(MACHINEGUN, machinegun, NEW(MachineGun));
+REGISTER_WEAPON(MACHINEGUN, NEW(MachineGun));
 
 SPAWNFUNC_WEAPON(weapon_machinegun, WEP_MACHINEGUN)
 SPAWNFUNC_WEAPON(weapon_uzi, WEP_MACHINEGUN)

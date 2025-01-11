@@ -15,7 +15,6 @@ CLASS(XonoticToSDialog, XonoticRootDialog)
 	ATTRIB(XonoticToSDialog, columns, float, 6.2);
 	ATTRIB(XonoticToSDialog, name, string, "TermsOfService");
 
-	ATTRIB(XonoticToSDialog, text, string);
 	ATTRIB(XonoticToSDialog, textBox, entity);
 
 	ATTRIB(XonoticToSDialog, closable, float, 0);

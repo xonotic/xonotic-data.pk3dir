@@ -10,7 +10,7 @@ CLASS(Assault, Gametype)
     METHOD(Assault, m_generate_mapinfo, void(Gametype this, string v))
     {
         if(v == "target_assault_roundend")
-            MapInfo_Map_supportedGametypes |= this.m_flags;
+            MapInfo_Map_supportedGametypes |= this.gametype_flags;
     }
     METHOD(Assault, m_isTwoBaseMode, bool())
     {

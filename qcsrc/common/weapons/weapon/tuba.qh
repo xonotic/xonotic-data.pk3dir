@@ -5,7 +5,7 @@ CLASS(Tuba, Weapon)
 /* impulse   */ ATTRIB(Tuba, impulse, int, 1);
 /* flags     */ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL | WEP_FLAG_NOTRUEAIM);
 /* rating    */ ATTRIB(Tuba, bot_pickupbasevalue, float, 2000);
-/* color     */ ATTRIB(Tuba, wpcolor, vector, '0 1 0');
+/* color     */ ATTRIB(Tuba, m_color, vector, '0 1 0');
 /* modelname */ ATTRIB(Tuba, mdl, string, "tuba");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Tuba, m_model, Model, MDL_TUBA_ITEM);
@@ -36,10 +36,10 @@ CLASS(Tuba, Weapon)
 		P(class, prefix, weaponstart, float, NONE) \
 		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Tuba, tuba)
+	W_PROPS(X, Tuba, tuba)
 #undef X
 ENDCLASS(Tuba)
-REGISTER_WEAPON(TUBA, tuba, NEW(Tuba));
+REGISTER_WEAPON(TUBA, NEW(Tuba));
 
 SPAWNFUNC_WEAPON(weapon_tuba, WEP_TUBA)
 

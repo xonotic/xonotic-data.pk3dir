@@ -164,10 +164,10 @@ entity Monster_FindTarget(entity this)
 
 void monster_setupcolors(entity this)
 {
-	if(IS_PLAYER(this.realowner))
-		this.colormap = this.realowner.colormap;
-	else if(teamplay && this.team)
+	if(teamplay && this.team)
 		this.colormap = 1024 + (this.team - 1) * 17;
+	else if(IS_PLAYER(this.realowner))
+		this.colormap = this.realowner.colormap;
 	else
 	{
 		if(this.monster_skill <= MONSTER_SKILL_EASY)
@@ -691,7 +691,7 @@ int Monster_CheckDanger(entity this, vector dst_ahead)
 {
 	float s;
 
-	if((this.flags & FL_FLY) || (this.flags & FL_SWIM))
+	if(this.flags & (FL_FLY | FL_SWIM))
 	{
 		// Look ahead
 		traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
@@ -943,7 +943,7 @@ void Monster_Remove(entity this)
 
 void Monster_Dead_Think(entity this)
 {
-	this.nextthink = time + this.ticrate;
+	this.nextthink = time;
 
 	Monster mon = REGISTRY_GET(Monsters, this.monsterid);
 	mon.mr_deadthink(mon, this);
@@ -1029,11 +1029,11 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 
 	Monster_Sound(this, monstersound_death, 0, false, CH_VOICE);
 
-	if(!(this.spawnflags & MONSTERFLAG_SPAWNED) && !(this.spawnflags & MONSTERFLAG_RESPAWNED))
+	if(!(this.spawnflags & (MONSTERFLAG_SPAWNED | MONSTERFLAG_RESPAWNED)))
 		monsters_killed += 1;
 
 	if(IS_PLAYER(attacker))
-	if(autocvar_g_monsters_score_spawned || !((this.spawnflags & MONSTERFLAG_SPAWNED) || (this.spawnflags & MONSTERFLAG_RESPAWNED)))
+	if(autocvar_g_monsters_score_spawned || !(this.spawnflags & (MONSTERFLAG_SPAWNED | MONSTERFLAG_RESPAWNED)))
 		GameRules_scoring_add(attacker, SCORE, +autocvar_g_monsters_score_kill);
 
 	if(gibbed)
@@ -1252,7 +1252,7 @@ void Monster_Frozen_Think(entity this)
 {
 	if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
 	{
-		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + this.ticrate * this.revive_speed, 1);
+		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
 		SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * this.max_health));
 		if (this.iceblock)
 			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
@@ -1265,7 +1265,7 @@ void Monster_Frozen_Think(entity this)
 	}
 	else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
 	{
-		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - this.ticrate * this.revive_speed, 1);
+		STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
 		SetResourceExplicit(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (this.max_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
 
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE) && this.sprite)
@@ -1328,7 +1328,7 @@ void Monster_Enemy_Check(entity this)
 void Monster_Think(entity this)
 {
 	setthink(this, Monster_Think);
-	this.nextthink = time + this.ticrate;
+	this.nextthink = time;
 
 	if(this.monster_lifetime && time >= this.monster_lifetime)
 	{
@@ -1413,7 +1413,7 @@ bool Monster_Spawn_Setup(entity this)
 	}
 
 	setthink(this, Monster_Think);
-	this.nextthink = time + this.ticrate;
+	this.nextthink = time;
 
 	if(MUTATOR_CALLHOOK(MonsterSpawn, this))
 		return false;
@@ -1459,8 +1459,8 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 	else
 		setmodel(this, mon.m_model);
 
-	if(!this.monster_name || this.monster_name == "")
-		this.monster_name = mon.monster_name;
+	if(!this.m_name || this.m_name == "")
+		this.m_name = mon.m_name;
 
 	if(this.statuseffects && this.statuseffects.owner == this)
 	{
@@ -1506,7 +1506,7 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 	this.monster_face 		= '0 0 0';
 	this.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 
-	if(!this.noalign) { this.noalign = ((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM)); }
+	if(!this.noalign) { this.noalign = (mon.spawnflags & (MONSTER_TYPE_FLY | MONSTER_TYPE_SWIM)); }
 	if(!this.scale) { this.scale = 1; }
 	if(autocvar_g_monsters_edit) { this.grab = 1; }
 	if(autocvar_g_fullbrightplayers) { this.effects |= EF_FULLBRIGHT; }
@@ -1527,8 +1527,6 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 
 	setsize(this, RoundPerfectVector(mon.m_mins * this.scale), RoundPerfectVector(mon.m_maxs * this.scale));
 	this.view_ofs			= '0 0 0.7' * (this.maxs_z * 0.5);
-
-	this.ticrate = bound(sys_frametime, ((!this.ticrate) ? autocvar_g_monsters_think_delay : this.ticrate), 60);
 
 	Monster_UpdateModel(this);
 

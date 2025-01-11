@@ -244,13 +244,6 @@ void timeout_handler_think(entity this)
 				// set the slowmo value to the timeout default slowmo value
 				cvar_set("slowmo", ftos(TIMEOUT_SLOWMO_VALUE));
 
-				// reset all the flood variables
-				FOREACH_CLIENT(true, {
-					it.nickspamcount = it.nickspamtime = it.floodcontrol_chat =
-						it.floodcontrol_chatteam = it.floodcontrol_chattell =
-							it.floodcontrol_voice = it.floodcontrol_voiceteam = 0;
-				});
-
 				// copy .v_angle to .lastV_angle for every player in order to fix their view during pause (see PlayerPreThink)
 				FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 					it.lastV_angle = it.v_angle;
@@ -348,11 +341,11 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 
-					string mon_oldname = mon.monster_name;
+					string mon_oldname = mon.m_name;
 
-					mon.monster_name = argument;
+					mon.m_name = argument;
 					if (mon.sprite)   WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null); // TODO: the new name is never actually sent to CSQC!
-					print_to(caller, sprintf("Your pet '%s' is now known as '%s'", mon_oldname, mon.monster_name));
+					print_to(caller, sprintf("Your pet '%s' is now known as '%s'", mon_oldname, mon.m_name));
 					return;
 				}
 				case "spawn":
@@ -393,7 +386,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					totalspawned += 1;
 					WarpZone_TraceBox(CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, true, caller);
 					mon = spawnmonster(spawn(), arg_lower, MON_Null, caller, caller, trace_endpos, false, false, moveflag);
-					print_to(caller, strcat("Spawned ", mon.monster_name));
+					print_to(caller, strcat("Spawned ", mon.m_name));
 					return;
 				}
 				case "kill":
@@ -403,7 +396,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 
 					Damage(mon, NULL, NULL, GetResource(mon, RES_HEALTH) + mon.max_health + 200, DEATH_KILL.m_id, DMG_NOWEP, mon.origin, '0 0 0');
-					print_to(caller, strcat("Your pet '", mon.monster_name, "' has been brutally mutilated"));
+					print_to(caller, strcat("Your pet '", mon.m_name, "' has been brutally mutilated"));
 					return;
 				}
 				case "skin":

@@ -256,7 +256,7 @@ MUTATOR_HOOKABLE(WeaponRateFactor, EV_WeaponRateFactor);
     /**/
 MUTATOR_HOOKABLE(WeaponSpeedFactor, EV_WeaponSpeedFactor);
 
-/** adjusts {warmup_}start_{items,weapons,ammo_{cells,plasma,rockets,nails,shells,fuel}} */
+/** adjusts {warmup_}start_{items,weapons,ammo_{cells,rockets,nails,shells,fuel}} */
 MUTATOR_HOOKABLE(SetStartItems, EV_NO_ARGS);
 
 /** called every frame. customizes the waypoint for spectators */
@@ -570,6 +570,18 @@ MUTATOR_HOOKABLE(PlayerUseKey, EV_PlayerUseKey);
  	/** whole command, use only if you really have to */ i(string, MUTATOR_ARGV_3_string) \
     /**/
 MUTATOR_HOOKABLE(SV_ParseClientCommand, EV_SV_ParseClientCommand);
+
+/**
+ * please read EV_SV_ParseClientCommand description before using
+ * return true to skip flood control on the given command
+ */
+#define EV_ClientCommand_FloodControl(i, o) \
+    /** client sending the command */       i(entity, MUTATOR_ARGV_0_entity) \
+    /** command name */                     i(string, MUTATOR_ARGV_1_string) \
+    /** argc (also, argv() can be used) */  i(int, MUTATOR_ARGV_2_int) \
+    /** whole command, use only if you really have to */ i(string, MUTATOR_ARGV_3_string) \
+    /**/
+MUTATOR_HOOKABLE(ClientCommand_FloodControl, EV_ClientCommand_FloodControl);
 
 /** please read EV_SV_ParseClientCommand description before using */
 #define EV_SV_ParseServerCommand(i, o) \
@@ -1178,12 +1190,6 @@ enum {
     MUT_FUSREAC_TARG_INVALID // return this flag to make the function return false (invalid target)
 };
 
-/** return true to hide the 'teamnumbers are imbalanced' message */
-#define EV_HideTeamNagger(i, o) \
-    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
-    /**/
-MUTATOR_HOOKABLE(HideTeamNagger, EV_HideTeamNagger);
-
 /** return true to show a waypoint while the item is spawning */
 #define EV_Item_ScheduleRespawn(i, o) \
     /** item */             i(entity, MUTATOR_ARGV_0_entity) \
@@ -1280,3 +1286,25 @@ MUTATOR_HOOKABLE(AllowRocketJumping, EV_AllowRocketJumping);
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(W_PlayStrengthSound, EV_W_PlayStrengthSound);
+
+/** Return true to prevent sandbox objects from being dragged */
+#define EV_Sandbox_DragAllowed(i, o) \
+    /** object */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(Sandbox_DragAllowed, EV_Sandbox_DragAllowed);
+
+/** Return true to prevent writing sandbox changes to storage */
+MUTATOR_HOOKABLE(Sandbox_SaveAllowed, EV_NO_ARGS);
+
+/** Return true to prevent the player from editing sandbox objects with commands */
+#define EV_Sandbox_EditAllowed(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(Sandbox_EditAllowed, EV_Sandbox_EditAllowed);
+
+/** Return true to hide the chat bubble above typing players */
+#define EV_ShowChatBubble(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** bubble */ i(entity, MUTATOR_ARGV_1_entity) \
+    /**/
+MUTATOR_HOOKABLE(ShowChatBubble, EV_ShowChatBubble);

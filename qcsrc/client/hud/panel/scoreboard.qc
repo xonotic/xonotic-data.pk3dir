@@ -62,17 +62,6 @@ float sbt_highlight_alpha;
 float sbt_highlight_alpha_self;
 float sbt_highlight_alpha_eliminated;
 
-// provide basic panel cvars to old clients
-// TODO remove them after a future release (0.8.2+)
-noref string autocvar_hud_panel_scoreboard_pos = "0.150000 0.150000";
-noref string autocvar_hud_panel_scoreboard_size = "0.700000 0.700000";
-noref string autocvar_hud_panel_scoreboard_bg = "border_default";
-noref string autocvar_hud_panel_scoreboard_bg_color = "0 0.3 0.5";
-noref string autocvar_hud_panel_scoreboard_bg_color_team = "";
-noref string autocvar_hud_panel_scoreboard_bg_alpha = "0.7";
-noref string autocvar_hud_panel_scoreboard_bg_border = "";
-noref string autocvar_hud_panel_scoreboard_bg_padding = "";
-
 float autocvar_hud_panel_scoreboard_fadeinspeed = 10;
 float autocvar_hud_panel_scoreboard_fadeoutspeed = 5;
 float autocvar_hud_panel_scoreboard_respawntime_decimals = 1;
@@ -292,10 +281,10 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 		if(nPrimary == K_TAB) hudShiftState |= S_TAB;
 	}
 	else {
-		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
-		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
-		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
-		if(nPrimary == K_TAB) hudShiftState -= (hudShiftState & S_TAB);
+		if(nPrimary == K_ALT) hudShiftState &= ~S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState &= ~S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState &= ~S_SHIFT;
+		if(nPrimary == K_TAB) hudShiftState &= ~S_TAB;
 	}
 
 	if(nPrimary == K_TAB)
@@ -592,6 +581,25 @@ void Scoreboard_UpdatePlayerTeams()
 		print(strcat("PNUM: ", ftos(num), "\n"));
 	lastpnum = num;
 	*/
+
+	// update the smallest and largest team sizes
+	if (!teamplay || !teams.sort_next)
+		ts_min = ts_max = 0;
+	else
+	{
+		ts_min = 255, ts_max = 0;
+
+		for (entity tm = teams.sort_next; tm; tm = tm.sort_next)
+		{
+			if (tm.team == NUM_SPECTATOR)
+				continue;
+
+			if (ts_min > tm.team_size)
+				ts_min = tm.team_size;
+			if (ts_max < tm.team_size)
+				ts_max = tm.team_size;
+		}
+	}
 }
 
 int Scoreboard_CompareScore(int vl, int vr, int f)
@@ -1752,7 +1760,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		}
 		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
 		{
-			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK))
+			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED))
 				++nHidden;
 			else
 				++disownedcnt;
@@ -2419,6 +2427,14 @@ void Scoreboard_Draw()
 	// Begin of Game Info Section
 	sb_gameinfo_type_fontsize = hud_fontsize * 2.5;
 	sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
+
+	if (GET_NEXTMAP() != "")
+	{
+		// NOTE: nextmap is drawn before title to avoid covering title in case of long map name
+		str = strcat("^7", _("Next map:"), " ^9", GET_NEXTMAP());
+		drawcolorcodedstring(pos + vec2(hud_fontsize.x * 0.5, sb_gameinfo_type_fontsize.y - hud_fontsize.y * 1.25),
+			str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
 
 	// Game Info: Game Type
 	if (scoreboard_ui_enabled == 2)

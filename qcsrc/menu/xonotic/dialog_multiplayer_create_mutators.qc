@@ -15,56 +15,6 @@ void XonoticMutatorsDialog_showNotify(entity me)
 	loadAllCvars(me);
 }
 
-string weaponarenastring;
-string weaponarenastring_cvar;
-string WeaponArenaString()
-{
-	string s;
-	float n;
-	s = cvar_string("g_weaponarena");
-	if(s == "0" || s == "") return "";
-	if(s == "all" || s == "1") return _("All Weapons Arena");
-	if(s == "all_available") return _("All Available Weapons Arena");
-	if(s == "most") return _("Most Weapons Arena");
-	if(s == "most_available") return _("Most Available Weapons Arena");
-	if(s == "devall") return "Dev All Weapons Arena"; // development option, do not translate
-	if(s == "devall_available") return "Dev All Available Weapons Arena"; // development option, do not translate
-	if(s == weaponarenastring_cvar)
-		return weaponarenastring;
-
-	strcpy(weaponarenastring_cvar, s);
-
-	n = tokenize_console(s);
-	s = "";
-	for(int j = 0; j < n; ++j)
-	{
-		Weapon wep = Weapon_from_name(argv(j));
-		if(wep != WEP_Null)
-		{
-			s = cons_mid(s, " & ", wep.m_name);
-		}
-	}
-	if (s != "")
-		s = sprintf(_("%s Arena"), s);
-	else
-		s = _("No Weapons Arena");
-
-	strcpy(weaponarenastring, s);
-
-	return weaponarenastring;
-}
-
-string XonoticMutatorsDialog_toString(entity me)
-{
-	string s = build_mutator_list("");
-	if(cvar_string("g_weaponarena") != "0")
-		s = cons_mid(s, ", ", WeaponArenaString());
-	if(s == "")
-		return ZCTX(_("MUT^None"));
-	else
-		return s;
-}
-
 float checkCompatibility_pinata(entity me)
 {
 	if(cvar("g_instagib"))
@@ -214,7 +164,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
 	{
 		w = REGISTRY_GET(Weapons, i);
-		if (w.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK))
+		if (w.spawnflags & WEP_FLAG_HIDDEN)
 			continue;
 		if ((j % 3) == 0)
 		{

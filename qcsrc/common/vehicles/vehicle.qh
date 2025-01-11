@@ -7,7 +7,9 @@ CLASS(Vehicle, Object)
     /** short name */
     ATTRIB(Vehicle, netname, string, "");
     /** human readable name */
-    ATTRIB(Vehicle, vehicle_name, string, "Vehicle");
+    ATTRIB(Vehicle, m_name, string, _("Vehicle"));
+    /** color */
+    ATTRIB(Vehicle, m_color, vector, '1 1 1');
     /** full name of model */
     ATTRIB(Vehicle, model, string, "");
     /** currently a copy of the model */

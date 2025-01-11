@@ -6,7 +6,7 @@ CLASS(Vaporizer, Weapon)
 /* impulse   */ ATTRIB(Vaporizer, impulse, int, 7);
 /* flags     */ ATTRIB(Vaporizer, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Vaporizer, bot_pickupbasevalue, float, 10000);
-/* color     */ ATTRIB(Vaporizer, wpcolor, vector, '0.5 1 1');
+/* color     */ ATTRIB(Vaporizer, m_color, vector, '0.5 1 1');
 /* modelname */ ATTRIB(Vaporizer, mdl, string, "minstanex");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Vaporizer, m_model, Model, MDL_VAPORIZER_ITEM);
@@ -32,19 +32,6 @@ CLASS(Vaporizer, Weapon)
 		P(class, prefix, damagefalloff_mindist, float, PRI) \
 		P(class, prefix, force, float, PRI) \
 		P(class, prefix, refire, float, PRI) \
-		P(class, prefix, ammo, float, SEC) \
-		P(class, prefix, animtime, float, SEC) \
-		P(class, prefix, damage, float, SEC) \
-		P(class, prefix, delay, float, SEC) \
-		P(class, prefix, edgedamage, float, SEC) \
-		P(class, prefix, force, float, SEC) \
-		P(class, prefix, force_zscale, float, SEC) \
-		P(class, prefix, lifetime, float, SEC) \
-		P(class, prefix, radius, float, SEC) \
-		P(class, prefix, refire, float, SEC) \
-		P(class, prefix, shotangle, float, SEC) \
-		P(class, prefix, speed, float, SEC) \
-		P(class, prefix, spread, float, SEC) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
@@ -58,7 +45,7 @@ CLASS(Vaporizer, Weapon)
 #undef X
 
 ENDCLASS(Vaporizer)
-REGISTER_WEAPON(VAPORIZER, vaporizer, NEW(Vaporizer));
+REGISTER_WEAPON(VAPORIZER, NEW(Vaporizer));
 
 SPAWNFUNC_WEAPON(weapon_vaporizer, WEP_VAPORIZER)
 SPAWNFUNC_WEAPON(weapon_minstanex, WEP_VAPORIZER)
