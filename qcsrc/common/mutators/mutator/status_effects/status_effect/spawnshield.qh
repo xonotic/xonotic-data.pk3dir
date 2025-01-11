@@ -2,7 +2,7 @@
 
 #include <common/mutators/mutator/status_effects/all.qh>
 
-CLASS(SpawnShield, StatusEffects)
+CLASS(SpawnShield, StatusEffect)
     ATTRIB(SpawnShield, netname, string, "spawnshield");
 #if 0
     // NOTE: status effect name and icon disabled as they are not displayed

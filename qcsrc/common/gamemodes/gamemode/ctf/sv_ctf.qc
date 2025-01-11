@@ -684,7 +684,7 @@ void ctf_Handle_Return(entity flag, entity player)
 	// messages and sounds
 	if(IS_MONSTER(player))
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(flag.team, INFO_CTF_RETURN_MONSTER), player.monster_name);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(flag.team, INFO_CTF_RETURN_MONSTER), player.m_name);
 	}
 	else if(flag.team)
 	{

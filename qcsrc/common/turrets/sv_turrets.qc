@@ -1356,7 +1356,7 @@ bool turret_initialize(entity this, Turret tur)
 	this.m_id					= tur.m_id;
 	this.active					= ACTIVE_ACTIVE;
 	this.effects				= EF_NODRAW;
-	this.netname				= tur.turret_name;
+	this.netname				= tur.m_name;
 	this.max_health				= GetResource(this, RES_HEALTH);
 	this.target_validate_flags	= this.target_select_flags;
 	this.ammo					= this.ammo_max;
