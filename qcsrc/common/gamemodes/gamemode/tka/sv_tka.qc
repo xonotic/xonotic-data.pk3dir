@@ -276,7 +276,7 @@ void havocbot_goalrating_tkaball(entity this, float ratingscale, vector org)
 	entity ball = NULL, ball_carried = NULL;
 
 	// stops at last ball, prefers ball without carrier
-	IL_EACH(g_tkaballs, it.owner != this && DIFF_TEAM(ball.owner, this),
+	IL_EACH(g_tkaballs, it.owner != this,
 	{
 		if(it.owner)
 		{
