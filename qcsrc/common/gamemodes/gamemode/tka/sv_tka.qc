@@ -31,12 +31,12 @@ bool tka_ballcarrier_waypointsprite_visible_for_player(entity this, entity playe
 	if(view.ballcarried)
 		if(IS_SPEC(player))
 			return false; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
-	if(IS_SPEC(player))
+	if(IS_SPEC(player) || SAME_TEAM(player, this.owner))
 		return true;
+	if(StatusEffects_active(STATUSEFFECT_Invisibility, this.owner))
+		return false; // hide the waypointsprite if the owner has the invisibility powerup
 
-	// TODO: Make the ballcarrier lack a waypointsprite whenever they have the invisibility powerup
-
-	return SAME_TEAM(this.owner, player) || autocvar_g_tka_ballcarrier_waypoint;
+	return autocvar_g_tka_ballcarrier_waypoint;
 }
 
 void tka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
