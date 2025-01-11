@@ -10,6 +10,7 @@ float autocvar_g_tka_ballcarrier_force;
 float autocvar_g_tka_ballcarrier_highspeed;
 float autocvar_g_tka_ballcarrier_selfdamage;
 float autocvar_g_tka_ballcarrier_selfforce;
+bool autocvar_g_tka_ballcarrier_waypoint = true;
 float autocvar_g_tka_noncarrier_damage;
 float autocvar_g_tka_noncarrier_force;
 float autocvar_g_tka_noncarrier_selfdamage;
@@ -30,10 +31,12 @@ bool tka_ballcarrier_waypointsprite_visible_for_player(entity this, entity playe
 	if(view.ballcarried)
 		if(IS_SPEC(player))
 			return false; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
+	if(IS_SPEC(player))
+		return true;
 
 	// TODO: Make the ballcarrier lack a waypointsprite whenever they have the invisibility powerup
 
-	return true;
+	return SAME_TEAM(this.owner, player) || autocvar_g_tka_ballcarrier_waypoint;
 }
 
 void tka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
@@ -276,8 +279,17 @@ void havocbot_goalrating_tkaball(entity this, float ratingscale, vector org)
 	IL_EACH(g_tkaballs, it.owner != this && DIFF_TEAM(ball.owner, this),
 	{
 		if(it.owner)
+		{
+			entity ball_wp = it.owner.waypointsprite_attachedforcarrier;
+			if(!ball_wp || !ball_wp.waypointsprite_visible_for_player(ball_wp, this, WaypointSprite_getviewentity(this)))
+			{ // waypoint not visible
+				traceline(this.origin + this.view_ofs, it.owner.origin, MOVE_NOMONSTERS, this);
+				if(trace_fraction < 1 && trace_ent != it.owner)
+					continue; // skip what I can't see
+			}
 			ball_carried = it.owner;
-		else
+		}
+		else // waypoint is always shown if it's dropped (has no carrier)
 			ball = it;
 	});
 
