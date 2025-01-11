@@ -155,7 +155,7 @@ string clockedtime_tostring(int tm, bool hundredths, bool compact)
 			return strcat("0:00.0", hundredths ? "0" : "");
 	}
 	int acc = hundredths ? 6000 : 600;
-	tm = floor(tm + 0.5);
+	tm = rint(tm);
 	int minutes = floor(tm / acc);
 	int tm_without_minutes = tm - minutes * acc;
 	// NOTE: the start digit of s is a placeholder and won't be displayed
@@ -179,7 +179,7 @@ string clockedtime_tostring(int tm, bool hundredths, bool compact)
 ERASEABLE
 string format_time(float seconds)
 {
-	seconds = floor(seconds + 0.5);
+	seconds = rint(seconds);
 	float days = floor(seconds / 864000);
 	seconds -= days * 864000;
 	float hours = floor(seconds / 36000);
