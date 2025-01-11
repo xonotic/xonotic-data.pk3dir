@@ -228,7 +228,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_accuracy_data_receive, bool, this.cvar_cl_accuracy_data_receive);
     ATTRIBARRAY(Client, cvar_cl_weaponpriorities, string, 10);
     ATTRIB(Client, cvar_cl_weaponpriority, string, this.cvar_cl_weaponpriority);
-    ATTRIB(Client, cvar_cl_cts_noautoswitch, bool, this.cvar_cl_cts_noautoswitch);
+    ATTRIB(Client, cvar_cl_autoswitch_cts, int, this.cvar_cl_autoswitch_cts);
     ATTRIB(Client, cvar_cl_weapon_switch_reload, bool, this.cvar_cl_weapon_switch_reload);
     ATTRIB(Client, cvar_cl_weapon_switch_fallback_to_impulse, bool, this.cvar_cl_weapon_switch_fallback_to_impulse);
 #endif
