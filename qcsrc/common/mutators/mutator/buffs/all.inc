@@ -165,7 +165,7 @@ CLASS(JumpBuff, Buff)
     METHOD(JumpBuff, describe, string(JumpBuff this))
     {
         TC(JumpBuff, this);
-        return sprintf(_("The %s greatly increases your jump height, while the buff is active"),
+        return sprintf(_("The %s greatly increases your jump height, while the buff is active\n\nIt also makes you immune to fall damage"),
         COLORED_NAME_WITH_CONCAT(this, _("Buff")));
     }
 #endif
