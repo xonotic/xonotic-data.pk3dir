@@ -125,3 +125,5 @@
 #include <menu/xonotic/util.qc>
 #include <menu/xonotic/weaponarenacheckbox.qc>
 #include <menu/xonotic/weaponslist.qc>
+
+#include <menu/xonotic/guide/_mod.inc>

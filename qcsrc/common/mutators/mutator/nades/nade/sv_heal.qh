@@ -1,0 +1,9 @@
+#pragma once
+
+bool autocvar_g_nades_heal = true;
+float autocvar_g_nades_heal_time;
+float autocvar_g_nades_heal_rate;
+float autocvar_g_nades_heal_friend;
+float autocvar_g_nades_heal_foe;
+
+void nade_heal_boom(entity this);

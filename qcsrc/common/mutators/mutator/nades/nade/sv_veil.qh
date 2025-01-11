@@ -1,0 +1,11 @@
+#pragma once
+
+bool autocvar_g_nades_veil;
+float autocvar_g_nades_veil_time = 8;
+float autocvar_g_nades_veil_radius = 300;
+
+.float nade_veil_time;
+.float nade_veil_prevalpha;
+
+void nade_veil_boom(entity this);
+void nade_veil_Apply(entity player);
