@@ -9,7 +9,6 @@
 #endif
 
 #ifdef GAMEQC
-MODEL(Strength_ITEM, Item_Model("g_strength.md3"));
 SOUND(Strength, Item_Sound("powerup"));
 #endif
 
@@ -38,15 +37,14 @@ CLASS(StrengthItem, Powerup)
 #ifdef GAMEQC
     ATTRIB(StrengthItem, spawnflags, int, ITEM_FLAG_NORMAL);
     ATTRIB(StrengthItem, m_itemid, int, IT_STRENGTH);
-    ATTRIB(StrengthItem, m_model, Model, MDL_Strength_ITEM);
+    ATTRIB(StrengthItem, m_skin, int, 0);
     ATTRIB(StrengthItem, m_sound, Sound, SND_Strength);
-    ATTRIB(StrengthItem, m_glow, bool, true);
     ATTRIB(StrengthItem, m_respawnsound, Sound, SND_STRENGTH_RESPAWN);
 #endif
     ATTRIB(StrengthItem, netname, string, "strength");
     ATTRIB(StrengthItem, m_name, string, _("Strength"));
     ATTRIB(StrengthItem, m_icon, string, "strength");
-    ATTRIB(StrengthItem, m_color, vector, '0 0 1');
+    ATTRIB(StrengthItem, m_color, vector, '1 0.5 0');
     ATTRIB(StrengthItem, m_waypoint, string, _("Strength"));
     ATTRIB(StrengthItem, m_waypointblink, int, 2);
 ENDCLASS(StrengthItem)
