@@ -9,7 +9,6 @@
 #endif
 
 #ifdef GAMEQC
-//MODEL(Invisibility_ITEM, Item_Model("g_strength.md3")); // TODO: new model required
 SOUND(Invisibility, Item_Sound("powerup"));
 #endif
 
@@ -37,15 +36,13 @@ CLASS(InvisibilityItem, Powerup)
 #ifdef GAMEQC
     ATTRIB(InvisibilityItem, spawnflags, int, ITEM_FLAG_NORMAL);
     ATTRIB(InvisibilityItem, m_itemid, int, IT_INVISIBILITY);
-    ATTRIB(InvisibilityItem, m_model, Model, MDL_BUFF); // TODO: MDL_Invisibility_ITEM when new model available
-    ATTRIB(InvisibilityItem, m_skin, int, 12);
+    ATTRIB(InvisibilityItem, m_skin, int, 3);
     ATTRIB(InvisibilityItem, m_sound, Sound, SND_Invisibility);
-    ATTRIB(InvisibilityItem, m_glow, bool, true);
     ATTRIB(InvisibilityItem, m_respawnsound, Sound, SND_STRENGTH_RESPAWN);
 #endif
     ATTRIB(InvisibilityItem, netname, string, "invisibility");
     ATTRIB(InvisibilityItem, m_name, string, _("Invisibility"));
-    ATTRIB(InvisibilityItem, m_icon, string, "buff_invisible");
+    ATTRIB(InvisibilityItem, m_icon, string, "invisibility");
     ATTRIB(InvisibilityItem, m_color, vector, '0.5 0.5 1');
     ATTRIB(InvisibilityItem, m_waypoint, string, _("Invisibility"));
     ATTRIB(InvisibilityItem, m_waypointblink, int, 2);
@@ -59,6 +56,6 @@ CLASS(InvisibilityStatusEffect, PowerupStatusEffect)
 	ATTRIB(InvisibilityStatusEffect, netname, string, "invisibility");
 	ATTRIB(InvisibilityStatusEffect, m_name, string, _("Invisibility"));
 	ATTRIB(InvisibilityStatusEffect, m_color, vector, '0.5 0.5 1');
-	ATTRIB(InvisibilityStatusEffect, m_icon, string, "buff_invisible");
+	ATTRIB(InvisibilityStatusEffect, m_icon, string, "invisibility");
 ENDCLASS(InvisibilityStatusEffect)
 REGISTER_STATUSEFFECT(Invisibility, NEW(InvisibilityStatusEffect));
