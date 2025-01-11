@@ -1,6 +1,8 @@
 #pragma once
 
-CLASS(GuidePage, Object);
+// This is for the freetext sections only
+
+CLASS(GuidePage, Object)
 	ATTRIB(GuidePage, m_id, int, 0);
 	ATTRIB(GuidePage, m_name, string, "");
 	ATTRIB(GuidePage, m_icon, string);
@@ -25,8 +27,7 @@ CLASS(GuidePage, Object);
 ENDCLASS(GuidePage)
 
 REGISTRY(GuidePages, 16)
-#define REGISTER_GUIDE_PAGE(id, name, icon) \
-	REGISTER(GuidePages, GUIDE_PAGE, id, m_id, NEW(GuidePage, name, icon))
+#define REGISTER_GUIDE_PAGE(id, name, icon) REGISTER(GuidePages, GUIDE_PAGE, id, m_id, NEW(GuidePage, name, icon))
 REGISTER_REGISTRY(GuidePages)
 
 REGISTER_GUIDE_PAGE(0, _("Introduction"), "gametype_dm")
