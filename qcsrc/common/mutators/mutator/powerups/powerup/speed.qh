@@ -9,7 +9,6 @@
 #endif
 
 #ifdef GAMEQC
-//MODEL(Speed_ITEM, Item_Model("g_invincible.md3")); // TODO: new model required
 SOUND(Speed, Item_Sound("powerup_shield"));
 #endif
 
@@ -38,10 +37,8 @@ CLASS(SpeedItem, Powerup)
 #ifdef GAMEQC
     ATTRIB(SpeedItem, spawnflags, int, ITEM_FLAG_NORMAL);
     ATTRIB(SpeedItem, m_itemid, int, IT_SPEED);
-    ATTRIB(SpeedItem, m_model, Model, MDL_BUFF); // TODO: MDL_Speed_ITEM when new model available
-    ATTRIB(SpeedItem, m_skin, int, 9);
+    ATTRIB(SpeedItem, m_skin, int, 2);
     ATTRIB(SpeedItem, m_sound, Sound, SND_Speed);
-    ATTRIB(SpeedItem, m_glow, bool, true);
     ATTRIB(SpeedItem, m_respawnsound, Sound, SND_SHIELD_RESPAWN);
 #endif
     ATTRIB(SpeedItem, netname, string, "speed");
@@ -60,6 +57,6 @@ CLASS(SpeedStatusEffect, PowerupStatusEffect)
 	ATTRIB(SpeedStatusEffect, netname, string, "speed");
 	ATTRIB(SpeedStatusEffect, m_name, string, _("Speed"));
 	ATTRIB(SpeedStatusEffect, m_color, vector, '0.1 1 0.84');
-	ATTRIB(SpeedStatusEffect, m_icon, string, "buff_speed");
+	ATTRIB(SpeedStatusEffect, m_icon, string, "speed");
 ENDCLASS(SpeedStatusEffect)
 REGISTER_STATUSEFFECT(Speed, NEW(SpeedStatusEffect));

@@ -9,7 +9,6 @@
 #endif
 
 #ifdef GAMEQC
-MODEL(Shield_ITEM, Item_Model("g_invincible.md3"));
 SOUND(Shield, Item_Sound("powerup_shield"));
 #endif
 
@@ -36,15 +35,14 @@ CLASS(ShieldItem, Powerup)
 #ifdef GAMEQC
     ATTRIB(ShieldItem, spawnflags, int, ITEM_FLAG_NORMAL);
     ATTRIB(ShieldItem, m_itemid, int, IT_INVINCIBLE);
-    ATTRIB(ShieldItem, m_model, Model, MDL_Shield_ITEM);
+    ATTRIB(ShieldItem, m_skin, int, 1);
     ATTRIB(ShieldItem, m_sound, Sound, SND_Shield);
-    ATTRIB(ShieldItem, m_glow, bool, true);
     ATTRIB(ShieldItem, m_respawnsound, Sound, SND_SHIELD_RESPAWN);
 #endif
     ATTRIB(ShieldItem, netname, string, "invincible");
     ATTRIB(ShieldItem, m_name, string, _("Shield"));
     ATTRIB(ShieldItem, m_icon, string, "shield");
-    ATTRIB(ShieldItem, m_color, vector, '1 0 1');
+    ATTRIB(ShieldItem, m_color, vector, '0.5 1 0');
     ATTRIB(ShieldItem, m_waypoint, string, _("Shield"));
     ATTRIB(ShieldItem, m_waypointblink, int, 2);
 ENDCLASS(ShieldItem)
