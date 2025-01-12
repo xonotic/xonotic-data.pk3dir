@@ -7,13 +7,14 @@
 # Ellis Walsh, 2022
 # Hampus Kreitz, 2022
 # Hampus Kreitz, 2022
+# Magnus Granås, 2025
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-02 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hampus Kreitz, 2022\n"
+"Last-Translator: Magnus Granås, 2025\n"
 "Language-Team: Norwegian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/no/)\n"
 "Language: no\n"
@@ -34,16 +35,16 @@ msgstr "&2Eksportert vellykket til %s! (Note: Det er lagret i data/data/)"
 #: qcsrc/client/hud/hud_config.qc:84
 #, c-format
 msgid "^1Couldn't write to %s"
-msgstr "^1Kunne ikke skrive inn i %s"
+msgstr "^1Kunne ikke skrive til %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 msgid "Title"
-msgstr ""
+msgstr "Tittel"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr "^3Nedtelling melding om tiden %s, sekunder: ^COUNT"
+msgstr "^3Nedtellings-melding ved tid %s, sekunder igjen: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:204
 #, c-format
@@ -55,11 +56,11 @@ msgstr ""
 #: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
 msgid "Message at time %s"
-msgstr ""
+msgstr "Melding ved tid %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:211
 msgid "Generic message"
-msgstr ""
+msgstr "Generisk melding"
 
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
@@ -73,7 +74,7 @@ msgstr "^3Spiller^7: Dette er chatteområdet."
 #: qcsrc/client/hud/panel/engineinfo.qc:75
 #, c-format
 msgid "FPS: %.*f"
-msgstr "FPS: %.*f"
+msgstr "BPS: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:94
 msgid "^1Observing"
@@ -82,22 +83,22 @@ msgstr "^1Observerer"
 #: qcsrc/client/hud/panel/infomessages.qc:96
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr ""
+msgstr "^1Ser på: ^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr ""
+msgstr "^1Trykk ^3%sfor å se på"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/menu/xonotic/keybinder.qc:50
 msgid "primary fire"
-msgstr "primær brann"
+msgstr "primær avfyring"
 
 #: qcsrc/client/hud/panel/infomessages.qc:109
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr ""
+msgstr "^1Trykk ^3%s^1 eller ^3%s for å se neste eller forrige spiller "
 
 #: qcsrc/client/hud/panel/infomessages.qc:109
 #: qcsrc/client/hud/panel/infomessages.qc:113
@@ -112,80 +113,80 @@ msgstr "forrige våpen"
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr ""
+msgstr "^1Bruk ^3%s^1 eller ^3%s for å endre hastigheten "
 
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Trykk ^3%s for å oberservere, ^3%s for å endre kameramodus"
 
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #: qcsrc/client/hud/panel/infomessages.qc:117
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 msgid "drop weapon"
-msgstr "slippe våpen"
+msgstr "slipp våpen"
 
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #: qcsrc/menu/xonotic/keybinder.qc:51
 msgid "secondary fire"
-msgstr "sekundær brann"
+msgstr "sekundær avfyring"
 
 #: qcsrc/client/hud/panel/infomessages.qc:117
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Trykk ^3%s^1 for å endre kameramodus"
 
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr ""
+msgstr "^1Trykk ^3%s^1 for info om spillmodus"
 
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #: qcsrc/menu/xonotic/keybinder.qc:106
 msgid "server info"
-msgstr "serverinformasjon"
+msgstr "tjenerinformasjon"
 
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr ""
+msgstr "^2Du står i kø for å bli med i lag: %s%s^2"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 msgid "^2You're queued to join any available team"
-msgstr ""
+msgstr "^2Du står i kø for å bli med i hvilket tilgjengelig lag som helst"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr ""
+msgstr "^1Trykk ^3%s^1 for å bli med"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1441
 #: qcsrc/common/notifications/all.qh:466
 msgid "jump"
-msgstr "hoppe"
+msgstr "hopp"
 
 #: qcsrc/client/hud/panel/infomessages.qc:150
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr ""
+msgstr "^1Spillet starter om ^3%d^1 sekunder"
 
 #: qcsrc/client/hud/panel/infomessages.qc:162
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr ""
+msgstr "^2For tiden i ^1oppvarmings^2-stadiet!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:172
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "^31^2 mer spiller trengs for at runden kan starte."
 
 #: qcsrc/client/hud/panel/infomessages.qc:174
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "^3%d^2 flere spillere trengs for at runden kan starte."
 
 #: qcsrc/client/hud/panel/infomessages.qc:187
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr ""
+msgstr "%sTrykk ^3%s%s for å avslutte oppvarmingen"
 
 #: qcsrc/client/hud/panel/infomessages.qc:187
 #: qcsrc/client/hud/panel/infomessages.qc:192
@@ -195,50 +196,50 @@ msgstr "klar"
 
 #: qcsrc/client/hud/panel/infomessages.qc:189
 msgid "^2Waiting for others to ready up to end warmup..."
-msgstr ""
+msgstr "^2Venter på at andre er klare til å avslutte oppvarmingen..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:192
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr ""
+msgstr "^2Trykk ^3%s^2 for å avslutte oppvarmingen"
 
 #: qcsrc/client/hud/panel/infomessages.qc:204
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "Lagene er ikke jevne!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr ""
+msgstr "Trykk^3%s%s for å justere"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 #: qcsrc/menu/xonotic/keybinder.qc:117
 msgid "team selection"
-msgstr "lagvalg"
+msgstr "velg lag"
 
 #: qcsrc/client/hud/panel/infomessages.qc:220
 msgid "^1Spectating this player:"
-msgstr ""
+msgstr "^1Ser på denne spilleren:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:220
 msgid "^1Spectating you:"
-msgstr ""
+msgstr "^1Ser på deg:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:267
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr ""
+msgstr "^7Trykk ^3ESC ^7 for å vise HUD-valg."
 
 #: qcsrc/client/hud/panel/infomessages.qc:268
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^3Dobbeltklikk ^7på et panel for spesifikke valg for det panelet."
 
 #: qcsrc/client/hud/panel/infomessages.qc:269
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr ""
+msgstr "^3CTRL ^7for å skru av kollisjonstesting, ^3SHIFT ^7og"
 
 #: qcsrc/client/hud/panel/infomessages.qc:270
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
-msgstr ""
+msgstr "^3ALT ^7+ ^3PILTASTER ^7for finjusteringer."
 
 #: qcsrc/client/hud/panel/notify.qc:145 qcsrc/client/hud/panel/notify.qc:146
 #: qcsrc/client/hud/panel/score.qc:66
@@ -248,13 +249,13 @@ msgstr "Spiller %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:220
 msgid "Standard quick menu"
-msgstr ""
+msgstr "Standard hurtigmeny"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:660
 #: qcsrc/client/hud/panel/quickmenu.qc:662
 #, c-format
 msgid "Submenu%d"
-msgstr ""
+msgstr "Undermeny %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:667
 #, c-format
@@ -272,15 +273,15 @@ msgstr "Chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:845
 msgid "QMCMD^Send public message to"
-msgstr ""
+msgstr "QMCMD^Send offentlig melding til"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "QMCMD^:-) / nice one"
-msgstr ""
+msgstr "QMCMD^:-) / pent"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "QMCMD^nice one"
-msgstr ""
+msgstr "QMCMD^pent"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:847
 msgid "QMCMD^good game"
@@ -288,40 +289,40 @@ msgstr "QMCMD^bra spilt"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "QMCMD^hei / lykke til"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^hi / good luck and have fun"
-msgstr ""
+msgstr "QMCMD^hei / lykke til å ha det gøy"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Send på engelsk"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:855
 #: qcsrc/client/hud/panel/quickmenu.qc:871
 msgid "QMCMD^Team chat"
-msgstr ""
+msgstr "QMCMD^Lagchat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^strength soon"
-msgstr ""
+msgstr "QMCMD^styrke snart"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^gratis gjenstand %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "QMCMD^gratis gjenstand, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^took item (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^tok gjenstand (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^took item, icon"
-msgstr ""
+msgstr "QMCMD^tok gjenstand, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^negative"
@@ -333,15 +334,15 @@ msgstr "QMCMD^positivt"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^trenger hjelp (l:%l^7) (h:%h^7 a:^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^need help, icon"
-msgstr ""
+msgstr "QMCMD^trenger hjelp, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^enemy seen (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^fiende oppdaget (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^enemy seen, icon"
@@ -448,7 +449,7 @@ msgstr "QMCMD^FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:883
 msgid "QMCMD^Net graph"
-msgstr ""
+msgstr "QMCMD^Nettgraf"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:886
 #: qcsrc/client/hud/panel/quickmenu.qc:889
@@ -465,37 +466,37 @@ msgstr "QMCMD^Chat lyd"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:893
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "QMCMD^Endre tilskuerkamera"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:898
 #: qcsrc/client/hud/panel/quickmenu.qc:902
 msgid "QMCMD^Observer camera"
-msgstr ""
+msgstr "QMCMD^Observatorkamera"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:899
 msgid "QMCMD^Increase speed"
-msgstr ""
+msgstr "QMCMD^Øk hastigheten"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:900
 msgid "QMCMD^Decrease speed"
-msgstr ""
+msgstr "QMCMD^Senk hastigheten"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:901
 msgid "QMCMD^Wall collision"
-msgstr ""
+msgstr "QMCMD^Veggkollisjon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:905
 msgid "QMCMD^Fullscreen"
-msgstr ""
+msgstr "QMCMD^Fullskjerm"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:908
 #: qcsrc/client/hud/panel/quickmenu.qc:918
 msgid "QMCMD^Call a vote"
-msgstr ""
+msgstr "QMCMD^Lag en avstemming"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "QMCMD^Restart the map"
-msgstr ""
+msgstr "QMCMD^Restart kartet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:910
 msgid "QMCMD^End match"
@@ -503,23 +504,23 @@ msgstr "QMCMD^Slutt kamp"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:913
 msgid "QMCMD^Reduce match time"
-msgstr ""
+msgstr "QMCMD^Reduser rundetiden"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:914
 msgid "QMCMD^Extend match time"
-msgstr ""
+msgstr "QMCMD^Utvid rundetiden"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:917
 msgid "QMCMD^Shuffle teams"
-msgstr ""
+msgstr "QMCMD^Omrokker lagene"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:922
 msgid "Server quick menu"
-msgstr ""
+msgstr "Hurtigmeny for tjener"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:924
 msgid "Waypoint editor menu"
-msgstr ""
+msgstr "Meny for veipunkt-behandler"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:927
 msgid "Waypoint editor menu as default"
@@ -531,7 +532,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:935
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "QMCMD^Se på en spiller"
 
 #: qcsrc/client/hud/panel/racetimer.qc:63
 #, c-format
@@ -556,30 +557,30 @@ msgstr "Mållinjen"
 #: qcsrc/client/hud/panel/racetimer.qc:195
 #, c-format
 msgid "Checkpoint %d"
-msgstr ""
+msgstr "Sjekkpunkt %d"
 
 #: qcsrc/client/hud/panel/racetimer.qc:198
 #: qcsrc/client/hud/panel/racetimer.qc:263
 #: qcsrc/client/hud/panel/racetimer.qc:327
 #, c-format
 msgid "PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "STRAFF: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:198 qcsrc/client/main.qc:1278
 msgid "missing a checkpoint"
-msgstr ""
+msgstr "sjekkpunkt mangler"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
-msgstr ""
+msgstr "Klikk for å velge mål for teleportering"
 
 #: qcsrc/client/hud/panel/radar.qc:343
 msgid "Click to select spawn location"
-msgstr ""
+msgstr "Klikk for å velge startsted"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "Number of ball carrier kills"
-msgstr ""
+msgstr "Antall ballbærer-drap"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "SCO^bckills"
@@ -675,7 +676,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Number of flag carrier kills"
-msgstr ""
+msgstr "Antall flaggbærer-drap"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^fckills"
@@ -691,7 +692,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of kills minus suicides"
-msgstr ""
+msgstr "Antall drap minus selvdrap"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^frags"
@@ -782,7 +783,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Player name"
-msgstr ""
+msgstr "Spillernavn"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^name"
@@ -819,7 +820,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Packet loss"
-msgstr ""
+msgstr "Pakketap"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^pl"
@@ -827,7 +828,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of players pushed into void"
-msgstr ""
+msgstr "Antall spillere dyttet ut i tomrommet"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^pushes"
@@ -835,7 +836,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "Player rank"
-msgstr ""
+msgstr "Spillerrangering"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "SCO^rank"
@@ -851,7 +852,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "Number of revivals"
-msgstr ""
+msgstr "Antall gjenopplivinger"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^revivals"
@@ -859,7 +860,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "Number of rounds won"
-msgstr ""
+msgstr "Antall runder vunnet"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "SCO^rounds won"
@@ -867,7 +868,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "Number of rounds played"
-msgstr ""
+msgstr "Antall runder spilt"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "SCO^rounds played"
@@ -879,11 +880,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "Total score"
-msgstr ""
+msgstr "Total poengsum"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of suicides"
-msgstr ""
+msgstr "Antall selvdrap"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^suicides"
@@ -891,7 +892,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of kills minus deaths"
-msgstr ""
+msgstr "Antall drap minus dødsfall"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^sum"
@@ -899,7 +900,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "Number of survivals"
-msgstr ""
+msgstr "Antall overlevelser"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^survivals"
@@ -915,7 +916,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of teamkills"
-msgstr ""
+msgstr "Antall lagdrap"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^teamkills"
@@ -941,10 +942,11 @@ msgstr ""
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
+"Du kan endre på poengtavlen ved å bruke kommandoen ^2scoreboard_columns_set"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:723
 msgid "Usage:"
-msgstr ""
+msgstr "Bruk:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:725
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
@@ -1033,16 +1035,16 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2080
 msgid "Monsters killed:"
-msgstr ""
+msgstr "Monster drept:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2087
 msgid "Secrets found:"
-msgstr ""
+msgstr "Hemmeligheter funnet:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2297
 #, c-format
 msgid "Spectators"
-msgstr ""
+msgstr "Tilskuere"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2319
 #, c-format
@@ -1052,7 +1054,7 @@ msgstr "^2+%s %s"
 #: qcsrc/client/hud/panel/scoreboard.qc:2319
 #, c-format
 msgid "^5%s %s"
-msgstr ""
+msgstr "^5%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2320
 msgid "SCO^points"
@@ -1060,32 +1062,32 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2434
 msgid "Next map:"
-msgstr ""
+msgstr "Neste kart:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2441
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
-msgstr ""
+msgstr "Velg lag"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2455
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
-msgstr ""
+msgstr "^7Trykk ^3%s^7 for å bli med i det valgte laget"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2457
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
-msgstr ""
+msgstr "^7Trykk ^3%s^7 for å velge lag automatisk og bli med i spillet"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2461
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
-msgstr ""
+msgstr "^7Trykk ^3%s^7 for å velge et spesifikt lag"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "^3%1.0f minutes"
-msgstr ""
+msgstr "^3%1.0f minutter"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2499
 #, c-format
@@ -1095,7 +1097,7 @@ msgstr "^5%d^7/^5%d ^7spillere"
 #: qcsrc/client/hud/panel/scoreboard.qc:2500 qcsrc/client/main.qc:1470
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
-msgstr ""
+msgstr "Kart:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2667
 #, c-format
@@ -1144,40 +1146,40 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:126
 msgid "Warmup"
-msgstr ""
+msgstr "Oppvarming"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players!"
-msgstr ""
+msgstr "Oppvarming: for få spillere!"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: teams unbalanced!"
-msgstr ""
+msgstr "Oppvarming: ujevne lag!"
 
 #: qcsrc/client/hud/panel/timer.qc:135
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "Oppvarming: ingen tidsbegrensing"
 
 #: qcsrc/client/hud/panel/timer.qc:139
 msgid "Timeout"
-msgstr ""
+msgstr "Tidsavbrudd"
 
 #: qcsrc/client/hud/panel/timer.qc:141
 msgid "Sudden Death"
-msgstr ""
+msgstr "Sudden Death"
 
 #: qcsrc/client/hud/panel/timer.qc:143
 msgid "Overtime"
-msgstr ""
+msgstr "Overtid"
 
 #: qcsrc/client/hud/panel/timer.qc:145
 #, c-format
 msgid "Overtime #%d"
-msgstr ""
+msgstr "Overtid #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering hud configure mode"
-msgstr ""
+msgstr "^1Du må svare før du kan gå inn i HUD-konfigurasjonsmodus"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1185,15 +1187,15 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:121
 msgid "A vote has been called for:"
-msgstr ""
+msgstr "En avstemming er startet for:"
 
 #: qcsrc/client/hud/panel/vote.qc:123
 msgid "Allow servers to store and display your name?"
-msgstr ""
+msgstr "Tillat tjenere å lagre og vise navnet ditt?"
 
 #: qcsrc/client/hud/panel/vote.qc:127
 msgid "^1Configure the HUD"
-msgstr ""
+msgstr "^1Konfigurer HUD-et"
 
 #: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
@@ -1204,7 +1206,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:16
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:15
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #: qcsrc/client/hud/panel/vote.qc:133 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
@@ -1215,19 +1217,19 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:17
 msgid "No"
-msgstr ""
+msgstr "Nei"
 
 #: qcsrc/client/hud/panel/weapons.qc:628
 msgid "Out of ammo"
-msgstr ""
+msgstr "Tom for ammo"
 
 #: qcsrc/client/hud/panel/weapons.qc:632
 msgid "Don't have"
-msgstr ""
+msgstr "Har ikke"
 
 #: qcsrc/client/hud/panel/weapons.qc:636
 msgid "Unavailable"
-msgstr ""
+msgstr "Utilgjengelig"
 
 #: qcsrc/client/main.qc:305
 msgid "Trying to remove a team which is not in the teamlist!"
@@ -1239,7 +1241,7 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1173 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
-msgstr ""
+msgstr "m/s"
 
 #: qcsrc/client/main.qc:1174 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
@@ -1251,7 +1253,7 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1176 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
-msgstr ""
+msgstr "knop"
 
 #: qcsrc/client/main.qc:1389
 msgid "All Weapons Arena"
@@ -1281,32 +1283,32 @@ msgstr "%s Arena"
 #: qcsrc/client/main.qc:1418 qcsrc/client/main.qc:1423
 #, c-format
 msgid "This is %s"
-msgstr ""
+msgstr "Dette er %s"
 
 #: qcsrc/client/main.qc:1419
 msgid "Your client version is outdated."
-msgstr ""
+msgstr "Klientversjonen din er utdatert."
 
 #: qcsrc/client/main.qc:1420
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
-msgstr ""
+msgstr "### DU VIL IKKE KUNNE SPILLE PÅ DENNE TJENEREN ###"
 
 #: qcsrc/client/main.qc:1421
 msgid "Please update!"
-msgstr ""
+msgstr "Vennligst oppdater!"
 
 #: qcsrc/client/main.qc:1424
 msgid "This server is using an outdated Xonotic version."
-msgstr ""
+msgstr "Denne tjeneren bruker en utdatert versjon av Xonotic."
 
 #: qcsrc/client/main.qc:1425
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
-msgstr ""
+msgstr "### DENNE TJENEREN ER IKKE KOMPATIBEL SÅ DU KAN IKKE BLI MED ###"
 
 #: qcsrc/client/main.qc:1427
 #, c-format
 msgid "Welcome to %s"
-msgstr ""
+msgstr "Velkommen til %s"
 
 #: qcsrc/client/main.qc:1443 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
@@ -1316,20 +1318,20 @@ msgstr "Nivå %d"
 #: qcsrc/client/main.qc:1445
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
-msgstr ""
+msgstr "^BGTrykk ^F2%s^BG for å bli med i spillet"
 
 #: qcsrc/client/main.qc:1468
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
-msgstr ""
+msgstr "Spillmodus:"
 
 #: qcsrc/client/main.qc:1472
 msgid "by:"
-msgstr ""
+msgstr "av:"
 
 #: qcsrc/client/main.qc:1476
 msgid "This match supports"
-msgstr ""
+msgstr "Denne runden støtter"
 
 #: qcsrc/client/main.qc:1478
 #, c-format
@@ -1339,21 +1341,21 @@ msgstr "%d spillere"
 #: qcsrc/client/main.qc:1480
 #, c-format
 msgid "%d to %d players"
-msgstr ""
+msgstr "%d til %d spillere"
 
 #: qcsrc/client/main.qc:1482
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "Maks. %d spillere"
 
 #: qcsrc/client/main.qc:1484
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "Min. %d spillere"
 
 #: qcsrc/client/main.qc:1489
 msgid "Active modifications:"
-msgstr ""
+msgstr "Aktive modifikasjoner:"
 
 #: qcsrc/client/main.qc:1492
 msgid "Special gameplay tips:"
@@ -1379,32 +1381,34 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:303
 msgid "Don't care"
-msgstr ""
+msgstr "Bryr meg ikke"
 
 #: qcsrc/client/mapvoting.qc:395
 msgid "Decide the gametype"
-msgstr ""
+msgstr "Velg en spillmodus"
 
 #: qcsrc/client/mapvoting.qc:395
 msgid "Vote for a map"
-msgstr ""
+msgstr "Stem på et kart"
 
 #: qcsrc/client/mapvoting.qc:418
 #, c-format
 msgid "%d seconds left"
-msgstr ""
+msgstr "%d sekunder igjen"
 
 #: qcsrc/client/mapvoting.qc:559
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr ""
+"mv_mapdownload: ^3Det er ikke meningen at du skal bruke denne kommandoen "
+"selv!"
 
 #: qcsrc/client/mapvoting.qc:569
 msgid "^1Error:^7 Couldn't find pak index."
-msgstr ""
+msgstr "^1Feil:^7 Kunne ikke finne pak-indeks."
 
 #: qcsrc/client/mapvoting.qc:578
 msgid "Requesting preview..."
-msgstr ""
+msgstr "Anmoder om forhåndsvising..."
 
 #: qcsrc/client/view.qc:955
 msgid "Nade timer"
@@ -1424,13 +1428,15 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid "Assault"
-msgstr ""
+msgstr "Angrep"
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid ""
 "Destroy obstacles to find and destroy the enemy power core before time runs "
 "out"
 msgstr ""
+"Ødelegg hindre for å finne og ødelegge fiendens kraftkjerne innen tiden går "
+"ut"
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:22
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:28
@@ -1442,7 +1448,7 @@ msgstr ""
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "Point limit:"
-msgstr ""
+msgstr "Poengmål:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
@@ -1450,21 +1456,21 @@ msgstr "Klan Arena"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Kill all enemy teammates to win the round"
-msgstr ""
+msgstr "Drep alle fiender for å vinne runden"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "Round limit:"
-msgstr ""
+msgstr "Rundemål:"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:40
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:43
 msgid "The amount of rounds won needed before the match will end"
-msgstr ""
+msgstr "Antallet runder som må vinnes før kampen er over"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
-msgstr ""
+msgstr "Fangsttid-rangeringer"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid "Capture the Flag"
@@ -1475,19 +1481,21 @@ msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
+"Finn og bring fiendens flagg til din egen base for å fange det. Beskytt ditt "
+"lags base og flagg fra fiendelaget."
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "Capture limit:"
-msgstr ""
+msgstr "Fangstmål:"
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr ""
+msgstr "Antall ganger flagget må fanges før kampen er over."
 
 #: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:184
 msgid "Rankings"
-msgstr ""
+msgstr "Rangeringer"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
 msgid "Race CTS"
@@ -1499,25 +1507,25 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Deathmatch"
-msgstr ""
+msgstr "Dødskamp"
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Score as many frags as you can"
-msgstr ""
+msgstr "Drep så mange fiender som du kan"
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Capture and defend all the control points to win"
-msgstr ""
+msgstr "Overta og beskytt alle kontrollpunktene for å vinne "
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Domination"
-msgstr ""
+msgstr "Dominasjon"
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:35
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:39
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:47
 msgid "The amount of points needed before the match will end"
-msgstr ""
+msgstr "Antall poenger som kreves før kampen avsluttes"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
@@ -1525,7 +1533,7 @@ msgstr "Duell"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
-msgstr ""
+msgstr "Kjemp i en 1 mot 1-arenakamp for å avgjøre en vinner"
 
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:15
 msgid "Freeze Tag"
@@ -1539,15 +1547,15 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Invasion"
-msgstr ""
+msgstr "Invasjon"
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Survive against waves of monsters"
-msgstr ""
+msgstr "Overlev bølger av monstre"
 
 #: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
 msgid "Hold the ball to get points for kills"
-msgstr ""
+msgstr "Hold ballen for å få poeng for drap"
 
 #: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
 msgid "Keepaway"
@@ -1555,64 +1563,65 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
 msgid "Gather all the keys to win the round"
-msgstr ""
+msgstr "Samle alle nøklene for å vinne runden"
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
 msgid "Key Hunt"
-msgstr ""
+msgstr "Nøkkeljakt"
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:18
 msgid "^1You have no more lives left"
-msgstr ""
+msgstr "^1Du har ingen flere liv igjen"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Last Man Standing"
-msgstr ""
+msgstr "Sistemann Ut"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Survive and kill until the enemies have no lives left"
-msgstr ""
+msgstr "Overlev og drep til fienden er tom for liv"
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:20
 msgid "Lives:"
-msgstr ""
+msgstr "Liv:"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
 msgstr ""
+"Konkurrer om å utgjøre mest skade og drepe flest i dette kaotiske helvetet!"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
-msgstr ""
+msgstr "Kaos"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "How much score is needed before the match will end"
-msgstr ""
+msgstr "Hvor mange poeng som trengs før kampen avsluttes"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
-msgstr ""
+msgstr "Nexball"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
-msgstr ""
+msgstr "Skyt og spark ballen inn i fiendens mål, og beskytt ditt eget mål"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr ""
+msgstr "Målkrav:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
-msgstr ""
+msgstr "Antall scoringer som trengs før kampen avsluttes"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:9
 msgid "Ball Stealer"
-msgstr ""
+msgstr "Balltyv"
 
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
-msgstr ""
+msgstr "Overta kontrollpunkter for å nå og ødelegge fiendens generator"
 
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:8
 msgid "Onslaught"
@@ -1620,43 +1629,43 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:102
 msgid "Personal best"
-msgstr ""
+msgstr "Personlig rekord"
 
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:112
 msgid "Server best"
-msgstr ""
+msgstr "Tjenerrekord"
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:11
 msgid "Race"
-msgstr ""
+msgstr "Kappløp"
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:11
 msgid "Race against other players to the finish line"
-msgstr ""
+msgstr "Nå mållinjen før de andre spillerne"
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:38
 msgid "Laps:"
-msgstr ""
+msgstr "Runder:"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:63
 msgid "Hunter"
-msgstr ""
+msgstr "Jeger"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:69
 msgid "Survivor"
-msgstr ""
+msgstr "Overlever"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
-msgstr ""
+msgstr "Identifiser og eliminer jegerne før laget ditt utslettes"
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Survival"
-msgstr ""
+msgstr "Overlevelse"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
-msgstr ""
+msgstr "Hjelp laget ditt med å få flest drap mot fiendelaget"
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Team Deathmatch"
@@ -1682,35 +1691,35 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:56 qcsrc/common/resources/all.inc:29
 msgid "Shells"
-msgstr ""
+msgstr "Hagleammo"
 
 #: qcsrc/common/items/item/ammo.qh:92 qcsrc/common/resources/all.inc:37
 msgid "Bullets"
-msgstr ""
+msgstr "Kuler"
 
 #: qcsrc/common/items/item/ammo.qh:124 qcsrc/common/resources/all.inc:45
 msgid "Rockets"
-msgstr ""
+msgstr "Raketter"
 
 #: qcsrc/common/items/item/ammo.qh:156 qcsrc/common/resources/all.inc:53
 msgid "Cells"
-msgstr ""
+msgstr "Celler"
 
 #: qcsrc/common/items/item/armor.qh:40
 msgid "Small armor"
-msgstr ""
+msgstr "Liten rustning"
 
 #: qcsrc/common/items/item/armor.qh:84
 msgid "Medium armor"
-msgstr ""
+msgstr "Middels rustning"
 
 #: qcsrc/common/items/item/armor.qh:128 qcsrc/common/items/item/armor.qh:135
 msgid "Big armor"
-msgstr ""
+msgstr "Stor rustning"
 
 #: qcsrc/common/items/item/armor.qh:172 qcsrc/common/items/item/armor.qh:179
 msgid "Mega armor"
-msgstr ""
+msgstr "Megarustning"
 
 #: qcsrc/common/items/item/health.qh:40
 msgid "Small health"
@@ -1732,19 +1741,19 @@ msgstr ""
 #: qcsrc/common/util.qc:271
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:123
 msgid "Jetpack"
-msgstr ""
+msgstr "Jetpack"
 
 #: qcsrc/common/items/item/jetpack.qh:75 qcsrc/common/resources/all.inc:61
 msgid "Fuel"
-msgstr ""
+msgstr "Drivstoff"
 
 #: qcsrc/common/items/item/jetpack.qh:109
 msgid "Fuel regenerator"
-msgstr ""
+msgstr "Drivstoffs-regenerator"
 
 #: qcsrc/common/items/item/jetpack.qh:112
 msgid "Fuel regen"
-msgstr ""
+msgstr "Drivstoffs-regen"
 
 #: qcsrc/common/mapinfo.qc:664
 #, no-c-format
@@ -1754,24 +1763,24 @@ msgstr ""
 #: qcsrc/common/mapinfo.qh:92
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:112
 msgid "Frag limit:"
-msgstr ""
+msgstr "Drapsmål:"
 
 #: qcsrc/common/mapinfo.qh:92
 msgid "The amount of frags needed before the match will end"
-msgstr ""
+msgstr "Antall drap som kreves før kampen avsluttes"
 
 #: qcsrc/common/minigames/cl_minigames.qc:287
 msgid "Spectators:"
-msgstr ""
+msgstr "Tilskuere:"
 
 #: qcsrc/common/minigames/cl_minigames.qc:424
 msgid "It's your turn"
-msgstr ""
+msgstr "Det er din tur"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:363
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:67 qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit"
-msgstr "Slutte"
+msgstr "Avslutt"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:368
 msgid "Invite"
@@ -1779,16 +1788,16 @@ msgstr "Invitere"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:407
 msgid "Current Game"
-msgstr ""
+msgstr "Nåværende spill"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:431
 msgid "Exit Menu"
-msgstr ""
+msgstr "Avsluttingsmeny"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:442
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
 msgid "Create"
-msgstr "Skape"
+msgstr "Opprett"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
 #: qcsrc/menu/xonotic/dialog_welcome.qc:131
@@ -1797,25 +1806,25 @@ msgstr "Bli med"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:521
 msgid "Minigames"
-msgstr ""
+msgstr "Minispill"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:581
 msgid "Minigame message"
-msgstr ""
+msgstr "Minispill-beskjed"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "Bulldozer"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1107
 #: qcsrc/common/minigames/minigame/ps.qc:425
 #: qcsrc/common/minigames/minigame/ps.qc:431
 msgid "Game over!"
-msgstr ""
+msgstr "Game over!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click 'Next Level' to continue"
-msgstr ""
+msgstr "Godt jobbet! Trykk «Neste nivå» for å fortsette"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1183
 #: qcsrc/common/minigames/minigame/c4.qc:383
@@ -1825,31 +1834,31 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/ps.qc:500
 #: qcsrc/common/minigames/minigame/ttt.qc:331
 msgid "You are spectating"
-msgstr ""
+msgstr "Du er tilskuer"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1186
 msgid "Better luck next time!"
-msgstr ""
+msgstr "Bedre hell neste gang!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1191
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Fett! Trykk «Neste nivå» for å fortsette"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1193
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Rått! Trykk «Neste nivå» for å fortsette"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1197
 msgid "Press the space bar to change your currently selected tile"
-msgstr ""
+msgstr "Trykk på mellomromstasten for å endre på den valgte flisa"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1200
 msgid "Push the boulders onto the targets"
-msgstr ""
+msgstr "Dytt steinene til målene"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1436
 msgid "Next Level"
-msgstr ""
+msgstr "Neste nivå"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1437
 msgid "Restart"
@@ -1876,41 +1885,41 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pp.qc:374
 #, c-format
 msgid "%s^7 won the game!"
-msgstr ""
+msgstr "%s^7 vant spillet!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:386
 #: qcsrc/common/minigames/minigame/pp.qc:452
 #: qcsrc/common/minigames/minigame/ttt.qc:334
 msgid "Draw"
-msgstr ""
+msgstr "Uavgjort"
 
 #: qcsrc/common/minigames/minigame/c4.qc:391
 #: qcsrc/common/minigames/minigame/nmm.qc:612
 #: qcsrc/common/minigames/minigame/pp.qc:458
 #: qcsrc/common/minigames/minigame/ttt.qc:341
 msgid "You lost the game!"
-msgstr ""
+msgstr "Du tapte spillet!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:392
 #: qcsrc/common/minigames/minigame/nmm.qc:613
 #: qcsrc/common/minigames/minigame/pp.qc:459
 #: qcsrc/common/minigames/minigame/ttt.qc:342
 msgid "You win!"
-msgstr ""
+msgstr "Du vant!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:396
 #: qcsrc/common/minigames/minigame/nmm.qc:617
 #: qcsrc/common/minigames/minigame/pp.qc:470
 #: qcsrc/common/minigames/minigame/ttt.qc:353
 msgid "Wait for your opponent to make their move"
-msgstr ""
+msgstr "Venter på motstander"
 
 #: qcsrc/common/minigames/minigame/c4.qc:399
 #: qcsrc/common/minigames/minigame/nmm.qc:619
 #: qcsrc/common/minigames/minigame/pp.qc:473
 #: qcsrc/common/minigames/minigame/ttt.qc:356
 msgid "Click on the game board to place your piece"
-msgstr ""
+msgstr "Klikk på brettet for å plassere brikken din"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:3
 msgid "Nine Men's Morris"
@@ -1940,19 +1949,19 @@ msgstr "AI"
 
 #: qcsrc/common/minigames/minigame/pong.qc:628
 msgid "Press ^1Start Match^7 to start the match with the current players"
-msgstr ""
+msgstr "Trykk ^1Start kamp^1^7 for å starte kampen med de nåværende spillerne"
 
 #: qcsrc/common/minigames/minigame/pong.qc:700
 msgid "Start Match"
-msgstr ""
+msgstr "Start kamp"
 
 #: qcsrc/common/minigames/minigame/pong.qc:701
 msgid "Add AI player"
-msgstr ""
+msgstr "Legg til AI-spiller"
 
 #: qcsrc/common/minigames/minigame/pong.qc:702
 msgid "Remove AI player"
-msgstr ""
+msgstr "Fjern AI-spiller"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
@@ -2203,16 +2212,16 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/nades/nades.qc:137
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
-msgstr ""
+msgstr "slipp våpen / kast granat"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:139
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
-msgstr ""
+msgstr "^3Granater^8 er aktivert. Trykk ^3%s^8 for å bruke de."
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:123
 msgid "Grenade"
-msgstr ""
+msgstr "Granat"
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
@@ -2243,13 +2252,13 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:49
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:58
 msgid "Invisibility"
-msgstr ""
+msgstr "Usynlighet"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:44
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:56
 msgid "Shield"
-msgstr ""
+msgstr "Skjold"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:50
@@ -2265,7 +2274,7 @@ msgstr "Styrke"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
-msgstr ""
+msgstr "I brann"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
@@ -2273,43 +2282,43 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/stunned.qh:16
 msgid "Stunned"
-msgstr ""
+msgstr "Svimeslått"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
-msgstr ""
+msgstr "Supervåpen"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
-msgstr ""
+msgstr "Veipunkt"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
-msgstr ""
+msgstr "Hjelp meg!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:5
 msgid "Here"
-msgstr ""
+msgstr "Her"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:6
 msgid "DANGER"
-msgstr ""
+msgstr "FARE"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:10
 msgid "Frozen!"
-msgstr ""
+msgstr "Frosset!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:11
 msgid "Reviving"
-msgstr ""
+msgstr "Gjenoppliver"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
-msgstr ""
+msgstr "Gjenstand"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:15
 msgid "Checkpoint"
-msgstr ""
+msgstr "Sjekkpunkt"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:16
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:237

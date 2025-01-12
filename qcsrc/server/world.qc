@@ -1836,9 +1836,9 @@ int want_weapon(entity weaponinfo, int allguns)
 	allow_mutatorblocked = M_ARGV(3, bool);
 
 	if(allguns == 1)
-		d = boolean(!(weaponinfo.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
+		d = boolean(!(weaponinfo.spawnflags & WEP_FLAG_HIDDEN));
 	else if(allguns == 2)
-		d = boolean((weaponinfo.spawnflags & WEP_FLAG_NORMAL) && !(weaponinfo.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)));
+		d = boolean((weaponinfo.spawnflags & WEP_FLAG_NORMAL) && !(weaponinfo.spawnflags & WEP_FLAG_HIDDEN));
 	else if(!mutator_returnvalue)
 		d = !(!weaponinfo.weaponstart);
 
@@ -1877,7 +1877,7 @@ WepSet weapons_all()
 {
 	WepSet ret = '0 0 0';
 	FOREACH(Weapons, it != WEP_Null, {
-		if (!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)))
+		if (!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN)))
 			ret |= it.m_wepset;
 	});
 	return ret;
@@ -1897,7 +1897,7 @@ WepSet weapons_most()
 {
 	WepSet ret = '0 0 0';
 	FOREACH(Weapons, it != WEP_Null, {
-		if ((it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)))
+		if ((it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN)))
 			ret |= it.m_wepset;
 	});
 	return ret;
