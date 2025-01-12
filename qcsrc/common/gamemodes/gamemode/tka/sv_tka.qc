@@ -28,10 +28,9 @@ int autocvar_g_tkaball_trail_color;
 
 bool tka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
 {
-	if(view.ballcarried)
-		if(IS_SPEC(player))
-			return false; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
-	if(IS_SPEC(player) || SAME_TEAM(player, this.owner))
+	if(view.ballcarried && IS_SPEC(player))
+		return false; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
+	if(IS_SPEC(player) || warmup_stage || SAME_TEAM(player, this.owner))
 		return true;
 	if(StatusEffects_active(STATUSEFFECT_Invisibility, this.owner))
 		return false; // hide the waypointsprite if the owner has the invisibility powerup
