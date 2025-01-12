@@ -25,7 +25,6 @@ float autocvar_g_balance_keyhunt_noncarrier_damage = 1;
 float autocvar_g_balance_keyhunt_noncarrier_force = 1;
 float autocvar_g_balance_keyhunt_noncarrier_selfdamage = 1;
 float autocvar_g_balance_keyhunt_noncarrier_selfforce = 1;
-bool autocvar_g_balance_keyhunt_noncarrier_warn = false;
 
 int autocvar_g_balance_keyhunt_score_capture;
 int autocvar_g_balance_keyhunt_score_carrierfrag;
@@ -1283,12 +1282,7 @@ MUTATOR_HOOKFUNCTION(kh, PlayerDies)
 	if(frag_target == frag_attacker)
 		kh_Key_DropAll(frag_target, true);
 	else if(IS_PLAYER(frag_attacker))
-	{
-		if(frag_attacker.kh_next == NULL)
-			if(autocvar_g_balance_keyhunt_noncarrier_warn)
-				Send_Notification(NOTIF_ONE_ONLY, frag_attacker, MSG_CENTER, CENTER_KEYHUNT_WARN);
 		kh_Key_DropAll(frag_target, false);
-	}
 	else
 		kh_Key_DropAll(frag_target, true);
 }
