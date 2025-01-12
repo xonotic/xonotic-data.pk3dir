@@ -136,12 +136,13 @@ float StrafeHUD_DetermineFrameTime()
 		if(dt_client > .05) // server splits frames longer than 50 ms into two moves (DarkPlaces behaviour)
 			dt_client /= 2; // does not ensure frames are smaller than 50 ms, just splits large frames in half, matches server behaviour
 
-		// calculate average frametime
-		// calculated using a weighted arithmetic mean, where the weighting is equal to the frametime itself
-		// for example, given a 1 ms frame and a 9 ms frame we have:
-		//   a total time of 10 ms
-		//   a weighted sum of 1 ms * 1 ms + 9 ms * 9 ms = 82 ms^2
-		//   the final result is 82 ms^2 / 10 ms = 8.2 ms
+		/* calculate average frametime
+		 * calculated using a weighted arithmetic mean, where the weighting is equal to the frametime itself
+		 * for example, given a 1 ms frame and a 9 ms frame we have:
+		 *   a total time of 10 ms
+		 *   a weighted sum of 1 ms * 1 ms + 9 ms * 9 ms = 82 ms^2
+		 *   the final result is 82 ms^2 / 10 ms = 8.2 ms
+		 */
 		dt_sum += dt_client * dt_client; // weighted sum of all frametimes (mean numerator)
 		dt_time += dt_client; // time spent averaging (mean denominator)
 
@@ -167,34 +168,20 @@ float StrafeHUD_DetermineWishAngle(vector movement, int keys, bool is_local)
 	float wishangle;
 	if(is_local) // if entity is local player
 	{
-		if(movement.x == 0)
-		{
-			if(movement.y < 0)
-				wishangle = -90;
-			else if(movement.y > 0)
-				wishangle = 90;
-			else
-				wishangle = 0;
-		}
+		if(movement.y == 0)
+			wishangle = 0;
 		else
 		{
-			if(movement.y == 0)
+			wishangle = RAD2DEG * atan2(movement.y, movement.x);
+			// wrap the wish angle if it exceeds ±90°
+			if(fabs(wishangle) > 90)
 			{
-				wishangle = 0;
-			}
-			else
-			{
-				wishangle = RAD2DEG * atan2(movement.y, movement.x);
-				// wrap the wish angle if it exceeds ±90°
-				if(fabs(wishangle) > 90)
-				{
-					if(wishangle < 0)
-						wishangle += 180;
-					else
-						wishangle -= 180;
+				if(wishangle < 0)
+					wishangle += 180;
+				else
+					wishangle -= 180;
 
-					wishangle *= -1;
-				}
+				wishangle *= -1;
 			}
 		}
 	}
@@ -297,13 +284,9 @@ float StrafeHUD_DetermineHudAngle(float absolute_wishangle, float absolute_overt
 float StrafeHUD_DetermineDirection(float angle, float wishangle, float antiflicker_angle)
 {
 	if(wishangle > 0)
-	{
 		return STRAFEHUD_DIRECTION_RIGHT;
-	}
 	else if(wishangle < 0)
-	{
 		return STRAFEHUD_DIRECTION_LEFT;
-	}
 	else
 	{
 		if(angle > antiflicker_angle && angle < (180 - antiflicker_angle))
@@ -340,4 +323,13 @@ vector StrafeHUD_MixColors(vector color1, vector color2, float ratio)
 	if(ratio <= 0) return color1;
 	if(ratio >= 1) return color2;
 	return color1 + (color2 - color1) * ratio;
+}
+
+vector StrafeHUD_CalculateTextIndicatorPosition(vector pos)
+{
+	pos.x *= panel_size.x / 2; // more intuitive since we start in the middle, this turns the range from -0.5 to +0.5 into -1 to +1
+	pos.y *= panel_size.y;
+	pos.z = 0;
+
+	return pos;
 }

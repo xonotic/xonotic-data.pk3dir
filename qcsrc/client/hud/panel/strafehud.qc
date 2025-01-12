@@ -31,9 +31,13 @@ void HUD_StrafeHUD()
 	// generic hud routines
 	if(!autocvar__hud_configure)
 	{
-		if(!autocvar_hud_panel_strafehud ||
-		   (spectatee_status == -1 && (autocvar_hud_panel_strafehud == 1 || autocvar_hud_panel_strafehud == 3)) ||
-		   (autocvar_hud_panel_strafehud == 3 && !MUTATOR_CALLHOOK(HUD_StrafeHUD_showoptional))) { hud_lasttime = time; return; }
+		if(!autocvar_hud_panel_strafehud
+		|| (spectatee_status == -1 && (autocvar_hud_panel_strafehud == 1 || autocvar_hud_panel_strafehud == 3))
+		|| (autocvar_hud_panel_strafehud == 3 && !MUTATOR_CALLHOOK(HUD_StrafeHUD_showoptional)))
+		{
+			hud_lasttime = time;
+			return;
+		}
 	}
 
 	HUD_Panel_LoadCvars();
@@ -63,7 +67,11 @@ void HUD_StrafeHUD()
 		strafeplayer = csqcplayer;
 	}
 
-	if(!csqcplayer || !strafeplayer) { hud_lasttime = time; return; }
+	if(!csqcplayer || !strafeplayer)
+	{
+		hud_lasttime = time;
+		return;
+	}
 
 	// draw strafehud
 
@@ -606,7 +614,7 @@ void HUD_StrafeHUD()
 		indicator_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_switch_line_height, 10), 1);
 		indicator_size.z = 0;
 
-		float num_dashes = nearbyint(autocvar_hud_panel_strafehud_switch_line);
+		float num_dashes = rint(autocvar_hud_panel_strafehud_switch_line);
 		bool has_top_arrow = autocvar_hud_panel_strafehud_switch_arrow == 1 || autocvar_hud_panel_strafehud_switch_arrow >= 3;
 		bool has_bottom_arrow = autocvar_hud_panel_strafehud_switch_arrow >= 2;
 
@@ -651,7 +659,7 @@ void HUD_StrafeHUD()
 		indicator_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_bestangle_line_height, 10), 1);
 		indicator_size.z = 0;
 
-		float num_dashes = nearbyint(autocvar_hud_panel_strafehud_bestangle_line);
+		float num_dashes = rint(autocvar_hud_panel_strafehud_bestangle_line);
 		bool has_top_arrow = autocvar_hud_panel_strafehud_bestangle_arrow == 1 || autocvar_hud_panel_strafehud_bestangle_arrow >= 3;
 		bool has_bottom_arrow = autocvar_hud_panel_strafehud_bestangle_arrow >= 2;
 
@@ -687,7 +695,7 @@ void HUD_StrafeHUD()
 		indicator_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_wturn_line_height, 10), 1);
 		indicator_size.z = 0;
 
-		float num_dashes = nearbyint(autocvar_hud_panel_strafehud_wturn_line);
+		float num_dashes = rint(autocvar_hud_panel_strafehud_wturn_line);
 		bool has_top_arrow = autocvar_hud_panel_strafehud_wturn_arrow == 1 || autocvar_hud_panel_strafehud_wturn_arrow >= 3;
 		bool has_bottom_arrow = autocvar_hud_panel_strafehud_wturn_arrow >= 2;
 
@@ -720,7 +728,7 @@ void HUD_StrafeHUD()
 		indicator_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_line_height, 10), 1);
 		indicator_size.z = 0;
 
-		float num_dashes = nearbyint(autocvar_hud_panel_strafehud_angle_line);
+		float num_dashes = rint(autocvar_hud_panel_strafehud_angle_line);
 		bool has_top_arrow = autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3;
 		bool has_bottom_arrow = autocvar_hud_panel_strafehud_angle_arrow >= 2;
 

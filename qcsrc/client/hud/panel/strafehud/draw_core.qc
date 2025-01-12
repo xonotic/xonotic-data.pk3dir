@@ -1,4 +1,4 @@
-#include "core.qh"
+#include "draw_core.qh"
 
 #include <client/draw.qh>
 

@@ -4,7 +4,7 @@
 
 // draw the strafe-o-meter bar
 // aligns HUD elements perfectly in the hud area
-// also deals with wrapping around on edges, different HUD styles, etc
+// also deals with wrapping around on edges, different HUD styles, etc.
 void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, float alpha, int type, int gradient_type, float range)
 {
 	float offset = StrafeHUD_AngleToOffset(startangle % 360, range);
@@ -12,11 +12,17 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 	float mirror_offset;
 	float mirror_width;
 
-	if(StrafeHUD_IsGradient(type) && gradient_type == STRAFEHUD_GRADIENT_NONE)
-		type = STRAFEHUD_STYLE_DRAWFILL;
+	if(width <= 0) return;
 
-	if(alpha <= 0 && !StrafeHUD_IsGradient(type) || width <= 0)
-		return;
+	if(StrafeHUD_IsGradient(type))
+	{
+		if(gradient_type == STRAFEHUD_GRADIENT_NONE)
+		{
+			type = STRAFEHUD_STYLE_DRAWFILL;
+			if(alpha <= 0) return;
+		}
+	}
+	else if(alpha <= 0) return;
 
 	// how much is hidden by the current hud angle
 	float hidden_width = (360 - range) / range * panel_size.x;
@@ -170,7 +176,9 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 }
 
 // accelerated gradient, does not support non-linear projection of the color and opacity within individual segments
-void StrafeHUD_DrawGradient(vector color1, vector color2, vector size, float original_width, float offset, float alpha, float gradient_offset, int gradient_type, float range)
+void StrafeHUD_DrawGradient(
+	vector color1, vector color2, vector size, float original_width,
+	float offset, float alpha, float gradient_offset, int gradient_type, float range)
 {
 	if(gradient_type == STRAFEHUD_GRADIENT_BOTH)
 	{
@@ -199,15 +207,15 @@ void StrafeHUD_DrawGradient(vector color1, vector color2, vector size, float ori
 
 	float alpha1 = bound(0, alpha, 1);
 	float alpha2 = bound(0, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, 1);
-	if((alpha1 + alpha2) == 0) return;
+	if(alpha1 + alpha2 == 0) return;
 
 	float ratio1 = gradient_offset / original_width;
-	if(gradient_type == STRAFEHUD_GRADIENT_LEFT)
-		ratio1 = 1 - ratio1;
-
 	float ratio2 = (gradient_offset + size.x) / original_width;
 	if(gradient_type == STRAFEHUD_GRADIENT_LEFT)
+	{
+		ratio1 = 1 - ratio1;
 		ratio2 = 1 - ratio2;
+	}
 
 	vector origin = HUD_Shift(panel_pos);
 	gradient_start.x = HUD_ScaleX(gradient_start.x);
@@ -230,7 +238,9 @@ void StrafeHUD_DrawGradient(vector color1, vector color2, vector size, float ori
 }
 
 // more expensive gradient rendering which does not rely on vertex gradients (required to properly render the color/opacity of individual segments in non-linear projection modes)
-void StrafeHUD_DrawSoftGradient(vector color1, vector color2, vector size, float original_width, float offset, float original_offset, float alpha, float gradient_offset, int gradient_type, float range)
+void StrafeHUD_DrawSoftGradient(
+	vector color1, vector color2, vector size, float original_width, float offset, float original_offset,
+	float alpha, float gradient_offset, int gradient_type, float range)
 {
 	float alpha1 = bound(0, alpha, 1);
 	float alpha2 = bound(0, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, 1);
@@ -266,8 +276,10 @@ void StrafeHUD_DrawSoftGradient(vector color1, vector color2, vector size, float
 // draw the strafe arrows (inspired by drawspritearrow() in common/mutators/mutator/waypoints/waypointsprites.qc)
 void StrafeHUD_DrawStrafeArrow(vector origin, float size, vector color, float alpha, bool flipped, float connection_width)
 {
+	// alpha and size already checked
+
 	origin = HUD_Shift(origin);
-	float width = HUD_ScaleX(size * 2 + connection_width);
+	float width  = HUD_ScaleX(size * 2 + connection_width);
 	float height = HUD_ScaleY(size);
 	if(flipped) origin.y -= size;
 	R_BeginPolygon("", DRAWFLAG_NORMAL, true);
@@ -285,26 +297,29 @@ void StrafeHUD_DrawStrafeArrow(vector origin, float size, vector color, float al
 	R_EndPolygon();
 }
 
-// draw a fading text indicator above or below the strafe meter, return true if something was displayed
-void StrafeHUD_DrawTextIndicator(string text, float height, vector color, float fadetime, float lasttime, vector pos, float offset_top, float offset_bottom)
+// draw a fading text indicator above or below the strafe meter
+void StrafeHUD_DrawTextIndicator(
+	string text, float height, vector color, float fadetime, float lasttime,
+	vector pos, float offset_top, float offset_bottom)
 {
-	if((height <= 0) || (lasttime <= 0) || (fadetime <= 0) || ((time - lasttime) >= fadetime))
+	float time_frac = (time - lasttime) / fadetime;
+	if(height <= 0 || lasttime <= 0 || fadetime <= 0 || time_frac > 1)
 		return;
 
-	float alpha = cos(((time - lasttime) / fadetime) * M_PI_2); // fade non-linear like the physics panel does
+	float alpha = cos(time_frac * M_PI_2); // fade non-linear like the physics panel does
 	vector size = panel_size;
 	size.y = height;
 
 	if(pos.y >= 1)
 	{
-		pos.y--; // for calculations the position should not start at +1
+		--pos.y; // for calculations the position should not start at +1
 		pos = StrafeHUD_CalculateTextIndicatorPosition(pos);
 		pos.y += size.y + offset_top;
 		pos.y *= -1; // it's more intuitive for up to be positive
 	}
 	else if(pos.y <= -1)
 	{
-		pos.y++; // for calculations the position should not start at -1
+		++pos.y; // for calculations the position should not start at -1
 		pos = StrafeHUD_CalculateTextIndicatorPosition(pos);
 		pos.y *= -1; // it's more intuitive for down to be negative
 		pos.y += panel_size.y + offset_bottom;
@@ -312,15 +327,6 @@ void StrafeHUD_DrawTextIndicator(string text, float height, vector color, float 
 	else return;
 
 	drawstring_aspect(panel_pos + pos, text, size, color, alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-}
-
-vector StrafeHUD_CalculateTextIndicatorPosition(vector pos)
-{
-	pos.x *= panel_size.x / 2; // more intuitive since we start in the middle, this turns the range from -0.5 to +0.5 into -1 to +1
-	pos.y *= panel_size.y;
-	pos.z = 0;
-
-	return pos;
 }
 
 bool StrafeHUD_IsGradient(int style)
