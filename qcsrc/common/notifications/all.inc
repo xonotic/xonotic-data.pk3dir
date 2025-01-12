@@ -741,6 +741,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(KEEPAWAY_PICKUP_SELF,              N_ENABLE,    0, 0, "",               CPID_KEEPAWAY,          "0 0",  _("^BGYou picked up the ball"), "")
     MSG_CENTER_NOTIF(KEEPAWAY_WARN,                     N_ENABLE,    0, 0, "",               CPID_KEEPAWAY_WARN,     "0 0",  _("^BGGet the ball to score points for frags!"), "")
 
+    MSG_CENTER_NOTIF(KEYHUNT_WARN,                      N_ENABLE,    0, 0, "",               CPID_KEYHUNT_WARN,      "0 0",  _("^BGFrag key carriers to help your team win!"), "")
     MSG_CENTER_NOTIF(KEYHUNT_HELP,                      N_ENABLE,    0, 0, "",               CPID_KEYHUNT,           "0 0",  _("^BGAll keys are in your team's hands!\nHelp the key carriers to meet!"), "")
     MULTITEAM_CENTER(KEYHUNT_INTERFERE,                 N_ENABLE,    0, 0, "",               CPID_KEYHUNT,           "0 0",  _("^BGAll keys are in ^TC^TT team^BG's hands!\nInterfere ^F4NOW^BG!"), "", NAME)
     MSG_CENTER_NOTIF(KEYHUNT_MEET,                      N_ENABLE,    0, 0, "",               CPID_KEYHUNT,           "0 0",  _("^BGAll keys are in your team's hands!\nMeet the other key carriers ^F4NOW^BG!"), "")
