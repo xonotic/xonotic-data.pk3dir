@@ -1,5 +1,6 @@
-#include "sv_disability.qh"
+#include "disability.qh"
 
+#ifdef SVQC
 void buff_Disability_ApplyStunned(entity frag_target, entity frag_attacker)
 {
 	if(frag_target != frag_attacker)
@@ -40,3 +41,4 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 	if(StatusEffects_active(STATUSEFFECT_Stunned, player))
 		M_ARGV(0, float) *= autocvar_g_buffs_disability_weaponspeed;
 }
+#endif // SVQC

@@ -1,5 +1,6 @@
-#include "sv_medic.qh"
+#include "medic.qh"
 
+#ifdef SVQC
 MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
 {
 	entity player = M_ARGV(0, entity);
@@ -18,3 +19,4 @@ float buff_Medic_CalculateSurviveDamage(float frag_damage, float health)
 		frag_damage = max(5, health - autocvar_g_buffs_medic_survive_health);
 	return frag_damage;
 }
+#endif // SVQC

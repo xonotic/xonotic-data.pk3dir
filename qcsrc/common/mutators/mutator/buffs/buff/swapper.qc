@@ -1,5 +1,6 @@
-#include "sv_swapper.qh"
+#include "swapper.qh"
 
+#ifdef SVQC
 MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 {
 	if(MUTATOR_RETURNVALUE || game_stopped) return;
@@ -78,3 +79,4 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 		}
 	}
 }
+#endif // SVQC

@@ -1,5 +1,6 @@
-#include "sv_magnet.qh"
+#include "magnet.qh"
 
+#ifdef SVQC
 METHOD(MagnetBuff, m_tick, void(StatusEffect this, entity actor))
 {
 	if(IS_PLAYER(actor))
@@ -22,3 +23,4 @@ METHOD(MagnetBuff, m_tick, void(StatusEffect this, entity actor))
 
 	SUPER(MagnetBuff).m_tick(this, actor);
 }
+#endif // SVQC

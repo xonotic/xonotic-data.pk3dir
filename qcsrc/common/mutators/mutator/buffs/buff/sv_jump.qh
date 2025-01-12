@@ -1,5 +1,0 @@
-#pragma once
-
-float autocvar_g_buffs_jump_height;
-
-float buff_Jump_ChangeDamage(float frag_damage, float frag_deathtype);

@@ -1,5 +1,6 @@
-#include "sv_inferno.qh"
+#include "inferno.qh"
 
+#ifdef SVQC
 float buff_Inferno_CalculateTime(float dmg)
 {
 	float offset_x    = 0;
@@ -13,3 +14,4 @@ float buff_Inferno_CalculateDamage(float frag_damage)
 {
 	return frag_damage * autocvar_g_buffs_inferno_damagemultiplier;
 }
+#endif // SVQC

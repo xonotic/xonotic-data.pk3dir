@@ -1,7 +1,0 @@
-#pragma once
-
-float autocvar_g_buffs_bash_force;
-float autocvar_g_buffs_bash_force_self;
-
-vector buff_Bash_TargetCalculateForce(vector frag_force, entity frag_target, entity frag_attacker);
-vector buff_Bash_AttackerCalculateForce(vector frag_force, entity frag_target, entity frag_attacker);

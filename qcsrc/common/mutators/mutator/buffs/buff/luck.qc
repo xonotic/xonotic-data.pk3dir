@@ -1,5 +1,6 @@
-#include "sv_luck.qh"
+#include "luck.qh"
 
+#ifdef SVQC
 float buff_Luck_CalculateDamage(float frag_damage)
 {
 	if(autocvar_g_buffs_luck_damagemultiplier > 0)
@@ -7,3 +8,4 @@ float buff_Luck_CalculateDamage(float frag_damage)
 		frag_damage *= autocvar_g_buffs_luck_damagemultiplier;
 	return frag_damage;
 }
+#endif // SVQC

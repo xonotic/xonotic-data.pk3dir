@@ -1,5 +1,6 @@
-#include "sv_bash.qh"
+#include "bash.qh"
 
+#ifdef SVQC
 vector buff_Bash_TargetCalculateForce(vector frag_force, entity frag_target, entity frag_attacker)
 {
 	if(frag_attacker != frag_target)
@@ -17,3 +18,4 @@ vector buff_Bash_AttackerCalculateForce(vector frag_force, entity frag_target, e
 	}
 	return frag_force;
 }
+#endif // SVQC

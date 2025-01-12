@@ -1,6 +1,0 @@
-#pragma once
-
-float autocvar_g_buffs_vengeance_damage_multiplier;
-
-void buff_Vengeance_DelayedDamage(entity this);
-float buff_Vengeance_CalculateDamage(float frag_damage);

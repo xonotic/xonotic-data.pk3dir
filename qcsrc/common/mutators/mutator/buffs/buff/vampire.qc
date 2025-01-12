@@ -1,5 +1,6 @@
-#include "sv_vampire.qh"
+#include "vampire.qh"
 
+#ifdef SVQC
 MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
 {
 	// NOTE: vampire PlayerDamage_SplitHealthArmor code is similar
@@ -15,3 +16,4 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
 		GiveResource(frag_attacker, RES_HEALTH, autocvar_g_buffs_vampire_damage_steal * health_take);
 	}
 }
+#endif // SVQC

@@ -1,5 +1,6 @@
-#include "sv_ammo.qh"
+#include "ammo.qh"
 
+#ifdef SVQC
 METHOD(AmmoBuff, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
 	bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
@@ -55,3 +56,4 @@ METHOD(AmmoBuff, m_tick, void(StatusEffect this, entity actor))
 
 	SUPER(AmmoBuff).m_tick(this, actor);
 }
+#endif // SVQC

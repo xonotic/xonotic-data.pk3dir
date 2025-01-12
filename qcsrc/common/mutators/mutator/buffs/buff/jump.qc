@@ -1,5 +1,6 @@
-#include "sv_jump.qh"
+#include "jump.qh"
 
+#ifdef SVQC
 float buff_Jump_ChangeDamage(float frag_damage, float frag_deathtype)
 {
 	if(frag_deathtype == DEATH_FALL.m_id)
@@ -15,3 +16,4 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics)
 	if(StatusEffects_active(BUFF_JUMP, player))
 		STAT(MOVEVARS_JUMPVELOCITY, player) = autocvar_g_buffs_jump_height;
 }
+#endif // SVQC

@@ -1,5 +1,6 @@
-#include "sv_flight.qh"
+#include "flight.qh"
 
+#ifdef SVQC
 METHOD(FlightBuff, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
 	bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
@@ -21,3 +22,4 @@ METHOD(FlightBuff, m_remove, void(StatusEffect this, entity actor, int removal_t
 	actor.buff_flight_oldgravity = 0;
 	SUPER(FlightBuff).m_remove(this, actor, removal_type);
 }
+#endif // SVQC
