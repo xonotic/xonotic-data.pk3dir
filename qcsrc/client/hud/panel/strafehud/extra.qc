@@ -14,7 +14,7 @@
 
 // epsilon value for the slick detector steps to avoid
 // an infinite loop due to floating point rounding errors
-// (works with current limits as long as uncapped mode is not used)
+// (works with current limits)
 #define SLICKDETECT_STEPS_EPSILON 0.00001
 
 // slick detector

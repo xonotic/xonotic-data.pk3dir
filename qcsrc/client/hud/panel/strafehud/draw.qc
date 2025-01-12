@@ -244,7 +244,7 @@ void StrafeHUD_DrawSoftGradient(
 {
 	float alpha1 = bound(0, alpha, 1);
 	float alpha2 = bound(0, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, 1);
-	if((alpha1 + alpha2) == 0) return;
+	if(alpha1 + alpha2 == 0) return;
 
 	float color_ratio = alpha1 / (alpha1 + alpha2);
 	vector segment_size = size;
@@ -329,6 +329,7 @@ void StrafeHUD_DrawTextIndicator(
 	drawstring_aspect(panel_pos + pos, text, size, color, alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
+// checks whether the current style is a gradient style
 bool StrafeHUD_IsGradient(int style)
 {
 	return style == STRAFEHUD_STYLE_GRADIENT || style == STRAFEHUD_STYLE_SOFT_GRADIENT;

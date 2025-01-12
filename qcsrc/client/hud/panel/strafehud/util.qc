@@ -318,6 +318,7 @@ bool StrafeHUD_DetermineJumpHeld(entity e, int keys, bool is_local)
 }
 
 // mix two colors based on a ratio
+// TODO: move mixing colors out of the HUD, this could be useful for other code
 vector StrafeHUD_MixColors(vector color1, vector color2, float ratio)
 {
 	if(ratio <= 0) return color1;
