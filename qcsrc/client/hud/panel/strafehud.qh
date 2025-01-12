@@ -11,7 +11,7 @@ bool autocvar_hud_panel_strafehud_dynamichud = true;
 int autocvar_hud_panel_strafehud_mode = 0;
 float autocvar_hud_panel_strafehud_range = 90;
 float autocvar_hud_panel_strafehud_range_sidestrafe = -2;
-int autocvar_hud_panel_strafehud_style = 3;
+int autocvar_hud_panel_strafehud_style = 2;
 bool autocvar_hud_panel_strafehud_unit_show = true;
 int autocvar_hud_panel_strafehud_onground_mode = 2;
 bool autocvar_hud_panel_strafehud_onground_friction = true;
@@ -136,7 +136,7 @@ const int STRAFEHUD_KEYS_BACKWARD = 2;
 const int STRAFEHUD_STYLE_DRAWFILL = 0;
 const int STRAFEHUD_STYLE_PROGRESSBAR = 1;
 const int STRAFEHUD_STYLE_GRADIENT = 2;
-const int STRAFEHUD_STYLE_FAST_GRADIENT = 3;
+const int STRAFEHUD_STYLE_SOFT_GRADIENT = 3;
 
 const int STRAFEHUD_GRADIENT_NONE = 0;
 const int STRAFEHUD_GRADIENT_LEFT = 1;
