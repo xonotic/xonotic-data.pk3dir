@@ -96,17 +96,10 @@ void HUD_StrafeHUD()
 	static bool onslick_last = false;
 	if(onground)
 	{
-		if(PHYS_FRICTION(strafeplayer) == 0)
-		{
-			onslick = true;
-		}
-		else // do not use IS_ONSLICK(), it only works for the local player and only if client prediction is enabled
-		{
-			trace_dphitq3surfaceflags = 0;
-			tracebox(strafeplayer.origin, strafeplayer.mins, strafeplayer.maxs, strafeplayer.origin - '0 0 1', MOVE_NOMONSTERS, strafeplayer);
-			onslick = trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK;
-		}
-		real_onslick = onslick;
+		// do not use IS_ONSLICK(), it only works for the local player and only if client prediction is enabled
+		trace_dphitq3surfaceflags = 0;
+		tracebox(strafeplayer.origin, strafeplayer.mins, strafeplayer.maxs, strafeplayer.origin - '0 0 1', MOVE_NOMONSTERS, strafeplayer);
+		real_onslick = onslick = trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK;
 
 		onground_lasttime = time;
 		onslick_last = onslick;
@@ -547,7 +540,8 @@ void HUD_StrafeHUD()
 
 	float text_offset_top;
 	float text_offset_bottom;
-	text_offset_top = text_offset_bottom = StrafeHUD_DrawSlickDetector(strafeplayer, real_onslick);
+	bool all_slick = PHYS_FRICTION(strafeplayer) == 0;
+	text_offset_top = text_offset_bottom = StrafeHUD_DrawSlickDetector(strafeplayer, all_slick && real_onground ? true : real_onslick);
 
 	if(autocvar_hud_panel_strafehud_direction)
 		StrafeHUD_DrawDirectionIndicator(direction, opposite_direction, fwd);

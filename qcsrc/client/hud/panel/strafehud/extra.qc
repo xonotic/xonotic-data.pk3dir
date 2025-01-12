@@ -20,7 +20,7 @@
 // slick detector
 // scans for slick in every direction downwards from the player's feet
 // may cause performance issues on slower machines
-float StrafeHUD_DrawSlickDetector(entity e, bool onslick)
+float StrafeHUD_DrawSlickDetector(entity e, bool already_detected)
 {
 	float slickdetector_height = bound(0, autocvar_hud_panel_strafehud_slickdetector_height, 1);
 	slickdetector_height *= panel_size.y;
@@ -37,7 +37,7 @@ float StrafeHUD_DrawSlickDetector(entity e, bool onslick)
 		slicksteps = 90 * DEG2RAD / 2 ** slicksteps;
 
 		// don't need to traceline if already touching slick
-		slickdetected = onslick;
+		slickdetected = already_detected;
 
 		// coordinates at the bottom center of the player bbox
 		vector traceorigin = e.origin + eZ * e.mins.z;
