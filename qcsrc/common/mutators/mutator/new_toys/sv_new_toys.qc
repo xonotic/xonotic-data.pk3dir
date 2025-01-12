@@ -122,7 +122,6 @@ bool nt_IsNewToy(int w)
 		case WEP_MINE_LAYER.m_id:
 		case WEP_HLAC.m_id:
 		case WEP_RIFLE.m_id:
-		case WEP_SHOCKWAVE.m_id:
 		case WEP_ARC.m_id:
 			return true;
 		default:
@@ -138,7 +137,6 @@ string nt_GetFullReplacement(string w)
 		case "devastator": return "minelayer";
 		case "machinegun": return "hlac";
 		case "vortex": return "rifle";
-		//case "shotgun": return "shockwave";
 		default: return string_null;
 	}
 }
