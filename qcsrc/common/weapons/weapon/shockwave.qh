@@ -6,7 +6,7 @@ CLASS(Shockwave, Weapon)
 /* impulse   */ ATTRIB(Shockwave, impulse, int, 2);
 /* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Shockwave, bot_pickupbasevalue, float, 3000);
-/* color     */ ATTRIB(Shockwave, wpcolor, vector, '0.5 0.25 0');
+/* color     */ ATTRIB(Shockwave, m_color, vector, '0.5 0.25 0');
 /* modelname */ ATTRIB(Shockwave, mdl, string, "shotgun");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Shockwave, m_model, Model, MDL_SHOCKWAVE_ITEM);

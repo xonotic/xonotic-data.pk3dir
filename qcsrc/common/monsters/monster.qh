@@ -33,9 +33,11 @@ CLASS(Monster, Object)
     /** attributes */
     ATTRIB(Monster, spawnflags, int, 0);
     /** human readable name */
-    ATTRIB(Monster, monster_name, string, "Monster");
+    ATTRIB(Monster, m_name, string, _("Monster"));
     /** short name */
     ATTRIB(Monster, netname, string, "");
+    /** color */
+    ATTRIB(Monster, m_color, vector, '1 1 1');
     /** model */
     ATTRIB(Monster, m_model, entity);
     /** hitbox size */

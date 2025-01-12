@@ -200,7 +200,7 @@ float StrafeHUD_DetermineWishAngle(vector movement, int keys, bool is_local)
 	}
 	else // alternatively calculate wishdir by querying pressed keys
 	{
-		if((keys & KEY_FORWARD) || (keys & KEY_BACKWARD))
+		if(keys & (KEY_FORWARD | KEY_BACKWARD))
 			wishangle = 45;
 		else
 			wishangle = 90;

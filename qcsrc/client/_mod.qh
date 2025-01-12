@@ -7,6 +7,7 @@
 #include <client/mapvoting.qh>
 #include <client/player_skeleton.qh>
 #include <client/shownames.qh>
+#include <client/spawnpoints.qh>
 #include <client/teamradar.qh>
 #include <client/view.qh>
 

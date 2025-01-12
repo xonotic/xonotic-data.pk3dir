@@ -1,7 +1,7 @@
 #include "invisibility.qh"
 
 #ifdef SVQC
-METHOD(Invisibility, m_remove, void(StatusEffects this, entity actor, int removal_type))
+METHOD(InvisibilityStatusEffect, m_remove, void(StatusEffect this, entity actor, int removal_type))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(removal_type == STATUSEFFECT_REMOVE_TIMEOUT && wasactive && IS_PLAYER(actor))
@@ -17,9 +17,9 @@ METHOD(Invisibility, m_remove, void(StatusEffects this, entity actor, int remova
         if(actor.exteriorweaponentity)
             actor.exteriorweaponentity.alpha = default_weapon_alpha;
     }
-    SUPER(Invisibility).m_remove(this, actor, removal_type);
+    SUPER(InvisibilityStatusEffect).m_remove(this, actor, removal_type);
 }
-METHOD(Invisibility, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+METHOD(InvisibilityStatusEffect, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(!wasactive && IS_PLAYER(actor))
@@ -28,9 +28,9 @@ METHOD(Invisibility, m_apply, void(StatusEffects this, entity actor, float eff_t
             Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_INVISIBILITY, actor.netname);
         Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
     }
-    SUPER(Invisibility).m_apply(this, actor, eff_time, eff_flags);
+    SUPER(InvisibilityStatusEffect).m_apply(this, actor, eff_time, eff_flags);
 }
-METHOD(Invisibility, m_tick, void(StatusEffects this, entity actor))
+METHOD(InvisibilityStatusEffect, m_tick, void(StatusEffect this, entity actor))
 {
     play_countdown(actor, StatusEffects_gettime(this, actor), SND_POWEROFF);
     if(!actor.vehicle)
@@ -39,6 +39,6 @@ METHOD(Invisibility, m_tick, void(StatusEffects this, entity actor))
         if(actor.exteriorweaponentity)
             actor.exteriorweaponentity.alpha = autocvar_g_balance_powerup_invisibility_alpha;
     }
-    SUPER(Invisibility).m_tick(this, actor);
+    SUPER(InvisibilityStatusEffect).m_tick(this, actor);
 }
 #endif

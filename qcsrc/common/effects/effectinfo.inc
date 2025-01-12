@@ -2203,12 +2203,11 @@ SUB(electro_combo) {
 SUB(electro_combo) {
 	MY(alpha_min) = 444;
 	MY(alpha_max) = 512;
-	MY(alpha_fade) = 700;
+	MY(alpha_fade) = 500;
 	MY(bounce) = 1.600000;
 	MY(color_min) = "0xa9cacf";
 	MY(color_max) = "0x0054ff";
 	MY(count) = 32;
-	MY(gravity) = 0.300000;
 	MY(originjitter) = '1.0 1.0 1.0';
 	MY(size_min) = 2;
 	MY(size_max) = 4;
@@ -2216,8 +2215,8 @@ SUB(electro_combo) {
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '312.0 312.0 312.0';
-	MY(velocitymultiplier) = 3;
+	MY(velocityjitter) = '128.0 128.0 128.0';
+	MY(velocitymultiplier) = 0.300000;
 }
 // inner cloud of smoke
 SUB(electro_combo) {
@@ -2236,15 +2235,14 @@ SUB(electro_combo) {
 }
 // shockwave
 SUB(electro_combo) {
-	MY(alpha_min) = 40;
-	MY(alpha_max) = 40;
-	MY(alpha_fade) = 100;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 40;
 	MY(color_min) = "0xa9cacf";
 	MY(color_max) = "0x0054ff";
 	MY(countabsolute) = 1;
-	MY(sizeincrease) = 600;
-	MY(size_min) = 30;
-	MY(size_max) = 30;
+	MY(size_min) = 120;
+	MY(size_max) = 120;
 	MY(tex_min) = 33;
 	MY(tex_max) = 33;
 	MY(type) = "smoke";

@@ -53,7 +53,7 @@ CLASS(Gametype, Object)
     /** game type defaults */
     ATTRIB(Gametype, model2, string);
     /** game type description */
-    ATTRIB(Gametype, gametype_description, string);
+    ATTRIB(Gametype, m_description, string);
     /** game type priority in random selections */
     ATTRIB(Gametype, m_priority, int, 0);
 #ifdef CSQC
@@ -95,7 +95,7 @@ CLASS(Gametype, Object)
     METHOD(Gametype, describe, string(Gametype this))
     {
         TC(Gametype, this);
-        return this.gametype_description;
+        return this.m_description;
     }
 
     METHOD(Gametype, display, void(Gametype this, void(string name, string icon) returns))
@@ -112,7 +112,7 @@ CLASS(Gametype, Object)
         this.team = (gflags & GAMETYPE_FLAG_TEAMPLAY);
         this.m_mutators = cons(sname, mutators);
         this.model2 = defaults;
-        this.gametype_description = gdescription;
+        this.m_description = gdescription;
         this.frags = (gflags & GAMETYPE_FLAG_USEPOINTS);
         this.m_priority = ((gflags & GAMETYPE_FLAG_PREFERRED) ? 2 : ((gflags & GAMETYPE_FLAG_PRIORITY) ? 1 : 0));
         this.m_hidelimits = (gflags & GAMETYPE_FLAG_HIDELIMITS);
