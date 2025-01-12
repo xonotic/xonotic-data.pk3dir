@@ -1,5 +1,6 @@
-#include "sv_ice.qh"
+#include "ice.qh"
 
+#ifdef SVQC
 void nade_ice_freeze(entity freezefield, entity frost_target, float freezetime)
 {
 	frost_target.frozen_by = freezefield.realowner;
@@ -112,3 +113,4 @@ void nade_ice_boom(entity this)
 	else
 		setmodel(fountain, MDL_Null);
 }
+#endif // SVQC

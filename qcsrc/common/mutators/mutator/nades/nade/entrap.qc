@@ -1,6 +1,7 @@
-#include "sv_entrap.qh"
+#include "entrap.qh"
 
-#include "sv_veil.qh"
+#ifdef SVQC
+#include "veil.qh"
 
 void nade_entrap_touch(entity this, entity toucher)
 {
@@ -62,3 +63,4 @@ MUTATOR_HOOKFUNCTION(nades, MonsterMove)
 		mon.nade_veil_time = 0;
 	}
 }
+#endif // SVQC

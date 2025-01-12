@@ -39,30 +39,8 @@ int autocvar_g_nades_bonus_score_low;
 int autocvar_g_nades_bonus_score_high;
 int autocvar_g_nades_bonus_score_medium;
 int autocvar_g_nades_bonus_score_spree;
-#endif
+#endif // SVQC
 
-// use slots 70-100
-const int PROJECTILE_NADE = 71;
-const int PROJECTILE_NADE_BURN = 72;
-const int PROJECTILE_NADE_NAPALM = 73;
-const int PROJECTILE_NADE_NAPALM_BURN = 74;
-const int PROJECTILE_NAPALM_FOUNTAIN = 75;
-const int PROJECTILE_NADE_ICE = 76;
-const int PROJECTILE_NADE_ICE_BURN = 77;
-const int PROJECTILE_NADE_TRANSLOCATE = 78;
-const int PROJECTILE_NADE_SPAWN = 79;
-const int PROJECTILE_NADE_HEAL = 80;
-const int PROJECTILE_NADE_HEAL_BURN = 81;
-const int PROJECTILE_NADE_MONSTER = 82;
-const int PROJECTILE_NADE_MONSTER_BURN = 83;
-const int PROJECTILE_NADE_ENTRAP = 84;
-const int PROJECTILE_NADE_ENTRAP_BURN = 85;
-const int PROJECTILE_NADE_VEIL = 86;
-const int PROJECTILE_NADE_VEIL_BURN = 87;
-const int PROJECTILE_NADE_AMMO = 88;
-const int PROJECTILE_NADE_AMMO_BURN = 89;
-const int PROJECTILE_NADE_DARKNESS = 90;
-const int PROJECTILE_NADE_DARKNESS_BURN = 91;
 
 REGISTRY(Nades, BITS(4))
 REGISTER_REGISTRY(Nades)
@@ -86,6 +64,21 @@ ENDCLASS(Nade)
 REGISTER_NADE(Null, NEW(Nade));
 REGISTRY_DEFINE_GET(Nades, NADE_TYPE_Null)
 
+
+// use slots 70-100
+const int PROJECTILE_NADE = 71;
+const int PROJECTILE_NADE_BURN = 72;
+// the rest of these are defined in their individual files like nade/napalm.qh
+
+#ifdef GAMEQC
+#include "effects.inc"
+
+#define NADE_PROJECTILE(i, projectile, trail) MACRO_BEGIN \
+    this.m_projectile[i] = projectile; \
+    this.m_trail[i] = trail; \
+MACRO_END
+#endif // GAMEQC
+
 Nade Nade_FromProjectile(int proj)
 {
     FOREACH(Nades, true, {
@@ -94,9 +87,6 @@ Nade Nade_FromProjectile(int proj)
     return NADE_TYPE_Null;
 }
 
-#ifdef GAMEQC
-#include "effects.inc"
-#endif
 
 #include "all.inc"
 
@@ -142,10 +132,10 @@ void nades_GiveBonus(entity player, float score);
     /**/
 MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
 
-#endif
+#endif // SVQC
 
 #ifdef CSQC
 bool Projectile_isnade(int proj); // TODO: remove
 
 void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator
-#endif
+#endif // CSQC

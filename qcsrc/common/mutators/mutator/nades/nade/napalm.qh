@@ -1,5 +1,8 @@
 #pragma once
 
+#include <common/mutators/mutator/nades/nades.qh>
+
+#ifdef SVQC
 bool autocvar_g_nades_napalm;
 int autocvar_g_nades_napalm_ball_count;
 float autocvar_g_nades_napalm_ball_spread;
@@ -17,3 +20,14 @@ float autocvar_g_nades_napalm_burntime;
 bool autocvar_g_nades_napalm_selfdamage;
 
 void nade_napalm_boom(entity this);
+#endif // SVQC
+
+const int PROJECTILE_NADE_NAPALM = 73;
+const int PROJECTILE_NADE_NAPALM_BURN = 74;
+const int PROJECTILE_NAPALM_FOUNTAIN = 75;
+
+CLASS(NapalmNade, Nade)
+	ATTRIB(NapalmNade, m_color, vector, '2 0.5 0');
+	ATTRIB(NapalmNade, m_name, string, _("Napalm grenade"));
+	ATTRIB(NapalmNade, m_icon, string, "nade_napalm");
+ENDCLASS(NapalmNade)

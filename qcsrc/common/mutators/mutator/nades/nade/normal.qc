@@ -1,5 +1,6 @@
-#include "sv_normal.qh"
+#include "normal.qh"
 
+#ifdef SVQC
 void normal_nade_boom(entity this)
 {
 	RadiusDamage(this, this.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
@@ -7,3 +8,4 @@ void normal_nade_boom(entity this)
 	Damage_DamageInfo(this.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 		autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, this.projectiledeathtype, 0, this);
 }
+#endif // SVQC

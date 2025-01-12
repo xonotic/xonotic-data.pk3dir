@@ -22,7 +22,7 @@
 #include <common/minigames/sv_minigames.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <common/mutators/mutator/instagib/sv_instagib.qh>
-#include <common/mutators/mutator/nades/nade/sv_ice.qh>
+#include <common/mutators/mutator/nades/_mod.qh>
 #include <common/mutators/mutator/overkill/oknex.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/waypoints/all.qh>

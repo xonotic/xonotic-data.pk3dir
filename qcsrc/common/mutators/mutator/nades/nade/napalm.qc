@@ -1,5 +1,6 @@
-#include "sv_napalm.qh"
+#include "napalm.qh"
 
+#ifdef SVQC
 void napalm_damage(entity this, float dist, float damage, float edgedamage, float burntime)
 {
 	entity e;
@@ -174,3 +175,4 @@ void nade_napalm_boom(entity this)
 	setsize(fountain, '-16 -16 -16', '16 16 16');
 	CSQCProjectile(fountain, true, PROJECTILE_NAPALM_FOUNTAIN, true);
 }
+#endif // SVQC

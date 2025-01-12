@@ -1,3 +1,0 @@
-#pragma once
-
-void normal_nade_boom(entity this);

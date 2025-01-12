@@ -1,5 +1,6 @@
-#include "sv_heal.qh"
+#include "heal.qh"
 
+#ifdef SVQC
 void nade_heal_touch(entity this, entity toucher)
 {
 	float maxhealth;
@@ -37,3 +38,4 @@ void nade_heal_boom(entity this)
 	settouch(orb, nade_heal_touch);
 	orb.colormod = '1 0 0';
 }
+#endif // SVQC

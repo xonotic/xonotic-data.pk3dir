@@ -1,5 +1,6 @@
-#include "sv_monster.qh"
+#include "monster.qh"
 
+#ifdef SVQC
 #include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
 
@@ -17,3 +18,4 @@ void nade_monster_boom(entity this)
 		e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
 	e.monster_skill = MONSTER_SKILL_INSANE;
 }
+#endif // SVQC

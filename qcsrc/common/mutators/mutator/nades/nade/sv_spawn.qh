@@ -1,7 +1,0 @@
-#pragma once
-
-bool autocvar_g_nades_spawn = true;
-
-void nade_spawn_boom(entity this);
-void nade_spawn_SetSpawnHealth(entity player);
-bool nade_spawn_DestroyDamage(entity this, entity attacker);

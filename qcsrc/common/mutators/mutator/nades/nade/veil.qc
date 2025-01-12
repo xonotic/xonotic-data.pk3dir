@@ -1,6 +1,7 @@
-#include "sv_veil.qh"
+#include "veil.qh"
 
-#include "sv_entrap.qh"
+#ifdef SVQC
+#include "entrap.qh"
 
 void nade_veil_touch(entity this, entity toucher)
 {
@@ -41,3 +42,4 @@ void nade_veil_Apply(entity player)
 			player.alpha = player.nade_veil_prevalpha;
 	}
 }
+#endif // SVQC

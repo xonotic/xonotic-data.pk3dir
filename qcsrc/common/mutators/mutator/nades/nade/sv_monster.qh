@@ -1,8 +1,0 @@
-#pragma once
-
-// TODO: rename these to `monster`
-bool autocvar_g_nades_pokenade;
-string autocvar_g_nades_pokenade_monster_type;
-float autocvar_g_nades_pokenade_monster_lifetime;
-
-void nade_monster_boom(entity this);

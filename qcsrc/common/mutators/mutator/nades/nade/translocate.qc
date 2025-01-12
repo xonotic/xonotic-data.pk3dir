@@ -1,5 +1,6 @@
-#include "sv_translocate.qh"
+#include "translocate.qh"
 
+#ifdef SVQC
 void nade_translocate_boom(entity this)
 {
 	if(this.realowner.vehicle)
@@ -35,3 +36,4 @@ bool nade_translocate_DestroyDamage(entity this, entity attacker)
 	}
 	return false;
 }
+#endif // SVQC

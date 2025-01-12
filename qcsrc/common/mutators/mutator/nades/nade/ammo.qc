@@ -1,5 +1,6 @@
-#include "sv_ammo.qh"
+#include "ammo.qh"
 
+#ifdef SVQC
 void nade_ammo_touch(entity this, entity toucher)
 {
 	float maxammo = 999;
@@ -62,3 +63,4 @@ void nade_ammo_boom(entity this)
 	settouch(orb, nade_ammo_touch);
 	orb.colormod = '0.66 0.33 0';
 }
+#endif // SVQC

@@ -1,5 +1,6 @@
-#include "sv_spawn.qh"
+#include "spawn.qh"
 
+#ifdef SVQC
 void nade_spawn_boom(entity this)
 {
 	entity player = this.realowner;
@@ -30,3 +31,4 @@ bool nade_spawn_DestroyDamage(entity this, entity attacker)
 		Damage(this.realowner, attacker, attacker, autocvar_g_nades_spawn_destroy_damage, DEATH_TOUCHEXPLODE.m_id, DMG_NOWEP, this.realowner.origin, '0 0 0');
 	return false;
 }
+#endif // SVQC
