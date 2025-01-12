@@ -579,7 +579,7 @@ void HUD_StrafeHUD()
 			strafe_ratio = (moveangle - absolute_prebestangle) / (absolute_bestangle - absolute_prebestangle);
 		}
 
-		if(autocvar_hud_panel_strafehud_style == STRAFEHUD_STYLE_GRADIENT || autocvar_hud_panel_strafehud_style == STRAFEHUD_STYLE_SOFT_GRADIENT)
+		if(StrafeHUD_IsGradient(autocvar_hud_panel_strafehud_style))
 			currentangle_color = StrafeHUD_MixColors(
 				autocvar_hud_panel_strafehud_angle_neutral_color,
 				currentangle_color, fabs(strafe_ratio));

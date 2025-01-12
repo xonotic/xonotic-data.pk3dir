@@ -5,21 +5,17 @@
 // draw the strafe-o-meter bar
 // aligns HUD elements perfectly in the hud area
 // also deals with wrapping around on edges, different HUD styles, etc
-void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, float alpha, int type, int gradient_type, bool project_width, float range)
+void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, float alpha, int type, int gradient_type, float range)
 {
 	float offset = StrafeHUD_AngleToOffset(startangle % 360, range);
 	float width = StrafeHUD_AngleToWidth(offsetangle, range);
 	float mirror_offset;
 	float mirror_width;
 
-	if(type == STRAFEHUD_STYLE_SOFT_GRADIENT)
-	{
-		project_width = true; // must be fully projected for software gradients
-		if(gradient_type == STRAFEHUD_GRADIENT_NONE)
-			type = STRAFEHUD_STYLE_DRAWFILL;
-	}
+	if(StrafeHUD_IsGradient(type) && gradient_type == STRAFEHUD_GRADIENT_NONE)
+		type = STRAFEHUD_STYLE_DRAWFILL;
 
-	if(alpha <= 0 && type != STRAFEHUD_STYLE_GRADIENT && type != STRAFEHUD_STYLE_SOFT_GRADIENT || width <= 0)
+	if(alpha <= 0 && !StrafeHUD_IsGradient(type) || width <= 0)
 		return;
 
 	// how much is hidden by the current hud angle
@@ -56,7 +52,7 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 	// the accelerated gradient does the projection later
 	if(type != STRAFEHUD_STYLE_GRADIENT)
 	{
-		if(project_width && size.x > 0)
+		if(size.x > 0)
 			size.x = StrafeHUD_ProjectWidth(offset, size.x, range);
 
 		offset = StrafeHUD_ProjectOffset(offset, range, false);
@@ -83,7 +79,7 @@ void StrafeHUD_DrawStrafeHUD(float startangle, float offsetangle, vector color, 
 	// the accelerated gradient does the projection later
 	if(type != STRAFEHUD_STYLE_GRADIENT)
 	{
-		if(project_width && mirror_size.x > 0)
+		if(mirror_size.x > 0)
 			mirror_size.x = StrafeHUD_ProjectWidth(mirror_offset, mirror_size.x, range);
 
 		mirror_offset = StrafeHUD_ProjectOffset(mirror_offset, range, false);
@@ -325,4 +321,9 @@ vector StrafeHUD_CalculateTextIndicatorPosition(vector pos)
 	pos.z = 0;
 
 	return pos;
+}
+
+bool StrafeHUD_IsGradient(int style)
+{
+	return style == STRAFEHUD_STYLE_GRADIENT || style == STRAFEHUD_STYLE_SOFT_GRADIENT;
 }
