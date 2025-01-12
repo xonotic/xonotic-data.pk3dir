@@ -440,7 +440,7 @@ MUTATOR_HOOKFUNCTION(tka, Damage_Calculate) // for changing damage and force val
 			frag_damage *= autocvar_g_tka_ballcarrier_selfdamage;
 			frag_force *= autocvar_g_tka_ballcarrier_selfforce;
 		}
-		else // damage done to other ballcarriers
+		else // damage done to other players
 		{
 			frag_damage *= autocvar_g_tka_ballcarrier_damage;
 			frag_force *= autocvar_g_tka_ballcarrier_force;
@@ -453,7 +453,7 @@ MUTATOR_HOOKFUNCTION(tka, Damage_Calculate) // for changing damage and force val
 			frag_damage *= autocvar_g_tka_noncarrier_selfdamage;
 			frag_force *= autocvar_g_tka_noncarrier_selfforce;
 		}
-		else // damage done to other noncarriers
+		else // damage done to other players
 		{
 			frag_damage *= autocvar_g_tka_noncarrier_damage;
 			frag_force *= autocvar_g_tka_noncarrier_force;
