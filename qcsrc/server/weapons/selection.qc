@@ -129,7 +129,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 	return false;
 }
 
-float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, float complain, float skipmissing, .entity weaponentity)
+float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, bool complain, bool skipmissing, .entity weaponentity)
 {
 	// We cannot tokenize in this function, as GiveItems calls this
 	// function. Thus we must use car/cdr.
@@ -148,7 +148,10 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 	if(dir == 0)
 		switchtonext = 1;
 
+	// complain-specific vars
 	int c = 0;
+	entity wepcomplain = NULL;
+	int wepcomplainindex = 0;
 
 	string rest = weaponorder;
 	while(rest != "")
@@ -174,7 +177,15 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 		if((wep.spawnflags & WEP_FLAG_MUTATORBLOCKED) || have_other)
 			continue;
 
-		++c;
+		if(complain)
+		{
+			if(!wepcomplain || this.weaponcomplainindex == c)
+			{
+				wepcomplain = wep;
+				wepcomplainindex = c;
+			}
+			++c;
+		}
 
 		if(!skipmissing || client_hasweapon(this, wep, weaponentity, true, false))
 		{
@@ -201,42 +212,12 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 		else
 			return first_valid;
 	}
+
 	// complain (but only for one weapon on the button that has been pressed)
 	if(complain)
 	{
-		this.weaponcomplainindex += 1;
-		c = (this.weaponcomplainindex % c) + 1;
-		rest = weaponorder;
-		while(rest != "")
-		{
-			weaponwant = stof(car(rest)); rest = cdr(rest);
-			wep = REGISTRY_GET(Weapons, weaponwant);
-			wepset = wep.m_wepset;
-			if(imp >= 0)
-				if(wep.impulse != imp)
-					continue;
-
-			bool have_other = false;
-			FOREACH(Weapons, it != WEP_Null, {
-				if(i != weaponwant)
-				if(it.impulse == imp || imp < 0)
-				if((STAT(WEAPONS, this) | weaponsInMap) & it.m_wepset)
-					have_other = true;
-			});
-
-			// skip weapons we don't own that aren't normal and aren't in the map
-			if(!(STAT(WEAPONS, this) & wepset))
-			if(!(weaponsInMap & wepset))
-			if((wep.spawnflags & WEP_FLAG_MUTATORBLOCKED) || have_other)
-				continue;
-
-			--c;
-			if(c == 0)
-			{
-				client_hasweapon(this, wep, weaponentity, true, true);
-				break;
-			}
-		}
+		this.weaponcomplainindex = wepcomplainindex + 1;
+		client_hasweapon(this, wepcomplain, weaponentity, true, true);
 	}
 	return 0;
 }
@@ -303,7 +284,7 @@ void W_SwitchWeapon_TryOthers(entity this, Weapon w, .entity weaponentity)
 void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponentity)
 {
 	float w;
-	w = W_GetCycleWeapon(this, weaponorder, dir, -1, 1, true, weaponentity);
+	w = W_GetCycleWeapon(this, weaponorder, dir, -1, true, true, weaponentity);
 	if(w > 0)
 		W_SwitchWeapon(this, REGISTRY_GET(Weapons, w), weaponentity);
 }
@@ -311,7 +292,7 @@ void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponent
 void W_NextWeaponOnImpulse(entity this, float imp, .entity weaponentity)
 {
 	float w;
-	w = W_GetCycleWeapon(this, CS_CVAR(this).cvar_cl_weaponpriority, +1, imp, 1, (CS_CVAR(this).cvar_cl_weaponimpulsemode == 0), weaponentity);
+	w = W_GetCycleWeapon(this, CS_CVAR(this).cvar_cl_weaponpriority, +1, imp, true, (CS_CVAR(this).cvar_cl_weaponimpulsemode == 0), weaponentity);
 	if(w > 0)
 		W_SwitchWeapon(this, REGISTRY_GET(Weapons, w), weaponentity);
 }
