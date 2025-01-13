@@ -525,6 +525,12 @@ const string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
 const string DIGITS = "0123456789";
 #define IS_DIGIT(d) (strstrofs(DIGITS, (d), 0) >= 0)
 
+ERASEABLE
+string escapeCarets(string s)
+{
+	return strreplace("^", "^^", s);
+}
+
 // returns true if the caret at position pos is escaped
 ERASEABLE
 bool isCaretEscaped(string theText, float pos)
