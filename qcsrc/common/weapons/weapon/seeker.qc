@@ -266,7 +266,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_FLAC_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_SEEKER, flac_damage), thiswep.m_id | HITTYPE_SECONDARY);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_SEEKER_FLAC_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_SEEKER, flac_damage), thiswep.m_id | HITTYPE_SECONDARY);
 	w_shotorg += f_diff;
 
 	// uses hagar effects!
@@ -653,28 +653,14 @@ METHOD(Seeker, wr_impacteffect, void(entity thiswep, entity actor))
 		{
 			pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
 			if(!w_issilent)
-			{
-				if(w_random<0.15)
-					sound(actor, CH_SHOTS, SND_TAGEXP1, 1, ATTEN_NORM);
-				else if(w_random<0.7)
-					sound(actor, CH_SHOTS, SND_TAGEXP2, 1, ATTEN_NORM);
-				else
-					sound(actor, CH_SHOTS, SND_TAGEXP3, 1, ATTEN_NORM);
-			}
+				sound(actor, CH_SHOTS, SND_TAGEXP_RANDOM(), 1, ATTEN_NORM);
 		}
 	}
 	else
 	{
 		pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
 		if(!w_issilent)
-		{
-			if(w_random<0.15)
-				sound(actor, CH_SHOTS, SND_SEEKEREXP1, 1, ATTEN_NORM);
-			else if(w_random<0.7)
-				sound(actor, CH_SHOTS, SND_SEEKEREXP2, 1, ATTEN_NORM);
-			else
-				sound(actor, CH_SHOTS, SND_SEEKEREXP3, 1, ATTEN_NORM);
-		}
+			sound(actor, CH_SHOTS, SND_SEEKEREXP_RANDOM(), 1, ATTEN_NORM);
 	}
 }
 

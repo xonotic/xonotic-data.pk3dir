@@ -63,8 +63,8 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	this.nextthink = time + autocvar_g_keepawayball_respawntime;
 	navigation_dynamicgoal_set(this, NULL);
 
-	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
-	Send_Effect(EFFECT_ELECTRO_COMBO, this.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_KA_BALL_RESPAWN, oldballorigin, '0 0 0', 1);
+	Send_Effect(EFFECT_KA_BALL_RESPAWN, this.origin, '0 0 0', 1);
 
 	WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', NULL, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 	WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);

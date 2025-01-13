@@ -1,5 +1,13 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(OK_MG_VIEW, W_Model("h_ok_mg.iqm"));
+MODEL(OK_MG_WORLD, W_Model("v_ok_mg.md3"));
+MODEL(OK_MG_ITEM, W_Model("g_ok_mg.md3"));
+
+SOUND(OK_MG_FIRE, W_Sound("uzi_fire"));
+#endif
+
 CLASS(OverkillMachineGun, Weapon)
 /* spawnfunc */ ATTRIB(OverkillMachineGun, m_canonical_spawnfunc, string, "weapon_okmachinegun");
 /* ammotype  */ ATTRIB(OverkillMachineGun, ammo_type, Resource, RES_BULLETS);
