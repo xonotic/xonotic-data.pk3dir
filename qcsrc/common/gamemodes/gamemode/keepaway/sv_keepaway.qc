@@ -431,7 +431,7 @@ MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force valu
 			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_selfdamage;
 			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_selfforce;
 		}
-		else // damage done to other ballcarriers
+		else // damage done to other players
 		{
 			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_damage;
 			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_force;
@@ -444,7 +444,7 @@ MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force valu
 			M_ARGV(4, float) *= autocvar_g_keepaway_noncarrier_selfdamage;
 			M_ARGV(6, vector) *= autocvar_g_keepaway_noncarrier_selfforce;
 		}
-		else // damage done to other noncarriers
+		else // damage done to other players
 		{
 			M_ARGV(4, float) *= autocvar_g_keepaway_noncarrier_damage;
 			M_ARGV(6, vector) *= autocvar_g_keepaway_noncarrier_force;
