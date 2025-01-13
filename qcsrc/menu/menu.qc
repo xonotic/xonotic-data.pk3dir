@@ -514,9 +514,9 @@ string gettooltip()
 				cvar_list = strcat(menuTooltipItem.controlledCvar, " ", cvar_list);
 			else
 				cvar_list = menuTooltipItem.controlledCvar;
-			s = strcat("[", cvar_list,
+			s = strcat("^3", cvar_list,
 				" ^7\"",    cvar_string(menuTooltipItem.controlledCvar), "^7\" "
-				"^8[\"", cvar_defstring(menuTooltipItem.controlledCvar), "^8\"]^7]");
+				"^8[\"", cvar_defstring(menuTooltipItem.controlledCvar), "^8\"]^7");
 		}
 		else if (menuTooltipItem.onClickCommand)
 			s = strcat("<", menuTooltipItem.onClickCommand, "^7>");
@@ -532,15 +532,15 @@ string gettooltip()
 				s = strcat(s, "\n\n", _("Has complicated requirements"));
 			else if (menuTooltipItem.cvarString_setDependent)
 				s = strcat(s, "\n\n",
-					sprintf(_("Requires %s not equal to \"%s^7\""), cvar_string(menuTooltipItem.cvarString_setDependent), menuTooltipItem.cvarValue_setDependent));
+					sprintf(_("Requires ^3%s^7 not equal to \"%s^7\""), cvar_string(menuTooltipItem.cvarString_setDependent), menuTooltipItem.cvarValue_setDependent));
 			else if (menuTooltipItem.cvar_setDependent)
 			{
 				s = strcat(s, "\n\n");
 #define TOOLTIP_MAKE_DEPENDENCY_STRING_NUMERIC(e, cvarStr, cvarMin, cvarMax) \
 				(e.(cvarMin) == e.(cvarMax) \
-					? sprintf("%s \"%s\"",                            e.(cvarStr), ftos_mindecimals(e.(cvarMin))) : (e.(cvarMin) < e.(cvarMax) \
-					? sprintf(_("%s in range \"%s\" to \"%s\""),      e.(cvarStr), ftos_mindecimals(e.(cvarMin)), ftos_mindecimals(e.(cvarMax))) \
-					: sprintf(_("%s outside range \"%s\" to \"%s\""), e.(cvarStr), ftos_mindecimals(e.(cvarMax)), ftos_mindecimals(e.(cvarMin))) \
+					? sprintf("^3%s^7 \"%s\"",                            e.(cvarStr), ftos_mindecimals(e.(cvarMin))) : (e.(cvarMin) < e.(cvarMax) \
+					? sprintf(_("^3%s^7 in range \"%s\" to \"%s\""),      e.(cvarStr), ftos_mindecimals(e.(cvarMin)), ftos_mindecimals(e.(cvarMax))) \
+					: sprintf(_("^3%s^7 outside range \"%s\" to \"%s\""), e.(cvarStr), ftos_mindecimals(e.(cvarMax)), ftos_mindecimals(e.(cvarMin))) \
 				))
 
 				string cvar1_s, cvar2_s, cvar3_s;
