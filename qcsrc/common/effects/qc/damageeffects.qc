@@ -20,6 +20,7 @@ bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 	WriteShort(MSG_ENTITY, floor(this.velocity.y / 4));
 	WriteShort(MSG_ENTITY, floor(this.velocity.z / 4));
 	WriteByte(MSG_ENTITY, this.species);
+	WriteByte(MSG_ENTITY, this.colormap);
 	return true;
 }
 
@@ -52,6 +53,8 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.species = bloodtype & BITS(4); // it only uses bits from 0 to 3, see SPECIES_* constants
 	if(rad_negative)
 		e.species |= BIT(7);
+
+	e.colormap = (teamplay) ? dmgowner.team : dmgowner.clientcolors; // NOTE: doesn't work on non-clients
 
 	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
 }
@@ -212,12 +215,28 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	bool rad_negative = (species & BIT(7));
 	species = (species & BITS(4));
 
+	int dmg_colors = ReadByte();
+
 	return = true;
 
 	if (!isNew)
 		return;
 
 	forcemul = (rad_negative ? -1 : 1);
+	// team color logic copied from projectiles
+	int tcolor = dmg_colors;
+	if(teamplay)
+	{
+		if(dmg_colors)
+			tcolor = (dmg_colors - 1) * 0x11;
+		else
+			tcolor = 0x00;
+		tcolor |= BIT(10); // RENDER_COLORMAPPED
+	}
+
+	// set globally so weapon impacts can use them
+	particles_colormin = colormapPaletteColor(floor(tcolor / 16), false);
+	particles_colormax = colormapPaletteColor(tcolor % 16, true);
 
 	FOREACH_ENTITY_RADIUS(w_org, rad + MAX_DAMAGEEXTRARADIUS, !it.tag_entity && !is_pure(it), {
 		vector nearest = NearestPointOnBox(it, w_org);

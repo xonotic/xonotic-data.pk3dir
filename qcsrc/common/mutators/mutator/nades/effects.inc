@@ -1,25 +1,8 @@
 #include <common/effects/all.qh>
 
-EFFECT(0, NADE_EXPLODE_RED,         "nade_red_explode")
-EFFECT(0, NADE_EXPLODE_BLUE,        "nade_blue_explode")
-EFFECT(0, NADE_EXPLODE_YELLOW,      "nade_yellow_explode")
-EFFECT(0, NADE_EXPLODE_PINK,        "nade_pink_explode")
-EFFECT(0, NADE_EXPLODE_NEUTRAL,     "nade_neutral_explode")
-EFFECT(0, NADE_EXPLODE_GREEN,       "nade_green_explode")
-EFFECT(0, NADE_EXPLODE_BROWN,       "nade_brown_explode")
-EFFECT(0, NADE_EXPLODE_PURPLE,      "nade_purple_explode")
+EFFECT(0, NADE_EXPLODE,             "nade_neutral_explode")
 
-entity EFFECT_NADE_EXPLODE(int teamid)
-{
-    switch (teamid) {
-        case NUM_TEAM_1:    return EFFECT_NADE_EXPLODE_RED;
-        case NUM_TEAM_2:    return EFFECT_NADE_EXPLODE_BLUE;
-        case NUM_TEAM_3:    return EFFECT_NADE_EXPLODE_YELLOW;
-        case NUM_TEAM_4:    return EFFECT_NADE_EXPLODE_PINK;
-        default:		    return EFFECT_NADE_EXPLODE_NEUTRAL;
-    }
-}
-
+// TODO: these are used on the server side (BAD)
 EFFECT(1, NADE_TRAIL_RED,           "nade_red")
 EFFECT(1, NADE_TRAIL_BLUE,          "nade_blue")
 EFFECT(1, NADE_TRAIL_YELLOW,        "nade_yellow")
