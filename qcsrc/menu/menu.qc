@@ -504,9 +504,9 @@ entity m_findtooltipitem(entity root, vector pos)
 }
 string gettooltip()
 {
+	string s;
 	if (menu_tooltips == 2)
 	{
-		string s;
 		if (menuTooltipItem.controlledCvar)
 		{
 			string cvar_list = getCvarsMulti(menuTooltipItem);
@@ -514,23 +514,62 @@ string gettooltip()
 				cvar_list = strcat(menuTooltipItem.controlledCvar, " ", cvar_list);
 			else
 				cvar_list = menuTooltipItem.controlledCvar;
-			s = strcat("[", cvar_list, " \"", cvar_string(menuTooltipItem.controlledCvar), "\"]");
+			s = strcat("^3", cvar_list,
+				" ^7\"",    cvar_string(menuTooltipItem.controlledCvar), "^7\" "
+				"^8[\"", cvar_defstring(menuTooltipItem.controlledCvar), "^8\"]^7");
 		}
 		else if (menuTooltipItem.onClickCommand)
-		{
-			s = strcat("<", menuTooltipItem.onClickCommand, ">");
-		}
+			s = strcat("<", menuTooltipItem.onClickCommand, "^7>");
 		else
+			s = "";
+
+		if (menuTooltipItem.tooltip)
+			s = (s == "" ? menuTooltipItem.tooltip : strcat(menuTooltipItem.tooltip, "\n\n", s));
+
+		if (menuTooltipItem.disabled)
 		{
-			return menuTooltipItem.tooltip;
+			if (menuTooltipItem.func_setDependent)
+				s = strcat(s, "\n\n", _("Has complicated requirements"));
+			else if (menuTooltipItem.cvarString_setDependent)
+				s = strcat(s, "\n\n",
+					sprintf(_("Requires ^3%s^7 not equal to \"%s^7\""), cvar_string(menuTooltipItem.cvarString_setDependent), menuTooltipItem.cvarValue_setDependent));
+			else if (menuTooltipItem.cvar_setDependent)
+			{
+				s = strcat(s, "\n\n");
+#define TOOLTIP_MAKE_DEPENDENCY_STRING_NUMERIC(e, cvarStr, cvarMin, cvarMax) \
+				(e.(cvarMin) == e.(cvarMax) \
+					? sprintf("^3%s^7 \"%s\"",                            e.(cvarStr), ftos_mindecimals(e.(cvarMin))) : (e.(cvarMin) < e.(cvarMax) \
+					? sprintf(_("^3%s^7 in range \"%s\" to \"%s\""),      e.(cvarStr), ftos_mindecimals(e.(cvarMin)), ftos_mindecimals(e.(cvarMax))) \
+					: sprintf(_("^3%s^7 outside range \"%s\" to \"%s\""), e.(cvarStr), ftos_mindecimals(e.(cvarMax)), ftos_mindecimals(e.(cvarMin))) \
+				))
+
+				string cvar1_s, cvar2_s, cvar3_s;
+				cvar1_s = TOOLTIP_MAKE_DEPENDENCY_STRING_NUMERIC(menuTooltipItem, cvar_setDependent,  cvarMin_setDependent,  cvarMax_setDependent);
+				if (menuTooltipItem.cvar2_setDependent)
+				{
+					cvar2_s = TOOLTIP_MAKE_DEPENDENCY_STRING_NUMERIC(menuTooltipItem, cvar2_setDependent, cvar2Min_setDependent, cvar2Max_setDependent);
+					if (menuTooltipItem.cvar3_setDependent)
+					{
+						cvar3_s = TOOLTIP_MAKE_DEPENDENCY_STRING_NUMERIC(menuTooltipItem, cvar3_setDependent, cvar3Min_setDependent, cvar3Max_setDependent);
+						s = strcat(s, sprintf(_("Requires %s, %s, and %s"), cvar1_s, cvar2_s, cvar3_s));
+					}
+					else
+						s = strcat(s, sprintf((menuTooltipItem.op_setDependent ? _("Requires %s or %s") : _("Requires %s and %s")), cvar1_s, cvar2_s));
+				}
+				else
+					s = strcat(s, sprintf(_("Requires %s"), cvar1_s));
+#undef TOOLTIP_MAKE_DEPENDENCY_STRING_NUMERIC
+			}
+			// if this point is reached, it's disabled for some other unknown reason
 		}
-		if (menuTooltipItem.tooltip) return strcat(menuTooltipItem.tooltip, " ", s);
-		return s;
 	}
-	return menuTooltipItem.tooltip;
+	else
+		s = menuTooltipItem.tooltip;
+	return s;
 }
 void m_tooltip(vector pos)
 {
+	const float MAX_TOOLTIP_LINES = 16;
 	static string prev_tooltip;
 	entity it;
 	menu_tooltips = cvar("menu_tooltips");
@@ -590,18 +629,27 @@ void m_tooltip(vector pos)
 
 					strcpy(menuTooltipText, gettooltip());
 
-					int i = 0;
 					float w = 0;
-					for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i)
+					float lines = 0;
+					int n = tokenizebyseparator(menuTooltipText, "\n");
+					for (int k = 0; k < n && lines <= MAX_TOOLTIP_LINES; ++k)
 					{
-						string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
-						if (i == 16)
-							s = "...";
-						float f = draw_TextWidth(s, false, fontsize);
-						if (f > w) w = f;
+						if (argv(k) == "")
+						{
+							lines += 0.5; // insert a half-height separator between paragraphs (marked by 2 newlines)
+							continue;
+						}
+						for (getWrappedLine_remaining = argv(k); getWrappedLine_remaining && lines <= MAX_TOOLTIP_LINES; ++lines)
+						{
+							string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithColors);
+							if (lines + 1 > MAX_TOOLTIP_LINES)
+								s = "...";
+							float f = draw_TextWidth_WithColors(s, fontsize);
+							if (f > w) w = f;
+						}
 					}
 					menuTooltipSize.x = w + 2 * (SKINMARGIN_TOOLTIP_x / conwidth);
-					menuTooltipSize.y = i * fontsize.y + 2 * (SKINMARGIN_TOOLTIP_y / conheight);
+					menuTooltipSize.y = lines * fontsize.y + 2 * (SKINMARGIN_TOOLTIP_y / conheight);
 					menuTooltipSize.z = 0;
 				}
 				break;
@@ -662,13 +710,23 @@ void m_tooltip(vector pos)
 			p = menuTooltipOrigin;
 			p.x += SKINMARGIN_TOOLTIP_x / conwidth;
 			p.y += SKINMARGIN_TOOLTIP_y / conheight;
-			int i = 0;
-			for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i, p.y += fontsize.y)
+			float lines = 0;
+			int n = tokenizebyseparator(menuTooltipText, "\n");
+			for (int k = 0; k < n && lines <= MAX_TOOLTIP_LINES; ++k)
 			{
-				string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
-				if (i == 16)
-					s = "...";
-				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, false);
+				if (argv(k) == "")
+				{
+					p.y += fontsize.y / 2;
+					continue;
+				}
+				for (getWrappedLine_remaining = argv(k); getWrappedLine_remaining && lines <= MAX_TOOLTIP_LINES; ++lines)
+				{
+					string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithColors);
+					if (lines + 1 > MAX_TOOLTIP_LINES)
+						s = "...";
+					draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, true);
+					p.y += fontsize.y;
+				}
 			}
 		}
 	}

@@ -112,20 +112,6 @@ void makeCallback(entity e, entity cbent, void(entity, entity) cbfunc)
 }
 
 .void(entity) draw_setDependent;
-.string cvar_setDependent;
-.float cvarMin_setDependent;
-.float cvarMax_setDependent;
-.string cvar2_setDependent;
-.float cvar2Min_setDependent;
-.float cvar2Max_setDependent;
-.string cvar3_setDependent;
-.float cvar3Min_setDependent;
-.float cvar3Max_setDependent;
-.float op_setDependent;
-.string cvarString_setDependent;
-.string cvarValue_setDependent;
-.float(entity) func_setDependent;
-.bool disabled;
 void setDependent_Check(entity e)
 {
 	bool disabled_prev = e.disabled;
