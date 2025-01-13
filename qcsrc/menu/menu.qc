@@ -522,18 +522,18 @@ string gettooltip()
 			s = "";
 
 		if (menuTooltipItem.tooltip)
-			s = (s == "" ? menuTooltipItem.tooltip : strcat(menuTooltipItem.tooltip, " ", s));
+			s = (s == "" ? menuTooltipItem.tooltip : strcat(menuTooltipItem.tooltip, "\n\n", s));
 
 		if (menuTooltipItem.disabled)
 		{
 			if (menuTooltipItem.func_setDependent)
-				s = strcat(s, "; ", _("Has complicated requirements"));
+				s = strcat(s, "\n\n", _("Has complicated requirements"));
 			else if (menuTooltipItem.cvarString_setDependent)
-				s = strcat(s, "; ",
+				s = strcat(s, "\n\n",
 					sprintf(_("Requires %s not equal to \"%s\""), cvar_string(menuTooltipItem.cvarString_setDependent), menuTooltipItem.cvarValue_setDependent));
 			else if (menuTooltipItem.cvar_setDependent)
 			{
-				s = strcat(s, "; ");
+				s = strcat(s, "\n\n");
 #define TOOLTIP_MAKE_DEPENDENCY_STRING_NUMERIC(e, cvarStr, cvarMin, cvarMax) \
 				(e.(cvarMin) == e.(cvarMax) \
 					? sprintf("%s \"%s\"",                            e.(cvarStr), ftos_mindecimals(e.(cvarMin))) : (e.(cvarMin) < e.(cvarMax) \
@@ -567,6 +567,7 @@ string gettooltip()
 }
 void m_tooltip(vector pos)
 {
+	const float MAX_TOOLTIP_LINES = 16;
 	static string prev_tooltip;
 	entity it;
 	menu_tooltips = cvar("menu_tooltips");
@@ -626,18 +627,27 @@ void m_tooltip(vector pos)
 
 					strcpy(menuTooltipText, gettooltip());
 
-					int i = 0;
 					float w = 0;
-					for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i)
+					float lines = 0;
+					int n = tokenizebyseparator(menuTooltipText, "\n");
+					for (int k = 0; k < n && lines <= MAX_TOOLTIP_LINES; ++k)
 					{
-						string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
-						if (i == 16)
-							s = "...";
-						float f = draw_TextWidth(s, false, fontsize);
-						if (f > w) w = f;
+						if (argv(k) == "")
+						{
+							lines += 0.5; // insert a half-height separator between paragraphs (marked by 2 newlines)
+							continue;
+						}
+						for (getWrappedLine_remaining = argv(k); getWrappedLine_remaining && lines <= MAX_TOOLTIP_LINES; ++lines)
+						{
+							string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
+							if (lines + 1 > MAX_TOOLTIP_LINES)
+								s = "...";
+							float f = draw_TextWidth(s, false, fontsize);
+							if (f > w) w = f;
+						}
 					}
 					menuTooltipSize.x = w + 2 * (SKINMARGIN_TOOLTIP_x / conwidth);
-					menuTooltipSize.y = i * fontsize.y + 2 * (SKINMARGIN_TOOLTIP_y / conheight);
+					menuTooltipSize.y = lines * fontsize.y + 2 * (SKINMARGIN_TOOLTIP_y / conheight);
 					menuTooltipSize.z = 0;
 				}
 				break;
@@ -698,13 +708,23 @@ void m_tooltip(vector pos)
 			p = menuTooltipOrigin;
 			p.x += SKINMARGIN_TOOLTIP_x / conwidth;
 			p.y += SKINMARGIN_TOOLTIP_y / conheight;
-			int i = 0;
-			for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i, p.y += fontsize.y)
+			float lines = 0;
+			int n = tokenizebyseparator(menuTooltipText, "\n");
+			for (int k = 0; k < n && lines <= MAX_TOOLTIP_LINES; ++k)
 			{
-				string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
-				if (i == 16)
-					s = "...";
-				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, false);
+				if (argv(k) == "")
+				{
+					p.y += fontsize.y / 2;
+					continue;
+				}
+				for (getWrappedLine_remaining = argv(k); getWrappedLine_remaining && lines <= MAX_TOOLTIP_LINES; ++lines)
+				{
+					string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
+					if (lines + 1 > MAX_TOOLTIP_LINES)
+						s = "...";
+					draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, false);
+					p.y += fontsize.y;
+				}
 			}
 		}
 	}
