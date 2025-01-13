@@ -514,7 +514,9 @@ string gettooltip()
 				cvar_list = strcat(menuTooltipItem.controlledCvar, " ", cvar_list);
 			else
 				cvar_list = menuTooltipItem.controlledCvar;
-			s = strcat("[", cvar_list, " \"", cvar_string(menuTooltipItem.controlledCvar), "\"]");
+			s = strcat("[", cvar_list,
+				" \"",     escapeCarets(cvar_string(menuTooltipItem.controlledCvar)), "\" "
+				"^8\"", escapeCarets(cvar_defstring(menuTooltipItem.controlledCvar)), "\"^7]");
 		}
 		else if (menuTooltipItem.onClickCommand)
 		{
@@ -594,10 +596,10 @@ void m_tooltip(vector pos)
 					float w = 0;
 					for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i)
 					{
-						string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
+						string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithColors);
 						if (i == 16)
 							s = "...";
-						float f = draw_TextWidth(s, false, fontsize);
+						float f = draw_TextWidth_WithColors(s, fontsize);
 						if (f > w) w = f;
 					}
 					menuTooltipSize.x = w + 2 * (SKINMARGIN_TOOLTIP_x / conwidth);
@@ -665,10 +667,10 @@ void m_tooltip(vector pos)
 			int i = 0;
 			for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i, p.y += fontsize.y)
 			{
-				string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
+				string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithColors);
 				if (i == 16)
 					s = "...";
-				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, false);
+				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, true);
 			}
 		}
 	}
