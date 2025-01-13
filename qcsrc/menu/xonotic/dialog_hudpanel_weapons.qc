@@ -18,16 +18,14 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Fade out after:")));
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Fade out after:")));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_timeout"))));
 				e.addValue(e, _("Never"), "0");
 				for(i = 1; i <= 10; ++i)
 					e.addValue(e, strzone(sprintf(_("%ds"), i)), strzone(ftos(i)));
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Fade effect:")));
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Fade effect:")));
 		setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_timeout_effect"))));
 				e.addValue(e, ZCTX(_("EF^None")),  "0");
@@ -36,9 +34,9 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 				e.addValue(e, ZCTX(_("EF^Both")),  "3");
 				e.configureXonoticTextSliderValues(e);
 			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");
+
 	me.TR(me);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Weapon icons:")));
-		me.TD(me, 1, 2.6, e = makeXonoticCheckBox(0, "hud_panel_weapons_onlyowned", _("Show only owned weapons")));
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_weapons_onlyowned", _("Show only owned weapons")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Noncurrent alpha:")));
@@ -51,22 +49,22 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 			setDependent(e, "hud_panel_weapons_onlyowned", 0, 0);
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_weapons_noncurrent_scale"));
 			setDependent(e, "hud_panel_weapons_onlyowned", 0, 0);
+
 	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Show weapon ID as:")));
-			me.TD(me, 1, 2.4/3, e = makeXonoticRadioButton(2, "hud_panel_weapons_label", "0", ZCTX(_("SHOWAS^None"))));
-			me.TD(me, 1, 2.4/3, e = makeXonoticRadioButton(2, "hud_panel_weapons_label", "1", _("Number")));
-			me.TD(me, 1, 2.4/3, e = makeXonoticRadioButton(2, "hud_panel_weapons_label", "2", _("Bind")));
+			me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(2, "hud_panel_weapons_label", "0", ZCTX(_("SHOWAS^None"))));
+			me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(2, "hud_panel_weapons_label", "1", _("Number")));
+			me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(2, "hud_panel_weapons_label", "2", _("Bind")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Weapon ID scale:")));
 			setDependent(e, "hud_panel_weapons_label", 1, 2);
 			me.TD(me, 1, 2.4, e = makeXonoticSlider(0.1, 1, 0.05, "hud_panel_weapons_label_scale"));
 			setDependent(e, "hud_panel_weapons_label", 1, 2);
+
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3.8/2, e = makeXonoticCheckBox(0, "hud_panel_weapons_accuracy", _("Show Accuracy")));
-		me.TD(me, 1, 3.8/2, e = makeXonoticCheckBox(0, "hud_panel_weapons_ammo", _("Show Ammo")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "hud_panel_weapons_ammo", _("Show Ammo")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "hud_panel_weapons_accuracy", _("Show Accuracy")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Ammo bar alpha:")));

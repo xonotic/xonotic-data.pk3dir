@@ -14,9 +14,6 @@ void XonoticHUDVoteDialog_fill(entity me)
 	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Votes:")));
-	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Alpha after voting:")));
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_vote_alreadyvoted_alpha"));
 }

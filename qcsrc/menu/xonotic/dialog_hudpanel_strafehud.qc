@@ -56,14 +56,6 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 			}
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TD(me, 1, 1.9, e = makeXonoticCheckBox(0, "_hud_panel_strafehud_demo", _("Demo mode")));
-
-		me.TDempty(me, 0.2);
-
-		me.TD(me, 1, 1.9, e = makeXonoticButton(_("Reset colors"), '0 0 0'));
-			e.onClick = StrafeHUD_ColorReset;
-			e.onClickEntity = me;
-	me.TR(me);
 		me.TD(me, 1, 1.9, e = makeXonoticTextLabel(0, _("Strafe bar:")));
 
 		me.TDempty(me, 0.2);
@@ -131,4 +123,12 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 		me.TD(me, 1, 0.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bestangle_alpha"));
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "hud_panel_strafehud_bestangle", _("Enable")));
+	me.TR(me);
+		me.TD(me, 1, 1.9, e = makeXonoticCheckBox(0, "_hud_panel_strafehud_demo", _("Demo mode")));
+
+		me.TDempty(me, 0.2);
+
+		me.TD(me, 1, 1.9, e = makeXonoticButton(_("Reset colors"), '0 0 0'));
+			e.onClick = StrafeHUD_ColorReset;
+			e.onClickEntity = me;
 }

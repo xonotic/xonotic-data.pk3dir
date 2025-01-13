@@ -6,7 +6,7 @@ CLASS(XonoticHUDItemsTimeDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDItemsTimeDialog, title, string, _("Items Time Panel"));
 	ATTRIB(XonoticHUDItemsTimeDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
 	ATTRIB(XonoticHUDItemsTimeDialog, intendedWidth, float, 0.4);
-	ATTRIB(XonoticHUDItemsTimeDialog, rows, float, 16.5);
+	ATTRIB(XonoticHUDItemsTimeDialog, rows, float, 16);
 	ATTRIB(XonoticHUDItemsTimeDialog, columns, float, 4);
 	ATTRIB(XonoticHUDItemsTimeDialog, name, string, "HUDitemstime");
 ENDCLASS(XonoticHUDItemsTimeDialog)
