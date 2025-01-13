@@ -33,7 +33,7 @@ CLASS(VaporizerCells, Ammo)
 /* refname     */ ATTRIB(VaporizerCells, netname, string, "vaporizer_cells");
 /* itemname    */ ATTRIB(VaporizerCells, m_name, string, _("Vaporizer ammo"));
 /* icon        */ ATTRIB(VaporizerCells, m_icon, string, "ammo_supercells");
-/* icon        */ ATTRIB(VaporizerCells, m_color, vector, '0.816 0.941 0.541');
+/* color       */ ATTRIB(VaporizerCells, m_color, vector, '0.816 0.941 0.541');
 #ifdef SVQC
 /* botvalue    */ ATTRIB(VaporizerCells, m_botvalue, int, 2000);
 /* itemid      */ ATTRIB(VaporizerCells, m_itemid, int, IT_RESOURCE);
