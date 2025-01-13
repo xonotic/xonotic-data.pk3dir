@@ -8,8 +8,7 @@
 #include <common/items/_mod.qh>
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/triggers.qh>
-#include <common/mutators/mutator/buffs/buffs.qh>
-#include <common/mutators/mutator/buffs/sv_buffs.qh>
+#include <common/mutators/mutator/buffs/_mod.qh>
 #include <common/mutators/mutator/instagib/sv_instagib.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
