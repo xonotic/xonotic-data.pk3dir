@@ -6,7 +6,7 @@ CLASS(OverkillShotgun, Weapon)
 /* impulse   */ ATTRIB(OverkillShotgun, impulse, int, 2);
 /* flags     */ ATTRIB(OverkillShotgun, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED);
 /* rating    */ ATTRIB(OverkillShotgun, bot_pickupbasevalue, float, 6000);
-/* color     */ ATTRIB(OverkillShotgun, m_color, vector, '0.5 0.25 0');
+/* color     */ ATTRIB(OverkillShotgun, m_color, vector, '0.518 0.608 0.659');
 /* modelname */ ATTRIB(OverkillShotgun, mdl, string, "ok_shotgun");
 #ifdef GAMEQC
 /* model     */ ATTRIB(OverkillShotgun, m_model, Model, MDL_OK_SHOTGUN_ITEM);
