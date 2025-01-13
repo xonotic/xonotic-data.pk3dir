@@ -207,6 +207,7 @@ void cvar_changes_init()
 		BADPREFIX("v_");
 		BADPREFIX("vid_");
 		BADPREFIX("crosshair");
+		BADPREFIX("notification_");
 		BADCVAR("mod_q3bsp_lightmapmergepower");
 		BADCVAR("mod_q3bsp_nolightmaps");
 		BADCVAR("fov");
@@ -215,6 +216,10 @@ void cvar_changes_init()
 		BADCVAR("bgmvolume");
 		BADCVAR("in_pitch_min");
 		BADCVAR("in_pitch_max");
+		BADCVAR("bottomcolor");
+		BADCVAR("topcolor");
+		BADCVAR("playermodel");
+		BADCVAR("prvm_language");
 
 		// private
 		BADCVAR("developer");
@@ -324,6 +329,7 @@ void cvar_changes_init()
 		BADCVAR("g_maplist_mostrecent");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_termsofservice_url");
+		BADCVAR("sv_adminnick");
 
 		v = cvar_string(k);
 		d = cvar_defstring(k);
@@ -419,7 +425,6 @@ void cvar_changes_init()
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
 		BADPREFIX("net_");
-		BADPREFIX("notification_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
