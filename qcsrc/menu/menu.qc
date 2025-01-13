@@ -514,10 +514,12 @@ string gettooltip()
 				cvar_list = strcat(menuTooltipItem.controlledCvar, " ", cvar_list);
 			else
 				cvar_list = menuTooltipItem.controlledCvar;
-			s = strcat("[", cvar_list, " \"", cvar_string(menuTooltipItem.controlledCvar), "\"]");
+			s = strcat("[", cvar_list,
+				" ^7\"",    cvar_string(menuTooltipItem.controlledCvar), "^7\" "
+				"^8[\"", cvar_defstring(menuTooltipItem.controlledCvar), "^8\"]^7]");
 		}
 		else if (menuTooltipItem.onClickCommand)
-			s = strcat("<", menuTooltipItem.onClickCommand, ">");
+			s = strcat("<", menuTooltipItem.onClickCommand, "^7>");
 		else
 			s = "";
 
@@ -530,7 +532,7 @@ string gettooltip()
 				s = strcat(s, "\n\n", _("Has complicated requirements"));
 			else if (menuTooltipItem.cvarString_setDependent)
 				s = strcat(s, "\n\n",
-					sprintf(_("Requires %s not equal to \"%s\""), cvar_string(menuTooltipItem.cvarString_setDependent), menuTooltipItem.cvarValue_setDependent));
+					sprintf(_("Requires %s not equal to \"%s^7\""), cvar_string(menuTooltipItem.cvarString_setDependent), menuTooltipItem.cvarValue_setDependent));
 			else if (menuTooltipItem.cvar_setDependent)
 			{
 				s = strcat(s, "\n\n");
@@ -639,10 +641,10 @@ void m_tooltip(vector pos)
 						}
 						for (getWrappedLine_remaining = argv(k); getWrappedLine_remaining && lines <= MAX_TOOLTIP_LINES; ++lines)
 						{
-							string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
+							string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithColors);
 							if (lines + 1 > MAX_TOOLTIP_LINES)
 								s = "...";
-							float f = draw_TextWidth(s, false, fontsize);
+							float f = draw_TextWidth_WithColors(s, fontsize);
 							if (f > w) w = f;
 						}
 					}
@@ -719,10 +721,10 @@ void m_tooltip(vector pos)
 				}
 				for (getWrappedLine_remaining = argv(k); getWrappedLine_remaining && lines <= MAX_TOOLTIP_LINES; ++lines)
 				{
-					string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
+					string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithColors);
 					if (lines + 1 > MAX_TOOLTIP_LINES)
 						s = "...";
-					draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, false);
+					draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, true);
 					p.y += fontsize.y;
 				}
 			}
