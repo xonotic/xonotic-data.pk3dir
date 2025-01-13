@@ -3,7 +3,7 @@
 #include <client/draw.qh>
 #include <client/items/items.qh>
 #include <client/view.qh>
-#include <common/mutators/mutator/nades/nades.qh>
+#include <common/mutators/mutator/nades/_mod.qh>
 #include <common/resources/resources.qh>
 #include <common/wepent.qh>
 
