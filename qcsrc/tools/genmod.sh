@@ -17,48 +17,42 @@ function hash() {
 	git hash-object "$1"
 }
 
-function print_noifdef() {
+function print_ifdef() {
 	local filename="$1"
 	local pathtofile="$2"
 	local filetype="$3"
-	local currentqc="$4" # Current ifdef QC VM
+	local outputfile="${MOD}.$filetype"
+	local currentqc="$4"  # Current ifdef QC VM type
+	local nextqc="${5-NONE}" # Next ifdef QC VM type
 
 	# End previous ifdef if required
-	if [ "$currentqc" != "NONE" ]
+	if [ "$currentqc" != "$nextqc" ] \
+	&& [ "$currentqc" != "NONE" ]
 	then
-		printf "#endif\n" >> "${MOD}.$filetype"
-	fi
-
-	# Include the file
-	printf "#include <%s>\n" "$pathtofile$filename" >> "${MOD}.$filetype"
-
-	# Return next ifdef QC VM type
-	echo NONE
-}
-function print_ifdef() {
-	local filename="$4$1"
-	local pathtofile="$2"
-	local filetype="$3"
-	local nextqc="$5" # Next ifdef QC VM type
-	local currentqc="$6" # Current ifdef QC VM type
-
-	# End previous ifdef if required
-	if [ "$currentqc" != "$nextqc" ] && [ "$currentqc" != "NONE" ]
-	then
-		printf "#endif\n" >> "${MOD}.$filetype"
+		printf "#endif\n" >> "$outputfile"
 	fi
 
 	# Start new ifdef if required
-	if [ "$currentqc" != "$nextqc" ]
+	if [ "${nextqc-}" != "NONE" ] \
+	&& [ "$currentqc" != "$nextqc" ]
 	then
-		printf "#ifdef %s\n" "$nextqc" >> "${MOD}.$filetype"
+		printf "#ifdef %s\n" "$nextqc" >> "$outputfile"
 	fi
 
-	# Include the file
-	printf "\t#include <%s>\n" "$pathtofile$filename" >> "${MOD}.$filetype"
+	# Update
+	currentqc="$nextqc"
 
-	# Return next ifdef QC VM type
-	echo "$nextqc"
+	# Include the file
+	if [ "$currentqc" != "NONE" ]
+	then
+		# Indent if inside an ifdef block
+		printf "\t#include <%s>\n" "$pathtofile$filename" >> "$outputfile"
+	else
+		printf   "#include <%s>\n" "$pathtofile$filename" >> "$outputfile"
+	fi
+
+	# "Return" the current (potentially changed) ifdef QC VM type
+	echo "$currentqc"
 }
 
 function genmod() {
@@ -96,8 +90,8 @@ function genmod() {
 		#
 		# file.qc into _mod.inc
 		# file.qh into _mod.qh
-		if [[ -f "$f"          ]]; then ifdef_inc=$(print_noifdef $f            $CTX "inc" $ifdef_inc); fi
-		if [[ -f "${f%.qc}.qh" ]]; then ifdef_qh=$( print_noifdef "${f%.qc}.qh" $CTX "qh"  $ifdef_qh);  fi
+		if [[ -f "$f"          ]]; then ifdef_inc=$(print_ifdef "$f"          "$CTX" "inc" "$ifdef_inc"); fi
+		if [[ -f "${f%.qc}.qh" ]]; then ifdef_qh=$( print_ifdef "${f%.qc}.qh" "$CTX" "qh"  "$ifdef_qh" ); fi
 
 		# Print the following template:
 		#
@@ -108,21 +102,21 @@ function genmod() {
 		# CSQC
 		# cl_file.qc into _mod.inc
 		# cl_file.qh into _mod.qh
-		if [[ -f "cl_$f"          ]]; then ifdef_inc=$(print_ifdef $f            $CTX "inc" "cl_" "CSQC" $ifdef_inc); fi
-		if [[ -f "cl_${f%.qc}.qh" ]]; then ifdef_qh=$( print_ifdef "${f%.qc}.qh" $CTX "qh"  "cl_" "CSQC" $ifdef_qh);  fi
+		if [[ -f "cl_$f"          ]]; then ifdef_inc=$(print_ifdef "cl_$f"          "$CTX" "inc" "$ifdef_inc" "CSQC"); fi
+		if [[ -f "cl_${f%.qc}.qh" ]]; then ifdef_qh=$( print_ifdef "cl_${f%.qc}.qh" "$CTX" "qh"  "$ifdef_qh"  "CSQC");  fi
 		# SVQC
 		# sv_file.qc into _mod.inc
 		# sv_file.qh into _mod.qh
-		if [[ -f "sv_$f"          ]]; then ifdef_inc=$(print_ifdef $f            $CTX "inc" "sv_" "SVQC" $ifdef_inc); fi
-		if [[ -f "sv_${f%.qc}.qh" ]]; then ifdef_qh=$( print_ifdef "${f%.qc}.qh" $CTX "qh"  "sv_" "SVQC" $ifdef_qh);  fi
+		if [[ -f "sv_$f"          ]]; then ifdef_inc=$(print_ifdef "sv_$f"          "$CTX" "inc" "$ifdef_inc" "SVQC"); fi
+		if [[ -f "sv_${f%.qc}.qh" ]]; then ifdef_qh=$( print_ifdef "sv_${f%.qc}.qh" "$CTX" "qh"  "$ifdef_qh"  "SVQC");  fi
 		# MENUQC
 		# ui_file.qc into _mod.inc
 		# ui_file.qh into _mod.qh
-		if [[ -f "ui_$f"          ]]; then ifdef_inc=$(print_ifdef $f            $CTX "inc" "ui_" "MENUQC" $ifdef_inc); fi
-		if [[ -f "ui_${f%.qc}.qh" ]]; then ifdef_qh=$( print_ifdef "${f%.qc}.qh" $CTX "qh"  "ui_" "MENUQC" $ifdef_qh);  fi
+		if [[ -f "ui_$f"          ]]; then ifdef_inc=$(print_ifdef "ui_$f"          "$CTX" "inc" "$ifdef_inc" "MENUQC"); fi
+		if [[ -f "ui_${f%.qc}.qh" ]]; then ifdef_qh=$( print_ifdef "ui_${f%.qc}.qh" "$CTX" "qh"  "$ifdef_qh"  "MENUQC");  fi
 	done
-	if [ $ifdef_inc != "NONE" ]; then printf "#endif\n" >> "${MOD}.inc"; fi
-	if [ $ifdef_qh  != "NONE" ]; then printf "#endif\n" >> "${MOD}.qh";  fi
+	if [ "$ifdef_inc" != "NONE" ]; then printf "#endif\n" >> "${MOD}.inc"; fi
+	if [ "$ifdef_qh"  != "NONE" ]; then printf "#endif\n" >> "${MOD}.qh";  fi
 
 	declare -l rec=1
 
