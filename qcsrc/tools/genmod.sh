@@ -18,15 +18,47 @@ function hash() {
 }
 
 function print_noifdef() {
-	if [ $4 != "NONE" ]; then printf "#endif\n" >> "${MOD}.$3"; fi
-	printf "#include <%s>\n" "$2$1"             >> "${MOD}.$3"
+	local filename="$1"
+	local pathtofile="$2"
+	local filetype="$3"
+	local currentqc="$4" # Current ifdef QC VM
+
+	# End previous ifdef if required
+	if [ "$currentqc" != "NONE" ]
+	then
+		printf "#endif\n" >> "${MOD}.$filetype"
+	fi
+
+	# Include the file
+	printf "#include <%s>\n" "$pathtofile$filename" >> "${MOD}.$filetype"
+
+	# Return next ifdef QC VM type
 	echo NONE
 }
 function print_ifdef() {
-	if [ $6 != $5 -a $6 != "NONE" ]; then printf "#endif\n"       >> "${MOD}.$3"; fi
-	if [ $6 != $5                 ]; then printf "#ifdef %s\n" $5 >> "${MOD}.$3"; fi
-	printf "\t#include <%s>\n" "$2$4$1"                           >> "${MOD}.$3"
-	echo $5
+	local filename="$4$1"
+	local pathtofile="$2"
+	local filetype="$3"
+	local nextqc="$5" # Next ifdef QC VM type
+	local currentqc="$6" # Current ifdef QC VM type
+
+	# End previous ifdef if required
+	if [ "$currentqc" != "$nextqc" ] && [ "$currentqc" != "NONE" ]
+	then
+		printf "#endif\n" >> "${MOD}.$filetype"
+	fi
+
+	# Start new ifdef if required
+	if [ "$currentqc" != "$nextqc" ]
+	then
+		printf "#ifdef %s\n" "$nextqc" >> "${MOD}.$filetype"
+	fi
+
+	# Include the file
+	printf "\t#include <%s>\n" "$pathtofile$filename" >> "${MOD}.$filetype"
+
+	# Return next ifdef QC VM type
+	echo "$nextqc"
 }
 
 function genmod() {
