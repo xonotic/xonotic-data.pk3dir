@@ -5,8 +5,10 @@
 # Translators:
 # Ben Dundon, 2023
 # Ben Dundon, 2023
+# k9er, 2024
 # k9 er, 2024
-# k9 er, 2024
+# k9er, 2024
+# k9er, 2024
 # Laurene Albrand, 2015
 # Laurene Albrand, 2015
 # Laurene Albrand, 2015
@@ -3146,7 +3148,7 @@ msgstr "^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"
 #: qcsrc/common/notifications/all.inc:361
 #, c-format
 msgid "^BG%s^K1 ended up in the wrong place%s%s"
-msgstr ""
+msgstr "^BG%s^K1 ended up in the wrong place%s%s"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format

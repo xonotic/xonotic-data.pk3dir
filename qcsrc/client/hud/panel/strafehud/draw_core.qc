@@ -1,4 +1,4 @@
-#include "core.qh"
+#include "draw_core.qh"
 
 #include <client/draw.qh>
 
@@ -90,7 +90,7 @@ void StrafeHUD_DrawStrafeMeter(
 				autocvar_hud_panel_strafehud_bar_accel_color,
 				autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
 				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_LEFT,
-				true, hudangle);
+				hudangle);
 
 		if(autocvar_hud_panel_strafehud_bar_preaccel && preaccelzone_offsetangle > 0)
 			StrafeHUD_DrawStrafeHUD(
@@ -98,7 +98,7 @@ void StrafeHUD_DrawStrafeMeter(
 				autocvar_hud_panel_strafehud_bar_preaccel_color,
 				autocvar_hud_panel_strafehud_bar_preaccel_alpha * panel_fg_alpha,
 				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_RIGHT,
-				true, hudangle);
+				hudangle);
 
 		// draw right acceleration zone
 		if(accelzone_offsetangle > 0)
@@ -107,7 +107,7 @@ void StrafeHUD_DrawStrafeMeter(
 				autocvar_hud_panel_strafehud_bar_accel_color,
 				autocvar_hud_panel_strafehud_bar_accel_alpha * panel_fg_alpha,
 				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_RIGHT,
-				true, hudangle);
+				hudangle);
 
 		if(autocvar_hud_panel_strafehud_bar_preaccel && preaccelzone_offsetangle > 0)
 			StrafeHUD_DrawStrafeHUD(
@@ -115,7 +115,7 @@ void StrafeHUD_DrawStrafeMeter(
 				autocvar_hud_panel_strafehud_bar_preaccel_color,
 				autocvar_hud_panel_strafehud_bar_preaccel_alpha * panel_fg_alpha,
 				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_LEFT,
-				true, hudangle);
+				hudangle);
 
 		// draw overturn zone
 		if(overturn_offsetangle > 0)
@@ -124,7 +124,7 @@ void StrafeHUD_DrawStrafeMeter(
 				autocvar_hud_panel_strafehud_bar_overturn_color,
 				autocvar_hud_panel_strafehud_bar_overturn_alpha * panel_fg_alpha,
 				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_BOTH,
-				true, hudangle);
+				hudangle);
 
 		// draw neutral zone
 		if(neutral_offsetangle > 0)
@@ -133,7 +133,7 @@ void StrafeHUD_DrawStrafeMeter(
 				autocvar_hud_panel_strafehud_bar_neutral_color,
 				autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha,
 				autocvar_hud_panel_strafehud_style, STRAFEHUD_GRADIENT_NONE,
-				true, hudangle);
+				hudangle);
 	}
 }
 

@@ -4015,7 +4015,7 @@ msgstr "^BG%s^K1 s'est cassé les oreilles avec son propre @!#%% Tuba%s%s"
 #: qcsrc/common/notifications/all.inc:534
 #, c-format
 msgid "^BG%s%s^K1 has been sublimated by ^BG%s^K1's Vaporizer%s%s"
-msgstr "^BG%s%s^K1 a été sublimé par le Vaporizer de^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 a été sublimé par le Vaporizer de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:535
 #, c-format

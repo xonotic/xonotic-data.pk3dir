@@ -18,7 +18,7 @@ CLASS(Raptor, Vehicle)
 /* tags       */ ATTRIB(Raptor, tag_view, string, "tag_camera");
 #endif
 /* netname    */ ATTRIB(Raptor, netname, string, "raptor");
-/* fullname   */ ATTRIB(Raptor, vehicle_name, string, _("Raptor"));
+/* fullname   */ ATTRIB(Raptor, m_name, string, _("Raptor"));
 /* icon       */ ATTRIB(Raptor, m_icon, string, "vehicle_raptor");
 ENDCLASS(Raptor)
 REGISTER_VEHICLE(RAPTOR, NEW(Raptor));

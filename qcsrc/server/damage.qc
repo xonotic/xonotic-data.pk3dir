@@ -832,7 +832,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 						}
 					}
 				}
-				else if (IS_PLAYER(attacker) && !STAT(FROZEN, victim)) // same team
+				else if (IS_PLAYER(attacker) && !STAT(FROZEN, victim) && !(deathtype & HITTYPE_SPAM)) // same team
 				{
 					if (deathtype != DEATH_FIRE.m_id)
 					{
@@ -919,7 +919,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 	total_damage_to_creatures = 0;
 
-	if(!(deathtype & HITTYPE_SOUND) && !(deathtype & HITTYPE_SPAM)) // do not send bandwidth-hogging radial spam attacks
+	if(!(deathtype & (HITTYPE_SOUND | HITTYPE_SPAM))) // do not send bandwidth-hogging radial spam attacks
 	{
 		force = inflictorvelocity;
 		if(force == '0 0 0')

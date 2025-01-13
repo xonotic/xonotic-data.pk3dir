@@ -129,8 +129,8 @@ Monster invasion_PickMonster(int supermonster_count)
 
 	FOREACH(Monsters, it != MON_Null,
 	{
-		if((it.spawnflags & MON_FLAG_HIDDEN) || (it.spawnflags & MONSTER_TYPE_PASSIVE) || (it.spawnflags & MONSTER_TYPE_FLY) || (it.spawnflags & MONSTER_TYPE_SWIM)
-			|| (it.spawnflags & MONSTER_SIZE_QUAKE) || ((it.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
+		if((it.spawnflags & (MON_FLAG_HIDDEN | MONSTER_TYPE_PASSIVE | MONSTER_TYPE_FLY | MONSTER_TYPE_SWIM | MONSTER_SIZE_QUAKE))
+		|| ((it.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
 			continue;
 		if(autocvar_g_invasion_zombies_only && !(it.spawnflags & MONSTER_TYPE_UNDEAD))
 			continue;
@@ -379,7 +379,7 @@ MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
 	mon.monster_skill = inv_monsterskill;
 
 	if(mon.monsterdef.spawnflags & MON_FLAG_SUPERMONSTER)
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, mon.monster_name);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, mon.m_name);
 }
 
 MUTATOR_HOOKFUNCTION(inv, SV_StartFrame)
