@@ -7723,8 +7723,8 @@ SUB(damage_hlac) {
 	MY(alpha_min) = 128;
 	MY(alpha_max) = 16;
 	MY(alpha_fade) = 128;
-	MY(color_min) = "0x880000";
-	MY(color_max) = "0xff4400";
+	MY(color_min) = "0x008800";
+	MY(color_max) = "0x44ff00";
 	MY(count) = 3;
 	MY(notunderwater) = true;
 	MY(originjitter) = '4.0 4.0 4.0';
@@ -9165,6 +9165,116 @@ SUB(item_despawn) {
 	MY(lightradiusfade) 64;
 	MY(lightcolor) '1 0.75 0.36';
 	MY(lightshadow) 1;
+}
+
+DEF(hlac_muzzleflash);
+// glow and light
+SUB(hlac_muzzleflash) {
+	MY(airfriction) = 10;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0x00cc00";
+	MY(color_max) = "0x00ff00";
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '0.4 0.8 0.2';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 100;
+	MY(sizeincrease) = -100;
+	MY(size_min) = 2;
+	MY(size_max) = 5;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 70;
+	MY(tex_max) = 70;
+	MY(type) = "smoke";
+}
+// electricity
+SUB(hlac_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 0;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x92e045";
+	MY(color_max) = "0x64f42a";
+	MY(count) = 15;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -400;
+	MY(spin_max) = 400;
+	MY(size_min) = 2;
+	MY(size_max) = 5;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(hlac_impact);
+// decal
+SUB(hlac_impact) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '0.4 0.8 0.2';
+	MY(lightradiusfade) = 500;
+	MY(lightradius) = 150;
+	MY(originjitter) = '14.0 14.0 14.0';
+	MY(size_min) = 12;
+	MY(size_max) = 12;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "decal";
+}
+// flare effect
+SUB(hlac_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x1be508";
+	MY(color_max) = "0xd5f0a1";
+	MY(countabsolute) = 1;
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 46;
+	MY(tex_max) = 46;
+	MY(type) = "static";
+}
+// sparks that rapidly expand and rapidly slow down to form an interesting spherical effect
+SUB(hlac_impact) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x92e045";
+	MY(color_max) = "0x54e51a";
+	MY(count) = 128;
+	MY(liquidfriction) = 2;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_min) = 45;
+	MY(tex_max) = 45;
+	MY(type) = "spark";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+SUB(hlac_impact) {
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x92e045";
+	MY(color_max) = "0xc7eda1";
+	MY(count) = 4;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = 6;
+	MY(size_min) = 12;
+	MY(size_max) = 12;
+	MY(tex_min) = 4;
+	MY(tex_max) = 6;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocitymultiplier) = 0.010000;
 }
 
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
