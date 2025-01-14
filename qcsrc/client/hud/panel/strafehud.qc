@@ -6,6 +6,7 @@
 #include <lib/csqcmodel/cl_player.qh>
 #include <common/physics/player.qh>
 #include <common/physics/movetypes/movetypes.qh>
+#include "racetimer.qh"
 
 // non-essential
 #include <client/view.qh> // for v_flipped state
@@ -25,14 +26,18 @@ void HUD_StrafeHUD()
 {
 	static float hud_lasttime = 0;
 	entity strafeplayer;
-	bool islocal;
+	bool is_local;
 
 	// generic hud routines
 	if(!autocvar__hud_configure)
 	{
-		if(!autocvar_hud_panel_strafehud ||
-		   (spectatee_status == -1 && (autocvar_hud_panel_strafehud == 1 || autocvar_hud_panel_strafehud == 3)) ||
-		   (autocvar_hud_panel_strafehud == 3 && !MUTATOR_CALLHOOK(HUD_StrafeHUD_showoptional))) { hud_lasttime = time; return; }
+		if(!autocvar_hud_panel_strafehud
+		|| (spectatee_status == -1 && (autocvar_hud_panel_strafehud == 1 || autocvar_hud_panel_strafehud == 3))
+		|| (autocvar_hud_panel_strafehud == 3 && !MUTATOR_CALLHOOK(HUD_StrafeHUD_showoptional)))
+		{
+			hud_lasttime = time;
+			return;
+		}
 	}
 
 	HUD_Panel_LoadCvars();
@@ -53,24 +58,28 @@ void HUD_StrafeHUD()
 	// find out whether the local csqcmodel entity is valid
 	if(spectatee_status > 0 || isdemo())
 	{
-		islocal = false;
+		is_local = false;
 		strafeplayer = CSQCModel_server2csqc(player_localentnum - 1);
 	}
 	else
 	{
-		islocal = true;
+		is_local = true;
 		strafeplayer = csqcplayer;
 	}
 
-	if(!csqcplayer || !strafeplayer) { hud_lasttime = time; return; }
+	if(!csqcplayer || !strafeplayer)
+	{
+		hud_lasttime = time;
+		return;
+	}
 
 	// draw strafehud
 
 	int keys = STAT(PRESSED_KEYS);
-	bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, islocal);
+	bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, is_local);
 
 	// does not get changed by ground timeout and is not affected by jump input
-	bool real_onground = islocal ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
+	bool real_onground = is_local ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
 
 	// does not get changed by ground timeout
 	bool real_onslick = false;
@@ -87,17 +96,10 @@ void HUD_StrafeHUD()
 	static bool onslick_last = false;
 	if(onground)
 	{
-		if(PHYS_FRICTION(strafeplayer) == 0)
-		{
-			onslick = true;
-		}
-		else // do not use IS_ONSLICK(), it only works for the local player and only if client prediction is enabled
-		{
-			trace_dphitq3surfaceflags = 0;
-			tracebox(strafeplayer.origin, strafeplayer.mins, strafeplayer.maxs, strafeplayer.origin - '0 0 1', MOVE_NOMONSTERS, strafeplayer);
-			onslick = trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK;
-		}
-		real_onslick = onslick;
+		// do not use IS_ONSLICK(), it only works for the local player and only if client prediction is enabled
+		trace_dphitq3surfaceflags = 0;
+		tracebox(strafeplayer.origin, strafeplayer.mins, strafeplayer.maxs, strafeplayer.origin - '0 0 1', MOVE_NOMONSTERS, strafeplayer);
+		real_onslick = onslick = trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK;
 
 		onground_lasttime = time;
 		onslick_last = onslick;
@@ -139,8 +141,8 @@ void HUD_StrafeHUD()
 	else
 		movespeed = min(movespeed, maxspeed);
 
-	int keys_fwd = StrafeHUD_DetermineForwardKeys(movement, keys, islocal);
-	float wishangle = StrafeHUD_DetermineWishAngle(movement, keys, islocal);
+	int keys_fwd = StrafeHUD_DetermineForwardKeys(movement, keys, is_local);
+	float wishangle = StrafeHUD_DetermineWishAngle(movement, keys, is_local);
 	float absolute_wishangle = fabs(wishangle); // unmodified by side strafing code
 	bool strafekeys = fabs(wishangle) > 45;
 
@@ -538,7 +540,8 @@ void HUD_StrafeHUD()
 
 	float text_offset_top;
 	float text_offset_bottom;
-	text_offset_top = text_offset_bottom = StrafeHUD_DrawSlickDetector(strafeplayer, real_onslick);
+	bool all_slick = PHYS_FRICTION(strafeplayer) == 0;
+	text_offset_top = text_offset_bottom = StrafeHUD_DrawSlickDetector(strafeplayer, all_slick && real_onground ? true : real_onslick);
 
 	if(autocvar_hud_panel_strafehud_direction)
 		StrafeHUD_DrawDirectionIndicator(direction, opposite_direction, fwd);
@@ -578,7 +581,7 @@ void HUD_StrafeHUD()
 			strafe_ratio = (moveangle - absolute_prebestangle) / (absolute_bestangle - absolute_prebestangle);
 		}
 
-		if(autocvar_hud_panel_strafehud_style == STRAFEHUD_STYLE_GRADIENT || autocvar_hud_panel_strafehud_style == STRAFEHUD_STYLE_FAST_GRADIENT)
+		if(StrafeHUD_IsGradient(autocvar_hud_panel_strafehud_style))
 			currentangle_color = StrafeHUD_MixColors(
 				autocvar_hud_panel_strafehud_angle_neutral_color,
 				currentangle_color, fabs(strafe_ratio));
@@ -605,7 +608,7 @@ void HUD_StrafeHUD()
 		indicator_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_switch_line_height, 10), 1);
 		indicator_size.z = 0;
 
-		float num_dashes = nearbyint(autocvar_hud_panel_strafehud_switch_line);
+		float num_dashes = rint(autocvar_hud_panel_strafehud_switch_line);
 		bool has_top_arrow = autocvar_hud_panel_strafehud_switch_arrow == 1 || autocvar_hud_panel_strafehud_switch_arrow >= 3;
 		bool has_bottom_arrow = autocvar_hud_panel_strafehud_switch_arrow >= 2;
 
@@ -650,7 +653,7 @@ void HUD_StrafeHUD()
 		indicator_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_bestangle_line_height, 10), 1);
 		indicator_size.z = 0;
 
-		float num_dashes = nearbyint(autocvar_hud_panel_strafehud_bestangle_line);
+		float num_dashes = rint(autocvar_hud_panel_strafehud_bestangle_line);
 		bool has_top_arrow = autocvar_hud_panel_strafehud_bestangle_arrow == 1 || autocvar_hud_panel_strafehud_bestangle_arrow >= 3;
 		bool has_bottom_arrow = autocvar_hud_panel_strafehud_bestangle_arrow >= 2;
 
@@ -686,7 +689,7 @@ void HUD_StrafeHUD()
 		indicator_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_wturn_line_height, 10), 1);
 		indicator_size.z = 0;
 
-		float num_dashes = nearbyint(autocvar_hud_panel_strafehud_wturn_line);
+		float num_dashes = rint(autocvar_hud_panel_strafehud_wturn_line);
 		bool has_top_arrow = autocvar_hud_panel_strafehud_wturn_arrow == 1 || autocvar_hud_panel_strafehud_wturn_arrow >= 3;
 		bool has_bottom_arrow = autocvar_hud_panel_strafehud_wturn_arrow >= 2;
 
@@ -719,7 +722,7 @@ void HUD_StrafeHUD()
 		indicator_size.y = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_line_height, 10), 1);
 		indicator_size.z = 0;
 
-		float num_dashes = nearbyint(autocvar_hud_panel_strafehud_angle_line);
+		float num_dashes = rint(autocvar_hud_panel_strafehud_angle_line);
 		bool has_top_arrow = autocvar_hud_panel_strafehud_angle_arrow == 1 || autocvar_hud_panel_strafehud_angle_arrow >= 3;
 		bool has_bottom_arrow = autocvar_hud_panel_strafehud_angle_arrow >= 2;
 
@@ -762,7 +765,7 @@ void HUD_StrafeHUD()
 	StrafeHUD_DrawVerticalAngle(strafeplayer, text_offset_top, text_offset_bottom);
 
 	draw_beginBoldFont();
-	StrafeHUD_DrawStartSpeed(speed, text_offset_top, text_offset_bottom);
+	StrafeHUD_DrawStartSpeed(race_timespeed, text_offset_top, text_offset_bottom);
 	StrafeHUD_DrawStrafeEfficiency(strafe_ratio, text_offset_top, text_offset_bottom);
 	StrafeHUD_DrawJumpHeight(strafeplayer, real_onground, swimming, text_offset_top, text_offset_bottom);
 	draw_endBoldFont();

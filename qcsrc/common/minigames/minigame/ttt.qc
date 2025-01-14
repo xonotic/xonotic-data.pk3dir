@@ -584,7 +584,7 @@ int ttt_client_event(entity minigame, string event, ...)
 		{
 			bool event_blocked = ((event == "key_released")
 				|| ((minigame.minigame_flags & TTT_TURN_TEAM) != minigame_self.team));
-			if (!(minigame.minigame_flags & TTT_TURN_WIN) && !(minigame.minigame_flags & TTT_TURN_DRAW))
+			if (!(minigame.minigame_flags & (TTT_TURN_WIN | TTT_TURN_DRAW)))
 			{
 				switch ( ...(0,int) )
 				{

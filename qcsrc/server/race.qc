@@ -939,11 +939,26 @@ bool race_waypointsprite_visible_for_player(entity this, entity player, entity v
 		return false;
 }
 
-void defrag_waypointsprites(entity targeted, entity checkpoint)
+void defrag_waypointsprites(entity targeted, entity checkpoint, int recursionlevel)
 {
 	// bones_was_here: spawn a waypoint for every entity with a bmodel
 	// that directly or indirectly targets this checkpoint
 	// (anything a player could touch or shoot to activate this cp)
+
+	// spam a few warnings so that larger link chain loops can be found
+	if (recursionlevel > 400)
+	{
+		LOG_WARNF("df cp wp loop: ^4\"target\" ^3\"%s\"^7, ^4\"targetname\" ^3\"%s\"^7",
+			targeted.classname,
+			targeted.targetname);
+	}
+	// avoid a stack overflow
+	if (recursionlevel > 420)
+	{
+		LOG_WARNF("Aborted creating defrag checkpoint waypointsprites for ^2%s^7 due to a loop",
+			checkpoint.classname);
+		return;
+	}
 
 	entity s = WP_RaceCheckpoint;
 	if (checkpoint.classname == "target_startTimer")
@@ -961,7 +976,7 @@ void defrag_waypointsprites(entity targeted, entity checkpoint)
 		}
 
 		if (t.targetname && t != checkpoint)
-			defrag_waypointsprites(t, checkpoint);
+			defrag_waypointsprites(t, checkpoint, ++recursionlevel);
 	}
 }
 
@@ -1061,7 +1076,7 @@ void trigger_race_checkpoint_verify(entity this)
 		if (defrag_ents) {
 			IL_EACH(g_race_targets, it.classname == "target_checkpoint" || it.classname == "target_startTimer" || it.classname == "target_stopTimer",
 			{
-				defrag_waypointsprites(it, it);
+				defrag_waypointsprites(it, it, 0);
 
 				if(it.classname == "target_checkpoint") {
 					if(it.race_checkpoint == -2)
