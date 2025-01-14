@@ -10,7 +10,5 @@
 #endif
 #ifdef SVQC
 	#include <common/mutators/mutator/overkill/sv_overkill.qc>
-#endif
-#ifdef SVQC
 	#include <common/mutators/mutator/overkill/sv_weapons.qc>
 #endif

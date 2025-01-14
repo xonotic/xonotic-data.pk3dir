@@ -1,0 +1,21 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+float autocvar_g_buffs_luck_chance = 0.15;
+float autocvar_g_buffs_luck_damagemultiplier = 3;
+
+float buff_Luck_CalculateDamage(float frag_damage);
+#endif // SVQC
+
+CLASS(LuckBuff, Buff)
+	ATTRIB(LuckBuff, m_name, string, _("Luck"));
+	ATTRIB(LuckBuff, netname, string, "luck");
+	ATTRIB(LuckBuff, m_icon, string, "buff_luck");
+	ATTRIB(LuckBuff, m_skin, int, 19);
+	ATTRIB(LuckBuff, m_color, vector, '1 0.23 0.44');
+ENDCLASS(LuckBuff)
+
+REGISTER_BUFF(LUCK, NEW(LuckBuff));
+BUFF_SPAWNFUNCS(luck, BUFF_LUCK)

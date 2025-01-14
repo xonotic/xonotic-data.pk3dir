@@ -65,8 +65,6 @@ string Buff_CompatName(string buffname);
 
 BUFF_SPAWNFUNCS(random, NULL)
 
-#include "all.inc"
-
 #ifdef GAMEQC
 REPLICATE_INIT(bool, cvar_cl_buffs_autoreplace);
 #endif
