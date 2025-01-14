@@ -816,6 +816,8 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 			me.TDempty(me, 0.2);
 			me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, strzone(hide_ondeath), _("Hide on death")));
 	}
+
+	me.gotoRC(me, me.currentRow + 0.5, 0); me.setFirstColumn(me, me.currentColumn);
 }
 
 bool isServerSingleplayer()

@@ -15,13 +15,9 @@ void XonoticHUDHealthArmorDialog_fill(entity me)
 	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Health/Armor:")));
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_healtharmor_combined", _("Combine health and armor")));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_healtharmor_combined", _("Combine health and armor")));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_healtharmor_flip", _("Flip health and armor positions")));
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_healtharmor_flip", _("Flip health and armor positions")));
 			setDependent(e, "hud_panel_healtharmor_combined", 0, 0);
 
 	me.TR(me);
@@ -39,18 +35,20 @@ void XonoticHUDHealthArmorDialog_fill(entity me)
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(100, 200, 10, "hud_panel_healtharmor_maxarmor"));
 			setDependent(e, "hud_panel_healtharmor_progressbar", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Status bar alignment:")));
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 3.8, e = makeXonoticTextLabel(0, _("Status bar alignment:")));
 			setDependent(e, "hud_panel_healtharmor_progressbar", 1, 1);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.95, e = makeXonoticRadioButton(2, "hud_panel_healtharmor_baralign", "0", _("Left")));
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 3.6/4, e = makeXonoticRadioButton(2, "hud_panel_healtharmor_baralign", "0", _("Left")));
 			setDependent(e, "hud_panel_healtharmor_progressbar", 1, 1);
-		me.TD(me, 1, 0.95, e = makeXonoticRadioButton(2, "hud_panel_healtharmor_baralign", "1", _("Right")));
+		me.TD(me, 1, 3.6/4, e = makeXonoticRadioButton(2, "hud_panel_healtharmor_baralign", "1", _("Right")));
 			setDependent(e, "hud_panel_healtharmor_progressbar", 1, 1);
-		me.TD(me, 1, 0.95, e = makeXonoticRadioButton(2, "hud_panel_healtharmor_baralign", "2", _("Inward")));
+		me.TD(me, 1, 3.6/4, e = makeXonoticRadioButton(2, "hud_panel_healtharmor_baralign", "2", _("Inward")));
 			setDependent(e, "hud_panel_healtharmor_progressbar", 1, 1);
-		me.TD(me, 1, 0.95, e = makeXonoticRadioButton(2, "hud_panel_healtharmor_baralign", "3", _("Outward")));
+		me.TD(me, 1, 3.6/4, e = makeXonoticRadioButton(2, "hud_panel_healtharmor_baralign", "3", _("Outward")));
 			setDependent(e, "hud_panel_healtharmor_progressbar", 1, 1);
+
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Icon alignment:")));
 	me.TR(me);
