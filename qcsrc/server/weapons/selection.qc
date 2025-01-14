@@ -139,6 +139,7 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, bo
 	first_valid = prev_valid = 0;
 	float weaponcur;
 	entity wep;
+	string rest;
 
 	if(skipmissing || this.(weaponentity).selectweapon == 0)
 		weaponcur = this.(weaponentity).m_switchweapon.m_id;
@@ -152,8 +153,33 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, bo
 	int c = 0;
 	entity wepcomplain = NULL;
 	int wepcomplainindex = 0;
+	bool have_other = false;
 
-	string rest = weaponorder;
+	// see if we have or can locate (not hidden), some other weapon in the group
+	WepSet customgroup = '0 0 0';
+	if(imp < 0) // custom cl_weaponpriorityN group
+	{
+		// These groups are client-specific, and (imp == -1) here,
+		// so generate a weapon set bitmask to represent the group.
+		rest = weaponorder;
+		while(rest != "")
+		{
+			weaponwant = stof(car(rest)); rest = cdr(rest);
+			customgroup |= REGISTRY_GET(Weapons, weaponwant).m_wepset;
+		}
+	}
+	else {} // standard weapon_group, defined by impulse sharing
+	FOREACH(Weapons, (imp >= 0 && it.impulse == imp) || (imp < 0 && (it.m_wepset & customgroup)),
+	{
+		if ((it.m_wepset & STAT(WEAPONS, this))
+		|| (it.m_wepset & weaponsInMap))
+		{
+			have_other = true;
+			break;
+		}
+	});
+
+	rest = weaponorder;
 	while(rest != "")
 	{
 		weaponwant = stof(car(rest)); rest = cdr(rest);
@@ -162,14 +188,6 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, bo
 		if(imp >= 0)
 		if(wep.impulse != imp)
 			continue;
-
-		bool have_other = false;
-		FOREACH(Weapons, it != WEP_Null, {
-			if(i != weaponwant)
-			if(it.impulse == imp || imp < 0)
-			if((STAT(WEAPONS, this) | weaponsInMap) & it.m_wepset)
-				have_other = true;
-		});
 
 		// skip weapons we don't own that aren't normal and aren't in the map
 		if(!(STAT(WEAPONS, this) & wepset))
