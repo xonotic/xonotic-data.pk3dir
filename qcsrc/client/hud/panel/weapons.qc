@@ -3,7 +3,7 @@
 #include <client/draw.qh>
 #include <client/view.qh>
 #include <common/wepent.qh>
-#include <common/mutators/mutator/nades/nades.qh>
+#include <common/mutators/mutator/nades/_mod.qh>
 #include <common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qh>
 #include <common/mutators/mutator/hook/cl_hook.qh>
 #include <common/weapons/weapon/blaster.qh>

@@ -6,3 +6,5 @@
 #ifdef SVQC
 	#include <common/mutators/mutator/buffs/sv_buffs.qh>
 #endif
+
+#include <common/mutators/mutator/buffs/buff/_mod.qh>

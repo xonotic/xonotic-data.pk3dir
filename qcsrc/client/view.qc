@@ -1306,7 +1306,7 @@ void View_PostProcessing()
 
 		// edge detection postprocess handling done second (used by hud_powerup)
 		float sharpen_intensity = 0;
-		FOREACH(StatusEffect, it.instanceOfPowerups,
+		FOREACH(StatusEffects, it.instanceOfPowerupStatusEffect,
 		{
 			float powerup_finished = StatusEffects_gettime(it, g_statuseffects) - time;
 			if(powerup_finished > 0)

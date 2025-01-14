@@ -12,8 +12,8 @@ CLASS(Powerup, Pickup)
 ENDCLASS(Powerup)
 
 #include <common/mutators/mutator/status_effects/all.qh>
-CLASS(Powerups, StatusEffects)
+CLASS(PowerupStatusEffect, StatusEffect)
 #ifdef GAMEQC
-    ATTRIB(Powerups, m_sound_rm, Sound, SND_POWEROFF);
+    ATTRIB(PowerupStatusEffect, m_sound_rm, Sound, SND_POWEROFF);
 #endif
-ENDCLASS(Powerups)
+ENDCLASS(PowerupStatusEffect)

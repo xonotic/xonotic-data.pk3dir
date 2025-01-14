@@ -2,120 +2,11 @@
 
 #include <common/teams.qh>
 
-#ifdef SVQC
-bool autocvar_g_nades;
-bool autocvar_g_nades_override_dropweapon = true;
-vector autocvar_g_nades_throw_offset;
-bool autocvar_g_nades_onspawn;
-int autocvar_g_nades_spawn_count;
-float autocvar_g_nades_spawn_health_respawn;
-float autocvar_g_nades_spawn_destroy_damage = 25;
-bool autocvar_g_nades_client_select;
-bool autocvar_g_nades_pickup = true;
-float autocvar_g_nades_pickup_time = 2;
-float autocvar_g_nades_nade_lifetime;
-float autocvar_g_nades_nade_minforce;
-float autocvar_g_nades_nade_maxforce;
-float autocvar_g_nades_nade_health;
-float autocvar_g_nades_nade_refire;
-float autocvar_g_nades_nade_damage;
-float autocvar_g_nades_nade_edgedamage;
-float autocvar_g_nades_nade_radius;
-float autocvar_g_nades_nade_force;
-int autocvar_g_nades_nade_newton_style;
-bool autocvar_g_nades_napalm;
-int autocvar_g_nades_napalm_ball_count;
-float autocvar_g_nades_napalm_ball_spread;
-float autocvar_g_nades_napalm_ball_damage;
-float autocvar_g_nades_napalm_ball_damageforcescale;
-float autocvar_g_nades_napalm_ball_lifetime;
-float autocvar_g_nades_napalm_ball_radius;
-bool autocvar_g_nades_napalm_blast;
-float autocvar_g_nades_napalm_fountain_lifetime;
-float autocvar_g_nades_napalm_fountain_delay;
-float autocvar_g_nades_napalm_fountain_radius;
-float autocvar_g_nades_napalm_fountain_damage;
-float autocvar_g_nades_napalm_fountain_edgedamage;
-float autocvar_g_nades_napalm_burntime;
-bool autocvar_g_nades_napalm_selfdamage;
-int autocvar_g_nades_nade_type;
-int autocvar_g_nades_bonus_type;
-bool autocvar_g_nades_bonus;
-bool autocvar_g_nades_bonus_onstrength;
-bool autocvar_g_nades_bonus_client_select;
-bool autocvar_g_nades_bonus_only;
-int autocvar_g_nades_bonus_max;
-int autocvar_g_nades_bonus_score_max;
-int autocvar_g_nades_bonus_score_time;
-int autocvar_g_nades_bonus_score_time_flagcarrier;
-int autocvar_g_nades_bonus_score_minor;
-int autocvar_g_nades_bonus_score_low;
-int autocvar_g_nades_bonus_score_high;
-int autocvar_g_nades_bonus_score_medium;
-int autocvar_g_nades_bonus_score_spree;
-bool autocvar_g_nades_ice = true;
-float autocvar_g_nades_ice_freeze_time;
-float autocvar_g_nades_ice_health;
-bool autocvar_g_nades_ice_explode;
-bool autocvar_g_nades_ice_teamcheck;
-bool autocvar_g_nades_translocate = true;
-float autocvar_g_nades_translocate_destroy_damage = 25;
-bool autocvar_g_nades_spawn = true;
-bool autocvar_g_nades_heal = true;
-float autocvar_g_nades_heal_time;
-float autocvar_g_nades_heal_rate;
-float autocvar_g_nades_heal_friend;
-float autocvar_g_nades_heal_foe;
-bool autocvar_g_nades_entrap;
-float autocvar_g_nades_entrap_strength = 0.01;
-float autocvar_g_nades_entrap_speed = 0.5;
-float autocvar_g_nades_entrap_radius = 500;
-float autocvar_g_nades_entrap_time = 10;
-bool autocvar_g_nades_veil;
-float autocvar_g_nades_veil_time = 8;
-float autocvar_g_nades_veil_radius = 300;
-bool autocvar_g_nades_ammo;
-float autocvar_g_nades_ammo_time;
-float autocvar_g_nades_ammo_rate;
-float autocvar_g_nades_ammo_friend;
-float autocvar_g_nades_ammo_foe;
-bool autocvar_g_nades_darkness;
-bool autocvar_g_nades_darkness_explode;
-bool autocvar_g_nades_darkness_teamcheck;
-float autocvar_g_nades_darkness_time;
-bool autocvar_g_nades_pokenade;
-string autocvar_g_nades_pokenade_monster_type;
-float autocvar_g_nades_pokenade_monster_lifetime;
-#endif
-
-// use slots 70-100
-const int PROJECTILE_NADE = 71;
-const int PROJECTILE_NADE_BURN = 72;
-const int PROJECTILE_NADE_NAPALM = 73;
-const int PROJECTILE_NADE_NAPALM_BURN = 74;
-const int PROJECTILE_NAPALM_FOUNTAIN = 75;
-const int PROJECTILE_NADE_ICE = 76;
-const int PROJECTILE_NADE_ICE_BURN = 77;
-const int PROJECTILE_NADE_TRANSLOCATE = 78;
-const int PROJECTILE_NADE_SPAWN = 79;
-const int PROJECTILE_NADE_HEAL = 80;
-const int PROJECTILE_NADE_HEAL_BURN = 81;
-const int PROJECTILE_NADE_MONSTER = 82;
-const int PROJECTILE_NADE_MONSTER_BURN = 83;
-const int PROJECTILE_NADE_ENTRAP = 84;
-const int PROJECTILE_NADE_ENTRAP_BURN = 85;
-const int PROJECTILE_NADE_VEIL = 86;
-const int PROJECTILE_NADE_VEIL_BURN = 87;
-const int PROJECTILE_NADE_AMMO = 88;
-const int PROJECTILE_NADE_AMMO_BURN = 89;
-const int PROJECTILE_NADE_DARKNESS = 90;
-const int PROJECTILE_NADE_DARKNESS_BURN = 91;
-
 REGISTRY(Nades, BITS(4))
 REGISTER_REGISTRY(Nades)
 REGISTRY_CHECK(Nades)
 
-#define REGISTER_NADE(id) REGISTER(Nades, NADE_TYPE, id, m_id, NEW(Nade))
+#define REGISTER_NADE(id, inst) REGISTER(Nades, NADE_TYPE, id, m_id, inst)
 
 CLASS(Nade, Object)
     ATTRIB(Nade, m_id, int, 0);
@@ -130,8 +21,22 @@ CLASS(Nade, Object)
     }
 ENDCLASS(Nade)
 
-REGISTER_NADE(Null);
+REGISTER_NADE(Null, NEW(Nade));
 REGISTRY_DEFINE_GET(Nades, NADE_TYPE_Null)
+
+// use slots 70-100
+const int PROJECTILE_NADE = 71;
+const int PROJECTILE_NADE_BURN = 72;
+// the rest of these are defined in their individual files like nade/napalm.qh
+
+#ifdef GAMEQC
+#include "effects.inc"
+
+#define NADE_PROJECTILE(i, projectile, trail) MACRO_BEGIN \
+    this.m_projectile[i] = projectile; \
+    this.m_trail[i] = trail; \
+MACRO_END
+#endif // GAMEQC
 
 Nade Nade_FromProjectile(int proj)
 {
@@ -141,11 +46,7 @@ Nade Nade_FromProjectile(int proj)
     return NADE_TYPE_Null;
 }
 
-#ifdef GAMEQC
-#include "effects.inc"
-#endif
-
-#include "nades.inc"
+#include "all.inc"
 
 .float orb_lifetime;
 .float orb_radius;
@@ -153,52 +54,4 @@ Nade Nade_FromProjectile(int proj)
 #ifdef GAMEQC
 REPLICATE_INIT(int, cvar_cl_nade_type);
 REPLICATE_INIT(string, cvar_cl_pokenade_type);
-#endif
-
-#ifdef SVQC
-
-.entity nade;
-.entity fake_nade;
-.float nade_refire;
-.float nade_special_time;
-.string pokenade_type;
-.entity nade_damage_target;
-.int cvar_cl_nade_type;
-.string cvar_cl_pokenade_type;
-.float toss_time;
-.float nade_show_particles;
-.float nade_veil_time;
-.float nade_veil_prevalpha;
-.float nade_entrap_time;
-.float nade_ammo_time;
-.float nade_darkness_time;
-
-bool orb_send(entity this, entity to, int sf);
-
-// Remove nades that are being thrown
-void nades_Clear(entity player);
-
-// Give a bonus grenade to a player
-void nades_GiveBonus(entity player, float score);
-
-/**
- * called to adjust nade damage and force on hit
- */
-#define EV_Nade_Damage(i, o) \
-    /** nade */   i(entity, MUTATOR_ARGV_0_entity) \
- 	/** weapon */ i(entity, MUTATOR_ARGV_1_entity) \
-    /** force */  i(vector, MUTATOR_ARGV_2_vector) \
-    /**/          o(vector, MUTATOR_ARGV_2_vector) \
- 	/** damage */ i(float,  MUTATOR_ARGV_3_float) \
-    /**/          o(float,  MUTATOR_ARGV_3_float) \
-    /**/
-MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
-
-#endif
-
-#ifdef CSQC
-bool Projectile_isnade(int proj); // TODO: remove
-
-vector nades_GetColor(entity def, int type_num);
-void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator
 #endif
