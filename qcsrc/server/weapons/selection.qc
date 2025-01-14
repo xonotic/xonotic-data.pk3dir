@@ -134,7 +134,6 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, bo
 	// We cannot tokenize in this function, as GiveItems calls this
 	// function. Thus we must use car/cdr.
 	float weaponwant, first_valid, prev_valid, switchtonext, switchtolast;
-	WepSet wepset = '0 0 0';
 	switchtonext = switchtolast = 0;
 	first_valid = prev_valid = 0;
 	float weaponcur;
@@ -172,7 +171,7 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, bo
 	FOREACH(Weapons, (imp >= 0 && it.impulse == imp) || (imp < 0 && (it.m_wepset & customgroup)),
 	{
 		if ((it.m_wepset & STAT(WEAPONS, this))
-		|| (it.m_wepset & weaponsInMap))
+		|| ((it.m_wepset & weaponsInMap) && !(it.spawnflags & WEP_FLAG_HIDDEN)))
 		{
 			have_other = true;
 			break;
@@ -184,16 +183,20 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, bo
 	{
 		weaponwant = stof(car(rest)); rest = cdr(rest);
 		wep = REGISTRY_GET(Weapons, weaponwant);
-		wepset = wep.m_wepset;
 		if(imp >= 0)
 		if(wep.impulse != imp)
 			continue;
 
 		// skip weapons we don't own that aren't normal and aren't in the map
-		if(!(STAT(WEAPONS, this) & wepset))
-		if(!(weaponsInMap & wepset))
-		if((wep.spawnflags & WEP_FLAG_MUTATORBLOCKED) || have_other)
-			continue;
+		if(!(STAT(WEAPONS, this) & wep.m_wepset))
+		{
+			if(wep.spawnflags & WEP_FLAG_HIDDEN)
+				continue;
+
+			if(!(weaponsInMap & wep.m_wepset))
+			if((wep.spawnflags & WEP_FLAG_MUTATORBLOCKED) || have_other)
+				continue;
+		}
 
 		if(complain)
 		{
@@ -232,7 +235,7 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, bo
 	}
 
 	// complain (but only for one weapon on the button that has been pressed)
-	if(complain)
+	if(wepcomplain)
 	{
 		this.weaponcomplainindex = wepcomplainindex + 1;
 		client_hasweapon(this, wepcomplain, weaponentity, true, true);
