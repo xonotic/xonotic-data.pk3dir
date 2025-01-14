@@ -61,9 +61,9 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Auto switch in CTS:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_autoswitch_cts"));
-			e.addValue(e, _("Default"), "0");
+			e.addValue(e, _("Default"), "-1");
 			e.addValue(e, _("Always"), "1");
-			e.addValue(e, _("Never"), "2");
+			e.addValue(e, _("Never"), "0");
 			e.configureXonoticTextSliderValues(e);
 			e.sendCvars = true;
 	me.TR(me);

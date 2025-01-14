@@ -93,6 +93,8 @@ void CSQC_Init(float apilevel, string enginename, float engineversion)
 
 	registercvar("cl_dodging", "0");
 
+	registercvar("cl_autoswitch_cts", "-1");
+
 	registercvar("cl_spawn_near_teammate", "1");
 
 	registercvar("cl_weapon_switch_reload", "1");
