@@ -73,6 +73,7 @@ CLASS(JetpackFuel, Ammo)
 /* refname    */ ATTRIB(JetpackFuel, netname, string, "fuel");
 /* itemname   */ ATTRIB(JetpackFuel, m_name, string, _("Fuel"));
 /* icon       */ ATTRIB(JetpackFuel, m_icon, string, "ammo_fuel");
+/* color      */ ATTRIB(JetpackFuel, m_color, vector, '0.984 0.878 0.506');
 #ifdef SVQC
 /* botvlaue   */ ATTRIB(JetpackFuel, m_botvalue, int, 2000);
 /* itemid     */ ATTRIB(JetpackFuel, m_itemid, int, IT_RESOURCE);

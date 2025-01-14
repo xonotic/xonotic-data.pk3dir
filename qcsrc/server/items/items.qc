@@ -7,8 +7,7 @@
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/_mod.qh>
-#include <common/mutators/mutator/buffs/buffs.qh>
-#include <common/mutators/mutator/buffs/sv_buffs.qh>
+#include <common/mutators/mutator/buffs/_mod.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
