@@ -529,7 +529,7 @@ string gettooltip()
 		if (menuTooltipItem.disabled)
 		{
 			if (menuTooltipItem.func_setDependent)
-				s = strcat(s, "\n\n", _("Has complicated requirements"));
+				s = strcat(s, "\n\n", _("Has special requirements"));
 			else if (menuTooltipItem.cvarString_setDependent)
 				s = strcat(s, "\n\n",
 					sprintf(_("Requires ^3%s^7 not equal to \"%s^7\""), cvar_string(menuTooltipItem.cvarString_setDependent), menuTooltipItem.cvarValue_setDependent));
