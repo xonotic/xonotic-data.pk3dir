@@ -331,8 +331,6 @@ vector Weapons_GetOffhands()
 {
 	if (!autocvar_hud_panel_weapons_offhand)
 		return vec2(0, 0);
-	if (autocvar__hud_configure)
-		return vec2(1, BIT(1));
 
 	// TODO: make this dynamic with an OffhandWeapon registry or something of the sorts
 	int bits = 0; // BIT(0) = nade, BIT(1) = hook, BIT(2) = blaster
@@ -353,6 +351,8 @@ vector Weapons_GetOffhands()
 		++total;
 	}
 
+	if (autocvar__hud_configure && !total)
+		return vec2(1, BIT(1));
 	return vec2(total, bits);
 }
 
