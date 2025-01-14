@@ -6,7 +6,7 @@
 REPLICATE_INIT(bool, cvar_cl_autoswitch);
 REPLICATE_INIT(int, cvar_cl_autoscreenshot);
 REPLICATE_INIT(bool, cvar_cl_clippedspectating);
-REPLICATE_INIT(bool, cvar_cl_cts_noautoswitch);
+REPLICATE_INIT(int, cvar_cl_autoswitch_cts);
 REPLICATE_INIT(vector, cvar_cl_handicap);
 REPLICATE_INIT(float, cvar_cl_handicap_damage_given);
 REPLICATE_INIT(float, cvar_cl_handicap_damage_taken);
@@ -15,7 +15,7 @@ REPLICATE_INIT(string, cvar_g_xonoticversion);
 REPLICATE(cvar_cl_autoswitch, bool, "cl_autoswitch");
 REPLICATE(cvar_cl_autoscreenshot, int, "cl_autoscreenshot");
 REPLICATE(cvar_cl_clippedspectating, bool, "cl_clippedspectating");
-REPLICATE(cvar_cl_cts_noautoswitch, bool, "cl_cts_noautoswitch");
+REPLICATE(cvar_cl_autoswitch_cts, int, "cl_autoswitch_cts");
 REPLICATE(cvar_cl_handicap, vector, "cl_handicap");
 REPLICATE(cvar_cl_handicap_damage_given, float, "cl_handicap_damage_given");
 REPLICATE(cvar_cl_handicap_damage_taken, float, "cl_handicap_damage_taken");
