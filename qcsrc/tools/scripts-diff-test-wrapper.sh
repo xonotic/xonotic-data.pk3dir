@@ -14,11 +14,14 @@ fi
 
 
 # Check that we do not already have changes
-STATE="$(git diff)"
-if [ -n "$STATE" ]
+if [ -n "$(git status --porcelain=v1)" ]
 then
 	echo
 	echo "$0: Do not run this script with changes in git index"
+	echo
+	echo
+	git status
+	echo
 	echo
 	exit 2
 fi
@@ -41,14 +44,13 @@ fi
 
 
 # Check that we did not produce changes
-STATE="$(git diff)"
-if [ -n "$STATE" ]
+if [ -n "$(git status --porcelain=v1)" ]
 then
 	echo
 	echo "$0: ${0%/*}/$1 produced a change in the repository:"
 	echo
 	echo
-	echo "$STATE"
+	git status
 	echo
 	echo
 	exit 5
