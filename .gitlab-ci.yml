@@ -34,9 +34,9 @@ test_compilation_units:
     - >
       if ! make test-diff ; then
         printf "\e[31m %s \e[0m\n" "Previous script in the pipeline produced a change."
-        printf "\e[31m %s \e[0m\n" "This is treated as a test failure. Please"
-        printf "\e[31m %s \e[0m\n" "run 'make test-diff' locally and address"
-        printf "\e[31m %s \e[0m\n" "the changes somehow in a commit."
+        printf "\e[31m %s \e[0m\n" "This is treated as a test failure."
+        printf "\e[31m %s \e[0m\n" "Please run 'make test-diff' locally"
+        printf "\e[31m %s \e[0m\n" "and address the changes somehow in a commit."
         exit 1
       fi
 
