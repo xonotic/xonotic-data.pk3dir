@@ -459,6 +459,8 @@ bool IsZooming(bool for_scrolling)
 	return zoomdir;
 }
 
+#define GET_ZOOMFACTOR() ((autocvar_cl_zoomfactor < 1 || autocvar_cl_zoomfactor > MAX_ZOOMFACTOR) ? 2.5 : autocvar_cl_zoomfactor)
+
 const float MAX_ZOOMFACTOR = 30;
 float zoomscroll_factor;
 float zoomscroll_factor_target;
@@ -479,9 +481,7 @@ float View_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	// at this point bInputType can only be 0 or 1 (key pressed or released)
 	bool key_pressed = (bInputType == 0);
 
-	float zoomfactor = autocvar_cl_zoomfactor;
-	if(zoomfactor < 1 || zoomfactor > MAX_ZOOMFACTOR)
-		zoomfactor = 2.5;
+	float zoomfactor = GET_ZOOMFACTOR();
 
 	// NOTE: cl_zoomscroll_factor_increase can be negative and if so zoom scroll direction is inverted
 	if(nPrimary == K_MWHEELUP)
@@ -515,9 +515,7 @@ vector GetCurrentFov(float fov)
 		zoomspeed = 3.5;
 	zoomsensitivity = autocvar_cl_zoomsensitivity;
 
-	zoomfactor = autocvar_cl_zoomfactor;
-	if(zoomfactor < 1 || zoomfactor > MAX_ZOOMFACTOR)
-		zoomfactor = 2.5;
+	zoomfactor = GET_ZOOMFACTOR();
 
 	if(zoomdir)
 		zoomin_effect = 0;
