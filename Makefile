@@ -38,9 +38,8 @@ sv:
 pk3:
 	$(MAKE) -C qcsrc pk3
 
+DIFFTESTS = test-genmod test-cvar-spelling
 COMPTESTS = test-server test-client test-menu
-.PHONY: test $(COMPTESTS)
-test:
-	$(MAKE) -C qcsrc test
-$(COMPTESTS):
+.PHONY: test test-diff $(DIFFTESTS) test-comp $(COMPTESTS)
+test test-diff $(DIFFTESTS) test-comp $(COMPTESTS):
 	$(MAKE) -C qcsrc $@
