@@ -533,7 +533,7 @@ string gettooltip()
 			s = "";
 
 		if (menuTooltipItem.tooltip)
-			s = (s == "" ? menuTooltipItem.tooltip : strcat(menuTooltipItem.tooltip, "\n\n", s));
+			s = strcat(rgb_to_hexcolor(SKINCOLOR_TOOLTIP), (s == "" ? menuTooltipItem.tooltip : strcat(menuTooltipItem.tooltip, "\n\n", s)));
 
 		if (menuTooltipItem.disabled)
 		{
@@ -725,7 +725,7 @@ void m_tooltip(vector pos)
 					string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithColors);
 					if (lines + 1 > MAX_TOOLTIP_LINES)
 						s = "...";
-					draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, true);
+					draw_Text(p, s, fontsize, '1 1 1', SKINALPHA_TOOLTIP * menuTooltipAlpha, true);
 					p.y += fontsize.y;
 				}
 			}
