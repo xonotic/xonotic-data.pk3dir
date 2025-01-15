@@ -24,7 +24,7 @@ float autocvar_g_tkaball_damageforcescale;
 int autocvar_g_tkaball_effects;
 float autocvar_g_tkaball_respawntime;
 int autocvar_g_tkaball_trail_color;
-int autocvar_g_tkaball_waypoint = 1;
+int autocvar_g_tkaball_waypoint;
 
 bool tka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
 {
