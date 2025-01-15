@@ -17,14 +17,14 @@ float autocvar_g_balance_keyhunt_dropvelocity;
 float autocvar_g_balance_keyhunt_maxdist;
 float autocvar_g_balance_keyhunt_protecttime;
 
-float autocvar_g_balance_keyhunt_carrier_damage = 1;
-float autocvar_g_balance_keyhunt_carrier_force = 1;
-float autocvar_g_balance_keyhunt_carrier_selfdamage = 1;
-float autocvar_g_balance_keyhunt_carrier_selfforce = 1;
-float autocvar_g_balance_keyhunt_noncarrier_damage = 1;
-float autocvar_g_balance_keyhunt_noncarrier_force = 1;
-float autocvar_g_balance_keyhunt_noncarrier_selfdamage = 1;
-float autocvar_g_balance_keyhunt_noncarrier_selfforce = 1;
+float autocvar_g_balance_keyhunt_carrier_damage;
+float autocvar_g_balance_keyhunt_carrier_force;
+float autocvar_g_balance_keyhunt_carrier_selfdamage;
+float autocvar_g_balance_keyhunt_carrier_selfforce;
+float autocvar_g_balance_keyhunt_noncarrier_damage;
+float autocvar_g_balance_keyhunt_noncarrier_force;
+float autocvar_g_balance_keyhunt_noncarrier_selfdamage;
+float autocvar_g_balance_keyhunt_noncarrier_selfforce;
 
 int autocvar_g_balance_keyhunt_score_capture;
 int autocvar_g_balance_keyhunt_score_carrierfrag;
