@@ -24,7 +24,7 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 {
 	entity e;
 	entity weaponsApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
-		"sendcvar cl_weaponpriority;"
+		"sendcvar cl_weaponpriority"
 		, COMMANDBUTTON_APPLY);
 	weaponsApplyButton.disableOnClick = true;
 
