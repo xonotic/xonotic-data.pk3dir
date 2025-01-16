@@ -3,6 +3,7 @@
 #include <server/weapons/tracing.qh> // autocvar_g_norecoil
 #include <server/world.qh>           // matchid
 #include <server/main.qh>
+#include <common/mutators/base.qh>
 
 string GameLog_ProcessIP(string s)
 {

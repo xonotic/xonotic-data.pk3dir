@@ -13,6 +13,7 @@
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/_mod.qh>
 #include <common/monsters/sv_monsters.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/physics/player.qh>

@@ -163,3 +163,38 @@ ENDCLASS(Cells)
 REGISTER_ITEM(Cells, NEW(Cells));
 
 SPAWNFUNC_ITEM(item_cells, ITEM_Cells)
+
+
+// ammo type #5: fuel
+#ifdef GAMEQC
+MODEL(JetpackFuel_ITEM, Item_Model("g_fuel.md3"));
+#endif
+
+#ifdef SVQC
+PROPERTY(int, g_pickup_fuel);
+void ammo_fuel_init(Pickup this, entity item)
+{
+    if(!GetResource(item, RES_FUEL))
+        SetResourceExplicit(item, RES_FUEL, g_pickup_fuel);
+}
+#endif
+
+CLASS(JetpackFuel, Ammo)
+/* spawnfunc  */ ATTRIB(JetpackFuel, m_canonical_spawnfunc, string, "item_fuel");
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(JetpackFuel, spawnflags, int, ITEM_FLAG_NORMAL | ITEM_FLAG_RESOURCE);
+/* model      */ ATTRIB(JetpackFuel, m_model, Model, MDL_JetpackFuel_ITEM);
+#endif
+/* refname    */ ATTRIB(JetpackFuel, netname, string, "fuel");
+/* itemname   */ ATTRIB(JetpackFuel, m_name, string, _("Fuel"));
+/* icon       */ ATTRIB(JetpackFuel, m_icon, string, "ammo_fuel");
+/* color      */ ATTRIB(JetpackFuel, m_color, vector, '0.984 0.878 0.506');
+#ifdef SVQC
+/* botvlaue   */ ATTRIB(JetpackFuel, m_botvalue, int, 2000);
+/* itemid     */ ATTRIB(JetpackFuel, m_itemid, int, IT_RESOURCE);
+/* iteminit   */ ATTRIB(JetpackFuel, m_iteminit, void(Pickup this, entity item), ammo_fuel_init);
+#endif
+ENDCLASS(JetpackFuel)
+REGISTER_ITEM(JetpackFuel, NEW(JetpackFuel));
+
+SPAWNFUNC_ITEM(item_fuel, ITEM_JetpackFuel)
