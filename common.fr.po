@@ -16,14 +16,14 @@
 # RedGuff <domsau2@yahoo.fr>, 2014
 # Yannick Le Guen <leguen.yannick@gmail.com>, 2013
 # Hugo Locurcio, 2013
-# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2024
+# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-15 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -8940,7 +8940,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:221
 msgid "Extra postprocessing effects"
-msgstr "Effets de post-traitement"
+msgstr "Effets de post-traitement supplémentaires"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
 msgid ""
@@ -9582,7 +9582,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:62
 msgid "Auto switch in CTS:"
-msgstr ""
+msgstr "Changement auto en CTS :"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:71
 msgid "Draw 1st person weapon model"
