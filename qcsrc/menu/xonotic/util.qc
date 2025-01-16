@@ -824,7 +824,7 @@ void CheckSendCvars(entity me, string cvarnamestring)
 		if(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
 		{
 			LOG_INFOF("Sending cvar: %s -> %s", cvarnamestring, cvar_string(cvarnamestring));
-			cmd(sprintf("\nsendcvar %s\n", cvarnamestring));
+			localcmd(sprintf("\nsendcvar %s\n", cvarnamestring));
 		}
 	}
 }
