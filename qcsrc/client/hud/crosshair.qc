@@ -731,7 +731,8 @@ void DrawReticle(entity this)
 			reticle_pos.y = (vid_conheight - reticle_size.y) / 2;
 		}
 
-		float f = (zoomscript_caught) ? 1 : bound(0.25, current_zoomfraction, 1);
+		float f = (zoomscript_caught) ? 1 : max(0.25, current_zoomfraction);
+
 		if(f)
 		{
 			switch(reticle_type)
