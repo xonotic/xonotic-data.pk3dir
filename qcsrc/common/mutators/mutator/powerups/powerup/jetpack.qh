@@ -1,0 +1,52 @@
+#pragma once
+
+#include <common/items/all.qh>
+#include <common/mutators/mutator/powerups/powerups.qh>
+#ifdef SVQC
+    #include <server/items/items.qh>
+    #include <common/resources/sv_resources.qh>
+#endif
+
+#ifdef GAMEQC
+MODEL(Jetpack_ITEM, Item_Model("g_jetpack.md3"));
+#endif
+
+#ifdef SVQC
+bool autocvar_g_powerups_jetpack = true;
+int autocvar_g_pickup_fuel_jetpack;
+void powerup_jetpack_init(Pickup def, entity item)
+{
+    if(!autocvar_g_powerups || !autocvar_g_powerups_jetpack)
+        def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+
+    if(!GetResource(item, RES_FUEL))
+        SetResourceExplicit(item, RES_FUEL, autocvar_g_pickup_fuel_jetpack);
+}
+#endif
+
+CLASS(Jetpack, Powerup)
+/* spawnfunc  */ ATTRIB(Jetpack, m_canonical_spawnfunc, string, "item_jetpack");
+#ifdef SVQC
+/* iteminit   */ ATTRIB(Jetpack, m_iteminit, void(Pickup this, entity item), powerup_jetpack_init);
+#endif
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(Jetpack, spawnflags, int, ITEM_FLAG_NORMAL);
+/* model      */ ATTRIB(Jetpack, m_model, Model, MDL_Jetpack_ITEM);
+/* sound      */ ATTRIB(Jetpack, m_itemid, int, IT_JETPACK);
+#endif
+/* refname    */ ATTRIB(Jetpack, netname, string, "jetpack");
+/* itemname   */ ATTRIB(Jetpack, m_name, string, _("Jetpack"));
+/* icon       */ ATTRIB(Jetpack, m_icon, string, "jetpack");
+/* color      */ ATTRIB(Jetpack, m_color, vector, '0.5 0.5 0.5');
+/* wptext     */ ATTRIB(Jetpack, m_waypoint, string, _("Jetpack"));
+/* wpblink    */ ATTRIB(Jetpack, m_waypointblink, int, 2);
+#ifdef SVQC
+/* botvalue   */ ATTRIB(Jetpack, m_botvalue, int, 3000);
+/* pickupfunc */ ATTRIB(Jetpack, m_pickupevalfunc, float(entity player, entity item), ammo_pickupevalfunc);
+#endif
+ENDCLASS(Jetpack)
+REGISTER_ITEM(Jetpack, NEW(Jetpack));
+
+SPAWNFUNC_ITEM(item_jetpack, ITEM_Jetpack)
+
+// no PowerupStatusEffect for Jetpack

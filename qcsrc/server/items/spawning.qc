@@ -6,6 +6,7 @@
 /// \copyright GNU GPLv2 or any later version.
 
 #include <common/mapobjects/subs.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/weapons/all.qh>
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
