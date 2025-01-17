@@ -1,0 +1,6 @@
+#pragma once
+
+#include "nades.qh"
+
+bool Projectile_isnade(int proj); // TODO: remove
+void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator

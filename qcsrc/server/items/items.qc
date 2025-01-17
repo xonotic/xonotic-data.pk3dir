@@ -7,8 +7,7 @@
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/_mod.qh>
-#include <common/mutators/mutator/buffs/buffs.qh>
-#include <common/mutators/mutator/buffs/sv_buffs.qh>
+#include <common/mutators/mutator/buffs/_mod.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
@@ -529,21 +528,22 @@ bool Item_GiveTo(entity item, entity player)
 {
 	// if nothing happens to player, just return without taking the item
 	int _switchweapon = 0;
-	// in case the player has autoswitch enabled do the following:
+	// in case the player has cl_autoswitch enabled do the following:
 	// if the player is using their best weapon before items are given, they
 	// probably want to switch to an even better weapon after items are given
 
-	if(CS_CVAR(player).cvar_cl_autoswitch)
+	bool use_cts_autoswitch = (g_cts && item.itemdef.instanceOfWeaponPickup && (CS_CVAR(player).cvar_cl_autoswitch_cts != -1));
+	if (CS_CVAR(player).cvar_cl_autoswitch && !use_cts_autoswitch)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
+			if (player.(weaponentity).m_weapon != WEP_Null || slot == 0)
 			{
-				if(player.(weaponentity).m_switchweapon == w_getbestweapon(player, weaponentity))
+				if (player.(weaponentity).m_switchweapon == w_getbestweapon(player, weaponentity))
 					_switchweapon |= BIT(slot);
 
-				if(!(STAT(WEAPONS, player) & WepSet_FromWeapon(player.(weaponentity).m_switchweapon)))
+				if (!(STAT(WEAPONS, player) & WepSet_FromWeapon(player.(weaponentity).m_switchweapon)))
 					_switchweapon |= BIT(slot);
 			}
 		}
@@ -643,8 +643,8 @@ bool Item_GiveTo(entity item, entity player)
 	if (item.superweapons_finished)
 	{
 		pickedup = true;
-		float t = StatusEffects_gettime(STATUSEFFECT_Superweapons, player);
-		StatusEffects_apply(STATUSEFFECT_Superweapons, player, t + item.superweapons_finished, 0);
+		float t = StatusEffects_gettime(STATUSEFFECT_Superweapon, player);
+		StatusEffects_apply(STATUSEFFECT_Superweapon, player, t + item.superweapons_finished, 0);
 	}
 
 	// always eat teamed entities
@@ -654,26 +654,32 @@ bool Item_GiveTo(entity item, entity player)
 	if (!pickedup)
 		return false;
 
-	// crude hack to enforce switching weapons
-	if(g_cts && item.itemdef.instanceOfWeaponPickup && !CS_CVAR(player).cvar_cl_cts_noautoswitch)
+	if(use_cts_autoswitch)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		// CTS handling: never switch (0), always switch (1)
+		if(CS_CVAR(player).cvar_cl_autoswitch_cts == 1)
 		{
-			.entity weaponentity = weaponentities[slot];
-			if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
-				W_SwitchWeapon_Force(player, REGISTRY_GET(Weapons, item.weapon), weaponentity);
+			// crude hack to enforce switching weapons
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
+					W_SwitchWeapon_Force(player, REGISTRY_GET(Weapons, item.weapon), weaponentity);
+			}
 		}
-		return true;
 	}
-
-	if(_switchweapon)
+	else if(_switchweapon)
 	{
+		// non-CTS handling: weaponpriority-based autoswitch
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(_switchweapon & BIT(slot))
-			if(player.(weaponentity).m_switchweapon != w_getbestweapon(player, weaponentity))
-				W_SwitchWeapon_Force(player, w_getbestweapon(player, weaponentity), weaponentity);
+			{
+				Weapon best_wep = w_getbestweapon(player, weaponentity);
+				if(player.(weaponentity).m_switchweapon != best_wep)
+					W_SwitchWeapon_Force(player, best_wep, weaponentity);
+			}
 		}
 	}
 
@@ -1362,7 +1368,7 @@ spawnfunc(target_items)
 			else if(argv(j) == "fuel_regen")             this.items |= ITEM_JetpackRegen.m_itemid;
 			else
 			{
-				FOREACH(StatusEffect, it.instanceOfBuff,
+				FOREACH(StatusEffects, it.instanceOfBuff,
 				{
 					string s = Buff_CompatName(argv(j));
 					if(s == it.netname)
@@ -1431,7 +1437,7 @@ spawnfunc(target_items)
 		res = GetResource(this, RES_FUEL);    if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "fuel");
 		res = GetResource(this, RES_HEALTH);  if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "health");
 		res = GetResource(this, RES_ARMOR);   if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "armor");
-		FOREACH(StatusEffect, it.instanceOfBuff, str = sprintf("%s %s%d %s", str, valueprefix, this.buffs_finished * boolean(this.buffdef == it), it.netname));
+		FOREACH(StatusEffects, it.instanceOfBuff, str = sprintf("%s %s%d %s", str, valueprefix, this.buffs_finished * boolean(this.buffdef == it), it.netname));
 		FOREACH(Weapons, it != WEP_Null, str = sprintf("%s %s%d %s", str, itemprefix, !!(STAT(WEAPONS, this) & (it.m_wepset)), it.netname));
 	}
 	this.netname = strzone(str);
@@ -1554,7 +1560,7 @@ bool GiveResourceValue(entity e, Resource res_type, int op, int val)
 
 	return SetResourceExplicit(e, res_type, new_val);
 }
-bool GiveStatusEffect(entity e, StatusEffects this, int op, float val)
+bool GiveStatusEffect(entity e, StatusEffect this, int op, float val)
 {
 	bool had_eff = StatusEffects_active(this, e);
 	float new_eff_time = ((had_eff) ? StatusEffects_gettime(this, e) : time);
@@ -1599,7 +1605,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	int _switchweapon = 0;
 
-	if(CS_CVAR(e).cvar_cl_autoswitch)
+	bool use_cts_autoswitch = (g_cts && (CS_CVAR(e).cvar_cl_autoswitch_cts != -1));
+	if(CS_CVAR(e).cvar_cl_autoswitch && !use_cts_autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -1616,7 +1623,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	PREGIVE_STATUSEFFECT(e, STATUSEFFECT_Shield);
 	PREGIVE_STATUSEFFECT(e, STATUSEFFECT_Speed);
 	PREGIVE_STATUSEFFECT(e, STATUSEFFECT_Invisibility);
-	//PREGIVE_STATUSEFFECT(e, STATUSEFFECT_Superweapons);
+	//PREGIVE_STATUSEFFECT(e, STATUSEFFECT_Superweapon);
 	PREGIVE_RESOURCE(e, RES_BULLETS);
 	PREGIVE_RESOURCE(e, RES_CELLS);
 	PREGIVE_RESOURCE(e, RES_SHELLS);
@@ -1625,6 +1632,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	PREGIVE_RESOURCE(e, RES_ARMOR);
 	PREGIVE_RESOURCE(e, RES_HEALTH);
 
+	Weapon last_wep = WEP_Null;
 	for(i = beginarg; i < endarg; ++i)
 	{
 		cmd = argv(i);
@@ -1654,16 +1662,17 @@ float GiveItems(entity e, float beginarg, float endarg)
 				continue;
 			case "ALL":
 				got += GiveBit(e, items, ITEM_JetpackRegen.m_itemid, op, val);
-				FOREACH(StatusEffect, it.instanceOfPowerups, got += GiveStatusEffect(e, it, op, val));
+				FOREACH(StatusEffects, it.instanceOfPowerupStatusEffect, got += GiveStatusEffect(e, it, op, val));
 				got += GiveBit(e, items, IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS, op, val);
 			case "all":
 				got += GiveBit(e, items, ITEM_Jetpack.m_itemid, op, val);
 				got += GiveResourceValue(e, RES_HEALTH, op, val);
 				got += GiveResourceValue(e, RES_ARMOR, op, val);
 			case "allweapons":
-				FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK)), got += GiveWeapon(e, it.m_id, op, val));
+				FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN)),
+					got += GiveWeapon(e, it.m_id, op, val));
 			//case "allbuffs": // all buffs makes a player god, do not want!
-				//FOREACH(StatusEffect, it.instanceOfBuff, got += GiveBuff(e, it, op, val));
+				//FOREACH(StatusEffects, it.instanceOfBuff, got += GiveBuff(e, it, op, val));
 			case "allammo":
 				got += GiveResourceValue(e, RES_CELLS, op, val);
 				got += GiveResourceValue(e, RES_SHELLS, op, val);
@@ -1701,7 +1710,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveStatusEffect(e, STATUSEFFECT_Invisibility, op, val);
 				break;
 			case "superweapons":
-				got += GiveStatusEffect(e, STATUSEFFECT_Superweapons, op, val);
+				got += GiveStatusEffect(e, STATUSEFFECT_Superweapon, op, val);
 				break;
 			case "cells":
 				got += GiveResourceValue(e, RES_CELLS, op, val);
@@ -1726,13 +1735,14 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveResourceValue(e, RES_FUEL, op, val);
 				break;
 			default:
-				FOREACH(StatusEffect, it.instanceOfBuff && buff_Available(it) && Buff_CompatName(cmd) == it.netname,
+				FOREACH(StatusEffects, it.instanceOfBuff && buff_Available(it) && Buff_CompatName(cmd) == it.netname,
 				{
 					got += GiveBuff(e, it, op, val);
 					break;
 				});
 				FOREACH(Weapons, it != WEP_Null && (cmd == it.netname || cmd == it.m_deprecated_netname), {
 					got += GiveWeapon(e, it.m_id, op, val);
+					last_wep = it;
 					break;
 				});
 				break;
@@ -1763,34 +1773,45 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_RES_ROT(e, RES_ARMOR, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_ARMOR25, SND_Null);
 	POSTGIVE_RES_ROT(e, RES_HEALTH, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_MEGAHEALTH, SND_Null);
 
-	if(!StatusEffects_active(STATUSEFFECT_Superweapons, e))
+	if(!StatusEffects_active(STATUSEFFECT_Superweapon, e))
 	{
 		// also give default superweapon time if player had no superweapons and just got one
 		if(!g_weaponarena && !(save_weapons & WEPSET_SUPERWEAPONS) && (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
-			StatusEffects_apply(STATUSEFFECT_Superweapons, e, time + autocvar_g_balance_superweapons_time, 0);
+			StatusEffects_apply(STATUSEFFECT_Superweapon, e, time + autocvar_g_balance_superweapons_time, 0);
 	}
 
 	if(e.statuseffects)
 		StatusEffects_update(e);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	if(last_wep != WEP_Null && use_cts_autoswitch)
 	{
-		.entity weaponentity = weaponentities[slot];
-		if(e.(weaponentity).m_weapon != WEP_Null || slot == 0)
-		if(!(STAT(WEAPONS, e) & WepSet_FromWeapon(e.(weaponentity).m_switchweapon)))
-			_switchweapon |= BIT(slot);
+		// CTS handling: never switch (0), always switch (1)
+		if(CS_CVAR(e).cvar_cl_autoswitch_cts == 1)
+		{
+			// crude hack to enforce switching weapons
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				if(e.(weaponentity).m_weapon != WEP_Null || slot == 0)
+					W_SwitchWeapon_Force(e, last_wep, weaponentity);
+			}
+		}
 	}
-
-	if(_switchweapon)
+	else
 	{
+		// non-CTS handling: weaponpriority-based autoswitch
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
+			if(e.(weaponentity).m_weapon != WEP_Null || slot == 0)
+			if(!(STAT(WEAPONS, e) & WepSet_FromWeapon(e.(weaponentity).m_switchweapon)))
+				_switchweapon |= BIT(slot);
+
 			if(_switchweapon & BIT(slot))
 			{
-				Weapon wep = w_getbestweapon(e, weaponentity);
-				if(wep != e.(weaponentity).m_switchweapon)
-					W_SwitchWeapon_Force(e, wep, weaponentity);
+				Weapon best_wep = w_getbestweapon(e, weaponentity);
+				if(e.(weaponentity).m_switchweapon != best_wep)
+					W_SwitchWeapon_Force(e, best_wep, weaponentity);
 			}
 		}
 	}

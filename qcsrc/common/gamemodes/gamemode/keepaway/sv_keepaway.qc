@@ -8,6 +8,7 @@
 #include <server/world.qh>
 
 .entity ballcarried;
+.entity previous_owner; // also used on kh keys
 
 int autocvar_g_keepaway_ballcarrier_effects;
 float autocvar_g_keepaway_ballcarrier_damage;
@@ -124,7 +125,8 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 		sound(this, CH_TRIGGER, SND_KA_TOUCH, VOL_BASE, ATTEN_NORM);
 		return;
 	}
-	else if(this.wait > time) { return; }
+	else if(this.wait > time && this.previous_owner == toucher)
+		return;
 
 	// attach the ball to the player
 	this.owner = toucher;
@@ -189,7 +191,8 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 	// reset the ball
 	setattachment(ball, NULL, "");
 	set_movetype(ball, MOVETYPE_BOUNCE);
-	ball.wait = time + 1;
+	ball.previous_owner = player;
+	ball.wait = time + 0.5; // same as for thrown weapons
 	settouch(ball, ka_TouchEvent);
 	setthink(ball, ka_RespawnBall);
 	ball.nextthink = time + autocvar_g_keepawayball_respawntime;

@@ -14,7 +14,7 @@ CLASS(Golem, Monster)
     ATTRIB(Golem, m_model, Model, MDL_MON_GOLEM);
 #endif
     ATTRIB(Golem, netname, string, "golem");
-    ATTRIB(Golem, monster_name, string, _("Golem"));
+    ATTRIB(Golem, m_name, string, _("Golem"));
 ENDCLASS(Golem)
 
 REGISTER_MONSTER(GOLEM, NEW(Golem));
