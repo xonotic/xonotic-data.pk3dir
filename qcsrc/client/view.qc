@@ -465,28 +465,20 @@ void ZoomScroll(float nPrimary)
 		zoomscroll_factor_target = max(1, zoomscroll_factor_target / zoomscroll_scale);
 }
 
-float View_InputEvent(int bInputType, float nPrimary, float nSecondary)
+bool View_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
-	if(!autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0)
-		return false; // zoom scroll disabled
-
-	if(!IsZooming())
-		return false;
-
-	if(bInputType == 3)
-	{
-		mousepos.x = nPrimary;
-		mousepos.y = nSecondary;
-		return true;
-	}
-	if(bInputType == 2)
+	if (bInputType == 2 || bInputType == 3)
 		return false;
 
 	// at this point bInputType can only be 0 or 1 (key pressed or released)
 	bool key_pressed = (bInputType == 0);
 
-	if(nPrimary == K_MWHEELUP || nPrimary == K_MWHEELDOWN)
+	if (nPrimary == K_MWHEELUP || nPrimary == K_MWHEELDOWN)
 	{
+		if (!autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0)
+			return false; // zoom scroll disabled
+		if (!IsZooming())
+			return false;
 		if (key_pressed)
 			ZoomScroll(nPrimary);
 		return true;
