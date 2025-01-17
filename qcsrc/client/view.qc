@@ -421,12 +421,8 @@ STATIC_INIT(fpscounter_init)
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
-// for_scrolling is true if we're checking for the purpose of determining whether the player can zoom scroll currently
-bool IsZooming(bool for_scrolling)
+bool IsZooming()
 {
-	if(for_scrolling && (!autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0))
-		return false;
-
 	bool zoomdir = button_zoom;
 
 	if(hud == HUD_NORMAL && !spectatee_status)
@@ -444,17 +440,9 @@ bool IsZooming(bool for_scrolling)
 			}
 		}
 	}
-	if(spectatee_status > 0 || isdemo())
-	{
-		if(spectatorbutton_zoom)
-		{
-			if(zoomdir)
-				zoomdir = 0;
-			else
-				zoomdir = 1;
-		}
-		// fteqcc failed twice here already, don't optimize this
-	}
+
+	if(spectatorbutton_zoom && (spectatee_status > 0 || isdemo()))
+		zoomdir = !zoomdir;
 
 	return zoomdir;
 }
@@ -480,7 +468,10 @@ void ZoomScrollChange(float nPrimary)
 
 float View_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
-	if(!IsZooming(true))
+	if(!autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0)
+		return false; // zoom scroll disabled
+
+	if(!IsZooming())
 		return false;
 
 	if(bInputType == 3)
@@ -512,7 +503,7 @@ vector GetCurrentFov(float fov)
 	float velocityzoom, curspeed;
 	vector v;
 
-	zoomdir = IsZooming(false);
+	zoomdir = IsZooming();
 
 	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
