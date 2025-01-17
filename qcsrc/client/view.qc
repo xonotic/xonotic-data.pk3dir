@@ -447,18 +447,17 @@ bool IsZooming()
 	return zoomdir;
 }
 
-#define GET_ZOOMFACTOR() ((autocvar_cl_zoomfactor < 1 || autocvar_cl_zoomfactor > MAX_ZOOMFACTOR) ? 2.5 : autocvar_cl_zoomfactor)
-
 const float MAX_ZOOMFACTOR = 30;
 float zoomscroll_factor;
 float zoomscroll_factor_target;
-void ZoomScrollChange(float nPrimary)
+void ZoomScroll(float nPrimary)
 {
 	bool zoomin = (nPrimary == K_MWHEELUP);
-	// allow negatives so that players can scroll the other way, biggest change allowed is +100%
-	float zoomscroll_scale = 1 + min(fabs(autocvar_cl_zoomscroll_scale), 1);
 	if (autocvar_cl_zoomscroll_scale < 0)
 		zoomin = !zoomin;
+
+	// allow negatives so that players can scroll the other way, biggest change allowed is +100%
+	float zoomscroll_scale = 1 + min(fabs(autocvar_cl_zoomscroll_scale), 1);
 
 	if (zoomin)
 		zoomscroll_factor_target = min(MAX_ZOOMFACTOR, zoomscroll_factor_target * zoomscroll_scale);
@@ -489,7 +488,7 @@ float View_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	if(nPrimary == K_MWHEELUP || nPrimary == K_MWHEELDOWN)
 	{
 		if (key_pressed)
-			ZoomScrollChange(nPrimary);
+			ZoomScroll(nPrimary);
 		return true;
 	}
 
@@ -510,7 +509,9 @@ vector GetCurrentFov(float fov)
 		zoomspeed = 3.5;
 	zoomsensitivity = autocvar_cl_zoomsensitivity;
 
-	zoomfactor = GET_ZOOMFACTOR();
+	zoomfactor = autocvar_cl_zoomfactor;
+	if(zoomfactor < 1 || zoomfactor > MAX_ZOOMFACTOR)
+		zoomfactor = 2.5;
 
 	if(zoomdir)
 		zoomin_effect = 0;
@@ -540,7 +541,7 @@ vector GetCurrentFov(float fov)
 		{
 			if (fabs(zoomscroll_factor - zoomscroll_factor_target) < 0.001) // snap
 				zoomscroll_factor = zoomscroll_factor_target;
-			else if (autocvar_cl_zoomscroll_speed)
+			else if (autocvar_cl_zoomscroll_speed > 0)
 			{
 				// NOTE: this averaging formula is frametime independent
 				float avg_time = 1 / autocvar_cl_zoomscroll_speed;
