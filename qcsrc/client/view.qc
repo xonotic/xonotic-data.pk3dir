@@ -424,7 +424,7 @@ STATIC_INIT(fpscounter_init)
 // for_scrolling is true if we're checking for the purpose of determining whether the player can zoom scroll currently
 bool IsZooming(bool for_scrolling)
 {
-	if(for_scrolling && (!autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_factor_increase == 0))
+	if(for_scrolling && (!autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0))
 		return false;
 
 	bool zoomdir = button_zoom;
@@ -463,32 +463,19 @@ bool IsZooming(bool for_scrolling)
 
 const float MAX_ZOOMFACTOR = 30;
 float zoomscroll_factor;
-float zoomscroll_factor_target; // will be added to zoomfactor
+float zoomscroll_factor_target;
 void ZoomScrollChange(float nPrimary)
 {
 	bool zoomin = (nPrimary == K_MWHEELUP);
-	// allow negatives so that players can scroll the other way
-	if (autocvar_cl_zoomscroll_factor_increase < 0)
+	// allow negatives so that players can scroll the other way, biggest change allowed is +100%
+	float zoomscroll_scale = 1 + min(fabs(autocvar_cl_zoomscroll_scale), 1);
+	if (autocvar_cl_zoomscroll_scale < 0)
 		zoomin = !zoomin;
 
-	float zoomfactor = GET_ZOOMFACTOR();
-
-	float inc = fabs(autocvar_cl_zoomscroll_factor_increase - 0.001);
-	const int MAX_SCROLLS = 5;
-
 	if (zoomin)
-	{
-		if (zoomscroll_factor_target + inc < MAX_SCROLLS * inc)
-		if (zoomscroll_factor_target + inc < MAX_ZOOMFACTOR - zoomfactor)
-			zoomscroll_factor_target += inc;
-	}
-	else
-	{
-		// slightly higher than 1 to prevent zoom scroll reset when fully zoomed out
-		if (zoomscroll_factor_target - inc > -MAX_SCROLLS * inc)
-		if (zoomscroll_factor_target - inc > 1.0001 - zoomfactor)
-			zoomscroll_factor_target -= inc;
-	}
+		zoomscroll_factor_target = min(MAX_ZOOMFACTOR, zoomscroll_factor_target * zoomscroll_scale);
+	else if (zoomscroll_factor_target / zoomscroll_scale > 1) // zoom x1 not allowed
+		zoomscroll_factor_target = zoomscroll_factor_target / zoomscroll_scale;
 }
 
 float View_InputEvent(int bInputType, float nPrimary, float nSecondary)
@@ -552,21 +539,25 @@ vector GetCurrentFov(float fov)
 	}
 	else
 	{
-		//if (zoomscroll_factor != zoomscroll_factor_target)
+		// initialize zoom scroll in the first frame / reset zoom scroll when fully zoomed out
+		if (!zoomscroll_factor || current_viewzoom == 1)
 		{
-			if (zoomscroll_factor == zoomscroll_factor_target || fabs(zoomscroll_factor - zoomscroll_factor_target) < 0.001 * autocvar_cl_zoomscroll_speed) // prevent view flickering
+			zoomscroll_factor_target = zoomfactor;
+			zoomscroll_factor = zoomfactor;
+		}
+		if (zoomscroll_factor != zoomscroll_factor_target)
+		{
+			if (fabs(zoomscroll_factor - zoomscroll_factor_target) < 0.001) // snap
 				zoomscroll_factor = zoomscroll_factor_target;
-			else if (zoomscroll_factor < zoomscroll_factor_target)
-				zoomscroll_factor = min(zoomscroll_factor_target, zoomscroll_factor + drawframetime * autocvar_cl_zoomscroll_speed);
-			else
-				zoomscroll_factor = max(zoomscroll_factor_target, zoomscroll_factor - drawframetime * autocvar_cl_zoomscroll_speed);
-			zoomfactor += zoomscroll_factor;
+			else if (autocvar_cl_zoomscroll_speed)
+			{
+				// NOTE: this averaging formula is frametime independent
+				float avg_time = 1 / autocvar_cl_zoomscroll_speed;
+				float frac = 1 - exp(-drawframetime / max(0.001, avg_time));
+				zoomscroll_factor = frac * zoomscroll_factor_target + (1 - frac) * zoomscroll_factor;
+			}
 		}
-		if (current_viewzoom == 1) // reset zoom scroll when fully zoomed out
-		{
-			zoomscroll_factor_target = 0;
-			zoomscroll_factor = 0;
-		}
+		zoomfactor = zoomscroll_factor;
 
 		if(zoomspeed < 0) // instant zoom
 		{
