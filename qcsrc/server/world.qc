@@ -2125,7 +2125,7 @@ void readplayerstartcvars()
 
 	if (start_items & ITEM_Jetpack.m_itemid)
 	{
-		start_items |= ITEM_JetpackRegen.m_itemid;
+		start_items |= ITEM_FuelRegen.m_itemid;
 		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
