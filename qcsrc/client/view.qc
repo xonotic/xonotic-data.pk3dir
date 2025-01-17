@@ -474,8 +474,8 @@ void ZoomScrollChange(float nPrimary)
 
 	if (zoomin)
 		zoomscroll_factor_target = min(MAX_ZOOMFACTOR, zoomscroll_factor_target * zoomscroll_scale);
-	else if (zoomscroll_factor_target / zoomscroll_scale > 1) // zoom x1 not allowed
-		zoomscroll_factor_target = zoomscroll_factor_target / zoomscroll_scale;
+	else
+		zoomscroll_factor_target = max(1, zoomscroll_factor_target / zoomscroll_scale);
 }
 
 float View_InputEvent(int bInputType, float nPrimary, float nSecondary)
@@ -540,7 +540,7 @@ vector GetCurrentFov(float fov)
 	else
 	{
 		// initialize zoom scroll in the first frame / reset zoom scroll when fully zoomed out
-		if (!zoomscroll_factor || current_viewzoom == 1)
+		if (!zoomscroll_factor || (current_viewzoom == 1 && !zoomdir))
 		{
 			zoomscroll_factor_target = zoomfactor;
 			zoomscroll_factor = zoomfactor;
