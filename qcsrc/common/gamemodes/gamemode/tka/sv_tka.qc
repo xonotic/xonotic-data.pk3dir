@@ -6,7 +6,7 @@
 .entity ballcarried;
 .entity previous_owner; // also used on kh keys
 
-int autocvar_g_tka_ballcarrier_effects;
+int autocvar_g_tka_ballcarrier_maxballs;
 float autocvar_g_tka_ballcarrier_damage;
 float autocvar_g_tka_ballcarrier_force;
 float autocvar_g_tka_ballcarrier_highspeed;
@@ -21,6 +21,7 @@ int autocvar_g_tka_score_bckill;
 int autocvar_g_tka_score_killac;
 bool autocvar_g_tka_score_team;
 int autocvar_g_tka_score_timepoints;
+int autocvar_g_tkaball_count;
 float autocvar_g_tkaball_damageforcescale;
 int autocvar_g_tkaball_effects;
 float autocvar_g_tkaball_respawntime;
@@ -87,13 +88,22 @@ MUTATOR_HOOKFUNCTION(tka, reset_map_global)
 }
 
 /// runs (only) while a player is carrying the ball
-void tka_TimeScoring(entity this)
+void tka_BallThink_Carried(entity this)
 {
 	if (autocvar_g_tka_score_timepoints)
 		GameRules_scoring_add_team_float2int(this.owner, SCORE, autocvar_g_tka_score_timepoints * frametime, timepoints_accum, 1);
 	GameRules_scoring_add(this.owner, TKA_BCTIME, frametime);
 
 	this.nextthink = time;
+
+	// animate, this is ~copied from KH
+#define BALL_XYSPEED 100 // KH 45
+#define BALL_XYDIST 24 // KH 24
+	makevectors(vec3(0, (360 * this.cnt / this.owner.ballcarried.cnt) + (time % 360) * BALL_XYSPEED, 0));
+	setorigin(this, vec3(v_forward.x * BALL_XYDIST, v_forward.y * BALL_XYDIST, this.origin.z));
+
+	// sync any invisibility effect
+	this.alpha = this.owner.alpha;
 }
 
 void tka_TouchEvent(entity this, entity toucher) // runs any time that the ball comes in contact with something
@@ -106,7 +116,6 @@ void tka_TouchEvent(entity this, entity toucher) // runs any time that the ball 
 		tka_RespawnBall(this);
 		return;
 	}
-	if(toucher.ballcarried) { return; }
 	if(IS_INDEPENDENT_PLAYER(toucher)) { return; }
 	if(IS_DEAD(toucher)) { return; }
 	if(STAT(FROZEN, toucher)) { return; }
@@ -119,6 +128,16 @@ void tka_TouchEvent(entity this, entity toucher) // runs any time that the ball 
 	else if(this.wait > time && this.previous_owner == toucher)
 		return;
 
+	if (toucher.ballcarried) // multiple balls exist
+	{
+		if (toucher.ballcarried.cnt >= autocvar_g_tka_ballcarrier_maxballs)
+			return;
+		this.ballcarried = toucher.ballcarried; // new ball will be inserted at start of chain
+		this.cnt = toucher.ballcarried.cnt + 1; // for orbit animation offset
+	}
+	else
+		this.cnt = 1;
+
 	// attach the ball to the player
 	this.owner = toucher;
 	toucher.ballcarried = this;
@@ -126,20 +145,15 @@ void tka_TouchEvent(entity this, entity toucher) // runs any time that the ball 
 	setattachment(this, toucher, "");
 	setorigin(this, '0 0 0');
 
-	// make the ball invisible/unable to do anything/set up time scoring
+	// make the ball unable to do anything, set up time scoring
 	this.velocity = '0 0 0';
 	set_movetype(this, MOVETYPE_NONE);
-	this.effects |= EF_NODRAW;
+	this.scale = 12/16; // somewhat smaller while carried
 	settouch(this, func_null);
-	setthink(this, tka_TimeScoring);
+	setthink(this, tka_BallThink_Carried);
 	this.nextthink = time;
 	this.takedamage = DAMAGE_NO;
 	navigation_dynamicgoal_unset(this);
-
-	// apply effects to player
-	toucher.glow_color = autocvar_g_tkaball_trail_color;
-	toucher.glow_trail = true;
-	toucher.effects |= autocvar_g_tka_ballcarrier_effects;
 
 	// messages and sounds
 	tka_EventLog("pickup", toucher);
@@ -173,10 +187,6 @@ void tka_PlayerReset(entity player)
 	player.ballcarried = NULL;
 	GameRules_scoring_vip(player, false);
 	WaypointSprite_Kill(player.waypointsprite_attachedforcarrier);
-
-	// reset the player effects
-	player.glow_trail = false;
-	player.effects &= ~autocvar_g_tka_ballcarrier_effects;
 }
 
 void tka_DropEvent(entity player) // runs any time that a player is supposed to lose the ball
@@ -195,8 +205,9 @@ void tka_DropEvent(entity player) // runs any time that a player is supposed to 
 	setthink(ball, tka_RespawnBall);
 	ball.nextthink = time + autocvar_g_tkaball_respawntime;
 	ball.takedamage = DAMAGE_YES;
-	ball.effects &= ~EF_NODRAW;
-	setorigin(ball, player.origin + '0 0 10');
+	ball.scale = 1; // it's smaller while carried
+	ball.alpha = 1; // in case the carrier had an invisibility effect
+	setorigin(ball, player.origin + ball.origin + '0 0 10'); // include attachment offset to reduce jump
 	nudgeoutofsolid_OrFallback(ball); // a ball has a horizontally bigger bbox than a player
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	ball.owner = NULL;
@@ -216,7 +227,13 @@ void tka_DropEvent(entity player) // runs any time that a player is supposed to 
 		WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
 	}
 
-	tka_PlayerReset(player);
+	if (ball.ballcarried) // >1 ball was chained, first one was just dropped
+	{
+		player.ballcarried = ball.ballcarried; // move the next one up
+		ball.ballcarried = NULL; // prevent infinite loop
+	}
+	else // no balls remaining so remove bc status
+		tka_PlayerReset(player);
 }
 
 .bool pushable;
@@ -264,7 +281,7 @@ void tka_SpawnBalls()
 
 		++i;
 	}
-	while (i < TKA_BALL_COUNT);
+	while (i < autocvar_g_tkaball_count);
 }
 
 void tka_Handler_CheckBall(entity this)
@@ -412,7 +429,8 @@ MUTATOR_HOOKFUNCTION(tka, PlayerDies)
 			GameRules_scoring_add_team(frag_attacker, SCORE, autocvar_g_tka_score_killac);
 	}
 
-	if(frag_target.ballcarried) { tka_DropEvent(frag_target); } // a player with the ball has died, drop it
+	while (frag_target.ballcarried)
+		tka_DropEvent(frag_target); // a player with ball(s) has died, drop them
 }
 
 MUTATOR_HOOKFUNCTION(tka, GiveFragsForKill)
@@ -514,27 +532,24 @@ MUTATOR_HOOKFUNCTION(tka, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.ballcarried) { tka_DropEvent(player); } // a player with the ball has left the match, drop it
+	while (player.ballcarried)
+		tka_DropEvent(player); // a player with ball(s) has left the match, drop them
 }
 
 MUTATOR_HOOKFUNCTION(tka, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.ballcarried) { tka_DropEvent(player); } // a player with the ball has left the match, drop it
+	while (player.ballcarried)
+		tka_DropEvent(player); // a player with ball(s) has left the match, drop them
 }
 
 MUTATOR_HOOKFUNCTION(tka, PlayerPowerups)
 {
-	entity player = M_ARGV(0, entity);
+//	entity player = M_ARGV(0, entity);
 
 	// In the future this hook is supposed to allow me to do some extra stuff with waypointsprites and invisibility powerup
 	// So bare with me until I can fix a certain bug with tka_ballcarrier_waypointsprite_visible_for_player()
-
-	player.effects &= ~autocvar_g_tka_ballcarrier_effects;
-
-	if(player.ballcarried)
-		player.effects |= autocvar_g_tka_ballcarrier_effects;
 }
 
 
@@ -580,7 +595,7 @@ MUTATOR_HOOKFUNCTION(tka, DropSpecialItems)
 {
 	entity frag_target = M_ARGV(0, entity);
 
-	if(frag_target.ballcarried)
+	while (frag_target.ballcarried)
 		tka_DropEvent(frag_target);
 }
 
