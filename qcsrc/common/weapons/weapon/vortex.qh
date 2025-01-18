@@ -17,7 +17,7 @@ CLASS(Vortex, Weapon)
 /* impulse   */ ATTRIB(Vortex, impulse, int, 7);
 /* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, 8000);
-/* color     */ ATTRIB(Vortex, wpcolor, vector, '0.5 1 1');
+/* color     */ ATTRIB(Vortex, m_color, vector, '0.459 0.765 0.835');
 /* modelname */ ATTRIB(Vortex, mdl, string, "nex");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Vortex, m_model, Model, MDL_VORTEX_ITEM);

@@ -15,7 +15,7 @@ CLASS(Rifle, Weapon)
 /* impulse   */ ATTRIB(Rifle, impulse, int, 7);
 /* flags     */ ATTRIB(Rifle, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS);
 /* rating    */ ATTRIB(Rifle, bot_pickupbasevalue, float, 7000);
-/* color     */ ATTRIB(Rifle, wpcolor, vector, '0.5 1 0');
+/* color     */ ATTRIB(Rifle, m_color, vector, '0.886 0.620 0.353');
 /* modelname */ ATTRIB(Rifle, mdl, string, "campingrifle");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Rifle, m_model, Model, MDL_RIFLE_ITEM);

@@ -17,7 +17,7 @@ CLASS(Mortar, Weapon)
 /* impulse   */ ATTRIB(Mortar, impulse, int, 4);
 /* flags     */ ATTRIB(Mortar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NOTRUEAIM);
 /* rating    */ ATTRIB(Mortar, bot_pickupbasevalue, float, 7000);
-/* color     */ ATTRIB(Mortar, wpcolor, vector, '1 0 0');
+/* color     */ ATTRIB(Mortar, m_color, vector, '0.988 0.392 0.314');
 /* modelname */ ATTRIB(Mortar, mdl, string, "gl");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Mortar, m_model, Model, MDL_MORTAR_ITEM);

@@ -14,12 +14,15 @@ CLASS(HLAC, Weapon)
 /* impulse   */ ATTRIB(HLAC, impulse, int, 6);
 /* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, 4000);
-/* color     */ ATTRIB(HLAC, wpcolor, vector, '0 1 0');
+/* color     */ ATTRIB(HLAC, m_color, vector, '0.506 0.945 0.239');
 /* modelname */ ATTRIB(HLAC, mdl, string, "hlac");
 #ifdef GAMEQC
 /* model     */ ATTRIB(HLAC, m_model, Model, MDL_HLAC_ITEM);
 /* flash mdl */ ATTRIB(HLAC, m_muzzlemodel, Model, MDL_Null);
-/* flash eff */ ATTRIB(HLAC, m_muzzleeffect, entity, EFFECT_BLASTER_MUZZLEFLASH);
+/* flash eff */ ATTRIB(HLAC, m_muzzleeffect, entity,
+	(particleeffectnum(EFFECT_GREEN_HLAC_MUZZLEFLASH) < 0)
+		? EFFECT_BLASTER_MUZZLEFLASH // compatible with Xonotic v0.8.6 or lower
+		: EFFECT_GREEN_HLAC_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(HLAC, w_crosshair, string, "gfx/crosshairhlac");
 /* crosshair */ ATTRIB(HLAC, w_crosshair_size, float, 0.6);

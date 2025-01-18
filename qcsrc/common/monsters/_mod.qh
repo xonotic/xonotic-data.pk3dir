@@ -2,11 +2,7 @@
 #include <common/monsters/all.qh>
 #ifdef SVQC
 	#include <common/monsters/sv_monsters.qh>
-#endif
-#ifdef SVQC
 	#include <common/monsters/sv_spawn.qh>
-#endif
-#ifdef SVQC
 	#include <common/monsters/sv_spawner.qh>
 #endif
 
