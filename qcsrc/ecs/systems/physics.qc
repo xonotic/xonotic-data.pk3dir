@@ -270,7 +270,23 @@ void sys_phys_simulate(entity this, float dt)
 	float wishspeed = min(wishvel_len, this.com_phys_vel_max);
 
 	// same as wishdir = normalize(wishvel); but cheaper
+	const vector wishdir_norm = normalize(wishvel);
 	const vector wishdir = (wishvel_len ? wishvel / wishvel_len : '0 0 0');
+
+	static float mindiff = 0;
+	if (mindiff == 0)
+	{
+		LOG_INFO("WISHDIR TEST: start\n");
+		mindiff = 0.0000002;
+	}
+
+	vector diff = (wishdir_norm - wishdir);
+	if (fabs(diff.x) > mindiff || fabs(diff.y) > mindiff || fabs(diff.z) > mindiff)
+		LOG_INFOF("WISHDIR TEST: diff = %v\n", diff);
+
+	float diff_len = vlen(diff);
+	if (diff_len > mindiff)
+		LOG_INFOF("WISHDIR TEST: diff_len = %f\n", diff_len);
 
 	if (this.com_phys_air) {
 		if (!(this.flags & FL_WATERJUMP)) {
