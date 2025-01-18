@@ -531,9 +531,9 @@ vector GetCurrentFov(float fov)
 		}
 		if (zoomscroll_factor != zoomscroll_factor_target)
 		{
-			if (fabs(zoomscroll_factor - zoomscroll_factor_target) < 0.001) // snap
+			if (fabs(zoomscroll_factor - zoomscroll_factor_target) < 0.001 || autocvar_cl_zoomscroll_speed < 0) // snap
 				zoomscroll_factor = zoomscroll_factor_target;
-			else if (autocvar_cl_zoomscroll_speed > 0)
+			else if (autocvar_cl_zoomscroll_speed != 0)
 			{
 				// NOTE: this averaging formula is frametime independent
 				float avg_time = 1 / autocvar_cl_zoomscroll_speed;
