@@ -96,13 +96,28 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 1, 0.1, "cl_zoomsensitivity",
 			_("How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)")));
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_zoomscroll", _("Zoom scrolling")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Scale:")));
 			setDependent(e, "cl_zoomscroll", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(-1, 1, 0.1, "cl_zoomscroll_scale")); // would be better if this could skip 0
+			setDependent(e, "cl_zoomscroll", 1, 1);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Speed:")));
+			setDependent(e, "cl_zoomscroll", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_zoomscroll_speed"));
+			e.addValue(e, "2", "2"); // Samual: for() loop doesn't work here, even though it would make sense.
+			e.addValue(e, "4", "4");
+			e.addValue(e, "6", "6");
+			e.addValue(e, "8", "8");
+			e.addValue(e, "10", "10");
+			e.addValue(e, "12", "12");
+			e.addValue(e, "14", "14");
+			e.addValue(e, "16", "16");
+			e.addValue(e, ZCTX(_("ZOOM^Instant")), "-1");
+			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "cl_zoomscroll", 1, 1);
 	me.TR(me);
 	me.TR(me);
