@@ -76,7 +76,7 @@ void sys_phys_update(entity this, float dt)
 
 	PM_check_slick(this);
 
-	if (IS_SVQC && !PHYS_FIXANGLE(this)) { this.angles = '0 1 0' * this.v_angle.y; }
+	if (IS_SVQC && !PHYS_FIXANGLE(this)) { this.angles = eY * this.v_angle.y; }
 	if (IS_PLAYER(this)) {
 		if (IS_ONGROUND(this)) {
 			PM_check_hitground(this);
@@ -194,7 +194,7 @@ void sys_phys_simulate(entity this, float dt)
 		// water jump only in certain situations
 		// this mimics quakeworld code
 		if (this.com_in_jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180 && !this.viewloc && !PHYS_FROZEN(this)) {
-			vector yawangles = '0 1 0' * this.v_angle.y;
+			vector yawangles = eY * this.v_angle.y;
 			vector forward, right, up;
 			MAKE_VECTORS(yawangles, forward, right, up);
 			vector spot = this.origin + 24 * forward;
@@ -219,7 +219,7 @@ void sys_phys_simulate(entity this, float dt)
 	// wishvel = forward * PHYS_CS(this).movement.x + right * PHYS_CS(this).movement.y + up * PHYS_CS(this).movement.z;
 	vector wishvel = forward * PHYS_CS(this).movement.x
 		+ right * PHYS_CS(this).movement.y
-		+ '0 0 1' * (this.com_phys_vel_2d ? 0 : PHYS_CS(this).movement.z);
+		+ eZ * (this.com_phys_vel_2d ? 0 : PHYS_CS(this).movement.z);
 	if (this.com_phys_water) {
 		if (PHYS_FROZEN(this))
 		{
@@ -236,7 +236,7 @@ void sys_phys_simulate(entity this, float dt)
 			if (this.viewloc) {
 				wishvel.z = -160;    // drift anyway
 			} else if (wishvel == '0 0 0') {
-				wishvel = '0 0 -60'; // drift towards bottom
+				wishvel.z = -60; // drift towards bottom
 			}
 		}
 	}
@@ -350,9 +350,10 @@ void sys_phys_simulate(entity this, float dt)
 					// slime: 80
 					// water: 100
 					// idea: double those
-					this.velocity_z = 200;
 					if (this.waterlevel >= WATERLEVEL_SUBMERGED) {
 						this.velocity_z = PHYS_MAXSPEED(this) * 0.7;
+					} else {
+						this.velocity_z = 200;
 					}
 				}
 			}
