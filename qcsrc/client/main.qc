@@ -493,6 +493,10 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	if (override)
 		return true;
 
+	override |= View_InputEvent(bInputType, nPrimary, nSecondary);
+	if (override)
+		return true;
+
 	override |= HUD_Panel_Chat_InputEvent(bInputType, nPrimary, nSecondary);
 
 	override |= QuickMenu_InputEvent(bInputType, nPrimary, nSecondary);
