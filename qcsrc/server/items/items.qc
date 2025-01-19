@@ -1742,7 +1742,9 @@ float GiveItems(entity e, float beginarg, float endarg)
 				});
 				FOREACH(Weapons, it != WEP_Null && (cmd == it.netname || cmd == it.m_deprecated_netname), {
 					got += GiveWeapon(e, it.m_id, op, val);
-					last_wep = it;
+					if(use_cts_autoswitch && CS_CVAR(e).cvar_cl_autoswitch_cts == 1)
+					if(val > 0 && (op == OP_SET && op == OP_PLUS || op == OP_MIN)) // switch to any given weapons, even if we already had it
+						last_wep = it; // (... non-CTS autoswitching can switch to a weapon we already have, so CTS autoswitch should be the same)
 					break;
 				});
 				break;
@@ -1783,9 +1785,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 	if(e.statuseffects)
 		StatusEffects_update(e);
 
-	if(last_wep != WEP_Null && use_cts_autoswitch)
+	if(use_cts_autoswitch)
 	{
 		// CTS handling: never switch (0), always switch (1)
+		if(last_wep != WEP_Null)
 		if(CS_CVAR(e).cvar_cl_autoswitch_cts == 1)
 		{
 			// crude hack to enforce switching weapons
