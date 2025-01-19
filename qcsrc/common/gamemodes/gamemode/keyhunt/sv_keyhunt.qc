@@ -99,13 +99,14 @@ void kh_ScoreRules(int teams)
 
 bool kh_KeyCarrier_waypointsprite_visible_for_player(entity this, entity player, entity view)  // runs all the time
 {
-	if(!IS_PLAYER(view) || DIFF_TEAM(this, view))
-		if(!kh_tracking_enabled)
-			return false;
-	if(StatusEffects_active(STATUSEFFECT_Invisibility, this.owner))
-		return false; // hide the waypointsprite if the owner has the invisibility powerup
+	if(view.kh_next && IS_SPEC(player))
+		return false; // we don't want spectators of key carriers to see the attached waypoint on the top of their screen
+	if(IS_SPEC(player) || warmup_stage || SAME_TEAM(player, this.owner))
+		return true;
+	if(StatusEffects_active(STATUSEFFECT_Invisibility, this.owner) || MUTATOR_IS_ENABLED(cloaked))
+		return false; // hide the waypointsprite if the owner is invisible
 
-	return true;
+	return kh_tracking_enabled;
 }
 
 bool kh_Key_waypointsprite_visible_for_player(entity this, entity player, entity view)
