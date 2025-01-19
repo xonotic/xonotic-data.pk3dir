@@ -28,7 +28,7 @@ float autocvar_g_keepawayball_damageforcescale;
 int autocvar_g_keepawayball_effects;
 float autocvar_g_keepawayball_respawntime;
 int autocvar_g_keepawayball_trail_color;
-int autocvar_g_keepawayball_waypoint;
+int autocvar_g_keepawayball_tracking;
 
 bool ka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
 {
@@ -39,7 +39,7 @@ bool ka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player
 	if(StatusEffects_active(STATUSEFFECT_Invisibility, this.owner))
 		return false; // hide the waypointsprite if the owner has the invisibility powerup
 
-	return autocvar_g_keepawayball_waypoint == 1;
+	return autocvar_g_keepawayball_tracking == 1;
 }
 
 void ka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
@@ -68,7 +68,7 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
 	Send_Effect(EFFECT_ELECTRO_COMBO, this.origin, '0 0 0', 1);
 
-	if(autocvar_g_keepawayball_waypoint || warmup_stage)
+	if(autocvar_g_keepawayball_tracking || warmup_stage)
 	{
 		WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', NULL, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 		WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
@@ -216,7 +216,7 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 	sound(NULL, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// waypoints
-	if(autocvar_g_keepawayball_waypoint || warmup_stage)
+	if(autocvar_g_keepawayball_tracking || warmup_stage)
 	{
 		WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 		WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
