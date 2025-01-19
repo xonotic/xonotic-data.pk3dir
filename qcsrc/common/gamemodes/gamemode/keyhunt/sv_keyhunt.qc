@@ -947,8 +947,11 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	kh_tracking_enabled = false;
-	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEYHUNT_SCAN, autocvar_g_balance_keyhunt_delay_tracking);
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, kh_EnableTrackingDevice);
+	if(autocvar_g_balance_keyhunt_delay_tracking >= 0)
+	{
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEYHUNT_SCAN, autocvar_g_balance_keyhunt_delay_tracking);
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, kh_EnableTrackingDevice);
+	}
 }
 
 float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the player score
