@@ -102,6 +102,8 @@ bool kh_KeyCarrier_waypointsprite_visible_for_player(entity this, entity player,
 	if(!IS_PLAYER(view) || DIFF_TEAM(this, view))
 		if(!kh_tracking_enabled)
 			return false;
+	if(StatusEffects_active(STATUSEFFECT_Invisibility, this.owner))
+		return false; // hide the waypointsprite if the owner has the invisibility powerup
 
 	return true;
 }
