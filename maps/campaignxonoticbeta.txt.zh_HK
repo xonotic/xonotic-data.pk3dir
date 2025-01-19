@@ -1,4 +1,5 @@
 //campaign：Xonotic 戰役
+//translators: NaitLee
 //"game","mapname","bots","skill","fraglimit","timelimit","mutator-sets","description","long description"
 //fraglimit: Score limit + lead limit, use "default" to leave the implicit value in effect, leave unset for no limit. eg: 50, 30+5, +10, 0+default
 //timelimit: Match duration in minutes, use "default" to leave the implicit value in effect, leave unset for no limit.
