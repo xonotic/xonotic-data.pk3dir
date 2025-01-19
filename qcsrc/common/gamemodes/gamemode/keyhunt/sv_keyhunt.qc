@@ -111,13 +111,12 @@ bool kh_KeyCarrier_waypointsprite_visible_for_player(entity this, entity player,
 
 bool kh_Key_waypointsprite_visible_for_player(entity this, entity player, entity view)
 {
+	if(IS_SPEC(player) || warmup_stage)
+		return true;
 	if(!kh_tracking_enabled)
 		return false;
-	if(!this.owner)
-		return true;
-	if(!this.owner.owner)
-		return true;
-	return false;  // draw only when key is not owned
+
+	return !this.owner || !this.owner.owner; // draw only when key is not owned
 }
 
 void kh_update_state()
