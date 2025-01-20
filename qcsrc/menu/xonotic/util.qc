@@ -769,8 +769,8 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 		me.TD(me, 2, 2.6, e = makeXonoticColorpickerString(strzone(strcat("hud_panel_", panelname, "_bg_color")), "hud_panel_bg_color"));
 			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_bg_color")), "");
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.0, e = makeXonoticCheckBoxString("", "1 1 1", strzone(strcat("hud_panel_", panelname, "_bg_color")), _("Use default")));
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 1.0, e = makeXonoticCheckBoxString("", "1 1 1", strzone(strcat("hud_panel_", panelname, "_bg_color")), _("Default")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Border size:")));
