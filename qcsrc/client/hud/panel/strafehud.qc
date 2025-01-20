@@ -134,13 +134,26 @@ void HUD_StrafeHUD()
 		}
 	}
 
+	// move values are only valid for the local player
 	vector movement = PHYS_INPUT_MOVEVALUES(strafeplayer);
-	float movespeed = vlen(vec2(movement));
-	if(movespeed == 0)
-		movespeed = maxspeed;
-	else
-		movespeed = min(movespeed, maxspeed);
 
+	float movespeed;
+	if(is_local)
+	{
+		movespeed = min(vlen(vec2(movement)), maxspeed);
+
+		// assume maxspeed so that the hud remains useful even if no direction keys are pressed
+		if(movespeed == 0) movespeed = maxspeed;
+	}
+	else
+	{
+		// the only information available is whether a movement key is pressed or not
+		// which means the movespeed would be either maxspeed or zero
+		// since we set it to maxspeed if it is zero the movespeed will always equal maxspeed if the player is not local
+		movespeed = maxspeed;
+	}
+
+	// the following functions have to check themselves whether the player is local and use the move values accordingly
 	int keys_fwd = StrafeHUD_DetermineForwardKeys(movement, keys, is_local);
 	float wishangle = StrafeHUD_DetermineWishAngle(movement, keys, is_local);
 	float absolute_wishangle = fabs(wishangle); // unmodified by side strafing code
@@ -149,7 +162,7 @@ void HUD_StrafeHUD()
 	// detect air strafe turning
 	static bool turn = false;
 	float strafity = 0;
-	if((!strafekeys && vlen(vec2(movement)) > 0) || onground || autocvar__hud_configure)
+	if(!strafekeys || onground || autocvar__hud_configure)
 	{
 		turn = false;
 	}
@@ -195,7 +208,9 @@ void HUD_StrafeHUD()
 	float bestspeed = max(movespeed - maxaccel, 0); // target speed to gain maximum acceleration
 
 	// use local csqcmodel entity for this even when spectating, flickers too much otherwise
-	float speed = !autocvar__hud_configure ? vlen(vec2(csqcplayer.velocity)) : 1337;
+	vector strafevelocity = csqcplayer.velocity;
+
+	float speed = !autocvar__hud_configure ? vlen(vec2(strafevelocity)) : 1337;
 	bool moving = speed > 0;
 
 	float frictionspeed; // speed lost from friction
@@ -223,7 +238,8 @@ void HUD_StrafeHUD()
 		if(moving)
 		{
 			// change the range from 0° - 360° to -180° - 180° to match how view_angle represents angles
-			float vel_angle = vectoangles(strafeplayer.velocity).y - (vectoangles(strafeplayer.velocity).y > 180 ? 360 : 0);
+			float vel_angle = vectoangles(strafevelocity).y;
+			if(vel_angle > 180) vel_angle -= 360;
 			float view_angle = PHYS_INPUT_ANGLES(strafeplayer).y;
 
 			// calculate view angle relative to the players current velocity direction
