@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-15 07:22+0100\n"
+"POT-Creation-Date: 2025-01-20 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: С Станев, 2024\n"
 "Language-Team: Bulgarian (http://app.transifex.com/team-xonotic/xonotic/"
@@ -169,7 +169,7 @@ msgstr ""
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Натиснете ^3%s^1 за да се включите"
 
-#: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1334
+#: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1338
 #: qcsrc/common/notifications/all.qh:466
 msgid "jump"
 msgstr "скок"
@@ -575,7 +575,7 @@ msgstr ""
 msgid "PENALTY: %.1f (%s)"
 msgstr "НАКАЗАНИЕ: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:203 qcsrc/client/main.qc:1171
+#: qcsrc/client/hud/panel/racetimer.qc:203 qcsrc/client/main.qc:1175
 msgid "missing a checkpoint"
 msgstr "пропусната проверочна точка"
 
@@ -1119,7 +1119,7 @@ msgstr "^3%1.0f минути"
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7играча"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2500 qcsrc/client/main.qc:1363
+#: qcsrc/client/hud/panel/scoreboard.qc:2500 qcsrc/client/main.qc:1367
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Карта:"
@@ -1261,137 +1261,137 @@ msgid "Trying to remove a team which is not in the teamlist!"
 msgstr ""
 "Опитвате се да премахнете отбор, който не съществува в списъка на отборите!"
 
-#: qcsrc/client/main.qc:1065 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
+#: qcsrc/client/main.qc:1069 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1066 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/client/main.qc:1070 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
 msgstr "м/с"
 
-#: qcsrc/client/main.qc:1067 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
+#: qcsrc/client/main.qc:1071 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
 msgstr "км/ч"
 
-#: qcsrc/client/main.qc:1068 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
+#: qcsrc/client/main.qc:1072 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
 msgid "mph"
 msgstr "мили/ч"
 
-#: qcsrc/client/main.qc:1069 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/client/main.qc:1073 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
 msgstr "възли"
 
-#: qcsrc/client/main.qc:1282
+#: qcsrc/client/main.qc:1286
 msgid "All Weapons Arena"
 msgstr "Арена с всички оръжия"
 
-#: qcsrc/client/main.qc:1283
+#: qcsrc/client/main.qc:1287
 msgid "All Available Weapons Arena"
 msgstr "Арена с всички налични оръжия"
 
-#: qcsrc/client/main.qc:1284
+#: qcsrc/client/main.qc:1288
 msgid "Most Weapons Arena"
 msgstr "Арена с повечето оръжия"
 
-#: qcsrc/client/main.qc:1285
+#: qcsrc/client/main.qc:1289
 msgid "Most Available Weapons Arena"
 msgstr "Арена с повечето от наличните оръжия"
 
-#: qcsrc/client/main.qc:1288 qcsrc/client/main.qc:1302
+#: qcsrc/client/main.qc:1292 qcsrc/client/main.qc:1306
 msgid "No Weapons Arena"
 msgstr "Арена без оръжия"
 
-#: qcsrc/client/main.qc:1300
+#: qcsrc/client/main.qc:1304
 #, c-format
 msgid "%s Arena"
 msgstr "%s Арена"
 
-#: qcsrc/client/main.qc:1311 qcsrc/client/main.qc:1316
+#: qcsrc/client/main.qc:1315 qcsrc/client/main.qc:1320
 #, c-format
 msgid "This is %s"
 msgstr "Това е %s"
 
-#: qcsrc/client/main.qc:1312
+#: qcsrc/client/main.qc:1316
 msgid "Your client version is outdated."
 msgstr "Версия на приложението ви е стара."
 
-#: qcsrc/client/main.qc:1313
+#: qcsrc/client/main.qc:1317
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### НЯМА ДА ИМАТЕ ВЪЗМОЖНОСТ ДА ИГРАЕТЕ НА ТОЗИ СЪРВЪР ###"
 
-#: qcsrc/client/main.qc:1314
+#: qcsrc/client/main.qc:1318
 msgid "Please update!"
 msgstr "Моля обновете!"
 
-#: qcsrc/client/main.qc:1317
+#: qcsrc/client/main.qc:1321
 msgid "This server is using an outdated Xonotic version."
 msgstr "Този сървър използва стара версия на Xonotic."
 
-#: qcsrc/client/main.qc:1318
+#: qcsrc/client/main.qc:1322
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### ТОЗИ СЪРВЪР Е НЕСЪВМЕСТИМ И ЗАТОВА НЕ МОЖЕ ДА СЕ ПРИСЪЕДИНИТЕ ###"
 
-#: qcsrc/client/main.qc:1320
+#: qcsrc/client/main.qc:1324
 #, c-format
 msgid "Welcome to %s"
 msgstr "Добре дошли в %s"
 
-#: qcsrc/client/main.qc:1336 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1340 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Ниво %d:"
 
-#: qcsrc/client/main.qc:1338
+#: qcsrc/client/main.qc:1342
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGНатиснете ^F2%s^BG за влизане в играта"
 
-#: qcsrc/client/main.qc:1361
+#: qcsrc/client/main.qc:1365
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Вид игра:"
 
-#: qcsrc/client/main.qc:1365
+#: qcsrc/client/main.qc:1369
 msgid "by:"
 msgstr "от:"
 
-#: qcsrc/client/main.qc:1369
+#: qcsrc/client/main.qc:1373
 msgid "This match supports"
 msgstr "Тази игра поддържа"
 
-#: qcsrc/client/main.qc:1371
+#: qcsrc/client/main.qc:1375
 #, c-format
 msgid "%d players"
 msgstr "%d играчи"
 
-#: qcsrc/client/main.qc:1373
+#: qcsrc/client/main.qc:1377
 #, c-format
 msgid "%d to %d players"
 msgstr "%d до %d играчи"
 
-#: qcsrc/client/main.qc:1375
+#: qcsrc/client/main.qc:1379
 #, c-format
 msgid "%d players maximum"
 msgstr "%d играчи максимум "
 
-#: qcsrc/client/main.qc:1377
+#: qcsrc/client/main.qc:1381
 #, c-format
 msgid "%d players minimum"
 msgstr "%d играчи минимум"
 
-#: qcsrc/client/main.qc:1382
+#: qcsrc/client/main.qc:1386
 msgid "Active modifications:"
 msgstr "Активни модификации:"
 
-#: qcsrc/client/main.qc:1385
+#: qcsrc/client/main.qc:1389
 msgid "Special gameplay tips:"
 msgstr "Специални съвети за игра:"
 
-#: qcsrc/client/main.qc:1392
+#: qcsrc/client/main.qc:1396
 msgid "Server's message"
 msgstr "Съобщение от сървъра"
 
-#: qcsrc/client/main.qc:1486
+#: qcsrc/client/main.qc:1490
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (не е свързано)"
@@ -1435,15 +1435,15 @@ msgstr "^1Грешка:^7 Не може да намери индекс."
 msgid "Requesting preview..."
 msgstr "Заявяване на преглед..."
 
-#: qcsrc/client/view.qc:960
+#: qcsrc/client/view.qc:1018
 msgid "Nade timer"
 msgstr "Таймер на гранати"
 
-#: qcsrc/client/view.qc:965
+#: qcsrc/client/view.qc:1023
 msgid "Capture progress"
 msgstr "Напредък на превземане"
 
-#: qcsrc/client/view.qc:970
+#: qcsrc/client/view.qc:1028
 msgid "Revival progress"
 msgstr "Процес на съживяване"
 
@@ -2183,7 +2183,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:102
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:60
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:109
-#: qcsrc/menu/xonotic/util.qc:768
+#: qcsrc/menu/xonotic/util.qc:754
 msgid "Color:"
 msgstr "Цвят:"
 
@@ -6148,6 +6148,45 @@ msgstr "Елемент %d"
 msgid "Custom"
 msgstr "Потребителски"
 
+#: qcsrc/menu/menu.qc:510
+#, c-format
+msgid "^3%s^7 in range \"%s\" to \"%s\""
+msgstr ""
+
+#: qcsrc/menu/menu.qc:512
+#, c-format
+msgid "^3%s^7 outside range \"%s\" to \"%s\""
+msgstr ""
+
+#: qcsrc/menu/menu.qc:541
+msgid "Has special requirements"
+msgstr ""
+
+#: qcsrc/menu/menu.qc:544
+#, c-format
+msgid "Requires ^3%s^7 not equal to \"%s^7\""
+msgstr ""
+
+#: qcsrc/menu/menu.qc:556
+#, c-format
+msgid "Requires %s, %s, and %s"
+msgstr ""
+
+#: qcsrc/menu/menu.qc:559
+#, c-format
+msgid "Requires %s and %s"
+msgstr ""
+
+#: qcsrc/menu/menu.qc:559
+#, c-format
+msgid "Requires %s or %s"
+msgstr ""
+
+#: qcsrc/menu/menu.qc:562
+#, c-format
+msgid "Requires %s"
+msgstr ""
+
 #: qcsrc/menu/xonotic/credits.qc:4
 msgid "Core Team"
 msgstr ""
@@ -6663,8 +6702,8 @@ msgstr "Панел с информационни съобщения"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:77
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:116
-#: qcsrc/menu/xonotic/util.qc:763 qcsrc/menu/xonotic/util.qc:779
-#: qcsrc/menu/xonotic/util.qc:796
+#: qcsrc/menu/xonotic/util.qc:749 qcsrc/menu/xonotic/util.qc:765
+#: qcsrc/menu/xonotic/util.qc:782
 msgid "Disable"
 msgstr "Забраняване"
 
@@ -6734,7 +6773,7 @@ msgstr "Панел за уведомления"
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:130
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:26
-#: qcsrc/menu/xonotic/util.qc:751
+#: qcsrc/menu/xonotic/util.qc:737
 msgid "Enable"
 msgstr ""
 
@@ -6775,6 +6814,7 @@ msgid "Flip speed/acceleration positions"
 msgstr "Размяна на позициите на скоростта/ускорението"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:108
 msgid "Speed:"
 msgstr "Скорост:"
 
@@ -6881,7 +6921,7 @@ msgstr "Радар:"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:70
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:124
-#: qcsrc/menu/xonotic/util.qc:785
+#: qcsrc/menu/xonotic/util.qc:771
 msgid "Alpha:"
 msgstr "Прозрачност:"
 
@@ -6910,6 +6950,7 @@ msgid "North"
 msgstr "Север"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:40
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:102
 msgid "Scale:"
 msgstr "Скала:"
 
@@ -7175,11 +7216,11 @@ msgstr ""
 msgid "Panel background defaults:"
 msgstr "Настройки на фона на панела:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48 qcsrc/menu/xonotic/util.qc:760
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48 qcsrc/menu/xonotic/util.qc:746
 msgid "Background:"
 msgstr "Фон:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60 qcsrc/menu/xonotic/util.qc:776
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60 qcsrc/menu/xonotic/util.qc:762
 msgid "Border size:"
 msgstr "Размер на рамката:"
 
@@ -7188,11 +7229,11 @@ msgstr "Размер на рамката:"
 msgid "Team color:"
 msgstr "Отборен цвят:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83 qcsrc/menu/xonotic/util.qc:802
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83 qcsrc/menu/xonotic/util.qc:788
 msgid "Test team color in configure mode"
 msgstr "Тестване на отборния цвят по време на конфигурирането"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86 qcsrc/menu/xonotic/util.qc:805
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86 qcsrc/menu/xonotic/util.qc:791
 msgid "Padding:"
 msgstr "Отстояние:"
 
@@ -7326,9 +7367,9 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:41
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:118
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
-#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:762
-#: qcsrc/menu/xonotic/util.qc:778 qcsrc/menu/xonotic/util.qc:787
-#: qcsrc/menu/xonotic/util.qc:795 qcsrc/menu/xonotic/util.qc:807
+#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:748
+#: qcsrc/menu/xonotic/util.qc:764 qcsrc/menu/xonotic/util.qc:773
+#: qcsrc/menu/xonotic/util.qc:781 qcsrc/menu/xonotic/util.qc:793
 msgid "Default"
 msgstr "По подразбиране"
 
@@ -9285,6 +9326,7 @@ msgstr ""
 "Колко бързо ще бъде приближаван изгледа, изключи за незабавно приближаване"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:91
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:119
 msgid "ZOOM^Instant"
 msgstr "ZOOM^Моментално"
 
@@ -9298,27 +9340,31 @@ msgid ""
 "sensitivity change)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:100
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:99
+msgid "Zoom scrolling"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:124
 msgid "Velocity zoom"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:101
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:125
 msgid "Forward movement only"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:105
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:129
 msgid "VZOOM^Factor"
 msgstr "VZOOM^Коефициент"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:112
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:136
 msgid "Display reticle 2D overlay while zooming"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:115
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:139
 msgid "Release zoom when you die or respawn"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:119
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:143
 msgid "Release zoom when you switch weapons"
 msgstr ""
 
@@ -10535,20 +10581,20 @@ msgstr ""
 msgid "%d (unranked)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:421
+#: qcsrc/menu/xonotic/util.qc:407
 msgid "Update can be downloaded at:"
 msgstr "Актуализацията може да бъде свалена на:"
 
-#: qcsrc/menu/xonotic/util.qc:519
+#: qcsrc/menu/xonotic/util.qc:505
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "Автоматично генериране на информацията за новодобавените карти..."
 
-#: qcsrc/menu/xonotic/util.qc:554
+#: qcsrc/menu/xonotic/util.qc:540
 #, c-format
 msgid "Update to %s now!"
 msgstr "Обновете до %s сега!"
 
-#: qcsrc/menu/xonotic/util.qc:639
+#: qcsrc/menu/xonotic/util.qc:625
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
@@ -10556,10 +10602,10 @@ msgstr ""
 "^1ГРЕШКА: Компресията на текстури се изисква, но не се поддържа.\n"
 "^1Очаквайте визуални проблеми."
 
-#: qcsrc/menu/xonotic/util.qc:773
+#: qcsrc/menu/xonotic/util.qc:759
 msgid "Use default"
 msgstr "Използване на стандартен"
 
-#: qcsrc/menu/xonotic/util.qc:793
+#: qcsrc/menu/xonotic/util.qc:779
 msgid "Team Color:"
 msgstr "Цвят на отбора:"
