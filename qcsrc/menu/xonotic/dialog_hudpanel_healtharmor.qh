@@ -6,7 +6,7 @@ CLASS(XonoticHUDHealthArmorDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDHealthArmorDialog, title, string, _("Health/Armor Panel"));
 	ATTRIB(XonoticHUDHealthArmorDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
 	ATTRIB(XonoticHUDHealthArmorDialog, intendedWidth, float, 0.4);
-	ATTRIB(XonoticHUDHealthArmorDialog, rows, float, 20);
+	ATTRIB(XonoticHUDHealthArmorDialog, rows, float, 18);
 	ATTRIB(XonoticHUDHealthArmorDialog, columns, float, 4);
 	ATTRIB(XonoticHUDHealthArmorDialog, name, string, "HUDhealtharmor");
 	ATTRIB(XonoticHUDHealthArmorDialog, requiresConnection, float, true);

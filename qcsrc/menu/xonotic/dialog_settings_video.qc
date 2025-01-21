@@ -19,13 +19,13 @@ void XonoticVideoSettingsTab_fill(entity me)
 {
 	entity e;
 	entity videoApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
-		"vid_width $_menu_vid_width;"
-		"vid_height $_menu_vid_height;"
-		"vid_pixelheight $_menu_vid_pixelheight;"
-		"vid_desktopfullscreen $_menu_vid_desktopfullscreen;"
-		"menu_cmd update_conwidths_before_vid_restart;"
-		"vid_restart;"
-		"menu_cmd sync;"
+		"vid_width $_menu_vid_width; "
+		"vid_height $_menu_vid_height; "
+		"vid_pixelheight $_menu_vid_pixelheight; "
+		"vid_desktopfullscreen $_menu_vid_desktopfullscreen; "
+		"menu_cmd update_conwidths_before_vid_restart; "
+		"vid_restart; "
+		"menu_cmd sync"
 		, COMMANDBUTTON_APPLY);
 	videoApplyButton.disableOnClick = true;
 

@@ -27,9 +27,9 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Status bar")));
 		me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_physics_progressbar"));
 			e.addText(e, _("None"),         0);
-			e.addText(e, _("Both"),         1);
 			e.addText(e, _("Speed"),        2);
 			e.addText(e, _("Acceleration"), 3);
+			e.addText(e, _("Both"),         1);
 			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);

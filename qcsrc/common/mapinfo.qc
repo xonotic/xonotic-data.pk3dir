@@ -650,7 +650,7 @@ Gametype MapInfo_Type_FromString(string gtype, bool dowarn, bool is_q3compat)
 
 string MapInfo_Type_Description(Gametype t)
 {
-	return t ? t.gametype_description : "";
+	return t ? t.m_description : "";
 }
 
 string MapInfo_Type_ToString(Gametype t)

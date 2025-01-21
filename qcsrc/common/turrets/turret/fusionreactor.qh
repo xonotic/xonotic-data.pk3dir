@@ -8,7 +8,7 @@ CLASS(FusionReactor, Turret)
 /* model      */ ATTRIB_STRZONE(FusionReactor, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(FusionReactor, head_model, string, strcat("models/turrets/", "reactor.md3"));
 /* netname    */ ATTRIB(FusionReactor, netname, string, "fusreac");
-/* fullname   */ ATTRIB(FusionReactor, turret_name, string, _("Fusion Reactor"));
+/* fullname   */ ATTRIB(FusionReactor, m_name, string, _("Fusion Reactor"));
 ENDCLASS(FusionReactor)
 
 #define X(BEGIN, P, END, class, prefix) \

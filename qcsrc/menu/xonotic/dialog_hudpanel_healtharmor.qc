@@ -24,18 +24,6 @@ void XonoticHUDHealthArmorDialog_fill(entity me)
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_healtharmor_progressbar", _("Enable status bar")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, ZCTX(_("PROGRESSBAR^Filled by health:"))));
-			setDependent(e, "hud_panel_healtharmor_progressbar", 1, 1);
-		me.TD(me, 1, 2.6, e = makeXonoticSlider(100, 200, 10, "hud_panel_healtharmor_maxhealth"));
-			setDependent(e, "hud_panel_healtharmor_progressbar", 1, 1);
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, ZCTX(_("PROGRESSBAR^Filled by armor:"))));
-			setDependent(e, "hud_panel_healtharmor_progressbar", 1, 1);
-		me.TD(me, 1, 2.6, e = makeXonoticSlider(100, 200, 10, "hud_panel_healtharmor_maxarmor"));
-			setDependent(e, "hud_panel_healtharmor_progressbar", 1, 1);
-	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 3.8, e = makeXonoticTextLabel(0, _("Status bar alignment:")));
 			setDependent(e, "hud_panel_healtharmor_progressbar", 1, 1);
 	me.TR(me);

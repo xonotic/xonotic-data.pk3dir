@@ -14,7 +14,7 @@ CLASS(Wyvern, Monster)
     ATTRIB(Wyvern, m_model, Model, MDL_MON_WYVERN);
 #endif
     ATTRIB(Wyvern, netname, string, "wyvern");
-    ATTRIB(Wyvern, monster_name, string, _("Wyvern"));
+    ATTRIB(Wyvern, m_name, string, _("Wyvern"));
 ENDCLASS(Wyvern)
 
 REGISTER_MONSTER(WYVERN, NEW(Wyvern));

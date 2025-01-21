@@ -1,19 +1,19 @@
 #include "stunned.qh"
 
 #ifdef SVQC
-METHOD(Stunned, m_remove, void(StatusEffects this, entity actor, int removal_type))
+METHOD(Stunned, m_remove, void(StatusEffect this, entity actor, int removal_type))
 {
     actor.effects &= ~EF_SHOCK;
     SUPER(Stunned).m_remove(this, actor, removal_type);
 }
 #if 0
 // TODO: some infinite source of stunning? e.g. some electric current
-METHOD(Stunned, m_persistent, bool(StatusEffects this, entity actor))
+METHOD(Stunned, m_persistent, bool(StatusEffect this, entity actor))
 {
     return true;
 }
 #endif
-METHOD(Stunned, m_tick, void(StatusEffects this, entity actor))
+METHOD(Stunned, m_tick, void(StatusEffect this, entity actor))
 {
     if(STAT(FROZEN, actor))
     {

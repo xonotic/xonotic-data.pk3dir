@@ -49,6 +49,11 @@ EFFECT(0, CRYLINK_IMPACT2,          "crylink_impact")
 EFFECT(0, CRYLINK_JOINEXPLODE,      "crylink_joinexplode")
 EFFECT(0, CRYLINK_MUZZLEFLASH,      "crylink_muzzleflash")
 
+// TODO: rename GREEN_HLAC_* to HLAC_* after next release (xonotic-v0.9.0)
+// see also common/weapons/weapon/hlac.q*
+EFFECT(0, GREEN_HLAC_IMPACT,        "hlac_impact")
+EFFECT(0, GREEN_HLAC_MUZZLEFLASH,   "hlac_muzzleflash")
+
 EFFECT(0, VORTEX_BEAM,              "nex_beam")
 EFFECT(0, VORTEX_BEAM_OLD,          "TE_TEI_G3")
 EFFECT(0, VORTEX_IMPACT,            "nex_impact")

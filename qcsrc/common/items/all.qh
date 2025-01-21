@@ -10,7 +10,7 @@ REGISTRY(Items, 32)
 REGISTRY_DEPENDS(Items, Models)
 #endif
 REGISTER_REGISTRY(Items)
-#define REGISTER_ITEM(id, class) REGISTER(Items, ITEM, id, m_id, NEW(class))
+#define REGISTER_ITEM(id, inst) REGISTER(Items, ITEM, id, m_id, inst)
 
 #ifdef CSQC
 // Copy Items registry here before it gets sorted alphabetically by REGISTRY_SORT

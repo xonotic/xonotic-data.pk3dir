@@ -1,9 +1,9 @@
 #include "sv_stale_move_negation.qh"
 
-AUTOCVAR(g_smneg, bool, false, "Stale-move negation: penalize repeated use of the same weapon");
-AUTOCVAR(g_smneg_bonus, bool, true, "Stale-move negation: allow weapons to become stronger than their baseline");
-AUTOCVAR(g_smneg_bonus_asymptote, float, 4, "Stale-move negation: damage = infinity at this bonus level");
-AUTOCVAR(g_smneg_cooldown_factor, float, 1 / 4, "Stale-move negation: penalty cooldown factor");
+AUTOCVAR(g_smneg, bool, false, "enable stale-move negation, penalizing repeated use of the same weapon");
+AUTOCVAR(g_smneg_bonus, bool, true, "allow weapons to become stronger than their baseline");
+AUTOCVAR(g_smneg_bonus_asymptote, float, 4, "stale-move negation damage is infinity at this bonus level");
+AUTOCVAR(g_smneg_cooldown_factor, float, 1 / 4, "stale-move negation penalty cooldown factor");
 REGISTER_MUTATOR(mutator_smneg, autocvar_g_smneg);
 
 MUTATOR_HOOKFUNCTION(mutator_smneg, BuildMutatorsString) {

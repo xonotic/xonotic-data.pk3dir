@@ -52,18 +52,18 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 			});
 			if(superweapons <= 1)
 			{
-				wep.superweapons_finished = StatusEffects_gettime(STATUSEFFECT_Superweapons, own);
-				StatusEffects_remove(STATUSEFFECT_Superweapons, own, STATUSEFFECT_REMOVE_CLEAR);
+				wep.superweapons_finished = StatusEffects_gettime(STATUSEFFECT_Superweapon, own);
+				StatusEffects_remove(STATUSEFFECT_Superweapon, own, STATUSEFFECT_REMOVE_CLEAR);
 			}
 			else
 			{
-				float timeleft = StatusEffects_gettime(STATUSEFFECT_Superweapons, own) - time;
+				float timeleft = StatusEffects_gettime(STATUSEFFECT_Superweapon, own) - time;
 				float weptimeleft = timeleft / superweapons;
 				wep.superweapons_finished = time + weptimeleft;
 				if(own.statuseffects)
 				{
 					// TODO: this doesn't explicitly enable the effect, use apply here?
-					own.statuseffects.statuseffect_time[STATUSEFFECT_Superweapons.m_id] -= weptimeleft;
+					own.statuseffects.statuseffect_time[STATUSEFFECT_Superweapon.m_id] -= weptimeleft;
 					StatusEffects_update(own);
 				}
 			}

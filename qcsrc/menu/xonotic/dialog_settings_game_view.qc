@@ -89,6 +89,23 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 1, 0.1, "cl_zoomsensitivity",
 			_("How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)")));
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_zoomscroll", _("Zoom scrolling")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Scale:")));
+			setDependent(e, "cl_zoomscroll", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticSlider(-1, 1, 0.1, "cl_zoomscroll_scale")); // would be better if this could skip 0
+			setDependent(e, "cl_zoomscroll", 1, 1);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Speed:")));
+			setDependent(e, "cl_zoomscroll", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_zoomscroll_speed"));
+			e.addRange(e, 2, 16, 2);
+			e.addText(e, ZCTX(_("ZOOM^Instant")), -1);
+			e.configureXonoticMixedSliderValues(e);
+			setDependent(e, "cl_zoomscroll", 1, 1);
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_velocityzoom_enabled", _("Velocity zoom")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(3, 1, "cl_velocityzoom_type", _("Forward movement only")));

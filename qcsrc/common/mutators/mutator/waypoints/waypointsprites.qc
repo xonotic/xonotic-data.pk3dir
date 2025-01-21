@@ -221,7 +221,7 @@ float spritelookupblinkvalue(entity this, string s)
 
 vector spritelookupcolor(entity this, string s, vector def)
 {
-    if (s == WP_Weapon.netname  || s == RADARICON_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).wpcolor;
+    if (s == WP_Weapon.netname  || s == RADARICON_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).m_color;
     if (s == WP_Item.netname    || s == RADARICON_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_color;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
@@ -237,7 +237,7 @@ string spritelookuptext(entity this, string s)
     if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
     if (s == WP_Weapon.netname) return REGISTRY_GET(Weapons, this.wp_extra).m_name;
     if (s == WP_Item.netname) return REGISTRY_GET(Items, this.wp_extra).m_waypoint;
-    if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).monster_name;
+    if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).m_name;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
         return M_ARGV(3, string);
