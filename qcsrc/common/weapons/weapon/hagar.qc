@@ -485,7 +485,7 @@ METHOD(Hagar, wr_impacteffect, void(entity thiswep, entity actor))
 	vector org2 = w_org + w_backoff * 2;
 	pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
 	if(!w_issilent)
-		sound(actor, CH_SHOTS, SND_HAGEXP_RANDOM(), VOL_BASE, ATTN_NORM);
+		sound(actor, CH_SHOTS, SND_HAGEXP_RANDOM(w_random), VOL_BASE, ATTN_NORM);
 }
 
 #endif
