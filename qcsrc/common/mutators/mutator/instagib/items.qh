@@ -53,7 +53,7 @@ SOUND(ExtraLife, Item_Sound("megahealth"));
 #endif
 
 CLASS(ExtraLife, Powerup)
-/* spawnfunc */ ATTRIB(ExtraLife, m_canonical_spawnfun, string, "item_extralife");
+/* spawnfunc */ ATTRIB(ExtraLife, m_canonical_spawnfunc, string, "item_extralife");
 #ifdef GAMEQC
 /* model     */ ATTRIB(ExtraLife, m_model, Model, MDL_ExtraLife_ITEM);
 /* sound     */ ATTRIB(ExtraLife, m_sound, Sound, SND_ExtraLife);
