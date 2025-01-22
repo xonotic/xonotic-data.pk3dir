@@ -653,14 +653,14 @@ METHOD(Seeker, wr_impacteffect, void(entity thiswep, entity actor))
 		{
 			pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(actor, CH_SHOTS, SND_TAGEXP_RANDOM(), 1, ATTEN_NORM);
+				sound(actor, CH_SHOTS, SND_TAGEXP_RANDOM(w_random), 1, ATTEN_NORM);
 		}
 	}
 	else
 	{
 		pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(actor, CH_SHOTS, SND_SEEKEREXP_RANDOM(), 1, ATTEN_NORM);
+			sound(actor, CH_SHOTS, SND_SEEKEREXP_RANDOM(w_random), 1, ATTEN_NORM);
 	}
 }
 

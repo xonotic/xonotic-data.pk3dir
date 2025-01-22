@@ -9,16 +9,16 @@ SOUND(SEEKER_FLAC_FIRE, W_Sound("flac_fire"));
 SOUND(TAGEXP1, W_Sound("tagexp1"));
 SOUND(TAGEXP2, W_Sound("tagexp2"));
 SOUND(TAGEXP3, W_Sound("tagexp3"));
-Sound SND_TAGEXP_RANDOM() {
-    return REGISTRY_GET(Sounds, SND_TAGEXP1.m_id + rint(random() * 2));
+Sound SND_TAGEXP_RANDOM(float rnd) {
+    return REGISTRY_GET(Sounds, SND_TAGEXP1.m_id + rint(rnd * 2));
 }
 SOUND(TAG_FIRE, W_Sound("tag_fire"));
 SOUND(TAG_IMPACT, W_Sound("tag_impact"));
 SOUND(SEEKEREXP1, W_Sound("seekerexp1"));
 SOUND(SEEKEREXP2, W_Sound("seekerexp2"));
 SOUND(SEEKEREXP3, W_Sound("seekerexp3"));
-Sound SND_SEEKEREXP_RANDOM() {
-    return REGISTRY_GET(Sounds, SND_SEEKEREXP1.m_id + rint(random() * 2));
+Sound SND_SEEKEREXP_RANDOM(float rnd) {
+    return REGISTRY_GET(Sounds, SND_SEEKEREXP1.m_id + rint(rnd * 2));
 }
 SOUND(SEEKER_FIRE, W_Sound("seeker_fire"));
 SOUND(SEEKER_ROCKET_FLY, W_Sound("tag_rocket_fly"));
