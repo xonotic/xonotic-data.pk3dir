@@ -136,7 +136,7 @@ float WarpZoneLib_BoxTouchesBrush_Recurse(vector mi, vector ma, entity e, entity
 
 float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 {
-	// bones_was_here: TODO: when findbox_OrFallback() builtin is available, use it to
+	// bones_was_here: TODO: when findbox_OrFallback() is available, use it to
 	// optimise this into a single non-recursive function that only calls tracebox once
 
 	float f, s;
