@@ -29,6 +29,7 @@ entity findbox_Fallback(vector mins, vector maxs)
 
 void CheckEngineExtensions(void)
 {
+	/* DO NOT SUBMIT: merge #1380 instead.
 	if (!cvar("pr_checkextension"))
 		LOG_FATAL("Engine lacks the QC extension system.");
 
@@ -69,4 +70,5 @@ void CheckEngineExtensions(void)
 #endif
 
 	// TODO: add proper warns/errors for other extensions we depend on
+	*/
 }
