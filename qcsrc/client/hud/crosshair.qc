@@ -90,13 +90,12 @@ int TrueAimCheck(entity wepent)
 
 	if(wep == WEP_RIFLE)
 	{
+		ta = trueaim_rifle; // WEAPONTODO
 		if(zoomscript_caught)
 		{
 			traceline(view_origin, view_origin + view_forward * max_shot_distance, mv, ta);
 			return EnemyHitCheck();
 		}
-
-		ta = trueaim_rifle; // WEAPONTODO
 	}
 
 	vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * STAT(VIEWHEIGHT));
