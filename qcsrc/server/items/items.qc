@@ -1,5 +1,6 @@
 #include "items.qh"
 
+#include <common/checkextension.qh>
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/gamemodes/gamemode/cts/cts.qh>
@@ -1081,7 +1082,7 @@ void StartItem(entity this, entity def)
 		}
 
 		// most loot items have a bigger horizontal size than a player
-		nudgeoutofsolid(this);
+		nudgeoutofsolid_OrFallback(this);
 
 		// don't drop if in a NODROP zone (such as lava)
 		traceline(this.origin, this.origin, MOVE_NORMAL, this);

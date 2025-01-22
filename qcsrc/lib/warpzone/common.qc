@@ -1,5 +1,7 @@
 #include "common.qh"
 
+#include <common/checkextension.qh>
+
 #if defined(CSQC)
     #include <client/items/items.qh>
 #elif defined(MENUQC)
@@ -134,7 +136,7 @@ float WarpZoneLib_BoxTouchesBrush_Recurse(vector mi, vector ma, entity e, entity
 
 float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 {
-	// bones_was_here: TODO: when findbox() builtin is available, use it to
+	// bones_was_here: TODO: when findbox_OrFallback() is available, use it to
 	// optimise this into a single non-recursive function that only calls tracebox once
 
 	float f, s;
