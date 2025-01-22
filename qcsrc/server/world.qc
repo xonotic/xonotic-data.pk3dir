@@ -208,6 +208,7 @@ void cvar_changes_init()
 		BADPREFIX("vid_");
 		BADPREFIX("crosshair");
 		BADPREFIX("notification_");
+		BADPREFIX("prvm_");
 		BADCVAR("mod_q3bsp_lightmapmergepower");
 		BADCVAR("mod_q3bsp_nolightmaps");
 		BADCVAR("fov");
@@ -219,7 +220,6 @@ void cvar_changes_init()
 		BADCVAR("bottomcolor");
 		BADCVAR("topcolor");
 		BADCVAR("playermodel");
-		BADCVAR("prvm_language");
 
 		// private
 		BADCVAR("developer");
@@ -425,7 +425,6 @@ void cvar_changes_init()
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
 		BADPREFIX("net_");
-		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
 		BADPREFIX("sv_cullentities_");
@@ -509,7 +508,6 @@ void cvar_changes_init()
 		BADCVAR("rcon_restricted_commands");
 		BADCVAR("rcon_restricted_password");
 		BADCVAR("skill");
-		BADCVAR("sv_adminnick");
 		BADCVAR("sv_autoscreenshot");
 		BADCVAR("sv_autotaunt");
 		BADCVAR("sv_curl_defaulturl");
