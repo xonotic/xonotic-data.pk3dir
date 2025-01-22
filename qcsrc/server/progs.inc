@@ -1,7 +1,7 @@
 #ifdef FTEQCC
 
 // To compile with fteqcc, run:
-// QCCFLAGS_WERROR='-O3' make -C data/xonotic-data.pk3dir/qcsrc ../progs.dat QCC=$HOME/src/fteqw/engine/qclib/fteqcc.bin
+// QCCFLAGS_WERROR='-TDP -O3' make -C data/xonotic-data.pk3dir/qcsrc ../progs.dat QCC=$HOME/src/fteqw/engine/qclib/fteqcc.bin
 
 // https://github.com/DarkPlacesEngine/DarkPlaces/pull/215
 #pragma opcode enable GLOBALADDRESS
