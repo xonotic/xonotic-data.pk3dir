@@ -18,7 +18,7 @@ void Send_WeaponComplain(entity e, float wpn, float type);
 bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andammo, bool complain);
 
 .int weaponcomplainindex;
-float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, float complain, float skipmissing, .entity weaponentity);
+float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, bool complain, bool skipmissing, .entity weaponentity);
 
 #define w_getbestweapon(ent,wepent) REGISTRY_GET(Weapons, W_GetCycleWeapon(ent, CS_CVAR(ent).cvar_cl_weaponpriority, 0, -1, false, true, wepent))
 
