@@ -1482,7 +1482,8 @@ void havocbot_ctf_calculate_middlepoint()
 	if(!n)
 		return;
 
-	havocbot_middlepoint = s / n;
+	// TODO: Consider changing this back to `s / n` after https://github.com/graphitemaster/gmqcc/issues/210.
+	havocbot_middlepoint = s * (1 / n);
 	havocbot_middlepoint_radius = vlen(fo - havocbot_middlepoint);
 
 	havocbot_symmetry_axis_m = 0;

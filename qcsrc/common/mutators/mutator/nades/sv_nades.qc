@@ -91,7 +91,7 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 	setmodel(orb, MDL_NADE_ORB);
 	orb.skin = 1;
 	orb.orb_radius = orb_rad; // required for fading
-	vector size = '1 1 1' * orb.orb_radius / 2;
+	vector size = '.5 .5 .5' * orb.orb_radius;
 	setsize(orb, -size, size);
 
 	Net_LinkEntity(orb, true, 0, orb_send);
