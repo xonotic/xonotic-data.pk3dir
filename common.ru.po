@@ -6962,7 +6962,7 @@ msgstr "Соотношение:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:27
 msgid "Show attack keys"
-msgstr "Показывать кнопки атаки"
+msgstr "Показывать кнопки огня"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
@@ -7226,7 +7226,7 @@ msgstr "Показывать только имеющееся оружие"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
 msgid "Show label:"
-msgstr ""
+msgstr "Пометка:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "Number"
@@ -9535,7 +9535,7 @@ msgstr "Переключаться только между применимым�
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:56
 msgid "Release attack buttons when you switch weapons"
-msgstr "Отключать кнопку атаки при смене оружия"
+msgstr "Отжимать кнопки атаки при смене оружия"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:58
 msgid "Auto switch weapons on pickup"
