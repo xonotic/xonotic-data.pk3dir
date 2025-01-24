@@ -15,7 +15,29 @@ float logfile;
 
 string GameLog_ProcessIP(string s);
 
+// Caller should check autocvar_sv_eventlog first.
 void GameLogEcho(string s);
+
+// Caller should check autocvar_sv_eventlog_verbose first.
+void GameLogEchoVerbose(string s);
+
+// Convenience macro to inline the check.
+// While loop used to allow this to be safely used as a statement.
+#define GAME_LOG_ECHO(s) \
+	while (autocvar_sv_eventlog) \
+	{ \
+		GameLogEcho(s); \
+		break; \
+	}
+
+// Convenience macro to inline the check.
+// While loop used to allow this to be safely used as a statement.
+#define GAME_LOG_ECHO_VERBOSE(s) \
+	while (autocvar_sv_eventlog_verbose) \
+	{ \
+		GameLogEchoVerbose(s); \
+		break; \
+	}
 
 void GameLogInit();
 

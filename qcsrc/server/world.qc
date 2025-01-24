@@ -2576,11 +2576,8 @@ void EndFrame()
 	systems_update();
 	IL_ENDFRAME();
 
-	if (autocvar_sv_eventlog_verbose)
-	{
-		GameLogEcho(sprintf(":verbose:EndFrame:%.9g:%.9g", time, frametime));
-	}
-
+	GAME_LOG_ECHO_VERBOSE(sprintf(":EndFrame:return:%.9g:%.9g",
+		time, frametime));
 }
 
 

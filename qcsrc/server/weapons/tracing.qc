@@ -23,11 +23,8 @@
 // make sure you call makevectors first (FIXME?)
 void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vector s_forward, vector mi, vector ma, float antilag, float recoil, Sound snd, float chan, float maxdamage, float range, int deathtype)
 {
-	if (autocvar_sv_eventlog_verbose)
-	{
-		GameLogEcho(sprintf(":verbose:W_SetupShot:args:%i:%.9v:%.9v:%.9v:%.9g:%.9g:%.9g",
-			ent, s_forward, mi, ma, recoil, maxdamage, range));
-	}
+	GAME_LOG_ECHO_VERBOSE(sprintf(":W_SetupShot:args:%i:%.9v:%.9v:%.9v:%.9g:%.9g:%.9g",
+		ent, s_forward, mi, ma, recoil, maxdamage, range));
 	TC(Sound, snd);
 	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	float oldsolid = ent.dphitcontentsmask;
@@ -177,11 +174,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	//if(w_shotorg != prevorg) { printf("SERVER: shotORG differs: %s - %s\n", vtos(w_shotorg), vtos(prevorg)); }
 	//if(w_shotdir != prevdir) { printf("SERVER: shotDIR differs: %s - %s\n", vtos(w_shotdir), vtos(prevdir)); }
 
-	if (autocvar_sv_eventlog_verbose)
-	{
-		GameLogEcho(sprintf(":verbose:W_SetupShot:return:%.9v:%.9v:%.9v",
-			w_shotorg, w_shotdir, w_shotend));
-	}
+	GAME_LOG_ECHO_VERBOSE(sprintf(":W_SetupShot:return:%.9v:%.9v:%.9v",
+		w_shotorg, w_shotdir, w_shotend));
 }
 
 vector W_CalculateProjectileVelocity(entity actor, vector pvelocity, vector mvelocity, float forceAbsolute)

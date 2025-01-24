@@ -299,15 +299,17 @@ void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
 {
-	if (autocvar_sv_eventlog_verbose)
-	{
-		GameLogEcho(sprintf(":verbose:StartFrame:%.9g:%.9g", time, frametime));
-	}
+	GAME_LOG_ECHO_VERBOSE(sprintf(":StartFrame:args:%.9g:%.9g",
+		time, frametime));
 
 	FOREACH_CLIENT(IS_FAKE_CLIENT(it),
 	{
 		// DP calls these for real clients only
+		GAME_LOG_ECHO_VERBOSE(sprintf(":SV_PlayerPhysics:args:%i:%.9f:%.9f:%.9v:%.9v:%.9v:%.9v",
+			it, time, frametime, it.origin, it.velocity, it.v_angle, it.movement));
 		sys_phys_update(it, frametime); // called by SV_PlayerPhysics for players
+		GAME_LOG_ECHO_VERBOSE(sprintf(":SV_PlayerPhysics:return:%i:%.9v:%.9v",
+			it, it.origin, it.velocity));
 		PlayerPreThink(it);
 	});
 

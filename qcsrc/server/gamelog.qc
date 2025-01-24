@@ -41,6 +41,14 @@ void GameLogEcho(string s)
 	}
 }
 
+void GameLogEchoVerbose(string s)
+{
+	if (autocvar_sv_eventlog_verbose)
+	{
+		GameLogEcho(strcat(":verbose", s));
+	}
+}
+
 void GameLogInit()
 {
 	GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", matchid));

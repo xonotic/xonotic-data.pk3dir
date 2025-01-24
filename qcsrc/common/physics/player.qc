@@ -844,6 +844,8 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 {
 #ifdef SVQC
 	// needs to be called before physics are run!
+	GAME_LOG_ECHO_VERBOSE(sprintf(":SV_PlayerPhysics:args:%i:%.9f:%.9f:%.9v:%.9v:%.9v:%.9v",
+		this, time, frametime, this.origin, this.velocity, this.v_angle, this.movement));
 	if(IS_REAL_CLIENT(this))
 		PM_UpdateButtons(this, CS(this));
 #elif defined(CSQC)
@@ -855,6 +857,8 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 
 #ifdef SVQC
 	CS(this).pm_frametime = frametime;
+	GAME_LOG_ECHO_VERBOSE(sprintf(":SV_PlayerPhysics:return:%i:%.9v:%.9v",
+		this, this.origin, this.velocity));
 #elif defined(CSQC)
 	if((ITEMS_STAT(this) & IT_USING_JETPACK) && !IS_DEAD(this) && !intermission)
 		this.csqcmodel_modelflags |= MF_ROCKET;
