@@ -24,20 +24,22 @@ void GameLogEchoVerbose(string s);
 // Convenience macro to inline the check.
 // While loop used to allow this to be safely used as a statement.
 #define GAME_LOG_ECHO(s) \
-	while (autocvar_sv_eventlog) \
+	do \
 	{ \
-		GameLogEcho(s); \
-		break; \
-	}
+		if (autocvar_sv_eventlog) \
+			GameLogEcho(s); \
+	} \
+	while (0)
 
 // Convenience macro to inline the check.
 // While loop used to allow this to be safely used as a statement.
 #define GAME_LOG_ECHO_VERBOSE(s) \
-	while (autocvar_sv_eventlog_verbose) \
+	do \
 	{ \
-		GameLogEchoVerbose(s); \
-		break; \
-	}
+		if (autocvar_sv_eventlog_verbose) \
+			GameLogEchoVerbose(s); \
+	} \
+	while (0)
 
 void GameLogInit();
 
