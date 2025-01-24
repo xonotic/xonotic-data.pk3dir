@@ -162,7 +162,10 @@ void setcolor(entity this, int clr)
 {
 #if 1
 	this.clientcolors = clr;
-	this.team = (clr & 15) + 1;
+	if(teamplay)
+		this.team = (clr & 15) + 1;
+	else
+		this.team = 0;
 #else
 	builtin_setcolor(this, clr);
 #endif
