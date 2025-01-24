@@ -1,5 +1,13 @@
 #include <common/effects/all.qh>
 
+// TODO: remove the effect definitions from effectinfo.txt post-release (xonotic-v0.9.0)
+//EFFECT(0, NADE_EXPLODE_RED,         "nade_red_explode")
+//EFFECT(0, NADE_EXPLODE_BLUE,        "nade_blue_explode")
+//EFFECT(0, NADE_EXPLODE_YELLOW,      "nade_yellow_explode")
+//EFFECT(0, NADE_EXPLODE_PINK,        "nade_pink_explode")
+//EFFECT(0, NADE_EXPLODE_GREEN,       "nade_green_explode")
+//EFFECT(0, NADE_EXPLODE_BROWN,       "nade_brown_explode")
+//EFFECT(0, NADE_EXPLODE_PURPLE,      "nade_purple_explode")
 EFFECT(0, NADE_EXPLODE,             "nade_neutral_explode")
 
 // TODO: these are used on the server side (BAD)
