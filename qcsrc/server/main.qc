@@ -299,6 +299,11 @@ void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
 {
+	if (autocvar_sv_eventlog_verbose)
+	{
+		GameLogEcho(sprintf(":verbose:StartFrame:%.9g:%.9g", time, frametime));
+	}
+
 	FOREACH_CLIENT(IS_FAKE_CLIENT(it),
 	{
 		// DP calls these for real clients only

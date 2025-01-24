@@ -607,6 +607,12 @@ void Unfreeze(entity targ, bool reset_health)
 
 void Damage(entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
+	if (autocvar_sv_eventlog_verbose)
+	{
+		GameLogEcho(sprintf(":verbose:Damage:args:%i:%i:%i:%.9g:%d:%.9v:%.9v",
+			targ, inflictor, attacker, damage, deathtype, hitloc, force));
+	}
+
 	float complainteamdamage = 0;
 	float mirrordamage = 0;
 	float mirrorforce = 0;
@@ -874,6 +880,13 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		UNSET_ONGROUND(targ);
 		UpdateCSQCProjectile(targ);
 	}
+
+	if (autocvar_sv_eventlog_verbose)
+	{
+		GameLogEcho(sprintf(":verbose:Damage:event_damage:%i:%i:%i:%.9g:%d:%.9v:%.9v",
+			targ, inflictor, attacker, damage, deathtype, hitloc, force));
+	}
+
 	// apply damage
 	if (damage != 0 || (targ.damageforcescale && force))
 	if (targ.event_damage)
@@ -894,6 +907,12 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
 								float inflictorselfdamage, float forceintensity, vector forcexyzscale, int deathtype, .entity weaponentity, entity directhitentity)
 {
+	if (autocvar_sv_eventlog_verbose)
+	{
+		GameLogEcho(sprintf(":verbose:RadiusDamage:args:%i:%.9v:%.9v:%i:%i:%i:%i",
+			inflictor, inflictororigin, inflictorvelocity, attacker, cantbe, mustbe, directhitentity));
+	}
+
 	entity	targ;
 	vector	force;
 	float   total_damage_to_creatures;
@@ -906,6 +925,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	if(RadiusDamage_running)
 	{
 		backtrace("RadiusDamage called recursively! Expect stuff to go HORRIBLY wrong.");
+		GameLogEcho(":verbose:RadiusDamage:return:-");
 		return 0;
 	}
 
@@ -1127,6 +1147,12 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 	if(!DEATH_ISSPECIAL(deathtype))
 		accuracy_add(attacker, DEATH_WEAPONOF(deathtype), 0, min(max(coredamage, edgedamage), stat_damagedone));
+
+	if (autocvar_sv_eventlog_verbose)
+	{
+		GameLogEcho(sprintf(":verbose:RadiusDamage:return:%.9g",
+			total_damage_to_creatures));
+	}
 
 	return total_damage_to_creatures;
 }

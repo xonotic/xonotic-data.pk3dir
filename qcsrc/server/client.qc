@@ -2607,6 +2607,12 @@ TODO: move more stuff from here and PlayerThink() and ObserverOrSpectatorThink()
 .float last_vehiclecheck;
 void PlayerPreThink (entity this)
 {
+	if (autocvar_sv_eventlog_verbose)
+	{
+		GameLogEcho(sprintf(":verbose:prethink:%i:%.9v:%.9v:%.9g:%.9g",
+			this, this.origin, this.velocity, this.health, this.armorvalue));
+	}
+
 	WarpZone_PlayerPhysics_FixVAngle(this);
 
 	zoomstate_set = false;
@@ -2759,6 +2765,12 @@ void PlayerPostThink (entity this)
 	}
 
 	CSQCMODEL_AUTOUPDATE(this);
+
+	if (autocvar_sv_eventlog_verbose)
+	{
+		GameLogEcho(sprintf(":verbose:postthink:%i:%.9v:%.9v:%.9g:%.9g",
+			this, this.origin, this.velocity, this.health, this.armorvalue));
+	}
 }
 
 /*
