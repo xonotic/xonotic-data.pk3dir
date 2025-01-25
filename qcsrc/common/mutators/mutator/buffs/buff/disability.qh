@@ -1,0 +1,32 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+float autocvar_g_buffs_disability_slowtime;
+float autocvar_g_buffs_disability_speed;
+float autocvar_g_buffs_disability_rate;
+float autocvar_g_buffs_disability_weaponspeed;
+
+void buff_Disability_ApplyStunned(entity frag_target, entity frag_attacker);
+#endif // SVQC
+
+CLASS(DisabilityBuff, Buff)
+	ATTRIB(DisabilityBuff, m_name, string, _("Disability"));
+	ATTRIB(DisabilityBuff, netname, string, "disability");
+	ATTRIB(DisabilityBuff, m_icon, string, "buff_disability");
+	ATTRIB(DisabilityBuff, m_skin, int, 7);
+	ATTRIB(DisabilityBuff, m_color, vector, '0.94 0.3 1');
+#ifdef MENUQC
+	METHOD(DisabilityBuff, describe, string(DisabilityBuff this))
+	{
+		TC(DisabilityBuff, this);
+		return sprintf(_("The %s causes your enemies and monsters to slow down for a few seconds when you attack them, while the buff is active\n\n"
+			"This is particularly useful against speedy players, especially in %s"),
+		COLORED_NAME_WITH_CONCAT(this, _("Buff")), COLORED_NAME(MAPINFO_TYPE_CTF));
+	}
+#endif
+ENDCLASS(DisabilityBuff)
+
+REGISTER_BUFF(DISABILITY, NEW(DisabilityBuff));
+BUFF_SPAWNFUNCS(disability, BUFF_DISABILITY)

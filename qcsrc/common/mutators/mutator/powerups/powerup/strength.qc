@@ -1,7 +1,7 @@
 #include "strength.qh"
 
 #ifdef SVQC
-METHOD(StrengthStatusEffect, m_remove, void(StatusEffects this, entity actor, int removal_type))
+METHOD(StrengthStatusEffect, m_remove, void(StatusEffect this, entity actor, int removal_type))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(removal_type == STATUSEFFECT_REMOVE_TIMEOUT && wasactive && IS_PLAYER(actor))
@@ -14,7 +14,7 @@ METHOD(StrengthStatusEffect, m_remove, void(StatusEffects this, entity actor, in
     actor.effects &= ~(EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
     SUPER(StrengthStatusEffect).m_remove(this, actor, removal_type);
 }
-METHOD(StrengthStatusEffect, m_apply, void(StatusEffects this, entity actor, float eff_time, float eff_flags))
+METHOD(StrengthStatusEffect, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
 {
     bool wasactive = (actor.statuseffects && (actor.statuseffects.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_ACTIVE));
     if(!wasactive && IS_PLAYER(actor))
@@ -25,21 +25,21 @@ METHOD(StrengthStatusEffect, m_apply, void(StatusEffects this, entity actor, flo
     }
     SUPER(StrengthStatusEffect).m_apply(this, actor, eff_time, eff_flags);
 }
-METHOD(StrengthStatusEffect, m_tick, void(StatusEffects this, entity actor))
+METHOD(StrengthStatusEffect, m_tick, void(StatusEffect this, entity actor))
 {
     play_countdown(actor, StatusEffects_gettime(this, actor), SND_POWEROFF);
     actor.effects |= (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
     SUPER(StrengthStatusEffect).m_tick(this, actor);
 }
-#endif
+#endif // SVQC
 #ifdef CSQC
-METHOD(StrengthStatusEffect, m_active, bool(StatusEffects this, entity actor))
+METHOD(StrengthStatusEffect, m_active, bool(StatusEffect this, entity actor))
 {
     if(autocvar__hud_configure)
         return true;
     return SUPER(StrengthStatusEffect).m_active(this, actor);
 }
-METHOD(StrengthStatusEffect, m_tick, void(StatusEffects this, entity actor))
+METHOD(StrengthStatusEffect, m_tick, void(StatusEffect this, entity actor))
 {
     if(this.m_hidden)
         return;
@@ -47,7 +47,7 @@ METHOD(StrengthStatusEffect, m_tick, void(StatusEffects this, entity actor))
     float currentTime = (autocvar__hud_configure) ? 15 : bound(0, actor.statuseffect_time[this.m_id] - time, 99);
     addPowerupItem(this.m_name, this.m_icon, autocvar_hud_progressbar_strength_color, currentTime, this.m_lifetime, (actor.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_PERSISTENT));
 }
-#endif
+#endif // CSQC
 #ifdef MENUQC
 METHOD(StrengthItem, describe, string(StrengthItem this))
 {
@@ -58,4 +58,4 @@ METHOD(StrengthItem, describe, string(StrengthItem this))
         "Since it is a powerup, it will drop if you die while holding it"),
     COLORED_NAME(this));
 }
-#endif
+#endif // MENUQC

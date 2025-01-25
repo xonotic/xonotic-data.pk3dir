@@ -16,7 +16,7 @@ REGISTER_MUTATOR(buffs, autocvar_g_buffs)
 	}
 }
 
-bool  autocvar_g_buffs_effects;
+bool autocvar_g_buffs_effects;
 float autocvar_g_buffs_waypoint_distance;
 bool autocvar_g_buffs_pickup_anyway = false;
 float autocvar_g_buffs_pickup_delay = 0.7;
@@ -31,38 +31,7 @@ bool autocvar_g_buffs_replace_available = true;
 bool autocvar_g_buffs_drop = false;
 float autocvar_g_buffs_cooldown_activate;
 float autocvar_g_buffs_cooldown_respawn;
-float autocvar_g_buffs_resistance_blockpercent;
-float autocvar_g_buffs_medic_survive_chance;
-float autocvar_g_buffs_medic_survive_health;
-float autocvar_g_buffs_medic_rot;
-float autocvar_g_buffs_medic_max;
-float autocvar_g_buffs_medic_regen;
-float autocvar_g_buffs_vengeance_damage_multiplier;
-float autocvar_g_buffs_bash_force;
-float autocvar_g_buffs_bash_force_self;
-float autocvar_g_buffs_disability_slowtime;
-float autocvar_g_buffs_disability_speed;
-float autocvar_g_buffs_disability_rate;
-float autocvar_g_buffs_disability_weaponspeed;
-float autocvar_g_buffs_vampire_damage_steal;
-float autocvar_g_buffs_jump_height;
-float autocvar_g_buffs_inferno_burntime_factor;
-float autocvar_g_buffs_inferno_burntime_min_time;
-float autocvar_g_buffs_inferno_burntime_target_damage;
-float autocvar_g_buffs_inferno_burntime_target_time;
-float autocvar_g_buffs_inferno_damagemultiplier;
-float autocvar_g_buffs_swapper_range;
-float autocvar_g_buffs_magnet_range_item;
-float autocvar_g_buffs_magnet_range_buff = 200;
-float autocvar_g_buffs_luck_chance = 0.15;
-float autocvar_g_buffs_luck_damagemultiplier = 3;
 
-// ammo
-.int buff_ammo_prev_infitems;
-.int buff_ammo_prev_clipload;
-// flight
-.float buff_flight_oldgravity;
-.bool buff_flight_crouchheld;
 // common buff variables
 .float buff_effect_delay;
 

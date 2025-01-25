@@ -8,7 +8,7 @@ CLASS(OverkillRocketPropelledChainsaw, Weapon)
 /* impulse   */ ATTRIB(OverkillRocketPropelledChainsaw, impulse, int, 9);
 /* flags     */ ATTRIB(OverkillRocketPropelledChainsaw, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON);
 /* rating    */ ATTRIB(OverkillRocketPropelledChainsaw, bot_pickupbasevalue, float, 10000);
-/* color     */ ATTRIB(OverkillRocketPropelledChainsaw, m_color, vector, '0.5 0.5 0');
+/* color     */ ATTRIB(OverkillRocketPropelledChainsaw, m_color, vector, '0.914 0.745 0.341');
 /* modelname */ ATTRIB(OverkillRocketPropelledChainsaw, mdl, string, "ok_rl");
 #ifdef GAMEQC
 /* model     */ ATTRIB(OverkillRocketPropelledChainsaw, m_model, Model, MDL_RPC_ITEM);

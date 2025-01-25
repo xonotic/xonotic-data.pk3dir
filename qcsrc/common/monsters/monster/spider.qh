@@ -31,7 +31,7 @@ REGISTER_WEAPON(SPIDER_ATTACK, NEW(SpiderAttack));
 
 #include <common/mutators/mutator/status_effects/all.qh>
 
-CLASS(Webbed, StatusEffects)
+CLASS(Webbed, StatusEffect)
     ATTRIB(Webbed, netname, string, "webbed");
 #if 0
     // NOTE: status effect name and icon disabled as they are not displayed

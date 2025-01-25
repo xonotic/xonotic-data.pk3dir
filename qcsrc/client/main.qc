@@ -93,6 +93,8 @@ void CSQC_Init(float apilevel, string enginename, float engineversion)
 
 	registercvar("cl_dodging", "0");
 
+	registercvar("cl_autoswitch_cts", "-1");
+
 	registercvar("cl_spawn_near_teammate", "1");
 
 	registercvar("cl_weapon_switch_reload", "1");
@@ -488,6 +490,10 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		return true;
 
 	override |= HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary);
+	if (override)
+		return true;
+
+	override |= View_InputEvent(bInputType, nPrimary, nSecondary);
 	if (override)
 		return true;
 

@@ -6,7 +6,7 @@ CLASS(Electro, Weapon)
 /* impulse   */ ATTRIB(Electro, impulse, int, 5);
 /* flags     */ ATTRIB(Electro, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Electro, bot_pickupbasevalue, float, 5000);
-/* color     */ ATTRIB(Electro, m_color, vector, '0 0.5 1');
+/* color     */ ATTRIB(Electro, m_color, vector, '0.408 0.600 0.949');
 /* modelname */ ATTRIB(Electro, mdl, string, "electro");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Electro, m_model, Model, MDL_ELECTRO_ITEM);

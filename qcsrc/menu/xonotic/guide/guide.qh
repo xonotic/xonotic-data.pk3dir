@@ -94,7 +94,7 @@ REGISTRY_SOURCE(GametypeSource, Gametypes, Gametypes)
 // The descriptions for these are in common/gamemodes/gamemode/*/*.qc
 
 #include <common/mutators/mutator/buffs/buffs.qh>
-REGISTRY_SOURCE(BuffSource, Buffs, StatusEffect, it.instanceOfBuff)
+REGISTRY_SOURCE(BuffSource, Buffs, StatusEffects, it.instanceOfBuff)
 // The descriptions for these are in common/mutators/mutator/buffs/all.inc
 
 #include <common/mutators/mutator/powerups/powerup/_mod.qh>

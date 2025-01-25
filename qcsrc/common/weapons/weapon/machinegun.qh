@@ -6,7 +6,7 @@ CLASS(MachineGun, Weapon)
 /* impulse   */ ATTRIB(MachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(MachineGun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_BLEED);
 /* rating    */ ATTRIB(MachineGun, bot_pickupbasevalue, float, 7000);
-/* color     */ ATTRIB(MachineGun, m_color, vector, '1 1 0');
+/* color     */ ATTRIB(MachineGun, m_color, vector, '0.678 0.886 0.267');
 /* modelname */ ATTRIB(MachineGun, mdl, string, "uzi");
 #ifdef GAMEQC
 /* model     */ ATTRIB(MachineGun, m_model, Model, MDL_MACHINEGUN_ITEM);

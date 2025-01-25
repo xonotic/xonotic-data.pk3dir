@@ -24,7 +24,7 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 {
 	entity e;
 	entity weaponsApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
-		"sendcvar cl_weaponpriority;"
+		"sendcvar cl_weaponpriority"
 		, COMMANDBUTTON_APPLY);
 	weaponsApplyButton.disableOnClick = true;
 
@@ -53,11 +53,19 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 			e.sendCvars = true;
 	me.TR(me);
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_unpress_attack_on_weapon_switch", _("Release attack buttons when you switch weapons")));
+	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "cl_autoswitch", _("Auto switch weapons on pickup"),
 			_("Automatically switch to newly picked up weapons if they are better than what you are carrying")));
 			e.sendCvars = true;
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_unpress_attack_on_weapon_switch", _("Release attack buttons when you switch weapons")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Auto switch in CTS:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_autoswitch_cts"));
+			e.addValue(e, _("Default"), "-1");
+			e.addValue(e, _("Always"), "1");
+			e.addValue(e, _("Never"), "0");
+			e.configureXonoticTextSliderValues(e);
+			e.sendCvars = true;
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "r_drawviewmodel", _("Draw 1st person weapon model"),
@@ -74,17 +82,16 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 			_("Position of the weapon model; requires reconnect")));
 			setDependent(e, "r_drawviewmodel", 1, 1);
 	me.TR(me);
-			me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Weapon model opacity:")));
-				setDependent(e, "r_drawviewmodel", 1, 1);
-
-			me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_viewmodel_alpha"));
-				setDependent(e, "r_drawviewmodel", 1, 1);
-				e.addValue(e, "15%", "0.15");
-				e.addValue(e, "25%", "0.25");
-				e.addValue(e, "50%", "0.5");
-				e.addValue(e, "75%", "0.75");
-				e.addValue(e, "100%", "1");
-				e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Weapon model opacity:")));
+			setDependent(e, "r_drawviewmodel", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_viewmodel_alpha"));
+			setDependent(e, "r_drawviewmodel", 1, 1);
+			e.addValue(e, "15%", "0.15");
+			e.addValue(e, "25%", "0.25");
+			e.addValue(e, "50%", "0.5");
+			e.addValue(e, "75%", "0.75");
+			e.addValue(e, "100%", "1");
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);

@@ -1,12 +1,13 @@
 #include "sv_monsters.qh"
 
+#include <common/checkextension.qh>
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/all.qh>
-#include <common/mutators/mutator/nades/nades.qh>
+#include <common/mutators/mutator/nades/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/physics/movelib.qh>
 #include <common/stats.qh>
@@ -1543,7 +1544,7 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 		setorigin(this, trace_endpos);
 	}
 
-	if (!nudgeoutofsolid(this))
+	if (!nudgeoutofsolid_OrFallback(this))
 	{
 		// Stuck and not fixable
 		Monster_Remove(this);

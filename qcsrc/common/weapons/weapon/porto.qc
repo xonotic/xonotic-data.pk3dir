@@ -1,5 +1,7 @@
 #include "porto.qh"
 
+#include <common/checkextension.qh>
+
 #ifdef CSQC
 
 STATIC_INIT(Porto)
@@ -124,7 +126,7 @@ void W_Porto_Fail(entity this, float failhard)
 		// FIXME: item properties should be obtained from the registry
 		setsize(this, ITEM_D_MINS, ITEM_D_MAXS);
 		setorigin(this, this.origin + trace_plane_normal);
-		if(nudgeoutofsolid(this))
+		if(nudgeoutofsolid_OrFallback(this))
 		{
 			this.flags = FL_ITEM;
 			IL_PUSH(g_items, this);

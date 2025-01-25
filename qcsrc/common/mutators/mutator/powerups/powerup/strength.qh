@@ -54,9 +54,9 @@ REGISTER_ITEM(Strength, NEW(StrengthItem));
 
 SPAWNFUNC_ITEM(item_strength, ITEM_Strength)
 
-CLASS(StrengthStatusEffect, Powerups)
-    ATTRIB(StrengthStatusEffect, netname, string, "strength");
-    ATTRIB(StrengthStatusEffect, m_name, string, _("Strength"));
-    ATTRIB(StrengthStatusEffect, m_icon, string, "strength");
+CLASS(StrengthStatusEffect, PowerupStatusEffect)
+	ATTRIB(StrengthStatusEffect, netname, string, "strength");
+	ATTRIB(StrengthStatusEffect, m_name, string, _("Strength"));
+	ATTRIB(StrengthStatusEffect, m_icon, string, "strength");
 ENDCLASS(StrengthStatusEffect)
 REGISTER_STATUSEFFECT(Strength, NEW(StrengthStatusEffect));

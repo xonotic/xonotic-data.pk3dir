@@ -1,0 +1,34 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+float autocvar_g_buffs_inferno_burntime_factor;
+float autocvar_g_buffs_inferno_burntime_min_time;
+float autocvar_g_buffs_inferno_burntime_target_damage;
+float autocvar_g_buffs_inferno_burntime_target_time;
+float autocvar_g_buffs_inferno_damagemultiplier;
+
+float buff_Inferno_CalculateTime(float dmg);
+float buff_Inferno_CalculateDamage(float frag_damage);
+#endif // SVQC
+
+CLASS(InfernoBuff, Buff)
+	ATTRIB(InfernoBuff, m_name, string, _("Inferno"));
+	ATTRIB(InfernoBuff, netname, string, "inferno");
+	ATTRIB(InfernoBuff, m_icon, string, "buff_inferno");
+	ATTRIB(InfernoBuff, m_skin, int, 16);
+	ATTRIB(InfernoBuff, m_color, vector, '1 0.62 0');
+#ifdef MENUQC
+	METHOD(InfernoBuff, describe, string(InfernoBuff this))
+	{
+		TC(InfernoBuff, this);
+		return sprintf(_("The %s sets any enemies or monsters you attack alight, dealing burn damage to them for several seconds until the buff expires"),
+		COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	}
+#endif
+ENDCLASS(InfernoBuff)
+
+REGISTER_BUFF(INFERNO, NEW(InfernoBuff));
+BUFF_SPAWNFUNCS(inferno, BUFF_INFERNO)
+BUFF_SPAWNFUNC_Q3COMPAT(item_doubler, BUFF_INFERNO)

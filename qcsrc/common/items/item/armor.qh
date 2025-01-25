@@ -42,7 +42,7 @@ CLASS(ArmorSmall, Armor)
 /* itemname     */ ATTRIB(ArmorSmall, m_name, string, _("Small armor"));
 /* icon         */ ATTRIB(ArmorSmall, m_icon, string, // ...
 #ifdef CSQC
-    (precache_pic(strcat("gfx/hud/luma/", "health_small")) == "")
+    (precache_pic(strcat("gfx/hud/luma/", "armor_small")) == "")
         ? "armor" // compatible with Xonotic v0.8.2 or lower
         : "armor_small"
 #else
@@ -53,9 +53,9 @@ CLASS(ArmorSmall, Armor)
 /* minsize      */ ATTRIB(ArmorSmall, m_mins, vector, ITEM_S_MINS);
 /* maxsize      */ ATTRIB(ArmorSmall, m_maxs, vector, ITEM_S_MAXS);
 /* itemid       */ ATTRIB(ArmorSmall, m_itemid, int, IT_RESOURCE);
-/* respawntime  */ ATTRIB(ArmorSmall, m_respawntime, float, GET(g_pickup_respawntime_armor_small));
-/*              */ ATTRIB(ArmorSmall, m_respawntimejitter, float, GET(g_pickup_respawntimejitter_armor_small));
-/* pickupanyway */ ATTRIB(ArmorSmall, m_pickupanyway, float, GET(g_pickup_armorsmall_anyway));
+/* respawntime  */ ATTRIB(ArmorSmall, m_respawntime, float(), GET(g_pickup_respawntime_armor_small));
+/*              */ ATTRIB(ArmorSmall, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_armor_small));
+/* pickupanyway */ ATTRIB(ArmorSmall, m_pickupanyway, float(), GET(g_pickup_armorsmall_anyway));
 /* iteminit     */ ATTRIB(ArmorSmall, m_iteminit, void(Pickup this, entity item), item_armorsmall_init);
 #endif
 ENDCLASS(ArmorSmall)
@@ -103,9 +103,9 @@ CLASS(ArmorMedium, Armor)
 /* minsize      */ ATTRIB(ArmorMedium, m_mins, vector, ITEM_S_MINS);
 /* maxsize      */ ATTRIB(ArmorMedium, m_maxs, vector, ITEM_S_MAXS);
 /* itemid       */ ATTRIB(ArmorMedium, m_itemid, int, IT_RESOURCE);
-/* respawntime  */ ATTRIB(ArmorMedium, m_respawntime, float, GET(g_pickup_respawntime_armor_medium));
-/*              */ ATTRIB(ArmorMedium, m_respawntimejitter, float, GET(g_pickup_respawntimejitter_armor_medium));
-/* pickupanyway */ ATTRIB(ArmorMedium, m_pickupanyway, float, GET(g_pickup_armormedium_anyway));
+/* respawntime  */ ATTRIB(ArmorMedium, m_respawntime, float(), GET(g_pickup_respawntime_armor_medium));
+/*              */ ATTRIB(ArmorMedium, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_armor_medium));
+/* pickupanyway */ ATTRIB(ArmorMedium, m_pickupanyway, float(), GET(g_pickup_armormedium_anyway));
 /* iteminit     */ ATTRIB(ArmorMedium, m_iteminit, void(Pickup this, entity item), item_armormedium_init);
 #endif
 ENDCLASS(ArmorMedium)
@@ -149,12 +149,13 @@ CLASS(ArmorBig, Armor)
     "armor_big"
 #endif
 );
+/* color        */ ATTRIB(ArmorBig, m_color, vector, '0 1 0');
 /* wptext       */ ATTRIB(ArmorBig, m_waypoint, string, _("Big armor"));
 #ifdef SVQC
 /* itemid       */ ATTRIB(ArmorBig, m_itemid, int, IT_RESOURCE);
-/* respawntime  */ ATTRIB(ArmorBig, m_respawntime, float, GET(g_pickup_respawntime_armor_big));
-/*              */ ATTRIB(ArmorBig, m_respawntimejitter, float, GET(g_pickup_respawntimejitter_armor_big));
-/* pickupanyway */ ATTRIB(ArmorBig, m_pickupanyway, float, GET(g_pickup_armorbig_anyway));
+/* respawntime  */ ATTRIB(ArmorBig, m_respawntime, float(), GET(g_pickup_respawntime_armor_big));
+/*              */ ATTRIB(ArmorBig, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_armor_big));
+/* pickupanyway */ ATTRIB(ArmorBig, m_pickupanyway, float(), GET(g_pickup_armorbig_anyway));
 /* iteminit     */ ATTRIB(ArmorBig, m_iteminit, void(Pickup this, entity item), item_armorbig_init);
 #endif
 ENDCLASS(ArmorBig)
@@ -198,14 +199,15 @@ CLASS(ArmorMega, Armor)
     "armor_mega"
 #endif
 );
+/* color        */ ATTRIB(ArmorMega, m_color, vector, '0 1 0');
 /* wptext       */ ATTRIB(ArmorMega, m_waypoint, string, _("Mega armor"));
 /* wpblink      */ ATTRIB(ArmorMega, m_waypointblink, int, 2);
 #ifdef SVQC
 /* maxsize      */ ATTRIB(ArmorMega, m_maxs, vector, ITEM_L_MAXS);
 /* itemid       */ ATTRIB(ArmorMega, m_itemid, int, IT_RESOURCE);
-/* respawntime  */ ATTRIB(ArmorMega, m_respawntime, float, GET(g_pickup_respawntime_armor_mega));
-/*              */ ATTRIB(ArmorMega, m_respawntimejitter, float, GET(g_pickup_respawntimejitter_armor_mega));
-/* pickupanyway */ ATTRIB(ArmorMega, m_pickupanyway, float, GET(g_pickup_armormega_anyway));
+/* respawntime  */ ATTRIB(ArmorMega, m_respawntime, float(), GET(g_pickup_respawntime_armor_mega));
+/*              */ ATTRIB(ArmorMega, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_armor_mega));
+/* pickupanyway */ ATTRIB(ArmorMega, m_pickupanyway, float(), GET(g_pickup_armormega_anyway));
 /* iteminit     */ ATTRIB(ArmorMega, m_iteminit, void(Pickup this, entity item), item_armormega_init);
 #endif
 ENDCLASS(ArmorMega)

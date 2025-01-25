@@ -31,12 +31,21 @@ test_compilation_units:
       - qcsrc/**/*
   stage: test
   script:
-    - make test
+    - >
+      if ! make test-diff ; then
+        printf "\e[31m %s \e[0m\n" "Previous script in the pipeline produced a change."
+        printf "\e[31m %s \e[0m\n" "This is treated as a test failure."
+        printf "\e[31m %s \e[0m\n" "Please run 'make test-diff' locally"
+        printf "\e[31m %s \e[0m\n" "and address the changes somehow in a commit."
+        exit 1
+      fi
+
+    - make test-comp
 
 test_sv_game:
   stage: test
   script:
-    - export EXPECT=f5fbfbd04a22e781397cfd14db367419
+    - export EXPECT=ee6d65824c57cb6d83cba31481a21822
     - qcsrc/tools/sv_game-hashtest.sh
     - exit $?
 

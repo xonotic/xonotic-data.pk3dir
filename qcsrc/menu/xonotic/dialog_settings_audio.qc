@@ -20,8 +20,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 {
 	entity e, e2, s;
 	entity audioApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
-		"snd_restart;"
-		"snd_attenuation_method_${menu_snd_attenuation_method};"
+		"snd_restart; "
+		"snd_attenuation_method_${menu_snd_attenuation_method}"
 		, COMMANDBUTTON_APPLY);
 	audioApplyButton.disableOnClick = true;
 

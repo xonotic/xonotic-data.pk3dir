@@ -56,10 +56,10 @@ REGISTER_ITEM(Speed, NEW(SpeedItem));
 SPAWNFUNC_ITEM(item_speed, ITEM_Speed)
 SPAWNFUNC_ITEM(item_buff_speed, ITEM_Speed)
 
-CLASS(SpeedStatusEffect, Powerups)
-    ATTRIB(SpeedStatusEffect, netname, string, "speed");
-    ATTRIB(SpeedStatusEffect, m_name, string, _("Speed"));
-    ATTRIB(SpeedStatusEffect, m_color, vector, '0.1 1 0.84');
-    ATTRIB(SpeedStatusEffect, m_icon, string, "buff_speed");
+CLASS(SpeedStatusEffect, PowerupStatusEffect)
+	ATTRIB(SpeedStatusEffect, netname, string, "speed");
+	ATTRIB(SpeedStatusEffect, m_name, string, _("Speed"));
+	ATTRIB(SpeedStatusEffect, m_color, vector, '0.1 1 0.84');
+	ATTRIB(SpeedStatusEffect, m_icon, string, "buff_speed");
 ENDCLASS(SpeedStatusEffect)
 REGISTER_STATUSEFFECT(Speed, NEW(SpeedStatusEffect));

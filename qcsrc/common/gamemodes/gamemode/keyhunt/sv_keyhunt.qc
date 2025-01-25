@@ -1,5 +1,6 @@
 #include "sv_keyhunt.qh"
 
+#include <common/checkextension.qh>
 #include <server/command/vote.qh>
 #include <server/gamelog.qh>
 #include <server/damage.qh>
@@ -76,7 +77,7 @@ float kh_interferemsg_time;
 .entity kh_next, kh_prev; // linked list
 .float kh_droptime;
 .int kh_dropperteam;
-.entity kh_previous_owner;
+.entity previous_owner; // also used on ka balls
 .int kh_previous_owner_playerid;
 
 int kh_key_dropped, kh_key_carried;
@@ -291,14 +292,14 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	if(!IL_CONTAINS(g_items, key))
 		IL_PUSH(g_items, key);
 	set_movetype(key, MOVETYPE_TOSS);
-	nudgeoutofsolid(key); // a key has a bigger bbox than a player
+	nudgeoutofsolid_OrFallback(key); // a key has a bigger bbox than a player
 	key.pain_finished = time + autocvar_g_balance_keyhunt_delay_return;
 	key.damageforcescale = autocvar_g_balance_keyhunt_damageforcescale;
 	key.takedamage = DAMAGE_YES;
 	// let key.team stay
 	key.modelindex = kh_key_dropped;
 	navigation_dynamicgoal_set(key, key.owner);
-	key.kh_previous_owner = key.owner;
+	key.previous_owner = key.owner;
 	key.kh_previous_owner_playerid = key.owner.playerid;
 }
 
@@ -584,8 +585,8 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 
 	if(attacker)
 	{
-		if(lostkey.kh_previous_owner)
-			kh_Scores_Event(lostkey.kh_previous_owner, NULL, "pushed", 0, -autocvar_g_balance_keyhunt_score_push);
+		if(lostkey.previous_owner)
+			kh_Scores_Event(lostkey.previous_owner, NULL, "pushed", 0, -autocvar_g_balance_keyhunt_score_push);
 			// don't actually GIVE them the -nn points, just log
 		kh_Scores_Event(attacker, NULL, "push", autocvar_g_balance_keyhunt_score_push, 0);
 		GameRules_scoring_add(attacker, KH_PUSHES, 1);
@@ -604,12 +605,12 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 			if(key.owner && key.team != loser_team)
 				++keys;
 
-		if(lostkey.kh_previous_owner)
-			kh_Scores_Event(lostkey.kh_previous_owner, NULL, "destroyed", 0, -autocvar_g_balance_keyhunt_score_destroyed);
+		if(lostkey.previous_owner)
+			kh_Scores_Event(lostkey.previous_owner, NULL, "destroyed", 0, -autocvar_g_balance_keyhunt_score_destroyed);
 			// don't actually GIVE them the -nn points, just log
 
-		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
-			GameRules_scoring_add(lostkey.kh_previous_owner, KH_DESTRUCTIONS, 1);
+		if(lostkey.previous_owner.playerid == lostkey.kh_previous_owner_playerid)
+			GameRules_scoring_add(lostkey.previous_owner, KH_DESTRUCTIONS, 1);
 
 		DistributeEvenly_Init(autocvar_g_balance_keyhunt_score_destroyed, keys * of + players);
 
@@ -649,9 +650,9 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 	int realteam = kh_Team_ByID(lostkey.count);
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(loser_team, CENTER_ROUND_TEAM_LOSS));
 	if(attacker)
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_PUSHED), attacker.netname, lostkey.kh_previous_owner.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_PUSHED), attacker.netname, lostkey.previous_owner.netname);
 	else
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_DESTROYED), lostkey.kh_previous_owner.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_DESTROYED), lostkey.previous_owner.netname);
 
 	play2all(SND(KH_DESTROY));
 	te_tarexplosion(lostkey.origin);

@@ -57,7 +57,7 @@ entity makeXonoticInputSettingsTab()
 void CheckBox_Click_Redisplay(entity me, entity checkbox)
 {
 	CheckBox_Click(me, checkbox);
-	cmd("\ndefer 0.2 \"togglemenu 1\"\n");
+	localcmd("\ndefer 0.2 \"togglemenu 1\"\n");
 	//m_display();
 }
 void XonoticInputSettingsTab_fill(entity me)

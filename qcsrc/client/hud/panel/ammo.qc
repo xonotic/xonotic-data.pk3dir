@@ -3,7 +3,7 @@
 #include <client/draw.qh>
 #include <client/items/items.qh>
 #include <client/view.qh>
-#include <common/mutators/mutator/nades/nades.qh>
+#include <common/mutators/mutator/nades/_mod.qh>
 #include <common/resources/resources.qh>
 #include <common/wepent.qh>
 
@@ -97,10 +97,10 @@ void DrawAmmoItem(vector myPos, vector mySize, Resource ammoType, bool isCurrent
 		drawpic_aspect_skin(myPos, "ammo_current_bg", mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	if(ammo > 0 && autocvar_hud_panel_ammo_progressbar)
-		HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x, autocvar_hud_panel_ammo_progressbar_name, ammo/autocvar_hud_panel_ammo_maxammo, 0, 0, textColor, autocvar_hud_progressbar_alpha * alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x, autocvar_hud_panel_ammo_progressbar_name, ammo/autocvar_hud_panel_ammo_maxammo, 0, 0, textColor * 0.2 + ammoType.m_color * 0.8, autocvar_hud_progressbar_alpha * alpha, DRAWFLAG_NORMAL);
 
 	if(autocvar_hud_panel_ammo_text)
-		drawstring_aspect(textPos, text, eX * (2/3) * mySize.x + eY * mySize.y, textColor, alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos, text, eX * (2/3) * mySize.x + eY * mySize.y, textColor * 0.6 + ammoType.m_color * 0.4, alpha, DRAWFLAG_NORMAL);
 
 	drawpic_aspect_skin(iconPos, ammoType.m_icon, '1 1 0' * mySize.y, iconColor, alpha, DRAWFLAG_NORMAL);
 }

@@ -685,14 +685,15 @@ void GameplayMode_DelayedInit(entity this)
 	if (warmup_stage < 0)
 	{
 		int m = GetPlayerLimit();
-		if (m <= 0) m = maxclients;
+		if (m <= 0)
+			m = maxclients;
 		map_minplayers = bound(max(2, AVAILABLE_TEAMS * 2), map_minplayers, m);
 		if (teamplay)
 		{
 			// automatic minplayers should be a multiple of team count
 			int down = map_minplayers % AVAILABLE_TEAMS;
 			int up = AVAILABLE_TEAMS - down;
-			map_minplayers += (up < down && up + map_minplayers <= m) ? up : -down;
+			map_minplayers += (up <= down && up + map_minplayers <= m) ? up : -down;
 		}
 	}
 	else
@@ -2336,12 +2337,12 @@ void DropToFloor_QC(entity this)
 		return;
 	}
 
-	/* Prior to sv_legacy_bbox_expand 0, both droptofloor and nudgeoutofsolid were done for items
+	/* Prior to sv_legacy_bbox_expand 0, both droptofloor and nudgeoutofsolid_OrFallback were done for items
 	 * using box '-16 -16 0' '16 16 48' (without the FL_ITEM expansion applied),
 	 * which often resulted in bboxes partially in solids once expansion was applied.
 	 * We don't want bboxes in solids (bad for gameplay and culling),
 	 * but we also don't want items to land on a "skirting board" or the base of a sloping wall.
-	 * For initial nudgeoutofsolid and droptofloor stages we use a small box
+	 * For initial nudgeoutofsolid_OrFallback and droptofloor stages we use a small box
 	 * so they fall as far and in the same place as they traditionally would,
 	 * then we nudge the full size box out of solid, in a direction appropriate for the plane(s).
 	 */
@@ -2365,7 +2366,7 @@ void DropToFloor_QC(entity this)
 	 */
 	if(!Q3COMPAT_COMMON && autocvar_sv_mapformat_is_quake3) // Xonotic, Nexuiz
 	{
-		nudgeresult = nudgeoutofsolid(this);
+		nudgeresult = nudgeoutofsolid_OrFallback(this);
 		if (!nudgeresult)
 			LOG_WARNF("DropToFloor_QC at \"%v\": COULD NOT FIX badly placed entity \"%s\" before drop", this.origin, this.classname);
 		else if (nudgeresult > 0)
@@ -2431,12 +2432,12 @@ void DropToFloor_QC(entity this)
 
 		// A side effect of using a small box to drop items (and do the initial nudge) is
 		// the full size box can end up in collision with a sloping floor or terrain model.
-		nudgeresult = nudgeoutofsolid(this);
+		nudgeresult = nudgeoutofsolid_OrFallback(this);
 		// No warns for successful nudge because it would spam about items on slopes/terrain.
 	}
 	else if (trace_allsolid && trace_fraction) // dropped using "proper" bbox but never left solid
 	{
-		nudgeresult = nudgeoutofsolid(this);
+		nudgeresult = nudgeoutofsolid_OrFallback(this);
 		if (nudgeresult > 0)
 			LOG_WARNF("DropToFloor_QC at \"%v\": FIXED badly placed entity \"%s\" after drop", this.origin, this.classname);
 	}
