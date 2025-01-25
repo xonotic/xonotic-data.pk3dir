@@ -52,8 +52,8 @@ float MachineGun_Heat(float spread_accum)
 	// NOTE: multipliers do not apply when unset for compatibility
 	float cold_multiplier = WEP_CVAR(WEP_MACHINEGUN, spread_cold_damagemultiplier);
 	float heat_multiplier = WEP_CVAR(WEP_MACHINEGUN, spread_heat_damagemultiplier);
-	float heat = (coldMultiplierApplicationPercent * ((cold_multiplier) ? cold_multiplier : 1))
-	           + (heatMultiplierApplicationPercent * ((heat_multiplier) ? heat_multiplier : 1));
+	return (cold_multiplier ? coldMultiplierApplicationPercent * cold_multiplier : coldMultiplierApplicationPercent)
+	     + (heat_multiplier ? heatMultiplierApplicationPercent * heat_multiplier : heatMultiplierApplicationPercent);
 
 	return heat;
 }
