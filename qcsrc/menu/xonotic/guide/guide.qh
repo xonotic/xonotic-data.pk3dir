@@ -74,7 +74,8 @@ CLASS(id, DataSource) \
 	} \
 	METHOD(id, reload, int(id this, string filter)) { \
 		arr_name##_MENU_COUNT = 0; \
-		_REGISTRY_SOURCE_FILL(arr_name, register_arr, cond1, cond2, cond3, num_conds, filter == "" ? true : (strstrofs(strtolower(it.m_name), strtolower(filter), 0) >= 0)); \
+		_REGISTRY_SOURCE_FILL(arr_name, register_arr, cond1, cond2, cond3, num_conds, \
+			(filter == "" ? true : (strstrofs(strtolower(it.message ? it.message : it.m_name), strtolower(filter), 0) >= 0))); \
 		return arr_name##_MENU_COUNT; \
 	} \
 ENDCLASS(id)
