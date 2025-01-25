@@ -54,8 +54,6 @@ float MachineGun_Heat(float spread_accum)
 	float heat_multiplier = WEP_CVAR(WEP_MACHINEGUN, spread_heat_damagemultiplier);
 	return (cold_multiplier ? coldMultiplierApplicationPercent * cold_multiplier : coldMultiplierApplicationPercent)
 	     + (heat_multiplier ? heatMultiplierApplicationPercent * heat_multiplier : heatMultiplierApplicationPercent);
-
-	return heat;
 }
 
 void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponentity)
