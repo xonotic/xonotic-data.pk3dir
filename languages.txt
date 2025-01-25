@@ -10,7 +10,7 @@ fr    "French" "Français" 100%
 gl    "Galician" "Galego" 98%
 ga    "Irish" "Irish" 29%
 it    "Italian" "Italiano" 98%
-la    "Latin" "Lingua Latina" 98%
+la    "Latin" "Lingua Latina" 99%
 hu    "Hungarian" "Magyar" 43%
 nl    "Dutch" "Nederlands" 59%
 pl    "Polish" "Polski" 75%
