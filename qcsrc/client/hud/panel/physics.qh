@@ -21,9 +21,9 @@ int autocvar_hud_panel_physics_text;
 float autocvar_hud_panel_physics_text_scale;
 bool autocvar_hud_panel_physics_topspeed;
 float autocvar_hud_panel_physics_topspeed_time;
-bool autocvar_hud_panel_physics_jumpspeed = false;
+bool autocvar_hud_panel_physics_jumpspeed;
 float autocvar_hud_panel_physics_jumpspeed_time = 1;
-int autocvar_hud_panel_physics_force_layout = 0;
+int autocvar_hud_panel_physics_force_layout;
 
 vector autocvar_hud_progressbar_acceleration_color;
 vector autocvar_hud_progressbar_acceleration_neg_color;
