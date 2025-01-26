@@ -70,8 +70,7 @@ int EnemyHitCheck()
 
 int TrueAimCheck(entity wepent)
 {
-	Weapon wep = wepent.activeweapon;
-	if(wep.spawnflags & WEP_FLAG_NOTRUEAIM)
+	if(wepent.activeweapon.spawnflags & WEP_FLAG_NOTRUEAIM)
 		return SHOTTYPE_HITWORLD;
 
 	float nudge = 1; // added to traceline target and subtracted from result TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
@@ -85,17 +84,38 @@ int TrueAimCheck(entity wepent)
 	ta = trueaim;
 	mv = MOVE_NOMONSTERS;
 
-	if(wep.spawnflags & WEP_TYPE_HITSCAN)
-		mv = MOVE_NORMAL; // accurate enemy hit detection
-
-	if(wep == WEP_RIFLE)
+	switch(wepent.activeweapon) // WEAPONTODO
 	{
-		ta = trueaim_rifle; // WEAPONTODO
-		if(zoomscript_caught)
-		{
-			traceline(view_origin, view_origin + view_forward * max_shot_distance, mv, ta);
-			return EnemyHitCheck();
-		}
+		case WEP_VORTEX:
+		case WEP_OVERKILL_NEX:
+		case WEP_VAPORIZER:
+			mv = MOVE_NORMAL;
+			break;
+		case WEP_RIFLE:
+			ta = trueaim_rifle;
+			mv = MOVE_NORMAL;
+			if(zoomscript_caught)
+			{
+				tracebox(view_origin, '0 0 0', '0 0 0', view_origin + view_forward * max_shot_distance, mv, ta);
+				return EnemyHitCheck();
+			}
+			break;
+		case WEP_DEVASTATOR: // projectile has a size!
+			mi = '-3 -3 -3';
+			ma = '3 3 3';
+			break;
+		case WEP_FIREBALL: // projectile has a size!
+			mi = '-16 -16 -16';
+			ma = '16 16 16';
+			break;
+		case WEP_SEEKER: // projectile has a size!
+			mi = '-2 -2 -2';
+			ma = '2 2 2';
+			break;
+		case WEP_ELECTRO: // projectile has a size!
+			mi = '0 0 -3';
+			ma = '0 0 -3';
+			break;
 	}
 
 	vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * STAT(VIEWHEIGHT));
