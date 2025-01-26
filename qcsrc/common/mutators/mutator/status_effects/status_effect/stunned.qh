@@ -8,7 +8,7 @@
 #ifdef GAMEQC
 SOUND(Stunned_Remove, "onslaught/ons_spark1");
 #endif
-CLASS(Stunned, StatusEffects)
+CLASS(Stunned, StatusEffect)
     ATTRIB(Stunned, netname, string, "stunned");
 #if 0
     // NOTE: status effect name and icon disabled as they are not displayed

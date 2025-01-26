@@ -6,7 +6,7 @@ CLASS(XonoticHUDPhysicsDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDPhysicsDialog, title, string, _("Physics Panel"));
 	ATTRIB(XonoticHUDPhysicsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
 	ATTRIB(XonoticHUDPhysicsDialog, intendedWidth, float, 0.4);
-	ATTRIB(XonoticHUDPhysicsDialog, rows, float, 16.5);
+	ATTRIB(XonoticHUDPhysicsDialog, rows, float, 19);
 	ATTRIB(XonoticHUDPhysicsDialog, columns, float, 4);
 	ATTRIB(XonoticHUDPhysicsDialog, name, string, "HUDphysics");
 	ATTRIB(XonoticHUDPhysicsDialog, requiresConnection, float, true);

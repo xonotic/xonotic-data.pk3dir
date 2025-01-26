@@ -1,7 +1,9 @@
 #include "physics.qh"
-#include <client/hud/common_physics.qh>
 
 #include <client/draw.qh>
+#include <lib/csqcmodel/cl_player.qh>
+#include <common/physics/player.qh>
+#include "strafehud.qh"
 
 // Physics (#15)
 
@@ -55,8 +57,14 @@ void HUD_Physics()
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	if (!csqc_and_strafe_player)
+	// NOTE: this is copied from strafehud.qc
+	bool is_local = !(spectatee_status > 0 || isdemo());
+	entity strafeplayer = StrafeHUD_GetStrafeplayer(is_local);
+
+	if (!csqcplayer || !strafeplayer)
 		return;
+
+	// draw physics hud
 
 	draw_beginBoldFont();
 
@@ -71,6 +79,7 @@ void HUD_Physics()
 		text_scale = min(autocvar_hud_panel_physics_text_scale, 1);
 
 	// compute speed
+	vector strafevelocity = csqcplayer.velocity;
 	float conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 	float speed, speed2d;
 	float max_speed = floor(autocvar_hud_panel_physics_speed_max * conversion_factor + 0.5);
@@ -78,13 +87,12 @@ void HUD_Physics()
 	{
 		speed2d = floor(max_speed * 0.65 + 0.5);
 		speed = speed2d; // just ignore vertical speed in hud configure
-		immobile = speed <= 0;
 	}
 	else
 	{
-		speed2d = floor(speed_phys * conversion_factor + 0.5);
+		speed2d = floor(vlen(vec2(strafevelocity)) * conversion_factor + 0.5);
 		if (autocvar_hud_panel_physics_speed_vertical)
-			speed = floor(speed3d_phys * conversion_factor + 0.5);
+			speed = floor(vlen(strafevelocity) * conversion_factor + 0.5);
 		else
 			speed = speed2d;
 	}
@@ -97,13 +105,13 @@ void HUD_Physics()
 	{
 		float f = time - acc_prev_time;
 		if (autocvar_hud_panel_physics_acceleration_vertical)
-			accel = (speed3d_phys - vlen(acc_prev_vel));
+			accel = (vlen(strafevelocity) - vlen(acc_prev_vel));
 		else
-			accel = (speed_phys - vlen(vec2(acc_prev_vel)));
+			accel = (vlen(vec2(strafevelocity)) - vlen(vec2(acc_prev_vel)));
 
-		accel *= (1 / max(0.0001, f)) * ACCEL2GRAV;
+		accel *= (1 / max(0.0001, f)) * ACCEL2GRAV; // now a fraction of gravity
 
-		acc_prev_vel  = vel_phys;
+		acc_prev_vel  = strafevelocity;
 		acc_prev_time = time;
 
 		if (autocvar_hud_panel_physics_acceleration_movingaverage > 0)
@@ -159,7 +167,7 @@ void HUD_Physics()
 	// ... and topspeed takes priority over jumpspeed in the lower spot
 
 	// draw speed
-	if (!immobile)
+	if (speed > 0)
 	if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH
 	||  autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_SPEED)
 		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed / max_speed, 0, speed_baralign,
@@ -179,13 +187,14 @@ void HUD_Physics()
 		}
 		else
 		{
-			if (rint(vel_phys.z) > rint(prev_vel_z))
+			if (rint(strafevelocity.z) > rint(prev_vel_z))
 			{
 				// NOTE: this includes some situations where the player doesn't explicitly jump
+				// e.g. landing, swimming in water, walking up/down ramps, using jetpack, bouncepads
 				jump_speed = prev_speed2d;
 				jump_speed_time = time;
 			}
-			prev_vel_z = vel_phys.z;
+			prev_vel_z = strafevelocity.z;
 			prev_speed2d = speed2d;
 			float time_frac = (time - jump_speed_time) / max(1, autocvar_hud_panel_physics_jumpspeed_time);
 			jump_speed_f = time_frac > 1 ? 0 : cos(time_frac * M_PI_2);
@@ -291,7 +300,15 @@ void HUD_Physics()
 		else
 			progressbar_color = autocvar_hud_progressbar_acceleration_color;
 
-		float accel_max = onslick && autocvar_hud_panel_physics_acceleration_max_slick != -1
+		// NOTE: this code is similar to the logic in strafehud.qc
+		int keys = STAT(PRESSED_KEYS);
+		bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, is_local);
+		bool real_onground = StrafeHUD_DetermineOnGround(strafeplayer, is_local);
+		bool onground = real_onground && !jumpheld;
+		bool real_onslick = onground && StrafeHUD_DetermineOnSlick(strafeplayer);
+		bool all_slick = PHYS_FRICTION(strafeplayer) == 0;
+
+		float accel_max = (autocvar_hud_panel_physics_acceleration_max_slick != -1 && ((all_slick && real_onground) || real_onslick))
 			? autocvar_hud_panel_physics_acceleration_max_slick
 			: autocvar_hud_panel_physics_acceleration_max;
 		float f = accel / accel_max;

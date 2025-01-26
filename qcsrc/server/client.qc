@@ -22,7 +22,7 @@
 #include <common/minigames/sv_minigames.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <common/mutators/mutator/instagib/sv_instagib.qh>
-#include <common/mutators/mutator/nades/nades.qh>
+#include <common/mutators/mutator/nades/_mod.qh>
 #include <common/mutators/mutator/overkill/oknex.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
@@ -638,7 +638,7 @@ void PutPlayerInServer(entity this)
 	PS(this).dual_weapons = '0 0 0';
 
 	if(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS)
-		StatusEffects_apply(STATUSEFFECT_Superweapons, this, time + autocvar_g_balance_superweapons_time, 0);
+		StatusEffects_apply(STATUSEFFECT_Superweapon, this, time + autocvar_g_balance_superweapons_time, 0);
 
 	this.items = start_items;
 
@@ -1563,7 +1563,7 @@ void player_powerups(entity this)
 		{
 			if (!(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS))
 			{
-				StatusEffects_remove(STATUSEFFECT_Superweapons, this, STATUSEFFECT_REMOVE_NORMAL);
+				StatusEffects_remove(STATUSEFFECT_Superweapon, this, STATUSEFFECT_REMOVE_NORMAL);
 				this.items &= ~IT_SUPERWEAPON;
 				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_LOST, this.netname);
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_LOST);
@@ -1574,8 +1574,8 @@ void player_powerups(entity this)
 			}
 			else
 			{
-				play_countdown(this, StatusEffects_gettime(STATUSEFFECT_Superweapons, this), SND_POWEROFF);
-				if (time >= StatusEffects_gettime(STATUSEFFECT_Superweapons, this))
+				play_countdown(this, StatusEffects_gettime(STATUSEFFECT_Superweapon, this), SND_POWEROFF);
+				if (time >= StatusEffects_gettime(STATUSEFFECT_Superweapon, this))
 				{
 					this.items &= ~IT_SUPERWEAPON;
 					STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;
@@ -1586,7 +1586,7 @@ void player_powerups(entity this)
 		}
 		else if(STAT(WEAPONS, this) & WEPSET_SUPERWEAPONS)
 		{
-			if (time < StatusEffects_gettime(STATUSEFFECT_Superweapons, this) || (this.items & IT_UNLIMITED_SUPERWEAPONS))
+			if (time < StatusEffects_gettime(STATUSEFFECT_Superweapon, this) || (this.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
 				this.items |= IT_SUPERWEAPON;
 				if(!(this.items & IT_UNLIMITED_SUPERWEAPONS))
@@ -1598,14 +1598,14 @@ void player_powerups(entity this)
 			}
 			else
 			{
-				if(StatusEffects_active(STATUSEFFECT_Superweapons, this))
-					StatusEffects_remove(STATUSEFFECT_Superweapons, this, STATUSEFFECT_REMOVE_TIMEOUT);
+				if(StatusEffects_active(STATUSEFFECT_Superweapon, this))
+					StatusEffects_remove(STATUSEFFECT_Superweapon, this, STATUSEFFECT_REMOVE_TIMEOUT);
 				STAT(WEAPONS, this) &= ~WEPSET_SUPERWEAPONS;
 			}
 		}
-		else if(StatusEffects_active(STATUSEFFECT_Superweapons, this)) // cheaper to check than to update each frame!
+		else if(StatusEffects_active(STATUSEFFECT_Superweapon, this)) // cheaper to check than to update each frame!
 		{
-			StatusEffects_remove(STATUSEFFECT_Superweapons, this, STATUSEFFECT_REMOVE_CLEAR);
+			StatusEffects_remove(STATUSEFFECT_Superweapon, this, STATUSEFFECT_REMOVE_CLEAR);
 		}
 	}
 

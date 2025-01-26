@@ -1,5 +1,6 @@
 #include "sv_ctf.qh"
 
+#include <common/checkextension.qh>
 #include <common/effects/all.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/triggers.qh>
@@ -500,7 +501,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	tracebox(player.origin - FLAG_DROP_OFFSET, flag.m_mins, flag.m_maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
 	flag.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 	setorigin(flag, trace_endpos);
-	if (trace_startsolid && !nudgeoutofsolid(flag)) // TODO: trace_allsolid would perform better but isn't 100% reliable yet
+	if (trace_startsolid && !nudgeoutofsolid_OrFallback(flag)) // TODO: trace_allsolid would perform better but isn't 100% reliable yet
 	{
 		// the flag's bbox doesn't fit but we can assume the player's current bbox does
 		tracebox(player.origin - FLAG_DROP_OFFSET, player.mins, player.maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
@@ -680,7 +681,7 @@ void ctf_Handle_Return(entity flag, entity player)
 	// messages and sounds
 	if(IS_MONSTER(player))
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(flag.team, INFO_CTF_RETURN_MONSTER), player.monster_name);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(flag.team, INFO_CTF_RETURN_MONSTER), player.m_name);
 	}
 	else if(flag.team)
 	{

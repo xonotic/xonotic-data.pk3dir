@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-02 07:22+0100\n"
+"POT-Creation-Date: 2025-01-23 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: С Станев, 2024\n"
 "Language-Team: Bulgarian (http://app.transifex.com/team-xonotic/xonotic/"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:115
+#: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:120
 msgid "Checkpoint times:"
 msgstr ""
 
@@ -169,7 +169,7 @@ msgstr ""
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Натиснете ^3%s^1 за да се включите"
 
-#: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1441
+#: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1338
 #: qcsrc/common/notifications/all.qh:466
 msgid "jump"
 msgstr "скок"
@@ -543,39 +543,39 @@ msgstr ""
 msgid "QMCMD^Spectate a player"
 msgstr "QMCMD^Наблюдавай играч"
 
-#: qcsrc/client/hud/panel/racetimer.qc:63
+#: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
 msgid " (-%dL)"
 msgstr "(-%dL)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:68
+#: qcsrc/client/hud/panel/racetimer.qc:70
 #, c-format
 msgid " (+%dL)"
 msgstr "(+%dL)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:87
+#: qcsrc/client/hud/panel/racetimer.qc:89
 msgid "Start line"
 msgstr "Начална линия"
 
-#: qcsrc/client/hud/panel/racetimer.qc:89
-#: qcsrc/client/hud/panel/racetimer.qc:93
+#: qcsrc/client/hud/panel/racetimer.qc:91
+#: qcsrc/client/hud/panel/racetimer.qc:95
 msgid "Finish line"
 msgstr "Крайна линия"
 
-#: qcsrc/client/hud/panel/racetimer.qc:91
-#: qcsrc/client/hud/panel/racetimer.qc:195
+#: qcsrc/client/hud/panel/racetimer.qc:93
+#: qcsrc/client/hud/panel/racetimer.qc:200
 #, c-format
 msgid "Checkpoint %d"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:198
-#: qcsrc/client/hud/panel/racetimer.qc:263
-#: qcsrc/client/hud/panel/racetimer.qc:327
+#: qcsrc/client/hud/panel/racetimer.qc:203
+#: qcsrc/client/hud/panel/racetimer.qc:293
+#: qcsrc/client/hud/panel/racetimer.qc:357
 #, c-format
 msgid "PENALTY: %.1f (%s)"
 msgstr "НАКАЗАНИЕ: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:198 qcsrc/client/main.qc:1278
+#: qcsrc/client/hud/panel/racetimer.qc:203 qcsrc/client/main.qc:1175
 msgid "missing a checkpoint"
 msgstr "пропусната проверочна точка"
 
@@ -1119,7 +1119,7 @@ msgstr "^3%1.0f минути"
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7играча"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2500 qcsrc/client/main.qc:1470
+#: qcsrc/client/hud/panel/scoreboard.qc:2500 qcsrc/client/main.qc:1367
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Карта:"
@@ -1149,23 +1149,23 @@ msgstr "Мъртав сте, изчакайте ^3%s^7 преди съживяв
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Мъртав сте, натиснете ^2%s^7 за съживяване"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1542
+#: qcsrc/client/hud/panel/strafehud/util.qc:97
 msgid "qu"
 msgstr "qu"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1543
+#: qcsrc/client/hud/panel/strafehud/util.qc:98
 msgid "m"
 msgstr "м"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1544
+#: qcsrc/client/hud/panel/strafehud/util.qc:99
 msgid "km"
 msgstr "км"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1545
+#: qcsrc/client/hud/panel/strafehud/util.qc:100
 msgid "mi"
 msgstr "ми"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1546
+#: qcsrc/client/hud/panel/strafehud/util.qc:101
 msgid "nmi"
 msgstr "нми"
 
@@ -1244,154 +1244,154 @@ msgstr "Да"
 msgid "No"
 msgstr "Не"
 
-#: qcsrc/client/hud/panel/weapons.qc:628
+#: qcsrc/client/hud/panel/weapons.qc:642
 msgid "Out of ammo"
 msgstr "Боеприпасите свършиха"
 
-#: qcsrc/client/hud/panel/weapons.qc:632
+#: qcsrc/client/hud/panel/weapons.qc:647
 msgid "Don't have"
 msgstr "Нямам"
 
-#: qcsrc/client/hud/panel/weapons.qc:636
+#: qcsrc/client/hud/panel/weapons.qc:652
 msgid "Unavailable"
 msgstr "Не е налично"
 
-#: qcsrc/client/main.qc:305
+#: qcsrc/client/main.qc:307
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr ""
 "Опитвате се да премахнете отбор, който не съществува в списъка на отборите!"
 
-#: qcsrc/client/main.qc:1172 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
+#: qcsrc/client/main.qc:1069 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1173 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/client/main.qc:1070 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
 msgstr "м/с"
 
-#: qcsrc/client/main.qc:1174 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
+#: qcsrc/client/main.qc:1071 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
 msgstr "км/ч"
 
-#: qcsrc/client/main.qc:1175 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
+#: qcsrc/client/main.qc:1072 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
 msgid "mph"
 msgstr "мили/ч"
 
-#: qcsrc/client/main.qc:1176 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/client/main.qc:1073 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
 msgstr "възли"
 
-#: qcsrc/client/main.qc:1389
+#: qcsrc/client/main.qc:1286
 msgid "All Weapons Arena"
 msgstr "Арена с всички оръжия"
 
-#: qcsrc/client/main.qc:1390
+#: qcsrc/client/main.qc:1287
 msgid "All Available Weapons Arena"
 msgstr "Арена с всички налични оръжия"
 
-#: qcsrc/client/main.qc:1391
+#: qcsrc/client/main.qc:1288
 msgid "Most Weapons Arena"
 msgstr "Арена с повечето оръжия"
 
-#: qcsrc/client/main.qc:1392
+#: qcsrc/client/main.qc:1289
 msgid "Most Available Weapons Arena"
 msgstr "Арена с повечето от наличните оръжия"
 
-#: qcsrc/client/main.qc:1395 qcsrc/client/main.qc:1409
+#: qcsrc/client/main.qc:1292 qcsrc/client/main.qc:1306
 msgid "No Weapons Arena"
 msgstr "Арена без оръжия"
 
-#: qcsrc/client/main.qc:1407
+#: qcsrc/client/main.qc:1304
 #, c-format
 msgid "%s Arena"
 msgstr "%s Арена"
 
-#: qcsrc/client/main.qc:1418 qcsrc/client/main.qc:1423
+#: qcsrc/client/main.qc:1315 qcsrc/client/main.qc:1320
 #, c-format
 msgid "This is %s"
 msgstr "Това е %s"
 
-#: qcsrc/client/main.qc:1419
+#: qcsrc/client/main.qc:1316
 msgid "Your client version is outdated."
 msgstr "Версия на приложението ви е стара."
 
-#: qcsrc/client/main.qc:1420
+#: qcsrc/client/main.qc:1317
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### НЯМА ДА ИМАТЕ ВЪЗМОЖНОСТ ДА ИГРАЕТЕ НА ТОЗИ СЪРВЪР ###"
 
-#: qcsrc/client/main.qc:1421
+#: qcsrc/client/main.qc:1318
 msgid "Please update!"
 msgstr "Моля обновете!"
 
-#: qcsrc/client/main.qc:1424
+#: qcsrc/client/main.qc:1321
 msgid "This server is using an outdated Xonotic version."
 msgstr "Този сървър използва стара версия на Xonotic."
 
-#: qcsrc/client/main.qc:1425
+#: qcsrc/client/main.qc:1322
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### ТОЗИ СЪРВЪР Е НЕСЪВМЕСТИМ И ЗАТОВА НЕ МОЖЕ ДА СЕ ПРИСЪЕДИНИТЕ ###"
 
-#: qcsrc/client/main.qc:1427
+#: qcsrc/client/main.qc:1324
 #, c-format
 msgid "Welcome to %s"
 msgstr "Добре дошли в %s"
 
-#: qcsrc/client/main.qc:1443 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1340 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Ниво %d:"
 
-#: qcsrc/client/main.qc:1445
+#: qcsrc/client/main.qc:1342
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGНатиснете ^F2%s^BG за влизане в играта"
 
-#: qcsrc/client/main.qc:1468
+#: qcsrc/client/main.qc:1365
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Вид игра:"
 
-#: qcsrc/client/main.qc:1472
+#: qcsrc/client/main.qc:1369
 msgid "by:"
 msgstr "от:"
 
-#: qcsrc/client/main.qc:1476
+#: qcsrc/client/main.qc:1373
 msgid "This match supports"
 msgstr "Тази игра поддържа"
 
-#: qcsrc/client/main.qc:1478
+#: qcsrc/client/main.qc:1375
 #, c-format
 msgid "%d players"
 msgstr "%d играчи"
 
-#: qcsrc/client/main.qc:1480
+#: qcsrc/client/main.qc:1377
 #, c-format
 msgid "%d to %d players"
 msgstr "%d до %d играчи"
 
-#: qcsrc/client/main.qc:1482
+#: qcsrc/client/main.qc:1379
 #, c-format
 msgid "%d players maximum"
 msgstr "%d играчи максимум "
 
-#: qcsrc/client/main.qc:1484
+#: qcsrc/client/main.qc:1381
 #, c-format
 msgid "%d players minimum"
 msgstr "%d играчи минимум"
 
-#: qcsrc/client/main.qc:1489
+#: qcsrc/client/main.qc:1386
 msgid "Active modifications:"
 msgstr "Активни модификации:"
 
-#: qcsrc/client/main.qc:1492
+#: qcsrc/client/main.qc:1389
 msgid "Special gameplay tips:"
 msgstr "Специални съвети за игра:"
 
-#: qcsrc/client/main.qc:1499
+#: qcsrc/client/main.qc:1396
 msgid "Server's message"
 msgstr "Съобщение от сървъра"
 
-#: qcsrc/client/main.qc:1593
+#: qcsrc/client/main.qc:1490
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (не е свързано)"
@@ -1435,15 +1435,15 @@ msgstr "^1Грешка:^7 Не може да намери индекс."
 msgid "Requesting preview..."
 msgstr "Заявяване на преглед..."
 
-#: qcsrc/client/view.qc:955
+#: qcsrc/client/view.qc:1018
 msgid "Nade timer"
 msgstr "Таймер на гранати"
 
-#: qcsrc/client/view.qc:960
+#: qcsrc/client/view.qc:1023
 msgid "Capture progress"
 msgstr "Напредък на превземане"
 
-#: qcsrc/client/view.qc:965
+#: qcsrc/client/view.qc:1028
 msgid "Revival progress"
 msgstr "Процес на съживяване"
 
@@ -1720,19 +1720,19 @@ msgstr ""
 msgid "Team Mayhem"
 msgstr "Отборна пълна лудница"
 
-#: qcsrc/common/items/item/ammo.qh:56 qcsrc/common/resources/all.inc:29
+#: qcsrc/common/items/item/ammo.qh:53 qcsrc/common/resources/all.inc:30
 msgid "Shells"
 msgstr "Снаряди"
 
-#: qcsrc/common/items/item/ammo.qh:92 qcsrc/common/resources/all.inc:37
+#: qcsrc/common/items/item/ammo.qh:87 qcsrc/common/resources/all.inc:39
 msgid "Bullets"
 msgstr "Патрони"
 
-#: qcsrc/common/items/item/ammo.qh:124 qcsrc/common/resources/all.inc:45
+#: qcsrc/common/items/item/ammo.qh:121 qcsrc/common/resources/all.inc:48
 msgid "Rockets"
 msgstr "Ракети"
 
-#: qcsrc/common/items/item/ammo.qh:156 qcsrc/common/resources/all.inc:53
+#: qcsrc/common/items/item/ammo.qh:155 qcsrc/common/resources/all.inc:57
 msgid "Cells"
 msgstr "Клетки"
 
@@ -1740,15 +1740,15 @@ msgstr "Клетки"
 msgid "Small armor"
 msgstr "Малка броня"
 
-#: qcsrc/common/items/item/armor.qh:84
+#: qcsrc/common/items/item/armor.qh:89
 msgid "Medium armor"
 msgstr "Средна броня"
 
-#: qcsrc/common/items/item/armor.qh:128 qcsrc/common/items/item/armor.qh:135
+#: qcsrc/common/items/item/armor.qh:138 qcsrc/common/items/item/armor.qh:149
 msgid "Big armor"
 msgstr "Голяма броня"
 
-#: qcsrc/common/items/item/armor.qh:172 qcsrc/common/items/item/armor.qh:179
+#: qcsrc/common/items/item/armor.qh:187 qcsrc/common/items/item/armor.qh:198
 msgid "Mega armor"
 msgstr "Мега броня"
 
@@ -1756,33 +1756,33 @@ msgstr "Мега броня"
 msgid "Small health"
 msgstr "Малка аптечка"
 
-#: qcsrc/common/items/item/health.qh:85
+#: qcsrc/common/items/item/health.qh:89
 msgid "Medium health"
 msgstr "Средна аптечка"
 
-#: qcsrc/common/items/item/health.qh:129 qcsrc/common/items/item/health.qh:132
+#: qcsrc/common/items/item/health.qh:138 qcsrc/common/items/item/health.qh:149
 msgid "Big health"
 msgstr "Голяма аптечка"
 
-#: qcsrc/common/items/item/health.qh:173 qcsrc/common/items/item/health.qh:180
+#: qcsrc/common/items/item/health.qh:187 qcsrc/common/items/item/health.qh:198
 msgid "Mega health"
 msgstr "Мега аптечка"
 
-#: qcsrc/common/items/item/jetpack.qh:42 qcsrc/common/items/item/jetpack.qh:45
+#: qcsrc/common/items/item/jetpack.qh:39 qcsrc/common/items/item/jetpack.qh:42
 #: qcsrc/common/util.qc:271
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:123
 msgid "Jetpack"
 msgstr "Реактивна раница"
 
-#: qcsrc/common/items/item/jetpack.qh:75 qcsrc/common/resources/all.inc:61
+#: qcsrc/common/items/item/jetpack.qh:74 qcsrc/common/resources/all.inc:66
 msgid "Fuel"
 msgstr "Гориво"
 
-#: qcsrc/common/items/item/jetpack.qh:109
+#: qcsrc/common/items/item/jetpack.qh:107
 msgid "Fuel regenerator"
 msgstr "Горивен регенератор"
 
-#: qcsrc/common/items/item/jetpack.qh:112
+#: qcsrc/common/items/item/jetpack.qh:110
 msgid "Fuel regen"
 msgstr "Гориво"
 
@@ -2057,6 +2057,11 @@ msgstr "Морски шах"
 msgid "Single Player"
 msgstr "Самостоятелна игра"
 
+#: qcsrc/common/monsters/monster.qh:36
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:76
+msgid "Monster"
+msgstr "Чудовище"
+
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Golem"
@@ -2098,57 +2103,63 @@ msgstr ""
 msgid "Zombie"
 msgstr "Зомби"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:19
+#: qcsrc/common/mutators/mutator/buffs/buff/ammo.qh:11
 msgid "Ammo"
 msgstr "Боеприпаси"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:30
-msgid "Resistance"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:41
-msgid "Medic"
-msgstr "Медик"
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:53
+#: qcsrc/common/mutators/mutator/buffs/buff/bash.qh:14
 msgid "Bash"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:64 qcsrc/common/util.qc:267
+#: qcsrc/common/mutators/mutator/buffs/buff/disability.qh:15
+msgid "Disability"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
+msgid "Flight"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
+msgid "Inferno"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/jump.qh:12
+msgid "Jump"
+msgstr "Скок"
+
+#: qcsrc/common/mutators/mutator/buffs/buff/luck.qh:13
+msgid "Luck"
+msgstr "Късмет"
+
+#: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:11
+msgid "Magnet"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/medic.qh:16
+msgid "Medic"
+msgstr "Медик"
+
+#: qcsrc/common/mutators/mutator/buffs/buff/resistance.qh:12
+msgid "Resistance"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qh:10
+msgid "Swapper"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
+#: qcsrc/common/util.qc:267
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:92
 msgid "Vampire"
 msgstr "Вампир"
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:75
-msgid "Disability"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:85
+#: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qh:13
 msgid "Vengeance"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/all.inc:96
-msgid "Jump"
-msgstr "Скок"
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:107
-msgid "Inferno"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:118
-msgid "Swapper"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:129
-msgid "Magnet"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:139
-msgid "Luck"
-msgstr "Късмет"
-
-#: qcsrc/common/mutators/mutator/buffs/all.inc:149
-msgid "Flight"
+#: qcsrc/common/mutators/mutator/buffs/buffs.qh:21
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:83
+msgid "Buff"
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:8
@@ -2172,7 +2183,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:102
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:60
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:109
-#: qcsrc/menu/xonotic/util.qc:768
+#: qcsrc/menu/xonotic/util.qc:754
 msgid "Color:"
 msgstr "Цвят:"
 
@@ -2191,68 +2202,69 @@ msgstr ""
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/instagib/items.qh:33
+#: qcsrc/common/mutators/mutator/instagib/items.qh:34
 msgid "Vaporizer ammo"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/instagib/items.qh:59
 #: qcsrc/common/mutators/mutator/instagib/items.qh:62
+#: qcsrc/common/mutators/mutator/instagib/items.qh:65
 msgid "Extra life"
 msgstr "Допълнителен живот"
 
-#: qcsrc/common/mutators/mutator/nades/nades.inc:18
-msgid "Napalm grenade"
-msgstr "Напалмова граната"
-
-#: qcsrc/common/mutators/mutator/nades/nades.inc:28
-msgid "Ice grenade"
-msgstr "Ледена граната"
-
-#: qcsrc/common/mutators/mutator/nades/nades.inc:38
-msgid "Translocate grenade"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/nades/nades.inc:48
-msgid "Spawn grenade"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/nades/nades.inc:58
-msgid "Heal grenade"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/nades/nades.inc:68
-msgid "Monster grenade"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/nades/nades.inc:78
-msgid "Entrap grenade"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/nades/nades.inc:88
-msgid "Veil grenade"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/nades/nades.inc:99
-msgid "Ammo grenade"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/nades/nades.inc:109
-msgid "Darkness grenade"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/nades/nades.qc:137
+#: qcsrc/common/mutators/mutator/nades/cl_nades.qc:69
 #: qcsrc/menu/xonotic/keybinder.qc:60
 msgid "drop weapon / throw nade"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nades.qc:139
+#: qcsrc/common/mutators/mutator/nades/cl_nades.qc:71
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:123
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:22
+msgid "Ammo grenade"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nade/darkness.qh:19
+msgid "Darkness grenade"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nade/entrap.qh:22
+msgid "Entrap grenade"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nade/heal.qh:20
+msgid "Heal grenade"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nade/ice.qh:20
+msgid "Ice grenade"
+msgstr "Ледена граната"
+
+#: qcsrc/common/mutators/mutator/nades/nade/monster.qh:19
+msgid "Monster grenade"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nade/napalm.qh:31
+msgid "Napalm grenade"
+msgstr "Напалмова граната"
+
+#: qcsrc/common/mutators/mutator/nades/nade/normal.qh:11
+#: qcsrc/common/mutators/mutator/nades/nades.qh:14
 msgid "Grenade"
 msgstr "Граната"
+
+#: qcsrc/common/mutators/mutator/nades/nade/spawn.qh:17
+msgid "Spawn grenade"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nade/translocate.qh:17
+msgid "Translocate grenade"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nade/veil.qh:22
+msgid "Veil grenade"
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
@@ -2279,27 +2291,28 @@ msgstr ""
 msgid "Overkill Shotgun"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:46
-#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:49
-#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:58
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:60
 msgid "Invisibility"
 msgstr "Невидимост"
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:44
-#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:47
-#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:56
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:58
 msgid "Shield"
 msgstr "Щит"
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:47
-#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:50
-#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:59
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:61
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:31
 msgid "Speed"
 msgstr "Скорост"
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:46
-#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:49
-#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:57
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:47
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:59
 msgid "Strength"
 msgstr "Сила"
 
@@ -2475,11 +2488,8 @@ msgstr "Генератор"
 msgid "Weapon"
 msgstr "Оръжие"
 
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:76
-msgid "Monster"
-msgstr "Чудовище"
-
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:78
+#: qcsrc/common/vehicles/vehicle.qh:10
 msgid "Vehicle"
 msgstr "Возило"
 
@@ -2490,10 +2500,6 @@ msgstr "Нарушител!"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:81
 msgid "Tagged"
 msgstr "Заплют"
-
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:83
-msgid "Buff"
-msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:694
 #, c-format
@@ -5863,7 +5869,7 @@ msgstr "Огнена топка"
 msgid "Hagar"
 msgstr "Hagar"
 
-#: qcsrc/common/weapons/weapon/hlac.qh:20
+#: qcsrc/common/weapons/weapon/hlac.qh:23
 msgid "Heavy Laser Assault Cannon"
 msgstr "Лазерно оръдие"
 
@@ -6142,6 +6148,45 @@ msgstr "Елемент %d"
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:115
 msgid "Custom"
 msgstr "Потребителски"
+
+#: qcsrc/menu/menu.qc:510
+#, c-format
+msgid "^3%s^7 in range \"%s\" to \"%s\""
+msgstr ""
+
+#: qcsrc/menu/menu.qc:512
+#, c-format
+msgid "^3%s^7 outside range \"%s\" to \"%s\""
+msgstr ""
+
+#: qcsrc/menu/menu.qc:541
+msgid "Has special requirements"
+msgstr ""
+
+#: qcsrc/menu/menu.qc:544
+#, c-format
+msgid "Requires ^3%s^7 not equal to \"%s^7\""
+msgstr ""
+
+#: qcsrc/menu/menu.qc:556
+#, c-format
+msgid "Requires %s, %s, and %s"
+msgstr ""
+
+#: qcsrc/menu/menu.qc:559
+#, c-format
+msgid "Requires %s and %s"
+msgstr ""
+
+#: qcsrc/menu/menu.qc:559
+#, c-format
+msgid "Requires %s or %s"
+msgstr ""
+
+#: qcsrc/menu/menu.qc:562
+#, c-format
+msgid "Requires %s"
+msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:4
 msgid "Core Team"
@@ -6475,106 +6520,123 @@ msgid "Game menu"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:18
-msgid "Ammunition display:"
-msgstr "Показване на амунициите:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
 msgid "Show only current ammo type"
 msgstr "Показване само на текущия тип амуниции"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:24
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:42
 msgid "Noncurrent alpha:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:28
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:50
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:48
 msgid "Noncurrent scale:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:32
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:33
 msgid "Align icon:"
 msgstr "Подравняване на иконата:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:33
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:32
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:25
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:37
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:23
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:31
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:44
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:40
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:37
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:21
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:57
 msgid "Left"
 msgstr "Ляво"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:34
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:34
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:27
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:38
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:26
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:25
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:36
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:48
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:45
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:42
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:26
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:38
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:23
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:59
 msgid "Right"
 msgstr "Дясно"
 
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:17
+msgid "Enable status bar"
+msgstr "Включване на лентата за статус"
+
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qh:6
 msgid "Ammo Panel"
 msgstr "Панел за амуниции"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:19
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:21
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:20
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:20
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:20
 msgid "Message duration:"
 msgstr "Продължителност на съобщението:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:23
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:25
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:23
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:23
 msgid "Fade time:"
 msgstr "Време за избледняване:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:25
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:25
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:25
+#: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
+msgid "FADESPEED^Instant"
+msgstr "FADESPEED^Моментално"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:31
+msgid "Font scale:"
+msgstr "Размер на шрифта:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:34
+msgid "Bold font scale:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:37
+msgid "Title font scale:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:40
 msgid "Flip messages order"
 msgstr "Обръщане на реда на съобщенията"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:43
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:18
 msgid "Text alignment:"
 msgstr "Подравняване на текста:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:47
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:22
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:70
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:78
 msgid "Center"
 msgstr "Център"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:37
-msgid "Font scale:"
-msgstr "Размер на шрифта:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:41
-msgid "Bold font scale:"
-msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:17
-msgid "Chat entries:"
-msgstr "Записи в чата:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:20
 msgid "Chat size:"
 msgstr "Размер на чата:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:20
 msgid "Chat lifetime:"
 msgstr "Време за видимост на чата:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:23
 msgid "Chat beep sound"
 msgstr "Звук за чат-а"
 
@@ -6582,89 +6644,83 @@ msgstr "Звук за чат-а"
 msgid "Chat Panel"
 msgstr "Чат панел"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:16
-msgid "Engine info:"
-msgstr "Информация за енджина:"
+#: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
+msgid "FPS:"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:19
-msgid "Use an averaging algorithm for fps"
-msgstr "Използване на усредняващ алгоритъм за fps"
+#: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:20
+msgid "Use an averaging algorithm"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:23
+msgid "Decimal places:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
 msgstr "Панел с информация за енджина"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:18
 msgid "Combine health and armor"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:19
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:17
-msgid "Enable status bar"
-msgstr "Включване на лентата за статус"
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:20
+msgid "Flip health and armor positions"
+msgstr "Размяна на позицията на здравето и бронята"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:21
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:19
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:36
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:20
 msgid "Status bar alignment:"
 msgstr "Подравняване на лентата за статус"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:29
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:39
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:27
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:37
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:44
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:39
 msgid "Inward"
 msgstr "Навътре"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:31
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:40
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:29
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:37
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:47
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:40
 msgid "Outward"
 msgstr "Навън"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:34
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:41
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:34
 msgid "Icon alignment:"
 msgstr "Подравняване на иконите:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:42
-msgid "Flip health and armor positions"
-msgstr "Размяна на позицията на здравето и бронята"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qh:6
 msgid "Health/Armor Panel"
 msgstr "Панел със Здраве/Броня"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:16
-msgid "Info messages:"
-msgstr "Информационни съобщения:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:19
-msgid "Flip align"
-msgstr "Обратно подравняване"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qh:6
 msgid "Info Messages Panel"
 msgstr "Панел с информационни съобщения"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:16
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:15
-#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:14
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:15
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:29
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:25
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:31
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:77
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:116
-#: qcsrc/menu/xonotic/util.qc:763 qcsrc/menu/xonotic/util.qc:779
-#: qcsrc/menu/xonotic/util.qc:796
+#: qcsrc/menu/xonotic/util.qc:749 qcsrc/menu/xonotic/util.qc:765
+#: qcsrc/menu/xonotic/util.qc:782
 msgid "Disable"
 msgstr "Забраняване"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 msgid "Enable spectating"
 msgstr ""
 
@@ -6672,23 +6728,23 @@ msgstr ""
 msgid "Enable even playing in warmup"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
-msgid "Reduced"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
 msgid "Text/icon ratio:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:35
-msgid "Hide spawned items"
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:33
+msgid "Reduced"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:37
-msgid "Hide big armor and health"
+msgid "Hide spawned items"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
+msgid "Hide big armor and health"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:41
 msgid "Dynamic size"
 msgstr ""
 
@@ -6696,100 +6752,101 @@ msgstr ""
 msgid "Items Time Panel"
 msgstr ""
 
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:20
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:23
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:26
+#, c-format
+msgid "GAMETYPE^%s:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:21
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:27
+msgid "Show icons"
+msgstr ""
+
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
 msgstr "Панел с икони на модовете"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:17
-msgid "Notifications:"
-msgstr "Уведомления:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:20
-msgid "Also print notifications to the console"
-msgstr "Показване на уведомления в конзолата"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:23
-msgid "Flip notify order"
-msgstr "Обръщане на реда на уведомленията"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:26
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:19
 msgid "Entry lifetime:"
 msgstr "Видимост на съобщенията:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:22
 msgid "Entry fadetime:"
 msgstr "Време за избледняване на съобщенията:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:30
+msgid "Flip notify order"
+msgstr "Обръщане на реда на уведомленията"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qh:6
 msgid "Notification Panel"
 msgstr "Панел за уведомления"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:30
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:130
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:26
-#: qcsrc/menu/xonotic/util.qc:751
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:119
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:125
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:24
+#: qcsrc/menu/xonotic/util.qc:737
 msgid "Enable"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:31
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:33
 msgid "Enable even observing"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:19
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:34
 msgid "Enable only in Race/CTS"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
-msgid "Status bar"
-msgstr "Лента за статуса"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:67
-msgid "Left align"
-msgstr "Подравняване вляво"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:27
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:73
-msgid "Right align"
-msgstr "Подравняване вдясно"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:28
-msgid "Inward align"
-msgstr "Подравняване навътре"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
-msgid "Outward align"
-msgstr "Подръвняване навън"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:25
 msgid "Flip speed/acceleration positions"
 msgstr "Размяна на позициите на скоростта/ускорението"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:46
+msgid "Status bar"
+msgstr "Лента за статуса"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
+msgid "None"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:30
+msgid "Both"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:32
+msgid "Acceleration"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:108
 msgid "Speed:"
 msgstr "Скорост:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "Include vertical speed"
 msgstr "Включване на вертикалната скорост"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:63
 msgid "Show speed unit"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:66
 msgid "Top speed"
 msgstr "Максимална скорост"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:58
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:72
 msgid "Acceleration:"
 msgstr "Ускорение:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:59
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:73
 msgid "Include vertical acceleration"
 msgstr "Включване на вертикалното ускорение"
 
@@ -6797,35 +6854,33 @@ msgstr "Включване на вертикалното ускорение"
 msgid "Physics Panel"
 msgstr "Панел за физика"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:18
-msgid "Pickup messages:"
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:31
+msgid "Icon size scale:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:35
 msgid "Show timer:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:31
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:36
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:23
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:179
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:145
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:66
 msgid "Never"
 msgstr "Никога"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:32
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:182
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:147
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
-msgid "Always"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
 msgid "Spectating"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
-msgid "Icon size scale:"
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
+#: qcsrc/menu/xonotic/dialog_settings_audio.qc:182
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:147
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:65
+msgid "Always"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
@@ -6836,7 +6891,7 @@ msgstr ""
 msgid "Powerups Panel"
 msgstr "Панел с бонуси!"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Always enable"
 msgstr ""
@@ -6845,9 +6900,21 @@ msgstr ""
 msgid "Forced aspect:"
 msgstr "Принудително съотношение:"
 
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:27
+msgid "Show attack keys"
+msgstr ""
+
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
 msgstr "Панел за натиснати клавиши"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:26
+msgid "Translate commands"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:28
+msgid "Use the server's quickmenu"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
@@ -6862,10 +6929,6 @@ msgid "Enable in team games"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
-msgid "Radar:"
-msgstr "Радар:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:26
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:68
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:107
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:54
@@ -6874,80 +6937,94 @@ msgstr "Радар:"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:70
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:124
-#: qcsrc/menu/xonotic/util.qc:785
+#: qcsrc/menu/xonotic/util.qc:771
 msgid "Alpha:"
 msgstr "Прозрачност:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:26
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:50
 msgid "Rotation:"
 msgstr "Завъртане:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:52
 msgid "Forward"
 msgstr "Напред"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:53
 msgid "West"
 msgstr "Запад"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:54
 msgid "South"
 msgstr "Юг"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:31
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:55
 msgid "East"
 msgstr "Изток"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:36
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:56
 msgid "North"
 msgstr "Север"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:40
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:60
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:63
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:102
 msgid "Scale:"
 msgstr "Скала:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:44
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:64
 msgid "Zoom mode:"
 msgstr "Режим на увеличение:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:40
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:66
 msgid "Zoomed in"
 msgstr "С увеличение"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:41
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:67
 msgid "Zoomed out"
 msgstr "Без увеличение"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:48
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:42
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:68
 msgid "Always zoomed"
 msgstr "Винаги с увеличение"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:43
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:69
 msgid "Never zoomed"
 msgstr "Винаги без увеличение"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
+msgid "Maximized radar:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
 msgstr "Радарен панел"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:17
-msgid "Score:"
-msgstr "Резултат:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:20
 msgid "Rankings:"
 msgstr "Класирания:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:21
+#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:18
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:58
 msgid "Off"
 msgstr "Изключено"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:22
+#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:19
 msgid "And me"
 msgstr "И аз"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:23
+#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:20
 msgid "Pure"
 msgstr "Чист"
 
@@ -6955,7 +7032,7 @@ msgstr "Чист"
 msgid "Score Panel"
 msgstr "Панел с резултати"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:40
 msgid "StrafeHUD mode:"
 msgstr ""
 
@@ -6967,63 +7044,63 @@ msgstr ""
 msgid "Velocity angle centered"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:44
 msgid "StrafeHUD style:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:48
-msgid "no styling"
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
+msgid "No styling"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
+msgid "Gradient"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
-msgid "progress bar"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
-msgid "gradient"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:53
 msgid "Range:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:56
-msgid "Demo mode"
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:51
+msgid "Dynamic"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:60
-msgid "Reset colors"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:64
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
 msgid "Strafe bar:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:68
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:63
 msgid "Angle indicator:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:70
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:78
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:65
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:73
 msgid "Neutral:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:72
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:80
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:67
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:75
 msgid "Good:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:74
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:82
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:69
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:77
 msgid "Overturn:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:109
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:104
 msgid "Switch indicator:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:113
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:108
 msgid "Best angle indicator:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:127
+msgid "Demo mode"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:131
+msgid "Reset colors"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
@@ -7031,18 +7108,14 @@ msgid "StrafeHUD Panel"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:17
-msgid "Timer:"
-msgstr "Таймер"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:20
 msgid "Show elapsed time"
 msgstr "Показване на изминалото време"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:20
 msgid "Secondary timer:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:25
 msgid "Swapped"
 msgstr ""
 
@@ -7058,52 +7131,44 @@ msgstr "Алфа след гласуване:"
 msgid "Vote Panel"
 msgstr "Панел за гласуване"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:22
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:21
 msgid "Fade out after:"
 msgstr "Избледняване след:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:26
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:25
 #, c-format
 msgid "%ds"
 msgstr "%ds"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:28
 msgid "Fade effect:"
 msgstr "Ефект за избледняване:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:31
 msgid "EF^None"
 msgstr "EF^Без"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:32
 msgid "Alpha"
 msgstr "Прозрачност"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "Slide"
 msgstr "Приплъзване"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:36
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "EF^Both"
 msgstr "EF^И двата"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:40
-msgid "Weapon icons:"
-msgstr "Икони за оръжията:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:43
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:39
 msgid "Show only owned weapons"
 msgstr "Показване само на притежаваните оръжия"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
-msgid "Show weapon ID as:"
-msgstr "Показване на ID на оръжията като:"
+msgid "Show label:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
-msgid "SHOWAS^None"
-msgstr "SHOWAS^Никак"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:56
 msgid "Number"
 msgstr "Номер"
 
@@ -7111,23 +7176,24 @@ msgstr "Номер"
 msgid "Bind"
 msgstr "Задаване"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:60
-msgid "Weapon ID scale:"
-msgstr ""
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:59
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:50
+msgid "Name"
+msgstr "Име"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:66
-msgid "Show Accuracy"
-msgstr "Показване на точност"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:67
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:69
 msgid "Show Ammo"
 msgstr "Показване на амуниции"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:70
+msgid "Show Accuracy"
+msgstr "Показване на точност"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:73
 msgid "Ammo bar alpha:"
 msgstr "Прозрачност на лентата за амуниции:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:76
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:79
 msgid "Ammo bar color:"
 msgstr "Цвят на лентата за амуниции:"
 
@@ -7168,11 +7234,11 @@ msgstr ""
 msgid "Panel background defaults:"
 msgstr "Настройки на фона на панела:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48 qcsrc/menu/xonotic/util.qc:760
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48 qcsrc/menu/xonotic/util.qc:746
 msgid "Background:"
 msgstr "Фон:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60 qcsrc/menu/xonotic/util.qc:776
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60 qcsrc/menu/xonotic/util.qc:762
 msgid "Border size:"
 msgstr "Размер на рамката:"
 
@@ -7181,11 +7247,11 @@ msgstr "Размер на рамката:"
 msgid "Team color:"
 msgstr "Отборен цвят:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83 qcsrc/menu/xonotic/util.qc:802
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83 qcsrc/menu/xonotic/util.qc:788
 msgid "Test team color in configure mode"
 msgstr "Тестване на отборния цвят по време на конфигурирането"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86 qcsrc/menu/xonotic/util.qc:805
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:86 qcsrc/menu/xonotic/util.qc:791
 msgid "Padding:"
 msgstr "Отстояние:"
 
@@ -7318,9 +7384,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:41
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:118
-#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:762
-#: qcsrc/menu/xonotic/util.qc:778 qcsrc/menu/xonotic/util.qc:787
-#: qcsrc/menu/xonotic/util.qc:795 qcsrc/menu/xonotic/util.qc:807
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
+#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:748
+#: qcsrc/menu/xonotic/util.qc:759 qcsrc/menu/xonotic/util.qc:764
+#: qcsrc/menu/xonotic/util.qc:773 qcsrc/menu/xonotic/util.qc:781
+#: qcsrc/menu/xonotic/util.qc:793
 msgid "Default"
 msgstr "По подразбиране"
 
@@ -7997,10 +8065,6 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:21
 msgid "Apply immediately"
 msgstr "Прилагане веднага"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:50
-msgid "Name"
-msgstr "Име"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:79
 msgid "Model"
@@ -9059,7 +9123,7 @@ msgid "Display name of flag stealer in Capture The Flag"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:76
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:92
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:135
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:104
 msgid "Other"
 msgstr "Други"
@@ -9277,6 +9341,7 @@ msgstr ""
 "Колко бързо ще бъде приближаван изгледа, изключи за незабавно приближаване"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:91
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:119
 msgid "ZOOM^Instant"
 msgstr "ZOOM^Моментално"
 
@@ -9290,27 +9355,31 @@ msgid ""
 "sensitivity change)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:100
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:99
+msgid "Zoom scrolling"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:124
 msgid "Velocity zoom"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:101
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:125
 msgid "Forward movement only"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:105
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:129
 msgid "VZOOM^Factor"
 msgstr "VZOOM^Коефициент"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:112
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:136
 msgid "Display reticle 2D overlay while zooming"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:115
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:139
 msgid "Release zoom when you die or respawn"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:119
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:143
 msgid "Release zoom when you switch weapons"
 msgstr ""
 
@@ -9345,42 +9414,54 @@ msgid "Cycle through only usable weapon selections"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:56
+msgid "Release attack buttons when you switch weapons"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:58
 msgid "Auto switch weapons on pickup"
 msgstr "Автоматично превключване на оръжието при вземане"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:59
 msgid ""
 "Automatically switch to newly picked up weapons if they are better than what "
 "you are carrying"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:60
-msgid "Release attack buttons when you switch weapons"
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:62
+msgid "Auto switch in CTS:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:63
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:71
 msgid "Draw 1st person weapon model"
 msgstr "Показване на оръжието при режим от първо лице"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:72
 msgid "Draw the weapon model"
 msgstr "Показване на модела на оръжието"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:68
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:71
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:74
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:75
+msgid "Left align"
+msgstr "Подравняване вляво"
+
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:76
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:79
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:82
 msgid "Position of the weapon model; requires reconnect"
 msgstr "Позиция на модела на оръжието; изисква свързване на ново"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:81
+msgid "Right align"
+msgstr "Подравняване вдясно"
+
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:85
 msgid "Weapon model opacity:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:91
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:98
 msgid "Gun model swaying"
 msgstr "Клатене на оръжието"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:96
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:103
 msgid "Gun model bobbing"
 msgstr "Клатене на оръжието"
 
@@ -9389,103 +9470,104 @@ msgstr "Клатене на оръжието"
 msgid "Weapons"
 msgstr "Оръжия"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:34
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:69
 msgid "Key Bindings"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:38
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:73
 msgid "Change key..."
 msgstr "Промяна на клавиша..."
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:42
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:77
 msgid "Edit..."
 msgstr "Редактиране..."
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:48
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:83
 msgid "Clear"
 msgstr "Изчистване"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:53
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:88
 msgid "Reset all"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:58
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:93
 msgid "Mouse"
 msgstr "Мишка"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:60
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:96
 msgid "Sensitivity:"
 msgstr "Чувствителност"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:62
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:98
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:102
 msgid "Mouse speed multiplier"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:64
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:107
 msgid "Smooth aiming"
 msgstr "Плавно прицелване"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:108
 msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:67
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:110
 msgid "Invert aiming"
 msgstr "Инвертиране на мишката"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:68
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:111
 msgid "Invert mouse movement on the Y-axis"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:70
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:113
 msgid "Use system mouse positioning"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:75
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:118
 msgid "Enable built in mouse acceleration"
 msgstr "Включване на вграденото ускорение на мишката "
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:79
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:83
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:86
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:122
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:126
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:129
 msgid "Disable system mouse acceleration"
 msgstr "Изключване на ускорението на мишката от операционната система"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:80
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:123
 msgid "Make use of DGA mouse input"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:94
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:137
 msgid "Pressing \"enter console\" key also closes it"
 msgstr "Натискането на клавиша за конзола също я и затваря"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:95
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:138
 msgid "Allow the console toggling bind to also close the console"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:97
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:140
 msgid "Automatically repeat jumping if holding jump"
 msgstr "Автоматично повтаряне на скачането ако клавиша е задържан"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:100
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:143
 msgid "Jetpack on jump:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:102
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:145
 msgid "JPJUMP^Disabled"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:103
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:146
 msgid "Air only"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:104
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:147
 msgid "JPJUMP^All"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:110
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:115
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:120
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:153
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:158
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:163
 msgid "Use joystick input"
 msgstr "Използване на джойстик"
 
@@ -10257,7 +10339,7 @@ msgid ""
 "again."
 msgstr ""
 
-#: qcsrc/menu/xonotic/playerlist.qc:110
+#: qcsrc/menu/xonotic/playerlist.qc:115
 msgid "spectator"
 msgstr "наблюдател"
 
@@ -10406,10 +10488,6 @@ msgstr "FADESPEED^Нормално"
 msgid "FADESPEED^Fast"
 msgstr "FADESPEED^Бързо"
 
-#: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
-msgid "FADESPEED^Instant"
-msgstr "FADESPEED^Моментално"
-
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
 msgstr "Януари"
@@ -10522,20 +10600,20 @@ msgstr ""
 msgid "%d (unranked)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:421
+#: qcsrc/menu/xonotic/util.qc:407
 msgid "Update can be downloaded at:"
 msgstr "Актуализацията може да бъде свалена на:"
 
-#: qcsrc/menu/xonotic/util.qc:519
+#: qcsrc/menu/xonotic/util.qc:505
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "Автоматично генериране на информацията за новодобавените карти..."
 
-#: qcsrc/menu/xonotic/util.qc:554
+#: qcsrc/menu/xonotic/util.qc:540
 #, c-format
 msgid "Update to %s now!"
 msgstr "Обновете до %s сега!"
 
-#: qcsrc/menu/xonotic/util.qc:639
+#: qcsrc/menu/xonotic/util.qc:625
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
@@ -10543,10 +10621,10 @@ msgstr ""
 "^1ГРЕШКА: Компресията на текстури се изисква, но не се поддържа.\n"
 "^1Очаквайте визуални проблеми."
 
-#: qcsrc/menu/xonotic/util.qc:773
-msgid "Use default"
-msgstr "Използване на стандартен"
-
-#: qcsrc/menu/xonotic/util.qc:793
+#: qcsrc/menu/xonotic/util.qc:779
 msgid "Team Color:"
 msgstr "Цвят на отбора:"
+
+#: qcsrc/menu/xonotic/util.qc:803
+msgid "Hide on death"
+msgstr ""
