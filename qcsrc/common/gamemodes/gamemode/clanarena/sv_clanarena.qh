@@ -29,22 +29,23 @@ bool ca_isEliminated(entity e);
 
 REGISTER_MUTATOR(ca, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
 		GameRules_teams(true);
-        GameRules_spawning_teams(autocvar_g_ca_team_spawns);
-        GameRules_limit_score(autocvar_g_ca_point_limit);
-        GameRules_limit_lead(autocvar_g_ca_point_leadlimit);
+		GameRules_spawning_teams(autocvar_g_ca_team_spawns);
+		GameRules_limit_score(autocvar_g_ca_point_limit);
+		GameRules_limit_lead(autocvar_g_ca_point_leadlimit);
 
 		ca_teams = autocvar_g_ca_teams_override;
 		if (ca_teams < 2)
 			ca_teams = cvar("g_ca_teams"); // read the cvar directly as it gets written earlier in the same frame
 
 		ca_teams = BITS(bound(2, ca_teams, 4));
-        GameRules_scoring(ca_teams, SFL_SORT_PRIO_PRIMARY, 0, {
-            field_team(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
-        });
+		GameRules_scoring(ca_teams, SFL_SORT_PRIO_PRIMARY, 0,
+		{
+			field_team(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+		});
 
 		allowed_to_spawn = true;
 		g_ca_spectate_enemies = autocvar_g_ca_spectate_enemies;

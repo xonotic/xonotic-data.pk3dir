@@ -14,13 +14,13 @@ void freezetag_Initialize();
 
 REGISTER_MUTATOR(ft, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
 		GameRules_teams(true);
-        GameRules_spawning_teams(autocvar_g_freezetag_team_spawns);
-        GameRules_limit_score(autocvar_g_freezetag_point_limit);
-        GameRules_limit_lead(autocvar_g_freezetag_point_leadlimit);
+		GameRules_spawning_teams(autocvar_g_freezetag_team_spawns);
+		GameRules_limit_score(autocvar_g_freezetag_point_limit);
+		GameRules_limit_lead(autocvar_g_freezetag_point_leadlimit);
 
 		freezetag_Initialize();
 	}

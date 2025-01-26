@@ -8,7 +8,7 @@ void tdm_Initialize();
 
 REGISTER_MUTATOR(tdm, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
 		tdm_Initialize();
