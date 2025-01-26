@@ -248,7 +248,10 @@ NET_HANDLE(net_gibsplash, bool isNew)
 		amount *= 5;
 
 	if(amount <= 0 || !isNew)
+	{
+		delete(this);
 		return;
+	}
 
 	setorigin(this, org); // for the sounds
 
