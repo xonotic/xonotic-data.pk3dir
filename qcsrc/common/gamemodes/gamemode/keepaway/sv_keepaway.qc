@@ -1,5 +1,6 @@
 #include "sv_keepaway.qh"
 
+#include <common/checkextension.qh>
 #include <common/effects/all.qh>
 #include <server/client.qh>
 #include <server/gamelog.qh>
@@ -202,7 +203,7 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 	IL_PUSH(g_damagedbycontents, ball);
 	ball.effects &= ~EF_NODRAW;
 	setorigin(ball, player.origin + '0 0 10');
-	nudgeoutofsolid(ball); // a ball has a horizontally bigger bbox than a player
+	nudgeoutofsolid_OrFallback(ball); // a ball has a horizontally bigger bbox than a player
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	ball.owner = NULL;
 	navigation_dynamicgoal_set(ball, player);

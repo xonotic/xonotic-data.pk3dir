@@ -37,8 +37,8 @@ CLASS(VaporizerCells, Ammo)
 #ifdef SVQC
 /* botvalue    */ ATTRIB(VaporizerCells, m_botvalue, int, 2000);
 /* itemid      */ ATTRIB(VaporizerCells, m_itemid, int, IT_RESOURCE);
-/* respawntime */ ATTRIB(VaporizerCells, m_respawntime, float, GET(instagib_respawntime_ammo));
-/*             */ ATTRIB(VaporizerCells, m_respawntimejitter, float, GET(instagib_respawntimejitter_ammo));
+/* respawntime */ ATTRIB(VaporizerCells, m_respawntime, float(), GET(instagib_respawntime_ammo));
+/*             */ ATTRIB(VaporizerCells, m_respawntimejitter, float(), GET(instagib_respawntimejitter_ammo));
 /* iteminit    */ ATTRIB(VaporizerCells, m_iteminit, void(Pickup this, entity item), ammo_vaporizercells_init);
 #endif
 ENDCLASS(VaporizerCells)
@@ -53,7 +53,7 @@ SOUND(ExtraLife, Item_Sound("megahealth"));
 #endif
 
 CLASS(ExtraLife, Powerup)
-/* spawnfunc */ ATTRIB(ExtraLife, m_canonical_spawnfun, string, "item_extralife");
+/* spawnfunc */ ATTRIB(ExtraLife, m_canonical_spawnfunc, string, "item_extralife");
 #ifdef GAMEQC
 /* model     */ ATTRIB(ExtraLife, m_model, Model, MDL_ExtraLife_ITEM);
 /* sound     */ ATTRIB(ExtraLife, m_sound, Sound, SND_ExtraLife);
