@@ -354,7 +354,7 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_index_b,
 	entity player, bool use_score);
 
 /// \brief Called when the player changes color with the "color" command.
-/// Note that the "color" command is always called early on player connection
+/// \note the "color" command is always called early on player connection
 /// \param[in,out] player Player that requested a new color.
 /// \param[in] new_color Requested color.
 void SV_ChangeTeam(entity player, int new_color);
