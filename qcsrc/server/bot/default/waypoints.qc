@@ -138,7 +138,7 @@ void waypoint_getSymmetricalAxis_cmd(entity caller, bool save, int arg_idx)
 {
 	vector v1 = stov(argv(arg_idx++));
 	vector v2 = stov(argv(arg_idx++));
-	vector mid = (v1 + v2) / 2;
+	vector mid = (v1 + v2) * 0.5;
 
 	float diffy = (v2.y - v1.y);
 	float diffx = (v2.x - v1.x);
@@ -190,14 +190,16 @@ void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx)
 	else
 	{
 		vector v1, v2, v3, v4, v5, v6;
+		// TODO: Consider inlining this away after https://github.com/graphitemaster/gmqcc/issues/210.
+		float r_ctf_flags = 1 / ctf_flags;
 		for (int i = 1; i <= ctf_flags; ++i)
 		{
-			if (i == 1) { v1 = stov(argv(arg_idx++)); org = v1 / ctf_flags; }
-			else if (i == 2) { v2 = stov(argv(arg_idx++)); org += v2 / ctf_flags; }
-			else if (i == 3) { v3 = stov(argv(arg_idx++)); org += v3 / ctf_flags; }
-			else if (i == 4) { v4 = stov(argv(arg_idx++)); org += v4 / ctf_flags; }
-			else if (i == 5) { v5 = stov(argv(arg_idx++)); org += v5 / ctf_flags; }
-			else if (i == 6) { v6 = stov(argv(arg_idx++)); org += v6 / ctf_flags; }
+			if (i == 1) { v1 = stov(argv(arg_idx++)); org = v1 * r_ctf_flags; }
+			else if (i == 2) { v2 = stov(argv(arg_idx++)); org += v2 * r_ctf_flags; }
+			else if (i == 3) { v3 = stov(argv(arg_idx++)); org += v3 * r_ctf_flags; }
+			else if (i == 4) { v4 = stov(argv(arg_idx++)); org += v4 * r_ctf_flags; }
+			else if (i == 5) { v5 = stov(argv(arg_idx++)); org += v5 * r_ctf_flags; }
+			else if (i == 6) { v6 = stov(argv(arg_idx++)); org += v6 * r_ctf_flags; }
 		}
 	}
 
