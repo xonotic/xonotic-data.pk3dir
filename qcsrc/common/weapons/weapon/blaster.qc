@@ -47,7 +47,7 @@ void W_Blaster_Attack(entity actor, .entity weaponentity)
 	vector s_forward = v_forward * cos(atk_shotangle) + v_up * sin(atk_shotangle);
 	int atk_deathtype = WEP_BLASTER.m_id;
 
-	W_SetupShot_Dir(actor, weaponentity, s_forward, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, atk_damage, atk_deathtype);
+	W_SetupShot_Dir(actor, weaponentity, s_forward, false, 3, SND_BLASTER_FIRE, CH_WEAPON_B, atk_damage, atk_deathtype);
 	W_MuzzleFlash(WEP_BLASTER, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity missile = new(blasterbolt);

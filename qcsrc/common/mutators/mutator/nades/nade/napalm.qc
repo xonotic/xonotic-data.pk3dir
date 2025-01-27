@@ -75,7 +75,7 @@ void nade_napalm_ball(entity this)
 	entity proj;
 	vector kick;
 
-	spamsound(this, CH_SHOTS, SND_FIREBALL_FIRE, VOL_BASE, ATTEN_NORM);
+	spamsound(this, CH_SHOTS, SND_NADE_NAPALM_FIRE, VOL_BASE, ATTEN_NORM);
 
 	proj = new(grenade);
 	proj.owner = this.owner;
