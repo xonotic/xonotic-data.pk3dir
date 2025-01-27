@@ -88,7 +88,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	{
 		vector rgb = '0.592 0.557 0.824';
 		if(autocvar_cl_vaporizerbeam_teamcolor)
-			colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
+			rgb = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
 
 		particles_colormin = particles_colormax = rgb;
 		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_BEAM_HIT : EFFECT_VAPORIZER_BEAM)), this.vorg1, this.vorg2, 1, PARTICLES_USECOLOR);
