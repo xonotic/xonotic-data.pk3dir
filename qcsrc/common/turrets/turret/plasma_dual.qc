@@ -16,7 +16,8 @@ METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret thistur, entity it))
 
         // teamcolor / hit beam effect
         vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-        Send_Effect(EFFECT_VAPORIZER(it.team), it.tur_shotorg, v, 1);
+        vector rgb = Team_ColorRGB(it.team);
+        Send_Effect_Except(EFFECT_VAPORIZER_BEAM, it.tur_shotorg, v, 1, rgb, rgb, NULL);
     } else {
         SUPER(PlasmaTurret).tr_attack(thistur, it);
     }

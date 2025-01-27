@@ -104,7 +104,7 @@ void W_OverkillNex_Attack(Weapon thiswep, entity actor, .entity weaponentity, fl
 	actor.oknex_lasthit = impressive_hits;
 
 	//beam and muzzle flash done on client
-	SendCSQCVortexBeamParticle(charge);
+	SendCSQCVortexBeamParticle(actor, charge);
 
 	W_DecreaseAmmo(thiswep, actor, myammo, weaponentity);
 }
