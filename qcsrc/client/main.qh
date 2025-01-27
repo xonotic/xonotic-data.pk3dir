@@ -201,7 +201,6 @@ float spectatee_status_changed_time;
 int tempdb;
 int ClientProgsDB;
 vector hook_shotorigin[4]; // WEAPONTODO
-vector lightning_shotorigin[4]; // TODO: unused
 
 float serverprevtime, serverdeltatime;
 

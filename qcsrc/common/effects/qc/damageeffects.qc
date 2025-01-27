@@ -350,11 +350,11 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				pointparticles(EFFECT_RAPTOR_BOMB_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_DEATH:
-				sound(this, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_LOW);
+				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_EXPLOSION_BIG, this.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_BUMB_GUN:
-				sound(this, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM);
+				sound(this, CH_SHOTS, SND_VEH_BUMBLEBEE_IMPACT, VOL_BASE, ATTEN_NORM);
 				pointparticles(EFFECT_BIGPLASMA_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 		}
@@ -381,7 +381,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 			case DEATH_TURRET_FLAC:
 				pointparticles(EFFECT_HAGAR_EXPLODE, w_org, '0 0 0', 1);
-				sound(this, CH_SHOTS, SND_HAGEXP_RANDOM(), VOL_BASE, ATTEN_NORM);
+				sound(this, CH_SHOTS, SND_FLACEXP_RANDOM(), VOL_BASE, ATTEN_NORM);
 				break;
 
 			case DEATH_TURRET_MLRS:
@@ -399,7 +399,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				break;
 
 			case DEATH_TURRET_PLASMA:
-				sound(this, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_LOW);
+				sound(this, CH_SHOTS, SND_TUR_PLASMA_IMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_ELECTRO_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 

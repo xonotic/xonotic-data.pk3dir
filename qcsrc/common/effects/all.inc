@@ -31,7 +31,7 @@ EFFECT(0, ARC_OVERHEAT,             "arc_overheat")
 EFFECT(0, ARC_OVERHEAT_FIRE,        "arc_overheat_fire")
 EFFECT(0, ARC_SMOKE,                "arc_smoke")
 EFFECT(0, ARC_LIGHTNING,            "arc_lightning")
-EFFECT(0, ARC_LIGHTNING2,           "electro_lightning")
+//EFFECT(0, ARC_LIGHTNING2,           "electro_lightning")
 
 EFFECT(0, MACHINEGUN_IMPACT,        "machinegun_impact")
 EFFECT(0, MACHINEGUN_MUZZLEFLASH,   "uzi_muzzleflash")
@@ -204,11 +204,17 @@ EFFECT(0, ITEM_PICKUP,              "item_pickup")
 EFFECT(0, ITEM_RESPAWN,             "item_respawn")
 EFFECT(0, ITEM_DESPAWN,             "item_despawn")
 
+// FIXME: needs custom effect
+EFFECT(0, ONS_ELECTRICITY_EXPLODE,  "electro_ballexplode")
 EFFECT(0, ONS_GENERATOR_DAMAGED,    "torch_small")
 EFFECT(0, ONS_GENERATOR_GIB,        "onslaught_generator_gib_explode")
 EFFECT(0, ONS_GENERATOR_EXPLODE,    "onslaught_generator_smallexplosion")
 EFFECT(0, ONS_GENERATOR_EXPLODE2,   "onslaught_generator_finalexplosion")
+// FIXME: needs custom effect
+EFFECT(0, ONS_SHOCKWAVE,            "electro_combo")
 
+// FIXME: needs custom effect
+EFFECT(0, KA_BALL_RESPAWN,          "electro_combo")
 
 
 EFFECT(0, LASER_DEADLY,             "laser_deadly")
