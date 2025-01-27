@@ -261,7 +261,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 		if(GetResource(this, RES_HEALTH) >= 1)
 		{
 			// despawn effect
-			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_SPAWN, this.origin, '0 0 0', 1);
 		}
 
 		// was a player, recount votes and ready status
@@ -1274,7 +1274,7 @@ void ClientDisconnect(entity this)
 	PlayerStats_GameReport_FinalizePlayer(this);
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
 	if (CS(this).active_minigame) part_minigame(this);
-	if (IS_PLAYER(this)) Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+	if (IS_PLAYER(this)) Send_Effect(EFFECT_SPAWN, this.origin, '0 0 0', 1);
 
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(this.playerid)));
