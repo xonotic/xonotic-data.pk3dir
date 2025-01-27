@@ -752,7 +752,6 @@ METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponent
 }
 #endif
 #ifdef CSQC
-bool autocvar_cl_arcbeam_teamcolor = true;
 bool autocvar_cl_arcbeam_simple = true;
 
 .int beam_slot;
@@ -1257,7 +1256,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		this.beam_type = ReadByte();
 
 		vector beamcolor = '1 1 1';
-		if(autocvar_cl_arcbeam_teamcolor)
+		if((teamplay && autocvar_cl_tracers_teamcolor == 1) || autocvar_cl_tracers_teamcolor == 2)
 			beamcolor = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
 
 		switch(this.beam_type)

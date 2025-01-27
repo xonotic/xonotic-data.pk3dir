@@ -303,8 +303,8 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 			vector a = vectoangles(targ.origin - this.origin);
 			this.angles = '0 1 0' * a.y;
 			this.fixangle = true;
-			Send_Effect(EFFECT_SPAWN_NEUTRAL, oldpos, '0 0 0', 1);
-			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_SPAWN, oldpos, '0 0 0', 1);
+			Send_Effect(EFFECT_SPAWN, this.origin, '0 0 0', 1);
 			this.attack_finished_single[0] = time + autocvar_g_monster_mage_attack_teleport_delay;
 			return;
 		}
@@ -320,8 +320,8 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 
 	vector newpos = trace_endpos;
 
-	Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
-	Send_Effect(EFFECT_SPAWN_NEUTRAL, newpos, '0 0 0', 1);
+	Send_Effect(EFFECT_SPAWN, this.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_SPAWN, newpos, '0 0 0', 1);
 
 	setorigin(this, newpos);
 

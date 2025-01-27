@@ -1,5 +1,6 @@
 #include "sv_tka.qh"
 
+#include <common/checkextension.qh>
 #include <common/effects/all.qh>
 
 .entity ballcarried;
@@ -183,7 +184,7 @@ void tka_DropEvent(entity player) // runs any time that a player is supposed to 
 	ball.takedamage = DAMAGE_YES;
 	ball.effects &= ~EF_NODRAW;
 	setorigin(ball, player.origin + '0 0 10');
-	nudgeoutofsolid(ball); // a ball has a horizontally bigger bbox than a player
+	nudgeoutofsolid_OrFallback(ball); // a ball has a horizontally bigger bbox than a player
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	ball.owner = NULL;
 	navigation_dynamicgoal_set(ball, player);

@@ -33,7 +33,7 @@ CLASS(Jetpack, Powerup)
 #ifdef GAMEQC
 /* spawnflags */ ATTRIB(Jetpack, spawnflags, int, ITEM_FLAG_NORMAL);
 /* model      */ ATTRIB(Jetpack, m_model, Model, MDL_Jetpack_ITEM);
-/* sound      */ ATTRIB(Jetpack, m_itemid, Sound, IT_JETPACK);
+/* sound      */ ATTRIB(Jetpack, m_itemid, int, IT_JETPACK);
 #endif
 /* refname    */ ATTRIB(Jetpack, netname, string, "jetpack");
 /* itemname   */ ATTRIB(Jetpack, m_name, string, _("Jetpack"));

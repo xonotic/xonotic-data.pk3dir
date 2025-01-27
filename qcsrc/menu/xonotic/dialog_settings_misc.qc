@@ -24,7 +24,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 	entity e;
 	//entity sk;
 
-	entity miscApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "menu_restart;", COMMANDBUTTON_APPLY);
+	entity miscApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "menu_restart", COMMANDBUTTON_APPLY);
 	miscApplyButton.disableOnClick = true;
 
 	me.TR(me);
