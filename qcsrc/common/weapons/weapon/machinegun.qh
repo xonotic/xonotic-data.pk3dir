@@ -1,5 +1,14 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(MACHINEGUN_MUZZLEFLASH, "models/uziflash.md3");
+MODEL(MACHINEGUN_VIEW, W_Model("h_uzi.iqm"));
+MODEL(MACHINEGUN_WORLD, W_Model("v_uzi.md3"));
+MODEL(MACHINEGUN_ITEM, W_Model("g_uzi.md3"));
+
+SOUND(MACHINEGUN_FIRE, W_Sound("uzi_fire"));
+#endif
+
 CLASS(MachineGun, Weapon)
 /* spawnfunc */ ATTRIB(MachineGun, m_canonical_spawnfunc, string, "weapon_machinegun");
 /* ammotype  */ ATTRIB(MachineGun, ammo_type, Resource, RES_BULLETS);

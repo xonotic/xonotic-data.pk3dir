@@ -122,7 +122,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupShot(actor, weaponentity, true, 0, SND_Null, CH_WEAPON_A, vaporizer_damage, thiswep.m_id);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
-	sound (actor, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
+	sound (actor, CH_WEAPON_A, SND_VAPORIZER_FIRE, VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
 	impressive_hits = 0;
@@ -195,7 +195,7 @@ void W_RocketMinsta_Attack(entity actor, .entity weaponentity, int mode)
 	entity proj;
 	int laser_count = max(1, autocvar_g_rm_laser_count);
 	int total = (mode == 0) ? laser_count : 1;
-	Sound snd = (mode == 0) ? SND_CRYLINK_FIRE : SND_ELECTRO_FIRE2;
+	Sound snd = (mode == 0) ? SND_CRYLINK_FIRE : SND_ELECTRO_FIRE2; // WEAPONTODO multiple references to other weapons here!
 	W_SetupShot_ProjectileSize(actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, snd, CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO.m_id);
 
 	// uses electro effects
@@ -381,7 +381,7 @@ METHOD(Vaporizer, wr_impacteffect, void(entity thiswep, entity actor))
 	vector org2 = w_org + w_backoff * 2;
 	pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
 	if(!w_issilent)
-		sound(actor, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+		sound(actor, CH_SHOTS, SND_VAPORIZER_IMPACT, VOL_BASE, ATTN_NORM);
 }
 
 METHOD(Vaporizer, wr_init, void(entity thiswep))

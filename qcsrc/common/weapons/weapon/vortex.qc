@@ -140,10 +140,10 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(actor, weaponentity, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg, dtype);
+	W_SetupShot(actor, weaponentity, true, 5, SND_VORTEX_FIRE, CH_WEAPON_A, mydmg, dtype);
 	if(charge > WEP_CVAR(WEP_VORTEX, charge_animlimit) && WEP_CVAR(WEP_VORTEX, charge_animlimit)) // if the Vortex is overcharged, we play an extra sound
 	{
-		sound(actor, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(WEP_VORTEX, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(WEP_VORTEX, charge_animlimit)), ATTN_NORM);
+		sound(actor, CH_WEAPON_B, SND_VORTEX_CHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(WEP_VORTEX, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(WEP_VORTEX, charge_animlimit)), ATTN_NORM);
 	}
 
 	yoda = 0;
@@ -346,7 +346,7 @@ METHOD(Vortex, wr_impacteffect, void(entity thiswep, entity actor))
 	bool usecolor = ((teamplay && autocvar_cl_tracers_teamcolor == 1) || autocvar_cl_tracers_teamcolor == 2);
 	boxparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), NULL, org2, org2, '0 0 0', '0 0 0', 1, ((usecolor) ? PARTICLES_USECOLOR : 0));
 	if(!w_issilent)
-		sound(this, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+		sound(this, CH_SHOTS, SND_VORTEX_IMPACT, VOL_BASE, ATTN_NORM);
 }
 METHOD(Vortex, wr_init, void(entity thiswep))
 {
