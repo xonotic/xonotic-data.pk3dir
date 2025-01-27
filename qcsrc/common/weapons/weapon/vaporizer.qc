@@ -44,7 +44,7 @@ void VaporizerBeam_Draw(entity this)
 	string tex = "particles/lgbeam";
 	if(this.cnt)
 		tex = "particles/gauntletbeam";
-	vector rgb = '0.592 0.557 0.824';
+	vector rgb = WEP_VAPORIZER.m_color;
 	if(autocvar_cl_vaporizerbeam_teamcolor)
 		rgb = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
 
@@ -86,7 +86,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 
 	if(autocvar_cl_vaporizerbeam_particle)
 	{
-		vector rgb = '0.592 0.557 0.824';
+		vector rgb = WEP_VAPORIZER.m_color;
 		if(autocvar_cl_vaporizerbeam_teamcolor)
 			rgb = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
 
