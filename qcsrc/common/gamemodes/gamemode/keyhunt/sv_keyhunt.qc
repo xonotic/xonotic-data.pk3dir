@@ -18,14 +18,10 @@ float autocvar_g_balance_keyhunt_dropvelocity;
 float autocvar_g_balance_keyhunt_maxdist;
 float autocvar_g_balance_keyhunt_protecttime;
 
-float autocvar_g_balance_keyhunt_carrier_damage;
-float autocvar_g_balance_keyhunt_carrier_force;
-float autocvar_g_balance_keyhunt_carrier_selfdamage;
-float autocvar_g_balance_keyhunt_carrier_selfforce;
-float autocvar_g_balance_keyhunt_noncarrier_damage;
-float autocvar_g_balance_keyhunt_noncarrier_force;
-float autocvar_g_balance_keyhunt_noncarrier_selfdamage;
-float autocvar_g_balance_keyhunt_noncarrier_selfforce;
+vector autocvar_g_balance_keyhunt_carrier_damage;
+vector autocvar_g_balance_keyhunt_carrier_force;
+vector autocvar_g_balance_keyhunt_noncarrier_damage;
+vector autocvar_g_balance_keyhunt_noncarrier_force;
 
 int autocvar_g_balance_keyhunt_score_capture;
 int autocvar_g_balance_keyhunt_score_carrierfrag;
@@ -1235,28 +1231,38 @@ MUTATOR_HOOKFUNCTION(kh, Damage_Calculate) // for changing damage and force valu
 
 	if (frag_attacker.kh_next != NULL) // if the attacker is a key carrier
 	{
-		if (frag_target == frag_attacker) // damage done to yourself
+		if (frag_target == frag_attacker) // damage done to themselves
 		{
-			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_selfdamage;
-			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_selfforce;
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_force.x;
 		}
-		else // damage done to other players
+		else if (frag_target.kh_next != NULL) // damage done to other key carriers
 		{
-			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_damage;
-			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_force;
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_force.y;
+		}
+		else // damage done to noncarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_force.z;
 		}
 	}
-	else if (frag_target.kh_next == NULL) // if the target is a noncarrier
+	else
 	{
-		if (frag_target == frag_attacker) // damage done to yourself
+		if (frag_target == frag_attacker) // damage done to themselves
 		{
-			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_selfdamage;
-			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_selfforce;
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_force.x;
 		}
-		else // damage done to other players
+		else if (frag_target.kh_next != NULL) // damage done to key carriers
 		{
-			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_damage;
-			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_force;
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_force.y;
+		}
+		else // damage done to other noncarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_force.z;
 		}
 	}
 }
