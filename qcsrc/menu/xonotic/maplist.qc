@@ -158,7 +158,7 @@ void XonoticMapList_drawListBoxItem(entity me, int i, vector absSize, bool isSel
 
 	if(draw_PictureSize(strcat("/maps/", MapInfo_Map_bspname)) == '0 0 0')
 	{
-		if(!draw_PictureExists(strcat("/levelshots/", MapInfo_Map_bspname)))
+		if(draw_PictureSize(strcat("/levelshots/", MapInfo_Map_bspname)) == '0 0 0')
 			draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 		else
 			draw_Picture(me.columnPreviewOrigin * eX, strcat("/levelshots/", MapInfo_Map_bspname), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
@@ -188,7 +188,10 @@ void XonoticMapList_refilter(entity me)
 	me.nItems = MapInfo_count;
 
 	for(i = 0; i < MapInfo_count; ++i)
+	{
 		draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i)));
+		draw_PreloadPicture(strcat("/levelshots/", MapInfo_BSPName_ByID(i)));
+	}
 	s = "0";
 	for(i = 1; i < MapInfo_count; i *= 2)
 		s = strcat(s, s);
