@@ -5,11 +5,12 @@ void beam_think(entity this);
 
 .int fireflag;
 SOUND(PhaserTurretAttack_FIRE, W_Sound("electro_fire"));
+SOUND(PhaserTurretAttack_IMPACT, W_Sound("neximpact"));
 METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_ELECTRO, refire))) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 1)) {
         if (isPlayer) {
             turret_initparams(actor);
             W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_PhaserTurretAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_PHASER.m_id);
@@ -17,7 +18,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
             actor.shot_speed = 1;
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_ELECTRO, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0.5, w_ready);
         }
         entity beam = new(PhaserTurret_beam);
         setmodel(beam, MDL_TUR_PHASER_BEAM);
@@ -43,7 +44,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 
         setattachment(beam, actor.tur_head, "tag_fire");
 
-        soundat (actor, trace_endpos, CH_SHOTS, SND(NEXIMPACT), VOL_BASE, ATTEN_NORM);
+        soundat (actor, trace_endpos, CH_SHOTS, SND(PhaserTurretAttack_IMPACT), VOL_BASE, ATTEN_NORM);
         if (!isPlayer)
         if (actor.tur_head.frame == 0)
             actor.tur_head.frame = 1;

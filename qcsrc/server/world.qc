@@ -207,6 +207,8 @@ void cvar_changes_init()
 		BADPREFIX("v_");
 		BADPREFIX("vid_");
 		BADPREFIX("crosshair");
+		BADPREFIX("notification_");
+		BADPREFIX("prvm_");
 		BADCVAR("mod_q3bsp_lightmapmergepower");
 		BADCVAR("mod_q3bsp_nolightmaps");
 		BADCVAR("fov");
@@ -215,6 +217,9 @@ void cvar_changes_init()
 		BADCVAR("bgmvolume");
 		BADCVAR("in_pitch_min");
 		BADCVAR("in_pitch_max");
+		BADCVAR("bottomcolor");
+		BADCVAR("topcolor");
+		BADCVAR("playermodel");
 
 		// private
 		BADCVAR("developer");
@@ -324,6 +329,7 @@ void cvar_changes_init()
 		BADCVAR("g_maplist_mostrecent");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_termsofservice_url");
+		BADCVAR("sv_adminnick");
 
 		v = cvar_string(k);
 		d = cvar_defstring(k);
@@ -419,8 +425,6 @@ void cvar_changes_init()
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
 		BADPREFIX("net_");
-		BADPREFIX("notification_");
-		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
 		BADPREFIX("sv_cullentities_");
@@ -504,7 +508,6 @@ void cvar_changes_init()
 		BADCVAR("rcon_restricted_commands");
 		BADCVAR("rcon_restricted_password");
 		BADCVAR("skill");
-		BADCVAR("sv_adminnick");
 		BADCVAR("sv_autoscreenshot");
 		BADCVAR("sv_autotaunt");
 		BADCVAR("sv_curl_defaulturl");
@@ -2337,12 +2340,12 @@ void DropToFloor_QC(entity this)
 		return;
 	}
 
-	/* Prior to sv_legacy_bbox_expand 0, both droptofloor and nudgeoutofsolid were done for items
+	/* Prior to sv_legacy_bbox_expand 0, both droptofloor and nudgeoutofsolid_OrFallback were done for items
 	 * using box '-16 -16 0' '16 16 48' (without the FL_ITEM expansion applied),
 	 * which often resulted in bboxes partially in solids once expansion was applied.
 	 * We don't want bboxes in solids (bad for gameplay and culling),
 	 * but we also don't want items to land on a "skirting board" or the base of a sloping wall.
-	 * For initial nudgeoutofsolid and droptofloor stages we use a small box
+	 * For initial nudgeoutofsolid_OrFallback and droptofloor stages we use a small box
 	 * so they fall as far and in the same place as they traditionally would,
 	 * then we nudge the full size box out of solid, in a direction appropriate for the plane(s).
 	 */
@@ -2366,7 +2369,7 @@ void DropToFloor_QC(entity this)
 	 */
 	if(!Q3COMPAT_COMMON && autocvar_sv_mapformat_is_quake3) // Xonotic, Nexuiz
 	{
-		nudgeresult = nudgeoutofsolid(this);
+		nudgeresult = nudgeoutofsolid_OrFallback(this);
 		if (!nudgeresult)
 			LOG_WARNF("DropToFloor_QC at \"%v\": COULD NOT FIX badly placed entity \"%s\" before drop", this.origin, this.classname);
 		else if (nudgeresult > 0)
@@ -2432,12 +2435,12 @@ void DropToFloor_QC(entity this)
 
 		// A side effect of using a small box to drop items (and do the initial nudge) is
 		// the full size box can end up in collision with a sloping floor or terrain model.
-		nudgeresult = nudgeoutofsolid(this);
+		nudgeresult = nudgeoutofsolid_OrFallback(this);
 		// No warns for successful nudge because it would spam about items on slopes/terrain.
 	}
 	else if (trace_allsolid && trace_fraction) // dropped using "proper" bbox but never left solid
 	{
-		nudgeresult = nudgeoutofsolid(this);
+		nudgeresult = nudgeoutofsolid_OrFallback(this);
 		if (nudgeresult > 0)
 			LOG_WARNF("DropToFloor_QC at \"%v\": FIXED badly placed entity \"%s\" after drop", this.origin, this.classname);
 	}

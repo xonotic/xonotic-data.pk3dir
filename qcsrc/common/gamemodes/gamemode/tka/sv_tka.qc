@@ -1,5 +1,6 @@
 #include "sv_tka.qh"
 
+#include <common/checkextension.qh>
 #include <common/effects/all.qh>
 
 .entity ballcarried;
@@ -61,8 +62,8 @@ void tka_RespawnBall(entity this) // runs whenever the ball needs to be relocate
 	this.nextthink = time + autocvar_g_tkaball_respawntime;
 	navigation_dynamicgoal_set(this, NULL);
 
-	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
-	Send_Effect(EFFECT_ELECTRO_COMBO, this.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_KA_BALL_RESPAWN, oldballorigin, '0 0 0', 1);
+	Send_Effect(EFFECT_KA_BALL_RESPAWN, this.origin, '0 0 0', 1);
 
 	WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', NULL, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 	WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
@@ -183,7 +184,7 @@ void tka_DropEvent(entity player) // runs any time that a player is supposed to 
 	ball.takedamage = DAMAGE_YES;
 	ball.effects &= ~EF_NODRAW;
 	setorigin(ball, player.origin + '0 0 10');
-	nudgeoutofsolid(ball); // a ball has a horizontally bigger bbox than a player
+	nudgeoutofsolid_OrFallback(ball); // a ball has a horizontally bigger bbox than a player
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	ball.owner = NULL;
 	navigation_dynamicgoal_set(ball, player);

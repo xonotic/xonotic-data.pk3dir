@@ -20,6 +20,7 @@ bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 	WriteShort(MSG_ENTITY, floor(this.velocity.y / 4));
 	WriteShort(MSG_ENTITY, floor(this.velocity.z / 4));
 	WriteByte(MSG_ENTITY, this.species);
+	WriteByte(MSG_ENTITY, this.colormap);
 	return true;
 }
 
@@ -52,6 +53,8 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.species = bloodtype & BITS(4); // it only uses bits from 0 to 3, see SPECIES_* constants
 	if(rad_negative)
 		e.species |= BIT(7);
+
+	e.colormap = (teamplay) ? dmgowner.team : dmgowner.clientcolors; // NOTE: doesn't work on non-clients
 
 	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
 }
@@ -212,12 +215,28 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	bool rad_negative = (species & BIT(7));
 	species = (species & BITS(4));
 
+	int dmg_colors = ReadByte();
+
 	return = true;
 
 	if (!isNew)
 		return;
 
 	forcemul = (rad_negative ? -1 : 1);
+	// team color logic copied from projectiles
+	int tcolor = dmg_colors;
+	if(teamplay)
+	{
+		if(dmg_colors)
+			tcolor = (dmg_colors - 1) * 0x11;
+		else
+			tcolor = 0x00;
+		tcolor |= BIT(10); // RENDER_COLORMAPPED
+	}
+
+	// set globally so weapon impacts can use them
+	particles_colormin = colormapPaletteColor(floor(tcolor / 16), false);
+	particles_colormax = colormapPaletteColor(tcolor % 16, true);
 
 	FOREACH_ENTITY_RADIUS(w_org, rad + MAX_DAMAGEEXTRARADIUS, !it.tag_entity && !is_pure(it), {
 		vector nearest = NearestPointOnBox(it, w_org);
@@ -331,11 +350,11 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				pointparticles(EFFECT_RAPTOR_BOMB_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_DEATH:
-				sound(this, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_LOW);
+				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_EXPLOSION_BIG, this.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_BUMB_GUN:
-				sound(this, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM);
+				sound(this, CH_SHOTS, SND_VEH_BUMBLEBEE_IMPACT, VOL_BASE, ATTEN_NORM);
 				pointparticles(EFFECT_BIGPLASMA_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 		}
@@ -362,7 +381,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 			case DEATH_TURRET_FLAC:
 				pointparticles(EFFECT_HAGAR_EXPLODE, w_org, '0 0 0', 1);
-				sound(this, CH_SHOTS, SND_HAGEXP_RANDOM(), VOL_BASE, ATTEN_NORM);
+				sound(this, CH_SHOTS, SND_FLACEXP_RANDOM(), VOL_BASE, ATTEN_NORM);
 				break;
 
 			case DEATH_TURRET_MLRS:
@@ -380,7 +399,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				break;
 
 			case DEATH_TURRET_PLASMA:
-				sound(this, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_LOW);
+				sound(this, CH_SHOTS, SND_TUR_PLASMA_IMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_ELECTRO_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 

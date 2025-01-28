@@ -49,15 +49,16 @@ float MachineGun_Heat(float spread_accum)
 	// example where low end has halved damage and high end has tripled damage:
 	// with 50% spread accumulation: heat = (0.5 * 0.5) + (0.5 * 3) = 0.25 + 1.5 = 1.75 damage multiplier
 	// with 90% spread accumulation: heat = (0.1 * 0.5) + (0.9 * 3) = 0.05 + 2.7 = 2.75 damage multiplier
-	float heat = (coldMultiplierApplicationPercent * WEP_CVAR(WEP_MACHINEGUN, spread_cold_damagemultiplier))
-	           + (heatMultiplierApplicationPercent * WEP_CVAR(WEP_MACHINEGUN, spread_heat_damagemultiplier));
-
-	return heat;
+	// NOTE: multipliers do not apply when unset for compatibility
+	float cold_multiplier = WEP_CVAR(WEP_MACHINEGUN, spread_cold_damagemultiplier);
+	float heat_multiplier = WEP_CVAR(WEP_MACHINEGUN, spread_heat_damagemultiplier);
+	return (cold_multiplier ? coldMultiplierApplicationPercent * cold_multiplier : coldMultiplierApplicationPercent)
+	     + (heat_multiplier ? heatMultiplierApplicationPercent * heat_multiplier : heatMultiplierApplicationPercent);
 }
 
 void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponentity)
 {
-	W_SetupShot(actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, ((actor.(weaponentity).misc_bulletcounter == 1) ? WEP_CVAR(WEP_MACHINEGUN, first_damage) : WEP_CVAR(WEP_MACHINEGUN, sustained_damage)), deathtype);
+	W_SetupShot(actor, weaponentity, true, 0, SND_MACHINEGUN_FIRE, CH_WEAPON_A, ((actor.(weaponentity).misc_bulletcounter == 1) ? WEP_CVAR(WEP_MACHINEGUN, first_damage) : WEP_CVAR(WEP_MACHINEGUN, sustained_damage)), deathtype);
 
 	if(!autocvar_g_norecoil)
 	{
@@ -152,7 +153,7 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(WEP_MACHINEGUN, sustained_ammo), weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_MACHINEGUN, sustained_damage), thiswep.m_id);
+	W_SetupShot(actor, weaponentity, true, 0, SND_MACHINEGUN_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_MACHINEGUN, sustained_damage), thiswep.m_id);
 	if(!autocvar_g_norecoil)
 	{
 		actor.punchangle_x = random() - 0.5;
@@ -203,7 +204,7 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 
 void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_SetupShot(actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_MACHINEGUN, sustained_damage), thiswep.m_id);
+	W_SetupShot(actor, weaponentity, true, 0, SND_MACHINEGUN_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_MACHINEGUN, sustained_damage), thiswep.m_id);
 	if(!autocvar_g_norecoil)
 	{
 		actor.punchangle_x = random() - 0.5;

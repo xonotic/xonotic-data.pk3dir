@@ -83,10 +83,10 @@ void W_OverkillNex_Attack(Weapon thiswep, entity actor, .entity weaponentity, fl
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(actor, weaponentity, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg, thiswep.m_id);
+	W_SetupShot(actor, weaponentity, true, 5, SND_OK_NEX_FIRE, CH_WEAPON_A, mydmg, thiswep.m_id);
 	if(charge > WEP_CVAR(WEP_OVERKILL_NEX, charge_animlimit) && WEP_CVAR(WEP_OVERKILL_NEX, charge_animlimit)) // if the OverkillNex is overcharged, we play an extra sound
 	{
-		sound(actor, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(WEP_OVERKILL_NEX, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(WEP_OVERKILL_NEX, charge_animlimit)), ATTN_NORM);
+		sound(actor, CH_WEAPON_B, SND_OK_NEX_CHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(WEP_OVERKILL_NEX, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(WEP_OVERKILL_NEX, charge_animlimit)), ATTN_NORM);
 	}
 
 	yoda = 0;
@@ -104,7 +104,7 @@ void W_OverkillNex_Attack(Weapon thiswep, entity actor, .entity weaponentity, fl
 	actor.oknex_lasthit = impressive_hits;
 
 	//beam and muzzle flash done on client
-	SendCSQCVortexBeamParticle(charge);
+	SendCSQCVortexBeamParticle(actor, charge);
 
 	W_DecreaseAmmo(thiswep, actor, myammo, weaponentity);
 }
@@ -332,7 +332,7 @@ METHOD(OverkillNex, wr_impacteffect, void(entity thiswep, entity actor))
 	vector org2 = w_org + w_backoff * 2;
 	pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
 	if(!w_issilent)
-		sound(this, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+		sound(this, CH_SHOTS, SND_OK_NEX_IMPACT, VOL_BASE, ATTN_NORM);
 }
 
 METHOD(OverkillNex, wr_init, void(entity thiswep))

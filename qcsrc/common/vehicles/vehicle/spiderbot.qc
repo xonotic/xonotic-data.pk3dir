@@ -271,7 +271,7 @@ bool spiderbot_frame(entity this, float dt)
 			fireBullet(this, weaponentity, v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
 				autocvar_g_vehicle_spiderbot_minigun_damage, 0, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN.m_id, EFFECT_BULLET);
 
-			sound (gun, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
+			sound (gun, CH_WEAPON_A, SND_VEH_SPIDERBOT_MINIGUN_FIRE, VOL_BASE, ATTEN_NORM);
 			//trailparticles(this, _particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
 			Send_Effect(EFFECT_SPIDERBOT_MINIGUN_MUZZLEFLASH, v, v_forward * 2500, 1);
 

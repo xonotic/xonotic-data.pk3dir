@@ -10,18 +10,18 @@ fr    "French" "Français" 100%
 gl    "Galician" "Galego" 98%
 ga    "Irish" "Irish" 29%
 it    "Italian" "Italiano" 98%
-la    "Latin" "Lingua Latina" 98%
+la    "Latin" "Lingua Latina" 99%
 hu    "Hungarian" "Magyar" 43%
 nl    "Dutch" "Nederlands" 59%
 pl    "Polish" "Polski" 75%
 pt    "Portuguese" "Português" 98%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 99%
-ro    "Romanian" "Romana" 68%
+ro    "Romanian" "Romana" 67%
 fi    "Finnish" "Suomi" 94%
 sv    "Swedish" "Svenska" 95%
 tr    "Turkish" "Türkçe" 53%
 cs    "Czech" "Čeština" 30%
-el    "Greek" "Ελληνική" 42%
+el    "Greek" "Ελληνική" 43%
 be    "Belarusian" "Беларуская" 47%
 bg    "Bulgarian" "Български" 67%
 ru    "Russian" "Русский" 100%
