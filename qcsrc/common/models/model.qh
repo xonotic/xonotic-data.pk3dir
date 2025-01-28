@@ -29,12 +29,6 @@ ENDCLASS(Model)
     _setmodel((this), _setmodel_cached ? _setmodel_cached : _setmodel_model.model_str()); \
 MACRO_END
 
-// enable for selective asset precaching
-// NOTE: enable the automatic precache code when disabling this
-#if 1
 #define precache_model(m) MACRO_BEGIN \
     (m).model_precache(m); \
 MACRO_END
-#else
-#define precache_model(m)
-#endif

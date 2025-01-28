@@ -5,7 +5,7 @@
 REGISTRY(Models, BITS(9))
 REGISTER_REGISTRY(Models)
 
-// NOTE: does not automatically precache assets, must be done via a separate function
+// NOTE: does not automatically precache assets, must be done separately with precache_model
 #define MODEL(name, path) \
     string MDL_##name##_get() { return path; } \
     REGISTER(Models, MDL, name, m_id, NEW(Model, MDL_##name##_get))
@@ -14,15 +14,6 @@ STATIC_INIT(NULLMDL)
 {
     _precache_model("null");
 }
-
-// enable for automatic asset precaching
-// reduces potential runtime overhead at the cost of a longer initial loading screen
-// NOTE: disable the selective precache macro when enabling this
-#if 0
-PRECACHE(Models) {
-    FOREACH(Models, true, it.model_precache(it));
-}
-#endif
 
 MODEL(Null, "null");
 REGISTRY_DEFINE_GET(Models, MDL_Null)

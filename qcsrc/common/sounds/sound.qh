@@ -144,12 +144,6 @@ string _Sound_fixpath_cached;
 	_Sound_fixpath_cached ? _Sound_fixpath_cached : _Sound_fixpath(_Sound_fixpath_this.sound_str()) \
 )
 
-// enable for selective asset precaching
-// NOTE: enable the automatic precache code when disabling this
-#if 1
 #define precache_sound(s) MACRO_BEGIN \
 	(s).sound_precache(s); \
 MACRO_END
-#else
-#define precache_sound(s)
-#endif

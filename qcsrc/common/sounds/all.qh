@@ -27,7 +27,7 @@ void stopsound(entity e, float chan);
 REGISTRY(Sounds, BITS(9))
 REGISTER_REGISTRY(Sounds)
 
-// NOTE: does not automatically precache assets, must be done via a separate function
+// NOTE: does not automatically precache assets, must be done separately with precache_sound
 #define SOUND(name, path) \
     string SND_##name##_get() { return path; } \
     REGISTER(Sounds, SND, name, m_id, NEW(Sound, SND_##name##_get))
@@ -35,21 +35,12 @@ REGISTER_REGISTRY(Sounds)
 /** @deprecated Used in places where a string is required for legacy reasons, prefer using SND_id constants instead */
 #define SND(id) Sound_fixpath(SND_##id)
 
-// enable for automatic asset precaching
-// reduces potential runtime overhead at the cost of a longer initial loading screen
-// NOTE: disable the selective precache macro when enabling this
-#if 0
-PRECACHE(Sounds) {
-    FOREACH(Sounds, true, it.sound_precache(it));
-}
-#endif
-
-STATIC_INIT(NULLSND)
-{
-    _precache_sound("misc/null.wav");
-}
-
 SOUND(Null, "misc/null");
 REGISTRY_DEFINE_GET(Sounds, SND_Null)
 #include "all.inc"
 #include "all.qc"
+
+STATIC_INIT(NULLSND)
+{
+    precache_sound(SND_Null);
+}
