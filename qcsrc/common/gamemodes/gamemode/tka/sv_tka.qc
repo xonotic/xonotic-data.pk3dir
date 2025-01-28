@@ -355,7 +355,8 @@ MUTATOR_HOOKFUNCTION(tka, PlayerDies)
 			team_has_ball = true;
 			break;
 		});
-		if(frag_target.ballcarried) { // add to amount of times killing carrier
+		if(frag_target.ballcarried) // add to amount of times killing carrier
+		{
 			GameRules_scoring_add(frag_attacker, TKA_CARRIERKILLS, 1);
 			if(autocvar_g_tka_score_bckill) // add bckills to the score
 				GameRules_scoring_add_team(frag_attacker, SCORE, autocvar_g_tka_score_bckill);
@@ -444,13 +445,13 @@ MUTATOR_HOOKFUNCTION(tka, Damage_Calculate) // for changing damage and force val
 			frag_damage *= autocvar_g_tka_ballcarrier_selfdamage;
 			frag_force *= autocvar_g_tka_ballcarrier_selfforce;
 		}
-		else // damage done to other ballcarriers
+		else // damage done to other players (ballcarriers and noncarriers)
 		{
 			frag_damage *= autocvar_g_tka_ballcarrier_damage;
 			frag_force *= autocvar_g_tka_ballcarrier_force;
 		}
 	}
-	else // if the attacker is a noncarrier
+	else if (!frag_target.ballcarried) // if the target is a noncarrier
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
 		{
