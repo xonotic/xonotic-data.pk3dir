@@ -20,4 +20,9 @@ METHOD(PlasmaAttack, wr_think, void(entity thiswep, entity actor, .entity weapon
 	}
 }
 
+METHOD(PlasmaAttack, wr_init, void(entity thiswep))
+{
+    precache_sound(SND_PlasmaAttack_FIRE);
+}
+
 #endif

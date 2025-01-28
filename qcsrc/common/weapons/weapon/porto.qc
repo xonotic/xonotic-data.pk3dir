@@ -416,6 +416,21 @@ METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep, entity actor))
 	actor.porto_current = NULL;
 }
 
+METHOD(PortoLaunch, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_PORTAL);
+	precache_model(MDL_PORTO_VIEW);
+	precache_model(MDL_PORTO_WORLD);
+	precache_model(MDL_PORTO_ITEM);
+
+	precache_sound(SND_PORTO_BOUNCE);
+	precache_sound(SND_PORTO_CREATE);
+	precache_sound(SND_PORTO_EXPIRE);
+	precache_sound(SND_PORTO_EXPLODE);
+	precache_sound(SND_PORTO_FIRE);
+	precache_sound(SND_PORTO_UNSUPPORTED);
+}
+
 #endif
 
 #ifdef CSQC

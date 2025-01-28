@@ -146,7 +146,7 @@ string _Sound_fixpath_cached;
 
 // enable for selective asset precaching
 // NOTE: enable the automatic precache code when disabling this
-#if 0
+#if 1
 #define precache_sound(s) MACRO_BEGIN \
 	(s).sound_precache(s); \
 MACRO_END

@@ -219,6 +219,16 @@ METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))
 	return PHYS_INPUT_BUTTON_ATCK2(actor) && WEP_CVAR(WEP_RIFLE, secondary) == 0;
 }
 
+METHOD(Rifle, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_RIFLE_VIEW);
+	precache_model(MDL_RIFLE_WORLD);
+	precache_model(MDL_RIFLE_ITEM);
+
+	precache_sound(SND_RIFLE_FIRE2);
+	precache_sound(SND_RIFLE_FIRE);
+}
+
 #endif
 #ifdef CSQC
 

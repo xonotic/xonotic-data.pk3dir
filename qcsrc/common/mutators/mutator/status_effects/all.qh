@@ -57,3 +57,14 @@ CLASS(StatusEffect, Object)
 		returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
 	}
 ENDCLASS(StatusEffect)
+
+#ifdef GAMEQC
+PRECACHE(StatusEffects)
+{
+	FOREACH(StatusEffects, true,
+	{
+		precache_sound(it.m_sound);
+		precache_sound(it.m_sound_rm);
+	});
+}
+#endif

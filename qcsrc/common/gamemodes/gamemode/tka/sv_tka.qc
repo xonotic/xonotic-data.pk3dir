@@ -558,6 +558,8 @@ MUTATOR_HOOKFUNCTION(tka, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 
 void tka_Initialize()
 {
+	precache_model(MDL_TKA_BALL);
+
 	tka_teams = autocvar_g_tka_teams_override;
 	if(tka_teams < 2)
 		tka_teams = cvar("g_tka_teams"); // read the cvar directly as it gets written earlier in the same frame

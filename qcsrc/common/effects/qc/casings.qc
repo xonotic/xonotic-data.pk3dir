@@ -110,6 +110,16 @@ Sound SND_CASINGS_RANDOM() {
     return REGISTRY_GET(Sounds, SND_CASINGS1.m_id + floor(prandom() * 3));
 }
 
+PRECACHE(Casings)
+{
+    precache_sound(SND_BRASS1);
+    precache_sound(SND_BRASS2);
+    precache_sound(SND_BRASS3);
+    precache_sound(SND_CASINGS1);
+    precache_sound(SND_CASINGS2);
+    precache_sound(SND_CASINGS3);
+}
+
 void Casing_Touch(entity this, entity toucher)
 {
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)

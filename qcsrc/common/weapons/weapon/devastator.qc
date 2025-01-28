@@ -594,6 +594,19 @@ METHOD(Devastator, wr_killmessage, Notification(entity thiswep))
 		return WEAPON_DEVASTATOR_MURDER_DIRECT;
 }
 
+METHOD(Devastator, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_DEVASTATOR_MUZZLEFLASH);
+	precache_model(MDL_DEVASTATOR_VIEW);
+	precache_model(MDL_DEVASTATOR_WORLD);
+	precache_model(MDL_DEVASTATOR_ITEM);
+
+	precache_sound(SND_DEVASTATOR_DET);
+	precache_sound(SND_DEVASTATOR_FIRE);
+	precache_sound(SND_DEVASTATOR_FLY);
+	precache_sound(SND_DEVASTATOR_MODE);
+}
+
 #endif
 #ifdef CSQC
 

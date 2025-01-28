@@ -143,6 +143,15 @@ METHOD(OverkillMachineGun, wr_killmessage, Notification(entity thiswep))
 	return WEAPON_OVERKILL_MACHINEGUN_MURDER;
 }
 
+METHOD(OverkillMachineGun, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_OK_MG_VIEW);
+	precache_model(MDL_OK_MG_WORLD);
+	precache_model(MDL_OK_MG_ITEM);
+
+	precache_sound(SND_OK_MG_FIRE);
+}
+
 #endif
 #ifdef CSQC
 

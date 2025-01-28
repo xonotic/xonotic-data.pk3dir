@@ -55,6 +55,12 @@ METHOD(RacerAttack, wr_checkammo1, bool(RacerAttack thiswep, entity actor, .enti
     return isPlayer || veh.vehicle_energy >= autocvar_g_vehicle_racer_cannon_cost;
 }
 
+METHOD(RacerAttack, wr_init, void(entity thiswep))
+{
+    precache_sound(SND_RacerAttack_LASER_FIRE);
+    precache_sound(SND_RacerAttack_ROCKET_FIRE);
+}
+
 void racer_rocket_tracker(entity this);
 void racer_rocket_groundhugger(entity this);
 

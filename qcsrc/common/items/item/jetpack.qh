@@ -20,6 +20,8 @@ bool autocvar_g_powerups_jetpack = true;
 PROPERTY(int, g_pickup_fuel_jetpack);
 void powerup_jetpack_init(Pickup def, entity item)
 {
+    precache_model(MDL_Jetpack_ITEM);
+
     if(!autocvar_g_powerups || !autocvar_g_powerups_jetpack)
         def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 
@@ -59,6 +61,8 @@ MODEL(JetpackFuel_ITEM, Item_Model("g_fuel.md3"));
 PROPERTY(int, g_pickup_fuel);
 void ammo_fuel_init(Pickup this, entity item)
 {
+    precache_model(MDL_JetpackFuel_ITEM);
+
     if(!GetResource(item, RES_FUEL))
         SetResourceExplicit(item, RES_FUEL, g_pickup_fuel);
 }
@@ -92,6 +96,8 @@ MODEL(JetpackRegen_ITEM, Item_Model("g_fuelregen.md3"));
 bool autocvar_g_powerups_fuelregen = true;
 void powerup_fuelregen_init(Pickup def, entity item)
 {
+    precache_model(MDL_JetpackRegen_ITEM);
+
     if(!autocvar_g_powerups || !autocvar_g_powerups_fuelregen)
         def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 }

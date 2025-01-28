@@ -390,6 +390,17 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 		weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.5, w_ready);
 	}
 }
+
+METHOD(Tuba, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_TUBA_VIEW);
+	precache_model(MDL_TUBA_WORLD);
+	precache_model(MDL_TUBA_ITEM);
+	precache_model(MDL_ACCORDION_VIEW);
+	precache_model(MDL_ACCORDION_WORLD);
+	precache_model(MDL_KLEINBOTTLE_VIEW);
+	precache_model(MDL_KLEINBOTTLE_WORLD);
+}
 #endif
 
 #ifdef SVQC

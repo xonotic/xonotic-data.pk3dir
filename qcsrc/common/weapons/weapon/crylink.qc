@@ -607,6 +607,19 @@ METHOD(Crylink, wr_killmessage, Notification(entity thiswep))
 	return WEAPON_CRYLINK_MURDER;
 }
 
+METHOD(Crylink, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_CRYLINK_VIEW);
+	precache_model(MDL_CRYLINK_WORLD);
+	precache_model(MDL_CRYLINK_ITEM);
+
+	precache_sound(SND_CRYLINK_FIRE2);
+	precache_sound(SND_CRYLINK_FIRE);
+	precache_sound(SND_CRYLINK_IMPACT2);
+	precache_sound(SND_CRYLINK_IMPACT);
+	precache_sound(SND_CRYLINK_LINKJOIN);
+}
+
 #endif
 #ifdef CSQC
 

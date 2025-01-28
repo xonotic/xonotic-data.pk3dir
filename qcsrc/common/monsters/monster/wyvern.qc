@@ -55,6 +55,11 @@ METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this, entity actor, .entit
 	return true;
 }
 
+METHOD(WyvernAttack, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_WyvernAttack_FIRE);
+}
+
 void M_Wyvern_Attack_Fireball_Explode(entity this)
 {
 	Send_Effect(EFFECT_FIREBALL_EXPLODE, this.origin, '0 0 0', 1);
@@ -177,5 +182,9 @@ METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
     actor.monster_attackfunc = M_Wyvern_Attack;
 
     return true;
+}
+METHOD(Wyvern, mr_init, void(Wyvern this, entity actor))
+{
+	precache_model(MDL_MON_WYVERN);
 }
 #endif

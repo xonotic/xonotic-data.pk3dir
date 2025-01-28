@@ -78,6 +78,11 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
     }
 }
 
+METHOD(SpiderAttack, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_SpiderAttack_FIRE);
+}
+
 void M_Spider_Attack_Web_Explode(entity this)
 {
 	if(this)
@@ -233,5 +238,9 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
     actor.monster_attackfunc = M_Spider_Attack;
 
     return true;
+}
+METHOD(Spider, mr_init, void(Spider this, entity actor))
+{
+	precache_model(MDL_MON_SPIDER);
 }
 #endif

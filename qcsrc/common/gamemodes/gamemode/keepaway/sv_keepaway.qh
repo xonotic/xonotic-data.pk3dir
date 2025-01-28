@@ -3,7 +3,7 @@
 #include <common/mutators/base.qh>
 #include <common/scores.qh>
 
-void ka_Handler_CheckBall(entity this);
+void ka_Initialize();
 
 IntrusiveList g_kaballs;
 REGISTER_MUTATOR(ka, false)
@@ -17,10 +17,7 @@ REGISTER_MUTATOR(ka, false)
 			field(SP_KEEPAWAY_BCTIME, "bctime", SFL_SORT_PRIO_SECONDARY);
 		});
 
-		g_kaballs = IL_NEW();
-		entity ka_Handler = new_pure(ka_Handler);
-		setthink(ka_Handler, ka_Handler_CheckBall);
-		InitializeEntity(ka_Handler, ka_Handler_CheckBall, INITPRIO_SETLOCATION);
+		ka_Initialize();
 	}
 	return false;
 }

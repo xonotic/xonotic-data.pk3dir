@@ -908,6 +908,8 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
 }
 METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
 {
+	precache_model(MDL_VEH_BUMBLEBEE_GUNCOCKPIT);
+
     if(autocvar_g_vehicle_bumblebee_energy)
     if(autocvar_g_vehicle_bumblebee_energy_regen)
         instance.vehicle_flags |= VHF_ENERGYREGEN;

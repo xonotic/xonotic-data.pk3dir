@@ -1436,6 +1436,8 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 			_precache_model(this.mdl);
 		if(this.mdl_dead && this.mdl_dead != "")
 			_precache_model(this.mdl_dead);
+
+		mon.mr_init(mon, this);
 	}
 
 	if(check_appear && Monster_Appear_Check(this, mon)) { return true; } // return true so the monster isn't removed

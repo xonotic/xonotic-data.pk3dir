@@ -60,6 +60,13 @@ METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weapon
     }
 }
 
+METHOD(MageSpike, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_MageSpike_FIRE);
+	precache_sound(SND_MageSpike_IMPACT);
+	precache_sound(SND_MageSpike_PUSH);
+}
+
 void M_Mage_Attack_Teleport(entity this, entity targ);
 
 CLASS(OffhandMageTeleport, OffhandWeapon)
@@ -486,5 +493,9 @@ METHOD(Mage, mr_setup, bool(Mage this, entity actor))
     actor.monster_attackfunc = M_Mage_Attack;
 
     return true;
+}
+METHOD(Mage, mr_init, void(Mage this, entity actor))
+{
+	precache_model(MDL_MON_MAGE);
 }
 #endif

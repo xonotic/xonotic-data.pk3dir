@@ -477,6 +477,20 @@ METHOD(Hagar, wr_killmessage, Notification(entity thiswep))
 		return WEAPON_HAGAR_MURDER_SPRAY;
 }
 
+METHOD(Hagar, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_HAGAR_VIEW);
+	precache_model(MDL_HAGAR_WORLD);
+	precache_model(MDL_HAGAR_ITEM);
+
+	precache_sound(SND_HAGAR_BEEP);
+	precache_sound(SND_HAGAR_FIRE);
+	precache_sound(SND_HAGAR_LOAD);
+	precache_sound(SND_HAGEXP1);
+	precache_sound(SND_HAGEXP2);
+	precache_sound(SND_HAGEXP3);
+}
+
 #endif
 #ifdef CSQC
 

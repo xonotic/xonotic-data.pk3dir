@@ -38,6 +38,11 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
     }
 }
 
+METHOD(HellionAttack, wr_init, void(entity thiswep))
+{
+    precache_sound(SND_HellionAttack_FIRE);
+}
+
 void turret_hellion_missile_think(entity this)
 {
     vector olddir,newdir;

@@ -11,6 +11,14 @@ MODEL(EDGE,         "models/pathlib/edge.md3");
 #include <common/turrets/util.qh>
 #endif
 
+PRECACHE(pathlib_debug)
+{
+    precache_model(MDL_SQUARE);
+    precache_model(MDL_SQUARE_GOOD);
+    precache_model(MDL_SQUARE_BAD);
+    precache_model(MDL_EDGE);
+}
+
 void pathlib_showpath(entity start)
 {
     entity e;

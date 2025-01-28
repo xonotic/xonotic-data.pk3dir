@@ -37,7 +37,7 @@ REGISTER_REGISTRY(Sounds)
 // enable for automatic asset precaching
 // reduces potential runtime overhead at the cost of a longer initial loading screen
 // NOTE: disable the selective precache macro when enabling this
-#if 1
+#if 0
 PRECACHE(Sounds) {
     FOREACH(Sounds, true, it.sound_precache(it));
 }

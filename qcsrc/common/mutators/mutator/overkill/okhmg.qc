@@ -143,6 +143,16 @@ METHOD(OverkillHeavyMachineGun, wr_killmessage, Notification(entity thiswep))
 	return WEAPON_OVERKILL_HMG_MURDER_SPRAY;
 }
 
+METHOD(OverkillHeavyMachineGun, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_HMG_MUZZLEFLASH);
+	precache_model(MDL_HMG_VIEW);
+	precache_model(MDL_HMG_WORLD);
+	precache_model(MDL_HMG_ITEM);
+
+	precache_sound(SND_HMG_FIRE);
+}
+
 #endif
 #ifdef CSQC
 

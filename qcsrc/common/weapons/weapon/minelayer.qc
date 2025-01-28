@@ -500,6 +500,21 @@ METHOD(MineLayer, wr_killmessage, Notification(entity thiswep))
 	return WEAPON_MINELAYER_MURDER;
 }
 
+METHOD(MineLayer, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_MINELAYER_MUZZLEFLASH);
+	precache_model(MDL_MINELAYER_MINE);
+	precache_model(MDL_MINELAYER_VIEW);
+	precache_model(MDL_MINELAYER_WORLD);
+	precache_model(MDL_MINELAYER_ITEM);
+
+	precache_sound(SND_MINE_DET);
+	precache_sound(SND_MINE_EXP);
+	precache_sound(SND_MINE_FIRE);
+	precache_sound(SND_MINE_STICK);
+	precache_sound(SND_MINE_TRIGGER);
+}
+
 #endif
 #ifdef CSQC
 

@@ -17,7 +17,7 @@ STATIC_INIT(NULLMDL)
 // enable for automatic asset precaching
 // reduces potential runtime overhead at the cost of a longer initial loading screen
 // NOTE: disable the selective precache macro when enabling this
-#if 1
+#if 0
 PRECACHE(Models) {
     FOREACH(Models, true, it.model_precache(it));
 }

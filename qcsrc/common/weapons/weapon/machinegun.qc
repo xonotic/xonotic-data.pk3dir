@@ -401,6 +401,16 @@ METHOD(MachineGun, wr_killmessage, Notification(entity thiswep))
 		return WEAPON_MACHINEGUN_MURDER_SPRAY;
 }
 
+METHOD(MachineGun, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_MACHINEGUN_MUZZLEFLASH);
+	precache_model(MDL_MACHINEGUN_VIEW);
+	precache_model(MDL_MACHINEGUN_WORLD);
+	precache_model(MDL_MACHINEGUN_ITEM);
+
+	precache_sound(SND_MACHINEGUN_FIRE);
+}
+
 #endif
 #ifdef CSQC
 

@@ -685,6 +685,18 @@ METHOD(Arc, wr_suicidemessage, Notification(entity thiswep))
 }
 METHOD(Arc, wr_init, void(entity thiswep))
 {
+	precache_model(MDL_ARC_MUZZLEFLASH);
+	precache_model(MDL_ARC_VIEW);
+	precache_model(MDL_ARC_WORLD);
+	precache_model(MDL_ARC_ITEM);
+
+	precache_sound(SND_ARC_BOLT_FIRE);
+	precache_sound(SND_ARC_BOLT_IMPACT);
+	precache_sound(SND_ARC_FIRE);
+	precache_sound(SND_ARC_LOOP);
+	precache_sound(SND_ARC_LOOP_OVERHEAT);
+	precache_sound(SND_ARC_STOP);
+	
 	if(!arc_shotorigin[0])
 	{
 		vector vecs = CL_Weapon_GetShotOrg(WEP_ARC.m_id);

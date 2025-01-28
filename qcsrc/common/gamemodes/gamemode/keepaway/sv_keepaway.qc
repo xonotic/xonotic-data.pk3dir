@@ -527,3 +527,13 @@ MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 	if(frag_target.ballcarried)
 		ka_DropEvent(frag_target);
 }
+
+void ka_Initialize()
+{
+	precache_model(MDL_KA_BALL);
+
+	g_kaballs = IL_NEW();
+	entity ka_Handler = new_pure(ka_Handler);
+	setthink(ka_Handler, ka_Handler_CheckBall);
+	InitializeEntity(ka_Handler, ka_Handler_CheckBall, INITPRIO_SETLOCATION);
+}

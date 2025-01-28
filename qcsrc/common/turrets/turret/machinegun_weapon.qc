@@ -23,4 +23,9 @@ METHOD(MachineGunTurretAttack, wr_think, void(entity thiswep, entity actor, .ent
     }
 }
 
+METHOD(MachineGunTurretAttack, wr_init, void(entity thiswep))
+{
+    precache_sound(SND_MachineGunTurretAttack_FIRE);
+}
+
 #endif

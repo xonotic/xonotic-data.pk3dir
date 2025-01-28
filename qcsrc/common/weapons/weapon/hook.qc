@@ -246,6 +246,19 @@ METHOD(Hook, wr_killmessage, Notification(entity thiswep))
 	return WEAPON_HOOK_MURDER;
 }
 
+METHOD(Hook, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_HOOK);
+	precache_model(MDL_HOOK_VIEW);
+	precache_model(MDL_HOOK_WORLD);
+	precache_model(MDL_HOOK_ITEM);
+
+	precache_sound(SND_HOOKBOMB_FIRE);
+	precache_sound(SND_HOOKBOMB_IMPACT);
+	precache_sound(SND_HOOK_FIRE);
+	precache_sound(SND_HOOK_IMPACT);
+}
+
 #endif
 #ifdef CSQC
 

@@ -373,6 +373,17 @@ METHOD(Vaporizer, wr_killmessage, Notification(entity thiswep))
 	return WEAPON_VAPORIZER_MURDER;
 }
 
+METHOD(Vaporizer, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_VAPORIZER_MUZZLEFLASH);
+	precache_model(MDL_VAPORIZER_VIEW);
+	precache_model(MDL_VAPORIZER_WORLD);
+	precache_model(MDL_VAPORIZER_ITEM);
+
+	precache_sound(SND_VAPORIZER_FIRE);
+	precache_sound(SND_VAPORIZER_IMPACT);
+}
+
 #endif
 #ifdef CSQC
 
