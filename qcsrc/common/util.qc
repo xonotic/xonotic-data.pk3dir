@@ -1242,7 +1242,7 @@ vector decompressShotOrigin(int f)
 	if (v.y & BIT(7)) { v.y &= ~BIT(7); v.x *= -1; }
 	if (v.y & BIT(6)) { v.y &= ~BIT(6); v.y *= -1; }
 	if (v.z & BIT(6)) { v.z &= ~BIT(6); v.z *= -1; }
-	return v / 2;
+	return v * 0.5;
 }
 
 #ifdef GAMEQC

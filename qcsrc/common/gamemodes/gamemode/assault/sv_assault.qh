@@ -49,7 +49,7 @@ void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrat
 void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
 
 // assault game mode: Which team is attacking in this round?
-float assault_attacker_team;
+int assault_attacker_team;
 
 // predefined spawnfuncs
 void target_objective_decrease_activate(entity this);

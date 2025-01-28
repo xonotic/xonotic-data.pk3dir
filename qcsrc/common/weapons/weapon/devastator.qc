@@ -269,7 +269,7 @@ void W_Devastator_Think(entity this)
 			{
 				Send_Effect(EFFECT_ROCKET_GUIDE, this.origin, this.velocity, 1);
 				// TODO add a better sound here
-				sound(this.realowner, CH_WEAPON_B, SND_ROCKET_MODE, VOL_BASE, ATTN_NORM);
+				sound(this.realowner, CH_WEAPON_B, SND_DEVASTATOR_MODE, VOL_BASE, ATTN_NORM);
 				this.count = 1;
 			}
 		}
@@ -313,7 +313,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(WEP_DEVASTATOR, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_DEVASTATOR, damage), thiswep.m_id);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_DEVASTATOR_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_DEVASTATOR, damage), thiswep.m_id);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
@@ -514,7 +514,7 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
 				}
 			});
 			if(rockfound)
-				sound(actor, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
+				sound(actor, CH_WEAPON_B, SND_DEVASTATOR_DET, VOL_BASE, ATTN_NORM);
 		}
 	}
 }

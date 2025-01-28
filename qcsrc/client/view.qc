@@ -421,22 +421,9 @@ STATIC_INIT(fpscounter_init)
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
-float avgspeed;
-vector GetCurrentFov(float fov)
+bool IsZooming()
 {
-	float zoomsensitivity, zoomspeed, zoomfactor, zoomdir;
-	float velocityzoom, curspeed;
-	vector v;
-
-	zoomsensitivity = autocvar_cl_zoomsensitivity;
-	zoomfactor = autocvar_cl_zoomfactor;
-	if(zoomfactor < 1 || zoomfactor > 30)
-		zoomfactor = 2.5;
-	zoomspeed = autocvar_cl_zoomspeed;
-	if (zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
-		zoomspeed = 3.5;
-
-	zoomdir = button_zoom;
+	bool zoomdir = button_zoom;
 
 	if(hud == HUD_NORMAL && !spectatee_status)
 	{
@@ -453,38 +440,109 @@ vector GetCurrentFov(float fov)
 			}
 		}
 	}
-	if(spectatee_status > 0 || isdemo())
+
+	if(spectatorbutton_zoom && (spectatee_status > 0 || isdemo()))
+		zoomdir = !zoomdir;
+
+	return zoomdir;
+}
+
+const float MAX_ZOOMFACTOR = 30;
+float zoomscroll_factor;
+float zoomscroll_factor_target;
+void ZoomScroll(float nPrimary)
+{
+	bool zoomin = (nPrimary == K_MWHEELUP);
+	if (autocvar_cl_zoomscroll_scale < 0)
+		zoomin = !zoomin;
+
+	// allow negatives so that players can scroll the other way, biggest change allowed is +100%
+	float zoomscroll_scale = 1 + min(fabs(autocvar_cl_zoomscroll_scale), 1);
+
+	if (zoomin)
+		zoomscroll_factor_target = min(MAX_ZOOMFACTOR, zoomscroll_factor_target * zoomscroll_scale);
+	else
+		zoomscroll_factor_target = max(1, zoomscroll_factor_target / zoomscroll_scale);
+}
+
+bool View_InputEvent(int bInputType, float nPrimary, float nSecondary)
+{
+	if (bInputType == 2 || bInputType == 3)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	if (nPrimary == K_MWHEELUP || nPrimary == K_MWHEELDOWN)
 	{
-		if(spectatorbutton_zoom)
-		{
-			if(zoomdir)
-				zoomdir = 0;
-			else
-				zoomdir = 1;
-		}
-		// fteqcc failed twice here already, don't optimize this
+		if (!autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0)
+			return false; // zoom scroll disabled
+		if (!IsZooming())
+			return false;
+		if (key_pressed)
+			ZoomScroll(nPrimary);
+		return true;
 	}
 
-	if(zoomdir) { zoomin_effect = 0; }
+	return false;
+}
+
+float avgspeed;
+vector GetCurrentFov(float fov)
+{
+	float zoomsensitivity, zoomspeed, zoomfactor, zoomdir;
+	float velocityzoom, curspeed;
+	vector v;
+
+	zoomdir = IsZooming();
+
+	zoomspeed = autocvar_cl_zoomspeed;
+	if(zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
+		zoomspeed = 3.5;
+	zoomsensitivity = autocvar_cl_zoomsensitivity;
+
+	zoomfactor = autocvar_cl_zoomfactor;
+	if(zoomfactor < 1 || zoomfactor > MAX_ZOOMFACTOR)
+		zoomfactor = 2.5;
+
+	if(zoomdir)
+		zoomin_effect = 0;
 
 	if (spectatee_status > 0 && STAT(CAMERA_SPECTATOR) == 2)
-	{
 		current_viewzoom = 1;
-	}
 	else if (camera_active)
-	{
 		current_viewzoom = min(1, current_viewzoom + drawframetime);
-	}
 	else if(autocvar_cl_spawnzoom && zoomin_effect)
 	{
-		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 30);
+		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, MAX_ZOOMFACTOR);
 
 		current_viewzoom += (autocvar_cl_spawnzoom_speed * (spawnzoomfactor - current_viewzoom) * drawframetime);
 		current_viewzoom = bound(1 / spawnzoomfactor, current_viewzoom, 1);
-		if(current_viewzoom == 1) { zoomin_effect = 0; }
+		if(current_viewzoom == 1)
+			zoomin_effect = 0;
 	}
 	else
 	{
+		// initialize zoom scroll in the first frame / reset zoom scroll when fully zoomed out
+		if (!zoomscroll_factor || (current_viewzoom == 1 && !zoomdir))
+		{
+			zoomscroll_factor_target = zoomfactor;
+			zoomscroll_factor = zoomfactor;
+		}
+		if (zoomscroll_factor != zoomscroll_factor_target)
+		{
+			if (fabs(zoomscroll_factor - zoomscroll_factor_target) < 0.001 || autocvar_cl_zoomscroll_speed < 0) // snap
+				zoomscroll_factor = zoomscroll_factor_target;
+			else if (autocvar_cl_zoomscroll_speed != 0)
+			{
+				// NOTE: this averaging formula is frametime independent
+				float avg_time = 1 / autocvar_cl_zoomscroll_speed;
+				float frac = 1 - exp(-drawframetime / max(0.001, avg_time));
+				zoomscroll_factor = frac * zoomscroll_factor_target + (1 - frac) * zoomscroll_factor;
+			}
+		}
+		zoomfactor = zoomscroll_factor;
+
 		if(zoomspeed < 0) // instant zoom
 		{
 			if(zoomdir)
@@ -1727,9 +1785,15 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	else if(game_stopped_time && !STAT(GAME_STOPPED))
 		game_stopped_time = 0;
 
-	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
+	// fire intermission hooks and gameend hook here
+	// gameend hook is executed on CSQC VM shutdown if
+	// the shutdown happens before intermission start
+	if (intermission
+	&& (calledhooks & HOOK_START) // ensure that we have initiated a gamemode
+	&& !(calledhooks & HOOK_END) // fire only once
+	&& !(calledhooks & HOOK_INTERMISSION))
 	{
-		if(calledhooks & HOOK_START)
+		if(!isdemo())
 		{
 			int gamecount = cvar("cl_matchcount");
 			localcmd("\ncl_hook_gameend\n");
@@ -1738,6 +1802,14 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 			localcmd(strcat("cl_matchcount ", itos(gamecount + 1), "\n"));
 			//cvar_set("cl_matchcount", itos(gamecount + 1));
 			calledhooks |= HOOK_END;
+
+			localcmd("\ncl_hook_gameintermission\n");
+			calledhooks |= HOOK_INTERMISSION;
+		}
+		else
+		{
+			localcmd("\ncl_hook_demointermission\n");
+			calledhooks |= HOOK_INTERMISSION;
 		}
 	}
 

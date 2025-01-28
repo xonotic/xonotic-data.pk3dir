@@ -1016,7 +1016,7 @@ CLIENT_COMMAND(kill, "Become a member of the dead") { ClientCommand_kill(caller,
 CLIENT_COMMAND(minigame, "Start a minigame") { ClientCommand_minigame(caller, request, arguments, command); }
 CLIENT_COMMAND(mv_getpicture, "Retrieve mapshot picture from the server") { ClientCommand_mv_getpicture(caller, request, arguments); }
 CLIENT_COMMAND(physics, "Change physics set") { ClientCommand_physics(caller, request, arguments); }
-CLIENT_COMMAND(ready, "Qualify as ready to end warmup stage") { ClientCommand_ready(caller, request); }
+CLIENT_COMMAND(ready, "Qualify as ready to end warmup-stage") { ClientCommand_ready(caller, request); }
 CLIENT_COMMAND(say, "Send a public chat message to all players") { ClientCommand_say(caller, request, arguments, command); }
 CLIENT_COMMAND(say_team, "Send a chat message to all team mates") { ClientCommand_say_team(caller, request, arguments, command); }
 CLIENT_COMMAND(selectteam, "Attempt to choose a team to join into") { ClientCommand_selectteam(caller, request, arguments); }

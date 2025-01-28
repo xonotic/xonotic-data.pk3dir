@@ -122,3 +122,7 @@ function check() {
 
 check .
 
+if [ -n "$(git diff)" ]
+then
+	echo "$0: Changes produced, please commit or ignore with ' // script-ignore [reason]'"
+fi

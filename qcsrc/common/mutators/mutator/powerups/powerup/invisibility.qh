@@ -30,7 +30,7 @@ void powerup_invisibility_init(Pickup def, entity item)
 #endif
 
 CLASS(InvisibilityItem, Powerup)
-    ATTRIB(InvisibilityItem, m_canonical_spawnfun, string, "item_invisibility");
+    ATTRIB(InvisibilityItem, m_canonical_spawnfunc, string, "item_invisibility");
 #ifdef SVQC
     ATTRIB(InvisibilityItem, m_iteminit, void(Pickup def, entity item), powerup_invisibility_init);
 #endif

@@ -33,7 +33,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	this.classname = wpn.m_canonical_spawnfunc;
 	if (!ITEM_IS_LOOT(this) && !this.m_isreplaced)
 	{
-		if (wpn.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN))
+		if (wpn.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
 			//LOG_WARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
 			startitem_failed = true;
