@@ -34,8 +34,18 @@ REGISTER_REGISTRY(Sounds)
 /** @deprecated Used in places where a string is required for legacy reasons, prefer using SND_id constants instead */
 #define SND(id) Sound_fixpath(SND_##id)
 
+// enable for automatic asset precaching
+// reduces potential runtime overhead at the cost of a longer initial loading screen
+// NOTE: disable the selective precache macro when enabling this
+#if 1
 PRECACHE(Sounds) {
     FOREACH(Sounds, true, it.sound_precache(it));
+}
+#endif
+
+STATIC_INIT(NULLSND)
+{
+    _precache_sound("misc/null.wav");
 }
 
 SOUND(Null, "misc/null");
