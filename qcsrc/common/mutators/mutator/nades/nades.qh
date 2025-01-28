@@ -32,6 +32,8 @@ const int PROJECTILE_NADE_BURN = 72;
 #ifdef GAMEQC
 #include "effects.inc"
 
+MODEL(NADE_ORB, "models/ctf/shield.md3");
+
 #define NADE_PROJECTILE(i, projectile, trail) MACRO_BEGIN \
     this.m_projectile[i] = projectile; \
     this.m_trail[i] = trail; \

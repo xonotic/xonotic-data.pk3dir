@@ -381,7 +381,6 @@ METHOD(Vaporizer, wr_init, void(entity thiswep))
 	precache_model(MDL_VAPORIZER_ITEM);
 
 	precache_sound(SND_VAPORIZER_FIRE);
-	precache_sound(SND_VAPORIZER_IMPACT);
 }
 
 #endif
@@ -397,10 +396,9 @@ METHOD(Vaporizer, wr_impacteffect, void(entity thiswep, entity actor))
 
 METHOD(Vaporizer, wr_init, void(entity thiswep))
 {
+	precache_sound(SND_VAPORIZER_IMPACT);
 	if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
-	{
 		precache_pic("gfx/reticle_nex");
-	}
 }
 
 METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))

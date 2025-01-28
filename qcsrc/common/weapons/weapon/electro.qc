@@ -753,13 +753,17 @@ METHOD(Electro, wr_init, void(entity thiswep))
 	precache_sound(SND_ELECTRO_BOUNCE);
 	precache_sound(SND_ELECTRO_FIRE2);
 	precache_sound(SND_ELECTRO_FIRE);
-	precache_sound(SND_ELECTRO_FLY);
-	precache_sound(SND_ELECTRO_IMPACT);
-	precache_sound(SND_ELECTRO_IMPACT_COMBO);
 }
 
 #endif
 #ifdef CSQC
+
+METHOD(Electro, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_ELECTRO_FLY);
+	precache_sound(SND_ELECTRO_IMPACT);
+	precache_sound(SND_ELECTRO_IMPACT_COMBO);
+}
 
 METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
 {

@@ -107,9 +107,6 @@ MODEL(PROJECTILE_RPC,                   W_Model("ok_rocket.md3"));
 MODEL(PROJECTILE_ROCKETMINSTA_LASER,    "models/elaser.mdl");
 
 MODEL(PROJECTILE_NADE,                  W_Model("v_ok_grenade.md3"));
-MODEL(NADE_VIEW,                        W_Model("h_ok_grenade.iqm"));
-MODEL(NADE_TIMER,                       "models/ok_nade_counter/ok_nade_counter.md3");
-MODEL(NADE_ORB,                         "models/ctf/shield.md3");
 
 MODEL(GIB_CHUNK,                        "models/gibs/chunk.mdl");
 MODEL(GIB_LEG1,                         "models/gibs/leg1.md3");
@@ -312,9 +309,6 @@ PRECACHE(Models_GlobalPrecache)
     precache_model(MDL_PROJECTILE_RPC);
     precache_model(MDL_PROJECTILE_ROCKETMINSTA_LASER);
     precache_model(MDL_PROJECTILE_NADE);
-    precache_model(MDL_NADE_VIEW);
-    precache_model(MDL_NADE_TIMER);
-    precache_model(MDL_NADE_ORB);
     precache_model(MDL_GIB_CHUNK);
     precache_model(MDL_GIB_LEG1);
     precache_model(MDL_GIB_LEG2);

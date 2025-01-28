@@ -691,7 +691,6 @@ METHOD(Arc, wr_init, void(entity thiswep))
 	precache_model(MDL_ARC_ITEM);
 
 	precache_sound(SND_ARC_BOLT_FIRE);
-	precache_sound(SND_ARC_BOLT_IMPACT);
 	precache_sound(SND_ARC_FIRE);
 	precache_sound(SND_ARC_LOOP);
 	precache_sound(SND_ARC_LOOP_OVERHEAT);
@@ -767,6 +766,11 @@ METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponent
 bool autocvar_cl_arcbeam_simple = true;
 
 .int beam_slot;
+
+METHOD(Arc, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_ARC_BOLT_IMPACT);
+}
 
 METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
 {

@@ -344,7 +344,6 @@ METHOD(Vortex, wr_init, void(entity thiswep))
 
 	precache_sound(SND_VORTEX_CHARGE);
 	precache_sound(SND_VORTEX_FIRE);
-	precache_sound(SND_VORTEX_IMPACT);
 }
 
 #endif
@@ -361,10 +360,9 @@ METHOD(Vortex, wr_impacteffect, void(entity thiswep, entity actor))
 }
 METHOD(Vortex, wr_init, void(entity thiswep))
 {
+	precache_sound(SND_VORTEX_IMPACT);
 	if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
-	{
 		precache_pic("gfx/reticle_nex");
-	}
 }
 METHOD(Vortex, wr_zoom, bool(entity thiswep, entity actor))
 {

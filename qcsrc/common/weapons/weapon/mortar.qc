@@ -368,12 +368,16 @@ METHOD(Mortar, wr_init, void(entity thiswep))
 
 	precache_sound(SND_MORTAR_DET);
 	precache_sound(SND_MORTAR_FIRE);
-	precache_sound(SND_MORTAR_IMPACT);
 	precache_sound(SND_MORTAR_STICK);
 }
 
 #endif
 #ifdef CSQC
+
+METHOD(Mortar, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_MORTAR_IMPACT);
+}
 
 METHOD(Mortar, wr_impacteffect, void(entity thiswep, entity actor))
 {

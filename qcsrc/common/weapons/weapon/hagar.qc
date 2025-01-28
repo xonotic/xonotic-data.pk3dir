@@ -486,13 +486,17 @@ METHOD(Hagar, wr_init, void(entity thiswep))
 	precache_sound(SND_HAGAR_BEEP);
 	precache_sound(SND_HAGAR_FIRE);
 	precache_sound(SND_HAGAR_LOAD);
-	precache_sound(SND_HAGEXP1);
-	precache_sound(SND_HAGEXP2);
-	precache_sound(SND_HAGEXP3);
 }
 
 #endif
 #ifdef CSQC
+
+METHOD(Hagar, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_HAGEXP1);
+	precache_sound(SND_HAGEXP2);
+	precache_sound(SND_HAGEXP3);
+}
 
 METHOD(Hagar, wr_impacteffect, void(entity thiswep, entity actor))
 {

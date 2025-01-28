@@ -331,7 +331,6 @@ METHOD(OverkillNex, wr_init, void(entity thiswep))
 
 	precache_sound(SND_OK_NEX_CHARGE);
 	precache_sound(SND_OK_NEX_FIRE);
-	precache_sound(SND_OK_NEX_IMPACT);
 }
 
 #endif
@@ -348,10 +347,9 @@ METHOD(OverkillNex, wr_impacteffect, void(entity thiswep, entity actor))
 
 METHOD(OverkillNex, wr_init, void(entity thiswep))
 {
+	precache_sound(SND_OK_NEX_IMPACT);
 	if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
-	{
 		precache_pic("gfx/reticle_nex");
-	}
 }
 
 METHOD(OverkillNex, wr_zoom, bool(entity thiswep, entity actor))

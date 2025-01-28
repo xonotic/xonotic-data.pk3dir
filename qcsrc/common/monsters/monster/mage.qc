@@ -494,7 +494,7 @@ METHOD(Mage, mr_setup, bool(Mage this, entity actor))
 
     return true;
 }
-METHOD(Mage, mr_init, void(Mage this, entity actor))
+METHOD(Mage, mr_precache, void(Mage this))
 {
 	precache_model(MDL_MON_MAGE);
 }

@@ -239,7 +239,7 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 
     return true;
 }
-METHOD(Spider, mr_init, void(Spider this, entity actor))
+METHOD(Spider, mr_precache, void(Spider this))
 {
 	precache_model(MDL_MON_SPIDER);
 }

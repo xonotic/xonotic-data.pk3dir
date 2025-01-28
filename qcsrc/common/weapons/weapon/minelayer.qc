@@ -509,7 +509,6 @@ METHOD(MineLayer, wr_init, void(entity thiswep))
 	precache_model(MDL_MINELAYER_ITEM);
 
 	precache_sound(SND_MINE_DET);
-	precache_sound(SND_MINE_EXP);
 	precache_sound(SND_MINE_FIRE);
 	precache_sound(SND_MINE_STICK);
 	precache_sound(SND_MINE_TRIGGER);
@@ -517,6 +516,11 @@ METHOD(MineLayer, wr_init, void(entity thiswep))
 
 #endif
 #ifdef CSQC
+
+METHOD(MineLayer, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_MINE_EXP);
+}
 
 METHOD(MineLayer, wr_impacteffect, void(entity thiswep, entity actor))
 {

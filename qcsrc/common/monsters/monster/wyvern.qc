@@ -183,7 +183,7 @@ METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
 
     return true;
 }
-METHOD(Wyvern, mr_init, void(Wyvern this, entity actor))
+METHOD(Wyvern, mr_precache, void(Wyvern this))
 {
 	precache_model(MDL_MON_WYVERN);
 }

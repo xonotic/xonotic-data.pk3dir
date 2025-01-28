@@ -45,8 +45,8 @@ CLASS(Monster, Object)
     /** hitbox size */
     ATTRIB(Monster, m_maxs, vector, '0 0 0');
 
-    /** (SERVER) called once when the monster first spawns, useful for precaching */
-    METHOD(Monster, mr_init, void(Monster this, entity actor)) { TC(Monster, this); }
+    /** (SERVER) called once when the monster first spawns, use to precache assets */
+    METHOD(Monster, mr_precache, void(Monster this)) { TC(Monster, this); }
     /** (SERVER) setup monster data */
     METHOD(Monster, mr_setup, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
     /** (SERVER) logic to run every frame */

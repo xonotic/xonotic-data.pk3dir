@@ -254,13 +254,17 @@ METHOD(Hook, wr_init, void(entity thiswep))
 	precache_model(MDL_HOOK_ITEM);
 
 	precache_sound(SND_HOOKBOMB_FIRE);
-	precache_sound(SND_HOOKBOMB_IMPACT);
 	precache_sound(SND_HOOK_FIRE);
 	precache_sound(SND_HOOK_IMPACT);
 }
 
 #endif
 #ifdef CSQC
+
+METHOD(Hook, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_HOOKBOMB_IMPACT);
+}
 
 METHOD(Hook, wr_impacteffect, void(entity thiswep, entity actor))
 {

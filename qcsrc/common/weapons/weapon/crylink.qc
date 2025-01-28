@@ -615,13 +615,17 @@ METHOD(Crylink, wr_init, void(entity thiswep))
 
 	precache_sound(SND_CRYLINK_FIRE2);
 	precache_sound(SND_CRYLINK_FIRE);
-	precache_sound(SND_CRYLINK_IMPACT2);
-	precache_sound(SND_CRYLINK_IMPACT);
 	precache_sound(SND_CRYLINK_LINKJOIN);
 }
 
 #endif
 #ifdef CSQC
+
+METHOD(Crylink, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_CRYLINK_IMPACT2);
+	precache_sound(SND_CRYLINK_IMPACT);
+}
 
 METHOD(Crylink, wr_impacteffect, void(entity thiswep, entity actor))
 {
