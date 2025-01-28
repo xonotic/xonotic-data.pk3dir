@@ -124,11 +124,11 @@ spawnfunc(func_plat)
 
 	if(this.noise && this.noise != "")
 	{
-		precache_sound(this.noise);
+		_precache_sound(this.noise);
 	}
 	if(this.noise1 && this.noise1 != "")
 	{
-		precache_sound(this.noise1);
+		_precache_sound(this.noise1);
 	}
 
 	this.mangle = this.angles;

@@ -1391,7 +1391,7 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	// sounds
 #define X(s,b) \
 		if(flag.s == "") flag.s = b; \
-		precache_sound(flag.s);
+		_precache_sound(flag.s);
 
 	X(snd_flag_taken, 		strzone(SND(CTF_TAKEN(teamnum))))
 	X(snd_flag_returned, 	strzone(SND(CTF_RETURNED(teamnum))))
@@ -1403,7 +1403,7 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 #undef X
 
 	// precache
-	precache_model(flag.model);
+	_precache_model(flag.model);
 
 	// appearence
 	_setmodel(flag, flag.model); // precision set below

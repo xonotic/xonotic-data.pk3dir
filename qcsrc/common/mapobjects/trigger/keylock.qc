@@ -158,9 +158,9 @@ spawnfunc(trigger_keylock)
 	if(!this.wait) { this.wait = 5; }
 
 	// precache sounds
-	precache_sound(this.noise);
-	precache_sound(this.noise1);
-	precache_sound(this.noise2);
+	_precache_sound(this.noise);
+	_precache_sound(this.noise1);
+	_precache_sound(this.noise2);
 
 	EXACTTRIGGER_INIT;
 

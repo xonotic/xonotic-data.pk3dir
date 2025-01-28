@@ -161,7 +161,7 @@ spawnfunc(trigger_multiple)
 		this.noise = "misc/trigger1.wav";
 
 	if(this.noise && this.noise != "")
-		precache_sound(this.noise);
+		_precache_sound(this.noise);
 
 	if (!this.wait)
 		this.wait = 0.2;

@@ -262,7 +262,7 @@ string StrafeHUD_UpdateSonarSound()
 		if(sonarsound)
 		{
 			sonarsound = strzone(sonarsound);
-			precache_sound(sonarsound);
+			_precache_sound(sonarsound);
 		}
 	}
 

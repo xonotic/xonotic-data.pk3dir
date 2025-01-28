@@ -539,11 +539,11 @@ spawnfunc(dom_team)
 		delete(this);
 		return;
 	}
-	precache_model(this.model);
+	_precache_model(this.model);
 	if (this.noise != "")
-		precache_sound(this.noise);
+		_precache_sound(this.noise);
 	if (this.noise1 != "")
-		precache_sound(this.noise1);
+		_precache_sound(this.noise1);
 	_setmodel(this, this.model); // precision not needed
 	this.mdl = this.model;
 	this.dmg = this.modelindex;

@@ -7,7 +7,7 @@ void func_stardust_think(entity this)
 }
 spawnfunc(func_stardust)
 {
-	if(this.model != "") { precache_model(this.model); _setmodel(this, this.model); }
+	if(this.model != "") { _precache_model(this.model); _setmodel(this, this.model); }
 
 	this.effects = EF_STARDUST;
 

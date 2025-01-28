@@ -92,8 +92,8 @@ void pointparticles_think(entity this)
 
 spawnfunc(func_pointparticles)
 {
-	if(this.model != "") { precache_model(this.model); _setmodel(this, this.model); }
-	if(this.noise != "") precache_sound(this.noise);
+	if(this.model != "") { _precache_model(this.model); _setmodel(this, this.model); }
+	if(this.noise != "") _precache_sound(this.noise);
 	if(this.mdl != "") this.cnt = 0; // use a good handler
 
 	if(!this.bgmscriptsustain) this.bgmscriptsustain = 1;

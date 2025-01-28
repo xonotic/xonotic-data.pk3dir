@@ -721,7 +721,7 @@ spawnfunc(func_camera)
 		this.scale = 1;
  	if(this.model != "")
  	{
- 		precache_model(this.model);
+ 		_precache_model(this.model);
  		_setmodel(this, this.model); // no precision needed
 	}
 	setorigin(this, this.origin);

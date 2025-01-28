@@ -126,7 +126,7 @@ spawnfunc(trigger_teleport)
 	this.use = trigger_teleport_use;
 
 	if(this.noise != "")
-		FOREACH_WORD(this.noise, true, precache_sound(it));
+		FOREACH_WORD(this.noise, true, _precache_sound(it));
 
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(this, teleport_findtarget, INITPRIO_FINDTARGET);
@@ -179,7 +179,7 @@ void target_teleporter_checktarget(entity this)
 	this.use = target_teleport_use;
 
 	if(this.noise && this.noise != "")
-		FOREACH_WORD(this.noise, true, precache_sound(it));
+		FOREACH_WORD(this.noise, true, _precache_sound(it));
 
 	if(this.target && this.target != "") // no need to find a target on this entity, as it does not have one and .enemy is already set as required
 		teleport_findtarget(this);

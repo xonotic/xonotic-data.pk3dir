@@ -210,7 +210,7 @@ spawnfunc(func_button)
 		this.wait = 0.1; // compatibility for q3: -1 = return immediately
 
     if(this.noise != "")
-        precache_sound(this.noise);
+        _precache_sound(this.noise);
 
 	this.draggable = drag_undraggable;
 

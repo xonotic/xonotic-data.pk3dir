@@ -226,21 +226,21 @@ spawnfunc(func_door_secret)
 	{
 		this.noise = "misc/talk.wav";
 	}
-	precache_sound(this.noise);
+	_precache_sound(this.noise);
 	// sound while moving backwards
 	if (this.noise1 && this.noise1 != "")
 	{
-		precache_sound(this.noise1);
+		_precache_sound(this.noise1);
 	}
 	// sound while moving sideways
 	if (this.noise2 && this.noise2 != "")
 	{
-		precache_sound(this.noise2);
+		_precache_sound(this.noise2);
 	}
 	// sound when door stops moving
 	if (this.noise3 && this.noise3 != "")
 	{
-		precache_sound(this.noise3);
+		_precache_sound(this.noise3);
 	}
 
 	settouch(this, secret_touch);

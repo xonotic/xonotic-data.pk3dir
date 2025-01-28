@@ -75,7 +75,7 @@ spawnfunc(trigger_secret)
 	}
 
 	if(this.noise && this.noise != "")
-		precache_sound(this.noise);
+		_precache_sound(this.noise);
 
 	// a secret cannot be delayed
 	this.delay = 0;

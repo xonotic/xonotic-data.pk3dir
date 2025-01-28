@@ -1433,9 +1433,9 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 	{
 		IL_PUSH(g_monsters, this);
 		if(this.mdl && this.mdl != "")
-			precache_model(this.mdl);
+			_precache_model(this.mdl);
 		if(this.mdl_dead && this.mdl_dead != "")
-			precache_model(this.mdl_dead);
+			_precache_model(this.mdl_dead);
 	}
 
 	if(check_appear && Monster_Appear_Check(this, mon)) { return true; } // return true so the monster isn't removed

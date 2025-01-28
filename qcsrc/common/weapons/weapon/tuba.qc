@@ -586,7 +586,7 @@ PRECACHE(Tuba)
 	for (int n = TUBA_MIN; n <= TUBA_MAX; ++n) {
 		if (!Tuba_PitchStep || pymod(n, Tuba_PitchStep) == 0) {
 			for (int i = 0; i < TUBA_INSTRUMENTS; ++i) {
-				precache_sound(TUBA_STARTNOTE(i, n));
+				_precache_sound(TUBA_STARTNOTE(i, n));
 			}
 		}
 	}

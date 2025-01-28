@@ -829,7 +829,7 @@ spawnfunc(trigger_push)
 
 	if (!this.noise)
 		this.noise = "misc/jumppad.wav";
-	precache_sound (this.noise);
+	_precache_sound (this.noise);
 
 	trigger_push_link(this); // link it now
 
@@ -857,7 +857,7 @@ spawnfunc(trigger_push_velocity)
 	// normal push setup
 	if (!this.noise)
 		this.noise = "misc/jumppad.wav";
-	precache_sound (this.noise);
+	_precache_sound (this.noise);
 
 	trigger_push_velocity_link(this); // link it now
 }
@@ -931,7 +931,7 @@ spawnfunc(target_push)
 		else
 			this.noise = "misc/jumppad.wav";
 	}
-	precache_sound (this.noise);
+	_precache_sound (this.noise);
 }
 
 spawnfunc(info_notnull)

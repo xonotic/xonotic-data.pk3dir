@@ -238,7 +238,7 @@ void Net_TargetMusic()
 	if(e.noise != noi)
 	{
 		strcpy(e.noise, noi);
-		precache_sound(e.noise);
+		_precache_sound(e.noise);
 		_sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
 		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
 		{
@@ -316,7 +316,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 		strcpy(this.noise, ReadString());
 		if(this.noise != s)
 		{
-			precache_sound(this.noise);
+			_precache_sound(this.noise);
 			sound7(this, CH_BGM_SINGLE, this.noise, 0, ATTEN_NONE, 0, BIT(4));
 			if(getsoundtime(this, CH_BGM_SINGLE) < 0)
 			{

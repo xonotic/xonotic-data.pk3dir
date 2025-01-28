@@ -11,7 +11,7 @@ REGISTER_REGISTRY(Models)
 
 STATIC_INIT(NULLMDL)
 {
-    precache_model("null");
+    _precache_model("null");
 }
 
 PRECACHE(Models) {

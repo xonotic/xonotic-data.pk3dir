@@ -678,8 +678,8 @@ void door_init_shared(entity this)
 	{
 		this.noise3 = "misc/talk.wav";
 	}
-	precache_sound(this.noise);
-	precache_sound(this.noise3);
+	_precache_sound(this.noise);
+	_precache_sound(this.noise3);
 
 	if((this.dmg || (this.spawnflags & DOOR_CRUSH)) && (this.message == ""))
 	{
@@ -731,12 +731,12 @@ void door_init_shared(entity this)
 	// sound when door stops moving
 	if(this.noise1 && this.noise1 != "")
 	{
-		precache_sound(this.noise1);
+		_precache_sound(this.noise1);
 	}
 	// sound when door is moving
 	if(this.noise2 && this.noise2 != "")
 	{
-		precache_sound(this.noise2);
+		_precache_sound(this.noise2);
 	}
 
 	if(autocvar_sv_doors_always_open)

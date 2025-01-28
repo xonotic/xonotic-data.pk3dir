@@ -47,7 +47,7 @@ void CSQCModel_LOD_Apply(entity this, bool isplayer)
 		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
 		if(fexists(s))
 		{
-			precache_model(s);
+			_precache_model(s);
 			_setmodel(this, s);
 			if(this.modelindex)
 				this.lodmodelindex2 = this.lodmodelindex1 = this.modelindex;
@@ -56,7 +56,7 @@ void CSQCModel_LOD_Apply(entity this, bool isplayer)
 		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
 		if(fexists(s))
 		{
-			precache_model(s);
+			_precache_model(s);
 			_setmodel(this, s);
 			if(this.modelindex)
 				this.lodmodelindex2 = this.modelindex;
@@ -152,7 +152,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 	if (!forceplayermodels_goodmodel)
 	{
 		entity e = spawn();
-		precache_model(cvar_defstring("_cl_playermodel"));
+		_precache_model(cvar_defstring("_cl_playermodel"));
 		_setmodel(e, cvar_defstring("_cl_playermodel"));
 		forceplayermodels_goodmodel = e.model;
 		forceplayermodels_goodmodelindex = e.modelindex;
@@ -183,7 +183,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 		// only if this failed, find it out on our own
 		entity e = spawn();
-		precache_model(autocvar__cl_playermodel);
+		_precache_model(autocvar__cl_playermodel);
 		_setmodel(e, autocvar__cl_playermodel); // this is harmless, see below
 		forceplayermodels_modelisgoodmodel = fexists(e.model);
 		forceplayermodels_model = e.model;

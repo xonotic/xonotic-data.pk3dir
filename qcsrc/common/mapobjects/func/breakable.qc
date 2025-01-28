@@ -362,14 +362,14 @@ void func_breakable_setup(entity this)
 
 	// precache all the models
 	if (this.mdl_dead)
-		precache_model(this.mdl_dead);
+		_precache_model(this.mdl_dead);
 	n = tokenize_console(this.debris);
 	for(i = 0; i < n; ++i)
-		precache_model(argv(i));
+		_precache_model(argv(i));
 	if(this.noise)
-		precache_sound(this.noise);
+		_precache_sound(this.noise);
 	if(this.noise1)
-		precache_sound(this.noise1);
+		_precache_sound(this.noise1);
 
 	this.team_saved = this.team;
 	IL_PUSH(g_saved_team, this);

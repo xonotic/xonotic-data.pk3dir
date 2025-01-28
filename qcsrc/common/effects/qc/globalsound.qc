@@ -185,11 +185,11 @@
 		if (n > 0)
 		{
 			for (int i = 1; i <= n; ++i)
-				precache_sound(sprintf("%s%d.wav", sample, i));
+				_precache_sound(sprintf("%s%d.wav", sample, i));
 		}
 		else
 		{
-			precache_sound(sprintf("%s.wav", sample));
+			_precache_sound(sprintf("%s.wav", sample));
 		}
 	}
 

@@ -462,7 +462,7 @@ void Create_Notification_Entity_Annce(entity notif,
 				{
 					if(notif.nent_enabled)
 					{
-						precache_sound(AnnouncerFilename(snd));
+						_precache_sound(AnnouncerFilename(snd));
 						notif.nent_channel = channel;
 						notif.nent_snd = strzone(snd);
 						notif.nent_vol = vol;
