@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 07:22+0100\n"
+"POT-Creation-Date: 2025-01-23 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: k9er, 2024\n"
 "Language-Team: English (United Kingdom) (http://app.transifex.com/team-"
@@ -1142,23 +1142,23 @@ msgstr "You are dead, wait ^3%s^7 before respawning"
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "You are dead, press ^2%s^7 to respawn"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1542
+#: qcsrc/client/hud/panel/strafehud/util.qc:97
 msgid "qu"
 msgstr "qu"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1543
+#: qcsrc/client/hud/panel/strafehud/util.qc:98
 msgid "m"
 msgstr "m"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1544
+#: qcsrc/client/hud/panel/strafehud/util.qc:99
 msgid "km"
 msgstr "km"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1545
+#: qcsrc/client/hud/panel/strafehud/util.qc:100
 msgid "mi"
 msgstr "mi"
 
-#: qcsrc/client/hud/panel/strafehud.qc:1546
+#: qcsrc/client/hud/panel/strafehud/util.qc:101
 msgid "nmi"
 msgstr "nmi"
 
@@ -2295,6 +2295,7 @@ msgstr "Shield"
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:61
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:31
 msgid "Speed"
 msgstr "Speed"
 
@@ -6540,106 +6541,123 @@ msgid "Game menu"
 msgstr "Game menu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:18
-msgid "Ammunition display:"
-msgstr "Ammunition display:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
 msgid "Show only current ammo type"
 msgstr "Show only current ammo type"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:24
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:42
 msgid "Noncurrent alpha:"
 msgstr "Noncurrent alpha:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:28
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:50
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:48
 msgid "Noncurrent scale:"
 msgstr "Noncurrent scale:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:32
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:33
 msgid "Align icon:"
 msgstr "Align icon:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:33
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:32
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:25
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:37
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:23
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:31
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:44
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:40
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:37
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:21
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:57
 msgid "Left"
 msgstr "Left"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:34
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:34
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:27
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:38
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:26
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:25
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:36
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:48
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:45
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:42
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:26
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:38
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:23
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:59
 msgid "Right"
 msgstr "Right"
 
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:17
+msgid "Enable status bar"
+msgstr "Enable status bar"
+
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qh:6
 msgid "Ammo Panel"
 msgstr "Ammo Panel"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:19
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:21
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:20
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:20
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:20
 msgid "Message duration:"
 msgstr "Message duration:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:23
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:25
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:23
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:23
 msgid "Fade time:"
 msgstr "Fade time:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:25
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:25
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:25
+#: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
+msgid "FADESPEED^Instant"
+msgstr "FADESPEED^Instant"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:31
+msgid "Font scale:"
+msgstr "Font scale:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:34
+msgid "Bold font scale:"
+msgstr "Bold font scale:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:37
+msgid "Title font scale:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:40
 msgid "Flip messages order"
 msgstr "Flip messages order"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:43
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:18
 msgid "Text alignment:"
 msgstr "Text alignment:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:47
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:22
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:78
 msgid "Center"
 msgstr "Centre"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:37
-msgid "Font scale:"
-msgstr "Font scale:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:41
-msgid "Bold font scale:"
-msgstr "Bold font scale:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
 msgstr "Centreprint Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:17
-msgid "Chat entries:"
-msgstr "Chat entries:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:20
 msgid "Chat size:"
 msgstr "Chat size:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:20
 msgid "Chat lifetime:"
 msgstr "Chat lifetime:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:23
 msgid "Chat beep sound"
 msgstr "Chat beep sound"
 
@@ -6647,78 +6665,72 @@ msgstr "Chat beep sound"
 msgid "Chat Panel"
 msgstr "Chat Panel"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:16
-msgid "Engine info:"
-msgstr "Engine info:"
+#: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
+msgid "FPS:"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:19
-msgid "Use an averaging algorithm for fps"
-msgstr "Use an averaging algorithm for fps"
+#: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:20
+msgid "Use an averaging algorithm"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:23
+msgid "Decimal places:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
 msgstr "Engine Info Panel"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:18
 msgid "Combine health and armor"
 msgstr "Combine health and armour"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:19
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:17
-msgid "Enable status bar"
-msgstr "Enable status bar"
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:20
+msgid "Flip health and armor positions"
+msgstr "Flip health and armour positions"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:21
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:19
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:36
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:20
 msgid "Status bar alignment:"
 msgstr "Status bar alignment:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:29
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:39
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:27
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:37
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:44
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:39
 msgid "Inward"
 msgstr "Inward"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:31
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:40
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:29
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:37
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:47
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:40
 msgid "Outward"
 msgstr "Outward"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:34
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:41
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:34
 msgid "Icon alignment:"
 msgstr "Icon alignment:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:42
-msgid "Flip health and armor positions"
-msgstr "Flip health and armour positions"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qh:6
 msgid "Health/Armor Panel"
 msgstr "Health/Armour Panel"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:16
-msgid "Info messages:"
-msgstr "Info messages:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:19
-msgid "Flip align"
-msgstr "Flip align"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qh:6
 msgid "Info Messages Panel"
 msgstr "Info Messages Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:16
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:15
-#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:14
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:15
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:29
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:25
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:31
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:77
@@ -6729,7 +6741,7 @@ msgid "Disable"
 msgstr "Disable"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 msgid "Enable spectating"
 msgstr "Enable spectating"
 
@@ -6737,23 +6749,23 @@ msgstr "Enable spectating"
 msgid "Enable even playing in warmup"
 msgstr "Enable even playing in warmup"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
-msgid "Reduced"
-msgstr "Reduced"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
 msgid "Text/icon ratio:"
 msgstr "Text/icon ratio:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:33
+msgid "Reduced"
+msgstr "Reduced"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:37
 msgid "Hide spawned items"
 msgstr "Hide spawned items"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:37
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
 msgid "Hide big armor and health"
 msgstr "Hide big armour and health"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:41
 msgid "Dynamic size"
 msgstr "Dynamic size"
 
@@ -6761,101 +6773,101 @@ msgstr "Dynamic size"
 msgid "Items Time Panel"
 msgstr "Items Time Panel"
 
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:20
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:23
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:26
+#, c-format
+msgid "GAMETYPE^%s:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:21
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:27
+msgid "Show icons"
+msgstr ""
+
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
 msgstr "Mod Icons Panel"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:17
-msgid "Notifications:"
-msgstr "Notifications:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:20
-msgid "Also print notifications to the console"
-msgstr "Also print notifications to the console"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:23
-msgid "Flip notify order"
-msgstr "Flip notify order"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:26
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:19
 msgid "Entry lifetime:"
 msgstr "Entry lifetime:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:22
 msgid "Entry fadetime:"
 msgstr "Entry fadetime:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:30
+msgid "Flip notify order"
+msgstr "Flip notify order"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qh:6
 msgid "Notification Panel"
 msgstr "Notification Panel"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:30
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:130
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:26
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:119
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:125
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:24
 #: qcsrc/menu/xonotic/util.qc:737
 msgid "Enable"
 msgstr "Enable"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:31
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:33
 msgid "Enable even observing"
 msgstr "Enable even observing"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:19
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:34
 msgid "Enable only in Race/CTS"
 msgstr "Enable only in Race/CTS"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
-msgid "Status bar"
-msgstr "Status bar"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:75
-msgid "Left align"
-msgstr "Left align"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:27
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:81
-msgid "Right align"
-msgstr "Right align"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:28
-msgid "Inward align"
-msgstr "Inward align"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
-msgid "Outward align"
-msgstr "Outward align"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:25
 msgid "Flip speed/acceleration positions"
 msgstr "Flip speed/acceleration positions"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:46
+msgid "Status bar"
+msgstr "Status bar"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
+msgid "None"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:30
+msgid "Both"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:32
+msgid "Acceleration"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:108
 msgid "Speed:"
 msgstr "Speed:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 msgid "Include vertical speed"
 msgstr "Include vertical speed"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:49
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:63
 msgid "Show speed unit"
 msgstr "Show speed unit"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:66
 msgid "Top speed"
 msgstr "Top speed"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:58
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:72
 msgid "Acceleration:"
 msgstr "Acceleration:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:59
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:73
 msgid "Include vertical acceleration"
 msgstr "Include vertical acceleration"
 
@@ -6863,16 +6875,16 @@ msgstr "Include vertical acceleration"
 msgid "Physics Panel"
 msgstr "Physics Panel"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:18
-msgid "Pickup messages:"
-msgstr "Pickup messages:"
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:31
+msgid "Icon size scale:"
+msgstr "Icon size scale:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:35
 msgid "Show timer:"
 msgstr "Show timer:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:31
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:36
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:23
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:179
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:145
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
@@ -6880,21 +6892,17 @@ msgstr "Show timer:"
 msgid "Never"
 msgstr "Never"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
+msgid "Spectating"
+msgstr "Spectating"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:182
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:147
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:65
 msgid "Always"
 msgstr "Always"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:33
-msgid "Spectating"
-msgstr "Spectating"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:37
-msgid "Icon size scale:"
-msgstr "Icon size scale:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
@@ -6904,7 +6912,7 @@ msgstr "Pickup Panel"
 msgid "Powerups Panel"
 msgstr "Powerups Panel"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Always enable"
 msgstr "Always enable"
@@ -6913,9 +6921,21 @@ msgstr "Always enable"
 msgid "Forced aspect:"
 msgstr "Forced aspect:"
 
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:27
+msgid "Show attack keys"
+msgstr ""
+
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
 msgstr "Pressed Keys Panel"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:26
+msgid "Translate commands"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:28
+msgid "Use the server's quickmenu"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
@@ -6930,10 +6950,6 @@ msgid "Enable in team games"
 msgstr "Enable in team games"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
-msgid "Radar:"
-msgstr "Radar:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:26
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:68
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:107
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:54
@@ -6946,77 +6962,90 @@ msgstr "Radar:"
 msgid "Alpha:"
 msgstr "Alpha:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:26
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:50
 msgid "Rotation:"
 msgstr "Rotation:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:52
 msgid "Forward"
 msgstr "Forward"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:53
 msgid "West"
 msgstr "West"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:54
 msgid "South"
 msgstr "South"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:31
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:55
 msgid "East"
 msgstr "East"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:36
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:56
 msgid "North"
 msgstr "North"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:40
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:60
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:63
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:102
 msgid "Scale:"
 msgstr "Scale:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:44
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:64
 msgid "Zoom mode:"
 msgstr "Zoom mode:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:40
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:66
 msgid "Zoomed in"
 msgstr "Zoomed in"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:41
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:67
 msgid "Zoomed out"
 msgstr "Zoomed out"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:48
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:42
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:68
 msgid "Always zoomed"
 msgstr "Always zoomed"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:43
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:69
 msgid "Never zoomed"
 msgstr "Never zoomed"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
+msgid "Maximized radar:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
 msgstr "Radar Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:17
-msgid "Score:"
-msgstr "Score:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:20
 msgid "Rankings:"
 msgstr "Rankings:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:21
+#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:18
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:58
 msgid "Off"
 msgstr "Off"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:22
+#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:19
 msgid "And me"
 msgstr "And me"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:23
+#: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:20
 msgid "Pure"
 msgstr "Pure"
 
@@ -7024,7 +7053,7 @@ msgstr "Pure"
 msgid "Score Panel"
 msgstr "Score Panel"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:40
 msgid "StrafeHUD mode:"
 msgstr "StrafeHUD mode:"
 
@@ -7036,82 +7065,78 @@ msgstr "View angle centred"
 msgid "Velocity angle centered"
 msgstr "Velocity angle centred"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:44
 msgid "StrafeHUD style:"
 msgstr "StrafeHUD style:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:48
-msgid "no styling"
-msgstr "no styling"
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
+msgid "No styling"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
+msgid "Gradient"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
-msgid "progress bar"
-msgstr "progress bar"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
-msgid "gradient"
-msgstr "gradient"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:53
 msgid "Range:"
 msgstr "Range:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:56
-msgid "Demo mode"
-msgstr "Demo mode"
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:51
+msgid "Dynamic"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:60
-msgid "Reset colors"
-msgstr "Reset colours"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:64
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
 msgid "Strafe bar:"
 msgstr "Strafe bar:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:68
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:63
 msgid "Angle indicator:"
 msgstr "Angle indicator:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:70
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:78
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:65
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:73
 msgid "Neutral:"
 msgstr "Neutral:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:72
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:80
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:67
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:75
 msgid "Good:"
 msgstr "Good:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:74
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:82
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:69
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:77
 msgid "Overturn:"
 msgstr "Overturn:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:109
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:104
 msgid "Switch indicator:"
 msgstr "Switch indicator:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:113
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:108
 msgid "Best angle indicator:"
 msgstr "Best angle indicator:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:127
+msgid "Demo mode"
+msgstr "Demo mode"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:131
+msgid "Reset colors"
+msgstr "Reset colours"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
 msgstr "StrafeHUD Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:17
-msgid "Timer:"
-msgstr "Timer:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:20
 msgid "Show elapsed time"
 msgstr "Show elapsed time"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:20
 msgid "Secondary timer:"
 msgstr "Secondary timer:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:25
 msgid "Swapped"
 msgstr "Swapped"
 
@@ -7127,52 +7152,44 @@ msgstr "Alpha after voting:"
 msgid "Vote Panel"
 msgstr "Vote Panel"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:22
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:21
 msgid "Fade out after:"
 msgstr "Fade out after:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:26
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:25
 #, c-format
 msgid "%ds"
 msgstr "%ds"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:28
 msgid "Fade effect:"
 msgstr "Fade effect:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:31
 msgid "EF^None"
 msgstr "EF^None"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:32
 msgid "Alpha"
 msgstr "Alpha"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "Slide"
 msgstr "Slide"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:36
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "EF^Both"
 msgstr "EF^Both"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:40
-msgid "Weapon icons:"
-msgstr "Weapon icons:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:43
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:39
 msgid "Show only owned weapons"
 msgstr "Show only owned weapons"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
-msgid "Show weapon ID as:"
-msgstr "Show weapon ID as:"
+msgid "Show label:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
-msgid "SHOWAS^None"
-msgstr "SHOWAS^None"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:56
 msgid "Number"
 msgstr "Number"
 
@@ -7180,23 +7197,24 @@ msgstr "Number"
 msgid "Bind"
 msgstr "Bind"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:60
-msgid "Weapon ID scale:"
-msgstr "Weapon ID scale:"
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:59
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:50
+msgid "Name"
+msgstr "Name"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:66
-msgid "Show Accuracy"
-msgstr "Show Accuracy"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:67
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:69
 msgid "Show Ammo"
 msgstr "Show Ammo"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:70
+msgid "Show Accuracy"
+msgstr "Show Accuracy"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:73
 msgid "Ammo bar alpha:"
 msgstr "Ammo bar alpha:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:76
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:79
 msgid "Ammo bar color:"
 msgstr "Ammo bar colour:"
 
@@ -7393,8 +7411,9 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:118
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
 #: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:748
-#: qcsrc/menu/xonotic/util.qc:764 qcsrc/menu/xonotic/util.qc:773
-#: qcsrc/menu/xonotic/util.qc:781 qcsrc/menu/xonotic/util.qc:793
+#: qcsrc/menu/xonotic/util.qc:759 qcsrc/menu/xonotic/util.qc:764
+#: qcsrc/menu/xonotic/util.qc:773 qcsrc/menu/xonotic/util.qc:781
+#: qcsrc/menu/xonotic/util.qc:793
 msgid "Default"
 msgstr "Default"
 
@@ -8100,10 +8119,6 @@ msgstr "Slide show"
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:21
 msgid "Apply immediately"
 msgstr "Apply immediately"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:50
-msgid "Name"
-msgstr "Name"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:79
 msgid "Model"
@@ -9506,11 +9521,19 @@ msgstr "Draw 1st person weapon model"
 msgid "Draw the weapon model"
 msgstr "Draw the weapon model"
 
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:75
+msgid "Left align"
+msgstr "Left align"
+
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:76
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:79
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:82
 msgid "Position of the weapon model; requires reconnect"
 msgstr "Position of the weapon model; requires reconnect"
+
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:81
+msgid "Right align"
+msgstr "Right align"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:85
 msgid "Weapon model opacity:"
@@ -10576,10 +10599,6 @@ msgstr "FADESPEED^Normal"
 msgid "FADESPEED^Fast"
 msgstr "FADESPEED^Fast"
 
-#: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
-msgid "FADESPEED^Instant"
-msgstr "FADESPEED^Instant"
-
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
 msgstr "January"
@@ -10713,10 +10732,10 @@ msgstr ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
 
-#: qcsrc/menu/xonotic/util.qc:759
-msgid "Use default"
-msgstr "Use default"
-
 #: qcsrc/menu/xonotic/util.qc:779
 msgid "Team Color:"
 msgstr "Team Colour:"
+
+#: qcsrc/menu/xonotic/util.qc:803
+msgid "Hide on death"
+msgstr ""

@@ -9,10 +9,15 @@ CLASS(XonoticWeaponsList, XonoticListBox)
 	METHOD(XonoticWeaponsList, drawListBoxItem, void(entity, int, vector, bool, bool));
 	METHOD(XonoticWeaponsList, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(XonoticWeaponsList, keyDown, float(entity, float, float, float));
+
 	ATTRIB(XonoticWeaponsList, realFontSize, vector, '0 0 0');
 	ATTRIB(XonoticWeaponsList, realUpperMargin, float, 0);
-	METHOD(XonoticWeaponsList, mouseDrag, float(entity, vector));
+	ATTRIB(XonoticWeaponsList, columnIconOrigin, float, 0);
+	ATTRIB(XonoticWeaponsList, columnIconSize, float, 0);
+	ATTRIB(XonoticWeaponsList, columnNameOrigin, float, 0);
+	ATTRIB(XonoticWeaponsList, columnNameSize, float, 0);
 
+	METHOD(XonoticWeaponsList, mouseDrag, float(entity, vector));
 	ATTRIB(XonoticWeaponsList, applyButton, entity);
 ENDCLASS(XonoticWeaponsList)
 entity makeXonoticWeaponsList();

@@ -1,5 +1,15 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(SHOCKWAVE_MUZZLEFLASH, "models/uziflash.md3");
+MODEL(SHOCKWAVE_VIEW, W_Model("h_shotgun.iqm"));
+MODEL(SHOCKWAVE_WORLD, W_Model("v_shotgun.md3"));
+MODEL(SHOCKWAVE_ITEM, W_Model("g_shotgun.md3"));
+
+SOUND(SHOCKWAVE_FIRE, W_Sound("lasergun_fire"));
+SOUND(SHOCKWAVE_MELEE, W_Sound("shotgun_melee"));
+#endif
+
 CLASS(Shockwave, Weapon)
 /* spawnfunc */ ATTRIB(Shockwave, m_canonical_spawnfunc, string, "weapon_shockwave");
 /* ammotype  */ //ATTRIB(Shockwave, ammo_type, Resource, RES_NONE);
