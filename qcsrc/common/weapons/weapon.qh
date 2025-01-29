@@ -127,7 +127,7 @@ CLASS(Weapon, Object)
 	/** (SERVER) update cvar based properties */
 	METHOD(Weapon, wr_update, void(Weapon this)) {}
 	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
-		returns(this.m_name, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.model2) : string_null);
+		returns(this.m_name, (this.model2 != "") ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.model2) : string_null);
 	}
 ENDCLASS(Weapon)
 

@@ -135,7 +135,7 @@ CLASS(GameItem, Object)
     METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))
     {
         TC(GameItem, this);
-        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon) : string_null);
+        returns(this.m_name, (this.m_icon != "") ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon) : string_null);
     }
     METHOD(GameItem, show, void(GameItem this))
     {
