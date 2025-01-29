@@ -189,8 +189,8 @@ void XonoticMapList_refilter(entity me)
 
 	for(i = 0; i < MapInfo_count; ++i)
 	{
-		draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i)));
-		draw_PreloadPicture(strcat("/levelshots/", MapInfo_BSPName_ByID(i)));
+		if(draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i))) == "")
+			draw_PreloadPicture(strcat("/levelshots/", MapInfo_BSPName_ByID(i)));
 	}
 	s = "0";
 	for(i = 1; i < MapInfo_count; i *= 2)
