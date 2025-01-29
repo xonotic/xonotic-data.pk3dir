@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-28 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: k9er, 2024\n"
+"Last-Translator: k9er, 2024-2025\n"
 "Language-Team: English (United Kingdom) (http://app.transifex.com/team-"
 "xonotic/xonotic/language/en_GB/)\n"
 "Language: en_GB\n"
@@ -6171,41 +6171,41 @@ msgstr "Custom"
 #: qcsrc/menu/menu.qc:510
 #, c-format
 msgid "^3%s^7 in range \"%s\" to \"%s\""
-msgstr ""
+msgstr "^3%s^7 in range \"%s\" to \"%s\""
 
 #: qcsrc/menu/menu.qc:512
 #, c-format
 msgid "^3%s^7 outside range \"%s\" to \"%s\""
-msgstr ""
+msgstr "^3%s^7 outside range \"%s\" to \"%s\""
 
 #: qcsrc/menu/menu.qc:541
 msgid "Has special requirements"
-msgstr ""
+msgstr "Has special requirements"
 
 #: qcsrc/menu/menu.qc:544
 #, c-format
 msgid "Requires ^3%s^7 not equal to \"%s^7\""
-msgstr ""
+msgstr "Requires ^3%s^7 not equal to \"%s^7\""
 
 #: qcsrc/menu/menu.qc:556
 #, c-format
 msgid "Requires %s, %s, and %s"
-msgstr ""
+msgstr "Requires %s, %s and %s"
 
 #: qcsrc/menu/menu.qc:559
 #, c-format
 msgid "Requires %s and %s"
-msgstr ""
+msgstr "Requires %s and %s"
 
 #: qcsrc/menu/menu.qc:559
 #, c-format
 msgid "Requires %s or %s"
-msgstr ""
+msgstr "Requires %s or %s"
 
 #: qcsrc/menu/menu.qc:562
 #, c-format
 msgid "Requires %s"
-msgstr ""
+msgstr "Requires %s"
 
 #: qcsrc/menu/xonotic/credits.qc:4
 msgid "Core Team"
@@ -6627,7 +6627,7 @@ msgstr "Bold font scale:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:37
 msgid "Title font scale:"
-msgstr ""
+msgstr "Title font scale:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:40
 msgid "Flip messages order"
@@ -6667,15 +6667,15 @@ msgstr "Chat Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "FPS:"
-msgstr ""
+msgstr "FPS:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:20
 msgid "Use an averaging algorithm"
-msgstr ""
+msgstr "Use an averaging algorithm"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:23
 msgid "Decimal places:"
-msgstr ""
+msgstr "Decimal places:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
@@ -6778,13 +6778,13 @@ msgstr "Items Time Panel"
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:26
 #, c-format
 msgid "GAMETYPE^%s:"
-msgstr ""
+msgstr "GAMETYPE^%s:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:27
 msgid "Show icons"
-msgstr ""
+msgstr "Show icons"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
@@ -6836,15 +6836,15 @@ msgstr "Status bar"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
 msgid "None"
-msgstr ""
+msgstr "None"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:30
 msgid "Both"
-msgstr ""
+msgstr "Both"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:32
 msgid "Acceleration"
-msgstr ""
+msgstr "Acceleration"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:108
@@ -6925,7 +6925,7 @@ msgstr "Forced aspect:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:27
 msgid "Show attack keys"
-msgstr ""
+msgstr "Show attack keys"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
@@ -6933,11 +6933,11 @@ msgstr "Pressed Keys Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:26
 msgid "Translate commands"
-msgstr ""
+msgstr "Translate commands"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:28
 msgid "Use the server's quickmenu"
-msgstr ""
+msgstr "Use the server's quickmenu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
@@ -7028,7 +7028,7 @@ msgstr "Never zoomed"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
 msgid "Maximized radar:"
-msgstr ""
+msgstr "Maximised radar:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
@@ -7073,11 +7073,11 @@ msgstr "StrafeHUD style:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
 msgid "No styling"
-msgstr ""
+msgstr "No styling"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
 msgid "Gradient"
-msgstr ""
+msgstr "Gradient"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
 msgid "Range:"
@@ -7085,7 +7085,7 @@ msgstr "Range:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:51
 msgid "Dynamic"
-msgstr ""
+msgstr "Dynamic"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
 msgid "Strafe bar:"
@@ -7189,7 +7189,7 @@ msgstr "Show only owned weapons"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
 msgid "Show label:"
-msgstr ""
+msgstr "Show label:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "Number"
@@ -9438,7 +9438,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:99
 msgid "Zoom scrolling"
-msgstr ""
+msgstr "Zoom scrolling"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:124
 msgid "Velocity zoom"
@@ -9543,11 +9543,11 @@ msgstr "Weapon model opacity:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:96
 msgid "Apply team colors to weapon beam effects:"
-msgstr ""
+msgstr "Apply team colours to weapon beam effects:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:100
 msgid "In team games"
-msgstr ""
+msgstr "In team games"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:105
 msgid "Gun model swaying"
@@ -10748,4 +10748,4 @@ msgstr "Team Colour:"
 
 #: qcsrc/menu/xonotic/util.qc:803
 msgid "Hide on death"
-msgstr ""
+msgstr "Hide on death"
