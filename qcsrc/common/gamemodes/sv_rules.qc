@@ -105,7 +105,7 @@ bool GameRules_scoring_is_vip(entity player)
 }
 
 // This function exists to work around a limitation of the score system that doesn't keep track of scores as float
-// to be compatibile with external softwares like web-based server browsers (e.g. qstat).
+// to be compatible with external softwares like web-based server browsers (e.g. qstat).
 // It adds the score in units without discarding the decimal part, so that the total score
 // is always the exact value but rounded. float_field is used to keep track of the decimal part.
 float _GameRules_scoring_add_float2int(entity client, entity sp, float value, .float float_field, float score_factor)

@@ -185,7 +185,7 @@ void kh_Scores_Event(entity player, entity key, string what, float frags_player,
 	if(key && key.owner && frags_owner)
 		GameRules_scoring_add_team_float2int(key.owner, SCORE, frags_owner, float_score, 1);
 
-	if(!autocvar_sv_eventlog)  //output extra info to the console or text file
+	if(!autocvar_sv_eventlog)  // output extra info to the console or text file
 		return;
 
 	s = strcat(":keyhunt:", what, ":", ftos(player.playerid), ":", ftos(frags_player));
@@ -1278,7 +1278,7 @@ MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)
 
 MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 {
-    entity bot = M_ARGV(0, entity);
+	entity bot = M_ARGV(0, entity);
 
 	if(IS_DEAD(bot))
 		return true;
@@ -1306,6 +1306,12 @@ MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
 	entity frag_target = M_ARGV(0, entity);
 
 	kh_Key_DropAll(frag_target, false);
+}
+
+MUTATOR_HOOKFUNCTION(kh, reset_map_players)
+{
+	FOREACH_CLIENT(true, { it.float_score = 0; });
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh, reset_map_global)
