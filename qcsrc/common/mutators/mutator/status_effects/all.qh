@@ -51,9 +51,23 @@ CLASS(StatusEffect, Object)
 	/** Sets the persistent flag and updates client side if returning true */
 	METHOD(StatusEffect, m_persistent, bool(StatusEffect this, entity actor)) { return false; };
 #endif
-	METHOD(StatusEffect, display, void(StatusEffect this, void(string name, string icon) returns))
+#ifndef SVQC
+	METHOD(StatusEffect, display, void(entity this, void(string name, string icon) returns))
 	{
 		TC(StatusEffect, this);
-		returns(this.m_name, (this.m_icon != "") ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon) : string_null);
+		string img = this.m_icon;
+		if (img != "")
+		{
+			img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon);
+	#ifdef CSQC
+			if (precache_pic(img) == "")
+	#endif
+	#ifdef MENUQC
+			if (draw_PreloadPicture(img) == "")
+	#endif
+				img = sprintf("/gfx/hud/default/%s", this.m_icon);
+		}
+		returns(this.m_name, img);
 	}
+#endif
 ENDCLASS(StatusEffect)
