@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-23 07:22+0100\n"
+"POT-Creation-Date: 2025-01-28 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: oblector o, 2022\n"
 "Language-Team: Latin (http://app.transifex.com/team-xonotic/xonotic/language/"
@@ -159,7 +159,7 @@ msgstr "^2Nunc exspecta ut advoceris ad aliquam manum"
 msgid "^1Press ^3%s^1 to join"
 msgstr "^3%s^1 preme ut incipias"
 
-#: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1338
+#: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1354
 #: qcsrc/common/notifications/all.qh:466
 msgid "jump"
 msgstr "salire"
@@ -565,7 +565,7 @@ msgstr "Meta %da"
 msgid "PENALTY: %.1f (%s)"
 msgstr "MULTA: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:203 qcsrc/client/main.qc:1175
+#: qcsrc/client/hud/panel/racetimer.qc:203 qcsrc/client/main.qc:1191
 msgid "missing a checkpoint"
 msgstr "meta ambita"
 
@@ -1110,7 +1110,7 @@ msgstr "^3%1.0f minuta"
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7ludentes"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2500 qcsrc/client/main.qc:1367
+#: qcsrc/client/hud/panel/scoreboard.qc:2500 qcsrc/client/main.qc:1383
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Harena:"
@@ -1247,141 +1247,141 @@ msgstr "Non habes"
 msgid "Unavailable"
 msgstr "Deest"
 
-#: qcsrc/client/main.qc:307
+#: qcsrc/client/main.qc:317
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Manum quae in indicem non est excipere non potes!"
 
-#: qcsrc/client/main.qc:1069 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
+#: qcsrc/client/main.qc:1085 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1070 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/client/main.qc:1086 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1071 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
+#: qcsrc/client/main.qc:1087 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1072 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
+#: qcsrc/client/main.qc:1088 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
 msgid "mph"
 msgstr "mi/h"
 
-#: qcsrc/client/main.qc:1073 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/client/main.qc:1089 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
 msgstr "nmi/h"
 
-#: qcsrc/client/main.qc:1286
+#: qcsrc/client/main.qc:1302
 msgid "All Weapons Arena"
 msgstr "Harena cum Omnibus Armis"
 
-#: qcsrc/client/main.qc:1287
+#: qcsrc/client/main.qc:1303
 msgid "All Available Weapons Arena"
 msgstr "Harena cum Omnibus Armis Praesentibus"
 
-#: qcsrc/client/main.qc:1288
+#: qcsrc/client/main.qc:1304
 msgid "Most Weapons Arena"
 msgstr "Harena cum Plurimis Armis"
 
-#: qcsrc/client/main.qc:1289
+#: qcsrc/client/main.qc:1305
 msgid "Most Available Weapons Arena"
 msgstr "Harena cum Plurimis Armis Praesentibus"
 
-#: qcsrc/client/main.qc:1292 qcsrc/client/main.qc:1306
+#: qcsrc/client/main.qc:1308 qcsrc/client/main.qc:1322
 msgid "No Weapons Arena"
 msgstr "Harena sine Armis"
 
-#: qcsrc/client/main.qc:1304
+#: qcsrc/client/main.qc:1320
 #, c-format
 msgid "%s Arena"
 msgstr "Harena cum %s"
 
-#: qcsrc/client/main.qc:1315 qcsrc/client/main.qc:1320
+#: qcsrc/client/main.qc:1331 qcsrc/client/main.qc:1336
 #, c-format
 msgid "This is %s"
 msgstr "Est %s"
 
-#: qcsrc/client/main.qc:1316
+#: qcsrc/client/main.qc:1332
 msgid "Your client version is outdated."
 msgstr "Nimis vetus cliens computatralis tuus est."
 
-#: qcsrc/client/main.qc:1317
+#: qcsrc/client/main.qc:1333
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### MODERATRO HOC LUDERE NON POTES ###"
 
-#: qcsrc/client/main.qc:1318
+#: qcsrc/client/main.qc:1334
 msgid "Please update!"
 msgstr "Noviorem inveni!"
 
-#: qcsrc/client/main.qc:1321
+#: qcsrc/client/main.qc:1337
 msgid "This server is using an outdated Xonotic version."
 msgstr "Moderatrum hoc Xonoticum veterem habet."
 
-#: qcsrc/client/main.qc:1322
+#: qcsrc/client/main.qc:1338
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### MODERATRUM HOC NON INTELLEGIT PROPTEREA LUDERE NON POTES ###"
 
-#: qcsrc/client/main.qc:1324
+#: qcsrc/client/main.qc:1340
 #, c-format
 msgid "Welcome to %s"
 msgstr "Salve, es in %s"
 
-#: qcsrc/client/main.qc:1340 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1356 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Munus %dum:"
 
-#: qcsrc/client/main.qc:1342
+#: qcsrc/client/main.qc:1358
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^F2%s^BG preme ut ludas"
 
-#: qcsrc/client/main.qc:1365
+#: qcsrc/client/main.qc:1381
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Ludi modus:"
 
-#: qcsrc/client/main.qc:1369
+#: qcsrc/client/main.qc:1385
 msgid "by:"
 msgstr "ab:"
 
-#: qcsrc/client/main.qc:1373
+#: qcsrc/client/main.qc:1389
 msgid "This match supports"
 msgstr "Hoc ludo sinuntur"
 
-#: qcsrc/client/main.qc:1375
+#: qcsrc/client/main.qc:1391
 #, c-format
 msgid "%d players"
 msgstr "%d ludentes"
 
-#: qcsrc/client/main.qc:1377
+#: qcsrc/client/main.qc:1393
 #, c-format
 msgid "%d to %d players"
 msgstr "%d ludentes aut plures, sed non plures quam %d"
 
-#: qcsrc/client/main.qc:1379
+#: qcsrc/client/main.qc:1395
 #, c-format
 msgid "%d players maximum"
 msgstr "non plures quam %d ludentes"
 
-#: qcsrc/client/main.qc:1381
+#: qcsrc/client/main.qc:1397
 #, c-format
 msgid "%d players minimum"
 msgstr "%d ludentes aut plures"
 
-#: qcsrc/client/main.qc:1386
+#: qcsrc/client/main.qc:1402
 msgid "Active modifications:"
 msgstr "Mutationes praesentes:"
 
-#: qcsrc/client/main.qc:1389
+#: qcsrc/client/main.qc:1405
 msgid "Special gameplay tips:"
 msgstr "Ludi insignis suasa:"
 
-#: qcsrc/client/main.qc:1396
+#: qcsrc/client/main.qc:1412
 msgid "Server's message"
 msgstr "Moderatri nuntium"
 
-#: qcsrc/client/main.qc:1490
+#: qcsrc/client/main.qc:1506
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (sine clavi)"
@@ -2260,23 +2260,23 @@ msgstr "Veli granata"
 msgid "^3offhand blaster^8 is enabled, press ^3%s^8 to use it"
 msgstr "^8est ^3flatrum obvium^8, ^3%s^8 preme ut eo utaris"
 
-#: qcsrc/common/mutators/mutator/overkill/okhmg.qh:22
+#: qcsrc/common/mutators/mutator/overkill/okhmg.qh:31
 msgid "Overkill Heavy Machine Gun"
 msgstr "Polybolus Gravis Immoderatus"
 
-#: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:20
+#: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:28
 msgid "Overkill MachineGun"
 msgstr "Polybolus Immoderatus"
 
-#: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
+#: qcsrc/common/mutators/mutator/overkill/oknex.qh:29
 msgid "Overkill Nex"
 msgstr "Nex Immoderata"
 
-#: qcsrc/common/mutators/mutator/overkill/okrpc.qh:22
+#: qcsrc/common/mutators/mutator/overkill/okrpc.qh:31
 msgid "Overkill Rocket Propelled Chainsaw"
 msgstr "Missilium Pellentium Serra Immoderata"
 
-#: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
+#: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:24
 msgid "Overkill Shotgun"
 msgstr "Sclopetum Immoderatum"
 
@@ -5852,85 +5852,85 @@ msgstr "Raptoris flamma"
 msgid "Spiderbot"
 msgstr "Aranea Automata"
 
-#: qcsrc/common/weapons/weapon/arc.qh:20
+#: qcsrc/common/weapons/weapon/arc.qh:34
 msgid "Arc"
 msgstr "Arcus"
 
-#: qcsrc/common/weapons/weapon/blaster.qh:20
+#: qcsrc/common/weapons/weapon/blaster.qh:28
 msgid "Blaster"
 msgstr "Flatrum"
 
-#: qcsrc/common/weapons/weapon/crylink.qh:20
+#: qcsrc/common/weapons/weapon/crylink.qh:32
 msgid "Crylink"
 msgstr "Crilictrum"
 
-#: qcsrc/common/weapons/weapon/devastator.qh:20
+#: qcsrc/common/weapons/weapon/devastator.qh:32
 msgid "Devastator"
 msgstr "Devastatrum"
 
-#: qcsrc/common/weapons/weapon/electro.qh:20
+#: qcsrc/common/weapons/weapon/electro.qh:33
 msgid "Electro"
 msgstr "Electrum"
 
-#: qcsrc/common/weapons/weapon/fireball.qh:20
+#: qcsrc/common/weapons/weapon/fireball.qh:34
 msgid "Fireball"
 msgstr "Globus Igneus"
 
-#: qcsrc/common/weapons/weapon/hagar.qh:20
+#: qcsrc/common/weapons/weapon/hagar.qh:36
 msgid "Hagar"
 msgstr "Hagar"
 
-#: qcsrc/common/weapons/weapon/hlac.qh:23
+#: qcsrc/common/weapons/weapon/hlac.qh:31
 msgid "Heavy Laser Assault Cannon"
 msgstr "Hyperbolicae Lucis Assilientis Tormentum"
 
-#: qcsrc/common/weapons/weapon/hook.qh:20
+#: qcsrc/common/weapons/weapon/hook.qh:32
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:119
 msgid "Grappling Hook"
 msgstr "Uncus Scandendo"
 
-#: qcsrc/common/weapons/weapon/machinegun.qh:20
+#: qcsrc/common/weapons/weapon/machinegun.qh:29
 msgid "MachineGun"
 msgstr "Polybolus"
 
-#: qcsrc/common/weapons/weapon/minelayer.qh:20
+#: qcsrc/common/weapons/weapon/minelayer.qh:34
 msgid "Mine Layer"
 msgstr "Tribuliferum"
 
-#: qcsrc/common/weapons/weapon/mortar.qh:20
+#: qcsrc/common/weapons/weapon/mortar.qh:31
 msgid "Mortar"
 msgstr "Mortarium"
 
-#: qcsrc/common/weapons/weapon/porto.qh:18
+#: qcsrc/common/weapons/weapon/porto.qh:32
 msgid "Port-O-Launch"
 msgstr "Teleportiferum"
 
-#: qcsrc/common/weapons/weapon/rifle.qh:21
+#: qcsrc/common/weapons/weapon/rifle.qh:30
 msgid "Rifle"
 msgstr "Sclopetum Pungens"
 
-#: qcsrc/common/weapons/weapon/seeker.qh:20
+#: qcsrc/common/weapons/weapon/seeker.qh:44
 msgid "T.A.G. Seeker"
 msgstr "T.A.G. Persecutrum"
 
-#: qcsrc/common/weapons/weapon/shockwave.qh:18
+#: qcsrc/common/weapons/weapon/shockwave.qh:28
 msgid "Shockwave"
 msgstr "Unda Impingens"
 
-#: qcsrc/common/weapons/weapon/shotgun.qh:20
+#: qcsrc/common/weapons/weapon/shotgun.qh:30
 msgid "Shotgun"
 msgstr "Sclopetum"
 
-#: qcsrc/common/weapons/weapon/tuba.qh:18
+#: qcsrc/common/weapons/weapon/tuba.qh:28
 #, no-c-format
 msgid "@!#%'n Tuba"
 msgstr "M@!#% Tuba"
 
-#: qcsrc/common/weapons/weapon/vaporizer.qh:21
+#: qcsrc/common/weapons/weapon/vaporizer.qh:31
 msgid "Vaporizer"
 msgstr "Vaporatrum"
 
-#: qcsrc/common/weapons/weapon/vortex.qh:21
+#: qcsrc/common/weapons/weapon/vortex.qh:32
 msgid "Vortex"
 msgstr "Vortex"
 
@@ -6618,7 +6618,7 @@ msgstr "Litterae gravis magnitudo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:37
 msgid "Title font scale:"
-msgstr ""
+msgstr "Tituli litterae magnitudo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:40
 msgid "Flip messages order"
@@ -6658,15 +6658,15 @@ msgstr "Locutorii Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "FPS:"
-msgstr ""
+msgstr "QIS:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:20
 msgid "Use an averaging algorithm"
-msgstr ""
+msgstr "QIS reri per mediarum computationem"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:23
 msgid "Decimal places:"
-msgstr ""
+msgstr "Figurae decimales:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
@@ -6769,13 +6769,13 @@ msgstr "Utilium Temporum Tabella"
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:26
 #, c-format
 msgid "GAMETYPE^%s:"
-msgstr ""
+msgstr "%s:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:27
 msgid "Show icons"
-msgstr ""
+msgstr "Imagines videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
@@ -6827,15 +6827,15 @@ msgstr "Status tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
 msgid "None"
-msgstr ""
+msgstr "Nulla"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:30
 msgid "Both"
-msgstr ""
+msgstr "Ambae"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:32
 msgid "Acceleration"
-msgstr ""
+msgstr "Acceleratio"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:108
@@ -6880,6 +6880,7 @@ msgstr "Tempus scribere:"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:145
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:66
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:99
 msgid "Never"
 msgstr "Numquam"
 
@@ -6892,6 +6893,7 @@ msgstr "Si spectas"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:147
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:101
 msgid "Always"
 msgstr "Semper"
 
@@ -6914,7 +6916,7 @@ msgstr "Proportio postulata:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:27
 msgid "Show attack keys"
-msgstr ""
+msgstr "Impetus claves videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
@@ -6922,11 +6924,11 @@ msgstr "Clavium Pressarum Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:26
 msgid "Translate commands"
-msgstr ""
+msgstr "Iussa scripta vertere"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:28
 msgid "Use the server's quickmenu"
-msgstr ""
+msgstr "Moderatri indice celeri uti"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
@@ -6998,26 +7000,26 @@ msgstr "Amplificationis modus:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:40
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:66
 msgid "Zoomed in"
-msgstr "Amplificatus"
+msgstr "Amplificatum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:41
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:67
 msgid "Zoomed out"
-msgstr "Imminutus"
+msgstr "Imminutum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:42
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:68
 msgid "Always zoomed"
-msgstr "Semper amplificatus"
+msgstr "Semper amplificatum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:43
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:69
 msgid "Never zoomed"
-msgstr "Nunquam amplificatus"
+msgstr "Nunquam amplificatum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
 msgid "Maximized radar:"
-msgstr ""
+msgstr "Detectrum amplificatum:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
@@ -7062,11 +7064,11 @@ msgstr "Motionis lateralis Notarum facies:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
 msgid "No styling"
-msgstr ""
+msgstr "Nulla facies"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
 msgid "Gradient"
-msgstr ""
+msgstr "Gradiens"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
 msgid "Range:"
@@ -7074,7 +7076,7 @@ msgstr "Intervallum:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:51
 msgid "Dynamic"
-msgstr ""
+msgstr "Mutabilis"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
 msgid "Strafe bar:"
@@ -7178,7 +7180,7 @@ msgstr "Modo arma tenta videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
 msgid "Show label:"
-msgstr ""
+msgstr "Scriptum videre:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "Number"
@@ -9434,7 +9436,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:99
 msgid "Zoom scrolling"
-msgstr ""
+msgstr "Amplificare per muris rotam"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:124
 msgid "Velocity zoom"
@@ -9510,7 +9512,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:62
 msgid "Auto switch in CTS:"
-msgstr ""
+msgstr "Statim commutas dum est Cursus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:71
 msgid "Draw 1st person weapon model"
@@ -9538,11 +9540,19 @@ msgstr "Ad Dextrum"
 msgid "Weapon model opacity:"
 msgstr "Armorum formae traluciditas:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:98
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:96
+msgid "Apply team colors to weapon beam effects:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:100
+msgid "In team games"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:105
 msgid "Gun model swaying"
 msgstr "Armorum forma pendula"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:103
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:110
 msgid "Gun model bobbing"
 msgstr "Armorum forma undans"
 
@@ -10744,4 +10754,4 @@ msgstr "Manus Color:"
 
 #: qcsrc/menu/xonotic/util.qc:803
 msgid "Hide on death"
-msgstr ""
+msgstr "Non videre cum moreris"

@@ -67,7 +67,7 @@ void func_ladder_init(entity this)
 	setsize(tracetest_ent, PL_MIN_CONST, PL_MAX_CONST);
 	tracetest_ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 
-	vector top_min = (this.absmin + this.absmax) / 2;
+	vector top_min = (this.absmin + this.absmax) * 0.5;
 	top_min.z = this.absmax.z;
 	vector top_max = top_min;
 	top_max.z += PL_MAX_CONST.z - PL_MIN_CONST.z;

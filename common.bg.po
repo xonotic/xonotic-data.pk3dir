@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-23 07:22+0100\n"
+"POT-Creation-Date: 2025-01-28 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: С Станев, 2024\n"
 "Language-Team: Bulgarian (http://app.transifex.com/team-xonotic/xonotic/"
@@ -169,7 +169,7 @@ msgstr ""
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Натиснете ^3%s^1 за да се включите"
 
-#: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1338
+#: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1354
 #: qcsrc/common/notifications/all.qh:466
 msgid "jump"
 msgstr "скок"
@@ -575,7 +575,7 @@ msgstr ""
 msgid "PENALTY: %.1f (%s)"
 msgstr "НАКАЗАНИЕ: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:203 qcsrc/client/main.qc:1175
+#: qcsrc/client/hud/panel/racetimer.qc:203 qcsrc/client/main.qc:1191
 msgid "missing a checkpoint"
 msgstr "пропусната проверочна точка"
 
@@ -1119,7 +1119,7 @@ msgstr "^3%1.0f минути"
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7играча"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2500 qcsrc/client/main.qc:1367
+#: qcsrc/client/hud/panel/scoreboard.qc:2500 qcsrc/client/main.qc:1383
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Карта:"
@@ -1256,142 +1256,142 @@ msgstr "Нямам"
 msgid "Unavailable"
 msgstr "Не е налично"
 
-#: qcsrc/client/main.qc:307
+#: qcsrc/client/main.qc:317
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr ""
 "Опитвате се да премахнете отбор, който не съществува в списъка на отборите!"
 
-#: qcsrc/client/main.qc:1069 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
+#: qcsrc/client/main.qc:1085 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:165
 msgid "qu/s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1070 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/client/main.qc:1086 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
 msgid "m/s"
 msgstr "м/с"
 
-#: qcsrc/client/main.qc:1071 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
+#: qcsrc/client/main.qc:1087 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 msgid "km/h"
 msgstr "км/ч"
 
-#: qcsrc/client/main.qc:1072 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
+#: qcsrc/client/main.qc:1088 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
 msgid "mph"
 msgstr "мили/ч"
 
-#: qcsrc/client/main.qc:1073 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/client/main.qc:1089 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
 msgid "knots"
 msgstr "възли"
 
-#: qcsrc/client/main.qc:1286
+#: qcsrc/client/main.qc:1302
 msgid "All Weapons Arena"
 msgstr "Арена с всички оръжия"
 
-#: qcsrc/client/main.qc:1287
+#: qcsrc/client/main.qc:1303
 msgid "All Available Weapons Arena"
 msgstr "Арена с всички налични оръжия"
 
-#: qcsrc/client/main.qc:1288
+#: qcsrc/client/main.qc:1304
 msgid "Most Weapons Arena"
 msgstr "Арена с повечето оръжия"
 
-#: qcsrc/client/main.qc:1289
+#: qcsrc/client/main.qc:1305
 msgid "Most Available Weapons Arena"
 msgstr "Арена с повечето от наличните оръжия"
 
-#: qcsrc/client/main.qc:1292 qcsrc/client/main.qc:1306
+#: qcsrc/client/main.qc:1308 qcsrc/client/main.qc:1322
 msgid "No Weapons Arena"
 msgstr "Арена без оръжия"
 
-#: qcsrc/client/main.qc:1304
+#: qcsrc/client/main.qc:1320
 #, c-format
 msgid "%s Arena"
 msgstr "%s Арена"
 
-#: qcsrc/client/main.qc:1315 qcsrc/client/main.qc:1320
+#: qcsrc/client/main.qc:1331 qcsrc/client/main.qc:1336
 #, c-format
 msgid "This is %s"
 msgstr "Това е %s"
 
-#: qcsrc/client/main.qc:1316
+#: qcsrc/client/main.qc:1332
 msgid "Your client version is outdated."
 msgstr "Версия на приложението ви е стара."
 
-#: qcsrc/client/main.qc:1317
+#: qcsrc/client/main.qc:1333
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### НЯМА ДА ИМАТЕ ВЪЗМОЖНОСТ ДА ИГРАЕТЕ НА ТОЗИ СЪРВЪР ###"
 
-#: qcsrc/client/main.qc:1318
+#: qcsrc/client/main.qc:1334
 msgid "Please update!"
 msgstr "Моля обновете!"
 
-#: qcsrc/client/main.qc:1321
+#: qcsrc/client/main.qc:1337
 msgid "This server is using an outdated Xonotic version."
 msgstr "Този сървър използва стара версия на Xonotic."
 
-#: qcsrc/client/main.qc:1322
+#: qcsrc/client/main.qc:1338
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### ТОЗИ СЪРВЪР Е НЕСЪВМЕСТИМ И ЗАТОВА НЕ МОЖЕ ДА СЕ ПРИСЪЕДИНИТЕ ###"
 
-#: qcsrc/client/main.qc:1324
+#: qcsrc/client/main.qc:1340
 #, c-format
 msgid "Welcome to %s"
 msgstr "Добре дошли в %s"
 
-#: qcsrc/client/main.qc:1340 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1356 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Ниво %d:"
 
-#: qcsrc/client/main.qc:1342
+#: qcsrc/client/main.qc:1358
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGНатиснете ^F2%s^BG за влизане в играта"
 
-#: qcsrc/client/main.qc:1365
+#: qcsrc/client/main.qc:1381
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
 msgstr "Вид игра:"
 
-#: qcsrc/client/main.qc:1369
+#: qcsrc/client/main.qc:1385
 msgid "by:"
 msgstr "от:"
 
-#: qcsrc/client/main.qc:1373
+#: qcsrc/client/main.qc:1389
 msgid "This match supports"
 msgstr "Тази игра поддържа"
 
-#: qcsrc/client/main.qc:1375
+#: qcsrc/client/main.qc:1391
 #, c-format
 msgid "%d players"
 msgstr "%d играчи"
 
-#: qcsrc/client/main.qc:1377
+#: qcsrc/client/main.qc:1393
 #, c-format
 msgid "%d to %d players"
 msgstr "%d до %d играчи"
 
-#: qcsrc/client/main.qc:1379
+#: qcsrc/client/main.qc:1395
 #, c-format
 msgid "%d players maximum"
 msgstr "%d играчи максимум "
 
-#: qcsrc/client/main.qc:1381
+#: qcsrc/client/main.qc:1397
 #, c-format
 msgid "%d players minimum"
 msgstr "%d играчи минимум"
 
-#: qcsrc/client/main.qc:1386
+#: qcsrc/client/main.qc:1402
 msgid "Active modifications:"
 msgstr "Активни модификации:"
 
-#: qcsrc/client/main.qc:1389
+#: qcsrc/client/main.qc:1405
 msgid "Special gameplay tips:"
 msgstr "Специални съвети за игра:"
 
-#: qcsrc/client/main.qc:1396
+#: qcsrc/client/main.qc:1412
 msgid "Server's message"
 msgstr "Съобщение от сървъра"
 
-#: qcsrc/client/main.qc:1490
+#: qcsrc/client/main.qc:1506
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (не е свързано)"
@@ -2271,23 +2271,23 @@ msgstr ""
 msgid "^3offhand blaster^8 is enabled, press ^3%s^8 to use it"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/overkill/okhmg.qh:22
+#: qcsrc/common/mutators/mutator/overkill/okhmg.qh:31
 msgid "Overkill Heavy Machine Gun"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:20
+#: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:28
 msgid "Overkill MachineGun"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/overkill/oknex.qh:19
+#: qcsrc/common/mutators/mutator/overkill/oknex.qh:29
 msgid "Overkill Nex"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/overkill/okrpc.qh:22
+#: qcsrc/common/mutators/mutator/overkill/okrpc.qh:31
 msgid "Overkill Rocket Propelled Chainsaw"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:18
+#: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:24
 msgid "Overkill Shotgun"
 msgstr ""
 
@@ -5841,85 +5841,85 @@ msgstr ""
 msgid "Spiderbot"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/arc.qh:20
+#: qcsrc/common/weapons/weapon/arc.qh:34
 msgid "Arc"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/blaster.qh:20
+#: qcsrc/common/weapons/weapon/blaster.qh:28
 msgid "Blaster"
 msgstr "Бластер"
 
-#: qcsrc/common/weapons/weapon/crylink.qh:20
+#: qcsrc/common/weapons/weapon/crylink.qh:32
 msgid "Crylink"
 msgstr "Crylink"
 
-#: qcsrc/common/weapons/weapon/devastator.qh:20
+#: qcsrc/common/weapons/weapon/devastator.qh:32
 msgid "Devastator"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/electro.qh:20
+#: qcsrc/common/weapons/weapon/electro.qh:33
 msgid "Electro"
 msgstr "Electro"
 
-#: qcsrc/common/weapons/weapon/fireball.qh:20
+#: qcsrc/common/weapons/weapon/fireball.qh:34
 msgid "Fireball"
 msgstr "Огнена топка"
 
-#: qcsrc/common/weapons/weapon/hagar.qh:20
+#: qcsrc/common/weapons/weapon/hagar.qh:36
 msgid "Hagar"
 msgstr "Hagar"
 
-#: qcsrc/common/weapons/weapon/hlac.qh:23
+#: qcsrc/common/weapons/weapon/hlac.qh:31
 msgid "Heavy Laser Assault Cannon"
 msgstr "Лазерно оръдие"
 
-#: qcsrc/common/weapons/weapon/hook.qh:20
+#: qcsrc/common/weapons/weapon/hook.qh:32
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:119
 msgid "Grappling Hook"
 msgstr "Кука"
 
-#: qcsrc/common/weapons/weapon/machinegun.qh:20
+#: qcsrc/common/weapons/weapon/machinegun.qh:29
 msgid "MachineGun"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/minelayer.qh:20
+#: qcsrc/common/weapons/weapon/minelayer.qh:34
 msgid "Mine Layer"
 msgstr "Mine Layer"
 
-#: qcsrc/common/weapons/weapon/mortar.qh:20
+#: qcsrc/common/weapons/weapon/mortar.qh:31
 msgid "Mortar"
 msgstr "Минохвъргачка"
 
-#: qcsrc/common/weapons/weapon/porto.qh:18
+#: qcsrc/common/weapons/weapon/porto.qh:32
 msgid "Port-O-Launch"
 msgstr "Port-O-Launch"
 
-#: qcsrc/common/weapons/weapon/rifle.qh:21
+#: qcsrc/common/weapons/weapon/rifle.qh:30
 msgid "Rifle"
 msgstr "Винтовка"
 
-#: qcsrc/common/weapons/weapon/seeker.qh:20
+#: qcsrc/common/weapons/weapon/seeker.qh:44
 msgid "T.A.G. Seeker"
 msgstr "T.A.G. Seeker"
 
-#: qcsrc/common/weapons/weapon/shockwave.qh:18
+#: qcsrc/common/weapons/weapon/shockwave.qh:28
 msgid "Shockwave"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/shotgun.qh:20
+#: qcsrc/common/weapons/weapon/shotgun.qh:30
 msgid "Shotgun"
 msgstr "Пушка"
 
-#: qcsrc/common/weapons/weapon/tuba.qh:18
+#: qcsrc/common/weapons/weapon/tuba.qh:28
 #, no-c-format
 msgid "@!#%'n Tuba"
 msgstr "@!#%'n Tuba"
 
-#: qcsrc/common/weapons/weapon/vaporizer.qh:21
+#: qcsrc/common/weapons/weapon/vaporizer.qh:31
 msgid "Vaporizer"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/vortex.qh:21
+#: qcsrc/common/weapons/weapon/vortex.qh:32
 msgid "Vortex"
 msgstr ""
 
@@ -6868,6 +6868,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:145
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:66
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:99
 msgid "Never"
 msgstr "Никога"
 
@@ -6880,6 +6881,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:147
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:101
 msgid "Always"
 msgstr ""
 
@@ -9457,11 +9459,19 @@ msgstr "Подравняване вдясно"
 msgid "Weapon model opacity:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:98
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:96
+msgid "Apply team colors to weapon beam effects:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:100
+msgid "In team games"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:105
 msgid "Gun model swaying"
 msgstr "Клатене на оръжието"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:103
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:110
 msgid "Gun model bobbing"
 msgstr "Клатене на оръжието"
 

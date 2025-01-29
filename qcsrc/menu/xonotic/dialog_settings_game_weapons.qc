@@ -93,15 +93,19 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 			e.addValue(e, "100%", "1");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Apply team colors to weapon beam effects:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "cl_followmodel", _("Gun model swaying"), "-"));
-		makeMulti(e, "cl_leanmodel");
-		setDependent(e, "r_drawviewmodel", 1, 1);
+			me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "cl_tracers_teamcolor", "0", _("Never")));
+			me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "cl_tracers_teamcolor", "1", _("In team games")));
+			me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "cl_tracers_teamcolor", "2", _("Always")));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_bobmodel", _("Gun model bobbing")));
-		setDependent(e, "r_drawviewmodel", 1, 1);
+	me.TR(me);
+		me.TD(me, 1, 2.8 / 2, e = makeXonoticCheckBox_T(0, "cl_followmodel", _("Gun model swaying"), "-"));
+			makeMulti(e, "cl_leanmodel");
+			setDependent(e, "r_drawviewmodel", 1, 1);
+		me.TD(me, 1, 2.8 / 2, e = makeXonoticCheckBox(0, "cl_bobmodel", _("Gun model bobbing")));
+			setDependent(e, "r_drawviewmodel", 1, 1);
 	me.gotoRC(me, me.rows - 1, 0); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, me.columns, weaponsApplyButton);
 }
