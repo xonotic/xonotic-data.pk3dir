@@ -9628,11 +9628,11 @@ msgstr "Opacidade do modelo das armas:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:96
 msgid "Apply team colors to weapon beam effects:"
-msgstr ""
+msgstr "Aplicar cores de equipes aos efeitos de feixes de armas:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:100
 msgid "In team games"
-msgstr ""
+msgstr "Em modos de equipes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:105
 msgid "Gun model swaying"
