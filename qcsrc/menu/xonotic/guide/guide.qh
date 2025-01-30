@@ -6,18 +6,19 @@
 #include <menu/xonotic/datasource.qh>
 
 #define TOPICS(X) \
-	X(NEW(FreetextSource),  _("Guide"),     "gametype_tdm") \
-	X(NEW(GametypeSource),  _("Gametypes"), "gametype_dm") \
-	X(NEW(WeaponSource),    _("Weapons"),   "gametype_duel") \
-	X(NEW(ItemSource),      _("Items"),     "gametype_kh") \
-	X(NEW(PowerupSource),   _("Powerups"),  "gametype_dom") \
-	X(NEW(BuffSource),      _("Buffs"),     "gametype_ka") \
-	X(NEW(NadeSource),      _("Nades"),     "gametype_ft") \
-	X(NEW(MonsterSource),   _("Monsters"),  "gametype_lms") \
-	X(NEW(VehicleSource),   _("Vehicles"),  "gametype_rc") \
-	X(NEW(TurretSource),    _("Turrets"),   "gametype_as") \
-	X(NEW(MutatorSource),   _("Mutators"),  "gametype_nb") \
-	/*X(NEW(MapSource),       _("Maps"),      "gametype_ctf")*/ \
+	X(NEW(IntroductionSource), _("Introduction"), "gametype_tdm") \
+	X(NEW(MovementSource),     _("Movement"),     "gametype_inv") \
+	X(NEW(GametypeSource),             _("Gametypes"),    "gametype_dm") \
+	X(NEW(WeaponSource),               _("Weapons"),      "gametype_duel") \
+	X(NEW(ItemSource),                 _("Items"),        "gametype_kh") \
+	X(NEW(PowerupSource),              _("Powerups"),     "gametype_dom") \
+	X(NEW(BuffSource),                 _("Buffs"),        "gametype_ka") \
+	X(NEW(NadeSource),                 _("Nades"),        "gametype_ft") \
+	X(NEW(MonsterSource),              _("Monsters"),     "gametype_lms") \
+	X(NEW(VehicleSource),              _("Vehicles"),     "gametype_rc") \
+	X(NEW(TurretSource),               _("Turrets"),      "gametype_as") \
+	X(NEW(MutatorSource),              _("Mutators"),     "gametype_nb") \
+	/*X(NEW(MapSource),                  _("Maps"),         "gametype_ctf")*/ \
 	/*if (gamestatus & GAME_DEVELOPER) X(NEW(DebugSource), _("Debug"), "gametype_ons")*/ \
 	/**/
 CLASS(TopicSource, DataSource)
@@ -86,7 +87,8 @@ ENDCLASS(id)
 #define REGISTRY_SOURCE_5(id, arr_name, register_arr, cond1, cond2)        _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, false, 2)
 #define REGISTRY_SOURCE_6(id, arr_name, register_arr, cond1, cond2, cond3) _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, cond3, 3)
 
-REGISTRY_SOURCE(FreetextSource, Guide, GuidePages)
+REGISTRY_SOURCE(IntroductionSource, Introduction, IntroductionGuidePages)
+REGISTRY_SOURCE(MovementSource, Movement, MovementGuidePages)
 // The descriptions for these are in menu/xonotic/guide/pages.qh
 
 #include <common/mapinfo.qh>

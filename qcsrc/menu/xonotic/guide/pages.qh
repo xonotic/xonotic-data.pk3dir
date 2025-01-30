@@ -1,7 +1,5 @@
 #pragma once
 
-// This is for the freetext sections only
-
 CLASS(GuidePage, Object)
 	ATTRIB(GuidePage, m_id, int, 0);
 	ATTRIB(GuidePage, m_name, string, "");
@@ -26,17 +24,25 @@ CLASS(GuidePage, Object)
 	}
 ENDCLASS(GuidePage)
 
-REGISTRY(GuidePages, 16)
-#define REGISTER_GUIDE_PAGE(id, name, icon) REGISTER(GuidePages, GUIDE_PAGE, id, m_id, NEW(GuidePage, name, icon))
-REGISTER_REGISTRY(GuidePages)
 
-REGISTER_GUIDE_PAGE(0, _("Introduction"), "gametype_dm")
+// This is for the freetext sections only
+
+REGISTRY(IntroductionGuidePages, 16)
+#define REGISTER_INTRODUCTION_PAGE(id, name, icon) REGISTER(IntroductionGuidePages, GUIDE_PAGE, id, m_id, NEW(GuidePage, name, icon))
+REGISTER_REGISTRY(IntroductionGuidePages)
+
+REGISTER_INTRODUCTION_PAGE(0, _("About this guide"), "gametype_dm")
 {
 	this.m_description = _("Welcome to Xonotic, the free and fast arena shooter!\n\n"
 		"Keep in mind all values and descriptions in this guide are based on the default game settings, so it may differ from the experience when playing on some modified servers");
 }
 
-REGISTER_GUIDE_PAGE(1, _("Movement"), "gametype_inv")
+
+REGISTRY(MovementGuidePages, 16)
+#define REGISTER_MOVEMENT_PAGE(id, name, icon) REGISTER(MovementGuidePages, GUIDE_PAGE, id, m_id, NEW(GuidePage, name, icon))
+REGISTER_REGISTRY(MovementGuidePages)
+
+REGISTER_MOVEMENT_PAGE(0, _("Movement"), "gametype_inv")
 {
 	this.m_description = _("In Xonotic to move quickly you will have to airstrafe and bunnyhop"); // TODO
 }
