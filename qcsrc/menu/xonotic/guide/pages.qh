@@ -28,7 +28,7 @@ ENDCLASS(GuidePage)
 // This is for the freetext sections only
 
 REGISTRY(IntroductionGuidePages, 16)
-#define REGISTER_INTRODUCTION_PAGE(id, name, icon) REGISTER(IntroductionGuidePages, GUIDE_PAGE, id, m_id, NEW(GuidePage, name, icon))
+#define REGISTER_INTRODUCTION_PAGE(id, name, icon) REGISTER(IntroductionGuidePages, GUIDE_INTRODUCTION_PAGE, id, m_id, NEW(GuidePage, name, icon))
 REGISTER_REGISTRY(IntroductionGuidePages)
 
 REGISTER_INTRODUCTION_PAGE(0, _("About this guide"), "gametype_dm")
@@ -39,7 +39,7 @@ REGISTER_INTRODUCTION_PAGE(0, _("About this guide"), "gametype_dm")
 
 
 REGISTRY(MovementGuidePages, 16)
-#define REGISTER_MOVEMENT_PAGE(id, name, icon) REGISTER(MovementGuidePages, GUIDE_PAGE, id, m_id, NEW(GuidePage, name, icon))
+#define REGISTER_MOVEMENT_PAGE(id, name, icon) REGISTER(MovementGuidePages, GUIDE_MOVEMENT_PAGE, id, m_id, NEW(GuidePage, name, icon))
 REGISTER_REGISTRY(MovementGuidePages)
 
 REGISTER_MOVEMENT_PAGE(0, _("Movement"), "gametype_inv")
