@@ -2251,7 +2251,7 @@ void readlevelcvars()
 	if (!warmup_stage && !autocvar_g_campaign)
 		game_starttime = time + cvar("g_start_delay");
 
-	FOREACH(Weapons, it != WEP_Null, { it.wr_init(it); });
+	FOREACH(Weapons, it != WEP_Null && (want_weapon(it, false) & 1), { it.wr_init(it); });
 
 	readplayerstartcvars();
 }
