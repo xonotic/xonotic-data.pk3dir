@@ -55,7 +55,7 @@ msgstr "^1無法寫入到 %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 msgid "Title"
-msgstr ""
+msgstr "標題"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -575,7 +575,7 @@ msgstr "終點線"
 #: qcsrc/client/hud/panel/racetimer.qc:200
 #, c-format
 msgid "Checkpoint %d"
-msgstr ""
+msgstr "檢查點 %d"
 
 #: qcsrc/client/hud/panel/racetimer.qc:203
 #: qcsrc/client/hud/panel/racetimer.qc:293
@@ -1088,7 +1088,7 @@ msgstr "分"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2434
 msgid "Next map:"
-msgstr ""
+msgstr "下一張地圖："
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2441
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
@@ -1790,7 +1790,7 @@ msgstr "殺敵數達到目標後，一輪競賽結束"
 
 #: qcsrc/common/minigames/cl_minigames.qc:287
 msgid "Spectators:"
-msgstr "觀察者:"
+msgstr "觀察者："
 
 #: qcsrc/common/minigames/cl_minigames.qc:424
 msgid "It's your turn"
@@ -3138,7 +3138,7 @@ msgstr "^BG%s^K1 來不及躲閃競速者的火箭彈%s%s"
 #: qcsrc/common/notifications/all.inc:361
 #, c-format
 msgid "^BG%s^K1 ended up in the wrong place%s%s"
-msgstr ""
+msgstr "^BG%s^K1 去了不該去的地方%s%s"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
@@ -3148,7 +3148,7 @@ msgstr "^BG%s^K1 被 ^BG%s^K1 背叛%s%s"
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
 msgid "(%s every %s seconds)"
-msgstr ""
+msgstr "(得 %s，間隔 %s 秒)"
 
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
@@ -4916,11 +4916,11 @@ msgstr "副火力"
 #: qcsrc/common/notifications/all.qh:455
 #, c-format
 msgid "%d points"
-msgstr ""
+msgstr "%d 點"
 
 #: qcsrc/common/notifications/all.qh:455
 msgid "1 point"
-msgstr ""
+msgstr "1 點"
 
 #: qcsrc/common/notifications/all.qh:464
 msgid "drop flag"
@@ -4933,100 +4933,100 @@ msgstr "扔榴彈"
 #: qcsrc/common/notifications/all.qh:495
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG!"
-msgstr ""
+msgstr "%s^K1 獲得【三殺】！"
 
 #: qcsrc/common/notifications/all.qh:495
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE!"
-msgstr ""
+msgstr "%s^K1 連續【三次】得分！"
 
 #: qcsrc/common/notifications/all.qh:495
 msgid "TRIPLE FRAG!"
-msgstr ""
+msgstr "三連殺！"
 
 #: qcsrc/common/notifications/all.qh:496
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 連續【五次】得分！"
 
 #: qcsrc/common/notifications/all.qh:496
 #, c-format
 msgid "%s^K1 unlocked RAGE!"
-msgstr ""
+msgstr "%s^K1 解鎖了【狂怒】！"
 
 #: qcsrc/common/notifications/all.qh:496
 msgid "RAGE!"
-msgstr ""
+msgstr "狂怒！"
 
 #: qcsrc/common/notifications/all.qh:497
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 連續【十次】得分！"
 
 #: qcsrc/common/notifications/all.qh:497
 #, c-format
 msgid "%s^K1 started a MASSACRE!"
-msgstr ""
+msgstr "%s^K1 開始【殺戮】!"
 
 #: qcsrc/common/notifications/all.qh:497
 msgid "MASSACRE!"
-msgstr ""
+msgstr "殺戮！"
 
 #: qcsrc/common/notifications/all.qh:498
 #, c-format
 msgid "%s^K1 executed MAYHEM!"
-msgstr ""
+msgstr "%s^K1 釋發【混亂】！"
 
 #: qcsrc/common/notifications/all.qh:498
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 連續【十五次】得分！"
 
 #: qcsrc/common/notifications/all.qh:498
 msgid "MAYHEM!"
-msgstr ""
+msgstr "混亂！"
 
 #: qcsrc/common/notifications/all.qh:499
 #, c-format
 msgid "%s^K1 is a BERSERKER!"
-msgstr ""
+msgstr "%s^K1 現在【無懈可擊】！"
 
 #: qcsrc/common/notifications/all.qh:499
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 連續【二十次】得分！"
 
 #: qcsrc/common/notifications/all.qh:499
 msgid "BERSERKER!"
-msgstr ""
+msgstr "无懈可击！"
 
 #: qcsrc/common/notifications/all.qh:500
 #, c-format
 msgid "%s^K1 inflicts CARNAGE!"
-msgstr ""
+msgstr "%s^K1 成為【修羅者】！"
 
 #: qcsrc/common/notifications/all.qh:500
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 連續【二十五次】得分！"
 
 #: qcsrc/common/notifications/all.qh:500
 msgid "CARNAGE!"
-msgstr ""
+msgstr "修羅者！"
 
 #: qcsrc/common/notifications/all.qh:501
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 連續【三十次】得分！"
 
 #: qcsrc/common/notifications/all.qh:501
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON!"
-msgstr ""
+msgstr "%s^K1 解封【末日決戰】！"
 
 #: qcsrc/common/notifications/all.qh:501
 msgid "ARMAGEDDON!"
-msgstr ""
+msgstr "【末日決戰】！"
 
 #: qcsrc/common/notifications/all.qh:508
 #, c-format
@@ -5059,48 +5059,48 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:541 qcsrc/common/notifications/all.qh:554
 #, c-format
 msgid "%d score spree!"
-msgstr ""
+msgstr "%d 次連續得分！"
 
 #: qcsrc/common/notifications/all.qh:553
 #, c-format
 msgid "%d frag spree!"
-msgstr ""
+msgstr "%d 連殺！"
 
 #: qcsrc/common/notifications/all.qh:566
 msgid "First blood!"
-msgstr ""
+msgstr "第一滴血！"
 
 #: qcsrc/common/notifications/all.qh:566
 msgid "First score!"
-msgstr ""
+msgstr "率先得分！"
 
 #: qcsrc/common/notifications/all.qh:570
 msgid "First casualty!"
-msgstr ""
+msgstr "第一個倒下！"
 
 #: qcsrc/common/notifications/all.qh:570
 msgid "First victim!"
-msgstr ""
+msgstr "第一個犧牲！"
 
 #: qcsrc/common/notifications/all.qh:613
 #, c-format
 msgid "%s^K1 has %d frags in a row!"
-msgstr ""
+msgstr "%s^K1 獲得 %d 連殺！"
 
 #: qcsrc/common/notifications/all.qh:614
 #, c-format
 msgid "%s^K1 made %d scores in a row!"
-msgstr ""
+msgstr "%s^K1 連續 %d 次得分！"
 
 #: qcsrc/common/notifications/all.qh:632
 #, c-format
 msgid "%s^K1 drew first blood!"
-msgstr ""
+msgstr "%s^K1 拿下第一滴血！"
 
 #: qcsrc/common/notifications/all.qh:633
 #, c-format
 msgid "%s^K1 got the first score!"
-msgstr ""
+msgstr "%s^K1 率先得分！"
 
 #: qcsrc/common/notifications/all.qh:649
 #, c-format
@@ -6133,41 +6133,41 @@ msgstr "自定義"
 #: qcsrc/menu/menu.qc:510
 #, c-format
 msgid "^3%s^7 in range \"%s\" to \"%s\""
-msgstr ""
+msgstr "^3%s^7 在 \"%s\" 到 \"%s\" 之間"
 
 #: qcsrc/menu/menu.qc:512
 #, c-format
 msgid "^3%s^7 outside range \"%s\" to \"%s\""
-msgstr ""
+msgstr "^3%s^7 在 \"%s\" 到 \"%s\" 之外"
 
 #: qcsrc/menu/menu.qc:541
 msgid "Has special requirements"
-msgstr ""
+msgstr "有特殊要求"
 
 #: qcsrc/menu/menu.qc:544
 #, c-format
 msgid "Requires ^3%s^7 not equal to \"%s^7\""
-msgstr ""
+msgstr "需要 ^3%s^7 不等於 \"%s^7\""
 
 #: qcsrc/menu/menu.qc:556
 #, c-format
 msgid "Requires %s, %s, and %s"
-msgstr ""
+msgstr "需要 %s, %s, 和 %s"
 
 #: qcsrc/menu/menu.qc:559
 #, c-format
 msgid "Requires %s and %s"
-msgstr ""
+msgstr "需要 %s 和 %s"
 
 #: qcsrc/menu/menu.qc:559
 #, c-format
 msgid "Requires %s or %s"
-msgstr ""
+msgstr "需要 %s 或 %s"
 
 #: qcsrc/menu/menu.qc:562
 #, c-format
 msgid "Requires %s"
-msgstr ""
+msgstr "需要 %s"
 
 #: qcsrc/menu/xonotic/credits.qc:4
 msgid "Core Team"
@@ -6574,7 +6574,7 @@ msgstr "淡出時間："
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:25
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "FADESPEED^Instant"
-msgstr "瞬間"
+msgstr "瞬時"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:31
 msgid "Font scale:"
@@ -6586,7 +6586,7 @@ msgstr "粗體字比例："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:37
 msgid "Title font scale:"
-msgstr ""
+msgstr "標題字型大小："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:40
 msgid "Flip messages order"
@@ -6626,15 +6626,15 @@ msgstr "聊天板面"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "FPS:"
-msgstr ""
+msgstr "FPS："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:20
 msgid "Use an averaging algorithm"
-msgstr ""
+msgstr "使用平均演算法"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:23
 msgid "Decimal places:"
-msgstr ""
+msgstr "小數點位置："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
@@ -6737,13 +6737,13 @@ msgstr "物品時間板面"
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:26
 #, c-format
 msgid "GAMETYPE^%s:"
-msgstr ""
+msgstr "%s："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:27
 msgid "Show icons"
-msgstr ""
+msgstr "顯示圖示"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
@@ -6795,15 +6795,15 @@ msgstr "狀態列"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
 msgid "None"
-msgstr ""
+msgstr "無"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:30
 msgid "Both"
-msgstr ""
+msgstr "全部"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:32
 msgid "Acceleration"
-msgstr ""
+msgstr "加速"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:108
@@ -6884,7 +6884,7 @@ msgstr "固定比例："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:27
 msgid "Show attack keys"
-msgstr ""
+msgstr "顯示攻擊按鍵"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
@@ -6892,11 +6892,11 @@ msgstr "按鍵板面"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:26
 msgid "Translate commands"
-msgstr ""
+msgstr "翻譯指令"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:28
 msgid "Use the server's quickmenu"
-msgstr ""
+msgstr "使用伺服器的快捷選單"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
@@ -6987,7 +6987,7 @@ msgstr "從不放縮"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
 msgid "Maximized radar:"
-msgstr ""
+msgstr "最大化雷達："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
@@ -7032,11 +7032,11 @@ msgstr "漂移指示風格："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
 msgid "No styling"
-msgstr ""
+msgstr "無樣式"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
 msgid "Gradient"
-msgstr ""
+msgstr "漸變"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
 msgid "Range:"
@@ -7044,7 +7044,7 @@ msgstr "範圍："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:51
 msgid "Dynamic"
-msgstr ""
+msgstr "動態"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
 msgid "Strafe bar:"
@@ -7148,7 +7148,7 @@ msgstr "僅顯示擁有的武器"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
 msgid "Show label:"
-msgstr ""
+msgstr "顯示標籤："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "Number"
@@ -9347,7 +9347,7 @@ msgstr "放縮如何影響滑鼠敏感度，從 0（低敏感）到 1（無改�
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:99
 msgid "Zoom scrolling"
-msgstr ""
+msgstr "放縮滾動"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:124
 msgid "Velocity zoom"
@@ -9419,7 +9419,7 @@ msgstr "如果撿起的武器比手中的要好，則自動切換到它"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:62
 msgid "Auto switch in CTS:"
-msgstr ""
+msgstr "在競速模式中自動切換："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:71
 msgid "Draw 1st person weapon model"
@@ -9449,11 +9449,11 @@ msgstr "武器模型透明度："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:96
 msgid "Apply team colors to weapon beam effects:"
-msgstr ""
+msgstr "武器光效使用隊伍顏色："
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:100
 msgid "In team games"
-msgstr ""
+msgstr "在團隊遊戲"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:105
 msgid "Gun model swaying"
@@ -10115,7 +10115,7 @@ msgstr "允許玩家統計使用你的暱稱嗎？"
 
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:12
 msgid "Answering \"No\" you will appear as \"Anonymous player\""
-msgstr "如果回答「否」，你將會以「匿名玩家」的形式出現"
+msgstr "如果回答「否」，將以「匿名玩家」的名稱記錄統計"
 
 #: qcsrc/menu/xonotic/gametypelist.qc:88
 msgid "teamplay"
@@ -10437,11 +10437,11 @@ msgstr "Overkill（絕滅模式）"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^InstaGib"
-msgstr "InstaGib（瞬殺）"
+msgstr "InstaGib（瞬殺模式）"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^Defrag Mode"
-msgstr "Defrag（休閒）"
+msgstr "Defrag（休閒模式）"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
@@ -10538,7 +10538,7 @@ msgstr "十二月"
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr "%Y 年 %m %d 日"
+msgstr "%Y 年%m %d 日"
 
 #: qcsrc/menu/xonotic/statslist.qc:97
 msgid "Joined:"
@@ -10584,7 +10584,7 @@ msgstr "擊殺比："
 
 #: qcsrc/menu/xonotic/statslist.qc:208
 msgid "ELO:"
-msgstr "實力評分："
+msgstr "實力評分 (ELO)："
 
 #: qcsrc/menu/xonotic/statslist.qc:215
 msgid "Rank:"
@@ -10626,4 +10626,4 @@ msgstr "隊伍顏色："
 
 #: qcsrc/menu/xonotic/util.qc:803
 msgid "Hide on death"
-msgstr ""
+msgstr "死亡時隱藏"
