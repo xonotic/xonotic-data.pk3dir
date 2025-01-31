@@ -1,5 +1,6 @@
 #include "dialog_hudpanel_pressedkeys.qh"
 
+#include "checkbox.qh"
 #include "textslider.qh"
 #include "slider.qh"
 #include "textlabel.qh"
@@ -19,7 +20,9 @@ void XonoticHUDPressedKeysDialog_fill(entity me)
 	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Forced aspect:")));
-			me.TD(me, 1, 2.6, e = makeXonoticSlider(0.2, 4, 0.1, "hud_panel_pressedkeys_aspect"));
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Forced aspect:")));
+		me.TD(me, 1, 2.6, e = makeXonoticSlider(0.2, 4, 0.1, "hud_panel_pressedkeys_aspect"));
+
+	me.TR(me);
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_pressedkeys_attack", _("Show attack keys")));
 }

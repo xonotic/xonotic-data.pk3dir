@@ -17,7 +17,7 @@ CLASS(Nade, Object)
     ATTRIBARRAY(Nade, m_projectile, int, 2);
     ATTRIBARRAY(Nade, m_trail, entity, 2);
     METHOD(Nade, display, void(entity this, void(string name, string icon) returns)) {
-        returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon));
+        returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon));
     }
 ENDCLASS(Nade)
 

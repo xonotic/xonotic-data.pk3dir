@@ -136,7 +136,7 @@ void W_Arc_Bolt_Touch(entity this, entity toucher)
 
 void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_SetupShot(actor, weaponentity, false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, WEP_CVAR(WEP_ARC, bolt_damage), thiswep.m_id | HITTYPE_SECONDARY);
+	W_SetupShot(actor, weaponentity, false, 2, SND_ARC_BOLT_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_ARC, bolt_damage), thiswep.m_id | HITTYPE_SECONDARY);
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
@@ -339,7 +339,7 @@ void W_Arc_Beam_Think(entity this)
 		float max_allowed_segments = ARC_MAX_SEGMENTS;
 		if(WEP_CVAR(WEP_ARC, beam_distancepersegment))
 		{
-			max_allowed_segments = 1 + (vlen(w_shotdir / WEP_CVAR(WEP_ARC, beam_distancepersegment)));
+			max_allowed_segments = 1 + vlen(w_shotdir) / WEP_CVAR(WEP_ARC, beam_distancepersegment);
 			max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
 		}
 
@@ -752,7 +752,6 @@ METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponent
 }
 #endif
 #ifdef CSQC
-bool autocvar_cl_arcbeam_teamcolor = true;
 bool autocvar_cl_arcbeam_simple = true;
 
 .int beam_slot;
@@ -763,7 +762,7 @@ METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
 	{
 		vector org2 = w_org + w_backoff * 2;
 		pointparticles(EFFECT_ELECTRO_IMPACT, org2, w_backoff * 1000, 1);
-		if(!w_issilent) { sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTN_NORM); }
+		if(!w_issilent) { sound(actor, CH_SHOTS, SND_ARC_BOLT_IMPACT, VOL_BASE, ATTN_NORM); }
 	}
 }
 
@@ -1257,7 +1256,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		this.beam_type = ReadByte();
 
 		vector beamcolor = '1 1 1';
-		if(autocvar_cl_arcbeam_teamcolor)
+		if((teamplay && autocvar_cl_tracers_teamcolor == 1) || autocvar_cl_tracers_teamcolor == 2)
 			beamcolor = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
 
 		switch(this.beam_type)

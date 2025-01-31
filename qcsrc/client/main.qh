@@ -160,8 +160,9 @@ float damagepush_speedfactor;
 
 //hooks
 int calledhooks;
-const int HOOK_START =    1;
-const int HOOK_END =      2;
+const int HOOK_START        = 1; // VM init
+const int HOOK_END          = 2; // VM shutdown
+const int HOOK_INTERMISSION = 4; // intermission start
 
 .float ping, ping_packetloss, ping_movementloss;
 
@@ -200,7 +201,6 @@ float spectatee_status_changed_time;
 int tempdb;
 int ClientProgsDB;
 vector hook_shotorigin[4]; // WEAPONTODO
-vector lightning_shotorigin[4]; // TODO: unused
 
 float serverprevtime, serverdeltatime;
 

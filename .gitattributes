@@ -114,7 +114,7 @@ GPL crlf=input
 *.idl crlf=input
 *.idsoftware crlf=input
 *.in crlf=input
-*.inc crlf=input linguist-language=C gitlab-language=C
+*.inc crlf=input linguist-language=C gitlab-language=c
 *.info-1 -crlf
 *.info-2 -crlf
 *.info -crlf
@@ -181,7 +181,7 @@ POSITIONS -crlf
 *.psd -crlf
 *.py crlf=input
 *.q3map1 crlf=input
-*.q[ch] crlf=input linguist-language=C gitlab-language=C
+*.q[ch] crlf=input linguist-language=C gitlab-language=c
 *.qdt crlf=input
 *.rar -crlf
 *.rb crlf=input

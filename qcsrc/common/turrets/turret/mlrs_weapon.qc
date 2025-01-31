@@ -1,7 +1,7 @@
 #include "mlrs_weapon.qh"
 
 #ifdef SVQC
-SOUND(MLRSTurretAttack_FIRE, W_Sound("electro_fire"));
+SOUND(MLRSTurretAttack_FIRE, W_Sound("rocket_fire"));
 METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     bool isPlayer = IS_PLAYER(actor);
@@ -17,7 +17,7 @@ METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, .entity we
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
         }
         turret_tag_fire_update(actor);
-        entity missile = turret_projectile(actor, SND_ROCKET_FIRE, 6, 10, DEATH_TURRET_MLRS.m_id, PROJECTILE_ROCKET, true, true);
+        entity missile = turret_projectile(actor, SND_MLRSTurretAttack_FIRE, 6, 10, DEATH_TURRET_MLRS.m_id, PROJECTILE_ROCKET, true, true);
         missile.nextthink = time + max(actor.tur_impacttime,(actor.shot_radius * 2) / actor.shot_speed);
         missile.missile_flags = MIF_SPLASH;
         te_explosion (missile.origin);

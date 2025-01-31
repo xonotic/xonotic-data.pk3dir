@@ -1,5 +1,6 @@
 #include "sv_keyhunt.qh"
 
+#include <common/checkextension.qh>
 #include <server/command/vote.qh>
 #include <server/gamelog.qh>
 #include <server/damage.qh>
@@ -291,7 +292,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	if(!IL_CONTAINS(g_items, key))
 		IL_PUSH(g_items, key);
 	set_movetype(key, MOVETYPE_TOSS);
-	nudgeoutofsolid(key); // a key has a bigger bbox than a player
+	nudgeoutofsolid_OrFallback(key); // a key has a bigger bbox than a player
 	key.pain_finished = time + autocvar_g_balance_keyhunt_delay_return;
 	key.damageforcescale = autocvar_g_balance_keyhunt_damageforcescale;
 	key.takedamage = DAMAGE_YES;
