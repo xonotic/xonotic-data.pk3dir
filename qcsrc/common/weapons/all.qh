@@ -181,14 +181,15 @@ const .float reloading_time = reload_time;
 		W_PROP_PRI(class, fld, T, wepname) \
 		W_PROP_SEC(class, fld, T, wepname)
 	#define W_PROP_BEGIN(class)
-		#ifdef GAMEQC
+		#if defined(SVQC)
 			#define _W_PROP(class, fld, T, wepname) \
 				/* static */ T _W_PROP_CVAR(wepname, fld); \
 				ATTRIB(class, wepvar_##fld, T, _W_PROP_CVAR(wepname, fld));
 			#define _W_PROP_CVAR(wepname, fld) autocvar_g_balance_##wepname##_##fld
+		#elif defined(CSQC)
+			#define _W_PROP(class, fld, T, wepname) ATTRIB(class, wepvar_##fld, T);
 		#else
 			#define _W_PROP(class, fld, T, wepname)
-			#define _W_PROP_CVAR(wepname, fld)
 		#endif
 	#define W_PROP_END()
 

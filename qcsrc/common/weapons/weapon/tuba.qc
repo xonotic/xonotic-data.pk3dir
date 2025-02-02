@@ -299,7 +299,7 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 
 	actor.(weaponentity).tuba_note.teleport_time = time + WEP_CVAR(WEP_TUBA, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely
 
-	//sound(actor, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
+	//sound(actor, c, TUBA_NOTE(n), bound(0, VOL_BASE * autocvar_cl_tuba_volume, 1), autocvar_cl_tuba_attenuation);
 	RadiusDamage(actor, actor, WEP_CVAR(WEP_TUBA, damage), WEP_CVAR(WEP_TUBA, edgedamage), WEP_CVAR(WEP_TUBA, radius), NULL, NULL, WEP_CVAR(WEP_TUBA, force), hittype | WEP_TUBA.m_id, weaponentity, NULL);
 
 	if(time > actor.(weaponentity).tuba_smoketime)
@@ -476,21 +476,21 @@ void tubasound(entity e, bool restart)
 			snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);
 		}
 
-		sound7(e, CH_TUBA_SINGLE, snd1, e.tuba_volume * vol1, e.tuba_attenuate * autocvar_g_balance_tuba_attenuation, 100 * speed1, 0);
+		sound7(e, CH_TUBA_SINGLE, snd1, e.tuba_volume * vol1, e.tuba_attenuate * autocvar_cl_tuba_attenuation, 100 * speed1, 0);
 		if (vol2) {
-			sound7(e.enemy, CH_TUBA_SINGLE, snd2, e.tuba_volume * vol2, e.tuba_attenuate * autocvar_g_balance_tuba_attenuation, 100 * speed2, 0);
+			sound7(e.enemy, CH_TUBA_SINGLE, snd2, e.tuba_volume * vol2, e.tuba_attenuate * autocvar_cl_tuba_attenuation, 100 * speed2, 0);
 		}
 	} else {
 		if (restart) {
 			snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);
 		}
-		_sound(e, CH_TUBA_SINGLE, snd1, e.tuba_volume, e.tuba_attenuate * autocvar_g_balance_tuba_attenuation);
+		_sound(e, CH_TUBA_SINGLE, snd1, e.tuba_volume, e.tuba_attenuate * autocvar_cl_tuba_attenuation);
 	}
 }
 
 void Ent_TubaNote_Think(entity this)
 {
-	float f = autocvar_g_balance_tuba_fadetime;
+	float f = autocvar_cl_tuba_fadetime;
 	if (f > 0) {
 		this.tuba_volume -= frametime * this.tuba_volume_initial / f;
 	} else {
@@ -511,7 +511,7 @@ void Ent_TubaNote_Think(entity this)
 
 void Ent_TubaNote_UpdateSound(entity this)
 {
-	this.enemy.tuba_volume = bound(0, VOL_BASE * autocvar_g_balance_tuba_volume, 1);
+	this.enemy.tuba_volume = bound(0, VOL_BASE * autocvar_cl_tuba_volume, 1);
 	this.enemy.tuba_volume_initial = this.enemy.tuba_volume;
 	this.enemy.note = this.note;
 	this.enemy.tuba_instrument = this.tuba_instrument;
@@ -576,7 +576,7 @@ NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 
 PRECACHE(Tuba)
 {
-	Tuba_PitchStep = autocvar_g_balance_tuba_pitchstep;
+	Tuba_PitchStep = autocvar_cl_tuba_pitchstep;
 	if (Tuba_PitchStep) {
 		if (!checkextension("DP_SND_SOUND7_WIP2") && !checkextension("DP_SND_SOUND7")) {
 			LOG_WARN("requested pitch shifting, but not supported by this engine build");
