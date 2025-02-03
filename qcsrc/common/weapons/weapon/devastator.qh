@@ -64,6 +64,7 @@ CLASS(Devastator, Weapon)
 	END()
 	W_PROPS(X, Devastator, devastator)
 #undef X
+
 ENDCLASS(Devastator)
 REGISTER_WEAPON(DEVASTATOR, NEW(Devastator));
 

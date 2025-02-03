@@ -48,6 +48,7 @@ CLASS(Hook, Weapon)
 	END()
 	W_PROPS(X, Hook, hook)
 #undef X
+
 ENDCLASS(Hook)
 REGISTER_WEAPON(HOOK, NEW(Hook));
 

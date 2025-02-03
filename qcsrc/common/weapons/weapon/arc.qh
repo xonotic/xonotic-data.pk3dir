@@ -78,6 +78,7 @@ CLASS(Arc, Weapon)
 	END()
 	W_PROPS(X, Arc, arc)
 #undef X
+
 ENDCLASS(Arc)
 REGISTER_WEAPON(ARC, NEW(Arc));
 

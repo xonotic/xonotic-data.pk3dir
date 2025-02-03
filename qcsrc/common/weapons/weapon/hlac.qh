@@ -51,6 +51,7 @@ CLASS(HLAC, Weapon)
 	END()
 	W_PROPS(X, HLAC, hlac)
 #undef X
+
 ENDCLASS(HLAC)
 REGISTER_WEAPON(HLAC, NEW(HLAC));
 

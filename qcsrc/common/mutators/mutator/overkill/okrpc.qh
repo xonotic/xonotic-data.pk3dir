@@ -49,6 +49,7 @@ CLASS(OverkillRocketPropelledChainsaw, Weapon)
 	END()
 	W_PROPS(X, OverkillRocketPropelledChainsaw, okrpc)
 #undef X
+
 ENDCLASS(OverkillRocketPropelledChainsaw)
 REGISTER_WEAPON(OVERKILL_RPC, NEW(OverkillRocketPropelledChainsaw));
 

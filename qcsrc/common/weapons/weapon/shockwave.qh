@@ -71,6 +71,7 @@ CLASS(Shockwave, Weapon)
 	END()
 	W_PROPS(X, Shockwave, shockwave)
 #undef X
+
 ENDCLASS(Shockwave)
 REGISTER_WEAPON(SHOCKWAVE, NEW(Shockwave));
 

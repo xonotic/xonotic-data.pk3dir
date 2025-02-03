@@ -52,6 +52,7 @@ CLASS(Fireball, Weapon)
 	END()
 	W_PROPS(X, Fireball, fireball)
 #undef X
+
 ENDCLASS(Fireball)
 REGISTER_WEAPON(FIREBALL, NEW(Fireball));
 

@@ -68,7 +68,6 @@ MUTATOR_HOOKFUNCTION(cl_ons, CustomizeEventchase)
 #endif // CSQC
 #ifdef MENUQC
 #include <common/gamemodes/gamemode/assault/assault.qh>
-#include <common/gamemodes/gamemode/domination/domination.qh>
 
 METHOD(Onslaught, describe, string(Onslaught this))
 {

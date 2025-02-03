@@ -61,6 +61,7 @@ CLASS(Vortex, Weapon)
 	END()
 	W_PROPS(X, Vortex, vortex)
 #undef X
+
 ENDCLASS(Vortex)
 REGISTER_WEAPON(VORTEX, NEW(Vortex));
 

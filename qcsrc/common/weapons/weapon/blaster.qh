@@ -43,6 +43,7 @@ CLASS(Blaster, Weapon)
 	END()
 	W_PROPS(X, Blaster, blaster)
 #undef X
+
 ENDCLASS(Blaster)
 REGISTER_WEAPON(BLASTER, NEW(Blaster));
 

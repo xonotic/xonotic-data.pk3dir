@@ -44,6 +44,7 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 	END()
 	W_PROPS(X, OverkillHeavyMachineGun, okhmg)
 #undef X
+
 ENDCLASS(OverkillHeavyMachineGun)
 REGISTER_WEAPON(OVERKILL_HMG, NEW(OverkillHeavyMachineGun));
 

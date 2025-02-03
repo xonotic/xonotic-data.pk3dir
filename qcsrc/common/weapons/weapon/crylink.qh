@@ -58,6 +58,7 @@ CLASS(Crylink, Weapon)
 	END()
 	W_PROPS(X, Crylink, crylink)
 #undef X
+
 ENDCLASS(Crylink)
 REGISTER_WEAPON(CRYLINK, NEW(Crylink));
 

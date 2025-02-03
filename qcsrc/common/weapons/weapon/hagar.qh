@@ -56,6 +56,7 @@ CLASS(Hagar, Weapon)
 	END()
 	W_PROPS(X, Hagar, hagar)
 #undef X
+
 ENDCLASS(Hagar)
 REGISTER_WEAPON(HAGAR, NEW(Hagar));
 

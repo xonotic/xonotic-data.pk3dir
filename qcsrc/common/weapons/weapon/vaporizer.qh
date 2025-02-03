@@ -43,6 +43,7 @@ CLASS(Vaporizer, Weapon)
 	END()
 	W_PROPS(X, Vaporizer, vaporizer)
 #undef X
+
 ENDCLASS(Vaporizer)
 REGISTER_WEAPON(VAPORIZER, NEW(Vaporizer));
 
