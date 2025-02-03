@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 CLASS(GuidePage, Object)
 	ATTRIB(GuidePage, m_id, int, 0);
@@ -33,21 +33,21 @@ REGISTER_REGISTRY(IntroductionGuidePages)
 
 REGISTER_INTRODUCTION_PAGE(0, _("About this guide"), "gametype_dm")
 {
-         this.m_description = _("Welcome to Xonotic, the free and fast arena shooter!\n\n"
-                  "Please note that this guide describes the default game behavior with vanilla settings. Xonotic is highly customizable and there are tons of servers out there that run with lightly or highly modified settings.\n\n"
-                  "You can find out which settings are modified by issuing \"cvar_changes\" in console after connecting to a server.");
+	this.m_description = _("Welcome to Xonotic, the free and fast arena shooter!\n\n"
+		"Please note that this guide describes the default game behavior with vanilla settings. Xonotic is highly customizable and there are tons of servers out there that run with lightly or highly modified settings.\n\n"
+		"You can find out which settings are modified by issuing \"cvar_changes\" in console after connecting to a server.");
 }
 REGISTER_INTRODUCTION_PAGE(1, _("Community"), "gametype_dm")
 {
-         this.m_description = _("Welcome to Xonotic, the free and fast arena shooter!\n\n"
-                  "Xonotic stands out for its friendly, mature and welcoming player community, and many long-term players argue that this is probably one of the best things about Xonotic. If you approach other players friendly and respectful, this will be recognized, acting toxic on the other hand will not make your life easier on the servers.\n\n"
-                  "The arguably best way to get in touch with the community is to just start playing online and use the in-game chat. However, you can also connect to the official matrix channels (#main:xonotic.org on Matrix, #xonotic on Quakenet IRC). And then there is of course the official forum.");
+	this.m_description = _("Welcome to Xonotic, the free and fast arena shooter!\n\n"
+		"Xonotic stands out for its friendly, mature and welcoming player community, and many long-term players argue that this is probably one of the best things about Xonotic. If you approach other players friendly and respectful, this will be recognized, acting toxic on the other hand will not make your life easier on the servers.\n\n"
+		"The arguably best way to get in touch with the community is to just start playing online and use the in-game chat. However, you can also connect to the official matrix channels (#main:xonotic.org on Matrix, #xonotic on Quakenet IRC). And then there is of course the official forum.");
 }
 REGISTER_INTRODUCTION_PAGE(2, _("Acquiring Skills"), "gametype_dm")
 {
-         this.m_description = _("The skill gap between new and experienced players is often immense. However, this is mostly because experienced players have learned how to make use of the game mechanics. If you see experienced players doing tricks you don't understand, don't hesitate to ask. In most cases, polite questions receive an answer - from anyone on the server if not from the experienced player itself.\n\n"
-                  "Another way to learn is to spectate experienced players. Observe which weapons they combo and the movement techniques they make use of. Also look at which weapons they choose depending on the gameplay situation, for example in close combat, mid-range battles or against groups of opponents.\n\n"
-                  "The learning curve is very steep. Understanding how the game works will enable you to speed around the map and apply effective weapon combos in no time.");
+	this.m_description = _("The skill gap between new and experienced players is often immense. However, this is mostly because experienced players have learned how to make use of the game mechanics. If you see experienced players doing tricks you don't understand, don't hesitate to ask. In most cases, polite questions receive an answer - from anyone on the server if not from the experienced player itself.\n\n"
+		"Another way to learn is to spectate experienced players. Observe which weapons they combo and the movement techniques they make use of. Also look at which weapons they choose depending on the gameplay situation, for example in close combat, mid-range battles or against groups of opponents.\n\n"
+		"The learning curve is very steep. Understanding how the game works will enable you to speed around the map and apply effective weapon combos in no time.");
 }
 
 REGISTRY(MovementGuidePages, 16)
@@ -56,26 +56,26 @@ REGISTER_REGISTRY(MovementGuidePages)
 
 REGISTER_MOVEMENT_PAGE(0, _("Relevance of Movement"), "gametype_inv")
 {
-         this.m_description = _("Xonotic is a very fast-paced arena shooter. Fast-paced does not only relate to reaction times but also to movement speed. That means, mastering movement skills is an essential part of Xonotic gameplay and must not be underestimated."); // TODO
+	this.m_description = _("Xonotic is a very fast-paced arena shooter. Fast-paced does not only relate to reaction times but also to movement speed. That means, mastering movement skills is an essential part of Xonotic gameplay and must not be underestimated."); // TODO
 }
 REGISTER_MOVEMENT_PAGE(1, _("Bunny Hopping"), "gametype_inv")
 {
-         this.m_description = _("\"Bunny Hopping\" is a technique known also from other arena shooters.\n\n"
-         "Due to air control, you can accelerate while in the air far beyond ground movement speed. In order to avoid ground friction, you can constantly hop, then the ground contact will not slow you down. You can even simply keep the jump button pressed to do that. This allows you to get around the map much faster than if you would just walk.\n\n"
-         "In vanilla settings, the speed you can reach by bunny hopping is capped at ???. Defrag/CTS servers usually run with different cpma-like physics that remove this capping."); // TODO
+	this.m_description = _("\"Bunny Hopping\" is a technique known also from other arena shooters.\n\n"
+		"Due to air control, you can accelerate while in the air far beyond ground movement speed. In order to avoid ground friction, you can constantly hop, then the ground contact will not slow you down. You can even simply keep the jump button pressed to do that. This allows you to get around the map much faster than if you would just walk.\n\n"
+		"In vanilla settings, the speed you can reach by bunny hopping is capped at ???. Defrag/CTS servers usually run with different cpma-like physics that remove this capping."); // TODO
 }
 REGISTER_MOVEMENT_PAGE(2, _("Strafe Turning"), "gametype_inv")
 {
-         this.m_description = _("Bunny hopping around corners requires strafe turning or you will loose a lot of speed (or simply not be able to make the turn).\n\n"
-         	"While bunny hopping, first release the forward movement key, then press the strafe key into turn direction, then start moving the mouse smoothly into turn direction. During the entire strafe turn, keep the jump button pressed.\n\n"
-         	"Note that if you press the strafe key before releasing the forward key, you will suffer a speed penalty.\n\n"
-         	"If you do it right, you will even continue to accelerate in strafe turns.\n\n"
-         	"For an illustration of this technique, see www.xonotic.org/guide.");
+	this.m_description = _("Bunny hopping around corners requires strafe turning or you will loose a lot of speed (or simply not be able to make the turn).\n\n"
+		"While bunny hopping, first release the forward movement key, then press the strafe key into turn direction, then start moving the mouse smoothly into turn direction. During the entire strafe turn, keep the jump button pressed.\n\n"
+		"Note that if you press the strafe key before releasing the forward key, you will suffer a speed penalty.\n\n"
+		"If you do it right, you will even continue to accelerate in strafe turns.\n\n"
+		"For an illustration of this technique, see www.xonotic.org/guide.");
 }
 REGISTER_MOVEMENT_PAGE(3, _("Advanced Movement"), "gametype_inv")
 {
-         this.m_description = _("Advanced techniques like strafe jumping or circle jumping offer only limited benefits in vanilla gameplay, but are crucial on defrag/CTS servers that use slightly different physics.\n\n"
-         	"If you want to master these techniques, be sure to check out http://xdf.gg/guide.");
+	this.m_description = _("Advanced techniques like strafe jumping or circle jumping offer only limited benefits in vanilla gameplay, but are crucial on defrag/CTS servers that use slightly different physics.\n\n"
+		"If you want to master these techniques, be sure to check out http://xdf.gg/guide.");
 }
 REGISTER_MOVEMENT_PAGE(4, _("Blaster Jumping"), "gametype_inv")
 {
