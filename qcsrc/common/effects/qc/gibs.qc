@@ -224,15 +224,14 @@ NET_HANDLE(net_gibsplash, bool isNew)
 
 	return = true;
 
-	float cl_gentle_gibs = autocvar_cl_gentle_gibs;
-	if(cl_gentle_gibs || autocvar_cl_gentle)
+	if(autocvar_cl_gentle_gibs || autocvar_cl_gentle)
 		type |= 0x80; // set gentle bit
 
 	if(type & 0x80)
 	{
-		if(cl_gentle_gibs == 2)
+		if(autocvar_cl_gentle_gibs == 2)
 			gentle_prefix = "";
-		else if(cl_gentle_gibs == 3)
+		else if(autocvar_cl_gentle_gibs == 3)
 			gentle_prefix = "happy_";
 	}
 	else if(autocvar_cl_particlegibs)
@@ -241,14 +240,17 @@ NET_HANDLE(net_gibsplash, bool isNew)
 		gentle_prefix = "particlegibs_";
 	}
 
-	if (!(cl_gentle_gibs || autocvar_cl_gentle))
+	if (!(autocvar_cl_gentle_gibs || autocvar_cl_gentle))
 		amount *= 1 - autocvar_cl_nogibs;
 
 	if(autocvar_ekg)
 		amount *= 5;
 
 	if(amount <= 0 || !isNew)
+	{
+		delete(this);
 		return;
+	}
 
 	setorigin(this, org); // for the sounds
 

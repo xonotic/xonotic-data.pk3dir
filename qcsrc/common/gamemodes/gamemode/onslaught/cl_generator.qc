@@ -54,7 +54,7 @@ void generator_draw(entity this)
 		if(random() < 0.9 - GetResource(this, RES_HEALTH) / this.max_health)
 		if(random() < 0.01)
 		{
-			pointparticles(EFFECT_ELECTRO_BALLEXPLODE, this.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
+			pointparticles(EFFECT_ONS_ELECTRICITY_EXPLODE, this.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
 			sound(this, CH_TRIGGER, SND_ONS_ELECTRICITY_EXPLODE, VOL_BASE, ATTEN_NORM);
 		}
 		else
@@ -75,7 +75,7 @@ void generator_draw(entity this)
 	if(this.count==40||this.count==20)
 	{
 		sound(this, CH_TRIGGER, SND_ONS_SHOCKWAVE, VOL_BASE, ATTEN_NORM);
-		pointparticles(EFFECT_ELECTRO_COMBO, this.origin, '0 0 0', 6);
+		pointparticles(EFFECT_ONS_SHOCKWAVE, this.origin, '0 0 0', 6);
 	}
 
 	// rays
@@ -95,7 +95,7 @@ void generator_draw(entity this)
 	if(random() < 0.25)
 	{
 		te_explosion(this.origin);
-		sound(this, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+		sound(this, CH_TRIGGER, SND_ONS_GENERATOR_EXPLODE, VOL_BASE, ATTEN_NORM);
 	}
 
 	// Particles

@@ -24,7 +24,7 @@ CLASS(Buff, StatusEffect)
 	ATTRIB(Buff, m_sprite, string, "");
 	METHOD(Buff, display, void(Buff this, void(string name, string icon) returns)) {
 		TC(Buff, this);
-		returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
+		returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon) : string_null);
 	}
 #ifdef SVQC
 	METHOD(Buff, m_time, float(Buff this)) {

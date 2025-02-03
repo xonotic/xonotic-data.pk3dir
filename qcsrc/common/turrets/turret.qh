@@ -28,7 +28,7 @@ CLASS(Turret, Object)
 
     METHOD(Turret, display, void(Turret this, void(string name, string icon) returns)) {
         TC(Turret, this);
-        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
+        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon) : string_null);
     }
     /** (BOTH) setup turret data */
     METHOD(Turret, tr_setup, void(Turret this, entity it)) {

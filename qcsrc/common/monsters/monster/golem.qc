@@ -45,7 +45,7 @@ void M_Golem_Attack_Swing(entity this)
 
 void M_Golem_Attack_Lightning_Explode(entity this, entity directhitentity)
 {
-	sound(this, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS, SND_MON_GOLEM_LIGHTNING_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
 
 	this.event_damage = func_null;

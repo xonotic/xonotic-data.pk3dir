@@ -25,7 +25,7 @@ void nade_ice_think(entity this)
 		{
 			vector expcol_min = nades_PlayerColor(this.realowner, false);
 			vector expcol_max = nades_PlayerColor(this.realowner, true);
-			entity expef = EFFECT_NADE_EXPLODE_NEUTRAL;
+			entity expef = EFFECT_NADE_EXPLODE;
 			Send_Effect_Except(expef, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 

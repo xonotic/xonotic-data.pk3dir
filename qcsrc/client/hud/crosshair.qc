@@ -47,7 +47,7 @@ void TrueAim_Init()
 	(trueaim_rifle = new_pure(trueaim_rifle)).dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 }
 
-float EnemyHitCheck()
+int EnemyHitCheck()
 {
 	float t, n;
 	wcross_origin = project_3d_to_2d(trace_endpos);
@@ -68,7 +68,7 @@ float EnemyHitCheck()
 	return SHOTTYPE_HITENEMY;
 }
 
-float TrueAimCheck(entity wepent)
+int TrueAimCheck(entity wepent)
 {
 	if(wepent.activeweapon.spawnflags & WEP_FLAG_NOTRUEAIM)
 		return SHOTTYPE_HITWORLD;

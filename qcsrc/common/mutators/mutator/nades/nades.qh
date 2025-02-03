@@ -18,7 +18,7 @@ CLASS(Nade, Object)
     ATTRIBARRAY(Nade, m_trail, entity, 2);
     METHOD(Nade, display, void(Nade this, void(string name, string icon) returns)) {
         TC(Nade, this);
-        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
+        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon) : string_null);
     }
 #ifdef MENUQC
     METHOD(Nade, describe, string(Nade this)) {

@@ -166,7 +166,7 @@ CLASS(Mutator, Object)
     }
     METHOD(Mutator, display, void(Mutator this, void(string name, string icon) returns)) {
         TC(Mutator, this);
-        returns(this.message, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
+        returns(this.message, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon) : string_null);
     }
 ENDCLASS(Mutator)
 

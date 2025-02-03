@@ -128,7 +128,7 @@ CLASS(Weapon, Object)
 	METHOD(Weapon, wr_update, void(Weapon this)) {}
 	METHOD(Weapon, display, void(Weapon this, void(string name, string icon) returns)) {
 		TC(Weapon, this);
-		returns(this.m_name, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
+		returns(this.m_name, (this.model2 != "") ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.model2) : string_null);
 	}
 #ifdef MENUQC
 	METHOD(Weapon, describe, string(Weapon this)) {
@@ -198,6 +198,10 @@ ENDCLASS(OffhandWeapon)
 
 #ifdef GAMEQC
 int max_shot_distance = 32768; // determined by world mins/maxs when map loads
+#endif
+
+#ifdef CSQC
+int autocvar_cl_tracers_teamcolor;
 #endif
 
 // weapon flags

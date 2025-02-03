@@ -142,7 +142,7 @@ void W_Shockwave_Melee_Think(entity this)
 
 void W_Shockwave_Melee(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTN_NORM);
+	sound(actor, CH_WEAPON_A, SND_SHOCKWAVE_MELEE, VOL_BASE, ATTN_NORM);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(WEP_SHOCKWAVE, melee_animtime), w_ready);
 
 	entity meleetemp = new_pure(meleetemp);
@@ -269,7 +269,7 @@ void W_Shockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	float i, queue = 0;
 
 	// set up the shot direction
-	W_SetupShot(actor, weaponentity, true, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, WEP_CVAR(WEP_SHOCKWAVE, blast_damage), thiswep.m_id);
+	W_SetupShot(actor, weaponentity, true, 3, SND_SHOCKWAVE_FIRE, CH_WEAPON_B, WEP_CVAR(WEP_SHOCKWAVE, blast_damage), thiswep.m_id);
 	vector attack_endpos = (w_shotorg + (w_shotdir * WEP_CVAR(WEP_SHOCKWAVE, blast_distance)));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, actor);
 	vector attack_hitpos = trace_endpos;
