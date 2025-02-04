@@ -173,6 +173,41 @@ void HUD_Physics()
 		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed / max_speed, 0, speed_baralign,
 			autocvar_hud_progressbar_speed_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 
+	float accel_max;
+	{
+		// NOTE: this code is similar to the logic in strafehud.qc
+		int keys = STAT(PRESSED_KEYS);
+		bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, is_local);
+		bool real_onground = StrafeHUD_DetermineOnGround(strafeplayer, is_local);
+		bool onground = real_onground && !jumpheld;
+		bool real_onslick = onground && StrafeHUD_DetermineOnSlick(strafeplayer);
+		bool all_slick = PHYS_FRICTION(strafeplayer) == 0;
+
+		accel_max = (autocvar_hud_panel_physics_acceleration_max_slick != -1 && ((all_slick && real_onground) || real_onslick))
+			? autocvar_hud_panel_physics_acceleration_max_slick
+			: autocvar_hud_panel_physics_acceleration_max;
+	}
+
+	// compute speed text color
+	vector speed_text_color = '1 1 1';
+	if (autocvar_hud_panel_physics_text == PHYSICS_TEXT_BOTH
+	||  autocvar_hud_panel_physics_text == PHYSICS_TEXT_SPEED)
+	{
+		if (autocvar__hud_configure)
+			speed_text_color = autocvar_hud_progressbar_acceleration_color;
+		else if (autocvar_hud_panel_physics_speed_colored)
+		{
+			float accel_pixels_drawn = accel / accel_max * accel_progressbar_scale * panel_size.x;
+			// this calculates how wide the accel/decel bar would be (if it were drawn), so that the text is only colored if something shows on the bar
+			// this workaround prevents tiny floating point errors that would otherwise cause the color to flicker
+			// positive means accel, negative means decel
+			if (accel_pixels_drawn > 1)
+				speed_text_color = autocvar_hud_progressbar_acceleration_color;
+			else if (accel_pixels_drawn < -1)
+				speed_text_color = autocvar_hud_progressbar_acceleration_neg_color;
+		}
+	}
+
 	// compute jumpspeed text
 	float jump_speed_f = 0;
 	if (autocvar_hud_panel_physics_jumpspeed)
@@ -195,11 +230,12 @@ void HUD_Physics()
 				jump_speed_time = time;
 			}
 			prev_vel_z = strafevelocity.z;
-			prev_speed2d = speed2d;
 			float time_frac = (time - jump_speed_time) / max(1, autocvar_hud_panel_physics_jumpspeed_time);
 			jump_speed_f = time_frac > 1 ? 0 : cos(time_frac * M_PI_2);
 		}
 	}
+
+	prev_speed2d = speed2d;
 
 	// compute and draw topspeed
 	float top_speed_f = 0;
@@ -283,7 +319,7 @@ void HUD_Physics()
 		tmp_size.y   = panel_size.y * text_scale;
 		tmp_offset.x = speed_baralign ? panel_size.x * (1 - speed_size) : 0;
 		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
-		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(discrete_speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(discrete_speed), tmp_size, speed_text_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_physics_speed_unit_show)
 			text_bits |= BIT(2);
@@ -300,17 +336,6 @@ void HUD_Physics()
 		else
 			progressbar_color = autocvar_hud_progressbar_acceleration_color;
 
-		// NOTE: this code is similar to the logic in strafehud.qc
-		int keys = STAT(PRESSED_KEYS);
-		bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, is_local);
-		bool real_onground = StrafeHUD_DetermineOnGround(strafeplayer, is_local);
-		bool onground = real_onground && !jumpheld;
-		bool real_onslick = onground && StrafeHUD_DetermineOnSlick(strafeplayer);
-		bool all_slick = PHYS_FRICTION(strafeplayer) == 0;
-
-		float accel_max = (autocvar_hud_panel_physics_acceleration_max_slick != -1 && ((all_slick && real_onground) || real_onslick))
-			? autocvar_hud_panel_physics_acceleration_max_slick
-			: autocvar_hud_panel_physics_acceleration_max;
 		float f = accel / accel_max;
 		if (autocvar_hud_panel_physics_acceleration_progressbar_nonlinear)
 			f = (f >= 0 ? sqrt(f) : -sqrt(-f));
