@@ -220,18 +220,6 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 {
 	me.configureXonoticListBox(me);
 	me.nItems = 0;
-
-	// TEMP: Xonotic 0.1 to later
-	replace_bind("impulse 1", "weapon_group_1");
-	replace_bind("impulse 2", "weapon_group_2");
-	replace_bind("impulse 3", "weapon_group_3");
-	replace_bind("impulse 4", "weapon_group_4");
-	replace_bind("impulse 5", "weapon_group_5");
-	replace_bind("impulse 6", "weapon_group_6");
-	replace_bind("impulse 7", "weapon_group_7");
-	replace_bind("impulse 8", "weapon_group_8");
-	replace_bind("impulse 9", "weapon_group_9");
-	replace_bind("impulse 14", "weapon_group_0");
 }
 void XonoticKeyBinder_loadKeyBinds(entity me)
 {
