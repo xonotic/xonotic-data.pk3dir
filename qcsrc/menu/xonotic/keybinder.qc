@@ -34,7 +34,8 @@ void KeyBinds_BuildList()
 	KeyBinds_Count = 0;
 
 	#define KEYBIND_DEF_WITH_ICON(func, desc, icon) MACRO_BEGIN \
-		if((KeyBinds_Count < MAX_KEYBINDS)) { \
+		if (KeyBinds_Count < MAX_KEYBINDS) \
+		{ \
 			KeyBinds_Functions[KeyBinds_Count] = strzone(func); \
 			KeyBinds_Descriptions[KeyBinds_Count] = strzone(desc); \
 			KeyBinds_Icons[KeyBinds_Count] = strzone(icon); \
@@ -89,7 +90,7 @@ void KeyBinds_BuildList()
 		|| ((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN)) /* non-hidden mutator weapons */ \
 		)
 
-	for(int imp = 1; imp <= 9; ++imp)
+	for (int imp = 1; imp <= 9; ++imp)
 	{
 		string w_list = "", w_override_list = "", w_icon = "";
 		int w_count = 0;
@@ -106,9 +107,9 @@ void KeyBinds_BuildList()
 			w_icon = XonoticKeyBinder_cb_icon;
 			++w_count;
 		});
-		if(w_list)
+		if (w_list)
 		{
-			if(w_count == 1) // group only has 1 weapon (like Blaster's group), use the group bind, and add the icon
+			if (w_count == 1) // group only has 1 weapon (like Blaster's group), use the group bind, and add the icon
 			{                // no overrides needed
 				KEYBIND_DEF_WITH_ICON(strcat("weapon_group_", itos(imp)), w_list, strcat(" ", w_icon));
 			}
@@ -128,9 +129,9 @@ void KeyBinds_BuildList()
 				});
 			}
 		}
-		if(imp == 0)
+		if (imp == 0)
 			break;
-		if(imp == 9)
+		if (imp == 9)
 			imp = -1;
 	}
 	#undef SHOWABLE_WEAPON
@@ -182,7 +183,7 @@ void KeyBinds_BuildList()
 
 	KEYBIND_HEADER(_("User defined"));
 
-	for(int i = 1; i <= 32; ++i)
+	for (int i = 1; i <= 32; ++i)
 		KEYBIND_DEF(strcat("+userbind ", itos(i)), strcat("$userbind", itos(i)));
 
 	KEYBIND_EMPTY_LINE();
@@ -207,13 +208,13 @@ void replace_bind(string from, string to)
 	int n, j;
 	float k; // not sure if float or int
 	n = tokenize(findkeysforcommand(from, 0)); // uses '...' strings
-	for(j = 0; j < n; ++j)
+	for (j = 0; j < n; ++j)
 	{
 		k = stof(argv(j));
-		if(k != -1)
+		if (k != -1)
 			localcmd("\nbind \"", keynumtostring(k), "\" \"", to, "\"\n");
 	}
-	if(n)
+	if (n)
 		cvar_set("_hud_showbinds_reload", "1");
 }
 void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
@@ -224,11 +225,11 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 void XonoticKeyBinder_loadKeyBinds(entity me)
 {
 	bool force_initial_selection = false;
-	if(KeyBinds_Count < 0) // me.handle not loaded yet?
+	if (KeyBinds_Count < 0) // me.handle not loaded yet?
 		force_initial_selection = true;
 	KeyBinds_BuildList();
 	me.nItems = KeyBinds_Count;
-	if(force_initial_selection)
+	if (force_initial_selection)
 		me.setSelected(me, 0);
 }
 void XonoticKeyBinder_showNotify(entity me)
@@ -255,7 +256,7 @@ void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, 
 void KeyBinder_Bind_Change(entity btn, entity me)
 {
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "" || KEYBIND_IS_SPECIAL(func))
+	if (func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
 	me.setSelected(me, me.selectedItem); // make it visible if it's hidden
@@ -271,34 +272,34 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 	me.keyGrabButton.forcePressed = 0;
 	me.clearButton.disabled = 0;
 
-	if(key == K_ESCAPE)
+	if (key == K_ESCAPE)
 		return;
 
 	// forbid these keys from being bound in the menu
-	if(key == K_CAPSLOCK || key == K_NUMLOCK)
+	if (key == K_CAPSLOCK || key == K_NUMLOCK)
 	{
 		KeyBinder_Bind_Change(me, me);
 		return;
 	}
 
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "" || KEYBIND_IS_SPECIAL(func))
+	if (func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
-	else if(KEYBIND_IS_OVERRIDER(func))
+	else if (KEYBIND_IS_OVERRIDER(func))
 	{
 		n = tokenizebyseparator(func, ";");
-		if(n <= 1)
+		if (n <= 1)
 			return;
 		func = argv(1);
 
 		// unset all binds for the functions this key overrides
-		for(j = 2; j < n; ++j)
+		for (j = 2; j < n; ++j)
 		{
 			n = tokenize(findkeysforcommand(argv(j), 0)); // uses '...' strings
-			for(i = 0; i < n; ++i)
+			for (i = 0; i < n; ++i)
 			{
 				k = stof(argv(i));
-				if(k != -1)
+				if (k != -1)
 				{
 					// bind to empty cmd instead of using unbind so it gets saved in config and overrides any default binds
 					localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
@@ -310,18 +311,18 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 
 	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
 	nvalid = 0;
-	for(j = 0; j < n; ++j)
+	for (j = 0; j < n; ++j)
 	{
 		k = stof(argv(j));
-		if(k != -1)
+		if (k != -1)
 			++nvalid;
 	}
-	if(nvalid >= MAX_KEYS_PER_FUNCTION)
+	if (nvalid >= MAX_KEYS_PER_FUNCTION)
 	{
-		for(j = 0; j < n; ++j)
+		for (j = 0; j < n; ++j)
 		{
 			k = stof(argv(j));
-			if(k != -1)
+			if (k != -1)
 			{
 				// bind to empty cmd instead of using unbind so it gets saved in config and overrides any default binds
 				localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
@@ -335,10 +336,10 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 }
 void XonoticKeyBinder_destroy(entity me)
 {
-	if(KeyBinds_Count < 0)
+	if (KeyBinds_Count < 0)
 		return;
 
-	for(int i = 0; i < MAX_KEYBINDS; ++i)
+	for (int i = 0; i < MAX_KEYBINDS; ++i)
 	{
 		strfree(KeyBinds_Functions[i]);
 		strfree(KeyBinds_Descriptions[i]);
@@ -348,15 +349,15 @@ void XonoticKeyBinder_destroy(entity me)
 }
 void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandPress, string theCommandRelease)
 {
-	if(!me.userbindEditDialog)
+	if (!me.userbindEditDialog)
 		return;
 
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "" || KEYBIND_IS_SPECIAL(func))
+	if (func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
 	string descr = KeyBinds_Descriptions[me.selectedItem];
-	if(!KEYBIND_IS_USERBIND(descr))
+	if (!KEYBIND_IS_USERBIND(descr))
 		return;
 	descr = substring(descr, 1, strlen(descr) - 1);
 
@@ -367,15 +368,15 @@ void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandP
 }
 void KeyBinder_Bind_Edit(entity btn, entity me)
 {
-	if(!me.userbindEditDialog)
+	if (!me.userbindEditDialog)
 		return;
 
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "" || KEYBIND_IS_SPECIAL(func))
+	if (func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 
 	string descr = KeyBinds_Descriptions[me.selectedItem];
-	if(!KEYBIND_IS_USERBIND(descr))
+	if (!KEYBIND_IS_USERBIND(descr))
 		return;
 
 	me.setSelected(me, me.selectedItem); // make it visible if it's hidden
@@ -391,12 +392,12 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	float n, j, k;
 
 	string func = KeyBinds_Functions[me.selectedItem];
-	if(func == "" || KEYBIND_IS_SPECIAL(func))
+	if (func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
-	else if(KEYBIND_IS_OVERRIDER(func))
+	else if (KEYBIND_IS_OVERRIDER(func))
 	{
 		n = tokenizebyseparator(func, ";");
-		if(n <= 1)
+		if (n <= 1)
 			return;
 		func = argv(1);
 	}
@@ -404,10 +405,10 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	me.setSelected(me, me.selectedItem); // make it visible if it's hidden
 
 	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
-	for(j = 0; j < n; ++j)
+	for (j = 0; j < n; ++j)
 	{
 		k = stof(argv(j));
-		if(k != -1)
+		if (k != -1)
 		{
 			// bind to empty cmd instead of using unbind so it gets saved in config and overrides any default binds
 			localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
@@ -439,33 +440,33 @@ void XonoticKeyBinder_setSelected(entity me, int i)
 			SUPER(XonoticKeyBinder).setSelected(me, i - 1);
 		return;
 	}
-	if(me.pressed == 0 || me.pressed == 1) // keyboard or scrolling - skip unselectable items
+	if (me.pressed == 0 || me.pressed == 1) // keyboard or scrolling - skip unselectable items
 	{
-		if(i > me.previouslySelected)
+		if (i > me.previouslySelected)
 		{
-			while((i < me.nItems - 1) && (KeyBinds_Functions[i] == ""))
+			while ((i < me.nItems - 1) && (KeyBinds_Functions[i] == ""))
 				++i;
 		}
-		while((i > 0) && (KeyBinds_Functions[i] == ""))
+		while ((i > 0) && (KeyBinds_Functions[i] == ""))
 			--i;
-		while((i < me.nItems - 1) && (KeyBinds_Functions[i] == ""))
+		while ((i < me.nItems - 1) && (KeyBinds_Functions[i] == ""))
 			++i;
 	}
-	if(me.pressed == 3) // released the mouse - fall back to last valid item
+	if (me.pressed == 3) // released the mouse - fall back to last valid item
 	{
-		if(KeyBinds_Functions[i] == "")
+		if (KeyBinds_Functions[i] == "")
 			i = me.previouslySelected;
 	}
-	if(KeyBinds_Functions[i] != "")
+	if (KeyBinds_Functions[i] != "")
 		me.previouslySelected = i;
-	if(me.userbindEditButton)
+	if (me.userbindEditButton)
 		me.userbindEditButton.disabled = !KEYBIND_IS_USERBIND(KeyBinds_Descriptions[i]);
 	SUPER(XonoticKeyBinder).setSelected(me, i);
 }
 float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 {
 	bool r = true;
-	switch(key)
+	switch (key)
 	{
 		case K_ENTER:
 		case K_KP_ENTER:
@@ -498,7 +499,7 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	string func = KeyBinds_Functions[i];
 	string icon = KeyBinds_Icons[i];
 
-	if(func == "")
+	if (func == "")
 	{
 		theColor = SKINCOLOR_KEYGRABBER_TITLES;
 		theAlpha = SKINALPHA_KEYGRABBER_TITLES;
@@ -506,14 +507,14 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	}
 	else
 	{
-		if(isSelected)
+		if (isSelected)
 		{
-			if(keyGrabber == me)
+			if (keyGrabber == me)
 				draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_WAITING, SKINALPHA_LISTBOX_WAITING);
 			else
 				draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 		}
-		else if(isFocused)
+		else if (isFocused)
 		{
 			me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
 			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
@@ -525,14 +526,14 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	}
 	descrWidth = me.columnFunctionSize;
 
-	if(KEYBIND_IS_USERBIND(descr))
+	if (KEYBIND_IS_USERBIND(descr))
 	{
 		string s = substring(descr, 1, strlen(descr) - 1);
 		descr = cvar_string(strcat(s, "_description"));
-		if(descr == "")
+		if (descr == "")
 			descr = s;
-		if(cvar_string(strcat(s, "_press")) == "")
-			if(cvar_string(strcat(s, "_release")) == "")
+		if (cvar_string(strcat(s, "_press")) == "")
+			if (cvar_string(strcat(s, "_release")) == "")
 				theAlpha *= SKINALPHA_DISABLED;
 	}
 
@@ -581,15 +582,15 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	{
 		bool joy_active = cvar("joy_active");
 		n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
-		for(int j = 0; j < n; ++j)
+		for (int j = 0; j < n; ++j)
 		{
 			float k = stof(argv(j));
-			if(k != -1)
+			if (k != -1)
 			{
 				string key = keynumtostring(k);
 				if (!joy_active && startsWith(key, "JOY"))
 					continue;
-				if(s != "")
+				if (s != "")
 					s = strcat(s, ", ");
 				s = strcat(s, translate_key(key));
 			}
