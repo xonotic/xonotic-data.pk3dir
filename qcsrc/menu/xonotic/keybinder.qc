@@ -572,7 +572,11 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 		func = argv(1);
 	}
 	if (KEYBIND_IS_SPECIAL(func))
+	{
 		s = substring(func, 1, -1);
+		theColor = SKINCOLOR_KEYGRABBER_KEYS_IMMUTABLE;
+		theAlpha = SKINALPHA_KEYGRABBER_KEYS_IMMUTABLE;
+	}
 	else
 	{
 		bool joy_active = cvar("joy_active");
