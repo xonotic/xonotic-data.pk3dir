@@ -2148,6 +2148,33 @@ void ons_DelayedInit(entity this) // Do this check with a delay so we can wait f
 
 void ons_Initialize()
 {
+	precache_model(MDL_ONS_CP);
+	precache_model(MDL_ONS_CP_SHIELD);
+	precache_model(MDL_ONS_CP_PAD1);
+	precache_model(MDL_ONS_CP_PAD2);
+	precache_model(MDL_ONS_CP1);
+	precache_model(MDL_ONS_CP1_GIB);
+	precache_model(MDL_ONS_CP2);
+	precache_model(MDL_ONS_CP2_GIB);
+	precache_model(MDL_ONS_CP3);
+	precache_model(MDL_ONS_CP3_GIB);
+	precache_model(MDL_ONS_RAY);
+	precache_model(MDL_ONS_GEN);
+	precache_model(MDL_ONS_GEN_SHIELD);
+	precache_model(MDL_ONS_GEN_GIB1);
+	precache_model(MDL_ONS_GEN_GIB2);
+	precache_model(MDL_ONS_GEN_GIB3);
+	precache_model(MDL_ONS_GEN1);
+	precache_model(MDL_ONS_GEN2);
+	precache_model(MDL_ONS_GEN3);
+	precache_model(MDL_ONS_GEN4);
+	precache_model(MDL_ONS_GEN5);
+	precache_model(MDL_ONS_GEN6);
+	precache_model(MDL_ONS_GEN7);
+	precache_model(MDL_ONS_GEN8);
+	precache_model(MDL_ONS_GEN9);
+	precache_model(MDL_ONS_GEN_DEAD);
+
 	g_onslaught = true;
 	g_onsshields = IL_NEW();
 	ons_captureshield_force = autocvar_g_onslaught_shield_force;

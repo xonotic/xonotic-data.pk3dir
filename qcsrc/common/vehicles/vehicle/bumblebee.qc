@@ -826,6 +826,15 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
 
     setorigin(instance, instance.pos1);
 }
+METHOD(Bumblebee, vr_precache, void(Bumblebee thisveh))
+{
+	SUPER(Bumblebee).vr_precache(thisveh);
+
+	precache_model(MDL_VEH_BUMBLEBEE_CANNON_CENTER);
+	precache_model(MDL_VEH_BUMBLEBEE_CANNON_LEFT);
+	precache_model(MDL_VEH_BUMBLEBEE_CANNON_RIGHT);
+	precache_model(MDL_VEH_BUMBLEBEE_SHIELD);
+}
 METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
 {
     if(!instance.gun1)

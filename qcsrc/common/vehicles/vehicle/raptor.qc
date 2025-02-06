@@ -635,6 +635,17 @@ METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
     instance.colormod = '-0.5 -0.5 -0.5';
     settouch(instance, raptor_blowup);
 }
+METHOD(Raptor, vr_precache, void(Raptor thisveh))
+{
+	SUPER(Raptor).vr_precache(thisveh);
+
+	precache_model(MDL_VEH_RAPTOR_PROP);
+	precache_model(MDL_VEH_RAPTOR_CB_FOLDED);
+	precache_model(MDL_VEH_RAPTOR_CB_FRAGMENT);
+	precache_model(MDL_VEH_RAPTOR_FLARE);
+	precache_model(MDL_VEH_RAPTOR_GUN);
+	precache_model(MDL_VEH_RAPTOR_TAIL);
+}
 METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
 {
     if(!instance.gun1)

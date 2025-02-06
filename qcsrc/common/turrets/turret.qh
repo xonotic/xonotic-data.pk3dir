@@ -37,10 +37,13 @@ CLASS(Turret, Object)
     METHOD(Turret, tr_death, void(Turret this, entity it)) {
 
     }
+#ifdef GAMEQC
     /** (BOTH) precaches models/sounds used by this turret */
     METHOD(Turret, tr_precache, void(Turret this)) {
-
+        _precache_model(this.model);
+        _precache_model(this.head_model);
     }
+#endif
     ATTRIB(Turret, m_weapon, Weapon);
 #ifdef SVQC
     /** (SERVER) called when turret attacks */

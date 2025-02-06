@@ -43,8 +43,16 @@ CLASS(Vehicle, Object)
     METHOD(Vehicle, vr_think, void(Vehicle this, entity instance)) { }
     /** (SERVER) called when vehicle dies */
     METHOD(Vehicle, vr_death, void(Vehicle this, entity instance)) { }
+#ifdef GAMEQC
     /** (BOTH) precaches models/sounds used by this vehicle */
-    METHOD(Vehicle, vr_precache, void(Vehicle this)) { }
+    METHOD(Vehicle, vr_precache, void(Vehicle this))
+    {
+        precache_model(MDL_VEH_SHIELD);
+        _precache_model(this.mdl);
+        _precache_model(this.head_model);
+        _precache_model(this.hud_model);
+    }
+#endif
     /** (SERVER) called when a player enters this vehicle */
     METHOD(Vehicle, vr_enter, void(Vehicle this, entity instance)) { }
     /** (SERVER) called when a player enters this vehicle while occupied */

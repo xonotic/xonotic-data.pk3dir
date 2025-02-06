@@ -659,6 +659,12 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 
 void dom_Initialize()
 {
+	precache_model(MDL_DOM_NEUTRAL);
+	precache_model(MDL_DOM_RED);
+	precache_model(MDL_DOM_BLUE);
+	precache_model(MDL_DOM_YELLOW);
+	precache_model(MDL_DOM_PINK);
+
 	g_domination = true;
 	g_dompoints = IL_NEW();
 

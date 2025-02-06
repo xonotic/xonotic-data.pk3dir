@@ -977,6 +977,11 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 
 void kh_Initialize()  // sets up th KH environment
 {
+	precache_model(MDL_KH_KEY);
+#ifdef KH_PLAYER_USE_CARRIEDMODEL
+	precache_model(MDL_KH_KEY_CARRIED);
+#endif
+
 	// setup variables
 	kh_teams = autocvar_g_keyhunt_teams_override;
 	if(kh_teams < 2)

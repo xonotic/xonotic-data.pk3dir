@@ -561,6 +561,12 @@ METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
 
     CSQCModel_UnlinkEntity(instance); // networking the death scene would be a nightmare
 }
+METHOD(Spiderbot, vr_precache, void(Spiderbot thisveh))
+{
+	SUPER(Spiderbot).vr_precache(thisveh);
+
+	precache_model(MDL_VEH_SPIDERBOT_GUN);
+}
 METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
 {
     if(!instance.gun1)

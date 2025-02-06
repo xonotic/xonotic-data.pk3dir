@@ -2892,6 +2892,10 @@ void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait f
 
 void ctf_Initialize()
 {
+	precache_model(MDL_CTF_SHIELD);
+	precache_model(MDL_CTF_CAPTURE);
+	precache_model(MDL_CTF_FLAG);
+
 	CTF_FLAG = NEW(Flag);
 	record_type = CTF_RECORD;
 	ctf_captimerecord = stof(db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time")));
