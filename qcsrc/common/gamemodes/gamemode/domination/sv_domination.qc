@@ -665,6 +665,8 @@ void dom_Initialize()
 	precache_model(MDL_DOM_YELLOW);
 	precache_model(MDL_DOM_PINK);
 
+	precache_sound(SND_DOM_CLAIM);
+
 	g_domination = true;
 	g_dompoints = IL_NEW();
 

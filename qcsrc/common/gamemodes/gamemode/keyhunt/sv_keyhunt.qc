@@ -982,6 +982,12 @@ void kh_Initialize()  // sets up th KH environment
 	precache_model(MDL_KH_KEY_CARRIED);
 #endif
 
+	precache_sound(SND_KH_ALARM);
+	precache_sound(SND_KH_CAPTURE);
+	precache_sound(SND_KH_COLLECT);
+	precache_sound(SND_KH_DESTROY);
+	precache_sound(SND_KH_DROP);
+
 	// setup variables
 	kh_teams = autocvar_g_keyhunt_teams_override;
 	if(kh_teams < 2)

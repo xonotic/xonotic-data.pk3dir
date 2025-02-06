@@ -2175,6 +2175,21 @@ void ons_Initialize()
 	precache_model(MDL_ONS_GEN9);
 	precache_model(MDL_ONS_GEN_DEAD);
 
+	precache_sound(SND_ONS_CONTROLPOINT_BUILD);
+	precache_sound(SND_ONS_CONTROLPOINT_BUILT);
+	precache_sound(SND_ONS_CONTROLPOINT_UNDERATTACK);
+	precache_sound(SND_ONS_DAMAGEBLOCKEDBYSHIELD);
+	precache_sound(SND_ONS_ELECTRICITY_EXPLODE);
+	precache_sound(SND_ONS_GENERATOR_ALARM);
+	precache_sound(SND_ONS_GENERATOR_DECAY);
+	precache_sound(SND_ONS_GENERATOR_UNDERATTACK);
+	precache_sound(SND_ONS_GENERATOR_EXPLODE);
+	precache_sound(SND_ONS_HIT1);
+	precache_sound(SND_ONS_HIT2);
+	precache_sound(SND_ONS_SPARK1);
+	precache_sound(SND_ONS_SPARK2);
+	precache_sound(SND_ONS_SHOCKWAVE);
+
 	g_onslaught = true;
 	g_onsshields = IL_NEW();
 	ons_captureshield_force = autocvar_g_onslaught_shield_force;

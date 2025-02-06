@@ -834,6 +834,9 @@ METHOD(Bumblebee, vr_precache, void(Bumblebee thisveh))
 	precache_model(MDL_VEH_BUMBLEBEE_CANNON_LEFT);
 	precache_model(MDL_VEH_BUMBLEBEE_CANNON_RIGHT);
 	precache_model(MDL_VEH_BUMBLEBEE_SHIELD);
+
+	precache_sound(SND_VEH_BUMBLEBEE_FIRE);
+	precache_sound(SND_VEH_BUMBLEBEE_IMPACT);
 }
 METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
 {

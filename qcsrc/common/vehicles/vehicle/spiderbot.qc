@@ -566,6 +566,16 @@ METHOD(Spiderbot, vr_precache, void(Spiderbot thisveh))
 	SUPER(Spiderbot).vr_precache(thisveh);
 
 	precache_model(MDL_VEH_SPIDERBOT_GUN);
+
+	precache_sound(SND_VEH_SPIDERBOT_DIE);
+	precache_sound(SND_VEH_SPIDERBOT_IDLE);
+	precache_sound(SND_VEH_SPIDERBOT_JUMP);
+	precache_sound(SND_VEH_SPIDERBOT_LAND);
+	precache_sound(SND_VEH_SPIDERBOT_STRAFE);
+	precache_sound(SND_VEH_SPIDERBOT_WALK);
+	precache_sound(SND_VEH_SPIDERBOT_MINIGUN_FIRE);
+	precache_sound(SND_VEH_SPIDERBOT_ROCKET_FLY);
+	precache_sound(SND_VEH_SPIDERBOT_ROCKET_FIRE);
 }
 METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
 {

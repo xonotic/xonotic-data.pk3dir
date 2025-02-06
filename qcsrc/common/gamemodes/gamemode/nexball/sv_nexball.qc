@@ -942,6 +942,12 @@ MUTATOR_HOOKFUNCTION(nb, SendWaypoint)
 
 void nb_Initialize()
 {
+	precache_sound(SND_NB_BOUNCE);
+	precache_sound(SND_NB_DROP);
+	precache_sound(SND_NB_SHOOT1);
+	precache_sound(SND_NB_SHOOT2);
+	precache_sound(SND_NB_STEAL);
+
 	g_nexball_meter_period = autocvar_g_nexball_meter_period;
 	if(g_nexball_meter_period <= 0)
 		g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users

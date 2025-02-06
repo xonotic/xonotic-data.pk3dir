@@ -645,6 +645,10 @@ METHOD(Raptor, vr_precache, void(Raptor thisveh))
 	precache_model(MDL_VEH_RAPTOR_FLARE);
 	precache_model(MDL_VEH_RAPTOR_GUN);
 	precache_model(MDL_VEH_RAPTOR_TAIL);
+
+	precache_sound(SND_VEH_RAPTOR_FLY);
+	precache_sound(SND_VEH_RAPTOR_SPEED);
+	precache_sound(SND_VEH_MISSILE_ALARM);
 }
 METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
 {

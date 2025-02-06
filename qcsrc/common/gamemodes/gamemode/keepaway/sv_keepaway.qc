@@ -532,6 +532,11 @@ void ka_Initialize()
 {
 	precache_model(MDL_KA_BALL);
 
+	precache_sound(SND_KA_DROPPED);
+	precache_sound(SND_KA_PICKEDUP);
+	precache_sound(SND_KA_RESPAWN);
+	precache_sound(SND_KA_TOUCH);
+
 	g_kaballs = IL_NEW();
 	entity ka_Handler = new_pure(ka_Handler);
 	setthink(ka_Handler, ka_Handler_CheckBall);
