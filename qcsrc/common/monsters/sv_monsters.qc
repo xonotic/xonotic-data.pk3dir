@@ -37,23 +37,54 @@ void monsters_setstatus(entity this)
 	STAT(MONSTERS_KILLED, this) = monsters_killed;
 }
 
-bool autocvar_g_monsters_drop = true;
 void monster_dropitem(entity this, entity attacker)
 {
-	if(!this.candrop || !this.monster_loot || !autocvar_g_monsters_drop)
+	if(!this.candrop || !autocvar_g_monsters_drop)
+		return;
+
+	// TODO: mapper customization (different field?)
+	string itemlist = this.monster_loot;
+
+	// TODO: replace regular loot?
+	if(this.spawnflags & MONSTERFLAG_MINIBOSS)
+		itemlist = cons(itemlist, autocvar_g_monsters_miniboss_loot);
+
+	MUTATOR_CALLHOOK(MonsterDropItem, this, itemlist, attacker);
+	itemlist = M_ARGV(1, string);
+
+	if(itemlist == "")
+		return;
+
+	RandomSelection_Init();
+	FOREACH_WORD(itemlist, true,
+	{
+		string item = it;
+
+		FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
+		{
+			if(it.netname == item || (item == "random" && (it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & WEP_FLAG_HIDDEN) && !(it.spawnflags & WEP_FLAG_SUPERWEAPON)))
+				RandomSelection_AddEnt(it, 1, 1);
+		});
+		FOREACH(Items, Item_IsDefinitionAllowed(it),
+		{
+			if(it.netname == item || (item == "random" && (it.spawnflags & ITEM_FLAG_NORMAL) && !it.instanceOfPowerup))
+				RandomSelection_AddEnt(it, 1, 1);
+		});
+	});
+
+	if(!RandomSelection_chosen_ent)
 		return;
 
 	entity e = spawn();
-	e.itemdef = this.monster_loot;
-	e.origin = CENTER_OR_VIEWOFS(this);
+	e.monster_item = true;
+	ITEM_SET_LOOT(e, true);
+	e.colormap = this.colormap;
+	e.itemdef = RandomSelection_chosen_ent;
+	setorigin(e, CENTER_OR_VIEWOFS(this));
 	e.velocity = randomvec() * 175 + '0 0 325';
 	e.lifetime = max(0, autocvar_g_monsters_drop_time);
 
-	MUTATOR_CALLHOOK(MonsterDropItem, this, e, attacker);
-	e = M_ARGV(1, entity);
-
-	if(e && e.itemdef)
-		Item_Initialise(e);
+	Item_Initialise(e);
 }
 
 bool monster_facing(entity this, entity targ)
@@ -516,8 +547,7 @@ void Monster_Miniboss_Check(entity this)
 	{
 		GiveResource(this, RES_HEALTH, autocvar_g_monsters_miniboss_healthboost);
 		this.effects |= EF_RED;
-		if(!this.weapon)
-			this.weapon = WEP_VORTEX.m_id;
+		this.spawnflags |= MONSTERFLAG_MINIBOSS; // identifier for other code
 	}
 }
 
@@ -1068,12 +1098,6 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 
 	Monster mon = this.monsterdef;
 	mon.mr_death(mon, this);
-
-	if(this.candrop && this.weapon && autocvar_g_monsters_drop)
-	{
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		W_ThrowNewWeapon(this, this.weapon, 0, this.origin, randomvec() * 150 + '0 0 325', weaponentity);
-	}
 }
 
 void Monster_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)

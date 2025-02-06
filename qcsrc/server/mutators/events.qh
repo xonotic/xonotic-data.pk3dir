@@ -375,11 +375,11 @@ MUTATOR_HOOKABLE(MonsterRespawn, EV_MonsterRespawn);
 /** called when a monster is dropping loot */
 #define EV_MonsterDropItem(i, o) \
     /* monster */                          i(entity, MUTATOR_ARGV_0_entity) \
-    /* item (can be removed or changed) */ i(entity, MUTATOR_ARGV_1_entity) \
-    /**/                                   o(entity, MUTATOR_ARGV_1_entity) \
+    /* list of items to drop */            i(string, MUTATOR_ARGV_1_string) \
+    /**/                                   o(string, MUTATOR_ARGV_1_string) \
     /* attacker */                         i(entity, MUTATOR_ARGV_2_entity) \
     /**/
-.entity monster_loot;
+.string monster_loot;
 MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
 
 /**
