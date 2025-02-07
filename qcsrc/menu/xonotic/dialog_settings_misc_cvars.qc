@@ -59,7 +59,7 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 			e.onChangeEntity = cvarlist;
 			e.onEnter = CvarList_End_Editing;
 			e.onEnterEntity = cvarlist;
-		me.TD(me, 1, 1, e = makeXonoticButton(string_null, SKINCOLOR_CVARLIST_CONTROLS));
+		me.TD(me, 1, 1, e = makeXonoticButton_T(string_null, SKINCOLOR_CVARLIST_CONTROLS, _("Reset to default")));
 			cvarlist.cvarDefaultBox = e;
 			e.onClick = CvarList_Revert_Click;
 			e.onClickEntity = cvarlist;
