@@ -92,31 +92,26 @@ void KeyBinds_BuildList()
 
 	for (int imp = 1; imp <= 9; ++imp)
 	{
-		string w_list = "", w_override_list = "", w_icon = "";
+		string w_override_list = "";
 		int w_count = 0;
 
 		FOREACH(Weapons, it != WEP_Null, {
 			if (it.impulse != imp || !SHOWABLE_WEAPON(it))
 				continue;
 			it.display(it, XonoticKeyBinder_cb);
-			if (w_count)
-				w_list = strcat(w_list, " / ", XonoticKeyBinder_cb_name);
-			else
-				w_list = XonoticKeyBinder_cb_name;
 			w_override_list = strcat(w_override_list, ";weapon_", it.netname);
-			w_icon = XonoticKeyBinder_cb_icon;
 			++w_count;
 		});
-		if (w_list)
+		if (w_count)
 		{
 			if (w_count == 1) // group only has 1 weapon (like Blaster's group), use the group bind, and add the icon
 			{                // no overrides needed
-				KEYBIND_DEF_WITH_ICON(strcat("weapon_group_", itos(imp)), w_list, strcat(" ", w_icon));
+				KEYBIND_DEF_WITH_ICON(strcat("weapon_group_", itos(imp)), XonoticKeyBinder_cb_name, strcat(" ", XonoticKeyBinder_cb_icon));
 			}
 			else // group has multiple weapons, allow binding them separately or together
 			{    // setting the group bind overrides the individual binds, and vice versa
 				string w_group = strcat(";weapon_group_", itos(imp));
-				KEYBIND_DEF(strcat(w_group, w_override_list), w_list);
+				KEYBIND_DEF(strcat(w_group, w_override_list), sprintf(_("weapon group %d"), imp));
 
 				int w_counter = 0;
 				FOREACH(Weapons, it != WEP_Null, {
