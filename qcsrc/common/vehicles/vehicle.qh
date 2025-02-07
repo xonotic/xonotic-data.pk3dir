@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef GAMEQC
+#include <common/models/all.qh>
+#endif
+
 CLASS(Vehicle, Object)
     ATTRIB(Vehicle, vehicleid, int, 0);
     /** hud icon */
