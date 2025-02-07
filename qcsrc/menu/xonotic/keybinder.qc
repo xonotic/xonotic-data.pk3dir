@@ -264,10 +264,24 @@ void KeyBinder_Bind_Change(entity btn, entity me)
 	me.clearButton.disabled = 1;
 	keyGrabber = me;
 }
+void KeyBinder_Bind_UnbindAllForFunction(int n)
+{
+	// usage: call tokenize beforehand, then pass in the output
+
+	float k;
+	for (int j = 0; j < n; ++j)
+	{
+		k = stof(argv(j));
+		if (k != -1)
+		{
+			// bind to empty cmd instead of using unbind so it gets saved in config and overrides any default binds
+			localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
+		}
+	}
+}
 void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 {
-	int n, j, i, nvalid;
-	float k;
+	int n, j, k, nvalid;
 
 	me.keyGrabButton.forcePressed = 0;
 	me.clearButton.disabled = 0;
@@ -296,15 +310,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 		for (j = 2; j < n; ++j)
 		{
 			n = tokenize(findkeysforcommand(argv(j), 0)); // uses '...' strings
-			for (i = 0; i < n; ++i)
-			{
-				k = stof(argv(i));
-				if (k != -1)
-				{
-					// bind to empty cmd instead of using unbind so it gets saved in config and overrides any default binds
-					localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
-				}
-			}
+			KeyBinder_Bind_UnbindAllForFunction(n);
 			n = tokenizebyseparator(func, ";"); // reset argv back to the overridden functions
 		}
 	}
@@ -318,17 +324,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 			++nvalid;
 	}
 	if (nvalid >= MAX_KEYS_PER_FUNCTION)
-	{
-		for (j = 0; j < n; ++j)
-		{
-			k = stof(argv(j));
-			if (k != -1)
-			{
-				// bind to empty cmd instead of using unbind so it gets saved in config and overrides any default binds
-				localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
-			}
-		}
-	}
+		KeyBinder_Bind_UnbindAllForFunction(n);
 	m_play_click_sound(MENU_SOUND_SELECT);
 	localcmd("\nbind \"", keynumtostring(key), "\" \"", func, "\"\n");
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
@@ -389,7 +385,7 @@ void KeyBinder_Bind_Edit(entity btn, entity me)
 }
 void KeyBinder_Bind_Clear(entity btn, entity me)
 {
-	float n, j, k;
+	int n;
 
 	string func = KeyBinds_Functions[me.selectedItem];
 	if (func == "" || KEYBIND_IS_SPECIAL(func))
@@ -405,15 +401,8 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	me.setSelected(me, me.selectedItem); // make it visible if it's hidden
 
 	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
-	for (j = 0; j < n; ++j)
-	{
-		k = stof(argv(j));
-		if (k != -1)
-		{
-			// bind to empty cmd instead of using unbind so it gets saved in config and overrides any default binds
-			localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
-		}
-	}
+	KeyBinder_Bind_UnbindAllForFunction(n);
+
 	m_play_click_sound(MENU_SOUND_CLEAR);
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
 	cvar_set("_hud_showbinds_reload", "1");
