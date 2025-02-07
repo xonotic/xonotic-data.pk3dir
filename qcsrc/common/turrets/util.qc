@@ -172,6 +172,11 @@ entity mark_misc(vector where,float lifetime)
 
 MODEL(TUR_C512, "models/turrets/c512.md3");
 
+PRECACHE(paint_target_debug)
+{
+	precache_model(MDL_TUR_C512);
+}
+
 /*
 * Paint a v_color colord circle on target onwho
 * that fades away over f_time

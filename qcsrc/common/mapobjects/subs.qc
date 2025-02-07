@@ -423,7 +423,7 @@ void SetBrushEntityModel(entity this, bool with_lod)
 
 	if(this.model != "")
 	{
-		precache_model(this.model);
+		_precache_model(this.model);
 		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
 		{
 			vector mi = this.mins;
@@ -511,13 +511,13 @@ void LODmodel_attach(entity this)
 		mi = this.mins;
 		ma = this.maxs;
 
-		precache_model(this.lodmodel1);
+		_precache_model(this.lodmodel1);
 		_setmodel(this, this.lodmodel1);
 		this.lodmodelindex1 = this.modelindex;
 
 		if(this.lodmodel2 != "" && fexists(this.lodmodel2))
 		{
-			precache_model(this.lodmodel2);
+			_precache_model(this.lodmodel2);
 			_setmodel(this, this.lodmodel2);
 			this.lodmodelindex2 = this.modelindex;
 		}

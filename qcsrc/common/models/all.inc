@@ -107,9 +107,6 @@ MODEL(PROJECTILE_RPC,                   W_Model("ok_rocket.md3"));
 MODEL(PROJECTILE_ROCKETMINSTA_LASER,    "models/elaser.mdl");
 
 MODEL(PROJECTILE_NADE,                  W_Model("v_ok_grenade.md3"));
-MODEL(NADE_VIEW,                        W_Model("h_ok_grenade.iqm"));
-MODEL(NADE_TIMER,                       "models/ok_nade_counter/ok_nade_counter.md3");
-MODEL(NADE_ORB,                         "models/ctf/shield.md3");
 
 MODEL(GIB_CHUNK,                        "models/gibs/chunk.mdl");
 MODEL(GIB_LEG1,                         "models/gibs/leg1.md3");
@@ -234,3 +231,79 @@ Model MDL_NUM(int i) {
 
 MODEL(WAYPOINT,                         "models/runematch/rune.mdl");
 MODEL(MARKER,                           "models/marker.md3");
+
+// TODO: clean this up
+PRECACHE(Models_GlobalPrecache)
+{
+    precache_model(MDL_ICE);
+    precache_model(MDL_PROJECTILE_ELECTRO);
+    precache_model(MDL_PROJECTILE_ELECTRO_BEAM);
+    precache_model(MDL_PROJECTILE_ROCKET);
+    precache_model(MDL_PROJECTILE_CRYLINK);
+    precache_model(MDL_PROJECTILE_CRYLINK_BOUNCING);
+    precache_model(MDL_PROJECTILE_GRENADE);
+    precache_model(MDL_PROJECTILE_GRENADE_BOUNCING);
+    precache_model(MDL_PROJECTILE_MINE);
+    precache_model(MDL_PROJECTILE_BLASTER);
+    precache_model(MDL_PROJECTILE_HLAC);
+    precache_model(MDL_PROJECTILE_PORTO_RED);
+    precache_model(MDL_PROJECTILE_PORTO_BLUE);
+    precache_model(MDL_PROJECTILE_HOOKBOMB);
+    precache_model(MDL_PROJECTILE_HAGAR);
+    precache_model(MDL_PROJECTILE_HAGAR_BOUNCING);
+    precache_model(MDL_PROJECTILE_ARC_BOLT);
+    precache_model(MDL_PROJECTILE_NAPALM_FOUNTAIN);
+    precache_model(MDL_PROJECTILE_FIREBALL);
+    precache_model(MDL_PROJECTILE_FIREMINE);
+    precache_model(MDL_PROJECTILE_TAG);
+    precache_model(MDL_PROJECTILE_FLAC);
+    precache_model(MDL_PROJECTILE_SEEKER);
+    precache_model(MDL_PROJECTILE_MAGE_SPIKE);
+    precache_model(MDL_PROJECTILE_GOLEM_LIGHTNING);
+    precache_model(MDL_PROJECTILE_RAPTORBOMB);
+    precache_model(MDL_PROJECTILE_RAPTORBOMBLET);
+    precache_model(MDL_PROJECTILE_RAPTORCANNON);
+    precache_model(MDL_PROJECTILE_SPIDERROCKET);
+    precache_model(MDL_PROJECTILE_WAKIROCKET);
+    precache_model(MDL_PROJECTILE_WAKICANNON);
+    precache_model(MDL_PROJECTILE_BUMBLE_GUN);
+    precache_model(MDL_PROJECTILE_BUMBLE_BEAM);
+    precache_model(MDL_PROJECTILE_RPC);
+    precache_model(MDL_PROJECTILE_ROCKETMINSTA_LASER);
+    precache_model(MDL_PROJECTILE_NADE);
+    precache_model(MDL_GIB_CHUNK);
+    precache_model(MDL_GIB_LEG1);
+    precache_model(MDL_GIB_LEG2);
+    precache_model(MDL_GIB_CHEST);
+    precache_model(MDL_GIB_SMALLCHEST);
+    precache_model(MDL_GIB_ARM);
+    precache_model(MDL_GIB_BLOODYSKULL);
+    precache_model(MDL_GIB_EYE);
+    precache_model(MDL_GIB_ROBO);
+    precache_model(MDL_GIB_ROBO_1);
+    precache_model(MDL_GIB_ROBO_2);
+    precache_model(MDL_GIB_ROBO_3);
+    precache_model(MDL_GIB_ROBO_4);
+    precache_model(MDL_GIB_ROBO_5);
+    precache_model(MDL_GIB_ROBO_6);
+    precache_model(MDL_GIB_ROBO_7);
+    precache_model(MDL_GIB_ROBO_8);
+    precache_model(MDL_CASING_SHELL);
+    precache_model(MDL_CASING_BULLET);
+    precache_model(MDL_BUFF);
+    precache_model(MDL_CHAT);
+    precache_model(MDL_CHAT_MINIGAME);
+    precache_model(MDL_0);
+    precache_model(MDL_1);
+    precache_model(MDL_2);
+    precache_model(MDL_3);
+    precache_model(MDL_4);
+    precache_model(MDL_5);
+    precache_model(MDL_6);
+    precache_model(MDL_7);
+    precache_model(MDL_8);
+    precache_model(MDL_9);
+    precache_model(MDL_10);
+    precache_model(MDL_WAYPOINT);
+    precache_model(MDL_MARKER);
+}

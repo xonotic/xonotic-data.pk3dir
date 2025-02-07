@@ -655,6 +655,16 @@ REGISTER_MUTATOR(nades, autocvar_g_nades)
 	MUTATOR_ONADD
 	{
 		OFFHAND_NADE = NEW(NadeOffhand);
+
+		precache_model(MDL_NADE_VIEW);
+		precache_model(MDL_NADE_TIMER);
+		precache_model(MDL_NADE_ORB);
+
+		// monster nade can spawn any monster
+		if(autocvar_g_monsters)
+		{
+			FOREACH(Monsters, it != MON_Null, it.mr_precache(it));
+		}
 	}
 	return 0;
 }

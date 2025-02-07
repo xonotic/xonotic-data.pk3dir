@@ -368,6 +368,17 @@ METHOD(Shotgun, wr_killmessage, Notification(entity thiswep))
 		return WEAPON_SHOTGUN_MURDER;
 }
 
+METHOD(Shotgun, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_SHOTGUN_MUZZLEFLASH);
+	precache_model(MDL_SHOTGUN_VIEW);
+	precache_model(MDL_SHOTGUN_WORLD);
+	precache_model(MDL_SHOTGUN_ITEM);
+
+	precache_sound(SND_SHOTGUN_FIRE);
+	precache_sound(SND_SHOTGUN_MELEE);
+}
+
 #endif
 #ifdef CSQC
 .float prevric;

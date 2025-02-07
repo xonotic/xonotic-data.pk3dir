@@ -18,7 +18,7 @@ CLASS(Model, Object)
             return;
         }
         //profile(sprintf("precache_model(\"%s\")", s));
-        precache_model(s);
+        _precache_model(s);
         strcpy(this.model_str_, s);
     }
 ENDCLASS(Model)
@@ -27,4 +27,8 @@ ENDCLASS(Model)
     Model _setmodel_model = (m); \
     string _setmodel_cached = _setmodel_model.model_str_; \
     _setmodel((this), _setmodel_cached ? _setmodel_cached : _setmodel_model.model_str()); \
+MACRO_END
+
+#define precache_model(m) MACRO_BEGIN \
+    (m).model_precache(m); \
 MACRO_END

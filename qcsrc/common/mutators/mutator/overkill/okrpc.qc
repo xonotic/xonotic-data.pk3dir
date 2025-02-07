@@ -218,6 +218,16 @@ METHOD(OverkillRocketPropelledChainsaw, wr_killmessage, Notification(entity this
 		return WEAPON_OVERKILL_RPC_MURDER_DIRECT;
 }
 
+METHOD(OverkillRocketPropelledChainsaw, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_RPC_MUZZLEFLASH);
+	precache_model(MDL_RPC_VIEW);
+	precache_model(MDL_RPC_WORLD);
+	precache_model(MDL_RPC_ITEM);
+
+	precache_sound(SND_RPC_FIRE);
+}
+
 #endif
 
 #ifdef CSQC

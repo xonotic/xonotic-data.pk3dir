@@ -744,8 +744,26 @@ METHOD(Electro, wr_killmessage, Notification(entity thiswep))
 	}
 }
 
+METHOD(Electro, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_ELECTRO_VIEW);
+	precache_model(MDL_ELECTRO_WORLD);
+	precache_model(MDL_ELECTRO_ITEM);
+
+	precache_sound(SND_ELECTRO_BOUNCE);
+	precache_sound(SND_ELECTRO_FIRE2);
+	precache_sound(SND_ELECTRO_FIRE);
+}
+
 #endif
 #ifdef CSQC
+
+METHOD(Electro, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_ELECTRO_FLY);
+	precache_sound(SND_ELECTRO_IMPACT);
+	precache_sound(SND_ELECTRO_IMPACT_COMBO);
+}
 
 METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
 {

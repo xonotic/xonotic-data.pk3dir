@@ -35,6 +35,10 @@ METHOD(RaptorCannon, wr_checkammo1, bool(RaptorCannon thiswep, entity actor, .en
     entity veh = player.vehicle;
     return isPlayer || veh.vehicle_energy >= autocvar_g_vehicle_raptor_cannon_cost;
 }
+METHOD(RaptorCannon, wr_init, void(entity thiswep))
+{
+    precache_sound(SND_RaptorCannon_FIRE);
+}
 
 
 void raptor_bombdrop(entity this);

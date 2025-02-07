@@ -41,6 +41,11 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
 	}
 }
 
+METHOD(HunterKillerAttack, wr_init, void(entity thiswep))
+{
+    precache_sound(SND_HunterKillerAttack_FIRE);
+}
+
 bool hk_is_valid_target(entity this, entity proj, entity targ);
 void turret_hk_missile_think(entity this)
 {

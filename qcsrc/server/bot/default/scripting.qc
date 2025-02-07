@@ -61,7 +61,7 @@ void bot_queuecommand(entity bot, string cmdstring)
 						break;
 					parm = substring(parm, sp + 1, -1);
 				}
-				precache_sound(parm);
+				_precache_sound(parm);
 			}
 		}
 	}
@@ -1065,7 +1065,7 @@ float bot_cmd_sound(entity this)
 	if(n >= 4)
 		atten = stof(argv(2));
 
-	precache_sound(f);
+	_precache_sound(f);
 	_sound(this, chan, sample, vol, atten);
 
 	return CMD_STATUS_FINISHED;

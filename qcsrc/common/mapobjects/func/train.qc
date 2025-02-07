@@ -229,7 +229,7 @@ target : targetname of first spawnfunc_path_corner (starts here)
 spawnfunc(func_train)
 {
 	if (this.noise != "")
-		precache_sound(this.noise);
+		_precache_sound(this.noise);
 
 	if (this.target == "")
 		objerror(this, "func_train without a target");

@@ -48,6 +48,11 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
     }
 }
 
+METHOD(TeslaCoilTurretAttack, wr_init, void(entity thiswep))
+{
+    precache_sound(SND_TeslaCoilTurretAttack_FIRE);
+}
+
 entity toast(entity actor, entity from, float range, float damage)
 {
     float dd = range + 1;

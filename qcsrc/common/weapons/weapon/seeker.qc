@@ -636,8 +636,31 @@ METHOD(Seeker, wr_killmessage, Notification(entity thiswep))
 		return WEAPON_SEEKER_MURDER_SPRAY;
 }
 
+METHOD(Seeker, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_SEEKER_VIEW);
+	precache_model(MDL_SEEKER_WORLD);
+	precache_model(MDL_SEEKER_ITEM);
+
+	precache_sound(SND_SEEKER_FLAC_FIRE);
+	precache_sound(SND_TAG_FIRE);
+	precache_sound(SND_SEEKER_FIRE);
+}
+
 #endif
 #ifdef CSQC
+
+METHOD(Seeker, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_TAGEXP1);
+	precache_sound(SND_TAGEXP2);
+	precache_sound(SND_TAGEXP3);
+	precache_sound(SND_TAG_IMPACT);
+	precache_sound(SND_SEEKEREXP1);
+	precache_sound(SND_SEEKEREXP2);
+	precache_sound(SND_SEEKEREXP3);
+	precache_sound(SND_SEEKER_ROCKET_FLY);
+}
 
 METHOD(Seeker, wr_impacteffect, void(entity thiswep, entity actor))
 {

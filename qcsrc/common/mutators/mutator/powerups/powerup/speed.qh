@@ -22,6 +22,9 @@ float autocvar_g_balance_powerup_speed_highspeed;
 float autocvar_g_balance_powerup_speed_time;
 void powerup_speed_init(Pickup def, entity item)
 {
+    //precache_model(MDL_Speed_ITEM);
+    precache_sound(SND_Speed);
+
     if(!autocvar_g_powerups || !autocvar_g_powerups_speed)
         def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 

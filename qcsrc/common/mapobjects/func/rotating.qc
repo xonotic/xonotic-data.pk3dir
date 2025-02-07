@@ -63,7 +63,7 @@ spawnfunc(func_rotating)
 {
 	if (this.noise && this.noise != "")
 	{
-		precache_sound(this.noise);
+		_precache_sound(this.noise);
 	}
 
 	this.setactive = func_rotating_setactive;

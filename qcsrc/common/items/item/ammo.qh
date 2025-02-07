@@ -38,6 +38,8 @@ MODEL(Shells_ITEM, Item_Model("a_shells.md3"));
 PROPERTY(int, g_pickup_shells);
 void ammo_shells_init(Pickup this, entity item)
 {
+    precache_model(MDL_Shells_ITEM);
+
     if(!GetResource(item, RES_SHELLS))
         SetResourceExplicit(item, RES_SHELLS, g_pickup_shells);
 }
@@ -72,6 +74,8 @@ MODEL(Bullets_ITEM, Item_Model("a_bullets.mdl"));
 PROPERTY(int, g_pickup_nails);
 void ammo_bullets_init(Pickup this, entity item)
 {
+    precache_model(MDL_Bullets_ITEM);
+
     if(!GetResource(item, RES_BULLETS))
         SetResourceExplicit(item, RES_BULLETS, g_pickup_nails);
 }
@@ -106,6 +110,8 @@ MODEL(Rockets_ITEM, Item_Model("a_rockets.md3"));
 PROPERTY(int, g_pickup_rockets);
 void ammo_rockets_init(Pickup this, entity item)
 {
+    precache_model(MDL_Rockets_ITEM);
+
     if(!GetResource(item, RES_ROCKETS))
         SetResourceExplicit(item, RES_ROCKETS, g_pickup_rockets);
 }
@@ -140,6 +146,8 @@ MODEL(Cells_ITEM, Item_Model("a_cells.md3"));
 PROPERTY(int, g_pickup_cells);
 void ammo_cells_init(Pickup this, entity item)
 {
+    precache_model(MDL_Cells_ITEM);
+
     if(!GetResource(item, RES_CELLS))
         SetResourceExplicit(item, RES_CELLS, g_pickup_cells);
 }

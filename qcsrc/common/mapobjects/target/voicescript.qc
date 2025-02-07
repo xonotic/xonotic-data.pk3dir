@@ -110,7 +110,7 @@ spawnfunc(target_voicescript)
 			this.cnt = i / 2;
 			++i;
 		}
-		precache_sound(strcat(this.netname, "/", argv(i), ".wav"));
+		_precache_sound(strcat(this.netname, "/", argv(i), ".wav"));
 	}
 }
 #endif

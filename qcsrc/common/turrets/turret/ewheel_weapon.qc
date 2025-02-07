@@ -33,4 +33,9 @@ METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, .entity weapon
     }
 }
 
+METHOD(EWheelAttack, wr_init, void(entity thiswep))
+{
+    precache_sound(SND_EWheelAttack_FIRE);
+}
+
 #endif

@@ -24,4 +24,9 @@ METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, .entity we
     }
 }
 
+METHOD(MLRSTurretAttack, wr_init, void(entity thiswep))
+{
+    precache_sound(SND_MLRSTurretAttack_FIRE);
+}
+
 #endif

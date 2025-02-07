@@ -179,7 +179,7 @@ void LocalCommand_debugmodel(int request, int argc)
 			if (modelname != "")
 			{
 				entity debugmodel_entity = new(debugmodel);
-				precache_model(modelname);
+				_precache_model(modelname);
 				_setmodel(debugmodel_entity, modelname);
 				setorigin(debugmodel_entity, view_origin);
 				debugmodel_entity.angles = view_angles;

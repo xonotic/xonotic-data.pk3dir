@@ -68,7 +68,7 @@ void ItemSetModel(entity this, bool wantsimple)
 	// this.model is an engine string so it doesn't need to be zoned and can't be unzoned
 	if(this.model == "")
 		LOG_WARNF("this.model is unset for item %s", this.classname);
-	precache_model(this.model);
+	_precache_model(this.model);
 	_setmodel(this, this.model);
 	setsize(this, this.m_mins, this.m_maxs);
 }

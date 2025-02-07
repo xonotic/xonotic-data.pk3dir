@@ -390,6 +390,17 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 		weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.5, w_ready);
 	}
 }
+
+METHOD(Tuba, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_TUBA_VIEW);
+	precache_model(MDL_TUBA_WORLD);
+	precache_model(MDL_TUBA_ITEM);
+	precache_model(MDL_ACCORDION_VIEW);
+	precache_model(MDL_ACCORDION_WORLD);
+	precache_model(MDL_KLEINBOTTLE_VIEW);
+	precache_model(MDL_KLEINBOTTLE_WORLD);
+}
 #endif
 
 #ifdef SVQC
@@ -586,7 +597,7 @@ PRECACHE(Tuba)
 	for (int n = TUBA_MIN; n <= TUBA_MAX; ++n) {
 		if (!Tuba_PitchStep || pymod(n, Tuba_PitchStep) == 0) {
 			for (int i = 0; i < TUBA_INSTRUMENTS; ++i) {
-				precache_sound(TUBA_STARTNOTE(i, n));
+				_precache_sound(TUBA_STARTNOTE(i, n));
 			}
 		}
 	}

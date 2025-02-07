@@ -170,4 +170,8 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 
     return true;
 }
+METHOD(Zombie, mr_precache, void(Zombie this))
+{
+	precache_model(MDL_MON_ZOMBIE);
+}
 #endif

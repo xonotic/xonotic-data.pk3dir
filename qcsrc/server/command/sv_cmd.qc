@@ -822,7 +822,7 @@ void GameCommand_gettaginfo(int request, int argc)
 				}
 				else
 				{
-					precache_model(argv(1));
+					_precache_model(argv(1));
 					_setmodel(tmp_entity, argv(1));
 				}
 				tmp_entity.frame = stof(argv(2));
@@ -884,7 +884,7 @@ void GameCommand_animbench(int request, int argc)
 				}
 				else
 				{
-					precache_model(argv(1));
+					_precache_model(argv(1));
 					_setmodel(tmp_entity, argv(1));
 				}
 				float f1 = stof(argv(2));

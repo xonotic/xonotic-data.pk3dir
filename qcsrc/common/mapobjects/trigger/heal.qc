@@ -42,7 +42,7 @@ void trigger_heal_init(entity this)
 		this.max_health = 200; // max health topoff for field
 	if(this.noise == "")
 		this.noise = "misc/mediumhealth.wav";
-	precache_sound(this.noise);
+	_precache_sound(this.noise);
 }
 
 spawnfunc(trigger_heal)

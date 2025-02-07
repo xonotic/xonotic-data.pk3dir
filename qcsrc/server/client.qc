@@ -231,7 +231,7 @@ string CheckPlayerModel(string plyermodel) {
 
 void setplayermodel(entity e, string modelname)
 {
-	precache_model(modelname);
+	_precache_model(modelname);
 	_setmodel(e, modelname);
 	player_setupanimsformodel(e);
 	if(!autocvar_g_debug_globalsounds)

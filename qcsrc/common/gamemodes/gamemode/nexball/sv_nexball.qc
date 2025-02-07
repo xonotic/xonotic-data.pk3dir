@@ -536,7 +536,7 @@ void SpawnBall(entity this)
 		this.scale = 1.3;
 	}
 
-	precache_model(this.model);
+	_precache_model(this.model);
 	_setmodel(this, this.model);
 	setsize(this, BALL_MINS, BALL_MAXS);
 	ball_scale = this.scale;
@@ -568,9 +568,9 @@ void SpawnBall(entity this)
 	if(this.noise2 == "")
 		this.noise2 = strzone(SND(NB_STEAL));
 	//stealing sound placeholder (FIXME)
-	if(this.noise) precache_sound(this.noise);
-	precache_sound(this.noise1);
-	precache_sound(this.noise2);
+	if(this.noise) _precache_sound(this.noise);
+	_precache_sound(this.noise1);
+	_precache_sound(this.noise2);
 
 	WaypointSprite_AttachCarrier(WP_NbBall, this, RADARICON_FLAGCARRIER); // the ball's team is not set yet, no rule update needed
 
@@ -638,7 +638,7 @@ void SpawnGoal(entity this)
 	this.classname = "nexball_goal";
 	if(this.noise == "")
 		this.noise = "ctf/respawn.wav";
-	precache_sound(this.noise);
+	_precache_sound(this.noise);
 	settouch(this, GoalTouch);
 }
 
@@ -942,6 +942,12 @@ MUTATOR_HOOKFUNCTION(nb, SendWaypoint)
 
 void nb_Initialize()
 {
+	precache_sound(SND_NB_BOUNCE);
+	precache_sound(SND_NB_DROP);
+	precache_sound(SND_NB_SHOOT1);
+	precache_sound(SND_NB_SHOOT2);
+	precache_sound(SND_NB_STEAL);
+
 	g_nexball_meter_period = autocvar_g_nexball_meter_period;
 	if(g_nexball_meter_period <= 0)
 		g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users

@@ -636,13 +636,13 @@ void precache_playermodel(string m)
 		return;
 	if(substring(m, -9, 5) == "_lod2")
 		return;
-	precache_model(m);
+	_precache_model(m);
 	f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
 	if(fexists(f))
-		precache_model(f);
+		_precache_model(f);
 	f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
 	if(fexists(f))
-		precache_model(f);
+		_precache_model(f);
 
 	globhandle = search_begin(strcat(m, "_*.sounds"), true, false);
 	if (globhandle < 0)

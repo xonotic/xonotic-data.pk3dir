@@ -214,6 +214,15 @@ METHOD(HLAC, wr_killmessage, Notification(entity thiswep))
 	return WEAPON_HLAC_MURDER;
 }
 
+METHOD(HLAC, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_HLAC_VIEW);
+	precache_model(MDL_HLAC_WORLD);
+	precache_model(MDL_HLAC_ITEM);
+
+	precache_sound(SND_HLAC_FIRE);
+}
+
 #endif
 #ifdef CSQC
 

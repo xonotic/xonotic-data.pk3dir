@@ -39,6 +39,8 @@ int autocvar_g_nades_bonus_score_high;
 int autocvar_g_nades_bonus_score_medium;
 int autocvar_g_nades_bonus_score_spree;
 
+MODEL(NADE_VIEW, W_Model("h_ok_grenade.iqm"));
+MODEL(NADE_TIMER, "models/ok_nade_counter/ok_nade_counter.md3");
 
 .entity nade;
 .entity fake_nade;

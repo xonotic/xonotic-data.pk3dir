@@ -536,6 +536,18 @@ METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
 #endif
 }
 
+#ifdef SVQC
+METHOD(Racer, vr_precache, void(Racer thisveh))
+{
+	SUPER(Racer).vr_precache(thisveh);
+
+	precache_sound(SND_VEH_RACER_BOOST);
+	precache_sound(SND_VEH_RACER_IDLE);
+	precache_sound(SND_VEH_RACER_MOVE);
+	precache_sound(SND_VEH_RACER_ROCKET_FLY);
+}
+#endif
+
 METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC

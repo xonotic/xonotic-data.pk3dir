@@ -12,6 +12,8 @@
 #define trailparticles __trailparticles
 #define pointparticles __pointparticles
 #define setmodel _setmodel
+#define precache_model _precache_model
+#define precache_sound _precache_sound
 
 #define STAT_FRAGLIMIT _STAT_FRAGLIMIT
 #define STAT_TIMELIMIT _STAT_TIMELIMIT
@@ -40,6 +42,8 @@
 #undef trailparticles
 #undef pointparticles
 #undef setmodel
+#undef precache_model
+#undef precache_sound
 
 #undef STAT_FRAGLIMIT
 #undef STAT_TIMELIMIT

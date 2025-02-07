@@ -20,6 +20,9 @@ float autocvar_g_balance_powerup_invincible_takeforce;
 float autocvar_g_balance_powerup_invincible_time;
 void powerup_shield_init(Pickup def, entity item)
 {
+    precache_model(MDL_Shield_ITEM);
+    precache_sound(SND_Shield);
+
     if(!autocvar_g_powerups || !autocvar_g_powerups_shield)
         def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 

@@ -28,7 +28,7 @@ void WarpZoneLib_ExactTrigger_Init(entity this, bool unsetmodel)
  	{
 		mi = this.mins;
 		ma = this.maxs;
- 		precache_model(this.model);
+ 		_precache_model(this.model);
  		_setmodel(this, this.model);
 		// let mapper-set mins/maxs override the model's bounds if set
 		if(mi != '0 0 0' || ma != '0 0 0')

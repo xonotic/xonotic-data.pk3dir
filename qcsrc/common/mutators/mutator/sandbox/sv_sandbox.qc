@@ -353,7 +353,7 @@ entity sandbox_ObjectPort_Load(entity this, string s, float database)
 			parent = e; // mark parent objects as such
 		}
 		// properties stored for all objects
-		SANDBOX_GETARG; precache_model(arg); _setmodel(e, arg);
+		SANDBOX_GETARG; _precache_model(arg); _setmodel(e, arg);
 		SANDBOX_GETARG; e.skin = stof(arg);
 		SANDBOX_GETARG; e.alpha = stof(arg);
 		SANDBOX_GETARG; e.colormod = stov(arg);
@@ -442,7 +442,7 @@ void sandbox_Database_Load()
 			{
 				// since objects are being loaded for the first time, precache material sounds for each
 				for (i = 1; i <= 5; ++i) // 5 sounds in total
-					precache_sound(strcat("object/impact_", e.material, "_", ftos(i), ".wav"));
+					_precache_sound(strcat("object/impact_", e.material, "_", ftos(i), ".wav"));
 			}
 		}
 		if(autocvar_g_sandbox_info > 0)
@@ -535,7 +535,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 				}
 
 				e = sandbox_ObjectSpawn(player, false);
-				precache_model(argv(2));
+				_precache_model(argv(2));
 				_setmodel(e, argv(2));
 
 				if(autocvar_g_sandbox_info > 0)
@@ -720,7 +720,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							if(argv(3))
 							{
 								for (j = 1; j <= 5; ++j) // precache material sounds, 5 in total
-									precache_sound(strcat("object/impact_", argv(3), "_", ftos(j), ".wav"));
+									_precache_sound(strcat("object/impact_", argv(3), "_", ftos(j), ".wav"));
 								e.material = strzone(argv(3));
 							}
 							else

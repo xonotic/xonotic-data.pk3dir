@@ -323,6 +323,16 @@ METHOD(OverkillNex, wr_zoom, bool(entity thiswep, entity actor))
 	return PHYS_INPUT_BUTTON_ATCK2(actor) && !WEP_CVAR(WEP_OVERKILL_NEX, secondary);
 }
 
+METHOD(OverkillNex, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_OK_NEX_VIEW);
+	precache_model(MDL_OK_NEX_WORLD);
+	precache_model(MDL_OK_NEX_ITEM);
+
+	precache_sound(SND_OK_NEX_CHARGE);
+	precache_sound(SND_OK_NEX_FIRE);
+}
+
 #endif
 #ifdef CSQC
 
@@ -337,10 +347,9 @@ METHOD(OverkillNex, wr_impacteffect, void(entity thiswep, entity actor))
 
 METHOD(OverkillNex, wr_init, void(entity thiswep))
 {
+	precache_sound(SND_OK_NEX_IMPACT);
 	if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
-	{
 		precache_pic("gfx/reticle_nex");
-	}
 }
 
 METHOD(OverkillNex, wr_zoom, bool(entity thiswep, entity actor))

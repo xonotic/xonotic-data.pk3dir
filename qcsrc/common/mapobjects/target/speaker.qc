@@ -81,7 +81,7 @@ spawnfunc(target_speaker)
 	// TODO: "*" prefix to sound file name
 	// TODO: wait and random (just, HOW? random is not a field)
 	if(this.noise)
-		precache_sound (this.noise);
+		_precache_sound (this.noise);
 
 	if(!this.atten && (this.spawnflags & SPEAKER_GLOBAL) && !(this.spawnflags & 3)) // special check for quake 3: looped sounds are never global
 	{

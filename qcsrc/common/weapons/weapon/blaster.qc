@@ -129,6 +129,15 @@ METHOD(Blaster, wr_killmessage, Notification(entity thiswep))
 	return WEAPON_BLASTER_MURDER;
 }
 
+METHOD(Blaster, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_BLASTER_VIEW);
+	precache_model(MDL_BLASTER_WORLD);
+	precache_model(MDL_BLASTER_ITEM);
+
+	precache_sound(SND_BLASTER_FIRE);
+}
+
 METHOD(OffhandBlaster, offhand_think, void(OffhandBlaster this, entity actor, bool key_pressed))
 {
 	if (!key_pressed || (time < actor.jump_interval))

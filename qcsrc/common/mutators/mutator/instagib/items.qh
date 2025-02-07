@@ -18,6 +18,9 @@ SOUND(VaporizerCells, Item_Sound("itempickup"));
 int autocvar_g_instagib_ammo_drop;
 void ammo_vaporizercells_init(Pickup this, entity item)
 {
+    precache_model(MDL_VaporizerCells_ITEM);
+    precache_sound(SND_VaporizerCells);
+
     if(!GetResource(item, RES_CELLS))
         SetResourceExplicit(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
 }
@@ -52,6 +55,14 @@ MODEL(ExtraLife_ITEM, Item_Model("g_h100.md3"));
 SOUND(ExtraLife, Item_Sound("megahealth"));
 #endif
 
+#ifdef SVQC
+void powerup_extralife_init(Pickup def, entity item)
+{
+    precache_model(MDL_ExtraLife_ITEM);
+    precache_sound(SND_ExtraLife);
+}
+#endif
+
 CLASS(ExtraLife, Powerup)
 /* spawnfunc */ ATTRIB(ExtraLife, m_canonical_spawnfunc, string, "item_extralife");
 #ifdef GAMEQC
@@ -66,6 +77,7 @@ CLASS(ExtraLife, Powerup)
 /* wpblink   */ ATTRIB(ExtraLife, m_waypointblink, int, 2);
 #ifdef SVQC
 /* itemid    */ ATTRIB(ExtraLife, m_itemid, int, IT_RESOURCE);
+/* iteminit  */ ATTRIB(ExtraLife, m_iteminit, void(Pickup this, entity item), powerup_extralife_init);
 #endif
 ENDCLASS(ExtraLife)
 REGISTER_ITEM(ExtraLife, NEW(ExtraLife));

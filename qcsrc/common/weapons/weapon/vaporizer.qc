@@ -373,6 +373,16 @@ METHOD(Vaporizer, wr_killmessage, Notification(entity thiswep))
 	return WEAPON_VAPORIZER_MURDER;
 }
 
+METHOD(Vaporizer, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_VAPORIZER_MUZZLEFLASH);
+	precache_model(MDL_VAPORIZER_VIEW);
+	precache_model(MDL_VAPORIZER_WORLD);
+	precache_model(MDL_VAPORIZER_ITEM);
+
+	precache_sound(SND_VAPORIZER_FIRE);
+}
+
 #endif
 #ifdef CSQC
 
@@ -386,10 +396,9 @@ METHOD(Vaporizer, wr_impacteffect, void(entity thiswep, entity actor))
 
 METHOD(Vaporizer, wr_init, void(entity thiswep))
 {
+	precache_sound(SND_VAPORIZER_IMPACT);
 	if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
-	{
 		precache_pic("gfx/reticle_nex");
-	}
 }
 
 METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))

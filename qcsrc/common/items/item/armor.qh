@@ -22,6 +22,9 @@ PROPERTY(int, g_pickup_armorsmall);
 PROPERTY(int, g_pickup_armorsmall_max);
 void item_armorsmall_init(Pickup this, entity item)
 {
+    precache_model(MDL_ArmorSmall_ITEM);
+    precache_sound(SND_ArmorSmall);
+
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armorsmall_max;
     if(!GetResource(item, RES_ARMOR))
@@ -71,6 +74,9 @@ PROPERTY(int, g_pickup_armormedium);
 PROPERTY(int, g_pickup_armormedium_max);
 void item_armormedium_init(Pickup this, entity item)
 {
+    precache_model(MDL_ArmorMedium_ITEM);
+    precache_sound(SND_ArmorMedium);
+
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armormedium_max;
     if(!GetResource(item, RES_ARMOR))
@@ -120,6 +126,9 @@ PROPERTY(int, g_pickup_armorbig);
 PROPERTY(int, g_pickup_armorbig_max);
 void item_armorbig_init(Pickup this, entity item)
 {
+    precache_model(MDL_ArmorBig_ITEM);
+    precache_sound(SND_ArmorBig);
+
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armorbig_max;
     if(!GetResource(item, RES_ARMOR))
@@ -169,6 +178,9 @@ PROPERTY(int, g_pickup_armormega);
 PROPERTY(int, g_pickup_armormega_max);
 void item_armormega_init(Pickup this, entity item)
 {
+    precache_model(MDL_ArmorMega_ITEM);
+    precache_sound(SND_ArmorMega);
+
     if(!item.max_armorvalue)
         item.max_armorvalue = g_pickup_armormega_max;
     if(!GetResource(item, RES_ARMOR))

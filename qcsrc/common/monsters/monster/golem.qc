@@ -279,4 +279,8 @@ METHOD(Golem, mr_setup, bool(Golem this, entity actor))
 
     return true;
 }
+METHOD(Golem, mr_precache, void(Golem this))
+{
+	precache_model(MDL_MON_GOLEM);
+}
 #endif

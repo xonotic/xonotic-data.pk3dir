@@ -51,6 +51,12 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
     }
 }
 
+METHOD(PhaserTurretAttack, wr_init, void(entity thiswep))
+{
+    precache_sound(SND_PhaserTurretAttack_FIRE);
+    precache_sound(SND_PhaserTurretAttack_IMPACT);
+}
+
 void beam_think(entity this)
 {
     entity actor = this.owner;

@@ -414,8 +414,27 @@ METHOD(Fireball, wr_killmessage, Notification(entity thiswep))
 		return WEAPON_FIREBALL_MURDER_BLAST;
 }
 
+METHOD(Fireball, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_FIREBALL_SPHERE);
+	precache_model(MDL_FIREBALL_VIEW);
+	precache_model(MDL_FIREBALL_WORLD);
+	precache_model(MDL_FIREBALL_ITEM);
+
+	precache_sound(SND_FIREBALL_FIRE2);
+	precache_sound(SND_FIREBALL_FIRE);
+	precache_sound(SND_FIREBALL_PREFIRE2);
+}
+
 #endif
 #ifdef CSQC
+
+METHOD(Fireball, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_FIREBALL_FLY2);
+	precache_sound(SND_FIREBALL_FLY);
+	precache_sound(SND_FIREBALL_IMPACT2);
+}
 
 METHOD(Fireball, wr_impacteffect, void(entity thiswep, entity actor))
 {

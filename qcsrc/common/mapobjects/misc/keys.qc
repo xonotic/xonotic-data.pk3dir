@@ -97,7 +97,7 @@ void item_key_touch(entity this, entity toucher)
  */
 void spawn_item_key(entity this)
 {
-	precache_model(this.model);
+	_precache_model(this.model);
 
 	if (this.spawnflags & 1) // FLOATING
 		this.noalign = 1;
@@ -107,7 +107,7 @@ void spawn_item_key(entity this)
 	else
 		set_movetype(this, MOVETYPE_TOSS);
 
-	precache_sound(this.noise);
+	_precache_sound(this.noise);
 
 	this.mdl = this.model;
 	this.effects = EF_LOWPRECISION;

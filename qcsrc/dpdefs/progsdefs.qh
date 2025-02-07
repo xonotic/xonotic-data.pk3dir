@@ -9,6 +9,8 @@
 
 #define spawn _spawn
 #define setmodel _setmodel
+#define precache_model _precache_model
+#define precache_sound _precache_sound
 
 #include "upstream/progsdefs.qc"
 
@@ -19,6 +21,8 @@
 
 #undef spawn
 #undef setmodel
+#undef precache_model
+#undef precache_sound
 
 #define stuffcmd(cl, ...) MACRO_BEGIN \
     entity _cl = (cl); \

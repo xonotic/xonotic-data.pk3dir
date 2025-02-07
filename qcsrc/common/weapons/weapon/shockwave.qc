@@ -678,6 +678,17 @@ METHOD(Shockwave, wr_killmessage, Notification(entity thiswep))
 		return WEAPON_SHOCKWAVE_MURDER;
 }
 
+METHOD(Shockwave, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_SHOCKWAVE_MUZZLEFLASH);
+	precache_model(MDL_SHOCKWAVE_VIEW);
+	precache_model(MDL_SHOCKWAVE_WORLD);
+	precache_model(MDL_SHOCKWAVE_ITEM);
+
+	precache_sound(SND_SHOCKWAVE_FIRE);
+	precache_sound(SND_SHOCKWAVE_MELEE);
+}
+
 #endif
 #ifdef CSQC
 // WEAPONTODO: add client side settings for these

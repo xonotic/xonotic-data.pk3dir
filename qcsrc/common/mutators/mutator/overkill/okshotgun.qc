@@ -103,6 +103,13 @@ METHOD(OverkillShotgun, wr_killmessage, Notification(entity thiswep))
 	return WEAPON_OVERKILL_SHOTGUN_MURDER;
 }
 
+METHOD(OverkillShotgun, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_OK_SHOTGUN_VIEW);
+	precache_model(MDL_OK_SHOTGUN_WORLD);
+	precache_model(MDL_OK_SHOTGUN_ITEM);
+}
+
 #endif
 #ifdef CSQC
 .float prevric;

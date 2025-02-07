@@ -34,6 +34,11 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponen
     }
 }
 
+METHOD(FlacAttack, wr_init, void(entity thiswep))
+{
+    precache_sound(SND_FlacAttack_FIRE);
+}
+
 void turret_flac_projectile_think_explode(entity this)
 {
     if(this.enemy != NULL)

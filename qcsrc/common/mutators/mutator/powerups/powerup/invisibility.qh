@@ -21,6 +21,9 @@ float autocvar_g_balance_powerup_invisibility_alpha;
 float autocvar_g_balance_powerup_invisibility_time;
 void powerup_invisibility_init(Pickup def, entity item)
 {
+    //precache_model(MDL_Invisibility_ITEM);
+    precache_sound(SND_Invisibility);
+
     if(!autocvar_g_powerups || !autocvar_g_powerups_invisibility)
         def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 

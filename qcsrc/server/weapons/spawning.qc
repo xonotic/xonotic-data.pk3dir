@@ -156,9 +156,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 
 	StartItem(this, wpn.m_pickup);
 
-	#if 0 // WEAPONTODO
-	if (this.modelindex) { // don't precache if this was removed
+	if (!wasfreed(this)) { // don't precache if this was removed
 		wpn.wr_init(wpn);
 	}
-	#endif
 }

@@ -335,6 +335,16 @@ METHOD(Vortex, wr_zoom, bool(entity thiswep, entity actor))
 {
 	return PHYS_INPUT_BUTTON_ATCK2(actor) && !WEP_CVAR(WEP_VORTEX, secondary);
 }
+METHOD(Vortex, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_VORTEX_MUZZLEFLASH);
+	precache_model(MDL_VORTEX_VIEW);
+	precache_model(MDL_VORTEX_WORLD);
+	precache_model(MDL_VORTEX_ITEM);
+
+	precache_sound(SND_VORTEX_CHARGE);
+	precache_sound(SND_VORTEX_FIRE);
+}
 
 #endif
 #ifdef CSQC
@@ -350,10 +360,9 @@ METHOD(Vortex, wr_impacteffect, void(entity thiswep, entity actor))
 }
 METHOD(Vortex, wr_init, void(entity thiswep))
 {
+	precache_sound(SND_VORTEX_IMPACT);
 	if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
-	{
 		precache_pic("gfx/reticle_nex");
-	}
 }
 METHOD(Vortex, wr_zoom, bool(entity thiswep, entity actor))
 {

@@ -131,7 +131,7 @@ CLASS(Sound, Object)
 		string s = _Sound_fixpath(this.sound_str());
 		if (!s) return;
 		//profile(sprintf("precache_sound(\"%s\")", s));
-		precache_sound(s);
+		_precache_sound(s);
 		strcpy(this.sound_str_, s);
 	}
 ENDCLASS(Sound)
@@ -143,3 +143,7 @@ string _Sound_fixpath_cached;
 	_Sound_fixpath_cached = _Sound_fixpath_this.sound_str_, \
 	_Sound_fixpath_cached ? _Sound_fixpath_cached : _Sound_fixpath(_Sound_fixpath_this.sound_str()) \
 )
+
+#define precache_sound(s) MACRO_BEGIN \
+	(s).sound_precache(s); \
+MACRO_END

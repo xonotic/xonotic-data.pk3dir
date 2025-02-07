@@ -8,7 +8,14 @@ float autocvar_g_touchexplode_force;
 
 SOUND(TOUCHEXPLODE, W_Sound("grenade_impact"));
 
-REGISTER_MUTATOR(touchexplode, expr_evaluate(autocvar_g_touchexplode));
+REGISTER_MUTATOR(touchexplode, expr_evaluate(autocvar_g_touchexplode))
+{
+	MUTATOR_ONADD
+	{
+		precache_sound(SND_TOUCHEXPLODE);
+	}
+	return false;
+}
 
 .float touchexplode_time;
 

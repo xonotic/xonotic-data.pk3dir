@@ -22,6 +22,9 @@ PROPERTY(int, g_pickup_healthsmall);
 PROPERTY(int, g_pickup_healthsmall_max);
 void item_healthsmall_init(Pickup this, entity item)
 {
+    precache_model(MDL_HealthSmall_ITEM);
+    precache_sound(SND_HealthSmall);
+
     if(!item.max_health)
         item.max_health = g_pickup_healthsmall_max;
     if(!GetResource(item, RES_HEALTH))
@@ -71,6 +74,9 @@ PROPERTY(int, g_pickup_healthmedium);
 PROPERTY(int, g_pickup_healthmedium_max);
 void item_healthmedium_init(Pickup this, entity item)
 {
+    precache_model(MDL_HealthMedium_ITEM);
+    precache_sound(SND_HealthMedium);
+
     if(!item.max_health)
         item.max_health = g_pickup_healthmedium_max;
     if(!GetResource(item, RES_HEALTH))
@@ -120,6 +126,9 @@ PROPERTY(int, g_pickup_healthbig);
 PROPERTY(int, g_pickup_healthbig_max);
 void item_healthbig_init(Pickup this, entity item)
 {
+    precache_model(MDL_HealthBig_ITEM);
+    precache_sound(SND_HealthBig);
+
     if(!item.max_health)
         item.max_health = g_pickup_healthbig_max;
     if(!GetResource(item, RES_HEALTH))
@@ -169,6 +178,9 @@ PROPERTY(int, g_pickup_healthmega);
 PROPERTY(int, g_pickup_healthmega_max);
 void item_healthmega_init(Pickup this, entity item)
 {
+    precache_model(MDL_HealthMega_ITEM);
+    precache_sound(SND_HealthMega);
+
     if(!item.max_health)
         item.max_health = g_pickup_healthmega_max;
     if(!GetResource(item, RES_HEALTH))

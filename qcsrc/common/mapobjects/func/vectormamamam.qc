@@ -133,7 +133,7 @@ spawnfunc(func_vectormamamam)
 {
 	if (this.noise != "")
 	{
-		precache_sound(this.noise);
+		_precache_sound(this.noise);
 	}
 
 	if(!this.targetfactor)

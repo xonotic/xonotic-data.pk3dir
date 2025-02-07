@@ -1391,7 +1391,7 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	// sounds
 #define X(s,b) \
 		if(flag.s == "") flag.s = b; \
-		precache_sound(flag.s);
+		_precache_sound(flag.s);
 
 	X(snd_flag_taken, 		strzone(SND(CTF_TAKEN(teamnum))))
 	X(snd_flag_returned, 	strzone(SND(CTF_RETURNED(teamnum))))
@@ -1403,7 +1403,7 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 #undef X
 
 	// precache
-	precache_model(flag.model);
+	_precache_model(flag.model);
 
 	// appearence
 	_setmodel(flag, flag.model); // precision set below
@@ -2892,6 +2892,34 @@ void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait f
 
 void ctf_Initialize()
 {
+	precache_model(MDL_CTF_SHIELD);
+	precache_model(MDL_CTF_CAPTURE);
+	precache_model(MDL_CTF_FLAG);
+
+	precache_sound(SND_CTF_CAPTURE_NEUTRAL);
+	precache_sound(SND_CTF_CAPTURE_RED);
+	precache_sound(SND_CTF_CAPTURE_BLUE);
+	precache_sound(SND_CTF_CAPTURE_YELLOW);
+	precache_sound(SND_CTF_CAPTURE_PINK);
+	precache_sound(SND_CTF_DROPPED_NEUTRAL);
+	precache_sound(SND_CTF_DROPPED_RED);
+	precache_sound(SND_CTF_DROPPED_BLUE);
+	precache_sound(SND_CTF_DROPPED_YELLOW);
+	precache_sound(SND_CTF_DROPPED_PINK);
+	precache_sound(SND_CTF_PASS);
+	precache_sound(SND_CTF_RESPAWN);
+	precache_sound(SND_CTF_RETURNED_NEUTRAL);
+	precache_sound(SND_CTF_RETURNED_RED);
+	precache_sound(SND_CTF_RETURNED_BLUE);
+	precache_sound(SND_CTF_RETURNED_YELLOW);
+	precache_sound(SND_CTF_RETURNED_PINK);
+	precache_sound(SND_CTF_TAKEN_NEUTRAL);
+	precache_sound(SND_CTF_TAKEN_RED);
+	precache_sound(SND_CTF_TAKEN_BLUE);
+	precache_sound(SND_CTF_TAKEN_YELLOW);
+	precache_sound(SND_CTF_TAKEN_PINK);
+	precache_sound(SND_CTF_TOUCH);
+
 	CTF_FLAG = NEW(Flag);
 	record_type = CTF_RECORD;
 	ctf_captimerecord = stof(db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time")));

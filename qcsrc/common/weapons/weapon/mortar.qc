@@ -360,8 +360,24 @@ METHOD(Mortar, wr_killmessage, Notification(entity thiswep))
 		return WEAPON_MORTAR_MURDER_EXPLODE;
 }
 
+METHOD(Mortar, wr_init, void(entity thiswep))
+{
+	precache_model(MDL_MORTAR_VIEW);
+	precache_model(MDL_MORTAR_WORLD);
+	precache_model(MDL_MORTAR_ITEM);
+
+	precache_sound(SND_MORTAR_DET);
+	precache_sound(SND_MORTAR_FIRE);
+	precache_sound(SND_MORTAR_STICK);
+}
+
 #endif
 #ifdef CSQC
+
+METHOD(Mortar, wr_init, void(entity thiswep))
+{
+	precache_sound(SND_MORTAR_IMPACT);
+}
 
 METHOD(Mortar, wr_impacteffect, void(entity thiswep, entity actor))
 {
