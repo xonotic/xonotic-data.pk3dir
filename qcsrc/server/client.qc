@@ -2445,11 +2445,14 @@ bool PlayerThink(entity this)
 	return true;
 }
 
-.bool would_spectate;
+#define IS_WEAPNEXT_IMPULSE(imp) (imp == 10 || imp == 15 || imp == 18 || (imp >= 200 && imp <= 209))
+#define IS_WEAPPREV_IMPULSE(imp) (imp == 12 || imp == 16 || imp == 19 || (imp >= 220 && imp <= 229))
+
 // merged SpectatorThink and ObserverThink (old names are here so you can grep for them)
 void ObserverOrSpectatorThink(entity this)
 {
 	bool is_spec = IS_SPEC(this);
+
 	if ( CS(this).impulse )
 	{
 		int r = MinigameImpulse(this, CS(this).impulse);
@@ -2483,7 +2486,7 @@ void ObserverOrSpectatorThink(entity this)
 		if (PHYS_INPUT_BUTTON_JUMP(this) && (joinAllowed(this, this.wants_join) || time < CS(this).jointime + MIN_SPEC_TIME)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
-		} else if((is_spec && (PHYS_INPUT_BUTTON_ATCK(this) || CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18 || (CS(this).impulse >= 200 && CS(this).impulse <= 209)))
+		} else if((is_spec && (PHYS_INPUT_BUTTON_ATCK(this) || IS_WEAPNEXT_IMPULSE(CS(this).impulse)))
 			|| (!is_spec && ((PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch) || this.would_spectate))) {
 			this.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext(this)) {
@@ -2497,7 +2500,7 @@ void ObserverOrSpectatorThink(entity this)
 			if (is_spec)
 				CS(this).impulse = 0;
 		} else if (is_spec) {
-			if(CS(this).impulse == 12 || CS(this).impulse == 16  || CS(this).impulse == 19 || (CS(this).impulse >= 220 && CS(this).impulse <= 229)) {
+			if(PHYS_INPUT_BUTTON_ATCK2(this) || IS_WEAPPREV_IMPULSE(CS(this).impulse)) {
 				this.flags &= ~FL_JUMPRELEASED;
 				if(SpectatePrev(this)) {
 					TRANSMUTE(Spectator, this);
@@ -2506,13 +2509,6 @@ void ObserverOrSpectatorThink(entity this)
 					PutClientInServer(this);
 				}
 				CS(this).impulse = 0;
-			} else if(PHYS_INPUT_BUTTON_ATCK2(this)) {
-				if(!observe_blocked_if_eliminated || !INGAME(this)) {
-					this.would_spectate = false;
-					this.flags &= ~FL_JUMPRELEASED;
-					TRANSMUTE(Observer, this);
-					PutClientInServer(this);
-				}
 			} else if(!SpectateUpdate(this) && !SpectateNext(this)) {
 				PutObserverInServer(this, false, true);
 				this.would_spectate = true;
@@ -2546,6 +2542,8 @@ void ObserverOrSpectatorThink(entity this)
 	if (is_spec)
 		this.flags |= FL_CLIENT | FL_NOTARGET;
 }
+#undef IS_WEAPNEXT_IMPULSE
+#undef IS_WEAPPREV_IMPULSE
 
 void PlayerUseKey(entity this)
 {

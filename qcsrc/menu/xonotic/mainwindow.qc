@@ -6,6 +6,7 @@
 #include "inputbox.qh"
 #include "dialog_termsofservice.qh"
 #include "dialog_firstrun.qh"
+#include "dialog_forfeit.qh"
 #include "dialog_hudsetup_exit.qh"
 #include "dialog_hudpanel_notification.qh"
 #include "dialog_hudpanel_ammo.qh"
@@ -265,6 +266,10 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	i = NEW(XonoticUid2NameDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	i = NEW(XonoticForfeitDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 

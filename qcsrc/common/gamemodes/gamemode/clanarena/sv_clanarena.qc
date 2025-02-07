@@ -635,7 +635,7 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 	{
 		// they're going to spec, we can do other checks
 		if (autocvar_sv_spectate && (IS_SPEC(player) || IS_OBSERVER(player)))
-			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_LEAVE);
+			return MUT_SPECCMD_RETURN_FORFEIT;
 		return MUT_SPECCMD_FORCE;
 	}
 
