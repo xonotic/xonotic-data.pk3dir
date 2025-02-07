@@ -44,6 +44,7 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 	me.gotoRC(me, me.rows - 8, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Setting:")));
 		me.TD(me, 1, me.columns - 1, e = makeXonoticTextLabel(0, string_null));
+			e.colorL = '1 1 0'; // draw the cvar name yellow
 			cvarlist.cvarNameBox = e;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Type:")));
