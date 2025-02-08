@@ -178,10 +178,9 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 1.2, e = makeXonoticCheckBox_T(0, "hud_dynamic_follow", _("Dynamic HUD"),
 			_("HUD moves around following player's movement")));
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "hud_dynamic_shake", _("Shake the HUD when hurt")));
-	me.TR(me);
-	me.TR(me);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("Enter HUD editor"), '0 0 0'));
+
+	me.gotoRC(me, me.rows - 1, 0); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Enter HUD editor"), '0 0 0'));
 			e.onClick = HUDSetup_Check_Gamestatus;
 			e.onClickEntity = me;
 		// TODO: show hud config name with text here
