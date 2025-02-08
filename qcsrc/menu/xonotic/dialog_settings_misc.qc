@@ -9,7 +9,6 @@
 #include "mainwindow.qh"
 #include "commandbutton.qh"
 
-#define ADDVALUE_FPS(i) e.addText(e, strzone(sprintf(_("%d fps"), i)), i)
 #define ADDVALUE_SPEED_KB(i) e.addText(e, strzone(sprintf(_("%d KiB/s"), i)), i)
 #define ADDVALUE_SPEED_MB(i, j) e.addText(e, strzone(sprintf(_("%d MiB/s"), i)), j)
 entity makeXonoticMiscSettingsTab()
@@ -63,44 +62,6 @@ void XonoticMiscSettingsTab_fill(entity me)
 		e.configureXonoticMixedSliderValues(e);
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Framerate")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "showfps", _("Show frames per second"),
-			_("Show your rendered frames per second")));
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Maximum:")));
-		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_maxfps"));
-			ADDVALUE_FPS(128);
-			ADDVALUE_FPS(256);
-			ADDVALUE_FPS(512);
-			ADDVALUE_FPS(1024);
-			ADDVALUE_FPS(2048);
-			e.addText(e, ZCTX(_("MAXFPS^Unlimited")), 0);
-			e.configureXonoticMixedSliderValues(e);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Target:")));
-		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_minfps"));
-			e.addText(e, ZCTX(_("TRGT^Disabled")), 0);
-			ADDVALUE_FPS(40);
-			ADDVALUE_FPS(60);
-			ADDVALUE_FPS(100);
-			ADDVALUE_FPS(125);
-			ADDVALUE_FPS(150);
-			ADDVALUE_FPS(200);
-			ADDVALUE_FPS(250);
-			ADDVALUE_FPS(400);
-			e.configureXonoticMixedSliderValues(e);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Idle limit:")));
-		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_maxidlefps"));
-			ADDVALUE_FPS(16);
-			ADDVALUE_FPS(32);
-			ADDVALUE_FPS(64);
-			ADDVALUE_FPS(128);
-			e.addText(e, ZCTX(_("IDLFPS^Unlimited")), 0);
-			e.configureXonoticMixedSliderValues(e);
-	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Other")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu tooltips:")));
@@ -131,4 +92,3 @@ void XonoticMiscSettingsTab_fill(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, miscApplyButton);
 }
-#undef ADDVALUE_FPS

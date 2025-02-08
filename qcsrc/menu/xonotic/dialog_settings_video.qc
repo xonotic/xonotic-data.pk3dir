@@ -8,6 +8,7 @@
 #include "slider_resolution.qh"
 #include "radiobutton.qh"
 
+#define ADDVALUE_FPS(i) e.addText(e, strzone(sprintf(_("%d fps"), i)), i)
 entity makeXonoticVideoSettingsTab()
 {
 	entity me;
@@ -107,6 +108,17 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addText(e, ZCTX(_("DF^All")), 2);
 			e.configureXonoticMixedSliderValues(e);
 
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "gl_finish", _("Wait for GPU to finish each frame"),
+			_("Make the CPU wait for the GPU to finish each frame, can help with some strange input or video lag on some machines")));
+	me.TR(me);
+	if (cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+	{
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_gl20", _("Use OpenGL 2.0 shaders (GLSL)")));
+			e.applyButton = videoApplyButton;
+	}
+
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Brightness:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.0, 0.5, 0.02, "v_brightness",
@@ -148,17 +160,47 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Intensity:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.5, 2.0, 0.05, "r_hdr_scenebrightness",
 			_("Global rendering brightness")));
+
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "gl_finish", _("Wait for GPU to finish each frame"),
-			_("Make the CPU wait for the GPU to finish each frame, can help with some strange input or video lag on some machines")));
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Framerate")));
 	me.TR(me);
-	if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
-	{
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_gl20", _("Use OpenGL 2.0 shaders (GLSL)")));
-			e.applyButton = videoApplyButton;
-	}
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "showfps", _("Show frames per second"),
+			_("Show your rendered frames per second")));
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Maximum:")));
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_maxfps"));
+			ADDVALUE_FPS(128);
+			ADDVALUE_FPS(256);
+			ADDVALUE_FPS(512);
+			ADDVALUE_FPS(1024);
+			ADDVALUE_FPS(2048);
+			e.addText(e, ZCTX(_("MAXFPS^Unlimited")), 0);
+			e.configureXonoticMixedSliderValues(e);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Target:")));
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_minfps"));
+			e.addText(e, ZCTX(_("TRGT^Disabled")), 0);
+			ADDVALUE_FPS(40);
+			ADDVALUE_FPS(60);
+			ADDVALUE_FPS(100);
+			ADDVALUE_FPS(125);
+			ADDVALUE_FPS(150);
+			ADDVALUE_FPS(200);
+			ADDVALUE_FPS(250);
+			ADDVALUE_FPS(400);
+			e.configureXonoticMixedSliderValues(e);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Idle limit:")));
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_maxidlefps"));
+			ADDVALUE_FPS(16);
+			ADDVALUE_FPS(32);
+			ADDVALUE_FPS(64);
+			ADDVALUE_FPS(128);
+			e.addText(e, ZCTX(_("IDLFPS^Unlimited")), 0);
+			e.configureXonoticMixedSliderValues(e);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, videoApplyButton);
 }
+#undef ADDVALUE_FPS
