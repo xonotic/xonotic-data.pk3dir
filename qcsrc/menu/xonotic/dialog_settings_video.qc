@@ -31,6 +31,12 @@ void XonoticVideoSettingsTab_fill(entity me)
 	videoApplyButton.disableOnClick = true;
 
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));
+			e.applyButton = videoApplyButton;
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "vid_borderless", _("Borderless window")));
+			setDependent(e, "vid_fullscreen", 0, 0);
+	me.TR(me);
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Resolution:")));
 		me.TD(me, 1, 2, e = makeXonoticResolutionSlider());
 			e.applyButton = videoApplyButton;
@@ -49,26 +55,13 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.configureXonoticMixedSliderValues(e);
 			e.applyButton = videoApplyButton;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Color depth:")));
-		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("vid_bitsperpixel",
-			_("How many bits per pixel (BPP) to render at, 32 is recommended")));
-			e.addText(e, _("16bit"), 16);
-			e.addText(e, _("32bit"), 32);
-			e.configureXonoticMixedSliderValues(e);
-			e.applyButton = videoApplyButton;
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));
-			e.applyButton = videoApplyButton;
-		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "vid_vsync", _("Vertical Synchronization"),
-			_("Vsync prevents tearing, but increases latency and caps your fps at the screen refresh rate")));
-	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "r_viewfbo", _("High-quality frame buffer")));
-		if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+		if (cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 			setDependent(e, "vid_samples", 0, 1);
 
 	me.TR(me);
 	me.TR(me);
-	if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+	if (cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 	{
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Antialiasing:")));
 			setDependent(e, "r_viewfbo", 0, 0);
@@ -98,15 +91,13 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addText(e, _("16x"), 16);
 			e.configureXonoticMixedSliderValues(e);
 
+	string df_tooltip = _("Eliminate overdraw by rendering a depth-only version of the scene before the normal rendering starts");
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Depth first:")));
-		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("r_depthfirst",
-			_("Eliminate overdraw by rendering a depth-only version of the scene before the normal rendering starts")));
-			e.addText(e, ZCTX(_("DF^Disabled")), 0);
-			e.addText(e, ZCTX(_("DF^World")), 1);
-			e.addText(e, ZCTX(_("DF^All")), 2);
-			e.configureXonoticMixedSliderValues(e);
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton_T(2, "r_depthfirst", "0", ZCTX(_("DF^Disabled")), df_tooltip));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton_T(2, "r_depthfirst", "1", ZCTX(_("DF^World")), df_tooltip));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton_T(2, "r_depthfirst", "2", ZCTX(_("DF^All")), df_tooltip));
 
 	me.TR(me);
 	me.TR(me);
@@ -129,29 +120,28 @@ void XonoticVideoSettingsTab_fill(entity me)
 			_("Brightness of white")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gamma:")));
-		if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+		if (cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.5, 2.0, 0.05, "v_gamma",
 			_("Inverse gamma correction value, a brightness effect that does not affect white or black")));
-		if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+		if (cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Contrast boost:")));
-		if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+		if (cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1.0, 5.0, 0.1, "v_contrastboost",
 			_("By how much to multiply the contrast in dark areas")));
-		if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+		if (cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Saturation:")));
-		if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+		if (cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 			setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.5, 2.0, 0.05, "r_glsl_saturation",
 			_("Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), requires GLSL color control")));
-		if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+		if (cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 			setDependent(e, "vid_gl20", 1, 1);
-	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("LIT^Ambient:"))));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 20.0, 0.25, "r_ambient",
@@ -164,9 +154,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Framerate")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "showfps", _("Show frames per second"),
-			_("Show your rendered frames per second")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Maximum:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_maxfps"));
@@ -199,6 +186,12 @@ void XonoticVideoSettingsTab_fill(entity me)
 			ADDVALUE_FPS(128);
 			e.addText(e, ZCTX(_("IDLFPS^Unlimited")), 0);
 			e.configureXonoticMixedSliderValues(e);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "vid_vsync", _("Vertical Synchronization"),
+			_("Vsync prevents tearing, but increases latency and caps your fps at the screen refresh rate")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "showfps", _("Show frames per second"),
+			_("Show your rendered frames per second")));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, videoApplyButton);
