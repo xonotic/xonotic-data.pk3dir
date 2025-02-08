@@ -68,8 +68,17 @@ void XonoticUserSettingsTab_fill(entity me)
 			e.onClick = SetLanguage_Click;
 			e.onClickEntity = sk;
 
-	me.gotoRC(me, 11.5, 3.25); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 11, 3.25); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox_T(0, "cl_gentle", _("Disable gore effects and harsh language"),
 			_("Replace blood and gibs with content that does not have any gore effects")));
 			e.sendCvars = true;
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.3, e = makeXonoticCheckBox(0, "cl_gentle_gibs", _("Just the gore")));
+			makeMulti(e, "cl_gentle_damage");
+			setDependent(e, "cl_gentle", 0, 0);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.3, e = makeXonoticCheckBox(0, "cl_gentle_messages", _("Just the language")));
+			setDependent(e, "cl_gentle", 0, 0);
 }
