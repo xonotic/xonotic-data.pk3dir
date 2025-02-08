@@ -24,6 +24,7 @@ CLASS(XonoticCvarList, XonoticListBox)
 	METHOD(XonoticCvarList, updateCvarType, float(entity));
 
 	ATTRIB(XonoticCvarList, controlledTextbox, entity);
+	ATTRIB(XonoticCvarList, cvarlistResultCountBox, entity);
 	ATTRIB(XonoticCvarList, cvarNameBox, entity);
 	ATTRIB(XonoticCvarList, cvarDescriptionBox, entity);
 	ATTRIB(XonoticCvarList, cvarTypeBox, entity);
@@ -32,6 +33,7 @@ CLASS(XonoticCvarList, XonoticListBox)
 	ATTRIB(XonoticCvarList, cvarNeedsForcing, float, 0);
 
 	ATTRIB(XonoticCvarList, handle, float, -1);
+	ATTRIB(XonoticCvarList, cvarlistResultCount, string);
 	ATTRIB(XonoticCvarList, cvarName, string);
 	ATTRIB(XonoticCvarList, cvarDescription, string);
 	ATTRIB(XonoticCvarList, cvarType, string);
