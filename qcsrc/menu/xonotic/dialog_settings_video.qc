@@ -31,6 +31,12 @@ void XonoticVideoSettingsTab_fill(entity me)
 	videoApplyButton.disableOnClick = true;
 
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));
+			e.applyButton = videoApplyButton;
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "vid_borderless", _("Borderless window")));
+			setDependent(e, "vid_fullscreen", 0, 0);
+	me.TR(me);
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Resolution:")));
 		me.TD(me, 1, 2, e = makeXonoticResolutionSlider());
 			e.applyButton = videoApplyButton;
@@ -56,11 +62,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addValue(e, _("32bit"), "32");
 			e.configureXonoticTextSliderValues(e);
 			e.applyButton = videoApplyButton;
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));
-			e.applyButton = videoApplyButton;
-		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "vid_vsync", _("Vertical Synchronization"),
-			_("Vsync prevents tearing, but increases latency and caps your fps at the screen refresh rate")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "r_viewfbo", _("High-quality frame buffer")));
 		if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
@@ -152,7 +153,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 		if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("LIT^Ambient:"))));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 20.0, 0.25, "r_ambient",
 			_("Ambient lighting, if set too high it tends to make light on maps look dull and flat")));
@@ -164,9 +164,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Framerate")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "showfps", _("Show frames per second"),
-			_("Show your rendered frames per second")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Maximum:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_maxfps"));
@@ -199,6 +196,12 @@ void XonoticVideoSettingsTab_fill(entity me)
 			ADDVALUE_FPS(128);
 			e.addValue(e, ZCTX(_("IDLFPS^Unlimited")), "0");
 			e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "vid_vsync", _("Vertical Synchronization"),
+			_("Vsync prevents tearing, but increases latency and caps your fps at the screen refresh rate")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "showfps", _("Show frames per second"),
+			_("Show your rendered frames per second")));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, videoApplyButton);
