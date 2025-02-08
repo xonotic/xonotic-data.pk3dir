@@ -115,7 +115,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 	me.TR(me);
 	#endif
 
-	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, 3); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Player Names")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_shownames", _("Show names above players")));
@@ -161,6 +161,8 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 
 	me.TR(me);
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Other")));
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Speed unit:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider("hud_speed_unit"));
 			e.addText(e, _("qu/s"),  1);
@@ -173,10 +175,9 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Damage overlay:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "hud_dynamic_follow", _("Dynamic HUD"),
+		me.TD(me, 1, 1.2, e = makeXonoticCheckBox_T(0, "hud_dynamic_follow", _("Dynamic HUD"),
 			_("HUD moves around following player's movement")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_dynamic_shake", _("Shake the HUD when hurt")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "hud_dynamic_shake", _("Shake the HUD when hurt")));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
