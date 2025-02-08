@@ -11,5 +11,3 @@ CLASS(XonoticGameMessageSettingsTab, XonoticTab)
 	ATTRIB(XonoticGameMessageSettingsTab, weaponsList, entity);
 ENDCLASS(XonoticGameMessageSettingsTab)
 entity makeXonoticGameMessageSettingsTab();
-#include "../gamesettings.qh"
-REGISTER_SETTINGS(Messages, makeXonoticGameMessageSettingsTab());

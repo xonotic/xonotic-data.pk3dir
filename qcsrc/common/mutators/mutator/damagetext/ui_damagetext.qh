@@ -10,4 +10,3 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
 	ATTRIB(XonoticDamageTextSettings, columns, float, 5);
 ENDCLASS(XonoticDamageTextSettings)
 entity makeXonoticDamageTextSettingsTab();
-REGISTER_SETTINGS(damagetext, makeXonoticDamageTextSettingsTab());
