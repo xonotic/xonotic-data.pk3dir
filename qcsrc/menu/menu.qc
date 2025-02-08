@@ -101,6 +101,11 @@ void m_init()
 		else m_hide();
 		cvar_set("_menu_initialized", "1");
 	}
+	else
+	{
+	    // exec font cfg again in case font depends on menu cvars like prvm_language
+		localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
+	}
 }
 
 const float MENU_ASPECT = 1280 / 1024;
