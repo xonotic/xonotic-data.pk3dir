@@ -24,6 +24,7 @@ CLASS(XonoticCvarList, XonoticListBox)
 	METHOD(XonoticCvarList, updateCvarType, bool(entity));
 
 	ATTRIB(XonoticCvarList, controlledTextbox, entity);
+	ATTRIB(XonoticCvarList, cvarlistResultCountBox, entity);
 	ATTRIB(XonoticCvarList, cvarNameBox, entity);
 	ATTRIB(XonoticCvarList, cvarDescriptionBox, entity);
 	ATTRIB(XonoticCvarList, cvarTypeBox, entity);

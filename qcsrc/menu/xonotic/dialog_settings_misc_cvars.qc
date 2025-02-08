@@ -41,7 +41,8 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 			e.onClickEntity = cvarlist;
 			e.onClick = CvarList_Filter_ModifiedCvars;
 	me.TR(me);
-		me.TDempty(me, 1);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, string_null));
+			cvarlist.cvarlistResultCountBox = e;
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "menu_cvarlist_descriptions", _("Search in cvar descriptions too")));
 			e.color = e.colorC = e.colorF = e.colorD = SKINCOLOR_CVARLIST_CONTROLS;
 			e.onClickEntity = cvarlist;

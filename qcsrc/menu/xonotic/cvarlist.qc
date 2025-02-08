@@ -18,17 +18,25 @@ void XonoticCvarList_configureXonoticCvarList(entity me)
 	me.handle = buf_create();
 	me.nItems = 0;
 }
+void CvarList_UpdateResults(entity me)
+{
+	int c = me.nItems;
+	static string cvarlistResultCount = string_null;
+	strcpy(cvarlistResultCount, c == 1 ? _("1 result") : sprintf(_("%d results"), c));
+	me.cvarlistResultCountBox.setText(me.cvarlistResultCountBox, cvarlistResultCount);
+}
 void CvarList_Load(entity me, string filter)
 {
 	if(me.handle < 0)
 		return;
 
-	if(!autocvar_menu_cvarlist_onlymodified
+	if (!autocvar_menu_cvarlist_onlymodified
 		&& (!autocvar_menu_cvarlist_descriptions || filter == ""))
 	{
 		// simplest case where we filter only cvar names (or no filter at all)
 		buf_cvarlist(me.handle, filter, "_"); // cvars starting with "_" are excluded
 		me.nItems = buf_getsize(me.handle);
+		CvarList_UpdateResults(me);
 		return;
 	}
 
@@ -51,7 +59,7 @@ void CvarList_Load(entity me, string filter)
 	for (int i = 0; i < me.nItems; ++i)
 	{
 		string cvar_name = bufstr_get(me.handle, i);
-		if(autocvar_menu_cvarlist_onlymodified && cvar_string(cvar_name) == cvar_defstring(cvar_name))
+		if (autocvar_menu_cvarlist_onlymodified && cvar_string(cvar_name) == cvar_defstring(cvar_name))
 		{
 			continue;
 		}
@@ -67,6 +75,7 @@ void CvarList_Load(entity me, string filter)
 	buf_del(me.handle);
 	me.handle = newbuf;
 	me.nItems = buf_getsize(me.handle);
+	CvarList_UpdateResults(me);
 }
 void XonoticCvarList_showNotify(entity me)
 {
