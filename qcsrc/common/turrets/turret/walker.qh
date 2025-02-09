@@ -2,8 +2,6 @@
 
 //#define WALKER_FANCYPATHING
 
-#include "walker_weapon.qh"
-
 CLASS(WalkerTurret, Turret)
 /* spawnflags */ ATTRIB(WalkerTurret, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE);
 /* mins       */ ATTRIB(WalkerTurret, m_mins, vector, '-70 -70 0');
@@ -13,7 +11,6 @@ CLASS(WalkerTurret, Turret)
 /* head_model */ ATTRIB_STRZONE(WalkerTurret, head_model, string, strcat("models/turrets/", "walker_head_minigun.md3"));
 /* netname    */ ATTRIB(WalkerTurret, netname, string, "walker");
 /* fullname   */ ATTRIB(WalkerTurret, m_name, string, _("Walker Turret"));
-    ATTRIB(WalkerTurret, m_weapon, Weapon, WEP_WALKER);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

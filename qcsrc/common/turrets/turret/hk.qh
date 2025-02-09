@@ -2,8 +2,6 @@
 
 //#define TURRET_DEBUG_HK
 
-#include "hk_weapon.qh"
-
 CLASS(HunterKiller, Turret)
 /* spawnflags */ ATTRIB(HunterKiller, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER | TUR_FLAG_RECIEVETARGETS);
 /* mins       */ ATTRIB(HunterKiller, m_mins, vector, '-32 -32 0');
@@ -13,7 +11,6 @@ CLASS(HunterKiller, Turret)
 /* head_model */ ATTRIB_STRZONE(HunterKiller, head_model, string, strcat("models/turrets/", "hk.md3"));
 /* netname    */ ATTRIB(HunterKiller, netname, string, "hk");
 /* fullname   */ ATTRIB(HunterKiller, m_name, string, _("Hunter-Killer Turret"));
-    ATTRIB(HunterKiller, m_weapon, Weapon, WEP_HK);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

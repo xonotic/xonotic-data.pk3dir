@@ -1,7 +1,5 @@
 #pragma once
 
-#include "hellion_weapon.qh"
-
 CLASS(Hellion, Turret)
 /* spawnflags */ ATTRIB(Hellion, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_FASTPROJ | TUR_FLAG_PLAYER | TUR_FLAG_MISSILE);
 /* mins       */ ATTRIB(Hellion, m_mins, vector, '-32 -32 0');
@@ -11,7 +9,6 @@ CLASS(Hellion, Turret)
 /* head_model */ ATTRIB_STRZONE(Hellion, head_model, string, strcat("models/turrets/", "hellion.md3"));
 /* netname    */ ATTRIB(Hellion, netname, string, "hellion");
 /* fullname   */ ATTRIB(Hellion, m_name, string, _("Hellion Missile Turret"));
-    ATTRIB(Hellion, m_weapon, Weapon, WEP_HELLION);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

@@ -134,6 +134,22 @@ void ewheel_findtarget(entity this)
 
 spawnfunc(turret_ewheel) { if(!turret_initialize(this, TUR_EWHEEL)) delete(this); }
 
+SOUND(EWheelAttack_FIRE, W_Sound("lasergun_fire"));
+METHOD(EWheel, tr_attack, void(EWheel this, entity actor))
+{
+    turret_do_updates(actor);
+
+    entity missile = turret_projectile(actor, SND_EWheelAttack_FIRE, 1, 0, DEATH_TURRET_EWHEEL.m_id, PROJECTILE_BLASTER, true, true);
+    missile.missile_flags = MIF_SPLASH;
+
+    Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);
+
+    actor.tur_head.frame += 2;
+
+    if (actor.tur_head.frame > 3)
+        actor.tur_head.frame = 0;
+}
+
 METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
 {
     vector wish_angle, real_angle;

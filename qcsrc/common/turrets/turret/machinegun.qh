@@ -1,7 +1,5 @@
 #pragma once
 
-#include "machinegun_weapon.qh"
-
 CLASS(MachineGunTurret, Turret)
 /* spawnflags */ ATTRIB(MachineGunTurret, spawnflags, int, TUR_FLAG_PLAYER);
 /* mins       */ ATTRIB(MachineGunTurret, m_mins, vector, '-32 -32 0');
@@ -11,7 +9,6 @@ CLASS(MachineGunTurret, Turret)
 /* head_model */ ATTRIB_STRZONE(MachineGunTurret, head_model, string, strcat("models/turrets/", "machinegun.md3"));
 /* netname    */ ATTRIB(MachineGunTurret, netname, string, "machinegun");
 /* fullname   */ ATTRIB(MachineGunTurret, m_name, string, _("Machinegun Turret"));
-    ATTRIB(MachineGunTurret, m_weapon, Weapon, WEP_TUR_MACHINEGUN);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

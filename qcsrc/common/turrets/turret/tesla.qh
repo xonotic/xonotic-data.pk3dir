@@ -1,7 +1,5 @@
 #pragma once
 
-#include "tesla_weapon.qh"
-
 CLASS(TeslaCoil, Turret)
 /* spawnflags */ ATTRIB(TeslaCoil, spawnflags, int, TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER | TUR_FLAG_MISSILE);
 /* mins       */ ATTRIB(TeslaCoil, m_mins, vector, '-60 -60 0');
@@ -11,7 +9,6 @@ CLASS(TeslaCoil, Turret)
 /* head_model */ ATTRIB_STRZONE(TeslaCoil, head_model, string, strcat("models/turrets/", "tesla_head.md3"));
 /* netname    */ ATTRIB(TeslaCoil, netname, string, "tesla");
 /* fullname   */ ATTRIB(TeslaCoil, m_name, string, _("Tesla Coil"));
-    ATTRIB(TeslaCoil, m_weapon, Weapon, WEP_TESLA);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

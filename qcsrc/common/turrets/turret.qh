@@ -44,10 +44,8 @@ CLASS(Turret, Object)
     ATTRIB(Turret, m_weapon, Weapon);
 #ifdef SVQC
     /** (SERVER) called when turret attacks */
-    METHOD(Turret, tr_attack, void(Turret this, entity it)) {
-        Weapon w = this.m_weapon;
-        .entity weaponentity = weaponentities[0];
-        w.wr_think(w, it, weaponentity, 1);
+    METHOD(Turret, tr_attack, void(Turret this, entity actor)) {
+
     }
 #endif
 	/** (SERVER) dump turret cvars to config in data directory (see: sv_cmd dumpturrets) */

@@ -4,6 +4,16 @@
 
 spawnfunc(turret_mlrs) { if (!turret_initialize(this, TUR_MLRS)) delete(this); }
 
+SOUND(MLRSTurretAttack_FIRE, W_Sound("rocket_fire"));
+METHOD(MLRSTurret, tr_attack, void(MLRSTurret this, entity actor))
+{
+    turret_tag_fire_update(actor);
+    entity missile = turret_projectile(actor, SND_MLRSTurretAttack_FIRE, 6, 10, DEATH_TURRET_MLRS.m_id, PROJECTILE_ROCKET, true, true);
+    missile.nextthink = time + max(actor.tur_impacttime,(actor.shot_radius * 2) / actor.shot_speed);
+    missile.missile_flags = MIF_SPLASH;
+    te_explosion (missile.origin);
+}
+
 METHOD(MLRSTurret, tr_think, void(MLRSTurret thistur, entity it))
 {
     // 0 = full, 6 = empty

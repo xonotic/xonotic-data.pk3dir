@@ -1,14 +1,5 @@
 #pragma once
 
-#include "plasma_weapon.qh"
-
-CLASS(PlasmaDualAttack, PlasmaAttack)
-/* flags     */ ATTRIB(PlasmaDualAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
-/* refname   */ ATTRIB(PlasmaDualAttack, netname, string, "turret_plasma_dual");
-/* wepname   */ ATTRIB(PlasmaDualAttack, m_name, string, _("Dual plasma"));
-ENDCLASS(PlasmaDualAttack)
-REGISTER_WEAPON(PLASMA_DUAL, NEW(PlasmaDualAttack));
-
 CLASS(DualPlasmaTurret, PlasmaTurret)
 /* spawnflags */ ATTRIB(DualPlasmaTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
 /* mins       */ ATTRIB(DualPlasmaTurret, m_mins, vector, '-32 -32 0');
@@ -18,7 +9,6 @@ CLASS(DualPlasmaTurret, PlasmaTurret)
 /* head_model */ ATTRIB_STRZONE(DualPlasmaTurret, head_model, string, strcat("models/turrets/", "plasmad.md3"));
 /* netname    */ ATTRIB(DualPlasmaTurret, netname, string, "plasma_dual");
 /* fullname   */ ATTRIB(DualPlasmaTurret, m_name, string, _("Dual Plasma Cannon"));
-    ATTRIB(DualPlasmaTurret, m_weapon, Weapon, WEP_PLASMA_DUAL);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
