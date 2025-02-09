@@ -85,8 +85,7 @@ void KeyBinds_BuildList()
 	KEYBIND_DEF("dropweapon"                            , _("drop weapon / throw nade"));
 
 	#define SHOWABLE_WEAPON(w) \
-		(!(it.spawnflags & WEP_FLAG_SPECIALATTACK) && \
-		!((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_FLAG_HIDDEN)) )
+		(!((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_FLAG_HIDDEN)) )
 	// no special attacks, and no hidden mutator-blocked weapons
 
 	for (int imp = 1; imp <= 9; ++imp)

@@ -35,8 +35,6 @@ void Dump_Weapon_Settings()
 	int wepcount = 1;
 	#define WEP_CONFIG_WRITETOFILE(str) write_String_To_File(wep_config_file, str, wep_config_alsoprint)
 	FOREACH(Weapons, it != WEP_Null, {
-		if(it.spawnflags & WEP_FLAG_SPECIALATTACK)
-			continue; // never include the attacks
 		// step 1: clear the queue
 		WEP_CONFIG_COUNT = 0;
 		for (int x = 0; x < MAX_CONFIG_SETTINGS; ++x)

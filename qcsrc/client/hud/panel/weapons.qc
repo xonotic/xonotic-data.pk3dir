@@ -184,7 +184,7 @@ void HUD_Weapons()
 		{
 			int j = 0;
 			FOREACH(Weapons, it != WEP_Null && it.impulse >= 0 && (it.impulse % 3 != 0) && j < 6, {
-				if (!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)))
+				if (!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				{
 					if (!panel_switchweapon || j < 4)
 						panel_switchweapon = it;
