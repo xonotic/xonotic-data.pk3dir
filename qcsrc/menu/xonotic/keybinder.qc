@@ -86,7 +86,7 @@ void KeyBinds_BuildList()
 
 	// no hidden mutator-blocked weapons
 	#define SHOWABLE_WEAPON(w) \
-		(!((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_FLAG_HIDDEN)) )
+		!((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_FLAG_HIDDEN))
 
 	for (int imp = 1; imp <= 9; ++imp)
 	{
