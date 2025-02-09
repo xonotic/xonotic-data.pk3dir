@@ -369,17 +369,6 @@ g_seeker_luma
 	}
 }
 
-g_shockwave_luma
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/weapons/g_shockwave_luma
-		blendfunc blend
-	}
-}
-
 g_shotgun_luma
 {
 	deformVertexes autosprite
