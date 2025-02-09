@@ -206,3 +206,4 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, videoApplyButton);
 }
+#undef ADDVALUE_FPS

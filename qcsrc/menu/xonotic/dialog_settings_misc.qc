@@ -85,11 +85,10 @@ void XonoticMiscSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("Factory reset"), '0 0 0'));
+		me.TD(me, 1, 2, e = makeXonoticButton(_("Factory reset"), '1 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.resetDialog;
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, miscApplyButton);
 }
-#undef ADDVALUE_FPS
