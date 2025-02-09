@@ -362,13 +362,11 @@ bool raptor_frame(entity this, float dt)
 	UpdateAuxiliaryXhair(this, trace_endpos, '0 1 0', 0);
 	*/
 
-	Weapon wep1 = WEP_RAPTOR;
-	.entity weaponentity = weaponentities[0];
 	if(!weaponLocked(this) && !weaponUseForbidden(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
-	if (wep1.wr_checkammo1(wep1, vehic, weaponentity))
+	if(vehic.vehicle_energy >= autocvar_g_vehicle_raptor_cannon_cost)
 	{
-		wep1.wr_think(wep1, vehic, weaponentity, 1);
+		raptor_cannon(vehic);
 	}
 
 	if(vehic.vehicle_flags  & VHF_SHIELDREGEN)
@@ -380,27 +378,23 @@ bool raptor_frame(entity this, float dt)
 	if(vehic.vehicle_flags  & VHF_ENERGYREGEN)
 		vehicles_regen(vehic, vehic.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, dt, false);
 
-	Weapon wep2a = WEP_RAPTOR_BOMB;
 	if(!weaponLocked(this) && !weaponUseForbidden(this))
 	if(STAT(VEHICLESTAT_W2MODE, vehic) == RSM_BOMB)
 	{
 		if(time > vehic.lip + autocvar_g_vehicle_raptor_bombs_refire)
 		if(PHYS_INPUT_BUTTON_ATCK2(this))
 		{
-		    .entity weaponentity = weaponentities[1];
-			wep2a.wr_think(wep2a, vehic, weaponentity, 2);
+			raptor_bombdrop(vehic);
 			vehic.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
 			vehic.lip   = time;
 		}
 	}
 	else
 	{
-		Weapon wep2b = WEP_RAPTOR_FLARE;
 		if(time > vehic.lip + autocvar_g_vehicle_raptor_flare_refire)
 		if(PHYS_INPUT_BUTTON_ATCK2(this))
 		{
-		    .entity weaponentity = weaponentities[1];
-			wep2b.wr_think(wep2b, vehic, weaponentity, 2);
+			raptor_flare(vehic);
 			vehic.delay = time + autocvar_g_vehicle_raptor_flare_refire;
 			vehic.lip   = time;
 		}

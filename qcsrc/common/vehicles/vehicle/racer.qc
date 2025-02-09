@@ -302,13 +302,12 @@ bool racer_frame(entity this, float dt)
 
 #ifdef SVQC
 
-	Weapon wep1 = WEP_RACER;
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	if (!weaponLocked(player) && !weaponUseForbidden(player))
 	if (PHYS_INPUT_BUTTON_ATCK(player))
-	if (wep1.wr_checkammo1(wep1, vehic, weaponentity))
+	if (vehic.vehicle_energy >= autocvar_g_vehicle_racer_cannon_cost)
+	if (time > vehic.wait + autocvar_g_vehicle_racer_cannon_refire)
 	{
-		wep1.wr_think(wep1, vehic, weaponentity, 1);
+		racer_cannon(vehic);
 	}
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)

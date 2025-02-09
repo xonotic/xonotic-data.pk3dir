@@ -1,17 +1,8 @@
 #pragma once
 
-#include <common/weapons/_all.qh>
-
-CLASS(RacerAttack, PortoLaunch)
-/* flags     */ ATTRIB(RacerAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
-/* impulse   */ ATTRIB(RacerAttack, impulse, int, 3);
-/* refname   */ ATTRIB(RacerAttack, netname, string, "racercannon");
-/* wepname   */ ATTRIB(RacerAttack, m_name, string, _("Racer cannon"));
-ENDCLASS(RacerAttack)
-REGISTER_WEAPON(RACER, NEW(RacerAttack));
-
 // TODO: move into implementation
 #ifdef SVQC
+void racer_cannon(entity actor);
 void racer_fire_rocket(entity this, entity player, vector org, vector dir, entity trg);
 #endif
 
