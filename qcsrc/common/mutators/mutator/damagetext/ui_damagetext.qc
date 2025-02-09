@@ -65,9 +65,9 @@ void XonoticDamageTextSettings_fill(entity me)
 			setDependent(e, "cl_damagetext", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("If younger than:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("If younger than:")));
 			setDependent(e, "cl_damagetext", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_damagetext_accumulate_lifetime"));
+		me.TD(me, 1, 1.8, e = makeXonoticTextSlider("cl_damagetext_accumulate_lifetime"));
 			e.addValue(e, _("Never"), "0");
 			e.addValue(e, _("1s"), "1");
 			e.addValue(e, _("2s"), "2");
@@ -77,8 +77,8 @@ void XonoticDamageTextSettings_fill(entity me)
 			setDependent(e, "cl_damagetext", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("If alpha greater than:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("If alpha greater than:")));
 			setDependent(e, "cl_damagetext", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "cl_damagetext_accumulate_alpha_rel"));
+		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.05, "cl_damagetext_accumulate_alpha_rel"));
 			setDependent(e, "cl_damagetext", 1, 1);
 }
