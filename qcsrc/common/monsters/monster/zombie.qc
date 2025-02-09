@@ -175,9 +175,11 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 METHOD(Zombie, describe, string(Zombie this))
 {
     TC(Zombie, this);
-    return _("The Zombie is an undead human that tears chunks of flesh from its head, hindquarters, and crotch before proceeding to toss them at the player character for minor damage\n\n"
-             "When an opponent comes too close to the Zombie, it will start chasing then launch to attack with a bite\n\n"
-             "When a Zombie is close to death, it will stand in a \"dead pose,\" from which it can be revived. "
-             "To properly kill one, you will need to damage the Zombie when it is in a dead pose");
+    return _("Zombies are the undead remains of deceased soldiers, risen with a ravenous hunger and no sense of self-preservation\n\n"
+             "When a Zombie senses a nearby player it will begin to charge its target at high speeds\n"
+             "While charging, a Zombie may leap towards the player, dealing massive damage on contact\n"
+             "If it gets close, the Zombie will punch and bite repeatedly. "
+             "When threatened the Zombie may hold up its hands to block incoming attacks briefly\n\n"
+             "It is no small task to kill that which is already dead. Once a Zombie is defeated, destroy its corpse to prevent it from rising again");
 }
 #endif

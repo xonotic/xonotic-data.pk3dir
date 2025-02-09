@@ -183,8 +183,7 @@ METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
 METHOD(Wyvern, describe, string(Wyvern this))
 {
     TC(Wyvern, this);
-    return _("The Wyvern is a dragon that was said to breathe fire or to possess a poisonous breath, a reptilian body, two legs or sometimes none, and a spiked tail. "
-             "The alleged marine variant had a fishtail instead of the spiny dragon tail\n\n"
-             "Wyvern flies around the map and chases and attacks his opponents with fireballs");
+    return _("The Wyvern is a flying reptilian monster that glides around hunting for fresh prey\n\n"
+             "While fragile, the Wyvern is capable of launching deadly fireballs at the player from a distance, inflicting high damage and causing burning");
 }
 #endif
