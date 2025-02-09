@@ -13,48 +13,6 @@ float autocvar_g_monster_wyvern_speed_stop;
 float autocvar_g_monster_wyvern_speed_run;
 float autocvar_g_monster_wyvern_speed_walk;
 
-void M_Wyvern_Attack_Fireball_Explode(entity this);
-void M_Wyvern_Attack_Fireball_Touch(entity this, entity toucher);
-
-SOUND(WyvernAttack_FIRE, W_Sound("electro_fire"));
-METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity weaponentity, int fire))
-{
-    TC(WyvernAttack, thiswep);
-    if (fire & 1)
-    if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2)) {
-    	monster_makevectors(actor, actor.enemy);
-        if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_WyvernAttack_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_WYVERN.m_id);
-		if (IS_MONSTER(actor)) {
-			actor.attack_finished_single[0] = time + 1.2;
-			actor.anim_finished = time + 1.2;
-		}
-
-		entity missile = new(WyvernAttack);
-		missile.owner = missile.realowner = actor;
-		missile.solid = SOLID_TRIGGER;
-		set_movetype(missile, MOVETYPE_FLYMISSILE);
-		missile.projectiledeathtype = DEATH_MONSTER_WYVERN.m_id;
-		setsize(missile, '-6 -6 -6', '6 6 6');
-		setorigin(missile, actor.origin + actor.view_ofs + v_forward * 14);
-		missile.flags = FL_PROJECTILE;
-        IL_PUSH(g_projectiles, missile);
-        IL_PUSH(g_bot_dodge, missile);
-		missile.velocity = w_shotdir * (autocvar_g_monster_wyvern_attack_fireball_speed);
-		missile.avelocity = '300 300 300';
-		missile.nextthink = time + 5;
-		setthink(missile, M_Wyvern_Attack_Fireball_Explode);
-		settouch(missile, M_Wyvern_Attack_Fireball_Touch);
-		CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
-
-        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
-    }
-}
-
-METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this, entity actor, .entity weaponentity)) {
-    TC(WyvernAttack, this);
-	return true;
-}
-
 void M_Wyvern_Attack_Fireball_Explode(entity this)
 {
 	Send_Effect(EFFECT_FIREBALL_EXPLODE, this.origin, '0 0 0', 1);
@@ -81,14 +39,28 @@ void M_Wyvern_Attack_Fireball_Touch(entity this, entity toucher)
 
 void M_Wyvern_Attack_Fireball(entity this)
 {
-	w_shotdir = normalize((this.enemy.origin + '0 0 10') - this.origin);
-	Weapon wep = WEP_WYVERN_ATTACK;
-	// TODO
-	.entity weaponentity = weaponentities[0];
-	wep.wr_think(wep, this, weaponentity, 1);
+	this.attack_finished_single[0] = time + 1.2;
+	//this.anim_finished = time + 1.2;
+
+	entity missile = new(WyvernAttack);
+	missile.owner = missile.realowner = this;
+	missile.solid = SOLID_TRIGGER;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.projectiledeathtype = DEATH_MONSTER_WYVERN.m_id;
+	setsize(missile, '-6 -6 -6', '6 6 6');
+	setorigin(missile, this.origin + this.view_ofs + v_forward * 14);
+	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
+	IL_PUSH(g_bot_dodge, missile);
+	missile.velocity = v_forward * (autocvar_g_monster_wyvern_attack_fireball_speed);
+	missile.avelocity = '300 300 300';
+	missile.nextthink = time + 5;
+	setthink(missile, M_Wyvern_Attack_Fireball_Explode);
+	settouch(missile, M_Wyvern_Attack_Fireball_Touch);
+	CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 }
 
-bool M_Wyvern_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
+bool M_Wyvern_Attack(int attack_type, entity actor, entity targ)
 {
 	switch(attack_type)
 	{

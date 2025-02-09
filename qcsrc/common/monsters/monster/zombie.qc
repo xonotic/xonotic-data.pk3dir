@@ -60,7 +60,7 @@ bool M_Zombie_Defend_Block(entity this)
 	return true;
 }
 
-bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
+bool M_Zombie_Attack(int attack_type, entity actor, entity targ)
 {
 	switch(attack_type)
 	{

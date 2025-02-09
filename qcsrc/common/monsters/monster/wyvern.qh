@@ -18,13 +18,3 @@ CLASS(Wyvern, Monster)
 ENDCLASS(Wyvern)
 
 REGISTER_MONSTER(WYVERN, NEW(Wyvern));
-
-#include <common/weapons/_all.qh>
-
-CLASS(WyvernAttack, PortoLaunch)
-/* flags     */ ATTRIB(WyvernAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK);
-/* impulse   */ ATTRIB(WyvernAttack, impulse, int, 9);
-/* refname   */ ATTRIB(WyvernAttack, netname, string, "wyvern");
-/* wepname   */ ATTRIB(WyvernAttack, m_name, string, _("Wyvern attack"));
-ENDCLASS(WyvernAttack)
-REGISTER_WEAPON(WYVERN_ATTACK, NEW(WyvernAttack));

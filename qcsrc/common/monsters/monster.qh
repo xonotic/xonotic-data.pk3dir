@@ -16,7 +16,7 @@ const int MONSTER_TYPE_UNDEAD = BIT(15); // monster is by most definitions a zom
 const int MON_FLAG_HIDDEN = BIT(16);
 
 // entity properties of monsterinfo:
-.bool(int, entity actor, entity targ, .entity weaponentity) monster_attackfunc;
+.bool(int, entity actor, entity targ) monster_attackfunc;
 .entity monsterdef;
 
 // animations

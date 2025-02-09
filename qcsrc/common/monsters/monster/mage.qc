@@ -38,45 +38,6 @@ float autocvar_g_monster_mage_speed_walk;
 SOUND(MageSpike_FIRE, W_Sound("electro_fire"));
 SOUND(MageSpike_IMPACT, W_Sound("grenade_impact"));
 SOUND(MageSpike_PUSH, W_Sound("tagexp1"));
-void M_Mage_Attack_Spike(entity this, vector dir);
-void M_Mage_Attack_Push(entity this);
-METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weaponentity, int fire))
-{
-    TC(MageSpike, thiswep);
-    if (fire & 1)
-    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
-        if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
-        actor.enemy = Monster_FindTarget(actor);
-        monster_makevectors(actor, actor.enemy);
-        W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_MageSpike_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_MAGE.m_id);
-    	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
-        M_Mage_Attack_Spike(actor, w_shotdir);
-        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
-    }
-    if (fire & 2)
-    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, true, 0.5)) {
-        M_Mage_Attack_Push(actor);
-        weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
-    }
-}
-
-void M_Mage_Attack_Teleport(entity this, entity targ);
-
-CLASS(OffhandMageTeleport, OffhandWeapon)
-    .bool OffhandMageTeleport_key_pressed;
-    METHOD(OffhandMageTeleport, offhand_think, void(OffhandMageTeleport this, entity player, bool key_pressed))
-    {
-        TC(OffhandMageTeleport, this);
-        if (key_pressed && !player.OffhandMageTeleport_key_pressed)
-        	M_Mage_Attack_Teleport(player, player.enemy);
-        player.OffhandMageTeleport_key_pressed = key_pressed;
-    }
-ENDCLASS(OffhandMageTeleport)
-OffhandMageTeleport OFFHAND_MAGE_TELEPORT;
-STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
-
-void M_Mage_Defend_Heal(entity this);
-void M_Mage_Defend_Shield(entity this);
 
 .entity mage_spike;
 .float mage_shield_delay;
@@ -345,7 +306,7 @@ void M_Mage_Defend_Shield(entity this)
 	this.anim_finished = time + 1;
 }
 
-bool M_Mage_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
+bool M_Mage_Attack(int attack_type, entity actor, entity targ)
 {
 	switch(attack_type)
 	{
@@ -353,9 +314,7 @@ bool M_Mage_Attack(int attack_type, entity actor, entity targ, .entity weaponent
 		{
 			if(random() <= autocvar_g_monster_mage_attack_push_chance)
 			{
-				Weapon wep = WEP_MAGE_SPIKE;
-
-				wep.wr_think(wep, actor, weaponentity, 2);
+				M_Mage_Attack_Push(actor);
 				return true;
 			}
 
@@ -365,9 +324,7 @@ bool M_Mage_Attack(int attack_type, entity actor, entity targ, .entity weaponent
 		{
 			if(random() <= autocvar_g_monster_mage_attack_teleport_chance)
 			{
-				OffhandWeapon off = OFFHAND_MAGE_TELEPORT;
-				actor.OffhandMageTeleport_key_pressed = 0;
-				off.offhand_think(off, actor, 1);
+				M_Mage_Attack_Teleport(actor, targ);
 				return true;
 			}
 			else if(!actor.mage_spike && random() <= autocvar_g_monster_mage_attack_spike_chance)
@@ -376,8 +333,7 @@ bool M_Mage_Attack(int attack_type, entity actor, entity targ, .entity weaponent
 				actor.attack_finished_single[0] = time + (autocvar_g_monster_mage_attack_spike_delay);
 				actor.anim_finished = time + 1;
 				actor.state = MONSTER_ATTACK_MELEE; // prevent moving while firing spike
-				Weapon wep = WEP_MAGE_SPIKE;
-				wep.wr_think(wep, actor, weaponentity, 1);
+				M_Mage_Attack_Spike(actor, v_forward);
 				return true;
 			}
 

@@ -439,21 +439,19 @@ bool Monster_Attack_Leap(entity this, vector anm, void(entity this, entity touch
 	return true;
 }
 
-void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
+void Monster_Attack_Check(entity this, entity targ)
 {
-	int slot = weaponslot(weaponentity);
-
 	if((!this || !targ)
 	|| (!this.monster_attackfunc)
 	|| (game_stopped)
-	|| (time < this.attack_finished_single[slot])
+	|| (time < this.attack_finished_single[0])
 	|| ((autocvar_g_monsters_target_infront || (this.spawnflags & MONSTERFLAG_INFRONT)) && !monster_facing(this, targ))
 	) { return; }
 
 	if(vdist(targ.origin - this.origin, <=, this.attack_range))
 	{
 		monster_makevectors(this, targ);
-		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_MELEE, this, targ, weaponentity);
+		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_MELEE, this, targ);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
 		else if(attack_success > 0)
@@ -463,7 +461,7 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 	if(vdist(targ.origin - this.origin, >, this.attack_range))
 	{
 		monster_makevectors(this, targ);
-		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_RANGED, this, targ, weaponentity);
+		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_RANGED, this, targ);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
 		else if(attack_success > 0)
@@ -931,12 +929,6 @@ void Monster_Remove(entity this)
 	if(!MUTATOR_CALLHOOK(MonsterRemove, this))
 		Send_Effect(EFFECT_ITEM_PICKUP, this.origin, '0 0 0', 1);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		if(this.(weaponentity))
-			delete(this.(weaponentity));
-	}
 	if(this.iceblock) { delete(this.iceblock); }
 	WaypointSprite_Kill(this.sprite);
 	delete(this);
@@ -1238,15 +1230,6 @@ void Monster_Anim(entity this)
 		animbits |= ANIMSTATE_DUCK; // not that monsters can crouch currently...
 	animdecide_setstate(this, animbits, false);
 	animdecide_setimplicitstate(this, (IS_ONGROUND(this)));
-
-	/* // weapon entities for monsters?
-	if (this.weaponentity)
-	{
-		updateanim(this.weaponentity);
-		if (!this.weaponentity.animstate_override)
-			setanim(this.weaponentity, this.weaponentity.anim_idle, true, false, false);
-	}
-	*/
 }
 
 void Monster_Frozen_Think(entity this)
@@ -1350,8 +1333,7 @@ void Monster_Think(entity this)
 	{
 		Monster_Move(this, this.speed2, this.speed, this.stopspeed);
 
-		.entity weaponentity = weaponentities[0]; // TODO?
-		Monster_Attack_Check(this, this.enemy, weaponentity);
+		Monster_Attack_Check(this, this.enemy);
 	}
 
 	Monster_Anim(this);

@@ -147,7 +147,7 @@ void M_Golem_Attack_Lightning(entity this)
 
 .int state;
 
-bool M_Golem_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
+bool M_Golem_Attack(int attack_type, entity actor, entity targ)
 {
 	switch(attack_type)
 	{
