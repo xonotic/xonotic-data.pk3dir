@@ -1,7 +1,5 @@
 #pragma once
 
-#include <common/weapons/_all.qh>
-
 CLASS(Turret, Object)
     ATTRIB(Turret, m_id, int, 0);
 
@@ -41,7 +39,6 @@ CLASS(Turret, Object)
     METHOD(Turret, tr_precache, void(Turret this)) {
 
     }
-    ATTRIB(Turret, m_weapon, Weapon);
 #ifdef SVQC
     /** (SERVER) called when turret attacks */
     METHOD(Turret, tr_attack, void(Turret this, entity actor)) {
