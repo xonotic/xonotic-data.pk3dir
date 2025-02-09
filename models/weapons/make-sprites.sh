@@ -75,7 +75,6 @@ sprite gl			"Mortar"			ff0000 # Red
 sprite porto		"Port-O-Launch"		808080 # Gray
 sprite campingrifle	"Rifle"				80ff00 # Chartreuse
 sprite seeker		"T.A.G.\nSeeker"	80ff00 # Chartreuse
-#sprite shockwave	"Shockwave"			804000 # Cinnamon
 sprite shotgun		"Shotgun"			804000 # Cinnamon
 sprite tuba			"Tuba" 				00ff00 # Green
 sprite minstanex	"Vaporizer"			80ffff # Anakiwa
