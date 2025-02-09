@@ -294,7 +294,6 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	hp -= damage;
 	SetResource(this, RES_HEALTH, hp);
 
-	if(STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_TRANSLOCATE.m_id && STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_SPAWN.m_id)
 	if(STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_HEAL.m_id || IS_PLAYER(attacker))
 		this.realowner = attacker;
 
@@ -528,17 +527,17 @@ void nade_prime(entity this)
 	string pntype = this.pokenade_type;
 
 	if(StatusEffects_active(STATUSEFFECT_Strength, this) && autocvar_g_nades_bonus_onstrength)
-		ntype = STAT(NADE_BONUS_TYPE, this);
+		ntype  = STAT(NADE_BONUS_TYPE, this);
 	else if (STAT(NADE_BONUS, this) >= 1)
 	{
-		ntype = STAT(NADE_BONUS_TYPE, this);
+		ntype  = STAT(NADE_BONUS_TYPE, this);
 		pntype = this.pokenade_type;
 		STAT(NADE_BONUS, this) -= 1;
 	}
 	else
 	{
-		ntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_nade_type : autocvar_g_nades_nade_type);
-		pntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		ntype  = STAT(NADE_OFFHAND_TYPE, this);
+		pntype = ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
 	}
 
 	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype);
@@ -682,7 +681,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (!IS_PLAYER(player)) { return; }
+	if (!IS_PLAYER(player))
+		return;
 
 	if (player.nade && (player.offhand != OFFHAND_NADE || (STAT(WEAPONS, player) & WEPSET(HOOK))))
 		OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
@@ -704,48 +704,53 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		}
 	}
 
-	if(IS_PLAYER(player))
+	if (autocvar_g_nades_client_select)
+		STAT(NADE_OFFHAND_TYPE, player) = CS_CVAR(player).cvar_cl_nade_type;
+	else
+		STAT(NADE_OFFHAND_TYPE, player) = autocvar_g_nades_nade_type;
+
+	if ( autocvar_g_nades_bonus && autocvar_g_nades )
 	{
-		if ( autocvar_g_nades_bonus && autocvar_g_nades )
+		entity key;
+		float key_count = 0;
+		FOR_EACH_KH_KEY(key) if(key.owner == player) { ++key_count; }
+
+		float time_score;
+		if(GameRules_scoring_is_vip(player))
+			time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
+		else
+			time_score = autocvar_g_nades_bonus_score_time;
+
+		if(key_count)
+			time_score = autocvar_g_nades_bonus_score_time_flagcarrier * key_count; // multiply by the number of keys the player is holding
+
+		if(autocvar_g_nades_bonus_client_select)
 		{
-			entity key;
-			float key_count = 0;
-			FOR_EACH_KH_KEY(key) if(key.owner == player) { ++key_count; }
-
-			float time_score;
-			if(GameRules_scoring_is_vip(player))
-				time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
-			else
-				time_score = autocvar_g_nades_bonus_score_time;
-
-			if(key_count)
-				time_score = autocvar_g_nades_bonus_score_time_flagcarrier * key_count; // multiply by the number of keys the player is holding
-
-			if(autocvar_g_nades_bonus_client_select)
-			{
-				STAT(NADE_BONUS_TYPE, player) = nades_CheckTypes(player, CS_CVAR(player).cvar_cl_nade_type);
-				player.pokenade_type = CS_CVAR(player).cvar_cl_pokenade_type;
-			}
-			else
-			{
-				STAT(NADE_BONUS_TYPE, player) = autocvar_g_nades_bonus_type;
-				player.pokenade_type = autocvar_g_nades_pokenade_monster_type;
-			}
-
-			STAT(NADE_BONUS_TYPE, player) = bound(0, STAT(NADE_BONUS_TYPE, player), REGISTRY_COUNT(Nades));
-
-			if(STAT(NADE_BONUS_SCORE, player) >= 0 && autocvar_g_nades_bonus_score_max)
-				nades_GiveBonus(player, time_score / autocvar_g_nades_bonus_score_max);
+			STAT(NADE_BONUS_TYPE, player) = nades_CheckTypes(player, CS_CVAR(player).cvar_cl_nade_type);
+			player.pokenade_type = CS_CVAR(player).cvar_cl_pokenade_type;
 		}
 		else
 		{
-			STAT(NADE_BONUS, player) = STAT(NADE_BONUS_SCORE, player) = 0;
+			STAT(NADE_BONUS_TYPE, player) = autocvar_g_nades_bonus_type;
+			player.pokenade_type = autocvar_g_nades_pokenade_monster_type;
 		}
 
-		nade_veil_Apply(player);
+		STAT(NADE_BONUS_TYPE, player) = bound(0, STAT(NADE_BONUS_TYPE, player), REGISTRY_COUNT(Nades));
+
+		if(STAT(NADE_BONUS_SCORE, player) >= 0 && autocvar_g_nades_bonus_score_max)
+			nades_GiveBonus(player, time_score / autocvar_g_nades_bonus_score_max);
+
+		STAT(NADE_BONUS_ONLY, player) = autocvar_g_nades_bonus_only;		
+	}
+	else
+	{
+		STAT(NADE_BONUS, player) = STAT(NADE_BONUS_SCORE, player) = 0;
+		STAT(NADE_BONUS_ONLY, player) = false;
 	}
 
-	if (!(frametime && IS_PLAYER(player)))
+	nade_veil_Apply(player);
+
+	if (!frametime)
 		return true;
 
 	entity revivers_last = NULL;
@@ -934,10 +939,12 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	entity client = M_ARGV(1, entity);
 
 	STAT(NADE_TIMER, client) = STAT(NADE_TIMER, spectatee);
-	STAT(NADE_BONUS_TYPE, client) = STAT(NADE_BONUS_TYPE, spectatee);
+	STAT(NADE_OFFHAND_TYPE, client) = STAT(NADE_OFFHAND_TYPE, spectatee);
 	client.pokenade_type = spectatee.pokenade_type;
+	STAT(NADE_BONUS_TYPE, client) = STAT(NADE_BONUS_TYPE, spectatee);
 	STAT(NADE_BONUS, client) = STAT(NADE_BONUS, spectatee);
 	STAT(NADE_BONUS_SCORE, client) = STAT(NADE_BONUS_SCORE, spectatee);
+	STAT(NADE_BONUS_ONLY, client) = STAT(NADE_BONUS_ONLY, spectatee);
 }
 
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsPrettyString)

@@ -49,6 +49,13 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 			setDependent(e, "hud_panel_weapons_onlyowned", 0, 1);
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_weapons_noncurrent_scale"));
 			setDependent(e, "hud_panel_weapons_onlyowned", 0, 1);
+	me.TR(me);
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Show offhands:")));
+		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_weapons_offhand"));
+			e.addValue(e, _("Prepend"), "1");
+			e.addValue(e, _("Disable"), "0");
+			e.addValue(e, _("Append"), "2");
+			e.configureXonoticTextSliderValues(e);
 
 	me.TR(me);
  		me.TD(me, 1, 1.4, e = makeXonoticCheckBox(0, "hud_panel_weapons_label", _("Show label:")));

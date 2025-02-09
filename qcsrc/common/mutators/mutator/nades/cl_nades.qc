@@ -76,23 +76,28 @@ bool Projectile_isnade(int p)
 {
 	return Nade_FromProjectile(p) != NADE_TYPE_Null;
 }
+vector nades_GetColor(entity def, int type_num)
+{
+	vector nadeColor;
+	if(type_num)
+		nadeColor = def.m_color;
+	else
+	{
+		nadeColor.x = time;
+		nadeColor.y = 1;
+		nadeColor.z = 1;
+		nadeColor = hsv_to_rgb(nadeColor);
+	}
+	return nadeColor;
+}
 void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time)
 {
 	float bonusNades    = STAT(NADE_BONUS);
 	float bonusProgress = STAT(NADE_BONUS_SCORE);
 	float bonusType     = STAT(NADE_BONUS_TYPE);
 	Nade def = REGISTRY_GET(Nades, max(1, bonusType));
-	string nadeIcon = def.m_icon; // use the Normal Nade icon for the random nade, and draw it as rainbow
-	vector nadeColor;
-	if(bonusType)
-		nadeColor = def.m_color;
-	else
-	{
-		nadeColor.x = time % (M_PI * 2);
-		nadeColor.y = 1;
-		nadeColor.z = 1;
-		nadeColor = hsv_to_rgb(nadeColor);
-	}
+	string nadeIcon  = def.m_icon; // use the Normal Nade icon for the random nade, and draw it as rainbow
+	vector nadeColor = nades_GetColor(def, bonusType);
 
 	vector iconPos, textPos;
 

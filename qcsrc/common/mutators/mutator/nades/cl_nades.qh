@@ -3,4 +3,5 @@
 #include "nades.qh"
 
 bool Projectile_isnade(int proj); // TODO: remove
+vector nades_GetColor(entity def, int type_num);
 void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator
