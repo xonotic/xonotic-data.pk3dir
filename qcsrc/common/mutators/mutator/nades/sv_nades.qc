@@ -471,14 +471,13 @@ Nade Nades_FromString(string ntype)
 
 Nade Nades_GetType(string ntype)
 {
+	Nade def = Nades_FromString(ntype);
 	if(ntype == "random" || ntype == "0")
 	{
 		int rnade = floor(random() * (REGISTRY_COUNT(Nades) - 1)) + 1;
-		Nade def = REGISTRY_GET(Nades, rnade);
-		return (def == NADE_TYPE_Null) ? NADE_TYPE_NORMAL : def;
+		def = REGISTRY_GET(Nades, rnade);
 	}
 
-	Nade def = Nades_FromString(ntype);
 	return (def == NADE_TYPE_Null) ? NADE_TYPE_NORMAL : def;
 }
 
