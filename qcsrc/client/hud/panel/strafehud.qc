@@ -11,10 +11,6 @@
 // non-essential
 #include <client/view.qh> // for v_flipped state
 
-// non-local players
-#include <common/animdecide.qh> // anim_implicit_state
-#include <common/ent_cs.qh> // CSQCModel_server2csqc()
-
 // StrafeHUD (#25)
 
 void HUD_StrafeHUD_Export(int fh)
@@ -25,8 +21,6 @@ void HUD_StrafeHUD_Export(int fh)
 void HUD_StrafeHUD()
 {
 	static float hud_lasttime = 0;
-	entity strafeplayer;
-	bool is_local;
 
 	// generic hud routines
 	if(!autocvar__hud_configure)
@@ -55,17 +49,8 @@ void HUD_StrafeHUD()
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	// find out whether the local csqcmodel entity is valid
-	if(spectatee_status > 0 || isdemo())
-	{
-		is_local = false;
-		strafeplayer = CSQCModel_server2csqc(player_localentnum - 1);
-	}
-	else
-	{
-		is_local = true;
-		strafeplayer = csqcplayer;
-	}
+	bool is_local = !(spectatee_status > 0 || isdemo());
+	entity strafeplayer = StrafeHUD_GetStrafeplayer(is_local);
 
 	if(!csqcplayer || !strafeplayer)
 	{
@@ -79,7 +64,7 @@ void HUD_StrafeHUD()
 	bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, is_local);
 
 	// does not get changed by ground timeout and is not affected by jump input
-	bool real_onground = is_local ? IS_ONGROUND(strafeplayer) : !(strafeplayer.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
+	bool real_onground = StrafeHUD_DetermineOnGround(strafeplayer, is_local);
 
 	// does not get changed by ground timeout
 	bool real_onslick = false;
@@ -96,10 +81,7 @@ void HUD_StrafeHUD()
 	static bool onslick_last = false;
 	if(onground)
 	{
-		// do not use IS_ONSLICK(), it only works for the local player and only if client prediction is enabled
-		trace_dphitq3surfaceflags = 0;
-		tracebox(strafeplayer.origin, strafeplayer.mins, strafeplayer.maxs, strafeplayer.origin - '0 0 1', MOVE_NOMONSTERS, strafeplayer);
-		real_onslick = onslick = trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK;
+		real_onslick = onslick = StrafeHUD_DetermineOnSlick(strafeplayer);
 
 		onground_lasttime = time;
 		onslick_last = onslick;
@@ -557,7 +539,7 @@ void HUD_StrafeHUD()
 	float text_offset_top;
 	float text_offset_bottom;
 	bool all_slick = PHYS_FRICTION(strafeplayer) == 0;
-	text_offset_top = text_offset_bottom = StrafeHUD_DrawSlickDetector(strafeplayer, all_slick && real_onground ? true : real_onslick);
+	text_offset_top = text_offset_bottom = StrafeHUD_DrawSlickDetector(strafeplayer, (all_slick && real_onground) || real_onslick);
 
 	if(autocvar_hud_panel_strafehud_direction)
 		StrafeHUD_DrawDirectionIndicator(direction, opposite_direction, fwd);
@@ -574,13 +556,13 @@ void HUD_StrafeHUD()
 		if(moveangle >= absolute_overturnangle)
 		{
 			if(moveangle == absolute_overturnangle && absolute_overturnangle == 180)
-					; // everywhere gives acceleration, keep strafe_ratio as 0
+			{} // everywhere gives acceleration, keep strafe_ratio as 0
 			else
 			{
-					currentangle_color = autocvar_hud_panel_strafehud_angle_overturn_color;
-					strafe_ratio = (moveangle - absolute_overturnangle) / (180 - absolute_overturnangle);
-					// moveangle is always <= 180, so this code won't run if absolute_overturnangle == 180
-					strafe_ratio *= -1;
+				currentangle_color = autocvar_hud_panel_strafehud_angle_overturn_color;
+				strafe_ratio = (moveangle - absolute_overturnangle) / (180 - absolute_overturnangle);
+				// moveangle is always <= 180, so this code won't run if absolute_overturnangle == 180
+				strafe_ratio *= -1;
 			}
 		}
 		// player gains speed by strafing
