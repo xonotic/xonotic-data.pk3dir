@@ -318,7 +318,7 @@ void HUD_Physics()
 		tmp_size.x   = panel_size.x * speed_size;
 		tmp_size.y   = panel_size.y * text_scale;
 		tmp_offset.x = speed_baralign ? panel_size.x * (1 - speed_size) : 0;
-		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
+		tmp_offset.y = (panel_size.y - tmp_size.y) * 0.5;
 		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(discrete_speed), tmp_size, speed_text_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if (autocvar_hud_panel_physics_speed_unit_show)
@@ -347,7 +347,7 @@ void HUD_Physics()
 			if (accel_baralign == 1)
 				tmp_offset.x = panel_size.x - tmp_size.x;
 			else if (accel_baralign == 2 || accel_baralign == 3)
-				tmp_offset.x = (panel_size.x - tmp_size.x) / 2;
+				tmp_offset.x = (panel_size.x - tmp_size.x) * 0.5;
 			else
 				tmp_offset.x = 0;
 			tmp_offset.y = 0;
@@ -369,7 +369,7 @@ void HUD_Physics()
 		tmp_size.x = panel_size.x;
 		tmp_size.y = panel_size.y * text_scale;
 		tmp_offset.x = 0;
-		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
+		tmp_offset.y = (panel_size.y - tmp_size.y) * 0.5;
 		drawstring_aspect(panel_pos + accel_offset + tmp_offset, strcat(ftos_decimals(discrete_accel, acc_decimals), "g"), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
@@ -383,7 +383,7 @@ void HUD_Physics()
 		if (text_bits == BIT(2)) // it's the only text drawn, so make it large and centered
 		{
 			main_text_size = 1 - 0.8; // make the main text small, so the non-main text (speed unit) is large
-			tmp_offset.y = panel_size.y * main_text_size / 2; // offset halved to center text
+			tmp_offset.y = panel_size.y * main_text_size * 0.5; // offset halved to center text
 		}
 		else
 		{
@@ -393,13 +393,13 @@ void HUD_Physics()
 			jump_speed_y = top_speed_y;
 		}
 		tmp_size.y    =  panel_size.y * (1 - main_text_size) * text_scale;
-		tmp_offset.y += (panel_size.y * (1 - main_text_size) - tmp_size.y) / 2;
+		tmp_offset.y += (panel_size.y * (1 - main_text_size) - tmp_size.y) * 0.5;
 		drawstring_aspect(panel_pos + speed_offset + tmp_offset, GetSpeedUnit(autocvar_hud_speed_unit), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else if (text_bits == BIT(0) || text_bits == BIT(1)) // only one text is drawn, make it large and centered
 	{
 		main_text_size = 0.8;
-		top_speed_y  = panel_size.y * (1 - main_text_size) / 2; // offset halved to center text
+		top_speed_y  = panel_size.y * (1 - main_text_size) * 0.5; // offset halved to center text
 		jump_speed_y = top_speed_y;
 	}
 	else // both topspeed and jumpspeed are drawn
@@ -413,14 +413,14 @@ void HUD_Physics()
 	tmp_size.y = panel_size.y * main_text_size * text_scale;
 	if ((text_bits & BIT(1)) && jump_speed_f > 0)
 	{
-		jump_speed_y += (panel_size.y * main_text_size - tmp_size.y) / 2;
+		jump_speed_y += (panel_size.y * main_text_size - tmp_size.y) * 0.5;
 		tmp_offset.y  = jump_speed_y;
 		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(jump_speed), tmp_size, '0 1 0', jump_speed_f * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	// draw topspeed text
 	if ((text_bits & BIT(0)) && top_speed_f > 0)
 	{
-		top_speed_y += (panel_size.y * main_text_size - tmp_size.y) / 2;
+		top_speed_y += (panel_size.y * main_text_size - tmp_size.y) * 0.5;
 		tmp_offset.y = top_speed_y;
 		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(discrete_top_speed), tmp_size, '1 0 0', top_speed_f * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
