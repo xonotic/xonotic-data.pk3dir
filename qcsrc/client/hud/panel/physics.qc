@@ -174,6 +174,9 @@ void HUD_Physics()
 			autocvar_hud_progressbar_speed_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	float accel_max;
+	if (autocvar__hud_configure)
+		accel_max = autocvar_hud_panel_physics_acceleration_max;
+	else
 	{
 		// NOTE: this code is similar to the logic in strafehud.qc
 		int keys = STAT(PRESSED_KEYS);
