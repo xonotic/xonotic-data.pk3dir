@@ -45,9 +45,8 @@ void monster_dropitem(entity this, entity attacker)
 	// TODO: mapper customization (different field?)
 	string itemlist = this.monster_loot;
 
-	// TODO: replace regular loot?
 	if(this.spawnflags & MONSTERFLAG_MINIBOSS)
-		itemlist = cons(itemlist, autocvar_g_monsters_miniboss_loot);
+		itemlist = autocvar_g_monsters_miniboss_loot;
 
 	MUTATOR_CALLHOOK(MonsterDropItem, this, itemlist, attacker);
 	itemlist = M_ARGV(1, string);
@@ -538,7 +537,11 @@ void Monster_Touch(entity this, entity toucher)
 void Monster_Miniboss_Check(entity this)
 {
 	if(MUTATOR_CALLHOOK(MonsterCheckBossFlag, this))
+	{
+		// prevent other code from identifying the monster as a miniboss
+		this.spawnflags &= ~MONSTERFLAG_MINIBOSS;
 		return;
+	}
 
 	float chance = random() * 100;
 
@@ -1405,6 +1408,8 @@ bool Monster_Spawn_Setup(entity this)
 		if(!this.skin)
 			this.skin = rint(random() * 4);
 	}
+	else if(this.spawnflags & MONSTERFLAG_MINIBOSS)
+		this.effects |= EF_RED;
 
 	this.max_health = GetResource(this, RES_HEALTH);
 	this.pain_finished = this.nextthink;
