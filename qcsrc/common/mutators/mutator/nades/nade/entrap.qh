@@ -21,4 +21,6 @@ CLASS(EntrapNade, Nade)
 	ATTRIB(EntrapNade, m_color, vector, '0.15 0.85 0');
 	ATTRIB(EntrapNade, m_name, string, _("Entrap grenade"));
 	ATTRIB(EntrapNade, m_icon, string, "nade_entrap");
+	ATTRIB(EntrapNade, netname, string, "entrap");
+	ATTRIB(EntrapNade, impulse, int, 8);
 ENDCLASS(EntrapNade)
