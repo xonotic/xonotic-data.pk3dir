@@ -383,7 +383,9 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	_nade.toss_time = time;
 	_nade.solid = SOLID_CORPSE; //((STAT(NADE_BONUS_TYPE, _nade) == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
 
-	if(STAT(NADE_BONUS_TYPE, _nade) == NADE_TYPE_TRANSLOCATE.m_id || STAT(NADE_BONUS_TYPE, _nade) == NADE_TYPE_SPAWN.m_id)
+	if(STAT(NADE_BONUS_TYPE, _nade) == NADE_TYPE_TRANSLOCATE.m_id
+	|| STAT(NADE_BONUS_TYPE, _nade) == NADE_TYPE_SPAWN.m_id
+	|| STAT(NADE_BONUS_TYPE, _nade) == NADE_TYPE_MONSTER.m_id)
 		_nade.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	else
 		_nade.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
