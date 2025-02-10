@@ -2478,7 +2478,7 @@ void Scoreboard_Draw()
 					str = strcat(str, "^7 / "); // delimiter
 				str = strcat(str, Scoreboard_Fraglimit_Draw(fl, false));
 			}
-			if(ll > 0)
+			if(ll > 0 && (ll < fl || fl <= 0))
 			{
 				if(tl > 0 || fl > 0)
 				{
