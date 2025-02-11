@@ -409,7 +409,10 @@ MUTATOR_HOOKABLE(MonsterFindTarget, EV_NO_ARGS);
     /**/
 MUTATOR_HOOKABLE(MonsterValidTarget, EV_MonsterValidTarget);
 
-/** called to change a random monster to a miniboss */
+/**
+ * called when checking if a monster should be a miniboss
+ * return true to prevent the monster from becoming a miniboss
+ */
 #define EV_MonsterCheckBossFlag(i, o) \
     /** monster */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/

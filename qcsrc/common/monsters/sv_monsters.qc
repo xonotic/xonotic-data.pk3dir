@@ -534,8 +534,16 @@ void Monster_Touch(entity this, entity toucher)
 		this.enemy = toucher;
 }
 
-void Monster_Miniboss_Check(entity this)
+void Monster_Miniboss_Setup(entity this)
 {
+	if(this.spawnflags & MONSTERFLAG_RESPAWNED)
+	{
+		// already performed initial setup, just reapply statuses as needed
+		if(this.spawnflags & MONSTERFLAG_MINIBOSS)
+			this.effects |= EF_RED;
+		return;
+	}
+
 	if(MUTATOR_CALLHOOK(MonsterCheckBossFlag, this))
 	{
 		// prevent other code from identifying the monster as a miniboss
@@ -543,10 +551,8 @@ void Monster_Miniboss_Check(entity this)
 		return;
 	}
 
-	float chance = random() * 100;
-
 	// g_monsters_miniboss_chance cvar or spawnflags 64 causes a monster to be a miniboss
-	if ((this.spawnflags & MONSTERFLAG_MINIBOSS) || (chance < autocvar_g_monsters_miniboss_chance))
+	if ((this.spawnflags & MONSTERFLAG_MINIBOSS) || ((random() * 100) < autocvar_g_monsters_miniboss_chance))
 	{
 		GiveResource(this, RES_HEALTH, autocvar_g_monsters_miniboss_healthboost);
 		this.effects |= EF_RED;
@@ -1400,16 +1406,15 @@ bool Monster_Spawn_Setup(entity this)
 	if(!this.attack_range) { this.attack_range = autocvar_g_monsters_attack_range; }
 	if(!this.damageforcescale) { this.damageforcescale = autocvar_g_monsters_damageforcescale; }
 
+	Monster_Miniboss_Setup(this);
+
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
-		Monster_Miniboss_Check(this);
 		SetResourceExplicit(this, RES_HEALTH, GetResource(this, RES_HEALTH) * MONSTER_SKILLMOD(this));
 
 		if(!this.skin)
 			this.skin = rint(random() * 4);
 	}
-	else if(this.spawnflags & MONSTERFLAG_MINIBOSS)
-		this.effects |= EF_RED;
 
 	this.max_health = GetResource(this, RES_HEALTH);
 	this.pain_finished = this.nextthink;
