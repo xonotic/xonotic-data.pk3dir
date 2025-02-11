@@ -18,4 +18,6 @@ CLASS(MonsterNade, Nade)
 	ATTRIB(MonsterNade, m_color, vector, '0.25 0.75 0');
 	ATTRIB(MonsterNade, m_name, string, _("Monster grenade"));
 	ATTRIB(MonsterNade, m_icon, string, "nade_monster");
+	ATTRIB(MonsterNade, netname, string, "pokenade"); // TODO: "monster"? nade needs renaming!
+	ATTRIB(MonsterNade, impulse, int, 7);
 ENDCLASS(MonsterNade)

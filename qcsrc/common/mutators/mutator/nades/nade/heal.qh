@@ -19,4 +19,6 @@ CLASS(HealNade, Nade)
 	ATTRIB(HealNade, m_color, vector, '1 0 0');
 	ATTRIB(HealNade, m_name, string, _("Heal grenade"));
 	ATTRIB(HealNade, m_icon, string, "nade_heal");
+	ATTRIB(HealNade, netname, string, "heal");
+	ATTRIB(HealNade, impulse, int, 6);
 ENDCLASS(HealNade)
