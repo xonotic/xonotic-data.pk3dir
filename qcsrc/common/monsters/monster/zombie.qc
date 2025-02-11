@@ -2,6 +2,7 @@
 
 #ifdef SVQC
 float autocvar_g_monster_zombie_health;
+string autocvar_g_monster_zombie_loot = "health_medium";
 float autocvar_g_monster_zombie_damageforcescale = 0.55;
 float autocvar_g_monster_zombie_attack_melee_damage;
 float autocvar_g_monster_zombie_attack_melee_delay;
@@ -159,7 +160,7 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 
     actor.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
-    actor.monster_loot = ITEM_HealthMedium;
+    actor.monster_loot = autocvar_g_monster_zombie_loot;
     actor.monster_attackfunc = M_Zombie_Attack;
     StatusEffects_apply(STATUSEFFECT_SpawnShield, actor, actor.spawn_time, 0);
     actor.respawntime = 0.2;
