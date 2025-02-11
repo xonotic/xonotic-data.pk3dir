@@ -44,4 +44,4 @@ void CvarList_Value_Change(entity box, entity me);
 void CvarList_Revert_Click(entity btn, entity me);
 void CvarList_End_Editing(entity box, entity me);
 
-bool autocvar_menu_cvarlist_onlymodified = true;
+bool autocvar_menu_cvarlist_onlymodified;
