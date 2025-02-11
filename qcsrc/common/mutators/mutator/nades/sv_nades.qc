@@ -169,10 +169,10 @@ void nade_boom(entity this)
 	delete(this);
 }
 
-void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype);
+void spawn_held_nade(entity player, entity nowner, float ntime, string ntype, string pntype);
 void nade_pickup(entity this, entity thenade)
 {
-	spawn_held_nade(this, thenade.realowner, autocvar_g_nades_pickup_time, STAT(NADE_BONUS_TYPE, thenade), thenade.pokenade_type);
+	spawn_held_nade(this, thenade.realowner, autocvar_g_nades_pickup_time, REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, thenade)).netname, thenade.pokenade_type);
 
 	// set refire so player can't even
 	this.nade_refire = time + autocvar_g_nades_nade_refire;
@@ -460,17 +460,34 @@ bool nade_customize(entity this, entity client)
 	return true;
 }
 
-void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype)
+Nade Nades_FromString(string ntype)
+{
+	FOREACH(Nades, it != NADE_TYPE_Null && (it.netname == ntype || ftos(it.impulse) == ntype),
+	{
+		return it;
+	});
+	return NADE_TYPE_Null;
+}
+
+Nade Nades_GetType(string ntype)
+{
+	Nade def = Nades_FromString(ntype);
+	if(ntype == "random" || ntype == "0")
+	{
+		int rnade = floor(random() * (REGISTRY_COUNT(Nades) - 1)) + 1;
+		def = REGISTRY_GET(Nades, rnade);
+	}
+
+	return (def == NADE_TYPE_Null) ? NADE_TYPE_NORMAL : def;
+}
+
+void spawn_held_nade(entity player, entity nowner, float ntime, string ntype, string pntype)
 {
 	entity n = new(nade), fn = new(fake_nade);
 
-	n.pokenade_type = pntype;
+	Nade def = Nades_GetType(ntype);
 
-	if(ntype == 0) // random nade
-		ntype = floor(random() * (REGISTRY_COUNT(Nades) - 1)) + 1;
-	Nade def = REGISTRY_GET(Nades, ntype);
-	if(def == NADE_TYPE_Null)
-		def = NADE_TYPE_NORMAL;
+	n.pokenade_type = pntype;
 
 	STAT(NADE_BONUS_TYPE, n) = def.m_id;
 
@@ -524,24 +541,24 @@ void nade_prime(entity this)
 		delete(this.fake_nade);
 	this.fake_nade = NULL;
 
-	int ntype;
+	Nade ntype;
 	string pntype = this.pokenade_type;
 
 	if(StatusEffects_active(STATUSEFFECT_Strength, this) && autocvar_g_nades_bonus_onstrength)
-		ntype = STAT(NADE_BONUS_TYPE, this);
+		ntype = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this));
 	else if (STAT(NADE_BONUS, this) >= 1)
 	{
-		ntype = STAT(NADE_BONUS_TYPE, this);
+		ntype = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this));
 		pntype = this.pokenade_type;
 		STAT(NADE_BONUS, this) -= 1;
 	}
 	else
 	{
-		ntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_nade_type : autocvar_g_nades_nade_type);
-		pntype 	= ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		ntype = Nades_FromString(((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_nade_type : autocvar_g_nades_nade_type));
+		pntype = ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
 	}
 
-	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype);
+	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype.netname, pntype);
 }
 
 bool CanThrowNade(entity this)
@@ -592,15 +609,15 @@ void nades_Clear(entity player)
 	STAT(NADE_TIMER, player) = 0;
 }
 
-int nades_CheckTypes(entity player, int cl_ntype)
+int nades_CheckTypes(entity player, Nade cl_ntype)
 {
 	// TODO check what happens without this patch
 #define CL_NADE_TYPE_CHECK(nade_ent, nade_cvar) \
-	case nade_ent.m_id: if (nade_cvar) return cl_ntype
+	case nade_ent: if (nade_cvar) return cl_ntype.m_id
 
 	switch (cl_ntype)
 	{
-		case 0: return 0; // random nade
+		case NADE_TYPE_Null: return 0; // random nade
 		CL_NADE_TYPE_CHECK(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_ICE,         autocvar_g_nades_ice);
 		CL_NADE_TYPE_CHECK(NADE_TYPE_TRANSLOCATE, autocvar_g_nades_translocate);
@@ -723,12 +740,12 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 			if(autocvar_g_nades_bonus_client_select)
 			{
-				STAT(NADE_BONUS_TYPE, player) = nades_CheckTypes(player, CS_CVAR(player).cvar_cl_nade_type);
+				STAT(NADE_BONUS_TYPE, player) = nades_CheckTypes(player, Nades_FromString(CS_CVAR(player).cvar_cl_nade_type));
 				player.pokenade_type = CS_CVAR(player).cvar_cl_pokenade_type;
 			}
 			else
 			{
-				STAT(NADE_BONUS_TYPE, player) = autocvar_g_nades_bonus_type;
+				STAT(NADE_BONUS_TYPE, player) = Nades_FromString(autocvar_g_nades_bonus_type).m_id;
 				player.pokenade_type = autocvar_g_nades_pokenade_monster_type;
 			}
 
@@ -817,7 +834,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 		player.nade_refire += autocvar_g_nades_nade_refire;
 
 	if(autocvar_g_nades_bonus_client_select)
-		STAT(NADE_BONUS_TYPE, player) = CS_CVAR(player).cvar_cl_nade_type;
+		STAT(NADE_BONUS_TYPE, player) = Nades_FromString(CS_CVAR(player).cvar_cl_nade_type).m_id;
 
 	STAT(NADE_TIMER, player) = 0;
 

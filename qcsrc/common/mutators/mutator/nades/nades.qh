@@ -14,6 +14,8 @@ CLASS(Nade, Object)
     ATTRIB(Nade, m_name, string, _("Grenade"));
     ATTRIB(Nade, m_icon, string, "nade_normal");
     ATTRIB(Nade, m_alpha, float, 1);
+    ATTRIB(Nade, netname, string, "random");
+    ATTRIB(Nade, impulse, int, 0); // legacy number for selection, do not add to new nade types
     ATTRIBARRAY(Nade, m_projectile, int, 2);
     ATTRIBARRAY(Nade, m_trail, entity, 2);
     METHOD(Nade, display, void(entity this, void(string name, string icon) returns)) {
@@ -52,6 +54,6 @@ Nade Nade_FromProjectile(int proj)
 .float orb_radius;
 
 #ifdef GAMEQC
-REPLICATE_INIT(int, cvar_cl_nade_type);
+REPLICATE_INIT(string, cvar_cl_nade_type);
 REPLICATE_INIT(string, cvar_cl_pokenade_type);
 #endif
