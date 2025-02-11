@@ -103,7 +103,7 @@ void m_init()
 	}
 	else
 	{
-	    // exec font cfg again in case font depends on menu cvars like prvm_language
+		// exec font cfg again in case font depends on menu cvars like prvm_language
 		localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
 	}
 }
