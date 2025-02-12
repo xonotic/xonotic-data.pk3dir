@@ -36,7 +36,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "vid_borderless", _("Borderless window")));
 			setDependent(e, "vid_fullscreen", 0, 0);
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Resolution:")));
 		me.TD(me, 1, 2, e = makeXonoticResolutionSlider());
 			e.applyButton = videoApplyButton;
@@ -54,6 +53,8 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addText(e, ZCTX(_("SZ^Colossal")), 1);
 			e.configureXonoticMixedSliderValues(e);
 			e.applyButton = videoApplyButton;
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "r_stereo_redcyan", _("Anaglyph 3D (red-cyan)")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "r_viewfbo", _("High-quality frame buffer")));
 		if (cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
