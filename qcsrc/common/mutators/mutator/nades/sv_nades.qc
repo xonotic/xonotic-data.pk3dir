@@ -490,25 +490,12 @@ bool nade_customize(entity this, entity client)
 
 int nade_choose_random()
 {
-	// loops: first determine how many allowed options there are (A), then randomly select one of them (B)
-	int total_allowed = 0;
-	FOREACH(Nades, it != NADE_TYPE_Null, { // (A)
-		if (nades_CheckTypes(it).m_id == it.m_id) // this nade type is allowed
-			++total_allowed;
+	RandomSelection_Init();
+	FOREACH(Nades, it != NADE_TYPE_Null, {
+		if (nades_CheckTypes(it) == it) // this nade type is allowed
+			RandomSelection_AddEnt(it, 1, 1);
 	});
-	int choose_nth = floor(random() * total_allowed);
-	int n_i = 0;
-	int ntype = 0;
-	FOREACH(Nades, true, { // (B)
-		if (it != NADE_TYPE_Null && nades_CheckTypes(it).m_id == it.m_id)
-		{
-			if (n_i == choose_nth)
-				break;
-			++n_i;
-		}
-		++ntype;
-	});
-	return ntype;
+	return RandomSelection_chosen_ent.m_id;
 }
 
 Nade Nades_FromString(string ntype)
