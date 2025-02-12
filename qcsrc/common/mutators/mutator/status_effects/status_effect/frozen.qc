@@ -32,6 +32,7 @@ void Frozen_ice_create(entity this)
     setthink(ice, Frozen_ice_think);
     ice.nextthink = time;
     ice.frame = floor(random() * 21); // ice model has 20 different looking frames
+    // TODO: unique (less pronounced) model
     setmodel(ice, MDL_ICE);
     ice.alpha = 0.5;
 

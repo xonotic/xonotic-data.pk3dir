@@ -53,13 +53,7 @@ int autocvar_g_frozen_revive_falldamage_health;
 bool autocvar_g_frozen_damage_trigger;
 float autocvar_g_frozen_force;
 
-// frozen state (elimination)
-// TODO: use a simple boolean for frozen state
-//const int FROZEN_NOT              = 0;
-const int FROZEN_NORMAL             = 1;
-const int FROZEN_TEMP_REVIVING      = 2;
-const int FROZEN_TEMP_DYING         = 3;
-
+// frozen (eliminated) state
 .float revival_time; // time at which player was last revived
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
 .float freeze_time;
