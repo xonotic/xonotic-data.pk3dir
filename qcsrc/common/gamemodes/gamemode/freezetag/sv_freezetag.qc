@@ -273,7 +273,7 @@ void freezetag_Unfreeze(entity targ, bool reset_health)
 
 	targ.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
 
-	STAT(FROZEN, targ) = 0;
+	STAT(FROZEN, targ) = false;
 	STAT(REVIVE_PROGRESS, targ) = 0;
 	targ.revival_time = time;
 	if(!targ.bot_attack)
