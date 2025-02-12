@@ -196,21 +196,109 @@ void freezetag_Add_Score(entity targ, entity attacker)
 	// else nothing - got frozen by the game type rules themselves
 }
 
+void freezetag_Ice_Think(entity this)
+{
+	if(!STAT(FROZEN, this.owner) || this.owner.iceblock != this)
+	{
+		delete(this);
+		return;
+	}
+	vector ice_org = this.owner.origin - '0 0 16';
+	if (this.origin != ice_org)
+		setorigin(this, ice_org);
+	this.nextthink = time;
+}
+
 // to be called when the player is frozen by freezetag (on death, spectator join etc), gives the score
 void freezetag_Freeze(entity targ, entity attacker)
 {
-	if(STAT(FROZEN, targ))
+	if(!IS_PLAYER(targ) || STAT(FROZEN, targ))
 		return;
 
 	targ.freezetag_frozen_time = time;
 	if (autocvar_g_freezetag_revive_auto && autocvar_g_freezetag_frozen_maxtime > 0)
 		targ.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
 
-	Freeze(targ, 0, FROZEN_NORMAL, true);
+	STAT(FROZEN, targ) = FROZEN_NORMAL;
+	STAT(REVIVE_PROGRESS, targ) = 0;
+	SetResource(targ, RES_HEALTH, 1);
+	targ.revive_speed = 0;
+	if(targ.bot_attack)
+		IL_REMOVE(g_bot_targets, targ);
+	targ.bot_attack = false;
+	targ.freeze_time = time;
+
+	entity ice = new(ice);
+	ice.owner = targ;
+	ice.scale = targ.scale;
+	// set_movetype(ice, MOVETYPE_FOLLOW) would rotate the ice model with the player
+	setthink(ice, freezetag_Ice_Think);
+	ice.nextthink = time;
+	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
+	setmodel(ice, MDL_ICE);
+	ice.alpha = 1;
+	ice.colormod = Team_ColorRGB(targ.team);
+	ice.glowmod = ice.colormod;
+	targ.iceblock = ice;
+	targ.revival_time = 0;
+
+	freezetag_Ice_Think(ice);
+
+	RemoveGrapplingHooks(targ);
+
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(it.(weaponentity).hook.aiment == targ)
+				RemoveHook(it.(weaponentity).hook);
+		}
+	});
+
+	WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', NULL, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 
 	freezetag_count_alive_players();
 
 	freezetag_Add_Score(targ, attacker);
+}
+
+void freezetag_Unfreeze(entity targ, bool reset_health)
+{
+	if(!STAT(FROZEN, targ))
+		return;
+
+	if (reset_health && STAT(FROZEN, targ) != FROZEN_TEMP_DYING)
+		SetResource(targ, RES_HEALTH, ((IS_PLAYER(targ)) ? start_health : targ.max_health));
+
+	targ.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
+
+	STAT(FROZEN, targ) = 0;
+	STAT(REVIVE_PROGRESS, targ) = 0;
+	targ.revival_time = time;
+	if(!targ.bot_attack)
+		IL_PUSH(g_bot_targets, targ);
+	targ.bot_attack = true;
+
+	WaypointSprite_Kill(targ.waypointsprite_attached);
+
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(it.(weaponentity).hook.aiment == targ)
+				RemoveHook(it.(weaponentity).hook);
+		}
+	});
+
+	// remove the ice block
+	if(targ.iceblock)
+		delete(targ.iceblock);
+	targ.iceblock = NULL;
+
+	targ.freezetag_frozen_time = 0;
+	targ.freezetag_frozen_timeout = 0;
 }
 
 bool freezetag_isEliminated(entity e)
@@ -333,7 +421,7 @@ void ft_RemovePlayer(entity this)
 {
 	if (STAT(FROZEN, this) != FROZEN_NORMAL)
 		freezetag_LastPlayerForTeam_Notify(this);
-	Unfreeze(this, false);
+	freezetag_Unfreeze(this, false);
 
 	SetResourceExplicit(this, RES_HEALTH, 0); // neccessary to correctly count alive players
 	freezetag_count_alive_players();
@@ -354,6 +442,29 @@ MUTATOR_HOOKFUNCTION(ft, MakePlayerObserver)
 	ft_RemovePlayer(player);
 }
 
+MUTATOR_HOOKFUNCTION(ft, SpectateCopy)
+{
+	entity spectatee = M_ARGV(0, entity);
+	entity client = M_ARGV(1, entity);
+
+	STAT(FROZEN, client) = STAT(FROZEN, spectatee);
+	STAT(REVIVE_PROGRESS, client) = STAT(REVIVE_PROGRESS, spectatee);
+}
+
+MUTATOR_HOOKFUNCTION(ft, ClientKill)
+{
+	entity player = M_ARGV(0, entity);
+
+	return STAT(FROZEN, player);
+}
+
+MUTATOR_HOOKFUNCTION(ft, PlayerDied)
+{
+	entity player = M_ARGV(0, entity);
+
+	freezetag_Unfreeze(player, false);
+}
+
 MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 {
 	entity frag_attacker = M_ARGV(1, entity);
@@ -364,7 +475,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	if(round_handler_CountdownRunning())
 	{
 		if (STAT(FROZEN, frag_target) == FROZEN_NORMAL)
-			Unfreeze(frag_target, true);
+			freezetag_Unfreeze(frag_target, true);
 		freezetag_count_alive_players();
 		frag_target.respawn_time = time;
 		frag_target.respawn_flags |= RESPAWN_FORCE;
@@ -436,6 +547,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
+	freezetag_Unfreeze(player, false);
+
 	if(player.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
 		return true; // do nothing, round is starting right now
 
@@ -462,6 +575,21 @@ MUTATOR_HOOKFUNCTION(ft, PutClientInServer)
 	eliminatedPlayers.SendFlags |= 1;
 }
 
+MUTATOR_HOOKFUNCTION(ft, PlayerAnim)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(STAT(FROZEN, player))
+		M_ARGV(1, int) |= ANIMSTATE_FROZEN;
+}
+
+MUTATOR_HOOKFUNCTION(ft, reset_map_global)
+{
+	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), {
+		freezetag_Unfreeze(it, false);
+	});
+}
+
 MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 {
 	FOREACH_CLIENT(IS_PLAYER(it), {
@@ -481,19 +609,43 @@ MUTATOR_HOOKFUNCTION(ft, GiveFragsForKill, CBC_ORDER_FIRST)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ft, Unfreeze)
+MUTATOR_HOOKFUNCTION(ft, LockWeapon)
 {
-	entity targ = M_ARGV(0, entity);
-	targ.freezetag_frozen_time = 0;
-	targ.freezetag_frozen_timeout = 0;
+	entity player = M_ARGV(0, entity);
+	return STAT(FROZEN, player);
+}
+
+MUTATOR_HOOKFUNCTION(ft, PlayerDamaged)
+{
+	entity frag_target = M_ARGV(1, entity);
+	return STAT(FROZEN, frag_target);
+}
+
+MUTATOR_HOOKFUNCTION(ft, AccuracyTargetValid)
+{
+	entity frag_target = M_ARGV(1, entity);
+
+	// damage to frozen players is good only if it happens in the frame they get frozen
+	if (STAT(FROZEN, frag_target) && time > frag_target.freeze_time)
+		return MUT_ACCADD_INDIFFERENT;
+	return MUT_ACCADD_VALID;
+}
+
+MUTATOR_HOOKFUNCTION(ft, PlayerDamage_SplitHealthArmor)
+{
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(6, float);
+
+	if(STAT(FROZEN, frag_target) && !ITEM_DAMAGE_NEEDKILL(frag_deathtype))
+		M_ARGV(4, float) = 0;
 }
 
 MUTATOR_HOOKFUNCTION(ft, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
-	//float frag_deathtype = M_ARGV(3, float);
-	//float frag_damage = M_ARGV(4, float);
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
 	vector frag_force = M_ARGV(6, vector);
 
 	frag_target.freezetag_frozen_armor = GetResource(frag_target, RES_ARMOR);
@@ -525,11 +677,95 @@ MUTATOR_HOOKFUNCTION(ft, Damage_Calculate)
 				frag_target.freezetag_frozen_timeout = time;
 		}
 	}
+
+	if(STAT(FROZEN, frag_target) && !ITEM_DAMAGE_NEEDKILL(frag_deathtype)
+			&& frag_deathtype != DEATH_TEAMCHANGE.m_id && frag_deathtype != DEATH_AUTOTEAMCHANGE.m_id)
+	{
+		if(autocvar_g_frozen_revive_falldamage > 0 && frag_deathtype == DEATH_FALL.m_id && frag_damage >= autocvar_g_frozen_revive_falldamage)
+		{
+			freezetag_Unfreeze(frag_target, false);
+			SetResource(frag_target, RES_HEALTH, autocvar_g_frozen_revive_falldamage_health);
+			Send_Effect(EFFECT_ICEORGLASS, frag_target.origin, '0 0 0', 3);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, frag_target.netname);
+			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
+		}
+
+		frag_damage = 0;
+		frag_force *= autocvar_g_frozen_force;
+	}
+
+	if(IS_PLAYER(frag_target) && STAT(FROZEN, frag_target)
+			&& ITEM_DAMAGE_NEEDKILL(frag_deathtype) && !autocvar_g_frozen_damage_trigger)
+	{
+		Send_Effect(EFFECT_TELEPORT, frag_target.origin, '0 0 0', 1);
+
+		entity spot = SelectSpawnPoint(frag_target, false);
+		if(spot)
+		{
+			frag_damage = 0;
+			frag_target.deadflag = DEAD_NO;
+
+			frag_target.angles = spot.angles;
+
+			frag_target.effects = 0;
+			frag_target.effects |= EF_TELEPORT_BIT;
+
+			frag_target.angles_z = 0; // never spawn tilted even if the spot says to
+			frag_target.fixangle = true; // turn this way immediately
+			frag_target.velocity = '0 0 0';
+			frag_target.avelocity = '0 0 0';
+			frag_target.punchangle = '0 0 0';
+			frag_target.punchvector = '0 0 0';
+			frag_target.oldvelocity = frag_target.velocity;
+
+			frag_target.spawnorigin = spot.origin;
+			setorigin(frag_target, spot.origin + '0 0 1' * (1 - frag_target.mins.z - 24));
+			// don't reset back to last position, even if new position is stuck in solid
+			frag_target.oldorigin = frag_target.origin;
+
+			Send_Effect(EFFECT_TELEPORT, frag_target.origin, '0 0 0', 1);
+		}
+	}
+
+	M_ARGV(4, float) = frag_damage;
+	M_ARGV(6, vector) = frag_force;
 }
 
 #ifdef IN_REVIVING_RANGE
 	#undef IN_REVIVING_RANGE
 #endif
+
+void freezetag_PlayerFrame(entity this)
+{
+	if (IS_PLAYER(this) && time >= game_starttime)
+	{
+		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
+		{
+			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
+			SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
+			if (this.iceblock)
+				this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
+
+			if (STAT(REVIVE_PROGRESS, this) >= 1)
+				freezetag_Unfreeze(this, false);
+		}
+		else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
+		{
+			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
+			SetResourceExplicit(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
+
+			if (GetResource(this, RES_HEALTH) < 1)
+			{
+				if (this.vehicle)
+					vehicles_exit(this.vehicle, VHEF_RELEASE);
+				if(this.event_damage)
+					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
+			}
+			else if (STAT(REVIVE_PROGRESS, this) <= 0)
+				freezetag_Unfreeze(this, false);
+		}
+	}
+}
 
 #define IN_REVIVING_RANGE(player, it, revive_extra_size) \
 	(it != player && !IS_DEAD(it) && SAME_TEAM(it, player) \
@@ -644,7 +880,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
 		{
 			float frozen_time = time - player.freezetag_frozen_time;
-			Unfreeze(player, false);
+			freezetag_Unfreeze(player, false);
 			SetResourceExplicit(player, RES_HEALTH, ((warmup_stage) ? warmup_start_health : start_health));
 			player.spawnshieldtime = time + autocvar_g_freezetag_revive_spawnshield;
 			freezetag_count_alive_players();
@@ -702,7 +938,34 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		WaypointSprite_UpdateHealth(player_wp, STAT(REVIVE_PROGRESS, player));
 	}
 
+	freezetag_PlayerFrame(player);
+
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(ft, PlayerRegen)
+{
+	entity player = M_ARGV(0, entity);
+
+	return STAT(FROZEN, player);
+}
+
+MUTATOR_HOOKFUNCTION(ft, ItemTouch)
+{
+	if(MUTATOR_RETURNVALUE) return false;
+
+	entity toucher = M_ARGV(1, entity);
+
+	if(STAT(FROZEN, toucher))
+		return MUT_ITEMTOUCH_RETURN;
+	return MUT_ITEMTOUCH_CONTINUE;
+}
+
+MUTATOR_HOOKFUNCTION(ft, BuffTouch)
+{
+	entity toucher = M_ARGV(1, entity);
+
+	return STAT(FROZEN, toucher);
 }
 
 MUTATOR_HOOKFUNCTION(ft, SetStartItems)
@@ -718,6 +981,38 @@ MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_ft_start_ammo_rockets;
 	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_ft_start_ammo_cells;
 	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_ft_start_ammo_fuel;
+}
+
+MUTATOR_HOOKFUNCTION(ft, AllowMobSpawning)
+{
+	M_ARGV(1, string) = "You can't spawn monsters while frozen";
+	return true;
+}
+
+MUTATOR_HOOKFUNCTION(ft, MonsterValidTarget)
+{
+	entity targ = M_ARGV(1, entity);
+
+	return !STAT(FROZEN, targ);
+}
+
+MUTATOR_HOOKFUNCTION(ft, TurretValidateTarget)
+{
+	entity targ = M_ARGV(1, entity);
+
+	if(STAT(FROZEN, targ))
+	{
+		M_ARGV(3, float) = -6;
+		return true;
+	}
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(ft, BotShouldAttack)
+{
+	entity targ = M_ARGV(1, entity);
+
+	return !STAT(FROZEN, targ);
 }
 
 MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
