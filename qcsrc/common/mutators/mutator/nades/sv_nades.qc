@@ -243,7 +243,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		this.takedamage = DAMAGE_NO;
-		nade_boom(this);
+		W_PrepareExplosionByDamage(this, attacker, nade_boom);
 		return;
 	}
 
