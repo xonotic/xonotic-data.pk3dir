@@ -1,12 +1,24 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(DEVASTATOR_MUZZLEFLASH, "models/flash.md3");
+MODEL(DEVASTATOR_VIEW, W_Model("h_rl.iqm"));
+MODEL(DEVASTATOR_WORLD, W_Model("v_rl.md3"));
+MODEL(DEVASTATOR_ITEM, W_Model("g_rl.md3"));
+
+SOUND(DEVASTATOR_DET, W_Sound("rocket_det"));
+SOUND(DEVASTATOR_FIRE, W_Sound("rocket_fire"));
+SOUND(DEVASTATOR_FLY, W_Sound("rocket_fly"));
+SOUND(DEVASTATOR_MODE, W_Sound("rocket_mode"));
+#endif
+
 CLASS(Devastator, Weapon)
 /* spawnfunc */ ATTRIB(Devastator, m_canonical_spawnfunc, string, "weapon_devastator");
 /* ammotype  */ ATTRIB(Devastator, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Devastator, impulse, int, 9);
 /* flags     */ ATTRIB(Devastator, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Devastator, bot_pickupbasevalue, float, 8000);
-/* color     */ ATTRIB(Devastator, wpcolor, vector, '1 1 0');
+/* color     */ ATTRIB(Devastator, m_color, vector, '0.914 0.745 0.341');
 /* modelname */ ATTRIB(Devastator, mdl, string, "rl");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Devastator, m_model, Model, MDL_DEVASTATOR_ITEM);
@@ -29,6 +41,7 @@ CLASS(Devastator, Weapon)
 		P(class, prefix, detonatedelay, float, NONE) \
 		P(class, prefix, edgedamage, float, NONE) \
 		P(class, prefix, force, float, NONE) \
+		P(class, prefix, force_xyscale, float, NONE) \
 		P(class, prefix, guidedelay, float, NONE) \
 		P(class, prefix, guidegoal, float, NONE) \
 		P(class, prefix, guideratedelay, float, NONE) \

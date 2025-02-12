@@ -14,7 +14,6 @@
 #include <common/weapons/weapon/porto.qc>
 #include <common/weapons/weapon/rifle.qc>
 #include <common/weapons/weapon/seeker.qc>
-#include <common/weapons/weapon/shockwave.qc>
 #include <common/weapons/weapon/shotgun.qc>
 #include <common/weapons/weapon/tuba.qc>
 #include <common/weapons/weapon/vaporizer.qc>

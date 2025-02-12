@@ -97,7 +97,7 @@ void W_Mortar_Grenade_Touch1(entity this, entity toucher)
 	}
 	else if(WEP_CVAR_PRI(WEP_MORTAR, type) == 2 && (!toucher || (toucher.takedamage != DAMAGE_AIM && toucher.move_movetype == MOVETYPE_NONE))) // stick
 	{
-		spamsound(this, CH_SHOTS, SND_GRENADE_STICK, VOL_BASE, ATTN_NORM);
+		spamsound(this, CH_SHOTS, SND_MORTAR_STICK, VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
 		this.movedir = this.velocity; // save to this temporary field, will be restored on explosion
@@ -133,7 +133,7 @@ void W_Mortar_Grenade_Touch2(entity this, entity toucher)
 	}
 	else if(WEP_CVAR_SEC(WEP_MORTAR, type) == 2 && (!toucher || (toucher.takedamage != DAMAGE_AIM && toucher.move_movetype == MOVETYPE_NONE))) // stick
 	{
-		spamsound(this, CH_SHOTS, SND_GRENADE_STICK, VOL_BASE, ATTN_NORM);
+		spamsound(this, CH_SHOTS, SND_MORTAR_STICK, VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
 		this.movedir = this.velocity; // save to this temporary field, will be restored on explosion
@@ -153,7 +153,7 @@ void W_Mortar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(WEP_MORTAR, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(WEP_MORTAR, damage), thiswep.m_id);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 4, SND_MORTAR_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(WEP_MORTAR, damage), thiswep.m_id);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
@@ -205,7 +205,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(WEP_MORTAR, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(WEP_MORTAR, damage), thiswep.m_id | HITTYPE_SECONDARY);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 4, SND_MORTAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(WEP_MORTAR, damage), thiswep.m_id | HITTYPE_SECONDARY);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
@@ -317,7 +317,7 @@ METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 				}
 			});
 			if(nadefound)
-				sound(actor, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
+				sound(actor, CH_WEAPON_B, SND_MORTAR_DET, VOL_BASE, ATTN_NORM);
 		}
 		else if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_MORTAR, refire)))
 		{
@@ -370,7 +370,7 @@ METHOD(Mortar, wr_impacteffect, void(entity thiswep, entity actor))
 	vector org2 = w_org + w_backoff * 2;
 	pointparticles(EFFECT_GRENADE_EXPLODE, org2, '0 0 0', 1);
 	if(!w_issilent)
-		sound(actor, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTN_NORM);
+		sound(actor, CH_SHOTS, SND_MORTAR_IMPACT, VOL_BASE, ATTN_NORM);
 }
 
 #endif

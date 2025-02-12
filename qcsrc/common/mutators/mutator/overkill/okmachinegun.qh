@@ -1,12 +1,20 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(OK_MG_VIEW, W_Model("h_ok_mg.iqm"));
+MODEL(OK_MG_WORLD, W_Model("v_ok_mg.md3"));
+MODEL(OK_MG_ITEM, W_Model("g_ok_mg.md3"));
+
+SOUND(OK_MG_FIRE, W_Sound("uzi_fire"));
+#endif
+
 CLASS(OverkillMachineGun, Weapon)
 /* spawnfunc */ ATTRIB(OverkillMachineGun, m_canonical_spawnfunc, string, "weapon_okmachinegun");
 /* ammotype  */ ATTRIB(OverkillMachineGun, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(OverkillMachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(OverkillMachineGun, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_MUTATORBLOCKED);
 /* rating    */ ATTRIB(OverkillMachineGun, bot_pickupbasevalue, float, 7000);
-/* color     */ ATTRIB(OverkillMachineGun, wpcolor, vector, '1 1 0');
+/* color     */ ATTRIB(OverkillMachineGun, m_color, vector, '0.678 0.886 0.267');
 /* modelname */ ATTRIB(OverkillMachineGun, mdl, string, "ok_mg");
 #ifdef GAMEQC
 /* model     */ ATTRIB(OverkillMachineGun, m_model, Model, MDL_OK_MG_ITEM);

@@ -289,3 +289,5 @@ float cvar_or(string cv, float v);
 float blink_synced(float base, float range, float freq, float start_time, int start_blink);
 
 float blink(float base, float range, float freq);
+
+string find_last_color_code(string s);

@@ -2,6 +2,7 @@
 
 #ifdef SVQC
 float autocvar_g_monster_wyvern_health;
+string autocvar_g_monster_wyvern_loot = "cells";
 float autocvar_g_monster_wyvern_damageforcescale = 0.6;
 float autocvar_g_monster_wyvern_attack_fireball_damage;
 float autocvar_g_monster_wyvern_attack_fireball_edgedamage;
@@ -173,7 +174,7 @@ METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_wyvern_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_wyvern_damageforcescale); }
 
-    actor.monster_loot = ITEM_Cells;
+    actor.monster_loot = autocvar_g_monster_wyvern_loot;
     actor.monster_attackfunc = M_Wyvern_Attack;
 
     return true;

@@ -1,12 +1,13 @@
 #include "sv_monsters.qh"
 
+#include <common/checkextension.qh>
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/all.qh>
-#include <common/mutators/mutator/nades/nades.qh>
+#include <common/mutators/mutator/nades/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/physics/movelib.qh>
 #include <common/stats.qh>
@@ -36,23 +37,53 @@ void monsters_setstatus(entity this)
 	//STAT(MONSTERS_KILLED, this) = monsters_killed;
 }
 
-bool autocvar_g_monsters_drop = true;
 void monster_dropitem(entity this, entity attacker)
 {
-	if(!this.candrop || !this.monster_loot || !autocvar_g_monsters_drop)
+	if(!this.candrop || !autocvar_g_monsters_drop)
+		return;
+
+	// TODO: mapper customization (different field?)
+	string itemlist = this.monster_loot;
+
+	if(this.spawnflags & MONSTERFLAG_MINIBOSS)
+		itemlist = autocvar_g_monsters_miniboss_loot;
+
+	MUTATOR_CALLHOOK(MonsterDropItem, this, itemlist, attacker);
+	itemlist = M_ARGV(1, string);
+
+	if(itemlist == "")
+		return;
+
+	RandomSelection_Init();
+	FOREACH_WORD(itemlist, true,
+	{
+		string item = it;
+
+		FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
+		{
+			if(it.netname == item || (item == "random" && (it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & WEP_FLAG_HIDDEN) && !(it.spawnflags & WEP_FLAG_SUPERWEAPON)))
+				RandomSelection_AddEnt(it, 1, 1);
+		});
+		FOREACH(Items, Item_IsDefinitionAllowed(it),
+		{
+			if(it.netname == item || (item == "random" && (it.spawnflags & ITEM_FLAG_NORMAL) && !it.instanceOfPowerup))
+				RandomSelection_AddEnt(it, 1, 1);
+		});
+	});
+
+	if(!RandomSelection_chosen_ent)
 		return;
 
 	entity e = spawn();
-	e.itemdef = this.monster_loot;
-	e.origin = CENTER_OR_VIEWOFS(this);
+	e.monster_item = true;
+	ITEM_SET_LOOT(e, true);
+	e.colormap = this.colormap;
+	e.itemdef = RandomSelection_chosen_ent;
+	setorigin(e, CENTER_OR_VIEWOFS(this));
 	e.velocity = randomvec() * 175 + '0 0 325';
 	e.lifetime = max(0, autocvar_g_monsters_drop_time);
 
-	MUTATOR_CALLHOOK(MonsterDropItem, this, e, attacker);
-	e = M_ARGV(1, entity);
-
-	if(e && e.itemdef)
-		Item_Initialise(e);
+	Item_Initialise(e);
 }
 
 bool monster_facing(entity this, entity targ)
@@ -164,10 +195,10 @@ entity Monster_FindTarget(entity this)
 
 void monster_setupcolors(entity this)
 {
-	if(IS_PLAYER(this.realowner))
-		this.colormap = this.realowner.colormap;
-	else if(teamplay && this.team)
+	if(teamplay && this.team)
 		this.colormap = 1024 + (this.team - 1) * 17;
+	else if(IS_PLAYER(this.realowner))
+		this.colormap = this.realowner.colormap;
 	else
 	{
 		if(this.monster_skill <= MONSTER_SKILL_EASY)
@@ -503,20 +534,29 @@ void Monster_Touch(entity this, entity toucher)
 		this.enemy = toucher;
 }
 
-void Monster_Miniboss_Check(entity this)
+void Monster_Miniboss_Setup(entity this)
 {
-	if(MUTATOR_CALLHOOK(MonsterCheckBossFlag, this))
+	if(this.spawnflags & MONSTERFLAG_RESPAWNED)
+	{
+		// already performed initial setup, just reapply statuses as needed
+		if(this.spawnflags & MONSTERFLAG_MINIBOSS)
+			this.effects |= EF_RED;
 		return;
+	}
 
-	float chance = random() * 100;
+	if(MUTATOR_CALLHOOK(MonsterCheckBossFlag, this))
+	{
+		// prevent other code from identifying the monster as a miniboss
+		this.spawnflags &= ~MONSTERFLAG_MINIBOSS;
+		return;
+	}
 
 	// g_monsters_miniboss_chance cvar or spawnflags 64 causes a monster to be a miniboss
-	if ((this.spawnflags & MONSTERFLAG_MINIBOSS) || (chance < autocvar_g_monsters_miniboss_chance))
+	if ((this.spawnflags & MONSTERFLAG_MINIBOSS) || ((random() * 100) < autocvar_g_monsters_miniboss_chance))
 	{
 		GiveResource(this, RES_HEALTH, autocvar_g_monsters_miniboss_healthboost);
 		this.effects |= EF_RED;
-		if(!this.weapon)
-			this.weapon = WEP_VORTEX.m_id;
+		this.spawnflags |= MONSTERFLAG_MINIBOSS; // identifier for other code
 	}
 }
 
@@ -691,7 +731,7 @@ int Monster_CheckDanger(entity this, vector dst_ahead)
 {
 	float s;
 
-	if((this.flags & FL_FLY) || (this.flags & FL_SWIM))
+	if(this.flags & (FL_FLY | FL_SWIM))
 	{
 		// Look ahead
 		traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
@@ -1029,11 +1069,11 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 
 	Monster_Sound(this, monstersound_death, 0, false, CH_VOICE);
 
-	if(!(this.spawnflags & MONSTERFLAG_SPAWNED) && !(this.spawnflags & MONSTERFLAG_RESPAWNED))
+	if(!(this.spawnflags & (MONSTERFLAG_SPAWNED | MONSTERFLAG_RESPAWNED)))
 		monsters_killed += 1;
 
 	if(IS_PLAYER(attacker))
-	if(autocvar_g_monsters_score_spawned || !((this.spawnflags & MONSTERFLAG_SPAWNED) || (this.spawnflags & MONSTERFLAG_RESPAWNED)))
+	if(autocvar_g_monsters_score_spawned || !(this.spawnflags & (MONSTERFLAG_SPAWNED | MONSTERFLAG_RESPAWNED)))
 		GameRules_scoring_add(attacker, SCORE, +autocvar_g_monsters_score_kill);
 
 	if(gibbed)
@@ -1067,12 +1107,6 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 
 	Monster mon = this.monsterdef;
 	mon.mr_death(mon, this);
-
-	if(this.candrop && this.weapon && autocvar_g_monsters_drop)
-	{
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		W_ThrowNewWeapon(this, this.weapon, 0, this.origin, randomvec() * 150 + '0 0 325', weaponentity);
-	}
 }
 
 void Monster_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
@@ -1372,9 +1406,10 @@ bool Monster_Spawn_Setup(entity this)
 	if(!this.attack_range) { this.attack_range = autocvar_g_monsters_attack_range; }
 	if(!this.damageforcescale) { this.damageforcescale = autocvar_g_monsters_damageforcescale; }
 
+	Monster_Miniboss_Setup(this);
+
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
-		Monster_Miniboss_Check(this);
 		SetResourceExplicit(this, RES_HEALTH, GetResource(this, RES_HEALTH) * MONSTER_SKILLMOD(this));
 
 		if(!this.skin)
@@ -1459,8 +1494,8 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 	else
 		setmodel(this, mon.m_model);
 
-	if(!this.monster_name || this.monster_name == "")
-		this.monster_name = mon.monster_name;
+	if(!this.m_name || this.m_name == "")
+		this.m_name = mon.m_name;
 
 	if(this.statuseffects && this.statuseffects.owner == this)
 	{
@@ -1506,7 +1541,7 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 	this.monster_face 		= '0 0 0';
 	this.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 
-	if(!this.noalign) { this.noalign = ((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM)); }
+	if(!this.noalign) { this.noalign = (mon.spawnflags & (MONSTER_TYPE_FLY | MONSTER_TYPE_SWIM)); }
 	if(!this.scale) { this.scale = 1; }
 	if(autocvar_g_monsters_edit) { this.grab = 1; }
 	if(autocvar_g_fullbrightplayers) { this.effects |= EF_FULLBRIGHT; }
@@ -1543,7 +1578,7 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 		setorigin(this, trace_endpos);
 	}
 
-	if (!nudgeoutofsolid(this))
+	if (!nudgeoutofsolid_OrFallback(this))
 	{
 		// Stuck and not fixable
 		Monster_Remove(this);

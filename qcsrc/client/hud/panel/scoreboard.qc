@@ -296,10 +296,10 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 		if(nPrimary == K_TAB) hudShiftState |= S_TAB;
 	}
 	else {
-		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
-		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
-		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
-		if(nPrimary == K_TAB) hudShiftState -= (hudShiftState & S_TAB);
+		if(nPrimary == K_ALT) hudShiftState &= ~S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState &= ~S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState &= ~S_SHIFT;
+		if(nPrimary == K_TAB) hudShiftState &= ~S_TAB;
 	}
 
 	if(nPrimary == K_TAB)
@@ -2268,7 +2268,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		}
 		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
 		{
-			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK))
+			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED))
 				++nHidden;
 			else
 				++disownedcnt;
@@ -2696,7 +2696,15 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
 		str = count_ordinal(i+1);
-		drawstring(pos + text_ofs, str, hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+		vector rank_color;
+		switch(i)
+		{
+			case 0:  rank_color = '0.933 0.733 0.200'; break; // 1st; gold
+			case 1:  rank_color = '0.667 0.667 0.667'; break; // 2nd; silver
+			case 2:  rank_color = '0.800 0.467 0.267'; break; // 3rd; bronze
+			default: rank_color = '1 1 1';
+		}
+		drawstring(pos + text_ofs, str, hud_fontsize, rank_color, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + text_ofs + eX * ranksize, TIME_ENCODED_TOSTRING(t, true), hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
 		str = ColorTranslateRGB(grecordholder[i]);
 		if(cut)
@@ -3007,7 +3015,7 @@ void Scoreboard_Draw()
 					str = strcat(str, "^7 / "); // delimiter
 				str = strcat(str, Scoreboard_Fraglimit_Draw(fl, false));
 			}
-			if(ll > 0)
+			if(ll > 0 && (ll < fl || fl <= 0))
 			{
 				if(tl > 0 || fl > 0)
 				{

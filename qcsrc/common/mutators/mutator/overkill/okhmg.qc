@@ -18,7 +18,7 @@ void W_OverkillHeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity
 		return;
 	}
 
-	if((!thiswep.wr_checkammo1(thiswep, actor, weaponentity) && !(actor.items & IT_UNLIMITED_AMMO)) || (!StatusEffects_active(STATUSEFFECT_Superweapons, actor) && !(actor.items & IT_UNLIMITED_SUPERWEAPONS)))
+	if((!thiswep.wr_checkammo1(thiswep, actor, weaponentity) && !(actor.items & IT_UNLIMITED_AMMO)) || (!StatusEffects_active(STATUSEFFECT_Superweapon, actor) && !(actor.items & IT_UNLIMITED_SUPERWEAPONS)))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -27,7 +27,7 @@ void W_OverkillHeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity
 
 	W_DecreaseAmmo(WEP_OVERKILL_HMG, actor, WEP_CVAR_PRI(WEP_OVERKILL_HMG, ammo), weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(WEP_OVERKILL_HMG, damage), WEP_OVERKILL_HMG.m_id);
+	W_SetupShot(actor, weaponentity, true, 0, SND_HMG_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(WEP_OVERKILL_HMG, damage), WEP_OVERKILL_HMG.m_id);
 
 	if(!autocvar_g_norecoil)
 	{

@@ -1,12 +1,22 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(VAPORIZER_MUZZLEFLASH, "models/nexflash.md3");
+MODEL(VAPORIZER_VIEW, W_Model("h_minstanex.iqm"));
+MODEL(VAPORIZER_WORLD, W_Model("v_minstanex.md3"));
+MODEL(VAPORIZER_ITEM, W_Model("g_minstanex.md3"));
+
+SOUND(VAPORIZER_FIRE, W_Sound("minstanexfire"));
+SOUND(VAPORIZER_IMPACT, W_Sound("neximpact"));
+#endif
+
 CLASS(Vaporizer, Weapon)
 /* spawnfunc */ ATTRIB(Vaporizer, m_canonical_spawnfunc, string, "weapon_vaporizer");
 /* ammotype  */ ATTRIB(Vaporizer, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Vaporizer, impulse, int, 7);
 /* flags     */ ATTRIB(Vaporizer, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Vaporizer, bot_pickupbasevalue, float, 10000);
-/* color     */ ATTRIB(Vaporizer, wpcolor, vector, '0.5 1 1');
+/* color     */ ATTRIB(Vaporizer, m_color, vector, '0.592 0.557 0.824');
 /* modelname */ ATTRIB(Vaporizer, mdl, string, "minstanex");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Vaporizer, m_model, Model, MDL_VAPORIZER_ITEM);

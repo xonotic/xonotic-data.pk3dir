@@ -6,7 +6,10 @@ cscope*
 .idea/
 Thumbs.db
 
-# sv_game hashtest local test re-use
+# CI/CD pipeline files
+gmqcc
+data/xonotic-data.pk3dir
+## sv_game hashtest local test re-use
 data/maps/
 data/maps/_init.bsp
 data/stormkeep.pk3

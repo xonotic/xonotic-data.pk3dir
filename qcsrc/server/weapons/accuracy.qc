@@ -147,7 +147,7 @@ void accuracy_add(entity this, Weapon w, float fired, float hit)
     }
 
 	if (!g_duel && b == accuracy_byte(a.accuracy_hit[wepid], a.accuracy_fired[wepid])) return; // no change
-	int sf = 1 << (wepid % 24);
+	int sf = BIT(wepid % 24);
 	a.SendFlags |= sf;
 	
 	if(!g_duel)

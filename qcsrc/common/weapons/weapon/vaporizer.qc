@@ -13,9 +13,9 @@ void SendCSQCVaporizerBeamParticle(entity player, int hit) {
 	WriteVector(MSG_BROADCAST, v);
 	WriteByte(MSG_BROADCAST, hit);
 	WriteByte(MSG_BROADCAST, etof(player));
-	WriteByte(MSG_BROADCAST, player.team);
 }
 #elif defined(CSQC)
+bool autocvar_cl_vaporizerbeam_teamcolor = true;
 bool autocvar_cl_vaporizerbeam_particle = false;
 float autocvar_cl_vaporizerbeam_lifetime = 0.8;
 float autocvar_cl_vaporizerbeam_colorboost = 0.7;
@@ -44,15 +44,10 @@ void VaporizerBeam_Draw(entity this)
 	string tex = "particles/lgbeam";
 	if(this.cnt)
 		tex = "particles/gauntletbeam";
-	vector rgb;
-	//entity e = CSQCModel_server2csqc(this.sv_entnum - 1);
-	//if (e == NULL)
-	//{
+	vector rgb = WEP_VAPORIZER.m_color;
+	if(autocvar_cl_vaporizerbeam_teamcolor)
 		rgb = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
-		//rgb = '1 1 1';
-	//}
-	//else
-	//	rgb = e.glowmod;
+
 	rgb *= (1 + autocvar_cl_vaporizerbeam_colorboost);
 
 	float fail = (this.nextthink - time);
@@ -86,13 +81,17 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	int myowner = ReadByte();
 	this.owner = playerslots[myowner - 1];
 	this.sv_entnum = myowner;
-	this.team = ReadByte() - 1;
 
 	//pointparticles(EFFECT_VORTEX_MUZZLEFLASH, this.vorg1, normalize(this.vorg2 - this.vorg1) * 1000, 1);
 
 	if(autocvar_cl_vaporizerbeam_particle)
 	{
-		WarpZone_TrailParticles(NULL, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT(this.team) : EFFECT_VAPORIZER(this.team))), this.vorg1, this.vorg2);
+		vector rgb = WEP_VAPORIZER.m_color;
+		if(autocvar_cl_vaporizerbeam_teamcolor)
+			rgb = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
+
+		particles_colormin = particles_colormax = rgb;
+		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_BEAM_HIT : EFFECT_VAPORIZER_BEAM)), this.vorg1, this.vorg2, 1, PARTICLES_USECOLOR);
 		this.draw = func_null;
 		this.drawmask = MASK_NORMAL;
 		delete(this);
@@ -123,7 +122,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupShot(actor, weaponentity, true, 0, SND_Null, CH_WEAPON_A, vaporizer_damage, thiswep.m_id);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
-	sound (actor, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
+	sound (actor, CH_WEAPON_A, SND_VAPORIZER_FIRE, VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
 	impressive_hits = 0;
@@ -200,7 +199,7 @@ void W_RocketMinsta_Attack(entity actor, .entity weaponentity, int mode)
 	entity proj;
 	int laser_count = max(1, autocvar_g_rm_laser_count);
 	int total = (mode == 0) ? laser_count : 1;
-	Sound snd = (mode == 0) ? SND_CRYLINK_FIRE : SND_ELECTRO_FIRE2;
+	Sound snd = (mode == 0) ? SND_CRYLINK_FIRE : SND_ELECTRO_FIRE2; // WEAPONTODO multiple references to other weapons here!
 	W_SetupShot_ProjectileSize(actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, snd, CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO.m_id);
 
 	// uses electro effects
@@ -386,7 +385,7 @@ METHOD(Vaporizer, wr_impacteffect, void(entity thiswep, entity actor))
 	vector org2 = w_org + w_backoff * 2;
 	pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
 	if(!w_issilent)
-		sound(actor, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+		sound(actor, CH_SHOTS, SND_VAPORIZER_IMPACT, VOL_BASE, ATTN_NORM);
 }
 
 METHOD(Vaporizer, wr_init, void(entity thiswep))

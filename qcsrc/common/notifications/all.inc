@@ -385,6 +385,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(DEATH_MURDER_VH_WAKI_GUN,                N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"), "")
     MSG_INFO_NOTIF(DEATH_MURDER_VH_WAKI_ROCKET,             N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"), "")
     MSG_INFO_NOTIF(DEATH_MURDER_VOID,                       N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_void",          _("^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"), "")
+    MSG_INFO_NOTIF(DEATH_MURDER_VOID_ENT,                   N_CONSOLE,  4, 2, "spree_inf s1 s3#s2 #s2 s4loc spree_end", "s2 s1",        "notify_void",            "^BG%s%s^K1 %s%s%s%s", "")
 
     MSG_INFO_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,               N_CONSOLE,  2, 1, "s1 death_team s2loc", "",        "",                     _("^BG%s^K1 was moved into the %s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_BETRAYAL,                     N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_teamkill_red",  _("^BG%s^K1 became enemies with the Lord of Teamplay%s%s"), "")
@@ -438,7 +439,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(DEATH_SELF_VH_SPID_ROCKET,               N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_VH_WAKI_DEATH,                N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 got caught in the blast of a Racer explosion%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_VH_WAKI_ROCKET,               N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"), "")
-    MSG_INFO_NOTIF(DEATH_SELF_VOID,                         N_CONSOLE,  3, 1, "s1 s2 s3loc spree_lost", "s1",   "notify_void",            "^BG%s^K1 %s^K1%s%s", "")
+    MSG_INFO_NOTIF(DEATH_SELF_VOID,                         N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_void",          _("^BG%s^K1 ended up in the wrong place%s%s"), "")
+    MSG_INFO_NOTIF(DEATH_SELF_VOID_ENT,                     N_CONSOLE,  3, 1, "s1 s2 s3loc spree_lost", "s1",   "notify_void",            "^BG%s^K1 %s%s%s", "")
 
     MULTITEAM_INFO(DEATH_TEAMKILL,                          N_CONSOLE,  3, 1, "s1 s2 s3loc spree_end", "s2 s1",     "notify_teamkill_%s",   _("^BG%s^K1 was betrayed by ^BG%s^K1%s%s"), "", NAME)
 
@@ -605,8 +607,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(WEAPON_SEEKER_MURDER_SPRAY,              N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponseeker",             _("^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SEEKER_MURDER_TAG,                N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponseeker",             _("^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SEEKER_SUICIDE,                   N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weaponseeker",             _("^BG%s^K1 played with tiny Seeker rockets%s%s"), "")
-    MSG_INFO_NOTIF(WEAPON_SHOCKWAVE_MURDER,                 N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponshockwave",          _("^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"), "")
-    MSG_INFO_NOTIF(WEAPON_SHOCKWAVE_MURDER_SLAP,            N_CONSOLE,  3, 2, "spree_inf s2 s1 s3loc spree_end", "s2 s1",       "notify_melee_shotgun",     _("^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shockwave%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SHOTGUN_MURDER,                   N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponshotgun",            _("^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SHOTGUN_MURDER_SLAP,              N_CONSOLE,  3, 2, "spree_inf s2 s1 s3loc spree_end", "s2 s1",       "notify_melee_shotgun",     _("^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_THINKING_WITH_PORTALS,            N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "notify_selfkill",          _("^BG%s^K1 is now thinking with portals%s%s"), "")
@@ -974,6 +974,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(DEATH_MURDER_VH_WAKI_GUN,           N_ENABLE,  NULL,           INFO_DEATH_MURDER_VH_WAKI_GUN,          NULL)
     MSG_MULTI_NOTIF(DEATH_MURDER_VH_WAKI_ROCKET,        N_ENABLE,  NULL,           INFO_DEATH_MURDER_VH_WAKI_ROCKET,       NULL)
     MSG_MULTI_NOTIF(DEATH_MURDER_VOID,                  N_ENABLE,  NULL,           INFO_DEATH_MURDER_VOID,                 NULL)
+    MSG_MULTI_NOTIF(DEATH_MURDER_VOID_ENT,              N_ENABLE,  NULL,           INFO_DEATH_MURDER_VOID_ENT,             NULL)
 
     MSG_MULTI_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,          N_ENABLE,  NULL,           INFO_DEATH_SELF_AUTOTEAMCHANGE,         CENTER_DEATH_SELF_AUTOTEAMCHANGE)
     MSG_MULTI_NOTIF(DEATH_SELF_BETRAYAL,                N_ENABLE,  NULL,           INFO_DEATH_SELF_BETRAYAL,               CENTER_DEATH_SELF_BETRAYAL)
@@ -1028,6 +1029,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(DEATH_SELF_VH_WAKI_DEATH,           N_ENABLE,  NULL,           INFO_DEATH_SELF_VH_WAKI_DEATH,          CENTER_DEATH_SELF_VH_WAKI_DEATH)
     MSG_MULTI_NOTIF(DEATH_SELF_VH_WAKI_ROCKET,          N_ENABLE,  NULL,           INFO_DEATH_SELF_VH_WAKI_ROCKET,         CENTER_DEATH_SELF_VH_WAKI_ROCKET)
     MSG_MULTI_NOTIF(DEATH_SELF_VOID,                    N_ENABLE,  NULL,           INFO_DEATH_SELF_VOID,                   CENTER_DEATH_SELF_VOID)
+    MSG_MULTI_NOTIF(DEATH_SELF_VOID_ENT,                N_ENABLE,  NULL,           INFO_DEATH_SELF_VOID_ENT,               CENTER_DEATH_SELF_VOID)
 
     MSG_MULTI_NOTIF(ITEM_BUFF_DROP,                     N_ENABLE,  NULL,           INFO_ITEM_BUFF_DROP,                    CENTER_ITEM_BUFF_DROP)
     MSG_MULTI_NOTIF(ITEM_BUFF_GOT,                      N_ENABLE,  NULL,           INFO_ITEM_BUFF_GOT,                     CENTER_ITEM_BUFF_GOT)
@@ -1094,8 +1096,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(WEAPON_SEEKER_MURDER_SPRAY,         N_ENABLE,  NULL,           INFO_WEAPON_SEEKER_MURDER_SPRAY,        NULL)
     MSG_MULTI_NOTIF(WEAPON_SEEKER_MURDER_TAG,           N_ENABLE,  NULL,           INFO_WEAPON_SEEKER_MURDER_TAG,          NULL)
     MSG_MULTI_NOTIF(WEAPON_SEEKER_SUICIDE,              N_ENABLE,  NULL,           INFO_WEAPON_SEEKER_SUICIDE,             CENTER_DEATH_SELF_GENERIC)
-    MSG_MULTI_NOTIF(WEAPON_SHOCKWAVE_MURDER,            N_ENABLE,  NULL,           INFO_WEAPON_SHOCKWAVE_MURDER,           NULL)
-    MSG_MULTI_NOTIF(WEAPON_SHOCKWAVE_MURDER_SLAP,       N_ENABLE,  NULL,           INFO_WEAPON_SHOCKWAVE_MURDER_SLAP,      NULL)
     MSG_MULTI_NOTIF(WEAPON_SHOTGUN_MURDER,              N_ENABLE,  NULL,           INFO_WEAPON_SHOTGUN_MURDER,             NULL)
     MSG_MULTI_NOTIF(WEAPON_SHOTGUN_MURDER_SLAP,         N_ENABLE,  NULL,           INFO_WEAPON_SHOTGUN_MURDER_SLAP,        NULL)
     MSG_MULTI_NOTIF(WEAPON_THINKING_WITH_PORTALS,       N_ENABLE,  NULL,           INFO_WEAPON_THINKING_WITH_PORTALS,      CENTER_DEATH_SELF_GENERIC)

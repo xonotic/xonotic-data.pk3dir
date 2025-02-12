@@ -19,8 +19,6 @@ float pickup_crosshair_time, pickup_crosshair_size;
 float hitindication_crosshair_size;
 float use_vortex_chargepool;
 
-float reticle_type;
-
 vector wcross_origin;
 float wcross_scale_prev, wcross_alpha_prev;
 vector wcross_color_prev;
@@ -49,7 +47,7 @@ void TrueAim_Init()
 	(trueaim_rifle = new_pure(trueaim_rifle)).dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 }
 
-float EnemyHitCheck()
+int EnemyHitCheck()
 {
 	float t, n;
 	wcross_origin = project_3d_to_2d(trace_endpos);
@@ -70,7 +68,7 @@ float EnemyHitCheck()
 	return SHOTTYPE_HITENEMY;
 }
 
-float TrueAimCheck(entity wepent)
+int TrueAimCheck(entity wepent)
 {
 	if(wepent.activeweapon.spawnflags & WEP_FLAG_NOTRUEAIM)
 		return SHOTTYPE_HITWORLD;
@@ -181,7 +179,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 		{
 			if(this != WEP_Null && hud == HUD_NORMAL)
 			{
-				wcross_color = this.wpcolor;
+				wcross_color = this.m_color;
 				break;
 			}
 			else { goto normalcolor; }
@@ -677,11 +675,9 @@ void HUD_Crosshair(entity this)
 void DrawReticle(entity this)
 {
 	if(!autocvar_cl_reticle || MUTATOR_CALLHOOK(DrawReticle))
-	{
-		reticle_type = 0;
 		return;
-	}
 
+	int reticle_type = 0;
 	float is_dead = (STAT(HEALTH) <= 0);
 	string reticle_image = string_null;
 	bool wep_zoomed = false;
@@ -735,7 +731,7 @@ void DrawReticle(entity this)
 			reticle_pos.y = (vid_conheight - reticle_size.y) / 2;
 		}
 
-		float f = (zoomscript_caught) ? 1 : current_zoomfraction;
+		float f = (zoomscript_caught) ? 1 : max(0.25, current_zoomfraction);
 
 		if(f)
 		{

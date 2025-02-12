@@ -1,7 +1,8 @@
 #pragma once
 
 #ifdef CSQC
-#include <client/csqcmodel_hooks.qh>
+	#include <client/csqcmodel_hooks.qh>
+	#include <client/main.qh> // for playerslots
 #endif
 
 REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)

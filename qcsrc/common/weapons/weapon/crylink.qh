@@ -1,12 +1,24 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(CRYLINK_VIEW, W_Model("h_crylink.iqm"));
+MODEL(CRYLINK_WORLD, W_Model("v_crylink.md3"));
+MODEL(CRYLINK_ITEM, W_Model("g_crylink.md3"));
+
+SOUND(CRYLINK_FIRE2, W_Sound("crylink_fire2"));
+SOUND(CRYLINK_FIRE, W_Sound("crylink_fire"));
+SOUND(CRYLINK_IMPACT2, W_Sound("crylink_impact2"));
+SOUND(CRYLINK_IMPACT, W_Sound("crylink_impact"));
+SOUND(CRYLINK_LINKJOIN, W_Sound("crylink_linkjoin"));
+#endif
+
 CLASS(Crylink, Weapon)
 /* spawnfunc */ ATTRIB(Crylink, m_canonical_spawnfunc, string, "weapon_crylink");
 /* ammotype  */ ATTRIB(Crylink, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Crylink, impulse, int, 6);
 /* flags     */ ATTRIB(Crylink, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_CANCLIMB);
 /* rating    */ ATTRIB(Crylink, bot_pickupbasevalue, float, 6000);
-/* color     */ ATTRIB(Crylink, wpcolor, vector, '1 0.5 1');
+/* color     */ ATTRIB(Crylink, m_color, vector, '0.918 0.435 0.976');
 /* modelname */ ATTRIB(Crylink, mdl, string, "crylink");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Crylink, m_model, Model, MDL_CRYLINK_ITEM);

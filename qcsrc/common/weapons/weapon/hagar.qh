@@ -1,12 +1,28 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(HAGAR_VIEW, W_Model("h_hagar.iqm"));
+MODEL(HAGAR_WORLD, W_Model("v_hagar.md3"));
+MODEL(HAGAR_ITEM, W_Model("g_hagar.md3"));
+
+SOUND(HAGAR_BEEP, W_Sound("hagar_beep"));
+SOUND(HAGAR_FIRE, W_Sound("hagar_fire"));
+SOUND(HAGAR_LOAD, W_Sound("hagar_load"));
+SOUND(HAGEXP1, W_Sound("hagexp1"));
+SOUND(HAGEXP2, W_Sound("hagexp2"));
+SOUND(HAGEXP3, W_Sound("hagexp3"));
+Sound SND_HAGEXP_RANDOM(float rnd) {
+    return REGISTRY_GET(Sounds, SND_HAGEXP1.m_id + rint(rnd * 2));
+}
+#endif
+
 CLASS(Hagar, Weapon)
 /* spawnfunc */ ATTRIB(Hagar, m_canonical_spawnfunc, string, "weapon_hagar");
 /* ammotype  */ ATTRIB(Hagar, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Hagar, impulse, int, 8);
 /* flags     */ ATTRIB(Hagar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Hagar, bot_pickupbasevalue, float, 6000);
-/* color     */ ATTRIB(Hagar, wpcolor, vector, '1 1 0.5');
+/* color     */ ATTRIB(Hagar, m_color, vector, '0.886 0.545 0.345');
 /* modelname */ ATTRIB(Hagar, mdl, string, "hagar");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Hagar, m_model, Model, MDL_HAGAR_ITEM);

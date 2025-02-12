@@ -1,18 +1,18 @@
 #pragma once
 
 #ifdef GAMEQC
-    #include <common/sounds/all.qh>
+	#include <common/sounds/all.qh>
 #endif
 
-REGISTRY(StatusEffect, 32)
-REGISTER_REGISTRY(StatusEffect)
-#define REGISTER_STATUSEFFECT(id, inst) REGISTER(StatusEffect, STATUSEFFECT, id, m_id, inst)
+REGISTRY(StatusEffects, 32)
+REGISTER_REGISTRY(StatusEffects)
+#define REGISTER_STATUSEFFECT(id, inst) REGISTER(StatusEffects, STATUSEFFECT, id, m_id, inst)
 
-REGISTRY_SORT(StatusEffect)
-REGISTRY_CHECK(StatusEffect)
+REGISTRY_SORT(StatusEffects)
+REGISTRY_CHECK(StatusEffects)
 
-REGISTRY_DEFINE_GET(StatusEffect, NULL)
-STATIC_INIT(StatusEffect) { FOREACH(StatusEffect, true, it.m_id = i); }
+REGISTRY_DEFINE_GET(StatusEffects, NULL)
+STATIC_INIT(StatusEffects) { FOREACH(StatusEffects, true, it.m_id = i); }
 
 enum
 {
@@ -27,33 +27,33 @@ enum
     STATUSEFFECT_REMOVE_CLEAR          ///< Effect is being forcibly removed without calling any additional mechanics.
 };
 
-CLASS(StatusEffects, Object)
-    ATTRIB(StatusEffects, m_id, int, 0);
-    ATTRIB(StatusEffects, m_name, string);
-    ATTRIB(StatusEffects, m_icon, string);
-    ATTRIB(StatusEffects, m_color, vector, '1 1 1');
-    /** Whether the effect is displayed in the HUD */
-    ATTRIB(StatusEffects, m_hidden, bool, false);
-    /** Lifetime scale for HUD progress bars */
-    ATTRIB(StatusEffects, m_lifetime, float, 30);
+CLASS(StatusEffect, Object)
+	ATTRIB(StatusEffect, m_id, int, 0);
+	ATTRIB(StatusEffect, m_name, string);
+	ATTRIB(StatusEffect, m_icon, string);
+	ATTRIB(StatusEffect, m_color, vector, '1 1 1');
+	/** Whether the effect is displayed in the HUD */
+	ATTRIB(StatusEffect, m_hidden, bool, false);
+	/** Lifetime scale for HUD progress bars */
+	ATTRIB(StatusEffect, m_lifetime, float, 30);
 #ifdef GAMEQC
-    ATTRIB(StatusEffects, m_sound, Sound, SND_Null);
-    ATTRIB(StatusEffects, m_sound_rm, Sound, SND_Null);
-    METHOD(StatusEffects, m_tick, void(StatusEffects this, entity actor));
-    METHOD(StatusEffects, m_active, bool(StatusEffects this, entity actor));
-    /** Stores times of status effects, the id being the index */
-    ATTRIBARRAY(StatusEffects, statuseffect_time, float, REGISTRY_MAX(StatusEffect));
-    ATTRIBARRAY(StatusEffects, statuseffect_flags, int, REGISTRY_MAX(StatusEffect));
+	ATTRIB(StatusEffect, m_sound, Sound, SND_Null);
+	ATTRIB(StatusEffect, m_sound_rm, Sound, SND_Null);
+	METHOD(StatusEffect, m_tick, void(StatusEffect this, entity actor));
+	METHOD(StatusEffect, m_active, bool(StatusEffect this, entity actor));
+	/** Stores times of status effects, the id being the index */
+	ATTRIBARRAY(StatusEffect, statuseffect_time, float, REGISTRY_MAX(StatusEffects));
+	ATTRIBARRAY(StatusEffect, statuseffect_flags, int, REGISTRY_MAX(StatusEffects));
 #endif
 #ifdef SVQC
-    METHOD(StatusEffects, m_apply, void(StatusEffects this, entity actor, float eff_time, int eff_flags));
-    METHOD(StatusEffects, m_remove, void(StatusEffects this, entity actor, int removal_type));
-    /** Sets the persistent flag and updates client side if returning true */
-    METHOD(StatusEffects, m_persistent, bool(StatusEffects this, entity actor)) { return false; };
+	METHOD(StatusEffect, m_apply, void(StatusEffect this, entity actor, float eff_time, int eff_flags));
+	METHOD(StatusEffect, m_remove, void(StatusEffect this, entity actor, int removal_type));
+	/** Sets the persistent flag and updates client side if returning true */
+	METHOD(StatusEffect, m_persistent, bool(StatusEffect this, entity actor)) { return false; };
 #endif
-    METHOD(StatusEffects, display, void(StatusEffects this, void(string name, string icon) returns))
-    {
-        TC(StatusEffects, this);
-        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
-    }
-ENDCLASS(StatusEffects)
+	METHOD(StatusEffect, display, void(StatusEffect this, void(string name, string icon) returns))
+	{
+		TC(StatusEffect, this);
+		returns(this.m_name, (this.m_icon != "") ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon) : string_null);
+	}
+ENDCLASS(StatusEffect)

@@ -1318,7 +1318,7 @@ effect electro_combo
 effect electro_combo
 	type static
 	airfriction 6
-	alpha 156 156 156
+	alpha 156 156 100
 	bounce 2
 	color 0x2030FF 0x80C0FF
 	count 5
@@ -1329,17 +1329,17 @@ effect electro_combo
 	velocityjitter 512 512 512
 effect electro_combo
 	type spark
-	alpha 444 512 700
+	alpha 444 512 500
 	bounce 1.600000
 	color 0xa9cacf 0x0054ff
 	count 32
-	gravity 0.300000
 	originjitter 1 1 1
 	size 2 4
 	stretchfactor 2
 	tex 41 41
-	velocityjitter 312 312 312
-	velocitymultiplier 3
+	velocityjitter 128 128 128
+	velocitymultiplier 0.300000
+	rotate -180 180 4000 -4000
 effect electro_combo
 	type smoke
 	alpha 256 256 256
@@ -1351,11 +1351,10 @@ effect electro_combo
 	velocityjitter 32 32 32
 effect electro_combo
 	type smoke
-	alpha 40 40 100
+	alpha 64 64 40
 	color 0xa9cacf 0x0054ff
 	countabsolute 1
-	sizeincrease 600
-	size 30 30
+	size 120 120
 	tex 33 33
 	velocitymultiplier 0.300000
 effect crylink_muzzleflash
@@ -5968,7 +5967,7 @@ effect damage_hlac
 	type smoke
 	airfriction -0.350000
 	alpha 128 16 128
-	color 0x880000 0xff4400
+	color 0x008800 0x44ff00
 	count 3
 	notunderwater
 	originjitter 4 4 4
@@ -8926,3 +8925,67 @@ effect item_despawn
 	lightradiusfade 64
 	lightcolor 1 0.75 0.36
 	lightshadow 1
+effect hlac_muzzleflash
+	type smoke
+	airfriction 10
+	alpha 128 256 6280
+	color 0x00cc00 0x00ff00
+	countabsolute 1
+	lightcolor 0.4 0.8 0.2
+	lightradiusfade 2000
+	lightradius 100
+	sizeincrease -100
+	size 2 5
+	stretchfactor 2
+	tex 70 70
+effect hlac_muzzleflash
+	type spark
+	airfriction 12
+	alpha 0 128 1024
+	color 0x92e045 0x64f42a
+	count 15
+	originjitter 1 1 1
+	rotate -180 180 -400 400
+	size 2 5
+	stretchfactor 2
+	tex 48 55
+	velocityjitter 200 200 200
+	velocitymultiplier 0.500000
+effect hlac_impact
+	type decal
+	alpha 128 128 0
+	countabsolute 1
+	lightcolor 0.4 0.8 0.2
+	lightradiusfade 500
+	lightradius 150
+	originjitter 14 14 14
+	size 12 12
+	tex 47 47
+effect hlac_impact
+	type static
+	alpha 256 256 1024
+	color 0x1be508 0xd5f0a1
+	countabsolute 1
+	size 24 24
+	tex 46 46
+effect hlac_impact
+	type spark
+	airfriction 8
+	alpha 256 256 1024
+	color 0x92e045 0x54e51a
+	count 128
+	liquidfriction 2
+	size 4 4
+	tex 45 45
+	velocityjitter 256 256 256
+effect hlac_impact
+	type smoke
+	alpha 64 256 256
+	color 0x92e045 0xc7eda1
+	count 4
+	originjitter 1 1 1
+	sizeincrease 6
+	size 12 12
+	tex 4 6
+	velocityjitter 16 16 16
+	velocitymultiplier 0.010000

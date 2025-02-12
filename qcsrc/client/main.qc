@@ -93,6 +93,8 @@ void CSQC_Init(float apilevel, string enginename, float engineversion)
 
 	registercvar("cl_dodging", "0");
 
+	registercvar("cl_autoswitch_cts", "-1");
+
 	registercvar("cl_spawn_near_teammate", "1");
 
 	registercvar("cl_weapon_switch_reload", "1");
@@ -182,19 +184,29 @@ void Shutdown()
 
 	cvar_set("slowmo", cvar_defstring("slowmo")); // reset it back to 'default'
 
-	if (!isdemo())
+	// if _cl_hook_gamestart wasn't called with an actual gamemode
+	// before CSQC VM shutdown then call it with nop fallback here
+	if (!(calledhooks & HOOK_START) && !isdemo())
+		localcmd("\n_cl_hook_gamestart nop\n");
+
+	// fire game or demo end hooks when CSQC VM shuts down
+	if (!(calledhooks & HOOK_END))
 	{
-		if (!(calledhooks & HOOK_START))
-			localcmd("\n_cl_hook_gamestart nop\n");
-		if (!(calledhooks & HOOK_END))
+		// call gameend hook if it hasn't somehow yet fired by intermission starting
+		if (!isdemo())
 		{
-			int gamecount = cvar("cl_matchcount");
 			localcmd("\ncl_hook_gameend\n");
+
 			// NOTE: using localcmd here to ensure it's executed AFTER cl_hook_gameend
 			// earlier versions of the game abuse the hook to set this cvar
+			int gamecount = cvar("cl_matchcount");
 			localcmd(strcat("cl_matchcount ", itos(gamecount + 1), "\n"));
 			//cvar_set("cl_matchcount", itos(gamecount + 1));
 		}
+		else
+			localcmd("\ncl_hook_demoend\n");
+
+		calledhooks |= HOOK_END; // mark the hook as having fired
 	}
 
 	localcmd("\ncl_hook_shutdown\n");
@@ -494,6 +506,10 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	if (override)
 		return true;
 
+	override |= View_InputEvent(bInputType, nPrimary, nSecondary);
+	if (override)
+		return true;
+
 	override |= HUD_Panel_Chat_InputEvent(bInputType, nPrimary, nSecondary);
 
 	override |= QuickMenu_InputEvent(bInputType, nPrimary, nSecondary);
@@ -520,10 +536,10 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		if(nPrimary == K_TAB) hudShiftState |= S_TAB;
 	}
 	else {
-		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
-		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
-		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
-		if(nPrimary == K_TAB) hudShiftState -= (hudShiftState & S_TAB);
+		if(nPrimary == K_ALT) hudShiftState &= ~S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState &= ~S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState &= ~S_SHIFT;
+		if(nPrimary == K_TAB) hudShiftState &= ~S_TAB;
 	}
 
 	// NOTE: Shift-Escape must be filtered out because it's the hardcoded console shortcut
@@ -604,7 +620,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	int sf = ReadShort();
 	int lf = ReadShort();
 	FOREACH(Scores, true, {
-		int p = 1 << (i % 16);
+		int p = BIT(i % 16);
 		if (sf & p)
 		{
 			if (lf & p)
@@ -834,115 +850,6 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 	return true;
 }
 
-void Spawn_Draw(entity this)
-{
-	bool dodraw = autocvar_cl_spawn_point_particles;
-	if(dodraw && autocvar_cl_spawn_point_dist_max)
-	{
-		vector org = getpropertyvec(VF_ORIGIN);
-		dodraw = vdist(org - this.origin, <, autocvar_cl_spawn_point_dist_max);
-	}
-
-	if(dodraw)
-		pointparticles(((!teamplay) ? EFFECT_SPAWNPOINT_NEUTRAL : EFFECT_SPAWNPOINT(this.team - 1)), this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
-}
-
-NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
-{
-	float teamnum = (ReadByte() - 1);
-	vector spn_origin = ReadVector();
-
-	this.team = (teamnum + 1);
-
-	//if(is_new)
-	//{
-		this.origin = spn_origin;
-		setsize(this, PL_MIN_CONST, PL_MAX_CONST);
-		//droptofloor();
-
-		/*if(autocvar_cl_spawn_point_model) // needs a model first
-		{
-			this.mdl = "models/spawnpoint.md3";
-			this.colormod = Team_ColorRGB(teamnum);
-			precache_model(this.mdl);
-			setmodel(this, this.mdl);
-			this.drawmask = MASK_NORMAL;
-			//this.move_movetype = MOVETYPE_NOCLIP;
-			//this.draw = Spawn_Draw;
-			IL_PUSH(g_drawables, this);
-		}*/
-		this.draw = Spawn_Draw;
-		if (is_new) IL_PUSH(g_drawables, this);
-	//}
-
-	//printf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(this.origin), teamnum, this.cnt);
-	return true;
-}
-
-NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
-{
-	// If entnum is 0, ONLY do the local spawn actions
-	// this way the server can disable the sending of
-	// spawn origin or such to clients if wanted.
-	float entnum = ReadByte();
-
-	if(entnum)
-	{
-		this.origin = ReadVector();
-
-		int particlesAndOrSound = ReadByte();
-
-		if(is_new)
-		{
-			float teamnum = entcs_GetTeam(entnum - 1);
-
-			if(autocvar_cl_spawn_event_particles && (particlesAndOrSound & BIT(0)))
-			{
-				switch(teamnum)
-				{
-					case NUM_TEAM_1: pointparticles(EFFECT_SPAWN_RED, this.origin, '0 0 0', 1); break;
-					case NUM_TEAM_2: pointparticles(EFFECT_SPAWN_BLUE, this.origin, '0 0 0', 1); break;
-					case NUM_TEAM_3: pointparticles(EFFECT_SPAWN_YELLOW, this.origin, '0 0 0', 1); break;
-					case NUM_TEAM_4: pointparticles(EFFECT_SPAWN_PINK, this.origin, '0 0 0', 1); break;
-					default: pointparticles(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1); break;
-				}
-			}
-
-			if(autocvar_cl_spawn_event_sound && (particlesAndOrSound & BIT(1)))
-			{
-				sound(this, CH_TRIGGER, SND_SPAWN, VOL_BASE, ATTEN_NORM);
-			}
-		}
-	}
-	return = true;
-
-	// local spawn actions
-	if(is_new && (!entnum || (entnum == player_localentnum)))
-	{
-		if(!spectatee_status)
-		if(autocvar_cl_autodemo_delete_keepmatches >= 2 || (!warmup_stage && autocvar_cl_autodemo_delete_keepmatches == 1))
-		{
-			float del = autocvar_cl_autodemo_delete;
-			del &= ~1;
-			cvar_set("cl_autodemo_delete", ftos(del)); // don't delete demo where the player joined the match
-		}
-
-		if(autocvar_cl_spawnzoom && !autocvar_cl_lockview)
-		{
-			zoomin_effect = 1;
-			current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
-		}
-
-		if(autocvar_cl_unpress_zoom_on_spawn)
-		{
-			localcmd("-zoom\n");
-			button_zoom = false;
-		}
-		HUD_Radar_Hide_Maximized();
-	}
-	//printf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(this.origin), entnum, player_localentnum);
-}
-
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The parameter isnew reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void CSQC_Ent_Update(entity this, bool isnew)
@@ -1041,19 +948,25 @@ void CSQC_Ent_Remove(entity this)
 
 void Gamemode_Init()
 {
-	if (!isdemo())
+	// fire game or demo start hooks here
+	if (!(calledhooks & HOOK_START))
 	{
-		if(!(calledhooks & HOOK_START))
+		if (!isdemo())
 			localcmd("\n_cl_hook_gamestart ", MapInfo_Type_ToString(gametype), "\n");
-		calledhooks |= HOOK_START;
+		else
+			localcmd("\ncl_hook_demostart\n");
+
+		calledhooks |= HOOK_START; // mark start hook as fired
 	}
 }
+
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
 void CSQC_Parse_StuffCmd(string strMessage)
 {
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_StuffCmd(\"%s\")", strMessage);
 	localcmd(strMessage);
 }
+
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
 void CSQC_Parse_Print(string strMessage)
 {

@@ -1,0 +1,21 @@
+#pragma once
+
+#include <common/mutators/mutator/nades/nades.qh>
+
+#ifdef SVQC
+bool autocvar_g_nades_translocate = true;
+float autocvar_g_nades_translocate_destroy_damage = 25;
+
+void nade_translocate_boom(entity this);
+bool nade_translocate_DestroyDamage(entity this, entity attacker);
+#endif // SVQC
+
+const int PROJECTILE_NADE_TRANSLOCATE = 78;
+
+CLASS(TranslocateNade, Nade)
+	ATTRIB(TranslocateNade, m_color, vector, '1 0 1');
+	ATTRIB(TranslocateNade, m_name, string, _("Translocate grenade"));
+	ATTRIB(TranslocateNade, m_icon, string, "nade_translocate");
+	ATTRIB(TranslocateNade, netname, string, "translocate");
+	ATTRIB(TranslocateNade, impulse, int, 4);
+ENDCLASS(TranslocateNade)

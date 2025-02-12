@@ -263,7 +263,7 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 
 	int longflags = 0;
 	FOREACH(Scores, true, {
-	    int p = 1 << (i % 16);
+	    int p = BIT(i % 16);
 		if (this.(scores(it)) > 127 || this.(scores(it)) <= -128)
 			longflags |= p;
     });
@@ -271,7 +271,7 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 	WriteShort(MSG_ENTITY, sendflags);
 	WriteShort(MSG_ENTITY, longflags);
 	FOREACH(Scores, true, {
-	    int p = 1 << (i % 16);
+	    int p = BIT(i % 16);
 		if (sendflags & p)
 		{
 			if(longflags & p)

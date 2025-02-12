@@ -89,7 +89,7 @@ void W_OverkillRocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .ent
 	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(actor);
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(WEP_OVERKILL_RPC, ammo), weaponentity);
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage), thiswep.m_id);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_RPC_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage), thiswep.m_id);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 	PROJECTILE_MAKETRIGGER(missile);
 
@@ -204,7 +204,7 @@ METHOD(OverkillRocketPropelledChainsaw, wr_reload, void(entity thiswep, entity a
 
 METHOD(OverkillRocketPropelledChainsaw, wr_suicidemessage, Notification(entity thiswep))
 {
-	if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
+	if(w_deathtype & (HITTYPE_BOUNCE | HITTYPE_SPLASH))
 		return WEAPON_OVERKILL_RPC_SUICIDE_SPLASH;
 	else
 		return WEAPON_OVERKILL_RPC_SUICIDE_DIRECT;
@@ -212,7 +212,7 @@ METHOD(OverkillRocketPropelledChainsaw, wr_suicidemessage, Notification(entity t
 
 METHOD(OverkillRocketPropelledChainsaw, wr_killmessage, Notification(entity thiswep))
 {
-	if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
+	if(w_deathtype & (HITTYPE_BOUNCE | HITTYPE_SPLASH))
 		return WEAPON_OVERKILL_RPC_MURDER_SPLASH;
 	else
 		return WEAPON_OVERKILL_RPC_MURDER_DIRECT;

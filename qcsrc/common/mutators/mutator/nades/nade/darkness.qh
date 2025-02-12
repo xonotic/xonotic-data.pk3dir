@@ -1,0 +1,23 @@
+#pragma once
+
+#include <common/mutators/mutator/nades/nades.qh>
+
+#ifdef SVQC
+bool autocvar_g_nades_darkness;
+bool autocvar_g_nades_darkness_explode;
+bool autocvar_g_nades_darkness_teamcheck;
+float autocvar_g_nades_darkness_time;
+
+void nade_darkness_boom(entity this);
+#endif // SVQC
+
+const int PROJECTILE_NADE_DARKNESS = 90;
+const int PROJECTILE_NADE_DARKNESS_BURN = 91;
+
+CLASS(DarknessNade, Nade)
+	ATTRIB(DarknessNade, m_color, vector, '0.23 0 0.23');
+	ATTRIB(DarknessNade, m_name, string, _("Darkness grenade"));
+	ATTRIB(DarknessNade, m_icon, string, "nade_darkness");
+	ATTRIB(DarknessNade, netname, string, "darkness");
+	ATTRIB(DarknessNade, impulse, int, 11);
+ENDCLASS(DarknessNade)

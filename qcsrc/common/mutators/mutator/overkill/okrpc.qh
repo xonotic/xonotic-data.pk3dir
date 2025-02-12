@@ -2,13 +2,22 @@
 
 #include <common/weapons/all.qh>
 
+#ifdef GAMEQC
+MODEL(RPC_MUZZLEFLASH, "models/flash.md3");
+MODEL(RPC_VIEW, W_Model("h_ok_rl.iqm"));
+MODEL(RPC_WORLD, W_Model("v_ok_rl.md3"));
+MODEL(RPC_ITEM, W_Model("g_ok_rl.md3"));
+
+SOUND(RPC_FIRE, W_Sound("rocket_fire"));
+#endif
+
 CLASS(OverkillRocketPropelledChainsaw, Weapon)
 /* spawnfunc */ ATTRIB(OverkillRocketPropelledChainsaw, m_canonical_spawnfunc, string, "weapon_okrpc");
 /* ammotype  */ ATTRIB(OverkillRocketPropelledChainsaw, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(OverkillRocketPropelledChainsaw, impulse, int, 9);
 /* flags     */ ATTRIB(OverkillRocketPropelledChainsaw, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON);
 /* rating    */ ATTRIB(OverkillRocketPropelledChainsaw, bot_pickupbasevalue, float, 10000);
-/* color     */ ATTRIB(OverkillRocketPropelledChainsaw, wpcolor, vector, '0.5 0.5 0');
+/* color     */ ATTRIB(OverkillRocketPropelledChainsaw, m_color, vector, '0.914 0.745 0.341');
 /* modelname */ ATTRIB(OverkillRocketPropelledChainsaw, mdl, string, "ok_rl");
 #ifdef GAMEQC
 /* model     */ ATTRIB(OverkillRocketPropelledChainsaw, m_model, Model, MDL_RPC_ITEM);

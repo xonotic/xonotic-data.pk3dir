@@ -2,6 +2,7 @@
 
 #ifdef SVQC
 float autocvar_g_monster_mage_health;
+string autocvar_g_monster_mage_loot = "health_big";
 float autocvar_g_monster_mage_damageforcescale = 0.5;
 float autocvar_g_monster_mage_attack_spike_damage;
 float autocvar_g_monster_mage_attack_spike_radius;
@@ -36,6 +37,8 @@ float autocvar_g_monster_mage_speed_run;
 float autocvar_g_monster_mage_speed_walk;
 
 SOUND(MageSpike_FIRE, W_Sound("electro_fire"));
+SOUND(MageSpike_IMPACT, W_Sound("grenade_impact"));
+SOUND(MageSpike_PUSH, W_Sound("tagexp1"));
 void M_Mage_Attack_Spike(entity this, vector dir);
 void M_Mage_Attack_Push(entity this);
 METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weaponentity, int fire))
@@ -115,7 +118,7 @@ void M_Mage_Attack_Spike_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 
-	sound(this, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS, SND_MageSpike_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	this.realowner.mage_spike = NULL;
 
@@ -274,7 +277,7 @@ void M_Mage_Defend_Heal(entity this)
 
 void M_Mage_Attack_Push(entity this)
 {
-	sound(this, CH_SHOTS, SND_TAGEXP1, 1, ATTEN_NORM);
+	sound(this, CH_SHOTS, SND_MageSpike_PUSH, 1, ATTEN_NORM);
 	RadiusDamage (this, this, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius),
 						NULL, NULL, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE.m_id, DMG_NOWEP, this.enemy);
 	Send_Effect(EFFECT_TE_EXPLOSION, this.origin, '0 0 0', 1);
@@ -301,8 +304,8 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 			vector a = vectoangles(targ.origin - this.origin);
 			this.angles = '0 1 0' * a.y;
 			this.fixangle = true;
-			Send_Effect(EFFECT_SPAWN_NEUTRAL, oldpos, '0 0 0', 1);
-			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_SPAWN, oldpos, '0 0 0', 1);
+			Send_Effect(EFFECT_SPAWN, this.origin, '0 0 0', 1);
 			this.attack_finished_single[0] = time + autocvar_g_monster_mage_attack_teleport_delay;
 			return;
 		}
@@ -318,8 +321,8 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 
 	vector newpos = trace_endpos;
 
-	Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
-	Send_Effect(EFFECT_SPAWN_NEUTRAL, newpos, '0 0 0', 1);
+	Send_Effect(EFFECT_SPAWN, this.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_SPAWN, newpos, '0 0 0', 1);
 
 	setorigin(this, newpos);
 
@@ -480,7 +483,7 @@ METHOD(Mage, mr_setup, bool(Mage this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_mage_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_mage_damageforcescale); }
 
-    actor.monster_loot = ITEM_HealthBig;
+    actor.monster_loot = autocvar_g_monster_mage_loot;
     actor.monster_attackfunc = M_Mage_Attack;
 
     return true;

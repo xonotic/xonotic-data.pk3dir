@@ -1,12 +1,23 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(VORTEX_MUZZLEFLASH, "models/nexflash.md3");
+MODEL(VORTEX_VIEW, W_Model("h_nex.iqm"));
+MODEL(VORTEX_WORLD, W_Model("v_nex.md3"));
+MODEL(VORTEX_ITEM, W_Model("g_nex.md3"));
+
+SOUND(VORTEX_CHARGE, W_Sound("nexcharge"));
+SOUND(VORTEX_FIRE, W_Sound("nexfire"));
+SOUND(VORTEX_IMPACT, W_Sound("neximpact"));
+#endif
+
 CLASS(Vortex, Weapon)
 /* spawnfunc */ ATTRIB(Vortex, m_canonical_spawnfunc, string, "weapon_vortex");
 /* ammotype  */ ATTRIB(Vortex, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Vortex, impulse, int, 7);
 /* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, 8000);
-/* color     */ ATTRIB(Vortex, wpcolor, vector, '0.5 1 1');
+/* color     */ ATTRIB(Vortex, m_color, vector, '0.459 0.765 0.835');
 /* modelname */ ATTRIB(Vortex, mdl, string, "nex");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Vortex, m_model, Model, MDL_VORTEX_ITEM);

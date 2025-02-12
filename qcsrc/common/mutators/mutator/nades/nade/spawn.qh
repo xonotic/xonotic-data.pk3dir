@@ -1,0 +1,21 @@
+#pragma once
+
+#include <common/mutators/mutator/nades/nades.qh>
+
+#ifdef SVQC
+bool autocvar_g_nades_spawn = true;
+
+void nade_spawn_boom(entity this);
+void nade_spawn_SetSpawnHealth(entity player);
+bool nade_spawn_DestroyDamage(entity this, entity attacker);
+#endif // SVQC
+
+const int PROJECTILE_NADE_SPAWN = 79;
+
+CLASS(SpawnNade, Nade)
+	ATTRIB(SpawnNade, m_color, vector, '1 0.9 0');
+	ATTRIB(SpawnNade, m_name, string, _("Spawn grenade"));
+	ATTRIB(SpawnNade, m_icon, string, "nade_spawn");
+	ATTRIB(SpawnNade, netname, string, "spawn");
+	ATTRIB(SpawnNade, impulse, int, 5);
+ENDCLASS(SpawnNade)

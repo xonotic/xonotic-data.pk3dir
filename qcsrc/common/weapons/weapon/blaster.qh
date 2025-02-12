@@ -1,12 +1,20 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(BLASTER_VIEW, W_Model("h_laser.iqm"));
+MODEL(BLASTER_WORLD, W_Model("v_laser.md3"));
+MODEL(BLASTER_ITEM, W_Model("g_laser.md3"));
+
+SOUND(BLASTER_FIRE, W_Sound("lasergun_fire"));
+#endif
+
 CLASS(Blaster, Weapon)
 /* spawnfunc */ ATTRIB(Blaster, m_canonical_spawnfunc, string, "weapon_blaster");
 /* ammotype  */ //ATTRIB(Blaster, ammo_type, Resource, RES_NONE);
 /* impulse   */ ATTRIB(Blaster, impulse, int, 1);
 /* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
-/* color     */ ATTRIB(Blaster, wpcolor, vector, '1 0.5 0.5');
+/* color     */ ATTRIB(Blaster, m_color, vector, '0.969 0.443 0.482');
 /* modelname */ ATTRIB(Blaster, mdl, string, "laser");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Blaster, m_model, Model, MDL_BLASTER_ITEM);
