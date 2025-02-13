@@ -9963,7 +9963,7 @@ msgstr "Valeur :"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:64
 msgid "Reset to default"
-msgstr ""
+msgstr "Réinitialisation aux valeurs par défaut"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:72
 msgid "Description:"
