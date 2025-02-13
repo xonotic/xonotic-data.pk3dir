@@ -572,16 +572,19 @@ void CSQCModel_Effects_Apply(entity this)
 		this.renderflags |= RF_FULLBRIGHT;
 	if(eff & EF_FLAME)
 	{
+		eff |= EF_NOSHADOW;
 		boxparticles(particleeffectnum(EFFECT_EF_FLAME), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
 		//pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', bound(0, frametime, 0.1));
 	}
 	if(eff & EF_SHOCK)
 	{
+		eff |= EF_NOSHADOW;
 		boxparticles(particleeffectnum(EFFECT_ARC_LIGHTNING), this, this.absmin, this.absmax, '0 0 0', '0 0 0', bound(0, frametime, 0.1), 0);
 		//pointparticles(EFFECT_ARC_LIGHTNING, this.origin, '0 0 0', bound(0, frametime, 0.1));
 	}
 	if(eff & EF_STARDUST)
 	{
+		eff |= EF_NOSHADOW;
 		boxparticles(particleeffectnum(EFFECT_EF_STARDUST), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
 		//pointparticles(EFFECT_EF_STARDUST, this.origin, '0 0 0', bound(0, frametime, 0.1));
 	}
