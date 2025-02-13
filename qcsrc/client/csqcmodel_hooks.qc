@@ -584,7 +584,6 @@ void CSQCModel_Effects_Apply(entity this)
 	}
 	if(eff & EF_STARDUST)
 	{
-		eff |= EF_NOSHADOW;
 		boxparticles(particleeffectnum(EFFECT_EF_STARDUST), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
 		//pointparticles(EFFECT_EF_STARDUST, this.origin, '0 0 0', bound(0, frametime, 0.1));
 	}
