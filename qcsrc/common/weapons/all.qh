@@ -343,7 +343,9 @@ STATIC_INIT(register_weapons_done)
 		WEPSET_ALL |= set;
 		if (it.spawnflags & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
 		if (it == WEP_Null) continue;
-		if ((it.spawnflags & WEP_FLAG_SPECIALATTACK) || (it.spawnflags & WEP_TYPE_OTHER)) continue;
+		if (it.spawnflags & WEP_FLAG_SPECIALATTACK) continue;
+		// TODO: this exists to filter out the Ball Stealer, otherwise we run out of impulses
+		if ((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_TYPE_OTHER)) continue;
 
 		it.m_impulse = imp;
 		if (imp <= WEP_IMPULSE_END)
