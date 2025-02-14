@@ -59,7 +59,6 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	this.velocity = '0 0 200';
 	this.angles = '0 0 0';
 	this.effects = autocvar_g_keepawayball_effects;
-	settouch(this, ka_TouchEvent);
 	setthink(this, ka_RespawnBall);
 	this.nextthink = time + autocvar_g_keepawayball_respawntime;
 	navigation_dynamicgoal_set(this, NULL);
@@ -170,6 +169,7 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	toucher.ballcarried = this;
 	GameRules_scoring_vip(toucher, true);
 	setattachment(this, toucher, "");
+	this.solid = SOLID_NOT; // before setorigin to ensure unlinking
 	setorigin(this, '0 0 0');
 
 	// TODO leadin animation?
@@ -178,7 +178,6 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	this.velocity = '0 0 0';
 	set_movetype(this, MOVETYPE_NONE);
 	this.scale = 12/16; // smaller while carried
-	settouch(this, func_null);
 	setthink(this, ka_TimeScoring);
 	this.nextthink = time;
 	this.takedamage = DAMAGE_NO;
@@ -233,13 +232,13 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 	set_movetype(ball, MOVETYPE_BOUNCE);
 	ball.previous_owner = player;
 	ball.wait = time + 0.5; // same as for thrown weapons
-	settouch(ball, ka_TouchEvent);
 	setthink(ball, ka_RespawnBall);
 	ball.nextthink = time + autocvar_g_keepawayball_respawntime;
 	ball.takedamage = DAMAGE_YES;
 	ball.event_damage = ka_DamageEvent;
 	ball.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, ball);
+	ball.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 	ball.scale = 1; // it's smaller while carried
 	setorigin(ball, player.origin + ball.origin + '0 0 10'); // include attachment offset to reduce jump
 	nudgeoutofsolid_OrFallback(ball); // a ball has a horizontally bigger bbox than a player
