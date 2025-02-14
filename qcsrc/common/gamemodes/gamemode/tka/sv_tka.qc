@@ -59,7 +59,6 @@ void tka_RespawnBall(entity this) // runs whenever the ball needs to be relocate
 	this.velocity = '0 0 200';
 	this.angles = '0 0 0';
 	this.effects = autocvar_g_tkaball_effects;
-	settouch(this, tka_TouchEvent);
 	setthink(this, tka_RespawnBall);
 	this.nextthink = time + autocvar_g_tkaball_respawntime;
 	navigation_dynamicgoal_set(this, NULL);
@@ -143,13 +142,13 @@ void tka_TouchEvent(entity this, entity toucher) // runs any time that the ball 
 	toucher.ballcarried = this;
 	GameRules_scoring_vip(toucher, true);
 	setattachment(this, toucher, "");
+	this.solid = SOLID_NOT; // before setorigin to ensure area grid unlinking
 	setorigin(this, '0 0 0');
 
 	// make the ball unable to do anything, set up time scoring
 	this.velocity = '0 0 0';
 	set_movetype(this, MOVETYPE_NONE);
 	this.scale = 12/16; // somewhat smaller while carried
-	settouch(this, func_null);
 	setthink(this, tka_BallThink_Carried);
 	this.nextthink = time;
 	this.takedamage = DAMAGE_NO;
@@ -201,12 +200,12 @@ void tka_DropEvent(entity player) // runs any time that a player is supposed to 
 	set_movetype(ball, MOVETYPE_BOUNCE);
 	ball.previous_owner = player;
 	ball.wait = time + 0.5; // same as for thrown weapons
-	settouch(ball, tka_TouchEvent);
 	setthink(ball, tka_RespawnBall);
 	ball.nextthink = time + autocvar_g_tkaball_respawntime;
 	ball.takedamage = DAMAGE_YES;
 	ball.scale = 1; // it's smaller while carried
 	ball.alpha = 1; // in case the carrier had an invisibility effect
+	ball.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 	setorigin(ball, player.origin + ball.origin + '0 0 10'); // include attachment offset to reduce jump
 	nudgeoutofsolid_OrFallback(ball); // a ball has a horizontally bigger bbox than a player
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
