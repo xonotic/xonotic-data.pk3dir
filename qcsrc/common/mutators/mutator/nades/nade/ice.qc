@@ -61,7 +61,7 @@ void nade_ice_think(entity this)
 	float current_freeze_time = this.ltime - time - 0.1;
 
 	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage
-		&& it.iscreature && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_freeze_time > 0
+		&& (IS_PLAYER(it) || IS_MONSTER(it)) && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_freeze_time > 0
 		&& (!it.revival_time || ((time - it.revival_time) >= 1.5))
 		&& !STAT(FROZEN, it) && !StatusEffects_active(STATUSEFFECT_Frozen, it),
 	{
