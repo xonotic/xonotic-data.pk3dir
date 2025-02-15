@@ -6149,41 +6149,41 @@ msgstr "Utens optat"
 #: qcsrc/menu/menu.qc:510
 #, c-format
 msgid "^3%s^7 in range \"%s\" to \"%s\""
-msgstr ""
+msgstr "^3%s^7 in intervallo inter \"%s\" et \"%s\""
 
 #: qcsrc/menu/menu.qc:512
 #, c-format
 msgid "^3%s^7 outside range \"%s\" to \"%s\""
-msgstr ""
+msgstr "^3%s^7 non in intervallo inter \"%s\" et \"%s\""
 
 #: qcsrc/menu/menu.qc:541
 msgid "Has special requirements"
-msgstr ""
+msgstr "Habet condiciones proprias"
 
 #: qcsrc/menu/menu.qc:544
 #, c-format
 msgid "Requires ^3%s^7 not equal to \"%s^7\""
-msgstr ""
+msgstr "Postulatur ut ^3%s^7 non habeat \"%s^7\""
 
 #: qcsrc/menu/menu.qc:556
 #, c-format
 msgid "Requires %s, %s, and %s"
-msgstr ""
+msgstr "Postulantur %s, %s et %s"
 
 #: qcsrc/menu/menu.qc:559
 #, c-format
 msgid "Requires %s and %s"
-msgstr ""
+msgstr "Postulantur %s et %s"
 
 #: qcsrc/menu/menu.qc:559
 #, c-format
 msgid "Requires %s or %s"
-msgstr ""
+msgstr "Postulatur %s vel %s"
 
 #: qcsrc/menu/menu.qc:562
 #, c-format
 msgid "Requires %s"
-msgstr ""
+msgstr "Postulatur %s"
 
 #: qcsrc/menu/xonotic/credits.qc:4
 msgid "Core Team"
@@ -6842,7 +6842,7 @@ msgstr "Velocitas summa"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:71
 msgid "Jump speed"
-msgstr ""
+msgstr "Saltus velocitas"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:77
 msgid "Acceleration:"
@@ -9533,11 +9533,11 @@ msgstr "Armorum formae traluciditas:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:96
 msgid "Apply team colors to weapon beam effects:"
-msgstr ""
+msgstr "Manus colores pingere in emissionum lineis:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:100
 msgid "In team games"
-msgstr ""
+msgstr "Manus ludis"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:104
 msgid "Gun model swaying"
@@ -9829,7 +9829,7 @@ msgstr "Valor:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:64
 msgid "Reset to default"
-msgstr ""
+msgstr "Optionem oblivisci"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:72
 msgid "Description:"
@@ -10298,7 +10298,7 @@ msgstr "replere"
 #: qcsrc/menu/xonotic/keybinder.qc:113
 #, c-format
 msgid "weapon group %d"
-msgstr ""
+msgstr "armorum series %da"
 
 #: qcsrc/menu/xonotic/keybinder.qc:136
 msgid "hold zoom"
