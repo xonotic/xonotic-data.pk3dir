@@ -65,7 +65,7 @@ REGISTRY(MovementGuidePages, 16)
 #define REGISTER_MOVEMENT_PAGE(id, name, icon) REGISTER(MovementGuidePages, GUIDE_MOVEMENT_PAGE, id, m_id, NEW(GuidePage, name, icon))
 REGISTER_REGISTRY(MovementGuidePages)
 
-REGISTER_MOVEMENT_PAGE(0, _("Relevance of Movement"), "gametype_inv")
+REGISTER_MOVEMENT_PAGE(0, _("Movement Importance"), "gametype_inv")
 {
 	this.m_description = _("Xonotic is a very fast-paced arena shooter. Fast-paced does not only relate to reaction times but also to movement speed. "
 		"That means mastering movement skills is an essential part of Xonotic gameplay and must not be underestimated\n\n"
