@@ -1,5 +1,10 @@
 ﻿#pragma once
 
+#include <common/weapons/weapon/blaster.qh>
+#include <common/weapons/weapon/crylink.qh>
+#include <common/weapons/weapon/devastator.qh>
+#include <common/mutators/mutator/rocketflying/rocketflying.qh>
+
 CLASS(GuidePage, Object)
 	ATTRIB(GuidePage, m_id, int, 0);
 	ATTRIB(GuidePage, m_name, string, "");
@@ -65,12 +70,12 @@ REGISTER_MOVEMENT_PAGE(0, _("Relevance of Movement"), "gametype_inv")
 	this.m_description = _("Xonotic is a very fast-paced arena shooter. Fast-paced does not only relate to reaction times but also to movement speed. "
 		"That means mastering movement skills is an essential part of Xonotic gameplay and must not be underestimated\n\n"
 		"For a new player using default physics, the most important tricks to learn are:"
-		"\nBunny Hopping"
-		"\nStrafe Turning"
-		"\nBlaster Jumping"
-		"\nRocket Flying"
-		"\nCrylink Running"
-		"\nRamp Jumping"); // TODO: improve?
+		"\n  Bunny Hopping"
+		"\n  Strafe Turning"
+		"\n  Blaster Jumping"
+		"\n  Rocket Flying"
+		"\n  Crylink Running"
+		"\n  Ramp Jumping"); // TODO: improve?
 }
 REGISTER_MOVEMENT_PAGE(1, _("Bunny Hopping"), "gametype_inv")
 {
@@ -94,39 +99,44 @@ REGISTER_MOVEMENT_PAGE(2, _("Strafe Turning"), "gametype_inv")
 }
 REGISTER_MOVEMENT_PAGE(3, _("Blaster Jumping"), "gametype_inv")
 {
-	this.m_description = _("In most situations, the Blaster is more a movement tool than a weapon. "
-		"That's why many players will often have single digit accuracy for the Blaster. "
+	this.m_description = strzone(sprintf(_("In most situations, the %s is more a movement tool than a weapon. "
+		"That's why many players will often have single digit accuracy for the %s. "
 		"It is instead especially useful to make high jumps\n\n"
-		"To do a \"laser jump,\" simply fire the Blaster at your own feet and jump. "
-		"Experiment a bit with the timing of firing the Blaster and jumping to get a feeling about which timing will get you how high");
+		"To do a \"laser jump,\" simply fire the %s at your own feet and jump. "
+		"Experiment a bit with the timing of firing the %s and jumping to get a feeling about which timing will get you how high"),
+	COLORED_NAME(WEP_BLASTER), COLORED_NAME(WEP_BLASTER), COLORED_NAME(WEP_BLASTER), COLORED_NAME(WEP_BLASTER)));
 }
 REGISTER_MOVEMENT_PAGE(4, _("Wall Blastering"), "gametype_inv")
 {
-	this.m_description = _("If you don't fire the Blaster at the floor but instead against a wall next to you, you can get significant horizontal speed. "
+	this.m_description = strzone(sprintf(_("If you don't fire the %s at the floor but instead against a wall next to you, you can get significant horizontal speed. "
 		"You can do that to pick up speed off the stand or even when passing a wall while already bunny hopping\n\n"
-		"To use this technique, start a bunny hop. Right after jumping, flick back with your mouse at about 8 o'clock if the wall is to your left (or 4 o'clock if the wall is to your right), aim at the level of your head, and fire the Blaster. "
+		"To use this technique, start a bunny hop. Right after jumping, flick back with your mouse at about 8 o'clock if the wall is to your left (or 4 o'clock if the wall is to your right), aim at the level of your head, and fire the %s. "
 		"Immediately flick back to your movement direction and continue to bunny hop\n\n"
 		"In order to waste as little speed as possible while flicking back, switch to strafe key for the duration of the flick. "
 		"Use the strafe right key if the wall is to your left, and the strafe left key if the wall is to your right\n\n"
-		"You'll find an illustration of this technique on ^5www.xonotic.org/guide^7");
+		"You'll find an illustration of this technique on ^5www.xonotic.org/guide^7"),
+	COLORED_NAME(WEP_BLASTER), COLORED_NAME(WEP_BLASTER)));
 }
 REGISTER_MOVEMENT_PAGE(5, _("Rocket Flying"), "gametype_inv")
 {
-	this.m_description = _("The Devastator can be used just like the Blaster for movement, however it inflicts way more damage to the player. "
+	this.m_description = strzone(sprintf(_("The %s can be used just like the %s for movement, however it inflicts way more damage to the player. "
 		"In game modes without self damage however it is a very versatile movement tool\n\n"
 		"You can also fire a rocket underneath yourself and immediately detonate it. The explosion will push you upwards a little bit, and can prolong a jump\n\n"
-		"Note that this strategy only really works if the Rocket Flying mutator is enabled");
+		"Note that this strategy only really works if the %s mutator is enabled"),
+	COLORED_NAME(WEP_DEVASTATOR), COLORED_NAME(WEP_BLASTER), COLORED_NAME(MUTATOR_rocketflying)));
 }
 REGISTER_MOVEMENT_PAGE(6, _("Crylink Running"), "gametype_inv")
 {
-	this.m_description = _("The drag force of Crylink secondary fire can not only break other people's movement, but can also give yourself a significant speed boost\n\n"
-		"To \"crylink run,\" shoot the Crylink secondary at the floor (or a parallel wall) just in front of you and begin bunny hopping to catapult yourself off the stand into high speed");
+	this.m_description = strzone(sprintf(_("The drag force of %s secondary fire can not only break other people's movement, but can also give yourself a significant speed boost\n\n"
+		"To \"crylink run,\" shoot the %s secondary at the floor (or a parallel wall) just in front of you and begin bunny hopping to catapult yourself off the stand into high speed"),
+	COLORED_NAME(WEP_CRYLINK), COLORED_NAME(WEP_CRYLINK)));
 }
 REGISTER_MOVEMENT_PAGE(7, _("Crylink Wall Climbing"), "gametype_inv")
 {
-	this.m_description = _("By shooting the Crylink secondary against a wall next to you (just above your head), you can climb up walls quickly. "
-		"This is called \"wall climbing\" with the Crylink\n\n"
-		"This is also a good way to save yourself from falling off the map, as it reliably stops your downfall");
+	this.m_description = strzone(sprintf(_("By shooting the %s secondary against a wall next to you (just above your head), you can climb up walls quickly. "
+		"This is called \"wall climbing\" with the %s\n\n"
+		"This is also a good way to save yourself from falling off the map, as it reliably stops your downfall"),
+	COLORED_NAME(WEP_CRYLINK), COLORED_NAME(WEP_CRYLINK)));
 }
 REGISTER_MOVEMENT_PAGE(8, _("Ramp Jumping"), "gametype_inv")
 {
