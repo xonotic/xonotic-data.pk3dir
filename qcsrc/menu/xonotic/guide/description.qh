@@ -6,8 +6,8 @@ CLASS(XonoticGuideDescription, XonoticListBox)
 	ATTRIB(XonoticGuideDescription, realUpperMargin, float, 0);
 	ATTRIB(XonoticGuideDescription, rowsPerItem, float, 1);
 	ATTRIB(XonoticGuideDescription, selectionDoesntMatter, bool, true);
-	ATTRIB(XonoticGuideDescription, description, string, string_null);
-	ATTRIB(XonoticGuideDescription, descriptionWrapped, string, string_null);
+	ATTRIB(XonoticGuideDescription, m_description, string, string_null);
+	ATTRIB(XonoticGuideDescription, m_descriptionWrapped, string, string_null);
 
 	METHOD(XonoticGuideDescription, drawListBoxItem, void(entity, int, vector, bool, bool));
 	METHOD(XonoticGuideDescription, setDescription, void(entity, string));

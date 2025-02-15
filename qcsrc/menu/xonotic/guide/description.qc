@@ -2,18 +2,18 @@
 
 void XonoticGuideDescription_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
-	tokenizebyseparator(me.descriptionWrapped, "\n");
+	tokenizebyseparator(me.m_descriptionWrapped, "\n");
 	draw_Text(me.realFontSize.x * eX + me.realUpperMargin * eY, argv(i), me.realFontSize, '1 1 1', 1, true);
 }
 
 void XonoticGuideDescription_setDescription(entity me, string desc)
 {
-	string current = me.description;
+	string current = me.m_description;
 	if (current && current != desc)
 		strunzone(current);
-	me.description = strzone(desc);
+	me.m_description = strzone(desc);
 
-	string currentWrapped = me.descriptionWrapped;
+	string currentWrapped = me.m_descriptionWrapped;
 	if (currentWrapped)
 		strunzone(currentWrapped);
 
@@ -30,7 +30,7 @@ void XonoticGuideDescription_setDescription(entity me, string desc)
 		}
 		wrapped = strcat(wrapped, line);
 	}
-	me.descriptionWrapped = strzone(wrapped);
+	me.m_descriptionWrapped = strzone(wrapped);
 
 	me.nItems = tokenizebyseparator(wrapped, "\n");
 }
@@ -42,5 +42,5 @@ void XonoticGuideDescription_resizeNotify(entity me, vector relOrigin, vector re
 	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
 	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
-	me.setDescription(me, me.description);
+	me.setDescription(me, me.m_description);
 }
