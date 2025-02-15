@@ -2,8 +2,6 @@
 
 //#define EWHEEL_FANCYPATH
 
-#include "ewheel_weapon.qh"
-
 CLASS(EWheel, Turret)
 /* spawnflags */ ATTRIB(EWheel, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE | TUR_FLAG_ROAM);
 /* mins       */ ATTRIB(EWheel, m_mins, vector, '-32 -32 0');
@@ -13,7 +11,6 @@ CLASS(EWheel, Turret)
 /* head_model */ ATTRIB_STRZONE(EWheel, head_model, string, strcat("models/turrets/", "ewheel-gun1.md3"));
 /* netname    */ ATTRIB(EWheel, netname, string, "ewheel");
 /* fullname   */ ATTRIB(EWheel, m_name, string, _("eWheel Turret"));
-    ATTRIB(EWheel, m_weapon, Weapon, WEP_EWHEEL);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

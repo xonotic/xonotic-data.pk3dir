@@ -1,7 +1,5 @@
 #pragma once
 
-#include "mlrs_weapon.qh"
-
 CLASS(MLRSTurret, Turret)
 /* spawnflags */ ATTRIB(MLRSTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
 /* mins       */ ATTRIB(MLRSTurret, m_mins, vector, '-32 -32 0');
@@ -11,7 +9,6 @@ CLASS(MLRSTurret, Turret)
 /* head_model */ ATTRIB_STRZONE(MLRSTurret, head_model, string, strcat("models/turrets/", "mlrs.md3"));
 /* netname    */ ATTRIB(MLRSTurret, netname, string, "mlrs");
 /* fullname   */ ATTRIB(MLRSTurret, m_name, string, _("MLRS Turret"));
-    ATTRIB(MLRSTurret, m_weapon, Weapon, WEP_TUR_MLRS);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

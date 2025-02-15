@@ -1,7 +1,5 @@
 #pragma once
 
-#include "plasma_weapon.qh"
-
 CLASS(PlasmaTurret, Turret)
 /* spawnflags */ ATTRIB(PlasmaTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
 /* mins       */ ATTRIB(PlasmaTurret, m_mins, vector, '-32 -32 0');
@@ -11,7 +9,6 @@ CLASS(PlasmaTurret, Turret)
 /* head_model */ ATTRIB_STRZONE(PlasmaTurret, head_model, string, strcat("models/turrets/", "plasma.md3"));
 /* netname    */ ATTRIB(PlasmaTurret, netname, string, "plasma");
 /* fullname   */ ATTRIB(PlasmaTurret, m_name, string, _("Plasma Cannon"));
-    ATTRIB(PlasmaTurret, m_weapon, Weapon, WEP_PLASMA);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
@@ -22,3 +19,7 @@ CLASS(PlasmaTurret, Turret)
 
 ENDCLASS(PlasmaTurret)
 REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));
+
+#ifdef SVQC
+SOUND(PlasmaAttack_FIRE, W_Sound("hagar_fire"));
+#endif

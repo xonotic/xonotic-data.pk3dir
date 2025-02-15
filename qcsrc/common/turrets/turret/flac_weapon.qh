@@ -1,9 +1,0 @@
-#pragma once
-
-CLASS(FlacAttack, PortoLaunch)
-/* flags     */ ATTRIB(FlacAttack, spawnflags, int, WEP_FLAG_SPECIALATTACK | WEP_FLAG_HIDDEN);
-/* impulse   */ ATTRIB(FlacAttack, impulse, int, 5);
-/* refname   */ ATTRIB(FlacAttack, netname, string, "turret_flac");
-/* wepname   */ ATTRIB(FlacAttack, m_name, string, _("FLAC"));
-ENDCLASS(FlacAttack)
-REGISTER_WEAPON(FLAC, NEW(FlacAttack));
