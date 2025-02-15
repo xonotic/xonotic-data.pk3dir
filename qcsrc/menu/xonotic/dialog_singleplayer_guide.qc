@@ -12,7 +12,7 @@ void XonoticGuideDialog_fill(entity me)
 	me.gotoRC(me, 0, col);
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Topic")));
 	me.TR(me);
-		me.TD(me, me.rows - 1, width, e = me.topicList);
+		me.TD(me, me.rows - 2, width, e = me.topicList);
 			e.onChange = XonoticGuideDialog_topicChangeNotify;
 			e.onChangeEntity = me;
 
@@ -20,10 +20,10 @@ void XonoticGuideDialog_fill(entity me)
 	me.gotoRC(me, 0, col); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Entry")));
 	me.TR(me);
-		me.TD(me, me.rows - 1 - 1, width, e = me.entryList);
+		me.TD(me, me.rows - 3, width, e = me.entryList);
 			e.onChange = XonoticGuideDialog_entryChangeNotify;
 			e.onChangeEntity = me;
-	me.gotoRC(me, me.rows - 1, col);
+	me.gotoRC(me, me.rows - 2, col);
 		me.entryList.stringFilterBox = makeXonoticInputBox_T(false, string_null,
 			_("Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-Delete to clear; Enter when done."));
 		me.TD(me, 1, 0.3, makeXonoticTextLabel(0, _("Filter:")));
@@ -36,7 +36,12 @@ void XonoticGuideDialog_fill(entity me)
 	me.gotoRC(me, 0, col); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Description")));
 	me.TR(me);
-		me.TD(me, me.rows - 1, width, me.descriptionPane);
+		me.TD(me, me.rows - 2, width, me.descriptionPane);
+
+	me.gotoRC(me, me.rows - 1, 0);
+		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
+			e.onClick = Dialog_Close;
+			e.onClickEntity = me;
 
 	me.topicChangeNotify(me.topicList, me);
 }
