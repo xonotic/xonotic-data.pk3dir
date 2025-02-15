@@ -9,7 +9,7 @@ CLASS(XonoticGuideDialog, XonoticDialog)
 	ATTRIB(XonoticGuideDialog, color, vector, SKINCOLOR_DIALOG_GUIDE);
 	ATTRIB(XonoticGuideDialog, rows, float, 21);
 	ATTRIB(XonoticGuideDialog, columns, float, 6);
-	ATTRIB(XonoticGuideDialog, intendedWidth, float, 0.9);
+	ATTRIB(XonoticGuideDialog, intendedWidth, float, 0.96);
 	METHOD(XonoticGuideDialog, fill, void(entity));
 	METHOD(XonoticGuideDialog, topicChangeNotify, void(entity, entity));
 	METHOD(XonoticGuideDialog, entryChangeNotify, void(entity, entity));
