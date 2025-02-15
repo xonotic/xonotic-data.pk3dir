@@ -31,4 +31,6 @@ CLASS(VeilNade, Nade)
 		COLORED_NAME(this));
 	}
 #endif
+	ATTRIB(VeilNade, netname, string, "veil");
+	ATTRIB(VeilNade, impulse, int, 9);
 ENDCLASS(VeilNade)

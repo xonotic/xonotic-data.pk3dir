@@ -30,4 +30,6 @@ CLASS(EntrapNade, Nade)
 		COLORED_NAME(this));
 	}
 #endif
+	ATTRIB(EntrapNade, netname, string, "entrap");
+	ATTRIB(EntrapNade, impulse, int, 8);
 ENDCLASS(EntrapNade)

@@ -28,4 +28,6 @@ CLASS(IceNade, Nade)
 		COLORED_NAME(this));
 	}
 #endif
+	ATTRIB(IceNade, netname, string, "ice");
+	ATTRIB(IceNade, impulse, int, 3);
 ENDCLASS(IceNade)

@@ -31,4 +31,6 @@ CLASS(AmmoNade, Nade)
 		COLORED_NAME(this));
 	}
 #endif
+	ATTRIB(AmmoNade, netname, string, "ammo");
+	ATTRIB(AmmoNade, impulse, int, 10);
 ENDCLASS(AmmoNade)

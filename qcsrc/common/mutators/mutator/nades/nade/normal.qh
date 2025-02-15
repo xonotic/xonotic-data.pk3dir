@@ -19,4 +19,6 @@ CLASS(NormalNade, Nade)
 		COLORED_NAME(this));
 	}
 #endif
+	ATTRIB(NormalNade, impulse, int, 1);
+	ATTRIB(NormalNade, netname, string, "normal");
 ENDCLASS(NormalNade)

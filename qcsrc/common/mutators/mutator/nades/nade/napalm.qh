@@ -39,4 +39,6 @@ CLASS(NapalmNade, Nade)
 		COLORED_NAME(this));
 	}
 #endif
+	ATTRIB(NapalmNade, netname, string, "napalm");
+	ATTRIB(NapalmNade, impulse, int, 2);
 ENDCLASS(NapalmNade)

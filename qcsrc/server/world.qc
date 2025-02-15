@@ -427,7 +427,6 @@ void cvar_changes_init()
 		BADPREFIX("net_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
-		BADPREFIX("sv_cullentities_");
 		BADPREFIX("sv_maxidle");
 		BADPREFIX("sv_minigames_");
 		BADPREFIX("sv_radio_");

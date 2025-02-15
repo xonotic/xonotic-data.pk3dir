@@ -266,8 +266,11 @@ void sys_phys_simulate(entity this, float dt)
 	}
 
 	// acceleration
-	const vector wishdir = normalize(wishvel);
-	float wishspeed = min(vlen(wishvel), this.com_phys_vel_max);
+	float wishspeed = vlen(wishvel);
+	// Mathematically equivalent to normalize(wishvel) but more closely matches Q3
+	// which uses the same single-precision optimisation to save one sqrt()
+	const vector wishdir = wishspeed ? wishvel * (1 / wishspeed) : '0 0 0';
+	wishspeed = min(wishspeed, this.com_phys_vel_max);
 
 	if (this.com_phys_air) {
 		if (!(this.flags & FL_WATERJUMP)) {

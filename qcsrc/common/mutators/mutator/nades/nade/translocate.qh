@@ -24,4 +24,6 @@ CLASS(TranslocateNade, Nade)
 		COLORED_NAME(this));
 	}
 #endif
+	ATTRIB(TranslocateNade, netname, string, "translocate");
+	ATTRIB(TranslocateNade, impulse, int, 4);
 ENDCLASS(TranslocateNade)

@@ -10,6 +10,13 @@ MODEL(KLEINBOTTLE_VIEW, W_Model("h_kleinbottle.iqm"));
 MODEL(KLEINBOTTLE_WORLD, W_Model("v_kleinbottle.md3"));
 #endif
 
+#ifdef CSQC
+float autocvar_cl_tuba_attenuation = 0.5;
+float autocvar_cl_tuba_fadetime = 0.25;
+float autocvar_cl_tuba_pitchstep = 6;
+float autocvar_cl_tuba_volume = 1;
+#endif
+
 CLASS(Tuba, Weapon)
 /* spawnfunc */ ATTRIB(Tuba, m_canonical_spawnfunc, string, "weapon_tuba");
 /* impulse   */ ATTRIB(Tuba, impulse, int, 1);
@@ -33,14 +40,11 @@ CLASS(Tuba, Weapon)
 		P(class, prefix, attenuation, float, NONE) \
 		P(class, prefix, damage, float, NONE) \
 		P(class, prefix, edgedamage, float, NONE) \
-		P(class, prefix, fadetime, float, NONE) \
 		P(class, prefix, force, float, NONE) \
-		P(class, prefix, pitchstep, float, NONE) \
 		P(class, prefix, radius, float, NONE) \
 		P(class, prefix, refire, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, volume, float, NONE) \
 		P(class, prefix, weaponreplace, string, NONE) \
 		P(class, prefix, weaponstartoverride, float, NONE) \
 		P(class, prefix, weaponstart, float, NONE) \

@@ -28,4 +28,6 @@ CLASS(HealNade, Nade)
 		COLORED_NAME(this));
 	}
 #endif
+	ATTRIB(HealNade, netname, string, "heal");
+	ATTRIB(HealNade, impulse, int, 6);
 ENDCLASS(HealNade)

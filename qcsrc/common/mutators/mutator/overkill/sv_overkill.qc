@@ -108,10 +108,13 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 MUTATOR_HOOKFUNCTION(ok, MonsterDropItem)
 {
 	entity mon = M_ARGV(0, entity);
-	entity item = M_ARGV(1, entity);
 	entity frag_attacker = M_ARGV(2, entity);
 
+	entity item = spawn();
 	ok_DropItem(mon, frag_attacker, item);
+	Item_Initialise(item);
+
+	M_ARGV(1, string) = ""; // item drops handled
 }
 
 MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)

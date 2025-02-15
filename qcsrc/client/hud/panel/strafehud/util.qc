@@ -4,6 +4,10 @@
 #include <common/physics/player.qh>
 #include <common/physics/movetypes/movetypes.qh>
 
+// non-local players
+#include <common/ent_cs.qh> // CSQCModel_server2csqc()
+#include <common/animdecide.qh> // anim_implicit_state
+
 // convert a strafe angle into a HUD width value
 float StrafeHUD_AngleToWidth(float angle, float range)
 {
@@ -100,6 +104,14 @@ string StrafeHUD_GetLengthUnit(int length_unit)
 		case 4: return strcat(" ", _("mi"));
 		case 5: return strcat(" ", _("nmi"));
 	}
+}
+
+entity StrafeHUD_GetStrafeplayer(bool is_local)
+{
+	// use the local csqcmodel entity if it's valid (i.e. is_local == true)
+	return is_local
+		? csqcplayer
+		: CSQCModel_server2csqc(player_localentnum - 1);
 }
 
 // check the player waterlevel without affecting the player entity, this way we can fetch waterlevel even if client prediction is disabled
@@ -315,6 +327,23 @@ bool StrafeHUD_DetermineJumpHeld(entity e, int keys, bool is_local)
 	}
 
 	return false;
+}
+
+// determine whether the player is on ground
+// this return value is used in real_onground, not onground
+bool StrafeHUD_DetermineOnGround(entity e, bool is_local)
+{
+	return is_local ? IS_ONGROUND(e) : !(e.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
+}
+
+// determine whether the player is standing on a slick surface
+// NOTE: this isn't the only condition for the slick detector being drawn
+bool StrafeHUD_DetermineOnSlick(entity e)
+{
+	// do not use IS_ONSLICK(), it only works for the local player and only if client prediction is enabled
+	trace_dphitq3surfaceflags = 0;
+	tracebox(e.origin, e.mins, e.maxs, e.origin - '0 0 1', MOVE_NOMONSTERS, e);
+	return boolean(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK);
 }
 
 // mix two colors based on a ratio

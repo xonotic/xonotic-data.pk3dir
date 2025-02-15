@@ -285,10 +285,16 @@ MUTATOR_HOOKFUNCTION(cts, FilterItem)
 
 	if (ITEM_IS_LOOT(item))
 	{
-		if(item.monster_loot && autocvar_g_cts_drop_monster_items)
+		if(item.monster_item && autocvar_g_cts_drop_monster_items)
 			return false;
 		return true;
 	}
+}
+
+MUTATOR_HOOKFUNCTION(cts, MonsterDropItem)
+{
+	if(!autocvar_g_cts_drop_monster_items)
+		M_ARGV(1, string) = "";
 }
 
 MUTATOR_HOOKFUNCTION(cts, Damage_Calculate)

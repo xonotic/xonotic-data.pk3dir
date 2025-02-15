@@ -26,4 +26,6 @@ CLASS(MonsterNade, Nade)
 		COLORED_NAME(this));
 	}
 #endif
+	ATTRIB(MonsterNade, netname, string, "pokenade"); // TODO: "monster"? nade needs renaming!
+	ATTRIB(MonsterNade, impulse, int, 7);
 ENDCLASS(MonsterNade)

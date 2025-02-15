@@ -25,4 +25,6 @@ CLASS(SpawnNade, Nade)
 		COLORED_NAME(this));
 	}
 #endif
+	ATTRIB(SpawnNade, netname, string, "spawn");
+	ATTRIB(SpawnNade, impulse, int, 5);
 ENDCLASS(SpawnNade)

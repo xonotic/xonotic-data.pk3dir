@@ -26,4 +26,6 @@ CLASS(DarknessNade, Nade)
 		COLORED_NAME(this));
 	}
 #endif
+	ATTRIB(DarknessNade, netname, string, "darkness");
+	ATTRIB(DarknessNade, impulse, int, 11);
 ENDCLASS(DarknessNade)
