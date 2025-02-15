@@ -79,7 +79,7 @@ REGISTER_MOVEMENT_PAGE(0, _("Movement Importance"), "gametype_inv")
 }
 REGISTER_MOVEMENT_PAGE(1, _("Bunny Hopping"), "gametype_inv")
 {
-	this.m_description = _("\"Bunny Hopping\" is a technique known also from other arena shooters\n\n"
+	this.m_description = _("\"Bunny hopping\" (\"bhopping\") is a technique known also from other arena shooters\n\n"
 		"Due to air control, you can accelerate while in the air far beyond the maximum ground movement speed. "
 		"In order to avoid ground friction you can constantly hop, so that ground contact won't slow you down, by simply keeping the ^3+jump^7 button pressed. "
 		"This allows you to get around the map much faster than if you would just walk\n\n"
