@@ -96,7 +96,8 @@ void m_init()
 
 	if (!restarting)
 	{
-		if (cvar("_menu_initialized")) {
+		if (cvar("_menu_initialized"))
+		{
 			// always show menu after menu_restart
 			m_display();
 			// exec font cfg again in case font depends on menu cvars like prvm_language
