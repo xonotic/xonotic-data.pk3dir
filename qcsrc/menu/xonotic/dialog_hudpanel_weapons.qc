@@ -2,7 +2,7 @@
 
 #include "checkbox.qh"
 #include "textlabel.qh"
-#include "textslider.qh"
+#include "mixedslider.qh"
 #include "slider.qh"
 #include "radiobutton.qh"
 #include "colorpicker_string.qh"
@@ -19,20 +19,20 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Fade out after:")));
-			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_timeout"))));
-				e.addValue(e, _("Never"), "0");
+			me.TD(me, 1, 2.6, e = makeXonoticMixedSlider(strzone(strcat("hud_panel_", panelname, "_timeout"))));
+				e.addText(e, _("Never"), 0);
 				for(i = 1; i <= 10; ++i)
-					e.addValue(e, strzone(sprintf(_("%ds"), i)), strzone(ftos(i)));
-				e.configureXonoticTextSliderValues(e);
+					e.addText(e, strzone(sprintf(_("%ds"), i)), i);
+				e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Fade effect:")));
 		setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");
-			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_timeout_effect"))));
-				e.addValue(e, ZCTX(_("EF^None")),  "0");
-				e.addValue(e, _("Alpha"), "1");
-				e.addValue(e, _("Slide"), "2");
-				e.addValue(e, ZCTX(_("EF^Both")),  "3");
-				e.configureXonoticTextSliderValues(e);
+			me.TD(me, 1, 2.6, e = makeXonoticMixedSlider(strzone(strcat("hud_panel_", panelname, "_timeout_effect"))));
+				e.addText(e, ZCTX(_("EF^None")), 0);
+				e.addText(e, _("Alpha"), 1);
+				e.addText(e, _("Slide"), 2);
+				e.addText(e, ZCTX(_("EF^Both")), 3);
+				e.configureXonoticMixedSliderValues(e);
 			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");
 
 	me.TR(me);

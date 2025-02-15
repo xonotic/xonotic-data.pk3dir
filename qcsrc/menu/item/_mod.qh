@@ -9,6 +9,7 @@
 #include <menu/item/inputcontainer.qh>
 #include <menu/item/label.qh>
 #include <menu/item/listbox.qh>
+#include <menu/item/mixedslider.qh>
 #include <menu/item/modalcontroller.qh>
 #include <menu/item/nexposee.qh>
 #include <menu/item/radiobutton.qh>
