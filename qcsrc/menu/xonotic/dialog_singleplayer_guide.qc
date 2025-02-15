@@ -1,5 +1,6 @@
 #include "dialog_singleplayer_guide.qh"
 
+#include "button.qh"
 #include "inputbox.qh"
 #include "textlabel.qh"
 #include <menu/xonotic/guide/entries.qh>
