@@ -182,7 +182,24 @@ void XonoticLanguageList_setLanguage(entity me)
 	if(prvm_language != cvar_string("_menu_prvm_language"))
 	{
 		if(!(gamestatus & GAME_CONNECTED))
+		{
+			string variant = "";
+			if (cvar("font_cjk_enable"))
+			{
+				switch(cvar_string("_menu_prvm_language"))
+				{
+					case "zh_CN": variant = "sc";
+					case "zh_HK": variant = "hk";
+					case "zh_TW": variant = "tc";
+					case "ko":    variant = "kr";
+					default:
+					case "ja":
+					case "JP_ja": variant = "jp";
+				}
+				cvar_set("font_cjk_variant", variant);
+			}
 			localcmd("\nprvm_language \"$_menu_prvm_language\"; menu_restart; menu_cmd languageselect\n");
+		}
 		else
 			DialogOpenButton_Click(me, main.languageWarningDialog);
 	}

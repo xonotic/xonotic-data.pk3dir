@@ -67,8 +67,12 @@ void XonoticUserSettingsTab_fill(entity me)
 		me.TD(me, 1, 1.5, e = makeXonoticButton(_("Set language"), '0 0 0'));
 			e.onClick = SetLanguage_Click;
 			e.onClickEntity = sk;
+	me.TR(me);
+		me.TD(me, 1, 2.25, e = makeXonoticCheckBox_T(0, "font_cjk_enable", _("Load additional fonts for CJK languages"),
+			_("Improve support for Chinese / Japanese / Korean glyphs (click \"Set language\" to apply the changes)")));
+			e.sendCvars = true;
 
-	me.gotoRC(me, 11.5, 3.25); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 12.5, 3.25); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox_T(0, "cl_gentle", _("Disable gore effects and harsh language"),
 			_("Replace blood and gibs with content that does not have any gore effects")));
 			e.sendCvars = true;
