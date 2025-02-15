@@ -26,16 +26,18 @@ float autocvar_g_tkaball_damageforcescale;
 int autocvar_g_tkaball_effects;
 float autocvar_g_tkaball_respawntime;
 int autocvar_g_tkaball_trail_color;
+int autocvar_g_tkaball_tracking;
 
 bool tka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
 {
-	if(view.ballcarried)
-		if(IS_SPEC(player))
-			return false; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
+	if(view.ballcarried && IS_SPEC(player))
+		return false; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
+	if(IS_SPEC(player) || warmup_stage || SAME_TEAM(player, this.owner))
+		return true;
+	if(StatusEffects_active(STATUSEFFECT_Invisibility, this.owner) || MUTATOR_IS_ENABLED(cloaked))
+		return false; // hide the waypointsprite if the owner is invisible
 
-	// TODO: Make the ballcarrier lack a waypointsprite whenever they have the invisibility powerup
-
-	return true;
+	return autocvar_g_tkaball_tracking == 1;
 }
 
 void tka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
@@ -65,8 +67,11 @@ void tka_RespawnBall(entity this) // runs whenever the ball needs to be relocate
 	Send_Effect(EFFECT_KA_BALL_RESPAWN, oldballorigin, '0 0 0', 1);
 	Send_Effect(EFFECT_KA_BALL_RESPAWN, this.origin, '0 0 0', 1);
 
-	WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', NULL, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
-	WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
+	if(autocvar_g_tkaball_tracking || warmup_stage)
+	{
+		WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', NULL, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
+		WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
+	}
 
 	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
@@ -196,9 +201,12 @@ void tka_DropEvent(entity player) // runs any time that a player is supposed to 
 	sound(NULL, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// waypoints
-	WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
-	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
+	if(autocvar_g_tkaball_tracking || warmup_stage)
+	{
+		WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
+		WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+		WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
+	}
 
 	tka_PlayerReset(player);
 }
@@ -277,12 +285,31 @@ void havocbot_goalrating_tkaball(entity this, float ratingscale, vector org)
 	entity ball = NULL, ball_carried = NULL;
 
 	// stops at last ball, prefers ball without carrier
-	IL_EACH(g_tkaballs, it.owner != this && DIFF_TEAM(ball.owner, this),
+	IL_EACH(g_tkaballs, it.owner != this,
 	{
+		entity ball_wp;
 		if(it.owner)
+		{
+			ball_wp = it.owner.waypointsprite_attachedforcarrier;
+			if(!ball_wp || !ball_wp.waypointsprite_visible_for_player(ball_wp, this, WaypointSprite_getviewentity(this)))
+			{ // waypoint not visible
+				traceline(this.origin + this.view_ofs, it.owner.origin, MOVE_NOMONSTERS, this);
+				if(trace_fraction < 1 && trace_ent != it.owner)
+					continue; // skip what I can't see
+			}
 			ball_carried = it.owner;
+		}
 		else
+		{
+			ball_wp = it.waypointsprite_attachedforcarrier;
+			if(!ball_wp)
+			{ // waypoint not visible
+				traceline(this.origin + this.view_ofs, it.origin, MOVE_NOMONSTERS, this);
+				if(trace_fraction < 1 && trace_ent != it)
+					continue; // skip what I can't see
+			}
 			ball = it;
+		}
 	});
 
 	if (ball)
