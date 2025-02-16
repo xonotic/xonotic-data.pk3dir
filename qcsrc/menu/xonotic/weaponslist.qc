@@ -58,10 +58,9 @@ void XonoticWeaponsList_resizeNotify(entity me, vector relOrigin, vector relSize
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
-
-	me.columnIconOrigin = 0;
+	me.columnIconOrigin = 0.25 * me.realFontSize.x;
 	me.columnIconSize = me.itemAbsSize.y / me.itemAbsSize.x;
-	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize + (0.5 * me.realFontSize.x);
+	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize + (0.25 * me.realFontSize.x);
 	me.columnNameSize = 1 - me.columnIconSize - (1.5 * me.realFontSize.x); // unused
 }
 float XonoticWeaponsList_mouseDrag(entity me, vector pos)
