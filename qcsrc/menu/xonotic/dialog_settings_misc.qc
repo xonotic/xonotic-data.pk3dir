@@ -72,6 +72,9 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.addText(e, ZCTX(_("TLTIP^Advanced")), 2);
 			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "r_textshadow", _("Text shadow"),
+			_("Draw a shadow behind all text to improve readability")));
+	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "showtime", _("Show current date and time"),
 			_("Show current date and time of day, useful on screenshots")));
 			makeMulti(e, "showdate");
