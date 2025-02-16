@@ -87,7 +87,7 @@ void W_Nexball_Touch(entity this, entity toucher)
 		{
 			toucher.velocity = toucher.velocity + normalize(this.velocity) * toucher.damageforcescale * autocvar_g_balance_nexball_secondary_force;
 			UNSET_ONGROUND(toucher);
-			if(!attacker.ballcarried)
+			if(!attacker.ballcarried && !IS_DEAD(attacker))
 			{
 				LogNB("stole", attacker);
 				_sound(toucher, CH_TRIGGER, ball.noise2, VOL_BASE, ATTEN_NORM);
