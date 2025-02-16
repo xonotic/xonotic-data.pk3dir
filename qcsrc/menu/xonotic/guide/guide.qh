@@ -8,16 +8,16 @@
 #define TOPICS(X) \
 	X(NEW(IntroductionSource), _("Introduction"), "gametype_tdm") \
 	X(NEW(MovementSource),     _("Movement"),     "gametype_inv") \
-	X(NEW(GametypeSource),             _("Gametypes"),    "gametype_dm") \
-	X(NEW(WeaponSource),               _("Weapons"),      "gametype_duel") \
-	X(NEW(ItemSource),                 _("Items"),        "gametype_kh") \
-	X(NEW(PowerupSource),              _("Powerups"),     "gametype_dom") \
-	X(NEW(BuffSource),                 _("Buffs"),        "gametype_ka") \
-	X(NEW(NadeSource),                 _("Nades"),        "gametype_ft") \
-	X(NEW(MonsterSource),              _("Monsters"),     "gametype_lms") \
-	X(NEW(VehicleSource),              _("Vehicles"),     "gametype_rc") \
-	X(NEW(TurretSource),               _("Turrets"),      "gametype_as") \
-	X(NEW(MutatorSource),              _("Mutators"),     "gametype_nb") \
+	X(NEW(GametypeSource),     _("Gametypes"),    "gametype_dm") \
+	X(NEW(WeaponSource),       _("Weapons"),      "gametype_duel") \
+	X(NEW(ItemSource),         _("Items"),        "gametype_kh") \
+	X(NEW(PowerupSource),      _("Powerups"),     "gametype_dom") \
+	X(NEW(BuffSource),         _("Buffs"),        "gametype_ka") \
+	X(NEW(NadeSource),         _("Nades"),        "gametype_ft") \
+	X(NEW(MonsterSource),      _("Monsters"),     "gametype_lms") \
+	X(NEW(VehicleSource),      _("Vehicles"),     "gametype_rc") \
+	X(NEW(TurretSource),       _("Turrets"),      "gametype_as") \
+	X(NEW(MutatorSource),      _("Mutators"),     "gametype_nb") \
 	/**/
 CLASS(TopicSource, DataSource)
 	METHOD(TopicSource, getEntry, entity(TopicSource this, int i, void(string, string) returns));
@@ -76,49 +76,49 @@ ENDCLASS(id)
 #define REGISTRY_SOURCE_5(id, arr_name, register_arr, cond1, cond2)        _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, false, 2)
 #define REGISTRY_SOURCE_6(id, arr_name, register_arr, cond1, cond2, cond3) _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, cond3, 3)
 
+// The descriptions for these are in menu/xonotic/guide/pages.qh
 REGISTRY_SOURCE(IntroductionSource, Introduction, IntroductionGuidePages)
 REGISTRY_SOURCE(MovementSource, Movement, MovementGuidePages)
-// The descriptions for these are in menu/xonotic/guide/pages.qh
 
 #include <common/mapinfo.qh>
-REGISTRY_SOURCE(GametypeSource, Gametypes, Gametypes)
 // The descriptions for these are in common/gamemodes/gamemode/*/*.qc
+REGISTRY_SOURCE(GametypeSource, Gametypes, Gametypes)
 
 #include <common/mutators/mutator/buffs/buffs.qh>
+// The descriptions for these are in common/mutators/mutator/buffs/buff/*.qc
 REGISTRY_SOURCE(BuffSource, Buffs, StatusEffects, it.instanceOfBuff)
-// The descriptions for these are in common/mutators/mutator/buffs/all.inc
 
 #include <common/mutators/mutator/powerups/powerup/_mod.qh>
-REGISTRY_SOURCE(PowerupSource, Powerups, Items, it.instanceOfPowerup)
 // The descriptions for these are in common/mutators/mutator/powerups/powerup/*.qc and common/items/item/jetpack.qc
+REGISTRY_SOURCE(PowerupSource, Powerups, Items, it.instanceOfPowerup)
 
 #include <common/items/all.qh>
+// The descriptions for these are in common/items/item/*.qc and common/mutators/mutator/instagib/items.qc
 REGISTRY_SOURCE(ItemSource, Items, Items,
 	!it.instanceOfPowerup && it.instanceOfAmmo,
 	!it.instanceOfPowerup && it.instanceOfHealth,
 	!it.instanceOfPowerup && it.instanceOfArmor)
-// The descriptions for these are in common/items/item/*.qc and common/mutators/mutator/instagib/items.qc
 
 #include <common/mutators/mutator/nades/nades.qh>
+// The descriptions for these are in common/mutators/mutator/nades/nade/*.qc
 REGISTRY_SOURCE(NadeSource, Nades, Nades)
-// The descriptions for these are in common/mutators/mutator/nades/all.inc
 
 #include <common/weapons/all.qh>
-REGISTRY_SOURCE(WeaponSource, Weapons, Weapons)
 // The descriptions for these are in common/weapons/weapon/*.qc and common/mutators/mutator/overkill/ok*.qc (weapon files)
+REGISTRY_SOURCE(WeaponSource, Weapons, Weapons)
 
 #include <common/monsters/all.qh>
-REGISTRY_SOURCE(MonsterSource, Monsters, Monsters)
 // The descriptions for these are in common/monsters/monster/*.qc
+REGISTRY_SOURCE(MonsterSource, Monsters, Monsters)
 
 #include <common/vehicles/all.qh>
-REGISTRY_SOURCE(VehicleSource, Vehicles, Vehicles)
 // The descriptions for these are in common/vehicles/vehicle/*.qc
+REGISTRY_SOURCE(VehicleSource, Vehicles, Vehicles)
 
 #include <common/turrets/all.qh>
-REGISTRY_SOURCE(TurretSource, Turrets, Turrets)
 // The descriptions for these are in common/turrets/turret/*.qc
+REGISTRY_SOURCE(TurretSource, Turrets, Turrets)
 
 #include <common/mutators/base.qh>
-REGISTRY_SOURCE(MutatorSource, Mutators, Mutators)
 // The descriptions for these are in common/mutators/mutator/*.qc (not the cl_* or sv_* files)
+REGISTRY_SOURCE(MutatorSource, Mutators, Mutators)
