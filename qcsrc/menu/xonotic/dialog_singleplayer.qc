@@ -146,7 +146,7 @@ void XonoticSingleplayerDialog_fill(entity me)
 	entity e, btnPrev, btnNext, lblTitle;
 
 	me.TR(me);
-		me.TDempty(me, (me.columns / 2) - 2);
+		me.TDempty(me, (me.columns * 0.5) - 2);
 		me.TD(me, 2, 2, e = makeXonoticBigButton(_("Instant action with bots!"), '0 0 0'));
 			e.onClick = InstantAction_LoadMap;
 			e.onClickEntity = NULL;

@@ -19,7 +19,7 @@ METHOD(TopicSource, getEntry, entity(TopicSource this, int i, void(string, strin
 METHOD(TopicSource, reload, int(TopicSource this, string filter))
 {
 	int n = 0;
-	#define TOPIC(src, name, icon) n++;
+	#define TOPIC(src, name, icon) ++n;
 	TOPICS(TOPIC);
 	#undef TOPIC
 	return n;
