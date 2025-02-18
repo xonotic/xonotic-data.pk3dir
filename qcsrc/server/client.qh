@@ -205,7 +205,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_voice_directional_taunt_attenuation, float, this.cvar_cl_voice_directional_taunt_attenuation);
     ATTRIB(Client, cvar_cl_physics, string, this.cvar_cl_physics);
     ATTRIB(Client, cvar_cl_buffs_autoreplace, bool, this.cvar_cl_buffs_autoreplace);
-    ATTRIB(Client, cvar_cl_nade_type, int, this.cvar_cl_nade_type);
+    ATTRIB(Client, cvar_cl_nade_type, string, this.cvar_cl_nade_type);
     ATTRIB(Client, cvar_cl_pokenade_type, string, this.cvar_cl_pokenade_type);
     ATTRIB(Client, cvar_cl_spawn_near_teammate, bool, this.cvar_cl_spawn_near_teammate);
     ATTRIB(Client, cvar_cl_gunalign, int, this.cvar_cl_gunalign);

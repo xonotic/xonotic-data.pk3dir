@@ -6,6 +6,7 @@
 
 #ifdef SVQC
 float autocvar_g_monster_spider_health;
+string autocvar_g_monster_spider_loot = "health_medium";
 float autocvar_g_monster_spider_damageforcescale = 0.6;
 float autocvar_g_monster_spider_attack_bite_damage;
 float autocvar_g_monster_spider_attack_bite_delay;
@@ -229,7 +230,7 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spider_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_spider_damageforcescale); }
 
-    actor.monster_loot = ITEM_HealthMedium;
+    actor.monster_loot = autocvar_g_monster_spider_loot;
     actor.monster_attackfunc = M_Spider_Attack;
 
     return true;

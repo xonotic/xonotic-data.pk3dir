@@ -22,4 +22,6 @@ CLASS(VeilNade, Nade)
 	ATTRIB(VeilNade, m_name, string, _("Veil grenade"));
 	ATTRIB(VeilNade, m_icon, string, "nade_veil");
 	ATTRIB(VeilNade, m_alpha, float, 0.45);
+	ATTRIB(VeilNade, netname, string, "veil");
+	ATTRIB(VeilNade, impulse, int, 9);
 ENDCLASS(VeilNade)

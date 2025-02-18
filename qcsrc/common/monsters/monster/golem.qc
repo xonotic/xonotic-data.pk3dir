@@ -2,6 +2,7 @@
 
 #ifdef SVQC
 float autocvar_g_monster_golem_health;
+string autocvar_g_monster_golem_loot = "health_mega electro";
 float autocvar_g_monster_golem_damageforcescale = 0.1;
 float autocvar_g_monster_golem_attack_smash_damage;
 float autocvar_g_monster_golem_attack_smash_force = 100;
@@ -269,8 +270,7 @@ METHOD(Golem, mr_setup, bool(Golem this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_golem_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_golem_damageforcescale); }
 
-    actor.monster_loot = ITEM_HealthMega;
-    actor.weapon = WEP_ELECTRO.m_id; // matches attacks better than WEP_VORTEX
+    actor.monster_loot = autocvar_g_monster_golem_loot;
 
     setanim(actor, actor.anim_spawn, false, true, true);
     actor.spawn_time = actor.animstate_endtime;

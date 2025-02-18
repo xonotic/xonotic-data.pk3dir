@@ -108,9 +108,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, RandomItems_GetRandomItemClassName)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
 {
-	entity item = M_ARGV(1, entity);
-
-	item.itemdef = ITEM_VaporizerCells;
+	M_ARGV(1, string) = "vaporizer_cells";
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)

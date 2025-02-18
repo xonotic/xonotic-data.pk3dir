@@ -19,4 +19,6 @@ CLASS(IceNade, Nade)
 	ATTRIB(IceNade, m_color, vector, '0 0.5 2');
 	ATTRIB(IceNade, m_name, string, _("Ice grenade"));
 	ATTRIB(IceNade, m_icon, string, "nade_ice");
+	ATTRIB(IceNade, netname, string, "ice");
+	ATTRIB(IceNade, impulse, int, 3);
 ENDCLASS(IceNade)

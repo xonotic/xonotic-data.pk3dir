@@ -21,4 +21,6 @@ CLASS(AmmoNade, Nade)
 	ATTRIB(AmmoNade, m_color, vector, '0.66 0.33 0');
 	ATTRIB(AmmoNade, m_name, string, _("Ammo grenade"));
 	ATTRIB(AmmoNade, m_icon, string, "nade_ammo");
+	ATTRIB(AmmoNade, netname, string, "ammo");
+	ATTRIB(AmmoNade, impulse, int, 10);
 ENDCLASS(AmmoNade)

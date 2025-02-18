@@ -11,7 +11,7 @@ REGISTER_STAT(NADES_SMALL, INT, autocvar_g_nades_nade_small)
 
 #ifdef GAMEQC
 
-REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
+REPLICATE(cvar_cl_nade_type, string, "cl_nade_type");
 REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 
 entity Nade_TrailEffect(int proj, int nade_team)
