@@ -184,7 +184,7 @@ int W_GetGunAlignment(entity player)
 }
 #endif
 
-vector W_CalculateSpreadPattern(int pattern, int counter, int total)
+vector W_CalculateSpreadPattern(int pattern, float bias, int counter, int total)
 {
 	vector s = '0 0 0';
 
@@ -200,6 +200,9 @@ vector W_CalculateSpreadPattern(int pattern, int counter, int total)
 			makevectors('0 360 0' * (0.75 + (counter - 0.5) / (total - 1)));
 			s.y = v_forward.x;
 			s.z = v_forward.y;
+			// move outer projectiles randomly towards the center by max <bias> percent radius
+			if (bias)
+				s *= ((1 - bias) + random() * bias);
 
 			return s;
 		}
@@ -221,6 +224,8 @@ vector W_CalculateSpreadPattern(int pattern, int counter, int total)
 			// return transform vector
 			s.y = v_forward.x;
 			s.z = v_forward.y;
+			if (bias)
+				s *= ((1 - bias) + random() * bias);
 
 			//else // return original result normal vector
 			//s = v_forward;
