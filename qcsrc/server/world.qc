@@ -757,6 +757,20 @@ void InitGameplayMode()
 bool world_already_spawned;
 spawnfunc(worldspawn)
 {
+#ifdef WATERMARK
+	string curr_version = cvar_string("sv_version");
+	if (curr_version != WATERMARK)
+	{
+		// set the new version even if it errors, next time it won't error
+		cvar_set("sv_version", WATERMARK);
+		if (curr_version != "") // curr_version is "" only on Xonotic start
+			error("\n"
+				"\n^3    A new version has been detected, please fully restart"
+				"\n^3    Xonotic otherwise you may get random bugs."
+				"\n\n");
+	}
+#endif
+
 	CheckEngineExtensions();
 
 	cvar_set("_endmatch", "0");
