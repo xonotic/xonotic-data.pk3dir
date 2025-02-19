@@ -126,9 +126,25 @@ CLASS(Weapon, Object)
 	METHOD(Weapon, wr_pickup, void(Weapon this, entity actor, .entity weaponentity)) {}
 	/** (SERVER) update cvar based properties */
 	METHOD(Weapon, wr_update, void(Weapon this)) {}
-	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
-		returns(this.m_name, (this.model2 != "") ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.model2) : string_null);
+
+#ifndef SVQC
+	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns))
+	{
+		string img = this.model2;
+		if (img != "")
+		{
+			img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.model2);
+	#ifdef CSQC
+			if (precache_pic(img) == "")
+	#endif
+	#ifdef MENUQC
+			if (draw_PreloadPicture(img) == "")
+	#endif
+				img = sprintf("/gfx/hud/default/%s", this.model2);
+		}
+		returns(this.m_name, img);
 	}
+#endif
 ENDCLASS(Weapon)
 
 #ifdef SVQC

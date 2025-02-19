@@ -22,9 +22,20 @@ CLASS(Buff, StatusEffect)
 	ATTRIB(Buff, m_skin, int, 0);
 	ATTRIB(Buff, m_lifetime, float, 60);
 	ATTRIB(Buff, m_sprite, string, "");
-	METHOD(Buff, display, void(entity this, void(string name, string icon) returns)) {
-		returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon));
+#ifndef SVQC
+	METHOD(Buff, display, void(entity this, void(string name, string icon) returns))
+	{
+		string img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon);
+	#ifdef CSQC
+		if (precache_pic(img) == "")
+	#endif
+	#ifdef MENUQC
+		if (draw_PreloadPicture(img) == "")
+	#endif
+			img = sprintf("/gfx/hud/default/%s", this.m_icon);
+		returns(this.m_name, img);
 	}
+#endif
 #ifdef SVQC
 	METHOD(Buff, m_time, float(Buff this))
 	{ return cvar(strcat("g_buffs_", this.netname, "_time")); }
