@@ -84,7 +84,8 @@ void M_Mage_Defend_Shield(entity this);
 
 bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 {
-	if(targ == NULL)
+	// TODO: mutator hook to choose valid healing targets?
+	if(!targ)
 		return false;
 	if(GetResource(targ, RES_HEALTH) <= 0)
 		return false;
