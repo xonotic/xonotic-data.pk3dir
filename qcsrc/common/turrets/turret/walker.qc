@@ -640,3 +640,17 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
 }
 
 #endif // CSQC
+#ifdef MENUQC
+#include <common/weapons/weapon/devastator.qh>
+#include <common/weapons/weapon/machinegun.qh>
+
+METHOD(WalkerTurret, describe, string(WalkerTurret this))
+{
+    TC(WalkerTurret, this);
+    return sprintf(_("The %s is an arachnid-like walking turret that hunts down its targets\n\n"
+        "It has two weapons, both a machinegun like the %s for medium range combat, and a rocket launcher shooting homing missiles like the %s for long range targets. "
+        "It also has the ability to melee close by targets"),
+    COLORED_NAME(this), COLORED_NAME(WEP_MACHINEGUN), COLORED_NAME(WEP_DEVASTATOR));
+}
+
+#endif // MENUQC

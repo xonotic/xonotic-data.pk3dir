@@ -21,6 +21,15 @@ CLASS(EntrapNade, Nade)
 	ATTRIB(EntrapNade, m_color, vector, '0.15 0.85 0');
 	ATTRIB(EntrapNade, m_name, string, _("Entrap grenade"));
 	ATTRIB(EntrapNade, m_icon, string, "nade_entrap");
+#ifdef MENUQC
+	METHOD(EntrapNade, describe, string(EntrapNade this))
+	{
+		TC(EntrapNade, this);
+		return sprintf(_("The %s detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
+			"Players and projectiles that enter the sphere will be slowed down, including yourself"),
+		COLORED_NAME(this));
+	}
+#endif
 	ATTRIB(EntrapNade, netname, string, "entrap");
 	ATTRIB(EntrapNade, impulse, int, 8);
 ENDCLASS(EntrapNade)

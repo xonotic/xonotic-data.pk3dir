@@ -16,6 +16,15 @@ CLASS(SpawnNade, Nade)
 	ATTRIB(SpawnNade, m_color, vector, '1 0.9 0');
 	ATTRIB(SpawnNade, m_name, string, _("Spawn grenade"));
 	ATTRIB(SpawnNade, m_icon, string, "nade_spawn");
+#ifdef MENUQC
+	METHOD(SpawnNade, describe, string(SpawnNade this))
+	{
+		TC(SpawnNade, this);
+		return sprintf(_("The %s detonates after a short delay, temporarily setting your spawn point to where it detonated. "
+			"It is useful for cases where you want to go back to some point on the map after you die"),
+		COLORED_NAME(this));
+	}
+#endif
 	ATTRIB(SpawnNade, netname, string, "spawn");
 	ATTRIB(SpawnNade, impulse, int, 5);
 ENDCLASS(SpawnNade)

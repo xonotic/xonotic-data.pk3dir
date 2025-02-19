@@ -32,4 +32,17 @@ METHOD(DualPlasmaTurret, tr_think, void(DualPlasmaTurret thistur, entity it))
         it.tur_head.frame = 0;
 }
 
-#endif
+#endif // SVQC
+#ifdef MENUQC
+#include <common/weapons/weapon/electro.qh>
+#include "plasma.qh"
+
+METHOD(DualPlasmaTurret, describe, string(DualPlasmaTurret this))
+{
+    TC(DualPlasmaTurret, this);
+    return sprintf(_("The %s is a turret that fires electric balls forwards from its two cannons, shooting balls similar to those of the %s\n\n"
+        "It is a stronger version of the %s, which only has one electric ball cannon"),
+    COLORED_NAME(this), COLORED_NAME(WEP_ELECTRO), COLORED_NAME(TUR_PLASMA));
+}
+
+#endif // MENUQC

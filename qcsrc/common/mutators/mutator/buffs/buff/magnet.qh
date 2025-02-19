@@ -13,6 +13,14 @@ CLASS(MagnetBuff, Buff)
 	ATTRIB(MagnetBuff, m_icon, string, "buff_magnet");
 	ATTRIB(MagnetBuff, m_skin, int, 18);
 	ATTRIB(MagnetBuff, m_color, vector, '1 0.95 0.18');
+#ifdef MENUQC
+	METHOD(MagnetBuff, describe, string(MagnetBuff this))
+	{
+		TC(MagnetBuff, this);
+		return sprintf(_("The %s greatly increases your item pickup range, collecting nearby items for you while the buff is active"),
+		COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	}
+#endif
 ENDCLASS(MagnetBuff)
 
 REGISTER_BUFF(MAGNET, NEW(MagnetBuff));

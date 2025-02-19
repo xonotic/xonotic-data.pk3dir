@@ -31,7 +31,7 @@ METHOD(StrengthStatusEffect, m_tick, void(StatusEffect this, entity actor))
     actor.effects |= (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
     SUPER(StrengthStatusEffect).m_tick(this, actor);
 }
-#endif
+#endif // SVQC
 #ifdef CSQC
 METHOD(StrengthStatusEffect, m_active, bool(StatusEffect this, entity actor))
 {
@@ -47,4 +47,15 @@ METHOD(StrengthStatusEffect, m_tick, void(StatusEffect this, entity actor))
     float currentTime = (autocvar__hud_configure) ? 15 : bound(0, actor.statuseffect_time[this.m_id] - time, 99);
     addPowerupItem(this.m_name, this.m_icon, autocvar_hud_progressbar_strength_color, currentTime, this.m_lifetime, (actor.statuseffect_flags[this.m_id] & STATUSEFFECT_FLAG_PERSISTENT));
 }
-#endif
+#endif // CSQC
+#ifdef MENUQC
+METHOD(StrengthItem, describe, string(StrengthItem this))
+{
+    TC(StrengthItem, this);
+    return sprintf(_("The %s powerup greatly increases the damage you deal, until the powerup expires. "
+        "It also increases the knockback that your attacks deal\n\n"
+        "The damage and knockback you deal to yourself also increases but by a smaller amount\n\n"
+        "Since it is a powerup, it will drop if you die while holding it"),
+    COLORED_NAME(this));
+}
+#endif // MENUQC

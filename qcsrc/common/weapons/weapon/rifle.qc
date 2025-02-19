@@ -259,3 +259,20 @@ METHOD(Rifle, wr_zoomdir, bool(entity thiswep))
 }
 
 #endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+#include "vortex.qh"
+
+METHOD(Rifle, describe, string(Rifle this))
+{
+	TC(Rifle, this);
+	return sprintf(_("The %s fires bullets that traverse the map instantaneously and deal a significant chunk of damage on impact\n\n"
+		"The secondary fire shoots a few less powerful bullets at once with a bit of scatter\n\n"
+		"It consumes %s ammo for each bullet shot\n\n"
+		"Unlike the %s, the secondary fire doesn't zoom, so the ^3+zoom^7 bind needs to be used manually with the %s. "
+		"Also, it needs to be reloaded after its magazine is emptied\n\n"
+		"Similar to the %s, the %s can be used at any range, but it stands out at long ranges"),
+	COLORED_NAME(this), COLORED_NAME(ITEM_Bullets), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this));
+}
+
+#endif
