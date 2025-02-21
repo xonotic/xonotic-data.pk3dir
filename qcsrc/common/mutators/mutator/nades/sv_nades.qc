@@ -120,17 +120,17 @@ void nade_boom(entity this)
 
 	switch ( REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this)) )
 	{
-		SET_NADE_EFFECT(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm_blast, EFFECT_EXPLOSION_MEDIUM, 										'0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_ICE,         false,                         EFFECT_ELECTRO_COMBO, 										'0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_TRANSLOCATE, false,                         NULL, 														'0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_MONSTER,     true,                          (!autocvar_g_monsters) ? EFFECT_NADE_EXPLODE : NULL, 			nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
-		SET_NADE_EFFECT(NADE_TYPE_SPAWN,       false,                         EFFECT_SPAWN, 												nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
-		SET_NADE_EFFECT(NADE_TYPE_HEAL,        false,                         EFFECT_SPAWN, 												'1 0 0', '1 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      false,                         EFFECT_SPAWN, 												'1 1 0', '1 1 0');
-		SET_NADE_EFFECT(NADE_TYPE_VEIL,        false,                         EFFECT_SPAWN, 												'0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_AMMO,        false,                         EFFECT_SPAWN, 												'0.66 0.33 0', '0.66 0.33 0');
-		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    false,                         EFFECT_EXPLOSION_MEDIUM, 										'0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      true,                          EFFECT_NADE_EXPLODE, 											nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		SET_NADE_EFFECT(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm_blast, EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_ICE,         false,                         EFFECT_ELECTRO_COMBO,    '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_TRANSLOCATE, false,                         NULL,                    '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_MONSTER,     true,                          NULL,                    nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		SET_NADE_EFFECT(NADE_TYPE_SPAWN,       false,                         EFFECT_SPAWN,            nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		SET_NADE_EFFECT(NADE_TYPE_HEAL,        false,                         EFFECT_SPAWN,            '1 0 0', '1 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      false,                         EFFECT_SPAWN,            '1 1 0', '1 1 0');
+		SET_NADE_EFFECT(NADE_TYPE_VEIL,        false,                         EFFECT_SPAWN,            '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_AMMO,        false,                         EFFECT_SPAWN,            '0.66 0.33 0', '0.66 0.33 0');
+		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    false,                         EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      true,                          EFFECT_NADE_EXPLODE,     nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
 		default: expef = EFFECT_NADE_EXPLODE; expcol_min = nades_PlayerColor(this.realowner, false); expcol_max = nades_PlayerColor(this.realowner, true); break;
 	}
 #undef SET_NADE_EFFECT
@@ -243,7 +243,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		this.takedamage = DAMAGE_NO;
-		nade_boom(this);
+		W_PrepareExplosionByDamage(this, attacker, nade_boom);
 		return;
 	}
 
@@ -383,7 +383,9 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	_nade.toss_time = time;
 	_nade.solid = SOLID_CORPSE; //((STAT(NADE_BONUS_TYPE, _nade) == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
 
-	if(STAT(NADE_BONUS_TYPE, _nade) == NADE_TYPE_TRANSLOCATE.m_id || STAT(NADE_BONUS_TYPE, _nade) == NADE_TYPE_SPAWN.m_id)
+	if(STAT(NADE_BONUS_TYPE, _nade) == NADE_TYPE_TRANSLOCATE.m_id
+	|| STAT(NADE_BONUS_TYPE, _nade) == NADE_TYPE_SPAWN.m_id
+	|| STAT(NADE_BONUS_TYPE, _nade) == NADE_TYPE_MONSTER.m_id)
 		_nade.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	else
 		_nade.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
@@ -398,6 +400,32 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 
 	e.nade_refire = time + autocvar_g_nades_nade_refire;
 	STAT(NADE_TIMER, e) = 0;
+}
+
+Nade nades_CheckTypes(Nade ntype)
+{
+#define NADE_TYPE_CHECK(nade_ent, nade_cvar) \
+	case nade_ent.m_id: \
+		if (nade_cvar) \
+			return ntype; \
+		break
+
+	switch (ntype.m_id)
+	{
+		case 0: return NADE_TYPE_Null; // use NADE_TYPE_Null to signify a random nade
+		NADE_TYPE_CHECK(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm);
+		NADE_TYPE_CHECK(NADE_TYPE_ICE,         autocvar_g_nades_ice);
+		NADE_TYPE_CHECK(NADE_TYPE_TRANSLOCATE, autocvar_g_nades_translocate);
+		NADE_TYPE_CHECK(NADE_TYPE_SPAWN,       autocvar_g_nades_spawn);
+		NADE_TYPE_CHECK(NADE_TYPE_HEAL,        autocvar_g_nades_heal);
+		NADE_TYPE_CHECK(NADE_TYPE_MONSTER,     autocvar_g_nades_pokenade && autocvar_g_monsters); // if monsters disabled, this nade can't do anything, use instead normal nade
+		NADE_TYPE_CHECK(NADE_TYPE_ENTRAP,      autocvar_g_nades_entrap);
+		NADE_TYPE_CHECK(NADE_TYPE_VEIL,        autocvar_g_nades_veil);
+		NADE_TYPE_CHECK(NADE_TYPE_AMMO,        autocvar_g_nades_ammo);
+		NADE_TYPE_CHECK(NADE_TYPE_DARKNESS,    autocvar_g_nades_darkness);
+	}
+	return NADE_TYPE_NORMAL; // default to NADE_TYPE_NORMAL for unknown nade types
+#undef NADE_TYPE_CHECK
 }
 
 void nades_GiveBonus(entity player, float score)
@@ -460,6 +488,16 @@ bool nade_customize(entity this, entity client)
 	return true;
 }
 
+int nade_choose_random()
+{
+	RandomSelection_Init();
+	FOREACH(Nades, it != NADE_TYPE_Null, {
+		if (nades_CheckTypes(it) == it) // this nade type is allowed
+			RandomSelection_AddEnt(it, 1, 1);
+	});
+	return RandomSelection_chosen_ent.m_id;
+}
+
 Nade Nades_FromString(string ntype)
 {
 	FOREACH(Nades, it != NADE_TYPE_Null && (it.netname == ntype || ftos(it.impulse) == ntype),
@@ -473,10 +511,7 @@ Nade Nades_GetType(string ntype)
 {
 	Nade def = Nades_FromString(ntype);
 	if(ntype == "random" || ntype == "0")
-	{
-		int rnade = floor(random() * (REGISTRY_COUNT(Nades) - 1)) + 1;
-		def = REGISTRY_GET(Nades, rnade);
-	}
+		def = REGISTRY_GET(Nades, nade_choose_random());
 
 	return (def == NADE_TYPE_Null) ? NADE_TYPE_NORMAL : def;
 }
@@ -554,8 +589,16 @@ void nade_prime(entity this)
 	}
 	else
 	{
-		ntype = Nades_FromString(((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_nade_type : autocvar_g_nades_nade_type));
-		pntype = ((autocvar_g_nades_client_select) ? CS_CVAR(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		if (autocvar_g_nades_client_select)
+		{
+			ntype  = nades_CheckTypes(Nades_FromString(CS_CVAR(this).cvar_cl_nade_type));
+			pntype = CS_CVAR(this).cvar_cl_pokenade_type;
+		}
+		else
+		{
+			ntype  = Nades_FromString(autocvar_g_nades_nade_type);
+			pntype = autocvar_g_nades_pokenade_monster_type;
+		}
 	}
 
 	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype.netname, pntype);
@@ -607,30 +650,6 @@ void nades_Clear(entity player)
 
 	player.nade = player.fake_nade = NULL;
 	STAT(NADE_TIMER, player) = 0;
-}
-
-int nades_CheckTypes(entity player, Nade cl_ntype)
-{
-	// TODO check what happens without this patch
-#define CL_NADE_TYPE_CHECK(nade_ent, nade_cvar) \
-	case nade_ent: if (nade_cvar) return cl_ntype.m_id
-
-	switch (cl_ntype)
-	{
-		case NADE_TYPE_Null: return 0; // random nade
-		CL_NADE_TYPE_CHECK(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm);
-		CL_NADE_TYPE_CHECK(NADE_TYPE_ICE,         autocvar_g_nades_ice);
-		CL_NADE_TYPE_CHECK(NADE_TYPE_TRANSLOCATE, autocvar_g_nades_translocate);
-		CL_NADE_TYPE_CHECK(NADE_TYPE_SPAWN,       autocvar_g_nades_spawn);
-		CL_NADE_TYPE_CHECK(NADE_TYPE_HEAL,        autocvar_g_nades_heal);
-		CL_NADE_TYPE_CHECK(NADE_TYPE_MONSTER,     autocvar_g_nades_pokenade);
-		CL_NADE_TYPE_CHECK(NADE_TYPE_ENTRAP,      autocvar_g_nades_entrap);
-		CL_NADE_TYPE_CHECK(NADE_TYPE_VEIL,        autocvar_g_nades_veil);
-		CL_NADE_TYPE_CHECK(NADE_TYPE_AMMO,        autocvar_g_nades_ammo);
-		CL_NADE_TYPE_CHECK(NADE_TYPE_DARKNESS,    autocvar_g_nades_darkness);
-	}
-	return NADE_TYPE_NORMAL.m_id; // default to NADE_TYPE_NORMAL for unknown nade types
-#undef CL_NADE_TYPE_CHECK
 }
 
 MUTATOR_HOOKFUNCTION(nades, VehicleEnter)
@@ -740,16 +759,14 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 			if(autocvar_g_nades_bonus_client_select)
 			{
-				STAT(NADE_BONUS_TYPE, player) = nades_CheckTypes(player, Nades_FromString(CS_CVAR(player).cvar_cl_nade_type));
-				player.pokenade_type = CS_CVAR(player).cvar_cl_pokenade_type;
+				STAT(NADE_BONUS_TYPE, player) = nades_CheckTypes(Nades_FromString(CS_CVAR(player).cvar_cl_nade_type)).m_id;
+				player.pokenade_type          = CS_CVAR(player).cvar_cl_pokenade_type;
 			}
 			else
 			{
 				STAT(NADE_BONUS_TYPE, player) = Nades_FromString(autocvar_g_nades_bonus_type).m_id;
-				player.pokenade_type = autocvar_g_nades_pokenade_monster_type;
+				player.pokenade_type          = autocvar_g_nades_pokenade_monster_type;
 			}
-
-			STAT(NADE_BONUS_TYPE, player) = bound(0, STAT(NADE_BONUS_TYPE, player), REGISTRY_COUNT(Nades));
 
 			if(STAT(NADE_BONUS_SCORE, player) >= 0 && autocvar_g_nades_bonus_score_max)
 				nades_GiveBonus(player, time_score / autocvar_g_nades_bonus_score_max);
