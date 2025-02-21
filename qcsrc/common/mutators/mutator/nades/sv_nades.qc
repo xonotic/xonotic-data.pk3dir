@@ -111,6 +111,13 @@ void nade_boom(entity this)
 
 	Nade ntype = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this));
 
+	if (!this.takedamage || ntype == NADE_TYPE_Null)
+	{
+		// first condition: nade was destroyed by something (lava, void, etc.), just do a normal explosion
+		// this prevents weird cases like spawn nade setting your spawnpoint on the void, translocate sending you into the void, etc.
+		ntype = NADE_TYPE_NORMAL;
+	}
+
 #define SET_NADE_EFFECT(nade_type, exp_effect, exp_color_min, exp_color_max) \
 	case nade_type: \
 		expef = exp_effect; \
@@ -118,7 +125,7 @@ void nade_boom(entity this)
 		expcol_max = exp_color_max; \
 		break
 
-	switch(ntype)
+	switch (ntype)
 	{
 		SET_NADE_EFFECT(NADE_TYPE_NAPALM,      EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
 		SET_NADE_EFFECT(NADE_TYPE_ICE,         EFFECT_ELECTRO_COMBO,    '0 0 0', '0 0 0');
@@ -131,24 +138,20 @@ void nade_boom(entity this)
 		SET_NADE_EFFECT(NADE_TYPE_AMMO,        EFFECT_SPAWN,            '0.66 0.33 0', '0.66 0.33 0');
 		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
 		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      EFFECT_NADE_EXPLODE,     nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
-		default: expef = EFFECT_NADE_EXPLODE; expcol_min = nades_PlayerColor(this.realowner, false); expcol_max = nades_PlayerColor(this.realowner, true); break;
 	}
 #undef SET_NADE_EFFECT
 
-	if(expef)
+	if (expef)
 		Send_Effect_Except(expef, findbetterlocation(this.origin, 8), '0 0 0', 1, expcol_min, expcol_max, NULL);
 
-	sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
-	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS_SINGLE, SND_Null,          VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS,        SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	this.event_damage = func_null; // prevent somehow calling damage in the next call
 
-	if(ntype == NADE_TYPE_NORMAL)
-		nade_normal_boom(this);
-
-	if(this.takedamage)
-	switch(ntype)
+	switch (ntype)
 	{
+		case NADE_TYPE_NORMAL:      nade_normal_boom(this);      break;
 		case NADE_TYPE_NAPALM:      nade_napalm_boom(this);      break;
 		case NADE_TYPE_ICE:         nade_ice_boom(this);         break;
 		case NADE_TYPE_TRANSLOCATE: nade_translocate_boom(this); break;
