@@ -107,30 +107,30 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 void nade_boom(entity this)
 {
 	entity expef = NULL;
-	bool nade_blast = true;
 	vector expcol_min = '0 0 0', expcol_max = '0 0 0';
 
-#define SET_NADE_EFFECT(nade_type, blast, exp_effect, exp_color_min, exp_color_max) \
+	Nade ntype = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this));
+
+#define SET_NADE_EFFECT(nade_type, exp_effect, exp_color_min, exp_color_max) \
 	case nade_type: \
-		nade_blast = blast; \
 		expef = exp_effect; \
 		expcol_min = exp_color_min; \
 		expcol_max = exp_color_max; \
 		break
 
-	switch ( REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this)) )
+	switch(ntype)
 	{
-		SET_NADE_EFFECT(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm_blast, EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_ICE,         false,                         EFFECT_ELECTRO_COMBO,    '0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_TRANSLOCATE, false,                         NULL,                    '0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_MONSTER,     true,                          NULL,                    nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
-		SET_NADE_EFFECT(NADE_TYPE_SPAWN,       false,                         EFFECT_SPAWN,            nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
-		SET_NADE_EFFECT(NADE_TYPE_HEAL,        false,                         EFFECT_SPAWN,            '1 0 0', '1 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      false,                         EFFECT_SPAWN,            '1 1 0', '1 1 0');
-		SET_NADE_EFFECT(NADE_TYPE_VEIL,        false,                         EFFECT_SPAWN,            '0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_AMMO,        false,                         EFFECT_SPAWN,            '0.66 0.33 0', '0.66 0.33 0');
-		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    false,                         EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      true,                          EFFECT_NADE_EXPLODE,     nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		SET_NADE_EFFECT(NADE_TYPE_NAPALM,      EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_ICE,         EFFECT_ELECTRO_COMBO,    '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_TRANSLOCATE, NULL,                    '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_MONSTER,     NULL,                    nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		SET_NADE_EFFECT(NADE_TYPE_SPAWN,       EFFECT_SPAWN,            nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		SET_NADE_EFFECT(NADE_TYPE_HEAL,        EFFECT_SPAWN,            '1 0 0', '1 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      EFFECT_SPAWN,            '1 1 0', '1 1 0');
+		SET_NADE_EFFECT(NADE_TYPE_VEIL,        EFFECT_SPAWN,            '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_AMMO,        EFFECT_SPAWN,            '0.66 0.33 0', '0.66 0.33 0');
+		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      EFFECT_NADE_EXPLODE,     nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
 		default: expef = EFFECT_NADE_EXPLODE; expcol_min = nades_PlayerColor(this.realowner, false); expcol_max = nades_PlayerColor(this.realowner, true); break;
 	}
 #undef SET_NADE_EFFECT
@@ -143,11 +143,11 @@ void nade_boom(entity this)
 
 	this.event_damage = func_null; // prevent somehow calling damage in the next call
 
-	if(nade_blast)
+	if(ntype == NADE_TYPE_NORMAL)
 		normal_nade_boom(this);
 
 	if(this.takedamage)
-	switch ( REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this)) )
+	switch(ntype)
 	{
 		case NADE_TYPE_NAPALM:      nade_napalm_boom(this);      break;
 		case NADE_TYPE_ICE:         nade_ice_boom(this);         break;
