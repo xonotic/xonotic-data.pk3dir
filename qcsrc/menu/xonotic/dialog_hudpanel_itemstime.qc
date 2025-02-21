@@ -1,7 +1,7 @@
 #include "dialog_hudpanel_itemstime.qh"
 
 #include "textlabel.qh"
-#include "textslider.qh"
+#include "mixedslider.qh"
 #include "radiobutton.qh"
 #include "checkbox.qh"
 #include "slider.qh"
@@ -12,11 +12,11 @@ void XonoticHUDItemsTimeDialog_fill(entity me)
 	string panelname = "itemstime";
 
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_itemstime"));
-			e.addValue(e, _("Disable"), "0");
-			e.addValue(e, _("Enable spectating"), "1");
-			e.addValue(e, _("Enable even playing in warmup"), "2");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 4, e = makeXonoticMixedSlider("hud_panel_itemstime"));
+			e.addText(e, _("Disable"), 0);
+			e.addText(e, _("Enable spectating"), 1);
+			e.addText(e, _("Enable even playing in warmup"), 2);
+			e.configureXonoticMixedSliderValues(e);
 
 	dialog_hudpanel_main_settings(me, panelname);
 

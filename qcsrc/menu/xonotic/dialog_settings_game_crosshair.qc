@@ -7,7 +7,6 @@
 #include "slider.qh"
 #include "colorpicker_string.qh"
 #include "checkbox.qh"
-#include "textslider.qh"
 
 void XonoticGameCrosshairSettingsTab_showNotify(entity me)
 {

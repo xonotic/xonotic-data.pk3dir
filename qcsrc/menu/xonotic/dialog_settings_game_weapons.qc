@@ -3,7 +3,7 @@
 #include "weaponslist.qh"
 #include "commandbutton.qh"
 #include "textlabel.qh"
-#include "textslider.qh"
+#include "mixedslider.qh"
 #include "checkbox.qh"
 #include "button.qh"
 #include "radiobutton.qh"
@@ -60,11 +60,11 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 			e.sendCvars = true;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Auto switch in CTS:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_autoswitch_cts"));
-			e.addValue(e, _("Default"), "-1");
-			e.addValue(e, _("Always"), "1");
-			e.addValue(e, _("Never"), "0");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_autoswitch_cts"));
+			e.addText(e, _("Never"), 0);
+			e.addText(e, _("Default"), -1);
+			e.addText(e, _("Always"), 1);
+			e.configureXonoticMixedSliderValues(e);
 			e.sendCvars = true;
 	me.TR(me);
 	me.TR(me);
@@ -82,16 +82,16 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 			_("Position of the weapon model; requires reconnect")));
 			setDependent(e, "r_drawviewmodel", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Weapon model opacity:")));
-			setDependent(e, "r_drawviewmodel", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_viewmodel_alpha"));
-			setDependent(e, "r_drawviewmodel", 1, 1);
-			e.addValue(e, "15%", "0.15");
-			e.addValue(e, "25%", "0.25");
-			e.addValue(e, "50%", "0.5");
-			e.addValue(e, "75%", "0.75");
-			e.addValue(e, "100%", "1");
-			e.configureXonoticTextSliderValues(e);
+			me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Weapon model opacity:")));
+				setDependent(e, "r_drawviewmodel", 1, 1);
+			me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_viewmodel_alpha"));
+				setDependent(e, "r_drawviewmodel", 1, 1);
+				e.addText(e, "15%", 0.15);
+				e.addText(e, "25%", 0.25);
+				e.addText(e, "50%", 0.5);
+				e.addText(e, "75%", 0.75);
+				e.addText(e, "100%", 1);
+				e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Apply team colors to weapon beam effects:")));
 	me.TR(me);
