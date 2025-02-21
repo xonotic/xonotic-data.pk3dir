@@ -144,7 +144,7 @@ void nade_boom(entity this)
 	this.event_damage = func_null; // prevent somehow calling damage in the next call
 
 	if(ntype == NADE_TYPE_NORMAL)
-		normal_nade_boom(this);
+		nade_normal_boom(this);
 
 	if(this.takedamage)
 	switch(ntype)
