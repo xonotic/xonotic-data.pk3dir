@@ -3966,11 +3966,6 @@ effect EF_FLAME
 	size 11 15
 	tex 0 8
 	velocityjitter 11 11 50
-effect EF_FLAME
-	count 0.500000
-	lightcolor 0.9 0.9 0.2
-	lightradiusfade 10000
-	lightradius 200
 effect tr_rifle
 	type spark
 	alpha 256 256 2560
@@ -8989,3 +8984,43 @@ effect hlac_impact
 	tex 4 6
 	velocityjitter 16 16 16
 	velocitymultiplier 0.010000
+effect EF_SHOCK
+	type static
+	airfriction 110
+	alpha 256 256 512
+	color 0xDDFDFF 0xFDFDFF
+	count 100
+	originjitter 20 20 20
+	rotate 0 360 -36000 36000
+	sizeincrease -5
+	size 0 5
+	stretchfactor 1
+	tex 71 74
+	velocityjitter 250 250 250
+	velocitymultiplier 100
+effect EF_SHOCK
+	type static
+	airfriction 5
+	alpha 256 256 512
+	color 0xDDFDFF 0xFDFDFF
+	count 100
+	liquidfriction 5
+	orientation spark
+	originjitter 20 20 20
+	rotate 0 360 -36000 36000
+	sizeincrease -5
+	size 0 5
+	stretchfactor 1
+	tex 71 74
+	underwater
+	velocityjitter 250 250 250
+	velocitymultiplier 20
+effect EF_SHOCK
+	type smoke
+	alpha 40 40 350
+	color 0x80C0FF 0x80C0FF
+	count 10
+	sizeincrease 400
+	size 4 4
+	tex 38 38
+	velocitymultiplier 100
