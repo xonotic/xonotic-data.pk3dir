@@ -32,6 +32,12 @@ REGISTER_INTRODUCTION_PAGE(2, _("Acquiring Skills"), "gametype_dm")
 		"The learning curve is very steep. That said, understanding how the game works will enable you to speed around the map and apply effective weapon combos in no time");
 }
 
+REGISTER_INTRODUCTION_PAGE(3, _("XonStat"), "gametype_dm")
+{
+	this.m_description = _("XonStat is the integrated player statistics application for Xonotic. See vital stats like your K:D ratio, weapon damage and accuracy, and scoreboards from past games. "
+		"Tracking is completely opt-in, and no login is required.");
+}
+
 REGISTER_MOVEMENT_PAGE(0, _("Movement Importance"), "gametype_inv")
 {
 	this.m_description = _("Xonotic is a very fast-paced arena shooter. Fast-paced does not only relate to reaction times but also to movement speed. "
