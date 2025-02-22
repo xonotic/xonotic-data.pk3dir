@@ -49,7 +49,8 @@ void Projectile_DrawTrail(entity this, vector to)
 	// Right now (2024-12-30), only Crylink can generate alpha via
 	// fade_rate/fade_time, and only PROJECTILE_PORTO_* set a fixed alpha
 	// (and reuse the Arc's TE_WIZSPIKE).
-	if (this.traileffect && a > 0)
+	// NOTE: the frametime check is a temporary workaround for https://gitlab.com/xonotic/darkplaces/-/issues/431
+	if (this.traileffect && a > 0 && frametime)
 	{
 		float f = PARTICLES_DRAWASTRAIL;
 		if (a < 1)
