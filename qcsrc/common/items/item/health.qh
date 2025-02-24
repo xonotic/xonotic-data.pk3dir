@@ -20,6 +20,8 @@ SOUND(HealthSmall, Item_Sound("minihealth"));
 bool autocvar_g_pickup_healthsmall_anyway;
 int autocvar_g_pickup_healthsmall;
 int autocvar_g_pickup_healthsmall_max;
+float autocvar_g_pickup_respawntime_health_small;
+float autocvar_g_pickup_respawntimejitter_health_small;
 void item_healthsmall_init(Pickup this, entity item)
 {
     if(!item.max_health)
@@ -51,8 +53,8 @@ CLASS(HealthSmall, Health)
 /* minsize      */ ATTRIB(HealthSmall, m_mins, vector, ITEM_S_MINS);
 /* maxsize      */ ATTRIB(HealthSmall, m_maxs, vector, ITEM_S_MAXS);
 /* itemid       */ ATTRIB(HealthSmall, m_itemid, int, IT_RESOURCE);
-/* respawntime  */ ATTRIB(HealthSmall, m_respawntime, float(), GET(g_pickup_respawntime_health_small));
-/*              */ ATTRIB(HealthSmall, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_health_small));
+/* respawntime  */ ATTRIB(HealthSmall, m_respawntime, float, autocvar_g_pickup_respawntime_health_small);
+/*              */ ATTRIB(HealthSmall, m_respawntimejitter, float, autocvar_g_pickup_respawntimejitter_health_small);
 /* pickupanyway */ ATTRIB(HealthSmall, m_pickupanyway, bool, autocvar_g_pickup_healthsmall_anyway);
 /* iteminit     */ ATTRIB(HealthSmall, m_iteminit, void(Pickup this, entity item), item_healthsmall_init);
 #endif
@@ -69,6 +71,8 @@ SOUND(HealthMedium, Item_Sound("mediumhealth"));
 bool autocvar_g_pickup_healthmedium_anyway;
 int autocvar_g_pickup_healthmedium;
 int autocvar_g_pickup_healthmedium_max;
+float autocvar_g_pickup_respawntime_health_medium;
+float autocvar_g_pickup_respawntimejitter_health_medium;
 void item_healthmedium_init(Pickup this, entity item)
 {
     if(!item.max_health)
@@ -100,8 +104,8 @@ CLASS(HealthMedium, Health)
 /* minsize      */ ATTRIB(HealthMedium, m_mins, vector, ITEM_S_MINS);
 /* maxsize      */ ATTRIB(HealthMedium, m_maxs, vector, ITEM_S_MAXS);
 /* itemid       */ ATTRIB(HealthMedium, m_itemid, int, IT_RESOURCE);
-/* respawntime  */ ATTRIB(HealthMedium, m_respawntime, float(), GET(g_pickup_respawntime_health_medium));
-/*              */ ATTRIB(HealthMedium, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_health_medium));
+/* respawntime  */ ATTRIB(HealthMedium, m_respawntime, float, autocvar_g_pickup_respawntime_health_medium);
+/*              */ ATTRIB(HealthMedium, m_respawntimejitter, float, autocvar_g_pickup_respawntimejitter_health_medium);
 /* pickupanyway */ ATTRIB(HealthMedium, m_pickupanyway, bool, autocvar_g_pickup_healthmedium_anyway);
 /* iteminit     */ ATTRIB(HealthMedium, m_iteminit, void(Pickup this, entity item), item_healthmedium_init);
 #endif
@@ -118,6 +122,8 @@ SOUND(HealthBig, Item_Sound("mediumhealth"));
 bool autocvar_g_pickup_healthbig_anyway;
 int autocvar_g_pickup_healthbig;
 int autocvar_g_pickup_healthbig_max;
+float autocvar_g_pickup_respawntime_health_big;
+float autocvar_g_pickup_respawntimejitter_health_big;
 void item_healthbig_init(Pickup this, entity item)
 {
     if(!item.max_health)
@@ -149,8 +155,8 @@ CLASS(HealthBig, Health)
 /* wptext       */ ATTRIB(HealthBig, m_waypoint, string, _("Big health"));
 #ifdef SVQC
 /* itemid       */ ATTRIB(HealthBig, m_itemid, int, IT_RESOURCE);
-/* respawntime  */ ATTRIB(HealthBig, m_respawntime, float(), GET(g_pickup_respawntime_health_big));
-/*              */ ATTRIB(HealthBig, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_health_big));
+/* respawntime  */ ATTRIB(HealthBig, m_respawntime, float, autocvar_g_pickup_respawntime_health_big);
+/*              */ ATTRIB(HealthBig, m_respawntimejitter, float, autocvar_g_pickup_respawntimejitter_health_big);
 /* pickupanyway */ ATTRIB(HealthBig, m_pickupanyway, bool, autocvar_g_pickup_healthbig_anyway);
 /* iteminit     */ ATTRIB(HealthBig, m_iteminit, void(Pickup this, entity item), item_healthbig_init);
 #endif
@@ -167,6 +173,8 @@ SOUND(HealthMega, Item_Sound("megahealth"));
 bool autocvar_g_pickup_healthmega_anyway;
 int autocvar_g_pickup_healthmega;
 int autocvar_g_pickup_healthmega_max;
+float autocvar_g_pickup_respawntime_health_mega;
+float autocvar_g_pickup_respawntimejitter_health_mega;
 void item_healthmega_init(Pickup this, entity item)
 {
     if(!item.max_health)
@@ -200,8 +208,8 @@ CLASS(HealthMega, Health)
 #ifdef SVQC
 /* maxsize      */ ATTRIB(HealthMega, m_maxs, vector, ITEM_L_MAXS);
 /* itemid       */ ATTRIB(HealthMega, m_itemid, int, IT_RESOURCE);
-/* respawntime  */ ATTRIB(HealthMega, m_respawntime, float(), GET(g_pickup_respawntime_health_mega));
-/*              */ ATTRIB(HealthMega, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_health_mega));
+/* respawntime  */ ATTRIB(HealthMega, m_respawntime, float, autocvar_g_pickup_respawntime_health_mega);
+/*              */ ATTRIB(HealthMega, m_respawntimejitter, float, autocvar_g_pickup_respawntimejitter_health_mega);
 /* pickupanyway */ ATTRIB(HealthMega, m_pickupanyway, bool, autocvar_g_pickup_healthmega_anyway);
 /* iteminit     */ ATTRIB(HealthMega, m_iteminit, void(Pickup this, entity item), item_healthmega_init);
 #endif

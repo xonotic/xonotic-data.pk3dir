@@ -2177,31 +2177,6 @@ void readlevelcvars()
 		}
 	}
 
-	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
-	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
-	g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
-	g_pickup_respawntime_armor_small = cvar("g_pickup_respawntime_armor_small");
-	g_pickup_respawntime_armor_medium = cvar("g_pickup_respawntime_armor_medium");
-	g_pickup_respawntime_armor_big = cvar("g_pickup_respawntime_armor_big");
-	g_pickup_respawntime_armor_mega = cvar("g_pickup_respawntime_armor_mega");
-	g_pickup_respawntime_health_small = cvar("g_pickup_respawntime_health_small");
-	g_pickup_respawntime_health_medium = cvar("g_pickup_respawntime_health_medium");
-	g_pickup_respawntime_health_big = cvar("g_pickup_respawntime_health_big");
-	g_pickup_respawntime_health_mega = cvar("g_pickup_respawntime_health_mega");
-	g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
-	g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
-	g_pickup_respawntimejitter_superweapon = cvar("g_pickup_respawntimejitter_superweapon");
-	g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
-	g_pickup_respawntimejitter_armor_small = cvar("g_pickup_respawntimejitter_armor_small");
-	g_pickup_respawntimejitter_armor_medium = cvar("g_pickup_respawntimejitter_armor_medium");
-	g_pickup_respawntimejitter_armor_big = cvar("g_pickup_respawntimejitter_armor_big");
-	g_pickup_respawntimejitter_armor_mega = cvar("g_pickup_respawntimejitter_armor_mega");
-	g_pickup_respawntimejitter_health_small = cvar("g_pickup_respawntimejitter_health_small");
-	g_pickup_respawntimejitter_health_medium = cvar("g_pickup_respawntimejitter_health_medium");
-	g_pickup_respawntimejitter_health_big = cvar("g_pickup_respawntimejitter_health_big");
-	g_pickup_respawntimejitter_health_mega = cvar("g_pickup_respawntimejitter_health_mega");
-	g_pickup_respawntimejitter_powerup = cvar("g_pickup_respawntimejitter_powerup");
-
 	g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
 	if(!g_weapon_stay)
 		g_weapon_stay = cvar("g_weapon_stay");
