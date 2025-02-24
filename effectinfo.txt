@@ -9024,3 +9024,34 @@ effect EF_SHOCK
 	size 4 4
 	tex 38 38
 	velocitymultiplier 100
+effect EF_FLAME_OLD
+	type smoke
+	alpha 200 356 512
+	bounce 2
+	color 0x8f0d00 0xff5a00
+	count 100
+	gravity -0.500000
+	originjitter 12 12 34
+	originoffset 0 0 10
+	sizeincrease -1
+	size 5 21
+	tex 48 55
+	velocityjitter 22 22 50
+effect EF_FLAME_OLD
+	type alphastatic
+	alpha 200 256 200
+	bounce 2
+	color 0x000000 0x111111
+	count 50
+	gravity -0.300000
+	originjitter 12 12 34
+	originoffset 0 0 10
+	sizeincrease 6
+	size 11 15
+	tex 0 8
+	velocityjitter 11 11 50
+effect EF_FLAME_OLD
+	count 0.500000
+	lightcolor 0.9 0.9 0.2
+	lightradiusfade 10000
+	lightradius 200
