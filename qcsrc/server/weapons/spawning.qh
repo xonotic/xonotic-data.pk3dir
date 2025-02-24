@@ -3,6 +3,8 @@
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 
+bool autocvar_g_pickup_weapons_anyway;
+
 string W_Apply_Weaponreplace(string in);
 
 void weapon_defaultspawnfunc(entity this, Weapon e);

@@ -146,7 +146,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	#endif
 
 	// pickup anyway
-	if (g_pickup_weapons_anyway)
+	if (autocvar_g_pickup_weapons_anyway)
 		this.pickup_anyway = true;
 
 	if(!this.owner)

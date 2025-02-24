@@ -53,7 +53,7 @@ CLASS(Pickup, GameItem)
     ATTRIB(Pickup, m_pickupevalfunc, float(entity player, entity item), generic_pickupevalfunc);
     ATTRIB(Pickup, m_respawntime, float());
     ATTRIB(Pickup, m_respawntimejitter, float());
-    ATTRIB(Pickup, m_pickupanyway, float());
+    ATTRIB(Pickup, m_pickupanyway, bool);
     ATTRIB(Pickup, m_iteminit, void(Pickup this, entity item));
     float Item_GiveTo(entity item, entity player);
     METHOD(Pickup, giveTo, bool(Pickup this, entity item, entity player));
