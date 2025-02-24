@@ -5666,7 +5666,7 @@ SUB(EF_FLAME) {
 	MY(color_max) = "0xff5a00";
 	MY(count) = 100;
 	MY(gravity) = -0.500000;
-	MY(originjitter) = '12.0 12.0 34.0';
+	MY(originjitter) = '12.0 12.0 24.0';
 	MY(originoffset) = '0.0 0.0 10.0';
 	MY(sizeincrease) = -1;
 	MY(size_min) = 5;
@@ -5678,16 +5678,16 @@ SUB(EF_FLAME) {
 }
 // smoke
 SUB(EF_FLAME) {
-	MY(alpha_min) = 200;
-	MY(alpha_max) = 256;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 156;
 	MY(alpha_fade) = 200;
 	MY(bounce) = 2;
 	MY(color_min) = "0x000000";
-	MY(color_max) = "0x111111";
-	MY(count) = 50;
-	MY(gravity) = -0.300000;
-	MY(originjitter) = '12.0 12.0 34.0';
-	MY(originoffset) = '0.0 0.0 10.0';
+	MY(color_max) = "0x444444";
+	MY(count) = 30;
+	MY(gravity) = -0.500000;
+	MY(originjitter) = '6.0 6.0 24.0';
+	MY(originoffset) = '0.0 0.0 40.0';
 	MY(sizeincrease) = 6;
 	MY(size_min) = 11;
 	MY(size_max) = 15;
@@ -9276,17 +9276,18 @@ DEF(EF_SHOCK);
 SUB(EF_SHOCK) {
 	MY(airfriction) = 110;
 	MY(alpha_min) = 256;
-	MY(alpha_max) = 256;
+	MY(alpha_max) = 300;
 	MY(alpha_fade) = 512;
 	MY(color_min) = "0xDDFDFF";
 	MY(color_max) = "0xFDFDFF";
-	MY(count) = 100;
-	MY(originjitter) = '20.0 20.0 20.0';
+	MY(count) = 50;
+	MY(originjitter) = '6.0 6.0 10.0';
 	MY(startangle_max) = 360;
-	MY(spin_min) = -36000;
-	MY(spin_max) = 36000;
-	MY(sizeincrease) = -5;
-	MY(size_max) = 5;
+	MY(spin_min) = 0;
+	MY(spin_max) = 0;
+	MY(sizeincrease) = -1;
+	MY(size_min) = 4;
+	MY(size_max) = 7;
 	MY(stretchfactor) = 1;
 	MY(tex_min) = 71;
 	MY(tex_max) = 74;
@@ -9298,19 +9299,20 @@ SUB(EF_SHOCK) {
 SUB(EF_SHOCK) {
 	MY(airfriction) = 5;
 	MY(alpha_min) = 256;
-	MY(alpha_max) = 256;
+	MY(alpha_max) = 300;
 	MY(alpha_fade) = 512;
 	MY(color_min) = "0xDDFDFF";
 	MY(color_max) = "0xFDFDFF";
-	MY(count) = 100;
+	MY(count) = 30;
 	MY(liquidfriction) = 5;
 	MY(orientation) = "spark";
-	MY(originjitter) = '20.0 20.0 20.0';
+	MY(originjitter) = '12.0 12.0 12.0';
 	MY(startangle_max) = 360;
 	MY(spin_min) = -36000;
 	MY(spin_max) = 36000;
 	MY(sizeincrease) = -5;
-	MY(size_max) = 5;
+	MY(size_min) = 4;
+	MY(size_max) = 7;
 	MY(stretchfactor) = 1;
 	MY(tex_min) = 71;
 	MY(tex_max) = 74;
@@ -9322,7 +9324,7 @@ SUB(EF_SHOCK) {
 // impact smoke
 SUB(EF_SHOCK) {
 	MY(alpha_min) = 40;
-	MY(alpha_max) = 40;
+	MY(alpha_max) = 60;
 	MY(alpha_fade) = 350;
 	MY(color_min) = "0x80C0FF";
 	MY(color_max) = "0x80C0FF";
