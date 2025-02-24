@@ -93,13 +93,13 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	{
 		if (wpn.spawnflags & WEP_FLAG_SUPERWEAPON)
 		{
-			this.respawntime = g_pickup_respawntime_superweapon;
-			this.respawntimejitter = g_pickup_respawntimejitter_superweapon;
+			this.respawntime = autocvar_g_pickup_respawntime_superweapon;
+			this.respawntimejitter = autocvar_g_pickup_respawntimejitter_superweapon;
 		}
 		else
 		{
-			this.respawntime = g_pickup_respawntime_weapon;
-			this.respawntimejitter = g_pickup_respawntimejitter_weapon;
+			this.respawntime = autocvar_g_pickup_respawntime_weapon;
+			this.respawntimejitter = autocvar_g_pickup_respawntimejitter_weapon;
 		}
 	}
 

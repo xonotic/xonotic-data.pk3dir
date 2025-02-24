@@ -4,6 +4,10 @@
 #include <common/stats.qh>
 
 bool autocvar_g_pickup_weapons_anyway;
+float autocvar_g_pickup_respawntime_superweapon;
+float autocvar_g_pickup_respawntimejitter_superweapon;
+float autocvar_g_pickup_respawntime_weapon;
+float autocvar_g_pickup_respawntimejitter_weapon;
 
 string W_Apply_Weaponreplace(string in);
 

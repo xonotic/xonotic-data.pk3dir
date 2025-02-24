@@ -1107,12 +1107,12 @@ void StartItem(entity this, entity def)
 		if(!this.respawntime) // both need to be set
 		{
 			if (def.m_respawntime)
-				this.respawntime = def.m_respawntime();
+				this.respawntime = def.m_respawntime;
 			else
 				LOG_WARNF("Default respawntime for a %s is unavailable from its itemdef", this.classname);
 
 			if (def.m_respawntimejitter)
-				this.respawntimejitter = def.m_respawntimejitter();
+				this.respawntimejitter = def.m_respawntimejitter;
 			else
 				LOG_WARNF("Default respawntimejitter for a %s is unavailable from its itemdef", this.classname);
 		}

@@ -1,32 +1,5 @@
 #pragma once
 
-#ifdef SVQC
-PROPERTY(float, g_pickup_respawntime_weapon)
-PROPERTY(float, g_pickup_respawntime_superweapon)
-PROPERTY(float, g_pickup_respawntime_ammo)
-PROPERTY(float, g_pickup_respawntime_armor_small)
-PROPERTY(float, g_pickup_respawntime_armor_medium)
-PROPERTY(float, g_pickup_respawntime_armor_big)
-PROPERTY(float, g_pickup_respawntime_armor_mega)
-PROPERTY(float, g_pickup_respawntime_health_small)
-PROPERTY(float, g_pickup_respawntime_health_medium)
-PROPERTY(float, g_pickup_respawntime_health_big)
-PROPERTY(float, g_pickup_respawntime_health_mega)
-PROPERTY(float, g_pickup_respawntime_powerup)
-PROPERTY(float, g_pickup_respawntimejitter_weapon)
-PROPERTY(float, g_pickup_respawntimejitter_superweapon)
-PROPERTY(float, g_pickup_respawntimejitter_ammo)
-PROPERTY(float, g_pickup_respawntimejitter_health_small)
-PROPERTY(float, g_pickup_respawntimejitter_health_medium)
-PROPERTY(float, g_pickup_respawntimejitter_health_big)
-PROPERTY(float, g_pickup_respawntimejitter_health_mega)
-PROPERTY(float, g_pickup_respawntimejitter_armor_small)
-PROPERTY(float, g_pickup_respawntimejitter_armor_medium)
-PROPERTY(float, g_pickup_respawntimejitter_armor_big)
-PROPERTY(float, g_pickup_respawntimejitter_armor_mega)
-PROPERTY(float, g_pickup_respawntimejitter_powerup)
-#endif
-
 #include <common/items/item.qh>
 
 CLASS(Pickup, GameItem)
@@ -51,8 +24,8 @@ CLASS(Pickup, GameItem)
     ATTRIB(Pickup, m_itemflags, int, 0);
     float generic_pickupevalfunc(entity player, entity item);
     ATTRIB(Pickup, m_pickupevalfunc, float(entity player, entity item), generic_pickupevalfunc);
-    ATTRIB(Pickup, m_respawntime, float());
-    ATTRIB(Pickup, m_respawntimejitter, float());
+    ATTRIB(Pickup, m_respawntime, float);
+    ATTRIB(Pickup, m_respawntimejitter, float);
     ATTRIB(Pickup, m_pickupanyway, bool);
     ATTRIB(Pickup, m_iteminit, void(Pickup this, entity item));
     float Item_GiveTo(entity item, entity player);
