@@ -24,12 +24,15 @@ ifndef ZIP
 endif
 
 
+# If requested, these targets must always run first:
+.EXTRA_PREREQS := $(filter clean, $(MAKECMDGOALS))
 
 .PHONY: all
 all: qc pk3
 
 $(WORKDIR):
 	@mkdir -p $@
+$(WORKDIR): .EXTRA_PREREQS =  # prevents circular dependency
 
 .PHONY: clean
 clean: | $(WORKDIR)
@@ -59,13 +62,13 @@ pk3: csprogs-$(VER).pk3
 
 
 
-DIFFTESTS = test-genmod test-cvar-spelling
+DIFFTESTS = test-genmod .WAIT test-cvar-spelling
 COMPTESTS = test-server test-client test-menu
 .PHONY: test test-diff $(DIFFTESTS) test-comp $(COMPTESTS)
 
-test: $(DIFFTESTS) $(COMPTESTS)
+test: $(DIFFTESTS) .WAIT $(COMPTESTS)
 
-test-diff: test-genmod test-cvar-spelling
+test-diff: $(DIFFTESTS)
 test-genmod:
 	tools/scripts-diff-test-wrapper.sh genmod.sh
 test-cvar-spelling:
