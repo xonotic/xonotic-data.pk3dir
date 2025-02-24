@@ -17,15 +17,15 @@ MODEL(ArmorSmall_ITEM, Item_Model("item_armor_small.md3"));
 SOUND(ArmorSmall, Item_Sound("armor1"));
 #endif
 #ifdef SVQC
-PROPERTY(float, g_pickup_armorsmall_anyway);
-PROPERTY(int, g_pickup_armorsmall);
-PROPERTY(int, g_pickup_armorsmall_max);
+bool autocvar_g_pickup_armorsmall_anyway;
+int autocvar_g_pickup_armorsmall;
+int autocvar_g_pickup_armorsmall_max;
 void item_armorsmall_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
-        item.max_armorvalue = g_pickup_armorsmall_max;
+        item.max_armorvalue = autocvar_g_pickup_armorsmall_max;
     if(!GetResource(item, RES_ARMOR))
-        SetResourceExplicit(item, RES_ARMOR, g_pickup_armorsmall);
+        SetResourceExplicit(item, RES_ARMOR, autocvar_g_pickup_armorsmall);
 }
 #endif
 
@@ -53,7 +53,7 @@ CLASS(ArmorSmall, Armor)
 /* itemid       */ ATTRIB(ArmorSmall, m_itemid, int, IT_RESOURCE);
 /* respawntime  */ ATTRIB(ArmorSmall, m_respawntime, float(), GET(g_pickup_respawntime_armor_small));
 /*              */ ATTRIB(ArmorSmall, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_armor_small));
-/* pickupanyway */ ATTRIB(ArmorSmall, m_pickupanyway, float(), GET(g_pickup_armorsmall_anyway));
+/* pickupanyway */ ATTRIB(ArmorSmall, m_pickupanyway, bool, autocvar_g_pickup_armorsmall_anyway);
 /* iteminit     */ ATTRIB(ArmorSmall, m_iteminit, void(Pickup this, entity item), item_armorsmall_init);
 #endif
 ENDCLASS(ArmorSmall)
@@ -66,15 +66,15 @@ MODEL(ArmorMedium_ITEM, Item_Model("item_armor_medium.md3"));
 SOUND(ArmorMedium, Item_Sound("armor10"));
 #endif
 #ifdef SVQC
-PROPERTY(float, g_pickup_armormedium_anyway);
-PROPERTY(int, g_pickup_armormedium);
-PROPERTY(int, g_pickup_armormedium_max);
+bool autocvar_g_pickup_armormedium_anyway;
+int autocvar_g_pickup_armormedium;
+int autocvar_g_pickup_armormedium_max;
 void item_armormedium_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
-        item.max_armorvalue = g_pickup_armormedium_max;
+        item.max_armorvalue = autocvar_g_pickup_armormedium_max;
     if(!GetResource(item, RES_ARMOR))
-        SetResourceExplicit(item, RES_ARMOR, g_pickup_armormedium);
+        SetResourceExplicit(item, RES_ARMOR, autocvar_g_pickup_armormedium);
 }
 #endif
 
@@ -102,7 +102,7 @@ CLASS(ArmorMedium, Armor)
 /* itemid       */ ATTRIB(ArmorMedium, m_itemid, int, IT_RESOURCE);
 /* respawntime  */ ATTRIB(ArmorMedium, m_respawntime, float(), GET(g_pickup_respawntime_armor_medium));
 /*              */ ATTRIB(ArmorMedium, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_armor_medium));
-/* pickupanyway */ ATTRIB(ArmorMedium, m_pickupanyway, float(), GET(g_pickup_armormedium_anyway));
+/* pickupanyway */ ATTRIB(ArmorMedium, m_pickupanyway, bool, autocvar_g_pickup_armormedium_anyway);
 /* iteminit     */ ATTRIB(ArmorMedium, m_iteminit, void(Pickup this, entity item), item_armormedium_init);
 #endif
 ENDCLASS(ArmorMedium)
@@ -115,15 +115,15 @@ MODEL(ArmorBig_ITEM, Item_Model("item_armor_big.md3"));
 SOUND(ArmorBig, Item_Sound("armor17_5"));
 #endif
 #ifdef SVQC
-PROPERTY(float, g_pickup_armorbig_anyway);
-PROPERTY(int, g_pickup_armorbig);
-PROPERTY(int, g_pickup_armorbig_max);
+bool autocvar_g_pickup_armorbig_anyway;
+int autocvar_g_pickup_armorbig;
+int autocvar_g_pickup_armorbig_max;
 void item_armorbig_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
-        item.max_armorvalue = g_pickup_armorbig_max;
+        item.max_armorvalue = autocvar_g_pickup_armorbig_max;
     if(!GetResource(item, RES_ARMOR))
-        SetResourceExplicit(item, RES_ARMOR, g_pickup_armorbig);
+        SetResourceExplicit(item, RES_ARMOR, autocvar_g_pickup_armorbig);
 }
 #endif
 
@@ -151,7 +151,7 @@ CLASS(ArmorBig, Armor)
 /* itemid       */ ATTRIB(ArmorBig, m_itemid, int, IT_RESOURCE);
 /* respawntime  */ ATTRIB(ArmorBig, m_respawntime, float(), GET(g_pickup_respawntime_armor_big));
 /*              */ ATTRIB(ArmorBig, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_armor_big));
-/* pickupanyway */ ATTRIB(ArmorBig, m_pickupanyway, float(), GET(g_pickup_armorbig_anyway));
+/* pickupanyway */ ATTRIB(ArmorBig, m_pickupanyway, bool, autocvar_g_pickup_armorbig_anyway);
 /* iteminit     */ ATTRIB(ArmorBig, m_iteminit, void(Pickup this, entity item), item_armorbig_init);
 #endif
 ENDCLASS(ArmorBig)
@@ -164,15 +164,15 @@ MODEL(ArmorMega_ITEM, Item_Model("item_armor_large.md3"));
 SOUND(ArmorMega, Item_Sound("armor25"));
 #endif
 #ifdef SVQC
-PROPERTY(float, g_pickup_armormega_anyway);
-PROPERTY(int, g_pickup_armormega);
-PROPERTY(int, g_pickup_armormega_max);
+bool autocvar_g_pickup_armormega_anyway;
+int autocvar_g_pickup_armormega;
+int autocvar_g_pickup_armormega_max;
 void item_armormega_init(Pickup this, entity item)
 {
     if(!item.max_armorvalue)
-        item.max_armorvalue = g_pickup_armormega_max;
+        item.max_armorvalue = autocvar_g_pickup_armormega_max;
     if(!GetResource(item, RES_ARMOR))
-        SetResourceExplicit(item, RES_ARMOR, g_pickup_armormega);
+        SetResourceExplicit(item, RES_ARMOR, autocvar_g_pickup_armormega);
 }
 #endif
 
@@ -202,7 +202,7 @@ CLASS(ArmorMega, Armor)
 /* itemid       */ ATTRIB(ArmorMega, m_itemid, int, IT_RESOURCE);
 /* respawntime  */ ATTRIB(ArmorMega, m_respawntime, float(), GET(g_pickup_respawntime_armor_mega));
 /*              */ ATTRIB(ArmorMega, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_armor_mega));
-/* pickupanyway */ ATTRIB(ArmorMega, m_pickupanyway, float(), GET(g_pickup_armormega_anyway));
+/* pickupanyway */ ATTRIB(ArmorMega, m_pickupanyway, bool, autocvar_g_pickup_armormega_anyway);
 /* iteminit     */ ATTRIB(ArmorMega, m_iteminit, void(Pickup this, entity item), item_armormega_init);
 #endif
 ENDCLASS(ArmorMega)

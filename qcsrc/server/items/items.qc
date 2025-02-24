@@ -552,11 +552,11 @@ bool Item_GiveTo(entity item, entity player)
 	bool pickedup = false;
 	pickedup |= Item_GiveAmmoTo(item, player, RES_HEALTH, item.max_health);
 	pickedup |= Item_GiveAmmoTo(item, player, RES_ARMOR, item.max_armorvalue);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_SHELLS, g_pickup_shells_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_BULLETS, g_pickup_nails_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_ROCKETS, g_pickup_rockets_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_CELLS, g_pickup_cells_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_FUEL, g_pickup_fuel_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_SHELLS, autocvar_g_pickup_shells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_BULLETS, autocvar_g_pickup_nails_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_ROCKETS, autocvar_g_pickup_rockets_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_CELLS, autocvar_g_pickup_cells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_FUEL, autocvar_g_pickup_fuel_max);
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
 		WepSet w, wp;
@@ -1041,7 +1041,7 @@ void StartItem(entity this, entity def)
 		LOG_WARNF("No pickup sound set for a %s", this.classname);
 
 	if(!this.pickup_anyway && def.m_pickupanyway)
-		this.pickup_anyway = def.m_pickupanyway();
+		this.pickup_anyway = def.m_pickupanyway;
 
 	// bones_was_here TODO: implement sv_cullentities_dist and replace g_items_maxdist with it
 	if(!this.fade_end)
