@@ -40,11 +40,6 @@
 #include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
 
-void UpdateFrags(entity player, int f)
-{
-	GameRules_scoring_add_team(player, SCORE, f);
-}
-
 void GiveFrags(entity attacker, entity targ, float f, int deathtype, .entity weaponentity)
 {
 	// TODO route through PlayerScores instead
@@ -80,7 +75,7 @@ void GiveFrags(entity attacker, entity targ, float f, int deathtype, .entity wea
 	attacker.totalfrags += f;
 
 	if(f)
-		UpdateFrags(attacker, f);
+		GameRules_scoring_add_team(attacker, SCORE, f);
 }
 
 string AppendItemcodes(string s, entity player)
