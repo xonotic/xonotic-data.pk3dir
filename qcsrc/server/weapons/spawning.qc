@@ -113,7 +113,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	{
 		int ammo = 0;
 		if (q3compat && this.count > 0)
-			ammo = this.count * GetAmmoConsumptionQ3(wpn.netname);
+			ammo = this.count * GetAmmoConsumptionQ3(wpn);
 			// WEAPONTODO: magazines of MG, rifle and OK weapons are unaccounted for
 		else
 		{
