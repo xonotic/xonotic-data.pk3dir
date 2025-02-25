@@ -85,7 +85,8 @@ METHOD(SwapperBuff, describe, string(SwapperBuff this))
 {
 	TC(SwapperBuff, this);
 	return sprintf(_("The %s allows you to press the ^3drop weapon^7 bind to switch places with a nearby enemy once\n\n"
-		"A common usage of this buff is to jump over the map's void, then swap with an enemy, to cause them to fall into the void"),
+		"A common usage of this buff is to jump over the map's void, then swap with an enemy, to cause them to fall into the void\n\n"
+		"The range that the buff works over is limited, so sometimes it may do nothing if there are no enemies nearby"),
 	COLORED_NAME_WITH_CONCAT(this, _("Buff")));
 }
 #endif // MENUQC

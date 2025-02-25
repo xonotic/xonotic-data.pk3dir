@@ -58,11 +58,14 @@ METHOD(AmmoBuff, m_tick, void(StatusEffect this, entity actor))
 }
 #endif // SVQC
 #ifdef MENUQC
+#include <common/weapons/weapon/rifle.qh>
+#include <common/mutators/mutator/overkill/okmachinegun.qh>
+
 METHOD(AmmoBuff, describe, string(AmmoBuff this))
 {
 	TC(AmmoBuff, this);
 	return sprintf(_("The %s gives you infinite ammo until the buff expires, so you don't need to worry about running out of ammo\n\n"
-		"It also removes the need to reload any weapons that require reloading"),
-	COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+		"It also removes the need to reload any weapons that require reloading, like the %s and %s"),
+	COLORED_NAME_WITH_CONCAT(this, _("Buff")), COLORED_NAME(WEP_RIFLE), COLORED_NAME(WEP_OVERKILL_MACHINEGUN));
 }
 #endif // MENUQC
