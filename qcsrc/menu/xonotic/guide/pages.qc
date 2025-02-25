@@ -16,10 +16,11 @@ REGISTER_INTRODUCTION_PAGE(0, _("About this guide"), "gametype_dm")
 }
 REGISTER_INTRODUCTION_PAGE(1, _("Community"), "gametype_dm")
 {
-	this.m_description = _("Xonotic stands out for its friendly, mature, and welcoming player community, and many long-term players argue that this is probably one of the best things about Xonotic. "
+	this.m_description = strzone(sprintf(_("Xonotic stands out for its friendly, mature, and welcoming player community, and many long-term players argue that this is probably one of the best things about Xonotic. "
 		"If you approach other players friendly and respectfully, this will be recognized, while acting toxic on the other hand will not make your life easier on the servers\n\n"
 		"The best way to get in touch with the community is to just start playing online and use the in-game chat. "
-		"However, you can also connect to the official communication channels (^5#main:xonotic.org^7 on Matrix, ^5#xonotic^7 on QuakeNet IRC), and of course the official forum");
+		"However, you can also connect to the official communication channels (^5%s^7 on Matrix, ^5%s^7 on QuakeNet IRC), and of course the official forum"),
+	"#main:xonotic.org", "#xonotic"));
 }
 REGISTER_INTRODUCTION_PAGE(2, _("Acquiring Skills"), "gametype_dm")
 {
@@ -31,11 +32,13 @@ REGISTER_INTRODUCTION_PAGE(2, _("Acquiring Skills"), "gametype_dm")
 		"Also look at which weapons they choose depending on the gameplay situation, for example in close combat, mid-range battles, or against groups of opponents\n\n"
 		"The learning curve is very steep. That said, understanding how the game works will enable you to speed around the map and apply effective weapon combos in no time");
 }
-
 REGISTER_INTRODUCTION_PAGE(3, _("XonStat"), "gametype_dm")
 {
-	this.m_description = _("XonStat is the integrated player statistics application for Xonotic. See vital stats like your K:D ratio, weapon damage and accuracy, and scoreboards from past games. "
-		"Tracking is completely opt-in, and no login is required.");
+	this.m_description = strzone(sprintf(_("XonStat is the integrated player statistics application for Xonotic. "
+		"It stores vital stats like your K:D ratio, weapon damage and accuracy, and scoreboards from past games\n\n"
+		"Tracking is completely opt-in, and no login is required\n\n"
+		"Some of the statistics are available in-game on your player profile, while the rest are accessible at ^5%s^7"),
+	"stats.xonotic.org"));
 }
 
 REGISTER_MOVEMENT_PAGE(0, _("Movement Importance"), "gametype_inv")
@@ -62,13 +65,14 @@ REGISTER_MOVEMENT_PAGE(1, _("Bunny Hopping"), "gametype_inv")
 }
 REGISTER_MOVEMENT_PAGE(2, _("Strafe Turning"), "gametype_inv")
 {
-	this.m_description = _("Bunny hopping around corners requires \"strafe turning\" or you will loose a lot of speed (or simply not be able to make the turn). "
+	this.m_description = strzone(sprintf(_("Bunny hopping around corners requires \"strafe turning\" or you will loose a lot of speed (or simply not be able to make the turn). "
 		"Strafe turning is a method used to quickly change the direction you're traveling while mid-air, without losing speed\n\n"
 		"While bunny hopping, first release the ^3+forward^7 movement key, then press the strafe key into the turn direction (^3+moveleft^7 or ^3+moveright^7), then start moving the mouse smoothly into the turn direction. "
 		"As always, during the entire strafe turn keep the jump button held\n\n"
 		"Note that if you press the strafe key before releasing the forward key, you will suffer a speed penalty\n\n"
 		"If you do it right, you will even continue to accelerate in strafe turns\n\n"
-		"For an illustration of this technique, see ^5www.xonotic.org/guide^7");
+		"For an illustration of this technique, see ^5%s^7"),
+	"xonotic.org/guide"));
 }
 REGISTER_MOVEMENT_PAGE(3, _("Blaster Jumping"), "gametype_inv")
 {
@@ -87,8 +91,8 @@ REGISTER_MOVEMENT_PAGE(4, _("Wall Blastering"), "gametype_inv")
 		"Immediately flick back to your movement direction and continue to bunny hop\n\n"
 		"In order to waste as little speed as possible while flicking back, switch to strafe key for the duration of the flick. "
 		"Use the strafe right key if the wall is to your left, and the strafe left key if the wall is to your right\n\n"
-		"You'll find an illustration of this technique on ^5www.xonotic.org/guide^7"),
-	COLORED_NAME(WEP_BLASTER), COLORED_NAME(WEP_BLASTER)));
+		"You'll find an illustration of this technique on ^5%s^7"),
+	COLORED_NAME(WEP_BLASTER), COLORED_NAME(WEP_BLASTER), "xonotic.org/guide"));
 }
 REGISTER_MOVEMENT_PAGE(5, _("Rocket Flying"), "gametype_inv")
 {
@@ -121,6 +125,8 @@ REGISTER_MOVEMENT_PAGE(8, _("Ramp Jumping"), "gametype_inv")
 }
 REGISTER_MOVEMENT_PAGE(9, _("Advanced Movement"), "gametype_inv")
 {
-	this.m_description = _("Advanced techniques like \"strafe jumping\" (\"strafing\") or \"circle jumping\" (\"CJ\") offer only limited benefits in vanilla gameplay, but are crucial on CTS/DeFRaG servers that use slightly different physics\n\n"
-		"If you want to master these techniques, be sure to check out ^5http://xdf.gg/guide^7");
+	this.m_description = strzone(sprintf(_("Advanced techniques like \"strafe jumping\" (\"strafing\") or \"circle jumping\" (\"CJ\") offer only limited benefits in vanilla gameplay, "
+		"but are crucial on CTS/DeFRaG servers that use slightly different physics\n\n"
+		"If you want to master these techniques, be sure to check out ^5%s^7"),
+	"xdf.gg/guide"));
 }
