@@ -61,6 +61,6 @@ void nade_ammo_boom(entity this)
 	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_ammo_time, autocvar_g_nades_nade_radius);
 
 	settouch(orb, nade_ammo_touch);
-	orb.colormod = '0.66 0.33 0';
+	orb.colormod = NADE_TYPE_AMMO.m_color;
 }
 #endif // SVQC
