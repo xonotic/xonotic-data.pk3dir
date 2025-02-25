@@ -135,7 +135,7 @@ void nade_boom(entity this)
 		SET_NADE_EFFECT(NADE_TYPE_HEAL,        EFFECT_SPAWN,            '1 0 0', '1 0 0');
 		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      EFFECT_SPAWN,            '1 1 0', '1 1 0');
 		SET_NADE_EFFECT(NADE_TYPE_VEIL,        EFFECT_SPAWN,            '0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_AMMO,        EFFECT_SPAWN,            '0.66 0.33 0', '0.66 0.33 0');
+		SET_NADE_EFFECT(NADE_TYPE_AMMO,        EFFECT_SPAWN,            '0.33 0.33 1', '0.33 0.33 1');
 		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
 		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      EFFECT_NADE_EXPLODE,     nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
 	}

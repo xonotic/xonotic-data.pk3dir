@@ -12,7 +12,7 @@ CLASS(AmmoBuff, Buff)
 	ATTRIB(AmmoBuff, netname, string, "ammo");
 	ATTRIB(AmmoBuff, m_icon, string, "buff_ammo");
 	ATTRIB(AmmoBuff, m_skin, int, 3);
-	ATTRIB(AmmoBuff, m_color, vector, '0.76 1 0.1');
+	ATTRIB(AmmoBuff, m_color, vector, '0.29 0.37 1');
 ENDCLASS(AmmoBuff)
 
 REGISTER_BUFF(AMMO, NEW(AmmoBuff));
