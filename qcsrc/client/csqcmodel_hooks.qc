@@ -576,7 +576,7 @@ void CSQCModel_Effects_Apply(entity this)
 		// NOTE here we check if EF_SHOCK exists because it was added together with the change to EF_FLAME
 		int ef_shock_num = particleeffectnum(EFFECT_EF_SHOCK);
 		if (ef_shock_num >= 0) // in the old version of EF_FLAME the light was spawned by boxparticles
-			adddynamiclight2(this.origin, 200, '1 0.35 0', 6, "", PFLAGS_FULLDYNAMIC); // no PFLAGS_CORONA, it looks bad
+			adddynamiclight2(this.origin + '0 0 10', 200, '1 0.35 0', 6, "", PFLAGS_FULLDYNAMIC); // no PFLAGS_CORONA, it looks bad
 		int ef_flame_num = particleeffectnum(EFFECT_EF_FLAME);
 		boxparticles(ef_flame_num, this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
 		//pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', bound(0, frametime, 0.1));
