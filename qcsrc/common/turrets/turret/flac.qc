@@ -21,8 +21,8 @@ METHOD(Flac, tr_setup, void(Flac this, entity it))
 METHOD(Flac, describe, string(Flac this))
 {
     TC(Flac, this);
-    return sprintf(_("The %s is a turret similar to flak cannons, instead firing anti-projectile flak shells to take down projectiles fired by its targets\n\n"
-        "The shells it shoots are against projectiles such as the %s secondary fire grenade, %s secondary fire balls, %s rockets, and other missiles"),
+    return sprintf(_("The %s is a turret similar to flak cannons, instead firing anti-projectile flak shells to take down projectiles fired by its targets.\n\n"
+        "The shells it shoots are against projectiles such as the %s secondary fire grenade, %s secondary fire balls, %s rockets, and other missiles."),
     COLORED_NAME(this), COLORED_NAME(WEP_MORTAR), COLORED_NAME(WEP_ELECTRO), COLORED_NAME(WEP_DEVASTATOR));
 }
 

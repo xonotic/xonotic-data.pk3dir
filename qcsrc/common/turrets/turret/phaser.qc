@@ -48,8 +48,8 @@ bool turret_phaser_firecheck(entity this)
 METHOD(PhaserTurret, describe, string(PhaserTurret this))
 {
     TC(PhaserTurret, this);
-    return sprintf(_("The %s is a turret that fires an invisible beam of energy towards its targets\n\n"
-        "Looks are deceiving with the %s, since although the beam of energy can't be seen, it constantly deals damage to and slows down players who intercept its path"),
+    return sprintf(_("The %s is a turret that fires an invisible beam of energy towards its targets.\n\n"
+        "Looks are deceiving with the %s, since although the beam of energy can't be seen, it constantly deals damage to and slows down players who intercept its path."),
     COLORED_NAME(this), COLORED_NAME(this));
 }
 

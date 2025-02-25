@@ -176,11 +176,11 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 METHOD(Zombie, describe, string(Zombie this))
 {
     TC(Zombie, this);
-    return _("Zombies are the undead remains of deceased soldiers, risen with a ravenous hunger and no sense of self-preservation\n\n"
-             "When a Zombie senses a nearby player it will begin to charge its target at high speeds\n"
-             "While charging, a Zombie may leap towards the player, dealing massive damage on contact\n"
-             "If it gets close, the Zombie will punch and bite repeatedly. "
-             "When threatened the Zombie may hold up its hands to block incoming attacks briefly\n\n"
-             "It is no small task to kill that which is already dead. Once a Zombie is defeated, destroy its corpse to prevent it from rising again");
+    return _("Zombies are the undead remains of deceased soldiers, risen with a ravenous hunger and no sense of self-preservation.\n\n"
+             "When a Zombie senses a nearby player it will begin to charge its target at high speeds. "
+             "While charging, a Zombie may leap towards the player, dealing massive damage on contact. "
+             "If it gets close, the Zombie will punch and bite repeatedly.\n\n"
+             "When threatened the Zombie may hold up its hands to block incoming attacks briefly.\n\n"
+             "It is no small task to kill that which is already dead. Once a Zombie is defeated, destroy its corpse to prevent it from rising again!");
 }
 #endif

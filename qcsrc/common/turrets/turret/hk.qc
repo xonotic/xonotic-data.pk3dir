@@ -52,7 +52,7 @@ METHOD(HunterKiller, describe, string(HunterKiller this))
 {
     TC(HunterKiller, this);
     return sprintf(_("The %s fires a single powerful homing rocket with the ability to evade obstacles to find its target. "
-        "The rocket it fires is similar to that of the %s"),
+        "The rocket it fires is similar to that of the %s."),
     COLORED_NAME(this), COLORED_NAME(WEP_DEVASTATOR));
 }
 

@@ -53,9 +53,9 @@ METHOD(StrengthItem, describe, string(StrengthItem this))
 {
     TC(StrengthItem, this);
     return sprintf(_("The %s powerup greatly increases the damage you deal, until the powerup expires. "
-        "It also increases the knockback that your attacks deal\n\n"
-        "The damage and knockback you deal to yourself also increases but by a smaller amount\n\n"
-        "Since it is a powerup, it will drop if you die while holding it"),
+        "It also increases the knockback that your attacks deal.\n\n"
+        "The damage and knockback you deal to yourself also increases but by a smaller amount.\n\n"
+        "Since it is a powerup, it will drop if you die while holding it."),
     COLORED_NAME(this));
 }
 #endif // MENUQC

@@ -495,12 +495,12 @@ METHOD(Hagar, wr_impacteffect, void(entity thiswep, entity actor))
 METHOD(Hagar, describe, string(Hagar this))
 {
 	TC(Hagar, this);
-	return sprintf(_("The %s rapidly fires small propelled rockets forwards, dealing some splash damage on impact\n\n"
+	return sprintf(_("The %s rapidly fires small propelled rockets forwards, dealing some splash damage on impact.\n\n"
 		"When the secondary fire is held, multiple rockets are loaded up, and they're shot at the same time when released. "
-		"These rockets can't be held forever, so it will fire itself after some time (after a warning beep) if the secondary fire isn't released\n\n"
-		"It consumes %s ammo for each rocket\n\n"
+		"These rockets can't be held forever, so it will fire itself after some time (after a warning beep) if the secondary fire isn't released.\n\n"
+		"It consumes %s ammo for each rocket.\n\n"
 		"The %s works best over close to medium ranges, since it's hard to land hits at a long distance. "
-		"A common usage is fully loading the secondary fire before turning a corner, so you can surprise any enemies around the corner with a bunch of rockets to the face"),
+		"A common usage is fully loading the secondary fire before turning a corner, so you can surprise any enemies around the corner with a bunch of rockets to the face."),
 	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(this));
 }
 

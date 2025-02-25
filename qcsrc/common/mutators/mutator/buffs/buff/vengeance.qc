@@ -20,8 +20,8 @@ float buff_Vengeance_CalculateDamage(float frag_damage)
 METHOD(VengeanceBuff, describe, string(VengeanceBuff this))
 {
 	TC(VengeanceBuff, this);
-	return sprintf(_("The %s reciprocates a portion of the damage enemies deal to you onto them, until the buff expires\n\n"
-		"In some sense, this is the opposite of the %s"),
+	return sprintf(_("The %s reciprocates a portion of the damage enemies deal to you onto them, until the buff expires.\n\n"
+		"In some sense, this is the opposite of the %s."),
 	COLORED_NAME_WITH_CONCAT(this, _("Buff")), COLORED_NAME_WITH_CONCAT(BUFF_VAMPIRE, _("Buff")));
 }
 #endif // MENUQC

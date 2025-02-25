@@ -44,7 +44,7 @@ METHOD(HealNade, describe, string(HealNade this))
 {
 	TC(HealNade, this);
 	return sprintf(_("The %s detonates after a short delay, temporarily creating a healing orb around the point where it detonated for several seconds. "
-		"If your team members enter the orb they will recover health, and if enemies enter the sphere they will be harmed"),
+		"If your team members enter the orb they will recover health, and if enemies enter the sphere they will be harmed."),
 	COLORED_NAME(this));
 }
 #endif // MENUQC

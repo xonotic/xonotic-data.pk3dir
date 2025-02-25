@@ -23,8 +23,8 @@ vector buff_Bash_AttackerCalculateForce(vector frag_force, entity frag_target, e
 METHOD(BashBuff, describe, string(BashBuff this))
 {
 	TC(BashBuff, this);
-	return sprintf(_("The %s increases knockback force you deal, and makes you immune to knockback while the buff is active\n\n"
-		"It also slightly increases knockback you deal to yourself"),
+	return sprintf(_("The %s increases knockback force you deal, and makes you immune to knockback while the buff is active.\n\n"
+		"It also slightly increases knockback you deal to yourself."),
 	COLORED_NAME_WITH_CONCAT(this, _("Buff")));
 }
 #endif // MENUQC

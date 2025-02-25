@@ -672,11 +672,11 @@ METHOD(Seeker, describe, string(Seeker this))
 {
 	TC(Seeker, this);
 	return sprintf(_("The %s is a unique weapon, firing a \"tag\" which then launches a few homing missiles if it collides with a player. "
-		"The homing isn't perfect, so sometimes the missiles can hit an object or a corner\n\n"
-		"The secondary fire launches a rapid barrage of scattered explosives that travel only a short distance\n\n"
-		"It consumes %s ammo, even when the tag doesn't land\n\n"
+		"The homing isn't perfect, so sometimes the missiles can hit an object or a corner.\n\n"
+		"The secondary fire launches a rapid barrage of scattered explosives that travel only a short distance.\n\n"
+		"It consumes %s ammo, even when the tag doesn't land.\n\n"
 		"The %s primary fire deals quite a lot of damage when a tag lands, although it requires skill to aim effectively. "
-		"The secondary fire is only useful in close range combat, and sometimes the explosives can damage yourself too"),
+		"The secondary fire is only useful in close range combat, and sometimes the explosives can damage yourself too."),
 	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(this));
 }
 

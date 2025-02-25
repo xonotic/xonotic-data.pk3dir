@@ -72,8 +72,8 @@ MUTATOR_HOOKFUNCTION(bloodloss, PlayerJump)
 METHOD(MutatorBloodLoss, describe, string(MutatorBloodLoss this))
 {
 	TC(MutatorBloodLoss, this);
-	return sprintf(_("%s is a mutator in which players below a certain health threshold (for example 25) will suffer blood loss\n\n"
-		"Blood loss makes players stunned, severely impairs their movement, and rapidly takes away health points until they either die or gain enough health to go above the health threshold"),
+	return sprintf(_("%s is a mutator in which players below a certain health threshold (for example 25) will suffer blood loss.\n\n"
+		"Blood loss makes players stunned, severely impairs their movement, and rapidly takes away health points until they either die or gain enough health to go above the health threshold."),
 	COLORED_NAME(this));
 }
 #endif

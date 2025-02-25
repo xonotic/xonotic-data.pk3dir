@@ -52,8 +52,8 @@ METHOD(PlasmaTurret, tr_setup, void(PlasmaTurret this, entity it))
 METHOD(PlasmaTurret, describe, string(PlasmaTurret this))
 {
     TC(PlasmaTurret, this);
-    return sprintf(_("The %s is a turret that fires electric balls forwards, similar to those of the %s\n\n"
-        "It is a weaker version of the %s, which has two electric ball cannons"),
+    return sprintf(_("The %s is a turret that fires electric balls forwards, similar to those of the %s.\n\n"
+        "It is a weaker version of the %s, which has two electric ball cannons."),
     COLORED_NAME(this), COLORED_NAME(WEP_ELECTRO), COLORED_NAME(TUR_PLASMA_DUAL));
 }
 

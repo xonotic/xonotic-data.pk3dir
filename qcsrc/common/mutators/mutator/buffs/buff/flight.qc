@@ -27,7 +27,7 @@ METHOD(FlightBuff, m_remove, void(StatusEffect this, entity actor, int removal_t
 METHOD(FlightBuff, describe, string(FlightBuff this))
 {
 	TC(FlightBuff, this);
-	return sprintf(_("While you have the %s, you can crouch while midair to switch your gravity, allowing flight"),
+	return sprintf(_("While you have the %s, you can crouch while midair to switch your gravity, allowing flight."),
 	COLORED_NAME_WITH_CONCAT(this, _("Buff")));
 }
 #endif

@@ -7,7 +7,7 @@ METHOD(MutatorCloaked, describe, string(MutatorCloaked this))
 {
 	TC(MutatorCloaked, this);
 	return sprintf(_("The %s mutator makes all players nearly invisible, similar to the %s powerup. "
-		"This adds an extra layer of stealth and strategy to gameplay"),
+		"This adds an extra layer of stealth and strategy to gameplay."),
 	COLORED_NAME(this), COLORED_NAME(ITEM_Invisibility));
 }
 #endif

@@ -240,8 +240,8 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 METHOD(Spider, describe, string(Spider this))
 {
     TC(Spider, this);
-    return _("The Spider is a large mechanically enhanced arachnoid adept at hunting speedy enemies\n\n"
-             "To slow down its target, the Spider launches a synthetic web-like substance from its cannons\n"
-             "Approaching its enwebbed prey, the Spider will inflict a series of high damage bites");
+    return _("The Spider is a large mechanically enhanced arachnoid adept at hunting speedy enemies.\n\n"
+             "To slow down its target, the Spider launches a synthetic web-like substance from its cannons. "
+             "Approaching its enwebbed prey, the Spider will inflict a series of high damage bites.");
 }
 #endif

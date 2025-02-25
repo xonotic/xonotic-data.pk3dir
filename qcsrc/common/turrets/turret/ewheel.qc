@@ -247,8 +247,8 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
 METHOD(EWheel, describe, string(EWheel this))
 {
     TC(Ewheel, this);
-    return sprintf(_("The %s is a mobile turret that rolls around, attacking its targets when they enter its line of sight\n\n"
-        "It attacks by shooting laser beams similar to those of the %s, from both of its two cannons"),
+    return sprintf(_("The %s is a mobile turret that rolls around, attacking its targets when they enter its line of sight.\n\n"
+        "It attacks by shooting laser beams similar to those of the %s, from both of its two cannons."),
     COLORED_NAME(this), COLORED_NAME(WEP_BLASTER));
 }
 

@@ -25,8 +25,8 @@ bool nt_IsNewToy(int w)
 METHOD(MutatorNewToys, describe, string(MutatorNewToys this))
 {
 	TC(MutatorNewToys, this);
-	string s = sprintf(_("The %s mutator, enabled by default, allows the spawning of new gimmicky weapons, sometimes replacing a core weapon\n\n"
-		"Since these weapons can't spawn in %s and %s, the %s mutator can't be enabled concurrently\n\n"
+	string s = sprintf(_("The %s mutator, enabled by default, allows the spawning of new gimmicky weapons, sometimes replacing a core weapon.\n\n"
+		"Since these weapons can't spawn in %s and %s, the %s mutator can't be enabled concurrently.\n\n"
 		"The current %s weapons are:"), // do it like this so that the string doesn't need to change when the list is updated
 	COLORED_NAME(this), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this), COLORED_NAME(this));
     FOREACH(Weapons, nt_IsNewToy(it.m_id), {

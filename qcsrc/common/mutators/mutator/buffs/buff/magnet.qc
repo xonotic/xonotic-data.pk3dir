@@ -28,7 +28,7 @@ METHOD(MagnetBuff, m_tick, void(StatusEffect this, entity actor))
 METHOD(MagnetBuff, describe, string(MagnetBuff this))
 {
 	TC(MagnetBuff, this);
-	return sprintf(_("The %s greatly increases your item pickup range, collecting nearby items for you while the buff is active"),
+	return sprintf(_("The %s greatly increases your item pickup range, collecting nearby items for you while the buff is active."),
 	COLORED_NAME_WITH_CONCAT(this, _("Buff")));
 }
 #endif // MENUQC

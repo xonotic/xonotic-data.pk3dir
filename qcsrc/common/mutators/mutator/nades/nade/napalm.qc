@@ -181,7 +181,7 @@ METHOD(NapalmNade, describe, string(NapalmNade this))
 {
 	TC(NapalmNade, this);
 	return sprintf(_("The %s explodes after a short delay, spreading fiery napalm globs around in the fountain. "
-		"The napalm fire balls burn for a while, and damage players who get too close"),
+		"The napalm fire balls burn for a while, and damage players who get too close."),
 	COLORED_NAME(this));
 }
 #endif // MENUQC

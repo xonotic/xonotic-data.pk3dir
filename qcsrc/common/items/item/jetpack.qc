@@ -21,7 +21,7 @@ METHOD(Jetpack, describe, string(Jetpack this))
 {
 	TC(Jetpack, this);
 	return sprintf(_("The %s powerup allows you to fly around the map for a short period, "
-		"providing increased mobility, maneuverability, and the ability to reach higher ground\n\n"
+		"providing increased mobility, maneuverability, and the ability to reach higher ground.\n\n"
 		"It consumes Fuel ammo while operating, so make sure you don't run out when you're high up!"),
 	COLORED_NAME(this));
 }
@@ -37,8 +37,8 @@ METHOD(JetpackRegen, describe, string(JetpackRegen this))
 {
 	TC(JetpackRegen, this);
 	return sprintf(_("The %s powerup regenerates %s needed for the %s until the powerup expires, "
-		"so you can continue flying around for longer\n\n"
-		"Since it is a powerup, it will drop if you die while holding it"),
+		"so you can continue flying around for longer.\n\n"
+		"Since it is a powerup, it will drop if you die while holding it."),
 	COLORED_NAME(this), COLORED_NAME(ITEM_JetpackFuel), COLORED_NAME(ITEM_Jetpack));
 }
 #endif
