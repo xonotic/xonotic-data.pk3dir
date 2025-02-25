@@ -12,14 +12,6 @@ CLASS(VampireBuff, Buff)
 	ATTRIB(VampireBuff, m_icon, string, "buff_vampire");
 	ATTRIB(VampireBuff, m_skin, int, 2);
 	ATTRIB(VampireBuff, m_color, vector, '1 0 0.24');
-#ifdef MENUQC
-	METHOD(VampireBuff, describe, string(VampireBuff this))
-	{
-		TC(VampireBuff, this);
-		return sprintf(_("The %s converts some of the damage you deal to enemies and monsters into health for yourself, until the buff expires"),
-		COLORED_NAME_WITH_CONCAT(this, _("Buff")));
-	}
-#endif
 ENDCLASS(VampireBuff)
 
 REGISTER_BUFF(VAMPIRE, NEW(VampireBuff));

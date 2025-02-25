@@ -136,3 +136,11 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 	return false;
 }
 #endif // CSQC
+#ifdef MENUQC
+METHOD(DarknessNade, describe, string(DarknessNade this))
+{
+	TC(DarknessNade, this);
+	return sprintf(_("The %s detonates after a short delay, creating a dark field which temporarily blinds enemies who enter it"),
+	COLORED_NAME(this));
+}
+#endif // MENUQC

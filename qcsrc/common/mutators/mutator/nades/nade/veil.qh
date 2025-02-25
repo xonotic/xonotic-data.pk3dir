@@ -22,15 +22,6 @@ CLASS(VeilNade, Nade)
 	ATTRIB(VeilNade, m_name, string, _("Veil grenade"));
 	ATTRIB(VeilNade, m_icon, string, "nade_veil");
 	ATTRIB(VeilNade, m_alpha, float, 0.45);
-#ifdef MENUQC
-	METHOD(VeilNade, describe, string(VeilNade this))
-	{
-		TC(VeilNade, this);
-		return sprintf(_("The Veil grenade detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
-			"Players inside the orb will be invisible to those outside it"),
-		COLORED_NAME(this));
-	}
-#endif
 	ATTRIB(VeilNade, netname, string, "veil");
 	ATTRIB(VeilNade, impulse, int, 9);
 ENDCLASS(VeilNade)

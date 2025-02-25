@@ -19,3 +19,11 @@ void nade_monster_boom(entity this)
 	e.monster_skill = MONSTER_SKILL_INSANE;
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(MonsterNade, describe, string(MonsterNade this))
+{
+	TC(MonsterNade, this);
+	return sprintf(_("The %s explodes after a short delay, spawning one of four monster types"),
+	COLORED_NAME(this));
+}
+#endif // MENUQC

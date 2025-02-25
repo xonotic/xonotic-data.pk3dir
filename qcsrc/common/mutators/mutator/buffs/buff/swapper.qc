@@ -80,3 +80,12 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	}
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(SwapperBuff, describe, string(SwapperBuff this))
+{
+	TC(SwapperBuff, this);
+	return sprintf(_("The %s allows you to press the ^3drop weapon^7 bind to switch places with a nearby enemy once\n\n"
+		"A common usage of this buff is to jump over the map's void, then swap with an enemy, to cause them to fall into the void"),
+	COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+}
+#endif // MENUQC

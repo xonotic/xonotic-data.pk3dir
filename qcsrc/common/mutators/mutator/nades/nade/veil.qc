@@ -43,3 +43,12 @@ void nade_veil_Apply(entity player)
 	}
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(VeilNade, describe, string(VeilNade this))
+{
+	TC(VeilNade, this);
+	return sprintf(_("The Veil grenade detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
+		"Players inside the orb will be invisible to those outside it"),
+	COLORED_NAME(this));
+}
+#endif // MENUQC

@@ -16,15 +16,6 @@ CLASS(BashBuff, Buff)
 	ATTRIB(BashBuff, m_icon, string, "buff_bash");
 	ATTRIB(BashBuff, m_skin, int, 5);
 	ATTRIB(BashBuff, m_color, vector, '1 0.39 0');
-#ifdef MENUQC
-	METHOD(BashBuff, describe, string(BashBuff this))
-	{
-		TC(BashBuff, this);
-		return sprintf(_("The %s increases knockback force you deal, and makes you immune to knockback while the buff is active\n\n"
-			"It also slightly increases knockback you deal to yourself"),
-		COLORED_NAME_WITH_CONCAT(this, _("Buff")));
-	}
-#endif
 ENDCLASS(BashBuff)
 
 REGISTER_BUFF(BASH, NEW(BashBuff));

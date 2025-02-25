@@ -16,14 +16,6 @@ CLASS(TranslocateNade, Nade)
 	ATTRIB(TranslocateNade, m_color, vector, '1 0 1');
 	ATTRIB(TranslocateNade, m_name, string, _("Translocate grenade"));
 	ATTRIB(TranslocateNade, m_icon, string, "nade_translocate");
-#ifdef MENUQC
-	METHOD(TranslocateNade, describe, string(TranslocateNade this))
-	{
-		TC(TranslocateNade, this);
-		return sprintf(_("The %s detonates after a short delay, teleporting you to where it detonated"),
-		COLORED_NAME(this));
-	}
-#endif
 	ATTRIB(TranslocateNade, netname, string, "translocate");
 	ATTRIB(TranslocateNade, impulse, int, 4);
 ENDCLASS(TranslocateNade)

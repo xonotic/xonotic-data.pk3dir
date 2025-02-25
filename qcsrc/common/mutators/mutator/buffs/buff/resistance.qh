@@ -14,15 +14,6 @@ CLASS(ResistanceBuff, Buff)
 	ATTRIB(ResistanceBuff, m_icon, string, "buff_resistance");
 	ATTRIB(ResistanceBuff, m_skin, int, 0);
 	ATTRIB(ResistanceBuff, m_color, vector, '0.36 1 0.07');
-#ifdef MENUQC
-	METHOD(ResistanceBuff, describe, string(ResistanceBuff this))
-	{
-		TC(ResistanceBuff, this);
-		return sprintf(_("The %s greatly reduces your damage taken while the buff is active\n\n"
-			"This also impacts the damage you deal to yourself"),
-		COLORED_NAME_WITH_CONCAT(this, _("Buff")));
-	}
-#endif
 ENDCLASS(ResistanceBuff)
 
 REGISTER_BUFF(RESISTANCE, NEW(ResistanceBuff));

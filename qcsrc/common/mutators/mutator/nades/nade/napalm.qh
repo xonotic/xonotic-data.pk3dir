@@ -30,15 +30,6 @@ CLASS(NapalmNade, Nade)
 	ATTRIB(NapalmNade, m_color, vector, '2 0.5 0');
 	ATTRIB(NapalmNade, m_name, string, _("Napalm grenade"));
 	ATTRIB(NapalmNade, m_icon, string, "nade_napalm");
-#ifdef MENUQC
-	METHOD(NapalmNade, describe, string(NapalmNade this))
-	{
-		TC(NapalmNade, this);
-		return sprintf(_("The %s explodes after a short delay, spreading fiery napalm globs around in the fountain. "
-			"The napalm fire balls burn for a while, and damage players who get too close"),
-		COLORED_NAME(this));
-	}
-#endif
 	ATTRIB(NapalmNade, netname, string, "napalm");
 	ATTRIB(NapalmNade, impulse, int, 2);
 ENDCLASS(NapalmNade)

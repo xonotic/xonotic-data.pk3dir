@@ -14,14 +14,6 @@ CLASS(JumpBuff, Buff)
 	ATTRIB(JumpBuff, m_icon, string, "buff_jump");
 	ATTRIB(JumpBuff, m_skin, int, 10);
 	ATTRIB(JumpBuff, m_color, vector, '0.24 0.78 1');
-#ifdef MENUQC
-	METHOD(JumpBuff, describe, string(JumpBuff this))
-	{
-		TC(JumpBuff, this);
-		return sprintf(_("The %s greatly increases your jump height, while the buff is active\n\nIt also makes you immune to fall damage"),
-		COLORED_NAME_WITH_CONCAT(this, _("Buff")));
-	}
-#endif
 ENDCLASS(JumpBuff)
 
 REGISTER_BUFF(JUMP, NEW(JumpBuff));

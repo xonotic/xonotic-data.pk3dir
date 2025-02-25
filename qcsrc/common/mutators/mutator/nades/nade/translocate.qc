@@ -37,3 +37,11 @@ bool nade_translocate_DestroyDamage(entity this, entity attacker)
 	return false;
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(TranslocateNade, describe, string(TranslocateNade this))
+{
+	TC(TranslocateNade, this);
+	return sprintf(_("The %s detonates after a short delay, teleporting you to where it detonated"),
+	COLORED_NAME(this));
+}
+#endif // MENUQC
