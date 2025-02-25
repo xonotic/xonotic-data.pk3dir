@@ -608,6 +608,7 @@ METHOD(Devastator, wr_impacteffect, void(entity thiswep, entity actor))
 #endif
 #ifdef MENUQC
 #include <common/items/item/ammo.qh>
+#include <common/mutators/mutator/rocketflying/rocketflying.qh>
 #include "vortex.qh"
 
 METHOD(Devastator, describe, string(Devastator this))
@@ -620,8 +621,9 @@ METHOD(Devastator, describe, string(Devastator this))
 		"Due to its high damage output, the %s is one of the most commonly used weapons. "
 		"It can be used in almost any scenario, working best in medium range combat. "
 		"In close range combat, the large splash radius means often rockets can damage yourself as well as the enemy.\n\n"
-		"Due to the ability to remotely detonate rockets, a common usage is \"rocket flying,\" where you fire a rocket and immediately detonate it to boost yourself while mid-air."),
-	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this));
+		"Due to the ability to remotely detonate rockets, a common usage is \"rocket flying,\" where you fire a rocket and immediately detonate it to boost yourself while mid-air, "
+		"much more effective with the %s mutator enabled."),
+	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this), COLORED_NAME(MUTATOR_rocketflying));
 }
 
 #endif

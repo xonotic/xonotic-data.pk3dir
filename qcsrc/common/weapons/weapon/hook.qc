@@ -421,6 +421,7 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 #endif
 #ifdef MENUQC
 #include <common/items/item/jetpack.qh>
+#include <common/mutators/mutator/hook/hook.qh>
 
 METHOD(Hook, describe, string(Hook this))
 {
@@ -430,8 +431,8 @@ METHOD(Hook, describe, string(Hook this))
 		"It usually requires %s ammo to work, consuming it both when initially firing the hook, and after a couple seconds as it reels you in.\n\n"
 		"The %s allows reaching previously unreachable places on maps and zooming around the map at high speeds, "
 		"making both surprise ambushes and miraculous escapes possible.\n\n"
-		"It isn't available very often on maps, unless the Grappling Hook mutator is active, in which all players have it on their offhand, used with the ^3+hook^7 bind."),
-	COLORED_NAME(this), COLORED_NAME(ITEM_JetpackFuel), COLORED_NAME(this));
+		"It isn't available very often on maps, unless the %s mutator is active, in which all players have it on their offhand, used with the ^3+hook^7 bind."),
+	COLORED_NAME(this), COLORED_NAME(ITEM_JetpackFuel), COLORED_NAME(this), COLORED_NAME(MUTATOR_hook));
 }
 
 #endif
