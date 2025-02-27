@@ -214,7 +214,6 @@ const int WEP_FLAG_NODUAL         =  BIT(12); // weapon doesn't work well with d
 const int WEP_FLAG_PENETRATEWALLS =  BIT(13); // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
 const int WEP_FLAG_BLEED          =  BIT(14); // weapon pierces and causes bleeding (used for damage effects)
 const int WEP_FLAG_NOTRUEAIM      =  BIT(15); // weapon doesn't aim directly at targets
-const int WEP_FLAG_SPECIALATTACK  =  BIT(16); // special attack (not a true weapon); NOTE: if this flag is set then WEP_FLAG_HIDDEN must be set as well
 
 // variables:
 string weaponorder_byid;
