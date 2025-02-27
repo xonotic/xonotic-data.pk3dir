@@ -52,7 +52,7 @@ CLASS(Weapon, Object)
 	ATTRIB(Weapon, spawnflags, int, 0);
 	/** M: rating    : bot weapon priority */
 	ATTRIB(Weapon, bot_pickupbasevalue, float, 0);
-	/** M: color     : waypointsprite color */
+	/** M: color     : waypointsprite color. previously called "wpcolor" */
 	ATTRIB(Weapon, m_color, vector, '0 0 0');
 	/** M: modelname : name of model (without g_ v_ or h_ prefixes) */
 	ATTRIB(Weapon, mdl, string, "");
@@ -126,9 +126,16 @@ CLASS(Weapon, Object)
 	METHOD(Weapon, wr_pickup, void(Weapon this, entity actor, .entity weaponentity)) {}
 	/** (SERVER) update cvar based properties */
 	METHOD(Weapon, wr_update, void(Weapon this)) {}
-	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
+	METHOD(Weapon, display, void(Weapon this, void(string name, string icon) returns)) {
+		TC(Weapon, this);
 		returns(this.m_name, (this.model2 != "") ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.model2) : string_null);
 	}
+#ifdef MENUQC
+	METHOD(Weapon, describe, string(Weapon this)) {
+		TC(Weapon, this);
+		return SUPER(Weapon).describe(this);
+	}
+#endif
 ENDCLASS(Weapon)
 
 #ifdef SVQC
@@ -218,21 +225,3 @@ const int WEP_FLAG_SPECIALATTACK  =  BIT(16); // special attack (not a true weap
 
 // variables:
 string weaponorder_byid;
-
-// functions:
-string W_FixWeaponOrder(string order, float complete);
-string W_NameWeaponOrder(string order);
-string W_NumberWeaponOrder(string order);
-string W_FixWeaponOrder_BuildImpulseList(string o);
-string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
-string W_FixWeaponOrder_ForceComplete(string order);
-WepSet W_RandomWeapons(entity e, WepSet remaining, int n);
-
-entity GetAmmoItem(Resource ammotype);
-
-#ifdef CSQC
-int GetAmmoStat(Resource ammotype);
-#endif
-
-string W_Sound(string w_snd);
-string W_Model(string w_mdl);

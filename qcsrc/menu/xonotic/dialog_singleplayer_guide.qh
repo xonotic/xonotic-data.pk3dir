@@ -1,0 +1,20 @@
+#pragma once
+
+#include <menu/xonotic/guide/_mod.qh>
+
+#include "dialog.qh"
+CLASS(XonoticGuideDialog, XonoticDialog)
+	ATTRIB(XonoticGuideDialog, title, string, _("Guide"));
+	ATTRIB(XonoticGuideDialog, name, string, "guide");
+	ATTRIB(XonoticGuideDialog, color, vector, SKINCOLOR_DIALOG_GUIDE);
+	ATTRIB(XonoticGuideDialog, rows, float, 21);
+	ATTRIB(XonoticGuideDialog, columns, float, 6);
+	ATTRIB(XonoticGuideDialog, intendedWidth, float, 0.96);
+	METHOD(XonoticGuideDialog, fill, void(entity));
+	METHOD(XonoticGuideDialog, topicChangeNotify, void(entity, entity));
+	METHOD(XonoticGuideDialog, entryChangeNotify, void(entity, entity));
+
+	ATTRIB(XonoticGuideDialog, topicList, entity, NEW(XonoticTopicList, NEW(TopicSource)));
+	ATTRIB(XonoticGuideDialog, entryList, entity, NEW(XonoticEntryList, NULL));
+	ATTRIB(XonoticGuideDialog, descriptionPane, entity, NEW(XonoticGuideDescription));
+ENDCLASS(XonoticGuideDialog)

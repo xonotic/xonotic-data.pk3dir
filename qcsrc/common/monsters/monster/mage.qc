@@ -489,3 +489,16 @@ METHOD(Mage, mr_setup, bool(Mage this, entity actor))
     return true;
 }
 #endif
+#ifdef MENUQC
+METHOD(Mage, describe, string(Mage this))
+{
+    TC(Mage, this);
+    return _("Wielding nanotechnology as if it were sorcery, the Mage employs a range of unique abilities of its own creation in combat.\n\n"
+             "As a primary attack, the Mage throws a homing electric sphere towards the player. "
+             "This sphere will track its target at high speed, exploding on impact or if it does not reach its target in time.\n\n"
+             "When threatened, the Mage may deploy an energy shield to protect itself from damage briefly. "
+             "Enemies approaching too closely during this time may be pushed away with explosive force!\n\n"
+             "Defensively the Mage is capable of healing itself and nearby allies, with some variants also providing armor and ammunition.\n\n"
+             "The Mage may sometimes appear to blink out of existence as it teleports behind its target for a sneak attack.");
+}
+#endif
