@@ -21,7 +21,6 @@ int autocvar_g_tka_score_bckill;
 int autocvar_g_tka_score_killac;
 bool autocvar_g_tka_score_team;
 int autocvar_g_tka_score_timepoints;
-float autocvar_g_tka_score_timeinterval;
 float autocvar_g_tkaball_damageforcescale;
 int autocvar_g_tkaball_effects;
 float autocvar_g_tkaball_respawntime;
@@ -90,11 +89,8 @@ MUTATOR_HOOKFUNCTION(tka, reset_map_global)
 /// runs (only) while a player is carrying the ball
 void tka_TimeScoring(entity this)
 {
-	if (autocvar_g_tka_score_timepoints && autocvar_g_tka_score_timeinterval)
-	{
-		float timescore = autocvar_g_tka_score_timepoints / autocvar_g_tka_score_timeinterval;
-		GameRules_scoring_add_team_float2int(this.owner, SCORE, timescore * frametime, timepoints_accum, 1);
-	}
+	if (autocvar_g_tka_score_timepoints)
+		GameRules_scoring_add_team_float2int(this.owner, SCORE, autocvar_g_tka_score_timepoints * frametime, timepoints_accum, 1);
 	GameRules_scoring_add(this.owner, TKA_BCTIME, frametime);
 
 	this.nextthink = time;

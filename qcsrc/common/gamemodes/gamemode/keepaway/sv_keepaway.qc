@@ -25,7 +25,6 @@ bool autocvar_g_keepaway_noncarrier_warn;
 int autocvar_g_keepaway_score_bckill;
 int autocvar_g_keepaway_score_killac;
 int autocvar_g_keepaway_score_timepoints;
-float autocvar_g_keepaway_score_timeinterval;
 float autocvar_g_keepawayball_damageforcescale;
 int autocvar_g_keepawayball_effects;
 float autocvar_g_keepawayball_respawntime;
@@ -93,11 +92,8 @@ MUTATOR_HOOKFUNCTION(ka, reset_map_global)
 /// runs (only) while a player is carrying the ball
 void ka_TimeScoring(entity this)
 {
-	if (autocvar_g_keepaway_score_timepoints && autocvar_g_keepaway_score_timeinterval)
-	{
-		float timescore = autocvar_g_keepaway_score_timepoints / autocvar_g_keepaway_score_timeinterval;
-		GameRules_scoring_add_float2int(this.owner, SCORE, timescore * frametime, timepoints_accum, 1);
-	}
+	if (autocvar_g_keepaway_score_timepoints)
+		GameRules_scoring_add_float2int(this.owner, SCORE, autocvar_g_keepaway_score_timepoints * frametime, timepoints_accum, 1);
 	GameRules_scoring_add(this.owner, KEEPAWAY_BCTIME, frametime);
 
 	this.nextthink = time;
