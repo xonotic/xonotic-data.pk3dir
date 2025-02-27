@@ -76,16 +76,28 @@ void tka_RespawnBall(entity this) // runs whenever the ball needs to be relocate
 	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
+/// accumulates points precisely while main points value remains an integer, shared with ka
+.float timepoints_accum;
+MUTATOR_HOOKFUNCTION(tka, reset_map_global)
+{
+	FOREACH_CLIENT(true,
+	{
+		it.timepoints_accum = 0;
+	});
+	return true;
+}
+
+/// runs (only) while a player is carrying the ball
 void tka_TimeScoring(entity this)
 {
-	if(this.owner.ballcarried)
-	{ // add points for holding the ball after a certain amount of time
-		if(autocvar_g_tka_score_timepoints)
-			GameRules_scoring_add_team(this.owner, SCORE, autocvar_g_tka_score_timepoints);
-
-		GameRules_scoring_add(this.owner, TKA_BCTIME, (autocvar_g_tka_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
-		this.nextthink = time + autocvar_g_tka_score_timeinterval;
+	if (autocvar_g_tka_score_timepoints && autocvar_g_tka_score_timeinterval)
+	{
+		float timescore = autocvar_g_tka_score_timepoints / autocvar_g_tka_score_timeinterval;
+		GameRules_scoring_add_team_float2int(this.owner, SCORE, timescore * frametime, timepoints_accum, 1);
 	}
+	GameRules_scoring_add(this.owner, TKA_BCTIME, frametime);
+
+	this.nextthink = time;
 }
 
 void tka_TouchEvent(entity this, entity toucher) // runs any time that the ball comes in contact with something
@@ -124,7 +136,7 @@ void tka_TouchEvent(entity this, entity toucher) // runs any time that the ball 
 	this.effects |= EF_NODRAW;
 	settouch(this, func_null);
 	setthink(this, tka_TimeScoring);
-	this.nextthink = time + autocvar_g_tka_score_timeinterval;
+	this.nextthink = time;
 	this.takedamage = DAMAGE_NO;
 	navigation_dynamicgoal_unset(this);
 

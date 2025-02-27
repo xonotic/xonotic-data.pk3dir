@@ -107,11 +107,11 @@ bool GameRules_scoring_is_vip(entity player)
 	return player.m_GameRules_scoring_vip;
 }
 
-// Uses client.float_field to accumulate and consume float score and adds score to the player as int (rounded)
-// only when at least one unit of score has been accumulated. It works with negative score too
-// Float scores can't be used as score because they aren't supported by the QC score networking system
-// and online server browsers (e.g. qstat)
-float _GameRules_scoring_add_float2int(entity client, entity sp, float value, .float float_field, float score_factor)
+/// Uses client.(float_field) to accumulate and consume float score and adds score to the player as int (rounded)
+/// only when at least one unit of score has been accumulated. It works with negative score too
+/// Float scores can't be used as score because they aren't supported by the QC score networking system
+/// and online server browsers (e.g. qstat)
+float _GameRules_scoring_add_float2int(entity client, entity sp, int st, float value, .float float_field, float score_factor, bool team)
 {
 	client.(float_field) += value;
 	float score_counter = client.(float_field) / score_factor;
@@ -120,10 +120,10 @@ float _GameRules_scoring_add_float2int(entity client, entity sp, float value, .f
 
 	// NOTE: this code works for subtracting score too
 	int points = floor(score_counter + 0.5);
-	client.(float_field) -= points * score_factor;
 	if (!points)
 		return 0;
-	return PlayerScore_Add(client, sp, points);
+	client.(float_field) -= points * score_factor;
+	return team ? PlayerTeamScore_Add(client, sp, st, points) : PlayerScore_Add(client, sp, points);
 }
 
 float _GameRules_scoring_add(entity client, entity sp, float value)

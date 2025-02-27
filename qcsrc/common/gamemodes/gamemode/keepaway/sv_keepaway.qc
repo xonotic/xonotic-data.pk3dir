@@ -79,30 +79,28 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
-.float timepoints_counter;
+/// accumulates points precisely while main points value remains an integer, shared with tka
+.float timepoints_accum;
 MUTATOR_HOOKFUNCTION(ka, reset_map_global)
 {
 	FOREACH_CLIENT(true,
 	{
-		it.timepoints_counter = 0;
+		it.timepoints_accum = 0;
 	});
 	return true;
 }
 
+/// runs (only) while a player is carrying the ball
 void ka_TimeScoring(entity this)
 {
-	if(this.owner.ballcarried)
-	{ // add points for holding the ball after a certain amount of time
-		float timescore = 0;
-		if(autocvar_g_keepaway_score_timepoints)
-			timescore = autocvar_g_keepaway_score_timepoints / max(0.001, autocvar_g_keepaway_score_timeinterval);
-
-		if (timescore)
-			GameRules_scoring_add_float2int(this.owner, SCORE, timescore, timepoints_counter, 1);
-
-		GameRules_scoring_add(this.owner, KEEPAWAY_BCTIME, 1);
-		this.nextthink = time + 1;
+	if (autocvar_g_keepaway_score_timepoints && autocvar_g_keepaway_score_timeinterval)
+	{
+		float timescore = autocvar_g_keepaway_score_timepoints / autocvar_g_keepaway_score_timeinterval;
+		GameRules_scoring_add_float2int(this.owner, SCORE, timescore * frametime, timepoints_accum, 1);
 	}
+	GameRules_scoring_add(this.owner, KEEPAWAY_BCTIME, frametime);
+
+	this.nextthink = time;
 }
 
 void ka_DamageEvent(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
@@ -147,7 +145,7 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	this.effects |= EF_NODRAW;
 	settouch(this, func_null);
 	setthink(this, ka_TimeScoring);
-	this.nextthink = time + 1;
+	this.nextthink = time;
 	this.takedamage = DAMAGE_NO;
 	this.event_damage = func_null;
 	this.damagedbycontents = false;
