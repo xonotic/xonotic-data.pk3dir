@@ -1,8 +1,5 @@
 #include "sv_rules.qh"
 
-#include <server/spawnpoints.qh>
-#include <server/teamplay.qh>
-
 void GameRules_teams(bool value)
 {
 	if (value)
@@ -20,17 +17,6 @@ void GameRules_teams(bool value)
 		cvar_set("teamplay", "0");  // DP needs this for sending proper getstatus replies.
 		GameRules_spawning_teams(false);
 	}
-}
-
-void GameRules_spawning_teams(bool value)
-{
-	have_team_spawns = value ? -1 : 0;
-}
-
-bool _GameRules_score_enabled = true;
-void GameRules_score_enabled(bool value)
-{
-	_GameRules_score_enabled = value;
 }
 
 bool GameRules_limit_score_initialized;
@@ -80,33 +66,6 @@ void GameRules_limit_fallbacks()
 	GameRules_limit_time(autocvar_timelimit_override);
 }
 
-void _GameRules_scoring_begin(int teams, float spprio, float stprio)
-{
-	ScoreRules_basics(teams, spprio, stprio, _GameRules_score_enabled);
-}
-void _GameRules_scoring_field(entity i, string label, int scoreflags)
-{
-	ScoreInfo_SetLabel_PlayerScore(i, label, scoreflags);
-}
-void _GameRules_scoring_field_team(float i, string label, int scoreflags)
-{
-	ScoreInfo_SetLabel_TeamScore(i, label, scoreflags);
-}
-void _GameRules_scoring_end()
-{
-	ScoreRules_basics_end();
-}
-
-.bool m_GameRules_scoring_vip;
-void GameRules_scoring_vip(entity player, bool value)
-{
-	player.m_GameRules_scoring_vip = value;
-}
-bool GameRules_scoring_is_vip(entity player)
-{
-	return player.m_GameRules_scoring_vip;
-}
-
 /// Uses client.(float_field) to accumulate and consume float score and adds score to the player as int (rounded)
 /// only when at least one unit of score has been accumulated. It works with negative score too
 /// Float scores can't be used as score because they aren't supported by the QC score networking system
@@ -124,13 +83,4 @@ float _GameRules_scoring_add_float2int(entity client, entity sp, int st, float v
 		return 0;
 	client.(float_field) -= points * score_factor;
 	return team ? PlayerTeamScore_Add(client, sp, st, points) : PlayerScore_Add(client, sp, points);
-}
-
-float _GameRules_scoring_add(entity client, entity sp, float value)
-{
-	return PlayerScore_Add(client, sp, value);
-}
-float _GameRules_scoring_add_team(entity client, entity sp, int st, float value)
-{
-	return PlayerTeamScore_Add(client, sp, st, value);
 }
