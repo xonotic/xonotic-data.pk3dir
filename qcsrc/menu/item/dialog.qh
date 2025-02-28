@@ -4,7 +4,6 @@
 // - isTabRoot is 0
 // - backgroundImage is the tab's background
 // - closable is 0
-// - rootDialog is 0
 // - title is ""
 // - marginTop is
 // - intendedHeight ends up to be the tab's actual height, or at least close
