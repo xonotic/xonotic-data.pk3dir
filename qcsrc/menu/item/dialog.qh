@@ -67,9 +67,9 @@ CLASS(Dialog, InputContainer)
 	ATTRIB(Dialog, borderLines, float, 1);
 	ATTRIB(Dialog, closeButtonImage, string);
 
-	ATTRIB(Dialog, hideMenuOnClose, bool, false);
-
 	ATTRIB(Dialog, frame, entity);
 ENDCLASS(Dialog)
 
 void Dialog_Close(entity button, entity me);
+
+.bool hideMenuOnClose;
