@@ -11,6 +11,10 @@
 #include <server/items/spawning.qh>
 #endif
 
+#ifdef MENUQC
+#include <menu/draw.qh>
+#endif
+
 #ifdef GAMEQC
 const int IT_UNLIMITED_AMMO 			=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
 const int IT_UNLIMITED_SUPERWEAPONS		=  BIT(1); // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
@@ -119,35 +123,49 @@ enum
 
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
 CLASS(GameItem, Object)
-    ATTRIB(GameItem, m_id, int, 0);
-    /** the canonical spawnfunc name */
-    ATTRIB(GameItem, m_canonical_spawnfunc, string);
-    METHOD(GameItem, m_spawnfunc_hookreplace, GameItem(GameItem this, entity e)) { return this; }
-    ATTRIB(GameItem, m_name, string);
-    ATTRIB(GameItem, m_icon, string);
-    ATTRIB(GameItem, m_color, vector, '1 1 1');
-    ATTRIB(GameItem, m_waypoint, string);
-    ATTRIB(GameItem, m_waypointblink, int, 1);
+	ATTRIB(GameItem, m_id, int, 0);
+	/** the canonical spawnfunc name */
+	ATTRIB(GameItem, m_canonical_spawnfunc, string);
+	METHOD(GameItem, m_spawnfunc_hookreplace, GameItem(GameItem this, entity e)) { return this; }
+	ATTRIB(GameItem, m_name, string);
+	ATTRIB(GameItem, m_icon, string);
+	ATTRIB(GameItem, m_color, vector, '1 1 1');
+	ATTRIB(GameItem, m_waypoint, string);
+	ATTRIB(GameItem, m_waypointblink, int, 1);
 #ifdef GAMEQC
-    ATTRIB(GameItem, m_glow, bool, false);
-    ATTRIB(GameItem, m_respawnsound, Sound, SND_ITEMRESPAWN);
+	ATTRIB(GameItem, m_glow, bool, false);
+	ATTRIB(GameItem, m_respawnsound, Sound, SND_ITEMRESPAWN);
 #endif
 #ifdef MENUQC
-    METHOD(GameItem, describe, string(GameItem this))
-    {
-        TC(GameItem, this);
-        return SUPER(GameItem).describe(this);
-    }
+	METHOD(GameItem, describe, string(GameItem this))
+	{
+		TC(GameItem, this);
+		return SUPER(GameItem).describe(this);
+	}
 #endif
-    METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))
-    {
-        TC(GameItem, this);
-        returns(this.m_name, (this.m_icon != "") ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon) : string_null);
-    }
-    METHOD(GameItem, show, void(GameItem this))
-    {
-        TC(GameItem, this);
-        LOG_INFO("A game item");
-    }
-    void ITEM_HANDLE(Show, GameItem this) { this.show(this); }
+#ifndef SVQC
+	METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))
+	{
+		TC(GameItem, this);
+		string img = this.m_icon;
+		if (img != "")
+		{
+			img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon);
+	#ifdef CSQC
+			if (precache_pic(img) == "")
+	#endif
+	#ifdef MENUQC
+			if (draw_PreloadPicture(img) == "")
+	#endif
+				img = sprintf("/gfx/hud/default/%s", this.m_icon);
+		}
+		returns(this.m_name, img);
+	}
+#endif
+	METHOD(GameItem, show, void(GameItem this))
+	{
+		TC(GameItem, this);
+		LOG_INFO("A game item");
+	}
+	void ITEM_HANDLE(Show, GameItem this) { this.show(this); }
 ENDCLASS(GameItem)

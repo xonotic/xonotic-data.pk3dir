@@ -56,7 +56,9 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 	proj.avelocity = randomvec() * 720;
 	proj.alphamod = nade_type.m_alpha;
 
-	if (nade_type == NADE_TYPE_TRANSLOCATE || nade_type == NADE_TYPE_SPAWN)
+	if (nade_type == NADE_TYPE_TRANSLOCATE
+	||  nade_type == NADE_TYPE_SPAWN
+	||  nade_type == NADE_TYPE_MONSTER)
 		proj.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	else
 		proj.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
