@@ -11,6 +11,7 @@
 .int m_itemid;
 #endif
 
+// jetpack powerup
 #ifdef GAMEQC
 MODEL(Jetpack_ITEM, Item_Model("g_jetpack.md3"));
 #endif
@@ -51,6 +52,7 @@ REGISTER_ITEM(Jetpack, NEW(Jetpack));
 
 SPAWNFUNC_ITEM(item_jetpack, ITEM_Jetpack)
 
+// fuel ammo
 #ifdef GAMEQC
 MODEL(JetpackFuel_ITEM, Item_Model("g_fuel.md3"));
 #endif
@@ -84,6 +86,7 @@ REGISTER_ITEM(JetpackFuel, NEW(JetpackFuel));
 
 SPAWNFUNC_ITEM(item_fuel, ITEM_JetpackFuel)
 
+// fuel regenerator powerup
 #ifdef GAMEQC
 MODEL(JetpackRegen_ITEM, Item_Model("g_fuelregen.md3"));
 #endif

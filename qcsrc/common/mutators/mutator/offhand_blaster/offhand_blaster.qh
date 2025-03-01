@@ -1,0 +1,9 @@
+#pragma once
+
+#ifdef MENUQC
+CLASS(MutatorOffhandBlaster, Mutator)
+	ATTRIB(MutatorOffhandBlaster, message, string, _("Offhand blaster"));
+ENDCLASS(MutatorOffhandBlaster)
+
+REGISTER_MUTATOR(offhand_blaster, true, MutatorOffhandBlaster);
+#endif
