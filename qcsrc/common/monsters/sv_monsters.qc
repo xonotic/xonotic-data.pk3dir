@@ -51,34 +51,15 @@ void monster_dropitem(entity this, entity attacker)
 	MUTATOR_CALLHOOK(MonsterDropItem, this, itemlist, attacker);
 	itemlist = M_ARGV(1, string);
 
-	if(itemlist == "")
-		return;
-
-	RandomSelection_Init();
-	FOREACH_WORD(itemlist, true,
-	{
-		string item = it;
-
-		FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
-		{
-			if(it.netname == item || (item == "random" && (it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & WEP_FLAG_HIDDEN) && !(it.spawnflags & WEP_FLAG_SUPERWEAPON)))
-				RandomSelection_AddEnt(it, 1, 1);
-		});
-		FOREACH(Items, Item_IsDefinitionAllowed(it),
-		{
-			if(it.netname == item || (item == "random" && (it.spawnflags & ITEM_FLAG_NORMAL) && !it.instanceOfPowerup))
-				RandomSelection_AddEnt(it, 1, 1);
-		});
-	});
-
-	if(!RandomSelection_chosen_ent)
+	entity loot_itemdef = Item_RandomFromList(itemlist);
+	if (!loot_itemdef)
 		return;
 
 	entity e = spawn();
 	e.monster_item = true;
 	ITEM_SET_LOOT(e, true);
 	e.colormap = this.colormap;
-	e.itemdef = RandomSelection_chosen_ent;
+	e.itemdef = loot_itemdef;
 	setorigin(e, CENTER_OR_VIEWOFS(this));
 	e.velocity = randomvec() * 175 + '0 0 325';
 	e.lifetime = max(0, autocvar_g_monsters_drop_time);
