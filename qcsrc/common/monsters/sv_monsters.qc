@@ -39,7 +39,7 @@ void monsters_setstatus(entity this)
 
 void monster_dropitem(entity this, entity attacker)
 {
-	if(!this.candrop || !autocvar_g_monsters_drop)
+	if(!this.candrop || autocvar_g_monsters_drop_time <= 0)
 		return;
 
 	// TODO: mapper customization (different field?)
@@ -62,7 +62,7 @@ void monster_dropitem(entity this, entity attacker)
 	e.itemdef = loot_itemdef;
 	setorigin(e, CENTER_OR_VIEWOFS(this));
 	e.velocity = randomvec() * 175 + '0 0 325';
-	e.lifetime = max(0, autocvar_g_monsters_drop_time);
+	e.lifetime = autocvar_g_monsters_drop_time;
 
 	Item_Initialise(e);
 }
