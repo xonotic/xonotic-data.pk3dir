@@ -31,8 +31,6 @@ STATIC_INIT(WeaponPickup)
 {
 	FOREACH(Weapons, true,
 	{
-		if ((it.spawnflags & WEP_FLAG_SPECIALATTACK) && !(it.spawnflags & WEP_FLAG_HIDDEN))
-			error(sprintf("Special attack \"%s\" without WEP_FLAG_HIDDEN flag set.", it.m_name));
 		it.m_pickup = NEW(WeaponPickup, it);
 	});
 }
