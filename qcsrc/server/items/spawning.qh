@@ -29,6 +29,10 @@ bool Item_IsDefinitionAllowed(entity definition);
 /// permanent items only: noalign means the item is suspended (won't drop to floor)
 bool Item_Initialise(entity item);
 
+/// Takes a space-separated list of netnames,
+/// returns the itemdef of one of them (or NULL if none are available).
+entity Item_RandomFromList(string itemlist);
+
 /// \brief Returns whether the item is loot.
 /// \param[in] item Item to check.
 /// \return True if the item is loot, false otherwise.
