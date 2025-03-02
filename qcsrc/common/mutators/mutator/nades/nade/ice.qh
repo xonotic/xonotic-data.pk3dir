@@ -5,7 +5,6 @@
 #ifdef SVQC
 bool autocvar_g_nades_ice = true;
 float autocvar_g_nades_ice_freeze_time;
-float autocvar_g_nades_ice_health;
 bool autocvar_g_nades_ice_explode;
 bool autocvar_g_nades_ice_teamcheck;
 
