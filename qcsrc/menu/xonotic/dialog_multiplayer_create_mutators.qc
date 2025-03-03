@@ -35,6 +35,8 @@ float checkCompatibility_weaponstay(entity me)
 }
 float checkCompatibility_newtoys(entity me)
 {
+	if(!cvar("g_new_toys"))
+		return 0;
 	if(cvar("g_instagib"))
 		return 0;
 	if(cvar_string("g_weaponarena") == "most")
@@ -129,8 +131,8 @@ void XonoticMutatorsDialog_fill(entity me)
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_new_toys", _("New Toys"),
-			_("Some weapon spawns will be randomly replaced with new weapons: Heavy Laser Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_new_toys_autoreplace", _("New Toys"),
+			_("Automatically replace some weapons of the map with their corresponding additional weapons")));
 			setDependentWeird(e, checkCompatibility_newtoys);
 	me.TR(me);
 		me.TDempty(me, 0.2);
