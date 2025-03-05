@@ -349,6 +349,15 @@ void walker_findtarget(entity this)
 
 spawnfunc(turret_walker) { if(!turret_initialize(this, TUR_WALKER)) delete(this); }
 
+SOUND(WalkerTurretAttack_FIRE, W_Sound("uzi_fire"));
+METHOD(WalkerTurret, tr_attack, void(WalkerTurret this, entity actor))
+{
+    .entity weaponentity = weaponentities[0]; // TODO
+    sound (actor, CH_WEAPON_A, SND_WalkerTurretAttack_FIRE, VOL_BASE, ATTEN_NORM);
+    fireBullet(actor, weaponentity, actor.tur_shotorg, actor.tur_shotdir_updated, actor.shot_spread, 0, actor.shot_dmg, 0, actor.shot_force, DEATH_TURRET_WALK_GUN.m_id, EFFECT_BULLET);
+    Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);
+}
+
 METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
 {
     fixedmakevectors(it.angles);

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "phaser_weapon.qh"
-
 CLASS(PhaserTurret, Turret)
 /* spawnflags */ ATTRIB(PhaserTurret, spawnflags, int, TUR_FLAG_SNIPER | TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER);
 /* mins       */ ATTRIB(PhaserTurret, m_mins, vector, '-32 -32 0');
@@ -11,7 +9,6 @@ CLASS(PhaserTurret, Turret)
 /* head_model */ ATTRIB_STRZONE(PhaserTurret, head_model, string, strcat("models/turrets/", "phaser.md3"));
 /* netname    */ ATTRIB(PhaserTurret, netname, string, "phaser");
 /* fullname   */ ATTRIB(PhaserTurret, m_name, string, _("Phaser Cannon"));
-    ATTRIB(PhaserTurret, m_weapon, Weapon, WEP_PHASER);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
