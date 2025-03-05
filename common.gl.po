@@ -43,7 +43,7 @@ msgstr "Título"
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
-msgstr "^3Mensaxe de conta atrás á hora %s, segundos restantes: ^COUNT"
+msgstr "^3Mensaxe de conta atrás en %s, segundos restantes: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:204
 #, c-format
@@ -57,7 +57,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
 msgid "Message at time %s"
-msgstr "Mensaxe á hora %s"
+msgstr "Mensaxe en %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:211
 msgid "Generic message"
@@ -84,7 +84,7 @@ msgstr "^1Observando"
 #: qcsrc/client/hud/panel/infomessages.qc:96
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr "^1Espectando: ^7%s"
+msgstr "^1Ollando: ^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #, c-format
@@ -104,7 +104,7 @@ msgstr "^1Pulsa ^3%s^1 ou ^3%s^1 para ver o xogador seguinte ou anterior"
 #: qcsrc/client/hud/panel/infomessages.qc:109
 #: qcsrc/client/hud/panel/infomessages.qc:113
 msgid "next weapon"
-msgstr "seguinte arma"
+msgstr "arma seguinte"
 
 #: qcsrc/client/hud/panel/infomessages.qc:109
 #: qcsrc/client/hud/panel/infomessages.qc:113
@@ -114,12 +114,12 @@ msgstr "arma anterior"
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr "^1Usa ^3%s^1 ou ^3%s^1 para cambiar a velocidade"
+msgstr "^1Usa ^3%s^1 ou ^3%s^1 para trocar a velocidade"
 
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr "^1Pulsa ^3%s^1 para observar ou ^3%s^1 para cambiar o modo de cámara"
+msgstr "^1Pulsa ^3%s^1 para observar ou ^3%s^1 para trocar o modo de cámara"
 
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #: qcsrc/client/hud/panel/infomessages.qc:117
@@ -154,12 +154,12 @@ msgstr "^2Estás na cola para unirte %s%s^2 o equipo"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 msgid "^2You're queued to join any available team"
-msgstr "^2Estás en cola para unirte a calquera equipo dispoñible"
+msgstr "^2Estás na cola para unirte a calquera equipo dispoñible"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^1Pulsa ^3%s^1 para unirche"
+msgstr "^1Preme ^3%s^1 para unirte"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1354
 #: qcsrc/common/notifications/all.qh:466
@@ -173,7 +173,7 @@ msgstr "^1O xogo comeza en ^3%d^1 segundos"
 
 #: qcsrc/client/hud/panel/infomessages.qc:162
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr "^2Actualmente en etapa de ^1quecemento^2!"
+msgstr "^2Actualmente na fase de ^1quecemento^2!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:172
 msgid "^31^2 more player is needed for the match to start."
@@ -182,7 +182,7 @@ msgstr "^31^2 necesítase máis xogador para que comece a partida."
 #: qcsrc/client/hud/panel/infomessages.qc:174
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr "^3%d^2 necesítanse máis xogadores para que comece a partida."
+msgstr "^3%d^2 precisanse máis xogadores para que comece a partida."
 
 #: qcsrc/client/hud/panel/infomessages.qc:187
 #, c-format
@@ -533,7 +533,7 @@ msgstr "Menú rapido do servidor por defecto"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:935
 msgid "QMCMD^Spectate a player"
-msgstr "QMCMD^Observar a un xogador"
+msgstr "QMCMD^Ollar a un xogador"
 
 #: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
@@ -552,7 +552,7 @@ msgstr "Liña de saida"
 #: qcsrc/client/hud/panel/racetimer.qc:91
 #: qcsrc/client/hud/panel/racetimer.qc:95
 msgid "Finish line"
-msgstr "Liñad e meta"
+msgstr "Liña de meta"
 
 #: qcsrc/client/hud/panel/racetimer.qc:93
 #: qcsrc/client/hud/panel/racetimer.qc:200
@@ -573,11 +573,11 @@ msgstr "Falta un punto de control"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
-msgstr "Fai Click para escoller un destino de teletransporte"
+msgstr "Fai Clic para escoller un destino de teletransporte"
 
 #: qcsrc/client/hud/panel/radar.qc:343
 msgid "Click to select spawn location"
-msgstr "Fai Click  para escoller o lugar de reaparición"
+msgstr "Fai Clic  para escoller o lugar de reaparición"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "Number of ball carrier kills"
@@ -585,11 +585,11 @@ msgstr "Número de asasinatos do portador de balón"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:129
 msgid "SCO^bckills"
-msgstr "SCO^Asasinatos portador pelota"
+msgstr "SCO^Asasinatos portador balón"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^bctime"
-msgstr "SCO^Tempo portador pelota"
+msgstr "SCO^Tempo portador balón"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Total amount of time holding the ball in Keepaway"
