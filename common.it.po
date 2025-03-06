@@ -8,6 +8,7 @@
 # Costa <yesbubu@hotmail.it>, 2014,2021
 # Felice Sallustio <fel.sallustio@gmail.com>, 2011
 # giovanni rizzello, 2025
+# giovanni rizzello, 2025
 # Jessica Amoruso <jessica.amoruso123@gmail.com>, 2021
 # Mirio <opivy@hotmail.de>, 2017
 # Antonio <piuntn@gmail.com>, 2013
@@ -15,9 +16,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-12 07:22+0100\n"
+"POT-Creation-Date: 2025-03-06 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: giovanni rizzello, 2025\n"
+"Last-Translator: Antonio <piuntn@gmail.com>, 2013-2024\n"
 "Language-Team: Italian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
 "Language: it\n"
@@ -1780,7 +1781,7 @@ msgstr "Mega vita"
 
 #: qcsrc/common/items/item/jetpack.qh:39 qcsrc/common/items/item/jetpack.qh:42
 #: qcsrc/common/util.qc:271
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:123
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:129
 msgid "Jetpack"
 msgstr "Jetpack"
 
@@ -2162,7 +2163,7 @@ msgstr "Scambiatore"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
 #: qcsrc/common/util.qc:267
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:92
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:98
 msgid "Vampire"
 msgstr "Vampiro"
 
@@ -2224,12 +2225,12 @@ msgstr "Munizioni per vaporizer"
 msgid "Extra life"
 msgstr "Vita extra"
 
-#: qcsrc/common/mutators/mutator/nades/cl_nades.qc:69
+#: qcsrc/common/mutators/mutator/nades/cl_nades.qc:71
 #: qcsrc/menu/xonotic/keybinder.qc:85
 msgid "drop weapon / throw nade"
 msgstr "abbandona arma / lancia granata"
 
-#: qcsrc/common/mutators/mutator/nades/cl_nades.qc:71
+#: qcsrc/common/mutators/mutator/nades/cl_nades.qc:73
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr "^8le ^3granate^8 sono abilitate, premi ^3%s^8 per usarle"
@@ -5427,42 +5428,42 @@ msgid "Walker"
 msgstr "Walker"
 
 #: qcsrc/common/util.qc:256
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:71
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:77
 msgid "Dodging"
 msgstr "Schivamento"
 
 #: qcsrc/common/util.qc:257
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:191
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:208
 msgid "InstaGib"
 msgstr "InstaGib"
 
 #: qcsrc/common/util.qc:258
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:132
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
 msgid "New Toys"
 msgstr "Nuovi giocattoli"
 
 #: qcsrc/common/util.qc:259
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:196
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
 msgid "NIX"
 msgstr "NIX"
 
 #: qcsrc/common/util.qc:260
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:137
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:154
 msgid "Rocket Flying"
 msgstr "Volando coi razzi"
 
 #: qcsrc/common/util.qc:261
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:127
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:133
 msgid "Invincible Projectiles"
 msgstr "Proiettili invincibili"
 
 #: qcsrc/common/util.qc:262
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:110
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:116
 msgid "Low gravity"
 msgstr "Bassa gravità"
 
 #: qcsrc/common/util.qc:263
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:79
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
 msgid "Cloaked"
 msgstr "Invisibile"
 
@@ -5471,7 +5472,7 @@ msgid "Hook"
 msgstr "Rampino"
 
 #: qcsrc/common/util.qc:265
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:88
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:94
 msgid "Midair"
 msgstr "A mezz'aria"
 
@@ -5480,22 +5481,22 @@ msgid "Melee only Arena"
 msgstr "Arena solo melee"
 
 #: qcsrc/common/util.qc:268
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:142
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
 msgid "Piñata"
 msgstr "Piñata"
 
 #: qcsrc/common/util.qc:269
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:147
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:164
 msgid "Weapons stay"
 msgstr "Armi rimangono"
 
 #: qcsrc/common/util.qc:270
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:99
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:105
 msgid "Blood loss"
 msgstr "Perdita di sangue"
 
 #: qcsrc/common/util.qc:272
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:83
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:89
 msgid "Buffs"
 msgstr "Bonus"
 
@@ -5512,7 +5513,7 @@ msgid "Powerups"
 msgstr "Powerup"
 
 #: qcsrc/common/util.qc:276
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:75
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
 msgid "Touch explode"
 msgstr "Tocco esplode"
 
@@ -5521,7 +5522,7 @@ msgid "Wall jumping"
 msgstr "Salto sui muri"
 
 #: qcsrc/common/util.qc:278
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:206
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:223
 msgid "No start weapons"
 msgstr "Senza armi all'inizio"
 
@@ -5984,7 +5985,7 @@ msgid "Heavy Laser Assault Cannon"
 msgstr "Heavy Laser Assault Cannon"
 
 #: qcsrc/common/weapons/weapon/hook.qh:32
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:119
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
 msgid "Grappling Hook"
 msgstr "Rampino"
 
@@ -6512,7 +6513,7 @@ msgstr "sola lettura"
 
 #: qcsrc/menu/xonotic/dialog_credits.qc:13
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:38
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:211
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:228
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:85
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:77
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
@@ -6977,6 +6978,7 @@ msgstr "Mostra timer:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:36
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:23
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:146
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:179
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:145
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
@@ -6990,6 +6992,7 @@ msgid "Spectating"
 msgstr "Guardando"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:148
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:182
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:147
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
@@ -7724,11 +7727,11 @@ msgstr "Gioca"
 msgid "Map Information"
 msgstr "Informazioni mappa"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:68
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:74
 msgid "Gameplay mutators:"
 msgstr "Mutatori di gioco:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:72
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:78
 msgid ""
 "Enable dodging (quick acceleration in a given direction). Double-tap a "
 "directional key to dodge"
@@ -7736,15 +7739,15 @@ msgstr ""
 "Abilita lo schivamento (veloce accelerazione in una data direzione). Tocca "
 "due volte un tasto direzionale per schivare"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:76
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:82
 msgid "An explosion occurs when two players collide"
 msgstr "Succede un'esplosione quando due giocatori collidono"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:80
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:86
 msgid "All players are almost invisible"
 msgstr "Tutti i giocatori sono quasi invisibili"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:84
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:90
 msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
@@ -7752,15 +7755,15 @@ msgstr ""
 "Abilita i bonus da prendere (bonus casuali come Dottore, Invisibile, ecc.) "
 "sulle mappe che lo supportano"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:89
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
 msgid "Only possible to inflict damage on your enemy while they're airborne"
 msgstr "È possibile infliggere danni al tuo nemico solo quando è per aria"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:93
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:99
 msgid "Damage done to your enemy gets added to your own health"
 msgstr "Il danno causato al tuo nemico aumenta la tua vita"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:98
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:104
 msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
@@ -7768,20 +7771,20 @@ msgstr ""
 "Quantità di vita al di sotto della quale i giocatori iniziano a sanguinare "
 "(la vita marcisce e non possono saltare)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:107
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:113
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
 msgstr ""
 "Fa cadere le cose a terra più lentamente (percentuale di gravità normale)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:116
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:122
 msgid "Weapon & item mutators:"
 msgstr "Mutatori di armi ed oggetti:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:120
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:126
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
 msgstr "I giocatori nascono con il rampino. Premi il tasto 'hook' per usarlo"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:124
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:130
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
@@ -7789,7 +7792,7 @@ msgstr ""
 "I giocatori nascono con il jetpack. Tocca due volte 'salta' o premi il tasto "
 "'jetpack' per usarlo"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:128
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:134
 msgid ""
 "Projectiles can't be destroyed. However, you can still explode Electro orbs "
 "with the Electro primary fire"
@@ -7797,15 +7800,25 @@ msgstr ""
 "I proiettili non possono essere distrutti. Tuttavia, puoi ancora far "
 "esplodere le sfere dell'Electro con il fuoco primario dell'Electro"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:133
-msgid ""
-"Some weapon spawns will be randomly replaced with new weapons: Heavy Laser "
-"Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker"
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
+msgid "Allow maps to spawn additional weapons (new toys)"
 msgstr ""
-"Alcune armi sono rimpiazzate a caso con nuove armi: Heavy Laser Assault "
-"Cannon, Mine Layer, Rifle, T.A.G. Seeker"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:141
+msgid "Replacement:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:143
+msgid ""
+"Automatically replace some normal weapons of the map with their "
+"corresponding additional weapons"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:150
+msgid "Randomly"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:155
 msgid ""
 "Devastator rockets can be detonated instantly (otherwise, there's a short "
 "delay). This allows players to fire and detonate a Devastator rocket while "
@@ -7816,20 +7829,20 @@ msgstr ""
 "far esplodere un razzo quando si è in aria per una forte spinta a mezz'aria "
 "anche mentre ci si muove velocemente"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:143
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
 msgid "Players will drop all weapons they possessed when they are killed"
 msgstr ""
 "I giocatori rilasceranno tutte le armi che possedevano appena vengono uccisi"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:148
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:165
 msgid "Weapons stay after they are picked up"
 msgstr "Le armi rimangono dopo che vengono raccolte"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:153
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:170
 msgid "Regular (no arena)"
 msgstr "Regolare (no arena)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:154
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:171
 msgid ""
 "Players will be given a set of weapons at spawn as well as unlimited ammo, "
 "without weapon pickups"
@@ -7837,27 +7850,27 @@ msgstr ""
 "Ai giocatori verrà dato un insieme di armi alla nascita come anche infinite "
 "munizioni, senza armi da raccogliere"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:156
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
 msgid "Weapon arenas:"
 msgstr "Arene di armi:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:176
 msgid "Custom weapons"
 msgstr "Armi personalizzate"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:181
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:198
 msgid "Most weapons"
 msgstr "Molte armi"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:185
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:202
 msgid "All weapons"
 msgstr "Tutte le armi"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:188
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:205
 msgid "Special arenas:"
 msgstr "Arene speciali:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:209
 msgid ""
 "Players will be given only one weapon, which can instantly kill the opponent "
 "with a single shot. If the player runs out of ammo, they will have 10 "
@@ -7869,7 +7882,7 @@ msgstr ""
 "avrà 10 secondi per trovarne qualcuna altrimenti morirà. Il fuoco secondario "
 "non infligge nessun danno ma è buono per fare salti speciali."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:197
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:214
 msgid ""
 "No items Xonotic - instead of pickup items, everyone plays with the same "
 "weapon. After some time, a countdown will start, after which everyone will "
@@ -7879,11 +7892,11 @@ msgstr ""
 "stessa arma. Dopo un pò di tempo, un conto alla rovescia inizierà, dopo il "
 "quale ognuno passerà ad un'altra arma."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:201
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:218
 msgid "with blaster"
 msgstr "con blaster"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:202
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:219
 msgid "Always carry the blaster as an additional weapon in Nix"
 msgstr "Trasporta sempre il blaster come arma addizionale in Nix"
 

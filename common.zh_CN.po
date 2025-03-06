@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-12 07:22+0100\n"
+"POT-Creation-Date: 2025-03-06 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (http://app.transifex.com/team-xonotic/"
@@ -1755,7 +1755,7 @@ msgstr "超级血包"
 
 #: qcsrc/common/items/item/jetpack.qh:39 qcsrc/common/items/item/jetpack.qh:42
 #: qcsrc/common/util.qc:271
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:123
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:129
 msgid "Jetpack"
 msgstr "火箭背包"
 
@@ -2134,7 +2134,7 @@ msgstr "位置交换"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
 #: qcsrc/common/util.qc:267
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:92
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:98
 msgid "Vampire"
 msgstr "吸血"
 
@@ -2196,12 +2196,12 @@ msgstr "汽化者弹药"
 msgid "Extra life"
 msgstr "额外的生命"
 
-#: qcsrc/common/mutators/mutator/nades/cl_nades.qc:69
+#: qcsrc/common/mutators/mutator/nades/cl_nades.qc:71
 #: qcsrc/menu/xonotic/keybinder.qc:85
 msgid "drop weapon / throw nade"
 msgstr "丢出武器 / 扔榴弹"
 
-#: qcsrc/common/mutators/mutator/nades/cl_nades.qc:71
+#: qcsrc/common/mutators/mutator/nades/cl_nades.qc:73
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr "^3榴弹^8已启用，按 ^3%s^8 投掷"
@@ -5285,42 +5285,42 @@ msgid "Walker"
 msgstr "行走者"
 
 #: qcsrc/common/util.qc:256
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:71
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:77
 msgid "Dodging"
 msgstr "躲避"
 
 #: qcsrc/common/util.qc:257
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:191
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:208
 msgid "InstaGib"
 msgstr "InstaGib（瞬杀）"
 
 #: qcsrc/common/util.qc:258
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:132
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
 msgid "New Toys"
 msgstr "新玩意"
 
 #: qcsrc/common/util.qc:259
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:196
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
 msgid "NIX"
 msgstr "NIX（无物品 Xonotic）"
 
 #: qcsrc/common/util.qc:260
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:137
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:154
 msgid "Rocket Flying"
 msgstr "火箭飞行"
 
 #: qcsrc/common/util.qc:261
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:127
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:133
 msgid "Invincible Projectiles"
 msgstr "无敌子弹"
 
 #: qcsrc/common/util.qc:262
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:110
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:116
 msgid "Low gravity"
 msgstr "低重力"
 
 #: qcsrc/common/util.qc:263
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:79
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
 msgid "Cloaked"
 msgstr "隐形"
 
@@ -5329,7 +5329,7 @@ msgid "Hook"
 msgstr "钩爪"
 
 #: qcsrc/common/util.qc:265
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:88
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:94
 msgid "Midair"
 msgstr "空中打击"
 
@@ -5338,22 +5338,22 @@ msgid "Melee only Arena"
 msgstr "仅近战竞技场"
 
 #: qcsrc/common/util.qc:268
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:142
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
 msgid "Piñata"
 msgstr "大礼包"
 
 #: qcsrc/common/util.qc:269
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:147
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:164
 msgid "Weapons stay"
 msgstr "武器可重复拾取"
 
 #: qcsrc/common/util.qc:270
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:99
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:105
 msgid "Blood loss"
 msgstr "失血"
 
 #: qcsrc/common/util.qc:272
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:83
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:89
 msgid "Buffs"
 msgstr "增益"
 
@@ -5370,7 +5370,7 @@ msgid "Powerups"
 msgstr "超能物品"
 
 #: qcsrc/common/util.qc:276
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:75
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
 msgid "Touch explode"
 msgstr "接触爆炸"
 
@@ -5379,7 +5379,7 @@ msgid "Wall jumping"
 msgstr "蹬墙跳"
 
 #: qcsrc/common/util.qc:278
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:206
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:223
 msgid "No start weapons"
 msgstr "无初始武器"
 
@@ -5842,7 +5842,7 @@ msgid "Heavy Laser Assault Cannon"
 msgstr "重型镭射突击炮"
 
 #: qcsrc/common/weapons/weapon/hook.qh:32
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:119
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
 msgid "Grappling Hook"
 msgstr "抓钩"
 
@@ -6370,7 +6370,7 @@ msgstr "只读"
 
 #: qcsrc/menu/xonotic/dialog_credits.qc:13
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:38
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:211
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:228
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:85
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:77
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
@@ -6831,6 +6831,7 @@ msgstr "显示计时："
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:36
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:23
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:146
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:179
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:145
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
@@ -6844,6 +6845,7 @@ msgid "Spectating"
 msgstr "旁观时"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:148
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:182
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:147
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
@@ -7571,77 +7573,87 @@ msgstr "开始"
 msgid "Map Information"
 msgstr "地图信息"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:68
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:74
 msgid "Gameplay mutators:"
 msgstr "游戏修改："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:72
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:78
 msgid ""
 "Enable dodging (quick acceleration in a given direction). Double-tap a "
 "directional key to dodge"
 msgstr "启用闪避（往指定方向快速移动）。双击一个方向键以闪避"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:76
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:82
 msgid "An explosion occurs when two players collide"
 msgstr "当两个玩家相碰撞时发生爆炸"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:80
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:86
 msgid "All players are almost invisible"
 msgstr "所有玩家都近乎隐身"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:84
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:90
 msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
 msgstr "在支持的地图上启用可拾取的增益物品（像治愈、隐身等的随机奖励）"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:89
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
 msgid "Only possible to inflict damage on your enemy while they're airborne"
 msgstr "仅当敌人在空中时可对其造成伤害"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:93
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:99
 msgid "Damage done to your enemy gets added to your own health"
 msgstr "对敌人造成的伤害会转为自己的生命值"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:98
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:104
 msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
 msgstr "生命值在此之下的玩家开始流血（生命值腐败、无法跳跃）"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:107
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:113
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
 msgstr "让事物下落得慢些（相对正常重力的百分比）"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:116
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:122
 msgid "Weapon & item mutators:"
 msgstr "武器与物品修改："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:120
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:126
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
 msgstr "玩家生成时携带钩爪。按下“钩爪”按键以使用"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:124
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:130
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
 msgstr "玩家生成时携带喷气背包。双击“跳跃”键或按下“喷气背包”按键以使用"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:128
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:134
 msgid ""
 "Projectiles can't be destroyed. However, you can still explode Electro orbs "
 "with the Electro primary fire"
 msgstr "射弹不会被破坏。不过，你仍然可以用电射枪的主攻击爆破电射球"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:133
-msgid ""
-"Some weapon spawns will be randomly replaced with new weapons: Heavy Laser "
-"Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker"
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
+msgid "Allow maps to spawn additional weapons (new toys)"
 msgstr ""
-"一些武器在生成时会被随机替换为新武器：\n"
-"重型镭射突击炮、地雷放置器、步枪、T.A.G. 瞄准者"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:141
+msgid "Replacement:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:143
+msgid ""
+"Automatically replace some normal weapons of the map with their "
+"corresponding additional weapons"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:150
+msgid "Randomly"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:155
 msgid ""
 "Devastator rockets can be detonated instantly (otherwise, there's a short "
 "delay). This allows players to fire and detonate a Devastator rocket while "
@@ -7650,45 +7662,45 @@ msgstr ""
 "灭世的火箭弹可被迅速引爆（一般有一小段延迟）。这使得玩家在空中时可以打出并引"
 "爆灭世火箭弹以获得强大的加速度"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:143
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
 msgid "Players will drop all weapons they possessed when they are killed"
 msgstr "在玩家被杀死时会掉落他所捡起过的所有武器"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:148
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:165
 msgid "Weapons stay after they are picked up"
 msgstr "武器在被捡起时不消失（其他玩家可立即再次捡取）"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:153
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:170
 msgid "Regular (no arena)"
 msgstr "常规（无竞技）"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:154
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:171
 msgid ""
 "Players will be given a set of weapons at spawn as well as unlimited ammo, "
 "without weapon pickups"
 msgstr "玩家在生成时会携带一些武器及无限弹药，而不捡取武器"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:156
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
 msgid "Weapon arenas:"
 msgstr "武器竞技："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:176
 msgid "Custom weapons"
 msgstr "自定义武器"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:181
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:198
 msgid "Most weapons"
 msgstr "多数武器"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:185
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:202
 msgid "All weapons"
 msgstr "全部武器"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:188
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:205
 msgid "Special arenas:"
 msgstr "特殊竞技："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:209
 msgid ""
 "Players will be given only one weapon, which can instantly kill the opponent "
 "with a single shot. If the player runs out of ammo, they will have 10 "
@@ -7698,7 +7710,7 @@ msgstr ""
 "每位玩家只拥有一把武器，它可以一击秒杀敌人。当玩家耗尽弹药时，需要在 10 秒内"
 "找到一些弹药；如果没有找到，迎接死亡。副火力不造成伤害，可以用来弹射走位。"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:197
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:214
 msgid ""
 "No items Xonotic - instead of pickup items, everyone plays with the same "
 "weapon. After some time, a countdown will start, after which everyone will "
@@ -7707,11 +7719,11 @@ msgstr ""
 "无物品 Xonotic - 每位玩家以同样的武器进行游戏，而不拾取物品。每隔一段时间，会"
 "在倒计时之后随机更换到另一把武器。"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:201
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:218
 msgid "with blaster"
 msgstr "随附镭射枪"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:202
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:219
 msgid "Always carry the blaster as an additional weapon in Nix"
 msgstr "除了有 Nix 模式的随机武器外，总是随附一把镭射枪"
 
