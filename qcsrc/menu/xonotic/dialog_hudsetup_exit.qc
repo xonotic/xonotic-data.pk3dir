@@ -2,7 +2,9 @@
 
 #include "textlabel.qh"
 #include "button.qh"
+#include "slider.qh"
 #include "textslider.qh"
+#include "mixedslider.qh"
 #include "inputbox.qh"
 #include "hudskinlist.qh"
 #include "colorpicker_string.qh"
@@ -58,36 +60,28 @@ void XonoticHUDExitDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Border size:")));
-			me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_bg_border"));
-				e.addValue(e, _("Disable"), "0");
-				for(i = 1; i <= 10; ++i)
-					e.addValue(e, strzone(ftos_decimals(i * 2, 0)), strzone(ftos(i * 2)));
-				e.configureXonoticTextSliderValues(e);
+			me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_bg_border"));
+				e.addText(e, _("Disable"), 0);
+				e.addRange(e, 2, 20, 2);
+				e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Alpha:")));
-			me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_bg_alpha"));
-				for(i = 1; i <= 10; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
-				e.configureXonoticTextSliderValues(e);
+			me.TD(me, 1, 2.6, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_bg_alpha"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Team color:")));
-			me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_bg_color_team"));
-				e.addValue(e, _("Disable"), "0");
-				for(i = 1; i <= 10; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
-				e.configureXonoticTextSliderValues(e);
+			me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_bg_color_team"));
+				e.addText(e, _("Disable"), 0);
+				e.addRange(e, 0.1, 1, 0.1);
+				e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 3.6, e = makeXonoticCheckBox(0, "hud_configure_teamcolorforced", _("Test team color in configure mode")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Padding:")));
-			me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_bg_padding"));
-				for(i = 0; i <= 10; ++i)
-					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
-				e.configureXonoticTextSliderValues(e);
+			me.TD(me, 1, 2.6, e = makeXonoticSlider(-5, 5, 1, "hud_panel_bg_padding"));
 
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("HUD Dock:")));
@@ -105,18 +99,14 @@ void XonoticHUDExitDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Alpha:")));
-			me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_dock_alpha"));
-				for(i = 1; i <= 10; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
-				e.configureXonoticTextSliderValues(e);
+			me.TD(me, 1, 2.6, e = makeXonoticSlider(0.1, 1, 0.1, "hud_dock_alpha"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Team color:")));
-			me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_dock_color_team"));
-				e.addValue(e, _("Disable"), "0");
-				for(i = 1; i <= 10; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
-				e.configureXonoticTextSliderValues(e);
+			me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_dock_color_team"));
+				e.addText(e, _("Disable"), 0);
+				e.addRange(e, 0.1, 1, 0.1);
+				e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1.4, makeXonoticTextLabel(0, _("Grid settings:")));
 		me.TD(me, 1, 2.6, e = makeXonoticCheckBox(0, "hud_configure_grid", _("Snap panels to grid")));
@@ -126,17 +116,17 @@ void XonoticHUDExitDialog_fill(entity me)
 			setDependent(e, "hud_configure_grid", 1, 1);
 		me.TD(me, 1, 0.2, e = makeXonoticTextLabel(0, _("X:")));
 			setDependent(e, "hud_configure_grid", 1, 1);
-			me.TD(me, 1, 1.1, e = makeXonoticTextSlider("hud_configure_grid_xsize"));
+			me.TD(me, 1, 1.1, e = makeXonoticMixedSlider("hud_configure_grid_xsize"));
 				for(i = 1; i <= 14; ++i)
-					e.addValue(e, strzone(sprintf("%.1f%%", i/2)), strzone(ftos(i/200)));
-				e.configureXonoticTextSliderValues(e);
+					e.addText(e, strzone(sprintf("%.1f%%", i/2)), i/200);
+				e.configureXonoticMixedSliderValues(e);
 				setDependent(e, "hud_configure_grid", 1, 1);
 		me.TD(me, 1, 0.2, e = makeXonoticTextLabel(0, _("Y:")));
 			setDependent(e, "hud_configure_grid", 1, 1);
-			me.TD(me, 1, 1.1, e = makeXonoticTextSlider("hud_configure_grid_ysize"));
+			me.TD(me, 1, 1.1, e = makeXonoticMixedSlider("hud_configure_grid_ysize"));
 				for(i = 1; i <= 14; ++i)
-					e.addValue(e, strzone(sprintf("%.1f%%", i/2)), strzone(ftos(i/200)));
-				e.configureXonoticTextSliderValues(e);
+					e.addText(e, strzone(sprintf("%.1f%%", i/2)), i/200);
+				e.configureXonoticMixedSliderValues(e);
 				setDependent(e, "hud_configure_grid", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
