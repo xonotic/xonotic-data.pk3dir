@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-06 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Темак, 2024\n"
+"Last-Translator: Andrei Stepanov, 2014-2025\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -7736,21 +7736,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
 msgid "Allow maps to spawn additional weapons (new toys)"
-msgstr ""
+msgstr "Разрешить появление на картах дополнительного оружия (новые игрушки)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:141
 msgid "Replacement:"
-msgstr ""
+msgstr "Замена:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:143
 msgid ""
 "Automatically replace some normal weapons of the map with their "
 "corresponding additional weapons"
 msgstr ""
+"Автоматически заменять некоторые обычные виды оружия на соответствующие им "
+"дополнительные."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:150
 msgid "Randomly"
-msgstr ""
+msgstr "Случайно"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:155
 msgid ""
