@@ -8,6 +8,7 @@
 #include "textlabel.qh"
 #include "checkbox.qh"
 #include "textslider.qh"
+#include "mixedslider.qh"
 #include "slider.qh"
 #include "radiobutton.qh"
 #include "checkbox_slider_invalid.qh"
@@ -53,37 +54,37 @@ void XonoticEffectsSettingsTab_fill(entity me)
 
 	me.gotoRC(me, 1.25, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Geometry detail:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("r_subdivisions_tolerance",
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("r_subdivisions_tolerance",
 			_("Change the smoothness of the curves on the map")));
-			e.addValue(e, ZCTX(_("DET^Lowest")), "16");
-			e.addValue(e, ZCTX(_("DET^Low")), "8");
-			e.addValue(e, ZCTX(_("DET^Normal")), "4");
-			e.addValue(e, ZCTX(_("DET^Good")), "3");
-			e.addValue(e, ZCTX(_("DET^Best")), "2");
-			e.addValue(e, ZCTX(_("DET^Insane")), "1");
-			e.configureXonoticTextSliderValues(e);
+			e.addText(e, ZCTX(_("DET^Lowest")), 16);
+			e.addText(e, ZCTX(_("DET^Low")), 8);
+			e.addText(e, ZCTX(_("DET^Normal")), 4);
+			e.addText(e, ZCTX(_("DET^Good")), 3);
+			e.addText(e, ZCTX(_("DET^Best")), 2);
+			e.addText(e, ZCTX(_("DET^Insane")), 1);
+			e.configureXonoticMixedSliderValues(e);
 			e.applyButton = effectsApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Player detail:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_playerdetailreduction"));
-			e.addValue(e, ZCTX(_("PDET^Low")), "4");
-			e.addValue(e, ZCTX(_("PDET^Medium")), "3");
-			e.addValue(e, ZCTX(_("PDET^Normal")), "2");
-			e.addValue(e, ZCTX(_("PDET^Good")), "1");
-			e.addValue(e, ZCTX(_("PDET^Best")), "0");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_playerdetailreduction"));
+			e.addText(e, ZCTX(_("PDET^Low")), 4);
+			e.addText(e, ZCTX(_("PDET^Medium")), 3);
+			e.addText(e, ZCTX(_("PDET^Normal")), 2);
+			e.addText(e, ZCTX(_("PDET^Good")), 1);
+			e.addText(e, ZCTX(_("PDET^Best")), 0);
+			e.configureXonoticMixedSliderValues(e);
 			e.applyButton = effectsApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Texture resolution:")));
 			setDependent(e, "r_showsurfaces", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());
-			e.addValue(e, ZCTX(_("RES^Lowest")), "1337");
-			e.addValue(e, ZCTX(_("RES^Very low")), "2");
-			e.addValue(e, ZCTX(_("RES^Low")), "1");
-			e.addValue(e, ZCTX(_("RES^Normal")), "0");
-			e.addValue(e, ZCTX(_("RES^Good")), "-1");
-			e.addValue(e, ZCTX(_("RES^Best")), "-2");
-			e.configureXonoticTextSliderValues(e);
+			e.addText(e, ZCTX(_("RES^Lowest")), 1337);
+			e.addText(e, ZCTX(_("RES^Very low")), 2);
+			e.addText(e, ZCTX(_("RES^Low")), 1);
+			e.addText(e, ZCTX(_("RES^Normal")), 0);
+			e.addText(e, ZCTX(_("RES^Good")), -1);
+			e.addText(e, ZCTX(_("RES^Best")), -2);
+			e.configureXonoticMixedSliderValues(e);
 			setDependent(e, "r_showsurfaces", 0, 0);
 			e.applyButton = effectsApplyButton;
 	me.TR(me);
@@ -147,12 +148,12 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			_("Reflection and refraction quality, has a huge impact on performance on maps with reflecting surfaces")));
 			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 				setDependent(e, "vid_gl20", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("r_water_resolutionmultiplier",
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("r_water_resolutionmultiplier",
 			_("Resolution of reflections/refractions")));
-			e.addValue(e, _("Blurred"), "0.25");
-			e.addValue(e, ZCTX(_("REFL^Good")), "0.5");
-			e.addValue(e, _("Sharp"), "1");
-			e.configureXonoticTextSliderValues(e);
+			e.addText(e, _("Blurred"), 0.25);
+			e.addText(e, ZCTX(_("REFL^Good")), 0.5);
+			e.addText(e, _("Sharp"), 1);
+			e.configureXonoticMixedSliderValues(e);
 			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 				setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);
 			else
@@ -179,11 +180,11 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Damage effects:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_damageeffect"));
-			e.addValue(e, ZCTX(_("DMGFX^Disabled")), "0");
-			e.addValue(e, _("Skeletal"), "1");
-			e.addValue(e, ZCTX(_("DMGFX^All")), "2");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_damageeffect"));
+			e.addText(e, ZCTX(_("DMGFX^Disabled")), 0);
+			e.addText(e, _("Skeletal"), 1);
+			e.addText(e, ZCTX(_("DMGFX^All")), 2);
+			e.configureXonoticMixedSliderValues(e);
 
 	me.gotoRC(me, 1.25, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "r_shadow_realtime_dlight", _("Realtime dynamic lights"),

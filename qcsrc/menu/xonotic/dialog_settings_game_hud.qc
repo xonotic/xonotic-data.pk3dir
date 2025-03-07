@@ -5,6 +5,7 @@
 #include "textlabel.qh"
 #include "slider.qh"
 #include "slider_sbfadetime.qh"
+#include "mixedslider.qh"
 #include "checkbox.qh"
 #include "button.qh"
 
@@ -53,11 +54,11 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_scoreboard_accuracy", _("Show accuracy underneath scoreboard")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Show team sizes:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("hud_panel_scoreboard_team_size_position", _("Team size position: Off=do not show; Left=on the left side of the scoreboard and move team scores to the right; Right=on the right of the scoreboard")));
-			e.addValue(e, _("Left"), "1");
-			e.addValue(e, _("Off"), "0");
-			e.addValue(e, _("Right"), "2");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("hud_panel_scoreboard_team_size_position", _("Team size position: Off=do not show; Left=on the left side of the scoreboard and move team scores to the right; Right=on the right of the scoreboard")));
+			e.addText(e, _("Left"),  1);
+			e.addText(e, _("Off"),   0);
+			e.addText(e, _("Right"), 2);
+			e.configureXonoticMixedSliderValues(e);
 
 	me.TR(me);
 	me.TR(me);
@@ -141,11 +142,11 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Decolorize:")));
 			setDependent(e, "hud_shownames", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_shownames_decolorize"));
-			e.addValue(e, _("Never"), "0");
-			e.addValue(e, _("Teamplay"), "1");
-			e.addValue(e, _("Always"), "2");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("hud_shownames_decolorize"));
+			e.addText(e, _("Never"),    0);
+			e.addText(e, _("Teamplay"), 1);
+			e.addText(e, _("Always"),   2);
+			e.configureXonoticMixedSliderValues(e);
 			setDependent(e, "hud_shownames", 1, 1);
 
 	me.TR(me);
@@ -161,13 +162,13 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Speed unit:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_speed_unit"));
-			e.addValue(e, _("qu/s") , "1");
-			e.addValue(e, _("m/s")  , "2");
-			e.addValue(e, _("km/h") , "3");
-			e.addValue(e, _("mph")  , "4");
-			e.addValue(e, _("knots"), "5");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("hud_speed_unit"));
+			e.addText(e, _("qu/s"),  1);
+			e.addText(e, _("m/s"),   2);
+			e.addText(e, _("km/h"),  3);
+			e.addText(e, _("mph"),   4);
+			e.addText(e, _("knots"), 5);
+			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Damage overlay:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
