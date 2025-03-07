@@ -2,7 +2,7 @@
 
 #include "textlabel.qh"
 #include "checkbox.qh"
-#include "textslider.qh"
+#include "mixedslider.qh"
 
 void XonoticGameMessageSettingsTab_showNotify(entity me)
 {
@@ -42,12 +42,12 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Sprees in info messages:")));
 			setDependent(e, "notification_show_sprees", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("notification_show_sprees_info", "-"));
-			e.addValue(e, ZCTX(_("SPREES^Disabled")), "0");
-			e.addValue(e, _("Target"), "1");
-			e.addValue(e, _("Attacker"), "2");
-			e.addValue(e, ZCTX(_("SPREES^Both")), "3");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("notification_show_sprees_info", "-"));
+			e.addText(e, ZCTX(_("SPREES^Disabled")), 0);
+			e.addText(e, _("Target"), 1);
+			e.addText(e, _("Attacker"), 2);
+			e.addText(e, ZCTX(_("SPREES^Both")), 3);
+			e.configureXonoticMixedSliderValues(e);
 			setDependent(e, "notification_show_sprees", 1, 1);
 	#endif
 	me.TR(me);

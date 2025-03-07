@@ -3,6 +3,7 @@
 #include "textlabel.qh"
 #include "checkbox.qh"
 #include "textslider.qh"
+#include "mixedslider.qh"
 #include "slider.qh"
 
 void XonoticGameModelSettingsTab_showNotify(entity me)
@@ -51,25 +52,25 @@ void XonoticGameModelSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Force player colors to mine")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("cl_forceplayercolors",
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("cl_forceplayercolors",
 			_("Warning: if enabled in team games your team's color may be the same as the enemy team")));
-			e.addValue(e, _("Never"), "0");
-			e.addValue(e, _("Except in team games"), "1");
-			e.addValue(e, _("Only in Duel"), "3");
-			e.addValue(e, _("Only in team games"), "4");
-			e.addValue(e, _("In team games and Duel"), "5");
-			e.addValue(e, _("Always"), "2");
-			e.configureXonoticTextSliderValues(e);
+			e.addText(e, _("Never"), 0);
+			e.addText(e, _("Except in team games"), 1);
+			e.addText(e, _("Only in Duel"), 3);
+			e.addText(e, _("Only in team games"), 4);
+			e.addText(e, _("In team games and Duel"), 5);
+			e.addText(e, _("Always"), 2);
+			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Body fading:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 2, 0.2, "cl_deathglow"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gibs:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_nogibs"));
-			e.addValue(e, ZCTX(_("GIBS^None")), "1");
-			e.addValue(e, ZCTX(_("GIBS^Few")), "0.75");
-			e.addValue(e, ZCTX(_("GIBS^Many")), "0.5");
-			e.addValue(e, ZCTX(_("GIBS^Lots")), "0");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_nogibs"));
+			e.addText(e, ZCTX(_("GIBS^None")), 1);
+			e.addText(e, ZCTX(_("GIBS^Few")), 0.75);
+			e.addText(e, ZCTX(_("GIBS^Many")), 0.5);
+			e.addText(e, ZCTX(_("GIBS^Lots")), 0);
+			e.configureXonoticMixedSliderValues(e);
 			setDependent(e, "cl_gentle", 0, 0);
 }
