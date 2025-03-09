@@ -302,6 +302,18 @@ void ka_Handler_CheckBall(entity this)
 // Bot player logic
 // ================
 
+bool ka_waypointsprite_visible_for_bot(entity this, entity e, bool dropped)
+{
+	entity ball_wp = e.waypointsprite_attachedforcarrier;
+	if (!ball_wp)
+	if (dropped || !ball_wp.waypointsprite_visible_for_player(ball_wp, this, WaypointSprite_getviewentity(this)))
+	{ // has no waypoint, or waypoint not visible
+		if (!checkpvs(this.origin + this.view_ofs, e)) // ball cannot be seen
+			return false;
+	}
+	return true;
+}
+
 void havocbot_goalrating_ball(entity this, float ratingscale, vector org)
 {
 	entity ball = NULL, ball_carried = NULL;
@@ -309,15 +321,23 @@ void havocbot_goalrating_ball(entity this, float ratingscale, vector org)
 	// stops at last ball, prefers ball without carrier
 	IL_EACH(g_kaballs, it.owner != this,
 	{
-		if(it.owner)
+		if (it.owner)
+		{
+			if (!ka_waypointsprite_visible_for_bot(this, it.owner, false))
+				continue;
 			ball_carried = it.owner;
+		}
 		else
+		{
+			if (!ka_waypointsprite_visible_for_bot(this, it, true))
+				continue;
 			ball = it;
+		}
 	});
 
-	if(ball)
+	if (ball)
 		navigation_routerating(this, ball, ratingscale, 2000);
-	else if(ball_carried)
+	else if (ball_carried)
 		navigation_routerating(this, ball_carried, ratingscale, 2000);
 }
 

@@ -280,23 +280,48 @@ void tka_Handler_CheckBall(entity this)
 // Bot player logic
 // ================
 
-void havocbot_goalrating_tkaball(entity this, float ratingscale, vector org)
+bool tka_waypointsprite_visible_for_bot(entity this, entity e, bool dropped)
+{
+	entity ball_wp = e.waypointsprite_attachedforcarrier;
+	if (!ball_wp)
+	if (dropped || !ball_wp.waypointsprite_visible_for_player(ball_wp, this, WaypointSprite_getviewentity(this)))
+	{ // has no waypoint, or waypoint not visible
+		if (!checkpvs(this.origin + this.view_ofs, e)) // ball cannot be seen
+			return false;
+	}
+	return true;
+}
+
+void havocbot_goalrating_tkaball(entity this, float ratingscale, float ratingscale_sameteam, vector org)
 {
 	entity ball = NULL, ball_carried = NULL;
 
 	// stops at last ball, prefers ball without carrier
-	IL_EACH(g_tkaballs, it.owner != this && DIFF_TEAM(ball.owner, this),
+	IL_EACH(g_tkaballs, it.owner != this,
 	{
-		if(it.owner)
+		if (it.owner)
+		{
+			if (!tka_waypointsprite_visible_for_bot(this, it.owner, false))
+				continue;
 			ball_carried = it.owner;
+		}
 		else
+		{
+			if (!tka_waypointsprite_visible_for_bot(this, it, true))
+				continue;
 			ball = it;
+		}
 	});
 
 	if (ball)
 		navigation_routerating(this, ball, ratingscale, 2000);
-	else if(ball_carried)
-		navigation_routerating(this, ball_carried, ratingscale, 2000);
+	else if (ball_carried)
+	{
+		if (DIFF_TEAM(ball_carried, this))
+			navigation_routerating(this, ball_carried, ratingscale, 2000);
+		else
+			navigation_routerating(this, ball_carried, ratingscale_sameteam, 2000);
+	}
 }
 
 void havocbot_role_tka_carrier(entity this)
@@ -332,7 +357,7 @@ void havocbot_role_tka_collector(entity this)
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 500, this.origin, 10000);
-		havocbot_goalrating_tkaball(this, 8000, this.origin);
+		havocbot_goalrating_tkaball(this, 8000, 4000, this.origin);
 		navigation_goalrating_end(this);
 
 		navigation_goalrating_timeout_set(this);

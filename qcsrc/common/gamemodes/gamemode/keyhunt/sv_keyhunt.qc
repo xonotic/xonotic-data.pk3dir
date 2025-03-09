@@ -1025,30 +1025,37 @@ void(entity this) havocbot_role_kh_offense;
 void(entity this) havocbot_role_kh_freelancer;
 
 
+bool kh_waypointsprite_visible_for_bot(entity this, entity e)
+{
+	entity key_wp = e.waypointsprite_attachedforcarrier;
+	if (!key_wp)
+	if (!key_wp.waypointsprite_visible_for_player(key_wp, this, WaypointSprite_getviewentity(this)))
+	{ // has no waypoint, or waypoint not visible
+		if (!checkpvs(this.origin + this.view_ofs, e)) // key cannot be seen
+			return false;
+	}
+	return true;
+}
+
 void havocbot_goalrating_kh(entity this, float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy)
 {
-	entity head;
-	for (head = kh_worldkeylist; head; head = head.kh_worldkeynext)
+	for (entity head = kh_worldkeylist; head; head = head.kh_worldkeynext)
 	{
-		if(head.owner == this)
-			continue;
-		if(!kh_tracking_enabled)
+		if (head.owner)
 		{
-			// if it's carried by our team we know about it
-			// otherwise we have to see it to know about it
-			if(!head.owner || head.team != this.team)
-			{
-				traceline(this.origin + this.view_ofs, head.origin, MOVE_NOMONSTERS, this);
-				if (trace_fraction < 1 && trace_ent != head)
-					continue; // skip what I can't see
-			}
+			if (head.owner == this || !kh_waypointsprite_visible_for_bot(this, head.owner))
+				continue;
+			if (SAME_TEAM(head, this))
+				navigation_routerating(this, head.owner, ratingscale_team * 10000, 100000);
+			else
+				navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
 		}
-		if(!head.owner)
-			navigation_routerating(this, head, ratingscale_dropped * 10000, 100000);
-		else if(head.team == this.team)
-			navigation_routerating(this, head.owner, ratingscale_team * 10000, 100000);
 		else
-			navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
+		{
+			if (!kh_waypointsprite_visible_for_bot(this, head))
+				continue;
+			navigation_routerating(this, head, ratingscale_dropped * 10000, 100000);
+		}
 	}
 
 	havocbot_goalrating_items(this, 80000, this.origin, 10000);
