@@ -70,7 +70,6 @@ int kh_Team_ByID(int t)
 }
 
 entity kh_controller;
-//bool kh_tracking_enabled;
 int kh_teams;
 int kh_interferemsg_team;
 float kh_interferemsg_time;
@@ -100,22 +99,24 @@ void kh_ScoreRules(int teams)
 
 bool kh_KeyCarrier_waypointsprite_visible_for_player(entity this, entity player, entity view)  // runs all the time
 {
-	if(!IS_PLAYER(view) || DIFF_TEAM(this, view))
-		if(!kh_tracking_enabled)
-			return false;
+	if(view.kh_next && IS_SPEC(player))
+		return false; // we don't want spectators of key carriers to see the attached waypoint on the top of their screen
+	if(IS_SPEC(player) || warmup_stage || SAME_TEAM(player, this.owner))
+		return true;
+	if(IS_INVISIBLE(this.owner))
+		return false; // hide the waypointsprite if the owner is invisible
 
-	return true;
+	return kh_tracking_enabled;
 }
 
 bool kh_Key_waypointsprite_visible_for_player(entity this, entity player, entity view)
 {
+	if(IS_SPEC(player) || warmup_stage)
+		return true;
 	if(!kh_tracking_enabled)
 		return false;
-	if(!this.owner)
-		return true;
-	if(!this.owner.owner)
-		return true;
-	return false;  // draw only when key is not owned
+
+	return !this.owner || !this.owner.owner; // draw only when key is not owned
 }
 
 void kh_update_state()
@@ -946,8 +947,11 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	kh_tracking_enabled = false;
-	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEYHUNT_SCAN, autocvar_g_balance_keyhunt_delay_tracking);
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, kh_EnableTrackingDevice);
+	if(autocvar_g_balance_keyhunt_delay_tracking >= 0)
+	{
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEYHUNT_SCAN, autocvar_g_balance_keyhunt_delay_tracking);
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, kh_EnableTrackingDevice);
+	}
 }
 
 float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the player score
@@ -1021,30 +1025,37 @@ void(entity this) havocbot_role_kh_offense;
 void(entity this) havocbot_role_kh_freelancer;
 
 
+bool kh_waypointsprite_visible_for_bot(entity this, entity e)
+{
+	entity key_wp = e.waypointsprite_attachedforcarrier;
+	if (!key_wp)
+	if (!key_wp.waypointsprite_visible_for_player(key_wp, this, WaypointSprite_getviewentity(this)))
+	{ // has no waypoint, or waypoint not visible
+		if (!checkpvs(this.origin + this.view_ofs, e)) // key cannot be seen
+			return false;
+	}
+	return true;
+}
+
 void havocbot_goalrating_kh(entity this, float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy)
 {
-	entity head;
-	for (head = kh_worldkeylist; head; head = head.kh_worldkeynext)
+	for (entity head = kh_worldkeylist; head; head = head.kh_worldkeynext)
 	{
-		if(head.owner == this)
-			continue;
-		if(!kh_tracking_enabled)
+		if (head.owner)
 		{
-			// if it's carried by our team we know about it
-			// otherwise we have to see it to know about it
-			if(!head.owner || head.team != this.team)
-			{
-				traceline(this.origin + this.view_ofs, head.origin, MOVE_NOMONSTERS, this);
-				if (trace_fraction < 1 && trace_ent != head)
-					continue; // skip what I can't see
-			}
+			if (head.owner == this || !kh_waypointsprite_visible_for_bot(this, head.owner))
+				continue;
+			if (SAME_TEAM(head, this))
+				navigation_routerating(this, head.owner, ratingscale_team * 10000, 100000);
+			else
+				navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
 		}
-		if(!head.owner)
-			navigation_routerating(this, head, ratingscale_dropped * 10000, 100000);
-		else if(head.team == this.team)
-			navigation_routerating(this, head.owner, ratingscale_team * 10000, 100000);
 		else
-			navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
+		{
+			if (!kh_waypointsprite_visible_for_bot(this, head))
+				continue;
+			navigation_routerating(this, head, ratingscale_dropped * 10000, 100000);
+		}
 	}
 
 	havocbot_goalrating_items(this, 80000, this.origin, 10000);

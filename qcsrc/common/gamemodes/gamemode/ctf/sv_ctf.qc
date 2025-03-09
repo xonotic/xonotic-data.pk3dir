@@ -876,8 +876,10 @@ bool ctf_Stalemate_Customize(entity this, entity client)
 
 	// team waypoints
 	//if(CTF_SAMETEAM(wp_owner.flagcarried, wp_owner)) { return false; }
-	if(SAME_TEAM(wp_owner, e)) { return false; }
-	if(!IS_PLAYER(e)) { return false; }
+	if(SAME_TEAM(wp_owner, e) || !IS_PLAYER(e))
+		return false;
+	if(IS_INVISIBLE(wp_owner))
+		return false; // hide the waypointsprite if the owner is invisible
 
 	return true;
 }
