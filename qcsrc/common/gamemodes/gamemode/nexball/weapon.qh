@@ -7,5 +7,8 @@ CLASS(BallStealer, PortoLaunch)
 /* impulse   */ ATTRIB(BallStealer, impulse, int, 0);
 /* refname   */ ATTRIB(BallStealer, netname, string, "ballstealer");
 /* wepname   */ ATTRIB(BallStealer, m_name, string, _("Ball Stealer"));
+#ifdef MENUQC
+/* hidden    */ ATTRIB(BallStealer, m_hidden, bool, true);
+#endif
 ENDCLASS(BallStealer)
 REGISTER_WEAPON(NEXBALL, NEW(BallStealer));

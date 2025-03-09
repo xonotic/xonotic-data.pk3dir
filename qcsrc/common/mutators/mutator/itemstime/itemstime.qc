@@ -1,8 +1,7 @@
 #include "itemstime.qh"
 
-REGISTER_MUTATOR(itemstime, true);
-
 #ifdef GAMEQC
+REGISTER_MUTATOR(itemstime, true);
 REGISTER_NET_TEMP(itemstime)
 #endif
 
