@@ -7,16 +7,13 @@
 .entity previous_owner; // also used on kh keys
 
 int autocvar_g_tka_ballcarrier_effects;
-float autocvar_g_tka_ballcarrier_damage;
-float autocvar_g_tka_ballcarrier_force;
 float autocvar_g_tka_ballcarrier_highspeed;
-float autocvar_g_tka_ballcarrier_selfdamage;
-float autocvar_g_tka_ballcarrier_selfforce;
-float autocvar_g_tka_noncarrier_damage;
-float autocvar_g_tka_noncarrier_force;
-float autocvar_g_tka_noncarrier_selfdamage;
-float autocvar_g_tka_noncarrier_selfforce;
+vector autocvar_g_tka_ballcarrier_damage;
+vector autocvar_g_tka_ballcarrier_force;
+vector autocvar_g_tka_noncarrier_damage;
+vector autocvar_g_tka_noncarrier_force;
 bool autocvar_g_tka_noncarrier_warn;
+
 int autocvar_g_tka_score_bckill;
 int autocvar_g_tka_score_killac;
 bool autocvar_g_tka_score_team;
@@ -26,16 +23,18 @@ float autocvar_g_tkaball_damageforcescale;
 int autocvar_g_tkaball_effects;
 float autocvar_g_tkaball_respawntime;
 int autocvar_g_tkaball_trail_color;
+int autocvar_g_tkaball_tracking;
 
 bool tka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
 {
-	if(view.ballcarried)
-		if(IS_SPEC(player))
-			return false; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
+	if(view.ballcarried && IS_SPEC(player))
+		return false; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
+	if(IS_SPEC(player) || warmup_stage || SAME_TEAM(player, this.owner))
+		return true;
+	if(IS_INVISIBLE(this.owner))
+		return false; // hide the waypointsprite if the owner is invisible
 
-	// TODO: Make the ballcarrier lack a waypointsprite whenever they have the invisibility powerup
-
-	return true;
+	return autocvar_g_tkaball_tracking == 1;
 }
 
 void tka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
@@ -65,8 +64,11 @@ void tka_RespawnBall(entity this) // runs whenever the ball needs to be relocate
 	Send_Effect(EFFECT_KA_BALL_RESPAWN, oldballorigin, '0 0 0', 1);
 	Send_Effect(EFFECT_KA_BALL_RESPAWN, this.origin, '0 0 0', 1);
 
-	WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', NULL, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
-	WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
+	if(autocvar_g_tkaball_tracking || warmup_stage)
+	{
+		WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', NULL, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
+		WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
+	}
 
 	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
@@ -196,9 +198,12 @@ void tka_DropEvent(entity player) // runs any time that a player is supposed to 
 	sound(NULL, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// waypoints
-	WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
-	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
+	if(autocvar_g_tkaball_tracking || warmup_stage)
+	{
+		WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
+		WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+		WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
+	}
 
 	tka_PlayerReset(player);
 }
@@ -272,23 +277,48 @@ void tka_Handler_CheckBall(entity this)
 // Bot player logic
 // ================
 
-void havocbot_goalrating_tkaball(entity this, float ratingscale, vector org)
+bool tka_waypointsprite_visible_for_bot(entity this, entity e, bool dropped)
+{
+	entity ball_wp = e.waypointsprite_attachedforcarrier;
+	if (!ball_wp)
+	if (dropped || !ball_wp.waypointsprite_visible_for_player(ball_wp, this, WaypointSprite_getviewentity(this)))
+	{ // has no waypoint, or waypoint not visible
+		if (!checkpvs(this.origin + this.view_ofs, e)) // ball cannot be seen
+			return false;
+	}
+	return true;
+}
+
+void havocbot_goalrating_tkaball(entity this, float ratingscale, float ratingscale_sameteam, vector org)
 {
 	entity ball = NULL, ball_carried = NULL;
 
 	// stops at last ball, prefers ball without carrier
-	IL_EACH(g_tkaballs, it.owner != this && DIFF_TEAM(ball.owner, this),
+	IL_EACH(g_tkaballs, it.owner != this,
 	{
-		if(it.owner)
+		if (it.owner)
+		{
+			if (!tka_waypointsprite_visible_for_bot(this, it.owner, false))
+				continue;
 			ball_carried = it.owner;
+		}
 		else
+		{
+			if (!tka_waypointsprite_visible_for_bot(this, it, true))
+				continue;
 			ball = it;
+		}
 	});
 
 	if (ball)
 		navigation_routerating(this, ball, ratingscale, 2000);
-	else if(ball_carried)
-		navigation_routerating(this, ball_carried, ratingscale, 2000);
+	else if (ball_carried)
+	{
+		if (DIFF_TEAM(ball_carried, this))
+			navigation_routerating(this, ball_carried, ratingscale, 2000);
+		else
+			navigation_routerating(this, ball_carried, ratingscale_sameteam, 2000);
+	}
 }
 
 void havocbot_role_tka_carrier(entity this)
@@ -324,7 +354,7 @@ void havocbot_role_tka_collector(entity this)
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 500, this.origin, 10000);
-		havocbot_goalrating_tkaball(this, 8000, this.origin);
+		havocbot_goalrating_tkaball(this, 8000, 4000, this.origin);
 		navigation_goalrating_end(this);
 
 		navigation_goalrating_timeout_set(this);
@@ -431,42 +461,47 @@ MUTATOR_HOOKFUNCTION(tka, Damage_Calculate) // for changing damage and force val
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
-	float frag_damage = M_ARGV(4, float);
-	vector frag_force = M_ARGV(6, vector);
 
 	// as a gamemode rule, only apply scaling to player versus player combat
-	if(!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
+	if (!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
 		return;
 
-	if(frag_attacker.ballcarried) // if the attacker is a ballcarrier
+	if (frag_attacker.ballcarried) // if the attacker is a ballcarrier
 	{
-		if(frag_target == frag_attacker) // damage done to yourself
+		if (frag_target == frag_attacker) // damage done to themselves
 		{
-			frag_damage *= autocvar_g_tka_ballcarrier_selfdamage;
-			frag_force *= autocvar_g_tka_ballcarrier_selfforce;
+			M_ARGV(4, float) *= autocvar_g_tka_ballcarrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_tka_ballcarrier_force.x;
 		}
-		else // damage done to other players (ballcarriers and noncarriers)
+		else if (frag_target.ballcarried) // damage done to other ballcarriers
 		{
-			frag_damage *= autocvar_g_tka_ballcarrier_damage;
-			frag_force *= autocvar_g_tka_ballcarrier_force;
+			M_ARGV(4, float) *= autocvar_g_tka_ballcarrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_tka_ballcarrier_force.y;
+		}
+		else // damage done to noncarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_tka_ballcarrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_tka_ballcarrier_force.z;
 		}
 	}
-	else if (!frag_target.ballcarried) // if the target is a noncarrier
+	else
 	{
-		if(frag_target == frag_attacker) // damage done to yourself
+		if (frag_target == frag_attacker) // damage done to themselves
 		{
-			frag_damage *= autocvar_g_tka_noncarrier_selfdamage;
-			frag_force *= autocvar_g_tka_noncarrier_selfforce;
+			M_ARGV(4, float) *= autocvar_g_tka_noncarrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_tka_noncarrier_force.x;
+		}
+		else if (frag_target.ballcarried) // damage done to ballcarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_tka_noncarrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_tka_noncarrier_force.y;
 		}
 		else // damage done to other noncarriers
 		{
-			frag_damage *= autocvar_g_tka_noncarrier_damage;
-			frag_force *= autocvar_g_tka_noncarrier_force;
+			M_ARGV(4, float) *= autocvar_g_tka_noncarrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_tka_noncarrier_force.z;
 		}
 	}
-
-	M_ARGV(4, float) = frag_damage;
-	M_ARGV(6, vector) = frag_force;
 }
 
 MUTATOR_HOOKFUNCTION(tka, ClientDisconnect)
