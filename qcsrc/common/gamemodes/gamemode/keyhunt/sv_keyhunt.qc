@@ -70,7 +70,6 @@ int kh_Team_ByID(int t)
 }
 
 entity kh_controller;
-//bool kh_tracking_enabled;
 int kh_teams;
 int kh_interferemsg_team;
 float kh_interferemsg_time;
@@ -100,22 +99,24 @@ void kh_ScoreRules(int teams)
 
 bool kh_KeyCarrier_waypointsprite_visible_for_player(entity this, entity player, entity view)  // runs all the time
 {
-	if(!IS_PLAYER(view) || DIFF_TEAM(this, view))
-		if(!kh_tracking_enabled)
-			return false;
+	if(view.kh_next && IS_SPEC(player))
+		return false; // we don't want spectators of key carriers to see the attached waypoint on the top of their screen
+	if(IS_SPEC(player) || warmup_stage || SAME_TEAM(player, this.owner))
+		return true;
+	if(IS_INVISIBLE(this.owner))
+		return false; // hide the waypointsprite if the owner is invisible
 
-	return true;
+	return kh_tracking_enabled;
 }
 
 bool kh_Key_waypointsprite_visible_for_player(entity this, entity player, entity view)
 {
+	if(IS_SPEC(player) || warmup_stage)
+		return true;
 	if(!kh_tracking_enabled)
 		return false;
-	if(!this.owner)
-		return true;
-	if(!this.owner.owner)
-		return true;
-	return false;  // draw only when key is not owned
+
+	return !this.owner || !this.owner.owner; // draw only when key is not owned
 }
 
 void kh_update_state()
@@ -946,8 +947,11 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	kh_tracking_enabled = false;
-	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEYHUNT_SCAN, autocvar_g_balance_keyhunt_delay_tracking);
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, kh_EnableTrackingDevice);
+	if(autocvar_g_balance_keyhunt_delay_tracking >= 0)
+	{
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEYHUNT_SCAN, autocvar_g_balance_keyhunt_delay_tracking);
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, kh_EnableTrackingDevice);
+	}
 }
 
 float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the player score
