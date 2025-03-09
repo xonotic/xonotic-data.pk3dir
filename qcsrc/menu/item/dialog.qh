@@ -4,7 +4,6 @@
 // - isTabRoot is 0
 // - backgroundImage is the tab's background
 // - closable is 0
-// - rootDialog is 0
 // - title is ""
 // - marginTop is
 // - intendedHeight ends up to be the tab's actual height, or at least close
@@ -67,9 +66,9 @@ CLASS(Dialog, InputContainer)
 	ATTRIB(Dialog, borderLines, float, 1);
 	ATTRIB(Dialog, closeButtonImage, string);
 
-	ATTRIB(Dialog, hideMenuOnClose, bool, false);
-
 	ATTRIB(Dialog, frame, entity);
 ENDCLASS(Dialog)
 
 void Dialog_Close(entity button, entity me);
+
+.bool hideMenuOnClose;
