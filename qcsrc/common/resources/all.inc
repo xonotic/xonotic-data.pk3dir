@@ -66,7 +66,4 @@ REGISTER_RESOURCE(FUEL, NEW(AmmoResource)) {
 	this.m_name   = _("Fuel");
 	this.m_icon   = "ammo_fuel";
 	this.m_color  = '0.984 0.878 0.506';
-#ifdef CSQC
-	this.m_hidden = true; // displayed in a separate panel
-#endif
 }
