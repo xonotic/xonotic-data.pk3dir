@@ -165,11 +165,29 @@ void HUD_Ammo()
 		total_ammo_count = AMMO_COUNT;
 
 	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_AMMO);
-	bool have_hook = (WepSet_GetFromStat() & WEPSET(HOOK)) != '0 0 0';
-	bool have_jetpack = boolean(STAT(ITEMS) & IT_JETPACK);
 
-	// always show fuel if we have jetpack or off-hand hook
-	bool show_fuel = (STAT(FUEL) || infinite_ammo || have_jetpack || have_hook);
+	bool show_fuel = false;
+	int have_hook;
+	if (mut_is_active(MUT_GRAPPLING_HOOK))
+	{
+		have_hook = 2; // off-hand hook
+		if (STAT(HOOK_FUEL))
+			show_fuel = true;
+	}
+	else
+	{
+		have_hook = ((WepSet_GetFromStat() & WEPSET(HOOK)) != '0 0 0') ? 1 : 0;
+		if (have_hook && WEP_CVAR_PRI(WEP_HOOK, ammo))
+			show_fuel = true;
+	}
+
+	bool have_jetpack = boolean(STAT(ITEMS) & IT_JETPACK);
+	if (have_jetpack && STAT(JETPACK_FUEL))
+		show_fuel = true;
+
+	if (!show_fuel)
+		show_fuel = (STAT(FUEL) || infinite_ammo);
+
 	if (show_fuel)
 		++total_ammo_count;
 
@@ -247,7 +265,7 @@ void HUD_Ammo()
 				if (!show_fuel)
 					continue;
 				if (!isCurrent)
-					isCurrent = have_jetpack; // jetpack can be used anytime
+					isCurrent = (have_jetpack || have_hook == 2); // these tools can be used anytime
 			}
 
 			DrawAmmoItem(
