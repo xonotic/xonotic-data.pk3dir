@@ -42,7 +42,7 @@ float mapvote_rng[MAPVOTE_COUNT]; // random() value for each map to determine ti
  * This would use less storage but isn't truly random and can sometimes be predictable.
  */
 bool mapvote_run;
-bool mapvote_detail;
+int mapvote_detail;
 bool mapvote_abstain;
 .int mapvote;
 
@@ -240,8 +240,8 @@ void MapVote_Init()
 	MapVote_UnzoneStrings();
 
 	mapvote_count = 0;
-	mapvote_detail = !autocvar_g_maplist_votable_nodetail;
-	mapvote_abstain = boolean(autocvar_g_maplist_votable_abstain);
+	mapvote_detail = autocvar_g_maplist_votable_detail;
+	mapvote_abstain = autocvar_g_maplist_votable_abstain;
 	current_gametype_index = -1;
 
 	if(mapvote_abstain)
@@ -425,26 +425,30 @@ bool MapVote_SendEntity(entity this, entity to, int sf)
 		}
 	}
 
-	if(sf & 2)
-	{
-		// flag 2 == update of mask
+	if(sf & 2) // flag 2 == update of mask
 		MapVote_WriteMask();
-	}
 
 	if(sf & 4)
 	{
 		if(mapvote_detail)
+		{
 			for(i = 0; i < mapvote_count; ++i)
 				if ( mapvote_maps_flags[i] & GTV_AVAILABLE )
 					WriteByte(MSG_ENTITY, mapvote_selections[i]);
+
+			if(mapvote_detail == 2) // tell the client who the tie winner will be
+				WriteChar(MSG_ENTITY, mapvote_ranked[0]);
+			else if(mapvote_selections[mapvote_ranked[0]] == 0) // no votes yet, don't draw a winner (-1)
+				WriteChar(MSG_ENTITY, -1);
+			else // figure out winners yourself (-2)
+				WriteChar(MSG_ENTITY, -2);
+		}
 
 		WriteByte(MSG_ENTITY, to.mapvote);
 	}
 
 	if(sf & 8)
-	{
 		WriteByte(MSG_ENTITY, mapvote_winner + 1);
-	}
 
 	return true;
 }
@@ -903,7 +907,7 @@ bool GameTypeVote_Start()
 	mapvote_count = 0;
 	mapvote_timeout = time + autocvar_sv_vote_gametype_timeout;
 	mapvote_abstain = false;
-	mapvote_detail = !autocvar_g_maplist_votable_nodetail;
+	mapvote_detail = autocvar_sv_vote_gametype_detail;
 
 	int n = tokenizebyseparator(autocvar_sv_vote_gametype_options, " ");
 	n = min(MAPVOTE_COUNT, n);

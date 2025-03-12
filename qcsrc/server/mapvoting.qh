@@ -11,7 +11,7 @@ float autocvar_g_maplist_shuffle;
 bool autocvar_g_maplist_votable_abstain;
 float autocvar_g_maplist_votable_reduce_time;
 int autocvar_g_maplist_votable_reduce_count;
-bool autocvar_g_maplist_votable_nodetail;
+int autocvar_g_maplist_votable_detail;
 string autocvar_g_maplist_votable_screenshot_dir;
 bool autocvar_g_maplist_votable_suggestions;
 bool autocvar_g_maplist_votable_suggestions_override_mostrecent;
@@ -25,6 +25,7 @@ float autocvar_sv_vote_gametype_timeout;
 string autocvar_sv_vote_gametype_options;
 float autocvar_sv_vote_gametype_reduce_time;
 int autocvar_sv_vote_gametype_reduce_count;
+int autocvar_sv_vote_gametype_detail;
 bool autocvar_sv_vote_gametype_default_current;
 bool autocvar_sv_vote_gametype_maplist_reset = true;
 
