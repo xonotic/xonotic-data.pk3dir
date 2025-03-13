@@ -9,6 +9,7 @@
 #include "textlabel.qh"
 #include "button.qh"
 #include "slider.qh"
+#include "mixedslider.qh"
 #include "checkbox.qh"
 #include "inputbox.qh"
 
@@ -57,7 +58,7 @@ entity makeXonoticInputSettingsTab()
 void CheckBox_Click_Redisplay(entity me, entity checkbox)
 {
 	CheckBox_Click(me, checkbox);
-	cmd("\ndefer 0.2 \"togglemenu 1\"\n");
+	localcmd("\ndefer 0.2 \"togglemenu 1\"\n");
 	//m_display();
 }
 void XonoticInputSettingsTab_fill(entity me)
@@ -141,11 +142,11 @@ void XonoticInputSettingsTab_fill(entity me)
 			e.sendCvars = true;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Jetpack on jump:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_jetpack_jump"));
-			e.addValue(e, ZCTX(_("JPJUMP^Disabled")), "0");
-			e.addValue(e, _("Air only"), "1");
-			e.addValue(e, ZCTX(_("JPJUMP^All")), "2");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_jetpack_jump"));
+			e.addText(e, ZCTX(_("JPJUMP^Disabled")), 0);
+			e.addText(e, _("Air only"), 1);
+			e.addText(e, ZCTX(_("JPJUMP^All")), 2);
+			e.configureXonoticMixedSliderValues(e);
 			e.sendCvars = true;
 	me.TR(me);
 		if(cvar_type("joy_enable") & CVAR_TYPEFLAG_ENGINE)

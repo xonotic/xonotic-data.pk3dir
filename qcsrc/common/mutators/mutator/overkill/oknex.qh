@@ -1,15 +1,25 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(OK_NEX_VIEW, W_Model("h_ok_sniper.iqm"));
+MODEL(OK_NEX_WORLD, W_Model("v_ok_sniper.md3"));
+MODEL(OK_NEX_ITEM, W_Model("g_ok_sniper.md3"));
+
+SOUND(OK_NEX_CHARGE, W_Sound("nexcharge"));
+SOUND(OK_NEX_FIRE, W_Sound("nexfire"));
+SOUND(OK_NEX_IMPACT, W_Sound("neximpact"));
+#endif
+
 CLASS(OverkillNex, Weapon)
 /* spawnfunc */ ATTRIB(OverkillNex, m_canonical_spawnfunc, string, "weapon_oknex");
 /* ammotype  */ ATTRIB(OverkillNex, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(OverkillNex, impulse, int, 7);
 /* flags     */ ATTRIB(OverkillNex, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED);
 /* rating    */ ATTRIB(OverkillNex, bot_pickupbasevalue, float, 8000);
-/* color     */ ATTRIB(OverkillNex, wpcolor, vector, '0.5 1 1');
+/* color     */ ATTRIB(OverkillNex, m_color, vector, '0.459 0.765 0.835');
 /* modelname */ ATTRIB(OverkillNex, mdl, string, "ok_sniper");
 #ifdef GAMEQC
-/* model     */ ATTRIB(OverkillNex, m_model, Model, MDL_OK_SNIPER_ITEM);
+/* model     */ ATTRIB(OverkillNex, m_model, Model, MDL_OK_NEX_ITEM);
 #endif
 /* crosshair */ ATTRIB(OverkillNex, w_crosshair, string, "gfx/crosshairnex");
 /* crosshair */ ATTRIB(OverkillNex, w_crosshair_size, float, 0.65);

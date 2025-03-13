@@ -4,8 +4,7 @@
 #include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
 #include <common/mapobjects/trigger/counter.qh>
 #include <common/mapobjects/triggers.qh>
-#include <common/mutators/mutator/buffs/buffs.qh>
-#include <common/mutators/mutator/buffs/sv_buffs.qh>
+#include <common/mutators/mutator/buffs/_mod.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/notifications/all.qh>
@@ -170,7 +169,7 @@ void target_init_use(entity this, entity actor, entity trigger)
 
 	if (!(this.spawnflags & 8))
 	{
-		FOREACH(StatusEffect, it.instanceOfPowerups,
+		FOREACH(StatusEffects, it.instanceOfPowerupStatusEffect,
 		{
 			it.m_remove(it, actor, STATUSEFFECT_REMOVE_NORMAL);
 		});

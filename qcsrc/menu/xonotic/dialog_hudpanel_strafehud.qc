@@ -5,7 +5,8 @@
 #include "button.qh"
 #include "slider.qh"
 #include "textlabel.qh"
-#include "textslider.qh"
+#include "mixedslider.qh"
+#include "radiobutton.qh"
 
 void StrafeHUD_ColorReset(entity btn, entity me)
 {
@@ -23,43 +24,33 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "strafehud";
+	int i;
 
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_strafehud"));
-			e.addValue(e, _("Disable"), "0");
-			e.addValue(e, _("Enable"), "1");
-			e.addValue(e, _("Enable even observing"), "2");
-			e.addValue(e, _("Enable only in Race/CTS"), "3");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 4, e = makeXonoticMixedSlider("hud_panel_strafehud"));
+			e.addText(e, _("Disable"), 0);
+			e.addText(e, _("Enable"), 1);
+			e.addText(e, _("Enable even observing"), 2);
+			e.addText(e, _("Enable only in Race/CTS"), 3);
+			e.configureXonoticMixedSliderValues(e);
 
 	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("StrafeHUD mode:")));
-
-		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_strafehud_mode"));
-			e.addValue(e, _("View angle centered"), "0");
-			e.addValue(e, _("Velocity angle centered"), "1");
-			e.configureXonoticTextSliderValues(e);
+			me.TD(me, 1, 2.6/2, e = makeXonoticRadioButton(2, "hud_panel_strafehud_mode", "0", _("View angle centered")));
+			me.TD(me, 1, 2.6/2, e = makeXonoticRadioButton(2, "hud_panel_strafehud_mode", "1", _("Velocity angle centered")));
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("StrafeHUD style:")));
-
-		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_strafehud_style"));
-			e.addValue(e, _("no styling"), "0");
-			e.addValue(e, _("progress bar"), "1");
-			e.addValue(e, _("gradient"), "2");
-			e.configureXonoticTextSliderValues(e);
+			me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(3, "hud_panel_strafehud_style", "0", _("No styling")));
+			me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(3, "hud_panel_strafehud_style", "1", _("Status bar")));
+			me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(3, "hud_panel_strafehud_style", "2", _("Gradient")));
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Range:")));
-		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 360, 5, "hud_panel_strafehud_range"));
-	me.TR(me);
-		me.TD(me, 1, 1.9, e = makeXonoticCheckBox(0, "_hud_panel_strafehud_demo", _("Demo mode")));
-
-		me.TDempty(me, 0.2);
-
-		me.TD(me, 1, 1.9, e = makeXonoticButton(_("Reset colors"), '0 0 0'));
-			e.onClick = StrafeHUD_ColorReset;
-			e.onClickEntity = me;
+		me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_strafehud_range"));
+			e.addText(e, _("Dynamic"), 0);
+			e.addRange(e, 10, 360, 10);
+			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1.9, e = makeXonoticTextLabel(0, _("Strafe bar:")));
 
@@ -128,4 +119,12 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 		me.TD(me, 1, 0.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bestangle_alpha"));
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "hud_panel_strafehud_bestangle", _("Enable")));
+	me.TR(me);
+		me.TD(me, 1, 1.9, e = makeXonoticCheckBox(0, "_hud_panel_strafehud_demo", _("Demo mode")));
+
+		me.TDempty(me, 0.2);
+
+		me.TD(me, 1, 1.9, e = makeXonoticButton(_("Reset colors"), '0 0 0'));
+			e.onClick = StrafeHUD_ColorReset;
+			e.onClickEntity = me;
 }

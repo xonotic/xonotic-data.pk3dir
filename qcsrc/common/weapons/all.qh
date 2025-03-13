@@ -27,7 +27,15 @@ WepSet ReadWepSet();
 
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
 REGISTER_REGISTRY(Weapons)
-STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, it.m_pickup = NEW(WeaponPickup, it)); }
+STATIC_INIT(WeaponPickup)
+{
+	FOREACH(Weapons, true,
+	{
+		if ((it.spawnflags & WEP_FLAG_SPECIALATTACK) && !(it.spawnflags & WEP_FLAG_HIDDEN))
+			error(sprintf("Special attack \"%s\" without WEP_FLAG_HIDDEN flag set.", it.m_name));
+		it.m_pickup = NEW(WeaponPickup, it);
+	});
+}
 
 #ifdef SVQC
 #include <server/bot/api.qh>
@@ -173,14 +181,15 @@ const .float reloading_time = reload_time;
 		W_PROP_PRI(class, fld, T, wepname) \
 		W_PROP_SEC(class, fld, T, wepname)
 	#define W_PROP_BEGIN(class)
-		#ifdef GAMEQC
+		#if defined(SVQC)
 			#define _W_PROP(class, fld, T, wepname) \
 				/* static */ T _W_PROP_CVAR(wepname, fld); \
 				ATTRIB(class, wepvar_##fld, T, _W_PROP_CVAR(wepname, fld));
 			#define _W_PROP_CVAR(wepname, fld) autocvar_g_balance_##wepname##_##fld
+		#elif defined(CSQC)
+			#define _W_PROP(class, fld, T, wepname) ATTRIB(class, wepvar_##fld, T);
 		#else
 			#define _W_PROP(class, fld, T, wepname)
-			#define _W_PROP_CVAR(wepname, fld)
 		#endif
 	#define W_PROP_END()
 

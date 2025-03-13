@@ -1,12 +1,26 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(FIREBALL_SPHERE, "models/sphere/sphere.md3");
+MODEL(FIREBALL_VIEW, W_Model("h_fireball.iqm"));
+MODEL(FIREBALL_WORLD, W_Model("v_fireball.md3"));
+MODEL(FIREBALL_ITEM, W_Model("g_fireball.md3"));
+
+SOUND(FIREBALL_FIRE2, W_Sound("fireball_fire2"));
+SOUND(FIREBALL_FIRE, W_Sound("fireball_fire"));
+SOUND(FIREBALL_FLY2, W_Sound("fireball_fly2"));
+SOUND(FIREBALL_FLY, W_Sound("fireball_fly"));
+SOUND(FIREBALL_IMPACT2, W_Sound("fireball_impact2"));
+SOUND(FIREBALL_PREFIRE2, W_Sound("fireball_prefire2"));
+#endif
+
 CLASS(Fireball, Weapon)
 /* spawnfunc */ ATTRIB(Fireball, m_canonical_spawnfunc, string, "weapon_fireball");
 /* ammotype  */ //ATTRIB(Fireball, ammo_type, Resource, RES_NONE);
 /* impulse   */ ATTRIB(Fireball, impulse, int, 9);
 /* flags     */ ATTRIB(Fireball, spawnflags, int, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Fireball, bot_pickupbasevalue, float, 5000);
-/* color     */ ATTRIB(Fireball, wpcolor, vector, '1 0.5 0');
+/* color     */ ATTRIB(Fireball, m_color, vector, '0.941 0.522 0.373');
 /* modelname */ ATTRIB(Fireball, mdl, string, "fireball");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Fireball, m_model, Model, MDL_FIREBALL_ITEM);

@@ -281,7 +281,8 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 				+ 0.05 / max(1, sk + this.havocbot_keyboardskill)
 				+ random() * 0.025 / max(0.00025, skill + this.havocbot_keyboardskill)
 		, time);
-	vector keyboard = CS(this).movement / autocvar_sv_maxspeed;
+	// TODO: Consider changing this back to `/ autocvar_sv_maxspeed` after https://github.com/graphitemaster/gmqcc/issues/210.
+	vector keyboard = CS(this).movement * (1 / autocvar_sv_maxspeed);
 
 	float trigger = autocvar_bot_ai_keyboard_threshold;
 
@@ -406,7 +407,7 @@ int havocbot_checkdanger(entity this, vector dst_ahead)
 	if (trace_fraction == 1 && !this.jumppadcount
 		&& !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
 		&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
-	if ((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || (this.aistatus & AI_STATUS_ROAMING) || PHYS_INPUT_BUTTON_JUMP(this))
+	if ((IS_ONGROUND(this)) || (this.aistatus & (AI_STATUS_RUNNING | AI_STATUS_ROAMING)) || PHYS_INPUT_BUTTON_JUMP(this))
 	{
 		// Look downwards
 		traceline(dst_ahead , dst_down, true, NULL);
@@ -1086,7 +1087,7 @@ void havocbot_movetogoal(entity this)
 						}
 						else
 						{
-							jump_height = stepheightvec + jumpheight_vec / 2;
+							jump_height = stepheightvec + jumpheight_vec * 0.5;
 							tracebox(this.origin + jump_height, this.mins, this.maxs, actual_destorg + jump_height, false, this);
 							if (trace_fraction > s)
 							{

@@ -2,7 +2,7 @@
 
 #include "textlabel.qh"
 #include "checkbox.qh"
-#include "textslider.qh"
+#include "mixedslider.qh"
 #include "slider.qh"
 #include "radiobutton.qh"
 
@@ -78,23 +78,33 @@ void XonoticGameViewSettingsTab_fill(entity me)
 	me.TR(me);
 		//me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom speed:"))));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("cl_zoomspeed",
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("cl_zoomspeed",
 			_("How fast the view will be zoomed, disable to zoom instantly")));
-			e.addValue(e, "1", "1"); // Samual: for() loop doesn't work here, even though it would make sense.
-			e.addValue(e, "2", "2");
-			e.addValue(e, "3", "3");
-			e.addValue(e, "4", "4");
-			e.addValue(e, "5", "5");
-			e.addValue(e, "6", "6");
-			e.addValue(e, "7", "7");
-			e.addValue(e, "8", "8");
-			e.addValue(e, ZCTX(_("ZOOM^Instant")), "-1");
-			e.configureXonoticTextSliderValues(e);
+			e.addRange(e, 1, 8, 1);
+			e.addText(e, ZCTX(_("ZOOM^Instant")), -1);
+			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		//me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom sensitivity:"))));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 1, 0.1, "cl_zoomsensitivity",
 			_("How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)")));
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_zoomscroll", _("Zoom scrolling")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Scale:")));
+			setDependent(e, "cl_zoomscroll", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticSlider(-1, 1, 0.1, "cl_zoomscroll_scale")); // would be better if this could skip 0
+			setDependent(e, "cl_zoomscroll", 1, 1);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Speed:")));
+			setDependent(e, "cl_zoomscroll", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_zoomscroll_speed"));
+			e.addRange(e, 2, 16, 2);
+			e.addText(e, ZCTX(_("ZOOM^Instant")), -1);
+			e.configureXonoticMixedSliderValues(e);
+			setDependent(e, "cl_zoomscroll", 1, 1);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_velocityzoom_enabled", _("Velocity zoom")));

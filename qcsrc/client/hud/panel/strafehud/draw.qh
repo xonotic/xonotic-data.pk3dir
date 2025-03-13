@@ -1,0 +1,9 @@
+#pragma once
+#include "../strafehud.qh"
+
+void StrafeHUD_DrawStrafeHUD(float, float, vector, float, int, int, float);
+void StrafeHUD_DrawGradient(vector, vector, vector, float, float, float, float, int, float);
+void StrafeHUD_DrawSoftGradient(vector, vector, vector, float, float, float, float, float, int, float);
+void StrafeHUD_DrawStrafeArrow(vector, float, vector, float, bool, float);
+void StrafeHUD_DrawTextIndicator(string, float, vector, float, float, vector, float, float);
+bool StrafeHUD_IsGradient(int);

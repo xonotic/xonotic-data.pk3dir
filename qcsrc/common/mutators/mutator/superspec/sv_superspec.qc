@@ -6,22 +6,22 @@ REGISTER_MUTATOR(superspec, expr_evaluate(autocvar_g_superspectate));
 #define _SSMAGIX "SUPERSPEC_OPTIONSFILE_V1"
 #define _ISLOCAL(ent) ((edict_num(1) == (ent)) ? true : false)
 
-const float ASF_STRENGTH 		= BIT(0);
-const float ASF_SHIELD 			= BIT(1);
-const float ASF_MEGA_AR 		= BIT(2);
-const float ASF_MEGA_HP 		= BIT(3);
-const float ASF_FLAG_GRAB 		= BIT(4);
-const float ASF_OBSERVER_ONLY 	= BIT(5);
-const float ASF_SHOWWHAT 		= BIT(6);
-const float ASF_SSIM 			= BIT(7);
-const float ASF_FOLLOWKILLER 	= BIT(8);
-const float ASF_ALL 			= 0xFFFFFF;
-.float autospec_flags;
+const int ASF_STRENGTH      = BIT(0);
+const int ASF_SHIELD        = BIT(1);
+const int ASF_MEGA_AR       = BIT(2);
+const int ASF_MEGA_HP       = BIT(3);
+const int ASF_FLAG_GRAB     = BIT(4);
+const int ASF_OBSERVER_ONLY = BIT(5);
+const int ASF_SHOWWHAT      = BIT(6);
+const int ASF_SSIM          = BIT(7);
+const int ASF_FOLLOWKILLER  = BIT(8);
+const int ASF_ALL           = 0xFFFFFF;
+.int autospec_flags;
 
-const float SSF_SILENT = 1;
-const float SSF_VERBOSE = 2;
-const float SSF_ITEMMSG = 4;
-.float superspec_flags;
+const int SSF_SILENT  = BIT(0);
+const int SSF_VERBOSE = BIT(1);
+const int SSF_ITEMMSG = BIT(2);
+.int superspec_flags;
 
 .string superspec_itemfilter; //"classname1 classname2 ..."
 
@@ -55,9 +55,9 @@ void superspec_save_client_conf(entity this)
 	{
 		fputs(fh, _SSMAGIX);
 		fputs(fh, "\n");
-		fputs(fh, ftos(this.autospec_flags));
+		fputs(fh, itos(this.autospec_flags));
 		fputs(fh, "\n");
-		fputs(fh, ftos(this.superspec_flags));
+		fputs(fh, itos(this.superspec_flags));
 		fputs(fh, "\n");
 		fputs(fh, this.superspec_itemfilter);
 		fputs(fh, "\n");
@@ -429,8 +429,8 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 		}
 		else
 		{
-			player.autospec_flags = stof(fgets(fh));
-			player.superspec_flags = stof(fgets(fh));
+			player.autospec_flags = stoi(fgets(fh));
+			player.superspec_flags = stoi(fgets(fh));
 			player.superspec_itemfilter = strzone(fgets(fh));
 		}
 		fclose(fh);

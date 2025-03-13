@@ -1,12 +1,24 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(HOOK, "models/hook.md3");
+MODEL(HOOK_VIEW, W_Model("h_hookgun.iqm"));
+MODEL(HOOK_WORLD, W_Model("v_hookgun.md3"));
+MODEL(HOOK_ITEM, W_Model("g_hookgun.md3"));
+
+SOUND(HOOKBOMB_FIRE, W_Sound("hookbomb_fire"));
+SOUND(HOOKBOMB_IMPACT, W_Sound("hookbomb_impact"));
+SOUND(HOOK_FIRE, W_Sound("hook_fire"));
+SOUND(HOOK_IMPACT, W_Sound("hook_impact"));
+#endif
+
 CLASS(Hook, Weapon)
 /* spawnfunc */ ATTRIB(Hook, m_canonical_spawnfunc, string, "weapon_hook");
 /* ammotype  */ ATTRIB(Hook, ammo_type, Resource, RES_FUEL);
 /* impulse   */ ATTRIB(Hook, impulse, int, 0);
 /* flags     */ ATTRIB(Hook, spawnflags, int, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NOTRUEAIM);
 /* rating    */ ATTRIB(Hook, bot_pickupbasevalue, float, 0);
-/* color     */ ATTRIB(Hook, wpcolor, vector, '0 0.5 0');
+/* color     */ ATTRIB(Hook, m_color, vector, '0.471 0.817 0.392');
 /* modelname */ ATTRIB(Hook, mdl, string, "hookgun");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Hook, m_model, Model, MDL_HOOK_ITEM);

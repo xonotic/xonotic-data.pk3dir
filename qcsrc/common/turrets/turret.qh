@@ -8,7 +8,7 @@ CLASS(Turret, Object)
     /** short name */
     ATTRIB(Turret, netname, string);
     /** human readable name */
-    ATTRIB(Turret, turret_name, string, _("Turret"));
+    ATTRIB(Turret, m_name, string, _("Turret"));
     /** currently a copy of the model */
     ATTRIB(Turret, mdl, string);
     /** full name of model */
@@ -23,7 +23,7 @@ CLASS(Turret, Object)
     ATTRIB(Turret, m_maxs, vector, '0 0 0');
 
     METHOD(Turret, display, void(Turret this, void(string name, string icon) returns)) {
-        returns(this.turret_name, string_null);
+        returns(this.m_name, string_null);
     }
     /** (BOTH) setup turret data */
     METHOD(Turret, tr_setup, void(Turret this, entity it)) {

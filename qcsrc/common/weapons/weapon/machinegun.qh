@@ -1,12 +1,21 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(MACHINEGUN_MUZZLEFLASH, "models/uziflash.md3");
+MODEL(MACHINEGUN_VIEW, W_Model("h_uzi.iqm"));
+MODEL(MACHINEGUN_WORLD, W_Model("v_uzi.md3"));
+MODEL(MACHINEGUN_ITEM, W_Model("g_uzi.md3"));
+
+SOUND(MACHINEGUN_FIRE, W_Sound("uzi_fire"));
+#endif
+
 CLASS(MachineGun, Weapon)
 /* spawnfunc */ ATTRIB(MachineGun, m_canonical_spawnfunc, string, "weapon_machinegun");
 /* ammotype  */ ATTRIB(MachineGun, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(MachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(MachineGun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_BLEED);
 /* rating    */ ATTRIB(MachineGun, bot_pickupbasevalue, float, 7000);
-/* color     */ ATTRIB(MachineGun, wpcolor, vector, '1 1 0');
+/* color     */ ATTRIB(MachineGun, m_color, vector, '0.678 0.886 0.267');
 /* modelname */ ATTRIB(MachineGun, mdl, string, "uzi");
 #ifdef GAMEQC
 /* model     */ ATTRIB(MachineGun, m_model, Model, MDL_MACHINEGUN_ITEM);

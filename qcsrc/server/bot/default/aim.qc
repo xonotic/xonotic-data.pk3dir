@@ -52,7 +52,8 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	setorigin(tracetossfaketarget, v);
 
 	c = 0;
-	dir = (end - org) / shotdistance; // same as dir = normalize(end - org); but cheaper
+	// TODO: Consider changing this back to `/ shotdistance` after https://github.com/graphitemaster/gmqcc/issues/210.
+	dir = (end - org) * (1 / shotdistance); // same as dir = normalize(end - org); but cheaper
 	vector test_dir = dir;
 	vector test_dir_normalized = dir;
 	while (c < 10) // 10 traces

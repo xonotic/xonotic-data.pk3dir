@@ -6,7 +6,7 @@ CLASS(XonoticHUDPowerupsDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDPowerupsDialog, title, string, _("Powerups Panel"));
 	ATTRIB(XonoticHUDPowerupsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
 	ATTRIB(XonoticHUDPowerupsDialog, intendedWidth, float, 0.4);
-	ATTRIB(XonoticHUDPowerupsDialog, rows, float, 15.5);
+	ATTRIB(XonoticHUDPowerupsDialog, rows, float, 16);
 	ATTRIB(XonoticHUDPowerupsDialog, columns, float, 4);
 	ATTRIB(XonoticHUDPowerupsDialog, name, string, "HUDpowerups");
 	ATTRIB(XonoticHUDPowerupsDialog, requiresConnection, float, true);

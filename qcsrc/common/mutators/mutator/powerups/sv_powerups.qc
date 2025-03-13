@@ -90,7 +90,7 @@ void powerups_DropItem_Think(entity this)
 	}
 }
 
-void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
+void powerups_DropItem(entity this, StatusEffect effect, bool freezeTimer)
 {
 	float t = StatusEffects_gettime(effect, this);
 	float timeleft = t - time;
@@ -114,7 +114,7 @@ void powerups_DropItem(entity this, StatusEffects effect, bool freezeTimer)
 	{
 		case STATUSEFFECT_Strength:     e.itemdef = ITEM_Strength;     e.strength_finished = finished;     maxtime = autocvar_g_balance_powerup_strength_time;   break;
 		case STATUSEFFECT_Shield:       e.itemdef = ITEM_Shield;       e.invincible_finished = finished;   maxtime = autocvar_g_balance_powerup_invincible_time; break;
-		case STATUSEFFECT_Invisibility: e.itemdef = ITEM_Invisibility; e.invisibility_finished = finished; maxtime = autocvar_g_balance_powerup_invincible_time; break;
+		case STATUSEFFECT_Invisibility: e.itemdef = ITEM_Invisibility; e.invisibility_finished = finished; maxtime = autocvar_g_balance_powerup_invisibility_time; break;
 		case STATUSEFFECT_Speed:        e.itemdef = ITEM_Speed;        e.speed_finished = finished;        maxtime = autocvar_g_balance_powerup_speed_time;      break;
 		default: delete(e); return;
 	}
@@ -153,7 +153,7 @@ MUTATOR_HOOKFUNCTION(powerups, PlayerDies)
 
 	entity frag_target = M_ARGV(2, entity);
 
-	FOREACH(StatusEffect, it.instanceOfPowerups,
+	FOREACH(StatusEffects, it.instanceOfPowerupStatusEffect,
 	{
 		if(StatusEffects_active(it, frag_target))
 			powerups_DropItem(frag_target, it, autocvar_g_powerups_drop_ondeath == 2);
@@ -166,7 +166,7 @@ MUTATOR_HOOKFUNCTION(powerups, PlayerUseKey)
 
 	entity player = M_ARGV(0, entity);
 
-	FOREACH(StatusEffect, it.instanceOfPowerups,
+	FOREACH(StatusEffects, it.instanceOfPowerupStatusEffect,
 	{
 		if(StatusEffects_active(it, player)) {
 			powerups_DropItem(player, it, autocvar_g_powerups_drop == 2);

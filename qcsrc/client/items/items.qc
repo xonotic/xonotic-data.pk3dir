@@ -80,7 +80,7 @@ void ItemDraw(entity this)
 		ItemSetModel(this, wantsimple);
 
 	// no bobbing applied to simple items, for consistency's sake (no visual difference between ammo and weapons)
-	bool animate = (autocvar_cl_items_animate & 1) && this.item_simple <= 0 && ((this.ItemStatus & ITS_ANIMATE1) || (this.ItemStatus & ITS_ANIMATE2));
+	bool animate = (autocvar_cl_items_animate & 1) && this.item_simple <= 0 && (this.ItemStatus & (ITS_ANIMATE1 | ITS_ANIMATE2));
 
 	// rotation must be set before running physics
 	if(!animate)
@@ -272,7 +272,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		}
 	}
 
-	if(sf & ISF_SIZE || sf & ISF_SIZE2) // always true when it's spawned (in CSQC's perspective)
+	if(sf & (ISF_SIZE | ISF_SIZE2)) // always true when it's spawned (in CSQC's perspective)
 	{
 		if(isnew)
 		{
@@ -331,7 +331,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		SET_ONGROUND(this); // extra overkill
 	}
 
-	if(sf & ISF_REMOVEFX && !(sf & ISF_SIZE) && !(sf & ISF_SIZE2)) // TODO !isnew isn't reliable for this... are we double sending initialisations?
+	if(sf & ISF_REMOVEFX && !(sf & (ISF_SIZE | ISF_SIZE2))) // TODO !isnew isn't reliable for this... are we double sending initialisations?
 	{
 		// no longer available to pick up, about to be removed
 		if (this.drawmask) // this.alpha > 0

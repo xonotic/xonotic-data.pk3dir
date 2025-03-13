@@ -170,7 +170,9 @@ void GrapplingHookThink(entity this)
 
 		vector dir = this.origin - myorg;
 		dist = vlen(dir);
-		dir = (dist ? dir / dist : '0 0 0'); // same as dir = normalize(dir); but cheaper
+
+		// TODO: Consider changing this back to `dir / dist` after https://github.com/graphitemaster/gmqcc/issues/210.
+		dir = (dist ? dir * (1 / dist) : '0 0 0'); // same as dir = normalize(dir); but cheaper
 
 		if(tarzan)
 		{

@@ -650,7 +650,7 @@ Gametype MapInfo_Type_FromString(string gtype, bool dowarn, bool is_q3compat)
 
 string MapInfo_Type_Description(Gametype t)
 {
-	return t ? t.gametype_description : "";
+	return t ? t.m_description : "";
 }
 
 string MapInfo_Type_ToString(Gametype t)
@@ -1007,28 +1007,33 @@ string _MapInfo_CheckArenaFile(string pFilename, string pMapname)
 
 string _MapInfo_FindArenaFile(string pFilename, string extension)
 {
-	string fallback = strcat("scripts/", pFilename, extension);
-	if(!checkextension("DP_QC_FS_SEARCH_PACKFILE"))
-		return _MapInfo_CheckArenaFile(fallback, pFilename);
+	// A valid arena file with the "default" name may have been created as a map-specific
+	// override of an arena file with a different name (possibly multi-map) in the pk3
+	// (occasionally in the wild such file exists in the pk3 but isn't valid for a map in the pk3).
+	// Therefore we try the "default" name first.
+	string afile = _MapInfo_CheckArenaFile(strcat("scripts/", pFilename, extension), pFilename);
+	if (afile != ""
+	|| !checkextension("DP_QC_FS_SEARCH_PACKFILE"))
+		return afile;
+
 	string base_pack = whichpack(strcat("maps/", pFilename, ".bsp"));
 	if(base_pack == "") // this map isn't packaged!
-		return _MapInfo_CheckArenaFile(fallback, pFilename);
-
+		return "";
 	int glob = search_packfile_begin(strcat("scripts/*", extension), true, true, base_pack);
-	if(glob < 0)
-		return _MapInfo_CheckArenaFile(fallback, pFilename);
+	if(glob < 0) // there's no matching file in the pack
+		return "";
 	int n = search_getsize(glob);
 	for(int j = 0; j < n; ++j)
 	{
-		string file = search_getfilename(glob, j);
-		if(_MapInfo_CheckArenaFile(file, pFilename) != "")
+		afile = search_getfilename(glob, j);
+		if(_MapInfo_CheckArenaFile(afile, pFilename) != "")
 		{
 			search_end(glob);
-			return file;
+			return afile;
 		}
 	}
-
 	search_end(glob);
+
 	return ""; // if we get here, a valid .arena file could not be found
 }
 

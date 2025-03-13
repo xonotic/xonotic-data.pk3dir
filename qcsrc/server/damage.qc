@@ -8,8 +8,7 @@
 #include <common/items/_mod.qh>
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/triggers.qh>
-#include <common/mutators/mutator/buffs/buffs.qh>
-#include <common/mutators/mutator/buffs/sv_buffs.qh>
+#include <common/mutators/mutator/buffs/_mod.qh>
 #include <common/mutators/mutator/instagib/sv_instagib.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
@@ -832,7 +831,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 						}
 					}
 				}
-				else if (IS_PLAYER(attacker) && !STAT(FROZEN, victim)) // same team
+				else if (IS_PLAYER(attacker) && !STAT(FROZEN, victim) && !(deathtype & HITTYPE_SPAM)) // same team
 				{
 					if (deathtype != DEATH_FIRE.m_id)
 					{
@@ -919,7 +918,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 	total_damage_to_creatures = 0;
 
-	if(!(deathtype & HITTYPE_SOUND) && !(deathtype & HITTYPE_SPAM)) // do not send bandwidth-hogging radial spam attacks
+	if(!(deathtype & (HITTYPE_SOUND | HITTYPE_SPAM))) // do not send bandwidth-hogging radial spam attacks
 	{
 		force = inflictorvelocity;
 		if(force == '0 0 0')

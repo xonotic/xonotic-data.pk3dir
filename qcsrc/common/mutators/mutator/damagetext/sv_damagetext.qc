@@ -1,6 +1,6 @@
 #include "sv_damagetext.qh"
 
-AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: visible to spectators, >= 2: visible to attacker, >= 3: all players see everyone's damage");
+AUTOCVAR(sv_damagetext, int, 2, "\\\"0\\\" = disable damage text, \\\"1\\\" = show damage text to spectators, \\\"2\\\" = also to the attacker, \\\"3\\\" = show damage text to all players");
 
 REGISTER_MUTATOR(damagetext, true);
 
@@ -67,7 +67,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 	float armor = M_ARGV(3, float);
 	int deathtype = M_ARGV(5, int);
 	float potential_damage = M_ARGV(6, float);
-	if(DEATH_WEAPONOF(deathtype) == WEP_VAPORIZER) return;
+	if(MUTATOR_IS_ENABLED(mutator_instagib) && DEATH_WEAPONOF(deathtype) == WEP_VAPORIZER) return;
 
 	static entity net_text_prev;
 	static float net_damagetext_prev_time;
