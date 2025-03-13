@@ -112,7 +112,7 @@ void ClearRaceSplits(bool quiet)
 {
 	bool once = true;
 	bool changed_player = (racetimer_have_stored_splits_player != (current_player + 1));
-	for (int i = 0; i <= 255; ++i)
+	for (int i = 0; i < 256; ++i)
 	{
 		if(race_checkpoint_splits[i]
 		&& autocvar_cl_race_checkpoint_splits_console
