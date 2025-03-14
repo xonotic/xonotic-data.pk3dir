@@ -17,15 +17,17 @@ MODEL(HealthSmall_ITEM, Item_Model("g_h1.md3"));
 SOUND(HealthSmall, Item_Sound("minihealth"));
 #endif
 #ifdef SVQC
-PROPERTY(float, g_pickup_healthsmall_anyway);
-PROPERTY(int, g_pickup_healthsmall);
-PROPERTY(int, g_pickup_healthsmall_max);
+bool autocvar_g_pickup_healthsmall_anyway;
+int autocvar_g_pickup_healthsmall;
+int autocvar_g_pickup_healthsmall_max;
+float autocvar_g_pickup_respawntime_health_small;
+float autocvar_g_pickup_respawntimejitter_health_small;
 void item_healthsmall_init(Pickup this, entity item)
 {
     if(!item.max_health)
-        item.max_health = g_pickup_healthsmall_max;
+        item.max_health = autocvar_g_pickup_healthsmall_max;
     if(!GetResource(item, RES_HEALTH))
-        SetResourceExplicit(item, RES_HEALTH, q3compat && item.count ? item.count : g_pickup_healthsmall);
+        SetResourceExplicit(item, RES_HEALTH, q3compat && item.count ? item.count : autocvar_g_pickup_healthsmall);
 }
 #endif
 
@@ -51,9 +53,9 @@ CLASS(HealthSmall, Health)
 /* minsize      */ ATTRIB(HealthSmall, m_mins, vector, ITEM_S_MINS);
 /* maxsize      */ ATTRIB(HealthSmall, m_maxs, vector, ITEM_S_MAXS);
 /* itemid       */ ATTRIB(HealthSmall, m_itemid, int, IT_RESOURCE);
-/* respawntime  */ ATTRIB(HealthSmall, m_respawntime, float(), GET(g_pickup_respawntime_health_small));
-/*              */ ATTRIB(HealthSmall, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_health_small));
-/* pickupanyway */ ATTRIB(HealthSmall, m_pickupanyway, float(), GET(g_pickup_healthsmall_anyway));
+/* respawntime  */ ATTRIB(HealthSmall, m_respawntime, float, autocvar_g_pickup_respawntime_health_small);
+/*              */ ATTRIB(HealthSmall, m_respawntimejitter, float, autocvar_g_pickup_respawntimejitter_health_small);
+/* pickupanyway */ ATTRIB(HealthSmall, m_pickupanyway, bool, autocvar_g_pickup_healthsmall_anyway);
 /* iteminit     */ ATTRIB(HealthSmall, m_iteminit, void(Pickup this, entity item), item_healthsmall_init);
 #endif
 ENDCLASS(HealthSmall)
@@ -66,15 +68,17 @@ MODEL(HealthMedium_ITEM, Item_Model("g_h25.md3"));
 SOUND(HealthMedium, Item_Sound("mediumhealth"));
 #endif
 #ifdef SVQC
-PROPERTY(float, g_pickup_healthmedium_anyway);
-PROPERTY(int, g_pickup_healthmedium);
-PROPERTY(int, g_pickup_healthmedium_max);
+bool autocvar_g_pickup_healthmedium_anyway;
+int autocvar_g_pickup_healthmedium;
+int autocvar_g_pickup_healthmedium_max;
+float autocvar_g_pickup_respawntime_health_medium;
+float autocvar_g_pickup_respawntimejitter_health_medium;
 void item_healthmedium_init(Pickup this, entity item)
 {
     if(!item.max_health)
-        item.max_health = g_pickup_healthmedium_max;
+        item.max_health = autocvar_g_pickup_healthmedium_max;
     if(!GetResource(item, RES_HEALTH))
-        SetResourceExplicit(item, RES_HEALTH, q3compat && item.count ? item.count : g_pickup_healthmedium);
+        SetResourceExplicit(item, RES_HEALTH, q3compat && item.count ? item.count : autocvar_g_pickup_healthmedium);
 }
 #endif
 
@@ -100,9 +104,9 @@ CLASS(HealthMedium, Health)
 /* minsize      */ ATTRIB(HealthMedium, m_mins, vector, ITEM_S_MINS);
 /* maxsize      */ ATTRIB(HealthMedium, m_maxs, vector, ITEM_S_MAXS);
 /* itemid       */ ATTRIB(HealthMedium, m_itemid, int, IT_RESOURCE);
-/* respawntime  */ ATTRIB(HealthMedium, m_respawntime, float(), GET(g_pickup_respawntime_health_medium));
-/*              */ ATTRIB(HealthMedium, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_health_medium));
-/* pickupanyway */ ATTRIB(HealthMedium, m_pickupanyway, float(), GET(g_pickup_healthmedium_anyway));
+/* respawntime  */ ATTRIB(HealthMedium, m_respawntime, float, autocvar_g_pickup_respawntime_health_medium);
+/*              */ ATTRIB(HealthMedium, m_respawntimejitter, float, autocvar_g_pickup_respawntimejitter_health_medium);
+/* pickupanyway */ ATTRIB(HealthMedium, m_pickupanyway, bool, autocvar_g_pickup_healthmedium_anyway);
 /* iteminit     */ ATTRIB(HealthMedium, m_iteminit, void(Pickup this, entity item), item_healthmedium_init);
 #endif
 ENDCLASS(HealthMedium)
@@ -115,15 +119,17 @@ MODEL(HealthBig_ITEM, Item_Model("g_h50.md3"));
 SOUND(HealthBig, Item_Sound("mediumhealth"));
 #endif
 #ifdef SVQC
-PROPERTY(float, g_pickup_healthbig_anyway);
-PROPERTY(int, g_pickup_healthbig);
-PROPERTY(int, g_pickup_healthbig_max);
+bool autocvar_g_pickup_healthbig_anyway;
+int autocvar_g_pickup_healthbig;
+int autocvar_g_pickup_healthbig_max;
+float autocvar_g_pickup_respawntime_health_big;
+float autocvar_g_pickup_respawntimejitter_health_big;
 void item_healthbig_init(Pickup this, entity item)
 {
     if(!item.max_health)
-        item.max_health = g_pickup_healthbig_max;
+        item.max_health = autocvar_g_pickup_healthbig_max;
     if(!GetResource(item, RES_HEALTH))
-        SetResourceExplicit(item, RES_HEALTH, q3compat && item.count ? item.count : g_pickup_healthbig);
+        SetResourceExplicit(item, RES_HEALTH, q3compat && item.count ? item.count : autocvar_g_pickup_healthbig);
 }
 #endif
 
@@ -149,9 +155,9 @@ CLASS(HealthBig, Health)
 /* wptext       */ ATTRIB(HealthBig, m_waypoint, string, _("Big health"));
 #ifdef SVQC
 /* itemid       */ ATTRIB(HealthBig, m_itemid, int, IT_RESOURCE);
-/* respawntime  */ ATTRIB(HealthBig, m_respawntime, float(), GET(g_pickup_respawntime_health_big));
-/*              */ ATTRIB(HealthBig, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_health_big));
-/* pickupanyway */ ATTRIB(HealthBig, m_pickupanyway, float(), GET(g_pickup_healthbig_anyway));
+/* respawntime  */ ATTRIB(HealthBig, m_respawntime, float, autocvar_g_pickup_respawntime_health_big);
+/*              */ ATTRIB(HealthBig, m_respawntimejitter, float, autocvar_g_pickup_respawntimejitter_health_big);
+/* pickupanyway */ ATTRIB(HealthBig, m_pickupanyway, bool, autocvar_g_pickup_healthbig_anyway);
 /* iteminit     */ ATTRIB(HealthBig, m_iteminit, void(Pickup this, entity item), item_healthbig_init);
 #endif
 ENDCLASS(HealthBig)
@@ -164,15 +170,17 @@ MODEL(HealthMega_ITEM, Item_Model("g_h100.md3"));
 SOUND(HealthMega, Item_Sound("megahealth"));
 #endif
 #ifdef SVQC
-PROPERTY(float, g_pickup_healthmega_anyway);
-PROPERTY(int, g_pickup_healthmega);
-PROPERTY(int, g_pickup_healthmega_max);
+bool autocvar_g_pickup_healthmega_anyway;
+int autocvar_g_pickup_healthmega;
+int autocvar_g_pickup_healthmega_max;
+float autocvar_g_pickup_respawntime_health_mega;
+float autocvar_g_pickup_respawntimejitter_health_mega;
 void item_healthmega_init(Pickup this, entity item)
 {
     if(!item.max_health)
-        item.max_health = g_pickup_healthmega_max;
+        item.max_health = autocvar_g_pickup_healthmega_max;
     if(!GetResource(item, RES_HEALTH))
-        SetResourceExplicit(item, RES_HEALTH, q3compat && item.count ? item.count : g_pickup_healthmega);
+        SetResourceExplicit(item, RES_HEALTH, q3compat && item.count ? item.count : autocvar_g_pickup_healthmega);
 }
 #endif
 
@@ -200,9 +208,9 @@ CLASS(HealthMega, Health)
 #ifdef SVQC
 /* maxsize      */ ATTRIB(HealthMega, m_maxs, vector, ITEM_L_MAXS);
 /* itemid       */ ATTRIB(HealthMega, m_itemid, int, IT_RESOURCE);
-/* respawntime  */ ATTRIB(HealthMega, m_respawntime, float(), GET(g_pickup_respawntime_health_mega));
-/*              */ ATTRIB(HealthMega, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_health_mega));
-/* pickupanyway */ ATTRIB(HealthMega, m_pickupanyway, float(), GET(g_pickup_healthmega_anyway));
+/* respawntime  */ ATTRIB(HealthMega, m_respawntime, float, autocvar_g_pickup_respawntime_health_mega);
+/*              */ ATTRIB(HealthMega, m_respawntimejitter, float, autocvar_g_pickup_respawntimejitter_health_mega);
+/* pickupanyway */ ATTRIB(HealthMega, m_pickupanyway, bool, autocvar_g_pickup_healthmega_anyway);
 /* iteminit     */ ATTRIB(HealthMega, m_iteminit, void(Pickup this, entity item), item_healthmega_init);
 #endif
 ENDCLASS(HealthMega)
