@@ -17,14 +17,14 @@ MODEL(Jetpack_ITEM, Item_Model("g_jetpack.md3"));
 
 #ifdef SVQC
 bool autocvar_g_powerups_jetpack = true;
-PROPERTY(int, g_pickup_fuel_jetpack);
+int autocvar_g_pickup_fuel_jetpack;
 void powerup_jetpack_init(Pickup def, entity item)
 {
     if(!autocvar_g_powerups || !autocvar_g_powerups_jetpack)
         def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 
     if(!GetResource(item, RES_FUEL))
-        SetResourceExplicit(item, RES_FUEL, g_pickup_fuel_jetpack);
+        SetResourceExplicit(item, RES_FUEL, autocvar_g_pickup_fuel_jetpack);
 }
 #endif
 
@@ -56,11 +56,12 @@ MODEL(JetpackFuel_ITEM, Item_Model("g_fuel.md3"));
 #endif
 
 #ifdef SVQC
-PROPERTY(int, g_pickup_fuel);
+int autocvar_g_pickup_fuel;
+int autocvar_g_pickup_fuel_max;
 void ammo_fuel_init(Pickup this, entity item)
 {
     if(!GetResource(item, RES_FUEL))
-        SetResourceExplicit(item, RES_FUEL, g_pickup_fuel);
+        SetResourceExplicit(item, RES_FUEL, autocvar_g_pickup_fuel);
 }
 #endif
 

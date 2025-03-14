@@ -30,22 +30,22 @@ float GetResourceLimit(entity e, Resource res_type)
 		}
 		case RES_SHELLS:
 		{
-			limit = g_pickup_shells_max;
+			limit = autocvar_g_pickup_shells_max;
 			break;
 		}
 		case RES_BULLETS:
 		{
-			limit = g_pickup_nails_max;
+			limit = autocvar_g_pickup_nails_max;
 			break;
 		}
 		case RES_ROCKETS:
 		{
-			limit = g_pickup_rockets_max;
+			limit = autocvar_g_pickup_rockets_max;
 			break;
 		}
 		case RES_CELLS:
 		{
-			limit = g_pickup_cells_max;
+			limit = autocvar_g_pickup_cells_max;
 			break;
 		}
 		case RES_FUEL:

@@ -7,6 +7,9 @@ DIFF ?= diff
 # xonotic build system overrides this by command line argument to turn off the check-cvars step
 XON_BUILDSYSTEM =
 
+# If requested, these targets must always run first:
+.EXTRA_PREREQS := $(filter clean, $(MAKECMDGOALS))
+
 .PHONY: all
 all: check-cvars
 	$(MAKE) -C qcsrc all

@@ -231,7 +231,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 		entity wep = spawn();
 		Item_CopyFields(item, wep);
 		wep.ok_item = true;
-		wep.respawntime = g_pickup_respawntime_superweapon;
+		wep.respawntime = autocvar_g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
 		wep.itemdef = WEP_OVERKILL_HMG;
 		wep.lifetime = -1;
@@ -243,7 +243,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 		entity wep = spawn();
 		Item_CopyFields(item, wep);
 		wep.ok_item = true;
-		wep.respawntime = g_pickup_respawntime_superweapon;
+		wep.respawntime = autocvar_g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
 		wep.itemdef = WEP_OVERKILL_RPC;
 		wep.lifetime = -1;
