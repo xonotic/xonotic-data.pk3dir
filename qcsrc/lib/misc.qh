@@ -31,9 +31,6 @@
 	// already defined
 #endif
 
-#define GET(name) name##get
-#define GETTER(type, name) type GET(name)() { return name; }
-#define PROPERTY(type, name) type name; GETTER(type, name)
 #define LAMBDA(...) { __VA_ARGS__; }
 
 // With block may not contain continue or break

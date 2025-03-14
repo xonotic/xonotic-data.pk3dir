@@ -119,28 +119,41 @@ enum
 
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
 CLASS(GameItem, Object)
-    ATTRIB(GameItem, m_id, int, 0);
-    /** the canonical spawnfunc name */
-    ATTRIB(GameItem, m_canonical_spawnfunc, string);
-    METHOD(GameItem, m_spawnfunc_hookreplace, GameItem(GameItem this, entity e)) { return this; }
-    ATTRIB(GameItem, m_name, string);
-    ATTRIB(GameItem, m_icon, string);
-    ATTRIB(GameItem, m_color, vector, '1 1 1');
-    ATTRIB(GameItem, m_waypoint, string);
-    ATTRIB(GameItem, m_waypointblink, int, 1);
+	ATTRIB(GameItem, m_id, int, 0);
+	/** the canonical spawnfunc name */
+	ATTRIB(GameItem, m_canonical_spawnfunc, string);
+	METHOD(GameItem, m_spawnfunc_hookreplace, GameItem(GameItem this, entity e)) { return this; }
+	ATTRIB(GameItem, m_name, string);
+	ATTRIB(GameItem, m_icon, string);
+	ATTRIB(GameItem, m_color, vector, '1 1 1');
+	ATTRIB(GameItem, m_waypoint, string);
+	ATTRIB(GameItem, m_waypointblink, int, 1);
 #ifdef GAMEQC
-    ATTRIB(GameItem, m_glow, bool, false);
-    ATTRIB(GameItem, m_respawnsound, Sound, SND_ITEMRESPAWN);
+	ATTRIB(GameItem, m_glow, bool, false);
+	ATTRIB(GameItem, m_respawnsound, Sound, SND_ITEMRESPAWN);
 #endif
-    METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))
-    {
-        TC(GameItem, this);
-        returns(this.m_name, (this.m_icon != "") ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon) : string_null);
-    }
-    METHOD(GameItem, show, void(GameItem this))
-    {
-        TC(GameItem, this);
-        LOG_INFO("A game item");
-    }
-    void ITEM_HANDLE(Show, GameItem this) { this.show(this); }
+#ifndef SVQC
+	METHOD(GameItem, display, void(entity this, void(string name, string icon) returns))
+	{
+		string img = this.m_icon;
+		if (img != "")
+		{
+			img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon);
+	#ifdef CSQC
+			if (precache_pic(img) == "")
+	#endif
+	#ifdef MENUQC
+			if (draw_PreloadPicture(img) == "")
+	#endif
+				img = sprintf("/gfx/hud/default/%s", this.m_icon);
+		}
+		returns(this.m_name, img);
+	}
+#endif
+	METHOD(GameItem, show, void(GameItem this))
+	{
+		TC(GameItem, this);
+		LOG_INFO("A game item");
+	}
+	void ITEM_HANDLE(Show, GameItem this) { this.show(this); }
 ENDCLASS(GameItem)

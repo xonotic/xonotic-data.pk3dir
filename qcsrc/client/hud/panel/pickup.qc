@@ -54,23 +54,23 @@ void HUD_Pickup()
 	float display_time = min(5, autocvar_hud_panel_pickup_time);
 	entity it = last_pickup_item;
 
-	if((last_pickup_time && last_pickup_time > time - display_time && it) || autocvar__hud_configure) {
+	if((last_pickup_time && last_pickup_time > time - display_time && it) || autocvar__hud_configure)
+	{
+		if(autocvar__hud_configure)
+			it = ITEM_ArmorMega;
+
 		string str_timer, str_name, icon;
-		vector sz, sz2;
 		vector fontsize = '1 1 0' * mySize.y;
 		vector iconsize = fontsize * autocvar_hud_panel_pickup_iconsize;
 
-		if(autocvar__hud_configure)
-			icon = strcat(hud_skin_path, "/armor_mega");
-		else
-			icon = strcat(hud_skin_path, "/", ((it.model2) ? it.model2 : it.m_icon));
+		icon = strcat(hud_skin_path, "/", (it.model2) ? it.model2 : it.m_icon);
+		if(precache_pic(icon) == "")
+			icon = strcat("gfx/hud/default/", (it.model2) ? it.model2 : it.m_icon);
 
-		sz = draw_getimagesize(icon);
-		sz2 = vec2(iconsize.y*(sz.x/sz.y), iconsize.y);
-		if(autocvar__hud_configure)
-			str_name = "Mega armor";
-		else
-			str_name = ((last_pickup_count > 1) ? sprintf("%s (x%d)", it.m_name, last_pickup_count) : it.m_name);
+		vector sz = draw_getimagesize(icon);
+		sz = vec2(iconsize.y * (sz.y ? sz.x/sz.y : 1), iconsize.y);
+
+		str_name = ((last_pickup_count > 1) ? sprintf("%s (x%d)", it.m_name, last_pickup_count) : it.m_name);
 
 		float a;
 		float fade_out_time = min(display_time, autocvar_hud_panel_pickup_fade_out);
@@ -97,8 +97,8 @@ void HUD_Pickup()
 			}
 		}
 
-		drawpic(pos - eY * ((iconsize.y - fontsize.y) / 2), icon, sz2, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		pos.x += sz2.x + fontsize.x * 0.25;
+		drawpic(pos - eY * ((iconsize.y - fontsize.y) / 2), icon, sz, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		pos.x += sz.x + fontsize.x * 0.25;
 		str_name = textShortenToWidth(str_name, mySize.x - (pos.x - panel_pos.x), fontsize, stringwidth_nocolors);
 		drawstring(pos, str_name, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	}
