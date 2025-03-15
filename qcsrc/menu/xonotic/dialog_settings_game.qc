@@ -92,47 +92,55 @@ CONSTRUCTOR(XonoticRegisteredSettingsList, DataSource _source) {
     this.refilter(this);
 }
 
-METHOD(XonoticGameSettingsTab, topicChangeNotify, void(entity, entity this))
+
+entity makeXonoticGameSettingsTab()
+{
+	entity me;
+	me = NEW(XonoticGameSettingsTab);
+	me.configureDialog(me);
+	return me;
+}
+METHOD(XonoticGameSettingsTab, topicChangeNotify, void(entity, entity me))
 {
 	entity s = NULL;
-	entity c = this.currentPanel;
+	entity c = me.currentPanel;
 	if (c.classname == "XonoticScrollPanel")
 	{
-		s = this.currentPanel;
+		s = me.currentPanel;
 		s.viewportHeight = 15.5;
 		c = s.currentPanel;
 	}
 
-    entity removing = this.currentItem;
-    DataSource data = this.topicList.source;
-    entity adding = data.getEntry(data, this.topicList.selectedItem, func_null);
-    if (removing == adding) return;
-    if (removing) {
-        this.currentItem = NULL;
-        c.removeItem(c, removing);
-    }
-    if (adding) {
-        this.currentItem = adding;
-        adding.resizeNotify(adding, '0 0 0', c.size, '0 0 0', c.size);
-        c.addItem(c, adding, '0 0 0', '1 1 0', 1);
+	entity removing = me.currentItem;
+	DataSource data = me.topicList.source;
+	entity adding = data.getEntry(data, me.topicList.selectedItem, func_null);
+	if (removing == adding) return;
+	if (removing) {
+		me.currentItem = NULL;
+		c.removeItem(c, removing);
+	}
+	if (adding) {
+		me.currentItem = adding;
+		adding.resizeNotify(adding, '0 0 0', c.size, '0 0 0', c.size);
+		c.addItem(c, adding, '0 0 0', '1 1 0', 1);
 		if (s)
 			s.resizeNotify(s, '0 0 0', s.size, '0 0 0', s.size);
-    }
+	}
 }
-METHOD(XonoticGameSettingsTab, fill, void(entity this))
+void XonoticGameSettingsTab_fill(entity me)
 {
-    entity topics = this.topicList;
-        topics.onChange = this.topicChangeNotify;
-        topics.onChangeEntity = this;
+	entity topics = me.topicList;
+		topics.onChange = me.topicChangeNotify;
+		topics.onChangeEntity = me;
 
-    int
-    col = 0, width = 1;
-    this.gotoRC(this, 0, col);
-        this.TD(this, this.rows, width, topics);
+	int
+	col = 0, width = 1;
+	me.gotoRC(me, 0, col);
+		me.TD(me, me.rows, width, topics);
 
-    col += width, width = this.columns - col;
-    this.gotoRC(this, 0, col); this.setFirstColumn(this, this.currentColumn);
-        this.TD(this, this.rows, width, this.currentPanel);
+	col += width, width = me.columns - col;
+	me.gotoRC(me, 0, col); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, me.rows, width, me.currentPanel);
 
-    this.topicChangeNotify(topics, this);
+	me.topicChangeNotify(topics, me);
 }

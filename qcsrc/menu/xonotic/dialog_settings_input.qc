@@ -110,26 +110,44 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(1.022, "m_pitch", _("Invert aiming"),
 			_("Invert mouse movement on the Y-axis")));
+
+	string m_accelerate_tooltip = _("In-game linear acceleration factor. \"Fully disabled\" also disables other acceleration types that can be enabled via the m_accelerate_* cvars");
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Acceleration factor:")));
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("m_accelerate", m_accelerate_tooltip));
+			e.addText(e, ZCTX(_("MOUSEACCEL^Fully disabled")), 0);
+			e.addText(e, ZCTX(_("MOUSEACCEL^Linear disabled")), 1);
+			e.addRange(e, 1.2, 4, 0.2);
+			e.configureXonoticMixedSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Speed bounds:")));
+			setDependent(e, "m_accelerate", 1, 0);
+		me.TD(me, 1, 1, e = makeXonoticSlider_T(0, 10000, 500, "m_accelerate_minspeed",
+			m_accelerate_tooltip));
+			setDependent(e, "m_accelerate", 1, 0);
+		me.TD(me, 1, 1, e = makeXonoticSlider_T(5000, 20000, 1000, "m_accelerate_maxspeed",
+			m_accelerate_tooltip));
+			setDependent(e, "m_accelerate", 1, 0);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		if(cvar_type("vid_dgamouse") & CVAR_TYPEFLAG_ENGINE)
+		{
+			me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "vid_dgamouse", _("Disable system mouse acceleration"),
+				_("Make use of DGA mouse input")));
+		}
+		else if(cvar_type("apple_mouse_noaccel") & CVAR_TYPEFLAG_ENGINE)
+			me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "apple_mouse_noaccel", _("Disable system mouse acceleration")));
+		else
+		{
+			me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, string_null, _("Disable system mouse acceleration")));
+			e.disabled = 1; // the option is never available in this case, just there for show
+		}
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "menu_mouse_absolute", _("Use system mouse positioning"), "-"));
 			makeMulti(e, "hud_cursormode");
 			e.onClick = CheckBox_Click_Redisplay;
 			e.onClickEntity = e;
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "m_accelerate", _("Enable built in mouse acceleration")));
-	me.TR(me);
-		if(cvar_type("vid_dgamouse") & CVAR_TYPEFLAG_ENGINE)
-		{
-			me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "vid_dgamouse", _("Disable system mouse acceleration"),
-				_("Make use of DGA mouse input")));
-		}
-		else if(cvar_type("apple_mouse_noaccel") & CVAR_TYPEFLAG_ENGINE)
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "apple_mouse_noaccel", _("Disable system mouse acceleration")));
-		else
-		{
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, string_null, _("Disable system mouse acceleration")));
-			e.disabled = 1; // the option is never available in this case, just there for show
-		}
 
 	me.TR(me);
 	me.TR(me);
