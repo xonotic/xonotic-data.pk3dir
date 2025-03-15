@@ -373,8 +373,6 @@ void reset_map(bool is_fake_round_start)
 			accuracy_reset(it); // for spectators too because weapon accuracy is persistent
 		if (!IS_PLAYER(it))
 			continue;
-		if (STAT(FROZEN, it))
-			Unfreeze(it, false);
 		player_powerups_remove_all(it, true);
 		entity store = PS(it);
 		if (store)

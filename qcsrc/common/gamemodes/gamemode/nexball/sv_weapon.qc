@@ -82,8 +82,9 @@ void W_Nexball_Touch(entity this, entity toucher)
 	//this.enemy = NULL;
 
 	PROJECTILE_TOUCH(this, toucher);
+	// TODO: mutator hook to prevent picking up objectives
 	if(attacker.team != toucher.team || autocvar_g_nexball_basketball_teamsteal)
-		if((ball = toucher.ballcarried) && !STAT(FROZEN, toucher) && !IS_DEAD(toucher) && (IS_PLAYER(attacker)))
+		if((ball = toucher.ballcarried) && !IS_DEAD(toucher) && (IS_PLAYER(attacker)))
 		{
 			toucher.velocity = toucher.velocity + normalize(this.velocity) * toucher.damageforcescale * autocvar_g_balance_nexball_secondary_force;
 			UNSET_ONGROUND(toucher);

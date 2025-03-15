@@ -693,7 +693,6 @@ void ons_ControlPoint_Touch(entity this, entity toucher)
 	}
 
 	if(!IS_PLAYER(toucher)) { return; }
-	if(STAT(FROZEN, toucher)) { return; }
 	if(IS_DEAD(toucher)) { return; }
 
 	if ( SAME_TEAM(this,toucher) )
@@ -1934,46 +1933,40 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 
 		if ( IS_PLAYER(player) )
 		{
-			if ( !STAT(FROZEN, player) )
+			entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_onslaught_teleport_radius);
+
+			if ( !source_point && GetResource(player, RES_HEALTH) > 0 )
 			{
-				entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_onslaught_teleport_radius);
-
-				if ( !source_point && GetResource(player, RES_HEALTH) > 0 )
-				{
-					sprint(player, "\nYou need to be next to a control point\n");
-					return true;
-				}
-
-
-				entity closest_target = ons_Nearest_ControlPoint_2D(player, pos, autocvar_g_onslaught_click_radius);
-
-				if ( closest_target == NULL )
-				{
-					sprint(player, "\nNo control point found\n");
-					return true;
-				}
-
-				if ( GetResource(player, RES_HEALTH) <= 0 )
-				{
-					player.ons_spawn_by = closest_target;
-					player.respawn_flags = player.respawn_flags | RESPAWN_FORCE;
-				}
-				else
-				{
-					if ( source_point == closest_target )
-					{
-						sprint(player, "\nTeleporting to the same point\n");
-						return true;
-					}
-
-					if ( !ons_Teleport(player,closest_target,autocvar_g_onslaught_teleport_radius,true) )
-						sprint(player, "\nUnable to teleport there\n");
-				}
-
+				sprint(player, "\nYou need to be next to a control point\n");
 				return true;
 			}
 
-			sprint(player, "\nNo teleportation for you\n");
+			entity closest_target = ons_Nearest_ControlPoint_2D(player, pos, autocvar_g_onslaught_click_radius);
+
+			if ( closest_target == NULL )
+			{
+				sprint(player, "\nNo control point found\n");
+				return true;
+			}
+
+			if ( GetResource(player, RES_HEALTH) <= 0 )
+			{
+				player.ons_spawn_by = closest_target;
+				player.respawn_flags = player.respawn_flags | RESPAWN_FORCE;
+			}
+			else
+			{
+				if ( source_point == closest_target )
+				{
+					sprint(player, "\nTeleporting to the same point\n");
+					return true;
+				}
+
+				if ( !ons_Teleport(player,closest_target,autocvar_g_onslaught_teleport_radius,true) )
+					sprint(player, "\nUnable to teleport there\n");
+			}
+
+			return true;
 		}
 
 		return true;
