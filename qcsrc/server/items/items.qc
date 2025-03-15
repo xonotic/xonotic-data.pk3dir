@@ -1094,8 +1094,6 @@ void StartItem(entity this, entity def)
 	}
 	else
 	{
-		this.reset = Item_Reset;
-
 		// must be done after def.m_iteminit() as that may set ITEM_FLAG_MUTATORBLOCKED
 		if(!have_pickup_item(this))
 		{
@@ -1103,19 +1101,16 @@ void StartItem(entity this, entity def)
 			return;
 		}
 
-		// must be done before Item_Reset() and after MUTATORBLOCKED check (blocked items may have null func ptrs)
-		if(!this.respawntime) // both need to be set
+		// must be done before Item_Reset() and after MUTATORBLOCKED check (blocked items may be uninitialised)
+		if(!this.respawntime)
 		{
 			if (def.m_respawntime)
 				this.respawntime = def.m_respawntime;
 			else
 				LOG_WARNF("Default respawntime for a %s is unavailable from its itemdef", this.classname);
-
-			if (def.m_respawntimejitter)
-				this.respawntimejitter = def.m_respawntimejitter;
-			else
-				LOG_WARNF("Default respawntimejitter for a %s is unavailable from its itemdef", this.classname);
 		}
+
+		this.reset = Item_Reset;
 
 		if(this.angles != '0 0 0')
 			this.SendFlags |= ISF_ANGLES;
