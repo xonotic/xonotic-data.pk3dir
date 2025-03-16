@@ -757,6 +757,20 @@ void InitGameplayMode()
 bool world_already_spawned;
 spawnfunc(worldspawn)
 {
+	if(world_already_spawned) // must be checked first because we don't always error()
+	{
+		string msg = "world already spawned - you may have EXACTLY ONE worldspawn!";
+		if (q3compat) // must be set during normal worldspawn
+		{
+			// Q3 allows >1 worldspawn entity, test map: q3dmz_carnage
+			LOG_WARN(msg);
+			return;
+		}
+		else
+			error(msg);
+	}
+	world_already_spawned = true;
+
 	CheckEngineExtensions();
 
 	cvar_set("_endmatch", "0");
@@ -830,10 +844,6 @@ spawnfunc(worldspawn)
 			// let initialization continue, shutdown depends on it
 		}
 	}
-
-	if(world_already_spawned)
-		error("world already spawned - you may have EXACTLY ONE worldspawn!");
-	world_already_spawned = true;
 
 	delete_fn = remove_safely; // during spawning, watch what you remove!
 
