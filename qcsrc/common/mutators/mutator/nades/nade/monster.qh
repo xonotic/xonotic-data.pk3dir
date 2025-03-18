@@ -15,7 +15,7 @@ const int PROJECTILE_NADE_MONSTER = 82;
 const int PROJECTILE_NADE_MONSTER_BURN = 83;
 
 CLASS(MonsterNade, Nade)
-	ATTRIB(MonsterNade, m_color, vector, '0.25 0.75 0');
+	ATTRIB(MonsterNade, m_color, vector, '0.1 0.65 0');
 	ATTRIB(MonsterNade, m_name, string, _("Monster grenade"));
 	ATTRIB(MonsterNade, m_icon, string, "nade_monster");
 	ATTRIB(MonsterNade, netname, string, "pokenade"); // TODO: "monster"? nade needs renaming!
