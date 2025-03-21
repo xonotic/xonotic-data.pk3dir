@@ -2405,10 +2405,10 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 
 	entity player = M_ARGV(0, entity);
 
-	if((time > player.throw_antispam) && !IS_DEAD(player) && !player.speedrunning && player.flagcarried.classname != "phantomflag" && (!player.vehicle || autocvar_g_ctf_allow_vehicle_touch))
+	if((time > player.throw_antispam) && !IS_DEAD(player) && !player.speedrunning && (!player.vehicle || autocvar_g_ctf_allow_vehicle_touch))
 	{
 		// pass the flag to a team mate
-		if(autocvar_g_ctf_pass)
+		if(autocvar_g_ctf_pass && player.flagcarried.classname != "phantomflag")
 		{
 			entity head, closest_target = NULL;
 			head = WarpZone_FindRadius(player.origin, autocvar_g_ctf_pass_radius, true);
