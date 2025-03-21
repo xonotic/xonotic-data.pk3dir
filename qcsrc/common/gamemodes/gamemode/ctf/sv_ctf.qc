@@ -60,6 +60,7 @@ bool autocvar_g_ctf_flag_return_when_unreachable;
 float autocvar_g_ctf_flag_return_damage;
 float autocvar_g_ctf_flag_return_damage_delay;
 float autocvar_g_ctf_flag_return_dropped;
+bool autocvar_g_ctf_flag_stay;
 bool autocvar_g_ctf_flag_waypoint = true;
 float autocvar_g_ctf_flag_waypoint_maxdistance;
 float autocvar_g_ctf_flagcarrier_auto_helpme_damage;
@@ -482,7 +483,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	if(!flag) { return; }
 	if((droptype == DROP_PASS) && !receiver) { return; }
 
-	if(flag.speedrunning)
+	if(flag.speedrunning || flag.classname == "phantomflag")
 	{
 		// ensure old waypoints are removed before resetting the flag
 		WaypointSprite_Kill(player.wps_flagcarrier);
@@ -614,11 +615,12 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 		toucher.goalentity_lock_timeout = 0;
 
 	if(ctf_oneflag)
-	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
-	if(SAME_TEAM(tmp_entity, player))
 	{
-		player_team_flag = tmp_entity;
-		break;
+		IL_EACH(g_flags, SAME_TEAM(it, player),
+		{
+			player_team_flag = it;
+			break;
+		});
 	}
 
 	nades_GiveBonus(player, autocvar_g_nades_bonus_score_high );
@@ -723,6 +725,16 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 {
 	// declarations
 	float pickup_dropped_score; // used to calculate dropped pickup score
+
+	if(autocvar_g_ctf_flag_stay && pickuptype == PICKUP_BASE)
+	{
+		entity newflag = spawn();
+		copyentity_qc(flag, newflag);
+		newflag.classname = "phantomflag"; // identifier for other code
+		IL_PUSH(g_flags, newflag);
+		//newflag.effects |= EF_ADDITIVE;
+		flag = newflag;
+	}
 
 	// attach the flag to the player
 	flag.owner = player;
@@ -888,21 +900,19 @@ void ctf_CheckStalemate()
 {
 	// declarations
 	int stale_flags = 0, stale_red_flags = 0, stale_blue_flags = 0, stale_yellow_flags = 0, stale_pink_flags = 0, stale_neutral_flags = 0;
-	entity tmp_entity;
-
 	entity ctf_staleflaglist = NULL; // reset the list, we need to build the list each time this function runs
 
 	// build list of stale flags
-	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
+	IL_EACH(g_flags, true,
 	{
 		if(autocvar_g_ctf_stalemate)
-		if(tmp_entity.ctf_status != FLAG_BASE)
-		if(time >= tmp_entity.ctf_pickuptime + autocvar_g_ctf_stalemate_time || !tmp_entity.team) // instant stalemate in oneflag
+		if(it.ctf_status != FLAG_BASE)
+		if(time >= it.ctf_pickuptime + autocvar_g_ctf_stalemate_time || !it.team) // instant stalemate in oneflag
 		{
-			tmp_entity.ctf_staleflagnext = ctf_staleflaglist; // link flag into staleflaglist
-			ctf_staleflaglist = tmp_entity;
+			it.ctf_staleflagnext = ctf_staleflaglist; // link flag into staleflaglist
+			ctf_staleflaglist = it;
 
-			switch(tmp_entity.team)
+			switch(it.team)
 			{
 				case NUM_TEAM_1: ++stale_red_flags; break;
 				case NUM_TEAM_2: ++stale_blue_flags; break;
@@ -911,7 +921,7 @@ void ctf_CheckStalemate()
 				default: ++stale_neutral_flags; break;
 			}
 		}
-	}
+	});
 
 	if(ctf_oneflag)
 		stale_flags = (stale_neutral_flags >= 1);
@@ -930,6 +940,7 @@ void ctf_CheckStalemate()
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
 	if(ctf_stalemate)
 	{
+		entity tmp_entity;
 		for(tmp_entity = ctf_staleflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_staleflagnext)
 		{
 			if((tmp_entity.owner) && (!tmp_entity.owner.wps_enemyflagcarrier))
@@ -986,14 +997,7 @@ void ctf_FlagDamage(entity this, entity inflictor, entity attacker, float damage
 
 void ctf_FlagThink(entity this)
 {
-	// declarations
-	entity tmp_entity;
-
 	this.nextthink = time + FLAG_THINKRATE; // only 5 fps, more is unnecessary.
-
-	// captureshield
-	if(this == ctf_worldflaglist) // only for the first flag
-		FOREACH_CLIENT(true, { ctf_CaptureShield_Update(it, 1); }); // release shield only
 
 	// sanity checks
 	if(this.mins != this.m_mins || this.maxs != this.m_maxs) { // reset the flag boundaries in case it got squished
@@ -1009,11 +1013,13 @@ void ctf_FlagThink(entity this)
 		{
 			if(autocvar_g_ctf_dropped_capture_radius)
 			{
-				for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
-					if(tmp_entity.ctf_status == FLAG_DROPPED)
-					if(vdist(this.origin - tmp_entity.origin, <, autocvar_g_ctf_dropped_capture_radius))
-					if((this.noalign || tmp_entity.ctf_landtime) && time > ((this.noalign) ? tmp_entity.ctf_droptime : tmp_entity.ctf_landtime) + autocvar_g_ctf_dropped_capture_delay)
-						ctf_Handle_Capture(this, tmp_entity, CAPTURE_DROPPED);
+				IL_EACH(g_flags, true,
+				{
+					if(it.ctf_status == FLAG_DROPPED)
+					if(vdist(this.origin - it.origin, <, autocvar_g_ctf_dropped_capture_radius))
+					if((this.noalign || it.ctf_landtime) && time > ((this.noalign) ? it.ctf_droptime : it.ctf_landtime) + autocvar_g_ctf_dropped_capture_delay)
+						ctf_Handle_Capture(this, it, CAPTURE_DROPPED);
+				});
 			}
 			return;
 		}
@@ -1281,6 +1287,9 @@ void ctf_RespawnFlag(entity flag)
 	navigation_dynamicgoal_unset(flag);
 
 	ctf_CheckStalemate();
+
+	if(flag.classname == "phantomflag")
+		delete(flag);
 }
 
 void ctf_Reset(entity this)
@@ -1339,8 +1348,7 @@ void ctf_DelayedFlagSetup(entity this) // called after a flag is placed on a map
 void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag entity on the map as a spawnfunc
 {
 	// main setup
-	flag.ctf_worldflagnext = ctf_worldflaglist; // link flag into ctf_worldflaglist
-	ctf_worldflaglist = flag;
+	IL_PUSH(g_flags, flag);
 
 	setattachment(flag, NULL, "");
 
@@ -1469,19 +1477,23 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 
 void havocbot_ctf_calculate_middlepoint()
 {
-	entity f;
 	vector s = '0 0 0';
 	vector fo = '0 0 0';
 	int n = 0;
 
-	f = ctf_worldflaglist;
-	while (f)
+	entity f1 = NULL, f2 = NULL;
+
+	IL_EACH(g_flags, it.classname != "phantomflag",
 	{
-		fo = f.origin;
-		s = s + fo;
-		f = f.ctf_worldflagnext;
-		n++;
-	}
+		// save base flags incase symmetry is checked
+		if(!f1 && it.team == NUM_TEAM_1)
+			f1 = it;
+		else if(!f2 && it.team == NUM_TEAM_2)
+			f2 = it;
+		fo = it.origin;
+		s += fo;
+		++n;
+	});
 	if(!n)
 		return;
 
@@ -1494,8 +1506,6 @@ void havocbot_ctf_calculate_middlepoint()
 	if(n == 2)
 	{
 		// for symmetrical editing of waypoints
-		entity f1 = ctf_worldflaglist;
-		entity f2 = f1.ctf_worldflagnext;
 		float m = -(f1.origin.y - f2.origin.y) / (max(f1.origin.x - f2.origin.x, FLOAT_EPSILON));
 		float q = havocbot_middlepoint.y - m * havocbot_middlepoint.x;
 		havocbot_symmetry_axis_m = m;
@@ -1507,40 +1517,33 @@ void havocbot_ctf_calculate_middlepoint()
 
 entity havocbot_ctf_find_flag(entity bot)
 {
-	entity f;
-	f = ctf_worldflaglist;
-	while (f)
+	IL_EACH(g_flags, CTF_SAMETEAM(bot, it),
 	{
-		if (CTF_SAMETEAM(bot, f))
-			return f;
-		f = f.ctf_worldflagnext;
-	}
+		return it;
+	});
 	return NULL;
 }
 
 entity havocbot_ctf_find_enemy_flag(entity bot)
 {
-	entity f;
-	f = ctf_worldflaglist;
-	while (f)
+	IL_EACH(g_flags, true,
 	{
 		if(ctf_oneflag)
 		{
-			if(CTF_DIFFTEAM(bot, f))
+			if(CTF_DIFFTEAM(bot, it))
 			{
-				if(f.team)
+				if(it.team)
 				{
 					if(bot.flagcarried)
-						return f;
+						return it;
 				}
 				else if(!bot.flagcarried)
-					return f;
+					return it;
 			}
 		}
-		else if (CTF_DIFFTEAM(bot, f))
-			return f;
-		f = f.ctf_worldflagnext;
-	}
+		else if (CTF_DIFFTEAM(bot, it))
+			return it;
+	});
 	return NULL;
 }
 
@@ -1581,61 +1584,64 @@ void havocbot_goalrating_ctf_ourflag(entity this, float ratingscale)
 
 void havocbot_goalrating_ctf_ourbase(entity this, float ratingscale)
 {
-	entity head;
-	head = ctf_worldflaglist;
-	while (head)
+	entity chosen = NULL;
+	IL_EACH(g_flags, CTF_SAMETEAM(this, it),
 	{
-		if (CTF_SAMETEAM(this, head))
+		if(this.flagcarried)
+		if((this.flagcarried.cnt || it.cnt) && this.flagcarried.cnt != it.cnt)
 		{
-			if (this.flagcarried)
-			if ((this.flagcarried.cnt || head.cnt) && this.flagcarried.cnt != head.cnt)
-			{
-				head = head.ctf_worldflagnext; // skip base if it has a different group
-				continue;
-			}
-			break;
+			// skip base if it has a different group
+			continue;
 		}
-		head = head.ctf_worldflagnext;
-	}
-	if (!head)
-		return;
 
-	navigation_routerating(this, head.bot_basewaypoint, ratingscale, 10000);
+		chosen = it;
+		break;
+	});
+
+	navigation_routerating(this, chosen.bot_basewaypoint, ratingscale, 10000);
 }
 
 void havocbot_goalrating_ctf_enemyflag(entity this, float ratingscale)
 {
-	entity head;
-	head = ctf_worldflaglist;
-	while (head)
+	entity chosen = NULL;
+	IL_EACH(g_flags, true,
 	{
 		if(ctf_oneflag)
 		{
-			if(CTF_DIFFTEAM(this, head))
+			if(CTF_DIFFTEAM(this, it))
 			{
-				if(head.team)
+				if(it.team)
 				{
 					if(this.flagcarried)
+					{
+						chosen = it;
 						break;
+					}
 				}
 				else if(!this.flagcarried)
+				{
+					chosen = it;
 					break;
+				}
 			}
 		}
-		else if(CTF_DIFFTEAM(this, head))
+		else if(CTF_DIFFTEAM(this, it))
+		{
+			chosen = it;
 			break;
-		head = head.ctf_worldflagnext;
-	}
-	if (head)
+		}
+	});
+
+	if (chosen)
 	{
-		if (head.ctf_status == FLAG_CARRY)
+		if (chosen.ctf_status == FLAG_CARRY)
 		{
 			// adjust rating of our flag carrier depending on their health
-			head = head.tag_entity;
-			float f = bound(0, (GetResource(head, RES_HEALTH) + GetResource(head, RES_ARMOR)) / 100, 2) - 1;
+			chosen = chosen.tag_entity;
+			float f = bound(0, (GetResource(chosen, RES_HEALTH) + GetResource(chosen, RES_ARMOR)) / 100, 2) - 1;
 			ratingscale += ratingscale * f * 0.1;
 		}
-		navigation_routerating(this, head, ratingscale, 10000);
+		navigation_routerating(this, chosen, ratingscale, 10000);
 	}
 }
 
@@ -1674,25 +1680,21 @@ void havocbot_goalrating_ctf_ourstolenflag(entity this, float ratingscale)
 
 void havocbot_goalrating_ctf_droppedflags(entity this, float ratingscale, vector org, float df_radius)
 {
-	entity head;
-	head = ctf_worldflaglist;
-	while (head)
+	IL_EACH(g_flags, true,
 	{
 		// flag is out in the field
-		if(head.ctf_status != FLAG_BASE)
-		if(head.tag_entity==NULL)	// dropped
+		if(it.ctf_status != FLAG_BASE)
+		if(it.tag_entity==NULL)	// dropped
 		{
 			if(df_radius)
 			{
-				if(vdist(org - head.origin, <, df_radius))
-					navigation_routerating(this, head, ratingscale, 10000);
+				if(vdist(org - it.origin, <, df_radius))
+					navigation_routerating(this, it, ratingscale, 10000);
 			}
 			else
-				navigation_routerating(this, head, ratingscale, 10000);
+				navigation_routerating(this, it, ratingscale, 10000);
 		}
-
-		head = head.ctf_worldflagnext;
-	}
+	});
 }
 
 void havocbot_ctf_reset_role(entity this)
@@ -1779,13 +1781,10 @@ bool havocbot_ctf_is_basewaypoint(entity item)
 	if (item.classname != "waypoint")
 		return false;
 
-	entity head = ctf_worldflaglist;
-	while (head)
+	IL_EACH(g_flags, item == it.bot_basewaypoint,
 	{
-		if (item == head.bot_basewaypoint)
-			return true;
-		head = head.ctf_worldflagnext;
-	}
+		return true;
+	});
 	return false;
 }
 
@@ -2243,20 +2242,20 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 						   | CTF_FLAG_NEUTRAL | CTF_SHIELDED | CTF_STALEMATE);
 
 	// scan through all the flags and notify the client about them
-	for(entity flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
+	IL_EACH(g_flags, true,
 	{
-		if(flag.team == NUM_TEAM_1 && !b1) { b1 = true; t = CTF_RED_FLAG_CARRYING;		t2 = CTF_RED_FLAG_TAKEN;		t3 = CTF_RED_FLAG_LOST; }
-		if(flag.team == NUM_TEAM_2 && !b2) { b2 = true; t = CTF_BLUE_FLAG_CARRYING;		t2 = CTF_BLUE_FLAG_TAKEN;		t3 = CTF_BLUE_FLAG_LOST; }
-		if(flag.team == NUM_TEAM_3 && !b3) { b3 = true; t = CTF_YELLOW_FLAG_CARRYING; 	t2 = CTF_YELLOW_FLAG_TAKEN;		t3 = CTF_YELLOW_FLAG_LOST; }
-		if(flag.team == NUM_TEAM_4 && !b4) { b4 = true; t = CTF_PINK_FLAG_CARRYING;		t2 = CTF_PINK_FLAG_TAKEN;		t3 = CTF_PINK_FLAG_LOST; }
-		if(flag.team == 0 && !b5) 		   { b5 = true; t = CTF_NEUTRAL_FLAG_CARRYING;	t2 = CTF_NEUTRAL_FLAG_TAKEN;	t3 = CTF_NEUTRAL_FLAG_LOST; STAT(OBJECTIVE_STATUS, player) |= CTF_FLAG_NEUTRAL; }
+		if(it.team == NUM_TEAM_1 && !b1) { b1 = true; t = CTF_RED_FLAG_CARRYING;		t2 = CTF_RED_FLAG_TAKEN;		t3 = CTF_RED_FLAG_LOST; }
+		if(it.team == NUM_TEAM_2 && !b2) { b2 = true; t = CTF_BLUE_FLAG_CARRYING;		t2 = CTF_BLUE_FLAG_TAKEN;		t3 = CTF_BLUE_FLAG_LOST; }
+		if(it.team == NUM_TEAM_3 && !b3) { b3 = true; t = CTF_YELLOW_FLAG_CARRYING; 	t2 = CTF_YELLOW_FLAG_TAKEN;		t3 = CTF_YELLOW_FLAG_LOST; }
+		if(it.team == NUM_TEAM_4 && !b4) { b4 = true; t = CTF_PINK_FLAG_CARRYING;		t2 = CTF_PINK_FLAG_TAKEN;		t3 = CTF_PINK_FLAG_LOST; }
+		if(it.team == 0 && !b5) 		   { b5 = true; t = CTF_NEUTRAL_FLAG_CARRYING;	t2 = CTF_NEUTRAL_FLAG_TAKEN;	t3 = CTF_NEUTRAL_FLAG_LOST; STAT(OBJECTIVE_STATUS, player) |= CTF_FLAG_NEUTRAL; }
 
-		switch(flag.ctf_status)
+		switch(it.ctf_status)
 		{
 			case FLAG_PASSING:
 			case FLAG_CARRY:
 			{
-				if((flag.owner == player) || (flag.pass_sender == player))
+				if((it.owner == player) || (it.pass_sender == player))
 					STAT(OBJECTIVE_STATUS, player) |= t; // carrying: player is currently carrying the flag
 				else
 					STAT(OBJECTIVE_STATUS, player) |= t2; // taken: someone else is carrying the flag
@@ -2268,7 +2267,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 				break;
 			}
 		}
-	}
+	});
 
 	// item for stopping players from capturing the flag too often
 	if(player.ctf_captureshielded)
@@ -2276,6 +2275,8 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 
 	if(ctf_stalemate)
 		STAT(OBJECTIVE_STATUS, player) |= CTF_STALEMATE;
+
+	ctf_CaptureShield_Update(player, 1);
 
 	// update the health of the flag carrier waypointsprite
 	if(player.wps_flagcarrier)
@@ -2347,12 +2348,12 @@ void ctf_RemovePlayer(entity player)
 	if(player.flagcarried)
 		{ ctf_Handle_Throw(player, NULL, DROP_NORMAL); }
 
-	for(entity flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
+	IL_EACH(g_flags, true,
 	{
-		if(flag.pass_sender == player) { flag.pass_sender = NULL; }
-		if(flag.pass_target == player) { flag.pass_target = NULL; }
-		if(flag.ctf_dropper == player) { flag.ctf_dropper = NULL; }
-	}
+		if(it.pass_sender == player) { it.pass_sender = NULL; }
+		if(it.pass_target == player) { it.pass_target = NULL; }
+		if(it.ctf_dropper == player) { it.ctf_dropper = NULL; }
+	});
 }
 
 MUTATOR_HOOKFUNCTION(ctf, MakePlayerObserver)
@@ -2404,7 +2405,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 
 	entity player = M_ARGV(0, entity);
 
-	if((time > player.throw_antispam) && !IS_DEAD(player) && !player.speedrunning && (!player.vehicle || autocvar_g_ctf_allow_vehicle_touch))
+	if((time > player.throw_antispam) && !IS_DEAD(player) && !player.speedrunning && player.flagcarried.classname != "phantomflag" && (!player.vehicle || autocvar_g_ctf_allow_vehicle_touch))
 	{
 		// pass the flag to a team mate
 		if(autocvar_g_ctf_pass)
@@ -2424,7 +2425,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 
 					if(ctf_CheckPassDirection(head_center, passer_center, player.v_angle, head.WarpZone_findradius_nearest))
 					{
-						if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried)
+						if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried && head.flagcarried.classname != "phantomflag")
 						{
 							if(IS_BOT_CLIENT(head))
 							{
@@ -2559,20 +2560,18 @@ MUTATOR_HOOKFUNCTION(ctf, AbortSpeedrun)
 
 MUTATOR_HOOKFUNCTION(ctf, MatchEnd)
 {
-	entity flag; // temporary entity for the search method
-
-	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
+	IL_EACH(g_flags, true,
 	{
-		switch(flag.ctf_status)
+		switch(it.ctf_status)
 		{
 			case FLAG_DROPPED:
 			case FLAG_PASSING:
 			{
 				// lock the flag, game is over
-				set_movetype(flag, MOVETYPE_NONE);
-				flag.takedamage = DAMAGE_NO;
-				flag.solid = SOLID_NOT;
-				flag.nextthink = false; // stop thinking
+				set_movetype(it, MOVETYPE_NONE);
+				it.takedamage = DAMAGE_NO;
+				it.solid = SOLID_NOT;
+				it.nextthink = false; // stop thinking
 
 				//dprint("stopping the ", flag.netname, " from moving.\n");
 				break;
@@ -2586,7 +2585,7 @@ MUTATOR_HOOKFUNCTION(ctf, MatchEnd)
 				break;
 			}
 		}
-	}
+	});
 }
 
 MUTATOR_HOOKFUNCTION(ctf, HavocBot_ChooseRole)
@@ -2848,21 +2847,20 @@ void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait f
 {
 	ctf_teams = 0;
 
-	entity tmp_entity;
-	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
+	IL_EACH(g_flags, true,
 	{
-		//if(tmp_entity.team == NUM_TEAM_3) { ctf_teams = max(3, ctf_teams); }
-		//if(tmp_entity.team == NUM_TEAM_4) { ctf_teams = max(4, ctf_teams); }
+		//if(it.team == NUM_TEAM_3) { ctf_teams = max(3, ctf_teams); }
+		//if(it.team == NUM_TEAM_4) { ctf_teams = max(4, ctf_teams); }
 
-		switch(tmp_entity.team)
+		switch(it.team)
 		{
 			case NUM_TEAM_1: BITSET_ASSIGN(ctf_teams, BIT(0)); break;
 			case NUM_TEAM_2: BITSET_ASSIGN(ctf_teams, BIT(1)); break;
 			case NUM_TEAM_3: BITSET_ASSIGN(ctf_teams, BIT(2)); break;
 			case NUM_TEAM_4: BITSET_ASSIGN(ctf_teams, BIT(3)); break;
 		}
-		if(tmp_entity.team == 0) { ctf_oneflag = true; }
-	}
+		if(it.team == 0) { ctf_oneflag = true; }
+	});
 
 	havocbot_ctf_calculate_middlepoint();
 
