@@ -466,6 +466,9 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			setsize(w, PL_CROUCH_MIN_CONST - '1 1 0', PL_CROUCH_MAX_CONST + '1 1 0');
 		else
 			setsize(w, PL_MIN_CONST - '1 1 0', PL_MAX_CONST + '1 1 0');
+		// Test if the waypoint is next to an obstacle or wall and if so move it 1qu away.
+		// It avoids bad linkage from other waypoints due to collision_extendtraceboxlength 1 that makes
+		// tracewalk think the bot would be stuck in solid if it got to the exact tracewalk destination
 		if(!move_out_of_solid(w))
 		{
 			if(!(f & WAYPOINTFLAG_GENERATED))
@@ -479,7 +482,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 				if(autocvar_developer > 0)
 				{
 					LOG_INFO("A generated waypoint is stuck in solid at ", vtos(w.origin));
-					backtrace("Waypoint stuck");
+					backtrace("Waypoint stuck\n");
 				}
 			}
 		}
@@ -2063,7 +2066,22 @@ void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent)
 
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent)
 {
+	vector dest_save = destination;
 	destination = waypoint_fixorigin(destination, tracetest_ent);
+
+	if (tracetest_ent.velocity.x != 0 || tracetest_ent.velocity.y != 0)
+	{
+		// Test if the destination waypoint is next to an obstacle or wall and if so move it back 1qu.
+		// It avoids bad linkage from other waypoints.
+		// This method is more reliable than waypoint_spawn's one using move_out_of_solid
+		vector dest_test = destination + '0 0 1'; // z offset prevents trace_startsolid on bumpy terrain
+		tracebox(dest_test, PL_MIN_CONST - '1 1 0', PL_MAX_CONST + '1 1 0', dest_test, MOVE_NOMONSTERS, tracetest_ent);
+		if (trace_startsolid)
+		{
+			destination = dest_save;
+			destination = waypoint_fixorigin(destination - normalize(vec2(tracetest_ent.velocity)), tracetest_ent);
+		}
+	}
 	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, e.absmin - PL_MAX_CONST, e.absmax - PL_MIN_CONST, destination, destination, timetaken);
 }
 
