@@ -341,7 +341,8 @@ void basketball_touch(entity this, entity toucher)
 		football_touch(this, toucher);
 		return;
 	}
-	if(!this.cnt && IS_PLAYER(toucher) && !STAT(FROZEN, toucher) && !IS_DEAD(toucher) && (toucher != this.nb_dropper || time > this.nb_droptime + autocvar_g_nexball_delay_collect))
+	// TODO: mutator hook to prevent picking up objectives
+	if(!this.cnt && IS_PLAYER(toucher) && !IS_DEAD(toucher) && (toucher != this.nb_dropper || time > this.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
 		if(GetResource(toucher, RES_HEALTH) < 1)
 			return;

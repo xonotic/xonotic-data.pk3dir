@@ -107,7 +107,7 @@ void W_Fireball_LaserPlay(entity this, float dt, float dist, float damage, float
 	RandomSelection_Init();
 	for(e = WarpZone_FindRadius(this.origin, dist, true); e; e = e.chain)
 	{
-		if(STAT(FROZEN, e)) continue;
+		if(STAT(FROZEN, e) || StatusEffects_active(STATUSEFFECT_Frozen, e)) continue;
 		if(e == this.realowner) continue;
 		if(IS_INDEPENDENT_PLAYER(e)) continue;
 		if(e.takedamage != DAMAGE_AIM) continue;

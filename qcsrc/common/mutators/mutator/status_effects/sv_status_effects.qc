@@ -70,6 +70,13 @@ MUTATOR_HOOKFUNCTION(status_effects, PlayerDies)
 	StatusEffects_removeall(frag_target, STATUSEFFECT_REMOVE_NORMAL);
 }
 
+MUTATOR_HOOKFUNCTION(status_effects, MonsterDies)
+{
+	entity frag_target = M_ARGV(0, entity);
+
+	StatusEffects_removeall(frag_target, STATUSEFFECT_REMOVE_NORMAL);
+}
+
 MUTATOR_HOOKFUNCTION(status_effects, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);

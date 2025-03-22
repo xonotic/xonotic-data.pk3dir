@@ -116,6 +116,9 @@ MUTATOR_HOOKABLE(Ent_Init, EV_NO_ARGS);
 	/**/
 MUTATOR_HOOKABLE(HUD_Draw_overlay, EV_HUD_Draw_overlay);
 
+/** return true to hide the damage HUD overlay */
+MUTATOR_HOOKABLE(HUD_Damage_show, EV_NO_ARGS);
+
 MUTATOR_HOOKABLE(HUD_Powerups_add, EV_NO_ARGS);
 
 /** return true to show the physics HUD panel when optional mode is enabled */
