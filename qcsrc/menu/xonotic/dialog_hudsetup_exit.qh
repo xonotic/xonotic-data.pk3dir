@@ -11,3 +11,13 @@ CLASS(XonoticHUDExitDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDExitDialog, name, string, "HUDExit");
 	ATTRIB(XonoticHUDExitDialog, requiresConnection, float, true);
 ENDCLASS(XonoticHUDExitDialog)
+
+#include "dialog.qh"
+CLASS(XonoticSkinResetDialog, XonoticDialog)
+	METHOD(XonoticSkinResetDialog, fill, void(entity));
+	ATTRIB(XonoticSkinResetDialog, title, string, _("Reset HUD skin"));
+	ATTRIB(XonoticSkinResetDialog, color, vector, SKINCOLOR_DIALOG_QUIT);
+	ATTRIB(XonoticSkinResetDialog, intendedWidth, float, 0.5);
+	ATTRIB(XonoticSkinResetDialog, rows, float, 3);
+	ATTRIB(XonoticSkinResetDialog, columns, float, 2);
+ENDCLASS(XonoticSkinResetDialog)
