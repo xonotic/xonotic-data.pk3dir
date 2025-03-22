@@ -64,3 +64,13 @@ void nade_ammo_boom(entity this)
 	orb.colormod = '0.66 0.33 0';
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(AmmoNade, describe, string(AmmoNade this))
+{
+	TC(AmmoNade, this);
+	return sprintf(_("The %s detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
+		"If your team members enter the orb they will recover ammo, and if enemies enter the sphere they will lose ammo.\n\n"
+		"This does not impact weapon magazines, so it won't reload your weapons for you."),
+	COLORED_NAME(this));
+}
+#endif // MENUQC
