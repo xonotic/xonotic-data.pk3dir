@@ -1903,6 +1903,12 @@ float waypoint_loadall()
 		if (!s)
 			break;
 		m2 = stov(s);
+		if (m1.x > m2.x || m1.y > m2.y || m1.z > m2.z)
+		{
+			fclose(file);
+			error(sprintf("Backwards mins/maxs in %s. Waypoint file must be removed or fixed.", filename));
+		}
+
 		s = fgets(file);
 		if (!s)
 			break;
