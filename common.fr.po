@@ -3337,7 +3337,7 @@ msgstr "^F1%s %s^BG ne peut pas tirer, mais son ^F1%s^BG le peut"
 #: qcsrc/common/notifications/all.inc:724
 #, c-format
 msgid "^F1%s^BG is ^F4not available^BG on this map"
-msgstr "Le ^F1%s^BG n'est ^F4pas disponible^BG dans cette carte"
+msgstr "Le ^F1%s^BG n'est ^F4pas disponible^BG sur cette carte"
 
 #: qcsrc/common/notifications/all.inc:394
 #, c-format
@@ -8857,7 +8857,7 @@ msgid ""
 "with reflecting surfaces"
 msgstr ""
 "Qualité des reflets et de la réfraction, cela a un gros impact sur les "
-"performances dans les cartes avec des surfaces réfléchissantes"
+"performances sur les cartes avec des surfaces réfléchissantes"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:151
 msgid "Resolution of reflections/refractions"
@@ -8951,7 +8951,7 @@ msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
 msgstr ""
-"Sources de lumière en temps réel incluses dans certaines cartes. Peut avoir "
+"Sources de lumière en temps réel incluses sur certaines cartes. Peut avoir "
 "un impact important sur les performances."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
