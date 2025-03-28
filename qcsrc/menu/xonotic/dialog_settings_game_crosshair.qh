@@ -10,6 +10,3 @@ CLASS(XonoticGameCrosshairSettingsTab, XonoticTab)
 	ATTRIB(XonoticGameCrosshairSettingsTab, columns, float, 6.2);
 ENDCLASS(XonoticGameCrosshairSettingsTab)
 entity makeXonoticGameCrosshairSettingsTab();
-
-#include "../gamesettings.qh"
-REGISTER_SETTINGS(Crosshair, makeXonoticGameCrosshairSettingsTab());
