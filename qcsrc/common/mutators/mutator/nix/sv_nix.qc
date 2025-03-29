@@ -19,11 +19,6 @@ float autocvar_g_balance_nix_roundtime;
 bool autocvar_g_nix_with_healtharmor;
 bool autocvar_g_nix_with_blaster;
 bool autocvar_g_nix_with_powerups;
-int autocvar_g_pickup_cells_max;
-int autocvar_g_pickup_fuel_max;
-int autocvar_g_pickup_nails_max;
-int autocvar_g_pickup_rockets_max;
-int autocvar_g_pickup_shells_max;
 
 float g_nix_with_blaster;
 // WEAPONTODO

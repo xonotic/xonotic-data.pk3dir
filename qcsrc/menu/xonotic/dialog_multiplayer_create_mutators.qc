@@ -45,6 +45,12 @@ float checkCompatibility_newtoys(entity me)
 		return 0;
 	return 1;
 }
+float checkCompatibility_newtoys_autoreplace(entity me)
+{
+	if(!cvar("g_new_toys"))
+		return 0;
+	return checkCompatibility_newtoys(me);
+}
 float checkCompatibility_weaponarena_weapon(entity me)
 {
 	if(cvar("g_instagib"))
@@ -129,9 +135,20 @@ void XonoticMutatorsDialog_fill(entity me)
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_new_toys", _("New Toys"),
-			_("Some weapon spawns will be randomly replaced with new weapons: Heavy Laser Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker")));
+		me.TD(me, 1, 1.8 / 2, e = makeXonoticCheckBox_T(0, "g_new_toys", _("New Toys"),
+			_("Allow maps to spawn additional weapons (new toys)")));
 			setDependentWeird(e, checkCompatibility_newtoys);
+		me.TD(me, 1, 1.8 / 2, e = makeXonoticTextLabel(0, _("Replacement:")));
+			setDependentWeird(e, checkCompatibility_newtoys_autoreplace);
+	string nta_tooltip = _("Automatically replace some normal weapons of the map with their corresponding additional weapons");
+	me.TR(me);
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 1.6 / 3, e = makeXonoticRadioButton_T(3, "g_new_toys_autoreplace", "0", _("Never"), nta_tooltip));
+			setDependentWeird(e, checkCompatibility_newtoys_autoreplace);
+		me.TD(me, 1, 1.6 / 3, e = makeXonoticRadioButton_T(3, "g_new_toys_autoreplace", "1", _("Always"), nta_tooltip));
+			setDependentWeird(e, checkCompatibility_newtoys_autoreplace);
+		me.TD(me, 1, 1.6 / 3, e = makeXonoticRadioButton_T(3, "g_new_toys_autoreplace", "2", _("Randomly"), nta_tooltip));
+			setDependentWeird(e, checkCompatibility_newtoys_autoreplace);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_rocket_flying", _("Rocket Flying"),
@@ -151,7 +168,7 @@ void XonoticMutatorsDialog_fill(entity me)
 
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, string_null, string_null, _("Regular (no arena)")));
-	string weaponarena_tooltip = strzone(_("Players will be given a set of weapons at spawn as well as unlimited ammo, without weapon pickups"));
+	string weaponarena_tooltip = _("Players will be given a set of weapons at spawn as well as unlimited ammo, without weapon pickups");
 	me.TR(me);
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon arenas:")));
 	me.TR(me);

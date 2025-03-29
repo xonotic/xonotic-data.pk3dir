@@ -448,18 +448,18 @@ bool DoesQ3ARemoveThisEntity(entity this)
 	return false;
 }
 
-int GetAmmoConsumptionQ3(string netname)
-// Returns ammo consumed per shot by the primary/default fire mode
-// Returns 0 if the netname has no ammo cvar
+/// Returns ammo consumed per shot by the primary/default fire mode.
+/// Return value is undefined if entity isn't a weapon that uses ammo.
+int GetAmmoConsumptionQ3(entity wpn)
 {
-	switch (netname)
+	switch (wpn)
 	{
-		case "arc":	   return autocvar_g_balance_arc_beam_ammo;
-		case "devastator": return autocvar_g_balance_devastator_ammo;
-		case "machinegun": return autocvar_g_balance_machinegun_sustained_ammo;
-		case "minelayer":  return autocvar_g_balance_minelayer_ammo;
-		case "seeker":	   return autocvar_g_balance_seeker_tag_ammo;
-		default:	   return cvar(strcat("g_balance_", netname, "_primary_ammo"));
+		case WEP_ARC:        return WEP_CVAR(WEP_ARC,        beam_ammo);
+		case WEP_DEVASTATOR: return WEP_CVAR(WEP_DEVASTATOR, ammo);
+		case WEP_MACHINEGUN: return WEP_CVAR(WEP_MACHINEGUN, sustained_ammo);
+		case WEP_MINE_LAYER: return WEP_CVAR(WEP_MINE_LAYER, ammo);
+		case WEP_SEEKER:     return WEP_CVAR(WEP_SEEKER,     tag_ammo);
+		default:             return WEP_CVAR_PRI(wpn, ammo);
 	}
 }
 

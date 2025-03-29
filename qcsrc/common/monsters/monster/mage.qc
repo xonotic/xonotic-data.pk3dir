@@ -2,6 +2,7 @@
 
 #ifdef SVQC
 float autocvar_g_monster_mage_health;
+string autocvar_g_monster_mage_loot = "health_big";
 float autocvar_g_monster_mage_damageforcescale = 0.5;
 float autocvar_g_monster_mage_attack_spike_damage;
 float autocvar_g_monster_mage_attack_spike_radius;
@@ -101,11 +102,11 @@ bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 		case 0: return (GetResource(targ, RES_HEALTH) < autocvar_g_balance_health_regenstable);
 		case 1:
 		{
-			return ((GetResource(targ, RES_CELLS) && GetResource(targ, RES_CELLS) < g_pickup_cells_max)
-				||  (GetResource(targ, RES_ROCKETS) && GetResource(targ, RES_ROCKETS) < g_pickup_rockets_max)
-				||  (GetResource(targ, RES_BULLETS) && GetResource(targ, RES_BULLETS) < g_pickup_nails_max)
-				||  (GetResource(targ, RES_SHELLS) && GetResource(targ, RES_SHELLS) < g_pickup_shells_max)
-					);
+			return ((GetResource(targ, RES_CELLS) && GetResource(targ, RES_CELLS) < autocvar_g_pickup_cells_max)
+			     || (GetResource(targ, RES_ROCKETS) && GetResource(targ, RES_ROCKETS) < autocvar_g_pickup_rockets_max)
+			     || (GetResource(targ, RES_BULLETS) && GetResource(targ, RES_BULLETS) < autocvar_g_pickup_nails_max)
+			     || (GetResource(targ, RES_SHELLS) && GetResource(targ, RES_SHELLS) < autocvar_g_pickup_shells_max)
+			);
 		}
 		case 2: return (GetResource(targ, RES_ARMOR) < autocvar_g_balance_armor_regenstable);
 	}
@@ -237,10 +238,10 @@ void M_Mage_Defend_Heal(entity this)
 				}
 				case 1:
 				{
-					if(GetResource(it, RES_CELLS)) GiveResourceWithLimit(it, RES_CELLS, 1, g_pickup_cells_max);
-					if(GetResource(it, RES_ROCKETS)) GiveResourceWithLimit(it, RES_ROCKETS, 1, g_pickup_rockets_max);
-					if(GetResource(it, RES_SHELLS)) GiveResourceWithLimit(it, RES_SHELLS, 2, g_pickup_shells_max);
-					if(GetResource(it, RES_BULLETS)) GiveResourceWithLimit(it, RES_BULLETS, 5, g_pickup_nails_max);
+					if(GetResource(it, RES_CELLS)) GiveResourceWithLimit(it, RES_CELLS, 1, autocvar_g_pickup_cells_max);
+					if(GetResource(it, RES_ROCKETS)) GiveResourceWithLimit(it, RES_ROCKETS, 1, autocvar_g_pickup_rockets_max);
+					if(GetResource(it, RES_SHELLS)) GiveResourceWithLimit(it, RES_SHELLS, 2, autocvar_g_pickup_shells_max);
+					if(GetResource(it, RES_BULLETS)) GiveResourceWithLimit(it, RES_BULLETS, 5, autocvar_g_pickup_nails_max);
 					// TODO: fuel?
 					fx = EFFECT_AMMO_REGEN;
 					break;
@@ -482,7 +483,7 @@ METHOD(Mage, mr_setup, bool(Mage this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_mage_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_mage_damageforcescale); }
 
-    actor.monster_loot = ITEM_HealthBig;
+    actor.monster_loot = autocvar_g_monster_mage_loot;
     actor.monster_attackfunc = M_Mage_Attack;
 
     return true;

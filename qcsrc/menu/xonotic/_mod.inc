@@ -98,6 +98,7 @@
 #include <menu/xonotic/listbox.qc>
 #include <menu/xonotic/mainwindow.qc>
 #include <menu/xonotic/maplist.qc>
+#include <menu/xonotic/mixedslider.qc>
 #include <menu/xonotic/nexposee.qc>
 #include <menu/xonotic/picker.qc>
 #include <menu/xonotic/playerlist.qc>

@@ -14,11 +14,24 @@ CLASS(Nade, Object)
     ATTRIB(Nade, m_name, string, _("Grenade"));
     ATTRIB(Nade, m_icon, string, "nade_normal");
     ATTRIB(Nade, m_alpha, float, 1);
+    ATTRIB(Nade, netname, string, "random");
+    ATTRIB(Nade, impulse, int, 0); // legacy number for selection, do not add to new nade types
     ATTRIBARRAY(Nade, m_projectile, int, 2);
     ATTRIBARRAY(Nade, m_trail, entity, 2);
-    METHOD(Nade, display, void(entity this, void(string name, string icon) returns)) {
-        returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon));
+#ifndef SVQC
+    METHOD(Nade, display, void(entity this, void(string name, string icon) returns))
+    {
+        string img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon);
+    #ifdef CSQC
+        if (precache_pic(img) == "")
+    #endif
+    #ifdef MENUQC
+        if (draw_PreloadPicture(img) == "")
+    #endif
+            img = sprintf("/gfx/hud/default/%s", this.m_icon);
+        returns(this.m_name, img);
     }
+#endif
 ENDCLASS(Nade)
 
 REGISTER_NADE(Null, NEW(Nade));
@@ -52,6 +65,6 @@ Nade Nade_FromProjectile(int proj)
 .float orb_radius;
 
 #ifdef GAMEQC
-REPLICATE_INIT(int, cvar_cl_nade_type);
+REPLICATE_INIT(string, cvar_cl_nade_type);
 REPLICATE_INIT(string, cvar_cl_pokenade_type);
 #endif

@@ -2206,7 +2206,15 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
 		str = count_ordinal(i+1);
-		drawstring(pos + text_ofs, str, hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+		vector rank_color;
+		switch(i)
+		{
+			case 0:  rank_color = '0.933 0.733 0.200'; break; // 1st; gold
+			case 1:  rank_color = '0.667 0.667 0.667'; break; // 2nd; silver
+			case 2:  rank_color = '0.800 0.467 0.267'; break; // 3rd; bronze
+			default: rank_color = '1 1 1';
+		}
+		drawstring(pos + text_ofs, str, hud_fontsize, rank_color, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + text_ofs + eX * ranksize, TIME_ENCODED_TOSTRING(t, true), hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
 		str = ColorTranslateRGB(grecordholder[i]);
 		if(cut)
@@ -2499,7 +2507,7 @@ void Scoreboard_Draw()
 					str = strcat(str, "^7 / "); // delimiter
 				str = strcat(str, Scoreboard_Fraglimit_Draw(fl, false));
 			}
-			if(ll > 0)
+			if(ll > 0 && (ll < fl || fl <= 0))
 			{
 				if(tl > 0 || fl > 0)
 				{

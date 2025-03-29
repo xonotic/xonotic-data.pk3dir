@@ -1141,6 +1141,7 @@ void ClientConnect(entity this)
 
 	bot_clientconnect(this);
 
+	this.team = -1;
 	Player_DetermineForcedTeam(this);
 
 	TRANSMUTE(Observer, this);

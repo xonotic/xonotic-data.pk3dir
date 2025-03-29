@@ -152,5 +152,3 @@ const int STRAFEHUD_PROJECTION_PERSPECTIVE = 1;
 const int STRAFEHUD_PROJECTION_PANORAMIC = 2;
 
 const float ACOS_SQRT2_3_DEG = 35.2643896827546543153;  /* acos(sqrt(2/3)) * RAD2DEG */
-
-float GeomLerp(float a, float _lerp, float b); // declare GeomLerp here since there's no header file for it

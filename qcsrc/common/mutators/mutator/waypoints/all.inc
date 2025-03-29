@@ -39,7 +39,7 @@ REGISTER_WAYPOINT(FlagCarrierEnemyYellow,  _("Enemy carrier"), "flag_yellow_carr
 REGISTER_WAYPOINT(FlagCarrierEnemyPink,    _("Enemy carrier"), "flag_pink_carrying",    '0.8 0.8 0', 1);
 REGISTER_WAYPOINT(FlagReturn, _("Return flag here"), "", '0 0.8 0.8', 1);
 
-REGISTER_WAYPOINT(DomNeut, _("Control point"), "dom_icon_blue-highlighted", '0 1 1', 1);
+REGISTER_WAYPOINT(DomNeut, _("Control point"), "dom_icon_neutral-highlighted", '0 1 1', 1);
 REGISTER_WAYPOINT(DomRed, _("Control point"), "dom_icon_red-highlighted", '0 1 1', 1);
 REGISTER_WAYPOINT(DomBlue, _("Control point"), "dom_icon_blue-highlighted", '0 1 1', 1);
 REGISTER_WAYPOINT(DomYellow, _("Control point"), "dom_icon_yellow-highlighted", '0 1 1', 1);

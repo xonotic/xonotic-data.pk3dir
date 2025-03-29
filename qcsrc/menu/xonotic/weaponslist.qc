@@ -58,8 +58,14 @@ void XonoticWeaponsList_resizeNotify(entity me, vector relOrigin, vector relSize
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
+
+	entity e = REGISTRY_GET(Weapons, WEP_FIRST);
+	e.display(e, XonoticWeaponsList_cb);
+	vector sz = draw_PictureSize(XonoticWeaponsList_cb_icon);
+	float aspect_ratio = sz.y ? sz.x / sz.y : 1;
 	me.columnIconOrigin = 0;
-	me.columnIconSize = me.itemAbsSize.y / me.itemAbsSize.x;
+	me.columnIconSize = me.itemAbsSize.y / me.itemAbsSize.x * aspect_ratio;
+
 	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize + (0.5 * me.realFontSize.x);
 	me.columnNameSize = 1 - me.columnIconSize - (1.5 * me.realFontSize.x); // unused
 }

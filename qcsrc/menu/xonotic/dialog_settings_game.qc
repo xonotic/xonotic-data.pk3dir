@@ -46,7 +46,7 @@ METHOD(XonoticRegisteredSettingsList, drawListBoxItem, void(entity this, int i, 
 
 METHOD(XonoticRegisteredSettingsList, focusedItemChangeNotify, void(entity this))
 {
-    if (this.focusedItem == -1 || !this.source)
+    if (this.focusedItem < 0 || !this.source)
     {
         clearTooltip(this);
         return;

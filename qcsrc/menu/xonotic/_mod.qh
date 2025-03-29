@@ -98,6 +98,7 @@
 #include <menu/xonotic/listbox.qh>
 #include <menu/xonotic/mainwindow.qh>
 #include <menu/xonotic/maplist.qh>
+#include <menu/xonotic/mixedslider.qh>
 #include <menu/xonotic/nexposee.qh>
 #include <menu/xonotic/picker.qh>
 #include <menu/xonotic/playerlist.qh>

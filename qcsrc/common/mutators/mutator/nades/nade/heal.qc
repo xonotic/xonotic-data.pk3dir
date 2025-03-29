@@ -16,7 +16,7 @@ void nade_heal_touch(entity this, entity toucher)
 
 		if ( health_factor > 0 )
 		{
-			maxhealth = (IS_MONSTER(toucher)) ? toucher.max_health : g_pickup_healthmega_max;
+			maxhealth = (IS_MONSTER(toucher)) ? toucher.max_health : autocvar_g_pickup_healthmega_max;
 			float hp = GetResource(toucher, RES_HEALTH);
 			if (hp < maxhealth)
 			{

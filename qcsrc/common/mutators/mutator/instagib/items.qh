@@ -4,11 +4,6 @@
 #include <common/items/item/ammo.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 
-float instagib_respawntime_ammo = 45;
-float instagib_respawntimejitter_ammo = 0;
-GETTER(float, instagib_respawntime_ammo)
-GETTER(float, instagib_respawntimejitter_ammo)
-
 #ifdef GAMEQC
 MODEL(VaporizerCells_ITEM, Item_Model("a_cells.md3"));
 SOUND(VaporizerCells, Item_Sound("itempickup"));
@@ -37,8 +32,8 @@ CLASS(VaporizerCells, Ammo)
 #ifdef SVQC
 /* botvalue    */ ATTRIB(VaporizerCells, m_botvalue, int, 2000);
 /* itemid      */ ATTRIB(VaporizerCells, m_itemid, int, IT_RESOURCE);
-/* respawntime */ ATTRIB(VaporizerCells, m_respawntime, float(), GET(instagib_respawntime_ammo));
-/*             */ ATTRIB(VaporizerCells, m_respawntimejitter, float(), GET(instagib_respawntimejitter_ammo));
+/* respawntime */ ATTRIB(VaporizerCells, m_respawntime, float, 45);
+/*             */ ATTRIB(VaporizerCells, m_respawntimejitter, float, 0);
 /* iteminit    */ ATTRIB(VaporizerCells, m_iteminit, void(Pickup this, entity item), ammo_vaporizercells_init);
 #endif
 ENDCLASS(VaporizerCells)

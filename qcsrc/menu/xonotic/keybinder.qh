@@ -13,9 +13,11 @@ CLASS(XonoticKeyBinder, XonoticListBox)
 	METHOD(XonoticKeyBinder, keyGrabbed, void(entity, float, float));
 	METHOD(XonoticKeyBinder, destroy, void(entity));
 
+	ATTRIB(XonoticKeyBinder, itemAbsSize, vector, '0 0 0');
 	ATTRIB(XonoticKeyBinder, realFontSize, vector, '0 0 0');
 	ATTRIB(XonoticKeyBinder, realUpperMargin, float, 0);
-	ATTRIB(XonoticKeyBinder, columnFunctionOrigin, float, 0);
+	ATTRIB(XonoticKeyBinder, columnTreeIconSize, float, 0);
+	ATTRIB(XonoticKeyBinder, columnIconSize, float, 0);
 	ATTRIB(XonoticKeyBinder, columnFunctionSize, float, 0);
 	ATTRIB(XonoticKeyBinder, columnKeysOrigin, float, 0);
 	ATTRIB(XonoticKeyBinder, columnKeysSize, float, 0);

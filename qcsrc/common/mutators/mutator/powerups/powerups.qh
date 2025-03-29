@@ -1,13 +1,19 @@
 #pragma once
 
 #include <common/items/item/pickup.qh>
+
+#ifdef SVQC
+float autocvar_g_pickup_respawntime_powerup;
+float autocvar_g_pickup_respawntimejitter_powerup;
+#endif
+
 CLASS(Powerup, Pickup)
 #ifdef SVQC
     ATTRIB(Powerup, m_maxs, vector, ITEM_L_MAXS);
     ATTRIB(Powerup, m_botvalue, int, 11000);
     ATTRIB(Powerup, m_itemflags, int, FL_POWERUP);
-    ATTRIB(Powerup, m_respawntime, float(), GET(g_pickup_respawntime_powerup));
-    ATTRIB(Powerup, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_powerup));
+    ATTRIB(Powerup, m_respawntime, float, autocvar_g_pickup_respawntime_powerup);
+    ATTRIB(Powerup, m_respawntimejitter, float, autocvar_g_pickup_respawntimejitter_powerup);
 #endif
 ENDCLASS(Powerup)
 

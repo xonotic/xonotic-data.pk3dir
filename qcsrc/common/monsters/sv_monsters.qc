@@ -37,23 +37,34 @@ void monsters_setstatus(entity this)
 	STAT(MONSTERS_KILLED, this) = monsters_killed;
 }
 
-bool autocvar_g_monsters_drop = true;
 void monster_dropitem(entity this, entity attacker)
 {
-	if(!this.candrop || !this.monster_loot || !autocvar_g_monsters_drop)
+	if(!this.candrop || autocvar_g_monsters_drop_time <= 0)
+		return;
+
+	// TODO: mapper customization (different field?)
+	string itemlist = this.monster_loot;
+
+	if(this.spawnflags & MONSTERFLAG_MINIBOSS)
+		itemlist = autocvar_g_monsters_miniboss_loot;
+
+	MUTATOR_CALLHOOK(MonsterDropItem, this, itemlist, attacker);
+	itemlist = M_ARGV(1, string);
+
+	entity loot_itemdef = Item_RandomFromList(itemlist);
+	if (!loot_itemdef)
 		return;
 
 	entity e = spawn();
-	e.itemdef = this.monster_loot;
-	e.origin = CENTER_OR_VIEWOFS(this);
+	e.monster_item = true;
+	ITEM_SET_LOOT(e, true);
+	e.colormap = this.colormap;
+	e.itemdef = loot_itemdef;
+	setorigin(e, CENTER_OR_VIEWOFS(this));
 	e.velocity = randomvec() * 175 + '0 0 325';
-	e.lifetime = max(0, autocvar_g_monsters_drop_time);
+	e.lifetime = autocvar_g_monsters_drop_time;
 
-	MUTATOR_CALLHOOK(MonsterDropItem, this, e, attacker);
-	e = M_ARGV(1, entity);
-
-	if(e && e.itemdef)
-		Item_Initialise(e);
+	Item_Initialise(e);
 }
 
 bool monster_facing(entity this, entity targ)
@@ -504,20 +515,29 @@ void Monster_Touch(entity this, entity toucher)
 		this.enemy = toucher;
 }
 
-void Monster_Miniboss_Check(entity this)
+void Monster_Miniboss_Setup(entity this)
 {
-	if(MUTATOR_CALLHOOK(MonsterCheckBossFlag, this))
+	if(this.spawnflags & MONSTERFLAG_RESPAWNED)
+	{
+		// already performed initial setup, just reapply statuses as needed
+		if(this.spawnflags & MONSTERFLAG_MINIBOSS)
+			this.effects |= EF_RED;
 		return;
+	}
 
-	float chance = random() * 100;
+	if(MUTATOR_CALLHOOK(MonsterCheckBossFlag, this))
+	{
+		// prevent other code from identifying the monster as a miniboss
+		this.spawnflags &= ~MONSTERFLAG_MINIBOSS;
+		return;
+	}
 
 	// g_monsters_miniboss_chance cvar or spawnflags 64 causes a monster to be a miniboss
-	if ((this.spawnflags & MONSTERFLAG_MINIBOSS) || (chance < autocvar_g_monsters_miniboss_chance))
+	if ((this.spawnflags & MONSTERFLAG_MINIBOSS) || ((random() * 100) < autocvar_g_monsters_miniboss_chance))
 	{
 		GiveResource(this, RES_HEALTH, autocvar_g_monsters_miniboss_healthboost);
 		this.effects |= EF_RED;
-		if(!this.weapon)
-			this.weapon = WEP_VORTEX.m_id;
+		this.spawnflags |= MONSTERFLAG_MINIBOSS; // identifier for other code
 	}
 }
 
@@ -1068,12 +1088,6 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 
 	Monster mon = this.monsterdef;
 	mon.mr_death(mon, this);
-
-	if(this.candrop && this.weapon && autocvar_g_monsters_drop)
-	{
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		W_ThrowNewWeapon(this, this.weapon, 0, this.origin, randomvec() * 150 + '0 0 325', weaponentity);
-	}
 }
 
 void Monster_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
@@ -1373,9 +1387,10 @@ bool Monster_Spawn_Setup(entity this)
 	if(!this.attack_range) { this.attack_range = autocvar_g_monsters_attack_range; }
 	if(!this.damageforcescale) { this.damageforcescale = autocvar_g_monsters_damageforcescale; }
 
+	Monster_Miniboss_Setup(this);
+
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
-		Monster_Miniboss_Check(this);
 		SetResourceExplicit(this, RES_HEALTH, GetResource(this, RES_HEALTH) * MONSTER_SKILLMOD(this));
 
 		if(!this.skin)

@@ -72,12 +72,6 @@ string cache_lastmutatormsg;
 float default_player_alpha;
 float default_weapon_alpha;
 
-float g_pickup_shells_max;
-float g_pickup_nails_max;
-float g_pickup_rockets_max;
-float g_pickup_cells_max;
-float g_pickup_fuel_max;
-float g_pickup_weapons_anyway;
 float g_weaponarena;
 WepSet g_weaponarena_weapons;
 float g_weaponarena_random; // TODO

@@ -427,7 +427,6 @@ void cvar_changes_init()
 		BADPREFIX("net_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
-		BADPREFIX("sv_cullentities_");
 		BADPREFIX("sv_maxidle");
 		BADPREFIX("sv_minigames_");
 		BADPREFIX("sv_radio_");
@@ -2177,70 +2176,6 @@ void readlevelcvars()
 				warmup_limit = autocvar_timelimit * 60;
 		}
 	}
-
-	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
-	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
-	g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
-	g_pickup_respawntime_armor_small = cvar("g_pickup_respawntime_armor_small");
-	g_pickup_respawntime_armor_medium = cvar("g_pickup_respawntime_armor_medium");
-	g_pickup_respawntime_armor_big = cvar("g_pickup_respawntime_armor_big");
-	g_pickup_respawntime_armor_mega = cvar("g_pickup_respawntime_armor_mega");
-	g_pickup_respawntime_health_small = cvar("g_pickup_respawntime_health_small");
-	g_pickup_respawntime_health_medium = cvar("g_pickup_respawntime_health_medium");
-	g_pickup_respawntime_health_big = cvar("g_pickup_respawntime_health_big");
-	g_pickup_respawntime_health_mega = cvar("g_pickup_respawntime_health_mega");
-	g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
-	g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
-	g_pickup_respawntimejitter_superweapon = cvar("g_pickup_respawntimejitter_superweapon");
-	g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
-	g_pickup_respawntimejitter_armor_small = cvar("g_pickup_respawntimejitter_armor_small");
-	g_pickup_respawntimejitter_armor_medium = cvar("g_pickup_respawntimejitter_armor_medium");
-	g_pickup_respawntimejitter_armor_big = cvar("g_pickup_respawntimejitter_armor_big");
-	g_pickup_respawntimejitter_armor_mega = cvar("g_pickup_respawntimejitter_armor_mega");
-	g_pickup_respawntimejitter_health_small = cvar("g_pickup_respawntimejitter_health_small");
-	g_pickup_respawntimejitter_health_medium = cvar("g_pickup_respawntimejitter_health_medium");
-	g_pickup_respawntimejitter_health_big = cvar("g_pickup_respawntimejitter_health_big");
-	g_pickup_respawntimejitter_health_mega = cvar("g_pickup_respawntimejitter_health_mega");
-	g_pickup_respawntimejitter_powerup = cvar("g_pickup_respawntimejitter_powerup");
-
-	g_pickup_shells = cvar("g_pickup_shells");
-	g_pickup_shells_max = cvar("g_pickup_shells_max");
-	g_pickup_nails = cvar("g_pickup_nails");
-	g_pickup_nails_max = cvar("g_pickup_nails_max");
-	g_pickup_rockets = cvar("g_pickup_rockets");
-	g_pickup_rockets_max = cvar("g_pickup_rockets_max");
-	g_pickup_cells = cvar("g_pickup_cells");
-	g_pickup_cells_max = cvar("g_pickup_cells_max");
-	g_pickup_fuel = cvar("g_pickup_fuel");
-	g_pickup_fuel_jetpack = cvar("g_pickup_fuel_jetpack");
-	g_pickup_fuel_max = cvar("g_pickup_fuel_max");
-	g_pickup_armorsmall = cvar("g_pickup_armorsmall");
-	g_pickup_armorsmall_max = cvar("g_pickup_armorsmall_max");
-	g_pickup_armorsmall_anyway = cvar("g_pickup_armorsmall_anyway");
-	g_pickup_armormedium = cvar("g_pickup_armormedium");
-	g_pickup_armormedium_max = cvar("g_pickup_armormedium_max");
-	g_pickup_armormedium_anyway = cvar("g_pickup_armormedium_anyway");
-	g_pickup_armorbig = cvar("g_pickup_armorbig");
-	g_pickup_armorbig_max = cvar("g_pickup_armorbig_max");
-	g_pickup_armorbig_anyway = cvar("g_pickup_armorbig_anyway");
-	g_pickup_armormega = cvar("g_pickup_armormega");
-	g_pickup_armormega_max = cvar("g_pickup_armormega_max");
-	g_pickup_armormega_anyway = cvar("g_pickup_armormega_anyway");
-	g_pickup_healthsmall = cvar("g_pickup_healthsmall");
-	g_pickup_healthsmall_max = cvar("g_pickup_healthsmall_max");
-	g_pickup_healthsmall_anyway = cvar("g_pickup_healthsmall_anyway");
-	g_pickup_healthmedium = cvar("g_pickup_healthmedium");
-	g_pickup_healthmedium_max = cvar("g_pickup_healthmedium_max");
-	g_pickup_healthmedium_anyway = cvar("g_pickup_healthmedium_anyway");
-	g_pickup_healthbig = cvar("g_pickup_healthbig");
-	g_pickup_healthbig_max = cvar("g_pickup_healthbig_max");
-	g_pickup_healthbig_anyway = cvar("g_pickup_healthbig_anyway");
-	g_pickup_healthmega = cvar("g_pickup_healthmega");
-	g_pickup_healthmega_max = cvar("g_pickup_healthmega_max");
-	g_pickup_healthmega_anyway = cvar("g_pickup_healthmega_anyway");
-
-	g_pickup_ammo_anyway = cvar("g_pickup_ammo_anyway");
-	g_pickup_weapons_anyway = cvar("g_pickup_weapons_anyway");
 
 	g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
 	if(!g_weapon_stay)
