@@ -65,4 +65,20 @@ MUTATOR_HOOKFUNCTION(cl_ons, CustomizeEventchase)
 	return false;
 }
 
-#endif
+#endif // CSQC
+#ifdef MENUQC
+#include <common/gamemodes/gamemode/assault/assault.qh>
+
+METHOD(Onslaught, describe, string(Onslaught this))
+{
+	TC(Onslaught, this);
+	return sprintf(_("%s is a team-based gamemode similar to %s where the final goal is to destroy the enemy team core generator. "
+		"In order to destroy the generator, control points on the map (similar to those in %s) must first be captured.\n\n"
+		"Since your team can only capture a control point if it is connected to another control point currently owned by your team, you have to systematically work through the map to reach the enemy generator.\n\n"
+		"A control point is captured by walking into it then waiting for it to finish constructing. "
+		"Control points of the opposing team are destroyed by attacking the \"info bot\" that hovers above them, converting the control point to neutral once it is destroyed.\n\n"
+		"When in overtime, the enemy's generator will start to decay, at a faster rate the more control points your team has."),
+	COLORED_NAME(this), COLORED_NAME(MAPINFO_TYPE_ASSAULT));
+}
+
+#endif // MENUQC

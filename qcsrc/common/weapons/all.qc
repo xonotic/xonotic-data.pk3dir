@@ -196,6 +196,16 @@ entity GetAmmoItem(Resource ammotype)
 	return NULL;
 }
 
+entity GetAmmoResource(Ammo ammotype)
+{
+	FOREACH(Resources, it.netname == ammotype.netname,
+	{
+		return it;
+	});
+	LOG_WARNF("Invalid ammo type %d ", ammotype.m_id);
+	return NULL;
+}
+
 #ifdef CSQC
 int GetAmmoStat(Resource ammotype)
 {

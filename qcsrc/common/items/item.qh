@@ -11,6 +11,10 @@
 #include <server/items/spawning.qh>
 #endif
 
+#ifdef MENUQC
+#include <menu/draw.qh>
+#endif
+
 #ifdef GAMEQC
 const int IT_UNLIMITED_AMMO 			=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
 const int IT_UNLIMITED_SUPERWEAPONS		=  BIT(1); // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
@@ -132,9 +136,17 @@ CLASS(GameItem, Object)
 	ATTRIB(GameItem, m_glow, bool, false);
 	ATTRIB(GameItem, m_respawnsound, Sound, SND_ITEMRESPAWN);
 #endif
-#ifndef SVQC
-	METHOD(GameItem, display, void(entity this, void(string name, string icon) returns))
+#ifdef MENUQC
+	METHOD(GameItem, describe, string(GameItem this))
 	{
+		TC(GameItem, this);
+		return SUPER(GameItem).describe(this);
+	}
+#endif
+#ifndef SVQC
+	METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))
+	{
+		TC(GameItem, this);
 		string img = this.m_icon;
 		if (img != "")
 		{

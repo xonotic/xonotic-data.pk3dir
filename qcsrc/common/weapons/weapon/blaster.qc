@@ -152,3 +152,18 @@ METHOD(Blaster, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+
+METHOD(Blaster, describe, string(Blaster this))
+{
+	TC(Blaster, this);
+	return sprintf(_("The %s is one of the two main default weapons, firing a relatively weak high speed laser forwards, dealing some splash damage but importantly a lot of knockback.\n\n"
+		"It has no secondary fire, instead switching to the previously selected weapon.\n\n"
+		"It doesn't require ammo, meaning it is a great choice if you are running low on ammo and need to preserve some.\n\n"
+		"The %s is always available so ends up being used a lot when players spawn in, but it's difficult to master when used over a medium to long range.\n\n"
+		"One of the most common uses of the %s is \"laser jumping,\" where you can gain height by aiming down, jumping, then firing to boost yourself up. "
+		"Because it does a lot of knockback, another common usage is alternating between a high damage weapon and the %s to throw the enemy's aim off."),
+	COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this));
+}
+
+#endif
