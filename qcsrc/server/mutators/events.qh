@@ -1164,6 +1164,7 @@ MUTATOR_HOOKABLE(CopyBody, EV_CopyBody);
     /** sender */ i(entity, MUTATOR_ARGV_0_entity) \
     /** ret */ i(int, MUTATOR_ARGV_1_int) \
     /**/ o(int, MUTATOR_ARGV_1_int) \
+    /** message */ i(string, MUTATOR_ARGV_2_string) \
     /**/
 MUTATOR_HOOKABLE(ChatMessage, EV_ChatMessage);
 
