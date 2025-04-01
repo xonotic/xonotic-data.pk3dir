@@ -270,9 +270,9 @@ NET_HANDLE(damagetext, bool isNew)
 		// this should only cancel damage accumulation for this DT
 
 		if (flags & DTFLAG_STOP_ACCUMULATION
+			|| (current_alpha(it) < alphathreshold)
 			|| ((autocvar_cl_damagetext_accumulate_lifetime >= 0) // negative never disowns
-				&& (time - it.hit_time > autocvar_cl_damagetext_accumulate_lifetime)
-				&& (current_alpha(it) < alphathreshold)))
+				&& (time - it.hit_time > autocvar_cl_damagetext_accumulate_lifetime)))
 		{
 			it.m_group = 0;
 		}
