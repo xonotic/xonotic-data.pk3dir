@@ -48,7 +48,7 @@ WepSet _WepSet_FromWeapon(int i);
 
 #define DEFAULT_FILENAME "weapons_dump.cfg"
 // NOTE: dumpeffectinfo, dumpnotifs, dumpturrets and dumpweapons use similar code
-GENERIC_COMMAND(dumpweapons, "Dump all turrets into " DEFAULT_FILENAME, false) // WEAPONTODO: make this work with other progs than just server
+GENERIC_COMMAND(dumpweapons, "Dump all weapons into " DEFAULT_FILENAME, false) // WEAPONTODO: make this work with other progs than just server
 {
 	switch(request)
 	{
