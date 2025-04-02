@@ -111,7 +111,8 @@ bool kh_KeyCarrier_waypointsprite_visible_for_player(entity this, entity player,
 
 bool kh_Key_waypointsprite_visible_for_player(entity this, entity player, entity view)
 {
-	if(IS_SPEC(player) || warmup_stage)
+	// always show the dropped key waypoint while in warmup or spectating
+	if(this.owner && !this.owner.owner && (IS_SPEC(player) || warmup_stage))
 		return true;
 	if(!kh_tracking_enabled)
 		return false;
