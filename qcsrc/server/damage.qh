@@ -77,8 +77,6 @@ string deathmessage;
 
 float IsFlying(entity a);
 
-void UpdateFrags(entity player, int f);
-
 // NOTE: f=0 means still count as a (positive) kill, but count no frags for it
 void W_SwitchWeapon_Force(Player this, Weapon w, .entity weaponentity);
 void GiveFrags (entity attacker, entity targ, float f, int deathtype, .entity weaponentity);

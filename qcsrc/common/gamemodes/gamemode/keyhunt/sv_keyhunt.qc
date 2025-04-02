@@ -181,10 +181,10 @@ void kh_Scores_Event(entity player, entity key, string what, float frags_player,
 		return;
 
 	if(frags_player)
-		UpdateFrags(player, frags_player);
+		GameRules_scoring_add_team(player, SCORE, frags_player);
 
 	if(key && key.owner && frags_owner)
-		UpdateFrags(key.owner, frags_owner);
+		GameRules_scoring_add_team(key.owner, SCORE, frags_owner);
 
 	if(!autocvar_sv_eventlog)  //output extra info to the console or text file
 		return;
