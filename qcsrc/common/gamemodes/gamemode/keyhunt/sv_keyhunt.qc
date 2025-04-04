@@ -18,6 +18,11 @@ float autocvar_g_balance_keyhunt_dropvelocity;
 float autocvar_g_balance_keyhunt_maxdist;
 float autocvar_g_balance_keyhunt_protecttime;
 
+vector autocvar_g_balance_keyhunt_carrier_damage;
+vector autocvar_g_balance_keyhunt_carrier_force;
+vector autocvar_g_balance_keyhunt_noncarrier_damage;
+vector autocvar_g_balance_keyhunt_noncarrier_force;
+
 int autocvar_g_balance_keyhunt_score_capture;
 int autocvar_g_balance_keyhunt_score_carrierfrag;
 int autocvar_g_balance_keyhunt_score_collect;
@@ -1226,6 +1231,53 @@ void havocbot_role_kh_freelancer(entity this)
 
 
 // register this as a mutator
+
+MUTATOR_HOOKFUNCTION(kh, Damage_Calculate) // for changing damage and force values that are applied to players
+{
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
+	// as a gamemode rule, only apply scaling to player versus player combat
+	if (!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
+		return;
+
+	if (frag_attacker.kh_next != NULL) // if the attacker is a key carrier
+	{
+		if (frag_target == frag_attacker) // damage done to themselves
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_force.x;
+		}
+		else if (frag_target.kh_next != NULL) // damage done to other key carriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_force.y;
+		}
+		else // damage done to noncarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_force.z;
+		}
+	}
+	else
+	{
+		if (frag_target == frag_attacker) // damage done to themselves
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_force.x;
+		}
+		else if (frag_target.kh_next != NULL) // damage done to key carriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_force.y;
+		}
+		else // damage done to other noncarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_force.z;
+		}
+	}
+}
 
 MUTATOR_HOOKFUNCTION(kh, ClientDisconnect)
 {
