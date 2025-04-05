@@ -762,6 +762,8 @@ void ClientCommand_spectate(entity caller, int request)
 							PutClientInServer(caller);
 						}
 					}
+					else if (autocvar_sv_spectate == 2 && !warmup_stage && !caller.vote_master)
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_SPECTATE_SPEC_NOTALLOWED);
 					else
 					{
 						entity client = GetFilteredEntity(argv(1));
@@ -786,7 +788,7 @@ void ClientCommand_spectate(entity caller, int request)
 				if (autocvar_sv_spectate)
 					ClientKill_TeamChange(caller, -2); // observe
 				else
-					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_SPECTATE_NOTALLOWED);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_MULTI, SPECTATE_NOTALLOWED);
 			}
 			return; // never fall through to usage
 		}
