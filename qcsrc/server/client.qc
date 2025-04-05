@@ -2487,7 +2487,9 @@ void ObserverOrSpectatorThink(entity this)
 		} else if((is_spec && (PHYS_INPUT_BUTTON_ATCK(this) || CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18 || (CS(this).impulse >= 200 && CS(this).impulse <= 209)))
 			|| (!is_spec && ((PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch) || this.would_spectate))) {
 			this.flags &= ~FL_JUMPRELEASED;
-			if(SpectateNext(this)) {
+			if (autocvar_sv_spectate == 2 && !warmup_stage && !this.vote_master)
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_SPECTATE_SPEC_NOTALLOWED);
+			else if(SpectateNext(this)) {
 				TRANSMUTE(Spectator, this);
 			} else if (is_spec) {
 				TRANSMUTE(Observer, this);
@@ -2801,12 +2803,20 @@ void PlayerFrame (entity this)
 		{
 			// sv_spectate was disabled recently (or the server was stalled far too long)
 			CS(this).spectatortime = time; // reset the grace period
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+			// TODO re-test blocktime networking
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 		}
 		else if (time > cutoff)
 			if (dropclient_schedule(this))
 				Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
+	}
+	else if (autocvar_sv_spectate == 2 && !warmup_stage && IS_SPEC(this) && !this.vote_master)
+	{
+		// TODO check what happens here in CA
+			// iirc dead CA players can spectate a teammate, sv_spectate 2 should block it
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, SPECTATE_SPEC_NOTALLOWED);
+		TRANSMUTE(Observer, this);
+		PutClientInServer(this);
 	}
 
 	// Check for nameless players
