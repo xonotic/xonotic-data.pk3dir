@@ -2487,7 +2487,10 @@ void ObserverOrSpectatorThink(entity this)
 		} else if((is_spec && (PHYS_INPUT_BUTTON_ATCK(this) || CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18 || (CS(this).impulse >= 200 && CS(this).impulse <= 209)))
 			|| (!is_spec && ((PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch) || this.would_spectate))) {
 			this.flags &= ~FL_JUMPRELEASED;
-			if(SpectateNext(this)) {
+			if (autocvar_sv_spectate == 2 && !warmup_stage)
+				sprint(this, "^1spectating a specific client is not allowed during this match! <click path>\n");
+				// TODO can we share a SPECTATE_NOTALLOWED notification instead?
+			else if(SpectateNext(this)) {
 				TRANSMUTE(Spectator, this);
 			} else if (is_spec) {
 				TRANSMUTE(Observer, this);
@@ -2793,7 +2796,15 @@ void PlayerFrame (entity this)
 	anticheat_prethink(this);
 
 	// Check if spectating is allowed
-	if (!autocvar_sv_spectate && IS_REAL_CLIENT(this)
+	// TODO: should be possible to make this all event-driven rather than checking every frame
+	if (IS_SPEC(this) && autocvar_sv_spectate == 2 && !warmup_stage)
+	{
+		sprint(this, "^1spectating a specific client is not allowed during this match! <warmup ended path>\n");
+		// TODO is this the correct API use? vs eg PutObserverInServer() ? the +attack code does it this way...
+		TRANSMUTE(Observer, this);
+		PutClientInServer(this);
+	}
+	else if (!autocvar_sv_spectate && IS_REAL_CLIENT(this)
 	&& (IS_SPEC(this) || IS_OBSERVER(this)) && !INGAME(this))
 	{
 		float cutoff = CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime;

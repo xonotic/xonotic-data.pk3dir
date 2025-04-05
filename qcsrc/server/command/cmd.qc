@@ -750,9 +750,12 @@ void ClientCommand_spectate(entity caller, int request)
 		{
 			if (!intermission_running && IS_CLIENT(caller))
 			{
+				// TODO: add an arg that switches to observer?
 				if(argv(1) != "")
 				{
-					if(IS_SPEC(caller) || IS_OBSERVER(caller))
+					if (autocvar_sv_spectate == 2 && !warmup_stage)
+						sprint(caller, "^1spectating a specific client is not allowed during this match! <cmd path>\n");
+					else if(IS_SPEC(caller) || IS_OBSERVER(caller))
 					{
 						entity client = GetFilteredEntity(argv(1));
 						float spec_accepted = VerifyClientEntity(client, false, false);
