@@ -45,8 +45,5 @@ CLASS(XonoticGameSettingsTab, XonoticTab)
 	ATTRIB(XonoticGameSettingsTab, currentItem, entity);
 	METHOD(XonoticGameSettingsTab, topicChangeNotify, void(entity, entity this));
 	METHOD(XonoticGameSettingsTab, fill, void(entity this));
-	INIT(XonoticGameSettingsTab)
-    {
-        this.configureDialog(this);
-    }
 ENDCLASS(XonoticGameSettingsTab)
+entity makeXonoticGameSettingsTab();

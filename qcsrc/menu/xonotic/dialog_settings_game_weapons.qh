@@ -11,5 +11,3 @@ CLASS(XonoticGameWeaponsSettingsTab, XonoticTab)
 	ATTRIB(XonoticGameWeaponsSettingsTab, weaponsList, entity);
 ENDCLASS(XonoticGameWeaponsSettingsTab)
 entity makeXonoticGameWeaponsSettingsTab();
-#include "../gamesettings.qh"
-REGISTER_SETTINGS(Weapons, makeXonoticGameWeaponsSettingsTab());
