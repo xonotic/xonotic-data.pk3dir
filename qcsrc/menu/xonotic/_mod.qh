@@ -35,6 +35,7 @@
 #include <menu/xonotic/dialog_hudpanel_powerups.qh>
 #include <menu/xonotic/dialog_hudpanel_pressedkeys.qh>
 #include <menu/xonotic/dialog_hudpanel_quickmenu.qh>
+#include <menu/xonotic/dialog_hudpanel_racesplits.qh>
 #include <menu/xonotic/dialog_hudpanel_racetimer.qh>
 #include <menu/xonotic/dialog_hudpanel_radar.qh>
 #include <menu/xonotic/dialog_hudpanel_score.qh>
