@@ -207,7 +207,6 @@ void buff_Touch(entity this, entity toucher)
 		return; // incase mutator changed toucher
 
 	if((this.team_forced && toucher.team != this.team_forced)
-	|| (STAT(FROZEN, toucher))
 	|| (toucher.vehicle)
 	|| (!this.buffdef) // TODO: error out or maybe reset type if this occurs?
 	|| (time < toucher.buff_shield)
@@ -647,12 +646,6 @@ MUTATOR_HOOKFUNCTION(buffs, FilterItem)
 	}
 
 	return false;
-}
-
-MUTATOR_HOOKFUNCTION(buffs, Freeze)
-{
-	entity targ = M_ARGV(0, entity);
-	buff_RemoveAll(targ, STATUSEFFECT_REMOVE_NORMAL);
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
