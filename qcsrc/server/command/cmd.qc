@@ -752,7 +752,17 @@ void ClientCommand_spectate(entity caller, int request)
 			{
 				if(argv(1) != "")
 				{
-					if(IS_SPEC(caller) || IS_OBSERVER(caller))
+					if (!(IS_SPEC(caller) || IS_OBSERVER(caller)))
+						sprint(caller, "cmd spectate <client> only works when you are spectator/observer\n");
+					else if (argv(1) == "0")
+					{ // switch back to observing without leaving the CA team or join queue (like +attack2)
+						if (!IS_OBSERVER(caller))
+						{
+							TRANSMUTE(Observer, caller);
+							PutClientInServer(caller);
+						}
+					}
+					else
 					{
 						entity client = GetFilteredEntity(argv(1));
 						float spec_accepted = VerifyClientEntity(client, false, false);
@@ -766,8 +776,6 @@ void ClientCommand_spectate(entity caller, int request)
 						else
 							sprint(caller, "Can't spectate ", argv(1), "^7\n");
 					}
-					else
-						sprint(caller, "cmd spectate <client> only works when you are spectator/observer\n");
 					return;
 				}
 
