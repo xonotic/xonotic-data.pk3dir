@@ -1127,6 +1127,7 @@ Called when a client connects to the server
 Do not send temp entity headers directly here, they may arrive before CSQC is ready.
 =============
 */
+string autocvar_sv_vote_master_ids;
 void ClientConnect(entity this)
 {
 	if (Ban_MaybeEnforceBanOnce(this)) return;
@@ -1241,6 +1242,11 @@ void ClientConnect(entity this)
 
 	if (get_nextmap() != "")
 		Send_NextMap_To_Player(this);
+
+	// TODO: exempt vote masters from the various bans? or only make rcon admins exempt from bans?
+	if (autocvar_sv_vote_master_ids != "" && this.crypto_idfp_signed)
+		if (strstrofs(autocvar_sv_vote_master_ids, this.crypto_idfp, 0) >= 0)
+			this.vote_master = true;
 }
 
 .string shootfromfixedorigin;
