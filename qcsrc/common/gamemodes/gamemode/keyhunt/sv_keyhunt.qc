@@ -180,6 +180,7 @@ void kh_Controller_Think(entity this)  // called a lot
 
 // frags f: take from cvar * f
 // frags 0: no frags
+.float float_score;
 void kh_Scores_Event(entity player, entity key, string what, float frags_player, float frags_owner)  // update the score when a key is captured
 {
 	string s;
@@ -187,10 +188,10 @@ void kh_Scores_Event(entity player, entity key, string what, float frags_player,
 		return;
 
 	if(frags_player)
-		GameRules_scoring_add_team(player, SCORE, frags_player);
+		GameRules_scoring_add_team_float2int(player, SCORE, frags_player, float_score, 1);
 
 	if(key && key.owner && frags_owner)
-		GameRules_scoring_add_team(key.owner, SCORE, frags_owner);
+		GameRules_scoring_add_team_float2int(key.owner, SCORE, frags_owner, float_score, 1);
 
 	if(!autocvar_sv_eventlog)  //output extra info to the console or text file
 		return;
