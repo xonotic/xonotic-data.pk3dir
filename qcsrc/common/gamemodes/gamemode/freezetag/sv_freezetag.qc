@@ -631,15 +631,6 @@ MUTATOR_HOOKFUNCTION(ft, AccuracyTargetValid)
 	return MUT_ACCADD_VALID;
 }
 
-MUTATOR_HOOKFUNCTION(ft, PlayerDamage_SplitHealthArmor)
-{
-	entity frag_target = M_ARGV(2, entity);
-	float frag_deathtype = M_ARGV(6, float);
-
-	if(STAT(FROZEN, frag_target) && !ITEM_DAMAGE_NEEDKILL(frag_deathtype))
-		M_ARGV(4, float) = 0;
-}
-
 MUTATOR_HOOKFUNCTION(ft, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
