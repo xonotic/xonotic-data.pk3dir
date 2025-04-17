@@ -12,16 +12,13 @@
 .entity previous_owner; // also used on kh keys
 
 int autocvar_g_keepaway_ballcarrier_maxballs;
-float autocvar_g_keepaway_ballcarrier_damage;
-float autocvar_g_keepaway_ballcarrier_force;
 float autocvar_g_keepaway_ballcarrier_highspeed;
-float autocvar_g_keepaway_ballcarrier_selfdamage;
-float autocvar_g_keepaway_ballcarrier_selfforce;
-float autocvar_g_keepaway_noncarrier_damage;
-float autocvar_g_keepaway_noncarrier_force;
-float autocvar_g_keepaway_noncarrier_selfdamage;
-float autocvar_g_keepaway_noncarrier_selfforce;
+vector autocvar_g_keepaway_ballcarrier_damage;
+vector autocvar_g_keepaway_ballcarrier_force;
+vector autocvar_g_keepaway_noncarrier_damage;
+vector autocvar_g_keepaway_noncarrier_force;
 bool autocvar_g_keepaway_noncarrier_warn;
+
 int autocvar_g_keepaway_score_bckill;
 int autocvar_g_keepaway_score_killac;
 int autocvar_g_keepaway_score_timepoints;
@@ -467,33 +464,43 @@ MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force valu
 	entity frag_target = M_ARGV(2, entity);
 
 	// as a gamemode rule, only apply scaling to player versus player combat
-	if(!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
+	if (!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
 		return;
 
-	if(frag_attacker.ballcarried) // if the attacker is a ballcarrier
+	if (frag_attacker.ballcarried) // if the attacker is a ballcarrier
 	{
-		if(frag_target == frag_attacker) // damage done to yourself
+		if (frag_target == frag_attacker) // damage done to themselves
 		{
-			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_selfdamage;
-			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_selfforce;
+			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_force.x;
 		}
-		else // damage done to other players (ballcarriers and noncarriers)
+		else if (frag_target.ballcarried) // damage done to other ballcarriers
 		{
-			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_damage;
-			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_force;
+			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_force.y;
+		}
+		else // damage done to noncarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_force.z;
 		}
 	}
-	else if (!frag_target.ballcarried) // if the target is a noncarrier
+	else
 	{
-		if(frag_target == frag_attacker) // damage done to yourself
+		if (frag_target == frag_attacker) // damage done to themselves
 		{
-			M_ARGV(4, float) *= autocvar_g_keepaway_noncarrier_selfdamage;
-			M_ARGV(6, vector) *= autocvar_g_keepaway_noncarrier_selfforce;
+			M_ARGV(4, float) *= autocvar_g_keepaway_noncarrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_keepaway_noncarrier_force.x;
+		}
+		else if (frag_target.ballcarried) // damage done to ballcarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_keepaway_noncarrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_keepaway_noncarrier_force.y;
 		}
 		else // damage done to other noncarriers
 		{
-			M_ARGV(4, float) *= autocvar_g_keepaway_noncarrier_damage;
-			M_ARGV(6, vector) *= autocvar_g_keepaway_noncarrier_force;
+			M_ARGV(4, float) *= autocvar_g_keepaway_noncarrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_keepaway_noncarrier_force.z;
 		}
 	}
 }

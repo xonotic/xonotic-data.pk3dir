@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Antonio <piuntn@gmail.com>, 2013-2024
+# Antonio <piuntn@gmail.com>, 2013-2025
 # Antonio 'terencehill' Piu <piuntn@gmail.com>, 2011-2012
 # Costa <yesbubu@hotmail.it>, 2014,2021
 # Felice Sallustio <fel.sallustio@gmail.com>, 2011
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-06 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Antonio <piuntn@gmail.com>, 2013-2024\n"
+"Last-Translator: Antonio <piuntn@gmail.com>, 2013-2025\n"
 "Language-Team: Italian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
 "Language: it\n"
@@ -6259,12 +6259,12 @@ msgstr "Personalizzato"
 #: qcsrc/menu/menu.qc:510
 #, c-format
 msgid "^3%s^7 in range \"%s\" to \"%s\""
-msgstr "^3%s^7 nel raggio \"%s\" a \"%s\""
+msgstr "^3%s^7 nell'intervallo da \"%s\" a \"%s\""
 
 #: qcsrc/menu/menu.qc:512
 #, c-format
 msgid "^3%s^7 outside range \"%s\" to \"%s\""
-msgstr "^3%s^7 fuori dal raggio \"%s\" a \"%s\""
+msgstr "^3%s^7 fuori dall'intervallo da \"%s\" a \"%s\""
 
 #: qcsrc/menu/menu.qc:541
 msgid "Has special requirements"
@@ -6867,7 +6867,7 @@ msgstr "Pannello Tempo Oggetti"
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:26
 #, c-format
 msgid "GAMETYPE^%s:"
-msgstr "MODALITA'^%s:"
+msgstr "GAMETYPE^%s:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
@@ -7802,21 +7802,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
 msgid "Allow maps to spawn additional weapons (new toys)"
-msgstr ""
+msgstr "Permetti alle mappe di fornire le armi aggiuntive (new toys)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:141
 msgid "Replacement:"
-msgstr ""
+msgstr "Sostituzione:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:143
 msgid ""
 "Automatically replace some normal weapons of the map with their "
 "corresponding additional weapons"
 msgstr ""
+"Sostituisci automaticamente certe armi normali della mappa con le "
+"corrispondenti armi aggiuntive"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:150
 msgid "Randomly"
-msgstr ""
+msgstr "A caso"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:155
 msgid ""

@@ -263,15 +263,15 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 
 	int longflags = 0;
 	FOREACH(Scores, true, {
-	    int p = BIT(i % 16);
+		int p = BIT(i % 16);
 		if (this.(scores(it)) > 127 || this.(scores(it)) <= -128)
 			longflags |= p;
-    });
+	});
 
 	WriteShort(MSG_ENTITY, sendflags);
 	WriteShort(MSG_ENTITY, longflags);
 	FOREACH(Scores, true, {
-	    int p = BIT(i % 16);
+		int p = BIT(i % 16);
 		if (sendflags & p)
 		{
 			if(longflags & p)
@@ -279,7 +279,7 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 			else
 				WriteChar(MSG_ENTITY, this.(scores(it)));
 		}
-    });
+	});
 
 	return true;
 }
@@ -636,7 +636,7 @@ string GetPlayerScoreString(entity pl, float shortString)
 				l = scores_label(it);
 				out = strcat(out, GetScoreLogLabel(l, f), ",");
 			}
-        });
+		});
 		if(shortString < 2)
 		FOREACH(Scores, true, {
 			if((scores_flags(it) & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_SECONDARY)
@@ -645,7 +645,7 @@ string GetPlayerScoreString(entity pl, float shortString)
 				l = scores_label(it);
 				out = strcat(out, GetScoreLogLabel(l, f), ",");
 			}
-        });
+		});
 		if(shortString < 1)
 		FOREACH(Scores, true, {
 			if((scores_flags(it) & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_PRIMARY)
@@ -655,7 +655,7 @@ string GetPlayerScoreString(entity pl, float shortString)
 				l = scores_label(it);
 				out = strcat(out, GetScoreLogLabel(l, f), ",");
 			}
-        });
+		});
 		out = substring(out, 0, strlen(out) - 1);
 	}
 	else if((sk = CS(pl).scorekeeper))
@@ -663,18 +663,18 @@ string GetPlayerScoreString(entity pl, float shortString)
 		FOREACH(Scores, true, {
 			if ((scores_flags(it) & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_PRIMARY)
 				out = strcat(out, ftos(sk.(scores(it))), ",");
-        });
+		});
 		if(shortString < 2)
 		FOREACH(Scores, true, {
 			if ((scores_flags(it) & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_SECONDARY)
 				out = strcat(out, ftos(sk.(scores(it))), ",");
-        });
+		});
 		if(shortString < 1)
 		FOREACH(Scores, true, {
 			if((scores_flags(it) & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_PRIMARY)
 			if((scores_flags(it) & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_SECONDARY)
 				out = strcat(out, ftos(sk.(scores(it))), ",");
-        });
+		});
 		out = substring(out, 0, strlen(out) - 1);
 	}
 	return out;

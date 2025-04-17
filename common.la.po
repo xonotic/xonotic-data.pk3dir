@@ -7690,21 +7690,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
 msgid "Allow maps to spawn additional weapons (new toys)"
-msgstr ""
+msgstr "Sinit harenas continere arma non ordinaria (crepundia nova)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:141
 msgid "Replacement:"
-msgstr ""
+msgstr "Commutatio:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:143
 msgid ""
 "Automatically replace some normal weapons of the map with their "
 "corresponding additional weapons"
 msgstr ""
+"Commutare, pro aliquibus armis ordinariis in harena, similia arma non "
+"ordinaria"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:150
 msgid "Randomly"
-msgstr ""
+msgstr "Fortuito"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:155
 msgid ""
