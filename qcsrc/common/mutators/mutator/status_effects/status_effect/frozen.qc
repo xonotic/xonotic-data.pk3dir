@@ -37,6 +37,8 @@ void Frozen_ice_create(entity this)
     ice.alpha = 0.5;
 
     this.frozen_ice = ice;
+
+    Frozen_ice_think(ice);
 }
 
 METHOD(Frozen, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
