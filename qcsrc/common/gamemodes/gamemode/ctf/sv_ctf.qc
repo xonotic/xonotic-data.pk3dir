@@ -1142,8 +1142,8 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 	}
 
 	// special touch behaviors
+	// TODO: mutator hook to prevent picking up objectives
 	if(IS_INDEPENDENT_PLAYER(toucher)) { return; }
-	else if(STAT(FROZEN, toucher)) { return; }
 	else if(IS_VEHICLE(toucher))
 	{
 		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)

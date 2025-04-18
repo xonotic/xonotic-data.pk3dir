@@ -701,7 +701,6 @@ void Item_Touch(entity this, entity toucher)
 	}
 
 	if(!(toucher.flags & FL_PICKUPITEMS)
-	|| STAT(FROZEN, toucher)
 	|| IS_DEAD(toucher)
 	|| (this.solid != SOLID_TRIGGER)
 	|| (this.owner == toucher)
