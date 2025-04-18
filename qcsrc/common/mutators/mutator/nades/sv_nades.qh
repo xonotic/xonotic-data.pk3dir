@@ -42,6 +42,7 @@ int autocvar_g_nades_bonus_score_spree;
 
 .entity nade;
 .entity fake_nade;
+.float nade_lifetime;
 .float nade_refire;
 .float nade_special_time;
 .string pokenade_type;
