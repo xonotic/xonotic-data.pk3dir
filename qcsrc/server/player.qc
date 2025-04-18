@@ -166,12 +166,16 @@ void player_anim(entity this)
 		deadbits = 0;
 	}
 	int animbits = deadbits;
-	if(STAT(FROZEN, this))
+	if(StatusEffects_active(STATUSEFFECT_Frozen, this))
 		animbits |= ANIMSTATE_FROZEN;
 	if(this.move_movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;
 	if(IS_DUCKED(this))
 		animbits |= ANIMSTATE_DUCK;
+
+	MUTATOR_CALLHOOK(PlayerAnim, this, animbits);
+	animbits = M_ARGV(1, int);
+
 	animdecide_setstate(this, animbits, false);
 	animdecide_setimplicitstate(this, IS_ONGROUND(this));
 }
@@ -245,12 +249,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			}
 		}
 
-		if (STAT(FROZEN, this))
-		{
-			if (!ITEM_DAMAGE_NEEDKILL(deathtype))
-				damage = 0;
-		}
-		else if (StatusEffects_active(STATUSEFFECT_SpawnShield, this) && autocvar_g_spawnshield_blockdamage < 1)
+		if (StatusEffects_active(STATUSEFFECT_SpawnShield, this) && autocvar_g_spawnshield_blockdamage < 1)
 			damage *= 1 - bound(0, autocvar_g_spawnshield_blockdamage, 1);
 
 		if(deathtype & HITTYPE_SOUND) // sound based attacks cause bleeding from the ears
@@ -350,7 +349,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			if(take)
 				this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
-			if (time > this.pain_finished && !STAT(FROZEN, this)) // Don't switch pain sequences like crazy
+			if (time > this.pain_finished && !STAT(FROZEN, this) && !StatusEffects_active(STATUSEFFECT_Frozen, this)) // Don't switch pain sequences like crazy
 			{
 				this.pain_finished = time + 0.5;	//Supajoe
 
@@ -433,7 +432,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if ((dh || da) && !forbid_logging_damage)
 	{
 		float realdmg = damage - excess;
-		if ((this != attacker || deathtype == DEATH_KILL.m_id) && realdmg && !STAT(FROZEN, this)
+		if ((this != attacker || deathtype == DEATH_KILL.m_id) && realdmg
 			&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
 		{
 			// accumulate damage, it will be logged later in this frame
@@ -516,7 +515,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			ClientKill_Now_TeamChange(this); // can turn player into spectator
 
 		// player could have been miraculously resuscitated ;)
-		// e.g. players in freezetag get frozen, they don't really die
 		if(GetResource(this, RES_HEALTH) >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
 			return;
 
@@ -524,8 +522,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			calculate_player_respawn_time(this);
 
 		// when we get here, player actually dies
-
-		Unfreeze(this, false); // remove any icy remains
 
 		// clear waypoints
 		WaypointSprite_PlayerDead(this);

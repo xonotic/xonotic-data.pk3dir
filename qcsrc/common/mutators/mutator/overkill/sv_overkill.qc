@@ -138,7 +138,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 		return;
 	}
 	entity player = M_ARGV(0, entity);
-	if (!IS_PLAYER(player) || IS_DEAD(player) || STAT(FROZEN, player))
+	if (!IS_PLAYER(player) || IS_DEAD(player))
 	{
 		return;
 	}

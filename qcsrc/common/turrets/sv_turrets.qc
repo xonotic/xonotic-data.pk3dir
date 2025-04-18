@@ -716,8 +716,6 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	// Cant touch this
 	if (GetResource(e_target, RES_HEALTH) <= 0)
 		return -6;
-	else if (STAT(FROZEN, e_target))
-		return -6;
 
 	// vehicle
 	if(IS_VEHICLE(e_target))

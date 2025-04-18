@@ -113,7 +113,7 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 #define PHYS_FRICTION_ONLAND(s)             STAT(MOVEVARS_FRICTION_ONLAND, s)
 #define PHYS_FRICTION_SLICK(s)              STAT(MOVEVARS_FRICTION_SLICK, s)
 
-#define PHYS_FROZEN(s)                      STAT(FROZEN, s)
+#define PHYS_FROZEN(s)                      (STAT(FROZEN, s) || StatusEffects_active(STATUSEFFECT_Frozen, s))
 
 #define PHYS_HIGHSPEED(s)                   STAT(MOVEVARS_HIGHSPEED, s)
 

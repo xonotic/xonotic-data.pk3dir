@@ -114,7 +114,6 @@ void tka_TouchEvent(entity this, entity toucher) // runs any time that the ball 
 	}
 	if(IS_INDEPENDENT_PLAYER(toucher)) { return; }
 	if(IS_DEAD(toucher)) { return; }
-	if(STAT(FROZEN, toucher)) { return; }
 	if (!IS_PLAYER(toucher))
 	{  // The ball just touched an object, most likely the world
 		Send_Effect(EFFECT_BALL_SPARKS, this.origin, '0 0 0', 1);
