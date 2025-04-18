@@ -4,6 +4,7 @@
 #
 # Translators:
 # Kamparano <kamparano.viro@gmail.com>, 2017
+# Krystian J, 2025
 # Voltinus <voltinusmail@gmail.com>, 2022
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-06 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Voltinus <voltinusmail@gmail.com>, 2022\n"
+"Last-Translator: Krystian J, 2025\n"
 "Language-Team: Esperanto (http://app.transifex.com/team-xonotic/xonotic/"
 "language/eo/)\n"
 "Language: eo\n"
@@ -62,7 +63,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
-msgstr ""
+msgstr "kontraŭ"
 
 #: qcsrc/client/hud/panel/chat.qc:168
 msgid "^3Player^7: This is the chat area."
@@ -85,7 +86,7 @@ msgstr "^1Spektante: ^7%s"
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Premi ^3%s^1 por spekti"
+msgstr "^1Premu ^3%s^1 por spekti"
 
 #: qcsrc/client/hud/panel/infomessages.qc:107
 #: qcsrc/menu/xonotic/keybinder.qc:75
@@ -100,12 +101,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:109
 #: qcsrc/client/hud/panel/infomessages.qc:113
 msgid "next weapon"
-msgstr ""
+msgstr "venonta armilo"
 
 #: qcsrc/client/hud/panel/infomessages.qc:109
 #: qcsrc/client/hud/panel/infomessages.qc:113
 msgid "previous weapon"
-msgstr ""
+msgstr "antaŭa armilo"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #, c-format
@@ -155,7 +156,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:141
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr ""
+msgstr "^1Premu ^3%s^1 por aliĝi"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141 qcsrc/client/main.qc:1354
 #: qcsrc/common/notifications/all.qh:466
@@ -266,7 +267,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "Chat"
-msgstr ""
+msgstr "Babilejo"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:845
 msgid "QMCMD^Send public message to"
@@ -1786,12 +1787,12 @@ msgstr ""
 #: qcsrc/common/minigames/cl_minigames_hud.qc:442
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
 msgid "Create"
-msgstr ""
+msgstr "Kreu"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:445
 #: qcsrc/menu/xonotic/dialog_welcome.qc:131
 msgid "Join"
-msgstr ""
+msgstr "Aliĝu"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:521
 msgid "Minigames"
@@ -3198,7 +3199,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:719
 #, c-format
 msgid "^BGYou do not have the ^F1%s"
-msgstr ""
+msgstr "^BGVi ne havas la ^F1%s "
 
 #: qcsrc/common/notifications/all.inc:388
 #: qcsrc/common/notifications/all.inc:720
@@ -6313,7 +6314,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
-msgstr ""
+msgstr "Nomo:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:62
@@ -6346,7 +6347,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_welcome.qc:13
 #: qcsrc/menu/xonotic/dialog_welcome.qh:6
 msgid "Welcome"
-msgstr ""
+msgstr "Bonvenon"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:18
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:28
@@ -6354,7 +6355,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:227
 msgid "Join!"
-msgstr ""
+msgstr "Aliĝu!"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:26
@@ -6368,7 +6369,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:45
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
 msgid "Servers"
-msgstr ""
+msgstr "Serviloj"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:48
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:19
@@ -7325,19 +7326,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:116
 msgid "Teams:"
-msgstr ""
+msgstr "Teamoj:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
 msgid "2 teams"
-msgstr ""
+msgstr "2 teamoj"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:120
 msgid "3 teams"
-msgstr ""
+msgstr "3 teamoj"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
 msgid "4 teams"
-msgstr ""
+msgstr "4 teamoj"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:124
 msgid "Player slots:"
@@ -7371,7 +7372,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
 msgid "Beginner"
-msgstr ""
+msgstr "Komencanto"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
 msgid "You will win"
@@ -10399,51 +10400,51 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
-msgstr ""
+msgstr "Januaro"
 
 #: qcsrc/menu/xonotic/statslist.qc:30
 msgid "February"
-msgstr ""
+msgstr "Februaro"
 
 #: qcsrc/menu/xonotic/statslist.qc:31
 msgid "March"
-msgstr ""
+msgstr "Marto"
 
 #: qcsrc/menu/xonotic/statslist.qc:32
 msgid "April"
-msgstr ""
+msgstr "Aprilo"
 
 #: qcsrc/menu/xonotic/statslist.qc:33
 msgid "May"
-msgstr ""
+msgstr "Majo"
 
 #: qcsrc/menu/xonotic/statslist.qc:34
 msgid "June"
-msgstr ""
+msgstr "Junio"
 
 #: qcsrc/menu/xonotic/statslist.qc:35
 msgid "July"
-msgstr ""
+msgstr "Julio"
 
 #: qcsrc/menu/xonotic/statslist.qc:36
 msgid "August"
-msgstr ""
+msgstr "Aŭgusto"
 
 #: qcsrc/menu/xonotic/statslist.qc:37
 msgid "September"
-msgstr ""
+msgstr "Septembro"
 
 #: qcsrc/menu/xonotic/statslist.qc:38
 msgid "October"
-msgstr ""
+msgstr "Oktobro"
 
 #: qcsrc/menu/xonotic/statslist.qc:39
 msgid "November"
-msgstr ""
+msgstr "Novembro"
 
 #: qcsrc/menu/xonotic/statslist.qc:40
 msgid "December"
-msgstr ""
+msgstr "Decembro"
 
 #: qcsrc/menu/xonotic/statslist.qc:46
 #, no-c-format

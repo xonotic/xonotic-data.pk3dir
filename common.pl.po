@@ -22,6 +22,7 @@
 # Kriss Chr <kriss7475@gmail.com>, 2017
 # Marcin Nogaj, 2022
 # Marcin Nogaj, 2022
+# Oliwier Jaszczyszyn, 2025
 # Piotr Kozica <koza91@gmail.com>, 2016
 # qqiLMFjv1iBfT3p6TNxjUThsaTVIXhQc qqiLMFjv1iBfT3p6TNxjUThsaTVIXhQc, 2022
 # qqiLMFjv1iBfT3p6TNxjUThsaTVIXhQc qqiLMFjv1iBfT3p6TNxjUThsaTVIXhQc, 2022
@@ -40,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-06 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Wojciech Sikora, 2022\n"
+"Last-Translator: Oliwier Jaszczyszyn, 2025\n"
 "Language-Team: Polish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -53,7 +54,7 @@ msgstr ""
 
 #: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:120
 msgid "Checkpoint times:"
-msgstr ""
+msgstr "Czasy punktów kontrolnych:"
 
 #: qcsrc/client/hud/hud_config.qc:80
 #, c-format
@@ -67,7 +68,7 @@ msgstr "^1Nie można zapisać do %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 msgid "Title"
-msgstr ""
+msgstr "Tytuł"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -80,11 +81,13 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
+"^1Wiadomość z wieloma liniami o czasie %s, która\n"
+"^BOLDwyświetla się dłużej niż zwykle "
 
 #: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
 msgid "Message at time %s"
-msgstr "Wiadomość o czasu %s"
+msgstr "Wiadomość o czasie %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:211
 msgid "Generic message"
@@ -178,11 +181,11 @@ msgstr "informacja o serwerze"
 #: qcsrc/client/hud/panel/infomessages.qc:136
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr ""
+msgstr "^2Jesteś w kolejce do drużyny %s%s^2"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 msgid "^2You're queued to join any available team"
-msgstr ""
+msgstr "^2Jesteś w kolejce do dowolnej drużyny"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141
 #, c-format
@@ -210,7 +213,7 @@ msgstr "^31^2 więcej graczy jest potrzebne by zacząć mecz"
 #: qcsrc/client/hud/panel/infomessages.qc:174
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "Do rozpoczęcia gry potrzebnych jest jeszcze ^3%d^2 graczy."
 
 #: qcsrc/client/hud/panel/infomessages.qc:187
 #, c-format
@@ -234,7 +237,7 @@ msgstr "^2Naciśnij ^3%s^2 by zakończyć rozgrzewkę"
 
 #: qcsrc/client/hud/panel/infomessages.qc:204
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "Drużyny nie mają po tyle samo graczy!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 #, c-format
@@ -278,7 +281,7 @@ msgstr "Gracz %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:220
 msgid "Standard quick menu"
-msgstr ""
+msgstr "Standardowe menu szybkich akcji"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:660
 #: qcsrc/client/hud/panel/quickmenu.qc:662
@@ -545,19 +548,19 @@ msgstr "Wymieszaj drużyny"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:922
 msgid "Server quick menu"
-msgstr ""
+msgstr "Menu szybkich akcji serwera"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:924
 msgid "Waypoint editor menu"
-msgstr ""
+msgstr "Edytor punktów lokalizacji"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:927
 msgid "Waypoint editor menu as default"
-msgstr ""
+msgstr "Ustaw edytor punktów lokalizacji jako domyślny"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:929
 msgid "Server quick menu as default"
-msgstr ""
+msgstr "Ustaw menu szybkich akcji serwera jako domyślne"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:935
 msgid "QMCMD^Spectate a player"
@@ -586,7 +589,7 @@ msgstr "Linia mety"
 #: qcsrc/client/hud/panel/racetimer.qc:200
 #, c-format
 msgid "Checkpoint %d"
-msgstr ""
+msgstr "Punkt kontrolny %d"
 
 #: qcsrc/client/hud/panel/racetimer.qc:203
 #: qcsrc/client/hud/panel/racetimer.qc:293
@@ -621,7 +624,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Total amount of time holding the ball in Keepaway"
-msgstr ""
+msgstr "Łączny czas kontroli nad piłką w trybie Keepaway"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
@@ -661,7 +664,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "The total damage dealt"
-msgstr ""
+msgstr "Zadanych obrażeń w ogóle"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^damage taken"
@@ -729,7 +732,7 @@ msgstr "SCO^fragi"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of generators destroyed"
-msgstr ""
+msgstr "Liczba zniszczonych generatorów"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^generators"
@@ -834,6 +837,8 @@ msgstr "SCO^cele"
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr ""
+"Jak często flaga (CTF), klucz (KeyHunt) lub piłka (Keepaway) był(a) "
+"przejmowany/-a"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pickups"
@@ -897,7 +902,7 @@ msgstr "SCO^wygrane rundy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "Number of rounds played"
-msgstr ""
+msgstr "Liczba rozegranych rund"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "SCO^rounds played"
@@ -1093,7 +1098,7 @@ msgstr "SCO^punkty"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2442
 msgid "Next map:"
-msgstr ""
+msgstr "Następna mapa:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2449
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
@@ -1182,11 +1187,11 @@ msgstr "Rozgrzewka"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players!"
-msgstr ""
+msgstr "Rozgrzewka: za mało graczy!"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: teams unbalanced!"
-msgstr ""
+msgstr "Rozgrzewka: drużyny nie mają po tyle samo graczy!"
 
 #: qcsrc/client/hud/panel/timer.qc:135
 msgid "Warmup: no time limit"
@@ -1361,7 +1366,7 @@ msgstr "Rodzaj gry:"
 
 #: qcsrc/client/main.qc:1385
 msgid "by:"
-msgstr ""
+msgstr "przez:"
 
 #: qcsrc/client/main.qc:1389
 msgid "This match supports"
@@ -1622,6 +1627,8 @@ msgstr "Życia:"
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
 msgstr ""
+"Konkuruj z innymi o to, kto zada najwięcej obrażeń i sfraguje jak najwięcej "
+"graczy w tym chaotycznym starciu!"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
@@ -1630,7 +1637,7 @@ msgstr ""
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:46
 msgid "How much score is needed before the match will end"
-msgstr ""
+msgstr "Ile punktów należy zdobyć przed końcem gry"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
@@ -1642,7 +1649,7 @@ msgstr "Strzelaj do piłki i kop ją do bramki przeciwnika, broń własnej bramk
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "Goal limit:"
-msgstr ""
+msgstr "Limit punktów:"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
@@ -1724,19 +1731,19 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:53 qcsrc/common/resources/all.inc:30
 msgid "Shells"
-msgstr ""
+msgstr "Łuski"
 
 #: qcsrc/common/items/item/ammo.qh:87 qcsrc/common/resources/all.inc:39
 msgid "Bullets"
-msgstr ""
+msgstr "Naboje"
 
 #: qcsrc/common/items/item/ammo.qh:121 qcsrc/common/resources/all.inc:48
 msgid "Rockets"
-msgstr ""
+msgstr "Rakiety"
 
 #: qcsrc/common/items/item/ammo.qh:155 qcsrc/common/resources/all.inc:57
 msgid "Cells"
-msgstr ""
+msgstr "Baterie"
 
 #: qcsrc/common/items/item/armor.qh:40
 msgid "Small armor"
@@ -1778,7 +1785,7 @@ msgstr "Jetpack"
 
 #: qcsrc/common/items/item/jetpack.qh:74 qcsrc/common/resources/all.inc:66
 msgid "Fuel"
-msgstr ""
+msgstr "Paliwo"
 
 #: qcsrc/common/items/item/jetpack.qh:107
 msgid "Fuel regenerator"
@@ -1804,7 +1811,7 @@ msgstr "Ilość zabójstw potrzebnych do zakończenia meczu"
 
 #: qcsrc/common/minigames/cl_minigames.qc:287
 msgid "Spectators:"
-msgstr ""
+msgstr "Obserwujący:"
 
 #: qcsrc/common/minigames/cl_minigames.qc:424
 msgid "It's your turn"
@@ -1968,10 +1975,12 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/nmm.qc:623
 msgid "You can select one of your pieces to move it anywhere on the board"
 msgstr ""
+"Możesz zaznaczyć jeden ze swoich elementów, żeby przenieść go gdziekolwiek "
+"na planszy"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:625
 msgid "You can take one of the opponent's pieces"
-msgstr ""
+msgstr "Możesz wziąć jeden z elementów przeciwnika"
 
 #: qcsrc/common/minigames/minigame/pong.qc:2
 msgid "Pong"
@@ -2516,7 +2525,7 @@ msgstr "^1Powiadomienia serwera:"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4UWAGA: ^BGCzat jest obecnie wyłączony na tym serwerze"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -2526,15 +2535,16 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4UWAGA: ^BGCzat prywatny jest obecnie wyłączony na tym serwerze"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
 msgstr ""
+"^F4UWAGA: ^BGCzat dla obserwujących jest obecnie wyłączony na tym serwerze"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4UWAGA: ^BGCzat drużynowy jest obecnie wyłączony na tym serwerze"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -2685,7 +2695,7 @@ msgstr "^F2Mecz się restartuje..."
 #: qcsrc/common/notifications/all.inc:558
 #, c-format
 msgid "%s players are needed for this match."
-msgstr ""
+msgstr "Do rozpoczęcia tej gry potrzebnych jest jeszcze %s graczy."
 
 #: qcsrc/common/notifications/all.inc:274
 #: qcsrc/common/notifications/all.inc:275
@@ -2758,6 +2768,7 @@ msgstr "^BG%s%s^K1 zbliżył się za nadto do eksplozji napalmu%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"
 msgstr ""
+"^BG%s%s^K1 został spalony na śmierć przez granat palny gracza ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:286
 #, c-format
@@ -2768,6 +2779,8 @@ msgstr ""
 #, c-format
 msgid "^BG%s%s^K1 was frozen to death by ^BG%s^K1's Ice Nade%s%s"
 msgstr ""
+"^BG%s%s^K1 został zamrożony na śmierć przez granat zamrażający gracza "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
