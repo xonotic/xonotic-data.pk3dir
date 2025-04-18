@@ -115,10 +115,9 @@ bool accuracy_isgooddamage(entity attacker, entity targ)
 
 	if (warmup_stage || game_stopped) return false;
 
-	// damage to dead/frozen players is good only if it happens in the frame they get killed / frozen
+	// damage to dead players is good only if it happens in the frame they get killed
 	// so that stats for weapons that shoot multiple projectiles per shot are properly counted
 	if (IS_DEAD(targ) && time > targ.death_time) return false;
-	if (STAT(FROZEN, targ) && time > targ.freeze_time) return false;
 	if (SAME_TEAM(attacker, targ)) return false;
 
 	if (mutator_check == MUT_ACCADD_INVALID) return true;

@@ -5,6 +5,7 @@
 #include <common/mapobjects/func/ladder.qh>
 #include <common/mapobjects/trigger/hurt.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/stats.qh>
 #include <common/weapons/_all.qh>

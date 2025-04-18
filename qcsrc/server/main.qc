@@ -85,6 +85,7 @@ void CreatureFrame_hotliquids(entity this)
 	}
 	else
 	{
+		// TODO: do we even need this hack? frozen players still die in lava!
 		if (STAT(FROZEN, this))
 		{
 			if (this.watertype == CONTENT_LAVA)

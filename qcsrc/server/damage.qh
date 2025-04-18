@@ -25,10 +25,6 @@ float autocvar_g_balance_selfdamagepercent;
 float autocvar_g_friendlyfire;
 float autocvar_g_friendlyfire_virtual;
 float autocvar_g_friendlyfire_virtual_force;
-float autocvar_g_frozen_revive_falldamage;
-int autocvar_g_frozen_revive_falldamage_health;
-bool autocvar_g_frozen_damage_trigger;
-float autocvar_g_frozen_force;
 
 .void(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force) event_damage;
 
@@ -102,24 +98,6 @@ float Obituary_WeaponDeath(
 	float f1, float f2);
 
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .entity weaponentity);
-
-// Frozen status effect
-//const int FROZEN_NOT              = 0;
-const int FROZEN_NORMAL             = 1;
-const int FROZEN_TEMP_REVIVING      = 2;
-const int FROZEN_TEMP_DYING         = 3;
-
-.float revival_time; // time at which player was last revived
-.float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
-.float freeze_time;
-.entity iceblock;
-.entity frozen_by; // for ice fields
-
-void Ice_Think(entity this);
-
-void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint);
-
-void Unfreeze(entity targ, bool reset_health);
 
 // WEAPONTODO
 #define DMG_NOWEP (weaponentities[0])
