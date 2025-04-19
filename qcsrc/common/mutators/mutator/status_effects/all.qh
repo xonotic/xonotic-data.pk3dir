@@ -52,7 +52,7 @@ CLASS(StatusEffect, Object)
 	METHOD(StatusEffect, m_persistent, bool(StatusEffect this, entity actor)) { return false; };
 #endif
 #ifndef SVQC
-	METHOD(StatusEffect, display, void(entity this, void(string name, string icon) returns))
+	METHOD(StatusEffect, display, void(StatusEffect this, void(string name, string icon) returns))
 	{
 		TC(StatusEffect, this);
 		string img = this.m_icon;

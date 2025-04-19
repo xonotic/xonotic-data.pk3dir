@@ -1,0 +1,9 @@
+#pragma once
+
+#ifdef MENUQC
+CLASS(MutatorGrapplingHook, Mutator)
+	ATTRIB(MutatorGrapplingHook, message, string, _("Hook"));
+ENDCLASS(MutatorGrapplingHook)
+
+REGISTER_MUTATOR(hook, true, MutatorGrapplingHook);
+#endif
