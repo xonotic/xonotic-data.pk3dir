@@ -119,7 +119,7 @@ METHOD(IceNade, describe, string(IceNade this))
 {
 	TC(IceNade, this);
 	return sprintf(_("The %s detonates after a short delay, freezing any enemies who walk within the explosion radius for a few seconds after the explosion. "
-		"While frozen, enemies are progressively dealt damage."),
+		"While frozen, players can't move or shoot, leaving them vulnerable to damage."),
 	COLORED_NAME(this));
 }
 #endif // MENUQC
