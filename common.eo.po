@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-19 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Voltinus <voltinusmail@gmail.com>, 2022\n"
+"Last-Translator: Krystian J, 2025\n"
 "Language-Team: Esperanto (http://app.transifex.com/team-xonotic/xonotic/"
 "language/eo/)\n"
 "Language: eo\n"
@@ -38,7 +38,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 msgid "Title"
-msgstr ""
+msgstr "Titolo"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -59,7 +59,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/centerprint.qc:211
 msgid "Generic message"
-msgstr ""
+msgstr "Komuna mesaĝo"
 
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
@@ -97,7 +97,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:109
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr ""
+msgstr "^1Premu ^3%s^1 aŭ ^3%s^1 por venonta aŭ antaŭa ludanto"
 
 #: qcsrc/client/hud/panel/infomessages.qc:109
 #: qcsrc/client/hud/panel/infomessages.qc:113
@@ -263,7 +263,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:693
 msgid "Continue..."
-msgstr ""
+msgstr "Daŭrigu..."
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 #: qcsrc/client/hud/panel/quickmenu.qc:851
@@ -288,7 +288,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "QMCMD^sal / bonŝancon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^hi / good luck and have fun"
@@ -1424,7 +1424,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid "Assault"
-msgstr ""
+msgstr "Sturmo"
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid ""
@@ -1446,7 +1446,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
-msgstr ""
+msgstr "Klanareno"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Kill all enemy teammates to win the round"
@@ -1521,7 +1521,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
-msgstr ""
+msgstr "Duelo"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
@@ -1539,7 +1539,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Invasion"
-msgstr ""
+msgstr "Invado"
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Survive against waves of monsters"
@@ -1628,7 +1628,7 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:11
 msgid "Race"
-msgstr ""
+msgstr "Vetkuro"
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:11
 msgid "Race against other players to the finish line"
@@ -1682,7 +1682,7 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:56 qcsrc/common/resources/all.inc:30
 msgid "Shells"
-msgstr ""
+msgstr "Kartoĉoj"
 
 #: qcsrc/common/items/item/ammo.qh:91 qcsrc/common/resources/all.inc:39
 msgid "Bullets"
@@ -2020,12 +2020,12 @@ msgstr ""
 #: qcsrc/common/monsters/monster.qh:36
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:76
 msgid "Monster"
-msgstr ""
+msgstr "Monstro"
 
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Golem"
-msgstr ""
+msgstr "Golemo"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
@@ -2039,7 +2039,7 @@ msgstr ""
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
 msgid "Spider"
-msgstr ""
+msgstr "Araneo"
 
 #: qcsrc/common/monsters/monster/spider.qh:28
 msgid "Spider attack"
@@ -2061,7 +2061,7 @@ msgstr ""
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
 msgid "Zombie"
-msgstr ""
+msgstr "Zombio"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qh:11
 msgid "Ammo"
@@ -2145,7 +2145,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:108
 #: qcsrc/menu/xonotic/util.qc:754
 msgid "Color:"
-msgstr ""
+msgstr "Koloro:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:36
 msgid "Draw damage numbers for friendly fire"
@@ -2212,7 +2212,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qh:11
 #: qcsrc/common/mutators/mutator/nades/nades.qh:14
 msgid "Grenade"
-msgstr ""
+msgstr "Grenado"
 
 #: qcsrc/common/mutators/mutator/nades/nade/spawn.qh:17
 msgid "Spawn grenade"
@@ -2421,7 +2421,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:56
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:65
 msgid "Ball"
-msgstr ""
+msgstr "Pilko"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:58
@@ -2446,12 +2446,12 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:74
 msgid "Weapon"
-msgstr ""
+msgstr "Armilo"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:78
 #: qcsrc/common/vehicles/vehicle.qh:10
 msgid "Vehicle"
-msgstr ""
+msgstr "Veturilo"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:79
 msgid "Intruder!"
@@ -5029,7 +5029,7 @@ msgstr ""
 
 #: qcsrc/common/teams.qh:35
 msgid "Team"
-msgstr ""
+msgstr "Teamo"
 
 #: qcsrc/common/teams.qh:36
 msgid "Neutral"
@@ -5134,7 +5134,7 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/machinegun_weapon.qh:7
 msgid "Machinegun"
-msgstr ""
+msgstr "Maŝinpafilo"
 
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
@@ -5223,7 +5223,7 @@ msgstr ""
 
 #: qcsrc/common/util.qc:264
 msgid "Hook"
-msgstr ""
+msgstr "Hoko"
 
 #: qcsrc/common/util.qc:265
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:94
@@ -7458,7 +7458,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
 msgid "Close"
-msgstr ""
+msgstr "Fermu"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:90
 msgid "MAP^Play"
@@ -8140,11 +8140,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:30
 msgid "Master:"
-msgstr ""
+msgstr "Ĉefa:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:36
 msgid "Music:"
-msgstr ""
+msgstr "Muziko:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:44
 msgid "VOL^Ambient:"
@@ -8164,7 +8164,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:72
 msgid "Player:"
-msgstr ""
+msgstr "Ludanto:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:79
 msgid "Shots:"
@@ -8172,11 +8172,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:86
 msgid "Voice:"
-msgstr ""
+msgstr "Voĉo:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:94
 msgid "Weapons:"
-msgstr ""
+msgstr "Armiloj:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:100
 msgid "New style sound attenuation"
