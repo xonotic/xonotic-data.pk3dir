@@ -14,12 +14,16 @@ CLASS(Duel, Gametype)
 	}
 	METHOD(Duel, m_isForcedSupported, bool(Gametype this))
 	{
-		if(!cvar("g_duel_not_dm_maps"))
+		if(!cvar("g_duel_not_dm_maps")) // all DM maps support duel too
 		{
-			// if this is set, all DM maps support duel too
 			// TODO: we should really check the size of maps, some DM maps do not work for duel!
 			if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.gametype_flags))
+			{
+#ifdef CSQC // server admins might not read their server console output, also prevents spam
+				LOG_WARNF("This map doesn't support Duel in Xonotic newer than 0.9.0. To fix it add \"gametype duel\" to the \"%s.mapinfo\" file.", MapInfo_Map_bspname);
+#endif
 				return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+			}
 		}
 		return false;
 	}
