@@ -751,7 +751,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 	if (autocvar_sv_vote_limit > 0 && strlen(vote_command) > autocvar_sv_vote_limit)
 		return 0;
 
-	if (!VoteCommand_checkinlist(first_command, vote_list)) return 0;
+	if (caller && !VoteCommand_checkinlist(first_command, vote_list)) return 0;
 
 	if (!VoteCommand_checkargs(startpos, argc)) return 0;
 
