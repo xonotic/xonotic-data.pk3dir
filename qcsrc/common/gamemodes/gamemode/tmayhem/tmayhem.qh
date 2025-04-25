@@ -11,14 +11,16 @@ CLASS(tmayhem, Gametype)
 	}
 	METHOD(tmayhem, m_parse_mapinfo, bool(string k, string v))
 	{
-		if (!k) {
+		if (!k)
+		{
 			cvar_set("g_tmayhem_teams", cvar_defstring("g_tmayhem_teams"));
 			return true;
 		}
-		switch (k) {
+		switch (k)
+		{
 			case "teams":
-			cvar_set("g_tmayhem_teams", v);
-			return true;
+				cvar_set("g_tmayhem_teams", v);
+				return true;
 		}
 		return false;
 	}

@@ -3,7 +3,7 @@
 #include <common/mutators/mutator/nades/nades.qh>
 
 #ifdef SVQC
-void normal_nade_boom(entity this);
+void nade_normal_boom(entity this);
 #endif // SVQC
 
 CLASS(NormalNade, Nade)

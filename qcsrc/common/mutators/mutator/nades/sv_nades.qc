@@ -107,48 +107,51 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 void nade_boom(entity this)
 {
 	entity expef = NULL;
-	bool nade_blast = true;
 	vector expcol_min = '0 0 0', expcol_max = '0 0 0';
 
-#define SET_NADE_EFFECT(nade_type, blast, exp_effect, exp_color_min, exp_color_max) \
+	Nade ntype = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this));
+
+	if (!this.takedamage || ntype == NADE_TYPE_Null)
+	{
+		// first condition: nade was destroyed by something (lava, void, etc.), just do a normal explosion
+		// this prevents weird cases like spawn nade setting your spawnpoint on the void, translocate sending you into the void, etc.
+		ntype = NADE_TYPE_NORMAL;
+	}
+
+#define SET_NADE_EFFECT(nade_type, exp_effect, exp_color_min, exp_color_max) \
 	case nade_type: \
-		nade_blast = blast; \
 		expef = exp_effect; \
 		expcol_min = exp_color_min; \
 		expcol_max = exp_color_max; \
 		break
 
-	switch ( REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this)) )
+	switch (ntype)
 	{
-		SET_NADE_EFFECT(NADE_TYPE_NAPALM,      autocvar_g_nades_napalm_blast, EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_ICE,         false,                         EFFECT_ELECTRO_COMBO,    '0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_TRANSLOCATE, false,                         NULL,                    '0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_MONSTER,     true,                          NULL,                    nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
-		SET_NADE_EFFECT(NADE_TYPE_SPAWN,       false,                         EFFECT_SPAWN,            nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
-		SET_NADE_EFFECT(NADE_TYPE_HEAL,        false,                         EFFECT_SPAWN,            '1 0 0', '1 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      false,                         EFFECT_SPAWN,            '1 1 0', '1 1 0');
-		SET_NADE_EFFECT(NADE_TYPE_VEIL,        false,                         EFFECT_SPAWN,            '0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_AMMO,        false,                         EFFECT_SPAWN,            '0.66 0.33 0', '0.66 0.33 0');
-		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    false,                         EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      true,                          EFFECT_NADE_EXPLODE,     nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
-		default: expef = EFFECT_NADE_EXPLODE; expcol_min = nades_PlayerColor(this.realowner, false); expcol_max = nades_PlayerColor(this.realowner, true); break;
+		SET_NADE_EFFECT(NADE_TYPE_NAPALM,      EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_ICE,         EFFECT_ELECTRO_COMBO,    '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_TRANSLOCATE, NULL,                    '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_MONSTER,     NULL,                    nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		SET_NADE_EFFECT(NADE_TYPE_SPAWN,       EFFECT_SPAWN,            nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
+		SET_NADE_EFFECT(NADE_TYPE_HEAL,        EFFECT_SPAWN,            '1 0 0', '1 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      EFFECT_SPAWN,            '1 1 0', '1 1 0');
+		SET_NADE_EFFECT(NADE_TYPE_VEIL,        EFFECT_SPAWN,            '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_AMMO,        EFFECT_SPAWN,            '0.66 0.33 0', '0.66 0.33 0');
+		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
+		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      EFFECT_NADE_EXPLODE,     nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
 	}
 #undef SET_NADE_EFFECT
 
-	if(expef)
+	if (expef)
 		Send_Effect_Except(expef, findbetterlocation(this.origin, 8), '0 0 0', 1, expcol_min, expcol_max, NULL);
 
-	sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
-	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS_SINGLE, SND_Null,          VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS,        SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	this.event_damage = func_null; // prevent somehow calling damage in the next call
 
-	if(nade_blast)
-		normal_nade_boom(this);
-
-	if(this.takedamage)
-	switch ( REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this)) )
+	switch (ntype)
 	{
+		case NADE_TYPE_NORMAL:      nade_normal_boom(this);      break;
 		case NADE_TYPE_NAPALM:      nade_napalm_boom(this);      break;
 		case NADE_TYPE_ICE:         nade_ice_boom(this);         break;
 		case NADE_TYPE_TRANSLOCATE: nade_translocate_boom(this); break;
@@ -705,15 +708,6 @@ MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 	}
 }
 
-#ifdef IN_REVIVING_RANGE
-	#undef IN_REVIVING_RANGE
-#endif
-
-// returns true if player is reviving it
-#define IN_REVIVING_RANGE(player, it, revive_extra_size) \
-	(it != player && !IS_DEAD(it) && SAME_TEAM(it, player) \
-	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
-
 MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
@@ -777,64 +771,6 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		}
 
 		nade_veil_Apply(player);
-	}
-
-	if (!(frametime && IS_PLAYER(player)))
-		return true;
-
-	entity revivers_last = NULL;
-	entity revivers_first = NULL;
-
-	bool player_is_reviving = false;
-	int n = 0;
-	vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
-	FOREACH_CLIENT(IS_PLAYER(it) && IN_REVIVING_RANGE(player, it, revive_extra_size), {
-		// check if player is reviving anyone
-		if (STAT(FROZEN, it) == FROZEN_TEMP_DYING)
-		{
-			if ((STAT(FROZEN, player) == FROZEN_TEMP_DYING))
-				continue;
-			if (!IN_REVIVING_RANGE(player, it, revive_extra_size))
-				continue;
-			player_is_reviving = true;
-			break;
-		}
-
-		if (!(STAT(FROZEN, player) == FROZEN_TEMP_DYING))
-			continue; // both player and it are NOT frozen
-		if (revivers_last)
-			revivers_last.chain = it;
-		revivers_last = it;
-		if (!revivers_first)
-			revivers_first = it;
-		++n;
-	});
-	if (revivers_last)
-		revivers_last.chain = NULL;
-
-	if (!n) // no teammate nearby
-	{
-		// freezetag already resets revive progress
-		if (!g_freezetag && !STAT(FROZEN, player) && !player_is_reviving)
-			STAT(REVIVE_PROGRESS, player) = 0; // thawing nobody
-	}
-	else if (n > 0 && STAT(FROZEN, player) == FROZEN_TEMP_DYING) // OK, there is at least one teammate reviving us
-	{
-		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		// undo what PlayerPreThink did
-		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * player.revive_speed, 1);
-		SetResource(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
-
-		if(STAT(REVIVE_PROGRESS, player) >= 1)
-		{
-			Unfreeze(player, false);
-
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, revivers_first.netname);
-			Send_Notification(NOTIF_ONE, revivers_first, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
-		}
-
-		for(entity it = revivers_first; it; it = it.chain)
-			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
 	}
 }
 
@@ -917,7 +853,7 @@ MUTATOR_HOOKFUNCTION(nades, Damage_Calculate)
 	if(autocvar_g_freezetag_revive_nade && STAT(FROZEN, frag_target) && frag_attacker == frag_target && frag_deathtype == DEATH_NADE.m_id)
 	if(time - frag_inflictor.toss_time <= 0.1)
 	{
-		Unfreeze(frag_target, false);
+		freezetag_Unfreeze(frag_target, false);
 		SetResource(frag_target, RES_HEALTH, autocvar_g_freezetag_revive_nade_health);
 		Send_Effect(EFFECT_ICEORGLASS, frag_target.origin, '0 0 0', 3);
 		M_ARGV(4, float) = 0;

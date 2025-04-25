@@ -3,11 +3,10 @@
 #ifdef SVQC
 void nade_ice_freeze(entity freezefield, entity frost_target, float freezetime)
 {
-	frost_target.frozen_by = freezefield.realowner;
 	Send_Effect(EFFECT_ELECTRO_IMPACT, frost_target.origin, '0 0 0', 1);
-	Freeze(frost_target, 1 / freezetime, FROZEN_TEMP_DYING, false);
+	StatusEffects_apply(STATUSEFFECT_Frozen, frost_target, time + freezetime, 0);
 
-	Drop_Special_Items(frost_target);
+	//Drop_Special_Items(frost_target);
 }
 
 void nade_ice_think(entity this)
@@ -29,7 +28,7 @@ void nade_ice_think(entity this)
 			Send_Effect_Except(expef, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
-			normal_nade_boom(this);
+			nade_normal_boom(this);
 		}
 		delete(this);
 		return;
@@ -62,8 +61,9 @@ void nade_ice_think(entity this)
 	float current_freeze_time = this.ltime - time - 0.1;
 
 	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage
-		&& !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_freeze_time > 0
-		&& (!it.revival_time || ((time - it.revival_time) >= 1.5)) && !STAT(FROZEN, it),
+		&& (IS_PLAYER(it) || IS_MONSTER(it)) && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_freeze_time > 0
+		&& (!it.revival_time || ((time - it.revival_time) >= 1.5))
+		&& !STAT(FROZEN, it) && !StatusEffects_active(STATUSEFFECT_Frozen, it),
 	{
 		switch (autocvar_g_nades_ice_teamcheck)
 		{
