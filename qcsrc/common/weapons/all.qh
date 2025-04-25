@@ -344,8 +344,8 @@ STATIC_INIT(register_weapons_done)
 		if (it.spawnflags & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
 		if (it == WEP_Null) continue;
 		if (it.spawnflags & WEP_FLAG_SPECIALATTACK) continue;
-		// TODO: this exists to filter out the Overkill mutator weapons, see issue #2268
-		if ((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_FLAG_HIDDEN)) continue;
+		// TODO: this exists to filter out the Ball Stealer, otherwise we run out of impulses
+		if ((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_TYPE_OTHER)) continue;
 
 		it.m_unique_impulse = imp;
 		if (imp <= WEP_IMPULSE_END)
