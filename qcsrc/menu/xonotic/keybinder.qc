@@ -241,7 +241,13 @@ void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
-	me.columnIconSize = me.itemAbsSize.y / me.itemAbsSize.x;
+	entity e = REGISTRY_GET(Weapons, WEP_FIRST);
+	e.display(e, XonoticKeyBinder_cb);
+	vector sz = draw_PictureSize(XonoticKeyBinder_cb_icon);
+	float aspect_ratio = sz.y ? sz.x / sz.y : 1;
+	me.columnIconSize = me.itemAbsSize.y / me.itemAbsSize.x * aspect_ratio;
+
+	me.columnTreeIconSize = me.itemAbsSize.y / me.itemAbsSize.x; // 1:1 aspect ratio
 	me.columnKeysSize = me.realFontSize.x * 12;
 	me.columnFunctionSize = 1 - me.columnKeysSize - 2 * me.realFontSize.x;
 	// columnFunctionSize will need to be shortened if an icon is drawn
@@ -523,18 +529,19 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	if (icon != "")
 	{
 		string tree_type = substring(icon, 0, 1);
-		float addedMargin = me.columnIconSize + 0.25 * me.realFontSize.x;
 		if (tree_type == "+" || tree_type == "T" || tree_type == "L")
 		{
 			draw_Picture(extraMargin * eX,
 				sprintf("/gfx/menu/%s/%s", cvar_string("menu_skin"), (tree_type == "+" ? "tree_branch" : tree_type == "T" ? "tree_branch_start" : "tree_elbow")),
-				me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
+				me.columnTreeIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
+			float addedMargin = me.columnTreeIconSize + 0.25 * me.realFontSize.x;
 			extraMargin += addedMargin;
 			descrWidth  -= addedMargin;
 		}
 		if (strlen(icon) > 1) // not just the tree icon
 		{
 			draw_Picture(extraMargin * eX, substring(icon, 1, strlen(icon) - 1), me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
+			float addedMargin = me.columnIconSize + 0.25 * me.realFontSize.x;
 			extraMargin += addedMargin;
 			descrWidth  -= addedMargin;
 		}

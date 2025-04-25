@@ -11,13 +11,13 @@ void invasion_Initialize();
 
 REGISTER_MUTATOR(inv, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
 		g_invasion_roundends = IL_NEW();
 		g_invasion_waves = IL_NEW();
 		g_invasion_spawns = IL_NEW();
-        GameRules_limit_score(autocvar_g_invasion_point_limit);
+		GameRules_limit_score(autocvar_g_invasion_point_limit);
 
 		g_invasion = true;
 		cvar_settemp("g_monsters", "1");

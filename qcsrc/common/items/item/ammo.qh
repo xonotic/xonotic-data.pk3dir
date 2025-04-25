@@ -13,15 +13,17 @@
 #endif
 
 #ifdef SVQC
-PROPERTY(float, g_pickup_ammo_anyway);
+bool autocvar_g_pickup_ammo_anyway;
+float autocvar_g_pickup_respawntime_ammo;
+float autocvar_g_pickup_respawntimejitter_ammo;
 #endif
 
 CLASS(Ammo, Pickup)
 #ifdef SVQC
     ATTRIB(Ammo, m_pickupevalfunc, float(entity player, entity item), ammo_pickupevalfunc);
-    ATTRIB(Ammo, m_respawntime, float(), GET(g_pickup_respawntime_ammo));
-    ATTRIB(Ammo, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_ammo));
-    ATTRIB(Ammo, m_pickupanyway, float(), GET(g_pickup_ammo_anyway));
+    ATTRIB(Ammo, m_respawntime, float, autocvar_g_pickup_respawntime_ammo);
+    ATTRIB(Ammo, m_respawntimejitter, float, autocvar_g_pickup_respawntimejitter_ammo);
+    ATTRIB(Ammo, m_pickupanyway, bool, autocvar_g_pickup_ammo_anyway);
 #endif
 ENDCLASS(Ammo)
 
@@ -35,11 +37,12 @@ MODEL(Shells_ITEM, Item_Model("a_shells.md3"));
 #endif
 
 #ifdef SVQC
-PROPERTY(int, g_pickup_shells);
+int autocvar_g_pickup_shells;
+int autocvar_g_pickup_shells_max;
 void ammo_shells_init(Pickup this, entity item)
 {
     if(!GetResource(item, RES_SHELLS))
-        SetResourceExplicit(item, RES_SHELLS, g_pickup_shells);
+        SetResourceExplicit(item, RES_SHELLS, autocvar_g_pickup_shells);
 }
 #endif
 
@@ -69,11 +72,12 @@ MODEL(Bullets_ITEM, Item_Model("a_bullets.mdl"));
 #endif
 
 #ifdef SVQC
-PROPERTY(int, g_pickup_nails);
+int autocvar_g_pickup_nails;
+int autocvar_g_pickup_nails_max;
 void ammo_bullets_init(Pickup this, entity item)
 {
     if(!GetResource(item, RES_BULLETS))
-        SetResourceExplicit(item, RES_BULLETS, g_pickup_nails);
+        SetResourceExplicit(item, RES_BULLETS, autocvar_g_pickup_nails);
 }
 #endif
 
@@ -103,11 +107,12 @@ MODEL(Rockets_ITEM, Item_Model("a_rockets.md3"));
 #endif
 
 #ifdef SVQC
-PROPERTY(int, g_pickup_rockets);
+int autocvar_g_pickup_rockets;
+int autocvar_g_pickup_rockets_max;
 void ammo_rockets_init(Pickup this, entity item)
 {
     if(!GetResource(item, RES_ROCKETS))
-        SetResourceExplicit(item, RES_ROCKETS, g_pickup_rockets);
+        SetResourceExplicit(item, RES_ROCKETS, autocvar_g_pickup_rockets);
 }
 #endif
 
@@ -137,11 +142,12 @@ MODEL(Cells_ITEM, Item_Model("a_cells.md3"));
 #endif
 
 #ifdef SVQC
-PROPERTY(int, g_pickup_cells);
+int autocvar_g_pickup_cells;
+int autocvar_g_pickup_cells_max;
 void ammo_cells_init(Pickup this, entity item)
 {
     if(!GetResource(item, RES_CELLS))
-        SetResourceExplicit(item, RES_CELLS, g_pickup_cells);
+        SetResourceExplicit(item, RES_CELLS, autocvar_g_pickup_cells);
 }
 #endif
 

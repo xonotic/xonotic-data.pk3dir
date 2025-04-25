@@ -93,13 +93,13 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	{
 		if (wpn.spawnflags & WEP_FLAG_SUPERWEAPON)
 		{
-			this.respawntime = g_pickup_respawntime_superweapon;
-			this.respawntimejitter = g_pickup_respawntimejitter_superweapon;
+			this.respawntime = autocvar_g_pickup_respawntime_superweapon;
+			this.respawntimejitter = autocvar_g_pickup_respawntimejitter_superweapon;
 		}
 		else
 		{
-			this.respawntime = g_pickup_respawntime_weapon;
-			this.respawntimejitter = g_pickup_respawntimejitter_weapon;
+			this.respawntime = autocvar_g_pickup_respawntime_weapon;
+			this.respawntimejitter = autocvar_g_pickup_respawntimejitter_weapon;
 		}
 	}
 
@@ -113,7 +113,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	{
 		int ammo = 0;
 		if (q3compat && this.count > 0)
-			ammo = this.count * GetAmmoConsumptionQ3(wpn.netname);
+			ammo = this.count * GetAmmoConsumptionQ3(wpn);
 			// WEAPONTODO: magazines of MG, rifle and OK weapons are unaccounted for
 		else
 		{
@@ -146,7 +146,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	#endif
 
 	// pickup anyway
-	if (g_pickup_weapons_anyway)
+	if (autocvar_g_pickup_weapons_anyway)
 		this.pickup_anyway = true;
 
 	if(!this.owner)

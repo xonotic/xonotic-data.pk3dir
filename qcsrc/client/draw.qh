@@ -78,9 +78,8 @@ string _drawpic_picpath;
 #define drawpic_aspect_skin(pos,pic,sz,color,theAlpha,drawflag)\
 	MACRO_BEGIN \
 		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
-		if(precache_pic(_drawpic_picpath) == "") {\
+		if(precache_pic(_drawpic_picpath) == "")\
 			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
-		}\
 		drawpic_aspect(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
 		_drawpic_picpath = string_null;\
 	MACRO_END
@@ -89,9 +88,8 @@ string _drawpic_picpath;
 #define drawpic_skin(pos,pic,sz,color,theAlpha,drawflag)\
 	MACRO_BEGIN \
 		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
-		if(precache_pic(_drawpic_picpath) == "") {\
+		if(precache_pic(_drawpic_picpath) == "")\
 			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
-		}\
 		drawpic(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
 		_drawpic_picpath = string_null;\
 	MACRO_END

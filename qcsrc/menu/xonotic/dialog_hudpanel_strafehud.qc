@@ -5,7 +5,7 @@
 #include "button.qh"
 #include "slider.qh"
 #include "textlabel.qh"
-#include "textslider.qh"
+#include "mixedslider.qh"
 #include "radiobutton.qh"
 
 void StrafeHUD_ColorReset(entity btn, entity me)
@@ -27,12 +27,12 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 	int i;
 
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_strafehud"));
-			e.addValue(e, _("Disable"), "0");
-			e.addValue(e, _("Enable"), "1");
-			e.addValue(e, _("Enable even observing"), "2");
-			e.addValue(e, _("Enable only in Race/CTS"), "3");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 4, e = makeXonoticMixedSlider("hud_panel_strafehud"));
+			e.addText(e, _("Disable"), 0);
+			e.addText(e, _("Enable"), 1);
+			e.addText(e, _("Enable even observing"), 2);
+			e.addText(e, _("Enable only in Race/CTS"), 3);
+			e.configureXonoticMixedSliderValues(e);
 
 	dialog_hudpanel_main_settings(me, panelname);
 
@@ -47,14 +47,10 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 			me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(3, "hud_panel_strafehud_style", "2", _("Gradient")));
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Range:")));
-		me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_strafehud_range"));
-			e.addValue(e, _("Dynamic"), "0");
-			for(i = 10; i <= 360; i += 10)
-			{
-				string i_str = strzone(itos(i));
-				e.addValue(e, i_str, i_str);
-			}
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_strafehud_range"));
+			e.addText(e, _("Dynamic"), 0);
+			e.addRange(e, 10, 360, 10);
+			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1.9, e = makeXonoticTextLabel(0, _("Strafe bar:")));
 

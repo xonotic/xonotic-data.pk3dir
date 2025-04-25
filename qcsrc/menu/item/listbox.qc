@@ -251,7 +251,7 @@
 	void ListBox_setFocusedItem(entity me, int item)
 	{
 		float focusedItem_save = me.focusedItem;
-		me.focusedItem = (item < me.nItems) ? item : -1;
+		me.focusedItem = (item >= 0 && item < me.nItems) ? item : -1;
 		if (focusedItem_save != me.focusedItem)
 		{
 			me.focusedItemChangeNotify(me);

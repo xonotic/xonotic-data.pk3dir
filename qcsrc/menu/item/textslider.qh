@@ -2,6 +2,7 @@
 
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then multiple times addValue, then configureTextSlider
+//   don't use if all identifiers are numbers, instead use a MixedSlider
 #include "slider.qh"
 CLASS(TextSlider, Slider)
 	METHOD(TextSlider, valueToText, string(entity, float));

@@ -552,11 +552,11 @@ bool Item_GiveTo(entity item, entity player)
 	bool pickedup = false;
 	pickedup |= Item_GiveAmmoTo(item, player, RES_HEALTH, item.max_health);
 	pickedup |= Item_GiveAmmoTo(item, player, RES_ARMOR, item.max_armorvalue);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_SHELLS, g_pickup_shells_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_BULLETS, g_pickup_nails_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_ROCKETS, g_pickup_rockets_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_CELLS, g_pickup_cells_max);
-	pickedup |= Item_GiveAmmoTo(item, player, RES_FUEL, g_pickup_fuel_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_SHELLS, autocvar_g_pickup_shells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_BULLETS, autocvar_g_pickup_nails_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_ROCKETS, autocvar_g_pickup_rockets_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_CELLS, autocvar_g_pickup_cells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RES_FUEL, autocvar_g_pickup_fuel_max);
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
 		WepSet w, wp;
@@ -701,7 +701,6 @@ void Item_Touch(entity this, entity toucher)
 	}
 
 	if(!(toucher.flags & FL_PICKUPITEMS)
-	|| STAT(FROZEN, toucher)
 	|| IS_DEAD(toucher)
 	|| (this.solid != SOLID_TRIGGER)
 	|| (this.owner == toucher)
@@ -1041,7 +1040,7 @@ void StartItem(entity this, entity def)
 		LOG_WARNF("No pickup sound set for a %s", this.classname);
 
 	if(!this.pickup_anyway && def.m_pickupanyway)
-		this.pickup_anyway = def.m_pickupanyway();
+		this.pickup_anyway = def.m_pickupanyway;
 
 	// bones_was_here TODO: implement sv_cullentities_dist and replace g_items_maxdist with it
 	if(!this.fade_end)
@@ -1094,8 +1093,6 @@ void StartItem(entity this, entity def)
 	}
 	else
 	{
-		this.reset = Item_Reset;
-
 		// must be done after def.m_iteminit() as that may set ITEM_FLAG_MUTATORBLOCKED
 		if(!have_pickup_item(this))
 		{
@@ -1103,19 +1100,16 @@ void StartItem(entity this, entity def)
 			return;
 		}
 
-		// must be done before Item_Reset() and after MUTATORBLOCKED check (blocked items may have null func ptrs)
-		if(!this.respawntime) // both need to be set
+		// must be done before Item_Reset() and after MUTATORBLOCKED check (blocked items may be uninitialised)
+		if(!this.respawntime)
 		{
 			if (def.m_respawntime)
-				this.respawntime = def.m_respawntime();
+				this.respawntime = def.m_respawntime;
 			else
 				LOG_WARNF("Default respawntime for a %s is unavailable from its itemdef", this.classname);
-
-			if (def.m_respawntimejitter)
-				this.respawntimejitter = def.m_respawntimejitter();
-			else
-				LOG_WARNF("Default respawntimejitter for a %s is unavailable from its itemdef", this.classname);
 		}
+
+		this.reset = Item_Reset;
 
 		if(this.angles != '0 0 0')
 			this.SendFlags |= ISF_ANGLES;

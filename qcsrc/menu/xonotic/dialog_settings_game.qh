@@ -22,7 +22,6 @@ CLASS(XonoticRegisteredSettingsList, XonoticListBox)
 	ATTRIB(XonoticRegisteredSettingsList, source, DataSource);
 	ATTRIB(XonoticRegisteredSettingsList, onChange, void(entity, entity));
 	ATTRIB(XonoticRegisteredSettingsList, onChangeEntity, entity);
-	METHOD(XonoticRegisteredSettingsList, focusedItemChangeNotify, void(entity));
 	METHOD(XonoticRegisteredSettingsList, drawListBoxItem, void(entity this, int i, vector absSize, bool isSelected, bool isFocused));
 	METHOD(XonoticRegisteredSettingsList, focusedItemChangeNotify, void(entity this));
 	METHOD(XonoticRegisteredSettingsList, refilter, void(entity this));

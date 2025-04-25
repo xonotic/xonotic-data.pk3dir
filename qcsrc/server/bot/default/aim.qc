@@ -105,9 +105,6 @@ bool bot_shouldattack(entity this, entity targ)
 			return false;
 	}
 
-	if(STAT(FROZEN, targ))
-		return false;
-
 	if(teamplay)
 	{
 		if(targ.team==0)

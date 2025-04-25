@@ -428,7 +428,7 @@ bool weaponLocked(entity player)
 	if (time < game_starttime && !sv_ready_restart_after_countdown) return true;
 	if (player.player_blocked) return true;
 	if (game_stopped) return true;
-	if (STAT(FROZEN, player)) return true;
+	if (StatusEffects_active(STATUSEFFECT_Frozen, player)) return true;
 	if (MUTATOR_CALLHOOK(LockWeapon, player)) return true;
 	return false;
 }

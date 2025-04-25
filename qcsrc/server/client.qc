@@ -312,7 +312,6 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 
 	RemoveGrapplingHooks(this);
 	Portal_ClearAll(this);
-	Unfreeze(this, false);
 	SetSpectatee(this, NULL);
 
 	if (this.alivetime)
@@ -376,8 +375,6 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	this.nextthink = 0;
 	this.deadflag = DEAD_NO;
 	UNSET_DUCKED(this);
-	STAT(REVIVE_PROGRESS, this) = 0;
-	this.revival_time = 0;
 	this.draggable = drag_undraggable;
 
 	player_powerups_remove_all(this, was_player);
@@ -690,9 +687,6 @@ void PutPlayerInServer(entity this)
 	this.punchangle = '0 0 0';
 	this.punchvector = '0 0 0';
 
-	STAT(REVIVE_PROGRESS, this) = 0;
-	this.revival_time = 0;
-
 	STAT(AIR_FINISHED, this) = 0;
 	this.waterlevel = WATERLEVEL_NONE;
 	this.watertype = CONTENT_EMPTY;
@@ -794,8 +788,6 @@ void PutPlayerInServer(entity this)
 			}
 		}
 	});
-
-	Unfreeze(this, false);
 
 	MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
 	{
@@ -1141,6 +1133,7 @@ void ClientConnect(entity this)
 
 	bot_clientconnect(this);
 
+	this.team = -1;
 	Player_DetermineForcedTeam(this);
 
 	TRANSMUTE(Observer, this);
@@ -1291,8 +1284,6 @@ void ClientDisconnect(entity this)
 	ClientState_detach(this);
 
 	Portal_ClearAll(this);
-
-	Unfreeze(this, false);
 
 	RemoveGrapplingHooks(this);
 
@@ -1696,7 +1687,6 @@ void player_regen(entity this)
 	float rotstable, regenstable, rotframetime, regenframetime;
 
 	if(!mutator_returnvalue)
-	if(!STAT(FROZEN, this))
 	{
 		regenstable = autocvar_g_balance_armor_regenstable;
 		rotstable = autocvar_g_balance_armor_rotstable;
@@ -1812,8 +1802,6 @@ void SpectateCopy(entity this, entity spectatee)
 	this.dmg_inflictor = spectatee.dmg_inflictor;
 	this.v_angle = spectatee.v_angle;
 	this.angles = spectatee.v_angle;
-	STAT(FROZEN, this) = STAT(FROZEN, spectatee);
-	STAT(REVIVE_PROGRESS, this) = STAT(REVIVE_PROGRESS, spectatee);
 	this.viewloc = spectatee.viewloc;
 	if(!PHYS_INPUT_BUTTON_USE(this) && STAT(CAMERA_SPECTATOR, this) != 2)
 		this.fixangle = true;
@@ -2562,7 +2550,7 @@ void PlayerUseKey(entity this)
 	}
 	else if(autocvar_g_vehicles_enter)
 	{
-		if(!game_stopped && !STAT(FROZEN, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
+		if(!game_stopped && !STAT(FROZEN, this) && !StatusEffects_active(STATUSEFFECT_Frozen, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 		{
 			entity head, closest_target = NULL;
 			head = WarpZone_FindRadius(this.origin, autocvar_g_vehicles_enter_radius, true);
@@ -2682,6 +2670,7 @@ void PlayerPreThink (entity this)
 
 void DrownPlayer(entity this)
 {
+	// TODO: mutator hook to prevent drowning?
 	if(IS_DEAD(this) || game_stopped || time < game_starttime || this.vehicle
 		|| STAT(FROZEN, this) || this.watertype != CONTENT_WATER)
 	{
@@ -2862,39 +2851,9 @@ void PlayerFrame (entity this)
 		this.max_armorvalue = 0;
 	}
 
-	// FreezeTag
-	if (IS_PLAYER(this) && time >= game_starttime)
-	{
-		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
-		{
-			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
-			SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
-			if (this.iceblock)
-				this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
-
-			if (STAT(REVIVE_PROGRESS, this) >= 1)
-				Unfreeze(this, false);
-		}
-		else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
-		{
-			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
-			SetResourceExplicit(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
-
-			if (GetResource(this, RES_HEALTH) < 1)
-			{
-				if (this.vehicle)
-					vehicles_exit(this.vehicle, VHEF_RELEASE);
-				if(this.event_damage)
-					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
-			}
-			else if (STAT(REVIVE_PROGRESS, this) <= 0)
-				Unfreeze(this, false);
-		}
-	}
-
 	// Vehicles
 	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !game_stopped && !this.vehicle)
-	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
+	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !StatusEffects_active(STATUSEFFECT_Frozen, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 	{
 		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it) && !IS_DEAD(it) && it.takedamage != DAMAGE_NO,
 		{

@@ -9,7 +9,7 @@
 
 #include "checkbox.qh"
 #include "image.qh"
-#include "textslider.qh"
+#include "mixedslider.qh"
 #include "textlabel.qh"
 #include "slider.qh"
 #include "mainwindow.qh"
@@ -23,34 +23,32 @@ void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax,
 	int i;
 	entity e = me.sliderFraglimit;
 	entity l = me.labelFraglimit;
-	e.configureXonoticTextSlider(e, pCvar, pTooltip);
+	e.configureXonoticMixedSlider(e, pCvar, pTooltip);
 	e.disabled = l.disabled = !pCvar;
 	l.setText(l, pLabel);
 
 	// clear old values
 	for(i = 0; i < e.nValues; ++i);
-	{
 		strfree(e.(valueStrings[i]));
-		strfree(e.(valueIdentifiers[i]));
-	}
 	e.clearValues(e);
 
 	if(pCvar != "")
 	{
 		// set new values
-		e.addValue(e, strzone(_("Default")), strzone("-1"));
-		for(i = pMin; i <= pMax; i += pStep) { e.addValue(e, strzone(ftos(i)), strzone(ftos(i))); }
-		e.addValue(e, strzone(_("Unlimited")), strzone("0"));
+		e.addText(e, strzone(_("Default")), -1);
+		for(i = pMin; i <= pMax; i += pStep)
+			e.addText(e, strzone(ftos(i)), i);
+		e.addText(e, strzone(_("Unlimited")), 0);
 	}
-	e.configureXonoticTextSliderValues(e);
+	e.configureXonoticMixedSliderValues(e);
 
 
 	entity t = me.sliderTeams;
 	entity tl = me.labelTeams;
-	t.configureXonoticTextSlider(t, tCvar, string_null);
+	t.configureXonoticMixedSlider(t, tCvar, string_null);
 	tl.disabled = t.disabled = !tCvar;
 	t.nValues = (tCvar == "") ? 0 : 4; // instead of clearing / readding the very same values
-	t.configureXonoticTextSliderValues(t);
+	t.configureXonoticMixedSliderValues(t);
 }
 
 void GameType_ConfigureSliders_for_CurrentGametype(entity me)
@@ -84,11 +82,11 @@ void XonoticServerCreateTab_fill(entity me)
 			_("Show all available gametypes")));
 	me.gotoRC(me, 13.5, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Time limit:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("timelimit_override",
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("timelimit_override",
 			_("Timelimit in minutes that when hit, will end the match")));
-			#define ADDVALUE_MINUTES(i) e.addValue(e, strzone(sprintf(_("%d minutes"), i)), #i)
-			e.addValue(e, ZCTX(_("TIMLIM^Default")), "-1");
-			e.addValue(e, _("1 minute"), "1");
+			#define ADDVALUE_MINUTES(i) e.addText(e, strzone(sprintf(_("%d minutes"), i)), i)
+			e.addText(e, ZCTX(_("TIMLIM^Default")), -1);
+			e.addText(e, _("1 minute"), 1);
 			ADDVALUE_MINUTES(2);
 			ADDVALUE_MINUTES(3);
 			ADDVALUE_MINUTES(4);
@@ -105,21 +103,21 @@ void XonoticServerCreateTab_fill(entity me)
 			ADDVALUE_MINUTES(40);
 			ADDVALUE_MINUTES(50);
 			ADDVALUE_MINUTES(60);
-			e.addValue(e, ZCTX(_("TIMLIM^Infinite")), "0");
-			e.configureXonoticTextSliderValues(e);
+			e.addText(e, ZCTX(_("TIMLIM^Infinite")), 0);
+			e.configureXonoticMixedSliderValues(e);
 			#undef ADDVALUE_MINUTES
 	me.TR(me);
 		me.TD(me, 1, 1, me.labelFraglimit = makeXonoticTextLabel(0, _("Frag limit:")));
-		me.TD(me, 1, 2, e = me.sliderFraglimit = makeXonoticTextSlider("fraglimit_override"));
+		me.TD(me, 1, 2, e = me.sliderFraglimit = makeXonoticMixedSlider("fraglimit_override"));
 
 	me.gotoRC(me, 16, 0);
 		me.TD(me, 1, 1, me.labelTeams = makeXonoticTextLabel(0, _("Teams:")));
-		me.TD(me, 1, 2, e = me.sliderTeams = makeXonoticTextSlider(string_null));
-			e.addValue(e, _("Default"), "0");
-			e.addValue(e, _("2 teams"), "2");
-			e.addValue(e, _("3 teams"), "3");
-			e.addValue(e, _("4 teams"), "4");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = me.sliderTeams = makeXonoticMixedSlider(string_null));
+			e.addText(e, _("Default"), 0);
+			e.addText(e, _("2 teams"), 2);
+			e.addText(e, _("3 teams"), 3);
+			e.addText(e, _("4 teams"), 4);
+			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Player slots:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1, 32, 1, "menu_maxplayers",
@@ -133,20 +131,20 @@ void XonoticServerCreateTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bot skill:")));
 			setDependentAND(e, "bot_number", 0, -1, "g_campaign", 0, 0);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("skill",
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("skill",
 			_("Specify how experienced the bots will be")));
-			e.addValue(e, _("Botlike"), "0");
-			e.addValue(e, _("Beginner"), "1");
-			e.addValue(e, _("You will win"), "2");
-			e.addValue(e, _("You can win"), "3");
-			e.addValue(e, _("You might win"), "4");
-			e.addValue(e, _("Advanced"), "5");
-			e.addValue(e, _("Expert"), "6");
-			e.addValue(e, _("Pro"), "7");
-			e.addValue(e, _("Assassin"), "8");
-			e.addValue(e, _("Unhuman"), "9");
-			e.addValue(e, _("Godlike"), "10");
-			e.configureXonoticTextSliderValues(e);
+			e.addText(e, _("Botlike"), 0);
+			e.addText(e, _("Beginner"), 1);
+			e.addText(e, _("You will win"), 2);
+			e.addText(e, _("You can win"), 3);
+			e.addText(e, _("You might win"), 4);
+			e.addText(e, _("Advanced"), 5);
+			e.addText(e, _("Expert"), 6);
+			e.addText(e, _("Pro"), 7);
+			e.addText(e, _("Assassin"), 8);
+			e.addText(e, _("Unhuman"), 9);
+			e.addText(e, _("Godlike"), 10);
+			e.configureXonoticMixedSliderValues(e);
 			setDependentAND(e, "bot_number", 0, -1, "g_campaign", 0, 0);
 
 	// mapListBox is in the right column but the ref is needed for mutators dialog here
