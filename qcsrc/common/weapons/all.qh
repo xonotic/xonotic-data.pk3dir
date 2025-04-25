@@ -46,7 +46,7 @@ STATIC_INIT(WeaponPickup)
 #define WepSet_FromWeapon(it) ((it).m_wepset)
 WepSet _WepSet_FromWeapon(int i);
 
-.int m_impulse;
+.int m_unique_impulse;
 
 #define DEFAULT_FILENAME "weapons_dump.cfg"
 // NOTE: dumpeffectinfo, dumpnotifs, dumpturrets and dumpweapons use similar code
@@ -146,7 +146,7 @@ Weapon Weapon_from_name(string s)
 
 Weapon Weapon_from_impulse(int imp)
 {
-	FOREACH(Weapons, it != WEP_Null && it.m_impulse == imp, return it);
+	FOREACH(Weapons, it != WEP_Null && it.m_unique_impulse == imp, return it);
 	return WEP_Null;
 }
 
@@ -347,7 +347,7 @@ STATIC_INIT(register_weapons_done)
 		// TODO: this exists to filter out the Ball Stealer, otherwise we run out of impulses
 		if ((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_TYPE_OTHER)) continue;
 
-		it.m_impulse = imp;
+		it.m_unique_impulse = imp;
 		if (imp <= WEP_IMPULSE_END)
 			localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
 		else
