@@ -344,8 +344,14 @@ STATIC_INIT(register_weapons_done)
 		if (it.spawnflags & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
 		if (it == WEP_Null) continue;
 		if (it.spawnflags & WEP_FLAG_SPECIALATTACK) continue;
-		// TODO: this exists to filter out the Ball Stealer, otherwise we run out of impulses
-		if ((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_TYPE_OTHER)) continue;
+
+		if ((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && it.m_unique_impulse)
+		{
+			// this mutator weapon recycles an impulse of a weapon group to reduce the number of impulses used,
+			// which are very limited. The impulse number must be unique in the mutator
+			localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, it.m_unique_impulse));
+			continue;
+		}
 
 		it.m_unique_impulse = imp;
 		if (imp <= WEP_IMPULSE_END)
