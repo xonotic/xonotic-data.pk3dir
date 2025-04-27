@@ -7,6 +7,7 @@
 # Wuzzy <Wuzzy@disroot.org>, 2016-2018
 # BL4NKY, 2023
 # BL4NKY -, 2023
+# BL4NKY, 2025
 # BL4NKY, 2023
 # TheTrueBrot <noah.schluessel@gmail.com>, 2015
 # cvcxc <hans.andersen72@yahoo.com>, 2013
@@ -37,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-19 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
+"Last-Translator: BL4NKY, 2025\n"
 "Language-Team: German (http://app.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -64,7 +65,7 @@ msgstr "^1Konnte nicht nach %s schreiben"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -1114,7 +1115,7 @@ msgstr "SCO^punkte"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2442
 msgid "Next map:"
-msgstr ""
+msgstr "nächste Karte"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2449
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
@@ -1202,7 +1203,7 @@ msgstr "Aufwärmphase"
 
 #: qcsrc/client/hud/panel/timer.qc:131
 msgid "Warmup: too few players!"
-msgstr ""
+msgstr "Aufwärmphase: zu wenige Spieler"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: teams unbalanced!"
