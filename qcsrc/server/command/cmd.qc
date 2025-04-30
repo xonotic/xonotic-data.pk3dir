@@ -765,12 +765,11 @@ void ClientCommand_spectate(entity caller, int request)
 					else
 					{
 						entity client = GetFilteredEntity(argv(1));
-						float spec_accepted = VerifyClientEntity(client, false, false);
-						if(spec_accepted > 0 && IS_PLAYER(client))
+						if (IS_PLAYER(client)
+						&& VerifyClientEntity(client, false, false)
+						&& Spectate(caller, client)) // mutator hook might say no
 						{
-							bool caller_is_observer = (IS_OBSERVER(caller));
-							Spectate(caller, client);
-							if (caller_is_observer)
+							if (IS_OBSERVER(caller))
 								TRANSMUTE(Spectator, caller);
 						}
 						else
