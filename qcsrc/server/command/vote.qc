@@ -1200,7 +1200,7 @@ void VoteCommand_no(int request, entity caller)  // CLIENT ONLY
 			{
 				print_to(caller, "^1You have already voted.");
 			}
-			else if (((caller == vote_caller) || caller.vote_master) && autocvar_sv_vote_no_stops_vote)
+			else if (caller == vote_caller && autocvar_sv_vote_no_stops_vote)
 			{
 				VoteStop(caller, true);
 			}
