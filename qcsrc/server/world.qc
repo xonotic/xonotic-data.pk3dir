@@ -1467,7 +1467,7 @@ int InitiateSuddenDeath()
 			else
 			{
 				checkrules_suddendeathend = time + 60 * autocvar_timelimit_suddendeath;
-				overtimes = -1;
+				overtimes = BITS(24); // sudden death
 			}
 			if(g_race && !g_race_qualifying)
 				race_StartCompleting();
@@ -1479,6 +1479,8 @@ int InitiateSuddenDeath()
 void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 {
 	++checkrules_overtimesadded;
+	// NOTE: here overtimes can never be < 0 so it can be safely sent as int stat; we ignore
+	// the upper limit of BITS(24) - 1 = 16777215 - 1 that in practice can never be reached in game
 	overtimes = checkrules_overtimesadded;
 	//add one more overtime by simply extending the timelimit
 	cvar_set("timelimit", ftos(autocvar_timelimit + autocvar_timelimit_overtime));
@@ -1827,7 +1829,7 @@ void CheckRules_World()
 
 	if(checkrules_status == WINNING_YES)
 	{
-		if (overtimes == -1 && overtimes != overtimes_prev)
+		if (overtimes == BITS(24) && overtimes != overtimes_prev)
 		{
 			// if suddendeathend overtime has just begun, revert it
 			checkrules_suddendeathend = 0;
