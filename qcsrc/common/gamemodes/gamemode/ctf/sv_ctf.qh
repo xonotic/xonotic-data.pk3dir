@@ -6,8 +6,8 @@
 #include <common/gamemodes/sv_rules.qh>
 
 CLASS(Flag, Pickup)
-    ATTRIB(Flag, m_mins, vector, (PL_MIN_CONST + '0 0 -13') * 1.4); // scaling be damned
-    ATTRIB(Flag, m_maxs, vector, (PL_MAX_CONST + '0 0 -13') * 1.4);
+	ATTRIB(Flag, m_mins, vector, (PL_MIN_CONST + '0 0 -13') * 1.4); // scaling be damned
+	ATTRIB(Flag, m_maxs, vector, (PL_MAX_CONST + '0 0 -13') * 1.4);
 ENDCLASS(Flag)
 Flag CTF_FLAG;
 void ctf_Initialize();
@@ -17,16 +17,16 @@ int autocvar_capturelimit_override;
 
 REGISTER_MUTATOR(ctf, false)
 {
-    MUTATOR_STATIC();
-    MUTATOR_ONADD
-    {
-        GameRules_teams(true);
-        GameRules_limit_score(autocvar_capturelimit_override);
-        GameRules_limit_lead(autocvar_captureleadlimit_override);
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		GameRules_teams(true);
+		GameRules_limit_score(autocvar_capturelimit_override);
+		GameRules_limit_lead(autocvar_captureleadlimit_override);
 
-        ctf_Initialize();
-    }
-    return 0;
+		ctf_Initialize();
+	}
+	return 0;
 }
 
 // used in cheats.qc

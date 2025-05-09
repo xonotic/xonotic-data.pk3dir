@@ -941,10 +941,11 @@ void vehicles_enter(entity pl, entity veh)
 	if((IS_BOT_CLIENT(pl) && !autocvar_g_vehicles_allow_bots))
 		return;
 
+	// TODO: mutator hook to prevent entering vehicles
 	if((!IS_PLAYER(pl))
 	|| (veh.phase >= time)
 	|| (pl.vehicle_enter_delay >= time)
-	|| (STAT(FROZEN, pl))
+	|| (STAT(FROZEN, pl) || StatusEffects_active(STATUSEFFECT_Frozen, pl))
 	|| (IS_DEAD(pl))
 	|| (pl.vehicle)
 	) { return; }

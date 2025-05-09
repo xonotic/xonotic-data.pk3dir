@@ -272,7 +272,7 @@ NET_HANDLE(damagetext, bool isNew)
 		if (flags & DTFLAG_STOP_ACCUMULATION
 			|| ((autocvar_cl_damagetext_accumulate_lifetime >= 0) // negative never disowns
 				&& (time - it.hit_time > autocvar_cl_damagetext_accumulate_lifetime)
-				&& (current_alpha(it) > alphathreshold)))
+				&& (current_alpha(it) < alphathreshold)))
 		{
 			it.m_group = 0;
 		}

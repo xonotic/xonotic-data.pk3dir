@@ -79,8 +79,8 @@ MUTATOR_HOOKFUNCTION(powerups, MonsterValidTarget)
 
 void powerups_DropItem_Think(entity this)
 {
-	// Only needed to update if the timer of the powerup is running
-	if(!GetResource(this, RES_ARMOR))
+	// if there is no armor it means the timer of the powerup is running
+	if(this.waypointsprite_attached && !GetResource(this, RES_ARMOR))
 	{
 		float timeleft = floor(this.wait - time);
 		if (timeleft)

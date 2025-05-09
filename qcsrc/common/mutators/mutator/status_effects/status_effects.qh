@@ -121,7 +121,7 @@ void StatusEffects_Write(StatusEffect data, StatusEffect store)
 #undef G_MINOR
 
 #ifdef SVQC
-bool StatusEffects_Send(StatusEffect this, Client to, int sf)
+bool StatusEffects_Send(StatusEffect this, entity to, int sf)
 {
     TC(StatusEffect, this);
     WriteHeader(MSG_ENTITY, ENT_CLIENT_STATUSEFFECTS);

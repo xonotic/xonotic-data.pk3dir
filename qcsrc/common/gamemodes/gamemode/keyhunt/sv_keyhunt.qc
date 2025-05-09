@@ -18,6 +18,11 @@ float autocvar_g_balance_keyhunt_dropvelocity;
 float autocvar_g_balance_keyhunt_maxdist;
 float autocvar_g_balance_keyhunt_protecttime;
 
+vector autocvar_g_balance_keyhunt_carrier_damage;
+vector autocvar_g_balance_keyhunt_carrier_force;
+vector autocvar_g_balance_keyhunt_noncarrier_damage;
+vector autocvar_g_balance_keyhunt_noncarrier_force;
+
 int autocvar_g_balance_keyhunt_score_capture;
 int autocvar_g_balance_keyhunt_score_carrierfrag;
 int autocvar_g_balance_keyhunt_score_collect;
@@ -70,7 +75,6 @@ int kh_Team_ByID(int t)
 }
 
 entity kh_controller;
-//bool kh_tracking_enabled;
 int kh_teams;
 int kh_interferemsg_team;
 float kh_interferemsg_time;
@@ -100,22 +104,25 @@ void kh_ScoreRules(int teams)
 
 bool kh_KeyCarrier_waypointsprite_visible_for_player(entity this, entity player, entity view)  // runs all the time
 {
-	if(!IS_PLAYER(view) || DIFF_TEAM(this, view))
-		if(!kh_tracking_enabled)
-			return false;
+	if(view.kh_next && IS_SPEC(player))
+		return false; // we don't want spectators of key carriers to see the attached waypoint on the top of their screen
+	if(IS_SPEC(player) || warmup_stage || SAME_TEAM(player, this.owner))
+		return true;
+	if(IS_INVISIBLE(this.owner))
+		return false; // hide the waypointsprite if the owner is invisible
 
-	return true;
+	return kh_tracking_enabled;
 }
 
 bool kh_Key_waypointsprite_visible_for_player(entity this, entity player, entity view)
 {
+	// always show the dropped key waypoint while in warmup or spectating
+	if(this.owner && !this.owner.owner && (IS_SPEC(player) || warmup_stage))
+		return true;
 	if(!kh_tracking_enabled)
 		return false;
-	if(!this.owner)
-		return true;
-	if(!this.owner.owner)
-		return true;
-	return false;  // draw only when key is not owned
+
+	return !this.owner || !this.owner.owner; // draw only when key is not owned
 }
 
 void kh_update_state()
@@ -180,10 +187,10 @@ void kh_Scores_Event(entity player, entity key, string what, float frags_player,
 		return;
 
 	if(frags_player)
-		UpdateFrags(player, frags_player);
+		GameRules_scoring_add_team(player, SCORE, frags_player);
 
 	if(key && key.owner && frags_owner)
-		UpdateFrags(key.owner, frags_owner);
+		GameRules_scoring_add_team(key.owner, SCORE, frags_owner);
 
 	if(!autocvar_sv_eventlog)  //output extra info to the console or text file
 		return;
@@ -946,8 +953,11 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	kh_tracking_enabled = false;
-	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEYHUNT_SCAN, autocvar_g_balance_keyhunt_delay_tracking);
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, kh_EnableTrackingDevice);
+	if(autocvar_g_balance_keyhunt_delay_tracking >= 0)
+	{
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEYHUNT_SCAN, autocvar_g_balance_keyhunt_delay_tracking);
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, kh_EnableTrackingDevice);
+	}
 }
 
 float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the player score
@@ -1021,30 +1031,37 @@ void(entity this) havocbot_role_kh_offense;
 void(entity this) havocbot_role_kh_freelancer;
 
 
+bool kh_waypointsprite_visible_for_bot(entity this, entity e)
+{
+	entity key_wp = e.waypointsprite_attachedforcarrier;
+	if (!key_wp)
+	if (!key_wp.waypointsprite_visible_for_player(key_wp, this, WaypointSprite_getviewentity(this)))
+	{ // has no waypoint, or waypoint not visible
+		if (!checkpvs(this.origin + this.view_ofs, e)) // key cannot be seen
+			return false;
+	}
+	return true;
+}
+
 void havocbot_goalrating_kh(entity this, float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy)
 {
-	entity head;
-	for (head = kh_worldkeylist; head; head = head.kh_worldkeynext)
+	for (entity head = kh_worldkeylist; head; head = head.kh_worldkeynext)
 	{
-		if(head.owner == this)
-			continue;
-		if(!kh_tracking_enabled)
+		if (head.owner)
 		{
-			// if it's carried by our team we know about it
-			// otherwise we have to see it to know about it
-			if(!head.owner || head.team != this.team)
-			{
-				traceline(this.origin + this.view_ofs, head.origin, MOVE_NOMONSTERS, this);
-				if (trace_fraction < 1 && trace_ent != head)
-					continue; // skip what I can't see
-			}
+			if (head.owner == this || !kh_waypointsprite_visible_for_bot(this, head.owner))
+				continue;
+			if (SAME_TEAM(head, this))
+				navigation_routerating(this, head.owner, ratingscale_team * 10000, 100000);
+			else
+				navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
 		}
-		if(!head.owner)
-			navigation_routerating(this, head, ratingscale_dropped * 10000, 100000);
-		else if(head.team == this.team)
-			navigation_routerating(this, head.owner, ratingscale_team * 10000, 100000);
 		else
-			navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
+		{
+			if (!kh_waypointsprite_visible_for_bot(this, head))
+				continue;
+			navigation_routerating(this, head, ratingscale_dropped * 10000, 100000);
+		}
 	}
 
 	havocbot_goalrating_items(this, 80000, this.origin, 10000);
@@ -1214,6 +1231,53 @@ void havocbot_role_kh_freelancer(entity this)
 
 
 // register this as a mutator
+
+MUTATOR_HOOKFUNCTION(kh, Damage_Calculate) // for changing damage and force values that are applied to players
+{
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
+	// as a gamemode rule, only apply scaling to player versus player combat
+	if (!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
+		return;
+
+	if (frag_attacker.kh_next != NULL) // if the attacker is a key carrier
+	{
+		if (frag_target == frag_attacker) // damage done to themselves
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_force.x;
+		}
+		else if (frag_target.kh_next != NULL) // damage done to other key carriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_force.y;
+		}
+		else // damage done to noncarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_force.z;
+		}
+	}
+	else
+	{
+		if (frag_target == frag_attacker) // damage done to themselves
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_force.x;
+		}
+		else if (frag_target.kh_next != NULL) // damage done to key carriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_force.y;
+		}
+		else // damage done to other noncarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_force.z;
+		}
+	}
+}
 
 MUTATOR_HOOKFUNCTION(kh, ClientDisconnect)
 {

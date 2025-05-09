@@ -124,27 +124,28 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 		checkclient(this); // TODO: .health is checked in the engine with this, possibly replace with a QC function?
 	}
 #endif
-    if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-        return true;
-    if (toucher == NULL && this.size != '0 0 0')
-    {
-        vector tic;
-        tic = this.velocity * sys_frametime;
-        tic = tic + normalize(tic) * vlen(this.maxs - this.mins);
-        traceline(this.origin - tic, this.origin + tic, MOVE_NORMAL, this);
-        if (trace_fraction >= 1)
-        {
-            // NOTE: this notice can occur when projectiles hit non-world objects, better to not spam the console!
-            //LOG_TRACE("Odd... did not hit...?");
-        }
-        else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-        {
-            LOG_TRACE("Detected and prevented the sky-grapple bug.");
-            return true;
-        }
-    }
+	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+		return true;
 
-    return false;
+	if (toucher == NULL && this.size != '0 0 0')
+	{
+		vector tic;
+		tic = this.velocity * sys_frametime;
+		tic = tic + normalize(tic) * vlen(this.maxs - this.mins);
+		traceline(this.origin - tic, this.origin + tic, MOVE_NORMAL, this);
+		if (trace_fraction >= 1)
+		{
+			// NOTE: this notice can occur when projectiles hit non-world objects, better to not spam the console!
+			//LOG_TRACE("Odd... did not hit...?");
+		}
+		else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+		{
+			LOG_TRACE("Detected and prevented the sky-grapple bug.");
+			return true;
+		}
+	}
+
+	return false;
 }
 
 bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher)

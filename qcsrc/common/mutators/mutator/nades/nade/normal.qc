@@ -1,7 +1,7 @@
 #include "normal.qh"
 
 #ifdef SVQC
-void normal_nade_boom(entity this)
+void nade_normal_boom(entity this)
 {
 	RadiusDamage(this, this.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 		autocvar_g_nades_nade_radius, this, NULL, autocvar_g_nades_nade_force, this.projectiledeathtype, DMG_NOWEP, this.enemy);
@@ -13,7 +13,8 @@ void normal_nade_boom(entity this)
 METHOD(NormalNade, describe, string(NormalNade this))
 {
 	TC(NormalNade, this);
-	return sprintf(_("The (normal) %s explodes after a short delay, dealing damage to nearby players.\n\n"
+	return sprintf(_("The (normal) %s explodes after a short delay, dealing damage to nearby players. "
+		"If other nade types are destroyed before they detonate, they will instead explode similarly, without doing their special effects.\n\n"
 		"Make sure you remember to throw it with ^3drop weapon^7, or else it will blow up in your hands!"),
 	COLORED_NAME(this));
 }

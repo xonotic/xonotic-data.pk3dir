@@ -218,5 +218,7 @@ else # red error print
 	printf "\033[31m%s\033[0m\n" "expected: $EXPECT"
 	printf "\033[31m%s\033[0m\n" "  actual: $HASH"
 	printf "\033[1;31m%s\033[0m\n" "!!! ERROR: HASHES DO NOT MATCH !!!"
+	printf "\033[35mThis is expected if the number or execution order of random() calls changed,\n"
+	printf "otherwise it indicates a more meaningful change in gameplay and match outcomes.\033[0m\n"
 	exit 1
 fi

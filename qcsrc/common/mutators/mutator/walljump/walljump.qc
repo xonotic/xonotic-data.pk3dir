@@ -42,7 +42,7 @@ MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 	if(!IS_ONGROUND(player))
 	if(player.move_movetype != MOVETYPE_NONE && player.move_movetype != MOVETYPE_FOLLOW && player.move_movetype != MOVETYPE_FLY && player.move_movetype != MOVETYPE_NOCLIP)
 	if(!IS_JUMP_HELD(player))
-	if(!STAT(FROZEN, player))
+	if(!STAT(FROZEN, player) && !StatusEffects_active(STATUSEFFECT_Frozen, player))
 	if(!IS_DEAD(player))
 	{
 		vector plane_normal = PlayerTouchWall(player);

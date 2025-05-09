@@ -23,7 +23,7 @@ void nade_monster_boom(entity this)
 METHOD(MonsterNade, describe, string(MonsterNade this))
 {
 	TC(MonsterNade, this);
-	return sprintf(_("The %s explodes after a short delay, spawning one of four monster types."),
+	return sprintf(_("The %s detonates after a short delay, spawning one of four monster types."),
 	COLORED_NAME(this));
 }
 #endif // MENUQC

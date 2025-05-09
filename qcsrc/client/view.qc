@@ -741,7 +741,7 @@ int WantEventchase(entity this, bool want_vehiclechase)
 			return 1;
 		if(MUTATOR_CALLHOOK(WantEventchase, this))
 			return 1;
-		if(autocvar_cl_eventchase_frozen && STAT(FROZEN))
+		if(autocvar_cl_eventchase_frozen && StatusEffects_active(STATUSEFFECT_Frozen, this))
 			return 1;
 		if(autocvar_cl_eventchase_death && (STAT(HEALTH) <= 0))
 		{
@@ -997,20 +997,12 @@ void HUD_Draw(entity this)
 			if (alpha_multipl > 0)
 				drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_multipl, DRAWFLAG_ADDITIVE);
 		}
-		else if(STAT(FROZEN))
-		{
-			vector col = '0.25 0.90 1';
-			float col_fade = max(0, STAT(REVIVE_PROGRESS) * 2 - 1);
-			float alpha_fade = 0.3 + 0.7 * (1 - max(0, STAT(REVIVE_PROGRESS) * 4 - 3));
-			if(col_fade)
-				col += vec3(col_fade, -col_fade, -col_fade);
-			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_fade, DRAWFLAG_ADDITIVE);
-		}
 	}
 
 	HUD_Scale_Enable();
 	if(!intermission)
 	{
+		// TODO: mutator hook for these? maybe something more generic!
 		if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 		{
 			vector col = '0.25 0.90 1' + vec3(STAT(NADE_TIMER), -STAT(NADE_TIMER), -STAT(NADE_TIMER));
@@ -1244,7 +1236,7 @@ void HUD_Contents()
 // provides some effects to the postprocessing function
 void HUD_Damage()
 {
-	if(!autocvar_hud_damage || STAT(FROZEN))
+	if(!autocvar_hud_damage || MUTATOR_CALLHOOK(HUD_Damage_show))
 		return;
 
 	vector splash_pos = '0 0 0', splash_size = '0 0 0';
