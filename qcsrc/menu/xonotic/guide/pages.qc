@@ -105,7 +105,7 @@ REGISTER_MOVEMENT_PAGE(5, _("Rocket Flying"), "gametype_inv")
 REGISTER_MOVEMENT_PAGE(6, _("Crylink Running"), "gametype_inv")
 {
 	this.m_description = strzone(sprintf(_("The drag force of %s secondary fire can not only break other people's movement, but can also give yourself a significant speed boost.\n\n"
-		"To \"crylink run,\" shoot the %s secondary at the floor (or a parallel wall) just in front of you and begin bunny hopping to catapult yourself off the stand into high speed"),
+		"To \"crylink run,\" shoot the %s secondary at the floor (or a parallel wall) just in front of you and begin bunny hopping to catapult yourself off the stand into high speed."),
 	COLORED_NAME(WEP_CRYLINK), COLORED_NAME(WEP_CRYLINK)));
 }
 REGISTER_MOVEMENT_PAGE(7, _("Crylink Wall Climbing"), "gametype_inv")
