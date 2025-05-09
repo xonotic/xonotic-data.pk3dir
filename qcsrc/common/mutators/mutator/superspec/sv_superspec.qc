@@ -27,9 +27,7 @@ const int SSF_ITEMMSG = BIT(2);
 
 bool superspec_Spectate(entity this, entity targ)
 {
-	if(Spectate(this, targ) == 1)
-	    TRANSMUTE(Spectator, this);
-
+	Spectate(this, targ);
 	return true;
 }
 

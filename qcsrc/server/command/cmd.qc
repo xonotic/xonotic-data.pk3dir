@@ -770,10 +770,7 @@ void ClientCommand_spectate(entity caller, int request)
 						if (IS_PLAYER(client)
 						&& VerifyClientEntity(client, false, false)
 						&& Spectate(caller, client)) // mutator hook might say no
-						{
-							if (IS_OBSERVER(caller))
-								TRANSMUTE(Spectator, caller);
-						}
+							{ }
 						else
 							sprint(caller, "Can't spectate ", argv(1), "^7\n");
 					}
