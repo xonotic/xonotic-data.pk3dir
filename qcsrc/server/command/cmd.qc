@@ -640,6 +640,18 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			float team_num = Team_ColorToTeam(argv(1));
 			if (team_num == -1) // invalid
 				return;
+
+			// players queued to change teams may leave the queue by selecting their current team or autoselect
+			if (caller.team > 0 && caller.wants_join && (!team_num || caller.team == team_num))
+			{
+				if (caller.killindicator_teamchange > 0)
+					return; // teams would be unbalanced by cancelling change during g_balance_kill_delay
+				Kill_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CPID_PREVENT_JOIN);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, caller.netname);
+				caller.wants_join = caller.team_selected = 0;
+				return;
+			}
+
 			if (caller.team == team_num && team_num && !IS_DEAD(caller))
 			{
 				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_SAME);
@@ -781,7 +793,16 @@ void ClientCommand_spectate(entity caller, int request)
 
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN) return;
 
-				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE || caller.wants_join))
+				if (caller.wants_join)
+				{
+					if (caller.killindicator_teamchange > 0)
+						return; // teams would be unbalanced by cancelling change during g_balance_kill_delay
+					Kill_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CPID_PREVENT_JOIN);
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, caller.netname);
+					caller.wants_join = caller.team_selected = 0;
+				}
+
+				if (IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE)
 				if (autocvar_sv_spectate)
 					ClientKill_TeamChange(caller, -2); // observe
 				else
