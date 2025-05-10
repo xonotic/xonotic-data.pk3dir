@@ -19,7 +19,7 @@ void HUD_Checkpoints_Export(int fh)
 const float CHECKPOINTS_SPACING   = 0.25;
 const float CHECKPOINTS_BASE_SIZE = 0.75;
 
-string demolines[256];
+string demolines[10];
 
 vector Checkpoints_drawstring(string s, vector pos, vector sz, float a, vector fontsize)
 {
