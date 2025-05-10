@@ -2106,7 +2106,7 @@ void Join(entity this, bool queued_join)
 		else if (this.wants_join)
 		{
 			// Get queued player's attention
-			if (game_starttime <= time) // No countdown in progress
+			if (game_starttime <= time && !warmup_stage) // No countdown in progress and not returning to warmup via ReadyRestart_force
 				Send_Notification(NOTIF_ONE_ONLY, this, MSG_ANNCE, ANNCE_BEGIN);
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_JOIN_PLAY_TEAM));
 		}
