@@ -781,11 +781,21 @@ void ClientCommand_spectate(entity caller, int request)
 
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN) return;
 
-				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE || caller.wants_join))
-				if (autocvar_sv_spectate)
-					ClientKill_TeamChange(caller, -2); // observe
-				else
-					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_MULTI, SPECTATE_NOTALLOWED);
+				// if queued the first spec command shall only leave the queue (player might be on a team, queued to switch)
+				if (caller.wants_join)
+				{
+					Kill_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CPID_PREVENT_JOIN);
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, caller.netname);
+					caller.wants_join = 0;
+					caller.team_selected = 0;
+				}
+				else if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE))
+				{
+					if (autocvar_sv_spectate)
+						ClientKill_TeamChange(caller, -2); // observe
+					else
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_MULTI, SPECTATE_NOTALLOWED);
+				}
 			}
 			return; // never fall through to usage
 		}
