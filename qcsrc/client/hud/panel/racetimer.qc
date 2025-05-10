@@ -108,7 +108,7 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(theirname, col, lapstr)));
 }
 
-void ClearRaceSplits(bool quiet)
+void ClearCheckpointSplits(bool quiet)
 {
 	bool once = true;
 	bool changed_player = (racetimer_have_stored_splits_player != (current_player + 1));
@@ -133,11 +133,11 @@ void ClearRaceSplits(bool quiet)
 	if(changed_player) racetimer_have_stored_splits_player = 0;
 }
 
-void StoreRaceSplits(float race_checkpoint, string forcetime, string s)
+void StoreCheckpointSplits(float race_checkpoint, string forcetime, string s)
 {
 	// store checkpoint splits string for later printing
 	if (racetimer_have_stored_splits && racetimer_have_stored_splits_player != (current_player + 1)) // we changed player
-		ClearRaceSplits(true);
+		ClearCheckpointSplits(true);
 
 	// 0 or 255 go to 255 as finish, strcpy does the free if needed
 	strcpy(race_checkpoint_splits[race_checkpoint ? race_checkpoint : 255], (forcetime != "") ? sprintf("%s %s", forcetime, s) : s);
@@ -233,7 +233,7 @@ void HUD_RaceTimer ()
 				else
 				{
 					if (racetimer_have_stored_splits && racetimer_have_stored_splits_player != (current_player + 1)) // we changed player
-						ClearRaceSplits(true);
+						ClearCheckpointSplits(true);
 
 					// build checkpoint split strings
 					if(race_time && race_previousbesttime)
@@ -267,14 +267,14 @@ void HUD_RaceTimer ()
 					if(race_time)
 						forcetime = TIME_ENCODED_TOSTRING(race_time, false);
 
-					StoreRaceSplits(race_checkpoint, forcetime, s);
+					StoreCheckpointSplits(race_checkpoint, forcetime, s);
 				}
 			}
 			else
 			{
 				// clean cp splits on start
 				if(racetimer_have_stored_splits && race_time == 0)
-					ClearRaceSplits(false);
+					ClearCheckpointSplits(false);
 			}
 		}
 		else
@@ -332,7 +332,7 @@ void HUD_RaceTimer ()
 	else
 	{
 		if(racetimer_have_stored_splits && (race_time == 0 || time < STAT(GAMESTARTTIME)))
-			ClearRaceSplits(false);
+			ClearCheckpointSplits(false);
 
 		if(race_mycheckpointtime)
 		{

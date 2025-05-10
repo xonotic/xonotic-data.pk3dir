@@ -24,6 +24,7 @@
 #include <menu/xonotic/dialog_hudpanel_ammo.qc>
 #include <menu/xonotic/dialog_hudpanel_centerprint.qc>
 #include <menu/xonotic/dialog_hudpanel_chat.qc>
+#include <menu/xonotic/dialog_hudpanel_checkpoints.qc>
 #include <menu/xonotic/dialog_hudpanel_engineinfo.qc>
 #include <menu/xonotic/dialog_hudpanel_healtharmor.qc>
 #include <menu/xonotic/dialog_hudpanel_infomessages.qc>
@@ -35,7 +36,6 @@
 #include <menu/xonotic/dialog_hudpanel_powerups.qc>
 #include <menu/xonotic/dialog_hudpanel_pressedkeys.qc>
 #include <menu/xonotic/dialog_hudpanel_quickmenu.qc>
-#include <menu/xonotic/dialog_hudpanel_racesplits.qc>
 #include <menu/xonotic/dialog_hudpanel_racetimer.qc>
 #include <menu/xonotic/dialog_hudpanel_radar.qc>
 #include <menu/xonotic/dialog_hudpanel_score.qc>

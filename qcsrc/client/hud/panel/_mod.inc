@@ -2,6 +2,7 @@
 #include <client/hud/panel/ammo.qc>
 #include <client/hud/panel/centerprint.qc>
 #include <client/hud/panel/chat.qc>
+#include <client/hud/panel/checkpoints.qc>
 #include <client/hud/panel/engineinfo.qc>
 #include <client/hud/panel/healtharmor.qc>
 #include <client/hud/panel/infomessages.qc>
@@ -13,7 +14,6 @@
 #include <client/hud/panel/powerups.qc>
 #include <client/hud/panel/pressedkeys.qc>
 #include <client/hud/panel/quickmenu.qc>
-#include <client/hud/panel/racesplits.qc>
 #include <client/hud/panel/racetimer.qc>
 #include <client/hud/panel/radar.qc>
 #include <client/hud/panel/score.qc>

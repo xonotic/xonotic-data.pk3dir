@@ -1,4 +1,4 @@
-#include "racesplits.qh"
+#include "checkpoints.qh"
 #include "racetimer.qh"
 #include "physics.qh"
 
@@ -8,31 +8,31 @@
 
 // Race Splits (#27)
 
-void HUD_RaceSplits_Export(int fh)
+void HUD_Checkpoints_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
-	HUD_Write_Cvar("hud_panel_racesplits_align");
-	HUD_Write_Cvar("hud_panel_racesplits_flip");
-	HUD_Write_Cvar("hud_panel_racesplits_fontscale");
+	HUD_Write_Cvar("hud_panel_checkpoints_align");
+	HUD_Write_Cvar("hud_panel_checkpoints_flip");
+	HUD_Write_Cvar("hud_panel_checkpoints_fontscale");
 }
 
-const float RACESPLITS_SPACING   = 0.25;
-const float RACESPLITS_BASE_SIZE = 0.75;
+const float CHECKPOINTS_SPACING   = 0.25;
+const float CHECKPOINTS_BASE_SIZE = 0.75;
 
 string demolines[256];
 
-vector RaceSplits_drawstring(string s, vector pos, vector sz, float a, vector fontsize)
+vector Checkpoints_drawstring(string s, vector pos, vector sz, float a, vector fontsize)
 {
 	getWrappedLine_remaining = s;
-	const float align = bound(0, autocvar_hud_panel_racesplits_align, 1);
+	const float align = bound(0, autocvar_hud_panel_checkpoints_align, 1);
 	float offset = 0;
-	if (autocvar_hud_panel_racesplits_flip)
+	if (autocvar_hud_panel_checkpoints_flip)
 	{
 		const string s_original = s;
 		do
 		{
 			s = getWrappedLine(sz.x - offset, fontsize, stringwidth_colors);
-			if (autocvar_hud_panel_racesplits_align)
+			if (autocvar_hud_panel_checkpoints_align)
 				offset = (sz.x - stringwidth_colors(s, fontsize) - offset) * align;
 			pos.y -= fontsize.y;
 			offset = fontsize.x;
@@ -47,7 +47,7 @@ vector RaceSplits_drawstring(string s, vector pos, vector sz, float a, vector fo
 	do
 	{
 		s = getWrappedLine(sz.x - offset, fontsize, stringwidth_colors);
-		if (autocvar_hud_panel_racesplits_align)
+		if (autocvar_hud_panel_checkpoints_align)
 			offset = (sz.x - stringwidth_colors(s, fontsize) - offset) * align;
 		drawcolorcodedstring(pos + eX * offset, s, fontsize, a, DRAWFLAG_NORMAL);
 		pos.y += fontsize.y;
@@ -55,18 +55,18 @@ vector RaceSplits_drawstring(string s, vector pos, vector sz, float a, vector fo
 	}
 	while (getWrappedLine_remaining);
 
-	if (autocvar_hud_panel_racesplits_flip)
+	if (autocvar_hud_panel_checkpoints_flip)
 	{
 		pos.y = old_pos_y;
-		pos.y -= RACESPLITS_SPACING * fontsize.y;
+		pos.y -= CHECKPOINTS_SPACING * fontsize.y;
 	}
 	else
-		pos.y += RACESPLITS_SPACING * fontsize.y;
+		pos.y += CHECKPOINTS_SPACING * fontsize.y;
 
 	return pos;
 }
 
-vector RaceSplits_Draw(int end, vector pos, vector fontsize, vector rs_fontsize)
+vector Checkpoints_Draw(int end, vector pos, vector fontsize, vector rs_fontsize)
 {
 	string s;
 	for (int j = end; j >= 0; --j)
@@ -74,8 +74,8 @@ vector RaceSplits_Draw(int end, vector pos, vector fontsize, vector rs_fontsize)
 		s = autocvar__hud_configure ? demolines[j] : race_checkpoint_splits[j];
 		if (s == "")
 			continue;
-		pos = RaceSplits_drawstring(s, pos, panel_size, panel_fg_alpha, fontsize);
-		if (autocvar_hud_panel_racesplits_flip) // now check if the next line can be shown (fit)
+		pos = Checkpoints_drawstring(s, pos, panel_size, panel_fg_alpha, fontsize);
+		if (autocvar_hud_panel_checkpoints_flip) // now check if the next line can be shown (fit)
 		{
 			if (pos.y < panel_pos.y)
 				break;
@@ -89,19 +89,19 @@ vector RaceSplits_Draw(int end, vector pos, vector fontsize, vector rs_fontsize)
 	return pos;
 }
 
-void HUD_RaceSplits()
+void HUD_Checkpoints()
 {
 	if (!autocvar__hud_configure)
 	{
-		if (!autocvar_hud_panel_racesplits) return;
+		if (!autocvar_hud_panel_checkpoints) return;
 	}
 
 	HUD_Panel_LoadCvars();
 	// XONRELEASE: default values for <= 0.8.6 can be removed after next release
-	registercvar("hud_panel_racesplits_pos", "0.700000 0.190000");
-	registercvar("hud_panel_racesplits_size", "0.250000 0.170000");
+	registercvar("hud_panel_checkpoints_pos", "0.700000 0.190000");
+	registercvar("hud_panel_checkpoints_size", "0.250000 0.170000");
 
-	if (autocvar_hud_panel_racesplits_dynamichud)
+	if (autocvar_hud_panel_checkpoints_dynamichud)
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
@@ -114,11 +114,11 @@ void HUD_RaceSplits()
 	}
 
 	vector pos = panel_pos;
-	if (autocvar_hud_panel_racesplits_flip)
+	if (autocvar_hud_panel_checkpoints_flip)
 		pos.y += panel_size.y;
 
-	const vector rs_fontsize = hud_fontsize * RACESPLITS_BASE_SIZE;
-	const vector fontsize = rs_fontsize * autocvar_hud_panel_racesplits_fontscale;
+	const vector rs_fontsize = hud_fontsize * CHECKPOINTS_BASE_SIZE;
+	const vector fontsize = rs_fontsize * autocvar_hud_panel_checkpoints_fontscale;
 
 	if (!autocvar__hud_configure)
 	{
@@ -132,7 +132,7 @@ void HUD_RaceSplits()
 		else // before start, not on race (cts), keep old run cps visible
 			i = 255;
 
-		pos = RaceSplits_Draw(i, pos, fontsize, rs_fontsize);
+		pos = Checkpoints_Draw(i, pos, fontsize, rs_fontsize);
 	}
 	else
 	{
@@ -154,6 +154,6 @@ void HUD_RaceSplits()
 		for (; j < 10; ++j) // just draw 10 for configuring the HUD
 			demolines[j] = sprintf(strcat("%s ^7", _("Checkpoint %d"), " ^7%d%s"), TIME_ENCODED_TOSTRING(TIME_ENCODE(j*9.37), false), j+1, (1100 + j*63) * speed_conv_f, units_text);
 
-		pos = RaceSplits_Draw(9, pos, fontsize, rs_fontsize);
+		pos = Checkpoints_Draw(9, pos, fontsize, rs_fontsize);
 	}
 }
