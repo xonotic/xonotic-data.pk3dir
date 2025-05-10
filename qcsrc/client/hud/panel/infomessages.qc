@@ -86,6 +86,8 @@ void HUD_InfoMessages()
 	int img_curr_group = -1;
 	if(!autocvar__hud_configure)
 	{
+		int wants_join = teamplay ? entcs_GetWantsJoin(current_player) : 0;
+
 		if(spectatee_status)
 		{
 			if(spectatee_status == -1)
@@ -125,21 +127,17 @@ void HUD_InfoMessages()
 			pos = M_ARGV(0, vector);
 			img_curr_group = M_ARGV(2, int);
 
-			if(!mutator_returnvalue)
-			{
-				int tm = entcs_GetWantsJoin(current_player);
-				if(tm > 0)
-				{
-					tm = Team_IndexToTeam(tm);
-					s = sprintf(_("^2You're queued to join the %s%s^2 team"), Team_ColorCode(tm), Team_ColorName(tm));
-				}
-				else if (tm < 0)
-					s = sprintf(_("^2You're queued to join any available team"));
-				else
-					s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
-				InfoMessage(s);
-			}
+			if(!mutator_returnvalue && !wants_join)
+				InfoMessage(sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump")));
 		}
+
+		if(wants_join > 0)
+		{
+			wants_join = Team_IndexToTeam(wants_join);
+			InfoMessage(sprintf(_("^2You're queued to join the %s%s^2 team"), Team_ColorCode(wants_join), Team_ColorName(wants_join)));
+		}
+		else if (wants_join < 0)
+			InfoMessage(sprintf(_("^2You're queued to join any available team")));
 
 		if (time < STAT(GAMESTARTTIME))
 		{
