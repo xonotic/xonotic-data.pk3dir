@@ -923,10 +923,6 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			{
 				continue;
 			}
-			if (it.wants_join)
-			{
-				continue; // Queued players aren't actually in the game (and shouldn't have .team set).
-			}
 			int team_num;
 			// TODO: Reconsider when the player is truly on the team.
 			if (IS_CLIENT(it) || INGAME(it))
