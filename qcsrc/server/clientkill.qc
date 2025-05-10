@@ -36,23 +36,10 @@ void ClientKill_Now_TeamChange(entity this)
 			// shouldn't get here because of condition in ClientCommand_spectate()
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 
-		if (this.wants_join)
-		{
-			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, this.netname);
-			SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR);
-			// Can't do this in PutObserverInServer() or SetPlayerTeam() cos it causes
-			// mouse2 (change spectate mode) to kick the player off the join queue.
-			this.wants_join = 0;
-			this.team_selected = 0;
-		}
-		else
-		{
-			PutObserverInServer(this, false, true);
-			if (!TeamBalance_QueuedPlayersTagIn(this))
-			if (autocvar_g_balance_teams_remove)
-				TeamBalance_RemoveExcessPlayers(this);
-		}
+		PutObserverInServer(this, false, true);
+		if (!TeamBalance_QueuedPlayersTagIn(this))
+		if (autocvar_g_balance_teams_remove)
+			TeamBalance_RemoveExcessPlayers(this);
 	}
 	else
 	{
