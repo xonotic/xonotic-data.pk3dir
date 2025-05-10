@@ -118,7 +118,7 @@ void HUD_Checkpoints()
 		pos.y += panel_size.y;
 
 	const vector rs_fontsize = hud_fontsize * CHECKPOINTS_BASE_SIZE;
-	const vector fontsize = rs_fontsize * autocvar_hud_panel_checkpoints_fontscale;
+	const vector fontsize = autocvar_hud_panel_checkpoints_fontscale > 0.125 ? rs_fontsize * autocvar_hud_panel_checkpoints_fontscale : rs_fontsize;
 
 	if (!autocvar__hud_configure)
 	{
