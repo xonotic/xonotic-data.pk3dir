@@ -9,10 +9,10 @@
 # Andrei Stepanov, 2014-2025
 # Andrey P <andrey.pyntikov@gmail.com>, 2016
 # Artem Vorotnikov <artem@vorotnikov.me>, 2015
-# Blueberryy <igory.ygr200@gmail.com>, 2021,2023
-# Blueberryy <igory.ygr200@gmail.com>, 2021
-# Blueberryy <igory.ygr200@gmail.com>, 2021,2023
-# Blueberryy <igory.ygr200@gmail.com>, 2021
+# berry, 2021,2023
+# berry, 2021
+# berry, 2021,2023
+# berry, 2021
 # Lord Canistra <lordcanistra@gmail.com>, 2011
 # Mirio <opivy@hotmail.de>, 2017
 # Nick S <morosophos@teichisma.info>, 2018-2019
