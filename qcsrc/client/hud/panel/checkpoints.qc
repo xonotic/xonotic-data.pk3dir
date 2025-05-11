@@ -97,9 +97,6 @@ void HUD_Checkpoints()
 	}
 
 	HUD_Panel_LoadCvars();
-	// XONRELEASE: default values for <= 0.8.6 can be removed after next release
-	registercvar("hud_panel_checkpoints_pos", "0.700000 0.190000");
-	registercvar("hud_panel_checkpoints_size", "0.250000 0.170000");
 
 	if (autocvar_hud_panel_checkpoints_dynamichud)
 		HUD_Scale_Enable();
