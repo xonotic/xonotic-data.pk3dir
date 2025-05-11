@@ -117,40 +117,38 @@ void HUD_Checkpoints()
 	const vector rs_fontsize = hud_fontsize * CHECKPOINTS_BASE_SIZE;
 	const vector fontsize = autocvar_hud_panel_checkpoints_fontscale > 0.125 ? rs_fontsize * autocvar_hud_panel_checkpoints_fontscale : rs_fontsize;
 
+	int i;
 	if (!autocvar__hud_configure)
 	{
 		// show up to race_nextcheckpoint (not including) or everything if you are before start (0 or 254)
 		// (except race_laptime != 0 for race, means next is start+finish so don't show previous lap finish)
-		int i;
 		if (race_checkpoint != 0 && race_checkpoint != 254) // middle of run/race
 			i = race_checkpoint;
 		else if (ISGAMETYPE(RACE) && race_nextcheckpoint == 0) // before start, but on race, so don't keep old finish visible
 			i = 253;
 		else // before start, not on race (cts), keep old run cps visible
 			i = 255;
-
-		pos = Checkpoints_Draw(i, pos, fontsize, rs_fontsize);
 	}
 	else
 	{
 		const string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
 		const float speed_conv_f = GetSpeedUnitFactor(autocvar_hud_speed_unit);
-		int j;
-		for (j = 0; j < 4; ++j)
+		for (i = 0; i < 4; ++i)
 		{
-			string timestr     = TIME_ENCODED_TOSTRING(TIME_ENCODE(18.7 + j * 5.33), false);
-			string time_split  = j == 0 ? "+0.39" : j == 1 ? "+0.0" : j == 2 ? "-0.14" : "-0.08";
-			string col         = j == 0 ? "^1" : j == 1 ? "^3" : "^2";
-			float speed_split  = speed_conv_f * (1086 + j * 51);
-			float speed_diff   = speed_conv_f * (j == 0 ? -34 : j == 1 ? 86 : j == 2 ? 25 : 0);
-			string speed_color = rgb_to_hexcolor(j == 0 ? autocvar_hud_progressbar_acceleration_neg_color : autocvar_hud_progressbar_acceleration_color);
-			if (j == 3)
+			string timestr     = TIME_ENCODED_TOSTRING(TIME_ENCODE(18.7 + i * 5.33), false);
+			string time_split  = i == 0 ? "+0.39" : i == 1 ? "+0.0" : i == 2 ? "-0.14" : "-0.08";
+			string col         = i == 0 ? "^1" : i == 1 ? "^3" : "^2";
+			float speed_split  = speed_conv_f * (1086 + i * 51);
+			float speed_diff   = speed_conv_f * (i == 0 ? -34 : i == 1 ? 86 : i == 2 ? 25 : 0);
+			string speed_color = rgb_to_hexcolor(i == 0 ? autocvar_hud_progressbar_acceleration_neg_color : autocvar_hud_progressbar_acceleration_color);
+			if (i == 3)
 				speed_color = "^3";
-			demolines[j] = sprintf(strcat("%s %s", _("Checkpoint %d"), " (%s) ^7%d%s %s"), timestr, col, j+1, time_split, speed_split, units_text, sprintf("%s(%+d%s)", speed_color, speed_diff, units_text));
+			demolines[i] = sprintf(strcat("%s %s", _("Checkpoint %d"), " (%s) ^7%d%s %s"), timestr, col, i+1, time_split, speed_split, units_text, sprintf("%s(%+d%s)", speed_color, speed_diff, units_text));
 		}
-		for (; j < 10; ++j) // just draw 10 for configuring the HUD
-			demolines[j] = sprintf(strcat("%s ^7", _("Checkpoint %d"), " ^7%d%s"), TIME_ENCODED_TOSTRING(TIME_ENCODE(j*9.37), false), j+1, (1100 + j*63) * speed_conv_f, units_text);
-
-		pos = Checkpoints_Draw(9, pos, fontsize, rs_fontsize);
+		for (; i < 10; ++i) // iust draw 10 for configuring the HUD
+			demolines[i] = sprintf(strcat("%s ^7", _("Checkpoint %d"), " ^7%d%s"), TIME_ENCODED_TOSTRING(TIME_ENCODE(i*9.37), false), i+1, (1100 + i*63) * speed_conv_f, units_text);
+		--i;
 	}
+
+	pos = Checkpoints_Draw(i, pos, fontsize, rs_fontsize);
 }
