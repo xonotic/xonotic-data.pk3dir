@@ -6,7 +6,7 @@
 #include <client/draw.qh>
 #include <common/ent_cs.qh>
 
-// Race Splits (#27)
+// Checkpoints (#27)
 
 void HUD_Checkpoints_Export(int fh)
 {

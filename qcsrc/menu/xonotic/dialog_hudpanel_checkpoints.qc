@@ -23,5 +23,5 @@ void XonoticHUDCheckpointsDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(3, "hud_panel_checkpoints_align", "0.5", _("Center")));
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(3, "hud_panel_checkpoints_align", "1", _("Right")));
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_checkpoints_flip", _("Flip splits order")));
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_checkpoints_flip", _("Flip checkpoint order")));
 }
