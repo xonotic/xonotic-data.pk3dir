@@ -15,6 +15,7 @@
 #include "dialog_hudpanel_powerups.qh"
 #include "dialog_hudpanel_pressedkeys.qh"
 #include "dialog_hudpanel_racetimer.qh"
+#include "dialog_hudpanel_checkpoints.qh"
 #include "dialog_hudpanel_radar.qh"
 #include "dialog_hudpanel_score.qh"
 #include "dialog_hudpanel_timer.qh"
@@ -132,6 +133,10 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	i = NEW(XonoticHUDRaceTimerDialog);
+	i.configureDialog(i);
+	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	i = NEW(XonoticHUDCheckpointsDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
