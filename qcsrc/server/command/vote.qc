@@ -492,6 +492,21 @@ void ReadyRestart_force(bool is_fake_round_start)
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
 
+	if (autocvar_sv_spectate == 2 && !warmup_stage)
+	{
+		FOREACH_CLIENT(IS_SPEC(it),
+		{
+			if (it.vote_master)
+				ClientData_Touch(it.enemy);
+			else
+			{
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_MULTI, SPECTATE_SPEC_NOTALLOWED);
+				TRANSMUTE(Observer, it);
+				PutClientInServer(it);
+			}
+		});
+	}
+
 	if (!sv_ready_restart_after_countdown || warmup_stage)
 		reset_map(is_fake_round_start);
 
