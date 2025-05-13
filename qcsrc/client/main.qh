@@ -17,13 +17,11 @@ bool autocvar_developer_csqcentities;
 // or the release after it to support the old-stable release
 // this can't be done now as players would lack these from their configs then
 bool autocvar_cl_race_checkpoint_splits_console;
-bool autocvar_cl_race_checkpoint_splits_hud;
 bool autocvar_cl_race_cptimes_showspeed = false;
 bool autocvar_cl_race_cptimes_showspeed_unit = true;
 float autocvar_cl_race_cptimes_namesize = 10;
 #else
 AUTOCVAR_SAVE(cl_race_checkpoint_splits_console, bool, 1, "print checkpoint splits to console");
-AUTOCVAR_SAVE(cl_race_checkpoint_splits_hud, bool, 1, "show race checkpoint splits on HUD in infomessages");
 AUTOCVAR_SAVE(cl_race_cptimes_showspeed, bool, 0, "show race checkpoint speed (NOTE: ignores vertical speed)");
 AUTOCVAR_SAVE(cl_race_cptimes_showspeed_unit, bool, 1, "show race checkpoint speed units");
 AUTOCVAR_SAVE(cl_race_cptimes_namesize, float, 10, "maximum player name length in race checkpoint messages");

@@ -278,7 +278,9 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      PANEL_CONFIG_MAIN       
 REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // SCOREBOARD
 REGISTER_HUD_PANEL(STRAFEHUD,       HUD_StrafeHUD,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // STRAFEHUD
 REGISTER_HUD_PANEL(PICKUP,          HUD_Pickup,         PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // PICKUP
-// always add new panels to the end of list
+REGISTER_HUD_PANEL(CHECKPOINTS,     HUD_Checkpoints,    PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // CHECKPOINTS
+// always add new panels to the end of list and add a comment in the form of
+// "// Panel Name (#nr)" with the relative panel nr in your main panelname.qc
 
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:
 // ----------------------

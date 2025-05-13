@@ -24,6 +24,7 @@
 #include <menu/xonotic/dialog_hudpanel_ammo.qh>
 #include <menu/xonotic/dialog_hudpanel_centerprint.qh>
 #include <menu/xonotic/dialog_hudpanel_chat.qh>
+#include <menu/xonotic/dialog_hudpanel_checkpoints.qh>
 #include <menu/xonotic/dialog_hudpanel_engineinfo.qh>
 #include <menu/xonotic/dialog_hudpanel_healtharmor.qh>
 #include <menu/xonotic/dialog_hudpanel_infomessages.qh>
