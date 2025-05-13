@@ -103,17 +103,21 @@
 
 	void Dialog_close(entity me)
 	{
+		bool closed = false;
 		if (me.parent.instanceOfNexposee)
 		{
 			ExposeeCloseButton_Click(me, me.parent);
-			if(me.hideMenuOnClose)
-			{
-				me.hideMenuOnClose = false;
-				m_hide();
-			}
+			closed = true;
 		}
 		else if (me.parent.instanceOfModalController)
+		{
 			DialogCloseButton_Click(me, me);
+			closed = true;
+		}
+
+		if (closed && me.hideMenuOnClose)
+			m_goto(string_null, false);
+		me.hideMenuOnClose = false; // reset it regardless
 	}
 
 	float Dialog_keyDown(entity me, float key, float ascii, float shift)

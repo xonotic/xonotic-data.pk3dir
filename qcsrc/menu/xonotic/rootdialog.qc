@@ -8,5 +8,5 @@ void XonoticRootDialog_showNotify(entity me)
 
 void XonoticRootDialog_close(entity me)
 {
-	m_goto(string_null);
+	m_goto(string_null, true);
 }

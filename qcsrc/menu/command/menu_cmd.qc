@@ -114,7 +114,7 @@ void GameCommand(string theCommand)
 		else if (argc == 2 && !close_mode && (!isdemo() || argv(1) == "Welcome")) // don't allow this command in demos
 		{
 			m_play_click_sound(MENU_SOUND_OPEN);
-			m_goto(strcat(filter, argv(1))); // switch to a menu item
+			m_goto(strcat(filter, argv(1)), true); // switch to a menu item
 		}
 		else if(argc > 2 && (!isdemo() || argv(1) == "Welcome"))
 		{
@@ -132,7 +132,7 @@ void GameCommand(string theCommand)
 							bufstr_add(argsbuf, argv(i), 1);
 						e.readInputArgs(e, argsbuf);
 						if (!close_mode)
-							m_goto(strcat(filter, s));
+							m_goto(strcat(filter, s), true);
 					}
 					if(argsbuf >= 0)
 						buf_del(argsbuf);
@@ -148,52 +148,17 @@ void GameCommand(string theCommand)
 		return;
 	}
 
-	if (argv(0) == "nexposee")
+	switch (argv(0))
 	{
-		m_goto("nexposee");
-		return;
-	}
-
-	if (argv(0) == "servers")
-	{
-		m_goto("servers");
-		return;
-	}
-
-	if (argv(0) == "profile")
-	{
-		m_goto("profile");
-		return;
-	}
-
-	if (argv(0) == "skinselect")
-	{
-		m_goto("skinselector");
-		return;
-	}
-
-	if (argv(0) == "languageselect")
-	{
-		m_goto("languageselector");
-		return;
-	}
-
-	if (argv(0) == "settings")
-	{
-		m_goto("settings");
-		return;
-	}
-
-	if (argv(0) == "inputsettings")
-	{
-		m_goto("inputsettings");
-		return;
-	}
-
-	if (argv(0) == "videosettings")
-	{
-		m_goto("videosettings");
-		return;
+		// unlike menu_cmd directmenu, the menu won't be closed when these menu items will be closed
+		case "nexposee":         m_goto("nexposee", false); return;
+		case "servers":          m_goto("servers", false); return;
+		case "profile":          m_goto("profile", false); return;
+		case "skinselect":       m_goto("skinselector", false); return;
+		case "languageselect":   m_goto("languageselector", false); return;
+		case "settings":         m_goto("settings", false); return;
+		case "inputsettings":    m_goto("inputsettings", false); return;
+		case "videosettings":    m_goto("videosettings", false); return;
 	}
 
 	if (argv(0) == "dumptree")
