@@ -36,7 +36,7 @@ void CheckEngineExtensions(void)
 		LOG_WARN("Engine lacks HTTP support, XonStat and map downloads are unavailable.");
 
 	if (!checkextension("DP_CRYPTO"))
-		LOG_WARN("Engine lacks DP_CRYPTO, Player IDs (required for XonStat and CTS/CTF records) are unavailable.");
+		LOG_WARN("Engine lacks DP_CRYPTO, Player IDs (required for XonStat, CTS/CTF records and pubkey authentication) are unavailable.");
 
 #ifdef SVQC // change to GAMEQC if/when we use nudgeoutofsolid in CSQC
 	if (checkextension("DP_QC_NUDGEOUTOFSOLID"))
