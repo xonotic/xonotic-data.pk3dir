@@ -450,6 +450,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MULTITEAM_INFO(SCORES,                                  N_CONSOLE,  0, 0, "", "",           "",                     _("^TC^TT ^BGteam scores!"), "", NAME)
 
     MSG_INFO_NOTIF(SPECTATE_WARNING,                        N_CONSOLE,  0, 1, "f1secs", "",     "",                     _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!"), "")
+    MSG_INFO_NOTIF(SPECTATE_NOTALLOWED,                     N_CONSOLE,  0, 0, "", "",           "",                     _("^F2Spectating isn't allowed at this time!"), "")
+    MSG_INFO_NOTIF(SPECTATE_SPEC_NOTALLOWED,                N_CONSOLE,  0, 0, "", "",           "",                     _("^F2Spectating specific players isn't allowed at this time!"), "")
 
     MSG_INFO_NOTIF(SUPERWEAPON_PICKUP,                      N_CONSOLE,  1, 0, "s1", "s1",       "superweapons",         _("^BG%s^K1 picked up a Superweapon"), "")
 
@@ -799,6 +801,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_CENTER_NOTIF(SPECTATE_WARNING,                  N_ENABLE,    0, 1, "f1secs",         CPID_PREVENT_JOIN,      "0 0",  _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!"), "") // same string as INFO_SPECTATE_WARNING
     MSG_CENTER_NOTIF(SPECTATE_NOTALLOWED,               N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F2Spectating isn't allowed at this time!"), "")
+    MSG_CENTER_NOTIF(SPECTATE_SPEC_NOTALLOWED,          N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F2Spectating specific players isn't allowed at this time!"), "")
 
     MSG_CENTER_NOTIF(SUPERWEAPON_BROKEN,                N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have broken down"), "")
     MSG_CENTER_NOTIF(SUPERWEAPON_LOST,                  N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have been lost"), "")
@@ -947,6 +950,10 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_MULTI_NOTIF(MULTI_COINTOSS,                     N_ENABLE,  NULL,           INFO_COINTOSS,                          CENTER_COINTOSS)
     MSG_MULTI_NOTIF(MULTI_INSTAGIB_FINDAMMO,            N_ENABLE,  ANNCE_NUM_10,   NULL,                                   CENTER_INSTAGIB_FINDAMMO_FIRST)
+
+    MSG_MULTI_NOTIF(SPECTATE_WARNING,                   N_ENABLE,  NULL,           INFO_SPECTATE_WARNING,                  CENTER_SPECTATE_WARNING)
+    MSG_MULTI_NOTIF(SPECTATE_NOTALLOWED,                N_ENABLE,  NULL,           INFO_SPECTATE_NOTALLOWED,               CENTER_SPECTATE_NOTALLOWED)
+    MSG_MULTI_NOTIF(SPECTATE_SPEC_NOTALLOWED,           N_ENABLE,  NULL,           INFO_SPECTATE_SPEC_NOTALLOWED,          CENTER_SPECTATE_SPEC_NOTALLOWED)
 
     MSG_MULTI_NOTIF(WEAPON_ACCORDEON_MURDER,            N_ENABLE,  NULL,           INFO_WEAPON_ACCORDEON_MURDER,           NULL)
     MSG_MULTI_NOTIF(WEAPON_ACCORDEON_SUICIDE,           N_ENABLE,  NULL,           INFO_WEAPON_ACCORDEON_SUICIDE,          CENTER_DEATH_SELF_GENERIC)

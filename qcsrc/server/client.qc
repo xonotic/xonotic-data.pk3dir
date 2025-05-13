@@ -1238,6 +1238,11 @@ void ClientConnect(entity this)
 
 	if (get_nextmap() != "")
 		Send_NextMap_To_Player(this);
+
+	// cvar hook/callback TODO: recheck this when the cvar is changed
+	if (autocvar_sv_vote_master_ids != "" && this.crypto_idfp_signed)
+		if (strstrofs(autocvar_sv_vote_master_ids, this.crypto_idfp, 0) >= 0)
+			this.vote_master = true;
 }
 
 .string shootfromfixedorigin;
@@ -1858,6 +1863,8 @@ bool SpectateUpdate(entity this)
 	}
 
 	SpectateCopy(this, this.enemy);
+	if (IS_OBSERVER(this))
+		TRANSMUTE(Spectator, this);
 
 	return true;
 }
@@ -2493,8 +2500,10 @@ void ObserverOrSpectatorThink(entity this)
 		|| (!is_spec && ((PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch) || this.would_spectate)))
 		{
 			this.flags &= ~FL_JUMPRELEASED;
-			if(SpectateNext(this))
-				TRANSMUTE(Spectator, this);
+			if (autocvar_sv_spectate == 2 && !warmup_stage && !this.vote_master)
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_SPECTATE_SPEC_NOTALLOWED);
+			else if(SpectateNext(this))
+				{ }
 			else if (is_spec)
 			{
 				TRANSMUTE(Observer, this);
@@ -2511,9 +2520,7 @@ void ObserverOrSpectatorThink(entity this)
 			if(CS(this).impulse == 12 || CS(this).impulse == 16  || CS(this).impulse == 19 || (CS(this).impulse >= 220 && CS(this).impulse <= 229))
 			{
 				this.flags &= ~FL_JUMPRELEASED;
-				if(SpectatePrev(this))
-					TRANSMUTE(Spectator, this);
-				else
+				if (!SpectatePrev(this))
 				{
 					TRANSMUTE(Observer, this);
 					PutClientInServer(this);
@@ -2825,6 +2832,7 @@ void PlayerFrame (entity this)
 	anticheat_prethink(this);
 
 	// Check if spectating is allowed
+	// cvar hook/callback TODO: make this event-driven
 	if (!autocvar_sv_spectate && IS_REAL_CLIENT(this)
 	&& (IS_SPEC(this) || IS_OBSERVER(this)) && !INGAME(this))
 	{
@@ -2833,8 +2841,7 @@ void PlayerFrame (entity this)
 		{
 			// sv_spectate was disabled recently (or the server was stalled far too long)
 			CS(this).spectatortime = time; // reset the grace period
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 		}
 		else if (time > cutoff)
 			if (dropclient_schedule(this))

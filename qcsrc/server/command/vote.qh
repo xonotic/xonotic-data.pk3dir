@@ -11,6 +11,7 @@ float autocvar_sv_vote_majority_factor_of_voted;
 bool autocvar_sv_vote_master;
 bool autocvar_sv_vote_master_callable;
 string autocvar_sv_vote_master_commands;
+string autocvar_sv_vote_master_ids;
 string autocvar_sv_vote_master_password;
 int autocvar_sv_vote_master_playerlimit;
 bool autocvar_sv_vote_no_stops_vote;

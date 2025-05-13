@@ -2,6 +2,7 @@
 #include <client/hud/panel/ammo.qc>
 #include <client/hud/panel/centerprint.qc>
 #include <client/hud/panel/chat.qc>
+#include <client/hud/panel/checkpoints.qc>
 #include <client/hud/panel/engineinfo.qc>
 #include <client/hud/panel/healtharmor.qc>
 #include <client/hud/panel/infomessages.qc>

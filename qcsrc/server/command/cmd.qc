@@ -752,22 +752,28 @@ void ClientCommand_spectate(entity caller, int request)
 			{
 				if(argv(1) != "")
 				{
-					if(IS_SPEC(caller) || IS_OBSERVER(caller))
+					if (!(IS_SPEC(caller) || IS_OBSERVER(caller)))
+						sprint(caller, "cmd spectate <client> only works when you are spectator/observer\n");
+					else if (argv(1) == "0")
+					{ // switch back to observing without leaving the CA team or join queue (like +attack2)
+						if (!IS_OBSERVER(caller))
+						{
+							TRANSMUTE(Observer, caller);
+							PutClientInServer(caller);
+						}
+					}
+					else if (autocvar_sv_spectate == 2 && !warmup_stage && !caller.vote_master)
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_SPECTATE_SPEC_NOTALLOWED);
+					else
 					{
 						entity client = GetFilteredEntity(argv(1));
-						float spec_accepted = VerifyClientEntity(client, false, false);
-						if(spec_accepted > 0 && IS_PLAYER(client))
-						{
-							bool caller_is_observer = (IS_OBSERVER(caller));
-							Spectate(caller, client);
-							if (caller_is_observer)
-								TRANSMUTE(Spectator, caller);
-						}
+						if (IS_PLAYER(client)
+						&& VerifyClientEntity(client, false, false)
+						&& Spectate(caller, client)) // mutator hook might say no
+							{ }
 						else
 							sprint(caller, "Can't spectate ", argv(1), "^7\n");
 					}
-					else
-						sprint(caller, "cmd spectate <client> only works when you are spectator/observer\n");
 					return;
 				}
 
@@ -779,7 +785,7 @@ void ClientCommand_spectate(entity caller, int request)
 				if (autocvar_sv_spectate)
 					ClientKill_TeamChange(caller, -2); // observe
 				else
-					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_SPECTATE_NOTALLOWED);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_MULTI, SPECTATE_NOTALLOWED);
 			}
 			return; // never fall through to usage
 		}
