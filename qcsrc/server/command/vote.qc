@@ -155,10 +155,13 @@ void VoteReset(bool verbose)
 
 void VoteStop(entity stopper, bool canceled)
 {
-	if (canceled)
+	if (canceled) // Code such as NextLevel() stopped it, not a direct action by a human.
 		bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote was canceled\n");
+	else if (stopper == vote_caller)
+		bprint("\{1}^2* ^3", OriginalCallerName(), "^2 stopped their vote\n");
 	else
 		bprint("\{1}^2* ^3", GetCallerName(stopper), "^2 stopped ^3", OriginalCallerName(), "^2's vote\n");
+
 	if (autocvar_sv_eventlog)   GameLogEcho(strcat(":vote:vstop:", ftos(stopper.playerid)));
 	// Don't force them to wait for next vote, this way they can e.g. correct their vote.
 	if ((vote_caller) && (stopper == vote_caller))   vote_caller.vote_waittime = time + autocvar_sv_vote_stop;
@@ -1200,9 +1203,9 @@ void VoteCommand_no(int request, entity caller)  // CLIENT ONLY
 			{
 				print_to(caller, "^1You have already voted.");
 			}
-			else if (((caller == vote_caller) || caller.vote_master) && autocvar_sv_vote_no_stops_vote)
+			else if (caller == vote_caller && autocvar_sv_vote_no_stops_vote)
 			{
-				VoteStop(caller, true);
+				VoteStop(caller, false);
 			}
 
 			else  // everything went okay, continue changing vote

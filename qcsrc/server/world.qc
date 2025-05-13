@@ -231,6 +231,7 @@ void cvar_changes_init()
 		BADCVAR("serverconfig");
 		BADCVAR("sv_autoscreenshot");
 		BADCVAR("sv_heartbeatperiod");
+		BADCVAR("sv_vote_master_ids");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sys_colortranslation");
 		BADCVAR("sys_specialcharactertranslation");
@@ -525,9 +526,7 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_call");
 		BADCVAR("sv_vote_commands");
 		BADCVAR("sv_vote_majority_factor");
-		BADCVAR("sv_vote_master");
-		BADCVAR("sv_vote_master_commands");
-		BADCVAR("sv_vote_master_password");
+		BADPREFIX("sv_vote_master");
 		BADCVAR("sv_vote_simple_majority_factor");
 		BADVALUE("sys_ticrate", "0.0078125");
 		BADVALUE("sys_ticrate", "0.015625");

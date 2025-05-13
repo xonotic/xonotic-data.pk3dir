@@ -1238,6 +1238,11 @@ void ClientConnect(entity this)
 
 	if (get_nextmap() != "")
 		Send_NextMap_To_Player(this);
+
+	// cvar hook/callback TODO: recheck this when the cvar is changed
+	if (autocvar_sv_vote_master_ids != "" && this.crypto_idfp_signed)
+		if (strstrofs(autocvar_sv_vote_master_ids, this.crypto_idfp, 0) >= 0)
+			this.vote_master = true;
 }
 
 .string shootfromfixedorigin;
