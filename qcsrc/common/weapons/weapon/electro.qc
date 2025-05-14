@@ -673,7 +673,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 
 	if(fire & 1)
 	{
-		if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(WEP_ELECTRO, refire2) * W_WeaponRateFactor(actor))
+		if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(WEP_ELECTRO, refire) * W_WeaponRateFactor(actor))
 		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_ELECTRO, refire)))
 		{
 			W_Electro_Attack_Bolt(thiswep, actor, weaponentity);
@@ -682,7 +682,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 	}
 	else if(fire & 2)
 	{
-		if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(WEP_ELECTRO, refire) * W_WeaponRateFactor(actor))
+		if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(WEP_ELECTRO, refire2) * W_WeaponRateFactor(actor))
 		if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
 		{
 			W_Electro_Attack_Orb(thiswep, actor, weaponentity);
@@ -790,7 +790,7 @@ METHOD(Electro, describe, string(Electro this))
 		"The %s is one of the best spam weapons to use in crowded areas, since combos can deal tons of damage, if the enemy is close enough. "
 		"Since the primary fire doesn't travel particularly fast, the %s is not useful in many other situations.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(MAPINFO_TYPE_CTF), COLORED_NAME(ITEM_Cells), COLORED_NAME(this), COLORED_NAME(this),
-	W_Guide_DPS_withCombo(this.netname, "primary", "secondary")); // TODO FIXME
+	W_Guide_DPS_secondaryMultishotWithCombo(this.netname, "primary", "secondary", "secondary_count", "secondary_refire2"));
 }
 
 #endif
