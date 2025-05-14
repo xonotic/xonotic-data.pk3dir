@@ -68,6 +68,7 @@ MUTATOR_HOOKFUNCTION(cl_ons, CustomizeEventchase)
 #endif // CSQC
 #ifdef MENUQC
 #include <common/gamemodes/gamemode/assault/assault.qh>
+#include <common/gamemodes/gamemode/domination/domination.qh>
 
 METHOD(Onslaught, describe, string(Onslaught this))
 {
@@ -78,7 +79,7 @@ METHOD(Onslaught, describe, string(Onslaught this))
 		"A control point is captured by walking into it then waiting for it to finish constructing. "
 		"Control points of the opposing team are destroyed by attacking the \"info bot\" that hovers above them, converting the control point to neutral once it is destroyed.\n\n"
 		"When in overtime, the enemy's generator will start to decay, at a faster rate the more control points your team has."),
-	COLORED_NAME(this), COLORED_NAME(MAPINFO_TYPE_ASSAULT));
+	COLORED_NAME(this), COLORED_NAME(MAPINFO_TYPE_ASSAULT), COLORED_NAME(MAPINFO_TYPE_DOMINATION));
 }
 
 #endif // MENUQC
