@@ -29,7 +29,7 @@ METHOD(Jetpack, describe, string(Jetpack this))
 METHOD(JetpackFuel, describe, string(JetpackFuel this))
 {
 	TC(JetpackFuel, this);
-	return sprintf(_("The %s ammo type is used by the %s"),
+	return sprintf(_("The %s ammo type is used by the %s."),
 	COLORED_NAME(this), COLORED_NAME(ITEM_Jetpack));
 }
 
