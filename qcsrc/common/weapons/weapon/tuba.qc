@@ -603,8 +603,8 @@ METHOD(Tuba, describe, string(Tuba this))
 		"The only ammo it needs to operate is the breath from your lungs.\n\n"
 		"Since your enemies need to be close by to hear your rubbish music, the %s is only effective at very close ranges.\n\n"
 		"The pitch the %s plays depends on the movement keys pressed. "
-		"Reloading the weapon switches its model and notes played."),
-	COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this));
+		"Reloading the weapon switches its model and notes played.\n\n%s"),
+	COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this), W_Guide_DPS_onlyOne_unnamed(this.netname));
 }
 
 #endif

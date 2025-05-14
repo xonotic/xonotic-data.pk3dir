@@ -385,8 +385,8 @@ METHOD(Vortex, describe, string(Vortex this))
 		"It consumes %s ammo for each bullet shot.\n\n"
 		"Unlike the %s, the %s doesn't need to be reloaded manually, although you have to wait a couple seconds between shots. "
 		"Uniquely, it can be fired slightly before it finishes completely reloading, albeit with the tradeoff of dealing slightly less damage.\n\n"
-		"Similar to the %s, the %s can be used at any range, but it stands out at long ranges."),
-	COLORED_NAME(this), COLORED_NAME(ITEM_Cells), COLORED_NAME(WEP_RIFLE), COLORED_NAME(this), COLORED_NAME(WEP_RIFLE), COLORED_NAME(this));
+		"Similar to the %s, the %s can be used at any range, but it stands out at long ranges.\n\n%s"),
+	COLORED_NAME(this), COLORED_NAME(ITEM_Cells), COLORED_NAME(WEP_RIFLE), COLORED_NAME(this), COLORED_NAME(WEP_RIFLE), COLORED_NAME(this), W_Guide_DPS_onlyOne(this.netname, "primary"));
 }
 
 #endif

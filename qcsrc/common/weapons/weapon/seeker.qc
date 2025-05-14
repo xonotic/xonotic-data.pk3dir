@@ -676,8 +676,8 @@ METHOD(Seeker, describe, string(Seeker this))
 		"The secondary fire launches a rapid barrage of scattered explosives that travel only a short distance.\n\n"
 		"It consumes %s ammo, even when the tag doesn't land.\n\n"
 		"The %s primary fire deals quite a lot of damage when a tag lands, although it requires skill to aim effectively. "
-		"The secondary fire is only useful in close range combat, and sometimes the explosives can damage yourself too."),
-	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(this));
+		"The secondary fire is only useful in close range combat, and sometimes the explosives can damage yourself too.\n\n%s"),
+	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(this), W_Guide_DPS_primaryMultishot(this.netname, "missile", "flac", "missile_count", "tag_refire"));
 }
 
 #endif

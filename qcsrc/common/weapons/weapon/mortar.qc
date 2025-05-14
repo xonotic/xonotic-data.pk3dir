@@ -382,8 +382,8 @@ METHOD(Mortar, describe, string(Mortar this))
 		"The secondary fire shoots a similar grenade that explodes shortly after bouncing.\n\n"
 		"It consumes %s ammo for every grenade launched.\n\n"
 		"The %s works best at close to medium ranges, but it's quite tricky to hit an enemy if they're airborne. "
-		"Since the secondary fire grenade bounces before exploding, it can be bounced against walls to damage enemies lurking around a corner."),
-	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(this));
+		"Since the secondary fire grenade bounces before exploding, it can be bounced against walls to damage enemies lurking around a corner.\n\n%s"),
+	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(this), W_Guide_DPS(this.netname, "primary", "secondary"));
 }
 
 #endif

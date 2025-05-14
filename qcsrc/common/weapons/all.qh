@@ -452,3 +452,16 @@ int GetAmmoStat(Resource ammotype);
 
 string W_Sound(string w_snd);
 string W_Model(string w_mdl);
+
+
+#ifdef MENUQC
+string W_Guide_DPS_onlyOne_unnamed(string name);
+string W_Guide_DPS_onlyOne(string name, string fire);
+string W_Guide_DPS(string name, string pri, string sec);
+string W_Guide_DPS_bothMultishot(string name, string pri, string sec);
+string W_Guide_DPS_secondaryMultishot(string name, string pri, string sec, string shots, string refire2);
+string W_Guide_DPS_primaryMultishot(string name, string pri, string sec, string shots, string refire2);
+string W_Guide_DPS_onlyOneMultishot(string name, string fire, string shots, string refire2);
+string W_Guide_DPS_withCombo(string name, string pri, string sec);
+string W_Guide_DPS_primaryDPS(string name, string pri, string sec);
+#endif

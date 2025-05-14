@@ -271,8 +271,8 @@ METHOD(Rifle, describe, string(Rifle this))
 		"It consumes %s ammo for each bullet shot.\n\n"
 		"Unlike the %s, the secondary fire doesn't zoom, so the ^3+zoom^7 bind needs to be used manually with the %s. "
 		"Also, it needs to be reloaded after its magazine is emptied.\n\n"
-		"Similar to the %s, the %s can be used at any range, but it stands out at long ranges."),
-	COLORED_NAME(this), COLORED_NAME(ITEM_Bullets), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this));
+		"Similar to the %s, the %s can be used at any range, but it stands out at long ranges.\n\n%s"),
+	COLORED_NAME(this), COLORED_NAME(ITEM_Bullets), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this), W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_shots", ""));
 }
 
 #endif
