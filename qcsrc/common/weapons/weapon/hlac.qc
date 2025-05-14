@@ -250,7 +250,8 @@ METHOD(HLAC, describe, string(HLAC this))
 		"A unique aspect of the %s is that the longer the primary fire is held, the more that the lasers will start to spread out. "
 		"This means releasing primary fire every now and then is important to restore accuracy. "
 		"Also, the %s has less spread when used while crouching.\n\n%s"),
-	COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this), W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_shots", "")));
+	COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this),
+	W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_shots", "")));
 	return s;
 }
 

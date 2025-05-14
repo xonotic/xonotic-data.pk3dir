@@ -374,7 +374,8 @@ METHOD(OverkillNex, describe, string(OverkillNex this))
 		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s. "
 		"It has a limited magazine size, so needs reloading after several shots.\n\n"
 		"Since it is the only %s weapon with no spread, the %s stands out at long ranges.\n\n%s"),
-	COLORED_NAME(this), COLORED_NAME(MUTATOR_ok), COLORED_NAME(ITEM_Cells), COLORED_NAME(MUTATOR_ok), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this), W_Guide_DPS_onlyOne(this.netname, "primary"));
+	COLORED_NAME(this), COLORED_NAME(MUTATOR_ok), COLORED_NAME(ITEM_Cells), COLORED_NAME(MUTATOR_ok), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this),
+	W_Guide_DPS_onlyOne(this.netname, "primary"));
 }
 
 #endif

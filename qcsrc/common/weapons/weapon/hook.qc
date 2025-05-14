@@ -432,7 +432,8 @@ METHOD(Hook, describe, string(Hook this))
 		"The %s allows reaching previously unreachable places on maps and zooming around the map at high speeds, "
 		"making both surprise ambushes and miraculous escapes possible.\n\n"
 		"It isn't available very often on maps, unless the %s mutator is active, in which all players have it on their offhand, used with the ^3+hook^7 bind.\n\n%s"),
-	COLORED_NAME(this), COLORED_NAME(ITEM_JetpackFuel), COLORED_NAME(this), COLORED_NAME(MUTATOR_hook), W_Guide_DPS_onlyOne(this.netname, "secondary"));
+	COLORED_NAME(this), COLORED_NAME(ITEM_JetpackFuel), COLORED_NAME(this), COLORED_NAME(MUTATOR_hook),
+	W_Guide_DPS_onlyOne(this.netname, "secondary"));
 }
 
 #endif

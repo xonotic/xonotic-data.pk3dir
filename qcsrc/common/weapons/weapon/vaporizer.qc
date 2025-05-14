@@ -420,7 +420,8 @@ METHOD(Vaporizer, describe, string(Vaporizer this))
 		"The secondary fire fires a laser identical to that fired by the %s, with strong knockback.\n\n"
 		"It is a superweapon, so isn't often found in game, except in %s where all players spawn with it.\n\n"
 		"It consumes some %s ammo with each shot.\n\n%s"),
-	COLORED_NAME(this), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(ITEM_ExtraLife), COLORED_NAME(WEP_BLASTER), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(ITEM_Cells), W_Guide_DPS_onlyOne(this.netname, "primary"));
+	COLORED_NAME(this), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(ITEM_ExtraLife), COLORED_NAME(WEP_BLASTER), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(ITEM_Cells),
+	W_Guide_DPS_onlyOne(this.netname, "primary"));
 }
 
 #endif

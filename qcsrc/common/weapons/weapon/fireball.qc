@@ -444,7 +444,8 @@ METHOD(Fireball, describe, string(Fireball this))
 		"It doesn't require ammo, but it is destroyed after some time.\n\n"
 		"Since the %s takes a moment to charge and the fireball travels slowly, using it effectively may be difficult, "
 		"but if done properly it can deal a ton of damage.\n\n%s"),
-	COLORED_NAME(this), COLORED_NAME(this), W_Guide_DPS(this.netname, "primary", "secondary"));
+	COLORED_NAME(this), COLORED_NAME(this),
+	W_Guide_DPS(this.netname, "primary", "secondary"));
 }
 
 #endif

@@ -643,7 +643,8 @@ METHOD(Crylink, describe, string(Crylink this))
 		"The %s deals knockback in a unique way, pulling the player from their center to the point of impact. "
 		"This makes it one of the best weapons to slow someone down if you are chasing them, particularly with the secondary fire. "
 		"Another common use of the %s is \"crylink running,\" where you partially angle down and use the secondary fire to pull yourself forwards, in order to gain speed.\n\n%s"),
-	COLORED_NAME(this), COLORED_NAME(ITEM_Cells), COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this), W_Guide_DPS_bothMultishot(this.netname, "primary", "secondary"));
+	COLORED_NAME(this), COLORED_NAME(ITEM_Cells), COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this),
+	W_Guide_DPS_bothMultishot(this.netname, "primary", "secondary"));
 }
 
 #endif

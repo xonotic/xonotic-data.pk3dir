@@ -243,7 +243,8 @@ METHOD(OverkillRocketPropelledChainsaw, describe, string(OverkillRocketPropelled
 		"It is a superweapon found on some maps, meaning that it breaks down after some time.\n\n"
 		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s.\n\n"
 		"Since it is the only %s weapon which deals splash damage, the %s is a good choice of weapon for attacking groups of enemies.\n\n%s"),
-	COLORED_NAME(this), COLORED_NAME(MUTATOR_ok), COLORED_NAME(ITEM_Rockets), COLORED_NAME(MUTATOR_ok), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this), W_Guide_DPS_onlyOne(this.netname, "primary"));
+	COLORED_NAME(this), COLORED_NAME(MUTATOR_ok), COLORED_NAME(ITEM_Rockets), COLORED_NAME(MUTATOR_ok), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this),
+	W_Guide_DPS_onlyOne(this.netname, "primary"));
 }
 
 #endif
