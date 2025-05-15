@@ -19,14 +19,14 @@ vector HUD_Timer_Color(float timeleft, float timelimit)
 	if(autocvar_hud_panel_timer_warning_relative) {
 		if(autocvar_hud_panel_timer_warning_relative == 1 && timelimit)
 		{
-			limitred = 100 * timelimit * autocvar_hud_panel_timer_warning_red;
-			limityellow = 100 * timelimit * autocvar_hud_panel_timer_warning_yellow;
+			limitred = 100 * timelimit * autocvar_hud_panel_timer_warning_relative_red;
+			limityellow = 100 * timelimit * autocvar_hud_panel_timer_warning_relative_yellow;
 		} else if(autocvar_hud_panel_timer_warning_relative == 2 && ISGAMETYPE(CTS) && race_server_record) {
-			limitred = race_server_record * autocvar_hud_panel_timer_warning_red;
-			limityellow = race_server_record * autocvar_hud_panel_timer_warning_yellow;
+			limitred = race_server_record * autocvar_hud_panel_timer_warning_relative_red;
+			limityellow = race_server_record * autocvar_hud_panel_timer_warning_relative_yellow;
 		} else {
-			limitred = 100 * 60;
-			limityellow = 100 * 300;
+			limitred = 100 * autocvar_hud_panel_timer_warning_red;
+			limityellow = 100 * autocvar_hud_panel_timer_warning_yellow;
 		}
 	} else { // relative 0, means fixed values in seconds
 		limitred = 100 * autocvar_hud_panel_timer_warning_red;

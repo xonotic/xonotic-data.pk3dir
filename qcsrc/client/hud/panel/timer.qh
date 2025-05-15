@@ -7,6 +7,8 @@ bool autocvar_hud_panel_timer_increment;
 int autocvar_hud_panel_timer_secondary = 1;
 bool autocvar_hud_panel_timer_unbound;
 int autocvar_hud_panel_timer_warning_relative = 0;
+float autocvar_hud_panel_timer_warning_relative_red = 1.2;
+float autocvar_hud_panel_timer_warning_relative_yellow = 3;
 float autocvar_hud_panel_timer_warning_red = 60;
 float autocvar_hud_panel_timer_warning_yellow = 300;
 
