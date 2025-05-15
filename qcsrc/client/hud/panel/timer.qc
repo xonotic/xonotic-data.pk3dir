@@ -2,9 +2,9 @@
 #include "scoreboard.qh"
 
 #include <client/draw.qh>
+#include <client/hud/panel/racetimer.qh>
 #include <client/view.qh>
 #include <common/gamemodes/_mod.qh>
-#include <client/hud/panel/racetimer.qh>
 
 // Timer (#5)
 
