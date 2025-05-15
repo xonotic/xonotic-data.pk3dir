@@ -14,6 +14,7 @@ CLASS(OverkillNex, Weapon)
 /* spawnfunc */ ATTRIB(OverkillNex, m_canonical_spawnfunc, string, "weapon_oknex");
 /* ammotype  */ ATTRIB(OverkillNex, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(OverkillNex, impulse, int, 7);
+/* unique imp*/ ATTRIB(OverkillNex, m_unique_impulse, int, 7); // same as impulse to avoid running out of impulses
 /* flags     */ ATTRIB(OverkillNex, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED);
 /* rating    */ ATTRIB(OverkillNex, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(OverkillNex, m_color, vector, '0.459 0.765 0.835');
