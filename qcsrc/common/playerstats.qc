@@ -56,6 +56,8 @@ void PlayerStats_GameReport_Reset_All()
 		strfree(it.playerstats_id);
 		PlayerStats_GameReport_AddEvent(sprintf("kills-%d", it.playerid));
 		PlayerStats_GameReport_AddPlayer(it);
+		it.handicap_avg_given_sum = 0;
+		it.handicap_avg_taken_sum = 0;
 	});
 	FOREACH(Scores, true, {
 		string label = scores_label(it);
@@ -255,6 +257,12 @@ void PlayerStats_GameReport(bool finished)
 			}
 		}
 
+		// handicap
+		const float given = GameRules_scoring_add(it, DMG, 0);
+		const float taken = GameRules_scoring_add(it, DMGTAKEN, 0);
+		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_HANDICAP_GIVEN, given <= 0 ? 1 : it.handicap_avg_given_sum / given);
+		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_HANDICAP_TAKEN, taken <= 0 ? 1 : it.handicap_avg_taken_sum / taken);
+
 		// collect final player information
 		PlayerStats_GameReport_FinalizePlayer(it);
 	});
@@ -303,6 +311,8 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_SCOREBOARD_POS);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_RANK);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_HANDICAP_GIVEN);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_HANDICAP_TAKEN);
 
 		// accuracy stats
 		FOREACH(Weapons, it != WEP_Null, {
@@ -390,6 +400,8 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 *   achievement-<achievementname>: achievement counters (their "count" is usually 1 if nonzero at all)
 		 *   kills-<index>: number of kills against the indexed player
 		 *   rank <number>: rank of player
+		 *   handicapgiven: average handicap on given (dealt) damage throughout the match
+		 *   handicaptaken: average handicap on taken (received) damage throughout the match
 		 *   acc-<weapon netname>-hit: total damage dealt
 		 *   acc-<weapon netname>-fired: total damage that all fired projectiles *could* have dealt
 		 *   acc-<weapon netname>-cnt-hit: amount of shots that actually hit
