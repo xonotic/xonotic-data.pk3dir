@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-14 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2025\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -3571,7 +3571,7 @@ msgstr "^F2Espectadores não são permitidos neste momento!"
 #: qcsrc/common/notifications/all.inc:454
 #: qcsrc/common/notifications/all.inc:804
 msgid "^F2Spectating specific players isn't allowed at this time!"
-msgstr ""
+msgstr "^F2Não é permitido assistir a jogadores específicos neste momento!"
 
 #: qcsrc/common/notifications/all.inc:456
 #, c-format
@@ -6703,15 +6703,15 @@ msgstr "Painel do Bate-papo"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:21
 msgid "Align:"
-msgstr ""
+msgstr "Alinhar:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:26
 msgid "Flip checkpoint order"
-msgstr ""
+msgstr "Trocar ordem dos pontos de checagem"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qh:6
 msgid "Checkpoints Panel"
-msgstr ""
+msgstr "Painel dos Pontos de Checagem"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "FPS:"

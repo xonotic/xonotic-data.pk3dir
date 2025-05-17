@@ -23,7 +23,7 @@
 # Larson März <larson@protonmail.ch>, 2016
 # afba88cf42cbdff57149d4a6d53a94f9, 2018
 # Mirio <opivy@hotmail.de>, 2014-2017,2019-2024
-# Robert Katzinsky <hbmctextures.unknown@gmail.com>, 2020
+# Robert Katzinsky <hbmctextures.unknown@gmail.com>, 2020,2025
 # divVerent <divVerent@gmail.com>, 2011
 # Sless <sless@gmx.net>, 2014
 # Sless <sless@gmx.net>, 2014
@@ -38,7 +38,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-14 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
+"Last-Translator: Robert Katzinsky <hbmctextures.unknown@gmail.com>, "
+"2020,2025\n"
 "Language-Team: German (http://app.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -105,7 +106,7 @@ msgstr "^3Spieler^7: Dies ist der Chat-Bereich."
 #: qcsrc/client/hud/panel/racetimer.qc:209
 #, c-format
 msgid "Checkpoint %d"
-msgstr ""
+msgstr "Kontrollpunkt %d"
 
 #: qcsrc/client/hud/panel/engineinfo.qc:75
 #, c-format
@@ -189,7 +190,7 @@ msgstr "^2Du wartest darauf, dem Team %s%s^2 beizutreten"
 
 #: qcsrc/client/hud/panel/infomessages.qc:137
 msgid "^2You're queued to join any available team"
-msgstr ""
+msgstr "^2Du wartest darauf, einem beliebigen Team beizutreten"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -242,7 +243,7 @@ msgstr "^2Drücke ^3%s^2, um die Aufwärmphase zu beenden"
 
 #: qcsrc/client/hud/panel/infomessages.qc:202
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "Die Teams sind unausgeglichen!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:205
 #, c-format
@@ -1209,7 +1210,7 @@ msgstr "Aufwärmphase: zu wenige Spieler"
 
 #: qcsrc/client/hud/panel/timer.qc:133
 msgid "Warmup: teams unbalanced!"
-msgstr ""
+msgstr "Aufwärmphase: Teams sind unausgeglichen!"
 
 #: qcsrc/client/hud/panel/timer.qc:135
 msgid "Warmup: no time limit"
@@ -2744,7 +2745,7 @@ msgstr "^F4Countdown gestoppt!"
 #: qcsrc/common/notifications/all.inc:275
 #: qcsrc/common/notifications/all.inc:559
 msgid "Teams are too unbalanced."
-msgstr ""
+msgstr "Die Teams sind zu unausgeglichen."
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
@@ -3203,7 +3204,7 @@ msgstr "^BG%s^K1 konnte keinen Schutz vor der Raserrakete finden%s%s"
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
 msgid "^BG%s^K1 ended up in the wrong place%s%s"
-msgstr ""
+msgstr "^BG%s^K1 landete am falschen Ort %s%s"
 
 #: qcsrc/common/notifications/all.inc:362
 #, c-format
@@ -3213,7 +3214,7 @@ msgstr "^BG%s^K1 wurde von ^BG%s^K1 verraten%s%s"
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
 msgid "(%s every %s seconds)"
-msgstr ""
+msgstr "(%s alle %s Sekunden)"
 
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
@@ -3485,7 +3486,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^F3 has left the join queue after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 hat nach %s Sekunden Inaktivität die Warteliste verlassen"
 
 #: qcsrc/common/notifications/all.inc:431
 #, c-format
@@ -3519,7 +3520,7 @@ msgstr "^BG%s^F3 schaut nun zu"
 #: qcsrc/common/notifications/all.inc:436
 #, c-format
 msgid "^BG%s^F3 has left the join queue"
-msgstr ""
+msgstr "^BG%s^F3 hat die Warteliste verlassen"
 
 #: qcsrc/common/notifications/all.inc:438
 #, c-format
@@ -3604,12 +3605,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:453
 #: qcsrc/common/notifications/all.inc:803
 msgid "^F2Spectating isn't allowed at this time!"
-msgstr ""
+msgstr "^F2Zuschauen ist derzeit nicht erlaubt!"
 
 #: qcsrc/common/notifications/all.inc:454
 #: qcsrc/common/notifications/all.inc:804
 msgid "^F2Spectating specific players isn't allowed at this time!"
-msgstr ""
+msgstr "^F2Bestimmen Spielern zuzuschauen ist derzeit nicht erlaubt!"
 
 #: qcsrc/common/notifications/all.inc:456
 #, c-format
@@ -3629,12 +3630,12 @@ msgstr "^F1Überlebende^BG gewinnen die Runde"
 #: qcsrc/common/notifications/all.inc:461
 #: qcsrc/common/notifications/all.inc:819
 msgid "^K2You're not allowed to join a larger team!"
-msgstr ""
+msgstr "^K2Du darfst einem grösseren Team nicht beitreten!"
 
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:820
 msgid "^K2You're not allowed to change teams!"
-msgstr ""
+msgstr "^K2Du darfst das Team nicht wechseln!"
 
 #: qcsrc/common/notifications/all.inc:463
 #: qcsrc/common/notifications/all.inc:821
@@ -3642,19 +3643,21 @@ msgid ""
 "^K2Teams are locked, you can't join or change teams until they're unlocked "
 "or the map changes."
 msgstr ""
+"^K2Die Teams sind gesperrt, du kannst das Team nicht wechseln bis sie "
+"entsperrt sind, oder die Karte gewechselt wird."
 
 #: qcsrc/common/notifications/all.inc:464
 #: qcsrc/common/notifications/all.inc:822
 msgid "^K2You're already on that team!"
-msgstr ""
+msgstr "^K2Du bist bereits in diesem Team!"
 
 #: qcsrc/common/notifications/all.inc:466
 msgid "^F4The teams are now locked."
-msgstr ""
+msgstr "^F4Die Teams sind jetzt gesperrt."
 
 #: qcsrc/common/notifications/all.inc:467
 msgid "^F1The teams are now unlocked."
-msgstr ""
+msgstr "^F1Die Teams sind jetzt entsperrt."
 
 #: qcsrc/common/notifications/all.inc:469
 #, c-format
@@ -4608,7 +4611,7 @@ msgstr "^F1Jetpack^BG erhalten"
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^K1Your Xonotic version is incompatible with the server's version!"
-msgstr ""
+msgstr "^K1Deine Xonotic-Version ist mit der Version des Servers inkompatibel!"
 
 #: qcsrc/common/notifications/all.inc:726
 msgid ""
@@ -4637,33 +4640,33 @@ msgstr "^K1Der angegebenen Minispielsitzung kann nicht beigetreten werden!"
 
 #: qcsrc/common/notifications/all.inc:730
 msgid "^BGYou're queued to join any available team."
-msgstr ""
+msgstr "^BGDu wartest darauf, einem beliebigen Team beizutreten."
 
 #: qcsrc/common/notifications/all.inc:731
 msgid "^BGYou're queued to join the ^TC^TT^BG team."
-msgstr ""
+msgstr "^BGDu wartest darauf, Team ^TC^TT^BG beizutreten."
 
 #: qcsrc/common/notifications/all.inc:732
 #, c-format
 msgid "%s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "%s^K2 wählte ^TC^TT^K2 zuerst."
 
 #: qcsrc/common/notifications/all.inc:732
 msgid "^K2You're queued to join any available team."
-msgstr ""
+msgstr "^K2Du wartest darauf, einem beliebigen Team beizutreten."
 
 #: qcsrc/common/notifications/all.inc:733
 #, c-format
 msgid "%s^K2 chose your preferred team first."
-msgstr ""
+msgstr "%s^K2 hat dein bevorzugtes Team zuerst gewählt."
 
 #: qcsrc/common/notifications/all.inc:733
 msgid "^K2You're now playing on ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Du spielst jetzt für Team ^TC^TT^K2!"
 
 #: qcsrc/common/notifications/all.inc:734
 msgid "^BGYou're now playing on ^TC^TT^BG team!"
-msgstr ""
+msgstr "^BGDu spielst jetzt für Team ^TC^TT^BG!"
 
 #: qcsrc/common/notifications/all.inc:738
 msgid "^BGYou picked up the ball"
@@ -5030,11 +5033,11 @@ msgstr "sekundär"
 #: qcsrc/common/notifications/all.qh:455
 #, c-format
 msgid "%d points"
-msgstr ""
+msgstr "%d Punkte"
 
 #: qcsrc/common/notifications/all.qh:455
 msgid "1 point"
-msgstr ""
+msgstr "1 Punkt"
 
 #: qcsrc/common/notifications/all.qh:464
 msgid "drop flag"
@@ -5047,100 +5050,100 @@ msgstr "Granate werfen"
 #: qcsrc/common/notifications/all.qh:495
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG!"
-msgstr ""
+msgstr "%s^K1 ist ein DREIERSCHLÄCHTER!"
 
 #: qcsrc/common/notifications/all.qh:495
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE!"
-msgstr ""
+msgstr "%s^K1 hat 3 PUNKTE IN FOLGE geschafft!"
 
 #: qcsrc/common/notifications/all.qh:495
 msgid "TRIPLE FRAG!"
-msgstr ""
+msgstr "DREIERSCHLÄCHTER!"
 
 #: qcsrc/common/notifications/all.qh:496
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 hat 5 PUNKTE IN FOLGE erzielt!"
 
 #: qcsrc/common/notifications/all.qh:496
 #, c-format
 msgid "%s^K1 unlocked RAGE!"
-msgstr ""
+msgstr "%s^K1 ist in RAGE!"
 
 #: qcsrc/common/notifications/all.qh:496
 msgid "RAGE!"
-msgstr ""
+msgstr "RAGE!"
 
 #: qcsrc/common/notifications/all.qh:497
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 hat 10 PUNKTE IN FOLGE erzielt!"
 
 #: qcsrc/common/notifications/all.qh:497
 #, c-format
 msgid "%s^K1 started a MASSACRE!"
-msgstr ""
+msgstr "%s^K1 hat ein MASSAKER angefangen!"
 
 #: qcsrc/common/notifications/all.qh:497
 msgid "MASSACRE!"
-msgstr ""
+msgstr "MASSAKER!"
 
 #: qcsrc/common/notifications/all.qh:498
 #, c-format
 msgid "%s^K1 executed MAYHEM!"
-msgstr ""
+msgstr "%s^K1 richtet CHAOS an!"
 
 #: qcsrc/common/notifications/all.qh:498
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 hat 15 PUNKTE IN FOLGE erzielt!"
 
 #: qcsrc/common/notifications/all.qh:498
 msgid "MAYHEM!"
-msgstr ""
+msgstr "CHAOS!"
 
 #: qcsrc/common/notifications/all.qh:499
 #, c-format
 msgid "%s^K1 is a BERSERKER!"
-msgstr ""
+msgstr "%s^K1 ist ein BERSERKER!"
 
 #: qcsrc/common/notifications/all.qh:499
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 hat 20 PUNKTE IN FOLGE erzielt!"
 
 #: qcsrc/common/notifications/all.qh:499
 msgid "BERSERKER!"
-msgstr ""
+msgstr "BERSERKER!"
 
 #: qcsrc/common/notifications/all.qh:500
 #, c-format
 msgid "%s^K1 inflicts CARNAGE!"
-msgstr ""
+msgstr "%s^K1 verursacht ein GEMETZEL!"
 
 #: qcsrc/common/notifications/all.qh:500
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 hat 25 PUNKTE IN FOLGE erzielt!"
 
 #: qcsrc/common/notifications/all.qh:500
 msgid "CARNAGE!"
-msgstr ""
+msgstr "GEMETZEL!"
 
 #: qcsrc/common/notifications/all.qh:501
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 hat 30 PUNKTE IN FOLGE erzielt!"
 
 #: qcsrc/common/notifications/all.qh:501
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON!"
-msgstr ""
+msgstr "%s^K1 entfesselt ein ARMAGEDDON!"
 
 #: qcsrc/common/notifications/all.qh:501
 msgid "ARMAGEDDON!"
-msgstr ""
+msgstr "ARMAGEDDON!"
 
 #: qcsrc/common/notifications/all.qh:508
 #, c-format
@@ -5173,12 +5176,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:541 qcsrc/common/notifications/all.qh:554
 #, c-format
 msgid "%d score spree!"
-msgstr ""
+msgstr "%d Punkte hintereinander!"
 
 #: qcsrc/common/notifications/all.qh:553
 #, c-format
 msgid "%d frag spree!"
-msgstr ""
+msgstr "%d Kills in Folge!"
 
 #: qcsrc/common/notifications/all.qh:566
 msgid "First blood!"
@@ -6253,32 +6256,32 @@ msgstr ""
 
 #: qcsrc/menu/menu.qc:541
 msgid "Has special requirements"
-msgstr ""
+msgstr "Hat bestimmte Voraussetzungen"
 
 #: qcsrc/menu/menu.qc:544
 #, c-format
 msgid "Requires ^3%s^7 not equal to \"%s^7\""
-msgstr ""
+msgstr "Benötigt ^3%s^7 ungleich \"%s^7\""
 
 #: qcsrc/menu/menu.qc:556
 #, c-format
 msgid "Requires %s, %s, and %s"
-msgstr ""
+msgstr "Benötigt %s, %s und %s"
 
 #: qcsrc/menu/menu.qc:559
 #, c-format
 msgid "Requires %s and %s"
-msgstr ""
+msgstr "Benötigt %s und %s"
 
 #: qcsrc/menu/menu.qc:559
 #, c-format
 msgid "Requires %s or %s"
-msgstr ""
+msgstr "Benötigt %s oder %s"
 
 #: qcsrc/menu/menu.qc:562
 #, c-format
 msgid "Requires %s"
-msgstr ""
+msgstr "Benötigt %s"
 
 #: qcsrc/menu/xonotic/credits.qc:4
 msgid "Core Team"
@@ -6704,7 +6707,7 @@ msgstr "Fette Schriftgrösse:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:35
 msgid "Title font scale:"
-msgstr ""
+msgstr "Titel-Schriftgrösse:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:38
 msgid "Flip messages order"
@@ -6745,27 +6748,27 @@ msgstr "Chat-Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:21
 msgid "Align:"
-msgstr ""
+msgstr "Ausrichten:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:26
 msgid "Flip checkpoint order"
-msgstr ""
+msgstr "Kontrollpunkt-Reihenfolge umkehren"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qh:6
 msgid "Checkpoints Panel"
-msgstr ""
+msgstr "Kontrollpunkt-Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "FPS:"
-msgstr ""
+msgstr "FPS:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:20
 msgid "Use an averaging algorithm"
-msgstr ""
+msgstr "Durchschnittswert anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:23
 msgid "Decimal places:"
-msgstr ""
+msgstr "Dezimalstellen:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
@@ -6868,13 +6871,13 @@ msgstr "Gegenstände-Zeit-Panel"
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:26
 #, c-format
 msgid "GAMETYPE^%s:"
-msgstr ""
+msgstr "SPIELTYP^%s:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:27
 msgid "Show icons"
-msgstr ""
+msgstr "Icons anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
@@ -6926,11 +6929,11 @@ msgstr "Statusleiste"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
 msgid "None"
-msgstr ""
+msgstr "Keine"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:31
 msgid "Acceleration"
-msgstr ""
+msgstr "Beschleunigung"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:32
 msgid "Both"
@@ -6955,7 +6958,7 @@ msgstr "Geschwindigkeitsrekord"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:71
 msgid "Jump speed"
-msgstr ""
+msgstr "Sprunggeschwindigkeit"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:77
 msgid "Acceleration:"
@@ -7021,7 +7024,7 @@ msgstr "Seitenverhältnis:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:27
 msgid "Show attack keys"
-msgstr ""
+msgstr "Angriffstasten anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
@@ -7029,11 +7032,11 @@ msgstr "Tastendruck-Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:26
 msgid "Translate commands"
-msgstr ""
+msgstr "Befehle übersetzen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:28
 msgid "Use the server's quickmenu"
-msgstr ""
+msgstr "Servers Schnellmenü verwenden"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
@@ -7124,7 +7127,7 @@ msgstr "Nie vergrössert"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
 msgid "Maximized radar:"
-msgstr ""
+msgstr "Maximiertes Radar:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
@@ -7169,11 +7172,11 @@ msgstr "StrafeHUD Stil:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
 msgid "No styling"
-msgstr ""
+msgstr "Kein Styling"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
 msgid "Gradient"
-msgstr ""
+msgstr "Gradient"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
 msgid "Range:"
@@ -7181,7 +7184,7 @@ msgstr "Reichweite:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:51
 msgid "Dynamic"
-msgstr ""
+msgstr "Dynamisch"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:55
 msgid "Strafe bar:"
@@ -7528,11 +7531,11 @@ msgstr "Spieltyp"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:81
 msgid "Show all"
-msgstr ""
+msgstr "Alle anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:82
 msgid "Show all available gametypes"
-msgstr ""
+msgstr "Alle verfügbaren Spieltypen anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
 msgid "Time limit:"
@@ -7812,7 +7815,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
 msgid "Allow maps to spawn additional weapons (new toys)"
-msgstr ""
+msgstr "Erlaube Karten, zusätzliche Waffen zu spawnen (neue Spielzeuge)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:141
 msgid "Replacement:"
@@ -7823,10 +7826,12 @@ msgid ""
 "Automatically replace some normal weapons of the map with their "
 "corresponding additional weapons"
 msgstr ""
+"Automatisch Standardwaffen auf der Karte mit entsprechenden Zusatzwaffen "
+"ersetzen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:150
 msgid "Randomly"
-msgstr ""
+msgstr "Zufällig"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:155
 msgid ""
@@ -9576,7 +9581,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:92
 msgid "Zoom scrolling"
-msgstr ""
+msgstr "Zoom-Scrollen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:110
 msgid "Velocity zoom"
@@ -9682,11 +9687,11 @@ msgstr "Waffenmodellundurchsichtigkeit:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:96
 msgid "Apply team colors to weapon beam effects:"
-msgstr ""
+msgstr "Teamfarben auf Waffeneffekte anwenden:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:100
 msgid "In team games"
-msgstr ""
+msgstr "In Teamspielen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:104
 msgid "Gun model swaying"
@@ -9983,7 +9988,7 @@ msgstr "Wert:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:64
 msgid "Reset to default"
-msgstr ""
+msgstr "Auf Standard zurücksetzen"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:72
 msgid "Description:"
@@ -10452,7 +10457,7 @@ msgstr "nachladen"
 #: qcsrc/menu/xonotic/keybinder.qc:113
 #, c-format
 msgid "weapon group %d"
-msgstr ""
+msgstr "Waffengruppe %d"
 
 #: qcsrc/menu/xonotic/keybinder.qc:136
 msgid "hold zoom"
