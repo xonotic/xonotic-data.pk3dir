@@ -999,8 +999,10 @@ bool Heal(entity targ, entity inflictor, float amount, float limit)
 
 float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 {
-	float dps;
 	float maxtime, mintime, maxdamage, mindamage, maxdps, mindps, totaldamage, totaltime;
+
+	if (d <= 0)
+		return -1;
 
 	if(IS_PLAYER(e))
 	{
@@ -1009,7 +1011,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 	}
 
 	t = max(t, 0.1);
-	dps = d / t;
+	float dps = d / t;
 	if(StatusEffects_active(STATUSEFFECT_Burning, e))
 	{
 		float fireendtime = StatusEffects_gettime(STATUSEFFECT_Burning, e);
