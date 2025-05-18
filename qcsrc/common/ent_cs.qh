@@ -68,15 +68,16 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	#define entcs_receiver_2(i, v) AL_sete(_entcs, i, v)
 	#define entcs_is_self(e) ((e).sv_entnum == player_localentnum - 1)
 
-	/**
-     * @param i zero indexed player
-     */
-    .int frags;
-    .int wants_join;
+	.int frags;
+	.int handicap_level;
+	.int wants_join;
 	const int ENTCS_SPEC_PURE = 1; // real spectator
 	const int ENTCS_SPEC_IN_SCOREBOARD = 2; // spectator but still in game (can be in a team)
 	#define entcs_IsSpectating(i) boolean(entcs_GetSpecState(i))
 
+	/**
+	 * @param i zero indexed player
+	 */
 	int entcs_GetSpecState(int i)
 	{
 		bool unconnected = !playerslots[i].gotscores;
@@ -91,8 +92,17 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	}
 
 	/**
-     * @param i zero indexed player
-     */
+	 * @param i zero indexed player
+	 */
+	int entcs_GetHandicapLevel(int i)
+	{
+		entity e = entcs_receiver(i);
+		return e.handicap_level;
+	}
+
+	/**
+	 * @param i zero indexed player
+	 */
 	int entcs_GetWantsJoin(int i)
 	{
 		entity e = entcs_receiver(i);
@@ -100,8 +110,8 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	}
 
 	/**
-     * @param i zero indexed player
-     */
+	 * @param i zero indexed player
+	 */
 	int entcs_GetClientColors(int i)
 	{
 		entity e = entcs_receiver(i);
@@ -144,39 +154,39 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 		return e ? ColorTranslateRGB(e.netname) : "";
 	}
 
-    /**
-     * @param i zero indexed player
-     */
+	/**
+	 * @param i zero indexed player
+	 */
 	entity CSQCModel_server2csqc(int i);
 
-    .float alpha;
+	.float alpha;
 
-    /**
-     * @param i zero indexed player
-     */
+	/**
+	 * @param i zero indexed player
+	 */
 	float entcs_GetAlpha(int i)
 	{
 		entity e = CSQCModel_server2csqc(i);
 		return e ? e.alpha : 1;
 	}
 
-    /**
-     * @param i zero indexed player
-     */
+	/**
+	 * @param i zero indexed player
+	 */
 	vector entcs_GetColor(int i)
 	{
 		entity e = CSQCModel_server2csqc(i);
 		return (!e || e.colormap <= 0)
-		       ? '1 1 1'
+			   ? '1 1 1'
 			   : colormapPaletteColor(((e.colormap >= 1024)
 			? e.colormap
 			: entcs_GetClientColors(e.colormap - 1)) & 15, true)
 		;
 	}
 
-    /**
-     * @param i zero indexed player
-     */
+	/**
+	 * @param i zero indexed player
+	 */
 	bool entcs_IsDead(int i)
 	{
 		entity e = CSQCModel_server2csqc(i);
