@@ -461,7 +461,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 
 	// clear player attributes
 	FOREACH_CLIENT(IS_PLAYER(it), {
-		it.alivetime = 0;
+		it.alivetime_start = 0;
 		CS(it).killcount = 0;
 	});
 

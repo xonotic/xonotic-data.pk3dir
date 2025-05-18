@@ -313,11 +313,11 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	Portal_ClearAll(this);
 	SetSpectatee(this, NULL);
 
-	if (this.alivetime)
+	if (this.alivetime_start)
 	{
 		if (!warmup_stage)
-			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
-		this.alivetime = 0;
+			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, max(0, time - this.alivetime_start));
+		this.alivetime_start = 0;
 	}
 
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -835,8 +835,8 @@ void PutPlayerInServer(entity this)
 		W_WeaponFrame(this, weaponentity);
 	}
 
-	if (!warmup_stage && !this.alivetime)
-		this.alivetime = time;
+	if (!warmup_stage && !this.alivetime_start)
+		this.alivetime_start = max(time, game_starttime);
 
 	antilag_clear(this, CS(this));
 

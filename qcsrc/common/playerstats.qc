@@ -184,10 +184,10 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	if((p.playerstats_id == "") || PS_GR_OUT_DB < 0) { return; }
 
 	// add global info!
-	if(p.alivetime)
+	if(p.alivetime_start)
 	{
-		PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
-		p.alivetime = 0;
+		PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_ALIVETIME, max(0, time - p.alivetime_start));
+		p.alivetime_start = 0;
 	}
 
 	db_put(PS_GR_OUT_DB, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));

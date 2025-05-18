@@ -447,10 +447,10 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		bool defer_ClientKill_Now_TeamChange = false;
 
-		if(this.alivetime)
+		if(this.alivetime_start)
 		{
-			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
-			this.alivetime = 0;
+			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, max(0, time - this.alivetime_start));
+			this.alivetime_start = 0;
 		}
 
 		if(valid_damage_for_weaponstats)
