@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-14 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -103,7 +103,7 @@ msgstr "^1En observateur"
 #: qcsrc/client/hud/panel/infomessages.qc:94
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr "^1En spectateur sur : ^7%s"
+msgstr "^1Vous observez : ^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
 #, c-format
@@ -245,11 +245,11 @@ msgstr "sélection de l'équipe"
 
 #: qcsrc/client/hud/panel/infomessages.qc:218
 msgid "^1Spectating this player:"
-msgstr "^1En spectateur sur ce joueur :"
+msgstr "^1Vous observez ce joueur :"
 
 #: qcsrc/client/hud/panel/infomessages.qc:218
 msgid "^1Spectating you:"
-msgstr "^1Vous regarde(nt) :"
+msgstr "^1Vous observe(nt) :"
 
 #: qcsrc/client/hud/panel/infomessages.qc:234
 msgid "^7Press ^3ESC ^7to show HUD options."
@@ -3608,7 +3608,7 @@ msgstr "^F2Les spectateurs ne sont pas autorisés pour l'instant !"
 #: qcsrc/common/notifications/all.inc:454
 #: qcsrc/common/notifications/all.inc:804
 msgid "^F2Spectating specific players isn't allowed at this time!"
-msgstr ""
+msgstr "^F2Observer un joueur spécifique n'est actuellement pas autorisé !"
 
 #: qcsrc/common/notifications/all.inc:456
 #, c-format
@@ -6753,15 +6753,15 @@ msgstr "Tchat"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:21
 msgid "Align:"
-msgstr ""
+msgstr "Aligner :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:26
 msgid "Flip checkpoint order"
-msgstr ""
+msgstr "Inverser l'ordre des points de contrôle"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qh:6
 msgid "Checkpoints Panel"
-msgstr ""
+msgstr "Points de contrôle"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "FPS:"
@@ -6841,7 +6841,7 @@ msgstr "Désactiver"
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 msgid "Enable spectating"
-msgstr "Activer les spectateurs"
+msgstr "Autoriser les spectateurs"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "Enable even playing in warmup"
