@@ -98,7 +98,7 @@ msgstr "IPS : %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:92
 msgid "^1Observing"
-msgstr "^1En observateur"
+msgstr "^1Caméra libre"
 
 #: qcsrc/client/hud/panel/infomessages.qc:94
 #, c-format
@@ -141,7 +141,8 @@ msgstr "^1Utilisez ^3%s^1 ou ^3%s^1 pour changer la vitesse"
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
 msgstr ""
-"^1Appuyez sur ^3%s^1 pour observer, sur ^3%s^1 pour changer de mode de caméra"
+"^1Appuyez sur ^3%s^1 pour la caméra libre, sur ^3%s^1 pour changer de mode "
+"de caméra"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
 #: qcsrc/client/hud/panel/infomessages.qc:115
@@ -498,7 +499,7 @@ msgstr "Changer de caméra spectateur"
 #: qcsrc/client/hud/panel/quickmenu.qc:898
 #: qcsrc/client/hud/panel/quickmenu.qc:902
 msgid "QMCMD^Observer camera"
-msgstr "Caméra observateur"
+msgstr "Caméra libre"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:899
 msgid "QMCMD^Increase speed"
@@ -6916,7 +6917,7 @@ msgstr "Afficher"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:33
 msgid "Enable even observing"
-msgstr "Activer même en mode observateur"
+msgstr "Activer même en caméra libre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:34
