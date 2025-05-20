@@ -2,7 +2,9 @@
 #include "scoreboard.qh"
 
 #include <client/draw.qh>
+#include <client/hud/panel/racetimer.qh>
 #include <client/view.qh>
+#include <common/gamemodes/_mod.qh>
 
 // Timer (#5)
 
@@ -11,11 +13,29 @@ void HUD_Timer_Export(int fh)
 	// allow saving cvars that aesthetically change the panel into hud skin files
 }
 
-vector HUD_Timer_Color(float timeleft)
+vector HUD_Timer_Color(float timeleft, float timelimit)
 {
-	if(timeleft <= 60)
+	float limitred,limityellow;
+	if(autocvar_hud_panel_timer_warning_relative) {
+		if(autocvar_hud_panel_timer_warning_relative == 1 && timelimit)
+		{
+			limitred = timelimit * autocvar_hud_panel_timer_warning_relative_red;
+			limityellow = timelimit * autocvar_hud_panel_timer_warning_relative_yellow;
+		} else if(autocvar_hud_panel_timer_warning_relative == 2 && ISGAMETYPE(CTS) && race_server_record) {
+			limitred = TIME_DECODE(race_server_record) * autocvar_hud_panel_timer_warning_relative_red;
+			limityellow = TIME_DECODE(race_server_record) * autocvar_hud_panel_timer_warning_relative_yellow;
+		} else {
+			limitred = autocvar_hud_panel_timer_warning_red;
+			limityellow = autocvar_hud_panel_timer_warning_yellow;
+		}
+	} else { // relative 0, means fixed values in seconds
+		limitred = autocvar_hud_panel_timer_warning_red;
+		limityellow = autocvar_hud_panel_timer_warning_yellow;
+	}
+
+	if(timeleft <= limitred)
 		return '1 0 0'; // red
-	else if(timeleft <= 300)
+	else if(timeleft <= limityellow)
 		return '1 1 0'; // yellow
 	else
 		return '1 1 1'; // white
@@ -80,7 +100,7 @@ void HUD_Timer()
 
 	// Timer color
 	if(!intermission_time && !warmup_stage && timelimit > 0)
-		timer_color = HUD_Timer_Color(timeleft);
+		timer_color = HUD_Timer_Color(timeleft, timelimit);
 
 	// Timer text
 	if (autocvar_hud_panel_timer_increment || timelimit <= 0)
@@ -107,7 +127,7 @@ void HUD_Timer()
 
 			// Subtimer color
 			if(!intermission_time && round_timelimit > 0)
-				subtimer_color = HUD_Timer_Color(round_timeleft);
+				subtimer_color = HUD_Timer_Color(round_timeleft, round_timelimit);
 
 			// Subtimer text
 			if (autocvar_hud_panel_timer_increment || round_timelimit <= 0)
