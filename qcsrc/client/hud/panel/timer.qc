@@ -15,27 +15,27 @@ void HUD_Timer_Export(int fh)
 
 vector HUD_Timer_Color(float timeleft, float timelimit)
 {
-	int limitred,limityellow;
+	float limitred,limityellow;
 	if(autocvar_hud_panel_timer_warning_relative) {
 		if(autocvar_hud_panel_timer_warning_relative == 1 && timelimit)
 		{
-			limitred = 100 * timelimit * autocvar_hud_panel_timer_warning_relative_red;
-			limityellow = 100 * timelimit * autocvar_hud_panel_timer_warning_relative_yellow;
+			limitred = timelimit * autocvar_hud_panel_timer_warning_relative_red;
+			limityellow = timelimit * autocvar_hud_panel_timer_warning_relative_yellow;
 		} else if(autocvar_hud_panel_timer_warning_relative == 2 && ISGAMETYPE(CTS) && race_server_record) {
-			limitred = race_server_record * autocvar_hud_panel_timer_warning_relative_red;
-			limityellow = race_server_record * autocvar_hud_panel_timer_warning_relative_yellow;
+			limitred = TIME_DECODE(race_server_record) * autocvar_hud_panel_timer_warning_relative_red;
+			limityellow = TIME_DECODE(race_server_record) * autocvar_hud_panel_timer_warning_relative_yellow;
 		} else {
-			limitred = 100 * autocvar_hud_panel_timer_warning_red;
-			limityellow = 100 * autocvar_hud_panel_timer_warning_yellow;
+			limitred = autocvar_hud_panel_timer_warning_red;
+			limityellow = autocvar_hud_panel_timer_warning_yellow;
 		}
 	} else { // relative 0, means fixed values in seconds
-		limitred = 100 * autocvar_hud_panel_timer_warning_red;
-		limityellow = 100 * autocvar_hud_panel_timer_warning_yellow;
+		limitred = autocvar_hud_panel_timer_warning_red;
+		limityellow = autocvar_hud_panel_timer_warning_yellow;
 	}
 
-	if(100 * timeleft <= limitred)
+	if(timeleft <= limitred)
 		return '1 0 0'; // red
-	else if(100 * timeleft <= limityellow)
+	else if(timeleft <= limityellow)
 		return '1 1 0'; // yellow
 	else
 		return '1 1 1'; // white
