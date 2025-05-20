@@ -246,7 +246,7 @@ msgstr "sélection de l'équipe"
 
 #: qcsrc/client/hud/panel/infomessages.qc:218
 msgid "^1Spectating this player:"
-msgstr "^1Vous observez ce joueur :"
+msgstr "^1Observe(nt) ce joueur :"
 
 #: qcsrc/client/hud/panel/infomessages.qc:218
 msgid "^1Spectating you:"
@@ -2313,7 +2313,7 @@ msgstr "Mitraillette Overkill lourde"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:28
 msgid "Overkill MachineGun"
-msgstr "Mitraillette Overkill"
+msgstr "Pistolet-mitrailleur Overkill"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:29
 msgid "Overkill Nex"
@@ -3121,7 +3121,7 @@ msgstr "^BG%s^K1 n'a pas pu éviter la tourelle Hunter%s%s"
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
-msgstr "^BG%s^K1 a été criblé de balles par une tourelle Machinegun%s%s"
+msgstr "^BG%s^K1 a été criblé de balles par une tourelle Mitrailleuse%s%s"
 
 #: qcsrc/common/notifications/all.inc:344
 #, c-format
@@ -5368,11 +5368,11 @@ msgstr "Hunter-Killer"
 
 #: qcsrc/common/turrets/turret/machinegun.qh:13
 msgid "Machinegun Turret"
-msgstr "Tourelle Machinegun"
+msgstr "Tourelle Mitrailleuse"
 
 #: qcsrc/common/turrets/turret/machinegun_weapon.qh:7
 msgid "Machinegun"
-msgstr "Machinegun"
+msgstr "Pistolet-mitrailleur"
 
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
@@ -5983,7 +5983,7 @@ msgstr "Grappin"
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:29
 msgid "MachineGun"
-msgstr "Mitraillette"
+msgstr "Pistolet-mitrailleur"
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:34
 msgid "Mine Layer"
