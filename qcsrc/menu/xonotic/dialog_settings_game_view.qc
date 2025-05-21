@@ -23,6 +23,14 @@ void XonoticGameViewSettingsTab_fill(entity me)
 	entity e;
 
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Perspective")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
+		me.TD(me, 1, 1.8, e = makeXonoticSlider_T(60, 130, 5, "fov",
+			_("Field of vision in degrees")));
+	me.TR(me);
+	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "chase_active", "0", _("1st person perspective")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -50,28 +58,24 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "chase_active", "1", _("3rd person perspective")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Back distance")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Back distance")));
 		setDependent(e, "chase_active", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider(10, 100, 1, "chase_back"));
+		me.TD(me, 1, 1.8, e = makeXonoticSlider(10, 100, 1, "chase_back"));
 		setDependent(e, "chase_active", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Up distance")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Up distance")));
 		setDependent(e, "chase_active", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider(10, 50, 1, "chase_up"));
+		me.TD(me, 1, 1.8, e = makeXonoticSlider(10, 50, 1, "chase_up"));
 		setDependent(e, "chase_active", 1, 1);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_clippedspectating", _("Allow passing through walls while spectating")));
 			e.sendCvars = true;
 
-	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider_T(60, 130, 5, "fov",
-			_("Field of vision in degrees")));
+	me.gotoRC(me, 0, 3); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Zooming")));
 	me.TR(me);
-	me.TR(me);
-		//me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom factor:"))));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(2, 30, 0.5, "cl_zoomfactor",
 			_("How big the zoom factor is when the zoom button is pressed")));
@@ -107,15 +111,17 @@ void XonoticGameViewSettingsTab_fill(entity me)
 			setDependent(e, "cl_zoomscroll", 1, 1);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_velocityzoom_enabled", _("Velocity zoom")));
-		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(3, 1, "cl_velocityzoom_type", _("Forward movement only")));
-			setDependent(e, "cl_velocityzoom_enabled", 1, 1);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_velocityzoom_enabled", _("Velocity zoom")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, ZCTX(_("VZOOM^Factor"))));
 			setDependentAND(e, "cl_velocityzoom_enabled", 1, 1, "cl_velocityzoom_type", 1, 3);
 		me.TD(me, 1, 2, e = makeXonoticSlider(-1, 1, 0.1, "cl_velocityzoom_factor"));
 			setDependentAND(e, "cl_velocityzoom_enabled", 1, 1, "cl_velocityzoom_type", 1, 3);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(3, 1, "cl_velocityzoom_type", _("Forward movement only")));
+			setDependent(e, "cl_velocityzoom_enabled", 1, 1);
 	me.TR(me);
 	me.TR(me);
 		//me.TDempty(me, 0.2);

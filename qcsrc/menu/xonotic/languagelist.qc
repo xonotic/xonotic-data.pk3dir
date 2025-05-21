@@ -79,9 +79,9 @@ void XonoticLanguageList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 	me.columnPercentageSize = me.realFontSize.x * 3;
-	me.columnPercentageOrigin = 1 - me.columnPercentageSize;
-	me.columnNameOrigin = 0;
-	me.columnNameSize = me.columnPercentageOrigin;
+	me.columnPercentageOrigin = 1 - me.columnPercentageSize - 0.5 * me.realFontSize.x;
+	me.columnNameOrigin = 0.5 * me.realFontSize.x;
+	me.columnNameSize = me.columnPercentageOrigin - me.columnNameOrigin;
 }
 
 void XonoticLanguageList_setSelected(entity me, float i)

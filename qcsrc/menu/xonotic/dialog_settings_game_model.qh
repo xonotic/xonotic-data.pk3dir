@@ -11,5 +11,3 @@ CLASS(XonoticGameModelSettingsTab, XonoticTab)
 	ATTRIB(XonoticGameModelSettingsTab, columns, float, 5);
 ENDCLASS(XonoticGameModelSettingsTab)
 entity makeXonoticGameModelSettingsTab();
-#include "../gamesettings.qh"
-REGISTER_SETTINGS(Models, makeXonoticGameModelSettingsTab());
