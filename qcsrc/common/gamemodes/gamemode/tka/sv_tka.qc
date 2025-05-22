@@ -7,16 +7,13 @@
 .entity previous_owner; // also used on kh keys
 
 int autocvar_g_tka_ballcarrier_maxballs;
-float autocvar_g_tka_ballcarrier_damage;
-float autocvar_g_tka_ballcarrier_force;
 float autocvar_g_tka_ballcarrier_highspeed;
-float autocvar_g_tka_ballcarrier_selfdamage;
-float autocvar_g_tka_ballcarrier_selfforce;
-float autocvar_g_tka_noncarrier_damage;
-float autocvar_g_tka_noncarrier_force;
-float autocvar_g_tka_noncarrier_selfdamage;
-float autocvar_g_tka_noncarrier_selfforce;
+vector autocvar_g_tka_ballcarrier_damage;
+vector autocvar_g_tka_ballcarrier_force;
+vector autocvar_g_tka_noncarrier_damage;
+vector autocvar_g_tka_noncarrier_force;
 bool autocvar_g_tka_noncarrier_warn;
+
 int autocvar_g_tka_score_bckill;
 int autocvar_g_tka_score_killac;
 bool autocvar_g_tka_score_team;
@@ -117,7 +114,6 @@ void tka_TouchEvent(entity this, entity toucher) // runs any time that the ball 
 	}
 	if(IS_INDEPENDENT_PLAYER(toucher)) { return; }
 	if(IS_DEAD(toucher)) { return; }
-	if(STAT(FROZEN, toucher)) { return; }
 	if (!IS_PLAYER(toucher))
 	{  // The ball just touched an object, most likely the world
 		Send_Effect(EFFECT_BALL_SPARKS, this.origin, '0 0 0', 1);
@@ -489,42 +485,47 @@ MUTATOR_HOOKFUNCTION(tka, Damage_Calculate) // for changing damage and force val
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
-	float frag_damage = M_ARGV(4, float);
-	vector frag_force = M_ARGV(6, vector);
 
 	// as a gamemode rule, only apply scaling to player versus player combat
-	if(!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
+	if (!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
 		return;
 
-	if(frag_attacker.ballcarried) // if the attacker is a ballcarrier
+	if (frag_attacker.ballcarried) // if the attacker is a ballcarrier
 	{
-		if(frag_target == frag_attacker) // damage done to yourself
+		if (frag_target == frag_attacker) // damage done to themselves
 		{
-			frag_damage *= autocvar_g_tka_ballcarrier_selfdamage;
-			frag_force *= autocvar_g_tka_ballcarrier_selfforce;
+			M_ARGV(4, float) *= autocvar_g_tka_ballcarrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_tka_ballcarrier_force.x;
 		}
-		else // damage done to other players (ballcarriers and noncarriers)
+		else if (frag_target.ballcarried) // damage done to other ballcarriers
 		{
-			frag_damage *= autocvar_g_tka_ballcarrier_damage;
-			frag_force *= autocvar_g_tka_ballcarrier_force;
+			M_ARGV(4, float) *= autocvar_g_tka_ballcarrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_tka_ballcarrier_force.y;
+		}
+		else // damage done to noncarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_tka_ballcarrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_tka_ballcarrier_force.z;
 		}
 	}
-	else if (!frag_target.ballcarried) // if the target is a noncarrier
+	else
 	{
-		if(frag_target == frag_attacker) // damage done to yourself
+		if (frag_target == frag_attacker) // damage done to themselves
 		{
-			frag_damage *= autocvar_g_tka_noncarrier_selfdamage;
-			frag_force *= autocvar_g_tka_noncarrier_selfforce;
+			M_ARGV(4, float) *= autocvar_g_tka_noncarrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_tka_noncarrier_force.x;
+		}
+		else if (frag_target.ballcarried) // damage done to ballcarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_tka_noncarrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_tka_noncarrier_force.y;
 		}
 		else // damage done to other noncarriers
 		{
-			frag_damage *= autocvar_g_tka_noncarrier_damage;
-			frag_force *= autocvar_g_tka_noncarrier_force;
+			M_ARGV(4, float) *= autocvar_g_tka_noncarrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_tka_noncarrier_force.z;
 		}
 	}
-
-	M_ARGV(4, float) = frag_damage;
-	M_ARGV(6, vector) = frag_force;
 }
 
 MUTATOR_HOOKFUNCTION(tka, ClientDisconnect)

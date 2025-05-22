@@ -3,7 +3,7 @@
 #include <common/mutators/base.qh>
 REGISTER_MUTATOR(duel, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	return 0;
 }
 

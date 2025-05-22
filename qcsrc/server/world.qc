@@ -231,6 +231,7 @@ void cvar_changes_init()
 		BADCVAR("serverconfig");
 		BADCVAR("sv_autoscreenshot");
 		BADCVAR("sv_heartbeatperiod");
+		BADCVAR("sv_vote_master_ids");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sys_colortranslation");
 		BADCVAR("sys_specialcharactertranslation");
@@ -525,9 +526,7 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_call");
 		BADCVAR("sv_vote_commands");
 		BADCVAR("sv_vote_majority_factor");
-		BADCVAR("sv_vote_master");
-		BADCVAR("sv_vote_master_commands");
-		BADCVAR("sv_vote_master_password");
+		BADPREFIX("sv_vote_master");
 		BADCVAR("sv_vote_simple_majority_factor");
 		BADVALUE("sys_ticrate", "0.0078125");
 		BADVALUE("sys_ticrate", "0.015625");
@@ -757,6 +756,19 @@ void InitGameplayMode()
 bool world_already_spawned;
 spawnfunc(worldspawn)
 {
+#ifdef WATERMARK
+	string watermark_start = cvar_string("sv_watermark_start");
+	if (watermark_start == "") // always true on Xonotic (re)start
+		cvar_set("sv_watermark_start", WATERMARK);
+	else if (watermark_start != WATERMARK) // true when qc code has been recompiled on a different git commit
+	{
+		LOG_INFOF(
+			"\n^1    Warning: ^3the server QC program was updated without a full restart."
+			"\n^3    Please restart the Xonotic executable otherwise you may get random bugs."
+			"\n\n");
+	}
+#endif
+
 	CheckEngineExtensions();
 
 	cvar_set("_endmatch", "0");

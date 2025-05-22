@@ -7,26 +7,26 @@
 void HUD_Mod_Survival(vector pos, vector mySize);
 #endif
 CLASS(Survival, Gametype)
-    INIT(Survival)
-    {
-        this.gametype_init(this, _("Survival"), "surv", "g_survival", GAMETYPE_FLAG_USEPOINTS, "", "timelimit=20 pointlimit=12", _("Identify and eliminate all the hunters before all your allies are gone"));
-    }
-    METHOD(Survival, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
-    {
-        return true;
-    }
-    METHOD(Survival, m_isForcedSupported, bool(Gametype this))
-    {
-        if(!cvar("g_survival_not_lms_maps"))
-        {
-            // if this is unset, all LMS maps support Survival too
-            if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_LMS.gametype_flags))
-                return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
-        }
-        return false;
-    }
+	INIT(Survival)
+	{
+		this.gametype_init(this, _("Survival"), "surv", "g_survival", GAMETYPE_FLAG_USEPOINTS, "", "timelimit=20 pointlimit=12", _("Identify and eliminate all the hunters before all your allies are gone"));
+	}
+	METHOD(Survival, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+	{
+		return true;
+	}
+	METHOD(Survival, m_isForcedSupported, bool(Gametype this))
+	{
+		if(!cvar("g_survival_not_lms_maps"))
+		{
+			// if this is unset, all LMS maps support Survival too
+			if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_LMS.gametype_flags))
+			return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+		}
+		return false;
+	}
 #ifdef CSQC
-    ATTRIB(Survival, m_modicons, void(vector pos, vector mySize), HUD_Mod_Survival);
+	ATTRIB(Survival, m_modicons, void(vector pos, vector mySize), HUD_Mod_Survival);
 #endif
 ENDCLASS(Survival)
 REGISTER_GAMETYPE(SURVIVAL, NEW(Survival));

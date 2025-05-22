@@ -83,23 +83,23 @@
 
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
-    ClientConnect(this);
-    TRANSMUTE(Player, this);
-    this.frame = 12; // 7
-    this.team = _team;
-    PutClientInServer(this);
+	ClientConnect(this);
+	TRANSMUTE(Player, this);
+	this.frame = 12; // 7
+	this.team = _team;
+	PutClientInServer(this);
 }
 
 STATIC_METHOD(Client, Remove, void(Client this))
 {
-    TRANSMUTE(Observer, this);
-    PutClientInServer(this);
-    ClientDisconnect(this);
+	TRANSMUTE(Observer, this);
+	PutClientInServer(this);
+	ClientDisconnect(this);
 }
 
 int CountSpectators(entity player, entity to)
 {
-	if(!player) { return 0; } // not sure how, but best to be safe
+	if(!player) return 0; // not sure how, but best to be safe
 
 	int spec_count = 0;
 
@@ -113,7 +113,7 @@ int CountSpectators(entity player, entity to)
 
 void WriteSpectators(entity player, entity to)
 {
-	if(!player) { return; } // not sure how, but best to be safe
+	if(!player) return; // not sure how, but best to be safe
 
 	int spec_count = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_SPEC(it) && it != to && it.enemy == player,
@@ -141,7 +141,7 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (autocvar_sv_showspectators == 1 || (autocvar_sv_showspectators && IS_SPEC(to)))
 	                                sf |= BIT(4); // show spectators
 	if (autocvar_sv_teamnagger && teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
-						  sf |= (autocvar_sv_teamnagger & 0x03) << 5; // BIT(5) | BIT(6)
+	                                sf |= (autocvar_sv_teamnagger & 0x03) << 5; // BIT(5) | BIT(6)
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
@@ -175,13 +175,13 @@ void ClientData_Detach(entity this)
 void ClientData_Touch(entity e)
 {
 	entity cd = CS(e).clientdata;
-	if (cd) { cd.SendFlags = 1; }
+	if (cd) cd.SendFlags = 1;
 
 	// make it spectatable
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e,
 	{
 		entity cd = CS(it).clientdata;
-		if (cd) { cd.SendFlags = 1; }
+		if (cd) cd.SendFlags = 1;
 	});
 }
 
@@ -195,7 +195,8 @@ Returns a valid one in doubt.
 =============
 */
 string FallbackPlayerModel;
-string CheckPlayerModel(string plyermodel) {
+string CheckPlayerModel(string plyermodel)
+{
 	if(FallbackPlayerModel != cvar_defstring("_cl_playermodel"))
 	{
 		// note: we cannot summon Don Strunzone here, some player may
@@ -208,13 +209,12 @@ string CheckPlayerModel(string plyermodel) {
 		return FallbackPlayerModel;
 	// only good file extensions
 	if(substring(plyermodel, -4, 4) != ".iqm"
-		&& substring(plyermodel, -4, 4) != ".zym"
-		&& substring(plyermodel, -4, 4) != ".dpm"
-		&& substring(plyermodel, -4, 4) != ".md3"
-		&& substring(plyermodel, -4, 4) != ".psk")
-	{
+	&& substring(plyermodel, -4, 4) != ".zym"
+	&& substring(plyermodel, -4, 4) != ".dpm"
+	&& substring(plyermodel, -4, 4) != ".md3"
+	&& substring(plyermodel, -4, 4) != ".psk")
 		return FallbackPlayerModel;
-	}
+
 	// forbid the LOD models
 	if(substring(plyermodel, -9, 5) == "_lod1" || substring(plyermodel, -9, 5) == "_lod2")
 		return FallbackPlayerModel;
@@ -222,10 +222,9 @@ string CheckPlayerModel(string plyermodel) {
 		return FallbackPlayerModel;
 	// also, restrict to server models
 	if(autocvar_sv_servermodelsonly)
-	{
 		if(!fexists(plyermodel))
 			return FallbackPlayerModel;
-	}
+
 	return plyermodel;
 }
 
@@ -312,14 +311,13 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 
 	RemoveGrapplingHooks(this);
 	Portal_ClearAll(this);
-	Unfreeze(this, false);
 	SetSpectatee(this, NULL);
 
-	if (this.alivetime)
+	if (this.alivetime_start)
 	{
 		if (!warmup_stage)
-			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
-		this.alivetime = 0;
+			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, max(0, time - this.alivetime_start));
+		this.alivetime_start = 0;
 	}
 
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -376,8 +374,6 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	this.nextthink = 0;
 	this.deadflag = DEAD_NO;
 	UNSET_DUCKED(this);
-	STAT(REVIVE_PROGRESS, this) = 0;
-	this.revival_time = 0;
 	this.draggable = drag_undraggable;
 
 	player_powerups_remove_all(this, was_player);
@@ -452,10 +448,10 @@ void FixPlayermodel(entity player)
 		{
 			switch(player.team)
 			{
-				case NUM_TEAM_1: defaultmodel = autocvar_sv_defaultplayermodel_red; defaultskin = autocvar_sv_defaultplayerskin_red; break;
-				case NUM_TEAM_2: defaultmodel = autocvar_sv_defaultplayermodel_blue; defaultskin = autocvar_sv_defaultplayerskin_blue; break;
+				case NUM_TEAM_1: defaultmodel = autocvar_sv_defaultplayermodel_red;    defaultskin = autocvar_sv_defaultplayerskin_red; break;
+				case NUM_TEAM_2: defaultmodel = autocvar_sv_defaultplayermodel_blue;   defaultskin = autocvar_sv_defaultplayerskin_blue; break;
 				case NUM_TEAM_3: defaultmodel = autocvar_sv_defaultplayermodel_yellow; defaultskin = autocvar_sv_defaultplayerskin_yellow; break;
-				case NUM_TEAM_4: defaultmodel = autocvar_sv_defaultplayermodel_pink; defaultskin = autocvar_sv_defaultplayerskin_pink; break;
+				case NUM_TEAM_4: defaultmodel = autocvar_sv_defaultplayermodel_pink;   defaultskin = autocvar_sv_defaultplayerskin_pink; break;
 			}
 		}
 
@@ -518,7 +514,9 @@ void FixPlayermodel(entity player)
 
 		oldskin = player.skin;
 		player.skin = defaultskin;
-	} else {
+	}
+	else
+	{
 		if (player.playermodel != player.model || player.playermodel == "")
 		{
 			player.playermodel = CheckPlayerModel(player.playermodel); // this is never "", so no endless loop
@@ -587,7 +585,8 @@ void PutPlayerInServer(entity this)
 	}
 
 	entity spot = SelectSpawnPoint(this, false);
-	if (!spot) {
+	if (!spot)
+	{
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_NOSPAWNS);
 		return; // spawn failed
 	}
@@ -665,8 +664,8 @@ void PutPlayerInServer(entity this)
 	this.respawn_time = 0;
 	STAT(RESPAWN_TIME, this) = 0;
 	this.scale = ((q3compat && autocvar_sv_q3compat_changehitbox) || !autocvar_sv_mapformat_is_quake3)
-		? 0.8125 // DP model scaling uses 1/16 accuracy and 13/16 is closest to 56/69
-		: autocvar_sv_player_scale;
+	             ? 0.8125 // DP model scaling uses 1/16 accuracy and 13/16 is closest to 56/69
+	             : autocvar_sv_player_scale;
 	this.fade_time = 0;
 	this.pain_finished = 0;
 	this.pushltime = 0;
@@ -689,9 +688,6 @@ void PutPlayerInServer(entity this)
 	this.avelocity = '0 0 0';
 	this.punchangle = '0 0 0';
 	this.punchvector = '0 0 0';
-
-	STAT(REVIVE_PROGRESS, this) = 0;
-	this.revival_time = 0;
 
 	STAT(AIR_FINISHED, this) = 0;
 	this.waterlevel = WATERLEVEL_NONE;
@@ -760,7 +756,8 @@ void PutPlayerInServer(entity this)
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 
 	// player was spectator
-	if (CS(this).killcount == FRAGS_SPECTATOR) {
+	if (CS(this).killcount == FRAGS_SPECTATOR)
+	{
 		PlayerScore_Clear(this);
 		CS(this).killcount = 0;
 		CS(this).startplaytime = time;
@@ -783,10 +780,12 @@ void PutPlayerInServer(entity this)
 	target_voicescript_clear(this);
 
 	// reset fields the weapons may use
-	FOREACH(Weapons, true, {
+	FOREACH(Weapons, true,
+	{
 		it.wr_resetplayer(it, this);
 			// reload all reloadable weapons
-		if (it.spawnflags & WEP_FLAG_RELOADABLE) {
+		if (it.spawnflags & WEP_FLAG_RELOADABLE)
+		{
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
 				.entity weaponentity = weaponentities[slot];
@@ -794,8 +793,6 @@ void PutPlayerInServer(entity this)
 			}
 		}
 	});
-
-	Unfreeze(this, false);
 
 	MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
 	{
@@ -838,8 +835,8 @@ void PutPlayerInServer(entity this)
 		W_WeaponFrame(this, weaponentity);
 	}
 
-	if (!warmup_stage && !this.alivetime)
-		this.alivetime = time;
+	if (!warmup_stage && !this.alivetime_start)
+		this.alivetime_start = max(time, game_starttime);
 
 	antilag_clear(this, CS(this));
 
@@ -850,7 +847,8 @@ void PutPlayerInServer(entity this)
 /** Called when a client spawns in the server */
 void PutClientInServer(entity this)
 {
-	if (IS_REAL_CLIENT(this)) {
+	if (IS_REAL_CLIENT(this))
+	{
 		msg_entity = this;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, this);
@@ -867,11 +865,10 @@ void PutClientInServer(entity this)
 
 	MUTATOR_CALLHOOK(PutClientInServer, this);
 
-	if (IS_OBSERVER(this)) {
+	if (IS_OBSERVER(this))
 		PutObserverInServer(this, false, use_spawnpoint);
-	} else if (IS_PLAYER(this)) {
+	else if (IS_PLAYER(this))
 		PutPlayerInServer(this);
-	}
 
 	bot_relinkplayerlist();
 }
@@ -1050,10 +1047,9 @@ void ClientPreConnect(entity this)
 	if(autocvar_sv_eventlog)
 	{
 		GameLogEcho(sprintf(":connect:%d:%d:%s",
-			this.playerid,
-			etof(this),
-			((IS_REAL_CLIENT(this)) ? this.netaddress : "bot")
-		));
+		                    this.playerid,
+		                    etof(this),
+		                    IS_REAL_CLIENT(this) ? this.netaddress : "bot"));
 	}
 }
 #endif
@@ -1217,7 +1213,8 @@ void ClientConnect(entity this)
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this);
 
-	IL_EACH(g_initforplayer, it.init_for_player, {
+	IL_EACH(g_initforplayer, it.init_for_player,
+	{
 		it.init_for_player(it, this);
 	});
 
@@ -1241,6 +1238,11 @@ void ClientConnect(entity this)
 
 	if (get_nextmap() != "")
 		Send_NextMap_To_Player(this);
+
+	// cvar hook/callback TODO: recheck this when the cvar is changed
+	if (autocvar_sv_vote_master_ids != "" && this.crypto_idfp_signed)
+		if (strstrofs(autocvar_sv_vote_master_ids, this.crypto_idfp, 0) >= 0)
+			this.vote_master = true;
 }
 
 .string shootfromfixedorigin;
@@ -1292,8 +1294,6 @@ void ClientDisconnect(entity this)
 	ClientState_detach(this);
 
 	Portal_ClearAll(this);
-
-	Unfreeze(this, false);
 
 	RemoveGrapplingHooks(this);
 
@@ -1398,7 +1398,8 @@ void calculate_player_respawn_time(entity this)
 	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
 	if (teamplay)
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this,
+		{
 			if(it.team == this.team)
 				++pcount;
 		});
@@ -1409,7 +1410,8 @@ void calculate_player_respawn_time(entity this)
 	}
 	else
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this,
+		{
 			++pcount;
 		});
 		if (sdelay_small_count == 0)
@@ -1529,12 +1531,12 @@ void player_powerups_remove_all(entity this, bool allow_poweroff_sound)
 	{
 		// don't play the poweroff sound when the game restarts or the player disconnects
 		if (allow_poweroff_sound && time > game_starttime + 1 && IS_CLIENT(this)
-			&& !(start_items & (IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS)))
-		{
+		&& !(start_items & (IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS)))
 			sound(this, CH_INFO, SND_POWEROFF, VOL_BASE, ATTEN_NORM);
-		}
+
 		if (this.items & (IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS))
 			stopsound(this, CH_TRIGGER_SINGLE); // get rid of the pickup sound
+
 		this.items -= (this.items & (IT_SUPERWEAPON | IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS));
 	}
 }
@@ -1640,8 +1642,8 @@ float CalcRot(float current, float stable, float rotfactor, float rotframetime)
 }
 
 void RotRegen(entity this, Resource res, float limit_mod,
-	float regenstable, float regenfactor, float regenlinear, float regenframetime,
-	float rotstable, float rotfactor, float rotlinear, float rotframetime)
+              float regenstable, float regenfactor, float regenlinear, float regenframetime,
+              float rotstable, float rotfactor, float rotlinear, float rotframetime)
 {
 	float old = GetResource(this, res);
 	float current = old;
@@ -1682,7 +1684,7 @@ void player_regen(entity this)
 	float regen_health_stable = autocvar_g_balance_health_regenstable;
 	float regen_health_rotstable = autocvar_g_balance_health_rotstable;
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(PlayerRegen, this, max_mod, regen_mod, rot_mod, limit_mod, regen_health, regen_health_linear, regen_health_rot,
-		regen_health_rotlinear, regen_health_stable, regen_health_rotstable);
+	                                            regen_health_rotlinear, regen_health_stable, regen_health_rotstable);
 	max_mod = M_ARGV(1, float);
 	regen_mod = M_ARGV(2, float);
 	rot_mod = M_ARGV(3, float);
@@ -1697,15 +1699,14 @@ void player_regen(entity this)
 	float rotstable, regenstable, rotframetime, regenframetime;
 
 	if(!mutator_returnvalue)
-	if(!STAT(FROZEN, this))
 	{
 		regenstable = autocvar_g_balance_armor_regenstable;
 		rotstable = autocvar_g_balance_armor_rotstable;
 		regenframetime = (time > this.pauseregen_finished) ? (regen_mod * frametime) : 0;
 		rotframetime = (time > this.pauserotarmor_finished) ? (rot_mod * frametime) : 0;
 		RotRegen(this, RES_ARMOR, limit_mod,
-			regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, regenframetime,
-			rotstable, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear, rotframetime);
+		         regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, regenframetime,
+		         rotstable, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear, rotframetime);
 
 		// NOTE: max_mod is only applied to health
 		regenstable = regen_health_stable * max_mod;
@@ -1713,8 +1714,8 @@ void player_regen(entity this)
 		regenframetime = (time > this.pauseregen_finished) ? (regen_mod * frametime) : 0;
 		rotframetime = (time > this.pauserothealth_finished) ? (rot_mod * frametime) : 0;
 		RotRegen(this, RES_HEALTH, limit_mod,
-			regenstable, regen_health, regen_health_linear, regenframetime,
-			rotstable, regen_health_rot, regen_health_rotlinear, rotframetime);
+		         regenstable, regen_health, regen_health_linear, regenframetime,
+		         rotstable, regen_health_rot, regen_health_rotlinear, rotframetime);
 	}
 
 	// if player rotted to death...  die!
@@ -1734,8 +1735,8 @@ void player_regen(entity this)
 		regenframetime = ((time > this.pauseregen_finished) && (this.items & ITEM_JetpackRegen.m_itemid)) ? frametime : 0;
 		rotframetime = (time > this.pauserotfuel_finished) ? frametime : 0;
 		RotRegen(this, RES_FUEL, 1,
-			regenstable, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regenframetime,
-			rotstable, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, rotframetime);
+		         regenstable, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regenframetime,
+		         rotstable, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, rotframetime);
 	}
 }
 
@@ -1762,15 +1763,15 @@ void GetPressedKeys(entity this)
 
 	// NOTE: GetPressedKeys and PM_dodging_GetPressedKeys use similar code
 	int keys = STAT(PRESSED_KEYS, this);
-	keys = BITSET(keys, KEY_FORWARD, 	CS(this).movement.x > 0);
-	keys = BITSET(keys, KEY_BACKWARD, 	CS(this).movement.x < 0);
-	keys = BITSET(keys, KEY_RIGHT, 		CS(this).movement.y > 0);
-	keys = BITSET(keys, KEY_LEFT, 		CS(this).movement.y < 0);
+	keys = BITSET(keys, KEY_FORWARD,   CS(this).movement.x > 0);
+	keys = BITSET(keys, KEY_BACKWARD,  CS(this).movement.x < 0);
+	keys = BITSET(keys, KEY_RIGHT,     CS(this).movement.y > 0);
+	keys = BITSET(keys, KEY_LEFT,      CS(this).movement.y < 0);
 
-	keys = BITSET(keys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(this));
-	keys = BITSET(keys, KEY_CROUCH, 	IS_DUCKED(this)); // workaround: player can't un-crouch until their path is clear, so we keep the button held here
-	keys = BITSET(keys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(this));
-	keys = BITSET(keys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(this));
+	keys = BITSET(keys, KEY_JUMP,      PHYS_INPUT_BUTTON_JUMP(this));
+	keys = BITSET(keys, KEY_CROUCH,    IS_DUCKED(this)); // workaround: player can't un-crouch until their path is clear, so we keep the button held here
+	keys = BITSET(keys, KEY_ATCK,      PHYS_INPUT_BUTTON_ATCK(this));
+	keys = BITSET(keys, KEY_ATCK2,     PHYS_INPUT_BUTTON_ATCK2(this));
 	CS(this).pressedkeys = keys; // store for other users
 
 	STAT(PRESSED_KEYS, this) = keys;
@@ -1813,8 +1814,6 @@ void SpectateCopy(entity this, entity spectatee)
 	this.dmg_inflictor = spectatee.dmg_inflictor;
 	this.v_angle = spectatee.v_angle;
 	this.angles = spectatee.v_angle;
-	STAT(FROZEN, this) = STAT(FROZEN, spectatee);
-	STAT(REVIVE_PROGRESS, this) = STAT(REVIVE_PROGRESS, spectatee);
 	this.viewloc = spectatee.viewloc;
 	if(!PHYS_INPUT_BUTTON_USE(this) && STAT(CAMERA_SPECTATOR, this) != 2)
 		this.fixangle = true;
@@ -1822,34 +1821,34 @@ void SpectateCopy(entity this, entity spectatee)
 	setsize(this, spectatee.mins, spectatee.maxs);
 	SetZoomState(this, CS(spectatee).zoomstate);
 
-    anticheat_spectatecopy(this, spectatee);
+	anticheat_spectatecopy(this, spectatee);
 	STAT(HUD, this) = STAT(HUD, spectatee);
 	if(spectatee.vehicle)
-    {
-    	this.angles = spectatee.v_angle;
+	{
+		this.angles = spectatee.v_angle;
 
-        //this.fixangle = false;
-        //this.velocity = spectatee.vehicle.velocity;
-        this.vehicle_health = spectatee.vehicle_health;
-        this.vehicle_shield = spectatee.vehicle_shield;
-        this.vehicle_energy = spectatee.vehicle_energy;
-        this.vehicle_ammo1 = spectatee.vehicle_ammo1;
-        this.vehicle_ammo2 = spectatee.vehicle_ammo2;
-        this.vehicle_reload1 = spectatee.vehicle_reload1;
-        this.vehicle_reload2 = spectatee.vehicle_reload2;
+		//this.fixangle = false;
+		//this.velocity = spectatee.vehicle.velocity;
+		this.vehicle_health = spectatee.vehicle_health;
+		this.vehicle_shield = spectatee.vehicle_shield;
+		this.vehicle_energy = spectatee.vehicle_energy;
+		this.vehicle_ammo1 = spectatee.vehicle_ammo1;
+		this.vehicle_ammo2 = spectatee.vehicle_ammo2;
+		this.vehicle_reload1 = spectatee.vehicle_reload1;
+		this.vehicle_reload2 = spectatee.vehicle_reload2;
 
-        //msg_entity = this;
+		//msg_entity = this;
 
-       // WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
-            //WriteAngle(MSG_ONE,  spectatee.v_angle.x);
-           // WriteAngle(MSG_ONE,  spectatee.v_angle.y);
-           // WriteAngle(MSG_ONE,  spectatee.v_angle.z);
+		// WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
+			//WriteAngle(MSG_ONE,  spectatee.v_angle.x);
+		// WriteAngle(MSG_ONE,  spectatee.v_angle.y);
+		// WriteAngle(MSG_ONE,  spectatee.v_angle.z);
 
-        //WriteByte (MSG_ONE, SVC_SETVIEW);
-        //    WriteEntity(MSG_ONE, this);
-        //makevectors(spectatee.v_angle);
-        //setorigin(this, spectatee.origin - v_forward * 400 + v_up * 300);*/
-    }
+		//WriteByte (MSG_ONE, SVC_SETVIEW);
+		//    WriteEntity(MSG_ONE, this);
+		//makevectors(spectatee.v_angle);
+		//setorigin(this, spectatee.origin - v_forward * 400 + v_up * 300);*/
+	}
 }
 
 bool SpectateUpdate(entity this)
@@ -1864,6 +1863,8 @@ bool SpectateUpdate(entity this)
 	}
 
 	SpectateCopy(this, this.enemy);
+	if (IS_OBSERVER(this))
+		TRANSMUTE(Spectator, this);
 
 	return true;
 }
@@ -1978,7 +1979,7 @@ bool SpectateNext(entity this)
 	else if (!ent)
 		ent = find(ent, classname, STR_PLAYER);
 
-	if(ent) { SetSpectatee(this, ent); }
+	if(ent) SetSpectatee(this, ent);
 
 	return SpectateSet(this);
 }
@@ -1993,8 +1994,8 @@ bool SpectatePrev(entity this)
 	entity first = ent;
 	// skip players until current spectated player
 	if(this.enemy)
-	while(ent && ent != this.enemy)
-		ent = ent.chain;
+		while(ent && ent != this.enemy)
+			ent = ent.chain;
 
 	switch (MUTATOR_CALLHOOK(SpectatePrev, this, ent, first))
 	{
@@ -2039,7 +2040,7 @@ void ShowRespawnCountdown(entity this)
 		{
 			this.respawn_countdown = number - 1;
 			if(ceil(this.respawn_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
-				{ Send_Notification(NOTIF_ONE, this, MSG_ANNCE, Announcer_PickNumber(CNT_RESPAWN, number)); }
+				Send_Notification(NOTIF_ONE, this, MSG_ANNCE, Announcer_PickNumber(CNT_RESPAWN, number));
 		}
 	}
 }
@@ -2161,7 +2162,8 @@ int nJoinAllowed(entity this, entity ignore)
 	// TODO simplify this
 	int totalClients = 0;
 	int currentlyPlaying = 0;
-	FOREACH_CLIENT(true, {
+	FOREACH_CLIENT(true,
+	{
 		if(it != ignore)
 			++totalClients;
 		if(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)))
@@ -2300,14 +2302,16 @@ void show_entnum(entity this)
 .bool dualwielding_prev;
 bool PlayerThink(entity this)
 {
-	if (game_stopped || intermission_running) {
+	if (game_stopped || intermission_running)
+	{
 		this.modelflags &= ~MF_ROCKET;
 		if(intermission_running)
 			IntermissionThink(this);
 		return false;
 	}
 
-	if (timeout_status == TIMEOUT_ACTIVE) {
+	if (timeout_status == TIMEOUT_ACTIVE)
+	{
 		// don't allow the player to turn around while game is paused
 		// FIXME turn this into CSQC stuff
 		this.v_angle = this.lastV_angle;
@@ -2319,16 +2323,20 @@ bool PlayerThink(entity this)
 
 	if (frametime && autocvar_sv_show_entnum) show_entnum(this);
 
-	if (IS_DEAD(this)) {
+	if (IS_DEAD(this))
+	{
 		if (this.personal && g_race_qualifying
 		&& (autocvar_g_allow_checkpoints || CheatsAllowed(this, CHIMPULSE_SPEEDRUN.impulse, 0, 0, false, true)))
 		{
-			if (time > this.respawn_time) {
+			if (time > this.respawn_time)
+			{
 				STAT(RESPAWN_TIME, this) = this.respawn_time = time + 1; // only retry once a second
 				respawn(this);
 				CS(this).impulse = CHIMPULSE_SPEEDRUN.impulse;
 			}
-		} else {
+		}
+		else
+		{
 			if (frametime) player_anim(this);
 
 			if (this.respawn_flags & RESPAWN_DENY)
@@ -2399,7 +2407,8 @@ bool PlayerThink(entity this)
 
 	FixPlayermodel(this);
 
-	if (this.shootfromfixedorigin != autocvar_g_shootfromfixedorigin) {
+	if (this.shootfromfixedorigin != autocvar_g_shootfromfixedorigin)
+	{
 		strcpy(this.shootfromfixedorigin, autocvar_g_shootfromfixedorigin);
 		stuffcmd(this, sprintf("\ncl_shootfromfixedorigin \"%s\"\n", autocvar_g_shootfromfixedorigin));
 	}
@@ -2480,55 +2489,74 @@ void ObserverOrSpectatorThink(entity this)
 		return;
 	}
 
-	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && (joinAllowed(this, this.wants_join) || time < CS(this).jointime + MIN_SPEC_TIME)) {
+	if (this.flags & FL_JUMPRELEASED)
+	{
+		if (PHYS_INPUT_BUTTON_JUMP(this) && (joinAllowed(this, this.wants_join) || time < CS(this).jointime + MIN_SPEC_TIME))
+		{
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
-		} else if((is_spec && (PHYS_INPUT_BUTTON_ATCK(this) || CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18 || (CS(this).impulse >= 200 && CS(this).impulse <= 209)))
-			|| (!is_spec && ((PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch) || this.would_spectate))) {
+		}
+		else if((is_spec && (PHYS_INPUT_BUTTON_ATCK(this) || CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18 || (CS(this).impulse >= 200 && CS(this).impulse <= 209)))
+		|| (!is_spec && ((PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch) || this.would_spectate)))
+		{
 			this.flags &= ~FL_JUMPRELEASED;
-			if(SpectateNext(this)) {
-				TRANSMUTE(Spectator, this);
-			} else if (is_spec) {
+			if (autocvar_sv_spectate == 2 && !warmup_stage && !this.vote_master)
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_SPECTATE_SPEC_NOTALLOWED);
+			else if(SpectateNext(this))
+				{ }
+			else if (is_spec)
+			{
 				TRANSMUTE(Observer, this);
 				PutClientInServer(this);
 			}
 			else
 				this.would_spectate = false; // unable to spectate anyone
+
 			if (is_spec)
 				CS(this).impulse = 0;
-		} else if (is_spec) {
-			if(CS(this).impulse == 12 || CS(this).impulse == 16  || CS(this).impulse == 19 || (CS(this).impulse >= 220 && CS(this).impulse <= 229)) {
+		}
+		else if (is_spec)
+		{
+			if(CS(this).impulse == 12 || CS(this).impulse == 16  || CS(this).impulse == 19 || (CS(this).impulse >= 220 && CS(this).impulse <= 229))
+			{
 				this.flags &= ~FL_JUMPRELEASED;
-				if(SpectatePrev(this)) {
-					TRANSMUTE(Spectator, this);
-				} else {
+				if (!SpectatePrev(this))
+				{
 					TRANSMUTE(Observer, this);
 					PutClientInServer(this);
 				}
 				CS(this).impulse = 0;
-			} else if(PHYS_INPUT_BUTTON_ATCK2(this)) {
-				if(!observe_blocked_if_eliminated || !INGAME(this)) {
+			}
+			else if(PHYS_INPUT_BUTTON_ATCK2(this))
+			{
+				if(!observe_blocked_if_eliminated || !INGAME(this))
+				{
 					this.would_spectate = false;
 					this.flags &= ~FL_JUMPRELEASED;
 					TRANSMUTE(Observer, this);
 					PutClientInServer(this);
 				}
-			} else if(!SpectateUpdate(this) && !SpectateNext(this)) {
+			}
+			else if(!SpectateUpdate(this) && !SpectateNext(this))
+			{
 				PutObserverInServer(this, false, true);
 				this.would_spectate = true;
 			}
 		}
-		else {
+		else
+		{
 			bool wouldclip = CS_CVAR(this).cvar_cl_clippedspectating;
 			if (PHYS_INPUT_BUTTON_USE(this))
 				wouldclip = !wouldclip;
 			int preferred_movetype = (wouldclip ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			set_movetype(this, preferred_movetype);
 		}
-	} else { // jump pressed
+	}
+	else
+	{ // jump pressed
 		if ((is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)))
-			|| (!is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this)))) {
+		|| (!is_spec && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this))))
+		{
 			this.flags |= FL_JUMPRELEASED;
 			// primary attack pressed
 			if(this.flags & FL_SPAWNING)
@@ -2563,7 +2591,7 @@ void PlayerUseKey(entity this)
 	}
 	else if(autocvar_g_vehicles_enter)
 	{
-		if(!game_stopped && !STAT(FROZEN, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
+		if(!game_stopped && !STAT(FROZEN, this) && !StatusEffects_active(STATUSEFFECT_Frozen, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 		{
 			entity head, closest_target = NULL;
 			head = WarpZone_FindRadius(this.origin, autocvar_g_vehicles_enter_radius, true);
@@ -2576,15 +2604,20 @@ void PlayerUseKey(entity this)
 					if(closest_target)
 					{
 						if(vlen2(this.origin - head.origin) < vlen2(this.origin - closest_target.origin))
-						{ closest_target = head; }
+							closest_target = head;
 					}
-					else { closest_target = head; }
+					else
+						closest_target = head;
 				}
 
 				head = head.chain;
 			}
 
-			if(closest_target) { vehicles_enter(this, closest_target); return; }
+			if(closest_target)
+			{
+				vehicles_enter(this, closest_target);
+				return;
+			}
 		}
 	}
 
@@ -2618,13 +2651,15 @@ void PlayerPreThink (entity this)
 		PlayerUseKey(this);
 	CS(this).usekeypressed = PHYS_INPUT_BUTTON_USE(this);
 
-	if (IS_PLAYER(this)) {
+	if (IS_PLAYER(this))
+	{
 		if (IS_REAL_CLIENT(this) && time < CS(this).jointime + MIN_SPEC_TIME)
 			error("Client can't be spawned as player on connection!");
 		if(!PlayerThink(this))
 			return;
 	}
-	else if (game_stopped || intermission_running) {
+	else if (game_stopped || intermission_running)
+	{
 		if(intermission_running)
 			IntermissionThink(this);
 		return;
@@ -2636,20 +2671,20 @@ void PlayerPreThink (entity this)
 		// don't do this in ClientConnect
 		// many things can go wrong if a client is spawned as player on connection
 		if (early_join_requested || MUTATOR_CALLHOOK(AutoJoinOnConnection, this)
-			|| (!(autocvar_sv_spectate || autocvar_g_campaign || (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
-				&& (!teamplay || autocvar_g_balance_teams)))
+		|| (!(autocvar_sv_spectate || autocvar_g_campaign || (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
+		    && (!teamplay || autocvar_g_balance_teams)))
 		{
 			if(joinAllowed(this, this.wants_join))
 				Join(this, teamplay);
 			return;
 		}
 	}
-	else if (IS_OBSERVER(this) || IS_SPEC(this)) {
+	else if (IS_OBSERVER(this) || IS_SPEC(this))
 		ObserverOrSpectatorThink(this);
-	}
 
 	// WEAPONTODO: Add weapon request for this
-	if (!zoomstate_set) {
+	if (!zoomstate_set)
+	{
 		bool wep_zoomed = false;
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -2673,7 +2708,8 @@ void PlayerPreThink (entity this)
 		e.pusher = oldpusher;
 	}
 
-	if (CS(this).taunt_soundtime && time > CS(this).taunt_soundtime) {
+	if (CS(this).taunt_soundtime && time > CS(this).taunt_soundtime)
+	{
 		CS(this).taunt_soundtime = 0;
 		PlayerSound(this, playersound_taunt, CH_VOICE, VOL_BASEVOICE, VOICETYPE_AUTOTAUNT);
 	}
@@ -2683,8 +2719,9 @@ void PlayerPreThink (entity this)
 
 void DrownPlayer(entity this)
 {
+	// TODO: mutator hook to prevent drowning?
 	if(IS_DEAD(this) || game_stopped || time < game_starttime || this.vehicle
-		|| STAT(FROZEN, this) || this.watertype != CONTENT_WATER)
+	|| STAT(FROZEN, this) || this.watertype != CONTENT_WATER)
 	{
 		STAT(AIR_FINISHED, this) = 0;
 		return;
@@ -2742,10 +2779,12 @@ void PlayerPostThink (entity this)
 {
 	Player_Physics(this);
 
-	if (IS_PLAYER(this)) {
+	if (IS_PLAYER(this))
+	{
 		DrownPlayer(this);
 		UpdateChatBubble(this);
-		if (CS(this).impulse) ImpulseCommands(this);
+		if (CS(this).impulse)
+			ImpulseCommands(this);
 		GetPressedKeys(this);
 		if (game_stopped)
 		{
@@ -2777,11 +2816,13 @@ void PlayerFrame (entity this)
 
 	if (this.score_frame_dmg)
 	{
+		this.handicap_avg_given_sum += this.score_frame_dmg * Handicap_GetTotalHandicap(this, false);
 		GameRules_scoring_add(this, DMG, this.score_frame_dmg);
 		this.score_frame_dmg = 0;
 	}
 	if (this.score_frame_dmgtaken)
 	{
+		this.handicap_avg_taken_sum += this.score_frame_dmgtaken * Handicap_GetTotalHandicap(this, true);
 		GameRules_scoring_add(this, DMGTAKEN, this.score_frame_dmgtaken);
 		this.score_frame_dmgtaken = 0;
 	}
@@ -2793,6 +2834,7 @@ void PlayerFrame (entity this)
 	anticheat_prethink(this);
 
 	// Check if spectating is allowed
+	// cvar hook/callback TODO: make this event-driven
 	if (!autocvar_sv_spectate && IS_REAL_CLIENT(this)
 	&& (IS_SPEC(this) || IS_OBSERVER(this)) && !INGAME(this))
 	{
@@ -2801,8 +2843,7 @@ void PlayerFrame (entity this)
 		{
 			// sv_spectate was disabled recently (or the server was stalled far too long)
 			CS(this).spectatortime = time; // reset the grace period
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 		}
 		else if (time > cutoff)
 			if (dropclient_schedule(this))
@@ -2863,39 +2904,9 @@ void PlayerFrame (entity this)
 		this.max_armorvalue = 0;
 	}
 
-	// FreezeTag
-	if (IS_PLAYER(this) && time >= game_starttime)
-	{
-		if (STAT(FROZEN, this) == FROZEN_TEMP_REVIVING)
-		{
-			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
-			SetResourceExplicit(this, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, this) * start_health));
-			if (this.iceblock)
-				this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
-
-			if (STAT(REVIVE_PROGRESS, this) >= 1)
-				Unfreeze(this, false);
-		}
-		else if (STAT(FROZEN, this) == FROZEN_TEMP_DYING)
-		{
-			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
-			SetResourceExplicit(this, RES_HEALTH, max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this)));
-
-			if (GetResource(this, RES_HEALTH) < 1)
-			{
-				if (this.vehicle)
-					vehicles_exit(this.vehicle, VHEF_RELEASE);
-				if(this.event_damage)
-					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
-			}
-			else if (STAT(REVIVE_PROGRESS, this) <= 0)
-				Unfreeze(this, false);
-		}
-	}
-
 	// Vehicles
 	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !game_stopped && !this.vehicle)
-	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
+	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !StatusEffects_active(STATUSEFFECT_Frozen, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 	{
 		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it) && !IS_DEAD(it) && it.takedamage != DAMAGE_NO,
 		{

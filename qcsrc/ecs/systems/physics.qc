@@ -10,7 +10,8 @@ void sys_phys_postupdate(entity this);
 
 void sys_phys_update(entity this, float dt)
 {
-	if (!IS_CLIENT(this)) {
+	if (!IS_CLIENT(this))
+	{
 		sys_phys_simulate_simple(this, dt);
 		return;
 	}
@@ -30,8 +31,10 @@ void sys_phys_update(entity this, float dt)
 
 	sys_phys_pregame_hold(this);
 
-	if (IS_SVQC) {
-		if (this.move_movetype == MOVETYPE_NONE) { return; }
+	if (IS_SVQC)
+	{
+		if (this.move_movetype == MOVETYPE_NONE)
+			return;
 		// when we get here, disableclientprediction cannot be 2
 		if(this.move_movetype == MOVETYPE_FOLLOW) // not compatible with prediction
 			this.disableclientprediction = 1;
@@ -50,20 +53,24 @@ void sys_phys_update(entity this, float dt)
 	float maxspeed_mod = 1;
 
 	// conveyors: first fix velocity
-	if (this.conveyor.active) { this.velocity -= this.conveyor.movedir; }
+	if (this.conveyor.active)
+		this.velocity -= this.conveyor.movedir;
 	MUTATOR_CALLHOOK(PlayerPhysics, this, dt);
 
-	if (!IS_PLAYER(this)) {
+	if (!IS_PLAYER(this))
+	{
 		sys_phys_spectator_control(this);
 		maxspeed_mod = STAT(SPECTATORSPEED, this);
 	}
 	sys_phys_fixspeed(this, maxspeed_mod);
 
-	if (IS_DEAD(this)) {
+	if (IS_DEAD(this))
+	{
 		// handle water here
 		vector midpoint = ((this.absmin + this.absmax) * 0.5);
 		int cont = pointcontents(midpoint);
-		if (cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME) {
+		if (cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
+		{
 			this.velocity = this.velocity * 0.5;
 
 			// do we want this?
@@ -76,30 +83,36 @@ void sys_phys_update(entity this, float dt)
 
 	PM_check_slick(this);
 
-	if (IS_SVQC && !PHYS_FIXANGLE(this)) { this.angles = eY * this.v_angle.y; }
-	if (IS_PLAYER(this)) {
-		if (IS_ONGROUND(this)) {
+	if (IS_SVQC && !PHYS_FIXANGLE(this))
+		this.angles = eY * this.v_angle.y;
+	if (IS_PLAYER(this))
+	{
+		if (IS_ONGROUND(this))
+		{
 			PM_check_hitground(this);
 			PM_Footsteps(this);
-		} else if (IsFlying(this)) {
-			this.wasFlying = true;
 		}
+		else if (IsFlying(this))
+			this.wasFlying = true;
 		CheckPlayerJump(this);
 	}
 
-	if (this.flags & FL_WATERJUMP) {
+	if (this.flags & FL_WATERJUMP)
+	{
 		this.velocity_x = this.movedir.x;
 		this.velocity_y = this.movedir.y;
-		if (time > this.teleport_time || this.waterlevel == WATERLEVEL_NONE) {
+		if (time > this.teleport_time || this.waterlevel == WATERLEVEL_NONE)
+		{
 			this.flags &= ~FL_WATERJUMP;
 			this.teleport_time = 0;
 		}
-	} else if (MUTATOR_CALLHOOK(PM_Physics, this, maxspeed_mod, dt)) {
-		// handled
-	} else if (this.move_movetype == MOVETYPE_NOCLIP
-		|| this.move_movetype == MOVETYPE_FLY
-		|| this.move_movetype == MOVETYPE_FLY_WORLDONLY
-		|| MUTATOR_CALLHOOK(IsFlying, this))
+	}
+	else if (MUTATOR_CALLHOOK(PM_Physics, this, maxspeed_mod, dt))
+		{ /* handled */ }
+	else if (this.move_movetype == MOVETYPE_NOCLIP
+	      || this.move_movetype == MOVETYPE_FLY
+	      || this.move_movetype == MOVETYPE_FLY_WORLDONLY
+	      || MUTATOR_CALLHOOK(IsFlying, this))
 	{
 		this.com_phys_friction = PHYS_FRICTION(this);
 		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;
@@ -107,44 +120,54 @@ void sys_phys_update(entity this, float dt)
 		this.com_phys_friction_air = true;
 		sys_phys_simulate(this, dt);
 		this.com_phys_friction_air = false;
-	} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
+	}
+	else if (this.waterlevel >= WATERLEVEL_SWIMMING)
+	{
 		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;
 		this.com_phys_acc_rate = PHYS_ACCELERATE(this) * maxspeed_mod;
 		this.com_phys_water = true;
 		sys_phys_simulate(this, dt);
 		this.com_phys_water = false;
 		this.jumppadcount = 0;
-	} else if (this.ladder_entity) {
+	}
+	else if (this.ladder_entity)
+	{
 		this.com_phys_friction = PHYS_FRICTION(this);
 		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;
 		this.com_phys_acc_rate = PHYS_ACCELERATE(this) * maxspeed_mod;
 		this.com_phys_gravity = -PHYS_GRAVITY(this) * dt;
-		if (PHYS_ENTGRAVITY(this)) { this.com_phys_gravity *= PHYS_ENTGRAVITY(this); }
+		if (PHYS_ENTGRAVITY(this))
+			this.com_phys_gravity *= PHYS_ENTGRAVITY(this);
 		this.com_phys_ladder = true;
 		this.com_phys_friction_air = true;
 		sys_phys_simulate(this, dt);
 		this.com_phys_friction_air = false;
 		this.com_phys_ladder = false;
 		this.com_phys_gravity = 0;
-	} else if (ITEMS_STAT(this) & IT_USING_JETPACK) {
+	}
+	else if (ITEMS_STAT(this) & IT_USING_JETPACK)
 		PM_jetpack(this, maxspeed_mod, dt);
-	} else if (IS_ONGROUND(this) && (!IS_ONSLICK(this) || !PHYS_SLICK_APPLYGRAVITY(this))) {
-		if (!WAS_ONGROUND(this)) {
+	else if (IS_ONGROUND(this) && (!IS_ONSLICK(this) || !PHYS_SLICK_APPLYGRAVITY(this)))
+	{
+		if (!WAS_ONGROUND(this))
+		{
 			emit(phys_land, this);
-			if (this.lastground < time - 0.3) {
+			if (this.lastground < time - 0.3)
 				this.velocity *= (1 - PHYS_FRICTION_ONLAND(this));
-			}
 		}
 		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;
 		this.com_phys_gravity = -PHYS_GRAVITY(this) * dt;
-		if (PHYS_ENTGRAVITY(this)) { this.com_phys_gravity *= PHYS_ENTGRAVITY(this); }
+		if (PHYS_ENTGRAVITY(this))
+			this.com_phys_gravity *= PHYS_ENTGRAVITY(this);
 		this.com_phys_ground = true;
 		this.com_phys_vel_2d = true;
 		sys_phys_simulate(this, dt);
 		this.com_phys_vel_2d = false;
 		this.com_phys_ground = false;
 		this.com_phys_gravity = 0;
-	} else {
+	}
+	else
+	{
 		this.com_phys_acc_rate_air = PHYS_AIRACCELERATE(this) * min(maxspeed_mod, 1);
 		this.com_phys_acc_rate_air_stop = PHYS_AIRSTOPACCELERATE(this) * maxspeed_mod;
 		this.com_phys_acc_rate_air_strafe = PHYS_AIRSTRAFEACCELERATE(this) * maxspeed_mod;
@@ -163,9 +186,11 @@ void sys_phys_update(entity this, float dt)
 
 void sys_phys_postupdate(entity this)
 {
-	if (IS_ONGROUND(this)) { this.lastground = time; }
+	if (IS_ONGROUND(this))
+		this.lastground = time;
 	// conveyors: then break velocity again
-	if (this.conveyor.active) { this.velocity += this.conveyor.movedir; }
+	if (this.conveyor.active)
+		this.velocity += this.conveyor.movedir;
 	this.lastflags = this.flags;
 
 	this.lastclassname = this.classname;
@@ -174,7 +199,8 @@ void sys_phys_postupdate(entity this)
 /** for players */
 void sys_phys_simulate(entity this, float dt)
 {
-	if (!this.com_phys_ground && !this.com_phys_air) {
+	if (!this.com_phys_ground && !this.com_phys_air)
+	{
 		// noclipping
 		// flying
 		// on a spawnfunc_func_ladder
@@ -182,7 +208,8 @@ void sys_phys_simulate(entity this, float dt)
 		// swimming
 		UNSET_ONGROUND(this);
 
-		if (this.com_phys_friction_air) {
+		if (this.com_phys_friction_air)
+		{
 			const float grav = -this.com_phys_gravity;
 			this.velocity_z += grav / 2;
 			this.velocity = this.velocity * (1 - dt * this.com_phys_friction);
@@ -190,20 +217,28 @@ void sys_phys_simulate(entity this, float dt)
 		}
 	}
 
-	if (this.com_phys_water) {
+	if (this.com_phys_water)
+	{
 		// water jump only in certain situations
 		// this mimics quakeworld code
-		if (this.com_in_jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180 && !this.viewloc && !PHYS_FROZEN(this)) {
+		if (this.com_in_jump
+		&&  this.waterlevel == WATERLEVEL_SWIMMING
+		&&  this.velocity_z >= -180
+		&& !this.viewloc
+		&& !PHYS_FROZEN(this))
+		{
 			vector yawangles = eY * this.v_angle.y;
 			vector forward, right, up;
 			MAKE_VECTORS(yawangles, forward, right, up);
 			vector spot = this.origin + 24 * forward;
 			spot_z += 8;
 			traceline(spot, spot, MOVE_NOMONSTERS, this);
-			if (trace_startsolid) {
+			if (trace_startsolid)
+			{
 				spot_z += 24;
 				traceline(spot, spot, MOVE_NOMONSTERS, this);
-				if (!trace_startsolid) {
+				if (!trace_startsolid)
+				{
 					this.velocity = forward * 50;
 					this.velocity_z = 310;
 					UNSET_ONGROUND(this);
@@ -220,7 +255,8 @@ void sys_phys_simulate(entity this, float dt)
 	vector wishvel = forward * PHYS_CS(this).movement.x
 		+ right * PHYS_CS(this).movement.y
 		+ eZ * (this.com_phys_vel_2d ? 0 : PHYS_CS(this).movement.z);
-	if (this.com_phys_water) {
+	if (this.com_phys_water)
+	{
 		if (PHYS_FROZEN(this))
 		{
 			if(this.waterlevel >= WATERLEVEL_SUBMERGED && this.velocity.z >= -70) // don't change the speed too abruptally
@@ -230,35 +266,35 @@ void sys_phys_simulate(entity this, float dt)
 		}
 		else
 		{
-			if (PHYS_INPUT_BUTTON_CROUCH(this)) {
+			if (PHYS_INPUT_BUTTON_CROUCH(this))
 				wishvel.z = -PHYS_MAXSPEED(this);
-			}
-			if (this.viewloc) {
+			if (this.viewloc)
 				wishvel.z = -160;    // drift anyway
-			} else if (wishvel == '0 0 0') {
+			else if (wishvel == '0 0 0')
 				wishvel.z = -60; // drift towards bottom
-			}
 		}
 	}
-	if (this.com_phys_ladder) {
-		if (this.viewloc) {
+	if (this.com_phys_ladder)
+	{
+		if (this.viewloc)
 			wishvel.z = PHYS_CS(this).movement_old.x;
-		}
-		if (this.ladder_entity.classname == "func_water") {
+
+		if (this.ladder_entity.classname == "func_water")
+		{
 			float f = vlen(wishvel);
-			if (f > this.ladder_entity.speed) {
+			if (f > this.ladder_entity.speed)
 				wishvel *= (this.ladder_entity.speed / f);
-			}
 
 			this.watertype = this.ladder_entity.skin;
 			f = this.ladder_entity.origin_z + this.ladder_entity.maxs_z;
-			if ((this.origin_z + this.view_ofs_z) < f) {
+			if ((this.origin_z + this.view_ofs_z) < f)
 				this.waterlevel = WATERLEVEL_SUBMERGED;
-			} else if ((this.origin_z + (this.mins_z + this.maxs_z) * 0.5) < f) {
+			else if ((this.origin_z + (this.mins_z + this.maxs_z) * 0.5) < f)
 				this.waterlevel = WATERLEVEL_SWIMMING;
-			} else if ((this.origin_z + this.mins_z + 1) < f) {
+			else if ((this.origin_z + this.mins_z + 1) < f)
 				this.waterlevel = WATERLEVEL_WETFEET;
-			} else {
+			else
+			{
 				this.waterlevel = WATERLEVEL_NONE;
 				this.watertype = CONTENT_EMPTY;
 			}
@@ -272,23 +308,26 @@ void sys_phys_simulate(entity this, float dt)
 	const vector wishdir = wishspeed ? wishvel * (1 / wishspeed) : '0 0 0';
 	wishspeed = min(wishspeed, this.com_phys_vel_max);
 
-	if (this.com_phys_air) {
-		if (!(this.flags & FL_WATERJUMP)) {
+	if (this.com_phys_air)
+	{
+		if (!(this.flags & FL_WATERJUMP))
+		{
 			// apply air speed limit
 			float airaccelqw = PHYS_AIRACCEL_QW(this);
 			float wishspeed0 = wishspeed;
 			const float maxairspd = this.com_phys_vel_max;
 			wishspeed = min(wishspeed, maxairspd);
-			if (IS_DUCKED(this)) {
+			if (IS_DUCKED(this))
 				wishspeed *= 0.5;
-			}
+
 			float airaccel = this.com_phys_acc_rate_air;
 
 			float accelerating = (this.velocity * wishdir > 0);
 			float wishspeed2 = wishspeed;
 
 			// CPM: air control
-			if (PHYS_AIRSTOPACCELERATE(this)) {
+			if (PHYS_AIRSTOPACCELERATE(this))
+			{
 				vector curdir = normalize(vec2(this.velocity));
 				airaccel += (this.com_phys_acc_rate_air_stop - airaccel) * max(0, -(curdir * wishdir));
 			}
@@ -301,36 +340,41 @@ void sys_phys_simulate(entity this, float dt)
 			// log dv/dt = logaccel + logmaxspeed (when slow)
 			// log dv/dt = logaccel + logmaxspeed + log(1 - accelqw) (when fast)
 			float strafity = IsMoveInDirection(PHYS_CS(this).movement, -90) + IsMoveInDirection(PHYS_CS(this).movement, +90);  // if one is nonzero, other is always zero
-			if (PHYS_MAXAIRSTRAFESPEED(this)) {
-				wishspeed = min(wishspeed,
-					GeomLerp(this.com_phys_vel_max_air, strafity, this.com_phys_vel_max_air_strafe));
-			}
-			if (PHYS_AIRSTRAFEACCELERATE(this)) {
+			if (PHYS_MAXAIRSTRAFESPEED(this))
+				wishspeed = min(wishspeed, GeomLerp(this.com_phys_vel_max_air,
+				                                    strafity,
+				                                    this.com_phys_vel_max_air_strafe));
+
+			if (PHYS_AIRSTRAFEACCELERATE(this))
 				airaccel = GeomLerp(airaccel, strafity, this.com_phys_acc_rate_air_strafe);
-			}
-			if (PHYS_AIRSTRAFEACCEL_QW(this)) {
+
+			if (PHYS_AIRSTRAFEACCEL_QW(this))
 				airaccelqw =
 					(((strafity > 0.5 ? PHYS_AIRSTRAFEACCEL_QW(this) : PHYS_AIRACCEL_QW(this)) >= 0) ? +1 : -1)
 					*
 					(1 - GeomLerp(1 - fabs(PHYS_AIRACCEL_QW(this)), strafity, 1 - fabs(PHYS_AIRSTRAFEACCEL_QW(this))));
-			}
 			// !CPM
 
-			if (PHYS_WARSOWBUNNY_TURNACCEL(this) && accelerating && PHYS_CS(this).movement.y == 0 && PHYS_CS(this).movement.x != 0) {
+			if (PHYS_WARSOWBUNNY_TURNACCEL(this) && accelerating && PHYS_CS(this).movement.y == 0 && PHYS_CS(this).movement.x != 0)
 				PM_AirAccelerate(this, dt, wishdir, wishspeed2);
-			} else {
+			else
+			{
 				float sidefric = maxairspd ? (PHYS_AIRACCEL_SIDEWAYS_FRICTION(this) / maxairspd) : 0;
 				PM_Accelerate(this, dt, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw,
 					PHYS_AIRACCEL_QW_STRETCHFACTOR(this), sidefric, PHYS_AIRSPEEDLIMIT_NONQW(this));
 			}
 
-			if (PHYS_AIRCONTROL(this)) {
+			if (PHYS_AIRCONTROL(this))
 				CPM_PM_Aircontrol(this, dt, wishdir, wishspeed2);
-			}
 		}
-	} else {
-		if (this.com_phys_ground && IS_DUCKED(this)) { wishspeed *= 0.5; }
-		if (this.com_phys_water) {
+	}
+	else
+	{
+		if (this.com_phys_ground && IS_DUCKED(this))
+			wishspeed *= 0.5;
+
+		if (this.com_phys_water)
+		{
 			wishspeed *= 0.7;
 
 			//	if (!(this.flags & FL_WATERJUMP)) // TODO: use
@@ -341,41 +385,48 @@ void sys_phys_simulate(entity this, float dt)
 				this.velocity *= f;
 
 				f = wishspeed - this.velocity * wishdir;
-				if (f > 0) {
+				if (f > 0)
+				{
 					float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, f);
 					this.velocity += accelspeed * wishdir;
 				}
 
 				// holding jump button swims upward slowly
-				if (this.com_in_jump && !this.viewloc && !PHYS_FROZEN(this)) {
+				if (this.com_in_jump && !this.viewloc && !PHYS_FROZEN(this))
+				{
 					// was:
 					// lava: 50
 					// slime: 80
 					// water: 100
 					// idea: double those
-					if (this.waterlevel >= WATERLEVEL_SUBMERGED) {
+					if (this.waterlevel >= WATERLEVEL_SUBMERGED)
 						this.velocity_z = PHYS_MAXSPEED(this) * 0.7;
-					} else {
+					else
 						this.velocity_z = 200;
-					}
 				}
 			}
-			if (this.viewloc) {
+			if (this.viewloc)
+			{
 				const float addspeed = wishspeed - this.velocity * wishdir;
-				if (addspeed > 0) {
+				if (addspeed > 0)
+				{
 					const float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, addspeed);
 					this.velocity += accelspeed * wishdir;
 				}
-			} else {
+			}
+			else
+			{
 				// water acceleration
 				PM_Accelerate(this, dt, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
 			}
 			return;
 		}
-		if (this.com_phys_ground) {
+		if (this.com_phys_ground)
+		{
 			// apply edge friction
 			const float f2 = vlen2(vec2(this.velocity));
-			if (f2 > 0) {
+			if (f2 > 0)
+			{
 				// TODO: apply edge friction
 				// apply ground friction
 				const int realfriction = (IS_ONSLICK(this))
@@ -411,16 +462,16 @@ void sys_phys_simulate(entity this, float dt)
 				 */
 			}
 			const float addspeed = wishspeed - this.velocity * wishdir;
-			if (addspeed > 0) {
+			if (addspeed > 0)
+			{
 				const float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, addspeed);
 				this.velocity += accelspeed * wishdir;
 			}
 			return;
 		}
 
-		if (!(this.flags & FL_WATERJUMP)) {
+		if (!(this.flags & FL_WATERJUMP))
 			PM_Accelerate(this, dt, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
-		}
 	}
 }
 
@@ -432,7 +483,8 @@ void sys_phys_simulate_simple(entity this, float dt)
 	vector mx = this.maxs;
 
 	vector g = '0 0 0';
-	if (this.com_phys_gravity_factor && !g) g = '0 0 -1' * PHYS_GRAVITY(NULL);
+	if (this.com_phys_gravity_factor && !g)
+		g = '0 0 -1' * PHYS_GRAVITY(NULL);
 
 	vector vel = this.com_phys_vel;
 	vector pos = this.com_phys_pos;
@@ -443,21 +495,27 @@ void sys_phys_simulate_simple(entity this, float dt)
 
 	this.angles += dt * this.avelocity;
 	float movetime = dt;
-	for (int i = 0; i < MAX_CLIP_PLANES && movetime > 0; ++i) {
+	for (int i = 0; i < MAX_CLIP_PLANES && movetime > 0; ++i)
+	{
 		vector push = vel * movetime;
 		vector p0 = pos;
 		vector p1 = p0 + push;
 		// SV_PushEntity
 		tracebox(p0, mn, mx, p1, MOVE_NORMAL, this);
-		if (!trace_startsolid) {
+		if (!trace_startsolid)
+		{
 			bool hit = trace_fraction < 1;
 			pos = trace_endpos;
 			entity ent = trace_ent;
 			// SV_LinkEdict_TouchAreaGrid
-			if (this.solid != SOLID_NOT) {
-				FOREACH_ENTITY_RADIUS_ORDERED(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true, {
-					if (it.solid != SOLID_TRIGGER || it == this) continue;
-					if (gettouch(it) && boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax)) {
+			if (this.solid != SOLID_NOT)
+			{
+				FOREACH_ENTITY_RADIUS_ORDERED(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true,
+				{
+					if (it.solid != SOLID_TRIGGER || it == this)
+						continue;
+					if (gettouch(it) && boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax))
+					{
 						// SV_LinkEdict_TouchAreaGrid_Call
 						trace_allsolid = false;
 						trace_startsolid = false;
@@ -477,15 +535,17 @@ void sys_phys_simulate_simple(entity this, float dt)
 					}
 				});
 			}
-			if (hit && this.solid >= SOLID_TRIGGER && (!IS_ONGROUND(this) || this.groundentity != ent)) {
+			if (hit && this.solid >= SOLID_TRIGGER && (!IS_ONGROUND(this) || this.groundentity != ent))
+			{
 				// SV_Impact (ent, trace);
 				tracebox(p0, mn, mx, p1, MOVE_NORMAL, this);
 				void(entity, entity) touched = gettouch(this);
-				if (touched && this.solid != SOLID_NOT) {
+				if (touched && this.solid != SOLID_NOT)
 					touched(ent, this);
-				}
+
 				void(entity, entity) touched2 = gettouch(ent);
-				if (this && ent && touched2 && ent.solid != SOLID_NOT) {
+				if (this && ent && touched2 && ent.solid != SOLID_NOT)
+				{
 					trace_endpos = ent.origin;
 					trace_plane_normal *= -1;
 					trace_plane_dist *= -1;
@@ -499,9 +559,11 @@ void sys_phys_simulate_simple(entity this, float dt)
 			}
 		}
 		// end SV_PushEntity
-		if (wasfreed(this)) { return; }
+		if (wasfreed(this))
+			return;
 		tracebox(p0, mn, mx, p1, MOVE_NORMAL, this);
-		if (trace_fraction == 1) { break; }
+		if (trace_fraction == 1)
+			break;
 		movetime *= 1 - min(1, trace_fraction);
 		ClipVelocity(vel, trace_plane_normal, vel, 1);
 	}

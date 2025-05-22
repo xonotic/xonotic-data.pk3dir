@@ -284,7 +284,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(DEATH_MURDER_NADE,                       N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "nade_normal",          _("^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"), "")
     MSG_INFO_NOTIF(DEATH_MURDER_NADE_NAPALM,                N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "nade_napalm",          _("^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"), _("^BG%s%s^K1 got too close to a napalm explosion%s%s"))
     MSG_INFO_NOTIF(DEATH_MURDER_NADE_ICE,                   N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "nade_ice",             _("^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"), "")
-    MSG_INFO_NOTIF(DEATH_MURDER_NADE_ICE_FREEZE,            N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "nade_ice",             _("^BG%s%s^K1 was frozen to death by ^BG%s^K1's Ice Nade%s%s"), "")
     MSG_INFO_NOTIF(DEATH_MURDER_NADE_HEAL,                  N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "nade_heal",            _("^BG%s%s^K1 has not been healed by ^BG%s^K1's Healing Nade%s%s"), "")
     MSG_INFO_NOTIF(DEATH_MURDER_SHOOTING_STAR,              N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_shootingstar",  _("^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"), "")
     MSG_INFO_NOTIF(DEATH_MURDER_SLIME,                      N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_slime",         _("^BG%s%s^K1 was slimed by ^BG%s^K1%s%s"), "")
@@ -327,7 +326,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_INFO_NOTIF(DEATH_SELF_NADE,                         N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "nade_normal",          _("^BG%s^K1 mastered the art of self-nading%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_NADE_NAPALM,                  N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "nade_napalm",          _("^BG%s^K1 was burned to death by their own Napalm Nade%s%s"), _("^BG%s^K1 decided to take a look at the results of their napalm explosion%s%s"))
     MSG_INFO_NOTIF(DEATH_SELF_NADE_ICE,                     N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "nade_ice",             _("^BG%s^K1 mastered the art of self-nading%s%s"), "")
-    MSG_INFO_NOTIF(DEATH_SELF_NADE_ICE_FREEZE,              N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "nade_ice",             _("^BG%s^K1 was frozen to death by their own Ice Nade%s%s"), _("^BG%s^K1 felt a little chilly%s%s"))
     MSG_INFO_NOTIF(DEATH_SELF_NADE_HEAL,                    N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "nade_heal",            _("^BG%s^K1's Healing Nade didn't quite heal them%s%s"), "")
     MSG_INFO_NOTIF(DEATH_SELF_NOAMMO,                       N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_outofammo",     _("^BG%s^K1 died%s%s. What's the point of living without ammo?"), _("^BG%s^K1 ran out of ammo%s%s"))
     MSG_INFO_NOTIF(DEATH_SELF_ROT,                          N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 rotted away%s%s"), "")
@@ -452,6 +450,8 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MULTITEAM_INFO(SCORES,                                  N_CONSOLE,  0, 0, "", "",           "",                     _("^TC^TT ^BGteam scores!"), "", NAME)
 
     MSG_INFO_NOTIF(SPECTATE_WARNING,                        N_CONSOLE,  0, 1, "f1secs", "",     "",                     _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!"), "")
+    MSG_INFO_NOTIF(SPECTATE_NOTALLOWED,                     N_CONSOLE,  0, 0, "", "",           "",                     _("^F2Spectating isn't allowed at this time!"), "")
+    MSG_INFO_NOTIF(SPECTATE_SPEC_NOTALLOWED,                N_CONSOLE,  0, 0, "", "",           "",                     _("^F2Spectating specific players isn't allowed at this time!"), "")
 
     MSG_INFO_NOTIF(SUPERWEAPON_PICKUP,                      N_CONSOLE,  1, 0, "s1", "s1",       "superweapons",         _("^BG%s^K1 picked up a Superweapon"), "")
 
@@ -660,7 +660,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(DEATH_SELF_MONSTER,                N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were killed by a monster!")), BOLD(_("^K1You need to watch out for monsters!")))
     MSG_CENTER_NOTIF(DEATH_SELF_NADE,                   N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You forgot to put the pin back in!")), BOLD(_("^K1Tastes like chicken!")))
     MSG_CENTER_NOTIF(DEATH_SELF_NADE_NAPALM,            N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1Hanging around a napalm explosion is bad!")), "")
-    MSG_CENTER_NOTIF(DEATH_SELF_NADE_ICE_FREEZE,        N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You got a little bit too cold!")), BOLD(_("^K1You felt a little chilly!")))
     MSG_CENTER_NOTIF(DEATH_SELF_NADE_HEAL,              N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1Your Healing Nade is a bit defective")), "")
     MSG_CENTER_NOTIF(DEATH_SELF_NOAMMO,                 N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You were killed for running out of ammo...")), BOLD(_("^K1You are respawning for running out of ammo...")))
     MSG_CENTER_NOTIF(DEATH_SELF_ROT,                    N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  BOLD(_("^K1You grew too old without taking your medicine")), BOLD(_("^K1You need to preserve your health")))
@@ -802,6 +801,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_CENTER_NOTIF(SPECTATE_WARNING,                  N_ENABLE,    0, 1, "f1secs",         CPID_PREVENT_JOIN,      "0 0",  _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!"), "") // same string as INFO_SPECTATE_WARNING
     MSG_CENTER_NOTIF(SPECTATE_NOTALLOWED,               N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F2Spectating isn't allowed at this time!"), "")
+    MSG_CENTER_NOTIF(SPECTATE_SPEC_NOTALLOWED,          N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^F2Spectating specific players isn't allowed at this time!"), "")
 
     MSG_CENTER_NOTIF(SUPERWEAPON_BROKEN,                N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have broken down"), "")
     MSG_CENTER_NOTIF(SUPERWEAPON_LOST,                  N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have been lost"), "")
@@ -864,7 +864,6 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(DEATH_MURDER_NADE,                  N_ENABLE,  NULL,           INFO_DEATH_MURDER_NADE,                 NULL)
     MSG_MULTI_NOTIF(DEATH_MURDER_NADE_NAPALM,           N_ENABLE,  NULL,           INFO_DEATH_MURDER_NADE_NAPALM,          NULL)
     MSG_MULTI_NOTIF(DEATH_MURDER_NADE_ICE,              N_ENABLE,  NULL,           INFO_DEATH_MURDER_NADE_ICE,             NULL)
-    MSG_MULTI_NOTIF(DEATH_MURDER_NADE_ICE_FREEZE,       N_ENABLE,  NULL,           INFO_DEATH_MURDER_NADE_ICE_FREEZE,      NULL)
     MSG_MULTI_NOTIF(DEATH_MURDER_NADE_HEAL,             N_ENABLE,  NULL,           INFO_DEATH_MURDER_NADE_HEAL,            NULL)
     MSG_MULTI_NOTIF(DEATH_MURDER_SHOOTING_STAR,         N_ENABLE,  NULL,           INFO_DEATH_MURDER_SHOOTING_STAR,        NULL)
     MSG_MULTI_NOTIF(DEATH_MURDER_SLIME,                 N_ENABLE,  NULL,           INFO_DEATH_MURDER_SLIME,                NULL)
@@ -906,8 +905,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_MULTI_NOTIF(DEATH_SELF_MON_ZOMBIE_MELEE,        N_ENABLE,  NULL,           INFO_DEATH_SELF_MON_ZOMBIE_MELEE,       CENTER_DEATH_SELF_MONSTER)
     MSG_MULTI_NOTIF(DEATH_SELF_NADE,                    N_ENABLE,  NULL,           INFO_DEATH_SELF_NADE,                   CENTER_DEATH_SELF_NADE)
     MSG_MULTI_NOTIF(DEATH_SELF_NADE_NAPALM,             N_ENABLE,  NULL,           INFO_DEATH_SELF_NADE_NAPALM,            CENTER_DEATH_SELF_NADE_NAPALM)
-    MSG_MULTI_NOTIF(DEATH_SELF_NADE_ICE,                N_ENABLE,  NULL,           INFO_DEATH_SELF_NADE_ICE,               CENTER_DEATH_SELF_NADE_ICE_FREEZE)
-    MSG_MULTI_NOTIF(DEATH_SELF_NADE_ICE_FREEZE,         N_ENABLE,  NULL,           INFO_DEATH_SELF_NADE_ICE_FREEZE,        CENTER_DEATH_SELF_NADE_ICE_FREEZE)
+    MSG_MULTI_NOTIF(DEATH_SELF_NADE_ICE,                N_ENABLE,  NULL,           INFO_DEATH_SELF_NADE_ICE,               CENTER_DEATH_SELF_NADE)
     MSG_MULTI_NOTIF(DEATH_SELF_NADE_HEAL,               N_ENABLE,  NULL,           INFO_DEATH_SELF_NADE_HEAL,              CENTER_DEATH_SELF_NADE_HEAL)
     MSG_MULTI_NOTIF(DEATH_SELF_NOAMMO,                  N_ENABLE,  NULL,           INFO_DEATH_SELF_NOAMMO,                 CENTER_DEATH_SELF_NOAMMO)
     MSG_MULTI_NOTIF(DEATH_SELF_ROT,                     N_ENABLE,  NULL,           INFO_DEATH_SELF_ROT,                    CENTER_DEATH_SELF_ROT)
@@ -952,6 +950,10 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
 
     MSG_MULTI_NOTIF(MULTI_COINTOSS,                     N_ENABLE,  NULL,           INFO_COINTOSS,                          CENTER_COINTOSS)
     MSG_MULTI_NOTIF(MULTI_INSTAGIB_FINDAMMO,            N_ENABLE,  ANNCE_NUM_10,   NULL,                                   CENTER_INSTAGIB_FINDAMMO_FIRST)
+
+    MSG_MULTI_NOTIF(SPECTATE_WARNING,                   N_ENABLE,  NULL,           INFO_SPECTATE_WARNING,                  CENTER_SPECTATE_WARNING)
+    MSG_MULTI_NOTIF(SPECTATE_NOTALLOWED,                N_ENABLE,  NULL,           INFO_SPECTATE_NOTALLOWED,               CENTER_SPECTATE_NOTALLOWED)
+    MSG_MULTI_NOTIF(SPECTATE_SPEC_NOTALLOWED,           N_ENABLE,  NULL,           INFO_SPECTATE_SPEC_NOTALLOWED,          CENTER_SPECTATE_SPEC_NOTALLOWED)
 
     MSG_MULTI_NOTIF(WEAPON_ACCORDEON_MURDER,            N_ENABLE,  NULL,           INFO_WEAPON_ACCORDEON_MURDER,           NULL)
     MSG_MULTI_NOTIF(WEAPON_ACCORDEON_SUICIDE,           N_ENABLE,  NULL,           INFO_WEAPON_ACCORDEON_SUICIDE,          CENTER_DEATH_SELF_GENERIC)

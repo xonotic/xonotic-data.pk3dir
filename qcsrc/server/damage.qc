@@ -40,11 +40,6 @@
 #include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
 
-void UpdateFrags(entity player, int f)
-{
-	GameRules_scoring_add_team(player, SCORE, f);
-}
-
 void GiveFrags(entity attacker, entity targ, float f, int deathtype, .entity weaponentity)
 {
 	// TODO route through PlayerScores instead
@@ -80,7 +75,7 @@ void GiveFrags(entity attacker, entity targ, float f, int deathtype, .entity wea
 	attacker.totalfrags += f;
 
 	if(f)
-		UpdateFrags(attacker, f);
+		GameRules_scoring_add_team(attacker, SCORE, f);
 }
 
 string AppendItemcodes(string s, entity player)
@@ -503,108 +498,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 	CS(targ).killcount = 0;
 }
 
-void Ice_Think(entity this)
-{
-	if(!STAT(FROZEN, this.owner) || this.owner.iceblock != this)
-	{
-		delete(this);
-		return;
-	}
-	vector ice_org = this.owner.origin - '0 0 16';
-	if (this.origin != ice_org)
-		setorigin(this, ice_org);
-	this.nextthink = time;
-}
-
-void Freeze(entity targ, float revivespeed, int frozen_type, bool show_waypoint)
-{
-	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // TODO: only specified entities can be freezed
-		return;
-
-	if(STAT(FROZEN, targ))
-		return;
-
-	float targ_maxhealth = ((IS_MONSTER(targ)) ? targ.max_health : start_health);
-
-	STAT(FROZEN, targ) = frozen_type;
-	STAT(REVIVE_PROGRESS, targ) = ((frozen_type == FROZEN_TEMP_DYING) ? 1 : 0);
-	SetResource(targ, RES_HEALTH, ((frozen_type == FROZEN_TEMP_DYING) ? targ_maxhealth : 1));
-	targ.revive_speed = revivespeed;
-	if(targ.bot_attack)
-		IL_REMOVE(g_bot_targets, targ);
-	targ.bot_attack = false;
-	targ.freeze_time = time;
-
-	entity ice = new(ice);
-	ice.owner = targ;
-	ice.scale = targ.scale;
-	// set_movetype(ice, MOVETYPE_FOLLOW) would rotate the ice model with the player
-	setthink(ice, Ice_Think);
-	ice.nextthink = time;
-	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
-	setmodel(ice, MDL_ICE);
-	ice.alpha = 1;
-	ice.colormod = Team_ColorRGB(targ.team);
-	ice.glowmod = ice.colormod;
-	targ.iceblock = ice;
-	targ.revival_time = 0;
-
-	Ice_Think(ice);
-
-	RemoveGrapplingHooks(targ);
-
-	FOREACH_CLIENT(IS_PLAYER(it),
-	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-			if(it.(weaponentity).hook.aiment == targ)
-				RemoveHook(it.(weaponentity).hook);
-		}
-	});
-
-	// add waypoint
-	if(MUTATOR_CALLHOOK(Freeze, targ, revivespeed, frozen_type) || show_waypoint)
-		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', NULL, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
-}
-
-void Unfreeze(entity targ, bool reset_health)
-{
-	if(!STAT(FROZEN, targ))
-		return;
-
-	if (reset_health && STAT(FROZEN, targ) != FROZEN_TEMP_DYING)
-		SetResource(targ, RES_HEALTH, ((IS_PLAYER(targ)) ? start_health : targ.max_health));
-
-	targ.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
-
-	STAT(FROZEN, targ) = 0;
-	STAT(REVIVE_PROGRESS, targ) = 0;
-	targ.revival_time = time;
-	if(!targ.bot_attack)
-		IL_PUSH(g_bot_targets, targ);
-	targ.bot_attack = true;
-
-	WaypointSprite_Kill(targ.waypointsprite_attached);
-
-	FOREACH_CLIENT(IS_PLAYER(it),
-	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-			if(it.(weaponentity).hook.aiment == targ)
-				RemoveHook(it.(weaponentity).hook);
-		}
-	});
-
-	// remove the ice block
-	if(targ.iceblock)
-		delete(targ.iceblock);
-	targ.iceblock = NULL;
-
-	MUTATOR_CALLHOOK(Unfreeze, targ);
-}
-
 void Damage(entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	float complainteamdamage = 0;
@@ -742,55 +635,6 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			}
 		}
 
-		if(STAT(FROZEN, targ) && !ITEM_DAMAGE_NEEDKILL(deathtype)
-			&& deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id)
-		{
-			if(autocvar_g_frozen_revive_falldamage > 0 && deathtype == DEATH_FALL.m_id && damage >= autocvar_g_frozen_revive_falldamage)
-			{
-				Unfreeze(targ, false);
-				SetResource(targ, RES_HEALTH, autocvar_g_frozen_revive_falldamage_health);
-				Send_Effect(EFFECT_ICEORGLASS, targ.origin, '0 0 0', 3);
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
-				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
-			}
-
-			damage = 0;
-			force *= autocvar_g_frozen_force;
-		}
-
-		if(IS_PLAYER(targ) && STAT(FROZEN, targ)
-			&& ITEM_DAMAGE_NEEDKILL(deathtype) && !autocvar_g_frozen_damage_trigger)
-		{
-			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
-
-			entity spot = SelectSpawnPoint(targ, false);
-			if(spot)
-			{
-				damage = 0;
-				targ.deadflag = DEAD_NO;
-
-				targ.angles = spot.angles;
-
-				targ.effects = 0;
-				targ.effects |= EF_TELEPORT_BIT;
-
-				targ.angles_z = 0; // never spawn tilted even if the spot says to
-				targ.fixangle = true; // turn this way immediately
-				targ.velocity = '0 0 0';
-				targ.avelocity = '0 0 0';
-				targ.punchangle = '0 0 0';
-				targ.punchvector = '0 0 0';
-				targ.oldvelocity = targ.velocity;
-
-				targ.spawnorigin = spot.origin;
-				setorigin(targ, spot.origin + '0 0 1' * (1 - targ.mins.z - 24));
-				// don't reset back to last position, even if new position is stuck in solid
-				targ.oldorigin = targ.origin;
-
-				Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
-			}
-		}
-
 		if (targ == attacker)
 			damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
@@ -807,6 +651,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			else
 				victim = targ;
 
+			// TODO: allow the mutator hook to tell if the hit sound should be team or not
 			if(IS_PLAYER(victim) || (IS_TURRET(victim) && victim.active == ACTIVE_ACTIVE) || IS_MONSTER(victim) || MUTATOR_CALLHOOK(PlayHitsound, victim, attacker))
 			{
 				if (DIFF_TEAM(victim, attacker))
@@ -1139,6 +984,7 @@ float RadiusDamage(entity inflictor, entity attacker, float coredamage, float ed
 
 bool Heal(entity targ, entity inflictor, float amount, float limit)
 {
+	// TODO: mutator hook to control healing
 	if(game_stopped || (IS_CLIENT(targ) && CS(targ).killcount == FRAGS_SPECTATOR) || STAT(FROZEN, targ) || IS_DEAD(targ))
 		return false;
 
@@ -1153,8 +999,10 @@ bool Heal(entity targ, entity inflictor, float amount, float limit)
 
 float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 {
-	float dps;
 	float maxtime, mintime, maxdamage, mindamage, maxdps, mindps, totaldamage, totaltime;
+
+	if (d <= 0)
+		return -1;
 
 	if(IS_PLAYER(e))
 	{
@@ -1163,7 +1011,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 	}
 
 	t = max(t, 0.1);
-	dps = d / t;
+	float dps = d / t;
 	if(StatusEffects_active(STATUSEFFECT_Burning, e))
 	{
 		float fireendtime = StatusEffects_gettime(STATUSEFFECT_Burning, e);
@@ -1284,7 +1132,7 @@ void Fire_ApplyDamage(entity e)
 	}
 	e.fire_hitsound = true;
 
-	if(!IS_INDEPENDENT_PLAYER(e) && !STAT(FROZEN, e))
+	if(!IS_INDEPENDENT_PLAYER(e) && !STAT(FROZEN, e) && !StatusEffects_active(STATUSEFFECT_Frozen, e))
 	{
 		IL_EACH(g_damagedbycontents, it.damagedbycontents && it != e,
 		{

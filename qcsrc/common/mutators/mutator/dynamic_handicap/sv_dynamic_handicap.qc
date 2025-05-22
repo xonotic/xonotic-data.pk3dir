@@ -38,6 +38,9 @@ void DynamicHandicap_UpdateHandicap()
 		total_score += PlayerScore_Get(it, SP_SCORE);
 		++totalplayers;
 	});
+	if (totalplayers == 0)
+		return;
+
 	float mean_score = total_score / totalplayers;
 	FOREACH_CLIENT(true,
 	{

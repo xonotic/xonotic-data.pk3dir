@@ -40,18 +40,19 @@ void XonoticGameMenuDialog_fill(entity me)
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Main menu"), '0 0 0', "menu_cmd nexposee", 0));
+		// NOTE these buttons use directmenu so that the menu will be hidden when these dialogs are closed
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Servers"), '0 0 0', "menu_cmd servers", 0));
+		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Servers"), '0 0 0', "menu_cmd directmenu servers", 0));
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Profile"), '0 0 0', "menu_cmd profile", 0));
+		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Profile"), '0 0 0', "menu_cmd directmenu profile", 0));
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Settings"), '0 0 0', "menu_cmd settings", 0));
+		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Settings"), '0 0 0', "menu_cmd directmenu settings", 0));
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Input"), '0 0 0', "menu_cmd inputsettings", 0));
+		me.TD(me, 1, 0.8, e = makeXonoticCommandButton(_("Input"), '0 0 0', "menu_cmd directmenu inputsettings", 0));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Quick menu"), '0 0 0', "quickmenu", COMMANDBUTTON_CLOSE));
 	me.TR(me);

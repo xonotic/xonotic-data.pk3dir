@@ -15,6 +15,7 @@
 #include "dialog_hudpanel_powerups.qh"
 #include "dialog_hudpanel_pressedkeys.qh"
 #include "dialog_hudpanel_racetimer.qh"
+#include "dialog_hudpanel_checkpoints.qh"
 #include "dialog_hudpanel_radar.qh"
 #include "dialog_hudpanel_score.qh"
 #include "dialog_hudpanel_timer.qh"
@@ -135,6 +136,10 @@ void MainWindow_configureMainWindow(entity me)
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
+	i = NEW(XonoticHUDCheckpointsDialog);
+	i.configureDialog(i);
+	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
 	i = NEW(XonoticHUDRadarDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
@@ -193,6 +198,10 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	me.bindingsResetDialog = i = NEW(XonoticBindingsResetDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	me.skinResetDialog = i = NEW(XonoticSkinResetDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 

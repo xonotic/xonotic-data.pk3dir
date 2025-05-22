@@ -57,7 +57,7 @@ void havocbot_ai(entity this)
 		}
 		else
 		{
-			if (!this.jumppadcount && !STAT(FROZEN, this)
+			if (!this.jumppadcount && !STAT(FROZEN, this) && !StatusEffects_active(STATUSEFFECT_Frozen, this)
 				&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP) && !IS_ONGROUND(this)))
 			{
 				// find a new goal
@@ -66,7 +66,7 @@ void havocbot_ai(entity this)
 		}
 
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
-		if(!(IS_DEAD(this) || STAT(FROZEN, this)))
+		if(!(IS_DEAD(this) || STAT(FROZEN, this) || StatusEffects_active(STATUSEFFECT_Frozen, this)))
 		if(!this.goalcurrent)
 		if(this.waterlevel == WATERLEVEL_SWIMMING || (this.aistatus & AI_STATUS_OUT_WATER))
 		{
@@ -110,7 +110,7 @@ void havocbot_ai(entity this)
 		return;
 	}
 
-	if(IS_DEAD(this) || STAT(FROZEN, this))
+	if(IS_DEAD(this) || STAT(FROZEN, this) || StatusEffects_active(STATUSEFFECT_Frozen, this))
 	{
 		if (this.goalcurrent)
 			navigation_clearroute(this);

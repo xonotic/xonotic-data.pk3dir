@@ -9,13 +9,38 @@
 #include "hudskinlist.qh"
 #include "colorpicker_string.qh"
 #include "checkbox.qh"
+#include "mainwindow.qh"
 #include "commandbutton.qh"
+
+void HUDSkinList_Reset_Click(entity me, entity btn)
+{
+	DialogOpenButton_Click(me, main.skinResetDialog);
+}
+
+void XonoticSkinResetDialog_fill(entity me)
+{
+	entity e;
+	if (!hudskinlist)
+		hudskinlist = makeXonoticHUDSkinList();
+
+	me.TR(me);
+		me.TD(me, 1, 2, makeXonoticTextLabel(0.5, _("Are you sure you want to reset your HUD to this skin?")));
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticButton(_("Yes"), '1 0 0'));
+			e.onClick = SetHUDSkin_Click;
+			e.onClickEntity = hudskinlist;
+		me.TD(me, 1, 1, e = makeXonoticButton(_("No"), '0 1 0'));
+			e.onClick = Dialog_Close;
+			e.onClickEntity = me;
+}
 
 void XonoticHUDExitDialog_fill(entity me)
 {
 	entity e;
 	int i;
-	hudskinlist = makeXonoticHUDSkinList();
+	if (!hudskinlist)
+		hudskinlist = makeXonoticHUDSkinList();
 
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticHeaderLabel(_("HUD skins")));
@@ -33,11 +58,11 @@ void XonoticHUDExitDialog_fill(entity me)
 			e.onClick = HUDSkinList_Refresh_Click;
 			e.onClickEntity = hudskinlist;
 		me.TD(me, 1, 2.2, e = makeXonoticButton(_("Set skin"), '0 0 0'));
-			e.onClick = SetHUDSkin_Click;
-			e.onClickEntity = hudskinlist;
+			e.onClick = HUDSkinList_Reset_Click;
+			e.onClickEntity = me;
 	me.gotoRC(me, me.rows - 2.5, 0);
 		me.TD(me, 1, 2, e = makeXonoticButton_T(_("Save current skin"), '0 0 0',
-			"Note: HUD skins are saved in data/data/ directory and can be manually renamed/deleted from there"));
+			_("Note: HUD skins are saved in data/data/ directory and can be manually renamed/deleted from there")));
 			e.onClick = SaveHUDSkin_Click;
 			e.onClickEntity = hudskinlist;
 		me.TD(me, 1, 2, e = makeXonoticInputBox(0, string_null));

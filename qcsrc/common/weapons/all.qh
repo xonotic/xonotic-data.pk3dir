@@ -46,9 +46,11 @@ STATIC_INIT(WeaponPickup)
 #define WepSet_FromWeapon(it) ((it).m_wepset)
 WepSet _WepSet_FromWeapon(int i);
 
+.int m_unique_impulse;
+
 #define DEFAULT_FILENAME "weapons_dump.cfg"
 // NOTE: dumpeffectinfo, dumpnotifs, dumpturrets and dumpweapons use similar code
-GENERIC_COMMAND(dumpweapons, "Dump all turrets into " DEFAULT_FILENAME, false) // WEAPONTODO: make this work with other progs than just server
+GENERIC_COMMAND(dumpweapons, "Dump all weapons into " DEFAULT_FILENAME, false) // WEAPONTODO: make this work with other progs than just server
 {
 	switch(request)
 	{
@@ -139,6 +141,12 @@ REGISTRY_DEFINE_GET(Weapons, WEP_Null)
 Weapon Weapon_from_name(string s)
 {
 	FOREACH(Weapons, it != WEP_Null && it.netname == s, return it);
+	return WEP_Null;
+}
+
+Weapon Weapon_from_impulse(int imp)
+{
+	FOREACH(Weapons, it != WEP_Null && it.m_unique_impulse == imp, return it);
 	return WEP_Null;
 }
 
@@ -329,16 +337,22 @@ REGISTRY_CHECK(Weapons)
 STATIC_INIT(register_weapons_done)
 {
 	string inaccessible = "";
+	int imp = WEP_IMPULSE_BEGIN;
 	FOREACH(Weapons, true, {
 		WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
 		WEPSET_ALL |= set;
 		if (it.spawnflags & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
 		if (it == WEP_Null) continue;
-		int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
+		if (it.spawnflags & WEP_FLAG_SPECIALATTACK) continue;
+		// TODO: this exists to filter out the Ball Stealer, otherwise we run out of impulses
+		if ((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_TYPE_OTHER)) continue;
+
+		it.m_unique_impulse = imp;
 		if (imp <= WEP_IMPULSE_END)
 			localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
 		else
 			inaccessible = strcat(inaccessible, "\n", it.netname);
+		++imp;
 	});
 	if (inaccessible != "" && autocvar_developer > 0) LOG_TRACEF("Impulse limit exceeded, weapon(s) will not be directly accessible: %s", inaccessible);
 	#ifdef CSQC

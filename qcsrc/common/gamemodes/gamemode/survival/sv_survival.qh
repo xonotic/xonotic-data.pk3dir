@@ -6,7 +6,7 @@ void surv_Initialize();
 
 REGISTER_MUTATOR(surv, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
 		surv_Initialize();
