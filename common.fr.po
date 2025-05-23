@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-22 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -2201,7 +2201,7 @@ msgstr "Bonus"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:24
 msgid "Damage Text"
-msgstr ""
+msgstr "Dommages"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:26
 msgid "Draw damage numbers"
@@ -2236,7 +2236,7 @@ msgstr "Selon l'arme"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:54
 msgid "Initial alpha:"
-msgstr ""
+msgstr "Transparence initiale :"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:59
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:23
@@ -2247,11 +2247,11 @@ msgstr "Durée du fondu :"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:64
 msgid "Accumulate:"
-msgstr ""
+msgstr "Accumuler :"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:68
 msgid "If younger than:"
-msgstr ""
+msgstr "Dans un intervalle de :"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:71
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:34
@@ -2267,15 +2267,15 @@ msgstr "Jamais"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:72
 msgid "1s"
-msgstr ""
+msgstr "1s"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:73
 msgid "2s"
-msgstr ""
+msgstr "2s"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:74
 msgid "3s"
-msgstr ""
+msgstr "3s"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:75
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:36
@@ -2290,7 +2290,7 @@ msgstr "Toujours"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:80
 msgid "Or alpha greater than:"
-msgstr ""
+msgstr "Ou transparence supérieure à :"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:7
 msgid "Damage text"
@@ -7374,7 +7374,7 @@ msgstr "Armes"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:27
 msgid "Are you sure you want to reset your HUD to this skin?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir réinitialiser votre ATH avec ce thème ?"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:46
 msgid "HUD skins"
@@ -7411,6 +7411,8 @@ msgid ""
 "Note: HUD skins are saved in data/data/ directory and can be manually "
 "renamed/deleted from there"
 msgstr ""
+"Remarque : les thèmes de l'ATH sont sauvegardés dans le répertoire data/"
+"data/ et peuvent être manuellement renommés ou supprimés depuis ce répertoire"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:73
 msgid "Panel background defaults:"
@@ -7503,7 +7505,7 @@ msgstr "Configuration de l'ATH"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qh:18
 msgid "Reset HUD skin"
-msgstr ""
+msgstr "Réinitialiser le thème de l'ATH"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
@@ -9152,7 +9154,7 @@ msgstr "Afficher le point central du réticule"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:112
 msgid "Use normal color"
-msgstr ""
+msgstr "Utiliser une couleur normale"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:123
 msgid "Smooth effects of crosshairs"
@@ -9553,7 +9555,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:26
 msgid "Perspective"
-msgstr ""
+msgstr "Perspective"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:29
 msgid "Field of view:"
@@ -9605,7 +9607,7 @@ msgstr "Passer à travers les murs en mode spectateur"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:77
 msgid "Zooming"
-msgstr ""
+msgstr "Zoom"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:79
 msgid "ZOOM^Zoom factor:"
@@ -9702,7 +9704,7 @@ msgstr "Toujours basculer vers une arme disponible"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
 msgid "Weapon Options"
-msgstr ""
+msgstr "Options des armes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:59
 msgid "Release attack buttons when you switch weapons"
@@ -9726,7 +9728,7 @@ msgstr "Changement auto en CTS :"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:75
 msgid "Weapon Visuals"
-msgstr ""
+msgstr "Visuels des armes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
 msgid "Draw 1st person weapon model"
@@ -9831,22 +9833,25 @@ msgid ""
 "In-game linear acceleration factor. \"Fully disabled\" also disables other "
 "acceleration types that can be enabled via the m_accelerate_* cvars"
 msgstr ""
+"Facteur d'accélération linéaire dans le jeu. L'option « Complètement "
+"désactivé » désactive également les autres types d'accélération qui peuvent "
+"être activés via les cvars m_accelerate_*"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:116
 msgid "Acceleration factor:"
-msgstr ""
+msgstr "Facteur d'accélération :"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:118
 msgid "MOUSEACCEL^Fully disabled"
-msgstr ""
+msgstr "Complètement désactivé"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:119
 msgid "MOUSEACCEL^Linear disabled"
-msgstr ""
+msgstr "Linéaire désactivé"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:124
 msgid "Speed bounds:"
-msgstr ""
+msgstr "Limites de vitesse :"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:136
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:140
@@ -9993,11 +9998,11 @@ msgstr "Avancé"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:75
 msgid "Text shadow"
-msgstr ""
+msgstr "Ombre du texte"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:76
 msgid "Draw a shadow behind all text to improve readability"
-msgstr ""
+msgstr "Dessiner une ombre derrière tout le texte pour améliorer la lisibilité"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Show current date and time"
@@ -10080,11 +10085,11 @@ msgstr "Remplacer les effets gores par des effets moins violents"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:77
 msgid "Just the gore"
-msgstr ""
+msgstr "Uniquement le gore"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:82
 msgid "Just the language"
-msgstr ""
+msgstr "Uniquement le langage"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
 msgid ""
@@ -10118,7 +10123,7 @@ msgstr "Plein écran"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:36
 msgid "Borderless window"
-msgstr ""
+msgstr "Fenêtre sans bordure"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:39
 msgid "Resolution:"
@@ -10166,7 +10171,7 @@ msgstr "Colossale"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:57
 msgid "Anaglyph 3D (red-cyan)"
-msgstr ""
+msgstr "Anaglyphe 3D (rouge-cyan)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:59
 msgid "High-quality frame buffer"

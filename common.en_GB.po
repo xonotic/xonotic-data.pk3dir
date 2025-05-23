@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-22 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: k9er, 2024\n"
+"Last-Translator: k9er, 2024-2025\n"
 "Language-Team: English (United Kingdom) (http://app.transifex.com/team-"
 "xonotic/xonotic/language/en_GB/)\n"
 "Language: en_GB\n"
@@ -2157,7 +2157,7 @@ msgstr "Buff"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:24
 msgid "Damage Text"
-msgstr ""
+msgstr "Damage Text"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:26
 msgid "Draw damage numbers"
@@ -2192,7 +2192,7 @@ msgstr "Per weapon"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:54
 msgid "Initial alpha:"
-msgstr ""
+msgstr "Initial alpha:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:59
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:23
@@ -2203,11 +2203,11 @@ msgstr "Fade time:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:64
 msgid "Accumulate:"
-msgstr ""
+msgstr "Accumulate:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:68
 msgid "If younger than:"
-msgstr ""
+msgstr "If younger than:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:71
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:34
@@ -2223,15 +2223,15 @@ msgstr "Never"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:72
 msgid "1s"
-msgstr ""
+msgstr "1s"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:73
 msgid "2s"
-msgstr ""
+msgstr "2s"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:74
 msgid "3s"
-msgstr ""
+msgstr "3s"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:75
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:36
@@ -2246,7 +2246,7 @@ msgstr "Always"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:80
 msgid "Or alpha greater than:"
-msgstr ""
+msgstr "Or alpha greater than:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:7
 msgid "Damage text"
@@ -7263,7 +7263,7 @@ msgstr "Weapons Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:27
 msgid "Are you sure you want to reset your HUD to this skin?"
-msgstr ""
+msgstr "Are you sure you want to reset your HUD to this skin?"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:46
 msgid "HUD skins"
@@ -7300,6 +7300,8 @@ msgid ""
 "Note: HUD skins are saved in data/data/ directory and can be manually "
 "renamed/deleted from there"
 msgstr ""
+"Note: HUD skins are saved in data/data/ directory and can be manually "
+"renamed/deleted from there"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:73
 msgid "Panel background defaults:"
@@ -7391,7 +7393,7 @@ msgstr "Panel HUD Setup"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qh:18
 msgid "Reset HUD skin"
-msgstr ""
+msgstr "Reset HUD skin"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
@@ -9025,7 +9027,7 @@ msgstr "Enable centre crosshair dot"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:112
 msgid "Use normal color"
-msgstr ""
+msgstr "Use normal colour"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:123
 msgid "Smooth effects of crosshairs"
@@ -9420,7 +9422,7 @@ msgstr "Customise how players and items are displayed in game"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:26
 msgid "Perspective"
-msgstr ""
+msgstr "Perspective"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:29
 msgid "Field of view:"
@@ -9472,7 +9474,7 @@ msgstr "Allow passing through walls while spectating"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:77
 msgid "Zooming"
-msgstr ""
+msgstr "Zooming"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:79
 msgid "ZOOM^Zoom factor:"
@@ -9568,7 +9570,7 @@ msgstr "Cycle through only usable weapon selections"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
 msgid "Weapon Options"
-msgstr ""
+msgstr "Weapon Options"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:59
 msgid "Release attack buttons when you switch weapons"
@@ -9592,7 +9594,7 @@ msgstr "Auto switch in CTS:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:75
 msgid "Weapon Visuals"
-msgstr ""
+msgstr "Weapon Visuals"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
 msgid "Draw 1st person weapon model"
@@ -9695,22 +9697,24 @@ msgid ""
 "In-game linear acceleration factor. \"Fully disabled\" also disables other "
 "acceleration types that can be enabled via the m_accelerate_* cvars"
 msgstr ""
+"In-game linear acceleration factor. \"Fully disabled\" also disables other "
+"acceleration types that can be enabled via the m_accelerate_* cvars"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:116
 msgid "Acceleration factor:"
-msgstr ""
+msgstr "Acceleration factor:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:118
 msgid "MOUSEACCEL^Fully disabled"
-msgstr ""
+msgstr "MOUSEACCEL^Fully disabled"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:119
 msgid "MOUSEACCEL^Linear disabled"
-msgstr ""
+msgstr "MOUSEACCEL^Linear disabled"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:124
 msgid "Speed bounds:"
-msgstr ""
+msgstr "Speed bounds:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:136
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:140
@@ -9856,11 +9860,11 @@ msgstr "TLTIP^Advanced"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:75
 msgid "Text shadow"
-msgstr ""
+msgstr "Text shadow"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:76
 msgid "Draw a shadow behind all text to improve readability"
-msgstr ""
+msgstr "Draw a shadow behind all text to improve readability"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Show current date and time"
@@ -9943,11 +9947,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:77
 msgid "Just the gore"
-msgstr ""
+msgstr "Just the gore"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:82
 msgid "Just the language"
-msgstr ""
+msgstr "Just the language"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
 msgid ""
@@ -9980,7 +9984,7 @@ msgstr "Full screen"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:36
 msgid "Borderless window"
-msgstr ""
+msgstr "Borderless window"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:39
 msgid "Resolution:"
@@ -10028,7 +10032,7 @@ msgstr "SZ^Colossal"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:57
 msgid "Anaglyph 3D (red-cyan)"
-msgstr ""
+msgstr "Anaglyph 3D (red-cyan)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:59
 msgid "High-quality frame buffer"
