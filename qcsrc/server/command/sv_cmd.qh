@@ -6,6 +6,7 @@
 
 bool shuffleteams_on_reset_map;
 void shuffleteams();
+void rebalanceplayer();
 
 void race_deleteTime(string map, float pos);
 

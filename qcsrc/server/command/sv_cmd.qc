@@ -1163,7 +1163,7 @@ void GameCommand_moveplayer(int request, int argc)
 			LOG_HELP("  Full list of destinations here: spec, spectator, red, blue, yellow, pink, auto.");
 			LOG_HELP("Examples: sv_cmd moveplayer 1,3,5 red");
 			LOG_HELP("          sv_cmd moveplayer 2 spec");
-			LOG_HELP("See also: ^2allspec, shuffleteams^7");
+			LOG_HELP("See also: ^2allspec, shuffleteams, rebalanceplayer^7");
 			return;
 		}
 	}
@@ -1334,6 +1334,75 @@ void GameCommand_setbots(int request, int argc)
 	}
 }
 
+// TODO team as 2nd argument for games with more than 2 teams
+void rebalanceplayer()
+{
+	if (!teamplay)
+	{
+		LOG_INFO("Can't rebalance in matches without teams.");
+		return;
+	}
+
+	int number_of_teams = 0;
+	entity balance = TeamBalance_CheckAllowedTeams(NULL);
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		if (TeamBalance_IsTeamAllowed(balance, i))
+		{
+			number_of_teams = max(i, number_of_teams);
+		}
+	}
+	TeamBalance_Destroy(balance);
+
+	if (number_of_teams != 2)
+	{
+		LOG_INFO("Can't rebalance in matches with more than 2 teams.");
+		return;
+	}
+
+	// Check to see if the player is a valid target
+	string pl_name = argv(1);
+	entity pl = GetFilteredEntity(pl_name);
+	int accepted = VerifyClientEntity(pl, false, false);
+
+	if (accepted <= 0)
+	{
+		LOG_INFOF("Can't rebalance %s: %s", pl_name, GetClientErrorString(accepted, pl_name));
+		return;
+	}
+
+	int team_index_pl = Entity_GetTeamIndex(pl);
+	int team_index_worst_pl = (team_index_pl == 1) ? 2 : 1;
+
+	// FIXME doesn't work if worst score is the greater one
+	int score = FLOAT_MAX;
+	int worst_pl_score = FLOAT_MAX;
+	float worst_pl_alivetime = -1;
+	entity worst_pl = NULL;
+	FOREACH_CLIENT((IS_PLAYER(it) || INGAME(it)) && Entity_GetTeamIndex(it) == team_index_worst_pl, {
+		if (time - it.alivetime_start <= 0)
+			continue;
+		score = PlayerScore_Get(it, SP_SCORE) / (time - it.alivetime_start);
+		if (score < worst_pl_score || (score == worst_pl_score && time - it.alivetime_start > worst_pl_alivetime))
+		{
+			worst_pl = it;
+			worst_pl_score = score;
+			worst_pl_alivetime = time - it.alivetime_start;
+		}
+	});
+
+	if (!worst_pl)
+	{
+		LOG_INFOF("Can't rebalance %s, there are no players on the other team.", pl.netname);
+		return;
+	}
+
+	MoveToTeam(pl, team_index_worst_pl, 6);
+	MoveToTeam(worst_pl, team_index_pl, 6);
+
+	bprint(sprintf("Successfully rebalanced %s\n", pl.netname));
+}
+
 void shuffleteams()
 {
 	if (!teamplay)
@@ -1402,7 +1471,35 @@ void GameCommand_shuffleteams(int request)
 		{
 			LOG_HELP("Usage:^3 sv_cmd shuffleteams");
 			LOG_HELP("  No arguments required.");
-			LOG_HELP("See also: ^2moveplayer, allspec^7");
+			LOG_HELP("See also: ^2moveplayer, allspec, rebalanceplayer^7");
+			return;
+		}
+	}
+}
+
+void GameCommand_rebalanceplayer(int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			// FIXME
+			if (shuffleteams_on_reset_map)
+			{
+				bprint("Players will be shuffled when this round is over.\n");
+				shuffleteams_on_reset_map = true;
+			}
+			else
+				rebalanceplayer();
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO("Usage:^3 sv_cmd rebalanceplayer");
+			LOG_INFO("  No arguments required.");
+			LOG_INFO("See also: ^2moveplayer, allspec, shuffleteams, rebalanceplayer^7");
 			return;
 		}
 	}
@@ -1800,6 +1897,7 @@ SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_rada
 SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }
 SERVER_COMMAND(resetmatch, "Soft restart the game without changing teams; goes back to warmup if enabled") { GameCommand_resetmatch(request); }
 SERVER_COMMAND(setbots, "Adjust how many bots are in the match") { GameCommand_setbots(request, arguments); }
+SERVER_COMMAND(rebalanceplayer, "Swap the given player with the worst player of the other team") { GameCommand_rebalanceplayer(request, arguments); }
 SERVER_COMMAND(shuffleteams, "Randomly move players to different teams") { GameCommand_shuffleteams(request); }
 SERVER_COMMAND(stuffto, "Send a command to be executed on a client") { GameCommand_stuffto(request, arguments); }
 SERVER_COMMAND(trace, "Various debugging tools with tracing") { GameCommand_trace(request, arguments); }
