@@ -1209,7 +1209,7 @@ msgstr "Suffragiis disputent de:"
 
 #: qcsrc/client/hud/panel/vote.qc:123
 msgid "Allow servers to store and display your name?"
-msgstr "Moderatra nomen tuum meminisse et nuntiare sinis?"
+msgstr "Sinisne moderatra nomen tuum meminisse et nuntiare?"
 
 #: qcsrc/client/hud/panel/vote.qc:127
 msgid "^1Configure the HUD"
@@ -3597,7 +3597,7 @@ msgstr "^F2Nunc spectare vetatur!"
 #: qcsrc/common/notifications/all.inc:454
 #: qcsrc/common/notifications/all.inc:804
 msgid "^F2Spectating specific players isn't allowed at this time!"
-msgstr ""
+msgstr "^F2Nunc vetatur quemvis ludentem eligere et spectare!"
 
 #: qcsrc/common/notifications/all.inc:456
 #, c-format
@@ -6698,15 +6698,15 @@ msgstr "Locutorii Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:21
 msgid "Align:"
-msgstr ""
+msgstr "Ad latus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:26
 msgid "Flip checkpoint order"
-msgstr ""
+msgstr "Metarum ordo inversus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qh:6
 msgid "Checkpoints Panel"
-msgstr ""
+msgstr "Metarum Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "FPS:"
