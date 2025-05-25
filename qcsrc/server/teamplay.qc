@@ -273,6 +273,7 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 		{
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_JOIN_PLAY_TEAM), player.netname);
 			player.team_selected = team_index; // no autoselect in Join()
+			player.wants_join = 0;
 
 			if (warmup_stage)
 				ReadyCount(); // teams might be balanced now
