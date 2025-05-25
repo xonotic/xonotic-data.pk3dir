@@ -578,10 +578,13 @@ void PutPlayerInServer(entity this)
 	{
 		if (this.bot_forced_team)
 			SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
-		else if (this.wants_join > 0)
-			SetPlayerTeam(this, this.wants_join, TEAM_CHANGE_MANUAL);
-		else if (this.team <= 0 || this.wants_join < 0 || autocvar_g_campaign)
-			TeamBalance_JoinBestTeam(this);
+		else if (this.team <= 0)
+		{
+			if (this.wants_join > 0)
+				SetPlayerTeam(this, this.wants_join, TEAM_CHANGE_MANUAL);
+			else
+				TeamBalance_JoinBestTeam(this);
+		}
 	}
 
 	entity spot = SelectSpawnPoint(this, false);
