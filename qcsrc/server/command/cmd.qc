@@ -661,12 +661,6 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_SAME);
 				return;
 			}
-			if (CS(caller).wasplayer && autocvar_g_changeteam_banned)
-			{
-				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
-				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_NOTALLOWED);
-				return;
-			}
 			if (team_num && autocvar_bot_vs_human)
 			{
 				entity balance = TeamBalance_CheckAllowedTeams(caller);

@@ -596,7 +596,6 @@ void PutPlayerInServer(entity this)
 
 	TRANSMUTE(Player, this);
 
-	CS(this).wasplayer = true;
 	this.iscreature = true;
 	this.teleportable = TELEPORT_NORMAL;
 	if(!this.damagedbycontents)
@@ -2051,7 +2050,7 @@ void ShowRespawnCountdown(entity this)
 
 bool ShowTeamSelection(entity this)
 {
-	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
+	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || Player_HasRealForcedTeam(this))
 		return false;
 	if (QueuedPlayersReady(this, true))
 		return false;

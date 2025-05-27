@@ -2,7 +2,6 @@
 
 int autocvar_teamplay_mode;
 
-bool autocvar_g_changeteam_banned;
 bool autocvar_teamplay_lockonrestart;
 
 bool autocvar_g_balance_teams;

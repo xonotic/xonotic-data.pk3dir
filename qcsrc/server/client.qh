@@ -67,7 +67,6 @@ float autocvar_sv_player_scale;
 .float startplaytime; // time of switching from spectator to player
 .float alivetime_start; // start time of being alive
 .float death_time;
-.bool wasplayer;
 
 .int spectatee_status;
 .bool zoomstate;
@@ -189,9 +188,8 @@ CLASS(Client, Object)
     ATTRIB(Client, hitplotfh, int, this.hitplotfh);
     ATTRIB(Client, clientdata, entity, this.clientdata);
     ATTRIB(Client, cmd_floodtime, float, this.cmd_floodtime);
-    ATTRIB(Client, wasplayer, bool, this.wasplayer);
     ATTRIB(Client, weaponorder_byimpulse, string, this.weaponorder_byimpulse);
-    ATTRIB(Client, autojoin_checked, int, this.wasplayer);
+    ATTRIB(Client, autojoin_checked, int, this.autojoin_checked);
 
     // networked cvars
 
