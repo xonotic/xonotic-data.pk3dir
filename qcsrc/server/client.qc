@@ -2130,9 +2130,8 @@ int GetPlayerLimit()
 }
 
 /**
- * Determines whether the player is allowed to join. This depends on cvar
- * g_maxplayers, if it isn't used this function always return true, otherwise
- * it checks whether the number of currently playing players exceeds g_maxplayers.
+ * Determines how many player slots are free. This depends on cvar g_maxplayers
+ * and other limits applied to all clients that aren't specifically excepted.
  * @return int number of free slots for players, 0 if none
  */
 int nJoinAllowed(entity this, entity ignore)
@@ -2145,20 +2144,8 @@ int nJoinAllowed(entity this, entity ignore)
 			return 0;
 		if(autocvar_g_forced_team_otherwise == "spectator")
 			return 0;
-	}
-
-	if(this && (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
-		return 0; // forced spectators can never join
-
-	static float msg_time = 0;
-	if(this && !INGAME(this) && ignore && PlayerInList(this, autocvar_g_playban_list))
-	{
-		if(time > msg_time)
-		{
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PLAYBAN);
-			msg_time = time + 0.5;
-		}
-		return 0;
+		if (teamplay && lockteams)
+			return 0;
 	}
 
 	// TODO simplify this
@@ -2180,11 +2167,8 @@ int nJoinAllowed(entity this, entity ignore)
 	else if(player_limit > 0 && currentlyPlaying < player_limit)
 		free_slots = min(maxclients - totalClients, player_limit - currentlyPlaying);
 
-	if(this && !INGAME(this) && ignore && !free_slots && time > msg_time)
-	{
+	if(this && !INGAME(this) && ignore && !free_slots)
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT, player_limit);
-		msg_time = time + 0.5;
-	}
 
 	return free_slots;
 }
@@ -2254,6 +2238,14 @@ bool joinAllowed(entity this, int team_index)
 	if (teamplay && lockteams)
 	{
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_LOCKED);
+		return false;
+	}
+
+	if (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR) return false;
+
+	if (!INGAME(this) && PlayerInList(this, autocvar_g_playban_list))
+	{
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PLAYBAN);
 		return false;
 	}
 
