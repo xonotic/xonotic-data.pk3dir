@@ -299,52 +299,16 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 
 void Player_SetTeamIndexChecked(entity player, int team_index)
 {
-	if (!teamplay)
-	{
+	if (!teamplay || !Team_IsValidIndex(team_index))
 		return;
-	}
-	if (!Team_IsValidIndex(team_index))
-	{
-		return;
-	}
 
-	// TODO: this is in ClientCommand_selectteam(), shouldn't be necessary to have it here too (refactor SV_ChangeTeam ?)
-	if ((autocvar_g_campaign) || (autocvar_g_changeteam_banned && CS(player).wasplayer))
-	{
-		Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
-		Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_TEAMCHANGE_NOTALLOWED);
-		return;
-	}
 	entity balance = TeamBalance_CheckAllowedTeams(player);
-	if (team_index == 1 && !TeamBalance_IsTeamAllowedInternal(balance, 1))
+	switch (team_index)
 	{
-		team_index = 4;
-	}
-	if (team_index == 4 && !TeamBalance_IsTeamAllowedInternal(balance, 4))
-	{
-		team_index = 3;
-	}
-	if (team_index == 3 && !TeamBalance_IsTeamAllowedInternal(balance, 3))
-	{
-		team_index = 2;
-	}
-	if (team_index == 2 && !TeamBalance_IsTeamAllowedInternal(balance, 2))
-	{
-		team_index = 1;
-	}
-
-	// TODO: this is in ClientCommand_selectteam(), shouldn't be necessary to have it here too (refactor SV_ChangeTeam ?)
-	if (autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
-	{
-		TeamBalance_GetTeamCounts(balance, player);
-		if ((Team_IndexToBit(team_index) & TeamBalance_FindBestTeams(balance,
-			player, false)) == 0)
-		{
-			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
-			Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
-			TeamBalance_Destroy(balance);
-			return;
-		}
+		case 1: if (!TeamBalance_IsTeamAllowedInternal(balance, 1)) team_index = 4; break;
+		case 2: if (!TeamBalance_IsTeamAllowedInternal(balance, 2)) team_index = 1; break;
+		case 3: if (!TeamBalance_IsTeamAllowedInternal(balance, 3)) team_index = 2; break;
+		case 4: if (!TeamBalance_IsTeamAllowedInternal(balance, 4)) team_index = 3; break;
 	}
 	TeamBalance_Destroy(balance);
 
@@ -1358,18 +1322,7 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b,
 void SV_ChangeTeam(entity player, int new_color)
 {
 	if (!teamplay)
-	{
 		SetPlayerColors(player, new_color);
-	}
-	if(!IS_CLIENT(player))
-	{
-		return;
-	}
-	if (!teamplay)
-	{
-		return;
-	}
-	Player_SetTeamIndexChecked(player, Team_TeamToIndex((new_color & 0x0F) + 1));
 }
 
 bool QueueNeeded(entity ignore)
