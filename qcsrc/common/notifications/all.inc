@@ -813,9 +813,9 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR_WIN,             N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^F1Survivors^BG win the round"), "")
 
     MULTITEAM_CENTER(TEAMCHANGE,                        N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Changing to ^TC^TT^K1 in ^COUNT"), "", NAME)
-    MSG_CENTER_NOTIF(TEAMCHANGE_AUTO,                   N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Changing team in ^COUNT"), "")
     MSG_CENTER_NOTIF(TEAMCHANGE_SPECTATE,               N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Spectating in ^COUNT"), "")
     MSG_CENTER_NOTIF(TEAMCHANGE_SUICIDE,                N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Suicide in ^COUNT"), "")
+    MSG_CENTER_NOTIF(TEAMCHANGE_ALREADYBEST,            N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2Your current team choice seems fine."), "")
     MSG_CENTER_NOTIF(TEAMCHANGE_LARGERTEAM,             N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2You're not allowed to join a larger team!"), "")
     MSG_CENTER_NOTIF(TEAMCHANGE_NOTALLOWED,             N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2You're not allowed to change teams!"), "")
     MSG_CENTER_NOTIF(TEAMCHANGE_LOCKED,                 N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2Teams are locked, you can't join or change teams until they're unlocked or the map changes."), "")

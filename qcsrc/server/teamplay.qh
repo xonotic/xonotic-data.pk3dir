@@ -226,8 +226,9 @@ int TeamBalance_GetNumberOfPlayers(entity balance, int index);
 /// \param[in] player Player to check.
 /// \param[in] ignore_player ???
 /// \return Index of the team that will make the game most balanced if the
-/// player joins it. If there are several equally good teams available, the
-/// function will pick a random one.
+/// player joins it. If there are several equally good teams available the
+/// function will pick a random one, unless the player is already on one of them
+/// in which case that one is returned.
 int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player);
 
 /// \brief Returns the bitmask of the teams that will make the game most

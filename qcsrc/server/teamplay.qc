@@ -960,6 +960,11 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player)
 	{
 		LOG_FATALF("No teams available for %s\n", GetGametype());
 	}
+
+	// don't punish players for UI mistakes by changing teams randomly when already on a best team
+	if (player.team > 0 && (team_bits & Team_TeamToBit(player.team)))
+		return Team_TeamToIndex(player.team);
+
 	RandomSelection_Init();
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
