@@ -217,3 +217,5 @@ ENDCLASS(HealthMega)
 REGISTER_ITEM(HealthMega, NEW(HealthMega));
 
 SPAWNFUNC_ITEM(item_health_mega, ITEM_HealthMega)
+
+#include <common/mutators/mutator/powerups/_mod.qh>
