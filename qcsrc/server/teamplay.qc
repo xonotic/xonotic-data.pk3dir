@@ -1319,6 +1319,9 @@ bool QueueNeeded(entity ignore)
 	if (!teamplay || warmup_stage || !autocvar_g_balance_teams_queue || autocvar_g_campaign)
 		return false;
 
+	if (ignore.team > 0)
+		return false;
+
 	int human_clients = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
