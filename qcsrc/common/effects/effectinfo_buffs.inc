@@ -58,8 +58,8 @@ SUB(relic_ammo) {
     MY(alpha_min) = 128;
     MY(alpha_max) = 256;
     MY(alpha_fade) = 256;
-    MY(color_min) = "0x80ff00";
-    MY(color_max) = "0x80ff00";
+    MY(color_min) = "0x4040ff";
+    MY(color_max) = "0x4040ff";
     MY(count) = 1;
     MY(gravity) = -0.100000;
     MY(liquidfriction) = 0.800000;
