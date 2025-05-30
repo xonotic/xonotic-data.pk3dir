@@ -586,7 +586,7 @@ bool Item_GiveTo(entity item, entity player)
 
 	if (item.itemdef.instanceOfPowerup)
 	{
-		if ((item.itemdef == ITEM_JetpackRegen) && !(player.items & IT_FUEL_REGEN))
+		if ((item.itemdef == ITEM_FuelRegen) && !(player.items & IT_FUEL_REGEN))
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ITEM_FUELREGEN_GOT);
 		else if ((item.itemdef == ITEM_Jetpack) && !(player.items & IT_JETPACK))
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ITEM_JETPACK_GOT);
@@ -1360,7 +1360,7 @@ spawnfunc(target_items)
 			else if(argv(j) == "invisibility")           this.items |= ITEM_Invisibility.m_itemid;
 			else if(argv(j) == "superweapons")           this.items |= IT_SUPERWEAPON;
 			else if(argv(j) == "jetpack")                this.items |= ITEM_Jetpack.m_itemid;
-			else if(argv(j) == "fuel_regen")             this.items |= ITEM_JetpackRegen.m_itemid;
+			else if(argv(j) == "fuel_regen")             this.items |= ITEM_FuelRegen.m_itemid;
 			else
 			{
 				FOREACH(StatusEffects, it.instanceOfBuff,
@@ -1423,7 +1423,7 @@ spawnfunc(target_items)
 		str = sprintf("%s %s%d %s", str, valueprefix, this.speed_finished * boolean(this.items & ITEM_Speed.m_itemid), "speed");
 		str = sprintf("%s %s%d %s", str, valueprefix, this.superweapons_finished * boolean(this.items & IT_SUPERWEAPON), "superweapons");
 		str = sprintf("%s %s%d %s", str, itemprefix, boolean(this.items & ITEM_Jetpack.m_itemid), "jetpack");
-		str = sprintf("%s %s%d %s", str, itemprefix, boolean(this.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
+		str = sprintf("%s %s%d %s", str, itemprefix, boolean(this.items & ITEM_FuelRegen.m_itemid), "fuel_regen");
 		float res;
 		res = GetResource(this, RES_SHELLS);  if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "shells");
 		res = GetResource(this, RES_BULLETS); if(res != 0) str = sprintf("%s %s%d %s", str, valueprefix, max(0, res), "nails");
@@ -1656,7 +1656,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				op = OP_MINUS;
 				continue;
 			case "ALL":
-				got += GiveBit(e, items, ITEM_JetpackRegen.m_itemid, op, val);
+				got += GiveBit(e, items, ITEM_FuelRegen.m_itemid, op, val);
 				FOREACH(StatusEffects, it.instanceOfPowerupStatusEffect, got += GiveStatusEffect(e, it, op, val));
 				got += GiveBit(e, items, IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS, op, val);
 			case "all":
@@ -1689,7 +1689,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveBit(e, items, ITEM_Jetpack.m_itemid, op, val);
 				break;
 			case "fuel_regen":
-				got += GiveBit(e, items, ITEM_JetpackRegen.m_itemid, op, val);
+				got += GiveBit(e, items, ITEM_FuelRegen.m_itemid, op, val);
 				break;
 			case "strength":
 				got += GiveStatusEffect(e, STATUSEFFECT_Strength, op, val);
@@ -1748,7 +1748,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 		op = OP_SET;
 	}
 
-	POSTGIVE_BIT(e, items, ITEM_JetpackRegen.m_itemid, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_BIT(e, items, ITEM_FuelRegen.m_itemid, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_BIT(e, items, IT_UNLIMITED_AMMO, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, SND_ITEMPICKUP, SND_Null);

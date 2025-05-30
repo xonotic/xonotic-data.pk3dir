@@ -1732,7 +1732,7 @@ void player_regen(entity this)
 	{
 		regenstable = autocvar_g_balance_fuel_regenstable;
 		rotstable = autocvar_g_balance_fuel_rotstable;
-		regenframetime = ((time > this.pauseregen_finished) && (this.items & ITEM_JetpackRegen.m_itemid)) ? frametime : 0;
+		regenframetime = ((time > this.pauseregen_finished) && (this.items & ITEM_FuelRegen.m_itemid)) ? frametime : 0;
 		rotframetime = (time > this.pauserotfuel_finished) ? frametime : 0;
 		RotRegen(this, RES_FUEL, 1,
 		         regenstable, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regenframetime,
