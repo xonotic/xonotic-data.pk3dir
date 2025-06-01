@@ -13,6 +13,7 @@
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/_mod.qh>
 #include <common/monsters/sv_monsters.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/physics/player.qh>
@@ -2139,7 +2140,7 @@ void readplayerstartcvars()
 
 	if (start_items & ITEM_Jetpack.m_itemid)
 	{
-		start_items |= ITEM_JetpackRegen.m_itemid;
+		start_items |= ITEM_FuelRegen.m_itemid;
 		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
