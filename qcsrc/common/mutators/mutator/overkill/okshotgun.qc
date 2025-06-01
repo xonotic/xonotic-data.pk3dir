@@ -57,6 +57,7 @@ METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity wea
 			WEP_CVAR_PRI(WEP_OVERKILL_SHOTGUN, spread),
 			WEP_CVAR_PRI(WEP_OVERKILL_SHOTGUN, spread_pattern),
 			WEP_CVAR_PRI(WEP_OVERKILL_SHOTGUN, spread_pattern_scale),
+			WEP_CVAR_PRI(WEP_OVERKILL_SHOTGUN, spread_pattern_bias),
 			WEP_CVAR_PRI(WEP_OVERKILL_SHOTGUN, solidpenetration),
 			WEP_CVAR_PRI(WEP_OVERKILL_SHOTGUN, force),
 			WEP_CVAR_PRI(WEP_OVERKILL_SHOTGUN, damagefalloff_forcehalflife),
