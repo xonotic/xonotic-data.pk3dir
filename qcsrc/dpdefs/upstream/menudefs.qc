@@ -558,6 +558,28 @@ float(string pattern, float caseinsensitive, float quiet, string packfile) searc
 //extension to search_begin (DP_QC_FS_SEARCH), performs a filename search with the specified pattern (for example "maps/*.bsp") and stores the results in a search slot (minimum of 128 supported by any engine with this extension), the other functions take this returned search slot number, be sure to search_free when done (they are also freed on progs reload).
 //only searches for files within the specified packfile, which is expected to match the results of whichpack().
 
+//DP_QC_STRINGBUFFERS_EXT_WIP
+//idea: VorteX
+//darkplaces implementation: VorteX
+//constant definitions:
+const float MATCH_AUTO = 0;
+const float MATCH_WHOLE = 1;
+const float MATCH_LEFT = 2;
+const float MATCH_RIGHT = 3;
+const float MATCH_MIDDLE = 4;
+const float MATCH_PATTERN = 5;
+//builtin definitions:
+float(string filename, float bufhandle) buf_loadfile = #535; // append each line of file as new buffer string, return 1 if succesful
+float(float filehandle, float bufhandle, float startpos, float numstrings) buf_writefile = #536; // writes buffer strings as lines, returns 1 if succesful
+float(float bufhandle, string match, float matchrule, float startpos, float step) bufstr_find = #537; // returns string index
+float(string s, string pattern, float matchrule) matchpattern = #538; // returns 0/1
+float(string s, string pattern, float matchrule, float pos) matchpatternofs = #538;
+//description:
+//provides a set of functions to manipulate with string buffers
+//pattern wildcards: * - any character (or no characters), ? - any 1 character
+//Warning: This extension is work-in-progress, it may be changed/revamped/removed at any time, dont use it if you dont want any trouble
+//wip note: UTF8 is not supported yet
+
 // assorted undocumented extensions
 string(string, float) netaddress_resolve = #625;
 string(string search, string replace, string subject) strreplace = #484;
