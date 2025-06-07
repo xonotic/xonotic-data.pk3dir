@@ -62,7 +62,7 @@ msgstr "Заголовок"
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
 msgstr ""
-"^3Сообщение отсчёта начала матча протяжённостью %s, сек. осталось: ^COUNT"
+"^3Сообщение отсчёта начала матча длительностью %s, секунд осталось: ^COUNT"
 
 #: qcsrc/client/hud/panel/centerprint.qc:204
 #, c-format
@@ -5657,7 +5657,7 @@ msgstr "ТИЛЬДА"
 
 #: qcsrc/common/util.qc:1514
 msgid "BACKQUOTE"
-msgstr "ОБРАТНАЯ КАВЫЧКА"
+msgstr "ОБРАТ. КАВЫЧКА"
 
 #: qcsrc/common/util.qc:1515
 msgid "QUOTE"
@@ -5669,7 +5669,7 @@ msgstr "АПОСТРОФ"
 
 #: qcsrc/common/util.qc:1517
 msgid "BACKSLASH"
-msgstr "ОБРАТНАЯ КОСАЯ ЧЕРТА"
+msgstr "ОБРАТ. КОСАЯ ЧЕРТА"
 
 #: qcsrc/common/util.qc:1525
 #, c-format
@@ -5736,7 +5736,7 @@ msgstr "PRINTSCREEN"
 #: qcsrc/common/util.qc:1565
 #, c-format
 msgid "MOUSE%d"
-msgstr "МЫШЬ %d"
+msgstr "КН. МЫШИ %d"
 
 #: qcsrc/common/util.qc:1567
 msgid "MWHEELUP"
@@ -6231,7 +6231,7 @@ msgstr "Без описания"
 #: qcsrc/lib/string.qh:189
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
-msgstr "%d д, %02d:%02d:%02d"
+msgstr "%d дн., %02d:%02d:%02d"
 
 #: qcsrc/lib/string.qh:190
 #, c-format
@@ -6484,7 +6484,7 @@ msgstr "Прошлые участники"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:73
 msgid "forced to be saved to config.cfg"
-msgstr "принудительно записывается в config.cfg"
+msgstr "принудительно сохранять в config.cfg"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:79 qcsrc/menu/xonotic/cvarlist.qc:89
 msgid "will not be saved"
@@ -6915,7 +6915,7 @@ msgstr "Даже при наблюдении"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:34
 msgid "Enable only in Race/CTS"
-msgstr "Только в Race/CTS"
+msgstr "Только в Гонке/Этапах"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:25
 msgid "Flip speed/acceleration positions"
@@ -10000,7 +10000,7 @@ msgid ""
 "language changes will take effect starting from the next game"
 msgstr ""
 "Во время подключения к серверу изменения языка будут применяться только к "
-"меню, полные изменения языка задействуются со следующей игры"
+"меню, полные изменения языка заработают со следующей игры"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"
@@ -10885,7 +10885,7 @@ msgstr "Обновление может быть загружено с:"
 
 #: qcsrc/menu/xonotic/util.qc:505
 msgid "Autogenerating mapinfo for newly added maps..."
-msgstr "Автосоздание mapinfo для новых арен…"
+msgstr "Автосоздание сведений mapinfo для новых арен…"
 
 #: qcsrc/menu/xonotic/util.qc:540
 #, c-format
