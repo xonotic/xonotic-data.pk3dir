@@ -150,9 +150,18 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 
 bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher)
 {
-	// owner check
 	if(toucher && toucher == this.owner)
 		return true;
+
+	if(autocvar_g_projectiles_interact == 1 && toucher.classname == "blasterbolt")
+	{
+		if (this.movetype == MOVETYPE_BOUNCE || this.movetype == MOVETYPE_BOUNCEMISSILE)
+			// We'll bounce off it due to limitations so let it deflect us
+			// to hide the problem, see PROJECTILE_MAKETRIGGER.
+			gettouch(toucher)(toucher, this);
+		return true;
+	}
+
 	if(SUB_NoImpactCheck(this, toucher))
 	{
 		if(this.classname == "nade")
