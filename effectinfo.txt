@@ -6879,7 +6879,7 @@ effect nade_green
 effect nade_brown
 	type smoke
 	alpha 100 100 250
-	color 0xa85400 0xa85400
+	color 0x5454ff 0x5454ff
 	sizeincrease -1
 	size 3 3
 	tex 65 65
@@ -6887,7 +6887,7 @@ effect nade_brown
 effect nade_brown
 	type smoke
 	alpha 30 30 150
-	color 0xff0000 0xffa2a2
+	color 0x0000ff 0xa2a2ff
 	notunderwater
 	sizeincrease -10
 	size 15 25
@@ -6897,7 +6897,7 @@ effect nade_brown
 	type bubble
 	alpha 256 256 256
 	bounce 1.500000
-	color 0xa85400 0xa85400
+	color 0x5454ff 0xa5454ff
 	gravity -0.125000
 	liquidfriction 4
 	size 1 1
@@ -7137,7 +7137,7 @@ effect nade_neutral_burn
 effect nade_brown_burn
 	type smoke
 	alpha 100 100 250
-	color 0xa85400 0xff3c00
+	color 0x5454ff 0x0099ff
 	sizeincrease -1
 	size 5 5
 	tex 65 65
@@ -7145,7 +7145,7 @@ effect nade_brown_burn
 effect nade_brown_burn
 	type smoke
 	alpha 200 200 1000
-	color 0xff0000 0xffa2a2
+	color 0x0000ff 0xa2a2ff
 	notunderwater
 	sizeincrease -30
 	size 45 25
@@ -7155,7 +7155,7 @@ effect nade_brown_burn
 	type bubble
 	alpha 256 256 256
 	bounce 1.500000
-	color 0xa85400 0xff3c00
+	color 0x5454ff 0x0099ff
 	gravity -0.125000
 	liquidfriction 4
 	size 1 1
@@ -7166,7 +7166,7 @@ effect nade_brown_burn
 effect nade_brown_burn
 	type smoke
 	alpha 300 900 1500
-	color 0xa85400 0xff3c00
+	color 0x5454ff 0x0099ff
 	originjitter 2 2 2
 	rotate -180 180 20 -20
 	sizeincrease -40
@@ -7887,7 +7887,7 @@ effect nade_brown_explode
 effect nade_brown_explode
 	type smoke
 	alpha 80 80 650
-	color 0xff0000 0xffa2a2
+	color 0x0000ff 0xa2a2ff
 	countabsolute 1
 	sizeincrease 1800
 	size 32 32
@@ -7897,7 +7897,7 @@ effect nade_brown_explode
 	type smoke
 	airfriction 30
 	alpha 400 656 2000
-	color 0xa85400 0xa647d3
+	color 0x5454ff 0xa647d3
 	count 16
 	notunderwater
 	originjitter 50 50 50
@@ -7910,7 +7910,7 @@ effect nade_brown_explode
 	type spark
 	airfriction -9
 	alpha 1500 3000 13000
-	color 0xa85400 0xff4200
+	color 0x5454ff 0x0099ff
 	count 8
 	sizeincrease 40
 	size 60 90
@@ -7950,7 +7950,7 @@ effect nade_brown_explode
 	airfriction 1
 	alpha 644 956 484
 	bounce 1.600000
-	color 0xff0000 0xffa2a2
+	color 0x0000ff 0xa2a2ff
 	count 8
 	gravity 1
 	liquidfriction 0.800000
@@ -7964,7 +7964,7 @@ effect nade_brown_explode
 	type spark
 	airfriction 0.700000
 	alpha 644 956 684
-	color 0xff0000 0xffa2a2
+	color 0x0000ff 0xa2a2ff
 	count 16
 	gravity 0.500000
 	liquidfriction 0.800000
@@ -7976,7 +7976,7 @@ effect nade_brown_explode
 effect nade_brown_explode
 	type smoke
 	alpha 644 956 2500
-	color 0xff0000 0xffa2a2
+	color 0x0000ff 0xa2a2ff
 	count 8
 	notunderwater
 	originjitter 64 64 64
@@ -8481,7 +8481,7 @@ effect relic_ammo
 	type static
 	airfriction 0.200000
 	alpha 128 256 256
-	color 0x80ff00 0x80ff00
+	color 0x4040ff 0x4040ff
 	count 1
 	gravity -0.100000
 	liquidfriction 0.800000
