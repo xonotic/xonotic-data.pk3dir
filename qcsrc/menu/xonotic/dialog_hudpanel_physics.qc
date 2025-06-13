@@ -13,6 +13,7 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticMixedSlider("hud_panel_physics"));
+			e.setValueSpace(e, e.valueSpace * 1.2);
 			e.addText(e, _("Disable"), 0);
 			e.addText(e, _("Enable"), 1);
 			e.addText(e, _("Enable even observing"), 2);

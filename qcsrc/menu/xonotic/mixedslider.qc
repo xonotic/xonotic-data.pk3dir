@@ -34,6 +34,11 @@ void XonoticMixedSlider_setValue_noAnim(entity me, float val)
 		me.saveCvars(me);
 	}
 }
+void XonoticMixedSlider_setValueSpace(entity me, float val)
+{
+	me.valueSpace = val;
+	me.configureSliderVisuals(me, me.fontSize, me.align, me.valueSpace, me.image);
+}
 void XonoticMixedSlider_loadCvars(entity me)
 {
 	if (!me.controlledCvar)
