@@ -92,7 +92,7 @@ void XonoticHUDExitDialog_fill(entity me)
 				e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Alpha:")));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Opacity:")));
 			me.TD(me, 1, 2.6, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_bg_alpha"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -124,7 +124,7 @@ void XonoticHUDExitDialog_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Alpha:")));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Opacity:")));
 			me.TD(me, 1, 2.6, e = makeXonoticSlider(0.1, 1, 0.1, "hud_dock_alpha"));
 	me.TR(me);
 		me.TDempty(me, 0.2);

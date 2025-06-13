@@ -43,7 +43,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Scoreboard")));
 	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Alpha:")));
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Opacity:")));
 	me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_scoreboard_bg_alpha"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Fading speed:")));
@@ -68,10 +68,10 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 			_("Show various gametype specific waypoints")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Alpha:")));
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Opacity:")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.1, 1, 0.1, "g_waypointsprite_alpha",
-			_("Control transparency of the waypoints")));
+			_("Control opacity of the waypoints")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -122,7 +122,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Alpha:")));
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Opacity:")));
 			setDependent(e, "hud_shownames", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.1, "hud_shownames_alpha"));
 			setDependent(e, "hud_shownames", 1, 1);
