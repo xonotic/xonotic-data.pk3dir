@@ -111,10 +111,7 @@ void Handicap_UpdateHandicapLevel(entity player)
 
 	float handicap_total = (Handicap_GetTotalHandicap(player, true) +
 		Handicap_GetTotalHandicap(player, false)) / 2;
-	if (handicap_total <= 1)
-		player.handicap_level = 0;
-	else
-		player.handicap_level = floor(map_bound_ranges(handicap_total, 1, HANDICAP_MAX_LEVEL_EQUIVALENT, 1, 16));
+	player.handicap_level = floor(map_bound_ranges(handicap_total, 1, HANDICAP_MAX_LEVEL_EQUIVALENT, 0, 16));
 }
 
 REPLICATE_APPLYCHANGE("cl_handicap_damage_given", { Handicap_UpdateHandicapLevel(this); });

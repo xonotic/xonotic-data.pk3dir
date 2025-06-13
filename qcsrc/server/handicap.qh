@@ -57,8 +57,8 @@ void Handicap_UpdateHandicapLevel(entity player);
 #define HANDICAP_DISABLED() \
 	(IS_GAMETYPE(CTS) || IS_GAMETYPE(RACE))
 
-// This int ranges 0 to 16, 0 meaning no handicap, 1 to 16 representing handicap "levels" mapped
-// from 1.0 to HANDICAP_MAX_LEVEL_EQUIVALENT, using (given + taken)/2 (i.e. both-ways handicap).
+// This int ranges from 0 to 16, representing handicap "levels" mapped from
+// 1.0 to HANDICAP_MAX_LEVEL_EQUIVALENT, using (given + taken)/2 (i.e. both-ways handicap).
 // It is networked to the client.
 // The levels are mostly meaningless, just used to determine the player_handicap icon color.
 .int handicap_level;
