@@ -51,9 +51,10 @@ void XonoticGameModelSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Force player colors to mine")));
-		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("cl_forceplayercolors",
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Force player colors to mine")));
+		me.TD(me, 1, 1.8, e = makeXonoticMixedSlider_T("cl_forceplayercolors",
 			_("Warning: if enabled in team games your team's color may be the same as the enemy team")));
+			e.setValueSpace(e, e.valueSpace * 1.75);
 			e.addText(e, _("Never"), 0);
 			e.addText(e, _("Except in team games"), 1);
 			e.addText(e, _("Only in Duel"), 3);
