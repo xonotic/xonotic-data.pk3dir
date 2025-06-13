@@ -770,7 +770,7 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Alpha:")));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Opacity:")));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg_alpha"))));
 				e.addValue(e, _("Default"), "");
 				for(i = 1; i <= 10; ++i)
