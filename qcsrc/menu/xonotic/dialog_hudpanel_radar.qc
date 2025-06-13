@@ -12,6 +12,7 @@ void XonoticHUDRadarDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticMixedSlider("hud_panel_radar"));
+			e.setValueSpace(e, e.valueSpace * 1.2);
 			e.addText(e, _("Disable"), 0);
 			e.addText(e, _("Enable in team games"), 1);
 			e.addText(e, _("Always enable"), 2);
@@ -37,6 +38,7 @@ void XonoticHUDRadarDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Zoom mode:")));
 			me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_radar_zoommode"));
+				e.setValueSpace(e, e.valueSpace * 1.25);
 				e.addText(e, _("Zoomed in"),     0);
 				e.addText(e, _("Zoomed out"),    1);
 				e.addText(e, _("Always zoomed"), 2);
@@ -63,6 +65,7 @@ void XonoticHUDRadarDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Zoom mode:")));
 			me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_radar_maximized_zoommode"));
+				e.setValueSpace(e, e.valueSpace * 1.25);
 				e.addText(e, _("Zoomed in"),     0);
 				e.addText(e, _("Zoomed out"),    1);
 				e.addText(e, _("Always zoomed"), 2);

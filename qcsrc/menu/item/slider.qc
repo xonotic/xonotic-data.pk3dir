@@ -48,6 +48,7 @@
 	void Slider_configureSliderVisuals(entity me, float sz, float theAlign, float theTextSpace, string gfx)
 	{
 		SUPER(Slider).configureLabel(me, string_null, sz, theAlign);
+		theTextSpace = bound(0, theTextSpace, 1);
 		me.textSpace = theTextSpace;
 		me.keepspaceLeft = (theTextSpace == 0) ? 0 : (1 - theTextSpace);
 		me.src = gfx;

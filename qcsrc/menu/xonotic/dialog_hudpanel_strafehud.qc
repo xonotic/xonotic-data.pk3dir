@@ -28,6 +28,7 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticMixedSlider("hud_panel_strafehud"));
+			e.setValueSpace(e, e.valueSpace * 1.2);
 			e.addText(e, _("Disable"), 0);
 			e.addText(e, _("Enable"), 1);
 			e.addText(e, _("Enable even observing"), 2);
@@ -37,17 +38,17 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
-		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("StrafeHUD mode:")));
-			me.TD(me, 1, 2.6/2, e = makeXonoticRadioButton(2, "hud_panel_strafehud_mode", "0", _("View angle centered")));
-			me.TD(me, 1, 2.6/2, e = makeXonoticRadioButton(2, "hud_panel_strafehud_mode", "1", _("Velocity angle centered")));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Centered on:")));
+			me.TD(me, 1, 2.8/2, e = makeXonoticRadioButton(2, "hud_panel_strafehud_mode", "0", _("View angle")));
+			me.TD(me, 1, 2.8/2, e = makeXonoticRadioButton(2, "hud_panel_strafehud_mode", "1", _("Velocity angle")));
 	me.TR(me);
-		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("StrafeHUD style:")));
-			me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(3, "hud_panel_strafehud_style", "0", _("No styling")));
-			me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(3, "hud_panel_strafehud_style", "1", _("Status bar")));
-			me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(3, "hud_panel_strafehud_style", "2", _("Gradient")));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Style:")));
+			me.TD(me, 1, 2.8/3, e = makeXonoticRadioButton(3, "hud_panel_strafehud_style", "0", _("No styling")));
+			me.TD(me, 1, 2.8/3, e = makeXonoticRadioButton(3, "hud_panel_strafehud_style", "1", _("Status bar")));
+			me.TD(me, 1, 2.8/3, e = makeXonoticRadioButton(3, "hud_panel_strafehud_style", "2", _("Gradient")));
 	me.TR(me);
-		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Range:")));
-		me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_strafehud_range"));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Range:")));
+		me.TD(me, 1, 2.8, e = makeXonoticMixedSlider("hud_panel_strafehud_range"));
 			e.addText(e, _("Dynamic"), 0);
 			e.addRange(e, 10, 360, 10);
 			e.configureXonoticMixedSliderValues(e);
