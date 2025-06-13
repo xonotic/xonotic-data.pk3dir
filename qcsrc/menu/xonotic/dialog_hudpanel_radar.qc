@@ -21,7 +21,7 @@ void XonoticHUDRadarDialog_fill(entity me)
 	dialog_hudpanel_main_settings(me, panelname);
 
 	me.TR(me);
-		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Alpha:")));
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Opacity:")));
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_radar_foreground_alpha"));
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Rotation:")));
