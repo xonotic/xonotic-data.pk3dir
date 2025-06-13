@@ -34,6 +34,11 @@ void XonoticTextSlider_setValue_noAnim(entity me, float val)
 		me.saveCvars(me);
 	}
 }
+void XonoticTextSlider_setValueSpace(entity me, float val)
+{
+	me.valueSpace = val;
+	me.configureSliderVisuals(me, me.fontSize, me.align, me.valueSpace, me.image);
+}
 void XonoticTextSlider_loadCvars(entity me)
 {
 	if (!me.controlledCvar)
