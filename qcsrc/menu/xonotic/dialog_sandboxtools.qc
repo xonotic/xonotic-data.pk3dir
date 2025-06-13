@@ -38,7 +38,7 @@ void XonoticSandboxToolsDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Set skin:"), '0 0 0', "sandbox object_edit skin $menu_sandbox_edit_skin", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 99, 1, "menu_sandbox_edit_skin"));
-		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Set alpha:"), '0 0 0', "sandbox object_edit alpha $menu_sandbox_edit_alpha", 0));
+		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Set opacity:"), '0 0 0', "sandbox object_edit alpha $menu_sandbox_edit_alpha", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0.1, 1, 0.05, "menu_sandbox_edit_alpha"));
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Set color main:"), '0 0 0', "sandbox object_edit color_main \"$menu_sandbox_edit_color_main\"", 0));
