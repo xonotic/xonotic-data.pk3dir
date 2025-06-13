@@ -1,5 +1,6 @@
 #include "util.qh"
 #include "dialog.qh"
+#include "textslider.qh"
 
 #include "../item.qh"
 
@@ -745,6 +746,7 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 	me.gotoRC(me, me.currentRow + 1.5, 0);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Background:")));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg"))));
+				e.setValueSpace(e, e.valueSpace * 1.25);
 				e.addValue(e, _("Default"), "");
 				e.addValue(e, _("Disable"), "0");
 				e.addValue(e, strzone(strcat("border_", panelname)), strzone(strcat("border_", panelname)));
