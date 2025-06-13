@@ -24,6 +24,8 @@ void Handicap_Initialize(entity player)
 
 float Handicap_GetVoluntaryHandicap(entity player, bool receiving)
 {
+	if (HANDICAP_DISABLED())
+		return 1;
 #if 0
 	if (receiving)
 		return bound(1.0, CS_CVAR(player).cvar_cl_handicap_damage_taken, 10.0);
@@ -68,6 +70,8 @@ float Handicap_GetVoluntaryHandicap(entity player, bool receiving)
 
 float Handicap_GetForcedHandicap(entity player, bool receiving)
 {
+	if (HANDICAP_DISABLED())
+		return 1;
 	if (receiving)
 		return (CS(player)) ? CS(player).m_handicap_take : 1;
 	else
@@ -76,6 +80,8 @@ float Handicap_GetForcedHandicap(entity player, bool receiving)
 
 void Handicap_SetForcedHandicap(entity player, float value, bool receiving)
 {
+	if (HANDICAP_DISABLED())
+		return;
 	if (value <= 0)
 		error("Handicap_SetForcedHandicap: Invalid handicap value.");
 
@@ -89,12 +95,20 @@ void Handicap_SetForcedHandicap(entity player, float value, bool receiving)
 
 float Handicap_GetTotalHandicap(entity player, bool receiving)
 {
+	if (HANDICAP_DISABLED())
+		return 1;
 	return Handicap_GetForcedHandicap(player, receiving) *
 		Handicap_GetVoluntaryHandicap(player, receiving);
 }
 
 void Handicap_UpdateHandicapLevel(entity player)
 {
+	if (HANDICAP_DISABLED())
+	{
+		player.handicap_level = 0;
+		return;
+	}
+
 	float handicap_total = (Handicap_GetTotalHandicap(player, true) +
 		Handicap_GetTotalHandicap(player, false)) / 2;
 	if (handicap_total <= 1)
