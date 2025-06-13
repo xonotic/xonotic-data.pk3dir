@@ -58,6 +58,16 @@ vector InfoMessages_drawstring(string s, vector pos, vector sz, float a, vector 
 	img_curr_group = -1; \
 MACRO_END
 
+string get_team_list(int team_mask)
+{
+	return strcat(
+		((team_mask & BIT(0)) ? strcat(Team_ColoredFullName(NUM_TEAM_1), (team_mask >> 1) ? ", " : "") : ""),
+		((team_mask & BIT(1)) ? strcat(Team_ColoredFullName(NUM_TEAM_2), (team_mask >> 2) ? ", " : "") : ""),
+		((team_mask & BIT(2)) ? strcat(Team_ColoredFullName(NUM_TEAM_3), (team_mask >> 3) ? ", " : "") : ""),
+		((team_mask & BIT(3)) ? Team_ColoredFullName(NUM_TEAM_4) : "")
+	);
+}
+
 void HUD_InfoMessages()
 {
 	if(!autocvar__hud_configure)
@@ -188,6 +198,22 @@ void HUD_InfoMessages()
 					s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey(_("ready"), "ready"));
 				InfoMessage(s);
 			}
+		}
+
+		// NOTE: this stat is used for missing players in ffa games
+		int missing_teams_mask = STAT(MISSING_TEAMS_MASK);
+		if (missing_teams_mask)
+		{
+			if (teamplay)
+				s = sprintf(_("%sNeed active players for: %s"), blinkcolor, get_team_list(missing_teams_mask));
+			else
+			{
+				if (missing_teams_mask == 1)
+					s = sprintf(_("%sWaiting for 1 player to join..."), blinkcolor);
+				else
+					s = sprintf(_("%sWaiting for %d players to join..."), blinkcolor, missing_teams_mask);
+			}
+			InfoMessage(s);
 		}
 
 		if (teamplay && numplayers > 1 && teamnagger)
