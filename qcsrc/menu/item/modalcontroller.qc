@@ -22,7 +22,7 @@
 	{
 		if (tab.ModalController_state == 1) return;
 		tab.parent.hideAll(tab.parent, 0);
-		button.forcePressed = 1;
+		button.forcePressed = true;
 		tab.ModalController_controllingButton = button;
 		tab.parent.showChild(tab.parent, tab, button.origin, button.size, 0);
 	}
@@ -35,7 +35,7 @@
 	void DialogOpenButton_Click_withCoords(entity button, entity tab, vector theOrigin, vector theSize)
 	{
 		if (tab.ModalController_state) return;
-		if (button) button.forcePressed = 1;
+		if (button) button.forcePressed = true;
 		if (tab.parent.focusedChild) tab.parent.focusedChild.saveFocus(tab.parent.focusedChild);
 		tab.ModalController_controllingButton = button;
 		tab.parent.showChild(tab.parent, tab, theOrigin, theSize, 0);
@@ -186,7 +186,7 @@
 		other.tabSelectingButton = tabButton;
 		if (other == me.firstChild)
 		{
-			tabButton.forcePressed = 1;
+			tabButton.forcePressed = true;
 			other.ModalController_controllingButton = tabButton;
 			me.showChild(me, other, '0 0 0', '0 0 0', 1);
 		}
@@ -231,7 +231,7 @@
 			me.switchState(me, other, 0, skipAnimation);
 			if (other.ModalController_controllingButton)
 			{
-				other.ModalController_controllingButton.forcePressed = 0;
+				other.ModalController_controllingButton.forcePressed = false;
 				other.ModalController_controllingButton = NULL;
 			}
 		}  // just alpha fade out (factor increases and decreases alpha)
