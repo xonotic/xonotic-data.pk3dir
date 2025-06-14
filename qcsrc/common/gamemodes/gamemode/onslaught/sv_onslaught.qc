@@ -473,10 +473,12 @@ void ons_ControlPoint_Icon_Think(entity this)
 			}
 		});
 
-		_friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
-		_enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
+		float hlt = (_friendly_count - _enemy_count) * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 
-		GiveResourceWithLimit(this, RES_HEALTH, (_friendly_count - _enemy_count), this.max_health);
+		if (hlt < 0)
+			TakeResource(this, RES_HEALTH, -hlt);
+		else if (hlt > 0)
+			GiveResourceWithLimit(this, RES_HEALTH, hlt, this.max_health);
 		this.SendFlags |= CPSF_STATUS;
 		if(GetResource(this, RES_HEALTH) <= 0)
 		{
