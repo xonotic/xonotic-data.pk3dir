@@ -9,7 +9,7 @@ CLASS(XonoticColorpicker, Image)
 	ATTRIB(XonoticColorpicker, controlledTextbox, entity);
 	ATTRIB(XonoticColorpicker, image, string, SKINGFX_COLORPICKER);
 	ATTRIB(XonoticColorpicker, imagemargin, vector, SKINMARGIN_COLORPICKER);
-	ATTRIB(XonoticColorpicker, focusable, float, 1);
+	ATTRIB(XonoticColorpicker, focusable, bool, true);
 	METHOD(XonoticColorpicker, focusLeave, void(entity));
 	METHOD(XonoticColorpicker, keyDown, float(entity, float, float, float));
 	METHOD(XonoticColorpicker, draw, void(entity));

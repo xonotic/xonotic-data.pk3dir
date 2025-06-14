@@ -19,11 +19,11 @@
 	}
 	void BorderImage_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 	{
-		me.isNexposeeTitleBar = 0;
+		me.isNexposeeTitleBar = false;
 		if (me.zoomedOutTitleBar)
 			if (me.parent.parent.instanceOfNexposee)
 				if (me.parent.instanceOfDialog)
-					if (me == me.parent.frame) me.isNexposeeTitleBar = 1;
+					if (me == me.parent.frame) me.isNexposeeTitleBar = true;
 		me.saveRelOrigin = relOrigin;
 		me.saveRelSize = relSize;
 		SUPER(BorderImage).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);

@@ -101,7 +101,7 @@ void XonoticInputSettingsTab_fill(entity me)
 			sensitivitySlider = e;
 		me.TD(me, 1, 1, e = makeXonoticInputBox_T(0, "sensitivity",
 			_("Mouse speed multiplier")));
-			e.saveImmediately = 1;
+			e.saveImmediately = true;
 			e.allowedCharacters = "0.123456789";
 			linkSensitivities(sensitivitySlider, e);
 	me.TR(me);

@@ -14,5 +14,5 @@ CLASS(XonoticTeamSelectDialog, XonoticRootDialog)
 	ATTRIB(XonoticTeamSelectDialog, team2, entity);
 	ATTRIB(XonoticTeamSelectDialog, team3, entity);
 	ATTRIB(XonoticTeamSelectDialog, team4, entity);
-	ATTRIB(XonoticTeamSelectDialog, requiresConnection, float, true);
+	ATTRIB(XonoticTeamSelectDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticTeamSelectDialog)
