@@ -1904,7 +1904,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 			weapons_with_stats += 1;
 			average_accuracy += weapon_stats; // store sum of all accuracies in average_accuracy
 
-			string s = sprintf("%d%%", weapon_stats * 100);
+			string s = ftos_decimals_percentage(weapon_stats, 0);
 			float padding = (weapon_width - stringwidth(s, false, hud_fontsize)) / 2;
 
 			if (!autocvar_hud_panel_scoreboard_accuracy_nocolors)
