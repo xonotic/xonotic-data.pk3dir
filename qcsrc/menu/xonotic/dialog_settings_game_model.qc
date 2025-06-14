@@ -34,6 +34,7 @@ void XonoticGameModelSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Unavailable opacity:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.1, "cl_ghost_items"));
+			e.formatString = "%";
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Unavailable color:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_ghost_items_color"));
