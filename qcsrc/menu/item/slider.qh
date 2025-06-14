@@ -34,6 +34,7 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, valueKeyStep, float, 0);
 	ATTRIB(Slider, valuePageStep, float, 0);
 	ATTRIB(Slider, valueDisplayMultiplier, float, 1.0);
+	ATTRIB(Slider, formatString, string, "");
 	ATTRIB(Slider, textSpace, float, 0);
 	ATTRIB(Slider, controlWidth, float, 0);
 	ATTRIB(Slider, pressed, float, 0);

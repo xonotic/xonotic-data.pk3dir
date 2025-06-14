@@ -773,8 +773,8 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Opacity:")));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg_alpha"))));
 				e.addValue(e, _("Default"), "");
-				for(i = 1; i <= 10; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
+				for(i = 1; i <= 20; ++i)
+					e.addValue(e, strzone(ftos_decimals_percentage(i / 20, 0)), strzone(ftos_mindecimals(i / 20)));
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -783,7 +783,7 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 				e.addValue(e, _("Default"), "");
 				e.addValue(e, _("Disable"), "0");
 				for(i = 1; i <= 10; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
+					e.addValue(e, strzone(ftos_decimals_percentage(i / 10, 0)), strzone(ftos_mindecimals(i / 10)));
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.4);

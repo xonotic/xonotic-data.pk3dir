@@ -42,8 +42,12 @@
 	}
 	string Slider_valueToText(entity me, float val)
 	{
-		if (almost_in_bounds(me.valueMin, val, me.valueMax)) return ftos_decimals(val * me.valueDisplayMultiplier, me.valueDigits);
-		return "";
+		if (!almost_in_bounds(me.valueMin, val, me.valueMax))
+			return "";
+		val *= me.valueDisplayMultiplier;
+		if (me.formatString == "%")
+			return ftos_decimals_percentage(val, me.valueDigits);
+		return ftos_decimals(val, me.valueDigits);
 	}
 	void Slider_configureSliderVisuals(entity me, float sz, float theAlign, float theTextSpace, string gfx)
 	{
