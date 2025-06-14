@@ -31,7 +31,7 @@ CLASS(XonoticInputBox, InputBox)
 	METHOD(XonoticInputBox, saveCvars, void(entity));
 	ATTRIB(XonoticInputBox, sendCvars, float, 0);
 
-	ATTRIB(XonoticInputBox, saveImmediately, float, 0);
+	ATTRIB(XonoticInputBox, saveImmediately, bool, false);
 ENDCLASS(XonoticInputBox)
-entity makeXonoticInputBox_T(float, string, string theTooltip);
-entity makeXonoticInputBox(float, string);
+entity makeXonoticInputBox_T(bool, string, string theTooltip);
+entity makeXonoticInputBox(bool, string);

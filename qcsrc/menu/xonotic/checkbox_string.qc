@@ -11,12 +11,12 @@ void XonoticCheckBoxString_configureXonoticCheckBoxString(entity me, string theY
 {
 	me.yesString = theYesValue;
 	me.noString = theNoValue;
-	me.checked = 0;
+	me.checked = false;
 	me.controlledCvar = (theCvar) ? theCvar : string_null;
 	me.loadCvars(me);
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
 }
-void XonoticCheckBoxString_setChecked(entity me, float foo)
+void XonoticCheckBoxString_setChecked(entity me, bool foo)
 {
 	me.checked = !me.checked;
 	me.saveCvars(me);
@@ -27,7 +27,7 @@ void XonoticCheckBoxString_loadCvars(entity me)
 		return;
 
 	if(cvar_string(me.controlledCvar) == me.yesString)
-		me.checked = 1;
+		me.checked = true;
 }
 void XonoticCheckBoxString_saveCvars(entity me)
 {

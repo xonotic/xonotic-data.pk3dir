@@ -12,5 +12,5 @@ CLASS(InputContainer, Container)
 
 	METHOD(InputContainer, _changeFocusXY, bool(entity this, vector pos));
 	ATTRIB(InputContainer, mouseFocusedChild, entity);
-	ATTRIB(InputContainer, isTabRoot, float, 0);
+	ATTRIB(InputContainer, isTabRoot, bool, false);
 ENDCLASS(InputContainer)
