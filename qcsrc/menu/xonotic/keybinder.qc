@@ -263,7 +263,7 @@ void KeyBinder_Bind_Change(entity btn, entity me)
 		return;
 
 	me.setSelected(me, me.selectedItem); // make it visible if it's hidden
-	me.keyGrabButton.forcePressed = 1;
+	me.keyGrabButton.forcePressed = true;
 	me.clearButton.disabled = 1;
 	keyGrabber = me;
 }
@@ -286,7 +286,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 {
 	int n, j, k, nvalid;
 
-	me.keyGrabButton.forcePressed = 0;
+	me.keyGrabButton.forcePressed = false;
 	me.clearButton.disabled = 0;
 
 	if (key == K_ESCAPE)
