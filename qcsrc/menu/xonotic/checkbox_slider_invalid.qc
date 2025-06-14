@@ -30,7 +30,7 @@ void XonoticSliderCheckBox_draw(entity me)
 		me.savedValue = me.controlledSlider.value;
 	SUPER(XonoticSliderCheckBox).draw(me);
 }
-void XonoticSliderCheckBox_setChecked(entity me, float val)
+void XonoticSliderCheckBox_setChecked(entity me, bool val)
 {
 	if(me.checked == val)
 		return;

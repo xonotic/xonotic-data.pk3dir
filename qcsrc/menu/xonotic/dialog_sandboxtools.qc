@@ -16,7 +16,7 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 1.5, box = makeXonoticInputBox(1, "menu_sandbox_spawn_model"));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
-			box.saveImmediately = 1;
+			box.saveImmediately = true;
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Spawn"), '0 0 0', "sandbox object_spawn \"$menu_sandbox_spawn_model\"", 0));
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Remove *"), '0 0 0', "sandbox object_remove", 0));
 	me.TDempty(me, 0.1);
@@ -27,7 +27,7 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 1.5, box = makeXonoticInputBox(1, "menu_sandbox_attach_bone"));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
-			box.saveImmediately = 1;
+			box.saveImmediately = true;
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Set * as child"), '0 0 0', "sandbox object_attach get", 0));
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Attach to *"), '0 0 0', "sandbox object_attach set \"$menu_sandbox_attach_bone\"", 0));
 	me.TDempty(me, 0.1);
@@ -58,7 +58,7 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 1.5, box = makeXonoticInputBox(1, "menu_sandbox_edit_material"));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
-			box.saveImmediately = 1;
+			box.saveImmediately = true;
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Set solidity:"), '0 0 0', "sandbox object_edit solidity $menu_sandbox_edit_solidity", 0));
 		me.TD(me, 1, 0.75, e = makeXonoticRadioButton(1, "menu_sandbox_edit_solidity", "0", _("Non-solid")));

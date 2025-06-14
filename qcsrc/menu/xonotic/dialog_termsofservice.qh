@@ -17,7 +17,7 @@ CLASS(XonoticToSDialog, XonoticRootDialog)
 
 	ATTRIB(XonoticToSDialog, textBox, entity);
 
-	ATTRIB(XonoticToSDialog, closable, float, 0);
+	ATTRIB(XonoticToSDialog, closable, bool, false);
 ENDCLASS(XonoticToSDialog)
 
 void XonoticToS_OnGet(entity fh, entity me, int status);

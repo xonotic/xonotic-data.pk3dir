@@ -14,7 +14,7 @@ void XonoticWeaponarenaCheckBox_configureXonoticWeaponarenaCheckBox(entity me, s
 	me.loadCvars(me);
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
 }
-void XonoticWeaponarenaCheckBox_setChecked(entity me, float foo)
+void XonoticWeaponarenaCheckBox_setChecked(entity me, bool foo)
 {
 	me.checked = !me.checked;
 	me.saveCvars(me);
