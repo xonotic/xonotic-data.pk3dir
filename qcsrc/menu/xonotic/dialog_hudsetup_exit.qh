@@ -9,7 +9,7 @@ CLASS(XonoticHUDExitDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDExitDialog, rows, float, 18);
 	ATTRIB(XonoticHUDExitDialog, columns, float, 8.2);
 	ATTRIB(XonoticHUDExitDialog, name, string, "HUDExit");
-	ATTRIB(XonoticHUDExitDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDExitDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDExitDialog)
 
 #include "dialog.qh"
