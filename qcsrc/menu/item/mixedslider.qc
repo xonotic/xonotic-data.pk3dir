@@ -36,6 +36,8 @@
 	}
 	string MixedSlider_rangedIdentifierToText(entity me, float id)
 	{
+		if (me.formatString == "%")
+			return ftos_decimals_percentage(id, me.valueDigits);
 		return ftos_decimals(id, me.valueDigits);
 	}
 	void MixedSlider_adjustDigitsForStep(entity me, float valueStep)
@@ -59,9 +61,8 @@
 		me.adjustDigitsForStep(me, theValueStep);
 		for (float id = theValueMin; id <= theValueMax + theValueStep / 2; id += theValueStep)
 		{ // plus half to prevent almost all floating point errors
-			string rounded_id_str = me.rangedIdentifierToText(me, id);
-			me.(valueStrings[me.nValues]) = strzone(rounded_id_str);
-			me.(valueNumberIdentifiers[me.nValues]) = stof(rounded_id_str);
+			me.(valueStrings[me.nValues]) = strzone(me.rangedIdentifierToText(me, id));
+			me.(valueNumberIdentifiers[me.nValues]) = stof(ftos_decimals(id, me.valueDigits));
 			me.nValues += 1;
 		}
 	}
