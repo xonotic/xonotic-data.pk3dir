@@ -43,8 +43,9 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Scoreboard")));
 	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Opacity:")));
-	me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_scoreboard_bg_alpha"));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Opacity:")));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_scoreboard_bg_alpha"));
+			e.formatString = "%";
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Fading speed:")));
 		me.TD(me, 1, 2, e = makeXonoticScoreboardFadeTimeSlider());
@@ -72,6 +73,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.1, 1, 0.1, "g_waypointsprite_alpha",
 			_("Control opacity of the waypoints")));
+			e.formatString = "%";
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -125,6 +127,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Opacity:")));
 			setDependent(e, "hud_shownames", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.1, "hud_shownames_alpha"));
+			e.formatString = "%";
 			setDependent(e, "hud_shownames", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -173,7 +176,11 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Damage overlay:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("hud_damage"));
+			e.formatString = "%";
+			e.addText(e, _("Disable"), 0);
+			e.addRange(e, 0.05, 1, 0.05);
+			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1.2, e = makeXonoticCheckBox_T(0, "hud_dynamic_follow", _("Dynamic HUD"),
 			_("HUD moves around following player's movement")));
