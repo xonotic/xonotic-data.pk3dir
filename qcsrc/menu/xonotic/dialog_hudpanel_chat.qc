@@ -3,6 +3,7 @@
 #include "textlabel.qh"
 #include "checkbox.qh"
 #include "slider.qh"
+#include "mixedslider.qh"
 
 void XonoticHUDChatDialog_fill(entity me)
 {
@@ -23,6 +24,7 @@ void XonoticHUDChatDialog_fill(entity me)
 			e.setValueSpace(e, e.valueSpace * 1.25);
 			e.addRange(e, 5, 60, 5);
 			e.addRange(e, 120, 300, 60);
+			e.addText(e, ZCTX(_("LIFETIME^Infinite")), 0);
 			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "con_chatsound", _("Chat beep sound")));
