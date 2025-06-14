@@ -93,7 +93,7 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 1, 0.1, "cl_zoomsensitivity",
 			_("How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)")));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_zoomscroll", _("Zoom scrolling")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_zoomscroll", _("Zoom scrolling")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Scale:")));
