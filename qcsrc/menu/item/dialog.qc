@@ -32,7 +32,7 @@
 
 	void Dialog_TR(entity me)
 	{
-		me.currentRow += 1;
+		++me.currentRow;
 		me.currentColumn = me.firstColumn;
 	}
 

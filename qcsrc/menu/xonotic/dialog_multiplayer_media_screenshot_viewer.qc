@@ -55,12 +55,12 @@ void toggleSlideShow_Click(entity btn, entity me)
 	if (me.slideShowButton.forcePressed)
 	{
 		me.scrList.stopSlideShow(me.scrList);
-		me.slideShowButton.forcePressed = 0;
+		me.slideShowButton.forcePressed = false;
 	}
 	else
 	{
 		me.scrList.startSlideShow(me.scrList);
-		me.slideShowButton.forcePressed = 1;
+		me.slideShowButton.forcePressed = true;
 	}
 }
 float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, float shift)
@@ -118,7 +118,7 @@ void XonoticScreenshotViewerDialog_close(entity me)
 		localcmd("\ncd resume\n");
 
 	me.scrList.stopSlideShow(me.scrList);
-	me.slideShowButton.forcePressed = 0;
+	me.slideShowButton.forcePressed = false;
 	SUPER(XonoticScreenshotViewerDialog).close(me);
 }
 void XonoticScreenshotViewerDialog_fill(entity me)
@@ -126,7 +126,7 @@ void XonoticScreenshotViewerDialog_fill(entity me)
 	entity e;
 	me.TR(me);
 		me.TD(me, me.rows - 1, me.columns, e = makeXonoticScreenshotImage());
-			e.showTitle = 0; // dialog title is enough
+			e.showTitle = false; // dialog title is enough
 			me.screenshotImage = e;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TDempty(me, 1/20 * me.columns);

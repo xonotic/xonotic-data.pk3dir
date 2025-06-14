@@ -35,7 +35,7 @@
 	{
 		me.(valueStrings[me.nValues]) = theString;
 		me.(valueIdentifiers[me.nValues]) = theIdentifier;
-		me.nValues += 1;
+		++me.nValues;
 	}
 	void TextSlider_insertValue(entity me, int pos, string theString, string theIdentifier)
 	{
@@ -47,7 +47,7 @@
 		}
 		me.(valueStrings[pos]) = theString;
 		me.(valueIdentifiers[pos]) = theIdentifier;
-		me.nValues += 1;
+		++me.nValues;
 	}
 	void TextSlider_configureTextSliderValues(entity me, string theDefault)
 	{
