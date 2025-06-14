@@ -51,7 +51,7 @@ void DrawAmmoItem(vector myPos, vector mySize, Resource ammoType, bool isCurrent
 
 	if(!isCurrent)
 	{
-		float scale = bound(0, autocvar_hud_panel_ammo_noncurrent_scale, 1);
+		float scale = bound(0.01, autocvar_hud_panel_ammo_noncurrent_scale, 1);
 		myPos = myPos + (mySize - mySize * scale) * 0.5;
 		mySize = mySize * scale;
 	}
