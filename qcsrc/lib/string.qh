@@ -481,7 +481,7 @@ string ftos_decimals_percentage(float number, int decimals)
 {
 	// inhibit stupid negative zero
 	if (number == 0) number = 0;
-	return sprintf("%.*f%%", max(0, decimals - 2), number * 100);
+	return sprintf(_("%.*f%%"), decimals, number * 100); // translatable percentage string
 }
 
 /**
