@@ -3,11 +3,11 @@
 #include "../item/modalcontroller.qh"
 #include "mainwindow.qh"
 
-const float LANGPARM_ID = 0;
-const float LANGPARM_NAME = 1;
-const float LANGPARM_NAME_LOCALIZED = 2;
-const float LANGPARM_PERCENTAGE = 3;
-const float LANGPARM_COUNT = 4;
+const int LANGPARM_ID = 0;
+const int LANGPARM_NAME = 1;
+const int LANGPARM_NAME_LOCALIZED = 2;
+const int LANGPARM_PERCENTAGE = 3;
+const int LANGPARM_COUNT = 4;
 
 const string PERCENTAGE_FULL_ICON = "/gfx/scoreboard/player_ready";
 

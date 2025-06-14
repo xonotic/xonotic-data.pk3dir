@@ -13,5 +13,5 @@ CLASS(XonoticFirstRunDialog, XonoticRootDialog)
 	ATTRIB(XonoticFirstRunDialog, playerNameLabel, entity);
 	ATTRIB(XonoticFirstRunDialog, playerNameLabelAlpha, float, 0);
 
-	ATTRIB(XonoticFirstRunDialog, closable, float, 0);
+	ATTRIB(XonoticFirstRunDialog, closable, bool, false);
 ENDCLASS(XonoticFirstRunDialog)

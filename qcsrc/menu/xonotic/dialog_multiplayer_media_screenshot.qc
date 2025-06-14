@@ -65,7 +65,7 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 /*
 	me.TR(me);
 		me.TD(me, me.rows - me.currentRow, me.columns, e = makeXonoticScreenshotImage());
-			e.showTitle = 0;
+			e.showTitle = false;
 			me.screenshotImage = e;
 			slist.screenshotPreview = e;
 			slist.screenshotBrowserDialog = me;

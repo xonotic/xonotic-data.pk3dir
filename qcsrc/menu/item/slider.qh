@@ -20,10 +20,10 @@ CLASS(Slider, Label)
 	METHOD(Slider, setSliderValue, void(entity, float));
 	METHOD(Slider, showNotify, void(entity));
 	ATTRIB(Slider, src, string);
-	ATTRIB(Slider, focusable, float, 1);
-	ATTRIB(Slider, allowFocusSound, float, 1);
+	ATTRIB(Slider, focusable, bool, true);
+	ATTRIB(Slider, allowFocusSound, bool, true);
 	ATTRIB(Slider, value, float, 0);
-	ATTRIB(Slider, animated, float, 1);
+	ATTRIB(Slider, animated, bool, true);
 	ATTRIB(Slider, sliderValue, float, 0);
 	ATTRIB(Slider, sliderAnim, entity);
 	ATTRIB(Slider, valueMin, float, 0);

@@ -53,14 +53,14 @@
 		{ // plus half to prevent almost all floating point errors
 			me.(valueStrings[me.nValues]) = strzone(me.rangedIdentifierToText(me, id));
 			me.(valueNumberIdentifiers[me.nValues]) = stof(ftos_decimals(id, me.valueDigits));
-			me.nValues += 1;
+			++me.nValues;
 		}
 	}
 	void MixedSlider_addText(entity me, string theString, float theIdentifier)
 	{
 		me.(valueStrings[me.nValues]) = theString;
 		me.(valueNumberIdentifiers[me.nValues]) = theIdentifier;
-		me.nValues += 1;
+		++me.nValues;
 	}
 	void MixedSlider_insertRange(entity me, int pos, float theValueMin, float theValueMax, float theValueStep)
 	{
@@ -79,12 +79,12 @@
 			string rounded_id_str = me.rangedIdentifierToText(me, id);
 			me.(valueStrings[pos]) = strzone(rounded_id_str);
 			me.(valueNumberIdentifiers[pos]) = stof(rounded_id_str);
-			pos += 1;
+			++pos;
 		}
 	}
 	void MixedSlider_insertText(entity me, int pos, string theString, float theIdentifier)
 	{
-		me.nValues += 1;
+		++me.nValues;
 		for (int i = me.nValues - 1; i > pos; --i)
 		{
 			me.(valueStrings[i]) = me.(valueStrings[i - 1]);

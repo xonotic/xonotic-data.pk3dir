@@ -9,5 +9,5 @@ CLASS(XonoticHUDAmmoDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDAmmoDialog, rows, float, 16);
 	ATTRIB(XonoticHUDAmmoDialog, columns, float, 4);
 	ATTRIB(XonoticHUDAmmoDialog, name, string, "HUDammo");
-	ATTRIB(XonoticHUDAmmoDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDAmmoDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDAmmoDialog)

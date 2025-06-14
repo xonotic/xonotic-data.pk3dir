@@ -709,7 +709,7 @@ void XonoticServerList_setSortOrder(entity me, int fld, int direction)
 	me.sortButton1.forcePressed = (fld == SLIST_FIELD_PING);
 	me.sortButton2.forcePressed = (fld == SLIST_FIELD_NAME);
 	me.sortButton3.forcePressed = (fld == SLIST_FIELD_MAP);
-	me.sortButton4.forcePressed = 0;
+	me.sortButton4.forcePressed = false;
 	me.sortButton5.forcePressed = (fld == SLIST_FIELD_NUMHUMANS);
 	me.selectedItem = 0;
 	strfree(me.selectedServer);
@@ -945,12 +945,12 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	if(substring(s, 0, 1) == "[")
 	{
 		isv6 = true;
-		me.seenIPv6 += 1;
+		++me.seenIPv6;
 	}
 	else if(IS_DIGIT(substring(s, 0, 1)))
 	{
 		isv4 = true;
-		me.seenIPv4 += 1;
+		++me.seenIPv4;
 	}
 
 	int crypto = stof(substring(crypto_getencryptlevel(s), 0, 1));
