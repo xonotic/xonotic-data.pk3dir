@@ -296,39 +296,6 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 	return true;
 }
 
-void Player_SetTeamIndexChecked(entity player, int team_index)
-{
-	if (!teamplay)
-	{
-		return;
-	}
-	if (!Team_IsValidIndex(team_index))
-	{
-		return;
-	}
-
-	entity balance = TeamBalance_CheckAllowedTeams(player);
-	if (team_index == 1 && !TeamBalance_IsTeamAllowedInternal(balance, 1))
-	{
-		team_index = 4;
-	}
-	if (team_index == 4 && !TeamBalance_IsTeamAllowedInternal(balance, 4))
-	{
-		team_index = 3;
-	}
-	if (team_index == 3 && !TeamBalance_IsTeamAllowedInternal(balance, 3))
-	{
-		team_index = 2;
-	}
-	if (team_index == 2 && !TeamBalance_IsTeamAllowedInternal(balance, 2))
-	{
-		team_index = 1;
-	}
-	TeamBalance_Destroy(balance);
-
-	SetPlayerTeam(player, team_index, TEAM_CHANGE_MANUAL);
-}
-
 bool MoveToTeam(entity client, int team_index, int type)
 {
 	//PrintToChatAll(sprintf("MoveToTeam: %s, %f", client.netname, team_index));
