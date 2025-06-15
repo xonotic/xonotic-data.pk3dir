@@ -126,11 +126,6 @@ bool QueuedPlayersReady(entity this, bool checkspecificteam);
 /// \return True if team switch was successful, false otherwise.
 bool SetPlayerTeam(entity player, int team_index, int type);
 
-/// \brief Sets the team of the player with all sanity checks.
-/// \param[in,out] player Player to adjust.
-/// \param[in] team_index Index of the team to set.
-void Player_SetTeamIndexChecked(entity player, int team_index);
-
 /// \brief Moves player to the specified team.
 /// \param[in,out] client Client to move.
 /// \param[in] team_index Index of the team.
