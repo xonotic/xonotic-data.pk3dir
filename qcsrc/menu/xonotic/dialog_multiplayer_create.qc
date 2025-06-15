@@ -36,8 +36,7 @@ void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax,
 	{
 		// set new values
 		e.addText(e, strzone(_("Default")), -1);
-		for(i = pMin; i <= pMax; i += pStep)
-			e.addText(e, strzone(ftos(i)), i);
+		e.addRange(e, pMin, pMax, pStep);
 		e.addText(e, strzone(_("Unlimited")), 0);
 	}
 	e.configureXonoticMixedSliderValues(e);

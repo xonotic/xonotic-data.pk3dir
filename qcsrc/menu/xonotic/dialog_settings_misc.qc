@@ -9,8 +9,6 @@
 #include "mainwindow.qh"
 #include "commandbutton.qh"
 
-#define ADDVALUE_SPEED_KB(i) e.addText(e, strzone(sprintf(_("%d KiB/s"), i)), i)
-#define ADDVALUE_SPEED_MB(i, j) e.addText(e, strzone(sprintf(_("%d MiB/s"), i)), j)
 entity makeXonoticMiscSettingsTab()
 {
 	entity me;
@@ -50,14 +48,18 @@ void XonoticMiscSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bandwidth limit:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_curl_maxspeed"));
-		ADDVALUE_SPEED_KB(64);
-		ADDVALUE_SPEED_KB(128);
-		ADDVALUE_SPEED_KB(256);
-		ADDVALUE_SPEED_KB(512);
-		ADDVALUE_SPEED_MB(1, 1024);
-		ADDVALUE_SPEED_MB(2, 2048);
-		ADDVALUE_SPEED_MB(4, 4096);
-		ADDVALUE_SPEED_MB(8, 8192);
+			#define ADDVALUE_SPEED_KB(i)    e.addText(e, strzone(sprintf(_("%d KiB/s"), i)), i)
+			#define ADDVALUE_SPEED_MB(i, j) e.addText(e, strzone(sprintf(_("%d MiB/s"), i)), j)
+			ADDVALUE_SPEED_KB(64);
+			ADDVALUE_SPEED_KB(128);
+			ADDVALUE_SPEED_KB(256);
+			ADDVALUE_SPEED_KB(512);
+			ADDVALUE_SPEED_MB(1, 1024);
+			ADDVALUE_SPEED_MB(2, 2048);
+			ADDVALUE_SPEED_MB(4, 4096);
+			ADDVALUE_SPEED_MB(8, 8192);
+			#undef ADDVALUE_SPEED_KB
+			#undef ADDVALUE_SPEED_MB
 		e.addText(e, strzone(_("Unlimited")), 0);
 		e.configureXonoticMixedSliderValues(e);
 
