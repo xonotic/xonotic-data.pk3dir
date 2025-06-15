@@ -49,6 +49,7 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Range:")));
 		me.TD(me, 1, 2.8, e = makeXonoticMixedSlider("hud_panel_strafehud_range"));
+			e.formatString = _("%s°");
 			e.addText(e, _("Dynamic"), 0);
 			e.addRange(e, 10, 360, 10);
 			e.configureXonoticMixedSliderValues(e);
@@ -89,14 +90,18 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 0.56666666, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bar_neutral_alpha"));
+			e.formatString = "%";
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.56666666, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bar_accel_alpha"));
+			e.formatString = "%";
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.56666666, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bar_overturn_alpha"));
+			e.formatString = "%";
 
 		me.TDempty(me, 0.2);
 
 		me.TD(me, 1, 1.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_angle_alpha"));
+			e.formatString = "%";
 	me.TR(me);
 		me.TD(me, 1, 1.9, e = makeXonoticTextLabel(0, _("Switch indicator:")));
 
@@ -112,12 +117,14 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 0.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_switch_alpha"));
+			e.formatString = "%";
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "hud_panel_strafehud_switch", _("Enable")));
 
 		me.TDempty(me, 0.2);
 
 		me.TD(me, 1, 0.9, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bestangle_alpha"));
+			e.formatString = "%";
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "hud_panel_strafehud_bestangle", _("Enable")));
 	me.TR(me);

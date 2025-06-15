@@ -60,6 +60,7 @@ void XonoticDamageTextSettings_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Fade time:")));
 			setDependent(e, "cl_damagetext", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(1, 5, 0.5, "cl_damagetext_alpha_lifetime"));
+			e.formatString = _("%ss");
 			setDependent(e, "cl_damagetext", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Accumulate:")));
@@ -69,10 +70,9 @@ void XonoticDamageTextSettings_fill(entity me)
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("If younger than:")));
 			setDependent(e, "cl_damagetext", 1, 1);
 		me.TD(me, 1, 1.6, e = makeXonoticMixedSlider("cl_damagetext_accumulate_lifetime"));
+			e.formatString = _("%ss");
 			e.addText(e, _("Never"), 0);
-			e.addText(e, _("1s"), 1);
-			e.addText(e, _("2s"), 2);
-			e.addText(e, _("3s"), 3);
+			e.addRange(e, 0.5, 3, 0.5);
 			e.addText(e, _("Always"), -1);
 			e.configureXonoticMixedSliderValues(e);
 			setDependent(e, "cl_damagetext", 1, 1);

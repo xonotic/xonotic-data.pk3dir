@@ -19,15 +19,18 @@ void XonoticHUDPickupDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Message duration:")));
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(1, 5, 1, "hud_panel_pickup_time"));
+			e.formatString = _("%ss");
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Fade time:")));
 		me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_pickup_fade_out"));
+			e.formatString = _("%ss");
 			e.addText(e, ZCTX(_("FADESPEED^Instant")), 0);
 			e.addRange(e, 0.05, 1, 0.05);
 			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Icon size scale:")));
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(1, 3, 0.1, "hud_panel_pickup_iconsize"));
+			e.formatString = _("%sx");
 
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Show timer:")));

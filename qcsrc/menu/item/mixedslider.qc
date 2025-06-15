@@ -38,7 +38,10 @@
 	{
 		if (me.formatString == "%")
 			return ftos_decimals_percentage(id, max(0, me.valueDigits - 2));
-		return ftos_decimals(id, me.valueDigits);
+		string txt = ftos_decimals(id, me.valueDigits);
+		if (me.formatString != "")
+			return sprintf(me.formatString, txt);
+		return txt;
 	}
 	void MixedSlider_adjustDigitsForStep(entity me, float valueStep)
 	{

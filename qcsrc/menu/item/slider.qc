@@ -47,7 +47,10 @@
 		val *= me.valueDisplayMultiplier;
 		if (me.formatString == "%")
 			return ftos_decimals_percentage(val, max(0, me.valueDigits - 2));
-		return ftos_decimals(val, me.valueDigits);
+		string txt = ftos_decimals(val, me.valueDigits);
+		if (me.formatString != "")
+			return sprintf(me.formatString, txt);
+		return txt;
 	}
 	void Slider_configureSliderVisuals(entity me, float sz, float theAlign, float theTextSpace, string gfx)
 	{

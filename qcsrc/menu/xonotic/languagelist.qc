@@ -45,6 +45,7 @@ void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool 
 			alpha_factor = 0.65;
 		else
 			alpha_factor = 0.3;
+		p = ftos_decimals_percentage(percent / 100, 0); // make it translatable
 	}
 	else
 		p = "\xE2\x9C\x94"; // Unicode Character 'HEAVY CHECK MARK' (U+2714)

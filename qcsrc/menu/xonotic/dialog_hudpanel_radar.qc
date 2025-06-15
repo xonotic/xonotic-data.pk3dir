@@ -36,6 +36,7 @@ void XonoticHUDRadarDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Scale:")));
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(1024, 8192, 512, "hud_panel_radar_scale"));
+			e.formatString = _("%s qu");
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Zoom mode:")));
 			me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_radar_zoommode"));
@@ -62,6 +63,7 @@ void XonoticHUDRadarDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Scale:")));
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(1024, 8192, 512, "hud_panel_radar_maximized_scale"));
+			e.formatString = _("%s qu");
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Zoom mode:")));
