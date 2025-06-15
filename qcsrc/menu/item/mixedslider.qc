@@ -69,6 +69,16 @@
 			me.nValues += 1;
 		}
 	}
+	void MixedSlider_addRangeFormatted(entity me, string format, float theValueMin, float theValueMax, float theValueStep)
+	{
+		me.adjustDigitsForStep(me, theValueStep);
+		for (float id = theValueMin; id <= theValueMax + theValueStep / 2; id += theValueStep)
+		{ // plus half to prevent almost all floating point errors
+			me.(valueStrings[me.nValues]) = strzone(sprintf(format, id));
+			me.(valueNumberIdentifiers[me.nValues]) = stof(ftos_decimals(id, me.valueDigits));
+			++me.nValues;
+		}
+	}
 	void MixedSlider_addText(entity me, string theString, float theIdentifier)
 	{
 		me.(valueStrings[me.nValues]) = theString;

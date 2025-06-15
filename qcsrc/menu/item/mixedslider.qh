@@ -16,6 +16,7 @@ CLASS(MixedSlider, Slider)
 	METHOD(MixedSlider, adjustDigitsForStep, void(entity, float));
 	METHOD(MixedSlider, clearValues, void(entity));
 	METHOD(MixedSlider, addRange, void(entity, float, float, float));
+	METHOD(MixedSlider, addRangeFormatted, void(entity, string, float, float, float));
 	METHOD(MixedSlider, addText, void(entity, string, float));
 	METHOD(MixedSlider, insertRange, void(entity, int, float, float, float));
 	METHOD(MixedSlider, insertText, void(entity, int, string, float));
