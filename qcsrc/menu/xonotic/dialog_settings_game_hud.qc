@@ -140,6 +140,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Max distance:")));
 			setDependent(e, "hud_shownames", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(2000, 10000, 500, "hud_shownames_maxdistance"));
+			e.formatString = _("%s qu");
 			setDependent(e, "hud_shownames", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);

@@ -49,6 +49,7 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Range:")));
 		me.TD(me, 1, 2.8, e = makeXonoticMixedSlider("hud_panel_strafehud_range"));
+			e.formatString = _("%s°");
 			e.addText(e, _("Dynamic"), 0);
 			e.addRange(e, 10, 360, 10);
 			e.configureXonoticMixedSliderValues(e);
