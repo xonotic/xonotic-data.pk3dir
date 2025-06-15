@@ -42,10 +42,8 @@ void ClientKill_Now_TeamChange(entity this)
 			TeamBalance_RemoveExcessPlayers(this);
 	}
 	else
-	{
-		Player_SetTeamIndexChecked(this, Team_TeamToIndex(
-			this.killindicator_teamchange));
-	}
+		SetPlayerTeam(this, Team_TeamToIndex(this.killindicator_teamchange), TEAM_CHANGE_MANUAL);
+
 	this.killindicator_teamchange = 0;
 }
 

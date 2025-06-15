@@ -18,6 +18,7 @@
 #include <common/vehicles/all.qh>
 #include <lib/warpzone/common.qh>
 #include <server/bot/api.qh>
+#include <server/bot/default/cvars.qh> // for autocvar_bot_vs_human
 #include <server/bot/default/waypoints.qh>
 #include <server/campaign.qh>
 #include <server/chat.qh>
@@ -637,9 +638,11 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				return;
 			}
 
+			// TEAMNUMBERS_THAT_ARENT_STUPID FIXME: 0 and -1 mean different things to different funcs
 			float team_num = Team_ColorToTeam(argv(1));
 			if (team_num == -1) // invalid
 				return;
+			int team_index = Team_TeamToIndex(team_num);
 
 			// players queued to change teams may leave the queue by selecting their current team or autoselect
 			if (caller.team > 0 && caller.wants_join && (!team_num || caller.team == team_num))
@@ -664,6 +667,14 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_NOTALLOWED);
 				return;
 			}
+			if (team_num && autocvar_bot_vs_human)
+			{
+				entity balance = TeamBalance_CheckAllowedTeams(caller);
+				for (int i = 0; !TeamBalance_IsTeamAllowed(balance, team_index) && i < NUM_TEAMS; ++i)
+					team_index = team_index > 1 ? team_index - 1 : NUM_TEAMS;
+				team_num = Team_IndexToTeam(team_index);
+				TeamBalance_Destroy(balance);
+			}
 			if (team_num && autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
 			{
 				entity balance = TeamBalance_CheckAllowedTeams(caller);
@@ -679,7 +690,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				TeamBalance_Destroy(balance);
 			}
 
-			if (joinAllowed(caller, team_num ? Team_TeamToIndex(team_num) : -1))
+			if (joinAllowed(caller, team_num ? team_index : -1))
 				ClientKill_TeamChange(caller, team_num ? team_num : -1);
 
 			return;
