@@ -95,11 +95,15 @@ void cpicon_damage(entity this, float hp)
 	else if(hp <= this.max_health || hp >= this.max_health)
 		setmodel(this, MDL_ONS_CP);
 
-	this.punchangle = (2 * randomvec() - '1 1 1') * 45;
-
-	this.cp_bob_dmg_z = (2 * random() - 1) * 15;
-	this.pain_finished = time + 1;
-	this.colormod = '2 2 2';
+	if(hp < GetResource(this, RES_HEALTH))
+	{
+		this.punchangle = (2 * randomvec() - '1 1 1') * 45;
+		this.cp_bob_dmg_z = (2 * random() - 1) * 15;
+		this.pain_finished = time + 1;
+		this.colormod = '2 2 2';
+	}
+	else
+		this.pain_finished = 0;
 
 	setsize(this, CPICON_MIN, CPICON_MAX);
 }
