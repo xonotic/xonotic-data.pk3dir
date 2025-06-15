@@ -20,7 +20,6 @@ CLASS(Button, Label)
 	ATTRIB(Button, src2, string); // is centered, same aspect, and stretched to label size
 	ATTRIB(Button, src2scale, float, 1);
 	ATTRIB(Button, srcMulti, float, 1);        // 0: button square left, text right; 1: button stretched, text over it
-	ATTRIB(Button, buttonLeftOfText, float, 0);
 	ATTRIB(Button, focusable, float, 1);
 	ATTRIB(Button, allowFocusSound, float, 1);
 	ATTRIB(Button, pressed, float, 0);
