@@ -405,13 +405,33 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 	{
 		sound(this, CH_TRIGGER, SND_ONS_GENERATOR_EXPLODE, VOL_BASE, ATTEN_NORM);
 		pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
+
+		if (attacker != this)
+		{
+			GameRules_scoring_add(attacker, ONS_TAKES, 1);
+			GameRules_scoring_add(attacker, SCORE, 10);
+		}
+		else
+		{
+			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
+				if(vdist(it.origin - this.origin, <, autocvar_g_onslaught_cp_proxydecap_distance))
+				{
+					if(DIFF_TEAM(it, this))
+					{
+						if (attacker == this)
+							attacker = it; // show message only for this player
+						// reward all players
+						GameRules_scoring_add(it, ONS_TAKES, 1);
+						GameRules_scoring_add(it, SCORE, 5);
+					}
+				}
+			});
+		}
+
 		if (this.owner.message != "")
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED), this.owner.message, attacker.netname);
 		else
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED_NONAME), attacker.netname);
-
-		GameRules_scoring_add(attacker, ONS_TAKES, 1);
-		GameRules_scoring_add(attacker, SCORE, 10);
 
 		this.owner.goalentity = NULL;
 		this.owner.islinked = false;
@@ -461,6 +481,7 @@ void ons_ControlPoint_Icon_Think(entity this)
 	if(autocvar_g_onslaught_cp_proxydecap)
 	{
 		int _enemy_count = 0;
+		entity first_enemy = NULL;
 		int _friendly_count = 0;
 
 		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
@@ -469,7 +490,11 @@ void ons_ControlPoint_Icon_Think(entity this)
 				if(SAME_TEAM(it, this))
 					++_friendly_count;
 				else
+				{
 					++_enemy_count;
+					if (!first_enemy)
+						first_enemy = it;
+				}
 			}
 		});
 
@@ -482,7 +507,11 @@ void ons_ControlPoint_Icon_Think(entity this)
 		this.SendFlags |= CPSF_STATUS;
 		if(GetResource(this, RES_HEALTH) <= 0)
 		{
-			ons_ControlPoint_Icon_Damage(this, this, this, 1, 0, DMG_NOWEP, this.origin, '0 0 0');
+			// if we get here then _enemy_count >= 1
+			entity attacker = first_enemy;
+			if (_enemy_count > 1)
+				attacker = this; // tell ons_ControlPoint_Icon_Damage to find all attackers
+			ons_ControlPoint_Icon_Damage(this, this, attacker, 1, 0, DMG_NOWEP, this.origin, '0 0 0');
 			return;
 		}
 	}
