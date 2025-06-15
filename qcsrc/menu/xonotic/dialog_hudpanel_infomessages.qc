@@ -19,9 +19,11 @@ void XonoticHUDInfoMessagesDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Message duration:")));
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(1, 10, 1, "hud_panel_infomessages_group_time"));
+			e.formatString = _("%ss");
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Fade time:")));
 		me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_infomessages_group_fadetime"));
+			e.formatString = _("%ss");
 			e.addText(e, ZCTX(_("FADESPEED^Instant")), 0);
 			e.addRange(e, 0.05, 1, 0.05);
 			e.configureXonoticMixedSliderValues(e);
