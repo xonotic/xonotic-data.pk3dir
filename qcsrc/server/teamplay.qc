@@ -890,6 +890,8 @@ bool TeamBalance_IsTeamAllowed(entity balance, int index)
 	return TeamBalance_IsTeamAllowedInternal(balance, index);
 }
 
+// maybe include qcsrc/server/clientkill.qh instead of declaring this?
+.int killindicator_teamchange;
 void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 {
 	if (balance == NULL)
@@ -927,7 +929,7 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			// TODO: Reconsider when the player is truly on the team.
 			if (IS_CLIENT(it) || INGAME(it))
 			{
-				team_num = it.team;
+				team_num = it.killindicator_teamchange > 0 ? it.killindicator_teamchange : it.team;
 			}
 			else if (Player_HasRealForcedTeam(it))
 			{
