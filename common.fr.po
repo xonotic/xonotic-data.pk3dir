@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-22 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -3028,7 +3028,7 @@ msgstr "^BG%s^K1 a heurté le sol un peu trop violemment%s%s"
 #: qcsrc/common/notifications/all.inc:314
 #, c-format
 msgid "^BG%s^K1 hit the ground with a crunch%s%s"
-msgstr "^BG%s^K1 a heurté le sol dans un craquement sinistre%s%s"
+msgstr "^BG%s^K1 a heurté le sol dans un craquement%s%s"
 
 #: qcsrc/common/notifications/all.inc:315
 #, c-format
@@ -4413,7 +4413,7 @@ msgstr "^K1Vous n'avez pas pu reprendre votre souffle !"
 
 #: qcsrc/common/notifications/all.inc:656
 msgid "^K1You hit the ground with a crunch!"
-msgstr "^K1Vous avez heurté le sol dans un craquement sourd !"
+msgstr "^K1Vous avez heurté le sol dans un craquement !"
 
 #: qcsrc/common/notifications/all.inc:657
 msgid "^K1You felt a little too hot!"
