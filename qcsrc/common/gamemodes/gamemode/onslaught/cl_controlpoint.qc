@@ -97,7 +97,13 @@ void cpicon_damage(entity this, float hp)
 
 	if(hp < GetResource(this, RES_HEALTH))
 	{
-		this.punchangle = (2 * randomvec() - '1 1 1') * 45;
+		const int MIN_PUNCHANGLE = 8;
+		const int MAX_PUNCHANGLE = 25;
+		this.punchangle = (2 * randomvec() - '1 1 1') * (MAX_PUNCHANGLE - MIN_PUNCHANGLE);
+		this.punchangle.x += (this.punchangle.x >= 0 ? MIN_PUNCHANGLE : -MIN_PUNCHANGLE);
+		this.punchangle.y += (this.punchangle.y >= 0 ? MIN_PUNCHANGLE : -MIN_PUNCHANGLE);
+		this.punchangle.z += (this.punchangle.z >= 0 ? MIN_PUNCHANGLE : -MIN_PUNCHANGLE);
+
 		this.cp_bob_dmg_z = (2 * random() - 1) * 15;
 		this.pain_finished = time + 1;
 		this.colormod = '2 2 2';
