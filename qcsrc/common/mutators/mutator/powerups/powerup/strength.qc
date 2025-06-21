@@ -57,6 +57,6 @@ METHOD(StrengthItem, describe, string(StrengthItem this))
         "The damage and knockback you deal to yourself also increases but by a smaller amount.\n\n"
         "The %s is one of the most sought after items on a map due to its ability to allow you to easily dominate a map, so it's often highly contested when it spawns in.\n\n"
         "Since it is a powerup, it will drop if you die while holding it."),
-    COLORED_NAME(this));
+    COLORED_NAME(this), COLORED_NAME(this));
 }
 #endif // MENUQC
