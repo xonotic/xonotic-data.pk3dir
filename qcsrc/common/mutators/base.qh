@@ -152,6 +152,10 @@ enum {
 
 USING(mutatorfunc_t, bool(int));
 
+#ifdef MENUQC
+#include <menu/draw.qh>
+#endif
+
 CLASS(Mutator, Object)
     ATTRIB(Mutator, m_id, int, 0);
     ATTRIB(Mutator, message, string);
@@ -160,14 +164,21 @@ CLASS(Mutator, Object)
     ATTRIB(Mutator, m_name, string);
     ATTRIB(Mutator, mutatorfunc, mutatorfunc_t);
     ATTRIB(Mutator, mutatorcheck, bool());
+#ifdef MENUQC
     METHOD(Mutator, describe, string(Mutator this)) {
         TC(Mutator, this);
         return SUPER(Mutator).describe(this);
     }
     METHOD(Mutator, display, void(Mutator this, void(string name, string icon) returns)) {
         TC(Mutator, this);
-        returns(this.message, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon) : string_null);
+        string img = this.m_icon;
+        if (img == "" || draw_PreloadPicture(img) == "")
+            img = sprintf("/gfx/menu/%s/gametype_nb", cvar_string("hud_skin")); // used by the guide
+        else
+            img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), img);
+        returns(this.message, img);
     }
+#endif
 ENDCLASS(Mutator)
 
 REGISTRY(Mutators, BITS(7))
