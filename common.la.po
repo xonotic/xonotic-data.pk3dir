@@ -9420,7 +9420,7 @@ msgstr "Eligere formas imaginesque quas ludentes et utilia habeant"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:26
 msgid "Perspective"
-msgstr ""
+msgstr "Aspectus"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:29
 msgid "Field of view:"
@@ -9697,22 +9697,25 @@ msgid ""
 "In-game linear acceleration factor. \"Fully disabled\" also disables other "
 "acceleration types that can be enabled via the m_accelerate_* cvars"
 msgstr ""
+"Accelerationis multiplicandus linearis in ludo. Si \"Nulla multiplicatio\" "
+"eligitur non erunt aliae calculationes accelerationis quae iuberi possunt "
+"per variabiles m_accelerate_*"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:116
 msgid "Acceleration factor:"
-msgstr ""
+msgstr "Accelerationis multiplicandus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:118
 msgid "MOUSEACCEL^Fully disabled"
-msgstr ""
+msgstr "Nulla multiplicatio"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:119
 msgid "MOUSEACCEL^Linear disabled"
-msgstr ""
+msgstr "Sine lineari"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:124
 msgid "Speed bounds:"
-msgstr ""
+msgstr "Velocitatis limites:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:136
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:140
@@ -9947,11 +9950,11 @@ msgstr "Nec sanguinem nec intestina pingere, sed alias imagines decoras"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:77
 msgid "Just the gore"
-msgstr ""
+msgstr "Modo sine sanguine"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:82
 msgid "Just the language"
-msgstr ""
+msgstr "Modo sine verbis indecoris"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
 msgid ""
@@ -9984,7 +9987,7 @@ msgstr "Totum quadrum"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:36
 msgid "Borderless window"
-msgstr ""
+msgstr "Fenestra sine margine"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:39
 msgid "Resolution:"
@@ -10032,7 +10035,7 @@ msgstr "Colossica"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:57
 msgid "Anaglyph 3D (red-cyan)"
-msgstr ""
+msgstr "Simulare 3 dimensiones (per rubrum, caeruleum)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:59
 msgid "High-quality frame buffer"
@@ -10047,7 +10050,7 @@ msgid ""
 "Enable antialiasing, which smooths the edges of 3D geometry. Note that it "
 "might decrease performance by quite a lot"
 msgstr ""
-"Polire margines rerum tridimensionalium. NB: computatrum minus velox esse "
+"Polire margines rerum trium dimensionum. NB: computatrum minus velox esse "
 "poterit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:71
