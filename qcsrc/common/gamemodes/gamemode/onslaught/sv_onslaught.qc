@@ -478,7 +478,7 @@ void ons_ControlPoint_Icon_Think(entity this)
 {
 	this.nextthink = time + ONS_CP_THINKRATE;
 
-	if(autocvar_g_onslaught_cp_proxydecap)
+	if (!this.owner.isshielded && autocvar_g_onslaught_cp_proxydecap)
 	{
 		int _enemy_count = 0;
 		entity first_enemy = NULL;
