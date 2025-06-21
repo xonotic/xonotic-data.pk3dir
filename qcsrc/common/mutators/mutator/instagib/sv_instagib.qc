@@ -340,7 +340,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 				instagib_replace_item_with(item, ITEM_VaporizerCells);
 			return true;
 		case ITEM_Jetpack:
-		case ITEM_JetpackRegen:
+		case ITEM_FuelRegen:
 			return !autocvar_g_instagib_allow_jetpacks;
 	}
 

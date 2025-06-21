@@ -89,7 +89,7 @@ REGISTRY_SOURCE(GametypeSource, Gametypes, Gametypes)
 REGISTRY_SOURCE(BuffSource, Buffs, StatusEffects, it.instanceOfBuff)
 
 #include <common/mutators/mutator/powerups/powerup/_mod.qh>
-// The descriptions for these are in common/mutators/mutator/powerups/powerup/*.qc and common/items/item/jetpack.qc
+// The descriptions for these are in common/mutators/mutator/powerups/powerup/*.qc and common/mutators/mutator/powerups/powerup/jetpack.qc
 REGISTRY_SOURCE(PowerupSource, Powerups, Items, it.instanceOfPowerup)
 
 #include <common/items/all.qh>

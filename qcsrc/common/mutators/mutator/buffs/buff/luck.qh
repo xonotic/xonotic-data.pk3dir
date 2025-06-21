@@ -14,7 +14,7 @@ CLASS(LuckBuff, Buff)
 	ATTRIB(LuckBuff, netname, string, "luck");
 	ATTRIB(LuckBuff, m_icon, string, "buff_luck");
 	ATTRIB(LuckBuff, m_skin, int, 19);
-	ATTRIB(LuckBuff, m_color, vector, '1 0.23 0.44');
+	ATTRIB(LuckBuff, m_color, vector, '0.17 0.85 0.12');
 ENDCLASS(LuckBuff)
 
 REGISTER_BUFF(LUCK, NEW(LuckBuff));

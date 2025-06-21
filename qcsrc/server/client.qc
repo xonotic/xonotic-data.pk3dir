@@ -313,11 +313,11 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	Portal_ClearAll(this);
 	SetSpectatee(this, NULL);
 
-	if (this.alivetime)
+	if (this.alivetime_start)
 	{
 		if (!warmup_stage)
-			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
-		this.alivetime = 0;
+			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, max(0, time - this.alivetime_start));
+		this.alivetime_start = 0;
 	}
 
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -835,8 +835,8 @@ void PutPlayerInServer(entity this)
 		W_WeaponFrame(this, weaponentity);
 	}
 
-	if (!warmup_stage && !this.alivetime)
-		this.alivetime = time;
+	if (!warmup_stage && !this.alivetime_start)
+		this.alivetime_start = max(time, game_starttime);
 
 	antilag_clear(this, CS(this));
 
@@ -1732,7 +1732,7 @@ void player_regen(entity this)
 	{
 		regenstable = autocvar_g_balance_fuel_regenstable;
 		rotstable = autocvar_g_balance_fuel_rotstable;
-		regenframetime = ((time > this.pauseregen_finished) && (this.items & ITEM_JetpackRegen.m_itemid)) ? frametime : 0;
+		regenframetime = ((time > this.pauseregen_finished) && (this.items & ITEM_FuelRegen.m_itemid)) ? frametime : 0;
 		rotframetime = (time > this.pauserotfuel_finished) ? frametime : 0;
 		RotRegen(this, RES_FUEL, 1,
 		         regenstable, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regenframetime,
@@ -2816,11 +2816,13 @@ void PlayerFrame (entity this)
 
 	if (this.score_frame_dmg)
 	{
+		this.handicap_avg_given_sum += this.score_frame_dmg * Handicap_GetTotalHandicap(this, false);
 		GameRules_scoring_add(this, DMG, this.score_frame_dmg);
 		this.score_frame_dmg = 0;
 	}
 	if (this.score_frame_dmgtaken)
 	{
+		this.handicap_avg_taken_sum += this.score_frame_dmgtaken * Handicap_GetTotalHandicap(this, true);
 		GameRules_scoring_add(this, DMGTAKEN, this.score_frame_dmgtaken);
 		this.score_frame_dmgtaken = 0;
 	}

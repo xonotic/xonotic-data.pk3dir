@@ -45,3 +45,22 @@ void Handicap_SetForcedHandicap(entity player, float value, bool receiving);
 /// \param[in] receiving Whether handicap is for receiving or dealing.
 /// \return Total handicap of the player.
 float Handicap_GetTotalHandicap(entity player, bool receiving);
+
+/// \brief Updates .handicap_level for the player.
+/// \param[in] player Player to check.
+void Handicap_UpdateHandicapLevel(entity player);
+
+// This int ranges 0 to 16, 0 meaning no handicap, 1 to 16 representing handicap "levels" mapped
+// from 1.0 to HANDICAP_MAX_LEVEL_EQUIVALENT, using (given + taken)/2 (i.e. both-ways handicap).
+// It is networked to the client.
+// The levels are mostly meaningless, just used to determine the player_handicap icon color.
+.int handicap_level;
+
+#define HANDICAP_MAX_LEVEL_EQUIVALENT  2.0
+
+// These store the player's total "average-sum" given/taken damage handicaps respectively.
+// average-sum refers to the arithmetic sum of damage taken/given, weighted by respective handicap.
+// To calculate the average handicap, divide by damage taken/given.
+.float handicap_avg_given_sum;
+.float handicap_avg_taken_sum;
+

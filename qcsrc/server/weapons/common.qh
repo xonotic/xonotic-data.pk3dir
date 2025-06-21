@@ -1,6 +1,7 @@
 #pragma once
 
 int autocvar_g_projectiles_damage;
+int autocvar_g_projectiles_interact = 2;
 bool autocvar_g_projectiles_keep_owner;
 float autocvar_sv_strengthsound_antispam_refire_threshold;
 float autocvar_sv_strengthsound_antispam_time;
@@ -26,7 +27,18 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 
 #define PROJECTILE_TOUCH(e,t) MACRO_BEGIN if (WarpZone_Projectile_Touch(e,t)) return; MACRO_END
 
-#define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
+// FIXME: some behaviours can't be achieved or would require kludges in physics code,
+// eg we can't make electro bolts hit electro orbs only (without causing other problems) when g_projectiles_interact == 1,
+// see also WarpZone_Projectile_Touch_ImpactFilter_Callback().
+// Ideally, extend engine to support any combination of 'hit a and b but not x or y' and 'take hits from c and d but not w or z'.
+#define PROJECTILE_MAKETRIGGER(e) \
+MACRO_BEGIN \
+	(e).solid = SOLID_CORPSE; \
+	(e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE; \
+	if (!autocvar_g_projectiles_interact || (autocvar_g_projectiles_interact == 1 && (e).classname != "blasterbolt")) \
+		(e).clipgroup = FL_PROJECTILE; \
+MACRO_END
+
 // when doing this, hagar can go through clones
 // #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX
 

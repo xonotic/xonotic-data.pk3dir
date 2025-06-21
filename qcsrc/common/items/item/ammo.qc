@@ -17,4 +17,14 @@ METHOD(Ammo, describe, string(Ammo this))
 	// TODO: rename all *nails* cvars to bullets
     return s;
 }
+
+METHOD(Fuel, describe, string(Fuel this))
+{
+	TC(Fuel, this);
+	string s = sprintf(_("The %s ammo type is used by the %s."),
+	COLORED_NAME(this), COLORED_NAME(ITEM_Jetpack));
+	s = sprintf(_("%s\n\nBy default, the pickup gives you %s ammo, to a maximum of %s."),
+		s, cvar_defstring("g_pickup_fuel"), cvar_defstring("g_pickup_fuel_max"));
+	return s;
+}
 #endif

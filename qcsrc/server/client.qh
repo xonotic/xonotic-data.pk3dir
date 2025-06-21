@@ -65,7 +65,7 @@ float autocvar_sv_player_scale;
 
 .float jointime; // time of connecting
 .float startplaytime; // time of switching from spectator to player
-.float alivetime; // time of being alive
+.float alivetime_start; // start time of being alive
 .float death_time;
 .bool wasplayer;
 

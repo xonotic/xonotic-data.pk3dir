@@ -86,8 +86,7 @@ void nade_ice_boom(entity this)
 	setorigin(fountain, fountain.origin);
 	setthink(fountain, nade_ice_think);
 	fountain.nextthink = time;
-	fountain.ltime = time + autocvar_g_nades_ice_freeze_time;
-	fountain.pushltime = fountain.wait = fountain.ltime;
+	fountain.pushltime = fountain.wait = fountain.ltime = time + autocvar_g_nades_ice_freeze_time;
 	fountain.team = this.team;
 	set_movetype(fountain, MOVETYPE_TOSS);
 	fountain.projectiledeathtype = DEATH_NADE_ICE.m_id;
@@ -106,7 +105,8 @@ void nade_ice_boom(entity this)
 		timer.glowmod = this.glowmod;
 		setthink(timer, nade_timer_think);
 		timer.nextthink = time;
-		timer.wait = fountain.ltime;
+		timer.wait = fountain.wait;
+		timer.nade_lifetime = this.nade_lifetime;
 		timer.owner = fountain;
 		timer.skin = 10;
 	}
