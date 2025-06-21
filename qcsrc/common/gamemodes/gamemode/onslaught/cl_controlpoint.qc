@@ -8,7 +8,6 @@
 .bool iscaptured;
 
 .vector cp_origin, cp_bob_origin;
-.float cp_bob_spd;
 
 .float cp_bob_dmg_z;
 
@@ -26,8 +25,7 @@ void cpicon_draw(entity this)
 		this.cp_bob_dmg_z = this.cp_bob_dmg_z - 3 * frametime;
 	else
 		this.cp_bob_dmg_z = 0;
-	this.cp_bob_origin_z = 4 * PI * (1 - cos(this.cp_bob_spd));
-	this.cp_bob_spd = this.cp_bob_spd + 1.875 * frametime;
+	this.cp_bob_origin_z = 9 * (1 - cos(1.875 * time));
 	this.colormod = '1 1 1' * (2 - bound(0, (this.pain_finished - time) / 10, 1));
 
 	if(!this.iscaptured) this.alpha = GetResource(this, RES_HEALTH) / this.max_health;
@@ -92,7 +90,7 @@ void cpicon_damage(entity this, float hp)
 		setmodel(this, MDL_ONS_CP2);
 	else if(hp < this.max_health * 0.75)
 		setmodel(this, MDL_ONS_CP1);
-	else if(hp <= this.max_health || hp >= this.max_health)
+	else
 		setmodel(this, MDL_ONS_CP);
 
 	if(hp < GetResource(this, RES_HEALTH))
@@ -145,7 +143,6 @@ void cpicon_construct(entity this, bool isnew)
 	this.draw			= cpicon_draw;
 	this.cp_origin		= this.origin;
 	this.cp_bob_origin 	= '0 0 0.1';
-	this.cp_bob_spd 	= 0;
 
 	if(isnew)
 		IL_PUSH(g_drawables, this);
