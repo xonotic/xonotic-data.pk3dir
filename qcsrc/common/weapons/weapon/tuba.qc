@@ -598,7 +598,7 @@ PRECACHE(Tuba)
 METHOD(Tuba, describe, string(Tuba this))
 {
 	TC(Tuba, this);
-	return sprintf(_("The %s is unique weapon that makes the ears of nearby enemies bleed by playing awful sounds, also slightly knocking them back.\n\n"
+	return sprintf(_("The %s is a unique weapon that makes the ears of nearby enemies bleed by playing awful sounds, also slightly knocking them back.\n\n"
 		"The secondary fire works the same way, playing a higher pitch.\n\n"
 		"The only ammo it needs to operate is the breath from your lungs.\n\n"
 		"Since your enemies need to be close by to hear your rubbish music, the %s is only effective at very close ranges.\n\n"

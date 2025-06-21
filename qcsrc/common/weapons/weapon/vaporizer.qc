@@ -415,7 +415,7 @@ METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))
 METHOD(Vaporizer, describe, string(Vaporizer this))
 {
 	TC(Vaporizer, this);
-	return sprintf(_("The %s is unique weapon, firing a deadly beam of energy dealing a huge amount of damage. "
+	return sprintf(_("The %s is a unique weapon, firing a deadly beam of energy dealing a huge amount of damage. "
 		"In %s, the beam has the ability to instantly kill enemies with a single shot, unless they have an %s.\n\n"
 		"The secondary fire fires a laser identical to that fired by the %s, with strong knockback.\n\n"
 		"It is a superweapon, so isn't often found in game, except in %s where all players spawn with it.\n\n"
