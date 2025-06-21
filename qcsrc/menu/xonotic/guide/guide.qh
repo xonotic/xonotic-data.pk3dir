@@ -19,6 +19,7 @@
 	X(NEW(TurretSource),       _("Turrets"),      "gametype_as") \
 	X(NEW(MutatorSource),      _("Mutators"),     "gametype_nb") \
 	/**/
+// XONRELEASE TODO: improve icons, consider just creating new ones from scratch just for the guide
 CLASS(TopicSource, DataSource)
 	METHOD(TopicSource, getEntry, entity(TopicSource this, int i, void(string, string) returns));
 	METHOD(TopicSource, reload, int(TopicSource this, string filter));
@@ -77,6 +78,7 @@ ENDCLASS(id)
 #define REGISTRY_SOURCE_6(id, arr_name, register_arr, cond1, cond2, cond3) _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, cond3, 3)
 
 // The descriptions for these are in menu/xonotic/guide/pages.qh
+// XONRELEASE TODO: add icons
 REGISTRY_SOURCE(IntroductionSource, Introduction, IntroductionGuidePages)
 REGISTRY_SOURCE(MovementSource, Movement, MovementGuidePages)
 
@@ -109,16 +111,20 @@ REGISTRY_SOURCE(WeaponSource, Weapons, Weapons)
 
 #include <common/monsters/all.qh>
 // The descriptions for these are in common/monsters/monster/*.qc
+// XONRELEASE TODO: add icons
 REGISTRY_SOURCE(MonsterSource, Monsters, Monsters)
 
 #include <common/vehicles/all.qh>
 // The descriptions for these are in common/vehicles/vehicle/*.qc
+// XONRELEASE TODO: improve icons to make the styling consistent, may need to create new ones from scratch just for the guide
 REGISTRY_SOURCE(VehicleSource, Vehicles, Vehicles)
 
 #include <common/turrets/all.qh>
 // The descriptions for these are in common/turrets/turret/*.qc
+// XONRELEASE TODO: add icons
 REGISTRY_SOURCE(TurretSource, Turrets, Turrets)
 
 #include <common/mutators/base.qh>
 // The descriptions for these are in common/mutators/mutator/*.qc (not the cl_* or sv_* files)
+// XONRELEASE TODO: add icons
 REGISTRY_SOURCE(MutatorSource, Mutators, Mutators)
