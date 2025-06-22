@@ -19,7 +19,8 @@ void XonoticHUDChatDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Chat lifetime:")));
 		me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("con_chattime"));
-			e.formatString = _("%ss");
+			e.formatString = "s";
+			e.setValueSpace(e, e.valueSpace * 1.25);
 			e.addRange(e, 5, 60, 5);
 			e.addRange(e, 120, 300, 60);
 			e.configureXonoticMixedSliderValues(e);

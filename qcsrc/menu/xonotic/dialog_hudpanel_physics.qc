@@ -65,14 +65,16 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 3.8/2, e = makeXonoticCheckBox(0, "hud_panel_physics_topspeed", _("Top speed")));
-		me.TD(me, 1, 3.8/2, e = makeXonoticSlider(0.5, 10, 0.5, "hud_panel_physics_topspeed_time"));
-			e.formatString = _("%ss");
+		me.TD(me, 1, 3.8/2, e = makeXonoticSlider(0.5, 5, 0.5, "hud_panel_physics_topspeed_time"));
+			e.formatString = "S";
+			e.setValueSpace(e, e.valueSpace * 1.5);
 			setDependent(e, "hud_panel_physics_topspeed", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 3.8/2, e = makeXonoticCheckBox(0, "hud_panel_physics_jumpspeed", _("Jump speed")));
-		me.TD(me, 1, 3.8/2, e = makeXonoticSlider(0.5, 10, 0.5, "hud_panel_physics_jumpspeed_time"));
-			e.formatString = _("%ss");
+		me.TD(me, 1, 3.8/2, e = makeXonoticSlider(0.5, 5, 0.5, "hud_panel_physics_jumpspeed_time"));
+			e.formatString = "S";
+			e.setValueSpace(e, e.valueSpace * 1.5);
 			setDependent(e, "hud_panel_physics_jumpspeed", 1, 1);
 
 //acceleration
