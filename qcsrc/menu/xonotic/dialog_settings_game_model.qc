@@ -66,7 +66,7 @@ void XonoticGameModelSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Body fading:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 2, 0.2, "cl_deathglow"));
-			e.formatString = _("%ss");
+			e.formatString = "S";
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gibs:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_nogibs"));
