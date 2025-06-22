@@ -177,7 +177,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			setDependent(e, "cl_decals", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1, 20, 1, "cl_decals_fadetime",
 			_("Time in seconds before decals fade away")));
-			e.formatString = _("%ss");
+			e.formatString = "s";
 			setDependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
