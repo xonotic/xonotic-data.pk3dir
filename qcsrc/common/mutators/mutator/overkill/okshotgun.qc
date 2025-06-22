@@ -132,7 +132,7 @@ METHOD(OverkillShotgun, describe, string(OverkillShotgun this))
 		"Like with all %s weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around.\n\n"
 		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s. "
 		"It has a limited magazine size, so needs reloading after several shots.\n\n"
-		"The %s's damage drops off quickly as the range increases, so it is only useful for close combat or sometimes medium range combat.\n\n%s"),
+		"The %s damage drops off quickly as the range increases, so it is only useful for close combat or sometimes medium range combat.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(MUTATOR_ok), COLORED_NAME(ITEM_Shells), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this),
 	W_Guide_DPS_onlyOneMultishot(this.netname, "primary", "primary_bullets", ""));
 }
