@@ -3,6 +3,38 @@
 #include "../anim/easing.qh"
 #include "../anim/animhost.qh"
 
+string formatStringSpecial(string formatStr, float value, int decs)
+{
+	/* .formatString is usually in the format of "%sx" to print "2" as "2x".
+	 * Special options:
+	 *   "%": apply ftos_decimals_percentage
+	 *   Any of "smhdwy": apply time-counting functions
+	 *   Any of "SMHDWY": apply time-counting functions, allowing decimals
+	 */
+	if (strlen(formatStr) == 1)
+		switch (formatStr)
+		{
+			case "%": return ftos_decimals_percentage(value, max(0, decs - 2));
+			case "s": return count_seconds(value);
+			case "m": return count_minutes(value);
+			case "h": return count_hours(value);
+			case "d": return count_days(value);
+			case "w": return count_weeks(value);
+			case "y": return count_years(value);
+			case "S": return count_seconds_decs(value, decs);
+			case "M": return count_minutes_decs(value, decs);
+			case "H": return count_hours_decs(value, decs);
+			case "D": return count_days_decs(value, decs);
+			case "W": return count_weeks_decs(value, decs);
+			case "Y": return count_years_decs(value, decs);
+			default:  break;
+		}
+	const string txt = ftos_decimals(value, decs);
+	if (formatStr != "")
+		return sprintf(formatStr, txt);
+	return txt;
+}
+
 .entity applyButton;
 
 	void Slider_setValue_allowAnim(entity me, float val, bool allowAnim)
@@ -45,12 +77,7 @@
 		if (!almost_in_bounds(me.valueMin, val, me.valueMax))
 			return "";
 		val *= me.valueDisplayMultiplier;
-		if (me.formatString == "%")
-			return ftos_decimals_percentage(val, max(0, me.valueDigits - 2));
-		string txt = ftos_decimals(val, me.valueDigits);
-		if (me.formatString != "")
-			return sprintf(me.formatString, txt);
-		return txt;
+		return formatStringSpecial(me.formatString, val, me.valueDigits);
 	}
 	void Slider_configureSliderVisuals(entity me, float sz, float theAlign, float theTextSpace, string gfx)
 	{

@@ -36,12 +36,7 @@
 	}
 	string MixedSlider_rangedIdentifierToText(entity me, float id)
 	{
-		if (me.formatString == "%")
-			return ftos_decimals_percentage(id, max(0, me.valueDigits - 2));
-		string txt = ftos_decimals(id, me.valueDigits);
-		if (me.formatString != "")
-			return sprintf(me.formatString, txt);
-		return txt;
+		return formatStringSpecial(me.formatString, id, me.valueDigits);
 	}
 	void MixedSlider_adjustDigitsForStep(entity me, float valueStep)
 	{

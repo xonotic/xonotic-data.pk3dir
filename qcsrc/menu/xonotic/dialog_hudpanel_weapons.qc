@@ -20,7 +20,8 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Fade out after:")));
 			me.TD(me, 1, 2.6, e = makeXonoticMixedSlider(strzone(strcat("hud_panel_", panelname, "_timeout"))));
-				e.formatString = _("%ss");
+				e.formatString = "s";
+				e.setValueSpace(e, e.valueSpace * 1.2);
 				e.addText(e, _("Never"), 0);
 				e.addRange(e, 1, 10, 1);
 				e.configureXonoticMixedSliderValues(e);
@@ -29,8 +30,8 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 		setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");
 			me.TD(me, 1, 2.6, e = makeXonoticMixedSlider(strzone(strcat("hud_panel_", panelname, "_timeout_effect"))));
 				e.addText(e, ZCTX(_("EF^None")), 0);
-				e.addText(e, _("Opacity"), 1);
-				e.addText(e, _("Slide"), 2);
+				e.addText(e, _("Opacity"),       1);
+				e.addText(e, _("Slide"),         2);
 				e.addText(e, ZCTX(_("EF^Both")), 3);
 				e.configureXonoticMixedSliderValues(e);
 			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");

@@ -34,7 +34,7 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, valueKeyStep, float, 0);
 	ATTRIB(Slider, valuePageStep, float, 0);
 	ATTRIB(Slider, valueDisplayMultiplier, float, 1.0);
-	ATTRIB(Slider, formatString, string, ""); // should have %s only. Can also be "%" to apply ftos_decimals_percentage
+	ATTRIB(Slider, formatString, string, ""); // should have %s only. Special types described in formatStringSpecial
 	ATTRIB(Slider, textSpace, float, 0);
 	ATTRIB(Slider, controlWidth, float, 0);
 	ATTRIB(Slider, pressed, float, 0);
@@ -49,3 +49,4 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, colorF, vector, '1 1 1');
 	ATTRIB(Slider, disabledAlpha, float, 0.3);
 ENDCLASS(Slider)
+string formatStringSpecial(string, float, int);

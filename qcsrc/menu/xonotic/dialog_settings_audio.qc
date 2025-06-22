@@ -167,9 +167,9 @@ void XonoticAudioSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, makeXonoticTextLabel(0, _("Time announcer:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_announcer_maptime"));
+			e.formatString = "m";
 			e.addText(e, ZCTX(_("WRN^Disabled")), 0);
-			e.addText(e, _("1 minute"), 1);
-			e.addText(e, _("5 minutes"), 2);
+			e.addRange(e, 1, 5, 4); // 1 and 5
 			e.addText(e, ZCTX(_("WRN^Both")), 3);
 			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
