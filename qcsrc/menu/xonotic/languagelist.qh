@@ -10,8 +10,10 @@ CLASS(XonoticLanguageList, XonoticListBox)
 	METHOD(XonoticLanguageList, loadCvars, void(entity));
 	METHOD(XonoticLanguageList, saveCvars, void(entity));
 
+	ATTRIB(XonoticLanguageList, itemAbsSize, vector, '0 0 0');
 	ATTRIB(XonoticLanguageList, realFontSize, vector, '0 0 0');
 	ATTRIB(XonoticLanguageList, realUpperMargin, float, 0);
+	ATTRIB(XonoticLanguageList, columnIconSize, float, 0);
 	ATTRIB(XonoticLanguageList, columnNameOrigin, float, 0);
 	ATTRIB(XonoticLanguageList, columnNameSize, float, 0);
 	ATTRIB(XonoticLanguageList, columnPercentageOrigin, float, 0);
