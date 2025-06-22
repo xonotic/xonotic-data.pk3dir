@@ -38,6 +38,7 @@ void CvarList_Load(entity me, string filter)
 		me.handle = newbuf;
 		me.nItems = buf_getsize(me.handle);
 	}
+	me.setScrollbarVisibility(me);
 }
 void XonoticCvarList_showNotify(entity me)
 {
@@ -140,7 +141,7 @@ void XonoticCvarList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	SUPER(XonoticCvarList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.realFontSize_x = me.fontSize / (absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 	me.columnNameOrigin = 0;

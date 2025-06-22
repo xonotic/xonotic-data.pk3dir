@@ -31,6 +31,7 @@ void XonoticWeaponsList_draw(entity me)
 	if(t != s)
 		cvar_set("cl_weaponpriority", W_NameWeaponOrder(t));
 	me.nItems = tokenize_console(t);
+	me.setScrollbarVisibility(me);
 	SUPER(XonoticWeaponsList).draw(me);
 }
 void WeaponsList_MoveUp_Click(entity box, entity me)
@@ -54,7 +55,7 @@ void XonoticWeaponsList_resizeNotify(entity me, vector relOrigin, vector relSize
 	SUPER(XonoticWeaponsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.itemAbsSize.y = absSize.y * me.itemHeight;
-	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.itemAbsSize.x = absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);

@@ -99,6 +99,7 @@ void XonoticSkinList_getSkins(entity me)
 
 	me.skinlist = buf;
 	me.nItems = n;
+	me.setScrollbarVisibility(me);
 }
 
 void XonoticSkinList_destroy(entity me)
@@ -112,7 +113,7 @@ void XonoticSkinList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	SUPER(XonoticSkinList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.itemAbsSize.y = absSize.y * me.itemHeight;
-	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.itemAbsSize.x = absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin1 = 0.5 * (1 - 2.5 * me.realFontSize.y);

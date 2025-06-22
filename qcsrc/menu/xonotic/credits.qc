@@ -585,6 +585,7 @@ void XonoticCreditsList_configureXonoticCreditsList(entity me)
 	me.configureXonoticListBox(me);
 	me.bufferIndex = credits_get();
 	me.nItems = buf_getsize(me.bufferIndex);
+	me.setScrollbarVisibility(me);
 	if (cvar("_menu_credits_export")) // set by the menu_credits_export alias
 	{
 		credits_export();
@@ -599,7 +600,7 @@ void XonoticCreditsList_draw(entity me)
 {
 	if(me.scrolling)
 	{
-		me.scrollPos = bound(0, (time - me.scrolling) * me.itemHeight, me.nItems * me.itemHeight - 1);
+		me.scrollPos = bound(0, (time - me.scrolling) * me.itemHeight, me.getTotalHeight(me) - 1);
 		me.scrollPosTarget = me.scrollPos;
 	}
 	SUPER(XonoticCreditsList).draw(me);
@@ -609,7 +610,7 @@ void XonoticCreditsList_resizeNotify(entity me, vector relOrigin, vector relSize
 	SUPER(XonoticCreditsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.realFontSize_x = me.fontSize / (absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 }
 void XonoticCreditsList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)

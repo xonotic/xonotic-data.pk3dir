@@ -42,7 +42,7 @@ void XonoticTextBox_setText(entity me, string txt)
 		getWrappedLine_remaining = t;
 		while (getWrappedLine_remaining)
 		{
-			t = getWrappedLine(1 - me.controlWidth, me.realFontSize,
+			t = getWrappedLine((me.scrollbarShown ? 1 - me.controlWidth : 1), me.realFontSize,
 				(me.allowColors) ? draw_TextWidth_WithColors : draw_TextWidth_WithoutColors);
 			bufstr_set(buf, line, t);
 			line++;
@@ -51,6 +51,7 @@ void XonoticTextBox_setText(entity me, string txt)
 
 	me.stringList = buf;
 	me.nItems = line+1;
+	me.setScrollbarVisibility(me);
 }
 
 string XonoticTextBox_getTextBoxLine(entity me, int i)
@@ -68,7 +69,7 @@ void XonoticTextBox_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 	SUPER(XonoticTextBox).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.itemAbsSize.y = absSize.y * me.itemHeight;
-	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.itemAbsSize.x = absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.setText(me, strcat(me.text)); // rewrap

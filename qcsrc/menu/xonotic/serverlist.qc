@@ -540,6 +540,7 @@ void XonoticServerList_draw(entity me)
 			me.nItems = itemcount;
 		}
 	}
+	me.setScrollbarVisibility(me);
 
 	me.connectButton.disabled = (me.ipAddressBox.text == "");
 	me.infoButton.disabled = !owned;
@@ -718,7 +719,7 @@ void XonoticServerList_setSortOrder(entity me, int fld, int direction)
 void XonoticServerList_positionSortButton(entity me, entity btn, float theOrigin, float theSize, string theTitle, void(entity, entity) theFunc)
 {
 	vector originInLBSpace = eY * (-me.itemHeight);
-	vector sizeInLBSpace = eY * me.itemHeight + eX * (1 - me.controlWidth);
+	vector sizeInLBSpace = eY * me.itemHeight + eX * (me.scrollbarShown ? 1 - me.controlWidth : 1);
 
 	vector originInDialogSpace = boxToGlobal(originInLBSpace, me.Container_origin, me.Container_size);
 	vector sizeInDialogSpace = boxToGlobalSize(sizeInLBSpace, me.Container_size);
@@ -735,7 +736,7 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	SUPER(XonoticServerList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.realFontSize_x = me.fontSize / (absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 	me.columnIconsOrigin = 0;
@@ -787,7 +788,7 @@ void ServerList_Info_Click(entity btn, entity me)
 	float thisPos = me.getItemStart(me, me.selectedItem);
 	float thisHeight = me.getItemHeight(me, me.selectedItem);
 	vector org = boxToGlobal(eY * (thisPos - me.scrollPos), me.origin, me.size);
-	vector sz = boxToGlobalSize(eY * thisHeight + eX * (1 - me.controlWidth), me.size);
+	vector sz = boxToGlobalSize(eY * thisHeight + eX * (me.scrollbarShown ? 1 - me.controlWidth : 1), me.size);
 	DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 }
 void XonoticServerList_doubleClickListBoxItem(entity me, int i, vector where)
@@ -1131,7 +1132,7 @@ bool XonoticServerList_keyDown(entity me, int scan, bool ascii, bool shift)
 			float thisPos = me.getItemStart(me, me.selectedItem);
 			float thisHeight = me.getItemHeight(me, me.selectedItem);
 			vector org = boxToGlobal(eY * (thisPos - me.scrollPos), me.origin, me.size);
-			vector sz = boxToGlobalSize(eY * thisHeight + eX * (1 - me.controlWidth), me.size);
+			vector sz = boxToGlobalSize(eY * thisHeight + eX * (me.scrollbarShown ? 1 - me.controlWidth : 1), me.size);
 			m_play_click_sound(MENU_SOUND_OPEN);
 			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 			DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);

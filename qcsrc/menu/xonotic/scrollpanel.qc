@@ -26,7 +26,7 @@ METHOD(XonoticScrollPanel, mouseFunc, bool(XonoticScrollPanel this, vector pos))
 	this.setFocus(this, p); \
 	\
 	vector o = -eY * this.scrollPos; \
-	vector s = eX * (1 - this.controlWidth) + eY * this.itemHeight; \
+	vector s = eX * (this.scrollbarShown ? 1 - this.controlWidth : 1) + eY * this.itemHeight; \
 	return p.mouseFunc(p, globalToBox(pos, o, s)); \
 }
 X(mouseMove)

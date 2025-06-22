@@ -42,6 +42,7 @@
 	{
 		SUPER(ListBox).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 		me.controlWidth = me.scrollbarWidth / absSize.x;
+		me.setScrollbarVisibility(me);
 	}
 	void ListBox_configureListBox(entity me, float theScrollbarWidth, float theItemHeight)
 	{
@@ -107,7 +108,7 @@
 		{
 			if (me.selectionDoesntMatter)
 			{
-				me.scrollPosTarget = min(me.scrollPosTarget + 0.5, me.nItems * me.itemHeight - 1);
+				me.scrollPosTarget = min(me.scrollPosTarget + 0.5, me.getTotalHeight(me) - 1);
 				return 1;
 			}
 
@@ -136,7 +137,7 @@
 		{
 			if (me.selectionDoesntMatter)
 			{
-				me.scrollPosTarget = min(me.scrollPosTarget + me.itemHeight, me.nItems * me.itemHeight - 1);
+				me.scrollPosTarget = min(me.scrollPosTarget + me.itemHeight, me.getTotalHeight(me) - 1);
 				return 1;
 			}
 
@@ -163,7 +164,7 @@
 		if (pos_y < 0) return 0;
 		if (pos_x >= 1) return 0;
 		if (pos_y >= 1) return 0;
-		if (pos_x < 1 - me.controlWidth)
+		if (pos_x < (me.scrollbarShown ? 1 - me.controlWidth : 1))
 		{
 			me.mouseMoveOffset = pos.y;
 		}
@@ -179,10 +180,10 @@
 		float hit;
 		me.updateControlTopBottom(me);
 		me.dragScrollPos = pos;
-		if (me.pressed == 1)
+		if (me.pressed == 1 && me.scrollbarShown && me.getTotalHeight(me) > 1)
 		{
 			hit = 1;
-			if (pos.x < 1 - me.controlWidth - me.tolerance.x * me.controlWidth) hit = 0;
+			if (pos.x < (1 - me.controlWidth) - me.tolerance.x * me.controlWidth) hit = 0;
 			if (pos.y < 0 - me.tolerance.y) hit = 0;
 			if (pos.x >= 1 + me.tolerance.x * me.controlWidth) hit = 0;
 			if (pos.y >= 1 + me.tolerance.y) hit = 0;
@@ -217,7 +218,7 @@
 		if (pos.y >= 1) return false;
 		this.dragScrollPos = pos;
 		this.updateControlTopBottom(this);
-		if (pos.x >= 1 - this.controlWidth)
+		if (this.scrollbarShown && pos.x >= 1 - this.controlWidth)
 		{
 			// if hit, set this.pressed, otherwise scroll by one page
 			if (pos.y < this.controlTop)
@@ -255,7 +256,8 @@
 		if (focusedItem_save != me.focusedItem)
 		{
 			me.focusedItemChangeNotify(me);
-			if (me.focusedItem >= 0) me.focusedItemAlpha = SKINALPHA_LISTBOX_FOCUSED;
+			if (me.focusedItem >= 0)
+				me.focusedItemAlpha = SKINALPHA_LISTBOX_FOCUSED;
 		}
 	}
 	float ListBox_mouseRelease(entity me, vector pos)
@@ -276,7 +278,7 @@
 			// and give it a nice click event
 			if (me.nItems > 0)
 			{
-				vector where = globalToBox(pos, eY * (me.getItemStart(me, me.selectedItem) - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.getItemHeight(me, me.selectedItem));
+				vector where = globalToBox(pos, eY * (me.getItemStart(me, me.selectedItem) - me.scrollPos), eX * (me.scrollbarShown ? 1 - me.controlWidth : 1) + eY * me.getItemHeight(me, me.selectedItem));
 
 				if ((me.selectedItem == me.lastClickedItem && clickeditem == me.selectedItem) && (time < me.lastClickedTime + 0.3))
 					me.doubleClickListBoxItem(me, me.selectedItem, where);
@@ -340,10 +342,9 @@
 	AUTOCVAR(menu_scroll_averaging_time_pressed, float, 0.06, "smooth scroll averaging time when dragging the scrollbar");
 	void ListBox_draw(entity me)
 	{
-		vector fillSize = '0 0 0';
-
 		// we can't do this in mouseMove as the list can scroll without moving the cursor
-		if (me.mouseMoveOffset != -1) me.setFocusedItem(me, me.getItemAtPos(me, me.scrollPos + me.mouseMoveOffset));
+		if (me.mouseMoveOffset != -1)
+			me.setFocusedItem(me, me.getItemAtPos(me, me.scrollPos + me.mouseMoveOffset));
 
 		if (me.needScrollToItem >= 0)
 		{
@@ -358,21 +359,24 @@
 			// this formula works with whatever framerate
 			float f = averaging_time ? exp(-frametime / averaging_time) : 0;
 			me.scrollPos = me.scrollPos * f + me.scrollPosTarget * (1 - f);
-			if (fabs(me.scrollPos - me.scrollPosTarget) < 0.001) me.scrollPos = me.scrollPosTarget;
+			if (fabs(me.scrollPos - me.scrollPosTarget) < 0.001)
+				me.scrollPos = me.scrollPosTarget;
 		}
 
-		if (me.pressed == 2) me.mouseDrag(me, me.dragScrollPos);  // simulate mouseDrag event
+		if (me.pressed == 2)
+			me.mouseDrag(me, me.dragScrollPos); // simulate mouseDrag event
+		float cWidth = (me.scrollbarShown ? me.controlWidth : 0);
 		me.updateControlTopBottom(me);
-		fillSize.x = (1 - me.controlWidth);
-		if (me.alphaBG) draw_Fill('0 0 0', '0 1 0' + fillSize, me.colorBG, me.alphaBG);
-		if (me.controlWidth)
+		if (me.alphaBG)
+			draw_Fill('0 0 0', eX * (1 - cWidth) + eY, me.colorBG, me.alphaBG);
+		if (cWidth)
 		{
-			draw_VertButtonPicture(eX * (1 - me.controlWidth), strcat(me.src, "_s"), eX * me.controlWidth + eY, me.color2, 1);
+			draw_VertButtonPicture(eX * (1 - cWidth), strcat(me.src, "_s"), eX * cWidth + eY, me.color2, 1);
 			if (me.getTotalHeight(me) > 1)
 			{
 				vector o, s;
-				o = eX * (1 - me.controlWidth) + eY * me.controlTop;
-				s = eX * me.controlWidth + eY * (me.controlBottom - me.controlTop);
+				o = eX * (1 - cWidth) + eY * me.controlTop;
+				s = eX * cWidth + eY * (me.controlBottom - me.controlTop);
 				if (me.pressed == 1) draw_VertButtonPicture(o, strcat(me.src, "_c"), s, me.colorC, 1);
 				else if (me.focused) draw_VertButtonPicture(o, strcat(me.src, "_f"), s, me.colorF, 1);
 				else draw_VertButtonPicture(o, strcat(me.src, "_n"), s, me.color, 1);
@@ -384,14 +388,15 @@
 
 		int i = me.getItemAtPos(me, me.scrollPos);
 		float y = me.getItemStart(me, i) - me.scrollPos;
-		for ( ; i < me.nItems && y < 1; ++i)
+		while (i < me.nItems && y < 1)
 		{
 			draw_shift = boxToGlobal(eY * y, oldshift, oldscale);
-			vector relSize = eX * (1 - me.controlWidth) + eY * me.getItemHeight(me, i);
+			vector relSize = eX * (1 - cWidth) + eY * me.getItemHeight(me, i);
 			vector absSize = boxToGlobalSize(relSize, me.size);
 			draw_scale = boxToGlobalSize(relSize, oldscale);
 			me.drawListBoxItem(me, i, absSize, (me.selectedItem == i), (me.focusedItem == i));
 			y += relSize.y;
+			++i;
 		}
 		draw_ClearClip();
 
@@ -399,21 +404,24 @@
 		draw_scale = oldscale;
 		SUPER(ListBox).draw(me);
 	}
+	void ListBox_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
+	{
+		draw_Text('0 0 0', sprintf(_("Item %d"), i), eX * (8 / absSize.x) + eY * (8 / absSize.y), (isSelected ? '0 1 0' : '1 1 1'), 1, 0);
+	}
 
 	void ListBox_focusedItemChangeNotify(entity me)
 	{}
+	void ListBox_setScrollbarVisibility(entity me)
+	{
+		if (me.scrollbarShown != 2)
+			me.scrollbarShown = (me.getTotalHeight(me) > 1);
+	}
 
 	void ListBox_clickListBoxItem(entity me, float i, vector where)
 	{
 		// template method
 	}
-
 	void ListBox_doubleClickListBoxItem(entity me, float i, vector where)
 	{
 		// template method
-	}
-
-	void ListBox_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
-	{
-		draw_Text('0 0 0', sprintf(_("Item %d"), i), eX * (8 / absSize.x) + eY * (8 / absSize.y), (isSelected ? '0 1 0' : '1 1 1'), 1, 0);
 	}
