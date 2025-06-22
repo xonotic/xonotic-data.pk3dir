@@ -79,6 +79,7 @@ void XonoticCampaignList_loadCvars(entity me)
 	if(me.columnNameSize)
 		rewrapCampaign(me.columnNameSize, me.rowsPerItem - 3, me.emptyLineHeight, me.realFontSize);
 	me.nItems = min(me.campaignIndex + 2, campaign_entries);
+	me.setScrollbarVisibility(me);
 	me.setSelected(me, min(me.campaignIndex, me.nItems - 1));
 	if(me.nItems - 1 > me.campaignIndex)
 		me.scrollToItem(me, me.nItems - 1);
@@ -166,7 +167,7 @@ void XonoticCampaignList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	SUPER(XonoticCampaignList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.itemAbsSize.y = absSize.y * me.itemHeight;
-	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.itemAbsSize.x = absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin1 = 0.5 * me.realFontSize.y;

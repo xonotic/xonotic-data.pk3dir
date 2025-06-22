@@ -85,9 +85,9 @@ void XonoticLanguageList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	SUPER(XonoticLanguageList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.itemAbsSize.y = absSize.y * me.itemHeight;
-	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
-	me.realFontSize.y = me.fontSize / (absSize.y * me.itemHeight);
-	me.realFontSize.x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.itemAbsSize.x = absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1);
+	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
+	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 	vector sz = draw_PictureSize(PERCENTAGE_FULL_ICON);
@@ -191,6 +191,7 @@ void XonoticLanguageList_getLanguages(entity me)
 
 	me.languagelist = buf;
 	me.nItems = i;
+	me.setScrollbarVisibility(me);
 }
 
 void XonoticLanguageList_setLanguage(entity me)

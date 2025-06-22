@@ -223,6 +223,7 @@ void XonoticKeyBinder_loadKeyBinds(entity me)
 		force_initial_selection = true;
 	KeyBinds_BuildList();
 	me.nItems = KeyBinds_Count;
+	me.setScrollbarVisibility(me);
 	if (force_initial_selection)
 		me.setSelected(me, 0);
 }
@@ -236,7 +237,7 @@ void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	SUPER(XonoticKeyBinder).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.itemAbsSize.y = absSize.y * me.itemHeight;
-	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.itemAbsSize.x = absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);

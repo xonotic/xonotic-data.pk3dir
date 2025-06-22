@@ -15,6 +15,7 @@ void XonoticGametypeList_configureXonoticGametypeList(entity me)
 {
 	me.configureXonoticListBox(me);
 	me.nItems = GameType_GetCount();
+	me.setScrollbarVisibility(me);
 
 	if(SKINBOOL_GAMETYPELIST_ICON_BLUR)
 	{
@@ -65,6 +66,7 @@ void XonoticGametypeList_draw(entity me)
 	if(me.nItems != GameType_GetCount())
 	{
 		me.nItems = GameType_GetCount();
+		me.setScrollbarVisibility(me);
 		me.setSelected(me, 0);
 	}
 	SUPER(XonoticGametypeList).draw(me);
@@ -104,7 +106,7 @@ void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	SUPER(XonoticGametypeList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.itemAbsSize.y = absSize.y * me.itemHeight;
-	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.itemAbsSize.x = absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);

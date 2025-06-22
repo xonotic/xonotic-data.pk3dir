@@ -90,7 +90,7 @@ void XonoticMapList_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 	SUPER(XonoticMapList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.itemAbsSize.y = absSize.y * me.itemHeight;
-	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.itemAbsSize.x = absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin1 = 0.5 * (1 - 2.5 * me.realFontSize.y);
@@ -186,6 +186,7 @@ void XonoticMapList_refilter(entity me)
 	if (me.stringFilter)
 		MapInfo_FilterString(me.stringFilter);
 	me.nItems = MapInfo_count;
+	me.setScrollbarVisibility(me);
 
 	for(i = 0; i < MapInfo_count; ++i)
 	{

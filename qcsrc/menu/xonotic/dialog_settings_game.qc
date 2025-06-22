@@ -70,6 +70,7 @@ METHOD(XonoticRegisteredSettingsList, refilter, void(entity this))
         return;
     }
     this.nItems = this.source.reload(this.source, this.stringFilter);
+	this.setScrollbarVisibility(this);
 }
 METHOD(XonoticRegisteredSettingsList, resizeNotify, void(entity this, vector relOrigin, vector relSize, vector absOrigin, vector absSize))
 {
@@ -77,7 +78,7 @@ METHOD(XonoticRegisteredSettingsList, resizeNotify, void(entity this, vector rel
 
     this.itemAbsSize = '0 0 0';
     this.realFontSize_y = this.fontSize / (this.itemAbsSize_y = (absSize.y * this.itemHeight));
-    this.realFontSize_x = this.fontSize / (this.itemAbsSize_x = (absSize.x * (1 - this.controlWidth)));
+    this.realFontSize_x = this.fontSize / (this.itemAbsSize_x = (absSize.x * (this.scrollbarShown ? 1 - this.controlWidth : 1)));
     this.realUpperMargin = 0.5 * (1 - this.realFontSize.y);
 }
 METHOD(XonoticRegisteredSettingsList, setSelected, void(entity this, int i))
@@ -132,6 +133,7 @@ void XonoticGameSettingsTab_fill(entity me)
 	entity topics = me.topicList;
 		topics.onChange = me.topicChangeNotify;
 		topics.onChangeEntity = me;
+		topics.scrollbarShown = 2;
 
 	int
 	col = 0, width = 1;
