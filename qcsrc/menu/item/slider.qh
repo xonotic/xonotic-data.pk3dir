@@ -34,7 +34,7 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, valuePageStep, float, 0);
 	ATTRIB(Slider, valueDisplayMultiplier, float, 1.0);
 	ATTRIB(Slider, formatString, string, ""); // should have %s only. Special types described in formatStringSpecial
-	ATTRIB(Slider, textSpace, float, 0);
+	ATTRIB(Slider, valueSpace, float, 0);
 	ATTRIB(Slider, controlWidth, float, 0);
 	ATTRIB(Slider, pressed, float, 0);
 	ATTRIB(Slider, pressOffset, float, 0);
