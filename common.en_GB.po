@@ -5996,7 +5996,7 @@ msgstr "%d years"
 #: qcsrc/lib/counting.qh:13
 #, c-format
 msgid "CI_FIR^%d year"
-msgstr "CI_FIR^%d year"
+msgstr "%d year"
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
@@ -6026,7 +6026,7 @@ msgstr "%d weeks"
 #: qcsrc/lib/counting.qh:22
 #, c-format
 msgid "CI_FIR^%d week"
-msgstr "CI_FIR^%d week"
+msgstr "%d week"
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
@@ -6056,7 +6056,7 @@ msgstr "%d days"
 #: qcsrc/lib/counting.qh:31
 #, c-format
 msgid "CI_FIR^%d day"
-msgstr "CI_FIR^%d day"
+msgstr "%d day"
 
 #: qcsrc/lib/counting.qh:32
 #, c-format
@@ -6086,7 +6086,7 @@ msgstr "%d hours"
 #: qcsrc/lib/counting.qh:40
 #, c-format
 msgid "CI_FIR^%d hour"
-msgstr "CI_FIR^%d hour"
+msgstr "%d hour"
 
 #: qcsrc/lib/counting.qh:41
 #, c-format
@@ -6116,7 +6116,7 @@ msgstr "%d minutes"
 #: qcsrc/lib/counting.qh:50
 #, c-format
 msgid "CI_FIR^%d minute"
-msgstr "CI_FIR^%d minute"
+msgstr "%d minute"
 
 #: qcsrc/lib/counting.qh:51
 #, c-format
@@ -6146,7 +6146,7 @@ msgstr "%d seconds"
 #: qcsrc/lib/counting.qh:59
 #, c-format
 msgid "CI_FIR^%d second"
-msgstr "CI_FIR^%d second"
+msgstr "%d second"
 
 #: qcsrc/lib/counting.qh:60
 #, c-format
@@ -7206,7 +7206,7 @@ msgstr "Fade effect:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:31
 msgid "EF^None"
-msgstr "EF^None"
+msgstr "None"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:32
 msgid "Alpha"
@@ -7218,7 +7218,7 @@ msgstr "Slide"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "EF^Both"
-msgstr "EF^Both"
+msgstr "Both"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:39
 msgid "Show only owned weapons"
