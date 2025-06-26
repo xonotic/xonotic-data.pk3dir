@@ -33,7 +33,7 @@ void updateSensField(entity slider, entity field)
 	{
 		// Avoid onChange causing jittering
 		field.onChangeEntity = NULL;
-		field.setText(field, ftos_mindecimals(slider.value));
+		field.setText(field, ftos_decimals(slider.value, slider.valueDigits));
 		field.onChangeEntity = slider;
 	}
 }
