@@ -15,13 +15,10 @@ entity makeXonoticWeaponsList()
 {
 	entity me;
 	me = NEW(XonoticWeaponsList);
-	me.configureXonoticWeaponsList(me);
+	me.configureXonoticListBox(me);
 	return me;
 }
-void XonoticWeaponsList_configureXonoticWeaponsList(entity me)
-{
-	me.configureXonoticListBox(me);
-}
+
 void XonoticWeaponsList_draw(entity me)
 {
 	// read in cvar?
