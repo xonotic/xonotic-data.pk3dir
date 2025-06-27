@@ -153,7 +153,7 @@ void XonoticSingleplayerDialog_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, btnPrev = makeXonoticButton("<<", '0 0 0'));
-		me.TD(me, 1, me.columns - 2, lblTitle = makeXonoticTextLabel(0.5, "???"));
+		me.TD(me, 1, me.columns - 2, lblTitle = makeXonoticHeaderLabel("???"));
 		me.TD(me, 1, 1, btnNext = makeXonoticButton(">>", '0 0 0'));
 	me.TR(me);
 		me.TD(me, me.rows - 6, me.columns, me.campaignBox = makeXonoticCampaignList());
