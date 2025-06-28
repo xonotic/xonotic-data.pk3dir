@@ -83,7 +83,7 @@ float DynamicHandicap_ClampHandicap(float handicap)
 
 //============================= Hooks ========================================
 
-REGISTER_MUTATOR(dynamic_handicap, autocvar_g_dynamic_handicap && !HANDICAP_DISABLED());
+REGISTER_MUTATOR(dynamic_handicap, autocvar_g_dynamic_handicap);
 
 MUTATOR_HOOKFUNCTION(dynamic_handicap, BuildMutatorsString)
 {
