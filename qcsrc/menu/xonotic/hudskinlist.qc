@@ -133,6 +133,7 @@ void XonoticHUDSkinList_getHUDSkins(entity me)
 	getAllHUDSkins(me, sortbuf);
 	buf_del(sortbuf);
 	me.nItems = buf_getsize(me.listHUDSkin) / HUDSKINPARM_COUNT;
+	me.setScrollbarVisibility(me);
 }
 
 void XonoticHUDSkinList_destroy(entity me)
@@ -147,7 +148,7 @@ void XonoticHUDSkinList_resizeNotify(entity me, vector relOrigin, vector relSize
 	SUPER(XonoticHUDSkinList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.itemAbsSize.y = absSize.y * me.itemHeight;
-	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.itemAbsSize.x = absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);

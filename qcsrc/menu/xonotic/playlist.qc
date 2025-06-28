@@ -11,6 +11,7 @@ entity makeXonoticPlayList()
 void XonoticPlayList_configureXonoticPlayList(entity me)
 {
 	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
+	me.setScrollbarVisibility(me);
 	me.configureXonoticListBox(me);
 }
 
@@ -20,7 +21,7 @@ void XonoticPlayList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	SUPER(XonoticPlayList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.itemAbsSize.y = absSize.y * me.itemHeight;
-	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.itemAbsSize.x = absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
@@ -126,6 +127,7 @@ float XonoticPlayList_mouseDrag(entity me, vector pos)
 void XonoticPlayList_draw(entity me)
 {
 	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
+	me.setScrollbarVisibility(me);
 	if(cvar("music_playlist_index") == 0 || cvar("music_playlist_index") == 999)
 		me.playingTrack = cvar("music_playlist_current0");
 	else
@@ -180,6 +182,7 @@ void XonoticPlayList_startSound(entity me, float offset)
 {
 	float f;
 	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
+	me.setScrollbarVisibility(me);
 	if(offset)
 	{
 		if(cvar("music_playlist_index") == -1)

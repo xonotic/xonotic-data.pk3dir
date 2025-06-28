@@ -38,6 +38,7 @@ void CvarList_Load(entity me, string filter)
 		me.handle = newbuf;
 		me.nItems = buf_getsize(me.handle);
 	}
+	me.setScrollbarVisibility(me);
 }
 void XonoticCvarList_showNotify(entity me)
 {
@@ -62,32 +63,32 @@ void XonoticCvarList_destroy(entity me)
 }
 string autocvar_menu_forced_saved_cvars;
 string autocvar_menu_reverted_nonsaved_cvars;
-float XonoticCvarList_updateCvarType(entity me)
+bool XonoticCvarList_updateCvarType(entity me)
 {
 	float t;
 	t = cvar_type(me.cvarName);
 	me.cvarType = "";
-	float needsForcing;
+	bool needsForcing;
 	if(strhasword(autocvar_menu_forced_saved_cvars, me.cvarName))
 	{
 		me.cvarType = strcat(me.cvarType, ", ", _("forced to be saved to config.cfg"));
-		needsForcing = 0;
+		needsForcing = false;
 	}
 	else if(strhasword(autocvar_menu_reverted_nonsaved_cvars, me.cvarName))
 	{
 		// Currently claims to be saved, but won't be on next startup.
 		me.cvarType = strcat(me.cvarType, ", ", _("will not be saved"));
-		needsForcing = 1;
+		needsForcing = true;
 	}
 	else if(t & CVAR_TYPEFLAG_SAVED)
 	{
 		me.cvarType = strcat(me.cvarType, ", ", _("will be saved to config.cfg"));
-		needsForcing = 0;
+		needsForcing = false;
 	}
 	else
 	{
 		me.cvarType = strcat(me.cvarType, ", ", _("will not be saved"));
-		needsForcing = 1;
+		needsForcing = true;
 	}
 	if(t & CVAR_TYPEFLAG_PRIVATE)
 		me.cvarType = strcat(me.cvarType, ", ", _("private"));
@@ -113,12 +114,12 @@ void XonoticCvarList_setSelected(entity me, float i)
 	strcpy(me.cvarDefault, cvar_defstring(me.cvarName));
 	me.cvarNameBox.setText(me.cvarNameBox, me.cvarName);
 	me.cvarDescriptionBox.setText(me.cvarDescriptionBox, me.cvarDescription);
-	float needsForcing = me.updateCvarType(me);
+	bool needsForcing = me.updateCvarType(me);
 	me.cvarDefaultBox.setText(me.cvarDefaultBox, me.cvarDefault);
 
 	// this one can handle tempstrings
 	s = cvar_string(me.cvarName);
-	me.cvarNeedsForcing = 0;
+	me.cvarNeedsForcing = false;
 	me.cvarValueBox.setText(me.cvarValueBox, s);
 	me.cvarNeedsForcing = needsForcing;
 	me.cvarValueBox.cursorPos = strlen(s);
@@ -140,7 +141,7 @@ void XonoticCvarList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	SUPER(XonoticCvarList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.realFontSize_x = me.fontSize / (absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 	me.columnNameOrigin = 0;
@@ -228,7 +229,7 @@ void CvarList_Value_Change(entity box, entity me)
 			cvar_set("menu_forced_saved_cvars", me.cvarName);
 		else
 			cvar_set("menu_forced_saved_cvars", strcat(autocvar_menu_forced_saved_cvars, " ", me.cvarName));
-		me.cvarNeedsForcing = 0;
+		me.cvarNeedsForcing = false;
 		me.updateCvarType(me);
 	}
 }

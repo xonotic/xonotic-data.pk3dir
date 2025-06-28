@@ -33,7 +33,7 @@ void updateSensField(entity slider, entity field)
 	{
 		// Avoid onChange causing jittering
 		field.onChangeEntity = NULL;
-		field.setText(field, ftos_mindecimals(slider.value));
+		field.setText(field, ftos_decimals(slider.value, slider.valueDigits));
 		field.onChangeEntity = slider;
 	}
 }
@@ -97,11 +97,11 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Sensitivity:")));
 		me.TD(me, 1, 1, e = makeXonoticSlider_T(0.1, 9.9, 0.1, "sensitivity",
 			_("Mouse speed multiplier")));
+			e.setValueSpace(e, 0);
 			sensitivitySlider = e;
-			e.textSpace = 0;
 		me.TD(me, 1, 1, e = makeXonoticInputBox_T(0, "sensitivity",
 			_("Mouse speed multiplier")));
-			e.saveImmediately = 1;
+			e.saveImmediately = true;
 			e.allowedCharacters = "0.123456789";
 			linkSensitivities(sensitivitySlider, e);
 	me.TR(me);
@@ -115,6 +115,7 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Acceleration factor:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("m_accelerate", m_accelerate_tooltip));
+			e.setValueSpace(e, e.valueSpace * 1.25);
 			e.addText(e, ZCTX(_("MOUSEACCEL^Fully disabled")), 0);
 			e.addText(e, ZCTX(_("MOUSEACCEL^Linear disabled")), 1);
 			e.addRange(e, 1.2, 4, 0.2);
