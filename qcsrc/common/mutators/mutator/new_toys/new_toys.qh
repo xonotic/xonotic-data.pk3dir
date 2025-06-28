@@ -1,0 +1,11 @@
+#pragma once
+
+bool nt_IsNewToy(int w);
+
+#ifdef MENUQC
+CLASS(MutatorNewToys, Mutator)
+	ATTRIB(MutatorNewToys, message, string, _("New Toys"));
+ENDCLASS(MutatorNewToys)
+
+REGISTER_MUTATOR(nt, true, MutatorNewToys);
+#endif
