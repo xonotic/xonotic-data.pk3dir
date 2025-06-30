@@ -157,7 +157,7 @@ void HUD_Timer()
 	}
 	else if(STAT(TIMEOUT_STATUS) == 2)
 		subtext = _("Timeout");
-	else if (overtimes == -1)
+	else if (overtimes == OVERTIME_SUDDENDEATH)
 		subtext = _("Sudden Death");
 	else if(overtimes == 1)
 		subtext = _("Overtime");

@@ -2183,7 +2183,7 @@ msgstr "Bônus"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:24
 msgid "Damage Text"
-msgstr ""
+msgstr "Texto de Dano"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:26
 msgid "Draw damage numbers"
@@ -2218,7 +2218,7 @@ msgstr "Por arma"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:54
 msgid "Initial alpha:"
-msgstr ""
+msgstr "Alfa inicial:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:59
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:23
@@ -2229,11 +2229,11 @@ msgstr "Tempo de desaparecimento:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:64
 msgid "Accumulate:"
-msgstr ""
+msgstr "Acumular:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:68
 msgid "If younger than:"
-msgstr ""
+msgstr "Se durou menos que:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:71
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:34
@@ -2249,15 +2249,15 @@ msgstr "Nunca"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:72
 msgid "1s"
-msgstr ""
+msgstr "1s"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:73
 msgid "2s"
-msgstr ""
+msgstr "2s"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:74
 msgid "3s"
-msgstr ""
+msgstr "3s"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:75
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:36
@@ -2272,7 +2272,7 @@ msgstr "Sempre"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:80
 msgid "Or alpha greater than:"
-msgstr ""
+msgstr "Ou alfa maior que:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:7
 msgid "Damage text"
@@ -7323,7 +7323,7 @@ msgstr "Painel das Armas"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:27
 msgid "Are you sure you want to reset your HUD to this skin?"
-msgstr ""
+msgstr "Deseja mesmo redefinir sua interface para este visual?"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:46
 msgid "HUD skins"
@@ -7360,6 +7360,8 @@ msgid ""
 "Note: HUD skins are saved in data/data/ directory and can be manually "
 "renamed/deleted from there"
 msgstr ""
+"Observação: Visuais de interface são salvos na pasta data/data/ e podem ser "
+"manualmente renomeados/apagados lá"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:73
 msgid "Panel background defaults:"
@@ -7451,7 +7453,7 @@ msgstr "Painel de configuração da interface"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qh:18
 msgid "Reset HUD skin"
-msgstr ""
+msgstr "Redefinir visual de interface"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
@@ -9103,7 +9105,7 @@ msgstr "Habilitar ponto no centro do retículo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:112
 msgid "Use normal color"
-msgstr ""
+msgstr "Usar cor normal"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:123
 msgid "Smooth effects of crosshairs"
@@ -9503,7 +9505,7 @@ msgstr "Personalize como jogadores e itens são exibidos dentro do jogo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:26
 msgid "Perspective"
-msgstr ""
+msgstr "Perspectiva"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:29
 msgid "Field of view:"
@@ -9555,7 +9557,7 @@ msgstr "Atravessar paredes quando estiver de espectador"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:77
 msgid "Zooming"
-msgstr ""
+msgstr "Zoom"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:79
 msgid "ZOOM^Zoom factor:"
@@ -9652,7 +9654,7 @@ msgstr "Alterne somente entre armas utilizáveis"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
 msgid "Weapon Options"
-msgstr ""
+msgstr "Opções de Armas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:59
 msgid "Release attack buttons when you switch weapons"
@@ -9676,7 +9678,7 @@ msgstr "Trocar automaticamente em CTS:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:75
 msgid "Weapon Visuals"
-msgstr ""
+msgstr "Visuais de Armas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
 msgid "Draw 1st person weapon model"
@@ -9780,22 +9782,25 @@ msgid ""
 "In-game linear acceleration factor. \"Fully disabled\" also disables other "
 "acceleration types that can be enabled via the m_accelerate_* cvars"
 msgstr ""
+"Fator de aceleração linear interno ao jogo. \"Todo desativado\" também "
+"desativa outros tipos de aceleração que podem ser ativados pelas cvars "
+"m_accelerate_*"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:116
 msgid "Acceleration factor:"
-msgstr ""
+msgstr "Fator de aceleração:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:118
 msgid "MOUSEACCEL^Fully disabled"
-msgstr ""
+msgstr "Todo desativado"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:119
 msgid "MOUSEACCEL^Linear disabled"
-msgstr ""
+msgstr "Linear desativado"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:124
 msgid "Speed bounds:"
-msgstr ""
+msgstr "Limites de velocidade:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:136
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:140
@@ -9941,11 +9946,11 @@ msgstr "Avançado"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:75
 msgid "Text shadow"
-msgstr ""
+msgstr "Sombra do texto"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:76
 msgid "Draw a shadow behind all text to improve readability"
-msgstr ""
+msgstr "Desenhar uma sombra atrás de todo o texto para melhorar a legibilidade"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Show current date and time"
@@ -10029,11 +10034,11 @@ msgstr "Substitui o sangue com conteúdo que não contém nenhum efeito violento
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:77
 msgid "Just the gore"
-msgstr ""
+msgstr "Só o sangue"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:82
 msgid "Just the language"
-msgstr ""
+msgstr "Só a linguagem"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
 msgid ""
@@ -10067,7 +10072,7 @@ msgstr "Tela cheia"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:36
 msgid "Borderless window"
-msgstr ""
+msgstr "Janela sem borda"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:39
 msgid "Resolution:"
@@ -10115,7 +10120,7 @@ msgstr "Colossal"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:57
 msgid "Anaglyph 3D (red-cyan)"
-msgstr ""
+msgstr "Anáglifo 3D (vermelho-ciano)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:59
 msgid "High-quality frame buffer"

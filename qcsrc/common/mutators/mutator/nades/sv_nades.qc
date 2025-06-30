@@ -7,7 +7,6 @@
 #include <server/command/common.qh>
 
 .float nade_time_primed;
-.float nade_lifetime;
 
 .entity nade_spawnloc;
 
@@ -23,7 +22,7 @@ vector nades_PlayerColor(entity this, bool isPants)
 
 void nade_timer_think(entity this)
 {
-	this.skin = 8 - (this.owner.wait - time) / (this.owner.nade_lifetime / 10);
+	this.skin = 8 - (this.wait - time) / (this.nade_lifetime / 10);
 	this.nextthink = time;
 	if(!this.owner || wasfreed(this.owner))
 		delete(this);
@@ -44,6 +43,7 @@ void nade_spawn(entity _nade)
 	setthink(timer, nade_timer_think);
 	timer.nextthink = time;
 	timer.wait = _nade.wait;
+	timer.nade_lifetime = _nade.nade_lifetime;
 	timer.owner = _nade;
 	timer.skin = 10;
 
@@ -135,7 +135,7 @@ void nade_boom(entity this)
 		SET_NADE_EFFECT(NADE_TYPE_HEAL,        EFFECT_SPAWN,            '1 0 0', '1 0 0');
 		SET_NADE_EFFECT(NADE_TYPE_ENTRAP,      EFFECT_SPAWN,            '1 1 0', '1 1 0');
 		SET_NADE_EFFECT(NADE_TYPE_VEIL,        EFFECT_SPAWN,            '0 0 0', '0 0 0');
-		SET_NADE_EFFECT(NADE_TYPE_AMMO,        EFFECT_SPAWN,            '0.66 0.33 0', '0.66 0.33 0');
+		SET_NADE_EFFECT(NADE_TYPE_AMMO,        EFFECT_SPAWN,            '0.33 0.33 1', '0.33 0.33 1');
 		SET_NADE_EFFECT(NADE_TYPE_DARKNESS,    EFFECT_EXPLOSION_MEDIUM, '0 0 0', '0 0 0');
 		SET_NADE_EFFECT(NADE_TYPE_NORMAL,      EFFECT_NADE_EXPLODE,     nades_PlayerColor(this.realowner, false), nades_PlayerColor(this.realowner, true));
 	}

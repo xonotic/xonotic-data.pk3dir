@@ -73,13 +73,16 @@ REGISTER_STAT(OBJECTIVE_STATUS, INT)
 SPECTATE_COPYFIELD(_STAT(OBJECTIVE_STATUS))
 #endif
 
+#ifdef GAMEQC
+const int OVERTIME_SUDDENDEATH = BITS(24); // max value that can be sent as unsigned int
+#endif
 #ifdef SVQC
 float W_WeaponRateFactor(entity this);
 float game_stopped;
-float game_starttime; //point in time when the countdown to game start is over
-float round_starttime; //point in time when the countdown to round start is over
+float game_starttime; // point in time when the countdown to game start is over
+float round_starttime; // point in time when the countdown to round start is over
 int autocvar_leadlimit;
-int overtimes; // overtimes added (-1 = sudden death)
+int overtimes; // overtimes added (if set to the special value OVERTIME_SUDDENDEATH = sudden death)
 int timeout_status; // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
 
 // TODO: world.qh can't be included here due to circular includes!

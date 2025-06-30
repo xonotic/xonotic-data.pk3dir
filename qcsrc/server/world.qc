@@ -13,6 +13,7 @@
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/_mod.qh>
 #include <common/monsters/sv_monsters.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/physics/player.qh>
@@ -1466,7 +1467,7 @@ int InitiateSuddenDeath()
 			else
 			{
 				checkrules_suddendeathend = time + 60 * autocvar_timelimit_suddendeath;
-				overtimes = -1;
+				overtimes = OVERTIME_SUDDENDEATH;
 			}
 			if(g_race && !g_race_qualifying)
 				race_StartCompleting();
@@ -1478,6 +1479,8 @@ int InitiateSuddenDeath()
 void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 {
 	++checkrules_overtimesadded;
+	// NOTE: here overtimes can never be < 0 so it can be safely sent as (unsigned) int stat; we ignore
+	// the upper limit of OVERTIME_SUDDENDEATH - 1 = 16777215 - 1 that in practice can never be reached in game
 	overtimes = checkrules_overtimesadded;
 	//add one more overtime by simply extending the timelimit
 	cvar_set("timelimit", ftos(autocvar_timelimit + autocvar_timelimit_overtime));
@@ -1826,7 +1829,7 @@ void CheckRules_World()
 
 	if(checkrules_status == WINNING_YES)
 	{
-		if (overtimes == -1 && overtimes != overtimes_prev)
+		if (overtimes == OVERTIME_SUDDENDEATH && overtimes != overtimes_prev)
 		{
 			// if suddendeathend overtime has just begun, revert it
 			checkrules_suddendeathend = 0;
@@ -2139,7 +2142,7 @@ void readplayerstartcvars()
 
 	if (start_items & ITEM_Jetpack.m_itemid)
 	{
-		start_items |= ITEM_JetpackRegen.m_itemid;
+		start_items |= ITEM_FuelRegen.m_itemid;
 		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}

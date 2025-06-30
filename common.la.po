@@ -1209,7 +1209,7 @@ msgstr "Suffragiis disputent de:"
 
 #: qcsrc/client/hud/panel/vote.qc:123
 msgid "Allow servers to store and display your name?"
-msgstr "Moderatra nomen tuum meminisse et nuntiare sinis?"
+msgstr "Sinisne moderatra nomen tuum meminisse et nuntiare?"
 
 #: qcsrc/client/hud/panel/vote.qc:127
 msgid "^1Configure the HUD"
@@ -2157,7 +2157,7 @@ msgstr "Firmamen"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:24
 msgid "Damage Text"
-msgstr ""
+msgstr "Vulneris Scriptum"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:26
 msgid "Draw damage numbers"
@@ -2192,7 +2192,7 @@ msgstr "Armorum singula"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:54
 msgid "Initial alpha:"
-msgstr ""
+msgstr "Prima traluciditas:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:59
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:23
@@ -2203,11 +2203,11 @@ msgstr "Evanescit tempus:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:64
 msgid "Accumulate:"
-msgstr ""
+msgstr "Accumulare:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:68
 msgid "If younger than:"
-msgstr ""
+msgstr "Si non excedit:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:71
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:34
@@ -2223,15 +2223,15 @@ msgstr "Numquam"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:72
 msgid "1s"
-msgstr ""
+msgstr "1s"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:73
 msgid "2s"
-msgstr ""
+msgstr "2s"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:74
 msgid "3s"
-msgstr ""
+msgstr "3s"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:75
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:36
@@ -2246,7 +2246,7 @@ msgstr "Semper"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:80
 msgid "Or alpha greater than:"
-msgstr ""
+msgstr "Vel traluciditas maior quam:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:7
 msgid "Damage text"
@@ -3597,7 +3597,7 @@ msgstr "^F2Nunc spectare vetatur!"
 #: qcsrc/common/notifications/all.inc:454
 #: qcsrc/common/notifications/all.inc:804
 msgid "^F2Spectating specific players isn't allowed at this time!"
-msgstr ""
+msgstr "^F2Nunc vetatur quemvis ludentem eligere et spectare!"
 
 #: qcsrc/common/notifications/all.inc:456
 #, c-format
@@ -6698,15 +6698,15 @@ msgstr "Locutorii Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:21
 msgid "Align:"
-msgstr ""
+msgstr "Ad latus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:26
 msgid "Flip checkpoint order"
-msgstr ""
+msgstr "Metarum ordo inversus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qh:6
 msgid "Checkpoints Panel"
-msgstr ""
+msgstr "Metarum Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "FPS:"
@@ -7255,6 +7255,7 @@ msgstr "Armorum Tabella"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:27
 msgid "Are you sure you want to reset your HUD to this skin?"
 msgstr ""
+"Certumne est tibi integrare notas superpositas et reponere hanc faciem?"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:46
 msgid "HUD skins"
@@ -7291,6 +7292,8 @@ msgid ""
 "Note: HUD skins are saved in data/data/ directory and can be manually "
 "renamed/deleted from there"
 msgstr ""
+"Nota: Facies Notarum Superpositarum servantur in data/data/ et eo loco per "
+"iussus computatrales eas movere vel delere potes"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:73
 msgid "Panel background defaults:"
@@ -7382,7 +7385,7 @@ msgstr "Mutare Notarum Superpositarum Tabellam"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qh:18
 msgid "Reset HUD skin"
-msgstr ""
+msgstr "Integrare Facies Notarum Superpositarum"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
@@ -9020,7 +9023,7 @@ msgstr "Reticuli punctum medium videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:112
 msgid "Use normal color"
-msgstr ""
+msgstr "Colore ordinario uti"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:123
 msgid "Smooth effects of crosshairs"
@@ -9417,7 +9420,7 @@ msgstr "Eligere formas imaginesque quas ludentes et utilia habeant"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:26
 msgid "Perspective"
-msgstr ""
+msgstr "Aspectus"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:29
 msgid "Field of view:"
@@ -9469,7 +9472,7 @@ msgstr "Parietes transis dum spectas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:77
 msgid "Zooming"
-msgstr ""
+msgstr "Amplificatio"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:79
 msgid "ZOOM^Zoom factor:"
@@ -9567,7 +9570,7 @@ msgstr "Cum arma tenta permutas, non tenebis in manu arma quibus uti non potes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
 msgid "Weapon Options"
-msgstr ""
+msgstr "Armorum Optiones"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:59
 msgid "Release attack buttons when you switch weapons"
@@ -9591,7 +9594,7 @@ msgstr "Statim commutas dum est Cursus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:75
 msgid "Weapon Visuals"
-msgstr ""
+msgstr "Armorum Facies"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
 msgid "Draw 1st person weapon model"
@@ -9694,22 +9697,25 @@ msgid ""
 "In-game linear acceleration factor. \"Fully disabled\" also disables other "
 "acceleration types that can be enabled via the m_accelerate_* cvars"
 msgstr ""
+"Accelerationis multiplicandus linearis in ludo. Si \"Nulla multiplicatio\" "
+"eligitur non erunt aliae calculationes accelerationis quae iuberi possunt "
+"per variabiles m_accelerate_*"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:116
 msgid "Acceleration factor:"
-msgstr ""
+msgstr "Accelerationis multiplicandus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:118
 msgid "MOUSEACCEL^Fully disabled"
-msgstr ""
+msgstr "Nulla multiplicatio"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:119
 msgid "MOUSEACCEL^Linear disabled"
-msgstr ""
+msgstr "Sine lineari"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:124
 msgid "Speed bounds:"
-msgstr ""
+msgstr "Velocitatis limites:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:136
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:140
@@ -9856,11 +9862,11 @@ msgstr "Involutus"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:75
 msgid "Text shadow"
-msgstr ""
+msgstr "Scripti umbra"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:76
 msgid "Draw a shadow behind all text to improve readability"
-msgstr ""
+msgstr "Umbram sub scripto pingere ut facilius legatur"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Show current date and time"
@@ -9944,11 +9950,11 @@ msgstr "Nec sanguinem nec intestina pingere, sed alias imagines decoras"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:77
 msgid "Just the gore"
-msgstr ""
+msgstr "Modo sine sanguine"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:82
 msgid "Just the language"
-msgstr ""
+msgstr "Modo sine verbis indecoris"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
 msgid ""
@@ -9981,7 +9987,7 @@ msgstr "Totum quadrum"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:36
 msgid "Borderless window"
-msgstr ""
+msgstr "Fenestra sine margine"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:39
 msgid "Resolution:"
@@ -10029,7 +10035,7 @@ msgstr "Colossica"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:57
 msgid "Anaglyph 3D (red-cyan)"
-msgstr ""
+msgstr "Simulare 3 dimensiones (per rubrum, caeruleum)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:59
 msgid "High-quality frame buffer"
@@ -10044,7 +10050,7 @@ msgid ""
 "Enable antialiasing, which smooths the edges of 3D geometry. Note that it "
 "might decrease performance by quite a lot"
 msgstr ""
-"Polire margines rerum tridimensionalium. NB: computatrum minus velox esse "
+"Polire margines rerum trium dimensionum. NB: computatrum minus velox esse "
 "poterit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:71

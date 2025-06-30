@@ -1,6 +1,7 @@
 #include "quake2.qh"
 
 #include <common/items/_mod.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 
 //***********************
 //QUAKE 2 ENTITIES - So people can play quake2 maps with the xonotic weapons
