@@ -46,6 +46,8 @@ const int MF_TRACER3 =  BIT(7);  // purple trail
 
 .int isplayermodel;
 
+.float death_time;
+
 void CSQCModel_Effects_Apply(entity this);
 
 void CSQCModel_LOD_Apply(entity this, bool isplayer);
