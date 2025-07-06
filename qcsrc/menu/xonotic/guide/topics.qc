@@ -16,8 +16,11 @@ void XonoticTopicList_cb(string _name, string _icon)
 
 void XonoticTopicList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
-	if (!me.source) return;
-	if (!me.source.getEntry(me.source, i, XonoticTopicList_cb)) return;
+	if (!me.source)
+		return;
+	if (!me.source.getEntry(me.source, i, XonoticTopicList_cb))
+		return;
+
 	string icon = XonoticTopicList_cb_icon;
 	string name = XonoticTopicList_cb_name;
 	if (isSelected)
@@ -52,8 +55,10 @@ void XonoticTopicList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticEntryList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.itemAbsSize.y = absSize.y * me.itemHeight;
+	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
+	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 	me.columnIconOrigin = 0;
 	me.columnIconSize = me.itemAbsSize.y / me.itemAbsSize.x;

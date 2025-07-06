@@ -39,8 +39,8 @@ void XonoticGuideDescription_resizeNotify(entity me, vector relOrigin, vector re
 {
 	SUPER(XonoticGuideDescription).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.realFontSize.y = me.fontSize / (absSize.y * me.itemHeight);
+	me.realFontSize.x = me.fontSize / (absSize.x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 	me.setDescription(me, me.m_description);
 }

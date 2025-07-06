@@ -19,8 +19,11 @@ entity EntryList_Set_StringFilterBox(entity me, entity e)
 
 void XonoticEntryList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
-	if (!me.source) return;
-	if (!me.source.getEntry(me.source, i, XonoticEntryList_cb)) return;
+	if (!me.source)
+		return;
+	if (!me.source.getEntry(me.source, i, XonoticEntryList_cb))
+		return;
+
 	string name = XonoticEntryList_cb_name;
 	string icon = XonoticEntryList_cb_icon;
 	if (isSelected)
@@ -85,7 +88,7 @@ float EntryList_StringFilterBox_keyDown(entity me, float scan, float ascii, floa
 {
 	// in this section, note that onChangeEntity has the ref to entryList
 	// we make use of that, instead of extending a class to add one more attrib
-	switch(scan)
+	switch (scan)
 	{
 		case K_KP_ENTER:
 		case K_ENTER:
@@ -133,7 +136,7 @@ void XonoticEntryList_refilter(entity me)
 void EntryList_StringFilterBox_Change(entity box, entity me)
 {
 	strfree(me.stringFilter);
-	if(box.text != "")
+	if (box.text != "")
 		me.stringFilter = strzone(box.text);
 
 	me.refilter(me);
@@ -144,8 +147,10 @@ void XonoticEntryList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticEntryList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.itemAbsSize.y = absSize.y * me.itemHeight;
+	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
+	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin1 = 0.5 * (1 - 2.5 * me.realFontSize.y);
 	me.realUpperMargin2 = me.realUpperMargin1 + 1.5 * me.realFontSize.y;
 }
