@@ -328,8 +328,14 @@ void sys_phys_simulate(entity this, float dt)
 			// CPM: air control
 			if (PHYS_AIRSTOPACCELERATE(this))
 			{
-				vector curdir = normalize(vec2(this.velocity));
-				airaccel += (this.com_phys_acc_rate_air_stop - airaccel) * max(0, -(curdir * wishdir));
+				const float dot = normalize(vec2(this.velocity)) * wishdir;
+				if (dot < 0)
+				{
+					if (PHYS_AIRSTOPACCELERATE_FULL(this))
+						airaccel = this.com_phys_acc_rate_air_stop; // full slow-down
+					else
+						airaccel += (airaccel - this.com_phys_acc_rate_air_stop) * dot; // sinusoidal slow-down
+				}
 			}
 			// note that for straight forward jumping:
 			// step = accel * dt * wishspeed0;
