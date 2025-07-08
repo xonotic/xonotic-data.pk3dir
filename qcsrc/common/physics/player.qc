@@ -120,9 +120,8 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_WARSOWBUNNY_TURNACCEL, this) = Physics_ClientOption(this, "warsowbunny_turnaccel", autocvar_sv_warsowbunny_turnaccel);
 	STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, this) = Physics_ClientOption(this, "airaccel_sideways_friction", autocvar_sv_airaccel_sideways_friction);
 	STAT(MOVEVARS_AIRCONTROL, this) = Physics_ClientOption(this, "aircontrol", autocvar_sv_aircontrol);
+	STAT(MOVEVARS_AIRCONTROL_FLAGS, this) = Physics_ClientOption(this, "aircontrol_flags", autocvar_sv_aircontrol_flags);
 	STAT(MOVEVARS_AIRCONTROL_POWER, this) = Physics_ClientOption(this, "aircontrol_power", autocvar_sv_aircontrol_power);
-	STAT(MOVEVARS_AIRCONTROL_BACKWARDS, this) = Physics_ClientOption(this, "aircontrol_backwards", autocvar_sv_aircontrol_backwards);
-	STAT(MOVEVARS_AIRCONTROL_SIDEWARDS, this) = Physics_ClientOption(this, "aircontrol_sidewards", autocvar_sv_aircontrol_sidewards);
 	STAT(MOVEVARS_AIRCONTROL_PENALTY, this) = Physics_ClientOption(this, "aircontrol_penalty", autocvar_sv_aircontrol_penalty);
 	STAT(MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, this) = Physics_ClientOption(this, "warsowbunny_airforwardaccel", autocvar_sv_warsowbunny_airforwardaccel);
 	STAT(MOVEVARS_WARSOWBUNNY_TOPSPEED, this) = Physics_ClientOption(this, "warsowbunny_topspeed", autocvar_sv_warsowbunny_topspeed);
@@ -219,21 +218,21 @@ void PM_ClientMovement_UpdateStatus(entity this)
 void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 {
 	float movity = IsMoveInDirection(PHYS_CS(this).movement, 0);
-	if(PHYS_AIRCONTROL_BACKWARDS(this))
+	if(PHYS_AIRCONTROL_FLAGS(this) & BIT(0)) // backwards
 		movity += IsMoveInDirection(PHYS_CS(this).movement, 180);
-	if(PHYS_AIRCONTROL_SIDEWARDS(this))
+	if(PHYS_AIRCONTROL_FLAGS(this) & BIT(1)) // sidewards
 	{
 		movity += IsMoveInDirection(PHYS_CS(this).movement, 90);
 		movity += IsMoveInDirection(PHYS_CS(this).movement, -90);
 	}
 
-	float k = 32 * (2 * movity - 1);
+	float k = 2 * movity - 1;
 	if (k <= 0)
 		return;
+	if (!(PHYS_AIRCONTROL_FLAGS(this) & BIT(2))) // crouching has an impact
+		k *= bound(0, wishspeed / PHYS_MAXAIRSPEED(this), 1);
 
-	k *= bound(0, wishspeed / PHYS_MAXAIRSPEED(this), 1);
-
-	float zspeed = this.velocity_z;
+	const float zspeed = this.velocity_z;
 	this.velocity_z = 0;
 	float xyspeed = vlen(this.velocity);
 	this.velocity = normalize(this.velocity);
@@ -243,8 +242,8 @@ void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 	if (dot > 0) // we can't change direction while slowing down
 	{
 		k *= (dot ** PHYS_AIRCONTROL_POWER(this)) * dt;
-		xyspeed = max(0, xyspeed - PHYS_AIRCONTROL_PENALTY(this) * sqrt(max(0, 1 - dot*dot)) * k/32);
-		k *= PHYS_AIRCONTROL(this);
+		xyspeed = max(0, xyspeed - PHYS_AIRCONTROL_PENALTY(this) * sqrt(max(0, 1 - dot*dot)) * k);
+		k *= 32 * fabs(PHYS_AIRCONTROL(this));
 		this.velocity = normalize(this.velocity * xyspeed + wishdir * k);
 	}
 
