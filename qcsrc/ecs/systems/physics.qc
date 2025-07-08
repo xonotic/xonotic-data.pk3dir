@@ -425,41 +425,43 @@ void sys_phys_simulate(entity this, float dt)
 		{
 			// apply edge friction
 			const float f2 = vlen2(vec2(this.velocity));
-			if (f2 > 0)
+			const int realfriction = (IS_ONSLICK(this))
+				? PHYS_FRICTION_SLICK(this)
+				: PHYS_FRICTION(this);
+			if (f2 > 0 && realfriction != 0)
 			{
 				// TODO: apply edge friction
 				// apply ground friction
-				const int realfriction = (IS_ONSLICK(this))
-					? PHYS_FRICTION_SLICK(this)
-					: PHYS_FRICTION(this);
 
 				float f = sqrt(f2);
-				f = 1 - dt * realfriction
-					* ((f < PHYS_STOPSPEED(this)) ? (PHYS_STOPSPEED(this) / f) : 1);
-				f = max(0, f);
+				const float S = PHYS_STOPSPEED(this);
+				//f = 1 - dt * realfriction * ((f < S) ? (S / f) : 1);
+				// k9er: documentation here https://gitlab.com/otta8634/xonotic-physics
+				const float dt_r = PHYS_FRICTION_REPLICA_DT;
+				// minor optimization, but it's only useful if friction > 1/dt_r
+				//if (realfriction * dt_r >= 1)
+				//	f = 0;
+				//else
+				{
+					const float independent_geometric = (1 - realfriction * dt_r) ** (dt / dt_r);
+					// NOTE: first two conditions ensure subframe accuracy in the geometric <-> linear transition, may be not worth the hassle
+					if (realfriction > 0 && S < f && f < S / independent_geometric)
+					{
+						this.velocity = normalize(this.velocity);
+						f = S - S * realfriction * (dt - (dt_r * log(S / f)) / log(1 - realfriction * dt_r));
+					}
+					else if (realfriction < 0 && S * (1 + realfriction * dt) < f && f < S)
+					{
+						this.velocity = normalize(this.velocity);
+						f = S * (1 - realfriction * dt_r) ** ((dt - (f - S) / (S * realfriction)) / dt_r);
+					}
+					else if (f >= S)
+						f = independent_geometric;
+					else
+						f = 1 - realfriction * dt * S / f;
+					f = max(0, f);
+				}
 				this.velocity *= f;
-				/*
-				   Mathematical analysis time!
-
-				   Our goal is to invert this mess.
-
-				   For the two cases we get:
-				    v = v0 * (1 - dt * (PHYS_STOPSPEED(this) / v0) * PHYS_FRICTION(this))
-				      = v0 - dt * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
-				    v0 = v + dt * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
-				   and
-				    v = v0 * (1 - dt * PHYS_FRICTION(this))
-				    v0 = v / (1 - dt * PHYS_FRICTION(this))
-
-				   These cases would be chosen ONLY if:
-				    v0 < PHYS_STOPSPEED(this)
-				    v + dt * PHYS_STOPSPEED(this) * PHYS_FRICTION(this) < PHYS_STOPSPEED(this)
-				    v < PHYS_STOPSPEED(this) * (1 - dt * PHYS_FRICTION(this))
-				   and, respectively:
-				    v0 >= PHYS_STOPSPEED(this)
-				    v / (1 - dt * PHYS_FRICTION(this)) >= PHYS_STOPSPEED(this)
-				    v >= PHYS_STOPSPEED(this) * (1 - dt * PHYS_FRICTION(this))
-				 */
 			}
 			const float addspeed = wishspeed - this.velocity * wishdir;
 			if (addspeed > 0)
