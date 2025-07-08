@@ -202,8 +202,31 @@ void HUD_StrafeHUD()
 	{
 		float strafefriction = onslick ? PHYS_FRICTION_SLICK(strafeplayer) : PHYS_FRICTION(strafeplayer);
 
-		frictionspeed = speed * dt * strafefriction * max(PHYS_STOPSPEED(strafeplayer) / speed, 1);
-		strafespeed = max(speed - frictionspeed, 0);
+		if (strafefriction != 0)
+		{
+			float S = PHYS_STOPSPEED(strafeplayer);
+			//strafespeed = speed * (1 - dt * strafefriction * ((speed < S) ? (S / speed) : 1));
+			// NOTE: this is copied from ecs/systems/physics.qc
+			float dt_r = PHYS_FRICTION_REPLICA_DT;
+			//if (strafefriction * dt_r >= 1)
+			//	strafespeed = 0;
+			//else
+			{
+				float independent_geometric = (1 - strafefriction * dt_r) ** (dt / dt_r);
+				if (strafefriction > 0 && S < speed && speed < S / independent_geometric)
+					strafespeed = S - S * strafefriction * (dt - (dt_r * log(S / speed)) / log(1 - strafefriction * dt_r));
+				else if (strafefriction < 0 && S * (1 + strafefriction * dt) < speed && speed < S)
+					strafespeed = S * (1 - strafefriction * dt_r) ** ((dt - (speed - S) / (S * strafefriction)) / dt_r);
+				else if (speed >= S)
+					strafespeed = speed * independent_geometric;
+				else
+					strafespeed = speed - strafefriction * dt * S;
+				strafespeed = max(0, strafespeed);
+			}
+		}
+		else
+			strafespeed = speed;
+		frictionspeed = speed - strafespeed;
 	}
 	else
 	{
@@ -312,6 +335,7 @@ void HUD_StrafeHUD()
 		airstopaccel = 1; // values of 0 are equivalent to 1
 
 	// best angle to strafe at
+	// k9er: documentation here https://gitlab.com/otta8634/xonotic-physics
 	float bestangle;
 	float prebestangle;
 	float overturnangle;

@@ -337,6 +337,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 
 #endif
 
+#define PHYS_FRICTION_REPLICA_DT                0.00390625
+
 #ifdef SVQC
 // FIXME/EXPLAINME: why? Mario: because
 vector autocvar_sv_player_maxs = '16 16 45';
