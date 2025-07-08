@@ -456,7 +456,9 @@ void HUD_StrafeHUD()
 		float wturn_power = PHYS_AIRCONTROL_POWER(strafeplayer);
 		if(wturn_power == 2)
 		{
-			float wturn_a = 32 * aircontrol * dt;
+			float wturn_a = 32 * fabs(aircontrol) * dt;
+			if(aircontrol >= 0)
+				wturn_a *= maxspeed / maxspeed_phys;
 			float wturn_V = 1 - (wturn_a * wturn_a) / (speed * speed);
 			if(autocvar_hud_panel_strafehud_wturn_proper && wturn_a > 1 && wturn_V < 1 && wturn_V > -1)
 				wturn_bestangle = acos(-speed / wturn_a * (cos((acos(wturn_V) + M_PI * 2) / 3) * 2 + 1)) * RAD2DEG;

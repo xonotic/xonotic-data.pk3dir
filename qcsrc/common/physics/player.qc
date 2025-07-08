@@ -227,13 +227,13 @@ void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 		movity += IsMoveInDirection(PHYS_CS(this).movement, -90);
 	}
 
-	float k = 32 * (2 * movity - 1);
+	float k = 2 * movity - 1;
 	if (k <= 0)
 		return;
+	if (PHYS_AIRCONTROL(this) >= 0)
+		k *= bound(0, wishspeed / PHYS_MAXAIRSPEED(this), 1);
 
-	k *= bound(0, wishspeed / PHYS_MAXAIRSPEED(this), 1);
-
-	float zspeed = this.velocity_z;
+	const float zspeed = this.velocity_z;
 	this.velocity_z = 0;
 	float xyspeed = vlen(this.velocity);
 	this.velocity = normalize(this.velocity);
@@ -243,8 +243,8 @@ void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 	if (dot > 0) // we can't change direction while slowing down
 	{
 		k *= (dot ** PHYS_AIRCONTROL_POWER(this)) * dt;
-		xyspeed = max(0, xyspeed - PHYS_AIRCONTROL_PENALTY(this) * sqrt(max(0, 1 - dot*dot)) * k/32);
-		k *= PHYS_AIRCONTROL(this);
+		xyspeed = max(0, xyspeed - PHYS_AIRCONTROL_PENALTY(this) * sqrt(max(0, 1 - dot*dot)) * k);
+		k *= 32 * fabs(PHYS_AIRCONTROL(this));
 		this.velocity = normalize(this.velocity * xyspeed + wishdir * k);
 	}
 
