@@ -426,9 +426,10 @@ void HUD_StrafeHUD()
 	float absolute_overturnangle = overturnangle;
 
 	float aircontrol = PHYS_AIRCONTROL(strafeplayer);
-	bool aircontrol_backwards = PHYS_AIRCONTROL_BACKWARDS(strafeplayer);
-	bool is_aircontrol_keys = keys_fwd == STRAFEHUD_KEYS_FORWARD || (aircontrol_backwards && keys_fwd == STRAFEHUD_KEYS_BACKWARD);
-	bool is_aircontrol_direction = fwd || aircontrol_backwards;
+	int aircontrol_flags = PHYS_AIRCONTROL_FLAGS(strafeplayer);
+	bool is_aircontrol_keys = (keys_fwd == STRAFEHUD_KEYS_FORWARD)
+		|| ((aircontrol_flags & BIT(0)) && keys_fwd == STRAFEHUD_KEYS_BACKWARD);
+	bool is_aircontrol_direction = fwd || (aircontrol_flags & BIT(0));
 	bool airaccel_qw = PHYS_AIRACCEL_QW(strafeplayer) == 1;
 
 	/*
@@ -456,7 +457,9 @@ void HUD_StrafeHUD()
 		float wturn_power = PHYS_AIRCONTROL_POWER(strafeplayer);
 		if(wturn_power == 2)
 		{
-			float wturn_a = 32 * aircontrol * dt;
+			float wturn_a = 32 * fabs(aircontrol) * dt;
+			if(aircontrol_flags & BIT(2)) // crouching has no impact
+				wturn_a *= maxspeed / maxspeed_phys;
 			float wturn_V = 1 - (wturn_a * wturn_a) / (speed * speed);
 			if(autocvar_hud_panel_strafehud_wturn_proper && wturn_a > 1 && wturn_V < 1 && wturn_V > -1)
 				wturn_bestangle = acos(-speed / wturn_a * (cos((acos(wturn_V) + M_PI * 2) / 3) * 2 + 1)) * RAD2DEG;
