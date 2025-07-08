@@ -331,7 +331,7 @@ void HUD_StrafeHUD()
 	}
 
 	float airstopaccel = PHYS_AIRSTOPACCELERATE(strafeplayer);
-	if(airstopaccel == 0)
+	if(airstopaccel == 0 || turn) // no airstopaccel while side strafing
 		airstopaccel = 1; // values of 0 are equivalent to 1
 
 	// best angle to strafe at
@@ -398,11 +398,13 @@ void HUD_StrafeHUD()
 			}
 			else
 			{
-				// use angles as if in air
+				// use angles as if in air (see below), no range checks are needed
 				// no need to check if numerator < denominator, since all numerators < max onground speed < speed = all denominators
 				bestangle = acos(bestspeed / speed) * RAD2DEG;
 				prebestangle = acos(movespeed / speed) * RAD2DEG;
-				overturnangle = acos(-(airstopaccel * maxaccel / 2) / speed) * RAD2DEG;
+				overturnangle = (airstopaccel == 1 || PHYS_AIRSTOPACCELERATE_FULL(strafeplayer))
+					? acos(-(airstopaccel * maxaccel * 0.5) / speed) * RAD2DEG
+					: acos(-maxaccel / (2 * speed - (airstopaccel - 1) * maxaccel)) * RAD2DEG;
 			}
 		}
 	}
@@ -415,9 +417,12 @@ void HUD_StrafeHUD()
 		prebestangle = speed > movespeed
 			? acos(movespeed / speed) * RAD2DEG
 			: 0;
-		// with airstopaccel, delta_max = acos(airstopaccel * -a / 2v), only in air
-		overturnangle = speed > airstopaccel * maxaccel / 2
-			? acos(-(airstopaccel * maxaccel / 2) / speed) * RAD2DEG
+		// with airstopaccel, delta_max = acos(airstopaccel * -a / 2v), only in air,
+		// ... or if not applied fully, delta_max = acos(-a / (2v - (airstopaccel - 1) * a))
+		overturnangle = speed > airstopaccel * maxaccel * 0.5
+			? ((airstopaccel == 1 || PHYS_AIRSTOPACCELERATE_FULL(strafeplayer))
+				? acos(-(airstopaccel * maxaccel * 0.5) / speed) * RAD2DEG
+				: acos(-maxaccel / (2 * speed - (airstopaccel - 1) * maxaccel)) * RAD2DEG)
 			: 180;
 	}
 	// absolute_* variables which are always positive with no wishangle offset
