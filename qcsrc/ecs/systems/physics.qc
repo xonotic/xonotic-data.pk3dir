@@ -471,7 +471,10 @@ void sys_phys_simulate(entity this, float dt)
 			const float addspeed = wishspeed - this.velocity * wishdir;
 			if (addspeed > 0)
 			{
-				const float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, addspeed);
+				float accel = PHYS_ACCELERATE(this);
+				if (IS_ONSLICK(this) && PHYS_SLICKACCELERATE(this) >= 0)
+					accel = PHYS_SLICKACCELERATE(this);
+				const float accelspeed = min(accel * dt * wishspeed, addspeed);
 				this.velocity += accelspeed * wishdir;
 			}
 			return;

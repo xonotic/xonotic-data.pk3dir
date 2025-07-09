@@ -115,6 +115,11 @@ void HUD_StrafeHUD()
 			maxaccel = PHYS_ACCELERATE(strafeplayer);
 		}
 	}
+	else if(onslick && PHYS_SLICKACCELERATE(strafeplayer) >= 0)
+	{
+		if(!autocvar__hud_configure)
+			maxaccel = PHYS_SLICKACCELERATE(strafeplayer);
+	}
 
 	// move values are only valid for the local player
 	vector movement = PHYS_INPUT_MOVEVALUES(strafeplayer);
