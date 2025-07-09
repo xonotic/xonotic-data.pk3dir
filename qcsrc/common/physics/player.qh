@@ -32,6 +32,7 @@ float autocvar_sv_friction;
 float autocvar_sv_accelerate;
 float autocvar_sv_stopspeed;
 float autocvar_sv_airaccelerate;
+float autocvar_sv_slickaccelerate;
 float autocvar_sv_airstopaccelerate;
 bool autocvar_sv_airstopaccelerate_full;
 float autocvar_sv_track_canjump;
@@ -92,6 +93,7 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 
 #define PHYS_ACCELERATE(s)                  STAT(MOVEVARS_ACCELERATE, s)
 #define PHYS_AIRACCELERATE(s)               STAT(MOVEVARS_AIRACCELERATE, s)
+#define PHYS_SLICKACCELERATE(s)             STAT(MOVEVARS_SLICKACCELERATE, s)
 #define PHYS_AIRACCEL_QW(s)                 STAT(MOVEVARS_AIRACCEL_QW, s)
 #define PHYS_AIRACCEL_QW_STRETCHFACTOR(s)   STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, s)
 #define PHYS_AIRACCEL_SIDEWAYS_FRICTION(s)  STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, s)
