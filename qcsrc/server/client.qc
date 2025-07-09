@@ -415,7 +415,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	}
 	else
 	{
-		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR); // clears scores too in game modes without teams
+		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR, true); // clears scores too in game modes without teams
 		this.frags = FRAGS_SPECTATOR;
 	}
 
@@ -577,9 +577,9 @@ void PutPlayerInServer(entity this)
 	if (teamplay)
 	{
 		if (this.bot_forced_team)
-			SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
+			SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL, true);
 		else if (this.wants_join > 0)
-			SetPlayerTeam(this, this.wants_join, TEAM_CHANGE_MANUAL);
+			SetPlayerTeam(this, this.wants_join, TEAM_CHANGE_MANUAL, true);
 		else if (this.team <= 0 || this.wants_join < 0 || autocvar_g_campaign)
 			TeamBalance_JoinBestTeam(this);
 	}

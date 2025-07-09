@@ -1133,7 +1133,7 @@ void GameCommand_moveplayer(int request, int argc)
 
 						// If so, lets continue and finally move the player
 						Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
-						if (MoveToTeam(client, team_id, 6))
+						if (MoveToTeam(client, team_id, TEAM_CHANGE_MOVEPLAYER, true))
 						{
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
 							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ",
@@ -1368,7 +1368,7 @@ void shuffleteams()
 		int target_team_index = team_index + 1;
 		if (Entity_GetTeamIndex(it) != target_team_index)
 		{
-			MoveToTeam(it, target_team_index, 6);
+			MoveToTeam(it, target_team_index, TEAM_CHANGE_SHUFFLE, true);
 		}
 		team_index = (team_index + 1) % number_of_teams;
 	});
@@ -1480,8 +1480,8 @@ void rebalanceplayer(string pl_name)
 		return;
 	}
 
-	MoveToTeam(pl, team_index_worst_pl, 6);
-	MoveToTeam(worst_pl, team_index_pl, 6);
+	MoveToTeam(pl, team_index_worst_pl, TEAM_CHANGE_REBALANCEPLAYER, false);
+	MoveToTeam(worst_pl, team_index_pl, TEAM_CHANGE_REBALANCEPLAYER, false);
 
 	bprint(sprintf("Successfully rebalanced %s\n", pl.netname));
 }

@@ -252,7 +252,7 @@ bool QueuedPlayersReady(entity this, bool checkspecificteam)
 	return false;
 }
 
-bool SetPlayerTeam(entity player, int team_index, int type)
+bool SetPlayerTeam(entity player, int team_index, int type, bool autobalancebots)
 {
 	int old_team_index = Entity_GetTeamIndex(player);
 
@@ -266,7 +266,7 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 		KillPlayerForTeamChange(player);
 		PlayerScore_Clear(player); // works only in game modes without teams
 
-		if (!IS_BOT_CLIENT(player))
+		if (autobalancebots && !IS_BOT_CLIENT(player))
 			TeamBalance_AutoBalanceBots();
 
 		if (team_index != -1)
@@ -347,15 +347,15 @@ void Player_SetTeamIndexChecked(entity player, int team_index)
 	}
 	TeamBalance_Destroy(balance);
 
-	SetPlayerTeam(player, team_index, TEAM_CHANGE_MANUAL);
+	SetPlayerTeam(player, team_index, TEAM_CHANGE_MANUAL, true);
 }
 
-bool MoveToTeam(entity client, int team_index, int type)
+bool MoveToTeam(entity client, int team_index, int type, bool autobalancebots)
 {
 	//PrintToChatAll(sprintf("MoveToTeam: %s, %f", client.netname, team_index));
 	int lockteams_backup = lockteams;  // backup any team lock
 	lockteams = 0;  // disable locked teams
-	if (!SetPlayerTeam(client, team_index, type))
+	if (!SetPlayerTeam(client, team_index, type, autobalancebots))
 	{
 		lockteams = lockteams_backup;  // restore the team lock
 		return false;
@@ -496,7 +496,7 @@ void TeamBalance_JoinBestTeam(entity player)
 		{
 			return;
 		}
-		if (!SetPlayerTeam(player, forced_team_index, TEAM_CHANGE_AUTO))
+		if (!SetPlayerTeam(player, forced_team_index, TEAM_CHANGE_AUTO, true))
 		{
 			return;
 		}
@@ -504,7 +504,7 @@ void TeamBalance_JoinBestTeam(entity player)
 	}
 	int best_team_index = TeamBalance_FindBestTeam(balance, player, true);
 	TeamBalance_Destroy(balance);
-	if (!SetPlayerTeam(player, best_team_index, TEAM_CHANGE_AUTO))
+	if (!SetPlayerTeam(player, best_team_index, TEAM_CHANGE_AUTO, true))
 	{
 		return;
 	}
@@ -1171,7 +1171,7 @@ void TeamBalance_AutoBalanceBots()
 		//PrintToChatAll("No bot found after searching through all the teams");
 		return;
 	}
-	SetPlayerTeam(switchable_bot, smallest_team_index, TEAM_CHANGE_AUTO);
+	SetPlayerTeam(switchable_bot, smallest_team_index, TEAM_CHANGE_AUTO, true);
 }
 
 int TeamBalance_GetLargestTeamIndex(entity balance, int teams)
