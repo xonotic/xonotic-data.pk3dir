@@ -66,14 +66,14 @@ void GameRules_limit_fallbacks()
 	GameRules_limit_time(autocvar_timelimit_override);
 }
 
-/// Uses client.(float_field) to accumulate and consume float score and adds score to the player as int (rounded)
+/// Accumulates the decimal part of the score to player.(decimal_field) and adds the score to the player as int
 /// only when at least one unit of score has been accumulated. It works with negative score too
 /// Float scores can't be used as score because they aren't supported by the QC score networking system
 /// and online server browsers (e.g. qstat)
-float _GameRules_scoring_add_float2int(entity client, entity sp, int st, float value, .float float_field, float score_factor, bool team)
+float _GameRules_scoring_add_float2int(entity client, entity sp, int st, float value, .float decimal_field, float score_factor, bool team)
 {
-	client.(float_field) += value;
-	float score_counter = client.(float_field) / score_factor;
+	client.(decimal_field) += value;
+	float score_counter = client.(decimal_field) / score_factor;
 	if (score_counter >= -0.5 && score_counter < 0.5)
 		return 0;
 
@@ -81,6 +81,6 @@ float _GameRules_scoring_add_float2int(entity client, entity sp, int st, float v
 	int points = floor(score_counter + 0.5);
 	if (!points)
 		return 0;
-	client.(float_field) -= points * score_factor;
+	client.(decimal_field) -= points * score_factor;
 	return team ? PlayerTeamScore_Add(client, sp, st, points) : PlayerScore_Add(client, sp, points);
 }
