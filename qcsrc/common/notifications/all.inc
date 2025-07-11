@@ -726,6 +726,7 @@ string multiteam_info_sprintf(string input, string teamname) { return ((input !=
     MSG_CENTER_NOTIF(JOIN_PLAYBAN,                      N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  BOLD(_("^K1You aren't allowed to play because you are banned in this server")), "")
     MSG_CENTER_NOTIF(JOIN_PREVENT,                      N_ENABLE,    0, 1, "f1",             CPID_PREVENT_JOIN,      "0 0",  _("^K1You may not join the game at this time.\nThis match is limited to ^F2%s^BG players."), "")
     MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
+    MSG_CENTER_NOTIF(JOIN_PREVENT_PING,                 N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2Your ping (connection latency) is currently too high to play here.\nPlease consider joining a server closer to you."), "")
     MSG_CENTER_NOTIF(JOIN_PREVENT_QUEUE,                N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^BGYou're queued to join any available team."), "")
     MULTITEAM_CENTER(JOIN_PREVENT_QUEUE_TEAM,           N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^BGYou're queued to join the ^TC^TT^BG team."), "", NAME)
     MULTITEAM_CENTER(JOIN_PREVENT_QUEUE_TEAM_CONFLICT,  N_ENABLE,    1, 0, "s1",             CPID_PREVENT_JOIN,      "0 0",  strcat(_("^K2You're queued to join any available team."), "\n", _("%s^K2 chose ^TC^TT^K2 first.")), "", NAME)
