@@ -1,8 +1,7 @@
 #include "waypointsprites.qh"
 
-REGISTER_MUTATOR(waypointsprites, true);
-
 #ifdef GAMEQC
+REGISTER_MUTATOR(waypointsprites, true);
 REGISTER_NET_LINKED(waypointsprites)
 #endif
 

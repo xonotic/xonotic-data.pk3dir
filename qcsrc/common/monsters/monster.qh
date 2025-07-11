@@ -38,6 +38,8 @@ CLASS(Monster, Object)
     ATTRIB(Monster, netname, string, "");
     /** color */
     ATTRIB(Monster, m_color, vector, '1 1 1');
+    /** icon */
+    ATTRIB(Monster, m_icon, string);
     /** model */
     ATTRIB(Monster, m_model, entity);
     /** hitbox size */
@@ -57,7 +59,21 @@ CLASS(Monster, Object)
     METHOD(Monster, mr_pain, float(Monster this, entity actor, float damage_take, entity attacker, float deathtype)) { TC(Monster, this); return damage_take; }
     /** (BOTH?) sets animations for monster */
     METHOD(Monster, mr_anim, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
-
+#ifdef MENUQC
+    METHOD(Monster, describe, string(Monster this)) {
+        TC(Monster, this);
+        return SUPER(Monster).describe(this);
+    }
+    METHOD(Monster, display, void(Monster this, void(string name, string icon) returns)) {
+        TC(Monster, this);
+        string img = this.m_icon;
+        if (img == "" || draw_PreloadPicture(img) == "")
+            img = sprintf("/gfx/menu/%s/gametype_lms", cvar_string("hud_skin")); // used by the guide
+        else
+            img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), img);
+        returns(this.m_name, img);
+    }
+#endif
 ENDCLASS(Monster)
 
 
