@@ -77,6 +77,7 @@ void XonoticDemoList_getDemos(entity me)
 	}
 	getDemos_for_ext(me, ".dem", true);
 	me.nItems = buf_getsize(me.listDemo);
+	me.setScrollbarVisibility(me);
 	if(me.nItems > 0)
 		buf_sort(me.listDemo, 128, false);
 }
@@ -93,7 +94,7 @@ void XonoticDemoList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	SUPER(XonoticDemoList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.itemAbsSize.y = absSize.y * me.itemHeight;
-	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.itemAbsSize.x = absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
@@ -176,7 +177,7 @@ void DemoConfirm_ListClick_Check_Gamestatus(entity me)
 			me,
 			main.demostartconfirmDialog,
 			boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size),
-			boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size)
+			boxToGlobalSize(eY * me.itemHeight + eX * (me.scrollbarShown ? 1 - me.controlWidth : 1), me.size)
 		);
 	}
 }

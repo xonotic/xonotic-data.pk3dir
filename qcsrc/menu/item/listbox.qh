@@ -11,12 +11,12 @@ CLASS(ListBox, MenuItem)
 	METHOD(ListBox, mouseDrag, float(entity, vector));
 	METHOD(ListBox, mouseRelease, float(entity, vector));
 	METHOD(ListBox, focusLeave, void(entity));
-	ATTRIB(ListBox, focusable, float, 1);
+	ATTRIB(ListBox, focusable, bool, true);
 	ATTRIB(ListBox, focusedItem, int, -1);
 	ATTRIB(ListBox, focusedItemAlpha, float, 0.3);
 	METHOD(ListBox, setFocusedItem, void(entity, int));
 	ATTRIB(ListBox, mouseMoveOffset, float, -1);  // let know where the cursor is when the list scrolls without moving the cursor
-	ATTRIB(ListBox, allowFocusSound, float, 1);
+	ATTRIB(ListBox, allowFocusSound, bool, true);
 	ATTRIB(ListBox, selectedItem, int, 0);
 	ATTRIB(ListBox, size, vector, '0 0 0');
 	ATTRIB(ListBox, origin, vector, '0 0 0');
@@ -42,8 +42,9 @@ CLASS(ListBox, MenuItem)
 	ATTRIB(ListBox, colorC, vector, '1 1 1');
 	ATTRIB(ListBox, colorF, vector, '1 1 1');
 	ATTRIB(ListBox, tolerance, vector, '0 0 0'); // drag tolerance
+	ATTRIB(ListBox, scrollbarShown, int, 1);   // 0 = no, 1 = yes currently, 2 = always even if not needed
 	ATTRIB(ListBox, scrollbarWidth, float, 0);   // pixels
-	ATTRIB(ListBox, nItems, float, 42);          // FIXME: why?!?
+	ATTRIB(ListBox, nItems, int, 42);            // FIXME: why?!?
 	ATTRIB(ListBox, itemHeight, float, 0);
     ATTRIB(ListBox, itemAbsSize, vector, '0 0 0');
 	ATTRIB(ListBox, colorBG, vector, '0 0 0');
@@ -57,6 +58,7 @@ CLASS(ListBox, MenuItem)
 	METHOD(ListBox, doubleClickListBoxItem, void(entity, float, vector));    // item number, relative clickpos
 	METHOD(ListBox, setSelected, void(entity, float));
 	METHOD(ListBox, focusedItemChangeNotify, void(entity));
+	METHOD(ListBox, setScrollbarVisibility, void(entity));
 
 	METHOD(ListBox, getLastFullyVisibleItemAtScrollPos, float(entity, float));
 	METHOD(ListBox, getFirstFullyVisibleItemAtScrollPos, float(entity, float));

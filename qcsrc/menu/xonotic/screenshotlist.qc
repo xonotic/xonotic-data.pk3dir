@@ -82,6 +82,7 @@ void XonoticScreenshotList_getScreenshots(entity me)
 	getScreenshots_for_ext(me, ".tga", true);
 	getScreenshots_for_ext(me, ".png", true);
 	me.nItems = buf_getsize(me.listScreenshot);
+	me.setScrollbarVisibility(me);
 	if(me.nItems > 0)
 		buf_sort(me.listScreenshot, 128, false);
 }
@@ -98,7 +99,7 @@ void XonoticScreenshotList_resizeNotify(entity me, vector relOrigin, vector relS
 	SUPER(XonoticScreenshotList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.itemAbsSize.y = absSize.y * me.itemHeight;
-	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.itemAbsSize.x = absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);

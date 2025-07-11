@@ -153,7 +153,7 @@ void XonoticStatsList_getStats(entity me)
 			{
 				out_total_losses = max(0, (out_total_matches - out_total_wins));
 				bufstr_add(me.listStats, sprintf("003%s\n%d/%d", _("Wins/Losses:"), out_total_wins, out_total_losses), true);
-				bufstr_add(me.listStats, sprintf("004%s\n%d%%", _("Win percentage:"), ((out_total_wins / out_total_matches) * 100)), true);
+				bufstr_add(me.listStats, sprintf("004%s\n%s", _("Win percentage:"), ftos_decimals_percentage(out_total_wins / out_total_matches, 0)), true);
 			}
 
 			out_total_matches = -1;
@@ -220,7 +220,7 @@ void XonoticStatsList_getStats(entity me)
 					{
 						order = 4;
 						outstr = _("Percentile:");
-						data = sprintf("%d%%", stof(data));
+						data = ftos_decimals(stof(data), 0);
 						break;
 					}
 
@@ -256,6 +256,7 @@ void XonoticStatsList_getStats(entity me)
 	}
 
 	me.nItems = buf_getsize(me.listStats);
+	me.setScrollbarVisibility(me);
 	if(me.nItems > 0)
 		buf_sort(me.listStats, 128, false);
 }
@@ -272,7 +273,7 @@ void XonoticStatsList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	SUPER(XonoticStatsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.itemAbsSize.y = absSize.y * me.itemHeight;
-	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.itemAbsSize.x = absSize.x * (me.scrollbarShown ? 1 - me.controlWidth : 1);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);

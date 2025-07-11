@@ -5,7 +5,7 @@ CLASS(BorderImage, Label)
 	METHOD(BorderImage, configureBorderImage, void(entity, string, float, vector, string, float));
 	METHOD(BorderImage, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(BorderImage, recalcPositionWithText, void(entity, string));
-	ATTRIB(BorderImage, isBold, float, 1);
+	ATTRIB(BorderImage, isBold, bool, true);
 	METHOD(BorderImage, draw, void(entity));
 	ATTRIB(BorderImage, src, string);
 	ATTRIB(BorderImage, borderHeight, float, 0);
@@ -14,9 +14,9 @@ CLASS(BorderImage, Label)
 	ATTRIB(BorderImage, closeButton, entity);
 	ATTRIB(BorderImage, realFontSize_Nexposeed, vector, '0 0 0');
 	ATTRIB(BorderImage, realOrigin_Nexposeed, vector, '0 0 0');
-	ATTRIB(BorderImage, isNexposeeTitleBar, float, 0);
+	ATTRIB(BorderImage, isNexposeeTitleBar, bool, false);
 	ATTRIB(BorderImage, zoomedOutTitleBarPosition, float, 0);
-	ATTRIB(BorderImage, zoomedOutTitleBar, float, 0);
+	ATTRIB(BorderImage, zoomedOutTitleBar, bool, false);
 	ATTRIB(BorderImage, overrideRealOrigin, vector, '0 1 0');
 	ATTRIB(BorderImage, saveRelOrigin, vector, '0 0 0');
 	ATTRIB(BorderImage, saveRelSize, vector, '0 0 0');

@@ -5,6 +5,7 @@ CLASS(XonoticMixedSlider, MixedSlider)
 	METHOD(XonoticMixedSlider, configureXonoticMixedSlider, void(entity, string, string));
 	METHOD(XonoticMixedSlider, setValue, void(entity, float));
 	METHOD(XonoticMixedSlider, setValue_noAnim, void(entity, float));
+	METHOD(XonoticMixedSlider, setValueSpace, void(entity, float));
 	METHOD(XonoticMixedSlider, configureXonoticMixedSliderValues, void(entity));
 	ATTRIB(XonoticMixedSlider, fontSize, float, SKINFONTSIZE_NORMAL);
 	ATTRIB(XonoticMixedSlider, valueSpace, float, SKINWIDTH_SLIDERTEXT);

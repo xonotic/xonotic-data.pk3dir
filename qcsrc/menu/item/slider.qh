@@ -21,10 +21,10 @@ CLASS(Slider, Label)
 	METHOD(Slider, setSliderValue, void(entity, float));
 	METHOD(Slider, showNotify, void(entity));
 	ATTRIB(Slider, src, string);
-	ATTRIB(Slider, focusable, float, 1);
-	ATTRIB(Slider, allowFocusSound, float, 1);
+	ATTRIB(Slider, focusable, bool, true);
+	ATTRIB(Slider, allowFocusSound, bool, true);
 	ATTRIB(Slider, value, float, 0);
-	ATTRIB(Slider, animated, float, 1);
+	ATTRIB(Slider, animated, bool, true);
 	ATTRIB(Slider, sliderValue, float, 0);
 	ATTRIB(Slider, sliderAnim, entity);
 	ATTRIB(Slider, valueMin, float, 0);
@@ -34,7 +34,8 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, valueKeyStep, float, 0);
 	ATTRIB(Slider, valuePageStep, float, 0);
 	ATTRIB(Slider, valueDisplayMultiplier, float, 1.0);
-	ATTRIB(Slider, textSpace, float, 0);
+	ATTRIB(Slider, formatString, string, ""); // should have %s only. Special types described in formatStringSpecial
+	ATTRIB(Slider, valueSpace, float, 0);
 	ATTRIB(Slider, controlWidth, float, 0);
 	ATTRIB(Slider, pressed, float, 0);
 	ATTRIB(Slider, pressOffset, float, 0);
@@ -48,3 +49,4 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, colorF, vector, '1 1 1');
 	ATTRIB(Slider, disabledAlpha, float, 0.3);
 ENDCLASS(Slider)
+string formatStringSpecial(string, float, int);

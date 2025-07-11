@@ -270,10 +270,10 @@ float Item_ItemsTime_GetTime(int item)
     {
         switch(item)
         {
-            case ITEM_ArmorMega.m_id: return time + 0;
-            case ITEM_HealthMega.m_id: return time + 8;
-            case ITEM_Strength.m_id: return time + 0;
-            case ITEM_Shield.m_id: return time + 4;
+            case ITEM_ArmorMega.m_id: return time + 8;
+            case ITEM_ArmorBig.m_id: return time + 0;
+            case ITEM_HealthMega.m_id: return time + 0;
+            case ITEM_Strength.m_id: return time + 4;
         }
 
         return -1; // don't show others

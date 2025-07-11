@@ -3,6 +3,38 @@
 #include "../anim/easing.qh"
 #include "../anim/animhost.qh"
 
+string formatStringSpecial(string formatStr, float value, int decs)
+{
+	/* .formatString is usually in the format of "%sx" to print "2" as "2x".
+	 * Special options:
+	 *   "%": apply ftos_decimals_percentage
+	 *   Any of "smhdwy": apply time-counting functions
+	 *   Any of "SMHDWY": apply time-counting functions, allowing decimals
+	 */
+	if (strlen(formatStr) == 1)
+		switch (formatStr)
+		{
+			case "%": return ftos_decimals_percentage(value, max(0, decs - 2));
+			case "s": return count_seconds(value);
+			case "m": return count_minutes(value);
+			case "h": return count_hours(value);
+			case "d": return count_days(value);
+			case "w": return count_weeks(value);
+			case "y": return count_years(value);
+			case "S": return count_seconds_decs(value, decs);
+			case "M": return count_minutes_decs(value, decs);
+			case "H": return count_hours_decs(value, decs);
+			case "D": return count_days_decs(value, decs);
+			case "W": return count_weeks_decs(value, decs);
+			case "Y": return count_years_decs(value, decs);
+			default:  break;
+		}
+	const string txt = ftos_decimals(value, decs);
+	if (formatStr != "")
+		return sprintf(formatStr, txt);
+	return txt;
+}
+
 .entity applyButton;
 
 	void Slider_setValue_allowAnim(entity me, float val, bool allowAnim)
@@ -42,14 +74,16 @@
 	}
 	string Slider_valueToText(entity me, float val)
 	{
-		if (almost_in_bounds(me.valueMin, val, me.valueMax)) return ftos_decimals(val * me.valueDisplayMultiplier, me.valueDigits);
-		return "";
+		if (!almost_in_bounds(me.valueMin, val, me.valueMax))
+			return "";
+		val *= me.valueDisplayMultiplier;
+		return formatStringSpecial(me.formatString, val, me.valueDigits);
 	}
-	void Slider_configureSliderVisuals(entity me, float sz, float theAlign, float theTextSpace, string gfx)
+	void Slider_configureSliderVisuals(entity me, float sz, float theAlign, float theValueSpace, string gfx)
 	{
 		SUPER(Slider).configureLabel(me, string_null, sz, theAlign);
-		me.textSpace = theTextSpace;
-		me.keepspaceLeft = (theTextSpace == 0) ? 0 : (1 - theTextSpace);
+		me.valueSpace = bound(0, theValueSpace, 1);
+		me.keepspaceLeft = 1 - me.valueSpace;
 		me.src = gfx;
 	}
 	void Slider_configureSliderValues(entity me, float theValueMin, float theValue, float theValueMax, float theValueStep, float theValueKeyStep, float theValuePageStep)
@@ -150,14 +184,14 @@
 			hit = 1;
 			if (pos.x < 0 - me.tolerance.x) hit = 0;
 			if (pos.y < 0 - me.tolerance.y) hit = 0;
-			if (pos.x >= 1 - me.textSpace + me.tolerance.x) hit = 0;
+			if (pos.x >= 1 - me.valueSpace + me.tolerance.x) hit = 0;
 			if (pos.y >= 1 + me.tolerance.y) hit = 0;
 			if (hit)
 			{
 				// handle dragging
 				me.pressed = 2;
 
-				float f = bound(0, (pos.x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1);
+				float f = bound(0, (pos.x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.valueSpace - me.controlWidth), 1);
 				v = f * (me.valueMax - me.valueMin) + me.valueMin;
 				// there's no need to round min and max value... also if we did, v could be set
 				// to an out of bounds value due to precision errors
@@ -182,9 +216,9 @@
 		if (this.disabled) return false;
 		if (pos.x < 0) return false;
 		if (pos.y < 0) return false;
-		if (pos.x >= 1 - this.textSpace) return false;
+		if (pos.x >= 1 - this.valueSpace) return false;
 		if (pos.y >= 1) return false;
-		controlCenter = (this.value - this.valueMin) / (this.valueMax - this.valueMin) * (1 - this.textSpace - this.controlWidth) + 0.5 * this.controlWidth;
+		controlCenter = (this.value - this.valueMin) / (this.valueMax - this.valueMin) * (1 - this.valueSpace - this.controlWidth) + 0.5 * this.controlWidth;
 		if (fabs(pos.x - controlCenter) <= 0.5 * this.controlWidth)
 		{
 			this.pressed = 1;
@@ -195,7 +229,7 @@
 		else
 		{
 			float clickValue, pageValue, inRange;
-			clickValue = median(0, (pos.x - this.pressOffset - 0.5 * this.controlWidth) / (1 - this.textSpace - this.controlWidth), 1) * (this.valueMax - this.valueMin) + this.valueMin;
+			clickValue = median(0, (pos.x - this.pressOffset - 0.5 * this.controlWidth) / (1 - this.valueSpace - this.controlWidth), 1) * (this.valueMax - this.valueMin) + this.valueMin;
 			inRange = (almost_in_bounds(this.valueMin, this.value, this.valueMax));
 			if (pos.x < controlCenter)
 			{
@@ -215,7 +249,7 @@
 				this.applyButton.disabled = false;
 			if (pageValue == clickValue)
 			{
-				controlCenter = (this.value - this.valueMin) / (this.valueMax - this.valueMin) * (1 - this.textSpace - this.controlWidth) + 0.5 * this.controlWidth;
+				controlCenter = (this.value - this.valueMin) / (this.valueMax - this.valueMin) * (1 - this.valueSpace - this.controlWidth) + 0.5 * this.controlWidth;
 				this.pressed = 1;
 				this.pressOffset = pos.x - controlCenter;
 				this.previousValue = this.value;
@@ -242,11 +276,11 @@
 		me.focusable = !me.disabled;
 		save = draw_alpha;
 		if (me.disabled) draw_alpha *= me.disabledAlpha;
-		draw_ButtonPicture('0 0 0', strcat(me.src, "_s"), eX * (1 - me.textSpace) + eY, me.color2, 1);
+		draw_ButtonPicture('0 0 0', strcat(me.src, "_s"), eX * (1 - me.valueSpace) + eY, me.color2, 1);
 		if (me.valueMax > me.valueMin) // valid?
 		if (almost_in_bounds(me.valueMin, me.sliderValue, me.valueMax))
 		{
-			controlLeft = (me.sliderValue - me.valueMin) / (me.valueMax - me.valueMin) * (1 - me.textSpace - me.controlWidth);
+			controlLeft = (me.sliderValue - me.valueMin) / (me.valueMax - me.valueMin) * (1 - me.valueSpace - me.controlWidth);
 			if (me.disabled) draw_Picture(eX * controlLeft, strcat(me.src, "_d"), eX * me.controlWidth + eY, me.colorD, 1);
 			else if (me.pressed) draw_Picture(eX * controlLeft, strcat(me.src, "_c"), eX * me.controlWidth + eY, me.colorC, 1);
 			else if (me.focused) draw_Picture(eX * controlLeft, strcat(me.src, "_f"), eX * me.controlWidth + eY, me.colorF, 1);
@@ -263,7 +297,7 @@
 		if (me.valueMax > me.valueMin) // valid?
 			me.setText(me, me.valueToText(me, me.value));
 		draw_alpha = save;
-		if (me.textSpace > 0)
+		if (me.valueSpace > 0)
 		{
 			SUPER(Slider).draw(me);
 		}
