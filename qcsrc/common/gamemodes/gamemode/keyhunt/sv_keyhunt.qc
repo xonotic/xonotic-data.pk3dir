@@ -62,8 +62,7 @@ bool kh_no_radar_circles;
 //     bits  5- 9: team of key 2, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 10-14: team of key 3, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 15-19: team of key 4, or 0 for no such key, or 30 for dropped, or 31 for self
-.float siren_time;  //  time delay the siren
-//.float stuff_time;  //  time delay to stuffcmd a cvar
+.float siren_time;  // time delay the siren
 
 int kh_Team_ByID(int t)
 {
