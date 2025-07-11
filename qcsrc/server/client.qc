@@ -2223,6 +2223,7 @@ bool queuePlayer(entity this, int team_index)
 	return true;
 }
 
+float autocvar_g_maxping;
 bool joinAllowed(entity this, int team_index)
 {
 	if (CS(this).version_mismatch)
@@ -2243,6 +2244,17 @@ bool joinAllowed(entity this, int team_index)
 	{
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PLAYBAN);
 		return false;
+	}
+
+	// IS_PLAYER for most gametypes, INGAME for ca, lms, surv
+	if (autocvar_g_maxping && !(IS_PLAYER(this) || INGAME(this)) && !this.wants_join)
+	{
+		if (this.ping <= 0) return false; // too soon
+		if (this.ping > autocvar_g_maxping)
+		{
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT_PING);
+			return false;
+		}
 	}
 
 	if (QueueNeeded(this))
