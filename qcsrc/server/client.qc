@@ -2226,6 +2226,7 @@ bool queuePlayer(entity this, int team_index)
 	return true;
 }
 
+float autocvar_g_maxping;
 bool joinAllowed(entity this, int team_index)
 {
 	if (CS(this).version_mismatch)
@@ -2246,6 +2247,16 @@ bool joinAllowed(entity this, int team_index)
 	{
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PLAYBAN);
 		return false;
+	}
+
+	if (autocvar_g_maxping && !(IS_PLAYER(this) || INGAME(this)) && !this.wants_join) // TODO: can that check be simplified?
+	{
+		if (this.ping <= 0) return false;
+		if (this.ping > autocvar_g_maxping)
+		{
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT_PING);
+			return false;
+		}
 	}
 
 	if (QueueNeeded(this))
