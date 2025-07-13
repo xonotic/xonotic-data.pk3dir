@@ -37,27 +37,18 @@ string formatStringSpecial(string formatStr, float value, int decs)
 
 .entity applyButton;
 
-	void Slider_setValue_allowAnim(entity me, float val, bool allowAnim)
+	void Slider_setValue(entity me, float val, bool allowAnim)
 	{
 		if (allowAnim && me.animated)
 		{
-			float t = 0.5;
-			if (!me.sliderAnim) me.sliderAnim = makeHostedEasing(me, Slider_setSliderValue, easingQuadOut, t, me.sliderValue, val);
-			else me.sliderAnim.update(me.sliderAnim, t, me.sliderValue, val);
+			if (!me.sliderAnim) me.sliderAnim = makeHostedEasing(me, Slider_setSliderValue, easingQuadOut, autocvar_menu_animations, me.sliderValue, val);
+			else me.sliderAnim.update(me.sliderAnim, autocvar_menu_animations, me.sliderValue, val);
 		}
 		else
 		{
 			me.setSliderValue(me, val);
 		}
 		me.value = val;
-	}
-	void Slider_setValue_noAnim(entity me, float val)
-	{
-		Slider_setValue_allowAnim(me, val, false);
-	}
-	void Slider_setValue(entity me, float val)
-	{
-		Slider_setValue_allowAnim(me, val, true);
 	}
 	void Slider_setSliderValue(entity me, float val)
 	{
@@ -112,36 +103,36 @@ string formatStringSpecial(string formatStr, float value, int decs)
 		inRange = (almost_in_bounds(me.valueMin, me.value, me.valueMax));
 		if (key == K_LEFTARROW || key == K_KP_LEFTARROW || key == K_MWHEELDOWN)
 		{
-			if (inRange) me.setValue(me, median(me.valueMin, me.value - me.valueKeyStep, me.valueMax));
-			else me.setValue(me, me.valueMax);
+			if (inRange) me.setValue(me, median(me.valueMin, me.value - me.valueKeyStep, me.valueMax), autocvar_menu_animations > 0);
+			else me.setValue(me, me.valueMax, autocvar_menu_animations > 0);
 			ret_value = 1;
 		}
 		if (key == K_RIGHTARROW || key == K_KP_RIGHTARROW || key == K_MWHEELUP)
 		{
-			if (inRange) me.setValue(me, median(me.valueMin, me.value + me.valueKeyStep, me.valueMax));
-			else me.setValue(me, me.valueMin);
+			if (inRange) me.setValue(me, median(me.valueMin, me.value + me.valueKeyStep, me.valueMax), autocvar_menu_animations > 0);
+			else me.setValue(me, me.valueMin, autocvar_menu_animations > 0);
 			ret_value = 1;
 		}
 		if (key == K_PGDN || key == K_KP_PGDN)
 		{
-			if (inRange) me.setValue(me, median(me.valueMin, me.value - me.valuePageStep, me.valueMax));
-			else me.setValue(me, me.valueMax);
+			if (inRange) me.setValue(me, median(me.valueMin, me.value - me.valuePageStep, me.valueMax), autocvar_menu_animations > 0);
+			else me.setValue(me, me.valueMax, autocvar_menu_animations > 0);
 			ret_value = 1;
 		}
 		if (key == K_PGUP || key == K_KP_PGUP)
 		{
-			if (inRange) me.setValue(me, median(me.valueMin, me.value + me.valuePageStep, me.valueMax));
-			else me.setValue(me, me.valueMin);
+			if (inRange) me.setValue(me, median(me.valueMin, me.value + me.valuePageStep, me.valueMax), autocvar_menu_animations > 0);
+			else me.setValue(me, me.valueMin, autocvar_menu_animations > 0);
 			ret_value = 1;
 		}
 		if (key == K_HOME || key == K_KP_HOME)
 		{
-			me.setValue(me, me.valueMin);
+			me.setValue(me, me.valueMin, autocvar_menu_animations > 0);
 			ret_value = 1;
 		}
 		if (key == K_END || key == K_KP_END)
 		{
-			me.setValue(me, me.valueMax);
+			me.setValue(me, me.valueMax, autocvar_menu_animations > 0);
 			ret_value = 1;
 		}
 		if(ret_value == 1)
@@ -198,14 +189,14 @@ string formatStringSpecial(string formatStr, float value, int decs)
 				// to an out of bounds value due to precision errors
 				if (f > 0 && f < 1 && me.valueStep)
 					v = floor(0.5 + v / me.valueStep) * me.valueStep;
-				me.setValue_noAnim(me, v);
+				me.setValue(me, v, autocvar_menu_animations > 0);
 				if(me.applyButton)
 				if(me.previousValue != me.value)
 					me.applyButton.disabled = false;
 			}
 			else
 			{
-				me.setValue(me, me.previousValue);
+				me.setValue(me, me.previousValue, autocvar_menu_animations > 0);
 			}
 		}
 
@@ -244,8 +235,8 @@ string formatStringSpecial(string formatStr, float value, int decs)
 				if (this.valueStep) clickValue = ceil(clickValue / this.valueStep) * this.valueStep;
 				pageValue = min(pageValue, clickValue);
 			}
-			if (inRange) this.setValue(this, median(this.valueMin, pageValue, this.valueMax));
-			else this.setValue(this, this.valueMax);
+			if (inRange) this.setValue(this, median(this.valueMin, pageValue, this.valueMax), autocvar_menu_animations > 0);
+			else this.setValue(this, this.valueMax, autocvar_menu_animations > 0);
 			if(this.applyButton)
 				this.applyButton.disabled = false;
 			if (pageValue == clickValue)

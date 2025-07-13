@@ -1,5 +1,7 @@
 #pragma once
 
+float autocvar_menu_animations = 0.2;
+
 CLASS(Animation, Object)
 	METHOD(Animation, configureAnimation, void(Animation this, entity, void(entity, float), float, float, float, float));
 	METHOD(Animation, update, void(Animation this, float, float, float));
