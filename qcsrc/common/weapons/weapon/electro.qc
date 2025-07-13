@@ -790,7 +790,7 @@ METHOD(Electro, describe, string(Electro this))
 		"The %s is one of the best spam weapons to use in crowded areas, since combos can deal tons of damage, if the enemy is close enough. "
 		"Since the primary fire doesn't travel particularly fast, the %s is not useful in many other situations.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(MAPINFO_TYPE_CTF), COLORED_NAME(ITEM_Cells), COLORED_NAME(this), COLORED_NAME(this),
-	W_Guide_DPS_secondaryMultishotWithCombo(this.netname, "primary", "secondary", "secondary_count", "secondary_refire2"));
+	W_Guide_DPS_secondaryMultishotWithCombo(this.netname, "primary", "secondary", "secondary_count", "secondary_refire2", "combo"));
 }
 
 #endif
