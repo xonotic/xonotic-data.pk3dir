@@ -20,7 +20,7 @@ void updateSensSlider(entity field, entity slider)
 
 	// Avoid onChange causing jittering
 	slider.onChangeEntity = NULL;
-	slider.setValue(slider, stof(field.text));
+	slider.setValue(slider, stof(field.text), autocvar_menu_animations > 0);
 	slider.onChangeEntity = field;
 }
 

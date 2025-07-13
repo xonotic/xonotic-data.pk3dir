@@ -3,8 +3,7 @@
 #include "../item/textslider.qh"
 CLASS(XonoticTextSlider, TextSlider)
 	METHOD(XonoticTextSlider, configureXonoticTextSlider, void(entity, string, string));
-	METHOD(XonoticTextSlider, setValue, void(entity, float));
-	METHOD(XonoticTextSlider, setValue_noAnim, void(entity, float));
+	METHOD(XonoticTextSlider, setValue, void(entity, float, bool));
 	METHOD(XonoticTextSlider, setValueSpace, void(entity, float));
 	METHOD(XonoticTextSlider, configureXonoticTextSliderValues, void(entity));
 	ATTRIB(XonoticTextSlider, fontSize, float, SKINFONTSIZE_NORMAL);

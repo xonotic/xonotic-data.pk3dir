@@ -50,9 +50,9 @@ void XonoticDecibelsSlider_loadCvars(entity me)
 
 	// snapping
 	if(v > fromDecibelOfSquare(me.valueMax - 0.5 * me.valueStep, me.valueMin))
-		Slider_setValue_noAnim(me, me.valueMax);
+		Slider_setValue(me, me.valueMax, false);
 	else
-		Slider_setValue_noAnim(me, me.valueStep * floor(0.5 + toDecibelOfSquare(v, me.valueMin) / me.valueStep));
+		Slider_setValue(me, me.valueStep * floor(0.5 + toDecibelOfSquare(v, me.valueMin) / me.valueStep), false);
 }
 void XonoticDecibelsSlider_saveCvars(entity me)
 {
