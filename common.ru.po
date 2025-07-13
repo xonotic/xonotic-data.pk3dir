@@ -9748,11 +9748,11 @@ msgstr "Коэффициент ускорения:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:118
 msgid "MOUSEACCEL^Fully disabled"
-msgstr "MOUSEACCEL^Полностью отключён"
+msgstr "Полностью отключён"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:119
 msgid "MOUSEACCEL^Linear disabled"
-msgstr "MOUSEACCEL^Линейный отключён"
+msgstr "Линейный отключён"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:124
 msgid "Speed bounds:"

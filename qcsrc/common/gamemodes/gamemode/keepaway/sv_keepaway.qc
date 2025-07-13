@@ -75,13 +75,13 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
-/// accumulates points precisely while main points value remains an integer, shared with tka
-.float timepoints_accum;
+// field where the decimal part of SCORE is accumulated (shared with other gamemodes)
+.float float2int_decimal_fld;
 MUTATOR_HOOKFUNCTION(ka, reset_map_global)
 {
 	FOREACH_CLIENT(true,
 	{
-		it.timepoints_accum = 0;
+		it.float2int_decimal_fld = 0;
 	});
 	return true;
 }
@@ -90,7 +90,7 @@ MUTATOR_HOOKFUNCTION(ka, reset_map_global)
 void ka_BallThink_Carried(entity this)
 {
 	if (autocvar_g_keepaway_score_timepoints)
-		GameRules_scoring_add_float2int(this.owner, SCORE, autocvar_g_keepaway_score_timepoints * frametime, timepoints_accum, 1);
+		GameRules_scoring_add_float2int(this.owner, SCORE, autocvar_g_keepaway_score_timepoints * frametime, float2int_decimal_fld, 1);
 	GameRules_scoring_add(this.owner, KEEPAWAY_BCTIME, frametime);
 
 	this.nextthink = time;

@@ -334,7 +334,10 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 
 void drawBackground(string img, float a, string algn, float force1)
 {
-	if (main.mainNexposee.ModalController_state == 0) return;
+	if (main.mainNexposee.ModalController_state == 0
+	&& !(main.focusedChild && main.focusedChild.hideMenuOnClose && !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
+		return;
+
 	vector v = '0 0 0';
 	int scalemode = SCALEMODE_CROP;
 	int len = strlen(algn);
