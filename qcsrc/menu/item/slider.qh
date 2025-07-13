@@ -3,6 +3,7 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
 #include "label.qh"
+#include "../anim/animation.qh"
 CLASS(Slider, Label)
 	METHOD(Slider, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(Slider, configureSliderVisuals, void(entity, float, float, float, string));
@@ -15,9 +16,7 @@ CLASS(Slider, Label)
 	METHOD(Slider, mouseRelease, float(entity, vector));
 	METHOD(Slider, valueToText, string(entity, float));
 	METHOD(Slider, toString, string(entity));
-	METHOD(Slider, setValue_allowAnim, void(entity, float, bool));
-	METHOD(Slider, setValue_noAnim, void(entity, float));
-	METHOD(Slider, setValue, void(entity, float));
+	METHOD(Slider, setValue, void(entity, float, bool));
 	METHOD(Slider, setSliderValue, void(entity, float));
 	METHOD(Slider, showNotify, void(entity));
 	ATTRIB(Slider, src, string);

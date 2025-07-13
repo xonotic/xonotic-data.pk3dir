@@ -18,19 +18,11 @@ void XonoticTextSlider_configureXonoticTextSlider(entity me, string theCvar, str
 	// me.loadCvars(me); // don't load it yet
 	setZonedTooltip(me, theTooltip, theCvar);
 }
-void XonoticTextSlider_setValue(entity me, float val)
+void XonoticTextSlider_setValue(entity me, float val, bool allowAnim)
 {
 	if(val != me.value)
 	{
-		SUPER(XonoticTextSlider).setValue( me, val );
-		me.saveCvars(me);
-	}
-}
-void XonoticTextSlider_setValue_noAnim(entity me, float val)
-{
-	if(val != me.value)
-	{
-		SUPER(XonoticTextSlider).setValue_noAnim(me, val);
+		SUPER(XonoticTextSlider).setValue(me, val, allowAnim);
 		me.saveCvars(me);
 	}
 }
@@ -49,7 +41,7 @@ void XonoticTextSlider_loadCvars(entity me)
 	float i;
 	for(i = 1; i < n; ++i)
 		s = strcat(s, " ", cvar_string(argv(i)));
-	me.setValueFromIdentifier_noAnim(me, s);
+	me.setValueFromIdentifier(me, s, false);
 	if(me.value < 0 && n > 1)
 	{
 		// if it failed: check if all cvars have the same value
@@ -58,7 +50,7 @@ void XonoticTextSlider_loadCvars(entity me)
 			if(cvar_string(argv(i)) != cvar_string(argv(i-1)))
 				break;
 		if(i >= n)
-			me.setValueFromIdentifier_noAnim(me, cvar_string(argv(0)));
+			me.setValueFromIdentifier(me, cvar_string(argv(0)), false);
 	}
 }
 void XonoticTextSlider_saveCvars(entity me)

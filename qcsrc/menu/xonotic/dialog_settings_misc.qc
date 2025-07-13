@@ -67,9 +67,19 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu tooltips:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("menu_tooltips",
 			_("Menu tooltips: disabled, standard or advanced (also shows cvar or console command bound to the menu item)")));
+			e.setValueSpace(e, e.valueSpace * 1.2);
 			e.addText(e, ZCTX(_("TLTIP^Disabled")), 0);
 			e.addText(e, ZCTX(_("TLTIP^Standard")), 1);
 			e.addText(e, ZCTX(_("TLTIP^Advanced")), 2);
+			e.configureXonoticMixedSliderValues(e);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu animations:")));
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("menu_animations",
+			_("How fast animations in the menu occur")));
+			e.formatString = "S";
+			e.setValueSpace(e, e.valueSpace * 1.2);
+			e.addText(e, ZCTX(_("Disabled")), 0);
+			e.addRange(e, 0.05, 0.5, 0.05);
 			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "r_textshadow", _("Text shadow"),

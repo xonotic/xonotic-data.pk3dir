@@ -12,23 +12,15 @@
 			return -1; // this shouldn't occur
 		return me.(valueNumberIdentifiers[val]);
 	}
-	void MixedSlider_setValueFromNumberIdentifier_allowAnim(entity me, float id, bool allowAnim)
+	void MixedSlider_setValueFromNumberIdentifier(entity me, float id, bool allowAnim)
 	{
 		for (int i = 0; i < me.nValues; ++i)
 			if (me.valueToNumberIdentifier(me, i) == id)
 			{
-				SUPER(MixedSlider).setValue_allowAnim(me, i, allowAnim);
+				SUPER(MixedSlider).setValue(me, i, allowAnim);
 				return;
 			}
-		SUPER(MixedSlider).setValue_allowAnim(me, -1, allowAnim);
-	}
-	void MixedSlider_setValueFromNumberIdentifier_noAnim(entity me, float id)
-	{
-		MixedSlider_setValueFromNumberIdentifier_allowAnim(me, id, false);
-	}
-	void MixedSlider_setValueFromNumberIdentifier(entity me, float id)
-	{
-		MixedSlider_setValueFromNumberIdentifier_allowAnim(me, id, true);
+		SUPER(MixedSlider).setValue(me, -1, allowAnim);
 	}
 	float MixedSlider_getNumberIdentifier(entity me)
 	{
@@ -104,5 +96,5 @@
 	void MixedSlider_configureMixedSliderValues(entity me, float theDefault)
 	{
 		me.configureSliderValues(me, 0, 0, me.nValues - 1, 1, 1, 1);
-		me.setValueFromNumberIdentifier_noAnim(me, theDefault);
+		me.setValueFromNumberIdentifier(me, theDefault, false);
 	}
