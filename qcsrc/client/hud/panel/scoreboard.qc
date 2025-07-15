@@ -1,5 +1,6 @@
 #include "scoreboard.qh"
 
+#include <client/csqcmodel_hooks.qh>
 #include <client/draw.qh>
 #include <client/hud/panel/chat.qh>
 #include <client/hud/panel/physics.qh>
@@ -1776,6 +1777,7 @@ bool Scoreboard_WouldDraw()
 	else if (intermission == 2)
 		return false;
 	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && !MUTATOR_CALLHOOK(DrawDeathScoreboard)
+		&& time - CSQCModel_server2csqc(player_localentnum - 1).death_time >= autocvar_cl_deathscoreboard_delay
 		&& (!HUD_MinigameMenu_IsOpened() || !active_minigame))
 	{
 		return true;
