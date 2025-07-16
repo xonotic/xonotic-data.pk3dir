@@ -1,7 +1,7 @@
 #pragma once
 
 int autocvar_g_projectiles_damage;
-int autocvar_g_projectiles_interact = 2;
+int autocvar_g_projectiles_interact;
 bool autocvar_g_projectiles_keep_owner;
 float autocvar_sv_strengthsound_antispam_refire_threshold;
 float autocvar_sv_strengthsound_antispam_time;
