@@ -1362,7 +1362,7 @@ void MatchEnd_RestoreSpectatorAndTeamStatus(.int prev_team_field)
 		else if (fix_team && INGAME_JOINED(it) && it.(prev_team_field) && it.team != it.(prev_team_field))
 		{
 			Player_SetForcedTeamIndex(it, TEAM_FORCE_DEFAULT);
-			if (MoveToTeam(it, Team_TeamToIndex(it.(prev_team_field)), 6))
+			if (MoveToTeam(it, Team_TeamToIndex(it.(prev_team_field)), TEAM_CHANGE_RESTORE, false))
 			{
 				string pl_name = playername(it.netname, it.team, false);
 				bprint(pl_name, " has been moved back to the ", Team_ColoredFullName(it.team));
