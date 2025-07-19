@@ -9,6 +9,7 @@ bool autocvar_g_maplist_selectrandom;
 float autocvar_g_maplist_shuffle;
 #define autocvar_g_maplist_votable cvar("g_maplist_votable")
 bool autocvar_g_maplist_votable_abstain;
+bool autocvar_g_maplist_votable_show_suggester;
 float autocvar_g_maplist_votable_reduce_time;
 int autocvar_g_maplist_votable_reduce_count;
 int autocvar_g_maplist_votable_detail;
