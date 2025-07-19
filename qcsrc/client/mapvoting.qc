@@ -431,11 +431,13 @@ void MapVote_Draw()
 
 	draw_endBoldFont();
 
-	i = ceil(max(1, mv_timeout - time)); // make sure 0 seconds left never shows up, not even for a frame
 	if (mv_winner)
 		map = mv_maps[mv_winner - 1];
 	else
-		map = sprintf(_("%d seconds left"), i);
+	{
+		i = ceil(max(1, mv_timeout - time)); // make sure 0 seconds left never shows up, not even for a frame
+		map = count_seconds(i);
+	}
 	pos.x = center - stringwidth(map, false, hud_fontsize * 1.5) * 0.5;
 	drawstring(pos, map, hud_fontsize * 1.5, '0 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += hud_fontsize.y * 1.5;
