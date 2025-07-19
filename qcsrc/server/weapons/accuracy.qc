@@ -11,12 +11,12 @@
 #include <server/player.qh>
 #include <server/world.qh>
 
-// 0: haven't done damage with the weapon yet
+// 0: haven't fired the weapon yet
 // 1-101: weapon accuracy + 1%
 // 255: >100% accuracy (see accuracy_add)
 int accuracy_byte(float n, float d)
 {
-	if (n <= 0)
+	if (n < 0 || d <= 0)
 		return 0;
 	if (n > d)
 		return 255;
