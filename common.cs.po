@@ -9,6 +9,7 @@
 # fasdasd sdasd <transifexalternativeaccount@yopmail.com>, 2021
 # GamingasCZ <gamingforyou875@gmail.com>, 2019
 # GamingasCZ <gamingforyou875@gmail.com>, 2019
+# jan asdf, 2025
 # Jan Kocka <kockahonza@gmail.com>, 2019
 # Jiří Vrána <jirkacz199@gmail.com>, 2020-2021
 # Martin Taibr <taibr.martin@gmail.com>, 2017
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-22 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Tomáš Volavka <czheron@gmail.com>, 2015,2018\n"
+"Last-Translator: jan asdf, 2025\n"
 "Language-Team: Czech (http://app.transifex.com/team-xonotic/xonotic/language/"
 "cs/)\n"
 "Language: cs\n"
@@ -222,7 +223,7 @@ msgstr "^2Zmáčkni ^3%s^2 pro ukončení zahřívací fáze"
 
 #: qcsrc/client/hud/panel/infomessages.qc:202
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "Týmy jsou nevyrovnané!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:205
 #, c-format
@@ -232,7 +233,7 @@ msgstr " Zmáčkni ^3%s%s pro upravení"
 #: qcsrc/client/hud/panel/infomessages.qc:205
 #: qcsrc/menu/xonotic/keybinder.qc:166
 msgid "team selection"
-msgstr ""
+msgstr "Vybírání týmů"
 
 #: qcsrc/client/hud/panel/infomessages.qc:218
 msgid "^1Spectating this player:"
@@ -437,7 +438,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:876
 #: qcsrc/client/hud/panel/quickmenu.qc:906
 msgid "QMCMD^Settings"
-msgstr ""
+msgstr "QMCMD^Nastavení"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:877
 #: qcsrc/client/hud/panel/quickmenu.qc:884
@@ -446,7 +447,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:878
 msgid "QMCMD^3rd person view"
-msgstr ""
+msgstr "QMCMD^pohled 3. osoby"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "QMCMD^Player models like mine"
@@ -454,7 +455,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:880
 msgid "QMCMD^Names above players"
-msgstr ""
+msgstr "QMCMD^Jména nad hráči"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:881
 msgid "QMCMD^Crosshair per weapon"
@@ -492,7 +493,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:899
 msgid "QMCMD^Increase speed"
-msgstr ""
+msgstr "QMCMD^Zvýšit rychlost"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:900
 msgid "QMCMD^Decrease speed"
@@ -583,7 +584,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
-msgstr ""
+msgstr "Klikněte pro výběr cíle teleportace"
 
 #: qcsrc/client/hud/panel/radar.qc:343
 msgid "Click to select spawn location"
