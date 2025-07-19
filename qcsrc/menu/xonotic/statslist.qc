@@ -202,18 +202,11 @@ void XonoticStatsList_getStats(entity me)
 						outstr = _("Matches:");
 						break;
 					}
-					case "skill":
-					{
-						order = 2;
-						outstr = _("Skill:");
-						data = sprintf("%d", stof(data));
-						break;
-					}
 
 					#if 0
 					case "favorite-map":
 					{
-						order = 3;
+						order = 2;
 						outstr = _("Favorite map:");
 						break;
 					}
