@@ -20,7 +20,6 @@ float autocvar_g_vehicle_spiderbot_respawntime = 45;
 float autocvar_g_vehicle_spiderbot_speed_stop = 50;
 float autocvar_g_vehicle_spiderbot_speed_strafe = 400;
 float autocvar_g_vehicle_spiderbot_speed_walk = 500;
-float autocvar_g_vehicle_spiderbot_speed_run = 700;
 float autocvar_g_vehicle_spiderbot_turnspeed = 90;
 float autocvar_g_vehicle_spiderbot_turnspeed_strafe = 300;
 float autocvar_g_vehicle_spiderbot_movement_inertia = 0.15;
@@ -201,7 +200,7 @@ bool spiderbot_frame(entity this, float dt)
 					}
 					CS(this).movement_y = 0;
 					float oldvelz = vehic.velocity_z;
-					movelib_move_simple(vehic, normalize(v_forward * CS(this).movement_x),((PHYS_INPUT_BUTTON_JUMP(this)) ? autocvar_g_vehicle_spiderbot_speed_run : autocvar_g_vehicle_spiderbot_speed_walk),autocvar_g_vehicle_spiderbot_movement_inertia);
+					movelib_move_simple(vehic, normalize(v_forward * CS(this).movement_x), autocvar_g_vehicle_spiderbot_speed_walk, autocvar_g_vehicle_spiderbot_movement_inertia);
 					vehic.velocity_z = oldvelz;
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(vehic.velocity_z <= 20) // not while jumping
@@ -272,7 +271,7 @@ bool spiderbot_frame(entity this, float dt)
 			fireBullet(this, weaponentity, v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
 				autocvar_g_vehicle_spiderbot_minigun_damage, 0, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN.m_id, EFFECT_BULLET);
 
-			sound (gun, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
+			sound (gun, CH_WEAPON_A, SND_VEH_SPIDERBOT_MINIGUN_FIRE, VOL_BASE, ATTEN_NORM);
 			//trailparticles(this, _particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
 			Send_Effect(EFFECT_SPIDERBOT_MINIGUN_MUZZLEFLASH, v, v_forward * 2500, 1);
 
@@ -418,10 +417,10 @@ void spiderbot_blowup(entity this)
 	b.angles = this.angles;
 	setsize(b, this.mins, this.maxs);
 
+	h.solid = SOLID_BBOX; // before setorigin for immediate area grid linking
 	vector org = gettaginfo(this, gettagindex(this, "tag_head"));
 	setorigin(h, org);
 	set_movetype(h, MOVETYPE_BOUNCE);
-	h.solid = SOLID_BBOX;
 	h.velocity = v_up * (500 + random() * 500) + randomvec() * 128;
 	h.modelflags = MF_ROCKET;
 	h.effects = EF_FLAME | EF_LOWPRECISION;
@@ -434,17 +433,17 @@ void spiderbot_blowup(entity this)
 	setthink(h, spiderbot_headfade);
 	h.nextthink = time;
 
+	g1.solid = SOLID_CORPSE; // before setorigin for immediate area grid linking
 	org = gettaginfo(this.tur_head, gettagindex(this.tur_head, "tag_hardpoint01"));
 	setorigin(g1, org);
 	set_movetype(g1, MOVETYPE_TOSS);
-	g1.solid = SOLID_CORPSE;
 	g1.velocity = v_forward * 700 + (randomvec() * 32);
 	g1.avelocity = randomvec() * 180;
 
+	g2.solid = SOLID_CORPSE; // before setorigin for immediate area grid linking
 	org = gettaginfo(this.tur_head, gettagindex(this.tur_head, "tag_hardpoint02"));
 	setorigin(g2, org);
 	set_movetype(g2, MOVETYPE_TOSS);
-	g2.solid = SOLID_CORPSE;
 	g2.velocity = v_forward * 700 + (randomvec() * 32);
 	g2.avelocity = randomvec() * 180;
 

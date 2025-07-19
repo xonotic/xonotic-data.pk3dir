@@ -5,8 +5,13 @@
 #include "okrpc.qh"
 
 bool autocvar_g_overkill_powerups_replace;
-
 bool autocvar_g_overkill_itemwaypoints = true;
+bool autocvar_g_overkill_blaster_keepforce = false;
+bool autocvar_g_overkill_blaster_keepdamage = false;
+string autocvar_g_overkill_loot_player = "armor_small";
+float  autocvar_g_overkill_loot_player_time = 5;
+string autocvar_g_overkill_loot_monster = "armor_small";
+float  autocvar_g_overkill_loot_monster_time = 5;
 
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
 
@@ -69,20 +74,30 @@ MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 		if(frag_attacker != frag_target)
 		if(!STAT(FROZEN, frag_target))
 		if(!IS_DEAD(frag_target))
-		{
+		if(!autocvar_g_overkill_blaster_keepforce)
 			M_ARGV(6, vector) = '0 0 0'; // force
-		}
 
-		M_ARGV(4, float) = 0; // damage
+		if(!autocvar_g_overkill_blaster_keepdamage)
+			M_ARGV(4, float) = 0; // damage
 	}
 }
 
-void ok_DropItem(entity this, entity targ)
+void ok_DropItem(entity this, entity attacker, string itemlist, float itemlifetime)
 {
+	if (itemlifetime <= 0)
+		return;
+
+	entity loot_itemdef = Item_RandomFromList(itemlist);
+	if (!loot_itemdef)
+		return;
+
 	entity e = spawn();
 	e.ok_item = true;
-	Item_InitializeLoot(e, "item_armor_small", this.origin + '0 0 32',
-		'0 0 200' + normalize(targ.origin - this.origin) * 500, 5);
+	e.itemdef = loot_itemdef;
+	e.origin = this.origin + '0 0 32';
+	e.velocity = '0 0 200' + normalize(attacker.origin - this.origin) * 500;
+	e.lifetime = itemlifetime;
+	Item_Initialise(e);
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerDies)
@@ -90,9 +105,8 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 
-	entity targ = ((IS_PLAYER(frag_attacker)) ? frag_attacker : frag_target);
-
-	ok_DropItem(frag_target, targ);
+	entity attacker = ((IS_PLAYER(frag_attacker)) ? frag_attacker : frag_target);
+	ok_DropItem(frag_target, attacker, autocvar_g_overkill_loot_player, autocvar_g_overkill_loot_player_time);
 
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -105,14 +119,11 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 MUTATOR_HOOKFUNCTION(ok, MonsterDropItem)
 {
 	entity mon = M_ARGV(0, entity);
-	entity olditem = M_ARGV(1, entity);
 	entity frag_attacker = M_ARGV(2, entity);
 
-	delete(olditem);
+	ok_DropItem(mon, frag_attacker, autocvar_g_overkill_loot_monster, autocvar_g_overkill_loot_monster_time);
 
-	M_ARGV(1, entity) = NULL;
-
-	ok_DropItem(mon, frag_attacker);
+	M_ARGV(1, string) = ""; // item drops handled
 }
 
 MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
@@ -127,7 +138,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 		return;
 	}
 	entity player = M_ARGV(0, entity);
-	if (!IS_PLAYER(player) || IS_DEAD(player) || STAT(FROZEN, player))
+	if (!IS_PLAYER(player) || IS_DEAD(player))
 	{
 		return;
 	}
@@ -226,30 +237,26 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	}
 	if (item.classname == "item_strength")
 	{
-		entity wep = new(weapon_okhmg);
-		setorigin(wep, item.origin);
+		entity wep = spawn();
+		Item_CopyFields(item, wep);
 		wep.ok_item = true;
-		wep.noalign = Item_ShouldKeepPosition(item);
-		wep.cnt = item.cnt;
-		wep.team = item.team;
-		wep.respawntime = g_pickup_respawntime_superweapon;
+		wep.respawntime = autocvar_g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
-		wep.spawnfunc_checked = true;
-		Item_Initialize(wep, "weapon_okhmg"); // doesn't actually use spawnfunc
+		wep.itemdef = WEP_OVERKILL_HMG;
+		wep.lifetime = -1;
+		Item_Initialise(wep);
 		return true;
 	}
 	else if (item.classname == "item_shield")
 	{
-		entity wep = new(weapon_okrpc);
-		setorigin(wep, item.origin);
+		entity wep = spawn();
+		Item_CopyFields(item, wep);
 		wep.ok_item = true;
-		wep.noalign = Item_ShouldKeepPosition(item);
-		wep.cnt = item.cnt;
-		wep.team = item.team;
-		wep.respawntime = g_pickup_respawntime_superweapon;
+		wep.respawntime = autocvar_g_pickup_respawntime_superweapon;
 		wep.pickup_anyway = true;
-		wep.spawnfunc_checked = true;
-		Item_Initialize(wep, "weapon_okrpc"); // doesn't actually use spawnfunc
+		wep.itemdef = WEP_OVERKILL_RPC;
+		wep.lifetime = -1;
+		Item_Initialise(wep);
 		return true;
 	}
 	return true;

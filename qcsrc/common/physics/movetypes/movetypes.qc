@@ -4,7 +4,7 @@
 void set_movetype(entity this, int mt)
 {
 	this.move_movetype = mt;
-	this.move_qcphysics = (mt != MOVETYPE_PHYSICS);
+	this.move_qcphysics = (mt != MOVETYPE_PHYSICS && !use_engine_physics);
 	if(!IL_CONTAINS(g_moveables, this))
 		IL_PUSH(g_moveables, this); // add it to the moveable entities list (even if it doesn't move!) logic: if an object never sets its movetype, we assume it never does anything notable
 	this.movetype = (this.move_qcphysics) ? MOVETYPE_QCENTITY : mt;
@@ -20,7 +20,7 @@ bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot) // SV
 {
 	vector stuckorigin = this.origin;
 	vector goodmins = pivot, goodmaxs = pivot;
-	for(int bump = 0; bump < 6; bump++)
+	for(int bump = 0; bump < 6; ++bump)
 	{
 		int coord = 2 - (bump >> 1);
 		int dir = (bump & 1);
@@ -150,7 +150,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 
 	original_velocity = primal_velocity = this.velocity;
 
-	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
+	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES; ++bumpcount)
 	{
 		if(this.velocity == '0 0 0')
 			break;
@@ -265,11 +265,11 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		// modify original_velocity so it parallels all of the clip planes
 		vector new_velocity = '0 0 0';
 		int plane;
-		for (plane = 0;plane < numplanes;plane++)
+		for (plane = 0;plane < numplanes; ++plane)
 		{
 			int newplane;
 			new_velocity = _Movetype_ClipVelocity(original_velocity, planes[plane], 1);
-			for (newplane = 0;newplane < numplanes;newplane++)
+			for (newplane = 0;newplane < numplanes; ++newplane)
 			{
 				if(newplane != plane)
 				{
@@ -404,11 +404,8 @@ void _Movetype_CheckWaterTransition(entity ent)  // SV_CheckWaterTransition
 	}
 }
 
-void _Movetype_Impact(entity this, entity oth)  // SV_Impact
+void _Movetype_Impact(entity this, entity toucher)  // SV_Impact
 {
-	if(!this && !oth)
-		return;
-
 	// due to a lack of pointers in QC, we must save the trace values and restore them for other functions
 	bool save_trace_allsolid = trace_allsolid;
 	bool save_trace_startsolid = trace_startsolid;
@@ -424,11 +421,21 @@ void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 	int save_trace_dphitq3surfaceflags = trace_dphitq3surfaceflags;
 	string save_trace_dphittexturename = trace_dphittexturename;
 
-	if(this.solid != SOLID_NOT && gettouch(this))
-		gettouch(this)(this, oth);
+	if(this.solid != SOLID_NOT && gettouch(this) && !wasfreed(this) && !wasfreed(toucher))
+		gettouch(this)(this, toucher);
 
-	if(oth.solid != SOLID_NOT && gettouch(oth))
-		gettouch(oth)(oth, this);
+	if(toucher.solid != SOLID_NOT && gettouch(toucher) && !wasfreed(this) && !wasfreed(toucher))
+	{
+		trace_endpos = toucher.origin;
+		trace_plane_normal = -trace_plane_normal;
+		trace_plane_dist = -trace_plane_dist;
+		trace_ent = this;
+		trace_dpstartcontents = 0;
+		trace_dphitcontents = 0;
+		trace_dphitq3surfaceflags = 0;
+		trace_dphittexturename = string_null;
+		gettouch(toucher)(toucher, this);
+	}
 
 	trace_allsolid = save_trace_allsolid;
 	trace_startsolid = save_trace_startsolid;
@@ -465,10 +472,18 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 	int save_trace_dphitq3surfaceflags = trace_dphitq3surfaceflags;
 	string save_trace_dphittexturename = trace_dphittexturename;
 
-    FOREACH_ENTITY_RADIUS_ORDERED(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true, {
+	vector emin = this.absmin, emax = this.absmax;
+	// Xonotic and Nexuiz maps assume triggers will be activated by adjacent players
+	// prior to sv_legacy_bbox_expand 0 DP always did this for SVQC and never for CSQC
+	// we also need this for zero-size bboxes because radius == 0 returns nothing
+	// see also: WarpZoneLib_ExactTrigger_Touch()
+	emin -= '1 1 1';
+	emax += '1 1 1';
+
+	FOREACH_ENTITY_RADIUS_ORDERED(0.5 * (this.absmin + this.absmax), 0.5 * vlen(emin - emax), true, {
 		if (it.solid == SOLID_TRIGGER && it != this)
 		if (it.move_nomonsters != MOVE_NOMONSTERS && it.move_nomonsters != MOVE_WORLDONLY)
-		if (gettouch(it) && boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax))
+		if (gettouch(it) && boxesoverlap(it.absmin, it.absmax, emin, emax))
 		{
 			trace_allsolid = false;
 			trace_startsolid = false;
@@ -486,7 +501,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 
 			gettouch(it)(it, this);
 		}
-    });
+	});
 
 	trace_allsolid = save_trace_allsolid;
 	trace_startsolid = save_trace_startsolid;
@@ -508,44 +523,11 @@ void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
 {
 	if(autocvar__movetype_debug)
 	{
-		vector mi, ma;
-		if(this.solid == SOLID_BSP)
-		{
-			// TODO set the absolute bbox
-			mi = this.mins;
-			ma = this.maxs;
-		}
-		else
-		{
-			mi = this.mins;
-			ma = this.maxs;
-		}
-		mi += this.origin;
-		ma += this.origin;
-
-		if(this.flags & FL_ITEM)
-		{
-			mi -= '15 15 1';
-			ma += '15 15 1';
-		}
-		else
-		{
-			mi -= '1 1 1';
-			ma += '1 1 1';
-		}
-
-		this.absmin = mi;
-		this.absmax = ma;
+		this.absmin = this.origin + this.mins;
+		this.absmax = this.origin + this.maxs;
 	}
 	else
-	{
 		setorigin(this, this.origin); // calls SV_LinkEdict
-	#ifdef CSQC
-		// NOTE: CSQC's version of setorigin doesn't expand
-		this.absmin -= '1 1 1';
-		this.absmax += '1 1 1';
-	#endif
-	}
 
 	if(touch_triggers)
 		_Movetype_LinkEdict_TouchAreaGrid(this);
@@ -701,7 +683,10 @@ bool _Movetype_PushEntity(entity this, vector push, bool dolink)  // SV_PushEnti
 		_Movetype_PushEntityTrace(this, push);
 		this.move_nomonsters = oldtype;
 		if(trace_startsolid)
+		{
+			trace_fraction = 0;
 			return true;
+		}
 	}
 
 	this.origin = trace_endpos;

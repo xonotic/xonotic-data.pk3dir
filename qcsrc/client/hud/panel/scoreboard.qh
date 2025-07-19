@@ -2,10 +2,16 @@
 #include "../panel.qh"
 
 bool autocvar_cl_deathscoreboard;
+float autocvar_cl_deathscoreboard_delay = 1;
 string autocvar_scoreboard_columns;
 float autocvar_hud_panel_scoreboard_namesize = 15;
 
-bool scoreboard_showscores;
+string autocvar__nextmap;
+// no reason for get_nextmap to be a function for now
+// macro to not have an unnecessary function call stackframe
+#define GET_NEXTMAP() autocvar__nextmap
+
+bool sb_showscores; // set by +showscores engine command
 
 bool scoreboard_active;
 float scoreboard_fade_alpha;
@@ -18,6 +24,7 @@ float scoreboard_left;
 float scoreboard_right;
 
 int numplayers;
+int ts_min, ts_max; ///< team size
 
 void Cmd_Scoreboard_SetFields(int argc);
 void Scoreboard_Draw();

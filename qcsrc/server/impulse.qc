@@ -158,7 +158,7 @@ void weapon_byid_handle(entity this, int number, int imp)
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
-		W_SwitchWeapon_TryOthers(this, REGISTRY_GET(Weapons, WEP_FIRST + number), weaponentity);
+		W_SwitchWeapon_TryOthers(this, Weapon_from_impulse(imp), weaponentity);
 		if(autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
@@ -340,8 +340,7 @@ IMPULSE(weapon_drop)
 	{
 		.entity weaponentity = weaponentities[slot];
 		vector md = this.(weaponentity).movedir;
-		vector vecs = ((md.x > 0) ? md : '0 0 0');
-		vector dv = v_right * -vecs.y;
+		vector dv = v_right * -md.y;
 		if(!is_dualwielding)
 			dv = '0 0 0'; // don't override!
 		W_ThrowWeapon(this, weaponentity, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), dv, true);

@@ -1,6 +1,5 @@
 #pragma once
 
-#undef droptofloor
 #undef sound
 
 var void delete_fn(entity e);

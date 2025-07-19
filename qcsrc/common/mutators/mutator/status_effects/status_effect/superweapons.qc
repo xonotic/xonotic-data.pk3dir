@@ -1,20 +1,20 @@
 #include "superweapons.qh"
 
 #ifdef SVQC
-METHOD(Superweapons, m_persistent, bool(StatusEffects this, entity actor))
+METHOD(Superweapon, m_persistent, bool(StatusEffect this, entity actor))
 {
     return (actor.items & IT_UNLIMITED_SUPERWEAPONS);
 }
 #endif
 
 #ifdef CSQC
-METHOD(Superweapons, m_active, bool(StatusEffects this, entity actor))
+METHOD(Superweapon, m_active, bool(StatusEffect this, entity actor))
 {
     if(autocvar__hud_configure)
         return true;
-    return SUPER(Superweapons).m_active(this, actor);
+    return SUPER(Superweapon).m_active(this, actor);
 }
-METHOD(Superweapons, m_tick, void(StatusEffects this, entity actor))
+METHOD(Superweapon, m_tick, void(StatusEffect this, entity actor))
 {
     if(this.m_hidden)
         return;

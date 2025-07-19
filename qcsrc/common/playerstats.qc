@@ -47,7 +47,7 @@ void PlayerStats_GameReport_Reset_All()
 	if(PS_GR_OUT_DB < 0)
 		return;
 
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < 16; ++i)
 		if (teamscorekeepers[i])
 			PlayerStats_GameReport_AddTeam(i + 1);
 	FOREACH_CLIENT(true, {
@@ -56,6 +56,8 @@ void PlayerStats_GameReport_Reset_All()
 		strfree(it.playerstats_id);
 		PlayerStats_GameReport_AddEvent(sprintf("kills-%d", it.playerid));
 		PlayerStats_GameReport_AddPlayer(it);
+		it.handicap_avg_given_sum = 0;
+		it.handicap_avg_taken_sum = 0;
 	});
 	FOREACH(Scores, true, {
 		string label = scores_label(it);
@@ -154,7 +156,8 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 {
 	if((prefix == "") || PS_GR_OUT_DB < 0) { return 0; }
 
-	string key = sprintf("%s:%s", prefix, event_id);
+	// use a cheaper strcat here since this function is called often in game
+	string key = strcat(prefix, ":", event_id);
 	float val = stof(db_get(PS_GR_OUT_DB, key));
 	val += value;
 	db_put(PS_GR_OUT_DB, key, ftos(val));
@@ -181,10 +184,10 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	if((p.playerstats_id == "") || PS_GR_OUT_DB < 0) { return; }
 
 	// add global info!
-	if(p.alivetime)
+	if(p.alivetime_start)
 	{
-		PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
-		p.alivetime = 0;
+		PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_ALIVETIME, max(0, time - p.alivetime_start));
+		p.alivetime_start = 0;
 	}
 
 	db_put(PS_GR_OUT_DB, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
@@ -254,26 +257,31 @@ void PlayerStats_GameReport(bool finished)
 			}
 		}
 
+		// handicap
+		const float given = GameRules_scoring_add(it, DMG, 0);
+		const float taken = GameRules_scoring_add(it, DMGTAKEN, 0);
+		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_HANDICAP_GIVEN, given <= 0 ? 1 : it.handicap_avg_given_sum / given);
+		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_HANDICAP_TAKEN, taken <= 0 ? 1 : it.handicap_avg_taken_sum / taken);
+
 		// collect final player information
 		PlayerStats_GameReport_FinalizePlayer(it);
 	});
 
-	if(autocvar_g_playerstats_gamereport_uri != "")
-	{
-		PlayerStats_GameReport_DelayMapVote = true;
-		url_multi_fopen(
-			autocvar_g_playerstats_gamereport_uri,
-			FILE_APPEND,
-			PlayerStats_GameReport_Handler,
-			NULL
-		);
-	}
-	else
+	if(autocvar_g_playerstats_gamereport_uri == "" || warmup_stage)
 	{
 		PlayerStats_GameReport_DelayMapVote = false;
 		db_close(PS_GR_OUT_DB);
 		PS_GR_OUT_DB = -1;
+		return;
 	}
+
+	PlayerStats_GameReport_DelayMapVote = true;
+	url_multi_fopen(
+		autocvar_g_playerstats_gamereport_uri,
+		FILE_APPEND,
+		PlayerStats_GameReport_Handler,
+		NULL
+	);
 }
 
 void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that scores are added properly
@@ -289,11 +297,11 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 	{
 		PlayerStats_GameReport_DelayMapVote = true;
 
-		serverflags |= SERVERFLAG_PLAYERSTATS;
 		if(autocvar_g_playerstats_gamereport_uri != cvar_defstring("g_playerstats_gamereport_uri"))
-		{
-			serverflags |= SERVERFLAG_PLAYERSTATS_CUSTOM;
-		}
+			serverflags |= SERVERFLAG_PLAYERSTATS | SERVERFLAG_PLAYERSTATS_CUSTOM;
+		else if(checkextension("DP_CRYPTO") && checkextension("DP_QC_URI_POST"))
+			// XonStat submission requires player and server IDs, and HTTPS POST
+			serverflags |= SERVERFLAG_PLAYERSTATS;
 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ALIVETIME);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_AVGLATENCY);
@@ -303,6 +311,8 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_SCOREBOARD_POS);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_RANK);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_HANDICAP_GIVEN);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_HANDICAP_TAKEN);
 
 		// accuracy stats
 		FOREACH(Weapons, it != WEP_Null, {
@@ -369,6 +379,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 * C: number of "unpure" cvar changes
 		 * U: UDP port number of the server
 		 * D: duration of the match
+		 * RP: number of rounds played
 		 * L: "ladder" in which the server is participating in
 		 * P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
 		 * Q: team number of an existing team (format: team#NN); this also sets the owner for all following "e" lines (lower case!)
@@ -389,6 +400,8 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 *   achievement-<achievementname>: achievement counters (their "count" is usually 1 if nonzero at all)
 		 *   kills-<index>: number of kills against the indexed player
 		 *   rank <number>: rank of player
+		 *   handicapgiven: average handicap on given (dealt) damage throughout the match
+		 *   handicaptaken: average handicap on taken (received) damage throughout the match
 		 *   acc-<weapon netname>-hit: total damage dealt
 		 *   acc-<weapon netname>-fired: total damage that all fired projectiles *could* have dealt
 		 *   acc-<weapon netname>-cnt-hit: amount of shots that actually hit
@@ -409,7 +422,10 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
 			url_fputs(fh, sprintf("U %d\n", cvar("port")));
 			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
-			url_fputs(fh, sprintf("L %s\n", autocvar_g_playerstats_gamereport_ladder));
+			if (rounds_played > 0)
+				url_fputs(fh, sprintf("RP %d\n", rounds_played));
+			if (autocvar_g_playerstats_gamereport_ladder != "")
+				url_fputs(fh, sprintf("L %s\n", autocvar_g_playerstats_gamereport_ladder));
 
 			// TEAMS
 			if(teamplay)

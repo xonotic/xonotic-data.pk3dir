@@ -18,24 +18,6 @@
 #include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
 
-void thrown_wep_think(entity this)
-{
-	this.nextthink = time;
-	if(this.oldorigin != this.origin)
-	{
-		this.SendFlags |= ISF_LOCATION;
-		this.oldorigin = this.origin;
-	}
-	this.owner = NULL;
-	float timeleft = this.savenextthink - time;
-	if(timeleft > 1)
-		SUB_SetFade(this, this.savenextthink - 1, 1);
-	else if(timeleft > 0)
-		SUB_SetFade(this, time, timeleft);
-	else
-		SUB_VanishOrRemove(this);
-}
-
 // returns amount of ammo used, or -1 for failure, or 0 for no ammo count
 float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity)
 {
@@ -43,7 +25,7 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 	Resource ammotype = info.ammo_type;
 
 	entity wep = spawn();
-	Item_SetLoot(wep, true);
+	ITEM_SET_LOOT(wep, true);
 	setorigin(wep, org);
 	wep.velocity = velo;
 	wep.owner = wep.enemy = own;
@@ -56,7 +38,7 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 
 	if(WepSet_FromWeapon(REGISTRY_GET(Weapons, wpn)) & WEPSET_SUPERWEAPONS)
 	{
-		Item_SetExpiring(wep, true);
+		ITEM_SET_EXPIRING(wep, true);
 		if(own.items & IT_UNLIMITED_SUPERWEAPONS)
 		{
 			wep.superweapons_finished = time + autocvar_g_balance_superweapons_time;
@@ -66,22 +48,22 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 			int superweapons = 1;
 			FOREACH(Weapons, it != WEP_Null, {
 				WepSet set = it.m_wepset;
-				if((set & WEPSET_SUPERWEAPONS) && (STAT(WEAPONS, own) & set)) ++superweapons;
+				if((WEPSET_SUPERWEAPONS & STAT(WEAPONS, own)) & set) ++superweapons;
 			});
 			if(superweapons <= 1)
 			{
-				wep.superweapons_finished = StatusEffects_gettime(STATUSEFFECT_Superweapons, own);
-				StatusEffects_remove(STATUSEFFECT_Superweapons, own, STATUSEFFECT_REMOVE_CLEAR);
+				wep.superweapons_finished = StatusEffects_gettime(STATUSEFFECT_Superweapon, own);
+				StatusEffects_remove(STATUSEFFECT_Superweapon, own, STATUSEFFECT_REMOVE_CLEAR);
 			}
 			else
 			{
-				float timeleft = StatusEffects_gettime(STATUSEFFECT_Superweapons, own) - time;
+				float timeleft = StatusEffects_gettime(STATUSEFFECT_Superweapon, own) - time;
 				float weptimeleft = timeleft / superweapons;
 				wep.superweapons_finished = time + weptimeleft;
 				if(own.statuseffects)
 				{
 					// TODO: this doesn't explicitly enable the effect, use apply here?
-					own.statuseffects.statuseffect_time[STATUSEFFECT_Superweapons.m_id] -= weptimeleft;
+					own.statuseffects.statuseffect_time[STATUSEFFECT_Superweapon.m_id] -= weptimeleft;
 					StatusEffects_update(own);
 				}
 			}
@@ -91,9 +73,7 @@ float W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector
 	weapon_defaultspawnfunc(wep, info);
 	if(startitem_failed)
 		return -1;
-	setthink(wep, thrown_wep_think);
-	wep.savenextthink = wep.nextthink;
-	wep.nextthink = min(wep.nextthink, time + 0.5);
+
 	wep.pickup_anyway = true; // these are ALWAYS pickable
 
 	//wa = W_AmmoItemCode(wpn);

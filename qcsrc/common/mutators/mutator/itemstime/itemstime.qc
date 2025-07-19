@@ -2,7 +2,9 @@
 
 REGISTER_MUTATOR(itemstime, true);
 
+#ifdef GAMEQC
 REGISTER_NET_TEMP(itemstime)
+#endif
 
 #ifdef SVQC
 void IT_Write(entity e, int i, float f) {

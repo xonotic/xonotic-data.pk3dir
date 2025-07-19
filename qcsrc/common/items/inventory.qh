@@ -154,8 +154,17 @@ void Inventory_new(PlayerState this)
 	inv.owner = this;
 	Net_LinkEntity(inv, false, 0, Inventory_Send);
 }
+
 void Inventory_delete(entity e) { delete(e.inventory); }
 void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
+
+void Inventory_pickupitem(Pickup this, entity player)
+{
+	//LOG_DEBUGF("entity %i picked up %s", player, this.m_name);
+	entity store = IS_PLAYER(player) ? PS(player) : player;
+	++store.inventory.inv_items[this.m_id];
+	Inventory_update(store);
+}
 
 void Inventory_clear(entity store)
 {

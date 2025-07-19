@@ -13,6 +13,7 @@
 #include <client/shownames.qh>
 #include <client/view.qh>
 #include <client/weapons/projectile.qh>
+#include <common/checkextension.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.inc>
 #include <common/effects/all.qh>
@@ -42,13 +43,15 @@
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 
-void CSQC_Init()
+void CSQC_Init(float apilevel, string enginename, float engineversion)
 {
 	prvm_language = strzone(cvar_string("prvm_language"));
 
 #ifdef WATERMARK
 	LOG_TRACEF("^4CSQC Build information: ^1%s", WATERMARK);
 #endif
+
+	CheckEngineExtensions();
 
 	{
 		int i = 0;
@@ -90,6 +93,8 @@ void CSQC_Init()
 
 	registercvar("cl_dodging", "0");
 
+	registercvar("cl_autoswitch_cts", "-1");
+
 	registercvar("cl_spawn_near_teammate", "1");
 
 	registercvar("cl_weapon_switch_reload", "1");
@@ -103,6 +108,10 @@ void CSQC_Init()
 	if (cvar_type("_scoreboard_team_selection_available") & CVAR_TYPEFLAG_EXISTS)
 		cvar_settemp("_scoreboard_team_selection_available", "1");
 	cvar_set("_scoreboard_team_selection", "0"); // in case it has been left set to 1
+
+	// XONRELEASE: default values for <= 0.8.6 can be removed after next release
+	registercvar("hud_panel_checkpoints_pos", "0.700000 0.190000");
+	registercvar("hud_panel_checkpoints_size", "0.250000 0.170000");
 
 	gametype = NULL;
 
@@ -176,24 +185,36 @@ void Shutdown()
 
 	cvar_set("slowmo", cvar_defstring("slowmo")); // reset it back to 'default'
 
-	if (!isdemo())
+	// if _cl_hook_gamestart wasn't called with an actual gamemode
+	// before CSQC VM shutdown then call it with nop fallback here
+	if (!(calledhooks & HOOK_START) && !isdemo())
+		localcmd("\n_cl_hook_gamestart nop\n");
+
+	// fire game or demo end hooks when CSQC VM shuts down
+	if (!(calledhooks & HOOK_END))
 	{
-		if (!(calledhooks & HOOK_START))
-			localcmd("\n_cl_hook_gamestart nop\n");
-		if (!(calledhooks & HOOK_END))
+		// call gameend hook if it hasn't somehow yet fired by intermission starting
+		if (!isdemo())
 		{
-			int gamecount = cvar("cl_matchcount");
 			localcmd("\ncl_hook_gameend\n");
+
 			// NOTE: using localcmd here to ensure it's executed AFTER cl_hook_gameend
 			// earlier versions of the game abuse the hook to set this cvar
+			int gamecount = cvar("cl_matchcount");
 			localcmd(strcat("cl_matchcount ", itos(gamecount + 1), "\n"));
 			//cvar_set("cl_matchcount", itos(gamecount + 1));
 		}
+		else
+			localcmd("\ncl_hook_demoend\n");
+
+		calledhooks |= HOOK_END; // mark the hook as having fired
 	}
 
 	localcmd("\ncl_hook_shutdown\n");
 
 	localcmd("\n-button12\n");
+
+	strfree(gametype_custom_name);
 
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
@@ -486,6 +507,10 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	if (override)
 		return true;
 
+	override |= View_InputEvent(bInputType, nPrimary, nSecondary);
+	if (override)
+		return true;
+
 	override |= HUD_Panel_Chat_InputEvent(bInputType, nPrimary, nSecondary);
 
 	override |= QuickMenu_InputEvent(bInputType, nPrimary, nSecondary);
@@ -512,10 +537,10 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		if(nPrimary == K_TAB) hudShiftState |= S_TAB;
 	}
 	else {
-		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
-		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
-		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
-		if(nPrimary == K_TAB) hudShiftState -= (hudShiftState & S_TAB);
+		if(nPrimary == K_ALT) hudShiftState &= ~S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState &= ~S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState &= ~S_SHIFT;
+		if(nPrimary == K_TAB) hudShiftState &= ~S_TAB;
 	}
 
 	// NOTE: Shift-Escape must be filtered out because it's the hardcoded console shortcut
@@ -541,7 +566,7 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-
+.int survival_status;
 void Ent_RemovePlayerScore(entity this)
 {
 	if(this.owner) {
@@ -550,6 +575,11 @@ void Ent_RemovePlayerScore(entity this)
 		FOREACH(Scores, true, {
 			this.owner.(scores(it)) = 0; // clear all scores
 		});
+		this.owner.ready = 0;
+		this.owner.eliminated = 0;
+		this.owner.colormap = 0;
+		// TODO add a hook to reset this Survival field
+		this.owner.survival_status = 0;
 	}
 }
 
@@ -591,7 +621,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	int sf = ReadShort();
 	int lf = ReadShort();
 	FOREACH(Scores, true, {
-		int p = 1 << (i % 16);
+		int p = BIT(i % 16);
 		if (sf & p)
 		{
 			if (lf & p)
@@ -641,7 +671,7 @@ NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 {
 	make_pure(this);
-	float newspectatee_status;
+	int newspectatee_status;
 
 	int f = ReadByte();
 
@@ -686,9 +716,6 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 
 	if(newspectatee_status != spectatee_status)
 	{
-		// clear race stuff
-		race_laptime = 0;
-		race_checkpointtime = 0;
 		hud_dynamic_shake_factor = -1;
 		spectatee_status_changed_time = time;
 	}
@@ -704,12 +731,13 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 	spectatee_status = newspectatee_status;
 
 	// we could get rid of spectatee_status, and derive it from player_localentnum and player_localnum
+
+	teamnagger = (f & 0x60) >> 5; // 0x60 = BIT(5) | BIT(6)
 }
 
 NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 {
 	make_pure(this);
-	int i, j, b, f;
 
 	int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
 
@@ -736,20 +764,11 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 		strcpy(vote_called_vote, ReadString());
 	}
 
-	if(nags & 1)
-	{
-		for(j = 0; j < maxclients; ++j)
-			if(playerslots[j])
-				playerslots[j].ready = true;
-		for(i = 1; i <= maxclients; i += 8)
-		{
-			f = ReadByte();
-			for(j = i-1, b = BIT(0); b < BIT(8); b <<= 1, ++j)
-				if (!(f & b))
-					if(playerslots[j])
-						playerslots[j].ready = false;
-		}
-	}
+	if(nags & BIT(0))
+		for(int i = 0; i < maxclients;)
+			for(int f = ReadByte(), b = 0; b < 8 && i < maxclients; ++b, ++i)
+				if(playerslots[i])
+					playerslots[i].ready = f & BIT(b);
 
 	return = true;
 
@@ -819,104 +838,6 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 		f = (f == 0x800000) ? 1 : f * 2;
 	}
 	return true;
-}
-
-void Spawn_Draw(entity this)
-{
-	bool dodraw = autocvar_cl_spawn_point_particles;
-	if(dodraw && autocvar_cl_spawn_point_dist_max)
-	{
-		vector org = getpropertyvec(VF_ORIGIN);
-		dodraw = vdist(org - this.origin, <, autocvar_cl_spawn_point_dist_max);
-	}
-
-	if(dodraw)
-		pointparticles(((!teamplay) ? EFFECT_SPAWNPOINT_NEUTRAL : EFFECT_SPAWNPOINT(this.team - 1)), this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
-}
-
-NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
-{
-	float teamnum = (ReadByte() - 1);
-	vector spn_origin = ReadVector();
-
-	this.team = (teamnum + 1);
-
-	//if(is_new)
-	//{
-		this.origin = spn_origin;
-		setsize(this, PL_MIN_CONST, PL_MAX_CONST);
-		//droptofloor();
-
-		/*if(autocvar_cl_spawn_point_model) // needs a model first
-		{
-			this.mdl = "models/spawnpoint.md3";
-			this.colormod = Team_ColorRGB(teamnum);
-			precache_model(this.mdl);
-			setmodel(this, this.mdl);
-			this.drawmask = MASK_NORMAL;
-			//this.move_movetype = MOVETYPE_NOCLIP;
-			//this.draw = Spawn_Draw;
-			IL_PUSH(g_drawables, this);
-		}*/
-		this.draw = Spawn_Draw;
-		if (is_new) IL_PUSH(g_drawables, this);
-	//}
-
-	//printf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(this.origin), teamnum, this.cnt);
-	return true;
-}
-
-NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
-{
-	// If entnum is 0, ONLY do the local spawn actions
-	// this way the server can disable the sending of
-	// spawn origin or such to clients if wanted.
-	float entnum = ReadByte();
-
-	if(entnum)
-	{
-		this.origin = ReadVector();
-
-		if(is_new)
-		{
-			float teamnum = entcs_GetTeam(entnum - 1);
-
-			if(autocvar_cl_spawn_event_particles)
-			{
-				switch(teamnum)
-				{
-					case NUM_TEAM_1: pointparticles(EFFECT_SPAWN_RED, this.origin, '0 0 0', 1); break;
-					case NUM_TEAM_2: pointparticles(EFFECT_SPAWN_BLUE, this.origin, '0 0 0', 1); break;
-					case NUM_TEAM_3: pointparticles(EFFECT_SPAWN_YELLOW, this.origin, '0 0 0', 1); break;
-					case NUM_TEAM_4: pointparticles(EFFECT_SPAWN_PINK, this.origin, '0 0 0', 1); break;
-					default: pointparticles(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1); break;
-				}
-			}
-			if(autocvar_cl_spawn_event_sound)
-			{
-				sound(this, CH_TRIGGER, SND_SPAWN, VOL_BASE, ATTEN_NORM);
-			}
-		}
-	}
-	return = true;
-
-	// local spawn actions
-	if(is_new && (!entnum || (entnum == player_localentnum)))
-	{
-		if(autocvar_cl_spawnzoom && !autocvar_cl_lockview)
-		{
-			zoomin_effect = 1;
-			current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
-		}
-
-		if(autocvar_cl_unpress_zoom_on_spawn)
-		{
-			localcmd("-zoom\n");
-			button_zoom = false;
-		}
-		HUD_Radar_Hide_Maximized();
-	}
-	//printf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(this.origin), entnum, player_localentnum);
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
@@ -1017,19 +938,25 @@ void CSQC_Ent_Remove(entity this)
 
 void Gamemode_Init()
 {
-	if (!isdemo())
+	// fire game or demo start hooks here
+	if (!(calledhooks & HOOK_START))
 	{
-		if(!(calledhooks & HOOK_START))
+		if (!isdemo())
 			localcmd("\n_cl_hook_gamestart ", MapInfo_Type_ToString(gametype), "\n");
-		calledhooks |= HOOK_START;
+		else
+			localcmd("\ncl_hook_demostart\n");
+
+		calledhooks |= HOOK_START; // mark start hook as fired
 	}
 }
+
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
 void CSQC_Parse_StuffCmd(string strMessage)
 {
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_StuffCmd(\"%s\")", strMessage);
 	localcmd(strMessage);
 }
+
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
 void CSQC_Parse_Print(string strMessage)
 {
@@ -1065,13 +992,25 @@ bool CSQC_Parse_TempEntity()
 	return false;
 }
 
+bool autocvar_r_drawfog;
+bool autocvar_r_fog_exp2;
 string forcefog;
 void Fog_Force()
 {
 	if (autocvar_cl_orthoview && autocvar_cl_orthoview_nofog)
-		localcmd("\nr_drawfog 0\n");
+	{
+		if (autocvar_r_drawfog)
+			cvar_set("r_drawfog", "0");
+	}
 	else if (forcefog != "")
-		localcmd(sprintf("\nfog %s\nr_fog_exp2 0\nr_drawfog 1\n", forcefog));
+	{
+		// using cvar_set as it's faster and safer than a command
+		if (!autocvar_r_drawfog)
+			cvar_set("r_drawfog", "1");
+		if (autocvar_r_fog_exp2)
+			cvar_set("r_fog_exp2", "0");
+		localcmd(sprintf("\nfog %s\n", forcefog));
+	}
 }
 
 bool net_handle_ServerWelcome();
@@ -1079,6 +1018,7 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
 	gametype = ReadRegistered(Gametypes);
+	strcpy(gametype_custom_name, ReadString());
 	teamplay = _MapInfo_GetTeamPlayBool(gametype);
 	HUD_ModIcons_SetFunc();
 	FOREACH(Scores, true, {
@@ -1166,6 +1106,9 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_previousbesttime = ReadInt24_t();
 			race_mypreviousbesttime = ReadInt24_t();
 			string pbestname = ReadString();
+			race_timespeed = ReadFloat();
+			race_timebestspeed = ReadFloat();
+			race_mybestspeed = ReadFloat();
 			if(autocvar_cl_race_cptimes_onlyself)
 			{
 				race_previousbesttime = race_mypreviousbesttime;
@@ -1200,10 +1143,15 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			if(b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING) // not while spectating (matches server)
 				race_mybesttime = ReadInt24_t();
 			string newname = ReadString();
+			race_nextbestspeed = ReadFloat();
+			if(b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING) // not while spectating (matches server)
+				race_mybestspeed = ReadFloat();
 			if(autocvar_cl_race_cptimes_onlyself && b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING)
 			{
 				race_nextbesttime = race_mybesttime;
+				race_nextbestspeed = race_mybestspeed;
 				race_mybesttime = 0;
+				race_mybestspeed = 0;
 				strcpy(race_nextbestname, "");
 			}
 			else
@@ -1254,11 +1202,11 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_server_record = ReadInt24_t();
 			break;
 		case RACE_NET_SPEED_AWARD:
-			race_speedaward = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
+			race_speedaward = ReadInt24_t();
 			strcpy(race_speedaward_holder, ReadString());
 			break;
 		case RACE_NET_SPEED_AWARD_BEST:
-			race_speedaward_alltimebest = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
+			race_speedaward_alltimebest = ReadInt24_t();
 			strcpy(race_speedaward_alltimebest_holder, ReadString());
 			break;
 		case RACE_NET_RANKINGS_CNT:
@@ -1315,12 +1263,6 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 	return true;
 }
 
-NET_HANDLE(TE_CSQC_TEAMNAGGER, bool isNew)
-{
-	teamnagger = 1;
-	return true;
-}
-
 NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 {
 	int i = ReadByte();
@@ -1371,7 +1313,7 @@ string translate_weaponarena(string s)
 
 	int n = tokenizebyseparator(s, " & ");
 	string wpn_list = "";
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; ++i)
 	{
 		Weapon wep = Weapon_from_name(argv(i));
 		if (wep == WEP_Null)
@@ -1404,29 +1346,33 @@ string GetVersionMessage(string hostversion, bool version_mismatch, bool version
 
 bool net_handle_ServerWelcome()
 {
-	bool campaign = ReadByte();
+	int flags = ReadByte();
+
+	campaign = flags & 1;
 	if (campaign)
 	{
-		string campaign_title = ReadString();
 		int campaign_level = ReadByte();
-		string campaign_msg = ReadString();
-		string welcomedialog_args;
-		welcomedialog_args = strcat("HOSTNAME \"", campaign_title, "\"");
+		// Menu can't build the whole campaign message because it lacks getcommandkey and CCR
+		// so we build part of the message here and let the menu insert the level description
+		// (that client doesn't know) by replacing the keyword _LEVEL_DESC
 		string key = getcommandkey(_("jump"), "+jump");
 		string msg = strcat(
 			CCR("^F1"), sprintf(_("Level %d:"), campaign_level),
-			sprintf(CCR(" ^BG%s\n^3\n"), campaign_msg),
+			sprintf(CCR(" ^BG%s\n\n"), "_LEVEL_DESC"),
 			sprintf(CCR(_("^BGPress ^F2%s^BG to enter the game")), key));
 		msg = MakeConsoleSafe(strreplace("\n", "\\n", msg));
-		welcomedialog_args = strcat(welcomedialog_args, " WELCOME \"", msg, "\"");
+		string welcomedialog_args = strcat("CAMPAIGN ", itos(campaign_level), " \"", msg, "\"");
+
 		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
 		return true;
 	}
 
 	strcpy(hostname, ReadString());
 	string hostversion = ReadString();
-	bool version_mismatch = ReadByte();
-	bool version_check = ReadByte();
+	bool version_mismatch = flags & 2;
+	bool version_check = flags & 4;
+	MapInfo_Map_titlestring = ReadString();
+	MapInfo_Map_author = flags & 8 ? ReadString() : "";
 	srv_minplayers = ReadByte();
 	srv_maxplayers = ReadByte();
 	string modifications = translate_modifications(ReadString());
@@ -1438,15 +1384,9 @@ bool net_handle_ServerWelcome()
 
 	msg = strcat(msg, "\n\n", _("Gametype:"), " ^1", MapInfo_Type_ToText(gametype), "\n");
 
-	msg = strcat(msg, "\n", _("Map:"), " ^2");
-	if (world.message == "")
-		msg = strcat(msg, mi_shortname, "\n");
-	else
-	{
-		int i = strstrofs(world.message, " by ", 0); // matches _MapInfo_Generate()
-		string longname = i >= 0 ? substring(world.message, 0, i) : world.message;
-		msg = strcat(msg, (strcasecmp(longname, mi_shortname) ? strcat(mi_shortname, " ^7// ^2") : ""), longname, "\n");
-	}
+	msg = strcat(msg, "\n", _("Map:"), " ", MapInfo_Map_titlestring, "\n");
+	if (flags & 8)
+		msg = strcat(msg, "^9", _("by:"), " ", MapInfo_Map_author, "\n");
 
 	if (srv_minplayers || srv_maxplayers)
 	{

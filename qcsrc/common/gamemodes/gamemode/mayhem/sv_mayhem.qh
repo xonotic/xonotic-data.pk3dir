@@ -1,0 +1,17 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+
+void mayhem_Initialize();
+
+REGISTER_MUTATOR(mayhem, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		mayhem_Initialize();
+	}
+	return 0;
+}
+
+void MayhemCalculatePlayerScore(entity scorer);

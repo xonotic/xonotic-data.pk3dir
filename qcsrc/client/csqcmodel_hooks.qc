@@ -16,19 +16,20 @@
 #include <lib/csqcmodel/cl_player.qh>
 #include <lib/csqcmodel/interpolate.qh>
 
-.float death_time;
 .int modelflags;
 
 // FEATURE: LOD
 .int lodmodelindex0;
 .int lodmodelindex1;
 .int lodmodelindex2;
-void CSQCPlayer_LOD_Apply(entity this, bool isplayer)
+.float loddistance1;
+.float loddistance2;
+void CSQCModel_LOD_Apply(entity this, bool isplayer)
 {
 	int detailreduction = ((isplayer) ? autocvar_cl_playerdetailreduction : autocvar_cl_modeldetailreduction);
 
 	// LOD model loading
-	if(this.lodmodelindex0 != this.modelindex)
+	if(this.lodmodelindex0 != this.modelindex && this.lodmodelindex1 != this.modelindex && this.lodmodelindex2 != this.modelindex)
 	{
 		string modelname = this.model;
 		string s;
@@ -48,7 +49,7 @@ void CSQCPlayer_LOD_Apply(entity this, bool isplayer)
 			precache_model(s);
 			_setmodel(this, s);
 			if(this.modelindex)
-				this.lodmodelindex1 = this.modelindex;
+				this.lodmodelindex2 = this.lodmodelindex1 = this.modelindex;
 		}
 
 		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
@@ -77,11 +78,13 @@ void CSQCPlayer_LOD_Apply(entity this, bool isplayer)
 	else
 	{
 		float distance = vlen(((isplayer) ? this.origin : NearestPointOnBox(this, view_origin)) - view_origin); // TODO: perhaps it should just use NearestPointOnBox all the time, player hitbox can potentially be huge
+		float dist1 = (this.loddistance1 > 0) ? this.loddistance1 : autocvar_cl_loddistance1;
+		float dist2 = (this.loddistance2 > 0) ? this.loddistance2 : autocvar_cl_loddistance2;
 		float f = (distance * current_viewzoom + 100.0) * detailreduction;
 		f *= 1.0 / bound(0.01, view_quality, 1);
-		if(f > autocvar_cl_loddistance2)
+		if(f > dist2)
 			this.modelindex = this.lodmodelindex2;
-		else if(f > autocvar_cl_loddistance1)
+		else if(f > dist1)
 			this.modelindex = this.lodmodelindex1;
 		else
 			this.modelindex = this.lodmodelindex0;
@@ -305,11 +308,15 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 			this.colormap = 1024 + autocvar_cl_forcemyplayercolors;
 		else if (autocvar_cl_forceuniqueplayercolors && !islocalplayer && !gametype.m_1v1)
 		{
-			// Assign each enemy unique colors
+			// Assign each enemy an unique color combination
 			// pick colors from 0 to 14 since 15 is the rainbow color
 			// pl01 0 1, pl02 1 2, ..., pl14 13 14, pl15 14 0
 			// pl16 0 2, pl17 1 3, ..., pl29 13  0, pl30 14 1
-			int num = this.entnum - 1;
+			int num;
+			if (this.isplayermodel & ISPLAYER_CLIENT)
+				num = this.entnum - 1;
+			else
+				num = this.sv_entnum - 1;
 			int c1 = num % 15;
 			int q = floor(num / 15);
 			int c2 = (c1 + 1 + q) % 15;
@@ -567,6 +574,11 @@ void CSQCModel_Effects_Apply(entity this)
 		boxparticles(particleeffectnum(EFFECT_EF_FLAME), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
 		//pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', bound(0, frametime, 0.1));
 	}
+	if(eff & EF_SHOCK)
+	{
+		boxparticles(particleeffectnum(EFFECT_ARC_LIGHTNING), this, this.absmin, this.absmax, '0 0 0', '0 0 0', bound(0, frametime, 0.1), 0);
+		//pointparticles(EFFECT_ARC_LIGHTNING, this.origin, '0 0 0', bound(0, frametime, 0.1));
+	}
 	if(eff & EF_STARDUST)
 	{
 		boxparticles(particleeffectnum(EFFECT_EF_STARDUST), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
@@ -669,7 +681,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 	if((this.isplayermodel & ISPLAYER_MODEL) && this.drawmask) // this checks if it's a player MODEL!
 	{
 		CSQCPlayer_ModelAppearance_Apply(this, (this.isplayermodel & ISPLAYER_LOCAL));
-		CSQCPlayer_LOD_Apply(this, true);
+		CSQCModel_LOD_Apply(this, true);
 
 		if(!isplayer)
 		{
@@ -748,7 +760,7 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 		}
 	}
 	else
-		CSQCPlayer_LOD_Apply(this, false);
+		CSQCModel_LOD_Apply(this, false);
 
 	CSQCModel_AutoTagIndex_Apply(this);
 

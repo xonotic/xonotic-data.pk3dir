@@ -17,6 +17,7 @@
 
 #include "xonotic/util.qh"
 
+#include <common/checkextension.qh>
 #include <common/items/_mod.qh>
 #include <common/weapons/_all.qh>
 #include <common/mapinfo.qh>
@@ -30,8 +31,12 @@ float menuAlpha;
 float menuLogoAlpha;
 float prevMenuAlpha;
 bool menuInitialized;
-bool menuNotTheFirstFrame;
 int menuMouseMode;
+
+// Used for having effects only execute once in main menu, not for every reload
+// 0: never been in main menu before. 1: coming back to main menu. 2: in main menu.
+int menuNotTheFirstFrame;
+bool autocvar_menu_no_music_nor_welcome;
 
 float conwidth_s, conheight_s;
 float vidwidth_s, vidheight_s, vidpixelheight_s;
@@ -72,16 +77,7 @@ void m_init()
 		LOG_TRACEF("^4MQC Build information: ^1%s", WATERMARK);
 #endif
 
-	// list all game dirs (TEST)
-	if (cvar("developer") > 0)
-	{
-		for (int i = 0; ; ++i)
-		{
-			string s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
-			if (!s) break;
-			LOG_TRACE(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
-		}
-	}
+	CheckEngineExtensions();
 
 	registercvar("_menu_cmd_closemenu_available", "0", 0);
 	cvar_set("_menu_cmd_closemenu_available", "1");
@@ -122,7 +118,8 @@ void UpdateConWidthHeight(float w, float h, float p)
 {
 	if (w != vidwidth_s || h != vidheight_s || p != vidpixelheight_s)
 	{
-		if (updateConwidths(w, h, p)) localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
+		if (updateConwidths(w, h, p) && menuNotTheFirstFrame)
+			localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
 		vidwidth_s = w;
 		vidheight_s = h;
 		vidpixelheight_s = p;
@@ -219,7 +216,7 @@ void m_init_delayed()
 
 	if (m_goto_buffer)
 	{
-		m_goto(m_goto_buffer);
+		m_goto(m_goto_buffer, false);
 		strfree(m_goto_buffer);
 	}
 
@@ -337,7 +334,10 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 
 void drawBackground(string img, float a, string algn, float force1)
 {
-	if (main.mainNexposee.ModalController_state == 0) return;
+	if (main.mainNexposee.ModalController_state == 0
+	&& !(main.focusedChild && main.focusedChild.hideMenuOnClose && !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
+		return;
+
 	vector v = '0 0 0';
 	int scalemode = SCALEMODE_CROP;
 	int len = strlen(algn);
@@ -505,11 +505,20 @@ entity m_findtooltipitem(entity root, vector pos)
 
 	return best;
 }
+string gettooltip_dependency_string_numeric(entity e, .string cvarStr, .float cvarMin, .float cvarMax)
+{
+	if (e.(cvarMin) == e.(cvarMax))
+		return sprintf("^3%s^7 \"%s\"",                            e.(cvarStr), ftos_mindecimals(e.(cvarMin)));
+	else if (e.(cvarMin) < e.(cvarMax))
+		return sprintf(_("^3%s^7 in range \"%s\" to \"%s\""),      e.(cvarStr), ftos_mindecimals(e.(cvarMin)), ftos_mindecimals(e.(cvarMax)));
+	else
+		return sprintf(_("^3%s^7 outside range \"%s\" to \"%s\""), e.(cvarStr), ftos_mindecimals(e.(cvarMax)), ftos_mindecimals(e.(cvarMin)));
+}
 string gettooltip()
 {
+	string s;
 	if (menu_tooltips == 2)
 	{
-		string s;
 		if (menuTooltipItem.controlledCvar)
 		{
 			string cvar_list = getCvarsMulti(menuTooltipItem);
@@ -517,23 +526,54 @@ string gettooltip()
 				cvar_list = strcat(menuTooltipItem.controlledCvar, " ", cvar_list);
 			else
 				cvar_list = menuTooltipItem.controlledCvar;
-			s = strcat("[", cvar_list, " \"", cvar_string(menuTooltipItem.controlledCvar), "\"]");
+			s = strcat("^3", cvar_list,
+				" ^7\"",    cvar_string(menuTooltipItem.controlledCvar), "^7\" "
+				"^8[\"", cvar_defstring(menuTooltipItem.controlledCvar), "^8\"]^7");
 		}
 		else if (menuTooltipItem.onClickCommand)
-		{
-			s = strcat("<", menuTooltipItem.onClickCommand, ">");
-		}
+			s = strcat("<", menuTooltipItem.onClickCommand, "^7>");
 		else
+			s = "";
+
+		if (menuTooltipItem.tooltip)
+			s = strcat(rgb_to_hexcolor(SKINCOLOR_TOOLTIP), (s == "" ? menuTooltipItem.tooltip : strcat(menuTooltipItem.tooltip, "\n\n", s)));
+
+		if (menuTooltipItem.disabled)
 		{
-			return menuTooltipItem.tooltip;
+			if (menuTooltipItem.func_setDependent)
+				s = strcat(s, "\n\n", _("Has special requirements"));
+			else if (menuTooltipItem.cvarString_setDependent)
+				s = strcat(s, "\n\n",
+					sprintf(_("Requires ^3%s^7 not equal to \"%s^7\""), cvar_string(menuTooltipItem.cvarString_setDependent), menuTooltipItem.cvarValue_setDependent));
+			else if (menuTooltipItem.cvar_setDependent)
+			{
+				s = strcat(s, "\n\n");
+				string cvar1_s, cvar2_s, cvar3_s;
+				cvar1_s = gettooltip_dependency_string_numeric(menuTooltipItem, cvar_setDependent, cvarMin_setDependent, cvarMax_setDependent);
+				if (menuTooltipItem.cvar2_setDependent)
+				{
+					cvar2_s = gettooltip_dependency_string_numeric(menuTooltipItem, cvar2_setDependent, cvar2Min_setDependent, cvar2Max_setDependent);
+					if (menuTooltipItem.cvar3_setDependent)
+					{
+						cvar3_s = gettooltip_dependency_string_numeric(menuTooltipItem, cvar3_setDependent, cvar3Min_setDependent, cvar3Max_setDependent);
+						s = strcat(s, sprintf(_("Requires %s, %s, and %s"), cvar1_s, cvar2_s, cvar3_s));
+					}
+					else
+						s = strcat(s, sprintf((menuTooltipItem.op_setDependent ? _("Requires %s or %s") : _("Requires %s and %s")), cvar1_s, cvar2_s));
+				}
+				else
+					s = strcat(s, sprintf(_("Requires %s"), cvar1_s));
+			}
+			// if this point is reached, it's disabled for some other unknown reason
 		}
-		if (menuTooltipItem.tooltip) return strcat(menuTooltipItem.tooltip, " ", s);
-		return s;
 	}
-	return menuTooltipItem.tooltip;
+	else
+		s = menuTooltipItem.tooltip;
+	return s;
 }
 void m_tooltip(vector pos)
 {
+	const float MAX_TOOLTIP_LINES = 16;
 	static string prev_tooltip;
 	entity it;
 	menu_tooltips = cvar("menu_tooltips");
@@ -593,18 +633,27 @@ void m_tooltip(vector pos)
 
 					strcpy(menuTooltipText, gettooltip());
 
-					int i = 0;
 					float w = 0;
-					for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i)
+					float lines = 0;
+					int n = tokenizebyseparator(menuTooltipText, "\n");
+					for (int k = 0; k < n && lines <= MAX_TOOLTIP_LINES; ++k)
 					{
-						string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
-						if (i == 16)
-							s = "...";
-						float f = draw_TextWidth(s, false, fontsize);
-						if (f > w) w = f;
+						if (argv(k) == "")
+						{
+							lines += 0.5; // insert a half-height separator between paragraphs (marked by 2 newlines)
+							continue;
+						}
+						for (getWrappedLine_remaining = argv(k); getWrappedLine_remaining && lines <= MAX_TOOLTIP_LINES; ++lines)
+						{
+							string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithColors);
+							if (lines + 1 > MAX_TOOLTIP_LINES)
+								s = "...";
+							float f = draw_TextWidth_WithColors(s, fontsize);
+							if (f > w) w = f;
+						}
 					}
 					menuTooltipSize.x = w + 2 * (SKINMARGIN_TOOLTIP_x / conwidth);
-					menuTooltipSize.y = i * fontsize.y + 2 * (SKINMARGIN_TOOLTIP_y / conheight);
+					menuTooltipSize.y = lines * fontsize.y + 2 * (SKINMARGIN_TOOLTIP_y / conheight);
 					menuTooltipSize.z = 0;
 				}
 				break;
@@ -665,26 +714,37 @@ void m_tooltip(vector pos)
 			p = menuTooltipOrigin;
 			p.x += SKINMARGIN_TOOLTIP_x / conwidth;
 			p.y += SKINMARGIN_TOOLTIP_y / conheight;
-			int i = 0;
-			for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i, p.y += fontsize.y)
+			float lines = 0;
+			int n = tokenizebyseparator(menuTooltipText, "\n");
+			for (int k = 0; k < n && lines <= MAX_TOOLTIP_LINES; ++k)
 			{
-				string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
-				if (i == 16)
-					s = "...";
-				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, false);
+				if (argv(k) == "")
+				{
+					p.y += fontsize.y / 2;
+					continue;
+				}
+				for (getWrappedLine_remaining = argv(k); getWrappedLine_remaining && lines <= MAX_TOOLTIP_LINES; ++lines)
+				{
+					string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithColors);
+					if (lines + 1 > MAX_TOOLTIP_LINES)
+						s = "...";
+					draw_Text(p, s, fontsize, '1 1 1', SKINALPHA_TOOLTIP * menuTooltipAlpha, true);
+					p.y += fontsize.y;
+				}
 			}
 		}
 	}
 }
 
 const int MIN_DISCONNECTION_TIME = 1;
-float autocvar_menu_force_on_disconnection;
 bool autocvar_g_campaign;
 void m_draw(float width, float height)
 {
 	static float connected_time;
 	if (clientstate() == CS_DISCONNECTED)
 	{
+		// avoid a bug where the main menu re-opens when changing maps
+		// potentially exclusive to `map <mapname>` cmd?
 		if (connected_time && time - connected_time > MIN_DISCONNECTION_TIME)
 		{
 			if (autocvar_g_campaign)
@@ -695,10 +755,18 @@ void m_draw(float width, float height)
 				cvar_set("g_campaign", "0");
 				m_sync();
 			}
-			if (autocvar_menu_force_on_disconnection > 0)
-				m_toggle(true);
+
+			// reload the menu so that disconnecting players don't
+			// have to press ESC to open it again
+			m_toggle(true);
+
 			localcmd("\nmenu_cmd directmenu Welcome RESET\n");
 			connected_time = 0;
+
+			// reset main menu
+			// FIXME?: find out if anything should be done to reset it more,
+			// this is just a fix to make main menu music replay nicely
+			menuNotTheFirstFrame = 1;
 		}
 	}
 	else
@@ -720,18 +788,24 @@ void m_draw(float width, float height)
 		m_init_delayed();
 		return;
 	}
-	if (!menuNotTheFirstFrame)
+
+	if (menuNotTheFirstFrame == 0) // only fade the menu in once ever
+		menuLogoAlpha = -0.8;  // no idea why, but when I start this at zero, it jumps instead of fading FIXME
+
+	if (menuNotTheFirstFrame <= 1) // only once per menu reload
 	{
-		menuNotTheFirstFrame = true;
-		if (Menu_Active && !cvar("menu_video_played"))
-        {
-            localcmd("cd loop $menu_cdtrack\n");
-            // TODO: use this when we have a welcome sound
-            //localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
-            menuLogoAlpha = -0.8;  // no idea why, but when I start this at zero, it jumps instead of fading FIXME
-        }
-		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!
-		localcmd("set menu_video_played 1\n");
+		if (Menu_Active && !autocvar_menu_no_music_nor_welcome)
+		{
+			localcmd("cd loop $menu_cdtrack\n");
+
+			// TODO: enable this when we have a welcome sound
+			// FIXME: change the file used according to the selected announcer
+			// Only play the welcome announcement once, not on any menu reloads
+			//if (menuNotTheFirstFrame == 0)
+			//localcmd("play sound/announcer/default/welcome.wav\n");
+		}
+
+		menuNotTheFirstFrame = 2;
 	}
 
 	float t = gettime();
@@ -897,6 +971,10 @@ void m_toggle(int mode)
 	if (Menu_Active)
 	{
 		if (mode == 1) return;
+		// when togglemenu is called without arguments (mode is -1)
+		// the menu is closed only when connected
+		if (mode == -1 && !(gamestatus & GAME_CONNECTED)) return;
+		// togglemenu 0 always closes the menu
 		m_hide();
 	}
 	else
@@ -963,7 +1041,7 @@ void m_setpointerfocus(entity wnd)
 	if (wnd.focused) m_focus_item_chain(wnd, focus);
 }
 
-void m_goto(string itemname)
+void m_goto(string itemname, bool hide_menu_on_close)
 {
 	if (!menuInitialized)
 	{
@@ -994,12 +1072,17 @@ void m_goto(string itemname)
 
 		if ((e) && (!e.requiresConnection || (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
 		{
-			if(!Menu_Active)
-				e.hideMenuOnClose = true;
 			m_hide();
 			m_activate_window(e);
 			m_setpointerfocus(e);
 			m_display();
+			if (hide_menu_on_close)
+			{
+				while(e.parent && !(e.instanceOfDialog && e.isTabRoot))
+					e = e.parent;
+				if (e.instanceOfDialog)
+					e.hideMenuOnClose = true;
+			}
 		}
 	}
 }

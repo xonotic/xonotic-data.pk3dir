@@ -1,0 +1,45 @@
+//campaign：Xonotic 戰役
+//translators: NaitLee
+//"game","mapname","bots","skill","fraglimit","timelimit","mutator-sets","description","long description"
+//fraglimit: Score limit + lead limit, use "default" to leave the implicit value in effect, leave unset for no limit. eg: 50, 30+5, +10, 0+default
+//timelimit: Match duration in minutes, use "default" to leave the implicit value in effect, leave unset for no limit.
+"dm","boil","5","2","10",,,"死亡競賽：怒火中燒","歡迎來到 Xonotic！\n我們從簡出發，在《怒火中燒》地圖對付 5 隻簡單的機器人。\nXonotic 主要是多人遊戲， 不過在開始線上遊戲之前， 練習對付機器人更好。"
+"tdm","stormkeep","5","2",,"5",,"團隊死亡競賽：風暴要塞","下一步我們在《風暴要塞》練習 3 對 3 的團隊死亡競賽。\n你需要在這 5 分鐘內做到最好， 因為得分最高的團隊獲勝！"
+"mayhem","warfare","5","2",,"5",,"大亂鬥：針鋒相對","持續五分鐘的大亂鬥！\n在這裡，你全副武裝，帶著所有武器加入遊戲。武器對自己沒有傷害；造成最多傷害、殺敵最多的玩家獲勝！"
+"ctf","dance","9","3","3",,,"奪旗戰：起舞","在奪旗戰中，你要拿到對方的旗子、把它帶到你的基地。同時也得保護你自己的旗子、不讓對方拿走，才能成功奪取！\n奪取 3 次即獲勝。"
+"dm","finalrage","6","3","15",,,"死亡競賽：最終狂怒","另一場死亡競賽，不過機器人的水平比之前要好。"
+"dom","atelier","11","4","50",,,"統治：工作坊","佔領並保衛控制點、驅離進犯者，得分以獲勝。"
+"kh","runningmanctf","5","5","500",,,"鑰匙獵取：向前衝","每個團隊都有一把鑰匙。你要把它們都拿到手（殺死鑰匙攜帶者，撿起掉落的鑰匙），之後與團隊內其他攜帶者會面。"
+"ctf","geoplanetary","13","5","5",,,"奪旗戰：行星地帶","一場很「擁擠」的奪旗戰。\n開始線上遊戲前，值得一練。"
+"dm","darkzone","4","5","15",,"g_instagib 1","【特別】死亡競賽：暗黑地帶","InstaGib（瞬殺）！ 每個人都有一把武器——汽化者。\n瞄準你的敵人，一擊必殺。（除非他獲得如「額外生命」等加成）"
+"ctf","vorix","11","6","5",,"g_grappling_hook 1","【特別】奪旗戰：Vorix","鉤爪：按 e 鍵或‘滑鼠按鍵 5’來使用。 勾住一面牆，感受強大的拉力。"
+//"rc","leave_em_behind","0","0","2400",,,"競速：統統甩開","這是競速，跑得越快越好！靠近牆壁或地面時，使用鐳射槍（第一把武器）擊打之可獲得加速度。按住空格以連續加速跳躍（「兔兔蹦」）。\n奪得 24 秒以下的記錄以透過這關。"
+"dm","solarium","8","6","15",,"g_nix 1","【特別】死亡競賽：日光浴場","NIX（無物品 Xonotic）： 每個人都有相同的武器， 不過每隔一段時間會隨機更換。"
+"ft","erbium","5","6","5",,,"冰封戰：廢棄鉺工廠","當你被殺死時，你被凍結。站在被凍結的隊友身旁以復活他們。如果一個團隊的玩家都被凍結，此輪結束。"
+"lms","opium","6","6","5",,,"適者生存：麻木","在此遊戲類型中，你有 5 條生命。 目標是頑強鬥爭、活到最後！"
+"tdm","afterslime","5","7","20",,"sv_gravity 200","【特別】團隊死亡競賽：史萊姆研究室","另一場團隊死亡競賽。\n不過，這裡的重力低一些。"
+"ctf","go","5","7","5",,,"奪旗戰：勇往直前","又一次在太空中的奪旗戰，這次機器人的水平要稍微高一些。當心腳下，不要掉入虛空！"
+"tka","runningman","5","7","15",,,"團隊驅離：向前衝","為團隊爭奪光球，拿起來，開始殺敵！\n提示：你可以向傳送門內射彈，命中另一邊的敵人。"
+//"nb","nexballarena","5","7","5",,,"Nex 球賽：Nex 球賽競技場","這個有點像足球。把球踢進對方的球門裡。率先得 5 分的團隊獲勝！"
+"kh","silentsiege","8","8","600",,,"鑰匙獵取：靜謐圍城","再一場鑰匙獵取！得 600 分獲勝。"
+"ca","bromine","5","8","5",,,"組隊競技：廢棄鉺工廠","這是輪流制的團隊競爭。武器對自己無傷害，但如果你死亡，你就需要等到下一輪才能再次加入遊戲。競爭後仍有倖存玩家的隊伍獲勝！"
+"ctf","implosion","7","8","5",,"g_jetpack 1","【特別】奪旗戰：聚爆實驗場","噴氣揹包：在空中時跳躍（空格）以使用，享受飛行！"
+"as","techassault","7","8","30",,"g_campaign_forceteam 1","突擊：科技突襲","你是進攻方，需要摧毀所有目標。摧毀一個目標後，會出現下一目標。"
+"tmayhem","trident","7","8",,"5",,"團隊大亂鬥：三叉戟","在這裡，你全副武裝，帶著所有武器加入遊戲。武器對己方團隊沒有傷害；造成最多傷害、殺敵最多的團隊獲勝！"
+//"cts","courtfun","0","0","6000",,,"CTS 競速：殿堂歡樂","CTS 競速 (Complete the Stage) 類似於普通競速，不過只需要到達終點。你需要在 1 分鐘內完成。"
+"ft","xoylent","5","8","5",,,"冰封戰：Xoylent","當你被殺死時，你被凍結。站在被凍結的隊友身旁以復活他們。如果一個團隊的玩家都被凍結，此輪結束。"
+"ons","runningmanctf","7","8","1","10",,"猛攻：向前衝","猛攻：貼近已連線但還沒有被佔領的控制點以佔領它；摧毀並佔領所有敵方的控制點。最終摧毀敵方的發電核心以取勝！"
+"ctf","catharsis","9","9","5",,,"奪旗戰：水晶地帶","奪旗戰，有到目前為止最難的機器人！5 次奪取以獲勝。"
+"dm","stormkeep","5","9","15",,"g_new_toys 1; g_cloaked 1","【特別】死亡競賽：風暴要塞","新玩意：這裡會生成一些新武器，像地雷放置器，重型鐳射突擊大炮，和 T.A.G. 瞄準者。\n此外還有另一個修改：近乎隱形的玩家。"
+"ctf","space-elevator","7","10","3",,"g_instagib 1; g_grappling_hook 1","【特別】奪旗戰：太空電梯","這次是瞬殺奪旗戰。同時你會體驗使用非手持抓鉤！（按 e 鍵或‘滑鼠按鍵 5’來使用）"
+"duel","fuse","1","10","10","5","g_forced_respawn 1","【特別】決鬥：導火索","這次你只面對一個機器人——一場所謂的「決鬥」。多人遊戲非常流行決鬥。"
+"ca","warfare","5","10","5",,"g_vampire 1; g_vampire_factor 0.75; g_balance_health_limit 400; g_ca_start_health 400; g_ca_start_armor 0","【特別】組隊競技：針鋒相對","啟用了吸血修改，造成傷害可以恢復血量！\n競爭後仍有倖存玩家的隊伍獲勝！"
+"dm","glowplant","5","11","20",,,"【最終】死亡競賽：熒光反應堆","在這場最終競賽，你要打敗 5 隻能力最強的機器人。你需要 20 次殺敵以完結這場戰役！此後你就有能力和真人對抗！"
+"mayhem","stormkeep","9","11","300",,"g_weaponarena devastator; g_mayhem_selfdamage 1","【附加】大亂鬥：風暴要塞","驚喜！\n歡迎來到火箭地獄！\n這裡只有滅世火箭炮，可以對自己造成傷害——不要炸飛自己！玩得開心！"
+// Dr. Jaska: fix bot weapon priority and weapon balance before enabling full weapon arsenal for this one
+"mayhem","trident","6","1337",,"5","g_weaponarena \"blaster mortar crylink devastator \"","【終結】大亂鬥：三叉戟","驚喜！\n歡迎來到這場靈魂出竅的大亂鬥！\n沒有多年的遊戲經驗和出色的戰鬥技巧，是無法在這一關取勝的。"
+
+// rc & cts disabled, since we hide these modes
+
+// note that currently any cvars changed in mutator-sets must be accessed in code using the cvar() function (or autocvar aliases to that), otherwise they will not work
+// see https://gitlab.com/xonotic/xonotic-data.pk3dir/issues/1976 for details

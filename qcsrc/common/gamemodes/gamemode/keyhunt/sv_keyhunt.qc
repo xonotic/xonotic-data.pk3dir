@@ -1,5 +1,6 @@
 #include "sv_keyhunt.qh"
 
+#include <common/checkextension.qh>
 #include <server/command/vote.qh>
 #include <server/gamelog.qh>
 #include <server/damage.qh>
@@ -16,6 +17,11 @@ float autocvar_g_balance_keyhunt_return_when_unreachable;
 float autocvar_g_balance_keyhunt_dropvelocity;
 float autocvar_g_balance_keyhunt_maxdist;
 float autocvar_g_balance_keyhunt_protecttime;
+
+vector autocvar_g_balance_keyhunt_carrier_damage;
+vector autocvar_g_balance_keyhunt_carrier_force;
+vector autocvar_g_balance_keyhunt_noncarrier_damage;
+vector autocvar_g_balance_keyhunt_noncarrier_force;
 
 int autocvar_g_balance_keyhunt_score_capture;
 int autocvar_g_balance_keyhunt_score_carrierfrag;
@@ -45,8 +51,8 @@ const float KH_KEY_XYSPEED = 45;
 #endif
 const float KH_KEY_WP_ZSHIFT = 20;
 
-const vector KH_KEY_MIN = '-10 -10 -46';
-const vector KH_KEY_MAX = '10 10 3';
+const vector KH_KEY_MIN = '-25 -25 -46'; // 0.8.6 used '-10 -10 -46' with sv_legacy_bbox_expand 1 and FL_ITEM
+const vector KH_KEY_MAX = '25 25 4';     // 0.8.6 used '10 10 3'     with sv_legacy_bbox_expand 1 and FL_ITEM
 const float KH_KEY_BRIGHTNESS = 2;
 
 bool kh_no_radar_circles;
@@ -56,8 +62,7 @@ bool kh_no_radar_circles;
 //     bits  5- 9: team of key 2, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 10-14: team of key 3, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 15-19: team of key 4, or 0 for no such key, or 30 for dropped, or 31 for self
-.float siren_time;  //  time delay the siren
-//.float stuff_time;  //  time delay to stuffcmd a cvar
+.float siren_time;  // time delay the siren
 
 int kh_Team_ByID(int t)
 {
@@ -69,14 +74,13 @@ int kh_Team_ByID(int t)
 }
 
 entity kh_controller;
-//bool kh_tracking_enabled;
 int kh_teams;
 int kh_interferemsg_team;
 float kh_interferemsg_time;
 .entity kh_next, kh_prev; // linked list
 .float kh_droptime;
 .int kh_dropperteam;
-.entity kh_previous_owner;
+.entity previous_owner; // also used on ka balls
 .int kh_previous_owner_playerid;
 
 int kh_key_dropped, kh_key_carried;
@@ -90,7 +94,7 @@ void kh_ScoreRules(int teams)
         field_team(ST_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
         field(SP_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
         field(SP_KH_PUSHES, "pushes", 0);
-        field(SP_KH_DESTROYS, "destroyed", SFL_LOWER_IS_BETTER);
+        field(SP_KH_DESTRUCTIONS, "destructions", SFL_LOWER_IS_BETTER);
         field(SP_KH_PICKUPS, "pickups", 0);
         field(SP_KH_KCKILLS, "kckills", 0);
         field(SP_KH_LOSSES, "losses", SFL_LOWER_IS_BETTER);
@@ -99,22 +103,25 @@ void kh_ScoreRules(int teams)
 
 bool kh_KeyCarrier_waypointsprite_visible_for_player(entity this, entity player, entity view)  // runs all the time
 {
-	if(!IS_PLAYER(view) || DIFF_TEAM(this, view))
-		if(!kh_tracking_enabled)
-			return false;
+	if(view.kh_next && IS_SPEC(player))
+		return false; // we don't want spectators of key carriers to see the attached waypoint on the top of their screen
+	if(IS_SPEC(player) || warmup_stage || SAME_TEAM(player, this.owner))
+		return true;
+	if(IS_INVISIBLE(this.owner))
+		return false; // hide the waypointsprite if the owner is invisible
 
-	return true;
+	return kh_tracking_enabled;
 }
 
 bool kh_Key_waypointsprite_visible_for_player(entity this, entity player, entity view)
 {
+	// always show the dropped key waypoint while in warmup or spectating
+	if(this.owner && !this.owner.owner && (IS_SPEC(player) || warmup_stage))
+		return true;
 	if(!kh_tracking_enabled)
 		return false;
-	if(!this.owner)
-		return true;
-	if(!this.owner.owner)
-		return true;
-	return false;  // draw only when key is not owned
+
+	return !this.owner || !this.owner.owner; // draw only when key is not owned
 }
 
 void kh_update_state()
@@ -172,6 +179,8 @@ void kh_Controller_Think(entity this)  // called a lot
 
 // frags f: take from cvar * f
 // frags 0: no frags
+// field where the decimal part of SCORE is accumulated (shared with other gamemodes)
+.float float2int_decimal_fld;
 void kh_Scores_Event(entity player, entity key, string what, float frags_player, float frags_owner)  // update the score when a key is captured
 {
 	string s;
@@ -179,10 +188,10 @@ void kh_Scores_Event(entity player, entity key, string what, float frags_player,
 		return;
 
 	if(frags_player)
-		UpdateFrags(player, frags_player);
+		GameRules_scoring_add_team_float2int(player, SCORE, frags_player, float2int_decimal_fld, 1);
 
 	if(key && key.owner && frags_owner)
-		UpdateFrags(key.owner, frags_owner);
+		GameRules_scoring_add_team_float2int(key.owner, SCORE, frags_owner, float2int_decimal_fld, 1);
 
 	if(!autocvar_sv_eventlog)  //output extra info to the console or text file
 		return;
@@ -215,6 +224,7 @@ vector kh_AttachedOrigin(entity e)  // runs when a team captures the flag, it ca
 
 void kh_Key_Attach(entity key)  // runs when a player picks up a key and several times when a key is assigned to a player at the start of a round
 {
+	key.solid = SOLID_NOT; // before setorigin to prevent area grid linking
 #ifdef KH_PLAYER_USE_ATTACHMENT
 	entity first = key.owner.kh_next;
 	if(key == first)
@@ -248,7 +258,6 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 	key.flags = 0;
 	if(IL_CONTAINS(g_items, key))
 		IL_REMOVE(g_items, key);
-	key.solid = SOLID_NOT;
 	set_movetype(key, MOVETYPE_NONE);
 	key.team = key.owner.team;
 	key.nextthink = time;
@@ -260,6 +269,7 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 
 void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs several times times when all the keys are captured
 {
+	key.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 #ifdef KH_PLAYER_USE_ATTACHMENT
 	entity first = key.owner.kh_next;
 	if(key == first)
@@ -289,15 +299,15 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.flags = FL_ITEM;
 	if(!IL_CONTAINS(g_items, key))
 		IL_PUSH(g_items, key);
-	key.solid = SOLID_TRIGGER;
 	set_movetype(key, MOVETYPE_TOSS);
+	nudgeoutofsolid_OrFallback(key); // a key has a bigger bbox than a player
 	key.pain_finished = time + autocvar_g_balance_keyhunt_delay_return;
 	key.damageforcescale = autocvar_g_balance_keyhunt_damageforcescale;
 	key.takedamage = DAMAGE_YES;
 	// let key.team stay
 	key.modelindex = kh_key_dropped;
 	navigation_dynamicgoal_set(key, key.owner);
-	key.kh_previous_owner = key.owner;
+	key.previous_owner = key.owner;
 	key.kh_previous_owner_playerid = key.owner.playerid;
 }
 
@@ -454,6 +464,8 @@ void kh_Key_Touch(entity this, entity toucher)  // runs many, many times when a 
 		return;
 	if(IS_DEAD(toucher))
 		return;
+	if(IS_INDEPENDENT_PLAYER(toucher))
+		return;
 	if(toucher == this.enemy)
 		if(time < this.kh_droptime + autocvar_g_balance_keyhunt_delay_collect)
 			return;  // you just dropped it!
@@ -581,9 +593,9 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 
 	if(attacker)
 	{
-		if(lostkey.kh_previous_owner)
-			kh_Scores_Event(lostkey.kh_previous_owner, NULL, "pushed", 0, -autocvar_g_balance_keyhunt_score_push);
-			// don't actually GIVE him the -nn points, just log
+		if(lostkey.previous_owner)
+			kh_Scores_Event(lostkey.previous_owner, NULL, "pushed", 0, -autocvar_g_balance_keyhunt_score_push);
+			// don't actually GIVE them the -nn points, just log
 		kh_Scores_Event(attacker, NULL, "push", autocvar_g_balance_keyhunt_score_push, 0);
 		GameRules_scoring_add(attacker, KH_PUSHES, 1);
 		//centerprint(attacker, "Your push is the best!"); // does this really need to exist?
@@ -601,12 +613,12 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 			if(key.owner && key.team != loser_team)
 				++keys;
 
-		if(lostkey.kh_previous_owner)
-			kh_Scores_Event(lostkey.kh_previous_owner, NULL, "destroyed", 0, -autocvar_g_balance_keyhunt_score_destroyed);
-			// don't actually GIVE him the -nn points, just log
+		if(lostkey.previous_owner)
+			kh_Scores_Event(lostkey.previous_owner, NULL, "destroyed", 0, -autocvar_g_balance_keyhunt_score_destroyed);
+			// don't actually GIVE them the -nn points, just log
 
-		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
-			GameRules_scoring_add(lostkey.kh_previous_owner, KH_DESTROYS, 1);
+		if(lostkey.previous_owner.playerid == lostkey.kh_previous_owner_playerid)
+			GameRules_scoring_add(lostkey.previous_owner, KH_DESTRUCTIONS, 1);
 
 		DistributeEvenly_Init(autocvar_g_balance_keyhunt_score_destroyed, keys * of + players);
 
@@ -646,9 +658,9 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 	int realteam = kh_Team_ByID(lostkey.count);
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(loser_team, CENTER_ROUND_TEAM_LOSS));
 	if(attacker)
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_PUSHED), attacker.netname, lostkey.kh_previous_owner.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_PUSHED), attacker.netname, lostkey.previous_owner.netname);
 	else
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_DESTROYED), lostkey.kh_previous_owner.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_DESTROYED), lostkey.previous_owner.netname);
 
 	play2all(SND(KH_DESTROY));
 	te_tarexplosion(lostkey.origin);
@@ -942,8 +954,11 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	kh_tracking_enabled = false;
-	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEYHUNT_SCAN, autocvar_g_balance_keyhunt_delay_tracking);
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, kh_EnableTrackingDevice);
+	if(autocvar_g_balance_keyhunt_delay_tracking >= 0)
+	{
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEYHUNT_SCAN, autocvar_g_balance_keyhunt_delay_tracking);
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, kh_EnableTrackingDevice);
+	}
 }
 
 float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the player score
@@ -979,27 +994,24 @@ void kh_Initialize()  // sets up th KH environment
 		kh_teams = cvar("g_keyhunt_teams"); // read the cvar directly as it gets written earlier in the same frame
 	kh_teams = BITS(bound(2, kh_teams, 4));
 
-	// make a KH entity for controlling the game
-	kh_controller = new_pure(kh_controller);
-	setthink(kh_controller, kh_Controller_Think);
-	kh_Controller_SetThink(0, kh_WaitForPlayers);
+	// use a temp entity to avoid linking kh_controller to the world with setmodel
+	entity tmp_ent = spawn();
+	setmodel(tmp_ent, MDL_KH_KEY);
+	kh_key_dropped = tmp_ent.modelindex;
 
-	setmodel(kh_controller, MDL_KH_KEY);
-	kh_key_dropped = kh_controller.modelindex;
-	/*
-	dprint(vtos(kh_controller.mins));
-	dprint(vtos(kh_controller.maxs));
-	dprint("\n");
-	*/
 #ifdef KH_PLAYER_USE_CARRIEDMODEL
-	setmodel(kh_controller, MDL_KH_KEY_CARRIED);
-	kh_key_carried = kh_controller.modelindex;
+	setmodel(tmp_ent, MDL_KH_KEY_CARRIED);
+	kh_key_carried = tmp_ent.modelindex;
 #else
 	kh_key_carried = kh_key_dropped;
 #endif
 
-	kh_controller.model = "";
-	kh_controller.modelindex = 0;
+	delete(tmp_ent);
+
+	// make a KH entity for controlling the game
+	kh_controller = new_pure(kh_controller);
+	setthink(kh_controller, kh_Controller_Think);
+	kh_Controller_SetThink(0, kh_WaitForPlayers);
 
 	kh_ScoreRules(kh_teams);
 }
@@ -1020,30 +1032,37 @@ void(entity this) havocbot_role_kh_offense;
 void(entity this) havocbot_role_kh_freelancer;
 
 
+bool kh_waypointsprite_visible_for_bot(entity this, entity e)
+{
+	entity key_wp = e.waypointsprite_attachedforcarrier;
+	if (!key_wp)
+	if (!key_wp.waypointsprite_visible_for_player(key_wp, this, WaypointSprite_getviewentity(this)))
+	{ // has no waypoint, or waypoint not visible
+		if (!checkpvs(this.origin + this.view_ofs, e)) // key cannot be seen
+			return false;
+	}
+	return true;
+}
+
 void havocbot_goalrating_kh(entity this, float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy)
 {
-	entity head;
-	for (head = kh_worldkeylist; head; head = head.kh_worldkeynext)
+	for (entity head = kh_worldkeylist; head; head = head.kh_worldkeynext)
 	{
-		if(head.owner == this)
-			continue;
-		if(!kh_tracking_enabled)
+		if (head.owner)
 		{
-			// if it's carried by our team we know about it
-			// otherwise we have to see it to know about it
-			if(!head.owner || head.team != this.team)
-			{
-				traceline(this.origin + this.view_ofs, head.origin, MOVE_NOMONSTERS, this);
-				if (trace_fraction < 1 && trace_ent != head)
-					continue; // skip what I can't see
-			}
+			if (head.owner == this || !kh_waypointsprite_visible_for_bot(this, head.owner))
+				continue;
+			if (SAME_TEAM(head, this))
+				navigation_routerating(this, head.owner, ratingscale_team * 10000, 100000);
+			else
+				navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
 		}
-		if(!head.owner)
-			navigation_routerating(this, head, ratingscale_dropped * 10000, 100000);
-		else if(head.team == this.team)
-			navigation_routerating(this, head.owner, ratingscale_team * 10000, 100000);
 		else
-			navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
+		{
+			if (!kh_waypointsprite_visible_for_bot(this, head))
+				continue;
+			navigation_routerating(this, head, ratingscale_dropped * 10000, 100000);
+		}
 	}
 
 	havocbot_goalrating_items(this, 80000, this.origin, 10000);
@@ -1213,6 +1232,53 @@ void havocbot_role_kh_freelancer(entity this)
 
 
 // register this as a mutator
+
+MUTATOR_HOOKFUNCTION(kh, Damage_Calculate) // for changing damage and force values that are applied to players
+{
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
+	// as a gamemode rule, only apply scaling to player versus player combat
+	if (!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
+		return;
+
+	if (frag_attacker.kh_next != NULL) // if the attacker is a key carrier
+	{
+		if (frag_target == frag_attacker) // damage done to themselves
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_force.x;
+		}
+		else if (frag_target.kh_next != NULL) // damage done to other key carriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_force.y;
+		}
+		else // damage done to noncarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_carrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_carrier_force.z;
+		}
+	}
+	else
+	{
+		if (frag_target == frag_attacker) // damage done to themselves
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_force.x;
+		}
+		else if (frag_target.kh_next != NULL) // damage done to key carriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_force.y;
+		}
+		else // damage done to other noncarriers
+		{
+			M_ARGV(4, float) *= autocvar_g_balance_keyhunt_noncarrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_balance_keyhunt_noncarrier_force.z;
+		}
+	}
+}
 
 MUTATOR_HOOKFUNCTION(kh, ClientDisconnect)
 {

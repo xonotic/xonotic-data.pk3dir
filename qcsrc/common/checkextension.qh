@@ -1,0 +1,12 @@
+#pragma once
+
+#ifdef GAMEQC
+var entity(vector mins, vector maxs, .entity tofield) findbox_tofield_OrFallback = nil;
+var entity(vector mins, vector maxs) findbox_OrFallback = nil;
+#endif
+
+#ifdef SVQC // change to GAMEQC if/when we use nudgeoutofsolid in CSQC
+var float(entity ent) nudgeoutofsolid_OrFallback = nil;
+#endif
+
+void CheckEngineExtensions(void);

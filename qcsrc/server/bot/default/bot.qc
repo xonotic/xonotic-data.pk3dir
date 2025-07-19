@@ -3,6 +3,7 @@
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
 #include <common/net_linked.qh>
+#include <common/notifications/all.qh>
 #include <common/physics/player.qh>
 #include <common/stats.qh>
 #include <common/teams.qh>
@@ -30,6 +31,7 @@
 #include <server/weapons/accuracy.qh>
 #include <server/weapons/selection.qh>
 #include <server/world.qh>
+#include <server/command/vote.qh>
 
 STATIC_INIT(bot) { bot_calculate_stepheightvec(); }
 
@@ -51,6 +53,8 @@ entity bot_spawn()
 		ClientConnect(bot);
 		bot_setclientfields(bot);
 		PutClientInServer(bot);
+		if (!teamplay)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, bot.netname);
 	}
 	return bot;
 }
@@ -64,16 +68,14 @@ void bot_think(entity this)
 	if(autocvar_bot_god)
 		this.flags |= FL_GODMODE;
 
-	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * min(14 / (skill + this.bot_aiskill + 14), 1));
+	// if bot skill is high enough don't limit their think frequency
+	if (SUPERBOT)
+		this.bot_nextthink = max(time, this.bot_nextthink) + 0.005;
+	else
+		this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * min(14 / (skill + this.bot_aiskill + 14), 1));
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
-		if (IS_PLAYER(this))
-		{
-			.entity weaponentity = weaponentities[0];
-			if(this.(weaponentity).m_weapon == WEP_Null)
-				W_NextWeapon(this, 0, weaponentity);
-		}
 		CS(this).movement = '0 0 0';
 		this.bot_nextthink = time + 0.5;
 		return;
@@ -90,13 +92,19 @@ void bot_think(entity this)
 	this.dmg_save = 0;
 	this.dmg_inflictor = NULL;
 
-	// calculate an aiming latency based on the skill setting
-	// (simulated network latency + naturally delayed reflexes)
-	//this.ping = 0.7 - bound(0, 0.05 * skill, 0.5); // moved the reflexes to bot_aimdir (under the name 'think')
-	// minimum ping 20+10 random
-	CS(this).ping = bound(0,0.07 - bound(0, (skill + this.bot_pingskill) * 0.005,0.05)+random()*0.01,0.65); // Now holds real lag to server, and higer skill players take a less laggy server
-	// skill 10 = ping 0.2 (adrenaline)
-	// skill 0 = ping 0.7 (slightly drunk)
+	// if bot skill is high enough don't assign latency to them
+	if (SUPERBOT)
+		CS(this).ping = 0;
+	else
+	{
+		// calculate an aiming latency based on the skill setting
+		// (simulated network latency + naturally delayed reflexes)
+		//this.ping = 0.7 - bound(0, 0.05 * skill, 0.5); // moved the reflexes to bot_aimdir (under the name 'think')
+		// minimum ping 20+10 random
+		CS(this).ping = bound(0,0.07 - bound(0, (skill + this.bot_pingskill) * 0.005,0.05)+random()*0.01,0.65); // Now holds real lag to server, and higher skill players take a less laggy server
+		// skill 10 = ping 0.2 (adrenaline)
+		// skill 0 = ping 0.7 (slightly drunk)
+	}
 
 	// clear buttons
 	PHYS_INPUT_BUTTON_ATCK(this) = false;
@@ -113,12 +121,8 @@ void bot_think(entity this)
 
 	if (time < game_starttime)
 	{
-		.entity weaponentity = weaponentities[0];
-		if(this.(weaponentity).m_weapon == WEP_Null)
-			W_NextWeapon(this, 0, weaponentity);
 		// block the bot during the countdown to game start
 		CS(this).movement = '0 0 0';
-		this.bot_nextthink = game_starttime;
 		return;
 	}
 
@@ -145,6 +149,12 @@ void bot_think(entity this)
 	}
 	else if(this.aistatus & AI_STATUS_STUCK)
 		navigation_unstuck(this);
+
+	if (warmup_stage && !this.ready)
+	{
+		this.ready = true;
+		ReadyCount(); // this must be delayed until the bot has spawned
+	}
 
 	// now call the current bot AI (havocbot for example)
 	this.bot_ai(this);
@@ -279,13 +289,32 @@ void bot_setnameandstuff(entity this)
 	READSKILL(bot_thinkskill, 1, 0.5); // think skill
 	READSKILL(bot_aiskill, 2, 0); // "ai" skill
 
+	// if bot skill is high enough don't limit their skill
+	if (SUPERBOT)
+	{
+		// commented out means they're meaningless with this high skill
+		// no reason to set them, uncomment if this changes
+		//this.havocbot_keyboardskill = 10;
+		//this.bot_moveskill = 10; //midair modifier sets this to 0 to disable bhop
+		//this.bot_dodgeskill = 10;
+		//this.bot_pingskill = 10;
+		//this.bot_weaponskill = 10;
+		//this.bot_aggresskill = 10;
+		this.bot_rangepreference = 1; // no range preference modification
+		//this.bot_aimskill = 10;
+		//this.bot_offsetskill = 10;
+		//this.bot_mouseskill = 10;
+		//this.bot_thinkskill = 10;
+		//this.bot_aiskill = 10;
+	}
 	if (file >= 0 && argv(prio) != "")
 		LOG_INFOF("^1Warning^7: too many parameters for bot %s, please check format of %s", bot_name, autocvar_bot_config_file);
 
 	this.bot_config_loaded = true;
 
-	// this is really only a default, TeamBalance_JoinBestTeam is called later
 	setcolor(this, stof(bot_shirt) * 16 + stof(bot_pants));
+	this.team = -1; // undo team change by setcolor
+	// save clientcolors now because they may be overriden when joining a team
 	this.bot_preferredcolors = this.clientcolors;
 
 	string prefix = (autocvar_g_campaign ? "" : autocvar_bot_prefix);

@@ -283,12 +283,18 @@ MUTATOR_HOOKFUNCTION(cts, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if (Item_IsLoot(item))
+	if (ITEM_IS_LOOT(item))
 	{
-		if(item.monster_loot && autocvar_g_cts_drop_monster_items)
+		if(item.monster_item && autocvar_g_cts_drop_monster_items)
 			return false;
 		return true;
 	}
+}
+
+MUTATOR_HOOKFUNCTION(cts, MonsterDropItem)
+{
+	if(!autocvar_g_cts_drop_monster_items)
+		M_ARGV(1, string) = "";
 }
 
 MUTATOR_HOOKFUNCTION(cts, Damage_Calculate)
@@ -345,11 +351,6 @@ MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
 	// useful to prevent cheating by running back to the start line and starting out with more speed
 	if(autocvar_g_cts_finish_kill_delay)
 		ClientKill_Silent(player, autocvar_g_cts_finish_kill_delay);
-}
-
-MUTATOR_HOOKFUNCTION(cts, HideTeamNagger)
-{
-	return true; // doesn't work so well (but isn't cts a teamless mode?)
 }
 
 MUTATOR_HOOKFUNCTION(cts, FixClientCvars)

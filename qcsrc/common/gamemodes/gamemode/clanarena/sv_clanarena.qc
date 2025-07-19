@@ -1,7 +1,7 @@
 #include "sv_clanarena.qh"
 
 float autocvar_g_ca_damage2score = 100;
-bool autocvar_g_ca_prevent_stalemate;
+int autocvar_g_ca_prevent_stalemate;
 
 float autocvar_g_ca_start_health = 200;
 float autocvar_g_ca_start_armor = 200;
@@ -9,10 +9,9 @@ float autocvar_g_ca_start_ammo_shells = 60;
 float autocvar_g_ca_start_ammo_nails = 320;
 float autocvar_g_ca_start_ammo_rockets = 160;
 float autocvar_g_ca_start_ammo_cells = 180;
-float autocvar_g_ca_start_ammo_plasma = 180;
 float autocvar_g_ca_start_ammo_fuel = 0;
 
-.float ca_damage_counter;
+.int prev_team;
 
 void CA_count_alive_players()
 {
@@ -46,89 +45,112 @@ void nades_Clear(entity player);
 
 int CA_PreventStalemate()
 {
-	//LOG_INFO("PreventStalemate running");
-	int winnerTeam = 0;
-	int secondTeam = 0;
+	//bprint("PreventStalemate running\n");
 
-	for(int i = 1; i <= AVAILABLE_TEAMS; i++)
+	// g_ca_prevent_stalemate:
+	// Run survivor count check with 1 aka bit 0b0001
+	// Run total health check with 2 aka bit 0b0010
+	// With a value like 3 which has both bits both are ran
+
+	bool prevent_stalemate_by_survivors = (autocvar_g_ca_prevent_stalemate & BIT(0));
+	bool prevent_stalemate_by_health    = (autocvar_g_ca_prevent_stalemate & BIT(1));
+
+	// Check which team has more alive players
+	if (prevent_stalemate_by_survivors)
 	{
-		if(!winnerTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)))
-		{
-			secondTeam = winnerTeam;
-			winnerTeam = Team_IndexToTeam(i);
-		}
-		else
-		{
-			if(!secondTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)))
-				secondTeam = Team_IndexToTeam(i);
-		}
-	}
+		int winnerTeam = 0;
+		int secondTeam = 0;
 
-	if(Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)) != Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)))
-	{
-		LOG_INFOF("Stalemate broken by alive players. Best team: %s%s (%d)^7 - Trailing team: %s%s (%d)",
-			Team_ColorCode(winnerTeam), Team_ColorName(winnerTeam), Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)),
-			Team_ColorCode(secondTeam), Team_ColorName(secondTeam), Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)));
-		return winnerTeam;
-	}
-
-	// Equality. Let's check which team has more health now
-	//LOG_INFO("Equality. Checking health now.");
-	winnerTeam = 0;
-	secondTeam = 0;
-	int winnerTeamHealth = 0;
-	int secondTeamHealth = 0;
-	int teamIndex, teamHealth;
-
-	for(int i = 1; i <= AVAILABLE_TEAMS; i++)
-	{
-		teamIndex = i;
-		teamHealth = 0;
-
-		// Add up health for the players in this team
-		FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it) && it.team == Team_IndexToTeam(teamIndex),
+		for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
 		{
-			if (IS_DEAD(it))
-				continue;
-			teamHealth += GetResource(it, RES_HEALTH) + GetResource(it, RES_ARMOR);
-		});
-
-		// Set the winner teams
-		if(!winnerTeam || teamHealth > winnerTeamHealth)
-		{
-			secondTeam = winnerTeam;
-			secondTeamHealth = winnerTeamHealth;
-			winnerTeam = Team_IndexToTeam(i);
-			winnerTeamHealth = teamHealth;
-		}
-		else
-		{
-			if(!secondTeam || teamHealth > secondTeamHealth)
+			if(!winnerTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)))
 			{
-				secondTeam = Team_IndexToTeam(i);
-				secondTeamHealth = teamHealth;
+				secondTeam = winnerTeam;
+				winnerTeam = Team_IndexToTeam(i);
+			}
+			else
+			{
+				if(!secondTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)))
+					secondTeam = Team_IndexToTeam(i);
 			}
 		}
+
+		if(Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)) != Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)))
+		{
+			bprint(sprintf("Stalemate broken by alive players. Best team: %s%s (%d)^7 - Trailing team: %s%s (%d)\n",
+				Team_ColorCode(winnerTeam), Team_ColorName(winnerTeam), Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)),
+				Team_ColorCode(secondTeam), Team_ColorName(secondTeam), Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam))));
+			return winnerTeam;
+		}
 	}
 
-	if(winnerTeamHealth != secondTeamHealth)
+	// Check which team has more health
+	if (prevent_stalemate_by_health)
 	{
-		LOG_INFOF("Stalemate broken by team health. Best team: %s%s (%d)^7 - Trailing team: %s%s (%d)",
-			Team_ColorCode(winnerTeam), Team_ColorName(winnerTeam), winnerTeamHealth,
-			Team_ColorCode(secondTeam), Team_ColorName(secondTeam), secondTeamHealth);
-		return winnerTeam;
+		int winnerTeam = 0;
+		int secondTeam = 0;
+		int winnerTeamHealth = 0;
+		int secondTeamHealth = 0;
+		int teamIndex, teamHealth;
+
+		for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
+		{
+			teamIndex = i;
+			teamHealth = 0;
+
+			// Add up health for the players in this team
+			FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it) && it.team == Team_IndexToTeam(teamIndex),
+			{
+				if (IS_DEAD(it))
+					continue;
+				teamHealth += floor(GetResource(it, RES_HEALTH)) + floor(GetResource(it, RES_ARMOR));
+			});
+
+			// Round the resulting team health just in case
+			teamHealth = rint(teamHealth);
+
+			// Set the winner teams
+			if(!winnerTeam || teamHealth > winnerTeamHealth)
+			{
+				secondTeam = winnerTeam;
+				secondTeamHealth = winnerTeamHealth;
+				winnerTeam = Team_IndexToTeam(i);
+				winnerTeamHealth = teamHealth;
+			}
+			else
+			{
+				if(!secondTeam || teamHealth > secondTeamHealth)
+				{
+					secondTeam = Team_IndexToTeam(i);
+					secondTeamHealth = teamHealth;
+				}
+			}
+		}
+
+		if(winnerTeamHealth != secondTeamHealth)
+		{
+			bprint(sprintf("Stalemate broken by team health. Best team: %s%s (%d)^7 - Trailing team: %s%s (%d)\n",
+				Team_ColorCode(winnerTeam), Team_ColorName(winnerTeam), winnerTeamHealth,
+				Team_ColorCode(secondTeam), Team_ColorName(secondTeam), secondTeamHealth));
+			return winnerTeam;
+		}
 	}
-	else
-		return -2; // Equality. Can't avoid the stalemate.
+
+	return -2; // Equality. Can't avoid the stalemate.
 }
 
+float autocvar_g_ca_round_enddelay = 1;
 float CA_CheckWinner()
 {
 	int winner_team = 0;
 
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		if(autocvar_g_ca_prevent_stalemate)
+		// attempt to prevent stalemate by survivor count AND/OR total team health?
+		bool prevent_stalemate_by_survivors = (autocvar_g_ca_prevent_stalemate & BIT(0));
+		bool prevent_stalemate_by_health    = (autocvar_g_ca_prevent_stalemate & BIT(1));
+
+		if(prevent_stalemate_by_survivors || prevent_stalemate_by_health)
 			winner_team = CA_PreventStalemate();
 		else
 			winner_team = -2;
@@ -138,7 +160,29 @@ float CA_CheckWinner()
 	if (!winner_team)
 		winner_team = Team_GetWinnerAliveTeam();
 	if (!winner_team)
+	{
+		// Dr. Jaska:
+		// reset delay time here only for consistency
+		// CA players currently have no known ways to resurrect
+		round_handler_ResetEndDelayTime();
 		return 0;
+	}
+
+	// delay round ending a bit
+	if (autocvar_g_ca_round_enddelay
+		&& round_handler_GetEndTime() > 0
+		&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
+	{
+		if (round_handler_GetEndDelayTime() == -1)
+		{
+			round_handler_SetEndDelayTime(min(time + autocvar_g_ca_round_enddelay, round_handler_GetEndTime()));
+			return 0;
+		}
+		else if (round_handler_GetEndDelayTime() >= time)
+		{
+			return 0;
+		}
+	}
 
 	if(winner_team > 0)
 	{
@@ -169,6 +213,8 @@ float CA_CheckWinner()
 void CA_RoundStart()
 {
 	allowed_to_spawn = boolean(warmup_stage);
+	if (!warmup_stage)
+		FOREACH_CLIENT(IS_PLAYER(it), it.prev_team = it.team);
 }
 
 bool CA_CheckTeams()
@@ -234,13 +280,15 @@ entity CA_SpectateNext(entity player, entity start)
 }
 
 
+// field where the decimal part of SCORE is accumulated (shared with other gamemodes)
+.float float2int_decimal_fld;
 MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
 	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	if (time <= game_starttime) // reset on game restart, not on round start
-		player.ca_damage_counter = 0;
+		player.float2int_decimal_fld = 0;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 }
@@ -270,6 +318,9 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
+
+	if (!warmup_stage)
+		eliminatedPlayers.SendFlags |= 1;
 }
 
 MUTATOR_HOOKFUNCTION(ca, reset_map_players)
@@ -287,6 +338,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
 			PutClientInServer(it);
 		}
+		it.prev_team = 0;
 	});
 	return true;
 }
@@ -294,6 +346,12 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 {
 	allowed_to_spawn = true;
+	return true;
+}
+
+MUTATOR_HOOKFUNCTION(ca, MatchEnd_BeforeScores)
+{
+	MatchEnd_RestoreSpectatorAndTeamStatus(prev_team);
 	return true;
 }
 
@@ -405,7 +463,6 @@ MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_ca_start_ammo_nails;
 	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_ca_start_ammo_rockets;
 	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_ca_start_ammo_cells;
-	start_ammo_plasma  = warmup_start_ammo_plasma  = autocvar_g_ca_start_ammo_plasma;
 	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_ca_start_ammo_fuel;
 }
 
@@ -489,7 +546,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 	}
 
 	if (scorer)
-		GameRules_scoring_add_float2int(scorer, SCORE, scorer_damage, ca_damage_counter, autocvar_g_ca_damage2score);
+		GameRules_scoring_add_float2int(scorer, SCORE, scorer_damage, float2int_decimal_fld, autocvar_g_ca_damage2score);
 }
 
 MUTATOR_HOOKFUNCTION(ca, CalculateRespawnTime)
@@ -584,11 +641,6 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 	}
 
 	return MUT_SPECCMD_CONTINUE;
-}
-
-MUTATOR_HOOKFUNCTION(ca, HideTeamNagger)
-{
-	return true; // doesn't work well with the whole spectator as player thing
 }
 
 MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)

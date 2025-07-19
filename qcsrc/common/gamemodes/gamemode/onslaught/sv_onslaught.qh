@@ -94,4 +94,4 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org, float sradius);
 
 // score rule declarations
-const int ST_ONS_CAPS = 1;
+const int ST_ONS_GENS = 1;

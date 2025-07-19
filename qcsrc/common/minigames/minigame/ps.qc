@@ -405,7 +405,7 @@ void ps_hud_board(vector pos, vector mySize)
 				tile_size * 0.8, '0.5 0.5 0.5', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	if ( ( active_minigame.minigame_flags & PS_TURN_WIN ) || ( active_minigame.minigame_flags & PS_TURN_DRAW ) )
+	if(active_minigame.minigame_flags & (PS_TURN_WIN | PS_TURN_DRAW))
 	{
 		int remaining = 0;
 		FOREACH_MINIGAME_ENTITY(e)
@@ -425,12 +425,14 @@ void ps_hud_board(vector pos, vector mySize)
 			strcat(_("Game over!"), " ", remaining_text),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
-		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5*panel_fg_alpha,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
 			strcat(_("Game over!"), " ", remaining_text),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
+
+	minigame_show_allspecs(ps_boardpos, ps_boardsize);
 }
 
 
@@ -454,9 +456,9 @@ void ps_hud_status(vector pos, vector mySize)
 	if(minigame_self.team != PS_SPECTATOR_TEAM)
 	{
 		mypos = pos;
-		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5*panel_fg_alpha,DRAWFLAG_ADDITIVE);
 		mypos_y += player_fontsize_y;
-		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25*panel_fg_alpha,DRAWFLAG_ADDITIVE);
 	}
 
 	int remaining = 0;
@@ -554,7 +556,7 @@ int ps_client_event(entity minigame, string event, ...)
 		case "key_released":
 		{
 			bool event_blocked = (event == "key_released" || minigame_self.team == PS_SPECTATOR_TEAM);
-			if (!(minigame.minigame_flags & PS_TURN_WIN) && !(minigame.minigame_flags & PS_TURN_DRAW))
+			if (!(minigame.minigame_flags & (PS_TURN_WIN | PS_TURN_DRAW)))
 			{
 				switch ( ...(0,int) )
 				{

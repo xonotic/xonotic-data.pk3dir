@@ -1,0 +1,45 @@
+//campaign:Campagne Xonotic
+//translators: Yannick Le Guen
+//"game","mapname","bots","skill","fraglimit","timelimit","mutator-sets","description","long description"
+//fraglimit: Score limit + lead limit, use "default" to leave the implicit value in effect, leave unset for no limit. eg: 50, 30+5, +10, 0+default
+//timelimit: Match duration in minutes, use "default" to leave the implicit value in effect, leave unset for no limit.
+"dm","boil","5","2","10",,,"Match à Mort : Boil","Bienvenue sur Xonotic !\nNous allons commencer par un match à mort contre 5 bots sur Boil.\nXonotic est avant tout un jeu multijoueur, mais avant de se lancer dans les parties en ligne, il peut être judicieux de s'entraîner un peu contre des bots."
+"tdm","stormkeep","5","2",,"5",,"Match à Mort en Équipe : Stormkeep","Ensuite, nous allons essayer un match à mort en 3 contre 3 sur Stormkeep.\nVous allez devoir faire de votre mieux pendant cinq minutes, car l'équipe avec le meilleur score sera gagnante !"
+"mayhem","warfare","5","2",,"5",,"Grabuge : Warfare","Du grabuge façon chacun pour soi pendant cinq minutes !\nDans ce mode de jeu, vous débutez avec toutes les armes et une pile de santé et d'armure complète. Les dommages auto-infligés sont désactivés. Le joueur qui inflige le plus de dommages et obtient le plus de frags remporte la partie !"
+"ctf","dance","9","3","3",,,"Capture de Drapeau : Dance","En CTF (capture de drapeau), vous devez prendre le drapeau de l'équipe adverse et le ramener à votre base, par-dessus votre propre drapeau. 3 captures pour gagner la partie."
+"dm","finalrage","6","3","15",,,"Match à Mort : Final Rage","Encore un match à mort, mais les bots sont légèrement meilleurs maintenant."
+"dom","atelier","11","4","50",,,"Domination : Atelier","Défendez les points de contrôle et tuez les intrus pour gagner."
+"kh","runningmanctf","5","5","500",,,"Chasse aux Clés : Running Man","Chaque équipe détient une clé. Vous devez les collecter en tuant leurs porteurs et en les ramassant, puis vous rassembler avec les autres porteurs de clés de votre équipe."
+"ctf","geoplanetary","13","5","5",,,"Capture de Drapeau : Geoplanetary","Une autre expérience CTF bien remplie avant de se lancer dans le multijoueur."
+"dm","darkzone","4","5","15",,"g_instagib 1","[Spécial] Match à Mort : Darkzone","InstaGib ! Tout le monde ne possède qu'une seule arme, le Vaporizer.\nVos adversaires meurent instantanément si vous leur tirez dessus (à moins qu'ils n'aient récupéré un bonus tel que « Vie supplémentaire »)."
+"ctf","vorix","11","6","5",,"g_grappling_hook 1","[Spécial] Capture de Drapeau : Vorix","Grappin : Appuyez sur 'e' (touche par défaut) ou sur SOURIS5 pour l'utiliser. Tirez sur les murs et il vous propulsera à toute vitesse."
+//"rc","leave_em_behind","0","0","2400",,,"Race: Leave'em behind","It's a race, so run as fast as you can! You can try to boost yourself with the Blaster (weapon 1) if you shoot at the wall or under your feet. Also hold your Jump key to gain speed ('Bunnyhopping').\nTo proceed you need to get a time under 24 seconds."
+"dm","solarium","8","6","15",,"g_nix 1","[Spécial] Match à Mort : Solarium","NIX : Dans ce mutateur, tout le monde débute avec la même arme, mais celle-ci change de façon aléatoire après un certain temps."
+"ft","erbium","5","6","5",,,"Loup Glacé : Erbium","Si vous vous faites fragger, vous êtes gelé. Vous pouvez dégeler vos coéquipiers en restant près d'eux pendant quelques secondes. Une manche se termine lorsqu'une équipe entière est gelée."
+"lms","opium","6","6","5",,,"Dernier Homme en Vie : Opium","Vous avez 5 vies dans ce mode de jeu et le but est de ne pas se retrouver à court de vies avant les autres !"
+"tdm","afterslime","5","7","20",,"sv_gravity 200","[Spécial] Match à Mort en Équipe : Afterslime","Une autre partie de TDM (match à mort en équipe).\nCependant, nous avons un peu réduit la gravité."
+"ctf","go","5","7","5",,,"Capture de Drapeau : Go","Une autre carte de CTF dans l'espace, avec des bots un peu plus habiles cette fois. Attention à ne pas tomber dans le vide !"
+"tka","runningman","5","7","15",,,"Gardez-la-Balle en équipe : Running Man","Ramassez la balle avec votre équipe et fraggez l'équipe adverse tout en la conservant ! Astuce : vous pouvez tirer à travers les warpzones !"
+//"nb","nexballarena","5","7","5",,,"Nexball: Nexball Arena","This is similar to football now. You move the ball if you hit it, so try to push it into the opponents goal. First team who can score 5 goals wins!"
+"kh","silentsiege","8","8","600",,,"Chasse aux Clés : Silent Siege","Chasse aux clés une fois de plus ! Obtenez 600 points pour gagner."
+"ca","bromine","5","8","5",,,"Clan Arena : Bromine","Il s'agit d'un mode de jeu basé sur des manches. Les dommages auto-infligés sont désactivés, mais si vous mourez, vous devez attendre le prochain tour. La dernière équipe dont les joueurs sont encore en vie remporte la manche !"
+"ctf","implosion","7","8","5",,"g_jetpack 1","[Spécial] Capture de Drapeau : Implosion","Jetpack : Appuyez sur Sauter (touche par défaut 'ESPACE') lorsque vous êtes déjà en l'air pour utiliser le Jetpack et vous amuser à voler !"
+"as","techassault","7","8","30",,"g_campaign_forceteam 1","Assaut : Techassault","Vous êtes dans l'équipe attaquante et devez détruire tous les objectifs. Lorsque vous détruisez un objectif, de nouvelles pièces/chemins s'ouvrent à vous."
+"tmayhem","trident","7","8",,"5",,"Grabuge en Équipe : Trident","Dans ce mode de jeu, vous débutez avec toutes les armes et une pile de santé et d'armure complète. Les dommages auto-infligés sont désactivés. L'équipe qui inflige le plus de dommages et obtient le plus de frags remporte la partie !"
+//"cts","courtfun","0","0","6000",,,"Race CTS: Courtfun","Race CTS (Complete the Stage) is similar to the Race mode, just that you only need to reach the finish in CTS. You have to beat it within 1 minute though."
+"ft","xoylent","5","8","5",,,"Loup Glacé : Xoylent","Si vous vous faites fragger, vous êtes gelé. Vous pouvez dégeler vos coéquipiers en restant près d'eux pendant quelques secondes. Une manche se termine lorsqu'une équipe entière est gelée."
+"ons","runningmanctf","7","8","1","10",,"Attaque : Running Man","Attaque : Touchez un point de contrôle connecté mais non capturé pour commencer à le construire. Détruisez les points de contrôle connectés de l'équipe adverse pour les libérer et touchez-les pour les capturer. Détruisez le noyau de l'équipe adverse pour gagner !"
+"ctf","catharsis","9","9","5",,,"Capture de Drapeau : Catharsis","CTF contre une équipe composée des bots les plus durs à ce jour ! 5 captures pour gagner."
+"dm","stormkeep","5","9","15",,"g_new_toys 1; g_cloaked 1","[Spécial] Match à Mort : Stormkeep","Nouveaux Jouets : Dans ce mutateur, des armes fantaisistes comme le Poseur de Mines, le Heavy Laser Assault Cannon (HLAC) ou le T.A.G. Seeker sont disponibles.\nVous allez aussi faire l'expérience d'un autre mutateur : les joueurs presque invisibles."
+"ctf","space-elevator","7","10","3",,"g_instagib 1; g_grappling_hook 1","[Spécial] Capture de Drapeau : Space-Elevator","InstaGib en CTF cette fois. Vous jouez également avec le grappin (appuyez sur 'e' ou sur SOURIS5 pour l'utiliser) !"
+"duel","fuse","1","10","10","5","g_forced_respawn 1","[Spécial] Duel : Fuse","Cette fois-ci, vous n'affrontez qu'un seul bot, dans ce que l'on appelle un « Duel ». Le duel est très populaire en multijoueur."
+"ca","warfare","5","10","5",,"g_vampire 1; g_vampire_factor 0.75; g_balance_health_limit 400; g_ca_start_health 400; g_ca_start_armor 0","[Spécial] Clan Arena : Warfare","Mutateur vampirique activé, vous guérissez lorsque vous infligez des dommages !\nLa dernière équipe dont les joueurs sont encore en vie remporte la manche !"
+"dm","glowplant","5","11","20",,,"[FINALE] Match à Mort : Glow Plant","Dans ce match final, vous devez battre 5 des bots les plus habiles. Vous devez obtenir 20 frags pour gagner et terminer la campagne ! Après cela, vous devriez être prêt à jouer contre des vraies personnes."
+"mayhem","stormkeep","9","11","300",,"g_weaponarena devastator; g_mayhem_selfdamage 1","[Bonus] Grabuge : Stormkeep","SURPRISE !\nBienvenue dans l'ENFER DES ROQUETTES !\nSeul le Devastator est disponible ici. Les dommages auto-infligés sont activés, ne vous faites pas exploser vous-même ! Amusez-vous bien !"
+// Dr. Jaska: fix bot weapon priority and weapon balance before enabling full weapon arsenal for this one
+"mayhem","trident","6","1337",,"5","g_weaponarena \"blaster mortar crylink devastator \"","[PARTIE FINALE] Grabuge : Trident","SURPRISE !\nBienvenue sur une partie de Grabuge déséquilibrée !\nUn niveau bonus avec des superbots vraiment maléfiques que vous ne pouvez pas battre sans des années d'expérience et une maîtrise totale du combat."
+
+// rc & cts disabled, since we hide these modes
+
+// note that currently any cvars changed in mutator-sets must be accessed in code using the cvar() function (or autocvar aliases to that), otherwise they will not work
+// see https://gitlab.com/xonotic/xonotic-data.pk3dir/issues/1976 for details

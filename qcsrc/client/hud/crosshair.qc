@@ -19,8 +19,6 @@ float pickup_crosshair_time, pickup_crosshair_size;
 float hitindication_crosshair_size;
 float use_vortex_chargepool;
 
-float reticle_type;
-
 vector wcross_origin;
 float wcross_scale_prev, wcross_alpha_prev;
 vector wcross_color_prev;
@@ -49,7 +47,7 @@ void TrueAim_Init()
 	(trueaim_rifle = new_pure(trueaim_rifle)).dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 }
 
-float EnemyHitCheck()
+int EnemyHitCheck()
 {
 	float t, n;
 	wcross_origin = project_3d_to_2d(trace_endpos);
@@ -70,7 +68,7 @@ float EnemyHitCheck()
 	return SHOTTYPE_HITENEMY;
 }
 
-float TrueAimCheck(entity wepent)
+int TrueAimCheck(entity wepent)
 {
 	if(wepent.activeweapon.spawnflags & WEP_FLAG_NOTRUEAIM)
 		return SHOTTYPE_HITWORLD;
@@ -122,8 +120,6 @@ float TrueAimCheck(entity wepent)
 
 	vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * STAT(VIEWHEIGHT));
 
-	vecs = decompressShotOrigin(STAT(SHOTORG));
-
 	traceline(traceorigin, traceorigin + view_forward * max_shot_distance, mv, ta);
 	trueaimpoint = trace_endpos;
 	// move trueaimpoint a little bit forward to make the final tracebox reliable
@@ -132,6 +128,8 @@ float TrueAimCheck(entity wepent)
 
 	if(vdist((trueaimpoint - traceorigin), <, g_trueaim_minrange))
 		trueaimpoint = traceorigin + view_forward * g_trueaim_minrange;
+
+	vecs = decompressShotOrigin(STAT(SHOTORG));
 
 	if(vecs.x > 0)
 		vecs.y = -vecs.y;
@@ -181,7 +179,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 		{
 			if(this != WEP_Null && hud == HUD_NORMAL)
 			{
-				wcross_color = this.wpcolor;
+				wcross_color = this.m_color;
 				break;
 			}
 			else { goto normalcolor; }
@@ -540,16 +538,16 @@ void HUD_Crosshair(entity this)
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun";
 				}
-				else if (autocvar_crosshair_ring && wepent.activeweapon == WEP_MINE_LAYER && WEP_CVAR(minelayer, limit) && autocvar_crosshair_ring_minelayer)
+				else if (autocvar_crosshair_ring && wepent.activeweapon == WEP_MINE_LAYER && WEP_CVAR(WEP_MINE_LAYER, limit) && autocvar_crosshair_ring_minelayer)
 				{
-					ring_value = bound(0, wepent.minelayer_mines / WEP_CVAR(minelayer, limit), 1);
+					ring_value = bound(0, wepent.minelayer_mines / WEP_CVAR(WEP_MINE_LAYER, limit), 1);
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring";
 				}
 				else if (wepent.activeweapon == WEP_HAGAR && wepent.hagar_load && autocvar_crosshair_ring_hagar)
 				{
-					ring_value = bound(0, wepent.hagar_load / WEP_CVAR_SEC(hagar, load_max), 1);
+					ring_value = bound(0, wepent.hagar_load / WEP_CVAR_SEC(WEP_HAGAR, load_max), 1);
 					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring";
@@ -626,7 +624,8 @@ void HUD_Crosshair(entity this)
 #define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) \
 			CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
 
-			if(time < wcross_name_changedonetime && wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
+			if(autocvar_crosshair_effect_time > 0 && time < wcross_name_changedonetime
+				&& wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
 			{
 				f = (wcross_name_changedonetime - time) / (wcross_name_changedonetime - wcross_name_changestarttime);
 				wcross_size = draw_getimagesize(wcross_name_goal_prev_prev) * wcross_scale;
@@ -677,11 +676,9 @@ void HUD_Crosshair(entity this)
 void DrawReticle(entity this)
 {
 	if(!autocvar_cl_reticle || MUTATOR_CALLHOOK(DrawReticle))
-	{
-		reticle_type = 0;
 		return;
-	}
 
+	int reticle_type = 0;
 	float is_dead = (STAT(HEALTH) <= 0);
 	string reticle_image = string_null;
 	bool wep_zoomed = false;
@@ -701,7 +698,7 @@ void DrawReticle(entity this)
 	// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 	// It must be a persisted float for fading out to work properly (you let go of the zoom button for
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
-	if(spectatee_status || is_dead || hud != HUD_NORMAL || this.viewloc)
+	if(spectatee_status || is_dead || hud != HUD_NORMAL || this.viewloc || (autocvar_chase_active != 0 && !autocvar_cl_reticle_chase))
 	{
 		// no zoom reticle while dead
 		reticle_type = 0;
@@ -735,7 +732,7 @@ void DrawReticle(entity this)
 			reticle_pos.y = (vid_conheight - reticle_size.y) / 2;
 		}
 
-		float f = (zoomscript_caught) ? 1 : current_zoomfraction;
+		float f = (zoomscript_caught) ? 1 : max(0.25, current_zoomfraction);
 
 		if(f)
 		{

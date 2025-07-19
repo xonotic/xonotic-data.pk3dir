@@ -18,7 +18,7 @@ CLASS(Racer, Vehicle)
 /* tags       */ ATTRIB(Racer, tag_view, string, "tag_viewport");
 #endif
 /* netname    */ ATTRIB(Racer, netname, string, "racer");
-/* fullname   */ ATTRIB(Racer, vehicle_name, string, _("Racer"));
+/* fullname   */ ATTRIB(Racer, m_name, string, _("Racer"));
 /* icon       */ ATTRIB(Racer, m_icon, string, "vehicle_racer");
 ENDCLASS(Racer)
 REGISTER_VEHICLE(RACER, NEW(Racer));

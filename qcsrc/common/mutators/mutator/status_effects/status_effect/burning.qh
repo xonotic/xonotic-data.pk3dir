@@ -8,7 +8,7 @@ void Fire_ApplyDamage(entity e);
 #ifdef GAMEQC
 SOUND(Burning_Remove, "desertfactory/steam_burst");
 #endif
-CLASS(Burning, StatusEffects)
+CLASS(Burning, StatusEffect)
     ATTRIB(Burning, netname, string, "burning");
 #if 0
     // NOTE: status effect name and icon disabled as they are not displayed

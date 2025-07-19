@@ -35,7 +35,7 @@ float(string s) checkextension = #99;
 //field definitions:
 .float buttonchat;
 //description:
-//true if the player is currently chatting (in messagemode, menus or console)
+//true if the player is currently chatting (in messagemode, menus or console) or if their game window is not active.
 
 //DP_BUTTONUSE
 //idea: id Software
@@ -763,10 +763,10 @@ entity(.string fld, string match) findchain = #402;
 //idea: divVerent
 //darkplaces implementation: divVerent
 //builtin definitions:
-entity(.string fld, float match, .entity tofield) findradius_tofield = #22;
+entity(vector org, float rad, .entity tofield) findradius_tofield = #22;
 entity(.string fld, string match, .entity tofield) findchain_tofield = #402;
-entity(.string fld, float match, .entity tofield) findchainflags_tofield = #450;
-entity(.string fld, float match, .entity tofield) findchainfloat_tofield = #403;
+entity(.float fld, float match, .entity tofield) findchainflags_tofield = #450;
+entity(.float fld, float match, .entity tofield) findchainfloat_tofield = #403;
 //description:
 //similar to findchain() etc, but stores the chain into .tofield instead of .chain
 //actually, the .entity tofield is an optional field of the the existing findchain* functions
@@ -2140,7 +2140,7 @@ void(float fhandle) fclose = #111; // closes a file
 string(float fhandle) fgets = #112; // reads a line of text from the file and returns as a tempstring
 void(float fhandle, string s, ...) fputs = #113; // writes a line of text to the end of the file
 float(string s) strlen = #114; // returns how many characters are in a string
-string(string s1, string s2, ...) strcat = #115; // concatenates two or more strings (for example "abc", "def" would return "abcdef") and returns as a tempstring
+string(string s, string...) strcat = #115; // concatenates 1 to 8 strings (for example "abc", "def" would return "abcdef") and returns as a tempstring
 string(string s, float start, float length) substring = #116; // returns a section of a string as a tempstring - see FTE_STRINGS for enhanced version
 vector(string s) stov = #117; // returns vector value from a string
 string(string s, ...) strzone = #118; // makes a copy of a string into the string zone and returns it, this is often used to keep around a tempstring for longer periods of time (tempstrings are replaced often)
@@ -2632,3 +2632,38 @@ float(string pattern, float caseinsensitive, float quiet, string packfile) searc
 //description:
 //extension to search_begin (DP_QC_FS_SEARCH), performs a filename search with the specified pattern (for example "maps/*.bsp") and stores the results in a search slot (minimum of 128 supported by any engine with this extension), the other functions take this returned search slot number, be sure to search_free when done (they are also freed on progs reload).
 //only searches for files within the specified packfile, which is expected to match the results of whichpack().
+
+//EXT_CSQC (registercommand for CSQC, now also available in SVQC)
+//idea: probably Spoike
+//darkplaces implementation: Cloudwalk
+//builtin definitions:
+void(string cmdname) registercommand = #352;
+//engine-called QC prototypes:
+//float CSQC_ConsoleCommand(string command);
+//float ConsoleCmd(string command);
+//description:
+//Adds a new console command which will take priority over a previous command of the same name (including engine commands) and in CSQC is removed when the VM shuts down. This will call CSQC_ConsoleCommand(string command) or ConsoleCmd(string command) in SVQC.  Return value should be true if QC handled the command, otherwise return false to have the engine handle it.
+
+//DP_QC_FINDBOX
+//idea: Mario
+//darkplaces implementation: bones_was_here
+//builtin definitions:
+entity(vector mins, vector maxs) findbox = #566;
+entity(vector mins, vector maxs, .entity tofield) findbox_tofield = #566;
+//description:
+//Returns a chain of entities that are touching a box (a simpler findradius); supports DP_QC_FINDCHAIN_TOFIELD
+
+//DP_QC_NUDGEOUTOFSOLID
+//idea: LadyHavoc, bones_was_here
+//darkplaces implementation: LadyHavoc, bones_was_here
+//builtin definitions:
+float(entity ent) nudgeoutofsolid = #567;
+//cvar definitions:
+//sv_gameplayfix_nudgeoutofsolid_separation
+//description:
+//Attempts to move a stuck entity out of solid brushes, returning 1 if successful, 0 if it remains stuck, -1 if it wasn't stuck.
+//Note: makes only one tracebox call if the entity isn't stuck, so don't call tracebox just to see if you should call nudgeoutofsolid.
+
+
+// bones_was_here: commented as GMQCC wants to use this but we still need to support div0-stable:
+//float(float dividend, float divisor) mod = #245;

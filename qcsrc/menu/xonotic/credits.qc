@@ -2,18 +2,17 @@
 
 #define CREDITS(TITLE, FUNCTION, PERSON, PERSON_, NL) \
 	TITLE(_("Core Team")) \
-		PERSON(Rudolf "divVerent" Polzer) \
 		PERSON(Ant "Antibody" Zucaro) \
 		PERSON(Antonio "terencehill" Piu) \
-		PERSON(Marvin "Mirio" Beck) \
 		PERSON(Merlijn Hofstra) \
+		PERSON(Rudolf "divVerent" Polzer) \
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
 		PERSON(Tyler "-z-" Mulligan) \
-		PERSON(Zac "Mario" Jardine) \
 	NL() \
 	TITLE(_("Extended Team")) \
 		PERSON(bones_was_here) \
 		PERSON(David "Cloudwalk" Knapp) \
+		PERSON(Dr. Jaska) \
 		PERSON(Freddy) \
 		PERSON(Halogene) \
 		PERSON(Jan "zykure" Behrens) \
@@ -40,19 +39,21 @@
 		PERSON(Jan "zykure" Behrens) \
 	NL() \
 	FUNCTION(_("Art")) \
-		PERSON(Severin "sev" Meyer) \
-		PERSON(Sahil "DiaboliK" Singhal) \
-		PERSON(Peter "Morphed" Pielak) \
-		PERSON(Sam "LJFHutch" Hutchinson) \
-		PERSON(Pearce "theShadow" Michal) \
 		PERSON(KingPimpCommander) \
+		PERSON(Pearce "theShadow" Michal) \
+		PERSON(Peter "Morphed" Pielak) \
+		PERSON(Sahil "DiaboliK" Singhal) \
+		PERSON(Sam "LJFHutch" Hutchinson) \
+		PERSON(Severin "sev" Meyer) \
 	NL() \
 	FUNCTION(_("Animation")) \
-		PERSON(Sahil "DiaboliK" Singhal) \
 		PERSON(nifrek) \
+		PERSON(Sahil "DiaboliK" Singhal) \
 	NL() \
 	FUNCTION(_("Campaign")) \
+		PERSON(Dr. Jaska) \
 		PERSON(Marvin "Mirio" Beck) \
+		PERSON(Yannick "SpiKe" Le Guen) \
 	NL() \
 	FUNCTION(_("Level Design")) \
 		PERSON(Amadeusz "amade/proraide" Sławiński) \
@@ -64,9 +65,9 @@
 		PERSON(Hugo "Calinou" Locurcio) \
 		PERSON(Jakob "tZork" Markström Gröhn) \
 		PERSON(Konrad "Justin" Slawinski) \
-		PERSON(Maddin) \
 		PERSON(L0) \
 		PERSON(Łukasz "kuniu the frogg" Polek) \
+		PERSON(Maddin) \
 		PERSON(Maik "SavageX" Merten) \
 		PERSON(Marvin "Mirio" Beck) \
 		PERSON(MintOX) \
@@ -98,11 +99,13 @@
 	FUNCTION(_("Game Code")) \
 		PERSON(Antonio "terencehill" Piu) \
 		PERSON(bones_was_here) \
+		PERSON(Des) \
 		PERSON(Dr. Jaska) \
 		PERSON(Jakob "tZork" Markström Gröhn) \
+		PERSON(Juhu) \
 		PERSON(martin-t) \
-		PERSON(Mattia "Melanosuchus" Basaglia) \
 		PERSON(Matthias "matthiaskrgr" Krüger) \
+		PERSON(Mattia "Melanosuchus" Basaglia) \
 		PERSON(Rasmus "FruitieX" Eskola) \
 		PERSON(Rudolf "divVerent" Polzer) \
 		PERSON(Samual "Ares" Lenks) \
@@ -112,14 +115,14 @@
 		PERSON(Zac "Mario" Jardine) \
 	NL() \
 	FUNCTION(_("Marketing / PR")) \
-		PERSON(Tyler "-z-" Mulligan) \
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
 		PERSON(Samual "Ares" Lenks) \
 		PERSON(Saulo "mand1nga" Gil) \
+		PERSON(Tyler "-z-" Mulligan) \
 	NL() \
 	FUNCTION(_("Legal")) \
-		PERSON(Rudolf "divVerent" Polzer) \
 		PERSON(Merlijn Hofstra) \
+		PERSON(Rudolf "divVerent" Polzer) \
 	NL() \
 	NL() \
 	TITLE(_("Game Engine")) \
@@ -127,6 +130,7 @@
 			PERSON(Ashley Rose "LadyHavoc" Hale) \
 		NL() \
 		FUNCTION(_("Engine Additions")) \
+			PERSON(bones_was_here) \
 			PERSON(David "Cloudwalk" Knapp) \
 			PERSON(Rudolf "divVerent" Polzer) \
 			PERSON(Samual "Ares" Lenks) \
@@ -134,15 +138,9 @@
 	NL() \
 	TITLE(_("Compiler")) \
 		FUNCTION("GMQCC") \
-			PERSON(Wolfgang "Blub\0" Bumiller) \
 			PERSON(Dale "graphitemaster" Weiler) \
+			PERSON(Wolfgang "Blub\0" Bumiller) \
 		NL() \
-	NL() \
-	TITLE(_("Other Active Contributors")) \
-		PERSON(Jeff) \
-		PERSON(Mircea "Taoki" Kitsune) \
-		PERSON(Penguinum) \
-		PERSON(slava) \
 	NL() \
 	NL() \
 	TITLE(_("Translators")) \
@@ -158,6 +156,7 @@
 		FUNCTION(_("Bulgarian")) \
 			PERSON(Alexander "alex4o" Bonin) \
 			PERSON(ifohancroft) \
+			PERSON(Krasimir "kmikov" Mikov) \
 			PERSON(lokster) \
 			PERSON(Nik "cozmo" Dim) \
 			PERSON(set_killer) \
@@ -174,6 +173,20 @@
 			PERSON(Losier "losierb" Blackheath) \
 			PERSON(Matthew "wjjmatthew" Wu) \
 			PERSON(moetale) \
+			PERSON(NaitLee) \
+			PERSON(sapphireliu) \
+		NL() \
+		FUNCTION(_("Chinese (Hong Kong)")) \
+			PERSON(Antonidas) \
+			PERSON(CodingJellyfish) \
+			PERSON(gee "Largee" Lar) \
+			PERSON(jiegushijia) \
+			PERSON(kalawore) \
+			PERSON(Losier "losierb" Blackheath) \
+			PERSON(Matthew "wjjmatthew" Wu) \
+			PERSON(Liang "dxkliu" Liu) \
+			PERSON(moetale) \
+			PERSON(NaitLee) \
 			PERSON(sapphireliu) \
 		NL() \
 		FUNCTION(_("Chinese (Taiwan)")) \
@@ -181,9 +194,7 @@
 			PERSON(Armcoon) \
 			PERSON(Jeff "s8321414" Huang) \
 			PERSON(msn1018927464) \
-		NL() \
-		FUNCTION(_("Cornish")) \
-			PERSON(Nicky "nrowe" Rowe) \
+			PERSON(NaitLee) \
 		NL() \
 		FUNCTION(_("Czech")) \
 			PERSON(Adam "Admi335" Říha) \
@@ -215,6 +226,8 @@
 			PERSON(Henry "Exitium" Sanmark) \
 			PERSON(Jaakko Saarikko) \
 			PERSON(Jonas "PowaTree" Sahlberg) \
+			PERSON(LINUX SAUNA) \
+			PERSON(Oftox) \
 			PERSON(Oi Suomi On!) \
 			PERSON(Rasmus "FruitieX" Eskola) \
 		NL() \
@@ -258,6 +271,11 @@
 			PERSON(Ruszkai "CuBe0wL" Ákos) \
 			PERSON(xaN1C4n3) \
 		NL() \
+		FUNCTION(_("Indonesian")) \
+			PERSON(Angeline Meilia) \
+			PERSON(Ariesandy Hidayat) \
+			PERSON(red koala) \
+		NL() \
 		FUNCTION(_("Irish")) \
 			PERSON(Kevin "kscanne" Scannell) \
 		NL() \
@@ -283,6 +301,10 @@
 			PERSON(BYEONGJIN "ahnkoon" AN) \
 			PERSON(Jisoo "LimJiSoo0719" Lim) \
 			PERSON(Kim "coughingmouse" Lee) \
+			PERSON(Seokho Son) \
+		NL() \
+		FUNCTION(_("Latin")) \
+			PERSON(oblector o) \
 		NL() \
 		FUNCTION(_("Polish")) \
 			PERSON(4m) \
@@ -296,11 +318,13 @@
 			PERSON(Karol "kRkk" Kosek) \
 			PERSON(Kriss "Kriss7475" Chr) \
 			PERSON(Piotr "vipkoza" Kozica) \
+			PERSON(qqiLMFjv1iBfT3p6TNxjUThsaTVIXhQc) \
 			PERSON(Rafał "Okava" Szymański) \
 			PERSON(Robert "Szkodnix" Wolniak) \
 			PERSON(Saikuru "saikuru0" Zero) \
 			PERSON(Sertomas) \
 			PERSON(SFS Atlas) \
+			PERSON(Wojciech "g_host" Sikora) \
 		NL() \
 		FUNCTION(_("Portuguese")) \
 			PERSON(Ivan Paulos "greylica" Tomé) \
@@ -331,6 +355,7 @@
 			PERSON(Alexandr "zrg") \
 			PERSON(Andrei "adem4ik" Stepanov) \
 			PERSON(Andrey "dekrY" P.) \
+			PERSON(Артём "Temak" Котлубай) \
 			PERSON(Artem Vorotnikov) \
 			PERSON(Blueberryy) \
 			PERSON(gravicappa) \
@@ -340,9 +365,6 @@
 			PERSON(Nikoli) \
 			PERSON(Sergej "Clearness High" Lutsyk) \
 			PERSON(Simple88) \
-		NL() \
-		FUNCTION(_("Scottish Gaelic")) \
-			PERSON_("GunChleoc") \
 		NL() \
 		FUNCTION(_("Serbian")) \
 			PERSON_("Саша \"salepetronije\" Петровић") \
@@ -380,11 +402,13 @@
 			PERSON(Demiray "tulliana" Muhterem) \
 			PERSON(Gokdeniz.Kucukali) \
 			PERSON(ibra kap) \
+			PERSON(Lucifer "Lucifer25x" Morningstar) \
 			PERSON(yutyocraft) \
 		NL() \
 		FUNCTION(_("Ukrainian")) \
 			PERSON(Dmitro "Gamebot" Sokhin) \
 			PERSON(Ihor "uandreew" Andreev) \
+			PERSON(Illia "imbirWIthSugar" Serediuk) \
 			PERSON(Oleh "BlaXpirit" Prypin) \
 			PERSON(Vasyl "Harmata" Melnyk) \
 			PERSON(Yuriy "herrniemand" Ackermann) \
@@ -392,8 +416,8 @@
 	NL() \
 	TITLE(_("Past Contributors")) \
 		PERSON(Akari) \
-		PERSON(Alexander "naryl" Suhoverhov) \
 		PERSON(Alexander "motorsep" Zubov) \
+		PERSON(Alexander "naryl" Suhoverhov) \
 		PERSON(Amos "torus" Dudley) \
 		PERSON(Andreas "Black" Kirsch) \
 		PERSON(Attila "WW3" Houtkooper) \
@@ -424,6 +448,7 @@
 		PERSON(Gottfried "Toddd" Hofmann) \
 		PERSON(Henning "Tymo" Janssen) \
 		PERSON(Innovati) \
+		PERSON(Jeff) \
 		PERSON(JH0nny) \
 		PERSON(Jitspoe) \
 		PERSON(Jody Gallagher) \
@@ -442,26 +467,29 @@
 		PERSON(magorian) \
 		PERSON(Marius "GreEn`mArine" Shekow) \
 		PERSON(Marko "Urre" Permanto) \
+		PERSON(Marvin "Mirio" Beck) \
 		PERSON(Mathieu "Elric" Olivier) \
 		PERSON(Mattrew "Tronyn" Rye) \
 		PERSON(MauveBib) \
 		PERSON(Mephisto) \
+		PERSON(Mepper) \
 		PERSON(michaelb) \
 		PERSON(Michael "Tenshihan" Quinn) \
-		PERSON(Mepper) \
+		PERSON(Mircea "Taoki" Kitsune) \
 		PERSON(Munyul) \
 		PERSON(Netzwerg) \
 		PERSON(NoelCower) \
+		PERSON(Oleh "BlaXpirit" Prypin) \
 		PERSON(Parapraxis) \
 		PERSON(parasti) \
-		PERSON(Paul "Strahlemann" Evers) \
 		PERSON(Paul Scott) \
+		PERSON(Paul "Strahlemann" Evers) \
+		PERSON(Penguinum) \
 		PERSON(Petithomme) \
 		PERSON(PlasmaSheep) \
 		PERSON(Przemysław "atheros" Grzywacz) \
 		PERSON(Q1 Retexturing Project) \
 		PERSON(Qantourisc) \
-		PERSON(Oleh "BlaXpirit" Prypin) \
 		PERSON(Rick "Rat" Kelley) \
 		PERSON(Robert "ai" Kuroto) \
 		PERSON(Ronan) \
@@ -472,6 +500,7 @@
 		PERSON(Shank) \
 		PERSON(s1lence) \
 		PERSON(Simon O’Callaghan) \
+		PERSON(slava) \
 		PERSON(Soelen) \
 		PERSON(SomeGuy) \
 		PERSON(SoulKeeper_p) \
@@ -489,6 +518,7 @@
 		PERSON(William Libert) \
 		PERSON(William "Willis" Weilep) \
 		PERSON(Yves "EviLair" Allaire) \
+		PERSON(Zac "Mario" Jardine) \
 		PERSON(Zenex) \
 		PERSON(... and a goat) \
 		/**/

@@ -22,6 +22,8 @@
 
 .vector eent_net_location;
 .vector eent_net_velocity;
+.vector eent_net_color_min;
+.vector eent_net_color_max;
 .int eent_net_count;
 
 entity Create_Effect_Entity(string eff_name, bool eff_trail)

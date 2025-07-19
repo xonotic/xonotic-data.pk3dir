@@ -37,6 +37,8 @@ const string PLAYERSTATS_JOINS = "joins";
 const string PLAYERSTATS_SCOREBOARD_VALID = "scoreboardvalid";
 const string PLAYERSTATS_RANK = "rank";
 const string PLAYERSTATS_SCOREBOARD_POS = "scoreboardpos";
+const string PLAYERSTATS_HANDICAP_GIVEN = "handicapgiven";
+const string PLAYERSTATS_HANDICAP_TAKEN = "handicaptaken";
 
 const string PLAYERSTATS_TOTAL = "total-";
 const string PLAYERSTATS_SCOREBOARD = "scoreboard-";

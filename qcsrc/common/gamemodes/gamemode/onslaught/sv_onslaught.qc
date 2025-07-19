@@ -36,22 +36,9 @@ float autocvar_g_onslaught_teleport_radius;
 float autocvar_g_onslaught_spawn_choose;
 float autocvar_g_onslaught_click_radius;
 
-entity cam;
-
 // =======================
 // CaptureShield Functions
 // =======================
-
-bool clientcamera_send(entity this, entity to, int sf)
-{
-	WriteHeader(MSG_ENTITY, ENT_ONSCAMERA);
-
-	WriteVector(MSG_ENTITY, this.origin);
-
-	WriteAngleVector(MSG_ENTITY, this.angles);
-
-	return true;
-}
 
 bool ons_CaptureShield_Customize(entity this, entity client)
 {
@@ -327,14 +314,15 @@ int ons_ControlPoint_CanBeLinked(entity cp, int teamnum)
 	return 0;
 }
 
+// return values:
+// -2: SAME TEAM, attackable by enemy!
+// -1: SAME TEAM!
+// 0: off limits
+// 1: attack it
+// 2: touch it
+// 3: attack it (HIGH PRIO)
+// 4: touch it (HIGH PRIO)
 int ons_ControlPoint_Attackable(entity cp, int teamnum)
-	// -2: SAME TEAM, attackable by enemy!
-	// -1: SAME TEAM!
-	// 0: off limits
-	// 1: attack it
-	// 2: touch it
-	// 3: attack it (HIGH PRIO)
-	// 4: touch it (HIGH PRIO)
 {
 	int a;
 
@@ -415,7 +403,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 
 	if (GetResource(this, RES_HEALTH) < 0)
 	{
-		sound(this, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+		sound(this, CH_TRIGGER, SND_ONS_GENERATOR_EXPLODE, VOL_BASE, ATTEN_NORM);
 		pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
 		if (this.owner.message != "")
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED), this.owner.message, attacker.netname);
@@ -555,6 +543,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 		sound(this, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILT, VOL_BASE, ATTEN_NORM);
 		this.owner.iscaptured = true;
 		this.solid = SOLID_BBOX;
+		setorigin(this, this.origin); // setorigin after change to solid field to ensure area grid linking
 
 		Send_Effect(EFFECT_CAP(this.owner.team), this.owner.origin, '0 0 0', 1);
 
@@ -601,13 +590,13 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 {
 	entity e = new(onslaught_controlpoint_icon);
 
+	e.solid = SOLID_NOT; // before setsize/setorigin to prevent area grid linking
 	setsize(e, CPICON_MIN, CPICON_MAX);
 	setorigin(e, cp.origin + CPICON_OFFSET);
 
 	e.owner = cp;
 	e.max_health = autocvar_g_onslaught_cp_health;
 	SetResourceExplicit(e, RES_HEALTH, autocvar_g_onslaught_cp_buildhealth);
-	e.solid = SOLID_NOT;
 	e.takedamage = DAMAGE_AIM;
 	e.bot_attack = true;
 	IL_PUSH(g_bot_targets, e);
@@ -704,7 +693,6 @@ void ons_ControlPoint_Touch(entity this, entity toucher)
 	}
 
 	if(!IS_PLAYER(toucher)) { return; }
-	if(STAT(FROZEN, toucher)) { return; }
 	if(IS_DEAD(toucher)) { return; }
 
 	if ( SAME_TEAM(this,toucher) )
@@ -803,7 +791,7 @@ void ons_ControlPoint_Setup(entity cp)
 	{
 		setorigin(cp, cp.origin + '0 0 20');
 		cp.noalign = false;
-		droptofloor(cp);
+		DropToFloor_QC_DelayedInit(cp);
 		set_movetype(cp, MOVETYPE_TOSS);
 	}
 
@@ -851,6 +839,15 @@ void ons_Generator_UpdateSprite(entity e)
 		}
 		WaypointSprite_Ping(e.sprite);
 	}
+}
+
+entity cam;
+bool clientcamera_send(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_ONSCAMERA);
+	WriteVector(MSG_ENTITY, this.origin);
+	WriteAngleVector(MSG_ENTITY, this.angles);
+	return true;
 }
 
 void ons_camSetup(entity this)
@@ -1103,7 +1100,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.colormap = 1024 + (teamnum - 1) * 17;
 
 	// generator placement
-	droptofloor(gen);
+	DropToFloor_QC_DelayedInit(gen);
 
 	// waypointsprites
 	WaypointSprite_SpawnFixed(WP_Null, gen.origin + CPGEN_WAYPOINT_OFFSET, gen, sprite, RADARICON_NONE);
@@ -1196,7 +1193,7 @@ bool Onslaught_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
-		TeamScore_AddToTeam(winner_team, ST_ONS_CAPS, +1);
+		TeamScore_AddToTeam(winner_team, ST_ONS_GENS, +1);
 	}
 	else if(winner_team == -1)
 	{
@@ -1590,7 +1587,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 	for(i = 0; i < 16; ++i)
 	{
 		iteration_scale -= i / 16;
-		theta = random() * 2 * M_PI;
+		theta = random() * (2 * M_PI);
 		loc_y = sin(theta);
 		loc_x = cos(theta);
 		loc_z = 0;
@@ -1936,46 +1933,40 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 
 		if ( IS_PLAYER(player) )
 		{
-			if ( !STAT(FROZEN, player) )
+			entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_onslaught_teleport_radius);
+
+			if ( !source_point && GetResource(player, RES_HEALTH) > 0 )
 			{
-				entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_onslaught_teleport_radius);
-
-				if ( !source_point && GetResource(player, RES_HEALTH) > 0 )
-				{
-					sprint(player, "\nYou need to be next to a control point\n");
-					return true;
-				}
-
-
-				entity closest_target = ons_Nearest_ControlPoint_2D(player, pos, autocvar_g_onslaught_click_radius);
-
-				if ( closest_target == NULL )
-				{
-					sprint(player, "\nNo control point found\n");
-					return true;
-				}
-
-				if ( GetResource(player, RES_HEALTH) <= 0 )
-				{
-					player.ons_spawn_by = closest_target;
-					player.respawn_flags = player.respawn_flags | RESPAWN_FORCE;
-				}
-				else
-				{
-					if ( source_point == closest_target )
-					{
-						sprint(player, "\nTeleporting to the same point\n");
-						return true;
-					}
-
-					if ( !ons_Teleport(player,closest_target,autocvar_g_onslaught_teleport_radius,true) )
-						sprint(player, "\nUnable to teleport there\n");
-				}
-
+				sprint(player, "\nYou need to be next to a control point\n");
 				return true;
 			}
 
-			sprint(player, "\nNo teleportation for you\n");
+			entity closest_target = ons_Nearest_ControlPoint_2D(player, pos, autocvar_g_onslaught_click_radius);
+
+			if ( closest_target == NULL )
+			{
+				sprint(player, "\nNo control point found\n");
+				return true;
+			}
+
+			if ( GetResource(player, RES_HEALTH) <= 0 )
+			{
+				player.ons_spawn_by = closest_target;
+				player.respawn_flags = player.respawn_flags | RESPAWN_FORCE;
+			}
+			else
+			{
+				if ( source_point == closest_target )
+				{
+					sprint(player, "\nTeleporting to the same point\n");
+					return true;
+				}
+
+				if ( !ons_Teleport(player,closest_target,autocvar_g_onslaught_teleport_radius,true) )
+					sprint(player, "\nUnable to teleport there\n");
+			}
+
+			return true;
 		}
 
 		return true;
@@ -2134,7 +2125,7 @@ void ons_ScoreRules()
 	int teams = TeamBalance_GetAllowedTeams(balance);
 	TeamBalance_Destroy(balance);
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-	    field_team(ST_ONS_CAPS, "destroyed", SFL_SORT_PRIO_PRIMARY);
+	    field_team(ST_ONS_GENS, "generators", SFL_SORT_PRIO_PRIMARY);
 	    field(SP_ONS_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
 	    field(SP_ONS_TAKES,	"takes", 0);
 	});

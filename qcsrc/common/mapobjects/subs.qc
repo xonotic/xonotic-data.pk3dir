@@ -9,7 +9,7 @@ void SUB_CalcAngleMoveDone(entity this);
 spawnfunc(info_null)
 {
 	delete(this);
-	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
+	// if anything breaks, tell the mapper to fix their map! info_null is meant to remove itself immediately.
 }
 #endif
 
@@ -104,6 +104,8 @@ void SUB_CalcMoveDone(entity this)
 
 void SUB_CalcMovePause(entity this)
 {
+	if (!this.move_controller)
+		return;
 	this.move_controller.animstate_starttime += frametime;
 	this.move_controller.animstate_endtime += frametime;
 }
@@ -296,6 +298,11 @@ void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, vo
 			break;
 	}
 
+	// Q3 implements this fallback for all movers at the end of its InitMover()
+	// If .speed is negative this applies, instead of the mover-specific default speed.
+	if (traveltime <= 0)
+		traveltime = 0.001;
+
 	// Very short animations don't really show off the effect
 	// of controlled animation, so let's just use linear movement.
 	// Alternatively entities can choose to specify non-controlled movement.
@@ -412,6 +419,8 @@ void ApplyMinMaxScaleAngles(entity e)
 
 void SetBrushEntityModel(entity this, bool with_lod)
 {
+	// Ensure .solid is set correctly before calling this (for area grid linking/unlinking)
+
 	if(this.model != "")
 	{
 		precache_model(this.model);
@@ -426,9 +435,6 @@ void SetBrushEntityModel(entity this, bool with_lod)
 			_setmodel(this, this.model); // no precision needed
 		if(with_lod)
 			InitializeEntity(this, LODmodel_attach, INITPRIO_FINDTARGET);
-
-		if(endsWith(this.model, ".obj")) // WORKAROUND: darkplaces currently rotates .obj models on entities incorrectly, we need to add 180 degrees to the Y axis
-			this.angles_y = anglemods(this.angles_y - 180);
 	}
 	setorigin(this, this.origin);
 	ApplyMinMaxScaleAngles(this);
@@ -499,7 +505,7 @@ void LODmodel_attach(entity this)
 		this.lodmodel1 = this.lodmodel2 = ""; // don't even initialize
 	}
 
-	if(this.lodmodel1 != "")
+	if(this.lodmodel1 != "" && fexists(this.lodmodel1))
 	{
 		vector mi, ma;
 		mi = this.mins;
@@ -509,7 +515,7 @@ void LODmodel_attach(entity this)
 		_setmodel(this, this.lodmodel1);
 		this.lodmodelindex1 = this.modelindex;
 
-		if(this.lodmodel2 != "")
+		if(this.lodmodel2 != "" && fexists(this.lodmodel2))
 		{
 			precache_model(this.lodmodel2);
 			_setmodel(this, this.lodmodel2);

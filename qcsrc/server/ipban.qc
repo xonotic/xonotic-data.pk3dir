@@ -379,7 +379,7 @@ float Ban_GetClientIP(entity client)
 	ban_ip1 = substring(s, 0, i1); // 8
 	ban_ip2 = substring(s, 0, i2); // 16
 	ban_ip3 = substring(s, 0, i3); // 24
-	ban_ip4 = strcat1(s); // 32
+	ban_ip4 = strcat(s); // 32
 	return true;
 
 LABEL(ipv6)
@@ -551,7 +551,7 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 			}
 		}
 	}
-	// if we replace someone, will we be banned longer than him (so long-term
+	// if we replace someone, will we be banned longer than them (so long-term
 	// bans never get overridden by short-term bans)
 	if(i < ban_count)
 	if(ban_expire[i] > time + bantime)
@@ -593,21 +593,21 @@ void Ban_KickBanClient(entity client, float bantime, float masksize, string reas
 	switch(masksize)
 	{
 		case 1:
-			ip = strcat1(ban_ip1);
+			ip = strcat(ban_ip1);
 			break;
 		case 2:
-			ip = strcat1(ban_ip2);
+			ip = strcat(ban_ip2);
 			break;
 		case 3:
-			ip = strcat1(ban_ip3);
+			ip = strcat(ban_ip3);
 			break;
 		case 4:
 		default:
-			ip = strcat1(ban_ip4);
+			ip = strcat(ban_ip4);
 			break;
 	}
 	if(ban_idfp)
-		id = strcat1(ban_idfp);
+		id = strcat(ban_idfp);
 	else
 		id = string_null;
 

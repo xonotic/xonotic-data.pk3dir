@@ -277,7 +277,7 @@
 					continue;
 				}
 				string key = argv(0);
-				var.string field = GetPlayerSoundSampleField(key);
+				var .string field = GetPlayerSoundSampleField(key);
 				if (GetPlayerSoundSampleField_notFound) field = GetVoiceMessageSampleField(key);
 				if (GetPlayerSoundSampleField_notFound)
 				{

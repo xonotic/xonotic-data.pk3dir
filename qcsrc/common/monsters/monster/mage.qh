@@ -14,7 +14,7 @@ CLASS(Mage, Monster)
     ATTRIB(Mage, m_model, Model, MDL_MON_MAGE);
 #endif
     ATTRIB(Mage, netname, string, "mage");
-    ATTRIB(Mage, monster_name, string, _("Mage"));
+    ATTRIB(Mage, m_name, string, _("Mage"));
 ENDCLASS(Mage)
 
 REGISTER_MONSTER(MAGE, NEW(Mage));

@@ -1,0 +1,45 @@
+//campaign：Xonotic 战役
+//translators: NaitLee
+//"game","mapname","bots","skill","fraglimit","timelimit","mutator-sets","description","long description"
+//fraglimit: Score limit + lead limit, use "default" to leave the implicit value in effect, leave unset for no limit. eg: 50, 30+5, +10, 0+default
+//timelimit: Match duration in minutes, use "default" to leave the implicit value in effect, leave unset for no limit.
+"dm","boil","5","2","10",,,"死亡竞赛：怒火中烧","欢迎来到 Xonotic！\n我们从简出发，在《怒火中烧》地图对付 5 只简单的机器人。\nXonotic 主要是多人游戏， 不过在开始在线游戏之前， 练习对付机器人更好。"
+"tdm","stormkeep","5","2",,"5",,"团队死亡竞赛：风暴要塞","下一步我们在《风暴要塞》练习 3 对 3 的团队死亡竞赛。\n你需要在这 5 分钟内做到最好， 因为得分最高的团队获胜！"
+"mayhem","warfare","5","2",,"5",,"大乱斗：针锋相对","持续五分钟的大乱斗！\n在这里，你全副武装，带着所有武器加入游戏。武器对自己没有伤害；造成最多伤害、杀敌最多的玩家获胜！"
+"ctf","dance","9","3","3",,,"夺旗战：起舞","在夺旗战中，你要拿到对方的旗帜、把它带到你的基地。同时也得保护你自己的旗帜、不让对方拿走，才能成功夺取！\n夺取 3 次即获胜。"
+"dm","finalrage","6","3","15",,,"死亡竞赛：最终狂怒","另一场死亡竞赛，不过机器人的水平比之前要好。"
+"dom","atelier","11","4","50",,,"统治：工作坊","占领并保卫控制点、驱离进犯者，得分以获胜。"
+"kh","runningmanctf","5","5","500",,,"钥匙猎取：向前冲","每个团队都有一把钥匙。你要把它们都拿到手（杀死钥匙携带者，捡起掉落的钥匙），之后与团队内其他携带者会面。"
+"ctf","geoplanetary","13","5","5",,,"夺旗战：行星地带","一场很“拥挤”的夺旗战。\n开始在线游戏前，值得一练。"
+"dm","darkzone","4","5","15",,"g_instagib 1","【特别】死亡竞赛：暗黑地带","InstaGib（瞬杀）！ 每个人都有一把武器——汽化者。\n瞄准你的敌人，一击必杀。（除非他获得如“额外生命”等加成）"
+"ctf","vorix","11","6","5",,"g_grappling_hook 1","【特别】夺旗战：Vorix","钩爪：按 e 键或‘鼠标按键 5’来使用。 勾住一面墙，感受强大的拉力。"
+//"rc","leave_em_behind","0","0","2400",,,"竞速：统统甩开","这是竞速，跑得越快越好！靠近墙壁或地面时，使用镭射枪（第一把武器）击打之可获得加速度。按住空格以连续加速跳跃（“兔兔蹦”）。\n夺得 24 秒以下的记录以通过这关。"
+"dm","solarium","8","6","15",,"g_nix 1","【特别】死亡竞赛：日光浴场","NIX（无物品 Xonotic）： 每个人都有相同的武器， 不过每隔一段时间会随机更换。"
+"ft","erbium","5","6","5",,,"冰封战：废弃铒工厂","当你被杀死时，你被冻结。站在被冻结的队友身旁以复活他们。如果一个团队的玩家都被冻结，此轮结束。"
+"lms","opium","6","6","5",,,"笑到最后：麻木","在此游戏模式中，你有 5 条生命。 目标是顽强斗争、活到最后！"
+"tdm","afterslime","5","7","20",,"sv_gravity 200","【特别】团队死亡竞赛：史莱姆研究室","另一场团队死亡竞赛。\n不过，这里的重力低一些。"
+"ctf","go","5","7","5",,,"夺旗战：勇往直前","又一次在太空中的夺旗战，这次机器人的水平要稍微高一些。当心脚下，不要掉入虚空！"
+"tka","runningman","5","7","15",,,"团队驱离：向前冲","为团队争夺光球，拿起来，开始杀敌！\n提示：你可以向传送门内射弹，命中另一边的敌人。"
+//"nb","nexballarena","5","7","5",,,"Nex 球赛：Nex 球赛竞技场","这个有点像足球。把球踢进对方的球门里。率先得 5 分的团队获胜！"
+"kh","silentsiege","8","8","600",,,"钥匙猎取：静谧围城","再一场钥匙猎取！得 600 分获胜。"
+"ca","bromine","5","8","5",,,"组队竞技：废弃铒工厂","这是轮流制的团队竞争。武器对自己无伤害，但如果你死亡，你就需要等到下一轮才能再次加入游戏。竞争后仍有幸存玩家的队伍获胜！"
+"ctf","implosion","7","8","5",,"g_jetpack 1","【特别】夺旗战：聚爆实验场","喷气背包：在空中时跳跃（空格）以使用，享受飞行！"
+"as","techassault","7","8","30",,"g_campaign_forceteam 1","突击：科技突袭","你是进攻方，需要摧毁所有目标。摧毁一个目标后，会出现下一目标。"
+"tmayhem","trident","7","8",,"5",,"团队大乱斗：三叉戟","在这里，你全副武装，带着所有武器加入游戏。武器对己方团队没有伤害；造成最多伤害、杀敌最多的团队获胜！"
+//"cts","courtfun","0","0","6000",,,"CTS 竞速：殿堂欢乐","CTS 竞速 (Complete the Stage) 类似于普通竞速，不过只需要到达终点。你需要在 1 分钟内完成。"
+"ft","xoylent","5","8","5",,,"冰封战：Xoylent","当你被杀死时，你被冻结。站在被冻结的队友身旁以复活他们。如果一个团队的玩家都被冻结，此轮结束。"
+"ons","runningmanctf","7","8","1","10",,"猛攻：向前冲","猛攻：贴近已连接但还没有被占领的控制点以占领它；摧毁并占领所有敌方的控制点。最终摧毁敌方的发电核心以取胜！"
+"ctf","catharsis","9","9","5",,,"夺旗战：水晶地带","夺旗战，有到目前为止最难的机器人！5 次夺取以获胜。"
+"dm","stormkeep","5","9","15",,"g_new_toys 1; g_cloaked 1","【特别】死亡竞赛：风暴要塞","新玩意：这里会生成一些新武器，像地雷放置器，重型镭射突击大炮，和 T.A.G. 瞄准者。\n此外还有另一个修改：近乎隐形的玩家。"
+"ctf","space-elevator","7","10","3",,"g_instagib 1; g_grappling_hook 1","【特别】夺旗战：太空电梯","这次是瞬杀夺旗战。同时你会体验使用非手持抓钩！（按 e 键或‘鼠标按键 5’来使用）"
+"duel","fuse","1","10","10","5","g_forced_respawn 1","【特别】决斗：导火索","这次你只面对一个机器人——一场所谓的“决斗”。多人游戏非常流行决斗。"
+"ca","warfare","5","10","5",,"g_vampire 1; g_vampire_factor 0.75; g_balance_health_limit 400; g_ca_start_health 400; g_ca_start_armor 0","【特别】组队竞技：针锋相对","启用了吸血修改，造成伤害可以恢复血量！\n竞争后仍有幸存玩家的队伍获胜！"
+"dm","glowplant","5","11","20",,,"【最终】死亡竞赛：荧光反应堆","在这场最终竞赛，你要打败 5 只能力最强的机器人。你需要 20 次杀敌以完结这场战役！此后你就有能力和真人对抗！"
+"mayhem","stormkeep","9","11","300",,"g_weaponarena devastator; g_mayhem_selfdamage 1","【附加】大乱斗：风暴要塞","惊喜！\n欢迎来到火箭地狱！\n这里只有灭世火箭炮，可以对自己造成伤害——不要炸飞自己！玩得开心！"
+// Dr. Jaska: fix bot weapon priority and weapon balance before enabling full weapon arsenal for this one
+"mayhem","trident","6","1337",,"5","g_weaponarena \"blaster mortar crylink devastator \"","【终结】大乱斗：三叉戟","惊喜！\n欢迎来到这场灵魂出窍的大乱斗！\n没有多年的游戏经验和出色的战斗技巧，是无法在这一关取胜的。"
+
+// rc & cts disabled, since we hide these modes
+
+// note that currently any cvars changed in mutator-sets must be accessed in code using the cvar() function (or autocvar aliases to that), otherwise they will not work
+// see https://gitlab.com/xonotic/xonotic-data.pk3dir/issues/1976 for details

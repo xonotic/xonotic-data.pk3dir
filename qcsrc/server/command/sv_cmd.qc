@@ -21,6 +21,7 @@
 #include <server/command/radarmap.qh>
 #include <server/intermission.qh>
 #include <server/ipban.qh>
+#include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
 #include <server/scores_rules.qh>
@@ -90,6 +91,11 @@ void GameCommand_adminmsg(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			entity client;
 			float accepted;
 
@@ -142,7 +148,7 @@ void GameCommand_adminmsg(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd adminmsg <clients> \"<message>\" [<infobartime>]");
@@ -162,6 +168,11 @@ void GameCommand_allready(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			if(warmup_stage)
 			{
 				ReadyRestart(true);
@@ -188,6 +199,11 @@ void GameCommand_allspec(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			string reason = argv(1);
 			int n = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
@@ -216,6 +232,11 @@ void GameCommand_anticheat(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			entity client = GetIndexedEntity(argc, 1);
 			float accepted = VerifyClientEntity(client, false, false);
 
@@ -231,7 +252,7 @@ void GameCommand_anticheat(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd anticheat <client>");
@@ -320,6 +341,11 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			entity bot;
 
 			if (argv(1) == "reset")
@@ -433,14 +459,14 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd bot_cmd <client> <command> [<arguments>]");
 			LOG_HELP("  <client> can be either the name of the bot or a progressive number (not the entity number!)");
 			LOG_HELP("           can also be '*' or 'all' to allow sending the command to all the bots");
 			LOG_HELP("  For full list of commands, see bot_cmd help [<command>].");
-			LOG_HELP("Examples: sv_cmd bot_cmd 1 cc \"say something\"");
+			LOG_HELP("Examples: sv_cmd bot_cmd 1 cc say something");
 			LOG_HELP("          sv_cmd bot_cmd 1 presskey jump");
 			LOG_HELP("          sv_cmd bot_cmd * pause");
 			return;
@@ -454,6 +480,11 @@ void GameCommand_cointoss(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			string result1 = (argv(2) ? strcat("^7", argv(1)) : "^1HEADS");
 			string result2 = (argv(2) ? strcat("^7", argv(2)) : "^4TAILS");
 			string choice = ((random() > 0.5) ? result1 : result2);
@@ -503,7 +534,7 @@ void GameCommand_database(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd database <action> <filename>");
@@ -521,6 +552,11 @@ void GameCommand_defer_clear(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			entity client;
 			float accepted;
 
@@ -541,7 +577,7 @@ void GameCommand_defer_clear(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd defer_clear <client>");
@@ -558,6 +594,11 @@ void GameCommand_defer_clear_all(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			int n = 0;
 			int argc;
 
@@ -596,7 +637,7 @@ void GameCommand_delrec(int request, int argc)  // perhaps merge later with reco
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd delrec <ranking> [<map>]");
@@ -700,6 +741,11 @@ void GameCommand_extendmatchtime(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			changematchtime(autocvar_timelimit_increment * 60, autocvar_timelimit_min * 60, autocvar_timelimit_max * 60);
 			return;
 		}
@@ -723,43 +769,29 @@ void GameCommand_gametype(int request, int argc)
 		{
 			if (!world_initialized)
 			{
-				LOG_INFOF("This command works only when the server is running.");
+				LOG_HELPF("This command works only when the server is running.");
 				return;
 			}
 			if (argv(1) != "")
 			{
 				string s = argv(1);
-				Gametype t = MapInfo_Type_FromString(s, false, false), tsave = MapInfo_CurrentGametype();
+				Gametype t = MapInfo_Type_FromString(s, false, false);
 
 				if (t)
 				{
-					MapInfo_SwitchGameType(t);
-					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-					if (MapInfo_count > 0)
-					{
-						// update lsmaps in case the gametype changed, this way people can easily list maps for it
-						if (lsmaps_reply != "")   strunzone(lsmaps_reply);
-						lsmaps_reply = strzone(getlsmaps());
-						bprint("Game type successfully switched to ", s, "\n");
-					}
-					else
-					{
-						bprint("Cannot use this game type: no map for it found\n");
-						MapInfo_SwitchGameType(tsave);
-						MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-					}
+					// don't execute gametype hooks because they can change active
+					// gametype rules if executed during the game
+					GameTypeVote_SetGametype(t, "", false);
 				}
 				else
-				{
 					bprint("Failed to switch to ", s, ": this game type does not exist!\n");
-				}
 
 				return;
 			}
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd gametype <mode>");
@@ -824,7 +856,7 @@ void GameCommand_gettaginfo(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd gettaginfo <model> <frame> <index> [<command1>] [<command2>]");
@@ -883,7 +915,7 @@ void GameCommand_animbench(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd animbench <model> <frame1> <frame2>");
@@ -901,7 +933,7 @@ void GameCommand_gotomap(int request, int argc)
 		{
 			if (!world_initialized)
 			{
-				LOG_INFOF("This command works only when the server is running.");
+				LOG_HELPF("This command works only when the server is running.");
 				return;
 			}
 			if (argv(1))
@@ -912,7 +944,7 @@ void GameCommand_gotomap(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd gotomap <map>");
@@ -929,10 +961,15 @@ void GameCommand_lockteams(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			if (teamplay)
 			{
 				lockteams = 1;
-				bprint("^1The teams are now locked.\n");
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_LOCKED);
 			}
 			else
 			{
@@ -984,6 +1021,11 @@ void GameCommand_moveplayer(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			float accepted;
 			entity client;
 
@@ -1014,7 +1056,7 @@ void GameCommand_moveplayer(int request, int argc)
 					else if (destination == "spectator")
 					{
 						string pl_name = playername(client.netname, client.team, false);
-						if (!IS_SPEC(client) && !IS_OBSERVER(client))
+						if (!(IS_SPEC(client) || IS_OBSERVER(client)) || INGAME(client))
 						{
 							PutObserverInServer(client, true, true);
 
@@ -1051,7 +1093,8 @@ void GameCommand_moveplayer(int request, int argc)
 						if (team_num == client.team)  // already on the destination team
 						{
 							// keep the forcing undone
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ",
+								Team_ColoredFullName(team_num), ".");
 							continue;
 						}
 						else if (team_num == 0)  // auto team
@@ -1081,7 +1124,8 @@ void GameCommand_moveplayer(int request, int argc)
 						}
 						if (!TeamBalance_IsTeamAllowed(balance, team_id))
 						{
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ",
+								Team_ColoredFullName(team_num), ".");
 							TeamBalance_Destroy(balance);
 							continue;
 						}
@@ -1092,7 +1136,8 @@ void GameCommand_moveplayer(int request, int argc)
 						if (MoveToTeam(client, team_id, 6))
 						{
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ",
+								Team_ColoredFullName(team_num), ".");
 						}
 						else
 						{
@@ -1109,7 +1154,7 @@ void GameCommand_moveplayer(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd moveplayer <clients> <destination>");
@@ -1124,19 +1169,55 @@ void GameCommand_moveplayer(int request, int argc)
 	}
 }
 
+void GameCommand_nextmap(int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (argc >= 2) // nextmap with mapname arg
+			{
+				if (argc > 2)
+					LOG_HELP("Warning: nextmap only takes 1 argument");
+
+				string map = ValidateMap(argv(1), NULL);
+				if (map != "" && map != get_nextmap())
+					Set_NextMap(map);
+			}
+			else // nextmap without args
+			{
+				if (get_nextmap() != "")
+					LOG_HELP(get_nextmap());
+				else
+					LOG_HELP("none");
+			}
+			return;  // never fall through to usage
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd nextmap [<mapname>]");
+			LOG_HELP("  Without arguments it prints current nextmap if one is set");
+			LOG_HELP("  With arguments it attempts to set nextmap");
+			return;
+		}
+	}
+}
+
 void GameCommand_nospectators(int request)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			blockSpectators = 1;
-			// give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !INGAME(it), {
-				CS(it).spectatortime = time;
-				Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-			});
-			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
+			cvar_settemp("sv_spectate", "0");
+			// if sv_spectate was enabled PlayerFrame() sends SPECTATE_WARNING notifications
 			return;
 		}
 
@@ -1145,6 +1226,7 @@ void GameCommand_nospectators(int request)
 		{
 			LOG_HELP("Usage:^3 sv_cmd nospectators");
 			LOG_HELP("  No arguments required.");
+			LOG_HELP("Temporarily disables the ^3sv_spectate ^7cvar.");
 			return;
 		}
 	}
@@ -1156,6 +1238,11 @@ void GameCommand_printstats(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			DumpStats(false);
 			LOG_INFO("stats dumped.");
 			return;
@@ -1181,7 +1268,7 @@ void GameCommand_radarmap(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd radarmap [--force] [--loop] [--quit] [--block | --trace | --sample | --lineblock] [--sharpen N] [--res W H] [--qual Q]");
@@ -1199,6 +1286,11 @@ void GameCommand_reducematchtime(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			changematchtime(autocvar_timelimit_decrement * -60, autocvar_timelimit_min * 60, autocvar_timelimit_max * 60);
 			return;
 		}
@@ -1231,7 +1323,7 @@ void GameCommand_setbots(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd setbots <botnumber>");
@@ -1290,6 +1382,11 @@ void GameCommand_shuffleteams(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			if (shuffleteams_on_reset_map)
 			{
 				bprint("Players will be shuffled when this round is over.\n");
@@ -1317,6 +1414,11 @@ void GameCommand_resetmatch(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			ReadyRestart(false);
 			return;
 		}
@@ -1342,6 +1444,11 @@ void GameCommand_stuffto(int request, int argc)
 		{
 			case CMD_REQUEST_COMMAND:
 			{
+				if (!world_initialized)
+				{
+					LOG_HELPF("This command works only when the server is running.");
+					return;
+				}
 				if (argv(2))
 				{
 					entity client = GetIndexedEntity(argc, 1);
@@ -1362,7 +1469,7 @@ void GameCommand_stuffto(int request, int argc)
 			}
 
 			default:
-				LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+				LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 			case CMD_REQUEST_USAGE:
 			{
 				LOG_HELP("Usage:^3 sv_cmd stuffto <client> \"<command>\"");
@@ -1543,7 +1650,7 @@ void GameCommand_trace(int request, int argc)
 		}
 
 		default:
-			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
+			LOG_HELPF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd trace <command> [<startpos> <endpos>] [<endpos_height>]");
@@ -1562,10 +1669,15 @@ void GameCommand_unlockteams(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			if (teamplay)
 			{
 				lockteams = 0;
-				bprint("^1The teams are now unlocked.\n");
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_UNLOCKED);
 			}
 			else
 			{
@@ -1591,6 +1703,11 @@ void GameCommand_warp(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 			if (autocvar_g_campaign)
 			{
 				if (argc >= 2)
@@ -1630,6 +1747,11 @@ void GameCommand_(int request)
     {
         case CMD_REQUEST_COMMAND:
         {
+		    if (!world_initialized)
+		    {
+		        LOG_HELPF("This command works only when the server is running.");
+		        return;
+		    }
 
             return;
         }
@@ -1671,6 +1793,7 @@ SERVER_COMMAND(gotomap, "Simple command to switch to another map") { GameCommand
 SERVER_COMMAND(lockteams, "Disable the ability for players to switch or enter teams") { GameCommand_lockteams(request); }
 SERVER_COMMAND(make_mapinfo, "Automatically rebuild mapinfo files") { GameCommand_make_mapinfo(request); }
 SERVER_COMMAND(moveplayer, "Change the team/status of a player") { GameCommand_moveplayer(request, arguments); }
+SERVER_COMMAND(nextmap, "Set/Query the next map") { GameCommand_nextmap(request, arguments); }
 SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { GameCommand_nospectators(request); }
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }

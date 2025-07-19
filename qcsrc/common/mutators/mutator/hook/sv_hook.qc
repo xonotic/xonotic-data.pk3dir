@@ -1,9 +1,9 @@
 #include "sv_hook.qh"
 
 // can't use the autocvar as it doesn't work in the campaign
-//AUTOCVAR(g_grappling_hook, bool, false, "let players spawn with the grappling hook which allows them to pull themselves up");
+//AUTOCVAR(g_grappling_hook, bool, false, "let players spawn with the Grappling Hook which allows them to pull themselves up");
 #ifdef SVQC
-AUTOCVAR(g_grappling_hook_useammo, bool, false, "Use ammunition with the off-hand grappling hook");
+AUTOCVAR(g_grappling_hook_useammo, bool, false, "use ammunition with the offhand Grappling Hook");
 
 REGISTER_MUTATOR(hook, expr_evaluate(cvar_string("g_grappling_hook"))) {
     MUTATOR_ONADD {
@@ -34,7 +34,7 @@ MUTATOR_HOOKFUNCTION(hook, SetStartItems)
 {
     if(autocvar_g_grappling_hook_useammo)
     {
-        start_items |= ITEM_JetpackRegen.m_itemid;
+        start_items |= ITEM_FuelRegen.m_itemid;
         start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
         warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
     }

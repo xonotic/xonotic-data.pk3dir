@@ -80,7 +80,7 @@ void XonoticMapList_draw(entity me)
 {
 	if(me.startButton)
 		me.startButton.disabled = ((me.selectedItem < 0) || (me.selectedItem >= me.nItems)
-			|| (gamestatus & (GAME_ISSERVER | GAME_CONNECTED) && cvar("g_campaign")));
+			|| ((gamestatus & (GAME_ISSERVER | GAME_CONNECTED)) && cvar("g_campaign")));
 	SUPER(XonoticMapList).draw(me);
 }
 
@@ -158,7 +158,7 @@ void XonoticMapList_drawListBoxItem(entity me, int i, vector absSize, bool isSel
 
 	if(draw_PictureSize(strcat("/maps/", MapInfo_Map_bspname)) == '0 0 0')
 	{
-		if(!draw_PictureExists(strcat("/levelshots/", MapInfo_Map_bspname)))
+		if(draw_PictureSize(strcat("/levelshots/", MapInfo_Map_bspname)) == '0 0 0')
 			draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 		else
 			draw_Picture(me.columnPreviewOrigin * eX, strcat("/levelshots/", MapInfo_Map_bspname), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
@@ -188,7 +188,10 @@ void XonoticMapList_refilter(entity me)
 	me.nItems = MapInfo_count;
 
 	for(i = 0; i < MapInfo_count; ++i)
-		draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i)));
+	{
+		if(draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i))) == "")
+			draw_PreloadPicture(strcat("/levelshots/", MapInfo_BSPName_ByID(i)));
+	}
 	s = "0";
 	for(i = 1; i < MapInfo_count; i *= 2)
 		s = strcat(s, s);
@@ -234,7 +237,7 @@ void MapList_Add_Shown(entity btn, entity me)
 {
 	float i, n;
 	n = strlen(me.g_maplistCache);
-	for (i = 0 ; i < n; i++)
+	for (i = 0 ; i < n; ++i)
 	{
 		if (!me.g_maplistCacheQuery(me, i))
 			me.g_maplistCacheToggle(me, i);
@@ -246,7 +249,7 @@ void MapList_Remove_Shown(entity btn, entity me)
 {
 	float i, n;
 	n = strlen(me.g_maplistCache);
-	for (i = 0 ; i < n; i++)
+	for (i = 0 ; i < n; ++i)
 	{
 		if (me.g_maplistCacheQuery(me, i))
 			me.g_maplistCacheToggle(me, i);
@@ -261,8 +264,8 @@ void MapList_Add_All(entity btn, entity me)
 	_MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
 	s = "";
 	for(i = 0; i < MapInfo_count; ++i)
-		s = strcat(s, " ", MapInfo_BSPName_ByID(i));
-	cvar_set("g_maplist", substring(s, 1, strlen(s) - 1));
+		s = cons(s, MapInfo_BSPName_ByID(i));
+	cvar_set("g_maplist", s);
 	me.refilter(me);
 }
 

@@ -2,6 +2,7 @@
 
 #include <common/constants.qh>
 #include <common/effects/all.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/physics/player.qh>
 #include <common/state.qh>
@@ -26,69 +27,20 @@
 #include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
 
-/*============================================
-
-      Wazat's Xonotic Grappling Hook
-
-        Contact: Wazat1@gmail.com
-
-
-Installation instructions:
---------------------------
-
-1. Place hook.c in your gamec source directory with the other source files.
-
-2. Add this line to the bottom of progs.src:
-
-gamec/hook.c
-
-3. Open defs.h and add these lines to the very bottom:
-
-// Wazat's grappling hook
-.entity		hook;
-void GrapplingHookFrame();
-void RemoveGrapplingHook(entity pl);
-void SetGrappleHookBindings();
-// hook impulses
-const float GRAPHOOK_FIRE		= 20;
-const float GRAPHOOK_RELEASE		= 21;
-// (note: you can change the hook impulse #'s to whatever you please)
-
-4. Open client.c and add this to the top of PutClientInServer():
-
-	RemoveGrapplingHook(this); // Wazat's Grappling Hook
-
-5. Find ClientConnect() (in client.c) and add these lines to the bottom:
-
-	// Wazat's grappling hook
-	SetGrappleHookBindings();
-
-6. Still in client.c, find PlayerPreThink and add this line just above the call to W_WeaponFrame:
-
- 	GrapplingHookFrame();
-
-7. Build and test the mod.  You'll want to bind a key to "+hook" like this:
-bind ctrl "+hook"
-
-And you should be done!
-
-
-============================================*/
-
 void RemoveGrapplingHooks(entity pl)
 {
 	if(pl.move_movetype == MOVETYPE_FLY)
 		set_movetype(pl, MOVETYPE_WALK);
 
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-    	.entity weaponentity = weaponentities[slot];
-    	if(!pl.(weaponentity))
-    		continue; // continue incase other slots exist?
-    	if(pl.(weaponentity).hook)
-    		delete(pl.(weaponentity).hook);
-    	pl.(weaponentity).hook = NULL;
-    }
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(!pl.(weaponentity))
+			continue; // continue incase other slots exist?
+		if(pl.(weaponentity).hook)
+			delete(pl.(weaponentity).hook);
+		pl.(weaponentity).hook = NULL;
+	}
 
 	//pl.disableclientprediction = false;
 }
@@ -96,14 +48,14 @@ void RemoveGrapplingHooks(entity pl)
 void RemoveHook(entity this)
 {
 	entity player = this.realowner;
-    .entity weaponentity = this.weaponentity_fld;
+	.entity weaponentity = this.weaponentity_fld;
 
-    if(player.(weaponentity).hook == this)
-    	player.(weaponentity).hook = NULL;
+	if(player.(weaponentity).hook == this)
+		player.(weaponentity).hook = NULL;
 
-    if(player.move_movetype == MOVETYPE_FLY)
-    	set_movetype(player, MOVETYPE_WALK);
-    delete(this);
+	if(player.move_movetype == MOVETYPE_FLY)
+		set_movetype(player, MOVETYPE_WALK);
+	delete(this);
 }
 
 void GrapplingHookReset(entity this)
@@ -114,7 +66,7 @@ void GrapplingHookReset(entity this)
 void GrapplingHook_Stop(entity this)
 {
 	Send_Effect(EFFECT_HOOK_IMPACT, this.origin, '0 0 0', 1);
-	sound (this, CH_SHOTS, SND_HOOK_IMPACT, VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS, SND_HOOK_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	this.state = 1;
 	setthink(this, GrapplingHookThink);
@@ -153,8 +105,8 @@ int autocvar_g_grappling_hook_tarzan;
 
 void GrapplingHookThink(entity this)
 {
-	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch;
-	vector dir, org, end, v0, dv, v, myorg, vs;
+	float spd, dist;
+
 	.entity weaponentity = this.weaponentity_fld;
 	if(this.realowner.(weaponentity).hook != this)	// how did that happen?
 	{
@@ -174,11 +126,12 @@ void GrapplingHookThink(entity this)
 	this.nextthink = time;
 
 	int s = W_GunAlign(this.realowner.(weaponentity), STAT(GUNALIGN, this.realowner)) - 1;
-	vs = hook_shotorigin[s];
 
 	makevectors(this.realowner.v_angle);
-	org = this.realowner.origin + this.realowner.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
-	myorg = WarpZone_RefSys_TransformOrigin(this.realowner, this, org);
+	vector vs = hook_shotorigin[s];
+	vs = v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
+	vector org = this.realowner.origin + this.realowner.view_ofs + vs;
+	vector myorg = WarpZone_RefSys_TransformOrigin(this.realowner, this, org);
 
 	if(this.hook_length < 0)
 		this.hook_length = vlen(myorg - this.origin);
@@ -193,42 +146,45 @@ void GrapplingHookThink(entity this)
 
 	if(this.state == 1)
 	{
-		pullspeed = autocvar_g_balance_grapplehook_speed_pull;//2000;
+		float pullspeed = autocvar_g_balance_grapplehook_speed_pull;
 		// speed the rope is pulled with
 
-		rubberforce = autocvar_g_balance_grapplehook_force_rubber;//2000;
+		float rubberforce = autocvar_g_balance_grapplehook_force_rubber;
 		// force the rope will use if it is stretched
 
-		rubberforce_overstretch = autocvar_g_balance_grapplehook_force_rubber_overstretch;//1000;
+		float rubberforce_overstretch = autocvar_g_balance_grapplehook_force_rubber_overstretch;
 		// force the rope will use if it is stretched
 
-		minlength = autocvar_g_balance_grapplehook_length_min;//100;
+		float minlength = autocvar_g_balance_grapplehook_length_min;
 		// minimal rope length
 		// if the rope goes below this length, it isn't pulled any more
 
-		ropestretch = autocvar_g_balance_grapplehook_stretch;//400;
+		float ropestretch = autocvar_g_balance_grapplehook_stretch;
 		// if the rope is stretched by more than this amount, more rope is
 		// given to you again
 
-		ropeairfriction = autocvar_g_balance_grapplehook_airfriction;//0.2
+		float ropeairfriction = autocvar_g_balance_grapplehook_airfriction;
 		// while hanging on the rope, this friction component will help you a
 		// bit to control the rope
 
 		bool frozen_pulling = (autocvar_g_grappling_hook_tarzan >= 2 && autocvar_g_balance_grapplehook_pull_frozen);
+		bool target_isfrozen = (STAT(FROZEN, this.aiment) || StatusEffects_active(STATUSEFFECT_Frozen, this.aiment));
 
-		dir = this.origin - myorg;
+		vector dir = this.origin - myorg;
 		dist = vlen(dir);
-		dir = normalize(dir);
+
+		// TODO: Consider changing this back to `dir / dist` after https://github.com/graphitemaster/gmqcc/issues/210.
+		dir = (dist ? dir * (1 / dist) : '0 0 0'); // same as dir = normalize(dir); but cheaper
 
 		if(tarzan)
 		{
+			vector v, v0;
 			v = v0 = WarpZone_RefSys_TransformVelocity(pull_entity, this, pull_entity.velocity);
 
 			// first pull the rope...
 			if(this.realowner.(weaponentity).hook_state & HOOK_PULLING)
 			{
-				newlength = this.hook_length;
-				newlength = max(newlength - pullspeed * frametime, minlength);
+				float newlength = max(this.hook_length - pullspeed * frametime, minlength);
 
 				if(newlength < dist - ropestretch) // overstretched?
 				{
@@ -245,8 +201,7 @@ void GrapplingHookThink(entity this)
 
 			if(this.realowner.(weaponentity).hook_state & HOOK_RELEASING)
 			{
-				newlength = dist;
-				this.hook_length = newlength;
+				this.hook_length = dist;
 			}
 			else
 			{
@@ -255,14 +210,14 @@ void GrapplingHookThink(entity this)
 				v = v * (1 - frametime * ropeairfriction);
 				v = v + frametime * dir * spd * rubberforce;
 
-				dv = ((v - v0) * dir) * dir;
+				vector dv = ((v - v0) * dir) * dir;
 				if(tarzan >= 2)
 				{
 					if(this.aiment.move_movetype == MOVETYPE_WALK || this.aiment.classname == "nade")
 					{
 						entity aim_ent = ((IS_VEHICLE(this.aiment) && this.aiment.owner) ? this.aiment.owner : this.aiment);
 						v = v - dv * 0.5;
-						if((frozen_pulling && STAT(FROZEN, this.aiment)) || !frozen_pulling)
+						if((frozen_pulling && target_isfrozen) || !frozen_pulling)
 						{
 							this.aiment.velocity = this.aiment.velocity - dv * 0.5;
 							UNSET_ONGROUND(this.aiment);
@@ -283,7 +238,7 @@ void GrapplingHookThink(entity this)
 			if(!frozen_pulling && !(this.aiment.flags & FL_PROJECTILE))
 				pull_entity.velocity = WarpZone_RefSys_TransformVelocity(this, pull_entity, v * velocity_multiplier);
 
-			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !STAT(FROZEN, this.aiment))
+			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !target_isfrozen)
 			{
 				RemoveHook(this);
 				return;
@@ -291,7 +246,7 @@ void GrapplingHookThink(entity this)
 		}
 		else
 		{
-			end = this.origin - dir*50;
+			vector end = this.origin - dir * 50;
 			dist = vlen(end - myorg);
 			if(dist < 200)
 				spd = dist * (pullspeed / 200);
@@ -299,7 +254,7 @@ void GrapplingHookThink(entity this)
 				spd = pullspeed;
 			if(spd < 50)
 				spd = 0;
-			this.realowner.velocity = dir*spd;
+			this.realowner.velocity = dir * spd;
 			set_movetype(this.realowner, MOVETYPE_FLY);
 
 			UNSET_ONGROUND(this.realowner);
@@ -367,9 +322,8 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 	if(actor.vehicle) return;
 
 	int s = W_GunAlign(actor.(weaponentity), STAT(GUNALIGN, actor)) - 1;
-	vector vs = hook_shotorigin[s];
 	vector oldmovedir = actor.(weaponentity).movedir;
-	actor.(weaponentity).movedir = vs;
+	actor.(weaponentity).movedir = hook_shotorigin[s];
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', true, 0, SND_HOOK_FIRE, CH_WEAPON_B, 0, WEP_HOOK.m_id);
 	W_MuzzleFlash(WEP_HOOK, actor, weaponentity, w_shotorg, '0 0 0');
 	actor.(weaponentity).movedir = oldmovedir;
@@ -415,6 +369,8 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 	missile.hook_start = missile.hook_end = missile.origin;
 
 	Net_LinkEntity(missile, false, 0, GrapplingHookSend);
+
+	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
 
 // NOTE: using PRECACHE here to make sure it's called after everything else
@@ -431,9 +387,10 @@ PRECACHE(GrappleHookInit)
 	{
 		Weapon w = WEP_HOOK;
 		w.wr_init(w);
-		hook_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 1);
-		hook_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 2);
-		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 3);
-		hook_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 4);
+		vector vecs = CL_Weapon_GetShotOrg(WEP_HOOK.m_id);
+		hook_shotorigin[0] = shotorg_adjust(vecs, false, false, 1);
+		hook_shotorigin[1] = shotorg_adjust(vecs, false, false, 2);
+		hook_shotorigin[2] = shotorg_adjust(vecs, false, false, 3);
+		hook_shotorigin[3] = shotorg_adjust(vecs, false, false, 4);
 	}
 }

@@ -208,6 +208,10 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 	float i;
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
 	WriteRegistered(Gametypes, MSG_ENTITY, MapInfo_LoadedGametype);
+	string gt_name = "";
+	if (loaded_gametype_custom_string != "")
+		gt_name = cvar_string(strcat("sv_vote_gametype_", loaded_gametype_custom_string, "_name"));
+	WriteString(MSG_ENTITY, gt_name);
 	FOREACH(Scores, true, {
 		WriteString(MSG_ENTITY, scores_label(it));
 		WriteByte(MSG_ENTITY, scores_flags(it));
@@ -259,15 +263,15 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 
 	int longflags = 0;
 	FOREACH(Scores, true, {
-	    int p = 1 << (i % 16);
+		int p = BIT(i % 16);
 		if (this.(scores(it)) > 127 || this.(scores(it)) <= -128)
 			longflags |= p;
-    });
+	});
 
 	WriteShort(MSG_ENTITY, sendflags);
 	WriteShort(MSG_ENTITY, longflags);
 	FOREACH(Scores, true, {
-	    int p = 1 << (i % 16);
+		int p = BIT(i % 16);
 		if (sendflags & p)
 		{
 			if(longflags & p)
@@ -275,7 +279,7 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 			else
 				WriteChar(MSG_ENTITY, this.(scores(it)));
 		}
-    });
+	});
 
 	return true;
 }
@@ -445,7 +449,6 @@ void WinningConditionHelper(entity this)
 {
 	float c;
 	string s;
-	float fullstatus;
 	entity winnerscorekeeper;
 	entity secondscorekeeper;
 	entity sk;
@@ -456,16 +459,17 @@ void WinningConditionHelper(entity this)
 	// so to match pure, match for :P0:
 	// to match full, match for :S0:
 
-	fullstatus = autocvar_g_full_getstatus_responses;
-
-	s = GetGametype();
-	s = strcat(s, ":", autocvar_g_xonoticversion);
-	s = strcat(s, ":P", ftos(cvar_purechanges_count));
-	s = strcat(s, ":S", ftos(nJoinAllowed(this, NULL)));
-	s = strcat(s, ":F", ftos(serverflags));
-	s = strcat(s, ":T", sv_termsofservice_url_escaped);
-	s = strcat(s, ":M", modname);
-	s = strcat(s, "::", GetPlayerScoreString(NULL, (fullstatus ? 1 : 2)));
+	// NOTE can't use a single strcat because strcat concatenates max 8 strings
+	s = strcat(GetGametype(),
+		":", autocvar_g_xonoticversion,
+		":P", ftos(cvar_purechanges_count),
+		":S", ftos(nJoinAllowed(this, NULL)));
+	s = strcat(s,
+		":F", ftos(serverflags),
+		":T", sv_termsofservice_url_escaped,
+		":M", modname);
+	s = strcat(s,
+		"::", GetPlayerScoreString(NULL, (autocvar_g_full_getstatus_responses ? 1 : 2)));
 
 	if(teamscores_entities_count)
 	{
@@ -578,11 +582,12 @@ void WinningConditionHelper(entity this)
 		}
 	}
 
-	strcpy(worldstatus, s);
+	if (s != worldstatus)
+		strcpy(worldstatus, s);
 
 	FOREACH_CLIENT(true, {
 		string s = "";
-		if(fullstatus)
+		if(autocvar_g_full_getstatus_responses)
 		{
 			s = GetPlayerScoreString(it, 1);
 			s = strcat(s, IS_REAL_CLIENT(it) ? ":human" : ":bot");
@@ -597,7 +602,8 @@ void WinningConditionHelper(entity this)
 				s = "-666";
 		}
 
-		strcpy(it.clientstatus, s);
+		if (s != it.clientstatus)
+			strcpy(it.clientstatus, s);
 	});
 }
 
@@ -630,7 +636,7 @@ string GetPlayerScoreString(entity pl, float shortString)
 				l = scores_label(it);
 				out = strcat(out, GetScoreLogLabel(l, f), ",");
 			}
-        });
+		});
 		if(shortString < 2)
 		FOREACH(Scores, true, {
 			if((scores_flags(it) & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_SECONDARY)
@@ -639,7 +645,7 @@ string GetPlayerScoreString(entity pl, float shortString)
 				l = scores_label(it);
 				out = strcat(out, GetScoreLogLabel(l, f), ",");
 			}
-        });
+		});
 		if(shortString < 1)
 		FOREACH(Scores, true, {
 			if((scores_flags(it) & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_PRIMARY)
@@ -649,7 +655,7 @@ string GetPlayerScoreString(entity pl, float shortString)
 				l = scores_label(it);
 				out = strcat(out, GetScoreLogLabel(l, f), ",");
 			}
-        });
+		});
 		out = substring(out, 0, strlen(out) - 1);
 	}
 	else if((sk = CS(pl).scorekeeper))
@@ -657,18 +663,18 @@ string GetPlayerScoreString(entity pl, float shortString)
 		FOREACH(Scores, true, {
 			if ((scores_flags(it) & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_PRIMARY)
 				out = strcat(out, ftos(sk.(scores(it))), ",");
-        });
+		});
 		if(shortString < 2)
 		FOREACH(Scores, true, {
 			if ((scores_flags(it) & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_SECONDARY)
 				out = strcat(out, ftos(sk.(scores(it))), ",");
-        });
+		});
 		if(shortString < 1)
 		FOREACH(Scores, true, {
 			if((scores_flags(it) & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_PRIMARY)
 			if((scores_flags(it) & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_SECONDARY)
 				out = strcat(out, ftos(sk.(scores(it))), ",");
-        });
+		});
 		out = substring(out, 0, strlen(out) - 1);
 	}
 	return out;
@@ -864,7 +870,7 @@ void Score_NicePrint_Team(entity to, float t, float w)
 			{
 				fl = teamscores_flags(i);
 				sc = sk.(teamscores(i));
-				s = strcat(s, " ", Score_NicePrint_ItemColor(fl), ScoreString(fl, sc));
+				s = strcat(s, " ", Score_NicePrint_ItemColor(fl), ScoreString(fl, sc, 0));
 			}
 	}
 	else
@@ -912,7 +918,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 		{
 			fl = scores_flags(it);
 			sc = sk.(scores(it));
-			s = strcat(s, " ", Score_NicePrint_ItemColor(fl), strpad(-w, ScoreString(fl, sc)));
+			s = strcat(s, " ", Score_NicePrint_ItemColor(fl), strpad(-w, ScoreString(fl, sc, 0)));
 		}
     });
 

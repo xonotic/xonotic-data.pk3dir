@@ -1,0 +1,26 @@
+#pragma once
+
+#include <common/mutators/mutator/status_effects/all.qh>
+
+#ifdef SVQC
+//void Shock_ApplyDamage(entity e);
+#endif
+#ifdef GAMEQC
+SOUND(Stunned_Remove, "onslaught/ons_spark1");
+#endif
+CLASS(Stunned, StatusEffect)
+    ATTRIB(Stunned, netname, string, "stunned");
+#if 0
+    // NOTE: status effect name and icon disabled as they are not displayed
+    // re-enable if status effects are given a visual element
+    ATTRIB(Stunned, m_name, string, _("Stunned"));
+    ATTRIB(Stunned, m_icon, string, "buff_disability");
+#endif
+    ATTRIB(Stunned, m_color, vector, '0.67 0.84 1');
+    ATTRIB(Stunned, m_hidden, bool, true);
+    ATTRIB(Stunned, m_lifetime, float, 10);
+#ifdef GAMEQC
+    ATTRIB(Stunned, m_sound_rm, Sound, SND_Stunned_Remove);
+#endif
+ENDCLASS(Stunned)
+REGISTER_STATUSEFFECT(Stunned, NEW(Stunned));

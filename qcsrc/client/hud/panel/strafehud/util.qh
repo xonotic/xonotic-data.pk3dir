@@ -1,0 +1,27 @@
+#pragma once
+#include "../strafehud.qh"
+
+float StrafeHUD_AngleToWidth(float, float);
+float StrafeHUD_AngleToOffset(float, float);
+float StrafeHUD_Project(float, float, bool);
+float StrafeHUD_ProjectOffset(float, float, bool);
+float StrafeHUD_ProjectWidth(float, float, float);
+
+float StrafeHUD_GetLengthUnitFactor(int);
+string StrafeHUD_GetLengthUnit(int);
+
+entity StrafeHUD_GetStrafeplayer(bool);
+
+float StrafeHUD_DetermineWaterLevel(entity);
+float StrafeHUD_DetermineFrameTime();
+float StrafeHUD_DetermineWishAngle(vector, int, bool);
+int StrafeHUD_DetermineForwardKeys(vector, int, bool);
+float StrafeHUD_DetermineHudAngle(float, float, float);
+float StrafeHUD_DetermineDirection(float, float, float);
+bool StrafeHUD_DetermineJumpHeld(entity, int, bool);
+bool StrafeHUD_DetermineOnGround(entity, bool);
+bool StrafeHUD_DetermineOnSlick(entity);
+
+vector StrafeHUD_MixColors(vector, vector, float);
+
+vector StrafeHUD_CalculateTextIndicatorPosition(vector);
