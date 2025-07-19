@@ -16,9 +16,11 @@ void MapVote_Draw_Export(int fh)
 
 int mv_num_maps;
 
+// These are mostly the same as server/mapvoting.qc, or otherwise intuitive
 string mv_maps[MAPVOTE_COUNT];
 string mv_pics[MAPVOTE_COUNT];
 string mv_pk3[MAPVOTE_COUNT]; // map pk3 name or gametype human readable name
+string mv_suggester[MAPVOTE_COUNT];
 string mv_desc[MAPVOTE_COUNT];
 float mv_preview[MAPVOTE_COUNT];
 int mv_votes[MAPVOTE_COUNT];
@@ -297,18 +299,33 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 void MapVote_DrawAbstain(vector pos, float isize, float tsize, int _count, int id)
 {
 	TC(int, id);
-	vector rgb;
-	float text_size;
-	string label;
 
-	rgb = MapVote_RGB(id);
+	string label = MapVote_FormatMapItem(id, _("Don't care"), _count, tsize, hud_fontsize, -1);
 
-	label = MapVote_FormatMapItem(id, _("Don't care"), _count, tsize, hud_fontsize, -1);
+	float theAlpha = (mv_winner && mv_winner_alpha)
+		? mv_winner_alpha
+		: 1;
+	theAlpha *= panel_fg_alpha;
 
-	text_size = stringwidth(label, false, hud_fontsize);
+	float text_size = stringwidth(label, false, hud_fontsize);
+	pos.x -= text_size * 0.5;
+	drawstring(pos, label, hud_fontsize, MapVote_RGB(id), theAlpha, DRAWFLAG_NORMAL);
+}
 
-	pos.x -= text_size*0.5;
-	drawstring(pos, label, hud_fontsize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+void MapVote_DrawSuggester(vector pos)
+{
+	int id = mv_winner ? mv_winner - 1 : mv_selection;
+
+	if (id != -1 && (mv_flags[id] & GTV_AVAILABLE))
+	if (mv_suggester[id] != "")
+	{
+		string label = sprintf(_("Suggested by: %s"), ColorTranslateRGB(mv_suggester[id]));
+
+		// not impacted by alpha
+		float text_size = stringwidth(label, true, hud_fontsize);
+		pos.x -= text_size * 0.5;
+		drawcolorcodedstring(pos, label, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
 }
 
 vector MapVote_GridVec(vector gridspec, int i, int m)
@@ -372,7 +389,7 @@ void MapVote_Draw()
 	HUD_Panel_LoadCvars();
 
 	center = (vid_conwidth - 1)/2;
-	xmin = vid_conwidth * 0.08;
+	xmin = vid_conwidth * (gametypevote ? 0.08 : 0.1);
 	xmax = vid_conwidth - xmin;
 	ymin = 20;
 	ymax = vid_conheight - ymin;
@@ -429,11 +446,15 @@ void MapVote_Draw()
 	pos.x = xmin;
 	ymin = pos.y;
 	float abstain_spacing = panel_bg_border + hud_fontsize.y;
+	float suggester_spacing = hud_fontsize.y * 1.5;
 	if(mv_abstain)
 	{
 		mv_num_maps -= 1;
 		ymax -= abstain_spacing;
 	}
+	bool were_suggesters = (mv_suggester[0] != ""); // suggestions are placed at the start
+	if(were_suggesters)
+		ymax -= suggester_spacing;
 
 	// higher than the image itself ratio for mapvote items to reserve space for long map names
 	int item_aspect = (gametypevote) ? 3/1 : 5/3;
@@ -524,11 +545,12 @@ void MapVote_Draw()
 	if(mv_abstain)
 		++mv_num_maps;
 
+	pos.y = ymax + abstain_spacing;
 	if(mv_abstain && i < mv_num_maps) {
 		tmp = mv_votes[i];
-		pos.y = ymax + abstain_spacing;
-		pos.x = (xmax + xmin) * 0.5;
+		pos.x = center;
 		MapVote_DrawAbstain(pos, dist.x, xmax - xmin, tmp, i);
+		pos.y += suggester_spacing;
 	}
 
 	if (mv_winner)
@@ -550,10 +572,23 @@ void MapVote_Draw()
 		f = sqrt(f);
 		float theAlpha = f;
 		f = min(0.1 + f, 1);
-		vector img_pos = endpos * f + startpos * (1 - f);
 		vector img_size = endsize * f + startsize * (1 - f);
+		vector img_pos = endpos * f + startpos * (1 - f);
 
 		MapVote_DrawMapPicture(mv_pics[mv_winner - 1], img_pos, img_size, theAlpha);
+
+		if (were_suggesters)
+		{
+			float suggester_startposy = pos.y;
+			float suggester_endposy = panel_pos.y + endsize.y + hud_fontsize.y;
+			pos.y = suggester_endposy * f + suggester_startposy * (1 - f);
+		}
+	}
+
+	if (were_suggesters)
+	{
+		pos.x = center;
+		MapVote_DrawSuggester(pos);
 	}
 }
 
@@ -656,27 +691,25 @@ void MapVote_ReadMask()
 void MapVote_ReadOption(int i)
 {
 	TC(int, i);
-	string map = strzone(ReadString());
-	string pk3 = strzone(ReadString());
+
+	mv_maps[i] = strzone(ReadString());
+	mv_pk3[i] = strzone(ReadString());
+	mv_suggester[i] = strzone(ReadString());
+	mv_flags[i] = GTV_AVAILABLE;
 	int j = bound(0, ReadByte(), n_ssdirs - 1);
 
-	mv_maps[i] = map;
-	mv_pk3[i] = pk3;
-	mv_flags[i] = GTV_AVAILABLE;
-
-	string pic = strzone(strcat(ssdirs[j], "/", map));
-	mv_pics[i] = pic;
+	mv_pics[i] = strzone(strcat(ssdirs[j], "/", mv_maps[i]));
 	mv_preview[i] = false;
-	MapVote_CheckPic(pic, pk3, i);
+	MapVote_CheckPic(mv_pics[i], mv_pk3[i], i);
 }
 
 void GameTypeVote_ReadOption(int i)
 {
 	TC(int, i);
-	string gt = strzone(ReadString());
 
-	mv_maps[i] = gt;
+	mv_maps[i] = strzone(ReadString());
 	mv_flags[i] = ReadByte();
+	mv_suggester[i] = "";
 
 	string basetype = "";
 
@@ -684,22 +717,22 @@ void GameTypeVote_ReadOption(int i)
 	{
 		string name = ReadString();
 		if ( strlen(name) < 1 )
-			name = gt;
+			name = mv_maps[i];
 		mv_pk3[i] = strzone(name);
 		mv_desc[i] = strzone(ReadString());
 		basetype = strzone(ReadString());
 	}
 	else
 	{
-		Gametype type = MapInfo_Type_FromString(gt, false, false);
+		Gametype type = MapInfo_Type_FromString(mv_maps[i], false, false);
 		mv_pk3[i] = strzone(MapInfo_Type_ToText(type));
 		mv_desc[i] = MapInfo_Type_Description(type);
 	}
 
-	string mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, gt);
+	string mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, mv_maps[i]);
 	if(precache_pic(mv_picpath) == "")
 	{
-		mv_picpath = strcat("gfx/menu/default/gametype_", gt);
+		mv_picpath = strcat("gfx/menu/default/gametype_", mv_maps[i]);
 		if(precache_pic(mv_picpath) == "")
 		{
 			mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, basetype);
@@ -709,9 +742,8 @@ void GameTypeVote_ReadOption(int i)
 			}
 		}
 	}
-	string pic = strzone(mv_picpath);
-	mv_pics[i] = pic;
-	mv_preview[i] = PreviewExists(pic);
+	mv_pics[i] = strzone(mv_picpath);
+	mv_preview[i] = PreviewExists(mv_pics[i]);
 }
 
 void MapVote_Init()
