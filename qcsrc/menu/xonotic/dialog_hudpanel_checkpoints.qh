@@ -9,5 +9,5 @@ CLASS(XonoticHUDCheckpointsDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDCheckpointsDialog, rows, float, 15.5);
 	ATTRIB(XonoticHUDCheckpointsDialog, columns, float, 4);
 	ATTRIB(XonoticHUDCheckpointsDialog, name, string, "HUDcheckpoints");
-	ATTRIB(XonoticHUDCheckpointsDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDCheckpointsDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDCheckpointsDialog)
