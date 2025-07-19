@@ -29,7 +29,7 @@ int mapvote_count_real;
 string mapvote_maps[MAPVOTE_COUNT];
 int mapvote_maps_screenshot_dir[MAPVOTE_COUNT];
 string mapvote_maps_pakfile[MAPVOTE_COUNT];
-bool mapvote_maps_suggested[MAPVOTE_COUNT];
+string mapvote_maps_suggester[MAPVOTE_COUNT];
 string mapvote_suggestions[MAPVOTE_COUNT];
 int mapvote_suggestion_ptr;
 int mapvote_voters;
@@ -44,6 +44,7 @@ float mapvote_rng[MAPVOTE_COUNT]; // random() value for each map to determine ti
 bool mapvote_run;
 int mapvote_detail;
 bool mapvote_abstain;
+bool mapvote_show_suggester;
 .int mapvote;
 
 entity mapvote_ent;
@@ -124,6 +125,8 @@ void MapVote_UnzoneStrings()
 	{
 		strfree(mapvote_maps[j]);
 		strfree(mapvote_maps_pakfile[j]);
+		// unzoning all suggesters would delete them
+		// they're properly unzoned in MapVote_Suggest and MapVote_AddVotable
 	}
 }
 
@@ -162,6 +165,9 @@ string MapVote_Suggest(entity this, string m)
 	if(mapvote_suggestions[i] != "")
 		strunzone(mapvote_suggestions[i]);
 	mapvote_suggestions[i] = strzone(m);
+	if(mapvote_maps_suggester[i] != "")
+		strunzone(mapvote_maps_suggester[i]);
+	mapvote_maps_suggester[i] = strzone(this.netname);
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":vote:suggested:", m, ":", ftos(this.playerid)));
 	return strcat("Suggestion of ", m, " accepted.");
@@ -182,7 +188,6 @@ void MapVote_AddVotable(string nextMap, bool isSuggestion)
 		if(!MapInfo_CheckMap(nextMap))
 			return;
 	mapvote_maps[mapvote_count] = strzone(nextMap);
-	mapvote_maps_suggested[mapvote_count] = isSuggestion;
 	mapvote_rng[mapvote_count] = random();
 
 	pakfile = string_null;
@@ -204,6 +209,8 @@ void MapVote_AddVotable(string nextMap, bool isSuggestion)
 
 	mapvote_maps_screenshot_dir[mapvote_count] = i;
 	mapvote_maps_pakfile[mapvote_count] = strzone(pakfile);
+	if(!isSuggestion)
+		mapvote_maps_suggester[mapvote_count] = strzone("");
 	mapvote_maps_flags[mapvote_count] = GTV_AVAILABLE;
 
 	++mapvote_count;
@@ -242,6 +249,7 @@ void MapVote_Init()
 	mapvote_count = 0;
 	mapvote_detail = autocvar_g_maplist_votable_detail;
 	mapvote_abstain = autocvar_g_maplist_votable_abstain;
+	mapvote_show_suggester = autocvar_g_maplist_votable_show_suggester;
 	current_gametype_index = -1;
 
 	if(mapvote_abstain)
@@ -329,12 +337,14 @@ void MapVote_SendOption(int i)
 	{
 		WriteString(MSG_ENTITY, ""); // abstain needs no text
 		WriteString(MSG_ENTITY, ""); // abstain needs no pack
+		WriteString(MSG_ENTITY, ""); // abstain has no suggester
 		WriteByte(MSG_ENTITY, 0); // abstain needs no screenshot dir
 	}
 	else
 	{
 		WriteString(MSG_ENTITY, mapvote_maps[i]);
 		WriteString(MSG_ENTITY, mapvote_maps_pakfile[i]);
+		WriteString(MSG_ENTITY, mapvote_show_suggester ? mapvote_maps_suggester[i] : "");
 		WriteByte(MSG_ENTITY, mapvote_maps_screenshot_dir[i]);
 	}
 }
@@ -502,7 +512,7 @@ bool MapVote_Finished(int mappos)
 		result = strcat(result, ":didn't vote:", ftos(didntvote));
 
 		GameLogEcho(result);
-		if(mapvote_maps_suggested[mappos])
+		if(mapvote_maps_suggester[mappos] != "")
 			GameLogEcho(strcat(":vote:suggestion_accepted:", mapvote_maps[mappos]));
 	}
 
@@ -888,10 +898,9 @@ bool GameTypeVote_AddVotable(string nextMode)
 			return false;
 
 	mapvote_maps[mapvote_count] = strzone(nextMode);
-	mapvote_maps_suggested[mapvote_count] = false;
-
 	mapvote_maps_screenshot_dir[mapvote_count] = 0;
 	mapvote_maps_pakfile[mapvote_count] = strzone("");
+	// suggester will be uninitialized, but it's never read from until map voting, before which it has been set
 	mapvote_maps_flags[mapvote_count] = GameTypeVote_AvailabilityStatus(nextMode);
 
 	++mapvote_count;
@@ -908,6 +917,7 @@ bool GameTypeVote_Start()
 	mapvote_timeout = time + autocvar_sv_vote_gametype_timeout;
 	mapvote_abstain = false;
 	mapvote_detail = autocvar_sv_vote_gametype_detail;
+	mapvote_show_suggester = false;
 
 	int n = tokenizebyseparator(autocvar_sv_vote_gametype_options, " ");
 	n = min(MAPVOTE_COUNT, n);
