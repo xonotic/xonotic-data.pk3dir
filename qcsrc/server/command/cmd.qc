@@ -37,34 +37,38 @@
 #include <server/teamplay.qh>
 #include <server/world.qh>
 
-string ignore_removefromlist(entity list, entity ignore)
+void ignore_remove_player(entity this, entity ignore, bool only_from_ignore_list)
 {
-	if(ignore.crypto_idfp && ignore.crypto_idfp != "" && list.crypto_idfp && list.crypto_idfp != "")
+	if(only_from_ignore_list)
+		goto from_ignore_list;
+
+	if(ignore.crypto_idfp && ignore.crypto_idfp != "" && this.crypto_idfp && this.crypto_idfp != "")
 	{
 		for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
 		{
-			string pos = db_get(ServerProgsDB, strcat("/ignore/", list.crypto_idfp, "/", ftos(j)));
+			string pos = db_get(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
 			if(pos == ignore.crypto_idfp)
 			{
-				db_remove(ServerProgsDB, strcat("/ignore/", list.crypto_idfp, "/", ftos(j)));
+				db_remove(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
 				return string_null;
 			}
 		}
 		// should this fall back? we know advanced mode is being used
 	}
 
+	LABEL(from_ignore_list);
+	if (!this.ignore_list)
+		return;
+
 	string newlist = "";
 	string theid = ftos(etof(ignore));
 
-	FOREACH_WORD(list.ignore_list, it != theid,
+	FOREACH_WORD(this.ignore_list, it != theid,
 	{
 		newlist = cons(newlist, it);
 	});
 
-	if(newlist == "")
-		return string_null;
-	else
-		return newlist;
+	strcpy(this.ignore_list, newlist);
 }
 
 bool ignore_playerinlist(entity sender, entity targ)
@@ -408,11 +412,12 @@ void ClientCommand_ignore(entity caller, int request, int argc, string command)
 							return;
 						}
 
+						string list = cons(caller.ignore_list, ftos(etof(ignore_to)));
 						if(caller.ignore_list)
 							strunzone(caller.ignore_list);
-						caller.ignore_list = strzone(cons(caller.ignore_list, ftos(etof(ignore_to))));
+						caller.ignore_list = strzone(list);
 
-						sprint(caller, "You no longer receive messages from ", ignore_to.netname, "^7, use ^2unignore^7 to hear them again.\n");
+						sprint(caller, "You will no longer receive messages from ", ignore_to.netname, "^7 for this match, use ^2unignore^7 to hear them again.\n");
 					}
 					else { sprint(caller, "You can't ^2ignore^7 yourself.\n"); }
 				}
@@ -889,8 +894,6 @@ void ClientCommand_unignore(entity caller, int request, int argc, string command
 		{
 			if (argc >= 2)
 			{
-				bool advanced = (caller.crypto_idfp && caller.crypto_idfp != "");
-
 				if(!argv(1) || argv(1) == "")
 				{
 					sprint(caller, "This command requires an argument. Use a player's name or their ID from the ^2status^7 command.\n");
@@ -904,15 +907,7 @@ void ClientCommand_unignore(entity caller, int request, int argc, string command
 				{
 					if (unignore_to != caller)
 					{
-						string mylist = ignore_removefromlist(caller, unignore_to);
-						if(!advanced)
-						{
-							if(caller.ignore_list)
-								strunzone(caller.ignore_list);
-
-							caller.ignore_list = strzone(mylist);
-						}
-
+						ignore_remove_player(caller, unignore_to, false);
 						sprint(caller, "You can now receive messages from ", unignore_to.netname, " ^7again.\n");
 						return;
 					}

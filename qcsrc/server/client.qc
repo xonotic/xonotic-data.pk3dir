@@ -1260,19 +1260,11 @@ void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
 
-	/* from "ignore" command */
 	strfree(this.ignore_list);
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it.ignore_list,
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		if(it.crypto_idfp && it.crypto_idfp != "")
-			continue;
-		string mylist = ignore_removefromlist(it, this);
-		if(it.ignore_list)
-			strunzone(it.ignore_list);
-
-		it.ignore_list = strzone(mylist);
+		ignore_remove_player(it, this, true); // remove only from ignore_list, permanant ignore must be kept
 	});
-	/* from "ignore" command */
 
 	PlayerStats_GameReport_FinalizePlayer(this);
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
