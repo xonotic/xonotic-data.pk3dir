@@ -134,7 +134,7 @@ METHOD(OverkillShotgun, describe, string(OverkillShotgun this))
 		"It has a limited magazine size, so needs reloading after several shots.\n\n"
 		"The %s damage drops off quickly as the range increases, so it is only useful for close combat or sometimes medium range combat.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(MUTATOR_ok), COLORED_NAME(ITEM_Shells), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this),
-	W_Guide_DPS_onlyOneMultishot(this.netname, "primary", "primary_bullets", ""));
+	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_onlyOneMultishot(this.netname, "primary", "primary_bullets", "")));
 }
 
 #endif

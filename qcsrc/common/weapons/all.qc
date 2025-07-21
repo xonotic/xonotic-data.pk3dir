@@ -832,6 +832,43 @@ REPLICATE(cvar_cl_weaponpriorities[9], string, "cl_weaponpriority9", W_FixWeapon
 
 
 #ifdef MENUQC
+// Finds keybinds for a weapon
+string W_Guide_Keybinds(Weapon wep)
+{
+	string command, key, keys = "";
+	int n, j;
+	float k;
+	const bool joy_active = cvar("joy_active");
+
+	for (int cmd_type = 0; cmd_type < 2; ++cmd_type)
+	{
+		command = cmd_type
+			? strcat("weapon_", wep.netname)
+			: strcat("weapon_group_", itos(wep.impulse));
+		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
+
+		for (j = 0; j < n; ++j)
+		{
+			k = stof(argv(j));
+			if (k == -1)
+				continue;
+			key = keynumtostring(k);
+			if (!joy_active && startsWith(key, "JOY"))
+				continue;
+
+			key = translate_key(key);
+			if (keys == "")
+				keys = strcat("^3", key);
+			else
+				keys = strcat(keys, "^7, ^3", key);
+		}
+	}
+
+	if (keys == "")
+		return _("This weapon has not been bound directly."); // code may miss some weird bind configs, so say "directly"
+	return sprintf(_("You have bound this weapon to: %s."), strcat(keys, "^7"));
+}
+
 // One function for each translatable string
 
 string W_Guide_DPS_onlyOne_unnamed(string name)

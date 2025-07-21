@@ -421,7 +421,7 @@ METHOD(Vaporizer, describe, string(Vaporizer this))
 		"It is a superweapon, so isn't often found in game, except in %s where all players spawn with it.\n\n"
 		"It consumes some %s ammo with each shot.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(ITEM_ExtraLife), COLORED_NAME(WEP_BLASTER), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(ITEM_Cells),
-	W_Guide_DPS_onlyOne(this.netname, "primary"));
+	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_onlyOne(this.netname, "primary")));
 }
 
 #endif

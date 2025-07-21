@@ -433,7 +433,7 @@ METHOD(Hook, describe, string(Hook this))
 		"making both surprise ambushes and miraculous escapes possible.\n\n"
 		"It isn't available very often on maps, unless the %s mutator is active, in which all players have it on their offhand, used with the ^3+hook^7 bind.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(ITEM_Fuel), COLORED_NAME(this), COLORED_NAME(MUTATOR_hook),
-	W_Guide_DPS_onlyOne(this.netname, "secondary"));
+	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_onlyOne(this.netname, "secondary")));
 }
 
 #endif

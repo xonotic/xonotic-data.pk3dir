@@ -176,7 +176,7 @@ METHOD(Blaster, describe, string(Blaster this))
 		"One of the most common uses of the %s is \"laser jumping,\" where you can gain height by aiming down, jumping, then firing to boost yourself up. "
 		"Because it does a lot of knockback, another common usage is alternating between a high damage weapon and the %s to throw the enemy's aim off.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this),
-	W_Guide_DPS_onlyOne(this.netname, "primary"));
+	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_onlyOne(this.netname, "primary")));
 }
 
 #endif

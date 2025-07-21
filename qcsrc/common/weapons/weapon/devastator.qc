@@ -624,7 +624,7 @@ METHOD(Devastator, describe, string(Devastator this))
 		"Due to the ability to remotely detonate rockets, a common usage is \"rocket flying,\" where you fire a rocket and immediately detonate it to boost yourself while mid-air, "
 		"much more effective with the %s mutator enabled.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this), COLORED_NAME(MUTATOR_rocketflying),
-	W_Guide_DPS_onlyOne_unnamed(this.netname));
+	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_onlyOne_unnamed(this.netname)));
 }
 
 #endif

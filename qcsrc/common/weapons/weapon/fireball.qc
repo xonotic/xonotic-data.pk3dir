@@ -445,7 +445,7 @@ METHOD(Fireball, describe, string(Fireball this))
 		"Since the %s takes a moment to charge and the fireball travels slowly, using it effectively may be difficult, "
 		"but if done properly it can deal a ton of damage.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(this),
-	W_Guide_DPS(this.netname, "primary", "secondary"));
+	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS(this.netname, "primary", "secondary")));
 }
 
 #endif

@@ -605,7 +605,7 @@ METHOD(Tuba, describe, string(Tuba this))
 		"The pitch the %s plays depends on the movement keys pressed. "
 		"Reloading the weapon switches its model and notes played.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(this), COLORED_NAME(this),
-	W_Guide_DPS_onlyOne_unnamed(this.netname));
+	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_onlyOne_unnamed(this.netname)));
 }
 
 #endif

@@ -1519,7 +1519,7 @@ METHOD(Arc, describe, string(Arc this))
 		"It consumes %s ammo, steadily churning through your supply to maintain the stream.\n\n"
 		"The %s is quite a versatile weapon, however it is more effective at close to medium ranges, since the stream is not instantaneous.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(ITEM_Cells), COLORED_NAME(this),
-	W_Guide_DPS_primaryDPS(this.netname, "beam", "bolt"));
+	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_primaryDPS(this.netname, "beam", "bolt")));
 }
 
 #endif

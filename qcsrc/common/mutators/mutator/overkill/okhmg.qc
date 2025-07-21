@@ -171,7 +171,7 @@ METHOD(OverkillHeavyMachineGun, describe, string(OverkillHeavyMachineGun this))
 		"The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously.\n\n"
 		"Since its bullets deal a lot more damage than the %s bullets, it is often heavily contested when it spawns in.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(MUTATOR_ok), COLORED_NAME(ITEM_Bullets), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this), COLORED_NAME(WEP_OVERKILL_MACHINEGUN),
-	W_Guide_DPS_onlyOne(this.netname, "primary"));
+	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_onlyOne(this.netname, "primary")));
 }
 
 #endif

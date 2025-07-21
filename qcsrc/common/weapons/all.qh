@@ -469,6 +469,8 @@ string W_Model(string w_mdl);
 
 
 #ifdef MENUQC
+string W_Guide_Keybinds(Weapon wep);
+
 string W_Guide_DPS_onlyOne_unnamed(string name);
 string W_Guide_DPS_onlyOne(string name, string fire);
 string W_Guide_DPS(string name, string pri, string sec);

@@ -502,7 +502,7 @@ METHOD(Hagar, describe, string(Hagar this))
 		"The %s works best over close to medium ranges, since it's hard to land hits at a long distance. "
 		"A common usage is fully loading the secondary fire before turning a corner, so you can surprise any enemies around the corner with a bunch of rockets to the face.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(this),
-	W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_load_max", "secondary_load_speed"));
+	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_load_max", "secondary_load_speed")));
 }
 
 #endif

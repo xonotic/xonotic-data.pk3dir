@@ -434,8 +434,9 @@ METHOD(PortoLaunch, describe, string(PortoLaunch this))
 		"The secondary fire is used to shoot the out-portal, while the primary fire shoots the in-portal.\n\n"
 		"It doesn't require ammo, but it is destroyed after some time.\n\n"
 		"The portals will close either after the player who shot them dies or after some time period.\n\n"
-		"The %s isn't often placed on maps, but if used well it can make for some interesting gameplay."),
-	COLORED_NAME(this), COLORED_NAME(this));
+		"The %s isn't often placed on maps, but if used well it can make for some interesting gameplay.\n\n%s"),
+	COLORED_NAME(this), COLORED_NAME(this),
+	W_Guide_Keybinds(this));
 }
 
 #endif

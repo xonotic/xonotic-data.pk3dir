@@ -273,7 +273,7 @@ METHOD(Rifle, describe, string(Rifle this))
 		"Also, it needs to be reloaded after its magazine is emptied.\n\n"
 		"Similar to the %s, the %s can be used at any range, but it stands out at long ranges.\n\n%s"),
 	COLORED_NAME(this), COLORED_NAME(ITEM_Bullets), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this),
-	W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_shots", ""));
+	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_shots", "")));
 }
 
 #endif
