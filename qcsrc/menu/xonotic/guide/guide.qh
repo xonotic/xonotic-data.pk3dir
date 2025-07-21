@@ -57,13 +57,15 @@ STATIC_INIT_LATE(arr_name##_MENU) \
 	_REGISTRY_SOURCE_FILL(arr_name, register_arr, cond1, cond2, cond3, num_conds, true); \
 } \
 CLASS(id, DataSource) \
-	METHOD(id, getEntry, entity(id this, int i, void(string, string) returns)) { \
+	METHOD(id, getEntry, entity(id this, int i, void(string, string) returns)) \
+	{ \
 		entity e = AL_gete(arr_name##_MENU, i); \
 		if (returns) \
 			e.display(e, returns); \
 		return e; \
 	} \
-	METHOD(id, reload, int(id this, string filter)) { \
+	METHOD(id, reload, int(id this, string filter)) \
+	{ \
 		arr_name##_MENU_COUNT = 0; \
 		_REGISTRY_SOURCE_FILL(arr_name, register_arr, cond1, cond2, cond3, num_conds, \
 			(filter == "" ? true : (strstrofs(strtolower(it.message ? it.message : it.m_name), strtolower(filter), 0) >= 0))); \

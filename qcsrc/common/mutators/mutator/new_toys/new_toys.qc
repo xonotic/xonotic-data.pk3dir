@@ -5,7 +5,7 @@
 // TODO: unhardcode this
 bool nt_IsNewToy(int w)
 {
-	switch(w)
+	switch (w)
 	{
 		case WEP_SEEKER.m_id:
 		case WEP_MINE_LAYER.m_id:
@@ -19,8 +19,8 @@ bool nt_IsNewToy(int w)
 }
 
 #ifdef MENUQC
-#include "../instagib/instagib.qh"
-#include "../overkill/overkill.qh"
+#include <common/mutators/mutator/instagib/instagib.qh>
+#include <common/mutators/mutator/overkill/overkill.qh>
 
 METHOD(MutatorNewToys, describe, string(MutatorNewToys this))
 {
@@ -29,9 +29,9 @@ METHOD(MutatorNewToys, describe, string(MutatorNewToys this))
 		"Since these weapons can't spawn in %s and %s, the %s mutator can't be enabled concurrently.\n\n"
 		"The current %s weapons are:"), // do it like this so that the string doesn't need to change when the list is updated
 	COLORED_NAME(this), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this), COLORED_NAME(this));
-    FOREACH(Weapons, nt_IsNewToy(it.m_id), {
-        s = strcat(s, "\n  ", COLORED_NAME(it));
-    });
+	FOREACH(Weapons, nt_IsNewToy(it.m_id), {
+		s = strcat(s, "\n  ", COLORED_NAME(it));
+	});
 	return s;
 }
 #endif

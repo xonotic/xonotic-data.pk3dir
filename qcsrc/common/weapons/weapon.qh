@@ -127,7 +127,8 @@ CLASS(Weapon, Object)
 	/** (SERVER) update cvar based properties */
 	METHOD(Weapon, wr_update, void(Weapon this)) {}
 #ifdef MENUQC
-	METHOD(Weapon, describe, string(Weapon this)) {
+	METHOD(Weapon, describe, string(Weapon this))
+	{
 		TC(Weapon, this);
 		return SUPER(Weapon).describe(this);
 	}

@@ -182,12 +182,11 @@ vector hsl_to_rgb(vector hsl)
 ERASEABLE
 string rgb_to_hexcolor(vector rgb)
 {
-	return strcat(
-		"^x",
+	return strcat("^x",
 		DEC_TO_HEXDIGIT(floor(bound(0, rgb.x, 1) * 15 + 0.5)),
 		DEC_TO_HEXDIGIT(floor(bound(0, rgb.y, 1) * 15 + 0.5)),
 		DEC_TO_HEXDIGIT(floor(bound(0, rgb.z, 1) * 15 + 0.5))
-	             );
+	);
 }
 
 // useful macros for the guide

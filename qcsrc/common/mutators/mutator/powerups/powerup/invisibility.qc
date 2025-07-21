@@ -43,7 +43,7 @@ METHOD(InvisibilityStatusEffect, m_tick, void(StatusEffect this, entity actor))
 }
 #endif // SVQC
 #ifdef MENUQC
-#include "../../instagib/instagib.qh"
+#include <common/mutators/mutator/instagib/instagib.qh>
 
 METHOD(InvisibilityItem, describe, string(InvisibilityItem this))
 {

@@ -136,7 +136,7 @@ STATIC_INIT_LATE(W_PROP_reloader)
 #define REGISTER_WEAPON(id, inst) REGISTER(Weapons, WEP, id, m_id, inst)
 
 CLASS(NullWeapon, Weapon)
-    ATTRIB(NullWeapon, m_hidden, bool, true);
+	ATTRIB(NullWeapon, m_hidden, bool, true);
 ENDCLASS(NullWeapon)
 REGISTER_WEAPON(Null, NEW(NullWeapon));
 REGISTRY_DEFINE_GET(Weapons, WEP_Null)

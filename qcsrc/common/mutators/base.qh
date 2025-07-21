@@ -165,11 +165,13 @@ CLASS(Mutator, Object)
     ATTRIB(Mutator, mutatorfunc, mutatorfunc_t);
     ATTRIB(Mutator, mutatorcheck, bool());
 #ifdef MENUQC
-    METHOD(Mutator, describe, string(Mutator this)) {
+    METHOD(Mutator, describe, string(Mutator this))
+    {
         TC(Mutator, this);
         return SUPER(Mutator).describe(this);
     }
-    METHOD(Mutator, display, void(Mutator this, void(string name, string icon) returns)) {
+    METHOD(Mutator, display, void(Mutator this, void(string name, string icon) returns))
+    {
         TC(Mutator, this);
         string img = this.m_icon;
         if (img == "" || draw_PreloadPicture(img) == "")

@@ -17,7 +17,8 @@ CLASS(GuidePage, Object)
 		returns(this.m_name, this.m_icon ? this.m_icon : string_null);
 	}
 
-	CONSTRUCTOR(GuidePage, string _name, string _icon) {
+	CONSTRUCTOR(GuidePage, string _name, string _icon)
+	{
 		CONSTRUCT(GuidePage);
 		this.m_name = _name;
 		this.m_icon = _icon;

@@ -26,13 +26,13 @@ CLASS(XonoticEntryList, XonoticListBox)
 
 	ATTRIB(XonoticEntryList, source, DataSource, NULL);
 
-	CONSTRUCTOR(XonoticEntryList, DataSource _source) {
+	CONSTRUCTOR(XonoticEntryList, DataSource _source)
+	{
 		CONSTRUCT(XonoticEntryList);
 		this.source = _source;
 		this.configureXonoticListBox(this);
 		this.refilter(this);
 	}
-
 ENDCLASS(XonoticEntryList)
 void EntryList_StringFilterBox_Change(entity box, entity me);
 float EntryList_StringFilterBox_keyDown(entity me, float key, float ascii, float shift);

@@ -55,11 +55,13 @@ CLASS(Turret, Object)
     METHOD(Turret, tr_config, void(Turret this)) { }
 
 #ifdef MENUQC
-    METHOD(Turret, describe, string(Turret this)) {
+    METHOD(Turret, describe, string(Turret this))
+    {
         TC(Turret, this);
         return SUPER(Turret).describe(this);
     }
-    METHOD(Turret, display, void(Turret this, void(string name, string icon) returns)) {
+    METHOD(Turret, display, void(Turret this, void(string name, string icon) returns))
+    {
         TC(Turret, this);
         string img = this.m_icon;
         if (img == "" || draw_PreloadPicture(img) == "")

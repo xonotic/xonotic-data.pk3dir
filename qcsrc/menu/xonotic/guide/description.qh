@@ -13,7 +13,8 @@ CLASS(XonoticGuideDescription, XonoticListBox)
 	METHOD(XonoticGuideDescription, setDescription, void(entity, string));
 	METHOD(XonoticGuideDescription, resizeNotify, void(entity, vector, vector, vector, vector));
 
-	INIT(XonoticGuideDescription) {
+	INIT(XonoticGuideDescription)
+	{
 		this.configureXonoticListBox(this);
 	}
 ENDCLASS(XonoticGuideDescription)

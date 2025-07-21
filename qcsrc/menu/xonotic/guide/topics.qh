@@ -19,7 +19,8 @@ CLASS(XonoticTopicList, XonoticListBox)
 
 	ATTRIB(XonoticTopicList, source, DataSource, NULL);
 
-	CONSTRUCTOR(XonoticTopicList, DataSource _source) {
+	CONSTRUCTOR(XonoticTopicList, DataSource _source)
+	{
 		CONSTRUCT(XonoticTopicList);
 		this.source = _source;
 		this.nItems = _source.reload(_source, "");
