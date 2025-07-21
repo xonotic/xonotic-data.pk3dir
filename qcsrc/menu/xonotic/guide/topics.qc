@@ -21,8 +21,6 @@ void XonoticTopicList_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	if (!me.source.getEntry(me.source, i, XonoticTopicList_cb))
 		return;
 
-	string icon = XonoticTopicList_cb_icon;
-	string name = XonoticTopicList_cb_name;
 	if (isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 	else if (isFocused)
@@ -30,13 +28,13 @@ void XonoticTopicList_drawListBoxItem(entity me, int i, vector absSize, bool isS
 		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
 	}
-	draw_Picture(me.columnIconOrigin * eX, icon, me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
-	vector save_fontscale = draw_fontscale;
-	float f = draw_CondensedFontFactor(name, false, me.realFontSize, 1);
+	draw_Picture(me.columnIconOrigin * eX, XonoticTopicList_cb_icon, me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
+	const vector save_fontscale = draw_fontscale;
+	const float f = draw_CondensedFontFactor(XonoticTopicList_cb_name, false, me.realFontSize, 1);
 	draw_fontscale.x *= f;
 	vector fs = me.realFontSize;
 	fs.x *= f;
-	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, name, fs, '1 1 1', SKINALPHA_TEXT, 0);
+	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, XonoticTopicList_cb_name, fs, '1 1 1', SKINALPHA_TEXT, 0);
 	draw_fontscale = save_fontscale;
 }
 

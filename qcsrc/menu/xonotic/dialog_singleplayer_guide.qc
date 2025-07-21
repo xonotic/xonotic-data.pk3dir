@@ -49,16 +49,16 @@ void XonoticGuideDialog_fill(entity me)
 
 void XonoticGuideDialog_topicChangeNotify(entity, entity me)
 {
-	entity topics = me.topicList;
 	entity entries = me.entryList;
-	int i = topics.selectedItem;
+	const int i = me.topicList.selectedItem;
 	int idx = 0;
 	entity found = NULL;
 	#define TOPIC(src, name, icon) \
 		if (idx++ == i) \
 		{ \
 			static entity e; \
-			if (!e) e = src; \
+			if (!e) \
+				e = src; \
 			found = e; \
 			break; \
 		}

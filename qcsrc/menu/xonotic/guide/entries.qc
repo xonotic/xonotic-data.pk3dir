@@ -24,8 +24,6 @@ void XonoticEntryList_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	if (!me.source.getEntry(me.source, i, XonoticEntryList_cb))
 		return;
 
-	string name = XonoticEntryList_cb_name;
-	string icon = XonoticEntryList_cb_icon;
 	if (isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 	else if (isFocused)
@@ -33,17 +31,17 @@ void XonoticEntryList_drawListBoxItem(entity me, int i, vector absSize, bool isS
 		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
 	}
-	vector sz = draw_PictureSize(icon);
+	vector sz = draw_PictureSize(XonoticEntryList_cb_icon);
 	if (!sz)
 		sz = '1 1 0';
 	float szr = sz.x / sz.y;
-	if (strstrofs(icon, "map", 0) >= 0)
+	if (strstrofs(XonoticEntryList_cb_icon, "map", 0) >= 0)
 		szr = 4 / 3;
-	float asr = me.itemAbsSize.x / me.itemAbsSize.y;
+	const float asr = me.itemAbsSize.x / me.itemAbsSize.y;
 	sz.y = 1;
 	sz.x = szr / asr;
-	draw_Picture('0 0 0', icon, sz, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
-	string s = draw_TextShortenToWidth(strdecolorize(name), 1 - sz.x - 2 * me.realFontSize.x, 0, me.realFontSize);
+	draw_Picture('0 0 0', XonoticEntryList_cb_icon, sz, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
+	const string s = draw_TextShortenToWidth(strdecolorize(XonoticEntryList_cb_name), 1 - sz.x - 2 * me.realFontSize.x, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin1 * eY + (sz.x + 0.5 * me.realFontSize.x) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
 
@@ -67,7 +65,7 @@ METHOD(XonoticEntryList, keyDown, float(entity this, float scan, float ascii, fl
 		this.typeToSearchTime = time + 0.5;
 		if (strlen(this.typeToSearchString))
 		{
-			int idx = this.source.indexOf(this.source, this.typeToSearchString);
+			const int idx = this.source.indexOf(this.source, this.typeToSearchString);
 			if (idx >= 0)
 				this.setSelected(this, idx);
 		}
@@ -113,7 +111,6 @@ void XonoticEntryList_refilter(entity me)
 		return;
 	}
 	string oldName;
-	int newSelectedItem = 0;
 	if (me.selectedItem >= 0) // if negative we just switched source
 	{
 		me.source.getEntry(me.source, me.selectedItem, XonoticEntryList_cb);
@@ -122,6 +119,7 @@ void XonoticEntryList_refilter(entity me)
 	else
 		oldName = "";
 
+	int newSelectedItem = 0;
 	me.nItems = me.source.reload(me.source, me.stringFilter);
 	for (int i = 0, n = me.nItems; i < n; ++i)
 		if (me.source.getEntry(me.source, i, XonoticEntryList_cb))
