@@ -65,12 +65,14 @@ void nade_ammo_boom(entity this)
 }
 #endif // SVQC
 #ifdef MENUQC
+#include <common/mutators/mutator/buffs/buff/ammo.qh>
+
 METHOD(AmmoNade, describe, string(AmmoNade this))
 {
 	TC(AmmoNade, this);
 	return sprintf(_("The %s detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
 		"If your team members enter the orb they will recover ammo, and if enemies enter the sphere they will lose ammo.\n\n"
-		"This does not impact weapon magazines, so it won't reload your weapons for you."),
-	COLORED_NAME(this));
+		"This does not impact weapon magazines, so it won't reload your weapons for you, unlike the %s."),
+	COLORED_NAME(this), COLORED_NAME_WITH_CONCAT(BUFF_AMMO, _("Buff")));
 }
 #endif // MENUQC
