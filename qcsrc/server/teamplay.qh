@@ -308,6 +308,7 @@ void TeamBalance_BanTeamsExcept(entity balance, int index);
 /// \param[in] balance Team balance entity.
 /// \param[in] index Index of the team.
 /// \return Team entity of the team balance entity at the given index.
+/// \note The team entities are temporary so you may write to their fields.
 entity TeamBalance_GetTeamFromIndex(entity balance, int index);
 
 /// \brief Returns the team entity of the team balance entity that corresponds
@@ -316,6 +317,7 @@ entity TeamBalance_GetTeamFromIndex(entity balance, int index);
 /// \param[in] team_num Team value. See TEAM_NUM constants.
 /// \return Team entity of the team balance entity that corresponds to the given
 /// TEAM_NUM value.
+/// \note The team entities are temporary so you may write to their fields.
 entity TeamBalance_GetTeam(entity balance, int team_num);
 
 /// \brief Returns whether the team is allowed.
