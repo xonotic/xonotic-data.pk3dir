@@ -781,9 +781,16 @@ bool TeamBalance_QueuedPlayersTagIn(entity ignore)
 	entity it, balance = TeamBalance_CheckAllowedTeams(ignore);
 	TeamBalance_GetTeamCounts(balance, ignore);
 
+	int bots_would_leave_local = bots_would_leave;
 	for (j = 1; j <= AVAILABLE_TEAMS; ++j)
 	{
 		it = TeamBalance_GetTeamFromIndex(balance, j);
+		// discount bots that would leave if a player joined their team
+		if (bots_would_leave_local > 0)
+		{
+			it.m_num_players -= min(it.m_num_bots, bots_would_leave_local);
+			bots_would_leave_local -= it.m_num_bots; // may go below 0
+		}
 		// find the largest team size
 		if (it.m_num_players > teamplayers_max)
 			teamplayers_max = it.m_num_players;
