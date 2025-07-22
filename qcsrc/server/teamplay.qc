@@ -777,45 +777,43 @@ bool TeamBalance_QueuedPlayersTagIn(entity ignore)
 	if (!teamplay)
 		return true;
 
-	bool balanced = true;
-	int j, teamplayers, teamplayers_max = 0;
-	entity balance = TeamBalance_CheckAllowedTeams(ignore);
-
+	int j, teamplayers_deficit = 0, teamplayers_max = 0;
+	entity it, balance = TeamBalance_CheckAllowedTeams(ignore);
 	TeamBalance_GetTeamCounts(balance, ignore);
 
-	// find the target player count
 	for (j = 1; j <= AVAILABLE_TEAMS; ++j)
 	{
-		teamplayers = TeamBalance_GetTeamFromIndex(balance, j).m_num_players;
-		if(teamplayers > teamplayers_max)
-			teamplayers_max = teamplayers;
+		it = TeamBalance_GetTeamFromIndex(balance, j);
+		// find the largest team size
+		if (it.m_num_players > teamplayers_max)
+			teamplayers_max = it.m_num_players;
+	}
+	// find how many players we'd need to join to achieve balanced numbers that way
+	for (j = 1; j <= AVAILABLE_TEAMS; ++j)
+		teamplayers_deficit += teamplayers_max - TeamBalance_GetTeamFromIndex(balance, j).m_num_players;
+
+	// first pass: find clients(s) who want to play on a specific team
+	for (j = 1; teamplayers_deficit > 0 && j <= maxclients; ++j)
+	{
+		it = ftoe(j);
+		if (it.wants_join <= 0 || it == ignore) continue;
+		if (TeamBalance_GetTeamFromIndex(balance, it.wants_join).m_num_players >= teamplayers_max) continue;
+		Join(it, false);
+		++TeamBalance_GetTeam(balance, it.team).m_num_players;
+		--teamplayers_deficit;
 	}
 
-	for (j = 1; j <= AVAILABLE_TEAMS; ++j)
+	// second pass: find clients(s) who want to play on any team
+	for (j = 1; teamplayers_deficit > 0 && j <= maxclients; ++j)
 	{
-		teamplayers = TeamBalance_GetTeamFromIndex(balance, j).m_num_players;
-		// first pass: find player(s) who want to play on this specific team
-		FOREACH_CLIENT(it != ignore && it.wants_join == j,
-		{
-			if (teamplayers >= teamplayers_max)
-				break;
-			Join(it, false);
-			++teamplayers;
-		});
-		// second pass: find player(s) who want to play on any team
-		FOREACH_CLIENT(it != ignore && it.wants_join < 0,
-		{
-			if (teamplayers >= teamplayers_max)
-				break;
-			Join(it, false);
-			++teamplayers;
-		});
-		if (teamplayers < teamplayers_max)
-			balanced = false;
+		it = ftoe(j);
+		if (it.wants_join >= 0 || it == ignore) continue;
+		Join(it, false);
+		--teamplayers_deficit; // don't need to update .m_num_players as we won't read it again
 	}
 
 	TeamBalance_Destroy(balance);
-	return balanced;
+	return teamplayers_deficit <= 0; // return true if teams are now balanced
 }
 
 bool TeamBalance_IsTeamAllowed(entity balance, int index)
