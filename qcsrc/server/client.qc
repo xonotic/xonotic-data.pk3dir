@@ -1188,6 +1188,8 @@ void ClientConnect(entity this)
 
 	if (IS_REAL_CLIENT(this))
 	{
+		ignore_list_update_on_connection(this);
+
 		if (g_weaponarena_weapons == WEPSET(TUBA))
 			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
 		// quickmenu file must be put in a subfolder with an unique name
@@ -1263,7 +1265,8 @@ void ClientDisconnect(entity this)
 	strfree(this.ignore_list);
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		ignore_remove_player(it, this, true); // remove only from ignore_list, permanant ignore must be kept
+		// don't remove permanent ignores from db, only from list
+		ignore_remove_player(it, this, false);
 	});
 
 	PlayerStats_GameReport_FinalizePlayer(this);
@@ -2888,6 +2891,9 @@ void PlayerFrame (entity this)
 				Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
 		}
 	}
+
+	if (this.ignore_list_send_time && time > this.ignore_list_send_time)
+		ignore_list_send(this);
 
 	// GOD MODE info
 	if (!(this.flags & FL_GODMODE) && this.max_armorvalue)
