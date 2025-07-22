@@ -37,12 +37,9 @@
 #include <server/teamplay.qh>
 #include <server/world.qh>
 
-void ignore_remove_player(entity this, entity ignore, bool only_from_ignore_list)
+void ignore_remove_player(entity this, entity ignore, bool from_db_too)
 {
-	if(only_from_ignore_list)
-		goto from_ignore_list;
-
-	if(ignore.crypto_idfp && ignore.crypto_idfp != "" && this.crypto_idfp && this.crypto_idfp != "")
+	if (from_db_too && ignore.crypto_idfp && ignore.crypto_idfp != "" && this.crypto_idfp && this.crypto_idfp != "")
 	{
 		for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
 		{
@@ -50,30 +47,60 @@ void ignore_remove_player(entity this, entity ignore, bool only_from_ignore_list
 			if(pos == ignore.crypto_idfp)
 			{
 				db_remove(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
-				return string_null;
+				break;
 			}
 		}
-		// should this fall back? we know advanced mode is being used
 	}
 
-	LABEL(from_ignore_list);
 	if (!this.ignore_list)
 		return;
 
-	string newlist = "";
+	string list = "";
 	string theid = ftos(etof(ignore));
 
 	FOREACH_WORD(this.ignore_list, it != theid,
 	{
-		newlist = cons(newlist, it);
+		list = cons(list, it);
 	});
+	strcpy(this.ignore_list, list);
 
-	strcpy(this.ignore_list, newlist);
+	this.ignore_list_send_time = time + 0.5;
 }
 
-bool ignore_playerinlist(entity sender, entity targ)
+// return values:
+//  2: ignore added as permanent ignore
+//  1: ignore added as non-permanent ignore
+//  0: ignore not added (can happen only when trying to add too many permanent ignores)
+int ignore_add_player(entity this, entity ignore, bool to_db_too)
 {
-	// TODO: optimize this by saving it to .ignore_list?
+	int r = 1;
+	// permanent ignores work if both the player and the sender have a stats UID
+	if (to_db_too && ignore.crypto_idfp && ignore.crypto_idfp != "" && this.crypto_idfp && this.crypto_idfp != "")
+	{
+		for (int j = 0; j < IGNORE_MAXPLAYERS; ++j)
+		{
+			string pos = db_get(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
+			if(pos == "")
+			{
+				db_put(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)), ignore.crypto_idfp);
+				r = 2;
+				break;
+			}
+		}
+		if (r != 2)
+			return 0;
+	}
+
+	string list = cons(this.ignore_list, ftos(etof(ignore)));
+	strcpy(this.ignore_list, list);
+
+	this.ignore_list_send_time = time + 0.5;
+
+	return r;
+}
+
+bool ignore_playerindb(entity sender, entity targ)
+{
 	if(targ.crypto_idfp && targ.crypto_idfp != "" && sender.crypto_idfp && sender.crypto_idfp != "")
 	{
 		string thelist = "";
@@ -85,7 +112,12 @@ bool ignore_playerinlist(entity sender, entity targ)
 
 		return ((thelist != "") ? PlayerInList(sender, thelist) : false);
 	}
-	else if(!targ.ignore_list || targ.ignore_list == "")
+	return false;
+}
+
+bool ignore_playerinlist(entity sender, entity targ)
+{
+	if (!targ.ignore_list || targ.ignore_list == "")
 		return false;
 
 	string theid = ftos(etof(sender));
@@ -98,13 +130,52 @@ bool ignore_playerinlist(entity sender, entity targ)
 	return false;
 }
 
+// this function updates ignore list of all the players and is meant to be called when player 'this' connects
+void ignore_list_update_on_connection(entity this)
+{
+	if (!this)
+		return;
+
+	FOREACH_CLIENT(it != this && IS_REAL_CLIENT(it),
+	{
+		if (ignore_playerindb(this, it))
+		{
+			// update ignore list of other players
+			ignore_add_player(it, this, false);
+			it.ignore_list_send_time = time + 0.5;
+		}
+		if (ignore_playerindb(it, this))
+		{
+			// update ignore list of the connecting player
+			ignore_add_player(this, it, false);
+			this.ignore_list_send_time = time + 0.5;
+		}
+	});
+}
+
+void ignore_list_send(entity this)
+{
+	stuffcmd(this, strcat("cl_cmd settemp _cl_ignore_list \"", this.ignore_list, "\"\n"));
+}
+
 void ignore_clearall(entity this)
 {
 	for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
 	{
 		string pos = db_get(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
 		if(pos != "")
+		{
 			db_remove(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
+			FOREACH_CLIENT(it != this && IS_REAL_CLIENT(it),
+			{
+				if(pos == it.crypto_idfp)
+				{
+					// permanent ignores already removed from db, remove only from list now
+					ignore_remove_player(this, it, false);
+					this.ignore_list_send_time = time + 0.5;
+				}
+			});
+		}
 	}
 }
 
@@ -143,9 +214,7 @@ void ClientCommand_clear_ignores(entity caller, int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			bool advanced = (caller.crypto_idfp && caller.crypto_idfp != "");
-
-			if(!advanced)
+			if(!(caller.crypto_idfp && caller.crypto_idfp != ""))
 			{
 				sprint(caller, "You don't have a stats UID, unable to clear your ignore list.\n");
 				return;
@@ -373,8 +442,6 @@ void ClientCommand_ignore(entity caller, int request, int argc, string command)
 		{
 			if (argc >= 2)
 			{
-				bool advanced = (caller.crypto_idfp && caller.crypto_idfp != "");
-
 				if(!argv(1) || argv(1) == "")
 				{
 					sprint(caller, "This command requires an argument. Use a player's name or their ID from the ^2status^7 command.\n");
@@ -394,30 +461,14 @@ void ClientCommand_ignore(entity caller, int request, int argc, string command)
 							return;
 						}
 
-						// advanced ignore mode, works if both the player and the sender have a stats UID
-						if(advanced && ignore_to.crypto_idfp && ignore_to.crypto_idfp != "")
-						{
-							for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
-							{
-								string pos = db_get(ServerProgsDB, strcat("/ignore/", caller.crypto_idfp, "/", ftos(j)));
-								if(pos == "")
-								{
-									db_put(ServerProgsDB, strcat("/ignore/", caller.crypto_idfp, "/", ftos(j)), ignore_to.crypto_idfp);
-									sprint(caller, "You will no longer receive messages from ", ignore_to.netname, "^7, use ^2unignore^7 to hear them again.\n");
-									return;
-								}
-							}
-
+						int r = ignore_add_player(caller, ignore_to, true);
+						if (r == 2)
+							sprint(caller, "You will no longer receive messages from ", ignore_to.netname, "^7, use ^2unignore^7 to hear them again.\n");
+						else if (r == 1)
+							sprint(caller, "You will no longer receive messages from ", ignore_to.netname, "^7 for this match, use ^2unignore^7 to hear them again.\n");
+						else // r == 0
 							sprint(caller, "You may only ignore up to ", ftos(IGNORE_MAXPLAYERS), " players, remove one before trying again.\n");
-							return;
-						}
 
-						string list = cons(caller.ignore_list, ftos(etof(ignore_to)));
-						if(caller.ignore_list)
-							strunzone(caller.ignore_list);
-						caller.ignore_list = strzone(list);
-
-						sprint(caller, "You will no longer receive messages from ", ignore_to.netname, "^7 for this match, use ^2unignore^7 to hear them again.\n");
 					}
 					else { sprint(caller, "You can't ^2ignore^7 yourself.\n"); }
 				}
@@ -907,7 +958,8 @@ void ClientCommand_unignore(entity caller, int request, int argc, string command
 				{
 					if (unignore_to != caller)
 					{
-						ignore_remove_player(caller, unignore_to, false);
+						// remove ignores both from db (if permanent) and list
+						ignore_remove_player(caller, unignore_to, true);
 						sprint(caller, "You can now receive messages from ", unignore_to.netname, " ^7again.\n");
 						return;
 					}
