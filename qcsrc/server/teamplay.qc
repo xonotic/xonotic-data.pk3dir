@@ -677,7 +677,7 @@ bool TeamBalance_AreEqual(entity ignore, bool would_leave)
 	TeamBalance_Destroy(balance);
 
 	// Ignore if there are "ghost" bots that would leave if anyone joined
-	if (would_leave && bots > autocvar_bot_number)
+	if (would_leave && bots_would_leave)
 		return false;
 
 	return equality;
@@ -781,9 +781,16 @@ bool TeamBalance_QueuedPlayersTagIn(entity ignore)
 	entity it, balance = TeamBalance_CheckAllowedTeams(ignore);
 	TeamBalance_GetTeamCounts(balance, ignore);
 
-	for (j = 1; j <= AVAILABLE_TEAMS; ++j)
+	for (int bots_would_leave_remaining = bots_would_leave, j = 1; j <= AVAILABLE_TEAMS; ++j)
 	{
 		it = TeamBalance_GetTeamFromIndex(balance, j);
+		// deduct bots that would leave if a player joined their team, distributing the deductions between teams
+		if (bots_would_leave_remaining)
+		{
+			int to_remove = min(it.m_num_bots, ceil(bots_would_leave_remaining / AVAILABLE_TEAMS));
+			it.m_num_players -= to_remove;
+			bots_would_leave_remaining -= to_remove;
+		}
 		// find the largest team size
 		if (it.m_num_players > teamplayers_max)
 			teamplayers_max = it.m_num_players;
@@ -1275,12 +1282,16 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b,
 	{
 		return TEAMS_COMPARE_INVALID;
 	}
+	// deduct bots that would leave if a player joined their team, distributing the deductions between teams
 	int num_players_team_a = team_a.m_num_players;
 	int num_players_team_b = team_b.m_num_players;
 	if (IS_REAL_CLIENT(player) && bots_would_leave)
 	{
-		num_players_team_a -= team_a.m_num_bots;
-		num_players_team_b -= team_b.m_num_bots;
+		int bots_would_leave_remaining = bots_would_leave;
+		int to_remove = min(team_a.m_num_bots, ceil(bots_would_leave_remaining * 0.5));
+		num_players_team_a -= to_remove;
+		bots_would_leave_remaining -= to_remove;
+		num_players_team_b -= min(team_b.m_num_bots, bots_would_leave_remaining);
 	}
 	if (num_players_team_a < num_players_team_b)
 	{
