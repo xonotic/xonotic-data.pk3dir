@@ -2153,13 +2153,15 @@ int nJoinAllowed(entity this)
 	FOREACH_CLIENT(it != this,
 	{
 		++totalClients;
-		if(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)))
+		if(IS_PLAYER(it) || INGAME(it))
 			++currentlyPlaying;
 	});
 
 	int player_limit = GetPlayerLimit();
 
 	int free_slots = max(0, (player_limit ? player_limit : maxclients) - currentlyPlaying);
+	if (this || maxclients - totalClients) // don't add bot slots in the getstatus case if nobody can connect
+		free_slots += bots_would_leave;
 	if (!this) // getstatus case
 		free_slots = min(free_slots, maxclients - totalClients);
 
