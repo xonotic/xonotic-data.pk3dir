@@ -978,10 +978,12 @@ vector sbt_field_rgb;
 // these are drawn overlapping
 string sbt_field_icon_playercolor[3];
 vector sbt_field_icon_playercolor_rgb[3];
+
+const int SBT_FIELD_ICON_EXTRA_COUNT = 3;
 // these are drawn side-by-side, next to playercolor (if present)
-// 0: player_ready, 1: player_handicap
-string sbt_field_icon_extra[2];
-vector sbt_field_icon_extra_rgb[2];
+// 0: player_ready, 1: player_handicap, 2: player_ignored
+string sbt_field_icon_extra[SBT_FIELD_ICON_EXTRA_COUNT];
+vector sbt_field_icon_extra_rgb[SBT_FIELD_ICON_EXTRA_COUNT];
 string Scoreboard_GetName(entity pl)
 {
 	if (!teamplay)
@@ -1011,6 +1013,10 @@ string Scoreboard_GetName(entity pl)
 		sbt_field_icon_extra_rgb[1] = '1 0 0' + '0 1 1' * ((16 - handicap_lvl) / 15);
 		// goes from white to red over level 1 to 16
 	}
+
+	if (pl.ignored)
+		sbt_field_icon_extra[2] = "gfx/scoreboard/player_ignored";
+
 	return entcs_GetName(pl.sv_entnum);
 }
 
@@ -1042,10 +1048,12 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 	sbt_field_icon_playercolor_rgb[0] = '1 1 1';
 	sbt_field_icon_playercolor_rgb[1] = '1 1 1';
 	sbt_field_icon_playercolor_rgb[2] = '1 1 1';
-	sbt_field_icon_extra[0] = "";
-	sbt_field_icon_extra[1] = "";
-	sbt_field_icon_extra_rgb[0] = '1 1 1';
-	sbt_field_icon_extra_rgb[1] = '1 1 1';
+	for (f = 0; f < SBT_FIELD_ICON_EXTRA_COUNT; ++f)
+	{
+		sbt_field_icon_extra[f] = "";
+		sbt_field_icon_extra_rgb[f] = '1 1 1';
+	}
+
 	int rounds_played = 0;
 	if (per_round)
 		rounds_played = pl.(scores(SP_ROUNDS_PL));
@@ -1212,7 +1220,7 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 		}
 	// NOTE: extra icons (player_ready and player_handicap) are squares (32x32), so this may not be necessary
 	// simply setting sbt_fixcolumnwidth_iconlen_extra* = 1 would be equivalent
-	for (j = 0; j < 2; ++j)
+	for (j = 0; j < SBT_FIELD_ICON_EXTRA_COUNT; ++j)
 		if (sbt_field_icon_extra[j] != "")
 		{
 			sz = draw_getimagesize(sbt_field_icon_extra[j]);
@@ -1453,7 +1461,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 		for (j = 0; j < 3; ++j)
 			if (sbt_field_icon_playercolor[j] != "")
 				drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
-		for (j = 0; j < 2; ++j)
+		for (j = 0; j < SBT_FIELD_ICON_EXTRA_COUNT; ++j)
 			if (sbt_field_icon_extra[j] != "")
 			{
 				tmp.x -= icon_sz.x;
@@ -1496,7 +1504,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 			for (j = 0; j < 3; ++j)
 				if (sbt_field_icon_playercolor[j] != "")
 					drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
-			for (j = 0; j < 2; ++j)
+			for (j = 0; j < SBT_FIELD_ICON_EXTRA_COUNT; ++j)
 				if (sbt_field_icon_extra[j] != "")
 				{
 					tmp.x -= icon_sz.x;
@@ -2476,6 +2484,28 @@ void Scoreboard_Draw()
 	}
 
 	Scoreboard_UpdatePlayerTeams();
+
+	if (autocvar__cl_ignore_list != cl_ignore_list)
+	{
+		for (entity pl = players.sort_next; pl; pl = pl.sort_next)
+			pl.ignored = false;
+
+		if (autocvar__cl_ignore_list != "")
+			FOREACH_WORD(autocvar__cl_ignore_list, true,
+			{
+				int ignore_id = stoi(it);
+				entity pl = NULL;
+				for (pl = players.sort_next; pl; pl = pl.sort_next)
+				{
+					if (ignore_id == pl.sv_entnum + 1)
+					{
+						pl.ignored = true;
+						break;
+					}
+				}
+			});
+		strcpy(cl_ignore_list, autocvar__cl_ignore_list);
+	}
 
 	scoreboard_top = panel_pos.y;
 	vector pos = panel_pos;
