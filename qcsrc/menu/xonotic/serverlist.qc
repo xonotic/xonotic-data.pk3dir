@@ -1124,7 +1124,7 @@ bool XonoticServerList_keyDown(entity me, int scan, bool ascii, bool shift)
 		ServerList_Connect_Click(NULL, me);
 		return true;
 	}
-	else if(scan == K_MOUSE2 || scan == K_SPACE)
+	else if(scan == K_MOUSE2 || scan == K_SPACE || ((shift & S_CTRL) && scan == K_MOUSE1))
 	{
 		if(me.nItems != 0)
 		{
