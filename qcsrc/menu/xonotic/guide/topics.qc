@@ -29,8 +29,10 @@ void XonoticTopicList_drawListBoxItem(entity me, int i, vector absSize, bool isS
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
 	}
 	draw_Picture(me.columnIconOrigin * eX, XonoticTopicList_cb_icon, me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
+
+	// condense text so it's shown without truncating, vertically centered
 	const vector save_fontscale = draw_fontscale;
-	const float f = draw_CondensedFontFactor(XonoticTopicList_cb_name, false, me.realFontSize, 1);
+	const float f = draw_CondensedFontFactor(XonoticTopicList_cb_name, false, me.realFontSize, me.columnNameSize);
 	draw_fontscale.x *= f;
 	vector fs = me.realFontSize;
 	fs.x *= f;
@@ -61,7 +63,7 @@ void XonoticTopicList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.columnIconOrigin = 0;
 	me.columnIconSize = me.itemAbsSize.y / me.itemAbsSize.x;
 	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize + (0.5 * me.realFontSize.x);
-	me.columnNameSize = 1 - me.columnIconSize - (1.5 * me.realFontSize.x);
+	me.columnNameSize = 1 - me.columnNameOrigin - me.realFontSize.x;
 }
 
 void XonoticTopicList_setSelected(entity me, int i)

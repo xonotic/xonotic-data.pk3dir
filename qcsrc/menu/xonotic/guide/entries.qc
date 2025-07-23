@@ -41,8 +41,21 @@ void XonoticEntryList_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	sz.y = 1;
 	sz.x = szr / asr;
 	draw_Picture('0 0 0', XonoticEntryList_cb_icon, sz, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
-	const string s = draw_TextShortenToWidth(strdecolorize(XonoticEntryList_cb_name), 1 - sz.x - 2 * me.realFontSize.x, 0, me.realFontSize);
-	draw_Text(me.realUpperMargin1 * eY + (sz.x + 0.5 * me.realFontSize.x) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+
+	// display maximum 2 lines, last potentially truncated, vertically centered
+	string s;
+	vector pos = me.realUpperMargin * eY + (sz.x + 0.5 * me.realFontSize.x) * eX;
+	const float maxWidth = 1 - sz.x - 1.5 * me.realFontSize.x;
+	getWrappedLine_remaining = strdecolorize(XonoticEntryList_cb_name);
+	s = getWrappedLine(maxWidth, me.realFontSize, draw_TextWidth_WithoutColors);
+	if (getWrappedLine_remaining)
+	{
+		pos.y -= 0.5 * me.realFontSize.y;
+		draw_Text(pos, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, false);
+		s = draw_TextShortenToWidth(getWrappedLine_remaining, maxWidth, false, me.realFontSize);
+		pos.y += me.realFontSize.y;
+	}
+	draw_Text(pos, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, false);
 }
 
 METHOD(XonoticEntryList, keyDown, float(entity this, float scan, float ascii, float shift))
@@ -56,7 +69,7 @@ METHOD(XonoticEntryList, keyDown, float(entity this, float scan, float ascii, fl
 			save = substring(this.typeToSearchString, 0, strlen(this.typeToSearchString) - 1);
 		else
 		{
-			string ch = chr(ascii);
+			const string ch = chr(ascii);
 			save = (time > this.typeToSearchTime) ? ch : strcat(this.typeToSearchString, ch);
 		}
 		if (this.typeToSearchString)
@@ -149,8 +162,7 @@ void XonoticEntryList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
-	me.realUpperMargin1 = 0.5 * (1 - 2.5 * me.realFontSize.y);
-	me.realUpperMargin2 = me.realUpperMargin1 + 1.5 * me.realFontSize.y;
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 }
 
 void XonoticEntryList_setSelected(entity me, int i)

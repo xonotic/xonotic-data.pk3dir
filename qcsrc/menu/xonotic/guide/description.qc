@@ -3,7 +3,7 @@
 void XonoticGuideDescription_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	tokenizebyseparator(me.m_descriptionWrapped, "\n");
-	draw_Text(me.realFontSize.x * eX + me.realUpperMargin * eY, argv(i), me.realFontSize, '1 1 1', 1, true);
+	draw_Text(me.keepspaceLeft * eX, argv(i), me.realFontSize, '1 1 1', 1, true);
 }
 
 void XonoticGuideDescription_setDescription(entity me, string desc)
@@ -19,7 +19,7 @@ void XonoticGuideDescription_setDescription(entity me, string desc)
 
 	string wrapped = "";
 	// horizontal padding is me.realFontSize.x on both sides
-	const float maxWidth = 1 - 2 * me.realFontSize.x;
+	const float maxWidth = 1 - me.keepspaceLeft - me.keepspaceRight;
 	const int n = tokenizebyseparator(desc, "\n");
 	for (int i = 0; i < n; ++i)
 	{
@@ -31,6 +31,7 @@ void XonoticGuideDescription_setDescription(entity me, string desc)
 		}
 		wrapped = strcat(wrapped, line);
 	}
+	wrapped = strcat(wrapped, "\n\n");
 	me.m_descriptionWrapped = strzone(wrapped);
 
 	me.nItems = tokenizebyseparator(wrapped, "\n");
@@ -44,6 +45,6 @@ void XonoticGuideDescription_resizeNotify(entity me, vector relOrigin, vector re
 	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
-	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
+	me.keepspaceLeft = me.keepspaceRight = me.realFontSize.x;
 	me.setDescription(me, me.m_description);
 }
