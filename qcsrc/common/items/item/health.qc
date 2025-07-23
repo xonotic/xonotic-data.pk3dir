@@ -4,7 +4,7 @@
 #include <common/gamemodes/gamemode/duel/duel.qh>
 
 #define DEFAULT_PICKUP_HEALTH(s) \
-	sprintf(_("By default, the pickup gives you %s health."), cvar_defstring(strcat("g_pickup_health", s)))
+	sprintf(_("By default, the pickup gives you ^9%s^7 health."), cvar_defstring(strcat("g_pickup_health", s)))
 
 METHOD(HealthSmall, describe, string(HealthSmall this))
 {
