@@ -94,7 +94,16 @@ float XonoticCvarList_updateCvarType(entity me)
 	if(t & CVAR_TYPEFLAG_ENGINE)
 		me.cvarType = strcat(me.cvarType, ", ", _("engine setting"));
 	if(t & CVAR_TYPEFLAG_READONLY)
+	{
 		me.cvarType = strcat(me.cvarType, ", ", _("read only"));
+		me.cvarValueBox.disabled = true;
+		me.cvarDefaultBox.disabled = true;
+	}
+	else
+	{
+		me.cvarValueBox.disabled = false;
+		me.cvarDefaultBox.disabled = false;
+	}
 	me.cvarType = strzone(substring(me.cvarType, 2, strlen(me.cvarType) - 2));
 	me.cvarTypeBox.setText(me.cvarTypeBox, me.cvarType);
 	return needsForcing;
