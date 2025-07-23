@@ -247,7 +247,8 @@ void XonoticScreenshotList_doubleClickListBoxItem(entity me, float i, vector whe
 
 float XonoticScreenshotList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER || scan == K_KP_ENTER || scan == K_MOUSE2 || scan == K_SPACE) {
+	if (scan == K_ENTER || scan == K_KP_ENTER || scan == K_MOUSE2 || scan == K_SPACE || ((shift & S_CTRL) && scan == K_MOUSE1))
+	{
 		me.startScreenshot(me);
 		return 1;
 	}
