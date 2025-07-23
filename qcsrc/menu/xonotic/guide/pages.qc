@@ -24,7 +24,7 @@ REGISTER_INTRODUCTION_PAGE(1, _("Community"), "gametype_dm")
 		"You can also connect to the official communication channels (^5%s^7 on Matrix, ^5%s^7 on QuakeNet IRC), and of course the official forum."),
 	"#main:xonotic.org", "#xonotic"));
 }
-REGISTER_INTRODUCTION_PAGE(2, _("Acquiring Skills"), "gametype_dm")
+REGISTER_INTRODUCTION_PAGE(2, _("Getting good"), "gametype_dm")
 {
 	this.m_description = _("The skill gap between new and experienced players is often immense. However, this is mostly because experienced players have learned how to make use of the game mechanics. "
 		"If you see experienced players doing tricks you don't understand, don't hesitate to ask. "
