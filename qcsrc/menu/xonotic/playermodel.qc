@@ -4,7 +4,7 @@ entity makeXonoticPlayerModelSelector()
 {
 	entity me;
 	me = NEW(XonoticPlayerModelSelector);
-	me.configureXonoticPlayerModelSelector(me);
+	me.configureXonoticImage(me, string_null, -1);
 	return me;
 }
 
@@ -16,11 +16,6 @@ const float BUFMODELS_DESC = 4;
 const float BUFMODELS_COUNT = 5;
 
 #define XONVOTE186 1 // (nyov) removal of model text description
-
-void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
-{
-	me.configureXonoticImage(me, string_null, -1);
-}
 
 void XonoticPlayerModelSelector_loadModels(entity me)
 {

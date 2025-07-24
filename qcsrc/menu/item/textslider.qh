@@ -7,9 +7,7 @@
 CLASS(TextSlider, Slider)
 	METHOD(TextSlider, valueToText, string(entity, float));
 	METHOD(TextSlider, valueToIdentifier, string(entity, float));
-	METHOD(TextSlider, setValueFromIdentifier_allowAnim, void(entity, string, bool));
-	METHOD(TextSlider, setValueFromIdentifier_noAnim, void(entity, string));
-	METHOD(TextSlider, setValueFromIdentifier, void(entity, string));
+	METHOD(TextSlider, setValueFromIdentifier, void(entity, string, bool));
 	METHOD(TextSlider, getIdentifier, string(entity));
 	METHOD(TextSlider, clearValues, void(entity));
 	METHOD(TextSlider, addValue, void(entity, string, string));

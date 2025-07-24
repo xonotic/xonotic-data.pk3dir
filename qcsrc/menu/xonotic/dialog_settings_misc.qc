@@ -9,8 +9,6 @@
 #include "mainwindow.qh"
 #include "commandbutton.qh"
 
-#define ADDVALUE_SPEED_KB(i) e.addText(e, strzone(sprintf(_("%d KiB/s"), i)), i)
-#define ADDVALUE_SPEED_MB(i, j) e.addText(e, strzone(sprintf(_("%d MiB/s"), i)), j)
 entity makeXonoticMiscSettingsTab()
 {
 	entity me;
@@ -50,14 +48,18 @@ void XonoticMiscSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bandwidth limit:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_curl_maxspeed"));
-		ADDVALUE_SPEED_KB(64);
-		ADDVALUE_SPEED_KB(128);
-		ADDVALUE_SPEED_KB(256);
-		ADDVALUE_SPEED_KB(512);
-		ADDVALUE_SPEED_MB(1, 1024);
-		ADDVALUE_SPEED_MB(2, 2048);
-		ADDVALUE_SPEED_MB(4, 4096);
-		ADDVALUE_SPEED_MB(8, 8192);
+			#define ADDVALUE_SPEED_KB(i)    e.addText(e, strzone(sprintf(_("%d KiB/s"), i)), i)
+			#define ADDVALUE_SPEED_MB(i, j) e.addText(e, strzone(sprintf(_("%d MiB/s"), i)), j)
+			ADDVALUE_SPEED_KB(64);
+			ADDVALUE_SPEED_KB(128);
+			ADDVALUE_SPEED_KB(256);
+			ADDVALUE_SPEED_KB(512);
+			ADDVALUE_SPEED_MB(1, 1024);
+			ADDVALUE_SPEED_MB(2, 2048);
+			ADDVALUE_SPEED_MB(4, 4096);
+			ADDVALUE_SPEED_MB(8, 8192);
+			#undef ADDVALUE_SPEED_KB
+			#undef ADDVALUE_SPEED_MB
 		e.addText(e, strzone(_("Unlimited")), 0);
 		e.configureXonoticMixedSliderValues(e);
 
@@ -67,9 +69,19 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu tooltips:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("menu_tooltips",
 			_("Menu tooltips: disabled, standard or advanced (also shows cvar or console command bound to the menu item)")));
+			e.setValueSpace(e, e.valueSpace * 1.2);
 			e.addText(e, ZCTX(_("TLTIP^Disabled")), 0);
 			e.addText(e, ZCTX(_("TLTIP^Standard")), 1);
 			e.addText(e, ZCTX(_("TLTIP^Advanced")), 2);
+			e.configureXonoticMixedSliderValues(e);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu animations:")));
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("menu_animations",
+			_("How fast animations in the menu occur")));
+			e.formatString = "S";
+			e.setValueSpace(e, e.valueSpace * 1.2);
+			e.addText(e, ZCTX(_("Disabled")), 0);
+			e.addRange(e, 0.05, 0.5, 0.05);
 			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "r_textshadow", _("Text shadow"),

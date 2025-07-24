@@ -65,14 +65,14 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 			cvarlist.cvarDefaultBox = e;
 			e.onClick = CvarList_Revert_Click;
 			e.onClickEntity = cvarlist;
-			e.allowCut = 1;
+			e.allowCut = true;
 			e.marginLeft = e.marginRight = 0.5;
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Description:")));
 		me.TD(me, 1, me.columns - 1, e = makeXonoticTextLabel(0, string_null));
 			cvarlist.cvarDescriptionBox = e;
-			e.allowWrap = 1;
+			e.allowWrap = true;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), SKINCOLOR_CVARLIST_CONTROLS));
 			e.onClick = Dialog_Close;
