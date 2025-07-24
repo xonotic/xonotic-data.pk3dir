@@ -21,6 +21,7 @@ CLASS(XonoticLanguageList, XonoticListBox)
 
 	METHOD(XonoticLanguageList, doubleClickListBoxItem, void(entity, float, vector));
 	METHOD(XonoticLanguageList, keyDown, float(entity, float, float, float));  // enter handling
+	METHOD(XonoticLanguageList, focusedItemChangeNotify, void(entity));
 
 	METHOD(XonoticLanguageList, destroy, void(entity));
 
