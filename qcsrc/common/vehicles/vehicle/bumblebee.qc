@@ -1,10 +1,10 @@
 #include "bumblebee.qh"
 
-#ifdef GAMEQC
-
 #ifdef SVQC
 	#include <common/mutators/mutator/instagib/sv_instagib.qh>
 #endif
+
+#ifdef GAMEQC
 
 const float BRG_SETUP = 2;
 const float BRG_START = 4;
@@ -974,5 +974,19 @@ METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
 }
 
 #endif
+
+#endif
+#ifdef MENUQC
+
+METHOD(Bumblebee, describe, string(Bumblebee this))
+{
+    TC(Bumblebee, this);
+    return sprintf(_("The %s vehicle seats up to three passengers, who are given different roles based on the order they enter.\n\n"
+        "The first player to enter will be the pilot, flying the vehicle up into the skies. "
+        "The first player can also shoot a green healing wave to heal other teammates on the ground.\n\n"
+        "The second player to enter is the right gunner and the third player to enter is the left gunner.\n\n"
+        "When the pilot exits the vehicle, the players switch roles by moving up in position."),
+    COLORED_NAME(this));
+}
 
 #endif

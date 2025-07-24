@@ -1,0 +1,37 @@
+﻿#pragma once
+
+CLASS(GuidePage, Object)
+	ATTRIB(GuidePage, m_id, int, 0);
+	ATTRIB(GuidePage, m_name, string, "");
+	ATTRIB(GuidePage, m_icon, string);
+	ATTRIB(GuidePage, m_description, string, "");
+
+	METHOD(GuidePage, describe, string(GuidePage this))
+	{
+		TC(GuidePage, this);
+		return this.m_description;
+	}
+	METHOD(GuidePage, display, void(GuidePage this, void(string name, string icon) returns))
+	{
+		TC(GuidePage, this);
+		returns(this.m_name, this.m_icon ? this.m_icon : string_null);
+	}
+
+	CONSTRUCTOR(GuidePage, string _name, string _icon)
+	{
+		CONSTRUCT(GuidePage);
+		this.m_name = _name;
+		this.m_icon = _icon;
+	}
+ENDCLASS(GuidePage)
+
+
+// This is for the freetext sections only
+
+REGISTRY(IntroductionGuidePages, 16)
+#define REGISTER_INTRODUCTION_PAGE(id, name, icon) REGISTER(IntroductionGuidePages, GUIDE_INTRODUCTION_PAGE, id, m_id, NEW(GuidePage, name, icon))
+REGISTER_REGISTRY(IntroductionGuidePages)
+
+REGISTRY(MovementGuidePages, 16)
+#define REGISTER_MOVEMENT_PAGE(id, name, icon) REGISTER(MovementGuidePages, GUIDE_MOVEMENT_PAGE, id, m_id, NEW(GuidePage, name, icon))
+REGISTER_REGISTRY(MovementGuidePages)
