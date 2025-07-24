@@ -213,3 +213,11 @@ void SetLanguage_Click(entity btn, entity me)
 {
 	me.setLanguage(me);
 }
+
+void XonoticLanguageList_focusedItemChangeNotify(entity me)
+{
+	if (me.focusedItem >= 0)
+		setZonedTooltip(me, me.languageParameter(me, me.focusedItem, LANGPARM_NAME), string_null);
+	else
+		clearTooltip(me);
+}
