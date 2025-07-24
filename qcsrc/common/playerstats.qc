@@ -170,6 +170,7 @@ void PlayerStats_GameReport_Accuracy(entity p)
 		PlayerStats_GameReport_Event_Player(p, \
 			sprintf("acc-%s-%s", it.netname, suffix), CS(p).accuracy.(field[i-1]));
 	FOREACH(Weapons, it != WEP_Null, {
+		ACCMAC("real", accuracy_real)
 		ACCMAC("hit", accuracy_hit)
 		ACCMAC("fired", accuracy_fired)
 		ACCMAC("cnt-hit", accuracy_cnt_hit)
@@ -316,6 +317,7 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 
 		// accuracy stats
 		FOREACH(Weapons, it != WEP_Null, {
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-real"));
 			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-hit"));
 			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-fired"));
 			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-cnt-hit"));
@@ -402,8 +404,9 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 *   rank <number>: rank of player
 		 *   handicapgiven: average handicap on given (dealt) damage throughout the match
 		 *   handicaptaken: average handicap on taken (received) damage throughout the match
-		 *   acc-<weapon netname>-hit: total damage dealt
-		 *   acc-<weapon netname>-fired: total damage that all fired projectiles *could* have dealt
+		 *   acc-<weapon netname>-real: total damage dealt excluding excess after death
+		 *   acc-<weapon netname>-hit: total damage dealt including excess after death
+		 *   acc-<weapon netname>-fired: total damage that all fired shots could have dealt
 		 *   acc-<weapon netname>-cnt-hit: amount of shots that actually hit
 		 *   acc-<weapon netname>-cnt-fired: amount of fired shots
 		 *   acc-<weapon netname>-frags: amount of frags dealt by weapon
