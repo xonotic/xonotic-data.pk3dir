@@ -213,7 +213,7 @@ WIDTH_SLIDERTEXT              0.333333333333
 // tooltip
 ALPHA_TOOLTIP                 0.8
 COLOR_TOOLTIP                 '1 0.97 0.95'
-AVOID_TOOLTIP                 '8 8 0'
+AVOID_TOOLTIP                 '0 0 0'
 BORDER_TOOLTIP                '16 16 0'
 MARGIN_TOOLTIP                '10 8 0'
 WIDTH_TOOLTIP                 0.3
