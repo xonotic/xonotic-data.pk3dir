@@ -72,7 +72,7 @@ FONTSIZE_TOOLTIP                12
 ALPHA_TOOLTIP                   0.7
 COLOR_TOOLTIP                   '1 1 1'
 WIDTH_TOOLTIP                   0.3
-AVOID_TOOLTIP                   '8 8 0'
+AVOID_TOOLTIP                   '2 2 0'
 
 //------------------------------------------------------------------------------
 // Colors (e.g. font colors, field colors)
