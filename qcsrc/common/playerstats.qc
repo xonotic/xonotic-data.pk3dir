@@ -641,12 +641,18 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 			int buf = json_parse(temp, _json_parse_array);
 			EXPECT_NE(-1, buf);
 			string gametype = PlayerStats_GetGametype();
-			if (json_get(buf, "0.game_type_cd") == gametype && gametype != "") {
+			if (json_get(buf, "0.game_type_cd") == gametype && gametype != "")
+			{
 				float mu = stof(json_get(buf, "0.mu"));
-				float sigma = stof(json_get(buf, "0.sigma"));
-				float skill = mu - 3 * sigma;
-				GameRules_scoring_add(p, SKILL, ((skill < 0) ? 0 : skill) + 1);
+				//float sigma = stof(json_get(buf, "0.sigma"));
+				float skill = max(0, mu);
+				/* we display just the mean skill, since this most accurately represents how players will play on an average match.
+				 * displaying mu - 3 * sigma would display worst-case performance, but when applied to every player this becomes meaningless.
+				 * also we're not interested in the skill that we're confident players can operate above, rather where we expect them to operate.
+				 */
+				GameRules_scoring_add(p, SKILL, skill + 1);
 				return;
+
 			}
 			break;
 		}
