@@ -202,32 +202,17 @@ void XonoticStatsList_getStats(entity me)
 						outstr = _("Matches:");
 						break;
 					}
-					case "elo":
+					#if 0
+					case "skill":
 					{
 						order = 2;
-						outstr = _("ELO:");
+						outstr = _("Skill:");
 						data = sprintf("%d", stof(data));
 						break;
 					}
-					case "rank":
-					{
-						order = 3;
-						outstr = _("Rank:");
-						data = sprintf("%d", stof(data));
-						break;
-					}
-					case "percentile":
-					{
-						order = 4;
-						outstr = _("Percentile:");
-						data = sprintf("%d%%", stof(data));
-						break;
-					}
-
-					#if 0
 					case "favorite-map":
 					{
-						order = 5;
+						order = 3;
 						outstr = _("Favorite map:");
 						break;
 					}
