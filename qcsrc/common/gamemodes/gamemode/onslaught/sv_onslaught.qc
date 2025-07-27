@@ -16,9 +16,9 @@ bool g_onslaught;
 float autocvar_g_onslaught_teleport_wait;
 bool autocvar_g_onslaught_spawn_at_controlpoints;
 bool autocvar_g_onslaught_spawn_at_generator;
-float autocvar_g_onslaught_cp_proxydecap;
-float autocvar_g_onslaught_cp_proxydecap_distance = 512;
-float autocvar_g_onslaught_cp_proxydecap_dps = 100;
+float autocvar_g_onslaught_cp_proximitydecap;
+float autocvar_g_onslaught_cp_proximitydecap_distance = 512;
+float autocvar_g_onslaught_cp_proximitydecap_dps = 100;
 float autocvar_g_onslaught_spawn_at_controlpoints_chance = 0.5;
 float autocvar_g_onslaught_spawn_at_controlpoints_random;
 float autocvar_g_onslaught_spawn_at_generator_chance;
@@ -414,7 +414,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 		else
 		{
 			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
-				if(vdist(it.origin - this.origin, <, autocvar_g_onslaught_cp_proxydecap_distance))
+				if(vdist(it.origin - this.origin, <, autocvar_g_onslaught_cp_proximitydecap_distance))
 				{
 					if(DIFF_TEAM(it, this))
 					{
@@ -478,14 +478,14 @@ void ons_ControlPoint_Icon_Think(entity this)
 {
 	this.nextthink = time + ONS_CP_THINKRATE;
 
-	if (!this.owner.isshielded && autocvar_g_onslaught_cp_proxydecap)
+	if (!this.owner.isshielded && autocvar_g_onslaught_cp_proximitydecap)
 	{
 		int _enemy_count = 0;
 		entity first_enemy = NULL;
 		int _friendly_count = 0;
 
 		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
-			if(vdist(it.origin - this.origin, <, autocvar_g_onslaught_cp_proxydecap_distance))
+			if(vdist(it.origin - this.origin, <, autocvar_g_onslaught_cp_proximitydecap_distance))
 			{
 				if(SAME_TEAM(it, this))
 					++_friendly_count;
@@ -498,7 +498,7 @@ void ons_ControlPoint_Icon_Think(entity this)
 			}
 		});
 
-		float hlt = (_friendly_count - _enemy_count) * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
+		float hlt = (_friendly_count - _enemy_count) * (autocvar_g_onslaught_cp_proximitydecap_dps * ONS_CP_THINKRATE);
 
 		if (hlt < 0)
 			TakeResource(this, RES_HEALTH, -hlt);
