@@ -401,7 +401,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 	else
 		sound(this, CH_TRIGGER, SND_ONS_HIT2, VOL_BASE+0.3, ATTEN_NORM);
 
-	if (GetResource(this, RES_HEALTH) < 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 	{
 		sound(this, CH_TRIGGER, SND_ONS_GENERATOR_EXPLODE, VOL_BASE, ATTEN_NORM);
 		pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
