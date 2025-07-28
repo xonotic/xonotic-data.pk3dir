@@ -617,7 +617,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			{
 				return;
 			}
-			if (!IS_CLIENT(caller))
+			if (!IS_CLIENT(caller) || intermission_running)
 			{
 				return;
 			}
