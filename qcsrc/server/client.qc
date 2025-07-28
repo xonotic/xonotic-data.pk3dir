@@ -2064,8 +2064,12 @@ void Join(entity this, bool queued_join)
 {
 	entity player_with_dibs = NULL;
 
-	if (autocvar_g_campaign && !campaign_bots_may_start && !game_stopped && time >= game_starttime)
-		ReadyRestart(true);
+	if (autocvar_g_campaign)
+	{
+		if (!campaign_bots_may_start && !game_stopped && time >= game_starttime)
+			ReadyRestart(true);
+		campaign_bots_may_start = true;
+	}
 
 	if(queued_join
 	&& TeamBalance_AreEqual(this, true)) // if a player couldn't tag in for balance, don't join them here as it would cause a stack
@@ -2089,9 +2093,6 @@ void Join(entity this, bool queued_join)
 			Join(it, false);
 		});
 	}
-
-	if(autocvar_g_campaign)
-		campaign_bots_may_start = true;
 
 	Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
