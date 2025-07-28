@@ -1332,6 +1332,7 @@ void ClientDisconnect(entity this)
 	if (player_count == 0)
 		localcmd("\nsv_hook_lastleave\n");
 
+	if (!intermission_running)
 	if (!TeamBalance_QueuedPlayersTagIn(this))
 	if (autocvar_g_balance_teams_remove)
 		TeamBalance_RemoveExcessPlayers(NULL);
