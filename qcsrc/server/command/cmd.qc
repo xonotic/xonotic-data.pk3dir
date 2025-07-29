@@ -655,7 +655,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				return;
 			}
 
-			if (caller.team == team_num && team_num && !IS_DEAD(caller))
+			if (caller.team == team_num && team_num)
 			{
 				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_SAME);
 				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_SAME);
