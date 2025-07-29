@@ -970,6 +970,8 @@ void GameCommand_lockteams(int request)
 			{
 				lockteams = 1;
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_LOCKED);
+				// nobody can join or change teams now so remove everyone from the queue
+				FOREACH_CLIENT(it.wants_join, it.wants_join = it.team_selected = 0);
 			}
 			else
 			{
