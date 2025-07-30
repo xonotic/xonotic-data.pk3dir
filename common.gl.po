@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-28 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: LegendGuard, 2020\n"
+"Last-Translator: nin hum <ninhum@gmx.com>, 2024-2025\n"
 "Language-Team: Galician (http://app.transifex.com/team-xonotic/xonotic/"
 "language/gl/)\n"
 "Language: gl\n"
@@ -882,11 +882,11 @@ msgstr "Puntuación total"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Player skill"
-msgstr ""
+msgstr "Habilidade do xogador"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^skill"
-msgstr ""
+msgstr "SCO^habilidade"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of suicides"
@@ -7600,7 +7600,7 @@ msgstr "Cantidade de bots no teu servidor"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:132
 msgid "Bot skill:"
-msgstr "Habilidade de bot:"
+msgstr "Habilidade do bot:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
 msgid "Specify how experienced the bots will be"
@@ -10891,7 +10891,7 @@ msgstr "Ratio de asasinatos:"
 
 #: qcsrc/menu/xonotic/statslist.qc:209
 msgid "Skill:"
-msgstr ""
+msgstr "Habilidade:"
 
 #: qcsrc/menu/xonotic/statslist.qc:232
 #, c-format
