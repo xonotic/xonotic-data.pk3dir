@@ -2077,7 +2077,7 @@ void Join(entity this, bool queued_join)
 		// First we must join player(s) queued for specific team(s) (they chose first)
 		// so TeamBalance_JoinBestTeam() (if necessary) won't select the same team(s).
 		// Relies on `this` skipping the queue (this.team already set, this.wants_join not set) or using autoselect.
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && it.wants_join > 0,
+		FOREACH_CLIENT(it != this && it.wants_join > 0,
 		{
 			// detect any conflict between `this` and a queued player (queuePlayer() handles other conflicts)
 			if (this.team < 0 && this.team_selected > 0 // `this` can't have their preference
@@ -2088,7 +2088,7 @@ void Join(entity this, bool queued_join)
 		});
 
 		// Second pass: queued players whose team will be autoselected
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && it.wants_join < 0,
+		FOREACH_CLIENT(it != this && it.wants_join < 0,
 		{
 			Join(it, false);
 		});
@@ -2176,13 +2176,10 @@ int nJoinAllowed(entity this)
 // and will see the centreprint with their current preference each time they press +jump.
 bool queuePlayer(entity this, int team_index)
 {
-	if (IS_BOT_CLIENT(this) || !QueueNeeded(this))
-		return false;
-
 	// check if a queued player already chose the selected team
 	if (team_index > 0)
 	{
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && it.wants_join == team_index,
+		FOREACH_CLIENT(it != this && it.wants_join == team_index,
 		{
 			if (QueuedPlayersReady(this, false))
 			{
