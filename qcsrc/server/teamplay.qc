@@ -1324,7 +1324,7 @@ void SV_ChangeTeam(entity player, int new_color)
 
 bool QueueNeeded(entity ignore)
 {
-	if (!teamplay || warmup_stage || !autocvar_g_balance_teams_queue || autocvar_g_campaign)
+	if (!teamplay || warmup_stage || !autocvar_g_balance_teams_queue || autocvar_g_campaign || ignore.team > 0)
 		return false;
 
 	int human_clients = 0;
