@@ -448,7 +448,7 @@ void W_Arc_Beam_Think(entity this)
 
 			if(accuracy_isgooddamage(own, trace_ent))
 			{
-				accuracy_add(own, WEP_ARC, 0, rootdamage * coefficient * falloff);
+				accuracy_add(own, WEP_ARC, 0, rootdamage * coefficient * falloff, 0); // add to hit
 			}
 
 			vector new_dir = normalize(new_origin - last_origin_prev);
