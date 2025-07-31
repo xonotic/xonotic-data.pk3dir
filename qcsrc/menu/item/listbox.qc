@@ -179,7 +179,7 @@
 		float hit;
 		me.updateControlTopBottom(me);
 		me.dragScrollPos = pos;
-		if (me.pressed == 1)
+		if (me.pressed == 1 && me.getTotalHeight(me) > 1)
 		{
 			hit = 1;
 			if (pos.x < 1 - me.controlWidth - me.tolerance.x * me.controlWidth) hit = 0;
