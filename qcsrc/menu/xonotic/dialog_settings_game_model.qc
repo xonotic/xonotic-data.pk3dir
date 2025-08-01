@@ -32,8 +32,9 @@ void XonoticGameModelSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_simple_items", _("Use simple 2D images instead of item models")));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Unavailable alpha:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Unavailable opacity:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.1, "cl_ghost_items"));
+			e.formatString = "%";
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Unavailable color:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_ghost_items_color"));
@@ -51,9 +52,10 @@ void XonoticGameModelSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Force player colors to mine")));
-		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("cl_forceplayercolors",
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Force player colors to mine")));
+		me.TD(me, 1, 1.8, e = makeXonoticMixedSlider_T("cl_forceplayercolors",
 			_("Warning: if enabled in team games your team's color may be the same as the enemy team")));
+			e.setValueSpace(e, e.valueSpace * 1.75);
 			e.addText(e, _("Never"), 0);
 			e.addText(e, _("Except in team games"), 1);
 			e.addText(e, _("Only in Duel"), 3);
@@ -64,6 +66,7 @@ void XonoticGameModelSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Body fading:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 2, 0.2, "cl_deathglow"));
+			e.formatString = "S";
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gibs:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_nogibs"));

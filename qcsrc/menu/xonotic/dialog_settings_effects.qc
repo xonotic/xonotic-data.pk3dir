@@ -169,13 +169,15 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			setDependent(e, "cl_decals", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(200, 500, 20, "r_drawdecals_drawdistance",
 			_("Decals further away than this will not be drawn")));
+			e.formatString = _("%s qu");
 			setDependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Time:")));
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Fade time:")));
 			setDependent(e, "cl_decals", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1, 20, 1, "cl_decals_fadetime",
 			_("Time in seconds before decals fade away")));
+			e.formatString = "s";
 			setDependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -228,6 +230,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		s = makeXonoticSlider_T(0.1, 1, 0.1, "r_motionblur",
 			_("Motion blur strength - 0.4 recommended"));
 		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, s, _("Motion blur:")));
+			e.applyButton = effectsApplyButton;
 		if(s.value != e.savedValue)
 			e.savedValue = 0.4; // default
 		me.TD(me, 1, 2, s);
@@ -244,6 +247,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			setDependent(e, "cl_particles", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 3.0, 0.25, "cl_particles_quality",
 			_("Multiplier for amount of particles. Less means less particles, which in turn gives for better performance")));
+			e.formatString = _("%sx");
 			setDependent(e, "cl_particles", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -251,6 +255,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			setDependent(e, "cl_particles", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(200, 3000, 200, "r_drawparticles_drawdistance",
 			_("Particles further away than this will not be drawn")));
+			e.formatString = _("%s qu");
 			setDependent(e, "cl_particles", 1, 1);
 
 	me.gotoRC(me, me.rows - 1, 0);

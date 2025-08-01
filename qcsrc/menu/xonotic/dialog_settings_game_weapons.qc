@@ -3,6 +3,7 @@
 #include "weaponslist.qh"
 #include "commandbutton.qh"
 #include "textlabel.qh"
+#include "slider.qh"
 #include "mixedslider.qh"
 #include "checkbox.qh"
 #include "button.qh"
@@ -97,14 +98,9 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 	me.TR(me);
 			me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Weapon model opacity:")));
 				setDependent(e, "r_drawviewmodel", 1, 1);
-			me.TD(me, 1, 1.8, e = makeXonoticMixedSlider("cl_viewmodel_alpha"));
+			me.TD(me, 1, 1.8, e = makeXonoticSlider(0.05, 1, 0.05, "cl_viewmodel_alpha"));
+				e.formatString = "%";
 				setDependent(e, "r_drawviewmodel", 1, 1);
-				e.addText(e, "15%", 0.15);
-				e.addText(e, "25%", 0.25);
-				e.addText(e, "50%", 0.5);
-				e.addText(e, "75%", 0.75);
-				e.addText(e, "100%", 1);
-				e.configureXonoticMixedSliderValues(e);
 
 	me.TR(me);
 	me.TR(me);

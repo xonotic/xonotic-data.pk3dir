@@ -210,7 +210,7 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 }
 void XonoticResolutionSlider_loadCvars(entity me)
 {
-	me.setValueFromIdentifier_noAnim(me, strcat(cvar_string("_menu_vid_width"), " ", cvar_string("_menu_vid_height"), " ", cvar_string("_menu_vid_pixelheight")));
+	me.setValueFromIdentifier(me, strcat(cvar_string("_menu_vid_width"), " ", cvar_string("_menu_vid_height"), " ", cvar_string("_menu_vid_pixelheight")), false);
 }
 void XonoticResolutionSlider_saveCvars(entity me)
 {
