@@ -1004,6 +1004,8 @@ string Scoreboard_GetName(entity pl)
 	if (ready_waiting && pl.ready)
 	{
 		sbt_field_icon_extra[0] = "gfx/scoreboard/player_ready";
+		sbt_field_icon_extra_rgb[0].y = 1;
+		sbt_field_icon_extra_rgb[0].x = sbt_field_icon_extra_rgb[0].z = min(1, 1 + sin(2*M_PI*time));
 	}
 	int handicap_lvl = entcs_GetHandicapLevel(pl.sv_entnum);
 	if (handicap_lvl != 0)
