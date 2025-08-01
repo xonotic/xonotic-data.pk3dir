@@ -230,6 +230,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		s = makeXonoticSlider_T(0.1, 1, 0.1, "r_motionblur",
 			_("Motion blur strength - 0.4 recommended"));
 		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, s, _("Motion blur:")));
+			e.applyButton = effectsApplyButton;
 		if(s.value != e.savedValue)
 			e.savedValue = 0.4; // default
 		me.TD(me, 1, 2, s);
