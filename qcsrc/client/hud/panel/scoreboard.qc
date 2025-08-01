@@ -1157,8 +1157,12 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 				sbt_field_rgb = '1 1 1';
 				return ((pl.ping == 0) ? _("N/A") : "..."); // if 0 ping, either connecting or bot (either case can't show proper score)
 			}
-			//sbt_field_rgb = HUD_Get_Num_Color(fps, 200, true);
-			sbt_field_rgb = '1 0 0' + '0 1 1' * (bound(0, tmp, 60) / 60);
+			// <=32fps full red, 64fps to 96fps (inclusive) full yellow, >=128fps white
+			// A little opinionated but representative of what's adequate for a competitive experience,
+			// with consideration to the default and supported ticrates and the minimum USB polling rate.
+			sbt_field_rgb.x = 1;
+			sbt_field_rgb.y = bound(0, (tmp - 32) * 0.03125, 1); // 0 at 32fps, 1 at 64fps
+			sbt_field_rgb.z = bound(0, (tmp - 96) * 0.03125, 1); // 0 at 96fps, 1 at 128fps
 			return ftos(tmp);
 
 		case SP_ROUNDS_PL:
