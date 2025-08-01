@@ -8,7 +8,6 @@
 .bool iscaptured;
 
 .vector cp_origin, cp_bob_origin;
-.float cp_bob_spd;
 
 .float cp_bob_dmg_z;
 
@@ -26,8 +25,7 @@ void cpicon_draw(entity this)
 		this.cp_bob_dmg_z = this.cp_bob_dmg_z - 3 * frametime;
 	else
 		this.cp_bob_dmg_z = 0;
-	this.cp_bob_origin_z = 4 * PI * (1 - cos(this.cp_bob_spd));
-	this.cp_bob_spd = this.cp_bob_spd + 1.875 * frametime;
+	this.cp_bob_origin_z = 9 * (1 - cos(1.875 * time));
 	this.colormod = '1 1 1' * (2 - bound(0, (this.pain_finished - time) / 10, 1));
 
 	if(!this.iscaptured) this.alpha = GetResource(this, RES_HEALTH) / this.max_health;
@@ -92,14 +90,24 @@ void cpicon_damage(entity this, float hp)
 		setmodel(this, MDL_ONS_CP2);
 	else if(hp < this.max_health * 0.75)
 		setmodel(this, MDL_ONS_CP1);
-	else if(hp <= this.max_health || hp >= this.max_health)
+	else
 		setmodel(this, MDL_ONS_CP);
 
-	this.punchangle = (2 * randomvec() - '1 1 1') * 45;
+	if(hp < GetResource(this, RES_HEALTH))
+	{
+		const int MIN_PUNCHANGLE = 8;
+		const int MAX_PUNCHANGLE = 25;
+		this.punchangle = (2 * randomvec() - '1 1 1') * (MAX_PUNCHANGLE - MIN_PUNCHANGLE);
+		this.punchangle.x += (this.punchangle.x >= 0 ? MIN_PUNCHANGLE : -MIN_PUNCHANGLE);
+		this.punchangle.y += (this.punchangle.y >= 0 ? MIN_PUNCHANGLE : -MIN_PUNCHANGLE);
+		this.punchangle.z += (this.punchangle.z >= 0 ? MIN_PUNCHANGLE : -MIN_PUNCHANGLE);
 
-	this.cp_bob_dmg_z = (2 * random() - 1) * 15;
-	this.pain_finished = time + 1;
-	this.colormod = '2 2 2';
+		this.cp_bob_dmg_z = (2 * random() - 1) * 15;
+		this.pain_finished = time + 1;
+		this.colormod = '2 2 2';
+	}
+	else
+		this.pain_finished = 0;
 
 	setsize(this, CPICON_MIN, CPICON_MAX);
 }
@@ -135,7 +143,6 @@ void cpicon_construct(entity this, bool isnew)
 	this.draw			= cpicon_draw;
 	this.cp_origin		= this.origin;
 	this.cp_bob_origin 	= '0 0 0.1';
-	this.cp_bob_spd 	= 0;
 
 	if(isnew)
 		IL_PUSH(g_drawables, this);
