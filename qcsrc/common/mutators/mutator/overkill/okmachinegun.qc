@@ -155,3 +155,20 @@ METHOD(OverkillMachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+#include <common/mutators/mutator/overkill/overkill.qh>
+
+METHOD(OverkillMachineGun, describe, string(OverkillMachineGun this))
+{
+	TC(OverkillMachineGun, this);
+	return sprintf(_("The %s quickly fires bullets with a small degree of spread.\n\n"
+		"Like with all %s weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around.\n\n"
+		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s. "
+		"It has a limited magazine size, so needs reloading after several shots.\n\n"
+		"The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously.\n\n%s"),
+	COLORED_NAME(this), COLORED_NAME(MUTATOR_ok), COLORED_NAME(ITEM_Bullets), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this),
+	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_onlyOne(this.netname, "primary")));
+}
+
+#endif

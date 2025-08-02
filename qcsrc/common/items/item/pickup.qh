@@ -6,11 +6,11 @@ CLASS(Pickup, GameItem)
 #ifdef GAMEQC
     ATTRIB(Pickup, m_model, Model);
     ATTRIB(Pickup, m_skin, int);
-    ATTRIB(Pickup, m_color, vector);
     ATTRIB(Pickup, m_sound, Sound, SND_ITEMPICKUP);
 #endif
     ATTRIB(Pickup, netname, string);
     ATTRIB(Pickup, m_name, string);
+    ATTRIB(Pickup, m_color, vector, '1 1 1');
     METHOD(Pickup, show, void(Pickup this))
     {
         TC(Pickup, this);

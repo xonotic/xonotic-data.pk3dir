@@ -41,4 +41,16 @@ METHOD(InvisibilityStatusEffect, m_tick, void(StatusEffect this, entity actor))
     }
     SUPER(InvisibilityStatusEffect).m_tick(this, actor);
 }
-#endif
+#endif // SVQC
+#ifdef MENUQC
+#include <common/mutators/mutator/instagib/instagib.qh>
+
+METHOD(InvisibilityItem, describe, string(InvisibilityItem this))
+{
+    TC(InvisibilityItem, this);
+    return sprintf(_("The %s powerup increases your translucency while the powerup is active, making it more difficult for enemies to see you. "
+        "This powerup is often present in %s.\n\n"
+        "Since it is a powerup, it will drop if you die while holding it."),
+    COLORED_NAME(this), COLORED_NAME(MUTATOR_mutator_instagib));
+}
+#endif // MENUQC
