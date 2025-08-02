@@ -49,7 +49,8 @@ int LMS_NewPlayerLives()
 		if(lms_lowest_lives < fl - max(0, floor(autocvar_g_lms_last_join)))
 			return 0;
 
-	return bound(1, lms_lowest_lives, fl);
+	// subtract 1 since the lowest player doesn't really have N lives, they have N-1 lives plus some extra health/armor
+	return bound(1, lms_lowest_lives, fl) - 1;
 }
 
 void ClearWinners();
