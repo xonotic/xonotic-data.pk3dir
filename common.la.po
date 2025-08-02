@@ -877,11 +877,11 @@ msgstr "Tota ratio"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Player skill"
-msgstr ""
+msgstr "Ludentis habilitas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^skill"
-msgstr ""
+msgstr "habilitas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of suicides"
@@ -10827,7 +10827,7 @@ msgstr "Mortium fractio:"
 
 #: qcsrc/menu/xonotic/statslist.qc:209
 msgid "Skill:"
-msgstr ""
+msgstr "Habilitas:"
 
 #: qcsrc/menu/xonotic/statslist.qc:232
 #, c-format
