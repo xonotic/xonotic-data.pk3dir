@@ -174,12 +174,12 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	image_size *= 0.8;
 	float desc_padding = gtv_text_size.x * 0.6;
 	pos.x += image_size.x + desc_padding;
-	tsize -= image_size.x + desc_padding;
 
 	// Split the description into lines
 	entity title;
 	title = spawn();
 	title.message = strcat(rgb_to_hexcolor(rgb), MapVote_FormatMapItem(id, mv_pk3[id], _count, tsize, gtv_text_size, most_votes));
+	tsize -= image_size.x + desc_padding;
 
 	string thelabel = mv_desc[id], ts;
 	entity last = title;
