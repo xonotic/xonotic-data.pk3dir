@@ -1,5 +1,6 @@
 #include "util.qh"
 #include "dialog.qh"
+#include "textslider.qh"
 
 #include "../item.qh"
 
@@ -745,6 +746,7 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 	me.gotoRC(me, me.currentRow + 1.5, 0);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Background:")));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg"))));
+				e.setValueSpace(e, e.valueSpace * 1.25);
 				e.addValue(e, _("Default"), "");
 				e.addValue(e, _("Disable"), "0");
 				e.addValue(e, strzone(strcat("border_", panelname)), strzone(strcat("border_", panelname)));
@@ -768,20 +770,20 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Alpha:")));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Opacity:")));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg_alpha"))));
 				e.addValue(e, _("Default"), "");
-				for(i = 1; i <= 10; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
+				for(i = 1; i <= 20; ++i)
+					e.addValue(e, strzone(ftos_decimals_percentage(i / 20, 0)), strzone(ftos_mindecimals(i / 20)));
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Team Color:")));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Team color:")));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg_color_team"))));
 				e.addValue(e, _("Default"), "");
 				e.addValue(e, _("Disable"), "0");
 				for(i = 1; i <= 10; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
+					e.addValue(e, strzone(ftos_decimals_percentage(i / 10, 0)), strzone(ftos_mindecimals(i / 10)));
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.4);

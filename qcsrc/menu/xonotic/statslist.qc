@@ -153,7 +153,7 @@ void XonoticStatsList_getStats(entity me)
 			{
 				out_total_losses = max(0, (out_total_matches - out_total_wins));
 				bufstr_add(me.listStats, sprintf("003%s\n%d/%d", _("Wins/Losses:"), out_total_wins, out_total_losses), true);
-				bufstr_add(me.listStats, sprintf("004%s\n%d%%", _("Win percentage:"), ((out_total_wins / out_total_matches) * 100)), true);
+				bufstr_add(me.listStats, sprintf("004%s\n%s", _("Win percentage:"), ftos_decimals_percentage(out_total_wins / out_total_matches, 0)), true);
 			}
 
 			out_total_matches = -1;

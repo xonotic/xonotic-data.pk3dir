@@ -52,9 +52,10 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Alpha:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Opacity:")));
 			setDependent(e, "crosshair_enabled", 1, 2);
 		me.TD(me, 1, 1.8, e = makeXonoticSlider(0.1, 1, 0.1, "crosshair_alpha"));
+			e.formatString = "%";
 			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -85,9 +86,10 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 			setDependentAND(e, "crosshair_ring", 1, 1, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Alpha:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Opacity:")));
 			setDependentAND(e, "crosshair_ring", 1, 1, "crosshair_enabled", 1, 2);
 		me.TD(me, 1, 1.6, e = makeXonoticSlider(0.1, 1, 0.1, "crosshair_ring_alpha"));
+			e.formatString = "%";
 			setDependentAND(e, "crosshair_ring", 1, 1, "crosshair_enabled", 1, 2);
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
@@ -101,9 +103,10 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 			setDependentAND(e, "crosshair_dot", 1, 1, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Alpha:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Opacity:")));
 			setDependentAND(e, "crosshair_dot", 1, 1, "crosshair_enabled", 1, 2);
 		me.TD(me, 1, 1.8, e = makeXonoticSlider(0.1, 1, 0.1, "crosshair_dot_alpha"));
+			e.formatString = "%";
 			setDependentAND(e, "crosshair_dot", 1, 1, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.2);
