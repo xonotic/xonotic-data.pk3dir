@@ -59,7 +59,8 @@ CLASS(MineLayer, Weapon)
 		P(class, prefix, speed, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, time, float, NONE) \
+		P(class, prefix, time_center, float, NONE) \
+		P(class, prefix, time_edge, float, NONE) \
 		P(class, prefix, weaponreplace, string, NONE) \
 		P(class, prefix, weaponstartoverride, float, NONE) \
 		P(class, prefix, weaponstart, float, NONE) \

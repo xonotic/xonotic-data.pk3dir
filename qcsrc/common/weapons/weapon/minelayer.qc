@@ -131,10 +131,10 @@ void W_MineLayer_ProximityExplode(entity this)
 	if(WEP_CVAR(WEP_MINE_LAYER, protection) && this.mine_explodeanyway == 0)
 	{
 		entity head;
-		head = findradius(this.origin, WEP_CVAR(WEP_MINE_LAYER, radius));
+		head = WarpZone_FindRadius(this.origin, WEP_CVAR(WEP_MINE_LAYER, radius), false);
 		while(head)
 		{
-			if(head == this.realowner || SAME_TEAM(head, this.realowner))
+			if(SAME_TEAM(head, this.realowner))
 				return;
 			head = head.chain;
 		}
@@ -181,7 +181,6 @@ void W_MineLayer_Think(entity this)
 	}
 
 	// a player's mines shall explode if they disconnect or die
-	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
 	if(!IS_PLAYER(this.realowner) || IS_DEAD(this.realowner) || STAT(FROZEN, this.realowner))
 	{
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -190,15 +189,22 @@ void W_MineLayer_Think(entity this)
 	}
 
 	// set the mine for detonation when a foe gets close enough
-	head = findradius(this.origin, WEP_CVAR(WEP_MINE_LAYER, proximityradius));
+	float proxrad = WEP_CVAR(WEP_MINE_LAYER, proximityradius);
+	head = WarpZone_FindRadius(this.origin, proxrad, false);
 	while(head)
 	{
 		if(IS_PLAYER(head) && !IS_DEAD(head) && !STAT(FROZEN, head) && !IS_INDEPENDENT_PLAYER(head))
-		if(head != this.realowner && DIFF_TEAM(head, this.realowner)) // don't trigger for team mates
-		if(!this.mine_time)
+		if(DIFF_TEAM(head, this.realowner)) // don't trigger for team mates
 		{
-			spamsound(this, CH_SHOTS, SND_MINE_TRIGGER, VOL_BASE, ATTN_NORM);
-			this.mine_time = time + WEP_CVAR(WEP_MINE_LAYER, time);
+			if(!this.mine_time) // don't repeat the sound
+				spamsound(this, CH_SHOTS, SND_MINE_TRIGGER, VOL_BASE, ATTN_NORM);
+			float timecenter = WEP_CVAR(WEP_MINE_LAYER, time_center);
+			float timeedge = WEP_CVAR(WEP_MINE_LAYER, time_edge);
+			float new_mine_time = time + timecenter
+				+ (timeedge - timecenter) * vlen(head.WarpZone_findradius_dist) / proxrad;
+			// scale from time_edge to time_center based on how close the player is to the mine
+			if((!this.mine_time) || this.mine_time > new_mine_time) // choose the earliest explosion time
+				this.mine_time = new_mine_time;
 		}
 		head = head.chain;
 	}
