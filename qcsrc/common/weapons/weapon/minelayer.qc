@@ -73,6 +73,7 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 	{
 		entity own = this.realowner;
 		if(!thiswep.wr_checkammo1(thiswep, own, weaponentity))
+		if(!(own.items & IT_UNLIMITED_AMMO))
 		{
 			own.cnt = thiswep.m_id;
 			ATTACK_FINISHED(own, weaponentity) = time;
@@ -104,6 +105,7 @@ void W_MineLayer_DoRemoteExplode(entity this)
 	{
 		entity own = this.realowner;
 		if(!thiswep.wr_checkammo1(thiswep, own, weaponentity))
+		if(!(own.items & IT_UNLIMITED_AMMO))
 		{
 			own.cnt = thiswep.m_id;
 			ATTACK_FINISHED(own, weaponentity) = time;
