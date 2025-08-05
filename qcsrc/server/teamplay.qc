@@ -15,7 +15,7 @@
 #include <server/scores.qh>
 #include <server/scores_rules.qh>
 
-/// \brief Describes a state of team balance entity.
+/// \brief Describes a state of team balance data entity.
 enum
 {
 	TEAM_BALANCE_UNINITIALIZED, ///< The team balance has not been initialized.
@@ -28,7 +28,7 @@ enum
 /// \brief Indicates that the player is not allowed to join a team.
 const int TEAM_NOT_ALLOWED = -1;
 
-.int m_team_balance_state; ///< Holds the state of the team balance entity.
+.int m_team_balance_state; ///< Holds the state of the team balance data entity.
 .entity m_team_balance_team[NUM_TEAMS]; ///< ???
 
 .float m_team_score; ///< The score of the team.
@@ -863,9 +863,18 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 	}
 	else
 	{
+		float skill_weight = 0, skill_weight_sum = 0;
+		server_skill_average = 0;
 		// Manually count all players.
 		FOREACH_CLIENT(true,
 		{
+			if (it.m_skill_mu && it.m_skill_var)
+			{
+				skill_weight = 1 / it.m_skill_var;
+				server_skill_average += it.m_skill_mu * skill_weight;
+				skill_weight_sum += skill_weight;
+			}
+
 			if (it == ignore)
 			{
 				continue;
@@ -896,8 +905,13 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			}
 			team_ent.m_num_players_net = ++team_ent.m_num_players;
 			if (IS_BOT_CLIENT(it))
-			{
 				++team_ent.m_num_bots;
+
+			if (it.m_skill_mu && it.m_skill_var)
+			{
+				// skill_weight calculated above
+				team_ent.m_skill_mu += it.m_skill_mu * skill_weight;
+				team_ent.mass += skill_weight;
 			}
 		});
 
@@ -909,6 +923,36 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			int to_remove = min(team_ent.m_num_bots, ceil(bots_todo / AVAILABLE_TEAMS));
 			team_ent.m_num_players_net -= to_remove;
 			bots_todo -= to_remove;
+		}
+
+		// Calculate inverse-variance weighted mean skill ratings,
+		// for each unranked client use a fraction of the mean of all clients' skill ratings.
+		server_skill_average = (skill_weight_sum && autocvar_g_balance_teams_skill_unranked_factor > 0)
+			? autocvar_g_balance_teams_skill_unranked_factor * server_skill_average / skill_weight_sum
+			: 1000;
+		float server_skill_average_var = 0; skill_weight = 0; // will only be calculated once, if needed
+		for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
+		{
+			entity team_ent = TeamBalance_GetTeamFromIndex(balance, i);
+			int unranked_clients = team_ent.m_num_players_net - team_ent.count;
+			if (unranked_clients)
+			{
+				if (!server_skill_average_var)
+				{
+					server_skill_average_var = (server_skill_average * 0.25)**2;
+					skill_weight = 1 / server_skill_average_var;
+				}
+				team_ent.m_skill_mu += (server_skill_average * skill_weight) * unranked_clients;
+				team_ent.mass += skill_weight * unranked_clients;
+			}
+			if (team_ent.mass)
+			{
+				// .mass is storing the arithmetic sum of members' inverse-variance weightings
+				// Hence the team's   mean   is: team_ent.m_skill_mu / team_ent.mass
+				// Hence the team's variance is: 1 / team_ent.mass
+				team_ent.m_skill_mu /= team_ent.mass;
+				team_ent.m_skill_var = 1 / team_ent.mass;
+			}
 		}
 	}
 
@@ -1001,6 +1045,7 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 	}
 	int team_bits = 0;
 	int previous_team = 0;
+	float player_skill_mu = 0, player_skill_var = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
 		if (!TeamBalance_IsTeamAllowedInternal(balance, i))
@@ -1013,6 +1058,43 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 			previous_team = i;
 			continue;
 		}
+
+		// During warmup the "best" team isn't the smallest or weakest one,
+		// that method puts all the noobs on the same team when players join in the "wrong" order.
+		// This picks the team(s) whose weighted mean skill differs the most from the joining player's skill,
+		// unless they're all close enough in which case it picks smaller team(s).
+		// Warmup-only as it must unbalance team sizes in extreme cases, swaps needed should be minimal.
+		if (warmup_stage)
+		{
+			entity team_i = TeamBalance_GetTeamFromIndex(balance, i);
+			entity team_p = TeamBalance_GetTeamFromIndex(balance, previous_team);
+			if (!player_skill_mu)
+			{
+				player_skill_mu = player.m_skill_mu ? player.m_skill_mu : server_skill_average;
+				player_skill_var = player.m_skill_var ? player.m_skill_var : (server_skill_average * 0.25)**2;
+			}
+			// To determine significance, we'll use a z-score of the inverse-variance weightings
+			// with an adjustable threshold
+			float team_i_z = (team_i.m_skill_mu - player_skill_mu) / sqrt(team_i.m_skill_var + player_skill_var);
+			float team_p_z = (team_p.m_skill_mu - player_skill_mu) / sqrt(team_p.m_skill_var + player_skill_var);
+			bool significant = fabs(team_i_z - team_p_z) > autocvar_g_balance_teams_skill_significance_threshold;
+			// Do fabs afterwards, since the player can be in the middle of the teams (one z +ve, other -ve)
+			team_i_z = fabs(team_i_z);
+			team_p_z = fabs(team_p_z);
+			if ((!significant && team_i.m_num_players_net < team_p.m_num_players_net)
+			|| ((significant || team_i.m_num_players_net == team_p.m_num_players_net) && team_i_z > team_p_z))
+			{
+				team_bits = Team_IndexToBit(i);
+				previous_team = i;
+			}
+			else if (team_i_z == team_p_z) // rather unlikely
+			{
+				team_bits |= Team_IndexToBit(i);
+				previous_team = i;
+			}
+			continue;
+		}
+
 		int compare = TeamBalance_CompareTeams(balance, i, previous_team, use_score);
 		if (compare == TEAMS_COMPARE_LESS)
 		{
@@ -1295,14 +1377,27 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b, bool use_scor
 	{
 		return TEAMS_COMPARE_EQUAL;
 	}
-	if (team_a.m_team_score < team_b.m_team_score)
-	{
+
+// Compare skill and score together as team strength.
+	// Teams without players have 0 skill_mu but may have a score which must still apply.
+	bool use_skill = team_a.m_skill_var && team_b.m_skill_var
+		// z-score, <= threshold SDs means difference isn't significant, formula squared for perf
+		&& (((team_a.m_skill_mu - team_b.m_skill_mu)**2) / (team_a.m_skill_var + team_b.m_skill_var) > autocvar_g_balance_teams_skill_significance_threshold**2);
+	float team_a_strength = use_skill ? team_a.m_skill_mu : 1;
+	float team_b_strength = use_skill ? team_b.m_skill_mu : 1;
+	// Early in the match scores are ~random due to too few samples,
+	// as the match progresses scores become more reliable indicators of team strength.
+	// 0.96875 (31/32): if at halftime one team has score 0 and the other has 2 its skill is multiplied by 1.376,
+	// < 1 so that a team with 1 point is better than one with 0 (but not by much as sample size is small).
+	// Applying full score ratio to one team is equivalent here to applying half of it to each.
+	if (!warmup_stage && time > game_starttime)
+		team_a_strength *= (1 + ((team_a.m_team_score ? team_a.m_team_score : 0.96875) / (team_b.m_team_score ? team_b.m_team_score : 0.96875) - 1)
+		                      * ((time - game_starttime) / (autocvar_timelimit * 60))**1.5);
+
+	if (team_a_strength < team_b_strength)
 		return TEAMS_COMPARE_LESS;
-	}
-	if (team_a.m_team_score > team_b.m_team_score)
-	{
+	if (team_a_strength > team_b_strength)
 		return TEAMS_COMPARE_GREATER;
-	}
 	return TEAMS_COMPARE_EQUAL;
 }
 

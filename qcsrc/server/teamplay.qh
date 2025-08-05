@@ -9,10 +9,16 @@ bool autocvar_g_balance_teams_prevent_imbalance;
 bool autocvar_g_balance_teams_queue;
 bool autocvar_g_balance_teams_remove;
 int autocvar_g_balance_teams_remove_wait;
+float autocvar_g_balance_teams_skill_unranked_factor;
+float autocvar_g_balance_teams_skill_significance_threshold;
 
 string autocvar_g_forced_team_otherwise;
 
 bool lockteams;
+float server_skill_average; ///< Scaled inverse-variance weighted mean of all clients' m_skill_mu, for unranked clients.
+
+.float m_skill_mu; ///< Team: members' inverse-variance weighted skill mean.
+.float m_skill_var; ///< Team: members' inverse-variance weighted skill variance (sigma**2).
 
 .int team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
@@ -234,7 +240,7 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player);
 /// balanced if the player joins any of them.
 /// \param[in] balance Team balance entity.
 /// \param[in] player Player to check.
-/// \param[in] use_score Whether to take into account team scores.
+/// \param[in] use_score Whether to take into account team scores and skill ratings.
 /// \return Bitmask of the teams that will make the game most balanced if the
 /// player joins any of them.
 /// \note You need to call TeamBalance_GetTeamCounts before calling this
@@ -254,7 +260,7 @@ enum
 /// \param[in] balance Team balance entity.
 /// \param[in] team_index_a Index of the first team.
 /// \param[in] team_index_b Index of the second team.
-/// \param[in] use_score Whether to take into account team scores.
+/// \param[in] use_score Whether to take into account team scores and skill ratings.
 /// \return TEAMS_COMPARE value. See above.
 /// \note You need to call TeamBalance_GetTeamCounts before calling this
 /// function.
@@ -340,7 +346,7 @@ int TeamBalanceTeam_GetNumberOfBots(entity team_ent);
 /// \brief Compares two teams for the purposes of game balance.
 /// \param[in] team_a First team.
 /// \param[in] team_b Second team.
-/// \param[in] use_score Whether to take into account team scores.
+/// \param[in] use_score Whether to take into account team scores and skill ratings.
 /// \return TEAMS_COMPARE value. See above.
 /// \note You need to call TeamBalance_GetTeamCounts before calling this
 /// function.
