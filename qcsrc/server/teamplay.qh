@@ -9,6 +9,7 @@ bool autocvar_g_balance_teams_prevent_imbalance;
 bool autocvar_g_balance_teams_queue;
 bool autocvar_g_balance_teams_remove;
 int autocvar_g_balance_teams_remove_wait;
+float autocvar_g_balance_teams_skill_unranked_avg_frac;
 
 string autocvar_g_forced_team_otherwise;
 
@@ -234,12 +235,11 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player);
 /// balanced if the player joins any of them.
 /// \param[in] balance Team balance entity.
 /// \param[in] player Player to check.
-/// \param[in] use_score Whether to take into account team scores.
 /// \return Bitmask of the teams that will make the game most balanced if the
 /// player joins any of them.
 /// \note You need to call TeamBalance_GetTeamCounts before calling this
 /// function.
-int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score);
+int TeamBalance_FindBestTeams(entity balance, entity player);
 
 /// \brief Describes the result of comparing teams.
 enum
@@ -255,12 +255,10 @@ enum
 /// \param[in] team_index_a Index of the first team.
 /// \param[in] team_index_b Index of the second team.
 /// \param[in] player Player to check.
-/// \param[in] use_score Whether to take into account team scores.
 /// \return TEAMS_COMPARE value. See above.
 /// \note You need to call TeamBalance_GetTeamCounts before calling this
 /// function.
-int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
-	entity player, bool use_score);
+int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b, entity player);
 
 /// \brief Switches a bot from one team to another if teams are not balanced.
 void TeamBalance_AutoBalanceBots();
@@ -343,12 +341,10 @@ int TeamBalanceTeam_GetNumberOfBots(entity team_ent);
 /// \param[in] team_a First team.
 /// \param[in] team_b Second team.
 /// \param[in] player Player to check.
-/// \param[in] use_score Whether to take into account team scores.
 /// \return TEAMS_COMPARE value. See above.
 /// \note You need to call TeamBalance_GetTeamCounts before calling this
 /// function.
-int TeamBalance_CompareTeamsInternal(entity team_a, entity team_index_b,
-	entity player, bool use_score);
+int TeamBalance_CompareTeamsInternal(entity team_a, entity team_index_b, entity player);
 
 /// \brief Called when the player changes color with the "color" command.
 /// \note the "color" command is always called early on player connection
