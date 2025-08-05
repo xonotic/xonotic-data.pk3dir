@@ -747,8 +747,8 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 					if ((Team_IndexToBit(Team_TeamToIndex(team_num)) &
 					     TeamBalance_FindBestTeams(balance, caller, false)) == 0)
 					{
-						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
-						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_STRONGERTEAM);
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_STRONGERTEAM);
 						TeamBalance_Destroy(balance);
 						return;
 					}

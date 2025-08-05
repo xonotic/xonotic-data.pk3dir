@@ -8,7 +8,7 @@
 #include <server/teamplay.qh>
 
 int ScoreRules_teams;
-bool autocvar_sv_showskill;
+int autocvar_sv_showskill;
 
 bool IsTeamAvailable(int team_num)
 {
