@@ -923,6 +923,7 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 		});
 
 		// for each player without a skill rating use the average of all clients' skill ratings
+		// see also: Join() (code duplication :/)
 		int average_skill = (skilled_client_count && autocvar_g_balance_teams_skill_unranked_avg_frac > 0)
 			? server_skill_total * autocvar_g_balance_teams_skill_unranked_avg_frac / skilled_client_count
 			: 1000; // fallback: prevents m_team_skill 0 which would break m_team_score balancing
@@ -1324,7 +1325,9 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b, entity player
 		return TEAMS_COMPARE_GREATER;
 	}
 
-	float team_a_adjusted_skill = team_a.m_team_skill;
+	// Teams without players have 0 skill but may have a score which must still apply for optimal join queue selection.
+	float team_a_adjusted_skill = team_a.m_team_skill ? team_a.m_team_skill : 1;
+	float team_b_adjusted_skill = team_b.m_team_skill ? team_b.m_team_skill : 1;
 	// Early in the match scores are ~random due to too few samples,
 	// as the match progresses scores become more reliable indicators of team strength.
 	// 0.96875 (31/32): if at halftime one team has score 0 and the other has 2 its skill is multiplied by 1.376,
@@ -1333,9 +1336,9 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b, entity player
 	if (!warmup_stage && time > game_starttime)
 		team_a_adjusted_skill *= (1 + ((team_a.m_team_score ? team_a.m_team_score : 0.96875) / (team_b.m_team_score ? team_b.m_team_score : 0.96875) - 1)
 		                            * ((time - game_starttime) / (autocvar_timelimit * 60))**1.5);
-	if (team_a_adjusted_skill < team_b.m_team_skill)
+	if (team_a_adjusted_skill < team_b_adjusted_skill)
 		return TEAMS_COMPARE_LESS;
-	if (team_a_adjusted_skill > team_b.m_team_skill)
+	if (team_a_adjusted_skill > team_b_adjusted_skill)
 		return TEAMS_COMPARE_GREATER;
 	return TEAMS_COMPARE_EQUAL;
 }
