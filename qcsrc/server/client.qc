@@ -2075,8 +2075,8 @@ void Join(entity this, bool queued_join)
 	&& TeamBalance_AreEqual(this, true)) // if a player couldn't tag in for balance, don't join them here as it would cause a stack
 	{
 		// First we must join player(s) queued for specific team(s) (they chose first)
-		// so TeamBalance_JoinBestTeam() (if necessary) won't select the same team(s).
-		// Relies on `this` skipping the queue (this.team already set, this.wants_join not set) or using autoselect.
+		// so TeamBalance_JoinBestTeam() won't select the same team(s).
+		// Assumes `this` was already assigned a team via ClientCommand_selectteam() or is using autoselect.
 		FOREACH_CLIENT(it != this && it.wants_join > 0,
 		{
 			// detect any conflict between `this` and a queued player (queuePlayer() handles other conflicts)
@@ -2088,10 +2088,50 @@ void Join(entity this, bool queued_join)
 		});
 
 		// Second pass: queued players whose team will be autoselected
-		FOREACH_CLIENT(it != this && it.wants_join < 0,
+		// in order of strongest to weakest for optimal balance.
+		float server_skill_total = 0;
+		int skilled_client_count = 0, autoselect_client_count = 0;
+		FOREACH_CLIENT(IS_REAL_CLIENT(it),
 		{
-			Join(it, false);
+			float it_skill = PlayerScore_Get(it, SP_SKILL);
+			if (it_skill > 0)
+			{
+				server_skill_total += it_skill;
+				++skilled_client_count;
+			}
+			if (it.wants_join < 0 || (it == this && it.team <= 0))
+				++autoselect_client_count;
 		});
+		// for each player without a skill rating use the average of all clients' skill ratings
+		// see also: TeamBalance_GetTeamCounts() (small code duplication)
+		float server_average_skill = (skilled_client_count && autocvar_g_balance_teams_skill_unranked_avg_frac > 0)
+			? server_skill_total * autocvar_g_balance_teams_skill_unranked_avg_frac / skilled_client_count
+			: 1000;
+		for (; autoselect_client_count; --autoselect_client_count)
+		{
+			entity strongest_autoselect_client = NULL;
+			FOREACH_CLIENT(it.wants_join < 0 || (it == this && it.team <= 0),
+			{
+				if (strongest_autoselect_client)
+				{
+					float it_skill = PlayerScore_Get(it, SP_SKILL);
+					if (it_skill <= 0)
+						it_skill = server_average_skill;
+					if (it_skill <= PlayerScore_Get(strongest_autoselect_client, SP_SKILL))
+						continue;
+				}
+				strongest_autoselect_client = it;
+			});
+			if (strongest_autoselect_client == this) // can't Join(); return; due to player_with_dibs
+			{
+				entity balance = TeamBalance_CheckAllowedTeams(this);
+				int best_team_index = TeamBalance_FindBestTeam(balance, this, true);
+				TeamBalance_Destroy(balance);
+				SetPlayerTeam(this, best_team_index, TEAM_CHANGE_AUTO);
+			}
+			else if (strongest_autoselect_client)
+				Join(strongest_autoselect_client, false);
+		}
 	}
 
 	Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);

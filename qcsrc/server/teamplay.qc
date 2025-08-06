@@ -929,6 +929,7 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 		}
 
 		// for each player without a skill rating use the average of all clients' skill ratings
+		// see also: Join() (small code duplication)
 		float server_skill_average = (skilled_client_count && autocvar_g_balance_teams_skill_unranked_avg_frac > 0)
 			? server_skill_total * autocvar_g_balance_teams_skill_unranked_avg_frac / skilled_client_count
 			: 1000; // fallback: prevents m_team_skill 0 which would break m_team_score balancing
