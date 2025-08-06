@@ -2077,12 +2077,13 @@ void Join(entity this, bool queued_join)
 		campaign_bots_may_start = true;
 	}
 
-	if(queued_join
-	&& TeamBalance_AreEqual(this, true)) // if a player couldn't tag in for balance, don't join them here as it would cause a stack
+	// If teams aren't equal and a player is queued then they chose a biggest team so they can't join yet.
+	if (queued_join && TeamBalance_AreEqual(this, true))
 	{
+		int clients_remaining = AVAILABLE_TEAMS;
 		// First we must join player(s) queued for specific team(s) (they chose first)
-		// so TeamBalance_JoinBestTeam() (if necessary) won't select the same team(s).
-		// Relies on `this` skipping the queue (this.team already set, this.wants_join not set) or using autoselect.
+		// so TeamBalance_JoinBestTeam() won't select the same team(s).
+		// Assumes `this` was already assigned a team via ClientCommand_selectteam() or is using autoselect.
 		FOREACH_CLIENT(it != this && it.wants_join > 0,
 		{
 			// detect any conflict between `this` and a queued player (queuePlayer() handles other conflicts)
@@ -2091,13 +2092,34 @@ void Join(entity this, bool queued_join)
 				player_with_dibs = it;
 
 			Join(it, false);
+			--clients_remaining;
 		});
 
 		// Second pass: queued players whose team will be autoselected
-		FOREACH_CLIENT(it != this && it.wants_join < 0,
+		// in order of strongest to weakest for optimal balance.
+		for (; clients_remaining; --clients_remaining)
 		{
-			Join(it, false);
-		});
+			entity strongest_autoselect_client = NULL;
+			float strongest_autoselect_client_skill = 0;
+			FOREACH_CLIENT(it.wants_join < 0 || (it == this && it.team <= 0),
+			{
+				float it_skill = it.m_skill_mu ? it.m_skill_mu : server_skill_average; // average was set by TeamBalance_AreEqual()
+				if (it_skill > strongest_autoselect_client_skill)
+				{
+					strongest_autoselect_client = it;
+					strongest_autoselect_client_skill = it_skill;
+				}
+			});
+			if (strongest_autoselect_client == this) // can't just Join(); return; due to player_with_dibs
+			{
+				entity balance = TeamBalance_CheckAllowedTeams(this);
+				int best_team_index = TeamBalance_FindBestTeam(balance, this, true);
+				TeamBalance_Destroy(balance);
+				SetPlayerTeam(this, best_team_index, TEAM_CHANGE_AUTO);
+			}
+			else if (strongest_autoselect_client)
+				Join(strongest_autoselect_client, false);
+		}
 	}
 
 	Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
