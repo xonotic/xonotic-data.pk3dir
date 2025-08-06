@@ -2107,11 +2107,10 @@ void Join(entity this, bool queued_join)
 			// limitation: notifications support only 1 translated team name
 			// so the team `this` preferred can't be mentioned, only the team they got assigned to.
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_JOIN_PLAY_TEAM_QUEUECONFLICT), player_with_dibs.netname);
-		else if (this.wants_join)
+		else
 		{
-			// Get queued player's attention
-			if (game_starttime <= time && !warmup_stage) // No countdown in progress and not returning to warmup via ReadyRestart_force
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_ANNCE, ANNCE_BEGIN);
+			if (this.wants_join && game_starttime < time && !warmup_stage) // No countdown running && not returning to warmup via ReadyRestart_force
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_ANNCE, ANNCE_BEGIN); // Get queued player's attention
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_JOIN_PLAY_TEAM));
 		}
 	}
