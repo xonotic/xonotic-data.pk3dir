@@ -43,11 +43,11 @@ REGISTER_INTRODUCTION_PAGE(3, _("XonStat"), "gametype_dm")
 	"stats.xonotic.org"));
 }
 
-REGISTER_MOVEMENT_PAGE(0, _("Movement Importance"), "gametype_inv")
+REGISTER_MOVEMENT_PAGE(0, _("Introduction"), "gametype_inv")
 {
 	this.m_description = _("Xonotic is a very fast-paced arena shooter. Fast-paced does not only relate to reaction times but also to movement speed. "
 		"That means mastering movement skills is an essential part of Xonotic gameplay and must not be underestimated.\n\n"
-		"For a new player using default physics, the most important tricks to learn are:"
+		"For a new player, the most important tricks to learn are:"
 		"\n  Bunny Hopping"
 		"\n  Strafe Turning"
 		"\n  Blaster Jumping"
