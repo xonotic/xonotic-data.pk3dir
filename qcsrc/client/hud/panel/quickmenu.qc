@@ -915,6 +915,7 @@ void QuickMenu_Default(string target_submenu)
 		}
 		if(teamplay)
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
+		QUICKMENU_SMENU_PL(CTX(_("QMCMD^Rebalance player")), "Rebalance player", "vcall rebalanceplayer %s", 0, 0)
 	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
 
 	if (autocvar__hud_panel_quickmenu_file_from_server != "")
