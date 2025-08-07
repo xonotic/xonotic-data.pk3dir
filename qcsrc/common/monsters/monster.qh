@@ -68,11 +68,9 @@ CLASS(Monster, Object)
     METHOD(Monster, display, void(Monster this, void(string name, string icon) returns))
     {
         TC(Monster, this);
-        string img = this.m_icon;
-        if (img == "" || draw_PreloadPicture(img) == "")
-            img = sprintf("/gfx/menu/%s/gametype_lms", cvar_string("hud_skin")); // used by the guide
-        else
-            img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), img);
+        string img = sprintf("/gfx/menu/%s/%s", cvar_string("menu_skin"), this.m_icon);
+        if (draw_PreloadPicture(img) == "")
+            img = sprintf("/gfx/menu/%s/%s", cvar_defstring("menu_skin"), this.m_icon);
         returns(this.m_name, img);
     }
 #endif

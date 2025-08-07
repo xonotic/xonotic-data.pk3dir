@@ -3,7 +3,7 @@
 CLASS(GuidePage, Object)
 	ATTRIB(GuidePage, m_id, int, 0);
 	ATTRIB(GuidePage, m_name, string, "");
-	ATTRIB(GuidePage, m_icon, string);
+	ATTRIB(GuidePage, m_icon, string, "");
 	ATTRIB(GuidePage, m_description, string, "");
 
 	METHOD(GuidePage, describe, string(GuidePage this))
@@ -17,11 +17,10 @@ CLASS(GuidePage, Object)
 		returns(this.m_name, this.m_icon ? this.m_icon : string_null);
 	}
 
-	CONSTRUCTOR(GuidePage, string _name, string _icon)
+	CONSTRUCTOR(GuidePage, string _name)
 	{
 		CONSTRUCT(GuidePage);
 		this.m_name = _name;
-		this.m_icon = _icon;
 	}
 ENDCLASS(GuidePage)
 
@@ -29,9 +28,9 @@ ENDCLASS(GuidePage)
 // This is for the freetext sections only
 
 REGISTRY(IntroductionGuidePages, 16)
-#define REGISTER_INTRODUCTION_PAGE(id, name, icon) REGISTER(IntroductionGuidePages, GUIDE_INTRODUCTION_PAGE, id, m_id, NEW(GuidePage, name, icon))
+#define REGISTER_INTRODUCTION_PAGE(id, name) REGISTER(IntroductionGuidePages, GUIDE_INTRODUCTION_PAGE, id, m_id, NEW(GuidePage, name))
 REGISTER_REGISTRY(IntroductionGuidePages)
 
 REGISTRY(MovementGuidePages, 16)
-#define REGISTER_MOVEMENT_PAGE(id, name, icon) REGISTER(MovementGuidePages, GUIDE_MOVEMENT_PAGE, id, m_id, NEW(GuidePage, name, icon))
+#define REGISTER_MOVEMENT_PAGE(id, name) REGISTER(MovementGuidePages, GUIDE_MOVEMENT_PAGE, id, m_id, NEW(GuidePage, name))
 REGISTER_REGISTRY(MovementGuidePages)

@@ -31,21 +31,29 @@ void XonoticEntryList_drawListBoxItem(entity me, int i, vector absSize, bool isS
 		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
 	}
-	vector sz = draw_PictureSize(XonoticEntryList_cb_icon);
-	if (!sz)
-		sz = '1 1 0';
-	float szr = sz.x / sz.y;
-	if (strstrofs(XonoticEntryList_cb_icon, "map", 0) >= 0)
-		szr = 4 / 3;
-	const float asr = me.itemAbsSize.x / me.itemAbsSize.y;
-	sz.y = 1;
-	sz.x = szr / asr;
-	draw_Picture('0 0 0', XonoticEntryList_cb_icon, sz, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
+
+	vector sz;
+	if (draw_PreloadPicture(XonoticEntryList_cb_icon) == "")
+		sz = 2 * me.realFontSize.x * eX;
+	else
+	{
+		sz = draw_PictureSize(XonoticEntryList_cb_icon);
+		if (!sz)
+			sz = '1 1 0';
+		float szr = sz.x / sz.y;
+		if (strstrofs(XonoticEntryList_cb_icon, "map", 0) >= 0)
+			szr = 4 / 3;
+		const float asr = me.itemAbsSize.x / me.itemAbsSize.y;
+		sz.y = 1;
+		sz.x = szr / asr;
+		draw_Picture('0 0 0', XonoticEntryList_cb_icon, sz, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
+		sz.x += 0.5 * me.realFontSize.x;
+	}
 
 	// display maximum 2 lines, last potentially truncated, vertically centered
 	string s;
-	vector pos = me.realUpperMargin * eY + (sz.x + 0.5 * me.realFontSize.x) * eX;
-	const float maxWidth = 1 - sz.x - 1.5 * me.realFontSize.x;
+	vector pos = me.realUpperMargin * eY + sz.x * eX;
+	const float maxWidth = 1 - sz.x - me.realFontSize.x;
 	getWrappedLine_remaining = strdecolorize(XonoticEntryList_cb_name);
 	s = getWrappedLine(maxWidth, me.realFontSize, draw_TextWidth_WithoutColors);
 	if (getWrappedLine_remaining)
