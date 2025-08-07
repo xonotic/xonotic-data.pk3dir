@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-22 07:22+0200\n"
+"POT-Creation-Date: 2025-07-28 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 黃柏諺 <s8321414@gmail.com>, 2015\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/team-xonotic/"
@@ -598,85 +598,77 @@ msgstr "點選選擇傳送目的地"
 msgid "Click to select spawn location"
 msgstr "點選選擇出生點"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:129
+#: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Number of ball carrier kills"
 msgstr "帶球人擊殺數"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:129
+#: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^bckills"
 msgstr "殺死帶球人"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:130
+#: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^bctime"
 msgstr "持球時間"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:130
+#: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "Total amount of time holding the ball in Keepaway"
 msgstr "在驅離模式中持球的總時間"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:131
+#: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
 msgstr "奪取旗子或獵取鑰匙的頻率"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:131
+#: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^caps"
 msgstr "奪取"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^captime"
 msgstr "奪取時間"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Time of fastest capture (CTF)"
 msgstr "最快奪旗時間（CTF）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of deaths"
 msgstr "死亡次數"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^deaths"
 msgstr "死亡"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of keys destroyed by pushing them into void"
 msgstr "推入虛空而銷燬的鑰匙數"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^destructions"
 msgstr "摧毀"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^damage dealt"
 msgstr "傷害"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "The total damage dealt"
 msgstr "造成的總傷害"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^damage taken"
 msgstr "受傷"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "The total damage taken"
 msgstr "受到的總傷害"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Number of flag drops"
 msgstr "掉落旗子數"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^drops"
 msgstr "掉旗"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:138
-msgid "Player ELO"
-msgstr "玩家 ELO 分數"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:138
-msgid "SCO^elo"
-msgstr "elo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^fastest"
@@ -903,89 +895,97 @@ msgid "Total score"
 msgstr "總分數"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
+msgid "Player skill"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:168
+msgid "SCO^skill"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of suicides"
 msgstr "自殺次數"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:168
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^suicides"
 msgstr "自殺"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "Number of kills minus deaths"
 msgstr "殺敵數減去死亡數"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^sum"
 msgstr "總和"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "Number of survivals"
 msgstr "生還次數"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "SCO^survivals"
 msgstr "生還"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of domination points taken (Domination)"
 msgstr "統治點佔領數（統治）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^takes"
 msgstr "佔領"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of teamkills"
 msgstr "擊殺隊友數"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "SCO^teamkills"
 msgstr "殺死隊友"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:173
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "Number of ticks (Domination)"
 msgstr "佔領刻數量（統治模式）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:173
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "SCO^ticks"
 msgstr "刻"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:174
+#: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "SCO^time"
 msgstr "時間"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:174
+#: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "Total time raced (Race/CTS)"
 msgstr "競速總時（競速/CTS）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:722
+#: qcsrc/client/hud/panel/scoreboard.qc:724
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr "你可以用命令 ^2scoreboard_columns_set 修改得分榜。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:723
+#: qcsrc/client/hud/panel/scoreboard.qc:725
 msgid "Usage:"
 msgstr "用法："
 
-#: qcsrc/client/hud/panel/scoreboard.qc:725
+#: qcsrc/client/hud/panel/scoreboard.qc:727
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr "^2scoreboard_columns_set ^3域1 域2 ..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:726
+#: qcsrc/client/hud/panel/scoreboard.qc:728
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
 "^2scoreboard_columns_set ^7不含引數時會從 cvar scroreboard_columns 讀取引數"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:727
+#: qcsrc/client/hud/panel/scoreboard.qc:729
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
 "  ^5注意：^7不含引數的 scoreboard_columns_set 在每張地圖開始前都會執行一次"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:728
+#: qcsrc/client/hud/panel/scoreboard.qc:730
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
@@ -993,15 +993,15 @@ msgstr ""
 "^2scoreboard_columns_set ^3expand_default ^7載入預設佈局並將它擴展到 cvar "
 "scoreboard_columns 以便你更改"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:729
+#: qcsrc/client/hud/panel/scoreboard.qc:731
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr "你可以用 ^3|^7 開頭以使域右對齊"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:730
+#: qcsrc/client/hud/panel/scoreboard.qc:732
 msgid "The following field names are recognized (case insensitive):"
 msgstr "可使用以下域名稱（大小寫不敏感）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:736
+#: qcsrc/client/hud/panel/scoreboard.qc:738
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -1012,33 +1012,33 @@ msgstr ""
 "之後一個斜槓，以使此域僅顯示在這些（或除了這些）遊戲類型中。你也可以使"
 "用‘all’以顯示當前遊戲類型的所有域。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:742
+#: qcsrc/client/hud/panel/scoreboard.qc:744
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
 "特殊遊戲類型‘teams’和‘noteams’可用於包含/除去所有團隊合作/非團隊的遊戲類型。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:746
+#: qcsrc/client/hud/panel/scoreboard.qc:748
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr "如：scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:747
+#: qcsrc/client/hud/panel/scoreboard.qc:749
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr "會左對齊顯示名稱、延遲和丟包，右對齊顯示豎槓符號右側的域。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:749
+#: qcsrc/client/hud/panel/scoreboard.qc:751
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr ""
 "「field3」將只在奪旗戰顯示，「field4」將在除死亡競技的所有遊戲類型顯示。"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1062
-#: qcsrc/client/hud/panel/scoreboard.qc:1077
-#: qcsrc/client/hud/panel/scoreboard.qc:1147
+#: qcsrc/client/hud/panel/scoreboard.qc:1061
+#: qcsrc/client/hud/panel/scoreboard.qc:1076
+#: qcsrc/client/hud/panel/scoreboard.qc:1149
 #: qcsrc/client/hud/panel/scoreboard.qc:1158 qcsrc/common/util.qc:393
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
@@ -1048,106 +1048,106 @@ msgstr ""
 msgid "N/A"
 msgstr "無"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1852
+#: qcsrc/client/hud/panel/scoreboard.qc:1826
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "精準度（平均 %d%%）"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2009
+#: qcsrc/client/hud/panel/scoreboard.qc:1986
 msgid "Item stats"
 msgstr "物品統計"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2120
+#: qcsrc/client/hud/panel/scoreboard.qc:2101
 msgid "Map stats:"
 msgstr "地圖統計："
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2150
+#: qcsrc/client/hud/panel/scoreboard.qc:2131
 msgid "Monsters killed:"
 msgstr "怪物擊殺："
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2157
+#: qcsrc/client/hud/panel/scoreboard.qc:2138
 msgid "Secrets found:"
 msgstr "發現秘密："
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2375
+#: qcsrc/client/hud/panel/scoreboard.qc:2356
 #, c-format
 msgid "Spectators"
 msgstr "旁觀者"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2397
+#: qcsrc/client/hud/panel/scoreboard.qc:2378
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2397
+#: qcsrc/client/hud/panel/scoreboard.qc:2378
 #, c-format
 msgid "^5%s %s"
 msgstr "^5%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2398
+#: qcsrc/client/hud/panel/scoreboard.qc:2379
 msgid "SCO^points"
 msgstr "分"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2512
+#: qcsrc/client/hud/panel/scoreboard.qc:2496
 msgid "Next map:"
 msgstr "下一張地圖："
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2519
+#: qcsrc/client/hud/panel/scoreboard.qc:2503
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "選擇團隊"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2533
+#: qcsrc/client/hud/panel/scoreboard.qc:2517
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^7按 ^3%s^7 以加入所選隊伍"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2535
+#: qcsrc/client/hud/panel/scoreboard.qc:2519
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr "^7按 ^3%s^7 以自動選擇並加入隊伍"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2539
+#: qcsrc/client/hud/panel/scoreboard.qc:2523
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7按 ^3%s ^7 以加入特定隊伍"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2550
+#: qcsrc/client/hud/panel/scoreboard.qc:2534
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f 分鐘"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2577
+#: qcsrc/client/hud/panel/scoreboard.qc:2561
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7 / ^5%d^7 位玩家"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2578 qcsrc/client/main.qc:1387
+#: qcsrc/client/hud/panel/scoreboard.qc:2562 qcsrc/client/main.qc:1387
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "地圖："
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2745
+#: qcsrc/client/hud/panel/scoreboard.qc:2728
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "速度領先：%d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2749
+#: qcsrc/client/hud/panel/scoreboard.qc:2732
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "史上最快：%d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2783
+#: qcsrc/client/hud/panel/scoreboard.qc:2764
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1在 ^3%s^1 後復活……"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2793
+#: qcsrc/client/hud/panel/scoreboard.qc:2774
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "你死了，等待 ^3%s^7 後復活"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2802
+#: qcsrc/client/hud/panel/scoreboard.qc:2783
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "你死了, 按下 ^2%s^7 復活"
@@ -1438,15 +1438,15 @@ msgstr "^1錯誤：^7 無法找到資料包索引。"
 msgid "Requesting preview..."
 msgstr "正在請求預覽……"
 
-#: qcsrc/client/view.qc:1010
+#: qcsrc/client/view.qc:1007
 msgid "Nade timer"
 msgstr "榴彈計時"
 
-#: qcsrc/client/view.qc:1015
+#: qcsrc/client/view.qc:1012
 msgid "Capture progress"
 msgstr "佔領進度"
 
-#: qcsrc/client/view.qc:1020
+#: qcsrc/client/view.qc:1017
 msgid "Revival progress"
 msgstr "復活進度"
 
@@ -1712,21 +1712,25 @@ msgstr "在這場混亂中與隊友合作爭鬥，造成儘可能多的傷害！
 msgid "Team Mayhem"
 msgstr "團隊大亂鬥"
 
-#: qcsrc/common/items/item/ammo.qh:56 qcsrc/common/resources/all.inc:30
+#: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
 msgid "Shells"
 msgstr "霰彈"
 
-#: qcsrc/common/items/item/ammo.qh:91 qcsrc/common/resources/all.inc:39
+#: qcsrc/common/items/item/ammo.qh:94 qcsrc/common/resources/all.inc:39
 msgid "Bullets"
 msgstr "子彈"
 
-#: qcsrc/common/items/item/ammo.qh:126 qcsrc/common/resources/all.inc:48
+#: qcsrc/common/items/item/ammo.qh:129 qcsrc/common/resources/all.inc:48
 msgid "Rockets"
 msgstr "火箭彈"
 
-#: qcsrc/common/items/item/ammo.qh:161 qcsrc/common/resources/all.inc:57
+#: qcsrc/common/items/item/ammo.qh:164 qcsrc/common/resources/all.inc:57
 msgid "Cells"
 msgstr "電池"
+
+#: qcsrc/common/items/item/ammo.qh:199 qcsrc/common/resources/all.inc:66
+msgid "Fuel"
+msgstr "燃料"
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
@@ -1759,24 +1763,6 @@ msgstr "大補血包"
 #: qcsrc/common/items/item/health.qh:195 qcsrc/common/items/item/health.qh:206
 msgid "Mega health"
 msgstr "超級補血包"
-
-#: qcsrc/common/items/item/jetpack.qh:39 qcsrc/common/items/item/jetpack.qh:42
-#: qcsrc/common/util.qc:271
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:129
-msgid "Jetpack"
-msgstr "火箭揹包"
-
-#: qcsrc/common/items/item/jetpack.qh:75 qcsrc/common/resources/all.inc:66
-msgid "Fuel"
-msgstr "燃料"
-
-#: qcsrc/common/items/item/jetpack.qh:108
-msgid "Fuel regenerator"
-msgstr "燃料再生"
-
-#: qcsrc/common/items/item/jetpack.qh:111
-msgid "Fuel regen"
-msgstr "燃料再生"
 
 #: qcsrc/common/mapinfo.qc:664
 #, no-c-format
@@ -2351,11 +2337,26 @@ msgstr "絕滅火箭炮鏈鋸"
 msgid "Overkill Shotgun"
 msgstr "絕滅霰彈槍"
 
+#: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:33
+msgid "Fuel regenerator"
+msgstr "燃料再生"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:36
+msgid "Fuel regen"
+msgstr "燃料再生"
+
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:60
 msgid "Invisibility"
 msgstr "隱身"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:38
+#: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:41
+#: qcsrc/common/util.qc:271
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:129
+msgid "Jetpack"
+msgstr "火箭揹包"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
@@ -6172,41 +6173,41 @@ msgstr "物品 %d"
 msgid "Custom"
 msgstr "自定義"
 
-#: qcsrc/menu/menu.qc:510
+#: qcsrc/menu/menu.qc:513
 #, c-format
 msgid "^3%s^7 in range \"%s\" to \"%s\""
 msgstr "^3%s^7 在 \"%s\" 到 \"%s\" 之間"
 
-#: qcsrc/menu/menu.qc:512
+#: qcsrc/menu/menu.qc:515
 #, c-format
 msgid "^3%s^7 outside range \"%s\" to \"%s\""
 msgstr "^3%s^7 在 \"%s\" 到 \"%s\" 之外"
 
-#: qcsrc/menu/menu.qc:541
+#: qcsrc/menu/menu.qc:544
 msgid "Has special requirements"
 msgstr "有特殊要求"
 
-#: qcsrc/menu/menu.qc:544
+#: qcsrc/menu/menu.qc:547
 #, c-format
 msgid "Requires ^3%s^7 not equal to \"%s^7\""
 msgstr "需要 ^3%s^7 不等於 \"%s^7\""
 
-#: qcsrc/menu/menu.qc:556
+#: qcsrc/menu/menu.qc:559
 #, c-format
 msgid "Requires %s, %s, and %s"
 msgstr "需要 %s, %s, 和 %s"
 
-#: qcsrc/menu/menu.qc:559
+#: qcsrc/menu/menu.qc:562
 #, c-format
 msgid "Requires %s and %s"
 msgstr "需要 %s 和 %s"
 
-#: qcsrc/menu/menu.qc:559
+#: qcsrc/menu/menu.qc:562
 #, c-format
 msgid "Requires %s or %s"
 msgstr "需要 %s 或 %s"
 
-#: qcsrc/menu/menu.qc:562
+#: qcsrc/menu/menu.qc:565
 #, c-format
 msgid "Requires %s"
 msgstr "需要 %s"
@@ -10660,12 +10661,12 @@ msgstr "最後的競賽："
 msgid "Time played:"
 msgstr "遊戲時間："
 
-#: qcsrc/menu/xonotic/statslist.qc:118 qcsrc/menu/xonotic/statslist.qc:231
+#: qcsrc/menu/xonotic/statslist.qc:118 qcsrc/menu/xonotic/statslist.qc:216
 msgid "Favorite map:"
 msgstr "最喜歡的地圖："
 
 #: qcsrc/menu/xonotic/statslist.qc:150 qcsrc/menu/xonotic/statslist.qc:202
-#: qcsrc/menu/xonotic/statslist.qc:245
+#: qcsrc/menu/xonotic/statslist.qc:230
 #, c-format
 msgid "Matches:"
 msgstr "競賽局數："
@@ -10690,19 +10691,11 @@ msgstr "擊殺/死亡："
 msgid "Kill ratio:"
 msgstr "擊殺比："
 
-#: qcsrc/menu/xonotic/statslist.qc:208
-msgid "ELO:"
-msgstr "實力評分 (ELO)："
+#: qcsrc/menu/xonotic/statslist.qc:209
+msgid "Skill:"
+msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:215
-msgid "Rank:"
-msgstr "排名："
-
-#: qcsrc/menu/xonotic/statslist.qc:222
-msgid "Percentile:"
-msgstr "百分比："
-
-#: qcsrc/menu/xonotic/statslist.qc:247
+#: qcsrc/menu/xonotic/statslist.qc:232
 #, c-format
 msgid "%d (unranked)"
 msgstr "%d（無排名）"

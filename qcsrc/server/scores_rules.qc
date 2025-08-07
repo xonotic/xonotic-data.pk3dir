@@ -55,7 +55,7 @@ void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled
 		ScoreInfo_SetLabel_PlayerScore(SP_DMG, "dmg", 0);
 		ScoreInfo_SetLabel_PlayerScore(SP_DMGTAKEN, "dmgtaken", SFL_LOWER_IS_BETTER);
 
-		ScoreInfo_SetLabel_PlayerScore(SP_ELO, "elo", SFL_NOT_SORTABLE);
+		ScoreInfo_SetLabel_PlayerScore(SP_SKILL, "skill", SFL_NOT_SORTABLE);
 	}
 
 	if(STAT(SHOWFPS))

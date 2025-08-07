@@ -2,6 +2,9 @@
 
 #include "pickup.qh"
 #include <common/items/all.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
+// NOTE: ammo doesn't need this powerups include, but it prevents #2994
+// TODO: this sort of problem could be fixed by moving away from registries
 #include <common/resources/resources.qh>
 #ifdef SVQC
     #include <common/resources/sv_resources.qh>
