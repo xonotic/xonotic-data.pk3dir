@@ -208,7 +208,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	mspercallsum -= gettime(GETTIME_HIRES);
 	#endif
 
-	dir = W_CalculateSpread(dir, spread, autocvar_g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
+	dir = W_CalculateSpread(dir, spread, autocvar_g_projectiles_spread_style, false);
 
 	#if 0
 	mspercallsum += gettime(GETTIME_HIRES);
@@ -368,7 +368,7 @@ void fireBullet_falloff(entity this, .entity weaponentity, vector start, vector 
                         float force, float falloff_forcehalflife,
                         float dtype, entity tracer_effect, bool do_antilag)
 {
-	dir = normalize(dir + randomvec() * spread);
+	dir = W_CalculateSpread(dir, spread, autocvar_g_hitscan_spread_style, true);
 	vector end = start + dir * max_shot_distance;
 
 	fireBullet_last_hit = NULL;
