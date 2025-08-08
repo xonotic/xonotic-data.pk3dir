@@ -230,7 +230,7 @@ void HUD_Ammo()
 	Weapon wep = wepent.switchweapon;
 	int i;
 	row = column = 0;
-	if(autocvar_hud_panel_ammo_onlycurrent)
+	if(autocvar_hud_panel_ammo_onlycurrent && total_ammo_count == 1)
 	{
 		if(autocvar__hud_configure)
 		{
@@ -257,13 +257,40 @@ void HUD_Ammo()
 	else
 	{
 		row = column = 0;
+		bool normal_ammo_found = false;
 		IL_EACH(default_order_resources, it.instanceOfAmmoResource && !it.m_hidden,
 		{
 			bool isCurrent = (wep.ammo_type == it);
+			if (isCurrent && wep.ammo_type != RES_FUEL)
+				normal_ammo_found = true;
+
+			if (autocvar_hud_panel_ammo_onlycurrent && !isCurrent && it != RES_FUEL)
+			{
+				// skip everything except current ammo and fuel
+				continue;
+			}
+
 			if (it == RES_FUEL)
 			{
 				if (!show_fuel)
 					continue;
+
+				if (autocvar_hud_panel_ammo_onlycurrent && !normal_ammo_found)
+				{
+					// NOTE this code assumes fuel is the last ammo type in default_order_resources
+					// empty spot for normal ammo so the position is always the same
+
+					if(autocvar__hud_configure) // unless we are in hud config mode
+						DrawAmmoItem(pos, ammo_size, RES_ROCKETS, true, false);
+
+					++row;
+					if(row >= rows)
+					{
+						row = 0;
+						column = column + 1;
+					}
+				}
+
 				if (!isCurrent)
 					isCurrent = (have_jetpack || have_hook == 2); // these tools can be used anytime
 			}
