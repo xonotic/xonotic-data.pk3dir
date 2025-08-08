@@ -2,7 +2,6 @@
 
 int autocvar_teamplay_mode;
 
-bool autocvar_g_changeteam_banned;
 bool autocvar_teamplay_lockonrestart;
 
 bool autocvar_g_balance_teams;
@@ -10,6 +9,7 @@ bool autocvar_g_balance_teams_prevent_imbalance;
 bool autocvar_g_balance_teams_queue;
 bool autocvar_g_balance_teams_remove;
 int autocvar_g_balance_teams_remove_wait;
+float autocvar_g_balance_teams_skill_unranked_avg_frac;
 
 string autocvar_g_forced_team_otherwise;
 
@@ -126,11 +126,6 @@ bool QueuedPlayersReady(entity this, bool checkspecificteam);
 /// \return True if team switch was successful, false otherwise.
 bool SetPlayerTeam(entity player, int team_index, int type);
 
-/// \brief Sets the team of the player with all sanity checks.
-/// \param[in,out] player Player to adjust.
-/// \param[in] team_index Index of the team to set.
-void Player_SetTeamIndexChecked(entity player, int team_index);
-
 /// \brief Moves player to the specified team.
 /// \param[in,out] client Client to move.
 /// \param[in] team_index Index of the team.
@@ -231,20 +226,20 @@ int TeamBalance_GetNumberOfPlayers(entity balance, int index);
 /// \param[in] player Player to check.
 /// \param[in] ignore_player ???
 /// \return Index of the team that will make the game most balanced if the
-/// player joins it. If there are several equally good teams available, the
-/// function will pick a random one.
+/// player joins it. If there are several equally good teams available the
+/// function will pick a random one, unless the player is already on one of them
+/// in which case that one is returned.
 int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player);
 
 /// \brief Returns the bitmask of the teams that will make the game most
 /// balanced if the player joins any of them.
 /// \param[in] balance Team balance entity.
 /// \param[in] player Player to check.
-/// \param[in] use_score Whether to take into account team scores.
 /// \return Bitmask of the teams that will make the game most balanced if the
 /// player joins any of them.
 /// \note You need to call TeamBalance_GetTeamCounts before calling this
 /// function.
-int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score);
+int TeamBalance_FindBestTeams(entity balance, entity player);
 
 /// \brief Describes the result of comparing teams.
 enum
@@ -260,12 +255,10 @@ enum
 /// \param[in] team_index_a Index of the first team.
 /// \param[in] team_index_b Index of the second team.
 /// \param[in] player Player to check.
-/// \param[in] use_score Whether to take into account team scores.
 /// \return TEAMS_COMPARE value. See above.
 /// \note You need to call TeamBalance_GetTeamCounts before calling this
 /// function.
-int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
-	entity player, bool use_score);
+int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b, entity player);
 
 /// \brief Switches a bot from one team to another if teams are not balanced.
 void TeamBalance_AutoBalanceBots();
@@ -313,6 +306,7 @@ void TeamBalance_BanTeamsExcept(entity balance, int index);
 /// \param[in] balance Team balance entity.
 /// \param[in] index Index of the team.
 /// \return Team entity of the team balance entity at the given index.
+/// \note The team entities are temporary so you may write to their fields.
 entity TeamBalance_GetTeamFromIndex(entity balance, int index);
 
 /// \brief Returns the team entity of the team balance entity that corresponds
@@ -321,6 +315,7 @@ entity TeamBalance_GetTeamFromIndex(entity balance, int index);
 /// \param[in] team_num Team value. See TEAM_NUM constants.
 /// \return Team entity of the team balance entity that corresponds to the given
 /// TEAM_NUM value.
+/// \note The team entities are temporary so you may write to their fields.
 entity TeamBalance_GetTeam(entity balance, int team_num);
 
 /// \brief Returns whether the team is allowed.
@@ -346,12 +341,10 @@ int TeamBalanceTeam_GetNumberOfBots(entity team_ent);
 /// \param[in] team_a First team.
 /// \param[in] team_b Second team.
 /// \param[in] player Player to check.
-/// \param[in] use_score Whether to take into account team scores.
 /// \return TEAMS_COMPARE value. See above.
 /// \note You need to call TeamBalance_GetTeamCounts before calling this
 /// function.
-int TeamBalance_CompareTeamsInternal(entity team_a, entity team_index_b,
-	entity player, bool use_score);
+int TeamBalance_CompareTeamsInternal(entity team_a, entity team_index_b, entity player);
 
 /// \brief Called when the player changes color with the "color" command.
 /// \note the "color" command is always called early on player connection
