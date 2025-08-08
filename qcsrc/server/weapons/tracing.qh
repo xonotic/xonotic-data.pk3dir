@@ -11,7 +11,6 @@ float autocvar_g_ballistics_solidpenetration_exponent = 1;
 int autocvar_g_projectiles_newton_style;
 float autocvar_g_projectiles_newton_style_2_maxfactor;
 float autocvar_g_projectiles_newton_style_2_minfactor;
-int autocvar_g_projectiles_spread_style;
 bool autocvar_g_norecoil;
 float autocvar_g_trueaim_minrange;
 
