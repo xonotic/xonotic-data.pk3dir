@@ -9,7 +9,8 @@ void XonoticGuideDialog_fill(entity me)
 {
 	entity e;
 
-	int col = 0, width = 1.5;
+	float col = 0;
+	float width = 1.5;
 	me.gotoRC(me, 0, col);
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Topic")));
 	me.TR(me);
@@ -17,7 +18,8 @@ void XonoticGuideDialog_fill(entity me)
 			e.onChange = XonoticGuideDialog_topicChangeNotify;
 			e.onChangeEntity = me;
 
-	col += width, width = 2;
+	col += width;
+	width = 1.75;
 	me.gotoRC(me, 0, col); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Entry")));
 	me.TR(me);
@@ -33,7 +35,8 @@ void XonoticGuideDialog_fill(entity me)
 			e.keyDown = EntryList_StringFilterBox_keyDown;
 			e.onChangeEntity = me.entryList;
 
-	col += width, width = 2.5;
+	col += width;
+	width = 2.75;
 	me.gotoRC(me, 0, col); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Description")));
 	me.TR(me);

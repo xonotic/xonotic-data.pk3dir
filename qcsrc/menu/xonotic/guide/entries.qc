@@ -34,15 +34,15 @@ void XonoticEntryList_drawListBoxItem(entity me, int i, vector absSize, bool isS
 
 	vector sz;
 	if (draw_PreloadPicture(XonoticEntryList_cb_icon) == "")
-		sz = 2 * me.realFontSize.x * eX;
+		sz = me.rowsPerItem * 0.5 * me.realFontSize.x * eX;
 	else
 	{
 		sz = draw_PictureSize(XonoticEntryList_cb_icon);
 		if (!sz)
 			sz = '1 1 0';
 		float szr = sz.x / sz.y;
-		if (strstrofs(XonoticEntryList_cb_icon, "map", 0) >= 0)
-			szr = 4 / 3;
+		//if (strstrofs(XonoticEntryList_cb_icon, "map", 0) >= 0)
+			//szr = 4 / 3;
 		const float asr = me.itemAbsSize.x / me.itemAbsSize.y;
 		sz.y = 1;
 		sz.x = szr / asr;

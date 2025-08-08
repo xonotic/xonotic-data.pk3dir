@@ -8,7 +8,7 @@ CLASS(XonoticEntryList, XonoticListBox)
 	ATTRIB(XonoticEntryList, itemAbsSize, vector, '0 0 0');
 	ATTRIB(XonoticEntryList, realFontSize, vector, '0 0 0');
 	ATTRIB(XonoticEntryList, realUpperMargin, float, 0);
-	ATTRIB(XonoticEntryList, rowsPerItem, float, 4);
+	ATTRIB(XonoticEntryList, rowsPerItem, float, 3);
 	ATTRIB(XonoticEntryList, hasIcons, bool, true);
 
 	ATTRIB(XonoticEntryList, stringFilterBox, entity, NULL);
