@@ -21,6 +21,7 @@ void ammo_vaporizercells_init(Pickup this, entity item)
 CLASS(VaporizerCells, Ammo)
 /* spawnfunc   */ ATTRIB(VaporizerCells, m_canonical_spawnfunc, string, "item_vaporizer_cells");
 #ifdef GAMEQC
+// NOTE: ITEM_FLAG_MUTATORBLOCKED currently unused client side
 /* spawnflags  */ ATTRIB(VaporizerCells, spawnflags, int, ITEM_FLAG_MUTATORBLOCKED);
 /* model       */ ATTRIB(VaporizerCells, m_model, Model, MDL_VaporizerCells_ITEM);
 /* sound       */ ATTRIB(VaporizerCells, m_sound, Sound, SND_VaporizerCells);

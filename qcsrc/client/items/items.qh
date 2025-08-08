@@ -1,7 +1,5 @@
 #pragma once
 
-const int AMMO_COUNT = 4; // amount of ammo types to show in the ammo panel
-
 float  autocvar_cl_items_animate = 7;
 float  autocvar_cl_items_fadedist = 500;
 float  autocvar_cl_items_vehicle_alpha = 0.75;

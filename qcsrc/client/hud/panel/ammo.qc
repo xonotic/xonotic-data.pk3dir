@@ -143,13 +143,14 @@ void HUD_Ammo()
 	float nade_cnt = STAT(NADE_BONUS), nade_score = STAT(NADE_BONUS_SCORE);
 	bool draw_nades = (nade_cnt > 0 || nade_score > 0);
 	float nade_statuschange_elapsedtime;
-	int total_ammo_count;
 
-	vector ammo_size;
+	int total_ammo_count = 0;
 	if (autocvar_hud_panel_ammo_onlycurrent)
 		total_ammo_count = 1;
 	else
-		total_ammo_count = AMMO_COUNT;
+		IL_EACH(default_order_resources, it.instanceOfAmmoResource && !it.m_hidden,
+			++total_ammo_count;
+		);
 
 	if(draw_nades)
 	{
@@ -166,7 +167,7 @@ void HUD_Ammo()
 
 	rows = HUD_GetRowCount(total_ammo_count, mySize, 3);
 	columns = ceil((total_ammo_count)/rows);
-	ammo_size = vec2(mySize.x / columns, mySize.y / rows);
+	vector ammo_size = vec2(mySize.x / columns, mySize.y / rows);
 
 	vector offset = '0 0 0';
 	float newSize;
