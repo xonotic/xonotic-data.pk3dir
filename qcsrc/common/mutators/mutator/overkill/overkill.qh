@@ -1,2 +1,9 @@
 #pragma once
 
+#ifdef MENUQC
+CLASS(MutatorOverkill, Mutator)
+	ATTRIB(MutatorOverkill, message, string, _("Overkill"));
+ENDCLASS(MutatorOverkill)
+
+REGISTER_MUTATOR(ok, true, MutatorOverkill);
+#endif

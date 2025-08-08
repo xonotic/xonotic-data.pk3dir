@@ -1508,3 +1508,18 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 }
 
 #endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+
+METHOD(Arc, describe, string(Arc this))
+{
+	TC(Arc, this);
+	return sprintf(_("The %s fires a continuous beam of electricity, steadily dealing damage to any enemies that cross its path.\n\n"
+		"The secondary fire rapidly shoots electro bolts forward, exploding on impact and dealing some splash damage.\n\n"
+		"It consumes %s ammo, steadily churning through your supply to maintain the stream.\n\n"
+		"The %s is quite a versatile weapon, however it is more effective at close to medium ranges, since the stream is not instantaneous.\n\n%s"),
+	COLORED_NAME(this), COLORED_NAME(ITEM_Cells), COLORED_NAME(this),
+	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_primaryDPS(this.netname, "beam", "bolt")));
+}
+
+#endif

@@ -2,9 +2,10 @@
 
 #include "pickup.qh"
 CLASS(Armor, Pickup)
+/* color      */ ATTRIB(Armor, m_color, vector, '0 1 0');
 #ifdef SVQC
-    ATTRIB(Armor, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
-    ATTRIB(Armor, m_botvalue, int, 5000);
+/* pickupfunc */ ATTRIB(Armor, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
+/* botvalue   */ ATTRIB(Armor, m_botvalue, int, 5000);
 #endif
 ENDCLASS(Armor)
 
@@ -12,6 +13,7 @@ ENDCLASS(Armor)
     #include <server/items/items.qh>
 #endif
 
+// small armor
 #ifdef GAMEQC
 MODEL(ArmorSmall_ITEM, Item_Model("item_armor_small.md3"));
 SOUND(ArmorSmall, Item_Sound("armor1"));
@@ -63,6 +65,7 @@ REGISTER_ITEM(ArmorSmall, NEW(ArmorSmall));
 
 SPAWNFUNC_ITEM(item_armor_small, ITEM_ArmorSmall)
 
+// medium armor
 #ifdef GAMEQC
 MODEL(ArmorMedium_ITEM, Item_Model("item_armor_medium.md3"));
 SOUND(ArmorMedium, Item_Sound("armor10"));
@@ -114,6 +117,7 @@ REGISTER_ITEM(ArmorMedium, NEW(ArmorMedium));
 
 SPAWNFUNC_ITEM(item_armor_medium, ITEM_ArmorMedium)
 
+// big armor
 #ifdef GAMEQC
 MODEL(ArmorBig_ITEM, Item_Model("item_armor_big.md3"));
 SOUND(ArmorBig, Item_Sound("armor17_5"));
@@ -165,6 +169,7 @@ REGISTER_ITEM(ArmorBig, NEW(ArmorBig));
 
 SPAWNFUNC_ITEM(item_armor_big, ITEM_ArmorBig)
 
+// mega armor
 #ifdef GAMEQC
 MODEL(ArmorMega_ITEM, Item_Model("item_armor_large.md3"));
 SOUND(ArmorMega, Item_Sound("armor25"));

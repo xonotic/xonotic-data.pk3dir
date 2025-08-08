@@ -47,6 +47,7 @@ CLASS(PortoLaunch, Weapon)
 	END()
 	W_PROPS(X, PortoLaunch, porto)
 #undef X
+
 ENDCLASS(PortoLaunch)
 REGISTER_WEAPON(PORTO, NEW(PortoLaunch));
 
