@@ -32,6 +32,7 @@ void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector col
 		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
+Resource current_in_hud_configure;
 void DrawAmmoItem(vector myPos, vector mySize, Resource ammoType, bool isCurrent, bool isInfinite)
 {
 	TC(bool, isCurrent); TC(bool, isInfinite);
@@ -43,7 +44,7 @@ void DrawAmmoItem(vector myPos, vector mySize, Resource ammoType, bool isCurrent
 	int ammo;
 	if(autocvar__hud_configure)
 	{
-		isCurrent = (ammoType == RES_ROCKETS); // Rockets always current
+		isCurrent = (ammoType == current_in_hud_configure);
 		ammo = 60;
 	}
 	else
@@ -144,11 +145,14 @@ void HUD_Ammo()
 	bool draw_nades = (nade_cnt > 0 || nade_score > 0);
 	float nade_statuschange_elapsedtime;
 
+	if (autocvar__hud_configure)
+		current_in_hud_configure = RES_CELLS;
+
 	int total_ammo_count = 0;
 	if (autocvar_hud_panel_ammo_onlycurrent)
 		total_ammo_count = 1;
 	else
-		IL_EACH(default_order_resources, it.instanceOfAmmoResource && !it.m_hidden,
+		IL_EACH(default_order_resources, it.instanceOfAmmoResource && (autocvar__hud_configure || !it.m_hidden),
 			++total_ammo_count;
 		);
 
@@ -196,7 +200,7 @@ void HUD_Ammo()
 	{
 		if(autocvar__hud_configure)
 		{
-			DrawAmmoItem(pos, ammo_size, RES_ROCKETS, true, false);
+			DrawAmmoItem(pos, ammo_size, current_in_hud_configure, true, false);
 		}
 		else
 		{
@@ -219,7 +223,7 @@ void HUD_Ammo()
 	else
 	{
 		row = column = 0;
-		IL_EACH(default_order_resources, it.instanceOfAmmoResource && !it.m_hidden,
+		IL_EACH(default_order_resources, it.instanceOfAmmoResource && (autocvar__hud_configure || !it.m_hidden),
 		{
 			DrawAmmoItem(
 				pos + vec2(column * (ammo_size.x + offset.x), row * (ammo_size.y + offset.y)),
