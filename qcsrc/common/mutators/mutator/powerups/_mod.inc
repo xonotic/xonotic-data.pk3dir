@@ -6,5 +6,8 @@
 #ifdef SVQC
 	#include <common/mutators/mutator/powerups/sv_powerups.qc>
 #endif
+#ifdef MENUQC
+	#include <common/mutators/mutator/powerups/ui_powerups.qc>
+#endif
 
 #include <common/mutators/mutator/powerups/powerup/_mod.inc>

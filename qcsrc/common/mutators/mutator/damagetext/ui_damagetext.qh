@@ -1,5 +1,9 @@
 #pragma once
 
+// NOTE: this is NOT the same as other mutators like InstaGib
+// Damage text shows up in Settings > Game, not the Mutators dialog
+// Class is XonoticTab, not XonoticMutatorTab
+
 #include <menu/xonotic/tab.qh>
 CLASS(XonoticDamageTextSettings, XonoticTab)
 	METHOD(XonoticDamageTextSettings, fill, void(entity this));
