@@ -757,7 +757,7 @@ void Cmd_Scoreboard_Help()
 // otherwise the previous exclusive rule warns anyway
 // e.g. -teams,rc,cts,lms/kills ?+rc/kills
 #define SCOREBOARD_DEFAULT_COLUMNS \
-"ping pl fps name |" \
+"ping pl fps skill name |" \
 " -teams,rc,cts,surv,inv,lms/kills +ft,tdm,tmayhem/kills ?+rc,inv/kills" \
 " -teams,surv,lms/deaths +ft,tdm,tmayhem/deaths" \
 " +tdm/sum" \
@@ -883,7 +883,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 				});
 
 				// NOTE: can't check STAT(SHOWFPS) here, if checked too early it returns false anyway
-				if (!nocomplain && str != "fps") // server can disable the fps field
+				if (!nocomplain && str != "fps" && str != "skill") // server can disable the fps or skill fields
 					LOG_INFOF("^1Error:^7 Unknown score field: '%s'", str);
 
 				strfree(sbt_field_title[sbt_num_fields]);
