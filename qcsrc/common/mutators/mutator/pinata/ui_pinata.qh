@@ -1,0 +1,10 @@
+#pragma once
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorPinataTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorPinataTab, fill, void(entity));
+	ATTRIB(XonoticMutatorPinataTab, title, string, _("Piñata"));
+	ATTRIB(XonoticMutatorPinataTab, message, string, "g_pinata");
+	METHOD(XonoticMutatorPinataTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorPinataTab)
+entity makeXonoticMutatorPinataTab();

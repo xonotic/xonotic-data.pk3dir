@@ -3,3 +3,6 @@
 #ifdef SVQC
 	#include <common/mutators/mutator/rocketflying/sv_rocketflying.qc>
 #endif
+#ifdef MENUQC
+	#include <common/mutators/mutator/rocketflying/ui_rocketflying.qc>
+#endif

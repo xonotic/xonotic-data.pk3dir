@@ -1,0 +1,10 @@
+#pragma once
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorNadesTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorNadesTab, fill, void(entity));
+	ATTRIB(XonoticMutatorNadesTab, title, string, _("Nades"));
+	ATTRIB(XonoticMutatorNadesTab, message, string, "g_nades");
+	METHOD(XonoticMutatorNadesTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorNadesTab)
+entity makeXonoticMutatorNadesTab();
