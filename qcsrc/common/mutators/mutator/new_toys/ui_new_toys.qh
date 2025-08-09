@@ -1,0 +1,10 @@
+#pragma once
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorNewToysTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorNewToysTab, fill, void(entity));
+	ATTRIB(XonoticMutatorNewToysTab, title, string, _("New Toys"));
+	ATTRIB(XonoticMutatorNewToysTab, message, string, "g_new_toys");
+	METHOD(XonoticMutatorNewToysTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorNewToysTab)
+entity makeXonoticMutatorNewToysTab();
