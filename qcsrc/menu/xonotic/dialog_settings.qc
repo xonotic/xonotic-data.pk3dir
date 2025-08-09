@@ -15,14 +15,14 @@ void XonoticSettingsDialog_fill(entity me)
 	entity mc;
 	mc = makeXonoticTabController(me.rows - 2.5);
 	me.TR(me);
-		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Video"),   makeXonoticVideoSettingsTab()));
-		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Effects"), makeXonoticEffectsSettingsTab()));
-		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Audio"),   makeXonoticAudioSettingsTab()));
+		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Video"),    makeXonoticVideoSettingsTab()));
+		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Effects"),  makeXonoticEffectsSettingsTab()));
+		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Audio"),    makeXonoticAudioSettingsTab()));
 	me.TR(me);
-		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Game"),    NEW(XonoticGameSettingsTab)));
-		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Input"),   makeXonoticInputSettingsTab()));
-		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("User"),    makeXonoticUserSettingsTab()));
-		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Misc"),    makeXonoticMiscSettingsTab()));
+		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Game"),   makeXonoticGameSettingsTab()));
+		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Input"),  makeXonoticInputSettingsTab()));
+		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("User"),   makeXonoticUserSettingsTab()));
+		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Misc"),   makeXonoticMiscSettingsTab()));
 	me.gotoRC(me, 2.5, 0);
 		me.TD(me, me.rows - 2.5, me.columns, mc);
 }

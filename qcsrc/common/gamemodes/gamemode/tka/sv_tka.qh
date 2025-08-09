@@ -26,8 +26,6 @@ REGISTER_MUTATOR(tka, false)
 	return false;
 }
 
-const int TKA_BALL_COUNT = 1;
-
 void(entity this) havocbot_role_tka_carrier;
 void(entity this) havocbot_role_tka_collector;
 

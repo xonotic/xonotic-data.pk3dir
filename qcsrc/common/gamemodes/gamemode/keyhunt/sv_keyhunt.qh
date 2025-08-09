@@ -8,13 +8,13 @@ void kh_Initialize();
 
 REGISTER_MUTATOR(kh, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
 		GameRules_teams(true);
-        GameRules_spawning_teams(autocvar_g_keyhunt_team_spawns);
-        GameRules_limit_score(autocvar_g_keyhunt_point_limit);
-        GameRules_limit_lead(autocvar_g_keyhunt_point_leadlimit);
+		GameRules_spawning_teams(autocvar_g_keyhunt_team_spawns);
+		GameRules_limit_score(autocvar_g_keyhunt_point_limit);
+		GameRules_limit_lead(autocvar_g_keyhunt_point_leadlimit);
 
 		kh_Initialize();
 	}

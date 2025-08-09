@@ -14,5 +14,5 @@ void XonoticNexposee_configureXonoticNexposee(entity me)
 
 void XonoticNexposee_close(entity me)
 {
-	m_goto(string_null); // hide
+	m_goto(string_null, true); // hide
 }

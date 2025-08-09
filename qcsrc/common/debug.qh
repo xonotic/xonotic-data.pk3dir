@@ -48,7 +48,7 @@ REGISTER_NET_TEMP(net_debug)
 		WriteByte(channel, is_pure(this));
 		vector o = this.origin;
 		if (o == '0 0 0') // brushes
-			o = (this.absmin + this.absmax) / 2;
+			o = (this.absmin + this.absmax) * 0.5;
 		if (this.tag_entity)
 			o += this.tag_entity.origin;
 		WriteVector(channel, o);

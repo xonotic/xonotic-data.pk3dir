@@ -6,7 +6,7 @@ void nb_Initialize();
 
 REGISTER_MUTATOR(nb, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
 		nb_Initialize();

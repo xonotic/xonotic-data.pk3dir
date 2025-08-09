@@ -312,8 +312,9 @@ void bot_setnameandstuff(entity this)
 
 	this.bot_config_loaded = true;
 
-	// this is really only a default, TeamBalance_JoinBestTeam is called later
 	setcolor(this, stof(bot_shirt) * 16 + stof(bot_pants));
+	this.team = -1; // undo team change by setcolor
+	// save clientcolors now because they may be overriden when joining a team
 	this.bot_preferredcolors = this.clientcolors;
 
 	string prefix = (autocvar_g_campaign ? "" : autocvar_bot_prefix);

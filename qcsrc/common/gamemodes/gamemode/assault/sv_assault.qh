@@ -13,18 +13,19 @@ IntrusiveList g_assault_objectives;
 
 REGISTER_MUTATOR(as, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
 		g_assault_destructibles = IL_NEW();
 		g_assault_objectivedecreasers = IL_NEW();
 		g_assault_objectives = IL_NEW();
-        GameRules_teams(true);
-        int teams = BITS(2); // always red vs blue
-        GameRules_scoring(teams, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, {
-            field_team(ST_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);
-            field(SP_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);
-        });
+		GameRules_teams(true);
+		int teams = BITS(2); // always red vs blue
+		GameRules_scoring(teams, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY,
+		{
+			field_team(ST_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);
+			field(SP_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);
+		});
 	}
 	return 0;
 }
@@ -49,7 +50,7 @@ void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrat
 void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
 
 // assault game mode: Which team is attacking in this round?
-float assault_attacker_team;
+int assault_attacker_team;
 
 // predefined spawnfuncs
 void target_objective_decrease_activate(entity this);

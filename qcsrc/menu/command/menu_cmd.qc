@@ -54,6 +54,8 @@ void GameCommand(string theCommand)
 		LOG_HELP("  'closemenu' closes the menu window named <item> (or the menu window containing an item named <item>)");
 		LOG_HELP("   if <item> is not specified it shows the list of available items in the console");
 		LOG_HELP("  'dumptree' dumps the state of the menu as a tree to the console");
+		LOG_HELP("  'isdemo' checks if engine is currently running a demo. If given an <item> then 1 / 0 is placed");
+		LOG_HELP("   in the cvar with that name. Otherwise without an argument the result is printed to console.");
 
 		LOG_HELP("\nGeneric commands shared by all programs:");
 		GenericCommand_macro_help();
@@ -75,21 +77,21 @@ void GameCommand(string theCommand)
 		return;
 	}
 
-	string cmd = argv(0);
+	string argcmd = argv(0);
 	string filter = string_null;
 	bool close_mode = false;
-	if (cmd == "closemenu")
+	if (argcmd == "closemenu")
 	{
 		close_mode = true;
-		cmd = "directmenu";
+		argcmd = "directmenu";
 	}
-	else if (cmd == "directpanelhudmenu")
+	else if (argcmd == "directpanelhudmenu")
 	{
 		filter = "HUD";
-		cmd = "directmenu";
+		argcmd = "directmenu";
 	}
 
-	if (cmd == "directmenu")
+	if (argcmd == "directmenu")
 	{
 		if (argc == 1)
 		{
@@ -112,7 +114,7 @@ void GameCommand(string theCommand)
 		else if (argc == 2 && !close_mode && (!isdemo() || argv(1) == "Welcome")) // don't allow this command in demos
 		{
 			m_play_click_sound(MENU_SOUND_OPEN);
-			m_goto(strcat(filter, argv(1))); // switch to a menu item
+			m_goto(strcat(filter, argv(1)), true); // switch to a menu item
 		}
 		else if(argc > 2 && (!isdemo() || argv(1) == "Welcome"))
 		{
@@ -130,7 +132,7 @@ void GameCommand(string theCommand)
 							bufstr_add(argsbuf, argv(i), 1);
 						e.readInputArgs(e, argsbuf);
 						if (!close_mode)
-							m_goto(strcat(filter, s));
+							m_goto(strcat(filter, s), true);
 					}
 					if(argsbuf >= 0)
 						buf_del(argsbuf);
@@ -146,58 +148,39 @@ void GameCommand(string theCommand)
 		return;
 	}
 
-	if (argv(0) == "nexposee")
+	switch (argv(0))
 	{
-		m_goto("nexposee");
-		return;
-	}
-
-	if (argv(0) == "servers")
-	{
-		m_goto("servers");
-		return;
-	}
-
-	if (argv(0) == "profile")
-	{
-		m_goto("profile");
-		return;
-	}
-
-	if (argv(0) == "skinselect")
-	{
-		m_goto("skinselector");
-		return;
-	}
-
-	if (argv(0) == "languageselect")
-	{
-		m_goto("languageselector");
-		return;
-	}
-
-	if (argv(0) == "settings")
-	{
-		m_goto("settings");
-		return;
-	}
-
-	if (argv(0) == "inputsettings")
-	{
-		m_goto("inputsettings");
-		return;
-	}
-
-	if (argv(0) == "videosettings")
-	{
-		m_goto("videosettings");
-		return;
+		// unlike menu_cmd directmenu, the menu won't be closed when these menu items will be closed
+		case "nexposee":         m_goto("nexposee", false); return;
+		case "servers":          m_goto("servers", false); return;
+		case "profile":          m_goto("profile", false); return;
+		case "skinselect":       m_goto("skinselector", false); return;
+		case "languageselect":   m_goto("languageselector", false); return;
+		case "settings":         m_goto("settings", false); return;
+		case "inputsettings":    m_goto("inputsettings", false); return;
+		case "videosettings":    m_goto("videosettings", false); return;
 	}
 
 	if (argv(0) == "dumptree")
 	{
 		_dumptree_space = "";
 		depthfirst(main, parent, firstChild, nextSibling, _dumptree_open, _dumptree_close, NULL);
+		return;
+	}
+
+	if (argv(0) == "isdemo")
+	{
+		int value = isdemo();
+
+		if (argv(1) != "")
+		{
+			cvar_set(argv(1), ftos(value));
+		}
+		else
+		{
+			print(sprintf("%d\n", value));
+		}
+
 		return;
 	}
 

@@ -2,6 +2,12 @@
 
 // Client/server mappings
 
+#ifdef CSQC
+	#include <client/csqcmodel_hooks.qh> // for .isplayermodel, .csqcmodel_isdead
+	#include <common/resources/cl_resources.qh> // for GetResource
+	#include <lib/csqcmodel/common.qh> // for ISPLAYER_CLIENT, ISPLAYER_PLAYER
+#endif
+
 #ifdef SVQC
 // TODO: get rid of this random dumb include!
 	#include <common/state.qh>
@@ -107,7 +113,7 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 #define PHYS_FRICTION_ONLAND(s)             STAT(MOVEVARS_FRICTION_ONLAND, s)
 #define PHYS_FRICTION_SLICK(s)              STAT(MOVEVARS_FRICTION_SLICK, s)
 
-#define PHYS_FROZEN(s)                      STAT(FROZEN, s)
+#define PHYS_FROZEN(s)                      (STAT(FROZEN, s) || StatusEffects_active(STATUSEFFECT_Frozen, s))
 
 #define PHYS_HIGHSPEED(s)                   STAT(MOVEVARS_HIGHSPEED, s)
 
@@ -365,3 +371,6 @@ NET_HANDLE(setpause, bool)
 	return true;
 }
 #endif
+
+// used elsewhere, like in strafehud
+float GeomLerp(float, float, float);

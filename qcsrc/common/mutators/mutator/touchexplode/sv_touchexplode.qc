@@ -6,6 +6,8 @@ float autocvar_g_touchexplode_damage;
 float autocvar_g_touchexplode_edgedamage;
 float autocvar_g_touchexplode_force;
 
+SOUND(TOUCHEXPLODE, W_Sound("grenade_impact"));
+
 REGISTER_MUTATOR(touchexplode, expr_evaluate(autocvar_g_touchexplode));
 
 .float touchexplode_time;
@@ -15,7 +17,7 @@ void PlayerTouchExplode(entity p1, entity p2)
 	vector org = (p1.origin + p2.origin) * 0.5;
 	org.z += (p1.mins.z + p2.mins.z) * 0.5;
 
-	sound(p1, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+	sound(p1, CH_TRIGGER, SND_TOUCHEXPLODE, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, org, '0 0 0', 1);
 
 	entity e = spawn();

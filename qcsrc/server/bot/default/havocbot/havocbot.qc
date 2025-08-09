@@ -57,7 +57,7 @@ void havocbot_ai(entity this)
 		}
 		else
 		{
-			if (!this.jumppadcount && !STAT(FROZEN, this)
+			if (!this.jumppadcount && !STAT(FROZEN, this) && !StatusEffects_active(STATUSEFFECT_Frozen, this)
 				&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP) && !IS_ONGROUND(this)))
 			{
 				// find a new goal
@@ -66,7 +66,7 @@ void havocbot_ai(entity this)
 		}
 
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
-		if(!(IS_DEAD(this) || STAT(FROZEN, this)))
+		if(!(IS_DEAD(this) || STAT(FROZEN, this) || StatusEffects_active(STATUSEFFECT_Frozen, this)))
 		if(!this.goalcurrent)
 		if(this.waterlevel == WATERLEVEL_SWIMMING || (this.aistatus & AI_STATUS_OUT_WATER))
 		{
@@ -110,7 +110,7 @@ void havocbot_ai(entity this)
 		return;
 	}
 
-	if(IS_DEAD(this) || STAT(FROZEN, this))
+	if(IS_DEAD(this) || STAT(FROZEN, this) || StatusEffects_active(STATUSEFFECT_Frozen, this))
 	{
 		if (this.goalcurrent)
 			navigation_clearroute(this);
@@ -281,7 +281,8 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 				+ 0.05 / max(1, sk + this.havocbot_keyboardskill)
 				+ random() * 0.025 / max(0.00025, skill + this.havocbot_keyboardskill)
 		, time);
-	vector keyboard = CS(this).movement / autocvar_sv_maxspeed;
+	// TODO: Consider changing this back to `/ autocvar_sv_maxspeed` after https://github.com/graphitemaster/gmqcc/issues/210.
+	vector keyboard = CS(this).movement * (1 / autocvar_sv_maxspeed);
 
 	float trigger = autocvar_bot_ai_keyboard_threshold;
 
@@ -1086,7 +1087,7 @@ void havocbot_movetogoal(entity this)
 						}
 						else
 						{
-							jump_height = stepheightvec + jumpheight_vec / 2;
+							jump_height = stepheightvec + jumpheight_vec * 0.5;
 							tracebox(this.origin + jump_height, this.mins, this.maxs, actual_destorg + jump_height, false, this);
 							if (trace_fraction > s)
 							{

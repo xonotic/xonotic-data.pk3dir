@@ -11,6 +11,14 @@ void W_Blaster_Touch(entity this, entity toucher)
 	vector force_xyzscale = '1 1 1';
 	force_xyzscale.z = WEP_CVAR_PRI(WEP_BLASTER, force_zscale);
 
+	// slightly hacky but probably not worth adding a parameter for this special case
+	bool zero_damageforcescale = false;
+	if (autocvar_g_projectiles_interact == 1 && (toucher.flags & FL_PROJECTILE) && !toucher.damageforcescale)
+	{
+		toucher.damageforcescale = 1;
+		zero_damageforcescale = true;
+	}
+
 	RadiusDamageForSource(
 		this,
 		(this.origin + (this.mins + this.maxs) * 0.5),
@@ -28,6 +36,9 @@ void W_Blaster_Touch(entity this, entity toucher)
 		this.weaponentity_fld,
 		toucher
 	);
+
+	if (zero_damageforcescale)
+		toucher.damageforcescale = 0;
 
 	delete(this);
 }
@@ -47,7 +58,7 @@ void W_Blaster_Attack(entity actor, .entity weaponentity)
 	vector s_forward = v_forward * cos(atk_shotangle) + v_up * sin(atk_shotangle);
 	int atk_deathtype = WEP_BLASTER.m_id;
 
-	W_SetupShot_Dir(actor, weaponentity, s_forward, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, atk_damage, atk_deathtype);
+	W_SetupShot_Dir(actor, weaponentity, s_forward, false, 3, SND_BLASTER_FIRE, CH_WEAPON_B, atk_damage, atk_deathtype);
 	W_MuzzleFlash(WEP_BLASTER, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity missile = new(blasterbolt);

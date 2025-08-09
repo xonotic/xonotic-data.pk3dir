@@ -17,14 +17,14 @@ void nade_darkness_think(entity this)
 		{
 			vector expcol_min = nades_PlayerColor(this.realowner, false);
 			vector expcol_max = nades_PlayerColor(this.realowner, true);
-			entity expef = EFFECT_NADE_EXPLODE_NEUTRAL;
+			entity expef = EFFECT_NADE_EXPLODE;
 			Send_Effect_Except(expef, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
-			normal_nade_boom(this);
+			nade_normal_boom(this);
 		}
 		else
-			Send_Effect(EFFECT_SPAWN_PURPLE, this.origin + '0 0 1', '0 0 0', 1);
+			Send_Effect_Except(EFFECT_SPAWN, this.origin + '0 0 1', '0 0 0', 1, '0.5 0 0.5', '0.5 0 0.5', NULL);
 
 		delete(this);
 		return;
@@ -77,8 +77,7 @@ void nade_darkness_boom(entity this)
 	setorigin(fountain, fountain.origin);
 	setthink(fountain, nade_darkness_think);
 	fountain.nextthink = time;
-	fountain.ltime = time + autocvar_g_nades_darkness_time;
-	fountain.pushltime = fountain.wait = fountain.ltime;
+	fountain.pushltime = fountain.wait = fountain.ltime = time + autocvar_g_nades_darkness_time;
 	fountain.team = this.team;
 	set_movetype(fountain, MOVETYPE_TOSS);
 	fountain.projectiledeathtype = DEATH_NADE.m_id;
@@ -97,7 +96,8 @@ void nade_darkness_boom(entity this)
 		timer.glowmod = this.glowmod;
 		setthink(timer, nade_timer_think);
 		timer.nextthink = time;
-		timer.wait = fountain.ltime;
+		timer.wait = fountain.wait;
+		timer.nade_lifetime = this.nade_lifetime;
 		timer.owner = fountain;
 		timer.skin = 10;
 	}

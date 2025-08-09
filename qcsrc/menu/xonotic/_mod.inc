@@ -24,6 +24,7 @@
 #include <menu/xonotic/dialog_hudpanel_ammo.qc>
 #include <menu/xonotic/dialog_hudpanel_centerprint.qc>
 #include <menu/xonotic/dialog_hudpanel_chat.qc>
+#include <menu/xonotic/dialog_hudpanel_checkpoints.qc>
 #include <menu/xonotic/dialog_hudpanel_engineinfo.qc>
 #include <menu/xonotic/dialog_hudpanel_healtharmor.qc>
 #include <menu/xonotic/dialog_hudpanel_infomessages.qc>
@@ -98,6 +99,7 @@
 #include <menu/xonotic/listbox.qc>
 #include <menu/xonotic/mainwindow.qc>
 #include <menu/xonotic/maplist.qc>
+#include <menu/xonotic/mixedslider.qc>
 #include <menu/xonotic/nexposee.qc>
 #include <menu/xonotic/picker.qc>
 #include <menu/xonotic/playerlist.qc>

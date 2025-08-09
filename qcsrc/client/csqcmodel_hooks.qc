@@ -16,7 +16,6 @@
 #include <lib/csqcmodel/cl_player.qh>
 #include <lib/csqcmodel/interpolate.qh>
 
-.float death_time;
 .int modelflags;
 
 // FEATURE: LOD

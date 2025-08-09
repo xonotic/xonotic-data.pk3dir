@@ -216,7 +216,7 @@ void m_init_delayed()
 
 	if (m_goto_buffer)
 	{
-		m_goto(m_goto_buffer);
+		m_goto(m_goto_buffer, false);
 		strfree(m_goto_buffer);
 	}
 
@@ -334,7 +334,10 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 
 void drawBackground(string img, float a, string algn, float force1)
 {
-	if (main.mainNexposee.ModalController_state == 0) return;
+	if (main.mainNexposee.ModalController_state == 0
+	&& !(main.focusedChild && main.focusedChild.hideMenuOnClose && !(gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
+		return;
+
 	vector v = '0 0 0';
 	int scalemode = SCALEMODE_CROP;
 	int len = strlen(algn);
@@ -1038,7 +1041,7 @@ void m_setpointerfocus(entity wnd)
 	if (wnd.focused) m_focus_item_chain(wnd, focus);
 }
 
-void m_goto(string itemname)
+void m_goto(string itemname, bool hide_menu_on_close)
 {
 	if (!menuInitialized)
 	{
@@ -1069,12 +1072,17 @@ void m_goto(string itemname)
 
 		if ((e) && (!e.requiresConnection || (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
 		{
-			if(!Menu_Active)
-				e.hideMenuOnClose = true;
 			m_hide();
 			m_activate_window(e);
 			m_setpointerfocus(e);
 			m_display();
+			if (hide_menu_on_close)
+			{
+				while(e.parent && !(e.instanceOfDialog && e.isTabRoot))
+					e = e.parent;
+				if (e.instanceOfDialog)
+					e.hideMenuOnClose = true;
+			}
 		}
 	}
 }

@@ -162,8 +162,13 @@ void setcolor(entity this, int clr)
 {
 #if 1
 	this.clientcolors = clr;
-	this.team = (clr & 15) + 1;
+	if(teamplay)
+		this.team = (clr & 15) + 1;
+	else
+		this.team = -1;
 #else
+	// sets clientcolors and team (even in FFA games)
+	// and sends notification to all clients
 	builtin_setcolor(this, clr);
 #endif
 }
@@ -206,16 +211,8 @@ bool Player_SetTeamIndex(entity player, int index)
 {
 	int new_team = Team_IndexToTeam(index);
 	if (player.team == new_team)
-	{
-		if (new_team != -1)
-		{
-			// This is important when players join the game and one of their
-			// color matches the team color while other doesn't. For example
-			// [BOT]Lion: color 0 4.
-			SetPlayerColors(player, new_team - 1);
-		}
 		return true;
-	}
+
 	int old_index = Team_TeamToIndex(player.team);
 	if (MUTATOR_CALLHOOK(Player_ChangeTeam, player, old_index, index) == true)
 	{

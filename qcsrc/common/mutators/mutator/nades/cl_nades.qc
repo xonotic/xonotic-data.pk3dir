@@ -31,7 +31,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 
 	if (proj.cnt == PROJECTILE_NAPALM_FOUNTAIN)
 	{
-		loopsound(proj, CH_SHOTS_SINGLE, SND_FIREBALL_FLY2, VOL_BASE, ATTEN_NORM);
+		loopsound(proj, CH_SHOTS_SINGLE, SND_NADE_NAPALM_FLY, VOL_BASE, ATTEN_NORM);
 		proj.mins = '-16 -16 -16';
 		proj.maxs = '16 16 16';
 	}
@@ -56,7 +56,9 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 	proj.avelocity = randomvec() * 720;
 	proj.alphamod = nade_type.m_alpha;
 
-	if (nade_type == NADE_TYPE_TRANSLOCATE || nade_type == NADE_TYPE_SPAWN)
+	if (nade_type == NADE_TYPE_TRANSLOCATE
+	||  nade_type == NADE_TYPE_SPAWN
+	||  nade_type == NADE_TYPE_MONSTER)
 		proj.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	else
 		proj.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;

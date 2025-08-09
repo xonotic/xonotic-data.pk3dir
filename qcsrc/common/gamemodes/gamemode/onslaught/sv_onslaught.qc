@@ -16,9 +16,9 @@ bool g_onslaught;
 float autocvar_g_onslaught_teleport_wait;
 bool autocvar_g_onslaught_spawn_at_controlpoints;
 bool autocvar_g_onslaught_spawn_at_generator;
-float autocvar_g_onslaught_cp_proxydecap;
-float autocvar_g_onslaught_cp_proxydecap_distance = 512;
-float autocvar_g_onslaught_cp_proxydecap_dps = 100;
+float autocvar_g_onslaught_cp_proximitydecap;
+float autocvar_g_onslaught_cp_proximitydecap_distance = 512;
+float autocvar_g_onslaught_cp_proximitydecap_dps = 100;
 float autocvar_g_onslaught_spawn_at_controlpoints_chance = 0.5;
 float autocvar_g_onslaught_spawn_at_controlpoints_random;
 float autocvar_g_onslaught_spawn_at_generator_chance;
@@ -401,17 +401,37 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 	else
 		sound(this, CH_TRIGGER, SND_ONS_HIT2, VOL_BASE+0.3, ATTEN_NORM);
 
-	if (GetResource(this, RES_HEALTH) < 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 	{
-		sound(this, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+		sound(this, CH_TRIGGER, SND_ONS_GENERATOR_EXPLODE, VOL_BASE, ATTEN_NORM);
 		pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
+
+		if (attacker != this)
+		{
+			GameRules_scoring_add(attacker, ONS_TAKES, 1);
+			GameRules_scoring_add(attacker, SCORE, 10);
+		}
+		else
+		{
+			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
+				if(vdist(it.origin - this.origin, <, autocvar_g_onslaught_cp_proximitydecap_distance))
+				{
+					if(DIFF_TEAM(it, this))
+					{
+						if (attacker == this)
+							attacker = it; // show message only for this player
+						// reward all players
+						GameRules_scoring_add(it, ONS_TAKES, 1);
+						GameRules_scoring_add(it, SCORE, 5);
+					}
+				}
+			});
+		}
+
 		if (this.owner.message != "")
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED), this.owner.message, attacker.netname);
 		else
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED_NONAME), attacker.netname);
-
-		GameRules_scoring_add(attacker, ONS_TAKES, 1);
-		GameRules_scoring_add(attacker, SCORE, 10);
 
 		this.owner.goalentity = NULL;
 		this.owner.islinked = false;
@@ -458,29 +478,40 @@ void ons_ControlPoint_Icon_Think(entity this)
 {
 	this.nextthink = time + ONS_CP_THINKRATE;
 
-	if(autocvar_g_onslaught_cp_proxydecap)
+	if (!this.owner.isshielded && autocvar_g_onslaught_cp_proximitydecap)
 	{
 		int _enemy_count = 0;
+		entity first_enemy = NULL;
 		int _friendly_count = 0;
 
 		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
-			if(vdist(it.origin - this.origin, <, autocvar_g_onslaught_cp_proxydecap_distance))
+			if(vdist(it.origin - this.origin, <, autocvar_g_onslaught_cp_proximitydecap_distance))
 			{
 				if(SAME_TEAM(it, this))
 					++_friendly_count;
 				else
+				{
 					++_enemy_count;
+					if (!first_enemy)
+						first_enemy = it;
+				}
 			}
 		});
 
-		_friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
-		_enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
+		float hlt = (_friendly_count - _enemy_count) * (autocvar_g_onslaught_cp_proximitydecap_dps * ONS_CP_THINKRATE);
 
-		GiveResourceWithLimit(this, RES_HEALTH, (_friendly_count - _enemy_count), this.max_health);
+		if (hlt < 0)
+			TakeResource(this, RES_HEALTH, -hlt);
+		else if (hlt > 0)
+			GiveResourceWithLimit(this, RES_HEALTH, hlt, this.max_health);
 		this.SendFlags |= CPSF_STATUS;
 		if(GetResource(this, RES_HEALTH) <= 0)
 		{
-			ons_ControlPoint_Icon_Damage(this, this, this, 1, 0, DMG_NOWEP, this.origin, '0 0 0');
+			// if we get here then _enemy_count >= 1
+			entity attacker = first_enemy;
+			if (_enemy_count > 1)
+				attacker = this; // tell ons_ControlPoint_Icon_Damage to find all attackers
+			ons_ControlPoint_Icon_Damage(this, this, attacker, 1, 0, DMG_NOWEP, this.origin, '0 0 0');
 			return;
 		}
 	}
@@ -693,7 +724,6 @@ void ons_ControlPoint_Touch(entity this, entity toucher)
 	}
 
 	if(!IS_PLAYER(toucher)) { return; }
-	if(STAT(FROZEN, toucher)) { return; }
 	if(IS_DEAD(toucher)) { return; }
 
 	if ( SAME_TEAM(this,toucher) )
@@ -1934,46 +1964,40 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 
 		if ( IS_PLAYER(player) )
 		{
-			if ( !STAT(FROZEN, player) )
+			entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_onslaught_teleport_radius);
+
+			if ( !source_point && GetResource(player, RES_HEALTH) > 0 )
 			{
-				entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_onslaught_teleport_radius);
-
-				if ( !source_point && GetResource(player, RES_HEALTH) > 0 )
-				{
-					sprint(player, "\nYou need to be next to a control point\n");
-					return true;
-				}
-
-
-				entity closest_target = ons_Nearest_ControlPoint_2D(player, pos, autocvar_g_onslaught_click_radius);
-
-				if ( closest_target == NULL )
-				{
-					sprint(player, "\nNo control point found\n");
-					return true;
-				}
-
-				if ( GetResource(player, RES_HEALTH) <= 0 )
-				{
-					player.ons_spawn_by = closest_target;
-					player.respawn_flags = player.respawn_flags | RESPAWN_FORCE;
-				}
-				else
-				{
-					if ( source_point == closest_target )
-					{
-						sprint(player, "\nTeleporting to the same point\n");
-						return true;
-					}
-
-					if ( !ons_Teleport(player,closest_target,autocvar_g_onslaught_teleport_radius,true) )
-						sprint(player, "\nUnable to teleport there\n");
-				}
-
+				sprint(player, "\nYou need to be next to a control point\n");
 				return true;
 			}
 
-			sprint(player, "\nNo teleportation for you\n");
+			entity closest_target = ons_Nearest_ControlPoint_2D(player, pos, autocvar_g_onslaught_click_radius);
+
+			if ( closest_target == NULL )
+			{
+				sprint(player, "\nNo control point found\n");
+				return true;
+			}
+
+			if ( GetResource(player, RES_HEALTH) <= 0 )
+			{
+				player.ons_spawn_by = closest_target;
+				player.respawn_flags = player.respawn_flags | RESPAWN_FORCE;
+			}
+			else
+			{
+				if ( source_point == closest_target )
+				{
+					sprint(player, "\nTeleporting to the same point\n");
+					return true;
+				}
+
+				if ( !ons_Teleport(player,closest_target,autocvar_g_onslaught_teleport_radius,true) )
+					sprint(player, "\nUnable to teleport there\n");
+			}
+
+			return true;
 		}
 
 		return true;

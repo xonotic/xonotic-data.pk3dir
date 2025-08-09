@@ -21,13 +21,14 @@ string mv_pics[MAPVOTE_COUNT];
 string mv_pk3[MAPVOTE_COUNT]; // map pk3 name or gametype human readable name
 string mv_desc[MAPVOTE_COUNT];
 float mv_preview[MAPVOTE_COUNT];
-float mv_votes[MAPVOTE_COUNT];
-float mv_flags[MAPVOTE_COUNT];
-float mv_flags_start[MAPVOTE_COUNT];
+int mv_votes[MAPVOTE_COUNT];
+int mv_flags[MAPVOTE_COUNT];
+int mv_flags_start[MAPVOTE_COUNT];
 entity mv_pk3list;
-float mv_abstain;
-float mv_ownvote;
-float mv_detail;
+bool mv_abstain;
+int mv_detail;
+int mv_ownvote;
+int mv_tie_winner;
 float mv_timeout;
 float mv_top2_time;
 float mv_top2_alpha;
@@ -61,7 +62,7 @@ bool PreviewExists(string name)
 	return false;
 }
 
-string MapVote_FormatMapItem(int id, string map, float _count, float maxwidth, vector fontsize)
+string MapVote_FormatMapItem(int id, string map, int _count, float maxwidth, vector fontsize, int most_votes)
 {
 	TC(int, id);
 	string pre, post;
@@ -74,10 +75,13 @@ string MapVote_FormatMapItem(int id, string map, float _count, float maxwidth, v
 			post = sprintf(_(" (%d votes)"), _count);
 		else
 			post = "";
+		if(post != "" && (mv_flags[id] & GTV_AVAILABLE))
+		if(mv_tie_winner == id || (mv_tie_winner == -2 && _count == most_votes))
+			post = strcat("^5", post);
 	}
 	else
 		post = "";
-	maxwidth -= stringwidth(pre, false, fontsize) + stringwidth(post, false, fontsize);
+	maxwidth -= stringwidth(pre, false, fontsize) + stringwidth(post, true, fontsize);
 	map = textShortenToWidth(map, maxwidth, fontsize, stringwidth_nocolors);
 	return strcat(pre, map, post);
 }
@@ -95,7 +99,7 @@ vector MapVote_RGB(int id)
 		return '1 1 1';
 }
 
-void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string gtype, string pic, float _count, int id)
+void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string gtype, string pic, int _count, int id, int most_votes)
 {
 	TC(int, id);
 	// Find the correct alpha
@@ -153,7 +157,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	// Split the description into lines
 	entity title;
 	title = spawn();
-	title.message = MapVote_FormatMapItem(id, mv_pk3[id], _count, tsize, gtv_text_size);
+	title.message = strcat(rgb_to_hexcolor(rgb), MapVote_FormatMapItem(id, mv_pk3[id], _count, tsize, gtv_text_size, most_votes));
 
 	string thelabel = mv_desc[id], ts;
 	entity last = title;
@@ -188,7 +192,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		offset.y += maxh/2;
 
 	// Draw the title
-	drawstring(offset, title.message, gtv_text_size, rgb, alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(offset, title.message, gtv_text_size, alpha, DRAWFLAG_NORMAL);
 
 	// Draw the icon
 	if(pic != "")
@@ -220,7 +224,7 @@ void MapVote_DrawMapPicture(string pic, vector pos, vector img_size, float theAl
 	}
 }
 
-void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float _count, int id)
+void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, int _count, int id, int most_votes)
 {
 	TC(int, id);
 	vector img_size = '0 0 0';
@@ -247,9 +251,10 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	pos.y += (isize - img_size.y - hud_fontsize.y) / 2;
 
-	label = MapVote_FormatMapItem(id, map, _count, tsize, hud_fontsize);
+	vector rgb = MapVote_RGB(id);
+	label = strcat(rgb_to_hexcolor(rgb), MapVote_FormatMapItem(id, map, _count, tsize, hud_fontsize, most_votes));
 
-	text_size = stringwidth(label, false, hud_fontsize);
+	text_size = stringwidth(label, true, hud_fontsize);
 
 	float save_rect_sizex = rect_size.x;
 	rect_size.x = max(img_size.x, text_size) + rect_margin;
@@ -270,8 +275,6 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 		theAlpha = 1;
 	theAlpha *= panel_fg_alpha;
 
-	vector rgb = MapVote_RGB(id);
-
 	// Highlight selected item
 	if (!mv_winner)
 	{
@@ -286,12 +289,12 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 		}
 	}
 
-	drawstring(text_pos, label, hud_fontsize, rgb, theAlpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(text_pos, label, hud_fontsize, theAlpha, DRAWFLAG_NORMAL);
 
 	MapVote_DrawMapPicture(pic, pos, img_size, theAlpha);
 }
 
-void MapVote_DrawAbstain(vector pos, float isize, float tsize, float _count, int id)
+void MapVote_DrawAbstain(vector pos, float isize, float tsize, int _count, int id)
 {
 	TC(int, id);
 	vector rgb;
@@ -300,7 +303,7 @@ void MapVote_DrawAbstain(vector pos, float isize, float tsize, float _count, int
 
 	rgb = MapVote_RGB(id);
 
-	label = MapVote_FormatMapItem(id, _("Don't care"), _count, tsize, hud_fontsize);
+	label = MapVote_FormatMapItem(id, _("Don't care"), _count, tsize, hud_fontsize, -1);
 
 	text_size = stringwidth(label, false, hud_fontsize);
 
@@ -496,8 +499,13 @@ void MapVote_Draw()
 	if (mv_winner_time)
 		mv_winner_alpha = max(0.2, 1 - sqrt(max(0, time - mv_winner_time)));
 
-	void (vector, float, float, string, string, float, float) DrawItem;
+	int most_votes = -1;
+	if (mv_tie_winner == -2)
+		for (i = 0; i < mv_num_maps; ++i)
+			if (mv_votes[i] > most_votes)
+				most_votes = mv_votes[i];
 
+	void (vector, float, float, string, string, float, int, int) DrawItem;
 	if(gametypevote)
 		DrawItem = GameTypeVote_DrawGameTypeItem;
 	else
@@ -508,9 +516,9 @@ void MapVote_Draw()
 		tmp = mv_votes[i]; // FTEQCC bug: too many array accesses in the function call screw it up
 		map = mv_maps[i];
 		if(mv_preview[i])
-			DrawItem(pos + MapVote_GridVec(dist, i, mv_columns), dist.y, dist.x, map, mv_pics[i], tmp, i);
+			DrawItem(pos + MapVote_GridVec(dist, i, mv_columns), dist.y, dist.x, map, mv_pics[i], tmp, i, most_votes);
 		else
-			DrawItem(pos + MapVote_GridVec(dist, i, mv_columns), dist.y, dist.x, map, "", tmp, i);
+			DrawItem(pos + MapVote_GridVec(dist, i, mv_columns), dist.y, dist.x, map, "", tmp, i, most_votes);
 	}
 
 	if(mv_abstain)
@@ -725,9 +733,7 @@ void MapVote_Init()
 	n_ssdirs = min(n_ssdirs, NUM_SSDIRS);
 
 	mv_num_maps = min(MAPVOTE_COUNT, ReadByte());
-	mv_abstain = ReadByte();
-	if(mv_abstain)
-		mv_abstain = 1; // must be 1 for bool-true, makes stuff easier
+	mv_abstain = boolean(ReadByte());
 	mv_detail = ReadByte();
 
 	mv_ownvote = -1;
@@ -982,6 +988,8 @@ void MapVote_UpdateVotes()
 		else
 			mv_votes[i] = -1;
 	}
+	if(mv_detail)
+		mv_tie_winner = ReadChar();
 
 	mv_ownvote = ReadByte()-1;
 }

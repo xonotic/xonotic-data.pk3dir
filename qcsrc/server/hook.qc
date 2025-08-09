@@ -2,6 +2,7 @@
 
 #include <common/constants.qh>
 #include <common/effects/all.qh>
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/physics/player.qh>
 #include <common/state.qh>
@@ -167,10 +168,13 @@ void GrapplingHookThink(entity this)
 		// bit to control the rope
 
 		bool frozen_pulling = (autocvar_g_grappling_hook_tarzan >= 2 && autocvar_g_balance_grapplehook_pull_frozen);
+		bool target_isfrozen = (STAT(FROZEN, this.aiment) || StatusEffects_active(STATUSEFFECT_Frozen, this.aiment));
 
 		vector dir = this.origin - myorg;
 		dist = vlen(dir);
-		dir = (dist ? dir / dist : '0 0 0'); // same as dir = normalize(dir); but cheaper
+
+		// TODO: Consider changing this back to `dir / dist` after https://github.com/graphitemaster/gmqcc/issues/210.
+		dir = (dist ? dir * (1 / dist) : '0 0 0'); // same as dir = normalize(dir); but cheaper
 
 		if(tarzan)
 		{
@@ -213,7 +217,7 @@ void GrapplingHookThink(entity this)
 					{
 						entity aim_ent = ((IS_VEHICLE(this.aiment) && this.aiment.owner) ? this.aiment.owner : this.aiment);
 						v = v - dv * 0.5;
-						if((frozen_pulling && STAT(FROZEN, this.aiment)) || !frozen_pulling)
+						if((frozen_pulling && target_isfrozen) || !frozen_pulling)
 						{
 							this.aiment.velocity = this.aiment.velocity - dv * 0.5;
 							UNSET_ONGROUND(this.aiment);
@@ -234,7 +238,7 @@ void GrapplingHookThink(entity this)
 			if(!frozen_pulling && !(this.aiment.flags & FL_PROJECTILE))
 				pull_entity.velocity = WarpZone_RefSys_TransformVelocity(this, pull_entity, v * velocity_multiplier);
 
-			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !STAT(FROZEN, this.aiment))
+			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !target_isfrozen)
 			{
 				RemoveHook(this);
 				return;
@@ -365,6 +369,8 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 	missile.hook_start = missile.hook_end = missile.origin;
 
 	Net_LinkEntity(missile, false, 0, GrapplingHookSend);
+
+	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
 
 // NOTE: using PRECACHE here to make sure it's called after everything else

@@ -223,7 +223,7 @@ void W_Hagar_Attack2_Load_Release(Weapon thiswep, entity actor, .entity weaponen
 		spread_pershot = (1 - (spread_pershot * WEP_CVAR_SEC(WEP_HAGAR, load_spread_bias)));
 		spread_pershot = (WEP_CVAR_SEC(WEP_HAGAR, spread) * spread_pershot * autocvar_g_weaponspreadfactor);
 
-		s = W_CalculateSpreadPattern(1, counter, shots);
+		s = W_CalculateSpreadPattern(1, 0, counter, shots);
 		s = s * WEP_CVAR_SEC(WEP_HAGAR, load_spread) * autocvar_g_weaponspreadfactor;
 
 		W_SetupProjVelocity_Explicit(missile, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_SEC(WEP_HAGAR, speed), 0, 0, spread_pershot, false);
@@ -485,14 +485,7 @@ METHOD(Hagar, wr_impacteffect, void(entity thiswep, entity actor))
 	vector org2 = w_org + w_backoff * 2;
 	pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
 	if(!w_issilent)
-	{
-		if(w_random<0.15)
-			sound(actor, CH_SHOTS, SND_HAGEXP1, VOL_BASE, ATTN_NORM);
-		else if(w_random<0.7)
-			sound(actor, CH_SHOTS, SND_HAGEXP2, VOL_BASE, ATTN_NORM);
-		else
-			sound(actor, CH_SHOTS, SND_HAGEXP3, VOL_BASE, ATTN_NORM);
-	}
+		sound(actor, CH_SHOTS, SND_HAGEXP_RANDOM(w_random), VOL_BASE, ATTN_NORM);
 }
 
 #endif

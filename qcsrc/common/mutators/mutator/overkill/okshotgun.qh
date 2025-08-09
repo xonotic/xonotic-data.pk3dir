@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(OK_SHOTGUN_VIEW, W_Model("h_ok_shotgun.iqm"));
+MODEL(OK_SHOTGUN_WORLD, W_Model("v_ok_shotgun.md3"));
+MODEL(OK_SHOTGUN_ITEM, W_Model("g_ok_shotgun.md3"));
+#endif
+
 CLASS(OverkillShotgun, Weapon)
 /* spawnfunc */ ATTRIB(OverkillShotgun, m_canonical_spawnfunc, string, "weapon_okshotgun");
 /* ammotype  */ ATTRIB(OverkillShotgun, ammo_type, Resource, RES_SHELLS);
@@ -33,6 +39,7 @@ CLASS(OverkillShotgun, Weapon)
 		P(class, prefix, solidpenetration, float, PRI) \
 		P(class, prefix, spread, float, PRI) \
 		P(class, prefix, spread_pattern, float, PRI) \
+		P(class, prefix, spread_pattern_bias, float, PRI) \
 		P(class, prefix, spread_pattern_scale, float, PRI) \
 		P(class, prefix, refire_type, float, SEC) \
 		P(class, prefix, reload_ammo, float, NONE) \

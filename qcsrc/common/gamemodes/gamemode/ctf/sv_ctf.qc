@@ -876,8 +876,10 @@ bool ctf_Stalemate_Customize(entity this, entity client)
 
 	// team waypoints
 	//if(CTF_SAMETEAM(wp_owner.flagcarried, wp_owner)) { return false; }
-	if(SAME_TEAM(wp_owner, e)) { return false; }
-	if(!IS_PLAYER(e)) { return false; }
+	if(SAME_TEAM(wp_owner, e) || !IS_PLAYER(e))
+		return false;
+	if(IS_INVISIBLE(wp_owner))
+		return false; // hide the waypointsprite if the owner is invisible
 
 	return true;
 }
@@ -1140,8 +1142,8 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 	}
 
 	// special touch behaviors
+	// TODO: mutator hook to prevent picking up objectives
 	if(IS_INDEPENDENT_PLAYER(toucher)) { return; }
-	else if(STAT(FROZEN, toucher)) { return; }
 	else if(IS_VEHICLE(toucher))
 	{
 		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)
@@ -1483,7 +1485,8 @@ void havocbot_ctf_calculate_middlepoint()
 	if(!n)
 		return;
 
-	havocbot_middlepoint = s / n;
+	// TODO: Consider changing this back to `s / n` after https://github.com/graphitemaster/gmqcc/issues/210.
+	havocbot_middlepoint = s * (1 / n);
 	havocbot_middlepoint_radius = vlen(fo - havocbot_middlepoint);
 
 	havocbot_symmetry_axis_m = 0;

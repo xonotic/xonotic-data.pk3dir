@@ -25,6 +25,10 @@ entity makeXonoticCrosshairPicker()
 
 void XonoticCrosshairPicker_configureXonoticCrosshairPicker(entity me)
 {
+	int crosshair_count = me.columns * me.rows;
+	for (int i = 0; i < crosshair_count; ++i)
+		draw_PreloadPicture(strcat("/gfx/crosshair", ftos(31 + i)));
+
 	me.configureXonoticPicker(me);
 	SUPER(XonoticCrosshairPicker).cellSelect(me, crosshairpicker_crosshairToCell(me, cvar_string("crosshair")));
 }

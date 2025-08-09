@@ -100,22 +100,11 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	int privatemsgprefixlen = 0;
 	if (msgin != "")
 	{
-		bool found_me = false;
-		if(strstrofs(msgin, "/me", 0) >= 0)
+		bool found_me = (substring(msgin, 0, 4) == "/me "); // only accept /me at the start of the string, to prevent imitating others
+		if(found_me)
 		{
-			string newmsgin = "";
 			string newnamestr = ((teamsay) ? strcat(colorstr, "(", colorprefix, namestr, colorstr, ")", "^7") : strcat(colorprefix, namestr, "^7"));
-			FOREACH_WORD(msgin, true,
-			{
-				if(strdecolorize(it) == "/me")
-				{
-					found_me = true;
-					newmsgin = cons(newmsgin, newnamestr);
-				}
-				else
-					newmsgin = cons(newmsgin, it);
-			});
-			msgin = newmsgin;
+			msgin = strcat(newnamestr, substring(msgin, 3, strlen(msgin) - 3));
 		}
 
 		if(privatesay)
@@ -290,7 +279,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		ret = -1; // just hide the message completely
 	}
 
-	MUTATOR_CALLHOOK(ChatMessage, source, ret);
+	MUTATOR_CALLHOOK(ChatMessage, source, ret, sourcemsgstr);
 	ret = M_ARGV(1, int);
 
 	string event_log_msg = "";

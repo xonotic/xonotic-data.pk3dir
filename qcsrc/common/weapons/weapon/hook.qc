@@ -269,7 +269,6 @@ float autocvar_cl_grapplehook_alpha = 1;
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg);
 
 entityclass(Hook);
-classfield(Hook) .entity HookType; // ENT_CLIENT_*
 classfield(Hook) .vector origin;
 classfield(Hook) .vector velocity;
 classfield(Hook) .float HookSilent;
@@ -292,12 +291,9 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 classfield(Hook) .float teleport_time;
 void Draw_GrapplingHook(entity this)
 {
-	vector a, b, atrans;
+	vector a, b;
 	string tex;
 	vector rgb;
-	float t;
-	vector vs;
-	float intensity, offset;
 
 	if(this.teleport_time)
 	if(time > this.teleport_time)
@@ -309,80 +305,33 @@ void Draw_GrapplingHook(entity this)
 	InterpolateOrigin_Do(this);
 
 	int s = W_GunAlign(viewmodels[this.cnt], STAT(GUNALIGN)) - 1;
-
-	switch(this.HookType)
-	{
-		default:
-		case NET_ENT_CLIENT_HOOK:
-			vs = hook_shotorigin[s];
-			break;
-		case NET_ENT_CLIENT_ARC_BEAM:
-			vs = lightning_shotorigin[s];
-			break;
-	}
+	vector vs = hook_shotorigin[s];
 
 	if((this.owner.sv_entnum == player_localentnum - 1))
 	{
-		switch(this.HookType)
-		{
-			default:
-			case NET_ENT_CLIENT_HOOK:
-				if(autocvar_chase_active)
-					a = csqcplayer.origin + csqcplayer.view_ofs;
-				else
-					a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
-				b = this.origin;
-				break;
-			case NET_ENT_CLIENT_ARC_BEAM:
-				if(this.HookRange)
-					b = view_origin + view_forward * this.HookRange;
-				else
-					b = view_origin + view_forward * vlen(this.velocity - this.origin); // honor original length of beam!
-				WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, NULL);
-				b = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
-				break;
-		}
+		if(autocvar_chase_active)
+			a = csqcplayer.origin + csqcplayer.view_ofs;
+		else
+			a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
+		b = this.origin;
 	}
 	else
 	{
-		switch(this.HookType)
-		{
-			default:
-			case NET_ENT_CLIENT_HOOK:
-				a = this.velocity;
-				b = this.origin;
-				break;
-			case NET_ENT_CLIENT_ARC_BEAM:
-				a = this.origin;
-				b = this.velocity;
-				break;
-		}
+		a = this.velocity;
+		b = this.origin;
 	}
 
-	t = entcs_GetTeamColor(this.owner.sv_entnum);
+	int t = entcs_GetTeamColor(this.owner.sv_entnum);
 
-	switch(this.HookType)
+	float intensity = autocvar_cl_grapplehook_alpha;
+	float offset = 0;
+	switch(t)
 	{
-		default:
-		case NET_ENT_CLIENT_HOOK:
-			intensity = autocvar_cl_grapplehook_alpha;
-			offset = 0;
-			switch(t)
-			{
-				case NUM_TEAM_1: tex = "particles/hook_red"; rgb = '1 0.3 0.3'; break;
-				case NUM_TEAM_2: tex = "particles/hook_blue"; rgb = '0.3 0.3 1'; break;
-				case NUM_TEAM_3: tex = "particles/hook_yellow"; rgb = '1 1 0.3'; break;
-				case NUM_TEAM_4: tex = "particles/hook_pink"; rgb = '1 0.3 1'; break;
-				default: tex = "particles/hook_white"; rgb = entcs_GetColor(this.sv_entnum - 1); break;
-			}
-			break;
-		case NET_ENT_CLIENT_ARC_BEAM: // todo
-			intensity = bound(0.2, 1 + Noise_Pink(this, frametime) * 1 + Noise_Burst(this, frametime, 0.03) * 0.3, 2);
-			offset = Noise_Brown(this, frametime) * 10;
-			tex = "particles/lgbeam";
-			rgb = '1 1 1';
-			break;
+		case NUM_TEAM_1: tex = "particles/hook_red"; rgb = '1 0.3 0.3'; break;
+		case NUM_TEAM_2: tex = "particles/hook_blue"; rgb = '0.3 0.3 1'; break;
+		case NUM_TEAM_3: tex = "particles/hook_yellow"; rgb = '1 1 0.3'; break;
+		case NUM_TEAM_4: tex = "particles/hook_pink"; rgb = '1 0.3 1'; break;
+		default: tex = "particles/hook_white"; rgb = entcs_GetColor(this.sv_entnum - 1); break;
 	}
 
 	MUTATOR_CALLHOOK(DrawGrapplingHook, this, tex, rgb, t);
@@ -393,39 +342,20 @@ void Draw_GrapplingHook(entity this)
 	Draw_GrapplingHook_trace_callback_rnd = offset;
 	Draw_GrapplingHook_trace_callback_rgb = rgb;
 	Draw_GrapplingHook_trace_callback_a = intensity;
-	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((this.HookType == NET_ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), NULL, NULL, Draw_GrapplingHook_trace_callback);
+	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NOTHING, NULL, NULL, Draw_GrapplingHook_trace_callback);
 	Draw_GrapplingHook_trace_callback_tex = string_null;
 
-	atrans = WarpZone_TransformOrigin(WarpZone_trace_transform, a);
+	vector atrans = WarpZone_TransformOrigin(WarpZone_trace_transform, a);
 
-	switch(this.HookType)
+	if(vdist(trace_endpos - atrans, >, 0.5))
 	{
-		default:
-		case NET_ENT_CLIENT_HOOK:
-			if(vdist(trace_endpos - atrans, >, 0.5))
-			{
-				setorigin(this, trace_endpos); // hook endpoint!
-				this.angles = vectoangles(trace_endpos - atrans);
-				this.drawmask = MASK_NORMAL;
-			}
-			else
-			{
-				this.drawmask = 0;
-			}
-			break;
-		case NET_ENT_CLIENT_ARC_BEAM:
-			setorigin(this, a); // beam origin!
-			break;
+		setorigin(this, trace_endpos); // hook endpoint!
+		this.angles = vectoangles(trace_endpos - atrans);
+		this.drawmask = MASK_NORMAL;
 	}
-
-	switch(this.HookType)
+	else
 	{
-		default:
-		case NET_ENT_CLIENT_HOOK:
-			break;
-		case NET_ENT_CLIENT_ARC_BEAM:
-			pointparticles(EFFECT_ARC_LIGHTNING2, trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
-			break;
+		this.drawmask = 0;
 	}
 }
 
@@ -443,8 +373,6 @@ void Remove_GrapplingHook(entity this)
 
 NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 {
-	this.HookType = NET_ENT_CLIENT_HOOK;
-
 	int sf = ReadByte();
 
 	this.HookSilent = (sf & 0x80);
@@ -461,16 +389,7 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 		if(myowner == player_localentnum)
 			viewmodels[slot].hook = this;
 		this.cnt = slot;
-		switch(this.HookType)
-		{
-			default:
-			case NET_ENT_CLIENT_HOOK:
-				this.HookRange = 0;
-				break;
-			case NET_ENT_CLIENT_ARC_BEAM:
-				this.HookRange = ReadCoord();
-				break;
-		}
+		this.HookRange = 0;
 	}
 	if(sf & 2)
 	{
@@ -490,18 +409,8 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 		IL_PUSH(g_drawables, this);
 		this.entremove = Remove_GrapplingHook;
 
-		switch(this.HookType)
-		{
-			default:
-			case NET_ENT_CLIENT_HOOK:
-				// for the model
-				setmodel(this, MDL_HOOK);
-				this.drawmask = MASK_NORMAL;
-				break;
-			case NET_ENT_CLIENT_ARC_BEAM:
-				sound (this, CH_SHOTS_SINGLE, SND_LGBEAM_FLY, VOL_BASE, ATTEN_NORM);
-				break;
-		}
+		setmodel(this, MDL_HOOK);
+		this.drawmask = MASK_NORMAL;
 	}
 
 	this.teleport_time = time + 10;

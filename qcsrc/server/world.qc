@@ -13,6 +13,7 @@
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/_mod.qh>
 #include <common/monsters/sv_monsters.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/physics/player.qh>
@@ -207,6 +208,8 @@ void cvar_changes_init()
 		BADPREFIX("v_");
 		BADPREFIX("vid_");
 		BADPREFIX("crosshair");
+		BADPREFIX("notification_");
+		BADPREFIX("prvm_");
 		BADCVAR("mod_q3bsp_lightmapmergepower");
 		BADCVAR("mod_q3bsp_nolightmaps");
 		BADCVAR("fov");
@@ -215,6 +218,9 @@ void cvar_changes_init()
 		BADCVAR("bgmvolume");
 		BADCVAR("in_pitch_min");
 		BADCVAR("in_pitch_max");
+		BADCVAR("bottomcolor");
+		BADCVAR("topcolor");
+		BADCVAR("playermodel");
 
 		// private
 		BADCVAR("developer");
@@ -226,6 +232,7 @@ void cvar_changes_init()
 		BADCVAR("serverconfig");
 		BADCVAR("sv_autoscreenshot");
 		BADCVAR("sv_heartbeatperiod");
+		BADCVAR("sv_vote_master_ids");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sys_colortranslation");
 		BADCVAR("sys_specialcharactertranslation");
@@ -324,6 +331,7 @@ void cvar_changes_init()
 		BADCVAR("g_maplist_mostrecent");
 		BADCVAR("sv_motd");
 		BADCVAR("sv_termsofservice_url");
+		BADCVAR("sv_adminnick");
 
 		v = cvar_string(k);
 		d = cvar_defstring(k);
@@ -419,11 +427,8 @@ void cvar_changes_init()
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
 		BADPREFIX("net_");
-		BADPREFIX("notification_");
-		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
-		BADPREFIX("sv_cullentities_");
 		BADPREFIX("sv_maxidle");
 		BADPREFIX("sv_minigames_");
 		BADPREFIX("sv_radio_");
@@ -504,7 +509,6 @@ void cvar_changes_init()
 		BADCVAR("rcon_restricted_commands");
 		BADCVAR("rcon_restricted_password");
 		BADCVAR("skill");
-		BADCVAR("sv_adminnick");
 		BADCVAR("sv_autoscreenshot");
 		BADCVAR("sv_autotaunt");
 		BADCVAR("sv_curl_defaulturl");
@@ -523,9 +527,7 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_call");
 		BADCVAR("sv_vote_commands");
 		BADCVAR("sv_vote_majority_factor");
-		BADCVAR("sv_vote_master");
-		BADCVAR("sv_vote_master_commands");
-		BADCVAR("sv_vote_master_password");
+		BADPREFIX("sv_vote_master");
 		BADCVAR("sv_vote_simple_majority_factor");
 		BADVALUE("sys_ticrate", "0.0078125");
 		BADVALUE("sys_ticrate", "0.015625");
@@ -755,6 +757,19 @@ void InitGameplayMode()
 bool world_already_spawned;
 spawnfunc(worldspawn)
 {
+#ifdef WATERMARK
+	string watermark_start = cvar_string("sv_watermark_start");
+	if (watermark_start == "") // always true on Xonotic (re)start
+		cvar_set("sv_watermark_start", WATERMARK);
+	else if (watermark_start != WATERMARK) // true when qc code has been recompiled on a different git commit
+	{
+		LOG_INFOF(
+			"\n^1    Warning: ^3the server QC program was updated without a full restart."
+			"\n^3    Please restart the Xonotic executable otherwise you may get random bugs."
+			"\n\n");
+	}
+#endif
+
 	CheckEngineExtensions();
 
 	cvar_set("_endmatch", "0");
@@ -1452,7 +1467,7 @@ int InitiateSuddenDeath()
 			else
 			{
 				checkrules_suddendeathend = time + 60 * autocvar_timelimit_suddendeath;
-				overtimes = -1;
+				overtimes = OVERTIME_SUDDENDEATH;
 			}
 			if(g_race && !g_race_qualifying)
 				race_StartCompleting();
@@ -1464,6 +1479,8 @@ int InitiateSuddenDeath()
 void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 {
 	++checkrules_overtimesadded;
+	// NOTE: here overtimes can never be < 0 so it can be safely sent as (unsigned) int stat; we ignore
+	// the upper limit of OVERTIME_SUDDENDEATH - 1 = 16777215 - 1 that in practice can never be reached in game
 	overtimes = checkrules_overtimesadded;
 	//add one more overtime by simply extending the timelimit
 	cvar_set("timelimit", ftos(autocvar_timelimit + autocvar_timelimit_overtime));
@@ -1812,7 +1829,7 @@ void CheckRules_World()
 
 	if(checkrules_status == WINNING_YES)
 	{
-		if (overtimes == -1 && overtimes != overtimes_prev)
+		if (overtimes == OVERTIME_SUDDENDEATH && overtimes != overtimes_prev)
 		{
 			// if suddendeathend overtime has just begun, revert it
 			checkrules_suddendeathend = 0;
@@ -2125,7 +2142,7 @@ void readplayerstartcvars()
 
 	if (start_items & ITEM_Jetpack.m_itemid)
 	{
-		start_items |= ITEM_JetpackRegen.m_itemid;
+		start_items |= ITEM_FuelRegen.m_itemid;
 		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
@@ -2174,70 +2191,6 @@ void readlevelcvars()
 				warmup_limit = autocvar_timelimit * 60;
 		}
 	}
-
-	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
-	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
-	g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
-	g_pickup_respawntime_armor_small = cvar("g_pickup_respawntime_armor_small");
-	g_pickup_respawntime_armor_medium = cvar("g_pickup_respawntime_armor_medium");
-	g_pickup_respawntime_armor_big = cvar("g_pickup_respawntime_armor_big");
-	g_pickup_respawntime_armor_mega = cvar("g_pickup_respawntime_armor_mega");
-	g_pickup_respawntime_health_small = cvar("g_pickup_respawntime_health_small");
-	g_pickup_respawntime_health_medium = cvar("g_pickup_respawntime_health_medium");
-	g_pickup_respawntime_health_big = cvar("g_pickup_respawntime_health_big");
-	g_pickup_respawntime_health_mega = cvar("g_pickup_respawntime_health_mega");
-	g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
-	g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
-	g_pickup_respawntimejitter_superweapon = cvar("g_pickup_respawntimejitter_superweapon");
-	g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
-	g_pickup_respawntimejitter_armor_small = cvar("g_pickup_respawntimejitter_armor_small");
-	g_pickup_respawntimejitter_armor_medium = cvar("g_pickup_respawntimejitter_armor_medium");
-	g_pickup_respawntimejitter_armor_big = cvar("g_pickup_respawntimejitter_armor_big");
-	g_pickup_respawntimejitter_armor_mega = cvar("g_pickup_respawntimejitter_armor_mega");
-	g_pickup_respawntimejitter_health_small = cvar("g_pickup_respawntimejitter_health_small");
-	g_pickup_respawntimejitter_health_medium = cvar("g_pickup_respawntimejitter_health_medium");
-	g_pickup_respawntimejitter_health_big = cvar("g_pickup_respawntimejitter_health_big");
-	g_pickup_respawntimejitter_health_mega = cvar("g_pickup_respawntimejitter_health_mega");
-	g_pickup_respawntimejitter_powerup = cvar("g_pickup_respawntimejitter_powerup");
-
-	g_pickup_shells = cvar("g_pickup_shells");
-	g_pickup_shells_max = cvar("g_pickup_shells_max");
-	g_pickup_nails = cvar("g_pickup_nails");
-	g_pickup_nails_max = cvar("g_pickup_nails_max");
-	g_pickup_rockets = cvar("g_pickup_rockets");
-	g_pickup_rockets_max = cvar("g_pickup_rockets_max");
-	g_pickup_cells = cvar("g_pickup_cells");
-	g_pickup_cells_max = cvar("g_pickup_cells_max");
-	g_pickup_fuel = cvar("g_pickup_fuel");
-	g_pickup_fuel_jetpack = cvar("g_pickup_fuel_jetpack");
-	g_pickup_fuel_max = cvar("g_pickup_fuel_max");
-	g_pickup_armorsmall = cvar("g_pickup_armorsmall");
-	g_pickup_armorsmall_max = cvar("g_pickup_armorsmall_max");
-	g_pickup_armorsmall_anyway = cvar("g_pickup_armorsmall_anyway");
-	g_pickup_armormedium = cvar("g_pickup_armormedium");
-	g_pickup_armormedium_max = cvar("g_pickup_armormedium_max");
-	g_pickup_armormedium_anyway = cvar("g_pickup_armormedium_anyway");
-	g_pickup_armorbig = cvar("g_pickup_armorbig");
-	g_pickup_armorbig_max = cvar("g_pickup_armorbig_max");
-	g_pickup_armorbig_anyway = cvar("g_pickup_armorbig_anyway");
-	g_pickup_armormega = cvar("g_pickup_armormega");
-	g_pickup_armormega_max = cvar("g_pickup_armormega_max");
-	g_pickup_armormega_anyway = cvar("g_pickup_armormega_anyway");
-	g_pickup_healthsmall = cvar("g_pickup_healthsmall");
-	g_pickup_healthsmall_max = cvar("g_pickup_healthsmall_max");
-	g_pickup_healthsmall_anyway = cvar("g_pickup_healthsmall_anyway");
-	g_pickup_healthmedium = cvar("g_pickup_healthmedium");
-	g_pickup_healthmedium_max = cvar("g_pickup_healthmedium_max");
-	g_pickup_healthmedium_anyway = cvar("g_pickup_healthmedium_anyway");
-	g_pickup_healthbig = cvar("g_pickup_healthbig");
-	g_pickup_healthbig_max = cvar("g_pickup_healthbig_max");
-	g_pickup_healthbig_anyway = cvar("g_pickup_healthbig_anyway");
-	g_pickup_healthmega = cvar("g_pickup_healthmega");
-	g_pickup_healthmega_max = cvar("g_pickup_healthmega_max");
-	g_pickup_healthmega_anyway = cvar("g_pickup_healthmega_anyway");
-
-	g_pickup_ammo_anyway = cvar("g_pickup_ammo_anyway");
-	g_pickup_weapons_anyway = cvar("g_pickup_weapons_anyway");
 
 	g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
 	if(!g_weapon_stay)

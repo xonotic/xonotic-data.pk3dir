@@ -10,7 +10,6 @@ float autocvar_g_nades_napalm_ball_damage;
 float autocvar_g_nades_napalm_ball_damageforcescale;
 float autocvar_g_nades_napalm_ball_lifetime;
 float autocvar_g_nades_napalm_ball_radius;
-bool autocvar_g_nades_napalm_blast;
 float autocvar_g_nades_napalm_fountain_lifetime;
 float autocvar_g_nades_napalm_fountain_delay;
 float autocvar_g_nades_napalm_fountain_radius;
@@ -27,7 +26,9 @@ const int PROJECTILE_NADE_NAPALM_BURN = 74;
 const int PROJECTILE_NAPALM_FOUNTAIN = 75;
 
 CLASS(NapalmNade, Nade)
-	ATTRIB(NapalmNade, m_color, vector, '2 0.5 0');
+	ATTRIB(NapalmNade, m_color, vector, '1 0.5 0');
 	ATTRIB(NapalmNade, m_name, string, _("Napalm grenade"));
 	ATTRIB(NapalmNade, m_icon, string, "nade_napalm");
+	ATTRIB(NapalmNade, netname, string, "napalm");
+	ATTRIB(NapalmNade, impulse, int, 2);
 ENDCLASS(NapalmNade)

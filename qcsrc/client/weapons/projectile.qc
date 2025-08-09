@@ -65,6 +65,12 @@ void Projectile_DrawTrail(entity this, vector to)
 		}
 		//else
 		//	LOG_INFOF("particle fade skipped");
+
+		if (this.colormod != '0 0 0')
+		{
+			particles_colormin = particles_colormax = this.colormod;
+			f |= PARTICLES_USECOLOR;
+		}
 		entity eff = REGISTRY_GET(Effects, this.traileffect);
 		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, f);
 	}
@@ -299,10 +305,10 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		}
 
 		int proj_team = ReadByte();
-		this.team = proj_team - 1;
 
 		if(teamplay)
 		{
+			this.team = proj_team - 1;
 			if(proj_team)
 				this.colormap = (this.team) * 0x11; // note: team - 1 on server (client uses different numbers)
 			else
@@ -310,7 +316,10 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			this.colormap |= BIT(10); // RENDER_COLORMAPPED
 		}
 		else
+		{
+			this.team = 0;
 			this.colormap = proj_team;
+		}
 		// TODO: projectiles use glowmaps for their color, not teams
 		#if 0
 		if(this.colormap > 0)
@@ -370,7 +379,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 			HANDLE(RPC)                this.traileffect = EFFECT_TR_ROCKET.m_id; break;
 
-			HANDLE(ROCKETMINSTA_LASER) this.traileffect = EFFECT_ROCKETMINSTA_LASER(this.team).m_id; break;
+			HANDLE(ROCKETMINSTA_LASER) this.traileffect = EFFECT_ROCKETMINSTA_LASER.m_id; break;
 #undef HANDLE
 			default:
 				if (MUTATOR_CALLHOOK(Ent_Projectile, this))
@@ -401,7 +410,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_DEVASTATOR_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
 				break;
@@ -468,7 +477,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.maxs = '2 2 2';
 				break;
 			case PROJECTILE_SEEKER:
-				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_SEEKER_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				break;
@@ -485,25 +494,15 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_RAPTORCANNON:
 				break;
 			case PROJECTILE_SPIDERROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_VEH_SPIDERBOT_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				break;
 			case PROJECTILE_WAKIROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_VEH_RACER_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				break;
-			/*
-			case PROJECTILE_WAKICANNON:
-			    break;
-			case PROJECTILE_BUMBLE_GUN:
-			    // only new engines support sound moving with object
-			    loopsound(this, CH_SHOTS_SINGLE, SND_ELECTRO_FLY, VOL_BASE, ATTEN_NORM);
-			    this.mins = '0 0 -4';
-			    this.maxs = '0 0 -4';
-			    this.move_movetype = MOVETYPE_BOUNCE;
-			    settouch(this, func_null);
-			    this.bouncefactor = WEP_CVAR_SEC(WEP_ELECTRO, bouncefactor);
-			    this.bouncestop = WEP_CVAR_SEC(WEP_ELECTRO, bouncestop);
-			    break;
-			*/
+			case PROJECTILE_ROCKETMINSTA_LASER:
+				if(this.colormap > 0)
+					this.colormod = colormapPaletteColor(this.colormap & 0x0F, true);
+				break;
 			default:
 				break;
 		}

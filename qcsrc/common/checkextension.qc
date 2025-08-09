@@ -36,7 +36,7 @@ void CheckEngineExtensions(void)
 		LOG_WARN("Engine lacks HTTP support, XonStat and map downloads are unavailable.");
 
 	if (!checkextension("DP_CRYPTO"))
-		LOG_WARN("Engine lacks DP_CRYPTO, Player IDs (required for XonStat and CTS/CTF records) are unavailable.");
+		LOG_WARN("Engine lacks DP_CRYPTO, Player IDs (required for XonStat, CTS/CTF records and pubkey authentication) are unavailable.");
 
 #ifdef SVQC // change to GAMEQC if/when we use nudgeoutofsolid in CSQC
 	if (checkextension("DP_QC_NUDGEOUTOFSOLID"))
@@ -52,6 +52,9 @@ void CheckEngineExtensions(void)
 
 	if (!world.fullspawndata)
 		LOG_WARN("Engine lacks entity fullspawndata, on Quake 3 maps some entities will malfunction.");
+
+	if (!checkextension("DP_RM_CLIPGROUP"))
+		LOG_WARN("Engine lacks DP_RM_CLIPGROUP, g_projectiles_interact < 2 won't take effect.");
 #endif
 
 #ifdef GAMEQC

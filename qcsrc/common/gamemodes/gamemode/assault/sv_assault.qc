@@ -149,18 +149,22 @@ void target_assault_roundend_use(entity this, entity actor, entity trigger)
 	this.winning = 1; // round has been won by attackers
 }
 
+bool assault_turrets_teamswap_forbidden;
 void assault_roundstart_use(entity this, entity actor, entity trigger)
 {
 	SUB_UseTargets(this, this, trigger);
 
-	//(Re)spawn all turrets
+	// (Re)spawn all turrets
 	IL_EACH(g_turrets, true,
 	{
-		// Swap turret teams
-		if(it.team == NUM_TEAM_1)
-			it.team = NUM_TEAM_2;
-		else
-			it.team = NUM_TEAM_1;
+		if (!assault_turrets_teamswap_forbidden)
+		{
+			// Swap turret teams
+			if(it.team == NUM_TEAM_1)
+				it.team = NUM_TEAM_2;
+			else
+				it.team = NUM_TEAM_1;
+		}
 
 		// Doubles as teamchange
 		turret_respawn(it);
@@ -630,10 +634,14 @@ MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(as, ReadyRestart_Deny)
 {
-	// readyrestart not supported
-	// it's allowed only in campaign since the campaign requires readyrestart support
-	// to do so Assault is played in single round mode
+	// Readyrestart is forbidden because Assault is actually played in 2 different games, called
+	// rounds, where the map is completely restarted and the timelimit of the second round is set
+	// to the time the previous attacker team took to destroy the main objective
+	// In campaign it's allowed because Assault is played in a single game / round
 	if (autocvar_g_campaign)
+	{
+		assault_turrets_teamswap_forbidden = true;
 		return false;
+	}
 	return true;
 }

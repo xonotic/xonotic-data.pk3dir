@@ -30,7 +30,7 @@ bsp2ent crlf=input
 *.cbp -crlf
 *.cbp -crlf
 *.c crlf=input
-*.cfg crlf=input
+*.cfg crlf=input gitlab-language=text
 *.cg crlf=input
 ChangeLog crlf=input
 CHANGES crlf=input
@@ -114,7 +114,7 @@ GPL crlf=input
 *.idl crlf=input
 *.idsoftware crlf=input
 *.in crlf=input
-*.inc crlf=input linguist-language=C gitlab-language=c
+*.inc crlf=input linguist-language=C gitlab-language=java
 *.info-1 -crlf
 *.info-2 -crlf
 *.info -crlf
@@ -181,7 +181,7 @@ POSITIONS -crlf
 *.psd -crlf
 *.py crlf=input
 *.q3map1 crlf=input
-*.q[ch] crlf=input linguist-language=C gitlab-language=c
+*.q[ch] crlf=input linguist-language=C gitlab-language=java
 *.qdt crlf=input
 *.rar -crlf
 *.rb crlf=input

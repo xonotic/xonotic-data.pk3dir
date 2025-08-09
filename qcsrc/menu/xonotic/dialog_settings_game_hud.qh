@@ -11,5 +11,3 @@ CLASS(XonoticGameHUDSettingsTab, XonoticTab)
 ENDCLASS(XonoticGameHUDSettingsTab)
 entity makeXonoticGameHUDSettingsTab();
 void HUDSetup_Start(entity me, entity btn);
-#include "../gamesettings.qh"
-REGISTER_SETTINGS(HUD, makeXonoticGameHUDSettingsTab());

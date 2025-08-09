@@ -5,6 +5,7 @@
 #include "textlabel.qh"
 #include "slider.qh"
 #include "slider_sbfadetime.qh"
+#include "mixedslider.qh"
 #include "checkbox.qh"
 #include "button.qh"
 
@@ -43,7 +44,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Scoreboard")));
 	me.TR(me);
 	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Alpha:")));
-	me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_panel_scoreboard_bg_alpha"));
+	me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_scoreboard_bg_alpha"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Fading speed:")));
 		me.TD(me, 1, 2, e = makeXonoticScoreboardFadeTimeSlider());
@@ -53,11 +54,11 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_scoreboard_accuracy", _("Show accuracy underneath scoreboard")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Show team sizes:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("hud_panel_scoreboard_team_size_position", _("Team size position: Off=do not show; Left=on the left side of the scoreboard and move team scores to the right; Right=on the right of the scoreboard")));
-			e.addValue(e, _("Left"), "1");
-			e.addValue(e, _("Off"), "0");
-			e.addValue(e, _("Right"), "2");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("hud_panel_scoreboard_team_size_position", _("Team size position: Off=do not show; Left=on the left side of the scoreboard and move team scores to the right; Right=on the right of the scoreboard")));
+			e.addText(e, _("Left"),  1);
+			e.addText(e, _("Off"),   0);
+			e.addText(e, _("Right"), 2);
+			e.configureXonoticMixedSliderValues(e);
 
 	me.TR(me);
 	me.TR(me);
@@ -69,7 +70,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Alpha:")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
-		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.1, 1, 0.05, "g_waypointsprite_alpha",
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.1, 1, 0.1, "g_waypointsprite_alpha",
 			_("Control transparency of the waypoints")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 	me.TR(me);
@@ -114,7 +115,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 	me.TR(me);
 	#endif
 
-	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, 3); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Player Names")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_shownames", _("Show names above players")));
@@ -123,7 +124,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Alpha:")));
 			setDependent(e, "hud_shownames", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.05, "hud_shownames_alpha"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.1, "hud_shownames_alpha"));
 			setDependent(e, "hud_shownames", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -141,11 +142,11 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Decolorize:")));
 			setDependent(e, "hud_shownames", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_shownames_decolorize"));
-			e.addValue(e, _("Never"), "0");
-			e.addValue(e, _("Teamplay"), "1");
-			e.addValue(e, _("Always"), "2");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("hud_shownames_decolorize"));
+			e.addText(e, _("Never"),    0);
+			e.addText(e, _("Teamplay"), 1);
+			e.addText(e, _("Always"),   2);
+			e.configureXonoticMixedSliderValues(e);
 			setDependent(e, "hud_shownames", 1, 1);
 
 	me.TR(me);
@@ -160,26 +161,26 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 
 	me.TR(me);
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Other")));
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Speed unit:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_speed_unit"));
-			e.addValue(e, _("qu/s") , "1");
-			e.addValue(e, _("m/s")  , "2");
-			e.addValue(e, _("km/h") , "3");
-			e.addValue(e, _("mph")  , "4");
-			e.addValue(e, _("knots"), "5");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("hud_speed_unit"));
+			e.addText(e, _("qu/s"),  1);
+			e.addText(e, _("m/s"),   2);
+			e.addText(e, _("km/h"),  3);
+			e.addText(e, _("mph"),   4);
+			e.addText(e, _("knots"), 5);
+			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Damage overlay:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "hud_dynamic_follow", _("Dynamic HUD"),
+		me.TD(me, 1, 1.2, e = makeXonoticCheckBox_T(0, "hud_dynamic_follow", _("Dynamic HUD"),
 			_("HUD moves around following player's movement")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_dynamic_shake", _("Shake the HUD when hurt")));
-	me.TR(me);
-	me.TR(me);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("Enter HUD editor"), '0 0 0'));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "hud_dynamic_shake", _("Shake the HUD when hurt")));
+
+	me.gotoRC(me, me.rows - 1, 0); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Enter HUD editor"), '0 0 0'));
 			e.onClick = HUDSetup_Check_Gamestatus;
 			e.onClickEntity = me;
 		// TODO: show hud config name with text here

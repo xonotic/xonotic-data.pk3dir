@@ -34,7 +34,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	if(IS_DUCKED(actor))
 		spread = spread * WEP_CVAR_PRI(WEP_HLAC, spread_crouchmod);
 
-	W_SetupShot(actor, weaponentity, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(WEP_HLAC, damage), thiswep.m_id);
+	W_SetupShot(actor, weaponentity, false, 3, SND_HLAC_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(WEP_HLAC, damage), thiswep.m_id);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 	if(!autocvar_g_norecoil)
 	{
@@ -81,7 +81,7 @@ void W_HLAC_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	if(IS_DUCKED(actor))
 		spread = spread * WEP_CVAR_SEC(WEP_HLAC, spread_crouchmod);
 
-	W_SetupShot(actor, weaponentity, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(WEP_HLAC, damage) * WEP_CVAR_SEC(WEP_HLAC, shots), thiswep.m_id | HITTYPE_SECONDARY);
+	W_SetupShot(actor, weaponentity, false, 3, SND_HLAC_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(WEP_HLAC, damage) * WEP_CVAR_SEC(WEP_HLAC, shots), thiswep.m_id | HITTYPE_SECONDARY);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(WEP_HLAC, ammo), weaponentity);
 

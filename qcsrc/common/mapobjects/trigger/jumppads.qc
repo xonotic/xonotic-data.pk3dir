@@ -495,7 +495,7 @@ bool trigger_push_testorigin(entity tracetest_ent, entity targ, entity jp, vecto
 		tracetoss(tracetest_ent, tracetest_ent);
 		if (trace_startsolid && ofs.z)
 		{
-			setorigin(tracetest_ent, targ.origin + ofs / 2);
+			setorigin(tracetest_ent, targ.origin + ofs * 0.5);
 			tracetoss(tracetest_ent, tracetest_ent);
 			if (trace_startsolid && ofs.z)
 			{

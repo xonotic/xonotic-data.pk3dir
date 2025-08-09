@@ -421,27 +421,24 @@ STATIC_INIT(fpscounter_init)
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
-bool IsZooming()
+bool IsZooming(bool ignore_spectatorbutton_zoom)
 {
 	bool zoomdir = button_zoom;
 
-	if(hud == HUD_NORMAL && !spectatee_status)
-	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	if (hud == HUD_NORMAL && !spectatee_status)
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			entity wepent = viewmodels[slot];
-			if(wepent.switchweapon != wepent.activeweapon)
+			if (wepent.switchweapon != wepent.activeweapon)
 				continue;
 			Weapon wep = wepent.activeweapon;
-			if(wep != WEP_Null && wep.wr_zoomdir)
-			{
-				bool do_zoom = wep.wr_zoomdir(wep); // TODO: merge this with wr_zoom?
-				zoomdir += do_zoom;
-			}
+			if (wep != WEP_Null && wep.wr_zoomdir)
+			if (wep.wr_zoomdir(wep)) // TODO: merge this with wr_zoom?
+				zoomdir = true;
 		}
-	}
 
-	if(spectatorbutton_zoom && (spectatee_status > 0 || isdemo()))
+	if (!ignore_spectatorbutton_zoom)
+	if (spectatorbutton_zoom && (spectatee_status > 0 || isdemo()))
 		zoomdir = !zoomdir;
 
 	return zoomdir;
@@ -477,7 +474,7 @@ bool View_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	{
 		if (!autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0)
 			return false; // zoom scroll disabled
-		if (!IsZooming())
+		if (!IsZooming(true))
 			return false;
 		if (key_pressed)
 			ZoomScroll(nPrimary);
@@ -494,7 +491,7 @@ vector GetCurrentFov(float fov)
 	float velocityzoom, curspeed;
 	vector v;
 
-	zoomdir = IsZooming();
+	zoomdir = IsZooming(false);
 
 	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
@@ -741,7 +738,7 @@ int WantEventchase(entity this, bool want_vehiclechase)
 			return 1;
 		if(MUTATOR_CALLHOOK(WantEventchase, this))
 			return 1;
-		if(autocvar_cl_eventchase_frozen && STAT(FROZEN))
+		if(autocvar_cl_eventchase_frozen && StatusEffects_active(STATUSEFFECT_Frozen, this))
 			return 1;
 		if(autocvar_cl_eventchase_death && (STAT(HEALTH) <= 0))
 		{
@@ -997,20 +994,12 @@ void HUD_Draw(entity this)
 			if (alpha_multipl > 0)
 				drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_multipl, DRAWFLAG_ADDITIVE);
 		}
-		else if(STAT(FROZEN))
-		{
-			vector col = '0.25 0.90 1';
-			float col_fade = max(0, STAT(REVIVE_PROGRESS) * 2 - 1);
-			float alpha_fade = 0.3 + 0.7 * (1 - max(0, STAT(REVIVE_PROGRESS) * 4 - 3));
-			if(col_fade)
-				col += vec3(col_fade, -col_fade, -col_fade);
-			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_fade, DRAWFLAG_ADDITIVE);
-		}
 	}
 
 	HUD_Scale_Enable();
 	if(!intermission)
 	{
+		// TODO: mutator hook for these? maybe something more generic!
 		if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 		{
 			vector col = '0.25 0.90 1' + vec3(STAT(NADE_TIMER), -STAT(NADE_TIMER), -STAT(NADE_TIMER));
@@ -1244,7 +1233,7 @@ void HUD_Contents()
 // provides some effects to the postprocessing function
 void HUD_Damage()
 {
-	if(!autocvar_hud_damage || STAT(FROZEN))
+	if(!autocvar_hud_damage || MUTATOR_CALLHOOK(HUD_Damage_show))
 		return;
 
 	vector splash_pos = '0 0 0', splash_size = '0 0 0';
@@ -1785,9 +1774,15 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	else if(game_stopped_time && !STAT(GAME_STOPPED))
 		game_stopped_time = 0;
 
-	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
+	// fire intermission hooks and gameend hook here
+	// gameend hook is executed on CSQC VM shutdown if
+	// the shutdown happens before intermission start
+	if (intermission
+	&& (calledhooks & HOOK_START) // ensure that we have initiated a gamemode
+	&& !(calledhooks & HOOK_END) // fire only once
+	&& !(calledhooks & HOOK_INTERMISSION))
 	{
-		if(calledhooks & HOOK_START)
+		if(!isdemo())
 		{
 			int gamecount = cvar("cl_matchcount");
 			localcmd("\ncl_hook_gameend\n");
@@ -1796,6 +1791,14 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 			localcmd(strcat("cl_matchcount ", itos(gamecount + 1), "\n"));
 			//cvar_set("cl_matchcount", itos(gamecount + 1));
 			calledhooks |= HOOK_END;
+
+			localcmd("\ncl_hook_gameintermission\n");
+			calledhooks |= HOOK_INTERMISSION;
+		}
+		else
+		{
+			localcmd("\ncl_hook_demointermission\n");
+			calledhooks |= HOOK_INTERMISSION;
 		}
 	}
 
