@@ -3,4 +3,7 @@
 #ifdef SVQC
 	#include <common/mutators/mutator/instagib/sv_instagib.qc>
 #endif
+#ifdef MENUQC
+	#include <common/mutators/mutator/instagib/ui_instagib.qc>
+#endif
 #include <common/mutators/mutator/instagib/items.qc>

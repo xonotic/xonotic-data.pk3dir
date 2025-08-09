@@ -6,6 +6,9 @@
 #ifdef SVQC
 	#include <common/mutators/mutator/nades/sv_nades.qh>
 #endif
+#ifdef MENUQC
+	#include <common/mutators/mutator/nades/ui_nades.qh>
+#endif
 #include <common/mutators/mutator/nades/net.qh>
 
 #include <common/mutators/mutator/nades/nade/_mod.qh>

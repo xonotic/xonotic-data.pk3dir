@@ -1,0 +1,10 @@
+#pragma once
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorBuffsTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorBuffsTab, fill, void(entity));
+	ATTRIB(XonoticMutatorBuffsTab, title, string, _("Buffs"));
+	ATTRIB(XonoticMutatorBuffsTab, message, string, "g_buffs");
+	METHOD(XonoticMutatorBuffsTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorBuffsTab)
+entity makeXonoticMutatorBuffsTab();
