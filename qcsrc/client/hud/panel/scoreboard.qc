@@ -1017,22 +1017,18 @@ string Scoreboard_GetName(entity pl)
 	return entcs_GetName(pl.sv_entnum);
 }
 
-int autocvar_hud_panel_scoreboard_ping_best = 0;
-int autocvar_hud_panel_scoreboard_ping_medium = 70;
-int autocvar_hud_panel_scoreboard_ping_high = 100;
-int autocvar_hud_panel_scoreboard_ping_worst = 150;
-vector autocvar_hud_panel_scoreboard_ping_best_color = '0 1 0';
+int autocvar_hud_panel_scoreboard_ping_low = 20;
+int autocvar_hud_panel_scoreboard_ping_medium = 80;
+int autocvar_hud_panel_scoreboard_ping_high = 200;
+vector autocvar_hud_panel_scoreboard_ping_low_color = '0 1 0';
 vector autocvar_hud_panel_scoreboard_ping_medium_color = '1 1 0';
-vector autocvar_hud_panel_scoreboard_ping_high_color = '1 0.5 0';
-vector autocvar_hud_panel_scoreboard_ping_worst_color = '1 0 0';
-#define PING_BEST autocvar_hud_panel_scoreboard_ping_best
+vector autocvar_hud_panel_scoreboard_ping_high_color = '1 0 0';
+#define PING_LOW autocvar_hud_panel_scoreboard_ping_low
 #define PING_MED autocvar_hud_panel_scoreboard_ping_medium
 #define PING_HIGH autocvar_hud_panel_scoreboard_ping_high
-#define PING_WORST autocvar_hud_panel_scoreboard_ping_worst
-#define COLOR_BEST autocvar_hud_panel_scoreboard_ping_best_color
+#define COLOR_LOW autocvar_hud_panel_scoreboard_ping_low_color
 #define COLOR_MED autocvar_hud_panel_scoreboard_ping_medium_color
 #define COLOR_HIGH autocvar_hud_panel_scoreboard_ping_high_color
-#define COLOR_WORST autocvar_hud_panel_scoreboard_ping_worst_color
 string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 {
 	float tmp, num, denom;
@@ -1061,16 +1057,15 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 			f = pl.ping;
 			if (f == 0)
 				return _("N/A");
-			if (f < PING_BEST)
-				sbt_field_rgb = COLOR_BEST;
+			// this colour selection code should match menuqc XonoticServerList_drawListBoxItem()
+			if (f < PING_LOW)
+				sbt_field_rgb = COLOR_LOW;
 			else if (f < PING_MED)
-				sbt_field_rgb = COLOR_BEST + (COLOR_MED - COLOR_BEST) * ((f - PING_BEST) / (PING_MED - PING_BEST));
+				sbt_field_rgb = COLOR_LOW + (COLOR_MED - COLOR_LOW) * ((f - PING_LOW) / (PING_MED - PING_LOW));
 			else if (f < PING_HIGH)
 				sbt_field_rgb = COLOR_MED + (COLOR_HIGH - COLOR_MED) * ((f - PING_MED) / (PING_HIGH - PING_MED));
-			else if (f < PING_WORST)
-				sbt_field_rgb = COLOR_HIGH + (COLOR_WORST - COLOR_HIGH) * ((f - PING_HIGH) / (PING_WORST - PING_HIGH));
 			else
-				sbt_field_rgb = COLOR_WORST;
+				sbt_field_rgb = COLOR_HIGH;
 			return ftos(f);
 
 		case SP_PL:
