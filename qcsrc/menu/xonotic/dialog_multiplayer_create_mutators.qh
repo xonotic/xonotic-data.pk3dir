@@ -1,9 +1,97 @@
 #pragma once
 
+#include "mutatortab.qh"
+#include <common/mutators/mutator/bloodloss/ui_bloodloss.qh>
+#include <common/mutators/mutator/buffs/ui_buffs.qh>
+#include <common/mutators/mutator/cloaked/ui_cloaked.qh>
+#include <common/mutators/mutator/instagib/ui_instagib.qh>
+#include <common/mutators/mutator/invincibleproj/ui_invincibleproj.qh>
+#include <common/mutators/mutator/midair/ui_midair.qh>
+#include <common/mutators/mutator/nades/ui_nades.qh>
+#include <common/mutators/mutator/new_toys/ui_new_toys.qh>
+#include <common/mutators/mutator/nix/ui_nix.qh>
+#include <common/mutators/mutator/overkill/ui_overkill.qh>
+#include <common/mutators/mutator/pinata/ui_pinata.qh>
+#include <common/mutators/mutator/powerups/ui_powerups.qh>
+#include <common/mutators/mutator/rocketflying/ui_rocketflying.qh>
+#include <common/mutators/mutator/touchexplode/ui_touchexplode.qh>
+#include <common/mutators/mutator/vampire/ui_vampire.qh>
+
+REGISTRY(MenuMutators, BITS(5))
+REGISTER_REGISTRY(MenuMutators)
+
+REGISTRY_DEFINE_GET(MenuMutators, NULL)
+#define REGISTER_MENU_MUTATOR(id, impl) \
+	LAZY_NEW(id, impl) \
+	REGISTER(MenuMutators, MENU, id, m_id, NEW(Lazy, LAZY(id)))
+
+// The "cvar changes" mutator classes are created in mutatortab.qc
+// Arenas
+const int MENU_MUTATOR_HEADER_1 = 0;
+REGISTER_MENU_MUTATOR(weaponarena,     makeXonoticMutatorWeaponArenaTab()); // cvar changes
+REGISTER_MENU_MUTATOR(instagib,        makeXonoticMutatorInstaGibTab());
+REGISTER_MENU_MUTATOR(nix,             makeXonoticMutatorNIXTab());
+// Weapon & item mutators
+REGISTER_MENU_MUTATOR(weaponstay,      makeXonoticMutatorWeaponStayTab()); // cvar changes
+REGISTER_MENU_MUTATOR(newtoys,         makeXonoticMutatorNewToysTab());
+REGISTER_MENU_MUTATOR(rocketflying,    makeXonoticMutatorRocketFlyingTab());
+REGISTER_MENU_MUTATOR(offhandweapons,  makeXonoticMutatorOffhandWeaponsTab()); // multiple mutators combined
+REGISTER_MENU_MUTATOR(jetpack,         makeXonoticMutatorJetpackTab()); // cvar changes
+REGISTER_MENU_MUTATOR(invincibleprojs, makeXonoticMutatorInvincibleProjectilesTab());
+REGISTER_MENU_MUTATOR(pinata,          makeXonoticMutatorPinataTab());
+// Gameplay mutators
+const int MENU_MUTATOR_HEADER_2 = 11;
+REGISTER_MENU_MUTATOR(buffs,           makeXonoticMutatorBuffsTab());
+REGISTER_MENU_MUTATOR(powerups,        makeXonoticMutatorPowerupsTab());
+#ifdef MENU_INCLUDE_OVERKILL
+REGISTER_MENU_MUTATOR(overkill,        makeXonoticMutatorOverkillTab());
+#endif
+REGISTER_MENU_MUTATOR(nades,           makeXonoticMutatorNadesTab());
+REGISTER_MENU_MUTATOR(cloaked,         makeXonoticMutatorCloakedTab());
+REGISTER_MENU_MUTATOR(vampire,         makeXonoticMutatorVampireTab());
+REGISTER_MENU_MUTATOR(bloodloss,       makeXonoticMutatorBloodLossTab());
+REGISTER_MENU_MUTATOR(touchexplode,    makeXonoticMutatorTouchExplodeTab());
+REGISTER_MENU_MUTATOR(midair,          makeXonoticMutatorMidAirTab());
+REGISTER_MENU_MUTATOR(customphysics,   makeXonoticMutatorCustomPhysicsTab()); // cvar changes & multiple mutators combined
+
+
+#include "datasource.qh"
+CLASS(MenuMutatorSource, DataSource)
+	METHOD(MenuMutatorSource, getEntry, entity(entity me, int i, void(string name, string description) returns));
+	METHOD(MenuMutatorSource, getEntryOther, entity(entity me, int i, void(bool show_tick, bool disabled, string tree) returns));
+	METHOD(MenuMutatorSource, reload, int(entity me, string filter));
+ENDCLASS(MenuMutatorSource)
+
+
+#include "listbox.qh"
+CLASS(XonoticRegisteredMutatorsList, XonoticListBox)
+	ATTRIB(XonoticRegisteredMutatorsList, alphaBG, float, 0);
+	ATTRIB(XonoticRegisteredMutatorsList, itemAbsSize, vector, '0 0 0');
+	ATTRIB(XonoticRegisteredMutatorsList, origin, vector, '0 0 0');
+	ATTRIB(XonoticRegisteredMutatorsList, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticRegisteredMutatorsList, realUpperMargin, float, 0);
+	ATTRIB(XonoticRegisteredMutatorsList, columnIconOrigin, float, 0);
+	ATTRIB(XonoticRegisteredMutatorsList, columnIconSize, float, 0);
+	ATTRIB(XonoticRegisteredMutatorsList, columnNameOrigin, float, 0);
+	ATTRIB(XonoticRegisteredMutatorsList, columnNameSize, float, 0);
+	ATTRIB(XonoticRegisteredMutatorsList, columnTreeIconSize, float, 0);
+	ATTRIB(XonoticRegisteredMutatorsList, rowsPerItem, float, 1.6);
+	ATTRIB(XonoticRegisteredMutatorsList, typeToSearchString, string);
+	ATTRIB(XonoticRegisteredMutatorsList, typeToSearchTime, float, 0);
+	ATTRIB(XonoticRegisteredMutatorsList, source, DataSource, NEW(MenuMutatorSource));
+	ATTRIB(XonoticRegisteredMutatorsList, onChange, void(entity, entity));
+	ATTRIB(XonoticRegisteredMutatorsList, onChangeEntity, entity);
+	ATTRIB(XonoticRegisteredMutatorsList, previouslySelected, int, -1);
+	METHOD(XonoticRegisteredMutatorsList, drawListBoxItem, void(entity me, int i, vector absSize, bool isSelected, bool isFocused));
+	METHOD(XonoticRegisteredMutatorsList, refilter, void(entity me));
+	METHOD(XonoticRegisteredMutatorsList, resizeNotify, void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize));
+	METHOD(XonoticRegisteredMutatorsList, setSelected, void(entity me, int i));
+ENDCLASS(XonoticRegisteredMutatorsList)
+entity makeXonoticRegisteredMutatorsList();
+
+
 #include "dialog.qh"
 CLASS(XonoticMutatorsDialog, XonoticDialog)
-	METHOD(XonoticMutatorsDialog, fill, void(entity));
-	METHOD(XonoticMutatorsDialog, showNotify, void(entity));
 	METHOD(XonoticMutatorsDialog, close, void(entity));
 	ATTRIB(XonoticMutatorsDialog, title, string, _("Mutators"));
 	ATTRIB(XonoticMutatorsDialog, color, vector, SKINCOLOR_DIALOG_MUTATORS);
@@ -11,4 +99,12 @@ CLASS(XonoticMutatorsDialog, XonoticDialog)
 	ATTRIB(XonoticMutatorsDialog, rows, float, 21);
 	ATTRIB(XonoticMutatorsDialog, columns, float, 6);
 	ATTRIB(XonoticMutatorsDialog, refilterEntity, entity);
+	ATTRIB(XonoticMutatorsDialog, topicList, entity, makeXonoticRegisteredMutatorsList());
+	ATTRIB(XonoticMutatorsDialog, currentPanel, entity, NEW(XonoticTab));
+	ATTRIB(XonoticMutatorsDialog, currentItem, entity);
+	ATTRIB(XonoticMutatorsDialog, labelTitle, entity);
+	ATTRIB(XonoticMutatorsDialog, descriptionLabel, entity);
+	METHOD(XonoticMutatorsDialog, topicChangeNotify, void(entity, entity me));
+	METHOD(XonoticMutatorsDialog, fill, void(entity me));
 ENDCLASS(XonoticMutatorsDialog)
+entity makeXonoticMutatorsDialog();
