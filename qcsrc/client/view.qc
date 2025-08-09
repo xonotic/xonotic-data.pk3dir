@@ -1657,6 +1657,12 @@ void View_UpdateFov()
 	setproperty(VF_FOV, fov);
 }
 
+// _cl_weaponarena_weapons is automatically set by the server and stores the list
+// of weapons available in the current Weapon Arena.
+// Initial state is '-1 0 0' meaning Weapon Arena is not enabled.
+// It can be set to '0 0 0' meaning No Weapons Arena is enabled, which is a valid Weapons Arena
+vector autocvar__cl_weaponarena_weapons = '-1 0 0';
+vector weaponarena_weapons_saved = '-1 0 0';
 void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 {
 	TC(int, w); TC(int, h);
@@ -1677,6 +1683,18 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 		db_close(binddb);
 		binddb = db_create();
 		cvar_set("_hud_showbinds_reload", "0");
+	}
+
+	if (autocvar__cl_weaponarena_weapons != weaponarena_weapons_saved)
+	{
+		IL_EACH(default_order_resources, it.instanceOfAmmoResource,
+			it.m_hidden = true;
+		);
+		FOREACH(Weapons, it != WEP_Null && (autocvar__cl_weaponarena_weapons & it.m_wepset), {
+			if (it.ammo_type)
+				it.ammo_type.m_hidden = false;
+		});
+		weaponarena_weapons_saved = autocvar__cl_weaponarena_weapons;
 	}
 
 	if(checkextension("DP_CSQC_MINFPS_QUALITY"))

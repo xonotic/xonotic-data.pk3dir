@@ -1163,6 +1163,8 @@ void ClientConnect(entity this)
 
 	// get version info from player
 	stuffcmd(this, "cmd clientversion $gameversion\n");
+	if (g_weaponarena)
+		stuffcmd(this, sprintf("settemp _cl_weaponarena_weapons \"%v\"", g_weaponarena_weapons));
 
 	// notify about available teams
 	if (teamplay)
