@@ -123,8 +123,6 @@ void HUD_Ammo()
 
 	HUD_Panel_LoadCvars();
 
-	draw_beginBoldFont();
-
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -149,12 +147,17 @@ void HUD_Ammo()
 		current_in_hud_configure = RES_CELLS;
 
 	int total_ammo_count = 0;
-	if (autocvar_hud_panel_ammo_onlycurrent)
-		total_ammo_count = 1;
-	else
-		IL_EACH(default_order_resources, it.instanceOfAmmoResource && (autocvar__hud_configure || !it.m_hidden),
-			++total_ammo_count;
-		);
+	IL_EACH(default_order_resources, it.instanceOfAmmoResource && (autocvar__hud_configure || !it.m_hidden),
+		++total_ammo_count;
+	);
+
+	bool onlycurrent = autocvar_hud_panel_ammo_onlycurrent;
+	if (onlycurrent)
+	{
+		total_ammo_count = min(1, total_ammo_count);
+		if (total_ammo_count == 0)
+			onlycurrent = false; // otherwise it breaks if we have a nade
+	}
 
 	if(draw_nades)
 	{
@@ -168,6 +171,9 @@ void HUD_Ammo()
 	}
 	else
 		nade_prevstatus = nade_prevframe = nade_statuschange_time = 0;
+
+	if (total_ammo_count == 0)
+		return;
 
 	rows = HUD_GetRowCount(total_ammo_count, mySize, 3);
 	columns = ceil((total_ammo_count)/rows);
@@ -190,13 +196,14 @@ void HUD_Ammo()
 		ammo_size.y = newSize;
 	}
 
+	draw_beginBoldFont();
 	entity wepent = viewmodels[0]; // TODO: unhardcode
 
 	Weapon wep = wepent.switchweapon;
 	int i;
 	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_AMMO);
 	row = column = 0;
-	if(autocvar_hud_panel_ammo_onlycurrent)
+	if (onlycurrent)
 	{
 		if(autocvar__hud_configure)
 		{
