@@ -44,7 +44,9 @@ void wordwrap_cb(string s, float l, void(string) callback);
 #ifndef SVQC
 string draw_currentSkin;
 string draw_UseSkinFor(string pic);
+#endif
 
+#ifdef CSQC
 // NOTE they aren't all registered mutators, e.g. jetpack, low gravity
 // TODO add missing "mutators"
 const int MUT_DODGING = 0;

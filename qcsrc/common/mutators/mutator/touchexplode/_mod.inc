@@ -2,3 +2,6 @@
 #ifdef SVQC
 	#include <common/mutators/mutator/touchexplode/sv_touchexplode.qc>
 #endif
+#ifdef MENUQC
+	#include <common/mutators/mutator/touchexplode/ui_touchexplode.qc>
+#endif
