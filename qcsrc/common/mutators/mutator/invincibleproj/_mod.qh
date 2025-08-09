@@ -2,3 +2,6 @@
 #ifdef SVQC
 	#include <common/mutators/mutator/invincibleproj/sv_invincibleproj.qh>
 #endif
+#ifdef MENUQC
+	#include <common/mutators/mutator/invincibleproj/ui_invincibleproj.qh>
+#endif
