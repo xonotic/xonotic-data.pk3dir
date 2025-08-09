@@ -2,3 +2,6 @@
 #ifdef SVQC
 	#include <common/mutators/mutator/cloaked/sv_cloaked.qc>
 #endif
+#ifdef MENUQC
+	#include <common/mutators/mutator/cloaked/ui_cloaked.qc>
+#endif

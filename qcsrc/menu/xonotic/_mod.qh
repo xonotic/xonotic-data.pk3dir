@@ -100,6 +100,7 @@
 #include <menu/xonotic/mainwindow.qh>
 #include <menu/xonotic/maplist.qh>
 #include <menu/xonotic/mixedslider.qh>
+#include <menu/xonotic/mutatortab.qh>
 #include <menu/xonotic/nexposee.qh>
 #include <menu/xonotic/picker.qh>
 #include <menu/xonotic/playerlist.qh>
@@ -125,5 +126,4 @@
 #include <menu/xonotic/textlabel.qh>
 #include <menu/xonotic/textslider.qh>
 #include <menu/xonotic/util.qh>
-#include <menu/xonotic/weaponarenacheckbox.qh>
 #include <menu/xonotic/weaponslist.qh>

@@ -2,3 +2,6 @@
 #ifdef SVQC
 	#include <common/mutators/mutator/vampire/sv_vampire.qc>
 #endif
+#ifdef MENUQC
+	#include <common/mutators/mutator/vampire/ui_vampire.qc>
+#endif
