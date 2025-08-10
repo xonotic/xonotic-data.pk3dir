@@ -10,6 +10,7 @@ int autocvar_hud_panel_ammo_maxammo;
 int autocvar_hud_panel_ammo_maxfuel = 100;
 bool autocvar_hud_panel_ammo_onlycurrent;
 float autocvar_hud_panel_ammo_noncurrent_alpha = 0.7;
+bool autocvar_hud_panel_ammo_onlycurrent_and_always_fuel = false;
 float autocvar_hud_panel_ammo_noncurrent_scale = 1;
 bool autocvar_hud_panel_ammo_progressbar;
 string autocvar_hud_panel_ammo_progressbar_name;

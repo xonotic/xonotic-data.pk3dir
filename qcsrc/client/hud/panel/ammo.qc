@@ -188,6 +188,9 @@ void HUD_Ammo()
 	if (!show_fuel)
 		show_fuel = (STAT(FUEL) || infinite_ammo);
 
+	if (autocvar_hud_panel_ammo_onlycurrent && autocvar_hud_panel_ammo_onlycurrent_and_always_fuel)
+		show_fuel = true;
+
 	if (show_fuel)
 		++total_ammo_count;
 
