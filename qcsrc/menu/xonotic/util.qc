@@ -112,47 +112,61 @@ void makeCallback(entity e, entity cbent, void(entity, entity) cbfunc)
 	e.saveCvars_Callback_func = cbfunc;
 }
 
+/* So far this allows for:
+ * A
+ * A AND B
+ * A AND B AND C
+ * A OR B
+ * A OR B OR C
+ * Same but with (NOT A) instead of A
+ * A can be range, function, string exactly equal
+ * Must call setDependent/setDependentNOT/setDependentStringNotEqual first,
+ * ... then setDependentAND/setDependentOR after
+ */
 .void(entity) draw_setDependent;
 void setDependent_Check(entity e)
 {
 	bool disabled_prev = e.disabled;
 	float f;
 	string s;
-	if(e.func_setDependent)
+	if (e.func_setDependent)
 	{
 		e.disabled = !(e.func_setDependent(e));
 	}
-	else if(e.cvarString_setDependent)
+	else if (e.cvarString_setDependent)
 	{
 		s = cvar_string(e.cvarString_setDependent);
 		e.disabled = (cvar_string(e.cvarString_setDependent) == e.cvarValue_setDependent);
 	}
-	else
+	else if (e.cvar1_setDependent)
 	{
-		if(e.cvar_setDependent)
+		f = cvar(e.cvar1_setDependent);
+		if (e.op_setDependent & BIT(1)) // NOT
+			e.disabled = (f == e.cvar1Min_setDependent);
+		else
 		{
-			f = cvar(e.cvar_setDependent);
-			if(e.cvarMin_setDependent <= e.cvarMax_setDependent)
-				e.disabled = ((f < e.cvarMin_setDependent) || (f > e.cvarMax_setDependent));
+			if (e.cvar1Min_setDependent <= e.cvar1Max_setDependent)
+				e.disabled = ((f < e.cvar1Min_setDependent) || (f > e.cvar1Max_setDependent));
 			else
-				e.disabled = ((f >= e.cvarMax_setDependent) && (f <= e.cvarMin_setDependent));
+				e.disabled = ((f >= e.cvar1Max_setDependent) && (f <= e.cvar1Min_setDependent));
 		}
-		if(e.cvar2_setDependent)
-		{
-			f = cvar(e.cvar2_setDependent);
-			if(e.cvar2Min_setDependent <= e.cvar2Max_setDependent)
-				e.disabled = (e.disabled + ((f < e.cvar2Min_setDependent) || (f > e.cvar2Max_setDependent)) > e.op_setDependent);
-			else
-				e.disabled = (e.disabled + ((f >= e.cvar2Max_setDependent) && (f <= e.cvar2Min_setDependent)) > e.op_setDependent);
-		}
-		if(e.cvar3_setDependent)
-		{
-			f = cvar(e.cvar3_setDependent);
-			if(e.cvar3Min_setDependent <= e.cvar3Max_setDependent)
-				e.disabled = (e.disabled + ((f < e.cvar3Min_setDependent) || (f > e.cvar3Max_setDependent)) > e.op_setDependent);
-			else
-				e.disabled = (e.disabled + ((f >= e.cvar3Max_setDependent) && (f <= e.cvar3Min_setDependent)) > e.op_setDependent);
-		}
+	}
+	int op = e.op_setDependent & BIT(0);
+	if (e.cvar2_setDependent)
+	{
+		f = cvar(e.cvar2_setDependent);
+		if (e.cvar2Min_setDependent <= e.cvar2Max_setDependent)
+			e.disabled = (e.disabled + ((f < e.cvar2Min_setDependent) || (f > e.cvar2Max_setDependent)) > op);
+		else
+			e.disabled = (e.disabled + ((f >= e.cvar2Max_setDependent) && (f <= e.cvar2Min_setDependent)) > op);
+	}
+	if (e.cvar3_setDependent)
+	{
+		f = cvar(e.cvar3_setDependent);
+		if (e.cvar3Min_setDependent <= e.cvar3Max_setDependent)
+			e.disabled = (e.disabled + ((f < e.cvar3Min_setDependent) || (f > e.cvar3Max_setDependent)) > op);
+		else
+			e.disabled = (e.disabled + ((f >= e.cvar3Max_setDependent) && (f <= e.cvar3Min_setDependent)) > op);
 	}
 	if (disabled_prev != e.disabled && e.loadCvars)
 		e.loadCvars(e);
@@ -166,11 +180,23 @@ void setDependent_Draw(entity e)
 void setDependent(entity e, string theCvarName, float theCvarMin, float theCvarMax)
 {
 	e.draw_setDependent = e.draw;
-	e.cvar_setDependent = theCvarName;
-	e.cvarMin_setDependent = theCvarMin;
-	e.cvarMax_setDependent = theCvarMax;
-	e.cvar2_setDependent = string_null;
-	e.cvar3_setDependent = string_null;
+	e.cvar1_setDependent = theCvarName;
+	e.cvar1Min_setDependent = theCvarMin;
+	e.cvar1Max_setDependent = theCvarMax;
+	e.op_setDependent = 0;
+	e.cvarString_setDependent = string_null;
+	e.func_setDependent = func_null;
+	e.draw = setDependent_Draw;
+	setDependent_Check(e);
+}
+void setDependentNOT(entity e, string theCvarName, float theCvarValue)
+{
+	e.draw_setDependent = e.draw;
+	e.cvar1_setDependent = theCvarName;
+	e.cvar1Min_setDependent = theCvarValue;
+	e.cvar1Max_setDependent = theCvarValue;
+	e.op_setDependent |= BIT(1); // NOT
+	e.cvarString_setDependent = string_null;
 	e.func_setDependent = func_null;
 	e.draw = setDependent_Draw;
 	setDependent_Check(e);
@@ -180,58 +206,44 @@ void setDependentStringNotEqual(entity e, string theCvarName, string theCvarValu
 	e.draw_setDependent = e.draw;
 	e.cvarString_setDependent = theCvarName;
 	e.cvarValue_setDependent = theCvarValue;
-	e.cvar_setDependent = string_null;
-	e.cvar2_setDependent = string_null;
-	e.cvar3_setDependent = string_null;
 	e.func_setDependent = func_null;
 	e.draw = setDependent_Draw;
 	setDependent_Check(e);
 }
-void setDependentAND(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max)
+void setDependentAND(entity e, string theCvarName, float theCvarMin, float theCvarMax)
 {
-	e.draw_setDependent = e.draw;
-	e.cvar_setDependent = theCvarName;
-	e.cvarMin_setDependent = theCvarMin;
-	e.cvarMax_setDependent = theCvarMax;
-	e.cvar2_setDependent = theCvar2Name;
-	e.cvar2Min_setDependent = theCvar2Min;
-	e.cvar2Max_setDependent = theCvar2Max;
-	e.cvar3_setDependent = string_null;
-	e.op_setDependent = 0;
+	if (e.cvar2_setDependent)
+	{
+		e.cvar3_setDependent = theCvarName;
+		e.cvar3Min_setDependent = theCvarMin;
+		e.cvar3Max_setDependent = theCvarMax;
+	}
+	else
+	{
+		e.cvar2_setDependent = theCvarName;
+		e.cvar2Min_setDependent = theCvarMin;
+		e.cvar2Max_setDependent = theCvarMax;
+	}
+	e.op_setDependent &= ~BIT(0); // AND
 	e.func_setDependent = func_null;
-	e.draw = setDependent_Draw;
 	setDependent_Check(e);
 }
-void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max)
+void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCvarMax)
 {
-	e.draw_setDependent = e.draw;
-	e.cvar_setDependent = theCvarName;
-	e.cvarMin_setDependent = theCvarMin;
-	e.cvarMax_setDependent = theCvarMax;
-	e.cvar2_setDependent = theCvar2Name;
-	e.cvar2Min_setDependent = theCvar2Min;
-	e.cvar2Max_setDependent = theCvar2Max;
-	e.cvar3_setDependent = string_null;
-	e.op_setDependent = 1;
+	if (e.cvar2_setDependent)
+	{
+		e.cvar3_setDependent = theCvarName;
+		e.cvar3Min_setDependent = theCvarMin;
+		e.cvar3Max_setDependent = theCvarMax;
+	}
+	else
+	{
+		e.cvar2_setDependent = theCvarName;
+		e.cvar2Min_setDependent = theCvarMin;
+		e.cvar2Max_setDependent = theCvarMax;
+	}
+	e.op_setDependent |= BIT(0); // OR
 	e.func_setDependent = func_null;
-	e.draw = setDependent_Draw;
-	setDependent_Check(e);
-}
-void setDependentAND3(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max, string theCvar3Name, float theCvar3Min, float theCvar3Max)
-{
-	e.draw_setDependent = e.draw;
-	e.cvar_setDependent = theCvarName;
-	e.cvarMin_setDependent = theCvarMin;
-	e.cvarMax_setDependent = theCvarMax;
-	e.cvar2_setDependent = theCvar2Name;
-	e.cvar2Min_setDependent = theCvar2Min;
-	e.cvar2Max_setDependent = theCvar2Max;
-	e.cvar3_setDependent = theCvar3Name;
-	e.cvar3Min_setDependent = theCvar3Min;
-	e.cvar3Max_setDependent = theCvar3Max;
-	e.op_setDependent = 0;
-	e.func_setDependent = func_null;
-	e.draw = setDependent_Draw;
 	setDependent_Check(e);
 }
 void setDependentWeird(entity e, float(entity) func)
@@ -754,6 +766,7 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Color:")));
+			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_bg")), "0");
 		me.TD(me, 2, 2.6, e = makeXonoticColorpickerString(strzone(strcat("hud_panel_", panelname, "_bg_color")), "hud_panel_bg_color"));
 			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_bg_color")), "");
 	me.TR(me);
@@ -779,12 +792,14 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Team color:")));
+			setDependentNOT(e, strzone(strcat("hud_panel_", panelname, "_bg_alpha")), 0);
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg_color_team"))));
 				e.addValue(e, _("Default"), "");
 				e.addValue(e, _("Disable"), "0");
 				for(i = 1; i <= 10; ++i)
 					e.addValue(e, strzone(ftos_decimals_percentage(i / 10, 0)), strzone(ftos_mindecimals(i / 10)));
 				e.configureXonoticTextSliderValues(e);
+				setDependentNOT(e, strzone(strcat("hud_panel_", panelname, "_bg_alpha")), 0);
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 3.6, e = makeXonoticCheckBox(0, "hud_configure_teamcolorforced", _("Test team color in configure mode")));

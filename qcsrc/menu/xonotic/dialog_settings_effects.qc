@@ -122,16 +122,15 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.applyButton = effectsApplyButton;
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_deluxemapping", _("Deluxe mapping"),
 			_("Use per-pixel lighting effects")));
-			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
-				setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
-			else
 				setDependent(e, "mod_q3bsp_nolightmaps", 0, 0);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependentAND(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_shadow_gloss", _("Gloss"),
 			_("Enable the use of glossmaps on textures supporting it")));
+				setDependent(e, "mod_q3bsp_nolightmaps", 0, 0);
+				setDependentAND(e, "r_glsl_deluxemapping", 1, 1);
 			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
-				setDependentAND3(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0, "r_glsl_deluxemapping", 1, 1);
-			else
-				setDependentAND(e, "mod_q3bsp_nolightmaps", 0, 0, "r_glsl_deluxemapping", 1, 1);
+				setDependentAND(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_offsetmapping", _("Offset mapping"),
 			_("Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface")));
@@ -139,10 +138,9 @@ void XonoticEffectsSettingsTab_fill(entity me)
 				setDependent(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping"),
 			_("Higher quality offset mapping, which also has a huge impact on performance")));
-			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
-				setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
-			else
 				setDependent(e, "r_glsl_offsetmapping", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependentAND(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_water", _("Reflections:"),
 			_("Reflection and refraction quality, has a huge impact on performance on maps with reflecting surfaces")));
@@ -154,10 +152,9 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addText(e, ZCTX(_("REFL^Good")), 0.5);
 			e.addText(e, _("Sharp"), 1);
 			e.configureXonoticMixedSliderValues(e);
-			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
-				setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);
-			else
 				setDependent(e, "r_water", 1, 1);
+			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
+				setDependentAND(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "cl_decals", _("Decals"),
 			_("Enable decals (bullet holes and blood)")));
@@ -166,11 +163,13 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Distance:")));
-			setDependent(e, "cl_decals", 1, 1);
+			setDependentNOT(e, "cl_decals_fadetime", 0);
+			setDependentAND(e, "cl_decals", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(200, 500, 20, "r_drawdecals_drawdistance",
 			_("Decals further away than this will not be drawn")));
 			e.formatString = _("%s qu");
-			setDependent(e, "cl_decals", 1, 1);
+			setDependentNOT(e, "cl_decals_fadetime", 0);
+			setDependentAND(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Fade time:")));
@@ -205,7 +204,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "r_shadow_usenormalmap", _("Use normal maps"),
 			_("Directional shading of certain textures to simulate interaction of realtime light with a bumpy surface")));
-			setDependentOR(e, "r_shadow_realtime_dlight", 1, 1, "r_shadow_realtime_world", 1, 1);
+			setDependent(e, "r_shadow_realtime_dlight", 1, 1);
+			setDependentOR(e, "r_shadow_realtime_world", 1, 1);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_shadow_shadowmapping", _("Soft shadows")));
 			setDependentWeird(e, someShadowCvarIsEnabled);
 	me.TR(me);
@@ -216,7 +216,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "r_coronas_occlusionquery", _("Fade coronas according to visibility"),
 			_("Corona fading using occlusion queries")));
-			setDependent(e, "r_coronas", 0.1, 2);
+			setDependentNOT(e, "r_coronas", 0);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_bloom", _("Bloom"),

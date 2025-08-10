@@ -27,14 +27,14 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 				e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Fade effect:")));
-		setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");
+		setDependentNOT(e, strzone(strcat("hud_panel_", panelname, "_timeout")), 0);
 			me.TD(me, 1, 2.6, e = makeXonoticMixedSlider(strzone(strcat("hud_panel_", panelname, "_timeout_effect"))));
 				e.addText(e, ZCTX(_("EF^None")), 0);
 				e.addText(e, _("Opacity"),       1);
 				e.addText(e, _("Slide"),         2);
 				e.addText(e, ZCTX(_("EF^Both")), 3);
 				e.configureXonoticMixedSliderValues(e);
-			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");
+				setDependentNOT(e, strzone(strcat("hud_panel_", panelname, "_timeout")), 0);
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_weapons_onlyowned", _("Show only owned weapons")));
@@ -48,10 +48,12 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Noncurrent scale:")));
-			setDependent(e, "hud_panel_weapons_onlyowned", 0, 1);
+			setDependentNOT(e, "hud_panel_weapons_noncurrent_alpha", 0);
+			setDependentAND(e, "hud_panel_weapons_onlyowned", 0, 1);
 		me.TD(me, 1, 2.4, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_weapons_noncurrent_scale"));
 			e.formatString = "%";
-			setDependent(e, "hud_panel_weapons_onlyowned", 0, 1);
+			setDependentNOT(e, "hud_panel_weapons_noncurrent_alpha", 0);
+			setDependentAND(e, "hud_panel_weapons_onlyowned", 0, 1);
 
 	me.TR(me);
  		me.TD(me, 1, 1.4, e = makeXonoticCheckBox(0, "hud_panel_weapons_label", _("Show label:")));
@@ -82,8 +84,10 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Ammo bar color:")));
-			setDependent(e, "hud_panel_weapons_ammo", 1, 1);
+			setDependentNOT(e, "hud_panel_weapons_ammo_alpha", 0);
+			setDependentAND(e, "hud_panel_weapons_ammo", 1, 1);
 		me.TD(me, 2, 2.4, e = makeXonoticColorpickerString("hud_panel_weapons_ammo_color", "hud_panel_weapons_ammo_color"));
-			setDependent(e, "hud_panel_weapons_ammo", 1, 1);
+			setDependentNOT(e, "hud_panel_weapons_ammo_alpha", 0);
+			setDependentAND(e, "hud_panel_weapons_ammo", 1, 1);
 		me.TR(me);
 }
