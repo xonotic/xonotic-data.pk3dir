@@ -171,16 +171,16 @@ void XonoticInputSettingsTab_fill(entity me)
 		if(cvar_type("joy_enable") & CVAR_TYPEFLAG_ENGINE)
 		{
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joy_enable", _("Use joystick input")));
-			setDependent(e, "joy_detected", 1, 10000000);
+				setDependentNOT(e, "joy_detected", 0);
 		}
 		else if(cvar_type("joystick") & CVAR_TYPEFLAG_ENGINE)
 		{
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joystick", _("Use joystick input")));
-			setDependent(e, "joy_detected", 1, 10000000);
+				setDependentNOT(e, "joy_detected", 0);
 		}
 		else
 		{
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, string_null, _("Use joystick input")));
-			e.disabled = 1; // the option is never available in this case, just there for show
+				e.disabled = 1; // the option is never available in this case, just there for show
 		}
 }

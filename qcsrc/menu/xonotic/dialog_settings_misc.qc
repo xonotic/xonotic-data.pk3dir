@@ -36,7 +36,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 			_("Each packet includes a copy of the previous message")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_movement_errorcompensation", _("Movement prediction error compensation")));
-		setDependent(e, "cl_movement", 1, 1);
+			setDependent(e, "cl_movement", 1, 1);
 	me.TR(me);
 	if(cvar_type("crypto_aeslevel") & CVAR_TYPEFLAG_ENGINE)
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 1, "crypto_aeslevel", _("Use encryption (AES) when available")));

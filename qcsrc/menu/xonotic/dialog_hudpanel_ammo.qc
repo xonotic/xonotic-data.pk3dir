@@ -26,10 +26,12 @@ void XonoticHUDAmmoDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Noncurrent scale:")));
-			setDependent(e, "hud_panel_ammo_onlycurrent", 0, 0);
+			setDependentNOT(e, "hud_panel_ammo_noncurrent_alpha", 0);
+			setDependentAND(e, "hud_panel_ammo_onlycurrent", 0, 0);
 		me.TD(me, 1, 2.4, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_ammo_noncurrent_scale"));
 			e.formatString = "%";
-			setDependent(e, "hud_panel_ammo_onlycurrent", 0, 0);
+			setDependentNOT(e, "hud_panel_ammo_noncurrent_alpha", 0);
+			setDependentAND(e, "hud_panel_ammo_onlycurrent", 0, 0);
 
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Align icon:")));
