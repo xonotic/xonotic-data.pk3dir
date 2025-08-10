@@ -22,13 +22,16 @@ void XonoticHUDNotificationDialog_fill(entity me)
 			e.setValueSpace(e, e.valueSpace * 1.25);
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Entry fadetime:")));
+			setDependentNOT(e, "hud_panel_notify_time", 0);
 		me.TD(me, 1, 2.6, e = makeXonoticMixedSlider("hud_panel_notify_fadetime"));
 			e.formatString = "S";
 			e.setValueSpace(e, e.valueSpace * 1.25);
 			e.addText(e, ZCTX(_("FADESPEED^Instant")), 0);
 			e.addRange(e, 0.5, 5, 0.5);
 			e.configureXonoticMixedSliderValues(e);
+			setDependentNOT(e, "hud_panel_notify_time", 0);
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_notify_flip", _("Flip notify order")));
+			setDependentNOT(e, "hud_panel_notify_time", 0);
 }

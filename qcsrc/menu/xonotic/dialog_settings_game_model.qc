@@ -37,6 +37,7 @@ void XonoticGameModelSettingsTab_fill(entity me)
 			e.formatString = "%";
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Unavailable color:")));
+			setDependentNOT(e, "cl_ghost_items", 0);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_ghost_items_color"));
 			e.addValue(e, ZCTX(_("GHOITEMS^Black")), "-1 -1 -1");
 			e.addValue(e, ZCTX(_("GHOITEMS^Dark")), "0.1 0.1 0.1");
@@ -44,7 +45,7 @@ void XonoticGameModelSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("GHOITEMS^Normal")), "1 1 1");
 			e.addValue(e, ZCTX(_("GHOITEMS^Blue")), "-1 -1 3");
 			e.configureXonoticTextSliderValues(e);
-			setDependent(e, "cl_ghost_items", 0.001, 1);
+			setDependentNOT(e, "cl_ghost_items", 0);
 
 	me.TR(me);
 	me.TR(me);
@@ -69,6 +70,7 @@ void XonoticGameModelSettingsTab_fill(entity me)
 			e.formatString = "S";
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gibs:")));
+			setDependent(e, "cl_gentle", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_nogibs"));
 			e.addText(e, ZCTX(_("GIBS^None")), 1);
 			e.addText(e, ZCTX(_("GIBS^Few")), 0.75);

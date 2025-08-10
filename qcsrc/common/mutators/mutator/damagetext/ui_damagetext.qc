@@ -43,7 +43,8 @@ void XonoticDamageTextSettings_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Color:")));
 			setDependent(e, "cl_damagetext", 1, 1);
 		me.TD(me, 2, 2, e = makeXonoticColorpickerString("cl_damagetext_color", "cl_damagetext_color"));
-			setDependentAND(e, "cl_damagetext", 1, 1, "cl_damagetext_color_per_weapon", 0, 0);
+			setDependent(e, "cl_damagetext", 1, 1);
+			setDependentAND(e, "cl_damagetext_color_per_weapon", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_damagetext_color_per_weapon", _("Per weapon")));
@@ -80,8 +81,10 @@ void XonoticDamageTextSettings_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Or opacity greater than:")));
-			setDependentAND(e, "cl_damagetext", 1, 1, "cl_damagetext_accumulate_lifetime", 0.00001, 999999);
+			setDependentNOT(e, "cl_damagetext_accumulate_lifetime", 0);
+			setDependentAND(e, "cl_damagetext", 1, 1);
 		me.TD(me, 1, 1.6, e = makeXonoticSlider(0, 1, 0.05, "cl_damagetext_accumulate_alpha_rel"));
 			e.formatString = "%";
-			setDependentAND(e, "cl_damagetext", 1, 1, "cl_damagetext_accumulate_lifetime", 0.00001, 999999);
+			setDependentNOT(e, "cl_damagetext_accumulate_lifetime", 0);
+			setDependentAND(e, "cl_damagetext", 1, 1);
 }

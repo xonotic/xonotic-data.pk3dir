@@ -115,7 +115,8 @@ void XonoticServerCreateTab_fill(entity me)
 			setDependent(e, "g_campaign", 0, 0);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bot skill:")));
-			setDependentAND(e, "bot_number", 0, -1, "g_campaign", 0, 0);
+			setDependentNOT(e, "bot_number", 0);
+			setDependentAND(e, "g_campaign", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("skill",
 			_("Specify how experienced the bots will be")));
 			e.addText(e, _("Botlike"), 0);
@@ -130,7 +131,8 @@ void XonoticServerCreateTab_fill(entity me)
 			e.addText(e, _("Unhuman"), 9);
 			e.addText(e, _("Godlike"), 10);
 			e.configureXonoticMixedSliderValues(e);
-			setDependentAND(e, "bot_number", 0, -1, "g_campaign", 0, 0);
+			setDependentNOT(e, "bot_number", 0);
+			setDependentAND(e, "g_campaign", 0, 0);
 
 	// mapListBox is in the right column but the ref is needed for mutators dialog here
 	me.mapListBox = makeXonoticMapList();
