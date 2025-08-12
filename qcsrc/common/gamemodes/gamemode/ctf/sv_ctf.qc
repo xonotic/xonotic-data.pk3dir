@@ -1409,8 +1409,7 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 
 	// appearence
 	_setmodel(flag, flag.model); // precision set below
-	// 0.8.6 with sv_legacy_bbox_expand 1 did this FL_ITEM expansion in DP
-	setsize(flag, CTF_FLAG.m_mins * flag.scale - '15 15 1', CTF_FLAG.m_maxs * flag.scale + '15 15 1');
+	setsize(flag, CTF_FLAG.m_mins * flag.scale, CTF_FLAG.m_maxs * flag.scale);
 	flag.m_mins = flag.mins; // store these for squash checks
 	flag.m_maxs = flag.maxs;
 	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));

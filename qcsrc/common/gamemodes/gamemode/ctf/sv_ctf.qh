@@ -5,11 +5,6 @@
 #include <common/mutators/base.qh>
 #include <common/gamemodes/sv_rules.qh>
 
-CLASS(Flag, Pickup)
-	ATTRIB(Flag, m_mins, vector, (PL_MIN_CONST + '0 0 -13') * 1.4); // scaling be damned
-	ATTRIB(Flag, m_maxs, vector, (PL_MAX_CONST + '0 0 -13') * 1.4);
-ENDCLASS(Flag)
-Flag CTF_FLAG;
 void ctf_Initialize();
 
 int autocvar_captureleadlimit_override;
@@ -35,11 +30,23 @@ void ctf_RespawnFlag(entity flag);
 // score rule declarations
 const int ST_CTF_CAPS = 1;
 
-void ctf_FlagTouch(entity this, entity toucher) { ITEM_HANDLE(Pickup, CTF_FLAG, this, toucher); }
-
 // flag constants // for most of these, there is just one question to be asked: WHYYYYY?
 
-const float FLAG_SCALE = 0.6;
+CLASS(Flag, Pickup)
+	// bones_was_here: previously after several calculations (inc FL_ITEM expansion with sv_legacy_bbox_expand 1)
+	// the old final bbox was '-28.44 -28.44 -32.08' '28.44 28.44 27.88' at FLAG_SCALE 0.6
+	// and the model was noticeably too tall to fit.
+	// The following values give '-29.8125 -29.8125 -32.0625' '29.8125 29.8125 38.25' at FLAG_SCALE 0.5625
+	// which are power of two float multiples, are very close to the 60x60x70 size of megas and powerups,
+	// have the same origin.z height, and are a better fit for the model.
+	ATTRIB(Flag, m_mins, vector, '-53 -53 -57');
+	ATTRIB(Flag, m_maxs, vector, '53 53 68');
+ENDCLASS(Flag)
+Flag CTF_FLAG;
+
+// bones_was_here: previous FLAG_SCALE was 0.6 but model scale is floored to a 1/16 increment
+// so 9/16 was the real model scale. Applies to bbox too!
+const float FLAG_SCALE = 0.5625;
 
 const float FLAG_THINKRATE = 0.2;
 const float FLAG_TOUCHRATE = 0.5;
@@ -54,6 +61,8 @@ const int FLAG_PASS_ARC_OFFSET_Z = -10;
 
 const vector VEHICLE_FLAG_OFFSET = ('0 0 96');
 const float VEHICLE_FLAG_SCALE = 1.0;
+
+void ctf_FlagTouch(entity this, entity toucher) { ITEM_HANDLE(Pickup, CTF_FLAG, this, toucher); }
 
 // waypoint colors
 #define WPCOLOR_ENEMYFC(t) ((t) ? colormapPaletteColor(t - 1, false) * 0.75 : '1 1 1')
