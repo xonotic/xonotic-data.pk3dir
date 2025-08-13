@@ -49,7 +49,7 @@ const int HUD_BUMBLEBEE_GUN = 25;
 
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
-const int MAPVOTE_COUNT = 30;
+const int MAPVOTE_COUNT = 20;
 
 // a bit more constant
 const vector PL_MAX_CONST = '16 16 45';
