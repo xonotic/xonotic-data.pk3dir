@@ -1,5 +1,7 @@
 #include "sv_powerups.qh"
 
+#include <common/mutators/mutator/buffs/sv_buffs.qh>
+
 MUTATOR_HOOKFUNCTION(powerups, W_PlayStrengthSound)
 {
 	entity player = M_ARGV(0, entity);
@@ -195,7 +197,7 @@ MUTATOR_HOOKFUNCTION(powerups, WeaponRateFactor)
 
 MUTATOR_HOOKFUNCTION(powerups, BuildMutatorsPrettyString)
 {
-	if(autocvar_g_powerups == 0)
+	if(autocvar_g_powerups == 0 || (autocvar_g_buffs == 1 && autocvar_g_buffs_replace_powerups))
 		M_ARGV(0, string) = strcat(M_ARGV(0, string), ", No powerups");
 	if(autocvar_g_powerups > 0)
 		M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Powerups");
@@ -211,7 +213,7 @@ MUTATOR_HOOKFUNCTION(powerups, Bot_ForbidAttack)
 
 MUTATOR_HOOKFUNCTION(powerups, BuildMutatorsString)
 {
-	if(autocvar_g_powerups == 0)
+	if(autocvar_g_powerups == 0 || (autocvar_g_buffs == 1 && autocvar_g_buffs_replace_powerups))
 		M_ARGV(0, string) = strcat(M_ARGV(0, string), ":no_powerups");
 	if(autocvar_g_powerups > 0)
 		M_ARGV(0, string) = strcat(M_ARGV(0, string), ":powerups");
