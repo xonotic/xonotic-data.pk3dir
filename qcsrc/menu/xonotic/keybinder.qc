@@ -583,11 +583,7 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 			if (!joy_active && startsWith(key, "JOY"))
 				continue;
 
-			key = translate_key(key);
-			if (s == "")
-				s = key;
-			else
-				s = strcat(s, ", ", key);
+			s = cons_mid(s, ", ", translate_key(key));
 		}
 	}
 	s = draw_TextShortenToWidth(s, me.columnKeysSize, 0, me.realFontSize);

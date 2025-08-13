@@ -1487,11 +1487,7 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 			if (!joy_active && startsWith(key, "JOY"))
 				continue;
 
-			key = translate_key(key);
-			if (keys == "")
-				keys = key;
-			else
-				keys = strcat(keys, ", ", key);
+			keys = cons_mid(keys, ", ", translate_key(key));
 
 			if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit <= ++found)
 				break;
