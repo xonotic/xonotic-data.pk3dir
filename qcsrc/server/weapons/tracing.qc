@@ -64,7 +64,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 
 	// track max damage
 	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
-		accuracy_add(ent, wep, maxdamage, 0);
+		accuracy_add(ent, wep, maxdamage, 0, 0); // add to fired
 
 	if(IS_PLAYER(ent))
 		W_HitPlotAnalysis(ent, wep, forward, right, up);
@@ -346,7 +346,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 
 	// calculate hits and fired shots for hitscan
 	if(this.(weaponentity))
-		accuracy_add(this, this.(weaponentity).m_weapon, 0, min(bdamage, totaldmg));
+		accuracy_add(this, this.(weaponentity).m_weapon, 0, min(bdamage, totaldmg), 0); // add to hit
 
 	trace_endpos = endpoint;
 	trace_ent = endent;
@@ -474,7 +474,7 @@ void fireBullet_falloff(entity this, .entity weaponentity, vector start, vector 
 				// do not exceed 100%
 				float added_damage = min(damage - total_damage, damage * damage_fraction);
 				total_damage += damage * damage_fraction;
-				accuracy_add(this, this.(weaponentity).m_weapon, 0, added_damage);
+				accuracy_add(this, this.(weaponentity).m_weapon, 0, added_damage, 0); // add to hit
 			}
 		}
 
