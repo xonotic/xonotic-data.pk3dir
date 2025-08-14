@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-28 07:22+0200\n"
+"POT-Creation-Date: 2025-08-14 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Артем Быстров, 2015-2016\n"
 "Language-Team: Kazakh (Cyrillic) (http://app.transifex.com/team-xonotic/"
@@ -1372,41 +1372,41 @@ msgstr ""
 msgid "%s (not bound)"
 msgstr "%s (байланыс емес)"
 
-#: qcsrc/client/mapvoting.qc:73
+#: qcsrc/client/mapvoting.qc:80
 msgid " (1 vote)"
 msgstr ""
 
-#: qcsrc/client/mapvoting.qc:75
+#: qcsrc/client/mapvoting.qc:82
 #, c-format
 msgid " (%d votes)"
 msgstr ""
 
-#: qcsrc/client/mapvoting.qc:306
+#: qcsrc/client/mapvoting.qc:340
 msgid "Don't care"
 msgstr ""
 
-#: qcsrc/client/mapvoting.qc:398
+#: qcsrc/client/mapvoting.qc:379
+#, c-format
+msgid "Suggested by: %s"
+msgstr ""
+
+#: qcsrc/client/mapvoting.qc:458
 msgid "Decide the gametype"
 msgstr ""
 
-#: qcsrc/client/mapvoting.qc:398
+#: qcsrc/client/mapvoting.qc:458
 msgid "Vote for a map"
 msgstr ""
 
-#: qcsrc/client/mapvoting.qc:421
-#, c-format
-msgid "%d seconds left"
-msgstr ""
-
-#: qcsrc/client/mapvoting.qc:567
+#: qcsrc/client/mapvoting.qc:651
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr ""
 
-#: qcsrc/client/mapvoting.qc:577
+#: qcsrc/client/mapvoting.qc:663
 msgid "^1Error:^7 Couldn't find pak index."
 msgstr ""
 
-#: qcsrc/client/mapvoting.qc:586
+#: qcsrc/client/mapvoting.qc:674
 msgid "Requesting preview..."
 msgstr ""
 

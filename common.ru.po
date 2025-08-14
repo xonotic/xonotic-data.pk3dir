@@ -10,10 +10,10 @@
 # Andrey P <andrey.pyntikov@gmail.com>, 2016
 # Artem Vorotnikov <artem@vorotnikov.me>, 2015
 # berry, 2021,2023
-# berry, 2021,2023
-# berry, 2021
-# berry, 2021,2023
-# berry, 2021
+# Blueberryy, 2021,2023
+# Blueberryy, 2021
+# Blueberryy, 2021,2023
+# Blueberryy, 2021
 # Lord Canistra <lordcanistra@gmail.com>, 2011
 # Mirio <opivy@hotmail.de>, 2017
 # Nick S <morosophos@teichisma.info>, 2018-2019
@@ -27,9 +27,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-28 07:22+0200\n"
+"POT-Creation-Date: 2025-08-14 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Andrei Stepanov, 2014-2025\n"
+"Last-Translator: Темак, 2024\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -1416,42 +1416,42 @@ msgstr "Сообщение сервера"
 msgid "%s (not bound)"
 msgstr "%s (не связаны)"
 
-#: qcsrc/client/mapvoting.qc:73
+#: qcsrc/client/mapvoting.qc:80
 msgid " (1 vote)"
 msgstr " (голосов: 1)"
 
-#: qcsrc/client/mapvoting.qc:75
+#: qcsrc/client/mapvoting.qc:82
 #, c-format
 msgid " (%d votes)"
 msgstr " (голосов: %d)"
 
-#: qcsrc/client/mapvoting.qc:306
+#: qcsrc/client/mapvoting.qc:340
 msgid "Don't care"
 msgstr "Всё равно"
 
-#: qcsrc/client/mapvoting.qc:398
+#: qcsrc/client/mapvoting.qc:379
+#, c-format
+msgid "Suggested by: %s"
+msgstr ""
+
+#: qcsrc/client/mapvoting.qc:458
 msgid "Decide the gametype"
 msgstr "Выберите режим игры"
 
-#: qcsrc/client/mapvoting.qc:398
+#: qcsrc/client/mapvoting.qc:458
 msgid "Vote for a map"
 msgstr "Голосование за арену"
 
-#: qcsrc/client/mapvoting.qc:421
-#, c-format
-msgid "%d seconds left"
-msgstr "Осталось секунд: %d"
-
-#: qcsrc/client/mapvoting.qc:567
+#: qcsrc/client/mapvoting.qc:651
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr ""
 "mv_mapdownload: ^3Вы не должны использовать эту команду по своему усмотрению!"
 
-#: qcsrc/client/mapvoting.qc:577
+#: qcsrc/client/mapvoting.qc:663
 msgid "^1Error:^7 Couldn't find pak index."
 msgstr "^1Ошибка:^7 Не удалось найти индекс пака."
 
-#: qcsrc/client/mapvoting.qc:586
+#: qcsrc/client/mapvoting.qc:674
 msgid "Requesting preview..."
 msgstr "Запрос эскиза…"
 

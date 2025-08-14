@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-28 07:22+0200\n"
+"POT-Creation-Date: 2025-08-14 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Seokho Son, 2022\n"
 "Language-Team: Korean (http://app.transifex.com/team-xonotic/xonotic/"
@@ -1395,41 +1395,41 @@ msgstr ""
 msgid "%s (not bound)"
 msgstr "%s (미정)"
 
-#: qcsrc/client/mapvoting.qc:73
+#: qcsrc/client/mapvoting.qc:80
 msgid " (1 vote)"
 msgstr "(투표 1 표)"
 
-#: qcsrc/client/mapvoting.qc:75
+#: qcsrc/client/mapvoting.qc:82
 #, c-format
 msgid " (%d votes)"
 msgstr "(투표 %d 표)"
 
-#: qcsrc/client/mapvoting.qc:306
+#: qcsrc/client/mapvoting.qc:340
 msgid "Don't care"
 msgstr "신경 안 씀"
 
-#: qcsrc/client/mapvoting.qc:398
+#: qcsrc/client/mapvoting.qc:379
+#, c-format
+msgid "Suggested by: %s"
+msgstr ""
+
+#: qcsrc/client/mapvoting.qc:458
 msgid "Decide the gametype"
 msgstr "게임 유형을 정하세요"
 
-#: qcsrc/client/mapvoting.qc:398
+#: qcsrc/client/mapvoting.qc:458
 msgid "Vote for a map"
 msgstr "투표해서 맵을 정하세요"
 
-#: qcsrc/client/mapvoting.qc:421
-#, c-format
-msgid "%d seconds left"
-msgstr "%d 초 남음"
-
-#: qcsrc/client/mapvoting.qc:567
+#: qcsrc/client/mapvoting.qc:651
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr "mv_mapdownload: ^3이 명령을 직접 사용하지 마세요!"
 
-#: qcsrc/client/mapvoting.qc:577
+#: qcsrc/client/mapvoting.qc:663
 msgid "^1Error:^7 Couldn't find pak index."
 msgstr "^1오류:^7 pak 인덱스를 찾지 못함"
 
-#: qcsrc/client/mapvoting.qc:586
+#: qcsrc/client/mapvoting.qc:674
 msgid "Requesting preview..."
 msgstr "프리뷰 요청..."
 

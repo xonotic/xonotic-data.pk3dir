@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-28 07:22+0200\n"
+"POT-Creation-Date: 2025-08-14 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Ximielga <dorian@openmailbox.org>, 2014\n"
 "Language-Team: Asturian (http://app.transifex.com/team-xonotic/xonotic/"
@@ -1375,41 +1375,41 @@ msgstr ""
 msgid "%s (not bound)"
 msgstr ""
 
-#: qcsrc/client/mapvoting.qc:73
+#: qcsrc/client/mapvoting.qc:80
 msgid " (1 vote)"
 msgstr " (1 votu)"
 
-#: qcsrc/client/mapvoting.qc:75
+#: qcsrc/client/mapvoting.qc:82
 #, c-format
 msgid " (%d votes)"
 msgstr " (%d votos)"
 
-#: qcsrc/client/mapvoting.qc:306
+#: qcsrc/client/mapvoting.qc:340
 msgid "Don't care"
 msgstr "Dame igual"
 
-#: qcsrc/client/mapvoting.qc:398
+#: qcsrc/client/mapvoting.qc:379
+#, c-format
+msgid "Suggested by: %s"
+msgstr ""
+
+#: qcsrc/client/mapvoting.qc:458
 msgid "Decide the gametype"
 msgstr "Votación d'un tipu de xuegu"
 
-#: qcsrc/client/mapvoting.qc:398
+#: qcsrc/client/mapvoting.qc:458
 msgid "Vote for a map"
 msgstr "Votación d'un mapa"
 
-#: qcsrc/client/mapvoting.qc:421
-#, c-format
-msgid "%d seconds left"
-msgstr "Nᵘ de segundos que queden: %d"
-
-#: qcsrc/client/mapvoting.qc:567
+#: qcsrc/client/mapvoting.qc:651
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr "mv_mapdownload: ^3¡Supónse que tu nun pues usar esti comandu!"
 
-#: qcsrc/client/mapvoting.qc:577
+#: qcsrc/client/mapvoting.qc:663
 msgid "^1Error:^7 Couldn't find pak index."
 msgstr ""
 
-#: qcsrc/client/mapvoting.qc:586
+#: qcsrc/client/mapvoting.qc:674
 msgid "Requesting preview..."
 msgstr "Solicitando la previsualización..."
 
