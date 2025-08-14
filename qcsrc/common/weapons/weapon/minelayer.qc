@@ -138,7 +138,7 @@ void W_MineLayer_ProximityExplode(entity this)
 		head = findradius(this.origin, WEP_CVAR(WEP_MINE_LAYER, radius));
 		while(head)
 		{
-			if(head == this.realowner || SAME_TEAM(head, this.realowner))
+			if(SAME_TEAM(head, this.realowner))
 				return;
 			head = head.chain;
 		}
@@ -185,7 +185,6 @@ void W_MineLayer_Think(entity this)
 	}
 
 	// a player's mines shall explode if they disconnect or die
-	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
 	if(!IS_PLAYER(this.realowner) || IS_DEAD(this.realowner) || STAT(FROZEN, this.realowner))
 	{
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -194,15 +193,23 @@ void W_MineLayer_Think(entity this)
 	}
 
 	// set the mine for detonation when a foe gets close enough
-	head = findradius(this.origin, WEP_CVAR(WEP_MINE_LAYER, proximityradius));
+	float time_core = WEP_CVAR(WEP_MINE_LAYER, proximity_time_core);
+	float time_edge = WEP_CVAR(WEP_MINE_LAYER, proximity_time_edge);
+	float proxrad = WEP_CVAR(WEP_MINE_LAYER, proximity_radius);
+	head = findradius(this.origin, proxrad);
 	while(head)
 	{
 		if(IS_PLAYER(head) && !IS_DEAD(head) && !STAT(FROZEN, head) && !IS_INDEPENDENT_PLAYER(head))
-		if(head != this.realowner && DIFF_TEAM(head, this.realowner)) // don't trigger for teammates
-		if(!this.mine_time)
+		if(DIFF_TEAM(head, this.realowner)) // don't trigger for teammates
 		{
-			spamsound(this, CH_SHOTS, SND_MINE_TRIGGER, VOL_BASE, ATTN_NORM);
-			this.mine_time = time + WEP_CVAR(WEP_MINE_LAYER, time);
+			if(!this.mine_time) // don't repeat the sound
+				spamsound(this, CH_SHOTS, SND_MINE_TRIGGER, VOL_BASE, ATTN_NORM);
+			// scale from time_edge to time_core based on how close the player is to the mine
+			float new_mine_time = time + time_core;
+			if(time_edge != time_core)
+				new_mine_time += (time_edge - time_core) * vlen(head.origin - this.origin) / proxrad;
+			if((!this.mine_time) || this.mine_time > new_mine_time) // choose the earliest explosion time
+				this.mine_time = new_mine_time;
 		}
 		head = head.chain;
 	}
