@@ -222,6 +222,8 @@ void W_MineLayer_Touch(entity this, entity toucher)
 {
 	if(this.move_movetype == MOVETYPE_NONE || this.move_movetype == MOVETYPE_FOLLOW)
 		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
+	if(time <= this.wait)
+		return; // don't reattach yet
 
 	PROJECTILE_TOUCH(this, toucher);
 
@@ -240,6 +242,14 @@ void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float da
 {
 	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
+
+	if (this.damageforcescale && inflictor.classname != "mine")
+	{
+		set_movetype(this, MOVETYPE_BOUNCE); // BOUNCE not TOSS: so a direct hit can move the mine
+		this.wait = time + 0.0625; // after this time it will reattach instead of bouncing
+		settouch(this, W_MineLayer_Touch);
+		this.avelocity = this.velocity += force * this.damageforcescale;
+	}
 
 	float is_from_enemy = (inflictor.realowner != this.realowner);
 
