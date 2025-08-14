@@ -2,8 +2,8 @@
 
 #include "dialog.qh"
 CLASS(Tab, Dialog)
-	ATTRIB(Tab, isTabRoot, float, 0);
-	ATTRIB(Tab, closable, float, 0);
+	ATTRIB(Tab, isTabRoot, bool, false);
+	ATTRIB(Tab, closable, bool, false);
 	ATTRIB(Tab, title, string);
 	ATTRIB(Tab, titleFontSize, float, 0);  // pixels
 

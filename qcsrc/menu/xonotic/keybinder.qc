@@ -21,6 +21,14 @@ string KeyBinds_Icons[MAX_KEYBINDS]; // Allow all keybinds to have an icon, alth
 // Remove this character before drawing the icon
 
 #define KEYBIND_IS_USERBIND(descr) (substring(descr, 0, 1) == "$")
+// Special keybinds can't be edited or selected
+// If a special keybind description matches the previous one
+// then it's considered as an alternative keybind of the previous one
+#define KEYBIND_IS_SPECIAL(func) (substring(func, 0 ,1) == "*")
+// Overriding keybinds unset other binds when they're set
+// ... for the purposes of the menu, or for other reasons
+// The other binds that need to be unset are concatenated to func with a ";" separator
+#define KEYBIND_IS_OVERRIDER(func) (substring(func, 0 ,1) == ";")
 
 string XonoticKeyBinder_cb_name, XonoticKeyBinder_cb_icon;
 void XonoticKeyBinder_cb(string _name, string _icon)
@@ -43,21 +51,11 @@ void KeyBinds_BuildList()
 		} \
 	MACRO_END
 	#define KEYBIND_DEF(func, desc) KEYBIND_DEF_WITH_ICON(func, desc, "")
+	#define KEYBIND_DEF_SPECIAL_WITH_ICON(func, desc, icon) KEYBIND_DEF_WITH_ICON(strcat("*", func), desc, icon)
+	#define KEYBIND_DEF_OVERRIDER_WITH_ICON(func, desc, icon) KEYBIND_DEF_WITH_ICON(strcat(";", func), desc, icon)
 
 	#define KEYBIND_EMPTY_LINE() KEYBIND_DEF("", "")
 	#define KEYBIND_HEADER(str) KEYBIND_DEF("", str)
-
-	// Special keybinds can't be edited or selected
-	// If a special keybind description matches the previous one
-	// then it's considered as an alternative keybind of the previous one
-	#define KEYBIND_IS_SPECIAL(func) (substring(func, 0 ,1) == "*")
-	#define KEYBIND_SPECIAL_DEF_WITH_ICON(func, desc, icon) KEYBIND_DEF_WITH_ICON(strcat("*", func), desc, icon)
-
-	// Overriding keybinds unset other binds when they're set
-	// ... for the purposes of the menu, or for other reasons
-	// The other binds that need to be unset are concatenated to func with a ";" separator
-	#define KEYBIND_IS_OVERRIDER(func) (substring(func, 0 ,1) == ";")
-	#define KEYBIND_OVERRIDER_DEF_WITH_ICON(func, desc, icon) KEYBIND_DEF_WITH_ICON(strcat(";", func), desc, icon)
 
 
 	KEYBIND_HEADER(_("Moving"));
@@ -157,7 +155,7 @@ void KeyBinds_BuildList()
 	// non-English keyboard layouts, unlike default keys (` and ~)
 	KEYBIND_DEF("toggleconsole"                         , _("enter console"));
 		string console_shortcut = strcat(translate_key("SHIFT"), "+", translate_key("ESCAPE"));
-		KEYBIND_SPECIAL_DEF_WITH_ICON(console_shortcut  , _("enter console"), "");
+		KEYBIND_DEF_SPECIAL_WITH_ICON(console_shortcut  , _("enter console"), "");
 	KEYBIND_DEF("menu_showquitdialog"                   , _("quit"));
 	KEYBIND_EMPTY_LINE();
 
@@ -172,7 +170,7 @@ void KeyBinds_BuildList()
 	KEYBIND_DEF("kill"                                  , _("suicide / respawn"));
 	KEYBIND_DEF("quickmenu"                             , _("quick menu"));
 	string scoreboard_ui_shortcut = strcat(translate_key("TAB"), "+", translate_key("ESCAPE"));
-	KEYBIND_SPECIAL_DEF_WITH_ICON(scoreboard_ui_shortcut, _("scoreboard user interface"), "");
+	KEYBIND_DEF_SPECIAL_WITH_ICON(scoreboard_ui_shortcut, _("scoreboard user interface"), "");
 	KEYBIND_EMPTY_LINE();
 
 	KEYBIND_HEADER(_("User defined"));
@@ -187,7 +185,12 @@ void KeyBinds_BuildList()
 	KEYBIND_DEF("+button8"                              , _("drag object (sandbox)"));
 	KEYBIND_DEF("wpeditor_menu"                         , _("waypoint editor menu"));
 
+	#undef KEYBIND_DEF_WITH_ICON
 	#undef KEYBIND_DEF
+	#undef KEYBIND_EMPTY_LINE
+	#undef KEYBIND_HEADER
+	#undef KEYBIND_DEF_SPECIAL_WITH_ICON
+	#undef KEYBIND_DEF_OVERRIDER_WITH_ICON
 }
 
 entity makeXonoticKeyBinder()
@@ -260,7 +263,7 @@ void KeyBinder_Bind_Change(entity btn, entity me)
 		return;
 
 	me.setSelected(me, me.selectedItem); // make it visible if it's hidden
-	me.keyGrabButton.forcePressed = 1;
+	me.keyGrabButton.forcePressed = true;
 	me.clearButton.disabled = 1;
 	keyGrabber = me;
 }
@@ -283,7 +286,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 {
 	int n, j, k, nvalid;
 
-	me.keyGrabButton.forcePressed = 0;
+	me.keyGrabButton.forcePressed = false;
 	me.clearButton.disabled = 0;
 
 	if (key == K_ESCAPE)
@@ -422,39 +425,37 @@ void XonoticKeyBinder_doubleClickListBoxItem(entity me, float i, vector where)
 void XonoticKeyBinder_setSelected(entity me, int i)
 {
 	// handling of "unselectable" items
-	i = floor(0.5 + bound(0, i, me.nItems - 1));
-	if (KEYBIND_IS_SPECIAL(KeyBinds_Functions[i]))
+	i = bound(0, i, me.nItems - 1);
+#define KEYBIND_IS_UNSELECTABLE(idx) \
+	(KeyBinds_Functions[idx] == "" || KEYBIND_IS_SPECIAL(KeyBinds_Functions[idx]))
+
+	// skip over unselectables if selected via keyboard, otherwise ignore mouse input
+	if (!me.pressed)
 	{
-		if (i > 0 && KeyBinds_Descriptions[i] == KeyBinds_Descriptions[i - 1])
-			SUPER(XonoticKeyBinder).setSelected(me, i - 1);
-		return;
-	}
-	if (me.pressed == 0 || me.pressed == 1) // keyboard or scrolling - skip unselectable items
-	{
-		if (i > me.previouslySelected)
+		if (i < me.previouslySelected)
 		{
-			while ((i < me.nItems - 1) && (KeyBinds_Functions[i] == ""))
+			while ((i > 0) && KEYBIND_IS_UNSELECTABLE(i))
+				--i;
+		}
+		else
+		{
+			while ((i < me.nItems - 1) && KEYBIND_IS_UNSELECTABLE(i))
 				++i;
 		}
-		while ((i > 0) && (KeyBinds_Functions[i] == ""))
-			--i;
-		while ((i < me.nItems - 1) && (KeyBinds_Functions[i] == ""))
-			++i;
 	}
-	if (me.pressed == 3) // released the mouse - fall back to last valid item
-	{
-		if (KeyBinds_Functions[i] == "")
-			i = me.previouslySelected;
-	}
-	if (KeyBinds_Functions[i] != "")
+	if (KEYBIND_IS_UNSELECTABLE(i))
+		i = me.previouslySelected;
+	else
 		me.previouslySelected = i;
+
 	if (me.userbindEditButton)
 		me.userbindEditButton.disabled = !KEYBIND_IS_USERBIND(KeyBinds_Descriptions[i]);
 	SUPER(XonoticKeyBinder).setSelected(me, i);
+#undef KEYBIND_IS_UNSELECTABLE
 }
 float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 {
-	bool r = true;
+	float r = 1;
 	switch (key)
 	{
 		case K_ENTER:
@@ -591,3 +592,5 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 }
 
 #undef KEYBIND_IS_USERBIND
+#undef KEYBIND_IS_SPECIAL
+#undef KEYBIND_IS_OVERRIDER
