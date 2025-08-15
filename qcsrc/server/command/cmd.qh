@@ -17,8 +17,8 @@ void ClientCommand_macro_write_aliases(float fh);
 // functions for ignore command
 void ignore_remove_player(entity this, entity ignore, bool from_db_too);
 int ignore_add_player(entity this, entity ignore, bool to_db_too, float send_delay);
-bool ignore_playerindb(entity this, entity targ); // permanent ignores
-bool ignore_playerinlist(entity sender, entity targ); // all ignores
+bool ignore_playerindb(entity this, entity pl); // permanent ignores
+bool ignore_playerinlist(entity this, entity pl); // all ignores
 void ignore_clearall(entity this);
 void ignore_list_update_on_connection(entity this);
 void ignore_list_send(entity this);
