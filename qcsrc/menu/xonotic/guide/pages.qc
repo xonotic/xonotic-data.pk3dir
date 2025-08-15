@@ -45,15 +45,18 @@ REGISTER_INTRODUCTION_PAGE(3, _("XonStat"))
 
 REGISTER_MOVEMENT_PAGE(0, _("Introduction"))
 {
-	this.m_description = _("Xonotic is a very fast-paced arena shooter. Fast-paced does not only relate to reaction times but also to movement speed. "
+	this.m_description = strzone(strcat(_("Xonotic is a very fast-paced arena shooter. Fast-paced does not only relate to reaction times but also to movement speed. "
 		"That means mastering movement skills is an essential part of Xonotic gameplay and must not be underestimated.\n\n"
-		"For a new player, the most important tricks to learn are:"
-		"\n  Bunny Hopping"
-		"\n  Strafe Turning"
-		"\n  Blaster Jumping"
-		"\n  Rocket Flying"
-		"\n  Crylink Running"
-		"\n  Ramp Jumping");
+		"For a new player, the most important tricks to learn are:")
+		,
+		sprintf("\n  %s\n  %s\n  %s\n  %s\n  %s",
+			_("Bunny Hopping"),
+			_("Strafe Turning"),
+			_("Blaster Jumping"),
+			_("Rocket Flying"),
+			_("Crylink Running"),
+			_("Ramp Jumping")
+		)));
 }
 REGISTER_MOVEMENT_PAGE(1, _("Bunny Hopping"))
 {

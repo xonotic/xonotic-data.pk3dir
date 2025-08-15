@@ -35,8 +35,9 @@ METHOD(SpeedItem, describe, string(SpeedItem this))
 {
     TC(SpeedItem, this);
     return sprintf(_("The %s powerup increases your movement speed, attack speed, and health regeneration speed while the powerup is active. "
-        "However, it also makes you a bit more vulnerable to incoming attacks.\n\n"
-        "Since it is a powerup, it will drop if you die while holding it."),
-    COLORED_NAME(this));
+        "However, it also makes you a bit more vulnerable to incoming attacks.\n\n%s"),
+        COLORED_NAME(this),
+        _("Since it is a powerup, it will drop if you die while holding it.") // shared message
+    );
 }
 #endif // MENUQC
