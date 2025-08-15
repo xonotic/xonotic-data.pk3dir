@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-14 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Stuart Young <cefiar@gmail.com>, 2016\n"
+"Last-Translator: k9er, 2024-2025\n"
 "Language-Team: English (Australia) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/en_AU/)\n"
 "Language: en_AU\n"
@@ -1415,7 +1415,7 @@ msgstr "Don't care"
 #: qcsrc/client/mapvoting.qc:379
 #, c-format
 msgid "Suggested by: %s"
-msgstr ""
+msgstr "Suggested by: %s"
 
 #: qcsrc/client/mapvoting.qc:458
 msgid "Decide the gametype"

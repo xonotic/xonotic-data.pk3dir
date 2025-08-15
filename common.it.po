@@ -840,7 +840,7 @@ msgstr "spinte"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "Player rank"
-msgstr "Posizione del giocatore"
+msgstr "Posizione del giocatore (in classifica)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "SCO^rank"
@@ -888,11 +888,11 @@ msgstr "Punteggio totale"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Player skill"
-msgstr ""
+msgstr "Abilità del giocatore"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^skill"
-msgstr ""
+msgstr "abilità"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of suicides"
@@ -1423,7 +1423,7 @@ msgstr "Non importa"
 #: qcsrc/client/mapvoting.qc:379
 #, c-format
 msgid "Suggested by: %s"
-msgstr ""
+msgstr "Suggerita da: %s"
 
 #: qcsrc/client/mapvoting.qc:458
 msgid "Decide the gametype"
@@ -10944,12 +10944,12 @@ msgstr "Rapporto uccisioni:"
 
 #: qcsrc/menu/xonotic/statslist.qc:209
 msgid "Skill:"
-msgstr ""
+msgstr "Abilità:"
 
 #: qcsrc/menu/xonotic/statslist.qc:232
 #, c-format
 msgid "%d (unranked)"
-msgstr "%d (non piazzato)"
+msgstr "%d (non classificato)"
 
 #: qcsrc/menu/xonotic/util.qc:407
 msgid "Update can be downloaded at:"
