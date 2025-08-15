@@ -463,7 +463,7 @@ void WinningConditionHelper(entity this)
 	s = strcat(GetGametype(),
 		":", autocvar_g_xonoticversion,
 		":P", ftos(cvar_purechanges_count),
-		":S", ftos(nJoinAllowed(this, NULL)));
+		":S", ftos(nJoinAllowed(NULL)));
 	s = strcat(s,
 		":F", ftos(serverflags),
 		":T", sv_termsofservice_url_escaped,
