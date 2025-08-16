@@ -83,23 +83,21 @@ float DistributeEvenly_GetRandomized(float weight)
 
 // from the GNU Scientific Library
 float gsl_ran_gaussian_lastvalue;
-float gsl_ran_gaussian_lastvalue_set;
+bool gsl_ran_gaussian_lastvalue_set;
 ERASEABLE
-float gsl_ran_gaussian(float sigma)
+float gsl_ran_gaussian()
 {
 	if (gsl_ran_gaussian_lastvalue_set)
 	{
-		gsl_ran_gaussian_lastvalue_set = 0;
-		return sigma * gsl_ran_gaussian_lastvalue;
+		gsl_ran_gaussian_lastvalue_set = false;
+		return gsl_ran_gaussian_lastvalue;
 	}
-	else
-	{
-		float a = random() * (2 * M_PI);
-		float b = sqrt(-2 * log(random()));
-		gsl_ran_gaussian_lastvalue = cos(a) * b;
-		gsl_ran_gaussian_lastvalue_set = 1;
-		return sigma * sin(a) * b;
-	}
+
+	const float a = random() * (2 * M_PI);
+	const float b = sqrt(-2 * log(random()));
+	gsl_ran_gaussian_lastvalue = cos(a) * b;
+	gsl_ran_gaussian_lastvalue_set = true;
+	return sin(a) * b;
 }
 
 // prandom - PREDICTABLE random number generator (not seeded yet)

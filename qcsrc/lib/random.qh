@@ -16,8 +16,22 @@ void RandomSelection_Add(entity e, float f, string s, vector v, float weight, fl
 #define RandomSelection_AddString(s, weight, priority) RandomSelection_Add(NULL, 0, s, '0 0 0', weight, priority)
 #define RandomSelection_AddVec(v, weight, priority) RandomSelection_Add(NULL, 0, string_null, v, weight, priority)
 
-// prandom - PREDICTABLE random number generator
+ERASEABLE
+void DistributeEvenly_Init(float amount, float totalweight);
+ERASEABLE
+float DistributeEvenly_Get(float weight);
+ERASEABLE
+float DistributeEvenly_GetRounded(float weight);
+ERASEABLE
+float DistributeEvenly_GetRandomized(float weight);
 
+ERASEABLE
+float gsl_ran_gaussian();
+
+// crandom: returns a random number between -1.0 and 1.0
+#define crandom() (2 * (random() - 0.5))
+
+// prandom: PREDICTABLE random number generator
 #define USE_PRANDOM
 
 #ifdef USE_PRANDOM
