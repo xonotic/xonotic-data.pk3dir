@@ -1406,7 +1406,7 @@ msgstr "Non curo"
 #: qcsrc/client/mapvoting.qc:379
 #, c-format
 msgid "Suggested by: %s"
-msgstr ""
+msgstr "Hanc suadet: %s"
 
 #: qcsrc/client/mapvoting.qc:458
 msgid "Decide the gametype"
