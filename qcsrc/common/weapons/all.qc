@@ -966,7 +966,8 @@ string W_Guide_DPS_secondaryMultishotWithCombo(string name, string pri, string s
 	float combo_t = max(pri_rft, sec_rft);
 	if (refire2 != "")
 	{
-		const float sec_rft2 = stof(cvar_defstring(strcat(wepbal_s, refire2)));
+		const float sec_rft2 = sec_rft;
+		sec_rft = stof(cvar_defstring(strcat(wepbal_s, refire2)));
 		combo_t = max(combo_t, num_shots * sec_rft + sec_rft2);
 		sec_rft = (num_shots - 1) * sec_rft + sec_rft2;
 	}
