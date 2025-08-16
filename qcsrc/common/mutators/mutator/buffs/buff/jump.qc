@@ -17,3 +17,12 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics)
 		STAT(MOVEVARS_JUMPVELOCITY, player) = autocvar_g_buffs_jump_height;
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(JumpBuff, describe, string(JumpBuff this))
+{
+	TC(JumpBuff, this);
+	return sprintf(_("The %s greatly increases your jump height, while the buff is active.\n\n"
+		"It also makes you immune to fall damage."),
+	COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+}
+#endif // MENUQC

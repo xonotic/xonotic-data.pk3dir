@@ -22,9 +22,17 @@ CLASS(Buff, StatusEffect)
 	ATTRIB(Buff, m_skin, int, 0);
 	ATTRIB(Buff, m_lifetime, float, 60);
 	ATTRIB(Buff, m_sprite, string, "");
-#ifndef SVQC
-	METHOD(Buff, display, void(entity this, void(string name, string icon) returns))
+#ifdef MENUQC
+	METHOD(Buff, describe, string(Buff this))
 	{
+		TC(Buff, this);
+		return SUPER(Buff).describe(this);
+	}
+#endif
+#ifndef SVQC
+	METHOD(Buff, display, void(Buff this, void(string name, string icon) returns))
+	{
+		TC(Buff, this);
 		string img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon);
 	#ifdef CSQC
 		if (precache_pic(img) == "")
@@ -38,7 +46,9 @@ CLASS(Buff, StatusEffect)
 #endif
 #ifdef SVQC
 	METHOD(Buff, m_time, float(Buff this))
-	{ return cvar(strcat("g_buffs_", this.netname, "_time")); }
+	{
+		return cvar(strcat("g_buffs_", this.netname, "_time"));
+	}
 #endif
 ENDCLASS(Buff)
 

@@ -196,6 +196,16 @@ entity GetAmmoItem(Resource ammotype)
 	return NULL;
 }
 
+entity GetAmmoResource(Ammo ammotype)
+{
+	FOREACH(Resources, it.netname == ammotype.netname,
+	{
+		return it;
+	});
+	LOG_WARNF("Invalid ammo type %d ", ammotype.m_id);
+	return NULL;
+}
+
 #ifdef CSQC
 int GetAmmoStat(Resource ammotype)
 {
@@ -818,4 +828,163 @@ REPLICATE(cvar_cl_weaponpriorities[6], string, "cl_weaponpriority6", W_FixWeapon
 REPLICATE(cvar_cl_weaponpriorities[7], string, "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
 REPLICATE(cvar_cl_weaponpriorities[8], string, "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
 REPLICATE(cvar_cl_weaponpriorities[9], string, "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
+#endif
+
+
+#ifdef MENUQC
+// Finds keybinds for a weapon
+string W_Guide_Keybinds(Weapon wep)
+{
+	string command, key, keys = "";
+	int n, j;
+	float k;
+	const bool joy_active = cvar("joy_active");
+
+	for (int cmd_type = 0; cmd_type < 2; ++cmd_type)
+	{
+		command = cmd_type
+			? strcat("weapon_", wep.netname)
+			: strcat("weapon_group_", itos(wep.impulse));
+		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
+
+		for (j = 0; j < n; ++j)
+		{
+			k = stof(argv(j));
+			if (k == -1)
+				continue;
+			key = keynumtostring(k);
+			if (!joy_active && startsWith(key, "JOY"))
+				continue;
+
+			key = translate_key(key);
+			if (keys == "")
+				keys = strcat("^3", key);
+			else
+				keys = strcat(keys, "^7, ^3", key);
+		}
+	}
+
+	if (keys == "")
+		return _("This weapon has not been bound directly."); // code may miss some weird bind configs, so say "directly"
+	return sprintf(_("You have bound this weapon to: %s."), strcat(keys, "^7"));
+}
+
+// One function for each translatable string
+
+string W_Guide_DPS_onlyOne_unnamed(string name)
+{
+	const string wepbal_s = strcat("g_balance_", name);
+	const string dmg_s =      cvar_defstring(strcat(wepbal_s, "_damage"));
+	const float rft    = stof(cvar_defstring(strcat(wepbal_s, "_refire")));
+	return sprintf(_("By default, it does ^9%s^7 damage (DPS: %.2f)."),
+		dmg_s, rft <= 0 ? 1337 : stof(dmg_s) / rft);
+}
+string W_Guide_DPS_onlyOne(string name, string fire)
+{
+	return W_Guide_DPS_onlyOne_unnamed(strcat(name, "_", fire));
+}
+string W_Guide_DPS(string name, string pri, string sec)
+{
+	// TODO: rename all wep primary cvars to g_balance_*_primary_*, vice versa for secondary.
+	// Example exception: g_balance_arc_beam_* (primary)
+	const string wepbal_s = strcat("g_balance_", name, "_");
+	const string pri_dmg_s =      cvar_defstring(strcat(wepbal_s, pri, "_damage"));
+	const float pri_rft    = stof(cvar_defstring(strcat(wepbal_s, pri, "_refire")));
+	const string sec_dmg_s =      cvar_defstring(strcat(wepbal_s, sec, "_damage"));
+	const float sec_rft    = stof(cvar_defstring(strcat(wepbal_s, sec, "_refire")));
+	return sprintf(_("By default, the primary does ^9%s^7 damage (DPS: %.2f), and the secondary does ^9%s^7 damage (DPS: %.2f)."),
+		pri_dmg_s, (pri_rft <= 0 ? 1337 : stof(pri_dmg_s) / pri_rft),
+		sec_dmg_s, (sec_rft <= 0 ? 1337 : stof(sec_dmg_s) / sec_rft));
+}
+string W_Guide_DPS_bothMultishot(string name, string pri, string sec)
+{
+	const string wepbal_s = strcat("g_balance_", name, "_");
+	const string pri_dmg_s   =      cvar_defstring(strcat(wepbal_s, pri, "_damage"));
+	const float pri_rft      = stof(cvar_defstring(strcat(wepbal_s, pri, "_refire")));
+	const string pri_shots_s =      cvar_defstring(strcat(wepbal_s, pri, "_shots"));
+	const string sec_dmg_s   =      cvar_defstring(strcat(wepbal_s, sec, "_damage"));
+	const float sec_rft      = stof(cvar_defstring(strcat(wepbal_s, sec, "_refire")));
+	const string sec_shots_s =      cvar_defstring(strcat(wepbal_s, sec, "_shots"));
+	return sprintf(_("By default, the primary shoots %s shots doing ^9%s^7 damage each (DPS: %.2f), and the secondary shoots %s shots doing ^9%s^7 damage each (DPS: %.2f)."),
+		pri_shots_s, pri_dmg_s, (pri_rft <= 0 ? 1337 : stof(pri_dmg_s) / pri_rft * stof(pri_shots_s)),
+		sec_shots_s, sec_dmg_s, (sec_rft <= 0 ? 1337 : stof(sec_dmg_s) / sec_rft * stof(sec_shots_s)));
+}
+string W_Guide_DPS_secondaryMultishot(string name, string pri, string sec, string shots, string refire2)
+{
+	const string wepbal_s = strcat("g_balance_", name, "_");
+	const string pri_dmg_s   =      cvar_defstring(strcat(wepbal_s, pri, "_damage"));
+	const float pri_rft      = stof(cvar_defstring(strcat(wepbal_s, pri, "_refire")));
+	string sec_dmg_s         =      cvar_defstring(strcat(wepbal_s, sec, "_damage"));
+	float sec_rft            = stof(cvar_defstring(strcat(wepbal_s, sec, "_refire")));
+	const string sec_shots_s =      cvar_defstring(strcat(wepbal_s, shots));
+	if (sec_dmg_s == "")
+		sec_dmg_s = pri_dmg_s;
+	const float num_shots = stof(sec_shots_s);
+	if (refire2 != "")
+		sec_rft = (num_shots - 1) * sec_rft + stof(cvar_defstring(strcat(wepbal_s, refire2)));
+	return sprintf(_("By default, the primary does ^9%s^7 damage (DPS: %.2f), and the secondary shoots %s shots doing ^9%s^7 damage each (DPS: %.2f)."),
+		             pri_dmg_s, (pri_rft <= 0 ? 1337 : stof(pri_dmg_s) / pri_rft),
+		sec_shots_s, sec_dmg_s, (sec_rft <= 0 ? 1337 : stof(sec_dmg_s) / sec_rft * num_shots));
+}
+string W_Guide_DPS_primaryMultishot(string name, string pri, string sec, string shots, string refire2)
+{
+	const string wepbal_s = strcat("g_balance_", name, "_");
+	const string pri_dmg_s   =      cvar_defstring(strcat(wepbal_s, pri, "_damage"));
+	float pri_rft            = stof(cvar_defstring(strcat(wepbal_s, pri, "_refire")));
+	const string pri_shots_s =      cvar_defstring(strcat(wepbal_s, shots));
+	const string sec_dmg_s   =      cvar_defstring(strcat(wepbal_s, sec, "_damage"));
+	const float sec_rft      = stof(cvar_defstring(strcat(wepbal_s, sec, "_refire")));
+	const float num_shots = stof(pri_shots_s);
+	if (refire2 != "")
+		pri_rft = (num_shots - 1) * pri_rft + stof(cvar_defstring(strcat(wepbal_s, refire2)));
+	return sprintf(_("By default, the primary shoots %s shots doing ^9%s^7 damage each (DPS: %.2f), and the secondary does ^9%s^7 damage (DPS: %.2f)."),
+		pri_shots_s, pri_dmg_s, (pri_rft <= 0 ? 1337 : stof(pri_dmg_s) / pri_rft * num_shots),
+		             sec_dmg_s, (sec_rft <= 0 ? 1337 : stof(sec_dmg_s) / sec_rft));
+}
+string W_Guide_DPS_onlyOneMultishot(string name, string fire, string shots, string refire2)
+{
+	const string wepbal_s = strcat("g_balance_", name, "_");
+	const string dmg_s   =      cvar_defstring(strcat(wepbal_s, fire, "_damage"));
+	float rft            = stof(cvar_defstring(strcat(wepbal_s, fire, "_refire")));
+	const string shots_s =      cvar_defstring(strcat(wepbal_s, shots));
+	const float num_shots = stof(shots_s);
+	if (refire2 != "")
+		rft = (num_shots - 1) * rft + stof(cvar_defstring(strcat(wepbal_s, refire2)));
+	return sprintf(_("By default, it shoots %s shots doing ^9%s^7 damage each (DPS: %.2f)."),
+		shots_s, dmg_s, (rft <= 0 ? 1337 : stof(dmg_s) / rft * num_shots));
+}
+string W_Guide_DPS_secondaryMultishotWithCombo(string name, string pri, string sec, string shots, string refire2, string combo)
+{
+	const string wepbal_s = strcat("g_balance_", name, "_");
+	const string pri_dmg_s   =      cvar_defstring(strcat(wepbal_s, pri, "_damage"));
+	const float  pri_rft     = stof(cvar_defstring(strcat(wepbal_s, pri, "_refire")));
+	const string sec_dmg_s   =      cvar_defstring(strcat(wepbal_s, sec, "_damage"));
+	float sec_rft            = stof(cvar_defstring(strcat(wepbal_s, sec, "_refire")));
+	const string sec_shots_s =      cvar_defstring(strcat(wepbal_s, shots));
+	const string cmb_dmg_s   =      cvar_defstring(strcat(wepbal_s, combo, "_damage"));
+	const float num_shots = stof(sec_shots_s);
+	float combo_t = max(pri_rft, sec_rft);
+	if (refire2 != "")
+	{
+		const float sec_rft2 = sec_rft;
+		sec_rft = stof(cvar_defstring(strcat(wepbal_s, refire2)));
+		combo_t = max(combo_t, num_shots * sec_rft + sec_rft2);
+		sec_rft = (num_shots - 1) * sec_rft + sec_rft2;
+	}
+	const float pri_dmg = stof(pri_dmg_s);
+	const float sec_dmg = stof(sec_dmg_s);
+	return sprintf(_("By default, the primary does ^9%s^7 damage (DPS: %.2f), the secondary can shoot %s shots doing ^9%s^7 damage each (DPS: %.2f), and the combo adds an extra ^9%s^7 damage (total DPS: %.2f)."),
+		             pri_dmg_s, (pri_rft <= 0 ? 1337 : pri_dmg / pri_rft),
+		sec_shots_s, sec_dmg_s, (sec_rft <= 0 ? 1337 : sec_dmg / sec_rft * num_shots),
+		             cmb_dmg_s, (combo_t <= 0 ? 1337 : (pri_dmg + sec_dmg * num_shots + stof(cmb_dmg_s)) / combo_t));
+}
+string W_Guide_DPS_primaryDPS(string name, string pri, string sec)
+{
+	const string wepbal_s = strcat("g_balance_", name, "_");
+	const string pri_dps_s =      cvar_defstring(strcat(wepbal_s, pri, "_damage"));
+	const string sec_dmg_s =      cvar_defstring(strcat(wepbal_s, sec, "_damage"));
+	const float sec_rft    = stof(cvar_defstring(strcat(wepbal_s, sec, "_refire")));
+	return sprintf(_("By default, the primary does ^9%s^7 damage per second, and the secondary does ^9%s^7 damage (DPS: %.2f)."),
+		pri_dps_s, sec_dmg_s, (sec_rft <= 0 ? 1337 : stof(sec_dmg_s) / sec_rft));
+}
 #endif

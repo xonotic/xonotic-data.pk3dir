@@ -1,0 +1,9 @@
+#pragma once
+
+#ifdef MENUQC
+CLASS(MutatorPinata, Mutator)
+	ATTRIB(MutatorPinata, message, string, _("Piñata"));
+ENDCLASS(MutatorPinata)
+
+REGISTER_MUTATOR(pinata, true, MutatorPinata);
+#endif
