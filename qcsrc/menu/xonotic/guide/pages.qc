@@ -45,15 +45,18 @@ REGISTER_INTRODUCTION_PAGE(3, _("XonStat"))
 
 REGISTER_MOVEMENT_PAGE(0, _("Introduction"))
 {
-	this.m_description = _("Xonotic is a very fast-paced arena shooter. Fast-paced does not only relate to reaction times but also to movement speed. "
+	this.m_description = strzone(strcat(_("Xonotic is a very fast-paced arena shooter. Fast-paced does not only relate to reaction times but also to movement speed. "
 		"That means mastering movement skills is an essential part of Xonotic gameplay and must not be underestimated.\n\n"
-		"For a new player, the most important tricks to learn are:"
-		"\n  Bunny Hopping"
-		"\n  Strafe Turning"
-		"\n  Blaster Jumping"
-		"\n  Rocket Flying"
-		"\n  Crylink Running"
-		"\n  Ramp Jumping");
+		"For a new player, the most important tricks to learn are:")
+		,
+		sprintf("\n  %s\n  %s\n  %s\n  %s\n  %s",
+			_("Bunny Hopping"),
+			_("Strafe Turning"),
+			_("Blaster Jumping"),
+			_("Rocket Flying"),
+			_("Crylink Running"),
+			_("Ramp Jumping")
+		)));
 }
 REGISTER_MOVEMENT_PAGE(1, _("Bunny Hopping"))
 {
@@ -67,14 +70,14 @@ REGISTER_MOVEMENT_PAGE(1, _("Bunny Hopping"))
 }
 REGISTER_MOVEMENT_PAGE(2, _("Strafe Turning"))
 {
-	this.m_description = strzone(sprintf(_("Bunny hopping around corners requires \"strafe turning\" or you will lose a lot of speed (or simply not be able to make the turn). "
+	this.m_description = strzone(strcat(_("Bunny hopping around corners requires \"strafe turning\" or you will lose a lot of speed (or simply not be able to make the turn). "
 		"Strafe turning is a method used to quickly change the direction you're traveling while mid-air, without losing speed.\n\n"
 		"While bunny hopping, first release the ^3+forward^7 movement key, then press the strafe key into the turn direction (^3+moveleft^7 or ^3+moveright^7), then start turning smoothly into the turn direction. "
 		"As always, during the entire strafe turn keep the ^3+jump^7 button held.\n\n"
 		"Note that if you press the strafe key before releasing the forward key, you will suffer a speed penalty.\n\n"
-		"If you do it right, you will even continue to accelerate in strafe turns.\n\n"
-		"For an illustration of this technique, see ^5%s^7."),
-	"xonotic.org/guide"));
+		"If you do it right, you will even continue to accelerate in strafe turns.\n\n"),
+		sprintf(_("For an illustration of this technique, see ^5%s^7."), "xonotic.org/guide") // shared message
+		));
 }
 REGISTER_MOVEMENT_PAGE(3, _("Blaster Jumping"))
 {
@@ -87,14 +90,15 @@ REGISTER_MOVEMENT_PAGE(3, _("Blaster Jumping"))
 }
 REGISTER_MOVEMENT_PAGE(4, _("Wall Blastering"))
 {
-	this.m_description = strzone(sprintf(_("If you don't fire the %s at the floor but instead against a wall next to you, you can get significant horizontal speed. "
+	this.m_description = strzone(strcat(sprintf(_("If you don't fire the %s at the floor but instead against a wall next to you, you can get significant horizontal speed. "
 		"You can do this to pick up speed off the stand or even when passing a wall while already bunny hopping.\n\n"
 		"To use this technique, start a bunny hop. Right after jumping, flick back with your mouse at about 8 o'clock if the wall is to your left (or 4 o'clock if the wall is to your right), aim at the level of your head, and fire the %s. "
 		"Immediately flick back to your movement direction and continue to bunny hop.\n\n"
 		"In order to waste as little speed as possible while flicking back, switch to strafe key for the duration of the flick. "
-		"This means using ^3+moveleft^7 if the wall is to your left, and ^3+moveright^7 if the wall is to your right.\n\n"
-		"You'll find an illustration of this technique on ^5%s^7."),
-	COLORED_NAME(WEP_BLASTER), COLORED_NAME(WEP_BLASTER), "xonotic.org/guide"));
+		"This means using ^3+moveleft^7 if the wall is to your left, and ^3+moveright^7 if the wall is to your right.\n\n"),
+	COLORED_NAME(WEP_BLASTER), COLORED_NAME(WEP_BLASTER)),
+		sprintf(_("For an illustration of this technique, see ^5%s^7."), "xonotic.org/guide") // shared message
+		));
 }
 REGISTER_MOVEMENT_PAGE(5, _("Rocket Flying"))
 {
@@ -121,13 +125,15 @@ REGISTER_MOVEMENT_PAGE(7, _("Crylink Wall Climbing"))
 }
 REGISTER_MOVEMENT_PAGE(8, _("Ramp Jumping"))
 {
-	this.m_description = _("Ramps are an important part of Xonotic map design. "
+	this.m_description = strzone(strcat(_("Ramps are an important part of Xonotic map design. "
 		"Any sloped surface that you hit with the right speed and the right angle will give you a significant upwards boost and enable you to reach places that are otherwise accessible only with laser jumps, which cost health and make noise.\n\n"
 		"When doing ramp jumps, it is vital to hit the ramp at a flat angle to receive the upwards boost and not lose too much speed.\n\n"
 		"In order to make a ramp jump, approach a sloped surface (\"ramp\"), jump just before the ramp and keep the ^3+jump^7 button pressed so you jump again once you hit the ramp.\n\n"
 		"The higher the speed you have when you hit the ramp (at the right angle), the stronger the upwards boost. "
 		"As always, you can gain speed before the ramp by bunny hopping.\n\n"
-		"Note that when trying to make a ramp jump while bunny hopping, it is vital to time your hops carefully so you get the angle right.");
+		"Note that when trying to make a ramp jump while bunny hopping, it is vital to time your hops carefully so you get the angle right.\n\n"),
+		sprintf(_("For an illustration of this technique, see ^5%s^7."), "xonotic.org/guide") // shared message
+		));
 }
 REGISTER_MOVEMENT_PAGE(9, _("Advanced Movement"))
 {

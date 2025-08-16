@@ -16,8 +16,9 @@ METHOD(FuelRegen, describe, string(FuelRegen this))
 {
 	TC(FuelRegen, this);
 	return sprintf(_("The %s powerup regenerates %s needed for the %s until the powerup expires, "
-		"so you can continue flying around for longer.\n\n"
-		"Since it is a powerup, it will drop if you die while holding it."),
-	COLORED_NAME(this), COLORED_NAME(ITEM_Fuel), COLORED_NAME(ITEM_Jetpack));
+		"so you can continue flying around for longer.\n\n%s"),
+		COLORED_NAME(this), COLORED_NAME(ITEM_Fuel), COLORED_NAME(ITEM_Jetpack),
+		_("Since it is a powerup, it will drop if you die while holding it.") // shared message
+	);
 }
 #endif
