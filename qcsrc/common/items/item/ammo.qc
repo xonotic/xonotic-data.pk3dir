@@ -9,7 +9,7 @@ METHOD(Ammo, describe, string(Ammo this))
     entity ammo = GetAmmoResource(this);
     string s = sprintf(_("The %s ammo type is used by the:"), COLORED_NAME(this));
     FOREACH(Weapons, it.ammo_type == ammo, {
-        s = strcat(s, "\n  ", COLORED_NAME(it));
+        s = strcat(s, "\n* ", COLORED_NAME(it));
     });
 	const string nname = this.netname == "bullets" ? "nails" : this.netname;
 	s = sprintf(_("%s\n\nBy default, the pickup gives you ^9%s^7 ammo, to a maximum of %s."),

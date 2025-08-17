@@ -6,35 +6,57 @@ void XonoticGuideDescription_drawListBoxItem(entity me, int i, vector absSize, b
 	draw_Text(me.keepspaceLeft * eX, argv(i), me.realFontSize, '1 1 1', 1, true);
 }
 
-void XonoticGuideDescription_setDescription(entity me, string desc)
+/// wraps text and creates dot point list from lines starting with "* "
+string wrapGuideText(string desc, float maxWidth, vector theFontSize)
 {
-	string current = me.m_description;
-	if (current && current != desc)
-		strunzone(current);
-	me.m_description = strzone(desc);
-
-	string currentWrapped = me.m_descriptionWrapped;
-	if (currentWrapped)
-		strunzone(currentWrapped);
-
 	string wrapped = "";
-	// horizontal padding is me.realFontSize.x on both sides
-	const float maxWidth = 1 - me.keepspaceLeft - me.keepspaceRight;
+	bool keep_indenting = false;
 	const int n = tokenizebyseparator(desc, "\n");
 	for (int i = 0; i < n; ++i)
 	{
 		string s, line = "";
-		for (getWrappedLine_remaining = argv(i); getWrappedLine_remaining; )
+		getWrappedLine_remaining = argv(i);
+		bool dotpoint = false, indent = false;
+		if (substring(getWrappedLine_remaining, 0, 2) == "* ")
 		{
-			s = getWrappedLine(maxWidth, me.realFontSize, draw_TextWidth_WithColors);
+			dotpoint = true;
+			// We use Middle Dot (U+00B7) because it has the same width as space
+			// and makes the alignment with wrapped lines perfect.
+			getWrappedLine_remaining = strcat("  \xC2\xB7 ", substring(getWrappedLine_remaining, 2, -1));
+		}
+		else if (keep_indenting)
+		{
+			dotpoint = true;
+			indent = true;
+		}
+		while (getWrappedLine_remaining)
+		{
+			if (indent) // indent lines inside dot point lists
+				getWrappedLine_remaining = strcat("    ", getWrappedLine_remaining);
+			s = getWrappedLine(maxWidth, theFontSize, draw_TextWidth_WithColors);
+			indent = dotpoint;
 			line = strcat(line, "\n", s);
 		}
 		wrapped = strcat(wrapped, line);
-	}
-	wrapped = strcat(wrapped, "\n\n");
-	me.m_descriptionWrapped = strzone(wrapped);
 
-	me.nItems = tokenizebyseparator(wrapped, "\n");
+		// if the current line is indented, the following non-empty lines must be indented too
+		keep_indenting = (indent && i + 1 < n && argv(i+1) != "");
+	}
+	return strcat(wrapped, "\n\n");
+}
+
+void XonoticGuideDescription_setDescription(entity me, string desc)
+{
+	if (me.m_description && me.m_description != desc)
+		strunzone(me.m_description);
+	me.m_description = strzone(desc);
+
+	strfree(me.m_descriptionWrapped);
+
+	const float maxWidth = 1 - me.keepspaceLeft - me.keepspaceRight;
+	me.m_descriptionWrapped = strzone(wrapGuideText(me.m_description, maxWidth, me.realFontSize));
+
+	me.nItems = tokenizebyseparator(me.m_descriptionWrapped, "\n");
 }
 
 void XonoticGuideDescription_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)

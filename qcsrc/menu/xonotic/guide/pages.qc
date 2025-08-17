@@ -49,7 +49,7 @@ REGISTER_MOVEMENT_PAGE(0, _("Introduction"))
 		"That means mastering movement skills is an essential part of Xonotic gameplay and must not be underestimated.\n\n"
 		"For a new player, the most important tricks to learn are:")
 		,
-		sprintf("\n  %s\n  %s\n  %s\n  %s\n  %s",
+		sprintf("\n* %s\n* %s\n* %s\n* %s\n* %s",
 			_("Bunny Hopping"),
 			_("Strafe Turning"),
 			_("Blaster Jumping"),
