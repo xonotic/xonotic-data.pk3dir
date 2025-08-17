@@ -1436,7 +1436,7 @@ msgstr "Ne pas voter"
 #: qcsrc/client/mapvoting.qc:379
 #, c-format
 msgid "Suggested by: %s"
-msgstr "Suggéré par : %s"
+msgstr "Suggérée par : %s"
 
 #: qcsrc/client/mapvoting.qc:458
 msgid "Decide the gametype"
