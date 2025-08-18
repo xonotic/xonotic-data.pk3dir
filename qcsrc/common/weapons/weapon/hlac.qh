@@ -38,6 +38,7 @@ CLASS(HLAC, Weapon)
 		P(class, prefix, edgedamage, float, BOTH) \
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, radius, float, BOTH) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload_ammo, float, NONE) \

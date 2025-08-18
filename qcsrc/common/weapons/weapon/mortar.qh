@@ -45,6 +45,7 @@ CLASS(Mortar, Weapon)
 		P(class, prefix, lifetime, float, BOTH) \
 		P(class, prefix, lifetime_bounce, float, SEC) \
 		P(class, prefix, lifetime_stick, float, BOTH) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, radius, float, BOTH) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload_ammo, float, NONE) \

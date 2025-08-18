@@ -108,25 +108,14 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 			this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	// if we don't already have ammo, give us some ammo
-	// TODO: registry handles
+	// WEAPONTODO: magazines of MG, rifle and OK weapons are unaccounted for
 	if ((wpn.ammo_type != RES_NONE) && !GetResource(this, wpn.ammo_type))
 	{
 		int ammo = 0;
 		if (q3compat && this.count > 0)
 			ammo = this.count * GetAmmoConsumptionQ3(wpn);
-			// WEAPONTODO: magazines of MG, rifle and OK weapons are unaccounted for
 		else
-		{
-			switch (wpn.ammo_type)
-			{
-				case RES_SHELLS:  ammo = cvar("g_pickup_shells_weapon");  break;
-				case RES_BULLETS: ammo = cvar("g_pickup_nails_weapon");   break;
-				case RES_ROCKETS: ammo = cvar("g_pickup_rockets_weapon"); break;
-				case RES_CELLS:   ammo = cvar("g_pickup_cells_weapon");   break;
-				case RES_FUEL:    ammo = cvar("g_pickup_fuel_weapon");    break;
-			}
-		}
-
+			ammo = WEP_CVAR(wpn, pickup_ammo);
 		SetResource(this, wpn.ammo_type, ammo);
 	}
 
