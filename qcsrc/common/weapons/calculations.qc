@@ -271,9 +271,9 @@ vector W_CalculateSpread(vector dir, float spread, int spread_style, bool must_n
 		case 3: // gauss 3d
 			sigma = spread * 0.44721359549996; // match baseline stddev
 			// note: 2D gaussian has sqrt(2) times the stddev of 1D, so this factor is right
-			v1.x = gsl_ran_gaussian() * sigma;
-			v1.y = gsl_ran_gaussian() * sigma;
-			v1.z = gsl_ran_gaussian() * sigma;
+			v1.x = gsl_ran_ugaussian() * sigma;
+			v1.y = gsl_ran_ugaussian() * sigma;
+			v1.z = gsl_ran_ugaussian() * sigma;
 			if (vlen2(v1) > W_SPREAD_GAUSS_MAX_STDEV ** 2)
 				v1 = normalize(v1) * W_SPREAD_GAUSS_MAX_STDEV;
 			v2 = dir + v1;
@@ -281,9 +281,9 @@ vector W_CalculateSpread(vector dir, float spread, int spread_style, bool must_n
 		case 4: // gauss 2d
 			sigma = spread * 0.44721359549996; // match baseline stddev
 			// note: 2D gaussian has sqrt(2) times the stddev of 1D, so this factor is right
-			v1.x = gsl_ran_gaussian() * sigma;
-			v1.y = gsl_ran_gaussian() * sigma;
-			v1.z = gsl_ran_gaussian() * sigma;
+			v1.x = gsl_ran_ugaussian() * sigma;
+			v1.y = gsl_ran_ugaussian() * sigma;
+			v1.z = gsl_ran_ugaussian() * sigma;
 			if (vlen2(v1) > W_SPREAD_GAUSS_MAX_STDEV ** 2)
 				v1 = normalize(v1) * W_SPREAD_GAUSS_MAX_STDEV;
 			return normalize(dir + cliptoplane(v1, dir));

@@ -81,29 +81,30 @@ float DistributeEvenly_GetRandomized(float weight)
 	return f;
 }
 
-// from the GNU Scientific Library
-float gsl_ran_gaussian_lastvalue;
-bool gsl_ran_gaussian_lastvalue_set;
 ERASEABLE
-float gsl_ran_gaussian()
+/// Returns a Gaussian random variate, with mean zero and standard deviation sigma 1
+/// From the GNU Scientific Library
+float gsl_ran_ugaussian()
 {
-	if (gsl_ran_gaussian_lastvalue_set)
+	static float lastvalue;
+	static bool lastvalue_set;
+	if (lastvalue_set)
 	{
-		gsl_ran_gaussian_lastvalue_set = false;
-		return gsl_ran_gaussian_lastvalue;
+		lastvalue_set = false;
+		return lastvalue;
 	}
 
 	const float a = random() * (2 * M_PI);
 	const float b = sqrt(-2 * log(random()));
-	gsl_ran_gaussian_lastvalue = cos(a) * b;
-	gsl_ran_gaussian_lastvalue_set = true;
+	lastvalue = cos(a) * b;
+	lastvalue_set = true;
 	return sin(a) * b;
 }
 
-// prandom - PREDICTABLE random number generator (not seeded yet)
 
 #ifdef USE_PRANDOM
 	float prandom_seed;
+	/// Predictable random number generator (not seeded yet)
 	float prandom()
 	{
 		float c;

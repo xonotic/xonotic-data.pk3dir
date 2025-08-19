@@ -26,12 +26,11 @@ ERASEABLE
 float DistributeEvenly_GetRandomized(float weight);
 
 ERASEABLE
-float gsl_ran_gaussian();
+float gsl_ran_ugaussian();
 
-// crandom: returns a random number between -1.0 and 1.0
+/// Returns a random number between -1.0 and 1.0
 #define crandom() (2 * (random() - 0.5))
 
-// prandom: PREDICTABLE random number generator
 #define USE_PRANDOM
 
 #ifdef USE_PRANDOM
