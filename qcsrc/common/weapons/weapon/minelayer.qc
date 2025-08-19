@@ -18,6 +18,8 @@ void W_MineLayer_Stick(entity this, entity to)
 
 	newmine.owner = this.owner;
 	newmine.realowner = this.realowner;
+	newmine.glowmod = colormapPaletteColor(this.realowner.clientcolors & 0x0F, true);
+
 	PROJECTILE_MAKETRIGGER(newmine);
 	setorigin(newmine, this.origin);
 	setmodel(newmine, MDL_MINELAYER_MINE);
