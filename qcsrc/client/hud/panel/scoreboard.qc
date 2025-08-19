@@ -1,5 +1,6 @@
 #include "scoreboard.qh"
 
+#include <client/csqcmodel_hooks.qh>
 #include <client/draw.qh>
 #include <client/hud/panel/chat.qh>
 #include <client/hud/panel/physics.qh>
@@ -135,7 +136,6 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^damage dealt"),  "dmg", "                ", _("The total damage dealt"));
 		SCO_LABEL(_("SCO^damage taken"),  "dmgtaken", "           ", _("The total damage taken"));
 		SCO_LABEL(_("SCO^drops"),         "drops", "              ", _("Number of flag drops"));
-		SCO_LABEL(_("SCO^elo"),           "elo", "                ", _("Player ELO"));
 		SCO_LABEL(_("SCO^fastest"),       "fastest", "            ", _("Time of fastest lap (Race/CTS)"));
 		SCO_LABEL(_("SCO^faults"),        "faults", "             ", _("Number of faults committed"));
 		SCO_LABEL(_("SCO^fckills"),       "fckills", "            ", _("Number of flag carrier kills"));
@@ -169,6 +169,7 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^top speed"),     "topspeed", "           ", _("Top speed (CTS)"));
 		SCO_LABEL(_("SCO^start speed"),   "startspeed", "         ", _("Start speed (CTS)"));
 		SCO_LABEL(_("SCO^strafe"),        "strafe", "             ", _("Strafe efficiency (CTS)"));
+		SCO_LABEL(_("SCO^skill"),         "skill", "              ", _("Player skill"));
 		SCO_LABEL(_("SCO^suicides"),      "suicides", "           ", _("Number of suicides"));
 		SCO_LABEL(_("SCO^sum"),           "sum", "                ", _("Number of kills minus deaths"));
 		SCO_LABEL(_("SCO^survivals"),     "survivals", "          ", _("Number of survivals"));
@@ -1144,29 +1145,25 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 				return sprintf("%.1f", f / rounds_played);
 			return ftos(f);
 
-		case SP_ELO:
-		{
-			float elo = pl.(scores(SP_ELO));
-			switch (elo)
+		case SP_SKILL:
+			tmp = pl.(scores(SP_SKILL));
+			switch (tmp)
 			{
 				case -1: return "...";
 				case -2: return _("N/A");
-				default: return ftos(elo);
+				default: return ftos(tmp);
 			}
-		}
 
 		case SP_FPS:
-		{
-			float fps = pl.(scores(SP_FPS));
-			if (fps == 0)
+			tmp = pl.(scores(SP_FPS));
+			if (tmp == 0)
 			{
 				sbt_field_rgb = '1 1 1';
 				return ((pl.ping == 0) ? _("N/A") : "..."); // if 0 ping, either connecting or bot (either case can't show proper score)
 			}
 			//sbt_field_rgb = HUD_Get_Num_Color(fps, 200, true);
-			sbt_field_rgb = '1 0 0' + '0 1 1' * (bound(0, fps, 60) / 60);
-			return ftos(fps);
-		}
+			sbt_field_rgb = '1 0 0' + '0 1 1' * (bound(0, tmp, 60) / 60);
+			return ftos(tmp);
 
 		case SP_ROUNDS_PL:
 			return ftos(pl.(scores(field)));
@@ -1797,6 +1794,7 @@ bool Scoreboard_WouldDraw()
 	else if (intermission == 2)
 		return false;
 	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && !MUTATOR_CALLHOOK(DrawDeathScoreboard)
+		&& time - CSQCModel_server2csqc(player_localentnum - 1).death_time >= autocvar_cl_deathscoreboard_delay
 		&& (!HUD_MinigameMenu_IsOpened() || !active_minigame))
 	{
 		return true;

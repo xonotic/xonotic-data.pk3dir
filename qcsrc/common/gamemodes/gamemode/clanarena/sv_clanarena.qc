@@ -11,7 +11,6 @@ float autocvar_g_ca_start_ammo_rockets = 160;
 float autocvar_g_ca_start_ammo_cells = 180;
 float autocvar_g_ca_start_ammo_fuel = 0;
 
-.float ca_damage_counter;
 .int prev_team;
 
 void CA_count_alive_players()
@@ -281,13 +280,15 @@ entity CA_SpectateNext(entity player, entity start)
 }
 
 
+// field where the decimal part of SCORE is accumulated (shared with other gamemodes)
+.float float2int_decimal_fld;
 MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
 	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	if (time <= game_starttime) // reset on game restart, not on round start
-		player.ca_damage_counter = 0;
+		player.float2int_decimal_fld = 0;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 }
@@ -545,7 +546,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 	}
 
 	if (scorer)
-		GameRules_scoring_add_float2int(scorer, SCORE, scorer_damage, ca_damage_counter, autocvar_g_ca_damage2score);
+		GameRules_scoring_add_float2int(scorer, SCORE, scorer_damage, float2int_decimal_fld, autocvar_g_ca_damage2score);
 }
 
 MUTATOR_HOOKFUNCTION(ca, CalculateRespawnTime)

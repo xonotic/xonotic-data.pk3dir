@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-22 07:22+0200\n"
+"POT-Creation-Date: 2025-08-14 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Ihor <ihor@noleron.com>, 2021\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
@@ -598,85 +598,77 @@ msgstr "Натисніть що б вибрати пункт призначен�
 msgid "Click to select spawn location"
 msgstr "Натисніть що б вибрати точку спавна"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:129
+#: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Number of ball carrier kills"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:129
+#: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^bckills"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:130
+#: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^bctime"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:130
+#: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "Total amount of time holding the ball in Keepaway"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:131
+#: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:131
+#: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^caps"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^captime"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:132
+#: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Time of fastest capture (CTF)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of deaths"
 msgstr "Кількість смертей"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:133
+#: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^deaths"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of keys destroyed by pushing them into void"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:134
+#: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^destructions"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^damage dealt"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:135
+#: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "The total damage dealt"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^damage taken"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:136
+#: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "The total damage taken"
 msgstr "Всього шкоди отримано"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Number of flag drops"
 msgstr "Кількість прапорів втрачено"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:137
+#: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^drops"
 msgstr "SCO^втрачено"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:138
-msgid "Player ELO"
-msgstr "Гравець ELO"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:138
-msgid "SCO^elo"
-msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^fastest"
@@ -903,101 +895,109 @@ msgid "Total score"
 msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
-msgid "Number of suicides"
+msgid "Player skill"
 msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
+msgid "SCO^skill"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:169
+msgid "Number of suicides"
+msgstr ""
+
+#: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^suicides"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "Number of kills minus deaths"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:169
+#: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^sum"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "Number of survivals"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:170
+#: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "SCO^survivals"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of domination points taken (Domination)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:171
+#: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^takes"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of teamkills"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:172
+#: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "SCO^teamkills"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:173
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "Number of ticks (Domination)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:173
+#: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "SCO^ticks"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:174
+#: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "SCO^time"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:174
+#: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "Total time raced (Race/CTS)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:722
+#: qcsrc/client/hud/panel/scoreboard.qc:724
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:723
+#: qcsrc/client/hud/panel/scoreboard.qc:725
 msgid "Usage:"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:725
+#: qcsrc/client/hud/panel/scoreboard.qc:727
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:726
+#: qcsrc/client/hud/panel/scoreboard.qc:728
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:727
+#: qcsrc/client/hud/panel/scoreboard.qc:729
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:728
+#: qcsrc/client/hud/panel/scoreboard.qc:730
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:729
+#: qcsrc/client/hud/panel/scoreboard.qc:731
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:730
+#: qcsrc/client/hud/panel/scoreboard.qc:732
 msgid "The following field names are recognized (case insensitive):"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:736
+#: qcsrc/client/hud/panel/scoreboard.qc:738
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -1005,31 +1005,31 @@ msgid ""
 "field to show all fields available for the current game mode."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:742
+#: qcsrc/client/hud/panel/scoreboard.qc:744
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:746
+#: qcsrc/client/hud/panel/scoreboard.qc:748
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:747
+#: qcsrc/client/hud/panel/scoreboard.qc:749
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:749
+#: qcsrc/client/hud/panel/scoreboard.qc:751
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1062
-#: qcsrc/client/hud/panel/scoreboard.qc:1077
-#: qcsrc/client/hud/panel/scoreboard.qc:1147
+#: qcsrc/client/hud/panel/scoreboard.qc:1061
+#: qcsrc/client/hud/panel/scoreboard.qc:1076
+#: qcsrc/client/hud/panel/scoreboard.qc:1149
 #: qcsrc/client/hud/panel/scoreboard.qc:1158 qcsrc/common/util.qc:393
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
@@ -1039,106 +1039,106 @@ msgstr ""
 msgid "N/A"
 msgstr "Н/Д"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1852
+#: qcsrc/client/hud/panel/scoreboard.qc:1826
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2009
+#: qcsrc/client/hud/panel/scoreboard.qc:1986
 msgid "Item stats"
 msgstr "Характеристики предмета"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2120
+#: qcsrc/client/hud/panel/scoreboard.qc:2101
 msgid "Map stats:"
 msgstr "Статистика мапи:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2150
+#: qcsrc/client/hud/panel/scoreboard.qc:2131
 msgid "Monsters killed:"
 msgstr "Вбито монстрів:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2157
+#: qcsrc/client/hud/panel/scoreboard.qc:2138
 msgid "Secrets found:"
 msgstr "Знайдено секретів:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2375
+#: qcsrc/client/hud/panel/scoreboard.qc:2356
 #, c-format
 msgid "Spectators"
 msgstr "Спостерігачі"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2397
+#: qcsrc/client/hud/panel/scoreboard.qc:2378
 #, c-format
 msgid "^2+%s %s"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2397
+#: qcsrc/client/hud/panel/scoreboard.qc:2378
 #, c-format
 msgid "^5%s %s"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2398
+#: qcsrc/client/hud/panel/scoreboard.qc:2379
 msgid "SCO^points"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2512
+#: qcsrc/client/hud/panel/scoreboard.qc:2496
 msgid "Next map:"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2519
+#: qcsrc/client/hud/panel/scoreboard.qc:2503
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "Вибір команди"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2533
+#: qcsrc/client/hud/panel/scoreboard.qc:2517
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2535
+#: qcsrc/client/hud/panel/scoreboard.qc:2519
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2539
+#: qcsrc/client/hud/panel/scoreboard.qc:2523
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2550
+#: qcsrc/client/hud/panel/scoreboard.qc:2534
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f хвилин"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2577
+#: qcsrc/client/hud/panel/scoreboard.qc:2561
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7гравців"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2578 qcsrc/client/main.qc:1387
+#: qcsrc/client/hud/panel/scoreboard.qc:2562 qcsrc/client/main.qc:1387
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Мапа:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2745
+#: qcsrc/client/hud/panel/scoreboard.qc:2728
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Нагорода за швидкість: %d%s^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2749
+#: qcsrc/client/hud/panel/scoreboard.qc:2732
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Найшвидший за весь час: %d%s^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2783
+#: qcsrc/client/hud/panel/scoreboard.qc:2764
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Повернення до гри через ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2793
+#: qcsrc/client/hud/panel/scoreboard.qc:2774
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Ви загинули, почекайте ще ^3%s^7 перед поверненням у гру"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2802
+#: qcsrc/client/hud/panel/scoreboard.qc:2783
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Ви загинули, натисніть ^2%s^7 щоб повернутися до гри"
@@ -1391,53 +1391,53 @@ msgstr "Повідомлення від серверу"
 msgid "%s (not bound)"
 msgstr "%s (не пов'язані)"
 
-#: qcsrc/client/mapvoting.qc:73
+#: qcsrc/client/mapvoting.qc:80
 msgid " (1 vote)"
 msgstr " (1 голос)"
 
-#: qcsrc/client/mapvoting.qc:75
+#: qcsrc/client/mapvoting.qc:82
 #, c-format
 msgid " (%d votes)"
 msgstr " (%d голосів)"
 
-#: qcsrc/client/mapvoting.qc:306
+#: qcsrc/client/mapvoting.qc:340
 msgid "Don't care"
 msgstr "Не турбує"
 
-#: qcsrc/client/mapvoting.qc:398
+#: qcsrc/client/mapvoting.qc:379
+#, c-format
+msgid "Suggested by: %s"
+msgstr ""
+
+#: qcsrc/client/mapvoting.qc:458
 msgid "Decide the gametype"
 msgstr "Виберіть тип гри"
 
-#: qcsrc/client/mapvoting.qc:398
+#: qcsrc/client/mapvoting.qc:458
 msgid "Vote for a map"
 msgstr "Проголосуйте за мапу"
 
-#: qcsrc/client/mapvoting.qc:421
-#, c-format
-msgid "%d seconds left"
-msgstr "%d секунд залишилось"
-
-#: qcsrc/client/mapvoting.qc:567
+#: qcsrc/client/mapvoting.qc:651
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr "mv_mapdownload: ^3Вам не дозволено користуватися цією командою!"
 
-#: qcsrc/client/mapvoting.qc:577
+#: qcsrc/client/mapvoting.qc:663
 msgid "^1Error:^7 Couldn't find pak index."
 msgstr "^1Error:^7 Неможливо знайти заголовок pak-архіву."
 
-#: qcsrc/client/mapvoting.qc:586
+#: qcsrc/client/mapvoting.qc:674
 msgid "Requesting preview..."
 msgstr "Запитуємо попередній перегляд..."
 
-#: qcsrc/client/view.qc:1010
+#: qcsrc/client/view.qc:1007
 msgid "Nade timer"
 msgstr "Затримка гранати"
 
-#: qcsrc/client/view.qc:1015
+#: qcsrc/client/view.qc:1012
 msgid "Capture progress"
 msgstr "Процесс захоплення"
 
-#: qcsrc/client/view.qc:1020
+#: qcsrc/client/view.qc:1017
 msgid "Revival progress"
 msgstr "Процесс відодження"
 
@@ -1707,21 +1707,25 @@ msgstr ""
 msgid "Team Mayhem"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:56 qcsrc/common/resources/all.inc:30
+#: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
 msgid "Shells"
 msgstr "Гільза"
 
-#: qcsrc/common/items/item/ammo.qh:91 qcsrc/common/resources/all.inc:39
+#: qcsrc/common/items/item/ammo.qh:94 qcsrc/common/resources/all.inc:39
 msgid "Bullets"
 msgstr "Кулі"
 
-#: qcsrc/common/items/item/ammo.qh:126 qcsrc/common/resources/all.inc:48
+#: qcsrc/common/items/item/ammo.qh:129 qcsrc/common/resources/all.inc:48
 msgid "Rockets"
 msgstr "Ракети"
 
-#: qcsrc/common/items/item/ammo.qh:161 qcsrc/common/resources/all.inc:57
+#: qcsrc/common/items/item/ammo.qh:164 qcsrc/common/resources/all.inc:57
 msgid "Cells"
 msgstr "Батарейки"
+
+#: qcsrc/common/items/item/ammo.qh:199 qcsrc/common/resources/all.inc:66
+msgid "Fuel"
+msgstr "Паливо"
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
@@ -1754,24 +1758,6 @@ msgstr "Велика аптечка"
 #: qcsrc/common/items/item/health.qh:195 qcsrc/common/items/item/health.qh:206
 msgid "Mega health"
 msgstr "Мега аптечка"
-
-#: qcsrc/common/items/item/jetpack.qh:39 qcsrc/common/items/item/jetpack.qh:42
-#: qcsrc/common/util.qc:271
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:129
-msgid "Jetpack"
-msgstr "Ракетний ранець"
-
-#: qcsrc/common/items/item/jetpack.qh:75 qcsrc/common/resources/all.inc:66
-msgid "Fuel"
-msgstr "Паливо"
-
-#: qcsrc/common/items/item/jetpack.qh:108
-msgid "Fuel regenerator"
-msgstr "Паливний генератор"
-
-#: qcsrc/common/items/item/jetpack.qh:111
-msgid "Fuel regen"
-msgstr "Відновлення палива"
 
 #: qcsrc/common/mapinfo.qc:664
 #, no-c-format
@@ -2346,11 +2332,26 @@ msgstr ""
 msgid "Overkill Shotgun"
 msgstr ""
 
+#: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:33
+msgid "Fuel regenerator"
+msgstr "Паливний генератор"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:36
+msgid "Fuel regen"
+msgstr "Відновлення палива"
+
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:60
 msgid "Invisibility"
 msgstr "Невидимість"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:38
+#: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:41
+#: qcsrc/common/util.qc:271
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:129
+msgid "Jetpack"
+msgstr "Ракетний ранець"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
@@ -6159,41 +6160,41 @@ msgstr "Предмет %d"
 msgid "Custom"
 msgstr "Вибрати"
 
-#: qcsrc/menu/menu.qc:510
+#: qcsrc/menu/menu.qc:513
 #, c-format
 msgid "^3%s^7 in range \"%s\" to \"%s\""
 msgstr ""
 
-#: qcsrc/menu/menu.qc:512
+#: qcsrc/menu/menu.qc:515
 #, c-format
 msgid "^3%s^7 outside range \"%s\" to \"%s\""
 msgstr ""
 
-#: qcsrc/menu/menu.qc:541
+#: qcsrc/menu/menu.qc:544
 msgid "Has special requirements"
 msgstr ""
 
-#: qcsrc/menu/menu.qc:544
+#: qcsrc/menu/menu.qc:547
 #, c-format
 msgid "Requires ^3%s^7 not equal to \"%s^7\""
 msgstr ""
 
-#: qcsrc/menu/menu.qc:556
+#: qcsrc/menu/menu.qc:559
 #, c-format
 msgid "Requires %s, %s, and %s"
 msgstr ""
 
-#: qcsrc/menu/menu.qc:559
+#: qcsrc/menu/menu.qc:562
 #, c-format
 msgid "Requires %s and %s"
 msgstr ""
 
-#: qcsrc/menu/menu.qc:559
+#: qcsrc/menu/menu.qc:562
 #, c-format
 msgid "Requires %s or %s"
 msgstr ""
 
-#: qcsrc/menu/menu.qc:562
+#: qcsrc/menu/menu.qc:565
 #, c-format
 msgid "Requires %s"
 msgstr ""
@@ -10657,12 +10658,12 @@ msgstr "Остання гра:"
 msgid "Time played:"
 msgstr "Проведено часу у грі:"
 
-#: qcsrc/menu/xonotic/statslist.qc:118 qcsrc/menu/xonotic/statslist.qc:231
+#: qcsrc/menu/xonotic/statslist.qc:118 qcsrc/menu/xonotic/statslist.qc:216
 msgid "Favorite map:"
 msgstr "Улюблена арена:"
 
 #: qcsrc/menu/xonotic/statslist.qc:150 qcsrc/menu/xonotic/statslist.qc:202
-#: qcsrc/menu/xonotic/statslist.qc:245
+#: qcsrc/menu/xonotic/statslist.qc:230
 #, c-format
 msgid "Matches:"
 msgstr "Зіграно матчей:"
@@ -10687,19 +10688,11 @@ msgstr "Вбивств/Смертей:"
 msgid "Kill ratio:"
 msgstr "Співвідношення вбивств:"
 
-#: qcsrc/menu/xonotic/statslist.qc:208
-msgid "ELO:"
+#: qcsrc/menu/xonotic/statslist.qc:209
+msgid "Skill:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:215
-msgid "Rank:"
-msgstr "Ранг:"
-
-#: qcsrc/menu/xonotic/statslist.qc:222
-msgid "Percentile:"
-msgstr "Процентиль:"
-
-#: qcsrc/menu/xonotic/statslist.qc:247
+#: qcsrc/menu/xonotic/statslist.qc:232
 #, c-format
 msgid "%d (unranked)"
 msgstr ""

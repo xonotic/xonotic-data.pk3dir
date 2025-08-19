@@ -23,9 +23,6 @@ float mean_evaluate(entity e, .float a, .float c, float mean)
 #define MEAN_EVALUATE(s, prefix) mean_evaluate(s, prefix##_accumulator, prefix##_count, prefix##_mean)
 #define MEAN_DECLARE(prefix, m) float prefix##_mean = m; .float prefix##_count, prefix##_accumulator
 
-/** Returns a random number between -1.0 and 1.0 */
-#define crandom() (2 * (random() - 0.5))
-
 
 /*
 ==================

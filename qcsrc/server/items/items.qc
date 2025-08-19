@@ -664,8 +664,10 @@ bool Item_GiveTo(entity item, entity player)
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
 				.entity weaponentity = weaponentities[slot];
+				Weapon w = REGISTRY_GET(Weapons, item.weapon);
 				if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
-					W_SwitchWeapon_Force(player, REGISTRY_GET(Weapons, item.weapon), weaponentity);
+				if(client_hasweapon(player, w, weaponentity, true, false)) // ammo check
+					W_SwitchWeapon_Force(player, w, weaponentity);
 			}
 		}
 	}
@@ -1738,7 +1740,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				FOREACH(Weapons, it != WEP_Null && (cmd == it.netname || cmd == it.m_deprecated_netname), {
 					got += GiveWeapon(e, it.m_id, op, val);
 					if(use_cts_autoswitch && CS_CVAR(e).cvar_cl_autoswitch_cts == 1)
-					if(val > 0 && (op == OP_SET && op == OP_PLUS || op == OP_MIN)) // switch to any given weapons, even if we already had it
+					if(val > 0 && (op == OP_SET || op == OP_PLUS || op == OP_MIN)) // switch to any given weapons, even if we already had it
 						last_wep = it; // (... non-CTS autoswitching can switch to a weapon we already have, so CTS autoswitch should be the same)
 					break;
 				});
@@ -1791,6 +1793,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 			{
 				.entity weaponentity = weaponentities[slot];
 				if(e.(weaponentity).m_weapon != WEP_Null || slot == 0)
+				if(client_hasweapon(e, last_wep, weaponentity, true, false)) // ammo check
 					W_SwitchWeapon_Force(e, last_wep, weaponentity);
 			}
 		}

@@ -42,20 +42,29 @@ ERASEABLE
 void DistributeEvenly_Init(float amount, float totalweight)
 {
 	if (DistributeEvenly_amount)
-	{
-		LOG_TRACE("DistributeEvenly_Init: UNFINISHED DISTRIBUTION (", ftos(DistributeEvenly_amount), " for ", ftos(DistributeEvenly_totalweight), " left!)");
-	}
-	if (totalweight == 0) DistributeEvenly_amount = 0;
-	else DistributeEvenly_amount = amount;
+		LOG_TRACE("DistributeEvenly_Init: UNFINISHED DISTRIBUTION (", ftos(DistributeEvenly_amount),
+			" for ", ftos(DistributeEvenly_totalweight), " left!)");
+	DistributeEvenly_amount = (totalweight) ? amount : 0;
 	DistributeEvenly_totalweight = totalweight;
 }
 
 ERASEABLE
 float DistributeEvenly_Get(float weight)
 {
-	float f;
-	if (weight <= 0) return 0;
-	f = floor(0.5 + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
+	if (weight <= 0)
+		return 0;
+	float f = DistributeEvenly_amount * weight / DistributeEvenly_totalweight;
+	DistributeEvenly_totalweight -= weight;
+	DistributeEvenly_amount -= f;
+	return f;
+}
+
+ERASEABLE
+float DistributeEvenly_GetRounded(float weight)
+{
+	if (weight <= 0)
+		return 0;
+	float f = floor(0.5 + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
 	DistributeEvenly_totalweight -= weight;
 	DistributeEvenly_amount -= f;
 	return f;
@@ -64,39 +73,38 @@ float DistributeEvenly_Get(float weight)
 ERASEABLE
 float DistributeEvenly_GetRandomized(float weight)
 {
-	float f;
-	if (weight <= 0) return 0;
-	f = floor(random() + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
+	if (weight <= 0)
+		return 0;
+	float f = floor(random() + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
 	DistributeEvenly_totalweight -= weight;
 	DistributeEvenly_amount -= f;
 	return f;
 }
 
-// from the GNU Scientific Library
-float gsl_ran_gaussian_lastvalue;
-float gsl_ran_gaussian_lastvalue_set;
 ERASEABLE
-float gsl_ran_gaussian(float sigma)
+/// Returns a Gaussian random variate, with mean zero and standard deviation sigma 1
+/// From the GNU Scientific Library
+float gsl_ran_ugaussian()
 {
-	if (gsl_ran_gaussian_lastvalue_set)
+	static float lastvalue;
+	static bool lastvalue_set;
+	if (lastvalue_set)
 	{
-		gsl_ran_gaussian_lastvalue_set = 0;
-		return sigma * gsl_ran_gaussian_lastvalue;
+		lastvalue_set = false;
+		return lastvalue;
 	}
-	else
-	{
-		float a = random() * (2 * M_PI);
-		float b = sqrt(-2 * log(random()));
-		gsl_ran_gaussian_lastvalue = cos(a) * b;
-		gsl_ran_gaussian_lastvalue_set = 1;
-		return sigma * sin(a) * b;
-	}
+
+	const float a = random() * (2 * M_PI);
+	const float b = sqrt(-2 * log(random()));
+	lastvalue = cos(a) * b;
+	lastvalue_set = true;
+	return sin(a) * b;
 }
 
-// prandom - PREDICTABLE random number generator (not seeded yet)
 
 #ifdef USE_PRANDOM
 	float prandom_seed;
+	/// Predictable random number generator (not seeded yet)
 	float prandom()
 	{
 		float c;

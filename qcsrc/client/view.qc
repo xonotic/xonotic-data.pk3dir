@@ -421,27 +421,24 @@ STATIC_INIT(fpscounter_init)
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
-bool IsZooming()
+bool IsZooming(bool ignore_spectatorbutton_zoom)
 {
 	bool zoomdir = button_zoom;
 
-	if(hud == HUD_NORMAL && !spectatee_status)
-	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	if (hud == HUD_NORMAL && !spectatee_status)
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			entity wepent = viewmodels[slot];
-			if(wepent.switchweapon != wepent.activeweapon)
+			if (wepent.switchweapon != wepent.activeweapon)
 				continue;
 			Weapon wep = wepent.activeweapon;
-			if(wep != WEP_Null && wep.wr_zoomdir)
-			{
-				bool do_zoom = wep.wr_zoomdir(wep); // TODO: merge this with wr_zoom?
-				zoomdir += do_zoom;
-			}
+			if (wep != WEP_Null && wep.wr_zoomdir)
+			if (wep.wr_zoomdir(wep)) // TODO: merge this with wr_zoom?
+				zoomdir = true;
 		}
-	}
 
-	if(spectatorbutton_zoom && (spectatee_status > 0 || isdemo()))
+	if (!ignore_spectatorbutton_zoom)
+	if (spectatorbutton_zoom && (spectatee_status > 0 || isdemo()))
 		zoomdir = !zoomdir;
 
 	return zoomdir;
@@ -477,7 +474,7 @@ bool View_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	{
 		if (!autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0)
 			return false; // zoom scroll disabled
-		if (!IsZooming())
+		if (!IsZooming(true))
 			return false;
 		if (key_pressed)
 			ZoomScroll(nPrimary);
@@ -494,7 +491,7 @@ vector GetCurrentFov(float fov)
 	float velocityzoom, curspeed;
 	vector v;
 
-	zoomdir = IsZooming();
+	zoomdir = IsZooming(false);
 
 	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
