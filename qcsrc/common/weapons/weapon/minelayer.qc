@@ -229,15 +229,8 @@ void W_MineLayer_Touch(entity this, entity toucher)
 
 	PROJECTILE_TOUCH(this, toucher);
 
-	if((toucher && IS_PLAYER(toucher) && !IS_DEAD(toucher)) || toucher.owner == this.owner)
-	{
-		// hit a player or other mine
-		// don't stick
-	}
-	else
-	{
+	if (toucher.solid == SOLID_BSP)
 		W_MineLayer_Stick(this, toucher);
-	}
 }
 
 void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
