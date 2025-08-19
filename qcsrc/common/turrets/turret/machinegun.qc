@@ -20,8 +20,9 @@ METHOD(MachineGunTurret, tr_setup, void(MachineGunTurret this, entity it))
 METHOD(MachineGunTurret, describe, string(MachineGunTurret this))
 {
     TC(MachineGunTurret, this);
-    return sprintf(_("As the name suggests, the %s fires bullets in a burst at its targets, similar to the %s."),
-    COLORED_NAME(this), COLORED_NAME(WEP_MACHINEGUN));
+    PAGE_TEXT_INIT();
+    PAR(_("As the name suggests, the %s fires bullets in a burst at its targets, similar to the %s."), COLORED_NAME(this), COLORED_NAME(WEP_MACHINEGUN));
+    return PAGE_TEXT;
 }
 
 #endif // MENUQC

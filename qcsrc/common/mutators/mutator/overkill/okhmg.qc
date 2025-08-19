@@ -163,15 +163,17 @@ METHOD(OverkillHeavyMachineGun, wr_impacteffect, void(entity thiswep, entity act
 METHOD(OverkillHeavyMachineGun, describe, string(OverkillHeavyMachineGun this))
 {
 	TC(OverkillHeavyMachineGun, this);
-	return sprintf(_("The %s is a superweapon that rapidly fires harmful bullets with a small degree of spread.\n\n"
-		"Like with all %s weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around.\n\n"
-		"It is a superweapon found on some maps, meaning that it breaks down after some time.\n\n"
-		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s. "
-		"It has a limited magazine size, so needs reloading after several shots.\n\n"
-		"The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously.\n\n"
-		"Since its bullets deal a lot more damage than the %s bullets, it is often heavily contested when it spawns in.\n\n%s"),
-	COLORED_NAME(this), COLORED_NAME(MUTATOR_ok), COLORED_NAME(ITEM_Bullets), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this), COLORED_NAME(WEP_OVERKILL_MACHINEGUN),
-	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_onlyOne(this.netname, "primary")));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s is a superweapon that rapidly fires harmful bullets with a small degree of spread."), COLORED_NAME(this));
+	PAR(_("Like with all %s weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around."), COLORED_NAME(MUTATOR_ok));
+	PAR(_("It is a superweapon found on some maps, meaning that it breaks down after some time."));
+	PAR(_("The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s. "
+	      "It has a limited magazine size, so needs reloading after several shots."), COLORED_NAME(ITEM_Bullets), COLORED_NAME(MUTATOR_ok));
+	PAR(_("The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously."), COLORED_NAME(this));
+	PAR(_("Since its bullets deal a lot more damage than the %s bullets, it is often heavily contested when it spawns in."), COLORED_NAME(WEP_OVERKILL_MACHINEGUN));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_onlyOne(this.netname, "primary"));
+	return PAGE_TEXT;
 }
 
 #endif

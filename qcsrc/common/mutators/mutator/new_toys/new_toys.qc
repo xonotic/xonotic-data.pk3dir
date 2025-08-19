@@ -25,13 +25,13 @@ bool nt_IsNewToy(int w)
 METHOD(MutatorNewToys, describe, string(MutatorNewToys this))
 {
 	TC(MutatorNewToys, this);
-	string s = sprintf(_("The %s mutator, enabled by default, allows the spawning of new gimmicky weapons, sometimes replacing a core weapon.\n\n"
-		"Since these weapons can't spawn in %s and %s, the %s mutator can't be enabled concurrently.\n\n"
-		"The current %s weapons are:"), // do it like this so that the string doesn't need to change when the list is updated
-	COLORED_NAME(this), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this), COLORED_NAME(this));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s mutator, enabled by default, allows the spawning of new gimmicky weapons, sometimes replacing a core weapon."), COLORED_NAME(this));
+	PAR(_("Since these weapons can't spawn in %s and %s, the %s mutator can't be enabled concurrently."), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this));
+	PAR(_("The current %s weapons are:"), COLORED_NAME(this)); // do it like this so that the string doesn't need to change when the list is updated
 	FOREACH(Weapons, nt_IsNewToy(it.m_id), {
-		s = strcat(s, "\n* ", COLORED_NAME(it));
+		PAGE_TEXT = strcat(PAGE_TEXT, "\n* ", COLORED_NAME(it));
 	});
-	return s;
+	return PAGE_TEXT;
 }
 #endif

@@ -52,12 +52,12 @@ METHOD(StrengthStatusEffect, m_tick, void(StatusEffect this, entity actor))
 METHOD(StrengthItem, describe, string(StrengthItem this))
 {
     TC(StrengthItem, this);
-    return sprintf(_("The %s powerup greatly increases the damage you deal, until the powerup expires. "
-        "It also increases the knockback that your attacks deal.\n\n"
-        "The damage and knockback you deal to yourself also increases but by a smaller amount.\n\n"
-        "The %s is one of the most sought after items on a map due to its ability to allow you to easily dominate a map, so it's often highly contested when it spawns in.\n\n%s"),
-        COLORED_NAME(this), COLORED_NAME(this),
-        _("Since it is a powerup, it will drop if you die while holding it.") // shared message
-    );
+    PAGE_TEXT_INIT();
+    PAR(_("The %s powerup greatly increases the damage you deal, until the powerup expires. "
+          "It also increases the knockback that your attacks deal."), COLORED_NAME(this));
+    PAR(_("The damage and knockback you deal to yourself also increases but by a smaller amount."));
+    PAR(_("The %s is one of the most sought after items on a map due to its ability to allow you to easily dominate a map, so it's often highly contested when it spawns in."), COLORED_NAME(this));
+    PAR(_("Since it is a powerup, it will drop if you die while holding it.")); // shared message
+    return PAGE_TEXT;
 }
 #endif // MENUQC

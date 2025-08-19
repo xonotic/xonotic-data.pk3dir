@@ -10,8 +10,9 @@ float buff_Resistance_CalculateDamage(float frag_damage)
 METHOD(ResistanceBuff, describe, string(ResistanceBuff this))
 {
 	TC(ResistanceBuff, this);
-	return sprintf(_("The %s greatly reduces your damage taken while the buff is active.\n\n"
-		"This also impacts the damage you deal to yourself."),
-	COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s greatly reduces your damage taken while the buff is active."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAR(_("This also impacts the damage you deal to yourself."));
+	return PAGE_TEXT;
 }
 #endif // MENUQC

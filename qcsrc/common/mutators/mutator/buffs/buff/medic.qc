@@ -24,8 +24,9 @@ float buff_Medic_CalculateSurviveDamage(float frag_damage, float health)
 METHOD(MedicBuff, describe, string(MedicBuff this))
 {
 	TC(MedicBuff, this);
-	return sprintf(_("The %s increases health regeneration speed, increases the maximum health you can have before health starts to rot, and reduces health rot speed until the buff expires.\n\n"
-		"It also gives you a chance to survive a fatal hit, with a small amount of health left over."),
-	COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s increases health regeneration speed, increases the maximum health you can have before health starts to rot, and reduces health rot speed until the buff expires."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAR(_("It also gives you a chance to survive a fatal hit, with a small amount of health left over."));
+	return PAGE_TEXT;
 }
 #endif // MENUQC

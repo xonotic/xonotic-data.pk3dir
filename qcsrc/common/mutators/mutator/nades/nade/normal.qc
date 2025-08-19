@@ -13,9 +13,10 @@ void nade_normal_boom(entity this)
 METHOD(NormalNade, describe, string(NormalNade this))
 {
 	TC(NormalNade, this);
-	return sprintf(_("The (normal) %s explodes after a short delay, dealing damage to nearby players. "
-		"If other nade types are destroyed before they detonate, they will instead explode similarly, without doing their special effects.\n\n"
-		"Make sure you remember to throw it with ^3drop weapon^7, or else it will blow up in your hands!"),
-	COLORED_NAME(this));
+	PAGE_TEXT_INIT();
+	PAR(_("The (normal) %s explodes after a short delay, dealing damage to nearby players. "
+	      "If other nade types are destroyed before they detonate, they will instead explode similarly, without doing their special effects."), COLORED_NAME(this));
+	PAR(_("Make sure you remember to throw it with ^3drop weapon^7, or else it will blow up in your hands!"));
+	return PAGE_TEXT;
 }
 #endif // MENUQC

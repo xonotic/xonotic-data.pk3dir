@@ -430,13 +430,14 @@ METHOD(PortoLaunch, wr_impacteffect, void(entity this, entity actor)) {
 METHOD(PortoLaunch, describe, string(PortoLaunch this))
 {
 	TC(PortoLaunch, this);
-	return sprintf(_("The %s is a unique gun that creates one-way portals between flat surfaces on the map, that immediately teleport players and projectiles.\n\n"
-		"The secondary fire is used to shoot the out-portal, while the primary fire shoots the in-portal.\n\n"
-		"It doesn't require ammo, but it is destroyed after some time.\n\n"
-		"The portals will close either after the player who shot them dies or after some time period.\n\n"
-		"The %s isn't often placed on maps, but if used well it can make for some interesting gameplay.\n\n%s"),
-	COLORED_NAME(this), COLORED_NAME(this),
-	W_Guide_Keybinds(this));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s is a unique gun that creates one-way portals between flat surfaces on the map, that immediately teleport players and projectiles."), COLORED_NAME(this));
+	PAR(_("The secondary fire is used to shoot the out-portal, while the primary fire shoots the in-portal."));
+	PAR(_("It doesn't require ammo, but it is destroyed after some time."));
+	PAR(_("The portals will close either after the player who shot them dies or after some time period."));
+	PAR(_("The %s isn't often placed on maps, but if used well it can make for some interesting gameplay."), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	return PAGE_TEXT;
 }
 
 #endif

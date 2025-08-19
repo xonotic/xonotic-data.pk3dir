@@ -91,9 +91,10 @@ bool turret_tesla_firecheck(entity this)
 METHOD(TeslaCoil, describe, string(TeslaCoil this))
 {
     TC(TeslaCoil, this);
-    return sprintf(_("The %s is a turret that electrocutes all who dare come near it, sending powerful high-voltage arcs of lightning to strike its targets.\n\n"
-        "Since the arcs of lightning can jump between nearby targets, it is best to just stay away from the %s."),
-    COLORED_NAME(this), COLORED_NAME(this));
+    PAGE_TEXT_INIT();
+    PAR(_("The %s is a turret that electrocutes all who dare come near it, sending powerful high-voltage arcs of lightning to strike its targets."), COLORED_NAME(this));
+    PAR(_("Since the arcs of lightning can jump between nearby targets, it is best to just stay away from the %s."), COLORED_NAME(this));
+    return PAGE_TEXT;
 }
 
 #endif // MENUQC

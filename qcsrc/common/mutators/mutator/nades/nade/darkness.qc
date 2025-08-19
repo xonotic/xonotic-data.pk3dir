@@ -142,8 +142,9 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 METHOD(DarknessNade, describe, string(DarknessNade this))
 {
 	TC(DarknessNade, this);
-	return sprintf(_("The %s detonates after a short delay, creating a dark field which temporarily blinds enemies who enter it.\n\n"
-		"This is sort of the opposite of the %s."),
-	COLORED_NAME(this), COLORED_NAME(NADE_TYPE_VEIL));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s detonates after a short delay, creating a dark field which temporarily blinds enemies who enter it."), COLORED_NAME(this));
+	PAR(_("This is sort of the opposite of the %s."), COLORED_NAME(NADE_TYPE_VEIL));
+	return PAGE_TEXT;
 }
 #endif // MENUQC

@@ -128,13 +128,15 @@ METHOD(OverkillShotgun, wr_impacteffect, void(entity thiswep, entity actor))
 METHOD(OverkillShotgun, describe, string(OverkillShotgun this))
 {
 	TC(OverkillShotgun, this);
-	return sprintf(_("The %s fires a single shotgun round which spreads into multiple pellets upon exiting the barrel, dealing a deadly blow if up close.\n\n"
-		"Like with all %s weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around.\n\n"
-		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s. "
-		"It has a limited magazine size, so needs reloading after several shots.\n\n"
-		"The %s damage drops off quickly as the range increases, so it is only useful for close combat or sometimes medium range combat.\n\n%s"),
-	COLORED_NAME(this), COLORED_NAME(MUTATOR_ok), COLORED_NAME(ITEM_Shells), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this),
-	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_onlyOneMultishot(this.netname, "primary", "primary_bullets", "")));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s fires a single shotgun round which spreads into multiple pellets upon exiting the barrel, dealing a deadly blow if up close."), COLORED_NAME(this));
+	PAR(_("Like with all %s weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around."), COLORED_NAME(MUTATOR_ok));
+	PAR(_("The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s. "
+	      "It has a limited magazine size, so needs reloading after several shots."), COLORED_NAME(ITEM_Shells), COLORED_NAME(MUTATOR_ok));
+	PAR(_("The %s damage drops off quickly as the range increases, so it is only useful for close combat or sometimes medium range combat."), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_onlyOneMultishot(this.netname, "primary", "primary_bullets", ""));
+	return PAGE_TEXT;
 }
 
 #endif

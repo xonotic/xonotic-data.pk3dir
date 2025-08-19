@@ -378,13 +378,15 @@ METHOD(Mortar, wr_impacteffect, void(entity thiswep, entity actor))
 METHOD(Mortar, describe, string(Mortar this))
 {
 	TC(Mortar, this);
-	return sprintf(_("The %s launches a grenade that explodes immediately on impact, dealing a medium amount of splash damage.\n\n"
-		"The secondary fire shoots a similar grenade that explodes shortly after bouncing.\n\n"
-		"It consumes %s ammo for every grenade launched.\n\n"
-		"The %s works best at close to medium ranges, but it's quite tricky to hit an enemy if they're airborne. "
-		"Since the secondary fire grenade bounces before exploding, it can be bounced against walls to damage enemies lurking around a corner.\n\n%s"),
-	COLORED_NAME(this), COLORED_NAME(ITEM_Rockets), COLORED_NAME(this),
-	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS(this.netname, "primary", "secondary")));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s launches a grenade that explodes immediately on impact, dealing a medium amount of splash damage."), COLORED_NAME(this));
+	PAR(_("The secondary fire shoots a similar grenade that explodes shortly after bouncing."));
+	PAR(_("It consumes %s ammo for every grenade launched."), COLORED_NAME(ITEM_Rockets));
+	PAR(_("The %s works best at close to medium ranges, but it's quite tricky to hit an enemy if they're airborne. "
+	      "Since the secondary fire grenade bounces before exploding, it can be bounced against walls to damage enemies lurking around a corner."), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS(this.netname, "primary", "secondary"));
+	return PAGE_TEXT;
 }
 
 #endif

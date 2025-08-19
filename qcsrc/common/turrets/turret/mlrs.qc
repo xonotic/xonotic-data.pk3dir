@@ -31,10 +31,11 @@ METHOD(MLRSTurret, tr_setup, void(MLRSTurret this, entity it))
 METHOD(MLRSTurret, describe, string(MLRSTurret this))
 {
     TC(MLRSTurret, this);
-    return sprintf(_("The %s fires a rapid burst of 6 rockets similar to those of the %s towards its targets.\n\n"
-        "Getting caught in the line of fire of this turret can be very deadly, "
-        "but thankfully it doesn't shoot if you get too close, so as to not damage itself."),
-    COLORED_NAME(this), COLORED_NAME(WEP_DEVASTATOR));
+    PAGE_TEXT_INIT();
+    PAR(_("The %s fires a rapid burst of 6 rockets similar to those of the %s towards its targets."), COLORED_NAME(this), COLORED_NAME(WEP_DEVASTATOR));
+    PAR(_("Getting caught in the line of fire of this turret can be very deadly, "
+          "but thankfully it doesn't shoot if you get too close, so as to not damage itself."));
+    return PAGE_TEXT;
 }
 
 #endif // MENUQC

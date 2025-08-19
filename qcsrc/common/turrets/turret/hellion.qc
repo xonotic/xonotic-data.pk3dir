@@ -27,9 +27,10 @@ METHOD(Hellion, tr_setup, void(Hellion this, entity it))
 METHOD(Hellion, describe, string(Hellion this))
 {
     TC(Hellion, this);
-    return sprintf(_("The %s fires homing missiles similar to those of the %s towards its targets.\n\n"
-        "Although the missiles usually deal less damage than a %s rocket, the %s has two cannons so it can dish out quite the punch."),
-    COLORED_NAME(this), COLORED_NAME(WEP_DEVASTATOR), COLORED_NAME(WEP_DEVASTATOR), COLORED_NAME(this));
+    PAGE_TEXT_INIT();
+    PAR(_("The %s fires homing missiles similar to those of the %s towards its targets."), COLORED_NAME(this), COLORED_NAME(WEP_DEVASTATOR));
+    PAR(_("Although the missiles usually deal less damage than a %s rocket, the %s has two cannons so it can dish out quite the punch."), COLORED_NAME(WEP_DEVASTATOR), COLORED_NAME(this));
+    return PAGE_TEXT;
 }
 
 #endif // MENUQC

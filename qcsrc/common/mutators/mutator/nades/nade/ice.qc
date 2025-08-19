@@ -118,8 +118,9 @@ void nade_ice_boom(entity this)
 METHOD(IceNade, describe, string(IceNade this))
 {
 	TC(IceNade, this);
-	return sprintf(_("The %s detonates after a short delay, freezing any enemies who walk within the explosion radius for a few seconds after the explosion. "
-		"While frozen, players can't move or shoot, leaving them vulnerable to damage, but if left too long they'll unfreeze and run away!"),
-	COLORED_NAME(this));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s detonates after a short delay, freezing any enemies who walk within the explosion radius for a few seconds after the explosion. "
+	      "While frozen, players can't move or shoot, leaving them vulnerable to damage, but if left too long they'll unfreeze and run away!"), COLORED_NAME(this));
+	return PAGE_TEXT;
 }
 #endif // MENUQC

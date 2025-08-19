@@ -23,8 +23,9 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
 METHOD(VampireBuff, describe, string(VampireBuff this))
 {
 	TC(VampireBuff, this);
-	return sprintf(_("The %s converts some of the damage you deal to enemies and monsters into health for yourself, until the buff expires.\n\n"
-		"In some sense, this is the opposite of the %s."),
-	COLORED_NAME_WITH_CONCAT(this, _("Buff")), COLORED_NAME_WITH_CONCAT(BUFF_VENGEANCE, _("Buff")));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s converts some of the damage you deal to enemies and monsters into health for yourself, until the buff expires."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAR(_("In some sense, this is the opposite of the %s."), COLORED_NAME_WITH_CONCAT(BUFF_VENGEANCE, _("Buff")));
+	return PAGE_TEXT;
 }
 #endif // MENUQC

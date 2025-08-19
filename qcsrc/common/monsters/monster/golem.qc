@@ -284,9 +284,11 @@ METHOD(Golem, mr_setup, bool(Golem this, entity actor))
 METHOD(Golem, describe, string(Golem this))
 {
     TC(Golem, this);
-    return _("Golems are large powerful brutes capable of taking and dealing a beating. Keeping your distance is advised.\n\n"
-             "The Golem's primary melee attack is a series of punches. "
-             "On occasion the Golem may jump into the air, dealing massive damage in an area as it slams the ground.\n\n"
-             "To deal with distant foes, the Golem may throw a chunk of its electrified rocky exterior, zapping nearby targets on impact.");
+    PAGE_TEXT_INIT();
+    PAR(_("Golems are large powerful brutes capable of taking and dealing a beating. Keeping your distance is advised."));
+    PAR(_("The Golem's primary melee attack is a series of punches. "
+          "On occasion the Golem may jump into the air, dealing massive damage in an area as it slams the ground."));
+    PAR(_("To deal with distant foes, the Golem may throw a chunk of its electrified rocky exterior, zapping nearby targets on impact."));
+    return PAGE_TEXT;
 }
 #endif

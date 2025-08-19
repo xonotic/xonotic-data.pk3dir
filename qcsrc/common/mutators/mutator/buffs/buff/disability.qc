@@ -46,8 +46,9 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 METHOD(DisabilityBuff, describe, string(DisabilityBuff this))
 {
 	TC(DisabilityBuff, this);
-	return sprintf(_("The %s causes your enemies and monsters to slow down for a few seconds when you attack them, while the buff is active.\n\n"
-		"This is particularly useful against speedy players, especially in %s."),
-	COLORED_NAME_WITH_CONCAT(this, _("Buff")), COLORED_NAME(MAPINFO_TYPE_CTF));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s causes your enemies and monsters to slow down for a few seconds when you attack them, while the buff is active."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAR(_("This is particularly useful against speedy players, especially in %s."), COLORED_NAME(MAPINFO_TYPE_CTF));
+	return PAGE_TEXT;
 }
 #endif // MENUQC

@@ -415,13 +415,15 @@ METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))
 METHOD(Vaporizer, describe, string(Vaporizer this))
 {
 	TC(Vaporizer, this);
-	return sprintf(_("The %s is a unique weapon, firing a deadly beam of energy dealing a huge amount of damage. "
-		"In %s, the beam has the ability to instantly kill enemies with a single shot, unless they have an %s.\n\n"
-		"The secondary fire fires a laser identical to that fired by the %s, with strong knockback.\n\n"
-		"It is a superweapon, so isn't often found in game, except in %s where all players spawn with it.\n\n"
-		"It consumes some %s ammo with each shot.\n\n%s"),
-	COLORED_NAME(this), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(ITEM_ExtraLife), COLORED_NAME(WEP_BLASTER), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(ITEM_Cells),
-	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_onlyOne(this.netname, "primary")));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s is a unique weapon, firing a deadly beam of energy dealing a huge amount of damage. "
+	      "In %s, the beam has the ability to instantly kill enemies with a single shot, unless they have an %s."), COLORED_NAME(this), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(ITEM_ExtraLife));
+	PAR(_("The secondary fire fires a laser identical to that fired by the %s, with strong knockback."), COLORED_NAME(WEP_BLASTER));
+	PAR(_("It is a superweapon, so isn't often found in game, except in %s where all players spawn with it."), COLORED_NAME(MUTATOR_mutator_instagib));
+	PAR(_("It consumes some %s ammo with each shot."), COLORED_NAME(ITEM_Cells));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_onlyOne(this.netname, "primary"));
+	return PAGE_TEXT;
 }
 
 #endif

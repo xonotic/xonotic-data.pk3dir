@@ -13,7 +13,8 @@ float buff_Luck_CalculateDamage(float frag_damage)
 METHOD(LuckBuff, describe, string(LuckBuff this))
 {
 	TC(LuckBuff, this);
-	return sprintf(_("While you have the %s, each attack has a chance of being a critical hit with greatly increased damage."),
-	COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAGE_TEXT_INIT();
+	PAR(_("While you have the %s, each attack has a chance of being a critical hit with greatly increased damage."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	return PAGE_TEXT;
 }
 #endif // MENUQC

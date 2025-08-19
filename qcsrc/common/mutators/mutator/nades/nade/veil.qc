@@ -49,9 +49,10 @@ void nade_veil_Apply(entity player)
 METHOD(VeilNade, describe, string(VeilNade this))
 {
 	TC(VeilNade, this);
-	return sprintf(_("The %s detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
-		"Players inside the orb will be invisible to those outside it.\n\n"
-		"This is sort of the opposite of the %s."),
-	COLORED_NAME(this), COLORED_NAME(NADE_TYPE_DARKNESS));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
+	      "Players inside the orb will be invisible to those outside it."), COLORED_NAME(this));
+	PAR(_("This is sort of the opposite of the %s."), COLORED_NAME(NADE_TYPE_DARKNESS));
+	return PAGE_TEXT;
 }
 #endif // MENUQC

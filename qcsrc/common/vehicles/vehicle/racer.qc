@@ -646,11 +646,12 @@ METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
 METHOD(Racer, describe, string(Racer this))
 {
     TC(Racer, this);
-    return sprintf(_("The %s vehicle looks like a jet, but does not fly uwpards very well. "
-        "It seats only one passenger, who becomes the pilot.\n\n"
-        "It can be accelerated by pressing the ^3+jump^7 bind, which consumes power from the same source as the primary weapon.\n\n"
-        "The %s primary weapon is a laser and the secondary weapon shoots energy balls that explode on impact."),
-    COLORED_NAME(this), COLORED_NAME(this));
+    PAGE_TEXT_INIT();
+    PAR(_("The %s vehicle looks like a jet, but does not fly uwpards very well. "
+          "It seats only one passenger, who becomes the pilot."), COLORED_NAME(this));
+    PAR(_("It can be accelerated by pressing the ^3+jump^7 bind, which consumes power from the same source as the primary weapon."));
+    PAR(_("The %s primary weapon is a laser and the secondary weapon shoots energy balls that explode on impact."), COLORED_NAME(this));
+    return PAGE_TEXT;
 }
 
 #endif

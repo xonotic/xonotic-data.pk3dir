@@ -21,8 +21,9 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics)
 METHOD(JumpBuff, describe, string(JumpBuff this))
 {
 	TC(JumpBuff, this);
-	return sprintf(_("The %s greatly increases your jump height, while the buff is active.\n\n"
-		"It also makes you immune to fall damage."),
-	COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAGE_TEXT_INIT();
+	PAR(_("The %s greatly increases your jump height, while the buff is active."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAR(_("It also makes you immune to fall damage."));
+	return PAGE_TEXT;
 }
 #endif // MENUQC

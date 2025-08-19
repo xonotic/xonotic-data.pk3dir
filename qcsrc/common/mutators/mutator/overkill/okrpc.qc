@@ -238,13 +238,15 @@ METHOD(OverkillRocketPropelledChainsaw, wr_impacteffect, void(entity thiswep, en
 METHOD(OverkillRocketPropelledChainsaw, describe, string(OverkillRocketPropelledChainsaw this))
 {
 	TC(OverkillRocketPropelledChainsaw, this);
-	return sprintf(_("As the name suggests, the %s is a superweapon that fires a rocket propelled chainsaw which explodes on impact, dealing a lot of splash damage to any players close by.\n\n"
-		"Like with all %s weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around.\n\n"
-		"It is a superweapon found on some maps, meaning that it breaks down after some time.\n\n"
-		"The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s.\n\n"
-		"Since it is the only %s weapon which deals splash damage, the %s is a good choice of weapon for attacking groups of enemies.\n\n%s"),
-	COLORED_NAME(this), COLORED_NAME(MUTATOR_ok), COLORED_NAME(ITEM_Rockets), COLORED_NAME(MUTATOR_ok), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this),
-	strcat(W_Guide_Keybinds(this), "\n\n", W_Guide_DPS_onlyOne(this.netname, "primary")));
+	PAGE_TEXT_INIT();
+	PAR(_("As the name suggests, the %s is a superweapon that fires a rocket propelled chainsaw which explodes on impact, dealing a lot of splash damage to any players close by."), COLORED_NAME(this));
+	PAR(_("Like with all %s weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around."), COLORED_NAME(MUTATOR_ok));
+	PAR(_("It is a superweapon found on some maps, meaning that it breaks down after some time."));
+	PAR(_("The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s."), COLORED_NAME(ITEM_Rockets), COLORED_NAME(MUTATOR_ok));
+	PAR(_("Since it is the only %s weapon which deals splash damage, the %s is a good choice of weapon for attacking groups of enemies."), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_onlyOne(this.netname, "primary"));
+	return PAGE_TEXT;
 }
 
 #endif
