@@ -119,14 +119,32 @@ void W_MineLayer_DoRemoteExplode(entity this)
 
 void W_MineLayer_RemoteExplode(entity this)
 {
-	if(!IS_DEAD(this.realowner))
-		if((this.spawnshieldtime >= 0)
-			? (time >= this.spawnshieldtime) // timer
-			: (vdist(NearestPointOnBox(this.realowner, this.origin) - this.origin, >, WEP_CVAR(WEP_MINE_LAYER, remote_radius))) // safety device
-		)
+	if(IS_DEAD(this.realowner))
+		return;
+
+	if(this.spawnshieldtime >= 0)
+	{
+		if(time < this.spawnshieldtime) // timer
+			return;
+	}
+	else
+	{
+		/* make sure no friend is in the mine's radius.
+		 * WEAPONTODO: modify protection cvar to allow disabling remote detonation protection.
+		 * disabling it currently allows Mine Layer-flying, even more powerful than rocket-flying
+		 * ... even without Rocket Flying mutator enabled
+		 */
+		entity head;
+		head = findradius(this.origin, WEP_CVAR(WEP_MINE_LAYER, remote_radius));
+		while(head)
 		{
-			W_MineLayer_DoRemoteExplode(this);
+			if(SAME_TEAM(head, this.realowner))
+				return;
+			head = head.chain;
 		}
+	}
+
+	W_MineLayer_DoRemoteExplode(this);
 }
 
 void W_MineLayer_ProximityExplode(entity this)
