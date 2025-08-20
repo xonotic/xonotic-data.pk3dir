@@ -134,8 +134,7 @@ void W_MineLayer_RemoteExplode(entity this)
 		 * disabling it currently allows Mine Layer-flying, even more powerful than rocket-flying
 		 * ... even without Rocket Flying mutator enabled
 		 */
-		entity head;
-		head = findradius(this.origin, WEP_CVAR(WEP_MINE_LAYER, remote_radius));
+		entity head = WarpZone_FindRadius(this.origin, WEP_CVAR(WEP_MINE_LAYER, remote_radius), false);
 		while(head)
 		{
 			if(SAME_TEAM(head, this.realowner))
@@ -152,8 +151,7 @@ void W_MineLayer_ProximityExplode(entity this)
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until they're at a safe distance
 	if(WEP_CVAR(WEP_MINE_LAYER, protection) && this.mine_explodeanyway == 0)
 	{
-		entity head;
-		head = findradius(this.origin, WEP_CVAR(WEP_MINE_LAYER, radius));
+		entity head = WarpZone_FindRadius(this.origin, WEP_CVAR(WEP_MINE_LAYER, radius), false);
 		while(head)
 		{
 			if(SAME_TEAM(head, this.realowner))
@@ -214,7 +212,7 @@ void W_MineLayer_Think(entity this)
 	float time_core = WEP_CVAR(WEP_MINE_LAYER, proximity_time_core);
 	float time_edge = WEP_CVAR(WEP_MINE_LAYER, proximity_time_edge);
 	float proxrad = WEP_CVAR(WEP_MINE_LAYER, proximity_radius);
-	head = findradius(this.origin, proxrad);
+	head = WarpZone_FindRadius(this.origin, proxrad, false);
 	while(head)
 	{
 		if(IS_PLAYER(head) && !IS_DEAD(head) && !STAT(FROZEN, head) && !IS_INDEPENDENT_PLAYER(head))
@@ -225,7 +223,7 @@ void W_MineLayer_Think(entity this)
 			// scale from time_edge to time_core based on how close the player is to the mine
 			float new_mine_time = time + time_core;
 			if(time_edge != time_core)
-				new_mine_time += (time_edge - time_core) * vlen(head.origin - this.origin) / proxrad;
+				new_mine_time += (time_edge - time_core) * vlen(head.WarpZone_findradius_dist) / proxrad;
 			if((!this.mine_time) || this.mine_time > new_mine_time) // choose the earliest explosion time
 				this.mine_time = new_mine_time;
 		}
