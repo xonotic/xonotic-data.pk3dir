@@ -36,9 +36,9 @@ CLASS(Flag, Pickup)
 	// bones_was_here: previously after several calculations (inc FL_ITEM expansion with sv_legacy_bbox_expand 1)
 	// the old final bbox was '-28.44 -28.44 -32.08' '28.44 28.44 27.88' at FLAG_SCALE 0.6
 	// and the model was noticeably too tall to fit.
-	// The following values give '-29.8125 -29.8125 -32.0625' '29.8125 29.8125 38.25' at FLAG_SCALE 0.5625
-	// which are power of two float multiples, are very close to the 60x60x70 size of megas and powerups,
-	// have the same origin.z height, and are a better fit for the model.
+	// The following values give '-30 -30 -32' '30 30 38' after vrint() at FLAG_SCALE 0.5625
+	// which match the 60x60x70 size of megas and powerups,
+	// keep the same origin.z height, and are a better fit for the model.
 	ATTRIB(Flag, m_mins, vector, '-53 -53 -57');
 	ATTRIB(Flag, m_maxs, vector, '53 53 68');
 ENDCLASS(Flag)

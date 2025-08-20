@@ -1409,7 +1409,7 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 
 	// appearence
 	_setmodel(flag, flag.model); // precision set below
-	setsize(flag, CTF_FLAG.m_mins * flag.scale, CTF_FLAG.m_maxs * flag.scale);
+	setsize(flag, vrint(CTF_FLAG.m_mins * flag.scale), vrint(CTF_FLAG.m_maxs * flag.scale));
 	flag.m_mins = flag.mins; // store these for squash checks
 	flag.m_maxs = flag.maxs;
 	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));
