@@ -15,7 +15,7 @@ REGISTER_INTRODUCTION_PAGE(0, _("About this guide"))
 	      "but most of what you will learn will come from trying it out in practice."));
 	PAR(_("Please note that this guide describes the default game behavior with vanilla settings. "
 	      "Xonotic is highly customizable and there are tons of servers out there that run with lightly or highly modified settings."));
-	PAR(_("You can usually find out which settings are modified by issuing ^3cvar_changes^7 in console after connecting to a server."));
+	PAR(_("You can usually find out which settings are modified by issuing %s in console after connecting to a server."), "^3cvar_changes^7");
 	this.m_description = strzone(PAGE_TEXT);
 }
 REGISTER_INTRODUCTION_PAGE(1, _("Community"))
@@ -24,7 +24,7 @@ REGISTER_INTRODUCTION_PAGE(1, _("Community"))
 	PAR(_("Xonotic stands out for its friendly, mature, and welcoming player community, and many long-term players argue that this is probably one of the best things about Xonotic. "
 	      "If you approach other players friendly and respectfully, this will be recognized, while acting toxic on the other hand will not make your life easier on the servers."));
 	PAR(_("The best way to get in touch with the community is to just start playing online and use the in-game chat. "
-	      "You can also connect to the official communication channels (^5%s^7 on Matrix, ^5%s^7 on QuakeNet IRC), and of course the official forum."), "#main:xonotic.org", "#xonotic");
+	      "You can also connect to the official communication channels (%s on Matrix, %s on QuakeNet IRC), and of course the official forum."), "^5#main:xonotic.org^7", "^5#xonotic^7");
 	this.m_description = strzone(PAGE_TEXT);
 }
 REGISTER_INTRODUCTION_PAGE(2, _("Getting good"))
@@ -45,7 +45,7 @@ REGISTER_INTRODUCTION_PAGE(3, _("XonStat"))
 	PAR(_("XonStat is the integrated player statistics application for Xonotic. "
 	      "It stores vital stats like your K:D ratio, weapon damage and accuracy, and scoreboards from past games."));
 	PAR(_("Tracking is completely opt-in, and no login is required."));
-	PAR(_("Some of the statistics are available in-game on your player profile, while the rest are accessible at ^5%s^7."), "stats.xonotic.org");
+	PAR(_("Some of the statistics are available in-game on your player profile, while the rest are accessible at %s."), "^5stats.xonotic.org^7");
 	this.m_description = strzone(PAGE_TEXT);
 }
 
@@ -69,9 +69,9 @@ REGISTER_MOVEMENT_PAGE(1, _("Bunny Hopping"))
 	PAGE_TEXT_INIT();
 	PAR(_("Bunny hopping (\"bhopping\") is a technique known also from other arena shooters."));
 	PAR(_("Due to air control, you can accelerate while in the air far beyond the maximum ground movement speed. "
-	      "To avoid ground friction, players constantly hop by simply keeping the ^3+jump^7 button pressed, so that ground contact doesn't slow them down. "
-	      "This allows you to get around the map much faster than if you would just walk."));
-	PAR(_("Therefore, keeping ^3+jump^7 held while moving quickly is one of the most essential movement strategies, used by all experienced players."));
+	      "To avoid ground friction, players constantly hop by simply keeping %s pressed, so that ground contact doesn't slow them down. "
+	      "This allows you to get around the map much faster than if you would just walk."), strcat("^3", _("jump"), "^7"));
+	PAR(_("Therefore, keeping %s held while moving quickly is one of the most essential movement strategies, used by all experienced players."), strcat("^3", _("jump"), "^7"));
 	PAR(_("With default settings, the speed you can reach by bunny hopping is capped at 900 qu/s (\"units per second\"). "
 	      "CTS/DeFRaG servers usually run with different CPMA-like physics that remove this capping."));
 	this.m_description = strzone(PAGE_TEXT);
@@ -81,11 +81,11 @@ REGISTER_MOVEMENT_PAGE(2, _("Strafe Turning"))
 	PAGE_TEXT_INIT();
 	PAR(_("Bunny hopping around corners requires \"strafe turning\" or you will lose a lot of speed (or simply not be able to make the turn). "
 	      "Strafe turning is a method used to quickly change the direction you're traveling while mid-air, without losing speed."));
-	PAR(_("While bunny hopping, first release the ^3+forward^7 movement key, then press the strafe key into the turn direction (^3+moveleft^7 or ^3+moveright^7), then start turning smoothly into the turn direction. "
-	      "As always, during the entire strafe turn keep the ^3+jump^7 button held."));
+	PAR(_("While bunny hopping, first release %s, then press the strafe key into the turn direction (%s or %s), then start turning smoothly into the turn direction. "
+	      "As always, during the entire strafe turn keep %s held."), strcat("^3", _("move forward"), "^7"), strcat("^3", _("strafe left"), "^7"), strcat("^3", _("strafe right"), "^7"), strcat("^3", _("jump"), "^7"));
 	PAR(_("Note that if you press the strafe key before releasing the forward key, you will suffer a speed penalty."));
 	PAR(_("If you do it right, you will even continue to accelerate in strafe turns."));
-	PAR(_("For an illustration of this technique, see ^5%s^7."), "xonotic.org/guide"); // shared message
+	PAR(_("For an illustration of this technique, see %s."), "^5xonotic.org/guide^7"); // shared message
 	this.m_description = strzone(PAGE_TEXT);
 }
 REGISTER_MOVEMENT_PAGE(3, _("Blaster Jumping"))
@@ -106,8 +106,8 @@ REGISTER_MOVEMENT_PAGE(4, _("Wall Blastering"))
 	PAR(_("To use this technique, start a bunny hop. Right after jumping, flick back with your mouse at about 8 o'clock if the wall is to your left (or 4 o'clock if the wall is to your right), aim at the level of your head, and fire the %s. "
 	      "Immediately flick back to your movement direction and continue to bunny hop."), COLORED_NAME(WEP_BLASTER));
 	PAR(_("In order to waste as little speed as possible while flicking back, switch to strafe key for the duration of the flick. "
-	      "This means using ^3+moveleft^7 if the wall is to your left, and ^3+moveright^7 if the wall is to your right."));
-	PAR(_("For an illustration of this technique, see ^5%s^7."), "xonotic.org/guide"); // shared message
+	      "This means using %s if the wall is to your left, and %s if the wall is to your right."), strcat("^3", _("strafe left"), "^7"), strcat("^3", _("strafe right"), "^7"));
+	PAR(_("For an illustration of this technique, see %s."), "^5xonotic.org/guide^7"); // shared message
 	this.m_description = strzone(PAGE_TEXT);
 }
 REGISTER_MOVEMENT_PAGE(5, _("Rocket Flying"))
@@ -142,11 +142,11 @@ REGISTER_MOVEMENT_PAGE(8, _("Ramp Jumping"))
 	PAR(_("Ramps are an important part of Xonotic map design. "
 	      "Any sloped surface that you hit with the right speed and the right angle will give you a significant upwards boost and enable you to reach places that are otherwise accessible only with laser jumps, which cost health and make noise."));
 	PAR(_("When doing ramp jumps, it is vital to hit the ramp at a flat angle to receive the upwards boost and not lose too much speed."));
-	PAR(_("In order to make a ramp jump, approach a sloped surface (\"ramp\"), jump just before the ramp and keep the ^3+jump^7 button pressed so you jump again once you hit the ramp."));
+	PAR(_("In order to make a ramp jump, approach a sloped surface (\"ramp\"), jump just before the ramp and keep %s pressed so you jump again once you hit the ramp."), strcat("^3", _("jump"), "^7"));
 	PAR(_("The higher the speed you have when you hit the ramp (at the right angle), the stronger the upwards boost. "
 	      "As always, you can gain speed before the ramp by bunny hopping."));
 	PAR(_("Note that when trying to make a ramp jump while bunny hopping, it is vital to time your hops carefully so you get the angle right."));
-	PAR(_("For an illustration of this technique, see ^5%s^7."), "xonotic.org/guide"); // shared message
+	PAR(_("For an illustration of this technique, see %s."), "^5xonotic.org/guide^7"); // shared message
 	this.m_description = strzone(PAGE_TEXT);
 }
 REGISTER_MOVEMENT_PAGE(9, _("Advanced Movement"))
@@ -154,6 +154,6 @@ REGISTER_MOVEMENT_PAGE(9, _("Advanced Movement"))
 	PAGE_TEXT_INIT();
 	PAR(_("Advanced techniques like \"strafe jumping\" (\"strafing\") or \"circle jumping\" (\"CJ\") offer only limited benefits in vanilla gameplay, "
 	      "but are crucial on CTS/DeFRaG servers that use slightly different physics."));
-	PAR(_("If you want to master these techniques, be sure to check out ^5%s^7."), "xdf.gg/guide");
+	PAR(_("If you want to master these techniques, be sure to check out %s."), "^5xdf.gg/guide^7");
 	this.m_description = strzone(PAGE_TEXT);
 }

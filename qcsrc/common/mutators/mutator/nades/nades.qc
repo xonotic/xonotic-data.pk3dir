@@ -47,8 +47,8 @@ METHOD(MutatorNades, describe, string(MutatorNades this))
 {
 	TC(MutatorNades, this);
 	PAGE_TEXT_INIT();
-	PAR(_("The %s mutator gives all players offhand nades that can be primed then thrown by pressing ^3drop weapon^7 twice. "
-	      "If the %s and %s mutators are disabled, they can also be thrown by holding then releasing ^3+hook^7."), COLORED_NAME(this), COLORED_NAME(MUTATOR_offhand_blaster), COLORED_NAME(MUTATOR_hook));
+	PAR(_("The %s mutator gives all players offhand nades that can be primed then thrown by pressing %s twice. "
+	      "If the %s and %s mutators are disabled, they can also be thrown by holding then releasing %s."), COLORED_NAME(this), strcat("^3", _("drop weapon"), "^7"), COLORED_NAME(MUTATOR_offhand_blaster), COLORED_NAME(MUTATOR_hook), strcat("^3", _("hook"), "^7"));
 	PAR(_("There are multiple types of nades that can be selected, and many options available regarding this mutator, "
 	      "so they may act a little differently depending on the server you play on."));
 	PAR(_("This mutator is enabled by default in %s."), COLORED_NAME(MUTATOR_ok));
