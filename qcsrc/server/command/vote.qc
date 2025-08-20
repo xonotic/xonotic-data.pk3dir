@@ -365,6 +365,13 @@ void reset_map(bool is_fake_round_start)
 			round_handler_Reset(game_starttime);
 	}
 
+	if (rebalanceplayer_on_reset_map)
+	{
+		rebalanceplayer(rebalanceplayer_pl_name);
+		strfree(rebalanceplayer_pl_name);
+		rebalanceplayer_on_reset_map = false;
+	}
+
 	if (shuffleteams_on_reset_map)
 	{
 		shuffleteams();
@@ -824,6 +831,24 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 
 				vote_parsed_command = strcat(first_command, " # ", ftos(etof(victim)), " ", command_arguments);
 				vote_parsed_display = sprintf("^1%s #%d ^7%s^1 %s", first_command, etof(victim), victim.netname, reason);
+			}
+			else
+			{
+				print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n"));
+				return 0;
+			}
+
+			break;
+		}
+
+		case "rebalanceplayer":
+		{
+			entity pl = GetIndexedEntity(argc, (startpos + 1));
+			float accepted = VerifyClientEntity(pl, false, false);
+			if (accepted > 0)
+			{
+				vote_parsed_command = strcat(first_command, " #", ftos(etof(pl)));
+				vote_parsed_display = sprintf("^1%s #%d ^7%s", first_command, etof(pl), pl.netname);
 			}
 			else
 			{
