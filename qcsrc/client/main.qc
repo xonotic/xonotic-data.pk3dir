@@ -1369,6 +1369,7 @@ bool net_handle_ServerWelcome()
 
 	strcpy(hostname, ReadString());
 	string hostversion = ReadString();
+	string modname = ReadString();
 	bool version_mismatch = flags & 2;
 	bool version_check = flags & 4;
 	MapInfo_Map_titlestring = ReadString();
@@ -1380,9 +1381,12 @@ bool net_handle_ServerWelcome()
 	string cache_mutatormsg = ReadString();
 	string motd = ReadString();
 
-	string msg = GetVersionMessage(hostversion, version_mismatch, version_check);
+	string msg = strcat(GetVersionMessage(hostversion, version_mismatch, version_check), "\n");
 
-	msg = strcat(msg, "\n\n", _("Gametype:"), " ^1", MapInfo_Type_ToText(gametype), "\n");
+	if (modname != "Xonotic")
+		msg = strcat(msg, "\n", _("Mod:"), " ^5", modname);
+
+	msg = strcat(msg, "\n", _("Gametype:"), " ^1", MapInfo_Type_ToText(gametype), "\n");
 
 	msg = strcat(msg, "\n", _("Map:"), " ", MapInfo_Map_titlestring, "\n");
 	if (flags & 8)

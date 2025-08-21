@@ -1079,6 +1079,8 @@ void SendWelcomeMessage(entity this, int msg_type)
 	WriteString(msg_type, autocvar_hostname);
 	WriteString(msg_type, autocvar_g_xonoticversion);
 
+	WriteString(msg_type, modname);
+
 	WriteString(msg_type, MapInfo_Map_titlestring);
 	if (flags & 8)
 		WriteString(msg_type, MapInfo_Map_author);

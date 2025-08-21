@@ -37,6 +37,8 @@ float checkCompatibility_newtoys(entity me)
 {
 	if(cvar("g_instagib"))
 		return 0;
+	if(cvar("g_overkill"))
+		return 0;
 	if(cvar_string("g_weaponarena") == "most")
 		return 1;
 	if(cvar_string("g_weaponarena") == "all" || cvar_string("g_weaponarena") == "1")
@@ -218,6 +220,10 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 1.6, e = makeXonoticCheckBox_T(0, "g_nix_with_blaster", _("with blaster"),
 			_("Always carry the blaster as an additional weapon in Nix")));
 			setDependent(e, "g_nix", 1, 1);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_overkill", "1", _("Overkill-core"), "-"));
+			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_balance_blaster_weaponstartoverride", "0", _("No start weapons"), "-"));

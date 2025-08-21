@@ -282,17 +282,20 @@ MUTATOR_HOOKFUNCTION(ok, SetWeaponArena)
 
 MUTATOR_HOOKFUNCTION(ok, BuildMutatorsString)
 {
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":OK");
+	if (cvar_string("g_mod_balance") != "Overkill")
+		M_ARGV(0, string) = strcat(M_ARGV(0, string), ":OK-b");
 }
 
 MUTATOR_HOOKFUNCTION(ok, BuildMutatorsPrettyString)
 {
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Overkill");
+	if (cvar_string("g_mod_balance") != "Overkill")
+		M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Overkill-basic");
 }
 
 MUTATOR_HOOKFUNCTION(ok, SetModname)
 {
-	M_ARGV(0, string) = "Overkill";
+	if (cvar_string("g_mod_balance") == "Overkill")
+		M_ARGV(0, string) = "Overkill";
 	return true;
 }
 
