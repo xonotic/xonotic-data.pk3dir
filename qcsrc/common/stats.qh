@@ -306,6 +306,11 @@ REGISTER_STAT(JETPACK_MAXSPEED_SIDE, FLOAT, autocvar_g_jetpack_maxspeed_side)
 REGISTER_STAT(JETPACK_MAXSPEED_UP, FLOAT, autocvar_g_jetpack_maxspeed_up)
 REGISTER_STAT(JETPACK_REVERSE_THRUST, FLOAT, autocvar_g_jetpack_reverse_thrust)
 
+#ifdef SVQC
+float autocvar_g_grappling_hook_useammo;
+#endif
+REGISTER_STAT(HOOK_FUEL, BOOL, autocvar_g_grappling_hook_useammo)
+
 REGISTER_STAT(MOVEVARS_HIGHSPEED, FLOAT)
 
 #ifdef SVQC
