@@ -98,7 +98,7 @@ void HUD_StrafeHUD(bool should_draw)
 		onground_expired = (time - onground_lasttime) >= autocvar_hud_panel_strafehud_timeout_ground; // timeout for slick ramps
 
 	// only the local csqcplayer entity contains this information even when spectating
-	float maxspeed_mod = IS_DUCKED(csqcplayer) ? 0.5 : 1;
+	float maxspeed_mod = IS_DUCKED(csqcplayer) ? PHYS_CROUCHSPEEDSCALE(strafeplayer) : 1;
 	float maxspeed_phys = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
 	float maxspeed = !autocvar__hud_configure ? maxspeed_phys * maxspeed_mod : 320;
 	float maxaccel_phys = onground ? PHYS_ACCELERATE(strafeplayer) : PHYS_AIRACCELERATE(strafeplayer);
