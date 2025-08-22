@@ -148,6 +148,8 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
 	STAT(GAMEPLAYFIX_STEPDOWN, this) = Physics_ClientOption(this, "stepdown", autocvar_sv_gameplayfix_stepdown);
 	STAT(MOVEVARS_SKIMMING, this) = Physics_ClientOption(this, "skimming", autocvar_sv_skimming);
+	STAT(MOVEVARS_CROUCHFLAGS, this) = Physics_ClientOption(this, "crouchflags", autocvar_sv_crouchflags);
+	STAT(MOVEVARS_CROUCHSPEEDSCALE, this) = Physics_ClientOption(this, "crouchspeedscale", autocvar_sv_crouchspeedscale);
 
 	MUTATOR_CALLHOOK(PlayerPhysics_PostUpdateStats, this, maxspd_mod);
 }
@@ -206,8 +208,13 @@ void PM_ClientMovement_UpdateStatus(entity this)
 	do_crouch = M_ARGV(1, bool);
 
 	// Disable crouching on Q1BSP because it lacks a suitable cliphull (HLBSP added one).
-	if (STAT(PL_CROUCH_MAX, this).z == STAT(PL_MAX, this).z)
+	if (STAT(PL_CROUCH_MAX, this).z == STAT(PL_MAX, this).z
+	|| (PHYS_CROUCHFLAGS(this) & 1)) // can't crouch in Q1
 		do_crouch = false;
+	else if ((PHYS_CROUCHFLAGS(this) & 2) && !IS_ONGROUND(this))
+		do_crouch = false; // can't crouch while not on ground in Q2
+	else if ((PHYS_CROUCHFLAGS(this) & 4) && PHYS_INPUT_BUTTON_JUMP(this))
+		do_crouch = false; // can't crouch while holding jump in Q3 and Q2
 
 	if (do_crouch)
 	{
@@ -236,9 +243,9 @@ void PM_ClientMovement_UpdateStatus(entity this)
 void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 {
 	float movity = IsMoveInDirection(PHYS_CS(this).movement, 0);
-	if(PHYS_AIRCONTROL_FLAGS(this) & BIT(0)) // backwards
+	if(PHYS_AIRCONTROL_FLAGS(this) & 1) // backwards
 		movity += IsMoveInDirection(PHYS_CS(this).movement, 180);
-	if(PHYS_AIRCONTROL_FLAGS(this) & BIT(1)) // sidewards
+	if(PHYS_AIRCONTROL_FLAGS(this) & 2) // sidewards
 	{
 		movity += IsMoveInDirection(PHYS_CS(this).movement, 90);
 		movity += IsMoveInDirection(PHYS_CS(this).movement, -90);
@@ -247,8 +254,7 @@ void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 	float k = 2 * movity - 1;
 	if (k <= 0)
 		return;
-	if (!(PHYS_AIRCONTROL_FLAGS(this) & BIT(2))) // crouching has an impact
-		k *= bound(0, wishspeed / PHYS_MAXAIRSPEED(this), 1);
+	k *= bound(0, wishspeed / PHYS_MAXAIRSPEED(this), 1);
 
 	const float zspeed = this.velocity_z;
 	this.velocity_z = 0;
@@ -430,6 +436,9 @@ bool PlayerJump(entity this)
 		if (IS_JUMP_HELD(this))
 			return true;
 
+	if ((PHYS_CROUCHFLAGS(this) & 8) && PHYS_INPUT_BUTTON_CROUCH(this))
+		return true; // can't jump while holding crouch, but can jump while ducked (like in Q3)
+
 	// sv_jumpspeedcap_min/sv_jumpspeedcap_max act as baseline
 	// velocity bounds.  Final velocity is bound between (jumpheight *
 	// min + jumpheight) and (jumpheight * max + jumpheight);
@@ -584,7 +593,8 @@ void CheckPlayerJump(entity this)
 		ITEMS_STAT(this) &= ~IT_USING_JETPACK;
 	}
 
-	if (!PHYS_INPUT_BUTTON_JUMP(this))
+	if (!PHYS_INPUT_BUTTON_JUMP(this)
+	|| (PHYS_INPUT_BUTTON_CROUCH(this) && (PHYS_CROUCHFLAGS(this) & 8))) // crouch cancels jump in Q3
 		UNSET_JUMP_HELD(this);
 
 	if (this.waterlevel == WATERLEVEL_SWIMMING)
