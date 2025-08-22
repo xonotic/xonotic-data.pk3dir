@@ -11,8 +11,11 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 	bool applygravity = !_Movetype_CheckWater(this) && (this.move_movetype == MOVETYPE_WALK || this.move_movetype == MOVETYPE_STEP) && !(this.flags & FL_WATERJUMP);
 	vector start_velocity = this.velocity;
+	float stepheight = PHYS_STEPHEIGHT(this);
+	if ((PHYS_CROUCHFLAGS(this) & 128) && IS_DUCKED(this) && this.waterlevel < WATERLEVEL_SWIMMING)
+		stepheight *= 0.5;
 
-	int clip = _Movetype_FlyMove(this, dt, applygravity, PHYS_STEPHEIGHT(this));
+	int clip = _Movetype_FlyMove(this, dt, applygravity, stepheight);
 
 	_Movetype_LinkEdict(this, true);
 
@@ -29,7 +32,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 	vector originalorigin = this.origin;
 	// move down
-	if (!_Movetype_PushEntity(this, vec3(0, 0, -PHYS_STEPHEIGHT(this)), true))
+	if (!_Movetype_PushEntity(this, vec3(0, 0, -stepheight), true))
 	{
 		// we got teleported when downstepping... must abort the move
 		return;
