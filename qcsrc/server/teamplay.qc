@@ -32,6 +32,7 @@ const int TEAM_NOT_ALLOWED = -1;
 .entity m_team_balance_team[NUM_TEAMS]; ///< ???
 
 .float m_team_score; ///< The score of the team.
+.int m_team_skill; ///< The total skill of the team.
 .int m_num_players; ///< Number of players (both humans and bots) in a team.
 .int m_num_bots; ///< Number of bots in a team.
 .int m_num_players_alive; ///< Number of alive players in a team.
@@ -294,60 +295,6 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 	}
 
 	return true;
-}
-
-void Player_SetTeamIndexChecked(entity player, int team_index)
-{
-	if (!teamplay)
-	{
-		return;
-	}
-	if (!Team_IsValidIndex(team_index))
-	{
-		return;
-	}
-
-	// TODO: this is in ClientCommand_selectteam(), shouldn't be necessary to have it here too (refactor SV_ChangeTeam ?)
-	if ((autocvar_g_campaign) || (autocvar_g_changeteam_banned && CS(player).wasplayer))
-	{
-		Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
-		Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_TEAMCHANGE_NOTALLOWED);
-		return;
-	}
-	entity balance = TeamBalance_CheckAllowedTeams(player);
-	if (team_index == 1 && !TeamBalance_IsTeamAllowedInternal(balance, 1))
-	{
-		team_index = 4;
-	}
-	if (team_index == 4 && !TeamBalance_IsTeamAllowedInternal(balance, 4))
-	{
-		team_index = 3;
-	}
-	if (team_index == 3 && !TeamBalance_IsTeamAllowedInternal(balance, 3))
-	{
-		team_index = 2;
-	}
-	if (team_index == 2 && !TeamBalance_IsTeamAllowedInternal(balance, 2))
-	{
-		team_index = 1;
-	}
-
-	// TODO: this is in ClientCommand_selectteam(), shouldn't be necessary to have it here too (refactor SV_ChangeTeam ?)
-	if (autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
-	{
-		TeamBalance_GetTeamCounts(balance, player);
-		if ((Team_IndexToBit(team_index) & TeamBalance_FindBestTeams(balance,
-			player, false)) == 0)
-		{
-			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
-			Send_Notification(NOTIF_ONE_ONLY, player, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
-			TeamBalance_Destroy(balance);
-			return;
-		}
-	}
-	TeamBalance_Destroy(balance);
-
-	SetPlayerTeam(player, team_index, TEAM_CHANGE_MANUAL);
 }
 
 bool MoveToTeam(entity client, int team_index, int type)
@@ -731,7 +678,7 @@ bool TeamBalance_AreEqual(entity ignore, bool would_leave)
 	TeamBalance_Destroy(balance);
 
 	// Ignore if there are "ghost" bots that would leave if anyone joined
-	if (would_leave && bots > autocvar_bot_number)
+	if (would_leave && bots_would_leave)
 		return false;
 
 	return equality;
@@ -831,45 +778,50 @@ bool TeamBalance_QueuedPlayersTagIn(entity ignore)
 	if (!teamplay)
 		return true;
 
-	bool balanced = true;
-	int j, teamplayers, teamplayers_max = 0;
-	entity balance = TeamBalance_CheckAllowedTeams(ignore);
-
+	int j, teamplayers_deficit = 0, teamplayers_max = 0;
+	entity it, balance = TeamBalance_CheckAllowedTeams(ignore);
 	TeamBalance_GetTeamCounts(balance, ignore);
 
-	// find the target player count
-	for (j = 1; j <= AVAILABLE_TEAMS; ++j)
+	for (int bots_would_leave_remaining = bots_would_leave, j = 1; j <= AVAILABLE_TEAMS; ++j)
 	{
-		teamplayers = TeamBalance_GetTeamFromIndex(balance, j).m_num_players;
-		if(teamplayers > teamplayers_max)
-			teamplayers_max = teamplayers;
+		it = TeamBalance_GetTeamFromIndex(balance, j);
+		// deduct bots that would leave if a player joined their team, distributing the deductions between teams
+		if (bots_would_leave_remaining)
+		{
+			int to_remove = min(it.m_num_bots, ceil(bots_would_leave_remaining / AVAILABLE_TEAMS));
+			it.m_num_players -= to_remove;
+			bots_would_leave_remaining -= to_remove;
+		}
+		// find the largest team size
+		if (it.m_num_players > teamplayers_max)
+			teamplayers_max = it.m_num_players;
+	}
+	// find how many players we'd need to join to achieve balanced numbers that way
+	for (j = 1; j <= AVAILABLE_TEAMS; ++j)
+		teamplayers_deficit += teamplayers_max - TeamBalance_GetTeamFromIndex(balance, j).m_num_players;
+
+	// first pass: find clients(s) who want to play on a specific team
+	for (j = 1; teamplayers_deficit > 0 && j <= maxclients; ++j)
+	{
+		it = ftoe(j);
+		if (it.wants_join <= 0 || it == ignore) continue;
+		if (TeamBalance_GetTeamFromIndex(balance, it.wants_join).m_num_players >= teamplayers_max) continue;
+		Join(it, false);
+		++TeamBalance_GetTeam(balance, it.team).m_num_players;
+		--teamplayers_deficit;
 	}
 
-	for (j = 1; j <= AVAILABLE_TEAMS; ++j)
+	// second pass: find clients(s) who want to play on any team
+	for (j = 1; teamplayers_deficit > 0 && j <= maxclients; ++j)
 	{
-		teamplayers = TeamBalance_GetTeamFromIndex(balance, j).m_num_players;
-		// first pass: find player(s) who want to play on this specific team
-		FOREACH_CLIENT(it != ignore && it.wants_join == j,
-		{
-			if (teamplayers >= teamplayers_max)
-				break;
-			Join(it, false);
-			++teamplayers;
-		});
-		// second pass: find player(s) who want to play on any team
-		FOREACH_CLIENT(it != ignore && it.wants_join < 0,
-		{
-			if (teamplayers >= teamplayers_max)
-				break;
-			Join(it, false);
-			++teamplayers;
-		});
-		if (teamplayers < teamplayers_max)
-			balanced = false;
+		it = ftoe(j);
+		if (it.wants_join >= 0 || it == ignore) continue;
+		Join(it, false);
+		--teamplayers_deficit; // don't need to update .m_num_players as we won't read it again
 	}
 
 	TeamBalance_Destroy(balance);
-	return balanced;
+	return teamplayers_deficit <= 0; // return true if teams are now balanced
 }
 
 bool TeamBalance_IsTeamAllowed(entity balance, int index)
@@ -890,6 +842,8 @@ bool TeamBalance_IsTeamAllowed(entity balance, int index)
 	return TeamBalance_IsTeamAllowedInternal(balance, index);
 }
 
+// maybe include qcsrc/server/clientkill.qh instead of declaring this?
+.int killindicator_teamchange;
 void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 {
 	if (balance == NULL)
@@ -916,22 +870,27 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 	}
 	else
 	{
+		int server_skill_total = 0, skilled_client_count = 0;
 		// Manually count all players.
 		FOREACH_CLIENT(true,
 		{
+			// skill average intentionally includes ignore.skill
+			float it_skill = PlayerScore_Get(it, SP_SKILL);
+			if (it_skill > 0)
+			{
+				server_skill_total += it_skill;
+				++skilled_client_count;
+			}
+
 			if (it == ignore)
 			{
 				continue;
-			}
-			if (it.wants_join)
-			{
-				continue; // Queued players aren't actually in the game (and shouldn't have .team set).
 			}
 			int team_num;
 			// TODO: Reconsider when the player is truly on the team.
 			if (IS_CLIENT(it) || INGAME(it))
 			{
-				team_num = it.team;
+				team_num = it.killindicator_teamchange > 0 ? it.killindicator_teamchange : it.team;
 			}
 			else if (Player_HasRealForcedTeam(it))
 			{
@@ -956,7 +915,23 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			{
 				++team_ent.m_num_bots;
 			}
+
+			if (it_skill > 0)
+				team_ent.m_team_skill += it_skill;
+			else
+				++team_ent.count; // use average skill for this player
 		});
+
+		// for each player without a skill rating use the average of all clients' skill ratings
+		// see also: Join() (code duplication :/)
+		int average_skill = (skilled_client_count && autocvar_g_balance_teams_skill_unranked_avg_frac > 0)
+			? server_skill_total * autocvar_g_balance_teams_skill_unranked_avg_frac / skilled_client_count
+			: 1000; // fallback: prevents m_team_skill 0 which would break m_team_score balancing
+		for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
+		{
+			entity team_ent = TeamBalance_GetTeamFromIndex(balance, i);
+			team_ent.m_team_skill += team_ent.count * average_skill;
+		}
 	}
 
 	// if the player who has a forced team has not joined yet, reserve the spot
@@ -1011,11 +986,16 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player)
 	{
 		TeamBalance_GetTeamCounts(balance, NULL);
 	}
-	int team_bits = TeamBalance_FindBestTeams(balance, player, true);
+	int team_bits = TeamBalance_FindBestTeams(balance, player);
 	if (team_bits == 0)
 	{
 		LOG_FATALF("No teams available for %s\n", GetGametype());
 	}
+
+	// don't punish players for UI mistakes by changing teams randomly when already on a best team
+	if (player.team > 0 && (team_bits & Team_TeamToBit(player.team)))
+		return Team_TeamToIndex(player.team);
+
 	RandomSelection_Init();
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
@@ -1027,7 +1007,7 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player)
 	return RandomSelection_chosen_float;
 }
 
-int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
+int TeamBalance_FindBestTeams(entity balance, entity player)
 {
 	if (balance == NULL)
 	{
@@ -1055,8 +1035,7 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 			previous_team = i;
 			continue;
 		}
-		int compare = TeamBalance_CompareTeams(balance, i, previous_team,
-			player, use_score);
+		int compare = TeamBalance_CompareTeams(balance, i, previous_team, player);
 		if (compare == TEAMS_COMPARE_LESS)
 		{
 			team_bits = Team_IndexToBit(i);
@@ -1072,8 +1051,7 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 	return team_bits;
 }
 
-int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
-	entity player, bool use_score)
+int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b, entity player)
 {
 	if (balance == NULL)
 	{
@@ -1099,7 +1077,7 @@ int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
 	}
 	entity team_a = TeamBalance_GetTeamFromIndex(balance, team_index_a);
 	entity team_b = TeamBalance_GetTeamFromIndex(balance, team_index_b);
-	return TeamBalance_CompareTeamsInternal(team_a, team_b, player, use_score);
+	return TeamBalance_CompareTeamsInternal(team_a, team_b, player);
 }
 
 void TeamBalance_AutoBalanceBots()
@@ -1316,8 +1294,7 @@ int TeamBalanceTeam_GetNumberOfBots(entity team_ent)
 	return team_ent.m_num_bots;
 }
 
-int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b,
-	entity player, bool use_score)
+int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b, entity player)
 {
 	if (team_a == team_b)
 	{
@@ -1328,12 +1305,16 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b,
 	{
 		return TEAMS_COMPARE_INVALID;
 	}
+	// deduct bots that would leave if a player joined their team, distributing the deductions between teams
 	int num_players_team_a = team_a.m_num_players;
 	int num_players_team_b = team_b.m_num_players;
 	if (IS_REAL_CLIENT(player) && bots_would_leave)
 	{
-		num_players_team_a -= team_a.m_num_bots;
-		num_players_team_b -= team_b.m_num_bots;
+		int bots_would_leave_remaining = bots_would_leave;
+		int to_remove = min(team_a.m_num_bots, ceil(bots_would_leave_remaining * 0.5));
+		num_players_team_a -= to_remove;
+		bots_would_leave_remaining -= to_remove;
+		num_players_team_b -= min(team_b.m_num_bots, bots_would_leave_remaining);
 	}
 	if (num_players_team_a < num_players_team_b)
 	{
@@ -1343,41 +1324,34 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b,
 	{
 		return TEAMS_COMPARE_GREATER;
 	}
-	if (!use_score)
-	{
-		return TEAMS_COMPARE_EQUAL;
-	}
-	if (team_a.m_team_score < team_b.m_team_score)
-	{
+
+	// Teams without players have 0 skill but may have a score which must still apply for optimal join queue selection.
+	float team_a_adjusted_skill = team_a.m_team_skill ? team_a.m_team_skill : 1;
+	float team_b_adjusted_skill = team_b.m_team_skill ? team_b.m_team_skill : 1;
+	// Early in the match scores are ~random due to too few samples,
+	// as the match progresses scores become more reliable indicators of team strength.
+	// 0.96875 (31/32): if at halftime one team has score 0 and the other has 2 its skill is multiplied by 1.376,
+	// < 1 so that a team with 1 point is better than one with 0 (but not by much as sample size is small).
+	// Applying full score ratio to one team is equivalent here to applying half of it to each.
+	if (!warmup_stage && time > game_starttime)
+		team_a_adjusted_skill *= (1 + ((team_a.m_team_score ? team_a.m_team_score : 0.96875) / (team_b.m_team_score ? team_b.m_team_score : 0.96875) - 1)
+		                            * ((time - game_starttime) / (autocvar_timelimit * 60))**1.5);
+	if (team_a_adjusted_skill < team_b_adjusted_skill)
 		return TEAMS_COMPARE_LESS;
-	}
-	if (team_a.m_team_score > team_b.m_team_score)
-	{
+	if (team_a_adjusted_skill > team_b_adjusted_skill)
 		return TEAMS_COMPARE_GREATER;
-	}
 	return TEAMS_COMPARE_EQUAL;
 }
 
 void SV_ChangeTeam(entity player, int new_color)
 {
 	if (!teamplay)
-	{
 		SetPlayerColors(player, new_color);
-	}
-	if(!IS_CLIENT(player))
-	{
-		return;
-	}
-	if (!teamplay)
-	{
-		return;
-	}
-	Player_SetTeamIndexChecked(player, Team_TeamToIndex((new_color & 0x0F) + 1));
 }
 
 bool QueueNeeded(entity ignore)
 {
-	if (!teamplay || warmup_stage || !autocvar_g_balance_teams_queue || autocvar_g_campaign)
+	if (!teamplay || warmup_stage || !autocvar_g_balance_teams_queue || autocvar_g_campaign || ignore.team > 0)
 		return false;
 
 	int human_clients = 0;
