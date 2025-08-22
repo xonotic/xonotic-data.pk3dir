@@ -336,8 +336,8 @@ void sys_phys_simulate(entity this, float dt)
 		float wishspeed0 = wishspeed;
 		const float maxairspd = this.com_phys_vel_max;
 		wishspeed = min(wishspeed, maxairspd);
-		if (IS_DUCKED(this))
-			wishspeed *= 0.5;
+		if (IS_DUCKED(this) && !(PHYS_AIRCONTROL_FLAGS(this) & BIT(2))) // crouch scale has an impact
+			wishspeed = min(wishspeed, maxairspd * PHYS_CROUCHSPEEDSCALE(this));
 
 		float airaccel = this.com_phys_acc_rate_air;
 
@@ -395,7 +395,7 @@ void sys_phys_simulate(entity this, float dt)
 	else
 	{
 		if (this.com_phys_ground && IS_DUCKED(this))
-			wishspeed *= 0.5;
+			wishspeed = min(wishspeed, this.com_phys_vel_max * PHYS_CROUCHSPEEDSCALE(this));
 
 		if (this.com_phys_water)
 		{

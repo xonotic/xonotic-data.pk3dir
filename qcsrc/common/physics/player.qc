@@ -148,6 +148,8 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
 	STAT(GAMEPLAYFIX_STEPDOWN, this) = Physics_ClientOption(this, "stepdown", autocvar_sv_gameplayfix_stepdown);
 	STAT(MOVEVARS_SKIMMING, this) = Physics_ClientOption(this, "skimming", autocvar_sv_skimming);
+	STAT(MOVEVARS_CROUCHJUMP, this) = Physics_ClientOption(this, "crouchjump", autocvar_sv_crouchjump);
+	STAT(MOVEVARS_CROUCHSPEEDSCALE, this) = Physics_ClientOption(this, "crouchspeedscale", autocvar_sv_crouchspeedscale);
 
 	MUTATOR_CALLHOOK(PlayerPhysics_PostUpdateStats, this, maxspd_mod);
 }
@@ -247,8 +249,7 @@ void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 	float k = 2 * movity - 1;
 	if (k <= 0)
 		return;
-	if (!(PHYS_AIRCONTROL_FLAGS(this) & BIT(2))) // crouching has an impact
-		k *= bound(0, wishspeed / PHYS_MAXAIRSPEED(this), 1);
+	k *= bound(0, wishspeed / PHYS_MAXAIRSPEED(this), 1);
 
 	const float zspeed = this.velocity_z;
 	this.velocity_z = 0;
@@ -429,6 +430,9 @@ bool PlayerJump(entity this)
 	if (track_jump)
 		if (IS_JUMP_HELD(this))
 			return true;
+
+	if (!PHYS_CROUCHJUMP(this) && PHYS_INPUT_BUTTON_CROUCH(this))
+		return true; // can't jump while holding crouch, but can jump while ducked (like in Q3)
 
 	// sv_jumpspeedcap_min/sv_jumpspeedcap_max act as baseline
 	// velocity bounds.  Final velocity is bound between (jumpheight *
