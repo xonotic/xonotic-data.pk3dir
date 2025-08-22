@@ -110,6 +110,9 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 
 #define PHYS_AMMO_FUEL(s)                   STAT(FUEL, s)
 
+#define PHYS_CROUCHJUMP(s)                  STAT(MOVEVARS_CROUCHJUMP, s)
+#define PHYS_CROUCHSPEEDSCALE(s)            STAT(MOVEVARS_CROUCHSPEEDSCALE, s)
+
 #define PHYS_DODGING_FROZEN(s)              STAT(DODGING_FROZEN, s)
 
 #define PHYS_DOUBLEJUMP(s)                  STAT(DOUBLEJUMP, s)
