@@ -10,20 +10,24 @@ SOUND(MACHINEGUN_FIRE, W_Sound("uzi_fire"));
 #endif
 
 CLASS(MachineGun, Weapon)
+#ifdef SVQC
 /* spawnfunc */ ATTRIB(MachineGun, m_canonical_spawnfunc, string, "weapon_machinegun");
+/* rating    */ ATTRIB(MachineGun, bot_pickupbasevalue, float, 7000);
+#endif
 /* ammotype  */ ATTRIB(MachineGun, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(MachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(MachineGun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_BLEED);
-/* rating    */ ATTRIB(MachineGun, bot_pickupbasevalue, float, 7000);
 /* color     */ ATTRIB(MachineGun, m_color, vector, '0.678 0.886 0.267');
-/* modelname */ ATTRIB(MachineGun, mdl, string, "uzi");
 #ifdef GAMEQC
+/* modelname */ ATTRIB(MachineGun, mdl, string, "uzi");
 /* model     */ ATTRIB(MachineGun, m_model, Model, MDL_MACHINEGUN_ITEM);
 /* flash mdl */ ATTRIB(MachineGun, m_muzzlemodel, Model, MDL_MACHINEGUN_MUZZLEFLASH);
 /* flash eff */ ATTRIB(MachineGun, m_muzzleeffect, entity, EFFECT_MACHINEGUN_MUZZLEFLASH);
 #endif
+#ifdef CSQC
 /* crosshair */ ATTRIB(MachineGun, w_crosshair, string, "gfx/crosshairuzi");
 /* crosshair */ ATTRIB(MachineGun, w_crosshair_size, float, 0.6);
+#endif
 /* wepimg    */ ATTRIB(MachineGun, model2, string, "weaponuzi");
 /* refname   */ ATTRIB(MachineGun, netname, string, "machinegun");
 /* wepname   */ ATTRIB(MachineGun, m_name, string, _("MachineGun"));

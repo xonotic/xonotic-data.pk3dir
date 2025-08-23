@@ -14,20 +14,24 @@ SOUND(ELECTRO_IMPACT_COMBO, W_Sound("electro_impact_combo"));
 #endif
 
 CLASS(Electro, Weapon)
+#ifdef GAMEQC
 /* spawnfunc */ ATTRIB(Electro, m_canonical_spawnfunc, string, "weapon_electro");
+/* rating    */ ATTRIB(Electro, bot_pickupbasevalue, float, 5000);
+#endif
 /* ammotype  */ ATTRIB(Electro, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Electro, impulse, int, 5);
 /* flags     */ ATTRIB(Electro, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Electro, bot_pickupbasevalue, float, 5000);
 /* color     */ ATTRIB(Electro, m_color, vector, '0.408 0.600 0.949');
-/* modelname */ ATTRIB(Electro, mdl, string, "electro");
 #ifdef GAMEQC
+/* modelname */ ATTRIB(Electro, mdl, string, "electro");
 /* model     */ ATTRIB(Electro, m_model, Model, MDL_ELECTRO_ITEM);
 /* flash mdl */ ATTRIB(Electro, m_muzzlemodel, Model, MDL_Null);
 /* flash eff */ ATTRIB(Electro, m_muzzleeffect, entity, EFFECT_ELECTRO_MUZZLEFLASH);
 #endif
+#ifdef CSQC
 /* crosshair */ ATTRIB(Electro, w_crosshair, string, "gfx/crosshairelectro");
 /* crosshair */ ATTRIB(Electro, w_crosshair_size, float, 0.6);
+#endif
 /* wepimg    */ ATTRIB(Electro, model2, string, "weaponelectro");
 /* refname   */ ATTRIB(Electro, netname, string, "electro");
 /* wepname   */ ATTRIB(Electro, m_name, string, _("Electro"));

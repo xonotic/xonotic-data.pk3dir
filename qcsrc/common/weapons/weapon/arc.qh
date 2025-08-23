@@ -15,20 +15,24 @@ SOUND(ARC_STOP, W_Sound("arc_stop"));
 #endif
 
 CLASS(Arc, Weapon)
+#ifdef SVQC
 /* spawnfunc */ ATTRIB(Arc, m_canonical_spawnfunc, string, "weapon_arc");
+/* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, 8000);
+#endif
 /* ammotype  */ ATTRIB(Arc, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Arc, impulse, int, 3);
 /* flags     */ ATTRIB(Arc, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_TYPE_HITSCAN);
-/* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Arc, m_color, vector, '0.463 0.612 0.886');
-/* modelname */ ATTRIB(Arc, mdl, string, "arc");
 #ifdef GAMEQC
+/* modelname */ ATTRIB(Arc, mdl, string, "arc");
 /* model     */ ATTRIB(Arc, m_model, Model, MDL_ARC_ITEM);
 /* flash mdl */ ATTRIB(Arc, m_muzzlemodel, Model, MDL_Null);
 /* flash eff */ ATTRIB(Arc, m_muzzleeffect, entity, EFFECT_ARC_MUZZLEFLASH);
 #endif
+#ifdef CSQC
 /* crosshair */ ATTRIB(Arc, w_crosshair, string, "gfx/crosshairhlac");
 /* crosshair */ ATTRIB(Arc, w_crosshair_size, float, 0.7);
+#endif
 /* wepimg    */ ATTRIB(Arc, model2, string, "weaponarc");
 /* refname   */ ATTRIB(Arc, netname, string, "arc");
 /* wepname   */ ATTRIB(Arc, m_name, string, _("Arc"));

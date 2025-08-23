@@ -27,6 +27,7 @@ WepSet ReadWepSet();
 
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
 REGISTER_REGISTRY(Weapons)
+#ifdef GAMEQC
 STATIC_INIT(WeaponPickup)
 {
 	FOREACH(Weapons, true,
@@ -36,6 +37,7 @@ STATIC_INIT(WeaponPickup)
 		it.m_pickup = NEW(WeaponPickup, it);
 	});
 }
+#endif
 
 #ifdef SVQC
 #include <server/bot/api.qh>

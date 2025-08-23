@@ -18,20 +18,24 @@ Sound SND_HAGEXP_RANDOM(float rnd)
 #endif
 
 CLASS(Hagar, Weapon)
+#ifdef SVQC
 /* spawnfunc */ ATTRIB(Hagar, m_canonical_spawnfunc, string, "weapon_hagar");
+/* rating    */ ATTRIB(Hagar, bot_pickupbasevalue, float, 6000);
+#endif
 /* ammotype  */ ATTRIB(Hagar, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Hagar, impulse, int, 8);
 /* flags     */ ATTRIB(Hagar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Hagar, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Hagar, m_color, vector, '0.886 0.545 0.345');
-/* modelname */ ATTRIB(Hagar, mdl, string, "hagar");
 #ifdef GAMEQC
+/* modelname */ ATTRIB(Hagar, mdl, string, "hagar");
 /* model     */ ATTRIB(Hagar, m_model, Model, MDL_HAGAR_ITEM);
 /* flash mdl */ ATTRIB(Hagar, m_muzzlemodel, Model, MDL_Null);
 /* flash eff */ ATTRIB(Hagar, m_muzzleeffect, entity, EFFECT_HAGAR_MUZZLEFLASH);
 #endif
+#ifdef SCQC
 /* crosshair */ ATTRIB(Hagar, w_crosshair, string, "gfx/crosshairhagar");
 /* crosshair */ ATTRIB(Hagar, w_crosshair_size, float, 0.8);
+#endif
 /* wepimg    */ ATTRIB(Hagar, model2, string, "weaponhagar");
 /* refname   */ ATTRIB(Hagar, netname, string, "hagar");
 /* wepname   */ ATTRIB(Hagar, m_name, string, _("Hagar"));
