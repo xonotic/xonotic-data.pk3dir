@@ -20,10 +20,10 @@
 bool W_DualWielding(entity player)
 {
 	int held_weapons = 0;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
-		if(player.(weaponentity) && player.(weaponentity).m_switchweapon != WEP_Null)
+		if (player.(weaponentity) && player.(weaponentity).m_switchweapon != WEP_Null)
 			++held_weapons;
 	}
 
@@ -32,8 +32,8 @@ bool W_DualWielding(entity player)
 
 void W_GiveWeapon(entity e, int wep)
 {
-	if (!wep) return;
-
+	if (!wep)
+		return;
 	STAT(WEAPONS, e) |= WepSet_FromWeapon(REGISTRY_GET(Weapons, wep));
 }
 
@@ -44,41 +44,41 @@ void W_PlayStrengthSound(entity player)
 
 float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception)
 {
-	float is_from_contents = (deathtype == DEATH_SLIME.m_id || deathtype == DEATH_LAVA.m_id);
-	float is_from_owner = (inflictor == projowner);
-	float is_from_exception = (exception != -1);
+	bool is_from_contents = (deathtype == DEATH_SLIME.m_id || deathtype == DEATH_LAVA.m_id);
+	bool is_from_owner = (inflictor == projowner);
+	bool is_from_exception = (exception != -1);
 
 	//dprint(strcat("W_CheckProjectileDamage: from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", strcat(ftos(is_from_exception), " (", ftos(exception), "). \n")));
 
-	if(autocvar_g_projectiles_damage <= -2)
+	if (autocvar_g_projectiles_damage <= -2)
 	{
 		return false; // no damage to projectiles at all, not even with the exceptions
 	}
-	else if(autocvar_g_projectiles_damage == -1)
+	else if (autocvar_g_projectiles_damage == -1)
 	{
-		if(is_from_exception)
-			return (exception); // if exception is detected, allow it to override
+		if (is_from_exception)
+			return exception; // if exception is detected, allow it to override
 		else
 			return false; // otherwise, no other damage is allowed
 	}
-	else if(autocvar_g_projectiles_damage == 0)
+	else if (autocvar_g_projectiles_damage == 0)
 	{
-		if(is_from_exception)
-			return (exception); // if exception is detected, allow it to override
-		else if(!is_from_contents)
+		if (is_from_exception)
+			return exception; // if exception is detected, allow it to override
+		else if (!is_from_contents)
 			return false; // otherwise, only allow damage from contents
 	}
-	else if(autocvar_g_projectiles_damage == 1)
+	else if (autocvar_g_projectiles_damage == 1)
 	{
-		if(is_from_exception)
-			return (exception); // if exception is detected, allow it to override
-		else if(!(is_from_contents || is_from_owner))
+		if (is_from_exception)
+			return exception; // if exception is detected, allow it to override
+		else if (!(is_from_contents || is_from_owner))
 			return false; // otherwise, only allow self damage and damage from contents
 	}
-	else if(autocvar_g_projectiles_damage == 2) // allow any damage, but override for exceptions
+	else if (autocvar_g_projectiles_damage == 2) // allow any damage, but override for exceptions
 	{
-		if(is_from_exception)
-			return (exception); // if exception is detected, allow it to override
+		if (is_from_exception)
+			return exception; // if exception is detected, allow it to override
 	}
 
 	return true; // if none of these return, then allow damage anyway.
@@ -91,7 +91,7 @@ void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) 
 
 	MUTATOR_CALLHOOK(PrepareExplosionByDamage, this, attacker);
 
-	if(IS_CLIENT(attacker) && !autocvar_g_projectiles_keep_owner)
+	if (IS_CLIENT(attacker) && !autocvar_g_projectiles_keep_owner)
 	{
 		this.owner = attacker;
 		this.realowner = attacker;
@@ -105,7 +105,7 @@ void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) 
 
 void adaptor_think2use_hittype_splash(entity this) // for timed projectile detonation
 {
-	if(!(IS_ONGROUND(this))) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
+	if (!(IS_ONGROUND(this))) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
 		this.projectiledeathtype |= HITTYPE_SPLASH;
 	adaptor_think2use(this);
 }
@@ -118,7 +118,7 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 	// these stop the projectile from moving, so...
 	// NOTE: this notice is disabled to prevent spam as projectiles can hit content-less objects (other projectiles!)
 #if 0
-	if(trace_dphitcontents == 0)
+	if (trace_dphitcontents == 0)
 	{
 		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %i, classname: %s, origin: %v)", this, this.classname, this.origin);
 		checkclient(this); // TODO: .health is checked in the engine with this, possibly replace with a QC function?
@@ -149,10 +149,10 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 
 bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher)
 {
-	if(toucher && toucher == this.owner)
+	if (toucher && toucher == this.owner)
 		return true;
 
-	if(autocvar_g_projectiles_interact == 1 && toucher.classname == "blasterbolt")
+	if (autocvar_g_projectiles_interact == 1 && toucher.classname == "blasterbolt")
 	{
 		if (this.movetype == MOVETYPE_BOUNCE || this.movetype == MOVETYPE_BOUNCEMISSILE)
 			// We'll bounce off it due to limitations so let it deflect us
@@ -161,17 +161,17 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 		return true;
 	}
 
-	if(SUB_NoImpactCheck(this, toucher))
+	if (SUB_NoImpactCheck(this, toucher))
 	{
-		if(this.classname == "nade")
+		if (this.classname == "nade")
 			return false; // no checks here
-		else if(this.classname == "grapplinghook")
+		else if (this.classname == "grapplinghook")
 			RemoveHook(this);
 		else
 			delete(this);
 		return true;
 	}
-	if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
+	if (trace_ent && trace_ent.solid > SOLID_TRIGGER)
 		UpdateCSQCProjectile(this);
 	return false;
 }

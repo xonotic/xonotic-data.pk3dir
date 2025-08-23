@@ -19,12 +19,8 @@ const int MAX_WEAPONSLOTS = 2;
 int weaponslot(.entity weaponentity)
 {
 	for (int i = 0; i < MAX_WEAPONSLOTS; ++i)
-	{
 		if (weaponentities[i] == weaponentity)
-		{
 			return i;
-		}
-	}
 	return 0;
 }
 
@@ -46,7 +42,10 @@ CLASS(Weapon, Object)
 	/** the canonical spawnfunc name */
 	ATTRIB(Weapon, m_canonical_spawnfunc, string);
 	/** control what happens when this weapon is spawned */
-	METHOD(Weapon, m_spawnfunc_hookreplace, Weapon(Weapon this, entity e)) { return this; }
+	METHOD(Weapon, m_spawnfunc_hookreplace, Weapon(Weapon this, entity e))
+	{
+		return this;
+	}
 	/** M: ammotype  : main ammo type */
 	ATTRIB(Weapon, ammo_type, Resource, RES_NONE);
 	/** M: impulse   : weapon impulse */
@@ -85,50 +84,72 @@ CLASS(Weapon, Object)
 	ATTRIB(Weapon, m_pickup, entity);
 
 	/** (SERVER) setup weapon data */
-	METHOD(Weapon, wr_setup, void(Weapon this, entity actor, .entity weaponentity)) {}
+	METHOD(Weapon, wr_setup, void(Weapon this, entity actor, .entity weaponentity)) { }
 	/** (SERVER) logic to run every frame */
-	METHOD(Weapon, wr_think, void(Weapon this, entity actor, .entity weaponentity, int fire)) {}
+	METHOD(Weapon, wr_think, void(Weapon this, entity actor, .entity weaponentity, int fire)) { }
 	/** (SERVER) checks ammo for weapon primary */
-	METHOD(Weapon, wr_checkammo1, bool(Weapon this, entity actor, .entity weaponentity)) {return false;}
+	METHOD(Weapon, wr_checkammo1, bool(Weapon this, entity actor, .entity weaponentity))
+	{
+		return false;
+	}
 	/** (SERVER) checks ammo for weapon second */
-	METHOD(Weapon, wr_checkammo2, bool(Weapon this, entity actor, .entity weaponentity)) {return false;}
+	METHOD(Weapon, wr_checkammo2, bool(Weapon this, entity actor, .entity weaponentity))
+	{
+		return false;
+	}
 	/** (SERVER) runs bot aiming code for this weapon */
-	METHOD(Weapon, wr_aim, void(Weapon this, entity actor, .entity weaponentity)) {}
+	METHOD(Weapon, wr_aim, void(Weapon this, entity actor, .entity weaponentity)) { }
 	/** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */
-	METHOD(Weapon, wr_init, void(Weapon this)) {}
+	METHOD(Weapon, wr_init, void(Weapon this)) { }
 	/** (SERVER) notification number for suicide message (may inspect w_deathtype for details) */
-	METHOD(Weapon, wr_suicidemessage, entity(Weapon this)) {return NULL;}
+	METHOD(Weapon, wr_suicidemessage, entity(Weapon this))
+	{
+		return NULL;
+	}
 	/** (SERVER) notification number for kill message (may inspect w_deathtype for details) */
-	METHOD(Weapon, wr_killmessage, entity(Weapon this)) {return NULL;}
+	METHOD(Weapon, wr_killmessage, entity(Weapon this))
+	{
+		return NULL;
+	}
 	/** (SERVER) handles reloading for weapon */
-	METHOD(Weapon, wr_reload, void(Weapon this, entity actor, .entity weaponentity)) {}
+	METHOD(Weapon, wr_reload, void(Weapon this, entity actor, .entity weaponentity)) { }
 	/** (SERVER) clears fields that the weapon may use */
-	METHOD(Weapon, wr_resetplayer, void(Weapon this, entity actor)) {}
+	METHOD(Weapon, wr_resetplayer, void(Weapon this, entity actor)) { }
 	/** (CLIENT) impact effect for weapon explosion */
-	METHOD(Weapon, wr_impacteffect, void(Weapon this, entity actor)) {}
+	METHOD(Weapon, wr_impacteffect, void(Weapon this, entity actor)) { }
 	/** (SERVER) called whenever a player dies */
-	METHOD(Weapon, wr_playerdeath, void(Weapon this, entity actor, .entity weaponentity)) {}
+	METHOD(Weapon, wr_playerdeath, void(Weapon this, entity actor, .entity weaponentity)) { }
 	/** (SERVER) logic to run when weapon is lost */
-	METHOD(Weapon, wr_gonethink, void(Weapon this, entity actor, .entity weaponentity)) {}
+	METHOD(Weapon, wr_gonethink, void(Weapon this, entity actor, .entity weaponentity)) { }
 	/** (SERVER) dump weapon cvars to config in data directory (see: sv_cmd dumpweapons) */
-	METHOD(Weapon, wr_config, void(Weapon this)) {}
+	METHOD(Weapon, wr_config, void(Weapon this)) { }
 	/** (BOTH) weapon specific zoom reticle */
-	METHOD(Weapon, wr_zoom, bool(Weapon this, entity actor)) {
+	METHOD(Weapon, wr_zoom, bool(Weapon this, entity actor))
+	{
 		// no weapon specific image for this weapon
 		return false;
 	}
 	/** (CLIENT) check whether the weapon should zoom (special handling) */
-	METHOD(Weapon, wr_zoomdir, bool(Weapon this)) {return false;}
+	METHOD(Weapon, wr_zoomdir, bool(Weapon this))
+	{
+		return false;
+	}
 	/** (CLIENT) weapon specific view model */
-	METHOD(Weapon, wr_viewmodel, string(Weapon this, entity wep)) { return string_null; }
+	METHOD(Weapon, wr_viewmodel, string(Weapon this, entity wep))
+	{
+		return string_null;
+	}
 	/** (BOTH) weapon specific glow */
-	METHOD(Weapon, wr_glow, vector(Weapon this, int actor_colors, entity wepent)) { return '0 0 0'; }
+	METHOD(Weapon, wr_glow, vector(Weapon this, int actor_colors, entity wepent))
+	{
+		return '0 0 0';
+	}
 	/** (SERVER) the weapon is dropped */
-	METHOD(Weapon, wr_drop, void(Weapon this, entity actor, .entity weaponentity)) {}
+	METHOD(Weapon, wr_drop, void(Weapon this, entity actor, .entity weaponentity)) { }
 	/** (SERVER) a weapon is picked up */
-	METHOD(Weapon, wr_pickup, void(Weapon this, entity actor, .entity weaponentity)) {}
+	METHOD(Weapon, wr_pickup, void(Weapon this, entity actor, .entity weaponentity)) { }
 	/** (SERVER) update cvar based properties */
-	METHOD(Weapon, wr_update, void(Weapon this)) {}
+	METHOD(Weapon, wr_update, void(Weapon this)) { }
 #ifdef MENUQC
 	METHOD(Weapon, describe, string(Weapon this))
 	{
@@ -148,7 +169,10 @@ ENDCLASS(Weapon)
 
 void weapon_defaultspawnfunc(entity this, Weapon e);
 #define SPAWNFUNC_WEAPON(name, weapon) \
-	spawnfunc(name) { weapon_defaultspawnfunc(this, weapon); }
+	spawnfunc(name) \
+	{ \
+		weapon_defaultspawnfunc(this, weapon); \
+	}
 
 #else
 
@@ -168,7 +192,8 @@ CLASS(WeaponPickup, Pickup)
 	float weapon_pickupevalfunc(entity player, entity item);
 	ATTRIB(WeaponPickup, m_pickupevalfunc, float(entity player, entity item), weapon_pickupevalfunc);
 #endif
-	CONSTRUCTOR(WeaponPickup, Weapon w) {
+	CONSTRUCTOR(WeaponPickup, Weapon w)
+	{
 		CONSTRUCT(WeaponPickup);
 		this.m_weapon = w;
 		this.m_name = w.m_name;
@@ -183,16 +208,15 @@ CLASS(WeaponPickup, Pickup)
 	METHOD(WeaponPickup, giveTo, bool(entity this, entity item, entity player))
 	{
 		bool b = Item_GiveTo(item, player);
-		//if (b) {
+		//if (b)
 			//LOG_TRACEF("entity %i picked up %s", player, this.m_name);
-		//}
 		return b;
 	}
 #endif
 ENDCLASS(WeaponPickup)
 
 CLASS(OffhandWeapon, Object)
-	METHOD(OffhandWeapon, offhand_think, void(OffhandWeapon this, entity player, bool key_pressed)) {}
+	METHOD(OffhandWeapon, offhand_think, void(OffhandWeapon this, entity player, bool key_pressed)) { }
 ENDCLASS(OffhandWeapon)
 
 #ifdef SVQC
@@ -208,23 +232,23 @@ int autocvar_cl_tracers_teamcolor;
 #endif
 
 // weapon flags
-const int WEP_TYPE_OTHER          =  BIT(0); // not for damaging people
-const int WEP_TYPE_SPLASH         =  BIT(1); // splash damage
-const int WEP_TYPE_HITSCAN        =  BIT(2); // hitscan
-const int WEP_FLAG_CANCLIMB       =  BIT(3); // can be used for movement
-const int WEP_FLAG_NORMAL         =  BIT(4); // in "most weapons" set
-const int WEP_FLAG_HIDDEN         =  BIT(5); // hides from menu
-const int WEP_FLAG_RELOADABLE     =  BIT(6); // can has reload
-const int WEP_FLAG_SUPERWEAPON    =  BIT(7); // powerup timer
-const int WEP_FLAG_MUTATORBLOCKED =  BIT(8); // hides from impulse 99 etc. (mutators are allowed to clear this flag)
-const int WEP_TYPE_MELEE_PRI      =  BIT(9); // primary attack is melee swing (for animation)
-const int WEP_TYPE_MELEE_SEC      =  BIT(10); // secondary attack is melee swing (for animation)
-const int WEP_FLAG_DUALWIELD      =  BIT(11); // weapon can be dual wielded
-const int WEP_FLAG_NODUAL         =  BIT(12); // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
-const int WEP_FLAG_PENETRATEWALLS =  BIT(13); // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
-const int WEP_FLAG_BLEED          =  BIT(14); // weapon pierces and causes bleeding (used for damage effects)
-const int WEP_FLAG_NOTRUEAIM      =  BIT(15); // weapon doesn't aim directly at targets
-const int WEP_FLAG_SPECIALATTACK  =  BIT(16); // special attack (not a true weapon); NOTE: if this flag is set then WEP_FLAG_HIDDEN must be set as well
+const int WEP_TYPE_OTHER           = BIT(0);  // not for damaging people
+const int WEP_TYPE_SPLASH          = BIT(1);  // splash damage
+const int WEP_TYPE_HITSCAN         = BIT(2);  // hitscan
+const int WEP_FLAG_CANCLIMB        = BIT(3);  // can be used for movement
+const int WEP_FLAG_NORMAL          = BIT(4);  // in "most weapons" set
+const int WEP_FLAG_HIDDEN          = BIT(5);  // hides from menu
+const int WEP_FLAG_RELOADABLE      = BIT(6);  // can has reload
+const int WEP_FLAG_SUPERWEAPON     = BIT(7);  // powerup timer
+const int WEP_FLAG_MUTATORBLOCKED  = BIT(8);  // hides from impulse 99 etc. (mutators are allowed to clear this flag)
+const int WEP_TYPE_MELEE_PRI       = BIT(9);  // primary attack is melee swing (for animation)
+const int WEP_TYPE_MELEE_SEC       = BIT(10); // secondary attack is melee swing (for animation)
+const int WEP_FLAG_DUALWIELD       = BIT(11); // weapon can be dual wielded
+const int WEP_FLAG_NODUAL          = BIT(12); // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
+const int WEP_FLAG_PENETRATEWALLS  = BIT(13); // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
+const int WEP_FLAG_BLEED           = BIT(14); // weapon pierces and causes bleeding (used for damage effects)
+const int WEP_FLAG_NOTRUEAIM       = BIT(15); // weapon doesn't aim directly at targets
+const int WEP_FLAG_SPECIALATTACK   = BIT(16); // special attack (not a true weapon); NOTE: if this flag is set then WEP_FLAG_HIDDEN must be set as well
 
 // variables:
 string weaponorder_byid;

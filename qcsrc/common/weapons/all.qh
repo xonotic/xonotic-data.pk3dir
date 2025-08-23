@@ -17,10 +17,10 @@ WepSet ReadWepSet();
 #endif
 
 #ifdef GAMEQC
-#include "calculations.qh"
-#include "projectiles.qh"
-#include <common/models/all.qh>
-#include <common/effects/all.qh>
+	#include "calculations.qh"
+	#include "projectiles.qh"
+	#include <common/models/all.qh>
+	#include <common/effects/all.qh>
 #endif
 
 #include <common/util.qh>
@@ -52,7 +52,7 @@ WepSet _WepSet_FromWeapon(int i);
 // NOTE: dumpeffectinfo, dumpnotifs, dumpturrets and dumpweapons use similar code
 GENERIC_COMMAND(dumpweapons, "Dump all weapons into " DEFAULT_FILENAME, false) // WEAPONTODO: make this work with other progs than just server
 {
-	switch(request)
+	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
@@ -61,19 +61,19 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into " DEFAULT_FILENAME, false) /
 			wep_config_alsoprint = -1;
 			string filename = argv(1);
 
-			if(filename == "")
+			if (filename == "")
 			{
 				filename = DEFAULT_FILENAME;
 				wep_config_alsoprint = false;
 			}
-			else if(filename == "-")
+			else if (filename == "-")
 			{
 				filename = DEFAULT_FILENAME;
 				wep_config_alsoprint = true;
 			}
 			wep_config_file = fopen(filename, FILE_WRITE);
 
-			if(wep_config_file >= 0)
+			if (wep_config_file >= 0)
 			{
 				Dump_Weapon_Settings();
 				LOG_INFOF("Dumping weapons... File located in ^2data/data/%s^7.", filename);
@@ -82,9 +82,7 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into " DEFAULT_FILENAME, false) /
 				wep_config_alsoprint = -1;
 			}
 			else
-			{
 				LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
-			}
 			#else
 			LOG_INFO("Weapons dump command only works with sv_cmd.");
 			#endif
@@ -93,13 +91,11 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into " DEFAULT_FILENAME, false) /
 
 		default:
 		case CMD_REQUEST_USAGE:
-		{
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpweapons [<filename>]");
 			LOG_HELPF("  Where <filename> is the file to write (default is %s),", DEFAULT_FILENAME);
 			LOG_HELP("  if supplied with '-' output to console as well as default,");
 			LOG_HELP("  if left blank, it will only write to default.");
 			return;
-		}
 	}
 }
 #undef DEFAULT_FILENAME
@@ -113,10 +109,12 @@ void W_PROP_reload(int chan, entity to)
 {
 	W_PROP_reloader.nextthink = time + autocvar_w_prop_interval;
 	msg_entity = to;
-	FOREACH(Weapons, true, {
+	FOREACH(Weapons, true,
+	{
 		it.wr_update(it);
 		void(Weapon, int) f = it.wr_net;
-		if (f) f(it, chan);
+		if (f)
+			f(it, chan);
 	});
 }
 
@@ -341,14 +339,19 @@ STATIC_INIT(register_weapons_done)
 {
 	string inaccessible = "";
 	int imp = WEP_IMPULSE_BEGIN;
-	FOREACH(Weapons, true, {
+	FOREACH(Weapons, true,
+	{
 		WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
 		WEPSET_ALL |= set;
-		if (it.spawnflags & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
-		if (it == WEP_Null) continue;
-		if (it.spawnflags & WEP_FLAG_SPECIALATTACK) continue;
+		if (it.spawnflags & WEP_FLAG_SUPERWEAPON)
+			WEPSET_SUPERWEAPONS |= set;
+		if (it == WEP_Null)
+			continue;
+		if (it.spawnflags & WEP_FLAG_SPECIALATTACK)
+			continue;
 		// TODO: this exists to filter out the Ball Stealer, otherwise we run out of impulses
-		if ((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_TYPE_OTHER)) continue;
+		if ((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && (it.spawnflags & WEP_TYPE_OTHER))
+			continue;
 
 		it.m_unique_impulse = imp;
 		if (imp <= WEP_IMPULSE_END)
@@ -357,7 +360,8 @@ STATIC_INIT(register_weapons_done)
 			inaccessible = strcat(inaccessible, "\n", it.netname);
 		++imp;
 	});
-	if (inaccessible != "" && autocvar_developer > 0) LOG_TRACEF("Impulse limit exceeded, weapon(s) will not be directly accessible: %s", inaccessible);
+	if (inaccessible != "" && autocvar_developer > 0)
+		LOG_TRACEF("Impulse limit exceeded, weapon(s) will not be directly accessible: %s", inaccessible);
 	#ifdef CSQC
 	FOREACH(Weapons, true, it.wr_init(it));
 	#endif
@@ -377,8 +381,9 @@ STATIC_INIT(register_weapons_done)
 .entity exteriorweaponentity;
 vector weaponentity_glowmod(Weapon wep, int c, entity wepent)
 {
-	vector g;
-	if (!(g = wep.wr_glow(wep, c, wepent))) g = colormapPaletteColor(c & 0x0F, true);
+	vector g = wep.wr_glow(wep, c, wepent);
+	if (!g)
+		g = colormapPaletteColor(c & 0x0F, true);
 	return g;
 }
 
@@ -446,7 +451,7 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 #endif
 
-#endif
+#endif // GAMEQC
 
 // functions:
 string W_FixWeaponOrder(string order, float complete);
@@ -483,4 +488,4 @@ string W_Guide_DPS_onlySecondary(string name, string sec);
 string W_Guide_DPS_onlyOneMultishot(string name, string fire, string shots, string refire2);
 string W_Guide_DPS_secondaryMultishotWithCombo(string name, string pri, string sec, string shots, string refire2, string combo, bool sec_variable);
 string W_Guide_DPS_primaryDPS(string name, string pri, string sec);
-#endif
+#endif // MENUQC
