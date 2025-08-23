@@ -340,7 +340,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 
 	if (actor.(weaponentity).clip_load >= 0 // we are not currently reloading
 	&& WEP_CVAR(WEP_SHOTGUN, secondary) == 1
-	&& (((fire & 1) && !IS_BOT_CLIENT(actor) && GetResource(actor, thiswep.ammo_type) <= 0 && actor.(weaponentity).clip_load == 0 && !(actor.items & IT_UNLIMITED_AMMO))
+	&& (((fire & 1) && !IS_BOT_CLIENT(actor) && GetResource(actor, thiswep.ammo_type) < WEP_CVAR_PRI(WEP_SHOTGUN, ammo) && actor.(weaponentity).clip_load == 0 && !(actor.items & IT_UNLIMITED_AMMO))
 		|| (fire & 2))
 	&& (!WEP_CVAR_SEC(WEP_SHOTGUN, melee_blockedbyfiring) || time >= actor.(weaponentity).shotgun_primarytime)
 	&& weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_SHOTGUN, refire)))
