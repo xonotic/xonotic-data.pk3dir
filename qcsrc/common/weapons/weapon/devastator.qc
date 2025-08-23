@@ -532,7 +532,7 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
 
 METHOD(Devastator, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	return false;
+	return actor.(weaponentity).lastrocket != NULL;
 }
 
 METHOD(Devastator, wr_resetplayer, void(entity thiswep, entity actor))
