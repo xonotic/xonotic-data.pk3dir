@@ -61,4 +61,7 @@ SPAWNFUNC_WEAPON(weapon_laser, WEP_BLASTER) // Nexuiz compat
 CLASS(OffhandBlaster, OffhandWeapon)
 ENDCLASS(OffhandBlaster)
 OffhandBlaster OFFHAND_BLASTER;
-STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
+STATIC_INIT(OFFHAND_BLASTER)
+{
+	OFFHAND_BLASTER = NEW(OffhandBlaster);
+}

@@ -78,7 +78,10 @@ CLASS(OffhandHook, OffhandWeapon)
 #endif
 ENDCLASS(OffhandHook)
 OffhandHook OFFHAND_HOOK;
-STATIC_INIT(OFFHAND_HOOK) { OFFHAND_HOOK = NEW(OffhandHook); }
+STATIC_INIT(OFFHAND_HOOK)
+{
+	OFFHAND_HOOK = NEW(OffhandHook);
+}
 
 #ifdef SVQC
 

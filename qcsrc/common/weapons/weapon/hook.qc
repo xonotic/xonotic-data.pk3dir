@@ -4,19 +4,38 @@
 
 void W_Hook_ExplodeThink(entity this)
 {
-	float dt, dmg_remaining_next, f;
+	float dt = time - this.teleport_time;
+	float dmg_remaining_next = bound(0, 1 - dt / this.dmg_duration, 1) ** this.dmg_power;
 
-	dt = time - this.teleport_time;
-	dmg_remaining_next = (bound(0, 1 - dt / this.dmg_duration, 1) ** this.dmg_power);
-
-	f = this.dmg_last - dmg_remaining_next;
+	float f = this.dmg_last - dmg_remaining_next;
 	this.dmg_last = dmg_remaining_next;
 
-	RadiusDamage(this, this.realowner, this.dmg * f, this.dmg_edge * f, this.dmg_radius, this.realowner, NULL, this.dmg_force * f, this.projectiledeathtype, this.weaponentity_fld, NULL);
+	RadiusDamage(this, this.realowner,
+		f * this.dmg,
+		f * this.dmg_edge,
+		this.dmg_radius,
+		this.realowner,
+		NULL,
+		f * this.dmg_force,
+		this.projectiledeathtype,
+		this.weaponentity_fld,
+		NULL
+	);
 	this.projectiledeathtype |= HITTYPE_SPAM;
-	//RadiusDamage(this, NULL, this.dmg * f, this.dmg_edge * f, this.dmg_radius, NULL, NULL, this.dmg_force * f, this.projectiledeathtype, NULL);
+	#if 0
+	RadiusDamage(this, NULL,
+		f * this.dmg,
+		f * this.dmg_edge,
+		this.dmg_radius,
+		NULL,
+		NULL,
+		f * this.dmg_force,
+		this.projectiledeathtype,
+		NULL
+	);
+	#endif
 
-	if(dt < this.dmg_duration)
+	if (dt < this.dmg_duration)
 		this.nextthink = time + 0.05; // soon
 	else
 		delete(this);
@@ -48,15 +67,14 @@ void W_Hook_Explode2_use(entity this, entity actor, entity trigger)
 
 void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResource(this, RES_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 		return;
-
-	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
+	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
 	SetResourceExplicit(this, RES_HEALTH, GetResource(this, RES_HEALTH));
 
-	if(GetResource(this, RES_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, this.realowner, W_Hook_Explode2);
 }
 
@@ -116,10 +134,10 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 {
 	if (fire & 1)
 	{
-		if(!actor.(weaponentity).hook)
-		if(!(actor.(weaponentity).hook_state & HOOK_WAITING_FOR_RELEASE))
-		if(time > actor.(weaponentity).hook_refire)
-		if(weapon_prepareattack(thiswep, actor, weaponentity, false, -1))
+		if (!actor.(weaponentity).hook
+		&& !(actor.(weaponentity).hook_state & HOOK_WAITING_FOR_RELEASE)
+		&&   actor.(weaponentity).hook_refire < time
+		&& weapon_prepareattack(thiswep, actor, weaponentity, false, -1))
 		{
 			W_DecreaseAmmo(thiswep, actor, thiswep.ammo_factor * WEP_CVAR_PRI(WEP_HOOK, ammo), weaponentity);
 			actor.(weaponentity).hook_state |= HOOK_FIRING;
@@ -133,55 +151,46 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 		actor.(weaponentity).hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 	}
 
-	if(fire & 2)
+	if (fire & 2)
+	if (weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_HOOK, refire)))
 	{
-		if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_HOOK, refire)))
-		{
-			W_Hook_Attack2(thiswep, actor, weaponentity);
-			weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_HOOK, animtime), w_ready);
-		}
+		W_Hook_Attack2(thiswep, actor, weaponentity);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_HOOK, animtime), w_ready);
 	}
 
-	if(actor.(weaponentity).hook)
+	if (actor.(weaponentity).hook)
 	{
 		// if hooked, no bombs, and increase the timer
 		actor.(weaponentity).hook_refire = max(actor.(weaponentity).hook_refire, time + WEP_CVAR_PRI(WEP_HOOK, refire) * W_WeaponRateFactor(actor));
 
 		// hook also inhibits health regeneration, but only for 1 second
-		if(!(actor.items & IT_UNLIMITED_AMMO))
+		if (!(actor.items & IT_UNLIMITED_AMMO))
 			actor.pauseregen_finished = max(actor.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
 	}
 
-	if(actor.(weaponentity).hook && actor.(weaponentity).hook.state == 1)
+	if (actor.(weaponentity).hook && actor.(weaponentity).hook.state == 1)
 	{
 		float hooked_time_max = WEP_CVAR_PRI(WEP_HOOK, hooked_time_max);
-		if(hooked_time_max > 0)
-		{
-			if(time > actor.(weaponentity).hook_time_hooked + hooked_time_max)
-				actor.(weaponentity).hook_state |= HOOK_REMOVING;
-		}
+		if (hooked_time_max > 0 && time > actor.(weaponentity).hook_time_hooked + hooked_time_max)
+			actor.(weaponentity).hook_state |= HOOK_REMOVING;
 
 		float hooked_fuel = thiswep.ammo_factor * WEP_CVAR_PRI(WEP_HOOK, hooked_ammo);
-		if(hooked_fuel > 0)
+		if (hooked_fuel > 0
+		&& time > actor.(weaponentity).hook_time_fueldecrease
+		&& !(actor.items & IT_UNLIMITED_AMMO))
 		{
-			if(time > actor.(weaponentity).hook_time_fueldecrease)
+			if (GetResource(actor, RES_FUEL) >= (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel)
 			{
-				if(!(actor.items & IT_UNLIMITED_AMMO))
-				{
-					if(GetResource(actor, RES_FUEL) >= (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel)
-					{
-						W_DecreaseAmmo(thiswep, actor, (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel, weaponentity);
-						actor.(weaponentity).hook_time_fueldecrease = time;
-						// decrease next frame again
-					}
-					else
-					{
-						SetResource(actor, RES_FUEL, 0);
-						actor.(weaponentity).hook_state |= HOOK_REMOVING;
-						if(actor.(weaponentity).m_weapon != WEP_Null) // offhand
-							W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
-					}
-				}
+				W_DecreaseAmmo(thiswep, actor, (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel, weaponentity);
+				actor.(weaponentity).hook_time_fueldecrease = time;
+				// decrease next frame again
+			}
+			else
+			{
+				SetResource(actor, RES_FUEL, 0);
+				actor.(weaponentity).hook_state |= HOOK_REMOVING;
+				if (actor.(weaponentity).m_weapon != WEP_Null) // offhand
+					W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 			}
 		}
 	}
@@ -216,9 +225,9 @@ METHOD(Hook, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 
 METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor, .entity weaponentity))
 {
-	if (!thiswep.ammo_factor) return true;
-
-	if(actor.(weaponentity).hook)
+	if (!thiswep.ammo_factor)
+		return true;
+	if (actor.(weaponentity).hook)
 		return GetResource(actor, RES_FUEL) > 0;
 
 	return GetResource(actor, RES_FUEL) >= WEP_CVAR_PRI(WEP_HOOK, ammo);
@@ -233,7 +242,7 @@ METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor, .entity weaponentit
 METHOD(Hook, wr_resetplayer, void(entity thiswep, entity actor))
 {
 	RemoveGrapplingHooks(actor);
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		actor.(weaponentity).hook_time = 0;
@@ -246,7 +255,7 @@ METHOD(Hook, wr_killmessage, Notification(entity thiswep))
 	return WEAPON_HOOK_MURDER;
 }
 
-#endif
+#endif // SVQC
 #ifdef CSQC
 
 METHOD(Hook, wr_impacteffect, void(entity thiswep, entity actor))
@@ -254,13 +263,10 @@ METHOD(Hook, wr_impacteffect, void(entity thiswep, entity actor))
 	// the hook bomb uses a negative w_backoff factor because it explodes slightly below the floor, unlike other projectiles
 	vector org2 = w_org + w_backoff * -2;
 	pointparticles(EFFECT_HOOK_EXPLODE, org2, '0 0 0', 1);
-	if(!w_issilent)
+	if (!w_issilent)
 		sound(actor, CH_SHOTS, SND_HOOKBOMB_IMPACT, VOL_BASE, ATTN_NORM);
 }
 
-#endif
-
-#ifdef CSQC
 #include <lib/csqcmodel/interpolate.qh>
 #include <lib/warpzone/common.qh>
 
@@ -281,9 +287,9 @@ float Draw_GrapplingHook_trace_callback_a;
 void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 {
 	vector vorg = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
-	for(int i = 0; i < Draw_GrapplingHook_trace_callback_a; ++i)
+	for (int i = 0; i < Draw_GrapplingHook_trace_callback_a; ++i)
 		Draw_CylindricLine(hit, start, 8, Draw_GrapplingHook_trace_callback_tex, 0.25, Draw_GrapplingHook_trace_callback_rnd, Draw_GrapplingHook_trace_callback_rgb, min(1, Draw_GrapplingHook_trace_callback_a - i), DRAWFLAG_NORMAL, vorg);
-	Draw_GrapplingHook_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
+	Draw_GrapplingHook_trace_callback_rnd += (0.25 / 8) * vlen(hit - start);
 }
 
 classfield(Hook) .float teleport_time;
@@ -293,10 +299,9 @@ void Draw_GrapplingHook(entity this)
 	string tex;
 	vector rgb;
 
-	if(this.teleport_time)
-	if(time > this.teleport_time)
+	if (this.teleport_time && time > this.teleport_time)
 	{
-		sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM); // safeguard
+		sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM); // safeguard
 		this.teleport_time = 0;
 	}
 
@@ -305,9 +310,9 @@ void Draw_GrapplingHook(entity this)
 	int s = W_GunAlign(viewmodels[this.cnt], STAT(GUNALIGN)) - 1;
 	vector vs = hook_shotorigin[s];
 
-	if((this.owner.sv_entnum == player_localentnum - 1))
+	if (this.owner.sv_entnum == player_localentnum - 1)
 	{
-		if(autocvar_chase_active)
+		if (autocvar_chase_active)
 			a = csqcplayer.origin + csqcplayer.view_ofs;
 		else
 			a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
@@ -323,13 +328,16 @@ void Draw_GrapplingHook(entity this)
 
 	float intensity = autocvar_cl_grapplehook_alpha;
 	float offset = 0;
-	switch(t)
+	switch (t)
 	{
-		case NUM_TEAM_1: tex = "particles/hook_red"; rgb = '1 0.3 0.3'; break;
-		case NUM_TEAM_2: tex = "particles/hook_blue"; rgb = '0.3 0.3 1'; break;
-		case NUM_TEAM_3: tex = "particles/hook_yellow"; rgb = '1 1 0.3'; break;
-		case NUM_TEAM_4: tex = "particles/hook_pink"; rgb = '1 0.3 1'; break;
-		default: tex = "particles/hook_white"; rgb = entcs_GetColor(this.sv_entnum - 1); break;
+		case NUM_TEAM_1:  tex = "particles/hook_red";     rgb = '1 0.3 0.3';  break;
+		case NUM_TEAM_2:  tex = "particles/hook_blue";    rgb = '0.3 0.3 1';  break;
+		case NUM_TEAM_3:  tex = "particles/hook_yellow";  rgb = '1 1 0.3';    break;
+		case NUM_TEAM_4:  tex = "particles/hook_pink";    rgb = '1 0.3 1';    break;
+		default:
+			tex = "particles/hook_white";
+			rgb = entcs_GetColor(this.sv_entnum - 1);
+			break;
 	}
 
 	MUTATOR_CALLHOOK(DrawGrapplingHook, this, tex, rgb, t);
@@ -345,63 +353,58 @@ void Draw_GrapplingHook(entity this)
 
 	vector atrans = WarpZone_TransformOrigin(WarpZone_trace_transform, a);
 
-	if(vdist(trace_endpos - atrans, >, 0.5))
+	if (vdist(trace_endpos - atrans, >, 0.5))
 	{
 		setorigin(this, trace_endpos); // hook endpoint!
 		this.angles = vectoangles(trace_endpos - atrans);
 		this.drawmask = MASK_NORMAL;
 	}
 	else
-	{
 		this.drawmask = 0;
-	}
 }
 
 void Remove_GrapplingHook(entity this)
 {
-	sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		entity wep = viewmodels[slot];
-		if(wep.hook == this)
+		if (wep.hook == this)
 			wep.hook = NULL;
 	}
 }
 
-NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
+NET_HANDLE(ENT_CLIENT_HOOK, bool isNew)
 {
 	int sf = ReadByte();
 
-	this.HookSilent = (sf & 0x80);
+	this.HookSilent = sf & 0x80;
 	this.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 
 	InterpolateOrigin_Undo(this);
 
-	if(sf & 1)
+	if (sf & 1)
 	{
-		int myowner = ReadByte();
+		this.sv_entnum = ReadByte();
 		int slot = ReadByte();
-		this.owner = playerslots[myowner - 1];
-		this.sv_entnum = myowner;
-		if(myowner == player_localentnum)
+		this.owner = playerslots[this.sv_entnum - 1];
+		if (this.sv_entnum == player_localentnum)
 			viewmodels[slot].hook = this;
 		this.cnt = slot;
 		this.HookRange = 0;
 	}
-	if(sf & 2)
+	if (sf & 2)
 	{
 		this.origin = ReadVector();
 		setorigin(this, this.origin);
 	}
-	if(sf & 4)
-	{
+	if (sf & 4)
 		this.velocity = ReadVector();
-	}
 
 	InterpolateOrigin_Note(this);
 
-	if(bIsNew || !this.teleport_time)
+	if (isNew || !this.teleport_time)
 	{
 		this.draw = Draw_GrapplingHook;
 		IL_PUSH(g_drawables, this);
@@ -416,7 +419,7 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 }
 
 // TODO: hook: temporarily transform this.origin for drawing the model along warpzones!
-#endif
+#endif // CSQC
 #ifdef MENUQC
 #include <common/items/item/ammo.qh>
 #include <common/mutators/mutator/hook/hook.qh>
@@ -436,4 +439,4 @@ METHOD(Hook, describe, string(Hook this))
 	return PAGE_TEXT;
 }
 
-#endif
+#endif // MENUQC

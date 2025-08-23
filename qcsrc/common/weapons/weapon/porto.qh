@@ -40,7 +40,7 @@ CLASS(PortoLaunch, Weapon)
 		P(class, prefix, speed, float, BOTH) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
 		P(class, prefix, weaponstartoverride, float, NONE) \
 		P(class, prefix, weaponstart, float, NONE) \
 		P(class, prefix, weaponthrowable, float, NONE) \
@@ -64,6 +64,6 @@ void Porto_Draw(entity this);
 .vector right_vector;
 .float porto_forbidden;
 
-void W_Porto_Fail(entity this, float failhard);
+void W_Porto_Fail(entity this, bool failhard);
 void W_Porto_Remove (entity p);
 #endif

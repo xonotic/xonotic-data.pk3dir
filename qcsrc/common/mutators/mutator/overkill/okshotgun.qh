@@ -46,7 +46,7 @@ CLASS(OverkillShotgun, Weapon)
 		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
 		P(class, prefix, weaponstartoverride, float, NONE) \
 		P(class, prefix, weaponstart, float, NONE) \
 		P(class, prefix, weaponthrowable, float, NONE) \

@@ -59,7 +59,7 @@ CLASS(Fireball, Weapon)
 		P(class, prefix, spread, float, BOTH) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
 		P(class, prefix, weaponstartoverride, float, NONE) \
 		P(class, prefix, weaponstart, float, NONE) \
 		P(class, prefix, weaponthrowable, float, NONE) \
@@ -73,7 +73,6 @@ REGISTER_WEAPON(FIREBALL, NEW(Fireball));
 SPAWNFUNC_WEAPON(weapon_fireball, WEP_FIREBALL)
 
 #ifdef SVQC
-.float bot_primary_fireballmooth; // whatever a mooth is
 .vector fireball_impactvec;
 .float fireball_primarytime;
 #endif

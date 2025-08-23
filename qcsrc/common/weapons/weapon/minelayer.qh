@@ -81,5 +81,8 @@ void W_MineLayer_Think(entity this);
 .float mine_time;
 
 IntrusiveList g_mines;
-STATIC_INIT(g_mines) { g_mines = IL_NEW(); }
+STATIC_INIT(g_mines)
+{
+	g_mines = IL_NEW();
+}
 #endif
