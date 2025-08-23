@@ -604,8 +604,17 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 
 METHOD(Electro, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	PHYS_INPUT_BUTTON_ATCK(actor) = PHYS_INPUT_BUTTON_ATCK2(actor) = false;
-	if (vdist(actor.origin - actor.enemy.origin, >, 1000))
+	PHYS_INPUT_BUTTON_ATCK(actor)  = false;
+	PHYS_INPUT_BUTTON_ATCK2(actor) = false;
+	entity head = WarpZone_FindRadius(actor.origin, 1000, true);
+	bool found = false;
+	for (; head; head = head.chain)
+		if (head == actor.enemy)
+		{
+			found = true;
+			break;
+		}
+	if (!found)
 		actor.bot_secondary_electromooth = false;
 	if (!actor.bot_secondary_electromooth)
 	{

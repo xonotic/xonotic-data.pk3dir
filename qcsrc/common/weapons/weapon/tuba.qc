@@ -322,13 +322,16 @@ METHOD(Tuba, wr_aim, void(Tuba this, entity actor, .entity weaponentity))
 {
 	// bots cannot play the Tuba well yet
 	// I think they should start with the recorder first
-	if (vdist((actor.origin - actor.enemy.origin), <, WEP_CVAR(WEP_TUBA, radius)))
-	{
-		if (random() > 0.5)
-			PHYS_INPUT_BUTTON_ATCK(actor)  = true;
-		else
-			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-	}
+	entity head = WarpZone_FindRadius(actor.origin, WEP_CVAR(WEP_TUBA, radius), true);
+	for (; head; head = head.chain)
+		if (head == actor.enemy)
+		{
+			if (random() > 0.5)
+				PHYS_INPUT_BUTTON_ATCK(actor)  = true;
+			else
+				PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+			return;
+		}
 }
 
 METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int fire))

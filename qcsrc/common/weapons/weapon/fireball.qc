@@ -241,14 +241,22 @@ void W_Fireball_Firemine_Think(entity this)
 	// make it "hot" once it leaves its owner
 	if (this.owner)
 	{
-		if (vdist(this.origin - this.owner.origin - this.owner.view_ofs, >, WEP_CVAR_SEC(WEP_FIREBALL, laserradius)))
+		entity head = WarpZone_FindRadius(this.owner.origin + this.owner.view_ofs, WEP_CVAR_SEC(WEP_FIREBALL, laserradius), true);
+		bool found = false;
+		for (; head; head = head.chain)
+			if(head == this)
+			{
+				found = true;
+				break;
+			}
+		if (found)
+			this.cnt = 0;
+		else
 		{
 			++this.cnt;
 			if (this.cnt == 3)
 				this.owner = NULL;
 		}
-		else
-			this.cnt = 0;
 	}
 
 	W_Fireball_LaserPlay(this, 0.1, WEP_CVAR_SEC(WEP_FIREBALL, laserradius), WEP_CVAR_SEC(WEP_FIREBALL, laserdamage), WEP_CVAR_SEC(WEP_FIREBALL, laseredgedamage), WEP_CVAR_SEC(WEP_FIREBALL, laserburntime));

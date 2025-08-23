@@ -137,12 +137,15 @@ void W_Porto_Fail(entity this, bool failhard)
 			IL_PUSH(g_items, this);
 			this.velocity = trigger_push_calculatevelocity(this.origin, this.realowner, 128, this);
 			tracetoss(this, this);
-			if (vdist(trace_endpos - this.realowner.origin, <, 128))
-			{
-				.entity weaponentity = this.weaponentity_fld;
-				W_ThrowNewWeapon(this.realowner, WEP_PORTO.m_id, 0, this.origin, this.velocity, weaponentity);
-				Send_Notification(NOTIF_ONE, this.realowner, MSG_CENTER, CENTER_PORTO_FAILED);
-			}
+			entity head = WarpZone_FindRadius(trace_endpos, 128, true);
+			for (; head; head = head.chain)
+				if (head == this.realowner)
+				{
+					.entity weaponentity = this.weaponentity_fld;
+					W_ThrowNewWeapon(this.realowner, WEP_PORTO.m_id, 0, this.origin, this.velocity, weaponentity);
+					Send_Notification(NOTIF_ONE, this.realowner, MSG_CENTER, CENTER_PORTO_FAILED);
+					break;
+				}
 		}
 	}
 	delete(this);

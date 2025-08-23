@@ -139,16 +139,23 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 
 void W_Devastator_RemoteExplode(entity this, .entity weaponentity)
 {
-	if (!IS_DEAD(this.realowner)
-	&& this.realowner.(weaponentity).lastrocket)
+	if (IS_DEAD(this.realowner) || this.realowner.(weaponentity).lastrocket == NULL)
+		return;
+
+	if (this.spawnshieldtime >= 0)
 	{
-		if ((this.spawnshieldtime >= 0)
-			? (time >= this.spawnshieldtime) // timer
-			: vdist(NearestPointOnBox(this.realowner, this.origin) - this.origin, >, WEP_CVAR(WEP_DEVASTATOR, remote_radius))) // safety device
-		{
-			W_Devastator_DoRemoteExplode(this, weaponentity);
-		}
+		if (time < this.spawnshieldtime) // timer
+			return;
 	}
+	else
+	{
+		entity head = WarpZone_FindRadius(this.origin, WEP_CVAR(WEP_DEVASTATOR, remote_radius), false);
+		for (; head; head = head.chain)
+			if (head == this.realowner) // safety device
+				return;
+ 	}
+
+	W_Devastator_DoRemoteExplode(this, weaponentity);
 }
 
 vector W_Devastator_SteerTo(vector thisdir, vector goaldir, float maxturn_cos)

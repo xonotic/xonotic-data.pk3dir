@@ -3,10 +3,15 @@
 #ifdef SVQC
 METHOD(OverkillShotgun, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	if (vdist(actor.origin - actor.enemy.origin, >, WEP_CVAR_PRI(WEP_OVERKILL_SHOTGUN, bot_range)))
-		PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, false);
-	else
-		PHYS_INPUT_BUTTON_ATCK(actor)  = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, false);
+	entity head = WarpZone_FindRadius(actor.origin, WEP_CVAR_PRI(WEP_OVERKILL_SHOTGUN, bot_range), true);
+	for (; head; head = head.chain)
+		if (head == actor.enemy)
+		{
+			PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, false);
+			return;
+		}
+
+	PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true);
 }
 
 METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
