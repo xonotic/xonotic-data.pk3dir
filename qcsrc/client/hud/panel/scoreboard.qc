@@ -757,7 +757,7 @@ void Cmd_Scoreboard_Help()
 // otherwise the previous exclusive rule warns anyway
 // e.g. -teams,rc,cts,lms/kills ?+rc/kills
 #define SCOREBOARD_DEFAULT_COLUMNS \
-"ping pl fps name |" \
+"ping pl fps skill name |" \
 " -teams,rc,cts,surv,inv,lms/kills +ft,tdm,tmayhem/kills ?+rc,inv/kills" \
 " -teams,surv,lms/deaths +ft,tdm,tmayhem/deaths" \
 " +tdm/sum" \
@@ -883,7 +883,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 				});
 
 				// NOTE: can't check STAT(SHOWFPS) here, if checked too early it returns false anyway
-				if (!nocomplain && str != "fps") // server can disable the fps field
+				if (!nocomplain && str != "fps" && str != "skill") // server can disable the fps or skill fields
 					LOG_INFOF("^1Error:^7 Unknown score field: '%s'", str);
 
 				strfree(sbt_field_title[sbt_num_fields]);
@@ -1004,6 +1004,8 @@ string Scoreboard_GetName(entity pl)
 	if (ready_waiting && pl.ready)
 	{
 		sbt_field_icon_extra[0] = "gfx/scoreboard/player_ready";
+		sbt_field_icon_extra_rgb[0].y = 1;
+		sbt_field_icon_extra_rgb[0].x = sbt_field_icon_extra_rgb[0].z = min(1, 1 + sin(2*M_PI*time));
 	}
 	int handicap_lvl = entcs_GetHandicapLevel(pl.sv_entnum);
 	if (handicap_lvl != 0)
@@ -1015,22 +1017,18 @@ string Scoreboard_GetName(entity pl)
 	return entcs_GetName(pl.sv_entnum);
 }
 
-int autocvar_hud_panel_scoreboard_ping_best = 0;
-int autocvar_hud_panel_scoreboard_ping_medium = 70;
-int autocvar_hud_panel_scoreboard_ping_high = 100;
-int autocvar_hud_panel_scoreboard_ping_worst = 150;
-vector autocvar_hud_panel_scoreboard_ping_best_color = '0 1 0';
+int autocvar_hud_panel_scoreboard_ping_low = 20;
+int autocvar_hud_panel_scoreboard_ping_medium = 80;
+int autocvar_hud_panel_scoreboard_ping_high = 200;
+vector autocvar_hud_panel_scoreboard_ping_low_color = '0 1 0';
 vector autocvar_hud_panel_scoreboard_ping_medium_color = '1 1 0';
-vector autocvar_hud_panel_scoreboard_ping_high_color = '1 0.5 0';
-vector autocvar_hud_panel_scoreboard_ping_worst_color = '1 0 0';
-#define PING_BEST autocvar_hud_panel_scoreboard_ping_best
+vector autocvar_hud_panel_scoreboard_ping_high_color = '1 0 0';
+#define PING_LOW autocvar_hud_panel_scoreboard_ping_low
 #define PING_MED autocvar_hud_panel_scoreboard_ping_medium
 #define PING_HIGH autocvar_hud_panel_scoreboard_ping_high
-#define PING_WORST autocvar_hud_panel_scoreboard_ping_worst
-#define COLOR_BEST autocvar_hud_panel_scoreboard_ping_best_color
+#define COLOR_LOW autocvar_hud_panel_scoreboard_ping_low_color
 #define COLOR_MED autocvar_hud_panel_scoreboard_ping_medium_color
 #define COLOR_HIGH autocvar_hud_panel_scoreboard_ping_high_color
-#define COLOR_WORST autocvar_hud_panel_scoreboard_ping_worst_color
 string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 {
 	float tmp, num, denom;
@@ -1059,16 +1057,15 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 			f = pl.ping;
 			if (f == 0)
 				return _("N/A");
-			if (f < PING_BEST)
-				sbt_field_rgb = COLOR_BEST;
+			// this colour selection code should match menuqc XonoticServerList_drawListBoxItem()
+			if (f < PING_LOW)
+				sbt_field_rgb = COLOR_LOW;
 			else if (f < PING_MED)
-				sbt_field_rgb = COLOR_BEST + (COLOR_MED - COLOR_BEST) * ((f - PING_BEST) / (PING_MED - PING_BEST));
+				sbt_field_rgb = COLOR_LOW + (COLOR_MED - COLOR_LOW) * ((f - PING_LOW) / (PING_MED - PING_LOW));
 			else if (f < PING_HIGH)
 				sbt_field_rgb = COLOR_MED + (COLOR_HIGH - COLOR_MED) * ((f - PING_MED) / (PING_HIGH - PING_MED));
-			else if (f < PING_WORST)
-				sbt_field_rgb = COLOR_HIGH + (COLOR_WORST - COLOR_HIGH) * ((f - PING_HIGH) / (PING_WORST - PING_HIGH));
 			else
-				sbt_field_rgb = COLOR_WORST;
+				sbt_field_rgb = COLOR_HIGH;
 			return ftos(f);
 
 		case SP_PL:
@@ -1157,8 +1154,12 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 				sbt_field_rgb = '1 1 1';
 				return ((pl.ping == 0) ? _("N/A") : "..."); // if 0 ping, either connecting or bot (either case can't show proper score)
 			}
-			//sbt_field_rgb = HUD_Get_Num_Color(fps, 200, true);
-			sbt_field_rgb = '1 0 0' + '0 1 1' * (bound(0, tmp, 60) / 60);
+			// <=32fps full red, 64fps to 96fps (inclusive) full yellow, >=128fps white
+			// A little opinionated but representative of what's adequate for a competitive experience,
+			// with consideration to the default and supported ticrates and the minimum USB polling rate.
+			sbt_field_rgb.x = 1;
+			sbt_field_rgb.y = bound(0, (tmp - 32) * 0.03125, 1); // 0 at 32fps, 1 at 64fps
+			sbt_field_rgb.z = bound(0, (tmp - 96) * 0.03125, 1); // 0 at 96fps, 1 at 128fps
 			return ftos(tmp);
 
 		case SP_ROUNDS_PL:
