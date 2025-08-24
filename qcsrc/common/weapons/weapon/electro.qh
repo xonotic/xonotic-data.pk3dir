@@ -64,6 +64,7 @@ CLASS(Electro, Weapon)
 		P(class, prefix, midaircombo_radius, float, PRI) \
 		P(class, prefix, midaircombo_speed, float, PRI) \
 		P(class, prefix, midaircombo_teammate, float, PRI) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, radius, float, BOTH) \
 		P(class, prefix, refire2, float, SEC) \
 		P(class, prefix, refire, float, BOTH) \

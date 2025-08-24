@@ -48,6 +48,7 @@ CLASS(MachineGun, Weapon)
 		P(class, prefix, first_refire, float, NONE) \
 		P(class, prefix, first_spread, float, NONE) \
 		P(class, prefix, mode, float, NONE) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, solidpenetration, float, NONE) \

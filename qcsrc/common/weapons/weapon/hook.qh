@@ -47,6 +47,7 @@ CLASS(Hook, Weapon)
 		P(class, prefix, hooked_time_free, float, PRI) \
 		P(class, prefix, hooked_time_max, float, PRI) \
 		P(class, prefix, lifetime, float, SEC) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, power, float, SEC) \
 		P(class, prefix, radius, float, SEC) \
 		P(class, prefix, refire, float, BOTH) \
