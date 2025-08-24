@@ -32,7 +32,7 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 	for(i = 0; i < GameType_GetTotalCount(); ++i)
 	{
 		entity e;
-		e = me.(typeLabels[i]);
+		e = me.(toggleableItems[i]);
 		e.disabled = !(MapInfo_Map_supportedGametypes & GameType_GetID(i).gametype_flags);
 	}
 
@@ -52,13 +52,13 @@ void XonoticMapInfoDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Title:")));
 		me.TD(me, 1, w-1, e = makeXonoticTextLabel(0, ""));
 			e.colorL = SKINCOLOR_MAPLIST_TITLE;
-			e.allowCut = 1;
+			e.allowCut = true;
 			me.titleLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Author:")));
 		me.TD(me, 1, w-1, e = makeXonoticTextLabel(0, ""));
 			e.colorL = SKINCOLOR_MAPLIST_AUTHOR;
-			e.allowCut = 1;
+			e.allowCut = true;
 			me.authorLabel = e;
 	me.TR(me);
 		me.TD(me, 1, w, e = makeXonoticTextLabel(0, _("Game types:")));
@@ -73,12 +73,12 @@ void XonoticMapInfoDialog_fill(entity me)
 			me.TDempty(me, 0.2);
 		}
 		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, MapInfo_Type_ToText(GameType_GetID(i))));
-			me.(typeLabels[i]) = e;
+			me.(toggleableItems[i]) = e;
 	}
 
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticTextLabel(0.5, ""));
-			e.allowCut = 1;
+			e.allowCut = true;
 			me.descriptionLabel = e;
 
 	me.gotoRC(me, me.rows - 1, 0);

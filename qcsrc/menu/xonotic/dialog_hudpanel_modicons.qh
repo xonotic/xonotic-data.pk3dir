@@ -9,5 +9,5 @@ CLASS(XonoticHUDModIconsDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDModIconsDialog, rows, float, 15.5);
 	ATTRIB(XonoticHUDModIconsDialog, columns, float, 4);
 	ATTRIB(XonoticHUDModIconsDialog, name, string, "HUDmodicons");
-	ATTRIB(XonoticHUDModIconsDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDModIconsDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDModIconsDialog)

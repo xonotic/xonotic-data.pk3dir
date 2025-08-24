@@ -3,7 +3,7 @@
 #include "../item/checkbox.qh"
 CLASS(XonoticSliderCheckBox, CheckBox)
 	METHOD(XonoticSliderCheckBox, configureXonoticSliderCheckBox, void(entity, float, float, entity, string));
-	METHOD(XonoticSliderCheckBox, setChecked, void(entity, float));
+	METHOD(XonoticSliderCheckBox, setChecked, void(entity, bool));
 	METHOD(XonoticSliderCheckBox, draw, void(entity));
 	ATTRIB(XonoticSliderCheckBox, fontSize, float, SKINFONTSIZE_NORMAL);
 	ATTRIB(XonoticSliderCheckBox, image, string, SKINGFX_CHECKBOX);

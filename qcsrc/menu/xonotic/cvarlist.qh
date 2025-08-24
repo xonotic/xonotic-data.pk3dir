@@ -21,7 +21,7 @@ CLASS(XonoticCvarList, XonoticListBox)
 
 	METHOD(XonoticCvarList, mouseRelease, float(entity, vector));
 	METHOD(XonoticCvarList, setSelected, void(entity, float));
-	METHOD(XonoticCvarList, updateCvarType, float(entity));
+	METHOD(XonoticCvarList, updateCvarType, bool(entity));
 
 	ATTRIB(XonoticCvarList, controlledTextbox, entity);
 	ATTRIB(XonoticCvarList, cvarNameBox, entity);
@@ -29,7 +29,7 @@ CLASS(XonoticCvarList, XonoticListBox)
 	ATTRIB(XonoticCvarList, cvarTypeBox, entity);
 	ATTRIB(XonoticCvarList, cvarValueBox, entity);
 	ATTRIB(XonoticCvarList, cvarDefaultBox, entity);
-	ATTRIB(XonoticCvarList, cvarNeedsForcing, float, 0);
+	ATTRIB(XonoticCvarList, cvarNeedsForcing, bool, false);
 
 	ATTRIB(XonoticCvarList, handle, float, -1);
 	ATTRIB(XonoticCvarList, cvarName, string);
