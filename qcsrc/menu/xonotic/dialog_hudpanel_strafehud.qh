@@ -9,5 +9,5 @@ CLASS(XonoticHUDStrafeHUDDialog, XonoticRootDialog)
     ATTRIB(XonoticHUDStrafeHUDDialog, rows, float, 23);
     ATTRIB(XonoticHUDStrafeHUDDialog, columns, float, 4);
     ATTRIB(XonoticHUDStrafeHUDDialog, name, string, "HUDstrafehud");
-    ATTRIB(XonoticHUDStrafeHUDDialog, requiresConnection, float, true);
+    ATTRIB(XonoticHUDStrafeHUDDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDStrafeHUDDialog)

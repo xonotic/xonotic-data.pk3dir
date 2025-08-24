@@ -51,8 +51,8 @@ void XonoticProfileTab_fill(entity me)
 
 	me.gotoRC(me, 1.5, 0);
 		me.TD(me, 1, 3, label = makeXonoticTextLabel(0.5, string_null));
-			label.allowCut = 1;
-			label.allowColors = 1;
+			label.allowCut = true;
+			label.allowColors = true;
 			label.alpha = 1;
 			label.isBold = true;
 			label.fontSize = SKINFONTSIZE_TITLE;
@@ -62,8 +62,8 @@ void XonoticProfileTab_fill(entity me)
 			_("Name under which you will appear in the game")));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
-			box.saveImmediately = 0;  // Sorry, can't do this, it spams "name" commands.
-			box.enableClearButton = 0;
+			box.saveImmediately = false;  // Sorry, can't do this, it spams "name" commands.
+			box.enableClearButton = false;
 			box.applyButton = profileApplyButton;
 			label.textEntity = box;
 	me.TR(me);

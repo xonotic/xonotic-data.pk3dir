@@ -9,7 +9,7 @@ void XonoticLanguageWarningDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 2, 4, e = makeXonoticTextLabel(0,
 			_("While connected language changes will be applied only to the menu, full language changes will take effect starting from the next game")));
-			e.allowWrap = 1;
+			e.allowWrap = true;
 			e.allowWrap_spacing = 0.5;
 	me.TR(me);
 	me.TR(me);

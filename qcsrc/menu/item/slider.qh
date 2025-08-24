@@ -3,6 +3,7 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
 #include "label.qh"
+#include "../anim/animation.qh"
 CLASS(Slider, Label)
 	METHOD(Slider, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(Slider, configureSliderVisuals, void(entity, float, float, float, string));
@@ -15,16 +16,14 @@ CLASS(Slider, Label)
 	METHOD(Slider, mouseRelease, float(entity, vector));
 	METHOD(Slider, valueToText, string(entity, float));
 	METHOD(Slider, toString, string(entity));
-	METHOD(Slider, setValue_allowAnim, void(entity, float, bool));
-	METHOD(Slider, setValue_noAnim, void(entity, float));
-	METHOD(Slider, setValue, void(entity, float));
+	METHOD(Slider, setValue, void(entity, float, bool));
 	METHOD(Slider, setSliderValue, void(entity, float));
 	METHOD(Slider, showNotify, void(entity));
 	ATTRIB(Slider, src, string);
-	ATTRIB(Slider, focusable, float, 1);
-	ATTRIB(Slider, allowFocusSound, float, 1);
+	ATTRIB(Slider, focusable, bool, true);
+	ATTRIB(Slider, allowFocusSound, bool, true);
 	ATTRIB(Slider, value, float, 0);
-	ATTRIB(Slider, animated, float, 1);
+	ATTRIB(Slider, animated, bool, true);
 	ATTRIB(Slider, sliderValue, float, 0);
 	ATTRIB(Slider, sliderAnim, entity);
 	ATTRIB(Slider, valueMin, float, 0);
@@ -34,7 +33,8 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, valueKeyStep, float, 0);
 	ATTRIB(Slider, valuePageStep, float, 0);
 	ATTRIB(Slider, valueDisplayMultiplier, float, 1.0);
-	ATTRIB(Slider, textSpace, float, 0);
+	ATTRIB(Slider, formatString, string, ""); // should have %s only. Special types described in formatStringSpecial
+	ATTRIB(Slider, valueSpace, float, 0);
 	ATTRIB(Slider, controlWidth, float, 0);
 	ATTRIB(Slider, pressed, float, 0);
 	ATTRIB(Slider, pressOffset, float, 0);
@@ -48,3 +48,4 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, colorF, vector, '1 1 1');
 	ATTRIB(Slider, disabledAlpha, float, 0.3);
 ENDCLASS(Slider)
+string formatStringSpecial(string, float, int);

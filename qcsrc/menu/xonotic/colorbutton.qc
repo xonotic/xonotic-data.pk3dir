@@ -36,7 +36,7 @@ void XonoticColorButton_configureXonoticColorButton(entity me, float theGroup, f
 	me.loadCvars(me);
 	me.configureRadioButton(me, string_null, me.fontSize, me.image, theGroup, 0);
 }
-void XonoticColorButton_setChecked(entity me, float val)
+void XonoticColorButton_setChecked(entity me, bool val)
 {
 	if(val != me.checked)
 	{
