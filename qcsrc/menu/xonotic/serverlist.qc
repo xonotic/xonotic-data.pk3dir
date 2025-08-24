@@ -334,14 +334,13 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 		m = SLIST_MASK_AND - 1;
 		resethostcachemasks();
 
-		// ping: reject negative ping (no idea why this happens in the first place, engine bug)
-		sethostcachemasknumber(++m, SLIST_FIELD_PING, 0, SLIST_TEST_GREATEREQUAL);
-
 		// show full button
 		if(!me.filterShowFull)
 		{
-			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL); // legacy
-			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, ":S0:", SLIST_TEST_NOTCONTAIN); // g_maxplayers support
+			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL); // can connect
+			// There's several reasons to join a server where nJoinAllowed() reported 0 free slots, such as:
+			// to spec the match, chat, vote for a gametype with more players, or join your reserved tournament slot.
+			//sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, ":S0:", SLIST_TEST_NOTCONTAIN); // g_maxplayers support
 		}
 
 		// show empty button
@@ -858,7 +857,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		versionstr = argv(1);
 	}
 	bool pure = false, pure_available = false;
-	int freeslots = -1, sflags = -1;
+	int qcfreeslots = -1, sflags = -1;
 	string modname = "";
 	for(int j = 2; j < m; ++j)
 	{
@@ -872,7 +871,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 			pure_available = true;
 		}
 		else if(key == "S")
-			freeslots = stof(value);
+			qcfreeslots = stof(value); // from nJoinAllowed()
 		else if(key == "F")
 			sflags = stoi(value);
 		else if(key == "M")
@@ -904,10 +903,10 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		pure_available = false;
 
 	float theAlpha;
-	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0)
+	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0) // can't connect
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
-	else if(freeslots == 0)
-		theAlpha = SKINALPHA_SERVERLIST_FULL; // g_maxplayers support
+	else if(qcfreeslots == 0) // can connect but may not be able to play yet (duel, g_maxplayers, etc)
+		theAlpha = SKINALPHA_SERVERLIST_EMPTY;
 	else if (!gethostcachenumber(SLIST_FIELD_NUMHUMANS, i))
 		theAlpha = SKINALPHA_SERVERLIST_EMPTY;
 	else
@@ -936,7 +935,8 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, i))
 	{
 		theColor = theColor * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINCOLOR_SERVERLIST_FAVORITE * SKINALPHA_SERVERLIST_FAVORITE;
-		theAlpha = theAlpha * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINALPHA_SERVERLIST_FAVORITE;
+		if (gethostcachenumber(SLIST_FIELD_FREESLOTS, i) > 0) // can connect
+			theAlpha = theAlpha * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINALPHA_SERVERLIST_FAVORITE;
 	}
 
 	s = gethostcachestring(SLIST_FIELD_CNAME, i);
