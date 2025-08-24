@@ -106,7 +106,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 void W_RocketMinsta_Explosion(entity actor, .entity weaponentity, vector loc)
 {
 	if(accuracy_canbegooddamage(actor))
-		accuracy_add(actor, WEP_DEVASTATOR, autocvar_g_rm_damage, 0);
+		accuracy_add(actor, WEP_DEVASTATOR, autocvar_g_rm_damage, 0, 0); // add to fired
 	entity dmgent = spawn();
 	dmgent.owner = dmgent.realowner = actor;
 	setorigin(dmgent, loc);
