@@ -1519,7 +1519,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 		drawfill(h_pos, h_size, '0 0 0', sbt_highlight_alpha_eliminated, DRAWFLAG_NORMAL);
 }
 
-vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity ignored_pl, entity pl, int pl_number)
+vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity excluded_pl, entity pl, int pl_number)
 {
 	int i = 0;
 	vector h_pos = item_pos;
@@ -1555,7 +1555,7 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 	{
 		if (pl.team != this_team)
 			continue;
-		if (pl == ignored_pl)
+		if (pl == excluded_pl)
 			continue;
 
 		if (entcs_GetWantsJoin(pl.sv_entnum))
@@ -1579,8 +1579,11 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		string str = entcs_GetName(pl.sv_entnum);
 		if (autocvar_hud_panel_scoreboard_playerid)
 			str = Scoreboard_AddPlayerId(str, pl);
-		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
-		float column_width = stringwidth(str, true, hud_fontsize);
+
+		// ignored_size includes icon and padding
+		float ignored_size = (pl.ignored ? hud_fontsize.y + hud_fontsize.x * 0.25 : 0);
+		str = textShortenToWidth(str, namesize - ignored_size, hud_fontsize, stringwidth_colors);
+		float column_width = stringwidth(str, true, hud_fontsize) + ignored_size;
 		if ((this_team == NUM_SPECTATOR) && autocvar_hud_panel_scoreboard_spectators_aligned)
 		{
 			if (column_width > max_name_width)
@@ -1621,7 +1624,13 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		vector name_pos = pos;
 		if ((this_team == NUM_SPECTATOR) && autocvar_hud_panel_scoreboard_spectators_aligned)
 			name_pos.x += max(fieldsize, min_fieldsize) + 2 * fieldpadding + hud_fontsize.x * 0.25;
+		if (pl.ignored)
+		{
+			drawpic(name_pos, "gfx/scoreboard/player_ignored", '1 1 0' * hud_fontsize.y, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+			name_pos.x += ignored_size;
+		}
 		drawcolorcodedstring(name_pos, str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
+
 		if (field != "")
 		{
 			h_size.x = max(fieldsize, min_fieldsize) + 2 * fieldpadding;
