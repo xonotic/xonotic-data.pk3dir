@@ -1070,7 +1070,7 @@ msgstr "旁觀者"
 #: qcsrc/client/hud/panel/scoreboard.qc:2378
 #, c-format
 msgid "^2+%s %s"
-msgstr "^2落後 %s 次%s"
+msgstr "^2領先 %s 次%s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2378
 #, c-format
