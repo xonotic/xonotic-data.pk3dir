@@ -46,6 +46,7 @@ CLASS(MineLayer, Weapon)
 		P(class, prefix, lifetime, float, NONE) \
 		P(class, prefix, lifetime_countdown, float, NONE) \
 		P(class, prefix, limit, float, NONE) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, protection, float, NONE) \
 		P(class, prefix, proximityradius, float, NONE) \
 		P(class, prefix, radius, float, NONE) \

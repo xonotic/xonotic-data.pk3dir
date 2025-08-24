@@ -49,6 +49,7 @@ CLASS(Devastator, Weapon)
 		P(class, prefix, guidestop, float, NONE) \
 		P(class, prefix, health, float, NONE) \
 		P(class, prefix, lifetime, float, NONE) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, radius, float, NONE) \
 		P(class, prefix, refire, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
