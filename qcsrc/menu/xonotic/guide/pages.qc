@@ -5,6 +5,14 @@
 #include <common/weapons/weapon/crylink.qh>
 #include <common/weapons/weapon/devastator.qh>
 #include <common/mutators/base.qh>
+#include <common/mutators/mutator/dodging/dodging.qh>
+#include <common/mutators/mutator/nades/nades.qh>
+#include <common/mutators/mutator/overkill/overkill.qh>
+#include <common/mutators/mutator/overkill/okhmg.qh>
+#include <common/mutators/mutator/overkill/oknex.qh>
+#include <common/mutators/mutator/overkill/okmachinegun.qh>
+#include <common/mutators/mutator/overkill/okrpc.qh>
+#include <common/mutators/mutator/overkill/okshotgun.qh>
 #include <common/mutators/mutator/rocketflying/rocketflying.qh>
 
 REGISTER_INTRODUCTION_PAGE(0, _("About this guide"))
@@ -155,5 +163,17 @@ REGISTER_MOVEMENT_PAGE(9, _("Advanced Movement"))
 	PAR(_("Advanced techniques like \"strafe jumping\" (\"strafing\") or \"circle jumping\" (\"CJ\") offer only limited benefits in vanilla gameplay, "
 	      "but are crucial on CTS/DeFRaG servers that use slightly different physics."));
 	PAR(_("If you want to master these techniques, be sure to check out %s."), "^5xdf.gg/guide^7");
+	this.m_description = strzone(PAGE_TEXT);
+}
+
+REGISTER_MODS_PAGE(0, _("Overkill"))
+{
+	PAGE_TEXT_INIT();
+	PAR(_("%s is a mod that heavily changes the game, giving players fewer but more powerful weapons, nades, and more movement options."), COLORED_NAME(MUTATOR_ok));
+	PAR(_("In terms of weaponry, players have infinite ammo and spawn in with the %s, %s, and %s, and can pick up the %s and %s superweapons on the map sometimes. "
+	      "These weapons are a lot more powerful than the regular weapons, so their time-to-kill is quite low."), COLORED_NAME(WEP_OVERKILL_SHOTGUN), COLORED_NAME(WEP_OVERKILL_MACHINEGUN), COLORED_NAME(WEP_OVERKILL_NEX), COLORED_NAME(WEP_OVERKILL_HMG), COLORED_NAME(WEP_OVERKILL_RPC));
+	PAR(_("The secondary fire of all weapons shoots a laser which does not damage or push enemies, but can be used to push yourself around. "
+	      "Also since the %s mutator is active, all players have offhand nades."), COLORED_NAME(MUTATOR_nades));
+	PAR(_("As for movement tricks, %s is enabled by default in %s, allowing for rapidly changing your movement direction."), COLORED_NAME(MUTATOR_dodging), COLORED_NAME(MUTATOR_ok));
 	this.m_description = strzone(PAGE_TEXT);
 }
