@@ -5,7 +5,7 @@ METHOD(ClanArena, describe, string(ClanArena this))
 {
     TC(ClanArena, this);
 	PAGE_TEXT_INIT();
-	PAR(_("%s is a common round-based gamemode played with teams, where players spawn with all weapons available, have maximum health and armor, but only have one life per round. "
+	PAR(_("%s is a common round-based gametype played with teams, where players spawn with all weapons available, have maximum health and armor, but only have one life per round. "
 	      "There are no pickups available on the map in %s, making the gameplay fast-paced and focused on combat."), COLORED_NAME(this), COLORED_NAME(this));
 	PAR(_("Rounds start with a ten second grace period where weapons cannot be fired, so it's a good opportunity to group up with your team."));
 	PAR(_("The match ends once a team reaches a certain number of won rounds, or has a considerable lead over the other team."));

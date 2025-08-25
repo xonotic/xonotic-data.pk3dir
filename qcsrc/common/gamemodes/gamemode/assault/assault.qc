@@ -5,7 +5,7 @@ METHOD(Assault, describe, string(Assault this))
 {
 	TC(Assault, this);
 	PAGE_TEXT_INIT();
-	PAR(_("%s is a team-based gamemode involving an attacking and a defending team."), COLORED_NAME(this));
+	PAR(_("%s is a team-based gametype involving an attacking and a defending team."), COLORED_NAME(this));
 	PAR(_("The attacking team destroys objects placed on the map, which opens up new doors or pathways to more objects, until a main object (the enemy power core) is reached. "
 	      "The attacking team wins the round if they manage to destroy the power core before time runs out, and then teams switch roles in the next round."));
 	PAR(_("The defending team has to defend the objects, winning the round if they successfully prevent the attacking team from destroying the power core."));

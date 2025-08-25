@@ -5,7 +5,7 @@ METHOD(Domination, describe, string(Domination this))
 {
     TC(Domination, this);
 	PAGE_TEXT_INIT();
-	PAR(_("%s is a gamemode where teams compete to dominate the map by capturing and keeping control points."), COLORED_NAME(this));
+	PAR(_("%s is a gametype where teams compete to dominate the map by capturing and keeping control points."), COLORED_NAME(this));
 	PAR(_("Control points are displayed on the radar to make finding them easy, and they are captured by simply walking through them. "
         "However, an enemy can just as easily steal a control point owned by your team by doing the same. "
 	      "Control points start neutral (owned by no teams)."));

@@ -114,7 +114,7 @@ REGISTER_MOVEMENT_PAGE(5, _("Rocket Flying"))
 {
 	PAGE_TEXT_INIT();
 	PAR(_("The %s can be used just like the %s for movement, however it inflicts much more damage to the player. "
-	      "In game modes without self damage however it is a very versatile movement tool."), COLORED_NAME(WEP_DEVASTATOR), COLORED_NAME(WEP_BLASTER));
+	      "In gametypes without self damage however it is a very versatile movement tool."), COLORED_NAME(WEP_DEVASTATOR), COLORED_NAME(WEP_BLASTER));
 	PAR(_("While mid-air, you can also fire a rocket underneath yourself and immediately detonate it. "
 	      "The explosion will push you upwards a little bit, and can prolong a jump."));
 	PAR(_("Note that this strategy only really works if the %s mutator is enabled."), COLORED_NAME(MUTATOR_rocketflying));

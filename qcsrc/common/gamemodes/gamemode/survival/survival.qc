@@ -8,7 +8,7 @@ METHOD(Survival, describe, string(Survival this))
 {
     TC(Survival, this);
 	PAGE_TEXT_INIT();
-	PAR(_("%s is a hunter-survivor gamemode involving two teams where the goal of the hunters is to frag all survivors, and the goal of the survivors is to frag all hunters or survive until time runs out. "
+	PAR(_("%s is a hunter-survivor gametype involving two teams where the goal of the hunters is to frag all survivors, and the goal of the survivors is to frag all hunters or survive until time runs out. "
 	      "The trick lies in the fact that players only know which team they belong to, and not the team membership of any other players."), COLORED_NAME(this));
 	PAR(_("Since the goal of both teams is essentially to eliminate all members of the opposite team, it can be tricky for survivors to figure out their fellow teammates."));
 	PAR(_("Teams are randomly selected as the round begins, with the hunter team being a bit smaller, "

@@ -42,7 +42,7 @@ METHOD(ArmorMega, describe, string(ArmorMega this))
     PAGE_TEXT_INIT();
     PAR(_("The %s provides you a huge amount of armor when picked up, "
           "protecting you from damage by absorbing incoming hits until it is depleted."), COLORED_NAME(this));
-    PAR(_("It tends to be one of the most highly contested items on a map, particularly in game modes like %s."), COLORED_NAME(MAPINFO_TYPE_DUEL));
+    PAR(_("It tends to be one of the most highly contested items on a map, particularly in gametypes like %s."), COLORED_NAME(MAPINFO_TYPE_DUEL));
     PAR_DEFAULT_PICKUP_ARMOR("mega");
     return PAGE_TEXT;
 }
