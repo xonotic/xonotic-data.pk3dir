@@ -578,10 +578,13 @@ void PutPlayerInServer(entity this)
 	{
 		if (this.bot_forced_team)
 			SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
-		else if (this.wants_join > 0)
-			SetPlayerTeam(this, this.wants_join, TEAM_CHANGE_MANUAL);
-		else if (this.team <= 0 || this.wants_join < 0 || autocvar_g_campaign)
-			TeamBalance_JoinBestTeam(this);
+		else if (this.team <= 0)
+		{
+			if (this.wants_join > 0)
+				SetPlayerTeam(this, this.wants_join, TEAM_CHANGE_MANUAL);
+			else
+				TeamBalance_JoinBestTeam(this);
+		}
 	}
 
 	entity spot = SelectSpawnPoint(this, false);
@@ -593,7 +596,6 @@ void PutPlayerInServer(entity this)
 
 	TRANSMUTE(Player, this);
 
-	CS(this).wasplayer = true;
 	this.iscreature = true;
 	this.teleportable = TELEPORT_NORMAL;
 	if(!this.damagedbycontents)
@@ -1329,6 +1331,7 @@ void ClientDisconnect(entity this)
 	if (player_count == 0)
 		localcmd("\nsv_hook_lastleave\n");
 
+	if (!intermission_running)
 	if (!TeamBalance_QueuedPlayersTagIn(this))
 	if (autocvar_g_balance_teams_remove)
 		TeamBalance_RemoveExcessPlayers(NULL);
@@ -2047,7 +2050,7 @@ void ShowRespawnCountdown(entity this)
 
 bool ShowTeamSelection(entity this)
 {
-	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || Player_HasRealForcedTeam(this))
+	if (!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || Player_HasRealForcedTeam(this))
 		return false;
 	if (QueuedPlayersReady(this, true))
 		return false;
@@ -2061,8 +2064,12 @@ void Join(entity this, bool queued_join)
 {
 	entity player_with_dibs = NULL;
 
-	if (autocvar_g_campaign && !campaign_bots_may_start && !game_stopped && time >= game_starttime)
-		ReadyRestart(true);
+	if (autocvar_g_campaign)
+	{
+		if (!campaign_bots_may_start && !game_stopped && time >= game_starttime)
+			ReadyRestart(true);
+		campaign_bots_may_start = true;
+	}
 
 	if(queued_join
 	&& TeamBalance_AreEqual(this, true)) // if a player couldn't tag in for balance, don't join them here as it would cause a stack
@@ -2070,7 +2077,7 @@ void Join(entity this, bool queued_join)
 		// First we must join player(s) queued for specific team(s) (they chose first)
 		// so TeamBalance_JoinBestTeam() (if necessary) won't select the same team(s).
 		// Relies on `this` skipping the queue (this.team already set, this.wants_join not set) or using autoselect.
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && it.wants_join > 0,
+		FOREACH_CLIENT(it != this && it.wants_join > 0,
 		{
 			// detect any conflict between `this` and a queued player (queuePlayer() handles other conflicts)
 			if (this.team < 0 && this.team_selected > 0 // `this` can't have their preference
@@ -2081,14 +2088,11 @@ void Join(entity this, bool queued_join)
 		});
 
 		// Second pass: queued players whose team will be autoselected
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && it.wants_join < 0,
+		FOREACH_CLIENT(it != this && it.wants_join < 0,
 		{
 			Join(it, false);
 		});
 	}
-
-	if(autocvar_g_campaign)
-		campaign_bots_may_start = true;
 
 	Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
@@ -2103,11 +2107,10 @@ void Join(entity this, bool queued_join)
 			// limitation: notifications support only 1 translated team name
 			// so the team `this` preferred can't be mentioned, only the team they got assigned to.
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_JOIN_PLAY_TEAM_QUEUECONFLICT), player_with_dibs.netname);
-		else if (this.wants_join)
+		else
 		{
-			// Get queued player's attention
-			if (game_starttime <= time) // No countdown in progress
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_ANNCE, ANNCE_BEGIN);
+			if (this.wants_join && game_starttime < time && !warmup_stage) // No countdown running && not returning to warmup via ReadyRestart_force
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_ANNCE, ANNCE_BEGIN); // Get queued player's attention
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_JOIN_PLAY_TEAM));
 		}
 	}
@@ -2124,65 +2127,45 @@ int GetPlayerLimit()
 	int player_limit = (autocvar_g_maxplayers >= 0 || intermission_running) ? autocvar_g_maxplayers : map_maxplayers;
 	MUTATOR_CALLHOOK(GetPlayerLimit, player_limit);
 	player_limit = M_ARGV(0, int);
-	return player_limit < maxclients ? player_limit : 0;
+	return player_limit < maxclients && player_limit > 0 ? player_limit : 0;
 }
 
 /**
- * Determines whether the player is allowed to join. This depends on cvar
- * g_maxplayers, if it isn't used this function always return true, otherwise
- * it checks whether the number of currently playing players exceeds g_maxplayers.
+ * Determines how many player slots are free. This depends on cvar g_maxplayers
+ * and other limits that apply to all clients which aren't specifically excepted.
  * @return int number of free slots for players, 0 if none
  */
-int nJoinAllowed(entity this, entity ignore)
+int nJoinAllowed(entity this)
 {
-	if(!ignore)
+	if(!this)
 	// this is called that way when checking if anyone may be able to join (to build qcstatus)
 	// so report 0 free slots if restricted
 	{
-		if(autocvar_g_forced_team_otherwise == "spectate")
-			return 0;
-		if(autocvar_g_forced_team_otherwise == "spectator")
+		if(autocvar_g_forced_team_otherwise == "spectate"
+		|| autocvar_g_forced_team_otherwise == "spectator"
+		|| (teamplay && lockteams))
 			return 0;
 	}
 
-	if(this && (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
-		return 0; // forced spectators can never join
-
-	static float msg_time = 0;
-	if(this && !INGAME(this) && ignore && PlayerInList(this, autocvar_g_playban_list))
-	{
-		if(time > msg_time)
-		{
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PLAYBAN);
-			msg_time = time + 0.5;
-		}
-		return 0;
-	}
-
-	// TODO simplify this
 	int totalClients = 0;
 	int currentlyPlaying = 0;
-	FOREACH_CLIENT(true,
+	FOREACH_CLIENT(it != this,
 	{
-		if(it != ignore)
-			++totalClients;
-		if(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)))
+		++totalClients;
+		if(IS_PLAYER(it) || INGAME(it))
 			++currentlyPlaying;
 	});
 
 	int player_limit = GetPlayerLimit();
 
-	int free_slots = 0;
-	if (!player_limit)
-		free_slots = maxclients - totalClients;
-	else if(player_limit > 0 && currentlyPlaying < player_limit)
-		free_slots = min(maxclients - totalClients, player_limit - currentlyPlaying);
+	int free_slots = max(0, (player_limit ? player_limit : maxclients) - currentlyPlaying);
+	if (this || maxclients - totalClients) // don't add bot slots in the getstatus case if nobody can connect
+		free_slots += bots_would_leave;
+	if (!this) // getstatus case
+		free_slots = min(free_slots, maxclients - totalClients);
 
-	if(this && !INGAME(this) && ignore && !free_slots && time > msg_time)
-	{
+	if(this && !free_slots)
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT, player_limit);
-		msg_time = time + 0.5;
-	}
 
 	return free_slots;
 }
@@ -2192,13 +2175,10 @@ int nJoinAllowed(entity this, entity ignore)
 // and will see the centreprint with their current preference each time they press +jump.
 bool queuePlayer(entity this, int team_index)
 {
-	if (IS_BOT_CLIENT(this) || !QueueNeeded(this))
-		return false;
-
 	// check if a queued player already chose the selected team
 	if (team_index > 0)
 	{
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && it.wants_join == team_index,
+		FOREACH_CLIENT(it != this && it.wants_join == team_index,
 		{
 			if (QueuedPlayersReady(this, false))
 			{
@@ -2241,6 +2221,7 @@ bool queuePlayer(entity this, int team_index)
 	return true;
 }
 
+float autocvar_g_maxping;
 bool joinAllowed(entity this, int team_index)
 {
 	if (CS(this).version_mismatch)
@@ -2255,17 +2236,36 @@ bool joinAllowed(entity this, int team_index)
 		return false;
 	}
 
+	if (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR) return false;
+
+	if (!INGAME(this) && PlayerInList(this, autocvar_g_playban_list))
+	{
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PLAYBAN);
+		return false;
+	}
+
+	// IS_PLAYER for most gametypes, INGAME for ca, lms, surv
+	if (autocvar_g_maxping && !(IS_PLAYER(this) || INGAME(this)) && !this.wants_join)
+	{
+		if (this.ping <= 0) return false; // too soon
+		if (this.ping > autocvar_g_maxping)
+		{
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT_PING);
+			return false;
+		}
+	}
+
 	if (QueueNeeded(this))
 	{
 		if (team_index == 0) // so ClientCommand_selectteam() can check joinAllowed() before calling SetPlayerTeam() without chicken/egg problem
 			if (ShowTeamSelection(this)) return false; // only needed by callsites other than selectteam
 		// queuePlayer called here so that only conditions above block queuing (g_maxplayers shouldn't)
 		if (queuePlayer(this, team_index)) return false;
-		if (!nJoinAllowed(this, this)) return false;
+		if (!nJoinAllowed(this)) return false;
 	}
 	else
 	{
-		if (!nJoinAllowed(this, this)) return false;
+		if (!nJoinAllowed(this)) return false;
 		if (team_index == 0) // so ClientCommand_selectteam() can check joinAllowed() before calling SetPlayerTeam() without chicken/egg problem
 			if (ShowTeamSelection(this)) return false; // only needed by callsites other than selectteam
 	}
