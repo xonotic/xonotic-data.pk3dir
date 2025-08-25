@@ -42,7 +42,7 @@ METHOD(HealthMega, describe, string(HealthMega this))
     PAGE_TEXT_INIT();
     PAR(_("The %s restores a huge amount of health when picked up, "
           "helping you recover from damage taken during combat."), COLORED_NAME(this));
-    PAR(_("It tends to be one of the most highly contested items on a map, particularly in game modes like %s."), COLORED_NAME(MAPINFO_TYPE_DUEL));
+    PAR(_("It tends to be one of the most highly contested items on a map, particularly in gametypes like %s."), COLORED_NAME(MAPINFO_TYPE_DUEL));
     PAR_DEFAULT_PICKUP_HEALTH("mega");
     return PAGE_TEXT;
 }

@@ -12,8 +12,8 @@ METHOD(mayhem, describe, string(mayhem this))
 	PAR(_("It shines in its unique handling of scoring, accouting for both frags but also damage dealt. "
 		"This means that if you almost frag a player you will still be rewarded with points, but dealing the final blow is always better if possible. "
 	      "Points are deducted when you walk into hazards, but not when you do movement tricks like blaster jumping since self damage is disabled."));
-	PAR(_("Since damage is always rewarded in %s, the more you shoot the better, turning this gamemode into chaotic fun at times."), COLORED_NAME(this));
-	PAR(_("This gamemode is often seen as a more newbie-friendly version of %s."), COLORED_NAME(MAPINFO_TYPE_DEATHMATCH));
+	PAR(_("Since damage is always rewarded in %s, the more you shoot the better, turning this gametype into chaotic fun at times."), COLORED_NAME(this));
+	PAR(_("This gametype is often seen as a more newbie-friendly version of %s."), COLORED_NAME(MAPINFO_TYPE_DEATHMATCH));
 	return PAGE_TEXT;
 }
 #endif
