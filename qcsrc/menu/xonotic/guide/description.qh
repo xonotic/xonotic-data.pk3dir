@@ -1,0 +1,22 @@
+#pragma once
+
+#include <menu/xonotic/listbox.qh>
+CLASS(XonoticGuideDescription, XonoticListBox)
+	ATTRIB(XonoticGuideDescription, itemAbsSize, vector, '0 0 0');
+	ATTRIB(XonoticGuideDescription, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticGuideDescription, keepspaceLeft, float, 0);
+	ATTRIB(XonoticGuideDescription, keepspaceRight, float, 0);
+	ATTRIB(XonoticGuideDescription, rowsPerItem, float, 1);
+	ATTRIB(XonoticGuideDescription, selectionDoesntMatter, bool, true);
+	ATTRIB(XonoticGuideDescription, m_description, string, string_null);
+	ATTRIB(XonoticGuideDescription, m_descriptionWrapped, string, string_null);
+
+	METHOD(XonoticGuideDescription, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticGuideDescription, setDescription, void(entity, string));
+	METHOD(XonoticGuideDescription, resizeNotify, void(entity, vector, vector, vector, vector));
+
+	INIT(XonoticGuideDescription)
+	{
+		this.configureXonoticListBox(this);
+	}
+ENDCLASS(XonoticGuideDescription)

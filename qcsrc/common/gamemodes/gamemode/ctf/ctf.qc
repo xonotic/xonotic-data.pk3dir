@@ -1,1 +1,19 @@
 #include "ctf.qh"
+
+#ifdef MENUQC
+METHOD(CaptureTheFlag, describe, string(CaptureTheFlag this))
+{
+    TC(CaptureTheFlag, this);
+	PAGE_TEXT_INIT();
+	PAR(_("%s is a common team-based gametype where the object is to steal an enemy team's flag and bring it back to your own to capture it. "
+	      "A flag can only be captured if your own flag is also home in its base, so it's important to collect your flag after it's dropped."), COLORED_NAME(this));
+	PAR(_("The game is won once a team reaches a certain number of \"caps\" (captures), or has a considerable lead over the other team."));
+	PAR(_("If a flag is dropped into the void or a death trap it will be immediately returned to its base, or otherwise it will sit idle for a while before automatically returning itself. "
+	      "If all flags are held by an enemy, after some time period a \"stalemate\" will initiate and all flag carriers (\"fc\"s) will be exposed on the radar and with waypoints."));
+	PAR(_("Some %s maps have more than two bases on it, but generally this is a 2-team gametype."), COLORED_NAME(this));
+	PAR(_("This gametype rewards crafty movement, since the more difficult it is for enemies to attack you, the more likely you are to escape from their base with their flag. "
+	      "Importantly, it also rewards base defense since if your enemies can't take your flag, they can never capture. "
+	      "Lastly, good team communication is important, especially to let them know if you see the enemy flag carrier."));
+	return PAGE_TEXT;
+}
+#endif

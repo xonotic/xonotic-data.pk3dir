@@ -558,7 +558,7 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	if (KEYBIND_IS_OVERRIDER(func))
 	{
 		n = tokenizebyseparator(func, ";");
-		if(n <= 1)
+		if (n <= 1)
 			return;
 		func = argv(1);
 	}
@@ -570,20 +570,20 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	}
 	else
 	{
-		bool joy_active = cvar("joy_active");
+		string key;
+		float k;
+		const bool joy_active = cvar("joy_active");
 		n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
 		for (int j = 0; j < n; ++j)
 		{
-			float k = stof(argv(j));
-			if (k != -1)
-			{
-				string key = keynumtostring(k);
-				if (!joy_active && startsWith(key, "JOY"))
-					continue;
-				if (s != "")
-					s = strcat(s, ", ");
-				s = strcat(s, translate_key(key));
-			}
+			k = stof(argv(j));
+			if (k == -1)
+				continue;
+			key = keynumtostring(k);
+			if (!joy_active && startsWith(key, "JOY"))
+				continue;
+
+			s = cons_mid(s, ", ", translate_key(key));
 		}
 	}
 	s = draw_TextShortenToWidth(s, me.columnKeysSize, 0, me.realFontSize);

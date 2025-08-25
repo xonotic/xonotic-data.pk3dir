@@ -778,15 +778,18 @@ void GameTypeVote_ReadOption(int i)
 	}
 
 	string mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, mv_entries[i]);
+	string def_menu_skin = cvar_defstring("menu_skin");
+	if (def_menu_skin == "")
+		def_menu_skin = "luma";
 	if (precache_pic(mv_picpath) == "")
 	{
-		mv_picpath = strcat("gfx/menu/default/gametype_", mv_entries[i]);
+		mv_picpath = strcat("gfx/menu/%s/gametype_", def_menu_skin, mv_entries[i]);
 		if (precache_pic(mv_picpath) == "")
 		{
 			mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, basetype);
 			if (precache_pic(mv_picpath) == "")
 			{
-				mv_picpath = strcat("gfx/menu/default/gametype_", basetype);
+				mv_picpath = sprintf("gfx/menu/%s/gametype_%s", def_menu_skin, basetype);
 			}
 		}
 	}

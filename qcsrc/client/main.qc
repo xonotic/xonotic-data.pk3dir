@@ -1467,45 +1467,38 @@ NET_HANDLE(TE_CSQC_SERVERWELCOME, bool isNew)
 
 string _getcommandkey(string cmd_name, string command, bool forcename)
 {
-	string keys;
-	float n, j, k, l = 0;
-
 	if (!autocvar_hud_showbinds)
 		return cmd_name;
 
-	keys = db_get(binddb, command);
+	string key, keys = db_get(binddb, command);
+	int n, j, found = 0;
+	float k;
+
 	if (keys == "")
 	{
-		bool joy_active = cvar("joy_active");
+		const bool joy_active = cvar("joy_active");
 		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
-		for(j = 0; j < n; ++j)
+		for (j = 0; j < n; ++j)
 		{
 			k = stof(argv(j));
-			if(k != -1)
-			{
-				string key = keynumtostring(k);
-				if(!joy_active && substring(key, 0, 3) == "JOY")
-					continue;
+			if (k == -1)
+				continue;
+			key = keynumtostring(k);
+			if (!joy_active && startsWith(key, "JOY"))
+				continue;
 
-				key = translate_key(key);
+			keys = cons_mid(keys, ", ", translate_key(key));
 
-				if (keys == "")
-					keys = key;
-				else
-					keys = strcat(keys, ", ", key);
-
-				++l;
-				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit <= l)
-					break;
-			}
-
+			if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit <= ++found)
+				break;
 		}
 		if (keys == "")
 			keys = "NO_KEY";
 		db_put(binddb, command, keys);
 	}
 
-	if (keys == "NO_KEY") {
+	if (keys == "NO_KEY")
+	{
 		if (autocvar_hud_showbinds > 1)
 			return sprintf(_("%s (not bound)"), cmd_name);
 		else
@@ -1513,8 +1506,7 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 	}
 	else if (autocvar_hud_showbinds > 1 || forcename)
 		return sprintf("%s (%s)", cmd_name, keys);
-	else
-		return keys;
+	return keys;
 }
 
 /** engine callback */
