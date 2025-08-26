@@ -971,7 +971,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	RadiusDamage_running = 0;
 
 	if(!DEATH_ISSPECIAL(deathtype))
-		accuracy_add(attacker, DEATH_WEAPONOF(deathtype), 0, min(max(coredamage, edgedamage), stat_damagedone));
+		accuracy_add(attacker, DEATH_WEAPONOF(deathtype), 0, min(max(coredamage, edgedamage), stat_damagedone), 0); // add to hit
 
 	return total_damage_to_creatures;
 }
@@ -999,8 +999,10 @@ bool Heal(entity targ, entity inflictor, float amount, float limit)
 
 float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 {
-	float dps;
 	float maxtime, mintime, maxdamage, mindamage, maxdps, mindps, totaldamage, totaltime;
+
+	if (d <= 0)
+		return -1;
 
 	if(IS_PLAYER(e))
 	{
@@ -1009,7 +1011,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 	}
 
 	t = max(t, 0.1);
-	dps = d / t;
+	float dps = d / t;
 	if(StatusEffects_active(STATUSEFFECT_Burning, e))
 	{
 		float fireendtime = StatusEffects_gettime(STATUSEFFECT_Burning, e);
@@ -1088,7 +1090,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 				}
 			}
 			if(accuracy_isgooddamage(o, e))
-				accuracy_add(o, DEATH_WEAPONOF(dt), 0, max(0, totaldamage - mindamage));
+				accuracy_add(o, DEATH_WEAPONOF(dt), 0, max(0, totaldamage - mindamage), 0); // add to hit
 			return max(0, totaldamage - mindamage); // can never be negative, but to make sure
 		}
 		else
@@ -1102,7 +1104,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		e.fire_owner = o;
 		e.fire_hitsound = false;
 		if(accuracy_isgooddamage(o, e))
-			accuracy_add(o, DEATH_WEAPONOF(dt), 0, d);
+			accuracy_add(o, DEATH_WEAPONOF(dt), 0, d, 0); // add to hit
 		return d;
 	}
 }

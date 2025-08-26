@@ -38,6 +38,9 @@ void DynamicHandicap_UpdateHandicap()
 		total_score += PlayerScore_Get(it, SP_SCORE);
 		++totalplayers;
 	});
+	if (totalplayers == 0)
+		return;
+
 	float mean_score = total_score / totalplayers;
 	FOREACH_CLIENT(true,
 	{
@@ -80,7 +83,7 @@ float DynamicHandicap_ClampHandicap(float handicap)
 
 //============================= Hooks ========================================
 
-REGISTER_MUTATOR(dynamic_handicap, autocvar_g_dynamic_handicap);
+REGISTER_MUTATOR(dynamic_handicap, autocvar_g_dynamic_handicap && !HANDICAP_DISABLED());
 
 MUTATOR_HOOKFUNCTION(dynamic_handicap, BuildMutatorsString)
 {

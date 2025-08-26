@@ -1,4 +1,5 @@
 #include "gamelog.qh"
+#include <common/mutators/base.qh>
 #include <server/intermission.qh>    // GetGametype(), GetMapname()
 #include <server/weapons/tracing.qh> // autocvar_g_norecoil
 #include <server/world.qh>           // matchid

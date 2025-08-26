@@ -298,7 +298,7 @@ float PlayerScore_Clear(entity player)
 		if(sk.(scores(it)) != 0)
 			if(scores_label(it) != "")
 				sk.SendFlags |= BIT(i % 16);
-		if(i != SP_ELO.m_id)
+		if(i != SP_SKILL.m_id)
 			sk.(scores(it)) = 0;
 	});
 
@@ -316,7 +316,7 @@ void Score_ClearAll()
 			if(sk.(scores(it)) != 0)
 				if(scores_label(it) != "")
 					sk.SendFlags |= BIT(i % 16);
-			if(i != SP_ELO.m_id)
+			if(i != SP_SKILL.m_id)
 				sk.(scores(it)) = 0;
 		});
 	});

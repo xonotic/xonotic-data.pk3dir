@@ -52,6 +52,7 @@ CLASS(Crylink, Weapon)
 		P(class, prefix, middle_lifetime, float, BOTH) \
 		P(class, prefix, other_fadetime, float, BOTH) \
 		P(class, prefix, other_lifetime, float, BOTH) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, radius, float, BOTH) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload_ammo, float, NONE) \

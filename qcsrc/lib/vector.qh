@@ -209,4 +209,11 @@ vector RoundPerfectVector(vector v)
 	return v;
 }
 
+ERASEABLE
+vector vrint(vector v)
+{
+	v.x = rint(v.x); v.y = rint(v.y); v.z = rint(v.z);
+	return v;
+}
+
 #endif

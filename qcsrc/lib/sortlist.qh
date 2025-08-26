@@ -11,10 +11,11 @@ entity Sort_Spawn();
  * @param a FIRST entity
  * @param b entity after a
  */
-#define SORT_SWAP(a, b)                                  \
-	b.sort_prev = a.sort_prev;                          \
-	a.sort_next = b.sort_next;                          \
-	if (b.sort_next) b.sort_next.sort_prev = a;          \
-	if (a.sort_prev) a.sort_prev.sort_next = b;          \
-	a.sort_prev = b;                                    \
-	b.sort_next = a
+#define SORT_SWAP(a, b) MACRO_BEGIN \
+	b.sort_prev = a.sort_prev; \
+	a.sort_next = b.sort_next; \
+	if (b.sort_next) b.sort_next.sort_prev = a; \
+	if (a.sort_prev) a.sort_prev.sort_next = b; \
+	a.sort_prev = b; \
+	b.sort_next = a; \
+MACRO_END

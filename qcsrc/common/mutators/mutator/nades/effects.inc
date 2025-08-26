@@ -1,6 +1,7 @@
 #include <common/effects/all.qh>
 
-// TODO: remove the effect definitions from effectinfo.txt post-release (xonotic-v0.9.0)
+// XONRELEASE TODO v0.9.0 post-release: remove the effect definitions from effectinfo.txt
+// XONRELEASE TODO v0.9.0 post-release: rename brown to navy
 //EFFECT(0, NADE_EXPLODE_RED,         "nade_red_explode")
 //EFFECT(0, NADE_EXPLODE_BLUE,        "nade_blue_explode")
 //EFFECT(0, NADE_EXPLODE_YELLOW,      "nade_yellow_explode")

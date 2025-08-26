@@ -624,7 +624,8 @@ void HUD_Crosshair(entity this)
 #define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) \
 			CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
 
-			if(time < wcross_name_changedonetime && wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
+			if(autocvar_crosshair_effect_time > 0 && time < wcross_name_changedonetime
+				&& wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
 			{
 				f = (wcross_name_changedonetime - time) / (wcross_name_changedonetime - wcross_name_changestarttime);
 				wcross_size = draw_getimagesize(wcross_name_goal_prev_prev) * wcross_scale;

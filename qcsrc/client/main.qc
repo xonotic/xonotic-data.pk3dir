@@ -109,6 +109,10 @@ void CSQC_Init(float apilevel, string enginename, float engineversion)
 		cvar_settemp("_scoreboard_team_selection_available", "1");
 	cvar_set("_scoreboard_team_selection", "0"); // in case it has been left set to 1
 
+	// XONRELEASE: default values for <= 0.8.6 can be removed after next release
+	registercvar("hud_panel_checkpoints_pos", "0.700000 0.190000");
+	registercvar("hud_panel_checkpoints_size", "0.250000 0.170000");
+
 	gametype = NULL;
 
 	postinit = false;

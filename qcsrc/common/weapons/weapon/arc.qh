@@ -83,6 +83,7 @@ CLASS(Arc, Weapon)
 		P(class, prefix, cooldown_release, float, NONE) /* delay weapon re-use when releasing button */ \
 		P(class, prefix, overheat_max, float, NONE) /* maximum heat before jamming */ \
 		P(class, prefix, overheat_min, float, NONE) /* minimum heat to wait for cooldown */ \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
 		P(class, prefix, weaponreplace, string, NONE) \

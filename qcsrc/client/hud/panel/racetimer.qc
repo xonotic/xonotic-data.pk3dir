@@ -9,6 +9,7 @@ float racetimer_lastcheckpoint;
 string racetimer_checkpoint_comparison;
 string racetimer_checkpoint_time;
 bool racetimer_have_stored_splits;
+float racetimer_have_stored_splits_player;
 
 // Race timer (#8)
 
@@ -107,13 +108,15 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(theirname, col, lapstr)));
 }
 
-void ClearRaceSplits() {
+void ClearCheckpointSplits(bool quiet)
+{
 	bool once = true;
-	racetimer_lastcheckpoint = 0;
-	for (int i = 0; i <= 255; ++i)
+	bool changed_player = (racetimer_have_stored_splits_player != (current_player + 1));
+	for (int i = 0; i < 256; ++i)
 	{
 		if(race_checkpoint_splits[i]
-		&& autocvar_cl_race_checkpoint_splits_console)
+		&& autocvar_cl_race_checkpoint_splits_console
+		&& !quiet)
 		{
 			if(once)
 			{
@@ -123,23 +126,27 @@ void ClearRaceSplits() {
 			LOG_HELP(race_checkpoint_splits[i]);
 		}
 		strfree(race_checkpoint_splits[i]);
+		if(changed_player) race_checkpoint_splits_speed[i] = 0;
 	}
 	racetimer_have_stored_splits = false;
+	racetimer_lastcheckpoint = 0;
+	if(changed_player) racetimer_have_stored_splits_player = 0;
 }
 
-void StoreRaceSplits(float race_checkpoint, string forcetime, string s) {
+void StoreCheckpointSplits(float race_checkpoint, string forcetime, string s)
+{
 	// store checkpoint splits string for later printing
-	if (!entcs_IsSpectating(player_localnum))
-	{
-		// 0 or 255 go to 255 as finish, strcpy does the free if needed
-		strcpy(race_checkpoint_splits[race_checkpoint ? race_checkpoint : 255], (forcetime != "") ? sprintf("%s %s", forcetime, s) : s);
-	}
+	if (racetimer_have_stored_splits && racetimer_have_stored_splits_player != (current_player + 1)) // we changed player
+		ClearCheckpointSplits(true);
 
+	// 0 or 255 go to 255 as finish, strcpy does the free if needed
+	strcpy(race_checkpoint_splits[race_checkpoint ? race_checkpoint : 255], (forcetime != "") ? sprintf("%s %s", forcetime, s) : s);
 	// cache
 	racetimer_lastcheckpoint = race_checkpoint;
 	strcpy(racetimer_checkpoint_comparison, s);
 	strcpy(racetimer_checkpoint_time, forcetime);
 	racetimer_have_stored_splits = true;
+	racetimer_have_stored_splits_player = (current_player + 1);
 }
 
 void HUD_RaceTimer ()
@@ -197,7 +204,9 @@ void HUD_RaceTimer ()
 		str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '1 1 0' * 0.6 * mySize.y));
 		drawstring(str_pos, s, '1 1 0' * 0.6 * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
-		s = strcat("^1", sprintf(_("Checkpoint %d"), 1), " (+15.42)");
+		float speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
+		string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
+		s = strcat("^1", sprintf(_("Checkpoint %d"), 1), " (+15.42)", autocvar_cl_race_cptimes_showspeed ? sprintf(" ^7%d%s %s(%+d%s)", 345 * speed_conversion_factor, units_text, rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_color), 123 * speed_conversion_factor, units_text) : "");
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 		s = sprintf(_("PENALTY: %.1f (%s)"), 2, _("missing a checkpoint"));
@@ -214,7 +223,8 @@ void HUD_RaceTimer ()
 		{
 			if(race_checkpoint != 254 && race_time != 0)
 			{
-				if (race_checkpoint == racetimer_lastcheckpoint)
+				if (race_checkpoint == racetimer_lastcheckpoint // same cp *and* player
+				    && racetimer_have_stored_splits_player == (current_player + 1))
 				{
 					// use cached strings
 					s = racetimer_checkpoint_comparison;
@@ -222,6 +232,9 @@ void HUD_RaceTimer ()
 				}
 				else
 				{
+					if (racetimer_have_stored_splits && racetimer_have_stored_splits_player != (current_player + 1)) // we changed player
+						ClearCheckpointSplits(true);
+
 					// build checkpoint split strings
 					if(race_time && race_previousbesttime)
 						s = MakeRaceString(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, ((race_mypreviousbesttime) ? TIME_DECODE(race_time) - TIME_DECODE(race_mypreviousbesttime) : 0), 0, race_previousbestname);
@@ -250,19 +263,18 @@ void HUD_RaceTimer ()
 						{
 							race_checkpoint_splits_speed[race_checkpoint] = speed;
 						}
-
 					}
 					if(race_time)
 						forcetime = TIME_ENCODED_TOSTRING(race_time, false);
 
-					StoreRaceSplits(race_checkpoint, forcetime, s);
+					StoreCheckpointSplits(race_checkpoint, forcetime, s);
 				}
 			}
 			else
 			{
 				// clean cp splits on start
 				if(racetimer_have_stored_splits && race_time == 0)
-					ClearRaceSplits();
+					ClearCheckpointSplits(false);
 			}
 		}
 		else
@@ -320,7 +332,7 @@ void HUD_RaceTimer ()
 	else
 	{
 		if(racetimer_have_stored_splits && (race_time == 0 || time < STAT(GAMESTARTTIME)))
-			ClearRaceSplits();
+			ClearCheckpointSplits(false);
 
 		if(race_mycheckpointtime)
 		{

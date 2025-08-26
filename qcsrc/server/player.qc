@@ -437,7 +437,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		{
 			// accumulate damage, it will be logged later in this frame
 			if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this) && deathtype != DEATH_KILL.m_id)
+			{
+				if (accuracy_isgooddamage(attacker, this))
+					accuracy_add(attacker, awep, 0, 0, realdmg); // add to real
 				attacker.score_frame_dmg += realdmg;
+			}
 			if (IS_PLAYER(this))
 				this.score_frame_dmgtaken += realdmg;
 		}
@@ -447,10 +451,10 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		bool defer_ClientKill_Now_TeamChange = false;
 
-		if(this.alivetime)
+		if(this.alivetime_start)
 		{
-			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
-			this.alivetime = 0;
+			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, max(0, time - this.alivetime_start));
+			this.alivetime_start = 0;
 		}
 
 		if(valid_damage_for_weaponstats)

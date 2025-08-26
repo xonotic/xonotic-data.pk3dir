@@ -1024,7 +1024,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	else
 	{
 		string icon = strcat("icon_mod_", modname);
-		if(draw_PictureSize(icon) == '0 0 0')
+		if(draw_PreloadPicture(icon) == "")
 			icon = "icon_mod_";
 
 		// In mods, pure_available not being present indicates

@@ -1,6 +1,4 @@
 #include "infomessages.qh"
-#include "racetimer.qh" // for race_checkpoint_splits
-#include <common/gamemodes/gamemode/race/race.qh> // for ISGAMETYPE(RACE)
 
 #include <client/draw.qh>
 #include <common/ent_cs.qh>
@@ -229,37 +227,6 @@ void HUD_InfoMessages()
 					s = strcat("^7", entcs_GetName(slot));
 				InfoMessage(s);
 			}
-		}
-		if(autocvar_cl_race_checkpoint_splits_hud && !spectatee_status) {
-			int lines[6];
-			int ln = 5;
-			// show up to race_nextcheckpoint (not including) or everything
-			// if you are before start (0 or 254)
-			// (except race_laptime != 0 for race, means next is
-			// start+finish so don't show previous lap finish)
-			int i;
-			if (race_checkpoint != 0 && race_checkpoint != 254)
-			{ // middle of run/race
-				i = race_checkpoint;
-			}
-			else if (ISGAMETYPE(RACE) && race_nextcheckpoint == 0)
-			{ // before start, but on race, so don't keep old finish visible
-				i = 253;
-			}
-			else
-			{ // before start, not on race (cts), keep old run cps visible
-				i = 255;
-			}
-			for (; ln >= 0 && i >= 0; --i)
-			{
-				if (race_checkpoint_splits[i])
-				{
-					lines[ln] = i;
-					--ln;
-				}
-			}
-			for (int j = 0; j < 6; ++j)
-				InfoMessage(race_checkpoint_splits[lines[j]]);
 		}
 	}
 	else

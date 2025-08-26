@@ -52,6 +52,7 @@ CLASS(Shotgun, Weapon)
 		P(class, prefix, melee_swing_up, float, SEC) \
 		P(class, prefix, melee_time, float, SEC) \
 		P(class, prefix, melee_traces, float, SEC) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
@@ -59,6 +60,7 @@ CLASS(Shotgun, Weapon)
 		P(class, prefix, solidpenetration, float, PRI) \
 		P(class, prefix, spread, float, PRI) \
 		P(class, prefix, spread_pattern, float, PRI) \
+		P(class, prefix, spread_pattern_bias, float, PRI) \
 		P(class, prefix, spread_pattern_scale, float, PRI) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \

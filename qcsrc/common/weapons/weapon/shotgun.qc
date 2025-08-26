@@ -9,7 +9,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity,
                       float isprimary, float ammocount, float damage,
                       float falloff_halflife, float falloff_mindist, float falloff_maxdist,
                       float bullets, float spread,
-                      float spread_pattern, float spread_pattern_scale,
+                      float spread_pattern, float spread_pattern_scale, float spread_pattern_bias,
                       float solidpenetration,
                       float force, float falloff_forcehalflife,
                       entity bullet_trail_effect)
@@ -32,10 +32,10 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity,
 		up = v_up;
 
 		float fixed_spread_factor = (spread * autocvar_g_weaponspreadfactor) / spread_pattern_scale;
-
+		spread_pattern_bias = bound(0, spread_pattern_bias, 1);
 		for(int sc = 0; sc < bullets; ++sc)
 		{
-			vector s = W_CalculateSpreadPattern(spread_pattern, sc, bullets);
+			vector s = W_CalculateSpreadPattern(spread_pattern, spread_pattern_bias, sc, bullets);
 			s = s * fixed_spread_factor;
 			fireBullet_falloff(actor, weaponentity,
 			                   w_shotorg, w_shotdir + right * s.y + up * s.z,
@@ -136,7 +136,8 @@ void W_Shotgun_Melee_Think(entity this)
 				this.realowner.origin + this.realowner.view_ofs,
 				v_forward * WEP_CVAR_SEC(WEP_SHOTGUN, force));
 
-			if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_SHOTGUN, 0, swing_damage); }
+			if(accuracy_isgooddamage(this.realowner, target_victim))
+				accuracy_add(this.realowner, WEP_SHOTGUN, 0, swing_damage, 0); // add to hit
 
 			// draw large red flash for debugging
 		#ifdef SHOTGUN_MELEEDEBUG
@@ -205,6 +206,7 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity
 		WEP_CVAR_PRI(WEP_SHOTGUN, spread),
 		WEP_CVAR_PRI(WEP_SHOTGUN, spread_pattern),
 		WEP_CVAR_PRI(WEP_SHOTGUN, spread_pattern_scale),
+		WEP_CVAR_PRI(WEP_SHOTGUN, spread_pattern_bias),
 		WEP_CVAR_PRI(WEP_SHOTGUN, solidpenetration),
 		WEP_CVAR_PRI(WEP_SHOTGUN, force),
 		WEP_CVAR_PRI(WEP_SHOTGUN, damagefalloff_forcehalflife),
@@ -231,6 +233,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 		WEP_CVAR_PRI(WEP_SHOTGUN, spread),
 		WEP_CVAR_PRI(WEP_SHOTGUN, spread_pattern),
 		WEP_CVAR_PRI(WEP_SHOTGUN, spread_pattern_scale),
+		WEP_CVAR_PRI(WEP_SHOTGUN, spread_pattern_bias),
 		WEP_CVAR_PRI(WEP_SHOTGUN, solidpenetration),
 		WEP_CVAR_PRI(WEP_SHOTGUN, force),
 		WEP_CVAR_PRI(WEP_SHOTGUN, damagefalloff_forcehalflife),
@@ -278,6 +281,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 						WEP_CVAR_PRI(WEP_SHOTGUN, spread),
 						WEP_CVAR_PRI(WEP_SHOTGUN, spread_pattern),
 						WEP_CVAR_PRI(WEP_SHOTGUN, spread_pattern_scale),
+						WEP_CVAR_PRI(WEP_SHOTGUN, spread_pattern_bias),
 						WEP_CVAR_PRI(WEP_SHOTGUN, solidpenetration),
 						WEP_CVAR_PRI(WEP_SHOTGUN, force),
 						WEP_CVAR_PRI(WEP_SHOTGUN, damagefalloff_forcehalflife),
@@ -304,6 +308,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 						WEP_CVAR_PRI(WEP_SHOTGUN, spread),
 						WEP_CVAR_PRI(WEP_SHOTGUN, spread_pattern),
 						WEP_CVAR_PRI(WEP_SHOTGUN, spread_pattern_scale),
+						WEP_CVAR_PRI(WEP_SHOTGUN, spread_pattern_bias),
 						WEP_CVAR_PRI(WEP_SHOTGUN, solidpenetration),
 						WEP_CVAR_PRI(WEP_SHOTGUN, force),
 						WEP_CVAR_PRI(WEP_SHOTGUN, damagefalloff_forcehalflife),

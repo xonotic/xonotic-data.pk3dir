@@ -62,8 +62,7 @@ bool kh_no_radar_circles;
 //     bits  5- 9: team of key 2, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 10-14: team of key 3, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 15-19: team of key 4, or 0 for no such key, or 30 for dropped, or 31 for self
-.float siren_time;  //  time delay the siren
-//.float stuff_time;  //  time delay to stuffcmd a cvar
+.float siren_time;  // time delay the siren
 
 int kh_Team_ByID(int t)
 {
@@ -180,6 +179,8 @@ void kh_Controller_Think(entity this)  // called a lot
 
 // frags f: take from cvar * f
 // frags 0: no frags
+// field where the decimal part of SCORE is accumulated (shared with other gamemodes)
+.float float2int_decimal_fld;
 void kh_Scores_Event(entity player, entity key, string what, float frags_player, float frags_owner)  // update the score when a key is captured
 {
 	string s;
@@ -187,10 +188,10 @@ void kh_Scores_Event(entity player, entity key, string what, float frags_player,
 		return;
 
 	if(frags_player)
-		GameRules_scoring_add_team(player, SCORE, frags_player);
+		GameRules_scoring_add_team_float2int(player, SCORE, frags_player, float2int_decimal_fld, 1);
 
 	if(key && key.owner && frags_owner)
-		GameRules_scoring_add_team(key.owner, SCORE, frags_owner);
+		GameRules_scoring_add_team_float2int(key.owner, SCORE, frags_owner, float2int_decimal_fld, 1);
 
 	if(!autocvar_sv_eventlog)  //output extra info to the console or text file
 		return;
