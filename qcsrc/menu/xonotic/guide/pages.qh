@@ -34,3 +34,7 @@ REGISTER_REGISTRY(IntroductionGuidePages)
 REGISTRY(MovementGuidePages, 16)
 #define REGISTER_MOVEMENT_PAGE(id, name) REGISTER(MovementGuidePages, GUIDE_MOVEMENT_PAGE, id, m_id, NEW(GuidePage, name))
 REGISTER_REGISTRY(MovementGuidePages)
+
+REGISTRY(ModsGuidePages, 8)
+#define REGISTER_MODS_PAGE(id, name) REGISTER(ModsGuidePages, GUIDE_MODS_PAGE, id, m_id, NEW(GuidePage, name))
+REGISTER_REGISTRY(ModsGuidePages)
