@@ -869,6 +869,33 @@ string W_Guide_Keybinds(Weapon wep)
 	return sprintf(_("You have bound this weapon to: %s."), strcat(keys, "^7"));
 }
 
+
+#define COLORED_DAMAGE(dmg) strcat("^9", dmg, "^7")
+
+#define DPS_ONE(mode) sprintf(_("(DPS: %.2f)"), mode##rft <= 0 ? 1337 : stof(mode##dmg_s) / mode##rft)
+#define DPS_MUL(mode) sprintf(_("(DPS: %.2f)"), mode##rft <= 0 ? 1337 : stof(mode##dmg_s) / mode##rft * stof(mode##shots_s))
+
+#define pri_str _("primary")
+#define sec_str _("secondary")
+#define _IT_DOES_MSG()         strcat("\n* ", sprintf(_("It does %s damage"), COLORED_DAMAGE(dmg_s)), " ", DPS_ONE())
+#define _IT_SHOOTS_MSG()       strcat("\n* ", sprintf(_("It shoots %s shots doing %s damage each"), shots_s, COLORED_DAMAGE(dmg_s)), " ", DPS_MUL())
+#define _DOES_MSG(mode)        strcat("\n* ", sprintf(_("The %s does %s damage"), mode##str, COLORED_DAMAGE(mode##dmg_s)), " ", DPS_ONE(mode))
+#define _DOES_PERSEC_MSG(mode) strcat("\n* ", sprintf(_("The %s does %s damage per second"), mode##str, COLORED_DAMAGE(mode##dmg_s)))
+#define _SHOOTS_MSG(mode)      strcat("\n* ", sprintf(_("The %s shoots %s shots doing %s damage each"),    mode##str, mode##shots_s, COLORED_DAMAGE(mode##dmg_s)), " ", DPS_MUL(mode))
+#define _CAN_SHOOT_MSG(mode)   strcat("\n* ", sprintf(_("The %s can shoot %s shots doing %s damage each"), mode##str, mode##shots_s, COLORED_DAMAGE(mode##dmg_s)), " ", DPS_MUL(mode))
+
+// We could use the *_MSG macros directly but we use these because they are more intuitive and readable
+#define IT_DOES()                   _IT_DOES_MSG()
+#define IT_SHOOTS()                 _IT_SHOOTS_MSG()
+#define THE_PRIMARY_DOES()          _DOES_MSG(pri_)
+#define THE_PRIMARY_SHOOTS()        _SHOOTS_MSG(pri_)
+#define THE_PRIMARY_CAN_SHOOT()     _CAN_SHOOT_MSG(pri_)
+#define THE_PRIMARY_DOES_PERSEC()   _DOES_PERSEC_MSG(pri_)
+#define THE_SECONDARY_DOES()        _DOES_MSG(sec_)
+#define THE_SECONDARY_SHOOTS()      _SHOOTS_MSG(sec_)
+#define THE_SECONDARY_CAN_SHOOT()   _CAN_SHOOT_MSG(sec_)
+#define THE_SECONDARY_DOES_PERSEC() _DOES_PERSEC_MSG(sec_)
+
 // One function for each translatable string
 
 string W_Guide_DPS_onlyOne_unnamed(string name)
@@ -877,7 +904,8 @@ string W_Guide_DPS_onlyOne_unnamed(string name)
 	const string dmg_s =      cvar_defstring(strcat(wepbal_s, "_damage"));
 	const float rft    = stof(cvar_defstring(strcat(wepbal_s, "_refire")));
 	return strcat(_("Default damage stats:"),
-		"\n* ", sprintf(_("It does ^9%s^7 damage (DPS: %.2f)"), dmg_s, rft <= 0 ? 1337 : stof(dmg_s) / rft));
+		IT_DOES()
+	);
 }
 string W_Guide_DPS_onlyOne(string name, string fire)
 {
@@ -893,10 +921,8 @@ string W_Guide_DPS(string name, string pri, string sec)
 	const string sec_dmg_s =      cvar_defstring(strcat(wepbal_s, sec, "_damage"));
 	const float sec_rft    = stof(cvar_defstring(strcat(wepbal_s, sec, "_refire")));
 	return strcat(_("Default damage stats:"),
-		"\n* ", sprintf(_("The primary does ^9%s^7 damage (DPS: %.2f)"),
-			pri_dmg_s, (pri_rft <= 0 ? 1337 : stof(pri_dmg_s) / pri_rft)),
-		"\n* ", sprintf(_("The secondary does ^9%s^7 damage (DPS: %.2f)"),
-			sec_dmg_s, (sec_rft <= 0 ? 1337 : stof(sec_dmg_s) / sec_rft))
+		THE_PRIMARY_DOES(),
+		THE_SECONDARY_DOES()
 	);
 }
 string W_Guide_DPS_bothMultishot(string name, string pri, string sec)
@@ -909,10 +935,8 @@ string W_Guide_DPS_bothMultishot(string name, string pri, string sec)
 	const float sec_rft      = stof(cvar_defstring(strcat(wepbal_s, sec, "_refire")));
 	const string sec_shots_s =      cvar_defstring(strcat(wepbal_s, sec, "_shots"));
 	return strcat(_("Default damage stats:"),
-		"\n* ", sprintf(_("The primary shoots %s shots doing ^9%s^7 damage each (DPS: %.2f)"),
-			pri_shots_s, pri_dmg_s, (pri_rft <= 0 ? 1337 : stof(pri_dmg_s) / pri_rft * stof(pri_shots_s))),
-		"\n* ", sprintf(_("The secondary shoots %s shots doing ^9%s^7 damage each (DPS: %.2f)"),
-			sec_shots_s, sec_dmg_s, (sec_rft <= 0 ? 1337 : stof(sec_dmg_s) / sec_rft * stof(sec_shots_s)))
+		THE_PRIMARY_SHOOTS(),
+		THE_SECONDARY_SHOOTS()
 	);
 }
 string W_Guide_DPS_secondaryMultishot(string name, string pri, string sec, string shots, string refire2)
@@ -929,10 +953,8 @@ string W_Guide_DPS_secondaryMultishot(string name, string pri, string sec, strin
 	if (refire2 != "")
 		sec_rft = (num_shots - 1) * sec_rft + stof(cvar_defstring(strcat(wepbal_s, refire2)));
 	return strcat(_("Default damage stats:"),
-		"\n* ", sprintf(_("The primary does ^9%s^7 damage (DPS: %.2f)"),
-			             pri_dmg_s, (pri_rft <= 0 ? 1337 : stof(pri_dmg_s) / pri_rft)),
-		"\n* ", sprintf(_("The secondary shoots %s shots doing ^9%s^7 damage each (DPS: %.2f)"),
-			sec_shots_s, sec_dmg_s, (sec_rft <= 0 ? 1337 : stof(sec_dmg_s) / sec_rft * num_shots))
+		THE_PRIMARY_DOES(),
+		THE_SECONDARY_SHOOTS()
 	);
 }
 string W_Guide_DPS_primaryMultishot(string name, string pri, string sec, string shots, string refire2)
@@ -947,10 +969,8 @@ string W_Guide_DPS_primaryMultishot(string name, string pri, string sec, string 
 	if (refire2 != "")
 		pri_rft = (num_shots - 1) * pri_rft + stof(cvar_defstring(strcat(wepbal_s, refire2)));
 	return strcat(_("Default damage stats:"),
-		"\n* ", sprintf(_("The primary shoots %s shots doing ^9%s^7 damage each (DPS: %.2f)"),
-			pri_shots_s, pri_dmg_s, (pri_rft <= 0 ? 1337 : stof(pri_dmg_s) / pri_rft * num_shots)),
-		"\n* ", sprintf(_("The secondary does ^9%s^7 damage (DPS: %.2f)"),
-			             sec_dmg_s, (sec_rft <= 0 ? 1337 : stof(sec_dmg_s) / sec_rft))
+		THE_PRIMARY_SHOOTS(),
+		THE_SECONDARY_DOES()
 	);
 }
 string W_Guide_DPS_onlyOneMultishot(string name, string fire, string shots, string refire2)
@@ -963,8 +983,7 @@ string W_Guide_DPS_onlyOneMultishot(string name, string fire, string shots, stri
 	if (refire2 != "")
 		rft = (num_shots - 1) * rft + stof(cvar_defstring(strcat(wepbal_s, refire2)));
 	return strcat(_("Default damage stats:"),
-		"\n* ", sprintf(_("It shoots %s shots doing ^9%s^7 damage each (DPS: %.2f)"),
-			shots_s, dmg_s, (rft <= 0 ? 1337 : stof(dmg_s) / rft * num_shots))
+		IT_SHOOTS()
 	);
 }
 string W_Guide_DPS_secondaryMultishotWithCombo(string name, string pri, string sec, string shots, string refire2, string combo)
@@ -985,28 +1004,23 @@ string W_Guide_DPS_secondaryMultishotWithCombo(string name, string pri, string s
 		combo_t = max(combo_t, num_shots * sec_rft + sec_rft2);
 		sec_rft = (num_shots - 1) * sec_rft + sec_rft2;
 	}
-	const float pri_dmg = stof(pri_dmg_s);
-	const float sec_dmg = stof(sec_dmg_s);
+	const string DPS_combo = sprintf(_("(total DPS: %.2f)"),
+		combo_t <= 0 ? 1337 : (stof(pri_dmg_s) + stof(sec_dmg_s) * num_shots + stof(cmb_dmg_s)) / combo_t);
 	return strcat(_("Default damage stats:"),
-		"\n* ", sprintf(_("The primary does ^9%s^7 damage (DPS: %.2f)"),
-			             pri_dmg_s, (pri_rft <= 0 ? 1337 : pri_dmg / pri_rft)),
-		"\n* ", sprintf(_("The secondary can shoot %s shots doing ^9%s^7 damage each (DPS: %.2f)"),
-			sec_shots_s, sec_dmg_s, (sec_rft <= 0 ? 1337 : sec_dmg / sec_rft * num_shots)),
-		"\n* ", sprintf(_("The combo adds an extra ^9%s^7 damage (total DPS: %.2f)"),
-			             cmb_dmg_s, (combo_t <= 0 ? 1337 : (pri_dmg + sec_dmg * num_shots + stof(cmb_dmg_s)) / combo_t))
+		THE_PRIMARY_DOES(),
+		THE_SECONDARY_CAN_SHOOT(),
+		strcat("\n* ", sprintf(_("The combo adds an extra %s damage"), COLORED_DAMAGE(cmb_dmg_s)), " ", DPS_combo)
 	);
 }
 string W_Guide_DPS_primaryDPS(string name, string pri, string sec)
 {
 	const string wepbal_s = strcat("g_balance_", name, "_");
-	const string pri_dps_s =      cvar_defstring(strcat(wepbal_s, pri, "_damage"));
+	const string pri_dmg_s =      cvar_defstring(strcat(wepbal_s, pri, "_damage")); // actually damage per second
 	const string sec_dmg_s =      cvar_defstring(strcat(wepbal_s, sec, "_damage"));
 	const float sec_rft    = stof(cvar_defstring(strcat(wepbal_s, sec, "_refire")));
 	return strcat(_("Default damage stats:"),
-		"\n* ", sprintf(_("The primary does ^9%s^7 damage per second"),
-			pri_dps_s),
-		"\n* ", sprintf(_("The secondary does ^9%s^7 damage (DPS: %.2f)"),
-			sec_dmg_s, (sec_rft <= 0 ? 1337 : stof(sec_dmg_s) / sec_rft))
+		THE_PRIMARY_DOES_PERSEC(),
+		THE_SECONDARY_DOES()
 	);
 }
 #endif
