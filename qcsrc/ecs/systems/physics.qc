@@ -251,12 +251,22 @@ void sys_phys_simulate(entity this, float dt)
 	}
 
 	vector forward, right, up;
-	vector v_tmp = (this.com_phys_vel_2d ? vec3(0, this.v_angle.y, 0) : this.v_angle);
-	MAKE_VECTORS(v_tmp, forward, right, up);
+	MAKE_VECTORS(this.com_phys_vel_2d ? vec3(0, this.v_angle.y, 0) // Q3: project moves down to flat plane
+	             : this.v_angle, forward, right, up);
+	if (IS_ONGROUND(this))
+	{
+		// Q3: project the forward and right directions onto the ground plane
+		// Needed for circle jumps and slick strafing to work properly on slopes,
+		// fixes walking faster uphill than on level ground and getting air when walking downhill.
+		// The OVERCLIP value is used here to exactly match Q3's acceleration.
+		forward = normalize(_Movetype_ClipVelocity(forward, this.groundplane_normal, OVERCLIP));
+		right = normalize(_Movetype_ClipVelocity(right, this.groundplane_normal, OVERCLIP));
+	}
 	// wishvel = forward * PHYS_CS(this).movement.x + right * PHYS_CS(this).movement.y + up * PHYS_CS(this).movement.z;
 	vector wishvel = forward * PHYS_CS(this).movement.x
 		+ right * PHYS_CS(this).movement.y
 		+ eZ * (this.com_phys_vel_2d ? 0 : PHYS_CS(this).movement.z);
+
 	if (this.com_phys_water)
 	{
 		if (PHYS_FROZEN(this))

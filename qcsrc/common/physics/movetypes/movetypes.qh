@@ -92,6 +92,7 @@ void set_movetype(entity this, int mt);
 .vector punchangle;
 
 .entity groundentity;  // FIXME add move_groundnetworkentity?
+.vector groundplane_normal;
 .float move_suspendedinair;
 .float move_didgravity;
 
