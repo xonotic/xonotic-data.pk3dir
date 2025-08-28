@@ -140,6 +140,10 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 				this.velocity_z -= grav * 0.5;
 			else
 				this.velocity_z -= grav;
+
+			// Q3: slide along the ground plane
+			if (this.groundplane_normal.z)
+				_Movetype_ClipVelocity(this.velocity, this.groundplane_normal, OVERCLIP);
 		}
 	}
 
