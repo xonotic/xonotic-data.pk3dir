@@ -482,6 +482,8 @@ bool PlayerJump(entity this)
 
 	UNSET_ONGROUND(this);
 	UNSET_ONSLICK(this);
+	this.groundentity = NULL;
+	this.groundplane_normal = '0 0 0';
 	SET_JUMP_HELD(this);
 
 #ifdef CSQC
@@ -742,11 +744,13 @@ void PM_GroundDetect(entity this)
 	if (trace_plane_normal.z
 	// Q3: check if getting thrown off the ground
 	&& this.velocity.z > 0 && this.velocity * trace_plane_normal > 10)
-		trace_plane_normal = '0 0 0';
+		this.groundplane_normal = '0 0 0';
+	else
+		this.groundplane_normal = trace_plane_normal;
 
 	// Q3: if the trace didn't hit anything, we are in free fall
 	// Q3: slopes that are too steep will not be considered onground
-	if (trace_plane_normal.z < MIN_WALK_NORMAL)
+	if (this.groundplane_normal.z < MIN_WALK_NORMAL)
 	{
 		UNSET_ONGROUND(this);
 		this.groundentity = NULL;
@@ -765,7 +769,7 @@ void PM_GroundTrace(entity this)
 	PM_GroundDetect(this);
 
 	if (IS_ONGROUND(this))
-		this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1);
+		this.velocity = _Movetype_ClipVelocity(this.velocity, this.groundplane_normal, 1);
 }
 
 void PM_jetpack(entity this, float maxspd_mod, float dt)
@@ -879,6 +883,8 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 bool IsFlying(entity this)
 {
 	if(IS_ONGROUND(this))
+		return false;
+	if(this.groundplane_normal.z) // non-walkable but would be hit by the trace below
 		return false;
 	if(this.waterlevel >= WATERLEVEL_SWIMMING)
 		return false;
