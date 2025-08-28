@@ -251,7 +251,7 @@ METHOD(HLAC, describe, string(HLAC this))
 		"This means releasing primary fire every now and then is important to restore accuracy. "
 	      "Also, the %s has less spread when used while crouching."), COLORED_NAME(this), COLORED_NAME(this));
 	PAR(W_Guide_Keybinds(this));
-	PAR(W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_shots", ""));
+	PAR(W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_shots", "", false));
 	return PAGE_TEXT;
 }
 

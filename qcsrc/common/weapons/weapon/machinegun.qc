@@ -426,7 +426,7 @@ METHOD(MachineGun, describe, string(MachineGun this))
 	PAR(_("The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously. "
 	      "Since the secondary fire has no spread, it's the better option when firing over a long range."), COLORED_NAME(this));
 	PAR(W_Guide_Keybinds(this));
-	PAR(W_Guide_DPS_secondaryMultishot(this.netname, "sustained", "burst", "burst", "burst_refire2"));
+	PAR(W_Guide_DPS_secondaryMultishot(this.netname, "sustained", "burst", "burst", "burst_refire2", false));
 	return PAGE_TEXT;
 }
 

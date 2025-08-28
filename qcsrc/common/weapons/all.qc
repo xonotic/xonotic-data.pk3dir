@@ -882,18 +882,18 @@ string W_Guide_Keybinds(Weapon wep)
 #define _DOES_MSG(mode)        strcat("\n* ", sprintf(_("The %s does %s damage"), mode##str, COLORED_DAMAGE(mode##dmg_s)), " ", DPS_ONE(mode))
 #define _DOES_PERSEC_MSG(mode) strcat("\n* ", sprintf(_("The %s does %s damage per second"), mode##str, COLORED_DAMAGE(mode##dmg_s)))
 #define _SHOOTS_MSG(mode)      strcat("\n* ", sprintf(_("The %s shoots %s shots doing %s damage each"),    mode##str, mode##shots_s, COLORED_DAMAGE(mode##dmg_s)), " ", DPS_MUL(mode))
-#define _CAN_SHOOT_MSG(mode)   strcat("\n* ", sprintf(_("The %s can shoot %s shots doing %s damage each"), mode##str, mode##shots_s, COLORED_DAMAGE(mode##dmg_s)), " ", DPS_MUL(mode))
+#define _SHOOTS_UPTO_MSG(mode) strcat("\n* ", sprintf(_("The %s shoots up to %s shots doing %s damage each"), mode##str, mode##shots_s, COLORED_DAMAGE(mode##dmg_s)), " ", DPS_MUL(mode))
 
 // We could use the *_MSG macros directly but we use these because they are more intuitive and readable
 #define IT_DOES()                   _IT_DOES_MSG()
 #define IT_SHOOTS()                 _IT_SHOOTS_MSG()
 #define THE_PRIMARY_DOES()          _DOES_MSG(pri_)
 #define THE_PRIMARY_SHOOTS()        _SHOOTS_MSG(pri_)
-#define THE_PRIMARY_CAN_SHOOT()     _CAN_SHOOT_MSG(pri_)
+#define THE_PRIMARY_SHOOTS_UPTO()   _SHOOTS_UPTO_MSG(pri_)
 #define THE_PRIMARY_DOES_PERSEC()   _DOES_PERSEC_MSG(pri_)
 #define THE_SECONDARY_DOES()        _DOES_MSG(sec_)
 #define THE_SECONDARY_SHOOTS()      _SHOOTS_MSG(sec_)
-#define THE_SECONDARY_CAN_SHOOT()   _CAN_SHOOT_MSG(sec_)
+#define THE_SECONDARY_SHOOTS_UPTO() _SHOOTS_UPTO_MSG(sec_)
 #define THE_SECONDARY_DOES_PERSEC() _DOES_PERSEC_MSG(sec_)
 
 // One function for each translatable string
@@ -964,7 +964,7 @@ string W_Guide_DPS_onlySecondary(string name, string sec)
 		THE_SECONDARY_DOES()
 	);
 }
-string W_Guide_DPS_secondaryMultishot(string name, string pri, string sec, string shots, string refire2)
+string W_Guide_DPS_secondaryMultishot(string name, string pri, string sec, string shots, string refire2, bool sec_variable)
 {
 	const string wepbal_s = strcat("g_balance_", name, "_");
 	const string pri_dmg_s   =      cvar_defstring(strcat(wepbal_s, pri, "_damage"));
@@ -979,7 +979,7 @@ string W_Guide_DPS_secondaryMultishot(string name, string pri, string sec, strin
 		sec_rft = (num_shots - 1) * sec_rft + stof(cvar_defstring(strcat(wepbal_s, refire2)));
 	return strcat(_("Default damage stats:"),
 		THE_PRIMARY_DOES(),
-		THE_SECONDARY_SHOOTS()
+		(sec_variable ? THE_SECONDARY_SHOOTS_UPTO() : THE_SECONDARY_SHOOTS())
 	);
 }
 string W_Guide_DPS_primaryMultishot(string name, string pri, string sec, string shots, string refire2)
@@ -1011,7 +1011,7 @@ string W_Guide_DPS_onlyOneMultishot(string name, string fire, string shots, stri
 		IT_SHOOTS()
 	);
 }
-string W_Guide_DPS_secondaryMultishotWithCombo(string name, string pri, string sec, string shots, string refire2, string combo)
+string W_Guide_DPS_secondaryMultishotWithCombo(string name, string pri, string sec, string shots, string refire2, string combo, bool sec_variable)
 {
 	const string wepbal_s = strcat("g_balance_", name, "_");
 	const string pri_dmg_s   =      cvar_defstring(strcat(wepbal_s, pri, "_damage"));
@@ -1033,7 +1033,7 @@ string W_Guide_DPS_secondaryMultishotWithCombo(string name, string pri, string s
 		combo_t <= 0 ? 1337 : (stof(pri_dmg_s) + stof(sec_dmg_s) * num_shots + stof(cmb_dmg_s)) / combo_t);
 	return strcat(_("Default damage stats:"),
 		THE_PRIMARY_DOES(),
-		THE_SECONDARY_CAN_SHOOT(),
+		(sec_variable ? THE_SECONDARY_SHOOTS_UPTO() : THE_SECONDARY_SHOOTS()),
 		strcat("\n* ", sprintf(_("The combo adds an extra %s damage"), COLORED_DAMAGE(cmb_dmg_s)), " ", DPS_combo)
 	);
 }

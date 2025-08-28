@@ -274,7 +274,7 @@ METHOD(Rifle, describe, string(Rifle this))
 	      "Also, it needs to be reloaded after its magazine is emptied."), COLORED_NAME(WEP_VORTEX), strcat("^3", _("zoom"), "^7"), COLORED_NAME(this));
 	PAR(_("Similar to the %s, the %s can be used at any range, but it stands out at long ranges."), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this));
 	PAR(W_Guide_Keybinds(this));
-	PAR(W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_shots", ""));
+	PAR(W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_shots", "", false));
 	return PAGE_TEXT;
 }
 
