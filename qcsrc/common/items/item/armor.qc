@@ -4,7 +4,7 @@
 #include <common/gamemodes/gamemode/duel/duel.qh>
 
 #define PAR_DEFAULT_PICKUP_ARMOR(s) \
-	PAR(_("By default, the pickup gives you ^9%s^7 armor."), cvar_defstring(strcat("g_pickup_armor", s)))
+	PAR(_("By default, the pickup gives you %s armor."), strcat("^9", cvar_defstring(strcat("g_pickup_armor", s)), "^7"));
 
 METHOD(ArmorSmall, describe, string(ArmorSmall this))
 {

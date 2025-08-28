@@ -4,7 +4,7 @@
 #include <common/gamemodes/gamemode/duel/duel.qh>
 
 #define PAR_DEFAULT_PICKUP_HEALTH(s) \
-	PAR(_("By default, the pickup gives you ^9%s^7 health."), cvar_defstring(strcat("g_pickup_health", s)))
+	PAR(_("By default, the pickup gives you %s health."), strcat("^9", cvar_defstring(strcat("g_pickup_health", s)), "^7"));
 
 METHOD(HealthSmall, describe, string(HealthSmall this))
 {
