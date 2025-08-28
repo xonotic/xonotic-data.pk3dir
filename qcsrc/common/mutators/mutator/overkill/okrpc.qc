@@ -245,7 +245,7 @@ METHOD(OverkillRocketPropelledChainsaw, describe, string(OverkillRocketPropelled
 	PAR(_("The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s."), COLORED_NAME(ITEM_Rockets), COLORED_NAME(MUTATOR_ok));
 	PAR(_("Since it is the only %s weapon which deals splash damage, the %s is a good choice of weapon for attacking groups of enemies."), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this));
 	PAR(W_Guide_Keybinds(this));
-	PAR(W_Guide_DPS_onlyOne(this.netname, "primary"));
+	PAR(W_Guide_DPS_onlyOne_andDirectHit(this.netname, "primary"));
 	return PAGE_TEXT;
 }
 

@@ -898,6 +898,18 @@ string W_Guide_Keybinds(Weapon wep)
 
 // One function for each translatable string
 
+string W_Guide_DPS_onlyOne_unnamed_andDirectHit(string name)
+{
+	const string wepbal_s = strcat("g_balance_", name);
+	const string dmg_s =      cvar_defstring(strcat(wepbal_s, "_damage"));
+	const float rft    = stof(cvar_defstring(strcat(wepbal_s, "_refire")));
+	const string dmg2_s =     cvar_defstring(strcat(wepbal_s, "_damage2"));
+	const string DPS_direct = sprintf(_("(DPS: %.2f)"), rft <= 0 ? 1337 : stof(dmg2_s) / rft);
+	return strcat(_("Default damage stats:"),
+		IT_DOES(),
+		strcat("\n* ", sprintf(_("A direct hit does %s damage"), COLORED_DAMAGE(dmg2_s)), " ", DPS_direct)
+	);
+}
 string W_Guide_DPS_onlyOne_unnamed(string name)
 {
 	const string wepbal_s = strcat("g_balance_", name);
@@ -906,6 +918,10 @@ string W_Guide_DPS_onlyOne_unnamed(string name)
 	return strcat(_("Default damage stats:"),
 		IT_DOES()
 	);
+}
+string W_Guide_DPS_onlyOne_andDirectHit(string name, string fire)
+{
+	return W_Guide_DPS_onlyOne_unnamed_andDirectHit(strcat(name, "_", fire));
 }
 string W_Guide_DPS_onlyOne(string name, string fire)
 {
@@ -937,6 +953,15 @@ string W_Guide_DPS_bothMultishot(string name, string pri, string sec)
 	return strcat(_("Default damage stats:"),
 		THE_PRIMARY_SHOOTS(),
 		THE_SECONDARY_SHOOTS()
+	);
+}
+string W_Guide_DPS_onlySecondary(string name, string sec)
+{
+	const string wepbal_s = strcat("g_balance_", name, "_");
+	const string sec_dmg_s   =      cvar_defstring(strcat(wepbal_s, sec, "_damage"));
+	const float sec_rft      = stof(cvar_defstring(strcat(wepbal_s, sec, "_refire")));
+	return strcat(_("Default damage stats:"),
+		THE_SECONDARY_DOES()
 	);
 }
 string W_Guide_DPS_secondaryMultishot(string name, string pri, string sec, string shots, string refire2)

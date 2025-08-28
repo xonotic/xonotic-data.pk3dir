@@ -434,7 +434,7 @@ METHOD(Hook, describe, string(Hook this))
 	      "making both surprise ambushes and miraculous escapes possible."), COLORED_NAME(this));
 	PAR(_("It isn't available very often on maps, unless the %s mutator is active, in which all players have it on their offhand, used with %s."), COLORED_NAME(MUTATOR_hook), strcat("^3", _("hook"), "^7"));
 	PAR(W_Guide_Keybinds(this));
-	PAR(W_Guide_DPS_onlyOne(this.netname, "secondary"));
+	PAR(W_Guide_DPS_onlySecondary(this.netname, "secondary"));
 	return PAGE_TEXT;
 }
 

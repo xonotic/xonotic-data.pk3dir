@@ -473,10 +473,13 @@ string W_Guide_Keybinds(Weapon wep);
 
 string W_Guide_DPS_onlyOne_unnamed(string name);
 string W_Guide_DPS_onlyOne(string name, string fire);
+string W_Guide_DPS_onlyOne_unnamed_andDirectHit(string name);
+string W_Guide_DPS_onlyOne_andDirectHit(string name, string fire);
 string W_Guide_DPS(string name, string pri, string sec);
 string W_Guide_DPS_bothMultishot(string name, string pri, string sec);
 string W_Guide_DPS_secondaryMultishot(string name, string pri, string sec, string shots, string refire2);
 string W_Guide_DPS_primaryMultishot(string name, string pri, string sec, string shots, string refire2);
+string W_Guide_DPS_onlySecondary(string name, string sec);
 string W_Guide_DPS_onlyOneMultishot(string name, string fire, string shots, string refire2);
 string W_Guide_DPS_secondaryMultishotWithCombo(string name, string pri, string sec, string shots, string refire2, string combo);
 string W_Guide_DPS_primaryDPS(string name, string pri, string sec);
