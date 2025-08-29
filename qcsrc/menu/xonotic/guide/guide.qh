@@ -111,7 +111,10 @@ REGISTRY_SOURCE(NadeSource, Nades, Nades)
 
 #include <common/weapons/all.qh>
 // The descriptions for these are in common/weapons/weapon/*.qc and common/mutators/mutator/overkill/ok*.qc (weapon files)
-REGISTRY_SOURCE(WeaponSource, Weapons, Weapons)
+REGISTRY_SOURCE(WeaponSource, Weapons, Weapons,
+	!startsWith(it.registered_id, "WEP_OVERKILL_"),
+	startsWith(it.registered_id, "WEP_OVERKILL_") && !(it.spawnflags & WEP_FLAG_SUPERWEAPON),
+	startsWith(it.registered_id, "WEP_OVERKILL_") && (it.spawnflags & WEP_FLAG_SUPERWEAPON))
 
 #include <common/monsters/all.qh>
 // The descriptions for these are in common/monsters/monster/*.qc
