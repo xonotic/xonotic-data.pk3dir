@@ -12,7 +12,6 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	bool applygravity = !_Movetype_CheckWater(this) && (this.move_movetype == MOVETYPE_WALK || this.move_movetype == MOVETYPE_STEP) && !(this.flags & FL_WATERJUMP);
 
 	// do a regular slide move unless it looks like you ran into a step
-	bool oldonground = IS_ONGROUND(this);
 
 	vector start_origin = this.origin;
 	vector start_velocity = this.velocity;
@@ -27,36 +26,9 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 	int clip = _Movetype_FlyMove(this, dt, applygravity, false, GAMEPLAYFIX_STEPMULTIPLETIMES(this) ? PHYS_STEPHEIGHT(this) : 0);
 
-	if (GAMEPLAYFIX_DOWNTRACEONGROUND(this) && !(clip & 1))
-	{
-		// only try this if there was no floor in the way in the trace (no,
-		// this check seems to be not REALLY necessary, because if clip & 1,
-		// our trace will hit that thing too)
-		vector upmove = this.origin + '0 0 1';
-		vector downmove = this.origin - '0 0 1';
-		int type;
-		if (this.move_nomonsters)
-			type = max(0, this.move_nomonsters);
-		else if (this.move_movetype == MOVETYPE_FLYMISSILE)
-			type = MOVE_MISSILE;
-		else if (this.move_movetype == MOVETYPE_FLY_WORLDONLY)
-			type = MOVE_WORLDONLY;
-		else if (this.solid == SOLID_TRIGGER || this.solid == SOLID_NOT)
-			type = MOVE_NOMONSTERS;
-		else
-			type = MOVE_NORMAL;
-		tracebox(upmove, this.mins, this.maxs, downmove, type, this);
-		if (trace_fraction < 1 && trace_plane_normal.z > 0.7)
-		{
-			clip |= 1;  // but we HAVE found a floor
-			// set groundentity so we get carried when walking onto a mover
-			this.groundentity = trace_ent;
-		}
-	}
-
 	// if the move did not hit the ground at any point, we're not on ground
 	if (!(clip & 1))
-		UNSET_ONGROUND(this);
+		;
 	else if(PHYS_WALLCLIP(this) && !this.groundentity && (PHYS_WALLCLIP(this) == 2 || start_velocity.z < -200)) // don't do landing time if we were just going down a slope
 		this.pm_time = 0.25;
 
@@ -92,7 +64,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 			// return if attempting to jump while airborn (unless sv_jumpstep)
 			if (!PHYS_JUMPSTEP(this))
-				if (!oldonground && this.waterlevel == 0)
+				if (!WAS_ONGROUND(this) && this.waterlevel == 0)
 					return;
 		}
 
@@ -147,11 +119,9 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 			_Movetype_WallFriction(this, move_stepnormal);
 	}
 	// don't do the down move if stepdown is disabled, moving upward, not in water, or the move started offground or ended onground
-	else if (!GAMEPLAYFIX_STEPDOWN(this) || this.waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) 
-				|| !oldonground || IS_ONGROUND(this) || (GAMEPLAYFIX_STEPDOWN_MAXSPEED(this) && vdist(start_velocity, >=, GAMEPLAYFIX_STEPDOWN_MAXSPEED(this)) && !IS_ONSLICK(this)))
-	{
+	else if (!GAMEPLAYFIX_STEPDOWN(this) || this.waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) || !WAS_ONGROUND(this) || IS_ONGROUND(this)
+	|| (GAMEPLAYFIX_STEPDOWN_MAXSPEED(this) && vdist(start_velocity, >=, GAMEPLAYFIX_STEPDOWN_MAXSPEED(this)) && !IS_ONSLICK(this)))
 		return;
-	}
 
 	// move down
 	vector downmove = '0 0 0';
@@ -162,19 +132,8 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		return;
 	}
 
-	if (trace_fraction < 1 && trace_plane_normal.z > 0.7)
-	{
-		// this has been disabled so that you can't jump when you are stepping
-		// up while already jumping (also known as the Quake2 double jump bug)
-		// LordHavoc: disabled this check so you can walk on monsters/players
-		//if (PRVM_serveredictfloat(ent, solid) == SOLID_BSP)
-		if(GAMEPLAYFIX_STEPDOWN(this) == 2)
-		{
-			SET_ONGROUND(this);
-			this.groundentity = trace_ent;
-		}
-	}
-	else
+	// cancel the step down if it didn't land on walkable ground
+	if (trace_fraction == 1 || trace_plane_normal.z < MIN_WALK_NORMAL)
 	{
 		// Con_Printf("slope\n");
 		// if the push down didn't end up on good ground, use the move without
@@ -185,6 +144,8 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		this.flags = originalflags;
 		this.groundentity = originalmove_groundentity;
 	}
+	else if (GAMEPLAYFIX_STEPDOWN(this) == 2)
+		PM_GroundDetected(this);
 
 	_Movetype_LinkEdict(this, true);
 }
