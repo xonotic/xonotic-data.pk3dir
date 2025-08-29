@@ -5,8 +5,6 @@ void sys_phys_fix(entity this, float dt)
 	this.team = myteam + 1; // is this correct?
 	this.movement = PHYS_INPUT_MOVEVALUES(this);
 	this.items = STAT(ITEMS, this);
-	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump
-		UNSET_JUMP_HELD(this);           // canjump = true
 	PM_ClientMovement_UpdateStatus(this);
 }
 

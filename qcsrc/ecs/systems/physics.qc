@@ -21,9 +21,15 @@ void sys_phys_update(entity this, float dt)
 
 	sys_phys_monitor(this, dt);
 
+	// bones_was_here: old values must be set first, not last, so they're correct during replay
+	// and because this ECS code is only the first part of player movement.
 	PHYS_CS(this).movement_old = PHYS_CS(this).movement;
 	PHYS_CS(this).v_angle_old = this.v_angle;
 	PHYS_CS(this).buttons_old = PHYS_INPUT_BUTTON_MASK(this);
+	if (IS_ONGROUND(this))
+		this.lastground = time;
+	this.lastflags = this.flags;
+	this.lastclassname = this.classname;
 
 	sys_phys_ai(this);
 
@@ -83,8 +89,11 @@ void sys_phys_update(entity this, float dt)
 
 	if (IS_SVQC && !PHYS_FIXANGLE(this))
 		this.angles = eY * this.v_angle.y;
-	if (IS_PLAYER(this))
+	if (IS_PLAYER(this)) // bones_was_here: should this instead check for MOVETYPE_WALK ?
 	{
+		// PM_GroundTrace is part of MOVETYPE_WALK but must be called here,
+		// because some parts of the movetype are here and also need values set by this.
+		PM_GroundTrace(this, true);
 		if (IS_ONGROUND(this))
 		{
 			PM_check_hitground(this);
@@ -184,14 +193,9 @@ void sys_phys_update(entity this, float dt)
 
 void sys_phys_postupdate(entity this)
 {
-	if (IS_ONGROUND(this))
-		this.lastground = time;
 	// conveyors: then break velocity again
 	if (this.conveyor.active)
 		this.velocity += this.conveyor.movedir;
-	this.lastflags = this.flags;
-
-	this.lastclassname = this.classname;
 }
 
 /** for players */
