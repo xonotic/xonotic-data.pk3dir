@@ -20,7 +20,7 @@
 #include <common/effects/effect.qh>
 #include <common/effects/qc/_mod.qh>
 #include <common/ent_cs.qh>
-#include <common/gamemodes/gamemode/nexball/cl_nexball.qh>
+#include <common/gametypes/gametype/nexball/cl_nexball.qh>
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/_mod.qh>
@@ -936,7 +936,7 @@ void CSQC_Ent_Remove(entity this)
 	delete(this);
 }
 
-void Gamemode_Init()
+void Gametype_Init()
 {
 	// fire game or demo start hooks here
 	if (!(calledhooks & HOOK_START))
@@ -1035,7 +1035,7 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 		net_handle_ServerWelcome();
 	return = true;
 	Scoreboard_InitScores();
-	Gamemode_Init();
+	Gametype_Init();
 }
 
 NET_HANDLE(ENT_CLIENT_INIT, bool isnew)

@@ -1,0 +1,54 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+#if defined(CSQC)
+	#include <common/gametypes/gametype/clanarena/cl_clanarena.qh>
+#endif
+
+#ifdef CSQC
+void HUD_Mod_FreezeTag(vector myPos, vector mySize);
+void HUD_Mod_FreezeTag_Export(int fh);
+#endif
+CLASS(FreezeTag, Gametype)
+	INIT(FreezeTag)
+	{
+		this.gametype_init(this, _("Freeze Tag"),"ft","g_freezetag",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=10 teams=2 leadlimit=6",_("Kill enemies to freeze them, stand next to frozen teammates to revive them; freeze all enemies to win"));
+	}
+	METHOD(FreezeTag, m_parse_mapinfo, bool(string k, string v))
+	{
+		if (!k)
+		{
+			cvar_set("g_freezetag_teams", cvar_defstring("g_freezetag_teams"));
+			return true;
+		}
+		switch (k)
+		{
+			case "teams":
+				cvar_set("g_freezetag_teams", v);
+				return true;
+		}
+		return false;
+	}
+	METHOD(FreezeTag, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+	{
+		if(spawnpoints >= 8 && diameter > 3250)
+			return true;
+		return false;
+	}
+	METHOD(FreezeTag, m_setTeams, void(string sa))
+	{
+		cvar_set("g_freezetag_teams", sa);
+	}
+	METHOD(FreezeTag, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Round limit:"),     5,  100,  5, "fraglimit_override",        "g_freezetag_teams_override",   _("The amount of rounds won needed before the match will end"));
+	}
+#ifdef CSQC
+	ATTRIB(FreezeTag, m_modicons, void(vector pos, vector mySize), HUD_Mod_FreezeTag);
+	ATTRIB(FreezeTag, m_modicons_export, void(int fh), HUD_Mod_FreezeTag_Export);
+#endif
+	ATTRIB(FreezeTag, m_legacydefaults, string, "10 20 0");
+ENDCLASS(FreezeTag)
+REGISTER_GAMETYPE(FREEZETAG, NEW(FreezeTag));
+#define g_freezetag IS_GAMETYPE(FREEZETAG)

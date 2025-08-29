@@ -513,9 +513,9 @@ METHOD(MineLayer, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
-#include <common/gamemodes/gamemode/assault/assault.qh>
-#include <common/gamemodes/gamemode/ctf/ctf.qh>
-#include <common/gamemodes/gamemode/onslaught/onslaught.qh>
+#include <common/gametypes/gametype/assault/assault.qh>
+#include <common/gametypes/gametype/ctf/ctf.qh>
+#include <common/gametypes/gametype/onslaught/onslaught.qh>
 #include <common/items/item/ammo.qh>
 
 METHOD(MineLayer, describe, string(MineLayer this))

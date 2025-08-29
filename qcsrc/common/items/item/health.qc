@@ -1,7 +1,7 @@
 #include "health.qh"
 
 #ifdef MENUQC
-#include <common/gamemodes/gamemode/duel/duel.qh>
+#include <common/gametypes/gametype/duel/duel.qh>
 
 #define PAR_DEFAULT_PICKUP_HEALTH(s) \
 	PAR(_("By default, the pickup gives you %s health."), strcat("^9", cvar_defstring(strcat("g_pickup_health", s)), "^7"));

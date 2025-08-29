@@ -6,8 +6,8 @@
 #include <common/effects/all.qh>
 #include <common/effects/qc/globalsound.qh>
 #include <common/ent_cs.qh>
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/gametypes/gametype/nexball/sv_nexball.qh>
 #include <common/items/_mod.qh>
 #include <common/items/inventory.qh>
 #include <common/mapobjects/func/conveyor.qh>

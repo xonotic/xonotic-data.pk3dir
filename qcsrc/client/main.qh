@@ -52,7 +52,7 @@ void PostInit();
 
 void Ent_Remove(entity this);
 
-void Gamemode_Init();
+void Gametype_Init();
 
 entity players;
 entity teams;

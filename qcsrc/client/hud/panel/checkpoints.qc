@@ -2,7 +2,7 @@
 #include "racetimer.qh"
 #include "physics.qh"
 
-#include <common/gamemodes/gamemode/race/race.qh>
+#include <common/gametypes/gametype/race/race.qh>
 #include <client/draw.qh>
 #include <common/ent_cs.qh>
 

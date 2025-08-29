@@ -2,7 +2,7 @@
 
 #include <common/constants.qh>
 #include <common/effects/all.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <common/net_linked.qh>

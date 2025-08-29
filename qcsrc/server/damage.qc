@@ -3,8 +3,8 @@
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/rules.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/gametypes/rules.qh>
 #include <common/items/_mod.qh>
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/triggers.qh>

@@ -3,9 +3,9 @@
 #include "checkbox.qh"
 #include "textlabel.qh"
 #include <common/mapinfo.qh>
-#include <common/gamemodes/gamemode/clanarena/clanarena.qh>
-#include <common/gamemodes/gamemode/domination/domination.qh>
-#include <common/gamemodes/gamemode/freezetag/freezetag.qh>
+#include <common/gametypes/gametype/clanarena/clanarena.qh>
+#include <common/gametypes/gametype/domination/domination.qh>
+#include <common/gametypes/gametype/freezetag/freezetag.qh>
 
 void XonoticHUDModIconsDialog_fill(entity me)
 {

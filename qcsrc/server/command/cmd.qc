@@ -4,7 +4,7 @@
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/minigames/sv_minigames.qh>

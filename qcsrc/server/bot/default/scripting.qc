@@ -1,6 +1,6 @@
 #include "scripting.qh"
 
-#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#include <common/gametypes/gametype/ctf/sv_ctf.qh>
 #include <common/physics/player.qh>
 #include <common/state.qh>
 #include <common/stats.qh>

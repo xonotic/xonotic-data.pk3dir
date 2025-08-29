@@ -4,7 +4,7 @@
 #include <client/draw.qh>
 #include <client/hud/panel/racetimer.qh>
 #include <client/view.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 
 // Timer (#5)
 

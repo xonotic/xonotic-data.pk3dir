@@ -1,7 +1,7 @@
 #include "quake3.qh"
 
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/gametypes/gametype/ctf/sv_ctf.qh>
 #include <common/mapobjects/trigger/counter.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/buffs/_mod.qh>

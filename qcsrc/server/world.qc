@@ -3,8 +3,8 @@
 #include <common/checkextension.qh>
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/sv_rules.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/gametypes/sv_rules.qh>
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/target/music.qh>
