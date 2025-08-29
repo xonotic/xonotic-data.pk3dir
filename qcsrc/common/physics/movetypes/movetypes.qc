@@ -117,23 +117,22 @@ void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 }
 
 vector planes[MAX_CLIP_PLANES];
-int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight) // SV_FlyMove
+int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool applystepnormal, float stepheight) // SV_FlyMove
 {
 	move_stepnormal = '0 0 0';
 
-	if(dt <= 0)
-		return 0;
-
 	int i;
 	int blockedflag = 0;
+	vector jumporigin = this.origin;
+	LABEL(ReapplyGravityContinue)
 	int numplanes;
-	float time_left = dt, grav = 0;
+	float grav = 0;
 	vector restore_velocity = this.velocity;
 
 	if(applygravity)
 	{
 		this.move_didgravity = 1;
-		grav = dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
+		grav = time_left * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
 		{
@@ -193,21 +192,22 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 
 		vector my_trace_plane_normal = trace_plane_normal;
 
-		if(trace_plane_normal.z)
+		if (my_trace_plane_normal.z > 0) // landed on a ground plane or got an edge collision
 		{
-			if(trace_plane_normal.z > 0.7)
+			// trace to confirm it's really ground to prevent the wallwalk bug
+			int clip = PM_GroundTrace(this, false);
+
+			// frametime-independent jumping
+			if (PHYS_INPUT_BUTTON_JUMP(this) && (clip & 1)
+			&& this.origin != jumporigin) // prevents infinite looping when wedged
 			{
-				// floor
-				blockedflag |= 1;
-
-				if(!trace_ent)
+				this.velocity = _Movetype_ClipVelocity(this.velocity, my_trace_plane_normal, 1);
+				PlayerJump(this);
+				if (!IS_ONGROUND(this)) // definitely did jump
 				{
-					//dprint("_Movetype_FlyMove: !trace_ent\n");
-					trace_ent = NULL;
+					jumporigin = this.origin;
+					goto ReapplyGravityContinue;
 				}
-
-				SET_ONGROUND(this);
-				this.groundentity = trace_ent;
 			}
 		}
 		else if(stepheight)
