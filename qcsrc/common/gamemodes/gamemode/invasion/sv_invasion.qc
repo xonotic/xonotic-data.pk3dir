@@ -393,7 +393,7 @@ MUTATOR_HOOKFUNCTION(inv, SV_StartFrame)
 
 MUTATOR_HOOKFUNCTION(inv, PlayerRegen)
 {
-	// no regeneration in invasion, regardless of the game type
+	// no regeneration in invasion, regardless of the gametype
 	return true;
 }
 

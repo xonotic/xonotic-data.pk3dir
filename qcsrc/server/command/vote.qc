@@ -690,7 +690,7 @@ string ValidateMap(string validated_map, entity caller)
 
 	if (!MapInfo_CheckMap(validated_map))
 	{
-		print_to(caller, strcat("^1Invalid mapname, \"^3", validated_map, "^1\" does not support the current game mode."));
+		print_to(caller, strcat("^1Invalid mapname, \"^3", validated_map, "^1\" does not support the current gametype."));
 		return string_null;
 	}
 

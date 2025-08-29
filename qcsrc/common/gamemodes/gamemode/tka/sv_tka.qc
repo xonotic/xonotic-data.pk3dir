@@ -72,7 +72,7 @@ void tka_RespawnBall(entity this) // runs whenever the ball needs to be relocate
 	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
-// field where the decimal part of SCORE is accumulated (shared with other gamemodes)
+// field where the decimal part of SCORE is accumulated (shared with other gametypes)
 .float float2int_decimal_fld;
 MUTATOR_HOOKFUNCTION(tka, reset_map_global)
 {
@@ -486,7 +486,7 @@ MUTATOR_HOOKFUNCTION(tka, Damage_Calculate) // for changing damage and force val
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 
-	// as a gamemode rule, only apply scaling to player versus player combat
+	// as a gametype rule, only apply scaling to player versus player combat
 	if (!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
 		return;
 

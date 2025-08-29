@@ -31,7 +31,7 @@ MUTATOR_HOOKFUNCTION(cl_cts, DrawDeathScoreboard)
 
 MUTATOR_HOOKFUNCTION(cl_cts, DrawScoreboardAccuracy)
 {
-	return ISGAMETYPE(CTS); // accuracy is not a factor in this gamemode
+	return ISGAMETYPE(CTS); // accuracy is not a factor in this gametype
 }
 
 MUTATOR_HOOKFUNCTION(cl_cts, ShowRankings)

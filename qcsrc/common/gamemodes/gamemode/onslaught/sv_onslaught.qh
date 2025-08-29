@@ -67,7 +67,7 @@ float ons_notification_time[17];
 
 .entity ons_spawn_by;
 
-// declarations for functions used outside gamemode_onslaught.qc
+// declarations for functions used outside sv_onslaught.qc
 void ons_Generator_UpdateSprite(entity e);
 void ons_ControlPoint_UpdateSprite(entity e);
 bool ons_ControlPoint_Attackable(entity cp, int teamnum);

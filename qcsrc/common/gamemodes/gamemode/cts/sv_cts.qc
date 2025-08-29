@@ -35,7 +35,7 @@ void havocbot_role_cts(entity this)
 			{
 				// redirect bot to next goal if it touched the waypoint of an untouchable checkpoint
 				// e.g. checkpoint in front of Stormkeep's warpzone
-				// the same workaround is applied in Race game mode
+				// the same workaround is applied in Race gametype
 				if (raw_touch_check && vdist(this.origin - it.nearestwaypoint.origin, <, 30))
 				{
 					cp = race_NextCheckpoint(cp);

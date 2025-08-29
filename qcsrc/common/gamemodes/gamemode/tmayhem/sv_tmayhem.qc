@@ -128,13 +128,13 @@ MUTATOR_HOOKFUNCTION(tmayhem, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	// enable powerups if forced globally or global accepts gamemodes to have powerups according to their own settings
+	// enable powerups if forced globally or global accepts gametypes to have powerups according to their own settings
 	if (autocvar_g_powerups == 1 || (autocvar_g_powerups == -1 && autocvar_g_tmayhem_powerups == 1)){
 		if (item.itemdef.instanceOfPowerup){
 			return false;
 		}
 	}
-	// disabled powerups if forced off globally or in this gamemode
+	// disabled powerups if forced off globally or in this gametype
 	if (autocvar_g_powerups == 0 || autocvar_g_tmayhem_powerups == 0){
 		if (item.itemdef.instanceOfPowerup){
 			return true;
@@ -144,7 +144,7 @@ MUTATOR_HOOKFUNCTION(tmayhem, FilterItem)
 	if (autocvar_g_pickup_items == 0){
 		return true;
 	}
-	// if items are switched on in this gamemode allow the removal of weapons and ammo still
+	// if items are switched on in this gametype allow the removal of weapons and ammo still
 	if ((autocvar_g_tmayhem_pickup_items == 1 && autocvar_g_tmayhem_pickup_items_remove_weapons_and_ammo == 1) && autocvar_g_pickup_items <= 0){
 		if (item.itemdef.instanceOfAmmo || item.itemdef.instanceOfWeaponPickup){
 			return true;

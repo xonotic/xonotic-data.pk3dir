@@ -2406,7 +2406,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 
 	if((time > player.throw_antispam) && !IS_DEAD(player) && !player.speedrunning && (!player.vehicle || autocvar_g_ctf_allow_vehicle_touch))
 	{
-		// pass the flag to a team mate
+		// pass the flag to a teammate
 		if(autocvar_g_ctf_pass)
 		{
 			entity head, closest_target = NULL;

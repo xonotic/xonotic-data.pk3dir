@@ -241,7 +241,7 @@ bool surv_isEliminated(entity e)
 	return false;
 }
 
-void surv_Initialize() // run at the start of a match, initiates game mode
+void surv_Initialize() // run at the start of a match, initiates gametype
 {
 	GameRules_scoring(0, SFL_SORT_PRIO_PRIMARY, 0, {
 		field(SP_SURV_SURVIVALS, "survivals", 0);

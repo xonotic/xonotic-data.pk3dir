@@ -1315,7 +1315,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 		if(!((cp2.aregensneighbor & BIT(this.team)) || (cp2.arecpsneighbor & BIT(this.team))))
 			continue;
 
-		// Count team mates interested in this control point
+		// Count teammates interested in this control point
 		// (easier and cleaner than keeping counters per cp and teams)
 		FOREACH_CLIENT(it != this && IS_PLAYER(it), {
 			if(SAME_TEAM(it, this))

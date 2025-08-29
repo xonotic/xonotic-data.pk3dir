@@ -22,7 +22,7 @@ CLASS(Duel, Gametype)
 #ifdef CSQC // server admins might not read their server console output, also prevents spam
 				LOG_WARNF("This map doesn't support Duel in Xonotic newer than 0.9.0. To fix it add \"gametype duel\" to the \"%s.mapinfo\" file.", MapInfo_Map_bspname);
 #endif
-				return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+				return true; // TODO: references another gametype (alternatively, we could check which gametypes are always enabled and append this if any are supported)
 			}
 		}
 		return false;

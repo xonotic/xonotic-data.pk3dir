@@ -108,7 +108,7 @@ void HUD_Timer()
 	else
 		timer = timeleft;
 
-	// Secondary timer for round-based game modes
+	// Secondary timer for round-based gametypes
 	if(STAT(ROUNDSTARTTIME) && autocvar_hud_panel_timer_secondary)
 	{
 		if(STAT(ROUNDSTARTTIME) == -1) {

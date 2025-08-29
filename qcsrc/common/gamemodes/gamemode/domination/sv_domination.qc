@@ -497,7 +497,7 @@ identifier : Set to 1, 2, or 3 to match to point 'A', 'B', or 'C'.
 count : Adjust the range of the capture point (in units, eg: 64, 128... etc).
 target : Target name for multiple info_player_deathmatch entities (to allow spawning near that particular dom point).
 -------- NOTES --------
-Do not assign a 'gametype' key to this item. It is used in all four team game types. The game will call for it as needed.
+Do not assign a 'gametype' key to this item. It is used in all four team gametypes. The game will call for it as needed.
 -------- MODEL FOR RADIANT ONLY - DO NOT SET THIS AS A KEY --------
 model="models/powerups/domination/dompoint.md3"
 */

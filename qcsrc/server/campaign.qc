@@ -34,7 +34,7 @@ float Campaign_Invalid()
 	thismapname = GetMapname();
 	wantedmapname = campaign_gametype[0];
 	if(MapInfo_CurrentGametype() != MapInfo_Type_FromString(wantedmapname, false, false))
-		return CampaignBailout("wrong game type!");
+		return CampaignBailout("wrong gametype!");
 	wantedmapname = campaign_mapname[0];
 	if(wantedmapname != thismapname)
 		return CampaignBailout(strcat("wrong map: ", wantedmapname, " != ", thismapname));

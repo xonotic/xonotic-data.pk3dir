@@ -280,7 +280,7 @@ entity CA_SpectateNext(entity player, entity start)
 }
 
 
-// field where the decimal part of SCORE is accumulated (shared with other gamemodes)
+// field where the decimal part of SCORE is accumulated (shared with other gametypes)
 .float float2int_decimal_fld;
 MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {

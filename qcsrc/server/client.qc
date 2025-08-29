@@ -415,7 +415,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	}
 	else
 	{
-		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR); // clears scores too in game modes without teams
+		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR); // clears scores too in gametypes without teams
 		this.frags = FRAGS_SPECTATOR;
 	}
 

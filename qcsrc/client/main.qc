@@ -185,7 +185,7 @@ void Shutdown()
 
 	cvar_set("slowmo", cvar_defstring("slowmo")); // reset it back to 'default'
 
-	// if _cl_hook_gamestart wasn't called with an actual gamemode
+	// if _cl_hook_gamestart wasn't called with an actual gametype
 	// before CSQC VM shutdown then call it with nop fallback here
 	if (!(calledhooks & HOOK_START) && !isdemo())
 		localcmd("\n_cl_hook_gamestart nop\n");

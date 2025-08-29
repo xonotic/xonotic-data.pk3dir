@@ -736,20 +736,20 @@ void Cmd_Scoreboard_Help()
 	LOG_HELP("");
 
 	LOG_HELP(_("Before a field you can put a + or - sign, then a comma separated list\n"
-	        "of game types, then a slash, to make the field show up only in these\n"
-	        "or in all but these game types. You can also specify 'all' as a\n"
-	        "field to show all fields available for the current game mode."));
+	        "of gametypes, then a slash, to make the field show up only in these\n"
+	        "or in all but these gametypes. You can also specify 'all' as a\n"
+	        "field to show all fields available for the current gametype."));
 	LOG_HELP("");
 
-	LOG_HELP(_("The special game type names 'teams' and 'noteams' can be used to\n"
-	        "include/exclude ALL teams/noteams game modes."));
+	LOG_HELP(_("The special gametype names 'teams' and 'noteams' can be used to\n"
+	        "include/exclude ALL teams/noteams gametypes."));
 	LOG_HELP("");
 
 	LOG_HELP(_("Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"));
 	LOG_HELP(_("will display name, ping and pl aligned to the left, and the fields\n"
 	        "right of the vertical bar aligned to the right."));
 	LOG_HELP(_("'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
-			"other gamemodes except DM."));
+			"other gametypes except DM."));
 }
 
 // NOTE: adding a gametype with ? to not warn for an optional field
@@ -2511,7 +2511,7 @@ void Scoreboard_Draw()
 			str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	// Game Info: Game Type
+	// Game Info: Gametype
 	if (scoreboard_ui_enabled == 2)
 		str = _("Team Selection");
 	else if (gametype_custom_name != "")

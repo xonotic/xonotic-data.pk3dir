@@ -193,7 +193,7 @@ void freezetag_Add_Score(entity targ, entity attacker)
 			GameRules_scoring_add(attacker, SCORE, +1);
 		GameRules_scoring_add(targ, SCORE, -1);
 	}
-	// else nothing - got frozen by the game type rules themselves
+	// else nothing - got frozen by the gametype rules themselves
 }
 
 void freezetag_Ice_Think(entity this)
@@ -853,7 +853,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 				return true;
 			}
 
-			// EVERY team mate nearby gets a point (even if multiple!)
+			// EVERY teammate nearby gets a point (even if multiple!)
 			for(entity it = revivers_first; it; it = it.chain)
 			{
 				GameRules_scoring_add(it, FREEZETAG_REVIVALS, +1);

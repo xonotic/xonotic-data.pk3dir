@@ -64,7 +64,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3.1, e = makeXonoticHeaderLabel(_("Gamemode Settings")));
+		me.TD(me, 1, 3.1, e = makeXonoticHeaderLabel(_("Gametype Settings")));
 	me.TR(me);
 		me.TD(me, 1, 3.1, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_CAPTURE_TIME", _("Display capture times in Capture The Flag"), "-"));
 			makeMulti(e, "notification_CHOICE_CTF_CAPTURE_BROKEN notification_CHOICE_CTF_CAPTURE_UNBROKEN");

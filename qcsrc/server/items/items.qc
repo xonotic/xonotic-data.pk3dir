@@ -1138,7 +1138,7 @@ void StartItem(entity this, entity def)
 			set_movetype(this, MOVETYPE_NONE);
 		else
 			set_movetype(this, MOVETYPE_TOSS);
-		// do item filtering according to game mode and other things
+		// do item filtering according to gametype and other things
 		if (this.noalign <= 0)
 		{
 			if (!this.noalign)

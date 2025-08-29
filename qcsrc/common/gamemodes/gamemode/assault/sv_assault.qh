@@ -49,7 +49,7 @@ void(entity bot) havocbot_ast_reset_role;
 void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_items;
 void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
 
-// assault game mode: Which team is attacking in this round?
+// assault gametype: Which team is attacking in this round?
 int assault_attacker_team;
 
 // predefined spawnfuncs

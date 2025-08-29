@@ -31,7 +31,7 @@
 #include <server/weapons/common.qh>
 #include <server/world.qh>
 
-.string stored_netname; // TODO: store this information independently of race-based gamemodes
+.string stored_netname; // TODO: store this information independently of race-based gametypes
 
 string uid2name(string myuid)
 {

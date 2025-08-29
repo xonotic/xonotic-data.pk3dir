@@ -179,7 +179,7 @@ void kh_Controller_Think(entity this)  // called a lot
 
 // frags f: take from cvar * f
 // frags 0: no frags
-// field where the decimal part of SCORE is accumulated (shared with other gamemodes)
+// field where the decimal part of SCORE is accumulated (shared with other gametypes)
 .float float2int_decimal_fld;
 void kh_Scores_Event(entity player, entity key, string what, float frags_player, float frags_owner)  // update the score when a key is captured
 {
@@ -1238,7 +1238,7 @@ MUTATOR_HOOKFUNCTION(kh, Damage_Calculate) // for changing damage and force valu
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 
-	// as a gamemode rule, only apply scaling to player versus player combat
+	// as a gametype rule, only apply scaling to player versus player combat
 	if (!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
 		return;
 

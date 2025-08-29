@@ -16,7 +16,7 @@ int total_players;
 #define INGAME_STATUS_JOINING 0.5
 #define INGAME_STATUS_JOINED 1
 
-// typically used by game modes that temporarily turn players into spectators/observers
+// typically used by gametypes that temporarily turn players into spectators/observers
 // when they are eliminated but keeping them "in game", i.e. listed among players
 #define INGAME_STATUS_SET(it, s) (it).ingame = s
 #define INGAME_STATUS_CLEAR(it) INGAME_STATUS_SET(it, INGAME_STATUS_NONE)
