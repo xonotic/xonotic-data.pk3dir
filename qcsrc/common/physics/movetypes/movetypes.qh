@@ -13,6 +13,8 @@ const int WATERLEVEL_WETFEET = 1;
 const int WATERLEVEL_SWIMMING = 2;
 const int WATERLEVEL_SUBMERGED = 3;
 
+const int MIN_WALK_NORMAL = 0.7;
+
 #define IS_ONGROUND(s)                      boolean((s).flags & FL_ONGROUND)
 #define SET_ONGROUND(s)                     ((s).flags |= FL_ONGROUND)
 #define UNSET_ONGROUND(s)                   ((s).flags &= ~FL_ONGROUND)
@@ -20,7 +22,6 @@ const int WATERLEVEL_SUBMERGED = 3;
 #define SET_ONSLICK(s)                      ((s).flags |= FL_ONSLICK)
 #define UNSET_ONSLICK(s)                    ((s).flags &= ~FL_ONSLICK)
 
-#define GAMEPLAYFIX_DOWNTRACEONGROUND(s)    STAT(GAMEPLAYFIX_DOWNTRACEONGROUND)
 #define GAMEPLAYFIX_EASIERWATERJUMP(s)      STAT(GAMEPLAYFIX_EASIERWATERJUMP)
 #define GAMEPLAYFIX_STEPDOWN(s)             STAT(GAMEPLAYFIX_STEPDOWN, s)
 #define GAMEPLAYFIX_STEPDOWN_MAXSPEED(s)    STAT(GAMEPLAYFIX_STEPDOWN_MAXSPEED)
