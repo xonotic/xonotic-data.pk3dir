@@ -618,7 +618,7 @@ string nmm_turn_to_string(int turnflags)
 	if ( turnflags & NMM_TURN_PLACE )
 		return _("Click on the game board to place your piece");
 	if ( turnflags & NMM_TURN_MOVE )
-		return _("You can select one of your pieces to move it in one of the surrounding places");
+		return _("You can select one of your pieces to move it to one of the surrounding places");
 	if ( turnflags & NMM_TURN_FLY )
 		return _("You can select one of your pieces to move it anywhere on the board");
 	if ( turnflags & NMM_TURN_TAKE )

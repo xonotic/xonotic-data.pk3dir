@@ -129,7 +129,7 @@ string Label_getInfo(string label, int mode)
 	{
 		SCO_LABEL(_("SCO^bckills"),       "bckills", "            ", _("Number of ball carrier kills"));
 		SCO_LABEL(_("SCO^bctime"),        "bctime", "             ", _("Total amount of time holding the ball in Keepaway"));
-		SCO_LABEL(_("SCO^caps"),          "caps", "               ", _("How often a flag (CTF) or a key (KeyHunt) was captured"));
+		SCO_LABEL(_("SCO^caps"),          "caps", "               ", _("How often a flag (CTF) or a key (Key Hunt) was captured"));
 		SCO_LABEL(_("SCO^captime"),       "captime", "            ", _("Time of fastest capture (CTF)"));
 		SCO_LABEL(_("SCO^deaths"),        "deaths", "             ", _("Number of deaths"));
 		SCO_LABEL(_("SCO^destructions"),  "destructions", "       ", _("Number of keys destroyed by pushing them into void"));
@@ -144,7 +144,7 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^generators"),    "generators", "         ", _("Number of generators destroyed"));
 		SCO_LABEL(_("SCO^goals"),         "goals", "              ", _("Number of goals scored"));
 		SCO_LABEL(_("SCO^hunts"),         "hunts", "              ", _("Number of hunts (Survival)"));
-		SCO_LABEL(_("SCO^kckills"),       "kckills", "            ", _("Number of keys carrier kills"));
+		SCO_LABEL(_("SCO^kckills"),       "kckills", "            ", _("Number of key carrier kills"));
 		SCO_LABEL(_("SCO^k/d"),           "kd", "                 ", _("The kill-death ratio"));
 		SCO_LABEL(_("SCO^kdr"),           "kdr", "                ", _("The kill-death ratio"));
 		SCO_LABEL(_("SCO^kdratio"),       "kdratio", "            ", _("The kill-death ratio"));
@@ -155,7 +155,7 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^name"),          "name", "               ", _("Player name"));
 		SCO_LABEL(_("SCO^nick"),          "nick", "               ", _("Player name"));
 		SCO_LABEL(_("SCO^objectives"),    "objectives", "         ", _("Number of objectives destroyed"));
-		SCO_LABEL(_("SCO^pickups"),       "pickups", "            ", _("How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"));
+		SCO_LABEL(_("SCO^pickups"),       "pickups", "            ", _("How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"));
 		SCO_LABEL(_("SCO^ping"),          "ping", "               ", _("Ping time"));
 		SCO_LABEL(_("SCO^pl"),            "pl", "                 ", _("Packet loss"));
 		SCO_LABEL(_("SCO^pushes"),        "pushes", "             ", _("Number of players pushed into void"));
@@ -2544,7 +2544,7 @@ void Scoreboard_Draw()
 		float ll_and_fl = STAT(LEADLIMIT_AND_FRAGLIMIT);
 		str = "";
 		if (tl > 0)
-			str = strcat(str, sprintf(_("^3%1.0f minutes"), tl));
+			str = strcat(str, "^3", count_minutes(floor(tl)));
 		if (!gametype.m_hidelimits)
 		{
 			if (fl > 0)

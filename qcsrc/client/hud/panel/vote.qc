@@ -27,7 +27,7 @@ void HUD_Vote()
 		{
 			vote_yescount = 0;
 			vote_nocount = 0;
-			LOG_INFO(_("^1You must answer before entering hud configure mode"));
+			LOG_INFO(_("^1You must answer before entering HUD configure mode"));
 			cvar_set("_hud_configure", "0");
 		}
 		strcpy(vote_called_vote, _("^2Name ^7instead of \"^1Anonymous player^7\" in stats"));

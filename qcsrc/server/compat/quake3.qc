@@ -63,7 +63,7 @@ SPAWNFUNC_Q3(weapon_prox_launcher, ammo_mines, WEP_MINE_LAYER)
 // Team Arena Chain Gun -> HLAC
 SPAWNFUNC_Q3(weapon_chaingun, ammo_belt, WEP_HLAC)
 
-// Quake Live Heavy Machine Gun -> HLAC
+// Quake Live Heavy MachineGun -> HLAC
 SPAWNFUNC_Q3(weapon_hmg, ammo_hmg, WEP_HLAC)
 
 // Team Arena Nail Gun -> Crylink || Quake Nail Gun -> Electro
