@@ -64,7 +64,6 @@ MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 			player.oldvelocity = player.velocity;
 			Send_Effect(EFFECT_SMOKE_RING, trace_endpos, plane_normal, 5);
 			PlayerSound(player, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
-			animdecide_setaction(player, ANIMACTION_JUMP, true);
 #endif
 
 			M_ARGV(2, bool) = true; // multijump

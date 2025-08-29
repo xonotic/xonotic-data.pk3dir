@@ -485,12 +485,17 @@ bool PlayerJump(entity this)
 	SET_JUMP_HELD(this);
 
 #ifdef CSQC
-	jumpheight_min = jumpheight_max = this.origin.z;
+	if (csqcplayer_moveframe == clientcommandframe)
+	{
+		jumpheight_min = jumpheight_max = this.origin.z;
+
+		// FIXME this has no effect in SVQC, CSQC just guesses other players' animations which fails in some cases,
+		// also jumps and other data need to be networked to CSQC HUD panels during demo playback and spectating.
+		animdecide_setaction(this, ANIMACTION_JUMP, true);
+	}
 #endif
 
 #ifdef SVQC
-	animdecide_setaction(this, ANIMACTION_JUMP, true);
-
 	if (autocvar_g_jump_grunt)
 		PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
 #endif
@@ -730,6 +735,47 @@ void PM_check_blocked(entity this)
 	PHYS_CS(this).movement = '0 0 0';
 	this.disableclientprediction = 1;
 #endif
+}
+
+int PM_GroundDetected(entity this)
+{
+	// Q3: slopes that are too steep will not be considered onground
+	if (trace_plane_normal.z < MIN_WALK_NORMAL)
+		return 4;
+
+	SET_ONGROUND(this);
+	// set groundentity so we get carried when walking onto a mover
+	this.groundentity = trace_ent;
+
+	return 1;
+}
+
+int PM_GroundTrace(entity this, bool do_touch)
+{
+	int clip = 0;
+
+	_Movetype_PushEntityTrace(this, '0 0 -0.25'); // same distance as in Q3's PM_GroundTrace()
+
+	// Q3: if the trace didn't hit anything, we are in free fall
+	if (trace_fraction == 1
+	// Q3: check if getting thrown off the ground
+	|| (this.velocity.z > 0 && this.velocity * trace_plane_normal > 10))
+		;
+	else
+		clip = PM_GroundDetected(this);
+
+	if (clip & 1)
+	{
+		if (do_touch)
+			this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1);
+	}
+	else
+	{
+		UNSET_ONGROUND(this);
+		this.groundentity = NULL;
+	}
+
+	return clip;
 }
 
 void PM_jetpack(entity this, float maxspd_mod, float dt)
