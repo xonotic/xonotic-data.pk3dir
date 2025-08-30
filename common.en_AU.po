@@ -58,7 +58,7 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
-"^1Multiline message at time %s that\n"
+"^1Multi-line message at time %s that\n"
 "^BOLDlasts longer than normal"
 
 #: qcsrc/client/hud/panel/centerprint.qc:206
@@ -1858,7 +1858,7 @@ msgstr "Better luck next time!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1191
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr "Tubular! Press \"Next Level\" to continue!"
+msgstr "Ripper! Press \"Next Level\" to continue!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1193
 msgid "Wicked! Press \"Next Level\" to continue!"
