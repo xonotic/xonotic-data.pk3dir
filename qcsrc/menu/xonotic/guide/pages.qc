@@ -63,7 +63,7 @@ REGISTER_MOVEMENT_PAGE(0, _("Introduction"))
 	PAR(_("Xonotic is a very fast-paced arena shooter. Fast-paced does not only relate to reaction times but also to movement speed. "
 	      "That means mastering movement skills is an essential part of Xonotic gameplay and must not be underestimated."));
 	PAR(_("For a new player, the most important tricks to learn are:"));
-	PAR("* %s\n* %s\n* %s\n* %s\n* %s",
+	PAR("* %s\n* %s\n* %s\n* %s\n* %s\n* %s",
 		_("Bunny Hopping"),
 		_("Strafe Turning"),
 		_("Blaster Jumping"),

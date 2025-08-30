@@ -81,7 +81,6 @@ ENDCLASS(id)
 #define REGISTRY_SOURCE_6(id, arr_name, register_arr, cond1, cond2, cond3) _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, cond3, 3)
 
 // The descriptions for these are in menu/xonotic/guide/pages.qh
-// XONRELEASE TODO: add icons
 REGISTRY_SOURCE(IntroductionSource, Introduction, IntroductionGuidePages)
 REGISTRY_SOURCE(MovementSource, Movement, MovementGuidePages)
 REGISTRY_SOURCE(ModSource, Mods, ModsGuidePages)
