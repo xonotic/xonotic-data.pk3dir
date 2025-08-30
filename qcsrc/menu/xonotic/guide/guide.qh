@@ -80,8 +80,7 @@ ENDCLASS(id)
 #define REGISTRY_SOURCE_5(id, arr_name, register_arr, cond1, cond2)        _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, false, 2)
 #define REGISTRY_SOURCE_6(id, arr_name, register_arr, cond1, cond2, cond3) _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, cond3, 3)
 
-// The descriptions for these are in menu/xonotic/guide/pages.qh
-// XONRELEASE TODO: add icons
+// The descriptions for these are in menu/xonotic/guide/pages.qc
 REGISTRY_SOURCE(IntroductionSource, Introduction, IntroductionGuidePages)
 REGISTRY_SOURCE(MovementSource, Movement, MovementGuidePages)
 REGISTRY_SOURCE(ModSource, Mods, ModsGuidePages)
@@ -95,7 +94,7 @@ REGISTRY_SOURCE(GametypeSource, Gametypes, Gametypes)
 REGISTRY_SOURCE(BuffSource, Buffs, StatusEffects, it.instanceOfBuff)
 
 #include <common/mutators/mutator/powerups/powerup/_mod.qh>
-// The descriptions for these are in common/mutators/mutator/powerups/powerup/*.qc and common/mutators/mutator/powerups/powerup/jetpack.qc
+// The descriptions for these are in common/mutators/mutator/powerups/powerup/*.qc
 REGISTRY_SOURCE(PowerupSource, Powerups, Items, it.instanceOfPowerup)
 
 #include <common/items/all.qh>
@@ -118,7 +117,6 @@ REGISTRY_SOURCE(WeaponSource, Weapons, Weapons,
 
 #include <common/monsters/all.qh>
 // The descriptions for these are in common/monsters/monster/*.qc
-// XONRELEASE TODO: add icons
 REGISTRY_SOURCE(MonsterSource, Monsters, Monsters)
 
 #include <common/vehicles/all.qh>
@@ -128,10 +126,8 @@ REGISTRY_SOURCE(VehicleSource, Vehicles, Vehicles)
 
 #include <common/turrets/all.qh>
 // The descriptions for these are in common/turrets/turret/*.qc
-// XONRELEASE TODO: add icons
 REGISTRY_SOURCE(TurretSource, Turrets, Turrets)
 
 #include <common/mutators/base.qh>
 // The descriptions for these are in common/mutators/mutator/*.qc (not the cl_* or sv_* files)
-// XONRELEASE TODO: add icons
 REGISTRY_SOURCE(MutatorSource, Mutators, Mutators)

@@ -620,7 +620,7 @@ METHOD(Devastator, describe, string(Devastator this))
 	PAR(_("The secondary fire can be used to immediately detonate rockets, allowing dealing damage to enemies even if the rocket barely missed colliding with them."));
 	PAR(_("It consumes a bunch of %s ammo for each rocket, which can end up being depleted quickly, so often players alternate with another weapon like %s."), COLORED_NAME(ITEM_Rockets), COLORED_NAME(WEP_VORTEX));
 	PAR(_("Due to its high damage output, the %s is one of the most commonly used weapons. "
-		"It can be used in almost any scenario, working best in medium range combat. "
+	      "It can be used in almost any scenario, working best in medium range combat. "
 	      "In close range combat, the large splash radius often results in rockets damaging both you and your enemy."), COLORED_NAME(this));
 	PAR(_("Due to the ability to remotely detonate rockets, a common usage is \"rocket flying,\" where you fire a rocket and immediately detonate it to boost yourself while mid-air, "
 	      "much more effective with the %s mutator enabled."), COLORED_NAME(MUTATOR_rocketflying));

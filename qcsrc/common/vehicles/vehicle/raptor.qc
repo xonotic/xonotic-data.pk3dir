@@ -851,7 +851,7 @@ METHOD(Raptor, describe, string(Raptor this))
     PAR(_("The two weapons have different reticles for them similar to the %s. "
         "The primary weapon is laser-based, and is shot toward the white reticle. "
         "The secondary weapon drops bombs to the ground, aiming towards the green reticle. "
-          "The white reticle always points at the head of the vehicle, while the green reticle's location is determined by the momentum of the vehicle."), COLORED_NAME(VEH_SPIDERBOT));
+        "The white reticle always points at the head of the vehicle, while the green reticle's location is determined by the momentum of the vehicle."), COLORED_NAME(VEH_SPIDERBOT));
     return PAGE_TEXT;
 }
 

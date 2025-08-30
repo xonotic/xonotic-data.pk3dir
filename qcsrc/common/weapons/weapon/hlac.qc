@@ -248,7 +248,7 @@ METHOD(HLAC, describe, string(HLAC this))
 	PAR(_("Unlike the %s, it consumes %s ammo for each laser shot, meaning that it cannot be used infinitely."), COLORED_NAME(WEP_BLASTER), COLORED_NAME(ITEM_Cells));
 	PAR(_("The %s works best in close ranges, but the primary fire is also useful in medium ranges."), COLORED_NAME(this));
 	PAR(_("A unique aspect of the %s is that the longer the primary fire is held, the more that the lasers will start to spread out. "
-		"This means releasing primary fire every now and then is important to restore accuracy. "
+	      "This means releasing primary fire every now and then is important to restore accuracy. "
 	      "Also, the %s has less spread when used while crouching."), COLORED_NAME(this), COLORED_NAME(this));
 	PAR(W_Guide_Keybinds(this));
 	PAR(W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_shots", "", false));
