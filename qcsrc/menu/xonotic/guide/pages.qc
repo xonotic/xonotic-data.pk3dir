@@ -177,3 +177,12 @@ REGISTER_MODS_PAGE(0, _("Overkill"))
 	PAR(_("As for movement tricks, %s is enabled by default in %s, allowing for rapidly changing your movement direction."), COLORED_NAME(MUTATOR_dodging), COLORED_NAME(MUTATOR_ok));
 	this.m_description = strzone(PAGE_TEXT);
 }
+
+REGISTER_MODS_PAGE(1, _("XPM"))
+{
+	PAGE_TEXT_INIT();
+	PAR(_("%s (\"Xonotic Pro-Mode\") is a set of gameplay settings often used for competitive play, particularly in %s."), _("XPM"), COLORED_NAME(MAPINFO_TYPE_DUEL));
+	PAR(_("It adds extra rules for picking up items, preventing players with 100 or more health or armor from taking %s, %s, %s, and %s pickups, in order to give other players a fairer chance of rebuilding their stack. "
+	      "It also disables spawn protection and enables friendly fire in team-based gametypes."), COLORED_NAME(ITEM_HealthBig), COLORED_NAME(ITEM_HealthMedium), COLORED_NAME(ITEM_ArmorBig), COLORED_NAME(ITEM_ArmorMedium));
+	this.m_description = strzone(PAGE_TEXT);
+}
