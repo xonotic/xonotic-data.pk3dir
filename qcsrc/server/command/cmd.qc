@@ -661,25 +661,27 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_SAME);
 				return;
 			}
-			if (team_num && autocvar_bot_vs_human)
+			if (team_num)
 			{
 				entity balance = TeamBalance_CheckAllowedTeams(caller);
-				for (int i = 0; !TeamBalance_IsTeamAllowed(balance, team_index) && i < NUM_TEAMS; ++i)
-					team_index = team_index > 1 ? team_index - 1 : NUM_TEAMS;
-				team_num = Team_IndexToTeam(team_index);
-				TeamBalance_Destroy(balance);
-			}
-			if (team_num && autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
-			{
-				entity balance = TeamBalance_CheckAllowedTeams(caller);
-				TeamBalance_GetTeamCounts(balance, caller);
-				if ((Team_IndexToBit(Team_TeamToIndex(team_num)) &
-					TeamBalance_FindBestTeams(balance, caller, false)) == 0)
+				if (!TeamBalance_IsTeamAllowed(balance, team_index))
 				{
-					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
-					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_NOTALLOWED);
 					TeamBalance_Destroy(balance);
 					return;
+				}
+				if (autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
+				{
+					TeamBalance_GetTeamCounts(balance, caller);
+					if ((Team_IndexToBit(Team_TeamToIndex(team_num)) &
+					     TeamBalance_FindBestTeams(balance, caller, false)) == 0)
+					{
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
+						TeamBalance_Destroy(balance);
+						return;
+					}
 				}
 				TeamBalance_Destroy(balance);
 			}
