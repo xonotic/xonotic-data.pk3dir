@@ -3,7 +3,7 @@
 #ifdef SVQC
 float buff_Jump_ChangeDamage(float frag_damage, float frag_deathtype)
 {
-	if(frag_deathtype == DEATH_FALL.m_id)
+	if (frag_deathtype == DEATH_FALL.m_id)
 		frag_damage = 0;
 	return frag_damage;
 }
@@ -11,9 +11,9 @@ float buff_Jump_ChangeDamage(float frag_damage, float frag_deathtype)
 MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
-	// these automatically reset, no need to worry
 
-	if(StatusEffects_active(BUFF_JUMP, player))
-		STAT(MOVEVARS_JUMPVELOCITY, player) = autocvar_g_buffs_jump_height;
+	// these automatically reset, no need to worry
+	if (StatusEffects_active(BUFF_JUMP, player))
+		STAT(MOVEVARS_JUMPVELOCITY, player) = autocvar_g_buffs_jump_velocity;
 }
 #endif // SVQC

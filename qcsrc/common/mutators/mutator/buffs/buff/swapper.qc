@@ -3,36 +3,35 @@
 #ifdef SVQC
 MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 {
-	if(MUTATOR_RETURNVALUE || game_stopped) return;
-	entity player = M_ARGV(0, entity);
+	if (MUTATOR_RETURNVALUE || game_stopped)
+		return;
 
-	if(StatusEffects_active(BUFF_SWAPPER, player))
+	entity player = M_ARGV(0, entity);
+	if (StatusEffects_active(BUFF_SWAPPER, player))
 	{
-		float best_distance = autocvar_g_buffs_swapper_range;
+		float best_dist2 = autocvar_g_buffs_swapper_range ** 2;
 		entity closest = NULL;
 		FOREACH_CLIENT(IS_PLAYER(it), {
-			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
-			if(DIFF_TEAM(it, player))
+			if (!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
+			if (DIFF_TEAM(it, player))
 			{
-				float test = vlen2(player.origin - it.origin);
-				if(test <= best_distance * best_distance)
+				float test_dist2 = vlen2(player.origin - it.origin);
+				if (test_dist2 <= best_dist2)
 				{
-					best_distance = sqrt(test);
+					best_dist2 = test_dist2;
 					closest = it;
 				}
 			}
 		});
 
-		if(closest)
+		if (closest)
 		{
-			vector my_org, my_vel, my_ang, their_org, their_vel, their_ang;
-
-			my_org = player.origin;
-			my_vel = player.velocity;
-			my_ang = player.angles;
-			their_org = closest.origin;
-			their_vel = closest.velocity;
-			their_ang = closest.angles;
+			vector my_org = player.origin;
+			vector my_vel = player.velocity;
+			vector my_ang = player.angles;
+			vector their_org = closest.origin;
+			vector their_vel = closest.velocity;
+			vector their_ang = closest.angles;
 
 			Drop_Special_Items(closest);
 

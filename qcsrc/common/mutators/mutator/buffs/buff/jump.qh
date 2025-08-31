@@ -3,7 +3,7 @@
 #include <common/mutators/mutator/buffs/buffs.qh>
 
 #ifdef SVQC
-float autocvar_g_buffs_jump_height;
+float autocvar_g_buffs_jump_velocity;
 
 float buff_Jump_ChangeDamage(float frag_damage, float frag_deathtype);
 #endif // SVQC
