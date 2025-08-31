@@ -2140,7 +2140,7 @@ void readplayerstartcvars()
 
 	MUTATOR_CALLHOOK(SetStartItems);
 
-	if (start_items & ITEM_Jetpack.m_itemid)
+	if (start_items & ITEM_Jetpack.m_itemid && autocvar_g_jetpack_fuel)
 	{
 		start_items |= ITEM_FuelRegen.m_itemid;
 		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));

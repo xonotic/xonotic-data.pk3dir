@@ -47,7 +47,7 @@ void DrawAmmoItem(vector myPos, vector mySize, Resource ammoType, bool isCurrent
 		ammo = 60;
 	}
 	else
-		ammo = getstati(GetAmmoStat(ammoType));
+		ammo = GetAmmoStat(ammoType);
 
 	if(!isCurrent)
 	{
@@ -89,15 +89,28 @@ void DrawAmmoItem(vector myPos, vector mySize, Resource ammoType, bool isCurrent
 	else
 		alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_ammo_noncurrent_alpha, 1);
 
-	string text = isInfinite ? "\xE2\x88\x9E" : ftos(ammo); // Use infinity symbol (U+221E)
+	// Use infinity symbol (U+221E)
+	string text = isInfinite ? "\xE2\x88\x9E" : ftos((ammoType == RES_FUEL) ? ceil(ammo) : ammo);
 
 	// Draw item
 
 	if(isCurrent)
 		drawpic_aspect_skin(myPos, "ammo_current_bg", mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
-	if(ammo > 0 && autocvar_hud_panel_ammo_progressbar)
-		HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x, autocvar_hud_panel_ammo_progressbar_name, ammo/autocvar_hud_panel_ammo_maxammo, 0, 0, textColor * 0.2 + ammoType.m_color * 0.8, autocvar_hud_progressbar_alpha * alpha, DRAWFLAG_NORMAL);
+	if(ammo > 0 && (autocvar_hud_panel_ammo_progressbar || ammoType == RES_FUEL))
+	{
+		vector ammo_bar_color = textColor * 0.2 + ammoType.m_color * 0.8;
+		float ammo_bar_max = autocvar_hud_panel_ammo_maxammo;
+		if (ammoType == RES_FUEL)
+		{
+			ammo_bar_color = autocvar_hud_progressbar_fuel_color;
+			ammo_bar_max = autocvar_hud_panel_ammo_maxfuel;
+		}
+		vector ofs = eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x;
+		HUD_Panel_DrawProgressBar(myPos + ofs, mySize - ofs, autocvar_hud_panel_ammo_progressbar_name,
+			ammo / ammo_bar_max, 0, 0, ammo_bar_color,
+			autocvar_hud_progressbar_alpha * alpha, DRAWFLAG_NORMAL);
+	}
 
 	if(autocvar_hud_panel_ammo_text)
 		drawstring_aspect(textPos, text, eX * (2/3) * mySize.x + eY * mySize.y, textColor * 0.6 + ammoType.m_color * 0.4, alpha, DRAWFLAG_NORMAL);
@@ -151,6 +164,36 @@ void HUD_Ammo()
 	else
 		total_ammo_count = AMMO_COUNT;
 
+	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_AMMO);
+
+	bool show_fuel = false;
+	int have_hook;
+	if (mut_is_active(MUT_GRAPPLING_HOOK))
+	{
+		have_hook = 2; // off-hand hook
+		if (STAT(HOOK_FUEL))
+			show_fuel = true;
+	}
+	else
+	{
+		have_hook = ((WepSet_GetFromStat() & WEPSET(HOOK)) != '0 0 0') ? 1 : 0;
+		if (have_hook && WEP_CVAR_PRI(WEP_HOOK, ammo))
+			show_fuel = true;
+	}
+
+	bool have_jetpack = boolean(STAT(ITEMS) & IT_JETPACK);
+	if (have_jetpack && STAT(JETPACK_FUEL))
+		show_fuel = true;
+
+	if (!show_fuel)
+		show_fuel = (STAT(FUEL) || infinite_ammo);
+
+	if (autocvar_hud_panel_ammo_onlycurrent && autocvar_hud_panel_ammo_onlycurrent_and_always_fuel)
+		show_fuel = true;
+
+	if (show_fuel)
+		++total_ammo_count;
+
 	if(draw_nades)
 	{
 		++total_ammo_count;
@@ -189,9 +232,8 @@ void HUD_Ammo()
 
 	Weapon wep = wepent.switchweapon;
 	int i;
-	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_AMMO);
 	row = column = 0;
-	if(autocvar_hud_panel_ammo_onlycurrent)
+	if(autocvar_hud_panel_ammo_onlycurrent && total_ammo_count == 1)
 	{
 		if(autocvar__hud_configure)
 		{
@@ -218,13 +260,49 @@ void HUD_Ammo()
 	else
 	{
 		row = column = 0;
+		bool normal_ammo_found = false;
 		IL_EACH(default_order_resources, it.instanceOfAmmoResource && !it.m_hidden,
 		{
+			bool isCurrent = (wep.ammo_type == it);
+			if (isCurrent && wep.ammo_type != RES_FUEL)
+				normal_ammo_found = true;
+
+			if (autocvar_hud_panel_ammo_onlycurrent && !isCurrent && it != RES_FUEL)
+			{
+				// skip everything except current ammo and fuel
+				continue;
+			}
+
+			if (it == RES_FUEL)
+			{
+				if (!show_fuel)
+					continue;
+
+				if (autocvar_hud_panel_ammo_onlycurrent && !normal_ammo_found)
+				{
+					// NOTE this code assumes fuel is the last ammo type in default_order_resources
+					// empty spot for normal ammo so the position is always the same
+
+					if(autocvar__hud_configure) // unless we are in hud config mode
+						DrawAmmoItem(pos, ammo_size, RES_ROCKETS, true, false);
+
+					++row;
+					if(row >= rows)
+					{
+						row = 0;
+						column = column + 1;
+					}
+				}
+
+				if (!isCurrent)
+					isCurrent = (have_jetpack || have_hook == 2); // these tools can be used anytime
+			}
+
 			DrawAmmoItem(
 				pos + vec2(column * (ammo_size.x + offset.x), row * (ammo_size.y + offset.y)),
 				ammo_size,
 				it,
-				(wep.ammo_type == it),
+				isCurrent,
 				infinite_ammo
 			);
 

@@ -587,9 +587,9 @@ void Weapons_Draw(
 			if (!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_type != RES_NONE))
 			{
 				float ammo_full;
-				float a = getstati(GetAmmoStat(it.ammo_type)); // how much ammo do we have?
+				float ammo = GetAmmoStat(it.ammo_type); // how much ammo do we have?
 
-				if (a > 0)
+				if (ammo > 0)
 				{
 					// TODO: registry handles
 					switch (it.ammo_type)
@@ -605,7 +605,7 @@ void Weapons_Draw(
 					drawsetcliparea(
 						weapon_pos.x + baroffset.x,
 						weapon_pos.y + baroffset.y,
-						barsize.x * bound(0, a/ammo_full, 1),
+						barsize.x * bound(0, ammo / ammo_full, 1),
 						barsize.y
 					);
 
