@@ -9,20 +9,20 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	entity player = M_ARGV(0, entity);
 	if (StatusEffects_active(BUFF_SWAPPER, player))
 	{
-		float best_dist2 = autocvar_g_buffs_swapper_range ** 2;
+		entity head = WarpZone_FindRadius(player.origin, autocvar_g_buffs_swapper_range, false);
 		entity closest = NULL;
-		FOREACH_CLIENT(IS_PLAYER(it), {
-			if (!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
-			if (DIFF_TEAM(it, player))
+		float head_dist2, best_dist2 = autocvar_g_buffs_swapper_range ** 2;
+		for (; head; head = head.chain)
+			if (IS_PLAYER(head) && DIFF_TEAM(head, player))
+			if (!IS_DEAD(head) && !STAT(FROZEN, head) && !head.vehicle)
 			{
-				float test_dist2 = vlen2(player.origin - it.origin);
-				if (test_dist2 <= best_dist2)
+				head_dist2 = vlen2(head.WarpZone_findradius_dist);
+				if (head_dist2 < best_dist2)
 				{
-					best_dist2 = test_dist2;
-					closest = it;
+					best_dist2 = head_dist2;
+					closest = head;
 				}
 			}
-		});
 
 		if (closest)
 		{
