@@ -10,8 +10,12 @@
 CLASS(FlightBuff, Buff)
 	ATTRIB(FlightBuff, m_name, string, _("Flight"));
 	ATTRIB(FlightBuff, netname, string, "flight");
+#ifndef SVQC
 	ATTRIB(FlightBuff, m_icon, string, "buff_flight");
+#endif
+#ifdef GAMEQC
 	ATTRIB(FlightBuff, m_skin, int, 11);
+#endif
 	ATTRIB(FlightBuff, m_color, vector, '0.23 0.44 1');
 ENDCLASS(FlightBuff)
 

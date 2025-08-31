@@ -6,6 +6,7 @@ string BUFF_NAME(int i)
 	return strcat(rgb_to_hexcolor(b.m_color), b.m_name);
 }
 
+#ifdef SVQC
 string Buff_CompatName(string buffname)
 {
 	switch (buffname)
@@ -22,6 +23,7 @@ string Buff_CompatName(string buffname)
 		default:                       return buffname;
 	}
 }
+#endif
 
 #ifdef GAMEQC
 REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");

@@ -16,13 +16,14 @@ CLASS(Buff, StatusEffect)
 	ATTRIB(Buff, m_itemid, int, IT_BUFF);
 #endif
 	ATTRIB(Buff, netname, string, "buff");
-	ATTRIB(Buff, m_icon, string, "buff");
 	ATTRIB(Buff, m_color, vector, '1 1 1');
 	ATTRIB(Buff, m_name, string, _("Buff"));
+#ifdef GAMEQC
 	ATTRIB(Buff, m_skin, int, 0);
-	ATTRIB(Buff, m_lifetime, float, 60);
+#endif
 	ATTRIB(Buff, m_sprite, string, "");
 #ifndef SVQC
+	ATTRIB(Buff, m_icon, string, "buff");
 	METHOD(Buff, display, void(entity this, void(string name, string icon) returns))
 	{
 		string img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon);
@@ -37,6 +38,7 @@ CLASS(Buff, StatusEffect)
 	}
 #endif
 #ifdef SVQC
+	ATTRIB(Buff, m_lifetime, float, 60);
 	METHOD(Buff, m_time, float(Buff this))
 	{
 		return cvar(strcat("g_buffs_", this.netname, "_time"));
@@ -81,7 +83,9 @@ STATIC_INIT(REGISTER_BUFFS)
 	#define BUFF_SPAWNFUNC_Q3COMPAT(o, r)
 #endif
 
+#ifdef SVQC
 string Buff_CompatName(string buffname);
+#endif
 
 BUFF_SPAWNFUNCS(random, NULL)
 

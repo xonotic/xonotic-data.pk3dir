@@ -11,8 +11,12 @@ float buff_Jump_ChangeDamage(float frag_damage, float frag_deathtype);
 CLASS(JumpBuff, Buff)
 	ATTRIB(JumpBuff, m_name, string, _("Jump"));
 	ATTRIB(JumpBuff, netname, string, "jump");
+#ifndef SVQC
 	ATTRIB(JumpBuff, m_icon, string, "buff_jump");
+#endif
+#ifdef GAMEQC
 	ATTRIB(JumpBuff, m_skin, int, 10);
+#endif
 	ATTRIB(JumpBuff, m_color, vector, '0.24 0.78 1');
 ENDCLASS(JumpBuff)
 
