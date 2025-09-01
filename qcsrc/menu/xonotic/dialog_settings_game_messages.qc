@@ -53,7 +53,8 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 2.7, e = makeXonoticCheckBox_T(0, "notification_show_sprees_info_newline", _("Print on a seperate line"), "-"));
-			setDependentAND(e, "notification_show_sprees", 1, 1, "notification_show_sprees_info", 1, 3);
+			setDependent(e, "notification_show_sprees", 1, 1);
+			setDependentAND(e, "notification_show_sprees_info", 1, 3);
 	me.TR(me);
 		me.TD(me, 1, 3.1, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_FRAG", _("Add extra frag information to centerprint when available"), "-"));
 			makeMulti(e, "notification_CHOICE_FRAGGED notification_CHOICE_TYPEFRAG notification_CHOICE_TYPEFRAGGED notification_CHOICE_FRAG_FIRE notification_CHOICE_FRAGGED_FIRE notification_CHOICE_FRAG_FREEZE notification_CHOICE_FRAGGED_FREEZE");

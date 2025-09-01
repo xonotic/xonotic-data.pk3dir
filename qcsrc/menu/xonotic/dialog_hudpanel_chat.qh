@@ -9,5 +9,5 @@ CLASS(XonoticHUDChatDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDChatDialog, rows, float, 15.5);
 	ATTRIB(XonoticHUDChatDialog, columns, float, 4);
 	ATTRIB(XonoticHUDChatDialog, name, string, "HUDchat");
-	ATTRIB(XonoticHUDChatDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDChatDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDChatDialog)

@@ -20,7 +20,7 @@ void updateSensSlider(entity field, entity slider)
 
 	// Avoid onChange causing jittering
 	slider.onChangeEntity = NULL;
-	slider.setValue(slider, stof(field.text));
+	slider.setValue(slider, stof(field.text), autocvar_menu_animations > 0);
 	slider.onChangeEntity = field;
 }
 
@@ -33,7 +33,7 @@ void updateSensField(entity slider, entity field)
 	{
 		// Avoid onChange causing jittering
 		field.onChangeEntity = NULL;
-		field.setText(field, ftos_mindecimals(slider.value));
+		field.setText(field, ftos_decimals(slider.value, slider.valueDigits));
 		field.onChangeEntity = slider;
 	}
 }
@@ -97,11 +97,11 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Sensitivity:")));
 		me.TD(me, 1, 1, e = makeXonoticSlider_T(0.1, 9.9, 0.1, "sensitivity",
 			_("Mouse speed multiplier")));
+			e.setValueSpace(e, 0);
 			sensitivitySlider = e;
-			e.textSpace = 0;
 		me.TD(me, 1, 1, e = makeXonoticInputBox_T(0, "sensitivity",
 			_("Mouse speed multiplier")));
-			e.saveImmediately = 1;
+			e.saveImmediately = true;
 			e.allowedCharacters = "0.123456789";
 			linkSensitivities(sensitivitySlider, e);
 	me.TR(me);
@@ -115,6 +115,7 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Acceleration factor:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("m_accelerate", m_accelerate_tooltip));
+			e.setValueSpace(e, e.valueSpace * 1.25);
 			e.addText(e, ZCTX(_("MOUSEACCEL^Fully disabled")), 0);
 			e.addText(e, ZCTX(_("MOUSEACCEL^Linear disabled")), 1);
 			e.addRange(e, 1.2, 4, 0.2);
@@ -170,16 +171,16 @@ void XonoticInputSettingsTab_fill(entity me)
 		if(cvar_type("joy_enable") & CVAR_TYPEFLAG_ENGINE)
 		{
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joy_enable", _("Use joystick input")));
-			setDependent(e, "joy_detected", 1, 10000000);
+				setDependentNOT(e, "joy_detected", 0);
 		}
 		else if(cvar_type("joystick") & CVAR_TYPEFLAG_ENGINE)
 		{
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joystick", _("Use joystick input")));
-			setDependent(e, "joy_detected", 1, 10000000);
+				setDependentNOT(e, "joy_detected", 0);
 		}
 		else
 		{
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, string_null, _("Use joystick input")));
-			e.disabled = 1; // the option is never available in this case, just there for show
+				e.disabled = 1; // the option is never available in this case, just there for show
 		}
 }

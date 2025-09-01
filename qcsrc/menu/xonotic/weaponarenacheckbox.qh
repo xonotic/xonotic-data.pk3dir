@@ -3,7 +3,7 @@
 #include "../item/checkbox.qh"
 CLASS(XonoticWeaponarenaCheckBox, CheckBox)
 	METHOD(XonoticWeaponarenaCheckBox, configureXonoticWeaponarenaCheckBox, void(entity, string, string));
-	METHOD(XonoticWeaponarenaCheckBox, setChecked, void(entity, float));
+	METHOD(XonoticWeaponarenaCheckBox, setChecked, void(entity, bool));
 	ATTRIB(XonoticWeaponarenaCheckBox, fontSize, float, SKINFONTSIZE_NORMAL);
 	ATTRIB(XonoticWeaponarenaCheckBox, image, string, SKINGFX_CHECKBOX);
 	ATTRIB(XonoticWeaponarenaCheckBox, netname, string);
