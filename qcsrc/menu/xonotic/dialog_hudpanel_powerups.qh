@@ -9,5 +9,5 @@ CLASS(XonoticHUDPowerupsDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDPowerupsDialog, rows, float, 16);
 	ATTRIB(XonoticHUDPowerupsDialog, columns, float, 4);
 	ATTRIB(XonoticHUDPowerupsDialog, name, string, "HUDpowerups");
-	ATTRIB(XonoticHUDPowerupsDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDPowerupsDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDPowerupsDialog)

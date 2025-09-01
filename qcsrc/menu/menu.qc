@@ -505,10 +505,15 @@ entity m_findtooltipitem(entity root, vector pos)
 
 	return best;
 }
-string gettooltip_dependency_string_numeric(entity e, .string cvarStr, .float cvarMin, .float cvarMax)
+string gettooltip_dependency_string_numeric(entity e, .string cvarStr, .float cvarMin, .float cvarMax, float not_if_equal)
 {
 	if (e.(cvarMin) == e.(cvarMax))
-		return sprintf("^3%s^7 \"%s\"",                            e.(cvarStr), ftos_mindecimals(e.(cvarMin)));
+	{
+		if (not_if_equal)
+			return sprintf(_("^3%s^7 not equal to \"%s\""),        e.(cvarStr), ftos_mindecimals(e.(cvarMin)));
+		else
+			return sprintf("^3%s^7 \"%s\"",                        e.(cvarStr), ftos_mindecimals(e.(cvarMin)));
+	}
 	else if (e.(cvarMin) < e.(cvarMax))
 		return sprintf(_("^3%s^7 in range \"%s\" to \"%s\""),      e.(cvarStr), ftos_mindecimals(e.(cvarMin)), ftos_mindecimals(e.(cvarMax)));
 	else
@@ -544,22 +549,22 @@ string gettooltip()
 				s = strcat(s, "\n\n", _("Has special requirements"));
 			else if (menuTooltipItem.cvarString_setDependent)
 				s = strcat(s, "\n\n",
-					sprintf(_("Requires ^3%s^7 not equal to \"%s^7\""), cvar_string(menuTooltipItem.cvarString_setDependent), menuTooltipItem.cvarValue_setDependent));
-			else if (menuTooltipItem.cvar_setDependent)
+					sprintf(_("Requires ^3%s^7 not equal to \"%s^7\""), menuTooltipItem.cvarString_setDependent, menuTooltipItem.cvarValue_setDependent));
+			else if (menuTooltipItem.cvar1_setDependent)
 			{
 				s = strcat(s, "\n\n");
 				string cvar1_s, cvar2_s, cvar3_s;
-				cvar1_s = gettooltip_dependency_string_numeric(menuTooltipItem, cvar_setDependent, cvarMin_setDependent, cvarMax_setDependent);
+				cvar1_s = gettooltip_dependency_string_numeric(menuTooltipItem, cvar1_setDependent, cvar1Min_setDependent, cvar1Max_setDependent, menuTooltipItem.op_setDependent & BIT(1));
 				if (menuTooltipItem.cvar2_setDependent)
 				{
-					cvar2_s = gettooltip_dependency_string_numeric(menuTooltipItem, cvar2_setDependent, cvar2Min_setDependent, cvar2Max_setDependent);
+					cvar2_s = gettooltip_dependency_string_numeric(menuTooltipItem, cvar2_setDependent, cvar2Min_setDependent, cvar2Max_setDependent, 0);
 					if (menuTooltipItem.cvar3_setDependent)
 					{
-						cvar3_s = gettooltip_dependency_string_numeric(menuTooltipItem, cvar3_setDependent, cvar3Min_setDependent, cvar3Max_setDependent);
-						s = strcat(s, sprintf(_("Requires %s, %s, and %s"), cvar1_s, cvar2_s, cvar3_s));
+						cvar3_s = gettooltip_dependency_string_numeric(menuTooltipItem, cvar3_setDependent, cvar3Min_setDependent, cvar3Max_setDependent, 0);
+						s = strcat(s, sprintf((menuTooltipItem.op_setDependent & BIT(0) ? _("Requires %s, %s, and %s") : _("Requires %s, %s, or %s")), cvar1_s, cvar2_s, cvar3_s));
 					}
 					else
-						s = strcat(s, sprintf((menuTooltipItem.op_setDependent ? _("Requires %s or %s") : _("Requires %s and %s")), cvar1_s, cvar2_s));
+						s = strcat(s, sprintf((menuTooltipItem.op_setDependent & BIT(0) ? _("Requires %s or %s")       : _("Requires %s and %s")),     cvar1_s, cvar2_s));
 				}
 				else
 					s = strcat(s, sprintf(_("Requires %s"), cvar1_s));

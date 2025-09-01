@@ -252,15 +252,19 @@ void XonoticPlayList_doubleClickListBoxItem(entity me, float i, vector where)
 
 float XonoticPlayList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER || scan == K_KP_ENTER) {
+	if (scan == K_ENTER || scan == K_KP_ENTER || ((shift & S_CTRL) && scan == K_MOUSE1))
+	{
 		me.startSound(me, 0);
 		return 1;
 	}
-	else if(scan == K_SPACE) {
+	else if (scan == K_SPACE)
+	{
 		me.pauseSound(me);
 		return 1;
 	}
-	else if(scan == K_DEL || scan == K_KP_DEL || scan == K_BACKSPACE || scan == K_MOUSE3) {
+	else if (scan == K_DEL || scan == K_KP_DEL || scan == K_BACKSPACE || scan == K_MOUSE3
+		|| ascii == '-')
+	{
 		me.removeSelectedFromPlayList(me);
 		return 1;
 	}

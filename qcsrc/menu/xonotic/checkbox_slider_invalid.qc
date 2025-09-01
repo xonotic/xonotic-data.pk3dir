@@ -30,13 +30,13 @@ void XonoticSliderCheckBox_draw(entity me)
 		me.savedValue = me.controlledSlider.value;
 	SUPER(XonoticSliderCheckBox).draw(me);
 }
-void XonoticSliderCheckBox_setChecked(entity me, float val)
+void XonoticSliderCheckBox_setChecked(entity me, bool val)
 {
 	if(me.checked == val)
 		return;
 	me.checked = val;
 	if(val == me.inverted)
-		me.controlledSlider.setValue(me.controlledSlider, median(me.controlledSlider.valueMin, me.savedValue, me.controlledSlider.valueMax));
+		me.controlledSlider.setValue(me.controlledSlider, median(me.controlledSlider.valueMin, me.savedValue, me.controlledSlider.valueMax), autocvar_menu_animations > 0);
 	else
-		me.controlledSlider.setValue(me.controlledSlider, me.offValue);
+		me.controlledSlider.setValue(me.controlledSlider, me.offValue, autocvar_menu_animations > 0);
 }

@@ -30,7 +30,7 @@
 	{
 		entity e;
 		if (me.shown) return;
-		me.shown = 1;
+		me.shown = true;
 		for (e = me.firstChild; e; e = e.nextSibling)
 			if (e.Container_alpha > 0) e.showNotify(e);
 	}
@@ -39,7 +39,7 @@
 	{
 		entity e;
 		if (!me.shown) return;
-		me.shown = 0;
+		me.shown = false;
 		for (e = me.firstChild; e; e = e.nextSibling)
 			if (e.Container_alpha > 0) e.hideNotify(e);
 	}
@@ -115,10 +115,10 @@
 	{
 		entity e;
 
-		me.focusable = 0;
+		me.focusable = false;
 		for (e = me.firstChild; e; e = e.nextSibling)
 		{
-			if (e.focusable) me.focusable += 1;
+			if (e.focusable) me.focusable = true;
 			if (e.Container_alpha < 0.003)  // can't change color values anyway
 				continue;
 			me.enterSubitem(me, e);
@@ -233,7 +233,7 @@
 	{
 		if (other.parent) error("Can't add already added item!");
 
-		if (other.focusable) me.focusable += 1;
+		if (other.focusable) me.focusable = true;
 
 		if (theSize.x > 1)
 		{
@@ -271,7 +271,7 @@
 	{
 		if (other.parent != me) error("Can't remove from wrong container!");
 
-		if (other.focusable) me.focusable -= 1;
+		if (other.focusable) me.focusable = false;
 
 		other.parent = NULL;
 
@@ -292,7 +292,7 @@
 
 		if (me.focusedChild)
 		{
-			me.focusedChild.focused = 0;
+			me.focusedChild.focused = false;
 			me.focusedChild.focusLeave(me.focusedChild);
 			me.focusedChild = NULL;
 		}
@@ -305,7 +305,7 @@
 			{
 				me.focusedChild = me.savedFocus;
 				me.savedFocus = NULL;
-				me.focusedChild.focused = 1;
+				me.focusedChild.focused = true;
 				me.focusedChild.focusEnter(me.focusedChild);
 
 				if (me.focusedChild.instanceOfContainer)
@@ -314,7 +314,7 @@
 			else
 			{
 				me.focusedChild = other;
-				me.focusedChild.focused = 1;
+				me.focusedChild.focused = true;
 				me.focusedChild.focusEnter(me.focusedChild);
 			}
 		}

@@ -9,5 +9,5 @@ CLASS(XonoticHUDPressedKeysDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDPressedKeysDialog, rows, float, 15.5);
 	ATTRIB(XonoticHUDPressedKeysDialog, columns, float, 4);
 	ATTRIB(XonoticHUDPressedKeysDialog, name, string, "HUDpressedkeys");
-	ATTRIB(XonoticHUDPressedKeysDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDPressedKeysDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDPressedKeysDialog)

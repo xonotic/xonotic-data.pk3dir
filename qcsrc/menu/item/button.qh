@@ -20,16 +20,15 @@ CLASS(Button, Label)
 	ATTRIB(Button, src2, string); // is centered, same aspect, and stretched to label size
 	ATTRIB(Button, src2scale, float, 1);
 	ATTRIB(Button, srcMulti, float, 1);        // 0: button square left, text right; 1: button stretched, text over it
-	ATTRIB(Button, buttonLeftOfText, float, 0);
-	ATTRIB(Button, focusable, float, 1);
-	ATTRIB(Button, allowFocusSound, float, 1);
+	ATTRIB(Button, focusable, bool, true);
+	ATTRIB(Button, allowFocusSound, bool, true);
 	ATTRIB(Button, pressed, float, 0);
 	ATTRIB(Button, clickTime, float, 0);
 	ATTRIB(Button, applyButton, entity);
 	ATTRIB(Button, disableOnClick, bool, false);
 	ATTRIB(Button, disabled, float, 0);
 	ATTRIB(Button, disabledAlpha, float, 0.3);
-	ATTRIB(Button, forcePressed, float, 0);
+	ATTRIB(Button, forcePressed, bool, false);
 	ATTRIB(Button, color, vector, '1 1 1');
 	ATTRIB(Button, colorC, vector, '1 1 1');
 	ATTRIB(Button, colorF, vector, '1 1 1');

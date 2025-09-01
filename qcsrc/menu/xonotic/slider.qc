@@ -30,34 +30,28 @@ void XonoticSlider_configureXonoticSlider(entity me, float theValueMin, float th
 	me.loadCvars(me);
 	setZonedTooltip(me, theTooltip, theCvar);
 }
-void XonoticSlider_setValue(entity me, float val)
+void XonoticSlider_setValue(entity me, float val, bool allowAnim)
 {
 	if(val != me.value)
 	{
-		SUPER(XonoticSlider).setValue( me, val );
+		SUPER(XonoticSlider).setValue(me, val, allowAnim);
 		me.saveCvars(me);
 
 		if(me.onChange)
 			me.onChange(me, me.onChangeEntity);
 	}
 }
-void XonoticSlider_setValue_noAnim(entity me, float val)
+void XonoticSlider_setValueSpace(entity me, float val)
 {
-	if(val != me.value)
-	{
-		SUPER(XonoticSlider).setValue_noAnim(me, val);
-		me.saveCvars(me);
-
-		if(me.onChange)
-			me.onChange(me, me.onChangeEntity);
-	}
+	me.valueSpace = val;
+	me.configureSliderVisuals(me, me.fontSize, me.align, me.valueSpace, me.image);
 }
 void XonoticSlider_loadCvars(entity me)
 {
 	if (!me.controlledCvar)
 		return;
 
-	me.setValue_noAnim(me, cvar(me.controlledCvar));
+	me.setValue(me, cvar(me.controlledCvar), false);
 }
 void XonoticSlider_saveCvars(entity me)
 {

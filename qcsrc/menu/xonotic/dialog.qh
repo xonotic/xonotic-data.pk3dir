@@ -4,7 +4,7 @@
 CLASS(XonoticDialog, Dialog)
 	// still to be customized by user
 	/*
-	ATTRIB(XonoticDialog, closable, float, 1);
+	ATTRIB(XonoticDialog, closable, bool, true);
 	ATTRIB(XonoticDialog, title, string, _("Form1")); // ;);
 	ATTRIB(XonoticDialog, color, vector, '1 0.5 1');
 	ATTRIB(XonoticDialog, intendedWidth, float, 0);
@@ -25,7 +25,7 @@ CLASS(XonoticDialog, Dialog)
 	ATTRIB(XonoticDialog, borderLines, float, SKINHEIGHT_DIALOGBORDER);
 	ATTRIB(XonoticDialog, closeButtonImage, string, SKINGFX_CLOSEBUTTON);
 	ATTRIB(XonoticDialog, zoomedOutTitleBarPosition, float, SKINHEIGHT_ZOOMEDTITLE * 0.5 - 0.5);
-	ATTRIB(XonoticDialog, zoomedOutTitleBar, float, SKINHEIGHT_ZOOMEDTITLE != 0);
+	ATTRIB(XonoticDialog, zoomedOutTitleBar, bool, SKINHEIGHT_ZOOMEDTITLE != 0);
 
 	ATTRIB(XonoticDialog, alpha, float, SKINALPHA_TEXT);
 

@@ -41,7 +41,7 @@
 
 	METHOD(Animation, tick, void(entity this, float tickTime))
 	{
-		if (this.isStopped(this) || this.isFinished(this) || (tickTime < this.startTime)) return;
+		if (this.stopped || this.finished || (tickTime < this.startTime)) return;
 
 		if (tickTime >= (this.startTime + this.duration)) this.finishAnim(this);
 		else this.value = this.calcValue(this, (tickTime - this.startTime), this.duration, this.startValue, this.delta);
@@ -54,11 +54,6 @@
 		return animStartValue;
 	}
 
-	METHOD(Animation, isStopped, bool(entity this))
-	{
-		return this.stopped;
-	}
-
 	METHOD(Animation, stopAnim, void(entity this))
 	{
 		this.stopped = true;
@@ -67,11 +62,6 @@
 	METHOD(Animation, resumeAnim, void(entity this))
 	{
 		this.stopped = false;
-	}
-
-	METHOD(Animation, isFinished, bool(entity this))
-	{
-		return this.finished;
 	}
 
 	METHOD(Animation, finishAnim, void(entity this))

@@ -72,7 +72,7 @@ FONTSIZE_TOOLTIP                12
 ALPHA_TOOLTIP                   0.7
 COLOR_TOOLTIP                   '1 1 1'
 WIDTH_TOOLTIP                   0.3
-AVOID_TOOLTIP                   '8 8 0'
+AVOID_TOOLTIP                   '0 0 0'
 
 //------------------------------------------------------------------------------
 // Colors (e.g. font colors, field colors)
@@ -104,6 +104,8 @@ COLOR_CVARLIST_UNCHANGED        '1 1 1'
 COLOR_CVARLIST_CONTROLS         '1 0 0'
 
 // item: list box
+COLOR_LISTBOX_BACKGROUND        '0 0 0'
+ALPHA_LISTBOX_BACKGROUND        0.5
 COLOR_LISTBOX_SELECTED          '1 0.4375 0'
 ALPHA_LISTBOX_SELECTED          1
 COLOR_LISTBOX_WAITING           '1 1 1'

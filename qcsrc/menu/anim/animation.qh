@@ -1,5 +1,7 @@
 #pragma once
 
+float autocvar_menu_animations = 0.2;
+
 CLASS(Animation, Object)
 	METHOD(Animation, configureAnimation, void(Animation this, entity, void(entity, float), float, float, float, float));
 	METHOD(Animation, update, void(Animation this, float, float, float));
@@ -9,10 +11,8 @@ CLASS(Animation, Object)
 	METHOD(Animation, setObjectSetter, void(Animation this, entity, void(entity, float)));
 	METHOD(Animation, tick, void(Animation this, float));
 	METHOD(Animation, calcValue, float(Animation this, float, float, float, float));
-	METHOD(Animation, isStopped, float(Animation this));
 	METHOD(Animation, stopAnim, void(Animation this));
 	METHOD(Animation, resumeAnim, void(Animation this));
-	METHOD(Animation, isFinished, float(Animation this));
 	METHOD(Animation, finishAnim, void(Animation this));
 	ATTRIB(Animation, object, entity);
 	void setterDummy(Animation this, float) {}

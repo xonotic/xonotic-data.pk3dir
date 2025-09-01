@@ -9,5 +9,5 @@ CLASS(XonoticHUDPhysicsDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDPhysicsDialog, rows, float, 19);
 	ATTRIB(XonoticHUDPhysicsDialog, columns, float, 4);
 	ATTRIB(XonoticHUDPhysicsDialog, name, string, "HUDphysics");
-	ATTRIB(XonoticHUDPhysicsDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDPhysicsDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDPhysicsDialog)

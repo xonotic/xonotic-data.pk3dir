@@ -78,7 +78,7 @@ void XonoticToSDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 5, e = makeXonoticTextLabel(0, subtitle));
-		e.allowWrap = 1;
+			e.allowWrap = true;
 
 	me.TR(me);
 	me.TR(me);

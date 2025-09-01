@@ -4,7 +4,7 @@ entity makeXonoticTextLabel(float theAlign, string theText)
 {
 	entity me;
 	me = NEW(XonoticTextLabel);
-	me.configureXonoticTextLabel(me, theAlign, theText);
+	me.configureLabel(me, theText, me.fontSize, theAlign);
 	return me;
 }
 entity makeXonoticHeaderLabel(string theText)
@@ -16,10 +16,7 @@ entity makeXonoticHeaderLabel(string theText)
 	me.isBold = true;
 	return me;
 }
-void XonoticTextLabel_configureXonoticTextLabel(entity me, float theAlign, string theText)
-{
-	me.configureLabel(me, theText, me.fontSize, theAlign);
-}
+
 void XonoticTextLabel_draw(entity me)
 {
 	SUPER(XonoticTextLabel).draw(me);
