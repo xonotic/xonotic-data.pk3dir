@@ -136,8 +136,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 			_("Swap left/right channels")));
 			setDependentNOT(e, "snd_channels", 1);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "snd_spatialization_control", _("Headphone friendly mode"),
-			_("Enable spatialization (blend the right and left channel slightly to decrease stereo separation a bit for headphones)")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "snd_spatialization_control", _("Headphone-friendly mode"),
+			_("Blend the left and right channels slightly to decrease stereo separation a bit")));
 			setDependentNOT(e, "snd_channels", 1);
 	me.TR(me);
 	me.TR(me);
