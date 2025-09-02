@@ -20,9 +20,9 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 			actor.tur_shotdir_updated = w_shotdir;
 			actor.tur_shotorg = w_shotorg;
 			actor.tur_head = actor;
-			actor.shot_speed = 1;
 			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0.5, w_ready);
 		}
+		actor.shot_speed = 1;
 		entity beam = new(PhaserTurret_beam);
 		setmodel(beam, MDL_TUR_PHASER_BEAM);
 		beam.effects = EF_LOWPRECISION;
