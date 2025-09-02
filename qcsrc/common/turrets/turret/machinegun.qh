@@ -3,15 +3,19 @@
 #include "machinegun_weapon.qh"
 
 CLASS(MachineGunTurret, Turret)
+#ifdef GAMEQC
 /* spawnflags */ ATTRIB(MachineGunTurret, spawnflags, int, TUR_FLAG_PLAYER);
 /* mins       */ ATTRIB(MachineGunTurret, m_mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(MachineGunTurret, m_maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(MachineGunTurret, mdl, string, "base.md3");
 /* model      */ ATTRIB_STRZONE(MachineGunTurret, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(MachineGunTurret, head_model, string, strcat("models/turrets/", "machinegun.md3"));
+#endif
 /* netname    */ ATTRIB(MachineGunTurret, netname, string, "machinegun");
 /* fullname   */ ATTRIB(MachineGunTurret, m_name, string, _("Machinegun Turret"));
-	ATTRIB(MachineGunTurret, m_weapon, Weapon, WEP_TUR_MACHINEGUN);
+#ifdef SVQC
+/* weapon     */ ATTRIB(MachineGunTurret, m_weapon, Weapon, WEP_TUR_MACHINEGUN);
+#endif
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

@@ -3,15 +3,19 @@
 #include "plasma_weapon.qh"
 
 CLASS(PlasmaTurret, Turret)
+#ifdef GAMEQC
 /* spawnflags */ ATTRIB(PlasmaTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
 /* mins       */ ATTRIB(PlasmaTurret, m_mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(PlasmaTurret, m_maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(PlasmaTurret, mdl, string, "base.md3");
 /* model      */ ATTRIB_STRZONE(PlasmaTurret, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(PlasmaTurret, head_model, string, strcat("models/turrets/", "plasma.md3"));
+#endif
 /* netname    */ ATTRIB(PlasmaTurret, netname, string, "plasma");
 /* fullname   */ ATTRIB(PlasmaTurret, m_name, string, _("Plasma Cannon"));
-	ATTRIB(PlasmaTurret, m_weapon, Weapon, WEP_PLASMA);
+#ifdef SVQC
+/* weapon     */ ATTRIB(PlasmaTurret, m_weapon, Weapon, WEP_PLASMA);
+#endif
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

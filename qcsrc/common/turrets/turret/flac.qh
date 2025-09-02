@@ -3,15 +3,19 @@
 #include "flac_weapon.qh"
 
 CLASS(Flac, Turret)
+#ifdef GAMEQC
 /* spawnflags */ ATTRIB(Flac, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_FASTPROJ | TUR_FLAG_MISSILE);
 /* mins       */ ATTRIB(Flac, m_mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(Flac, m_maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(Flac, mdl, string, "base.md3");
 /* model      */ ATTRIB_STRZONE(Flac, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(Flac, head_model, string, strcat("models/turrets/", "flac.md3"));
+#endif
 /* netname    */ ATTRIB(Flac, netname, string, "flac");
 /* fullname   */ ATTRIB(Flac, m_name, string, _("FLAC Cannon"));
-	ATTRIB(Flac, m_weapon, Weapon, WEP_FLAC);
+#ifdef SVQC
+/* weapon     */ ATTRIB(Flac, m_weapon, Weapon, WEP_FLAC);
+#endif
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

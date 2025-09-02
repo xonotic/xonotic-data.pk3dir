@@ -5,15 +5,19 @@
 #include "ewheel_weapon.qh"
 
 CLASS(EWheel, Turret)
+#ifdef GAMEQC
 /* spawnflags */ ATTRIB(EWheel, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE | TUR_FLAG_ROAM);
 /* mins       */ ATTRIB(EWheel, m_mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(EWheel, m_maxs, vector, '32 32 48');
 /* modelname  */ ATTRIB(EWheel, mdl, string, "ewheel-base2.md3");
 /* model      */ ATTRIB_STRZONE(EWheel, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(EWheel, head_model, string, strcat("models/turrets/", "ewheel-gun1.md3"));
+#endif
 /* netname    */ ATTRIB(EWheel, netname, string, "ewheel");
 /* fullname   */ ATTRIB(EWheel, m_name, string, _("eWheel Turret"));
-	ATTRIB(EWheel, m_weapon, Weapon, WEP_EWHEEL);
+#ifdef SVQC
+/* weapon     */ ATTRIB(EWheel, m_weapon, Weapon, WEP_EWHEEL);
+#endif
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
