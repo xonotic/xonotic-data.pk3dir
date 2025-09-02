@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-14 07:22+0200\n"
+"POT-Creation-Date: 2025-09-02 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Oftox, 2023\n"
 "Language-Team: Finnish (http://app.transifex.com/team-xonotic/xonotic/"
@@ -113,7 +113,7 @@ msgid "^1Press ^3%s^1 to spectate"
 msgstr "^1Paina ^3%s^1 katsellaksesi"
 
 #: qcsrc/client/hud/panel/infomessages.qc:105
-#: qcsrc/menu/xonotic/keybinder.qc:75
+#: qcsrc/menu/xonotic/keybinder.qc:73
 msgid "primary fire"
 msgstr "ensisijainen tulitus"
 
@@ -150,7 +150,7 @@ msgid "drop weapon"
 msgstr "pudota ase"
 
 #: qcsrc/client/hud/panel/infomessages.qc:113
-#: qcsrc/menu/xonotic/keybinder.qc:76
+#: qcsrc/menu/xonotic/keybinder.qc:74
 msgid "secondary fire"
 msgstr "toissijainen tulitus"
 
@@ -165,7 +165,7 @@ msgid "^1Press ^3%s^1 for gamemode info"
 msgstr "^1Paina ^3%s^1 nähdäksesi pelitilatiedot"
 
 #: qcsrc/client/hud/panel/infomessages.qc:118
-#: qcsrc/menu/xonotic/keybinder.qc:155
+#: qcsrc/menu/xonotic/keybinder.qc:153
 msgid "server info"
 msgstr "palvelimen tiedot"
 
@@ -183,7 +183,8 @@ msgstr ""
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Paina ^3%s^1 liittyäksesi"
 
-#: qcsrc/client/hud/panel/infomessages.qc:139 qcsrc/client/main.qc:1358
+#: qcsrc/client/hud/panel/infomessages.qc:139
+#: qcsrc/client/hud/panel/scoreboard.qc:2783 qcsrc/client/main.qc:1358
 #: qcsrc/common/notifications/all.qh:466
 msgid "jump"
 msgstr "hyppää"
@@ -213,7 +214,7 @@ msgstr "%sPaina ^3%s%s päättääksesi lämmittelyn"
 
 #: qcsrc/client/hud/panel/infomessages.qc:185
 #: qcsrc/client/hud/panel/infomessages.qc:190
-#: qcsrc/menu/xonotic/keybinder.qc:151
+#: qcsrc/menu/xonotic/keybinder.qc:149
 msgid "ready"
 msgstr "valmis"
 
@@ -236,7 +237,7 @@ msgid " Press ^3%s%s to adjust"
 msgstr " Paina ^3%s%s säätääksesi"
 
 #: qcsrc/client/hud/panel/infomessages.qc:205
-#: qcsrc/menu/xonotic/keybinder.qc:166
+#: qcsrc/menu/xonotic/keybinder.qc:164
 msgid "team selection"
 msgstr "joukkuevalinta"
 
@@ -1161,6 +1162,13 @@ msgstr "Olet kuollut, odota ^3%s^7 ennen uudelleenvirkoamista"
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Olet kuollut, paina ^2%s^7 virotaksesi uudelleen"
 
+#: qcsrc/client/hud/panel/strafehud/extra.qc:111
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:55
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:32
+#, c-format
+msgid "%s°"
+msgstr ""
+
 #: qcsrc/client/hud/panel/strafehud/util.qc:101
 msgid "qu"
 msgstr "qu"
@@ -1258,15 +1266,15 @@ msgstr "Kyllä"
 msgid "No"
 msgstr "Ei"
 
-#: qcsrc/client/hud/panel/weapons.qc:642
+#: qcsrc/client/hud/panel/weapons.qc:647
 msgid "Out of ammo"
 msgstr "Ammukset loppu"
 
-#: qcsrc/client/hud/panel/weapons.qc:647
+#: qcsrc/client/hud/panel/weapons.qc:652
 msgid "Don't have"
 msgstr "Ei ole"
 
-#: qcsrc/client/hud/panel/weapons.qc:652
+#: qcsrc/client/hud/panel/weapons.qc:657
 msgid "Unavailable"
 msgstr "Ei saatavissa"
 
@@ -1274,23 +1282,23 @@ msgstr "Ei saatavissa"
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Koetetaan poistaa joukkuetta joka ei ole joukkuelistassa!"
 
-#: qcsrc/client/main.qc:1089 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:168
+#: qcsrc/client/main.qc:1089 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:186
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1090 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:169
+#: qcsrc/client/main.qc:1090 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:187
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1091 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:170
+#: qcsrc/client/main.qc:1091 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:188
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1092 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:171
+#: qcsrc/client/main.qc:1092 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:189
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1093 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:172
+#: qcsrc/client/main.qc:1093 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:190
 msgid "knots"
 msgstr "knots"
 
@@ -1791,7 +1799,7 @@ msgid "@!#%'n Tuba Throwing"
 msgstr "@!#%'n tuubanheitto!"
 
 #: qcsrc/common/mapinfo.qh:92
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:110
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:94
 msgid "Frag limit:"
 msgstr "Tapporaja:"
 
@@ -2186,76 +2194,65 @@ msgid "Font size maximum:"
 msgstr "Suurin kirjasinkoko:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:43
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:82
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:121
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:61
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:110
-#: qcsrc/menu/xonotic/util.qc:754
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:124
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:68
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:137
+#: qcsrc/menu/xonotic/util.qc:768
 msgid "Color:"
 msgstr "Väri:"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:49
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:50
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:34
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:63
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:71
 msgid "Per weapon"
 msgstr "Asekohtainen"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:54
-msgid "Initial alpha:"
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:55
+msgid "Initial opacity:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:59
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:23
-#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:23
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:23
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:61
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:25
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:25
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:25
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:175
 msgid "Fade time:"
 msgstr "Häivennyksen kesto:"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:64
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:67
 msgid "Accumulate:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:68
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:71
 msgid "If younger than:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:71
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:34
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:23
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:76
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:25
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:146
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:179
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:146
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:67
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:114
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:161
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:68
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:115
 msgid "Never"
 msgstr "Ei ikinä"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:72
-msgid "1s"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:73
-msgid "2s"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:74
-msgid "3s"
-msgstr ""
-
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:75
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:36
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:78
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:148
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:182
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:148
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:62
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:69
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:116
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:163
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:70
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:117
 msgid "Always"
 msgstr "Aina"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:80
-msgid "Or alpha greater than:"
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:83
+msgid "Or opacity greater than:"
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:7
@@ -2264,7 +2261,7 @@ msgstr "Vahinkoteksti"
 
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:10
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:9
-#: qcsrc/menu/xonotic/keybinder.qc:70
+#: qcsrc/menu/xonotic/keybinder.qc:68
 msgid "off-hand hook"
 msgstr "toisenkäden koukku"
 
@@ -2285,7 +2282,7 @@ msgid "Extra life"
 msgstr "Lisäelämä"
 
 #: qcsrc/common/mutators/mutator/nades/cl_nades.qc:71
-#: qcsrc/menu/xonotic/keybinder.qc:85
+#: qcsrc/menu/xonotic/keybinder.qc:83
 msgid "drop weapon / throw nade"
 msgstr "pudota ase / heitä naatti"
 
@@ -2397,7 +2394,7 @@ msgstr "Suoja"
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:61
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:31
 msgid "Speed"
 msgstr "Nopeus"
 
@@ -6249,7 +6246,12 @@ msgstr "%d päivää, %02d:%02d:%02d"
 msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
 
-#: qcsrc/menu/item/listbox.qc:418
+#: qcsrc/lib/string.qh:484
+#, c-format
+msgid "%.*f%%"
+msgstr ""
+
+#: qcsrc/menu/item/listbox.qc:414
 #, c-format
 msgid "Item %d"
 msgstr "Esine %d"
@@ -6257,239 +6259,257 @@ msgstr "Esine %d"
 #: qcsrc/menu/item/mixedslider.qc:6 qcsrc/menu/item/textslider.qc:11
 #: qcsrc/menu/item/textslider.qc:12
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:38
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:69
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:116
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:79
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:147
 msgid "Custom"
 msgstr "Omavalintainen"
 
 #: qcsrc/menu/menu.qc:513
 #, c-format
+msgid "^3%s^7 not equal to \"%s\""
+msgstr ""
+
+#: qcsrc/menu/menu.qc:518
+#, c-format
 msgid "^3%s^7 in range \"%s\" to \"%s\""
 msgstr ""
 
-#: qcsrc/menu/menu.qc:515
+#: qcsrc/menu/menu.qc:520
 #, c-format
 msgid "^3%s^7 outside range \"%s\" to \"%s\""
 msgstr ""
 
-#: qcsrc/menu/menu.qc:544
+#: qcsrc/menu/menu.qc:549
 msgid "Has special requirements"
 msgstr ""
 
-#: qcsrc/menu/menu.qc:547
+#: qcsrc/menu/menu.qc:552
 #, c-format
 msgid "Requires ^3%s^7 not equal to \"%s^7\""
 msgstr ""
 
-#: qcsrc/menu/menu.qc:559
+#: qcsrc/menu/menu.qc:564
 #, c-format
 msgid "Requires %s, %s, and %s"
 msgstr ""
 
-#: qcsrc/menu/menu.qc:562
+#: qcsrc/menu/menu.qc:564
+#, c-format
+msgid "Requires %s, %s, or %s"
+msgstr ""
+
+#: qcsrc/menu/menu.qc:567
 #, c-format
 msgid "Requires %s and %s"
 msgstr ""
 
-#: qcsrc/menu/menu.qc:562
+#: qcsrc/menu/menu.qc:567
 #, c-format
 msgid "Requires %s or %s"
 msgstr ""
 
-#: qcsrc/menu/menu.qc:565
+#: qcsrc/menu/menu.qc:570
 #, c-format
 msgid "Requires %s"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:4
+#: qcsrc/menu/xonotic/credits.qc:7
 msgid "Core Team"
 msgstr "Ydinjoukkue"
 
-#: qcsrc/menu/xonotic/credits.qc:12
+#: qcsrc/menu/xonotic/credits.qc:16
 msgid "Extended Team"
 msgstr "Laajennettu joukkue"
 
-#: qcsrc/menu/xonotic/credits.qc:31
+#: qcsrc/menu/xonotic/credits.qc:35
 msgid "Website"
 msgstr "Verkkosivu"
 
-#: qcsrc/menu/xonotic/credits.qc:37
+#: qcsrc/menu/xonotic/credits.qc:41
 msgid "Stats"
 msgstr "Tilastot"
 
-#: qcsrc/menu/xonotic/credits.qc:41
+#: qcsrc/menu/xonotic/credits.qc:45
 msgid "Art"
 msgstr "Taide"
 
-#: qcsrc/menu/xonotic/credits.qc:49
+#: qcsrc/menu/xonotic/credits.qc:53
 msgid "Animation"
 msgstr "Animaatio"
 
-#: qcsrc/menu/xonotic/credits.qc:53
+#: qcsrc/menu/xonotic/credits.qc:57
 msgid "Campaign"
 msgstr "Kampanja"
 
-#: qcsrc/menu/xonotic/credits.qc:58
+#: qcsrc/menu/xonotic/credits.qc:62
 msgid "Level Design"
 msgstr "Kenttäsuunnittelu"
 
-#: qcsrc/menu/xonotic/credits.qc:83
+#: qcsrc/menu/xonotic/credits.qc:87
 msgid "Music / Sound FX"
 msgstr "Musiikki / äänitehosteet"
 
-#: qcsrc/menu/xonotic/credits.qc:99
+#: qcsrc/menu/xonotic/credits.qc:103
 msgid "Game Code"
 msgstr "Pelin ohjelmakoodi"
 
-#: qcsrc/menu/xonotic/credits.qc:117
+#: qcsrc/menu/xonotic/credits.qc:122
 msgid "Marketing / PR"
 msgstr "Markkinointi / PR"
 
-#: qcsrc/menu/xonotic/credits.qc:123
+#: qcsrc/menu/xonotic/credits.qc:128
 msgid "Legal"
 msgstr "Lakisääteiset asiat"
 
-#: qcsrc/menu/xonotic/credits.qc:128
+#: qcsrc/menu/xonotic/credits.qc:133
 msgid "Game Engine"
 msgstr "Pelimoottori"
 
-#: qcsrc/menu/xonotic/credits.qc:132
+#: qcsrc/menu/xonotic/credits.qc:137
 msgid "Engine Additions"
 msgstr "Moottorin lisät"
 
-#: qcsrc/menu/xonotic/credits.qc:139
+#: qcsrc/menu/xonotic/credits.qc:144
 msgid "Compiler"
 msgstr "Koonti"
 
-#: qcsrc/menu/xonotic/credits.qc:146
+#: qcsrc/menu/xonotic/credits.qc:151
 msgid "Translators"
 msgstr "Kielikääntäjät"
 
-#: qcsrc/menu/xonotic/credits.qc:148
+#: qcsrc/menu/xonotic/credits.qc:153
 msgid "Asturian"
 msgstr "Asturian-kieli"
 
-#: qcsrc/menu/xonotic/credits.qc:153
+#: qcsrc/menu/xonotic/credits.qc:159
 msgid "Belarusian"
 msgstr "Valko-venäjä"
 
-#: qcsrc/menu/xonotic/credits.qc:156
+#: qcsrc/menu/xonotic/credits.qc:163
 msgid "Bulgarian"
 msgstr "Bulgaria"
 
-#: qcsrc/menu/xonotic/credits.qc:165
+#: qcsrc/menu/xonotic/credits.qc:174
 msgid "Chinese (China)"
 msgstr "Kiina (Kiinassa)"
 
-#: qcsrc/menu/xonotic/credits.qc:179
+#: qcsrc/menu/xonotic/credits.qc:191
 msgid "Chinese (Hong Kong)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:192
+#: qcsrc/menu/xonotic/credits.qc:204
 msgid "Chinese (Taiwan)"
 msgstr "Kiina (Taiwan)"
 
-#: qcsrc/menu/xonotic/credits.qc:199
+#: qcsrc/menu/xonotic/credits.qc:223
 msgid "Czech"
 msgstr "Tsekki"
 
-#: qcsrc/menu/xonotic/credits.qc:209
+#: qcsrc/menu/xonotic/credits.qc:238
 msgid "Dutch"
 msgstr "Hollanti"
 
-#: qcsrc/menu/xonotic/credits.qc:217
+#: qcsrc/menu/xonotic/credits.qc:247
 msgid "English (Australia)"
 msgstr "Englanti (Australiassa)"
 
-#: qcsrc/menu/xonotic/credits.qc:223
+#: qcsrc/menu/xonotic/credits.qc:255
+msgid "English (United Kingdom)"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:259
 msgid "Finnish"
 msgstr "Suomi"
 
-#: qcsrc/menu/xonotic/credits.qc:234
+#: qcsrc/menu/xonotic/credits.qc:272
 msgid "French"
 msgstr "Ranska"
 
-#: qcsrc/menu/xonotic/credits.qc:244
+#: qcsrc/menu/xonotic/credits.qc:288
+msgid "Galician"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:292
 msgid "German"
 msgstr "Saksa"
 
-#: qcsrc/menu/xonotic/credits.qc:257
+#: qcsrc/menu/xonotic/credits.qc:310
 msgid "Greek"
 msgstr "Kreikka"
 
-#: qcsrc/menu/xonotic/credits.qc:267
+#: qcsrc/menu/xonotic/credits.qc:322
 msgid "Hungarian"
 msgstr "Unkari"
 
-#: qcsrc/menu/xonotic/credits.qc:274
+#: qcsrc/menu/xonotic/credits.qc:333
 msgid "Indonesian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:279
+#: qcsrc/menu/xonotic/credits.qc:338
 msgid "Irish"
 msgstr "Iiri"
 
-#: qcsrc/menu/xonotic/credits.qc:282
+#: qcsrc/menu/xonotic/credits.qc:341
 msgid "Italian"
 msgstr "Italia"
 
-#: qcsrc/menu/xonotic/credits.qc:289
+#: qcsrc/menu/xonotic/credits.qc:351
 msgid "Japanese"
 msgstr "Japani"
 
-#: qcsrc/menu/xonotic/credits.qc:297
+#: qcsrc/menu/xonotic/credits.qc:360
 msgid "Kazakh"
 msgstr "Kasakki"
 
-#: qcsrc/menu/xonotic/credits.qc:300
+#: qcsrc/menu/xonotic/credits.qc:363
 msgid "Korean"
 msgstr "Korea"
 
-#: qcsrc/menu/xonotic/credits.qc:306
+#: qcsrc/menu/xonotic/credits.qc:369
 msgid "Latin"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:309
+#: qcsrc/menu/xonotic/credits.qc:372
 msgid "Polish"
 msgstr "Puola"
 
-#: qcsrc/menu/xonotic/credits.qc:329
+#: qcsrc/menu/xonotic/credits.qc:401
 msgid "Portuguese"
 msgstr "Portugali"
 
-#: qcsrc/menu/xonotic/credits.qc:338
+#: qcsrc/menu/xonotic/credits.qc:411
 msgid "Portuguese (Brazil)"
 msgstr "Portugali (Brasilia)"
 
-#: qcsrc/menu/xonotic/credits.qc:344
+#: qcsrc/menu/xonotic/credits.qc:421
 msgid "Romanian"
 msgstr "Romania"
 
-#: qcsrc/menu/xonotic/credits.qc:353
+#: qcsrc/menu/xonotic/credits.qc:432
 msgid "Russian"
 msgstr "Venäjä"
 
-#: qcsrc/menu/xonotic/credits.qc:369
+#: qcsrc/menu/xonotic/credits.qc:458
 msgid "Serbian"
 msgstr "Serbia"
 
-#: qcsrc/menu/xonotic/credits.qc:375
+#: qcsrc/menu/xonotic/credits.qc:465
 msgid "Spanish"
 msgstr "Espanja"
 
-#: qcsrc/menu/xonotic/credits.qc:393
+#: qcsrc/menu/xonotic/credits.qc:489
 msgid "Swedish"
 msgstr "Ruotsi"
 
-#: qcsrc/menu/xonotic/credits.qc:398
+#: qcsrc/menu/xonotic/credits.qc:496
 msgid "Turkish"
 msgstr "Turkki"
 
-#: qcsrc/menu/xonotic/credits.qc:408
+#: qcsrc/menu/xonotic/credits.qc:511
 msgid "Ukrainian"
 msgstr "Ukraina"
 
-#: qcsrc/menu/xonotic/credits.qc:417
+#: qcsrc/menu/xonotic/credits.qc:523
 msgid "Past Contributors"
 msgstr "Aikaisemmat panoksensa antajat"
 
@@ -6513,14 +6533,14 @@ msgstr "yksityinen"
 msgid "engine setting"
 msgstr "pelimoottorin asetus"
 
-#: qcsrc/menu/xonotic/cvarlist.qc:97
+#: qcsrc/menu/xonotic/cvarlist.qc:98
 msgid "read only"
 msgstr "vain luku"
 
 #: qcsrc/menu/xonotic/dialog_credits.qc:13
-#: qcsrc/menu/xonotic/dialog_monstertools.qc:38
+#: qcsrc/menu/xonotic/dialog_monstertools.qc:37
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:228
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:85
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:91
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:77
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
@@ -6639,52 +6659,52 @@ msgid "Show only current ammo type"
 msgstr "Näytä vain nykyinen ammustyyppi"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:42
-msgid "Noncurrent alpha:"
-msgstr "Ajanmukaistamaton alpha:"
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:43
+msgid "Noncurrent opacity:"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:27
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:48
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:50
 msgid "Noncurrent scale:"
 msgstr "Ajanmukaistamaton mittasuhde:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:37
 msgid "Align icon:"
 msgstr "Kuvakkeen kohdistus:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:34
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:44
-#: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:22
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:58
+#: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:27
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:44
-#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:30
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:40
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:37
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:41
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:37
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:21
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:58
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:59
 msgid "Left"
 msgstr "Vasen"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:35
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:46
-#: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:39
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:62
+#: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:45
-#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:31
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:42
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:39
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:43
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:26
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:38
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:23
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:60
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:61
 msgid "Right"
 msgstr "Oikea"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:42
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:24
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:17
 msgid "Enable status bar"
 msgstr "Ota tilapalkki käyttöön"
@@ -6699,41 +6719,42 @@ msgstr "Ammuspalkki"
 msgid "Message duration:"
 msgstr "Viestien kesto:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:25
-#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:25
-#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:24
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:25
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:30
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:30
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "FADESPEED^Instant"
 msgstr "FADESPEED^Välitön"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:35
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:18
 msgid "Font scale:"
 msgstr "Kirjasimen mittasuhde:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:40
 msgid "Bold font scale:"
 msgstr "Lihavoidun kirjasimen mittasuhde:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:45
 msgid "Title font scale:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:50
 msgid "Flip messages order"
 msgstr "Käänteistä viestijärjestys"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:41
-#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:54
+#: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:35
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:18
 msgid "Text alignment:"
 msgstr "Tekstin kohdistus:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:45
-#: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:23
+#: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:60
+#: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:22
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:84
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:86
 msgid "Center"
 msgstr "Keskitetty"
 
@@ -6741,15 +6762,19 @@ msgstr "Keskitetty"
 msgid "Centerprint Panel"
 msgstr "Keskeistulostepalkki"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:18
 msgid "Chat size:"
 msgstr "Keskustelualueen koko:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:20
+#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:21
 msgid "Chat lifetime:"
 msgstr "Keskustelujen säilyvyys:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:23
+#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:27
+msgid "LIFETIME^Infinite"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:30
 msgid "Chat beep sound"
 msgstr "Viestin piippausääni"
 
@@ -6758,10 +6783,6 @@ msgid "Chat Panel"
 msgstr "Keskustelupalkki"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:21
-msgid "Align:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:26
 msgid "Flip checkpoint order"
 msgstr ""
 
@@ -6794,14 +6815,14 @@ msgid "Flip health and armor positions"
 msgstr "Vaihda elämän ja panssarin paikkaa"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:27
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:36
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:20
 msgid "Status bar alignment:"
 msgstr "Tilapalkin kohdistus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:35
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:46
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:44
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:45
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:39
 msgid "Inward"
@@ -6809,14 +6830,14 @@ msgstr "Sisäänpäin"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:37
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:47
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:47
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:30
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:40
 msgid "Outward"
 msgstr "Ulospäin"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:41
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:34
 msgid "Icon alignment:"
 msgstr "Kuvakkeen kohdistus:"
@@ -6829,47 +6850,48 @@ msgstr "Elämä/Panssaripaneeli"
 msgid "Info Messages Panel"
 msgstr "Tiedotuspaneeli"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:16
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:15
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:31
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:77
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:89
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:100
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:132
-#: qcsrc/menu/xonotic/util.qc:749 qcsrc/menu/xonotic/util.qc:765
-#: qcsrc/menu/xonotic/util.qc:782
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:78
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:90
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:103
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:137
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:196
+#: qcsrc/menu/xonotic/util.qc:763 qcsrc/menu/xonotic/util.qc:780
+#: qcsrc/menu/xonotic/util.qc:798
 msgid "Disable"
 msgstr "Pois päältä"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 msgid "Enable spectating"
 msgstr "Kytke päälle sivustakatselu"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:19
 msgid "Enable even playing in warmup"
 msgstr "Salli jopa lämmittelykierrosta pelatessa"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
 msgid "Text/icon ratio:"
 msgstr "Teksti/kuvake-suhde:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:34
 msgid "Reduced"
 msgstr "Alennettu"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:37
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:38
 msgid "Hide spawned items"
 msgstr "Piilota ilmestyneet esineet"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:40
 msgid "Hide big armor and health"
 msgstr "Piilota suuri suojapanssari ja terveysmääre"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:41
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:42
 msgid "Dynamic size"
 msgstr "Dynaaminen koko"
 
@@ -6898,11 +6920,11 @@ msgstr "Modi-ikonit paneeli"
 msgid "Entry lifetime:"
 msgstr "Sisääntulon kesto"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:22
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:24
 msgid "Entry fadetime:"
 msgstr "Sisääntulon häivennyksen kesto:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:35
 msgid "Flip notify order"
 msgstr "Käännä ilmoitusjärjestys"
 
@@ -6910,60 +6932,54 @@ msgstr "Käännä ilmoitusjärjestys"
 msgid "Notification Panel"
 msgstr "Ilmoituspaneeli"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:32
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:115
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:121
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:24
-#: qcsrc/menu/xonotic/util.qc:737
+#: qcsrc/menu/xonotic/util.qc:750
 msgid "Enable"
 msgstr "Ota käyttöön"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:19
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:34
 msgid "Enable even observing"
 msgstr "Salli jopa katselijana"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:19
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:20
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:35
 msgid "Enable only in Race/CTS"
 msgstr "Otakäyttöön vain Kilvassa/CTS:ssä"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:25
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 msgid "Flip speed/acceleration positions"
 msgstr "Vaihda nopeuden/kiihtyvyyden paikkaa"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:27
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:46
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
 msgid "Status bar"
 msgstr "Tilapalkki"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:30
 msgid "None"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:31
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:32
 msgid "Acceleration"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
 msgid "Both"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:51
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:105
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:121
 msgid "Speed:"
 msgstr "Nopeus:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:53
 msgid "Include vertical speed"
 msgstr "Huomioi pystysuora nopeus"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:63
-msgid "Show speed unit"
-msgstr "Näytä nopeusyksikkö"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:66
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:64
 msgid "Top speed"
 msgstr "Huippunopeus"
 
@@ -6971,11 +6987,15 @@ msgstr "Huippunopeus"
 msgid "Jump speed"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:77
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:78
+msgid "Show speed unit"
+msgstr "Näytä nopeusyksikkö"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:84
 msgid "Acceleration:"
 msgstr "Kiihtyvyys:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:78
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:85
 msgid "Include vertical acceleration"
 msgstr "Huomioi pystysuora kiihtyvyys"
 
@@ -6983,15 +7003,27 @@ msgstr "Huomioi pystysuora kiihtyvyys"
 msgid "Physics Panel"
 msgstr "Fysiikkapaneeli"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:29
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:35
 msgid "Icon size scale:"
 msgstr "Kuvakekoon mittakaava:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:71
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:250
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:85
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:116
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:139
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:82
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:88
+#, c-format
+msgid "%sx"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:42
 msgid "Show timer:"
 msgstr "Näytä ajastin:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:48
 msgid "Spectating"
 msgstr "Katsellaan"
 
@@ -7004,7 +7036,7 @@ msgid "Powerups Panel"
 msgstr "Tehonlisäyspaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:18
 msgid "Always enable"
 msgstr "Aina päällä"
 
@@ -7036,86 +7068,97 @@ msgstr "Pikavalikkopalkki"
 msgid "Race Timer Panel"
 msgstr "Kilpajuoksun ajanoton paneeli"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Enable in team games"
 msgstr "Salli joukkuepeleissä"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:94
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:126
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:55
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:88
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:104
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:24
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:95
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:129
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:61
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:105
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:128
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:46
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:71
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:125
-#: qcsrc/menu/xonotic/util.qc:771
-msgid "Alpha:"
-msgstr "Alpha:"
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:72
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:133
+#: qcsrc/menu/xonotic/util.qc:786
+msgid "Opacity:"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:26
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:50
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:61
 msgid "Rotation:"
 msgstr "Pyöriminen:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:28
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:52
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:31
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:64
 msgid "Forward"
 msgstr "Eteenpäin"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:29
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:53
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:65
 msgid "West"
 msgstr "Länsi"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:30
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:54
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:66
 msgid "South"
 msgstr "Etelä"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:31
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:55
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:67
 msgid "East"
 msgstr "Itä"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:32
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:56
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:35
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:68
 msgid "North"
 msgstr "Pohjoinen"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:35
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:60
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:63
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:99
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:39
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:73
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:68
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:112
 msgid "Scale:"
 msgstr "Mittakaava:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:38
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:64
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:42
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:76
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:170
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:258
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:152
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:72
+#, c-format
+msgid "%s qu"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:45
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:80
 msgid "Zoom mode:"
 msgstr "Sisäänkohdennuksen tila:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:40
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:66
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:84
 msgid "Zoomed in"
 msgstr "Lähennetty kohteeseen"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:41
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:67
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:50
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:85
 msgid "Zoomed out"
 msgstr "Loitonnettu kohteesta"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:42
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:68
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:51
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:86
 msgid "Always zoomed"
 msgstr "Aina lähennettynä"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:43
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:69
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:52
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:87
 msgid "Never zoomed"
 msgstr "Kohdennus aina pois "
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:47
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:57
 msgid "Maximized radar:"
 msgstr ""
 
@@ -7128,7 +7171,7 @@ msgid "Rankings:"
 msgstr "Tilastot:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:18
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:59
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:60
 msgid "Off"
 msgstr "Pois päältä"
 
@@ -7144,74 +7187,91 @@ msgstr "Koskematon"
 msgid "Score Panel"
 msgstr "Tulospaneeli"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:40
-msgid "StrafeHUD mode:"
-msgstr "StrafeHUD-tila:"
-
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:41
-msgid "View angle centered"
-msgstr "Katselukulma keskitetty"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:42
-msgid "Velocity angle centered"
-msgstr "Nopeuskulma keskitetty"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:44
-msgid "StrafeHUD style:"
-msgstr "StrafeHUD-tyyli:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
-msgid "No styling"
+msgid "Centered on:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:47
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:42
+msgid "View angle"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:43
+msgid "Velocity angle"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
+msgid "Style:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:48
+msgid "STYL^Basic"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "Gradient"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:53
 msgid "Range:"
 msgstr "Säde:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:51
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:56
 msgid "Dynamic"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:55
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:60
 msgid "Strafe bar:"
 msgstr "Strafe-palkki:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:59
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:64
 msgid "Angle indicator:"
 msgstr "Kulman ilmaisin:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:61
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:69
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:66
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:74
 msgid "Neutral:"
 msgstr "Neutraali:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:63
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:71
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:68
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:76
 msgid "Good:"
 msgstr "Hyvä:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:65
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:73
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:70
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:78
 msgid "Overturn:"
 msgstr "Ylikääntymä:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:100
-msgid "Switch indicator:"
-msgstr "Vaihdon ilmaisin:"
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:118
+msgid "Switch:"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:104
-msgid "Best angle indicator:"
-msgstr "Parhaan kulman ilmaisin:"
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:119
+msgid "Indicator on the angle to aim at when switching strafing direction"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:123
+msgid "W-turn:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
+msgid ""
+"Indicator on the angle to aim at when W-turning to rotate as fast as possible"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:128
+msgid "Best angle:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:129
+msgid "Indicator on the angle to aim at for maximal acceleration"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:164
 msgid "Demo mode"
 msgstr "Demo-tila"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:127
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:168
 msgid "Reset colors"
 msgstr "Nollaa värit"
 
@@ -7236,8 +7296,8 @@ msgid "Timer Panel"
 msgstr "Ajastinpaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
-msgid "Alpha after voting:"
-msgstr "Alpha äänestyksen jälkeen"
+msgid "Opacity after voting:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
@@ -7247,65 +7307,60 @@ msgstr "Äänestyspaneeli"
 msgid "Fade out after:"
 msgstr "Himmennä jälkikäteen:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:25
-#, c-format
-msgid "%ds"
-msgstr "%dt"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:28
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:29
 msgid "Fade effect:"
 msgstr "Himmennystehoste:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:31
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:32
 msgid "EF^None"
 msgstr "EF^Ei mikään"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:32
-msgid "Alpha"
-msgstr "Alpha"
-
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
+msgid "Opacity"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Slide"
 msgstr "Liu'unta"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:35
 msgid "EF^Both"
 msgstr "EF^Molemmat"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:39
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:40
 msgid "Show only owned weapons"
 msgstr "Näytä vain omistuksessa olevat aseet"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:59
 msgid "Show label:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:60
 msgid "Number"
 msgstr "Numero"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:57
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:62
 msgid "Bind"
 msgstr "Sidonta"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:59
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:64
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:50
 msgid "Name"
 msgstr "Nimi"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:69
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:75
 msgid "Show Ammo"
 msgstr "Näytä panokset"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:70
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:76
 msgid "Show Accuracy"
 msgstr "Näytä tarkkuus"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:73
-msgid "Ammo bar alpha:"
-msgstr "Ammuskotelon alpha"
-
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:79
+msgid "Ammo bar opacity:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:86
 msgid "Ammo bar color:"
 msgstr "Ammuskotelon väri"
 
@@ -7322,7 +7377,7 @@ msgid "HUD skins"
 msgstr "HUD-päällysteet"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:49
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:175
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:161
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:36
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:42
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:25
@@ -7357,74 +7412,75 @@ msgstr ""
 msgid "Panel background defaults:"
 msgstr "Palkkitaustan vakiot:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:75 qcsrc/menu/xonotic/util.qc:746
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:75 qcsrc/menu/xonotic/util.qc:759
 msgid "Background:"
 msgstr "Tausta:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:87 qcsrc/menu/xonotic/util.qc:762
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:88 qcsrc/menu/xonotic/util.qc:777
 msgid "Border size:"
 msgstr "Reunan koko:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:98
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:130
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:100
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:134
+#: qcsrc/menu/xonotic/util.qc:794
 msgid "Team color:"
 msgstr "Joukkueen väri:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:105
-#: qcsrc/menu/xonotic/util.qc:788
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:108
+#: qcsrc/menu/xonotic/util.qc:805
 msgid "Test team color in configure mode"
 msgstr "Kokeile joukkueen väriä muokkaustilassa"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:108
-#: qcsrc/menu/xonotic/util.qc:791
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:111
+#: qcsrc/menu/xonotic/util.qc:808
 msgid "Padding:"
 msgstr "Pehmustus:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:112
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:115
 msgid "HUD Dock:"
 msgstr "Näkymän liitäntä:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:114
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:117
 msgid "DOCK^Disabled"
 msgstr "DOCK^Pois"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:115
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:118
 msgid "DOCK^Small"
 msgstr "DOCK^Pieni"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:116
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:119
 msgid "DOCK^Medium"
 msgstr "DOCK^Keskikokoinen"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:117
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:120
 msgid "DOCK^Large"
 msgstr "DOCK^Suuri"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:136
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:141
 msgid "Grid settings:"
 msgstr "Ruudukon asetukset:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:137
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:142
 msgid "Snap panels to grid"
 msgstr "Katkaise paneelit ruudukkoon"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:140
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:145
 msgid "Grid size:"
 msgstr "Ruudukon koko:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:142
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:147
 msgid "X:"
 msgstr "X:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:149
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:153
 msgid "Y:"
 msgstr "Y:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:159
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:162
 msgid "Center line"
 msgstr "Keskilinja"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:160
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:163
 #, c-format
 msgid ""
 "Show a vertical centerline to help align panels. It's possible to show more "
@@ -7433,7 +7489,7 @@ msgstr ""
 "Näytä pystysuora keskilinja paneeleiden linjaamisen avuksi. Keskilinjojen "
 "määrää voidaan korottaa muokkaamalla %s komentorivillä."
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:163
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:166
 msgid "Exit setup"
 msgstr "Poistu asetuksista"
 
@@ -7450,7 +7506,7 @@ msgid "Monster:"
 msgstr "Hirviö:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:22
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:20
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:21
 msgid "Spawn"
 msgstr "Luo"
 
@@ -7483,7 +7539,7 @@ msgid "Colors:"
 msgstr "Värit:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:33
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:39
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:42
 msgid "Set skin:"
 msgstr "Aseta päällyste:"
 
@@ -7516,79 +7572,69 @@ msgstr ""
 "tai muuta pelaaja-asetuksia"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:116
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:68
-#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:748
-#: qcsrc/menu/xonotic/util.qc:759 qcsrc/menu/xonotic/util.qc:764
-#: qcsrc/menu/xonotic/util.qc:773 qcsrc/menu/xonotic/util.qc:781
-#: qcsrc/menu/xonotic/util.qc:793
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:69
+#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:762
+#: qcsrc/menu/xonotic/util.qc:774 qcsrc/menu/xonotic/util.qc:779
+#: qcsrc/menu/xonotic/util.qc:788 qcsrc/menu/xonotic/util.qc:797
+#: qcsrc/menu/xonotic/util.qc:810
 msgid "Default"
 msgstr "Perusasetus"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:41
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:61
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:63
 msgid "Unlimited"
 msgstr "Rajoittamaton"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:75
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:74
 msgid "Gametype"
 msgstr "Pelimuoto"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:81
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:80
 msgid "Show all"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:82
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:81
 msgid "Show all available gametypes"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "Time limit:"
 msgstr "Aikaraja"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:85
 msgid "Timelimit in minutes that when hit, will end the match"
 msgstr "Aikaraja minuuteissa jonka täytyttyä, päättää ottelun"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
-#, c-format
-msgid "%d minutes"
-msgstr "%d minuuttia"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:88
 msgid "TIMLIM^Default"
 msgstr "TIMLIM^Vakio"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:89
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:171
-msgid "1 minute"
-msgstr "1 minuutti"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:106
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:91
 msgid "TIMLIM^Infinite"
 msgstr "TIMLIM^Rajaton"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:98
 msgid "Teams:"
 msgstr "Joukkueet:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:117
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:101
 msgid "2 teams"
 msgstr "2 joukkuetta"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:118
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:102
 msgid "3 teams"
 msgstr "3 joukkuetta"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:103
 msgid "4 teams"
 msgstr "4 joukkuetta"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:122
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:106
 msgid "Player slots:"
 msgstr "Pelaajalokerot:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:124
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:108
 msgid ""
 "The maximum amount of players or bots that can be connected to your server "
 "at once"
@@ -7596,79 +7642,79 @@ msgstr ""
 "Pelaajien tai bottien enimmäismäärä jotka voivat yhdistää palvelimeesi "
 "kerralla"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:110
 msgid "Number of bots:"
 msgstr "Bottien lukumäärä:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:129
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
 msgid "Amount of bots on your server"
 msgstr "Bottien lukumäärä palvelimellasi"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:132
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:116
 msgid "Bot skill:"
 msgstr "Bottien taitotaso:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:120
 msgid "Specify how experienced the bots will be"
 msgstr "Määritä kuinka kokeneita haluat bottien olevan"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
 msgid "Botlike"
 msgstr "Konemainen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:122
 msgid "Beginner"
 msgstr "Aloittelija"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "You will win"
 msgstr "Sinä tulet voittamaan"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:124
 msgid "You can win"
 msgstr "Voit voittaa"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:125
 msgid "You might win"
 msgstr "Voinet voittaa"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:141
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
 msgid "Advanced"
 msgstr "Kehittynyt"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
 msgid "Expert"
 msgstr "Kokenut"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:143
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:128
 msgid "Pro"
 msgstr "Ammattilainen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:144
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:129
 msgid "Assassin"
 msgstr "Murhaaja"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:145
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:130
 msgid "Unhuman"
 msgstr "Epäinhimillinen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:146
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
 msgid "Godlike"
 msgstr "Jumalainen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:156
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
 msgid "Mutators..."
 msgstr "Muovaajat..."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:157
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:143
 msgid "Mutators and weapon arenas"
 msgstr "Muovaajat ja ase-areenat"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:167
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:153
 msgid "Maplist"
 msgstr "Karttaluettelo"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:177
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:163
 msgid ""
 "Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-"
 "Delete to clear; Enter when done."
@@ -7676,39 +7722,39 @@ msgstr ""
 "Napsauta tässä tai Ctrl-F toimittaaksesi avainsanan kaventaaksesi "
 "karttaluetteloa. Ctrl-Delete tyhjentää; paina Enter kun kaikki valmista."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:186
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:172
 msgid "Add shown"
 msgstr "Lisää näkyvät"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:187
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:173
 msgid "Add the maps shown in the list to your selection"
 msgstr "Lisää kartat jotka näkyvät "
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:190
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:176
 msgid "Remove shown"
 msgstr "Poista näkyvistä"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:191
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:177
 msgid "Remove the maps shown in the list from your selection"
 msgstr "Poista karttoja jotka näkyvät "
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:196
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:182
 msgid "Add all"
 msgstr "Lisää kaikki"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:197
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:183
 msgid "Add every available map to your selection"
 msgstr "Lisää kaikki tarjollaolevat kartat valintaasi"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:200
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:186
 msgid "Remove all"
 msgstr "Poista kaikki"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:187
 msgid "Remove all the maps from your selection"
 msgstr "Poista kaikki kartat valinnastasi"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:209
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:195
 msgid "Start multiplayer!"
 msgstr "Aloita moninpeli!"
 
@@ -8222,28 +8268,28 @@ msgstr "Automaattinen kuvakaappaus tulostaulusta"
 msgid "Open in the viewer"
 msgstr "Avaa kuvankatseluohjelmassa"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:137
+#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:139
 msgid "Reset"
 msgstr "Nollaa"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:142
+#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:144
 msgid "Previous"
 msgstr "Edellinen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:145
+#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:147
 msgid "Next"
 msgstr "Seuraava"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:150
+#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:152
 msgid "Slide show"
 msgstr "Kuvasarja"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:38
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:22
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:38
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:26
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:26
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:22
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:27
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:24
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:21
 msgid "Apply immediately"
 msgstr "Ota käyttöön heti"
 
@@ -8291,119 +8337,119 @@ msgstr "Lopeta peli"
 msgid "Model:"
 msgstr "Malli:"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:21
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:22
 msgid "Remove *"
 msgstr "Poista *"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:23
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:24
 msgid "Copy *"
 msgstr "Kopioi *"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:24
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:25
 msgid "Paste"
 msgstr "Liitä:"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:26
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:27
 msgid "Bone:"
 msgstr "Luu:"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:31
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:33
 msgid "Set * as child"
 msgstr "Aseta * jatkeena"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:32
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:35
 msgid "Attach to *"
 msgstr "Liitä *:n"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:34
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:37
 msgid "Detach from *"
 msgstr "Irrota *:stä"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:37
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:40
 msgid "Visual object properties for *:"
 msgstr "Esineen *:n visuaaliset ominaisuudet:"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:41
-msgid "Set alpha:"
-msgstr "Aseta läpinäkyvyys:"
-
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:44
+msgid "Set opacity:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:48
 msgid "Set color main:"
 msgstr "Aseta pääväri:"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:46
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:50
 msgid "Set color glow:"
 msgstr "Aseta hehkumisväri:"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:50
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:54
 msgid "Set frame:"
 msgstr "Aseta kuvaruutu"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:54
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:57
 msgid "Physical object properties for *:"
 msgstr "Esineen *:n aineelliset ominaisuudet:"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:56
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:59
 msgid "Set material:"
 msgstr "Aseta raaka-aine:"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:62
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:65
 msgid "Set solidity:"
 msgstr "Aseta kiinteys:"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:63
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:66
 msgid "Non-solid"
 msgstr "Ei-kiinteä"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:64
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:67
 msgid "Solid"
 msgstr "Kiinteä"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:65
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:68
 msgid "Set physics:"
 msgstr "Aseta fysiikka:"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:66
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:69
 msgid "Static"
 msgstr "Muuttumaton"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:67
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:70
 msgid "Movable"
 msgstr "Siirrettävä"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:68
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:71
 msgid "Physical"
 msgstr "Aineellinen"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:70
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:73
 msgid "Set scale:"
 msgstr "Aseta mittakaava:"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:72
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:75
 msgid "Set force:"
 msgstr "Aseta voima:"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:76
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:79
 msgid "Claim *"
 msgstr "Haltuunota *"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:78
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:81
 msgid "* object info"
 msgstr "* esineen info"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:79
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:82
 msgid "* mesh info"
 msgstr "* mesh info"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:80
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:83
 msgid "* attachment info"
 msgstr "* liitosinfo"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:81
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:85
 msgid "Show help"
 msgstr "Näytä apu"
 
-#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:82
+#: qcsrc/menu/xonotic/dialog_sandboxtools.qc:88
 msgid "* is the object you are facing"
 msgstr "* on esine jota katsot"
 
@@ -8431,7 +8477,7 @@ msgstr "Peli"
 msgid "User"
 msgstr "Käyttäjä"
 
-#: qcsrc/menu/xonotic/dialog_settings.qc:25 qcsrc/menu/xonotic/keybinder.qc:170
+#: qcsrc/menu/xonotic/dialog_settings.qc:25 qcsrc/menu/xonotic/keybinder.qc:168
 msgid "Misc"
 msgstr "Sekalainen"
 
@@ -8443,39 +8489,39 @@ msgstr "Muuta peliasetuksia"
 msgid "Master:"
 msgstr "Pääkanava:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:36
+#: qcsrc/menu/xonotic/dialog_settings_audio.qc:37
 msgid "Music:"
 msgstr "Musiikki:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:44
+#: qcsrc/menu/xonotic/dialog_settings_audio.qc:45
 msgid "VOL^Ambient:"
 msgstr "VOL^Ympäristö:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:51
+#: qcsrc/menu/xonotic/dialog_settings_audio.qc:52
 msgid "Info:"
 msgstr "Tiedoitukset:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:58
+#: qcsrc/menu/xonotic/dialog_settings_audio.qc:59
 msgid "Items:"
 msgstr "Esineet:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_audio.qc:66
 msgid "Pain:"
 msgstr "Kipu:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:72
+#: qcsrc/menu/xonotic/dialog_settings_audio.qc:73
 msgid "Player:"
 msgstr "Pelaaja:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:79
+#: qcsrc/menu/xonotic/dialog_settings_audio.qc:80
 msgid "Shots:"
 msgstr "Laukaukset:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:86
+#: qcsrc/menu/xonotic/dialog_settings_audio.qc:87
 msgid "Voice:"
 msgstr "Puhe:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:94
+#: qcsrc/menu/xonotic/dialog_settings_audio.qc:95
 msgid "Weapons:"
 msgstr "Aseet:"
 
@@ -8576,16 +8622,14 @@ msgid "Swap left/right channels"
 msgstr "Vaihda kanavat vasen/oikea"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:139
-msgid "Headphone friendly mode"
-msgstr "Kuulokeystävällinen tila"
+msgid "Headphone-friendly mode"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:140
 msgid ""
-"Enable spatialization (blend the right and left channel slightly to decrease "
-"stereo separation a bit for headphones)"
+"Blend the left and right channels slightly to decrease stereo separation a "
+"bit"
 msgstr ""
-"Kytke spatialisaatio (sekoittaa inansa oikeaa ja vasempaa kanavaa "
-"vähentääkseen stereo erottelua hiukan kuulokkeita ajatellen) "
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:144
 msgid "Hit indication sound"
@@ -8639,13 +8683,9 @@ msgstr "Toista äänet myöskin vain leijaillessa valikon kohteiden yllä"
 msgid "Time announcer:"
 msgstr "Aikavaroitus:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:170
+#: qcsrc/menu/xonotic/dialog_settings_audio.qc:171
 msgid "WRN^Disabled"
 msgstr "WRN^Pois päältä"
-
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:172
-msgid "5 minutes"
-msgstr "5 minuuttia"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:173
 msgid "WRN^Both"
@@ -8817,19 +8857,19 @@ msgstr "Ylellinen kartoitus"
 msgid "Use per-pixel lighting effects"
 msgstr "Käytä pikselikohtaisia valoefektejä"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:128
 msgid "Gloss"
 msgstr "Kiilto"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:130
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Enable the use of glossmaps on textures supporting it"
 msgstr "Ota käyttöön tuetut hohtokartat tekstuureissa"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:136
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:135
 msgid "Offset mapping"
 msgstr "Poikkeavuuskartoitus"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:137
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:136
 msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
@@ -8838,22 +8878,22 @@ msgstr ""
 "kanssa näyttämään siltä kuin ne \"pompsahtaisivat ulos\" lättänästä 2D "
 "pinnasta"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:140
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:139
 msgid "Relief mapping"
 msgstr "Tehokas tekstuurien kuhmujen korostus"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:141
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:140
 msgid ""
 "Higher quality offset mapping, which also has a huge impact on performance"
 msgstr ""
 "Korkeampilaatuinen poikkeamatyyppinen kartoitus jolla on myös suuri vaikutus "
 "suorituskykyyn"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:147
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:145
 msgid "Reflections:"
 msgstr "Heijastukset:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:148
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:146
 msgid ""
 "Reflection and refraction quality, has a huge impact on performance on maps "
 "with reflecting surfaces"
@@ -8861,91 +8901,87 @@ msgstr ""
 "Heijastusten- ja taittumien laatu; omaa suuren vaikutuksen suorituskykyn "
 "kartoissa joissa on heijastavia pintoja"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:152
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:150
 msgid "Resolution of reflections/refractions"
 msgstr "Heijastusten/taittumien erottelumääre"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:153
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:151
 msgid "Blurred"
 msgstr "Sumennettu"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:154
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:152
 msgid "REFL^Good"
 msgstr "REFL^Hyvä"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:155
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:153
 msgid "Sharp"
 msgstr "Terävä"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:162
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:159
 msgid "Decals"
 msgstr "Siirtokuvat"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:163
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:160
 msgid "Enable decals (bullet holes and blood)"
 msgstr "Ota käyttöön tapahtumajäljet (luodinreijät ja verijäljet)"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:164
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:161
 msgid "Decals on models"
 msgstr "Hahmojen siirtokuvat"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:168
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:250
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:165
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:254
 msgid "Distance:"
 msgstr "Etäisyys:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:171
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:169
 msgid "Decals further away than this will not be drawn"
 msgstr "Tapahtumajälkiä tätä kauempana ei piirretä "
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:175
-msgid "Time:"
-msgstr "Kesto:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:178
 msgid "Time in seconds before decals fade away"
 msgstr "Aika sekunneissa milloin tapahtumajäljet haihtuvat"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:182
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:183
 msgid "Damage effects:"
 msgstr "Vahinkoefektit:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:184
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:185
 msgid "DMGFX^Disabled"
 msgstr "DMGFX^Pois"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:185
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:186
 msgid "Skeletal"
 msgstr "Luurankomainen"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:186
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:187
 msgid "DMGFX^All"
 msgstr "DMGFX^Kaikki"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:190
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:191
 msgid "Realtime dynamic lights"
 msgstr "Täsmäajallinen vaihteleva valaistus"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:191
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid ""
 "Temporary realtime light sources such as explosions, rockets and powerups"
 msgstr ""
 "Väliaikaiset täsmäaikavalolähteet kuten räjähdykset, raketit ja voimistukset "
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:193
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:194
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
 msgid "Shadows"
 msgstr "Varjot"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:194
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:195
 msgid "Shadows cast by realtime dynamic lights"
 msgstr "Varjot lankeavat täsmäaikavalojen mukaisesti"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:197
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:198
 msgid "Realtime world lights"
 msgstr "Maailmassa täsmäaikaiset valot"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:198
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
 msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
@@ -8953,15 +8989,15 @@ msgstr ""
 "Täsmäaikavalolähteet sisällytetty tiettyihin karttoihin. Saattaa vaikuttaa "
 "merkittävästi suorituskykyyn."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
 msgid "Shadows cast by realtime world lights"
 msgstr "Varjot lankeavat maailmallisten täsmäaikavalojen mukaisesti"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:204
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:205
 msgid "Use normal maps"
 msgstr "Käytä tekstuurien suunnattua varjostamista"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:205
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
 msgid ""
 "Directional shading of certain textures to simulate interaction of realtime "
 "light with a bumpy surface"
@@ -8969,31 +9005,31 @@ msgstr ""
 "Suuntavarjostus tietyille pinnoitteille mallintaakseen kanssakäyntiä "
 "täsmäajallisten valojen suhteen muhkuraisella pinnalla"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:207
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:209
 msgid "Soft shadows"
 msgstr "Pehmeät varjot"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:210
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
 msgid "Corona brightness:"
 msgstr "Koronan kirkkaus:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid "Flare effects around certain lights"
 msgstr "Pyöröheijastukset tiettyjen valojen ympärille"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:215
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:217
 msgid "Fade coronas according to visibility"
 msgstr "Himmennä pyörövaloheijastuksia näkyvyyteen nähden"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:216
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:218
 msgid "Corona fading using occlusion queries"
 msgstr "Koronahäivennys käyttäen okluusiokyselyjä"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:220
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
 msgid "Bloom"
 msgstr "Kukintohehku"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:221
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:223
 msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance."
@@ -9002,11 +9038,11 @@ msgstr ""
 "pikselit hyvin kirkkaista pikseleistä. Vaikuttanee merkittävästi "
 "suorituskykyyn."
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:224
 msgid "Extra postprocessing effects"
 msgstr "Ylimääräiset jälkikäsittelyn tehosteet"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:223
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:225
 msgid ""
 "Enables special postprocessing effects for when damaged or under water or "
 "using a powerup"
@@ -9014,33 +9050,33 @@ msgstr ""
 "Ottaa käyttöön erityiset jälkikäsittelytehosteet kärsiessä vahinkoa, ollessa "
 "veden alla tai kun käytetään pikavoimistuksia"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:229
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:231
 msgid "Motion blur strength - 0.4 recommended"
 msgstr "Liikkeen utuisuuden voimakkuus - 0.4 on suositeltava"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:230
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:232
 msgid "Motion blur:"
 msgstr "Liikesumeus:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:236
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:239
 msgid "Particles"
 msgstr "Hiukkaset"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:237
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:240
 msgid "Spawnpoint effects"
 msgstr "Syntypistehosteet"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:238
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:241
 msgid "Particles effects at all spawn points and whenever a player spawns"
 msgstr ""
 "Hiukkastehosteet kaikilla syntymispisteillä ja aina kun pelaaja ilmestyy/"
 "syntyy"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:243
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:246
 msgid "Quality:"
 msgstr "Laatu:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:246
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:249
 msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
@@ -9048,7 +9084,7 @@ msgstr ""
 "Hiukkasten määrän kerroin. Vähemmän tietää lukumääräisesti vähempää määrää "
 "hiukkasia, joka puolestaan johtaa parempaan suorituskykyyn"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:253
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:257
 msgid "Particles further away than this will not be drawn"
 msgstr "Tätä kauempana siintäviä hiukkasia ei piirretä"
 
@@ -9068,53 +9104,53 @@ msgid ""
 msgstr ""
 "Aseta eri tähtäin jokaiselle aseelle; on hyväksi jos pelaat ilman asemalleja"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:49
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:82
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:98
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:53
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:95
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:118
 msgid "Size:"
 msgstr "Koko:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:74
 msgid "By health"
 msgstr "Elinvoiman mukaisesti"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:77
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:90
 msgid "Use rings to indicate weapon status"
 msgstr "Käytä ympyröintiä asetilan osoittamiseksi"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:94
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:114
 msgid "Enable center crosshair dot"
 msgstr "Käytä keskitettyä pistettä tähtäimessä"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:112
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:141
 msgid "Use normal color"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:123
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:157
 msgid "Smooth effects of crosshairs"
 msgstr "Pehmennä tähtäimen efektejä"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:126
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:160
 msgid "Perform hit tests for the crosshair"
 msgstr "Suorita osumatestejä tähtäimen suhteen"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:130
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:164
 msgid "Blur if obstructed by an obstacle"
 msgstr "Sumenna mikäli eteen tulee este"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:134
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:169
 msgid "Blur if obstructed by a teammate"
 msgstr "Sumenna mikäli joukkuekaveri tulee tielle"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:138
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:174
 msgid "Shrink if obstructed by a teammate"
 msgstr "Kutista mikäli joukkuekaveri tulee tielle"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:141
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:178
 msgid "Animate crosshair when hitting an enemy"
 msgstr "Elävöitä tähtäin kun saat ammuttua osuman viholliseen"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:144
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:181
 msgid "Animate crosshair when picking up an item"
 msgstr "Elävöitä tähtäin poimiessasi esineen"
 
@@ -9122,23 +9158,23 @@ msgstr "Elävöitä tähtäin poimiessasi esineen"
 msgid "Scoreboard"
 msgstr "Tulostaulu"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:49
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:50
 msgid "Fading speed:"
 msgstr "Haihtumisen nopeus:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:52
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:53
 msgid "Enable rows / columns highlighting"
 msgstr "Ota käyttöön rivien / pystysarakkaiden korostus"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:54
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:55
 msgid "Show accuracy underneath scoreboard"
 msgstr "Näytä tulostaulun alaosassa osumatarkkuus"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:56
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:57
 msgid "Show team sizes:"
 msgstr "Näytä joukkueiden koot:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:57
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:58
 msgid ""
 "Team size position: Off=do not show; Left=on the left side of the scoreboard "
 "and move team scores to the right; Right=on the right of the scoreboard"
@@ -9146,112 +9182,112 @@ msgstr ""
 "Joukkuekoon sijainti: Pois= älä näytä. Vasen= tulostaulun vasemmassa "
 "laidassa sekä siirrä joukkuepisteet oikealle. Oikea= tulostaulun oikea laita "
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:66
 msgid "Waypoints"
 msgstr "Välietapit"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:67
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:68
 msgid "Display waypoint markers for objectives on the map"
 msgstr "Näytä välietappien maamerkit kartan kohteille "
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:68
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:69
 msgid "Show various gametype specific waypoints"
 msgstr "Näytä useita pelimuoto-ominaisia välietappeja"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:74
-msgid "Control transparency of the waypoints"
-msgstr "Hallinnoi välietappien läpinäkyvyyttä"
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:75
+msgid "Control opacity of the waypoints"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:78
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:131
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:80
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:140
 msgid "Font size:"
 msgstr "Kirjasimen koko:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:84
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:88
 msgid "Edge offset:"
 msgstr "Reunapoikkeama:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:92
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:98
 msgid "Fade when near the crosshair"
 msgstr "Hämärrä kun lähellä tähtäintä"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:96
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:103
 msgid "Display names instead of icons"
 msgstr "Näytä nimet kuvakkeiden sijasta"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:101
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:109
 msgid "Damage"
 msgstr "Vahinkoaste"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:103
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:111
 msgid "Overlay:"
 msgstr "Päällinen:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:106
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:114
 msgid "Factor:"
 msgstr "Tarkennuskerroin:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:111
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:119
 msgid "Fade rate:"
 msgstr "Häivennyksen kesto"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:119
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:127
 msgid "Player Names"
 msgstr "Pelaajanimet"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:121
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:129
 msgid "Show names above players"
 msgstr "Näytä pelaajanimet hahmojen yläpuolella"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:137
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:148
 msgid "Max distance:"
 msgstr "Enimmäisetäisyys:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:143
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:157
 msgid "Decolorize:"
 msgstr "Väripoisto:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:147
-#: qcsrc/menu/xonotic/keybinder.qc:164
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:162
+#: qcsrc/menu/xonotic/keybinder.qc:162
 msgid "Teamplay"
 msgstr "Joukkuepeli"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:155
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:171
 msgid "Only when near crosshair"
 msgstr "Vain lähellä tähtäintä"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:159
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:176
 msgid "Display health and armor"
 msgstr "Näytä elämän ja panssarin arvot"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:164
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:77
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:154
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:182
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:78
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:155
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:67
 msgid "Other"
 msgstr "Muuta"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:166
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:184
 msgid "Speed unit:"
 msgstr "Nopeuden mittayksikkö:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:175
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:193
 msgid "Damage overlay:"
 msgstr "Päällys joka osoittaa vahingot:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:178
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:200
 msgid "Dynamic HUD"
 msgstr "Vaihtelupäivitteinen tieto-HUD"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:179
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:201
 msgid "HUD moves around following player's movement"
 msgstr "HUD liikkuu ympärillä seuraten pelaajan liikkeitä"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:180
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:202
 msgid "Shake the HUD when hurt"
 msgstr "Väristä HUD:ia kun alkaa sattumaan"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:183
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:205
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
 msgid "Enter HUD editor"
 msgstr "Muokkaa tietotaulua"
@@ -9312,63 +9348,63 @@ msgstr "SPREES^Molemmat"
 msgid "Print on a seperate line"
 msgstr "Tulosta eri riveille"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:58
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:59
 msgid "Add extra frag information to centerprint when available"
 msgstr "Laita lisälahtausten tiedot keskiulosteeseen kun saatavilla"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:62
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:63
 msgid "Add frag location to death messages when available"
 msgstr "Lisää lahtauksen sijaintitieto kuoloviesteihin kun saatavilla"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:66
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:67
 msgid "Gamemode Settings"
 msgstr "Pelimuotoasetukset"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:68
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:69
 msgid "Display capture times in Capture The Flag"
 msgstr "Näytä kaappausajat Lipunryöstössä"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:72
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:73
 msgid "Display name of flag stealer in Capture The Flag"
 msgstr "Näytä lipunvarastajan nimi Lipunryöstössä"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:79
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:80
 msgid "Display console messages in the top left corner"
 msgstr "Näytä pääteviestejä vasemmassa yläkulmassa"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:81
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display all info messages in the chatbox"
 msgstr "Näytä kaikki tiedotusviestit keskustelulaatikossa"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:83
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:84
 msgid "Display player statuses in the chatbox"
 msgstr "Näytä pelaajatilat keskustelulaatikossa"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:87
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:88
 msgid "Powerup notifications"
 msgstr "Pikavoimistusten ilmoitukset"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:90
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:91
 msgid "Weapon centerprint notifications"
 msgstr "Aseiden ilmoitukset keskikirjoituksessa"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:93
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:94
 msgid "Weapon info message notifications"
 msgstr "Asetietoviestien ilmoitukset"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:98
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:99
 msgid "Announcers"
 msgstr "Julkistajat"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:100
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:101
 msgid "Respawn countdown sounds"
 msgstr "Uudelleensyntymislaskennan äänet"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:103
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:104
 msgid "Killstreak sounds"
 msgstr "Lahtaussarjan äänet"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:106
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:107
 msgid "Achievement sounds"
 msgstr "Saavutusäänet"
 
@@ -9385,47 +9421,47 @@ msgid "Use simple 2D images instead of item models"
 msgstr "Käytä yksinkertaisia 2D-kuvia esinemallien sijasta"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:35
-msgid "Unavailable alpha:"
-msgstr "Ei saatavissa alpha:"
+msgid "Unavailable opacity:"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:38
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:39
 msgid "Unavailable color:"
 msgstr "Ei paikalla -väri:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:40
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:42
 msgid "GHOITEMS^Black"
 msgstr "GHOITEMS^Musta"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:41
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:43
 msgid "GHOITEMS^Dark"
 msgstr "GHOITEMS^Tumma"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:42
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:44
 msgid "GHOITEMS^Tinted"
 msgstr "GHOITEMS^Sävytetty"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:43
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:45
 msgid "GHOITEMS^Normal"
 msgstr "GHOITEMS^Tavanomainen"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:44
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:46
 msgid "GHOITEMS^Blue"
 msgstr "GHOITEMS^Sininen"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:50
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:52
 #: qcsrc/menu/xonotic/serverlist.qc:759
 msgid "Players"
 msgstr "Pelaajat"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:52
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:54
 msgid "Force player models to mine"
 msgstr "Pakota hahmojen ulkomuoto samanlaiseksi:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:54
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
 msgid "Force player colors to mine"
 msgstr "Pakota pelaajien väri kuten omasi on"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team"
@@ -9433,43 +9469,43 @@ msgstr ""
 "Varoitus: mikäli tämä on kytketty päälle joukkuepeleissä voi joukkueesi väri "
 "ilmetä samana kuten vastapuolen väri"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
 msgid "Except in team games"
 msgstr "Poislukien joukkuepelit"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:62
 msgid "Only in Duel"
 msgstr "Vain Kaksintaistelussa"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:63
 msgid "Only in team games"
 msgstr "Vain joukkuepeleissä"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
 msgid "In team games and Duel"
 msgstr "Joukkuepeleissä sekä kaksintaisteluissa"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:68
 msgid "Body fading:"
 msgstr "Ruhohäivytys:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:68
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:72
 msgid "Gibs:"
 msgstr "Raajat:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:70
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:75
 msgid "GIBS^None"
 msgstr "GIBS^Ei mitään"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:71
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:76
 msgid "GIBS^Few"
 msgstr "GIBS^Vähän"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:72
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:77
 msgid "GIBS^Many"
 msgstr "GIBS^Paljon"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:73
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:78
 msgid "GIBS^Lots"
 msgstr "GIBS^Runsaasti"
 
@@ -9493,157 +9529,155 @@ msgstr "Näkökenttä:"
 msgid "Field of vision in degrees"
 msgstr "Näkökenttä asteissa"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:34
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:35
 msgid "1st person perspective"
 msgstr "1. persoonan näkymä"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:37
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:38
 msgid "Slide to third person upon death"
 msgstr "Liu'uta kolmannen persoonan näkymään kuollessa"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:41
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:42
 msgid "Smooth the view when landing from a jump"
 msgstr "Pehmennä näkymää laskeuduttaessa"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:45
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:46
 msgid "Smooth the view while crouching"
 msgstr "Pehmennä näkymää kun menet kyykkyyn"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:49
-msgid "View waving while idle"
-msgstr "Heiluta näkymää joutilaana"
-
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:53
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:50
 msgid "View bobbing while walking around"
 msgstr "Heiluta näkymää kun kävelet"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:58
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:55
+msgid "View waving while idle"
+msgstr "Heiluta näkymää joutilaana"
+
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:59
 msgid "3rd person perspective"
 msgstr "3. persoonan näkymä"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:61
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:62
 msgid "Back distance"
 msgstr "Etäisyys taakse:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:67
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:69
 msgid "Up distance"
 msgstr "Etäisyys ylös:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:73
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:76
 msgid "Allow passing through walls while spectating"
 msgstr "Salli lentäminen seinien läpi katsojana"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:77
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:80
 msgid "Zooming"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:79
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:82
 msgid "ZOOM^Zoom factor:"
 msgstr "ZOOM^Zoomauksen kerroin:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:81
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:84
 msgid "How big the zoom factor is when the zoom button is pressed"
 msgstr "Kuinka iso zoomauksen kerroin on zoomaus-nappia painettaessa"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:84
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:91
 msgid "ZOOM^Zoom speed:"
 msgstr "ZOOM^Zoom-nopeus:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:86
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:94
 msgid "How fast the view will be zoomed, disable to zoom instantly"
 msgstr ""
 "Kuinka nopeasti näkymä zoomataan, ota pois käytöstä jotta zoom tapahtuu "
 "välittömästi"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:88
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:109
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:96
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:126
 msgid "ZOOM^Instant"
 msgstr "ZOOM^Heti"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:92
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:101
 msgid "ZOOM^Zoom sensitivity:"
 msgstr "ZOOM^Zoom-herkkyys:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:94
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:104
 msgid ""
-"How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no "
+"How zoom changes sensitivity, from 0% (lower sensitivity) to 100% (no "
 "sensitivity change)"
 msgstr ""
-"Kuinka zoom kohdistaa herkkyyden kannalta, alkaen 0:sta (matalampi "
-"herkkyystaso) määreeseen 1 (ei muutosta herkkyydensäätöön)"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:96
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:108
 msgid "Zoom scrolling"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:114
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:132
 msgid "Velocity zoom"
 msgstr "Kiertonopeus-zoom"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:117
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:135
 msgid "VZOOM^Factor"
 msgstr "VZOOM^Kerroin"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:123
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:144
 msgid "Forward movement only"
 msgstr "Vain eteenpäinliike"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:128
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:150
 msgid "Display reticle 2D overlay while zooming"
 msgstr "Näytä 2D-päällisristikko zoomatessa"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:131
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:153
 msgid "Release zoom when you die or respawn"
 msgstr "Vapauta zoom kuollessa tai uudelleensynnyttäessä"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:135
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:157
 msgid "Release zoom when you switch weapons"
 msgstr "Vapauta zoom vaihtaessasi aseita"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qh:7
-#: qcsrc/menu/xonotic/keybinder.qc:135
+#: qcsrc/menu/xonotic/keybinder.qc:133
 msgid "View"
 msgstr "Näkymä"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:32
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:33
 msgid "Weapon Priority List (* = mutator weapon)"
 msgstr "Aseiden ensisijaisuusluettelo (* = muovaaja-ase)"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:38
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:39
 msgid "Up"
 msgstr "Ylös"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:42
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:43
 msgid "Down"
 msgstr "Alas"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:49
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:50
 msgid "Use priority list for weapon cycling"
 msgstr "Hyödynnä ensisijaisuusluetteloa asekierrätyksessä"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:50
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:51
 msgid ""
 "Make use of the list above when cycling through weapons with the mouse wheel"
 msgstr ""
 "Hyödynnä ylläolevaa luetteloa läpikäydessä asevalikoimaa hiiren rullalla"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:53
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:54
 msgid "Cycle through only usable weapon selections"
 msgstr "Läpikäy vain käytettäviä aseita"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:58
 msgid "Weapon Options"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:59
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:60
 msgid "Release attack buttons when you switch weapons"
 msgstr "Vapauta hyökkäyspainikkeet vaihtaessasi aseita"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:61
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:62
 msgid "Auto switch weapons on pickup"
 msgstr "Vaihda ase automaattisesti poimimisen jälkeen"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:62
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:63
 msgid ""
 "Automatically switch to newly picked up weapons if they are better than what "
 "you are carrying"
@@ -9651,58 +9685,58 @@ msgstr ""
 "Vaihda automaattisesti tuoreeltaan poimittu ase jos se on parempi kuin mitä "
 "sillä hetkellä kannat"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:66
 msgid "Auto switch in CTS:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:75
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:76
 msgid "Weapon Visuals"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:77
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:78
 msgid "Draw 1st person weapon model"
 msgstr "Piirrä ensimmäisen persoonan asemalli"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:78
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:79
 msgid "Draw the weapon model"
 msgstr "Piirrä asemalli"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:81
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:82
 msgid "Left align"
 msgstr "Vasen tasaus"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:82
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:85
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:88
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:83
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:87
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:91
 msgid "Position of the weapon model; requires reconnect"
 msgstr "Asemallin sijainti; vaatii yhteyden uudelleenmuodostamisen"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:87
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:90
 msgid "Right align"
 msgstr "Oikea tasaus"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:92
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:96
 msgid "Gun model swaying"
 msgstr "Aseen huojunta"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:95
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:100
 msgid "Gun model bobbing"
 msgstr "Aseen heilunta"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:98
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:104
 msgid "Weapon model opacity:"
 msgstr "Asemallin läpikuultavuus:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:111
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:112
 msgid "Apply team colors to weapon beam effects:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:115
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:116
 msgid "In team games"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
-#: qcsrc/menu/xonotic/keybinder.qc:79
+#: qcsrc/menu/xonotic/keybinder.qc:77
 msgid "Weapons"
 msgstr "Aseet"
 
@@ -9766,63 +9800,63 @@ msgstr ""
 msgid "Acceleration factor:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:118
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:119
 msgid "MOUSEACCEL^Fully disabled"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:119
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:120
 msgid "MOUSEACCEL^Linear disabled"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:124
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:125
 msgid "Speed bounds:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:136
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:140
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:143
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:137
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:141
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:144
 msgid "Disable system mouse acceleration"
 msgstr "Laita käyttöjärjestelmän hiiren kiihtyvyys pois päältä"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:137
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:138
 msgid "Make use of DGA mouse input"
 msgstr "Käytä DGA-sisääntuloa hiirelle"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:147
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:148
 msgid "Use system mouse positioning"
 msgstr "Käytä järjestelmän hiirenkohdistusta"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:156
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:157
 msgid "Pressing \"enter console\" key also closes it"
 msgstr "\"avaa komentorivi\" -painike myös sulkee sen"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:157
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:158
 msgid "Allow the console toggling bind to also close the console"
 msgstr "Salli päätteen esiintulon nappisidontaa myöskin päätteen sulkemiseen"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:159
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:160
 msgid "Automatically repeat jumping if holding jump"
 msgstr "Hyppää automaattisesti uudestaan pitämällä hyppynappi painettuna"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:162
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:163
 msgid "Jetpack on jump:"
 msgstr "Lentopakkaus hypätessä:"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:164
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:165
 msgid "JPJUMP^Disabled"
 msgstr "JPJUMP^Pois"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:165
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:166
 msgid "Air only"
 msgstr "Vain ilmassa"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:166
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:167
 msgid "JPJUMP^All"
 msgstr "JPJUMP^Kaikki"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:172
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:177
-#: qcsrc/menu/xonotic/dialog_settings_input.qc:182
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:173
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:178
+#: qcsrc/menu/xonotic/dialog_settings_input.qc:183
 msgid "Use joystick input"
 msgstr "Käytä peliohjainta"
 
@@ -9842,65 +9876,65 @@ msgstr "Peruuta"
 msgid "User defined key bind"
 msgstr "Käyttäjän määrittelemä näppäinasetus"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:12
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:28
+msgid "Network"
+msgstr "Verkko"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:30
+msgid "Show netgraph"
+msgstr "Näytä verkkokaavio"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
+msgid "Show a graph of packet sizes and other information"
+msgstr "Näytä pakettikokojen- ja muiden tietojen kuvaus"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:33
+msgid "Packet loss compensation"
+msgstr "Hyvitys pakettihäviötä ilmetessä"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:34
+msgid "Each packet includes a copy of the previous message"
+msgstr "Jokainen paketti sisältää tallenteen edellisestä viestistä"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
+msgid "Movement prediction error compensation"
+msgstr "Liikevirhe-ennakoinnin hyvitys"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:40
+msgid "Use encryption (AES) when available"
+msgstr "Käytä salausta (AES) kun se on saatavissa"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:43
+msgid "HTTP downloads"
+msgstr "HTTP lataukset"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:45
+msgid "Simultaneous:"
+msgstr "Yhtäaikainen:"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:47
+msgid "Maximum number of concurrent HTTP downloads"
+msgstr "Rinnakkaisten HTTP-latausten enimmäismäärä"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
+msgid "Bandwidth limit:"
+msgstr "Kaistaleveyden raja:"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 #, c-format
 msgid "%d KiB/s"
 msgstr "%d Kt/s"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:52
 #, c-format
 msgid "%d MiB/s"
 msgstr "%d Mt/s"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:30
-msgid "Network"
-msgstr "Verkko"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:32
-msgid "Show netgraph"
-msgstr "Näytä verkkokaavio"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:33
-msgid "Show a graph of packet sizes and other information"
-msgstr "Näytä pakettikokojen- ja muiden tietojen kuvaus"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:35
-msgid "Packet loss compensation"
-msgstr "Hyvitys pakettihäviötä ilmetessä"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
-msgid "Each packet includes a copy of the previous message"
-msgstr "Jokainen paketti sisältää tallenteen edellisestä viestistä"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:38
-msgid "Movement prediction error compensation"
-msgstr "Liikevirhe-ennakoinnin hyvitys"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:42
-msgid "Use encryption (AES) when available"
-msgstr "Käytä salausta (AES) kun se on saatavissa"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:45
-msgid "HTTP downloads"
-msgstr "HTTP lataukset"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:47
-msgid "Simultaneous:"
-msgstr "Yhtäaikainen:"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
-msgid "Maximum number of concurrent HTTP downloads"
-msgstr "Rinnakkaisten HTTP-latausten enimmäismäärä"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
-msgid "Bandwidth limit:"
-msgstr "Kaistaleveyden raja:"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:67
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
 msgid "Menu tooltips:"
 msgstr "Päävalikon työkaluvihjeet:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:71
 msgid ""
 "Menu tooltips: disabled, standard or advanced (also shows cvar or console "
 "command bound to the menu item)"
@@ -9908,47 +9942,59 @@ msgstr ""
 "Valikon vihjeet: pois, vakiollinen tai edistynyt (näyttää myös cvar:in tai "
 "päätekäskyn joka on sidonnainen valikon kohteeseen)"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:70
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:73
 msgid "TLTIP^Disabled"
 msgstr "TLTIP^Pois päältä"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:71
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:74
 msgid "TLTIP^Standard"
 msgstr "TLTIP^Vakio"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:72
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:75
 msgid "TLTIP^Advanced"
 msgstr "TLTIP^Kehittynyt"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:75
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
+msgid "Menu animations:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:80
+msgid "How fast animations in the menu occur"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:83
+msgid "Disabled"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:87
 msgid "Text shadow"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:76
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:88
 msgid "Draw a shadow behind all text to improve readability"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:91
 msgid "Show current date and time"
 msgstr "Näytä tämänhetkinen päivämäärä ja kellonaika"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:79
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:92
 msgid "Show current date and time of day, useful on screenshots"
 msgstr ""
 "Näytä tämänhetkinen päivämäärä ja kellonaika, käytännöllinen "
 "kuvakaappauksissa"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:84
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:97
 msgid "Advanced settings..."
 msgstr "Edistyneet asetukset..."
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:85
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:98
 msgid "Advanced settings where you can tweak every single variable of the game"
 msgstr ""
 "Edistyneet -valikko on paikka jonka kautta voit säätää pelien jokaista osa-"
 "aluetta ja muuttujaa"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:91
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:104
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
 msgid "Factory reset"
 msgstr "Nollaus tehdasasetuksiin"
@@ -10036,76 +10082,71 @@ msgstr "Vaihda kieli"
 msgid "Warning"
 msgstr "Varoitus"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:11
-#, c-format
-msgid "%d fps"
-msgstr "%d fps-ruudunpäivitys"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:34
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:33
 msgid "Full screen"
 msgstr "Kokoruutu"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:36
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:35
 msgid "Borderless window"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:39
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:38
 msgid "Resolution:"
 msgstr "Näytön tarkkuus:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:43
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:42
 msgid "Font/UI size:"
 msgstr "Kirjainten/käyttöliittymän koko:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:45
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:44
 msgid "SZ^Unreadable"
 msgstr "SZ^Miltein näkymätön"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:46
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:45
 msgid "SZ^Tiny"
 msgstr "SZ^Pikkuruinen"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:47
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:46
 msgid "SZ^Little"
 msgstr "SZ^Hyvin pieni"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:48
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:47
 msgid "SZ^Small"
 msgstr "SZ^Pieni"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:49
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:48
 msgid "SZ^Medium"
 msgstr "SZ^Keskikokoinen"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:50
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:49
 msgid "SZ^Large"
 msgstr "SZ^Suuri"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:51
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:50
 msgid "SZ^Huge"
 msgstr "SZ^Valtava"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:52
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:51
 msgid "SZ^Gigantic"
 msgstr "SZ^Jättiläismäinen"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:53
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:52
 msgid "SZ^Colossal"
 msgstr "SZ^Massiivinen"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:57
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:56
 msgid "Anaglyph 3D (red-cyan)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:59
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:58
 msgid "High-quality frame buffer"
 msgstr "Korkeanlaatuinen kehyspuskuri"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:67
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:66
 msgid "Antialiasing:"
 msgstr "Reunojenpehmennys (Antialiasing):"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:70
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:69
 msgid ""
 "Enable antialiasing, which smooths the edges of 3D geometry. Note that it "
 "might decrease performance by quite a lot"
@@ -10113,25 +10154,23 @@ msgstr ""
 "Kytke päälle anti-aliasing, joka pehmentää 3D-geometrisiä reunoja. Huomaa, "
 "että tämä saattaa alentaa suorituskykyä melkoisesti"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:71
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:70
 msgid "AA^Disabled"
 msgstr "AA^Pois päältä"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:72
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:89
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:71
 msgid "2x"
 msgstr "2x"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:73
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:90
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:72
 msgid "4x"
 msgstr "4x"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:80
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:79
 msgid "Resolution scaling:"
 msgstr "Ruututarkkuuden mitoitus"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:82
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:81
 msgid ""
 "Screen or window size multiplier, above 1x does antialiasing, below 1x may "
 "help slow GPUs"
@@ -10147,19 +10186,11 @@ msgstr "Anisotropia:"
 msgid "Anisotropic filtering quality"
 msgstr "Anisotrooppisen suodatuksen laatu"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:88
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:89
 msgid "ANISO^Disabled"
 msgstr "ANISO^Pois päältä"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:91
-msgid "8x"
-msgstr "8x"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:92
-msgid "16x"
-msgstr "16x"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:95
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:94
 msgid ""
 "Eliminate overdraw by rendering a depth-only version of the scene before the "
 "normal rendering starts"
@@ -10167,27 +10198,27 @@ msgstr ""
 "Poista ylipiirräntä renderöimällä vain-syvyys version kohtauksesta ennen "
 "kuin tavanomainen renderöinti alkaa"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:98
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:97
 msgid "Depth first:"
 msgstr "Syvyyssuuntainen renderöinti:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:99
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:98
 msgid "DF^Disabled"
 msgstr "DF^Pois"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:100
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:99
 msgid "DF^World"
 msgstr "DF^Maailma"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:101
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:100
 msgid "DF^All"
 msgstr "DF^Kaikki"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:105
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:104
 msgid "Wait for GPU to finish each frame"
 msgstr "Anna näytönohjaimen viimeistellä jokainen ruutu"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:106
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:105
 msgid ""
 "Make the CPU wait for the GPU to finish each frame, can help with some "
 "strange input or video lag on some machines"
@@ -10196,31 +10227,31 @@ msgstr ""
 "kehyksen; voi auttaa joissakin oudoissa sisääntulo tai videon "
 "laahaamisongelmissa joillakin kokoonpanoilla"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:110
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:109
 msgid "Use OpenGL 2.0 shaders (GLSL)"
 msgstr "Käytä OpenGL 2.0 shaders-varjostuksia (GLSL)"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:115
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:114
 msgid "Brightness:"
 msgstr "Kirkkaus:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:117
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:116
 msgid "Brightness of black"
 msgstr "Mustan kirkkaus"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:119
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:118
 msgid "Contrast:"
 msgstr "Kontrasti:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:121
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:120
 msgid "Brightness of white"
 msgstr "Valkoisen kirkkaus"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:123
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:122
 msgid "Gamma:"
 msgstr "Gamma:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:127
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:126
 msgid ""
 "Inverse gamma correction value, a brightness effect that does not affect "
 "white or black"
@@ -10228,19 +10259,19 @@ msgstr ""
 "Käännä gamma-kirkkauden korjausmääre, kirkkausefekti joka ei vaikuta "
 "valkoiseen tai mustaan"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:131
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:130
 msgid "Contrast boost:"
 msgstr "Kontrastin lisäys:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:135
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:134
 msgid "By how much to multiply the contrast in dark areas"
 msgstr "Monellako kontrasti kerrotaan tummilla alueilla"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:139
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:138
 msgid "Saturation:"
 msgstr "Kylläisyys:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:143
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:142
 msgid ""
 "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL color control"
@@ -10248,11 +10279,11 @@ msgstr ""
 "Kylläisyyden säätö (0 = harmaasävy, 1 = tavallinen, 2 = ylikylläinen), "
 "vaatii GLSL-värihallinnan"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:147
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:146
 msgid "LIT^Ambient:"
 msgstr "LIT^Ympäristö:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:149
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:148
 msgid ""
 "Ambient lighting, if set too high it tends to make light on maps look dull "
 "and flat"
@@ -10260,47 +10291,54 @@ msgstr ""
 "Ympäröivä valaistus; mikäli asetettu liian korkeaksi, se tapaa tehdä kartan "
 "valot tylsiksi ja tasapaksuiksi"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:151
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:150
 msgid "Intensity:"
 msgstr "Intensiivisyys:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:153
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:152
 msgid "Global rendering brightness"
 msgstr "Yleismaailmallisen renderöinnin kirkkaus"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:157
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:156
 msgid "Framerate"
 msgstr "Ruudunpäivitysnopeus"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:159
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:158
 msgid "Maximum:"
 msgstr "Enimmäinen:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:166
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:160
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:169
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:179
+#, c-format
+msgid "%s fps"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:164
 msgid "MAXFPS^Unlimited"
 msgstr "MAXFPS^Rajaton "
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:169
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:167
 msgid "Target:"
 msgstr "Kohde:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:171
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:170
 msgid "TRGT^Disabled"
 msgstr "TRGT^Pois päältä"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:182
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:177
 msgid "Idle limit:"
 msgstr "Joutilasajan raja:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:188
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:182
 msgid "IDLFPS^Unlimited"
 msgstr "IDLFPS^Rajaton"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:191
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:185
 msgid "Vertical Synchronization"
 msgstr "Pystytahdistus (VSYNC)"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:192
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:186
 msgid ""
 "Vsync prevents tearing, but increases latency and caps your fps at the "
 "screen refresh rate"
@@ -10308,11 +10346,11 @@ msgstr ""
 "Vsync estää kuvanäkymän revintää, mutta lisää viivettä sekä asettaa katon "
 "ruudunpäivitykselle ruudun virkistysvasteessa"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:194
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:188
 msgid "Show frames per second"
 msgstr "Näytä ruudunpäivitysnopeus (FPS)"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:195
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:189
 msgid "Show your rendered frames per second"
 msgstr "Näytä renderöityjen ruutujen nopeus /sekunnissa"
 
@@ -10379,7 +10417,7 @@ msgid "pink"
 msgstr "pinkki"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:43
-#: qcsrc/menu/xonotic/keybinder.qc:167
+#: qcsrc/menu/xonotic/keybinder.qc:165
 msgid "spectate"
 msgstr "seuraa sivusta"
 
@@ -10415,168 +10453,168 @@ msgstr "joukkuepeli"
 msgid "free for all"
 msgstr "kaikille vapaa"
 
-#: qcsrc/menu/xonotic/keybinder.qc:63
+#: qcsrc/menu/xonotic/keybinder.qc:61
 msgid "Moving"
 msgstr "Liikkeet"
 
-#: qcsrc/menu/xonotic/keybinder.qc:64
+#: qcsrc/menu/xonotic/keybinder.qc:62
 msgid "move forwards"
 msgstr "liiku eteenpäin"
 
-#: qcsrc/menu/xonotic/keybinder.qc:65
+#: qcsrc/menu/xonotic/keybinder.qc:63
 msgid "move backwards"
 msgstr "liiku taaksepäin"
 
-#: qcsrc/menu/xonotic/keybinder.qc:66
+#: qcsrc/menu/xonotic/keybinder.qc:64
 msgid "strafe left"
 msgstr "askella vasemmalle"
 
-#: qcsrc/menu/xonotic/keybinder.qc:67
+#: qcsrc/menu/xonotic/keybinder.qc:65
 msgid "strafe right"
 msgstr "askella oikealle"
 
-#: qcsrc/menu/xonotic/keybinder.qc:68
+#: qcsrc/menu/xonotic/keybinder.qc:66
 msgid "jump / swim"
 msgstr "hyppää / ui"
 
-#: qcsrc/menu/xonotic/keybinder.qc:69
+#: qcsrc/menu/xonotic/keybinder.qc:67
 msgid "crouch / sink"
 msgstr "kyykisty / uppoa"
 
-#: qcsrc/menu/xonotic/keybinder.qc:71
+#: qcsrc/menu/xonotic/keybinder.qc:69
 msgid "jetpack"
 msgstr "lentopakkaus"
 
-#: qcsrc/menu/xonotic/keybinder.qc:74
+#: qcsrc/menu/xonotic/keybinder.qc:72
 msgid "Attacking"
 msgstr "Hyökkääminen"
 
-#: qcsrc/menu/xonotic/keybinder.qc:80
+#: qcsrc/menu/xonotic/keybinder.qc:78
 msgid "WEAPON^previous"
 msgstr "ASE^edellinen"
 
-#: qcsrc/menu/xonotic/keybinder.qc:81
+#: qcsrc/menu/xonotic/keybinder.qc:79
 msgid "WEAPON^next"
 msgstr "ASE^seuraava"
 
-#: qcsrc/menu/xonotic/keybinder.qc:82
+#: qcsrc/menu/xonotic/keybinder.qc:80
 msgid "WEAPON^previously used"
 msgstr "ASE^aiemmin käytetty"
 
-#: qcsrc/menu/xonotic/keybinder.qc:83
+#: qcsrc/menu/xonotic/keybinder.qc:81
 msgid "WEAPON^best"
 msgstr "ASE^paras"
 
-#: qcsrc/menu/xonotic/keybinder.qc:84
+#: qcsrc/menu/xonotic/keybinder.qc:82
 msgid "reload"
 msgstr "lataa uudelleen"
 
-#: qcsrc/menu/xonotic/keybinder.qc:113
+#: qcsrc/menu/xonotic/keybinder.qc:111
 #, c-format
 msgid "weapon group %d"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:136
+#: qcsrc/menu/xonotic/keybinder.qc:134
 msgid "hold zoom"
 msgstr "pidä zoom paikallaan"
 
-#: qcsrc/menu/xonotic/keybinder.qc:137
+#: qcsrc/menu/xonotic/keybinder.qc:135
 msgid "toggle zoom"
 msgstr "zoom-kytkin"
 
-#: qcsrc/menu/xonotic/keybinder.qc:138
+#: qcsrc/menu/xonotic/keybinder.qc:136
 msgid "show scores"
 msgstr "näytä pisteet"
 
-#: qcsrc/menu/xonotic/keybinder.qc:139
+#: qcsrc/menu/xonotic/keybinder.qc:137
 msgid "screen shot"
 msgstr "kuvakaappaus"
 
-#: qcsrc/menu/xonotic/keybinder.qc:140
+#: qcsrc/menu/xonotic/keybinder.qc:138
 msgid "maximize radar"
 msgstr "suurenna tutka"
 
-#: qcsrc/menu/xonotic/keybinder.qc:141
+#: qcsrc/menu/xonotic/keybinder.qc:139
 msgid "3rd person view"
 msgstr "näkymä 3:ssa persoonassa"
 
-#: qcsrc/menu/xonotic/keybinder.qc:142
+#: qcsrc/menu/xonotic/keybinder.qc:140
 msgid "enter spectator mode"
 msgstr "käynnistä katsojatila"
 
-#: qcsrc/menu/xonotic/keybinder.qc:145
+#: qcsrc/menu/xonotic/keybinder.qc:143
 msgid "Communication"
 msgstr "Keskustelu"
 
-#: qcsrc/menu/xonotic/keybinder.qc:146
+#: qcsrc/menu/xonotic/keybinder.qc:144
 msgid "public chat"
 msgstr "julkinen chat-keskustelu"
 
-#: qcsrc/menu/xonotic/keybinder.qc:147
+#: qcsrc/menu/xonotic/keybinder.qc:145
 msgid "team chat"
 msgstr "joukkue-chat-keskustelu"
 
-#: qcsrc/menu/xonotic/keybinder.qc:148
+#: qcsrc/menu/xonotic/keybinder.qc:146
 msgid "show chat history"
 msgstr "näytä keskusteluhistoria"
 
-#: qcsrc/menu/xonotic/keybinder.qc:149
+#: qcsrc/menu/xonotic/keybinder.qc:147
 msgid "vote YES"
 msgstr "äänestä KYLLÄ"
 
-#: qcsrc/menu/xonotic/keybinder.qc:150
+#: qcsrc/menu/xonotic/keybinder.qc:148
 msgid "vote NO"
 msgstr "äänestä EI"
 
-#: qcsrc/menu/xonotic/keybinder.qc:154
+#: qcsrc/menu/xonotic/keybinder.qc:152
 msgid "Client"
 msgstr "Asiakasohjelma"
 
-#: qcsrc/menu/xonotic/keybinder.qc:158 qcsrc/menu/xonotic/keybinder.qc:160
+#: qcsrc/menu/xonotic/keybinder.qc:156 qcsrc/menu/xonotic/keybinder.qc:158
 msgid "enter console"
 msgstr "käynnistä pääte"
 
-#: qcsrc/menu/xonotic/keybinder.qc:161
+#: qcsrc/menu/xonotic/keybinder.qc:159
 msgid "quit"
 msgstr "lopeta"
 
-#: qcsrc/menu/xonotic/keybinder.qc:165
+#: qcsrc/menu/xonotic/keybinder.qc:163
 msgid "auto-join team"
 msgstr "liity joukkueeseen automaattisesti"
 
-#: qcsrc/menu/xonotic/keybinder.qc:171
+#: qcsrc/menu/xonotic/keybinder.qc:169
 msgid "drop key/flag, exit vehicle"
 msgstr "pudota avain/lippu, poistu ajoneuvosta"
 
-#: qcsrc/menu/xonotic/keybinder.qc:172
+#: qcsrc/menu/xonotic/keybinder.qc:170
 msgid "suicide / respawn"
 msgstr "itsari / uudelleensynty"
 
-#: qcsrc/menu/xonotic/keybinder.qc:173
+#: qcsrc/menu/xonotic/keybinder.qc:171
 msgid "quick menu"
 msgstr "pikavalikko"
 
-#: qcsrc/menu/xonotic/keybinder.qc:175
+#: qcsrc/menu/xonotic/keybinder.qc:173
 msgid "scoreboard user interface"
 msgstr "Tulostaulukon käyttöliittymä"
 
-#: qcsrc/menu/xonotic/keybinder.qc:178
+#: qcsrc/menu/xonotic/keybinder.qc:176
 msgid "User defined"
 msgstr "Käyttäjän määrittämä"
 
-#: qcsrc/menu/xonotic/keybinder.qc:185
+#: qcsrc/menu/xonotic/keybinder.qc:183
 msgid "Development"
 msgstr "Kehitys"
 
-#: qcsrc/menu/xonotic/keybinder.qc:186
+#: qcsrc/menu/xonotic/keybinder.qc:184
 msgid "sandbox menu"
 msgstr "rajattu hiekkalaatikkovalikko"
 
-#: qcsrc/menu/xonotic/keybinder.qc:187
+#: qcsrc/menu/xonotic/keybinder.qc:185
 msgid "drag object (sandbox)"
 msgstr "raahaa kohde (hiekkalaatikko)"
 
-#: qcsrc/menu/xonotic/keybinder.qc:188
+#: qcsrc/menu/xonotic/keybinder.qc:186
 msgid "waypoint editor menu"
 msgstr "välietapin muokkausvalikko"
 
@@ -10640,7 +10678,7 @@ msgstr ""
 msgid "spectator"
 msgstr "katsoja"
 
-#: qcsrc/menu/xonotic/playermodel.qc:161
+#: qcsrc/menu/xonotic/playermodel.qc:156
 msgid "<no model found>"
 msgstr "<mallia ei löytynyt>"
 
@@ -10893,21 +10931,21 @@ msgstr ""
 msgid "%d (unranked)"
 msgstr "%d (ei rankattu)"
 
-#: qcsrc/menu/xonotic/util.qc:407
+#: qcsrc/menu/xonotic/util.qc:420
 msgid "Update can be downloaded at:"
 msgstr "Päivitys ladattavissa osoitteessa:"
 
-#: qcsrc/menu/xonotic/util.qc:505
+#: qcsrc/menu/xonotic/util.qc:518
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr ""
 "Luodaan automaattisesti karttatietoja vastikään lisätyille kartoille..."
 
-#: qcsrc/menu/xonotic/util.qc:540
+#: qcsrc/menu/xonotic/util.qc:553
 #, c-format
 msgid "Update to %s now!"
 msgstr "Päivitä versioon %s nyt!"
 
-#: qcsrc/menu/xonotic/util.qc:625
+#: qcsrc/menu/xonotic/util.qc:638
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
@@ -10915,10 +10953,6 @@ msgstr ""
 "^1VIRHE: Tekstuuripakkaus vaaditaan mutta se ei ole tuettuna.\n"
 "^1Odotettavissa graafisia virheitä."
 
-#: qcsrc/menu/xonotic/util.qc:779
-msgid "Team Color:"
-msgstr "Joukkueen väri"
-
-#: qcsrc/menu/xonotic/util.qc:803
+#: qcsrc/menu/xonotic/util.qc:820
 msgid "Hide on death"
 msgstr ""
