@@ -2,7 +2,11 @@
 
 #ifdef SVQC
 
-spawnfunc(turret_flac) { if (!turret_initialize(this, TUR_FLAC)) delete(this); }
+spawnfunc(turret_flac)
+{
+	if (!turret_initialize(this, TUR_FLAC))
+		delete(this);
+}
 
 METHOD(Flac, tr_setup, void(Flac this, entity it))
 {

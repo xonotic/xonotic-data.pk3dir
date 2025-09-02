@@ -2,7 +2,11 @@
 
 #ifdef SVQC
 
-spawnfunc(turret_machinegun) { if (!turret_initialize(this, TUR_MACHINEGUN)) delete(this); }
+spawnfunc(turret_machinegun)
+{
+	if (!turret_initialize(this, TUR_MACHINEGUN))
+		delete(this);
+}
 
 METHOD(MachineGunTurret, tr_setup, void(MachineGunTurret this, entity it))
 {

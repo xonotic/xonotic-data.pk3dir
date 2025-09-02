@@ -17,7 +17,7 @@ const int ewheel_anim_bck_fast = 4;
 void ewheel_move_path(entity this)
 {
 	// Are we close enough to a path node to switch to the next?
-	if(turret_closetotarget(this, this.pathcurrent.origin, 64))
+	if (turret_closetotarget(this, this.pathcurrent.origin, 64))
 	{
 #ifdef EWHEEL_FANCYPATH
 		if (this.pathcurrent.path_next == NULL)
@@ -33,7 +33,7 @@ void ewheel_move_path(entity this)
 
 				if (this.pathgoal.enemy)
 				{
-					this.pathcurrent = pathlib_astar(this, this.pathgoal.origin,this.pathgoal.enemy.origin);
+					this.pathcurrent = pathlib_astar(this, this.pathgoal.origin, this.pathgoal.enemy.origin);
 					this.pathgoal = this.pathgoal.enemy;
 				}
 			}
@@ -60,37 +60,36 @@ void ewheel_move_enemy(entity this)
 {
 	int newframe;
 
-	this.steerto = steerlib_arrive(this, this.enemy.origin,this.target_range_optimal);
-
+	this.steerto = steerlib_arrive(this, this.enemy.origin, this.target_range_optimal);
 	this.moveto = this.origin + this.steerto * 128;
 
 	if (this.tur_dist_enemy > this.target_range_optimal)
 	{
-		if ( this.tur_head.spawnshieldtime < 1 )
+		if (this.tur_head.spawnshieldtime < 1)
 		{
 			newframe = ewheel_anim_fwd_fast;
-			movelib_move_simple(this, v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
+			movelib_move_simple(this, v_forward, autocvar_g_turrets_unit_ewheel_speed_fast, 0.4);
 		}
 		else if (this.tur_head.spawnshieldtime < 2)
 		{
 			newframe = ewheel_anim_fwd_slow;
-			movelib_move_simple(this, v_forward, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
+			movelib_move_simple(this, v_forward, autocvar_g_turrets_unit_ewheel_speed_slow, 0.4);
 		}
 		else
 		{
 			newframe = ewheel_anim_fwd_slow;
-			movelib_move_simple(this, v_forward, (autocvar_g_turrets_unit_ewheel_speed_slower), 0.4);
+			movelib_move_simple(this, v_forward, autocvar_g_turrets_unit_ewheel_speed_slower, 0.4);
 		}
 	}
 	else if (this.tur_dist_enemy < this.target_range_optimal * 0.5)
 	{
 		newframe = ewheel_anim_bck_slow;
-		movelib_move_simple(this, v_forward * -1, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
+		movelib_move_simple(this, -v_forward, autocvar_g_turrets_unit_ewheel_speed_slow, 0.4);
 	}
 	else
 	{
 		newframe = ewheel_anim_stop;
-		movelib_brake_simple(this, (autocvar_g_turrets_unit_ewheel_speed_stop));
+		movelib_brake_simple(this, autocvar_g_turrets_unit_ewheel_speed_stop);
 	}
 
 	turrets_setframe(this, newframe, false);
@@ -98,15 +97,15 @@ void ewheel_move_enemy(entity this)
 
 void ewheel_move_idle(entity this)
 {
-	if(this.frame != 0)
+	if (this.frame != 0)
 	{
 		this.SendFlags |= TNSF_ANIM;
 		this.anim_start_time = time;
+		this.frame = 0;
 	}
 
-	this.frame = 0;
-	if(this.velocity)
-		movelib_brake_simple(this, (autocvar_g_turrets_unit_ewheel_speed_stop));
+	if (this.velocity)
+		movelib_brake_simple(this, autocvar_g_turrets_unit_ewheel_speed_stop);
 }
 
 void ewheel_findtarget(entity this)
@@ -132,16 +131,19 @@ void ewheel_findtarget(entity this)
 	}
 }
 
-spawnfunc(turret_ewheel) { if(!turret_initialize(this, TUR_EWHEEL)) delete(this); }
+spawnfunc(turret_ewheel)
+{
+	if (!turret_initialize(this, TUR_EWHEEL))
+		delete(this);
+}
 
 METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
 {
 	vector wish_angle, real_angle;
 
-	float vz = it.velocity_z;
-
-	it.angles_x = anglemods(it.angles_x);
-	it.angles_y = anglemods(it.angles_y);
+	float vz = it.velocity.z;
+	it.angles.x = anglemods(it.angles.x);
+	it.angles.y = anglemods(it.angles.y);
 
 	fixedmakevectors(it.angles);
 
@@ -150,22 +152,22 @@ METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
 	real_angle = wish_angle - it.angles;
 	real_angle = shortangle_vxy(real_angle, it.tur_head.angles);
 
-	it.tur_head.spawnshieldtime = fabs(real_angle_y);
+	it.tur_head.spawnshieldtime = fabs(real_angle.y);
 
 	float f = it.tur_head.aim_speed * frametime;
-	real_angle_y = bound(-f, real_angle_y, f);
-	it.angles_y = (it.angles_y + real_angle_y);
+	real_angle.y = bound(-f, real_angle.y, f);
+	it.angles.y += real_angle.y;
 
-	if(it.enemy)
+	if (it.enemy)
 		ewheel_move_enemy(it);
-	else if(it.pathcurrent)
+	else if (it.pathcurrent)
 		ewheel_move_path(it);
 	else
 		ewheel_move_idle(it);
 
-	it.velocity_z = vz;
+	it.velocity.z = vz;
 
-	if(it.velocity)
+	if (it.velocity)
 		it.SendFlags |= TNSF_MOVE;
 }
 
@@ -182,7 +184,7 @@ METHOD(EWheel, tr_death, void(EWheel this, entity it))
 
 METHOD(EWheel, tr_setup, void(EWheel this, entity it))
 {
-	if(it.move_movetype == MOVETYPE_WALK)
+	if (it.move_movetype == MOVETYPE_WALK)
 	{
 		it.velocity = '0 0 0';
 		it.enemy = NULL;
@@ -193,20 +195,21 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
 			InitializeEntity(it, ewheel_findtarget, INITPRIO_FINDTARGET);
 	}
 
-	it.iscreature				= true;
-	it.teleportable			= TELEPORT_NORMAL;
-	if(!it.damagedbycontents)
+	it.iscreature             = true;
+	it.teleportable           = TELEPORT_NORMAL;
+	if (!it.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, it);
-	it.damagedbycontents        = true;
+	it.damagedbycontents      = true;
 	set_movetype(it, MOVETYPE_WALK);
-	it.solid					= SOLID_SLIDEBOX;
-	it.takedamage				= DAMAGE_AIM;
-	it.idle_aim				= '0 0 0';
-	it.pos1					= it.origin;
-	it.target_select_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-	it.target_validate_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-	it.frame					= it.tur_head.frame = 1;
-	it.ammo_flags				= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
+	it.solid                  = SOLID_SLIDEBOX;
+	it.takedamage             = DAMAGE_AIM;
+	it.idle_aim               = '0 0 0';
+	it.pos1                   = it.origin;
+	it.target_select_flags    = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
+	it.target_validate_flags  = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
+	it.frame                  = 1;
+	it.tur_head.frame         = 1;
+	it.ammo_flags             = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
 
 	it.tur_head.aim_speed = autocvar_g_turrets_unit_ewheel_turnrate;
 }
@@ -218,24 +221,24 @@ void ewheel_draw(entity this)
 {
 	float dt = time - this.move_time;
 	this.move_time = time;
-	if(dt <= 0)
+	if (dt <= 0)
 		return;
 
 	fixedmakevectors(this.angles);
 	setorigin(this, this.origin + this.velocity * dt);
 	this.tur_head.angles += dt * this.tur_head.avelocity;
 
-	if(GetResource(this, RES_HEALTH) < 127)
-	if(random() < 0.05)
+	if (GetResource(this, RES_HEALTH) < 127
+	&& random() < 0.05)
 		te_spark(this.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }
 
 METHOD(EWheel, tr_setup, void(EWheel this, entity it))
 {
-	it.gravity		= 1;
+	it.gravity = 1;
 	set_movetype(it, MOVETYPE_BOUNCE);
-	it.move_time		= time;
-	it.draw			= ewheel_draw;
+	it.move_time = time;
+	it.draw = ewheel_draw;
 }
 
 #endif // CSQC

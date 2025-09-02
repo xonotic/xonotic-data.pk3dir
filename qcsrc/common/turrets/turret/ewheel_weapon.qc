@@ -4,11 +4,14 @@
 
 void turret_initparams(entity);
 SOUND(EWheelAttack_FIRE, W_Sound("lasergun_fire"));
-METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
+METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
 	bool isPlayer = IS_PLAYER(actor);
 	if (fire & 1)
-	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 1)) {
-		if (isPlayer) {
+	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 1))
+	{
+		if (isPlayer)
+		{
 			turret_initparams(actor);
 			W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_EWheelAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_EWHEEL.m_id);
 			actor.tur_shotdir_updated = w_shotdir;
@@ -24,7 +27,8 @@ METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, .entity weapon
 
 		Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);
 
-		if (!isPlayer) {
+		if (!isPlayer)
+		{
 			actor.tur_head.frame += 2;
 
 			if (actor.tur_head.frame > 3)
@@ -33,4 +37,4 @@ METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, .entity weapon
 	}
 }
 
-#endif
+#endif // SVQC

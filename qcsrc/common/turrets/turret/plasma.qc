@@ -2,15 +2,27 @@
 
 #ifdef SVQC
 
-spawnfunc(turret_plasma) { if (!turret_initialize(this, TUR_PLASMA)) delete(this); }
+spawnfunc(turret_plasma)
+{
+	if (!turret_initialize(this, TUR_PLASMA))
+		delete(this);
+}
 
 METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 {
-	if(MUTATOR_IS_ENABLED(mutator_instagib))
+	if (MUTATOR_IS_ENABLED(mutator_instagib))
 	{
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		FireRailgunBullet (it, weaponentity, it.tur_shotorg, it.tur_shotorg + it.tur_shotdir_updated * max_shot_distance, 10000000000, false,
-			800, 0, 0, 0, 0, DEATH_TURRET_PLASMA.m_id);
+		FireRailgunBullet(it, weaponentity, it.tur_shotorg, it.tur_shotorg + it.tur_shotdir_updated * max_shot_distance,
+			10000000000,
+			false,
+			800,
+			0,
+			0,
+			0,
+			0,
+			DEATH_TURRET_PLASMA.m_id
+		);
 
 		Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, it.tur_shotorg, it.tur_shotdir_updated * 1000, 1);
 
@@ -20,9 +32,8 @@ METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 		Send_Effect_Except(EFFECT_VAPORIZER_BEAM, it.tur_shotorg, v, 1, rgb, rgb, NULL);
 	}
 	else
-	{
 		SUPER(PlasmaTurret).tr_attack(this, it);
-	}
+
 	if (it.tur_head.frame == 0)
 		it.tur_head.frame = 1;
 }
@@ -30,7 +41,6 @@ METHOD(PlasmaTurret, tr_think, void(PlasmaTurret thistur, entity it))
 {
 	if (it.tur_head.frame != 0)
 		++it.tur_head.frame;
-
 	if (it.tur_head.frame > 5)
 		it.tur_head.frame = 0;
 }

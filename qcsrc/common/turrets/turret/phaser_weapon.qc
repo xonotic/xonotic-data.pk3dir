@@ -1,6 +1,7 @@
 #include "phaser_weapon.qh"
 
 #ifdef SVQC
+
 void beam_think(entity this);
 
 .int fireflag;
@@ -10,8 +11,10 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 {
 	bool isPlayer = IS_PLAYER(actor);
 	if (fire & 1)
-	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 1)) {
-		if (isPlayer) {
+	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 1))
+	{
+		if (isPlayer)
+		{
 			turret_initparams(actor);
 			W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_PhaserTurretAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_PHASER.m_id);
 			actor.tur_shotdir_updated = w_shotdir;
@@ -44,9 +47,8 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 
 		setattachment(beam, actor.tur_head, "tag_fire");
 
-		soundat (actor, trace_endpos, CH_SHOTS, SND(PhaserTurretAttack_IMPACT), VOL_BASE, ATTEN_NORM);
-		if (!isPlayer)
-		if (actor.tur_head.frame == 0)
+		soundat(actor, trace_endpos, CH_SHOTS, SND(PhaserTurretAttack_IMPACT), VOL_BASE, ATTEN_NORM);
+		if (!isPlayer && actor.tur_head.frame == 0)
 			actor.tur_head.frame = 1;
 	}
 }
@@ -54,12 +56,12 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 void beam_think(entity this)
 {
 	entity actor = this.owner;
-	if ((time > this.cnt) || (IS_DEAD(actor)))
+	if (time > this.cnt || IS_DEAD(actor))
 	{
 		actor.attack_finished_single[0] = time + actor.shot_refire;
 		actor.fireflag = 2;
 		actor.tur_head.frame = 10;
-		sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
+		sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 		delete(this);
 		return;
 	}
@@ -69,21 +71,22 @@ void beam_think(entity this)
 	if (time - this.shot_spread > 0)
 	{
 		this.shot_spread = time + 2;
-		sound (this, CH_SHOTS_SINGLE, SND_TUR_PHASER, VOL_BASE, ATTEN_NORM);
+		sound(this, CH_SHOTS_SINGLE, SND_TUR_PHASER, VOL_BASE, ATTEN_NORM);
 	}
 
 	this.nextthink = time;
 
 	actor.attack_finished_single[0] = time + frametime;
-	FireImoBeam (   actor, actor.tur_shotorg,
+	FireImoBeam(actor, actor.tur_shotorg,
 		actor.tur_shotorg + actor.tur_shotdir_updated * actor.target_range,
 		'-1 -1 -1' * actor.shot_radius,
 		'1 1 1' * actor.shot_radius,
 		actor.shot_force,
 		this.shot_dmg,
 		0.75,
-		DEATH_TURRET_PHASER.m_id);
+		DEATH_TURRET_PHASER.m_id
+	);
 	this.scale = vlen(actor.tur_shotorg - trace_endpos) / 256;
 }
 
-#endif
+#endif // SVQC

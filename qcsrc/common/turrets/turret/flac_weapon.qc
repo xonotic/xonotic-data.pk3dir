@@ -4,11 +4,14 @@
 
 void turret_flac_projectile_think_explode(entity this);
 SOUND(FlacAttack_FIRE, W_Sound("hagar_fire"));
-METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
+METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
 	bool isPlayer = IS_PLAYER(actor);
 	if (fire & 1)
-	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 1)) {
-		if (isPlayer) {
+	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 1))
+	{
+		if (isPlayer)
+		{
 			turret_initparams(actor);
 			W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_FlacAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_FLAC.m_id);
 			actor.tur_shotdir_updated = w_shotdir;
@@ -26,7 +29,8 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponen
 		proj.nextthink  = time + actor.tur_impacttime + (random() * 0.01 - random() * 0.01);
 		Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);
 
-		if (!isPlayer) {
+		if (!isPlayer)
+		{
 			++actor.tur_head.frame;
 			if (actor.tur_head.frame >= 4)
 				actor.tur_head.frame = 0;
@@ -36,18 +40,30 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponen
 
 void turret_flac_projectile_think_explode(entity this)
 {
-	if(this.enemy != NULL)
-	if(vdist(this.origin - this.enemy.origin, <, this.owner.shot_radius * 3))
+	if (this.enemy != NULL
+	&& vdist(this.origin - this.enemy.origin, <, this.owner.shot_radius * 3))
 		setorigin(this, this.enemy.origin + randomvec() * this.owner.shot_radius);
 
 #ifdef TURRET_DEBUG
-	float d = RadiusDamage (this, this.owner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.projectiledeathtype, DMG_NOWEP, NULL);
+	float d = RadiusDamage(this, this.owner,
+#else
+	RadiusDamage(this, this.realowner,
+#endif
+		this.owner.shot_dmg,
+		this.owner.shot_dmg,
+		this.owner.shot_radius,
+		this,
+		NULL,
+		this.owner.shot_force,
+		this.projectiledeathtype,
+		DMG_NOWEP,
+		NULL
+	);
+#ifdef TURRET_DEBUG
 	this.owner.tur_debug_dmg_t_h += d;
 	this.owner.tur_debug_dmg_t_f += this.owner.shot_dmg;
-#else
-	RadiusDamage (this, this.realowner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.projectiledeathtype, DMG_NOWEP, NULL);
 #endif
 	delete(this);
 }
 
-#endif
+#endif // SVQC

@@ -2,7 +2,11 @@
 
 #ifdef SVQC
 
-spawnfunc(turret_phaser) { if (!turret_initialize(this, TUR_PHASER)) delete(this); }
+spawnfunc(turret_phaser)
+{
+	if (!turret_initialize(this, TUR_PHASER))
+		delete(this);
+}
 
 .int fireflag;
 
@@ -17,7 +21,7 @@ METHOD(PhaserTurret, tr_think, void(PhaserTurret thistur, entity it))
 			else
 				++it.tur_head.frame;
 		}
-		else if (it.fireflag == 2 )
+		else if (it.fireflag == 2)
 		{
 			++it.tur_head.frame;
 			if (it.tur_head.frame == 15)
@@ -38,7 +42,8 @@ METHOD(PhaserTurret, tr_setup, void(PhaserTurret this, entity it))
 }
 bool turret_phaser_firecheck(entity this)
 {
-	if (this.fireflag != 0) return false;
+	if (this.fireflag != 0)
+		return false;
 	return turret_firecheck(this);
 }
 
