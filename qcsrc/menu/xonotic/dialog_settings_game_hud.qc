@@ -71,8 +71,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Opacity:")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
-		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.1, 1, 0.1, "g_waypointsprite_alpha",
-			_("Control opacity of the waypoints")));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.1, 1, 0.1, "g_waypointsprite_alpha", "-"));
 			e.formatString = "%";
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 	me.TR(me);
