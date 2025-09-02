@@ -114,7 +114,11 @@ enum
 {
 	TEAM_CHANGE_AUTO = 2, ///< The team was selected by autobalance.
 	TEAM_CHANGE_MANUAL = 3, ///< Player has manually selected their team.
-	TEAM_CHANGE_SPECTATOR = 4 ///< Player is joining spectators. //TODO: Remove?
+	TEAM_CHANGE_SPECTATOR = 4, ///< Player is joining spectators. //TODO: Remove?
+	TEAM_CHANGE_REBALANCEPLAYER = 5, ///< The team was selected by the rebalanceplayer command.
+	TEAM_CHANGE_SHUFFLE = 6, ///< The team was selected by the shuffleteams command.
+	TEAM_CHANGE_RESTORE = 7, ///< The team was selected by MatchEnd_RestoreSpectatorAndTeamStatus.
+	TEAM_CHANGE_MOVEPLAYER = 8 ///< The team was selected by the moveplayer command.
 };
 
 bool QueuedPlayersReady(entity this, bool checkspecificteam);
@@ -123,8 +127,9 @@ bool QueuedPlayersReady(entity this, bool checkspecificteam);
 /// \param[in,out] player Player to adjust.
 /// \param[in] team_index Index of the team to set.
 /// \param[in] type Type of the team change. See TEAM_CHANGE constants.
+/// \param[in] autobalancebots whether allow autobalancing bots or not.
 /// \return True if team switch was successful, false otherwise.
-bool SetPlayerTeam(entity player, int team_index, int type);
+bool SetPlayerTeam(entity player, int team_index, int type, bool autobalancebots);
 
 /// \brief Sets the team of the player with all sanity checks.
 /// \param[in,out] player Player to adjust.
@@ -134,9 +139,10 @@ void Player_SetTeamIndexChecked(entity player, int team_index);
 /// \brief Moves player to the specified team.
 /// \param[in,out] client Client to move.
 /// \param[in] team_index Index of the team.
-/// \param[in] type ???
+/// \param[in] type Type of the team change. See TEAM_CHANGE constants.
+/// \param[in] autobalancebots whether allow autobalancing bots or not.
 /// \return True on success, false otherwise.
-bool MoveToTeam(entity client, int team_index, int type);
+bool MoveToTeam(entity client, int team_index, int type, bool autobalancebots);
 
 enum
 {

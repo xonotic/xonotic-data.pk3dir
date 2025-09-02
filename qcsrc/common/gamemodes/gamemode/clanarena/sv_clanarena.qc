@@ -654,5 +654,7 @@ MUTATOR_HOOKFUNCTION(ca, SV_ParseServerCommand)
 	string cmd_name = M_ARGV(0, string);
 	if (cmd_name == "shuffleteams")
 		shuffleteams_on_reset_map = !allowed_to_spawn;
+	else if (cmd_name == "rebalanceplayer")
+		rebalanceplayer_on_reset_map = !allowed_to_spawn;
 	return false;
 }

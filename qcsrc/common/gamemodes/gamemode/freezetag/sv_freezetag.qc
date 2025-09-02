@@ -1026,6 +1026,8 @@ MUTATOR_HOOKFUNCTION(ft, SV_ParseServerCommand)
 	string cmd_name = M_ARGV(0, string);
 	if (cmd_name == "shuffleteams")
 		shuffleteams_on_reset_map = !(round_handler_IsActive() && !round_handler_IsRoundStarted());
+	else if (cmd_name == "rebalanceplayer")
+		rebalanceplayer_on_reset_map = !(round_handler_IsActive() && !round_handler_IsRoundStarted());
 	return false;
 }
 
