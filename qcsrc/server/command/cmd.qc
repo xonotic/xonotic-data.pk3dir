@@ -113,34 +113,34 @@ int ignore_add_player(entity this, entity ignore, bool to_db_too, float send_del
 	return r;
 }
 
-/// \brief Checks if targ is permanently ignored by this
-bool ignore_playerindb(entity this, entity targ)
+/// \brief Checks if pl is permanently ignored by this
+bool ignore_playerindb(entity this, entity pl)
 {
-	if(targ.crypto_idfp && targ.crypto_idfp != "" && this.crypto_idfp && this.crypto_idfp != "")
+	if(this.crypto_idfp && this.crypto_idfp != "" && pl.crypto_idfp && pl.crypto_idfp != "")
 	{
 		string thelist = "";
 		for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
 		{
-			string pos = db_get(ServerProgsDB, strcat("/ignore/", targ.crypto_idfp, "/", ftos(j)));
+			string pos = db_get(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
 			thelist = cons(thelist, pos);
 		}
 
-		return ((thelist != "") ? PlayerInList(this, thelist) : false);
+		return ((thelist != "") ? PlayerInList(pl, thelist) : false);
 	}
 	return false;
 }
 
-/// \brief Checks if targ is ignored by sender (permanently or for the current match)
-bool ignore_playerinlist(entity sender, entity targ)
+/// \brief Checks if pl is ignored by this (permanently or for the current match)
+bool ignore_playerinlist(entity this, entity pl)
 {
-	if (!targ.ignore_list || targ.ignore_list == "")
+	if (!this.ignore_list || this.ignore_list == "")
 		return false;
 
-	string theid = ftos(etof(sender));
+	string theid = ftos(etof(pl));
 
 	// we use a tempstring here because if the input string of FOREACH_WORD is strzoned
 	// then it can no longer be strunzoned and updated correctly
-	string ignore_list_copy = strcat(targ.ignore_list);
+	string ignore_list_copy = strcat(this.ignore_list);
 	FOREACH_WORD(ignore_list_copy, it == theid,
 		return true;
 	);
@@ -157,9 +157,9 @@ void ignore_list_update_on_connection(entity this)
 
 	FOREACH_CLIENT(it != this && IS_REAL_CLIENT(it),
 	{
-		if (ignore_playerindb(it, this))
-			ignore_add_player(this, it, false, 0.5); // update ignore list of the connecting player
 		if (ignore_playerindb(this, it))
+			ignore_add_player(this, it, false, 0.5); // update ignore list of the connecting player
+		if (ignore_playerindb(it, this))
 			ignore_add_player(it, this, false, 0.5); // update ignore list of other players
 	});
 }
@@ -467,7 +467,7 @@ void ClientCommand_ignore(entity caller, int request, int argc, string command)
 				{
 					if (ignore_to != caller) // and we're allowed to ignore them heh
 					{
-						if(ignore_playerinlist(ignore_to, caller))
+						if(ignore_playerinlist(caller, ignore_to))
 						{
 							sprint(caller, ignore_to.netname, " ^7is already ignored!\n");
 							return;
