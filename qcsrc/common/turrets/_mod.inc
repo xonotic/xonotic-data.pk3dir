@@ -3,7 +3,6 @@
 #include <common/turrets/checkpoint.qc>
 #include <common/turrets/config.qc>
 #include <common/turrets/targettrigger.qc>
-#include <common/turrets/turrets.qc>
 #ifdef CSQC
 	#include <common/turrets/cl_turrets.qc>
 #endif
