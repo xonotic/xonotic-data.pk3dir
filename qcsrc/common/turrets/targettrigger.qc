@@ -3,15 +3,15 @@
 #ifdef SVQC
 
 spawnfunc(turret_targettrigger);
-void turret_targettrigger_touch(entity this, entity toucher);
 
 void turret_targettrigger_touch(entity this, entity toucher)
 {
-	if (this.cnt > time) return;
+	if (this.cnt > time)
+		return;
 	IL_EACH(g_turrets, it.targetname == this.target,
 	{
-		if (!(it.turret_flags & TUR_FLAG_RECIEVETARGETS)) continue;
-		if (!it.turret_addtarget) continue;
+		if (!(it.turret_flags & TUR_FLAG_RECIEVETARGETS) || !it.turret_addtarget)
+			continue;
 		it.turret_addtarget(it, toucher, this);
 	});
 	this.cnt = time + 0.5;
@@ -21,11 +21,15 @@ void turret_targettrigger_touch(entity this, entity toucher)
 */
 spawnfunc(turret_targettrigger)
 {
-	if(!autocvar_g_turrets) { delete(this); return; }
+	if (!autocvar_g_turrets)
+	{
+		delete(this);
+		return;
+	}
 
 	InitTrigger(this);
 
 	settouch(this, turret_targettrigger_touch);
 }
 
-#endif
+#endif // SVQC

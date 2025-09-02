@@ -16,10 +16,10 @@ void turret_checkpoint_init(entity this)
 	traceline(this.origin + '0 0 16', this.origin - '0 0 1024', MOVE_WORLDONLY, this);
 	setorigin(this, trace_endpos + '0 0 32');
 
-	if(this.target && this.target != "")
+	if (this.target && this.target != "")
 	{
 		this.enemy = find(NULL, targetname, this.target);
-		if(!this.enemy)
+		if (!this.enemy)
 			LOG_TRACE("A turret_checkpoint failed to find its target!");
 	}
 }
@@ -36,4 +36,4 @@ spawnfunc(walker_checkpoint)
 	spawnfunc_turret_checkpoint(this);
 }
 
-#endif
+#endif // SVQC

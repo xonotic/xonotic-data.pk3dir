@@ -45,14 +45,19 @@ REGISTRY_CHECK(Turrets)
 	L(TR_CONFIG_BEGIN, TR_CONFIG, TR_CONFIG_END, class, prefix) \
 	/**/
 
-#define TR_CONFIG(class, turname, fld, T) _TR_CONFIG(class, fld, T, turname)
+#define TR_CONFIG(class, turname, fld, T) \
+	_TR_CONFIG(class, fld, T, turname)
 #ifdef SVQC
-	#define TR_CONFIG_BEGIN(class) METHOD(class, tr_config, void(class this)) {
-		#define _TR_CONFIG(class, fld, T, turname) if (#turname == this.netname) TUR_CONFIG_WRITE_CVARS(turname, fld, T);
-	#define TR_CONFIG_END() }
+	#define TR_CONFIG_BEGIN(class) METHOD(class, tr_config, void(class this)) \
+	{
+		#define _TR_CONFIG(class, fld, T, turname) \
+		if (#turname == this.netname) \
+			TUR_CONFIG_WRITE_CVARS(turname, fld, T);
+	#define TR_CONFIG_END() \
+	}
 #else
 	#define TR_CONFIG_BEGIN(class)
-		#define _TR_CONFIG(class, fld, T, turname)
+	#define _TR_CONFIG(class, fld, T, turname)
 	#define TR_CONFIG_END()
 #endif
 
@@ -60,28 +65,28 @@ REGISTRY_CHECK(Turrets)
 // NOTE: dumpeffectinfo, dumpnotifs, dumpturrets and dumpweapons use similar code
 GENERIC_COMMAND(dumpturrets, "Dump all turrets into " DEFAULT_FILENAME, false)
 {
-	switch(request)
+	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			#ifdef SVQC
+		#ifdef SVQC
 			tur_config_file = -1;
 			tur_config_alsoprint = -1;
 			string filename = argv(1);
 
-			if(filename == "")
+			if (filename == "")
 			{
 				filename = DEFAULT_FILENAME;
 				tur_config_alsoprint = false;
 			}
-			else if(filename == "-")
+			else if (filename == "-")
 			{
 				filename = DEFAULT_FILENAME;
 				tur_config_alsoprint = true;
 			}
 			tur_config_file = fopen(filename, FILE_WRITE);
 
-			if(tur_config_file >= 0)
+			if (tur_config_file >= 0)
 			{
 				Dump_Turret_Settings();
 				LOG_INFOF("Dumping turrets... File located in ^2data/data/%s^7.", filename);
@@ -90,24 +95,19 @@ GENERIC_COMMAND(dumpturrets, "Dump all turrets into " DEFAULT_FILENAME, false)
 				tur_config_alsoprint = -1;
 			}
 			else
-			{
 				LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
-			}
-			#else
+		#else
 			LOG_INFO("Turrets dump command only works with sv_cmd.");
-			#endif
+		#endif
 			return;
 		}
-
 		default:
 		case CMD_REQUEST_USAGE:
-		{
 			LOG_HELP("Usage:^3 ", GetProgramCommandPrefix(), " dumpturrets [<filename>]");
 			LOG_HELPF("  Where <filename> is the file to write (default is %s),", DEFAULT_FILENAME);
 			LOG_HELP("  if supplied with '-' output to console as well as default,");
 			LOG_HELP("  if left blank, it will only write to default.");
 			return;
-		}
 	}
 }
 #undef DEFAULT_FILENAME
