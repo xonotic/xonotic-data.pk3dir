@@ -498,13 +498,14 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 
 	// reset the flag
 	setattachment(flag, NULL, "");
-	tracebox(player.origin - FLAG_DROP_OFFSET, flag.m_mins, flag.m_maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
+	tracebox(player.origin + vec3(0, 0, player.mins.z - flag.m_mins.z), // same bbox floor height as player
+	         flag.m_mins, flag.m_maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
 	flag.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
 	setorigin(flag, trace_endpos);
 	if (trace_startsolid && !nudgeoutofsolid_OrFallback(flag)) // TODO: trace_allsolid would perform better but isn't 100% reliable yet
 	{
 		// the flag's bbox doesn't fit but we can assume the player's current bbox does
-		tracebox(player.origin - FLAG_DROP_OFFSET, player.mins, player.maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
+		tracebox(player.origin, player.mins, player.maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
 		flag.origin = trace_endpos;
 		setsize(flag, player.mins, player.maxs); // this allows physics to move the flag somewhere its think func can resize it
 	}
