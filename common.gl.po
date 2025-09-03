@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-02 07:22+0200\n"
+"POT-Creation-Date: 2025-09-03 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: LegendGuard, 2020\n"
 "Language-Team: Galician (http://app.transifex.com/team-xonotic/xonotic/"
@@ -1272,23 +1272,23 @@ msgstr "Non dispoñible"
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Tentando eliminar un equipo que non está na lista de equipos!"
 
-#: qcsrc/client/main.qc:1089 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:186
+#: qcsrc/client/main.qc:1089 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:185
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1090 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:187
+#: qcsrc/client/main.qc:1090 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:186
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1091 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:188
+#: qcsrc/client/main.qc:1091 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:187
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1092 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:189
+#: qcsrc/client/main.qc:1092 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:188
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1093 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:190
+#: qcsrc/client/main.qc:1093 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:189
 msgid "knots"
 msgstr "nós"
 
@@ -2227,7 +2227,7 @@ msgstr "Se é máis novo ca:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:25
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:146
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:179
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:161
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:160
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:68
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:115
@@ -2238,7 +2238,7 @@ msgstr "Xamais"
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:148
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:182
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:163
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:162
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:65
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:70
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:117
@@ -6852,7 +6852,7 @@ msgstr "Panel de información das mensaxes"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:90
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:103
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:137
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:196
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:195
 #: qcsrc/menu/xonotic/util.qc:763 qcsrc/menu/xonotic/util.qc:780
 #: qcsrc/menu/xonotic/util.qc:798
 msgid "Disable"
@@ -7072,7 +7072,7 @@ msgstr "Habilitar nos xogos de equipo"
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:128
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:46
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:72
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:133
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:132
 #: qcsrc/menu/xonotic/util.qc:786
 msgid "Opacity:"
 msgstr ""
@@ -7118,7 +7118,7 @@ msgstr "Escala:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:76
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:170
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:258
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:152
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:151
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:65
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:72
 #, c-format
@@ -9193,100 +9193,96 @@ msgstr "Mostrar marcadores de waypoints para obxectivos no mapa"
 msgid "Show various gametype specific waypoints"
 msgstr "Mostrar puntos de encontro específicos de diferentes tipos de xogo"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:75
-msgid "Control opacity of the waypoints"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:80
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:140
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:79
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:139
 msgid "Font size:"
 msgstr "Tamaño de letra:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:88
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:87
 msgid "Edge offset:"
 msgstr "Desfase de bordo:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:98
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:97
 msgid "Fade when near the crosshair"
 msgstr "Esvaecer cando está preto do punto de mira"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:103
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:102
 msgid "Display names instead of icons"
 msgstr "Mostrar nomes en lugar de iconas"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:109
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:108
 msgid "Damage"
 msgstr "Dano"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:111
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:110
 msgid "Overlay:"
 msgstr "Superposición:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:114
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:113
 msgid "Factor:"
 msgstr "Factor:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:119
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:118
 msgid "Fade rate:"
 msgstr "Taxa de desvanecemento:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:127
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:126
 msgid "Player Names"
 msgstr "Nomes de xogadores"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:129
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:128
 msgid "Show names above players"
 msgstr "Mostra os nomes por riba dos xogadores"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:148
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:147
 msgid "Max distance:"
 msgstr "Distancia máxima:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:157
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:156
 msgid "Decolorize:"
 msgstr "Decolorar:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:162
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:161
 #: qcsrc/menu/xonotic/keybinder.qc:162
 msgid "Teamplay"
 msgstr "Xogo en equipo"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:171
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:170
 msgid "Only when near crosshair"
 msgstr "Só cando está preto do punto de mira"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:176
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:175
 msgid "Display health and armor"
 msgstr "Mostra saúde e armadura"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:182
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:181
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:78
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:155
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:67
 msgid "Other"
 msgstr "Outro"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:184
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:183
 msgid "Speed unit:"
 msgstr "Unidade de velocidade:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:193
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:192
 msgid "Damage overlay:"
 msgstr "Superposición de danos:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:200
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:199
 msgid "Dynamic HUD"
 msgstr "HUD dinámico"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:201
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:200
 msgid "HUD moves around following player's movement"
 msgstr "O HUD móvese seguindo o movemento do xogador"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:202
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:201
 msgid "Shake the HUD when hurt"
 msgstr "Axita o HUD cando estea ferido"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:205
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:204
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
 msgid "Enter HUD editor"
 msgstr "Entra no editor HUD"
