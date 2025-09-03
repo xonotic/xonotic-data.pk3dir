@@ -207,44 +207,44 @@ spawnfunc(target_init)
 	InitializeEntity(this, target_init_verify, INITPRIO_FINDTARGET);
 }
 
-// weapon give ent from Q3
+/*QUAKED target_give (1 0 0) (-8 -8 -8) (8 8 8)
+Gives the activator all the items pointed to.
+*/
 void target_give_init(entity this)
 {
+	InitializeEntity(this, target_init_verify, INITPRIO_FINDTARGET);
+}
+
+void target_give_use(entity this, entity actor, entity trigger)
+{
+	if (!IS_PLAYER(actor) || IS_DEAD(actor))
+		return;
+
 	IL_EACH(g_items, it.targetname == this.target,
 	{
-		if (it.classname == "item_buff")
+		// Q3 calls the item's touch func then disables respawn, probably not a good idea here.
+		if (it.itemdef)
 		{
-			this.netname = cons(this.netname, it.buffdef.netname);
-			this.buffs_finished += it.buffs_finished;
+			if (!ITEM_HANDLE(Pickup, it.itemdef, it, actor))
+				continue;
+			int ch = (it.itemdef.instanceOfPowerup && it.itemdef.m_itemid != IT_RESOURCE) ? CH_TRIGGER_SINGLE : CH_TRIGGER;
+			_sound(actor, ch, it.item_pickupsound, VOL_BASE, ATTEN_NORM);
 		}
-		else
+		else if (it.buffdef)
 		{
-			this.ammo_rockets          += it.ammo_rockets;
-			this.ammo_cells            += it.ammo_cells;
-			this.ammo_shells           += it.ammo_shells;
-			this.ammo_nails            += it.ammo_nails;
-			this.invincible_finished   += it.invincible_finished;
-			this.strength_finished     += it.strength_finished;
-			this.speed_finished        += it.speed_finished;
-			this.invisibility_finished += it.invisibility_finished;
-			this.health                += it.health;
-			this.armorvalue            += it.armorvalue;
-
-			this.netname = cons(this.netname, (it.itemdef.m_weapon) ? it.itemdef.m_weapon.netname : it.itemdef.netname);
+			if (!GiveBuff(actor, it.buffdef, OP_PLUS, it.buffs_finished ? it.buffs_finished : it.buffdef.m_time(it.buffdef)))
+				continue;
+			sound(actor, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
 		}
 
-		//remove(it); // removing ents in init functions causes havoc, workaround:
-		setthink(it, SUB_Remove);
-		it.nextthink = time;
+		if (it.target != "" && it.target != "###item###") // q3compat
+			SUB_UseTargets(it, actor, trigger);
 	});
-	this.spawnflags = 2;
-	this.spawnfunc_checked = true;
-	spawnfunc_target_items(this);
-	InitializeEntity(this, target_init_verify, INITPRIO_FINDTARGET);
 }
 
 spawnfunc(target_give)
 {
+	this.use = target_give_use;
 	InitializeEntity(this, target_give_init, INITPRIO_FINDTARGET);
 }
 

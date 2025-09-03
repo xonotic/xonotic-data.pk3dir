@@ -8,7 +8,6 @@
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/_mod.qh>
-#include <common/mutators/mutator/buffs/_mod.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
@@ -742,10 +741,8 @@ void Item_Touch(entity this, entity toucher)
 
 LABEL(pickup)
 
-	if(this.target && this.target != "" && this.target != "###item###") // defrag support
+	if(this.target != "" && this.target != "###item###") // q3compat
 		SUB_UseTargets(this, toucher, NULL);
-
-	STAT(LAST_PICKUP, toucher) = time;
 
 	GameItem def = this.itemdef;
 	int ch = ((def.instanceOfPowerup && def.m_itemid != IT_RESOURCE) ? CH_TRIGGER_SINGLE : CH_TRIGGER);
@@ -790,6 +787,15 @@ LABEL(pickup)
 
 void Item_Reset(entity this)
 {
+	if (this.targetname != "" && !(this.spawnflags & 16)) // q3compat
+	{
+		Item_Show(this, -1);
+		if (this.waypointsprite_attached)
+			WaypointSprite_Kill(this.waypointsprite_attached);
+		this.nextthink = 0;
+		return;
+	}
+
 	Item_Show(this, !this.state);
 
 	if (ITEM_IS_LOOT(this))
@@ -985,8 +991,10 @@ void Item_Damage(entity this, entity inflictor, entity attacker, float damage, i
 
 void item_use(entity this, entity actor, entity trigger)
 {
-	// use the touch function to handle collection
-	gettouch(this)(this, actor);
+	if (this.spawnflags & 16)
+		gettouch(this)(this, actor);
+	else // q3compat
+		Item_Respawn(this);
 }
 
 void item_setactive(entity this, int act)
@@ -1146,20 +1154,7 @@ void StartItem(entity this, entity def)
 			waypoint_spawnforitem(this);
 		}
 
-		/*
-		 * can't do it that way, as it would break maps
-		 * TODO make a target_give like entity another way, that perhaps has
-		 * the weapon name in a key
-		if(this.targetname)
-		{
-			// target_give not yet supported; maybe later
-			print("removed targeted ", this.classname, "\n");
-			delete(this);
-			return;
-		}
-		*/
-
-		if(this.targetname != "" && (this.spawnflags & 16))
+		if (this.targetname != "")
 			this.use = item_use;
 
 		this.setactive = item_setactive;
@@ -1304,6 +1299,9 @@ void setItemGroupCount()
 
 void target_items_use(entity this, entity actor, entity trigger)
 {
+	// bones_was_here: why is EXACTTRIGGER_TOUCH here?
+	// target_items has no bmodel (according to entities.ent), no touch func, and is SOLID_NOT
+
 	if(ITEM_IS_LOOT(actor))
 	{
 		EXACTTRIGGER_TOUCH(this, trigger);
@@ -1390,6 +1388,9 @@ spawnfunc(target_items)
 		}
 
 		string itemprefix, valueprefix;
+		// bones_was_here: this is inconsistent with entities.ent documentation, what's the intended behaviour?
+		// Knowing that should allow some optimising (target_items is much slower than target_give when triggered).
+		// spawnflags is supposed to be a bitfield, target_items breaks the standard :/
 		if(this.spawnflags == 0)
 		{
 			itemprefix = "";
