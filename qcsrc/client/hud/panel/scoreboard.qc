@@ -1437,6 +1437,16 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor
 				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[0]
 				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[1];
+			if (teamplay)
+			{
+				int wants_join = entcs_GetWantsJoin(pl.sv_entnum);
+				if (wants_join)
+				{
+					vector tmcolor = Team_ColorRGB(Team_IndexToTeam(wants_join)) * min(1, 1 + sin(2*M_PI*time));
+					drawstring(pos - tmp, "(Q)", hud_fontsize, tmcolor, sbt_fg_alpha, DRAWFLAG_NORMAL);
+					tmp.x -= stringwidth("(Q) ", true, hud_fontsize);
+				}
+			}
 			drawcolorcodedstring(pos - tmp, str, hud_fontsize, fg_alpha, DRAWFLAG_NORMAL);
 		}
 		else
@@ -1547,13 +1557,15 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		if (pl == ignored_pl)
 			continue;
 
-		if (entcs_GetWantsJoin(pl.sv_entnum))
+		if (teamplay)
 		{
-			vector tmcolor = Team_ColorRGB(Team_IndexToTeam(entcs_GetWantsJoin(pl.sv_entnum)));
-			tmcolor -= tmcolor * sin(2*M_PI*time);
-
-			drawstring(pos, "(Q)", hud_fontsize, tmcolor, sbt_fg_alpha, DRAWFLAG_NORMAL);
-			pos.x += stringwidth("(Q) ", true, hud_fontsize);
+			int wants_join = entcs_GetWantsJoin(pl.sv_entnum);
+			if (wants_join)
+			{
+				vector tmcolor = Team_ColorRGB(Team_IndexToTeam(wants_join)) * min(1, 1 + sin(2*M_PI*time));
+				drawstring(pos, "(Q)", hud_fontsize, tmcolor, sbt_fg_alpha, DRAWFLAG_NORMAL);
+				pos.x += stringwidth("(Q) ", true, hud_fontsize);
+			}
 		}
 
 		field = "";
