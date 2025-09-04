@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-03 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2025\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -1165,7 +1165,7 @@ msgstr "Você morreu. Aperte ^2%s^7 para ressurgir"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:32
 #, c-format
 msgid "%s°"
-msgstr ""
+msgstr "%s°"
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:101
 msgid "qu"
@@ -2212,7 +2212,7 @@ msgstr "Por arma"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:55
 msgid "Initial opacity:"
-msgstr ""
+msgstr "Opacidade inicial:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:61
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:25
@@ -2255,7 +2255,7 @@ msgstr "Sempre"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:83
 msgid "Or opacity greater than:"
-msgstr ""
+msgstr "Ou opacidade maior do que:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:7
 msgid "Damage text"
@@ -6256,7 +6256,7 @@ msgstr "%02d:%02d:%02d"
 #: qcsrc/lib/string.qh:484
 #, c-format
 msgid "%.*f%%"
-msgstr ""
+msgstr "%.*f%%"
 
 #: qcsrc/menu/item/listbox.qc:414
 #, c-format
@@ -6274,7 +6274,7 @@ msgstr "Personalizado"
 #: qcsrc/menu/menu.qc:513
 #, c-format
 msgid "^3%s^7 not equal to \"%s\""
-msgstr ""
+msgstr "^3%s^7 não igual a \"%s\""
 
 #: qcsrc/menu/menu.qc:518
 #, c-format
@@ -6303,7 +6303,7 @@ msgstr "Requer %s, %s e %s "
 #: qcsrc/menu/menu.qc:564
 #, c-format
 msgid "Requires %s, %s, or %s"
-msgstr ""
+msgstr "Requer %s, %s ou %s "
 
 #: qcsrc/menu/menu.qc:567
 #, c-format
@@ -6422,7 +6422,7 @@ msgstr "Inglês (Austrália)"
 
 #: qcsrc/menu/xonotic/credits.qc:255
 msgid "English (United Kingdom)"
-msgstr ""
+msgstr "Inglês (Reino Unido)"
 
 #: qcsrc/menu/xonotic/credits.qc:259
 msgid "Finnish"
@@ -6434,7 +6434,7 @@ msgstr "Francês"
 
 #: qcsrc/menu/xonotic/credits.qc:288
 msgid "Galician"
-msgstr ""
+msgstr "Galego"
 
 #: qcsrc/menu/xonotic/credits.qc:292
 msgid "German"
@@ -6670,7 +6670,7 @@ msgstr "Exibir apenas o tipo de munição atual"
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:43
 msgid "Noncurrent opacity:"
-msgstr ""
+msgstr "Opacidade não atual:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:50
@@ -6781,7 +6781,7 @@ msgstr "Tempo de vida do bate-papo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:27
 msgid "LIFETIME^Infinite"
-msgstr ""
+msgstr "Infinito"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:30
 msgid "Chat beep sound"
@@ -7026,7 +7026,7 @@ msgstr "Escala de tamanho de ícone:"
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:88
 #, c-format
 msgid "%sx"
-msgstr ""
+msgstr "%sx"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:42
 msgid "Show timer:"
@@ -7092,7 +7092,7 @@ msgstr "Ativar em modos de equipe"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:132
 #: qcsrc/menu/xonotic/util.qc:786
 msgid "Opacity:"
-msgstr ""
+msgstr "Opacidade:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:61
@@ -7140,7 +7140,7 @@ msgstr "Escala:"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:72
 #, c-format
 msgid "%s qu"
-msgstr ""
+msgstr "%s qu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:45
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:80
@@ -7198,23 +7198,23 @@ msgstr "Painel da Pontuação"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:41
 msgid "Centered on:"
-msgstr ""
+msgstr "Centralizado em:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:42
 msgid "View angle"
-msgstr ""
+msgstr "Ver ângulo"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:43
 msgid "Velocity angle"
-msgstr ""
+msgstr "Ângulo de velocidade"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
 msgid "Style:"
-msgstr ""
+msgstr "Estilo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:48
 msgid "STYL^Basic"
-msgstr ""
+msgstr "Básico"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "Gradient"
@@ -7253,11 +7253,13 @@ msgstr "Inversão:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:118
 msgid "Switch:"
-msgstr ""
+msgstr "Trocar:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:119
 msgid "Indicator on the angle to aim at when switching strafing direction"
 msgstr ""
+"Indicador no ângulo ao qual se deve apontar ao trocar a direção no movimento "
+"de \"strafe\""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:123
 msgid "W-turn:"
@@ -7270,11 +7272,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:128
 msgid "Best angle:"
-msgstr ""
+msgstr "Melhor ângulo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:129
 msgid "Indicator on the angle to aim at for maximal acceleration"
-msgstr ""
+msgstr "Indicador no ângulo ao qual apontar para maximizar a aceleração"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:164
 msgid "Demo mode"
@@ -7306,7 +7308,7 @@ msgstr "Painel do Cronômetro"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Opacity after voting:"
-msgstr ""
+msgstr "Opacidade depois de votar:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
@@ -7326,7 +7328,7 @@ msgstr "Nenhum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "Opacity"
-msgstr ""
+msgstr "Opacidade"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Slide"
@@ -7367,7 +7369,7 @@ msgstr "Exibir precisão"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:79
 msgid "Ammo bar opacity:"
-msgstr ""
+msgstr "Opacidade da barra de munições:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:86
 msgid "Ammo bar color:"
@@ -8389,7 +8391,7 @@ msgstr "Propriedades de objeto visual para *:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:44
 msgid "Set opacity:"
-msgstr ""
+msgstr "Definir opacidade:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:48
 msgid "Set color main:"
@@ -8641,13 +8643,15 @@ msgstr "Troca de lugar os canais esquerdo e direito"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:139
 msgid "Headphone-friendly mode"
-msgstr ""
+msgstr "Modo de fones de ouvido"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:140
 msgid ""
 "Blend the left and right channels slightly to decrease stereo separation a "
 "bit"
 msgstr ""
+"Mescla levemente os canais esquerdo e direito para diminuir um pouco a "
+"separação do estéreo"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:144
 msgid "Hit indication sound"
@@ -9441,7 +9445,7 @@ msgstr "Usar imagens 2D simples em vez de modelos de itens"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:35
 msgid "Unavailable opacity:"
-msgstr ""
+msgstr "Opacidade indisponível:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:39
 msgid "Unavailable color:"
@@ -9623,6 +9627,8 @@ msgid ""
 "How zoom changes sensitivity, from 0% (lower sensitivity) to 100% (no "
 "sensitivity change)"
 msgstr ""
+"Como o zoom altera a sensibilidade, a partir do valor 0% (sensibilidade mais "
+"baixa) até 100% (sem alterações na sensibilidade)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:108
 msgid "Zoom scrolling"
@@ -9977,11 +9983,11 @@ msgstr "Avançado"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Menu animations:"
-msgstr ""
+msgstr "Animações do menu:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:80
 msgid "How fast animations in the menu occur"
-msgstr ""
+msgstr "Velocidade das animações do menu"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:83
 msgid "Disabled"
@@ -10334,7 +10340,7 @@ msgstr "Máximo:"
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:179
 #, c-format
 msgid "%s fps"
-msgstr ""
+msgstr "%s fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:164
 msgid "MAXFPS^Unlimited"

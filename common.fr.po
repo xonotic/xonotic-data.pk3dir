@@ -11037,4 +11037,4 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:820
 msgid "Hide on death"
-msgstr "Masquer lorsque mort"
+msgstr "Masquer lorsque vous êtes mort"
