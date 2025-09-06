@@ -43,7 +43,7 @@ void DrawAmmoItem(vector myPos, vector mySize, Resource ammoType, bool isCurrent
 	int ammo;
 	if(autocvar__hud_configure)
 	{
-		isCurrent = (ammoType == RES_ROCKETS); // Rockets always current
+		isCurrent = (ammoType == RES_CELLS); // Chosen since InstaGib uses Cells, so this is useful more often than not
 		ammo = 60;
 	}
 	else
@@ -146,7 +146,8 @@ void HUD_Ammo()
 	int total_ammo_count;
 
 	vector ammo_size;
-	if (autocvar_hud_panel_ammo_onlycurrent)
+	bool onlycurrent = (autocvar_hud_panel_ammo_onlycurrent || mut_is_active(MUT_INSTAGIB));
+	if (onlycurrent)
 		total_ammo_count = 1;
 	else
 		total_ammo_count = AMMO_COUNT;
@@ -191,11 +192,11 @@ void HUD_Ammo()
 	int i;
 	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_AMMO);
 	row = column = 0;
-	if(autocvar_hud_panel_ammo_onlycurrent)
+	if(onlycurrent)
 	{
 		if(autocvar__hud_configure)
 		{
-			DrawAmmoItem(pos, ammo_size, RES_ROCKETS, true, false);
+			DrawAmmoItem(pos, ammo_size, RES_CELLS, true, false);
 		}
 		else
 		{
