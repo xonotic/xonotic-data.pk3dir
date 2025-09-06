@@ -1,0 +1,77 @@
+#pragma once
+
+#include "checkbox.qh"
+entity Mutators_main_checkbox(entity me);
+void Mutators_add_RadioButton(entity me, entity e);
+void Mutators_add_CheckBox(entity me, entity e);
+void Mutators_add_SliderCheckBox(entity me, entity e);
+
+#include "tab.qh"
+CLASS(XonoticMutatorTab, XonoticTab)
+	METHOD(XonoticMutatorTab, showNotify, void(entity));
+	ATTRIB(XonoticMutatorTab, title, string); // mutator translatable name
+	ATTRIB(XonoticMutatorTab, message, string); // main cvar controlled by the mutator
+	ATTRIB(XonoticMutatorTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticMutatorTab, rows, float, 16);
+	ATTRIB(XonoticMutatorTab, columns, float, 4);
+	ATTRIB(XonoticMutatorTab, cnt, int, 0); // how many toggleableItems have been set
+	ATTRIBARRAY(XonoticMutatorTab, toggleableItems, entity, 24); // these are all disabled when the mutator can't be enabled
+ENDCLASS(XonoticMutatorTab)
+
+
+// Weapon arena "mutator"
+CLASS(XonoticWeaponarenaCheckBox, XonoticCheckBox)
+	METHOD(XonoticWeaponarenaCheckBox, configureXonoticWeaponarenaCheckBox, void(entity, string, string));
+	ATTRIB(XonoticWeaponarenaCheckBox, message, string);
+	METHOD(XonoticWeaponarenaCheckBox, loadCvars, void(entity));
+	METHOD(XonoticWeaponarenaCheckBox, saveCvars, void(entity));
+ENDCLASS(XonoticWeaponarenaCheckBox)
+entity makeXonoticWeaponarenaCheckBox(string, string);
+
+CLASS(XonoticMutatorWeaponArenaTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorWeaponArenaTab, fill, void(entity));
+	ATTRIB(XonoticMutatorWeaponArenaTab, title, string, _("Weapon arena"));
+	ATTRIB(XonoticMutatorWeaponArenaTab, message, string, "g_weaponarena");
+	METHOD(XonoticMutatorWeaponArenaTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorWeaponArenaTab)
+entity makeXonoticMutatorWeaponArenaTab();
+
+
+// Weapon stay "mutator"
+CLASS(XonoticMutatorWeaponStayTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorWeaponStayTab, fill, void(entity));
+	ATTRIB(XonoticMutatorWeaponStayTab, title, string, _("Weapons stay"));
+	ATTRIB(XonoticMutatorWeaponStayTab, message, string, "g_weapon_stay");
+	METHOD(XonoticMutatorWeaponStayTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorWeaponStayTab)
+entity makeXonoticMutatorWeaponStayTab();
+
+
+// Offhand weapons "mutator"
+CLASS(XonoticMutatorOffhandWeaponsTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorOffhandWeaponsTab, fill, void(entity));
+	ATTRIB(XonoticMutatorOffhandWeaponsTab, title, string, _("Offhand weapons"));
+	ATTRIB(XonoticMutatorOffhandWeaponsTab, message, string, "");
+	METHOD(XonoticMutatorOffhandWeaponsTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorOffhandWeaponsTab)
+entity makeXonoticMutatorOffhandWeaponsTab();
+
+
+// Jetpack "mutator"
+CLASS(XonoticMutatorJetpackTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorJetpackTab, fill, void(entity));
+	ATTRIB(XonoticMutatorJetpackTab, title, string, _("Jetpack"));
+	ATTRIB(XonoticMutatorJetpackTab, message, string, "g_jetpack");
+	METHOD(XonoticMutatorJetpackTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorJetpackTab)
+entity makeXonoticMutatorJetpackTab();
+
+
+// Custom physics "mutator"
+CLASS(XonoticMutatorCustomPhysicsTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorCustomPhysicsTab, fill, void(entity));
+	ATTRIB(XonoticMutatorCustomPhysicsTab, title, string, _("Custom physics"));
+	ATTRIB(XonoticMutatorCustomPhysicsTab, message, string, "");
+	METHOD(XonoticMutatorCustomPhysicsTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorCustomPhysicsTab)
+entity makeXonoticMutatorCustomPhysicsTab();

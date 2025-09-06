@@ -16,7 +16,7 @@ CLASS(XonoticMapInfoDialog, XonoticDialog)
 	ATTRIB(XonoticMapInfoDialog, descriptionLabel, entity);
 	ATTRIB(XonoticMapInfoDialog, featuresLabel, entity);
 
-	ATTRIBARRAY(XonoticMapInfoDialog, typeLabels, entity, 24);
+	ATTRIBARRAY(XonoticMapInfoDialog, toggleableItems, entity, 24);
 
 	ATTRIB(XonoticMapInfoDialog, currentMapIndex, float, 0);
 	ATTRIB(XonoticMapInfoDialog, currentMapBSPName, string);
