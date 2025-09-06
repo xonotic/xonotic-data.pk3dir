@@ -26,6 +26,8 @@ float scoreboard_right;
 int numplayers;
 int ts_min, ts_max; ///< team size
 
+.bool ignored; // player is ignored
+
 void Cmd_Scoreboard_SetFields(int argc);
 void Scoreboard_Draw();
 void Scoreboard_InitScores();
