@@ -136,3 +136,15 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 	return false;
 }
 #endif // CSQC
+#ifdef MENUQC
+#include "darkness.qh"
+
+METHOD(DarknessNade, describe, string(DarknessNade this))
+{
+	TC(DarknessNade, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s detonates after a short delay, creating a dark field which temporarily blinds enemies who enter it."), COLORED_NAME(this));
+	PAR(_("This is sort of the opposite of the %s."), COLORED_NAME(NADE_TYPE_VEIL));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

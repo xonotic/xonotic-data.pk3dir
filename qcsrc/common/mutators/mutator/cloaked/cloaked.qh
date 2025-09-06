@@ -1,0 +1,9 @@
+#pragma once
+
+#ifdef MENUQC
+CLASS(MutatorCloaked, Mutator)
+	ATTRIB(MutatorCloaked, message, string, _("Cloaked"));
+ENDCLASS(MutatorCloaked)
+
+REGISTER_MUTATOR(cloaked, true, MutatorCloaked);
+#endif

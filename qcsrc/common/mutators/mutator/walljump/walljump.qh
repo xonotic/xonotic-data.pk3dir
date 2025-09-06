@@ -1,1 +1,9 @@
 #pragma once
+
+#ifdef MENUQC
+CLASS(MutatorWallJump, Mutator)
+	ATTRIB(MutatorWallJump, message, string, _("Wall jumping"));
+ENDCLASS(MutatorWallJump)
+
+REGISTER_MUTATOR(walljump, true, MutatorWallJump);
+#endif

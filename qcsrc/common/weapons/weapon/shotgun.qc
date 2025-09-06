@@ -390,3 +390,21 @@ METHOD(Shotgun, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+
+METHOD(Shotgun, describe, string(Shotgun this))
+{
+	TC(Shotgun, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s is one of the two main default weapons, firing a single shotgun round which spreads into multiple pellets upon exiting the barrel."), COLORED_NAME(this));
+	PAR(_("The secondary fire swings the %s, slapping players close enough with the head of the weapon. "
+	      "Since the slap takes a moment to land, timing this well is difficult."), COLORED_NAME(this));
+	PAR(_("The primary fire consumes %s ammo, although if you spawn in with the %s you will already have some."), COLORED_NAME(ITEM_Shells), COLORED_NAME(this));
+	PAR(_("The %s damage drops off quickly as the range increases, so it is only useful for close combat or sometimes medium range combat."), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_primaryMultishot(this.netname, "primary", "secondary", "primary_bullets", ""));
+	return PAGE_TEXT;
+}
+
+#endif

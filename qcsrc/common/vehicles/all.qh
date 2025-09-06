@@ -17,7 +17,10 @@ const int VEH_FIRST = 1;
 	#include "cl_vehicles.qh"
 #endif
 
-REGISTER_VEHICLE(Null, NEW(Vehicle));
+CLASS(NullVehicle, Vehicle)
+	ATTRIB(NullVehicle, m_hidden, bool, true);
+ENDCLASS(NullVehicle)
+REGISTER_VEHICLE(Null, NEW(NullVehicle));
 REGISTRY_DEFINE_GET(Vehicles, VEH_Null)
 
 #include "vehicle/_mod.qh"

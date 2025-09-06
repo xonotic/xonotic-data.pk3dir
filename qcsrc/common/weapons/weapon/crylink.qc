@@ -628,3 +628,26 @@ METHOD(Crylink, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+
+METHOD(Crylink, describe, string(Crylink this))
+{
+	TC(Crylink, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s fires bursts of laser-like projectiles, spreading out as they travel away and deflecting off walls. "
+	      "If the primary fire is held, when it's released the projectiles will converge before spreading out again, "
+	      "which can be utilized to deal more damage to an enemy by making the projectiles converge on them."), COLORED_NAME(this));
+	PAR(_("Projectiles deal damage on collision but also when they bounce, so with good positioning they can sometimes deal double damage."));
+	PAR(_("The secondary fire shoots the projectiles together in a tight group, so it is often the better option in situations where the enemy is an easy target to hit."));
+	PAR(_("It consumes %s ammo for each projectile, which is shared by several weapons."), COLORED_NAME(ITEM_Cells));
+	PAR(_("Close to medium range is the ideal time to use the %s, although the secondary fire can be useful for long range combat sometimes."), COLORED_NAME(this));
+	PAR(_("The %s deals knockback in a unique way, pulling the player from their center to the point of impact. "
+	      "This makes it one of the best weapons to slow someone down if you are chasing them, particularly with the secondary fire. "
+	      "Another common use of the %s is \"crylink running,\" where you partially angle down and use the secondary fire to pull yourself forwards, in order to gain speed."), COLORED_NAME(this), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_bothMultishot(this.netname, "primary", "secondary"));
+	return PAGE_TEXT;
+}
+
+#endif

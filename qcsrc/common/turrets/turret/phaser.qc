@@ -42,4 +42,16 @@ bool turret_phaser_firecheck(entity this)
     return turret_firecheck(this);
 }
 
-#endif
+#endif // SVQC
+#ifdef MENUQC
+
+METHOD(PhaserTurret, describe, string(PhaserTurret this))
+{
+    TC(PhaserTurret, this);
+    PAGE_TEXT_INIT();
+    PAR(_("The %s is a turret that fires an invisible beam of energy towards its targets."), COLORED_NAME(this));
+    PAR(_("Looks are deceiving with the %s, since although the beam of energy can't be seen, it constantly deals damage to and slows down players who intercept its path."), COLORED_NAME(this));
+    return PAGE_TEXT;
+}
+
+#endif // MENUQC
