@@ -79,8 +79,5 @@ void XonoticGuideDialog_entryChangeNotify(entity, entity me)
 	if (entries.nItems <= 0)
 		return;
 	entity e = entries.source.getEntry(entries.source, entries.selectedItem, func_null);
-	string s = e.describe(e);
-	if (gamestatus & GAME_DEVELOPER)
-		s = sprintf("entity %i\n\n%s", e, s);
-	me.descriptionPane.setDescription(me.descriptionPane, s);
+	me.descriptionPane.setDescription(me.descriptionPane, e.describe(e));
 }
