@@ -2494,28 +2494,6 @@ void Scoreboard_Draw()
 
 	Scoreboard_UpdatePlayerTeams();
 
-	if (autocvar__cl_ignore_list != cl_ignore_list)
-	{
-		for (entity pl = players.sort_next; pl; pl = pl.sort_next)
-			pl.ignored = false;
-
-		if (autocvar__cl_ignore_list != "")
-			FOREACH_WORD(autocvar__cl_ignore_list, true,
-			{
-				int ignore_id = stoi(it);
-				entity pl = NULL;
-				for (pl = players.sort_next; pl; pl = pl.sort_next)
-				{
-					if (ignore_id == pl.sv_entnum + 1)
-					{
-						pl.ignored = true;
-						break;
-					}
-				}
-			});
-		strcpy(cl_ignore_list, autocvar__cl_ignore_list);
-	}
-
 	scoreboard_top = panel_pos.y;
 	vector pos = panel_pos;
 	entity tm;

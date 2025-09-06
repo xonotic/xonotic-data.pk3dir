@@ -127,6 +127,10 @@ int srv_maxplayers;
 float welcome_msg_menu_check_maxtime;
 void Welcome_Message_Show_Try();
 
+string ignore_list;
+bool ignore_list_apply_time;
+void ignore_list_apply();
+
 void Fog_Force();
 
 string _getcommandkey(string text, string command, bool forcename);

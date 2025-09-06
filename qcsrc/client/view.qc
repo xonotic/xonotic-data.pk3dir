@@ -1848,6 +1848,9 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	HUD_Damage();
 	View_PostProcessing();
 
+	if (ignore_list_apply_time && time > ignore_list_apply_time)
+		ignore_list_apply();
+
 	// draw 2D entities
 	IL_EACH(g_drawables_2d, it.draw2d, it.draw2d(it));
 	IL_EACH(g_damagetext, it.draw2d, it.draw2d(it));

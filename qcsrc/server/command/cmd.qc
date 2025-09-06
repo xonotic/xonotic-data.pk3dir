@@ -58,7 +58,7 @@ void ignore_remove_player(entity this, entity ignore, bool from_db_too)
 		}
 	}
 
-	if (!this.ignore_list)
+	if (this.ignore_list == "")
 		return;
 
 	string newlist = "";
@@ -71,7 +71,7 @@ void ignore_remove_player(entity this, entity ignore, bool from_db_too)
 		newlist = cons(newlist, it););
 	strcpy(this.ignore_list, newlist);
 
-	this.ignore_list_send_time = time + 0.5;
+	this.ignore_list_send_time = time + 0.2;
 }
 
 /**
@@ -79,13 +79,12 @@ void ignore_remove_player(entity this, entity ignore, bool from_db_too)
 \param[in] this ignore list owner
 \param[in] ignore player to add to the ignore list
 \param[in] to_db_too whether to add ignore to db too (permanent ignore) or not
-\param[in] ignore_delay add delay
 \return status of the operation:
 - 0: ignore not added (can happen only when trying to add too many permanent ignores)
 - 1: ignore added as temporary (only for the current match)
 - 2: ignore added as permanent (to the db too)
 */
-int ignore_add_player(entity this, entity ignore, bool to_db_too, float send_delay)
+int ignore_add_player(entity this, entity ignore, bool to_db_too)
 {
 	int r = 1;
 	// permanent ignores work if both the player and the sender have a stats UID
@@ -108,7 +107,7 @@ int ignore_add_player(entity this, entity ignore, bool to_db_too, float send_del
 	string list = cons(this.ignore_list, ftos(etof(ignore)));
 	strcpy(this.ignore_list, list);
 
-	this.ignore_list_send_time = time + send_delay;
+	this.ignore_list_send_time = time + 0.2;
 
 	return r;
 }
@@ -158,16 +157,19 @@ void ignore_list_update_on_connection(entity this)
 	FOREACH_CLIENT(it != this && IS_REAL_CLIENT(it),
 	{
 		if (ignore_playerindb(this, it))
-			ignore_add_player(this, it, false, 0.5); // update ignore list of the connecting player
+			ignore_add_player(this, it, false); // update ignore list of the connecting player
+
 		if (ignore_playerindb(it, this))
-			ignore_add_player(it, this, false, 0.5); // update ignore list of other players
+			ignore_add_player(it, this, false); // update ignore list of other players
 	});
 }
 
 void ignore_list_send(entity this)
 {
-	stuffcmd(this, strcat("set _cl_ignore_list \"", this.ignore_list, "\"\n"));
-	this.ignore_list_send_time = 0;
+	ClientData_Touch(this, false);
+	// changing ignore_list_send_time to IGNORE_LIST_SEND_NOW is needed
+	// to send ignore_list correctly in ClientData_Send
+	this.ignore_list_send_time = IGNORE_LIST_SEND_NOW;
 }
 
 void ignore_clearall(entity this)
@@ -184,7 +186,7 @@ void ignore_clearall(entity this)
 				{
 					// permanent ignores already removed from db, remove only from list now
 					ignore_remove_player(this, it, false);
-					this.ignore_list_send_time = time + 0.5;
+					this.ignore_list_send_time = time;
 				}
 			});
 		}
@@ -473,7 +475,7 @@ void ClientCommand_ignore(entity caller, int request, int argc, string command)
 							return;
 						}
 
-						int r = ignore_add_player(caller, ignore_to, true, 0);
+						int r = ignore_add_player(caller, ignore_to, true);
 						if (r == 2)
 							sprint(caller, "You will no longer receive messages from ", ignore_to.netname, "^7, use ^2unignore^7 to hear them again.\n");
 						else if (r == 1)
