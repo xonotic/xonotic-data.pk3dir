@@ -93,3 +93,8 @@ void TakeResource(entity receiver, Resource res_type, float amount);
 /// \param[in] limit Limit of resources to take.
 /// \return No return.
 void TakeResourceWithLimit(entity receiver, Resource res_type, float amount, float limit);
+
+/// \brief Returns ammo consumed per shot by the primary/default fire mode.
+/// \param[in] wpn Weapon entity
+/// \return value is undefined if wpn entity isn't a weapon.
+int GetAmmoConsumption(entity wpn);

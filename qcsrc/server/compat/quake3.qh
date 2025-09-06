@@ -7,7 +7,6 @@ int q3compat = 0;
 bool autocvar_sv_q3compat_changehitbox;
 
 bool DoesQ3ARemoveThisEntity(entity this);
-int GetAmmoConsumptionQ3(entity wpn);
 
 .int fragsfilter_cnt;
 
@@ -20,7 +19,7 @@ int GetAmmoConsumptionQ3(entity wpn);
 	spawnfunc(ammo_classname) \
 	{ \
 		if(this.count && xonwep.ammo_type != RES_NONE) \
-			SetResource(this, xonwep.ammo_type, this.count * GetAmmoConsumptionQ3(xonwep)); \
+			SetResource(this, xonwep.ammo_type, this.count * GetAmmoConsumption(xonwep)); \
 		SPAWNFUNC_BODY(GetAmmoItem(xonwep.ammo_type)) \
 	}
 

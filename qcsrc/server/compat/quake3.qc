@@ -447,19 +447,3 @@ bool DoesQ3ARemoveThisEntity(entity this)
 
 	return false;
 }
-
-/// Returns ammo consumed per shot by the primary/default fire mode.
-/// Return value is undefined if entity isn't a weapon that uses ammo.
-int GetAmmoConsumptionQ3(entity wpn)
-{
-	switch (wpn)
-	{
-		case WEP_ARC:        return WEP_CVAR(WEP_ARC,        beam_ammo);
-		case WEP_DEVASTATOR: return WEP_CVAR(WEP_DEVASTATOR, ammo);
-		case WEP_MACHINEGUN: return WEP_CVAR(WEP_MACHINEGUN, sustained_ammo);
-		case WEP_MINE_LAYER: return WEP_CVAR(WEP_MINE_LAYER, ammo);
-		case WEP_SEEKER:     return WEP_CVAR(WEP_SEEKER,     tag_ammo);
-		default:             return WEP_CVAR_PRI(wpn, ammo);
-	}
-}
-
