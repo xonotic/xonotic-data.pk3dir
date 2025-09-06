@@ -16,8 +16,12 @@ float buff_Inferno_CalculateDamage(float frag_damage);
 CLASS(InfernoBuff, Buff)
 	ATTRIB(InfernoBuff, m_name, string, _("Inferno"));
 	ATTRIB(InfernoBuff, netname, string, "inferno");
+#ifndef SVQC
 	ATTRIB(InfernoBuff, m_icon, string, "buff_inferno");
+#endif
+#ifdef GAMEQC
 	ATTRIB(InfernoBuff, m_skin, int, 16);
+#endif
 	ATTRIB(InfernoBuff, m_color, vector, '1 0.62 0');
 ENDCLASS(InfernoBuff)
 

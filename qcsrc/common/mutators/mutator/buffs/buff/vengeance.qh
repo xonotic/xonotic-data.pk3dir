@@ -12,8 +12,12 @@ float buff_Vengeance_CalculateDamage(float frag_damage);
 CLASS(VengeanceBuff, Buff)
 	ATTRIB(VengeanceBuff, m_name, string, _("Vengeance"));
 	ATTRIB(VengeanceBuff, netname, string, "vengeance");
+#ifndef SVQC
 	ATTRIB(VengeanceBuff, m_icon, string, "buff_vengeance");
+#endif
+#ifdef GAMEQC
 	ATTRIB(VengeanceBuff, m_skin, int, 15);
+#endif
 	ATTRIB(VengeanceBuff, m_color, vector, '1 0.23 0.61');
 ENDCLASS(VengeanceBuff)
 
