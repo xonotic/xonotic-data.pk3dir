@@ -6,7 +6,7 @@ void XonoticGuideDescription_drawListBoxItem(entity me, int i, vector absSize, b
 	draw_Text(me.keepspaceLeft * eX, argv(i), me.realFontSize, '1 1 1', 1, true);
 }
 
-/// wraps text and creates dot point list from lines starting with "* "
+/// wraps text and creates dot point lists from lines starting with "* "
 string wrapGuideText(string desc, float maxWidth, vector theFontSize)
 {
 	string wrapped = "";
