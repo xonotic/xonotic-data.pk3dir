@@ -810,10 +810,12 @@ void ClientCommand_spectate(entity caller, int request)
 				}
 
 				if (IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE)
-				if (autocvar_sv_spectate)
-					ClientKill_TeamChange(caller, -2); // observe
-				else
-					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_MULTI, SPECTATE_NOTALLOWED);
+				{
+					if (autocvar_sv_spectate)
+						ClientKill_TeamChange(caller, -2); // observe
+					else
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_MULTI, SPECTATE_NOTALLOWED);
+				}
 			}
 			return; // never fall through to usage
 		}
