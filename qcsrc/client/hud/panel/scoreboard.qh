@@ -26,8 +26,6 @@ int numplayers;
 int ts_min, ts_max; ///< team size
 
 .bool ignored; // player is ignored
-string autocvar__cl_ignore_list;
-string cl_ignore_list = string_null;
 
 void Cmd_Scoreboard_SetFields(int argc);
 void Scoreboard_Draw();

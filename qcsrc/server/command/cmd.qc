@@ -58,7 +58,7 @@ void ignore_remove_player(entity this, entity ignore, bool from_db_too)
 		}
 	}
 
-	if (!this.ignore_list)
+	if (this.ignore_list == "")
 		return;
 
 	string newlist = "";
@@ -71,7 +71,7 @@ void ignore_remove_player(entity this, entity ignore, bool from_db_too)
 		newlist = cons(newlist, it););
 	strcpy(this.ignore_list, newlist);
 
-	this.ignore_list_send_time = time + 0.5;
+	this.ignore_list_send_time = time + 0.2;
 }
 
 /**
@@ -157,16 +157,17 @@ void ignore_list_update_on_connection(entity this)
 
 	FOREACH_CLIENT(it != this && IS_REAL_CLIENT(it),
 	{
+		// 1 second send delay in ignore_add_player because 0.5s is not enough
 		if (ignore_playerindb(this, it))
-			ignore_add_player(this, it, false, 0.5); // update ignore list of the connecting player
+			ignore_add_player(this, it, false, 1); // update ignore list of the connecting player
 		if (ignore_playerindb(it, this))
-			ignore_add_player(it, this, false, 0.5); // update ignore list of other players
+			ignore_add_player(it, this, false, 1); // update ignore list of other players
 	});
 }
 
 void ignore_list_send(entity this)
 {
-	stuffcmd(this, strcat("set _cl_ignore_list \"", this.ignore_list, "\"\n"));
+	ClientData_Touch(this, false);
 	this.ignore_list_send_time = 0;
 }
 
@@ -184,7 +185,7 @@ void ignore_clearall(entity this)
 				{
 					// permanent ignores already removed from db, remove only from list now
 					ignore_remove_player(this, it, false);
-					this.ignore_list_send_time = time + 0.5;
+					this.ignore_list_send_time = time;
 				}
 			});
 		}
