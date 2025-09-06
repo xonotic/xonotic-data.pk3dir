@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -3702,7 +3702,7 @@ msgstr "^K2Vous n'êtes pas autorisé à rejoindre une équipe plus grande !"
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:821
 msgid "^K2You're not allowed to join that team!"
-msgstr ""
+msgstr "^K2Vous n'êtes pas autorisé à rejoindre cette équipe !"
 
 #: qcsrc/common/notifications/all.inc:463
 #: qcsrc/common/notifications/all.inc:822
@@ -4709,6 +4709,9 @@ msgid ""
 "^K2Your ping (connection latency) is currently too high to play here.\n"
 "Please consider joining a server closer to you."
 msgstr ""
+"^K2Votre ping (latence de connexion) est actuellement trop élevé pour jouer "
+"ici.\n"
+"Veuillez envisager de rejoindre un serveur plus proche de chez vous."
 
 #: qcsrc/common/notifications/all.inc:731
 msgid "^BGYou're queued to join any available team."
@@ -5047,7 +5050,7 @@ msgstr "^K1Suicide dans ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:819
 msgid "^K2Your current team choice seems fine."
-msgstr ""
+msgstr "^K2Votre choix d'équipe actuel semble correct."
 
 #: qcsrc/common/notifications/all.inc:825
 msgid "^F4Timeout begins in ^COUNT"

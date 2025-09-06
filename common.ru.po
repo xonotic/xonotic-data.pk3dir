@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Темак, 2024\n"
+"Last-Translator: Andrei Stepanov, 2014-2025\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -3661,7 +3661,7 @@ msgstr "^K2Вы не можете присоединиться к большей
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:821
 msgid "^K2You're not allowed to join that team!"
-msgstr ""
+msgstr "^K2Вы не можете присоединиться к этой команде!"
 
 #: qcsrc/common/notifications/all.inc:463
 #: qcsrc/common/notifications/all.inc:822
@@ -6657,7 +6657,7 @@ msgstr "Показывать только текущий вид патронов
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:43
 msgid "Noncurrent opacity:"
-msgstr ""
+msgstr "Непрозрачность нетекущего:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:50
@@ -6768,7 +6768,7 @@ msgstr "Время жизни чата:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:27
 msgid "LIFETIME^Infinite"
-msgstr ""
+msgstr "Бесконечно"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:30
 msgid "Chat beep sound"
@@ -7079,7 +7079,7 @@ msgstr "В командных режимах"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:132
 #: qcsrc/menu/xonotic/util.qc:786
 msgid "Opacity:"
-msgstr ""
+msgstr "Непрозрачность:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:61
@@ -7189,19 +7189,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:42
 msgid "View angle"
-msgstr ""
+msgstr "Угол обзора"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:43
 msgid "Velocity angle"
-msgstr ""
+msgstr "Быстрота угла"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
 msgid "Style:"
-msgstr ""
+msgstr "Стиль:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:48
 msgid "STYL^Basic"
-msgstr ""
+msgstr "Базовый"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "Gradient"
@@ -7240,7 +7240,7 @@ msgstr "Переповорот:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:118
 msgid "Switch:"
-msgstr ""
+msgstr "Переключатель:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:119
 msgid "Indicator on the angle to aim at when switching strafing direction"
@@ -7257,7 +7257,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:128
 msgid "Best angle:"
-msgstr ""
+msgstr "Лучший угол:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:129
 msgid "Indicator on the angle to aim at for maximal acceleration"
@@ -7293,7 +7293,7 @@ msgstr "Панель таймера"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Opacity after voting:"
-msgstr ""
+msgstr "Непрозрачность после голосования:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
@@ -7313,7 +7313,7 @@ msgstr "Нет"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "Opacity"
-msgstr ""
+msgstr "Непрозрачность"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Slide"
@@ -7354,7 +7354,7 @@ msgstr "Показывать точность"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:79
 msgid "Ammo bar opacity:"
-msgstr ""
+msgstr "Непрозрачность шкалы патронов:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:86
 msgid "Ammo bar color:"
@@ -8362,7 +8362,7 @@ msgstr "Визуальные свойства для *:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:44
 msgid "Set opacity:"
-msgstr ""
+msgstr "Установить непрозрачность:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:48
 msgid "Set color main:"
@@ -8614,7 +8614,7 @@ msgstr "Поменять местами правый и левый каналы"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:139
 msgid "Headphone-friendly mode"
-msgstr ""
+msgstr "Режим для наушников"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:140
 msgid ""
@@ -9405,7 +9405,7 @@ msgstr "Показывать значки вместо моделей предм
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:35
 msgid "Unavailable opacity:"
-msgstr ""
+msgstr "Непрозрачность недоступного:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:39
 msgid "Unavailable color:"
@@ -9588,6 +9588,8 @@ msgid ""
 "How zoom changes sensitivity, from 0% (lower sensitivity) to 100% (no "
 "sensitivity change)"
 msgstr ""
+"Как увеличительный прицел влияет на чувствительность мыши: от 0% (низкая "
+"чувствительность) до 100% (не меняется)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:108
 msgid "Zoom scrolling"
@@ -9940,11 +9942,11 @@ msgstr "Расширенные"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Menu animations:"
-msgstr ""
+msgstr "Анимации меню:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:80
 msgid "How fast animations in the menu occur"
-msgstr ""
+msgstr "Скорость анимаций в меню"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:83
 msgid "Disabled"
@@ -10293,7 +10295,7 @@ msgstr "Предел:"
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:179
 #, c-format
 msgid "%s fps"
-msgstr ""
+msgstr "%s к/с"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:164
 msgid "MAXFPS^Unlimited"
