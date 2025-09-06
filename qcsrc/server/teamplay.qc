@@ -32,6 +32,7 @@ const int TEAM_NOT_ALLOWED = -1;
 .entity m_team_balance_team[NUM_TEAMS]; ///< ???
 
 .float m_team_score; ///< The score of the team.
+.int m_team_skill; ///< The total skill of the team.
 .int m_num_players; ///< Number of players (both humans and bots) in a team.
 .int m_num_bots; ///< Number of bots in a team.
 .int m_num_players_alive; ///< Number of alive players in a team.
@@ -869,9 +870,18 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 	}
 	else
 	{
+		int server_skill_total = 0, skilled_client_count = 0;
 		// Manually count all players.
 		FOREACH_CLIENT(true,
 		{
+			// skill average intentionally includes ignore.skill
+			float it_skill = PlayerScore_Get(it, SP_SKILL);
+			if (it_skill > 0)
+			{
+				server_skill_total += it_skill;
+				++skilled_client_count;
+			}
+
 			if (it == ignore)
 			{
 				continue;
@@ -905,7 +915,23 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			{
 				++team_ent.m_num_bots;
 			}
+
+			if (it_skill > 0)
+				team_ent.m_team_skill += it_skill;
+			else
+				++team_ent.count; // use average skill for this player
 		});
+
+		// for each player without a skill rating use the average of all clients' skill ratings
+		// see also: Join() (code duplication :/)
+		int average_skill = (skilled_client_count && autocvar_g_balance_teams_skill_unranked_avg_frac > 0)
+			? server_skill_total * autocvar_g_balance_teams_skill_unranked_avg_frac / skilled_client_count
+			: 1000; // fallback: prevents m_team_skill 0 which would break m_team_score balancing
+		for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
+		{
+			entity team_ent = TeamBalance_GetTeamFromIndex(balance, i);
+			team_ent.m_team_skill += team_ent.count * average_skill;
+		}
 	}
 
 	// if the player who has a forced team has not joined yet, reserve the spot
@@ -960,7 +986,7 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player)
 	{
 		TeamBalance_GetTeamCounts(balance, NULL);
 	}
-	int team_bits = TeamBalance_FindBestTeams(balance, player, true);
+	int team_bits = TeamBalance_FindBestTeams(balance, player);
 	if (team_bits == 0)
 	{
 		LOG_FATALF("No teams available for %s\n", GetGametype());
@@ -981,7 +1007,7 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player)
 	return RandomSelection_chosen_float;
 }
 
-int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
+int TeamBalance_FindBestTeams(entity balance, entity player)
 {
 	if (balance == NULL)
 	{
@@ -1009,8 +1035,7 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 			previous_team = i;
 			continue;
 		}
-		int compare = TeamBalance_CompareTeams(balance, i, previous_team,
-			player, use_score);
+		int compare = TeamBalance_CompareTeams(balance, i, previous_team, player);
 		if (compare == TEAMS_COMPARE_LESS)
 		{
 			team_bits = Team_IndexToBit(i);
@@ -1026,8 +1051,7 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 	return team_bits;
 }
 
-int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
-	entity player, bool use_score)
+int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b, entity player)
 {
 	if (balance == NULL)
 	{
@@ -1053,7 +1077,7 @@ int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
 	}
 	entity team_a = TeamBalance_GetTeamFromIndex(balance, team_index_a);
 	entity team_b = TeamBalance_GetTeamFromIndex(balance, team_index_b);
-	return TeamBalance_CompareTeamsInternal(team_a, team_b, player, use_score);
+	return TeamBalance_CompareTeamsInternal(team_a, team_b, player);
 }
 
 void TeamBalance_AutoBalanceBots()
@@ -1270,8 +1294,7 @@ int TeamBalanceTeam_GetNumberOfBots(entity team_ent)
 	return team_ent.m_num_bots;
 }
 
-int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b,
-	entity player, bool use_score)
+int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b, entity player)
 {
 	if (team_a == team_b)
 	{
@@ -1301,18 +1324,22 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b,
 	{
 		return TEAMS_COMPARE_GREATER;
 	}
-	if (!use_score)
-	{
-		return TEAMS_COMPARE_EQUAL;
-	}
-	if (team_a.m_team_score < team_b.m_team_score)
-	{
+
+	// Teams without players have 0 skill but may have a score which must still apply for optimal join queue selection.
+	float team_a_adjusted_skill = team_a.m_team_skill ? team_a.m_team_skill : 1;
+	float team_b_adjusted_skill = team_b.m_team_skill ? team_b.m_team_skill : 1;
+	// Early in the match scores are ~random due to too few samples,
+	// as the match progresses scores become more reliable indicators of team strength.
+	// 0.96875 (31/32): if at halftime one team has score 0 and the other has 2 its skill is multiplied by 1.376,
+	// < 1 so that a team with 1 point is better than one with 0 (but not by much as sample size is small).
+	// Applying full score ratio to one team is equivalent here to applying half of it to each.
+	if (!warmup_stage && time > game_starttime)
+		team_a_adjusted_skill *= (1 + ((team_a.m_team_score ? team_a.m_team_score : 0.96875) / (team_b.m_team_score ? team_b.m_team_score : 0.96875) - 1)
+		                            * ((time - game_starttime) / (autocvar_timelimit * 60))**1.5);
+	if (team_a_adjusted_skill < team_b_adjusted_skill)
 		return TEAMS_COMPARE_LESS;
-	}
-	if (team_a.m_team_score > team_b.m_team_score)
-	{
+	if (team_a_adjusted_skill > team_b_adjusted_skill)
 		return TEAMS_COMPARE_GREATER;
-	}
 	return TEAMS_COMPARE_EQUAL;
 }
 
