@@ -10,10 +10,9 @@ METHOD(CaptureTheFlag, describe, string(CaptureTheFlag this))
 	PAR(_("The game is won once a team reaches a certain number of \"caps\" (captures), or has a considerable lead over the other team."));
 	PAR(_("If a flag is dropped into the void or a death trap it will be immediately returned to its base, or otherwise it will sit idle for a while before automatically returning itself. "
 	      "If all flags are held by an enemy, after some time period a \"stalemate\" will initiate and all flag carriers (\"fc\"s) will be exposed on the radar and with waypoints."));
-	PAR(_("Some %s maps have more than two bases on it, but generally this is a 2-team gametype."), COLORED_NAME(this));
-	PAR(_("This gametype rewards crafty movement, since the more difficult it is for enemies to attack you, the more likely you are to escape from their base with their flag. "
+	PAR(_("%s rewards crafty movement, since the more difficult it is for enemies to attack you the more likely you are to escape from their base with their flag. "
 	      "Importantly, it also rewards base defense since if your enemies can't take your flag, they can never capture. "
-	      "Lastly, good team communication is important, especially to let them know if you see the enemy flag carrier."));
+	      "Lastly, good team communication is important, especially to let them know if you see the enemy flag carrier."), COLORED_NAME(this));
 	return PAGE_TEXT;
 }
 #endif
