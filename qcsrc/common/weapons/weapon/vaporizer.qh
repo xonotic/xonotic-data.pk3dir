@@ -41,6 +41,7 @@ CLASS(Vaporizer, Weapon)
 		P(class, prefix, damagefalloff_maxdist, float, PRI) \
 		P(class, prefix, damagefalloff_mindist, float, PRI) \
 		P(class, prefix, force, float, PRI) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, refire, float, PRI) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \

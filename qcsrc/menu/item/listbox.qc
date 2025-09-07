@@ -179,7 +179,7 @@
 		float hit;
 		me.updateControlTopBottom(me);
 		me.dragScrollPos = pos;
-		if (me.pressed == 1)
+		if (me.pressed == 1 && me.getTotalHeight(me) > 1)
 		{
 			hit = 1;
 			if (pos.x < 1 - me.controlWidth - me.tolerance.x * me.controlWidth) hit = 0;
@@ -301,7 +301,6 @@
 	}
 	void ListBox_updateControlTopBottom(entity me)
 	{
-		float f;
 		// scrollPos is in 0..1 and indicates where the "page" currently shown starts.
 		if (me.getTotalHeight(me) <= 1)
 		{
@@ -312,17 +311,14 @@
 		}
 		else
 		{
-			// if scroll pos is below end of list, fix it
-			me.scrollPos = min(me.scrollPos, me.getTotalHeight(me) - 1);
-			// if scroll pos is above beginning of list, fix it
-			me.scrollPos = max(me.scrollPos, 0);
+			// if scroll pos is above beginning or below end of list, fix it
+			me.scrollPos = bound(0, me.scrollPos, me.getTotalHeight(me) - 1);
 			// now that we know where the list is scrolled to, find out where to draw the control
 			me.controlTop = max(0, me.scrollPos / me.getTotalHeight(me));
 			me.controlBottom = min((me.scrollPos + 1) / me.getTotalHeight(me), 1);
 
-			float minfactor;
-			minfactor = 2 * me.controlWidth / me.size.y * me.size.x;
-			f = me.controlBottom - me.controlTop;
+			const float minfactor = 2 * me.controlWidth / me.size.y * me.size.x;
+			float f = me.controlBottom - me.controlTop;
 			if (f < minfactor)  // FIXME good default?
 			{
 				// f * X + 1 * (1-X) = minfactor

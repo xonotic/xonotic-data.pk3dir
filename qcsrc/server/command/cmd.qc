@@ -18,6 +18,7 @@
 #include <common/vehicles/all.qh>
 #include <lib/warpzone/common.qh>
 #include <server/bot/api.qh>
+#include <server/bot/default/cvars.qh> // for autocvar_bot_vs_human
 #include <server/bot/default/waypoints.qh>
 #include <server/campaign.qh>
 #include <server/chat.qh>
@@ -616,7 +617,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			{
 				return;
 			}
-			if (!IS_CLIENT(caller))
+			if (!IS_CLIENT(caller) || intermission_running)
 			{
 				return;
 			}
@@ -637,37 +638,55 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				return;
 			}
 
+			// TEAMNUMBERS_THAT_ARENT_STUPID FIXME: 0 and -1 mean different things to different funcs
 			float team_num = Team_ColorToTeam(argv(1));
 			if (team_num == -1) // invalid
 				return;
-			if (caller.team == team_num && team_num && !IS_DEAD(caller))
+			int team_index = Team_TeamToIndex(team_num);
+
+			// players queued to change teams may leave the queue by selecting their current team or autoselect
+			if (caller.team > 0 && caller.wants_join && (!team_num || caller.team == team_num))
+			{
+				if (caller.killindicator_teamchange > 0)
+					return; // teams would be unbalanced by cancelling change during g_balance_kill_delay
+				Kill_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CPID_PREVENT_JOIN);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, caller.netname);
+				caller.wants_join = caller.team_selected = 0;
+				return;
+			}
+
+			if (caller.team == team_num && team_num)
 			{
 				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_SAME);
 				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_SAME);
 				return;
 			}
-			if (CS(caller).wasplayer && autocvar_g_changeteam_banned)
-			{
-				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
-				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_NOTALLOWED);
-				return;
-			}
-			if (team_num && autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
+			if (team_num)
 			{
 				entity balance = TeamBalance_CheckAllowedTeams(caller);
-				TeamBalance_GetTeamCounts(balance, caller);
-				if ((Team_IndexToBit(Team_TeamToIndex(team_num)) &
-					TeamBalance_FindBestTeams(balance, caller, false)) == 0)
+				if (!TeamBalance_IsTeamAllowed(balance, team_index))
 				{
-					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
-					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_NOTALLOWED);
 					TeamBalance_Destroy(balance);
 					return;
+				}
+				if (autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
+				{
+					TeamBalance_GetTeamCounts(balance, caller);
+					if ((Team_IndexToBit(Team_TeamToIndex(team_num)) &
+					     TeamBalance_FindBestTeams(balance, caller, false)) == 0)
+					{
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
+						TeamBalance_Destroy(balance);
+						return;
+					}
 				}
 				TeamBalance_Destroy(balance);
 			}
 
-			if (joinAllowed(caller, team_num ? Team_TeamToIndex(team_num) : -1))
+			if (joinAllowed(caller, team_num ? team_index : -1))
 				ClientKill_TeamChange(caller, team_num ? team_num : -1);
 
 			return;
@@ -781,11 +800,22 @@ void ClientCommand_spectate(entity caller, int request)
 
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN) return;
 
-				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE || caller.wants_join))
-				if (autocvar_sv_spectate)
-					ClientKill_TeamChange(caller, -2); // observe
-				else
-					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_MULTI, SPECTATE_NOTALLOWED);
+				if (caller.wants_join)
+				{
+					if (caller.killindicator_teamchange > 0)
+						return; // teams would be unbalanced by cancelling change during g_balance_kill_delay
+					Kill_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CPID_PREVENT_JOIN);
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, caller.netname);
+					caller.wants_join = caller.team_selected = 0;
+				}
+
+				if (IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE)
+				{
+					if (autocvar_sv_spectate)
+						ClientKill_TeamChange(caller, -2); // observe
+					else
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_MULTI, SPECTATE_NOTALLOWED);
+				}
 			}
 			return; // never fall through to usage
 		}

@@ -37,14 +37,14 @@ string GetCallerName(entity caller)
 }
 
 // verify that the client provided is acceptable for kicking
-float VerifyKickableEntity(entity client)
+int VerifyKickableEntity(entity client)
 {
 	if (!IS_REAL_CLIENT(client)) return CLIENT_NOT_REAL;
 	return CLIENT_ACCEPTABLE;
 }
 
 // verify that the client provided is acceptable for use
-float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
+int VerifyClientEntity(entity client, bool must_be_real, bool must_be_bots)
 {
 	if (!IS_CLIENT(client)) return CLIENT_DOESNT_EXIST;
 	else if (must_be_real && !IS_REAL_CLIENT(client)) return CLIENT_NOT_REAL;
@@ -74,16 +74,15 @@ string GetClientErrorString_color(float clienterror, string original_input, stri
 }
 
 // is this entity number even in the possible range of entities?
-float VerifyClientNumber(float tmp_number)
+bool VerifyClientNumber(int num)
 {
-	if ((tmp_number < 1) || (tmp_number > maxclients)) return false;
-	else return true;
+	return (num >= 1 && num <= maxclients);
 }
 
-entity GetIndexedEntity(int argc, float start_index)
+entity GetIndexedEntity(int argc, int start_index)
 {
 	entity selection;
-	float tmp_number, index;
+	int tmp_number, index;
 	string tmp_string;
 
 	next_token = -1;
@@ -144,7 +143,7 @@ entity GetIndexedEntity(int argc, float start_index)
 entity GetFilteredEntity(string input)
 {
 	entity selection;
-	float tmp_number;
+	int tmp_number;
 
 	if (substring(input, 0, 1) == "#") tmp_number = stof(substring(input, 1, -1));
 	else tmp_number = stof(input);

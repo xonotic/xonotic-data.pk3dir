@@ -474,6 +474,17 @@ string ftos_decimals(float number, int decimals)
 }
 
 /**
+ * converts a percentage to a string with the indicated number of decimals
+ */
+ERASEABLE
+string ftos_decimals_percentage(float number, int decimals)
+{
+	// inhibit stupid negative zero
+	if (number == 0) number = 0;
+	return sprintf(_("%.*f%%"), decimals, number * 100); // translatable percentage string
+}
+
+/**
  * converts a number to a string with the minimum number of decimals
  */
 ERASEABLE

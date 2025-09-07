@@ -1437,6 +1437,16 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor
 				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[0]
 				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[1];
+			if (teamplay)
+			{
+				int wants_join = entcs_GetWantsJoin(pl.sv_entnum);
+				if (wants_join)
+				{
+					vector tmcolor = Team_ColorRGB(Team_IndexToTeam(wants_join)) * min(1, 1 + sin(2*M_PI*time));
+					drawstring(pos - tmp, "(Q)", hud_fontsize, tmcolor, sbt_fg_alpha, DRAWFLAG_NORMAL);
+					tmp.x -= stringwidth("(Q) ", true, hud_fontsize);
+				}
+			}
 			drawcolorcodedstring(pos - tmp, str, hud_fontsize, fg_alpha, DRAWFLAG_NORMAL);
 		}
 		else
@@ -1547,13 +1557,15 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		if (pl == ignored_pl)
 			continue;
 
-		if (entcs_GetWantsJoin(pl.sv_entnum))
+		if (teamplay)
 		{
-			vector tmcolor = Team_ColorRGB(Team_IndexToTeam(entcs_GetWantsJoin(pl.sv_entnum)));
-			tmcolor -= tmcolor * sin(2*M_PI*time);
-
-			drawstring(pos, "(Q)", hud_fontsize, tmcolor, sbt_fg_alpha, DRAWFLAG_NORMAL);
-			pos.x += stringwidth("(Q) ", true, hud_fontsize);
+			int wants_join = entcs_GetWantsJoin(pl.sv_entnum);
+			if (wants_join)
+			{
+				vector tmcolor = Team_ColorRGB(Team_IndexToTeam(wants_join)) * min(1, 1 + sin(2*M_PI*time));
+				drawstring(pos, "(Q)", hud_fontsize, tmcolor, sbt_fg_alpha, DRAWFLAG_NORMAL);
+				pos.x += stringwidth("(Q) ", true, hud_fontsize);
+			}
 		}
 
 		field = "";
@@ -1904,7 +1916,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 			weapons_with_stats += 1;
 			average_accuracy += weapon_stats; // store sum of all accuracies in average_accuracy
 
-			string s = sprintf("%d%%", weapon_stats * 100);
+			string s = ftos_decimals_percentage(weapon_stats, 0);
 			float padding = (weapon_width - stringwidth(s, false, hud_fontsize)) / 2;
 
 			if (!autocvar_hud_panel_scoreboard_accuracy_nocolors)
@@ -2780,7 +2792,7 @@ void Scoreboard_Draw()
 			);
 		}
 		else if (time >= respawn_time)
-			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey("jump", "+jump"));
+			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey(_("jump"), "+jump"));
 
 		pos.y += 1.2 * hud_fontsize.y;
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);

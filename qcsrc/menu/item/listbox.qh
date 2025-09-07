@@ -11,12 +11,12 @@ CLASS(ListBox, MenuItem)
 	METHOD(ListBox, mouseDrag, float(entity, vector));
 	METHOD(ListBox, mouseRelease, float(entity, vector));
 	METHOD(ListBox, focusLeave, void(entity));
-	ATTRIB(ListBox, focusable, float, 1);
+	ATTRIB(ListBox, focusable, bool, true);
 	ATTRIB(ListBox, focusedItem, int, -1);
 	ATTRIB(ListBox, focusedItemAlpha, float, 0.3);
 	METHOD(ListBox, setFocusedItem, void(entity, int));
 	ATTRIB(ListBox, mouseMoveOffset, float, -1);  // let know where the cursor is when the list scrolls without moving the cursor
-	ATTRIB(ListBox, allowFocusSound, float, 1);
+	ATTRIB(ListBox, allowFocusSound, bool, true);
 	ATTRIB(ListBox, selectedItem, int, 0);
 	ATTRIB(ListBox, size, vector, '0 0 0');
 	ATTRIB(ListBox, origin, vector, '0 0 0');
@@ -43,7 +43,7 @@ CLASS(ListBox, MenuItem)
 	ATTRIB(ListBox, colorF, vector, '1 1 1');
 	ATTRIB(ListBox, tolerance, vector, '0 0 0'); // drag tolerance
 	ATTRIB(ListBox, scrollbarWidth, float, 0);   // pixels
-	ATTRIB(ListBox, nItems, float, 42);          // FIXME: why?!?
+	ATTRIB(ListBox, nItems, int, 42);            // FIXME: why?!?
 	ATTRIB(ListBox, itemHeight, float, 0);
     ATTRIB(ListBox, itemAbsSize, vector, '0 0 0');
 	ATTRIB(ListBox, colorBG, vector, '0 0 0');

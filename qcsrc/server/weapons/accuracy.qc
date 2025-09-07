@@ -11,10 +11,15 @@
 #include <server/player.qh>
 #include <server/world.qh>
 
+// 0: haven't fired the weapon yet
+// 1-101: weapon accuracy + 1%
+// 255: >100% accuracy (see accuracy_add)
 int accuracy_byte(float n, float d)
 {
-	if (n <= 0) return 0;
-	if (n > d) return 255;
+	if (n < 0 || d <= 0)
+		return 0;
+	if (n > d)
+		return 255;
 	return 1 + rint(n * 100.0 / d);
 }
 
@@ -41,7 +46,7 @@ bool accuracy_send(entity this, entity to, int sf)
 	return true;
 }
 
-// init/free
+/// init/free
 void accuracy_init(entity e)
 {
 	entity a = CS(e).accuracy = new_pure(accuracy);
@@ -62,6 +67,7 @@ void accuracy_reset(entity e)
 
 	for (int i = 0; i < REGISTRY_MAX(Weapons); ++i)
 	{
+		a.accuracy_real[i] = 0;
 		a.accuracy_frags[i] = 0;
 		a.accuracy_hit[i] = 0;
 		a.accuracy_fired[i] = 0;
@@ -70,26 +76,39 @@ void accuracy_reset(entity e)
 	}
 }
 
-// force a resend of a player's accuracy stats
+/// force a resend of a player's accuracy stats
 void accuracy_resend(entity e)
 {
 	CS(e).accuracy.SendFlags = 0xFFFFFF;
 }
 
-// update accuracy stats
 //.float hit_time;
 .float fired_time;
-
-void accuracy_add(entity this, Weapon w, float fired, float hit)
+/* per-weapon accuracy stats:
+ *   fired: total damage that all fired shots could have dealt
+ *   hit: total damage dealt, including damage after death
+ *   real: total damage dealt, excluding damage after death
+ *   cnt-hit: amount of shots that actually hit
+ *   cnt-fired: amount of shots fired
+ * hit is important to have, to calculate accuracy (hit / fired * 100%), since real / fired would give low accuracy for shooting a 1 hp player with Vortex.
+ * accuracy_fired is usually added to only when a weapon is fired.
+ * accuracy_real is only added to when a player finally receives damage in PlayerDamage.
+ * accuracy_hit is added to at other points before excess damage is removed.
+ * accuracy_hit can be higher than accuracy_fired (accuracy_fired doesn't account for e.g. Vortex shots hitting 2 players), this is networked as 100% accuracy.
+ * adding to accuracy_real doesn't need to add to accuracy_cnt_hit, since accuracy_hit would've already updated it.
+ * we count only damage dealt to players, not any other entities.
+ */
+/// update accuracy stats
+void accuracy_add(entity this, Weapon w, float fired, float hit, float real)
 {
 	if (IS_INDEPENDENT_PLAYER(this)) return;
 	entity a = CS(this).accuracy;
 	if (!a) return;
-	if (!hit && !fired) return;
+	if (!hit && !fired && !real) return;
 	if (w == WEP_Null) return;
-	int wepid = w.m_id;
-	wepid -= WEP_FIRST;
+	int wepid = w.m_id - WEP_FIRST;
 	int b = accuracy_byte(a.accuracy_hit[wepid], a.accuracy_fired[wepid]);
+	if (real)   a.accuracy_real [wepid] += real;
 	if (hit)    a.accuracy_hit  [wepid] += hit;
 	if (fired)  a.accuracy_fired[wepid] += fired;
 
@@ -109,6 +128,8 @@ void accuracy_add(entity this, Weapon w, float fired, float hit)
 	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == this, { CS(it).accuracy.SendFlags |= sf; });
 }
 
+/// does this damage count towards accuracy stats?
+/// e.g. ignore team damage, damage to dead players, damage to map entities
 bool accuracy_isgooddamage(entity attacker, entity targ)
 {
 	int mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid, attacker, targ);
@@ -128,6 +149,8 @@ bool accuracy_isgooddamage(entity attacker, entity targ)
 	return true;
 }
 
+/// if damage were to occur, would accuracy_isgooddamage be able to return true?
+/// used to check if potential damage (for accuracy_fired) is good
 bool accuracy_canbegooddamage(entity attacker)
 {
 	return !warmup_stage && IS_CLIENT(attacker);
