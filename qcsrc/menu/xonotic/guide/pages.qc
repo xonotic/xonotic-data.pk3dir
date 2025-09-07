@@ -29,19 +29,20 @@ REGISTER_INTRODUCTION_PAGE(0, _("About this guide"))
 }
 REGISTER_INTRODUCTION_PAGE(1, _("Community"))
 {
+	string comm_channels = sprintf(_("%s on Matrix, %s on QuakeNet IRC, or the Discord"), "^5#main:xonotic.org^7", "^5#xonotic^7"); // string isolated as it's subject to change
 	PAGE_TEXT_INIT();
 	PAR(_("Xonotic stands out for its friendly, mature, and welcoming player community, and many long-term players argue that this is probably one of the best things about Xonotic. "
 	      "If you approach other players friendly and respectfully, this will be recognized, while acting toxic on the other hand will not make your life easier on the servers."));
 	PAR(_("The best way to get in touch with the community is to just start playing online and use the in-game chat. "
-	      "You can also connect to the official communication channels (%s on Matrix, %s on QuakeNet IRC), and of course the official forum."), "^5#main:xonotic.org^7", "^5#xonotic^7");
+	      "You can also connect to the official communication channels (%s), and of course the official forum."), comm_channels);
 	this.m_description = strzone(PAGE_TEXT);
 }
 REGISTER_INTRODUCTION_PAGE(2, _("Getting good"))
 {
 	PAGE_TEXT_INIT();
-	PAR(_("The skill gap between new and experienced players is often immense. However, this is mostly because experienced players have learned how to make use of the game mechanics. "
-	      "If you see experienced players doing tricks you don't understand, don't hesitate to ask. "
-	      "In most cases, polite questions receive an answer, from anyone on the server if not from the experienced player themselves."));
+	PAR(_("The skill gap between new and experienced players is often immense. "
+	      "However, this is mostly because experienced players have learned how to make use of the game mechanics. "
+	      "If you see experienced players doing tricks you don't understand, don't hesitate to ask anyone on the server!"));
 	PAR(_("Another way to learn is to spectate experienced players. "
 	      "Observe which weapons they combo and the movement techniques they make use of. "
 	      "Also look at which weapons they choose depending on the gameplay situation, for example in close combat, mid-range battles, or against groups of opponents."));
@@ -52,7 +53,7 @@ REGISTER_INTRODUCTION_PAGE(3, _("XonStat"))
 {
 	PAGE_TEXT_INIT();
 	PAR(_("XonStat is the integrated player statistics application for Xonotic. "
-	      "It stores vital stats like your K:D ratio, weapon damage and accuracy, and scoreboards from past games."));
+	      "It stores vital stats like your kill-death ratio, weapon damage and accuracy, and scoreboards from past games."));
 	PAR(_("Tracking is completely opt-in, and no login is required."));
 	PAR(_("Some of the statistics are available in-game on your player profile, while the rest are accessible at %s."), "^5stats.xonotic.org^7");
 	this.m_description = strzone(PAGE_TEXT);
@@ -82,7 +83,7 @@ REGISTER_MOVEMENT_PAGE(1, _("Bunny Hopping"))
 	      "This allows you to get around the map much faster than if you would just walk."), strcat("^3", _("jump"), "^7"));
 	PAR(_("Therefore, keeping %s held while moving quickly is one of the most essential movement strategies, used by all experienced players."), strcat("^3", _("jump"), "^7"));
 	PAR(_("With default settings, the speed you can reach by bunny hopping is capped at 900 qu/s (\"units per second\"). "
-	      "CTS/DeFRaG servers usually run with different CPMA-like physics that remove this capping."));
+	      "CTS/DeFRaG servers usually run with different CPMA-like physics that remove this cap."));
 	this.m_description = strzone(PAGE_TEXT);
 }
 REGISTER_MOVEMENT_PAGE(2, _("Strafe Turning"))
@@ -104,7 +105,7 @@ REGISTER_MOVEMENT_PAGE(3, _("Blaster Jumping"))
 	      "That's why many players will often have single digit accuracy for the %s. "
 	      "It is instead especially useful to make high jumps."), COLORED_NAME(WEP_BLASTER), COLORED_NAME(WEP_BLASTER));
 	PAR(_("To do a \"laser jump,\" simply fire the %s at your own feet and jump immediately afterwards. "
-	      "Experiment a bit with the timing of firing the %s and jumping to get a feeling about which timing will get you how high."), COLORED_NAME(WEP_BLASTER), COLORED_NAME(WEP_BLASTER));
+	      "Experiment a bit with the timing of firing the %s and jumping to get a feeling of which timings will get you how high."), COLORED_NAME(WEP_BLASTER), COLORED_NAME(WEP_BLASTER));
 	this.m_description = strzone(PAGE_TEXT);
 }
 REGISTER_MOVEMENT_PAGE(4, _("Wall Blastering"))
