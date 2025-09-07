@@ -82,10 +82,20 @@
 			{
 				bOrigin = '0 0 0';
 				bSize = '1 1 0';
-				if (me.disabled) draw_ButtonPicture(bOrigin, strcat(me.src, "_d", me.srcSuffix), bSize, me.colorD, 1);
-				else if (me.forcePressed || me.pressed || me.clickTime > 0) draw_ButtonPicture(bOrigin, strcat(me.src, "_c", me.srcSuffix), bSize, me.colorC, 1);
-				else if (me.focused) draw_ButtonPicture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1);
-				else draw_ButtonPicture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color, 1);
+				if (me.disabled)
+					draw_ButtonPicture(bOrigin, strcat(me.src, "_d", me.srcSuffix), bSize, me.colorD, 1);
+				else if (me.forcePressed || me.pressed || me.clickTime > 0)
+					draw_ButtonPicture(bOrigin, strcat(me.src, "_c", me.srcSuffix), bSize, me.colorC, 1);
+				else if (me.focused)
+					draw_ButtonPicture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1);
+				else if (me.pulse)
+				{
+					float alpha = min(1, 1 + sin(1.2*M_PI * time));
+					draw_ButtonPicture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1 - alpha);
+					draw_ButtonPicture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color, alpha);
+				}
+				else
+					draw_ButtonPicture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color,  1);
 			}
 			else
 			{
@@ -99,10 +109,20 @@
 					bOrigin = eY * (0.5 * (1 - me.realFontSize.y)) + eX * (0.5 * (me.keepspaceLeft - me.realFontSize.x));
 					bSize = me.realFontSize;
 				}
-				if (me.disabled) draw_Picture(bOrigin, strcat(me.src, "_d", me.srcSuffix), bSize, me.colorD, 1);
-				else if (me.forcePressed || me.pressed || me.clickTime > 0) draw_Picture(bOrigin, strcat(me.src, "_c", me.srcSuffix), bSize, me.colorC, 1);
-				else if (me.focused) draw_Picture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1);
-				else draw_Picture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color, 1);
+				if (me.disabled)
+					draw_Picture(bOrigin, strcat(me.src, "_d", me.srcSuffix), bSize, me.colorD, 1);
+				else if (me.forcePressed || me.pressed || me.clickTime > 0)
+					draw_Picture(bOrigin, strcat(me.src, "_c", me.srcSuffix), bSize, me.colorC, 1);
+				else if (me.focused)
+					draw_Picture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1);
+				else if (me.pulse)
+				{
+					float alpha = min(1, 1 + sin(1.2*M_PI * time));
+					draw_ButtonPicture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1 - alpha);
+					draw_ButtonPicture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color, alpha);
+				}
+				else
+					draw_Picture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color,  1);
 			}
 		}
 		if (me.src2)

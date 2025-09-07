@@ -140,6 +140,13 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 	cvar_set("lastlevel", "1");
 }
 
+void GuideButton_Click(entity btn, entity me)
+{
+	cvar_set("_menu_guide_highlight", "0"); // XONRELEASE TODO: delete this cvar and change .onClick to DialogOpenButton_Click below (pre-release next release)
+	btn.pulse = false;
+	DialogOpenButton_Click(btn, me);
+}
+
 void XonoticSingleplayerDialog_fill(entity me)
 {
 	entity e, btnPrev, btnNext, lblTitle;
@@ -150,7 +157,9 @@ void XonoticSingleplayerDialog_fill(entity me)
 			e.onClick = InstantAction_LoadMap;
 			e.onClickEntity = NULL;
 		me.TD(me, 2, 2, e = makeXonoticBigButton(_("Guide"), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
+			if (cvar("_menu_guide_highlight"))
+				e.pulse = true;
+			e.onClick = GuideButton_Click;
 			e.onClickEntity = main.guideDialog;
 	me.TR(me);
 	me.TR(me);
