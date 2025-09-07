@@ -98,11 +98,8 @@ const vector ITEM_L_MAXS = '30 30 70';  // 0.8.6 set '16 16 80' for powerups, '1
 #define SPAWNFUNC_ITEM(name, item) \
 	spawnfunc(name) \
 	{ \
-		SPAWNFUNC_BODY(item) \
+		SPAWNFUNC_BODY((item)) \
 	}
-
-#define SPAWNFUNC_ITEM_COND(name, cond, item1, item2) \
-	SPAWNFUNC_ITEM(name, (cond ? item1 : item2))
 
 #else
 

@@ -48,11 +48,11 @@
 */
 
 // SG -> MG || SG
-SPAWNFUNC_Q3_COND(weapon_shotgun, ammo_shells, (q3compat & Q3COMPAT_ARENA), WEP_MACHINEGUN, WEP_SHOTGUN)
+SPAWNFUNC_Q3(weapon_shotgun, ammo_shells, q3compat & Q3COMPAT_ARENA ? WEP_MACHINEGUN : WEP_SHOTGUN)
 
 // MG -> SG || MG
 // Technically we should replace weapon_machinegun with WEP_SHOTGUN if Q3COMPAT_ARENA, but it almost never occurs on Q3 maps
-SPAWNFUNC_Q3AMMO_COND(ammo_bullets, (q3compat & Q3COMPAT_ARENA), WEP_SHOTGUN, WEP_MACHINEGUN)
+SPAWNFUNC_Q3AMMO(ammo_bullets, q3compat & Q3COMPAT_ARENA ? WEP_SHOTGUN : WEP_MACHINEGUN)
 
 // GL -> Mortar
 SPAWNFUNC_Q3AMMO(ammo_grenades, WEP_MORTAR)
@@ -67,7 +67,7 @@ SPAWNFUNC_Q3(weapon_chaingun, ammo_belt, WEP_HLAC)
 SPAWNFUNC_Q3(weapon_hmg, ammo_hmg, WEP_HLAC)
 
 // Team Arena Nailgun -> Crylink || Quake Nailgun -> Electro
-SPAWNFUNC_Q3_COND(weapon_nailgun, ammo_nails, autocvar_sv_mapformat_is_quake3, WEP_CRYLINK, WEP_ELECTRO)
+SPAWNFUNC_Q3(weapon_nailgun, ammo_nails, autocvar_sv_mapformat_is_quake3 ? WEP_CRYLINK : WEP_ELECTRO)
 
 // LG -> Electro
 SPAWNFUNC_Q3(weapon_lightning, ammo_lightning, WEP_ELECTRO)
@@ -79,7 +79,7 @@ SPAWNFUNC_Q3(weapon_plasmagun, ammo_cells, WEP_HAGAR)
 SPAWNFUNC_Q3(weapon_railgun, ammo_slugs, WEP_VORTEX)
 
 // BFG -> Crylink || Fireball
-SPAWNFUNC_Q3_COND(weapon_bfg, ammo_bfg, cvar_string("g_mod_balance") == "XDF", WEP_CRYLINK, WEP_FIREBALL)
+SPAWNFUNC_Q3(weapon_bfg, ammo_bfg, cvar_string("g_mod_balance") == "XDF" ? WEP_CRYLINK : WEP_FIREBALL)
 	// FIXME: WEP_FIREBALL has no ammo_type field so ammo_bfg is deleted by SPAWNFUNC_BODY
 
 // grappling hook -> hook
