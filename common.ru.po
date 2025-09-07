@@ -4651,6 +4651,8 @@ msgid ""
 "^K2Your ping (connection latency) is currently too high to play here.\n"
 "Please consider joining a server closer to you."
 msgstr ""
+"^K2Сейчас ваш пинг (задержка соединения) слишком высок, чтобы играть здесь.\n"
+"Пожалуйста, подумайте о том, чтобы перейти на сервер поближе к вам."
 
 #: qcsrc/common/notifications/all.inc:731
 msgid "^BGYou're queued to join any available team."
@@ -4979,7 +4981,7 @@ msgstr "^K1Вы совершите самоубийство через ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:819
 msgid "^K2Your current team choice seems fine."
-msgstr ""
+msgstr "^K2Ваш текущий выбор команды кажется хорошим."
 
 #: qcsrc/common/notifications/all.inc:825
 msgid "^F4Timeout begins in ^COUNT"
@@ -7013,7 +7015,7 @@ msgstr "Размер значков:"
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:88
 #, c-format
 msgid "%sx"
-msgstr ""
+msgstr "%sx"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:42
 msgid "Show timer:"
@@ -7127,7 +7129,7 @@ msgstr "Размер:"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:72
 #, c-format
 msgid "%s qu"
-msgstr ""
+msgstr "%s qu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:45
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:80
@@ -7185,7 +7187,7 @@ msgstr "Таблица очков"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:41
 msgid "Centered on:"
-msgstr ""
+msgstr "Центрирование на:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:42
 msgid "View angle"
@@ -7245,15 +7247,19 @@ msgstr "Переключатель:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:119
 msgid "Indicator on the angle to aim at when switching strafing direction"
 msgstr ""
+"Индикатор угла прицеливания при переключении направления стрейфа (движения в "
+"бок)"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:123
 msgid "W-turn:"
-msgstr ""
+msgstr "Разворот в три приёма:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
 msgid ""
 "Indicator on the angle to aim at when W-turning to rotate as fast as possible"
 msgstr ""
+"Индикатор угла, на который нужно прицелиться при развороте в три приёма, "
+"чтобы повернуться как можно быстрее"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:128
 msgid "Best angle:"
@@ -7262,6 +7268,8 @@ msgstr "Лучший угол:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:129
 msgid "Indicator on the angle to aim at for maximal acceleration"
 msgstr ""
+"Индикатор угла, на который нужно нацелиться для достижения максимального "
+"ускорения"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:164
 msgid "Demo mode"
@@ -8621,6 +8629,7 @@ msgid ""
 "Blend the left and right channels slightly to decrease stereo separation a "
 "bit"
 msgstr ""
+"Лёгкое смешение левого и правого канала с целью сглаживания разделения стерео"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:144
 msgid "Hit indication sound"

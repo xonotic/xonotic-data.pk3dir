@@ -4,6 +4,7 @@
 #
 # Translators:
 # Pendulla <djdjoric@gmail.com>, 2014
+# Gabriell Šimić, 2025
 # Pendulla <djdjoric@gmail.com>, 2014
 # Ristovski <rafael.ristovski@gmail.com>, 2014
 # Ristovski <rafael.ristovski@gmail.com>, 2014
@@ -14,8 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Марко М. Костић (Marko M. Kostić) <marko.m.kostic@gmail."
-"com>, 2017,2019\n"
+"Last-Translator: Gabriell Šimić, 2025\n"
 "Language-Team: Serbian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/sr/)\n"
 "Language: sr\n"
@@ -216,7 +216,7 @@ msgstr "^2Притисните ^3%s^2 за завршавање загревањ
 
 #: qcsrc/client/hud/panel/infomessages.qc:200
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "Тимови нису фер!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:203
 #, c-format
@@ -440,7 +440,7 @@ msgstr "QMCMD^Преглед/ХУД подешавања"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:878
 msgid "QMCMD^3rd person view"
-msgstr "QMCMD^Преглед из трећег лица"
+msgstr "QMCMD^Преглед из 3. лица"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "QMCMD^Player models like mine"
@@ -693,15 +693,15 @@ msgstr "Број убистава без самоубистава"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^frags"
-msgstr ""
+msgstr "SCO^фрегови"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of generators destroyed"
-msgstr ""
+msgstr "Број уништених генератора"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^generators"
-msgstr ""
+msgstr "SCO^генератори"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of goals scored"
@@ -755,7 +755,7 @@ msgstr "SCO^убистава"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of laps finished (Race/CTS)"
-msgstr ""
+msgstr "Број завршених кругова (утрка/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^laps"
@@ -763,7 +763,7 @@ msgstr "SCO^кругова"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "Number of lives (LMS)"
-msgstr ""
+msgstr "Број живота (LMS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^lives"
@@ -802,6 +802,8 @@ msgstr "SCO^циљеви"
 msgid ""
 "How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
 msgstr ""
+"Колико је се пута покупило заставу (CTF) или кључ (KeyHunt) или лопту "
+"(Keepaway)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pickups"
@@ -937,7 +939,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "SCO^time"
-msgstr ""
+msgstr "SCO^време"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "Total time raced (Race/CTS)"
@@ -1066,7 +1068,7 @@ msgstr "SCO^бодова"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2508
 msgid "Next map:"
-msgstr ""
+msgstr "Следећа мапа:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2515
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
@@ -1141,11 +1143,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:102
 msgid "m"
-msgstr ""
+msgstr "м"
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:103
 msgid "km"
-msgstr ""
+msgstr "км"
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:104
 msgid "mi"
@@ -1173,7 +1175,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:159
 msgid "Timeout"
-msgstr ""
+msgstr "Тајмаут"
 
 #: qcsrc/client/hud/panel/timer.qc:161
 msgid "Sudden Death"
@@ -1270,7 +1272,7 @@ msgstr "чворови"
 
 #: qcsrc/client/main.qc:1306
 msgid "All Weapons Arena"
-msgstr "Све арене оружја"
+msgstr "Арена са свим оружјем"
 
 #: qcsrc/client/main.qc:1307
 msgid "All Available Weapons Arena"
@@ -1278,7 +1280,7 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1308
 msgid "Most Weapons Arena"
-msgstr "Већина арени оружја"
+msgstr "Арена са већином оружја"
 
 #: qcsrc/client/main.qc:1309
 msgid "Most Available Weapons Arena"
@@ -1296,7 +1298,7 @@ msgstr "%s арена"
 #: qcsrc/client/main.qc:1335 qcsrc/client/main.qc:1340
 #, c-format
 msgid "This is %s"
-msgstr ""
+msgstr "Ово је %s"
 
 #: qcsrc/client/main.qc:1336
 msgid "Your client version is outdated."
@@ -1340,7 +1342,7 @@ msgstr "Врста игре:"
 
 #: qcsrc/client/main.qc:1389
 msgid "by:"
-msgstr ""
+msgstr "од:"
 
 #: qcsrc/client/main.qc:1393
 msgid "This match supports"
@@ -1368,7 +1370,7 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1406
 msgid "Active modifications:"
-msgstr ""
+msgstr "Активне модификације:"
 
 #: qcsrc/client/main.qc:1409
 msgid "Special gameplay tips:"
@@ -1580,7 +1582,7 @@ msgstr "Сакупите све кључеве да бисте освојили 
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
 msgid "Key Hunt"
-msgstr "Лов на кључеве"
+msgstr "Key Hunt"
 
 #: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:18
 msgid "^1You have no more lives left"
@@ -1662,7 +1664,7 @@ msgstr "Кругови:"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:63
 msgid "Hunter"
-msgstr ""
+msgstr "ловац"
 
 #: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:69
 msgid "Survivor"
@@ -1713,7 +1715,7 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:129 qcsrc/common/resources/all.inc:48
 msgid "Rockets"
-msgstr ""
+msgstr "ракете"
 
 #: qcsrc/common/items/item/ammo.qh:164 qcsrc/common/resources/all.inc:57
 msgid "Cells"
@@ -1721,7 +1723,7 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:199 qcsrc/common/resources/all.inc:66
 msgid "Fuel"
-msgstr ""
+msgstr "гориво"
 
 #: qcsrc/common/items/item/armor.qh:42
 msgid "Small armor"
@@ -1775,7 +1777,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/cl_minigames.qc:424
 msgid "It's your turn"
-msgstr "На вас је ред"
+msgstr "Ти си на реду"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:363
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:68 qcsrc/menu/xonotic/dialog_quit.qh:6
@@ -1814,7 +1816,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
-msgstr ""
+msgstr "булдожер"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1107
 #: qcsrc/common/minigames/minigame/ps.qc:425
@@ -1945,7 +1947,7 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pong.qc:609
 #: qcsrc/common/minigames/minigame/ttt.qc:311
 msgid "AI"
-msgstr "ВИ"
+msgstr "уметна интелегенција"
 
 #: qcsrc/common/minigames/minigame/pong.qc:628
 msgid "Press ^1Start Match^7 to start the match with the current players"
@@ -2372,7 +2374,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
-msgstr ""
+msgstr "Супер оружје"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -2380,7 +2382,7 @@ msgstr "Путна тачка"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
-msgstr "Помози ми!"
+msgstr "Упомоћ!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:5
 msgid "Here"
@@ -3285,7 +3287,7 @@ msgstr "^BGУзели сте оружје ^F1%s"
 #: qcsrc/common/notifications/all.inc:721
 #, c-format
 msgid "^BGYou don't have enough ammo for the ^F1%s"
-msgstr ""
+msgstr "^BGНемаш довољно муниције за ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:389
 #: qcsrc/common/notifications/all.inc:722
@@ -3327,7 +3329,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:397
 #, c-format
 msgid "^BG%s^F3 wants to play"
-msgstr ""
+msgstr "^BG%s^F3 жели играти"
 
 #: qcsrc/common/notifications/all.inc:399
 #: qcsrc/common/notifications/all.inc:737
@@ -3435,7 +3437,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:427
 #, c-format
 msgid "^BG%s^F3 disconnected"
-msgstr "^BG%s^F3 се откачио"
+msgstr "^BG%s^F3 је се откачио"
 
 #: qcsrc/common/notifications/all.inc:428
 #, c-format
@@ -3501,7 +3503,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:441
 #, c-format
 msgid "^BG%s^BG has finished the race"
-msgstr ""
+msgstr "^BG%s^BG је завршио утрку"
 
 #: qcsrc/common/notifications/all.inc:442
 #, c-format
@@ -3579,12 +3581,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:461
 #: qcsrc/common/notifications/all.inc:820
 msgid "^K2You're not allowed to join a larger team!"
-msgstr ""
+msgstr "^K2Не смејеш се придружити вечем тиму!"
 
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:821
 msgid "^K2You're not allowed to join that team!"
-msgstr ""
+msgstr "^K2Не смејеш се придружити томе тиму!"
 
 #: qcsrc/common/notifications/all.inc:463
 #: qcsrc/common/notifications/all.inc:822
@@ -3596,7 +3598,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:464
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on that team!"
-msgstr ""
+msgstr "^K2Веч си у том тиму!"
 
 #: qcsrc/common/notifications/all.inc:466
 msgid "^F4The teams are now locked."
