@@ -28,7 +28,7 @@ void XonoticGuideDialog_fill(entity me)
 			e.onChangeEntity = me;
 	me.gotoRC(me, me.rows - 2, col);
 		me.entryList.stringFilterBox = makeXonoticInputBox_T(false, string_null,
-			_("Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-Delete to clear; Enter when done."));
+			_("Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL to clear; ENTER when done."));
 		me.TD(me, 1, 0.3, makeXonoticTextLabel(0, _("Filter:")));
 		me.TD(me, 1, width - 0.3, e = me.entryList.stringFilterBox);
 			e.onChange = EntryList_StringFilterBox_Change;
