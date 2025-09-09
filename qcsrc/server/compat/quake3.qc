@@ -45,11 +45,14 @@
  * CTF spawnfuncs in sv_ctf.qc
 
  NOTE: for best experience, you need to swap MGs with SGs in the map or it won't have a MG
+ Guns that are very different may need .count scaling beyond that of GetAmmoConsumption().
 */
 
 // Shotgun <-> Machine Gun
-SPAWNFUNC_Q3(weapon_shotgun, ammo_shells, q3compat & Q3COMPAT_ARENA ? WEP_MACHINEGUN : WEP_SHOTGUN)
-SPAWNFUNC_Q3(weapon_machinegun, ammo_bullets, q3compat & Q3COMPAT_ARENA ? WEP_SHOTGUN : WEP_MACHINEGUN)
+// In Q3 defaults SG has 10 shells and MG has 100 bullets, Xonotic's GetAmmoConsumption() will return 1 for both
+// so .count will be out by 10x, however Xonotic has a stronger MG than Q3 so using 8x for SG->MG.
+SPAWNFUNC_Q3(weapon_shotgun, ammo_shells, q3compat & Q3COMPAT_ARENA ? WEP_MACHINEGUN : WEP_SHOTGUN, q3compat & Q3COMPAT_ARENA ? 8 : 1)
+SPAWNFUNC_Q3(weapon_machinegun, ammo_bullets, q3compat & Q3COMPAT_ARENA ? WEP_SHOTGUN : WEP_MACHINEGUN, q3compat & Q3COMPAT_ARENA ? 0.1 : 1)
 
 // Grenade Launcher -> Mortar
 SPAWNFUNC_Q3(weapon_grenadelauncher, ammo_grenades, WEP_MORTAR)
@@ -67,7 +70,9 @@ SPAWNFUNC_Q3(weapon_hmg, ammo_hmg, WEP_HLAC)
 SPAWNFUNC_Q3(weapon_nailgun, ammo_nails, autocvar_sv_mapformat_is_quake3 ? WEP_CRYLINK : WEP_ELECTRO)
 
 // Lightning Gun -> Electro
-SPAWNFUNC_Q3(weapon_lightning, ammo_lightning, WEP_ELECTRO)
+// Damage potential of 100 LG bolts (varies between Q3 derivatives) is roughly half that of 100 electro cells,
+// Xonotic's GetAmmoConsumption() will return 4 so we need a 1/8 .count scale here.
+SPAWNFUNC_Q3(weapon_lightning, ammo_lightning, WEP_ELECTRO, 0.125)
 
 // Plasma Gun -> Hagar
 SPAWNFUNC_Q3(weapon_plasmagun, ammo_cells, WEP_HAGAR)

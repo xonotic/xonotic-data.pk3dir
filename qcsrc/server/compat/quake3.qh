@@ -15,16 +15,25 @@ bool DoesQ3ARemoveThisEntity(entity this);
  * and so the type can be looked up rather than specified in quake3.qc
  */
 // Ammo only (based on SPAWNFUNC_ITEM)
-#define SPAWNFUNC_Q3AMMO(classname, xonwep) \
+#define SPAWNFUNC_Q3AMMO(classname, xonwep, ...) \
 	spawnfunc(classname) \
 	{ \
+		__VA_OPT__(this.count *= (__VA_ARGS__);) \
 		if(this.count && (xonwep).ammo_type != RES_NONE) \
-			SetResource(this, (xonwep).ammo_type, this.count * GetAmmoConsumption(xonwep)); \
+			SetResource(this, (xonwep).ammo_type, rint(this.count * GetAmmoConsumption(xonwep))); \
 		SPAWNFUNC_BODY(GetAmmoItem((xonwep).ammo_type)) \
 	}
 
+// Weapon only (based on SPAWNFUNC_WEAPON)
+#define SPAWNFUNC_Q3WEAPON(classname, xonwep, ...) \
+	spawnfunc(classname) \
+	{ \
+		__VA_OPT__(this.count *= (__VA_ARGS__);) \
+		weapon_defaultspawnfunc(this, xonwep); \
+	}
+
 // Weapon & ammo
-#define SPAWNFUNC_Q3(weapon_classname, ammo_classname, xonwep) \
-	SPAWNFUNC_WEAPON(weapon_classname, xonwep) \
-	SPAWNFUNC_Q3AMMO(ammo_classname, xonwep)
+#define SPAWNFUNC_Q3(weapon_classname, ammo_classname, xonwep, ...) \
+	SPAWNFUNC_Q3WEAPON(weapon_classname, xonwep, __VA_ARGS__) \
+	SPAWNFUNC_Q3AMMO(ammo_classname, xonwep, __VA_ARGS__)
 

@@ -111,7 +111,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	// WEAPONTODO: magazines of MG, rifle and OK weapons are unaccounted for
 	if ((wpn.ammo_type != RES_NONE) && !GetResource(this, wpn.ammo_type))
 		SetResource(this, wpn.ammo_type,
-		            this.count > 0 ? this.count * GetAmmoConsumption(wpn) : WEP_CVAR(wpn, pickup_ammo));
+		            this.count > 0 ? rint(this.count * GetAmmoConsumption(wpn)) : WEP_CVAR(wpn, pickup_ammo));
 
 	#if 0 // WEAPONTODO
 	if (wpn.items)
