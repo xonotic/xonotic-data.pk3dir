@@ -47,46 +47,44 @@
  NOTE: for best experience, you need to swap MGs with SGs in the map or it won't have a MG
 */
 
-// SG -> MG || SG
+// Shotgun <-> Machine Gun
 SPAWNFUNC_Q3(weapon_shotgun, ammo_shells, q3compat & Q3COMPAT_ARENA ? WEP_MACHINEGUN : WEP_SHOTGUN)
+SPAWNFUNC_Q3(weapon_machinegun, ammo_bullets, q3compat & Q3COMPAT_ARENA ? WEP_SHOTGUN : WEP_MACHINEGUN)
 
-// MG -> SG || MG
-// Technically we should replace weapon_machinegun with WEP_SHOTGUN if Q3COMPAT_ARENA, but it almost never occurs on Q3 maps
-SPAWNFUNC_Q3AMMO(ammo_bullets, q3compat & Q3COMPAT_ARENA ? WEP_SHOTGUN : WEP_MACHINEGUN)
-
-// GL -> Mortar
-SPAWNFUNC_Q3AMMO(ammo_grenades, WEP_MORTAR)
+// Grenade Launcher -> Mortar
+SPAWNFUNC_Q3(weapon_grenadelauncher, ammo_grenades, WEP_MORTAR)
 
 // Team Arena Proximity Launcher -> Mine Layer
 SPAWNFUNC_Q3(weapon_prox_launcher, ammo_mines, WEP_MINE_LAYER)
 
-// Team Arena Chaingun -> HLAC
+// Team Arena Chain Gun -> HLAC
 SPAWNFUNC_Q3(weapon_chaingun, ammo_belt, WEP_HLAC)
 
 // Quake Live Heavy Machine Gun -> HLAC
 SPAWNFUNC_Q3(weapon_hmg, ammo_hmg, WEP_HLAC)
 
-// Team Arena Nailgun -> Crylink || Quake Nailgun -> Electro
+// Team Arena Nail Gun -> Crylink || Quake Nail Gun -> Electro
 SPAWNFUNC_Q3(weapon_nailgun, ammo_nails, autocvar_sv_mapformat_is_quake3 ? WEP_CRYLINK : WEP_ELECTRO)
 
-// LG -> Electro
+// Lightning Gun -> Electro
 SPAWNFUNC_Q3(weapon_lightning, ammo_lightning, WEP_ELECTRO)
 
-// Plasma -> Hagar
+// Plasma Gun -> Hagar
 SPAWNFUNC_Q3(weapon_plasmagun, ammo_cells, WEP_HAGAR)
 
-// Rail -> Vortex
+// Rail Gun -> Vortex
 SPAWNFUNC_Q3(weapon_railgun, ammo_slugs, WEP_VORTEX)
 
 // BFG -> Crylink || Fireball
 SPAWNFUNC_Q3(weapon_bfg, ammo_bfg, cvar_string("g_mod_balance") == "XDF" ? WEP_CRYLINK : WEP_FIREBALL)
-	// FIXME: WEP_FIREBALL has no ammo_type field so ammo_bfg is deleted by SPAWNFUNC_BODY
+	// NB: WEP_FIREBALL has no ammo_type field so ammo_bfg is deleted by SPAWNFUNC_BODY
 
-// grappling hook -> hook
+// Grappling Hook
 SPAWNFUNC_WEAPON(weapon_grapplinghook, WEP_HOOK)
+	// NB: in Q3 this doesn't use ammo
 
-// RL -> RL
-SPAWNFUNC_Q3AMMO(ammo_rockets, WEP_DEVASTATOR)
+// Rocket Launcher -> Devastator
+SPAWNFUNC_Q3(weapon_rocketlauncher, ammo_rockets, WEP_DEVASTATOR)
 
 // Gauntlet -> Tuba
 SPAWNFUNC_ITEM(weapon_gauntlet, WEP_TUBA)

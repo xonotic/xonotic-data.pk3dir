@@ -76,5 +76,4 @@ CLASS(MachineGun, Weapon)
 ENDCLASS(MachineGun)
 REGISTER_WEAPON(MACHINEGUN, NEW(MachineGun));
 
-SPAWNFUNC_WEAPON(weapon_machinegun, WEP_MACHINEGUN)
-SPAWNFUNC_WEAPON(weapon_uzi, WEP_MACHINEGUN)
+SPAWNFUNC_WEAPON(weapon_uzi, WEP_MACHINEGUN) // Nexuiz compat
