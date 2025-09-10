@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_HUDskin
+#endif
+
 CLASS(Vehicle, Object)
     ATTRIB(Vehicle, vehicleid, int, 0);
     /** hud icon */
@@ -44,11 +48,13 @@ CLASS(Vehicle, Object)
         return SUPER(Vehicle).describe(this);
     }
 #endif
+#ifndef SVQC
     METHOD(Vehicle, display, void(Vehicle this, void(string name, string icon) returns))
     {
         TC(Vehicle, this);
-        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon) : string_null);
+        returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
     }
+#endif
 
     /** (BOTH) setup vehicle data */
     METHOD(Vehicle, vr_setup, void(Vehicle this, entity instance)) { }

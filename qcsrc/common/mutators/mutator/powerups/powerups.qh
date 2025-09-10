@@ -22,6 +22,14 @@ CLASS(Powerup, Pickup)
         return SUPER(Powerup).describe(this);
     }
 #endif
+
+#ifndef SVQC
+    METHOD(Powerup, display, void(Powerup this, void(string name, string icon) returns))
+    {
+        TC(Powerup, this);
+        return SUPER(Powerup).display(this, returns);
+    }
+#endif
 ENDCLASS(Powerup)
 
 #include <common/mutators/mutator/status_effects/all.qh>

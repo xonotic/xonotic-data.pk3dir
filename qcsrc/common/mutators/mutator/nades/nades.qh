@@ -1,6 +1,9 @@
 #pragma once
 
 #include <common/teams.qh>
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_HUDskin
+#endif
 
 REGISTRY(Nades, BITS(4))
 REGISTER_REGISTRY(Nades)
@@ -28,16 +31,8 @@ CLASS(Nade, Object)
 #ifndef SVQC
     METHOD(Nade, display, void(Nade this, void(string name, string icon) returns))
     {
-		TC(Nade, this);
-        string img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon);
-    #ifdef CSQC
-        if (precache_pic(img) == "")
-    #endif
-    #ifdef MENUQC
-        if (draw_PreloadPicture(img) == "")
-    #endif
-            img = sprintf("/gfx/hud/default/%s", this.m_icon);
-        returns(this.m_name, img);
+        TC(Nade, this);
+        returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
     }
 #endif
 ENDCLASS(Nade)

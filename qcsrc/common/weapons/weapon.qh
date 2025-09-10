@@ -7,6 +7,9 @@
 #ifdef SVQC
 #include <common/effects/qc/_mod.qh>
 #endif
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_HUDskin
+#endif
 
 USING(WepSet, vector);
 
@@ -136,19 +139,7 @@ CLASS(Weapon, Object)
 #ifndef SVQC
 	METHOD(Weapon, display, void(Weapon this, void(string name, string icon) returns))
 	{
-		string img = this.model2;
-		if (img != "")
-		{
-			img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.model2);
-	#ifdef CSQC
-			if (precache_pic(img) == "")
-	#endif
-	#ifdef MENUQC
-			if (draw_PreloadPicture(img) == "")
-	#endif
-				img = sprintf("/gfx/hud/default/%s", this.model2);
-		}
-		returns(this.m_name, img);
+		returns(this.m_name, icon_path_from_HUDskin(this.model2));
 	}
 #endif
 ENDCLASS(Weapon)

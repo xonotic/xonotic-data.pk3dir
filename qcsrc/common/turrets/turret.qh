@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_HUDskin
+#endif
 #include <common/weapons/_all.qh>
 
 CLASS(Turret, Object)
@@ -63,10 +66,7 @@ CLASS(Turret, Object)
     METHOD(Turret, display, void(Turret this, void(string name, string icon) returns))
     {
         TC(Turret, this);
-        string img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon);
-        if (draw_PreloadPicture(img) == "")
-            img = sprintf("/gfx/hud/default/%s", this.m_icon);
-        returns(this.m_name, img);
+        returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
     }
 #endif
 ENDCLASS(Turret)

@@ -103,12 +103,16 @@ CLASS(Gametype, Object)
         TC(Gametype, this);
         return SUPER(Gametype).describe(this);
     }
-#endif
+
     METHOD(Gametype, display, void(Gametype this, void(string name, string icon) returns))
     {
         TC(Gametype, this);
-        returns(this.message, this.mdl ? strcat("gametype_", this.mdl) : string_null);
+        if (this.mdl == "")
+        	returns(this.message, "");
+        else
+        	returns(this.message, icon_path_from_menuskin(strcat("gametype_", this.mdl)));
     }
+#endif
 
     METHOD(Gametype, gametype_init, void(Gametype this, string hname, string sname, string g_name, int gflags, string mutators, string defaults, string gdescription))
     {

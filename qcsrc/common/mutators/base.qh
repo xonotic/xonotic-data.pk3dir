@@ -3,6 +3,9 @@
 #ifdef CSQC
 #include <client/main.qh>
 #endif
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_menuskin
+#endif
 
 const int CBC_ORDER_FIRST = 1;
 const int CBC_ORDER_LAST = 2;
@@ -173,10 +176,7 @@ CLASS(Mutator, Object)
     METHOD(Mutator, display, void(Mutator this, void(string name, string icon) returns))
     {
         TC(Mutator, this);
-        string img = sprintf("/gfx/menu/%s/%s", cvar_string("menu_skin"), this.m_icon);
-        if (draw_PreloadPicture(img) == "")
-            img = sprintf("/gfx/menu/%s/%s", cvar_defstring("menu_skin"), this.m_icon);
-        returns(this.message, img);
+        returns(this.message, icon_path_from_menuskin(this.m_icon));
     }
 #endif
 ENDCLASS(Mutator)
