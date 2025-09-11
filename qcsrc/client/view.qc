@@ -520,25 +520,28 @@ vector GetCurrentFov(float fov)
 	}
 	else
 	{
-		// initialize zoom scroll in the first frame / reset zoom scroll when fully zoomed out
-		if (!zoomscroll_factor || (current_viewzoom == 1 && !zoomdir))
+		if (autocvar_cl_zoomscroll && autocvar_cl_zoomscroll_scale)
 		{
-			zoomscroll_factor_target = zoomfactor;
-			zoomscroll_factor = zoomfactor;
-		}
-		if (zoomscroll_factor != zoomscroll_factor_target)
-		{
-			if (fabs(zoomscroll_factor - zoomscroll_factor_target) < 0.001 || autocvar_cl_zoomscroll_speed < 0) // snap
-				zoomscroll_factor = zoomscroll_factor_target;
-			else if (autocvar_cl_zoomscroll_speed != 0)
+			// initialize zoom scroll in the first frame / reset zoom scroll when fully zoomed out
+			if (!zoomscroll_factor || (current_viewzoom == 1 && !zoomdir))
 			{
-				// NOTE: this averaging formula is frametime independent
-				float avg_time = 1 / autocvar_cl_zoomscroll_speed;
-				float frac = 1 - exp(-drawframetime / max(0.001, avg_time));
-				zoomscroll_factor = frac * zoomscroll_factor_target + (1 - frac) * zoomscroll_factor;
+				zoomscroll_factor_target = zoomfactor;
+				zoomscroll_factor = zoomfactor;
 			}
+			if (zoomscroll_factor != zoomscroll_factor_target)
+			{
+				if (fabs(zoomscroll_factor - zoomscroll_factor_target) < 0.001 || autocvar_cl_zoomscroll_speed < 0) // snap
+					zoomscroll_factor = zoomscroll_factor_target;
+				else if (autocvar_cl_zoomscroll_speed != 0)
+				{
+					// NOTE: this averaging formula is frametime independent
+					float avg_time = 1 / autocvar_cl_zoomscroll_speed;
+					float frac = 1 - exp(-drawframetime / max(0.001, avg_time));
+					zoomscroll_factor = frac * zoomscroll_factor_target + (1 - frac) * zoomscroll_factor;
+				}
+			}
+			zoomfactor = zoomscroll_factor;
 		}
-		zoomfactor = zoomscroll_factor;
 
 		if(zoomspeed < 0) // instant zoom
 		{
