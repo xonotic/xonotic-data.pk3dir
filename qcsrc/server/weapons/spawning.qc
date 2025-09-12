@@ -110,14 +110,8 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	// if we don't already have ammo, give us some ammo
 	// WEAPONTODO: magazines of MG, rifle and OK weapons are unaccounted for
 	if ((wpn.ammo_type != RES_NONE) && !GetResource(this, wpn.ammo_type))
-	{
-		int ammo = 0;
-		if (q3compat && this.count > 0)
-			ammo = this.count * GetAmmoConsumptionQ3(wpn);
-		else
-			ammo = WEP_CVAR(wpn, pickup_ammo);
-		SetResource(this, wpn.ammo_type, ammo);
-	}
+		SetResource(this, wpn.ammo_type,
+		            this.count > 0 ? rint(this.count * GetAmmoConsumption(wpn)) : WEP_CVAR(wpn, pickup_ammo));
 
 	#if 0 // WEAPONTODO
 	if (wpn.items)

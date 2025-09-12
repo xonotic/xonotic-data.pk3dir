@@ -82,7 +82,6 @@ ENDCLASS(Devastator)
 REGISTER_WEAPON(DEVASTATOR, NEW(Devastator));
 
 SPAWNFUNC_WEAPON(weapon_devastator, WEP_DEVASTATOR)
-SPAWNFUNC_WEAPON(weapon_rocketlauncher, WEP_DEVASTATOR)
 
 #ifdef SVQC
 .float rl_release;
