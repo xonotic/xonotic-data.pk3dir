@@ -16,13 +16,14 @@ CLASS(Buff, StatusEffect)
 	ATTRIB(Buff, m_itemid, int, IT_BUFF);
 #endif
 	ATTRIB(Buff, netname, string, "buff");
-	ATTRIB(Buff, m_icon, string, "buff");
 	ATTRIB(Buff, m_color, vector, '1 1 1');
 	ATTRIB(Buff, m_name, string, _("Buff"));
+#ifdef GAMEQC
 	ATTRIB(Buff, m_skin, int, 0);
-	ATTRIB(Buff, m_lifetime, float, 60);
+#endif
 	ATTRIB(Buff, m_sprite, string, "");
 #ifndef SVQC
+	ATTRIB(Buff, m_icon, string, "buff");
 	METHOD(Buff, display, void(entity this, void(string name, string icon) returns))
 	{
 		string img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon);
@@ -37,12 +38,16 @@ CLASS(Buff, StatusEffect)
 	}
 #endif
 #ifdef SVQC
+	ATTRIB(Buff, m_lifetime, float, 60);
 	METHOD(Buff, m_time, float(Buff this))
-	{ return cvar(strcat("g_buffs_", this.netname, "_time")); }
+	{
+		return cvar(strcat("g_buffs_", this.netname, "_time"));
+	}
 #endif
 ENDCLASS(Buff)
 
-STATIC_INIT(REGISTER_BUFFS) {
+STATIC_INIT(REGISTER_BUFFS)
+{
 	FOREACH(StatusEffects, it.instanceOfBuff, {
 		it.m_sprite = strzone(strcat("buff-", it.netname));
 	});
@@ -53,26 +58,34 @@ STATIC_INIT(REGISTER_BUFFS) {
 	.int team_forced;
 	void buff_Init(entity ent);
 	void buff_Init_Compat(entity ent, entity replacement);
-	#define BUFF_SPAWNFUNC(e, b, t) spawnfunc(item_buff_##e) { \
-		this.buffdef = b; \
-		if(teamplay) \
-			this.team_forced = t; \
-		buff_Init(this); \
-	}
+	#define BUFF_SPAWNFUNC(e, b, t) \
+		spawnfunc(item_buff_##e) \
+		{ \
+			this.buffdef = b; \
+			if (teamplay) \
+				this.team_forced = t; \
+			buff_Init(this); \
+		}
 	#define BUFF_SPAWNFUNCS(e, b)                       \
 			BUFF_SPAWNFUNC(e,           b,  0)          \
 			BUFF_SPAWNFUNC(e##_team1,   b,  NUM_TEAM_1) \
 			BUFF_SPAWNFUNC(e##_team2,   b,  NUM_TEAM_2) \
 			BUFF_SPAWNFUNC(e##_team3,   b,  NUM_TEAM_3) \
 			BUFF_SPAWNFUNC(e##_team4,   b,  NUM_TEAM_4)
-	#define BUFF_SPAWNFUNC_Q3COMPAT(o, r) spawnfunc(o) { buff_Init_Compat(this, r); }
+	#define BUFF_SPAWNFUNC_Q3COMPAT(o, r) \
+		spawnfunc(o) \
+		{ \
+			buff_Init_Compat(this, r); \
+		}
 #else
 	#define BUFF_SPAWNFUNC(e, b, t)
 	#define BUFF_SPAWNFUNCS(e, b)
 	#define BUFF_SPAWNFUNC_Q3COMPAT(o, r)
 #endif
 
+#ifdef SVQC
 string Buff_CompatName(string buffname);
+#endif
 
 BUFF_SPAWNFUNCS(random, NULL)
 

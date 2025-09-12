@@ -5,7 +5,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(StatusEffects_active(BUFF_MEDIC, player))
+	if (StatusEffects_active(BUFF_MEDIC, player))
 	{
 		M_ARGV(3, float) = autocvar_g_buffs_medic_rot; // rot_mod
 		M_ARGV(4, float) = M_ARGV(1, float) = autocvar_g_buffs_medic_max; // limit_mod = max_mod
@@ -15,7 +15,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
 
 float buff_Medic_CalculateSurviveDamage(float frag_damage, float health)
 {
-	if(random() <= autocvar_g_buffs_medic_survive_chance)
+	if (random() <= autocvar_g_buffs_medic_survive_chance)
 		frag_damage = max(5, health - autocvar_g_buffs_medic_survive_health);
 	return frag_damage;
 }
