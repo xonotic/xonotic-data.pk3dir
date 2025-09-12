@@ -13,8 +13,12 @@ vector buff_Bash_AttackerCalculateForce(vector frag_force, entity frag_target, e
 CLASS(BashBuff, Buff)
 	ATTRIB(BashBuff, m_name, string, _("Bash"));
 	ATTRIB(BashBuff, netname, string, "bash");
+#ifndef SVQC
 	ATTRIB(BashBuff, m_icon, string, "buff_bash");
+#endif
+#ifdef GAMEQC
 	ATTRIB(BashBuff, m_skin, int, 5);
+#endif
 	ATTRIB(BashBuff, m_color, vector, '1 0.39 0');
 ENDCLASS(BashBuff)
 
