@@ -153,9 +153,6 @@ void weapon_defaultspawnfunc(entity this, Weapon e);
 #define SPAWNFUNC_WEAPON(name, weapon) \
 	spawnfunc(name) { weapon_defaultspawnfunc(this, weapon); }
 
-#define SPAWNFUNC_WEAPON_COND(name, cond, wep1, wep2) \
-	SPAWNFUNC_WEAPON(name, (cond ? wep1 : wep2))
-
 #else
 
 #define SPAWNFUNC_WEAPON(name, weapon)

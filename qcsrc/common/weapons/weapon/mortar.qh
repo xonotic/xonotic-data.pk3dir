@@ -70,7 +70,6 @@ ENDCLASS(Mortar)
 REGISTER_WEAPON(MORTAR, NEW(Mortar));
 
 SPAWNFUNC_WEAPON(weapon_mortar, WEP_MORTAR)
-SPAWNFUNC_WEAPON(weapon_grenadelauncher, WEP_MORTAR)
 
 #ifdef SVQC
 .float gl_detonate_later;
