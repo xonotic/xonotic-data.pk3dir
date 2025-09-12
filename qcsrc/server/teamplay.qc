@@ -33,6 +33,7 @@ const int TEAM_NOT_ALLOWED = -1;
 
 .float m_team_score; ///< The score of the team.
 .int m_num_players; ///< Number of players (both humans and bots) in a team.
+.int m_num_players_net; ///< .m_num_players but excluding bots that would leave if a human joined their team.
 .int m_num_bots; ///< Number of bots in a team.
 .int m_num_players_alive; ///< Number of alive players in a team.
 .int m_num_owned_items; ///< Number of items owned by a team.
@@ -781,32 +782,25 @@ bool TeamBalance_QueuedPlayersTagIn(entity ignore)
 	entity it, balance = TeamBalance_CheckAllowedTeams(ignore);
 	TeamBalance_GetTeamCounts(balance, ignore);
 
-	for (int bots_would_leave_remaining = bots_would_leave, j = 1; j <= AVAILABLE_TEAMS; ++j)
+	for (int j = 1; j <= AVAILABLE_TEAMS; ++j)
 	{
 		it = TeamBalance_GetTeamFromIndex(balance, j);
-		// deduct bots that would leave if a player joined their team, distributing the deductions between teams
-		if (bots_would_leave_remaining)
-		{
-			int to_remove = min(it.m_num_bots, ceil(bots_would_leave_remaining / AVAILABLE_TEAMS));
-			it.m_num_players -= to_remove;
-			bots_would_leave_remaining -= to_remove;
-		}
 		// find the largest team size
-		if (it.m_num_players > teamplayers_max)
-			teamplayers_max = it.m_num_players;
+		if (it.m_num_players_net > teamplayers_max)
+			teamplayers_max = it.m_num_players_net;
 	}
 	// find how many players we'd need to join to achieve balanced numbers that way
 	for (j = 1; j <= AVAILABLE_TEAMS; ++j)
-		teamplayers_deficit += teamplayers_max - TeamBalance_GetTeamFromIndex(balance, j).m_num_players;
+		teamplayers_deficit += teamplayers_max - TeamBalance_GetTeamFromIndex(balance, j).m_num_players_net;
 
 	// first pass: find clients(s) who want to play on a specific team
 	for (j = 1; teamplayers_deficit > 0 && j <= maxclients; ++j)
 	{
 		it = ftoe(j);
 		if (it.wants_join <= 0 || it == ignore) continue;
-		if (TeamBalance_GetTeamFromIndex(balance, it.wants_join).m_num_players >= teamplayers_max) continue;
+		if (TeamBalance_GetTeamFromIndex(balance, it.wants_join).m_num_players_net >= teamplayers_max) continue;
 		Join(it, false);
-		++TeamBalance_GetTeam(balance, it.team).m_num_players;
+		++TeamBalance_GetTeam(balance, it.team).m_num_players_net;
 		--teamplayers_deficit;
 	}
 
@@ -816,7 +810,7 @@ bool TeamBalance_QueuedPlayersTagIn(entity ignore)
 		it = ftoe(j);
 		if (it.wants_join >= 0 || it == ignore) continue;
 		Join(it, false);
-		--teamplayers_deficit; // don't need to update .m_num_players as we won't read it again
+		--teamplayers_deficit; // don't need to update .m_num_players_net as we won't read it again
 	}
 
 	TeamBalance_Destroy(balance);
@@ -900,12 +894,22 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			{
 				continue;
 			}
-			++team_ent.m_num_players;
+			team_ent.m_num_players_net = ++team_ent.m_num_players;
 			if (IS_BOT_CLIENT(it))
 			{
 				++team_ent.m_num_bots;
 			}
 		});
+
+		// deduct bots that would leave if a player joined their team, distributing the deductions between teams
+		// bones_was_here: not sure if it's safe to apply this to .m_num_players so using .m_num_players_net
+		for (int i = 1, bots_todo = bots_would_leave; bots_todo > 0 && i <= AVAILABLE_TEAMS; ++i)
+		{
+			entity team_ent = TeamBalance_GetTeamFromIndex(balance, i);
+			int to_remove = min(team_ent.m_num_bots, ceil(bots_todo / AVAILABLE_TEAMS));
+			team_ent.m_num_players_net -= to_remove;
+			bots_todo -= to_remove;
+		}
 	}
 
 	// if the player who has a forced team has not joined yet, reserve the spot
@@ -1009,8 +1013,7 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 			previous_team = i;
 			continue;
 		}
-		int compare = TeamBalance_CompareTeams(balance, i, previous_team,
-			player, use_score);
+		int compare = TeamBalance_CompareTeams(balance, i, previous_team, use_score);
 		if (compare == TEAMS_COMPARE_LESS)
 		{
 			team_bits = Team_IndexToBit(i);
@@ -1026,8 +1029,7 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 	return team_bits;
 }
 
-int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
-	entity player, bool use_score)
+int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b, bool use_score)
 {
 	if (balance == NULL)
 	{
@@ -1053,7 +1055,7 @@ int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b,
 	}
 	entity team_a = TeamBalance_GetTeamFromIndex(balance, team_index_a);
 	entity team_b = TeamBalance_GetTeamFromIndex(balance, team_index_b);
-	return TeamBalance_CompareTeamsInternal(team_a, team_b, player, use_score);
+	return TeamBalance_CompareTeamsInternal(team_a, team_b, use_score);
 }
 
 void TeamBalance_AutoBalanceBots()
@@ -1270,8 +1272,7 @@ int TeamBalanceTeam_GetNumberOfBots(entity team_ent)
 	return team_ent.m_num_bots;
 }
 
-int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b,
-	entity player, bool use_score)
+int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b, bool use_score)
 {
 	if (team_a == team_b)
 	{
@@ -1282,22 +1283,11 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b,
 	{
 		return TEAMS_COMPARE_INVALID;
 	}
-	// deduct bots that would leave if a player joined their team, distributing the deductions between teams
-	int num_players_team_a = team_a.m_num_players;
-	int num_players_team_b = team_b.m_num_players;
-	if (IS_REAL_CLIENT(player) && bots_would_leave)
-	{
-		int bots_would_leave_remaining = bots_would_leave;
-		int to_remove = min(team_a.m_num_bots, ceil(bots_would_leave_remaining * 0.5));
-		num_players_team_a -= to_remove;
-		bots_would_leave_remaining -= to_remove;
-		num_players_team_b -= min(team_b.m_num_bots, bots_would_leave_remaining);
-	}
-	if (num_players_team_a < num_players_team_b)
+	if (team_a.m_num_players_net < team_b.m_num_players_net)
 	{
 		return TEAMS_COMPARE_LESS;
 	}
-	if (num_players_team_a > num_players_team_b)
+	if (team_a.m_num_players_net > team_b.m_num_players_net)
 	{
 		return TEAMS_COMPARE_GREATER;
 	}
