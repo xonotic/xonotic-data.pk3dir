@@ -55,7 +55,9 @@ void GiveFrags(entity attacker, entity targ, float f, int deathtype, .entity wea
 		else
 		{
 			// teamkill
-			GameRules_scoring_add(attacker, TEAMKILLS, 1);
+			int teamkills = GameRules_scoring_add(attacker, TEAMKILLS, 1);
+			if(autocvar_g_teamkill_punishing)
+				f -= (teamkills * (teamkills - 1)) * 0.5; // negative 1, 2, 4, 7, 11, 16, 22, etc.
 		}
 	}
 	else
