@@ -177,7 +177,7 @@ void m_init_delayed()
 	}
 	if (fh < 0)
 	{
-		draw_currentSkin = "gfx/menu/luma";
+		draw_currentSkin = "gfx/menu/default";
 		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
 	if (fh < 0) error("cannot load any menu skin\n");

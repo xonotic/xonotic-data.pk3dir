@@ -55,7 +55,7 @@ void LoadMenuSkinValues()
 	}
 	if(fh < 0)
 	{
-		draw_currentSkin = "gfx/menu/luma";
+		draw_currentSkin = "gfx/menu/default";
 		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
 
