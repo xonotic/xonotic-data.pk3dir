@@ -1,1 +1,9 @@
 #pragma once
+
+#ifdef CSQC
+// Reused fields
+.float spawntime;
+.float update_time;
+.float animstate_entime;
+.float height;
+#endif
