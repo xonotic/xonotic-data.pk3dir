@@ -7,6 +7,7 @@ bool autocvar_g_nades_darkness;
 bool autocvar_g_nades_darkness_explode;
 bool autocvar_g_nades_darkness_teamcheck;
 float autocvar_g_nades_darkness_time;
+float autocvar_g_nades_darkness_radius;
 
 void nade_darkness_boom(entity this);
 #endif // SVQC
