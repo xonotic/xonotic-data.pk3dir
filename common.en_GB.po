@@ -10222,7 +10222,7 @@ msgid ""
 "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL color control"
 msgstr ""
-"Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
+"Saturation adjustment (0 = greyscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL colour control"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:146
