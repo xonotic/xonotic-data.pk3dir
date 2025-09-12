@@ -177,7 +177,7 @@ void m_init_delayed()
 	}
 	if (fh < 0)
 	{
-		draw_currentSkin = "gfx/menu/default";
+		draw_currentSkin = "gfx/menu/wickedx"; // default menu skin
 		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
 	if (fh < 0) error("cannot load any menu skin\n");

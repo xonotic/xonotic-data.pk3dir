@@ -9,8 +9,12 @@ float autocvar_g_buffs_vampire_damage_steal;
 CLASS(VampireBuff, Buff)
 	ATTRIB(VampireBuff, m_name, string, _("Vampire"));
 	ATTRIB(VampireBuff, netname, string, "vampire");
+#ifndef SVQC
 	ATTRIB(VampireBuff, m_icon, string, "buff_vampire");
+#endif
+#ifdef GAMEQC
 	ATTRIB(VampireBuff, m_skin, int, 2);
+#endif
 	ATTRIB(VampireBuff, m_color, vector, '1 0 0.24');
 ENDCLASS(VampireBuff)
 

@@ -532,9 +532,8 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 		string tree_type = substring(icon, 0, 1);
 		if (tree_type == "+" || tree_type == "T" || tree_type == "L")
 		{
-			draw_Picture(extraMargin * eX,
-				sprintf("/gfx/menu/%s/%s", cvar_string("menu_skin"), (tree_type == "+" ? "tree_branch" : tree_type == "T" ? "tree_branch_start" : "tree_elbow")),
-				me.columnTreeIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
+			string pic = (tree_type == "+" ? "tree_branch" : tree_type == "T" ? "tree_branch_start" : "tree_elbow");
+			draw_Picture(extraMargin * eX, pic, me.columnTreeIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
 			float addedMargin = me.columnTreeIconSize + 0.25 * me.realFontSize.x;
 			extraMargin += addedMargin;
 			descrWidth  -= addedMargin;
