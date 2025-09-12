@@ -7,56 +7,70 @@
 #ifdef CSQC
 #include <client/view.qh>
 
-.float ltime;
 void orb_draw(entity this)
 {
-	float dt = time - this.move_time;
-	this.move_time = time;
-	if (dt <= 0)
-		return;
+	float age = time - (this.ltime - this.lifetime);
+	float dt = time - this.update_time;
+	this.update_time = time;
 
-	this.alpha = (this.ltime - time) / this.orb_lifetime;
-	this.scale = min((1 - this.alpha) * this.orb_lifetime * 4, 1) * this.orb_radius;
-	this.angles += dt * this.avelocity;
+	if (dt > 0)
+	{
+		this.avelocity *= 24 ** (dt / this.orb_lifetime); // speed up, frametime independent
+		this.angles += dt * this.avelocity;
+	}
+	if (age > 0)
+	{
+		this.scale = this.orb_radius * (age >= this.animstate_endtime
+			? 1
+			: (this.height * age * (age - this.animstate_endtime * 2))); // increases at decreasing pace up to .orb_radius, as age -> .animstate_endtime
+		this.alpha = sqrt(1 - age / this.orb_lifetime); // slowly fade out
+	}
 }
 
-float orb_drawtime; // global storage of last drawn orb frame, to counter overlapping orbs
 void orb_draw2d(entity this)
 {
+	static float orb_drawtime; // last drawn orb frame, to counter overlapping orbs
 	if (time <= orb_drawtime)
 		return;
 
 	if (boxesoverlap(view_origin - '1 1 1', view_origin + '1 1 1', this.absmin, this.absmax)) // nade orbs actually act as a cube
 	{
 		orb_drawtime = time; // prevent rendering more than one of these per frame!
-		float orb_alpha = 0.65 * (this.ltime - time) / this.orb_lifetime;
+		float orb_alpha = this.alpha * 0.6;
 		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), this.colormod, autocvar_hud_colorflash_alpha * orb_alpha, DRAWFLAG_ADDITIVE);
 	}
 }
 
-void orb_setup(entity e)
+void orb_setup(entity orb)
 {
-	setmodel(e, MDL_NADE_ORB);
-	e.skin = 1;
+	orb.update_time = time; // used to calculate dt
+	orb.animstate_endtime = 0.25 * min(orb.orb_lifetime, 1); // when the orb will stop expanding
+	orb.height = -4 * (2 * orb.animstate_endtime) ** -2; // amplitude used in scaling calculation
 
-	setorigin(e, e.origin);
+	setmodel(orb, MDL_NADE_ORB);
+	orb.skin = 1;
 
-	float model_radius = e.maxs.x;
-	vector size = '0.5 0.5 0.5' * e.orb_radius;
-	setsize(e, -size, size);
-	e.orb_radius *= 0.6 / model_radius;
+	float model_radius = orb.maxs.x;
+	vector size = '0.5 0.5 0.5' * orb.orb_radius;
+	setsize(orb, -size, size);
+	orb.orb_radius *= 0.6 / model_radius;
 
-	e.draw = orb_draw;
-	e.draw2d = orb_draw2d;
-	IL_PUSH(g_drawables, e);
-	IL_PUSH(g_drawables_2d, e);
-	SetResourceExplicit(e, RES_HEALTH, 255);
-	set_movetype(e, MOVETYPE_NONE);
-	e.solid = SOLID_NOT;
-	e.drawmask = MASK_NORMAL;
-	e.scale = 0.01;
-	e.avelocity = '7 0 11';
-	e.renderflags |= RF_ADDITIVE;
+	orb.draw = orb_draw;
+	orb.draw2d = orb_draw2d;
+	IL_PUSH(g_drawables, orb);
+	IL_PUSH(g_drawables_2d, orb);
+	SetResourceExplicit(orb, RES_HEALTH, 255);
+	set_movetype(orb, MOVETYPE_NONE);
+	orb.solid = SOLID_NOT;
+	orb.drawmask = MASK_NORMAL;
+	orb.renderflags |= RF_ADDITIVE;
+	orb.scale = 0.01;
+	float spin_dir = 2*M_PI * random();
+	orb.avelocity = '6 0 0' * sin(spin_dir) + '0 0 6' * cos(spin_dir);
+
+	float age = time - (orb.ltime - orb.lifetime);
+	if (age > 0)
+		orb.avelocity *= 24 ** (age / orb.lifetime);
 }
 #endif // CSQC
 
