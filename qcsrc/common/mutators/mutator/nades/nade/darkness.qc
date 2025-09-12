@@ -32,7 +32,7 @@ void nade_darkness_think(entity this)
 
 	// gaussian
 	float randomr = random();
-	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_nade_radius;
+	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_darkness_radius;
 	float randomw = random() * (2 * M_PI);
 	vector randomp;
 	randomp.x = randomr * cos(randomw);
@@ -48,7 +48,7 @@ void nade_darkness_think(entity this)
 
 	float current_dark_time = this.ltime - time - 0.1;
 
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_darkness_radius, it != this && it.takedamage
 	&& !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_dark_time > 0 && IS_REAL_CLIENT(it),
 	{
 		switch (autocvar_g_nades_darkness_teamcheck)

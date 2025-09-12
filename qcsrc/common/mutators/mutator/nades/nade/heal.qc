@@ -38,7 +38,7 @@ void nade_heal_touch(entity this, entity toucher)
 
 void nade_heal_boom(entity this)
 {
-	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_heal_time, autocvar_g_nades_nade_radius);
+	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_heal_time, autocvar_g_nades_heal_radius);
 
 	settouch(orb, nade_heal_touch);
 	orb.colormod = '1 0 0';

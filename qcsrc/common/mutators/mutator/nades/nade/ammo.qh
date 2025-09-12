@@ -9,6 +9,7 @@ float autocvar_g_nades_ammo_rate;
 float autocvar_g_nades_ammo_friend;
 float autocvar_g_nades_ammo_foe;
 float autocvar_g_nades_ammo_clip_empty_rate;
+float autocvar_g_nades_ammo_radius;
 
 void nade_ammo_boom(entity this);
 #endif // SVQC

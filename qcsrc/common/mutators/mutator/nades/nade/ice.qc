@@ -36,7 +36,7 @@ void nade_ice_think(entity this)
 
 	// gaussian
 	float randomr = random();
-	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_nade_radius;
+	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_ice_radius;
 	float randomw = random() * (2 * M_PI);
 	vector randomp;
 	randomp.x = randomr * cos(randomw);
@@ -54,7 +54,7 @@ void nade_ice_think(entity this)
 
 	float current_freeze_time = this.ltime - time - 0.1;
 
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_ice_radius, it != this && it.takedamage
 	&& (IS_PLAYER(it) || IS_MONSTER(it)) && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_freeze_time > 0
 	&& (!it.revival_time || ((time - it.revival_time) >= 1.5))
 	&& !STAT(FROZEN, it) && !StatusEffects_active(STATUSEFFECT_Frozen, it),
