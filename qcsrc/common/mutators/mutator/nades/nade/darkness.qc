@@ -77,7 +77,7 @@ void nade_darkness_boom(entity this)
 	fountain.pushltime = fountain.wait = fountain.ltime = time + autocvar_g_nades_darkness_time;
 	fountain.team = this.team;
 	set_movetype(fountain, MOVETYPE_TOSS);
-	fountain.projectiledeathtype = DEATH_NADE.m_id;
+	fountain.projectiledeathtype = DEATH_NADE_DARKNESS.m_id;
 	fountain.bot_dodge = false;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
 	fountain.nade_special_time = time + 0.3;
