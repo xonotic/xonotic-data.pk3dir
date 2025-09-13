@@ -3,7 +3,6 @@
 #include <menu/xonotic/datasource.qh>
 #include <menu/xonotic/listbox.qh>
 CLASS(XonoticEntryList, XonoticListBox)
-	ATTRIB(XonoticEntryList, alphaBG, float, 0);
 	ATTRIB(XonoticEntryList, origin, vector, '0 0 0');
 	ATTRIB(XonoticEntryList, itemAbsSize, vector, '0 0 0');
 	ATTRIB(XonoticEntryList, realFontSize, vector, '0 0 0');
