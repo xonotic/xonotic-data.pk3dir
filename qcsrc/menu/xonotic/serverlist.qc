@@ -794,6 +794,9 @@ void XonoticServerList_doubleClickListBoxItem(entity me, int i, vector where)
 {
 	ServerList_Connect_Click(NULL, me);
 }
+int autocvar_hud_panel_scoreboard_ping_low;
+int autocvar_hud_panel_scoreboard_ping_medium;
+int autocvar_hud_panel_scoreboard_ping_high;
 void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	vector oldscale = draw_scale;
@@ -914,23 +917,21 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		theAlpha = 1;
 
 	float ping = gethostcachenumber(SLIST_FIELD_PING, i);
-	const int PING_LOW = 75;
-	const int PING_MED = 200;
-	const int PING_HIGH = 500;
+	const int PING_LOW = autocvar_hud_panel_scoreboard_ping_low;
+	const int PING_MED = autocvar_hud_panel_scoreboard_ping_medium;
+	const int PING_HIGH = autocvar_hud_panel_scoreboard_ping_high;
 	vector theColor;
-	if(ping < PING_LOW)
-		theColor = SKINCOLOR_SERVERLIST_LOWPING + (SKINCOLOR_SERVERLIST_MEDPING - SKINCOLOR_SERVERLIST_LOWPING) * (ping / PING_LOW);
+	// this colour selection code should match csqc Scoreboard_GetField()
+	if (ping < PING_LOW)
+		theColor = SKINCOLOR_SERVERLIST_LOWPING;
 	else if(ping < PING_MED)
-		theColor = SKINCOLOR_SERVERLIST_MEDPING + (SKINCOLOR_SERVERLIST_HIGHPING - SKINCOLOR_SERVERLIST_MEDPING) * ((ping - PING_LOW) / (PING_MED - PING_LOW));
+		theColor = SKINCOLOR_SERVERLIST_LOWPING + (SKINCOLOR_SERVERLIST_MEDPING - SKINCOLOR_SERVERLIST_LOWPING) * ((ping - PING_LOW) / (PING_MED - PING_LOW));
 	else if(ping < PING_HIGH)
-	{
-		theColor = SKINCOLOR_SERVERLIST_HIGHPING;
-		theAlpha *= 1 + (SKINALPHA_SERVERLIST_HIGHPING - 1) * ((ping - PING_MED) / (PING_HIGH - PING_MED));
-	}
+		theColor = SKINCOLOR_SERVERLIST_MEDPING + (SKINCOLOR_SERVERLIST_HIGHPING - SKINCOLOR_SERVERLIST_MEDPING) * ((ping - PING_MED) / (PING_HIGH - PING_MED));
 	else
 	{
 		theColor = eX;
-		theAlpha *= SKINALPHA_SERVERLIST_HIGHPING;
+		theAlpha *= 1 + (SKINALPHA_SERVERLIST_HIGHPING - 1) * ((ping - PING_HIGH) / (PING_HIGH * 2 - PING_HIGH));
 	}
 
 	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, i))
