@@ -454,6 +454,7 @@ bool PlayerJump(entity this)
 		if(this.lastground < time - 0.3)
 		{
 			float f = (1 - PHYS_FRICTION_ONLAND(this));
+			f = bound(0, f, 1);
 			this.velocity_x *= f;
 			this.velocity_y *= f;
 		}

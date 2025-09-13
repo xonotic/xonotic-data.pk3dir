@@ -207,7 +207,7 @@ void HUD_StrafeHUD()
 	{
 		float strafefriction = onslick ? PHYS_FRICTION_SLICK(strafeplayer) : PHYS_FRICTION(strafeplayer);
 
-		if (strafefriction != 0)
+		if (strafefriction > 0)
 		{
 			float S = PHYS_STOPSPEED(strafeplayer);
 			//strafespeed = speed * (1 - dt * strafefriction * ((speed < S) ? (S / speed) : 1));
@@ -218,10 +218,8 @@ void HUD_StrafeHUD()
 			//else
 			{
 				float independent_geometric = (1 - strafefriction * dt_r) ** (dt / dt_r);
-				if (strafefriction > 0 && S < speed && speed < S / independent_geometric)
+				if (S < speed && speed < S / independent_geometric)
 					strafespeed = S - S * strafefriction * (dt - (dt_r * log(S / speed)) / log(1 - strafefriction * dt_r));
-				else if (strafefriction < 0 && S * (1 + strafefriction * dt) < speed && speed < S)
-					strafespeed = S * (1 - strafefriction * dt_r) ** ((dt - (speed - S) / (S * strafefriction)) / dt_r);
 				else if (speed >= S)
 					strafespeed = speed * independent_geometric;
 				else
