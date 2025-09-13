@@ -6,7 +6,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_SURVIVALSTATUSES)
 #ifdef MENUQC
 METHOD(Survival, describe, string(Survival this))
 {
-    TC(Survival, this);
+	TC(Survival, this);
 	PAGE_TEXT_INIT();
 	PAR(_("%s is a hunter-survivor gametype involving two teams where the goal of the hunters is to frag all survivors, and the goal of the survivors is to frag all hunters or survive until time runs out. "
 	      "The trick lies in the fact that players only know which team they belong to, and not the team membership of any other players."), COLORED_NAME(this));

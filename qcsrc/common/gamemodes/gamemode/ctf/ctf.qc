@@ -3,7 +3,7 @@
 #ifdef MENUQC
 METHOD(CaptureTheFlag, describe, string(CaptureTheFlag this))
 {
-    TC(CaptureTheFlag, this);
+	TC(CaptureTheFlag, this);
 	PAGE_TEXT_INIT();
 	PAR(_("%s is a common team-based gametype where the object is to steal an enemy team's flag and bring it back to your own to capture it. "
 	      "A flag can only be captured if your own flag is also home in its base, so it's important to collect your flag after it's dropped."), COLORED_NAME(this));

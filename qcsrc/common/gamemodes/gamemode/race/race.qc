@@ -5,7 +5,7 @@
 
 METHOD(Race, describe, string(Race this))
 {
-    TC(Race, this);
+	TC(Race, this);
 	PAGE_TEXT_INIT();
 	PAR(_("%s is a gametype similar to %s except the start and finish line of the track are identical, so you run laps repeatedly through the track."), COLORED_NAME(this), COLORED_NAME(MAPINFO_TYPE_CTS));
 	PAR(_("Consequently the aim is to keep running constantly to complete as many laps as possible for the shot at the fastest time, rather than resetting runs like in %s to set the individual best time. "

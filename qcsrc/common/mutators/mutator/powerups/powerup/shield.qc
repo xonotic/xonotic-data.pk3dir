@@ -51,11 +51,11 @@ METHOD(ShieldStatusEffect, m_tick, void(StatusEffect this, entity actor))
 #ifdef MENUQC
 METHOD(ShieldItem, describe, string(ShieldItem this))
 {
-    TC(ShieldItem, this);
-    PAGE_TEXT_INIT();
-    PAR(_("The %s powerup greatly decreases the damage you take until the powerup expires, having a compounding effect with armor. "
-          "It also makes you more resistant to knockback."), COLORED_NAME(this));
-    PAR(_("Since it is a powerup, it will drop if you die while holding it.")); // shared message
-    return PAGE_TEXT;
+	TC(ShieldItem, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s powerup greatly decreases the damage you take until the powerup expires, having a compounding effect with armor. "
+	      "It also makes you more resistant to knockback."), COLORED_NAME(this));
+	PAR(_("Since it is a powerup, it will drop if you die while holding it.")); // shared message
+	return PAGE_TEXT;
 }
 #endif // MENUQC

@@ -3,7 +3,7 @@
 #ifdef MENUQC
 METHOD(FreezeTag, describe, string(FreezeTag this))
 {
-    TC(FreezeTag, this);
+	TC(FreezeTag, this);
 	PAGE_TEXT_INIT();
 	PAR(_("%s is a round-based teamplay gametype where killed players are frozen and need to be unfrozen to re-enter the round. "
 	      "The round ends when all players from all opposing teams are frozen, scoring the remaining team a point."), COLORED_NAME(this));
