@@ -3,12 +3,12 @@
 #ifdef SVQC
 void nade_translocate_boom(entity this)
 {
-	if(this.realowner.vehicle)
+	if (this.realowner.vehicle)
 		return;
 
-	setsize(this, PL_MIN_CONST-'16 16 16', PL_MAX_CONST+'16 16 16');
+	setsize(this, PL_MIN_CONST - '16 16 16', PL_MAX_CONST + '16 16 16');
 
-	if(!move_out_of_solid(this))
+	if (!move_out_of_solid(this))
 	{
 		sprint(this.realowner, "^1Couldn't move the translocator out of solid! origin: ", vtos(this.origin), "\n");
 		return;
@@ -27,9 +27,15 @@ void nade_translocate_boom(entity this)
 
 bool nade_translocate_DestroyDamage(entity this, entity attacker)
 {
-	if(autocvar_g_nades_translocate_destroy_damage > 0 && STAT(NADE_BONUS_TYPE, this) == NADE_TYPE_TRANSLOCATE.m_id)
+	if (STAT(NADE_BONUS_TYPE, this) == NADE_TYPE_TRANSLOCATE.m_id && autocvar_g_nades_translocate_destroy_damage > 0)
 	{
-		Damage(this.realowner, attacker, attacker, autocvar_g_nades_translocate_destroy_damage, DEATH_TOUCHEXPLODE.m_id, DMG_NOWEP, this.realowner.origin, '0 0 0');
+		Damage(this.realowner, attacker, attacker,
+			autocvar_g_nades_translocate_destroy_damage,
+			DEATH_TOUCHEXPLODE.m_id,
+			DMG_NOWEP,
+			this.realowner.origin,
+			'0 0 0'
+		);
 		W_PrepareExplosionByDamage(this, this.realowner, nade_boom); // Don't change the owner
 
 		return true;
