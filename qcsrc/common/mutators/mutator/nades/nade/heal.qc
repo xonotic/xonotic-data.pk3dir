@@ -1,6 +1,9 @@
 #include "heal.qh"
 
 #ifdef SVQC
+#include <common/items/item/health.qh>
+#include <common/items/item/armor.qh>
+
 void nade_heal_touch(entity this, entity toucher)
 {
 	if ((IS_PLAYER(toucher) || IS_MONSTER(toucher) || IS_VEHICLE(toucher))
@@ -22,7 +25,7 @@ void nade_heal_touch(entity this, entity toucher)
 			{
 				if (this.nade_show_particles)
 					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
-				
+
 				GiveResourceWithLimit(toucher, RES_HEALTH, health_factor, maxhealth);
 			}
 		}
@@ -34,6 +37,20 @@ void nade_heal_touch(entity this, entity toucher)
 				toucher.origin,
 				'0 0 0'
 			);
+
+		float armor_factor = autocvar_g_nades_heal_armor_rate * frametime * 0.5;
+		if (toucher != this.realowner)
+			armor_factor *= (SAME_TEAM(toucher, this))
+				? autocvar_g_nades_heal_friend
+				: 0;
+
+		if (armor_factor > 0)
+		{
+			float maxarmor = autocvar_g_pickup_armormega_max;
+			float armor = GetResource(toucher, RES_ARMOR);
+			if (armor < maxarmor)
+				GiveResourceWithLimit(toucher, RES_ARMOR, armor_factor, maxarmor);
+		}
 	}
 }
 
