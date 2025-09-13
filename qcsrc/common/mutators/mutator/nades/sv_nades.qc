@@ -76,24 +76,24 @@ void nades_orb_think(entity this)
 		this.nade_show_particles = 0;
 }
 
-entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, float orb_rad)
+entity nades_spawn_orb(entity this, float orb_ltime, float orb_rad, vector color)
 {
 	// NOTE: this function merely places an orb
 	// you must add a custom touch function to the returned entity if desired
-	// also set .colormod if you wish to have it colorized
 	entity orb = new(nades_spawn_orb);
-	orb.owner = own;
-	orb.realowner = realown;
-	setorigin(orb, org);
+	orb.owner = this.owner;
+	orb.realowner = this.realowner;
+	setorigin(orb, this.origin);
 
 	orb.lifetime = orb_ltime; // required for timers
 	orb.ltime = time + orb.lifetime;
 	orb.bot_dodge = false;
-	orb.team = realown.team;
+	orb.team = this.realowner.team;
 	orb.solid = SOLID_TRIGGER;
 
 	setmodel(orb, MDL_NADE_ORB);
 	orb.skin = 1;
+	orb.colormod = color;
 	orb.radius = bound(1, rint(orb_rad), BITS(16)); // required for fading
 	vector size = '0.5 0.5 0.5' * orb.radius;
 	setsize(orb, -size, size);
