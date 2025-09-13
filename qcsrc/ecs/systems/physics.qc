@@ -208,7 +208,7 @@ void sys_phys_simulate(entity this, float dt)
 		// swimming
 		UNSET_ONGROUND(this);
 
-		if (this.com_phys_friction_air)
+		if (this.com_phys_friction_air > 0)
 		{
 			const float grav = -this.com_phys_gravity;
 			this.velocity_z += grav / 2;
@@ -387,8 +387,7 @@ void sys_phys_simulate(entity this, float dt)
 			{
 				// water friction
 				float f = 1 - dt * PHYS_FRICTION(this);
-				f = min(max(0, f), 1);
-				this.velocity *= f;
+				this.velocity *= bound(0, f, 1);
 
 				f = wishspeed - this.velocity * wishdir;
 				if (f > 0)
@@ -434,7 +433,7 @@ void sys_phys_simulate(entity this, float dt)
 			const int realfriction = (IS_ONSLICK(this))
 				? PHYS_FRICTION_SLICK(this)
 				: PHYS_FRICTION(this);
-			if (f2 > 0 && realfriction != 0)
+			if (f2 > 0 && realfriction > 0)
 			{
 				// TODO: apply edge friction
 				// apply ground friction
@@ -450,16 +449,11 @@ void sys_phys_simulate(entity this, float dt)
 				//else
 				{
 					const float independent_geometric = (1 - realfriction * dt_r) ** (dt / dt_r);
-					// NOTE: first two conditions ensure subframe accuracy in the geometric <-> linear transition, may be not worth the hassle
-					if (realfriction > 0 && S < f && f < S / independent_geometric)
+					// NOTE: first condition ensures subframe accuracy in the geometric -> linear transition, may be not worth the hassle
+					if (S < f && f < S / independent_geometric)
 					{
 						this.velocity = normalize(this.velocity);
 						f = S - S * realfriction * (dt - (dt_r * log(S / f)) / log(1 - realfriction * dt_r));
-					}
-					else if (realfriction < 0 && S * (1 + realfriction * dt) < f && f < S)
-					{
-						this.velocity = normalize(this.velocity);
-						f = S * (1 - realfriction * dt_r) ** ((dt - (f - S) / (S * realfriction)) / dt_r);
 					}
 					else if (f >= S)
 						f = independent_geometric;

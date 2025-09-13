@@ -155,6 +155,7 @@ void movelib_update(entity this, vector dir,float force)
         else
             ffriction = this.air_friction;
 
+	ffriction = bound(0, ffriction, 1);
     acceleration *= ffriction;
     //this.velocity = this.velocity * (ffriction * movelib_deltatime);
     this.velocity += acceleration * movelib_deltatime;
