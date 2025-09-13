@@ -75,7 +75,7 @@ void W_Shotgun_Melee_Think(entity this)
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
 	entity target_victim;
-	vector targpos;
+	vector targpos, melee_path;
 
 	if(!this.cnt) // set start time of melee
 	{
@@ -97,17 +97,20 @@ void W_Shotgun_Melee_Think(entity this)
 		return;
 	}
 
+	melee_path = (v_up    * WEP_CVAR_SEC(WEP_SHOTGUN, melee_swing_up))
+	           + (v_right * WEP_CVAR_SEC(WEP_SHOTGUN, melee_swing_side));
 	// if okay, perform the traces needed for this frame
 	for(i=this.swing_prev; i < f; ++i)
 	{
 		swing_factor = ((1 - (i / WEP_CVAR_SEC(WEP_SHOTGUN, melee_traces))) * 2 - 1);
 
-		targpos = (this.realowner.origin + this.realowner.view_ofs
-			+ (v_forward * WEP_CVAR_SEC(WEP_SHOTGUN, melee_range))
-			+ (v_up * swing_factor * WEP_CVAR_SEC(WEP_SHOTGUN, melee_swing_up))
-			+ (v_right * swing_factor * WEP_CVAR_SEC(WEP_SHOTGUN, melee_swing_side)));
+		targpos = this.realowner.origin + this.realowner.view_ofs
+			+ (melee_path * swing_factor)
+			+ (v_forward * WEP_CVAR_SEC(WEP_SHOTGUN, melee_range));
 
 		WarpZone_traceline_antilag(this.realowner, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ((IS_CLIENT(this.realowner)) ? ANTILAG_LATENCY(this.realowner) : 0));
+
+		Send_Effect(EFFECT_SHOTGUN_WOOSH, trace_endpos, -melee_path, 1);
 
 		// draw lightning beams for debugging
 	#ifdef SHOTGUN_MELEEDEBUG
