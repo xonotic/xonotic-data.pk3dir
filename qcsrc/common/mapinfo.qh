@@ -40,6 +40,8 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, mdl, string);
     /** human readable name */
     ATTRIB(Gametype, message, string);
+    /** color */
+    ATTRIB(Gametype, m_color, vector, '1 1 1');
     /** does this gametype support teamplay? */
     ATTRIB(Gametype, team, bool, false);
     /** does this gametype use a point limit? */
@@ -92,17 +94,25 @@ CLASS(Gametype, Object)
         returns(menu, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        string_null,                    _("The amount of frags needed before the match will end"));
     }
 
+#ifdef MENUQC
+    /* game type guide description
+     * this description is used in the guide, the description stored in .m_description is shorter and used for things like the mapvoting dialog
+     */
     METHOD(Gametype, describe, string(Gametype this))
     {
         TC(Gametype, this);
-        return this.m_description;
+        return SUPER(Gametype).describe(this);
     }
 
     METHOD(Gametype, display, void(Gametype this, void(string name, string icon) returns))
     {
         TC(Gametype, this);
-        returns(this.message, strcat("gametype_", this.mdl));
+        if (this.mdl == "")
+        	returns(this.message, "");
+        else
+        	returns(this.message, icon_path_from_menuskin(strcat("gametype_", this.mdl)));
     }
+#endif
 
     METHOD(Gametype, gametype_init, void(Gametype this, string hname, string sname, string g_name, int gflags, string mutators, string defaults, string gdescription))
     {

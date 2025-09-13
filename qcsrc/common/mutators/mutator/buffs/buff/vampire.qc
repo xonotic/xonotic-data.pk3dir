@@ -18,3 +18,15 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
 	}
 }
 #endif // SVQC
+#ifdef MENUQC
+#include "vengeance.qh"
+
+METHOD(VampireBuff, describe, string(VampireBuff this))
+{
+	TC(VampireBuff, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s buff converts some of the damage you deal to enemies and monsters into health for yourself, until the buff expires."), COLORED_NAME(this));
+	PAR(_("In some sense, this is the opposite of the %s buff."), COLORED_NAME(BUFF_VENGEANCE));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

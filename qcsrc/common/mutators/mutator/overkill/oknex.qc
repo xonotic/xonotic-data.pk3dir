@@ -362,3 +362,22 @@ METHOD(OverkillNex, wr_zoomdir, bool(entity thiswep))
 }
 
 #endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+#include <common/mutators/mutator/overkill/overkill.qh>
+
+METHOD(OverkillNex, describe, string(OverkillNex this))
+{
+	TC(OverkillNex, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s fires harmful beams of energy that traverse the map instantaneously and deal a significant chunk of damage on impact."), COLORED_NAME(this));
+	PAR(_("Like with all %s weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around."), COLORED_NAME(MUTATOR_ok));
+	PAR(_("The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s. "
+	      "It has a limited magazine size, so needs reloading after several shots."), COLORED_NAME(ITEM_Cells), COLORED_NAME(MUTATOR_ok));
+	PAR(_("Since it is the only %s weapon with no spread, the %s stands out at long ranges."), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_onlyOne(this.netname, "primary"));
+	return PAGE_TEXT;
+}
+
+#endif

@@ -79,3 +79,14 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	}
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(SwapperBuff, describe, string(SwapperBuff this))
+{
+	TC(SwapperBuff, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s buff allows you to press %s to switch places with a nearby enemy once."), COLORED_NAME(this), strcat("^3", _("drop weapon"), "^7"));
+	PAR(_("A common usage of this buff is to jump over the map's void, then swap with an enemy, to cause them to fall into the void."));
+	PAR(_("The range that the buff works over is limited, so sometimes it may do nothing if there are no enemies nearby."));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

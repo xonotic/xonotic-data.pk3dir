@@ -45,3 +45,16 @@ bool turret_hk_addtarget(entity this, entity e_target,entity e_sender)
 }
 
 #endif // SVQC
+#ifdef MENUQC
+#include <common/weapons/weapon/devastator.qh>
+
+METHOD(HunterKiller, describe, string(HunterKiller this))
+{
+    TC(HunterKiller, this);
+    PAGE_TEXT_INIT();
+    PAR(_("The %s fires a single powerful homing rocket with the ability to evade obstacles to find its target. "
+          "The rocket it fires is similar to that of the %s."), COLORED_NAME(this), COLORED_NAME(WEP_DEVASTATOR));
+    return PAGE_TEXT;
+}
+
+#endif // MENUQC

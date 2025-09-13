@@ -10,5 +10,8 @@ REGISTRY_CHECK(Monsters)
 
 #include "monster.qh"
 
-REGISTER_MONSTER(Null, NEW(Monster));
+CLASS(NullMonster, Monster)
+	ATTRIB(NullMonster, m_hidden, bool, true);
+ENDCLASS(NullMonster)
+REGISTER_MONSTER(Null, NEW(NullMonster));
 REGISTRY_DEFINE_GET(Monsters, MON_Null)

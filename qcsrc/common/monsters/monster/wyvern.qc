@@ -180,3 +180,13 @@ METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
     return true;
 }
 #endif
+#ifdef MENUQC
+METHOD(Wyvern, describe, string(Wyvern this))
+{
+	TC(Wyvern, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The Wyvern is a flying reptilian monster that glides around hunting for fresh prey."));
+	PAR(_("While fragile, the Wyvern is capable of launching deadly fireballs at the player from a distance, inflicting high damage and causing burning."));
+	return PAGE_TEXT;
+}
+#endif
