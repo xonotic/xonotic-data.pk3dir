@@ -12,12 +12,12 @@ void orb_draw(entity this)
 {
 	float dt = time - this.move_time;
 	this.move_time = time;
-	if(dt <= 0)
+	if (dt <= 0)
 		return;
 
 	float age = time - (this.ltime - this.orb_lifetime);
 	this.alpha = sqrt((this.ltime - time) / this.orb_lifetime);
-	if(this.scale > 0.01)
+	if (this.scale > 0.01)
 		this.avelocity *= 24 ** (dt / this.orb_lifetime); // speed up, frametime independent
 	this.scale = (age >= 0.25)
 		? this.orb_radius
@@ -28,10 +28,10 @@ void orb_draw(entity this)
 float orb_drawtime; // global storage of last drawn orb frame, to counter overlapping orbs
 void orb_draw2d(entity this)
 {
-	if(time <= orb_drawtime)
+	if (time <= orb_drawtime)
 		return;
 
-	if(boxesoverlap(view_origin - '1 1 1', view_origin + '1 1 1', this.absmin, this.absmax))
+	if (boxesoverlap(view_origin - '1 1 1', view_origin + '1 1 1', this.absmin, this.absmax)) // nade orbs actually act as a cube
 	{
 		orb_drawtime = time; // prevent rendering more than one of these per frame!
 		float orb_alpha = this.alpha * 0.6;
@@ -48,8 +48,8 @@ void orb_setup(entity e)
 
 	float model_radius = e.maxs.x;
 	vector size = '.5 .5 .5' * e.orb_radius;
-	setsize(e,-size,size);
-	e.orb_radius = e.orb_radius/model_radius*0.6;
+	setsize(e, -size, size);
+	e.orb_radius *= 0.6 / model_radius;
 
 	e.draw = orb_draw;
 	e.draw2d = orb_draw2d;
@@ -60,11 +60,11 @@ void orb_setup(entity e)
 	e.solid = SOLID_NOT;
 	e.drawmask = MASK_NORMAL;
 	e.scale = 0.01;
-	float spin_dir = 2*M_PI * random();
+	float spin_dir = 2 * M_PI * random();
 	e.avelocity = '6 0 0' * sin(spin_dir) + '0 0 6' * cos(spin_dir);
 	e.renderflags |= RF_ADDITIVE;
 }
-#endif
+#endif // CSQC
 
 REGISTER_NET_LINKED(Nade_Orb)
 
@@ -73,19 +73,20 @@ NET_HANDLE(Nade_Orb, bool isNew)
 {
 	Net_Accept(Nade_Orb);
 	int sf = ReadByte();
-	if (sf & 1) {
+	if (sf & 1)
+	{
 		this.origin = ReadVector();
 		setorigin(this, this.origin);
 		this.colormod = ReadVector();
 		this.orb_lifetime = ReadByte();
 		this.orb_radius = ReadShort();
-		this.ltime = time + ReadByte()/10.0;
+		this.ltime = time + ReadByte() / 10.0;
 		// this.ltime = time + this.orb_lifetime;
 		orb_setup(this);
 	}
 	return true;
 }
-#endif
+#endif // CSQC
 
 #ifdef SVQC
 bool orb_send(entity this, entity to, int sf)
@@ -93,7 +94,8 @@ bool orb_send(entity this, entity to, int sf)
 	int channel = MSG_ENTITY;
 	WriteHeader(channel, Nade_Orb);
 	WriteByte(channel, sf);
-	if (sf & 1) {
+	if (sf & 1)
+	{
 		WriteVector(channel, this.origin);
 
 		WriteVector(channel, this.colormod);
@@ -102,10 +104,10 @@ bool orb_send(entity this, entity to, int sf)
 		//WriteByte(MSG_ENTITY, this.ltime - time + 1);
 		WriteShort(channel, this.orb_radius);
 		// round time delta to a 1/10th of a second
-		WriteByte(channel, (this.ltime - time)*10.0+0.5);
+		WriteByte(channel, (this.ltime - time) * 10.0 + 0.5);
 	}
 	return true;
 }
-#endif
+#endif // SVQC
 
-#endif
+#endif // GAMEQC
