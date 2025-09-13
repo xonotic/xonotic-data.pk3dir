@@ -128,7 +128,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		    e.classname = "net_linked";
 		}
 
-		if (e.model == "" || e.modelindex == 0)
+		if (e.modelindex == 0)
 		{
 			vector mi = e.mins;
 			vector ma = e.maxs;
