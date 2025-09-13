@@ -77,6 +77,8 @@ void nade_ice_boom(entity this)
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
+	fountain.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, fountain);
 	setorigin(fountain, fountain.origin);
 	setthink(fountain, nade_ice_think);
 	fountain.nextthink = time;
