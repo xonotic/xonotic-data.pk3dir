@@ -101,6 +101,8 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 	Net_LinkEntity(orb, true, 0, orb_send);
 	orb.SendFlags |= 1;
 
+	orb.reset = SUB_Remove;
+
 	setthink(orb, nades_orb_think);
 	orb.nextthink = time;
 
@@ -908,6 +910,7 @@ void nades_RemovePlayer(entity this)
 {
 	nades_Clear(this);
 	nades_RemoveBonus(this);
+	this.nade_spawnloc = NULL;
 }
 
 MUTATOR_HOOKFUNCTION(nades, MakePlayerObserver)
