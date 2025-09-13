@@ -223,7 +223,7 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 
-	// dialog used by singleplayer / guide
+	// dialog used by singleplayer
 	me.winnerDialog = i = NEW(XonoticWinnerDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
