@@ -301,8 +301,9 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	hp -= damage;
 	SetResource(this, RES_HEALTH, hp);
 
-	if (STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_TRANSLOCATE.m_id && STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_SPAWN.m_id)
-	if (STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_HEAL.m_id || IS_PLAYER(attacker))
+	if (IS_PLAYER(attacker)
+	&& STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_TRANSLOCATE.m_id
+	&& STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_SPAWN.m_id)
 		this.realowner = attacker;
 
 	if (hp <= 0)
