@@ -7,14 +7,14 @@ MODEL(MON_WYVERN, M_Model("wyvern.dpm"));
 #endif
 
 CLASS(Wyvern, Monster)
-    ATTRIB(Wyvern, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_RANGED | MON_FLAG_RIDE);
-    ATTRIB(Wyvern, m_mins, vector, '-30 -30 -48');
-    ATTRIB(Wyvern, m_maxs, vector, '30 30 30');
+	ATTRIB(Wyvern, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_RANGED | MON_FLAG_RIDE);
+	ATTRIB(Wyvern, m_mins, vector, '-30 -30 -48');
+	ATTRIB(Wyvern, m_maxs, vector, '30 30 30');
 #ifdef GAMEQC
-    ATTRIB(Wyvern, m_model, Model, MDL_MON_WYVERN);
+	ATTRIB(Wyvern, m_model, Model, MDL_MON_WYVERN);
 #endif
-    ATTRIB(Wyvern, netname, string, "wyvern");
-    ATTRIB(Wyvern, m_name, string, _("Wyvern"));
+	ATTRIB(Wyvern, netname, string, "wyvern");
+	ATTRIB(Wyvern, m_name, string, _("Wyvern"));
 ENDCLASS(Wyvern)
 
 REGISTER_MONSTER(WYVERN, NEW(Wyvern));
