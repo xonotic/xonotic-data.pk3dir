@@ -11,13 +11,19 @@ bool autocvar_g_nades_ice_teamcheck;
 void nade_ice_boom(entity this);
 #endif // SVQC
 
+#ifdef GAMEQC
 const int PROJECTILE_NADE_ICE = 76;
 const int PROJECTILE_NADE_ICE_BURN = 77;
+#endif
 
 CLASS(IceNade, Nade)
 	ATTRIB(IceNade, m_color, vector, '0 0.66 1');
 	ATTRIB(IceNade, m_name, string, _("Ice grenade"));
+#ifndef SVQC
 	ATTRIB(IceNade, m_icon, string, "nade_ice");
+#endif
 	ATTRIB(IceNade, netname, string, "ice");
+#ifdef SVQC
 	ATTRIB(IceNade, impulse, int, 3);
+#endif
 ENDCLASS(IceNade)

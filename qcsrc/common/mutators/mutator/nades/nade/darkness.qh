@@ -11,13 +11,19 @@ float autocvar_g_nades_darkness_time;
 void nade_darkness_boom(entity this);
 #endif // SVQC
 
+#ifdef GAMEQC
 const int PROJECTILE_NADE_DARKNESS = 90;
 const int PROJECTILE_NADE_DARKNESS_BURN = 91;
+#endif
 
 CLASS(DarknessNade, Nade)
 	ATTRIB(DarknessNade, m_color, vector, '0.23 0 0.23');
 	ATTRIB(DarknessNade, m_name, string, _("Darkness grenade"));
+#ifndef SVQC
 	ATTRIB(DarknessNade, m_icon, string, "nade_darkness");
+#endif
 	ATTRIB(DarknessNade, netname, string, "darkness");
+#ifdef SVQC
 	ATTRIB(DarknessNade, impulse, int, 11);
+#endif
 ENDCLASS(DarknessNade)

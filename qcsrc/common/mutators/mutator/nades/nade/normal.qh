@@ -9,7 +9,11 @@ void nade_normal_boom(entity this);
 CLASS(NormalNade, Nade)
 	ATTRIB(NormalNade, m_color, vector, '1 1 1');
 	ATTRIB(NormalNade, m_name, string, _("Grenade"));
+#ifndef SVQC
 	ATTRIB(NormalNade, m_icon, string, "nade_normal");
-	ATTRIB(NormalNade, impulse, int, 1);
+#endif
 	ATTRIB(NormalNade, netname, string, "normal");
+#ifdef SVQC
+	ATTRIB(NormalNade, impulse, int, 1);
+#endif
 ENDCLASS(NormalNade)
