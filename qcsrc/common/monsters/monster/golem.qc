@@ -29,12 +29,19 @@ void M_Golem_Attack_Smash(entity this)
 
 	vector loc = this.origin + v_forward * 50;
 
-	entity dmgent = spawn();
-	dmgent.owner = dmgent.realowner = this;
-	setorigin(dmgent, loc);
-	RadiusDamage (dmgent, this, (autocvar_g_monster_golem_attack_smash_damage) * MONSTER_SKILLMOD(this), (autocvar_g_monster_golem_attack_smash_damage * 0.5) * MONSTER_SKILLMOD(this), 
-					autocvar_g_monster_golem_attack_smash_range, this, NULL, autocvar_g_monster_golem_attack_smash_force, DEATH_MONSTER_GOLEM_SMASH.m_id, DMG_NOWEP, NULL);
-	delete(dmgent);
+	RadiusDamageForSource(this, loc, this.velocity, this.realowner,
+		autocvar_g_monster_golem_attack_smash_damage * MONSTER_SKILLMOD(this),
+		autocvar_g_monster_golem_attack_smash_damage * MONSTER_SKILLMOD(this) * 0.5,
+		autocvar_g_monster_golem_attack_smash_range,
+		this,
+		NULL,
+		false,
+		autocvar_g_monster_golem_attack_smash_force,
+		'1 1 1',
+		DEATH_MONSTER_GOLEM_SMASH.m_id,
+		DMG_NOWEP,
+		NULL
+	);
 }
 
 void M_Golem_Attack_Swing(entity this)
@@ -57,13 +64,28 @@ void M_Golem_Attack_Lightning_Explode(entity this, entity directhitentity)
 	if(this.move_movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
-	RadiusDamage (this, this.realowner, (autocvar_g_monster_golem_attack_lightning_damage), (autocvar_g_monster_golem_attack_lightning_damage), (autocvar_g_monster_golem_attack_lightning_radius),
-					NULL, NULL, (autocvar_g_monster_golem_attack_lightning_force), this.projectiledeathtype, DMG_NOWEP, directhitentity);
+	RadiusDamage(this, this.realowner,
+		autocvar_g_monster_golem_attack_lightning_damage,
+		autocvar_g_monster_golem_attack_lightning_damage,
+		autocvar_g_monster_golem_attack_lightning_radius,
+		NULL,
+		NULL,
+		autocvar_g_monster_golem_attack_lightning_force,
+		this.projectiledeathtype,
+		DMG_NOWEP,
+		directhitentity
+	);
 
 	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_golem_attack_lightning_radius_zap, it != this.realowner && it.takedamage,
 	{
 		te_csqc_lightningarc(this.origin, it.origin);
-		Damage(it, this, this.realowner, (autocvar_g_monster_golem_attack_lightning_damage_zap) * MONSTER_SKILLMOD(this), DEATH_MONSTER_GOLEM_ZAP.m_id, DMG_NOWEP, it.origin, '0 0 0');
+		Damage(it, this, this.realowner,
+			autocvar_g_monster_golem_attack_lightning_damage_zap * MONSTER_SKILLMOD(this),
+			DEATH_MONSTER_GOLEM_ZAP.m_id,
+			DMG_NOWEP,
+			it.origin,
+			'0 0 0'
+		);
 	});
 
 	setthink(this, SUB_Remove);
