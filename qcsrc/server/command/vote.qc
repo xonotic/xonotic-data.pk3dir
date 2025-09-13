@@ -335,8 +335,10 @@ void VoteCount(float first_count)
 
 void VoteThink()
 {
-	if (vote_endtime > 0)        // a vote was called
+	if (vote_endtime > 0) // a vote was called
 	{
+		if (warmup_stage)
+			game_starttime += frametime; // hack to pause the countdown
 		if (time > vote_endtime) // time is up
 			VoteCount(false);
 	}
@@ -1051,6 +1053,8 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 				vote_called_command = strzone(vote_parsed_command);
 				vote_called_display = strzone(vote_parsed_display);
 				vote_endtime = time + autocvar_sv_vote_timeout;
+				if (warmup_stage)
+					game_starttime += RESTART_COUNTDOWN; // prevent last-second vcall abuse
 
 				if (caller)
 				{
@@ -1179,6 +1183,8 @@ void VoteCommand_master(int request, entity caller, int argc, string vote_comman
 							vote_called_command = strzone("XXX");
 							vote_called_display = strzone("^3master");
 							vote_endtime = time + autocvar_sv_vote_timeout;
+							if (warmup_stage)
+								game_starttime += RESTART_COUNTDOWN; // prevent last-second vcall abuse
 
 							caller.vote_selection = VOTE_SELECT_ACCEPT;
 							caller.vote_waittime = time + autocvar_sv_vote_wait;
