@@ -22,13 +22,14 @@ EFFECT(1, NADE_TRAIL_BROWN,         "nade_brown")
 EFFECT(1, NADE_TRAIL_PURPLE,        "nade_purple")
 entity EFFECT_NADE_TRAIL(int teamid)
 {
-    switch (teamid) {
-        case NUM_TEAM_1:    return EFFECT_NADE_TRAIL_RED;
-        case NUM_TEAM_2:    return EFFECT_NADE_TRAIL_BLUE;
-        case NUM_TEAM_3:    return EFFECT_NADE_TRAIL_YELLOW;
-        case NUM_TEAM_4:    return EFFECT_NADE_TRAIL_PINK;
-        default:            return EFFECT_NADE_TRAIL_NEUTRAL;
-    }
+	switch (teamid)
+	{
+		case NUM_TEAM_1:    return EFFECT_NADE_TRAIL_RED;
+		case NUM_TEAM_2:    return EFFECT_NADE_TRAIL_BLUE;
+		case NUM_TEAM_3:    return EFFECT_NADE_TRAIL_YELLOW;
+		case NUM_TEAM_4:    return EFFECT_NADE_TRAIL_PINK;
+		default:            return EFFECT_NADE_TRAIL_NEUTRAL;
+	}
 }
 
 EFFECT(1, NADE_TRAIL_BURN_RED,      "nade_red_burn")
@@ -40,11 +41,12 @@ EFFECT(1, NADE_TRAIL_BURN_BROWN,    "nade_brown_burn")
 EFFECT(1, NADE_TRAIL_BURN_PURPLE,   "nade_purple_burn")
 entity EFFECT_NADE_TRAIL_BURN(int teamid)
 {
-    switch (teamid) {
-        case NUM_TEAM_1:    return EFFECT_NADE_TRAIL_BURN_RED;
-        case NUM_TEAM_2:    return EFFECT_NADE_TRAIL_BURN_BLUE;
-        case NUM_TEAM_3:    return EFFECT_NADE_TRAIL_BURN_YELLOW;
-        case NUM_TEAM_4:    return EFFECT_NADE_TRAIL_BURN_PINK;
-        default:            return EFFECT_NADE_TRAIL_BURN_NEUTRAL;
-    }
+	switch (teamid)
+	{
+		case NUM_TEAM_1:    return EFFECT_NADE_TRAIL_BURN_RED;
+		case NUM_TEAM_2:    return EFFECT_NADE_TRAIL_BURN_BLUE;
+		case NUM_TEAM_3:    return EFFECT_NADE_TRAIL_BURN_YELLOW;
+		case NUM_TEAM_4:    return EFFECT_NADE_TRAIL_BURN_PINK;
+		default:            return EFFECT_NADE_TRAIL_BURN_NEUTRAL;
+	}
 }

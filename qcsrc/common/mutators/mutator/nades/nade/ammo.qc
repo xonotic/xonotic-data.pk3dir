@@ -3,15 +3,8 @@
 #ifdef SVQC
 void nade_ammo_touch(entity this, entity toucher)
 {
-	float maxammo = 999;
-	float ammo_factor;
-	float amshells = GetResource(toucher, RES_SHELLS);
-	float ambullets = GetResource(toucher, RES_BULLETS);
-	float amrockets = GetResource(toucher, RES_ROCKETS);
-	float amcells = GetResource(toucher, RES_CELLS);
-	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
-	if(!IS_DEAD(toucher))
-	if(!STAT(FROZEN, toucher))
+	if ((IS_PLAYER(toucher) || IS_MONSTER(toucher))
+	&& !IS_DEAD(toucher) && !STAT(FROZEN, toucher))
 	{
 		float new_load;
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
@@ -21,37 +14,44 @@ void nade_ammo_touch(entity this, entity toucher)
 			{
 				new_load = (SAME_TEAM(toucher, this.realowner))
 					? toucher.(weaponentity).clip_size
-					: max(0, toucher.(weaponentity).clip_load - toucher.(weaponentity).clip_size * (autocvar_g_nades_ammo_clip_empty_rate * frametime/2));
+					: max(0, toucher.(weaponentity).clip_load - toucher.(weaponentity).clip_size * (autocvar_g_nades_ammo_clip_empty_rate * frametime * 0.5));
 
 				toucher.(weaponentity).clip_load = toucher.(weaponentity).(weapon_load[toucher.(weaponentity).m_switchweapon.m_id]) = new_load;
 			}
 		}
 
-		ammo_factor = autocvar_g_nades_ammo_rate*frametime/2;
-		if ( toucher != this.realowner )
-			ammo_factor *= (SAME_TEAM(toucher, this.realowner)) ? autocvar_g_nades_ammo_friend : autocvar_g_nades_ammo_foe;
+		float ammo_factor = autocvar_g_nades_ammo_rate * frametime * 0.5;
+		if (toucher != this.realowner)
+			ammo_factor *= (SAME_TEAM(toucher, this))
+				? autocvar_g_nades_ammo_friend
+				: autocvar_g_nades_ammo_foe;
 
-#define CHECK_AMMO_RESOURCE_LIMIT(amresource, res_resource) \
+		float maxammo = 999;
+		float amshells  = GetResource(toucher, RES_SHELLS);
+		float ambullets = GetResource(toucher, RES_BULLETS);
+		float amrockets = GetResource(toucher, RES_ROCKETS);
+		float amcells   = GetResource(toucher, RES_CELLS);
+
+#define GIVE_AMMO_RESOURCE(amresource, res_resource) \
 	if (amresource < maxammo) \
 		GiveResourceWithLimit(toucher, res_resource, ammo_factor, maxammo);
-
 #define DROP_AMMO_RESOURCE(amresource, res_resource) \
 	if (amresource > 0) \
 		SetResource(toucher, res_resource, amresource + ammo_factor);
 		
-		if ( ammo_factor > 0 )
+		if (ammo_factor > 0)
 		{
-			CHECK_AMMO_RESOURCE_LIMIT(amshells,  RES_SHELLS);
-			CHECK_AMMO_RESOURCE_LIMIT(ambullets, RES_BULLETS);
-			CHECK_AMMO_RESOURCE_LIMIT(amrockets, RES_ROCKETS);
-			CHECK_AMMO_RESOURCE_LIMIT(amcells,   RES_CELLS);
+			GIVE_AMMO_RESOURCE(amshells,  RES_SHELLS);
+			GIVE_AMMO_RESOURCE(ambullets, RES_BULLETS);
+			GIVE_AMMO_RESOURCE(amrockets, RES_ROCKETS);
+			GIVE_AMMO_RESOURCE(amcells,   RES_CELLS);
 
 			if (this.nade_show_particles)
 				Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
 		}
-		else if ( ammo_factor < 0 )
+		else if (ammo_factor < 0)
 		{
-			//Foe drops ammo points
+			// Foe drops ammo points
 			DROP_AMMO_RESOURCE(amshells,  RES_SHELLS);
 			DROP_AMMO_RESOURCE(ambullets, RES_BULLETS);
 			DROP_AMMO_RESOURCE(amrockets, RES_ROCKETS);
@@ -59,7 +59,7 @@ void nade_ammo_touch(entity this, entity toucher)
 
 			return;
 		}
-#undef CHECK_AMMO_RESOURCE_LIMIT
+#undef GIVE_AMMO_RESOURCE
 #undef DROP_AMMO_RESOURCE
 	}
 }

@@ -22,16 +22,15 @@ entity Nade_TrailEffect(int proj, int nade_team)
 		case PROJECTILE_NADE_BURN:  return EFFECT_NADE_TRAIL_BURN(nade_team);
 	}
 
-	FOREACH(Nades, true, {
+	FOREACH(Nades, true,
+	{
 		for (int j = 0; j < 2; ++j)
-		{
 			if (it.m_projectile[j] == proj)
 			{
-				string trail = it.m_trail[j].eent_eff_name;
-				if (trail) return it.m_trail[j];
+				if (it.m_trail[j].eent_eff_name)
+					return it.m_trail[j];
 				break;
 			}
-		}
 	});
 
 	return EFFECT_Null;

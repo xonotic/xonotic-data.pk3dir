@@ -11,21 +11,19 @@ void nade_ice_freeze(entity freezefield, entity frost_target, float freezetime)
 
 void nade_ice_think(entity this)
 {
-	if(round_handler_IsActive())
-	if(!round_handler_IsRoundStarted())
+	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
 	{
 		delete(this);
 		return;
 	}
 
-	if(time >= this.ltime)
+	if (time >= this.ltime)
 	{
-		if ( autocvar_g_nades_ice_explode )
+		if (autocvar_g_nades_ice_explode)
 		{
 			vector expcol_min = nades_PlayerColor(this.realowner, false);
 			vector expcol_max = nades_PlayerColor(this.realowner, true);
-			entity expef = EFFECT_NADE_EXPLODE;
-			Send_Effect_Except(expef, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
+			Send_Effect_Except(EFFECT_NADE_EXPLODE, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			nade_normal_boom(this);
@@ -33,7 +31,6 @@ void nade_ice_think(entity this)
 		delete(this);
 		return;
 	}
-
 
 	this.nextthink = time + 0.1;
 
@@ -47,7 +44,7 @@ void nade_ice_think(entity this)
 	randomp.z = 1;
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, this.origin + randomp, '0 0 0', 1);
 
-	if(time >= this.nade_special_time)
+	if (time >= this.nade_special_time)
 	{
 		this.nade_special_time = time + 0.7;
 
@@ -55,21 +52,20 @@ void nade_ice_think(entity this)
 		Send_Effect(EFFECT_ICEFIELD, this.origin, '0 0 0', 1);
 	}
 
-
 	float current_freeze_time = this.ltime - time - 0.1;
 
 	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage
-		&& (IS_PLAYER(it) || IS_MONSTER(it)) && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_freeze_time > 0
-		&& (!it.revival_time || ((time - it.revival_time) >= 1.5))
-		&& !STAT(FROZEN, it) && !StatusEffects_active(STATUSEFFECT_Frozen, it),
+	&& (IS_PLAYER(it) || IS_MONSTER(it)) && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_freeze_time > 0
+	&& (!it.revival_time || ((time - it.revival_time) >= 1.5))
+	&& !STAT(FROZEN, it) && !StatusEffects_active(STATUSEFFECT_Frozen, it),
 	{
 		switch (autocvar_g_nades_ice_teamcheck)
 		{
 			case 0:  break; // affect everyone
 			default: 
-			case 2:  if(SAME_TEAM(it, this.realowner)) continue; // don't affect teammates
+			case 2:  if (SAME_TEAM(it, this.realowner)) continue; // don't affect teammates
 			         // fall through (check case 1 condition too)
-			case 1:  if(it == this.realowner) continue; // don't affect the player who threw the nade
+			case 1:  if (it == this.realowner) continue; // don't affect the player who threw the nade
 		}
 		nade_ice_freeze(this, it, current_freeze_time);
 	});
@@ -93,7 +89,7 @@ void nade_ice_boom(entity this)
 	fountain.nade_special_time = time + 0.3;
 	fountain.angles = this.angles;
 
-	if ( autocvar_g_nades_ice_explode )
+	if (autocvar_g_nades_ice_explode)
 	{
 		setmodel(fountain, MDL_PROJECTILE_GRENADE);
 		entity timer = new(nade_timer);
