@@ -20,7 +20,7 @@ METHOD(InfernoBuff, describe, string(InfernoBuff this))
 {
 	TC(InfernoBuff, this);
 	PAGE_TEXT_INIT();
-	PAR(_("The %s sets any enemies or monsters you attack alight, dealing burn damage to them for several seconds until the buff expires."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAR(_("The %s buff sets any enemies or monsters you attack alight, dealing burn damage to them for several seconds until the buff expires."), COLORED_NAME(this));
 	return PAGE_TEXT;
 }
 #endif // MENUQC

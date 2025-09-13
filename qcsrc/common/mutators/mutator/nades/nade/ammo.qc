@@ -73,7 +73,7 @@ METHOD(AmmoNade, describe, string(AmmoNade this))
 	PAGE_TEXT_INIT();
 	PAR(_("The %s detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
 	      "If your team members enter the orb they will recover ammo, and if enemies enter the sphere they will lose ammo."), COLORED_NAME(this));
-	PAR(_("This does not impact weapon magazines, so it won't reload your weapons for you, unlike the %s."), COLORED_NAME_WITH_CONCAT(BUFF_AMMO, _("Buff")));
+	PAR(_("This does not impact weapon magazines, so it won't reload your weapons for you, unlike the %s buff."), COLORED_NAME(BUFF_AMMO));
 	return PAGE_TEXT;
 }
 #endif // MENUQC
