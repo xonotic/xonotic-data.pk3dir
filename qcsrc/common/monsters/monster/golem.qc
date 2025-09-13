@@ -29,21 +29,19 @@ void M_Golem_Attack_Smash(entity this)
 
 	vector loc = this.origin + v_forward * 50;
 
-	entity dmgent = spawn();
-	dmgent.owner = dmgent.realowner = this;
-	setorigin(dmgent, loc);
-	RadiusDamage(dmgent, this,
+	RadiusDamageForSource(this, loc, this.velocity, this.realowner,
 		autocvar_g_monster_golem_attack_smash_damage * MONSTER_SKILLMOD(this),
 		autocvar_g_monster_golem_attack_smash_damage * MONSTER_SKILLMOD(this) * 0.5,
 		autocvar_g_monster_golem_attack_smash_range,
 		this,
 		NULL,
+		false,
 		autocvar_g_monster_golem_attack_smash_force,
+		'1 1 1',
 		DEATH_MONSTER_GOLEM_SMASH.m_id,
 		DMG_NOWEP,
 		NULL
 	);
-	delete(dmgent);
 }
 
 void M_Golem_Attack_Swing(entity this)

@@ -294,7 +294,7 @@ void M_Mage_Defend_Heal(entity this)
 void M_Mage_Attack_Push(entity this)
 {
 	sound(this, CH_SHOTS, SND_MageSpike_PUSH, 1, ATTEN_NORM);
-	RadiusDamage(this, this,
+	RadiusDamage(this, this.realowner,
 		autocvar_g_monster_mage_attack_push_damage,
 		autocvar_g_monster_mage_attack_push_damage,
 		autocvar_g_monster_mage_attack_push_radius,
