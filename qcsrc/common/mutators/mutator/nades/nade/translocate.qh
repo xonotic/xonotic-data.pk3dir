@@ -10,12 +10,18 @@ void nade_translocate_boom(entity this);
 bool nade_translocate_DestroyDamage(entity this, entity attacker);
 #endif // SVQC
 
+#ifdef GAMEQC
 const int PROJECTILE_NADE_TRANSLOCATE = 78;
+#endif
 
 CLASS(TranslocateNade, Nade)
 	ATTRIB(TranslocateNade, m_color, vector, '1 0 1');
 	ATTRIB(TranslocateNade, m_name, string, _("Translocate grenade"));
+#ifndef SVQC
 	ATTRIB(TranslocateNade, m_icon, string, "nade_translocate");
+#endif
 	ATTRIB(TranslocateNade, netname, string, "translocate");
+#ifdef SVQC
 	ATTRIB(TranslocateNade, impulse, int, 4);
+#endif
 ENDCLASS(TranslocateNade)
