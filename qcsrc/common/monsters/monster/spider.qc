@@ -94,7 +94,7 @@ void M_Spider_Attack_Web_Explode(entity this)
 		0,
 		0,
 		25,
-		NULL,
+		this,
 		NULL,
 		25,
 		this.projectiledeathtype,
@@ -102,7 +102,7 @@ void M_Spider_Attack_Web_Explode(entity this)
 		NULL
 	);
 
-	FOREACH_ENTITY_RADIUS(this.origin, 25, it != this && it.takedamage && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && it.monsterdef != MON_SPIDER, {
+	FOREACH_ENTITY_RADIUS(this.origin, 25, MONSTER_IS_ENEMY(this, it) && it.takedamage && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && it.monsterdef != MON_SPIDER, {
 		StatusEffects_apply(STATUSEFFECT_Webbed, it, time + autocvar_g_monster_spider_attack_web_damagetime, 0);
 	});
 

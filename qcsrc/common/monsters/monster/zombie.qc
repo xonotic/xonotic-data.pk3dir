@@ -24,13 +24,12 @@ void M_Zombie_Attack_Leap_Touch(entity this, entity toucher)
 	if (toucher.takedamage)
 	{
 		angles_face = vectoangles(this.moveto - this.origin);
-		angles_face = normalize(angles_face) * autocvar_g_monster_zombie_attack_leap_force;
 		Damage(toucher, this, this.realowner,
 			autocvar_g_monster_zombie_attack_leap_damage * MONSTER_SKILLMOD(this),
 			DEATH_MONSTER_ZOMBIE_JUMP.m_id,
 			DMG_NOWEP,
 			toucher.origin,
-			angles_face
+			normalize(angles_face) * autocvar_g_monster_zombie_attack_leap_force
 		);
 		settouch(this, Monster_Touch); // instantly turn it off to stop damage spam
 		this.state = 0;

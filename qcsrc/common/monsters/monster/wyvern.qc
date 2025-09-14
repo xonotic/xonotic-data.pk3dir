@@ -28,7 +28,7 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
 		monster_makevectors(actor, actor.enemy);
 		if (IS_PLAYER(actor))
 			W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_WyvernAttack_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_WYVERN.m_id);
-		if (IS_MONSTER(actor))
+		else if (IS_MONSTER(actor))
 			actor.attack_finished_single[0] = actor.anim_finished = time + 1.2;
 
 		entity missile = new(WyvernAttack);
@@ -66,7 +66,7 @@ void M_Wyvern_Attack_Fireball_Explode(entity this)
 		autocvar_g_monster_wyvern_attack_fireball_damage,
 		autocvar_g_monster_wyvern_attack_fireball_edgedamage,
 		autocvar_g_monster_wyvern_attack_fireball_force,
-		this.realowner,
+		this,
 		NULL,
 		autocvar_g_monster_wyvern_attack_fireball_radius,
 		this.projectiledeathtype,
@@ -74,7 +74,7 @@ void M_Wyvern_Attack_Fireball_Explode(entity this)
 		NULL
 	);
 
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_wyvern_attack_fireball_radius, it.takedamage == DAMAGE_AIM && it != this.realowner, {
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_wyvern_attack_fireball_radius, MONSTER_IS_ENEMY(this, it) && it.takedamage == DAMAGE_AIM && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0, {
 		Fire_AddDamage(it, this.realowner, 5 * MONSTER_SKILLMOD(this.realowner), autocvar_g_monster_wyvern_attack_fireball_damagetime, this.projectiledeathtype);
 	});
 

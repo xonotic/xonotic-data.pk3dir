@@ -62,6 +62,10 @@ int monsters_killed;
 
 #define MONSTER_SKILLMOD(mon) (0.5 + mon.monster_skill * ((1.2 - 0.3) / 10))
 
+#define MONSTERS_TEAMED() (teamplay && autocvar_g_monsters_teams)
+#define MONSTER_IS_ENEMY(mon, targ) \
+	(MONSTERS_TEAMED() ? (mon).team != (targ).team : ((targ) != (mon) && (targ) != (mon).realowner))
+
 // other properties
 .bool monster_attack; // indicates whether an entity can be attacked by monsters
 

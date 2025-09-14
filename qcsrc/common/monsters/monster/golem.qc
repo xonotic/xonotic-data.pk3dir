@@ -68,7 +68,7 @@ void M_Golem_Attack_Lightning_Explode(entity this, entity directhitentity)
 		autocvar_g_monster_golem_attack_lightning_damage,
 		autocvar_g_monster_golem_attack_lightning_damage,
 		autocvar_g_monster_golem_attack_lightning_radius,
-		NULL,
+		this,
 		NULL,
 		autocvar_g_monster_golem_attack_lightning_force,
 		this.projectiledeathtype,
@@ -76,7 +76,7 @@ void M_Golem_Attack_Lightning_Explode(entity this, entity directhitentity)
 		directhitentity
 	);
 
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_golem_attack_lightning_radius_zap, it != this.realowner && it.takedamage, {
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_golem_attack_lightning_radius_zap, MONSTER_IS_ENEMY(this, it) && it.takedamage && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0, {
 		te_csqc_lightningarc(this.origin, it.origin);
 		Damage(it, this, this.realowner,
 			autocvar_g_monster_golem_attack_lightning_damage_zap * MONSTER_SKILLMOD(this),
@@ -98,7 +98,7 @@ void M_Golem_Attack_Lightning_Explode_use(entity this, entity actor, entity trig
 
 void M_Golem_Attack_Lightning_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if (GetResource(this, RES_HEALTH) <= 0)
+	if (!MONSTER_IS_ENEMY(inflictor, this) || IS_DEAD(this) || GetResource(this, RES_HEALTH) <= 0)
 		return;
 	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
