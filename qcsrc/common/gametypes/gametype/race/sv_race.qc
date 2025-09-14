@@ -54,12 +54,12 @@ void havocbot_role_race(entity this)
 void race_ScoreRules()
 {
 	GameRules_score_enabled(false);
-	GameRules_scoring(race_teams, 0, 0, {
-		if (race_teams)
+	GameRules_scoring(teamplay_bitmask, 0, 0, {
+		if (teamplay_bitmask)
 			field_team(ST_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
 		else if (g_race_qualifying)
 			field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-		if (race_teams || !g_race_qualifying)
+		if (teamplay_bitmask || !g_race_qualifying)
 		{
 			field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
 			field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
@@ -321,12 +321,6 @@ MUTATOR_HOOKFUNCTION(rc, PreferPlayerScore_Clear)
 		return true; // in qualifying, you don't lose score by observing
 }
 
-MUTATOR_HOOKFUNCTION(rc, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
-{
-	M_ARGV(0, float) = race_teams;
-	return true;
-}
-
 MUTATOR_HOOKFUNCTION(rc, Scores_CountFragsRemaining)
 {
 	// announce remaining frags if not in qualifying mode
@@ -405,10 +399,10 @@ void rc_SetLimits()
 	if(autocvar_g_race_teams)
 	{
 		GameRules_teams(true);
-		race_teams = BITS(bound(2, autocvar_g_race_teams, 4));
+		teamplay_bitmask = BITS(bound(2, autocvar_g_race_teams, 4));
 	}
 	else
-		race_teams = 0;
+		teamplay_bitmask = 0;
 
 	qualifying_override = autocvar_g_race_qualifying_timelimit_override;
 	fraglimit_override = autocvar_g_race_laps_limit;

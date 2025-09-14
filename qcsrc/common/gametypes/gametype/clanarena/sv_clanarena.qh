@@ -16,7 +16,6 @@ int autocvar_g_ca_teams_override;
 float autocvar_g_ca_warmup;
 string autocvar_g_ca_weaponarena = "most";
 
-int ca_teams;
 bool allowed_to_spawn;
 bool g_ca_spectate_enemies; // updated on map reset
 
@@ -37,12 +36,12 @@ REGISTER_MUTATOR(ca, false)
 		GameRules_limit_score(autocvar_g_ca_point_limit);
 		GameRules_limit_lead(autocvar_g_ca_point_leadlimit);
 
-		ca_teams = autocvar_g_ca_teams_override;
+		int ca_teams = autocvar_g_ca_teams_override;
 		if (ca_teams < 2)
 			ca_teams = cvar("g_ca_teams"); // read the cvar directly as it gets written earlier in the same frame
 
-		ca_teams = BITS(bound(2, ca_teams, 4));
-		GameRules_scoring(ca_teams, SFL_SORT_PRIO_PRIMARY, 0,
+		teamplay_bitmask = BITS(bound(2, ca_teams, 4));
+		GameRules_scoring(teamplay_bitmask, SFL_SORT_PRIO_PRIMARY, 0,
 		{
 			field_team(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
 		});

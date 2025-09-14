@@ -1,6 +1,6 @@
 #pragma once
 
-const int NUM_TEAMS = 4; ///< Number of teams in the game.
+const int NUM_TEAMS = 4; ///< Max number of teams that could exist, prefer AVAILABLE_TEAMS.
 
 #ifdef TEAMNUMBERS_THAT_ARENT_STUPID
 const int NUM_TEAM_1 = 1; // red

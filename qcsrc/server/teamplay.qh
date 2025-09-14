@@ -14,16 +14,24 @@ float autocvar_g_balance_teams_skill_significance_threshold;
 
 string autocvar_g_forced_team_otherwise;
 
+int teamplay_bitmask; ///< The set of currently available teams (AVAILABLE_TEAMS is the number of them).
+
 bool lockteams;
 float server_skill_average; ///< Scaled inverse-variance weighted mean of all clients' m_skill_mu, for unranked clients.
 
 .float m_skill_mu; ///< Team: members' inverse-variance weighted skill mean.
 .float m_skill_var; ///< Team: members' inverse-variance weighted skill variance (sigma**2).
 
-.int team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
+.int team_forced; ///< can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
 
 // ========================== Global teams API ================================
+
+/// \brief Finds any team map entities and returns their bitmask, else spawns them.
+/// \param[in] ent_classname The gametype-specific entity classname to search for.
+/// \param[in] defaultmask The bitmask of the team entities to spawn if the map has none.
+/// \return The bitmask of the teams found, == defaultmask if there were none.
+int Team_MapEnts_FindOrSpawn(string ent_classname, int defaultmask);
 
 void Team_InitTeams();
 

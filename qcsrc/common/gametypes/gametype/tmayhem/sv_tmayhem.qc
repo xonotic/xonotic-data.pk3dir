@@ -27,37 +27,11 @@ float autocvar_g_tmayhem_start_ammo_fuel = 0;
 
 .float total_damage_dealt;
 
-// code from here on is just to support maps that don't have team entities
-void tmayhem_SpawnTeam (string teamname, int teamcolor)
-{
-	entity this = new_pure(tmayhem_team);
-	this.netname = teamname;
-	this.cnt = teamcolor - 1;
-	this.team = teamcolor;
-	this.spawnfunc_checked = true;
-	//spawnfunc_tmayhem_team(this);
-}
 
 void tmayhem_DelayedInit(entity this)
 {
-	// if no teams are found, spawn defaults
-	if (find(NULL, classname, "tmayhem_team") == NULL)
-	{
-		LOG_TRACE("No \"tmayhem_team\" entities found on this map, creating them anyway.");
-
-		int numteams = autocvar_g_tmayhem_teams_override;
-		if(numteams < 2) { numteams = autocvar_g_tmayhem_teams; }
-
-		int teams = BITS(bound(2, numteams, 4));
-		if(teams & BIT(0))
-			tmayhem_SpawnTeam("Red", NUM_TEAM_1);
-		if(teams & BIT(1))
-			tmayhem_SpawnTeam("Blue", NUM_TEAM_2);
-		if(teams & BIT(2))
-			tmayhem_SpawnTeam("Yellow", NUM_TEAM_3);
-		if(teams & BIT(3))
-			tmayhem_SpawnTeam("Pink", NUM_TEAM_4);
-	}
+	int numteams = autocvar_g_tmayhem_teams_override >= 2 ? autocvar_g_tmayhem_teams_override : autocvar_g_tmayhem_teams;
+	teamplay_bitmask = Team_MapEnts_FindOrSpawn("tmayhem_team", BITS(bound(2, numteams, 4)));
 }
 
 void tmayhem_Initialize()
@@ -69,12 +43,6 @@ void tmayhem_Initialize()
 	GameRules_limit_lead(autocvar_g_tmayhem_point_leadlimit);
 
 	InitializeEntity(NULL, tmayhem_DelayedInit, INITPRIO_GAMETYPE);
-}
-// code up to here is just to support maps that don't have team entities
-
-MUTATOR_HOOKFUNCTION(tmayhem, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
-{
-	M_ARGV(1, string) = "tmayhem_team";
 }
 
 /*
