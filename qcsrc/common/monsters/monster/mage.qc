@@ -96,7 +96,7 @@ bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 	// TODO: mutator hook to choose valid healing targets?
 	if (!targ)
 		return false;
-	if (DIFF_TEAM(targ, this) && targ != this.monster_follow)
+	if (MONSTER_IS_ENEMY(this, targ) && targ != this.monster_follow)
 		return false;
 	if (GetResource(targ, RES_HEALTH) <= 0 || STAT(FROZEN, targ))
 		return false;
@@ -135,7 +135,7 @@ void M_Mage_Attack_Spike_Explode(entity this, entity directhitentity)
 		autocvar_g_monster_mage_attack_spike_damage,
 		autocvar_g_monster_mage_attack_spike_damage * 0.5,
 		autocvar_g_monster_mage_attack_spike_radius,
-		NULL,
+		this,
 		NULL,
 		0,
 		DEATH_MONSTER_MAGE.m_id,
@@ -298,7 +298,7 @@ void M_Mage_Attack_Push(entity this)
 		autocvar_g_monster_mage_attack_push_damage,
 		autocvar_g_monster_mage_attack_push_damage,
 		autocvar_g_monster_mage_attack_push_radius,
-		NULL,
+		this,
 		NULL,
 		autocvar_g_monster_mage_attack_push_force,
 		DEATH_MONSTER_MAGE.m_id,

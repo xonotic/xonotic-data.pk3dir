@@ -104,7 +104,7 @@ bool Monster_ValidTarget(entity this, entity targ, bool skipfacing)
 	if (!this || !targ)
 		return false;
 
-	if (targ == this
+	if (!MONSTER_IS_ENEMY(this, targ)
 	|| (IS_VEHICLE(targ) && !(this.monsterdef.spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
 	|| game_stopped || time < game_starttime // monsters do nothing before match has started
 	|| targ.takedamage == DAMAGE_NO
@@ -113,7 +113,6 @@ bool Monster_ValidTarget(entity this, entity targ, bool skipfacing)
 	|| this.monster_follow == targ || targ.monster_follow == this
 	|| (!IS_VEHICLE(targ) && (targ.flags & FL_NOTARGET))
 	|| (!autocvar_g_monsters_typefrag && PHYS_INPUT_BUTTON_CHAT(targ))
-	|| SAME_TEAM(targ, this)
 	|| (targ.alpha != 0 && targ.alpha < 0.5)
 	|| (autocvar_g_monsters_lineofsight && !checkpvs(this.origin + this.view_ofs, targ)) // enemy cannot be seen
 	|| MUTATOR_CALLHOOK(MonsterValidTarget, this, targ))
@@ -171,7 +170,7 @@ entity Monster_FindTarget(entity this)
 
 void monster_setupcolors(entity this)
 {
-	if (teamplay && this.team)
+	if (MONSTERS_TEAMED() && this.team)
 		this.colormap = 1024 + (this.team - 1) * 17;
 	else if (IS_PLAYER(this.realowner))
 		this.colormap = this.realowner.colormap;
@@ -199,7 +198,7 @@ void monster_setupcolors(entity this)
 
 void monster_changeteam(entity this, int newteam)
 {
-	if (!teamplay)
+	if (!MONSTERS_TEAMED())
 		return;
 
 	this.team = newteam;
@@ -855,7 +854,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	walkspeed = bound(0, M_ARGV(2, float) * MONSTER_SKILLMOD(this), walkspeed * 2.5); // limit maxspeed to prevent craziness
 
 	if (this.monster_follow)
-	if ((teamplay && autocvar_g_monsters_teams && DIFF_TEAM(this.monster_follow, this))
+	if (MONSTER_IS_ENEMY(this, this.monster_follow)
 	|| IS_SPEC(this.monster_follow) || IS_OBSERVER(this.monster_follow))
 		this.monster_follow = NULL;
 
@@ -1285,7 +1284,7 @@ void Monster_Think(entity this)
 			DEATH_KILL.m_id,
 			DMG_NOWEP,
 			this.origin,
-			this.origin
+			'0 0 0'
 		);
 		return;
 	}
@@ -1351,7 +1350,7 @@ bool Monster_Spawn_Setup(entity this)
 	Monster_Sounds_Precache(this);
 	Monster_Sounds_Update(this);
 
-	if (teamplay)
+	if (MONSTERS_TEAMED())
 	{
 		if (!this.monster_attack)
 			IL_PUSH(g_monster_targets, this);
@@ -1416,7 +1415,7 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 		return false;
 	}
 
-	if (this.team && !teamplay)
+	if (this.team && !MONSTERS_TEAMED())
 		this.team = 0;
 
 	if (!(this.spawnflags & MONSTERFLAG_SPAWNED) // naturally spawned monster

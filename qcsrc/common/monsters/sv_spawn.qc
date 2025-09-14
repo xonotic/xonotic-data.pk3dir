@@ -56,7 +56,7 @@ entity spawnmonster(entity e, string monster, Monster monster_id, entity spawned
 
 	if (IS_PLAYER(spawnedby))
 	{
-		if (teamplay && autocvar_g_monsters_teams)
+		if (MONSTERS_TEAMED())
 			e.team = spawnedby.team; // colors handled in spawn code
 		if (autocvar_g_monsters_owners)
 			e.monster_follow = own; // using .owner makes the monster non-solid for its master
