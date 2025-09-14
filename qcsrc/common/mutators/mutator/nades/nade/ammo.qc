@@ -13,13 +13,19 @@ void nade_ammo_touch(entity this, entity toucher)
 	if(!IS_DEAD(toucher))
 	if(!STAT(FROZEN, toucher))
 	{
-		if (SAME_TEAM(toucher, this.realowner))
-			for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		float new_load;
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if (toucher.(weaponentity).clip_size)
 			{
-				.entity weaponentity = weaponentities[slot];
-				if (toucher.(weaponentity).clip_size)
-					toucher.(weaponentity).clip_load = toucher.(weaponentity).(weapon_load[toucher.(weaponentity).m_switchweapon.m_id]) = toucher.(weaponentity).clip_size;
+				new_load = (SAME_TEAM(toucher, this.realowner))
+					? toucher.(weaponentity).clip_size
+					: max(0, toucher.(weaponentity).clip_load - toucher.(weaponentity).clip_size * (autocvar_g_nades_ammo_clip_empty_rate * frametime/2));
+
+				toucher.(weaponentity).clip_load = toucher.(weaponentity).(weapon_load[toucher.(weaponentity).m_switchweapon.m_id]) = new_load;
 			}
+		}
 
 		ammo_factor = autocvar_g_nades_ammo_rate*frametime/2;
 		if ( toucher != this.realowner )
@@ -55,12 +61,6 @@ void nade_ammo_touch(entity this, entity toucher)
 		}
 #undef CHECK_AMMO_RESOURCE_LIMIT
 #undef DROP_AMMO_RESOURCE
-	}
-
-	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
-	{
-		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
-		show_tint.nade_ammo_time = time + 0.1;
 	}
 }
 
