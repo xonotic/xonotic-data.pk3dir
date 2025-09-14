@@ -1,6 +1,8 @@
 #pragma once
 
+#ifdef GAMEQC
 string M_Model(string m_mdl);
+#endif
 
 REGISTRY(Monsters, BITS(5))
 #define get_monsterinfo(i) REGISTRY_GET(Monsters, i)

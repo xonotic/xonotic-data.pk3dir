@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef SVQC
 // special spawn flags
 const int MONSTER_RESPAWN_DEATHPOINT  = BIT(4);  // re-spawn where we died
 const int MONSTER_TYPE_FLY            = BIT(5);
@@ -18,7 +19,9 @@ const int MON_FLAG_HIDDEN             = BIT(16);
 // entity properties of monsterinfo:
 .bool(int, entity actor, entity targ, .entity weaponentity) monster_attackfunc;
 .entity monsterdef;
+#endif
 
+#ifdef GAMEQC
 // animations
 .vector anim_blockend;
 .vector anim_blockstart;
@@ -27,19 +30,25 @@ const int MON_FLAG_HIDDEN             = BIT(16);
 .vector anim_melee3;
 .vector anim_walk;
 .vector anim_spawn;
+#endif
 
 CLASS(Monster, Object)
 	ATTRIB(Monster, monsterid, int, 0);
+#ifdef SVQC
 	/** attributes */
 	ATTRIB(Monster, spawnflags, int, 0);
+#endif
 	/** human readable name */
 	ATTRIB(Monster, m_name, string, _("Monster"));
 	/** short name */
 	ATTRIB(Monster, netname, string, "");
 	/** color */
 	ATTRIB(Monster, m_color, vector, '1 1 1');
+#ifdef GAMEQC
 	/** model */
 	ATTRIB(Monster, m_model, entity);
+#endif
+#ifdef SVQC
 	/** hitbox size */
 	ATTRIB(Monster, m_mins, vector, '-0 -0 -0');
 	/** hitbox size */
@@ -75,12 +84,15 @@ CLASS(Monster, Object)
 		TC(Monster, this);
 		return damage_take;
 	}
+#endif
+#ifdef GAMEQC
 	/** (BOTH?) sets animations for monster */
 	METHOD(Monster, mr_anim, bool(Monster this, entity actor))
 	{
 		TC(Monster, this);
 		return false;
 	}
+#endif
 ENDCLASS(Monster)
 
 
