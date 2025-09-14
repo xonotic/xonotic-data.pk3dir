@@ -74,11 +74,11 @@ bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weapone
 			if (random() < 0.3 && GetResource(actor, RES_HEALTH) < 75 && GetResource(actor.enemy, RES_HEALTH) > 10)
 				return M_Zombie_Defend_Block(actor);
 
-			float anim_chance = random();
+			float anim_chance = random() * 3;
 			vector chosen_anim;
-			if (anim_chance < 0.33)
+			if (anim_chance < 1)
 				chosen_anim = actor.anim_melee1;
-			else if (anim_chance < 0.66)
+			else if (anim_chance < 2)
 				chosen_anim = actor.anim_melee2;
 			else
 				chosen_anim = actor.anim_melee3;
