@@ -45,11 +45,40 @@ string autocvar_g_forced_team_pink;
 
 entity g_team_entities[NUM_TEAMS]; ///< Holds global team entities.
 
+void _SpawnTeam(string teament_classname, string teamname, int teamnum)
+{
+	entity this = new_pure(teament_classname);
+	this.netname = teamname;
+	this.cnt = teamnum - 1;
+	this.spawnfunc_checked = true;
+	this.team = teamnum;
+}
+int Team_MapEnts_FindOrSpawn(string ent_classname, int defaultmask)
+{
+	int teams = 0;
+	entity head = findchain(classname, ent_classname);
+	while (head)
+	{
+		if (Team_IsValidTeam(head.team))
+			teams |= Team_TeamToBit(head.team);
+		head = head.chain;
+	}
+	if (teams)
+		return teams;
+
+	LOG_TRACEF("No \"%s\" entities found on this map, creating them anyway.", ent_classname);
+	if (defaultmask & BIT(0)) _SpawnTeam(ent_classname, "Red", NUM_TEAM_1);
+	if (defaultmask & BIT(1)) _SpawnTeam(ent_classname, "Blue", NUM_TEAM_2);
+	if (defaultmask & BIT(2)) _SpawnTeam(ent_classname, "Yellow", NUM_TEAM_3);
+	if (defaultmask & BIT(3)) _SpawnTeam(ent_classname, "Pink", NUM_TEAM_4);
+	return defaultmask;
+}
+
 void Team_InitTeams()
 {
 	if (g_team_entities[0])
 		return;
-	for (int i = 0; i < NUM_TEAMS; ++i)
+	for (int i = 0; i < AVAILABLE_TEAMS; ++i)
 	{
 		g_team_entities[i] = new_pure(team_entity);
 	}
@@ -96,7 +125,7 @@ void Team_SetNumberOfAlivePlayers(entity team_ent, int number)
 int Team_GetWinnerAliveTeam()
 {
 	int winner = 0;
-	for (int i = 0; i < NUM_TEAMS; ++i)
+	for (int i = 0; i < AVAILABLE_TEAMS; ++i)
 	{
 		if (g_team_entities[i].m_num_players_alive > 0)
 		{
@@ -111,7 +140,7 @@ int Team_GetWinnerAliveTeam()
 int Team_GetNumberOfAliveTeams()
 {
 	int result = 0;
-	for (int i = 0; i < NUM_TEAMS; ++i)
+	for (int i = 0; i < AVAILABLE_TEAMS; ++i)
 	{
 		if (g_team_entities[i].m_num_players_alive > 0)
 		{
@@ -124,7 +153,7 @@ int Team_GetNumberOfAliveTeams()
 int Team_GetWinnerTeam_WithOwnedItems(int min_control_points)
 {
 	int winner = 0;
-	for (int i = 0; i < NUM_TEAMS; ++i)
+	for (int i = 0; i < AVAILABLE_TEAMS; ++i)
 	{
 		if (g_team_entities[i].m_num_owned_items >= min_control_points)
 		{
@@ -149,7 +178,7 @@ void Team_SetNumberOfOwnedItems(entity team_ent, int number)
 int Team_GetNumberOfTeamsWithOwnedItems()
 {
 	int result = 0;
-	for (int i = 0; i < NUM_TEAMS; ++i)
+	for (int i = 0; i < AVAILABLE_TEAMS; ++i)
 	{
 		if (g_team_entities[i].m_num_owned_items > 0)
 		{
@@ -460,45 +489,14 @@ void TeamBalance_JoinBestTeam(entity player)
 entity TeamBalance_CheckAllowedTeams(entity for_whom)
 {
 	entity balance = spawn();
-	for (int i = 0; i < NUM_TEAMS; ++i)
+	for (int i = 0; i < AVAILABLE_TEAMS; ++i)
 	{
 		entity team_ent = balance.m_team_balance_team[i] = spawn();
 		team_ent.m_team_score = g_team_entities[i].m_team_score;
-		team_ent.m_num_players = TEAM_NOT_ALLOWED;
-		team_ent.m_num_bots = 0;
+		team_ent.m_num_players = teamplay_bitmask & BIT(i) ? 0 : TEAM_NOT_ALLOWED;
 	}
 	setthink(balance, TeamBalance_Destroy);
 	balance.nextthink = time;
-
-	int teams_mask = 0;
-	string teament_name = string_null;
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(TeamBalance_CheckAllowedTeams,
-		teams_mask, teament_name, for_whom);
-	teams_mask = M_ARGV(0, float);
-	teament_name = M_ARGV(1, string);
-	if (mutator_returnvalue)
-	{
-		for (int i = 0; i < NUM_TEAMS; ++i)
-		{
-			if (teams_mask & BIT(i))
-			{
-				balance.m_team_balance_team[i].m_num_players = 0;
-			}
-		}
-	}
-
-	if (teament_name)
-	{
-		entity head = find(NULL, classname, teament_name);
-		while (head)
-		{
-			if (Team_IsValidTeam(head.team))
-			{
-				TeamBalance_GetTeam(balance, head.team).m_num_players = 0;
-			}
-			head = find(head, classname, teament_name);
-		}
-	}
 
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
 	if (autocvar_bot_vs_human && AVAILABLE_TEAMS == 2 && for_whom)
@@ -584,7 +582,7 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 	}
 
 	// if player has a forced team, ONLY allow that one
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		if (for_whom.team_forced == i &&
 			TeamBalance_IsTeamAllowedInternal(balance, i))
@@ -603,7 +601,7 @@ void TeamBalance_Destroy(entity balance)
 	{
 		return;
 	}
-	for (int i = 0; i < NUM_TEAMS; ++i)
+	for (int i = 0; i < AVAILABLE_TEAMS; ++i)
 	{
 		delete(balance.(m_team_balance_team[i]));
 	}
@@ -621,7 +619,7 @@ int TeamBalance_GetAllowedTeams(entity balance)
 		LOG_FATAL("Team balance entity is not initialized.");
 	}
 	int result = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		if (TeamBalance_IsTeamAllowedInternal(balance, i))
 		{
@@ -987,7 +985,7 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player)
 		return Team_TeamToIndex(player.team);
 
 	RandomSelection_Init();
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		if (team_bits & Team_IndexToBit(i))
 		{
@@ -1078,7 +1076,7 @@ void TeamBalance_AutoBalanceBots()
 	TeamBalance_GetTeamCounts(balance, NULL);
 	int smallest_team_index = 0;
 	int smallest_team_player_count = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		entity team_ = TeamBalance_GetTeamFromIndex(balance, i);
 		if (!TeamBalanceTeam_IsAllowed(team_))
@@ -1100,7 +1098,7 @@ void TeamBalance_AutoBalanceBots()
 	//PrintToChatAll(sprintf("Smallest team: %f", smallest_team_index));
 	//PrintToChatAll(sprintf("Smallest team players: %f", smallest_team_player_count));
 	entity switchable_bot = NULL;
-	int teams = BITS(NUM_TEAMS);
+	int teams = BITS(AVAILABLE_TEAMS);
 	while (teams != 0)
 	{
 		int largest_team_index = TeamBalance_GetLargestTeamIndex(balance,
@@ -1142,7 +1140,7 @@ int TeamBalance_GetLargestTeamIndex(entity balance, int teams)
 {
 	int largest_team_index = 0;
 	int largest_team_player_count = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		if (!(Team_IndexToBit(i) & teams))
 		{
@@ -1236,13 +1234,13 @@ void KillPlayerForTeamChange(entity player)
 
 bool TeamBalance_IsTeamAllowedInternal(entity balance, int index)
 {
-	return balance.m_team_balance_team[index - 1].m_num_players !=
-		TEAM_NOT_ALLOWED;
+	return index <= AVAILABLE_TEAMS
+	       && balance.m_team_balance_team[index - 1].m_num_players != TEAM_NOT_ALLOWED;
 }
 
 void TeamBalance_BanTeamsExcept(entity balance, int index)
 {
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		if (i != index)
 		{
@@ -1267,7 +1265,7 @@ entity TeamBalance_GetTeam(entity balance, int team_num)
 
 bool TeamBalanceTeam_IsAllowed(entity team_ent)
 {
-	return team_ent.m_num_players != TEAM_NOT_ALLOWED;
+	return team_ent && team_ent.m_num_players != TEAM_NOT_ALLOWED;
 }
 
 int TeamBalanceTeam_GetNumberOfPlayers(entity team_ent)
