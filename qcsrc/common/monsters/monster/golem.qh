@@ -7,9 +7,11 @@ MODEL(MON_GOLEM, M_Model("golem.dpm"));
 #endif
 
 CLASS(Golem, Monster)
+#ifdef SVQC
 	ATTRIB(Golem, spawnflags, int, MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED);
 	ATTRIB(Golem, m_mins, vector, '-24 -24 -20');
 	ATTRIB(Golem, m_maxs, vector, '24 24 88');
+#endif
 #ifdef GAMEQC
 	ATTRIB(Golem, m_model, Model, MDL_MON_GOLEM);
 #endif
