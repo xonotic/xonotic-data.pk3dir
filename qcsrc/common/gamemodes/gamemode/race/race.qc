@@ -7,9 +7,10 @@ METHOD(Race, describe, string(Race this))
 {
 	TC(Race, this);
 	PAGE_TEXT_INIT();
-	PAR(_("%s is a gametype similar to %s except the start and finish line of the track are identical, so you run laps repeatedly through the track."), COLORED_NAME(this), COLORED_NAME(MAPINFO_TYPE_CTS));
-	PAR(_("Consequently the aim is to keep running constantly to complete as many laps as possible for the shot at the fastest time, rather than resetting runs like in %s to set the individual best time. "
-	      "Since you continue straight onto the next lap, having a speedy finish to a lap means that your next lap will start off with high speed, giving you a good shot at beating your personal best."), COLORED_NAME(MAPINFO_TYPE_CTS));
+	PAR(_("%s is a gametype similar to %s where players run on a track to be the first to cross the finish line after a certain number of laps."), COLORED_NAME(this), COLORED_NAME(MAPINFO_TYPE_CTS));
+	PAR(_("Before the real race starts there's a qualifying session that decides the starting grid based on the best lap time of each player. "
+	      "This stage is very similar to %s since weapons can't be used to disturb other players but can still be used to run faster."), COLORED_NAME(MAPINFO_TYPE_CTS));
+	PAR(_("During the real race it's possible to shoot other players in order to slow them down."));
 	return PAGE_TEXT;
 }
 #endif
