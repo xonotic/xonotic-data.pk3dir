@@ -611,11 +611,8 @@ vector Monster_WanderTarget(entity this, vector targetorigin)
 	makevectors(ang);
 	vector pos = targetorigin + v_forward * this.wander_distance;
 	if (((this.flags & FL_FLY) && (this.spawnflags & MONSTERFLAG_FLY_VERTICAL)) || (this.flags & FL_SWIM))
-	{
-		pos.z = random() * 200;
-		if (random() >= 0.5)
-			pos.z = -pos.z;
-	}
+		pos.z = crandom() * 200; // -200 to 200
+
 	// truncate movement so we don't do walking into walls animations
 	traceline(this.origin + this.view_ofs, pos, MOVE_NORMAL, this);
 	return trace_endpos;
