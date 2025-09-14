@@ -1356,7 +1356,7 @@ void shuffleteams()
 
 	int number_of_teams = 0;
 	entity balance = TeamBalance_CheckAllowedTeams(NULL);
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		if (TeamBalance_IsTeamAllowed(balance, i))
 		{
