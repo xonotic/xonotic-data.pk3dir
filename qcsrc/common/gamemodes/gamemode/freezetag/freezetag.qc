@@ -5,7 +5,7 @@ METHOD(FreezeTag, describe, string(FreezeTag this))
 {
 	TC(FreezeTag, this);
 	PAGE_TEXT_INIT();
-	PAR(_("%s is a round-based teamplay gametype where killed players are frozen and need to be unfrozen to re-enter the round. "
+	PAR(_("%s is a round-based teamplay gametype where fragged players are frozen and need to be unfrozen to re-enter the round. "
 	      "The round ends when all players from all opposing teams are frozen, scoring the remaining team a point."), COLORED_NAME(this));
 	PAR(_("Frozen players slowly unfreeze over time, but they unfreeze much faster when \"revived\" by a teammate standing in close proximity. "
 	      "Additionally, damaging frozen players on the other team helps unfreeze them, so it is best to try to avoid doing that."));

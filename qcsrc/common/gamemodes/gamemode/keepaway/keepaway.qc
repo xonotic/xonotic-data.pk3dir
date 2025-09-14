@@ -11,8 +11,7 @@ METHOD(Keepaway, describe, string(Keepaway this))
 	PAR(_("Your score increases when you frag someone while you're holding a ball and when you frag the ball carrier. "
 	      "The first player to reach the score limit will win the match."));
 	PAR(_("When the ball carrier is fragged, the ball will drop to the ground and anyone is able to pick it up. "
-	      "If nobody picks it up after some time it will get bored and teleport itself elsewhere. "
-	      "Like the flag in %s, the ball in %s can also be thrown, but it's not a great idea since you have no teammates!"), COLORED_NAME(MAPINFO_TYPE_CTF), COLORED_NAME(this));
+	      "If nobody picks it up after some time it will get bored and teleport itself elsewhere."));
 	PAR(_("%s rewards good fragging but also good movement, since the better you can evade attacks, the longer you can keep the ball."), COLORED_NAME(this));
 	return PAGE_TEXT;
 }
