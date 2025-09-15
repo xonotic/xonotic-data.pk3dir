@@ -2283,7 +2283,7 @@ bool joinAllowed(entity this, int team_index)
 		}
 	}
 
-	if (QueueNeeded(this))
+	if (QueueNeeded(this, team_index))
 	{
 		if (team_index == 0) // so ClientCommand_selectteam() can check joinAllowed() before calling SetPlayerTeam() without chicken/egg problem
 			if (ShowTeamSelection(this)) return false; // only needed by callsites other than selectteam
