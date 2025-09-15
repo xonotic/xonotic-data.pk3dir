@@ -357,4 +357,4 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_index_b, bool us
 void SV_ChangeTeam(entity player, int new_color);
 
 
-bool QueueNeeded(entity ignore);
+bool QueueNeeded(entity client, int team_index);

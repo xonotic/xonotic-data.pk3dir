@@ -1329,16 +1329,31 @@ void SV_ChangeTeam(entity player, int new_color)
 		SetPlayerColors(player, new_color);
 }
 
-bool QueueNeeded(entity ignore)
+bool QueueNeeded(entity client, int team_index)
 {
-	if (!teamplay || warmup_stage || !autocvar_g_balance_teams_queue || autocvar_g_campaign || ignore.team > 0)
+	if (!teamplay || warmup_stage || !autocvar_g_balance_teams_queue || autocvar_g_campaign || client.team > 0)
 		return false;
 
 	int human_clients = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
 		if (++human_clients > 1)
-			return TeamBalance_AreEqual(ignore, true);
+		{
+			if (TeamBalance_AreEqual(client, true))
+				return true;
+			if (team_index <= 0)
+				return false; // auto-select will join a smaller team
+
+			entity balance = TeamBalance_CheckAllowedTeams(client);
+			TeamBalance_GetTeamCounts(balance, client);
+			if ((Team_IndexToBit(team_index) & TeamBalance_FindBestTeams(balance, client, false)) == 0)
+			{
+				TeamBalance_Destroy(balance);
+				return true;
+			}
+			TeamBalance_Destroy(balance);
+			return false;
+		}
 	});
 	return false;
 }
