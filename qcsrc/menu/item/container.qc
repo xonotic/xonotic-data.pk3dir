@@ -184,7 +184,17 @@
 		if (f)
 		{
 			this.enterSubitem(this, f);
-			bool r = f.mousePress(f, globalToBox(pos, f.Container_origin, f.Container_size));
+			vector v = globalToBox(pos, f.Container_origin, f.Container_size);
+			// If something in this container is focused but somehow the cursor is outside of the container it then
+			// remove the focus on mouse press.
+			//   This situation can happen after a stand-alone dialog like "Advanced Settings" is opened and then closed
+			//   because the focused item of the current window is saved (by saveFocus) and then restored on close,
+			//   regardless of mouse position.
+			//   If the focus wasn't removed then clicking outside of the current window would do nothing instead of
+			//   closing the current window and returning to the main menu.
+			if (v.x < 0 || v.x > 1 || v.y < 0 || v.y > 1)
+				this.setFocus(this, NULL);
+			bool r = f.mousePress(f, v);
 			this.leaveSubitem(this);
 			return r;
 		}
