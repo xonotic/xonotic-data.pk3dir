@@ -96,7 +96,7 @@ entity Item_RandomFromList(string itemlist)
 // Compatibility spawn functions
 
 // in Quake this is green armor, in Xonotic maps it is an armor shard
-SPAWNFUNC_ITEM_COND(item_armor1, autocvar_sv_mapformat_is_quake3, ITEM_ArmorSmall, ITEM_ArmorMedium)
+SPAWNFUNC_ITEM(item_armor1, autocvar_sv_mapformat_is_quake3 ? ITEM_ArmorSmall : ITEM_ArmorMedium)
 SPAWNFUNC_ITEM(item_armor25, ITEM_ArmorMega) // Nexuiz used item_armor25 to spawn a Mega Armor
 SPAWNFUNC_ITEM(item_health1, ITEM_HealthSmall)
 SPAWNFUNC_ITEM(item_health25, ITEM_HealthMedium)
