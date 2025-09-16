@@ -105,27 +105,23 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 #endif // CSQC
 #ifdef SVQC
 
-void W_RocketMinsta_Explosion(entity actor, .entity weaponentity, vector loc)
+void W_RocketMinsta_Explosion(entity this, .entity weaponentity, vector loc)
 {
-	if (accuracy_canbegooddamage(actor))
-		accuracy_add(actor, WEP_DEVASTATOR, autocvar_g_rm_damage, 0, 0); // add to fired
-
-	entity dmgent = spawn();
-	dmgent.owner = dmgent.realowner = actor;
-	setorigin(dmgent, loc);
-	RadiusDamage(dmgent, actor,
+	if (accuracy_canbegooddamage(this))
+		accuracy_add(this, WEP_DEVASTATOR, autocvar_g_rm_damage, 0, 0); // add to fired
+	RadiusDamageForSource(this, loc, this.velocity, this.realowner,
 		autocvar_g_rm_damage,
 		autocvar_g_rm_edgedamage,
 		autocvar_g_rm_radius,
 		NULL,
 		NULL,
+		false,
 		autocvar_g_rm_force,
+		'1 1 1',
 		WEP_DEVASTATOR.m_id | HITTYPE_SPLASH,
 		weaponentity,
 		NULL
 	);
-
-	delete(dmgent);
 }
 
 void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
