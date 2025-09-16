@@ -42,3 +42,13 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 		M_ARGV(0, float) *= autocvar_g_buffs_disability_weaponspeed;
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(DisabilityBuff, describe, string(DisabilityBuff this))
+{
+	TC(DisabilityBuff, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s causes your enemies and monsters to slow down for a few seconds when you attack them, while the buff is active."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAR(_("This is particularly useful against speedy players, especially in %s."), COLORED_NAME(MAPINFO_TYPE_CTF));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

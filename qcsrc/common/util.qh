@@ -45,6 +45,11 @@ void wordwrap_cb(string s, float l, void(string) callback);
 string draw_currentSkin;
 string draw_UseSkinFor(string pic);
 
+string icon_path_from_HUDskin(string theIcon);
+#ifdef MENUQC
+string icon_path_from_menuskin(string theIcon);
+#endif
+
 // NOTE they aren't all registered mutators, e.g. jetpack, low gravity
 // TODO add missing "mutators"
 const int MUT_DODGING = 0;

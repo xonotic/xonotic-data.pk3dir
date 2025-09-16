@@ -1,14 +1,21 @@
 #pragma once
 
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_HUDskin
+#endif
 #include <common/weapons/_all.qh>
 
 CLASS(Turret, Object)
     ATTRIB(Turret, m_id, int, 0);
 
+    /** icon */
+    ATTRIB(Turret, m_icon, string);
     /** short name */
     ATTRIB(Turret, netname, string);
     /** human readable name */
     ATTRIB(Turret, m_name, string, _("Turret"));
+    /** color */
+    ATTRIB(Turret, m_color, vector, '1 1 1');
     /** currently a copy of the model */
     ATTRIB(Turret, mdl, string);
     /** full name of model */
@@ -22,9 +29,6 @@ CLASS(Turret, Object)
     /** turret hitbox size */
     ATTRIB(Turret, m_maxs, vector, '0 0 0');
 
-    METHOD(Turret, display, void(Turret this, void(string name, string icon) returns)) {
-        returns(this.m_name, string_null);
-    }
     /** (BOTH) setup turret data */
     METHOD(Turret, tr_setup, void(Turret this, entity it)) {
 
@@ -50,8 +54,21 @@ CLASS(Turret, Object)
         w.wr_think(w, it, weaponentity, 1);
     }
 #endif
-	/** (SERVER) dump turret cvars to config in data directory (see: sv_cmd dumpturrets) */
-	METHOD(Turret, tr_config, void(Turret this)) { }
+    /** (SERVER) dump turret cvars to config in data directory (see: sv_cmd dumpturrets) */
+    METHOD(Turret, tr_config, void(Turret this)) { }
+
+#ifdef MENUQC
+    METHOD(Turret, describe, string(Turret this))
+    {
+        TC(Turret, this);
+        return SUPER(Turret).describe(this);
+    }
+    METHOD(Turret, display, void(Turret this, void(string name, string icon) returns))
+    {
+        TC(Turret, this);
+        returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
+    }
+#endif
 ENDCLASS(Turret)
 
 // fields:

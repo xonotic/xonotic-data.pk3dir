@@ -51,4 +51,17 @@ METHOD(FusionReactor, tr_setup, void(FusionReactor this, entity it))
     it.turret_firecheckfunc = turret_fusionreactor_firecheck;
 }
 
-#endif
+#endif // SVQC
+#ifdef MENUQC
+
+METHOD(FusionReactor, describe, string(FusionReactor this))
+{
+    TC(FusionReactor, this);
+    PAGE_TEXT_INIT();
+    PAR(_("The %s is a bit of a unique turret, instead helping out other turrets rather than directly attacking its targets. "
+          "It has no weapon of its own, and instead works by generating power for nearby turrets, so that they can attack their shared targets more often."), COLORED_NAME(this));
+    PAR(_("This is the only turret that doesn't directly attack its targets."));
+    return PAGE_TEXT;
+}
+
+#endif // MENUQC

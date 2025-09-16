@@ -3,6 +3,9 @@
 #ifdef CSQC
 #include <client/main.qh>
 #endif
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_menuskin
+#endif
 
 const int CBC_ORDER_FIRST = 1;
 const int CBC_ORDER_LAST = 2;
@@ -152,16 +155,30 @@ enum {
 
 USING(mutatorfunc_t, bool(int));
 
+#ifdef MENUQC
+#include <menu/draw.qh>
+#endif
+
 CLASS(Mutator, Object)
     ATTRIB(Mutator, m_id, int, 0);
+    ATTRIB(Mutator, message, string);
+    ATTRIB(Mutator, m_color, vector, '1 1 1');
+    ATTRIB(Mutator, m_icon, string);
     ATTRIB(Mutator, m_name, string);
     ATTRIB(Mutator, mutatorfunc, mutatorfunc_t);
     ATTRIB(Mutator, mutatorcheck, bool());
-    CONSTRUCTOR(Mutator, string _name, mutatorfunc_t func) {
-        CONSTRUCT(Mutator);
-        this.m_name = _name;
-        this.mutatorfunc = func;
+#ifdef MENUQC
+    METHOD(Mutator, describe, string(Mutator this))
+    {
+        TC(Mutator, this);
+        return SUPER(Mutator).describe(this);
     }
+    METHOD(Mutator, display, void(Mutator this, void(string name, string icon) returns))
+    {
+        TC(Mutator, this);
+        returns(this.message, icon_path_from_menuskin(this.m_icon));
+    }
+#endif
 ENDCLASS(Mutator)
 
 REGISTRY(Mutators, BITS(7))
@@ -260,16 +277,24 @@ void Mutator_Remove(Mutator mut)
 #endif
 }
 
-#define REGISTER_MUTATOR(id, dependence) \
+#define _REGISTER_MUTATOR(id, dependence, cname) \
     bool MUTATORFUNC_##id##_hooks(int mode) { return = false; } \
     bool MUTATORFUNC_##id(int mode) { \
         return = false; \
         bool ret = MUTATORFUNC_##id##_hooks(mode); if (ret) return ret; \
     } \
     bool MUTATOR_##id##_check() { return dependence; } \
-    REGISTER(Mutators, MUTATOR, id, m_id, NEW(Mutator, #id, MUTATORFUNC_##id)) \
-    { this.mutatorcheck = MUTATOR_##id##_check; } \
+    REGISTER(Mutators, MUTATOR, id, m_id, NEW(cname)) \
+    { \
+        this.m_name = #id; \
+        this.mutatorfunc = MUTATORFUNC_##id; \
+        this.mutatorcheck = MUTATOR_##id##_check; \
+    } \
     ACCUMULATE bool MUTATORFUNC_##id(int mode)
+
+#define REGISTER_MUTATOR(...) EVAL(OVERLOAD(REGISTER_MUTATOR, __VA_ARGS__))
+#define REGISTER_MUTATOR_2(id, dependence)        _REGISTER_MUTATOR(id, dependence, Mutator)
+#define REGISTER_MUTATOR_3(id, dependence, cname) _REGISTER_MUTATOR(id, dependence, cname)
 
 STATIC_INIT(Mutators) {
     RegisterHooks();

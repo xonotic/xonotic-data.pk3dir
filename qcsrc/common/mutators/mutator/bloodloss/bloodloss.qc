@@ -68,3 +68,13 @@ MUTATOR_HOOKFUNCTION(bloodloss, PlayerJump)
 #endif
 
 #endif
+#ifdef MENUQC
+METHOD(MutatorBloodLoss, describe, string(MutatorBloodLoss this))
+{
+	TC(MutatorBloodLoss, this);
+	PAGE_TEXT_INIT();
+	PAR(_("%s is a mutator in which players below a certain health threshold (for example 25) will suffer blood loss."), COLORED_NAME(this));
+	PAR(_("Blood loss makes players stunned, severely impairs their movement, and rapidly takes away health points until they either die or gain enough health to go above the health threshold."));
+	return PAGE_TEXT;
+}
+#endif

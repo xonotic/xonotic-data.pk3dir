@@ -7,6 +7,9 @@
 #include <common/items/item.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #endif
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_HUDskin
+#endif
 
 #define REGISTER_BUFF(id, inst) REGISTER(StatusEffects, BUFF_##id, m_id, inst)
 
@@ -22,19 +25,19 @@ CLASS(Buff, StatusEffect)
 	ATTRIB(Buff, m_skin, int, 0);
 #endif
 	ATTRIB(Buff, m_sprite, string, "");
+#ifdef MENUQC
+	METHOD(Buff, describe, string(Buff this))
+	{
+		TC(Buff, this);
+		return SUPER(Buff).describe(this);
+	}
+#endif
 #ifndef SVQC
 	ATTRIB(Buff, m_icon, string, "buff");
-	METHOD(Buff, display, void(entity this, void(string name, string icon) returns))
+	METHOD(Buff, display, void(Buff this, void(string name, string icon) returns))
 	{
-		string img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon);
-	#ifdef CSQC
-		if (precache_pic(img) == "")
-	#endif
-	#ifdef MENUQC
-		if (draw_PreloadPicture(img) == "")
-	#endif
-			img = sprintf("/gfx/hud/default/%s", this.m_icon);
-		returns(this.m_name, img);
+		TC(Buff, this);
+		returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
 	}
 #endif
 #ifdef SVQC

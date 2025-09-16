@@ -11,6 +11,14 @@
 #include <server/items/spawning.qh>
 #endif
 
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_HUDskin
+#endif
+
+#ifdef MENUQC
+#include <menu/draw.qh>
+#endif
+
 #ifdef GAMEQC
 const int IT_UNLIMITED_AMMO 			=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
 const int IT_UNLIMITED_SUPERWEAPONS		=  BIT(1); // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
@@ -129,22 +137,18 @@ CLASS(GameItem, Object)
 	ATTRIB(GameItem, m_glow, bool, false);
 	ATTRIB(GameItem, m_respawnsound, Sound, SND_ITEMRESPAWN);
 #endif
-#ifndef SVQC
-	METHOD(GameItem, display, void(entity this, void(string name, string icon) returns))
+#ifdef MENUQC
+	METHOD(GameItem, describe, string(GameItem this))
 	{
-		string img = this.m_icon;
-		if (img != "")
-		{
-			img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon);
-	#ifdef CSQC
-			if (precache_pic(img) == "")
-	#endif
-	#ifdef MENUQC
-			if (draw_PreloadPicture(img) == "")
-	#endif
-				img = sprintf("/gfx/hud/default/%s", this.m_icon);
-		}
-		returns(this.m_name, img);
+		TC(GameItem, this);
+		return SUPER(GameItem).describe(this);
+	}
+#endif
+#ifndef SVQC
+	METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))
+	{
+		TC(GameItem, this);
+		returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
 	}
 #endif
 	METHOD(GameItem, show, void(GameItem this))

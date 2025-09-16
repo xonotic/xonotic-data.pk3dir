@@ -2,9 +2,10 @@
 
 #include "pickup.qh"
 CLASS(Health, Pickup)
+/* color      */ ATTRIB(Health, m_color, vector, '1 0 0');
 #ifdef SVQC
-    ATTRIB(Health, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
-    ATTRIB(Health, m_botvalue, int, 5000);
+/* pickupfunc */ ATTRIB(Health, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
+/* botvalue   */ ATTRIB(Health, m_botvalue, int, 5000);
 #endif
 ENDCLASS(Health)
 
@@ -12,6 +13,7 @@ ENDCLASS(Health)
     #include <server/items/items.qh>
 #endif
 
+// small health
 #ifdef GAMEQC
 MODEL(HealthSmall_ITEM, Item_Model("g_h1.md3"));
 SOUND(HealthSmall, Item_Sound("minihealth"));
@@ -63,6 +65,7 @@ REGISTER_ITEM(HealthSmall, NEW(HealthSmall));
 
 SPAWNFUNC_ITEM(item_health_small, ITEM_HealthSmall)
 
+// medium health
 #ifdef GAMEQC
 MODEL(HealthMedium_ITEM, Item_Model("g_h25.md3"));
 SOUND(HealthMedium, Item_Sound("mediumhealth"));
@@ -114,6 +117,7 @@ REGISTER_ITEM(HealthMedium, NEW(HealthMedium));
 
 SPAWNFUNC_ITEM(item_health_medium, ITEM_HealthMedium)
 
+// big health
 #ifdef GAMEQC
 MODEL(HealthBig_ITEM, Item_Model("g_h50.md3"));
 SOUND(HealthBig, Item_Sound("mediumhealth"));

@@ -211,6 +211,46 @@ string draw_UseSkinFor(string pic)
 		return strcat(draw_currentSkin, "/", pic);
 }
 
+#ifdef CSQC
+	#define PRECACHE_PIC precache_pic
+	#define SKIN_PATH    hud_skin_path
+#endif
+#ifdef MENUQC
+	#define PRECACHE_PIC draw_PreloadPicture
+	#define SKIN_PATH    (strreplace("gfx/menu", "gfx/hud", draw_currentSkin))
+#endif
+
+/// CLIENT: Returns icon path from the current HUD skin
+/// MENU: Returns icon path from the HUD skin with the same name as the current menu skin
+string icon_path_from_HUDskin(string theIcon)
+{
+	if (theIcon == "")
+		return "";
+
+	string img = strcat("/", SKIN_PATH, "/", theIcon);
+	if (PRECACHE_PIC(img) == "")
+		img = sprintf("/gfx/hud/default/%s", theIcon);
+	return img;
+}
+
+#ifdef MENUQC
+/// Returns icon path from the current menu skin (MENU only)
+string icon_path_from_menuskin(string theIcon)
+{
+	if (theIcon == "")
+		return "";
+
+	string img = strcat("/", draw_currentSkin, "/", theIcon);
+	if (draw_PreloadPicture(img) == "")
+		img = sprintf("/gfx/menu/wickedx/%s", theIcon); // default menu skin
+	return img;
+}
+#endif
+
+#undef PRECACHE_PIC
+#undef SKIN_PATH
+
+
 void mut_set_active(int mut)
 {
 	if (mut >= 24)

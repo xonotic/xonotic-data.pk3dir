@@ -135,7 +135,10 @@ STATIC_INIT_LATE(W_PROP_reloader)
 
 #define REGISTER_WEAPON(id, inst) REGISTER(Weapons, WEP, id, m_id, inst)
 
-REGISTER_WEAPON(Null, NEW(Weapon));
+CLASS(NullWeapon, Weapon)
+	ATTRIB(NullWeapon, m_hidden, bool, true);
+ENDCLASS(NullWeapon)
+REGISTER_WEAPON(Null, NEW(NullWeapon));
 REGISTRY_DEFINE_GET(Weapons, WEP_Null)
 
 Weapon Weapon_from_name(string s)
@@ -358,6 +361,9 @@ STATIC_INIT(register_weapons_done)
 	#ifdef CSQC
 	FOREACH(Weapons, true, it.wr_init(it));
 	#endif
+	#ifdef MENUQC
+	FOREACH(Weapons, (it.spawnflags & WEP_FLAG_HIDDEN) && (it.spawnflags & WEP_FLAG_SPECIALATTACK), it.m_hidden = true);
+	#endif
 	weaponorder_byid = "";
 	for (int i = REGISTRY_MAX(Weapons) - 1; i >= 1; --i)
 		if (REGISTRY_GET(Weapons, i))
@@ -440,4 +446,41 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 #endif
 
+#endif
+
+// functions:
+string W_FixWeaponOrder(string order, float complete);
+string W_NameWeaponOrder(string order);
+string W_NumberWeaponOrder(string order);
+string W_FixWeaponOrder_BuildImpulseList(string o);
+string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
+string W_FixWeaponOrder_ForceComplete(string order);
+WepSet W_RandomWeapons(entity e, WepSet remaining, int n);
+
+entity GetAmmoItem(Resource ammotype);
+entity GetAmmoResource(Ammo ammotype);
+
+#ifdef CSQC
+int GetAmmoStat(Resource ammotype);
+#endif
+
+string W_Sound(string w_snd);
+string W_Model(string w_mdl);
+
+
+#ifdef MENUQC
+string W_Guide_Keybinds(Weapon wep);
+
+string W_Guide_DPS_onlyOne_unnamed(string name);
+string W_Guide_DPS_onlyOne(string name, string fire);
+string W_Guide_DPS_onlyOne_unnamed_andDirectHit(string name);
+string W_Guide_DPS_onlyOne_andDirectHit(string name, string fire);
+string W_Guide_DPS(string name, string pri, string sec);
+string W_Guide_DPS_bothMultishot(string name, string pri, string sec);
+string W_Guide_DPS_secondaryMultishot(string name, string pri, string sec, string shots, string refire2, bool sec_variable);
+string W_Guide_DPS_primaryMultishot(string name, string pri, string sec, string shots, string refire2);
+string W_Guide_DPS_onlySecondary(string name, string sec);
+string W_Guide_DPS_onlyOneMultishot(string name, string fire, string shots, string refire2);
+string W_Guide_DPS_secondaryMultishotWithCombo(string name, string pri, string sec, string shots, string refire2, string combo, bool sec_variable);
+string W_Guide_DPS_primaryDPS(string name, string pri, string sec);
 #endif

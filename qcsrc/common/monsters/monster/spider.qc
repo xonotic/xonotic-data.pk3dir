@@ -236,3 +236,14 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
     return true;
 }
 #endif
+#ifdef MENUQC
+METHOD(Spider, describe, string(Spider this))
+{
+	TC(Spider, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The Spider is a large mechanically enhanced arachnoid adept at hunting speedy enemies."));
+	PAR(_("To slow down its target, the Spider launches a synthetic web-like substance from its cannons. "
+	      "Approaching its enwebbed prey, the Spider will inflict a series of high damage bites."));
+	return PAGE_TEXT;
+}
+#endif
