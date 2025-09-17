@@ -37,3 +37,14 @@ bool nade_translocate_DestroyDamage(entity this, entity attacker)
 	return false;
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(TranslocateNade, describe, string(TranslocateNade this))
+{
+	TC(TranslocateNade, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s detonates after a short delay, teleporting you to where it detonated."), COLORED_NAME(this));
+	PAR(_("A common use of this nade is saving yourself from the void in space maps, however mastering this is very tricky."));
+	PAR(_("If this grenade is destroyed by an attacker, it will deal some damage to them."));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

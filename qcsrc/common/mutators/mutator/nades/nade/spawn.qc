@@ -32,3 +32,13 @@ bool nade_spawn_DestroyDamage(entity this, entity attacker)
 	return false;
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(SpawnNade, describe, string(SpawnNade this))
+{
+	TC(SpawnNade, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s detonates after a short delay, temporarily setting your spawn point to where it detonated. "
+	      "It is useful for cases where you want to go back to some point on the map after you die."), COLORED_NAME(this));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

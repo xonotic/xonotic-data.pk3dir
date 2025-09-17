@@ -1,2 +1,12 @@
 #pragma once
 
+#ifdef MENUQC
+CLASS(MutatorOverkill, Mutator)
+	ATTRIB(MutatorOverkill, message, string, _("Overkill"));
+	// Currently the Overkill mutator itself as implemented in qc can't be enabled alone, it's supposed
+	// to be enabled only with additional mutators and features defined in ruleset-overkill.cfg
+	ATTRIB(MutatorOverkill, m_hidden, bool, true);
+ENDCLASS(MutatorOverkill)
+
+REGISTER_MUTATOR(ok, true, MutatorOverkill);
+#endif

@@ -419,3 +419,23 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 
 // TODO: hook: temporarily transform this.origin for drawing the model along warpzones!
 #endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+#include <common/mutators/mutator/hook/hook.qh>
+
+METHOD(Hook, describe, string(Hook this))
+{
+	TC(Hook, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s is a unique weapon, firing a chain forwards which pulls you in once it latches onto something."), COLORED_NAME(this));
+	PAR(_("The secondary fire usually drops a gravity bomb that affects enemies, also releasing light a smoke like a flashbang."));
+	PAR(_("It usually requires %s ammo to work, consuming it both when initially firing the hook, and after a couple seconds as it reels you in."), COLORED_NAME(ITEM_Fuel));
+	PAR(_("The %s allows reaching previously unreachable places on maps and zooming around the map at high speeds, "
+	      "making both surprise ambushes and miraculous escapes possible."), COLORED_NAME(this));
+	PAR(_("It isn't available very often on maps, unless the %s mutator is active, in which all players have it on their offhand, used with %s."), COLORED_NAME(MUTATOR_hook), strcat("^3", _("hook"), "^7"));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_onlySecondary(this.netname, "secondary"));
+	return PAGE_TEXT;
+}
+
+#endif

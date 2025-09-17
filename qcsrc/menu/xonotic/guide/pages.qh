@@ -1,0 +1,40 @@
+﻿#pragma once
+
+CLASS(GuidePage, Object)
+	ATTRIB(GuidePage, m_id, int, 0);
+	ATTRIB(GuidePage, m_name, string, "");
+	ATTRIB(GuidePage, m_icon, string, "");
+	ATTRIB(GuidePage, m_description, string, "");
+
+	METHOD(GuidePage, describe, string(GuidePage this))
+	{
+		TC(GuidePage, this);
+		return this.m_description;
+	}
+	METHOD(GuidePage, display, void(GuidePage this, void(string name, string icon) returns))
+	{
+		TC(GuidePage, this);
+		returns(this.m_name, this.m_icon ? this.m_icon : string_null);
+	}
+
+	CONSTRUCTOR(GuidePage, string _name)
+	{
+		CONSTRUCT(GuidePage);
+		this.m_name = _name;
+	}
+ENDCLASS(GuidePage)
+
+
+// This is for the freetext sections only
+
+REGISTRY(IntroductionGuidePages, 4)
+#define REGISTER_INTRODUCTION_PAGE(id, name) REGISTER(IntroductionGuidePages, GUIDE_INTRODUCTION_PAGE, id, m_id, NEW(GuidePage, name))
+REGISTER_REGISTRY(IntroductionGuidePages)
+
+REGISTRY(MovementGuidePages, 10)
+#define REGISTER_MOVEMENT_PAGE(id, name) REGISTER(MovementGuidePages, GUIDE_MOVEMENT_PAGE, id, m_id, NEW(GuidePage, name))
+REGISTER_REGISTRY(MovementGuidePages)
+
+REGISTRY(ModsGuidePages, 2)
+#define REGISTER_MODS_PAGE(id, name) REGISTER(ModsGuidePages, GUIDE_MODS_PAGE, id, m_id, NEW(GuidePage, name))
+REGISTER_REGISTRY(ModsGuidePages)

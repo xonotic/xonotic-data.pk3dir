@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_menuskin
+#endif
+
 // special spawn flags
 const int MONSTER_RESPAWN_DEATHPOINT = BIT(4); // re-spawn where we died
 const int MONSTER_TYPE_FLY = BIT(5);
@@ -38,6 +42,8 @@ CLASS(Monster, Object)
     ATTRIB(Monster, netname, string, "");
     /** color */
     ATTRIB(Monster, m_color, vector, '1 1 1');
+    /** icon */
+    ATTRIB(Monster, m_icon, string);
     /** model */
     ATTRIB(Monster, m_model, entity);
     /** hitbox size */
@@ -57,7 +63,18 @@ CLASS(Monster, Object)
     METHOD(Monster, mr_pain, float(Monster this, entity actor, float damage_take, entity attacker, float deathtype)) { TC(Monster, this); return damage_take; }
     /** (BOTH?) sets animations for monster */
     METHOD(Monster, mr_anim, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
-
+#ifdef MENUQC
+    METHOD(Monster, describe, string(Monster this))
+    {
+        TC(Monster, this);
+        return SUPER(Monster).describe(this);
+    }
+    METHOD(Monster, display, void(Monster this, void(string name, string icon) returns))
+    {
+        TC(Monster, this);
+        returns(this.m_name, icon_path_from_menuskin(this.m_icon));
+    }
+#endif
 ENDCLASS(Monster)
 
 

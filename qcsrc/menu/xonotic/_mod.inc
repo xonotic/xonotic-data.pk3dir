@@ -84,6 +84,7 @@
 #include <menu/xonotic/dialog_settings_user_languagewarning.qc>
 #include <menu/xonotic/dialog_settings_video.qc>
 #include <menu/xonotic/dialog_singleplayer.qc>
+#include <menu/xonotic/dialog_singleplayer_guide.qc>
 #include <menu/xonotic/dialog_singleplayer_winner.qc>
 #include <menu/xonotic/dialog_teamselect.qc>
 #include <menu/xonotic/dialog_termsofservice.qc>
@@ -127,3 +128,5 @@
 #include <menu/xonotic/util.qc>
 #include <menu/xonotic/weaponarenacheckbox.qc>
 #include <menu/xonotic/weaponslist.qc>
+
+#include <menu/xonotic/guide/_mod.inc>

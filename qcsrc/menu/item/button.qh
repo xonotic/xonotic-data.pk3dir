@@ -29,6 +29,7 @@ CLASS(Button, Label)
 	ATTRIB(Button, disabled, float, 0);
 	ATTRIB(Button, disabledAlpha, float, 0.3);
 	ATTRIB(Button, forcePressed, bool, false);
+	ATTRIB(Button, pulse, bool, false);
 	ATTRIB(Button, color, vector, '1 1 1');
 	ATTRIB(Button, colorC, vector, '1 1 1');
 	ATTRIB(Button, colorF, vector, '1 1 1');

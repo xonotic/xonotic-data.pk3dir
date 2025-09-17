@@ -66,6 +66,7 @@ CLASS(Mortar, Weapon)
 	END()
 	W_PROPS(X, Mortar, mortar)
 #undef X
+
 ENDCLASS(Mortar)
 REGISTER_WEAPON(MORTAR, NEW(Mortar));
 

@@ -62,6 +62,7 @@ CLASS(Rifle, Weapon)
 	END()
 	W_PROPS(X, Rifle, rifle)
 #undef X
+
 ENDCLASS(Rifle)
 REGISTER_WEAPON(RIFLE, NEW(Rifle));
 

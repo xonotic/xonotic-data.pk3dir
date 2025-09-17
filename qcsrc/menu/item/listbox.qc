@@ -411,5 +411,6 @@
 
 	void ListBox_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 	{
+		// should be overridden
 		draw_Text('0 0 0', sprintf(_("Item %d"), i), eX * (8 / absSize.x) + eY * (8 / absSize.y), (isSelected ? '0 1 0' : '1 1 1'), 1, 0);
 	}
