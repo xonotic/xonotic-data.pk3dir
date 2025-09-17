@@ -512,3 +512,25 @@ METHOD(MineLayer, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+#include <common/gamemodes/gamemode/assault/assault.qh>
+#include <common/gamemodes/gamemode/ctf/ctf.qh>
+#include <common/gamemodes/gamemode/onslaught/onslaught.qh>
+#include <common/items/item/ammo.qh>
+
+METHOD(MineLayer, describe, string(MineLayer this))
+{
+	TC(MineLayer, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s places mines on the ground when fired, which detonate and damage enemies if stepped on. "
+	      "Only a couple mines can be placed at any time, and after several seconds they will self-detonate."), COLORED_NAME(this));
+	PAR(_("The secondary fire instantaneously detonates any mines fired by the primary fire, first waiting until you're far enough away."));
+	PAR(_("It consumes %s ammo for each mine laid."), COLORED_NAME(ITEM_Rockets));
+	PAR(_("The mines are not launched very far before they hit the ground, so the %s isn't very effective at medium to long ranges. "
+	      "It is often used to protect important areas of the map such as the flag in %s, control points in %s, or checkpoints in %s."), COLORED_NAME(this), COLORED_NAME(MAPINFO_TYPE_CTF), COLORED_NAME(MAPINFO_TYPE_ONSLAUGHT), COLORED_NAME(MAPINFO_TYPE_ASSAULT));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_onlyOne_unnamed(this.netname));
+	return PAGE_TEXT;
+}
+
+#endif

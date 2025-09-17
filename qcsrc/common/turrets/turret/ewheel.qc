@@ -241,3 +241,16 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
 }
 
 #endif // CSQC
+#ifdef MENUQC
+#include <common/weapons/weapon/blaster.qh>
+
+METHOD(EWheel, describe, string(EWheel this))
+{
+    TC(Ewheel, this);
+    PAGE_TEXT_INIT();
+    PAR(_("The %s is a mobile turret that rolls around, attacking its targets when they enter its line of sight."), COLORED_NAME(this));
+    PAR(_("It attacks by shooting laser beams similar to those of the %s, from both of its two cannons."), COLORED_NAME(WEP_BLASTER));
+    return PAGE_TEXT;
+}
+
+#endif // MENUQC

@@ -3,6 +3,9 @@
 #ifdef GAMEQC
 	#include <common/sounds/all.qh>
 #endif
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_HUDskin
+#endif
 
 REGISTRY(StatusEffects, 32)
 REGISTER_REGISTRY(StatusEffects)
@@ -52,22 +55,10 @@ CLASS(StatusEffect, Object)
 	METHOD(StatusEffect, m_persistent, bool(StatusEffect this, entity actor)) { return false; };
 #endif
 #ifndef SVQC
-	METHOD(StatusEffect, display, void(entity this, void(string name, string icon) returns))
+	METHOD(StatusEffect, display, void(StatusEffect this, void(string name, string icon) returns))
 	{
 		TC(StatusEffect, this);
-		string img = this.m_icon;
-		if (img != "")
-		{
-			img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.m_icon);
-	#ifdef CSQC
-			if (precache_pic(img) == "")
-	#endif
-	#ifdef MENUQC
-			if (draw_PreloadPicture(img) == "")
-	#endif
-				img = sprintf("/gfx/hud/default/%s", this.m_icon);
-		}
-		returns(this.m_name, img);
+		returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
 	}
 #endif
 ENDCLASS(StatusEffect)

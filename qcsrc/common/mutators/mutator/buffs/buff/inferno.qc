@@ -15,3 +15,12 @@ float buff_Inferno_CalculateDamage(float frag_damage)
 	return frag_damage * autocvar_g_buffs_inferno_damagemultiplier;
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(InfernoBuff, describe, string(InfernoBuff this))
+{
+	TC(InfernoBuff, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s sets any enemies or monsters you attack alight, dealing burn damage to them for several seconds until the buff expires."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

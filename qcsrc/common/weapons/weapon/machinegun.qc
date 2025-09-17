@@ -413,3 +413,21 @@ METHOD(MachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+
+METHOD(MachineGun, describe, string(MachineGun this))
+{
+	TC(MachineGun, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s quickly fires bullets with a small degree of spread."), COLORED_NAME(this));
+	PAR(_("The secondary fire fires a quick burst of bullets faster than the primary fire and with no spread, but there's a short delay until it can be used again."));
+	PAR(_("It consumes %s ammo for each bullet shot, until the whole magazine is emptied."), COLORED_NAME(ITEM_Bullets));
+	PAR(_("The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously. "
+	      "Since the secondary fire has no spread, it's the better option when firing over a long range."), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_secondaryMultishot(this.netname, "sustained", "burst", "burst", "burst_refire2", false));
+	return PAGE_TEXT;
+}
+
+#endif

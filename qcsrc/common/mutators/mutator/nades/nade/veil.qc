@@ -43,3 +43,16 @@ void nade_veil_Apply(entity player)
 	}
 }
 #endif // SVQC
+#ifdef MENUQC
+#include "darkness.qh"
+
+METHOD(VeilNade, describe, string(VeilNade this))
+{
+	TC(VeilNade, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
+	      "Players inside the orb will be invisible to those outside it."), COLORED_NAME(this));
+	PAR(_("This is sort of the opposite of the %s."), COLORED_NAME(NADE_TYPE_DARKNESS));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

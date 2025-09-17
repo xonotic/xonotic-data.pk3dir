@@ -7,7 +7,7 @@
 CLASS(mayhem, Gametype)
 	INIT(mayhem)
 	{
-		this.gametype_init(this, _("Mayhem"),"mayhem","g_mayhem",GAMETYPE_FLAG_USEPOINTS,"","timelimit=15 pointlimit=1000 leadlimit=0",_("Compete for the most damage dealt and frags in this chaotic mayhem!"));
+		this.gametype_init(this, _("Mayhem"),"mayhem","g_mayhem",GAMETYPE_FLAG_USEPOINTS,"","timelimit=15 pointlimit=1000 leadlimit=0",_("Compete for the most damage dealt and frags in this chaotic mayhem"));
 	}
 	METHOD(mayhem, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
 	{

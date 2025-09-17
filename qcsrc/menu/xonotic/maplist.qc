@@ -20,7 +20,7 @@ entity makeXonoticMapList()
 	return me;
 }
 
-entity MapList_Set_String_Filter_Box(entity me, entity e)
+entity MapList_Set_StringFilterBox(entity me, entity e)
 {
 	me.stringFilterBox = e;
 	return e;
@@ -378,7 +378,7 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 	{
 		me.parent.setFocus(me.parent, me.stringFilterBox);
 	}
-	else if((shift & S_CTRL) && scan == 'u') // ctrl-u (remove stringFilter line
+	else if((shift & S_CTRL) && scan == 'u') // ctrl-u (remove stringFilter line)
 	{
 		me.stringFilterBox.setText(me.stringFilterBox, "");
 		MapList_StringFilterBox_Change(me.stringFilterBox, me);

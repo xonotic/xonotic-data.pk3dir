@@ -259,3 +259,23 @@ METHOD(Rifle, wr_zoomdir, bool(entity thiswep))
 }
 
 #endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+#include "vortex.qh"
+
+METHOD(Rifle, describe, string(Rifle this))
+{
+	TC(Rifle, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s fires bullets that traverse the map instantaneously and deal a significant chunk of damage on impact."), COLORED_NAME(this));
+	PAR(_("The secondary fire shoots a few less powerful bullets at once with a bit of scatter."));
+	PAR(_("It consumes %s ammo for each bullet shot."), COLORED_NAME(ITEM_Bullets)); // shared string
+	PAR(_("Unlike the %s, the secondary fire doesn't zoom, so %s needs to be used manually with the %s. "
+	      "Also, it needs to be reloaded after its magazine is emptied."), COLORED_NAME(WEP_VORTEX), strcat("^3", _("zoom"), "^7"), COLORED_NAME(this));
+	PAR(_("Similar to the %s, the %s can be used at any range, but it stands out at long ranges."), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_shots", "", false));
+	return PAGE_TEXT;
+}
+
+#endif

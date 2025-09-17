@@ -160,7 +160,7 @@ void XonoticServerCreateTab_fill(entity me)
 		// string filter label and box
 		me.TD(me, 1, 0.35, e = makeXonoticTextLabel(1, _("Filter:")));
 		me.mapListBox.stringFilterBox = makeXonoticInputBox_T(0, string_null,
-			_("Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-Delete to clear; Enter when done."));
+			_("Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL to clear; ENTER when done."));
 		me.TD(me, 1, me.columns - me.firstColumn - 0.35, e = me.mapListBox.stringFilterBox);
 			e.onChange = MapList_StringFilterBox_Change;
 			e.keyDown = MapList_StringFilterBox_keyDown;

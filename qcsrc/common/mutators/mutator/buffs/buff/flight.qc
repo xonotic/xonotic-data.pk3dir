@@ -23,3 +23,12 @@ METHOD(FlightBuff, m_remove, void(StatusEffect this, entity actor, int removal_t
 	SUPER(FlightBuff).m_remove(this, actor, removal_type);
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(FlightBuff, describe, string(FlightBuff this))
+{
+	TC(FlightBuff, this);
+	PAGE_TEXT_INIT();
+	PAR(_("While you have the %s, you can crouch while midair to switch your gravity, allowing flight."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	return PAGE_TEXT;
+}
+#endif

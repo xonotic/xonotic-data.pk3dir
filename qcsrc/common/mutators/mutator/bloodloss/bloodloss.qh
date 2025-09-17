@@ -1,1 +1,9 @@
 #pragma once
+
+#ifdef MENUQC
+CLASS(MutatorBloodLoss, Mutator)
+	ATTRIB(MutatorBloodLoss, message, string, _("Blood loss"));
+ENDCLASS(MutatorBloodLoss)
+
+REGISTER_MUTATOR(bloodloss, true, MutatorBloodLoss);
+#endif

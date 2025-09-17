@@ -21,3 +21,12 @@ METHOD(MagnetBuff, m_tick, void(StatusEffect this, entity actor))
 	SUPER(MagnetBuff).m_tick(this, actor);
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(MagnetBuff, describe, string(MagnetBuff this))
+{
+	TC(MagnetBuff, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s greatly increases your item pickup range, collecting nearby items for you while the buff is active."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	return PAGE_TEXT;
+}
+#endif // MENUQC
