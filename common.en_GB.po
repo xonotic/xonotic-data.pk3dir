@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-05 07:22+0200\n"
+"POT-Creation-Date: 2025-09-18 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: k9er, 2024-2025\n"
+"Last-Translator: k9er, 2024\n"
 "Language-Team: English (United Kingdom) (http://app.transifex.com/team-"
 "xonotic/xonotic/language/en_GB/)\n"
 "Language: en_GB\n"
@@ -131,6 +131,9 @@ msgstr "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
 
 #: qcsrc/client/hud/panel/infomessages.qc:115
 #: qcsrc/client/hud/panel/infomessages.qc:117
+#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:87
+#: qcsrc/common/mutators/mutator/nades/nade/normal.qc:19
+#: qcsrc/common/mutators/mutator/nades/nades.qc:51
 #: qcsrc/common/vehicles/cl_vehicles.qc:171
 msgid "drop weapon"
 msgstr "drop weapon"
@@ -161,8 +164,12 @@ msgid "^1Press ^3%s^1 to join"
 msgstr "^1Press ^3%s^1 to join"
 
 #: qcsrc/client/hud/panel/infomessages.qc:131
-#: qcsrc/client/hud/panel/scoreboard.qc:2795 qcsrc/client/main.qc:1358
+#: qcsrc/client/hud/panel/scoreboard.qc:2796 qcsrc/client/main.qc:1358
+#: qcsrc/common/mutators/mutator/walljump/walljump.qc:82
 #: qcsrc/common/notifications/all.qh:466
+#: qcsrc/common/vehicles/vehicle/racer.qc:652
+#: qcsrc/menu/xonotic/guide/pages.qc:83 qcsrc/menu/xonotic/guide/pages.qc:84
+#: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:155
 msgid "jump"
 msgstr "jump"
 
@@ -1029,10 +1036,10 @@ msgstr ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1061
-#: qcsrc/client/hud/panel/scoreboard.qc:1076
-#: qcsrc/client/hud/panel/scoreboard.qc:1149
-#: qcsrc/client/hud/panel/scoreboard.qc:1158 qcsrc/common/util.qc:393
+#: qcsrc/client/hud/panel/scoreboard.qc:1059
+#: qcsrc/client/hud/panel/scoreboard.qc:1073
+#: qcsrc/client/hud/panel/scoreboard.qc:1146
+#: qcsrc/client/hud/panel/scoreboard.qc:1155 qcsrc/common/util.qc:433
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -1041,106 +1048,106 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1838
+#: qcsrc/client/hud/panel/scoreboard.qc:1839
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Accuracy stats (average %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1998
+#: qcsrc/client/hud/panel/scoreboard.qc:1999
 msgid "Item stats"
 msgstr "Item stats"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2113
+#: qcsrc/client/hud/panel/scoreboard.qc:2114
 msgid "Map stats:"
 msgstr "Map stats:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2143
+#: qcsrc/client/hud/panel/scoreboard.qc:2144
 msgid "Monsters killed:"
 msgstr "Monsters killed:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2150
+#: qcsrc/client/hud/panel/scoreboard.qc:2151
 msgid "Secrets found:"
 msgstr "Secrets found:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2368
+#: qcsrc/client/hud/panel/scoreboard.qc:2369
 #, c-format
 msgid "Spectators"
 msgstr "Spectators"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2390
+#: qcsrc/client/hud/panel/scoreboard.qc:2391
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2390
+#: qcsrc/client/hud/panel/scoreboard.qc:2391
 #, c-format
 msgid "^5%s %s"
 msgstr "^5%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2391
+#: qcsrc/client/hud/panel/scoreboard.qc:2392
 msgid "SCO^points"
 msgstr "points"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2508
+#: qcsrc/client/hud/panel/scoreboard.qc:2509
 msgid "Next map:"
 msgstr "Next map:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2515
+#: qcsrc/client/hud/panel/scoreboard.qc:2516
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "Team Selection"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2529
+#: qcsrc/client/hud/panel/scoreboard.qc:2530
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^7Press ^3%s^7 to join the selected team"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2531
+#: qcsrc/client/hud/panel/scoreboard.qc:2532
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr "^7Press ^3%s^7 to auto-select a team and join"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2535
+#: qcsrc/client/hud/panel/scoreboard.qc:2536
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7Press ^3%s ^7to select a specific team"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2546
+#: qcsrc/client/hud/panel/scoreboard.qc:2547
 #, c-format
 msgid "^3%1.0f minutes"
 msgstr "^3%1.0f minutes"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2573
+#: qcsrc/client/hud/panel/scoreboard.qc:2574
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7players"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2574 qcsrc/client/main.qc:1387
+#: qcsrc/client/hud/panel/scoreboard.qc:2575 qcsrc/client/main.qc:1387
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Map:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2740
+#: qcsrc/client/hud/panel/scoreboard.qc:2741
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Speed award: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2744
+#: qcsrc/client/hud/panel/scoreboard.qc:2745
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "All-time fastest: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2776
+#: qcsrc/client/hud/panel/scoreboard.qc:2777
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Respawning in ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2786
+#: qcsrc/client/hud/panel/scoreboard.qc:2787
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "You are dead, wait ^3%s^7 before respawning"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2795
+#: qcsrc/client/hud/panel/scoreboard.qc:2796
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "You are dead, press ^2%s^7 to respawn"
@@ -1340,7 +1347,7 @@ msgstr "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgid "Welcome to %s"
 msgstr "Welcome to %s"
 
-#: qcsrc/client/main.qc:1360 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1360 qcsrc/menu/xonotic/campaign.qc:245
 #, c-format
 msgid "Level %d:"
 msgstr "Level %d:"
@@ -1395,7 +1402,7 @@ msgstr "Special gameplay tips:"
 msgid "Server's message"
 msgstr "Server's message"
 
-#: qcsrc/client/main.qc:1510
+#: qcsrc/client/main.qc:1503
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (not bound)"
@@ -1438,21 +1445,44 @@ msgstr "^1Error:^7 Couldn't find pak index."
 msgid "Requesting preview..."
 msgstr "Requesting preview..."
 
-#: qcsrc/client/view.qc:1007
+#: qcsrc/client/view.qc:1010
 msgid "Nade timer"
 msgstr "Nade timer"
 
-#: qcsrc/client/view.qc:1012
+#: qcsrc/client/view.qc:1015
 msgid "Capture progress"
 msgstr "Capture progress"
 
-#: qcsrc/client/view.qc:1017
+#: qcsrc/client/view.qc:1020
 msgid "Revival progress"
 msgstr "Revival progress"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
 msgstr "error creating curl handle"
+
+#: qcsrc/common/gamemodes/gamemode/assault/assault.qc:8
+#, c-format
+msgid ""
+"%s is a team-based gametype involving an attacking and a defending team."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/assault/assault.qc:9
+msgid ""
+"The attacking team has to destroy objects placed on the map, which opens up "
+"new doors or pathways to more objects, until the main object is reached and "
+"destroyed. The defending team has to defend the objects, winning the game if "
+"they successfully prevent the attacking team from destroying the main object "
+"within the time limit. If they fail then a second round is played where "
+"teams switch roles and the new attacking team wins only if they destroy the "
+"main object within the time the other team took to do it."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/assault/assault.qc:12
+msgid ""
+"Objects have waypoints which show their health and position, and they're "
+"destroyed by shooting them with any weapon."
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid "Assault"
@@ -1478,6 +1508,34 @@ msgstr ""
 msgid "Point limit:"
 msgstr "Point limit:"
 
+#: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qc:8
+#, c-format
+msgid ""
+"%s is a common round-based gametype played with teams, where players spawn "
+"with all weapons available, have maximum health and armor, but only have one "
+"life per round. There are no pickups available on the map in %s, making the "
+"gameplay fast-paced and focused on combat."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qc:10
+msgid ""
+"Rounds start with a ten second grace period where weapons cannot be fired, "
+"so it's a good opportunity to group up with your team."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qc:11
+msgid ""
+"The match ends once a team reaches a certain number of won rounds, or has a "
+"considerable lead over the other team."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qc:12
+msgid ""
+"Since players only have one life per round, it's important to group up with "
+"fellow teammates and pay attention to any callouts from them. Team "
+"coordination is key!"
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
 msgstr "Clan Arena"
@@ -1499,6 +1557,41 @@ msgstr "The amount of rounds won needed before the match will end"
 #: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
 msgstr "Capture time rankings"
+
+#: qcsrc/common/gamemodes/gamemode/ctf/ctf.qc:8
+#, c-format
+msgid ""
+"%s is a common team-based gametype where the objective is to steal an enemy "
+"team's flag and bring it to your own to capture it. A flag can only be "
+"captured if your own flag is also home in its base, so it's important to "
+"collect your flag after it's dropped."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/ctf/ctf.qc:10
+msgid ""
+"The game is won once a team reaches a certain number of \"caps\" (captures), "
+"or has a considerable lead over the other team."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/ctf/ctf.qc:11
+msgid ""
+"If a flag is dropped into the void or a death trap it will be immediately "
+"returned to its base, or otherwise it will sit idle for a while before "
+"automatically returning itself. If all flags are held by an enemy, after "
+"some time period a \"stalemate\" will initiate and all flag carriers "
+"(\"fc\"s) will be exposed on the radar and with waypoints."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/ctf/ctf.qc:13
+#, c-format
+msgid ""
+"%s rewards crafty movement, since the more difficult it is for enemies to "
+"attack you the more likely you are to escape from their base with their "
+"flag. Importantly, it also rewards base defense since if your enemies can't "
+"take your flag, they can never capture. Lastly, good team communication is "
+"important, especially to let teammates know if you see the enemy flag "
+"carrier."
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid "Capture the Flag"
@@ -1525,13 +1618,60 @@ msgstr "The amount of captures needed before the match will end"
 msgid "Rankings"
 msgstr "Rankings"
 
+#: qcsrc/common/gamemodes/gamemode/cts/cts.qc:10
+#, c-format
+msgid ""
+"%s is a unique gametype, focusing on racing against other players on the "
+"map, rather than fighting them with weapons. Players run through the map "
+"from start to finish as fast as possible and try to beat the times set by "
+"others."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/cts/cts.qc:12
+#, c-format
+msgid ""
+"%s is similar to %s, except you don't run in laps, and instead run from the "
+"start line to the finish line, then start over again."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/cts/cts.qc:13
+msgid ""
+"Although this gametype is quite different from the rest, it is played quite "
+"frequently since it's a great way to master movement skills and there are "
+"heaps of community-made maps available. Also, it only requires one player to "
+"play."
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
 msgid "Race CTS"
 msgstr "Race CTS"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
-msgid "Race for fastest time."
-msgstr "Race for fastest time."
+msgid "Race to the finish line for the fastest time"
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qc:11
+#, c-format
+msgid ""
+"%s is a simple free-for-all fight to the death, where everyone plays against "
+"everyone else, and the winner is the one with the most points. When fragged, "
+"you respawn with only the starter weapons, so any you collected will have to "
+"be picked up again."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qc:13
+msgid ""
+"Scoring is quite simple, fragging an opponent adds one to your score, and "
+"fragging yourself subtracts one."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qc:14
+#, c-format
+msgid ""
+"Maps often have powerups and items like %s and %s, which are usually highly "
+"contested since sometimes they have the power to make or break a game, so "
+"making good use of them is important."
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Deathmatch"
@@ -1540,6 +1680,27 @@ msgstr "Deathmatch"
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Score as many frags as you can"
 msgstr "Score as many frags as you can"
+
+#: qcsrc/common/gamemodes/gamemode/domination/domination.qc:8
+#, c-format
+msgid ""
+"%s is a gametype where teams compete to dominate the map by capturing and "
+"keeping control points."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/domination/domination.qc:9
+msgid ""
+"Control points are displayed on the radar to make finding them easy, and "
+"they are captured by simply walking through them. However, an enemy can just "
+"as easily steal a control point owned by your team by doing the same. "
+"Control points start neutral (owned by no teams)."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/domination/domination.qc:12
+msgid ""
+"Scoring is a combination of frags and score automatically generated by any "
+"control points held by your team every few seconds."
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Capture and defend all the control points to win"
@@ -1555,6 +1716,40 @@ msgstr "Domination"
 msgid "The amount of points needed before the match will end"
 msgstr "The amount of points needed before the match will end"
 
+#: qcsrc/common/gamemodes/gamemode/duel/duel.qc:12
+#, c-format
+msgid ""
+"%s is a 1-vs-1 arena battle to decide the winner, essentially a 2-player "
+"version of %s, making it one of the most competitive gametypes."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/duel/duel.qc:13
+#, c-format
+msgid ""
+"Since players are on their own, important items like the %s and %s are "
+"heavily contested, and are often \"timed\" by observing the in-game timer "
+"when they are picked up to determine when they'll next spawn. The player "
+"with the best item control is often the winner, so this is a key aspect to "
+"master."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/duel/duel.qc:16
+msgid ""
+"Once you frag your opponent, they will spawn with few weapons and limited "
+"health, so it is a good opportunity to search the map for them to pick up an "
+"easy frag and continue your streak."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/duel/duel.qc:17
+#, c-format
+msgid "%s is often played with %s rules."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/duel/duel.qc:17
+#: qcsrc/menu/xonotic/guide/pages.qc:183 qcsrc/menu/xonotic/guide/pages.qc:186
+msgid "XPM"
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"
 msgstr "Duel"
@@ -1562,6 +1757,39 @@ msgstr "Duel"
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
 msgstr "Fight in a one versus one arena battle to decide the winner"
+
+#: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qc:8
+#, c-format
+msgid ""
+"%s is a round-based teamplay gametype where fragged players are frozen and "
+"need to be unfrozen to re-enter the round. The round ends when all players "
+"from all opposing teams are frozen, scoring the remaining team a point."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qc:10
+msgid ""
+"Frozen players slowly unfreeze over time, but they unfreeze much faster when "
+"\"revived\" by a teammate standing in close proximity. Additionally, "
+"damaging frozen players on the other team helps unfreeze them, so it is best "
+"to try to avoid doing that."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qc:12
+msgid ""
+"Like in many other round-based gametypes, rounds start with a ten second "
+"grace period where weapons cannot be fired, meaning it's a good opportunity "
+"to grab as many pickups as you can."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qc:13
+msgid ""
+"Sneakily reviving a teammate will bring them back into the match to help "
+"outnumber your opponents, but it should be done with caution since often "
+"enemies pay close attention to frozen players to make sure they aren't being "
+"revived. For this reason it's important to have good team communication "
+"especially while frozen, so you can let your teammates know where the "
+"enemies are."
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:15
 msgid "Freeze Tag"
@@ -1575,6 +1803,21 @@ msgstr ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 
+#: qcsrc/common/gamemodes/gamemode/invasion/invasion.qc:8
+#, c-format
+msgid ""
+"%s is a unique gametype played in rounds where a herd of monsters spawn all "
+"around the map and players must try to frag as many as possible. Since "
+"players can't damage each other, they instead fight to steal monster frags "
+"from each other. The player who frags the most monsters overall wins the "
+"match."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/invasion/invasion.qc:11
+msgid ""
+"A round ends when either all monsters are fragged, or after a time limit."
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Invasion"
 msgstr "Invasion"
@@ -1583,6 +1826,34 @@ msgstr "Invasion"
 msgid "Survive against waves of monsters"
 msgstr "Survive against waves of monsters"
 
+#: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qc:10
+#, c-format
+msgid ""
+"%s is a free-for-all match where a ball spawns randomly on the map and the "
+"goal is to hold the ball for as long as possible."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qc:11
+msgid ""
+"Your score increases when you frag someone while you're holding a ball and "
+"when you frag the ball carrier. The first player to reach the score limit "
+"will win the match."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qc:13
+msgid ""
+"When the ball carrier is fragged, the ball will drop to the ground and "
+"anyone is able to pick it up. If nobody picks it up after some time it will "
+"get bored and teleport itself elsewhere."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qc:15
+#, c-format
+msgid ""
+"%s rewards good fragging but also good movement, since the better you can "
+"evade attacks, the longer you can keep the ball."
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
 msgid "Hold the ball to get points for kills"
 msgstr "Hold the ball to get points for kills"
@@ -1590,6 +1861,32 @@ msgstr "Hold the ball to get points for kills"
 #: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
 msgid "Keepaway"
 msgstr "Keepaway"
+
+#: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qc:10
+#, c-format
+msgid ""
+"%s is a round-based gametype played with a few teams, where each team starts "
+"with 1 key and all keys must be collected to win the round. The team member "
+"who is given the key at the start of the round is randomly selected after a "
+"ten second period, and the location of all keys will be visible in the radar "
+"after a few seconds."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qc:12
+#, c-format
+msgid ""
+"Scoring in %s is quite complicated, involving a mix of gathering all keys, "
+"points for collecting a key, fragging an enemy key carrier, and fragging "
+"other enemies. If a key is destroyed by being dropped into the void or a "
+"death trap, points are allocated accordingly."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qc:14
+#, c-format
+msgid ""
+"Like in %s the key can be dropped, so you can pass it to your teammates if "
+"you're running low on health."
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
 msgid "Gather all the keys to win the round"
@@ -1603,6 +1900,31 @@ msgstr "Key Hunt"
 msgid "^1You have no more lives left"
 msgstr "^1You have no more lives left"
 
+#: qcsrc/common/gamemodes/gamemode/lms/lms.qc:10
+#, c-format
+msgid ""
+"%s is a free-for-all gametype where all players start with a certain number "
+"of lives, and are eliminated from the match once they lose all lives. "
+"Players spawn in with all available weapons, maximum health and armor, and "
+"health and armor do not regenerate, similar to gametypes like %s. Similarly, "
+"item pickups don't spawn on the map."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/lms/lms.qc:13
+msgid ""
+"Hiding is sometimes a viable strategy since if you can't be found you can't "
+"lose lives, but often you become a vulnerable target once discovered."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/lms/lms.qc:14
+#, c-format
+msgid ""
+"Players leading the game by at least 2 lives glow and periodically have "
+"waypoints over their heads visible to all players for a few seconds in order "
+"to prevent hiding too much. Players who aren't in the lead steal a small "
+"percentage of health when they attack leaders, like in the %s mutator."
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
 msgid "Last Man Standing"
 msgstr "Last Man Standing"
@@ -1615,9 +1937,38 @@ msgstr "Survive and kill until the enemies have no lives left"
 msgid "Lives:"
 msgstr "Lives:"
 
+#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qc:10
+#, c-format
+msgid ""
+"%s is a fast-paced free-for-all deathmatch where players spawn in with all "
+"available weapons and maximum health and armor. There are no pickups enabled "
+"on maps, but buffs are still available."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qc:12
+msgid ""
+"It shines in its unique handling of scoring, accounting for both frags but "
+"also damage dealt. This means that if you almost frag a player you will "
+"still be rewarded with points, but dealing the final blow is always better "
+"if possible. Points are deducted when you walk into hazards, but not when "
+"you do movement tricks like blaster jumping since self damage is disabled."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qc:15
+#, c-format
+msgid ""
+"Since damage is always rewarded in %s, the more you shoot the better, "
+"turning this gametype into chaotic fun at times."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qc:16
+#, c-format
+msgid "This gametype is often seen as a more newbie-friendly version of %s."
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
-msgid "Compete for the most damage dealt and frags in this chaotic mayhem!"
-msgstr "Compete for the most damage dealt and frags in this chaotic mayhem!"
+msgid "Compete for the most damage dealt and frags in this chaotic mayhem"
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
@@ -1627,6 +1978,26 @@ msgstr "Mayhem"
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:48
 msgid "How much score is needed before the match will end"
 msgstr "How much score is needed before the match will end"
+
+#: qcsrc/common/gamemodes/gamemode/nexball/nexball.qc:10
+#, c-format
+msgid ""
+"%s is a fun ball sport game where 2 teams compete to score the most goals."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/nexball/nexball.qc:11
+#, c-format
+msgid ""
+"%s is usually played as either soccer where players walk into the ball to "
+"kick it around, or basketball where players have a %s so can pass the ball "
+"and intercept passes."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/nexball/nexball.qc:12
+msgid ""
+"Keep in mind players can score own goals, so don't embarrass yourself in "
+"front of your team!"
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
 msgid "Nexball"
@@ -1648,6 +2019,35 @@ msgstr "The amount of goals needed before the match will end"
 msgid "Ball Stealer"
 msgstr "Ball Stealer"
 
+#: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qc:77
+#, c-format
+msgid ""
+"%s is a team-based gametype similar to %s where the final goal is to destroy "
+"the enemy team core generator. In order to destroy the generator, control "
+"points on the map (similar to those in %s) must first be captured."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qc:79
+msgid ""
+"Since your team can only capture a control point if it is connected to "
+"another control point currently owned by your team, you have to "
+"systematically work through the map to reach the enemy generator."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qc:80
+msgid ""
+"A control point is captured by walking into it then waiting for it to finish "
+"constructing. Control points of the opposing team are destroyed by attacking "
+"the \"info bot\" that hovers above them, converting the control point to "
+"neutral once it is destroyed."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qc:82
+msgid ""
+"When in overtime, the enemy's generator will start to decay, at a faster "
+"rate the more control points your team has."
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
 msgstr "Capture control points to reach and destroy the enemy generator"
@@ -1663,6 +2063,28 @@ msgstr "Personal best"
 #: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:112
 msgid "Server best"
 msgstr "Server best"
+
+#: qcsrc/common/gamemodes/gamemode/race/race.qc:10
+#, c-format
+msgid ""
+"%s is a gametype similar to %s where players run on a track to be the first "
+"to cross the finish line after a certain number of laps."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/race/race.qc:11
+#, c-format
+msgid ""
+"Before the real race starts there's a qualifying session that decides the "
+"starting grid based on the best lap time of each player. This stage is very "
+"similar to %s since weapons can't be used to disturb other players but can "
+"still be used to run faster."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/race/race.qc:13
+msgid ""
+"During the real race it's possible to shoot other players in order to slow "
+"them down."
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:11
 msgid "Race"
@@ -1684,6 +2106,38 @@ msgstr "Hunter"
 msgid "Survivor"
 msgstr "Survivor"
 
+#: qcsrc/common/gamemodes/gamemode/survival/survival.qc:11
+#, c-format
+msgid ""
+"%s is a hunter-survivor gametype involving two teams where the goal of the "
+"hunters is to frag all survivors, and the goal of the survivors is to frag "
+"all hunters or survive until time runs out. The trick lies in the fact that "
+"players only know which team they belong to, and not the team membership of "
+"any other players."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/survival/survival.qc:13
+msgid ""
+"Since the goal of both teams is essentially to eliminate all members of the "
+"opposite team, it can be tricky for survivors to figure out their fellow "
+"teammates."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/survival/survival.qc:14
+msgid ""
+"Teams are randomly selected as the round begins, with the hunter team being "
+"a bit smaller, and then the round starts with a brief warmup grace period in "
+"which items can be collected but weapons can't be fired."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/survival/survival.qc:16
+msgid ""
+"Players are rewarded a point for each member of the opposing team they frag, "
+"only if they survive the round, and points are deducted for each teammate "
+"fragged. Extra points are also to survivors who survive until the round "
+"timer expires."
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
 msgstr "Identify and eliminate all the hunters before all your allies are gone"
@@ -1691,6 +2145,23 @@ msgstr "Identify and eliminate all the hunters before all your allies are gone"
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Survival"
 msgstr "Survival"
+
+#: qcsrc/common/gamemodes/gamemode/tdm/tdm.qc:10
+#, c-format
+msgid "%s is the team version of %s, played with 2 teams."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/tdm/tdm.qc:11
+msgid ""
+"Scoring is quite simple, adding a point for every frag, and subtracting a "
+"point for fragging yourself or a teammate."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/tdm/tdm.qc:12
+msgid ""
+"Careful team coordination and map control is often a key to winning a match, "
+"and sometimes players will share weapons with their teammates."
+msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -1700,6 +2171,20 @@ msgstr "Help your team score the most frags against the enemy team"
 msgid "Team Deathmatch"
 msgstr "Team Deathmatch"
 
+#: qcsrc/common/gamemodes/gamemode/tka/tka.qc:10
+#, c-format
+msgid ""
+"%s is the team version of %s, where teams compete to maintain superior "
+"control over the ball."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/tka/tka.qc:11
+#, c-format
+msgid ""
+"Scoring is similar to in %s, except that points are awarded for frags for "
+"all members of the team of the player holding the ball."
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
 msgstr "Keep the ball in your team's possession to get points for kills"
@@ -1708,67 +2193,169 @@ msgstr "Keep the ball in your team's possession to get points for kills"
 msgid "Team Keepaway"
 msgstr "Team Keepaway"
 
+#: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qc:11
+#, c-format
+msgid ""
+"%s is a constant action team-based gametype based on %s, using the same "
+"scoring system. It has a lot of similarities to %s, with one of the main "
+"differences being that %s is a round-based gametype, and of course the "
+"scoring system differences."
+msgstr ""
+
+#: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qc:13
+msgid ""
+"Since it doesn't have rounds, the chaos is nonstop. As a consequence of the "
+"chaotic nature, team communication is less important in this gametype than "
+"other team-based gametypes."
+msgstr ""
+
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
-"mayhem!"
+"mayhem"
 msgstr ""
-"Compete with your team for the most damage dealt and frags in this chaotic "
-"mayhem!"
 
 #: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
 msgstr "Team Mayhem"
 
+#: qcsrc/common/items/item/ammo.qc:11
+#, c-format
+msgid "The %s ammo type is used by the:"
+msgstr ""
+
+#: qcsrc/common/items/item/ammo.qc:16 qcsrc/common/items/item/ammo.qc:26
+#, c-format
+msgid "By default, the pickup gives you %s ammo, to a maximum of %s."
+msgstr ""
+
+#: qcsrc/common/items/item/ammo.qc:25
+#, c-format
+msgid "The %s ammo type is used by the %s."
+msgstr ""
+
 #: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
 msgid "Shells"
 msgstr "Shells"
 
-#: qcsrc/common/items/item/ammo.qh:94 qcsrc/common/resources/all.inc:39
+#: qcsrc/common/items/item/ammo.qh:95 qcsrc/common/resources/all.inc:39
 msgid "Bullets"
 msgstr "Bullets"
 
-#: qcsrc/common/items/item/ammo.qh:129 qcsrc/common/resources/all.inc:48
+#: qcsrc/common/items/item/ammo.qh:131 qcsrc/common/resources/all.inc:48
 msgid "Rockets"
 msgstr "Rockets"
 
-#: qcsrc/common/items/item/ammo.qh:164 qcsrc/common/resources/all.inc:57
+#: qcsrc/common/items/item/ammo.qh:167 qcsrc/common/resources/all.inc:57
 msgid "Cells"
 msgstr "Cells"
 
-#: qcsrc/common/items/item/ammo.qh:199 qcsrc/common/resources/all.inc:66
+#: qcsrc/common/items/item/ammo.qh:203 qcsrc/common/resources/all.inc:66
 msgid "Fuel"
 msgstr "Fuel"
 
-#: qcsrc/common/items/item/armor.qh:42
+#: qcsrc/common/items/item/armor.qc:7
+#, c-format
+msgid "By default, the pickup gives you %s armor."
+msgstr ""
+
+#: qcsrc/common/items/item/armor.qc:13
+#, c-format
+msgid ""
+"The %s provides you a small amount of armor when picked up, protecting you "
+"from damage by absorbing incoming hits until it is depleted."
+msgstr ""
+
+#: qcsrc/common/items/item/armor.qc:23
+#, c-format
+msgid ""
+"The %s provides you a medium amount of armor when picked up, protecting you "
+"from damage by absorbing incoming hits until it is depleted."
+msgstr ""
+
+#: qcsrc/common/items/item/armor.qc:33
+#, c-format
+msgid ""
+"The %s provides you a large amount of armor when picked up, protecting you "
+"from damage by absorbing incoming hits until it is depleted."
+msgstr ""
+
+#: qcsrc/common/items/item/armor.qc:43
+#, c-format
+msgid ""
+"The %s provides you a huge amount of armor when picked up, protecting you "
+"from damage by absorbing incoming hits until it is depleted."
+msgstr ""
+
+#: qcsrc/common/items/item/armor.qc:45 qcsrc/common/items/item/health.qc:45
+#, c-format
+msgid ""
+"It tends to be one of the most highly contested items on a map, particularly "
+"in gametypes like %s."
+msgstr ""
+
+#: qcsrc/common/items/item/armor.qh:44
 msgid "Small armor"
 msgstr "Small armour"
 
-#: qcsrc/common/items/item/armor.qh:93
+#: qcsrc/common/items/item/armor.qh:96
 msgid "Medium armor"
 msgstr "Medium armour"
 
-#: qcsrc/common/items/item/armor.qh:144 qcsrc/common/items/item/armor.qh:155
+#: qcsrc/common/items/item/armor.qh:148 qcsrc/common/items/item/armor.qh:159
 msgid "Big armor"
 msgstr "Big armour"
 
-#: qcsrc/common/items/item/armor.qh:195 qcsrc/common/items/item/armor.qh:206
+#: qcsrc/common/items/item/armor.qh:200 qcsrc/common/items/item/armor.qh:211
 msgid "Mega armor"
 msgstr "Mega armour"
 
-#: qcsrc/common/items/item/health.qh:42
+#: qcsrc/common/items/item/health.qc:7
+#, c-format
+msgid "By default, the pickup gives you %s health."
+msgstr ""
+
+#: qcsrc/common/items/item/health.qc:13
+#, c-format
+msgid ""
+"The %s restores a small amount of health when picked up, helping you recover "
+"from damage taken during combat."
+msgstr ""
+
+#: qcsrc/common/items/item/health.qc:23
+#, c-format
+msgid ""
+"The %s restores a medium amount of health when picked up, helping you "
+"recover from damage taken during combat."
+msgstr ""
+
+#: qcsrc/common/items/item/health.qc:33
+#, c-format
+msgid ""
+"The %s restores a large amount of health when picked up, helping you recover "
+"from damage taken during combat."
+msgstr ""
+
+#: qcsrc/common/items/item/health.qc:43
+#, c-format
+msgid ""
+"The %s restores a huge amount of health when picked up, helping you recover "
+"from damage taken during combat."
+msgstr ""
+
+#: qcsrc/common/items/item/health.qh:44
 msgid "Small health"
 msgstr "Small health"
 
-#: qcsrc/common/items/item/health.qh:93
+#: qcsrc/common/items/item/health.qh:96
 msgid "Medium health"
 msgstr "Medium health"
 
-#: qcsrc/common/items/item/health.qh:144 qcsrc/common/items/item/health.qh:155
+#: qcsrc/common/items/item/health.qh:148 qcsrc/common/items/item/health.qh:159
 msgid "Big health"
 msgstr "Big health"
 
-#: qcsrc/common/items/item/health.qh:195 qcsrc/common/items/item/health.qh:206
+#: qcsrc/common/items/item/health.qh:199 qcsrc/common/items/item/health.qh:210
 msgid "Mega health"
 msgstr "Mega health"
 
@@ -1777,12 +2364,12 @@ msgstr "Mega health"
 msgid "@!#%'n Tuba Throwing"
 msgstr "@!#%'n Tuba Throwing"
 
-#: qcsrc/common/mapinfo.qh:92
+#: qcsrc/common/mapinfo.qh:94
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:94
 msgid "Frag limit:"
 msgstr "Frag limit:"
 
-#: qcsrc/common/mapinfo.qh:92
+#: qcsrc/common/mapinfo.qh:94
 msgid "The amount of frags needed before the match will end"
 msgstr "The amount of frags needed before the match will end"
 
@@ -1795,7 +2382,7 @@ msgid "It's your turn"
 msgstr "It's your turn"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:363
-#: qcsrc/menu/xonotic/dialog_gamemenu.qc:68 qcsrc/menu/xonotic/dialog_quit.qh:6
+#: qcsrc/menu/xonotic/dialog_gamemenu.qc:71 qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit"
 msgstr "Quit"
 
@@ -2044,15 +2631,66 @@ msgstr "Noughts and Crosses"
 msgid "Single Player"
 msgstr "Single Player"
 
-#: qcsrc/common/monsters/monster.qh:36
+#: qcsrc/common/monsters/monster.qh:40
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:76
 msgid "Monster"
 msgstr "Monster"
+
+#: qcsrc/common/monsters/monster/golem.qc:288
+msgid ""
+"Golems are large powerful brutes capable of taking and dealing a beating. "
+"Keeping your distance is advised."
+msgstr ""
+
+#: qcsrc/common/monsters/monster/golem.qc:289
+msgid ""
+"The Golem's primary melee attack is a series of punches. On occasion the "
+"Golem may jump into the air, dealing massive damage in an area as it slams "
+"the ground."
+msgstr ""
+
+#: qcsrc/common/monsters/monster/golem.qc:291
+msgid ""
+"To deal with distant foes, the Golem may throw a chunk of its electrified "
+"rocky exterior, zapping nearby targets on impact."
+msgstr ""
 
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Golem"
 msgstr "Golem"
+
+#: qcsrc/common/monsters/monster/mage.qc:498
+msgid ""
+"Wielding nanotechnology as if it were sorcery, the Mage employs a range of "
+"unique abilities of its own creation in combat."
+msgstr ""
+
+#: qcsrc/common/monsters/monster/mage.qc:499
+msgid ""
+"As a primary attack, the Mage throws a homing electric sphere towards the "
+"player. This sphere will track its target at high speed, exploding on impact "
+"or if it does not reach its target in time."
+msgstr ""
+
+#: qcsrc/common/monsters/monster/mage.qc:501
+msgid ""
+"When threatened, the Mage may deploy an energy shield to protect itself from "
+"damage briefly. Enemies approaching too closely during this time may be "
+"pushed away with explosive force!"
+msgstr ""
+
+#: qcsrc/common/monsters/monster/mage.qc:503
+msgid ""
+"Defensively the Mage is capable of healing itself and nearby allies, with "
+"some variants also providing armor and ammunition."
+msgstr ""
+
+#: qcsrc/common/monsters/monster/mage.qc:504
+msgid ""
+"The Mage may sometimes appear to blink out of existence as it teleports "
+"behind its target for a sneak attack."
+msgstr ""
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
@@ -2062,6 +2700,19 @@ msgstr "Mage"
 #: qcsrc/common/monsters/monster/mage.qh:29
 msgid "Mage spike"
 msgstr "Mage spike"
+
+#: qcsrc/common/monsters/monster/spider.qc:244
+msgid ""
+"The Spider is a large mechanically enhanced arachnoid adept at hunting "
+"speedy enemies."
+msgstr ""
+
+#: qcsrc/common/monsters/monster/spider.qc:245
+msgid ""
+"To slow down its target, the Spider launches a synthetic web-like substance "
+"from its cannons. Approaching its enwebbed prey, the Spider will inflict a "
+"series of high damage bites."
+msgstr ""
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2076,6 +2727,18 @@ msgstr "Spider attack"
 msgid "Webbed"
 msgstr "Webbed"
 
+#: qcsrc/common/monsters/monster/wyvern.qc:188
+msgid ""
+"The Wyvern is a flying reptilian monster that glides around hunting for "
+"fresh prey."
+msgstr ""
+
+#: qcsrc/common/monsters/monster/wyvern.qc:189
+msgid ""
+"While fragile, the Wyvern is capable of launching deadly fireballs at the "
+"player from a distance, inflicting high damage and causing burning."
+msgstr ""
+
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
 msgid "Wyvern"
@@ -2085,69 +2748,280 @@ msgstr "Wyvern"
 msgid "Wyvern attack"
 msgstr "Wyvern attack"
 
+#: qcsrc/common/monsters/monster/zombie.qc:180
+msgid ""
+"Zombies are the undead remains of deceased soldiers, risen with a ravenous "
+"hunger and no sense of self-preservation."
+msgstr ""
+
+#: qcsrc/common/monsters/monster/zombie.qc:181
+msgid ""
+"When a Zombie senses a nearby player it will begin to charge its target at "
+"high speeds. While charging, a Zombie may leap towards the player, dealing "
+"massive damage on contact. If it gets close, the Zombie will punch and bite "
+"repeatedly."
+msgstr ""
+
+#: qcsrc/common/monsters/monster/zombie.qc:184
+msgid ""
+"When threatened the Zombie may hold up its hands to block incoming attacks "
+"briefly."
+msgstr ""
+
+#: qcsrc/common/monsters/monster/zombie.qc:185
+msgid ""
+"It is no small task to kill that which is already dead. Once a Zombie is "
+"defeated, destroy its corpse to prevent it from rising again!"
+msgstr ""
+
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
 msgid "Zombie"
 msgstr "Zombie"
 
+#: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qc:76
+#, c-format
+msgid ""
+"%s is a mutator in which players below a certain health threshold (for "
+"example 25) will suffer blood loss."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qc:77
+msgid ""
+"Blood loss makes players stunned, severely impairs their movement, and "
+"rapidly takes away health points until they either die or gain enough health "
+"to go above the health threshold."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qh:5
+#: qcsrc/common/util.qc:310
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:105
+msgid "Blood loss"
+msgstr "Blood loss"
+
+#: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:66
+#: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:27
+#: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:50
+#: qcsrc/common/mutators/mutator/buffs/buff/flight.qc:31
+#: qcsrc/common/mutators/mutator/buffs/buff/inferno.qc:23
+#: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:25
+#: qcsrc/common/mutators/mutator/buffs/buff/luck.qc:17
+#: qcsrc/common/mutators/mutator/buffs/buff/magnet.qc:29
+#: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:28
+#: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:14
+#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:87
+#: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:28
+#: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:29
+#: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:24
+#: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
+#: qcsrc/common/mutators/mutator/buffs/buffs.qh:23
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:76
+#: qcsrc/common/mutators/mutator/vampire/vampire.qc:11
+#: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:83
+msgid "Buff"
+msgstr "Buff"
+
+#: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:66
+#, c-format
+msgid ""
+"The %s gives you infinite ammo until the buff expires, so you don't need to "
+"worry about running out of ammo."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
+#, c-format
+msgid ""
+"It also removes the need to reload any weapons that require reloading, like "
+"the %s and %s."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qh:11
 msgid "Ammo"
 msgstr "Ammo"
+
+#: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:27
+#, c-format
+msgid ""
+"The %s increases knockback force you deal, and makes you immune to knockback "
+"while the buff is active."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
+msgid "It also slightly increases knockback you deal to yourself."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qh:14
 msgid "Bash"
 msgstr "Bash"
 
+#: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:50
+#, c-format
+msgid ""
+"The %s causes your enemies and monsters to slow down for a few seconds when "
+"you attack them, while the buff is active."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
+#, c-format
+msgid "This is particularly useful against speedy players, especially in %s."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qh:15
 msgid "Disability"
 msgstr "Disability"
+
+#: qcsrc/common/mutators/mutator/buffs/buff/flight.qc:31
+#, c-format
+msgid ""
+"While you have the %s, you can crouch while midair to switch your gravity, "
+"allowing flight."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
 msgid "Flight"
 msgstr "Flight"
 
+#: qcsrc/common/mutators/mutator/buffs/buff/inferno.qc:23
+#, c-format
+msgid ""
+"The %s sets any enemies or monsters you attack alight, dealing burn damage "
+"to them for several seconds until the buff expires."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
 msgid "Inferno"
 msgstr "Inferno"
+
+#: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:25
+#, c-format
+msgid "The %s greatly increases your jump height, while the buff is active."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
+msgid "It also makes you immune to fall damage."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qh:12
 msgid "Jump"
 msgstr "Jump"
 
+#: qcsrc/common/mutators/mutator/buffs/buff/luck.qc:17
+#, c-format
+msgid ""
+"While you have the %s, each attack has a chance of being a critical hit with "
+"greatly increased damage."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/buffs/buff/luck.qh:13
 msgid "Luck"
 msgstr "Luck"
+
+#: qcsrc/common/mutators/mutator/buffs/buff/magnet.qc:29
+#, c-format
+msgid ""
+"The %s greatly increases your item pickup range, collecting nearby items for "
+"you while the buff is active."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:11
 msgid "Magnet"
 msgstr "Magnet"
 
+#: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:28
+#, c-format
+msgid ""
+"The %s increases health regeneration speed, increases the maximum health you "
+"can have before health starts to rot, and reduces health rot speed until the "
+"buff expires."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:29
+msgid ""
+"It also gives you a chance to survive a fatal hit, with a small amount of "
+"health left over."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qh:16
 msgid "Medic"
 msgstr "Medic"
+
+#: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:14
+#, c-format
+msgid "The %s greatly reduces your damage taken while the buff is active."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
+msgid "This also impacts the damage you deal to yourself."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qh:12
 msgid "Resistance"
 msgstr "Resistance"
 
+#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:87
+#, c-format
+msgid ""
+"The %s allows you to press %s to switch places with a nearby enemy once."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:88
+msgid ""
+"A common usage of this buff is to jump over the map's void, then swap with "
+"an enemy, to cause them to fall into the void."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:89
+msgid ""
+"The range that the buff works over is limited, so sometimes it may do "
+"nothing if there are no enemies nearby."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qh:10
 msgid "Swapper"
 msgstr "Swapper"
 
+#: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:28
+#, c-format
+msgid ""
+"The %s converts some of the damage you deal to enemies and monsters into "
+"health for yourself, until the buff expires."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:29
+#: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
+#, c-format
+msgid "In some sense, this is the opposite of the %s."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
-#: qcsrc/common/util.qc:267
+#: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:307
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:98
 msgid "Vampire"
 msgstr "Vampire"
+
+#: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:24
+#, c-format
+msgid ""
+"The %s reciprocates a portion of the damage enemies deal to you onto them, "
+"until the buff expires."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qh:13
 msgid "Vengeance"
 msgstr "Vengeance"
 
-#: qcsrc/common/mutators/mutator/buffs/buffs.qh:21
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:83
-msgid "Buff"
-msgstr "Buff"
+#: qcsrc/common/mutators/mutator/cloaked/cloaked.qc:10
+#, c-format
+msgid ""
+"The %s mutator makes all players nearly invisible, similar to the %s "
+"powerup. This adds an extra layer of stealth and strategy to gameplay."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/cloaked/cloaked.qh:5 qcsrc/common/util.qc:303
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
+msgid "Cloaked"
+msgstr "Cloaked"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:24
 msgid "Damage Text"
@@ -2235,6 +3109,26 @@ msgstr "Or opacity greater than:"
 msgid "Damage text"
 msgstr "Damage text"
 
+#: qcsrc/common/mutators/mutator/dodging/dodging.qc:10
+#, c-format
+msgid ""
+"%s is a mutator that enables dodging maneuvers, making evading attacks in "
+"close combat easier. If enabled, when you're standing on the ground and "
+"double tap a movement key, you will leap in that direction. This also works "
+"while in contact with a wall, allowing quick speed gain if done repeatedly "
+"against a long wall."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/dodging/dodging.qc:13
+#, c-format
+msgid "Some other mutators like %s enable this by default."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/dodging/dodging.qh:5 qcsrc/common/util.qc:296
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:77
+msgid "Dodging"
+msgstr "Dodging"
+
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:10
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:9
 #: qcsrc/menu/xonotic/keybinder.qc:68
@@ -2245,6 +3139,89 @@ msgstr "off-hand hook"
 #, c-format
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
 msgstr "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
+
+#: qcsrc/common/mutators/mutator/hook/hook.qc:11
+#, c-format
+msgid ""
+"The %s mutator gives all players a %s as their offhand weapon, used with %s. "
+"It has unlimited ammo, but the ordinary secondary fire can't be used."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/hook/hook.qc:12
+#: qcsrc/common/mutators/mutator/nades/nades.qc:51
+#: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:12
+#: qcsrc/common/weapons/weapon/hook.qc:435
+msgid "hook"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/hook/hook.qc:13
+#, c-format
+msgid ""
+"Since it's given as an offhand, players can use it to move around and shoot "
+"at their enemies at the same time, opening up more gameplay possibilities "
+"than the regular %s."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/hook/hook.qc:14
+#, c-format
+msgid "Note that it is overridden by the %s mutator."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/hook/hook.qh:5 qcsrc/common/util.qc:304
+msgid "Hook"
+msgstr "Hook"
+
+#: qcsrc/common/mutators/mutator/instagib/instagib.qc:15
+#, c-format
+msgid ""
+"%s is a mutator that removes all weapons and weapon pickups and gives all "
+"players the %s, which immediately frags players in a single shot, hence the "
+"name \"InstaGib.\""
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/instagib.qc:17
+#, c-format
+msgid ""
+"Precise aim and ammo conservation are important, since you will suicide "
+"after 10 seconds if you run out of ammo. Ammo (%s) can be picked up on the "
+"map often, or collected from dropped %s guns."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/instagib.qc:19
+#, c-format
+msgid ""
+"Maps often have an %s on them, which will save you from being fragged when "
+"picked up (total extra lives is displayed as armor). Other powerups often "
+"present on maps include %s and %s."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/instagib.qc:21
+#, c-format
+msgid ""
+"It is quite a common mutator present on many servers, mixing well with a lot "
+"of gametypes but particularly %s. Sometimes it's enabled alongside other "
+"mutators such as %s for added movement possibilities."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/instagib.qh:5
+#: qcsrc/common/util.qc:297
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:208
+msgid "InstaGib"
+msgstr "InstaGib"
+
+#: qcsrc/common/mutators/mutator/instagib/items.qc:11
+#, c-format
+msgid ""
+"The %s is sometimes present on maps when %s is enabled, providing ammo for "
+"the %s."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/items.qc:19
+#, c-format
+msgid ""
+"The %s powerup acts as armor in %s. If a player is shot while having one or "
+"more extra lives, they will survive the shot but suffer strong knockback."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:29
 msgid "Vaporizer ammo"
@@ -2265,75 +3242,421 @@ msgstr "drop weapon / throw nade"
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr "^3nades^8 are enabled, press ^3%s^8 to use them"
 
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:74
+#, c-format
+msgid ""
+"The %s detonates after a short delay, temporarily creating an orb around the "
+"point where it detonated for several seconds. If your team members enter the "
+"orb they will recover ammo, and if enemies enter the sphere they will lose "
+"ammo."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:76
+#, c-format
+msgid ""
+"This does not impact weapon magazines, so it won't reload your weapons for "
+"you, unlike the %s."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:22
 msgid "Ammo grenade"
 msgstr "Ammo grenade"
+
+#: qcsrc/common/mutators/mutator/nades/nade/darkness.qc:146
+#, c-format
+msgid ""
+"The %s detonates after a short delay, creating a dark field which "
+"temporarily blinds enemies who enter it."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nade/darkness.qc:147
+#: qcsrc/common/mutators/mutator/nades/nade/veil.qc:55
+#, c-format
+msgid "This is sort of the opposite of the %s."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/darkness.qh:19
 msgid "Darkness grenade"
 msgstr "Darkness grenade"
 
+#: qcsrc/common/mutators/mutator/nades/nade/entrap.qc:72
+#, c-format
+msgid ""
+"The %s detonates after a short delay, temporarily creating an orb around the "
+"point where it detonated for several seconds. Players and projectiles that "
+"enter the sphere will be slowed down, including yourself."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/nades/nade/entrap.qh:22
 msgid "Entrap grenade"
 msgstr "Entrap grenade"
+
+#: qcsrc/common/mutators/mutator/nades/nade/heal.qc:47
+#, c-format
+msgid ""
+"The %s detonates after a short delay, temporarily creating a healing orb "
+"around the point where it detonated for several seconds. If your team "
+"members enter the orb they will recover health, and if enemies enter the "
+"sphere they will be harmed."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/heal.qh:20
 msgid "Heal grenade"
 msgstr "Heal grenade"
 
+#: qcsrc/common/mutators/mutator/nades/nade/ice.qc:122
+#, c-format
+msgid ""
+"The %s detonates after a short delay, freezing any enemies who walk within "
+"the explosion radius for a few seconds after the explosion. While frozen, "
+"players can't move or shoot, leaving them vulnerable to damage, but if left "
+"too long they'll unfreeze and run away!"
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/nades/nade/ice.qh:19
 msgid "Ice grenade"
 msgstr "Ice grenade"
+
+#: qcsrc/common/mutators/mutator/nades/nade/monster.qc:27
+#, c-format
+msgid ""
+"The %s detonates after a short delay, spawning one of four monster types."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/monster.qh:19
 msgid "Monster grenade"
 msgstr "Monster grenade"
 
+#: qcsrc/common/mutators/mutator/nades/nade/napalm.qc:184
+#, c-format
+msgid ""
+"The %s detonates after a short delay, spreading fiery napalm globs around in "
+"the fountain. The napalm fire balls burn for a while, and damage players who "
+"get too close."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/nades/nade/napalm.qh:30
 msgid "Napalm grenade"
 msgstr "Napalm grenade"
 
+#: qcsrc/common/mutators/mutator/nades/nade/normal.qc:17
+#, c-format
+msgid ""
+"The (normal) %s explodes after a short delay, dealing damage to nearby "
+"players. If other nade types are destroyed before they detonate, they will "
+"instead explode similarly, without doing their special effects."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nade/normal.qc:19
+#, c-format
+msgid ""
+"Make sure you remember to throw it with %s, or else it will blow up in your "
+"hands!"
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qh:11
-#: qcsrc/common/mutators/mutator/nades/nades.qh:14
+#: qcsrc/common/mutators/mutator/nades/nades.qh:17
 msgid "Grenade"
 msgstr "Grenade"
+
+#: qcsrc/common/mutators/mutator/nades/nade/spawn.qc:40
+#, c-format
+msgid ""
+"The %s detonates after a short delay, temporarily setting your spawn point "
+"to where it detonated. It is useful for cases where you want to go back to "
+"some point on the map after you die."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/spawn.qh:17
 msgid "Spawn grenade"
 msgstr "Spawn grenade"
 
+#: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:45
+#, c-format
+msgid ""
+"The %s detonates after a short delay, teleporting you to where it detonated."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:46
+msgid ""
+"A common use of this nade is saving yourself from the void in space maps, "
+"however mastering this is very tricky."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:47
+msgid ""
+"If this grenade is destroyed by an attacker, it will deal some damage to "
+"them."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qh:17
 msgid "Translocate grenade"
 msgstr "Translocate grenade"
 
+#: qcsrc/common/mutators/mutator/nades/nade/veil.qc:53
+#, c-format
+msgid ""
+"The %s detonates after a short delay, temporarily creating an orb around the "
+"point where it detonated for several seconds. Players inside the orb will be "
+"invisible to those outside it."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qh:22
 msgid "Veil grenade"
 msgstr "Veil grenade"
+
+#: qcsrc/common/mutators/mutator/nades/nades.qc:50
+#, c-format
+msgid ""
+"The %s mutator gives all players offhand nades that can be primed then "
+"thrown by pressing %s twice. If the %s and %s mutators are disabled, they "
+"can also be thrown by holding then releasing %s."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nades.qc:52
+msgid ""
+"There are multiple types of nades that can be selected, and many options "
+"available regarding this mutator, so they may act a little differently "
+"depending on the server you play on."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nades.qc:54
+#, c-format
+msgid "This mutator is enabled by default in %s."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/nades.qh:82 qcsrc/common/util.qc:319
+#: qcsrc/menu/xonotic/guide/guide.qh:16
+msgid "Nades"
+msgstr "Nades"
+
+#: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:29
+#, c-format
+msgid ""
+"The %s mutator, enabled by default, allows the spawning of new gimmicky "
+"weapons, sometimes replacing a core weapon."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:30
+#, c-format
+msgid ""
+"Since these weapons can't spawn in %s and %s, the %s mutator can't be "
+"enabled concurrently."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:31
+#, c-format
+msgid "The current %s weapons are:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/new_toys/new_toys.qh:7
+#: qcsrc/common/util.qc:298
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
+msgid "New Toys"
+msgstr "New Toys"
+
+#: qcsrc/common/mutators/mutator/nix/nix.qc:8
+#, c-format
+msgid ""
+"%s is a mutator that gives all players the same randomly selected weapon. "
+"After some time, the weapon is reselected, and this repeats forever. Weapon "
+"and ammo pickups are also removed from the map."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:299
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
+msgid "NIX"
+msgstr "NIX"
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
 msgid "^3offhand blaster^8 is enabled, press ^3%s^8 to use it"
 msgstr "^3off-hand blaster^8 is enabled, press ^3%s^8 to use it"
 
+#: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:11
+#, c-format
+msgid ""
+"The %s mutator gives all players a %s as their offhand weapon, used with %s. "
+"It can be fired at any time, but the ordinary secondary fire can't be used."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:13
+#, c-format
+msgid ""
+"Since it's given as an offhand, you can fire it at the same time as the "
+"ordinary %s while laser jumping to achieve even more height."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:14
+#, c-format
+msgid "Note that it overrides the %s mutator, since they use the same bind."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qh:5
+#: qcsrc/common/util.qc:320
+msgid "Offhand blaster"
+msgstr "Off-hand blaster"
+
+#: qcsrc/common/mutators/mutator/overkill/okhmg.qc:167
+#, c-format
+msgid ""
+"The %s is a superweapon that rapidly fires harmful bullets with a small "
+"degree of spread."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/overkill/okhmg.qc:168
+#: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:167
+#: qcsrc/common/mutators/mutator/overkill/oknex.qc:374
+#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:243
+#: qcsrc/common/mutators/mutator/overkill/okshotgun.qc:133
+#, c-format
+msgid ""
+"Like with all %s weapons, the secondary fire shoots a laser which does not "
+"damage or push enemies, but can be used to push yourself around."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/overkill/okhmg.qc:169
+#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:244
+msgid ""
+"It is a superweapon found on some maps, meaning that it breaks down after "
+"some time."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/overkill/okhmg.qc:170
+#: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:168
+#: qcsrc/common/mutators/mutator/overkill/oknex.qc:375
+#: qcsrc/common/mutators/mutator/overkill/okshotgun.qc:134
+#, c-format
+msgid ""
+"The primary fire consumes %s ammo, although you spawn with an infinite "
+"amount of it in %s. It has a limited magazine size, so needs reloading after "
+"several shots."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/overkill/okhmg.qc:172
+#: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:170
+#, c-format
+msgid ""
+"The %s can be used in a lot of situations, and it works particularly well at "
+"long ranges since the bullets pierce the sky instantaneously."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/overkill/okhmg.qc:173
+#, c-format
+msgid ""
+"Since its bullets deal a lot more damage than the %s bullets, it is often "
+"heavily contested when it spawns in."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:31
 msgid "Overkill Heavy Machine Gun"
 msgstr "Overkill Heavy Machine Gun"
+
+#: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:166
+#: qcsrc/common/weapons/weapon/machinegun.qc:423
+#, c-format
+msgid "The %s quickly fires bullets with a small degree of spread."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:28
 msgid "Overkill MachineGun"
 msgstr "Overkill MachineGun"
 
+#: qcsrc/common/mutators/mutator/overkill/oknex.qc:373
+#: qcsrc/common/weapons/weapon/vortex.qc:384
+#, c-format
+msgid ""
+"The %s fires harmful beams of energy that traverse the map instantaneously "
+"and deal a significant chunk of damage on impact."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/overkill/oknex.qc:377
+#, c-format
+msgid ""
+"Since it is the only %s weapon with no spread, the %s stands out at long "
+"ranges."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:29
 msgid "Overkill Nex"
 msgstr "Overkill Nex"
+
+#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:242
+#, c-format
+msgid ""
+"As the name suggests, the %s is a superweapon that fires a rocket propelled "
+"chainsaw which explodes on impact, dealing a lot of splash damage to any "
+"players close by."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:245
+#, c-format
+msgid ""
+"The primary fire consumes %s ammo, although you spawn with an infinite "
+"amount of it in %s."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:246
+#, c-format
+msgid ""
+"Since it is the only %s weapon which deals splash damage, the %s is a good "
+"choice of weapon for attacking groups of enemies."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:31
 msgid "Overkill Rocket Propelled Chainsaw"
 msgstr "Overkill Rocket Propelled Chainsaw"
 
+#: qcsrc/common/mutators/mutator/overkill/okshotgun.qc:132
+#, c-format
+msgid ""
+"The %s fires a single shotgun round which spreads into multiple pellets upon "
+"exiting the barrel, dealing a deadly blow if up close."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/overkill/okshotgun.qc:136
+#: qcsrc/common/weapons/weapon/shotgun.qc:404
+#, c-format
+msgid ""
+"The %s damage drops off quickly as the range increases, so it is only useful "
+"for close combat or sometimes medium range combat."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:24
 msgid "Overkill Shotgun"
 msgstr "Overkill Shotgun"
+
+#: qcsrc/common/mutators/mutator/overkill/overkill.qh:5
+#: qcsrc/common/util.qc:313 qcsrc/menu/xonotic/guide/pages.qc:171
+msgid "Overkill"
+msgstr "Overkill"
+
+#: qcsrc/common/mutators/mutator/pinata/pinata.qc:8
+#, c-format
+msgid ""
+"%s is a mutator that makes players drop all their weapons when they die. "
+"Without this mutator, players normally drop only their equipped weapon."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/pinata/pinata.qh:5 qcsrc/common/util.qc:308
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
+msgid "Piñata"
+msgstr "Piñata"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:19
+#, c-format
+msgid ""
+"The %s powerup regenerates %s needed for the %s until the powerup expires, "
+"so you can continue flying around for longer."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:21
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qc:54
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qc:58
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qc:40
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:60
+msgid "Since it is a powerup, it will drop if you die while holding it."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:33
 msgid "Fuel regenerator"
@@ -2343,24 +3666,62 @@ msgstr "Fuel regenerator"
 msgid "Fuel regen"
 msgstr "Fuel regen"
 
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qc:52
+#, c-format
+msgid ""
+"The %s powerup increases your translucency while the powerup is active, "
+"making it more difficult for enemies to see you. This powerup is often "
+"present in %s."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:60
 msgid "Invisibility"
 msgstr "Invisibility"
 
+#: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qc:19
+#, c-format
+msgid ""
+"The %s powerup allows you to fly around the map for a short period, "
+"providing increased mobility, maneuverability, and the ability to reach "
+"higher ground."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qc:21
+msgid ""
+"It consumes Fuel ammo while operating, so make sure you don't run out when "
+"you're high up!"
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:38
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:41
-#: qcsrc/common/util.qc:271
+#: qcsrc/common/util.qc:311
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:129
 msgid "Jetpack"
 msgstr "Jetpack"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qc:56
+#, c-format
+msgid ""
+"The %s powerup greatly decreases the damage you take until the powerup "
+"expires, having a compounding effect with armor. It also makes you more "
+"resistant to knockback."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:58
 msgid "Shield"
 msgstr "Shield"
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qc:38
+#, c-format
+msgid ""
+"The %s powerup increases your movement speed, attack speed, and health "
+"regeneration speed while the powerup is active. However, it also makes you a "
+"bit more vulnerable to incoming attacks."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
@@ -2369,11 +3730,48 @@ msgstr "Shield"
 msgid "Speed"
 msgstr "Speed"
 
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:56
+#, c-format
+msgid ""
+"The %s powerup greatly increases the damage you deal, until the powerup "
+"expires. It also increases the knockback that your attacks deal."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:58
+msgid ""
+"The damage and knockback you deal to yourself also increases but by a "
+"smaller amount."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:59
+#, c-format
+msgid ""
+"The %s is one of the most sought after items on a map due to its ability to "
+"allow you to easily dominate a map, so it's often highly contested when it "
+"spawns in."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:59
 msgid "Strength"
 msgstr "Strength"
+
+#: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qc:10
+#, c-format
+msgid ""
+"The %s mutator removes the slight delay when immediately detonating a %s "
+"rocket after firing. This allows for rockets fired to be detonated much "
+"closer to your hitbox, so they can give you a much larger speed boost, also "
+"allowing flying around the map."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qh:5
+#: qcsrc/common/util.qc:300
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:154
+#: qcsrc/menu/xonotic/guide/pages.qc:72 qcsrc/menu/xonotic/guide/pages.qc:123
+msgid "Rocket Flying"
+msgstr "Rocket Flying"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
@@ -2390,6 +3788,57 @@ msgstr "Stunned"
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
 msgstr "Superweapons"
+
+#: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qc:8
+#, c-format
+msgid ""
+"The %s mutator causes an explosion when two players collide if it is enabled."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qc:9
+msgid ""
+"This is a nice way to add some silly fun to a server, but it also does allow "
+"for the use of new tactics in some gametypes."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qh:5
+#: qcsrc/common/util.qc:316
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
+msgid "Touch explode"
+msgstr "Touch explode"
+
+#: qcsrc/common/mutators/mutator/vampire/vampire.qc:10
+#, c-format
+msgid ""
+"The %s mutator gives all players a permanent version of the %s. However, "
+"unlike the normal %s, when this mutator is enabled players' health can go "
+"way above the usual limit of 200."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
+#, c-format
+msgid ""
+"Additionally the amount of health players get is equal to the damage they "
+"deal, which isn't normaly the case with the %s."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/walljump/walljump.qc:81
+#, c-format
+msgid ""
+"%s is a mutator that enables jumping off walls for added mobility. To do a "
+"wall jump, tap %s when against a wall."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/walljump/walljump.qc:83
+msgid ""
+"This mutator adds a bit of versatility, allowing for more dynamic and "
+"unpredictable movement."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/walljump/walljump.qh:5
+#: qcsrc/common/util.qc:317
+msgid "Wall jumping"
+msgstr "Wall jumping"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -2424,13 +3873,13 @@ msgid "Checkpoint"
 msgstr "Checkpoint"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:16
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:237
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:236
 msgid "Finish"
 msgstr "Finish"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:237
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:236
 msgid "Start"
 msgstr "Start"
 
@@ -2548,7 +3997,7 @@ msgid "Weapon"
 msgstr "Weapon"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:78
-#: qcsrc/common/vehicles/vehicle.qh:10
+#: qcsrc/common/vehicles/vehicle.qh:14
 msgid "Vehicle"
 msgstr "Vehicle"
 
@@ -2560,7 +4009,7 @@ msgstr "Intruder!"
 msgid "Tagged"
 msgstr "Tagged"
 
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:694
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:693
 #, c-format
 msgid "%s needing help!"
 msgstr "%s needing help!"
@@ -4995,10 +6444,12 @@ msgid " (near %s)"
 msgstr " (near %s)"
 
 #: qcsrc/common/notifications/all.qh:452 qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/weapons/all.qc:878
 msgid "primary"
 msgstr "primary"
 
 #: qcsrc/common/notifications/all.qh:452 qcsrc/common/notifications/all.qh:453
+#: qcsrc/common/weapons/all.qc:879
 msgid "secondary"
 msgstr "secondary"
 
@@ -5293,9 +6744,23 @@ msgstr "Pink"
 msgid "%s under attack!"
 msgstr "%s under attack!"
 
-#: qcsrc/common/turrets/turret.qh:11
+#: qcsrc/common/turrets/turret.qh:16
 msgid "Turret"
 msgstr "Turret"
+
+#: qcsrc/common/turrets/turret/ewheel.qc:251
+#, c-format
+msgid ""
+"The %s is a mobile turret that rolls around, attacking its targets when they "
+"enter its line of sight."
+msgstr ""
+
+#: qcsrc/common/turrets/turret/ewheel.qc:252
+#, c-format
+msgid ""
+"It attacks by shooting laser beams similar to those of the %s, from both of "
+"its two cannons."
+msgstr ""
 
 #: qcsrc/common/turrets/turret/ewheel.qh:15
 msgid "eWheel Turret"
@@ -5305,6 +6770,20 @@ msgstr "eWheel Turret"
 msgid "eWheel"
 msgstr "eWheel"
 
+#: qcsrc/common/turrets/turret/flac.qc:25
+#, c-format
+msgid ""
+"The %s is a turret similar to flak cannons, instead firing anti-projectile "
+"flak shells to take down projectiles fired by its targets."
+msgstr ""
+
+#: qcsrc/common/turrets/turret/flac.qc:26
+#, c-format
+msgid ""
+"The shells it shoots are against projectiles such as the %s secondary fire "
+"grenade, %s secondary fire balls, %s rockets, and other missiles."
+msgstr ""
+
 #: qcsrc/common/turrets/turret/flac.qh:13
 msgid "FLAC Cannon"
 msgstr "FLAC Cannon"
@@ -5313,9 +6792,35 @@ msgstr "FLAC Cannon"
 msgid "FLAC"
 msgstr "FLAC"
 
+#: qcsrc/common/turrets/turret/fusionreactor.qc:61
+#, c-format
+msgid ""
+"The %s is a bit of a unique turret, instead helping out other turrets rather "
+"than directly attacking its targets. It has no weapon of its own, and "
+"instead works by generating power for nearby turrets, so that they can "
+"attack their shared targets more often."
+msgstr ""
+
+#: qcsrc/common/turrets/turret/fusionreactor.qc:63
+msgid "This is the only turret that doesn't directly attack its targets."
+msgstr ""
+
 #: qcsrc/common/turrets/turret/fusionreactor.qh:11
 msgid "Fusion Reactor"
 msgstr "Fusion Reactor"
+
+#: qcsrc/common/turrets/turret/hellion.qc:31
+#, c-format
+msgid ""
+"The %s fires homing missiles similar to those of the %s towards its targets."
+msgstr ""
+
+#: qcsrc/common/turrets/turret/hellion.qc:32
+#, c-format
+msgid ""
+"Although the missiles usually deal less damage than a %s rocket, the %s has "
+"two cannons so it can dish out quite the punch."
+msgstr ""
 
 #: qcsrc/common/turrets/turret/hellion.qh:13
 msgid "Hellion Missile Turret"
@@ -5325,6 +6830,14 @@ msgstr "Hellion Missile Turret"
 msgid "Hellion"
 msgstr "Hellion"
 
+#: qcsrc/common/turrets/turret/hk.qc:55
+#, c-format
+msgid ""
+"The %s fires a single powerful homing rocket with the ability to evade "
+"obstacles to find its target. The rocket it fires is similar to that of the "
+"%s."
+msgstr ""
+
 #: qcsrc/common/turrets/turret/hk.qh:15
 msgid "Hunter-Killer Turret"
 msgstr "Hunter-Killer Turret"
@@ -5332,6 +6845,13 @@ msgstr "Hunter-Killer Turret"
 #: qcsrc/common/turrets/turret/hk_weapon.qh:7
 msgid "Hunter-Killer"
 msgstr "Hunter-Killer"
+
+#: qcsrc/common/turrets/turret/machinegun.qc:24
+#, c-format
+msgid ""
+"As the name suggests, the %s fires bullets in a burst at its targets, "
+"similar to the %s."
+msgstr ""
 
 #: qcsrc/common/turrets/turret/machinegun.qh:13
 msgid "Machinegun Turret"
@@ -5341,6 +6861,19 @@ msgstr "Machinegun Turret"
 msgid "Machinegun"
 msgstr "Machinegun"
 
+#: qcsrc/common/turrets/turret/mlrs.qc:35
+#, c-format
+msgid ""
+"The %s fires a rapid burst of 6 rockets similar to those of the %s towards "
+"its targets."
+msgstr ""
+
+#: qcsrc/common/turrets/turret/mlrs.qc:36
+msgid ""
+"Getting caught in the line of fire of this turret can be very deadly, but "
+"thankfully it doesn't shoot if you get too close, so as to not damage itself."
+msgstr ""
+
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
 msgstr "MLRS Turret"
@@ -5348,6 +6881,21 @@ msgstr "MLRS Turret"
 #: qcsrc/common/turrets/turret/mlrs_weapon.qh:7
 msgid "MLRS"
 msgstr "MLRS"
+
+#: qcsrc/common/turrets/turret/phaser.qc:52
+#, c-format
+msgid ""
+"The %s is a turret that fires an invisible beam of energy towards its "
+"targets."
+msgstr ""
+
+#: qcsrc/common/turrets/turret/phaser.qc:53
+#, c-format
+msgid ""
+"Looks are deceiving with the %s, since although the beam of energy can't be "
+"seen, it constantly deals damage to and slows down players who intercept its "
+"path."
+msgstr ""
 
 #: qcsrc/common/turrets/turret/phaser.qh:13
 msgid "Phaser Cannon"
@@ -5357,9 +6905,34 @@ msgstr "Phaser Cannon"
 msgid "Phaser"
 msgstr "Phaser"
 
+#: qcsrc/common/turrets/turret/plasma.qc:56
+#, c-format
+msgid ""
+"The %s is a turret that fires electric balls forwards, similar to those of "
+"the %s."
+msgstr ""
+
+#: qcsrc/common/turrets/turret/plasma.qc:57
+#, c-format
+msgid "It is a weaker version of the %s, which has two electric ball cannons."
+msgstr ""
+
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
 msgstr "Plasma Cannon"
+
+#: qcsrc/common/turrets/turret/plasma_dual.qc:44
+#, c-format
+msgid ""
+"The %s is a turret that fires electric balls forwards from its two cannons, "
+"shooting balls similar to those of the %s."
+msgstr ""
+
+#: qcsrc/common/turrets/turret/plasma_dual.qc:45
+#, c-format
+msgid ""
+"It is a stronger version of the %s, which only has one electric ball cannon."
+msgstr ""
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:8
 msgid "Dual plasma"
@@ -5373,10 +6946,37 @@ msgstr "Dual Plasma Cannon"
 msgid "Plasma"
 msgstr "Plasma"
 
+#: qcsrc/common/turrets/turret/tesla.qc:95
+#, c-format
+msgid ""
+"The %s is a turret that electrocutes all who dare come near it, sending "
+"powerful high-voltage arcs of lightning to strike its targets."
+msgstr ""
+
+#: qcsrc/common/turrets/turret/tesla.qc:96
+#, c-format
+msgid ""
+"Since the arcs of lightning can jump between nearby targets, it is best to "
+"just stay away from the %s."
+msgstr ""
+
 #: qcsrc/common/turrets/turret/tesla.qh:13
 #: qcsrc/common/turrets/turret/tesla_weapon.qh:7
 msgid "Tesla Coil"
 msgstr "Tesla Coil"
+
+#: qcsrc/common/turrets/turret/walker.qc:651
+#, c-format
+msgid "The %s is an arachnid-like walking turret that hunts down its targets."
+msgstr ""
+
+#: qcsrc/common/turrets/turret/walker.qc:652
+#, c-format
+msgid ""
+"It has two weapons, both a machinegun like the %s for medium range combat, "
+"and a rocket launcher shooting homing missiles like the %s for long range "
+"targets. It also has the ability to melee close by targets."
+msgstr ""
 
 #: qcsrc/common/turrets/turret/walker.qh:15
 msgid "Walker Turret"
@@ -5386,482 +6986,418 @@ msgstr "Walker Turret"
 msgid "Walker"
 msgstr "Walker"
 
-#: qcsrc/common/util.qc:256
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:77
-msgid "Dodging"
-msgstr "Dodging"
-
-#: qcsrc/common/util.qc:257
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:208
-msgid "InstaGib"
-msgstr "InstaGib"
-
-#: qcsrc/common/util.qc:258
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
-msgid "New Toys"
-msgstr "New Toys"
-
-#: qcsrc/common/util.qc:259
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
-msgid "NIX"
-msgstr "NIX"
-
-#: qcsrc/common/util.qc:260
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:154
-msgid "Rocket Flying"
-msgstr "Rocket Flying"
-
-#: qcsrc/common/util.qc:261
+#: qcsrc/common/util.qc:301
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:133
 msgid "Invincible Projectiles"
 msgstr "Invincible Projectiles"
 
-#: qcsrc/common/util.qc:262
+#: qcsrc/common/util.qc:302
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:116
 msgid "Low gravity"
 msgstr "Low gravity"
 
-#: qcsrc/common/util.qc:263
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
-msgid "Cloaked"
-msgstr "Cloaked"
-
-#: qcsrc/common/util.qc:264
-msgid "Hook"
-msgstr "Hook"
-
-#: qcsrc/common/util.qc:265
+#: qcsrc/common/util.qc:305
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:94
 msgid "Midair"
 msgstr "Midair"
 
-#: qcsrc/common/util.qc:266
+#: qcsrc/common/util.qc:306
 msgid "Melee only Arena"
 msgstr "Melee only Arena"
 
-#: qcsrc/common/util.qc:268
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
-msgid "Piñata"
-msgstr "Piñata"
-
-#: qcsrc/common/util.qc:269
+#: qcsrc/common/util.qc:309
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:164
 msgid "Weapons stay"
 msgstr "Weapons stay"
 
-#: qcsrc/common/util.qc:270
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:105
-msgid "Blood loss"
-msgstr "Blood loss"
-
-#: qcsrc/common/util.qc:272
+#: qcsrc/common/util.qc:312
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:89
+#: qcsrc/menu/xonotic/guide/guide.qh:15
 msgid "Buffs"
 msgstr "Buffs"
 
-#: qcsrc/common/util.qc:273
-msgid "Overkill"
-msgstr "Overkill"
-
-#: qcsrc/common/util.qc:274
+#: qcsrc/common/util.qc:314
 msgid "No powerups"
 msgstr "No powerups"
 
-#: qcsrc/common/util.qc:275
+#: qcsrc/common/util.qc:315 qcsrc/menu/xonotic/guide/guide.qh:14
 msgid "Powerups"
 msgstr "Powerups"
 
-#: qcsrc/common/util.qc:276
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
-msgid "Touch explode"
-msgstr "Touch explode"
-
-#: qcsrc/common/util.qc:277
-msgid "Wall jumping"
-msgstr "Wall jumping"
-
-#: qcsrc/common/util.qc:278
+#: qcsrc/common/util.qc:318
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:223
 msgid "No start weapons"
 msgstr "No start weapons"
 
-#: qcsrc/common/util.qc:279
-msgid "Nades"
-msgstr "Nades"
-
-#: qcsrc/common/util.qc:280
-msgid "Offhand blaster"
-msgstr "Off-hand blaster"
-
-#: qcsrc/common/util.qc:1429
+#: qcsrc/common/util.qc:1469
 msgid "Male"
 msgstr "Male"
 
-#: qcsrc/common/util.qc:1430
+#: qcsrc/common/util.qc:1470
 msgid "Female"
 msgstr "Female"
 
-#: qcsrc/common/util.qc:1431
+#: qcsrc/common/util.qc:1471
 msgid "Undisclosed"
 msgstr "Undisclosed"
 
-#: qcsrc/common/util.qc:1478
+#: qcsrc/common/util.qc:1518
 msgid "<KEY NOT FOUND>"
 msgstr "<KEY NOT FOUND>"
 
-#: qcsrc/common/util.qc:1479
+#: qcsrc/common/util.qc:1519
 msgid "<UNKNOWN KEYNUM>"
 msgstr "<UNKNOWN KEYNUM>"
 
-#: qcsrc/common/util.qc:1484
+#: qcsrc/common/util.qc:1524
 msgid "TAB"
 msgstr "TAB"
 
-#: qcsrc/common/util.qc:1485 qcsrc/common/util.qc:1556
+#: qcsrc/common/util.qc:1525 qcsrc/common/util.qc:1596
 #, c-format
 msgid "ENTER"
 msgstr "ENTER"
 
-#: qcsrc/common/util.qc:1486
+#: qcsrc/common/util.qc:1526
 msgid "ESCAPE"
 msgstr "ESCAPE"
 
-#: qcsrc/common/util.qc:1487
+#: qcsrc/common/util.qc:1527
 msgid "SPACE"
 msgstr "SPACE"
 
-#: qcsrc/common/util.qc:1489
+#: qcsrc/common/util.qc:1529
 msgid "BACKSPACE"
 msgstr "BACKSPACE"
 
-#: qcsrc/common/util.qc:1490 qcsrc/common/util.qc:1547
+#: qcsrc/common/util.qc:1530 qcsrc/common/util.qc:1587
 #, c-format
 msgid "UPARROW"
 msgstr "UPARROW"
 
-#: qcsrc/common/util.qc:1491 qcsrc/common/util.qc:1542
+#: qcsrc/common/util.qc:1531 qcsrc/common/util.qc:1582
 #, c-format
 msgid "DOWNARROW"
 msgstr "DOWNARROW"
 
-#: qcsrc/common/util.qc:1492 qcsrc/common/util.qc:1544
+#: qcsrc/common/util.qc:1532 qcsrc/common/util.qc:1584
 #, c-format
 msgid "LEFTARROW"
 msgstr "LEFTARROW"
 
-#: qcsrc/common/util.qc:1493 qcsrc/common/util.qc:1545
+#: qcsrc/common/util.qc:1533 qcsrc/common/util.qc:1585
 #, c-format
 msgid "RIGHTARROW"
 msgstr "RIGHTARROW"
 
-#: qcsrc/common/util.qc:1495
+#: qcsrc/common/util.qc:1535
 msgid "ALT"
 msgstr "ALT"
 
-#: qcsrc/common/util.qc:1496
+#: qcsrc/common/util.qc:1536
 msgid "CTRL"
 msgstr "CTRL"
 
-#: qcsrc/common/util.qc:1497
+#: qcsrc/common/util.qc:1537
 msgid "SHIFT"
 msgstr "SHIFT"
 
-#: qcsrc/common/util.qc:1499 qcsrc/common/util.qc:1540
+#: qcsrc/common/util.qc:1539 qcsrc/common/util.qc:1580
 #, c-format
 msgid "INS"
 msgstr "INS"
 
-#: qcsrc/common/util.qc:1500 qcsrc/common/util.qc:1550
+#: qcsrc/common/util.qc:1540 qcsrc/common/util.qc:1590
 #, c-format
 msgid "DEL"
 msgstr "DEL"
 
-#: qcsrc/common/util.qc:1501 qcsrc/common/util.qc:1543
+#: qcsrc/common/util.qc:1541 qcsrc/common/util.qc:1583
 #, c-format
 msgid "PGDN"
 msgstr "PGDN"
 
-#: qcsrc/common/util.qc:1502 qcsrc/common/util.qc:1548
+#: qcsrc/common/util.qc:1542 qcsrc/common/util.qc:1588
 #, c-format
 msgid "PGUP"
 msgstr "PGUP"
 
-#: qcsrc/common/util.qc:1503 qcsrc/common/util.qc:1546
+#: qcsrc/common/util.qc:1543 qcsrc/common/util.qc:1586
 #, c-format
 msgid "HOME"
 msgstr "HOME"
 
-#: qcsrc/common/util.qc:1504 qcsrc/common/util.qc:1541
+#: qcsrc/common/util.qc:1544 qcsrc/common/util.qc:1581
 #, c-format
 msgid "END"
 msgstr "END"
 
-#: qcsrc/common/util.qc:1506
+#: qcsrc/common/util.qc:1546
 msgid "PAUSE"
 msgstr "PAUSE"
 
-#: qcsrc/common/util.qc:1508
+#: qcsrc/common/util.qc:1548
 msgid "NUMLOCK"
 msgstr "NUMLOCK"
 
-#: qcsrc/common/util.qc:1509
+#: qcsrc/common/util.qc:1549
 msgid "CAPSLOCK"
 msgstr "CAPSLOCK"
 
-#: qcsrc/common/util.qc:1510
+#: qcsrc/common/util.qc:1550
 msgid "SCROLLOCK"
 msgstr "SCROLLOCK"
 
-#: qcsrc/common/util.qc:1512
+#: qcsrc/common/util.qc:1552
 msgid "SEMICOLON"
 msgstr "SEMICOLON"
 
-#: qcsrc/common/util.qc:1513
+#: qcsrc/common/util.qc:1553
 msgid "TILDE"
 msgstr "TILDE"
 
-#: qcsrc/common/util.qc:1514
+#: qcsrc/common/util.qc:1554
 msgid "BACKQUOTE"
 msgstr "BACKQUOTE"
 
-#: qcsrc/common/util.qc:1515
+#: qcsrc/common/util.qc:1555
 msgid "QUOTE"
 msgstr "QUOTE"
 
-#: qcsrc/common/util.qc:1516
+#: qcsrc/common/util.qc:1556
 msgid "APOSTROPHE"
 msgstr "APOSTROPHE"
 
-#: qcsrc/common/util.qc:1517
+#: qcsrc/common/util.qc:1557
 msgid "BACKSLASH"
 msgstr "BACKSLASH"
 
-#: qcsrc/common/util.qc:1525
+#: qcsrc/common/util.qc:1565
 #, c-format
 msgid "F%d"
 msgstr "F%d"
 
-#: qcsrc/common/util.qc:1535
+#: qcsrc/common/util.qc:1575
 #, c-format
 msgid "KP_%d"
 msgstr "KP_%d"
 
-#: qcsrc/common/util.qc:1540 qcsrc/common/util.qc:1541
-#: qcsrc/common/util.qc:1542 qcsrc/common/util.qc:1543
-#: qcsrc/common/util.qc:1544 qcsrc/common/util.qc:1545
-#: qcsrc/common/util.qc:1546 qcsrc/common/util.qc:1547
-#: qcsrc/common/util.qc:1548 qcsrc/common/util.qc:1549
-#: qcsrc/common/util.qc:1550 qcsrc/common/util.qc:1551
-#: qcsrc/common/util.qc:1552 qcsrc/common/util.qc:1553
-#: qcsrc/common/util.qc:1554 qcsrc/common/util.qc:1555
-#: qcsrc/common/util.qc:1556 qcsrc/common/util.qc:1557
+#: qcsrc/common/util.qc:1580 qcsrc/common/util.qc:1581
+#: qcsrc/common/util.qc:1582 qcsrc/common/util.qc:1583
+#: qcsrc/common/util.qc:1584 qcsrc/common/util.qc:1585
+#: qcsrc/common/util.qc:1586 qcsrc/common/util.qc:1587
+#: qcsrc/common/util.qc:1588 qcsrc/common/util.qc:1589
+#: qcsrc/common/util.qc:1590 qcsrc/common/util.qc:1591
+#: qcsrc/common/util.qc:1592 qcsrc/common/util.qc:1593
+#: qcsrc/common/util.qc:1594 qcsrc/common/util.qc:1595
+#: qcsrc/common/util.qc:1596 qcsrc/common/util.qc:1597
 #, c-format
 msgid "KP_%s"
 msgstr "KP_%s"
 
-#: qcsrc/common/util.qc:1549
+#: qcsrc/common/util.qc:1589
 #, c-format
 msgid "PERIOD"
 msgstr "PERIOD"
 
-#: qcsrc/common/util.qc:1551
+#: qcsrc/common/util.qc:1591
 #, c-format
 msgid "DIVIDE"
 msgstr "DIVIDE"
 
-#: qcsrc/common/util.qc:1552
+#: qcsrc/common/util.qc:1592
 #, c-format
 msgid "SLASH"
 msgstr "SLASH"
 
-#: qcsrc/common/util.qc:1553
+#: qcsrc/common/util.qc:1593
 #, c-format
 msgid "MULTIPLY"
 msgstr "MULTIPLY"
 
-#: qcsrc/common/util.qc:1554
+#: qcsrc/common/util.qc:1594
 #, c-format
 msgid "MINUS"
 msgstr "MINUS"
 
-#: qcsrc/common/util.qc:1555
+#: qcsrc/common/util.qc:1595
 #, c-format
 msgid "PLUS"
 msgstr "PLUS"
 
-#: qcsrc/common/util.qc:1557
+#: qcsrc/common/util.qc:1597
 #, c-format
 msgid "EQUALS"
 msgstr "EQUALS"
 
-#: qcsrc/common/util.qc:1562
+#: qcsrc/common/util.qc:1602
 msgid "PRINTSCREEN"
 msgstr "PRINTSCREEN"
 
-#: qcsrc/common/util.qc:1565
+#: qcsrc/common/util.qc:1605
 #, c-format
 msgid "MOUSE%d"
 msgstr "MOUSE%d"
 
-#: qcsrc/common/util.qc:1567
+#: qcsrc/common/util.qc:1607
 msgid "MWHEELUP"
 msgstr "MWHEELUP"
 
-#: qcsrc/common/util.qc:1568
+#: qcsrc/common/util.qc:1608
 msgid "MWHEELDOWN"
 msgstr "MWHEELDOWN"
 
-#: qcsrc/common/util.qc:1571
+#: qcsrc/common/util.qc:1611
 #, c-format
 msgid "JOY%d"
 msgstr "JOY%d"
 
-#: qcsrc/common/util.qc:1574
+#: qcsrc/common/util.qc:1614
 #, c-format
 msgid "AUX%d"
 msgstr "AUX%d"
 
-#: qcsrc/common/util.qc:1581
+#: qcsrc/common/util.qc:1621
 #, c-format
 msgid "DPAD_UP"
 msgstr "DPAD_UP"
 
-#: qcsrc/common/util.qc:1581 qcsrc/common/util.qc:1582
-#: qcsrc/common/util.qc:1583 qcsrc/common/util.qc:1584
-#: qcsrc/common/util.qc:1585 qcsrc/common/util.qc:1586
-#: qcsrc/common/util.qc:1587 qcsrc/common/util.qc:1588
-#: qcsrc/common/util.qc:1589 qcsrc/common/util.qc:1590
-#: qcsrc/common/util.qc:1591 qcsrc/common/util.qc:1592
-#: qcsrc/common/util.qc:1593 qcsrc/common/util.qc:1594
-#: qcsrc/common/util.qc:1595 qcsrc/common/util.qc:1596
-#: qcsrc/common/util.qc:1597 qcsrc/common/util.qc:1598
-#: qcsrc/common/util.qc:1599 qcsrc/common/util.qc:1600
+#: qcsrc/common/util.qc:1621 qcsrc/common/util.qc:1622
+#: qcsrc/common/util.qc:1623 qcsrc/common/util.qc:1624
+#: qcsrc/common/util.qc:1625 qcsrc/common/util.qc:1626
+#: qcsrc/common/util.qc:1627 qcsrc/common/util.qc:1628
+#: qcsrc/common/util.qc:1629 qcsrc/common/util.qc:1630
+#: qcsrc/common/util.qc:1631 qcsrc/common/util.qc:1632
+#: qcsrc/common/util.qc:1633 qcsrc/common/util.qc:1634
+#: qcsrc/common/util.qc:1635 qcsrc/common/util.qc:1636
+#: qcsrc/common/util.qc:1637 qcsrc/common/util.qc:1638
+#: qcsrc/common/util.qc:1639 qcsrc/common/util.qc:1640
 #, c-format
 msgid "X360_%s"
 msgstr "X360_%s"
 
-#: qcsrc/common/util.qc:1582
+#: qcsrc/common/util.qc:1622
 #, c-format
 msgid "DPAD_DOWN"
 msgstr "DPAD_DOWN"
 
-#: qcsrc/common/util.qc:1583
+#: qcsrc/common/util.qc:1623
 #, c-format
 msgid "DPAD_LEFT"
 msgstr "DPAD_LEFT"
 
-#: qcsrc/common/util.qc:1584
+#: qcsrc/common/util.qc:1624
 #, c-format
 msgid "DPAD_RIGHT"
 msgstr "DPAD_RIGHT"
 
-#: qcsrc/common/util.qc:1585
+#: qcsrc/common/util.qc:1625
 #, c-format
 msgid "START"
 msgstr "START"
 
-#: qcsrc/common/util.qc:1586
+#: qcsrc/common/util.qc:1626
 #, c-format
 msgid "BACK"
 msgstr "BACK"
 
-#: qcsrc/common/util.qc:1587
+#: qcsrc/common/util.qc:1627
 #, c-format
 msgid "LEFT_THUMB"
 msgstr "LEFT_THUMB"
 
-#: qcsrc/common/util.qc:1588
+#: qcsrc/common/util.qc:1628
 #, c-format
 msgid "RIGHT_THUMB"
 msgstr "RIGHT_THUMB"
 
-#: qcsrc/common/util.qc:1589
+#: qcsrc/common/util.qc:1629
 #, c-format
 msgid "LEFT_SHOULDER"
 msgstr "LEFT_SHOULDER"
 
-#: qcsrc/common/util.qc:1590
+#: qcsrc/common/util.qc:1630
 #, c-format
 msgid "RIGHT_SHOULDER"
 msgstr "RIGHT_SHOULDER"
 
-#: qcsrc/common/util.qc:1591
+#: qcsrc/common/util.qc:1631
 #, c-format
 msgid "LEFT_TRIGGER"
 msgstr "LEFT_TRIGGER"
 
-#: qcsrc/common/util.qc:1592
+#: qcsrc/common/util.qc:1632
 #, c-format
 msgid "RIGHT_TRIGGER"
 msgstr "RIGHT_TRIGGER"
 
-#: qcsrc/common/util.qc:1593
+#: qcsrc/common/util.qc:1633
 #, c-format
 msgid "LEFT_THUMB_UP"
 msgstr "LEFT_THUMB_UP"
 
-#: qcsrc/common/util.qc:1594
+#: qcsrc/common/util.qc:1634
 #, c-format
 msgid "LEFT_THUMB_DOWN"
 msgstr "LEFT_THUMB_DOWN"
 
-#: qcsrc/common/util.qc:1595
+#: qcsrc/common/util.qc:1635
 #, c-format
 msgid "LEFT_THUMB_LEFT"
 msgstr "LEFT_THUMB_LEFT"
 
-#: qcsrc/common/util.qc:1596
+#: qcsrc/common/util.qc:1636
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
 msgstr "LEFT_THUMB_RIGHT"
 
-#: qcsrc/common/util.qc:1597
+#: qcsrc/common/util.qc:1637
 #, c-format
 msgid "RIGHT_THUMB_UP"
 msgstr "RIGHT_THUMB_UP"
 
-#: qcsrc/common/util.qc:1598
+#: qcsrc/common/util.qc:1638
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
 msgstr "RIGHT_THUMB_DOWN"
 
-#: qcsrc/common/util.qc:1599
+#: qcsrc/common/util.qc:1639
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
 msgstr "RIGHT_THUMB_LEFT"
 
-#: qcsrc/common/util.qc:1600
+#: qcsrc/common/util.qc:1640
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
 msgstr "RIGHT_THUMB_RIGHT"
 
-#: qcsrc/common/util.qc:1610 qcsrc/common/util.qc:1611
-#: qcsrc/common/util.qc:1612 qcsrc/common/util.qc:1613
+#: qcsrc/common/util.qc:1650 qcsrc/common/util.qc:1651
+#: qcsrc/common/util.qc:1652 qcsrc/common/util.qc:1653
 #, c-format
 msgid "JOY_%s"
 msgstr "JOY_%s"
 
-#: qcsrc/common/util.qc:1610
+#: qcsrc/common/util.qc:1650
 #, c-format
 msgid "UP"
 msgstr "UP"
 
-#: qcsrc/common/util.qc:1611
+#: qcsrc/common/util.qc:1651
 #, c-format
 msgid "DOWN"
 msgstr "DOWN"
 
-#: qcsrc/common/util.qc:1612
+#: qcsrc/common/util.qc:1652
 #, c-format
 msgid "LEFT"
 msgstr "LEFT"
 
-#: qcsrc/common/util.qc:1613
+#: qcsrc/common/util.qc:1653
 #, c-format
 msgid "RIGHT"
 msgstr "RIGHT"
 
-#: qcsrc/common/util.qc:1619
+#: qcsrc/common/util.qc:1659
 #, c-format
 msgid "MIDINOTE%d"
 msgstr "MIDINOTE%d"
@@ -5879,9 +7415,56 @@ msgstr "No right gunner!"
 msgid "No left gunner!"
 msgstr "No left gunner!"
 
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:985
+#, c-format
+msgid ""
+"The %s vehicle seats up to three passengers, who are given different roles "
+"based on the order they enter."
+msgstr ""
+
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:986
+msgid ""
+"The first player to enter will be the pilot, flying the vehicle up into the "
+"skies. The first player can also shoot a green healing wave to heal other "
+"teammates on the ground."
+msgstr ""
+
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:988
+msgid ""
+"The second player to enter is the right gunner and the third player to enter "
+"is the left gunner."
+msgstr ""
+
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:989
+msgid ""
+"When the pilot exits the vehicle, the players switch roles by moving up in "
+"position."
+msgstr ""
+
 #: qcsrc/common/vehicles/vehicle/bumblebee.qh:21
 msgid "Bumblebee"
 msgstr "Bumblebee"
+
+#: qcsrc/common/vehicles/vehicle/racer.qc:650
+#, c-format
+msgid ""
+"The %s vehicle looks like a jet, but does not fly uwpards very well. It "
+"seats only one passenger, who becomes the pilot."
+msgstr ""
+
+#: qcsrc/common/vehicles/vehicle/racer.qc:652
+#, c-format
+msgid ""
+"It can be accelerated by pressing %s, which consumes power from the same "
+"source as the primary weapon."
+msgstr ""
+
+#: qcsrc/common/vehicles/vehicle/racer.qc:653
+#, c-format
+msgid ""
+"The %s primary weapon is a laser and the secondary weapon shoots energy "
+"balls that explode on impact."
+msgstr ""
 
 #: qcsrc/common/vehicles/vehicle/racer.qh:21
 msgid "Racer"
@@ -5890,6 +7473,23 @@ msgstr "Racer"
 #: qcsrc/common/vehicles/vehicle/racer_weapon.qh:9
 msgid "Racer cannon"
 msgstr "Racer cannon"
+
+#: qcsrc/common/vehicles/vehicle/raptor.qc:850
+#, c-format
+msgid ""
+"The %s vehicle is a flying vehicle that takes only one pilot, who can also "
+"opearate two weapons."
+msgstr ""
+
+#: qcsrc/common/vehicles/vehicle/raptor.qc:851
+#, c-format
+msgid ""
+"The two weapons have different reticles for them similar to the %s. The "
+"primary weapon is laser-based, and is shot toward the white reticle. The "
+"secondary weapon drops bombs to the ground, aiming towards the green "
+"reticle. The white reticle always points at the head of the vehicle, while "
+"the green reticle's location is determined by the momentum of the vehicle."
+msgstr ""
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:21
 msgid "Raptor"
@@ -5907,83 +7507,741 @@ msgstr "Raptor bomb"
 msgid "Raptor flare"
 msgstr "Raptor flare"
 
+#: qcsrc/common/vehicles/vehicle/spiderbot.qc:655
+#, c-format
+msgid "The %s vehicle walks and jumps around, and takes only one rider."
+msgstr ""
+
+#: qcsrc/common/vehicles/vehicle/spiderbot.qc:656
+msgid "It can jump from very high altitudes while protecting the rider."
+msgstr ""
+
+#: qcsrc/common/vehicles/vehicle/spiderbot.qc:657
+#, c-format
+msgid ""
+"It has two weapons the rider can control, which have different reticles for "
+"them similar to the %s. The primary weapon is a machine gun, and is shot "
+"toward the green reticle. The secondary weapon shoots rockets towards the "
+"white reticle. The white reticle points to the front of the vehicle, while "
+"the green reticle also points to the front, with a bit of delay when the %s "
+"rotates."
+msgstr ""
+
 #: qcsrc/common/vehicles/vehicle/spiderbot.qh:21
 msgid "Spiderbot"
 msgstr "Spiderbot"
+
+#: qcsrc/common/weapons/all.qc:868
+msgid "This weapon has not been bound directly."
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:869
+#, c-format
+msgid "You have bound this weapon to: %s."
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:875 qcsrc/common/weapons/all.qc:876
+#: qcsrc/common/weapons/all.qc:907
+#, c-format
+msgid "(DPS: %.2f)"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:880
+#, c-format
+msgid "It does %s damage"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:881
+#, c-format
+msgid "It shoots %s shots doing %s damage each"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:882
+#, c-format
+msgid "The %s does %s damage"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:883
+#, c-format
+msgid "The %s does %s damage per second"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:884
+#, c-format
+msgid "The %s shoots %s shots doing %s damage each"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:885
+#, c-format
+msgid "The %s shoots up to %s shots doing %s damage each"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:908 qcsrc/common/weapons/all.qc:918
+#: qcsrc/common/weapons/all.qc:939 qcsrc/common/weapons/all.qc:953
+#: qcsrc/common/weapons/all.qc:963 qcsrc/common/weapons/all.qc:980
+#: qcsrc/common/weapons/all.qc:996 qcsrc/common/weapons/all.qc:1010
+#: qcsrc/common/weapons/all.qc:1034 qcsrc/common/weapons/all.qc:1046
+msgid "Default damage stats:"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:910
+#, c-format
+msgid "A direct hit does %s damage"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:1032
+#, c-format
+msgid "(total DPS: %.2f)"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:1037
+#, c-format
+msgid "The combo adds an extra %s damage"
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/arc.qc:1518
+#, c-format
+msgid ""
+"The %s fires a continuous beam of electricity, steadily dealing damage to "
+"any enemies that cross its path."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/arc.qc:1519
+msgid ""
+"The secondary fire rapidly shoots electro bolts forward, exploding on impact "
+"and dealing some splash damage."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/arc.qc:1520
+#, c-format
+msgid ""
+"It consumes %s ammo, steadily churning through your supply to maintain the "
+"stream."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/arc.qc:1521
+#, c-format
+msgid ""
+"The %s is quite a versatile weapon, however it is more effective at close to "
+"medium ranges, since the stream is not instantaneous."
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/arc.qh:34
 msgid "Arc"
 msgstr "Arc"
 
+#: qcsrc/common/weapons/weapon/blaster.qc:172
+#, c-format
+msgid ""
+"The %s is one of the two main default weapons, firing a relatively weak but "
+"high speed laser, dealing some splash damage but importantly a lot of "
+"knockback."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/blaster.qc:173
+msgid ""
+"It has no secondary fire, instead switching to the previously selected "
+"weapon."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/blaster.qc:174
+msgid ""
+"It doesn't require ammo, meaning it is a great choice if you are running low "
+"on ammo and need to preserve some."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/blaster.qc:175
+#, c-format
+msgid ""
+"The %s is always available so ends up being used a lot when players spawn "
+"in, but it's difficult to master when used over a medium to long range. "
+"Unlike other weapons, the %s can hit other projectiles directly."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/blaster.qc:177
+#, c-format
+msgid ""
+"One of the most common uses of the %s is \"laser jumping,\" where you can "
+"gain height by aiming down, jumping, then firing to boost yourself up. "
+"Because it does a lot of knockback, another common usage is alternating "
+"between a high damage weapon and the %s to throw the enemy's aim off."
+msgstr ""
+
 #: qcsrc/common/weapons/weapon/blaster.qh:28
 msgid "Blaster"
 msgstr "Blaster"
+
+#: qcsrc/common/weapons/weapon/crylink.qc:638
+#, c-format
+msgid ""
+"The %s fires bursts of laser-like projectiles, spreading out as they travel "
+"away and deflecting off walls. If the primary fire is held, when it's "
+"released the projectiles will converge before spreading out again, which can "
+"be utilized to deal more damage to an enemy by making the projectiles "
+"converge on them."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/crylink.qc:641
+msgid ""
+"Projectiles deal damage on collision but also when they bounce, so with good "
+"positioning they can sometimes deal double damage."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/crylink.qc:642
+msgid ""
+"The secondary fire shoots the projectiles together in a tight group, so it "
+"is often the better option in situations where the enemy is an easy target "
+"to hit."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/crylink.qc:643
+#, c-format
+msgid ""
+"It consumes %s ammo for each projectile, which is shared by several weapons."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/crylink.qc:644
+#, c-format
+msgid ""
+"Close to medium range is the ideal time to use the %s, although the "
+"secondary fire can be useful for long range combat sometimes."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/crylink.qc:645
+#, c-format
+msgid ""
+"The %s deals knockback in a unique way, pulling the player from their center "
+"to the point of impact. This makes it one of the best weapons to slow "
+"someone down if you are chasing them, particularly with the secondary fire. "
+"Another common use of the %s is \"crylink running,\" where you partially "
+"angle down and use the secondary fire to pull yourself forwards, in order to "
+"gain speed."
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/crylink.qh:32
 msgid "Crylink"
 msgstr "Crylink"
 
+#: qcsrc/common/weapons/weapon/devastator.qc:618
+#, c-format
+msgid ""
+"The %s launches a remote controlled rocket, dealing significant damage when "
+"it explodes on impact. If the primary fire is held, the rocket can be guided "
+"by the user's aim, allowing steering it towards enemies."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/devastator.qc:620
+msgid ""
+"The secondary fire can be used to immediately detonate rockets, allowing "
+"dealing damage to enemies even if the rocket barely missed colliding with "
+"them."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/devastator.qc:621
+#, c-format
+msgid ""
+"It consumes a bunch of %s ammo for each rocket, which can end up being "
+"depleted quickly, so often players alternate with another weapon like %s."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/devastator.qc:622
+#, c-format
+msgid ""
+"Due to its high damage output, the %s is one of the most commonly used "
+"weapons. It can be used in almost any scenario, working best in medium range "
+"combat. In close range combat, the large splash radius often results in "
+"rockets damaging both you and your enemy."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/devastator.qc:625
+#, c-format
+msgid ""
+"Due to the ability to remotely detonate rockets, a common usage is \"rocket "
+"flying,\" where you fire a rocket and immediately detonate it to boost "
+"yourself while mid-air, much more effective with the %s mutator enabled."
+msgstr ""
+
 #: qcsrc/common/weapons/weapon/devastator.qh:32
 msgid "Devastator"
 msgstr "Devastator"
+
+#: qcsrc/common/weapons/weapon/electro.qc:786
+#, c-format
+msgid ""
+"The %s shoots electric balls forwards, dealing some splash damage when they "
+"burst on impact."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/electro.qc:787
+#, c-format
+msgid ""
+"The secondary fire launches orbs that are influenced by gravity, so they can "
+"be laid around the map at high traffic locations (like at %s flag bases) to "
+"damage enemies that walk by. The orbs burst after some time, and can be "
+"forced to burst in a \"combo\" if a primary fire ball bursts near them."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/electro.qc:790
+#, c-format
+msgid "It consumes some %s ammo for each ball / orb."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/electro.qc:791
+#, c-format
+msgid ""
+"The %s is one of the best spam weapons to use in crowded areas, since combos "
+"can deal tons of damage, if the enemy is close enough. Since the primary "
+"fire doesn't travel particularly fast, the %s is not useful in many other "
+"situations."
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/electro.qh:33
 msgid "Electro"
 msgstr "Electro"
 
+#: qcsrc/common/weapons/weapon/fireball.qc:442
+#, c-format
+msgid ""
+"The %s supercharges then fires a massive fireball in a straight line, "
+"dealing heaps of splash damage over a large radius on impact."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/fireball.qc:443
+msgid ""
+"The secondary fire launches flaming balls that set nearby players alight."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/fireball.qc:444
+msgid "It is a superweapon, so isn't often found in game."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/fireball.qc:445
+#: qcsrc/common/weapons/weapon/porto.qc:436
+msgid "It doesn't require ammo, but it is destroyed after some time."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/fireball.qc:446
+#, c-format
+msgid ""
+"Since the %s takes a moment to charge and the fireball travels slowly, using "
+"it effectively may be difficult, but if done properly it can deal a ton of "
+"damage."
+msgstr ""
+
 #: qcsrc/common/weapons/weapon/fireball.qh:34
 msgid "Fireball"
 msgstr "Fireball"
+
+#: qcsrc/common/weapons/weapon/hagar.qc:499
+#, c-format
+msgid ""
+"The %s rapidly fires small propelled rockets forwards, dealing some splash "
+"damage on impact."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/hagar.qc:500
+msgid ""
+"When the secondary fire is held, multiple rockets are loaded up, and they're "
+"shot at the same time when released. These rockets can't be held forever, so "
+"it will fire itself after some time (after a warning beep) if the secondary "
+"fire isn't released."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/hagar.qc:502
+#, c-format
+msgid "It consumes %s ammo for each rocket."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/hagar.qc:503
+#, c-format
+msgid ""
+"The %s works best over close to medium ranges, since it's hard to land hits "
+"at a long distance. A common usage is fully loading the secondary fire "
+"before turning a corner, so you can surprise any enemies around the corner "
+"with a bunch of rockets to the face."
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/hagar.qh:36
 msgid "Hagar"
 msgstr "Hagar"
 
+#: qcsrc/common/weapons/weapon/hlac.qc:245
+#, c-format
+msgid ""
+"The %s (or HLAC for short) fires lasers in quick succession. The projectiles "
+"it fires are similar to those of the %s."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/hlac.qc:247
+msgid ""
+"The secondary fire shoots a randomly scattered burst of multiple lasers at "
+"once."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/hlac.qc:248
+#, c-format
+msgid ""
+"Unlike the %s, it consumes %s ammo for each laser shot, meaning that it "
+"cannot be used infinitely."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/hlac.qc:249
+#, c-format
+msgid ""
+"The %s works best in close ranges, but the primary fire is also useful in "
+"medium ranges."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/hlac.qc:250
+#, c-format
+msgid ""
+"A unique aspect of the %s is that the longer the primary fire is held, the "
+"more that the lasers will start to spread out. This means releasing primary "
+"fire every now and then is important to restore accuracy. Also, the %s has "
+"less spread when used while crouching."
+msgstr ""
+
 #: qcsrc/common/weapons/weapon/hlac.qh:31
 msgid "Heavy Laser Assault Cannon"
 msgstr "Heavy Laser Assault Cannon"
+
+#: qcsrc/common/weapons/weapon/hook.qc:430
+#, c-format
+msgid ""
+"The %s is a unique weapon, firing a chain forwards which pulls you in once "
+"it latches onto something."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/hook.qc:431
+msgid ""
+"The secondary fire usually drops a gravity bomb that affects enemies, also "
+"releasing light a smoke like a flashbang."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/hook.qc:432
+#, c-format
+msgid ""
+"It usually requires %s ammo to work, consuming it both when initially firing "
+"the hook, and after a couple seconds as it reels you in."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/hook.qc:433
+#, c-format
+msgid ""
+"The %s allows reaching previously unreachable places on maps and zooming "
+"around the map at high speeds, making both surprise ambushes and miraculous "
+"escapes possible."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/hook.qc:435
+#, c-format
+msgid ""
+"It isn't available very often on maps, unless the %s mutator is active, in "
+"which all players have it on their offhand, used with %s."
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/hook.qh:32
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
 msgid "Grappling Hook"
 msgstr "Grappling Hook"
 
+#: qcsrc/common/weapons/weapon/machinegun.qc:424
+msgid ""
+"The secondary fire fires a quick burst of bullets faster than the primary "
+"fire and with no spread, but there's a short delay until it can be used "
+"again."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/machinegun.qc:425
+#, c-format
+msgid ""
+"It consumes %s ammo for each bullet shot, until the whole magazine is "
+"emptied."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/machinegun.qc:426
+#, c-format
+msgid ""
+"The %s can be used in a lot of situations, and it works particularly well at "
+"long ranges since the bullets pierce the sky instantaneously. Since the "
+"secondary fire has no spread, it's the better option when firing over a long "
+"range."
+msgstr ""
+
 #: qcsrc/common/weapons/weapon/machinegun.qh:29
 msgid "MachineGun"
 msgstr "MachineGun"
+
+#: qcsrc/common/weapons/weapon/minelayer.qc:525
+#, c-format
+msgid ""
+"The %s places mines on the ground when fired, which detonate and damage "
+"enemies if stepped on. Only a couple mines can be placed at any time, and "
+"after several seconds they will self-detonate."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/minelayer.qc:527
+msgid ""
+"The secondary fire instantaneously detonates any mines fired by the primary "
+"fire, first waiting until you're far enough away."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/minelayer.qc:528
+#, c-format
+msgid "It consumes %s ammo for each mine laid."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/minelayer.qc:529
+#, c-format
+msgid ""
+"The mines are not launched very far before they hit the ground, so the %s "
+"isn't very effective at medium to long ranges. It is often used to protect "
+"important areas of the map such as the flag in %s, control points in %s, or "
+"checkpoints in %s."
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:34
 msgid "Mine Layer"
 msgstr "Mine Layer"
 
+#: qcsrc/common/weapons/weapon/mortar.qc:382
+#, c-format
+msgid ""
+"The %s launches a grenade that explodes immediately on impact, dealing a "
+"medium amount of splash damage."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/mortar.qc:383
+msgid ""
+"The secondary fire shoots a similar grenade that explodes shortly after "
+"bouncing."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/mortar.qc:384
+#, c-format
+msgid "It consumes %s ammo for every grenade launched."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/mortar.qc:385
+#, c-format
+msgid ""
+"The %s works best at close to medium ranges, but it's quite tricky to hit an "
+"enemy if they're airborne. Since the secondary fire grenade bounces before "
+"exploding, it can be bounced against walls to damage enemies lurking around "
+"a corner."
+msgstr ""
+
 #: qcsrc/common/weapons/weapon/mortar.qh:31
 msgid "Mortar"
 msgstr "Mortar"
+
+#: qcsrc/common/weapons/weapon/porto.qc:434
+#, c-format
+msgid ""
+"The %s is a unique gun that creates one-way portals between flat surfaces on "
+"the map, that immediately teleport players and projectiles."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/porto.qc:435
+msgid ""
+"The secondary fire is used to shoot the out-portal, while the primary fire "
+"shoots the in-portal."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/porto.qc:437
+msgid ""
+"The portals will close either after the player who shot them dies or after "
+"some time period."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/porto.qc:438
+#, c-format
+msgid ""
+"The %s isn't often placed on maps, but if used well it can make for some "
+"interesting gameplay."
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/porto.qh:32
 msgid "Port-O-Launch"
 msgstr "Port-O-Launch"
 
+#: qcsrc/common/weapons/weapon/rifle.qc:270
+#, c-format
+msgid ""
+"The %s fires bullets that traverse the map instantaneously and deal a "
+"significant chunk of damage on impact."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/rifle.qc:271
+msgid ""
+"The secondary fire shoots a few less powerful bullets at once with a bit of "
+"scatter."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/rifle.qc:272
+#: qcsrc/common/weapons/weapon/vortex.qc:386
+#, c-format
+msgid "It consumes %s ammo for each bullet shot."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/rifle.qc:273
+#, c-format
+msgid ""
+"Unlike the %s, the secondary fire doesn't zoom, so %s needs to be used "
+"manually with the %s. Also, it needs to be reloaded after its magazine is "
+"emptied."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/rifle.qc:274
+msgid "zoom"
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/rifle.qc:275
+#: qcsrc/common/weapons/weapon/vortex.qc:389
+#, c-format
+msgid ""
+"Similar to the %s, the %s can be used at any range, but it stands out at "
+"long ranges."
+msgstr ""
+
 #: qcsrc/common/weapons/weapon/rifle.qh:30
 msgid "Rifle"
 msgstr "Rifle"
+
+#: qcsrc/common/weapons/weapon/seeker.qc:675
+#, c-format
+msgid ""
+"The %s is a unique weapon, firing a \"tag\" which then launches a few homing "
+"missiles if it collides with a player. The homing isn't perfect, so "
+"sometimes the missiles can hit an object or a corner."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/seeker.qc:677
+msgid ""
+"The secondary fire launches a rapid barrage of scattered explosives that "
+"travel only a short distance."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/seeker.qc:678
+#, c-format
+msgid "It consumes %s ammo, even when the tag doesn't land."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/seeker.qc:679
+#, c-format
+msgid ""
+"The %s primary fire deals quite a lot of damage when a tag lands, although "
+"it requires skill to aim effectively. The secondary fire is only useful in "
+"close range combat, and sometimes the explosives can damage yourself too."
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/seeker.qh:44
 msgid "T.A.G. Seeker"
 msgstr "T.A.G. Seeker"
 
+#: qcsrc/common/weapons/weapon/shotgun.qc:400
+#, c-format
+msgid ""
+"The %s is one of the two main default weapons, firing a single shotgun round "
+"which spreads into multiple pellets upon exiting the barrel."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/shotgun.qc:401
+#, c-format
+msgid ""
+"The secondary fire swings the %s, slapping players close enough with the "
+"head of the weapon. Since the slap takes a moment to land, timing this well "
+"is difficult."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/shotgun.qc:403
+#, c-format
+msgid ""
+"The primary fire consumes %s ammo, although if you spawn in with the %s you "
+"will already have some."
+msgstr ""
+
 #: qcsrc/common/weapons/weapon/shotgun.qh:30
 msgid "Shotgun"
 msgstr "Shotgun"
+
+#: qcsrc/common/weapons/weapon/tuba.qc:602
+#, c-format
+msgid ""
+"The %s is a unique weapon that makes the ears of nearby enemies bleed by "
+"playing awful sounds, also slightly knocking them back."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/tuba.qc:603
+msgid "The secondary fire works the same way, playing a higher pitch."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/tuba.qc:604
+msgid "The only ammo it needs to operate is the breath from your lungs."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/tuba.qc:605
+#, c-format
+msgid ""
+"Since your enemies need to be close by to hear your rubbish music, the %s is "
+"only effective at very close ranges."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/tuba.qc:606
+#, c-format
+msgid ""
+"The pitch the %s plays depends on the movement keys pressed. Reloading the "
+"weapon switches its model and notes played."
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/tuba.qh:35
 #, no-c-format
 msgid "@!#%'n Tuba"
 msgstr "@!#%'n Tuba"
 
+#: qcsrc/common/weapons/weapon/vaporizer.qc:419
+#, c-format
+msgid ""
+"The %s is a unique weapon, firing a deadly beam of energy dealing a huge "
+"amount of damage. In %s, the beam has the ability to instantly kill enemies "
+"with a single shot, unless they have an %s."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/vaporizer.qc:421
+#, c-format
+msgid ""
+"The secondary fire fires a laser identical to that fired by the %s, with "
+"strong knockback."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/vaporizer.qc:422
+#, c-format
+msgid ""
+"It is a superweapon, so isn't often found in game, except in %s where all "
+"players spawn with it."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/vaporizer.qc:423
+#, c-format
+msgid "It consumes some %s ammo with each shot."
+msgstr ""
+
 #: qcsrc/common/weapons/weapon/vaporizer.qh:31
 msgid "Vaporizer"
 msgstr "Vaporiser"
+
+#: qcsrc/common/weapons/weapon/vortex.qc:385
+msgid "The secondary fire zooms in when held, allowing for ease of aiming."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/vortex.qc:387
+#, c-format
+msgid ""
+"Unlike the %s, the %s doesn't need to be reloaded manually, although you "
+"have to wait a couple seconds between shots. Uniquely, it can be fired "
+"slightly before it finishes completely reloading, albeit with the tradeoff "
+"of dealing slightly less damage."
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/vortex.qh:32
 msgid "Vortex"
@@ -6208,7 +8466,7 @@ msgstr "%02d:%02d:%02d"
 msgid "%.*f%%"
 msgstr "%.*f%%"
 
-#: qcsrc/menu/item/listbox.qc:414
+#: qcsrc/menu/item/listbox.qc:415
 #, c-format
 msgid "Item %d"
 msgstr "Item %d"
@@ -6499,6 +8757,7 @@ msgstr "read only"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:228
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:91
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:77
+#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:46
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
 msgstr "OK"
@@ -6563,7 +8822,7 @@ msgstr "Welcome"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:18
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:28
-#: qcsrc/menu/xonotic/dialog_gamemenu.qc:60
+#: qcsrc/menu/xonotic/dialog_gamemenu.qc:63
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:227
 msgid "Join!"
@@ -6598,11 +8857,17 @@ msgstr "Settings"
 msgid "Input"
 msgstr "Input"
 
-#: qcsrc/menu/xonotic/dialog_gamemenu.qc:57
+#: qcsrc/menu/xonotic/dialog_gamemenu.qc:58
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:159
+#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qh:7
+msgid "Guide"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_gamemenu.qc:60
 msgid "Quick menu"
 msgstr "Quick menu"
 
-#: qcsrc/menu/xonotic/dialog_gamemenu.qc:62
+#: qcsrc/menu/xonotic/dialog_gamemenu.qc:65
 #: qcsrc/menu/xonotic/dialog_welcome.qc:133
 msgid "Spectate"
 msgstr "Spectate"
@@ -7341,6 +9606,7 @@ msgstr "HUD skins"
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:25
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:32
+#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:32
 msgid "Filter:"
 msgstr "Filter:"
 
@@ -7675,12 +9941,11 @@ msgid "Maplist"
 msgstr "Maplist"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:163
+#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:31
 msgid ""
-"Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-"
-"Delete to clear; Enter when done."
+"Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
+"to clear; ENTER when done."
 msgstr ""
-"Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-"
-"Delete to clear; Enter when done."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:172
 msgid "Add shown"
@@ -7916,6 +10181,7 @@ msgid "Always carry the blaster as an additional weapon in Nix"
 msgstr "Always carry the blaster as an additional weapon in Nix"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qh:8
+#: qcsrc/menu/xonotic/guide/guide.qh:20
 msgid "Mutators"
 msgstr "Mutators"
 
@@ -7980,7 +10246,7 @@ msgid "No Terms of Service specified"
 msgstr "No Terms of Service specified"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
-#: qcsrc/menu/xonotic/serverlist.qc:1056
+#: qcsrc/menu/xonotic/serverlist.qc:1057
 msgid "MOD^Default"
 msgstr "Default"
 
@@ -8038,17 +10304,17 @@ msgid "Use the `crypto_aeslevel` cvar to change your preferences"
 msgstr "Use the `crypto_aeslevel` cvar to change your preferences"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
-#: qcsrc/menu/xonotic/serverlist.qc:1060
+#: qcsrc/menu/xonotic/serverlist.qc:1061
 msgid "custom stats server"
 msgstr "custom stats server"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
-#: qcsrc/menu/xonotic/serverlist.qc:1060
+#: qcsrc/menu/xonotic/serverlist.qc:1061
 msgid "stats disabled"
 msgstr "stats disabled"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
-#: qcsrc/menu/xonotic/serverlist.qc:1060
+#: qcsrc/menu/xonotic/serverlist.qc:1061
 msgid "stats enabled"
 msgstr "stats enabled"
 
@@ -9360,6 +11626,7 @@ msgid "Messages"
 msgstr "Messages"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:31
+#: qcsrc/menu/xonotic/guide/guide.qh:13
 msgid "Items"
 msgstr "Items"
 
@@ -9396,7 +11663,7 @@ msgid "GHOITEMS^Blue"
 msgstr "Blue"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:52
-#: qcsrc/menu/xonotic/serverlist.qc:759
+#: qcsrc/menu/xonotic/serverlist.qc:758
 msgid "Players"
 msgstr "Players"
 
@@ -9683,7 +11950,7 @@ msgid "In team games"
 msgstr "In team games"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
-#: qcsrc/menu/xonotic/keybinder.qc:77
+#: qcsrc/menu/xonotic/guide/guide.qh:12 qcsrc/menu/xonotic/keybinder.qc:77
 msgid "Weapons"
 msgstr "Weapons"
 
@@ -10300,27 +12567,27 @@ msgstr "Show frames per second"
 msgid "Show your rendered frames per second"
 msgstr "Show your rendered frames per second"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:149
-msgid "Instant action! (random map with bots)"
-msgstr "Instant action! (random map with bots)"
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:156
+msgid "Instant action with bots!"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:169
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:181
 msgid "Campaign Difficulty:"
 msgstr "Campaign Difficulty:"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:170
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:182
 msgid "CSKL^Easy"
 msgstr "Easy"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:171
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:183
 msgid "CSKL^Medium"
 msgstr "Medium"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:172
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:184
 msgid "CSKL^Hard"
 msgstr "Hard"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:189
 msgid "Play campaign!"
 msgstr "Play campaign!"
 
@@ -10329,8 +12596,22 @@ msgid "Singleplayer"
 msgstr "Singleplayer"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
-msgid "Play the singleplayer campaign or instant action matches against bots"
-msgstr "Play the singleplayer campaign or instant action matches against bots"
+msgid ""
+"Play the singleplayer campaign or instant action matches against bots, or "
+"read the guide"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:15
+msgid "Topic"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:24
+msgid "Entry"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:41
+msgid "Description"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
@@ -10398,6 +12679,445 @@ msgstr "teamplay"
 msgid "free for all"
 msgstr "free for all"
 
+#: qcsrc/menu/xonotic/guide/guide.qh:9 qcsrc/menu/xonotic/guide/pages.qc:62
+msgid "Introduction"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/guide.qh:10
+msgid "Movement"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/guide.qh:11
+msgid "Gametypes"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/guide.qh:17
+msgid "Monsters"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/guide.qh:18
+msgid "Vehicles"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/guide.qh:19
+msgid "Turrets"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/guide.qh:21
+msgid "Mods"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:19
+msgid "About this guide"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:22
+msgid "Welcome to Xonotic, the free and fast arena shooter!"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:23
+msgid ""
+"This guide covers the basics one should know about the weapons, items, and "
+"other aspects of the game, but most of what you will learn will come from "
+"trying it out in practice."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:25
+msgid ""
+"Please note that this guide describes the default game behavior with vanilla "
+"settings. Xonotic is highly customizable and there are tons of servers out "
+"there that run with lightly or highly modified settings."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:27
+#, c-format
+msgid ""
+"You can usually find out which settings are modified by issuing %s in "
+"console after connecting to a server."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:30
+msgid "Community"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:32
+#, c-format
+msgid "%s on Matrix, %s on QuakeNet IRC, or the Discord"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:34
+msgid ""
+"Xonotic stands out for its friendly, mature, and welcoming player community, "
+"and many long-term players argue that this is probably one of the best "
+"things about Xonotic. If you approach other players friendly and "
+"respectfully, this will be recognized, while acting toxic on the other hand "
+"will not make your life easier on the servers."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:36
+#, c-format
+msgid ""
+"The best way to get in touch with the community is to just start playing "
+"online and use the in-game chat. You can also connect to the official "
+"communication channels (%s), and of course the official forum."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:40
+msgid "Getting good"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:43
+msgid ""
+"The skill gap between new and experienced players is often immense. However, "
+"this is mostly because experienced players have learned how to make use of "
+"the game mechanics. If you see experienced players doing tricks you don't "
+"understand, don't hesitate to ask anyone on the server!"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:46
+msgid ""
+"Another way to learn is to spectate experienced players. Observe which "
+"weapons they combo and the movement techniques they make use of. Also look "
+"at which weapons they choose depending on the gameplay situation, for "
+"example in close combat, mid-range battles, or against groups of opponents."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:49
+msgid ""
+"The learning curve is very steep. That said, understanding how the game "
+"works will enable you to speed around the map and apply effective weapon "
+"combos in no time."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:52
+msgid "XonStat"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:55
+msgid ""
+"XonStat is the integrated player statistics application for Xonotic. It "
+"stores vital stats like your kill-death ratio, weapon damage and accuracy, "
+"and scoreboards from past games."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:57
+msgid "Tracking is completely opt-in, and no login is required."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:58
+#, c-format
+msgid ""
+"Some of the statistics are available in-game on your player profile, while "
+"the rest are accessible at %s."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:65
+msgid ""
+"Xonotic is a very fast-paced arena shooter. Fast-paced does not only relate "
+"to reaction times but also to movement speed. That means mastering movement "
+"skills is an essential part of Xonotic gameplay and must not be "
+"underestimated."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:67
+msgid "For a new player, the most important tricks to learn are:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:69 qcsrc/menu/xonotic/guide/pages.qc:77
+msgid "Bunny Hopping"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:70 qcsrc/menu/xonotic/guide/pages.qc:89
+msgid "Strafe Turning"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:71 qcsrc/menu/xonotic/guide/pages.qc:101
+msgid "Blaster Jumping"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:73 qcsrc/menu/xonotic/guide/pages.qc:133
+msgid "Crylink Running"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:74 qcsrc/menu/xonotic/guide/pages.qc:149
+msgid "Ramp Jumping"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:80
+msgid ""
+"Bunny hopping (\"bhopping\") is a technique known also from other arena "
+"shooters."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:81
+#, c-format
+msgid ""
+"Due to air control, you can accelerate while in the air far beyond the "
+"maximum ground movement speed. To avoid ground friction, players constantly "
+"hop by simply keeping %s pressed, so that ground contact doesn't slow them "
+"down. This allows you to get around the map much faster than if you would "
+"just walk."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:84
+#, c-format
+msgid ""
+"Therefore, keeping %s held while moving quickly is one of the most essential "
+"movement strategies, used by all experienced players."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:85
+msgid ""
+"With default settings, the speed you can reach by bunny hopping is capped at "
+"900 qu/s (\"units per second\"). CTS/DeFRaG servers usually run with "
+"different CPMA-like physics that remove this cap."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:92
+msgid ""
+"Bunny hopping around corners requires \"strafe turning\" or you will lose a "
+"lot of speed (or simply not be able to make the turn). Strafe turning is a "
+"method used to quickly change the direction you're traveling while mid-air, "
+"without losing speed."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:94
+#, c-format
+msgid ""
+"While bunny hopping, first release %s, then press the strafe key into the "
+"turn direction (%s or %s), then start turning smoothly into the turn "
+"direction. As always, during the entire strafe turn keep %s held."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:95
+msgid "move forward"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:119
+#: qcsrc/menu/xonotic/keybinder.qc:64
+msgid "strafe left"
+msgstr "strafe left"
+
+#: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:119
+#: qcsrc/menu/xonotic/keybinder.qc:65
+msgid "strafe right"
+msgstr "strafe right"
+
+#: qcsrc/menu/xonotic/guide/pages.qc:96
+msgid ""
+"Note that if you press the strafe key before releasing the forward key, you "
+"will suffer a speed penalty."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:97
+msgid ""
+"If you do it right, you will even continue to accelerate in strafe turns."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:98 qcsrc/menu/xonotic/guide/pages.qc:120
+#: qcsrc/menu/xonotic/guide/pages.qc:159
+#, c-format
+msgid "For an illustration of this technique, see %s."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:104
+#, c-format
+msgid ""
+"In most situations, the %s is more a movement tool than a weapon. That's why "
+"many players will often have single digit accuracy for the %s. It is instead "
+"especially useful to make high jumps."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:107
+#, c-format
+msgid ""
+"To do a \"laser jump,\" simply fire the %s at your own feet and jump "
+"immediately afterwards. Experiment a bit with the timing of firing the %s "
+"and jumping to get a feeling of which timings will get you how high."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:111
+msgid "Wall Blastering"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:114
+#, c-format
+msgid ""
+"If you don't fire the %s at the floor but instead against a wall next to "
+"you, you can get significant horizontal speed. You can do this to pick up "
+"speed off the stand or even when passing a wall while already bunny hopping."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:116
+#, c-format
+msgid ""
+"To use this technique, start a bunny hop. Right after jumping, flick back "
+"with your mouse at about 8 o'clock if the wall is to your left (or 4 o'clock "
+"if the wall is to your right), aim at the level of your head, and fire the "
+"%s. Immediately flick back to your movement direction and continue to bunny "
+"hop."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:118
+#, c-format
+msgid ""
+"In order to waste as little speed as possible while flicking back, switch to "
+"strafe key for the duration of the flick. This means using %s if the wall is "
+"to your left, and %s if the wall is to your right."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:126
+#, c-format
+msgid ""
+"The %s can be used just like the %s for movement, however it inflicts much "
+"more damage to the player. In gametypes without self damage however it is a "
+"very versatile movement tool."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:128
+msgid ""
+"While mid-air, you can also fire a rocket underneath yourself and "
+"immediately detonate it. The explosion will push you upwards a little bit, "
+"and can prolong a jump."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:130
+#, c-format
+msgid "Note that this strategy only really works if the %s mutator is enabled."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:136
+#, c-format
+msgid ""
+"The drag force of the %s secondary fire can not only break other players' "
+"movement, but can also give yourself a significant speed boost."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:137
+#, c-format
+msgid ""
+"To \"crylink run,\" shoot the %s secondary at the floor (or a parallel wall) "
+"just in front of you and begin bunny hopping to catapult yourself off the "
+"stand into high speed. Finding the best angle to aim at takes some practice, "
+"and changes depending on your speed."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:141
+msgid "Crylink Wall Climbing"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:144
+#, c-format
+msgid ""
+"By shooting the %s secondary against a wall next to you (just above your "
+"head), you can climb up walls quickly. This is called \"wall climbing\" with "
+"the %s."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:146
+msgid ""
+"This is also a good way to save yourself from falling off the map, as it "
+"reliably stops your downfall."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:152
+msgid ""
+"Ramps are an important part of Xonotic map design. Any sloped surface that "
+"you hit with the right speed and the right angle will give you a significant "
+"upwards boost and enable you to reach places that are otherwise accessible "
+"only with laser jumps, which cost health and make noise."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:154
+msgid ""
+"When doing ramp jumps, it is vital to hit the ramp at a flat angle to "
+"receive the upwards boost and not lose too much speed."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:155
+#, c-format
+msgid ""
+"In order to make a ramp jump, approach a sloped surface (\"ramp\"), jump "
+"just before the ramp and keep %s pressed so you jump again once you hit the "
+"ramp."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:156
+msgid ""
+"The higher the speed you have when you hit the ramp (at the right angle), "
+"the stronger the upwards boost. As always, you can gain speed before the "
+"ramp by bunny hopping."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:158
+msgid ""
+"Note that when trying to make a ramp jump while bunny hopping, it is vital "
+"to time your hops carefully so you get the angle right."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:162
+msgid "Advanced Movement"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:165
+msgid ""
+"Advanced techniques like \"strafe jumping\" (\"strafing\") or \"circle "
+"jumping\" (\"CJ\") offer only limited benefits in vanilla gameplay, but are "
+"crucial on CTS/DeFRaG servers that use slightly different physics."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:167
+#, c-format
+msgid "If you want to master these techniques, be sure to check out %s."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:174
+#, c-format
+msgid ""
+"%s is a mod that heavily changes the game, giving players fewer but more "
+"powerful weapons, nades, and more movement options."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:175
+#, c-format
+msgid ""
+"In terms of weaponry, players have infinite ammo and spawn in with the %s, "
+"%s, and %s, and can pick up the %s and %s superweapons on the map sometimes. "
+"These weapons are a lot more powerful than the regular weapons, so their "
+"time-to-kill is quite low."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:177
+#, c-format
+msgid ""
+"The secondary fire of all weapons shoots a laser which does not damage or "
+"push enemies, but can be used to push yourself around. Also since the %s "
+"mutator is active, all players have offhand nades."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:179
+#, c-format
+msgid ""
+"As for movement tricks, %s is enabled by default in %s, allowing for rapidly "
+"changing your movement direction."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:186
+#, c-format
+msgid ""
+"%s (\"Xonotic Pro-Mode\") is a set of gameplay settings often used for "
+"competitive play, particularly in %s."
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/pages.qc:187
+#, c-format
+msgid ""
+"It adds extra rules for picking up items, preventing players with 100 or "
+"more health or armor from taking %s, %s, %s, and %s pickups, in order to "
+"give other players a fairer chance of rebuilding their stack. It also "
+"disables spawn protection and enables friendly fire in team-based gametypes."
+msgstr ""
+
 #: qcsrc/menu/xonotic/keybinder.qc:61
 msgid "Moving"
 msgstr "Moving"
@@ -10409,14 +13129,6 @@ msgstr "move forwards"
 #: qcsrc/menu/xonotic/keybinder.qc:63
 msgid "move backwards"
 msgstr "move backwards"
-
-#: qcsrc/menu/xonotic/keybinder.qc:64
-msgid "strafe left"
-msgstr "strafe left"
-
-#: qcsrc/menu/xonotic/keybinder.qc:65
-msgid "strafe right"
-msgstr "strafe right"
 
 #: qcsrc/menu/xonotic/keybinder.qc:66
 msgid "jump / swim"
@@ -10595,7 +13307,7 @@ msgstr "Leave current singleplayer match"
 msgid "Leave current multiplayer match / Disconnect from the server"
 msgstr "Leave current multiplayer match / Disconnect from the server"
 
-#: qcsrc/menu/xonotic/mainwindow.qc:77 qcsrc/menu/xonotic/mainwindow.qc:80
+#: qcsrc/menu/xonotic/mainwindow.qc:78 qcsrc/menu/xonotic/mainwindow.qc:81
 msgid "Do not press this button again!"
 msgstr "Do not press this button again!"
 
@@ -10646,46 +13358,46 @@ msgstr ""
 "Bookmark the currently highlighted server so that it's faster to find in the "
 "future"
 
-#: qcsrc/menu/xonotic/serverlist.qc:755
+#: qcsrc/menu/xonotic/serverlist.qc:754
 msgid "Ping"
 msgstr "Ping"
 
-#: qcsrc/menu/xonotic/serverlist.qc:756
+#: qcsrc/menu/xonotic/serverlist.qc:755
 msgid "Hostname"
 msgstr "Hostname"
 
-#: qcsrc/menu/xonotic/serverlist.qc:757
+#: qcsrc/menu/xonotic/serverlist.qc:756
 msgid "Map"
 msgstr "Map"
 
-#: qcsrc/menu/xonotic/serverlist.qc:758
+#: qcsrc/menu/xonotic/serverlist.qc:757
 msgid "Type"
 msgstr "Type"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1055
+#: qcsrc/menu/xonotic/serverlist.qc:1056
 #, c-format
 msgid "AES level %d"
 msgstr "AES level %d"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1055
+#: qcsrc/menu/xonotic/serverlist.qc:1056
 msgid "ENC^none"
 msgstr "none"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1055
+#: qcsrc/menu/xonotic/serverlist.qc:1056
 msgid "encryption:"
 msgstr "encryption:"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1056
+#: qcsrc/menu/xonotic/serverlist.qc:1057
 #, c-format
 msgid "mod: %s"
 msgstr "mod: %s"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1058
+#: qcsrc/menu/xonotic/serverlist.qc:1059
 #, c-format
 msgid "modified settings"
 msgstr "modified settings"
 
-#: qcsrc/menu/xonotic/serverlist.qc:1058
+#: qcsrc/menu/xonotic/serverlist.qc:1059
 #, c-format
 msgid "official settings"
 msgstr "official settings"
