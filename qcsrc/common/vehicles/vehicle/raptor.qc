@@ -847,11 +847,11 @@ METHOD(Raptor, describe, string(Raptor this))
 {
 	TC(Raptor, this);
 	PAGE_TEXT_INIT();
-	PAR(_("The %s vehicle is a flying vehicle that takes only one pilot, who can also opearate two weapons."), COLORED_NAME(this));
+	PAR(_("The %s vehicle is a flying vehicle that takes only one pilot, who can operate both of the weapons."), COLORED_NAME(this));
 	PAR(_("The two weapons have different reticles for them similar to the %s. "
-	      "The primary weapon is laser-based, and is shot toward the white reticle. "
+	      "The primary weapon is laser-based, shooting toward the white reticle. "
 	      "The secondary weapon drops bombs to the ground, aiming towards the green reticle. "
-	      "The white reticle always points at the head of the vehicle, while the green reticle's location is determined by the momentum of the vehicle."), COLORED_NAME(VEH_SPIDERBOT));
+	      "The white reticle always points to the head of the vehicle, while the green reticle's location is determined by the momentum of the vehicle."), COLORED_NAME(VEH_SPIDERBOT));
 	return PAGE_TEXT;
 }
 

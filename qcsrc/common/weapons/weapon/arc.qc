@@ -1516,7 +1516,7 @@ METHOD(Arc, describe, string(Arc this))
 	TC(Arc, this);
 	PAGE_TEXT_INIT();
 	PAR(_("The %s fires a continuous beam of electricity, steadily dealing damage to any enemies that cross its path."), COLORED_NAME(this));
-	PAR(_("The secondary fire rapidly shoots electro bolts forward, exploding on impact and dealing some splash damage."));
+	PAR(_("The secondary fire rapidly shoots electric bolts forward, exploding on impact and dealing some splash damage."));
 	PAR(_("It consumes %s ammo, steadily churning through your supply to maintain the stream."), COLORED_NAME(ITEM_Cells));
 	PAR(_("The %s is quite a versatile weapon, however it is more effective at close to medium ranges, since the stream is not instantaneous."), COLORED_NAME(this));
 	PAR(W_Guide_Keybinds(this));

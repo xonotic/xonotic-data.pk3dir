@@ -24,7 +24,7 @@ METHOD(MonsterNade, describe, string(MonsterNade this))
 {
 	TC(MonsterNade, this);
 	PAGE_TEXT_INIT();
-	PAR(_("The %s detonates after a short delay, spawning one of four monster types."), COLORED_NAME(this));
+	PAR(_("The %s detonates after a short delay, spawning one of the five monster types."), COLORED_NAME(this));
 	return PAGE_TEXT;
 }
 #endif // MENUQC

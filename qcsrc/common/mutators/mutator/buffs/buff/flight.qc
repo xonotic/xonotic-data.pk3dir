@@ -28,7 +28,7 @@ METHOD(FlightBuff, describe, string(FlightBuff this))
 {
 	TC(FlightBuff, this);
 	PAGE_TEXT_INIT();
-	PAR(_("While you have the %s, you can crouch while midair to switch your gravity, allowing flight."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAR(_("While you have the %s, you can crouch while mid-air to switch your gravity, allowing flight."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
 	return PAGE_TEXT;
 }
 #endif

@@ -164,7 +164,7 @@ METHOD(OverkillMachineGun, describe, string(OverkillMachineGun this))
 	TC(OverkillMachineGun, this);
 	PAGE_TEXT_INIT();
 	PAR(_("The %s quickly fires bullets with a small degree of spread."), COLORED_NAME(this));
-	PAR(_("Like with all %s weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around."), COLORED_NAME(MUTATOR_ok));
+	PAR(_("Like with all %s weapons, the secondary fire shoots a laser which doesn't damage or push enemies, but can be used to push yourself around."), COLORED_NAME(MUTATOR_ok));
 	PAR(_("The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s. "
 	      "It has a limited magazine size, so needs reloading after several shots."), COLORED_NAME(ITEM_Bullets), COLORED_NAME(MUTATOR_ok));
 	PAR(_("The %s can be used in a lot of situations, and it works particularly well at long ranges since the bullets pierce the sky instantaneously."), COLORED_NAME(this));

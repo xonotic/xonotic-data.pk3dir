@@ -647,7 +647,7 @@ METHOD(Racer, describe, string(Racer this))
 {
 	TC(Racer, this);
 	PAGE_TEXT_INIT();
-	PAR(_("The %s vehicle looks like a jet, but does not fly uwpards very well. "
+	PAR(_("The %s vehicle looks like a jet, but does not fly upwards very well. "
 	      "It seats only one passenger, who becomes the pilot."), COLORED_NAME(this));
 	PAR(_("It can be accelerated by pressing %s, which consumes power from the same source as the primary weapon."), strcat("^3", _("jump"), "^7"));
 	PAR(_("The %s primary weapon is a laser and the secondary weapon shoots energy balls that explode on impact."), COLORED_NAME(this));

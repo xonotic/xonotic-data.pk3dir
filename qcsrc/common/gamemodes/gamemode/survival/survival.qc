@@ -14,7 +14,7 @@ METHOD(Survival, describe, string(Survival this))
 	PAR(_("Teams are randomly selected as the round begins, with the hunter team being a bit smaller, "
 	      "and then the round starts with a brief warmup grace period in which items can be collected but weapons can't be fired."));
 	PAR(_("Players are rewarded a point for each member of the opposing team they frag, only if they survive the round, and points are deducted for each teammate fragged. "
-	      "Extra points are also to survivors who survive until the round timer expires."));
+	      "Extra points are also given to survivors who survive until the round timer expires."));
 	return PAGE_TEXT;
 }
 #endif

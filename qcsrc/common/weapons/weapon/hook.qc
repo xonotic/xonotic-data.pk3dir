@@ -428,7 +428,7 @@ METHOD(Hook, describe, string(Hook this))
 	TC(Hook, this);
 	PAGE_TEXT_INIT();
 	PAR(_("The %s is a unique weapon, firing a chain forwards which pulls you in once it latches onto something."), COLORED_NAME(this));
-	PAR(_("The secondary fire usually drops a gravity bomb that affects enemies, also releasing light a smoke like a flashbang."));
+	PAR(_("The secondary fire usually drops a gravity bomb that affects enemies, also releasing light and smoke sort of like a flashbang."));
 	PAR(_("It usually requires %s ammo to work, consuming it both when initially firing the hook, and after a couple seconds as it reels you in."), COLORED_NAME(ITEM_Fuel));
 	PAR(_("The %s allows reaching previously unreachable places on maps and zooming around the map at high speeds, "
 	      "making both surprise ambushes and miraculous escapes possible."), COLORED_NAME(this));

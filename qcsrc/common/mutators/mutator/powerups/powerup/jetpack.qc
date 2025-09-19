@@ -18,7 +18,7 @@ METHOD(Jetpack, describe, string(Jetpack this))
 	PAGE_TEXT_INIT();
 	PAR(_("The %s powerup allows you to fly around the map for a short period, "
 	      "providing increased mobility, maneuverability, and the ability to reach higher ground."), COLORED_NAME(this));
-	PAR(_("It consumes Fuel ammo while operating, so make sure you don't run out when you're high up!"));
+	PAR(_("It consumes %s ammo while operating, so make sure you don't run out when you're high up!"), COLORED_NAME(ITEM_Fuel));
 	return PAGE_TEXT;
 }
 #endif

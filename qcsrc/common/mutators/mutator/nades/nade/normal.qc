@@ -15,7 +15,7 @@ METHOD(NormalNade, describe, string(NormalNade this))
 	TC(NormalNade, this);
 	PAGE_TEXT_INIT();
 	PAR(_("The (normal) %s explodes after a short delay, dealing damage to nearby players. "
-	      "If other nade types are destroyed before they detonate, they will instead explode similarly, without doing their special effects."), COLORED_NAME(this));
+	      "If other nade types are destroyed before they detonate, they instead explode similar to this, without doing their special effects."), COLORED_NAME(this));
 	PAR(_("Make sure you remember to throw it with %s, or else it will blow up in your hands!"), strcat("^3", _("drop weapon"), "^7"));
 	return PAGE_TEXT;
 }

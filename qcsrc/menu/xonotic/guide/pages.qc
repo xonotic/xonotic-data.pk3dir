@@ -115,7 +115,7 @@ REGISTER_MOVEMENT_PAGE(4, _("Wall Blastering"))
 	      "You can do this to pick up speed off the stand or even when passing a wall while already bunny hopping."), COLORED_NAME(WEP_BLASTER));
 	PAR(_("To use this technique, start a bunny hop. Right after jumping, flick back with your mouse at about 8 o'clock if the wall is to your left (or 4 o'clock if the wall is to your right), aim at the level of your head, and fire the %s. "
 	      "Immediately flick back to your movement direction and continue to bunny hop."), COLORED_NAME(WEP_BLASTER));
-	PAR(_("In order to waste as little speed as possible while flicking back, switch to strafe key for the duration of the flick. "
+	PAR(_("In order to waste as little speed as possible while flicking back, switch to a strafe key for the duration of the flick. "
 	      "This means using %s if the wall is to your left, and %s if the wall is to your right."), strcat("^3", _("strafe left"), "^7"), strcat("^3", _("strafe right"), "^7"));
 	PAR(_("For an illustration of this technique, see %s."), "^5xonotic.org/guide^7"); // shared message
 	this.m_description = strzone(PAGE_TEXT);
@@ -123,7 +123,7 @@ REGISTER_MOVEMENT_PAGE(4, _("Wall Blastering"))
 REGISTER_MOVEMENT_PAGE(5, _("Rocket Flying"))
 {
 	PAGE_TEXT_INIT();
-	PAR(_("The %s can be used just like the %s for movement, however it inflicts much more damage to the player. "
+	PAR(_("The %s can be used just like the %s for movement, but it inflicts much more damage to the player. "
 	      "In gametypes without self damage however it is a very versatile movement tool."), COLORED_NAME(WEP_DEVASTATOR), COLORED_NAME(WEP_BLASTER));
 	PAR(_("While mid-air, you can also fire a rocket underneath yourself and immediately detonate it. "
 	      "The explosion will push you upwards a little bit, and can prolong a jump."));

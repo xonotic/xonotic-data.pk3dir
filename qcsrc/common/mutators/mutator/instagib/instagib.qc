@@ -12,7 +12,7 @@ METHOD(MutatorInstagib, describe, string(MutatorInstagib this))
 {
 	TC(MutatorInstagib, this);
 	PAGE_TEXT_INIT();
-	PAR(_("%s is a mutator that removes all weapons and weapon pickups and gives all players the %s, "
+	PAR(_("%s is a mutator that removes all weapons and weapon pickups from the map, instead giving players the %s, "
 	      "which immediately frags players in a single shot, hence the name \"InstaGib.\""), COLORED_NAME(this), COLORED_NAME(WEP_VAPORIZER));
 	PAR(_("Precise aim and ammo conservation are important, since you will suicide after 10 seconds if you run out of ammo. "
 	      "Ammo (%s) can be picked up on the map often, or collected from dropped %s guns."), COLORED_NAME(ITEM_Cells), COLORED_NAME(WEP_VAPORIZER));

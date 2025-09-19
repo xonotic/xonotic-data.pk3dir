@@ -23,7 +23,7 @@ METHOD(Flac, describe, string(Flac this))
     TC(Flac, this);
     PAGE_TEXT_INIT();
     PAR(_("The %s is a turret similar to flak cannons, instead firing anti-projectile flak shells to take down projectiles fired by its targets."), COLORED_NAME(this));
-    PAR(_("The shells it shoots are against projectiles such as the %s secondary fire grenade, %s secondary fire balls, %s rockets, and other missiles."), COLORED_NAME(WEP_MORTAR), COLORED_NAME(WEP_ELECTRO), COLORED_NAME(WEP_DEVASTATOR));
+    PAR(_("The shells it shoots target projectiles such as the %s secondary fire grenade, %s secondary fire balls, %s rockets, and other missiles."), COLORED_NAME(WEP_MORTAR), COLORED_NAME(WEP_ELECTRO), COLORED_NAME(WEP_DEVASTATOR));
     return PAGE_TEXT;
 }
 

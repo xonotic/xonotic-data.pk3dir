@@ -657,7 +657,7 @@ METHOD(Spiderbot, describe, string(Spiderbot this))
 	PAR(_("It has two weapons the rider can control, which have different reticles for them similar to the %s. "
 	      "The primary weapon is a machine gun, and is shot toward the green reticle. "
 	      "The secondary weapon shoots rockets towards the white reticle. "
-	      "The white reticle points to the front of the vehicle, while the green reticle also points to the front, with a bit of delay when the %s rotates."), COLORED_NAME(VEH_RAPTOR), COLORED_NAME(this));
+	      "The white reticle points to the front of the vehicle, while the green reticle also points to the front but with a bit of delay when the %s rotates."), COLORED_NAME(VEH_RAPTOR), COLORED_NAME(this));
 	return PAGE_TEXT;
 }
 

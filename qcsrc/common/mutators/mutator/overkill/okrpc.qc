@@ -240,7 +240,7 @@ METHOD(OverkillRocketPropelledChainsaw, describe, string(OverkillRocketPropelled
 	TC(OverkillRocketPropelledChainsaw, this);
 	PAGE_TEXT_INIT();
 	PAR(_("As the name suggests, the %s is a superweapon that fires a rocket propelled chainsaw which explodes on impact, dealing a lot of splash damage to any players close by."), COLORED_NAME(this));
-	PAR(_("Like with all %s weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around."), COLORED_NAME(MUTATOR_ok));
+	PAR(_("Like with all %s weapons, the secondary fire shoots a laser which doesn't damage or push enemies, but can be used to push yourself around."), COLORED_NAME(MUTATOR_ok));
 	PAR(_("It is a superweapon found on some maps, meaning that it breaks down after some time."));
 	PAR(_("The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s."), COLORED_NAME(ITEM_Rockets), COLORED_NAME(MUTATOR_ok));
 	PAR(_("Since it is the only %s weapon which deals splash damage, the %s is a good choice of weapon for attacking groups of enemies."), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this));

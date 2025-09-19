@@ -165,7 +165,7 @@ METHOD(OverkillHeavyMachineGun, describe, string(OverkillHeavyMachineGun this))
 	TC(OverkillHeavyMachineGun, this);
 	PAGE_TEXT_INIT();
 	PAR(_("The %s is a superweapon that rapidly fires harmful bullets with a small degree of spread."), COLORED_NAME(this));
-	PAR(_("Like with all %s weapons, the secondary fire shoots a laser which does not damage or push enemies, but can be used to push yourself around."), COLORED_NAME(MUTATOR_ok));
+	PAR(_("Like with all %s weapons, the secondary fire shoots a laser which doesn't damage or push enemies, but can be used to push yourself around."), COLORED_NAME(MUTATOR_ok));
 	PAR(_("It is a superweapon found on some maps, meaning that it breaks down after some time."));
 	PAR(_("The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s. "
 	      "It has a limited magazine size, so needs reloading after several shots."), COLORED_NAME(ITEM_Bullets), COLORED_NAME(MUTATOR_ok));
