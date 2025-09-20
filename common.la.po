@@ -991,7 +991,7 @@ msgstr "Signum ^3|^7 scribe ut ad columnae latus dextrum res scribantur."
 #: qcsrc/client/hud/panel/scoreboard.qc:732
 msgid "The following field names are recognized (case insensitive):"
 msgstr ""
-"Noscuntur columnarum nomina quae sequuntur (litteras parvas vel magnas "
+"Recognoscuntur columnarum nomina quae sequuntur (litteras parvas vel magnas "
 "scribere potes):"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:738
@@ -1155,7 +1155,7 @@ msgstr "Mortuus es, ^2%s^7 preme ut renascaris"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:32
 #, c-format
 msgid "%s°"
-msgstr ""
+msgstr "%s°"
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:101
 msgid "qu"
@@ -3060,7 +3060,7 @@ msgstr "Armorum singula"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:55
 msgid "Initial opacity:"
-msgstr ""
+msgstr "Prima caecitas:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:61
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:25
@@ -3103,7 +3103,7 @@ msgstr "Semper"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:83
 msgid "Or opacity greater than:"
-msgstr ""
+msgstr "Vel caecitas maior quam:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:7
 msgid "Damage text"
@@ -5070,7 +5070,7 @@ msgstr "^K2Ire in manum maiorem non potes!"
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:821
 msgid "^K2You're not allowed to join that team!"
-msgstr ""
+msgstr "^K2Ire in istam manum non potes!"
 
 #: qcsrc/common/notifications/all.inc:463
 #: qcsrc/common/notifications/all.inc:822
@@ -6056,6 +6056,9 @@ msgid ""
 "^K2Your ping (connection latency) is currently too high to play here.\n"
 "Please consider joining a server closer to you."
 msgstr ""
+"^K2Tempus Ping (mora interretialis) inter te et hoc moderatrum nimis longum "
+"est.\n"
+"Melius est eligere moderatrum quod propius a te sit"
 
 #: qcsrc/common/notifications/all.inc:731
 msgid "^BGYou're queued to join any available team."
@@ -6216,7 +6219,7 @@ msgid ""
 "^F2Capture some control points to unshield it"
 msgstr ""
 "^BGHostium generatrum delere nondum potes\n"
-"^F2Aliquot dominationis locos capite ut id non protegetur"
+"^F2Aliquot dominationis locos capite ut eius scutum cadat"
 
 #: qcsrc/common/notifications/all.inc:770
 msgid "^BGThe ^TCenemy^BG generator is no longer shielded!"
@@ -6362,7 +6365,7 @@ msgstr "^F2Arma Magna tenes"
 msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
-msgstr "^BGEs ^K1venator^BG! Superstites occide, age ut ei non suspicentur!"
+msgstr "^BGEs ^K1venator^BG! Superstites occide, age ne ei suspicentur!"
 
 #: qcsrc/common/notifications/all.inc:813
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
@@ -6382,7 +6385,7 @@ msgstr "^K1Temet interficies post ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:819
 msgid "^K2Your current team choice seems fine."
-msgstr ""
+msgstr "^K2Manus in qua nunc es bona videtur."
 
 #: qcsrc/common/notifications/all.inc:825
 msgid "^F4Timeout begins in ^COUNT"
@@ -8455,7 +8458,7 @@ msgstr "%02d:%02d:%02d"
 #: qcsrc/lib/string.qh:484
 #, c-format
 msgid "%.*f%%"
-msgstr ""
+msgstr "%.*f%%"
 
 #: qcsrc/menu/item/listbox.qc:415
 #, c-format
@@ -8473,7 +8476,7 @@ msgstr "Utens optat"
 #: qcsrc/menu/menu.qc:513
 #, c-format
 msgid "^3%s^7 not equal to \"%s\""
-msgstr ""
+msgstr "^3%s^7 differre ab \"%s\""
 
 #: qcsrc/menu/menu.qc:518
 #, c-format
@@ -8492,7 +8495,7 @@ msgstr "Habet condiciones proprias"
 #: qcsrc/menu/menu.qc:552
 #, c-format
 msgid "Requires ^3%s^7 not equal to \"%s^7\""
-msgstr "Postulatur ut ^3%s^7 non habeat \"%s^7\""
+msgstr "Postulatur ut ^3%s^7 differat ab \"%s^7\""
 
 #: qcsrc/menu/menu.qc:564
 #, c-format
@@ -8502,7 +8505,7 @@ msgstr "Postulantur %s, %s et %s"
 #: qcsrc/menu/menu.qc:564
 #, c-format
 msgid "Requires %s, %s, or %s"
-msgstr ""
+msgstr "Postulantur %s, %s vel %s"
 
 #: qcsrc/menu/menu.qc:567
 #, c-format
@@ -8621,7 +8624,7 @@ msgstr "Anglica (Australia)"
 
 #: qcsrc/menu/xonotic/credits.qc:255
 msgid "English (United Kingdom)"
-msgstr ""
+msgstr "Anglica (Regnum Britannicum)"
 
 #: qcsrc/menu/xonotic/credits.qc:259
 msgid "Finnish"
@@ -8633,7 +8636,7 @@ msgstr "Francica"
 
 #: qcsrc/menu/xonotic/credits.qc:288
 msgid "Galician"
-msgstr ""
+msgstr "Gallaeca"
 
 #: qcsrc/menu/xonotic/credits.qc:292
 msgid "German"
@@ -8873,7 +8876,7 @@ msgstr "Missilia modo quibus tunc utitur videre"
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:43
 msgid "Noncurrent opacity:"
-msgstr ""
+msgstr "Caecitas aliorum:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:50
@@ -8984,7 +8987,7 @@ msgstr "Locutorii tempus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:27
 msgid "LIFETIME^Infinite"
-msgstr ""
+msgstr "Infinitum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:30
 msgid "Chat beep sound"
@@ -9229,7 +9232,7 @@ msgstr "Imaginis proportio:"
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:88
 #, c-format
 msgid "%sx"
-msgstr ""
+msgstr "%sx"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:42
 msgid "Show timer:"
@@ -9295,7 +9298,7 @@ msgstr "Videre in manus ludis"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:132
 #: qcsrc/menu/xonotic/util.qc:786
 msgid "Opacity:"
-msgstr ""
+msgstr "Caecitas:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:61
@@ -9343,7 +9346,7 @@ msgstr "Proportio:"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:72
 #, c-format
 msgid "%s qu"
-msgstr ""
+msgstr "%s qu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:45
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:80
@@ -9401,23 +9404,23 @@ msgstr "Rationum Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:41
 msgid "Centered on:"
-msgstr ""
+msgstr "Media pars ad:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:42
 msgid "View angle"
-msgstr ""
+msgstr "Angulum videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:43
 msgid "Velocity angle"
-msgstr ""
+msgstr "Velocitatis angulum"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
 msgid "Style:"
-msgstr ""
+msgstr "Facies:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:48
 msgid "STYL^Basic"
-msgstr ""
+msgstr "Nuda"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "Gradient"
@@ -9509,7 +9512,7 @@ msgstr "Temporum Tabella"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Opacity after voting:"
-msgstr ""
+msgstr "Caecitas post suffragium:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
@@ -9529,7 +9532,7 @@ msgstr "Nullus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "Opacity"
-msgstr ""
+msgstr "Caecitas"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Slide"
@@ -9570,7 +9573,7 @@ msgstr "Accurationem Videre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:79
 msgid "Ammo bar opacity:"
-msgstr ""
+msgstr "Missilium tabellae caecitas:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:86
 msgid "Ammo bar color:"
@@ -10582,7 +10585,7 @@ msgstr "Proprietates Visibiles *:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:44
 msgid "Set opacity:"
-msgstr ""
+msgstr "Caecitatem eligere:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:48
 msgid "Set color main:"
@@ -10834,13 +10837,15 @@ msgstr "Canalem sinistrum et dextrum commutare"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:139
 msgid "Headphone-friendly mode"
-msgstr ""
+msgstr "Modus pro instrumento auriculario"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:140
 msgid ""
 "Blend the left and right channels slightly to decrease stereo separation a "
 "bit"
 msgstr ""
+"Sonos dextros et sinistros paulum miscet ut soni minus disiungantur si "
+"instrumento auriculario uteris"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:144
 msgid "Hit indication sound"
@@ -11630,7 +11635,7 @@ msgstr "Imagines planas non formas solidas videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:35
 msgid "Unavailable opacity:"
-msgstr ""
+msgstr "Caecitas si absens:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:39
 msgid "Unavailable color:"
@@ -11812,6 +11817,8 @@ msgid ""
 "How zoom changes sensitivity, from 0% (lower sensitivity) to 100% (no "
 "sensitivity change)"
 msgstr ""
+"Quomodo muris perceptibilitatem amplificatio mutat, ab 0% (minor "
+"perceptibilitas) ad 100% (aequalis perceptibilitas)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:108
 msgid "Zoom scrolling"
@@ -11933,7 +11940,7 @@ msgstr "Armorum forma undans"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:104
 msgid "Weapon model opacity:"
-msgstr "Armorum formae traluciditas:"
+msgstr "Armorum formae caecitas:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:112
 msgid "Apply team colors to weapon beam effects:"
@@ -12167,11 +12174,11 @@ msgstr "Involutus"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:78
 msgid "Menu animations:"
-msgstr ""
+msgstr "Indicis animationes:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:80
 msgid "How fast animations in the menu occur"
-msgstr ""
+msgstr "Quam celeres sunt indicis animationes"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:83
 msgid "Disabled"
@@ -12525,7 +12532,7 @@ msgstr "Maximus"
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:179
 #, c-format
 msgid "%s fps"
-msgstr ""
+msgstr "%s QIS"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:164
 msgid "MAXFPS^Unlimited"

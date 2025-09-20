@@ -1495,6 +1495,8 @@ msgstr "erreur à la création du curl handle"
 msgid ""
 "%s is a team-based gametype involving an attacking and a defending team."
 msgstr ""
+"%s est un mode de jeu en équipe impliquant une équipe attaquante et une "
+"équipe défensive."
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qc:9
 msgid ""
@@ -1662,6 +1664,9 @@ msgid ""
 "%s is similar to %s, except you don't run in laps, and instead run from the "
 "start line to the finish line then start over again."
 msgstr ""
+"%s est similaire à %s, sauf que vous ne courez pas en enchaînant des tours, "
+"mais que vous courez de la ligne de départ à la ligne d'arrivée, puis "
+"recommencez à zéro."
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qc:13
 msgid ""
@@ -1678,6 +1683,7 @@ msgstr "Course CTS"
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
 msgid "Race to the finish line for the fastest time"
 msgstr ""
+"Faites la course jusqu'à la ligne d'arrivée pour réaliser le meilleur temps"
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qc:11
 #, c-format
@@ -2101,6 +2107,9 @@ msgid ""
 "%s is a gametype similar to %s where players run on a track to be the first "
 "to cross the finish line after a certain number of laps."
 msgstr ""
+"%s est un mode de jeu similaire à %s, où les joueurs courent sur une piste "
+"pour être les premiers à franchir la ligne d'arrivée après un certain nombre "
+"de tours."
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qc:11
 #, c-format
@@ -2110,12 +2119,19 @@ msgid ""
 "similar to %s since weapons can't be used to disturb other players but can "
 "still be used to run faster."
 msgstr ""
+"Avant le début de la course proprement dite, une séance de qualification "
+"permet de déterminer la grille de départ en fonction du meilleur temps de "
+"chaque joueur sur le tour. Cette étape est très similaire à %s, car les "
+"armes ne peuvent pas être utilisées pour gêner les autres joueurs, mais "
+"peuvent tout de même servir à courir plus vite."
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qc:13
 msgid ""
 "During the real race it's possible to shoot other players in order to slow "
 "them down."
 msgstr ""
+"Pendant la course, il est possible de tirer sur les autres joueurs afin de "
+"les ralentir."
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:11
 msgid "Race"
@@ -2123,7 +2139,7 @@ msgstr "Course"
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:11
 msgid "Race against other players to the finish line"
-msgstr "Courez contre d'autres joueurs vers la ligne d'arrivée"
+msgstr "Faites la course contre d'autres joueurs jusqu'à la ligne d'arrivée"
 
 #: qcsrc/common/gamemodes/gamemode/race/race.qh:40
 msgid "Laps:"
@@ -2943,6 +2959,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
 msgstr ""
+"Cela vous immunise également contre les dommages causés par les chutes."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qh:12
 msgid "Jump"
@@ -8262,6 +8279,9 @@ msgid ""
 "head of the weapon. Since the slap takes a moment to land, timing this well "
 "is difficult."
 msgstr ""
+"Le tir secondaire brandit le %s, frappant les joueurs suffisamment proches "
+"avec la crosse. Comme la frappe met un certain temps à atteindre sa cible, "
+"il est difficile de bien synchroniser son utilisation."
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:403
 #, c-format
@@ -12710,7 +12730,7 @@ msgstr "Afficher le nombre d'images par seconde"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:156
 msgid "Instant action with bots!"
-msgstr ""
+msgstr "Action instantanée avec des bots !"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:181
 msgid "Campaign Difficulty:"
