@@ -33,7 +33,7 @@ void XonoticEntryList_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	}
 
 	vector sz;
-	if (draw_PreloadPicture(XonoticEntryList_cb_icon) == "")
+	if (XonoticEntryList_cb_icon == "" || draw_PreloadPicture(XonoticEntryList_cb_icon) == "")
 		sz = me.rowsPerItem * 0.5 * me.realFontSize.x * eX;
 	else
 	{
@@ -145,7 +145,8 @@ void XonoticEntryList_refilter(entity me)
 	for (int i = 0, n = me.nItems; i < n; ++i)
 		if (me.source.getEntry(me.source, i, XonoticEntryList_cb))
 		{
-			draw_PreloadPicture(XonoticEntryList_cb_icon);
+			if (XonoticEntryList_cb_icon != "")
+				draw_PreloadPicture(XonoticEntryList_cb_icon);
 			if (XonoticEntryList_cb_name == oldName)
 				newSelectedItem = i;
 		}

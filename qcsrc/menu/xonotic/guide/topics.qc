@@ -68,6 +68,8 @@ void XonoticTopicList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 
 void XonoticTopicList_setSelected(entity me, int i)
 {
+	int curr = me.selectedItem;
 	SUPER(XonoticEntryList).setSelected(me, i);
-	me.onChange(me, me.onChangeEntity);
+	if (curr != me.selectedItem)
+		me.onChange(me, me.onChangeEntity);
 }
