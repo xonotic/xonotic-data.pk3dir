@@ -1551,6 +1551,8 @@ msgid ""
 "The match ends once a team reaches a certain number of rounds won, or has a "
 "considerable lead over the other team."
 msgstr ""
+"The match ends once a team reaches a certain number of rounds won, or has a "
+"considerable lead over the other team."
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qc:12
 msgid ""
@@ -1613,6 +1615,11 @@ msgid ""
 "\"stalemate\" will initiate and all flag carriers (\"fc\"s) will be exposed "
 "on the radar and with waypoints."
 msgstr ""
+"If a flag is dropped into the void or a death trap it will be immediately "
+"returned to its base, or otherwise sit idle for a while before automatically "
+"returning itself. If all flags are held, after some time period a "
+"\"stalemate\" will initiate and all flag carriers (\"fc\"s) will be exposed "
+"on the radar and with waypoints."
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qc:13
 #, c-format
@@ -1675,6 +1682,8 @@ msgid ""
 "%s is similar to %s, except you don't run in laps, and instead run from the "
 "start line to the finish line then start over again."
 msgstr ""
+"%s is similar to %s, except you don't run in laps, and instead run from the "
+"start line to the finish line then start over again."
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qc:13
 msgid ""
@@ -1724,6 +1733,9 @@ msgid ""
 "contested since they sometimes have the power to make or break a game, so "
 "making good use of them is important."
 msgstr ""
+"Maps often have powerups and items like %s and %s, which are usually highly "
+"contested since they sometimes have the power to make or break a game, so "
+"making good use of them is important."
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Deathmatch"
@@ -1973,6 +1985,11 @@ msgid ""
 "after a ten second period, and the location of all keys will be visible on "
 "the radar after a few seconds."
 msgstr ""
+"%s is a round-based gametype played with a few teams, where each team starts "
+"with one key and all keys must be collected to win the round. The team "
+"member who is given the key at the start of the round is randomly selected "
+"after a ten second period, and the location of all keys will be visible on "
+"the radar after a few seconds."
 
 #: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qc:12
 #, c-format
@@ -2303,6 +2320,10 @@ msgid ""
 "fragged. Extra points are also given to survivors who survive until the "
 "round timer expires."
 msgstr ""
+"Players are rewarded a point for each member of the opposing team they frag, "
+"only if they survive the round, and points are deducted for each teammate "
+"fragged. Extra points are also given to survivors who survive until the "
+"round timer expires."
 
 #: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
@@ -2315,7 +2336,7 @@ msgstr "Survival"
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qc:10
 #, c-format
 msgid "%s is the team version of %s, played in teams rather than solo."
-msgstr ""
+msgstr "%s is the team version of %s, played in teams rather than solo."
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qc:11
 msgid ""
@@ -2330,6 +2351,8 @@ msgid ""
 "Careful team coordination and map control is often key to winning a match, "
 "and sometimes players will share weapons with their teammates."
 msgstr ""
+"Careful team coordination and map control is often key to winning a match, "
+"and sometimes players will share weapons with their teammates."
 
 #: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -2924,6 +2947,8 @@ msgid ""
 "The Spider is a large mechanically-enhanced arachnoid adept at hunting "
 "speedy enemies."
 msgstr ""
+"The Spider is a large mechanically-enhanced arachnoid adept at hunting "
+"speedy enemies."
 
 #: qcsrc/common/monsters/monster/spider.qc:245
 msgid ""
@@ -3090,10 +3115,12 @@ msgid ""
 "The %s increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
+"The %s increases the knockback force you deal, and makes you immune to "
+"knockback while the buff is active."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
-msgstr ""
+msgstr "It also slightly increases the knockback you deal to yourself."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qh:14
 msgid "Bash"
@@ -3123,6 +3150,8 @@ msgid ""
 "While you have the %s, you can crouch while mid-air to switch your gravity, "
 "allowing flight."
 msgstr ""
+"While you have the %s, you can crouch while mid-air to switch your gravity, "
+"allowing flight."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
 msgid "Flight"
@@ -3456,6 +3485,9 @@ msgid ""
 "instead giving players the %s, which immediately frags players in a single "
 "shot, hence the name \"InstaGib.\""
 msgstr ""
+"%s is a mutator that removes all weapons and weapon pickups from the map, "
+"instead giving players the %s, which immediately frags players in a single "
+"shot, hence the name \"InstaGib.\""
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qc:17
 #, c-format
@@ -3632,6 +3664,7 @@ msgstr "Ice grenade"
 msgid ""
 "The %s detonates after a short delay, spawning one of the five monster types."
 msgstr ""
+"The %s detonates after a short delay, spawning one of the five monster types."
 
 #: qcsrc/common/mutators/mutator/nades/nade/monster.qh:19
 msgid "Monster grenade"
@@ -3644,6 +3677,9 @@ msgid ""
 "a fountain. The napalm fire balls burn for a while, and damage players who "
 "get too close."
 msgstr ""
+"The %s detonates after a short delay, spreading fiery napalm globs around in "
+"a fountain. The napalm fire balls burn for a while, and damage players who "
+"get too close."
 
 #: qcsrc/common/mutators/mutator/nades/nade/napalm.qh:30
 msgid "Napalm grenade"
@@ -3656,6 +3692,9 @@ msgid ""
 "players. If other nade types are destroyed before they detonate, they "
 "instead explode similar to this, without doing their special effects."
 msgstr ""
+"The (normal) %s explodes after a short delay, dealing damage to nearby "
+"players. If other nade types are destroyed before they detonate, they "
+"instead explode similar to this, without doing their special effects."
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:19
 #, c-format
@@ -3678,6 +3717,9 @@ msgid ""
 "where it detonated. It is useful for cases where you want to go back to some "
 "point on the map after you die."
 msgstr ""
+"The %s detonates after a short delay, temporarily setting your spawnpoint to "
+"where it detonated. It is useful for cases where you want to go back to some "
+"point on the map after you die."
 
 #: qcsrc/common/mutators/mutator/nades/nade/spawn.qh:17
 msgid "Spawn grenade"
@@ -3742,6 +3784,9 @@ msgid ""
 "configuration options for this mutator, so they may act a little differently "
 "depending on the server you play on."
 msgstr ""
+"There are multiple types of nades that can be selected, and many "
+"configuration options for this mutator, so they may act a little differently "
+"depending on the server you play on."
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:54
 #, c-format
@@ -3789,6 +3834,9 @@ msgid ""
 "After some time the weapon is reselected, and this repeats forever. Weapon "
 "and ammo pickups are also removed from the map."
 msgstr ""
+"%s is a mutator that gives all players the same randomly-selected weapon. "
+"After some time the weapon is reselected, and this repeats forever. Weapon "
+"and ammo pickups are also removed from the map."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:299
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
@@ -3847,6 +3895,8 @@ msgid ""
 "Like with all %s weapons, the secondary fire shoots a laser which doesn't "
 "damage or push enemies, but can be used to push yourself around."
 msgstr ""
+"Like with all %s weapons, the secondary fire shoots a laser which doesn't "
+"damage or push enemies, but can be used to push yourself around."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:169
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:244
@@ -4061,6 +4111,8 @@ msgid ""
 "It consumes %s ammo while operating, so make sure you don't run out when "
 "you're high up!"
 msgstr ""
+"It consumes %s ammo while operating, so make sure you don't run out when "
+"you're high up!"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:38
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:41
@@ -4146,6 +4198,10 @@ msgid ""
 "hitbox, so they can give you a much larger speed boost, also allowing flying "
 "around the map."
 msgstr ""
+"The %s mutator removes the slight delay when immediately detonating a %s "
+"rocket after firing. This allows rockets to be detonated much closer to your "
+"hitbox, so they can give you a much larger speed boost, also allowing flying "
+"around the map."
 
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qh:5
 #: qcsrc/common/util.qc:300
@@ -4208,6 +4264,8 @@ msgid ""
 "Additionally the amount of health players get is equal to the damage they "
 "deal, which isn't normally the case with the %s."
 msgstr ""
+"Additionally the amount of health players get is equal to the damage they "
+"deal, which isn't normally the case with the %s."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:81
 #, c-format
@@ -7180,6 +7238,8 @@ msgid ""
 "The shells it shoots target projectiles such as the %s secondary fire "
 "grenade, %s secondary fire balls, %s rockets, and other missiles."
 msgstr ""
+"The shells it shoots target projectiles such as the %s secondary fire "
+"grenade, %s secondary fire balls, %s rockets, and other missiles."
 
 #: qcsrc/common/turrets/turret/flac.qh:13
 msgid "FLAC Cannon"
@@ -7890,6 +7950,8 @@ msgid ""
 "The %s vehicle looks like a jet, but does not fly upwards very well. It "
 "seats only one passenger, who becomes the pilot."
 msgstr ""
+"The %s vehicle looks like a jet, but does not fly upwards very well. It "
+"seats only one passenger, who becomes the pilot."
 
 #: qcsrc/common/vehicles/vehicle/racer.qc:652
 #, c-format
@@ -7923,6 +7985,8 @@ msgid ""
 "The %s vehicle is a flying vehicle that takes only one pilot, who can "
 "operate both of the weapons."
 msgstr ""
+"The %s vehicle is a flying vehicle that takes only one pilot, who can "
+"operate both of the weapons."
 
 #: qcsrc/common/vehicles/vehicle/raptor.qc:851
 #, c-format
@@ -7933,6 +7997,11 @@ msgid ""
 "reticle. The white reticle always points to the head of the vehicle, while "
 "the green reticle's location is determined by the momentum of the vehicle."
 msgstr ""
+"The two weapons have different reticles for them similar to the %s. The "
+"primary weapon is laser-based, shooting toward the white reticle. The "
+"secondary weapon drops bombs to the ground, aiming towards the green "
+"reticle. The white reticle always points to the head of the vehicle, while "
+"the green reticle's location is determined by the momentum of the vehicle."
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:21
 msgid "Raptor"
@@ -7969,6 +8038,12 @@ msgid ""
 "the green reticle also points to the front but with a bit of delay when the "
 "%s rotates."
 msgstr ""
+"It has two weapons the rider can control, which have different reticles for "
+"them similar to the %s. The primary weapon is a machine gun, and is shot "
+"toward the green reticle. The secondary weapon shoots rockets towards the "
+"white reticle. The white reticle points to the front of the vehicle, while "
+"the green reticle also points to the front but with a bit of delay when the "
+"%s rotates."
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qh:21
 msgid "Spiderbot"
@@ -8056,6 +8131,8 @@ msgid ""
 "The secondary fire rapidly shoots electric bolts forward, exploding on "
 "impact and dealing some splash damage."
 msgstr ""
+"The secondary fire rapidly shoots electric bolts forward, exploding on "
+"impact and dealing some splash damage."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1520
 #, c-format
@@ -8402,6 +8479,8 @@ msgid ""
 "The secondary fire shoots a burst of multiple randomly-scattered lasers at "
 "once."
 msgstr ""
+"The secondary fire shoots a burst of multiple randomly-scattered lasers at "
+"once."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:248
 #, c-format
@@ -8452,6 +8531,8 @@ msgid ""
 "The secondary fire usually drops a gravity bomb that affects enemies, also "
 "releasing light and smoke sort of like a flashbang."
 msgstr ""
+"The secondary fire usually drops a gravity bomb that affects enemies, also "
+"releasing light and smoke sort of like a flashbang."
 
 #: qcsrc/common/weapons/weapon/hook.qc:432
 #, c-format
@@ -8822,6 +8903,8 @@ msgid ""
 "The secondary fire shoots a laser identical to that fired by the %s, with "
 "strong knockback."
 msgstr ""
+"The secondary fire shoots a laser identical to that fired by the %s, with "
+"strong knockback."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:422
 #, c-format
@@ -13656,6 +13739,9 @@ msgid ""
 "a strafe key for the duration of the flick. This means using %s if the wall "
 "is to your left, and %s if the wall is to your right."
 msgstr ""
+"In order to waste as little speed as possible while flicking back, switch to "
+"a strafe key for the duration of the flick. This means using %s if the wall "
+"is to your left, and %s if the wall is to your right."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:126
 #, c-format
@@ -13664,6 +13750,9 @@ msgid ""
 "damage to the player. In gametypes without self damage however it is a very "
 "versatile movement tool."
 msgstr ""
+"The %s can be used just like the %s for movement, but it inflicts much more "
+"damage to the player. In gametypes without self damage however it is a very "
+"versatile movement tool."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:128
 msgid ""
