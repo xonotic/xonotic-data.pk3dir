@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-19 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2025\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -1483,6 +1483,8 @@ msgstr "erro ao criar curl handle"
 msgid ""
 "%s is a team-based gametype involving an attacking and a defending team."
 msgstr ""
+"%s é um tipo de jogo de equipes envolvendo uma equipe atacante e uma "
+"defendente."
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qc:9
 msgid ""
@@ -1494,12 +1496,22 @@ msgid ""
 "teams switch roles and the new attacking team wins only if they destroy the "
 "main object within the time the other team took to do it."
 msgstr ""
+"A equipe atacante tem que destruir objetos postos no mapa, fazendo abrir "
+"novas portas ou vias a outros objetos, até que o objeto principal seja "
+"atingido e destruído. A equipe defendente tem que defender os objetos, "
+"vencendo o jogo se impedir com êxito a equipe atacante de destruir o objeto "
+"principal dentro do limite de tempo. Se a defesa falhar, uma segunda rodada "
+"é jogada com as equipes em papéis trocados, e a equipe desta vez atacante "
+"vence se destruir o objeto principal mais rápido do que a outra equipe na "
+"rodada anterior."
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qc:12
 msgid ""
 "Objects have waypoints which show their health and position, and they're "
 "destroyed by shooting them with any weapon."
 msgstr ""
+"Objetos são marcados em pontos de interesse mostrando sua saúde e posição e "
+"são destruídos ao serem atingidos com qualquer arma."
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
 msgid "Assault"
@@ -1533,18 +1545,26 @@ msgid ""
 "life per round. There are no pickups available on the map in %s, making the "
 "gameplay fast-paced and focused on combat."
 msgstr ""
+"%s é um tipo comum de jogo em rodadas e com equipes, no qual cada jogador "
+"nasce com todas as armas disponíveis, tem saúde e armadura máximas, mas só "
+"tem uma única vida por rodada. Não há itens coletáveis no mapa em %s, de "
+"modo que o jogo seja ágil e focado no combate."
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qc:10
 msgid ""
 "Rounds start with a ten second grace period where weapons cannot be fired, "
 "so it's a good opportunity to group up with your team."
 msgstr ""
+"Rodadas iniciam com um cessar-fogo de dez segundos, o que é uma boa "
+"oportunidade para se reunir com sua equipe."
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qc:11
 msgid ""
 "The match ends once a team reaches a certain number of rounds won, or has a "
 "considerable lead over the other team."
 msgstr ""
+"O jogo termina assim que uma equipe atingir um certo número de rodadas "
+"vencidas ou estiver consideravelmente à frente da outra equipe."
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qc:12
 msgid ""
@@ -1552,6 +1572,9 @@ msgid ""
 "fellow teammates and pay attention to any callouts from them. Team "
 "coordination is key!"
 msgstr ""
+"Como cada jogador só tem uma vida por rodada, é importante reunir-se com os "
+"colegas de equipe e atentar-se aos seus chamados. Coordenação de equipe é "
+"crucial!"
 
 #: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
 msgid "Clan Arena"
@@ -1583,12 +1606,18 @@ msgid ""
 "captured if your own flag is also home in its base, so it's important to "
 "collect your flag after it's dropped."
 msgstr ""
+"%s é um tipo comum de jogo de equipes no qual o objetivo é roubar a bandeira "
+"de uma equipe adversária e trazê-la à própria base para capturá-la. Uma "
+"bandeira só pode ser capturada se a sua própria bandeira também estiver em "
+"sua base, logo é importante pegar de volta sua bandeira quando a soltarem."
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qc:10
 msgid ""
 "The game is won once a team reaches a certain number of \"caps\" (captures), "
 "or has a considerable lead over the other team."
 msgstr ""
+"Vence o jogo a equipe que atingir um certo número de capturas (\"caps\") ou "
+"que estiver consideravelmente à frente da outra equipe."
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qc:11
 msgid ""
@@ -1598,6 +1627,12 @@ msgid ""
 "\"stalemate\" will initiate and all flag carriers (\"fc\"s) will be exposed "
 "on the radar and with waypoints."
 msgstr ""
+"Se uma bandeira for derrubada no vazio ou em uma armadilha mortal, será "
+"imediatamente devolvida à base, ou ficará ociosa por um tempo até "
+"automaticamente retornar sozinha. Se todas as bandeiras estão sendo "
+"seguradas, depois de algum tempo um \"impasse\" será iniciado e todos os "
+"portadores de bandeiras (\"pbnd\") serão expostos no radar e em pontos de "
+"interesse."
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qc:13
 #, c-format
@@ -1609,6 +1644,13 @@ msgid ""
 "important, especially to let teammates know if you see the enemy flag "
 "carrier."
 msgstr ""
+"%s recompensa movimento astuto, porque, quanto mais difícil é para os "
+"inimigos atacarem você, mais fácil é para você escapar da base deles após "
+"roubar a bandeira. Importantemente, também recompensa defesa de base, "
+"porque, se seus inimigos não conseguem pegar sua bandeira, não poderão "
+"capturá-la. Finalmente, boa comunicação de equipe é importante, "
+"especialmente para que seus colegas de equipe saibam se você vê ou não o "
+"inimigo portador de bandeira."
 
 #: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
 msgid "Capture the Flag"
@@ -1643,6 +1685,9 @@ msgid ""
 "from start to finish as fast as possible and try to beat the times set by "
 "others."
 msgstr ""
+"%s é um tipo de jogo único, focando em corridas contra outros jogadores no "
+"mapa, em vez de lutar com eles usando armas. Jogadores correm pelo mapa do "
+"início ao fim o mais rápido possível e tentar bater os recordes dos outros."
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qc:12
 #, c-format
@@ -1650,6 +1695,8 @@ msgid ""
 "%s is similar to %s, except you don't run in laps, and instead run from the "
 "start line to the finish line then start over again."
 msgstr ""
+"%s é similar a %s, exceto que você não corre voltas, e em vez disso corre da "
+"linha de partida à linha de chegada e então começa tudo de novo."
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qc:13
 msgid ""
@@ -1658,6 +1705,10 @@ msgid ""
 "heaps of community-made maps available. Also, it only requires one player to "
 "play."
 msgstr ""
+"Apesar de este tipo de jogo ser bem diferente dos outros, é jogado bem "
+"frequentemente porque é uma boa maneira de dominar as habilidades motoras e "
+"porque há muitos mapas feitos pela comunidade. Também, pode ser jogado "
+"individualmente."
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
 msgid "Race CTS"
@@ -1665,7 +1716,7 @@ msgstr "Corrida CTS"
 
 #: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
 msgid "Race to the finish line for the fastest time"
-msgstr ""
+msgstr "Compita em uma corrida pelo melhor tempo à linha de chegada."
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qc:11
 #, c-format
@@ -1675,12 +1726,18 @@ msgid ""
 "you respawn with only the starter weapons, so any you collected will have to "
 "be picked up again."
 msgstr ""
+"%s é uma básica luta de cada um por si até a morte, na qual todos lutam "
+"contra todos, e vence quem tiver mais pontos. Quando você for morto, você "
+"ressurge só com as armas iniciais, e quaisquer outras que tinha coletado "
+"terá de coletar de novo."
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qc:13
 msgid ""
 "Scoring is quite simple, fragging an opponent adds one to your score, and "
 "fragging yourself subtracts one."
 msgstr ""
+"A pontuação é bem simples, matar um oponente adiciona um a sua pontuação, e "
+"suicidar-se subtrai um."
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qc:14
 #, c-format
@@ -1689,6 +1746,9 @@ msgid ""
 "contested since they sometimes have the power to make or break a game, so "
 "making good use of them is important."
 msgstr ""
+"Mapas muitas vezes têm potencializadores e itens como %s e %s, que são "
+"usualmente disputados já que às vezes têm o poder de virar o jogo, logo é "
+"importante usufruir deles."
 
 #: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
 msgid "Deathmatch"
@@ -1704,6 +1764,8 @@ msgid ""
 "%s is a gametype where teams compete to dominate the map by capturing and "
 "keeping control points."
 msgstr ""
+"%s é um tipo de jogo no qual equipes competem para dominar o mapa capturando "
+"e mantendo pontos de controle."
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qc:9
 msgid ""
@@ -1712,12 +1774,19 @@ msgid ""
 "as easily steal a control point owned by your team by doing the same. "
 "Control points start neutral (owned by no teams)."
 msgstr ""
+"Pontos de controle são exibidos no radar para serem facilmente encontrados e "
+"são capturados simplesmente andando por eles. Porém, um inimigo pode de modo "
+"igualmente fácil furtar um ponto de controle possuído por sua equipe. Pontos "
+"de controle começam neutros (possuídos por ninguém)."
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qc:12
 msgid ""
 "Scoring is a combination of frags and score automatically generated by any "
 "control points held by your team every few seconds."
 msgstr ""
+"A pontuação é uma combinação de execuções e outros pontos automaticamente "
+"gerados por quaisquer pontos de controle mantidos por sua equipe a cada "
+"tantos segundos."
 
 #: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
 msgid "Capture and defend all the control points to win"
@@ -1739,6 +1808,8 @@ msgid ""
 "%s is a 1-vs-1 arena battle to decide the winner, essentially a 2-player "
 "version of %s, making it one of the most competitive gametypes."
 msgstr ""
+"%s é uma batalha em arena 1x1 para decidir o vencedor, essencialmente uma "
+"versão de 2 jogadores de %s, sendo um dos mais competitivos tipos de jogos."
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qc:13
 #, c-format
@@ -1749,6 +1820,11 @@ msgid ""
 "with the best item control is often the winner, so this is a key aspect to "
 "master."
 msgstr ""
+"Como jogadores estão por conta própria, itens importantes como %s e %s são "
+"muito disputados e são muitas vezes \"cronometrados\" olhando o tempo no "
+"jogo quando forem coletados para determinar-se quando ressurgirão. Muitas "
+"vezes vence quem tiver o melhor controle dos itens, assim é importante "
+"dominar esse truque."
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qc:16
 msgid ""
@@ -1756,6 +1832,9 @@ msgid ""
 "health, so it is a good opportunity to search the map for them to pick up an "
 "easy frag and continue your streak."
 msgstr ""
+"Quando você executar o oponente, este ressurgirá com poucas armas e saúde "
+"limitada, o que é uma boa oportunidade para caçá-lo pelo mapa e facilmente "
+"estender sua sequência de execuções."
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qc:17
 #, c-format
@@ -10011,6 +10090,8 @@ msgid ""
 "Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
 "to clear; ENTER when done."
 msgstr ""
+"Clique aqui ou aperte CTRL+F para digitar uma palavra chave e buscar o mapa "
+"desejado. Você pode apertar CTRL+DEL para apagar e ENTER para confirmar."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:172
 msgid "Add shown"
@@ -12662,7 +12743,7 @@ msgstr "Exibe a sua taxa de quadros por segundo"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:156
 msgid "Instant action with bots!"
-msgstr ""
+msgstr "Ação instantânea com bots!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:181
 msgid "Campaign Difficulty:"
@@ -12693,6 +12774,8 @@ msgid ""
 "Play the singleplayer campaign or instant action matches against bots, or "
 "read the guide"
 msgstr ""
+"Jogue a campanha de um jogador ou inicie uma partida de ação instantânea "
+"contra bots, ou leia o guia"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:15
 msgid "Topic"
