@@ -9277,4 +9277,27 @@ SUB(hlac_impact) {
 	MY(velocitymultiplier) = 0.010000;
 }
 
+DEF(shotgun_woosh);
+// puff
+SUB(shotgun_woosh) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 192;
+	MY(alpha_fade) = 512;
+	MY(bounce) = 0.100000;
+	MY(color_min) = "0x111111";
+	MY(color_max) = "0x979797";
+	MY(count) = 24;
+	MY(notunderwater) = true;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(sizeincrease) = 14;
+	MY(size_min) = 1;
+	MY(size_max) = 12;
+	MY(tex_min) = 0;
+	MY(tex_max) = 8;
+	MY(velocityjitter) = '128 128 64';
+	MY(velocitymultiplier) = 1;
+	MY(type) = "smoke";
+}
+
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
