@@ -186,7 +186,9 @@ void HUD_Physics()
 		bool real_onslick = onground && StrafeHUD_DetermineOnSlick(strafeplayer);
 		bool all_slick = PHYS_FRICTION(strafeplayer) == 0;
 
-		accel_max = (autocvar_hud_panel_physics_acceleration_max_slick != -1 && ((all_slick && real_onground) || real_onslick))
+		accel_max = (autocvar_hud_panel_physics_acceleration_max_slick != -1
+			&& ((all_slick && real_onground) || real_onslick)
+			&& PHYS_SLICKACCELERATE(strafeplayer) >= PHYS_ACCELERATE(strafeplayer))
 			? autocvar_hud_panel_physics_acceleration_max_slick
 			: autocvar_hud_panel_physics_acceleration_max;
 	}

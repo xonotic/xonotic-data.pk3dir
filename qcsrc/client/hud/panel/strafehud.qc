@@ -115,6 +115,11 @@ void HUD_StrafeHUD()
 			maxaccel = PHYS_ACCELERATE(strafeplayer);
 		}
 	}
+	else if(onslick)
+	{
+		if(!autocvar__hud_configure)
+			maxaccel = PHYS_SLICKACCELERATE(strafeplayer);
+	}
 
 	// move values are only valid for the local player
 	vector movement = PHYS_INPUT_MOVEVALUES(strafeplayer);
@@ -202,8 +207,29 @@ void HUD_StrafeHUD()
 	{
 		float strafefriction = onslick ? PHYS_FRICTION_SLICK(strafeplayer) : PHYS_FRICTION(strafeplayer);
 
-		frictionspeed = speed * dt * strafefriction * max(PHYS_STOPSPEED(strafeplayer) / speed, 1);
-		strafespeed = max(speed - frictionspeed, 0);
+		if (strafefriction > 0)
+		{
+			float S = PHYS_STOPSPEED(strafeplayer);
+			//strafespeed = speed * (1 - dt * strafefriction * ((speed < S) ? (S / speed) : 1));
+			// NOTE: this is copied from ecs/systems/physics.qc
+			float dt_r = PHYS_FRICTION_REPLICA_DT;
+			//if (strafefriction * dt_r >= 1)
+			//	strafespeed = 0;
+			//else
+			{
+				float independent_geometric = (1 - strafefriction * dt_r) ** (dt / dt_r);
+				if (S < speed && speed < S / independent_geometric)
+					strafespeed = S - S * strafefriction * (dt - (dt_r * log(S / speed)) / log(1 - strafefriction * dt_r));
+				else if (speed >= S)
+					strafespeed = speed * independent_geometric;
+				else
+					strafespeed = speed - strafefriction * dt * S;
+				strafespeed = max(0, strafespeed);
+			}
+		}
+		else
+			strafespeed = speed;
+		frictionspeed = speed - strafespeed;
 	}
 	else
 	{
@@ -308,10 +334,11 @@ void HUD_StrafeHUD()
 	}
 
 	float airstopaccel = PHYS_AIRSTOPACCELERATE(strafeplayer);
-	if(airstopaccel == 0)
+	if(airstopaccel == 0 || turn) // no airstopaccel while side strafing
 		airstopaccel = 1; // values of 0 are equivalent to 1
 
 	// best angle to strafe at
+	// k9er: documentation here https://gitlab.com/otta8634/xonotic-physics
 	float bestangle;
 	float prebestangle;
 	float overturnangle;
@@ -374,11 +401,13 @@ void HUD_StrafeHUD()
 			}
 			else
 			{
-				// use angles as if in air
+				// use angles as if in air (see below), no range checks are needed
 				// no need to check if numerator < denominator, since all numerators < max onground speed < speed = all denominators
 				bestangle = acos(bestspeed / speed) * RAD2DEG;
 				prebestangle = acos(movespeed / speed) * RAD2DEG;
-				overturnangle = acos(-(airstopaccel * maxaccel / 2) / speed) * RAD2DEG;
+				overturnangle = (airstopaccel == 1 || PHYS_AIRSTOPACCELERATE_FULL(strafeplayer))
+					? acos(-(airstopaccel * maxaccel * 0.5) / speed) * RAD2DEG
+					: acos(-maxaccel / (2 * speed - (airstopaccel - 1) * maxaccel)) * RAD2DEG;
 			}
 		}
 	}
@@ -391,9 +420,12 @@ void HUD_StrafeHUD()
 		prebestangle = speed > movespeed
 			? acos(movespeed / speed) * RAD2DEG
 			: 0;
-		// with airstopaccel, delta_max = acos(airstopaccel * -a / 2v), only in air
-		overturnangle = speed > airstopaccel * maxaccel / 2
-			? acos(-(airstopaccel * maxaccel / 2) / speed) * RAD2DEG
+		// with airstopaccel, delta_max = acos(airstopaccel * -a / 2v), only in air,
+		// ... or if not applied fully, delta_max = acos(-a / (2v - (airstopaccel - 1) * a))
+		overturnangle = speed > airstopaccel * maxaccel * 0.5
+			? ((airstopaccel == 1 || PHYS_AIRSTOPACCELERATE_FULL(strafeplayer))
+				? acos(-(airstopaccel * maxaccel * 0.5) / speed) * RAD2DEG
+				: acos(-maxaccel / (2 * speed - (airstopaccel - 1) * maxaccel)) * RAD2DEG)
 			: 180;
 	}
 	// absolute_* variables which are always positive with no wishangle offset
@@ -402,9 +434,10 @@ void HUD_StrafeHUD()
 	float absolute_overturnangle = overturnangle;
 
 	float aircontrol = PHYS_AIRCONTROL(strafeplayer);
-	bool aircontrol_backwards = PHYS_AIRCONTROL_BACKWARDS(strafeplayer);
-	bool is_aircontrol_keys = keys_fwd == STRAFEHUD_KEYS_FORWARD || (aircontrol_backwards && keys_fwd == STRAFEHUD_KEYS_BACKWARD);
-	bool is_aircontrol_direction = fwd || aircontrol_backwards;
+	int aircontrol_flags = PHYS_AIRCONTROL_FLAGS(strafeplayer);
+	bool is_aircontrol_keys = (keys_fwd == STRAFEHUD_KEYS_FORWARD)
+		|| ((aircontrol_flags & BIT(0)) && keys_fwd == STRAFEHUD_KEYS_BACKWARD);
+	bool is_aircontrol_direction = fwd || (aircontrol_flags & BIT(0));
 	bool airaccel_qw = PHYS_AIRACCEL_QW(strafeplayer) == 1;
 
 	/*
@@ -432,7 +465,9 @@ void HUD_StrafeHUD()
 		float wturn_power = PHYS_AIRCONTROL_POWER(strafeplayer);
 		if(wturn_power == 2)
 		{
-			float wturn_a = 32 * aircontrol * dt;
+			float wturn_a = 32 * fabs(aircontrol) * dt;
+			if(aircontrol_flags & BIT(2)) // crouching has no impact
+				wturn_a *= maxspeed / maxspeed_phys;
 			float wturn_V = 1 - (wturn_a * wturn_a) / (speed * speed);
 			if(autocvar_hud_panel_strafehud_wturn_proper && wturn_a > 1 && wturn_V < 1 && wturn_V > -1)
 				wturn_bestangle = acos(-speed / wturn_a * (cos((acos(wturn_V) + M_PI * 2) / 3) * 2 + 1)) * RAD2DEG;
