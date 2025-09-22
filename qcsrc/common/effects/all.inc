@@ -20,6 +20,7 @@ EFFECT(0, BLASTER_MUZZLEFLASH,      "laser_muzzleflash")
 
 EFFECT(0, SHOTGUN_IMPACT,           "shotgun_impact")
 EFFECT(0, SHOTGUN_MUZZLEFLASH,      "shotgun_muzzleflash")
+EFFECT(0, SHOTGUN_WOOSH,            "shotgun_woosh")
 
 EFFECT(0, ARC_BEAM,                 "arc_beam")
 EFFECT(0, ARC_BEAM_HEAL,            "arc_beam_heal")
