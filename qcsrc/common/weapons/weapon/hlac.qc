@@ -31,8 +31,8 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	float spread = WEP_CVAR_PRI(WEP_HLAC, spread_min) + (WEP_CVAR_PRI(WEP_HLAC, spread_add) * actor.(weaponentity).misc_bulletcounter);
 	spread = min(spread,WEP_CVAR_PRI(WEP_HLAC, spread_max));
-	if(IS_DUCKED(actor))
-		spread = spread * WEP_CVAR_PRI(WEP_HLAC, spread_crouchmod);
+	if(IS_DUCKED(actor) && IS_ONGROUND(actor))
+		spread *= WEP_CVAR_PRI(WEP_HLAC, spread_crouchmod);
 
 	W_SetupShot(actor, weaponentity, false, 3, SND_HLAC_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(WEP_HLAC, damage), thiswep.m_id);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
@@ -78,8 +78,8 @@ void W_HLAC_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	entity missile;
 	float spread = WEP_CVAR_SEC(WEP_HLAC, spread);
 
-	if(IS_DUCKED(actor))
-		spread = spread * WEP_CVAR_SEC(WEP_HLAC, spread_crouchmod);
+	if(IS_DUCKED(actor) && IS_ONGROUND(actor))
+		spread *= WEP_CVAR_SEC(WEP_HLAC, spread_crouchmod);
 
 	W_SetupShot(actor, weaponentity, false, 3, SND_HLAC_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(WEP_HLAC, damage) * WEP_CVAR_SEC(WEP_HLAC, shots), thiswep.m_id | HITTYPE_SECONDARY);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);

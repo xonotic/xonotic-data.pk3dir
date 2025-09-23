@@ -69,9 +69,13 @@ void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity we
 	// this attack_finished just enforces a cooldown at the end of a burst
 	ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(WEP_MACHINEGUN, first_refire) * W_WeaponRateFactor(actor);
 
+	float spread_accuracy = (IS_DUCKED(actor) && IS_ONGROUND(actor))
+		? WEP_CVAR(WEP_MACHINEGUN, spread_crouchmod)
+		: 1;
+
 	if(actor.(weaponentity).misc_bulletcounter == 1)
 		fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir,
-		                   WEP_CVAR(WEP_MACHINEGUN, first_spread),
+		                   WEP_CVAR(WEP_MACHINEGUN, first_spread) * spread_accuracy,
 		                   WEP_CVAR(WEP_MACHINEGUN, solidpenetration),
 		                   WEP_CVAR(WEP_MACHINEGUN, first_damage),
 		                   WEP_CVAR(WEP_MACHINEGUN, damagefalloff_halflife),
@@ -83,7 +87,7 @@ void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity we
 		                   deathtype, EFFECT_BULLET, true);
 	else
 		fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir,
-		                   WEP_CVAR(WEP_MACHINEGUN, sustained_spread),
+		                   WEP_CVAR(WEP_MACHINEGUN, sustained_spread) * spread_accuracy,
 		                   WEP_CVAR(WEP_MACHINEGUN, solidpenetration),
 		                   WEP_CVAR(WEP_MACHINEGUN, sustained_damage),
 		                   WEP_CVAR(WEP_MACHINEGUN, damagefalloff_halflife),
@@ -172,6 +176,9 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 	else // inverted
 		spread_accuracy = WEP_CVAR(WEP_MACHINEGUN, spread_min) - spread_accum;
 
+	if (IS_DUCKED(actor) && IS_ONGROUND(actor))
+		spread_accuracy *= WEP_CVAR(WEP_MACHINEGUN, spread_crouchmod);
+
 	fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir,
 	                   spread_accuracy,
 	                   WEP_CVAR(WEP_MACHINEGUN, solidpenetration),
@@ -217,8 +224,12 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 
 	float heat = MachineGun_Heat(spread_accum);
 
+	float spread_accuracy = WEP_CVAR(WEP_MACHINEGUN, burst_spread);
+	if (IS_DUCKED(actor) && IS_ONGROUND(actor))
+		spread_accuracy *= WEP_CVAR(WEP_MACHINEGUN, spread_crouchmod);
+
 	fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir,
-	                   WEP_CVAR(WEP_MACHINEGUN, burst_spread),
+	                   spread_accuracy,
 	                   WEP_CVAR(WEP_MACHINEGUN, solidpenetration),
 	                   WEP_CVAR(WEP_MACHINEGUN, sustained_damage) * heat,
 	                   WEP_CVAR(WEP_MACHINEGUN, damagefalloff_halflife),
