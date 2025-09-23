@@ -24,7 +24,7 @@ cs    "Czech" "Čeština" 25%
 el    "Greek" "Ελληνική" 36%
 be    "Belarusian" "Беларуская" 40%
 bg    "Bulgarian" "Български" 56%
-ru    "Russian" "Русский" 86%
+ru    "Russian" "Русский" 87%
 sr    "Serbian" "Српски" 48%
 uk    "Ukrainian" "Українська" 46%
 zh_TW "Chinese (Taiwan)" "中文（正體字）" 84%

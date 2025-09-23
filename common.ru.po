@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-19 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Темак, 2024\n"
+"Last-Translator: Andrei Stepanov, 2014-2025\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -1492,6 +1492,8 @@ msgstr "ошибка при создании curl handle"
 msgid ""
 "%s is a team-based gametype involving an attacking and a defending team."
 msgstr ""
+"%s — это командный режим игры, в котором участвуют атакующая и обороняющаяся "
+"стороны."
 
 #: qcsrc/common/gamemodes/gamemode/assault/assault.qc:9
 msgid ""
@@ -1767,12 +1769,12 @@ msgstr ""
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qc:17
 #, c-format
 msgid "%s is often played with %s rules."
-msgstr ""
+msgstr "%s часто использует правила %s."
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qc:17
 #: qcsrc/menu/xonotic/guide/pages.qc:183 qcsrc/menu/xonotic/guide/pages.qc:186
 msgid "XPM"
-msgstr ""
+msgstr "XPM"
 
 #: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
 msgid "Duel"

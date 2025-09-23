@@ -1852,6 +1852,8 @@ msgstr ""
 msgid ""
 "A round ends when either all monsters are fragged, or after a time limit."
 msgstr ""
+"Une manche se termine lorsque tous les monstres ont été éliminés ou après "
+"une limite de temps."
 
 #: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
 msgid "Invasion"
@@ -1950,6 +1952,9 @@ msgid ""
 "Hiding is sometimes a viable strategy since if you can't be found you can't "
 "lose lives, but often you become a vulnerable target once discovered."
 msgstr ""
+"Se cacher est parfois une stratégie viable, car si vous ne pouvez pas être "
+"trouvé, vous ne pouvez pas perdre de vies, mais vous devenez généralement "
+"une cible vulnérable une fois découvert."
 
 #: qcsrc/common/gamemodes/gamemode/lms/lms.qc:14
 #, c-format
@@ -1995,15 +2000,21 @@ msgid ""
 "Since damage is always rewarded in %s, the more you shoot the better, "
 "turning this gametype into chaotic fun at times."
 msgstr ""
+"Comme les dommages sont toujours récompensés en %s, plus vous tirez, mieux "
+"c'est, ce qui transforme ce mode de jeu en plaisir chaotique."
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qc:16
 #, c-format
 msgid "This gametype is often seen as a more newbie-friendly version of %s."
 msgstr ""
+"Ce mode de jeu est souvent vu comme une version plus adaptée aux débutants "
+"de %s."
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem"
 msgstr ""
+"Concourez pour infliger le plus de dommages et de frags dans ce combat "
+"chaotique"
 
 #: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
 msgid "Mayhem"
