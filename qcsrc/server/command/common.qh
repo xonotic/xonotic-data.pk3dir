@@ -65,10 +65,10 @@ float timeout_leadtime;  // contains the number of seconds left of the leadtime 
 void timeout_handler_think(entity this);
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
-void CommonCommand_macro_write_aliases(float fh);
+void CommonCommand_macro_write_aliases(int fh);
 
 // keep track of the next token to use for argc
-float next_token;
+int next_token;
 
 // select the proper prefix for usage and other messages
 string GetCommandPrefix(entity caller);
@@ -77,19 +77,19 @@ string GetCommandPrefix(entity caller);
 string GetCallerName(entity caller);
 
 // verify that the client provided is acceptable for kicking
-float VerifyKickableEntity(entity client);
+int VerifyKickableEntity(entity client);
 
 // verify that the client provided is acceptable for use
-float VerifyClientEntity(entity client, float must_be_real, float must_be_bots);
+int VerifyClientEntity(entity client, bool must_be_real, bool must_be_bots);
 
 // if the client is not acceptable, return a string to be used for error messages
-string GetClientErrorString_color(float clienterror, string original_input, string col);
+string GetClientErrorString_color(int clienterror, string original_input, string col);
 #define GetClientErrorString(clienterror, original_input) GetClientErrorString_color(clienterror, original_input, "^7")
 
 // is this entity number even in the possible range of entities?
-float VerifyClientNumber(float tmp_number);
+bool VerifyClientNumber(int num);
 
-entity GetIndexedEntity(int argc, float start_index);
+entity GetIndexedEntity(int argc, int start_index);
 
 // find a player which matches the input string, and return their entity
 entity GetFilteredEntity(string input);
@@ -185,7 +185,7 @@ float CommonCommand_macro_usage(int argc, entity caller)
 	return false;
 }
 
-void CommonCommand_macro_write_aliases(float fh)
+void CommonCommand_macro_write_aliases(int fh)
 {
 	FOREACH(COMMON_COMMANDS, true, { CMD_Write_Alias("qc_cmd_svcmd", it.m_name, it.m_description); });
 }

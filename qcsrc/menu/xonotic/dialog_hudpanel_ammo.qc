@@ -18,16 +18,20 @@ void XonoticHUDAmmoDialog_fill(entity me)
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_ammo_onlycurrent", _("Show only current ammo type")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Noncurrent alpha:")));
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Noncurrent opacity:")));
 			setDependent(e, "hud_panel_ammo_onlycurrent", 0, 0);
-		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_ammo_noncurrent_alpha"));
+		me.TD(me, 1, 2.4, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_ammo_noncurrent_alpha"));
+			e.formatString = "%";
 			setDependent(e, "hud_panel_ammo_onlycurrent", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Noncurrent scale:")));
-			setDependent(e, "hud_panel_ammo_onlycurrent", 0, 0);
-		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_ammo_noncurrent_scale"));
-			setDependent(e, "hud_panel_ammo_onlycurrent", 0, 0);
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Noncurrent scale:")));
+			setDependentNOT(e, "hud_panel_ammo_noncurrent_alpha", 0);
+			setDependentAND(e, "hud_panel_ammo_onlycurrent", 0, 0);
+		me.TD(me, 1, 2.4, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_ammo_noncurrent_scale"));
+			e.formatString = "%";
+			setDependentNOT(e, "hud_panel_ammo_noncurrent_alpha", 0);
+			setDependentAND(e, "hud_panel_ammo_onlycurrent", 0, 0);
 
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Align icon:")));

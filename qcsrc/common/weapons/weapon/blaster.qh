@@ -56,7 +56,7 @@ ENDCLASS(Blaster)
 REGISTER_WEAPON(BLASTER, NEW(Blaster));
 
 SPAWNFUNC_WEAPON(weapon_blaster, WEP_BLASTER)
-SPAWNFUNC_WEAPON(weapon_laser, WEP_BLASTER)
+SPAWNFUNC_WEAPON(weapon_laser, WEP_BLASTER) // Nexuiz compat
 
 CLASS(OffhandBlaster, OffhandWeapon)
 ENDCLASS(OffhandBlaster)

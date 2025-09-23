@@ -187,7 +187,7 @@ void HUD_Panel_SetPos(vector pos)
 	pos.y = bound(0, pos.y, vid_conheight - mySize.y);
 
 	string s;
-	s = strcat(ftos(pos.x/vid_conwidth), " ", ftos(pos.y/vid_conheight));
+	s = strcat(ftos_mindecimals(pos.x/vid_conwidth), " ", ftos_mindecimals(pos.y/vid_conheight));
 
 	cvar_set(strcat("hud_panel_", highlightedPanel.panel_name, "_pos"), s);
 }
@@ -383,10 +383,10 @@ void HUD_Panel_SetPosSize(vector mySize)
 		//drawfill(myPos, mySize, '0 1 0', .3, DRAWFLAG_NORMAL);
 
 	string s;
-	s = strcat(ftos(mySize.x/vid_conwidth), " ", ftos(mySize.y/vid_conheight));
+	s = strcat(ftos_mindecimals(mySize.x/vid_conwidth), " ", ftos_mindecimals(mySize.y/vid_conheight));
 	cvar_set(strcat("hud_panel_", highlightedPanel.panel_name, "_size"), s);
 
-	s = strcat(ftos(myPos.x/vid_conwidth), " ", ftos(myPos.y/vid_conheight));
+	s = strcat(ftos_mindecimals(myPos.x/vid_conwidth), " ", ftos_mindecimals(myPos.y/vid_conheight));
 	cvar_set(strcat("hud_panel_", highlightedPanel.panel_name, "_pos"), s);
 }
 
@@ -725,7 +725,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		panel_size_backup = panel_size;
 		highlightedPanel_backup = highlightedPanel;
 
-		s = strcat(ftos(tmp_size.x/vid_conwidth), " ", ftos(tmp_size.y/vid_conheight));
+		s = strcat(ftos_mindecimals(tmp_size.x/vid_conwidth), " ", ftos_mindecimals(tmp_size.y/vid_conheight));
 		cvar_set(strcat("hud_panel_", highlightedPanel.panel_name, "_size"), s);
 	}
 	else if(nPrimary == 'z' && hudShiftState & S_CTRL) // undo last action
@@ -735,9 +735,9 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		//restore previous values
 		if (highlightedPanel_backup)
 		{
-			s = strcat(ftos(panel_pos_backup.x/vid_conwidth), " ", ftos(panel_pos_backup.y/vid_conheight));
+			s = strcat(ftos_mindecimals(panel_pos_backup.x/vid_conwidth), " ", ftos_mindecimals(panel_pos_backup.y/vid_conheight));
 			cvar_set(strcat("hud_panel_", highlightedPanel_backup.panel_name, "_pos"), s);
-			s = strcat(ftos(panel_size_backup.x/vid_conwidth), " ", ftos(panel_size_backup.y/vid_conheight));
+			s = strcat(ftos_mindecimals(panel_size_backup.x/vid_conwidth), " ", ftos_mindecimals(panel_size_backup.y/vid_conheight));
 			cvar_set(strcat("hud_panel_", highlightedPanel_backup.panel_name, "_size"), s);
 			highlightedPanel_backup = NULL;
 		}

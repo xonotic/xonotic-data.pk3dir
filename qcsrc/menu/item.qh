@@ -21,9 +21,9 @@ CLASS(MenuItem, Object)
 	METHOD(MenuItem, hideNotify, void(MenuItem));
 	METHOD(MenuItem, toString, string(MenuItem));
 	METHOD(MenuItem, destroy, void(MenuItem));
-	ATTRIB(MenuItem, focused, float, 0);
-	ATTRIB(MenuItem, focusable, float, 0);
-	ATTRIB(MenuItem, allowFocusSound, float, 0);
+	ATTRIB(MenuItem, focused, bool, false);
+	ATTRIB(MenuItem, focusable, bool, false);
+	ATTRIB(MenuItem, allowFocusSound, bool, false);
 	ATTRIB(MenuItem, parent, entity);
 	ATTRIB(MenuItem, preferredFocusPriority, float, 0);
 	ATTRIB(MenuItem, origin, vector, '0 0 0');

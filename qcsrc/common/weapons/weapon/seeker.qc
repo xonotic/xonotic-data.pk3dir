@@ -665,3 +665,22 @@ METHOD(Seeker, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+
+METHOD(Seeker, describe, string(Seeker this))
+{
+	TC(Seeker, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s is a unique weapon, firing a \"tag\" which then launches a few homing missiles if it collides with a player. "
+	      "The homing isn't perfect, so sometimes the missiles can hit an object or a corner."), COLORED_NAME(this));
+	PAR(_("The secondary fire launches a rapid barrage of scattered explosives that travel only a short distance."));
+	PAR(_("It consumes %s ammo, even when the tag doesn't land."), COLORED_NAME(ITEM_Rockets));
+	PAR(_("The %s primary fire deals quite a lot of damage when a tag lands, although it requires skill to aim effectively. "
+	      "The secondary fire is only useful in close range combat, and sometimes the explosives can damage yourself too."), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_primaryMultishot(this.netname, "missile", "flac", "missile_count", "tag_refire"));
+	return PAGE_TEXT;
+}
+
+#endif

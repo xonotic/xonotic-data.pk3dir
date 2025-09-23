@@ -58,7 +58,7 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 				dir = normalize(e.origin + e.view_ofs - this.origin);
 
 				if(accuracy_isgooddamage(this.realowner, e))
-					accuracy_add(this.realowner, WEP_FIREBALL, 0, WEP_CVAR_PRI(WEP_FIREBALL, bfgdamage) * points);
+					accuracy_add(this.realowner, WEP_FIREBALL, 0, WEP_CVAR_PRI(WEP_FIREBALL, bfgdamage) * points, 0); // add to hit
 
 				Damage(
 					e,
@@ -430,6 +430,24 @@ METHOD(Fireball, wr_impacteffect, void(entity thiswep, entity actor))
 		if(!w_issilent)
 			sound(actor, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM * 0.25); // long range boom
 	}
+}
+
+#endif
+#ifdef MENUQC
+
+METHOD(Fireball, describe, string(Fireball this))
+{
+	TC(Fireball, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s supercharges then fires a massive fireball in a straight line, dealing heaps of splash damage over a large radius on impact."), COLORED_NAME(this));
+	PAR(_("The secondary fire launches flaming balls that set nearby players alight."));
+	PAR(_("It is a superweapon, so isn't often found in game."));
+	PAR(_("It doesn't require ammo, but it is destroyed after some time."));
+	PAR(_("Since the %s takes a moment to charge and the fireball travels slowly, using it effectively may be difficult, "
+	      "but if done properly it can deal a ton of damage."), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS(this.netname, "primary", "secondary"));
+	return PAGE_TEXT;
 }
 
 #endif

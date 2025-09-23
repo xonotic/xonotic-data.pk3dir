@@ -9,5 +9,5 @@ CLASS(XonoticHUDCenterprintDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDCenterprintDialog, rows, float, 18);
 	ATTRIB(XonoticHUDCenterprintDialog, columns, float, 4);
 	ATTRIB(XonoticHUDCenterprintDialog, name, string, "HUDcenterprint");
-	ATTRIB(XonoticHUDCenterprintDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDCenterprintDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDCenterprintDialog)

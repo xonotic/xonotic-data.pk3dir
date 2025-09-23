@@ -521,6 +521,7 @@ void cvar_changes_init()
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
 		BADCVAR("sv_showfps");
+		BADCVAR("sv_showskill");
 		BADCVAR("sv_showspectators");
 		BADCVAR("sv_status_privacy");
 		BADCVAR("sv_taunt");

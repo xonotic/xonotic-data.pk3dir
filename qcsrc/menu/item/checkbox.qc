@@ -1,6 +1,6 @@
 #include "checkbox.qh"
 
-	void CheckBox_setChecked(entity me, float val)
+	void CheckBox_setChecked(entity me, bool val)
 	{
 		me.checked = val;
 	}

@@ -4,6 +4,8 @@
 #include "inputbox.qh"
 #include "button.qh"
 
+const float SCREENSHOTVIEWER_ZOOM_FACTOR = 1.5;
+
 float music_playlist_index_backup;
 void XonoticScreenshotViewerDialog_loadScreenshot(entity me, string scrImage)
 {
@@ -38,11 +40,11 @@ void nextScreenshot_Click(entity btn, entity me)
 }
 void increaseZoom_Click(entity btn, entity me)
 {
-	me.screenshotImage.setZoom(me.screenshotImage, -2, false);
+	me.screenshotImage.setZoom(me.screenshotImage, -SCREENSHOTVIEWER_ZOOM_FACTOR, false);
 }
 void decreaseZoom_Click(entity btn, entity me)
 {
-	me.screenshotImage.setZoom(me.screenshotImage, -1/2, false);
+	me.screenshotImage.setZoom(me.screenshotImage, -1 / SCREENSHOTVIEWER_ZOOM_FACTOR, false);
 }
 void resetZoom_Click(entity btn, entity me)
 {
@@ -53,12 +55,12 @@ void toggleSlideShow_Click(entity btn, entity me)
 	if (me.slideShowButton.forcePressed)
 	{
 		me.scrList.stopSlideShow(me.scrList);
-		me.slideShowButton.forcePressed = 0;
+		me.slideShowButton.forcePressed = false;
 	}
 	else
 	{
 		me.scrList.startSlideShow(me.scrList);
-		me.slideShowButton.forcePressed = 1;
+		me.slideShowButton.forcePressed = true;
 	}
 }
 float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, float shift)
@@ -87,12 +89,12 @@ float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, f
 		default:
 			if (key == K_MWHEELUP || ascii == '+')
 			{
-				me.screenshotImage.setZoom(me.screenshotImage, -2, (key == K_MWHEELUP));
+				me.screenshotImage.setZoom(me.screenshotImage, -SCREENSHOTVIEWER_ZOOM_FACTOR, (key == K_MWHEELUP));
 				return 1;
 			}
 			else if (key == K_MWHEELDOWN || ascii == '-')
 			{
-				me.screenshotImage.setZoom(me.screenshotImage, -1/2, (key == K_MWHEELDOWN));
+				me.screenshotImage.setZoom(me.screenshotImage, -1 / SCREENSHOTVIEWER_ZOOM_FACTOR, (key == K_MWHEELDOWN));
 				return 1;
 			}
 			if (me.scrList.keyDown(me.scrList, key, ascii, shift))
@@ -116,7 +118,7 @@ void XonoticScreenshotViewerDialog_close(entity me)
 		localcmd("\ncd resume\n");
 
 	me.scrList.stopSlideShow(me.scrList);
-	me.slideShowButton.forcePressed = 0;
+	me.slideShowButton.forcePressed = false;
 	SUPER(XonoticScreenshotViewerDialog).close(me);
 }
 void XonoticScreenshotViewerDialog_fill(entity me)
@@ -124,7 +126,7 @@ void XonoticScreenshotViewerDialog_fill(entity me)
 	entity e;
 	me.TR(me);
 		me.TD(me, me.rows - 1, me.columns, e = makeXonoticScreenshotImage());
-			e.showTitle = 0; // dialog title is enough
+			e.showTitle = false; // dialog title is enough
 			me.screenshotImage = e;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TDempty(me, 1/20 * me.columns);

@@ -75,7 +75,7 @@ void W_Shotgun_Melee_Think(entity this)
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
 	entity target_victim;
-	vector targpos;
+	vector targpos, melee_path;
 
 	if(!this.cnt) // set start time of melee
 	{
@@ -97,17 +97,20 @@ void W_Shotgun_Melee_Think(entity this)
 		return;
 	}
 
+	melee_path = (v_up    * WEP_CVAR_SEC(WEP_SHOTGUN, melee_swing_up))
+	           + (v_right * WEP_CVAR_SEC(WEP_SHOTGUN, melee_swing_side));
 	// if okay, perform the traces needed for this frame
 	for(i=this.swing_prev; i < f; ++i)
 	{
 		swing_factor = ((1 - (i / WEP_CVAR_SEC(WEP_SHOTGUN, melee_traces))) * 2 - 1);
 
-		targpos = (this.realowner.origin + this.realowner.view_ofs
-			+ (v_forward * WEP_CVAR_SEC(WEP_SHOTGUN, melee_range))
-			+ (v_up * swing_factor * WEP_CVAR_SEC(WEP_SHOTGUN, melee_swing_up))
-			+ (v_right * swing_factor * WEP_CVAR_SEC(WEP_SHOTGUN, melee_swing_side)));
+		targpos = this.realowner.origin + this.realowner.view_ofs
+			+ (melee_path * swing_factor)
+			+ (v_forward * WEP_CVAR_SEC(WEP_SHOTGUN, melee_range));
 
 		WarpZone_traceline_antilag(this.realowner, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ((IS_CLIENT(this.realowner)) ? ANTILAG_LATENCY(this.realowner) : 0));
+
+		Send_Effect(EFFECT_SHOTGUN_WOOSH, trace_endpos, -melee_path, 1);
 
 		// draw lightning beams for debugging
 	#ifdef SHOTGUN_MELEEDEBUG
@@ -136,7 +139,8 @@ void W_Shotgun_Melee_Think(entity this)
 				this.realowner.origin + this.realowner.view_ofs,
 				v_forward * WEP_CVAR_SEC(WEP_SHOTGUN, force));
 
-			if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_SHOTGUN, 0, swing_damage); }
+			if(accuracy_isgooddamage(this.realowner, target_victim))
+				accuracy_add(this.realowner, WEP_SHOTGUN, 0, swing_damage, 0); // add to hit
 
 			// draw large red flash for debugging
 		#ifdef SHOTGUN_MELEEDEBUG
@@ -386,6 +390,24 @@ METHOD(Shotgun, wr_impacteffect, void(entity thiswep, entity actor))
 			sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
 		actor.prevric = time;
 	}
+}
+
+#endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+
+METHOD(Shotgun, describe, string(Shotgun this))
+{
+	TC(Shotgun, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s is one of the two main default weapons, firing a single shotgun round which spreads into multiple pellets upon exiting the barrel."), COLORED_NAME(this));
+	PAR(_("The secondary fire swings the %s, slapping players close enough with the head of the weapon. "
+	      "Since the slap takes a moment to land, timing this well is difficult."), COLORED_NAME(this));
+	PAR(_("The primary fire consumes %s ammo, although if you spawn in with the %s you will already have some."), COLORED_NAME(ITEM_Shells), COLORED_NAME(this));
+	PAR(_("The %s damage drops off quickly as the range increases, so it is only useful for close combat or sometimes medium range combat."), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_primaryMultishot(this.netname, "primary", "secondary", "primary_bullets", ""));
+	return PAGE_TEXT;
 }
 
 #endif

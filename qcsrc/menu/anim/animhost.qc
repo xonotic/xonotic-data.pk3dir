@@ -8,8 +8,7 @@
 	METHOD(AnimHost, addAnim, void(entity this, entity other))
 	{
 		if (other.parent) error("Can't add already added anim!");
-
-		if (other.isFinished(other)) error("Can't add finished anim!");
+		if (other.finished) error("Can't add finished anim!");
 
 		other.parent = this;
 
@@ -115,7 +114,7 @@
 		for (entity e = this.firstChild; e; e = e.nextSibling)
 		{
 			e.tick(e, time);
-			if (e.isFinished(e))
+			if (e.finished)
 			{
 				entity tmp = e;
 				e = tmp.prevSibling;

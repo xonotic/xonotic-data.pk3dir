@@ -9,5 +9,5 @@ CLASS(XonoticSandboxToolsDialog, XonoticRootDialog)
 	ATTRIB(XonoticSandboxToolsDialog, rows, float, 16);
 	ATTRIB(XonoticSandboxToolsDialog, columns, float, 4);
 	ATTRIB(XonoticSandboxToolsDialog, name, string, "SandboxTools");
-	ATTRIB(XonoticSandboxToolsDialog, requiresConnection, float, true);
+	ATTRIB(XonoticSandboxToolsDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticSandboxToolsDialog)

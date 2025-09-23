@@ -62,39 +62,48 @@ void XonoticCvarList_destroy(entity me)
 }
 string autocvar_menu_forced_saved_cvars;
 string autocvar_menu_reverted_nonsaved_cvars;
-float XonoticCvarList_updateCvarType(entity me)
+bool XonoticCvarList_updateCvarType(entity me)
 {
 	float t;
 	t = cvar_type(me.cvarName);
 	me.cvarType = "";
-	float needsForcing;
+	bool needsForcing;
 	if(strhasword(autocvar_menu_forced_saved_cvars, me.cvarName))
 	{
 		me.cvarType = strcat(me.cvarType, ", ", _("forced to be saved to config.cfg"));
-		needsForcing = 0;
+		needsForcing = false;
 	}
 	else if(strhasword(autocvar_menu_reverted_nonsaved_cvars, me.cvarName))
 	{
 		// Currently claims to be saved, but won't be on next startup.
 		me.cvarType = strcat(me.cvarType, ", ", _("will not be saved"));
-		needsForcing = 1;
+		needsForcing = true;
 	}
 	else if(t & CVAR_TYPEFLAG_SAVED)
 	{
 		me.cvarType = strcat(me.cvarType, ", ", _("will be saved to config.cfg"));
-		needsForcing = 0;
+		needsForcing = false;
 	}
 	else
 	{
 		me.cvarType = strcat(me.cvarType, ", ", _("will not be saved"));
-		needsForcing = 1;
+		needsForcing = true;
 	}
 	if(t & CVAR_TYPEFLAG_PRIVATE)
 		me.cvarType = strcat(me.cvarType, ", ", _("private"));
 	if(t & CVAR_TYPEFLAG_ENGINE)
 		me.cvarType = strcat(me.cvarType, ", ", _("engine setting"));
 	if(t & CVAR_TYPEFLAG_READONLY)
+	{
 		me.cvarType = strcat(me.cvarType, ", ", _("read only"));
+		me.cvarValueBox.disabled = true;
+		me.cvarDefaultBox.disabled = true;
+	}
+	else
+	{
+		me.cvarValueBox.disabled = false;
+		me.cvarDefaultBox.disabled = false;
+	}
 	me.cvarType = strzone(substring(me.cvarType, 2, strlen(me.cvarType) - 2));
 	me.cvarTypeBox.setText(me.cvarTypeBox, me.cvarType);
 	return needsForcing;
@@ -113,12 +122,12 @@ void XonoticCvarList_setSelected(entity me, float i)
 	strcpy(me.cvarDefault, cvar_defstring(me.cvarName));
 	me.cvarNameBox.setText(me.cvarNameBox, me.cvarName);
 	me.cvarDescriptionBox.setText(me.cvarDescriptionBox, me.cvarDescription);
-	float needsForcing = me.updateCvarType(me);
+	bool needsForcing = me.updateCvarType(me);
 	me.cvarDefaultBox.setText(me.cvarDefaultBox, me.cvarDefault);
 
 	// this one can handle tempstrings
 	s = cvar_string(me.cvarName);
-	me.cvarNeedsForcing = 0;
+	me.cvarNeedsForcing = false;
 	me.cvarValueBox.setText(me.cvarValueBox, s);
 	me.cvarNeedsForcing = needsForcing;
 	me.cvarValueBox.cursorPos = strlen(s);
@@ -228,7 +237,7 @@ void CvarList_Value_Change(entity box, entity me)
 			cvar_set("menu_forced_saved_cvars", me.cvarName);
 		else
 			cvar_set("menu_forced_saved_cvars", strcat(autocvar_menu_forced_saved_cvars, " ", me.cvarName));
-		me.cvarNeedsForcing = 0;
+		me.cvarNeedsForcing = false;
 		me.updateCvarType(me);
 	}
 }

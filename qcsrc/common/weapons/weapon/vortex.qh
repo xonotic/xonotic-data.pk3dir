@@ -59,10 +59,11 @@ CLASS(Vortex, Weapon)
 		P(class, prefix, damagefalloff_maxdist, float, BOTH) \
 		P(class, prefix, damagefalloff_mindist, float, BOTH) \
 		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, secondary, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, secondary, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, weaponreplace, string, NONE) \
@@ -77,7 +78,7 @@ ENDCLASS(Vortex)
 REGISTER_WEAPON(VORTEX, NEW(Vortex));
 
 SPAWNFUNC_WEAPON(weapon_vortex, WEP_VORTEX)
-SPAWNFUNC_WEAPON(weapon_nex, WEP_VORTEX)
+SPAWNFUNC_WEAPON(weapon_nex, WEP_VORTEX) // Nexuiz compat
 
 #ifdef CSQC
 bool autocvar_cl_particles_oldvortexbeam;

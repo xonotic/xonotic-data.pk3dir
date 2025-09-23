@@ -133,8 +133,10 @@ void XonoticSoundList_doubleClickListBoxItem(entity me, int i, vector where)
 
 float XonoticSoundList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER || scan == K_KP_ENTER || scan == K_SPACE) {
-		me.playlist.addToPlayList(me.playlist, me.soundName(me, me.selectedItem));
+	if (scan == K_ENTER || scan == K_KP_ENTER || scan == K_SPACE || ((shift & S_CTRL) && scan == K_MOUSE1)
+		|| ascii == '+')
+	{
+		SoundList_Add(NULL, me);
 		return 1;
 	}
 	else

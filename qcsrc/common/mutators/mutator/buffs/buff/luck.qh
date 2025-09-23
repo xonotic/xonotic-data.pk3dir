@@ -12,8 +12,12 @@ float buff_Luck_CalculateDamage(float frag_damage);
 CLASS(LuckBuff, Buff)
 	ATTRIB(LuckBuff, m_name, string, _("Luck"));
 	ATTRIB(LuckBuff, netname, string, "luck");
+#ifndef SVQC
 	ATTRIB(LuckBuff, m_icon, string, "buff_luck");
+#endif
+#ifdef GAMEQC
 	ATTRIB(LuckBuff, m_skin, int, 19);
+#endif
 	ATTRIB(LuckBuff, m_color, vector, '0.17 0.85 0.12');
 ENDCLASS(LuckBuff)
 

@@ -8,9 +8,7 @@
 CLASS(MixedSlider, Slider)
 	METHOD(MixedSlider, valueToText, string(entity, int));
 	METHOD(MixedSlider, valueToNumberIdentifier, float(entity, int));
-	METHOD(MixedSlider, setValueFromNumberIdentifier_allowAnim, void(entity, float, bool));
-	METHOD(MixedSlider, setValueFromNumberIdentifier_noAnim, void(entity, float));
-	METHOD(MixedSlider, setValueFromNumberIdentifier, void(entity, float));
+	METHOD(MixedSlider, setValueFromNumberIdentifier, void(entity, float, bool));
 	METHOD(MixedSlider, getNumberIdentifier, float(entity));
 	METHOD(MixedSlider, rangedIdentifierToText, string(entity, float));
 	METHOD(MixedSlider, adjustDigitsForStep, void(entity, float));

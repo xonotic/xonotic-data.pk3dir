@@ -98,7 +98,7 @@ float havocbot_symmetry_origin_order;
 .float ignoregoaltime;
 .entity ignoregoal;
 
-bool bots_would_leave;
+int bots_would_leave; ///< how many bots would leave so humans can replace them
 
 int player_count;
 int currentbots;

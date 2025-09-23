@@ -7,6 +7,9 @@
 #ifdef SVQC
 #include <common/effects/qc/_mod.qh>
 #endif
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_HUDskin
+#endif
 
 USING(WepSet, vector);
 
@@ -52,7 +55,7 @@ CLASS(Weapon, Object)
 	ATTRIB(Weapon, spawnflags, int, 0);
 	/** M: rating    : bot weapon priority */
 	ATTRIB(Weapon, bot_pickupbasevalue, float, 0);
-	/** M: color     : waypointsprite color */
+	/** M: color     : waypointsprite color. previously called "wpcolor" */
 	ATTRIB(Weapon, m_color, vector, '0 0 0');
 	/** M: modelname : name of model (without g_ v_ or h_ prefixes) */
 	ATTRIB(Weapon, mdl, string, "");
@@ -126,23 +129,17 @@ CLASS(Weapon, Object)
 	METHOD(Weapon, wr_pickup, void(Weapon this, entity actor, .entity weaponentity)) {}
 	/** (SERVER) update cvar based properties */
 	METHOD(Weapon, wr_update, void(Weapon this)) {}
-
-#ifndef SVQC
-	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns))
+#ifdef MENUQC
+	METHOD(Weapon, describe, string(Weapon this))
 	{
-		string img = this.model2;
-		if (img != "")
-		{
-			img = sprintf("/gfx/hud/%s/%s", cvar_string("hud_skin"), this.model2);
-	#ifdef CSQC
-			if (precache_pic(img) == "")
-	#endif
-	#ifdef MENUQC
-			if (draw_PreloadPicture(img) == "")
-	#endif
-				img = sprintf("/gfx/hud/default/%s", this.model2);
-		}
-		returns(this.m_name, img);
+		TC(Weapon, this);
+		return SUPER(Weapon).describe(this);
+	}
+#endif
+#ifndef SVQC
+	METHOD(Weapon, display, void(Weapon this, void(string name, string icon) returns))
+	{
+		returns(this.m_name, icon_path_from_HUDskin(this.model2));
 	}
 #endif
 ENDCLASS(Weapon)
@@ -152,9 +149,6 @@ ENDCLASS(Weapon)
 void weapon_defaultspawnfunc(entity this, Weapon e);
 #define SPAWNFUNC_WEAPON(name, weapon) \
 	spawnfunc(name) { weapon_defaultspawnfunc(this, weapon); }
-
-#define SPAWNFUNC_WEAPON_COND(name, cond, wep1, wep2) \
-	SPAWNFUNC_WEAPON(name, (cond ? wep1 : wep2))
 
 #else
 
@@ -234,21 +228,3 @@ const int WEP_FLAG_SPECIALATTACK  =  BIT(16); // special attack (not a true weap
 
 // variables:
 string weaponorder_byid;
-
-// functions:
-string W_FixWeaponOrder(string order, float complete);
-string W_NameWeaponOrder(string order);
-string W_NumberWeaponOrder(string order);
-string W_FixWeaponOrder_BuildImpulseList(string o);
-string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
-string W_FixWeaponOrder_ForceComplete(string order);
-WepSet W_RandomWeapons(entity e, WepSet remaining, int n);
-
-entity GetAmmoItem(Resource ammotype);
-
-#ifdef CSQC
-int GetAmmoStat(Resource ammotype);
-#endif
-
-string W_Sound(string w_snd);
-string W_Model(string w_mdl);

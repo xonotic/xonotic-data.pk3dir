@@ -18,21 +18,18 @@ void XonoticMixedSlider_configureXonoticMixedSlider(entity me, string theCvar, s
 	// me.loadCvars(me); // don't load it yet
 	setZonedTooltip(me, theTooltip, theCvar);
 }
-void XonoticMixedSlider_setValue(entity me, float val)
+void XonoticMixedSlider_setValue(entity me, float val, bool allowAnim)
 {
 	if (val != me.value)
 	{
-		SUPER(XonoticMixedSlider).setValue(me, val);
+		SUPER(XonoticMixedSlider).setValue(me, val, allowAnim);
 		me.saveCvars(me);
 	}
 }
-void XonoticMixedSlider_setValue_noAnim(entity me, float val)
+void XonoticMixedSlider_setValueSpace(entity me, float val)
 {
-	if (val != me.value)
-	{
-		SUPER(XonoticMixedSlider).setValue_noAnim(me, val);
-		me.saveCvars(me);
-	}
+	me.valueSpace = val;
+	me.configureSliderVisuals(me, me.fontSize, me.align, me.valueSpace, me.image);
 }
 void XonoticMixedSlider_loadCvars(entity me)
 {
@@ -40,7 +37,7 @@ void XonoticMixedSlider_loadCvars(entity me)
 		return;
 
 	// don't call setValue_noAnim or else it will call saveCvars
-	me.setValueFromNumberIdentifier_noAnim(me, cvar(me.controlledCvar));
+	me.setValueFromNumberIdentifier(me, cvar(me.controlledCvar), false);
 }
 void XonoticMixedSlider_saveCvars(entity me)
 {

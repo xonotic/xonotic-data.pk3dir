@@ -106,7 +106,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 void W_RocketMinsta_Explosion(entity actor, .entity weaponentity, vector loc)
 {
 	if(accuracy_canbegooddamage(actor))
-		accuracy_add(actor, WEP_DEVASTATOR, autocvar_g_rm_damage, 0);
+		accuracy_add(actor, WEP_DEVASTATOR, autocvar_g_rm_damage, 0, 0); // add to fired
 	entity dmgent = spawn();
 	dmgent.owner = dmgent.realowner = actor;
 	setorigin(dmgent, loc);
@@ -403,6 +403,27 @@ METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))
 		// no weapon specific image for this weapon
 		return false;
 	}
+}
+
+#endif
+#ifdef MENUQC
+#include <common/mutators/mutator/instagib/instagib.qh>
+#include <common/mutators/mutator/instagib/items.qh>
+#include <common/items/item/ammo.qh>
+#include "blaster.qh"
+
+METHOD(Vaporizer, describe, string(Vaporizer this))
+{
+	TC(Vaporizer, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s is a unique weapon, firing a deadly beam of energy dealing a huge amount of damage. "
+	      "In %s, the beam has the ability to instantly kill enemies with a single shot, unless they have an %s."), COLORED_NAME(this), COLORED_NAME(MUTATOR_mutator_instagib), COLORED_NAME(ITEM_ExtraLife));
+	PAR(_("The secondary fire shoots a laser identical to that fired by the %s, with strong knockback."), COLORED_NAME(WEP_BLASTER));
+	PAR(_("It is a superweapon, so isn't often found in game, except in %s where all players spawn with it."), COLORED_NAME(MUTATOR_mutator_instagib));
+	PAR(_("It consumes some %s ammo with each shot."), COLORED_NAME(ITEM_Cells));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_onlyOne(this.netname, "primary"));
+	return PAGE_TEXT;
 }
 
 #endif

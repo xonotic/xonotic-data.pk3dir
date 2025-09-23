@@ -108,7 +108,7 @@ void StrafeHUD_DrawVerticalAngle(entity e, float text_offset_top, float text_off
 
 	float vangle = -PHYS_INPUT_ANGLES(e).x;
 	float vangle_height = autocvar_hud_panel_strafehud_vangle_size * panel_size.y;
-	string vangle_text = strcat(ftos_decimals(vangle, 2), "°");
+	string vangle_text = sprintf(_("%s°"), ftos_decimals(vangle, 2));
 
 	StrafeHUD_DrawTextIndicator(
 		vangle_text, vangle_height,

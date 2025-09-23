@@ -4,7 +4,7 @@
 CLASS(XonoticRadioButton, RadioButton)
 	METHOD(XonoticRadioButton, configureXonoticRadioButton, void(entity, float, string, string, string, string));
 	METHOD(XonoticRadioButton, draw, void(entity));
-	METHOD(XonoticRadioButton, setChecked, void(entity, float));
+	METHOD(XonoticRadioButton, setChecked, void(entity, bool));
 	ATTRIB(XonoticRadioButton, fontSize, float, SKINFONTSIZE_NORMAL);
 	ATTRIB(XonoticRadioButton, image, string, SKINGFX_RADIOBUTTON);
 	ATTRIB(XonoticRadioButton, color, vector, SKINCOLOR_RADIOBUTTON_N);

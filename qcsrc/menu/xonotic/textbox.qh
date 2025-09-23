@@ -8,7 +8,7 @@ CLASS(XonoticTextBox, XonoticListBox)
 	ATTRIB(XonoticTextBox, rowsPerItem, float, 1);
 	METHOD(XonoticTextBox, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(XonoticTextBox, drawListBoxItem, void(entity, int, vector, bool, bool));
-	ATTRIB(XonoticTextBox, allowFocusSound, float, 0);
+	ATTRIB(XonoticTextBox, allowFocusSound, bool, false);
 	ATTRIB(XonoticTextBox, align, float, 0);
 	ATTRIB(XonoticTextBox, allowColors, bool, false);
 	ATTRIB(XonoticTextBox, escapedNewLines, bool, false);

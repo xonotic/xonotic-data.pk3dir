@@ -11,8 +11,12 @@ float buff_Resistance_CalculateDamage(float frag_damage);
 CLASS(ResistanceBuff, Buff)
 	ATTRIB(ResistanceBuff, m_name, string, _("Resistance"));
 	ATTRIB(ResistanceBuff, netname, string, "resistance");
+#ifndef SVQC
 	ATTRIB(ResistanceBuff, m_icon, string, "buff_resistance");
+#endif
+#ifdef GAMEQC
 	ATTRIB(ResistanceBuff, m_skin, int, 0);
+#endif
 	ATTRIB(ResistanceBuff, m_color, vector, '0.36 1 0.07');
 ENDCLASS(ResistanceBuff)
 

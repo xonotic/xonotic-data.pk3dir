@@ -8,7 +8,7 @@
 CLASS(RaceCTS, Gametype)
 	INIT(RaceCTS)
 	{
-		this.gametype_init(this, _("Race CTS"),"cts","g_cts",0,"cloaked","timelimit=20",_("Race for fastest time."));
+		this.gametype_init(this, _("Race CTS"),"cts","g_cts",0,"cloaked","timelimit=20",_("Race to the finish line for the fastest time"));
 	}
 	METHOD(RaceCTS, m_generate_mapinfo, void(Gametype this, string v))
 	{

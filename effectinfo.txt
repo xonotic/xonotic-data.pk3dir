@@ -8989,3 +8989,17 @@ effect hlac_impact
 	tex 4 6
 	velocityjitter 16 16 16
 	velocitymultiplier 0.010000
+effect shotgun_woosh
+	type smoke
+	airfriction 2
+	alpha 32 192 512
+	bounce 0.100000
+	color 0x111111 0x979797
+	count 24
+	notunderwater
+	originjitter 10 10 10
+	sizeincrease 14
+	size 1 12
+	tex 0 8
+	velocityjitter 128 128 64
+	velocitymultiplier 1

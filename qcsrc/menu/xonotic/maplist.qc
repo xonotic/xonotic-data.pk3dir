@@ -20,7 +20,7 @@ entity makeXonoticMapList()
 	return me;
 }
 
-entity MapList_Set_String_Filter_Box(entity me, entity e)
+entity MapList_Set_StringFilterBox(entity me, entity e)
 {
 	me.stringFilterBox = e;
 	return e;
@@ -325,12 +325,12 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 		main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
 		DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size.x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size.y), eY * me.itemAbsSize.y + eX * (me.itemAbsSize.x * me.columnNameSize));
 	}
-	else if(scan == K_MOUSE3 || scan == K_INS || scan == K_KP_INS)
+	else if(scan == K_MOUSE3 || scan == K_INS || scan == K_KP_INS || ((shift & S_CTRL) && scan == K_MOUSE1))
 	{
 		m_play_click_sound(MENU_SOUND_SELECT);
 		me.g_maplistCacheToggle(me, me.selectedItem);
 	}
-	else if(ascii == 43) // +
+	else if(ascii == '+')
 	{
 		if (!me.g_maplistCacheQuery(me, me.selectedItem))
 		{
@@ -338,7 +338,7 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 			me.g_maplistCacheToggle(me, me.selectedItem);
 		}
 	}
-	else if(ascii == 45) // -
+	else if(ascii == '-')
 	{
 		if(me.g_maplistCacheQuery(me, me.selectedItem))
 		{
@@ -378,7 +378,7 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 	{
 		me.parent.setFocus(me.parent, me.stringFilterBox);
 	}
-	else if((shift & S_CTRL) && scan == 'u') // ctrl-u (remove stringFilter line
+	else if((shift & S_CTRL) && scan == 'u') // ctrl-u (remove stringFilter line)
 	{
 		me.stringFilterBox.setText(me.stringFilterBox, "");
 		MapList_StringFilterBox_Change(me.stringFilterBox, me);

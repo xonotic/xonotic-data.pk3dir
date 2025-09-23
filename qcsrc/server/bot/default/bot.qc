@@ -638,7 +638,7 @@ bool bot_fixcount(bool multiple_per_frame)
 	int bots;
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
-	bots_would_leave = false;
+	bots_would_leave = 0;
 	if (autocvar_bot_vs_human && AVAILABLE_TEAMS == 2)
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
@@ -656,8 +656,7 @@ bool bot_fixcount(bool multiple_per_frame)
 			bots = min(bots, max(player_limit - activerealplayers, 0));
 		bots = min(bots, maxclients - realplayers);
 
-		if(bots > minbots)
-			bots_would_leave = true;
+		bots_would_leave = max(0, bots - minbots);
 	}
 	else
 	{

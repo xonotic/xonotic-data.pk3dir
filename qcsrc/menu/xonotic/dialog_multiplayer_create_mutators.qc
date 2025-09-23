@@ -202,7 +202,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "all", _("All weapons"), weaponarena_tooltip));
 			e.cvarOffValue = "0";
 	me.TR(me);
-		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Special arenas:")));
+		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Special arenas:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_instagib", "1", _("InstaGib"),

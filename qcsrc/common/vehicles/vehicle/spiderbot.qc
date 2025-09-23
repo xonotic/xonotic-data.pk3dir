@@ -2,6 +2,8 @@
 
 #if defined(SVQC)
 	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#elif defined(MENUQC)
+	#include "raptor.qh"
 #endif
 
 #ifdef GAMEQC
@@ -642,5 +644,21 @@ METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
 }
 
 #endif
+
+#endif
+#ifdef MENUQC
+
+METHOD(Spiderbot, describe, string(Spiderbot this))
+{
+	TC(Spiderbot, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s vehicle walks and jumps around, and takes only one rider."), COLORED_NAME(this));
+	PAR(_("It can jump from very high altitudes while protecting the rider."));
+	PAR(_("It has two weapons the rider can control, which have different reticles for them similar to the %s. "
+	      "The primary weapon is a machine gun, and is shot toward the green reticle. "
+	      "The secondary weapon shoots rockets towards the white reticle. "
+	      "The white reticle points to the front of the vehicle, while the green reticle also points to the front but with a bit of delay when the %s rotates."), COLORED_NAME(VEH_RAPTOR), COLORED_NAME(this));
+	return PAGE_TEXT;
+}
 
 #endif

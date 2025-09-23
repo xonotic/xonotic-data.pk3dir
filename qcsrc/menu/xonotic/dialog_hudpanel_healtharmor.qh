@@ -9,5 +9,5 @@ CLASS(XonoticHUDHealthArmorDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDHealthArmorDialog, rows, float, 18);
 	ATTRIB(XonoticHUDHealthArmorDialog, columns, float, 4);
 	ATTRIB(XonoticHUDHealthArmorDialog, name, string, "HUDhealtharmor");
-	ATTRIB(XonoticHUDHealthArmorDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDHealthArmorDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDHealthArmorDialog)

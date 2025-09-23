@@ -3,12 +3,7 @@
 	void InputContainer_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 	{
 		SUPER(InputContainer).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-		/*
-		if(me.parent.instanceOfInputContainer)
-		    me.isTabRoot = 0;
-		else
-		    me.isTabRoot = 1;
-		*/
+		//me.isTabRoot = !me.parent.instanceOfInputContainer;
 	}
 
 	void InputContainer_focusLeave(entity me)

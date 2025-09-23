@@ -5,7 +5,7 @@ CLASS(XonoticPlayerList, XonoticListBox)
 	ATTRIB(XonoticPlayerList, rowsPerItem, float, 1);
 	METHOD(XonoticPlayerList, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(XonoticPlayerList, drawListBoxItem, void(entity, int, vector, bool, bool));
-	ATTRIB(XonoticPlayerList, allowFocusSound, float, 0);
+	ATTRIB(XonoticPlayerList, allowFocusSound, bool, false);
 	ATTRIB(XonoticPlayerList, realFontSize, vector, '0 0 0');
 	ATTRIB(XonoticPlayerList, columnNameOrigin, float, 0);
 	ATTRIB(XonoticPlayerList, columnNameSize, float, 0);

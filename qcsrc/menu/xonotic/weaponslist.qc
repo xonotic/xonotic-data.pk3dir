@@ -15,13 +15,10 @@ entity makeXonoticWeaponsList()
 {
 	entity me;
 	me = NEW(XonoticWeaponsList);
-	me.configureXonoticWeaponsList(me);
+	me.configureXonoticListBox(me);
 	return me;
 }
-void XonoticWeaponsList_configureXonoticWeaponsList(entity me)
-{
-	me.configureXonoticListBox(me);
-}
+
 void XonoticWeaponsList_draw(entity me)
 {
 	// read in cvar?
@@ -129,19 +126,21 @@ void XonoticWeaponsList_drawListBoxItem(entity me, int i, vector absSize, bool i
 	draw_fontscale = save_fontscale;
 }
 
-float XonoticWeaponsList_keyDown(entity me, float scan, float ascii, float shift)
+float XonoticWeaponsList_keyDown(entity me, float key, float ascii, float shift)
 {
-	if(ascii == 43) // +
+	if (((shift & S_CTRL) && (key == K_UPARROW || key == K_KP_UPARROW))
+		|| ascii == '+')
 	{
 		WeaponsList_MoveUp_Click(NULL, me);
 		return 1;
 	}
-	else if(ascii == 45) // -
+	else if (((shift & S_CTRL) && (key == K_DOWNARROW || key == K_KP_DOWNARROW))
+		|| ascii == '-')
 	{
 		WeaponsList_MoveDown_Click(NULL, me);
 		return 1;
 	}
-	else if(SUPER(XonoticWeaponsList).keyDown(me, scan, ascii, shift))
+	else if(SUPER(XonoticWeaponsList).keyDown(me, key, ascii, shift))
 		return 1;
 	return 0;
 }

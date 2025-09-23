@@ -43,10 +43,10 @@
 		{
 			if (over_ClearButton(me, pos))
 			{
-				me.cb_focused = 1;
+				me.cb_focused = true;
 				return 1;
 			}
-			me.cb_focused = 0;
+			me.cb_focused = false;
 		}
 		return 1;
 	}
@@ -65,11 +65,11 @@
 		{
 			if (over_ClearButton(me, pos))
 			{
-				me.cb_pressed = 1;
+				me.cb_pressed = true;
 				return 1;
 			}
 		}
-		me.cb_pressed = 0;
+		me.cb_pressed = false;
 		return 1;
 	}
 
@@ -78,7 +78,7 @@
 		if (this.enableClearButton)
 			if (over_ClearButton(this, pos))
 			{
-				this.cb_pressed = 1;
+				this.cb_pressed = true;
 				return true;
 			}
 		this.dragScrollTimer = time;
@@ -95,13 +95,13 @@
 				me.setText(me, "");
 				if(me.applyButton)
 					me.applyButton.disabled = false;
-				me.cb_pressed = 0;
+				me.cb_pressed = false;
 				return 1;
 			}
 		float r = InputBox_mouseDrag(me, pos);
 		// reset cb_pressed after mouseDrag, mouseDrag could set cb_pressed in this case:
 		// mouse press out of the clear button, drag and then mouse release over the clear button
-		me.cb_pressed = 0;
+		me.cb_pressed = false;
 		me.pressed = 0;
 		return r;
 	}
@@ -145,11 +145,11 @@
 		{
 			case K_KP_LEFTARROW:
 			case K_LEFTARROW:
-				me.cursorPos -= 1;
+				--me.cursorPos;
 				return 1;
 			case K_KP_RIGHTARROW:
 			case K_RIGHTARROW:
-				me.cursorPos += 1;
+				++me.cursorPos;
 				return 1;
 			case K_KP_HOME:
 			case K_HOME:
@@ -162,7 +162,7 @@
 			case K_BACKSPACE:
 				if (me.cursorPos > 0)
 				{
-					me.cursorPos -= 1;
+					--me.cursorPos;
 					me.setText(me, strcat(substring(me.text, 0, me.cursorPos), substring(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
 					if(me.applyButton)
 						me.applyButton.disabled = false;
@@ -302,7 +302,7 @@
 								w = draw_TextWidth(substring(me.text, i, 3), 0, me.realFontSize);
 								draw_Fill(p, eX * w + eY * me.realFontSize.y, eY, fill_alpha);
 								draw_Text(p, substring(me.text, i, 3), me.realFontSize, '1 1 1', theAlpha, 0);
-								i += 1;
+								++i;
 							}
 						}
 						else
