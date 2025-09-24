@@ -9278,7 +9278,7 @@ msgstr "Afficher les icônes"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
-msgstr "Icônes du Mode de jeu"
+msgstr "Icônes du Mod"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:19
 msgid "Entry lifetime:"
@@ -10491,7 +10491,7 @@ msgstr "Nom d'hôte :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:48
 msgid "Mod:"
-msgstr "Mode :"
+msgstr "Mod :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:53
 msgid "Version:"
@@ -12775,11 +12775,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:15
 msgid "Topic"
-msgstr ""
+msgstr "Sujet"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:24
 msgid "Entry"
-msgstr ""
+msgstr "Entrée"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:41
 msgid "Description"
@@ -12864,7 +12864,7 @@ msgstr "Mouvement"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:11
 msgid "Gametypes"
-msgstr ""
+msgstr "Modes de jeu"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:17
 msgid "Monsters"
@@ -12880,7 +12880,7 @@ msgstr "Tourelles"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:21
 msgid "Mods"
-msgstr ""
+msgstr "Mods"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:19
 msgid "About this guide"
@@ -12888,7 +12888,7 @@ msgstr "À propos de ce guide"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:22
 msgid "Welcome to Xonotic, the free and fast arena shooter!"
-msgstr ""
+msgstr "Bienvenue sur Xonotic, le jeu de tir en arène libre et rapide !"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:23
 msgid ""
@@ -13566,7 +13566,7 @@ msgstr "chiffrement :"
 #: qcsrc/menu/xonotic/serverlist.qc:1057
 #, c-format
 msgid "mod: %s"
-msgstr "mode : %s"
+msgstr "mod : %s"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1059
 #, c-format

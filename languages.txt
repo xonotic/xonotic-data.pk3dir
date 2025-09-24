@@ -6,7 +6,7 @@ en    "English" "English" 100%
 en_AU "English (Australia)" "English (Australia)" 100%
 en_GB "English (United Kingdom)" "English (United Kingdom)" 100%
 es    "Spanish" "Español" 80%
-fr    "French" "Français" 87%
+fr    "French" "Français" 88%
 gl    "Galician" "Galego" 84%
 ga    "Irish" "Irish" 24%
 it    "Italian" "Italiano" 86%
