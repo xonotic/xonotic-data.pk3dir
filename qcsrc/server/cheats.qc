@@ -813,7 +813,7 @@ float Drag(entity this, float force_allow_pick, float ischeat)
 							if(e.owner == this || e.realowner == this)
 								pick = true;
 							break;
-						case 2: // owner and team mates can grab
+						case 2: // owner and teammates can grab
 							if(SAME_TEAM(e.owner, this) || SAME_TEAM(e.realowner, this) || e.team == this.team)
 								pick = true;
 							break;

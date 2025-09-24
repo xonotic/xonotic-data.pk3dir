@@ -1,6 +1,6 @@
 #include "chat.qh"
 
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mapobjects/target/location.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/notifications/all.qh>
@@ -319,7 +319,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			event_log_msg = sprintf(":chat_minigame:%d:%s:%s", source.playerid, CS(source).active_minigame.netname, msgin);
 
 		}
-		else if(teamsay > 0) // team message, only sent to team mates
+		else if(teamsay > 0) // team message, only sent to teammates
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too

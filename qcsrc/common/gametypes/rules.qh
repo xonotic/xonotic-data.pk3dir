@@ -1,0 +1,5 @@
+#pragma once
+
+#ifdef SVQC
+#include <common/gametypes/sv_rules.qh>
+#endif

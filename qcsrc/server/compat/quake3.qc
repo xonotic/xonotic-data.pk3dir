@@ -1,7 +1,7 @@
 #include "quake3.qh"
 
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/gametypes/gametype/ctf/sv_ctf.qh>
 #include <common/mapobjects/trigger/counter.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/buffs/_mod.qh>
@@ -63,7 +63,7 @@ SPAWNFUNC_Q3(weapon_prox_launcher, ammo_mines, WEP_MINE_LAYER)
 // Team Arena Chain Gun -> HLAC
 SPAWNFUNC_Q3(weapon_chaingun, ammo_belt, WEP_HLAC)
 
-// Quake Live Heavy Machine Gun -> HLAC
+// Quake Live Heavy MachineGun -> HLAC
 SPAWNFUNC_Q3(weapon_hmg, ammo_hmg, WEP_HLAC)
 
 // Team Arena Nail Gun -> Crylink || Quake Nail Gun -> Electro

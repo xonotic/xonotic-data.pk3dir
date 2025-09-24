@@ -1,7 +1,7 @@
 #pragma once
 
 #include "items.qh"
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 
 // TODO: make this its own mutator (somehow)!

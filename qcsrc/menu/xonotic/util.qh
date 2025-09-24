@@ -42,7 +42,7 @@ float updateCompression();
 
 void UpdateNotification_URI_Get_Callback(float id, float status, string data);
 
-// game type list box stuff (does not NEED to contain all game types, other
+// gametype list box stuff (does not NEED to contain all gametypes, other
 // types stay available via console)
 entity GameType_GetID(int cnt);
 string GameType_GetName(int cnt);

@@ -1,6 +1,6 @@
 #include "dialog_singleplayer.qh"
 
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include "bigbutton.qh"
 #include "leavematchbutton.qh"
 #include "radiobutton.qh"

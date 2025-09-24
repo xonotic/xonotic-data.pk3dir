@@ -86,7 +86,7 @@ REGISTRY_SOURCE(MovementSource, Movement, MovementGuidePages)
 REGISTRY_SOURCE(ModSource, Mods, ModsGuidePages)
 
 #include <common/mapinfo.qh>
-// The descriptions for these are in common/gamemodes/gamemode/*/*.qc
+// The descriptions for these are in common/gametypes/gametype/*/*.qc
 REGISTRY_SOURCE(GametypeSource, Gametypes, Gametypes)
 
 #include <common/mutators/mutator/buffs/buffs.qh>

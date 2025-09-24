@@ -106,7 +106,7 @@ void XonoticInputSettingsTab_fill(entity me)
 			linkSensitivities(sensitivitySlider, e);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "m_filter", _("Smooth aiming"),
-			_("Smoothes the mouse movement, but makes aiming slightly less responsive")));
+			_("Smooths the mouse movement, but makes aiming slightly less responsive")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(1.022, "m_pitch", _("Invert aiming"),
 			_("Invert mouse movement on the Y-axis")));

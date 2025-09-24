@@ -6,7 +6,7 @@
 #include <server/client.qh>
 #include <server/compat/quake3.qh>
 #include <server/main.qh>
-#include <common/gamemodes/sv_rules.qh>
+#include <common/gametypes/sv_rules.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/trigger/secret.qh>
 #include <common/mutators/mutator/doublejump/doublejump.qh>

@@ -67,9 +67,9 @@ void XonoticVideoSettingsTab_fill(entity me)
 			setDependent(e, "r_viewfbo", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("vid_samples",
 			_("Enable antialiasing, which smooths the edges of 3D geometry. Note that it might decrease performance by quite a lot")));
+			e.formatString = _("%sx");
 			e.addText(e, ZCTX(_("AA^Disabled")), 1);
-			e.addText(e, _("2x"), 2);
-			e.addText(e, _("4x"), 4);
+			e.addRange(e, 2, 4, 2);
 			e.configureXonoticMixedSliderValues(e);
 			setDependent(e, "r_viewfbo", 0, 0);
 			e.applyButton = videoApplyButton;

@@ -1,7 +1,7 @@
 #include "spiderbot.qh"
 
 #if defined(SVQC)
-	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+	#include <common/gametypes/gametype/ctf/sv_ctf.qh>
 #elif defined(MENUQC)
 	#include "raptor.qh"
 #endif

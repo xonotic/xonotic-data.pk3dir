@@ -1,0 +1,37 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+
+#ifdef CSQC
+void HUD_Mod_NexBall(vector pos, vector mySize);
+#endif
+CLASS(NexBall, Gametype)
+	INIT(NexBall)
+	{
+		this.gametype_init(this, _("Nexball"),"nb","g_nexball",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_WEAPONARENA,"","timelimit=20 pointlimit=5 leadlimit=0",_("Shoot and kick the ball into the enemy's goal, keep your goal clean"));
+	}
+	METHOD(NexBall, m_generate_mapinfo, void(Gametype this, string v))
+	{
+		if(substring(v, 0, 8) == "nexball_" || substring(v, 0, 4) == "ball")
+			MapInfo_Map_supportedGametypes |= this.gametype_flags;
+	}
+	METHOD(NexBall, m_isTwoBaseMode, bool())
+	{
+		return true;
+	}
+	METHOD(NexBall, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Goal limit:"),      1,   50,  1, "g_nexball_goallimit",       string_null,                    _("The amount of goals needed before the match will end"));
+	}
+#ifdef CSQC
+	ATTRIB(NexBall, m_modicons, void(vector pos, vector mySize), HUD_Mod_NexBall);
+#endif
+	ATTRIB(NexBall, m_legacydefaults, string, "5 20 0");
+ENDCLASS(NexBall)
+REGISTER_GAMETYPE(NEXBALL, NEW(NexBall));
+#define g_nexball IS_GAMETYPE(NEXBALL)
+
+#ifdef GAMEQC
+const int NB_CARRYING = BIT(0);
+#endif

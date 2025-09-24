@@ -4,7 +4,7 @@
 	#include <client/mutators/_mod.qh>
 	#include <common/constants.qh>
 	#include <common/deathtypes/all.qh>
-	#include <common/gamemodes/_mod.qh>
+	#include <common/gametypes/_mod.qh>
 	#include <common/mapinfo.qh>
 	#include <common/notifications/all.qh>
 	#include <common/scores.qh>
@@ -12,7 +12,7 @@
 #elif defined(SVQC)
 	#include <common/constants.qh>
 	#include <common/deathtypes/all.qh>
-	#include <common/gamemodes/_mod.qh>
+	#include <common/gametypes/_mod.qh>
 	#include <common/mapinfo.qh>
 	#include <common/notifications/all.qh>
 	#include <common/scores.qh>

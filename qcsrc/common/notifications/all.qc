@@ -803,7 +803,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	// Note: This warning only applies to the notifications.cfg file that is output...
 	// You ARE supposed to manually edit this function to add i.e. hard coded
-	// notification variables for mutators or game modes or such and then
+	// notification variables for mutators or gametypes or such and then
 	// regenerate the notifications.cfg file from the new code.
 
 	NOTIF_WRITE(

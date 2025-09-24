@@ -1,0 +1,32 @@
+#pragma once
+
+#include <common/gametypes/gametype/deathmatch/deathmatch.qh>
+#include <common/mapinfo.qh>
+
+CLASS(Duel, Gametype)
+	INIT(Duel)
+	{
+		this.gametype_init(this, _("Duel"),"duel","g_duel",GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_1V1,"","timelimit=10 pointlimit=0 leadlimit=0",_("Fight in a one versus one arena battle to decide the winner"));
+	}
+	METHOD(Duel, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+	{
+		return (diameter < 3250);
+	}
+	METHOD(Duel, m_isForcedSupported, bool(Gametype this))
+	{
+		if(!cvar("g_duel_not_dm_maps")) // all DM maps support duel too
+		{
+			// TODO: we should really check the size of maps, some DM maps do not work for duel!
+			if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.gametype_flags))
+			{
+#ifdef CSQC // server admins might not read their server console output, also prevents spam
+				LOG_WARNF("This map doesn't support Duel in Xonotic newer than 0.9.0. To fix it add \"gametype duel\" to the \"%s.mapinfo\" file.", MapInfo_Map_bspname);
+#endif
+				return true; // TODO: references another gametype (alternatively, we could check which gametypes are always enabled and append this if any are supported)
+			}
+		}
+		return false;
+	}
+ENDCLASS(Duel)
+REGISTER_GAMETYPE(DUEL, NEW(Duel));
+#define g_duel IS_GAMETYPE(DUEL)

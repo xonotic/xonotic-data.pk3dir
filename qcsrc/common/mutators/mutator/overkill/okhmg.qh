@@ -28,7 +28,7 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 /* crosshair */ ATTRIB(OverkillHeavyMachineGun, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(OverkillHeavyMachineGun, model2, string, "weaponhmg");
 /* refname   */ ATTRIB(OverkillHeavyMachineGun, netname, string, "okhmg");
-/* wepname   */ ATTRIB(OverkillHeavyMachineGun, m_name, string, _("Overkill Heavy Machine Gun"));
+/* wepname   */ ATTRIB(OverkillHeavyMachineGun, m_name, string, _("Overkill Heavy MachineGun"));
 /* legacy    */ ATTRIB(OverkillHeavyMachineGun, m_deprecated_netname, string, "hmg");
 
 #define X(BEGIN, P, END, class, prefix) \

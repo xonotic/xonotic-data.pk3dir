@@ -7,7 +7,7 @@
 #include "../menu.qh"
 #include <common/campaign_common.qh>
 #include <common/constants.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/util.qh>
 #include <common/command/_mod.qh>
 #include <menu/xonotic/gametypelist.qh>

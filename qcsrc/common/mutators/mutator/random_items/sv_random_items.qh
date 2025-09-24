@@ -21,8 +21,8 @@ enum
 /// \brief Returns a random classname of the item.
 /// \param[in] prefix Prefix of the cvars that hold probabilities.
 /// \return Random classname of the item.
-/// \note This function will automatically detect gamemode and use cvars from
-/// that gamemode.
+/// \note This function will automatically detect gametype and use cvars from
+/// that gametype.
 string RandomItems_GetRandomItemClassName(string prefix);
 
 /// \brief Returns a random classname of the vanilla item.

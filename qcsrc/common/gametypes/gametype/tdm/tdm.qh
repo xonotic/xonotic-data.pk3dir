@@ -1,0 +1,54 @@
+#pragma once
+
+#include <common/gametypes/gametype/deathmatch/deathmatch.qh>
+#include <common/mapinfo.qh>
+
+CLASS(TeamDeathmatch, Gametype)
+	INIT(TeamDeathmatch)
+	{
+		this.gametype_init(this, _("Team Deathmatch"),"tdm","g_tdm",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0",_("Help your team score the most frags against the enemy team"));
+	}
+	METHOD(TeamDeathmatch, m_parse_mapinfo, bool(string k, string v))
+	{
+		if (!k)
+		{
+			cvar_set("g_tdm_teams", cvar_defstring("g_tdm_teams"));
+			return true;
+		}
+		switch (k)
+		{
+			case "teams":
+				cvar_set("g_tdm_teams", v);
+				return true;
+		}
+		return false;
+	}
+	METHOD(TeamDeathmatch, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+	{
+		if(spawnpoints >= 8 && diameter > 3250)
+			return true;
+		return false;
+	}
+	METHOD(TeamDeathmatch, m_isForcedSupported, bool(Gametype this))
+	{
+		if(cvar("g_tdm_on_dm_maps"))
+		{
+			// if this is set, all DM maps support TDM too
+			if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.gametype_flags))
+			return true; // TODO: references another gametype (alternatively, we could check which gametypes are always enabled and append this if any are supported)
+		}
+		return false;
+	}
+	METHOD(TeamDeathmatch, m_setTeams, void(string sa))
+	{
+		cvar_set("g_tdm_teams", sa);
+	}
+	METHOD(TeamDeathmatch, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit",         "g_tdm_teams_override",         _("The amount of points needed before the match will end"));
+	}
+	ATTRIB(TeamDeathmatch, m_legacydefaults, string, "50 20 2 0");
+ENDCLASS(TeamDeathmatch)
+REGISTER_GAMETYPE(TEAM_DEATHMATCH, NEW(TeamDeathmatch));
+#define g_tdm IS_GAMETYPE(TEAM_DEATHMATCH)

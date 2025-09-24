@@ -1,11 +1,11 @@
 #include "ent_cs.qh"
 
 #if defined(CSQC)
-	#include <common/gamemodes/_mod.qh>
+	#include <common/gametypes/_mod.qh>
 	#include <common/resources/resources.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include <common/gamemodes/_mod.qh>
+	#include <common/gametypes/_mod.qh>
 	#include <common/resources/resources.qh>
 	#include <common/resources/sv_resources.qh>
 #endif

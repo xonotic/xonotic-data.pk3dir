@@ -7,7 +7,7 @@
 #include <common/effects/all.inc>
 #include <common/effects/all.qh>
 #include <common/ent_cs.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>

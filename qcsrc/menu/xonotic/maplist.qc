@@ -307,7 +307,7 @@ void MapList_LoadMap(entity btn, entity me)
 	}
 	else
 	{
-		LOG_INFO(_("Huh? Can't play this (invalid game type). Refiltering so this won't happen again."));
+		LOG_INFO(_("Huh? Can't play this (invalid gametype). Refiltering so this won't happen again."));
 		me.refilter(me);
 		return;
 	}

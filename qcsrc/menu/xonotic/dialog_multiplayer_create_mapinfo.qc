@@ -61,7 +61,7 @@ void XonoticMapInfoDialog_fill(entity me)
 			e.allowCut = true;
 			me.authorLabel = e;
 	me.TR(me);
-		me.TD(me, 1, w, e = makeXonoticTextLabel(0, _("Game types:")));
+		me.TD(me, 1, w, e = makeXonoticTextLabel(0, _("Gametypes:")));
 
 	n = ceil(GameType_GetTotalCount() / (me.rows - 6));
 	wgt = (w - 0.2) / n;

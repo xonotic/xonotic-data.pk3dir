@@ -117,7 +117,7 @@ void HUD_InfoMessages()
 							s = sprintf(_("^1Press ^3%s^1 to change camera mode"), getcommandkey(_("drop weapon"), "dropweapon"));
 						break;
 					case 2:
-						s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey(_("server info"), "+show_info"));
+						s = sprintf(_("^1Press ^3%s^1 for gametype info"), getcommandkey(_("server info"), "+show_info"));
 						break;
 				}
 				InfoMessage(s);
@@ -230,7 +230,7 @@ void HUD_InfoMessages()
 	else
 	{
 		InfoMessage(_("^7Press ^3ESC ^7to show HUD options."));
-		InfoMessage(_("^3Doubleclick ^7a panel for panel-specific options."));
+		InfoMessage(_("^3Double-click ^7a panel for panel-specific options."));
 		InfoMessage(_("^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"));
 		InfoMessage(_("^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."));
 	}

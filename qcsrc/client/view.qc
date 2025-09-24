@@ -15,7 +15,7 @@
 #include <common/deathtypes/all.qh>
 #include <common/debug.qh>
 #include <common/ent_cs.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/impulses/all.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/target/music.qh>
@@ -1781,7 +1781,7 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	// gameend hook is executed on CSQC VM shutdown if
 	// the shutdown happens before intermission start
 	if (intermission
-	&& (calledhooks & HOOK_START) // ensure that we have initiated a gamemode
+	&& (calledhooks & HOOK_START) // ensure that we have initiated a gametype
 	&& !(calledhooks & HOOK_END) // fire only once
 	&& !(calledhooks & HOOK_INTERMISSION))
 	{

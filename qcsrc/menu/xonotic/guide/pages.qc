@@ -1,6 +1,6 @@
 #include "pages.qh"
 
-#include <common/gamemodes/gamemode/duel/duel.qh>
+#include <common/gametypes/gametype/duel/duel.qh>
 #include <common/weapons/_all.qh>
 #include <common/weapons/weapon/blaster.qh>
 #include <common/weapons/weapon/crylink.qh>
