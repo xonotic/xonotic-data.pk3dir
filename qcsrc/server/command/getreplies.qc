@@ -2,7 +2,7 @@
 
 #include <common/command/_mod.qh>
 #include <common/constants.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/monsters/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
@@ -26,7 +26,7 @@
 // =========================================================
 
 // These strings are set usually during init in world.qc,
-// or also by some game modes or other functions manually,
+// or also by some gametypes or other functions manually,
 // and their purpose is to output information to clients
 // without using any extra processing time.
 
@@ -264,7 +264,7 @@ string getlsmaps()
 			if(added > LSMAPS_MAX)
 				continue; // we still get the added count, but skip the actual processing
 
-			// todo: Check by play count of maps for other game types?
+			// todo: Check by play count of maps for other gametypes?
 			if((g_race || g_cts) && !race_readTime(MapInfo_Map_bspname, 1))
 			{
 				newmaps = true;

@@ -2,7 +2,7 @@
 
 #include <common/mapobjects/target/music.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <server/items/items.qh>
 
 #include "buff/_mod.qh"

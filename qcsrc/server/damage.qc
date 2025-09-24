@@ -3,8 +3,8 @@
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/rules.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/gametypes/rules.qh>
 #include <common/items/_mod.qh>
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/triggers.qh>
@@ -138,7 +138,7 @@ void Obituary_SpecialDeath(
 	}
 
 	if(g_cts && deathtype == DEATH_KILL.m_id)
-		return; // TODO: somehow put this in CTS gamemode file!
+		return; // TODO: somehow put this in CTS gametype file!
 
 	Notification death_message = (murder) ? deathent.death_msgmurder : deathent.death_msgself;
 	if (msg_from_ent)
@@ -509,7 +509,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 	entity attacker_save = attacker;
 
-	// special rule: gravity bombs and sound-based attacks do not affect team mates (other than for disconnecting the hook)
+	// special rule: gravity bombs and sound-based attacks do not affect teammates (other than for disconnecting the hook)
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || (deathtype & HITTYPE_SOUND))
 	{
 		if(IS_PLAYER(targ) && SAME_TEAM(targ, attacker))

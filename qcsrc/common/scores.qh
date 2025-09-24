@@ -19,8 +19,8 @@ STATIC_INIT(Scores_renumber) { FOREACH(Scores, true, it.m_id = i); }
 // networked fields
 // NOTE: score registration order is used as player sort priority (after primary and secondary)
 
-// TODO: move gamemode scores to gamemode files
-// TODO: allow gamemodes to fully customize player sorting priority, even the common ones
+// TODO: move gametype scores to gametype files
+// TODO: allow gametypes to fully customize player sorting priority, even the common ones
 
 REGISTER_SP(RACE_LAPS);
 REGISTER_SP(RACE_TIME);

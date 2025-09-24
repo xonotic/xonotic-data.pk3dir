@@ -142,7 +142,7 @@ string MapVote_Suggest(entity this, string m)
 		return "This server does not allow for recent maps to be played again. Please be patient for some rounds.";
 
 	if (!autocvar_sv_vote_gametype && !MapInfo_CheckMap(m))
-		return "The map you suggested does not support the current game mode.";
+		return "The map you suggested does not support the current gametype.";
 	int i;
 	for (i = 0; i < mapvote_suggestion_ptr; ++i)
 		if (mapvote_maps_suggestions[i] == m)
@@ -315,9 +315,9 @@ void MapVote_Init()
 
 	MapVote_Spawn();
 
-	/* If match_gametype is set it means voted_gametype has just been applied (on game type vote end).
+	/* If match_gametype is set it means voted_gametype has just been applied (on gametype vote end).
 	 * In this case apply back match_gametype here so that the "restart" command, if called,
-	 * properly restarts the map applying the current game type.
+	 * properly restarts the map applying the current gametype.
 	 * Applying voted_gametype before map vote start is needed to properly initialize map vote.
 	 */
 	if (match_gametype)
@@ -767,7 +767,7 @@ void MapVote_Think()
 			if (voted_gametype)
 			{
 				// clear match_gametype so that GameTypeVote_SetGametype
-				// prints the game type switch message
+				// prints the gametype switch message
 				match_gametype = NULL;
 				GameTypeVote_SetGametype(voted_gametype, voted_gametype_string, true);
 			}
@@ -865,12 +865,12 @@ bool GameTypeVote_SetGametype(Gametype type, string gametype_string, bool call_h
 			strunzone(lsmaps_reply);
 		lsmaps_reply = strzone(getlsmaps());
 
-		if (!match_gametype) // don't show this msg if we are temporarily switching game type
-			bprint("Game type successfully switched to ", MapInfo_Type_ToString(type), "\n");
+		if (!match_gametype) // don't show this msg if we are temporarily switching gametype
+			bprint("Gametype successfully switched to ", MapInfo_Type_ToString(type), "\n");
 	}
 	else
 	{
-		bprint("Cannot use this game type: no map for it found\n");
+		bprint("Cannot use this gametype: no map for it found\n");
 		MapInfo_SwitchGameType(tsave);
 		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 		return false;

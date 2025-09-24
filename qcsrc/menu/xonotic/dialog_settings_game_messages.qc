@@ -52,7 +52,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 	#endif
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 2.7, e = makeXonoticCheckBox_T(0, "notification_show_sprees_info_newline", _("Print on a seperate line"), "-"));
+		me.TD(me, 1, 2.7, e = makeXonoticCheckBox_T(0, "notification_show_sprees_info_newline", _("Print on a separate line"), "-"));
 			setDependent(e, "notification_show_sprees", 1, 1);
 			setDependentAND(e, "notification_show_sprees_info", 1, 3);
 	me.TR(me);
@@ -64,7 +64,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3.1, e = makeXonoticHeaderLabel(_("Gamemode Settings")));
+		me.TD(me, 1, 3.1, e = makeXonoticHeaderLabel(_("Gametype Settings")));
 	me.TR(me);
 		me.TD(me, 1, 3.1, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_CAPTURE_TIME", _("Display capture times in Capture The Flag"), "-"));
 			makeMulti(e, "notification_CHOICE_CTF_CAPTURE_BROKEN notification_CHOICE_CTF_CAPTURE_UNBROKEN");

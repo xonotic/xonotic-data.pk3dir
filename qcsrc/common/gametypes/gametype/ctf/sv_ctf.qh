@@ -1,0 +1,187 @@
+#pragma once
+
+#include "ctf.qh"
+#include <common/items/item/pickup.qh>
+#include <common/mutators/base.qh>
+#include <common/gametypes/sv_rules.qh>
+
+void ctf_Initialize();
+
+int autocvar_captureleadlimit_override;
+int autocvar_capturelimit_override;
+
+REGISTER_MUTATOR(ctf, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		GameRules_teams(true);
+		GameRules_limit_score(autocvar_capturelimit_override);
+		GameRules_limit_lead(autocvar_captureleadlimit_override);
+
+		ctf_Initialize();
+	}
+	return 0;
+}
+
+// used in cheats.qc
+void ctf_RespawnFlag(entity flag);
+
+// score rule declarations
+const int ST_CTF_CAPS = 1;
+
+// flag constants // for most of these, there is just one question to be asked: WHYYYYY?
+
+CLASS(Flag, Pickup)
+	// bones_was_here: previously after several calculations (inc FL_ITEM expansion with sv_legacy_bbox_expand 1)
+	// the old final bbox was '-28.44 -28.44 -32.08' '28.44 28.44 27.88' at FLAG_SCALE 0.6
+	// and the model was noticeably too tall to fit.
+	// The following values give '-30 -30 -32' '30 30 38' after vrint() at FLAG_SCALE 0.5625
+	// which match the 60x60x70 size of megas and powerups,
+	// keep the same origin.z height, and are a better fit for the model.
+	ATTRIB(Flag, m_mins, vector, '-53 -53 -57');
+	ATTRIB(Flag, m_maxs, vector, '53 53 68');
+ENDCLASS(Flag)
+Flag CTF_FLAG;
+
+// bones_was_here: previous FLAG_SCALE was 0.6 but model scale is floored to a 1/16 increment
+// so 9/16 was the real model scale. Applies to bbox too!
+const float FLAG_SCALE = 0.5625;
+
+const float FLAG_THINKRATE = 0.2;
+const float FLAG_TOUCHRATE = 0.5;
+const float WPFE_THINKRATE = 0.5;
+
+const vector FLAG_DROP_OFFSET = ('0 0 32');
+const vector FLAG_CARRY_OFFSET = ('-16 0 8');
+#define FLAG_SPAWN_OFFSET ('0 0 1' * (PL_MAX_CONST.z - 13))
+const vector FLAG_WAYPOINT_OFFSET = ('0 0 64');
+const int FLAG_FLOAT_OFFSET_Z = 32;
+const int FLAG_PASS_ARC_OFFSET_Z = -10;
+
+const vector VEHICLE_FLAG_OFFSET = ('0 0 96');
+const float VEHICLE_FLAG_SCALE = 1.0;
+
+void ctf_FlagTouch(entity this, entity toucher) { ITEM_HANDLE(Pickup, CTF_FLAG, this, toucher); }
+
+// waypoint colors
+#define WPCOLOR_ENEMYFC(t) ((t) ? colormapPaletteColor(t - 1, false) * 0.75 : '1 1 1')
+#define WPCOLOR_FLAGCARRIER(t) ((t) ? colormapPaletteColor(t - 1, false) * 0.75 : '1 1 1')
+//#define WPCOLOR_FLAGCARRIER(t) (WP_FlagCarrier.m_color)
+#define WPCOLOR_DROPPEDFLAG(t) ((t) ? ('0.25 0.25 0.25' + colormapPaletteColor(t - 1, false)) * 0.5 : '1 1 1')
+
+// sounds
+#define snd_flag_taken noise
+#define snd_flag_returned noise1
+#define snd_flag_capture noise2
+#define snd_flag_respawn noise3
+.string snd_flag_dropped;
+.string snd_flag_touch;
+.string snd_flag_pass;
+
+// score fields
+.float score_assist;
+.float score_capture;
+.float score_drop; // note: negated
+.float score_pickup;
+.float score_return;
+.float score_team_capture; // shouldn't be too high
+
+// property set on objects to point to the flag they're carrying (if any)
+.entity flagcarried;
+
+// effects
+.string toucheffect;
+.string passeffect;
+.string capeffect;
+
+// list of flags on the map
+entity ctf_worldflaglist;
+.entity ctf_worldflagnext;
+.entity ctf_staleflagnext;
+
+// waypoint sprites
+.entity wps_helpme;
+.entity wps_flagbase;
+.entity wps_flagcarrier;
+.entity wps_flagdropped;
+.entity wps_flagreturn;
+.entity wps_enemyflagcarrier;
+.float wps_helpme_time;
+bool wpforenemy_announced;
+float wpforenemy_nextthink;
+
+// statuses
+const int FLAG_BASE = 1;
+const int FLAG_DROPPED = 2;
+const int FLAG_CARRY = 3;
+const int FLAG_PASSING = 4;
+
+const int DROP_NORMAL = 1;
+const int DROP_THROW = 2;
+const int DROP_PASS = 3;
+const int DROP_RESET = 4;
+
+const int PICKUP_BASE = 1;
+const int PICKUP_DROPPED = 2;
+
+const int CAPTURE_NORMAL = 1;
+const int CAPTURE_DROPPED = 2;
+
+const int RETURN_TIMEOUT = 1;
+const int RETURN_DROPPED = 2;
+const int RETURN_DAMAGE = 3;
+const int RETURN_SPEEDRUN = 4;
+const int RETURN_NEEDKILL = 5;
+
+bool ctf_Stalemate_Customize(entity this, entity client);
+
+void ctf_Handle_Throw(entity player, entity receiver, float droptype);
+
+// flag properties
+#define ctf_spawnorigin dropped_origin
+bool ctf_stalemate; // indicates that a stalemate is active
+float ctf_captimerecord; // record time for capturing the flag
+.float ctf_pickuptime;
+.float ctf_droptime;
+.float ctf_landtime;
+.int ctf_status; // status of the flag (FLAG_BASE, FLAG_DROPPED, FLAG_CARRY declared globally)
+.entity ctf_dropper; // don't allow spam of dropping the flag
+.float next_take_time;
+.bool ctf_flagdamaged_byworld;
+int ctf_teams;
+.entity enemy; // when flag is back in the base, it remembers last player who carried/touched the flag, useful to bots
+
+// passing/throwing properties
+.float pass_distance;
+.entity pass_sender;
+.entity pass_target;
+.float throw_antispam;
+.float throw_prevtime;
+.int throw_count;
+
+// CaptureShield: If the player is too bad to be allowed to capture, shield them from taking the flag.
+.bool ctf_captureshielded; // set to 1 if the player is too bad to be allowed to capture
+float ctf_captureshield_min_negscore; // punish at -20 points
+float ctf_captureshield_max_ratio; // punish at most 30% of each team
+float ctf_captureshield_force; // push force of the shield
+
+// 1 flag ctf
+bool ctf_oneflag; // indicates whether or not a neutral flag has been found
+
+// bot player logic
+const int HAVOCBOT_CTF_ROLE_NONE = 0;
+const int HAVOCBOT_CTF_ROLE_DEFENSE = 2;
+const int HAVOCBOT_CTF_ROLE_MIDDLE = 4;
+const int HAVOCBOT_CTF_ROLE_OFFENSE = 8;
+const int HAVOCBOT_CTF_ROLE_CARRIER = 16;
+const int HAVOCBOT_CTF_ROLE_RETRIEVER = 32;
+const int HAVOCBOT_CTF_ROLE_ESCORT = 64;
+
+.bool havocbot_cantfindflag;
+
+void havocbot_role_ctf_setrole(entity bot, int role);
+
+// team checking
+#define CTF_SAMETEAM(a,b) ((autocvar_g_ctf_reverse || (ctf_oneflag && autocvar_g_ctf_oneflag_reverse)) ? DIFF_TEAM(a,b) : SAME_TEAM(a,b))
+#define CTF_DIFFTEAM(a,b) ((autocvar_g_ctf_reverse || (ctf_oneflag && autocvar_g_ctf_oneflag_reverse)) ? SAME_TEAM(a,b) : DIFF_TEAM(a,b))
