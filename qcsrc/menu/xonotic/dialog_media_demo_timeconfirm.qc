@@ -1,4 +1,4 @@
-#include "dialog_multiplayer_media_demo_timeconfirm.qh"
+#include "dialog_media_demo_timeconfirm.qh"
 
 #include "demolist.qh"
 #include "textlabel.qh"
