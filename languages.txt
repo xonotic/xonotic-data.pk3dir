@@ -1,34 +1,34 @@
-ast   "Asturian" "Asturianu" 59%
-id_ID "Indonesian" "Bahasa Indonesia" 33%
-de    "German" "Deutsch" 83%
-de_CH "German (Switzerland)" "Deutsch (Schweiz)" 83%
+ast   "Asturian" "Asturianu" 58%
+id_ID "Indonesian" "Bahasa Indonesia" 32%
+de    "German" "Deutsch" 82%
+de_CH "German (Switzerland)" "Deutsch (Schweiz)" 82%
 en    "English" "English" 100%
-en_AU "English (Australia)" "English (Australia)" 100%
-en_GB "English (United Kingdom)" "English (United Kingdom)" 100%
-es    "Spanish" "Español" 80%
-fr    "French" "Français" 88%
-gl    "Galician" "Galego" 84%
+en_AU "English (Australia)" "English (Australia)" 98%
+en_GB "English (United Kingdom)" "English (United Kingdom)" 98%
+es    "Spanish" "Español" 79%
+fr    "French" "Français" 86%
+gl    "Galician" "Galego" 83%
 ga    "Irish" "Irish" 24%
-it    "Italian" "Italiano" 86%
-la    "Latin" "Lingua Latina" 86%
+it    "Italian" "Italiano" 85%
+la    "Latin" "Lingua Latina" 85%
 hu    "Hungarian" "Magyar" 36%
 nl    "Dutch" "Nederlands" 49%
 pl    "Polish" "Polski" 64%
-pt    "Portuguese" "Português" 82%
-pt_BR "Portuguese (Brazil)" "Português (Brasil)" 87%
-ro    "Romanian" "Romana" 57%
-fi    "Finnish" "Suomi" 79%
-sv    "Swedish" "Svenska" 80%
-tr    "Turkish" "Türkçe" 45%
+pt    "Portuguese" "Português" 81%
+pt_BR "Portuguese (Brazil)" "Português (Brasil)" 86%
+ro    "Romanian" "Romana" 56%
+fi    "Finnish" "Suomi" 78%
+sv    "Swedish" "Svenska" 78%
+tr    "Turkish" "Türkçe" 44%
 cs    "Czech" "Čeština" 25%
 el    "Greek" "Ελληνική" 36%
-be    "Belarusian" "Беларуская" 40%
-bg    "Bulgarian" "Български" 56%
-ru    "Russian" "Русский" 87%
-sr    "Serbian" "Српски" 48%
+be    "Belarusian" "Беларуская" 39%
+bg    "Bulgarian" "Български" 55%
+ru    "Russian" "Русский" 85%
+sr    "Serbian" "Српски" 47%
 uk    "Ukrainian" "Українська" 46%
-zh_TW "Chinese (Taiwan)" "中文（正體字）" 84%
-zh_CN "Chinese (China)" "中文（简体字）" 84%
-zh_HK "Chinese (Hong Kong)" "中文（香港字）" 84%
-ja_JP "Japanese" "日本語" 80%
-ko    "Korean" "한국의" 29%
+zh_TW "Chinese (Taiwan)" "中文（正體字）" 83%
+zh_CN "Chinese (China)" "中文（简体字）" 83%
+zh_HK "Chinese (Hong Kong)" "中文（香港字）" 83%
+ja_JP "Japanese" "日本語" 79%
+ko    "Korean" "한국의" 28%
