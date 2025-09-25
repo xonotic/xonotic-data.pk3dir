@@ -3,8 +3,8 @@
 #include "tab.qh"
 CLASS(XonoticScreenshotBrowserTab, XonoticTab)
 	METHOD(XonoticScreenshotBrowserTab, fill, void(entity));
-	ATTRIB(XonoticScreenshotBrowserTab, intendedWidth, float, 1);
-	ATTRIB(XonoticScreenshotBrowserTab, rows, float, 21);
+	ATTRIB(XonoticScreenshotBrowserTab, intendedWidth, float, 0.96);
+	ATTRIB(XonoticScreenshotBrowserTab, rows, float, 17);
 	ATTRIB(XonoticScreenshotBrowserTab, columns, float, 6.5);
 	ATTRIB(XonoticScreenshotBrowserTab, name, string, "ScreenshotBrowser");
 

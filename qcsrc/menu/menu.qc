@@ -997,8 +997,6 @@ void Shutdown()
 		it.destroy(it);
 	});
 	cvar_set("_menu_cmd_closemenu_available", "0");
-	if (cvar("cl_startcount") >= 5)
-		cvar_set("_menu_guide_highlight", "0");
 }
 
 void m_focus_item_chain(entity outermost, entity innermost)
