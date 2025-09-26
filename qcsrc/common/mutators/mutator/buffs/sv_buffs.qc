@@ -249,8 +249,6 @@ void buff_Touch(entity this, entity toucher)
 	if (!bufftime)
 		bufftime = 999;
 	StatusEffects_apply(thebuff, toucher, time + bufftime, 0);
-
-	STAT(LAST_PICKUP, toucher) = time;
 }
 
 float buff_Available(entity buff)
@@ -376,21 +374,27 @@ void buff_Think(entity this)
 	//this.angles_y = time * 110.1;
 }
 
-void buff_Waypoint_Reset(entity this)
-{
-	WaypointSprite_Kill(this.buff_waypoint);
-
-	if (this.buff_activetime)
-		buff_Waypoint_Spawn(this);
-}
-
 void buff_Reset(entity this)
 {
+	if (this.targetname != "" && !(this.spawnflags & 16)) // q3compat
+	{
+		// buffs have no equivalent of Item_Show(this, -1)
+		this.effects = EF_NODRAW;
+		this.solid = SOLID_NOT; // u can't touch this
+		setorigin(this, this.origin); // unlink from the area grid
+		this.nextthink = 0;
+		if (this.buff_waypoint)
+			WaypointSprite_Kill(this.buff_waypoint);
+		return;
+	}
+
 	if (autocvar_g_buffs_randomize && (!teamplay || autocvar_g_buffs_randomize_teamplay))
 		buff_NewType(this);
 	this.owner = NULL;
 	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate);
-	buff_Waypoint_Reset(this);
+	WaypointSprite_Kill(this.buff_waypoint);
+	if (this.buff_activetime)
+		buff_Waypoint_Spawn(this);
 	this.buff_activetime_updated = false;
 
 	if (autocvar_g_buffs_random_location || (this.spawnflags & 64))
@@ -485,8 +489,7 @@ void buff_Init(entity this)
 	if (this.noalign)
 		set_movetype(this, MOVETYPE_NONE); // reset by random location
 
-	if (autocvar_g_buffs_random_location || (this.spawnflags & 64))
-		buff_Respawn(this);
+	buff_Reset(this);
 }
 
 void buff_Init_Compat(entity ent, entity replacement)

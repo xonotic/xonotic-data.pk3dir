@@ -2,6 +2,7 @@
 
 #include <common/resources/resources.qh>
 #include <common/sounds/sound.qh>
+#include <common/mutators/mutator/buffs/_mod.qh> // for the `Buff` "class"
 
 float autocvar_g_balance_superweapons_time;
 bool autocvar_g_fullbrightitems;
@@ -97,16 +98,9 @@ void setItemGroup(entity this);
 void setItemGroupCount();
 
 float GiveWeapon(entity e, float wpn, float op, float val);
-
-float GiveBit(entity e, .float fld, float bit, float op, float val);
-
-float GiveValue(entity e, .float fld, float op, float val);
-
+bool GiveBuff(entity e, Buff thebuff, int op, int val);
 void GiveSound(entity e, float v0, float v1, float t, Sound snd_incr, Sound snd_decr);
-
 void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .float regenfield, float regentime);
-
-spawnfunc(target_items);
 
 #define PREGIVE_WEAPONS(e) WepSet save_weapons; save_weapons = STAT(WEAPONS, e)
 #define PREGIVE(e,f) float save_##f; save_##f = (e).f
