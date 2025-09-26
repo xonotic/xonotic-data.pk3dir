@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-25 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Темак, 2024\n"
+"Last-Translator: Andrei Stepanov, 2014-2025\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -171,7 +171,7 @@ msgstr "^1Для смены вида — ^3%s^1"
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
-msgstr ""
+msgstr "^1Для показа сведений о режиме игры — ^3%s^1"
 
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #: qcsrc/menu/xonotic/keybinder.qc:153
@@ -268,7 +268,7 @@ msgstr "^7Нажмите ^3ESC ^7для просмотра настроек ин
 
 #: qcsrc/client/hud/panel/infomessages.qc:233
 msgid "^3Double-click ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^3Двойной щелчок ^7по панели для её настройки."
 
 #: qcsrc/client/hud/panel/infomessages.qc:234
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -628,6 +628,7 @@ msgstr "Общее время владения мячом в режиме «Пр
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "How often a flag (CTF) or a key (Key Hunt) was captured"
 msgstr ""
+"Как часто флаг (Захват флага) или ключ (Охота за ключами) были захвачены"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^caps"
@@ -747,7 +748,7 @@ msgstr "охоты"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of key carrier kills"
-msgstr ""
+msgstr "Число убийств носителей ключей"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kckills"
