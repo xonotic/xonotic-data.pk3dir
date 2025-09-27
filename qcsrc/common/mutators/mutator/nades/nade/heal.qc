@@ -23,9 +23,7 @@ void nade_heal_touch(entity this, entity toucher)
 			: autocvar_g_pickup_healthmega_max;
 		if (GetResource(toucher, RES_HEALTH) < maxhealth)
 		{
-			if (this.nade_show_particles)
-				Send_Effect(EFFECT_HEALING, toucher.origin, vec2(toucher.velocity), 1);
-
+			nade_Effect(toucher, EFFECT_HEALING, 1);
 			GiveResourceWithLimit(toucher, RES_HEALTH, health_factor, maxhealth);
 		}
 	}
