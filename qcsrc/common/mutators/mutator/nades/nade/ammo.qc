@@ -3,41 +3,44 @@
 #ifdef SVQC
 void nade_ammo_touch(entity this, entity toucher)
 {
-	float maxammo = 999;
-	float ammo_factor;
-	float amshells = GetResource(toucher, RES_SHELLS);
-	float ambullets = GetResource(toucher, RES_BULLETS);
-	float amrockets = GetResource(toucher, RES_ROCKETS);
-	float amcells = GetResource(toucher, RES_CELLS);
-	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
-	if(!IS_DEAD(toucher))
-	if(!STAT(FROZEN, toucher))
+	if (IS_PLAYER(toucher) || IS_MONSTER(toucher))
+	if (!IS_DEAD(toucher) && !STAT(FROZEN, toucher))
 	{
-		ammo_factor = autocvar_g_nades_ammo_rate*frametime/2;
-		if ( toucher != this.realowner )
-			ammo_factor *= (SAME_TEAM(toucher, this)) ? autocvar_g_nades_ammo_friend : autocvar_g_nades_ammo_foe;
+		float ammo_factor = autocvar_g_nades_ammo_rate * frametime * 0.5;
+		if (toucher != this.realowner)
+			ammo_factor *= (SAME_TEAM(toucher, this))
+				? autocvar_g_nades_ammo_friend
+				: autocvar_g_nades_ammo_foe;
 
-#define CHECK_AMMO_RESOURCE_LIMIT(amresource, res_resource) \
-	if (amresource < maxammo) \
-		GiveResourceWithLimit(toucher, res_resource, ammo_factor, maxammo);
+		float amshells  = GetResource(toucher, RES_SHELLS);
+		float ambullets = GetResource(toucher, RES_BULLETS);
+		float amrockets = GetResource(toucher, RES_ROCKETS);
+		float amcells   = GetResource(toucher, RES_CELLS);
 
+#define GIVE_AMMO_RESOURCE(amresource, res_resource, max_resource) \
+	if (amresource < max_resource) \
+	{ \
+		GiveResourceWithLimit(toucher, res_resource, ammo_factor, max_resource); \
+		gave = true; \
+	}
 #define DROP_AMMO_RESOURCE(amresource, res_resource) \
 	if (amresource > 0) \
 		SetResource(toucher, res_resource, amresource + ammo_factor);
 		
-		if ( ammo_factor > 0 )
+		if (ammo_factor > 0)
 		{
-			CHECK_AMMO_RESOURCE_LIMIT(amshells,  RES_SHELLS);
-			CHECK_AMMO_RESOURCE_LIMIT(ambullets, RES_BULLETS);
-			CHECK_AMMO_RESOURCE_LIMIT(amrockets, RES_ROCKETS);
-			CHECK_AMMO_RESOURCE_LIMIT(amcells,   RES_CELLS);
+			bool gave = false;
+			GIVE_AMMO_RESOURCE(amshells,  RES_SHELLS,  autocvar_g_pickup_shells_max);
+			GIVE_AMMO_RESOURCE(ambullets, RES_BULLETS, autocvar_g_pickup_nails_max);
+			GIVE_AMMO_RESOURCE(amrockets, RES_ROCKETS, autocvar_g_pickup_rockets_max);
+			GIVE_AMMO_RESOURCE(amcells,   RES_CELLS,   autocvar_g_pickup_cells_max);
 
-			if (this.nade_show_particles)
-				Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
+			if (gave && this.nade_show_particles)
+				Send_Effect(EFFECT_AMMO_REGEN, toucher.origin, vec2(toucher.velocity), 1);
 		}
-		else if ( ammo_factor < 0 )
+		else if (ammo_factor < 0)
 		{
-			//Foe drops ammo points
+			// Foe drops ammo points
 			DROP_AMMO_RESOURCE(amshells,  RES_SHELLS);
 			DROP_AMMO_RESOURCE(ambullets, RES_BULLETS);
 			DROP_AMMO_RESOURCE(amrockets, RES_ROCKETS);
@@ -46,10 +49,10 @@ void nade_ammo_touch(entity this, entity toucher)
 			return;
 		}
 	}
-#undef CHECK_AMMO_RESOURCE_LIMIT
+#undef GIVE_AMMO_RESOURCE
 #undef DROP_AMMO_RESOURCE
 
-	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
+	if (IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner))
 	{
 		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 		show_tint.nade_ammo_time = time + 0.1;
@@ -58,10 +61,8 @@ void nade_ammo_touch(entity this, entity toucher)
 
 void nade_ammo_boom(entity this)
 {
-	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_ammo_time, autocvar_g_nades_nade_radius);
-
+	entity orb = nades_spawn_orb(this, autocvar_g_nades_ammo_time, autocvar_g_nades_ammo_radius, NADE_TYPE_AMMO.m_color);
 	settouch(orb, nade_ammo_touch);
-	orb.colormod = NADE_TYPE_AMMO.m_color;
 }
 #endif // SVQC
 #ifdef MENUQC
