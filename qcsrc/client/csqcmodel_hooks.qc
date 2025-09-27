@@ -15,6 +15,7 @@
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/cl_player.qh>
 #include <lib/csqcmodel/interpolate.qh>
+#include <lib/warpzone/common.qh>
 
 .int modelflags;
 
@@ -590,6 +591,36 @@ void CSQCModel_Effects_Apply(entity this)
 			ef_shock_num = particleeffectnum(EFFECT_ARC_LIGHTNING);
 		boxparticles(ef_shock_num, this, this.absmin, this.absmax, '0 0 0', '0 0 0', bound(0, frametime, 0.1), 0);
 		//pointparticles(EFFECT_ARC_LIGHTNING, this.origin, '0 0 0', bound(0, frametime, 0.1));
+	}
+	if(eff & EF_SPEED)
+	{
+		vector dir = normalize(this.velocity);
+		// XONRELEASE TODO: xonotic-v0.9.0 post-release remove the ef_speed_num check
+		int ef_speed_num = particleeffectnum(EFFECT_EF_SPEED);
+		int foot_L_idx = gettagindex(this, "foot_L"); // left & right feet on the playermodel,
+		int foot_R_idx = gettagindex(this, "foot_R"); // roughly at the heel
+		if (foot_L_idx && foot_R_idx)
+		{
+			vector foot_L_org = gettaginfo(this, foot_L_idx);
+			vector foot_R_org = gettaginfo(this, foot_R_idx);
+			if (ef_speed_num >= 0)
+			{
+				// NOTE: to make this a proper trail the old foot_*_org will need to be stored, however it looks fine as-is
+				WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, foot_L_org - dir, foot_L_org + dir, bound(0, frametime, 0.1), 0);
+				WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, foot_R_org - dir, foot_R_org + dir, bound(0, frametime, 0.1), 0);
+			}
+			// No fallback since nothing looks similar, light will still draw though
+			adddynamiclight(foot_L_org, 45, STATUSEFFECT_Speed.m_color);
+			adddynamiclight(foot_R_org, 45, STATUSEFFECT_Speed.m_color);
+		}
+		else
+		{
+			vector org = this.origin + 0.5 * (this.mins + this.maxs); // center
+			if (ef_speed_num >= 0)
+				WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, org - dir, org + dir, bound(0, frametime, 0.1), 0);
+				//pointparticles(EFFECT_EF_SPEED, org, '0 0 0', bound(0, frametime, 0.1));
+			adddynamiclight(org, 45, STATUSEFFECT_Speed.m_color);
+		}
 	}
 	if(eff & EF_STARDUST)
 	{
