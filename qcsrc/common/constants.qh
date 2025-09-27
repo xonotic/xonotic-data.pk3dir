@@ -101,6 +101,7 @@ const int INITPRIO_LAST                   = 99;
 
 // effects
 const int EF_SHOCK = 262144;
+const int EF_SPEED = 524288;
 #endif
 
 #if defined(SVQC)

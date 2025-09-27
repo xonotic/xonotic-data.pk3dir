@@ -9364,4 +9364,20 @@ SUB(EF_SHOCK) {
 	MY(velocitymultiplier) = 100;
 }
 
+DEF(EF_SPEED);
+// glowing vapor trail
+SUB(EF_SPEED) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x1affd6";
+	MY(color_max) = "0x1affd6";
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 34;
+	MY(tex_max) = 41;
+	MY(trailspacing) = 1;
+	MY(type) = "static";
+}
+
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
