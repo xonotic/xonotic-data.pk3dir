@@ -26,27 +26,30 @@ void nade_ammo_touch(entity this, entity toucher)
 				? autocvar_g_nades_ammo_friend
 				: autocvar_g_nades_ammo_foe;
 
-		float maxammo = 999;
 		float amshells  = GetResource(toucher, RES_SHELLS);
 		float ambullets = GetResource(toucher, RES_BULLETS);
 		float amrockets = GetResource(toucher, RES_ROCKETS);
 		float amcells   = GetResource(toucher, RES_CELLS);
 
-#define GIVE_AMMO_RESOURCE(amresource, res_resource) \
-	if (amresource < maxammo) \
-		GiveResourceWithLimit(toucher, res_resource, ammo_factor, maxammo);
+#define GIVE_AMMO_RESOURCE(amresource, res_resource, max_resource) \
+	if (amresource < max_resource) \
+	{ \
+		GiveResourceWithLimit(toucher, res_resource, ammo_factor, max_resource); \
+		gave = true; \
+	}
 #define DROP_AMMO_RESOURCE(amresource, res_resource) \
 	if (amresource > 0) \
 		SetResource(toucher, res_resource, amresource + ammo_factor);
 		
 		if (ammo_factor > 0)
 		{
-			GIVE_AMMO_RESOURCE(amshells,  RES_SHELLS);
-			GIVE_AMMO_RESOURCE(ambullets, RES_BULLETS);
-			GIVE_AMMO_RESOURCE(amrockets, RES_ROCKETS);
-			GIVE_AMMO_RESOURCE(amcells,   RES_CELLS);
+			bool gave = false;
+			GIVE_AMMO_RESOURCE(amshells,  RES_SHELLS,  autocvar_g_pickup_shells_max);
+			GIVE_AMMO_RESOURCE(ambullets, RES_BULLETS, autocvar_g_pickup_nails_max);
+			GIVE_AMMO_RESOURCE(amrockets, RES_ROCKETS, autocvar_g_pickup_rockets_max);
+			GIVE_AMMO_RESOURCE(amcells,   RES_CELLS,   autocvar_g_pickup_cells_max);
 
-			if (this.nade_show_particles)
+			if (gave && this.nade_show_particles)
 				Send_Effect(EFFECT_AMMO_REGEN, toucher.origin, vec2(toucher.velocity), 1);
 		}
 		else if (ammo_factor < 0)
