@@ -49,3 +49,6 @@ float buff_Available(entity buff);
 void buff_RemoveAll(entity actor, int removal_type);
 
 entity buff_FirstFromFlags(entity actor);
+
+/// Spawn effects on a player with a buff
+void buff_Effect(entity player, entity eff, vector eff_loc, vector eff_vel, int eff_cnt, bool hide);
