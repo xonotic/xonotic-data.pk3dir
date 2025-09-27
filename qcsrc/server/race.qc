@@ -3,6 +3,7 @@
 #include <common/deathtypes/all.qh>
 #include <common/gamemodes/_mod.qh>
 #include <common/gamemodes/rules.qh>
+#include <common/gamemodes/gamemode/race/outline.qh>
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
@@ -1145,6 +1146,7 @@ spawnfunc(trigger_race_checkpoint)
 
 	if(!this.race_penalty)
 	{
+		Outline_Spawn(this, o);
 		if(this.race_checkpoint)
 			WaypointSprite_SpawnFixed(WP_RaceCheckpoint, o, this, sprite, RADARICON_NONE);
 		else
