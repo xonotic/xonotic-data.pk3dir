@@ -3967,21 +3967,22 @@ SUB(ammoregen_fx) {
 DEF(rage);
 SUB(rage) {
 	MY(airfriction) = 2;
-	MY(alpha_min) = 256;
+	MY(alpha_min) = 128;
 	MY(alpha_max) = 256;
-	MY(alpha_fade) = 190;
+	MY(alpha_fade) = 384;
 	MY(color_min) = "0xff0000";
 	MY(color_max) = "0xff7800";
-	MY(count) = 2.500000;
-	MY(gravity) = -0.060000;
-	MY(originjitter) = '5.0 5.0 5.0';
-	MY(sizeincrease) = 10;
+	MY(count) = 2;
+	MY(gravity) = -0.100000;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 20;
 	MY(size_min) = 1;
 	MY(size_max) = 3;
 	MY(tex_min) = 35;
-	MY(tex_max) = 36;
+	MY(tex_max) = 37;
 	MY(type) = "smoke";
-	MY(velocityjitter) = '25.0 25.0 25.0';
+	MY(velocityoffset) = '0.0 0.0 5.0';
+	MY(velocityjitter) = '20.0 20.0 20.0';
 }
 
 // pieces of glass or ice falling on the floor
