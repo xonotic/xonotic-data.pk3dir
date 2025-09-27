@@ -52,6 +52,7 @@ METHOD(AmmoBuff, m_tick, void(StatusEffect this, entity actor))
 				actor.(weaponentity).clip_load = actor.(weaponentity).(weapon_load[actor.(weaponentity).m_switchweapon.m_id]) = actor.(weaponentity).clip_size;
 		}
 
+	buff_Effect(actor, EFFECT_AMMO_REGEN, actor.origin, vec2(actor.velocity), 1, true);
 	SUPER(AmmoBuff).m_tick(this, actor);
 }
 #endif // SVQC
