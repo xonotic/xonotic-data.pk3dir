@@ -7,7 +7,7 @@ void Outline_Spawn(entity tgt, vector org);
 float autocvar_cl_race_checkpoint_outline = 0;
 float autocvar_cl_race_checkpoint_outline_fill = 0;
 float autocvar_cl_race_checkpoint_outline_width = 1;
-vector autocvar_cl_race_checkpoint_outline_color = '1 1 0';
+vector autocvar_cl_race_checkpoint_outline_color = '1 0 1';
 
 // corner masks
 // those are used to determine which sides are extended to form the corners
