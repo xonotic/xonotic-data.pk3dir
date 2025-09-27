@@ -50,9 +50,11 @@ int autocvar_g_nades_bonus_score_spree;
 .string cvar_cl_nade_type;
 .string cvar_cl_pokenade_type;
 .float toss_time;
-.bool nade_show_particles;
 
 bool orb_send(entity this, entity to, int sf);
+
+/// Apply nade effects on a player
+void nade_Effect(entity player, entity eff, int eff_cnt);
 
 /// Spawns an orb for some nade types
 entity nades_spawn_orb(entity this, float orb_lifetime, float orb_rad);
