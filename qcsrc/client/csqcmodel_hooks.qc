@@ -591,6 +591,27 @@ void CSQCModel_Effects_Apply(entity this)
 		boxparticles(ef_shock_num, this, this.absmin, this.absmax, '0 0 0', '0 0 0', bound(0, frametime, 0.1), 0);
 		//pointparticles(EFFECT_ARC_LIGHTNING, this.origin, '0 0 0', bound(0, frametime, 0.1));
 	}
+	if(eff & EF_SPEED)
+	{
+		vector size = '0.5 1 0.5';
+		int foot_L_idx = gettagindex(this, "foot_L"); // left & right feet on the playermodel,
+		int foot_R_idx = gettagindex(this, "foot_R"); // roughly at the heel
+		if(foot_L_idx && foot_R_idx)
+		{
+			vector foot_L_org = gettaginfo(this, foot_L_idx);
+			vector foot_R_org = gettaginfo(this, foot_R_idx);
+			boxparticles(particleeffectnum(EFFECT_EF_SPEED), this, foot_L_org - size, foot_L_org + size, '0 0 0', '0 0 0', bound(0, frametime, 0.1), 0);
+			boxparticles(particleeffectnum(EFFECT_EF_SPEED), this, foot_R_org - size, foot_R_org + size, '0 0 0', '0 0 0', bound(0, frametime, 0.1), 0);
+			adddynamiclight(foot_L_org, 45, STATUSEFFECT_Speed.m_color);
+			adddynamiclight(foot_R_org, 45, STATUSEFFECT_Speed.m_color);
+		}
+		else
+		{
+			boxparticles(particleeffectnum(EFFECT_EF_SPEED), this, this.origin - size, this.origin + size, '0 0 0', '0 0 0', bound(0, frametime, 0.1), 0);
+			//pointparticles(EFFECT_EF_SPEED, this.origin, '0 0 0', bound(0, frametime, 0.1));
+			adddynamiclight(this.origin, 45, STATUSEFFECT_Speed.m_color);
+		}
+	}
 	if(eff & EF_STARDUST)
 	{
 		boxparticles(particleeffectnum(EFFECT_EF_STARDUST), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
