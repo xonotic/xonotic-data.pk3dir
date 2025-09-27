@@ -5,6 +5,12 @@ float buff_Resistance_CalculateDamage(float frag_damage)
 {
 	return bound(0, frag_damage * (1 - autocvar_g_buffs_resistance_blockpercent), frag_damage);
 }
+
+METHOD(ResistanceBuff, m_tick, void(StatusEffect this, entity actor))
+{
+	buff_Effect(actor, EFFECT_ARMOR_REPAIR, actor.origin, vec2(actor.velocity), 1, true);
+	SUPER(ResistanceBuff).m_tick(this, actor);
+}
 #endif // SVQC
 #ifdef MENUQC
 METHOD(ResistanceBuff, describe, string(ResistanceBuff this))
