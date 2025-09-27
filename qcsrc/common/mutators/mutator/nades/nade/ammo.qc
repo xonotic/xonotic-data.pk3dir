@@ -48,7 +48,7 @@ void nade_ammo_touch(entity this, entity toucher)
 		GIVE_AMMO_RESOURCE(amcells,   RES_CELLS);
 
 		if (this.nade_show_particles)
-			Send_Effect(EFFECT_AMMO_REGEN, toucher.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_AMMO_REGEN, toucher.origin, vec2(toucher.velocity), 1);
 	}
 	else if (ammo_factor < 0)
 	{
