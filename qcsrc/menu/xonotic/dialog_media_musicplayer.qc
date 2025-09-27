@@ -1,4 +1,4 @@
-#include "dialog_multiplayer_media_musicplayer.qh"
+#include "dialog_media_musicplayer.qh"
 
 #include "soundlist.qh"
 #include "playlist.qh"
@@ -21,7 +21,7 @@ void XonoticMusicPlayerTab_fill(entity me)
 	entity soundList, playList;
 	float columns_nospacing = (me.columns - 0.2);
 
-	me.TR(me);
+	me.gotoRC(me, 0.5, 0); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, _("Filter:")));
 		me.TD(me, 1, 2.5, e = makeXonoticInputBox(0, string_null));
 			soundList = makeXonoticSoundList();
@@ -31,7 +31,7 @@ void XonoticMusicPlayerTab_fill(entity me)
 			soundList.playlist = playList;
 
 	me.TR(me);
-		me.TD(me, me.rows - 4, columns_nospacing / 2, soundList);
+		me.TD(me, me.rows - 4.5, columns_nospacing / 2, soundList);
 
 	me.gotoRC(me, me.rows - 3, 0);
 		me.TD(me, 1, columns_nospacing / 4, e = makeXonoticButton(ZCTX(_("MUSICPL^Add")), '0 0 0'));
@@ -50,11 +50,11 @@ void XonoticMusicPlayerTab_fill(entity me)
 			e.onClickEntity = soundList;
 	me.TR(me);
 	me.TR(me);
-	me.gotoRC(me, 0, columns_nospacing / 2 + 0.2); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0.5, columns_nospacing / 2 + 0.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, columns_nospacing / 4, e = makeXonoticTextLabel(0, _("Playlist:")));
 		me.TD(me, 1, columns_nospacing / 4, e = makeXonoticCheckBox(0, "music_playlist_random0", _("Random order")));
 	me.TR(me);
-		me.TD(me, me.rows - 3, columns_nospacing / 2, playList);
+		me.TD(me, me.rows - 3.5, columns_nospacing / 2, playList);
 
 	me.gotoRC(me, me.rows - 2, columns_nospacing / 2 + 0.2);
 		me.TD(me, 1, columns_nospacing / 10, e = makeXonoticButton(ZCTX(_("MUSICPL^Stop")), '0 0 0'));
