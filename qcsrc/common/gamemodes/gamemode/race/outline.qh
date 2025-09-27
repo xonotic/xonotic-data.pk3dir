@@ -1,6 +1,7 @@
 #pragma once
 
 #ifdef SVQC
+float autocvar_sv_race_checkpoint_outline = true;
 void Outline_Spawn(entity tgt, vector org);
 #elif defined(CSQC)
 float autocvar_cl_race_checkpoint_outline = 0;

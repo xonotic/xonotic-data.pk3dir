@@ -34,6 +34,8 @@ bool outline_send(entity this, entity to, float sf)
 // spawn an outline, origin must be the center of the target
 void Outline_Spawn(entity tgt, vector org)
 {
+    if(!autocvar_sv_race_checkpoint_outline) return;
+
 	entity this = new(outline);
 
 	setorigin(this, org);
