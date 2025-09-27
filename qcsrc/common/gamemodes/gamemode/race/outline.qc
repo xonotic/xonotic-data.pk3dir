@@ -12,8 +12,8 @@
 //   -Z = bottom
 
 // closest single precision IEEE 754 floating point value to 1 which is less than 1
-// FIXME: the polygon draw functions misbehave when an alpha value which is greater or equal to 1 is used
-//        subsequent polygons should not be affected by previous drawing operations
+// if a polygon draw function uses an alpha value of 1, subsequent polygons can't reliably be drawn with transparency enabled
+// TODO: this has already been fixed in DarkPlaces, remove workaround when updating the engine
 #define ONE_MINUS_EPSILON 0.999999940395355224609375
 
 #ifdef GAMEQC
