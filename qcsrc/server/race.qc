@@ -909,7 +909,11 @@ void defrag_waypointsprites(entity targeted, entity checkpoint, int recursionlev
 	{
 		if (t.modelindex)
 		{
-			WaypointSprite_SpawnFixed(s, (t.absmin + t.absmax) * 0.5, t, sprite, RADARICON_NONE);
+			vector org = (t.absmin + t.absmax) * 0.5;
+
+			Outline_Spawn(t, org);
+
+			WaypointSprite_SpawnFixed(s, org, t, sprite, RADARICON_NONE);
 			t.sprite.realowner = checkpoint;
 			t.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 		}
@@ -1147,6 +1151,7 @@ spawnfunc(trigger_race_checkpoint)
 	if(!this.race_penalty)
 	{
 		Outline_Spawn(this, o);
+
 		if(this.race_checkpoint)
 			WaypointSprite_SpawnFixed(WP_RaceCheckpoint, o, this, sprite, RADARICON_NONE);
 		else
