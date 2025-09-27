@@ -50,7 +50,7 @@ int autocvar_g_nades_bonus_score_spree;
 .string cvar_cl_nade_type;
 .string cvar_cl_pokenade_type;
 .float toss_time;
-.float nade_show_particles;
+.bool nade_show_particles;
 
 bool orb_send(entity this, entity to, int sf);
 

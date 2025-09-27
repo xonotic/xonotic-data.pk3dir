@@ -69,11 +69,11 @@ void nades_orb_think(entity this)
 
 	if (time >= this.nade_special_time)
 	{
-		this.nade_special_time = time + 0.25;
-		this.nade_show_particles = 1;
+		this.nade_special_time = time + 0.05;
+		this.nade_show_particles = true;
 	}
 	else
-		this.nade_show_particles = 0;
+		this.nade_show_particles = false;
 }
 
 entity nades_spawn_orb(entity this, float orb_lifetime, float orb_rad)
