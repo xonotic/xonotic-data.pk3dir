@@ -34,7 +34,7 @@ bool outline_send(entity this, entity to, float sf)
 // spawn an outline, origin must be the center of the target
 void Outline_Spawn(entity tgt, vector org)
 {
-    if(!autocvar_sv_race_checkpoint_outline) return;
+	if (!autocvar_sv_race_checkpoint_outline) return;
 
 	entity this = new(outline);
 
@@ -56,7 +56,7 @@ void outline_drawline(entity this, vector start_ofs, vector end_ofs, int cap_mas
 	vector axis_2; // second axis to extend
 	vector start_ofs_caps = start_ofs;
 	vector end_ofs_caps = end_ofs;
-	if(start_ofs.x != end_ofs.x)
+	if (start_ofs.x != end_ofs.x)
 	{
 		axis_1 = width_halved * eY;
 		axis_2 = width_halved * eZ;
@@ -67,7 +67,7 @@ void outline_drawline(entity this, vector start_ofs, vector end_ofs, int cap_mas
 		start_ofs_caps.x -= width_halved;
 		end_ofs_caps.x += width_halved;
 	}
-	else if(start_ofs.y != end_ofs.y)
+	else if (start_ofs.y != end_ofs.y)
 	{
 		axis_1 = width_halved * eX;
 		axis_2 = width_halved * eZ;
@@ -78,7 +78,7 @@ void outline_drawline(entity this, vector start_ofs, vector end_ofs, int cap_mas
 		start_ofs_caps.y -= width_halved;
 		end_ofs_caps.y += width_halved;
 	}
-	else if(start_ofs.z != end_ofs.z)
+	else if (start_ofs.z != end_ofs.z)
 	{
 		axis_1 = width_halved * eX;
 		axis_2 = width_halved * eY;
@@ -199,7 +199,7 @@ void outline_drawfill(entity this, vector corner_1, vector corner_2, vector corn
 
 void outline_draw(entity this)
 {
-	if(autocvar_cl_race_checkpoint_outline == 0) return; // early return
+	if (autocvar_cl_race_checkpoint_outline == 0) return; // early return
 
 	// lower right front corner
 	vector bottom_1 = eX * this.mins.x + eY * this.mins.y + eZ * this.mins.z;
@@ -247,7 +247,7 @@ void outline_draw(entity this)
 	outline_drawline(this, bottom_4, top_4, CORNER_MASK_Z_FRONT | CORNER_MASK_Z_LEFT);
 
 	// optionally fill the box
-	if(autocvar_cl_race_checkpoint_outline_fill == 0) return; // early return
+	if (autocvar_cl_race_checkpoint_outline_fill == 0) return; // early return
 
 	// back face (facing X axis)
 	outline_drawfill(this, bottom_2, bottom_3, top_3,    top_2,    FACE_X_AXIS);
@@ -273,7 +273,7 @@ NET_HANDLE(ENT_CLIENT_RACE_OUTLINE, bool isnew)
 	setsize(this, this.mins, this.maxs);
 
 	this.draw = outline_draw;
-	if(isnew) IL_PUSH(g_drawables, this);
+	if (isnew) IL_PUSH(g_drawables, this);
 
 	return true;
 }
