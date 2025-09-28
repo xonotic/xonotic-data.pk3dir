@@ -36,7 +36,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-19 07:22+0200\n"
+"POT-Creation-Date: 2025-09-25 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
 "Language-Team: German (http://app.transifex.com/team-xonotic/xonotic/"
@@ -177,8 +177,8 @@ msgstr "^1Drücke ^3%s^1 um den Kameramodus zu wechseln"
 
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #, c-format
-msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^1Drücke ^3%s^1 für Spielmodus-Info"
+msgid "^1Press ^3%s^1 for gametype info"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #: qcsrc/menu/xonotic/keybinder.qc:153
@@ -275,8 +275,8 @@ msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr "^7Drücke ^3ESC^7, um die HUD-Optionen anzuzeigen."
 
 #: qcsrc/client/hud/panel/infomessages.qc:233
-msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr "^3Doppelklicke ^7ein Panel für Panel-spezifische Optionen."
+msgid "^3Double-click ^7a panel for panel-specific options."
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:234
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -634,9 +634,8 @@ msgid "Total amount of time holding the ball in Keepaway"
 msgstr "Gesamtzeit, die der Ball in Keepaway gehalten wurde"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
-msgid "How often a flag (CTF) or a key (KeyHunt) was captured"
+msgid "How often a flag (CTF) or a key (Key Hunt) was captured"
 msgstr ""
-"Wie oft eine Flagge (CTF) oder ein Schlüssel (KeyHunt) geschnappt wurde"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^caps"
@@ -756,8 +755,8 @@ msgid "SCO^hunts"
 msgstr "SCO^jagden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
-msgid "Number of keys carrier kills"
-msgstr "Anzahl an Schlüsselträgerkills"
+msgid "Number of key carrier kills"
+msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kckills"
@@ -836,10 +835,8 @@ msgstr "SCO^ziele"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid ""
-"How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"
+"How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"
 msgstr ""
-"Wie oft eine Flagge (CTF) oder ein Schlüssel (KeyHunt) oder ein Ball "
-"(Keepaway) aufgehoben wurde"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pickups"
@@ -1032,24 +1029,16 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:738
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
-"of game types, then a slash, to make the field show up only in these\n"
-"or in all but these game types. You can also specify 'all' as a\n"
-"field to show all fields available for the current game mode."
+"of gametypes, then a slash, to make the field show up only in these\n"
+"or in all but these gametypes. You can also specify 'all' as a\n"
+"field to show all fields available for the current gametype."
 msgstr ""
-"Vor einem Feld kannst du ein Plus- oder Minuszeichen setzen, dann\n"
-"eine kommagetrennte Liste an Spieltypen, dann ein Schrägstrich,\n"
-"um das Feld nur in diesen oder in allen ausser diesen Spieltypen\n"
-"anzuzeigen. Du kannst ausserdem „all“ als ein Feld angeben, um\n"
-"alle verfügbaren Felder für den aktuellen Spielmodus anzuzeigen."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:744
 msgid ""
-"The special game type names 'teams' and 'noteams' can be used to\n"
-"include/exclude ALL teams/noteams game modes."
+"The special gametype names 'teams' and 'noteams' can be used to\n"
+"include/exclude ALL teams/noteams gametypes."
 msgstr ""
-"Die besonderen Spieltypnamen „teams“ und „noteams“ können\n"
-"benutzt werden, um ALLE Spielmodi mit bzw. ohne Teams\n"
-"einzubinden bzw. auszuschliessen."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:748
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -1066,10 +1055,8 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:751
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
-"other gamemodes except DM."
+"other gametypes except DM."
 msgstr ""
-"„field3“ wird nur in CTF angezeigt, und „field4“ wird in allen\n"
-"anderen Spielmodi ausser DM angezeigt."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1059
 #: qcsrc/client/hud/panel/scoreboard.qc:1073
@@ -1146,11 +1133,6 @@ msgstr "^7Drücke ^3%s^7, um ein Team automatisch auszuwählen und beizutreten"
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7Drücke ^3%s^7, um einem bestimmten Team beizutreten"
-
-#: qcsrc/client/hud/panel/scoreboard.qc:2547
-#, c-format
-msgid "^3%1.0f minutes"
-msgstr "^3%1.0f Minuten"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2574
 #, c-format
@@ -1248,8 +1230,8 @@ msgid "Overtime #%d"
 msgstr "Verlängerung #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
-msgid "^1You must answer before entering hud configure mode"
-msgstr "^1Du musst antworten, bevor du den HUD-Konfigurationsmodus betrittst"
+msgid "^1You must answer before entering HUD configure mode"
+msgstr ""
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1498,13 +1480,13 @@ msgstr "Wiederbelebungsfortschritt"
 msgid "error creating curl handle"
 msgstr "Fehler bei Erzeugung des curl-Handles"
 
-#: qcsrc/common/gamemodes/gamemode/assault/assault.qc:8
+#: qcsrc/common/gametypes/gametype/assault/assault.qc:8
 #, c-format
 msgid ""
 "%s is a team-based gametype involving an attacking and a defending team."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/assault/assault.qc:9
+#: qcsrc/common/gametypes/gametype/assault/assault.qc:9
 msgid ""
 "The attacking team has to destroy objects placed on the map, which opens up "
 "new doors or pathways to more objects, until the main object is reached and "
@@ -1515,17 +1497,17 @@ msgid ""
 "main object within the time the other team took to do it."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/assault/assault.qc:12
+#: qcsrc/common/gametypes/gametype/assault/assault.qc:12
 msgid ""
 "Objects have waypoints which show their health and position, and they're "
 "destroyed by shooting them with any weapon."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
+#: qcsrc/common/gametypes/gametype/assault/assault.qh:8
 msgid "Assault"
 msgstr "Assault"
 
-#: qcsrc/common/gamemodes/gamemode/assault/assault.qh:8
+#: qcsrc/common/gametypes/gametype/assault/assault.qh:8
 msgid ""
 "Destroy obstacles to find and destroy the enemy power core before time runs "
 "out"
@@ -1533,19 +1515,19 @@ msgstr ""
 "Zerstöre Hindernisse, um den gegnerischen Reaktorkern zu zerstören, bevor "
 "die Zeit abläuft"
 
-#: qcsrc/common/gamemodes/gamemode/assault/assault.qh:22
-#: qcsrc/common/gamemodes/gamemode/cts/cts.qh:28
-#: qcsrc/common/gamemodes/gamemode/domination/domination.qh:37
-#: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:28
-#: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:41
-#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
-#: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:18
-#: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:49
-#: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:48
+#: qcsrc/common/gametypes/gametype/assault/assault.qh:22
+#: qcsrc/common/gametypes/gametype/cts/cts.qh:28
+#: qcsrc/common/gametypes/gametype/domination/domination.qh:37
+#: qcsrc/common/gametypes/gametype/invasion/invasion.qh:28
+#: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qh:41
+#: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:31
+#: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:18
+#: qcsrc/common/gametypes/gametype/tdm/tdm.qh:49
+#: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:48
 msgid "Point limit:"
 msgstr "Punktelimit:"
 
-#: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qc:8
+#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:8
 #, c-format
 msgid ""
 "%s is a common round-based gametype played with teams, where players spawn "
@@ -1554,48 +1536,48 @@ msgid ""
 "gameplay fast-paced and focused on combat."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qc:10
+#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:10
 msgid ""
 "Rounds start with a ten second grace period where weapons cannot be fired, "
 "so it's a good opportunity to group up with your team."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qc:11
+#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:11
 msgid ""
 "The match ends once a team reaches a certain number of rounds won, or has a "
 "considerable lead over the other team."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qc:12
+#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:12
 msgid ""
 "Since players only have one life per round, it's important to group up with "
 "fellow teammates and pay attention to any callouts from them. Team "
 "coordination is key!"
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
+#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:12
 msgid "Clan Arena"
 msgstr "Clan-Arena"
 
-#: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:12
+#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:12
 msgid "Kill all enemy teammates to win the round"
 msgstr "Töte alle feindlichen Teammitglieder, um zu gewinnen"
 
-#: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:42
-#: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:45
+#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:42
+#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:45
 msgid "Round limit:"
 msgstr "Rundenlimit:"
 
-#: qcsrc/common/gamemodes/gamemode/clanarena/clanarena.qh:42
-#: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:45
+#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:42
+#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:45
 msgid "The amount of rounds won needed before the match will end"
 msgstr "Die Anzahl der benötigten Runden, bevor das Spiel endet"
 
-#: qcsrc/common/gamemodes/gamemode/ctf/cl_ctf.qc:202
+#: qcsrc/common/gametypes/gametype/ctf/cl_ctf.qc:202
 msgid "Capture time rankings"
 msgstr "Eroberungszeit-Rangliste"
 
-#: qcsrc/common/gamemodes/gamemode/ctf/ctf.qc:8
+#: qcsrc/common/gametypes/gametype/ctf/ctf.qc:8
 #, c-format
 msgid ""
 "%s is a common team-based gametype where the objective is to steal an enemy "
@@ -1604,13 +1586,13 @@ msgid ""
 "collect your flag after it's dropped."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/ctf/ctf.qc:10
+#: qcsrc/common/gametypes/gametype/ctf/ctf.qc:10
 msgid ""
 "The game is won once a team reaches a certain number of \"caps\" (captures), "
 "or has a considerable lead over the other team."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/ctf/ctf.qc:11
+#: qcsrc/common/gametypes/gametype/ctf/ctf.qc:11
 msgid ""
 "If a flag is dropped into the void or a death trap it will be immediately "
 "returned to its base, or otherwise sit idle for a while before automatically "
@@ -1619,7 +1601,7 @@ msgid ""
 "on the radar and with waypoints."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/ctf/ctf.qc:13
+#: qcsrc/common/gametypes/gametype/ctf/ctf.qc:13
 #, c-format
 msgid ""
 "%s rewards crafty movement, since the more difficult it is for enemies to "
@@ -1630,11 +1612,11 @@ msgid ""
 "carrier."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
+#: qcsrc/common/gametypes/gametype/ctf/ctf.qh:12
 msgid "Capture the Flag"
 msgstr "Capture the Flag"
 
-#: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:12
+#: qcsrc/common/gametypes/gametype/ctf/ctf.qh:12
 msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
@@ -1642,20 +1624,20 @@ msgstr ""
 "Finde die gegnerische Flagge und bringe sie in die Basis deines Teams, "
 "verteidige deine Basis vom Team des Gegners"
 
-#: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
+#: qcsrc/common/gametypes/gametype/ctf/ctf.qh:30
 msgid "Capture limit:"
 msgstr "Eroberungs-Limit:"
 
-#: qcsrc/common/gamemodes/gamemode/ctf/ctf.qh:30
+#: qcsrc/common/gametypes/gametype/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
 msgstr "Die Anzahl der benötigten Flaggeneroberungen, bevor das Spiel endet"
 
-#: qcsrc/common/gamemodes/gamemode/cts/cl_cts.qc:41
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:184
+#: qcsrc/common/gametypes/gametype/cts/cl_cts.qc:41
+#: qcsrc/common/gametypes/gametype/race/cl_race.qc:184
 msgid "Rankings"
 msgstr "Platzierungen"
 
-#: qcsrc/common/gamemodes/gamemode/cts/cts.qc:10
+#: qcsrc/common/gametypes/gametype/cts/cts.qc:10
 #, c-format
 msgid ""
 "%s is a unique gametype, focusing on racing against other players on the "
@@ -1664,14 +1646,14 @@ msgid ""
 "others."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/cts/cts.qc:12
+#: qcsrc/common/gametypes/gametype/cts/cts.qc:12
 #, c-format
 msgid ""
 "%s is similar to %s, except you don't run in laps, and instead run from the "
 "start line to the finish line then start over again."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/cts/cts.qc:13
+#: qcsrc/common/gametypes/gametype/cts/cts.qc:13
 msgid ""
 "Although this gametype is quite different from the rest, it is played quite "
 "frequently since it's a great way to master movement skills and there are "
@@ -1679,15 +1661,15 @@ msgid ""
 "play."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
+#: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Race CTS"
 msgstr "CTS-Rennen"
 
-#: qcsrc/common/gamemodes/gamemode/cts/cts.qh:11
+#: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Race to the finish line for the fastest time"
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qc:11
+#: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:11
 #, c-format
 msgid ""
 "%s is a simple free-for-all fight to the death, where everyone plays against "
@@ -1696,13 +1678,13 @@ msgid ""
 "be picked up again."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qc:13
+#: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:13
 msgid ""
 "Scoring is quite simple, fragging an opponent adds one to your score, and "
 "fragging yourself subtracts one."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qc:14
+#: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:14
 #, c-format
 msgid ""
 "Maps often have powerups and items like %s and %s, which are usually highly "
@@ -1710,22 +1692,22 @@ msgid ""
 "making good use of them is important."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
+#: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qh:8
 msgid "Deathmatch"
 msgstr "Deathmatch"
 
-#: qcsrc/common/gamemodes/gamemode/deathmatch/deathmatch.qh:8
+#: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qh:8
 msgid "Score as many frags as you can"
 msgstr "Erziele so viele Frags wie möglich"
 
-#: qcsrc/common/gamemodes/gamemode/domination/domination.qc:8
+#: qcsrc/common/gametypes/gametype/domination/domination.qc:8
 #, c-format
 msgid ""
 "%s is a gametype where teams compete to dominate the map by capturing and "
 "keeping control points."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/domination/domination.qc:9
+#: qcsrc/common/gametypes/gametype/domination/domination.qc:9
 msgid ""
 "Control points are displayed on the radar to make finding them easy, and "
 "they are captured by simply walking through them. However, an enemy can just "
@@ -1733,34 +1715,34 @@ msgid ""
 "Control points start neutral (owned by no teams)."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/domination/domination.qc:12
+#: qcsrc/common/gametypes/gametype/domination/domination.qc:12
 msgid ""
 "Scoring is a combination of frags and score automatically generated by any "
 "control points held by your team every few seconds."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
+#: qcsrc/common/gametypes/gametype/domination/domination.qh:12
 msgid "Capture and defend all the control points to win"
 msgstr "Nimm alle Kontrollpunkte ein und verteidige sie, um zu gewinnen"
 
-#: qcsrc/common/gamemodes/gamemode/domination/domination.qh:12
+#: qcsrc/common/gametypes/gametype/domination/domination.qh:12
 msgid "Domination"
 msgstr "Domination"
 
-#: qcsrc/common/gamemodes/gamemode/domination/domination.qh:37
-#: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:41
-#: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:49
+#: qcsrc/common/gametypes/gametype/domination/domination.qh:37
+#: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qh:41
+#: qcsrc/common/gametypes/gametype/tdm/tdm.qh:49
 msgid "The amount of points needed before the match will end"
 msgstr "Die Anzahl der benötigten Punkte, bevor das Spiel endet"
 
-#: qcsrc/common/gamemodes/gamemode/duel/duel.qc:12
+#: qcsrc/common/gametypes/gametype/duel/duel.qc:12
 #, c-format
 msgid ""
 "%s is a 1-vs-1 arena battle to decide the winner, essentially a 2-player "
 "version of %s, making it one of the most competitive gametypes."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/duel/duel.qc:13
+#: qcsrc/common/gametypes/gametype/duel/duel.qc:13
 #, c-format
 msgid ""
 "Since players are on their own, important items like the %s and %s are "
@@ -1770,32 +1752,32 @@ msgid ""
 "master."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/duel/duel.qc:16
+#: qcsrc/common/gametypes/gametype/duel/duel.qc:16
 msgid ""
 "Once you frag your opponent, they will spawn with few weapons and limited "
 "health, so it is a good opportunity to search the map for them to pick up an "
 "easy frag and continue your streak."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/duel/duel.qc:17
+#: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #, c-format
 msgid "%s is often played with %s rules."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/duel/duel.qc:17
+#: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #: qcsrc/menu/xonotic/guide/pages.qc:183 qcsrc/menu/xonotic/guide/pages.qc:186
 msgid "XPM"
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
+#: qcsrc/common/gametypes/gametype/duel/duel.qh:9
 msgid "Duel"
 msgstr "Duell"
 
-#: qcsrc/common/gamemodes/gamemode/duel/duel.qh:9
+#: qcsrc/common/gametypes/gametype/duel/duel.qh:9
 msgid "Fight in a one versus one arena battle to decide the winner"
 msgstr "Kämpfe in einem 1-gegen-1-Arenakampf, um den Sieger zu bestimmen"
 
-#: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qc:8
+#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qc:8
 #, c-format
 msgid ""
 "%s is a round-based teamplay gametype where fragged players are frozen and "
@@ -1803,7 +1785,7 @@ msgid ""
 "from all opposing teams are frozen, scoring the remaining team a point."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qc:10
+#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qc:10
 msgid ""
 "Frozen players slowly unfreeze over time, but they unfreeze much faster when "
 "\"revived\" by a teammate standing in close proximity. Additionally, "
@@ -1811,14 +1793,14 @@ msgid ""
 "to try to avoid doing that."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qc:12
+#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qc:12
 msgid ""
 "Like in many other round-based gametypes, rounds start with a ten second "
 "grace period where weapons cannot be fired, meaning it's a good opportunity "
 "to grab as many pickups as you can."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qc:13
+#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qc:13
 msgid ""
 "Sneakily reviving a teammate will bring them back into the match to help "
 "outnumber your opponents, but it should be done with caution since often "
@@ -1828,11 +1810,11 @@ msgid ""
 "enemies are."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:15
+#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:15
 msgid "Freeze Tag"
 msgstr "Freeze-Tag"
 
-#: qcsrc/common/gamemodes/gamemode/freezetag/freezetag.qh:15
+#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:15
 msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
@@ -1841,7 +1823,7 @@ msgstr ""
 "Teammitglieder, um sie wieder aufzutauen, friere alle Gegner ein, um zu "
 "gewinnen"
 
-#: qcsrc/common/gamemodes/gamemode/invasion/invasion.qc:8
+#: qcsrc/common/gametypes/gametype/invasion/invasion.qc:8
 #, c-format
 msgid ""
 "%s is a unique gametype played in rounds where a herd of monsters spawn all "
@@ -1851,56 +1833,56 @@ msgid ""
 "match."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/invasion/invasion.qc:11
+#: qcsrc/common/gametypes/gametype/invasion/invasion.qc:11
 msgid ""
 "A round ends when either all monsters are fragged, or after a time limit."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
+#: qcsrc/common/gametypes/gametype/invasion/invasion.qh:8
 msgid "Invasion"
 msgstr "Invasion"
 
-#: qcsrc/common/gamemodes/gamemode/invasion/invasion.qh:8
+#: qcsrc/common/gametypes/gametype/invasion/invasion.qh:8
 msgid "Survive against waves of monsters"
 msgstr "Überlebe gegen Wellen von Monstern"
 
-#: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qc:10
+#: qcsrc/common/gametypes/gametype/keepaway/keepaway.qc:10
 #, c-format
 msgid ""
 "%s is a free-for-all match where a ball spawns randomly on the map and the "
 "goal is to hold the ball for as long as possible."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qc:11
+#: qcsrc/common/gametypes/gametype/keepaway/keepaway.qc:11
 msgid ""
 "Your score increases when you frag someone while you're holding a ball and "
 "when you frag the ball carrier. The first player to reach the score limit "
 "will win the match."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qc:13
+#: qcsrc/common/gametypes/gametype/keepaway/keepaway.qc:13
 msgid ""
 "When the ball carrier is fragged, the ball will drop to the ground and "
 "anyone is able to pick it up. If nobody picks it up after some time it will "
 "get bored and teleport itself elsewhere."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qc:15
+#: qcsrc/common/gametypes/gametype/keepaway/keepaway.qc:15
 #, c-format
 msgid ""
 "%s rewards good fragging but also good movement, since the better you can "
 "evade attacks, the longer you can keep the ball."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
+#: qcsrc/common/gametypes/gametype/keepaway/keepaway.qh:11
 msgid "Hold the ball to get points for kills"
 msgstr "Halte den Ball, und töte, um Punkte zu sammeln"
 
-#: qcsrc/common/gamemodes/gamemode/keepaway/keepaway.qh:11
+#: qcsrc/common/gametypes/gametype/keepaway/keepaway.qh:11
 msgid "Keepaway"
 msgstr "Keepaway"
 
-#: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qc:10
+#: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:10
 #, c-format
 msgid ""
 "%s is a round-based gametype played with a few teams, where each team starts "
@@ -1910,7 +1892,7 @@ msgid ""
 "the radar after a few seconds."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qc:12
+#: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:12
 #, c-format
 msgid ""
 "Scoring in %s is quite complicated, involving a mix of gathering all keys, "
@@ -1919,26 +1901,26 @@ msgid ""
 "death trap, points are allocated accordingly."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qc:14
+#: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:14
 #, c-format
 msgid ""
 "Like in %s the key can be dropped, so you can pass it to your teammates if "
 "you're running low on health."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
+#: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qh:11
 msgid "Gather all the keys to win the round"
 msgstr "Sammle alle Schlüssel, um die Runde zu gewinnen"
 
-#: qcsrc/common/gamemodes/gamemode/keyhunt/keyhunt.qh:11
+#: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qh:11
 msgid "Key Hunt"
 msgstr "Key Hunt"
 
-#: qcsrc/common/gamemodes/gamemode/lms/cl_lms.qc:18
+#: qcsrc/common/gametypes/gametype/lms/cl_lms.qc:18
 msgid "^1You have no more lives left"
 msgstr "^1Du hast keine Leben mehr übrig"
 
-#: qcsrc/common/gamemodes/gamemode/lms/lms.qc:10
+#: qcsrc/common/gametypes/gametype/lms/lms.qc:10
 #, c-format
 msgid ""
 "%s is a free-for-all gametype where all players start with a certain number "
@@ -1948,13 +1930,13 @@ msgid ""
 "item pickups don't spawn on the map."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/lms/lms.qc:13
+#: qcsrc/common/gametypes/gametype/lms/lms.qc:13
 msgid ""
 "Hiding is sometimes a viable strategy since if you can't be found you can't "
 "lose lives, but often you become a vulnerable target once discovered."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/lms/lms.qc:14
+#: qcsrc/common/gametypes/gametype/lms/lms.qc:14
 #, c-format
 msgid ""
 "Players leading the game by at least 2 lives glow and periodically have "
@@ -1963,19 +1945,19 @@ msgid ""
 "percentage of health when they attack leaders, like in the %s mutator."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
+#: qcsrc/common/gametypes/gametype/lms/lms.qh:11
 msgid "Last Man Standing"
 msgstr "Last Man Standing"
 
-#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:11
+#: qcsrc/common/gametypes/gametype/lms/lms.qh:11
 msgid "Survive and kill until the enemies have no lives left"
 msgstr "Überlebe und töte, bis die Feinde keine Leben mehr übrig haben"
 
-#: qcsrc/common/gamemodes/gamemode/lms/lms.qh:20
+#: qcsrc/common/gametypes/gametype/lms/lms.qh:20
 msgid "Lives:"
 msgstr "Leben:"
 
-#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qc:10
+#: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:10
 #, c-format
 msgid ""
 "%s is a fast-paced free-for-all deathmatch where players spawn in with all "
@@ -1983,7 +1965,7 @@ msgid ""
 "on maps, but buffs are still available."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qc:12
+#: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:12
 msgid ""
 "It shines in its unique handling of scoring, accounting for both frags but "
 "also damage dealt. This means that if you almost frag a player you will "
@@ -1992,38 +1974,38 @@ msgid ""
 "you do movement tricks like blaster jumping since self damage is disabled."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qc:15
+#: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:15
 #, c-format
 msgid ""
 "Since damage is always rewarded in %s, the more you shoot the better, "
 "turning this gametype into chaotic fun at times."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qc:16
+#: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:16
 #, c-format
 msgid "This gametype is often seen as a more newbie-friendly version of %s."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
+#: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem"
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:10
+#: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Mayhem"
 msgstr "Mayhem"
 
-#: qcsrc/common/gamemodes/gamemode/mayhem/mayhem.qh:31
-#: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:48
+#: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:31
+#: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:48
 msgid "How much score is needed before the match will end"
 msgstr "Die Anzahl der benötigten Punktzahl, bevor das Spiel endet"
 
-#: qcsrc/common/gamemodes/gamemode/nexball/nexball.qc:10
+#: qcsrc/common/gametypes/gametype/nexball/nexball.qc:10
 #, c-format
 msgid ""
 "%s is a fun ball sport game where 2 teams compete to score the most goals."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/nexball/nexball.qc:11
+#: qcsrc/common/gametypes/gametype/nexball/nexball.qc:11
 #, c-format
 msgid ""
 "%s is usually played as either soccer where players walk into the ball to "
@@ -2031,34 +2013,33 @@ msgid ""
 "and intercept passes."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/nexball/nexball.qc:12
+#: qcsrc/common/gametypes/gametype/nexball/nexball.qc:12
 msgid ""
 "Keep in mind players can score own goals, so don't embarrass yourself in "
 "front of your team!"
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
+#: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
 msgid "Nexball"
 msgstr "Nexball"
 
-#: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:11
-msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
+#: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
+msgid "Shoot and kick the ball into the enemy's goal, keep your goal clean"
 msgstr ""
-"Schiesse den Ball in das Tor des gegnerischen Teams, halte dein Tor sauber"
 
-#: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
+#: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
 msgid "Goal limit:"
 msgstr "Torlimit:"
 
-#: qcsrc/common/gamemodes/gamemode/nexball/nexball.qh:25
+#: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
 msgstr "Die Anzahl der benötigten Tore, bevor das Spiel endet"
 
-#: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:9
+#: qcsrc/common/gametypes/gametype/nexball/weapon.qh:9
 msgid "Ball Stealer"
 msgstr "Balldieb"
 
-#: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qc:77
+#: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:77
 #, c-format
 msgid ""
 "%s is a team-based gametype similar to %s where the final goal is to destroy "
@@ -2066,14 +2047,14 @@ msgid ""
 "points on the map (similar to those in %s) must first be captured."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qc:79
+#: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:79
 msgid ""
 "Since your team can only capture a control point if it is connected to "
 "another control point currently owned by your team, you have to "
 "systematically work through the map to reach the enemy generator."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qc:80
+#: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:80
 msgid ""
 "A control point is captured by walking into it then waiting for it to finish "
 "constructing. Control points of the opposing team are destroyed by attacking "
@@ -2081,38 +2062,38 @@ msgid ""
 "neutral once it is destroyed."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qc:82
+#: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:82
 msgid ""
 "When in overtime, the enemy's generator will start to decay, at a faster "
 "rate the more control points your team has."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:8
+#: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
 msgstr ""
 "Nimm Kontrollpunkte ein, um den gegnerischen Generator zu erreichen und zu "
 "zerstören"
 
-#: qcsrc/common/gamemodes/gamemode/onslaught/onslaught.qh:8
+#: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:8
 msgid "Onslaught"
 msgstr "Onslaught"
 
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:102
+#: qcsrc/common/gametypes/gametype/race/cl_race.qc:102
 msgid "Personal best"
 msgstr "Persönliche Bestzeit"
 
-#: qcsrc/common/gamemodes/gamemode/race/cl_race.qc:112
+#: qcsrc/common/gametypes/gametype/race/cl_race.qc:112
 msgid "Server best"
 msgstr "Server-Bestzeit"
 
-#: qcsrc/common/gamemodes/gamemode/race/race.qc:10
+#: qcsrc/common/gametypes/gametype/race/race.qc:10
 #, c-format
 msgid ""
 "%s is a gametype similar to %s where players run on a track to be the first "
 "to cross the finish line after a certain number of laps."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/race/race.qc:11
+#: qcsrc/common/gametypes/gametype/race/race.qc:11
 #, c-format
 msgid ""
 "Before the real race starts there's a qualifying session that decides the "
@@ -2121,33 +2102,33 @@ msgid ""
 "still be used to run faster."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/race/race.qc:13
+#: qcsrc/common/gametypes/gametype/race/race.qc:13
 msgid ""
 "During the real race it's possible to shoot other players in order to slow "
 "them down."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/race/race.qh:11
+#: qcsrc/common/gametypes/gametype/race/race.qh:11
 msgid "Race"
 msgstr "Rennen"
 
-#: qcsrc/common/gamemodes/gamemode/race/race.qh:11
+#: qcsrc/common/gametypes/gametype/race/race.qh:11
 msgid "Race against other players to the finish line"
 msgstr "Renne gegen die anderen Spieler zur Ziellinie"
 
-#: qcsrc/common/gamemodes/gamemode/race/race.qh:40
+#: qcsrc/common/gametypes/gametype/race/race.qh:40
 msgid "Laps:"
 msgstr "Runden:"
 
-#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:63
+#: qcsrc/common/gametypes/gametype/survival/cl_survival.qc:63
 msgid "Hunter"
 msgstr "Jäger"
 
-#: qcsrc/common/gamemodes/gamemode/survival/cl_survival.qc:69
+#: qcsrc/common/gametypes/gametype/survival/cl_survival.qc:69
 msgid "Survivor"
 msgstr "Überlebender"
 
-#: qcsrc/common/gamemodes/gamemode/survival/survival.qc:11
+#: qcsrc/common/gametypes/gametype/survival/survival.qc:11
 #, c-format
 msgid ""
 "%s is a hunter-survivor gametype involving two teams where the goal of the "
@@ -2157,21 +2138,21 @@ msgid ""
 "any other players."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/survival/survival.qc:13
+#: qcsrc/common/gametypes/gametype/survival/survival.qc:13
 msgid ""
 "Since the goal of both teams is essentially to eliminate all members of the "
 "opposite team, it can be tricky for survivors to figure out their fellow "
 "teammates."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/survival/survival.qc:14
+#: qcsrc/common/gametypes/gametype/survival/survival.qc:14
 msgid ""
 "Teams are randomly selected as the round begins, with the hunter team being "
 "a bit smaller, and then the round starts with a brief warmup grace period in "
 "which items can be collected but weapons can't be fired."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/survival/survival.qc:16
+#: qcsrc/common/gametypes/gametype/survival/survival.qc:16
 msgid ""
 "Players are rewarded a point for each member of the opposing team they frag, "
 "only if they survive the round, and points are deducted for each teammate "
@@ -2179,64 +2160,64 @@ msgid ""
 "round timer expires."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
+#: qcsrc/common/gametypes/gametype/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
 msgstr ""
 "Identifiziere und eliminiere alle Jäger, bevor alle deine Verbündeten "
 "gestorben sind"
 
-#: qcsrc/common/gamemodes/gamemode/survival/survival.qh:12
+#: qcsrc/common/gametypes/gametype/survival/survival.qh:12
 msgid "Survival"
 msgstr "Survival"
 
-#: qcsrc/common/gamemodes/gamemode/tdm/tdm.qc:10
+#: qcsrc/common/gametypes/gametype/tdm/tdm.qc:10
 #, c-format
 msgid "%s is the team version of %s, played in teams rather than solo."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/tdm/tdm.qc:11
+#: qcsrc/common/gametypes/gametype/tdm/tdm.qc:11
 msgid ""
 "Scoring is quite simple, adding a point for every frag, and subtracting a "
 "point for fragging yourself or a teammate."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/tdm/tdm.qc:12
+#: qcsrc/common/gametypes/gametype/tdm/tdm.qc:12
 msgid ""
 "Careful team coordination and map control is often key to winning a match, "
 "and sometimes players will share weapons with their teammates."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
+#: qcsrc/common/gametypes/gametype/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
 msgstr "Hilf deinem Team, mehr Frags zu erzielen als das gegnerische Team"
 
-#: qcsrc/common/gamemodes/gamemode/tdm/tdm.qh:9
+#: qcsrc/common/gametypes/gametype/tdm/tdm.qh:9
 msgid "Team Deathmatch"
 msgstr "Team-Deathmatch"
 
-#: qcsrc/common/gamemodes/gamemode/tka/tka.qc:10
+#: qcsrc/common/gametypes/gametype/tka/tka.qc:10
 #, c-format
 msgid ""
 "%s is the team version of %s, where teams compete to maintain superior "
 "control over the ball."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/tka/tka.qc:11
+#: qcsrc/common/gametypes/gametype/tka/tka.qc:11
 #, c-format
 msgid ""
 "Scoring is similar to in %s, except that points are awarded for frags for "
 "all members of the team of the player holding the ball."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
+#: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
 msgstr "Halte den Ball im Besitz deines Teams, und töte, um Punkte zu sammeln"
 
-#: qcsrc/common/gamemodes/gamemode/tka/tka.qh:13
+#: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Team Keepaway"
 msgstr "Team Keepaway"
 
-#: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qc:11
+#: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qc:11
 #, c-format
 msgid ""
 "%s is a constant action team-based gametype based on %s, using the same "
@@ -2245,20 +2226,20 @@ msgid ""
 "scoring system differences."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qc:13
+#: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qc:13
 msgid ""
 "Since it doesn't have rounds, the chaos is nonstop. As a consequence of the "
 "chaotic nature, team communication is less important in this gametype than "
 "other team-based gametypes."
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
+#: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem"
 msgstr ""
 
-#: qcsrc/common/gamemodes/gamemode/tmayhem/tmayhem.qh:10
+#: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
 msgstr "Team-Mayhem"
 
@@ -2470,8 +2451,8 @@ msgid "Game over!"
 msgstr "Spiel vorbei!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
-msgid "Well done! Click 'Next Level' to continue"
-msgstr "Gut gemacht! Klicke „Nächstes Level“, um fortzufahren"
+msgid "Well done! Click \"Next Level\" to continue"
+msgstr ""
 
 #: qcsrc/common/minigames/minigame/bd.qc:1183
 #: qcsrc/common/minigames/minigame/c4.qc:383
@@ -2496,8 +2477,8 @@ msgid "Wicked! Press \"Next Level\" to continue!"
 msgstr "Wahnsinn! Drücke „Nächstes Level“ zum Fortfahren!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1197
-msgid "Press the space bar to change your currently selected tile"
-msgstr "Drücke die Leertaste, um deinen derzeit ausgewählte Kachel zu ändern"
+msgid "Press the spacebar to change your currently selected tile"
+msgstr ""
 
 #: qcsrc/common/minigames/minigame/bd.qc:1200
 msgid "Push the boulders onto the targets"
@@ -2574,10 +2555,8 @@ msgstr "Mühle"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:621
 msgid ""
-"You can select one of your pieces to move it in one of the surrounding places"
+"You can select one of your pieces to move it to one of the surrounding places"
 msgstr ""
-"Du kannst eine deiner Spielfiguren auswählen, um sie zu einer der umgebenden "
-"Felder zu verschieben"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:623
 msgid "You can select one of your pieces to move it anywhere on the board"
@@ -3180,8 +3159,8 @@ msgstr "Ausweichen"
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:10
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:9
 #: qcsrc/menu/xonotic/keybinder.qc:68
-msgid "off-hand hook"
-msgstr "Enterhaken"
+msgid "offhand hook"
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
@@ -3597,11 +3576,11 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:31
-msgid "Overkill Heavy Machine Gun"
-msgstr "Overkill-Schweres-Maschinengewehr"
+msgid "Overkill Heavy MachineGun"
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:166
-#: qcsrc/common/weapons/weapon/machinegun.qc:423
+#: qcsrc/common/weapons/weapon/machinegun.qc:434
 #, c-format
 msgid "The %s quickly fires bullets with a small degree of spread."
 msgstr ""
@@ -3663,7 +3642,7 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qc:136
-#: qcsrc/common/weapons/weapon/shotgun.qc:404
+#: qcsrc/common/weapons/weapon/shotgun.qc:407
 #, c-format
 msgid ""
 "The %s damage drops off quickly as the range increases, so it is only useful "
@@ -4454,8 +4433,8 @@ msgstr "^BG%s^K1 dachte, einen schönen Campingplatz gefunden zu haben%s%s"
 
 #: qcsrc/common/notifications/all.inc:311
 #, c-format
-msgid "^BG%s^K1 unfairly eliminated themself%s%s"
-msgstr "^BG%s^K1 tötete sich unfairerweise selbst%s%s"
+msgid "^BG%s^K1 unfairly eliminated themselves%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:313
 #, c-format
@@ -4759,8 +4738,8 @@ msgstr "^BG%s^K3 wurde nach %s Sekunden automatisch wiederbelebt"
 
 #: qcsrc/common/notifications/all.inc:371
 #, c-format
-msgid "^BG%s^K1 froze themself"
-msgstr "^BG%s^K1 frierte sich selbst ein"
+msgid "^BG%s^K1 froze themselves"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:706
@@ -5235,8 +5214,8 @@ msgstr "^BG%s%s^K1 wurde von ^BG%s^K1s Blaster erschossen%s%s"
 
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
-msgid "^BG%s^K1 shot themself to hell with their Blaster%s%s"
-msgstr "^BG%s^K1 hat sich selbst mit dem Blaster in die Hölle geschossen%s%s"
+msgid "^BG%s^K1 shot themselves to hell with their Blaster%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
@@ -5260,8 +5239,8 @@ msgstr "^BG%s%s^K1 kam zu nah an der Rakete von ^BG%s^K1 heran%s%s"
 
 #: qcsrc/common/notifications/all.inc:484
 #, c-format
-msgid "^BG%s^K1 blew themself up with their Devastator%s%s"
-msgstr "^BG%s^K1 hat sich mit dem Devastator in die Luft gejagt%s%s"
+msgid "^BG%s^K1 blew themselves up with their Devastator%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:485
 #, c-format
@@ -5399,16 +5378,13 @@ msgstr "^BG%s^K1 hat die eigene Granate nicht beachtet%s%s"
 
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
-msgid "^BG%s^K1 blew themself up with their own Mortar%s%s"
-msgstr "^BG%s^K1 jagte sich mit dem eigenen Granatwerfer in die Luft%s%s"
+msgid "^BG%s^K1 blew themselves up with their own Mortar%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
-msgid ""
-"^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy Machine Gun%s%s"
+msgid "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy MachineGun%s%s"
 msgstr ""
-"^BG%s%s^K1 wurde vom ^BG%s^K1s Overkill-Schweres-Maschinengewehr in Stücke "
-"zerrissen%s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
@@ -5449,10 +5425,8 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:517
 #, c-format
 msgid ""
-"^BG%s^K1 blew themself up with their Overkill Rocket Propelled Chainsaw%s%s"
+"^BG%s^K1 blew themselves up with their Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s^K1 sprengte sich mit der eigenen Overkill-Raketenkettensäge selbst in "
-"die Luft%s%s"
 
 #: qcsrc/common/notifications/all.inc:519
 #, c-format
@@ -5712,24 +5686,23 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:600
 #, c-format
-msgid "^BGYour %steam mate^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr "^BGDein %sTeamkollege^BG hat die ^TC^TT^BG Flagge! Beschütze ihn!"
+msgid "^BGYour %steammate^BG got the ^TC^TT^BG flag! Protect them!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:601
 #, c-format
-msgid "^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
+msgid "^BGYour %steammate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
 msgstr ""
-"^BGDein %sTeamkollege (^BG%s%s)^BG hat die ^TC^TT^BG Flagge! Beschütze ihn!"
 
 #: qcsrc/common/notifications/all.inc:602
 #, c-format
-msgid "^BGYour %steam mate^BG got the flag! Protect them!"
-msgstr "^BGDein %sTeamkollege^BG hat die Flagge! Beschütze ihn!"
+msgid "^BGYour %steammate^BG got the flag! Protect them!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:603
 #, c-format
-msgid "^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"
-msgstr "^BGDein %sTeamkollege (^BG%s%s)^BG hat die Flagge! Beschütz ihn!"
+msgid "^BGYour %steammate (^BG%s%s)^BG got the flag! Protect them!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:604
 #: qcsrc/common/notifications/all.inc:750
@@ -5832,8 +5805,8 @@ msgstr ""
 "Du bist jetzt in: %s"
 
 #: qcsrc/common/notifications/all.inc:651
-msgid "^K1You were punished for attacking your team mates!"
-msgstr "^K1Du wurdest für den Angriff auf deine Teammitglieder bestraft!"
+msgid "^K1You were punished for attacking your teammates!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:652
 msgid "^K1Die camper!"
@@ -6014,8 +5987,8 @@ msgstr "^K1Achte darauf, wo du hintrittst!"
 
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
-msgid "^K1Traitor! You betrayed team mate ^BG%s"
-msgstr "^K1Verräter! Du hast dein Teammitglied ^BG%s verraten"
+msgid "^K1Traitor! You betrayed teammate ^BG%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
@@ -6024,8 +5997,8 @@ msgstr "^1Verräter! Du hast dein Teammitglied ^BG%s getötet"
 
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
-msgid "^K1You were betrayed by team mate ^BG%s"
-msgstr "^K1Du wurdest von deinem Teammitglied ^BG%s betrogen"
+msgid "^K1You were betrayed by teammate ^BG%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
@@ -8045,21 +8018,21 @@ msgstr ""
 msgid "Grappling Hook"
 msgstr "Enterhaken"
 
-#: qcsrc/common/weapons/weapon/machinegun.qc:424
+#: qcsrc/common/weapons/weapon/machinegun.qc:435
 msgid ""
 "The secondary fire fires a quick burst of bullets faster than the primary "
 "fire and with no spread, but there's a short delay until it can be used "
 "again."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/machinegun.qc:425
+#: qcsrc/common/weapons/weapon/machinegun.qc:436
 #, c-format
 msgid ""
 "It consumes %s ammo for each bullet shot, until the whole magazine is "
 "emptied."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/machinegun.qc:426
+#: qcsrc/common/weapons/weapon/machinegun.qc:437
 #, c-format
 msgid ""
 "The %s can be used in a lot of situations, and it works particularly well at "
@@ -8239,14 +8212,14 @@ msgstr ""
 msgid "T.A.G. Seeker"
 msgstr "T.A.G. Seeker"
 
-#: qcsrc/common/weapons/weapon/shotgun.qc:400
+#: qcsrc/common/weapons/weapon/shotgun.qc:403
 #, c-format
 msgid ""
 "The %s is one of the two main default weapons, firing a single shotgun round "
 "which spreads into multiple pellets upon exiting the barrel."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/shotgun.qc:401
+#: qcsrc/common/weapons/weapon/shotgun.qc:404
 #, c-format
 msgid ""
 "The secondary fire swings the %s, slapping players close enough with the "
@@ -8254,7 +8227,7 @@ msgid ""
 "is difficult."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/shotgun.qc:403
+#: qcsrc/common/weapons/weapon/shotgun.qc:406
 #, c-format
 msgid ""
 "The primary fire consumes %s ammo, although if you spawn in with the %s you "
@@ -9336,6 +9309,7 @@ msgstr "Symbolgrössenskala"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:85
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:116
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:139
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:70
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:82
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:88
 #, c-format
@@ -9928,10 +9902,8 @@ msgid "Time limit:"
 msgstr "Zeitlimit:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:85
-msgid "Timelimit in minutes that when hit, will end the match"
+msgid "Time limit in minutes that when hit, will end the match"
 msgstr ""
-"Wähle ein Zeitlimit bei dem die Map endet oder verwende den Map-Standard für "
-"diese Option"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
 msgid "TIMLIM^Default"
@@ -10093,8 +10065,8 @@ msgid "Author:"
 msgstr "Autor:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:64
-msgid "Game types:"
-msgstr "Spieltyp:"
+msgid "Gametypes:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
@@ -11407,8 +11379,8 @@ msgid "Spawnpoint effects"
 msgstr "Startpunkt-Effekte"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:241
-msgid "Particles effects at all spawn points and whenever a player spawns"
-msgstr "Partikeleffekte an allen Spawnpunkten, und, wenn ein Spieler spawnt"
+msgid "Particle effects at all spawn points and whenever a player spawns"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:246
 msgid "Quality:"
@@ -11682,8 +11654,8 @@ msgid "SPREES^Both"
 msgstr "Beide"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:55
-msgid "Print on a seperate line"
-msgstr "In separater Zeile anzeigen"
+msgid "Print on a separate line"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:59
 msgid "Add extra frag information to centerprint when available"
@@ -11694,8 +11666,8 @@ msgid "Add frag location to death messages when available"
 msgstr "Frag-Ort in den Nachrichten anzeigen, wenn verfügbar"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:67
-msgid "Gamemode Settings"
-msgstr "Spieltyp-Einstellungen"
+msgid "Gametype Settings"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:69
 msgid "Display capture times in Capture The Flag"
@@ -12118,9 +12090,8 @@ msgid "Smooth aiming"
 msgstr "Sanftes Zielen"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:109
-msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
+msgid "Smooths the mouse movement, but makes aiming slightly less responsive"
 msgstr ""
-"Glättet die Mausbewegung, aber verringert leicht die Reaktion des Zielens"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:111
 msgid "Invert aiming"
@@ -12499,17 +12470,9 @@ msgstr ""
 "Anti-Aliasing aktivieren, was die Kanten von 3-D-Geometrie weicher "
 "erscheinen lässt. Beachte, dass dies die Performanz stark verringern könnte"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:70
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:71
 msgid "AA^Disabled"
 msgstr "Aus"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:71
-msgid "2x"
-msgstr "2×"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:72
-msgid "4x"
-msgstr "4×"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:79
 msgid "Resolution scaling:"
@@ -12754,8 +12717,8 @@ msgid "join 'best' team (auto-select)"
 msgstr "Tritt „bestem“ Team bei (Auto-Auswahl)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
-msgid "Autoselect team (recommended)"
-msgstr "Automatische Auswahl des Teams (bevorzugt)"
+msgid "Auto-select team (recommended)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
@@ -13317,8 +13280,8 @@ msgid "show scores"
 msgstr "Punkte anzeigen"
 
 #: qcsrc/menu/xonotic/keybinder.qc:137
-msgid "screen shot"
-msgstr "Bildschirmfoto"
+msgid "screenshot"
+msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:138
 msgid "maximize radar"
@@ -13458,11 +13421,9 @@ msgstr "%ss Xonotic-Server"
 
 #: qcsrc/menu/xonotic/maplist.qc:310
 msgid ""
-"Huh? Can't play this (invalid game type). Refiltering so this won't happen "
+"Huh? Can't play this (invalid gametype). Refiltering so this won't happen "
 "again."
 msgstr ""
-"Huch? Kann dies nicht spielen (ungültiger Spieltyp). Neufilterung, damit das "
-"nicht nochmal passiert."
 
 #: qcsrc/menu/xonotic/playerlist.qc:115
 msgid "spectator"

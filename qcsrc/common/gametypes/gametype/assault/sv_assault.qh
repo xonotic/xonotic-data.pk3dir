@@ -1,0 +1,56 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+#include <common/scores.qh>
+
+const int ASSAULT_VALUE_INACTIVE = 1000;
+
+const int ST_ASSAULT_OBJECTIVES = 1;
+
+IntrusiveList g_assault_destructibles;
+IntrusiveList g_assault_objectivedecreasers;
+IntrusiveList g_assault_objectives;
+
+REGISTER_MUTATOR(as, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		g_assault_destructibles = IL_NEW();
+		g_assault_objectivedecreasers = IL_NEW();
+		g_assault_objectives = IL_NEW();
+		GameRules_teams(true);
+		int teams = BITS(2); // always red vs blue
+		GameRules_scoring(teams, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY,
+		{
+			field_team(ST_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);
+			field(SP_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);
+		});
+	}
+	return 0;
+}
+
+// sprites
+.entity assault_decreaser;
+.entity assault_sprite;
+
+// legacy bot defs
+const int HAVOCBOT_AST_ROLE_NONE = 0;
+const int HAVOCBOT_AST_ROLE_DEFENSE = 2;
+const int HAVOCBOT_AST_ROLE_OFFENSE = 4;
+
+.float havocbot_attack_time;
+
+void(entity this) havocbot_role_ast_defense;
+void(entity this) havocbot_role_ast_offense;
+
+void(entity bot) havocbot_ast_reset_role;
+
+void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_items;
+void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
+
+// assault gametype: Which team is attacking in this round?
+int assault_attacker_team;
+
+// predefined spawnfuncs
+void target_objective_decrease_activate(entity this);

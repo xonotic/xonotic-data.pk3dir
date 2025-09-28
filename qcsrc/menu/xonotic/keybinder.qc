@@ -65,7 +65,7 @@ void KeyBinds_BuildList()
 	KEYBIND_DEF("+moveright"                            , _("strafe right"));
 	KEYBIND_DEF("+jump"                                 , _("jump / swim"));
 	KEYBIND_DEF("+crouch"                               , _("crouch / sink"));
-	KEYBIND_DEF("+hook"                                 , _("off-hand hook"));
+	KEYBIND_DEF("+hook"                                 , _("offhand hook"));
 	KEYBIND_DEF("+jetpack"                              , _("jetpack"));
 	KEYBIND_EMPTY_LINE();
 
@@ -134,7 +134,7 @@ void KeyBinds_BuildList()
 	KEYBIND_DEF("+zoom"                                 , _("hold zoom"));
 	KEYBIND_DEF("togglezoom"                            , _("toggle zoom"));
 	KEYBIND_DEF("+showscores"                           , _("show scores"));
-	KEYBIND_DEF("screenshot"                            , _("screen shot"));
+	KEYBIND_DEF("screenshot"                            , _("screenshot"));
 	KEYBIND_DEF("+hud_panel_radar_maximized"            , _("maximize radar"));
 	KEYBIND_DEF("toggle chase_active"                   , _("3rd person view"));
 	KEYBIND_DEF("spec"                                  , _("enter spectator mode"));

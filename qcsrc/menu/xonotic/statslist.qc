@@ -88,7 +88,7 @@ void XonoticStatsList_getStats(entity me)
 		orderstr = "";
 		data = db_get(PS_D_IN_DB, sprintf("#%s", e));
 
-		// non-gamemode specific stuff
+		// non-gametype specific stuff
 		switch(e)
 		{
 			case "overall/joined_dt":
@@ -177,7 +177,7 @@ void XonoticStatsList_getStats(entity me)
 			continue;
 		}
 
-		// game mode specific stuff
+		// gametype specific stuff
 		if(order > 0)
 		{
 			orderstr = sprintf("%03d", order);
@@ -231,7 +231,7 @@ void XonoticStatsList_getStats(entity me)
 				outstr = strcat(strtoupper(gametype), " ", outstr);
 				data = sprintf(_("%d (unranked)"), stof(data));
 
-				// unranked game modes ALWAYS get put last
+				// unranked gametypes ALWAYS get put last
 				orderstr = "zzz";
 			}
 			else { continue; }

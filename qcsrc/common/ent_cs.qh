@@ -27,7 +27,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
  * If you add SendEntity to players, the engine will not
  * do any prediction anymore, and you'd have to write the whole
  * prediction code in CSQC, you want that? :P
- * Data can depend on gamemode. For now, it serves as GPS entities
+ * Data can depend on gametype. For now, it serves as GPS entities
  * in onslaught... YAY ;)
  */
 

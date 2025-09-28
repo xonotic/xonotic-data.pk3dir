@@ -1,0 +1,97 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+
+float autocvar_g_onslaught_point_limit;
+IntrusiveList g_onsshields;
+void ons_Initialize();
+
+REGISTER_MUTATOR(ons, false)
+{
+    MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		GameRules_teams(true);
+		GameRules_limit_score(autocvar_g_onslaught_point_limit);
+
+		ons_Initialize();
+	}
+	return false;
+}
+
+.entity ons_toucher; // player who touched the control point
+
+// control point / generator constants
+const float ONS_CP_THINKRATE = 0.2;
+const float GEN_THINKRATE = 1;
+#define CPGEN_SPAWN_OFFSET ('0 0 1' * (PL_MAX_CONST.z - 13))
+const vector CPGEN_WAYPOINT_OFFSET = ('0 0 128');
+const vector CPICON_OFFSET = ('0 0 96');
+
+// list of generators on the map
+entity ons_worldgeneratorlist;
+.entity ons_worldgeneratornext;
+
+// list of control points on the map
+entity ons_worldcplist;
+.entity ons_worldcpnext;
+
+// list of links on the map
+entity ons_worldlinklist;
+.entity ons_worldlinknext;
+
+// definitions
+.entity sprite;
+.string target2;
+.int iscaptured;
+.int islinked;
+.int isshielded;
+.float lasthealth;
+.int lastteam;
+.int lastshielded;
+.int lastcaptured;
+
+.bool waslinked;
+
+bool ons_stalemate;
+
+.float teleport_antispam;
+
+.int aregensneighbor;
+.int arecpsneighbor;
+float ons_notification_time[17];
+
+.float ons_overtime_damagedelay;
+
+.vector ons_deathloc;
+
+.entity ons_spawn_by;
+
+// declarations for functions used outside sv_onslaught.qc
+void ons_Generator_UpdateSprite(entity e);
+void ons_ControlPoint_UpdateSprite(entity e);
+bool ons_ControlPoint_Attackable(entity cp, int teamnum);
+
+// CaptureShield: Prevent capturing or destroying control point/generator if it is not available yet
+float ons_captureshield_force; // push force of the shield
+
+// bot player logic
+const int HAVOCBOT_ONS_ROLE_NONE 		= 0;
+const int HAVOCBOT_ONS_ROLE_DEFENSE 	= 2;
+const int HAVOCBOT_ONS_ROLE_ASSISTANT 	= 4;
+const int HAVOCBOT_ONS_ROLE_OFFENSE 	= 8;
+
+.entity havocbot_ons_target;
+
+.float havocbot_attack_time;
+
+void havocbot_role_ons_defense(entity this);
+void havocbot_role_ons_offense(entity this);
+void havocbot_role_ons_assistant(entity this);
+
+void havocbot_ons_reset_role(entity this);
+void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius);
+void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org, float sradius);
+
+// score rule declarations
+const int ST_ONS_GENS = 1;

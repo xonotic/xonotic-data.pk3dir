@@ -1,7 +1,7 @@
 #include "teamplay.qh"
 
 #include <common/deathtypes/all.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/teams.qh>
 #include <server/bot/api.qh>
 #include <server/bot/default/cvars.qh>
@@ -264,7 +264,7 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 	if (team_index != old_team_index)
 	{
 		KillPlayerForTeamChange(player);
-		PlayerScore_Clear(player); // works only in game modes without teams
+		PlayerScore_Clear(player); // works only in gametypes without teams
 
 		if (!IS_BOT_CLIENT(player))
 			TeamBalance_AutoBalanceBots();

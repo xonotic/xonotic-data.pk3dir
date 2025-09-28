@@ -314,11 +314,11 @@ STATIC_INIT_LATE(Mutators) {
     MUTATOR_ONADD { \
         /* game loads at time 1 */ \
         if (time > 1) { \
-            error("This is a game type and it cannot be added at runtime."); \
+            error("This is a gametype and it cannot be added at runtime."); \
         } \
     } \
 	MUTATOR_ONREMOVE { \
-		LOG_INFO("This is a game type and it cannot be removed at runtime."); \
+		LOG_INFO("This is a gametype and it cannot be removed at runtime."); \
 		return -1; \
 	} \
 MACRO_END

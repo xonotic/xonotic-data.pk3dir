@@ -776,7 +776,7 @@ METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
 
 #endif
 #ifdef MENUQC
-#include <common/gamemodes/gamemode/ctf/ctf.qh>
+#include <common/gametypes/gametype/ctf/ctf.qh>
 #include <common/items/item/ammo.qh>
 
 METHOD(Electro, describe, string(Electro this))

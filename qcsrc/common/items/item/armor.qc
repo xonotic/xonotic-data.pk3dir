@@ -1,7 +1,7 @@
 #include "armor.qh"
 
 #ifdef MENUQC
-#include <common/gamemodes/gamemode/duel/duel.qh>
+#include <common/gametypes/gametype/duel/duel.qh>
 
 #define PAR_DEFAULT_PICKUP_ARMOR(s) \
 	PAR(_("By default, the pickup gives you %s armor."), strcat("^9", cvar_defstring(strcat("g_pickup_armor", s)), "^7"));

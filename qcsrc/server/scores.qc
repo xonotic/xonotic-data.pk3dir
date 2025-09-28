@@ -222,7 +222,7 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 		WriteByte(MSG_ENTITY, teamscores_flags(i));
 	}
 	// prevent sending the welcome message again when score types are sent again because the scoring system has changed
-	// it can happen in some game modes like Race when the qualyfing session ends and the race starts
+	// it can happen in some gametypes like Race when the qualyfing session ends and the race starts
 	bool welcome_msg_too = (!CS(to) || time < CS(to).jointime + 5);
 	WriteByte(MSG_ENTITY, welcome_msg_too);
 	// welcome message is sent here because it needs to know the gametype

@@ -23,7 +23,7 @@ const float CHRAME_DRAG = 8;
 
 .entity personal;
 
-.int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
+.int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and teammates can grab, 3 = anyone can grab
 
 bool drag_undraggable(entity draggee, entity dragger);
 
