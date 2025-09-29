@@ -746,7 +746,17 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		if (time + 0.1 >= held_nade.wait)
 		{
 			toss_nade(player, false, '0 0 0', time + 0.05);
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_THROW);
+			int ntype = STAT(NADE_BONUS_TYPE, held_nade);
+			if (ntype == NADE_TYPE_NORMAL.m_id
+			||  ntype == NADE_TYPE_NAPALM.m_id
+			|| (ntype == NADE_TYPE_ICE.m_id      && !autocvar_g_nades_ice_teamcheck)
+			||  ntype == NADE_TYPE_TRANSLOCATE.m_id
+			|| (ntype == NADE_TYPE_HEAL.m_id     && (autocvar_g_nades_heal_friend < 0 || autocvar_g_nades_heal_armor_rate < 0))
+			|| (ntype == NADE_TYPE_ENTRAP.m_id   && (autocvar_g_nades_entrap_speed < 1 || autocvar_g_nades_entrap_strength < 1))
+			|| (ntype == NADE_TYPE_MONSTER.m_id  && !autocvar_g_monsters)
+			|| (ntype == NADE_TYPE_AMMO.m_id     && autocvar_g_nades_ammo_friend < 0)
+			|| (ntype == NADE_TYPE_DARKNESS.m_id && !autocvar_g_nades_darkness_teamcheck))
+				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_THROW);
 		}
 	}
 
