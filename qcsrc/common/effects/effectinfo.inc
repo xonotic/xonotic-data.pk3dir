@@ -9382,4 +9382,27 @@ SUB(EF_SPEED) {
 	MY(type) = "static";
 }
 
+DEF(vampire_fx);
+// rhomboids that fly out from the player when they're healed
+SUB(vampire_fx) {
+	MY(airfriction) = -0.250000;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 170;
+	MY(bounce) = 1.000000;
+	MY(color_min) = "0xff003d";
+	MY(color_max) = "0xff003d";
+	MY(count) = 5;
+	MY(gravity) = -0.5000000;
+	MY(originjitter) = '5.0 5.0 100.0';
+	MY(sizeincrease) = -0.050000;
+	MY(size_min) = 3;
+	MY(size_max) = 5;
+	MY(tex_min) = 70;
+	MY(tex_max) = 70;
+	MY(type) = "spark";
+	MY(velocityjitter) = '50.0 50.0 5.0';
+	MY(velocitymultiplier) = 0.2;
+}
+
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
