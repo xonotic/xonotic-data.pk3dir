@@ -14,7 +14,6 @@ NET_HANDLE(net_effect, bool isNew)
 	entity eff = REGISTRY_GET(Effects, net_name);
 
 	vector vel = '0 0 0';
-	int eff_cnt = 1;
 	int eff_flags = 0;
 	bool eff_trail = eff.eent_eff_trail;
 	vector v = ReadVector();
@@ -43,13 +42,10 @@ NET_HANDLE(net_effect, bool isNew)
 	else if(extraflags & EFF_NET_COLOR_SAME)
 		particles_colormax = particles_colormin;
 
-	if(!eff_trail)
-		eff_cnt = ReadByte();
-
 	if(eff_trail)
 		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(eff), v, vel, 1, eff_flags);
 	else
-		boxparticles(particleeffectnum(eff), NULL, v, v, vel, vel, 1, eff_flags);
+		boxparticles(particleeffectnum(eff), NULL, v, v, vel, vel, ReadByte(), eff_flags);
 	return true;
 }
 #endif
