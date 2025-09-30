@@ -829,6 +829,8 @@ msgstr "целей"
 msgid ""
 "How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"
 msgstr ""
+"Как часто флаг (Захват флага) или ключ (Охота за ключами) или мяч (Прятки) "
+"были подобраны"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pickups"
@@ -1025,12 +1027,18 @@ msgid ""
 "or in all but these gametypes. You can also specify 'all' as a\n"
 "field to show all fields available for the current gametype."
 msgstr ""
+"Вы можете написать «+» или «-» перед полем, а затем список\n"
+"режимов игры через запятую, затем косую черту «/» для показа\n"
+"только этих или не этих режимов. Вы так же можете указать «all»\n"
+"как поле для показа всех доступных полей текущего режима игры."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:744
 msgid ""
 "The special gametype names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams gametypes."
 msgstr ""
+"Специальные имена режимов «teams» и «noteams» можно использовать\n"
+"для включения/исключения ВСЕХ командных/некомандных режимов."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:748
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -1049,6 +1057,8 @@ msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gametypes except DM."
 msgstr ""
+"«field3» будет отображаться только в ЗФ, а «field4» во всех других режимах "
+"кроме СБ."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1059
 #: qcsrc/client/hud/panel/scoreboard.qc:1073
@@ -1223,7 +1233,7 @@ msgstr "Дополнительное время №%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering HUD configure mode"
-msgstr ""
+msgstr "^1Вы должны ответить перед входом в режим настройки интерфейса"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"

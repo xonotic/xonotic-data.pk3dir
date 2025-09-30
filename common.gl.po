@@ -2103,7 +2103,7 @@ msgstr ""
 "as mortes como o dano causado. Isto significa que, se case eliminas a un "
 "xogador, aínda así recibirás puntos, pero inflixir o golpe final sempre é "
 "mellor se é posible. Réstanse puntos cando chocas con perigos, pero non "
-"cando fas trucos de movemento como saltos con blaster, xa que o dano propio "
+"cando fas trucos de movemento como saltos con bláster, xa que o dano propio "
 "está desactivado."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:15
@@ -2610,7 +2610,7 @@ msgstr "Mega Poción"
 #: qcsrc/common/mapinfo.qc:664
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
-msgstr "@!#%'n Lanzamento de tuba"
+msgstr "Lanzamento de tuba Maldita"
 
 #: qcsrc/common/mapinfo.qh:94
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:94
@@ -3009,7 +3009,7 @@ msgid ""
 "The Wyvern is a flying reptilian monster that glides around hunting for "
 "fresh prey."
 msgstr ""
-"A Quimera voadora é un monstro reptiliano que se move voando en busca de "
+"A serpe alada é un monstro réptil voador que se despraza planeando á caza de "
 "presas frescas."
 
 #: qcsrc/common/monsters/monster/wyvern.qc:189
@@ -3017,17 +3017,17 @@ msgid ""
 "While fragile, the Wyvern is capable of launching deadly fireballs at the "
 "player from a distance, inflicting high damage and causing burning."
 msgstr ""
-"A Viverna, aínda que fráxil, é capaz de lanzar bólas de lume mortais ao "
+"A Serpe alada, aínda que fráxil, é capaz de lanzar bólas de lume mortais ao "
 "xogador desde lonxe, inflixindo gran dano e provocando queimaduras."
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
 msgid "Wyvern"
-msgstr "Dragón alado"
+msgstr "Serpe alada"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:28
 msgid "Wyvern attack"
-msgstr "Dragón alado ataque"
+msgstr "Ataque da Serpe alada"
 
 #: qcsrc/common/monsters/monster/zombie.qc:180
 msgid ""
@@ -3917,7 +3917,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qh:5
 #: qcsrc/common/util.qc:320
 msgid "Offhand blaster"
-msgstr "bláster de man secundaria"
+msgstr "Bláster de man secundaria"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:167
 #, c-format
@@ -3986,7 +3986,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:31
 msgid "Overkill Heavy MachineGun"
-msgstr "Ametralladora pesada Overkill"
+msgstr "Metralladora pesada Esaxerada"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:166
 #: qcsrc/common/weapons/weapon/machinegun.qc:434
@@ -3996,7 +3996,7 @@ msgstr "O %s dispara rapidamente balas cun pequeno grao de dispersión."
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:28
 msgid "Overkill MachineGun"
-msgstr "Ametralladora Esaxerada"
+msgstr "Metralladora Esaxerada"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qc:373
 #: qcsrc/common/weapons/weapon/vortex.qc:384
@@ -4969,7 +4969,7 @@ msgstr "^BG%s^K1 foi mordido por unha araña%s%s"
 #: qcsrc/common/notifications/all.inc:323
 #, c-format
 msgid "^BG%s^K1 was fireballed by a Wyvern%s%s"
-msgstr "^BG%s^K1 foi disparado por un Wyvern%s%s"
+msgstr "^BG%s^K1 foi disparado por unha Serpe alada%s%s"
 
 #: qcsrc/common/notifications/all.inc:324
 #, c-format
@@ -5077,7 +5077,7 @@ msgstr "^BG%s^K1 non podía esconderse da torreta Hunter%s%s"
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
-msgstr "^BG%s^K1 estaba cheo de buratos por unha Ametralladora de torreta%s%s"
+msgstr "^BG%s^K1 estaba cheo de buratos por unha Metralladora de torreta%s%s"
 
 #: qcsrc/common/notifications/all.inc:344
 #, c-format
@@ -5663,7 +5663,7 @@ msgstr "^BG%s%s^K1 foi asasinado a tiros polo bláster de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s^K1 shot themselves to hell with their Blaster%s%s"
-msgstr "^BG%s^K1 disparouse ata o inferno co seu Blaster %s%s"
+msgstr "^BG%s^K1 disparouse ata o inferno co seu Bláster %s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
@@ -5739,7 +5739,7 @@ msgstr "^BG%s^K1 esqueceuse da súa mina de fogo%s%s"
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by a burst of ^BG%s^K1's Hagar rockets%s%s"
 msgstr ""
-"^BG%s%s^K1 foi golpeado por unha explosión de foguetes Hagar de ^BG%s^K1%s%s"
+"^BG%s%s^K1 foi acougado por unha raxada dos foguetes Hagar de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
@@ -5754,12 +5754,12 @@ msgstr "^BG%s^K1 xogou cos pequenos foguetes Hagar%s%s"
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
 msgid "^BG%s%s^K1 was cut down with ^BG%s^K1's HLAC%s%s"
-msgstr "^BG%s%s^K1 foi reducido co HLAC de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 foi reducido co CLAP de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:498
 #, c-format
 msgid "^BG%s^K1 got a little jumpy with their HLAC%s%s"
-msgstr "^BG%s^K1 puxose un pouco nervioso co seu HLAC%s%s"
+msgstr "^BG%s^K1 puxose un pouco nervioso co seu CLAP%s%s"
 
 #: qcsrc/common/notifications/all.inc:499
 #, c-format
@@ -5782,12 +5782,12 @@ msgstr "^BG%s^K1 feriu seus propios oídos ca @!#%%'n Botella klein%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 foi tirado pola ametralladora de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 foi tirado pola Metralladora de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:503
 #, c-format
 msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 estaba cheo de buratos pola ametralladora de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 estaba cheo de buratos pola metralladora de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:504
 #: qcsrc/common/notifications/all.inc:837
@@ -5829,15 +5829,14 @@ msgstr "^BG%s^K1 explotouse a si mesmo co seu propio Mortar %s%s"
 #, c-format
 msgid "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy MachineGun%s%s"
 msgstr ""
-"^BG%s%s^K1 foi despezado pola Metralladora pesada Overkill de ^BG%s^K1 %s%s"
+"^BG%s%s^K1 foi despezado pola Metralladora pesada Esaxerada de ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 estaba cheo de buratos pola Ametralladora Esaxerada de "
-"^BG%s^K1%s%s"
+"^BG%s%s^K1 estaba cheo de buratos pola Metralladora Esaxerada de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:513
 #, c-format
@@ -5880,7 +5879,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:519
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr "^BG%s%s^K1 foi abatido pola escopeta Overkill de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 foi abatido pola escopeta Esaxerada de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:520
 #, c-format
@@ -5911,7 +5910,7 @@ msgstr "^BG%s%s^K1 foi golpeado polos Foguetes Buscadores de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:525
 #, c-format
 msgid "^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s"
-msgstr "^BG%s%s^K1 foi acertado polo Seeker de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 foi acertado polo Buscador de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:526
 #, c-format
@@ -5936,12 +5935,14 @@ msgstr "^BG%s^K1 agora está pensando con portais%s%s"
 #: qcsrc/common/notifications/all.inc:530
 #, c-format
 msgid "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s"
-msgstr "^BG%s%s^K1 morreu polo gran xogo de ^BG%s^K1 na @!#%%'n Tuba%s%s"
+msgstr ""
+"^BG%s%s^K1 morreu pola gran interpretación de ^BG%s^K1 coa Tuba Maldita%% "
+"%s%s"
 
 #: qcsrc/common/notifications/all.inc:531
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s"
-msgstr "^BG%s^K1 feriu os seus propios oídos ca @!#%%'n Tuba%s%s"
+msgstr "^BG%s^K1 feriu os seus propios oídos ca Tuba Maldita%% %s%s"
 
 #: qcsrc/common/notifications/all.inc:532
 #, c-format
@@ -7397,11 +7398,11 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/machinegun.qh:13
 msgid "Machinegun Turret"
-msgstr "Ametralladora de torreta"
+msgstr "Metralladora de torre"
 
 #: qcsrc/common/turrets/turret/machinegun_weapon.qh:7
 msgid "Machinegun"
-msgstr "Ametralladora"
+msgstr "Metralladora"
 
 #: qcsrc/common/turrets/turret/mlrs.qc:35
 #, c-format
@@ -8286,7 +8287,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/blaster.qh:28
 msgid "Blaster"
-msgstr "Blaster"
+msgstr "Bláster"
 
 #: qcsrc/common/weapons/weapon/crylink.qc:638
 #, c-format
@@ -8351,14 +8352,14 @@ msgid ""
 msgstr ""
 "O %s causa retroceso dunha maneira única, arrastrando ao xogador desde o seu "
 "centro ata o punto de impacto. Isto convértea nunha das mellores armas para "
-"ralentizar a alguén se o estás perseguindo, especialmente co disparo "
-"secundario. Outro uso común do %s é o 'crylink running', no que se inclina "
-"parcialmente cara abaixo e se utiliza o disparo secundario para impulsarse "
-"cara adiante e gañar velocidade."
+"minorar a alguén se o estás perseguindo, especialmente co disparo "
+"secundario. Outro uso común do %s é a 'carreira nexocristal', no que se "
+"inclina parcialmente cara abaixo e se utiliza o disparo secundario para "
+"impulsarse cara adiante e gañar velocidade."
 
 #: qcsrc/common/weapons/weapon/crylink.qh:32
 msgid "Crylink"
-msgstr "Crylink"
+msgstr "Nexocristal (Crylink)"
 
 #: qcsrc/common/weapons/weapon/devastator.qc:618
 #, c-format
@@ -8552,7 +8553,7 @@ msgid ""
 "The %s (or HLAC for short) fires lasers in quick succession. The projectiles "
 "it fires are similar to those of the %s."
 msgstr ""
-"O %s (ou HLAC para abreviar) dispara láseres en rápida sucesión. Os "
+"O %s (ou CLAP para abreviar) dispara láseres en rápida sucesión. Os "
 "proxectís que dispara son similares aos do %s."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:247
@@ -8596,7 +8597,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/hlac.qh:31
 msgid "Heavy Laser Assault Cannon"
-msgstr "Canón de Asalto Láser Pesado"
+msgstr "Canón Láser de Asalto Pesado"
 
 #: qcsrc/common/weapons/weapon/hook.qc:430
 #, c-format
@@ -8726,7 +8727,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:34
 msgid "Mine Layer"
-msgstr "Colocador de Minas"
+msgstr "Coloca Minas"
 
 #: qcsrc/common/weapons/weapon/mortar.qc:382
 #, c-format
@@ -8803,7 +8804,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/porto.qh:32
 msgid "Port-O-Launch"
-msgstr "Port-O-Launch"
+msgstr "Lanzador portátil"
 
 #: qcsrc/common/weapons/weapon/rifle.qc:270
 #, c-format
@@ -8841,7 +8842,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/rifle.qc:274
 msgid "zoom"
-msgstr ""
+msgstr "zoom"
 
 #: qcsrc/common/weapons/weapon/rifle.qc:275
 #: qcsrc/common/weapons/weapon/vortex.qc:389
@@ -8970,7 +8971,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/tuba.qh:35
 #, no-c-format
 msgid "@!#%'n Tuba"
-msgstr "@!#%'n Tuba"
+msgstr "Tuba Maldita"
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:419
 #, c-format
@@ -10232,7 +10233,7 @@ msgstr "Dinámico"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:60
 msgid "Strafe bar:"
-msgstr "Barra strafe:"
+msgstr "Barra de Estrafe"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:64
 msgid "Angle indicator:"
@@ -10290,7 +10291,7 @@ msgstr "Restablecer cores"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qh:6
 msgid "StrafeHUD Panel"
-msgstr "Panel StrafeHUD"
+msgstr "Panel de Estrafe do HUD"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:17
 msgid "Show elapsed time"
@@ -10904,7 +10905,7 @@ msgid ""
 msgstr ""
 "Os Foguetes Devastadores poden ser detonados ao instante (se non, hai un "
 "pequeno atraso). Isto permite aos xogadores disparar e detonar un Foguete "
-"Devastator mentres están no aire para obter un forte impulso no aire mesmo "
+"Devastador mentres están no aire para obter un forte impulso no aire mesmo "
 "mentres se move rápido."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
@@ -10971,7 +10972,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:218
 msgid "with blaster"
-msgstr "con blaster"
+msgstr "con bláster"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:219
 msgid "Always carry the blaster as an additional weapon in Nix"
@@ -12629,6 +12630,8 @@ msgid ""
 "How zoom changes sensitivity, from 0% (lower sensitivity) to 100% (no "
 "sensitivity change)"
 msgstr ""
+"Como o zoom cambia a sensibilidade, de 0 % (menor sensibilidade) a 100 % "
+"(sen cambio de sensibilidade)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:108
 msgid "Zoom scrolling"
@@ -12803,6 +12806,8 @@ msgstr "Apuntamento suave"
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:109
 msgid "Smooths the mouse movement, but makes aiming slightly less responsive"
 msgstr ""
+"Suaviza o movemento do rato, pero fai que o apuntado sexa lixeiramente menos "
+"sensible"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:111
 msgid "Invert aiming"
@@ -12985,7 +12990,7 @@ msgstr "Animacións do menú:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:80
 msgid "How fast animations in the menu occur"
-msgstr ""
+msgstr "A velocidade coa que se producen as animacións no menú"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:83
 msgid "Disabled"
@@ -13373,7 +13378,7 @@ msgstr "Mostra os teus fotogramas renderizados por segundo"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:156
 msgid "Instant action with bots!"
-msgstr ""
+msgstr "Acción instantánea con bots!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:181
 msgid "Campaign Difficulty:"
@@ -13404,18 +13409,20 @@ msgid ""
 "Play the singleplayer campaign or instant action matches against bots, or "
 "read the guide"
 msgstr ""
+"Xoga a campaña para un só xogador ou partidas de acción instantánea contra "
+"bots, ou le a guía"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:15
 msgid "Topic"
-msgstr ""
+msgstr "Tema"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:24
 msgid "Entry"
-msgstr ""
+msgstr "Entrada"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:41
 msgid "Description"
-msgstr ""
+msgstr "Descrición"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
@@ -13427,7 +13434,7 @@ msgstr "únete ao \"mellor\" equipo (selección automática)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Auto-select team (recommended)"
-msgstr ""
+msgstr "Seleccionar equipo automaticamente (recomendado)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
@@ -13485,39 +13492,39 @@ msgstr "libre para todos"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:9 qcsrc/menu/xonotic/guide/pages.qc:62
 msgid "Introduction"
-msgstr ""
+msgstr "Introdución"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:10
 msgid "Movement"
-msgstr ""
+msgstr "Movemento"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:11
 msgid "Gametypes"
-msgstr ""
+msgstr "Tipos de xogo"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:17
 msgid "Monsters"
-msgstr ""
+msgstr "Monstros"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:18
 msgid "Vehicles"
-msgstr ""
+msgstr "Vehículos"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:19
 msgid "Turrets"
-msgstr ""
+msgstr "Torres"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:21
 msgid "Mods"
-msgstr ""
+msgstr "Modificacións"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:19
 msgid "About this guide"
-msgstr ""
+msgstr "Sobre esta guía"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:22
 msgid "Welcome to Xonotic, the free and fast arena shooter!"
-msgstr ""
+msgstr "Benvido a Xonotic, un xogo de arena de disparos rápido e gratuíto!"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:23
 msgid ""
@@ -13525,6 +13532,9 @@ msgid ""
 "other aspects of the game, but most of what you will learn will come from "
 "trying it out in practice."
 msgstr ""
+"Esta guía abrangue os conceptos básicos que se deben saber sobre as armas, "
+"os obxectos e outros aspectos do xogo, pero a maior parte do que aprenderás "
+"virá da práctica."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:25
 msgid ""
@@ -13532,6 +13542,9 @@ msgid ""
 "settings. Xonotic is highly customizable and there are tons of servers out "
 "there that run with lightly or highly modified settings."
 msgstr ""
+"Ten en conta que esta guía describe o comportamento predeterminado do xogo "
+"con configuracións estándar. Xonotic é altamente personalizable e hai moitos "
+"servidores que funcionan con configuracións pouco ou moi modificadas."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:27
 #, c-format
@@ -13539,15 +13552,17 @@ msgid ""
 "You can usually find out which settings are modified by issuing %s in "
 "console after connecting to a server."
 msgstr ""
+"Xeralmente podes saber que opcións se modifican executando na consola %s "
+"despois de conectarte a un servidor."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:30
 msgid "Community"
-msgstr ""
+msgstr "Comunidade"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:32
 #, c-format
 msgid "%s on Matrix, %s on QuakeNet IRC, or the Discord"
-msgstr ""
+msgstr "%s en Matrix, %s en QuakeNet IRC ou en Discord"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:34
 msgid ""
@@ -13557,6 +13572,11 @@ msgid ""
 "respectfully, this will be recognized, while acting toxic on the other hand "
 "will not make your life easier on the servers."
 msgstr ""
+"Xonotic destaca pola súa comunidade de xogadores amigable, madura e "
+"acolledora, e moitos xogadores veteranos argumentan que esta é probablemente "
+"unha das mellores cousas de Xonotic. Se te achegas a outros xogadores de "
+"forma amigable e respectuosa, isto será recoñecido, mentres que actuar de "
+"forma tóxica, por outra banda, non che facilitará a vida nos servidores."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:36
 #, c-format
@@ -13565,10 +13585,13 @@ msgid ""
 "online and use the in-game chat. You can also connect to the official "
 "communication channels (%s), and of course the official forum."
 msgstr ""
+"A mellor maneira de contactar coa comunidade é simplemente comezar a xogar "
+"en liña e usar o chat do xogo. Tamén podes conectarte ás canles de "
+"comunicación oficiais (%s) e, por suposto, ao foro oficial."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:40
 msgid "Getting good"
-msgstr ""
+msgstr "Facéndoo ben"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:43
 msgid ""
@@ -13577,6 +13600,11 @@ msgid ""
 "the game mechanics. If you see experienced players doing tricks you don't "
 "understand, don't hesitate to ask anyone on the server!"
 msgstr ""
+"A diferenza de habilidade entre xogadores novos e experimentados adoita ser "
+"inmensa. Porén, isto débese principalmente a que os xogadores experimentados "
+"aprenderon a usar as mecánicas do xogo. Se ves xogadores experimentados "
+"facendo trucos que non entendes, non dubides en preguntarlle a calquera "
+"persoa do servidor!"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:46
 msgid ""
@@ -13585,6 +13613,10 @@ msgid ""
 "at which weapons they choose depending on the gameplay situation, for "
 "example in close combat, mid-range battles, or against groups of opponents."
 msgstr ""
+"Outra forma de aprender é observar a xogadores experimentados. Observa que "
+"armas combinan e as técnicas de movemento que empregan. Fíxate tamén que "
+"armas escollen dependendo da situación de xogo, por exemplo en combate corpo "
+"a corpo, batallas a media distancia ou contra grupos de opoñentes."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:49
 msgid ""
@@ -13592,10 +13624,13 @@ msgid ""
 "works will enable you to speed around the map and apply effective weapon "
 "combos in no time."
 msgstr ""
+"A curva de aprendizaxe é moi pronunciada. Dito isto, comprender como "
+"funciona o xogo permitirache moverte polo mapa rapidamente e aplicar "
+"combinacións de armas efectivas en pouco tempo."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:52
 msgid "XonStat"
-msgstr ""
+msgstr "XonStat"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:55
 msgid ""
@@ -13603,10 +13638,14 @@ msgid ""
 "stores vital stats like your kill-death ratio, weapon damage and accuracy, "
 "and scoreboards from past games."
 msgstr ""
+"XonStat é a aplicación integrada de estatísticas de xogador para Xonotic. "
+"Garda estatísticas vitais como a túa relación mortes/asasinatos, dano e "
+"precisión das armas, e táboas de puntuación de partidas anteriores."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:57
 msgid "Tracking is completely opt-in, and no login is required."
 msgstr ""
+"O seguimento é completamente opcional, e non se require inicio de sesión."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:58
 #, c-format
@@ -13614,6 +13653,8 @@ msgid ""
 "Some of the statistics are available in-game on your player profile, while "
 "the rest are accessible at %s."
 msgstr ""
+"Algunhas das estatísticas están dispoñibles no xogo no teu perfil de "
+"xogador, mentres que o resto é accesible en %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:65
 msgid ""
@@ -13622,36 +13663,43 @@ msgid ""
 "skills is an essential part of Xonotic gameplay and must not be "
 "underestimated."
 msgstr ""
+"Xonotic é un xogo de disparos de arena moi rápido. O ritmo rápido non só se "
+"relaciona cos tempos de reacción, senón tamén coa velocidade de movemento. "
+"Iso significa que dominar as habilidades de movemento é unha parte esencial "
+"do xogo de Xonotic e non se debe subestimar."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:67
 msgid "For a new player, the most important tricks to learn are:"
 msgstr ""
+"Para un xogador novato, os trucos máis importantes que debe aprender son:"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:69 qcsrc/menu/xonotic/guide/pages.qc:77
 msgid "Bunny Hopping"
-msgstr ""
+msgstr "Salto encadeado (Bunny Hopping)"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:70 qcsrc/menu/xonotic/guide/pages.qc:89
 msgid "Strafe Turning"
-msgstr ""
+msgstr "Xiro estrafado (Strafe Turning)"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:71 qcsrc/menu/xonotic/guide/pages.qc:101
 msgid "Blaster Jumping"
-msgstr ""
+msgstr "Salto co bláster (Blaster Jumping)"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:73 qcsrc/menu/xonotic/guide/pages.qc:133
 msgid "Crylink Running"
-msgstr ""
+msgstr "Carreira nexocristal (Crylink Running)"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:74 qcsrc/menu/xonotic/guide/pages.qc:149
 msgid "Ramp Jumping"
-msgstr ""
+msgstr "Salto en rampla (Ramp Jumping)"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:80
 msgid ""
 "Bunny hopping (\"bhopping\") is a technique known also from other arena "
 "shooters."
 msgstr ""
+"Salto encadeado (“bhopping”) é unha técnica coñecida tamén noutros xogos de "
+"disparos en arena."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:81
 #, c-format
@@ -13662,6 +13710,11 @@ msgid ""
 "down. This allows you to get around the map much faster than if you would "
 "just walk."
 msgstr ""
+"Grazas ao control no aire, podes acelerar mentres estás no aire moito máis "
+"alá da velocidade máxima de movemento no chan. Para evitar a fricción do "
+"chan, os xogadores saltan constantemente simplemente mantendo premida a "
+"tecla %s, de xeito que o contacto co chan non os minora. Isto permítelle "
+"desprazarse polo mapa moito máis rápido do que se só caminasen."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:84
 #, c-format
@@ -13669,6 +13722,9 @@ msgid ""
 "Therefore, keeping %s held while moving quickly is one of the most essential "
 "movement strategies, used by all experienced players."
 msgstr ""
+"Polo tanto, manter premida a tecla %s mentres te moves rapidamente é unha "
+"das estratexias de movemento máis importantes, utilizada por todos os "
+"xogadores experimentados."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:85
 msgid ""
@@ -13676,6 +13732,10 @@ msgid ""
 "900 qu/s (\"units per second\"). CTS/DeFRaG servers usually run with "
 "different CPMA-like physics that remove this cap."
 msgstr ""
+"Coas configuracións predeterminadas, a velocidade que podes alcanzar co "
+"Salto encadeado está limitada a 900 qu/s (“unidades por segundo”). Os "
+"servidores CTS/DeFRaG adoitan usar físicas similares a CPMA que eliminan "
+"este límite."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:92
 msgid ""
@@ -13684,6 +13744,11 @@ msgid ""
 "method used to quickly change the direction you're traveling while mid-air, "
 "without losing speed."
 msgstr ""
+"Para facer Salto de coelliño ao redor das esquinas precisas “xiro "
+"estrafado” (strafe turning), ou perderás moita velocidade (ou simplemente "
+"non poderás realizar o xiro). O xiro lateral en movemento é un método usado "
+"para cambiar rapidamente a dirección na que viaxas mentres estás no aire, "
+"sen perder velocidade."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:94
 #, c-format
@@ -13692,37 +13757,45 @@ msgid ""
 "turn direction (%s or %s), then start turning smoothly into the turn "
 "direction. As always, during the entire strafe turn keep %s held."
 msgstr ""
+"Mentres fas o Salto de coelliño, primeiro solta %s, despois preme a tecla de "
+"estrafe cara á dirección do xiro (%s ou %s), e logo comeza a xirar "
+"suavemente cara á dirección do xiro. Como sempre, durante todo o xiro de "
+"estrafe mantén premida a tecla %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95
 msgid "move forward"
-msgstr ""
+msgstr "Avanzar"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:119
 #: qcsrc/menu/xonotic/keybinder.qc:64
 msgid "strafe left"
-msgstr "tirar á esquerda"
+msgstr "estrafe a esquerda"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:119
 #: qcsrc/menu/xonotic/keybinder.qc:65
 msgid "strafe right"
-msgstr "tirar a dereita"
+msgstr "estrafe a dereita"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:96
 msgid ""
 "Note that if you press the strafe key before releasing the forward key, you "
 "will suffer a speed penalty."
 msgstr ""
+"Ten en conta que se premes a tecla de estrafe antes de soltar a tecla de "
+"avanzar, sufrirás unha penalización de velocidade."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:97
 msgid ""
 "If you do it right, you will even continue to accelerate in strafe turns."
 msgstr ""
+"Se o fas correctamente, incluso continuarás acelerando durante os xiros de "
+"estrafe."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:98 qcsrc/menu/xonotic/guide/pages.qc:120
 #: qcsrc/menu/xonotic/guide/pages.qc:159
 #, c-format
 msgid "For an illustration of this technique, see %s."
-msgstr ""
+msgstr "Para ver unha ilustración desta técnica, consulta %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:104
 #, c-format
@@ -13731,6 +13804,9 @@ msgid ""
 "many players will often have single digit accuracy for the %s. It is instead "
 "especially useful to make high jumps."
 msgstr ""
+"Na maioría das situacións, o %s é máis unha ferramenta de movemento que unha "
+"arma. Por iso, moitos xogadores adoitan ter unha precisión de un só díxito "
+"co %s. En cambio, é especialmente útil para realizar saltos altos."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:107
 #, c-format
@@ -13739,10 +13815,14 @@ msgid ""
 "immediately afterwards. Experiment a bit with the timing of firing the %s "
 "and jumping to get a feeling of which timings will get you how high."
 msgstr ""
+"Para facer un “salto láser”, simplemente dispara o %s aos teus propios pés e "
+"salta inmediatamente despois. Experimenta un pouco co tempo de disparar o %s "
+"e saltar para coller sensación de que tempos che permiten alcanzar máis "
+"altura."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:111
 msgid "Wall Blastering"
-msgstr ""
+msgstr "Bláster contra a parede"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:114
 #, c-format
@@ -13751,6 +13831,10 @@ msgid ""
 "you, you can get significant horizontal speed. You can do this to pick up "
 "speed off the stand or even when passing a wall while already bunny hopping."
 msgstr ""
+"Se non disparas o %s ao chan, senón contra unha parede ao teu carón, podes "
+"conseguir unha velocidade horizontal significativa. Podes facer isto para "
+"coller velocidade ao saír dun soporte ou incluso ao pasar xunto a unha "
+"parede mentres xa estás facendo salto encadeado."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:116
 #, c-format
@@ -13761,6 +13845,11 @@ msgid ""
 "%s. Immediately flick back to your movement direction and continue to bunny "
 "hop."
 msgstr ""
+"Para usar esta técnica, comeza un salto encadeado. Xusto despois de saltar, "
+"move rapidamente o rato cara atrás como ás 8 se a parede está á túa esquerda "
+"(ou ás 4 se a parede está á túa dereita), apunta á altura da túa cabeza e "
+"dispara o %s. Inmediatamente move o rato cara á dirección do teu movemento e "
+"continúa facendo salto encadeado."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:118
 #, c-format
@@ -13769,6 +13858,9 @@ msgid ""
 "a strafe key for the duration of the flick. This means using %s if the wall "
 "is to your left, and %s if the wall is to your right."
 msgstr ""
+"Para perder a mínima velocidade posible ao mover rapidamente o rato cara "
+"atrás, cambia á tecla de estrafe durante o movemento. Isto significa usar %s "
+"se a parede está á túa esquerda, e %s se a parede está á túa dereita."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:126
 #, c-format
@@ -13777,6 +13869,9 @@ msgid ""
 "damage to the player. In gametypes without self damage however it is a very "
 "versatile movement tool."
 msgstr ""
+"O %s pode usarse igual que o %s para moverse, pero inflixe moito máis dano "
+"ao xogador. En tipos de xogo sen dano propio, con todo, é unha ferramenta de "
+"movemento moi versátil."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:128
 msgid ""
@@ -13784,11 +13879,16 @@ msgid ""
 "immediately detonate it. The explosion will push you upwards a little bit, "
 "and can prolong a jump."
 msgstr ""
+"Mentres estás no aire, tamén podes disparar un foguete por debaixo de ti e "
+"detónao inmediatamente. A explosión empurrarate un pouco cara arriba e pode "
+"prolongar un salto."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:130
 #, c-format
 msgid "Note that this strategy only really works if the %s mutator is enabled."
 msgstr ""
+"Ten en conta que esta estratexia só funciona realmente se o mutador %s está "
+"activado."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:136
 #, c-format
@@ -13796,6 +13896,9 @@ msgid ""
 "The drag force of the %s secondary fire can not only break other players' "
 "movement, but can also give yourself a significant speed boost."
 msgstr ""
+"A forza de arrastre do disparo secundario do %s non só pode interromper o "
+"movemento doutros xogadores, senón que tamén pode darche a ti un impulso de "
+"velocidade significativo."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:137
 #, c-format
@@ -13805,10 +13908,15 @@ msgid ""
 "stand into high speed. Finding the best angle to aim at takes some practice, "
 "and changes depending on your speed."
 msgstr ""
+"Para facer unha “Carreira nexocristal”, preme o disparo secundario do %s ao "
+"chan (ou a unha parede paralela) xusto diante de ti e comeza a facer o salto "
+"encadeado para catapultarte desde o soporte a alta velocidade. Colle un "
+"pouco de práctica atopar o mellor ángulo para apuntar, e este cambia segundo "
+"a túa velocidade."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:141
 msgid "Crylink Wall Climbing"
-msgstr ""
+msgstr "Escalada co nexocristal"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:144
 #, c-format
@@ -13817,12 +13925,17 @@ msgid ""
 "head), you can climb up walls quickly. This is called \"wall climbing\" with "
 "the %s."
 msgstr ""
+"Premendo o disparo secundario do %s contra unha parede ao teu carón (xusto "
+"por riba da túa cabeza), podes subir polas paredes rapidamente. Isto "
+"chámaselle “escalada de parede” co %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:146
 msgid ""
 "This is also a good way to save yourself from falling off the map, as it "
 "reliably stops your downfall."
 msgstr ""
+"Esta tamén é unha boa forma de salvarte de caer fóra do mapa, xa que detén "
+"de maneira fiable a túa caída."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:152
 msgid ""
@@ -13831,12 +13944,19 @@ msgid ""
 "upwards boost and enable you to reach places that are otherwise accessible "
 "only with laser jumps, which cost health and make noise."
 msgstr ""
+"As ramplas son unha parte importante do deseño dos mapas de Xonotic. "
+"Calquera superficie inclinada á que chegues coa velocidade e o ángulo "
+"correctos darache un impulso significativo cara arriba e permitirache "
+"alcanzar lugares que doutra forma só serían accesibles con saltos láser, que "
+"custan vida e fan ruído."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:154
 msgid ""
 "When doing ramp jumps, it is vital to hit the ramp at a flat angle to "
 "receive the upwards boost and not lose too much speed."
 msgstr ""
+"Ao facer saltos desde ramplas, é vital alcanzar a rampla cun ángulo plano "
+"para recibir o impulso cara arriba e non perder demasiada velocidade."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:155
 #, c-format
@@ -13845,6 +13965,9 @@ msgid ""
 "just before the ramp and keep %s pressed so you jump again once you hit the "
 "ramp."
 msgstr ""
+"Para facer un salto desde rampla, achégate a unha superficie inclinada "
+"(“rampla”), salta xusto antes da rampla e mantén premida a tecla %s para "
+"saltar de novo cando chegues á rampla."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:156
 msgid ""
@@ -13852,16 +13975,22 @@ msgid ""
 "the stronger the upwards boost. As always, you can gain speed before the "
 "ramp by bunny hopping."
 msgstr ""
+"Canto maior sexa a velocidade que teñas ao alcanzar a rampla (co ángulo "
+"correcto), máis forte será o impulso cara arriba. Como sempre, podes coller "
+"velocidade antes da rampla facendo o salto encadeado."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:158
 msgid ""
 "Note that when trying to make a ramp jump while bunny hopping, it is vital "
 "to time your hops carefully so you get the angle right."
 msgstr ""
+"Ten en conta que, ao tentar facer un salto desde rampla mentres fas salto "
+"encadeado, é vital cronometrar os teus saltos coidadosamente para acertar no "
+"ángulo correcto."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:162
 msgid "Advanced Movement"
-msgstr ""
+msgstr "Movemento avanzado"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:165
 msgid ""
@@ -13869,11 +13998,15 @@ msgid ""
 "jumping\" (\"CJ\") offer only limited benefits in vanilla gameplay, but are "
 "crucial on CTS/DeFRaG servers that use slightly different physics."
 msgstr ""
+"Técnicas avanzadas como “Xiro lateral en movemento” (“estrafar”) ou “salto "
+"en circulo” (“SC”) ofrecen só beneficios limitados no xogo estándar, pero "
+"son cruciais nos servidores CTS/DeFRaG que usan físicas lixeiramente "
+"diferentes."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:167
 #, c-format
 msgid "If you want to master these techniques, be sure to check out %s."
-msgstr ""
+msgstr "Se queres dominar estas técnicas, asegúrate de consultar %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:174
 #, c-format
@@ -13881,6 +14014,8 @@ msgid ""
 "%s is a mod that heavily changes the game, giving players fewer but more "
 "powerful weapons, nades, and more movement options."
 msgstr ""
+"%s é unha modificación que cambia moito o xogo, ofrecendo aos xogadores "
+"menos armas pero máis poderosas, granadas e máis opcións de movemento."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:175
 #, c-format
@@ -13890,6 +14025,10 @@ msgid ""
 "These weapons are a lot more powerful than the regular weapons, so their "
 "time-to-kill is quite low."
 msgstr ""
+"En canto a armas, os xogadores teñen munición infinita e aparecen co %s,%s e "
+"%s, e ás veces poden recoller no mapa as súperarmas %s e %s. Estas armas son "
+"moito máis poderosas que as armas normais, polo que o seu tempo para matar é "
+"bastante baixo."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:177
 #, c-format
@@ -13898,6 +14037,10 @@ msgid ""
 "push enemies, but can be used to push yourself around. Also since the %s "
 "mutator is active, all players have offhand nades."
 msgstr ""
+"O disparo secundario de todas as armas dispara un láser que non causa dano "
+"nin empurra aos inimigos, pero pode usarse para empurrarte a ti mesmo. "
+"Ademais, como o mutador %s está activo, todos os xogadores teñen granadas na "
+"man secundaria."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:179
 #, c-format
@@ -13905,6 +14048,8 @@ msgid ""
 "As for movement tricks, %s is enabled by default in %s, allowing for rapidly "
 "changing your movement direction."
 msgstr ""
+"En canto a trucos de movemento, %s está activado por defecto en %s, "
+"permitindo cambiar rapidamente a dirección do teu movemento."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:186
 #, c-format
@@ -13912,6 +14057,8 @@ msgid ""
 "%s (\"Xonotic Pro-Mode\") is a set of gameplay settings often used for "
 "competitive play, particularly in %s."
 msgstr ""
+"%s (\"Xonotic Pro-Mode\") é un conxunto de configuracións de xogo usado "
+"frecuentemente para xogos competitivos, especialmente en %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:187
 #, c-format
@@ -13994,7 +14141,7 @@ msgstr "mostrar puntuacións"
 
 #: qcsrc/menu/xonotic/keybinder.qc:137
 msgid "screenshot"
-msgstr ""
+msgstr "captura de pantalla"
 
 #: qcsrc/menu/xonotic/keybinder.qc:138
 msgid "maximize radar"
@@ -14137,6 +14284,8 @@ msgid ""
 "Huh? Can't play this (invalid gametype). Refiltering so this won't happen "
 "again."
 msgstr ""
+"Eh? Non se pode xogar a isto (tipo de xogo inválido). Voltando a filtrar "
+"para que isto non volva ocorrer."
 
 #: qcsrc/menu/xonotic/playerlist.qc:115
 msgid "spectator"
