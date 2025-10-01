@@ -152,7 +152,7 @@ void XonoticDemoList_startDemo(entity me)
 	s = me.demoName(me, me.selectedItem);
 	s = strdecolorize(s);
 
-	localcmd("playdemo \"demos/", s, ".dem\" \nwait \ntogglemenu\n");
+	localcmd("togglemenu 0; playdemo \"demos/", s, ".dem\"\n");
 }
 
 void XonoticDemoList_timeDemo(entity me)
@@ -161,7 +161,7 @@ void XonoticDemoList_timeDemo(entity me)
 	s = me.demoName(me, me.selectedItem);
 	s = strdecolorize(s);
 
-	localcmd("timedemo \"demos/", s, ".dem\" \nwait \ntogglemenu\n");
+	localcmd("togglemenu 0; timedemo \"demos/", s, ".dem\"\n");
 }
 
 void DemoConfirm_ListClick_Check_Gamestatus(entity me)
