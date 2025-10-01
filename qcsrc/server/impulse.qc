@@ -1,6 +1,6 @@
 #include "impulse.qh"
 
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/minigames/sv_minigames.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 #include <common/state.qh>

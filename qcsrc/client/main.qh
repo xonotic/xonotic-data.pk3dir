@@ -26,7 +26,7 @@ AUTOCVAR_SAVE(cl_race_cptimes_showspeed, bool, 0, "show race checkpoint speed (N
 AUTOCVAR_SAVE(cl_race_cptimes_showspeed_unit, bool, 1, "show race checkpoint speed units");
 AUTOCVAR_SAVE(cl_race_cptimes_namesize, float, 10, "maximum player name length in race checkpoint messages");
 #endif
-bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
+bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gametype
 bool autocvar_cl_race_cptimes_showself = false;
 bool autocvar_cl_welcome = true;
 bool autocvar_cl_autodemo_delete;
@@ -52,7 +52,7 @@ void PostInit();
 
 void Ent_Remove(entity this);
 
-void Gamemode_Init();
+void Gametype_Init();
 
 entity players;
 entity teams;

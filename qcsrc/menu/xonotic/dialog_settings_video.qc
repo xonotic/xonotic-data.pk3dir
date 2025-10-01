@@ -8,7 +8,6 @@
 #include "slider_resolution.qh"
 #include "radiobutton.qh"
 
-#define ADDVALUE_FPS(i) e.addText(e, strzone(sprintf(_("%d fps"), i)), i)
 entity makeXonoticVideoSettingsTab()
 {
 	entity me;
@@ -68,9 +67,9 @@ void XonoticVideoSettingsTab_fill(entity me)
 			setDependent(e, "r_viewfbo", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("vid_samples",
 			_("Enable antialiasing, which smooths the edges of 3D geometry. Note that it might decrease performance by quite a lot")));
+			e.formatString = _("%sx");
 			e.addText(e, ZCTX(_("AA^Disabled")), 1);
-			e.addText(e, _("2x"), 2);
-			e.addText(e, _("4x"), 4);
+			e.addRange(e, 2, 4, 2);
 			e.configureXonoticMixedSliderValues(e);
 			setDependent(e, "r_viewfbo", 0, 0);
 			e.applyButton = videoApplyButton;
@@ -80,16 +79,16 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Resolution scaling:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.5, 2, 0.25, "r_viewscale",
 			_("Screen or window size multiplier, above 1x does antialiasing, below 1x may help slow GPUs")));
+			e.formatString = _("%sx");
 	}
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Anisotropy:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("gl_texture_anisotropy",
 			_("Anisotropic filtering quality")));
+			e.formatString = _("%sx");
 			e.addText(e, ZCTX(_("ANISO^Disabled")), 1);
-			e.addText(e, _("2x"), 2);
-			e.addText(e, _("4x"), 4);
-			e.addText(e, _("8x"), 8);
-			e.addText(e, _("16x"), 16);
+			e.addRange(e, 2, 4, 2);
+			e.addRange(e, 8, 16, 8);
 			e.configureXonoticMixedSliderValues(e);
 
 	string df_tooltip = _("Eliminate overdraw by rendering a depth-only version of the scene before the normal rendering starts");
@@ -158,33 +157,28 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Maximum:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_maxfps"));
-			ADDVALUE_FPS(128);
-			ADDVALUE_FPS(256);
-			ADDVALUE_FPS(512);
-			ADDVALUE_FPS(1024);
-			ADDVALUE_FPS(2048);
+			e.formatString = _("%s fps");
+			e.addRange(e, 128, 256, 128);
+			e.addRange(e, 512, 1024, 512);
+			e.addRange(e, 2048, 2048, 2048);
 			e.addText(e, ZCTX(_("MAXFPS^Unlimited")), 0);
 			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Target:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_minfps"));
+			e.formatString = _("%s fps");
 			e.addText(e, ZCTX(_("TRGT^Disabled")), 0);
-			ADDVALUE_FPS(40);
-			ADDVALUE_FPS(60);
-			ADDVALUE_FPS(100);
-			ADDVALUE_FPS(125);
-			ADDVALUE_FPS(150);
-			ADDVALUE_FPS(200);
-			ADDVALUE_FPS(250);
-			ADDVALUE_FPS(400);
+			e.addRange(e, 40, 60, 20);
+			e.addRange(e, 100, 150, 25);
+			e.addRange(e, 200, 250, 50);
+			e.addRange(e, 400, 400, 100);
 			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Idle limit:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_maxidlefps"));
-			ADDVALUE_FPS(16);
-			ADDVALUE_FPS(32);
-			ADDVALUE_FPS(64);
-			ADDVALUE_FPS(128);
+			e.formatString = _("%s fps");
+			e.addRange(e, 16, 32, 16);
+			e.addRange(e, 64, 128, 64);
 			e.addText(e, ZCTX(_("IDLFPS^Unlimited")), 0);
 			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
@@ -197,4 +191,3 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, videoApplyButton);
 }
-#undef ADDVALUE_FPS

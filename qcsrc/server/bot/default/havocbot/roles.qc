@@ -214,7 +214,7 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 	});
 }
 
-// legacy bot role for standard gamemodes
+// legacy bot role for standard gametypes
 // go to best items
 void havocbot_role_generic(entity this)
 {

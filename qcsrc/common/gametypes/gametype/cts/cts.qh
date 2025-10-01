@@ -1,0 +1,36 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+#if defined(CSQC)
+	#include <common/gametypes/gametype/race/cl_race.qh>
+#endif
+
+CLASS(RaceCTS, Gametype)
+	INIT(RaceCTS)
+	{
+		this.gametype_init(this, _("Race CTS"),"cts","g_cts",0,"cloaked","timelimit=20",_("Race to the finish line for the fastest time"));
+	}
+	METHOD(RaceCTS, m_generate_mapinfo, void(Gametype this, string v))
+	{
+		if(v == "target_startTimer")
+			MapInfo_Map_supportedGametypes |= this.gametype_flags;
+	}
+	METHOD(RaceCTS, m_setTeams, void(string sa))
+	{
+		// this is the skill of the map
+		// not parsed by anything yet
+		// for map databases
+		//  cvar_set("fraglimit", sa);
+	}
+	METHOD(RaceCTS, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
+	}
+#ifdef CSQC
+	ATTRIB(RaceCTS, m_modicons, void(vector pos, vector mySize), HUD_Mod_Race);
+#endif
+	ATTRIB(RaceCTS, m_legacydefaults, string, "20 0 0");
+ENDCLASS(RaceCTS)
+REGISTER_GAMETYPE(CTS, NEW(RaceCTS));
+#define g_cts IS_GAMETYPE(CTS)

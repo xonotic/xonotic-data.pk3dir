@@ -3,8 +3,8 @@
 #include <common/checkextension.qh>
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/sv_rules.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/gametypes/sv_rules.qh>
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/target/music.qh>
@@ -521,6 +521,7 @@ void cvar_changes_init()
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
 		BADCVAR("sv_showfps");
+		BADCVAR("sv_showskill");
 		BADCVAR("sv_showspectators");
 		BADCVAR("sv_status_privacy");
 		BADCVAR("sv_taunt");
@@ -852,7 +853,7 @@ spawnfunc(worldspawn)
 
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
 
-	// default to RACE_RECORD, can be overwritten by gamemodes
+	// default to RACE_RECORD, can be overwritten by gametypes
 	record_type = RACE_RECORD;
 
 	// needs to be done so early because of the constants they create
@@ -1017,7 +1018,7 @@ spawnfunc(worldspawn)
 		}
 	}
 	if (!records_available)
-		records_reply[0] = "No records available for the current game mode.\n";
+		records_reply[0] = "No records available for the current gametype.\n";
 	ladder_reply = strzone(getladder());
 	rankings_reply = strzone(getrankings());
 

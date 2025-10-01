@@ -120,7 +120,7 @@ void Draw_ShowNames(entity this)
 		else
 			this.alpha = min(minalpha, this.alpha + SHOWNAMES_FADESPEED * frametime);
 	}
-	else if (this.sameteam)  // fade in for team mates
+	else if (this.sameteam)  // fade in for teammates
 	{
 		this.alpha = min(1, this.alpha + SHOWNAMES_FADESPEED * frametime);
 	}

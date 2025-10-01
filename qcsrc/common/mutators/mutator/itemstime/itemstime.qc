@@ -1,8 +1,7 @@
 #include "itemstime.qh"
 
-REGISTER_MUTATOR(itemstime, true);
-
 #ifdef GAMEQC
+REGISTER_MUTATOR(itemstime, true);
 REGISTER_NET_TEMP(itemstime)
 #endif
 
@@ -269,14 +268,14 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, string item_icon, 
 
 float Item_ItemsTime_GetTime(int item)
 {
-	if(autocvar__hud_configure)
+	if (autocvar__hud_configure)
 	{
-		switch(item)
+		switch (item)
 		{
-			case ITEM_ArmorMega.m_id: return time + 0;
-			case ITEM_HealthMega.m_id: return time + 8;
-			case ITEM_Strength.m_id: return time + 0;
-			case ITEM_Shield.m_id: return time + 4;
+			case ITEM_ArmorMega.m_id: return time + 8;
+			case ITEM_ArmorBig.m_id: return time + 0;
+			case ITEM_HealthMega.m_id: return time + 0;
+			case ITEM_Strength.m_id: return time + 4;
 		}
 
 		return -1; // don't show others

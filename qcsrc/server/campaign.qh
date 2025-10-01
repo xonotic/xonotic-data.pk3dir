@@ -21,7 +21,7 @@ void CampaignLevelWarp(float n);
 
 /**
  * campaign mode: bots shall spawn but wait for the player to spawn before they do anything
- * in other game modes, this is ignored
+ * in other gametypes, this is ignored
  */
 bool campaign_bots_may_start;
 

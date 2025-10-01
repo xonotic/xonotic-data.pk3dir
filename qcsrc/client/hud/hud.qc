@@ -10,7 +10,7 @@
 #include <client/view.qh>
 #include <common/deathtypes/all.qh>
 #include <common/ent_cs.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/minigames/cl_minigames.qh>
@@ -55,7 +55,7 @@ void LoadMenuSkinValues()
 	}
 	if(fh < 0)
 	{
-		draw_currentSkin = "gfx/menu/default";
+		draw_currentSkin = "gfx/menu/wickedx"; // default menu skin
 		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
 

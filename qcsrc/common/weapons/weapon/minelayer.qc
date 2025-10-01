@@ -177,7 +177,7 @@ void W_MineLayer_Think(entity this)
 		if(WEP_CVAR(WEP_MINE_LAYER, lifetime_countdown) > 0)
 			spamsound(this, CH_SHOTS, SND_MINE_TRIGGER, VOL_BASE, ATTN_NORM);
 		this.mine_time = time + WEP_CVAR(WEP_MINE_LAYER, lifetime_countdown);
-		this.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
+		this.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a teammate is near.
 	}
 
 	// a player's mines shall explode if they disconnect or die
@@ -194,7 +194,7 @@ void W_MineLayer_Think(entity this)
 	while(head)
 	{
 		if(IS_PLAYER(head) && !IS_DEAD(head) && !STAT(FROZEN, head) && !IS_INDEPENDENT_PLAYER(head))
-		if(head != this.realowner && DIFF_TEAM(head, this.realowner)) // don't trigger for team mates
+		if(head != this.realowner && DIFF_TEAM(head, this.realowner)) // don't trigger for teammates
 		if(!this.mine_time)
 		{
 			spamsound(this, CH_SHOTS, SND_MINE_TRIGGER, VOL_BASE, ATTN_NORM);
@@ -509,6 +509,28 @@ METHOD(MineLayer, wr_impacteffect, void(entity thiswep, entity actor))
 	pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
 	if(!w_issilent)
 		sound(actor, CH_SHOTS, SND_MINE_EXP, VOL_BASE, ATTN_NORM);
+}
+
+#endif
+#ifdef MENUQC
+#include <common/gametypes/gametype/assault/assault.qh>
+#include <common/gametypes/gametype/ctf/ctf.qh>
+#include <common/gametypes/gametype/onslaught/onslaught.qh>
+#include <common/items/item/ammo.qh>
+
+METHOD(MineLayer, describe, string(MineLayer this))
+{
+	TC(MineLayer, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s places mines on the ground when fired, which detonate and damage enemies if stepped on. "
+	      "Only a couple mines can be placed at any time, and after several seconds they will self-detonate."), COLORED_NAME(this));
+	PAR(_("The secondary fire instantaneously detonates any mines fired by the primary fire, first waiting until you're far enough away."));
+	PAR(_("It consumes %s ammo for each mine laid."), COLORED_NAME(ITEM_Rockets));
+	PAR(_("The mines are not launched very far before they hit the ground, so the %s isn't very effective at medium to long ranges. "
+	      "It is often used to protect important areas of the map such as the flag in %s, control points in %s, or checkpoints in %s."), COLORED_NAME(this), COLORED_NAME(MAPINFO_TYPE_CTF), COLORED_NAME(MAPINFO_TYPE_ONSLAUGHT), COLORED_NAME(MAPINFO_TYPE_ASSAULT));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_onlyOne_unnamed(this.netname));
+	return PAGE_TEXT;
 }
 
 #endif

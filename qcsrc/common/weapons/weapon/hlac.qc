@@ -31,8 +31,8 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	float spread = WEP_CVAR_PRI(WEP_HLAC, spread_min) + (WEP_CVAR_PRI(WEP_HLAC, spread_add) * actor.(weaponentity).misc_bulletcounter);
 	spread = min(spread,WEP_CVAR_PRI(WEP_HLAC, spread_max));
-	if(IS_DUCKED(actor))
-		spread = spread * WEP_CVAR_PRI(WEP_HLAC, spread_crouchmod);
+	if(IS_DUCKED(actor) && IS_ONGROUND(actor))
+		spread *= WEP_CVAR_PRI(WEP_HLAC, spread_crouchmod);
 
 	W_SetupShot(actor, weaponentity, false, 3, SND_HLAC_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(WEP_HLAC, damage), thiswep.m_id);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
@@ -78,8 +78,8 @@ void W_HLAC_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	entity missile;
 	float spread = WEP_CVAR_SEC(WEP_HLAC, spread);
 
-	if(IS_DUCKED(actor))
-		spread = spread * WEP_CVAR_SEC(WEP_HLAC, spread_crouchmod);
+	if(IS_DUCKED(actor) && IS_ONGROUND(actor))
+		spread *= WEP_CVAR_SEC(WEP_HLAC, spread_crouchmod);
 
 	W_SetupShot(actor, weaponentity, false, 3, SND_HLAC_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(WEP_HLAC, damage) * WEP_CVAR_SEC(WEP_HLAC, shots), thiswep.m_id | HITTYPE_SECONDARY);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
@@ -231,6 +231,28 @@ METHOD(HLAC, wr_impacteffect, void(entity thiswep, entity actor))
 	pointparticles(eff, org2, w_backoff * 1000, 1);
 	if(!w_issilent)
 		sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM);
+}
+
+#endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+#include "blaster.qh"
+
+METHOD(HLAC, describe, string(HLAC this))
+{
+	TC(HLAC, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s (or HLAC for short) fires lasers in quick succession. "
+	      "The projectiles it fires are similar to those of the %s."), COLORED_NAME(this), COLORED_NAME(WEP_BLASTER));
+	PAR(_("The secondary fire shoots a burst of multiple randomly-scattered lasers at once."));
+	PAR(_("Unlike the %s, it consumes %s ammo for each laser shot, meaning that it cannot be used infinitely."), COLORED_NAME(WEP_BLASTER), COLORED_NAME(ITEM_Cells));
+	PAR(_("The %s works best in close ranges, but the primary fire is also useful in medium ranges."), COLORED_NAME(this));
+	PAR(_("A unique aspect of the %s is that the longer the primary fire is held, the more that the lasers will start to spread out. "
+	      "This means releasing primary fire every now and then is important to restore accuracy. "
+	      "Also, the %s has less spread when used while crouching."), COLORED_NAME(this), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_shots", "", false));
+	return PAGE_TEXT;
 }
 
 #endif

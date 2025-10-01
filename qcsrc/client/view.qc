@@ -15,7 +15,7 @@
 #include <common/deathtypes/all.qh>
 #include <common/debug.qh>
 #include <common/ent_cs.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/impulses/all.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/target/music.qh>
@@ -520,25 +520,28 @@ vector GetCurrentFov(float fov)
 	}
 	else
 	{
-		// initialize zoom scroll in the first frame / reset zoom scroll when fully zoomed out
-		if (!zoomscroll_factor || (current_viewzoom == 1 && !zoomdir))
+		if (autocvar_cl_zoomscroll && autocvar_cl_zoomscroll_scale)
 		{
-			zoomscroll_factor_target = zoomfactor;
-			zoomscroll_factor = zoomfactor;
-		}
-		if (zoomscroll_factor != zoomscroll_factor_target)
-		{
-			if (fabs(zoomscroll_factor - zoomscroll_factor_target) < 0.001 || autocvar_cl_zoomscroll_speed < 0) // snap
-				zoomscroll_factor = zoomscroll_factor_target;
-			else if (autocvar_cl_zoomscroll_speed != 0)
+			// initialize zoom scroll in the first frame / reset zoom scroll when fully zoomed out
+			if (!zoomscroll_factor || (current_viewzoom == 1 && !zoomdir))
 			{
-				// NOTE: this averaging formula is frametime independent
-				float avg_time = 1 / autocvar_cl_zoomscroll_speed;
-				float frac = 1 - exp(-drawframetime / max(0.001, avg_time));
-				zoomscroll_factor = frac * zoomscroll_factor_target + (1 - frac) * zoomscroll_factor;
+				zoomscroll_factor_target = zoomfactor;
+				zoomscroll_factor = zoomfactor;
 			}
+			if (zoomscroll_factor != zoomscroll_factor_target)
+			{
+				if (fabs(zoomscroll_factor - zoomscroll_factor_target) < 0.001 || autocvar_cl_zoomscroll_speed < 0) // snap
+					zoomscroll_factor = zoomscroll_factor_target;
+				else if (autocvar_cl_zoomscroll_speed != 0)
+				{
+					// NOTE: this averaging formula is frametime independent
+					float avg_time = 1 / autocvar_cl_zoomscroll_speed;
+					float frac = 1 - exp(-drawframetime / max(0.001, avg_time));
+					zoomscroll_factor = frac * zoomscroll_factor_target + (1 - frac) * zoomscroll_factor;
+				}
+			}
+			zoomfactor = zoomscroll_factor;
 		}
-		zoomfactor = zoomscroll_factor;
 
 		if(zoomspeed < 0) // instant zoom
 		{
@@ -1778,7 +1781,7 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 	// gameend hook is executed on CSQC VM shutdown if
 	// the shutdown happens before intermission start
 	if (intermission
-	&& (calledhooks & HOOK_START) // ensure that we have initiated a gamemode
+	&& (calledhooks & HOOK_START) // ensure that we have initiated a gametype
 	&& !(calledhooks & HOOK_END) // fire only once
 	&& !(calledhooks & HOOK_INTERMISSION))
 	{

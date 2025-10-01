@@ -4,7 +4,7 @@
 #include <client/draw.qh>
 #include <client/hud/panel/racetimer.qh>
 #include <client/view.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 
 // Timer (#5)
 
@@ -108,7 +108,7 @@ void HUD_Timer()
 	else
 		timer = timeleft;
 
-	// Secondary timer for round-based game modes
+	// Secondary timer for round-based gametypes
 	if(STAT(ROUNDSTARTTIME) && autocvar_hud_panel_timer_secondary)
 	{
 		if(STAT(ROUNDSTARTTIME) == -1) {

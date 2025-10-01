@@ -149,7 +149,7 @@ void MapInfo_Enumerate()
 		_MapInfo_globcount = 0;
 }
 
-// filter the info by game type mask (updates MapInfo_count)
+// filter the info by gametype mask (updates MapInfo_count)
 //
 float _MapInfo_filtered;
 float _MapInfo_filtered_allocated;
@@ -946,7 +946,7 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 			types = strreplace("team", "tdm ft", types);
 			types = strreplace("ffa", "dm lms ka", types);
 			types = strreplace("tourney", "duel", types); // QL used duel so the following check must support it
-			if(strstrofs(types, "duel", 0) < 0 && strstrofs(types, "tdm", 0) >= 0) // larger team map, support additional gamemodes!
+			if(strstrofs(types, "duel", 0) < 0 && strstrofs(types, "tdm", 0) >= 0) // larger team map, support additional gametypes!
 				types = cons(types, "ca kh");
 			FOREACH_WORD(types, true,
 			{
@@ -1230,7 +1230,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			if(f)
 				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f, true);
 			else if(WARN_COND)
-				LOG_DEBUG("Map ", pFilename, " supports unknown game type ", t, ", ignored");
+				LOG_DEBUG("Map ", pFilename, " supports unknown gametype ", t, ", ignored");
 		}
 		else if(t == "gametype")
 		{
@@ -1239,7 +1239,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			if(f)
 				_MapInfo_Map_ApplyGametypeEx (s, pGametypeToSet, f);
 			else if(WARN_COND)
-				LOG_DEBUG("Map ", pFilename, " supports unknown game type ", t, ", ignored");
+				LOG_DEBUG("Map ", pFilename, " supports unknown gametype ", t, ", ignored");
 		}
 		else if(t == "size")
 		{
@@ -1295,7 +1295,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			}
 			else
 			{
-				LOG_DEBUG("Map ", pFilename, " has a setting for unknown game type ", t, ", ignored");
+				LOG_DEBUG("Map ", pFilename, " has a setting for unknown gametype ", t, ", ignored");
 			}
 		}
 		else if(t == "clientsettemp_for_type")
@@ -1312,7 +1312,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			}
 			else
 			{
-				LOG_DEBUG("Map ", pFilename, " has a client setting for unknown game type ", t, ", ignored");
+				LOG_DEBUG("Map ", pFilename, " has a client setting for unknown gametype ", t, ", ignored");
 			}
 		}
 		else if(t == "fog")
@@ -1329,10 +1329,10 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		{
 			t = car(s); s = cdr(s);
 			// We do this only if pGametypeToSet even though this
-			// content is theoretically game type independent,
+			// content is theoretically gametype independent,
 			// because MapInfo_Map_clientstuff contains otherwise
-			// game type dependent stuff. That way this value stays
-			// empty when not setting a game type to not set any
+			// gametype dependent stuff. That way this value stays
+			// empty when not setting a gametype to not set any
 			// false expectations.
 			if(pGametypeToSet)
 			{
@@ -1384,7 +1384,7 @@ LABEL(mapinfo_handled)
 	if(MapInfo_Map_supportedGametypes != '0 0 0')
 		return r;
 	if (WARN_COND)
-		LOG_WARN("Map ", pFilename, " supports no game types, ignored");
+		LOG_WARN("Map ", pFilename, " supports no gametypes, ignored");
 	return 0;
 }
 int MapInfo_Get_ByName(string pFilename, float pAllowGenerate, Gametype pGametypeToSet)
@@ -1397,7 +1397,7 @@ int MapInfo_Get_ByName(string pFilename, float pAllowGenerate, Gametype pGametyp
 	{
 		if(!(MapInfo_Map_supportedGametypes & pGametypeToSet.gametype_flags))
 		{
-			error("Can't select the requested game type. This should never happen as the caller should prevent it!\n");
+			error("Can't select the requested gametype. This should never happen as the caller should prevent it!\n");
 			//_MapInfo_Map_ApplyGametypeEx("", pGametypeToSet, MAPINFO_TYPE_DEATHMATCH);
 			//return;
 		}
@@ -1526,7 +1526,7 @@ void MapInfo_LoadMap(string s, float reinit)
 	// we shouldn't need this, as LoadMapSettings already fixes the gametype
 	//if(!MapInfo_CheckMap(s))
 	//{
-	//	print("EMERGENCY: can't play the selected map in the given game mode. Falling back to DM.\n");
+	//	print("EMERGENCY: can't play the selected map in the given gametype. Falling back to DM.\n");
 	//	MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH.gametype_flags);
 	//}
 
@@ -1586,7 +1586,7 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 	{
 		if(cvar("g_mapinfo_allow_unsupported_modes_and_let_stuff_break"))
 		{
-			LOG_SEVERE("can't play the selected map in the given game mode. Working with only the override settings.");
+			LOG_SEVERE("can't play the selected map in the given gametype. Working with only the override settings.");
 			_MapInfo_Map_ApplyGametypeEx("", t, t);
 			return; // do not call Get_ByName!
 		}
@@ -1627,7 +1627,7 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 			t = RandomSelection_chosen_ent;
 
 		// t is now a supported mode!
-		LOG_WARNF("can't play the selected map in the given game mode (%s). Falling back to a supported mode (%s).", t_prev.mdl, t.mdl);
+		LOG_WARNF("can't play the selected map in the given gametype (%s). Falling back to a supported mode (%s).", t_prev.mdl, t.mdl);
 		MapInfo_LoadMapSettings_SaveGameType(t);
 	}
 	if(!_MapInfo_CheckMap(s, false)) { // with underscore, it keeps temps

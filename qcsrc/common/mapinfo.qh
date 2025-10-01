@@ -32,14 +32,16 @@ vector _GametypeFlags_FromGametype(int a);
 
 CLASS(Gametype, Object)
     ATTRIB(Gametype, m_id, int, 0);
-    /** game type ID */
+    /** gametype ID */
     ATTRIB(Gametype, items, int, 0);
-    /** game type name as in cvar (with g_ prefix) */
+    /** gametype name as in cvar (with g_ prefix) */
     ATTRIB(Gametype, netname, string);
-    /** game type short name */
+    /** gametype short name */
     ATTRIB(Gametype, mdl, string);
     /** human readable name */
     ATTRIB(Gametype, message, string);
+    /** color */
+    ATTRIB(Gametype, m_color, vector, '1 1 1');
     /** does this gametype support teamplay? */
     ATTRIB(Gametype, team, bool, false);
     /** does this gametype use a point limit? */
@@ -50,11 +52,11 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, m_weaponarena, bool, false);
     /** 1v1 gameplay? */
     ATTRIB(Gametype, m_1v1, bool, false);
-    /** game type defaults */
+    /** gametype defaults */
     ATTRIB(Gametype, model2, string);
-    /** game type description */
+    /** gametype description */
     ATTRIB(Gametype, m_description, string);
-    /** game type priority in random selections */
+    /** gametype priority in random selections */
     ATTRIB(Gametype, m_priority, int, 0);
 #ifdef CSQC
     ATTRIB(Gametype, m_modicons, void(vector pos, vector mySize));
@@ -92,17 +94,25 @@ CLASS(Gametype, Object)
         returns(menu, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        string_null,                    _("The amount of frags needed before the match will end"));
     }
 
+#ifdef MENUQC
+    /* gametype guide description
+     * this description is used in the guide, the description stored in .m_description is shorter and used for things like the mapvoting dialog
+     */
     METHOD(Gametype, describe, string(Gametype this))
     {
         TC(Gametype, this);
-        return this.m_description;
+        return SUPER(Gametype).describe(this);
     }
 
     METHOD(Gametype, display, void(Gametype this, void(string name, string icon) returns))
     {
         TC(Gametype, this);
-        returns(this.message, strcat("gametype_", this.mdl));
+        if (this.mdl == "")
+        	returns(this.message, "");
+        else
+        	returns(this.message, icon_path_from_menuskin(strcat("gametype_", this.mdl)));
     }
+#endif
 
     METHOD(Gametype, gametype_init, void(Gametype this, string hname, string sname, string g_name, int gflags, string mutators, string defaults, string gdescription))
     {
@@ -159,7 +169,7 @@ float MapInfo_count;
 // cache; you need to call MapInfo_FilterGametype afterwards!
 void MapInfo_Enumerate();
 
-// filter the info by game type mask (updates MapInfo_count)
+// filter the info by gametype mask (updates MapInfo_count)
 float MapInfo_progress;
 float MapInfo_FilterGametype(Gametype gametypeFlags, float features, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate); // 1 on success, 0 on temporary failure (call it again next frame then; use MapInfo_progress as progress indicator)
 float _MapInfo_FilterGametype(vector gametypeFlags, float features, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate); // 1 on success, 0 on temporary failure (call it again next frame then; use MapInfo_progress as progress indicator)
@@ -191,9 +201,9 @@ string MapInfo_FixName(string s);
 float MapInfo_CheckMap(string s); // returns 0 if the map can't be played with the current settings
 void MapInfo_LoadMap(string s, float reinit);
 
-// list all maps for the current game type
+// list all maps for the current gametype
 string MapInfo_ListAllowedMaps(Gametype type, float pFlagsRequired, float pFlagsForbidden);
-// list all allowed maps (for any game type)
+// list all allowed maps (for any gametype)
 string MapInfo_ListAllAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 
 // gets a gametype from a string
@@ -207,7 +217,7 @@ void MapInfo_SwitchGameType(Gametype t);
 
 // to be called from worldspawn to set up cvars
 void MapInfo_LoadMapSettings(string s);
-Gametype MapInfo_LoadedGametype; // game type that was active during map load
+Gametype MapInfo_LoadedGametype; // gametype that was active during map load
 
 void MapInfo_Cache_Destroy(); // disable caching
 void MapInfo_Cache_Create(); // enable caching

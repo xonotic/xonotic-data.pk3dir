@@ -52,16 +52,16 @@ void XonoticMapInfoDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Title:")));
 		me.TD(me, 1, w-1, e = makeXonoticTextLabel(0, ""));
 			e.colorL = SKINCOLOR_MAPLIST_TITLE;
-			e.allowCut = 1;
+			e.allowCut = true;
 			me.titleLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Author:")));
 		me.TD(me, 1, w-1, e = makeXonoticTextLabel(0, ""));
 			e.colorL = SKINCOLOR_MAPLIST_AUTHOR;
-			e.allowCut = 1;
+			e.allowCut = true;
 			me.authorLabel = e;
 	me.TR(me);
-		me.TD(me, 1, w, e = makeXonoticTextLabel(0, _("Game types:")));
+		me.TD(me, 1, w, e = makeXonoticTextLabel(0, _("Gametypes:")));
 
 	n = ceil(GameType_GetTotalCount() / (me.rows - 6));
 	wgt = (w - 0.2) / n;
@@ -78,7 +78,7 @@ void XonoticMapInfoDialog_fill(entity me)
 
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticTextLabel(0.5, ""));
-			e.allowCut = 1;
+			e.allowCut = true;
 			me.descriptionLabel = e;
 
 	me.gotoRC(me, me.rows - 1, 0);

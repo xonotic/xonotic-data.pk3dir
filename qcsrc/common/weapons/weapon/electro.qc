@@ -775,3 +775,24 @@ METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+#include <common/gametypes/gametype/ctf/ctf.qh>
+#include <common/items/item/ammo.qh>
+
+METHOD(Electro, describe, string(Electro this))
+{
+	TC(Electro, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s shoots electric balls forwards, dealing some splash damage when they burst on impact."), COLORED_NAME(this));
+	PAR(_("The secondary fire launches orbs that are influenced by gravity, "
+	      "so they can be laid around the map at high traffic locations (like at %s flag bases) to damage enemies that walk by. "
+	      "The orbs burst after some time, and can be forced to burst in a \"combo\" if a primary fire ball bursts near them."), COLORED_NAME(MAPINFO_TYPE_CTF));
+	PAR(_("It consumes some %s ammo for each ball / orb."), COLORED_NAME(ITEM_Cells));
+	PAR(_("The %s is one of the best spam weapons to use in crowded areas, since combos can deal tons of damage, if the enemy is close enough. "
+	      "Since the primary fire doesn't travel particularly fast, the %s is not useful in many other situations."), COLORED_NAME(this), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_secondaryMultishotWithCombo(this.netname, "primary", "secondary", "secondary_count", "secondary_refire2", "combo", true));
+	return PAGE_TEXT;
+}
+
+#endif

@@ -176,3 +176,13 @@ void nade_napalm_boom(entity this)
 	CSQCProjectile(fountain, true, PROJECTILE_NAPALM_FOUNTAIN, true);
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(NapalmNade, describe, string(NapalmNade this))
+{
+	TC(NapalmNade, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s detonates after a short delay, spreading fiery napalm globs around in a fountain. "
+	      "The napalm fire balls burn for a while, and damage players who get too close."), COLORED_NAME(this));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

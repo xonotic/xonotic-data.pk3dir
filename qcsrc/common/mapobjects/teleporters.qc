@@ -5,7 +5,7 @@
 #elif defined(SVQC)
 	#include <common/constants.qh>
 	#include <common/deathtypes/all.qh>
-	#include <common/gamemodes/_mod.qh>
+	#include <common/gametypes/_mod.qh>
 	#include <common/mapobjects/subs.qh>
 	#include <common/stats.qh>
 	#include <common/turrets/sv_turrets.qh>

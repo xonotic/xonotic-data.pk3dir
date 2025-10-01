@@ -36,6 +36,7 @@
 #include "dialog_settings_misc_reset.qh"
 #include "dialog_settings_user_languagewarning.qh"
 #include "dialog_settings_game_hudconfirm.qh"
+#include "dialog_singleplayer_guide.qh"
 #include "dialog_singleplayer_winner.qh"
 #include "dialog_multiplayer_join_serverinfo.qh"
 #include "dialog_multiplayer_media_demo_startconfirm.qh"
@@ -224,6 +225,10 @@ void MainWindow_configureMainWindow(entity me)
 
 	// dialog used by singleplayer
 	me.winnerDialog = i = NEW(XonoticWinnerDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	me.guideDialog = i = NEW(XonoticGuideDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 

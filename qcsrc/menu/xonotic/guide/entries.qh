@@ -1,0 +1,37 @@
+#pragma once
+
+#include <menu/xonotic/datasource.qh>
+#include <menu/xonotic/listbox.qh>
+CLASS(XonoticEntryList, XonoticListBox)
+	ATTRIB(XonoticEntryList, origin, vector, '0 0 0');
+	ATTRIB(XonoticEntryList, itemAbsSize, vector, '0 0 0');
+	ATTRIB(XonoticEntryList, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticEntryList, realUpperMargin, float, 0);
+	ATTRIB(XonoticEntryList, rowsPerItem, float, 3);
+	ATTRIB(XonoticEntryList, hasIcons, bool, true);
+
+	ATTRIB(XonoticEntryList, stringFilterBox, entity, NULL);
+	ATTRIB(XonoticEntryList, stringFilter, string, string_null);
+	ATTRIB(XonoticEntryList, typeToSearchString, string, string_null);
+	ATTRIB(XonoticEntryList, typeToSearchTime, float, 0);
+
+	METHOD(XonoticEntryList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticEntryList, keyDown, float(entity, float, float, float));
+	ATTRIB(XonoticEntryList, onChange, void(entity, entity));
+	ATTRIB(XonoticEntryList, onChangeEntity, entity);
+	METHOD(XonoticEntryList, refilter, void(entity));
+	METHOD(XonoticEntryList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticEntryList, setSelected, void(entity, int));
+
+	ATTRIB(XonoticEntryList, source, DataSource, NULL);
+
+	CONSTRUCTOR(XonoticEntryList, DataSource _source)
+	{
+		CONSTRUCT(XonoticEntryList);
+		this.source = _source;
+		this.configureXonoticListBox(this);
+		this.refilter(this);
+	}
+ENDCLASS(XonoticEntryList)
+void EntryList_StringFilterBox_Change(entity box, entity me);
+float EntryList_StringFilterBox_keyDown(entity me, float key, float ascii, float shift);

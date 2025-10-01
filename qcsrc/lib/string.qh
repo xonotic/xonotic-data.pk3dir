@@ -474,6 +474,17 @@ string ftos_decimals(float number, int decimals)
 }
 
 /**
+ * converts a percentage to a string with the indicated number of decimals
+ */
+ERASEABLE
+string ftos_decimals_percentage(float number, int decimals)
+{
+	// inhibit stupid negative zero
+	if (number == 0) number = 0;
+	return sprintf(_("%.*f%%"), decimals, number * 100); // translatable percentage string
+}
+
+/**
  * converts a number to a string with the minimum number of decimals
  */
 ERASEABLE
@@ -588,3 +599,22 @@ vector checkColorCode(string theText, int text_len, int pos, bool check_at_the_e
 	}
 	return '0 0 0';
 }
+
+#define PAGE_TEXT_INIT() string _page_text = ""
+#define PAGE_TEXT _page_text
+/// Adds an individually translatable paragraph to PAGE_TEXT without having to deal with strcat and sprintf.
+/// Secondary arguments are optional format arguments for internal sprintf calls.
+/// This is to make translators' work easier: paragraphs are shorter than the whole page, sometimes
+/// they can be shared across pages (reducing translatable text) and don't require translators
+/// to check the whole text in the case of a paragraph update.
+#define PAR(...) EVAL_PAR(OVERLOAD(PAR, __VA_ARGS__))
+#define EVAL_PAR(...) __VA_ARGS__
+#define PAR_1(msg)                                 _page_text = (_page_text == "" ? msg : strcat(_page_text, "\n\n", msg))
+#define PAR_2(msg, a1)                             MACRO_BEGIN string _msg = sprintf(msg, a1); PAR_1(_msg); MACRO_END
+#define PAR_3(msg, a1, a2)                         MACRO_BEGIN string _msg = sprintf(msg, a1, a2); PAR_1(_msg); MACRO_END
+#define PAR_4(msg, a1, a2, a3)                     MACRO_BEGIN string _msg = sprintf(msg, a1, a2, a3); PAR_1(_msg); MACRO_END
+#define PAR_5(msg, a1, a2, a3, a4)                 MACRO_BEGIN string _msg = sprintf(msg, a1, a2, a3, a4); PAR_1(_msg); MACRO_END
+#define PAR_6(msg, a1, a2, a3, a4, a5)             MACRO_BEGIN string _msg = sprintf(msg, a1, a2, a3, a4, a5); PAR_1(_msg); MACRO_END
+#define PAR_7(msg, a1, a2, a3, a4, a5, a6)         MACRO_BEGIN string _msg = sprintf(msg, a1, a2, a3, a4, a5, a6); PAR_1(_msg); MACRO_END
+#define PAR_8(msg, a1, a2, a3, a4, a5, a6, a7)     MACRO_BEGIN string _msg = sprintf(msg, a1, a2, a3, a4, a5, a6, a7); PAR_1(_msg); MACRO_END
+#define PAR_9(msg, a1, a2, a3, a4, a5, a6, a7, a8) MACRO_BEGIN string _msg = sprintf(msg, a1, a2, a3, a4, a5, a6, a7, a8); PAR_1(_msg); MACRO_END

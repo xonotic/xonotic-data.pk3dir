@@ -9,5 +9,5 @@ CLASS(XonoticHUDTimerDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDTimerDialog, rows, float, 15.5);
 	ATTRIB(XonoticHUDTimerDialog, columns, float, 4);
 	ATTRIB(XonoticHUDTimerDialog, name, string, "HUDtimer");
-	ATTRIB(XonoticHUDTimerDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDTimerDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDTimerDialog)

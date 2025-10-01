@@ -373,7 +373,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 * V: format version (always a fixed number) - this MUST be the first line!
 		 * #: comment (MUST be ignored by any parser)
 		 * R: release information on the server
-		 * G: game type
+		 * G: gametype
 		 * O: mod name (icon request) as in server browser
 		 * M: map name
 		 * I: match ID (see "matchid" in world.qc)

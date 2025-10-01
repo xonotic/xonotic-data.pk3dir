@@ -1,0 +1,133 @@
+#pragma once
+
+#include <menu/xonotic/guide/_mod.qh>
+#include <common/items/item.qh>
+#include <menu/anim/animhost.qh>
+#include <menu/xonotic/datasource.qh>
+
+#define TOPICS(X) \
+	X(NEW(IntroductionSource), _("Introduction"), "gametype_tdm") \
+	X(NEW(MovementSource),     _("Movement"),     "gametype_inv") \
+	X(NEW(GametypeSource),     _("Gametypes"),    "gametype_dm") \
+	X(NEW(WeaponSource),       _("Weapons"),      "gametype_duel") \
+	X(NEW(ItemSource),         _("Items"),        "gametype_kh") \
+	X(NEW(PowerupSource),      _("Powerups"),     "gametype_dom") \
+	X(NEW(BuffSource),         _("Buffs"),        "gametype_ka") \
+	X(NEW(NadeSource),         _("Nades"),        "gametype_ft") \
+	X(NEW(MonsterSource),      _("Monsters"),     "gametype_lms") \
+	X(NEW(VehicleSource),      _("Vehicles"),     "gametype_rc") \
+	X(NEW(TurretSource),       _("Turrets"),      "gametype_as") \
+	X(NEW(MutatorSource),      _("Mutators"),     "gametype_nb") \
+	X(NEW(ModSource),          _("Mods"),         "gametype_ons") \
+	/**/
+// XONRELEASE TODO: improve icons, consider just creating new ones from scratch just for the guide
+CLASS(TopicSource, DataSource)
+	METHOD(TopicSource, getEntry, entity(TopicSource this, int i, void(string, string) returns));
+	METHOD(TopicSource, reload, int(TopicSource this, string filter));
+ENDCLASS(TopicSource)
+
+.bool m_hidden;
+.bool instanceOfAmmo;
+.bool instanceOfHealth;
+.bool instanceOfArmor;
+.bool instanceOfPowerup;
+
+#define _REGISTRY_SOURCE_FILL(arr_name, register_arr, cond1, cond2, cond3, num_conds, filter_cond) \
+if (num_conds >= 1) \
+	FOREACH(register_arr, !it.m_hidden && (cond1) && (filter_cond), { \
+		AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
+		++arr_name##_MENU_COUNT; \
+	}); \
+if (num_conds >= 2) \
+	FOREACH(register_arr, !it.m_hidden && (cond2) && (filter_cond), { \
+		AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
+		++arr_name##_MENU_COUNT; \
+	}); \
+if (num_conds >= 3) \
+	FOREACH(register_arr, !it.m_hidden && (cond3) && (filter_cond), { \
+		AL_sete(arr_name##_MENU, arr_name##_MENU_COUNT, it); \
+		++arr_name##_MENU_COUNT; \
+	});
+
+#define _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, cond3, num_conds) \
+ArrayList arr_name##_MENU; \
+int arr_name##_MENU_COUNT; \
+STATIC_INIT_LATE(arr_name##_MENU) \
+{ \
+	AL_NEW(arr_name##_MENU, REGISTRY_MAX(register_arr), NULL, e); \
+	_REGISTRY_SOURCE_FILL(arr_name, register_arr, cond1, cond2, cond3, num_conds, true); \
+} \
+CLASS(id, DataSource) \
+	METHOD(id, getEntry, entity(id this, int i, void(string, string) returns)) \
+	{ \
+		entity e = AL_gete(arr_name##_MENU, i); \
+		if (returns) \
+			e.display(e, returns); \
+		return e; \
+	} \
+	METHOD(id, reload, int(id this, string filter)) \
+	{ \
+		arr_name##_MENU_COUNT = 0; \
+		_REGISTRY_SOURCE_FILL(arr_name, register_arr, cond1, cond2, cond3, num_conds, \
+			(filter == "" ? true : (strstrofs(strtolower(it.message ? it.message : it.m_name), strtolower(filter), 0) >= 0))); \
+		return arr_name##_MENU_COUNT; \
+	} \
+ENDCLASS(id)
+
+#define REGISTRY_SOURCE(...) EVAL(OVERLOAD(REGISTRY_SOURCE, __VA_ARGS__))
+#define REGISTRY_SOURCE_3(id, arr_name, register_arr)                      _REGISTRY_SOURCE(id, arr_name, register_arr,  true, false, false, 1)
+#define REGISTRY_SOURCE_4(id, arr_name, register_arr, cond1)               _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, false, false, 1)
+#define REGISTRY_SOURCE_5(id, arr_name, register_arr, cond1, cond2)        _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, false, 2)
+#define REGISTRY_SOURCE_6(id, arr_name, register_arr, cond1, cond2, cond3) _REGISTRY_SOURCE(id, arr_name, register_arr, cond1, cond2, cond3, 3)
+
+// The descriptions for these are in menu/xonotic/guide/pages.qc
+REGISTRY_SOURCE(IntroductionSource, Introduction, IntroductionGuidePages)
+REGISTRY_SOURCE(MovementSource, Movement, MovementGuidePages)
+REGISTRY_SOURCE(ModSource, Mods, ModsGuidePages)
+
+#include <common/mapinfo.qh>
+// The descriptions for these are in common/gametypes/gametype/*/*.qc
+REGISTRY_SOURCE(GametypeSource, Gametypes, Gametypes)
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+// The descriptions for these are in common/mutators/mutator/buffs/buff/*.qc
+REGISTRY_SOURCE(BuffSource, Buffs, StatusEffects, it.instanceOfBuff)
+
+#include <common/mutators/mutator/powerups/powerup/_mod.qh>
+// The descriptions for these are in common/mutators/mutator/powerups/powerup/*.qc
+REGISTRY_SOURCE(PowerupSource, Powerups, Items, it.instanceOfPowerup)
+
+#include <common/items/all.qh>
+// The descriptions for these are in common/items/item/*.qc and common/mutators/mutator/instagib/items.qc
+REGISTRY_SOURCE(ItemSource, Items, Items,
+	!it.instanceOfPowerup && it.instanceOfAmmo,
+	!it.instanceOfPowerup && it.instanceOfHealth,
+	!it.instanceOfPowerup && it.instanceOfArmor)
+
+#include <common/mutators/mutator/nades/nades.qh>
+// The descriptions for these are in common/mutators/mutator/nades/nade/*.qc
+REGISTRY_SOURCE(NadeSource, Nades, Nades)
+
+#include <common/weapons/all.qh>
+// The descriptions for these are in common/weapons/weapon/*.qc and common/mutators/mutator/overkill/ok*.qc (weapon files)
+REGISTRY_SOURCE(WeaponSource, Weapons, Weapons,
+	!startsWith(it.registered_id, "WEP_OVERKILL_"),
+	startsWith(it.registered_id, "WEP_OVERKILL_") && !(it.spawnflags & WEP_FLAG_SUPERWEAPON),
+	startsWith(it.registered_id, "WEP_OVERKILL_") && (it.spawnflags & WEP_FLAG_SUPERWEAPON))
+
+#include <common/monsters/all.qh>
+// The descriptions for these are in common/monsters/monster/*.qc
+REGISTRY_SOURCE(MonsterSource, Monsters, Monsters)
+
+#include <common/vehicles/all.qh>
+// The descriptions for these are in common/vehicles/vehicle/*.qc
+// XONRELEASE TODO: improve icons to make the styling consistent, may need to create new ones from scratch just for the guide
+REGISTRY_SOURCE(VehicleSource, Vehicles, Vehicles)
+
+#include <common/turrets/all.qh>
+// The descriptions for these are in common/turrets/turret/*.qc
+REGISTRY_SOURCE(TurretSource, Turrets, Turrets)
+
+#include <common/mutators/base.qh>
+// The descriptions for these are in common/mutators/mutator/*.qc (not the cl_* or sv_* files)
+REGISTRY_SOURCE(MutatorSource, Mutators, Mutators)

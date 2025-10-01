@@ -1,7 +1,7 @@
 #include "spawnpoints.qh"
 
 #include <common/constants.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/target/spawnpoint.qh>
 #include <common/mapobjects/triggers.qh>

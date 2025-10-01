@@ -63,6 +63,7 @@ void(vector ang) _makevectors_hidden = #1;
 vector(float skel, float bonenum) _skel_get_boneabs_hidden = #270;
 void(float skel, float bonenum, vector org) _skel_set_bone_hidden = #271;
 void(vector org, float radius, vector lightcolours) _adddynamiclight_hidden = #305;
+void(vector org, float radius, vector lightcolours, float style, string cubemapname, float pflags) _adddynamiclight2_hidden = #305;
 void(vector dir) _vectorvectors_hidden = #432;
 vector(entity ent, float tagindex) _gettaginfo_hidden = #452;
 

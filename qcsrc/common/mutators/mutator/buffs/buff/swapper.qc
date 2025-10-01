@@ -3,36 +3,35 @@
 #ifdef SVQC
 MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 {
-	if(MUTATOR_RETURNVALUE || game_stopped) return;
-	entity player = M_ARGV(0, entity);
+	if (MUTATOR_RETURNVALUE || game_stopped)
+		return;
 
-	if(StatusEffects_active(BUFF_SWAPPER, player))
+	entity player = M_ARGV(0, entity);
+	if (StatusEffects_active(BUFF_SWAPPER, player))
 	{
-		float best_distance = autocvar_g_buffs_swapper_range;
+		entity head = WarpZone_FindRadius(player.origin, autocvar_g_buffs_swapper_range, false);
 		entity closest = NULL;
-		FOREACH_CLIENT(IS_PLAYER(it), {
-			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
-			if(DIFF_TEAM(it, player))
+		float head_dist2, best_dist2 = autocvar_g_buffs_swapper_range ** 2;
+		for (; head; head = head.chain)
+			if (IS_PLAYER(head) && DIFF_TEAM(head, player))
+			if (!IS_DEAD(head) && !STAT(FROZEN, head) && !head.vehicle)
 			{
-				float test = vlen2(player.origin - it.origin);
-				if(test <= best_distance * best_distance)
+				head_dist2 = vlen2(head.WarpZone_findradius_dist);
+				if (head_dist2 < best_dist2)
 				{
-					best_distance = sqrt(test);
-					closest = it;
+					best_dist2 = head_dist2;
+					closest = head;
 				}
 			}
-		});
 
-		if(closest)
+		if (closest)
 		{
-			vector my_org, my_vel, my_ang, their_org, their_vel, their_ang;
-
-			my_org = player.origin;
-			my_vel = player.velocity;
-			my_ang = player.angles;
-			their_org = closest.origin;
-			their_vel = closest.velocity;
-			their_ang = closest.angles;
+			vector my_org = player.origin;
+			vector my_vel = player.velocity;
+			vector my_ang = player.angles;
+			vector their_org = closest.origin;
+			vector their_vel = closest.velocity;
+			vector their_ang = closest.angles;
 
 			Drop_Special_Items(closest);
 
@@ -80,3 +79,14 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	}
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(SwapperBuff, describe, string(SwapperBuff this))
+{
+	TC(SwapperBuff, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s allows you to press %s to switch places with a nearby enemy once."), COLORED_NAME_WITH_CONCAT(this, _("Buff")), strcat("^3", _("drop weapon"), "^7"));
+	PAR(_("A common usage of this buff is to jump over the map's void, then swap with an enemy, to cause them to fall into the void."));
+	PAR(_("The range that the buff works over is limited, so sometimes it may do nothing if there are no enemies nearby."));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

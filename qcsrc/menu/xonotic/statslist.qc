@@ -88,7 +88,7 @@ void XonoticStatsList_getStats(entity me)
 		orderstr = "";
 		data = db_get(PS_D_IN_DB, sprintf("#%s", e));
 
-		// non-gamemode specific stuff
+		// non-gametype specific stuff
 		switch(e)
 		{
 			case "overall/joined_dt":
@@ -153,7 +153,7 @@ void XonoticStatsList_getStats(entity me)
 			{
 				out_total_losses = max(0, (out_total_matches - out_total_wins));
 				bufstr_add(me.listStats, sprintf("003%s\n%d/%d", _("Wins/Losses:"), out_total_wins, out_total_losses), true);
-				bufstr_add(me.listStats, sprintf("004%s\n%d%%", _("Win percentage:"), ((out_total_wins / out_total_matches) * 100)), true);
+				bufstr_add(me.listStats, sprintf("004%s\n%s", _("Win percentage:"), ftos_decimals_percentage(out_total_wins / out_total_matches, 0)), true);
 			}
 
 			out_total_matches = -1;
@@ -177,7 +177,7 @@ void XonoticStatsList_getStats(entity me)
 			continue;
 		}
 
-		// game mode specific stuff
+		// gametype specific stuff
 		if(order > 0)
 		{
 			orderstr = sprintf("%03d", order);
@@ -231,7 +231,7 @@ void XonoticStatsList_getStats(entity me)
 				outstr = strcat(strtoupper(gametype), " ", outstr);
 				data = sprintf(_("%d (unranked)"), stof(data));
 
-				// unranked game modes ALWAYS get put last
+				// unranked gametypes ALWAYS get put last
 				orderstr = "zzz";
 			}
 			else { continue; }

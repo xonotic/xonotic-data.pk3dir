@@ -172,3 +172,17 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
     return true;
 }
 #endif
+#ifdef MENUQC
+METHOD(Zombie, describe, string(Zombie this))
+{
+	TC(Zombie, this);
+	PAGE_TEXT_INIT();
+	PAR(_("Zombies are the undead remains of deceased soldiers, risen with a ravenous hunger and no sense of self-preservation."));
+	PAR(_("When a Zombie senses a nearby player it will begin to charge its target at high speeds. "
+	      "While charging, a Zombie may leap towards the player, dealing massive damage on contact. "
+	      "If it gets close, the Zombie will punch and bite repeatedly."));
+	PAR(_("When threatened the Zombie may hold up its hands to block incoming attacks briefly."));
+	PAR(_("It is no small task to kill that which is already dead. Once a Zombie is defeated, destroy its corpse to prevent it from rising again!"));
+	return PAGE_TEXT;
+}
+#endif

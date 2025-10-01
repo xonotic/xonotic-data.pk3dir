@@ -229,12 +229,13 @@ void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool 
 	else
 		draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", campaign_mapname[i]), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 
-	s = strcat("/gfx/menu/", cvar_string("menu_skin"), "/gametype_", campaign_gametype[i]);
+	s = strcat("gametype_", campaign_gametype[i]);
 	if(i <= me.campaignIndex && draw_PictureSize(s) != '0 0 0')
 		draw_Picture(me.typeIconOrigin, s, me.typeIconSize, '1 1 1', 1);
 
 	if(i < me.campaignIndex)
 		draw_Picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);
+
 	if(i <= me.campaignIndex)
 		s = campaign_shortdesc[i]; // fteqcc sucks
 	else

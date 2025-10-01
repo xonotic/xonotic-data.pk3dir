@@ -15,8 +15,12 @@ float buff_Medic_CalculateSurviveDamage(float frag_damage, float health);
 CLASS(MedicBuff, Buff)
 	ATTRIB(MedicBuff, m_name, string, _("Medic"));
 	ATTRIB(MedicBuff, netname, string, "medic");
+#ifndef SVQC
 	ATTRIB(MedicBuff, m_icon, string, "buff_medic");
+#endif
+#ifdef GAMEQC
 	ATTRIB(MedicBuff, m_skin, int, 1);
+#endif
 	ATTRIB(MedicBuff, m_color, vector, '1 0.12 0');
 ENDCLASS(MedicBuff)
 

@@ -3,7 +3,7 @@
 #include <common/animdecide.qh>
 #include <common/constants.qh>
 #include <common/debug.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
 #include <common/net_linked.qh>
 #include <common/physics/player.qh>

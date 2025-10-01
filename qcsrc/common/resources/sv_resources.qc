@@ -227,3 +227,17 @@ void TakeResourceWithLimit(entity receiver, Resource res_type, float amount, flo
 	}
 	TakeResource(receiver, res_type, amount);
 }
+
+int GetAmmoConsumption(entity wpn)
+{
+	if (wpn.ammo_type == RES_NONE) return 0;
+	switch (wpn)
+	{
+		case WEP_ARC:        return WEP_CVAR(WEP_ARC,        beam_ammo);
+		case WEP_DEVASTATOR: return WEP_CVAR(WEP_DEVASTATOR, ammo);
+		case WEP_MACHINEGUN: return WEP_CVAR(WEP_MACHINEGUN, sustained_ammo);
+		case WEP_MINE_LAYER: return WEP_CVAR(WEP_MINE_LAYER, ammo);
+		case WEP_SEEKER:     return WEP_CVAR(WEP_SEEKER,     tag_ammo);
+		default:             return WEP_CVAR_PRI(wpn, ammo);
+	}
+}

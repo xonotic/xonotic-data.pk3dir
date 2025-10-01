@@ -1,7 +1,7 @@
 #include "racer.qh"
 
-#if defined(SVQC)
-	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#ifdef SVQC
+	#include <common/gametypes/gametype/ctf/sv_ctf.qh>
 	#include <common/mapobjects/trigger/impulse.qh>
 #endif
 
@@ -638,6 +638,20 @@ METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
 #ifdef CSQC
     AuxiliaryXhair[0].axh_image = vCROSS_LOCK; // Rocket
 #endif
+}
+
+#endif
+#ifdef MENUQC
+
+METHOD(Racer, describe, string(Racer this))
+{
+	TC(Racer, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s vehicle looks like a jet, but does not fly upwards very well. "
+	      "It seats only one passenger, who becomes the pilot."), COLORED_NAME(this));
+	PAR(_("It can be accelerated by pressing %s, which consumes power from the same source as the primary weapon."), strcat("^3", _("jump"), "^7"));
+	PAR(_("The %s primary weapon is a laser and the secondary weapon shoots energy balls that explode on impact."), COLORED_NAME(this));
+	return PAGE_TEXT;
 }
 
 #endif
