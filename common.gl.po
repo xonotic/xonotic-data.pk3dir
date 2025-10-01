@@ -70,7 +70,7 @@ msgstr "contra"
 
 #: qcsrc/client/hud/panel/chat.qc:168
 msgid "^3Player^7: This is the chat area."
-msgstr "^3Xogador^7: Esta é a área de leria."
+msgstr "^3Xogador^7: Esta é a área de conversa."
 
 #: qcsrc/client/hud/panel/checkpoints.qc:146
 #: qcsrc/client/hud/panel/checkpoints.qc:149
@@ -286,7 +286,7 @@ msgstr "Continuar..."
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "Chat"
-msgstr "Leria"
+msgstr "Conversa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:845
 msgid "QMCMD^Send public message to"
@@ -319,7 +319,7 @@ msgstr "QMCMD^Enviar en Inglés"
 #: qcsrc/client/hud/panel/quickmenu.qc:855
 #: qcsrc/client/hud/panel/quickmenu.qc:871
 msgid "QMCMD^Team chat"
-msgstr "QMCMD^Leria do equipo"
+msgstr "QMCMD^Conversa do equipo"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^strength soon"
@@ -479,7 +479,7 @@ msgstr "QMCMD^Son dos golpes"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:888
 msgid "QMCMD^Chat sound"
-msgstr "QMCMD^Son da leria"
+msgstr "QMCMD^Son da conversa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:893
 msgid "QMCMD^Change spectator camera"
@@ -1872,7 +1872,8 @@ msgid ""
 msgstr ""
 "Como en moitos outros modos de xogo por roldas, as roldas comezan cun "
 "período de graza de dez segundos no que non se poden disparar as armas, polo "
-"que é unha boa oportunidade para recoller o maior número posible de obxectos."
+"que é unha boa oportunidade para recoller o maior número posible de "
+"recollibles."
 
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qc:13
 msgid ""
@@ -2042,7 +2043,8 @@ msgstr ""
 "cun número determinado de vidas, e son eliminados da partida cando perden "
 "todas as vidas. Os xogadores aparecen con todas as armas dispoñibles, saúde "
 "e armadura máximas, e a saúde e a armadura non se rexeneran, similar a modos "
-"de xogo como %s. Do mesmo xeito, os obxectos non aparecen no mapa."
+"de xogo como %s. Do mesmo xeito, os obxectos recollibles non aparecen no "
+"mapa."
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qc:13
 msgid ""
@@ -2088,7 +2090,7 @@ msgid ""
 msgstr ""
 "%s é unha partida a morte todos contra todos rápida, no que os xogadores "
 "aparecen con todas as armas dispoñibles e con saúde e armadura máximas. Non "
-"hai obxectos recollibles nos mapas, pero os potenciadores seguen estando "
+"hai obxectos recollibles nos mapas, pero as melloras seguen estando "
 "dispoñibles."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:12
@@ -3124,8 +3126,8 @@ msgid ""
 "The %s gives you infinite ammo until the buff expires, so you don't need to "
 "worry about running out of ammo."
 msgstr ""
-"O %s dálle munición infinita ata que o potenciador expire, así que non tes "
-"que preocuparte por quedarte sen munición."
+"O %s dálle munición infinita ata que a mellora expire, así que non tes que "
+"preocuparte por quedar sen munición."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
 #, c-format
@@ -3147,7 +3149,7 @@ msgid ""
 "knockback while the buff is active."
 msgstr ""
 "O %s aumenta a forza de retroceso que inflixes e faiche inmune ao retroceso "
-"mentres o potenciador está activo."
+"mentres a mellora está activa."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
@@ -3164,7 +3166,7 @@ msgid ""
 "you attack them, while the buff is active."
 msgstr ""
 "O %s fai que os teus inimigos e monstros se ralenticen durante uns segundos "
-"cando os atacas, mentres o potenciador está activo."
+"cando os atacas, mentres a mellora está activa."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
 #, c-format
@@ -3196,7 +3198,7 @@ msgid ""
 "to them for several seconds until the buff expires."
 msgstr ""
 "O %s prende lume aos inimigos ou monstros que ataques, inflixíndolles dano "
-"por queima durante varios segundos ata que o potenciador expire."
+"por queima durante varios segundos ata que a mellora expire."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
 msgid "Inferno"
@@ -3206,8 +3208,8 @@ msgstr "Inferno"
 #, c-format
 msgid "The %s greatly increases your jump height, while the buff is active."
 msgstr ""
-"O %s aumenta considerablemente a altura dos teus saltos mentres o "
-"potenciador está activo."
+"O %s aumenta considerablemente a altura dos teus saltos mentres a mellora "
+"está activa."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
@@ -3236,8 +3238,8 @@ msgid ""
 "The %s greatly increases your item pickup range, collecting nearby items for "
 "you while the buff is active."
 msgstr ""
-"O %s aumenta moito o teu alcance de recollida de obxectos, recolleno os que "
-"estean preto de ti mentres o efecto estea activo."
+"O %s aumenta moito o teu alcance de recollida de obxectos recollibles, "
+"recollendo os que estean preto de ti mentres o efecto estea activo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:11
 msgid "Magnet"
@@ -3252,7 +3254,7 @@ msgid ""
 msgstr ""
 "O %s aumenta a velocidade de rexeneración de saúde, incrementa a saúde "
 "máxima que podes ter antes de que empece a deteriorarse e reduce a "
-"velocidade do deterioro da saúde ata que remate o efecto."
+"velocidade do deterioro da saúde ata que remate a mellora."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:29
 msgid ""
@@ -3269,7 +3271,7 @@ msgstr "Menciña"
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:14
 #, c-format
 msgid "The %s greatly reduces your damage taken while the buff is active."
-msgstr "O %s reduce moito o dano que recibes mentres o efecto está activo."
+msgstr "O %s reduce moito o dano que recibes mentres a mellora está activa."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
 msgid "This also impacts the damage you deal to yourself."
@@ -3292,7 +3294,7 @@ msgid ""
 "A common usage of this buff is to jump over the map's void, then swap with "
 "an enemy, to cause them to fall into the void."
 msgstr ""
-"Un uso común deste efecto é saltar ao baleiro do mapa e logo intercambiar a "
+"Un uso común desta mellora é saltar ao baleiro do mapa e logo intercambiar a "
 "posición cun inimigo, para facelo caer no baleiro."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:89
@@ -3300,7 +3302,7 @@ msgid ""
 "The range that the buff works over is limited, so sometimes it may do "
 "nothing if there are no enemies nearby."
 msgstr ""
-"O alcance no que funciona o efecto é limitado, así que ás veces pode non "
+"O alcance no que funciona a mellora é limitado, así que ás veces pode non "
 "facer nada se non hai inimigos preto."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qh:10
@@ -3314,7 +3316,7 @@ msgid ""
 "health for yourself, until the buff expires."
 msgstr ""
 "o %s converte parte do dano que lles causas aos inimigos e monstros en saúde "
-"para ti, ata que remate o efecto."
+"para ti, ata que remate a mellora."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:29
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
@@ -3335,7 +3337,7 @@ msgid ""
 "until the buff expires."
 msgstr ""
 "O %s Reflicte unha parte do dano que os inimigos che causan de volta sobre "
-"eles, ata que remate o efecto."
+"eles, ata que remate a mellora."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qh:13
 msgid "Vengeance"
@@ -3875,8 +3877,8 @@ msgid ""
 "and ammo pickups are also removed from the map."
 msgstr ""
 "%s é un mutador que dá a todos os xogadores a mesma arma seleccionada ao "
-"chou. Despois duns momentos, a arma selecciónase de novo, e isto repítese "
-"continuamente. Tamén se eliminan do mapa as armas e a munición."
+"chou. Tras un tempo, a arma selecciónase de novo, e isto repítese "
+"indefinidamente."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:299
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
@@ -4515,25 +4517,25 @@ msgstr "^1Novas do servidor:"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr "^F4NOTA: ^BGA leria está desactivada neste servidor"
+msgstr "^F4NOTA: ^BGA conversa está desactivada neste servidor"
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
 msgstr ""
-"^F4NOTA: ^BGA leria de espectadores non se envía aos xogadores durante a "
+"^F4NOTA: ^BGA conversa de espectadores non se envía aos xogadores durante a "
 "partida"
 
 #: qcsrc/common/notifications/all.inc:236
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
-msgstr "^F4NOTA: ^BGA leria privada está desactivada neste servidor"
+msgstr "^F4NOTA: ^BGA conversa privada está desactivada neste servidor"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
-msgstr "^F4NOTA: ^BGA leria de espectadores está desactivada neste servidor"
+msgstr "^F4NOTA: ^BGA conversa de espectadores está desactivada neste servidor"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
-msgstr "^F4NOTA: ^BGA leria do equipo está desactivada neste servidor"
+msgstr "^F4NOTA: ^BGA conversa do equipo está desactivada neste servidor"
 
 #: qcsrc/common/notifications/all.inc:240
 #, c-format
@@ -5052,37 +5054,37 @@ msgstr "^BG%s^K1 morreu nun accidente%s%s"
 #: qcsrc/common/notifications/all.inc:338
 #, c-format
 msgid "^BG%s^K1 ran into a turret%s%s"
-msgstr "^BG%s^K1 topouse cunha torre%s%s"
+msgstr "^BG%s^K1 topouse cunha torreta%s%s"
 
 #: qcsrc/common/notifications/all.inc:339
 #, c-format
 msgid "^BG%s^K1 was blasted away by an eWheel turret%s%s"
-msgstr "^BG%s^K1 foi arrasado por unha torreta eWheel%s%s"
+msgstr "^BG%s^K1 foi arrasado por unha torreta electroRoda%s%s"
 
 #: qcsrc/common/notifications/all.inc:340
 #, c-format
 msgid "^BG%s^K1 got caught up in the FLAC turret fire%s%s"
-msgstr "^BG%s^K1 quedou atrapado polo fogo da torre FLAC%s%s"
+msgstr "^BG%s^K1 quedou atrapado polo fogo da torreta FLAC%s%s"
 
 #: qcsrc/common/notifications/all.inc:341
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Hellion turret%s%s"
-msgstr "^BG%s^K1 foi destruído por unha torreta Hellion%s%s"
+msgstr "^BG%s^K1 foi destruído por unha torreta Infernal%s%s"
 
 #: qcsrc/common/notifications/all.inc:342
 #, c-format
 msgid "^BG%s^K1 could not hide from the Hunter turret%s%s"
-msgstr "^BG%s^K1 non podía esconderse da torreta Hunter%s%s"
+msgstr "^BG%s^K1 non podía esconderse da torreta Cazador%s%s"
 
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
-msgstr "^BG%s^K1 estaba cheo de buratos por unha Metralladora de torreta%s%s"
+msgstr "^BG%s^K1 estaba cheo de buratos por unha Torreta Metralladora de%s%s"
 
 #: qcsrc/common/notifications/all.inc:344
 #, c-format
 msgid "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s"
-msgstr "^BG%s^K1 foi convertido en anacos fumegantes por unha torreta MLRS%s%s"
+msgstr "^BG%s^K1 foi convertido en anacos fumegantes por unha torreta SLMF%s%s"
 
 #: qcsrc/common/notifications/all.inc:345
 #, c-format
@@ -5102,17 +5104,17 @@ msgstr "^BG%s^K1 foi electrocutado por unha torreta Tesla%s%s"
 #: qcsrc/common/notifications/all.inc:348
 #, c-format
 msgid "^BG%s^K1 got served a lead enrichment by a Walker turret%s%s"
-msgstr "^BG%s^K1 encheuse de chumbo por unha torreta Walker%s%s"
+msgstr "^BG%s^K1 encheuse de chumbo por unha torreta Andante%s%s"
 
 #: qcsrc/common/notifications/all.inc:349
 #, c-format
 msgid "^BG%s^K1 was impaled by a Walker turret%s%s"
-msgstr "^BG%s^K1 foi empalado por unha torre Walker%s%s"
+msgstr "^BG%s^K1 foi empalado por unha torreta Andante%s%s"
 
 #: qcsrc/common/notifications/all.inc:350
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Walker turret%s%s"
-msgstr "^BG%s^K1 foi destruído por unha torre Walker%s%s"
+msgstr "^BG%s^K1 foi destruído por unha torreta Andante%s%s"
 
 #: qcsrc/common/notifications/all.inc:351
 #, c-format
@@ -6382,19 +6384,19 @@ msgstr "^K1Fuches eliminado por unha torreta!"
 
 #: qcsrc/common/notifications/all.inc:673
 msgid "^K1You had an unfortunate run in with an eWheel turret!"
-msgstr "^K1Tiveches un desafortunado encontro cunha torreta eWheel!"
+msgstr "^K1Tiveches un desafortunado encontro cunha torreta electroRoda!"
 
 #: qcsrc/common/notifications/all.inc:673
 msgid "^K1You were fragged by an eWheel turret!"
-msgstr "^K1Fuches eliminado por unha torre de eWheel!"
+msgstr "^K1Fuches eliminado por unha torreta electroRoda!"
 
 #: qcsrc/common/notifications/all.inc:674
 msgid "^K1You had an unfortunate run in with a Walker turret!"
-msgstr "^K1Tiveches un desafortunado encontro cunha torreta Walker!"
+msgstr "^K1Tiveches un desafortunado encontro cunha torreta Andante!"
 
 #: qcsrc/common/notifications/all.inc:674
 msgid "^K1You were fragged by a Walker turret!"
-msgstr "^K1Fuches eliminado por unha torreta Walker!"
+msgstr "^K1Fuches eliminado por unha torreta Andante!"
 
 #: qcsrc/common/notifications/all.inc:675
 msgid "^K1You got caught in the blast of a Bumblebee explosion!"
@@ -7276,7 +7278,7 @@ msgid ""
 "The %s is a mobile turret that rolls around, attacking its targets when they "
 "enter its line of sight."
 msgstr ""
-"O %s é unha torre móbil que se move rodando, atacando os seus obxectivos "
+"O %s é unha torreta móbil que se move rodando, atacando os seus obxectivos "
 "cando entran na súa liña de visión."
 
 #: qcsrc/common/turrets/turret/ewheel.qc:252
@@ -7290,7 +7292,7 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/ewheel.qh:15
 msgid "eWheel Turret"
-msgstr "Torreta eWheel"
+msgstr "Torreta electroRoda"
 
 #: qcsrc/common/turrets/turret/ewheel_weapon.qh:7
 msgid "eWheel"
@@ -7302,7 +7304,7 @@ msgid ""
 "The %s is a turret similar to flak cannons, instead firing anti-projectile "
 "flak shells to take down projectiles fired by its targets."
 msgstr ""
-"O %s é unha torre similar aos canóns antiaéreos, pero dispara proxectís "
+"A %s é unha torreta similar aos canóns antiaéreos, pero dispara proxectís "
 "antiproxectís para derrubar os proxectís disparados polos seus obxectivos."
 
 #: qcsrc/common/turrets/turret/flac.qc:26
@@ -7331,14 +7333,14 @@ msgid ""
 "instead works by generating power for nearby turrets, so that they can "
 "attack their shared targets more often."
 msgstr ""
-"O %s é unha torre algo única, xa que en vez de atacar directamente aos seus "
-"obxectivos, axuda a outras torres. Non ten arma propia, e funciona xerando "
-"enerxía para as torres próximas, para que poidan atacar aos seus obxectivos "
-"compartidos con máis frecuencia."
+"A %s é unha torreta algo única, xa que en vez de atacar directamente aos "
+"seus obxectivos, axuda a outras torretas. Non ten arma propia, e funciona "
+"xerando enerxía para as torretas próximas, para que poidan atacar aos seus "
+"obxectivos compartidos con máis frecuencia."
 
 #: qcsrc/common/turrets/turret/fusionreactor.qc:63
 msgid "This is the only turret that doesn't directly attack its targets."
-msgstr "Esta é a única torre que non ataca directamente aos seus obxectivos."
+msgstr "Esta é a única torreta que non ataca directamente aos seus obxectivos."
 
 #: qcsrc/common/turrets/turret/fusionreactor.qh:11
 msgid "Fusion Reactor"
@@ -7362,7 +7364,7 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/hellion.qh:13
 msgid "Hellion Missile Turret"
-msgstr "Torreta de mísiles Hellion"
+msgstr "Torreta de mísiles Infernal"
 
 #: qcsrc/common/turrets/turret/hellion_weapon.qh:7
 msgid "Hellion"
@@ -7398,7 +7400,7 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/machinegun.qh:13
 msgid "Machinegun Turret"
-msgstr "Metralladora de torre"
+msgstr "Torreta Metralladora"
 
 #: qcsrc/common/turrets/turret/machinegun_weapon.qh:7
 msgid "Machinegun"
@@ -7418,12 +7420,12 @@ msgid ""
 "Getting caught in the line of fire of this turret can be very deadly, but "
 "thankfully it doesn't shoot if you get too close, so as to not damage itself."
 msgstr ""
-"Ser atrapado na liña de tiro desta torre pode ser moi mortal, pero por sorte "
-"non dispara se te achegas demasiado, para non danarse a si mesma."
+"Ser atrapado na liña de tiro desta torreta pode ser moi mortal, pero por "
+"sorte non dispara se te achegas demasiado, para non danarse a si mesma."
 
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
-msgstr "Torreta MLRS"
+msgstr "Torreta SLMF"
 
 #: qcsrc/common/turrets/turret/mlrs_weapon.qh:7
 msgid "MLRS"
@@ -7435,7 +7437,7 @@ msgid ""
 "The %s is a turret that fires an invisible beam of energy towards its "
 "targets."
 msgstr ""
-"O %s é unha torre que dispara un feixe invisible de enerxía cara aos seus "
+"A %s é unha torreta que dispara un feixe invisible de enerxía cara aos seus "
 "obxectivos."
 
 #: qcsrc/common/turrets/turret/phaser.qc:53
@@ -7463,8 +7465,8 @@ msgid ""
 "The %s is a turret that fires electric balls forwards, similar to those of "
 "the %s."
 msgstr ""
-"O %s é unha torre que dispara bolas eléctricas cara adiante, semellantes ás "
-"do %s."
+"A %s é unha torreta que dispara bolas eléctricas cara adiante, semellantes "
+"ás do %s."
 
 #: qcsrc/common/turrets/turret/plasma.qc:57
 #, c-format
@@ -7482,7 +7484,7 @@ msgid ""
 "The %s is a turret that fires electric balls forwards from its two cannons, "
 "shooting balls similar to those of the %s."
 msgstr ""
-"O %s é unha torre que dispara bolas eléctricas cara adiante dende os seus "
+"A %s é unha torreta que dispara bolas eléctricas cara adiante dende os seus "
 "dous canóns, lanzando proxectís semellantes aos do %s."
 
 #: qcsrc/common/turrets/turret/plasma_dual.qc:45
@@ -7510,7 +7512,7 @@ msgid ""
 "The %s is a turret that electrocutes all who dare come near it, sending "
 "powerful high-voltage arcs of lightning to strike its targets."
 msgstr ""
-"O %s é unha torre que electrocutará a quen se atreva a achegarse, lanzando "
+"A %s é unha torreta que electrocutará a quen se atreva a achegarse, lanzando "
 "poderosos arcos de raio de alto voltaxe para golpear os seus obxectivos."
 
 #: qcsrc/common/turrets/turret/tesla.qc:96
@@ -7531,7 +7533,7 @@ msgstr "Bobina de Tesla"
 #, c-format
 msgid "The %s is an arachnid-like walking turret that hunts down its targets."
 msgstr ""
-"O %s é unha torre andante de tipo arañóide que caza aos seus obxectivos."
+"A %s é unha torreta andante de tipo arañóide que caza aos seus obxectivos."
 
 #: qcsrc/common/turrets/turret/walker.qc:652
 #, c-format
@@ -7547,7 +7549,7 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/walker.qh:15
 msgid "Walker Turret"
-msgstr "Torreta Walker"
+msgstr "Torreta Andante"
 
 #: qcsrc/common/turrets/turret/walker_weapon.qh:7
 msgid "Walker"
@@ -8686,7 +8688,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:29
 msgid "MachineGun"
-msgstr "Ametralladora"
+msgstr "Metralladora"
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:525
 #, c-format
@@ -8904,7 +8906,7 @@ msgid ""
 "The %s is one of the two main default weapons, firing a single shotgun round "
 "which spreads into multiple pellets upon exiting the barrel."
 msgstr ""
-"O %s é unha das dúas armas principais predeterminadas, disparando unha soa "
+"A %s é unha das dúas armas principais predeterminadas, disparando unha soa "
 "bala de escopeta que se dispersa en múltiples perdigóns ao saír do canón."
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:404
@@ -9775,11 +9777,11 @@ msgstr "Panel de impresión central"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:18
 msgid "Chat size:"
-msgstr "Tamaño da leria:"
+msgstr "Tamaño da conversa:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:21
 msgid "Chat lifetime:"
-msgstr "Duración da leria:"
+msgstr "Duración da conversa:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:27
 msgid "LIFETIME^Infinite"
@@ -9787,11 +9789,11 @@ msgstr "LIFETIME^Infinito"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:30
 msgid "Chat beep sound"
-msgstr "Sinal sonoro da leria"
+msgstr "Sinal sonoro da conversa"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qh:6
 msgid "Chat Panel"
-msgstr "Panel da leria"
+msgstr "Panel da conversa"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:21
 msgid "Flip checkpoint order"
@@ -10826,7 +10828,7 @@ msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
 msgstr ""
-"Activa as recollidas de beneficios (bonos aleatorios como Medic, Invisible, "
+"Activa os recollibles de melloras (bonos aleatorios como Medico, Invisible, "
 "etc.) nos mapas que o admiten"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
@@ -10926,7 +10928,7 @@ msgid ""
 "without weapon pickups"
 msgstr ""
 "Os xogadores recibirán un conxunto de armas no momento da aparición, así "
-"como munición ilimitada, sen recoller armas"
+"como munición ilimitada, sen recollibles de armas"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
 msgid "Weapon arenas:"
@@ -11686,7 +11688,7 @@ msgstr "Aumentar"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:159
 msgid "Chat message sound"
-msgstr "Son da mensaxe da leria"
+msgstr "Son da mensaxe da conversa"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:161
 msgid "Menu sounds"
@@ -12400,11 +12402,11 @@ msgstr "Mostra as mensaxes da consola na esquina superior esquerda"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display all info messages in the chatbox"
-msgstr "Amosa todas as mensaxes de información na caixa de leria"
+msgstr "Amosa todas as mensaxes de información na caixa de conversa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:84
 msgid "Display player statuses in the chatbox"
-msgstr "Amosa o estado dos xogadores na caixa de leria"
+msgstr "Amosa o estado dos xogadores na caixa de conversa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:88
 msgid "Powerup notifications"
@@ -13171,7 +13173,7 @@ msgstr "Anaglif 3D (vermello-cian)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:58
 msgid "High-quality frame buffer"
-msgstr "Buffer de cadros de alta calidade"
+msgstr "Búfer de fotogramas de alta calidade"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:66
 msgid "Antialiasing:"
@@ -13512,7 +13514,7 @@ msgstr "Vehículos"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:19
 msgid "Turrets"
-msgstr "Torres"
+msgstr "Torretas"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:21
 msgid "Mods"
@@ -13586,7 +13588,7 @@ msgid ""
 "communication channels (%s), and of course the official forum."
 msgstr ""
 "A mellor maneira de contactar coa comunidade é simplemente comezar a xogar "
-"en liña e usar o chat do xogo. Tamén podes conectarte ás canles de "
+"en liña e usar a conversa do xogo. Tamén podes conectarte ás canles de "
 "comunicación oficiais (%s) e, por suposto, ao foro oficial."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:40
@@ -14069,10 +14071,10 @@ msgid ""
 "disables spawn protection and enables friendly fire in team-based gametypes."
 msgstr ""
 "Engade regras adicionais para recoller obxectos, impedindo que xogadores con "
-"100 ou máis de vida ou armadura tomen recollidas de %s, %s, %s e %s, co fin "
-"de darlles aos demais xogadores unha oportunidade máis xusta de reconstruír "
-"a súa reserva. Tamén desactiva a protección ao aparecer e activa o fogo "
-"amigo en tipos de xogo por equipos."
+"100 ou máis de saude ou armadura tomen recollibles de %s, %s, %s e %s, co "
+"fin de darlles aos demais xogadores unha oportunidade máis xusta de "
+"reconstruír a súa reserva. Tamén desactiva a protección ao aparecer e activa "
+"o fogo amigo en tipos de xogo por equipos."
 
 #: qcsrc/menu/xonotic/keybinder.qc:61
 msgid "Moving"
@@ -14161,15 +14163,15 @@ msgstr "Comunicación"
 
 #: qcsrc/menu/xonotic/keybinder.qc:144
 msgid "public chat"
-msgstr "Leria pública"
+msgstr "Conversa pública"
 
 #: qcsrc/menu/xonotic/keybinder.qc:145
 msgid "team chat"
-msgstr "leria do equipo"
+msgstr "conversa do equipo"
 
 #: qcsrc/menu/xonotic/keybinder.qc:146
 msgid "show chat history"
-msgstr "amosar o historial da leria"
+msgstr "amosar o historial da conversa"
 
 #: qcsrc/menu/xonotic/keybinder.qc:147
 msgid "vote YES"

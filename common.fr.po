@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-25 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -166,7 +166,7 @@ msgstr "^1Appuyez sur ^3%s^1 pour changer de mode de caméra"
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
-msgstr ""
+msgstr "^1Appuyez sur ^3%s^1 pour des infos sur le mode de jeu"
 
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #: qcsrc/menu/xonotic/keybinder.qc:153
@@ -267,6 +267,7 @@ msgstr "^7Appuyez sur ^3ÉCHAP ^7pour afficher les options de l'ATH."
 #: qcsrc/client/hud/panel/infomessages.qc:233
 msgid "^3Double-click ^7a panel for panel-specific options."
 msgstr ""
+"^3Double-cliquez ^7sur un tableau de bord pour en afficher les options."
 
 #: qcsrc/client/hud/panel/infomessages.qc:234
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -626,6 +627,8 @@ msgstr "Temps total de possession de balle en mode Gardez-la-Balle"
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "How often a flag (CTF) or a key (Key Hunt) was captured"
 msgstr ""
+"Combien de fois un drapeau (CTF) ou une clé (Chasse aux Clés) a été "
+"capturé(e)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^caps"
@@ -745,7 +748,7 @@ msgstr "chasses"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of key carrier kills"
-msgstr ""
+msgstr "Nombre de porteurs de clés tués"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kckills"
@@ -826,6 +829,8 @@ msgstr "objectifs"
 msgid ""
 "How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"
 msgstr ""
+"Combien de fois un drapeau (CTF), une clé (Chasse aux Clés) ou une balle "
+"(Gardez-la-Balle) a été ramassé(e)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pickups"
@@ -1021,12 +1026,22 @@ msgid ""
 "or in all but these gametypes. You can also specify 'all' as a\n"
 "field to show all fields available for the current gametype."
 msgstr ""
+"Avant un champ vous pouvez insérer un signe + ou -, puis une liste des modes "
+"de jeux\n"
+"séparés par des virgules, puis un slash pour faire apparaître le champ dans "
+"ces modes uniquement\n"
+"ou dans tous les modes sauf ceux-ci. Vous pouvez aussi spécifier « all » "
+"comme champ\n"
+"pour afficher tous les champs disponibles pour le mode de jeu actuel."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:744
 msgid ""
 "The special gametype names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams gametypes."
 msgstr ""
+"Les noms de modes de jeu spéciaux « teams » et « noteams » peuvent être "
+"utilisés pour\n"
+"inclure ou exclure TOUS les modes de jeu en équipe ou non."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:748
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -1045,6 +1060,8 @@ msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gametypes except DM."
 msgstr ""
+"« champ3 » sera affiché uniquement en CTF, et « champ4 » sera affiché\n"
+"dans tous les autres modes de jeu sauf DM."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1059
 #: qcsrc/client/hud/panel/scoreboard.qc:1073
@@ -1219,7 +1236,7 @@ msgstr "Prolongations #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering HUD configure mode"
-msgstr ""
+msgstr "^1Vous devez répondre avant d'entrer dans la configuration de l'ATH"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
