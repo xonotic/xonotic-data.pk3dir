@@ -4,7 +4,10 @@
 void buff_Vengeance_DelayedDamage(entity this)
 {
 	if (this.enemy)
+	{
 		Damage(this.enemy, this.owner, this.owner, this.dmg, DEATH_BUFF.m_id, DMG_NOWEP, this.enemy.origin, '0 0 0');
+		buff_Effect(this.owner, EFFECT_VENGEANCE, this.enemy.origin, vec2(this.enemy.velocity), min(ceil(this.dmg), 50), false);
+	}
 
 	delete(this);
 	return;
