@@ -9395,7 +9395,7 @@ SUB(vampire_fx) {
 	MY(count) = 5;
 	MY(gravity) = -0.5000000;
 	MY(originjitter) = '5.0 5.0 100.0';
-	MY(sizeincrease) = -0.050000;
+	MY(sizeincrease) = -0.500000;
 	MY(size_min) = 3;
 	MY(size_max) = 5;
 	MY(tex_min) = 70;
@@ -9403,6 +9403,29 @@ SUB(vampire_fx) {
 	MY(type) = "spark";
 	MY(velocityjitter) = '50.0 50.0 5.0';
 	MY(velocitymultiplier) = 0.2;
+}
+
+DEF(vengeance_fx);
+// rhomboids that fly out from the player when they're healed
+SUB(vengeance_fx) {
+	MY(airfriction) = -1.000000;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 384;
+	MY(bounce) = 0.100000;
+	MY(color_min) = "0xff3b9c";
+	MY(color_max) = "0xff3b9c";
+	MY(count) = 2;
+	MY(gravity) = -0.0500000;
+	MY(originjitter) = '10.0 10.0 50.0';
+	MY(sizeincrease) = -0.050000;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '150.0 150.0 10.0';
+	MY(velocitymultiplier) = 0;
 }
 
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
