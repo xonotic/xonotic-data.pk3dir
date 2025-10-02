@@ -9064,3 +9064,17 @@ effect vampire_fx
 	tex 70 70
 	velocityjitter 50 50 5
 	velocitymultiplier 0.2
+effect vengeance_fx
+	type spark
+	airfriction -1.000000
+	alpha 256 256 384
+	bounce 0.100000
+	color 0xff3b9c 0xff3b9c
+	count 2
+	gravity -0.050000
+	originjitter 10 10 50
+	sizeincrease -0.500000
+	size 3 3
+	tex 40 40
+	velocityjitter 150 150 10
+	velocitymultiplier 0
