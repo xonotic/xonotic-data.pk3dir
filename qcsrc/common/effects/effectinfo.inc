@@ -3902,16 +3902,16 @@ SUB(healing_fx) {
 	MY(airfriction) = -0.500000;
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
-	MY(alpha_fade) = 170;
+	MY(alpha_fade) = 200;
 	MY(bounce) = 1.500000;
 	MY(color_min) = "0xff0000";
-	MY(color_max) = "0xff0000";
+	MY(color_max) = "0xfd705b";
 	MY(count) = 5;
 	MY(gravity) = -0.100000;
-	MY(originjitter) = '5.0 5.0 100.0';
+	MY(originjitter) = '5.0 5.0 60.0';
 	MY(sizeincrease) = -0.050000;
-	MY(size_min) = 1;
-	MY(size_max) = 3;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
 	MY(tex_min) = 75;
 	MY(tex_max) = 75;
 	MY(type) = "spark";
@@ -3922,44 +3922,45 @@ SUB(healing_fx) {
 DEF(armorrepair_fx);
 SUB(armorrepair_fx) {
 	MY(airfriction) = -0.500000;
-	MY(alpha_min) = 256;
+	MY(alpha_min) = 200;
 	MY(alpha_max) = 256;
-	MY(alpha_fade) = 170;
+	MY(alpha_fade) = 256;
 	MY(bounce) = 1.500000;
 	MY(color_min) = "0x00ff00";
-	MY(color_max) = "0x00ff00";
+	MY(color_max) = "0x81f13d";
 	MY(count) = 5;
-	MY(gravity) = -0.100000;
+	MY(gravity) = -0.010000;
 	MY(originjitter) = '5.0 5.0 50.0';
 	MY(sizeincrease) = -0.050000;
-	MY(size_min) = 1;
-	MY(size_max) = 3;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
 	MY(tex_min) = 76;
 	MY(tex_max) = 76;
 	MY(type) = "spark";
-	MY(velocityjitter) = '50.0 50.0 0.0';
-	MY(velocitymultiplier) = 0.2;
+	MY(velocityjitter) = '150.0 150.0 5.0';
+	MY(velocitymultiplier) = 0.5;
 }
 
 DEF(ammoregen_fx);
 SUB(ammoregen_fx) {
-	MY(airfriction) = -0.500000;
+	MY(airfriction) = -1.000000;
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
-	MY(alpha_fade) = 170;
+	MY(alpha_fade) = 192;
 	MY(bounce) = 1.500000;
 	MY(color_min) = "0x0000ff";
-	MY(color_max) = "0x0000ff";
+	MY(color_max) = "0x5576ed";
 	MY(count) = 5;
 	MY(gravity) = 0.100000;
-	MY(originjitter) = '5.0 5.0 50.0';
+	MY(originjitter) = '10.0 10.0 30.0';
 	MY(sizeincrease) = -0.050000;
-	MY(size_min) = 1;
-	MY(size_max) = 3;
+	MY(size_min) = 4;
+	MY(size_max) = 5;
 	MY(tex_min) = 77;
 	MY(tex_max) = 81;
 	MY(type) = "spark";
-	MY(velocityjitter) = '50.0 50.0 0.0';
+	MY(velocityoffset) = '0.0 0.0 10.0';
+	MY(velocityjitter) = '40.0 40.0 2.0';
 	MY(velocitymultiplier) = 0.2;
 }
 
