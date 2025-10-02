@@ -3912,8 +3912,8 @@ SUB(healing_fx) {
 	MY(sizeincrease) = -0.050000;
 	MY(size_min) = 1;
 	MY(size_max) = 3;
-	MY(tex_min) = 40;
-	MY(tex_max) = 40;
+	MY(tex_min) = 75;
+	MY(tex_max) = 75;
 	MY(type) = "spark";
 	MY(velocityjitter) = '50.0 50.0 0.0';
 	MY(velocitymultiplier) = 0.2;
@@ -3934,8 +3934,8 @@ SUB(armorrepair_fx) {
 	MY(sizeincrease) = -0.050000;
 	MY(size_min) = 1;
 	MY(size_max) = 3;
-	MY(tex_min) = 40;
-	MY(tex_max) = 40;
+	MY(tex_min) = 76;
+	MY(tex_max) = 76;
 	MY(type) = "spark";
 	MY(velocityjitter) = '50.0 50.0 0.0';
 	MY(velocitymultiplier) = 0.2;
@@ -3956,8 +3956,8 @@ SUB(ammoregen_fx) {
 	MY(sizeincrease) = -0.050000;
 	MY(size_min) = 1;
 	MY(size_max) = 3;
-	MY(tex_min) = 40;
-	MY(tex_max) = 40;
+	MY(tex_min) = 77;
+	MY(tex_max) = 81;
 	MY(type) = "spark";
 	MY(velocityjitter) = '50.0 50.0 0.0';
 	MY(velocitymultiplier) = 0.2;
