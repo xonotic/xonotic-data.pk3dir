@@ -2429,47 +2429,48 @@ effect goldendust
 	tex 38 38
 	velocityjitter 0.1 0.1 0.1
 effect healing_fx
-	type spark
+	type static
 	airfriction -0.500000
-	alpha 256 256 170
+	alpha 256 256 200
 	bounce 1.500000
-	color 0xff0000 0xff0000
-	count 5
+	color 0xff0000 0xfd705b
+	count 3
 	gravity -0.100000
-	originjitter 5 5 100
+	originjitter 5 5 50
 	sizeincrease -0.050000
-	size 1 3
+	size 3 7
 	tex 75 75
-	velocityjitter 50 50 0
-	velocitymultiplier 0.2
+	velocityjitter 40 40 5
+	velocitymultiplier 0.200000
 effect armorrepair_fx
-	type spark
-	airfriction -0.500000
-	alpha 256 256 170
+	type static
+	airfriction 5
+	alpha 200 256 256
 	bounce 1.500000
-	color 0x00ff00 0x00ff00
-	count 5
-	gravity -0.100000
+	color 0x00ff00 0x81f13d
+	count 3
+	gravity -0.010000
 	originjitter 5 5 50
 	sizeincrease -0.050000
-	size 1 3
+	size 3 7
 	tex 76 76
-	velocityjitter 50 50 0
-	velocitymultiplier 0.2
+	velocityjitter 200 200 5
+	velocitymultiplier 0.500000
 effect ammoregen_fx
-	type spark
-	airfriction -0.500000
-	alpha 256 256 170
+	type static
+	airfriction -1
+	alpha 256 256 192
 	bounce 1.500000
-	color 0x0000ff 0x0000ff
-	count 5
+	color 0x0000ff 0x5576ed
+	count 3
 	gravity 0.100000
-	originjitter 5 5 50
+	originjitter 10 10 30
 	sizeincrease -0.050000
-	size 1 3
+	size 3 7
 	tex 77 81
-	velocityjitter 50 50 0
-	velocitymultiplier 0.2
+	velocityjitter 40 40 2
+	velocitymultiplier 0.200000
+	velocityoffset 0 0 10
 effect rage
 	type smoke
 	airfriction 2
