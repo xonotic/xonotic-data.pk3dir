@@ -166,7 +166,7 @@ msgstr "^1Appuyez sur ^3%s^1 pour changer de mode de caméra"
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
-msgstr "^1Appuyez sur ^3%s^1 pour des infos sur le mode de jeu"
+msgstr "^1Appuyez sur ^3%s^1 pour des infos sur le type de partie"
 
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #: qcsrc/menu/xonotic/keybinder.qc:153
@@ -1026,22 +1026,22 @@ msgid ""
 "or in all but these gametypes. You can also specify 'all' as a\n"
 "field to show all fields available for the current gametype."
 msgstr ""
-"Avant un champ vous pouvez insérer un signe + ou -, puis une liste des modes "
-"de jeux\n"
+"Avant un champ vous pouvez insérer un signe + ou -, puis une liste des types "
+"de partie\n"
 "séparés par des virgules, puis un slash pour faire apparaître le champ dans "
-"ces modes uniquement\n"
-"ou dans tous les modes sauf ceux-ci. Vous pouvez aussi spécifier « all » "
+"ces types uniquement\n"
+"ou dans tous les types sauf ceux-ci. Vous pouvez aussi spécifier « all » "
 "comme champ\n"
-"pour afficher tous les champs disponibles pour le mode de jeu actuel."
+"pour afficher tous les champs disponibles pour le type de partie actuel."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:744
 msgid ""
 "The special gametype names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams gametypes."
 msgstr ""
-"Les noms de modes de jeu spéciaux « teams » et « noteams » peuvent être "
+"Les noms de type de partie spéciaux « teams » et « noteams » peuvent être "
 "utilisés pour\n"
-"inclure ou exclure TOUS les modes de jeu en équipe ou non."
+"inclure ou exclure TOUS les types de partie en équipe ou non."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:748
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -1061,7 +1061,7 @@ msgid ""
 "other gametypes except DM."
 msgstr ""
 "« champ3 » sera affiché uniquement en CTF, et « champ4 » sera affiché\n"
-"dans tous les autres modes de jeu sauf DM."
+"dans tous les autres types de partie sauf DM."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1059
 #: qcsrc/client/hud/panel/scoreboard.qc:1073
@@ -1383,7 +1383,7 @@ msgstr "^BGAppuyez sur ^F2%s^BG pour rejoindre la partie"
 #: qcsrc/client/main.qc:1385
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
 msgid "Gametype:"
-msgstr "Mode de jeu :"
+msgstr "Type de partie :"
 
 #: qcsrc/client/main.qc:1389
 msgid "by:"
@@ -1450,7 +1450,7 @@ msgstr "Suggérée par : %s"
 
 #: qcsrc/client/mapvoting.qc:458
 msgid "Decide the gametype"
-msgstr "Choisissez le mode de jeu"
+msgstr "Choisissez le type de partie"
 
 #: qcsrc/client/mapvoting.qc:458
 msgid "Vote for a map"
@@ -1490,7 +1490,7 @@ msgstr "erreur à la création du curl handle"
 msgid ""
 "%s is a team-based gametype involving an attacking and a defending team."
 msgstr ""
-"%s est un mode de jeu en équipe impliquant une équipe attaquante et une "
+"%s est un type de partie en équipe impliquant une équipe attaquante et une "
 "équipe défensive."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qc:9
@@ -1542,6 +1542,11 @@ msgid ""
 "life per round. There are no pickups available on the map in %s, making the "
 "gameplay fast-paced and focused on combat."
 msgstr ""
+"%s est un type de partie courant en plusieurs manches et joué en équipes, "
+"dans lequel les joueurs apparaissent avec toutes les armes disponibles, "
+"disposent d'un maximum de santé et d'armure, mais n'ont qu'une seule vie par "
+"manche. Il n'y a aucun objet disponible sur la carte en %s, ce qui rend le "
+"gameplay rapide et axé sur le combat."
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:10
 msgid ""
@@ -1561,6 +1566,9 @@ msgid ""
 "fellow teammates and pay attention to any callouts from them. Team "
 "coordination is key!"
 msgstr ""
+"Comme les joueurs n'ont qu'une seule vie par manche, il est important de se "
+"regrouper avec ses coéquipiers et d'être attentif à leurs appels. La "
+"coordination de l'équipe est essentielle !"
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:12
 msgid "Clan Arena"
@@ -1592,12 +1600,19 @@ msgid ""
 "captured if your own flag is also home in its base, so it's important to "
 "collect your flag after it's dropped."
 msgstr ""
+"%s est un type de partie en équipe courant où l'objectif est de voler un "
+"drapeau ennemi et de le ramener sur le vôtre pour le capturer. Un drapeau ne "
+"peut être capturé que si votre propre drapeau se trouve également dans sa "
+"base. Il est donc important de récupérer votre drapeau après qu'il ait été "
+"lâché."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:10
 msgid ""
 "The game is won once a team reaches a certain number of \"caps\" (captures), "
 "or has a considerable lead over the other team."
 msgstr ""
+"La partie est gagnée dès qu'une équipe atteint un certain nombre de captures "
+"ou qu'elle a une avance considérable sur l'autre équipe."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:11
 msgid ""
@@ -1652,6 +1667,10 @@ msgid ""
 "from start to finish as fast as possible and try to beat the times set by "
 "others."
 msgstr ""
+"%s est un type de partie unique, axé sur la course contre d'autres joueurs "
+"sur la carte, plutôt que sur le combat armé. Les joueurs parcourent la carte "
+"du début à la fin aussi vite que possible et tentent de battre les temps "
+"réalisés par les autres."
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qc:12
 #, c-format
@@ -1670,6 +1689,10 @@ msgid ""
 "heaps of community-made maps available. Also, it only requires one player to "
 "play."
 msgstr ""
+"Bien que ce type de partie soit assez différent des autres, il est très joué "
+"car il permet de maîtriser les techniques de déplacement et il existe de "
+"nombreuses cartes créées par la communauté. De plus, il ne nécessite qu'un "
+"seul joueur."
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Race CTS"
@@ -1717,6 +1740,8 @@ msgid ""
 "%s is a gametype where teams compete to dominate the map by capturing and "
 "keeping control points."
 msgstr ""
+"%s est un type de partie où les équipes s'affrontent pour dominer la carte "
+"en capturant et en conservant des points de contrôle."
 
 #: qcsrc/common/gametypes/gametype/domination/domination.qc:9
 msgid ""
@@ -1752,6 +1777,8 @@ msgid ""
 "%s is a 1-vs-1 arena battle to decide the winner, essentially a 2-player "
 "version of %s, making it one of the most competitive gametypes."
 msgstr ""
+"%s est un combat en arène en 1 contre 1, semblable à une version de %s à 2 "
+"joueurs, ce qui en fait l'un des types de partie les plus compétitifs."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:13
 #, c-format
@@ -1795,6 +1822,10 @@ msgid ""
 "need to be unfrozen to re-enter the round. The round ends when all players "
 "from all opposing teams are frozen, scoring the remaining team a point."
 msgstr ""
+"%s est un type de partie en équipes en plusieurs manches où les joueurs "
+"éliminés sont gelés et doivent être dégelés pour pouvoir réintégrer la "
+"manche. La manche se termine lorsque tous les joueurs des équipes adverses "
+"sont gelés, ce qui rapporte un point à l'équipe restante."
 
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qc:10
 msgid ""
@@ -1810,6 +1841,10 @@ msgid ""
 "grace period where weapons cannot be fired, meaning it's a good opportunity "
 "to grab as many pickups as you can."
 msgstr ""
+"Comme dans beaucoup d'autres types de partie en plusieurs manches, celles-ci "
+"commencent par une période de grâce de dix secondes pendant laquelle les "
+"armes ne peuvent pas être utilisées, ce qui vous laisse le temps de "
+"récupérer autant d'objets que possible."
 
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qc:13
 msgid ""
@@ -1996,14 +2031,14 @@ msgid ""
 "turning this gametype into chaotic fun at times."
 msgstr ""
 "Comme les dommages sont toujours récompensés en %s, plus vous tirez, mieux "
-"c'est, ce qui transforme ce mode de jeu en plaisir chaotique."
+"c'est, ce qui transforme ce type de partie en plaisir chaotique."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:16
 #, c-format
 msgid "This gametype is often seen as a more newbie-friendly version of %s."
 msgstr ""
-"Ce mode de jeu est souvent vu comme une version plus adaptée aux débutants "
-"de %s."
+"Ce type de partie est souvent vu comme une version plus adaptée aux "
+"débutants de %s."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem"
@@ -2113,9 +2148,9 @@ msgid ""
 "%s is a gametype similar to %s where players run on a track to be the first "
 "to cross the finish line after a certain number of laps."
 msgstr ""
-"%s est un mode de jeu similaire à %s, où les joueurs courent sur une piste "
-"pour être les premiers à franchir la ligne d'arrivée après un certain nombre "
-"de tours."
+"%s est un type de partie similaire à %s, où les joueurs courent sur une "
+"piste pour être les premiers à franchir la ligne d'arrivée après un certain "
+"nombre de tours."
 
 #: qcsrc/common/gametypes/gametype/race/race.qc:11
 #, c-format
@@ -9949,7 +9984,7 @@ msgstr "Illimité"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:74
 msgid "Gametype"
-msgstr "Mode de jeu"
+msgstr "Type de partie"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:80
 msgid "Show all"
@@ -9957,7 +9992,7 @@ msgstr "Tout afficher"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:81
 msgid "Show all available gametypes"
-msgstr "Afficher tous les modes de jeu disponibles"
+msgstr "Afficher tous les types de partie disponibles"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "Time limit:"
@@ -11558,7 +11593,7 @@ msgstr "Afficher des balises pour les objectifs sur la carte"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:69
 msgid "Show various gametype specific waypoints"
-msgstr "Afficher diverses balises spécifiques au mode de jeu"
+msgstr "Afficher diverses balises spécifiques au type de partie"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:79
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:139
@@ -12844,7 +12879,7 @@ msgstr "Mouvement"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:11
 msgid "Gametypes"
-msgstr "Modes de jeu"
+msgstr "Types de partie"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:17
 msgid "Monsters"
