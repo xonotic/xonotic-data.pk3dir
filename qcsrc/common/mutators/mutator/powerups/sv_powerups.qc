@@ -190,7 +190,7 @@ MUTATOR_HOOKFUNCTION(powerups, WeaponRateFactor)
 	entity player = M_ARGV(1, entity);
 
 	if(StatusEffects_active(STATUSEFFECT_Speed, player))
-		M_ARGV(0, float) *= autocvar_g_balance_powerup_speed_attackrate;
+		M_ARGV(0, float) *= autocvar_g_balance_powerup_speed_attack_time_multiplier;
 }
 
 MUTATOR_HOOKFUNCTION(powerups, BuildMutatorsPrettyString)
