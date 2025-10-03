@@ -32,7 +32,7 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponRateFactor)
 	entity player = M_ARGV(1, entity);
 
 	if (StatusEffects_active(STATUSEFFECT_Stunned, player))
-		M_ARGV(0, float) *= autocvar_g_buffs_disability_rate;
+		M_ARGV(0, float) *= autocvar_g_buffs_disability_attack_time_multiplier;
 }
 MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 {

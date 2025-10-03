@@ -7,19 +7,19 @@ void nade_veil_touch(entity this, entity toucher)
 {
 	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
+		entity real_toucher = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 
 		float tint_alpha = 0.75;
 		if(SAME_TEAM(toucher, this.realowner))
 		{
 			tint_alpha = 0.45;
-			if(!show_tint.nade_veil_time)
+			if(!real_toucher.nade_veil_time)
 			{
 				toucher.nade_veil_prevalpha = toucher.alpha;
 				toucher.alpha = -1;
 			}
 		}
-		show_tint.nade_veil_time = time + 0.1;
+		real_toucher.nade_veil_time = time + 0.1;
 	}
 }
 
