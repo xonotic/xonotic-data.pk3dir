@@ -660,19 +660,19 @@ msgstr "destructions"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^damage dealt"
-msgstr "dommages infligés"
+msgstr "dégâts infligés"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "The total damage dealt"
-msgstr "Le total des dommages infligés"
+msgstr "Le total des dégâts infligés"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^damage taken"
-msgstr "dommages subis"
+msgstr "dégâts subis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "The total damage taken"
-msgstr "Le total des dommages subis"
+msgstr "Le total des dégâts subis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Number of flag drops"
@@ -1503,12 +1503,23 @@ msgid ""
 "teams switch roles and the new attacking team wins only if they destroy the "
 "main object within the time the other team took to do it."
 msgstr ""
+"L'équipe attaquante doit détruire les objets placés sur la carte, ce qui "
+"ouvre de nouvelles portes ou voies d'accès vers d'autres objets, jusqu'à ce "
+"que l'objectif principal soit atteint et détruit. L'équipe défensive doit "
+"défendre les objets et remporte la partie si elle parvient à empêcher "
+"l'équipe attaquante de détruire l'objectif principal dans le temps imparti. "
+"Si elle échoue, une deuxième manche est jouée, au cours de laquelle les "
+"équipes échangent leurs rôles et la nouvelle équipe attaquante ne remporte "
+"la partie que si elle détruit l'objectif principal dans le temps qu'il a "
+"fallu à l'autre équipe pour le faire."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qc:12
 msgid ""
 "Objects have waypoints which show their health and position, and they're "
 "destroyed by shooting them with any weapon."
 msgstr ""
+"Les objets ont des balises qui indiquent leur état et leur position, et sont "
+"détruits en leur tirant dessus avec n'importe quelle arme."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qh:8
 msgid "Assault"
@@ -1553,12 +1564,17 @@ msgid ""
 "Rounds start with a ten second grace period where weapons cannot be fired, "
 "so it's a good opportunity to group up with your team."
 msgstr ""
+"Les manches commencent par un délai de grâce de dix secondes pendant lequel "
+"les armes ne peuvent pas être utilisées, ce qui vous laisse le temps de vous "
+"regrouper avec votre équipe."
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:11
 msgid ""
 "The match ends once a team reaches a certain number of rounds won, or has a "
 "considerable lead over the other team."
 msgstr ""
+"La partie se termine lorsqu'une équipe atteint un certain nombre de manches "
+"gagnées ou dispose d'une avance considérable sur l'autre équipe."
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:12
 msgid ""
@@ -1877,6 +1893,12 @@ msgid ""
 "from each other. The player who frags the most monsters overall wins the "
 "match."
 msgstr ""
+"%s est un type de partie unique en plusieurs manches au cours desquelles une "
+"horde de monstres apparaît tout autour de la carte et les joueurs doivent "
+"essayer d'en éliminer le plus possible. Comme les joueurs ne peuvent pas "
+"s'infliger mutuellement des dégâts, ils se battent alors pour éliminer les "
+"monstres aux dépends des autres. Le joueur qui élimine le plus de monstres "
+"remporte la partie."
 
 #: qcsrc/common/gametypes/gametype/invasion/invasion.qc:11
 msgid ""
@@ -1938,6 +1960,12 @@ msgid ""
 "after a ten second period, and the location of all keys will be visible on "
 "the radar after a few seconds."
 msgstr ""
+"%s est un type de partie en plusieurs manches auquel participent plusieurs "
+"équipes. Chaque équipe commence avec une clé et doit récupérer toutes les "
+"clés pour remporter la manche. Le membre de l'équipe qui reçoit la clé au "
+"début de la manche est sélectionné au hasard après une période de dix "
+"secondes, et l'emplacement de toutes les clés sera visible sur le radar "
+"après quelques secondes."
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:12
 #, c-format
@@ -1976,6 +2004,12 @@ msgid ""
 "health and armor do not regenerate, similar to gametypes like %s. Similarly, "
 "item pickups don't spawn on the map."
 msgstr ""
+"%s est un type de partie « chacun pour soi » où tous les joueurs commencent "
+"avec un certain nombre de vies et sont éliminés de la partie une fois qu'ils "
+"ont perdu toutes leurs vies. Les joueurs apparaissent avec toutes les armes "
+"disponibles, un maximum de santé et d'armure, et ces dernières ne se "
+"régénèrent pas, tout comme dans d'autres type de partie telles que %s. De "
+"même, les objets à ramasser n'apparaissent pas sur la carte."
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qc:13
 msgid ""
@@ -2030,7 +2064,7 @@ msgid ""
 "Since damage is always rewarded in %s, the more you shoot the better, "
 "turning this gametype into chaotic fun at times."
 msgstr ""
-"Comme les dommages sont toujours récompensés en %s, plus vous tirez, mieux "
+"Comme les dégâts sont toujours récompensés en %s, plus vous tirez, mieux "
 "c'est, ce qui transforme ce type de partie en plaisir chaotique."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:16
@@ -2043,7 +2077,7 @@ msgstr ""
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem"
 msgstr ""
-"Concourez pour infliger le plus de dommages et de frags dans ce combat "
+"Concourez pour infliger le plus de dégâts et de frags dans ce combat "
 "chaotique"
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
@@ -2102,6 +2136,10 @@ msgid ""
 "the enemy team core generator. In order to destroy the generator, control "
 "points on the map (similar to those in %s) must first be captured."
 msgstr ""
+"%s est un type de partie en équipe similaire à %s où l'objectif final est de "
+"détruire le générateur central de l'équipe adverse. Pour détruire le "
+"générateur, il faut d'abord capturer des points de contrôle sur la carte "
+"(similaires à ceux en %s)."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:79
 msgid ""
@@ -2203,6 +2241,11 @@ msgid ""
 "players only know which team they belong to, and not the team membership of "
 "any other players."
 msgstr ""
+"%s est un type de partie chasseur-survivant impliquant deux équipes, où "
+"l'objectif des chasseurs est d'éliminer tous les survivants, et celui des "
+"survivants est d'éliminer tous les chasseurs ou de survivre jusqu'à la fin "
+"du temps imparti. La difficulté réside dans le fait que les joueurs ne "
+"connaissent que leur propre équipe, et non celle des autres joueurs."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:13
 msgid ""
@@ -2293,6 +2336,10 @@ msgid ""
 "differences being that %s is a round-based gametype, and of course the "
 "scoring system differences."
 msgstr ""
+"%s est un type de partie en équipe basé sur %s, utilisant le même système de "
+"points. Il présente de nombreuses similitudes avec %s, l'une des principales "
+"différences étant que %s est un type de partie en plusieurs manches, sans "
+"oublier bien sûr les différences au niveau du système de points."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qc:13
 msgid ""
@@ -2300,6 +2347,9 @@ msgid ""
 "chaotic nature, team communication is less important in this gametype than "
 "other team-based gametypes."
 msgstr ""
+"Comme il n'y a pas de manches, le chaos est permanent. En raison de cette "
+"nature chaotique, la communication au sein de l'équipe est moins importante "
+"dans ce type de partie que dans d'autres types de partie en équipe."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid ""
@@ -2385,6 +2435,8 @@ msgid ""
 "It tends to be one of the most highly contested items on a map, particularly "
 "in gametypes like %s."
 msgstr ""
+"Il s'agit généralement de l'un des éléments les plus disputés sur une carte, "
+"en particulier dans les types de partie tels que %s."
 
 #: qcsrc/common/items/item/armor.qh:44
 msgid "Small armor"
@@ -2520,7 +2572,7 @@ msgstr "Partie perdue !"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click \"Next Level\" to continue"
-msgstr ""
+msgstr "Bien joué ! Cliquez sur « Niveau suivant » pour continuer"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1183
 #: qcsrc/common/minigames/minigame/c4.qc:383
@@ -2546,7 +2598,7 @@ msgstr "Malicieux ! Appuyez sur « Niveau suivant » pour continuer !"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1197
 msgid "Press the spacebar to change your currently selected tile"
-msgstr ""
+msgstr "Appuyez sur la barre espace pour changer de tuile"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1200
 msgid "Push the boulders onto the targets"
@@ -2625,6 +2677,8 @@ msgstr "Jeu du moulin"
 msgid ""
 "You can select one of your pieces to move it to one of the surrounding places"
 msgstr ""
+"Vous pouvez sélectionner une de vos pièces pour la déplacer sur une case "
+"alentour"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:623
 msgid "You can select one of your pieces to move it anywhere on the board"
@@ -2997,8 +3051,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
-msgstr ""
-"Cela vous immunise également contre les dommages causés par les chutes."
+msgstr "Cela vous immunise également contre les dégâts causés par les chutes."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qh:12
 msgid "Jump"
@@ -3123,15 +3176,15 @@ msgstr "Joueurs transparents"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:24
 msgid "Damage Text"
-msgstr "Dommages"
+msgstr "Dégâts"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:26
 msgid "Draw damage numbers"
-msgstr "Afficher les nombres de dommages"
+msgstr "Afficher les nombres de dégâts"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:28
 msgid "Draw damage numbers for friendly fire"
-msgstr "Afficher les nombres de dommages pour le tir ami"
+msgstr "Afficher les nombres de dégâts pour le tir ami"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:33
 msgid "Font size minimum:"
@@ -3205,7 +3258,7 @@ msgstr "Ou opacité supérieure à :"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:7
 msgid "Damage text"
-msgstr "Dommages"
+msgstr "Dégâts"
 
 #: qcsrc/common/mutators/mutator/dodging/dodging.qc:10
 #, c-format
@@ -3250,7 +3303,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:12
 #: qcsrc/common/weapons/weapon/hook.qc:435
 msgid "hook"
-msgstr ""
+msgstr "grappin"
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:13
 #, c-format
@@ -3300,6 +3353,10 @@ msgid ""
 "of gametypes but particularly %s. Sometimes it's enabled alongside other "
 "mutators such as %s for added movement possibilities."
 msgstr ""
+"Il s'agit d'un mutateur assez courant présent sur de nombreux serveurs, qui "
+"s'intègre bien à de nombreux types de jeux, mais en particulier à %s. Il est "
+"parfois activé en même temps que d'autres mutateurs tels que %s pour offrir "
+"des possibilités de mouvement supplémentaires."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qh:5
 #: qcsrc/common/util.qc:297
@@ -3371,7 +3428,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qc:55
 #, c-format
 msgid "This is sort of the opposite of the %s."
-msgstr ""
+msgstr "C'est en quelque sorte le contraire de la %s."
 
 #: qcsrc/common/mutators/mutator/nades/nade/darkness.qh:19
 msgid "Darkness grenade"
@@ -3649,7 +3706,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:31
 msgid "Overkill Heavy MachineGun"
-msgstr ""
+msgstr "Pistolet-mitrailleur Overkill lourd"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:166
 #: qcsrc/common/weapons/weapon/machinegun.qc:434
@@ -3704,7 +3761,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:31
 msgid "Overkill Rocket Propelled Chainsaw"
-msgstr "Tronçonneuse à roquettes Overkill"
+msgstr "Tronçonneuse à roquette Overkill"
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qc:132
 #, c-format
@@ -3900,6 +3957,8 @@ msgid ""
 "This is a nice way to add some silly fun to a server, but it also does allow "
 "for the use of new tactics in some gametypes."
 msgstr ""
+"C'est une bonne façon d'ajouter un peu de fun à un serveur, mais cela permet "
+"aussi d'utiliser de nouvelles tactiques dans certains types de partie."
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qh:5
 #: qcsrc/common/util.qc:316
@@ -4510,7 +4569,7 @@ msgstr "^BG%s^K1 pensait avoir trouvé un bon endroit pour camper%s%s"
 #: qcsrc/common/notifications/all.inc:311
 #, c-format
 msgid "^BG%s^K1 unfairly eliminated themselves%s%s"
-msgstr ""
+msgstr "^BG%s^K1 s'est injustement éliminé(e)%s%s"
 
 #: qcsrc/common/notifications/all.inc:313
 #, c-format
@@ -4813,7 +4872,7 @@ msgstr "^BG%s^K3 a été dégelé automatiquement après %s secondes"
 #: qcsrc/common/notifications/all.inc:371
 #, c-format
 msgid "^BG%s^K1 froze themselves"
-msgstr ""
+msgstr "^BG%s^K1 s'est gelé(e) tout(e) seul(e)"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:706
@@ -4839,7 +4898,7 @@ msgstr "^BGManche terminée, il n'y a pas de gagnant"
 #: qcsrc/common/notifications/all.inc:378
 #, c-format
 msgid "^BGGodmode saved you %s units of damage, cheater!"
-msgstr "^BGLe mode Dieu vous a épargné %s points de dommages, tricheur !"
+msgstr "^BGLe mode Dieu vous a épargné %s points de dégâts, tricheur !"
 
 #: qcsrc/common/notifications/all.inc:380
 #, c-format
@@ -5290,7 +5349,7 @@ msgstr "^BG%s%s^K1 a été abattu par le Blaster de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s^K1 shot themselves to hell with their Blaster%s%s"
-msgstr ""
+msgstr "^BG%s^K1 s'est expédié(e) en enfer avec son propre Blaster%s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
@@ -5315,7 +5374,7 @@ msgstr "^BG%s%s^K1 s'est approché trop près de la roquette de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:484
 #, c-format
 msgid "^BG%s^K1 blew themselves up with their Devastator%s%s"
-msgstr ""
+msgstr "^BG%s^K1 s'est fait sauter avec son propre Devastator%s%s"
 
 #: qcsrc/common/notifications/all.inc:485
 #, c-format
@@ -5455,12 +5514,14 @@ msgstr "^BG%s^K1 n'a pas vu sa propre grenade de Mortier%s%s"
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s^K1 blew themselves up with their own Mortar%s%s"
-msgstr ""
+msgstr "^BG%s^K1 s'est fait sauter avec son propre Mortier%s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
 msgid "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy MachineGun%s%s"
 msgstr ""
+"^BG%s%s^K1 a été réduit en miettes par le Pistolet-mitrailleur Overkill "
+"lourd de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
@@ -5481,7 +5542,7 @@ msgid ""
 "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
 "Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 a été scié en deux par la Tronçonneuse à roquettes Overkill de "
+"^BG%s%s^K1 a été scié en deux par la Tronçonneuse à roquette Overkill de "
 "^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:515
@@ -5489,7 +5550,7 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 a presque évité la Tronçonneuse à roquettes Overkill de "
+"^BG%s%s^K1 a presque évité la Tronçonneuse à roquette Overkill de "
 "^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:516
@@ -5497,7 +5558,7 @@ msgstr ""
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s^K1 a été scié en deux par sa propre Tronçonneuse à roquettes "
+"^BG%s^K1 a été scié en deux par sa propre Tronçonneuse à roquette "
 "Overkill%s%s"
 
 #: qcsrc/common/notifications/all.inc:517
@@ -5505,6 +5566,8 @@ msgstr ""
 msgid ""
 "^BG%s^K1 blew themselves up with their Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s^K1 s'est fait sauter avec sa propre Tronçonneuse à roquette "
+"Overkill%s%s"
 
 #: qcsrc/common/notifications/all.inc:519
 #, c-format
@@ -5763,22 +5826,23 @@ msgstr "^BGL'ennemi %s (^BG%s%s)^BG a le drapeau ^TC^TT^BG ! Récupérez-le !"
 #: qcsrc/common/notifications/all.inc:600
 #, c-format
 msgid "^BGYour %steammate^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BGVotre coéquipier %s^BGa le drapeau ^TC^TT^BG ! Protégez-le !"
 
 #: qcsrc/common/notifications/all.inc:601
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
 msgstr ""
+"^BGVotre coéquipier %s(^BG%s%s)^BG a le drapeau ^TC^TT^BG ! Protégez-le !"
 
 #: qcsrc/common/notifications/all.inc:602
 #, c-format
 msgid "^BGYour %steammate^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BGVotre coéquipier %s^BGa le drapeau ! Protégez-le !"
 
 #: qcsrc/common/notifications/all.inc:603
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BGVotre coéquipier %s(^BG%s%s)^BG a le drapeau ! Protégez-le !"
 
 #: qcsrc/common/notifications/all.inc:604
 #: qcsrc/common/notifications/all.inc:750
@@ -5886,7 +5950,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:651
 msgid "^K1You were punished for attacking your teammates!"
-msgstr ""
+msgstr "^K1Vous avez été puni pour avoir attaqué vos coéquipiers !"
 
 #: qcsrc/common/notifications/all.inc:652
 msgid "^K1Die camper!"
@@ -6065,7 +6129,7 @@ msgstr "^K1Attention à la marche !"
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
 msgid "^K1Traitor! You betrayed teammate ^BG%s"
-msgstr ""
+msgstr "^K1Traitre ! Vous avez trahi votre coéquipier ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
@@ -6075,7 +6139,7 @@ msgstr "^K1Traitre ! Vous avez tué votre coéquipier ^BG%s"
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
 msgid "^K1You were betrayed by teammate ^BG%s"
-msgstr ""
+msgstr "^K1Vous avez été trahi par votre coéquipier ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
@@ -6184,7 +6248,7 @@ msgid ""
 "^K1No spawnpoints available!\n"
 "Hope your team can fix it..."
 msgstr ""
-"^K1Aucun endroit où apparaître !\n"
+"^K1Aucun endroit où réapparaître !\n"
 "En espérant que votre équipe puisse y remédier…"
 
 #: qcsrc/common/notifications/all.inc:727
@@ -7694,18 +7758,18 @@ msgstr "Spiderbot"
 
 #: qcsrc/common/weapons/all.qc:868
 msgid "This weapon has not been bound directly."
-msgstr ""
+msgstr "Cette arme n'est pas directement associée à un raccourci clavier."
 
 #: qcsrc/common/weapons/all.qc:869
 #, c-format
 msgid "You have bound this weapon to: %s."
-msgstr ""
+msgstr "Vous avez associé cette arme à la touche : %s."
 
 #: qcsrc/common/weapons/all.qc:875 qcsrc/common/weapons/all.qc:876
 #: qcsrc/common/weapons/all.qc:907
 #, c-format
 msgid "(DPS: %.2f)"
-msgstr ""
+msgstr "(DPS : %.2f)"
 
 #: qcsrc/common/weapons/all.qc:880
 #, c-format
@@ -7720,22 +7784,22 @@ msgstr ""
 #: qcsrc/common/weapons/all.qc:882
 #, c-format
 msgid "The %s does %s damage"
-msgstr ""
+msgstr "Le tir %s inflige %s points de dégâts"
 
 #: qcsrc/common/weapons/all.qc:883
 #, c-format
 msgid "The %s does %s damage per second"
-msgstr ""
+msgstr "Le tir %s inflige %s points de dégâts par seconde"
 
 #: qcsrc/common/weapons/all.qc:884
 #, c-format
 msgid "The %s shoots %s shots doing %s damage each"
-msgstr ""
+msgstr "Le tir %s tire %s coups infligeant chacun %s points de dégâts"
 
 #: qcsrc/common/weapons/all.qc:885
 #, c-format
 msgid "The %s shoots up to %s shots doing %s damage each"
-msgstr ""
+msgstr "Le tir %s tire jusqu'à %s coups infligeant chacun %s points de dégâts"
 
 #: qcsrc/common/weapons/all.qc:908 qcsrc/common/weapons/all.qc:918
 #: qcsrc/common/weapons/all.qc:939 qcsrc/common/weapons/all.qc:953
@@ -7743,22 +7807,22 @@ msgstr ""
 #: qcsrc/common/weapons/all.qc:996 qcsrc/common/weapons/all.qc:1010
 #: qcsrc/common/weapons/all.qc:1034 qcsrc/common/weapons/all.qc:1046
 msgid "Default damage stats:"
-msgstr ""
+msgstr "Stats des dégâts par défaut :"
 
 #: qcsrc/common/weapons/all.qc:910
 #, c-format
 msgid "A direct hit does %s damage"
-msgstr ""
+msgstr "Un tir direct inflige %s points de dégâts"
 
 #: qcsrc/common/weapons/all.qc:1032
 #, c-format
 msgid "(total DPS: %.2f)"
-msgstr ""
+msgstr "(DPS total : %.2f)"
 
 #: qcsrc/common/weapons/all.qc:1037
 #, c-format
 msgid "The combo adds an extra %s damage"
-msgstr ""
+msgstr "Le combo ajoute %s points de dégâts supplémentaires"
 
 #: qcsrc/common/weapons/weapon/arc.qc:1518
 #, c-format
@@ -9924,7 +9988,7 @@ msgstr "Vue libre"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:28
 msgid "Spawnpoint"
-msgstr "Point d'apparition"
+msgstr "Point de réapparition"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:29
 msgid "No moving"
@@ -10000,7 +10064,7 @@ msgstr "Limite de temps :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:85
 msgid "Time limit in minutes that when hit, will end the match"
-msgstr ""
+msgstr "Limite de temps, la partie se termine lorsque celle-ci est atteinte"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
 msgid "TIMLIM^Default"
@@ -10116,6 +10180,8 @@ msgid ""
 "Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
 "to clear; ENTER when done."
 msgstr ""
+"Cliquez ici ou appuyez sur Ctrl-F pour saisir un mot-clé afin d'affiner la "
+"liste ; Ctrl-Suppr pour effacer ; Entrée lorsque vous avez terminé."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:172
 msgid "Add shown"
@@ -10163,7 +10229,7 @@ msgstr "Auteur :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:64
 msgid "Gametypes:"
-msgstr ""
+msgstr "Types de partie :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
@@ -10208,11 +10274,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
 msgid "Only possible to inflict damage on your enemy while they're airborne"
-msgstr "Il faut que votre ennemi soit en l'air pour lui infliger des dommages"
+msgstr "Il faut que votre ennemi soit en l'air pour lui infliger des dégâts"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:99
 msgid "Damage done to your enemy gets added to your own health"
-msgstr "Les dommages infligés à vos ennemis vous rendent la santé"
+msgstr "Les dégâts infligés à vos ennemis vous rendent la santé"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:104
 msgid ""
@@ -10337,7 +10403,7 @@ msgstr ""
 "Les joueurs n'ont droit qu'à une seule arme qui peut tuer l'adversaire "
 "instantanément en un seul tir. Si le joueur est à court de munitions, il a "
 "10 secondes pour en trouver, sans quoi il meurt. Le tir secondaire n'inflige "
-"aucun dommage mais est utile pour réaliser des sauts."
+"aucun dégât mais est utile pour réaliser des sauts."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:214
 msgid ""
@@ -11044,7 +11110,7 @@ msgstr "Fixe"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decrease pitch with more damage"
-msgstr "Réduire la hauteur du son quand les dommages augmentent"
+msgstr "Réduire la hauteur du son quand les dégâts augmentent"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Decreasing"
@@ -11052,7 +11118,7 @@ msgstr "Décroissante"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increase pitch with more damage"
-msgstr "Accroître la hauteur du son quand les dommages augmentent"
+msgstr "Accroître la hauteur du son quand les dégâts augmentent"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:155
 msgid "Increasing"
@@ -11344,7 +11410,7 @@ msgstr "Durée en secondes avant que les marques d'impact ne disparaissent"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:183
 msgid "Damage effects:"
-msgstr "Effets des dommages :"
+msgstr "Effets des dégâts :"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:185
 msgid "DMGFX^Disabled"
@@ -11447,7 +11513,7 @@ msgid ""
 "Enables special postprocessing effects for when damaged or under water or "
 "using a powerup"
 msgstr ""
-"Activer des effets de postprocessing spéciaux lorsque vous êtes touché ou "
+"Activer des effets de post-traitement spéciaux lorsque vous êtes touché, "
 "sous l'eau ou quand vous utilisez un bonus"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:231
@@ -11464,11 +11530,13 @@ msgstr "Particules"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:240
 msgid "Spawnpoint effects"
-msgstr "Effets de point d'apparition"
+msgstr "Effets de point de réapparition"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:241
 msgid "Particle effects at all spawn points and whenever a player spawns"
 msgstr ""
+"Effets de particules à tous les points de réapparition et à chaque fois "
+"qu'un joueur apparaît"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:246
 msgid "Quality:"
@@ -11614,7 +11682,7 @@ msgstr "Afficher des noms au lieu des icônes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:108
 msgid "Damage"
-msgstr "Dommages"
+msgstr "Dégâts"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:110
 msgid "Overlay:"
@@ -11743,7 +11811,7 @@ msgstr "Les deux"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:55
 msgid "Print on a separate line"
-msgstr ""
+msgstr "Afficher sur une ligne séparée"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:59
 msgid "Add extra frag information to centerprint when available"
@@ -11758,7 +11826,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:67
 msgid "Gametype Settings"
-msgstr ""
+msgstr "Paramètres du type de partie"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:69
 msgid "Display capture times in Capture The Flag"
@@ -12185,7 +12253,7 @@ msgstr "Visée adoucie"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:109
 msgid "Smooths the mouse movement, but makes aiming slightly less responsive"
-msgstr ""
+msgstr "Lisse le mouvement de la souris, mais crée une légère latence"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:111
 msgid "Invert aiming"
@@ -12787,6 +12855,8 @@ msgid ""
 "Play the singleplayer campaign or instant action matches against bots, or "
 "read the guide"
 msgstr ""
+"Jouer la campagne solo ou des parties instantanées contre des bots, ou lire "
+"le guide"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:15
 msgid "Topic"
@@ -12810,7 +12880,7 @@ msgstr "rejoindre la ’meilleure’ équipe (auto-sélection)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Auto-select team (recommended)"
-msgstr ""
+msgstr "Auto-sélection de l'équipe (recommandé)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
@@ -12911,6 +12981,9 @@ msgid ""
 "other aspects of the game, but most of what you will learn will come from "
 "trying it out in practice."
 msgstr ""
+"Ce guide couvre les bases à connaître sur les armes, les objets et d'autres "
+"aspects du jeu, mais la plupart de ce que vous apprendrez viendra de votre "
+"expérience pratique."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:25
 msgid ""
@@ -12918,6 +12991,10 @@ msgid ""
 "settings. Xonotic is highly customizable and there are tons of servers out "
 "there that run with lightly or highly modified settings."
 msgstr ""
+"Veuillez noter que ce guide décrit le comportement par défaut du jeu avec "
+"les paramètres d'origine. Xonotic est hautement personnalisable et il existe "
+"de nombreux serveurs qui fonctionnent avec des paramètres légèrement ou "
+"fortement modifiés."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:27
 #, c-format
@@ -13163,6 +13240,10 @@ msgid ""
 "damage to the player. In gametypes without self damage however it is a very "
 "versatile movement tool."
 msgstr ""
+"Le %s peut être utilisé tout comme le %s pour se déplacer rapidement, mais "
+"il inflige beaucoup plus de dégâts au joueur. Cependant, dans les types de "
+"partie sans dégâts auto-infligés, c'est un outil de mouvement très "
+"polyvalent."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:128
 msgid ""
@@ -13375,7 +13456,7 @@ msgstr "afficher les scores"
 
 #: qcsrc/menu/xonotic/keybinder.qc:137
 msgid "screenshot"
-msgstr ""
+msgstr "capture d'écran"
 
 #: qcsrc/menu/xonotic/keybinder.qc:138
 msgid "maximize radar"
@@ -13506,7 +13587,7 @@ msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again."
 msgstr ""
 "Hein ? Impossible de lancer cette partie (m est NULL). Re-filtrer pour que "
-"cela n'arrive plus."
+"cela ne se reproduise plus."
 
 #: qcsrc/menu/xonotic/maplist.qc:305
 #, c-format
@@ -13518,6 +13599,8 @@ msgid ""
 "Huh? Can't play this (invalid gametype). Refiltering so this won't happen "
 "again."
 msgstr ""
+"Hein ? Impossible de lancer cette partie (type de partie invalide). Re-"
+"filtrer pour que cela ne se reproduise plus."
 
 #: qcsrc/menu/xonotic/playerlist.qc:115
 msgid "spectator"
