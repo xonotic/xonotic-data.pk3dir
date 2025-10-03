@@ -3,33 +3,36 @@
 #ifdef SVQC
 void nade_ammo_touch(entity this, entity toucher)
 {
-	if ((IS_PLAYER(toucher) || IS_MONSTER(toucher))
-		&& !IS_DEAD(toucher) && !STAT(FROZEN, toucher))
+	if ((!IS_PLAYER(toucher) && !IS_MONSTER(toucher))
+		|| IS_DEAD(toucher) || STAT(FROZEN, toucher))
 	{
-		float new_load;
-		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		return;
+	}
+
+	float new_load;
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (toucher.(weaponentity).clip_size)
 		{
-			.entity weaponentity = weaponentities[slot];
-			if (toucher.(weaponentity).clip_size)
-			{
-				new_load = (SAME_TEAM(toucher, this.realowner))
-					? toucher.(weaponentity).clip_size
-					: max(0, toucher.(weaponentity).clip_load - toucher.(weaponentity).clip_size * (autocvar_g_nades_ammo_clip_empty_rate * frametime * 0.5));
+			new_load = (SAME_TEAM(toucher, this.realowner))
+				? toucher.(weaponentity).clip_size
+				: max(0, toucher.(weaponentity).clip_load - toucher.(weaponentity).clip_size * (autocvar_g_nades_ammo_clip_empty_rate * frametime * 0.5));
 
-				toucher.(weaponentity).clip_load = toucher.(weaponentity).(weapon_load[toucher.(weaponentity).m_switchweapon.m_id]) = new_load;
-			}
+			toucher.(weaponentity).clip_load = toucher.(weaponentity).(weapon_load[toucher.(weaponentity).m_switchweapon.m_id]) = new_load;
 		}
+	}
 
-		float ammo_factor = autocvar_g_nades_ammo_rate * frametime * 0.5;
-		if (toucher != this.realowner)
-			ammo_factor *= (SAME_TEAM(toucher, this))
-				? autocvar_g_nades_ammo_friend
-				: autocvar_g_nades_ammo_foe;
+	float ammo_factor = autocvar_g_nades_ammo_rate * frametime * 0.5;
+	if (toucher != this.realowner)
+		ammo_factor *= (SAME_TEAM(toucher, this))
+			? autocvar_g_nades_ammo_friend
+			: autocvar_g_nades_ammo_foe;
 
-		float amshells  = GetResource(toucher, RES_SHELLS);
-		float ambullets = GetResource(toucher, RES_BULLETS);
-		float amrockets = GetResource(toucher, RES_ROCKETS);
-		float amcells   = GetResource(toucher, RES_CELLS);
+	float amshells  = GetResource(toucher, RES_SHELLS);
+	float ambullets = GetResource(toucher, RES_BULLETS);
+	float amrockets = GetResource(toucher, RES_ROCKETS);
+	float amcells   = GetResource(toucher, RES_CELLS);
 
 #define GIVE_AMMO_RESOURCE(amresource, res_resource, max_resource) \
 	if (amresource < max_resource) \
@@ -41,30 +44,29 @@ void nade_ammo_touch(entity this, entity toucher)
 	if (amresource > 0) \
 		SetResource(toucher, res_resource, amresource + ammo_factor);
 		
-		if (ammo_factor > 0)
-		{
-			bool gave = false;
-			GIVE_AMMO_RESOURCE(amshells,  RES_SHELLS,  autocvar_g_pickup_shells_max);
-			GIVE_AMMO_RESOURCE(ambullets, RES_BULLETS, autocvar_g_pickup_nails_max);
-			GIVE_AMMO_RESOURCE(amrockets, RES_ROCKETS, autocvar_g_pickup_rockets_max);
-			GIVE_AMMO_RESOURCE(amcells,   RES_CELLS,   autocvar_g_pickup_cells_max);
+	if (ammo_factor > 0)
+	{
+		bool gave = false;
+		GIVE_AMMO_RESOURCE(amshells,  RES_SHELLS,  autocvar_g_pickup_shells_max);
+		GIVE_AMMO_RESOURCE(ambullets, RES_BULLETS, autocvar_g_pickup_nails_max);
+		GIVE_AMMO_RESOURCE(amrockets, RES_ROCKETS, autocvar_g_pickup_rockets_max);
+		GIVE_AMMO_RESOURCE(amcells,   RES_CELLS,   autocvar_g_pickup_cells_max);
 
-			if (gave && this.nade_show_particles)
-				Send_Effect(EFFECT_AMMO_REGEN, toucher.origin, vec2(toucher.velocity), 1);
-		}
-		else if (ammo_factor < 0)
-		{
-			// Foe drops ammo points
-			DROP_AMMO_RESOURCE(amshells,  RES_SHELLS);
-			DROP_AMMO_RESOURCE(ambullets, RES_BULLETS);
-			DROP_AMMO_RESOURCE(amrockets, RES_ROCKETS);
-			DROP_AMMO_RESOURCE(amcells,   RES_CELLS);
+		if (gave && this.nade_show_particles)
+			Send_Effect(EFFECT_AMMO_REGEN, toucher.origin, vec2(toucher.velocity), 1);
+	}
+	else if (ammo_factor < 0)
+	{
+		// Foe drops ammo points
+		DROP_AMMO_RESOURCE(amshells,  RES_SHELLS);
+		DROP_AMMO_RESOURCE(ambullets, RES_BULLETS);
+		DROP_AMMO_RESOURCE(amrockets, RES_ROCKETS);
+		DROP_AMMO_RESOURCE(amcells,   RES_CELLS);
 
-			return;
-		}
+		return;
+	}
 #undef CHECK_AMMO_RESOURCE_LIMIT
 #undef DROP_AMMO_RESOURCE
-	}
 }
 
 void nade_ammo_boom(entity this)
