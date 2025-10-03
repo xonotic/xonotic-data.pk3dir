@@ -6,51 +6,53 @@
 
 void nade_heal_touch(entity this, entity toucher)
 {
-	if ((IS_PLAYER(toucher) || IS_MONSTER(toucher) || IS_VEHICLE(toucher))
-		&& !IS_DEAD(toucher) && !STAT(FROZEN, toucher))
+	if ((!IS_PLAYER(toucher) && !IS_MONSTER(toucher) && !IS_VEHICLE(toucher))
+		|| IS_DEAD(toucher) || STAT(FROZEN, toucher))
 	{
-		float health_factor = autocvar_g_nades_heal_rate * frametime * 0.5;
-		if (toucher != this.realowner)
-			health_factor *= (SAME_TEAM(toucher, this.realowner))
-				? autocvar_g_nades_heal_friend
-				: autocvar_g_nades_heal_foe;
+		return;
+	}
 
-		if (health_factor > 0)
+	float health_factor = autocvar_g_nades_heal_rate * frametime * 0.5;
+	if (toucher != this.realowner)
+		health_factor *= (SAME_TEAM(toucher, this.realowner))
+			? autocvar_g_nades_heal_friend
+			: autocvar_g_nades_heal_foe;
+
+	if (health_factor > 0)
+	{
+		float maxhealth = (IS_MONSTER(toucher))
+			? toucher.max_health
+			: autocvar_g_pickup_healthmega_max;
+		float hp = GetResource(toucher, RES_HEALTH);
+		if (hp < maxhealth)
 		{
-			float maxhealth = (IS_MONSTER(toucher))
-				? toucher.max_health
-				: autocvar_g_pickup_healthmega_max;
-			float hp = GetResource(toucher, RES_HEALTH);
-			if (hp < maxhealth)
-			{
-				if (this.nade_show_particles)
-					Send_Effect(EFFECT_HEALING, toucher.origin, vec2(toucher.velocity), 1);
+			if (this.nade_show_particles)
+				Send_Effect(EFFECT_HEALING, toucher.origin, vec2(toucher.velocity), 1);
 
-				GiveResourceWithLimit(toucher, RES_HEALTH, health_factor, maxhealth);
-			}
+			GiveResourceWithLimit(toucher, RES_HEALTH, health_factor, maxhealth);
 		}
-		else if (health_factor < 0)
-			Damage(toucher, this, this.realowner,
-				-health_factor,
-				DEATH_NADE_HEAL.m_id,
-				DMG_NOWEP,
-				toucher.origin,
-				'0 0 0'
-			);
+	}
+	else if (health_factor < 0)
+		Damage(toucher, this, this.realowner,
+			-health_factor,
+			DEATH_NADE_HEAL.m_id,
+			DMG_NOWEP,
+			toucher.origin,
+			'0 0 0'
+		);
 
-		float armor_factor = autocvar_g_nades_heal_armor_rate * frametime * 0.5;
-		if (toucher != this.realowner)
-			armor_factor *= (SAME_TEAM(toucher, this))
-				? autocvar_g_nades_heal_friend
-				: 0;
+	float armor_factor = autocvar_g_nades_heal_armor_rate * frametime * 0.5;
+	if (toucher != this.realowner)
+		armor_factor *= (SAME_TEAM(toucher, this))
+			? autocvar_g_nades_heal_friend
+			: 0;
 
-		if (armor_factor > 0)
-		{
-			float maxarmor = autocvar_g_pickup_armormega_max;
-			float armor = GetResource(toucher, RES_ARMOR);
-			if (armor < maxarmor)
-				GiveResourceWithLimit(toucher, RES_ARMOR, armor_factor, maxarmor);
-		}
+	if (armor_factor > 0)
+	{
+		float maxarmor = autocvar_g_pickup_armormega_max;
+		float armor = GetResource(toucher, RES_ARMOR);
+		if (armor < maxarmor)
+			GiveResourceWithLimit(toucher, RES_ARMOR, armor_factor, maxarmor);
 	}
 }
 
