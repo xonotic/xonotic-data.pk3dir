@@ -9078,3 +9078,62 @@ effect vengeance_fx
 	tex 40 40
 	velocityjitter 150 150 10
 	velocitymultiplier 0
+effect swapper
+	type decal
+	alpha 256 256 0
+	countabsolute 1
+	lightcolor 5 4 6
+	lightradiusfade 300
+	lightradius 300
+	originjitter 10 10 10
+	size 48 48
+	tex 59 59
+effect swapper
+	type static
+	alpha 128 128 64
+	color 0xC060FF 0xC060FF
+	countabsolute 1
+	size 48 48
+	tex 38 38
+effect swapper
+	type static
+	airfriction 6
+	alpha 156 156 100
+	bounce 2
+	color 0x6020FF 0xC060FF
+	count 4
+	liquidfriction 16
+	sizeincrease 50
+	size 32 32
+	tex 0 7
+	velocityjitter 256 256 256
+effect swapper
+	type spark
+	alpha 444 512 500
+	bounce 1.600000
+	color 0xcaa9cf 0xa15cff
+	count 24
+	originjitter 1 1 1
+	size 2 4
+	stretchfactor 2
+	tex 41 41
+	velocityjitter 100 100 100
+	velocitymultiplier 0.300000
+	rotate -180 180 4000 -4000
+effect swapper
+	type smoke
+	alpha 256 256 256
+	color 0x202020 0x404040
+	count 0.125000
+	originjitter 8 8 8
+	size 24 24
+	tex 0 8
+	velocityjitter 10 10 10
+effect swapper
+	type smoke
+	alpha 64 64 40
+	color 0xcaa9cf 0xa15cff
+	countabsolute 1
+	size 80 80
+	tex 33 33
+	velocitymultiplier 0.300000

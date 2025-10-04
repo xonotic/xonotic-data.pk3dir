@@ -9428,4 +9428,101 @@ SUB(vengeance_fx) {
 	MY(velocitymultiplier) = 0;
 }
 
+DEF(swapper);
+// decal
+SUB(swapper) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '5.0 4.0 6.0';
+	MY(lightradiusfade) = 300;
+	MY(lightradius) = 300;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(size_min) = 48;
+	MY(size_max) = 48;
+	MY(tex_min) = 59;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+// flare effect
+SUB(swapper) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0xC060FF";
+	MY(color_max) = "0xC060FF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 48;
+	MY(size_max) = 48;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "static";
+}
+// large sparks
+SUB(swapper) {
+	MY(airfriction) = 6;
+	MY(alpha_min) = 156;
+	MY(alpha_max) = 156;
+	MY(alpha_fade) = 156;
+	MY(bounce) = 2;
+	MY(color_min) = "0x6020FF";
+	MY(color_max) = "0xC060FF";
+	MY(count) = 4;
+	MY(liquidfriction) = 16;
+	MY(sizeincrease) = 50;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_max) = 7;
+	MY(type) = "static";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+SUB(swapper) {
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 500;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0xcaa9cf";
+	MY(color_max) = "0xa15cff";
+	MY(count) = 24;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocitymultiplier) = 0.300000;
+}
+// inner cloud of smoke
+SUB(swapper) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 0.125000;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '10.0 10.0 10.0';
+}
+// shockwave
+SUB(swapper) {
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 40;
+	MY(color_min) = "0xcaa9cf";
+	MY(color_max) = "0xa15cff";
+	MY(countabsolute) = 1;
+	MY(size_min) = 80;
+	MY(size_max) = 80;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 0.300000;
+}
+
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
