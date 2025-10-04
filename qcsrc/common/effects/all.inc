@@ -151,6 +151,7 @@ EFFECT(0, VAMPIRE,                  "vampire_fx")
 EFFECT(0, VENGEANCE,                "vengeance_fx")
 EFFECT(0, ARMOR_REPAIR,             "armorrepair_fx")
 EFFECT(0, AMMO_REGEN,               "ammoregen_fx")
+EFFECT(0, SWAPPER,                  "swapper")
 EFFECT(1, LASER_BEAM_FAST,          "nex242_misc_laser_beam_fast")
 EFFECT(0, RESPAWN_GHOST,            "respawn_ghost")
 
