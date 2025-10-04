@@ -5,6 +5,7 @@ float autocvar_g_survival_round_timelimit = 120;
 float autocvar_g_survival_warmup = 10;
 bool autocvar_g_survival_punish_teamkill = true;
 bool autocvar_g_survival_reward_survival = true;
+float autocvar_g_survival_round_enddelay;
 
 entity survivalStatuses;
 void SurvivalStatuses_Init();
@@ -74,7 +75,6 @@ void Surv_UpdateScores(bool timed_out)
 	});
 }
 
-float autocvar_g_survival_round_enddelay = 1;
 float Surv_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
