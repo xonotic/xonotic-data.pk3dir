@@ -27,12 +27,14 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	if (closest == NULL)
 		return;
 
-	vector my_org = player.origin;
-	vector my_vel = player.velocity;
-	vector my_ang = player.angles;
-	vector their_org = closest.origin;
-	vector their_vel = closest.velocity;
-	vector their_ang = closest.angles;
+	vector my_org    = player.origin;
+	vector my_center = CENTER_OF_ENT(player);
+	vector my_vel    = player.velocity;
+	vector my_ang    = player.angles;
+	vector their_org    = closest.origin;
+	vector their_center = CENTER_OF_ENT(closest);
+	vector their_vel    = closest.velocity;
+	vector their_ang    = closest.angles;
 
 	Drop_Special_Items(closest);
 
@@ -67,8 +69,8 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	closest.pushltime = time + autocvar_g_maxpushtime;
 	closest.istypefrag = PHYS_INPUT_BUTTON_CHAT(closest);
 
-	Send_Effect(EFFECT_ELECTRO_COMBO, their_org, '0 0 0', 1);
-	Send_Effect(EFFECT_ELECTRO_COMBO, my_org, '0 0 0', 1);
+	Send_Effect(EFFECT_SWAPPER, their_center, '0 0 0', 1);
+	Send_Effect(EFFECT_SWAPPER, my_center,    '0 0 0', 1);
 
 	sound(player,  CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
 	sound(closest, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
