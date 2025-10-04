@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-25 07:22+0200\n"
+"POT-Creation-Date: 2025-10-04 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Breton (http://app.transifex.com/team-xonotic/xonotic/"
@@ -2783,7 +2783,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:24
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
 #: qcsrc/common/mutators/mutator/buffs/buffs.qh:23
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:76
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:84
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:11
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:83
@@ -3210,7 +3210,7 @@ msgstr ""
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:74
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:82
 #, c-format
 msgid ""
 "The %s detonates after a short delay, temporarily creating an orb around the "
@@ -3219,14 +3219,14 @@ msgid ""
 "ammo."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:76
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:84
 #, c-format
 msgid ""
-"This does not impact weapon magazines, so it won't reload your weapons for "
-"you, unlike the %s."
+"Similar to the %s, your weapon magazines remain full while you are inside "
+"the orb, so you don't need to reload."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:22
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:21
 msgid "Ammo grenade"
 msgstr ""
 

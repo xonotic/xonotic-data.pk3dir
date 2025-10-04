@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-25 07:22+0200\n"
+"POT-Creation-Date: 2025-10-04 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: oblector o, 2022\n"
 "Language-Team: Latin (http://app.transifex.com/team-xonotic/xonotic/language/"
@@ -149,7 +149,7 @@ msgstr "^3%s^1 preme ut photographicam mutes"
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
-msgstr ""
+msgstr "^3%s^1 preme ut ludi notas videas"
 
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #: qcsrc/menu/xonotic/keybinder.qc:153
@@ -246,7 +246,7 @@ msgstr "^3ESC ^7preme ut Notarum Superpositarum optiones videas."
 
 #: qcsrc/client/hud/panel/infomessages.qc:233
 msgid "^3Double-click ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^7Quadri partem ^3bis clicca ^7ut eius partis optiones videas."
 
 #: qcsrc/client/hud/panel/infomessages.qc:234
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -605,7 +605,7 @@ msgstr "Quantum tempus totum pilam portabat Abhibitione"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "How often a flag (CTF) or a key (Key Hunt) was captured"
-msgstr ""
+msgstr "Quotiens vexillum (VC) aut clavem (CV) cepit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^caps"
@@ -725,7 +725,7 @@ msgstr "venatus"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of key carrier kills"
-msgstr ""
+msgstr "Quotiens clavem portantem interfecit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kckills"
@@ -805,7 +805,7 @@ msgstr "metae"
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid ""
 "How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"
-msgstr ""
+msgstr "Quotiens vexillum (VC) aut clavem (CV) aut pilam (Abhibitione) ferebat"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pickups"
@@ -1001,12 +1001,17 @@ msgid ""
 "or in all but these gametypes. You can also specify 'all' as a\n"
 "field to show all fields available for the current gametype."
 msgstr ""
+"Ante columnae nomen scribere potes signum + vel -, etiam sequentes\n"
+"ludorum modorum nomina, signa commata interposita, denique lineam /,\n"
+"ut columna scribatur solum cum inter ea nomina ludi modus sit, vel\n"
+"cum inter ea non sit. Atque 'all' scribere potes ut omnes ludi modi\n"
+"columnas videas."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:744
 msgid ""
 "The special gametype names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams gametypes."
-msgstr ""
+msgstr "Nomen 'teams' manuum modis est, et nomen 'noteams' aliis modis."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:748
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -1026,6 +1031,8 @@ msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gametypes except DM."
 msgstr ""
+"'columna3' modo Vexilli Captu 'ctf' videbitur, et 'columna4' omni\n"
+"modo praeter Interfectionem 'dm' videbitur."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1059
 #: qcsrc/client/hud/panel/scoreboard.qc:1073
@@ -1200,7 +1207,7 @@ msgstr "Prorogatio %da"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering HUD configure mode"
-msgstr ""
+msgstr "^1Respondere necesse est antequam notas superpositas mutes"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1634,7 +1641,7 @@ msgstr "Currere Tale Spatium"
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Race to the finish line for the fastest time"
-msgstr ""
+msgstr "Curre ad metam ut celerrimus sis"
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:11
 #, c-format
@@ -1954,7 +1961,7 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem"
-msgstr ""
+msgstr "Tot vulnera mortesque infer quot haec inordinatio tumultuosa postulat"
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Mayhem"
@@ -1991,7 +1998,7 @@ msgstr "Nexfollis"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
 msgid "Shoot and kick the ball into the enemy's goal, keep your goal clean"
-msgstr ""
+msgstr "In hostium portam follem iacite, porta vestra prohibete"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
 msgid "Goal limit:"
@@ -2203,6 +2210,8 @@ msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem"
 msgstr ""
+"Manus collegas iuvate ut tot vulnera mortesque inferatis quot haec "
+"inordinatio tumultuosa postulat"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
@@ -2417,7 +2426,7 @@ msgstr "Ludus finitus!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click \"Next Level\" to continue"
-msgstr ""
+msgstr "Macte virtute! 'Posteriorem' clicca ut persequaris"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1183
 #: qcsrc/common/minigames/minigame/c4.qc:383
@@ -2443,7 +2452,7 @@ msgstr "Bonum! 'Posteriorem' preme ut persequaris!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1197
 msgid "Press the spacebar to change your currently selected tile"
-msgstr ""
+msgstr "Spatii clavem preme ut laterem seligas"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1200
 msgid "Push the boulders onto the targets"
@@ -2521,7 +2530,7 @@ msgstr "Noveni Lapilli"
 #: qcsrc/common/minigames/minigame/nmm.qc:621
 msgid ""
 "You can select one of your pieces to move it to one of the surrounding places"
-msgstr ""
+msgstr "Unum tuum calculum seligere potes ut in finitimum moveas"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:623
 msgid "You can select one of your pieces to move it anywhere on the board"
@@ -2803,7 +2812,7 @@ msgstr "Exsanguis"
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:24
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
 #: qcsrc/common/mutators/mutator/buffs/buffs.qh:23
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:76
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:84
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:11
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:83
@@ -3121,7 +3130,7 @@ msgstr "Vitatio"
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:9
 #: qcsrc/menu/xonotic/keybinder.qc:68
 msgid "offhand hook"
-msgstr ""
+msgstr "uncus obvius"
 
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
@@ -3140,7 +3149,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:12
 #: qcsrc/common/weapons/weapon/hook.qc:435
 msgid "hook"
-msgstr ""
+msgstr "uncus"
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:13
 #, c-format
@@ -3230,7 +3239,7 @@ msgstr "arma demittere / granatam iacere"
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr "^8sunt ^3granatae^8, ^3%s^8 preme ut eis utaris"
 
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:74
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:82
 #, c-format
 msgid ""
 "The %s detonates after a short delay, temporarily creating an orb around the "
@@ -3239,14 +3248,14 @@ msgid ""
 "ammo."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:76
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:84
 #, c-format
 msgid ""
-"This does not impact weapon magazines, so it won't reload your weapons for "
-"you, unlike the %s."
+"Similar to the %s, your weapon magazines remain full while you are inside "
+"the orb, so you don't need to reload."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:22
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:21
 msgid "Ammo grenade"
 msgstr "Missilium granata"
 
@@ -3538,7 +3547,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:31
 msgid "Overkill Heavy MachineGun"
-msgstr ""
+msgstr "Polybolus Gravis Immoderatus"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:166
 #: qcsrc/common/weapons/weapon/machinegun.qc:434
@@ -4372,7 +4381,7 @@ msgstr "^BG%s^K1 locum castra bona esse putabat%s%s"
 #: qcsrc/common/notifications/all.inc:311
 #, c-format
 msgid "^BG%s^K1 unfairly eliminated themselves%s%s"
-msgstr ""
+msgstr "^BG%s^K1 iniuste se exclusit%s%s"
 
 #: qcsrc/common/notifications/all.inc:313
 #, c-format
@@ -4674,7 +4683,7 @@ msgstr "^BG%s^K3 restitutus est quia %s secunda expectavit"
 #: qcsrc/common/notifications/all.inc:371
 #, c-format
 msgid "^BG%s^K1 froze themselves"
-msgstr ""
+msgstr "^BG%s^K1 a se congelatus est"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:706
@@ -5141,7 +5150,7 @@ msgstr "^BG%s%s^K1, Flatro ^BG%s^K1, immissus est%s%s"
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s^K1 shot themselves to hell with their Blaster%s%s"
-msgstr ""
+msgstr "^BG%s^K1 suo Flatro se immisit%s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
@@ -5166,7 +5175,7 @@ msgstr "^BG%s%s^K1 ad ^BG%s^K1 missile igneum proxime fuit%s%s"
 #: qcsrc/common/notifications/all.inc:484
 #, c-format
 msgid "^BG%s^K1 blew themselves up with their Devastator%s%s"
-msgstr ""
+msgstr "^BG%s^K1 suo Devastatro se rupit%s%s"
 
 #: qcsrc/common/notifications/all.inc:485
 #, c-format
@@ -5298,12 +5307,12 @@ msgstr "^BG%s^K1 sui ipsius Mortarii granatam non vidit%s%s"
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s^K1 blew themselves up with their own Mortar%s%s"
-msgstr ""
+msgstr "^BG%s^K1 suo Mortario se rupit%s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
 msgid "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy MachineGun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1, Polybolo Immoderato ^BG%s^K1, divisus est%s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
@@ -5343,7 +5352,7 @@ msgstr "^BG%s^K1 Missilium Pellentium Serra Immoderata sua dimidiatus est%s%s"
 #, c-format
 msgid ""
 "^BG%s^K1 blew themselves up with their Overkill Rocket Propelled Chainsaw%s%s"
-msgstr ""
+msgstr "^BG%s^K1 Missilium Pellentium Serra Immoderata sua se rupit%s%s"
 
 #: qcsrc/common/notifications/all.inc:519
 #, c-format
@@ -5601,22 +5610,22 @@ msgstr "%sHostes (^BG%s%s)^BG vexillum ^TC^TT^BG tenent! Id recipe!"
 #: qcsrc/common/notifications/all.inc:600
 #, c-format
 msgid "^BGYour %steammate^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BGTuus %scollega^BG vexillum ^TC^TT^BG tenet! Eum serva!"
 
 #: qcsrc/common/notifications/all.inc:601
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BGTuus %scollega (^BG%s%s)^BG vexillum ^TC^TT^BG tenet! Eum serva!"
 
 #: qcsrc/common/notifications/all.inc:602
 #, c-format
 msgid "^BGYour %steammate^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BGTuus %scollega^BG vexillum tenet! Eum serva!"
 
 #: qcsrc/common/notifications/all.inc:603
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BGTuus %scollega (^BG%s%s)^BG vexillum tenet! Eum serva!"
 
 #: qcsrc/common/notifications/all.inc:604
 #: qcsrc/common/notifications/all.inc:750
@@ -5719,7 +5728,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:651
 msgid "^K1You were punished for attacking your teammates!"
-msgstr ""
+msgstr "^K1Punitus es quia tuos collegas laedebas!"
 
 #: qcsrc/common/notifications/all.inc:652
 msgid "^K1Die camper!"
@@ -5898,7 +5907,7 @@ msgstr "^K1Cave ne cadas!"
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
 msgid "^K1Traitor! You betrayed teammate ^BG%s"
-msgstr ""
+msgstr "^K1Proditor! Collegam ^BG%s^K1 prodidisti"
 
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
@@ -5908,7 +5917,7 @@ msgstr "^K1Proditor! Collegam ^BG%s^K1 occidisti"
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
 msgid "^K1You were betrayed by teammate ^BG%s"
-msgstr ""
+msgstr "^K1A collega ^BG%s^K1 proditus es"
 
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
@@ -9811,7 +9820,7 @@ msgstr "Tempus terminale:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:85
 msgid "Time limit in minutes that when hit, will end the match"
-msgstr ""
+msgstr "Ludus finietur cum hoc tempus transierit"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
 msgid "TIMLIM^Default"
@@ -9927,6 +9936,8 @@ msgid ""
 "Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
 "to clear; ENTER when done."
 msgstr ""
+"Hic clicca vel CTRL+F preme ut verbum scribas et videas modo nomina quae id "
+"verbum contineantur. CTRL+DEL ut verbum obliviscatur; INTRARE ut finias."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:172
 msgid "Add shown"
@@ -9974,7 +9985,7 @@ msgstr "Auctor:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:64
 msgid "Gametypes:"
-msgstr ""
+msgstr "Ludi modi:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
@@ -11271,6 +11282,7 @@ msgstr "Picturae parvae in loco ubi nascitur"
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:241
 msgid "Particle effects at all spawn points and whenever a player spawns"
 msgstr ""
+"Particulae pinguntur in loco ubi nascitur et in ludentibus qui nascuntur"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:246
 msgid "Quality:"
@@ -11545,7 +11557,7 @@ msgstr "Ambo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:55
 msgid "Print on a separate line"
-msgstr ""
+msgstr "In alio versu scribere"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:59
 msgid "Add extra frag information to centerprint when available"
@@ -11557,7 +11569,7 @@ msgstr "Locos caedium in mortuorum notis scribere si dicuntur"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:67
 msgid "Gametype Settings"
-msgstr ""
+msgstr "Ludi Modi Optiones"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:69
 msgid "Display capture times in Capture The Flag"
@@ -11981,7 +11993,7 @@ msgstr "Muris motio suavior"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:109
 msgid "Smooths the mouse movement, but makes aiming slightly less responsive"
-msgstr ""
+msgstr "Polire muris motionem, quae morosior autem fieri potest"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:111
 msgid "Invert aiming"
@@ -12556,7 +12568,7 @@ msgstr "Numerum tuum quadrorum pictorum in secundum videre"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:156
 msgid "Instant action with bots!"
-msgstr ""
+msgstr "Actio fortuita cum automatis!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:181
 msgid "Campaign Difficulty:"
@@ -12587,6 +12599,8 @@ msgid ""
 "Play the singleplayer campaign or instant action matches against bots, or "
 "read the guide"
 msgstr ""
+"Ludere expeditionem unius ludentis vel actionem fortuitam cum automatis, vel "
+"documenta legere"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:15
 msgid "Topic"
@@ -12610,7 +12624,7 @@ msgstr "in manum 'optimam' (computatro eligitur)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Auto-select team (recommended)"
-msgstr ""
+msgstr "Computatro manus eligi (quod suadetur)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
@@ -12877,7 +12891,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95
 msgid "move forward"
-msgstr ""
+msgstr "progredi"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:119
 #: qcsrc/menu/xonotic/keybinder.qc:64
@@ -13171,7 +13185,7 @@ msgstr "rationarium videre"
 
 #: qcsrc/menu/xonotic/keybinder.qc:137
 msgid "screenshot"
-msgstr ""
+msgstr "imaginem servare"
 
 #: qcsrc/menu/xonotic/keybinder.qc:138
 msgid "maximize radar"
@@ -13312,6 +13326,8 @@ msgid ""
 "Huh? Can't play this (invalid gametype). Refiltering so this won't happen "
 "again."
 msgstr ""
+"Hem, hoc ludi non potest (ludi modus erroneus). Ordinatur iterum ut "
+"emendetur."
 
 #: qcsrc/menu/xonotic/playerlist.qc:115
 msgid "spectator"

@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-25 07:22+0200\n"
+"POT-Creation-Date: 2025-10-04 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
@@ -1638,6 +1638,11 @@ msgid ""
 "\"stalemate\" will initiate and all flag carriers (\"fc\"s) will be exposed "
 "on the radar and with waypoints."
 msgstr ""
+"Si un drapeau tombe dans le vide ou dans un piège mortel, il reviendra "
+"immédiatement à sa base, ou restera inactif pendant un certain temps avant "
+"de revenir automatiquement. Si tous les drapeaux sont détenus, après un "
+"certain temps, une « impasse » sera déclenchée et tous les porteurs de "
+"drapeaux seront identifiés sur le radar ainsi que par des balises."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:13
 #, c-format
@@ -1649,6 +1654,13 @@ msgid ""
 "important, especially to let teammates know if you see the enemy flag "
 "carrier."
 msgstr ""
+"%s récompense les mouvements rusés, car plus vos ennemis peinent à vous "
+"attaquer, meilleures sont vos chances de vous échapper de leur base avec "
+"leur drapeau. Il est important de noter que ce type de partie récompense "
+"également la défense de la base, car si vos ennemis ne peuvent pas s'emparer "
+"de votre drapeau, ils ne peuvent jamais marquer de points. Enfin, une bonne "
+"communication au sein de l'équipe est importante, notamment pour informer "
+"vos coéquipiers si vous apercevez le porteur de drapeau ennemi."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qh:12
 msgid "Capture the Flag"
@@ -2115,7 +2127,7 @@ msgstr "Nexball"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
 msgid "Shoot and kick the ball into the enemy's goal, keep your goal clean"
-msgstr ""
+msgstr "Frappez et tirez la balle dans le but adverse, protégez votre but"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
 msgid "Goal limit:"
@@ -2966,7 +2978,7 @@ msgstr "Hémorragie"
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:24
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
 #: qcsrc/common/mutators/mutator/buffs/buffs.qh:23
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:76
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:84
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:11
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:83
@@ -3397,7 +3409,7 @@ msgstr "lâcher l'arme / lancer la grenade"
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr "^8Les ^3grenades^8 sont activées, appuyez sur ^3%s^8 pour les utiliser"
 
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:74
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:82
 #, c-format
 msgid ""
 "The %s detonates after a short delay, temporarily creating an orb around the "
@@ -3406,14 +3418,14 @@ msgid ""
 "ammo."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:76
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:84
 #, c-format
 msgid ""
-"This does not impact weapon magazines, so it won't reload your weapons for "
-"you, unlike the %s."
+"Similar to the %s, your weapon magazines remain full while you are inside "
+"the orb, so you don't need to reload."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:22
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:21
 msgid "Ammo grenade"
 msgstr "Grenade de munitions"
 
@@ -3591,6 +3603,8 @@ msgid ""
 "The %s mutator, enabled by default, allows the spawning of new gimmicky "
 "weapons, sometimes replacing a core weapon."
 msgstr ""
+"Le mutateur %s, activé par défaut, permet l'apparition de nouvelles armes "
+"fantaisistes, parfois en lieu et place d'une arme conventionnelle."
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:30
 #, c-format
@@ -3602,7 +3616,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:31
 #, c-format
 msgid "The current %s weapons are:"
-msgstr ""
+msgstr "Les armes %s actuelles sont :"
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qh:7
 #: qcsrc/common/util.qc:298
@@ -4056,7 +4070,7 @@ msgstr "Pousser"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:24
 msgid "Flag carrier"
-msgstr "Porteur du drapeau"
+msgstr "Porteur de drapeau"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:25
 msgid "White base"
@@ -4235,42 +4249,41 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:245
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
-msgstr "^BGLe drapeau ^TC^TT^BG a été retourné à la base par son propriétaire"
+msgstr "^BGLe drapeau ^TC^TT^BG a été ramené à la base par son propriétaire"
 
 #: qcsrc/common/notifications/all.inc:246
 msgid "^BGThe flag was returned by its owner"
-msgstr "^BGLe drapeau a été retourné par son propriétaire"
+msgstr "^BGLe drapeau a été ramené par son propriétaire"
 
 #: qcsrc/common/notifications/all.inc:247
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
-msgstr "^BGLe drapeau ^TC^TT^BG a été détruit et est retourné à la base"
+msgstr "^BGLe drapeau ^TC^TT^BG a été détruit et est revenu à la base"
 
 #: qcsrc/common/notifications/all.inc:248
 msgid "^BGThe flag was destroyed and returned to base"
-msgstr "^BGLe drapeau a été détruit et est retourné à la base"
+msgstr "^BGLe drapeau a été détruit et est revenu à la base"
 
 #: qcsrc/common/notifications/all.inc:249
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
 msgstr ""
-"^BGLe drapeau ^TC^TT^BG a été lâché dans la base et est retourné tout seul"
+"^BGLe drapeau ^TC^TT^BG a été lâché dans la base et est revenu tout seul"
 
 #: qcsrc/common/notifications/all.inc:250
 msgid "^BGThe flag was dropped in the base and returned itself"
-msgstr "^BGLe drapeau a été lâché dans la base et est retourné tout seul"
+msgstr "^BGLe drapeau a été lâché dans la base et est revenu tout seul"
 
 #: qcsrc/common/notifications/all.inc:251
 msgid ""
 "^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
 "base"
 msgstr ""
-"^BGLe drapeau ^TC^TT^BG est tombé dans un endroit inaccessible est est "
-"retourné à la base"
+"^BGLe drapeau ^TC^TT^BG est tombé à un endroit inaccessible et est revenu à "
+"la base"
 
 #: qcsrc/common/notifications/all.inc:252
 msgid "^BGThe flag fell somewhere it couldn't be reached and returned to base"
 msgstr ""
-"^BGLe drapeau est tombé dans un endroit inaccessible et est retourné à la "
-"base"
+"^BGLe drapeau est tombé à un endroit inaccessible et est revenu à la base"
 
 #: qcsrc/common/notifications/all.inc:253
 #, c-format
@@ -4279,23 +4292,23 @@ msgid ""
 "itself"
 msgstr ""
 "^BGLe drapeau ^TC^TT^BG s'est impatienté après ^F1%.2f^BG secondes et est "
-"retourné tout seul"
+"revenu tout seul"
 
 #: qcsrc/common/notifications/all.inc:254
 #, c-format
 msgid ""
 "^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"
 msgstr ""
-"^BGLe drapeau s'est impatienté après ^F1%.2f^BG secondes et est retourné "
-"tout seul"
+"^BGLe drapeau s'est impatienté après ^F1%.2f^BG secondes et est revenu tout "
+"seul"
 
 #: qcsrc/common/notifications/all.inc:255
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
-msgstr "^BGLe drapeau ^TC^TT^BG est retourné à la base"
+msgstr "^BGLe drapeau ^TC^TT^BG est revenu à la base"
 
 #: qcsrc/common/notifications/all.inc:256
 msgid "^BGThe flag has returned to the base"
-msgstr "^BGLe drapeau est retourné à la base"
+msgstr "^BGLe drapeau est revenu à la base"
 
 #: qcsrc/common/notifications/all.inc:257
 #, c-format
@@ -4321,7 +4334,7 @@ msgstr "^BG%s^BG a le drapeau"
 #: qcsrc/common/notifications/all.inc:262
 #, c-format
 msgid "^BG%s^BG returned the ^TC^TT^BG flag"
-msgstr "^BG%s^BG a retourné le drapeau ^TC^TT^BG"
+msgstr "^BG%s^BG a ramené le drapeau ^TC^TT^BG"
 
 #: qcsrc/common/notifications/all.inc:264
 #: qcsrc/common/notifications/all.inc:570
@@ -5851,18 +5864,16 @@ msgstr "^BGLes ennemis peuvent maintenant vous voir sur le radar !"
 
 #: qcsrc/common/notifications/all.inc:605
 msgid "^BGYou returned the ^TC^TT^BG flag!"
-msgstr "^BGVous avez récupéré le drapeau ^TC^TT^BG !"
+msgstr "^BGVous avez ramené le drapeau ^TC^TT^BG !"
 
 #: qcsrc/common/notifications/all.inc:606
 msgid "^BGStalemate! Enemies can now see you on radar!"
-msgstr ""
-"^BGChasse à l'homme ! Les ennemis peuvent maintenant vous voir sur le radar !"
+msgstr "^BGImpasse ! Les ennemis peuvent maintenant vous voir sur le radar !"
 
 #: qcsrc/common/notifications/all.inc:607
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
 msgstr ""
-"^BGChasse à l'homme ! Les porteurs de drapeau sont maintenant visibles sur "
-"le radar !"
+"^BGImpasse ! Les porteurs de drapeaux sont maintenant visibles sur le radar !"
 
 #: qcsrc/common/notifications/all.inc:611
 #, c-format
@@ -7028,7 +7039,7 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/fusionreactor.qc:63
 msgid "This is the only turret that doesn't directly attack its targets."
-msgstr ""
+msgstr "C'est la seule tourelle qui n'attaque pas directement ses cibles."
 
 #: qcsrc/common/turrets/turret/fusionreactor.qh:11
 msgid "Fusion Reactor"
@@ -8407,6 +8418,8 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/tuba.qc:604
 msgid "The only ammo it needs to operate is the breath from your lungs."
 msgstr ""
+"Les seules munitions dont il a besoin pour fonctionner est l'air que vous "
+"expirez."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:605
 #, c-format
@@ -13066,6 +13079,10 @@ msgid ""
 "stores vital stats like your kill-death ratio, weapon damage and accuracy, "
 "and scoreboards from past games."
 msgstr ""
+"XonStat est l'application intégrée de statistiques des joueurs pour Xonotic. "
+"Elle stocke des statistiques essentielles telles que votre ratio victoires / "
+"défaites, les dégâts et la précision de vos armes, ainsi que les classements "
+"des parties précédentes."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:57
 msgid "Tracking is completely opt-in, and no login is required."
@@ -13077,6 +13094,8 @@ msgid ""
 "Some of the statistics are available in-game on your player profile, while "
 "the rest are accessible at %s."
 msgstr ""
+"Certaines statistiques sont disponibles dans le jeu, sur votre profil de "
+"joueur, tandis que le reste est accessible sur %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:65
 msgid ""
