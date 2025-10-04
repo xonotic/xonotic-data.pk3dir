@@ -311,7 +311,7 @@ int total_control_points;
 void Domination_count_controlpoints()
 {
 	total_control_points = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		Team_SetNumberOfOwnedItems(Team_GetTeamFromIndex(i), 0);
 	}
