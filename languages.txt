@@ -15,7 +15,7 @@ hu    "Hungarian" "Magyar" 36%
 nl    "Dutch" "Nederlands" 49%
 pl    "Polish" "Polski" 64%
 pt    "Portuguese" "Português" 81%
-pt_BR "Portuguese (Brazil)" "Português (Brasil)" 88%
+pt_BR "Portuguese (Brazil)" "Português (Brasil)" 89%
 ro    "Romanian" "Romana" 56%
 fi    "Finnish" "Suomi" 78%
 sv    "Swedish" "Svenska" 78%

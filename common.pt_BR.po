@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-04 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2025\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -2196,6 +2196,10 @@ msgid ""
 "the enemy team core generator. In order to destroy the generator, control "
 "points on the map (similar to those in %s) must first be captured."
 msgstr ""
+"%s é um tipo de jogo de equipes similar a %s, no qual o objetivo final é "
+"destruir o núcleo gerador da equipe adversária. Para destruir o gerador,  "
+"pontos de controle no mapa (similares aos de %s) devem primeiro ser "
+"capturados."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:79
 msgid ""
@@ -2203,6 +2207,9 @@ msgid ""
 "another control point currently owned by your team, you have to "
 "systematically work through the map to reach the enemy generator."
 msgstr ""
+"Como sua equipe só pode capturar um ponto de controle se estiver conectado a "
+"um outro ponto de controle atualmente possuído por sua equipe, você tem que "
+"sistematicamente varrer o mapa para chegar ao gerador inimigo."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:80
 msgid ""
@@ -2211,12 +2218,18 @@ msgid ""
 "the \"info bot\" that hovers above them, converting the control point to "
 "neutral once it is destroyed."
 msgstr ""
+"Um ponto de controle é capturado ao andar nele e esperá-lo ser construído. "
+"Um ponto de controle da equipe adversária é destruído ao atacar o \"robô "
+"info\" que o sobrevoa, e converte-se em um ponto neutro quando terminar de "
+"ser destruído."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:82
 msgid ""
 "When in overtime, the enemy's generator will start to decay, at a faster "
 "rate the more control points your team has."
 msgstr ""
+"Quando nos acréscimos de tempo, o gerador inimigo começará a decair, e em "
+"uma taxa tanto mais veloz quanto mais pontos de controle sua equipe tiver."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
@@ -2240,6 +2253,9 @@ msgid ""
 "%s is a gametype similar to %s where players run on a track to be the first "
 "to cross the finish line after a certain number of laps."
 msgstr ""
+"%s é um tipo de jogo similar a %s, no qual os jogadores correm em uma pista "
+"para serem os primeiros a cruzar a linha de chegada após um certo número de "
+"voltas."
 
 #: qcsrc/common/gametypes/gametype/race/race.qc:11
 #, c-format
@@ -2249,12 +2265,19 @@ msgid ""
 "similar to %s since weapons can't be used to disturb other players but can "
 "still be used to run faster."
 msgstr ""
+"Antes da verdadeira corrida iniciar, há uma sessão qualificadora que decide "
+"a disposição inicial baseada no melhor tempo de volta de cada jogador. Este "
+"estágio é muito similar a %s porque armas não podem ser usadas para "
+"perturbar outros jogadores, mas ainda podem ser usadas para correr mais "
+"rápido."
 
 #: qcsrc/common/gametypes/gametype/race/race.qc:13
 msgid ""
 "During the real race it's possible to shoot other players in order to slow "
 "them down."
 msgstr ""
+"Durante a verdadeira corrida, é possível atirar em outros jogadores para "
+"retardá-los."
 
 #: qcsrc/common/gametypes/gametype/race/race.qh:11
 msgid "Race"
@@ -2285,6 +2308,11 @@ msgid ""
 "players only know which team they belong to, and not the team membership of "
 "any other players."
 msgstr ""
+"%s é um tipo de jogo de duas equipes, a de caçadores e a de sobreviventes, "
+"no qual o objetivo dos caçadores é executar todos os sobreviventes, e o "
+"objetivo dos sobreviventes é executar todos os caçadores ou sobreviver até "
+"que o tempo acabe. Porém, cada jogador só sabe a própria equipe a que "
+"pertence, e não sabe em qual das equipes está cada um dos outros jogadores."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:13
 msgid ""
@@ -2292,6 +2320,9 @@ msgid ""
 "opposite team, it can be tricky for survivors to figure out their fellow "
 "teammates."
 msgstr ""
+"Como o objetivo de cada equipe é essencialmente eliminar todos os membros da "
+"equipe adversária, pode ser complicado para os sobreviventes descobrirem "
+"quem são os seus colegas."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:14
 msgid ""
@@ -2299,6 +2330,9 @@ msgid ""
 "a bit smaller, and then the round starts with a brief warmup grace period in "
 "which items can be collected but weapons can't be fired."
 msgstr ""
+"As equipes são aleatoriamente selecionadas quando a rodada inicia, com a "
+"equipe dos caçadores sendo um pouco menor, e a rodada inicia com um breve "
+"cessar-fogo de aquecimento no qual os itens podem ser coletados."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:16
 msgid ""
@@ -2307,6 +2341,10 @@ msgid ""
 "fragged. Extra points are also given to survivors who survive until the "
 "round timer expires."
 msgstr ""
+"Os jogadores recebem um ponto para cada membro da equipe adversária que "
+"executarem, mas só se sobreviverem a rodada, e pontos são descontados por "
+"cada colega executado. Pontos adicionais também são dados aos sobreviventes "
+"que restarem quando o tempo da rodada acabar."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
@@ -12926,35 +12964,35 @@ msgstr "cada um por si"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:9 qcsrc/menu/xonotic/guide/pages.qc:62
 msgid "Introduction"
-msgstr ""
+msgstr "Introdução"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:10
 msgid "Movement"
-msgstr ""
+msgstr "Movimento"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:11
 msgid "Gametypes"
-msgstr ""
+msgstr "Tipos de jogo"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:17
 msgid "Monsters"
-msgstr ""
+msgstr "Monstros"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:18
 msgid "Vehicles"
-msgstr ""
+msgstr "Veículos"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:19
 msgid "Turrets"
-msgstr ""
+msgstr "Sentinelas"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:21
 msgid "Mods"
-msgstr ""
+msgstr "Mods"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:19
 msgid "About this guide"
-msgstr ""
+msgstr "Sobre este guia"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:22
 msgid "Welcome to Xonotic, the free and fast arena shooter!"

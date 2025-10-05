@@ -13015,6 +13015,8 @@ msgid ""
 "You can usually find out which settings are modified by issuing %s in "
 "console after connecting to a server."
 msgstr ""
+"Vous pouvez généralement savoir quels paramètres sont modifiés en exécutant "
+"la commande %s dans la console après vous être connecté à un serveur."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:30
 msgid "Community"
@@ -13033,6 +13035,11 @@ msgid ""
 "respectfully, this will be recognized, while acting toxic on the other hand "
 "will not make your life easier on the servers."
 msgstr ""
+"Xonotic se distingue par sa communauté de joueurs conviviale, mature et "
+"accueillante ; de nombreux joueurs de longue date affirment que réside "
+"probablement là l'un des principaux atouts de Xonotic. Si vous abordez les "
+"autres joueurs de façon amicale et respectueuse, cela sera apprécié, tandis "
+"qu'un comportement toxique ne vous facilitera pas la vie sur les serveurs."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:36
 #, c-format
@@ -13041,6 +13048,10 @@ msgid ""
 "online and use the in-game chat. You can also connect to the official "
 "communication channels (%s), and of course the official forum."
 msgstr ""
+"La meilleure façon d'entrer en contact avec la communauté est simplement de "
+"commencer à jouer en ligne et d'utiliser le tchat intégré au jeu. Vous "
+"pouvez également vous connecter aux canaux de communication officiels (%s) "
+"et, bien sûr, au forum officiel."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:40
 msgid "Getting good"
@@ -13086,7 +13097,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/pages.qc:57
 msgid "Tracking is completely opt-in, and no login is required."
-msgstr ""
+msgstr "Le suivi est entièrement facultatif et aucune connexion n'est requise."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:58
 #, c-format
