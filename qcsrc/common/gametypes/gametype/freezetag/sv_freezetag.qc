@@ -82,9 +82,6 @@ bool freezetag_CheckTeams()
 	return false;
 }
 
-void nades_Clear(entity);
-void nades_GiveBonus(entity player, float score);
-
 float autocvar_g_freezetag_round_enddelay = 1;
 bool freezetag_CheckWinner()
 {
@@ -96,7 +93,7 @@ bool freezetag_CheckWinner()
 		FOREACH_CLIENT(IS_PLAYER(it), {
 			it.freezetag_frozen_timeout = 0;
 			it.freezetag_revive_time = 0;
-			nades_Clear(it);
+			nades_RemovePlayer(it);
 		});
 		game_stopped = true;
 		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
@@ -141,7 +138,7 @@ bool freezetag_CheckWinner()
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.freezetag_frozen_timeout = 0;
 		it.freezetag_revive_time = 0;
-		nades_Clear(it);
+		nades_RemovePlayer(it);
 	});
 
 	game_stopped = true;

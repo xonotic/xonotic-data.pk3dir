@@ -41,8 +41,6 @@ void CA_count_alive_players()
 	});
 }
 
-void nades_Clear(entity player);
-
 int CA_PreventStalemate()
 {
 	//bprint("PreventStalemate running\n");
@@ -205,7 +203,9 @@ float CA_CheckWinner()
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
-	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		nades_RemovePlayer(it);
+	});
 
 	return 1;
 }

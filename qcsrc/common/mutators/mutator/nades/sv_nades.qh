@@ -57,6 +57,9 @@ bool orb_send(entity this, entity to, int sf);
 // Remove nades that are being thrown
 void nades_Clear(entity player);
 
+// Remove nades and bonus nades from a player
+void nades_RemovePlayer(entity player);
+
 // Give a bonus grenade to a player
 void nades_GiveBonus(entity player, float score);
 

@@ -6,8 +6,6 @@ float autocvar_g_survival_warmup = 10;
 bool autocvar_g_survival_punish_teamkill = true;
 bool autocvar_g_survival_reward_survival = true;
 
-void nades_Clear(entity player);
-
 entity survivalStatuses;
 void SurvivalStatuses_Init();
 
@@ -85,10 +83,8 @@ float Surv_CheckWinner()
 		// if the match times out, survivors win too!
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_SURVIVAL_SURVIVOR_WIN);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SURVIVAL_SURVIVOR_WIN);
-		FOREACH_CLIENT(true,
-		{
-			if(IS_PLAYER(it))
-				nades_Clear(it);
+		FOREACH_CLIENT(IS_PLAYER(it), {
+			nades_RemovePlayer(it);
 		});
 
 		Surv_UpdateScores(true);
@@ -156,10 +152,8 @@ float Surv_CheckWinner()
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
 	survivalStatuses.SendFlags = STATUS_SEND_HUNTERS;
 
-	FOREACH_CLIENT(true,
-	{
-		if(IS_PLAYER(it))
-			nades_Clear(it);
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		nades_RemovePlayer(it);
 	});
 
 	return 1;
