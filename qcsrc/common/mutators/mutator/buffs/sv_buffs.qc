@@ -175,8 +175,8 @@ void buff_Respawn(entity this)
 	if (autocvar_g_buffs_random_lifetime > 0)
 		this.lifetime = time + autocvar_g_buffs_random_lifetime;
 
-	Send_Effect(EFFECT_ELECTRO_COMBO, oldbufforigin + ((this.mins + this.maxs) * 0.5), '0 0 0', 1);
-	Send_Effect(EFFECT_ELECTRO_COMBO, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_TELEPORT, oldbufforigin + ((this.mins + this.maxs) * 0.5), '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_TELEPORT, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 
 	WaypointSprite_Ping(this.buff_waypoint);
 

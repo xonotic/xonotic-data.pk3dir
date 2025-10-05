@@ -9525,4 +9525,67 @@ SUB(swapper) {
 	MY(velocitymultiplier) = 0.300000;
 }
 
+DEF(item_teleport);
+// decal
+SUB(item_teleport) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '4.0 5.0 6.0';
+	MY(lightradiusfade) = 300;
+	MY(lightradius) = 200;
+	MY(originjitter) = '17.0 17.0 17.0';
+	MY(size_min) = 48;
+	MY(size_max) = 48;
+	MY(tex_min) = 59;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+// flare effect
+SUB(item_teleport) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "static";
+}
+SUB(item_teleport) {
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 500;
+	MY(bounce) = 0.500000;
+	MY(color_min) = "0xa9cacf";
+	MY(color_max) = "0x0054ff";
+	MY(count) = 24;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+}
+// shockwave
+SUB(item_teleport) {
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 40;
+	MY(color_min) = "0xa9cacf";
+	MY(color_max) = "0x0054ff";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 32;
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+}
+
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
