@@ -732,7 +732,9 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 		entity newflag = spawn();
 		copyentity_qc(flag, newflag);
 		newflag.classname = "phantomflag"; // identifier for other code
+		IL_PUSH(g_moveables, newflag); // cleared by copyentity_qc
 		IL_PUSH(g_flags, newflag);
+		// uncomment for "ghostly" phantom flag appearance (may look bad)
 		//newflag.effects |= EF_ADDITIVE;
 		flag = newflag;
 	}
@@ -941,8 +943,7 @@ void ctf_CheckStalemate()
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
 	if(ctf_stalemate)
 	{
-		entity tmp_entity;
-		for(tmp_entity = ctf_staleflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_staleflagnext)
+		for(entity tmp_entity = ctf_staleflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_staleflagnext)
 		{
 			if((tmp_entity.owner) && (!tmp_entity.owner.wps_enemyflagcarrier))
 			{
@@ -2230,9 +2231,6 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	int t = 0, t2 = 0, t3 = 0;
-	bool b1 = false, b2 = false, b3 = false, b4 = false, b5 = false; // TODO: kill this, we WANT to show the other flags, somehow! (note: also means you don't see if you're FC)
-
 	// initially clear items so they can be set as necessary later.
 	STAT(OBJECTIVE_STATUS, player) &= ~(CTF_RED_FLAG_CARRYING		| CTF_RED_FLAG_TAKEN		| CTF_RED_FLAG_LOST
 						   | CTF_BLUE_FLAG_CARRYING		| CTF_BLUE_FLAG_TAKEN		| CTF_BLUE_FLAG_LOST
@@ -2241,33 +2239,67 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 						   | CTF_NEUTRAL_FLAG_CARRYING	| CTF_NEUTRAL_FLAG_TAKEN	| CTF_NEUTRAL_FLAG_LOST
 						   | CTF_FLAG_NEUTRAL | CTF_SHIELDED | CTF_STALEMATE);
 
-	// scan through all the flags and notify the client about them
-	IL_EACH(g_flags, true,
+	// do an iteration for each team (plus neutral) and get the flag for that team
+	// this allows selection of the "best" flag for each team (e.g. the carried one)
+	for(int j = 0; j < 5; ++j)
 	{
-		if(it.team == NUM_TEAM_1 && !b1) { b1 = true; t = CTF_RED_FLAG_CARRYING;		t2 = CTF_RED_FLAG_TAKEN;		t3 = CTF_RED_FLAG_LOST; }
-		if(it.team == NUM_TEAM_2 && !b2) { b2 = true; t = CTF_BLUE_FLAG_CARRYING;		t2 = CTF_BLUE_FLAG_TAKEN;		t3 = CTF_BLUE_FLAG_LOST; }
-		if(it.team == NUM_TEAM_3 && !b3) { b3 = true; t = CTF_YELLOW_FLAG_CARRYING; 	t2 = CTF_YELLOW_FLAG_TAKEN;		t3 = CTF_YELLOW_FLAG_LOST; }
-		if(it.team == NUM_TEAM_4 && !b4) { b4 = true; t = CTF_PINK_FLAG_CARRYING;		t2 = CTF_PINK_FLAG_TAKEN;		t3 = CTF_PINK_FLAG_LOST; }
-		if(it.team == 0 && !b5) 		   { b5 = true; t = CTF_NEUTRAL_FLAG_CARRYING;	t2 = CTF_NEUTRAL_FLAG_TAKEN;	t3 = CTF_NEUTRAL_FLAG_LOST; STAT(OBJECTIVE_STATUS, player) |= CTF_FLAG_NEUTRAL; }
+		int teamnumber = (j > 0) ? Team_IndexToTeam(j) : 0;
+		entity bestflag = NULL;
+		int bestprio = 0;
 
-		switch(it.ctf_status)
+		IL_EACH(g_flags, it.team == teamnumber,
 		{
-			case FLAG_PASSING:
-			case FLAG_CARRY:
+			// if there's a neutral flag in the map, enable oneflag display
+			if(it.team == 0)
+				STAT(OBJECTIVE_STATUS, player) |= CTF_FLAG_NEUTRAL;
+
+			// use a priority system to decide the preferred flag
+			int prio = 0;
+			if(it.owner == player || it.pass_sender == player)
+				prio = 3;
+			else if(it.ctf_status == FLAG_DROPPED)
+				prio = 2;
+			else if(it.ctf_status != FLAG_BASE)
+				prio = 1;
+
+			if(!bestflag || prio > bestprio)
 			{
-				if((it.owner == player) || (it.pass_sender == player))
-					STAT(OBJECTIVE_STATUS, player) |= t; // carrying: player is currently carrying the flag
-				else
-					STAT(OBJECTIVE_STATUS, player) |= t2; // taken: someone else is carrying the flag
-				break;
+				bestflag = it;
+				bestprio = prio;
 			}
-			case FLAG_DROPPED:
+		});
+
+		if(bestflag)
+		{
+			int t = 0, t2 = 0, t3 = 0;
+			switch(bestflag.team)
 			{
-				STAT(OBJECTIVE_STATUS, player) |= t3; // lost: the flag is dropped somewhere on the map
-				break;
+				case NUM_TEAM_1:	t = CTF_RED_FLAG_CARRYING;		t2 = CTF_RED_FLAG_TAKEN;		t3 = CTF_RED_FLAG_LOST; break;
+				case NUM_TEAM_2:	t = CTF_BLUE_FLAG_CARRYING;		t2 = CTF_BLUE_FLAG_TAKEN;		t3 = CTF_BLUE_FLAG_LOST; break;
+				case NUM_TEAM_3:	t = CTF_YELLOW_FLAG_CARRYING;	t2 = CTF_YELLOW_FLAG_TAKEN;		t3 = CTF_YELLOW_FLAG_LOST; break;
+				case NUM_TEAM_4:	t = CTF_PINK_FLAG_CARRYING;		t2 = CTF_PINK_FLAG_TAKEN;		t3 = CTF_PINK_FLAG_LOST; break;
+				case 0:				t = CTF_NEUTRAL_FLAG_CARRYING;	t2 = CTF_NEUTRAL_FLAG_TAKEN;	t3 = CTF_NEUTRAL_FLAG_LOST; break;
+			}
+
+			switch(bestflag.ctf_status)
+			{
+				case FLAG_PASSING:
+				case FLAG_CARRY:
+				{
+					if((bestflag.owner == player) || (bestflag.pass_sender == player))
+						STAT(OBJECTIVE_STATUS, player) |= t; // carrying: player is currently carrying the flag
+					else
+						STAT(OBJECTIVE_STATUS, player) |= t2; // taken: someone else is carrying the flag
+					break;
+				}
+				case FLAG_DROPPED:
+				{
+					STAT(OBJECTIVE_STATUS, player) |= t3; // lost: the flag is dropped somewhere on the map
+					break;
+				}
 			}
 		}
-	});
+	}
 
 	// item for stopping players from capturing the flag too often
 	if(player.ctf_captureshielded)
