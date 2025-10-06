@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-04 07:22+0200\n"
+"POT-Creation-Date: 2025-10-06 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
@@ -179,7 +179,7 @@ msgid "^1Press ^3%s^1 to join"
 msgstr "^1Appuyez sur ^3%s^1 pour rejoindre la partie"
 
 #: qcsrc/client/hud/panel/infomessages.qc:131
-#: qcsrc/client/hud/panel/scoreboard.qc:2796 qcsrc/client/main.qc:1358
+#: qcsrc/client/hud/panel/scoreboard.qc:2799 qcsrc/client/main.qc:1358
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:82
 #: qcsrc/common/notifications/all.qh:466
 #: qcsrc/common/vehicles/vehicle/racer.qc:652
@@ -1075,101 +1075,101 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1839
+#: qcsrc/client/hud/panel/scoreboard.qc:1842
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Stats de précision (moyenne %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1999
+#: qcsrc/client/hud/panel/scoreboard.qc:2002
 msgid "Item stats"
 msgstr "Stats objet"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2114
+#: qcsrc/client/hud/panel/scoreboard.qc:2117
 msgid "Map stats:"
 msgstr "Stat. de la carte :"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2144
+#: qcsrc/client/hud/panel/scoreboard.qc:2147
 msgid "Monsters killed:"
 msgstr "Monstres tués :"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2151
+#: qcsrc/client/hud/panel/scoreboard.qc:2154
 msgid "Secrets found:"
 msgstr "Secrets trouvés :"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2369
+#: qcsrc/client/hud/panel/scoreboard.qc:2372
 #, c-format
 msgid "Spectators"
 msgstr "Spectateurs"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2391
+#: qcsrc/client/hud/panel/scoreboard.qc:2394
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2391
+#: qcsrc/client/hud/panel/scoreboard.qc:2394
 #, c-format
 msgid "^5%s %s"
 msgstr "^5%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2392
+#: qcsrc/client/hud/panel/scoreboard.qc:2395
 msgid "SCO^points"
 msgstr "points"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2509
+#: qcsrc/client/hud/panel/scoreboard.qc:2512
 msgid "Next map:"
 msgstr "Carte suivante :"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2516
+#: qcsrc/client/hud/panel/scoreboard.qc:2519
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "Sélection d'Équipe"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2530
+#: qcsrc/client/hud/panel/scoreboard.qc:2533
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^7Appuyez sur ^3%s^7 pour rejoindre l'équipe sélectionnée"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2532
+#: qcsrc/client/hud/panel/scoreboard.qc:2535
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr "^7Appuyez sur ^3%s^7 pour auto-sélectionner une équipe et la rejoindre"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2536
+#: qcsrc/client/hud/panel/scoreboard.qc:2539
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7Appuyez sur ^3%s ^7pour sélectionner une équipe spécifique"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2574
+#: qcsrc/client/hud/panel/scoreboard.qc:2577
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7joueurs"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2575 qcsrc/client/main.qc:1387
+#: qcsrc/client/hud/panel/scoreboard.qc:2578 qcsrc/client/main.qc:1387
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Carte :"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2741
+#: qcsrc/client/hud/panel/scoreboard.qc:2744
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Récompense de vitesse : %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2745
+#: qcsrc/client/hud/panel/scoreboard.qc:2748
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Le plus rapide jamais vu : %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2777
+#: qcsrc/client/hud/panel/scoreboard.qc:2780
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Réapparition dans ^3%s^1…"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2787
+#: qcsrc/client/hud/panel/scoreboard.qc:2790
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Vous êtes mort, attendez ^3%s^7 avant de réapparaître"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2796
+#: qcsrc/client/hud/panel/scoreboard.qc:2799
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Vous êtes mort, appuyez sur ^2%s^7 pour réapparaître"
@@ -1557,7 +1557,7 @@ msgstr ""
 "dans lequel les joueurs apparaissent avec toutes les armes disponibles, "
 "disposent d'un maximum de santé et d'armure, mais n'ont qu'une seule vie par "
 "manche. Il n'y a aucun objet disponible sur la carte en %s, ce qui rend le "
-"gameplay rapide et axé sur le combat."
+"gameplay effréné et axé sur le combat."
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:10
 msgid ""
@@ -1739,12 +1739,20 @@ msgid ""
 "you respawn with only the starter weapons, so any you collected will have to "
 "be picked up again."
 msgstr ""
+"%s est un simple combat à mort, où tout le monde ne joue que pour soi et "
+"affronte le reste des joueurs, et où le gagnant est celui qui obtient le "
+"plus de points. Lorsque vous êtes éliminé, vous réapparaissez avec "
+"uniquement les armes de départ, vous devrez donc récupérer toutes celles que "
+"vous aviez collectées."
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:13
 msgid ""
 "Scoring is quite simple, fragging an opponent adds one to your score, and "
 "fragging yourself subtracts one."
 msgstr ""
+"Le système de points est très simple : chaque adversaire éliminé ajoute un "
+"point à votre score, et chaque fois que vous vous éliminez vous-même, un "
+"point est retiré."
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:14
 #, c-format
@@ -1753,6 +1761,9 @@ msgid ""
 "contested since they sometimes have the power to make or break a game, so "
 "making good use of them is important."
 msgstr ""
+"Les cartes comportent souvent des bonus de puissance et des objets tels que "
+"%s et %s, qui sont généralement très disputés car ils peuvent parfois faire "
+"basculer le cours d'une partie. Il est donc important de bien les utiliser."
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qh:8
 msgid "Deathmatch"
@@ -1778,12 +1789,20 @@ msgid ""
 "as easily steal a control point owned by your team by doing the same. "
 "Control points start neutral (owned by no teams)."
 msgstr ""
+"Les points de contrôle sont affichés sur le radar afin de faciliter leur "
+"localisation, et il suffit de passer à travers pour les capturer. Cependant, "
+"un ennemi peut tout aussi facilement voler un point de contrôle appartenant "
+"à votre équipe en faisant de même. Les points de contrôle sont neutres au "
+"départ (ils n'appartiennent à aucune équipe)."
 
 #: qcsrc/common/gametypes/gametype/domination/domination.qc:12
 msgid ""
 "Scoring is a combination of frags and score automatically generated by any "
 "control points held by your team every few seconds."
 msgstr ""
+"Le système de points est une combinaison de frags et de score généré "
+"automatiquement toutes les quelques secondes par les points de contrôle "
+"détenus par votre équipe."
 
 #: qcsrc/common/gametypes/gametype/domination/domination.qh:12
 msgid "Capture and defend all the control points to win"
@@ -1805,7 +1824,7 @@ msgid ""
 "%s is a 1-vs-1 arena battle to decide the winner, essentially a 2-player "
 "version of %s, making it one of the most competitive gametypes."
 msgstr ""
-"%s est un combat en arène en 1 contre 1, semblable à une version de %s à 2 "
+"%s est un combat en arène en 1 contre 1, semblable à une partie de %s à 2 "
 "joueurs, ce qui en fait l'un des types de partie les plus compétitifs."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:13
@@ -1817,6 +1836,11 @@ msgid ""
 "with the best item control is often the winner, so this is a key aspect to "
 "master."
 msgstr ""
+"Comme les joueurs sont livrés à eux-mêmes, les objets importants tels que la "
+"%s et la %s sont très disputés, et leur réapparition est souvent "
+"« chronométrée » en se reportant au minuteur du jeu lorsqu'ils sont "
+"ramassés. Le joueur qui contrôle le mieux ces objets est souvent le gagnant, "
+"c'est donc un aspect essentiel à maîtriser."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:16
 msgid ""
@@ -1824,11 +1848,14 @@ msgid ""
 "health, so it is a good opportunity to search the map for them to pick up an "
 "easy frag and continue your streak."
 msgstr ""
+"Une fois que vous avez éliminé votre adversaire, il réapparaîtra avec peu "
+"d'armes et une santé limitée. C'est donc une bonne occasion de le rechercher "
+"sur la carte pour l'éliminer facilement et continuer sur votre lancée."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #, c-format
 msgid "%s is often played with %s rules."
-msgstr ""
+msgstr "%s est souvent joué avec les règles %s."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #: qcsrc/menu/xonotic/guide/pages.qc:183 qcsrc/menu/xonotic/guide/pages.qc:186
@@ -1933,6 +1960,9 @@ msgid ""
 "%s is a free-for-all match where a ball spawns randomly on the map and the "
 "goal is to hold the ball for as long as possible."
 msgstr ""
+"%s est une partie de type « chacun pour soi », où une balle apparaît "
+"aléatoirement sur la carte et où le but est de conserver celle-ci le plus "
+"longtemps possible."
 
 #: qcsrc/common/gametypes/gametype/keepaway/keepaway.qc:11
 msgid ""
@@ -1984,11 +2014,10 @@ msgstr ""
 msgid ""
 "Scoring in %s is quite complicated, involving a mix of gathering all keys, "
 "points for collecting a key, fragging an enemy key carrier, and fragging "
-"other enemies. If a key is destroyed by being dropped into the void or a "
-"death trap, points are allocated accordingly."
+"other enemies."
 msgstr ""
 
-#: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:14
+#: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:13
 #, c-format
 msgid ""
 "Like in %s the key can be dropped, so you can pass it to your teammates if "
@@ -2016,11 +2045,11 @@ msgid ""
 "health and armor do not regenerate, similar to gametypes like %s. Similarly, "
 "item pickups don't spawn on the map."
 msgstr ""
-"%s est un type de partie « chacun pour soi » où tous les joueurs commencent "
-"avec un certain nombre de vies et sont éliminés de la partie une fois qu'ils "
-"ont perdu toutes leurs vies. Les joueurs apparaissent avec toutes les armes "
-"disponibles, un maximum de santé et d'armure, et ces dernières ne se "
-"régénèrent pas, tout comme dans d'autres type de partie telles que %s. De "
+"%s est un type de partie « chacun pour soi » où les joueurs commencent avec "
+"un certain nombre de vies et sont éliminés de la partie une fois qu'ils les "
+"ont toutes perdues. Les joueurs apparaissent avec toutes les armes "
+"disponibles et un maximum de santé et d'armure, la santé et l'armure ne se "
+"régénérant pas, tout comme dans d'autres types de partie tels que %s. De "
 "même, les objets à ramasser n'apparaissent pas sur la carte."
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qc:13
@@ -2060,6 +2089,9 @@ msgid ""
 "available weapons and maximum health and armor. There are no pickups enabled "
 "on maps, but buffs are still available."
 msgstr ""
+"%s est un Match à Mort effréné où les joueurs apparaissent avec toutes les "
+"armes disponibles, ainsi que le maximum de santé et d'armure. Il n'y a pas "
+"d'objet à ramasser sur les cartes, mais les bonus sont toujours disponibles."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:12
 msgid ""
@@ -2120,6 +2152,8 @@ msgid ""
 "Keep in mind players can score own goals, so don't embarrass yourself in "
 "front of your team!"
 msgstr ""
+"N'oubliez pas que les joueurs peuvent marquer des buts contre leur camp, "
+"alors ne vous ridiculisez pas devant votre équipe !"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
 msgid "Nexball"
@@ -2376,7 +2410,7 @@ msgstr "Grabuge en Équipe"
 #: qcsrc/common/items/item/ammo.qc:11
 #, c-format
 msgid "The %s ammo type is used by the:"
-msgstr ""
+msgstr "Le type de munitions %s est utilisé par le (la) :"
 
 #: qcsrc/common/items/item/ammo.qc:16 qcsrc/common/items/item/ammo.qc:26
 #, c-format
@@ -2386,7 +2420,7 @@ msgstr ""
 #: qcsrc/common/items/item/ammo.qc:25
 #, c-format
 msgid "The %s ammo type is used by the %s."
-msgstr ""
+msgstr "Le type de munitions %s est utilisé par le %s."
 
 #: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
 msgid "Shells"
@@ -3942,7 +3976,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:154
 #: qcsrc/menu/xonotic/guide/pages.qc:72 qcsrc/menu/xonotic/guide/pages.qc:123
 msgid "Rocket Flying"
-msgstr "Roquettes volantes"
+msgstr "Vol à la roquette"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
@@ -7785,7 +7819,7 @@ msgstr "(DPS : %.2f)"
 #: qcsrc/common/weapons/all.qc:880
 #, c-format
 msgid "It does %s damage"
-msgstr ""
+msgstr "Cette arme inflige %s points de dégâts"
 
 #: qcsrc/common/weapons/all.qc:881
 #, c-format
@@ -8430,9 +8464,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/tuba.qc:606
 #, c-format
-msgid ""
-"The pitch the %s plays depends on the movement keys pressed. Reloading the "
-"weapon switches its model and notes played."
+msgid "The pitch the %s plays depends on the movement keys pressed."
 msgstr ""
 
 #: qcsrc/common/weapons/weapon/tuba.qh:35
@@ -9121,7 +9153,7 @@ msgstr "Menu du jeu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:18
 msgid "Show only current ammo type"
-msgstr "Afficher uniquement le type de munition actuel"
+msgstr "Afficher uniquement le type de munitions actuel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:43
@@ -12986,7 +13018,7 @@ msgstr "À propos de ce guide"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:22
 msgid "Welcome to Xonotic, the free and fast arena shooter!"
-msgstr "Bienvenue sur Xonotic, le jeu de tir en arène libre et rapide !"
+msgstr "Bienvenue sur Xonotic, le jeu de tir en arène libre et effréné !"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:23
 msgid ""
@@ -13115,14 +13147,19 @@ msgid ""
 "skills is an essential part of Xonotic gameplay and must not be "
 "underestimated."
 msgstr ""
+"Xonotic est un jeu de tir en arène très effréné. La rapidité ne tient pas "
+"seulement aux temps de réaction, mais aussi à la vitesse de déplacement. "
+"Cela signifie que la maîtrise des techniques de déplacement est un élément "
+"essentiel du gameplay de Xonotic et ne doit pas être sous-estimée."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:67
 msgid "For a new player, the most important tricks to learn are:"
 msgstr ""
+"Pour un nouveau joueur, les astuces les plus importantes à apprendre sont :"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:69 qcsrc/menu/xonotic/guide/pages.qc:77
 msgid "Bunny Hopping"
-msgstr ""
+msgstr "Bunny Hopping"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:70 qcsrc/menu/xonotic/guide/pages.qc:89
 msgid "Strafe Turning"
@@ -13145,6 +13182,8 @@ msgid ""
 "Bunny hopping (\"bhopping\") is a technique known also from other arena "
 "shooters."
 msgstr ""
+"Le bunny hopping (« bhopping ») est une technique également connue dans "
+"d'autres jeux de tir en arène."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:81
 #, c-format
