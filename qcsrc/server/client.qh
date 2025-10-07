@@ -358,7 +358,7 @@ bool PlayerInIDList(entity p, string idlist);
 
 bool PlayerInIPList(entity p, string iplist);
 
-void ClientData_Touch(entity e);
+void ClientData_Touch(entity e, bool to_spectators_too);
 
 void PlayerUseKey(entity this);
 

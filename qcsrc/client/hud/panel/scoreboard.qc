@@ -979,10 +979,12 @@ vector sbt_field_rgb;
 // these are drawn overlapping
 string sbt_field_icon_playercolor[3];
 vector sbt_field_icon_playercolor_rgb[3];
+
+const int SBT_FIELD_ICON_EXTRA_COUNT = 3;
 // these are drawn side-by-side, next to playercolor (if present)
-// 0: player_ready, 1: player_handicap
-string sbt_field_icon_extra[2];
-vector sbt_field_icon_extra_rgb[2];
+// 0: player_ready, 1: player_handicap, 2: player_ignored
+string sbt_field_icon_extra[SBT_FIELD_ICON_EXTRA_COUNT];
+vector sbt_field_icon_extra_rgb[SBT_FIELD_ICON_EXTRA_COUNT];
 string Scoreboard_GetName(entity pl)
 {
 	if (!teamplay)
@@ -1014,6 +1016,10 @@ string Scoreboard_GetName(entity pl)
 		sbt_field_icon_extra_rgb[1] = '1 0 0' + '0 1 1' * ((16 - handicap_lvl) / 15);
 		// goes from white to red over level 1 to 16
 	}
+
+	if (pl.ignored)
+		sbt_field_icon_extra[2] = "gfx/scoreboard/player_ignored";
+
 	return entcs_GetName(pl.sv_entnum);
 }
 
@@ -1041,10 +1047,12 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 	sbt_field_icon_playercolor_rgb[0] = '1 1 1';
 	sbt_field_icon_playercolor_rgb[1] = '1 1 1';
 	sbt_field_icon_playercolor_rgb[2] = '1 1 1';
-	sbt_field_icon_extra[0] = "";
-	sbt_field_icon_extra[1] = "";
-	sbt_field_icon_extra_rgb[0] = '1 1 1';
-	sbt_field_icon_extra_rgb[1] = '1 1 1';
+	for (f = 0; f < SBT_FIELD_ICON_EXTRA_COUNT; ++f)
+	{
+		sbt_field_icon_extra[f] = "";
+		sbt_field_icon_extra_rgb[f] = '1 1 1';
+	}
+
 	int rounds_played = 0;
 	if (per_round)
 		rounds_played = pl.(scores(SP_ROUNDS_PL));
@@ -1210,7 +1218,7 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 		}
 	// NOTE: extra icons (player_ready and player_handicap) are squares (32x32), so this may not be necessary
 	// simply setting sbt_fixcolumnwidth_iconlen_extra* = 1 would be equivalent
-	for (j = 0; j < 2; ++j)
+	for (j = 0; j < SBT_FIELD_ICON_EXTRA_COUNT; ++j)
 		if (sbt_field_icon_extra[j] != "")
 		{
 			sz = draw_getimagesize(sbt_field_icon_extra[j]);
@@ -1464,7 +1472,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 		for (j = 0; j < 3; ++j)
 			if (sbt_field_icon_playercolor[j] != "")
 				drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
-		for (j = 0; j < 2; ++j)
+		for (j = 0; j < SBT_FIELD_ICON_EXTRA_COUNT; ++j)
 			if (sbt_field_icon_extra[j] != "")
 			{
 				tmp.x -= icon_sz.x;
@@ -1507,7 +1515,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 			for (j = 0; j < 3; ++j)
 				if (sbt_field_icon_playercolor[j] != "")
 					drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
-			for (j = 0; j < 2; ++j)
+			for (j = 0; j < SBT_FIELD_ICON_EXTRA_COUNT; ++j)
 				if (sbt_field_icon_extra[j] != "")
 				{
 					tmp.x -= icon_sz.x;
@@ -1522,7 +1530,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 		drawfill(h_pos, h_size, '0 0 0', sbt_highlight_alpha_eliminated, DRAWFLAG_NORMAL);
 }
 
-vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity ignored_pl, entity pl, int pl_number)
+vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity excluded_pl, entity pl, int pl_number)
 {
 	int i = 0;
 	vector h_pos = item_pos;
@@ -1558,7 +1566,7 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 	{
 		if (pl.team != this_team)
 			continue;
-		if (pl == ignored_pl)
+		if (pl == excluded_pl)
 			continue;
 
 		if (teamplay)
@@ -1584,8 +1592,11 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		string str = entcs_GetName(pl.sv_entnum);
 		if (autocvar_hud_panel_scoreboard_playerid)
 			str = Scoreboard_AddPlayerId(str, pl);
-		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
-		float column_width = stringwidth(str, true, hud_fontsize);
+
+		// ignored_size includes icon and padding
+		float ignored_size = (pl.ignored ? hud_fontsize.y + hud_fontsize.x * 0.25 : 0);
+		str = textShortenToWidth(str, namesize - ignored_size, hud_fontsize, stringwidth_colors);
+		float column_width = stringwidth(str, true, hud_fontsize) + ignored_size;
 		if ((this_team == NUM_SPECTATOR) && autocvar_hud_panel_scoreboard_spectators_aligned)
 		{
 			if (column_width > max_name_width)
@@ -1626,7 +1637,13 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		vector name_pos = pos;
 		if ((this_team == NUM_SPECTATOR) && autocvar_hud_panel_scoreboard_spectators_aligned)
 			name_pos.x += max(fieldsize, min_fieldsize) + 2 * fieldpadding + hud_fontsize.x * 0.25;
+		if (pl.ignored)
+		{
+			drawpic(name_pos, "gfx/scoreboard/player_ignored", '1 1 0' * hud_fontsize.y, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+			name_pos.x += ignored_size;
+		}
 		drawcolorcodedstring(name_pos, str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
+
 		if (field != "")
 		{
 			h_size.x = max(fieldsize, min_fieldsize) + 2 * fieldpadding;

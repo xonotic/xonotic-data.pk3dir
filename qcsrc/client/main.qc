@@ -577,6 +577,7 @@ void Ent_RemovePlayerScore(entity this)
 		});
 		this.owner.ready = 0;
 		this.owner.eliminated = 0;
+		this.owner.ignored = false;
 		this.owner.colormap = 0;
 		// TODO add a hook to reset this Survival field
 		this.owner.survival_status = 0;
@@ -733,6 +734,28 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 	// we could get rid of spectatee_status, and derive it from player_localentnum and player_localnum
 
 	teamnagger = (f & 0x60) >> 5; // 0x60 = BIT(5) | BIT(6)
+
+	if (f & BIT(7))
+	{
+		for (entity pl = players.sort_next; pl; pl = pl.sort_next)
+			pl.ignored = false;
+
+		string ignore_list = ReadString();
+		if (ignore_list != "")
+			FOREACH_WORD(ignore_list, true,
+			{
+				int ignore_id = stoi(it);
+				entity pl = NULL;
+				for (pl = players.sort_next; pl; pl = pl.sort_next)
+				{
+					if (ignore_id == pl.sv_entnum + 1)
+					{
+						pl.ignored = true;
+						break;
+					}
+				}
+			});
+	}
 }
 
 NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
