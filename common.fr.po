@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-06 07:22+0200\n"
+"POT-Creation-Date: 2025-10-07 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
@@ -1889,6 +1889,11 @@ msgid ""
 "damaging frozen players on the other team helps unfreeze them, so it is best "
 "to try to avoid doing that."
 msgstr ""
+"Les joueurs gelés dégèlent lentement au fil du temps, mais ils dégèlent "
+"beaucoup plus rapidement lorsqu'ils sont « réanimés » par un coéquipier se "
+"trouvant à proximité immédiate. De plus, infliger des dégâts aux joueurs "
+"gelés de l'équipe adverse contribue à les dégeler, il est donc préférable de "
+"l'éviter."
 
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qc:12
 msgid ""
@@ -1910,6 +1915,13 @@ msgid ""
 "especially while frozen, so you can let your teammates know where the "
 "enemies are."
 msgstr ""
+"Réanimer discrètement un coéquipier le ramènera dans la partie pour vous "
+"aider à prendre l'avantage sur vos adversaires, mais cela doit être fait "
+"avec prudence, car les ennemis surveillent souvent de près les joueurs gelés "
+"pour s'assurer qu'ils ne sont pas réanimés. C'est pourquoi il est important "
+"d'avoir une bonne communication au sein de l'équipe, en particulier lorsque "
+"vous êtes gelé, afin de pouvoir indiquer à vos coéquipiers où se trouvent "
+"les ennemis."
 
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:15
 msgid "Freeze Tag"
@@ -1970,6 +1982,9 @@ msgid ""
 "when you frag the ball carrier. The first player to reach the score limit "
 "will win the match."
 msgstr ""
+"Votre score augmente lorsque vous éliminez un adversaire alors que vous êtes "
+"en possession de la balle et lorsque vous éliminez le porteur de balle. Le "
+"premier joueur à atteindre la limite de points remporte la partie."
 
 #: qcsrc/common/gametypes/gametype/keepaway/keepaway.qc:13
 msgid ""
@@ -1977,6 +1992,9 @@ msgid ""
 "anyone is able to pick it up. If nobody picks it up after some time it will "
 "get bored and teleport itself elsewhere."
 msgstr ""
+"Quand le porteur de balle est éliminé, la balle tombe au sol et n'importe "
+"qui peut la ramasser. Si personne ne la ramasse après un certain temps, elle "
+"finit par s'ennuyer et se téléporter ailleurs."
 
 #: qcsrc/common/gametypes/gametype/keepaway/keepaway.qc:15
 #, c-format
@@ -1984,6 +2002,8 @@ msgid ""
 "%s rewards good fragging but also good movement, since the better you can "
 "evade attacks, the longer you can keep the ball."
 msgstr ""
+"%s récompense les frags mais aussi les bons déplacements, car mieux vous "
+"savez éviter les attaques, plus longtemps vous pouvez garder la balle."
 
 #: qcsrc/common/gametypes/gametype/keepaway/keepaway.qh:11
 msgid "Hold the ball to get points for kills"
@@ -2138,13 +2158,15 @@ msgstr "Score nécessaire pour terminer la partie"
 msgid ""
 "%s is a fun ball sport game where 2 teams compete to score the most goals."
 msgstr ""
+"%s est un jeu de balle amusant où 2 équipes s'affrontent pour marquer le "
+"plus de buts possible."
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:11
 #, c-format
 msgid ""
 "%s is usually played as either soccer where players walk into the ball to "
-"kick it around, or basketball where players have a %s so can pass the ball "
-"and intercept passes."
+"kick it around, or basketball where players have a %s so they can pass the "
+"ball and intercept passes."
 msgstr ""
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:12
@@ -2193,6 +2215,10 @@ msgid ""
 "another control point currently owned by your team, you have to "
 "systematically work through the map to reach the enemy generator."
 msgstr ""
+"Comme votre équipe ne peut capturer un point de contrôle que s'il est relié "
+"à un autre point de contrôle actuellement détenu par votre équipe, vous "
+"devez systématiquement parcourir la carte pour atteindre le générateur "
+"ennemi."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:80
 msgid ""
@@ -2201,12 +2227,19 @@ msgid ""
 "the \"info bot\" that hovers above them, converting the control point to "
 "neutral once it is destroyed."
 msgstr ""
+"Un point de contrôle est capturé en y passant à travers, puis en attendant "
+"qu'il soit entièrement construit. Les points de contrôle de l'équipe adverse "
+"sont détruits en attaquant le « robot d'information » qui les survole, ce "
+"qui rend le point de contrôle neutre une fois qu'il est détruit."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:82
 msgid ""
 "When in overtime, the enemy's generator will start to decay, at a faster "
 "rate the more control points your team has."
 msgstr ""
+"Dans les phases de prolongation, le générateur ennemi commence à se "
+"détériorer, d'autant plus rapidement que votre équipe détient de points de "
+"contrôle."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
@@ -2329,18 +2362,24 @@ msgstr "Survie"
 #, c-format
 msgid "%s is the team version of %s, played in teams rather than solo."
 msgstr ""
+"%s est la version par équipe de %s, qui se joue en équipes plutôt qu'en solo."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:11
 msgid ""
 "Scoring is quite simple, adding a point for every frag, and subtracting a "
 "point for fragging yourself or a teammate."
 msgstr ""
+"Le système de points est assez simple : un point est ajouté pour chaque frag "
+"et un point est retiré en cas de suicide ou de coéquipier éliminé."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:12
 msgid ""
 "Careful team coordination and map control is often key to winning a match, "
 "and sometimes players will share weapons with their teammates."
 msgstr ""
+"Une coordination minutieuse au sein de l'équipe et le contrôle de la carte "
+"sont souvent essentiels pour remporter une partie, et il arrive parfois que "
+"les joueurs partagent leurs armes avec leurs coéquipiers."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -2356,6 +2395,8 @@ msgid ""
 "%s is the team version of %s, where teams compete to maintain superior "
 "control over the ball."
 msgstr ""
+"%s est la version par équipe de %s, où les équipes s'affrontent pour garder "
+"le contrôle de la balle."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qc:11
 #, c-format
@@ -3624,7 +3665,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/nades/nades.qc:54
 #, c-format
 msgid "This mutator is enabled by default in %s."
-msgstr ""
+msgstr "Ce mutateur est activé par défaut en %s."
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:82 qcsrc/common/util.qc:319
 #: qcsrc/menu/xonotic/guide/guide.qh:16
@@ -3725,6 +3766,8 @@ msgid ""
 "It is a superweapon found on some maps, meaning that it breaks down after "
 "some time."
 msgstr ""
+"Il s'agit d'une super-arme que l'on retrouve sur certaines cartes, ce qui "
+"signifie qu'elle se désactive après un certain temps."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:170
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:168
@@ -3792,6 +3835,9 @@ msgid ""
 "chainsaw which explodes on impact, dealing a lot of splash damage to any "
 "players close by."
 msgstr ""
+"Comme son nom l'indique, la %s est une super-arme qui tire une tronçonneuse "
+"propulsée par une roquette qui explose à l'impact, infligeant d'importants "
+"dégâts collatéraux à tous les joueurs à proximité."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:245
 #, c-format
@@ -3799,6 +3845,8 @@ msgid ""
 "The primary fire consumes %s ammo, although you spawn with an infinite "
 "amount of it in %s."
 msgstr ""
+"Le tir primaire consomme %s munitions, bien que vous apparaissiez avec une "
+"quantité infinie de munitions en %s."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:246
 #, c-format
@@ -3841,6 +3889,9 @@ msgid ""
 "%s is a mutator that makes players drop all their weapons when they die. "
 "Without this mutator, players normally drop only their equipped weapon."
 msgstr ""
+"%s est un mutateur qui fait relâcher aux joueurs toutes leurs armes "
+"lorsqu'ils meurent. Sans ce mutateur, les joueurs ne relâchent normalement "
+"que l'arme dont ils sont équipés."
 
 #: qcsrc/common/mutators/mutator/pinata/pinata.qh:5 qcsrc/common/util.qc:308
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
@@ -3861,6 +3912,8 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:60
 msgid "Since it is a powerup, it will drop if you die while holding it."
 msgstr ""
+"Comme il s'agit d'un bonus de puissance, il sera relâché si vous mourez "
+"alors que vous le détenez."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:33
 msgid "Fuel regenerator"
@@ -8084,6 +8137,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/fireball.qc:444
 msgid "It is a superweapon, so isn't often found in game."
 msgstr ""
+"Il s'agit d'une super-arme, on ne le trouve donc pas souvent dans le jeu."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:445
 #: qcsrc/common/weapons/weapon/porto.qc:436
@@ -8493,6 +8547,8 @@ msgid ""
 "It is a superweapon, so isn't often found in game, except in %s where all "
 "players spawn with it."
 msgstr ""
+"Il s'agit d'une super-arme, on ne le retrouve donc pas souvent dans le jeu, "
+"sauf en %s où tous les joueurs apparaissent avec."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:423
 #, c-format
@@ -13426,6 +13482,10 @@ msgid ""
 "These weapons are a lot more powerful than the regular weapons, so their "
 "time-to-kill is quite low."
 msgstr ""
+"En termes d'arsenal, les joueurs disposent de munitions infinies et "
+"apparaissent avec les %s, %s et %s. Ils peuvent parfois ramasser les super-"
+"armes %s et %s sur la carte. Ces dernières sont beaucoup plus puissantes que "
+"les armes classiques, leur durée d'utilisation est donc assez courte."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:177
 #, c-format
