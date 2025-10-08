@@ -2036,6 +2036,10 @@ msgid ""
 "points for collecting a key, fragging an enemy key carrier, and fragging "
 "other enemies."
 msgstr ""
+"Le système de points dans la %s est assez compliqué, puisqu'il combine le "
+"rassemblement de toutes les clés, les points obtenus pour chaque clé "
+"collectée, l'élimination d'un ennemi porteur d'une clé et l'élimination "
+"d'autres ennemis."
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:13
 #, c-format
@@ -2043,10 +2047,12 @@ msgid ""
 "Like in %s the key can be dropped, so you can pass it to your teammates if "
 "you're running low on health."
 msgstr ""
+"Comme en %s, la clé peut être lâchée, vous pouvez donc la passer à vos "
+"coéquipiers si votre santé est faible."
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qh:11
 msgid "Gather all the keys to win the round"
-msgstr "Collectez toutes les clés pour gagner la manche"
+msgstr "Rassemblez toutes les clés pour gagner la manche"
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qh:11
 msgid "Key Hunt"
@@ -2168,6 +2174,9 @@ msgid ""
 "kick it around, or basketball where players have a %s so they can pass the "
 "ball and intercept passes."
 msgstr ""
+"%s se joue généralement soit comme le football, où les joueurs courent vers "
+"la balle pour la frapper, soit comme le basket-ball, où les joueurs ont un "
+"%s afin de pouvoir passer la balle et intercepter les passes."
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:12
 msgid ""
@@ -2332,6 +2341,9 @@ msgid ""
 "opposite team, it can be tricky for survivors to figure out their fellow "
 "teammates."
 msgstr ""
+"Étant donné que l'objectif des deux équipes est pour ainsi dire d'éliminer "
+"tous les membres de l'équipe adverse, il peut être difficile pour les "
+"survivants d'identifier leurs coéquipiers."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:14
 msgid ""
@@ -2339,6 +2351,10 @@ msgid ""
 "a bit smaller, and then the round starts with a brief warmup grace period in "
 "which items can be collected but weapons can't be fired."
 msgstr ""
+"Les équipes sont sélectionnées au hasard au début de la manche, l'équipe des "
+"chasseurs étant légèrement moins nombreuse, puis la manche commence par une "
+"brève période d'échauffement pendant laquelle les objets peuvent être "
+"ramassés, mais les armes ne peuvent pas être utilisées."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:16
 msgid ""
@@ -2347,6 +2363,11 @@ msgid ""
 "fragged. Extra points are also given to survivors who survive until the "
 "round timer expires."
 msgstr ""
+"Les joueurs reçoivent un point pour chaque membre de l'équipe adverse qu'ils "
+"éliminent, à condition qu'ils survivent à la manche, et des points sont "
+"déduits pour chaque coéquipier éliminé. Des points supplémentaires sont "
+"également attribués aux survivants qui survivent jusqu'à la fin du temps "
+"imparti pour la manche."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
@@ -2443,6 +2464,8 @@ msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem"
 msgstr ""
+"Concourez avec votre équipe pour infliger le plus de dégâts et remporter le "
+"plus de frags dans ce combat chaotique"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
@@ -2879,6 +2902,8 @@ msgid ""
 "Golems are large powerful brutes capable of taking and dealing a beating. "
 "Keeping your distance is advised."
 msgstr ""
+"Les golems sont de grandes brutes puissantes capables d'encaisser et de "
+"distribuer des coups. Il est conseillé de garder vos distances."
 
 #: qcsrc/common/monsters/monster/golem.qc:289
 msgid ""
@@ -2886,12 +2911,17 @@ msgid ""
 "Golem may jump into the air, dealing massive damage in an area as it slams "
 "the ground."
 msgstr ""
+"L'attaque rapprochée principale du Golem consiste en une série de coups de "
+"poing. Il arrive parfois que le Golem saute en l'air et inflige des dégâts "
+"considérables dans une zone donnée en frappant le sol."
 
 #: qcsrc/common/monsters/monster/golem.qc:291
 msgid ""
 "To deal with distant foes, the Golem may throw a chunk of its electrified "
 "rocky exterior, zapping nearby targets on impact."
 msgstr ""
+"Pour affronter des ennemis éloignés, le Golem peut lancer un morceau de sa "
+"carapace rocheuse électrifiée, électrocutant les cibles proches à l'impact."
 
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
@@ -2903,6 +2933,8 @@ msgid ""
 "Wielding nanotechnology as if it were sorcery, the Mage employs a range of "
 "unique abilities of its own creation in combat."
 msgstr ""
+"Manipulant la nanotechnologie comme s'il s'agissait de sorcellerie, le Mage "
+"utilise au combat toute une gamme de capacités uniques de sa propre création."
 
 #: qcsrc/common/monsters/monster/mage.qc:499
 msgid ""
@@ -2910,6 +2942,9 @@ msgid ""
 "player. This sphere will track its target at high speed, exploding on impact "
 "or if it does not reach its target in time."
 msgstr ""
+"En guise d'attaque principale, le Mage lance une sphère électrique à tête "
+"chercheuse vers le joueur. Cette sphère poursuit sa cible à grande vitesse "
+"et explose à l'impact ou si elle n'atteint pas sa cible à temps."
 
 #: qcsrc/common/monsters/monster/mage.qc:501
 msgid ""
@@ -2917,18 +2952,26 @@ msgid ""
 "damage briefly. Enemies approaching too closely during this time may be "
 "pushed away with explosive force!"
 msgstr ""
+"Lorsqu'il est menacé, le Mage peut déployer un bouclier énergétique pour se "
+"protéger brièvement des dégâts. Les ennemis qui s'approchent trop près "
+"pendant ce temps peuvent être repoussés avec une force explosive !"
 
 #: qcsrc/common/monsters/monster/mage.qc:503
 msgid ""
 "Defensively the Mage is capable of healing itself and nearby allies, with "
 "some variants also providing armor and ammunition."
 msgstr ""
+"En défense, le Mage est capable de se soigner lui-même et de soigner ses "
+"alliés proches, certaines variantes fournissant également une armure et des "
+"munitions."
 
 #: qcsrc/common/monsters/monster/mage.qc:504
 msgid ""
 "The Mage may sometimes appear to blink out of existence as it teleports "
 "behind its target for a sneak attack."
 msgstr ""
+"Le Mage peut parfois sembler disparaître lorsqu'il se téléporte derrière sa "
+"cible pour lancer une attaque sournoise."
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
@@ -2937,13 +2980,15 @@ msgstr "Mage"
 
 #: qcsrc/common/monsters/monster/mage.qh:29
 msgid "Mage spike"
-msgstr "Pointe de mage"
+msgstr "Pointe de Mage"
 
 #: qcsrc/common/monsters/monster/spider.qc:244
 msgid ""
 "The Spider is a large mechanically-enhanced arachnoid adept at hunting "
 "speedy enemies."
 msgstr ""
+"L'Araignée est une grande arachnoïde améliorée mécaniquement, douée pour "
+"chasser les ennemis rapides."
 
 #: qcsrc/common/monsters/monster/spider.qc:245
 msgid ""
@@ -2951,6 +2996,10 @@ msgid ""
 "from its cannons. Approaching its enwebbed prey, the Spider will inflict a "
 "series of high damage bites."
 msgstr ""
+"Pour ralentir sa cible, l'Araignée lance une substance synthétique semblable "
+"à une toile depuis ses canons. En s'approchant de sa proie engluée dans sa "
+"toile, l'Araignée lui inflige une série de morsures, causant des dégâts "
+"importants."
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2959,7 +3008,7 @@ msgstr "Araignée"
 
 #: qcsrc/common/monsters/monster/spider.qh:28
 msgid "Spider attack"
-msgstr "Attaque d'araignée"
+msgstr "Attaque d'Araignée"
 
 #: qcsrc/common/monsters/monster/spider.qh:39
 msgid "Webbed"
@@ -2970,12 +3019,17 @@ msgid ""
 "The Wyvern is a flying reptilian monster that glides around hunting for "
 "fresh prey."
 msgstr ""
+"La Vouivre est un monstre reptilien volant qui plane dans les airs à la "
+"recherche de proies fraîches."
 
 #: qcsrc/common/monsters/monster/wyvern.qc:189
 msgid ""
 "While fragile, the Wyvern is capable of launching deadly fireballs at the "
 "player from a distance, inflicting high damage and causing burning."
 msgstr ""
+"Bien que fragile, la Vouivre est capable de lancer à distance des boules de "
+"feu mortelles sur le joueur, lui infligeant des dégâts importants et "
+"provoquant des brûlures."
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
@@ -2984,13 +3038,15 @@ msgstr "Vouivre"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:28
 msgid "Wyvern attack"
-msgstr "Attaque de vouivre"
+msgstr "Attaque de Vouivre"
 
 #: qcsrc/common/monsters/monster/zombie.qc:180
 msgid ""
 "Zombies are the undead remains of deceased soldiers, risen with a ravenous "
 "hunger and no sense of self-preservation."
 msgstr ""
+"Les Zombies sont les restes morts-vivants de soldats décédés, ressuscités "
+"avec une faim vorace et dénués d'instinct de survie."
 
 #: qcsrc/common/monsters/monster/zombie.qc:181
 msgid ""
@@ -2999,18 +3055,26 @@ msgid ""
 "massive damage on contact. If it gets close, the Zombie will punch and bite "
 "repeatedly."
 msgstr ""
+"Lorsqu'un Zombie détecte un joueur à proximité, il se met à charger sa cible "
+"à grande vitesse. Pendant sa charge, le Zombie peut bondir vers le joueur et "
+"lui infliger des dégâts considérables au moment de l'impact. S'il parvient à "
+"s'approcher, le Zombie frappera et mordra à plusieurs reprises."
 
 #: qcsrc/common/monsters/monster/zombie.qc:184
 msgid ""
 "When threatened the Zombie may hold up its hands to block incoming attacks "
 "briefly."
 msgstr ""
+"Lorsqu'il est menacé, le Zombie peut lever les mains pour bloquer brièvement "
+"les attaques."
 
 #: qcsrc/common/monsters/monster/zombie.qc:185
 msgid ""
 "It is no small task to kill that which is already dead. Once a Zombie is "
 "defeated, destroy its corpse to prevent it from rising again!"
 msgstr ""
+"Il n'est pas facile de tuer ce qui est déjà mort. Une fois qu'un Zombie est "
+"vaincu, détruisez son cadavre pour l'empêcher de se relever !"
 
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
@@ -3179,6 +3243,8 @@ msgid ""
 "It also gives you a chance to survive a fatal hit, with a small amount of "
 "health left over."
 msgstr ""
+"Cela vous donne également une chance de survivre à un tir fatal, avec un peu "
+"de santé restante."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qh:16
 msgid "Medic"
@@ -3192,6 +3258,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
 msgid "This also impacts the damage you deal to yourself."
 msgstr ""
+"Cela a également un impact sur les dégâts que vous vous infligez à vous-même."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qh:12
 msgid "Resistance"
@@ -3416,6 +3483,9 @@ msgid ""
 "instead giving players the %s, which immediately frags players in a single "
 "shot, hence the name \"InstaGib.\""
 msgstr ""
+"%s est un mutateur qui supprime toutes les armes de la carte et équipe les "
+"joueurs du %s, qui tue instantanément les joueurs d'un seul coup, d'où son "
+"nom « InstaGib »."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qc:17
 #, c-format
@@ -3424,6 +3494,10 @@ msgid ""
 "after 10 seconds if you run out of ammo. Ammo (%s) can be picked up on the "
 "map often, or collected from dropped %s guns."
 msgstr ""
+"Il est important de viser avec précision et d'économiser vos munitions, car "
+"vous vous suiciderez après 10 secondes si vous n'en avez plus. Vous pouvez "
+"souvent ramasser des munitions (%s) sur la carte ou les récupérer sur un %s "
+"abandonné."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qc:19
 #, c-format
@@ -3432,6 +3506,10 @@ msgid ""
 "picked up (total extra lives is displayed as armor). Other powerups often "
 "present on maps include %s and %s."
 msgstr ""
+"Les cartes comportent souvent un %s qui vous évite d'être tué lorsque vous "
+"le ramassez (le nombre total de vies supplémentaires est affiché sous forme "
+"d'armure). Parmi les autres bonus de puissance souvent présents sur les "
+"cartes, on retrouve %s et %s."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qc:21
 #, c-format
@@ -4744,7 +4822,7 @@ msgstr "^BG%s^K1 a été mordu par une Araignée%s%s"
 #: qcsrc/common/notifications/all.inc:323
 #, c-format
 msgid "^BG%s^K1 was fireballed by a Wyvern%s%s"
-msgstr "^BG%s^K1 a été carbonisé par un Vouivre%s%s"
+msgstr "^BG%s^K1 a été carbonisé par une Vouivre%s%s"
 
 #: qcsrc/common/notifications/all.inc:324
 #, c-format
@@ -13152,6 +13230,11 @@ msgid ""
 "the game mechanics. If you see experienced players doing tricks you don't "
 "understand, don't hesitate to ask anyone on the server!"
 msgstr ""
+"L'écart de niveau entre les nouveaux joueurs et les joueurs expérimentés est "
+"souvent immense. Cependant, cela s'explique principalement par le fait que "
+"les joueurs expérimentés ont appris à tirer parti des mécanismes du jeu. Si "
+"vous voyez des joueurs expérimentés user de stratagèmes que vous ne "
+"comprenez pas, n'hésitez pas à interpeller quelqu'un sur le serveur !"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:46
 msgid ""
@@ -13160,6 +13243,11 @@ msgid ""
 "at which weapons they choose depending on the gameplay situation, for "
 "example in close combat, mid-range battles, or against groups of opponents."
 msgstr ""
+"Une autre façon d'apprendre consiste à observer les joueurs expérimentés. "
+"Observez quelles combinaisons d'armes ils utilisent et quelles techniques de "
+"déplacement ils emploient. Regardez également quelles armes ils choisissent "
+"en fonction de la situation de jeu, par exemple en combat rapproché, à "
+"moyenne distance ou contre des groupes d'adversaires."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:49
 msgid ""
@@ -13167,6 +13255,9 @@ msgid ""
 "works will enable you to speed around the map and apply effective weapon "
 "combos in no time."
 msgstr ""
+"La courbe d'apprentissage est très raide. Cela dit, comprendre le "
+"fonctionnement du jeu vous permettra de vous déplacer rapidement sur la "
+"carte et d'utiliser des combinaisons d'armes efficaces en un rien de temps."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:52
 msgid "XonStat"
