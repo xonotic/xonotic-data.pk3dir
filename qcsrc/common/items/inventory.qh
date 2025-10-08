@@ -164,6 +164,7 @@ void Inventory_pickupitem(Pickup this, entity player)
 	entity store = IS_PLAYER(player) ? PS(player) : player;
 	++store.inventory.inv_items[this.m_id];
 	Inventory_update(store);
+	STAT(LAST_PICKUP, player) = time;
 }
 
 void Inventory_clear(entity store)
