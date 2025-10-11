@@ -1,0 +1,20 @@
+#pragma once
+
+#include <menu/xonotic/guide/_mod.qh>
+
+#include "tab.qh"
+CLASS(XonoticGuideTab, XonoticTab)
+	ATTRIB(XonoticGuideTab, title, string, _("Guide"));
+	ATTRIB(XonoticGuideTab, name, string, "guide");
+	ATTRIB(XonoticGuideTab, rows, float, 17);
+	ATTRIB(XonoticGuideTab, columns, float, 6);
+	METHOD(XonoticGuideTab, fill, void(entity));
+	ATTRIB(XonoticGuideTab, intendedWidth, float, 0.96);
+
+	METHOD(XonoticGuideTab, topicChangeNotify, void(entity, entity));
+	METHOD(XonoticGuideTab, entryChangeNotify, void(entity, entity));
+	ATTRIB(XonoticGuideTab, topicList, entity, NEW(XonoticTopicList, NEW(TopicSource)));
+	ATTRIB(XonoticGuideTab, entryList, entity, NEW(XonoticEntryList, NULL));
+	ATTRIB(XonoticGuideTab, descriptionPane, entity, NEW(XonoticGuideDescription));
+ENDCLASS(XonoticGuideTab)
+entity makeXonoticGuideTab();
