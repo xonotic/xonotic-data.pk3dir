@@ -476,6 +476,10 @@ bool PlayerJump(entity this)
 	UNSET_ONSLICK(this);
 	SET_JUMP_HELD(this);
 
+#ifdef CSQC
+	jumpheight_min = jumpheight_max = this.origin.z;
+#endif
+
 #ifdef SVQC
 	animdecide_setaction(this, ANIMACTION_JUMP, true);
 

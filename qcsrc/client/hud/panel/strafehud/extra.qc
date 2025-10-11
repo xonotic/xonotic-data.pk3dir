@@ -123,18 +123,17 @@ void StrafeHUD_DrawVerticalAngle(entity e, float text_offset_top, float text_off
 void StrafeHUD_DrawJumpHeight(entity e, bool onground, bool swimming, float text_offset_top, float text_offset_bottom)
 {
 	float length_conversion_factor = StrafeHUD_GetLengthUnitFactor(autocvar_hud_speed_unit);
-	static float height_min = 0, height_max = 0; // ground and peak of jump z coordinates
 	static float jumpheight = 0, jumptime = 0;   // displayed value and timestamp for fade out
 
 	// tries to catch kill and spectate but those are not reliable
 	if((e.velocity.z <= 0) || onground || swimming || IS_DEAD(e) || !IS_PLAYER(e))
 	{
-		height_min = height_max = e.origin.z;
+		jumpheight_min = jumpheight_max = e.origin.z;
 	}
-	else if(e.origin.z > height_max)
+	else if(e.origin.z > jumpheight_max)
 	{
-		height_max = e.origin.z;
-		float jumpheight_new = height_max - height_min;
+		jumpheight_max = e.origin.z;
+		float jumpheight_new = jumpheight_max - jumpheight_min;
 
 		if((jumpheight_new * length_conversion_factor) > max(autocvar_hud_panel_strafehud_jumpheight_min, 0))
 		{
