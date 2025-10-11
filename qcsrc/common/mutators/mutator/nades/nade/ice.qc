@@ -46,7 +46,7 @@ void nade_ice_think(entity this)
 
 	if (time >= this.nade_special_time)
 	{
-		this.nade_special_time = time + 0.7;
+		this.nade_special_time = time + 0.3;
 
 		Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
 		Send_Effect(EFFECT_ICEFIELD, this.origin, '0 0 0', 1);
