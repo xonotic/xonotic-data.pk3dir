@@ -2,6 +2,7 @@
 
 float autocvar_g_ca_damage2score = 100;
 int autocvar_g_ca_prevent_stalemate;
+float autocvar_g_ca_round_enddelay;
 
 float autocvar_g_ca_start_health = 200;
 float autocvar_g_ca_start_armor = 200;
@@ -137,7 +138,6 @@ int CA_PreventStalemate()
 	return -2; // Equality. Can't avoid the stalemate.
 }
 
-float autocvar_g_ca_round_enddelay = 1;
 float CA_CheckWinner()
 {
 	int winner_team = 0;
