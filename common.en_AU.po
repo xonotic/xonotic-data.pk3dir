@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-07 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Stuart Young <cefiar@gmail.com>, 2016\n"
+"Last-Translator: k9er, 2024-2025\n"
 "Language-Team: English (Australia) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/en_AU/)\n"
 "Language: en_AU\n"
@@ -1993,6 +1993,9 @@ msgid ""
 "points for collecting a key, fragging an enemy key carrier, and fragging "
 "other enemies."
 msgstr ""
+"Scoring in %s is quite complicated, involving a mix of gathering all keys, "
+"points for collecting a key, fragging an enemy key carrier and fragging "
+"other enemies."
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:13
 #, c-format
@@ -2129,6 +2132,9 @@ msgid ""
 "kick it around, or basketball where players have a %s so they can pass the "
 "ball and intercept passes."
 msgstr ""
+"%s is usually played as either soccer where players walk into the ball to "
+"kick it around, or basketball where players have a %s so they can pass the "
+"ball and intercept passes."
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:12
 msgid ""
@@ -3571,6 +3577,8 @@ msgid ""
 "Similar to the %s, your weapon magazines remain full while you are inside "
 "the orb, so you don't need to reload."
 msgstr ""
+"Similar to the %s, your weapon magazines remain full while you are inside "
+"the orb, so you don't need to reload."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:21
 msgid "Ammo grenade"
@@ -8859,7 +8867,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/tuba.qc:606
 #, c-format
 msgid "The pitch the %s plays depends on the movement keys pressed."
-msgstr ""
+msgstr "The pitch the %s plays depends on the movement keys pressed."
 
 #: qcsrc/common/weapons/weapon/tuba.qh:35
 #, no-c-format
