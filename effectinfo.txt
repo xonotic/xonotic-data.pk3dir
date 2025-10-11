@@ -2513,47 +2513,47 @@ effect poisonfield
 effect darkfield
 	type smoke
 	airfriction 1
-	alpha 256 256 50
+	alpha 256 256 100
 	bounce 1.500000
 	color 0x600089 0x000000
-	count 10
-	gravity -0.010000
+	count 6
+	gravity -0.020000
 	originjitter 333 333 0
-	sizeincrease 10
+	sizeincrease 20
 	size 1 1
 	tex 0 8
-	velocityjitter 5 5 30
+	velocityjitter 10 10 50
 effect darkfield
 	type smoke
-	alpha 256 256 50
+	alpha 256 256 100
 	color 0x600089 0x000000
-	count 5
-	gravity -0.001000
+	count 3
+	gravity -0.002000
 	originjitter 333 333 0
-	sizeincrease 10
+	sizeincrease 20
 	size 1 1
 	tex 48 55
 effect icefield
 	type smoke
 	airfriction 1
-	alpha 256 256 50
+	alpha 256 256 100
 	bounce 1.500000
 	color 0x008aff 0x75e7ff
-	count 10
-	gravity -0.010000
+	count 6
+	gravity -0.020000
 	originjitter 333 333 0
-	sizeincrease 10
+	sizeincrease 20
 	size 1 1
 	tex 0 8
-	velocityjitter 5 5 30
+	velocityjitter 10 10 50
 effect icefield
 	type smoke
-	alpha 256 256 50
+	alpha 256 256 100
 	color 0x008aff 0x75e7ff
-	count 5
-	gravity -0.001000
+	count 3
+	gravity -0.002000
 	originjitter 333 333 0
-	sizeincrease 10
+	sizeincrease 20
 	size 1 1
 	tex 48 55
 effect firefield

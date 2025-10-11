@@ -42,7 +42,7 @@ void nade_darkness_think(entity this)
 
 	if (time >= this.nade_special_time)
 	{
-		this.nade_special_time = time + 0.7;
+		this.nade_special_time = time + 5/16; // 0.3125
 		Send_Effect(EFFECT_DARKFIELD, this.origin, '0 0 0', 1);
 	}
 
