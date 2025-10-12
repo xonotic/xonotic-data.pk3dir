@@ -9,6 +9,7 @@ float autocvar_g_freezetag_round_timelimit;
 //int autocvar_g_freezetag_teams;
 int autocvar_g_freezetag_teams_override;
 float autocvar_g_freezetag_warmup;
+float autocvar_g_freezetag_round_enddelay;
 
 float autocvar_g_ft_start_health = 100;
 float autocvar_g_ft_start_armor = 100;
@@ -82,7 +83,6 @@ bool freezetag_CheckTeams()
 	return false;
 }
 
-float autocvar_g_freezetag_round_enddelay = 1;
 bool freezetag_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
