@@ -6,9 +6,6 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	if (dt <= 0)
 		return;
 
-	if (GAMEPLAYFIX_UNSTICKPLAYERS(this))
-		_Movetype_CheckStuck(this);
-
 	bool applygravity = !_Movetype_CheckWater(this) && (this.move_movetype == MOVETYPE_WALK || this.move_movetype == MOVETYPE_STEP) && !(this.flags & FL_WATERJUMP);
 	vector start_velocity = this.velocity;
 
