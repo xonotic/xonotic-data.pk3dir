@@ -102,7 +102,7 @@ void Physics_UpdateStats(entity this)
 		STAT(PL_MAX, this)             = '16 16 36';
 		STAT(PL_VIEW_OFS, this)        = '0 0 30';
 		STAT(PL_CROUCH_MIN, this)      = '-16 -16 -20';
-		// Q1BSP has no cliphull to support crouching so disable it there, see PM_ClientMovement_UpdateStatus().
+		// Q1BSP has no cliphull to support crouching so disable it there, see PM_CheckDuck().
 		STAT(PL_CROUCH_MAX, this)      = autocvar_sv_mapformat_is_quake2 ? '16 16 20' : STAT(PL_MAX, this);
 		STAT(PL_CROUCH_VIEW_OFS, this) = autocvar_sv_mapformat_is_quake2 ? '0 0 16'   : STAT(PL_VIEW_OFS, this);
 	}
@@ -171,7 +171,7 @@ float GeomLerp(float a, float _lerp, float b)
 		: a * (fabs(b / a) ** _lerp);
 }
 
-void PM_ClientMovement_UpdateStatus(entity this)
+void PM_CheckDuck(entity this, bool do_crouch)
 {
 	if(!IS_PLAYER(this))
 		return;
@@ -192,7 +192,6 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		}
 	}
 
-	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
 	if(this.viewloc && !(this.viewloc.spawnflags & VIEWLOC_FREEMOVE) && PHYS_CS(this).movement.x < 0)
 		do_crouch = true;
 	if (have_hook)
@@ -732,6 +731,66 @@ void PM_check_blocked(entity this)
 #endif
 }
 
+/// This uses several methods and assumes the player was already found to be stuck.
+int PM_CorrectStuck(entity this)
+{
+	if (!GAMEPLAYFIX_UNSTICKPLAYERS(this))
+		return false;
+
+	#ifdef SVQC
+	vector org = this.origin;
+	bool dospam = !autocvar_sv_dedicated && this.velocity;
+	#endif
+
+	// bones_was_here: some Q3 maps have teleporters that put players partially in the ground,
+	// they appear to work correctly in Q3 because it allows stepping up out of the ground!
+	// Not bothering with the PHYS_STEPTYPE conditions here for simplicity.
+	// Faster than other methods when it works and sometimes assists them when it doesn't.
+	_Movetype_PushEntityTrace(this, '0 0 18');
+	this.origin = trace_endpos;
+	_Movetype_PushEntityTrace(this, '0 0 -18');
+	this.origin = trace_endpos;
+	if (!trace_startsolid)
+	{
+		#ifdef SVQC
+		if (dospam && !Q3COMPAT_COMMON) // in Q3, this is fine
+			LOG_WARNF("fixed stuck %s '%s' by stepping up from '%v' to '%v'\n", this.classname, this.netname, org, this.origin);
+		#endif
+		return true;
+	}
+
+	// Try a smaller bbox as it may be less stuck, also this allows teleporting into crouch-only spaces.
+	if (!IS_DUCKED(this))
+		PM_CheckDuck(this, true);
+
+	switch (nudgeoutofsolid_OrFallback(this))
+	{
+		case UNSTICK_STUCK:
+			// FIXME nudgeoutofsolid() seems unable to unstick from bmodel movers that don't exist in CSQC,
+			// this is slower but can handle that case.
+			if (_Movetype_UnstickEntity(this) == UNSTICK_FIXED)
+			{
+				#ifdef SVQC
+				if (dospam)
+					LOG_WARNF("fixed stuck %s '%s' by unsticking from '%v' to '%v'\n", this.classname, this.netname, org, this.origin);
+				#endif
+				return true;
+			}
+			#ifdef SVQC
+			if (dospam)
+				LOG_WARNF("FAILED to fix stuck %s '%s' at '%v'\n", this.classname, this.netname, this.origin);
+			#endif
+			return false;
+		case UNSTICK_FIXED:
+			#ifdef SVQC
+			if (dospam)
+				LOG_WARNF("fixed stuck %s '%s' by nudging from '%v' to '%v'\n", this.classname, this.netname, org, this.origin);
+			#endif
+		case UNSTICK_FINE: // don't spam if ducking was sufficient
+	}
+	return true;
+}
+
 /// Timer and prediction updates for CPMA double jumping and Q3 skimming
 void PM_DropTimers(entity this, float dt)
 {
@@ -814,6 +873,15 @@ int PM_GroundTrace(entity this, vector previous_velocity, bool do_touch)
 	int clip = 0;
 
 	_Movetype_PushEntityTrace(this, '0 0 -0.25'); // same distance as in Q3's PM_GroundTrace()
+
+	// Q3: do something corrective if the trace starts in a solid...
+	// bones_was_here: this works around https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/2745
+	if (trace_startsolid)
+	{
+		if (!PM_CorrectStuck(this))
+			return 0;
+		_Movetype_PushEntityTrace(this, '0 0 -0.25');
+	}
 
 	// Q3: if the trace didn't hit anything, we are in free fall
 	if (trace_fraction == 1

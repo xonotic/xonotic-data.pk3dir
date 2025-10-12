@@ -122,10 +122,10 @@ void set_movetype(entity this, int mt);
 .float move_suspendedinair;
 .float move_didgravity;
 
-// unsticking
-const int UNSTICK_FINE = 0;
+// these must match DP_QC_NUDGEOUTOFSOLID return values
+const int UNSTICK_FINE = -1;
 const int UNSTICK_FIXED = 1;
-const int UNSTICK_STUCK = 2;
+const int UNSTICK_STUCK = 0;
 
 bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot);
 int _Movetype_FlyMove(entity this, float dt, bool applygravity, float stepheight);
