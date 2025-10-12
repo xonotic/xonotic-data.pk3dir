@@ -1,4 +1,4 @@
-#include "dialog_multiplayer_media_screenshot_viewer.qh"
+#include "dialog_media_screenshot_viewer.qh"
 
 #include "screenshotlist.qh"
 #include "inputbox.qh"

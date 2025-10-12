@@ -1,0 +1,13 @@
+#pragma once
+
+#include "dialog.qh"
+CLASS(XonoticMediaDialog, XonoticDialog)
+	METHOD(XonoticMediaDialog, fill, void(entity));
+	ATTRIB(XonoticMediaDialog, title, string, _("Media"));
+	ATTRIB(XonoticMediaDialog, name, string, "media");
+	ATTRIB(XonoticMediaDialog, tooltip, string, _("Read the guide, listen to Xonotic music tracks, and view your demos and screenshots"));
+	ATTRIB(XonoticMediaDialog, color, vector, SKINCOLOR_DIALOG_MEDIA);
+	ATTRIB(XonoticMediaDialog, intendedWidth, float, 0.96);
+	ATTRIB(XonoticMediaDialog, rows, float, 18);
+	ATTRIB(XonoticMediaDialog, columns, float, 6);
+ENDCLASS(XonoticMediaDialog)

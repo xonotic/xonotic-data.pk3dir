@@ -1,4 +1,4 @@
-#include "dialog_multiplayer_media_demo.qh"
+#include "dialog_media_demo.qh"
 
 #include "demolist.qh"
 #include "textlabel.qh"
@@ -38,20 +38,20 @@ void XonoticDemoBrowserTab_fill(entity me)
 	entity e;
 	demolist = makeXonoticDemoList();
 
-	me.TR(me);
+	me.gotoRC(me, 0.5, 0); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(1, _("Filter:")));
 		me.TD(me, 1, 2.9, e = makeXonoticInputBox(0, string_null));
 			e.onChange = DemoList_Filter_Change;
 			e.onChangeEntity = demolist;
 
-	me.gotoRC(me, 0, 3.7);
+	me.gotoRC(me, 0.5, 3.7);
 		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "cl_autodemo", _("Auto record demos")));
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Refresh"), '0 0 0'));
 			e.onClick = DemoList_Refresh_Click;
 			e.onClickEntity = demolist;
 
-	me.gotoRC(me, 1.5, 0);
-		me.TD(me, me.rows - 2.5, me.columns, demolist);
+	me.gotoRC(me, 2, 0);
+		me.TD(me, me.rows - 3, me.columns, demolist);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns / 2, e = makeXonoticButton_T(_("Timedemo"), '0 0 0',
