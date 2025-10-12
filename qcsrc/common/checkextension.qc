@@ -38,18 +38,18 @@ void CheckEngineExtensions(void)
 	if (!checkextension("DP_CRYPTO"))
 		LOG_WARN("Engine lacks DP_CRYPTO, Player IDs (required for XonStat, CTS/CTF records and pubkey authentication) are unavailable.");
 
-#ifdef SVQC // change to GAMEQC if/when we use nudgeoutofsolid in CSQC
+#ifdef GAMEQC
 	if (checkextension("DP_QC_NUDGEOUTOFSOLID"))
-	{
 		nudgeoutofsolid_OrFallback = nudgeoutofsolid;
-	}
 	else
 	{
 		LOG_WARN("Engine lacks DP_QC_NUDGEOUTOFSOLID, falling back to WarpZoneLib_MoveOutOfSolid().");
 		// DP_QC_NUDGEOUTOFSOLID fixes many cases WarpZoneLib_MoveOutOfSolid() can't, usually in less CPU time
 		nudgeoutofsolid_OrFallback = WarpZoneLib_MoveOutOfSolid;
 	}
+#endif
 
+#ifdef SVQC
 	if (!world.fullspawndata)
 		LOG_WARN("Engine lacks entity fullspawndata, on Quake 3 maps some entities will malfunction.");
 
