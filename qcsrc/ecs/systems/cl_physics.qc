@@ -5,7 +5,7 @@ void sys_phys_fix(entity this, float dt)
 	this.team = myteam + 1; // is this correct?
 	this.movement = PHYS_INPUT_MOVEVALUES(this);
 	this.items = STAT(ITEMS, this);
-	PM_ClientMovement_UpdateStatus(this);
+	PM_CheckDuck(this, PHYS_INPUT_BUTTON_CROUCH(this));
 }
 
 bool sys_phys_override(entity this, float dt)

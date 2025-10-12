@@ -103,7 +103,7 @@ void sys_phys_update(entity this, float dt)
 
 	// These funcs must be called here in this order,
 	// to set values needed in sys_phys_simulate() and _Movetype_Physics_Walk()
-	if (IS_PLAYER(this)) // bones_was_here: should this instead check for MOVETYPE_WALK ?
+	if (this.move_movetype == MOVETYPE_WALK)
 	{
 		PM_DropTimers(this, dt);
 		PM_GroundTrace(this, this.velocity, true);
