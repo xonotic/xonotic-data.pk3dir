@@ -108,7 +108,7 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, float ste
 	LABEL(ReapplyGravityContinue)
 	int numplanes;
 	float grav = 0;
-	vector restore_velocity = this.velocity;
+	vector previous_velocity = this.velocity;
 
 	if(applygravity)
 	{
@@ -147,11 +147,13 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, float ste
 			break;
 		}
 
-		// this code is used by MOVETYPE_WALK and MOVETYPE_STEP and SV_UnstickEntity
 		// abort move if we're stuck in the world (and didn't make it out)
-		if(trace_startsolid && trace_allsolid)
+		if (trace_allsolid)
 		{
-			this.velocity = restore_velocity;
+			if (PM_CorrectStuck(this))
+				continue; // retry from new position
+			this.velocity = '0 0 0'; // no Q3 wallbug type exploits plz
+			SET_ONGROUND(this); // disable gravity to limit spam
 			return 3;
 		}
 
@@ -246,7 +248,7 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, float ste
 					goto NoStep;
 
 				if ((PHYS_DOUBLEJUMP(this) && PHYS_INPUT_BUTTON_JUMP(this)) || PHYS_STEPTYPE(this) > 1)
-					clip = PM_GroundDetected(this, restore_velocity);
+					clip = PM_GroundDetected(this, previous_velocity);
 
 				if ((PHYS_DOUBLEJUMP(this) == 2 && PHYS_INPUT_BUTTON_JUMP(this)) || PHYS_STEPTYPE(this) > 1)
 				{
@@ -310,7 +312,7 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, float ste
 
 		if (trace_plane_normal.z > 0) // landed on a ground plane or got an edge collision
 		{
-			int clip = PM_GroundDetected(this, restore_velocity);
+			int clip = PM_GroundDetected(this, previous_velocity);
 
 			// frametime-independent jumping
 			if (PHYS_INPUT_BUTTON_JUMP(this) && (clip & 1)
@@ -688,14 +690,9 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	#undef X
 	{
 		if(_Movetype_TestEntityPosition_Offset(rint((this.maxs.z - this.mins.z) * 0.36)))
-		{
-			LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
-			etof(this), this.classname, vtos(this.origin));
 			return UNSTICK_STUCK;
-		}
 	}
-	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
-		etof(this), this.classname, vtos(this.origin));
+
 	_Movetype_LinkEdict(this, false);
 	return UNSTICK_FIXED;
 }
@@ -709,12 +706,13 @@ void _Movetype_CheckStuck(entity this)  // SV_CheckStuck
 			this.oldorigin = this.origin;
 			break;
 		case UNSTICK_FIXED:
+			LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)", etof(this), this.classname, vtos(this.origin));
 			break; // already sorted
 		case UNSTICK_STUCK:
 			vector offset = this.oldorigin - this.origin;
 			if(!_Movetype_TestEntityPosition(offset))
 				_Movetype_LinkEdict(this, false);
-			// couldn't unstick, should we warn about this?
+			LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)", etof(this), this.classname, vtos(this.origin));
 			break;
 	}
 }
