@@ -1,32 +1,39 @@
-#include "dialog_singleplayer_guide.qh"
+#include "dialog_media_guide.qh"
 
 #include "button.qh"
 #include "inputbox.qh"
 #include "textlabel.qh"
 #include <menu/xonotic/guide/entries.qh>
 
-void XonoticGuideDialog_fill(entity me)
+entity makeXonoticGuideTab()
+{
+	entity me;
+	me = NEW(XonoticGuideTab);
+	me.configureDialog(me);
+	return me;
+}
+void XonoticGuideTab_fill(entity me)
 {
 	entity e;
 
 	float col = 0;
 	float width = 1.5;
-	me.gotoRC(me, 0, col);
+	me.gotoRC(me, 0.5, col); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Topic")));
 	me.TR(me);
-		me.TD(me, me.rows - 2, width, e = me.topicList);
-			e.onChange = XonoticGuideDialog_topicChangeNotify;
+		me.TD(me, me.rows - 1.5, width, e = me.topicList);
+			e.onChange = XonoticGuideTab_topicChangeNotify;
 			e.onChangeEntity = me;
 
 	col += width;
 	width = 1.75;
-	me.gotoRC(me, 0, col); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0.5, col); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Entry")));
 	me.TR(me);
-		me.TD(me, me.rows - 3, width, e = me.entryList);
-			e.onChange = XonoticGuideDialog_entryChangeNotify;
+		me.TD(me, me.rows - 2.5, width, e = me.entryList);
+			e.onChange = XonoticGuideTab_entryChangeNotify;
 			e.onChangeEntity = me;
-	me.gotoRC(me, me.rows - 2, col);
+	me.gotoRC(me, me.rows - 1, col);
 		me.entryList.stringFilterBox = makeXonoticInputBox_T(false, string_null,
 			_("Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL to clear; ENTER when done."));
 		me.TD(me, 1, 0.3, makeXonoticTextLabel(0, _("Filter:")));
@@ -37,20 +44,15 @@ void XonoticGuideDialog_fill(entity me)
 
 	col += width;
 	width = 2.75;
-	me.gotoRC(me, 0, col); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0.5, col); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Description")));
 	me.TR(me);
-		me.TD(me, me.rows - 2, width, me.descriptionPane);
-
-	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
-			e.onClick = Dialog_Close;
-			e.onClickEntity = me;
+		me.TD(me, me.rows - 1.5, width, me.descriptionPane);
 
 	me.topicChangeNotify(me.topicList, me);
 }
 
-void XonoticGuideDialog_topicChangeNotify(entity, entity me)
+void XonoticGuideTab_topicChangeNotify(entity, entity me)
 {
 	entity entries = me.entryList;
 	const int i = me.topicList.selectedItem;
@@ -73,7 +75,7 @@ void XonoticGuideDialog_topicChangeNotify(entity, entity me)
 	entries.stringFilterBox.setText(entries.stringFilterBox, "");
 	EntryList_StringFilterBox_Change(entries.stringFilterBox, entries); // this calls entries.refilter, which calls entries.setSelected, which calls entryChangeNotify
 }
-void XonoticGuideDialog_entryChangeNotify(entity, entity me)
+void XonoticGuideTab_entryChangeNotify(entity, entity me)
 {
 	entity entries = me.entryList;
 	if (entries.nItems <= 0)

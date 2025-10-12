@@ -1,6 +1,6 @@
-#include "dialog_multiplayer_media_screenshot.qh"
+#include "dialog_media_screenshot.qh"
 
-#include "dialog_multiplayer_media_screenshot_viewer.qh"
+#include "dialog_media_screenshot_viewer.qh"
 #include "screenshotlist.qh"
 
 #include "textlabel.qh"
@@ -26,10 +26,8 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 {
 	entity e, slist;
 	slist = makeXonoticScreenshotList();
-	float slist_height = me.rows - 2;
 
-
-	me.TR(me);
+	me.gotoRC(me, 0.5, 0); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(1, _("Filter:")));
 		me.TD(me, 1, 2.4, e = makeXonoticInputBox(0, string_null));
 			e.onChange = ScreenshotList_Filter_Would_Change;
@@ -37,7 +35,7 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 			slist.screenshotViewerDialog = main.screenshotViewerDialog;
 			main.screenshotViewerDialog.scrList = slist;
 
-	me.gotoRC(me, 0, 3.1);
+	me.gotoRC(me, 0.5, 3.1);
 		me.TD(me, 1, 1.9, e = makeXonoticCheckBoxEx(2, 1, "cl_autoscreenshot", _("Auto screenshot scoreboard")));
 			e.sendCvars = true;
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Refresh"), '0 0 0'));
@@ -55,10 +53,10 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 			e.onClick = ScreenshotList_Refresh_Click;
 			e.onClickEntity = slist;*/
 
-	me.gotoRC(me, 1.5, 0);
-		me.TD(me, me.rows - 2.5, me.columns, slist);
+	me.gotoRC(me, 2, 0);
+		me.TD(me, me.rows - 3, me.columns, slist);
 
-	me.gotoRC(me, slist_height + 1, 0);
+	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Open in the viewer"), '0 0 0'));
 			e.onClick = StartScreenshot_Click;
 			e.onClickEntity = slist;

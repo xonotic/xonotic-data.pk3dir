@@ -1,7 +1,7 @@
 #include "screenshotlist.qh"
 
-#include "dialog_multiplayer_media_screenshot.qh"
-#include "dialog_multiplayer_media_screenshot_viewer.qh"
+#include "dialog_media_screenshot.qh"
+#include "dialog_media_screenshot_viewer.qh"
 #include "inputbox.qh"
 #include "../item/modalcontroller.qh"
 
