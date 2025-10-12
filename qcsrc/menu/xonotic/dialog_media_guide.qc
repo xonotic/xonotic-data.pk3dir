@@ -19,18 +19,14 @@ void XonoticGuideTab_fill(entity me)
 	float col = 0;
 	float width = 1.5;
 	me.gotoRC(me, 0.5, col); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Topic")));
-	me.TR(me);
-		me.TD(me, me.rows - 1.5, width, e = me.topicList);
+		me.TD(me, me.rows - 0.5, width, e = me.topicList);
 			e.onChange = XonoticGuideTab_topicChangeNotify;
 			e.onChangeEntity = me;
 
 	col += width;
 	width = 1.75;
 	me.gotoRC(me, 0.5, col); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Entry")));
-	me.TR(me);
-		me.TD(me, me.rows - 2.5, width, e = me.entryList);
+		me.TD(me, me.rows - 1.5, width, e = me.entryList);
 			e.onChange = XonoticGuideTab_entryChangeNotify;
 			e.onChangeEntity = me;
 	me.gotoRC(me, me.rows - 1, col);
@@ -45,9 +41,7 @@ void XonoticGuideTab_fill(entity me)
 	col += width;
 	width = 2.75;
 	me.gotoRC(me, 0.5, col); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, width, makeXonoticHeaderLabel(_("Description")));
-	me.TR(me);
-		me.TD(me, me.rows - 1.5, width, me.descriptionPane);
+		me.TD(me, me.rows - 0.5, width, me.descriptionPane);
 
 	me.topicChangeNotify(me.topicList, me);
 }
