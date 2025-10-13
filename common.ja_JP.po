@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 07:22+0200\n"
+"POT-Creation-Date: 2025-10-13 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021,2024\n"
 "Language-Team: Japanese (Japan) (http://app.transifex.com/team-xonotic/"
@@ -1220,8 +1220,8 @@ msgstr "^1HUDを構成する"
 
 #: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:30
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:18
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:18
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:14
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:26
@@ -1232,8 +1232,8 @@ msgstr "はい"
 
 #: qcsrc/client/hud/panel/vote.qc:133 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:33
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:21
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:21
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:29
@@ -2382,7 +2382,7 @@ msgid "Exit Menu"
 msgstr "終了メニュー"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:442
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
 msgid "Create"
 msgstr "作成する"
 
@@ -8724,7 +8724,6 @@ msgstr "読み取り専用"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:228
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:91
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:77
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:46
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
 msgstr "OK"
@@ -8806,12 +8805,12 @@ msgid "Main menu"
 msgstr "メインメニュー"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:46
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:13
 msgid "Servers"
 msgstr "サーバー"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:49
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:19
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:17
 msgid "Profile"
 msgstr "プロフィール"
 
@@ -8826,8 +8825,8 @@ msgid "Input"
 msgstr "インプット"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:58
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:159
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qh:7
+#: qcsrc/menu/xonotic/dialog_media.qc:13
+#: qcsrc/menu/xonotic/dialog_media_guide.qh:7
 msgid "Guide"
 msgstr ""
 
@@ -9568,20 +9567,20 @@ msgid "HUD skins"
 msgstr "HUDスキン"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:49
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:42
+#: qcsrc/menu/xonotic/dialog_media_guide.qc:35
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:25
+#: qcsrc/menu/xonotic/dialog_media_screenshot.qc:31
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:161
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:36
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:42
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:25
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:32
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:32
 msgid "Filter:"
 msgstr "フィルター:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:57
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:49
+#: qcsrc/menu/xonotic/dialog_media_screenshot.qc:41
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:59
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:49
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:43
 msgid "Refresh"
 msgstr "更新する"
 
@@ -9693,6 +9692,147 @@ msgstr "パネルHUDセットアップ"
 msgid "Reset HUD skin"
 msgstr ""
 
+#: qcsrc/menu/xonotic/dialog_media.qc:14
+msgid "Demos"
+msgstr "デモ"
+
+#: qcsrc/menu/xonotic/dialog_media.qc:15
+msgid "Screenshots"
+msgstr "スクリーンショット"
+
+#: qcsrc/menu/xonotic/dialog_media.qc:16
+msgid "Music Player"
+msgstr "音楽プレーヤー"
+
+#: qcsrc/menu/xonotic/dialog_media.qh:6
+msgid "Media"
+msgstr "メディア"
+
+#: qcsrc/menu/xonotic/dialog_media.qh:8
+msgid ""
+"Read the guide, listen to Xonotic music tracks, and view your demos and "
+"screenshots"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:48
+msgid "Auto record demos"
+msgstr "自動録画デモ"
+
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:57
+msgid "Timedemo"
+msgstr "最高速度でデモを再生する"
+
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:58
+msgid "Benchmark how fast your computer can run the highlighted demo"
+msgstr ""
+"お使いのコンピューターが強調表示されたデモを実行できる速度をベンチマークしま"
+"す"
+
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:62
+msgid "DEMO^Play"
+msgstr "再生する"
+
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:13
+msgid "Playing a demo will disconnect you from the current match."
+msgstr "デモを再生すると、現在の試合から切断されます。"
+
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:15
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:15
+msgid "Do you really wish to disconnect now?"
+msgstr "本当に切断しますか?"
+
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qh:6
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qh:6
+msgid "Disconnect"
+msgstr "切断"
+
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:13
+msgid "Timing a demo will disconnect you from the current match."
+msgstr "デモのタイミングをとると、現在の試合から切り離されます。"
+
+#: qcsrc/menu/xonotic/dialog_media_guide.qc:34
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:163
+msgid ""
+"Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
+"to clear; ENTER when done."
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:37
+msgid "MUSICPL^Add"
+msgstr "追加する"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:40
+msgid "MUSICPL^Add all"
+msgstr "全て追加する"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:44
+msgid "Set as menu track"
+msgstr "メニュートラックとして設定する"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:48
+msgid "Reset default menu track"
+msgstr "デフォルトのメニュートラックをリセットする"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:54
+msgid "Playlist:"
+msgstr "プレイリスト:"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:55
+msgid "Random order"
+msgstr "ランダム順序"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:60
+msgid "MUSICPL^Stop"
+msgstr "停止する"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:63
+msgid "MUSICPL^Play"
+msgstr "再生する"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:66
+msgid "MUSICPL^Pause"
+msgstr "一時停止する"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:69
+msgid "MUSICPL^Prev"
+msgstr "前"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:72
+msgid "MUSICPL^Next"
+msgstr "次"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:76
+msgid "MUSICPL^Remove"
+msgstr "削除する"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:79
+msgid "MUSICPL^Remove all"
+msgstr "全て削除する"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot.qc:39
+msgid "Auto screenshot scoreboard"
+msgstr "自動スクリーンショット得点表"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot.qc:60
+msgid "Open in the viewer"
+msgstr "ビューアで開く"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:139
+msgid "Reset"
+msgstr "リセットする"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:144
+msgid "Previous"
+msgstr "前"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:147
+msgid "Next"
+msgstr "次"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:152
+msgid "Slide show"
+msgstr "スライドショー"
+
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
 msgstr "モンスター:"
@@ -9739,28 +9879,21 @@ msgstr "スキンを設定する:"
 msgid "Monster Tools"
 msgstr "モンスターツール"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
 msgid "Find servers to play on"
 msgstr "遊ぶためにサーバーを見つける"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:17
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
 msgid "Host your own game"
 msgstr "自分のゲームを作成する"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:18
-msgid "Media"
-msgstr "メディア"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:6
 msgid "Multiplayer"
 msgstr "マルチプレイ"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
-msgid ""
-"Play online, against your friends in LAN, view demos or change player "
-"settings"
+msgid "Play online, against your friends in LAN, or change player settings"
 msgstr ""
-"オンラインで遊ぶ、LANの友達と対決、デモを表示するか、プレイヤー設定を変更"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
@@ -9902,13 +10035,6 @@ msgstr "ミューテーターと武器アリーナ"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:153
 msgid "Maplist"
 msgstr "マップリスト"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:163
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:31
-msgid ""
-"Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
-"to clear; ENTER when done."
-msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:172
 msgid "Add shown"
@@ -10338,130 +10464,6 @@ msgstr "状態:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
 msgstr "サーバー情報"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:25
-msgid "Demos"
-msgstr "デモ"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:26
-msgid "Screenshots"
-msgstr "スクリーンショット"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:27
-msgid "Music Player"
-msgstr "音楽プレーヤー"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:48
-msgid "Auto record demos"
-msgstr "自動録画デモ"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:57
-msgid "Timedemo"
-msgstr "最高速度でデモを再生する"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:58
-msgid "Benchmark how fast your computer can run the highlighted demo"
-msgstr ""
-"お使いのコンピューターが強調表示されたデモを実行できる速度をベンチマークしま"
-"す"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:62
-msgid "DEMO^Play"
-msgstr "再生する"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:13
-msgid "Playing a demo will disconnect you from the current match."
-msgstr "デモを再生すると、現在の試合から切断されます。"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:15
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:15
-msgid "Do you really wish to disconnect now?"
-msgstr "本当に切断しますか?"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qh:6
-msgid "Disconnect"
-msgstr "切断"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
-msgid "Timing a demo will disconnect you from the current match."
-msgstr "デモのタイミングをとると、現在の試合から切り離されます。"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:37
-msgid "MUSICPL^Add"
-msgstr "追加する"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:40
-msgid "MUSICPL^Add all"
-msgstr "全て追加する"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:44
-msgid "Set as menu track"
-msgstr "メニュートラックとして設定する"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:48
-msgid "Reset default menu track"
-msgstr "デフォルトのメニュートラックをリセットする"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:54
-msgid "Playlist:"
-msgstr "プレイリスト:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:55
-msgid "Random order"
-msgstr "ランダム順序"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:60
-msgid "MUSICPL^Stop"
-msgstr "停止する"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:63
-msgid "MUSICPL^Play"
-msgstr "再生する"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:66
-msgid "MUSICPL^Pause"
-msgstr "一時停止する"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:69
-msgid "MUSICPL^Prev"
-msgstr "前"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:72
-msgid "MUSICPL^Next"
-msgstr "次"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:76
-msgid "MUSICPL^Remove"
-msgstr "削除する"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:79
-msgid "MUSICPL^Remove all"
-msgstr "全て削除する"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:41
-msgid "Auto screenshot scoreboard"
-msgstr "自動スクリーンショット得点表"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:62
-msgid "Open in the viewer"
-msgstr "ビューアで開く"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:139
-msgid "Reset"
-msgstr "リセットする"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:144
-msgid "Previous"
-msgstr "前"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:147
-msgid "Next"
-msgstr "次"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:152
-msgid "Slide show"
-msgstr "スライドショー"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:38
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:22
@@ -12194,8 +12196,8 @@ msgid "This will create a backup config in your data directory"
 msgstr "これによりデータディレクトリにバックアップ構成が作成されます"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
-msgid "Menu Skins"
-msgstr "メニュースキン"
+msgid "Menu Skin"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"
@@ -12500,27 +12502,27 @@ msgstr "FPSを表示する"
 msgid "Show your rendered frames per second"
 msgstr "レンダリングしたFPSを表示する"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:156
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:149
 msgid "Instant action with bots!"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:181
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:169
 msgid "Campaign Difficulty:"
 msgstr "キャンペーンの難易度:"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:182
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:170
 msgid "CSKL^Easy"
 msgstr "簡単"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:183
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:171
 msgid "CSKL^Medium"
 msgstr "中"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:184
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:172
 msgid "CSKL^Hard"
 msgstr "難い"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:189
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
 msgstr "キャンペーンを遊ぶ！"
 
@@ -12529,22 +12531,10 @@ msgid "Singleplayer"
 msgstr "シングルプレイ"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
-msgid ""
-"Play the singleplayer campaign or instant action matches against bots, or "
-"read the guide"
+msgid "Play the singleplayer campaign or instant action matches against bots"
 msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:15
-msgid "Topic"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:24
-msgid "Entry"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:41
-msgid "Description"
-msgstr ""
+"ボットに対してシングルプレイヤーキャンペーンまたはインスタントアクションマッ"
+"チを遊ぶ"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"

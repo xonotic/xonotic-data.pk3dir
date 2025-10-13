@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 07:22+0200\n"
+"POT-Creation-Date: 2025-10-13 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (http://app.transifex.com/team-xonotic/"
@@ -1230,8 +1230,8 @@ msgstr "^1配置HUD"
 
 #: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:30
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:18
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:18
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:14
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:26
@@ -1242,8 +1242,8 @@ msgstr "是"
 
 #: qcsrc/client/hud/panel/vote.qc:133 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:33
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:21
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:21
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:29
@@ -2388,7 +2388,7 @@ msgid "Exit Menu"
 msgstr "退出菜单"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:442
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
 msgid "Create"
 msgstr "创建"
 
@@ -8704,7 +8704,6 @@ msgstr "只读"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:228
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:91
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:77
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:46
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
 msgstr "完成"
@@ -8782,12 +8781,12 @@ msgid "Main menu"
 msgstr "主菜单"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:46
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:13
 msgid "Servers"
 msgstr "服务器"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:49
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:19
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:17
 msgid "Profile"
 msgstr "用户档案"
 
@@ -8802,8 +8801,8 @@ msgid "Input"
 msgstr "输入"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:58
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:159
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qh:7
+#: qcsrc/menu/xonotic/dialog_media.qc:13
+#: qcsrc/menu/xonotic/dialog_media_guide.qh:7
 msgid "Guide"
 msgstr ""
 
@@ -9544,20 +9543,20 @@ msgid "HUD skins"
 msgstr "HUD 皮肤"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:49
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:42
+#: qcsrc/menu/xonotic/dialog_media_guide.qc:35
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:25
+#: qcsrc/menu/xonotic/dialog_media_screenshot.qc:31
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:161
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:36
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:42
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:25
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:32
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:32
 msgid "Filter:"
 msgstr "筛选："
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:57
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:49
+#: qcsrc/menu/xonotic/dialog_media_screenshot.qc:41
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:59
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:49
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:43
 msgid "Refresh"
 msgstr "刷新"
 
@@ -9667,6 +9666,145 @@ msgstr "HUD 配置面板"
 msgid "Reset HUD skin"
 msgstr "重置 HUD 皮肤"
 
+#: qcsrc/menu/xonotic/dialog_media.qc:14
+msgid "Demos"
+msgstr "演示"
+
+#: qcsrc/menu/xonotic/dialog_media.qc:15
+msgid "Screenshots"
+msgstr "屏幕截图"
+
+#: qcsrc/menu/xonotic/dialog_media.qc:16
+msgid "Music Player"
+msgstr "音乐播放器"
+
+#: qcsrc/menu/xonotic/dialog_media.qh:6
+msgid "Media"
+msgstr "媒体"
+
+#: qcsrc/menu/xonotic/dialog_media.qh:8
+msgid ""
+"Read the guide, listen to Xonotic music tracks, and view your demos and "
+"screenshots"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:48
+msgid "Auto record demos"
+msgstr "自动记录演示"
+
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:57
+msgid "Timedemo"
+msgstr "全速演示"
+
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:58
+msgid "Benchmark how fast your computer can run the highlighted demo"
+msgstr "对你的电脑播放所选演示的速度进行基准测试"
+
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:62
+msgid "DEMO^Play"
+msgstr "播放"
+
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:13
+msgid "Playing a demo will disconnect you from the current match."
+msgstr "播放演示将使你离开当前的竞赛"
+
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:15
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:15
+msgid "Do you really wish to disconnect now?"
+msgstr "你真的想要离开吗？"
+
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qh:6
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qh:6
+msgid "Disconnect"
+msgstr "断开连接"
+
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:13
+msgid "Timing a demo will disconnect you from the current match."
+msgstr "全速演示将使你离开当前的竞赛"
+
+#: qcsrc/menu/xonotic/dialog_media_guide.qc:34
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:163
+msgid ""
+"Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
+"to clear; ENTER when done."
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:37
+msgid "MUSICPL^Add"
+msgstr "添加"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:40
+msgid "MUSICPL^Add all"
+msgstr "添加全部"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:44
+msgid "Set as menu track"
+msgstr "设为菜单音轨"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:48
+msgid "Reset default menu track"
+msgstr "重设默认菜单音轨"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:54
+msgid "Playlist:"
+msgstr "播放列表："
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:55
+msgid "Random order"
+msgstr "随机点播"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:60
+msgid "MUSICPL^Stop"
+msgstr "停止"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:63
+msgid "MUSICPL^Play"
+msgstr "播放"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:66
+msgid "MUSICPL^Pause"
+msgstr "暂停"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:69
+msgid "MUSICPL^Prev"
+msgstr "上一首"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:72
+msgid "MUSICPL^Next"
+msgstr "下一首"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:76
+msgid "MUSICPL^Remove"
+msgstr "移除"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:79
+msgid "MUSICPL^Remove all"
+msgstr "全部移除"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot.qc:39
+msgid "Auto screenshot scoreboard"
+msgstr "自动截取记分板"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot.qc:60
+msgid "Open in the viewer"
+msgstr "在查看器中打开"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:139
+msgid "Reset"
+msgstr "重设"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:144
+msgid "Previous"
+msgstr "上一页"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:147
+msgid "Next"
+msgstr "下一页"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:152
+msgid "Slide show"
+msgstr "播放幻灯片"
+
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
 msgstr "怪物："
@@ -9713,27 +9851,21 @@ msgstr "设置皮肤："
 msgid "Monster Tools"
 msgstr "怪物工具"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
 msgid "Find servers to play on"
 msgstr "搜寻可供游玩的服务器"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:17
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
 msgid "Host your own game"
 msgstr "建立你自己的游戏服务"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:18
-msgid "Media"
-msgstr "媒体"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:6
 msgid "Multiplayer"
 msgstr "多人游戏"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
-msgid ""
-"Play online, against your friends in LAN, view demos or change player "
-"settings"
-msgstr "在线游戏，与局域网中的朋友比拼，观看演示或更改玩家设置"
+msgid "Play online, against your friends in LAN, or change player settings"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
@@ -9875,13 +10007,6 @@ msgstr "修改与武器竞技"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:153
 msgid "Maplist"
 msgstr "地图列表"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:163
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:31
-msgid ""
-"Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
-"to clear; ENTER when done."
-msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:172
 msgid "Add shown"
@@ -10297,128 +10422,6 @@ msgstr "状态："
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
 msgstr "服务器信息"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:25
-msgid "Demos"
-msgstr "演示"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:26
-msgid "Screenshots"
-msgstr "屏幕截图"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:27
-msgid "Music Player"
-msgstr "音乐播放器"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:48
-msgid "Auto record demos"
-msgstr "自动记录演示"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:57
-msgid "Timedemo"
-msgstr "全速演示"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:58
-msgid "Benchmark how fast your computer can run the highlighted demo"
-msgstr "对你的电脑播放所选演示的速度进行基准测试"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:62
-msgid "DEMO^Play"
-msgstr "播放"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:13
-msgid "Playing a demo will disconnect you from the current match."
-msgstr "播放演示将使你离开当前的竞赛"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:15
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:15
-msgid "Do you really wish to disconnect now?"
-msgstr "你真的想要离开吗？"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qh:6
-msgid "Disconnect"
-msgstr "断开连接"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
-msgid "Timing a demo will disconnect you from the current match."
-msgstr "全速演示将使你离开当前的竞赛"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:37
-msgid "MUSICPL^Add"
-msgstr "添加"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:40
-msgid "MUSICPL^Add all"
-msgstr "添加全部"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:44
-msgid "Set as menu track"
-msgstr "设为菜单音轨"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:48
-msgid "Reset default menu track"
-msgstr "重设默认菜单音轨"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:54
-msgid "Playlist:"
-msgstr "播放列表："
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:55
-msgid "Random order"
-msgstr "随机点播"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:60
-msgid "MUSICPL^Stop"
-msgstr "停止"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:63
-msgid "MUSICPL^Play"
-msgstr "播放"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:66
-msgid "MUSICPL^Pause"
-msgstr "暂停"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:69
-msgid "MUSICPL^Prev"
-msgstr "上一首"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:72
-msgid "MUSICPL^Next"
-msgstr "下一首"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:76
-msgid "MUSICPL^Remove"
-msgstr "移除"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:79
-msgid "MUSICPL^Remove all"
-msgstr "全部移除"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:41
-msgid "Auto screenshot scoreboard"
-msgstr "自动截取记分板"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:62
-msgid "Open in the viewer"
-msgstr "在查看器中打开"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:139
-msgid "Reset"
-msgstr "重设"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:144
-msgid "Previous"
-msgstr "上一页"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:147
-msgid "Next"
-msgstr "下一页"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:152
-msgid "Slide show"
-msgstr "播放幻灯片"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:38
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:22
@@ -12134,8 +12137,8 @@ msgid "This will create a backup config in your data directory"
 msgstr "这会在你的数据目录中创建一个备份的配置文件"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
-msgid "Menu Skins"
-msgstr "菜单皮肤"
+msgid "Menu Skin"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"
@@ -12426,27 +12429,27 @@ msgstr "显示每秒帧数"
 msgid "Show your rendered frames per second"
 msgstr "显示每秒渲染帧数"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:156
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:149
 msgid "Instant action with bots!"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:181
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:169
 msgid "Campaign Difficulty:"
 msgstr "战役难度："
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:182
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:170
 msgid "CSKL^Easy"
 msgstr "简单"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:183
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:171
 msgid "CSKL^Medium"
 msgstr "中等"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:184
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:172
 msgid "CSKL^Hard"
 msgstr "困难"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:189
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
 msgstr "开始战役！"
 
@@ -12455,22 +12458,8 @@ msgid "Singleplayer"
 msgstr "单人游戏"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
-msgid ""
-"Play the singleplayer campaign or instant action matches against bots, or "
-"read the guide"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:15
-msgid "Topic"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:24
-msgid "Entry"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:41
-msgid "Description"
-msgstr ""
+msgid "Play the singleplayer campaign or instant action matches against bots"
+msgstr "游玩单人战役，或者即刻行动对抗电脑玩家"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"

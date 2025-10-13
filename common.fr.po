@@ -21,9 +21,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 07:22+0200\n"
+"POT-Creation-Date: 2025-10-13 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025\n"
+"Last-Translator: Hugo Locurcio, 2013-2014\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -1256,8 +1256,8 @@ msgstr "^1Configurer l'ATH"
 
 #: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:30
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:18
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:18
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:14
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:26
@@ -1268,8 +1268,8 @@ msgstr "Oui"
 
 #: qcsrc/client/hud/panel/vote.qc:133 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:33
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:21
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:21
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_quit.qc:16
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:29
@@ -2653,7 +2653,7 @@ msgid "Exit Menu"
 msgstr "Quitter le menu"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:442
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
 msgid "Create"
 msgstr "Créer"
 
@@ -9164,7 +9164,6 @@ msgstr "lecture seule"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:228
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:91
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:77
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:46
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
 msgstr "OK"
@@ -9247,12 +9246,12 @@ msgid "Main menu"
 msgstr "Menu principal"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:46
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:13
 msgid "Servers"
 msgstr "Serveurs"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:49
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:19
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:17
 msgid "Profile"
 msgstr "Profil"
 
@@ -9267,8 +9266,8 @@ msgid "Input"
 msgstr "Contrôles"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:58
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:159
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qh:7
+#: qcsrc/menu/xonotic/dialog_media.qc:13
+#: qcsrc/menu/xonotic/dialog_media_guide.qh:7
 msgid "Guide"
 msgstr "Guide"
 
@@ -10012,20 +10011,20 @@ msgid "HUD skins"
 msgstr "Thèmes de l'ATH"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:49
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:42
+#: qcsrc/menu/xonotic/dialog_media_guide.qc:35
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:25
+#: qcsrc/menu/xonotic/dialog_media_screenshot.qc:31
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:161
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:36
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:42
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:25
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:32
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:32
 msgid "Filter:"
 msgstr "Filtre :"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:57
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:49
+#: qcsrc/menu/xonotic/dialog_media_screenshot.qc:41
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:59
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:49
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:43
 msgid "Refresh"
 msgstr "Rafraîchir"
 
@@ -10140,6 +10139,147 @@ msgstr "Configuration de l'ATH"
 msgid "Reset HUD skin"
 msgstr "Réinitialiser le thème de l'ATH"
 
+#: qcsrc/menu/xonotic/dialog_media.qc:14
+msgid "Demos"
+msgstr "Démos"
+
+#: qcsrc/menu/xonotic/dialog_media.qc:15
+msgid "Screenshots"
+msgstr "Captures d'écran"
+
+#: qcsrc/menu/xonotic/dialog_media.qc:16
+msgid "Music Player"
+msgstr "Lecteur de musique"
+
+#: qcsrc/menu/xonotic/dialog_media.qh:6
+msgid "Media"
+msgstr "Média"
+
+#: qcsrc/menu/xonotic/dialog_media.qh:8
+msgid ""
+"Read the guide, listen to Xonotic music tracks, and view your demos and "
+"screenshots"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:48
+msgid "Auto record demos"
+msgstr "Auto-enregistrement des démos"
+
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:57
+msgid "Timedemo"
+msgstr "Chronométrer la démo"
+
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:58
+msgid "Benchmark how fast your computer can run the highlighted demo"
+msgstr "Faire un test de performance en utilisant la démo sélectionnée"
+
+#: qcsrc/menu/xonotic/dialog_media_demo.qc:62
+msgid "DEMO^Play"
+msgstr "Jouer"
+
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:13
+msgid "Playing a demo will disconnect you from the current match."
+msgstr "Jouer une démo vous déconnectera de la partie actuelle."
+
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:15
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:15
+msgid "Do you really wish to disconnect now?"
+msgstr "Voulez-vous vraiment vous déconnecter ?"
+
+#: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qh:6
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qh:6
+msgid "Disconnect"
+msgstr "Se déconnecter"
+
+#: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:13
+msgid "Timing a demo will disconnect you from the current match."
+msgstr "Chronométrer une démo vous déconnectera de la partie actuelle."
+
+#: qcsrc/menu/xonotic/dialog_media_guide.qc:34
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:163
+msgid ""
+"Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
+"to clear; ENTER when done."
+msgstr ""
+"Cliquez ici ou appuyez sur Ctrl-F pour saisir un mot-clé afin d'affiner la "
+"liste ; Ctrl-Suppr pour effacer ; Entrée lorsque vous avez terminé."
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:37
+msgid "MUSICPL^Add"
+msgstr "Ajouter"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:40
+msgid "MUSICPL^Add all"
+msgstr "Tout ajouter"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:44
+msgid "Set as menu track"
+msgstr "Définir en tant que chanson du menu"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:48
+msgid "Reset default menu track"
+msgstr "Réinitialiser la chanson du menu par défaut"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:54
+msgid "Playlist:"
+msgstr "Liste de lecture :"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:55
+msgid "Random order"
+msgstr "Ordre aléatoire"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:60
+msgid "MUSICPL^Stop"
+msgstr "Stop"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:63
+msgid "MUSICPL^Play"
+msgstr "Lecture"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:66
+msgid "MUSICPL^Pause"
+msgstr "Pause"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:69
+msgid "MUSICPL^Prev"
+msgstr "Préc."
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:72
+msgid "MUSICPL^Next"
+msgstr "Suiv."
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:76
+msgid "MUSICPL^Remove"
+msgstr "Supprimer"
+
+#: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:79
+msgid "MUSICPL^Remove all"
+msgstr "Tout supprimer"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot.qc:39
+msgid "Auto screenshot scoreboard"
+msgstr "Auto-capture du tableau des scores"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot.qc:60
+msgid "Open in the viewer"
+msgstr "Ouvrir dans le visionneur"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:139
+msgid "Reset"
+msgstr "Réinitialiser"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:144
+msgid "Previous"
+msgstr "Précédente"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:147
+msgid "Next"
+msgstr "Suivante"
+
+#: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:152
+msgid "Slide show"
+msgstr "Diaporama"
+
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
 msgstr "Monstre :"
@@ -10186,29 +10326,21 @@ msgstr "Définir le thème :"
 msgid "Monster Tools"
 msgstr "Outils Monstres"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:14
 msgid "Find servers to play on"
 msgstr "Trouver des serveurs où jouer"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:17
+#: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
 msgid "Host your own game"
 msgstr "Héberger votre propre partie"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer.qc:18
-msgid "Media"
-msgstr "Média"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:6
 msgid "Multiplayer"
 msgstr "Multijoueur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
-msgid ""
-"Play online, against your friends in LAN, view demos or change player "
-"settings"
+msgid "Play online, against your friends in LAN, or change player settings"
 msgstr ""
-"Jouer en ligne, en LAN avec vos amis, voir vos démos et modifier vos "
-"paramètres joueur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
@@ -10352,15 +10484,6 @@ msgstr "Mutateurs et arènes avec une seule arme"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:153
 msgid "Maplist"
 msgstr "Liste des cartes"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:163
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:31
-msgid ""
-"Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
-"to clear; ENTER when done."
-msgstr ""
-"Cliquez ici ou appuyez sur Ctrl-F pour saisir un mot-clé afin d'affiner la "
-"liste ; Ctrl-Suppr pour effacer ; Entrée lorsque vous avez terminé."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:172
 msgid "Add shown"
@@ -10803,128 +10926,6 @@ msgstr "Statistiques :"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qh:6
 msgid "Server Information"
 msgstr "Informations sur le serveur"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:25
-msgid "Demos"
-msgstr "Démos"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:26
-msgid "Screenshots"
-msgstr "Captures d'écran"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:27
-msgid "Music Player"
-msgstr "Lecteur de musique"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:48
-msgid "Auto record demos"
-msgstr "Auto-enregistrement des démos"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:57
-msgid "Timedemo"
-msgstr "Chronométrer la démo"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:58
-msgid "Benchmark how fast your computer can run the highlighted demo"
-msgstr "Faire un test de performance en utilisant la démo sélectionnée"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:62
-msgid "DEMO^Play"
-msgstr "Jouer"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:13
-msgid "Playing a demo will disconnect you from the current match."
-msgstr "Jouer une démo vous déconnectera de la partie actuelle."
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:15
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:15
-msgid "Do you really wish to disconnect now?"
-msgstr "Voulez-vous vraiment vous déconnecter ?"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qh:6
-msgid "Disconnect"
-msgstr "Se déconnecter"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
-msgid "Timing a demo will disconnect you from the current match."
-msgstr "Chronométrer une démo vous déconnectera de la partie actuelle."
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:37
-msgid "MUSICPL^Add"
-msgstr "Ajouter"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:40
-msgid "MUSICPL^Add all"
-msgstr "Tout ajouter"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:44
-msgid "Set as menu track"
-msgstr "Définir en tant que chanson du menu"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:48
-msgid "Reset default menu track"
-msgstr "Réinitialiser la chanson du menu par défaut"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:54
-msgid "Playlist:"
-msgstr "Liste de lecture :"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:55
-msgid "Random order"
-msgstr "Ordre aléatoire"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:60
-msgid "MUSICPL^Stop"
-msgstr "Stop"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:63
-msgid "MUSICPL^Play"
-msgstr "Lecture"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:66
-msgid "MUSICPL^Pause"
-msgstr "Pause"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:69
-msgid "MUSICPL^Prev"
-msgstr "Préc."
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:72
-msgid "MUSICPL^Next"
-msgstr "Suiv."
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:76
-msgid "MUSICPL^Remove"
-msgstr "Supprimer"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:79
-msgid "MUSICPL^Remove all"
-msgstr "Tout supprimer"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:41
-msgid "Auto screenshot scoreboard"
-msgstr "Auto-capture du tableau des scores"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:62
-msgid "Open in the viewer"
-msgstr "Ouvrir dans le visionneur"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:139
-msgid "Reset"
-msgstr "Réinitialiser"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:144
-msgid "Previous"
-msgstr "Précédente"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:147
-msgid "Next"
-msgstr "Suivante"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc:152
-msgid "Slide show"
-msgstr "Diaporama"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:38
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:22
@@ -12690,8 +12691,8 @@ msgstr ""
 "« data »"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
-msgid "Menu Skins"
-msgstr "Thèmes du menu"
+msgid "Menu Skin"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"
@@ -13001,27 +13002,27 @@ msgstr "Afficher le nombre d'images par seconde"
 msgid "Show your rendered frames per second"
 msgstr "Afficher le nombre d'images par seconde"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:156
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:149
 msgid "Instant action with bots!"
 msgstr "Action instantanée avec des bots !"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:181
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:169
 msgid "Campaign Difficulty:"
 msgstr "Difficulté de la Campagne :"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:182
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:170
 msgid "CSKL^Easy"
 msgstr "Facile"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:183
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:171
 msgid "CSKL^Medium"
 msgstr "Moyen"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:184
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:172
 msgid "CSKL^Hard"
 msgstr "Difficile"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:189
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:177
 msgid "Play campaign!"
 msgstr "Lancer la campagne !"
 
@@ -13030,24 +13031,8 @@ msgid "Singleplayer"
 msgstr "Partie Solo"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
-msgid ""
-"Play the singleplayer campaign or instant action matches against bots, or "
-"read the guide"
-msgstr ""
-"Jouer la campagne solo ou des parties instantanées contre des bots, ou lire "
-"le guide"
-
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:15
-msgid "Topic"
-msgstr "Sujet"
-
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:24
-msgid "Entry"
-msgstr "Entrée"
-
-#: qcsrc/menu/xonotic/dialog_singleplayer_guide.qc:41
-msgid "Description"
-msgstr "Description"
+msgid "Play the singleplayer campaign or instant action matches against bots"
+msgstr "Jouer tout seul contre des adversaires contrôlés par ordinateur"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
