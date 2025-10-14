@@ -10,13 +10,9 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		_Movetype_CheckStuck(this);
 
 	bool applygravity = !_Movetype_CheckWater(this) && (this.move_movetype == MOVETYPE_WALK || this.move_movetype == MOVETYPE_STEP) && !(this.flags & FL_WATERJUMP);
-
-	// do a regular slide move unless it looks like you ran into a step
-
-	vector start_origin = this.origin;
 	vector start_velocity = this.velocity;
 
-	int clip = _Movetype_FlyMove(this, dt, applygravity, false, GAMEPLAYFIX_STEPMULTIPLETIMES(this) ? PHYS_STEPHEIGHT(this) : 0);
+	int clip = _Movetype_FlyMove(this, dt, applygravity, PHYS_STEPHEIGHT(this));
 
 	_Movetype_LinkEdict(this, true);
 
@@ -26,93 +22,14 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	if (this.flags & FL_WATERJUMP)
 		return;
 
-	if (PHYS_NOSTEP(this))
-		return;
-
-	vector originalorigin = this.origin;
-	vector originalvelocity = this.velocity;
-	// originalmove_clip = clip;
-	int originalflags = this.flags;
-	entity originalmove_groundentity = this.groundentity;
-
-	// if move didn't block on a step, return
-	if (clip & 2)
-	{
-		// if move was not trying to move into the step, return
-		if (fabs(start_velocity.x) < 0.03125 && fabs(start_velocity.y) < 0.03125)
-			return;
-
-		if (this.move_movetype != MOVETYPE_FLY)
-		{
-			// return if gibbed by a trigger
-			if (this.move_movetype != MOVETYPE_WALK)
-				return;
-
-			// return if attempting to jump while airborn (unless sv_jumpstep)
-			if (!PHYS_JUMPSTEP(this))
-				if (!WAS_ONGROUND(this) && this.waterlevel == 0)
-					return;
-		}
-
-		// try moving up and forward to go up a step
-		// back to start pos
-		this.origin = start_origin;
-		this.velocity = start_velocity;
-
-		// move up
-		vector upmove = '0 0 1' * PHYS_STEPHEIGHT(this);
-		if(!_Movetype_PushEntity(this, upmove, true))
-		{
-			// we got teleported when upstepping... must abort the move
-			return;
-		}
-
-		// move forward
-		this.velocity_z = 0;
-		clip = _Movetype_FlyMove(this, dt, applygravity, true, 0);
-		this.velocity_z += start_velocity.z;
-		if (clip & 8)
-		{
-			// we got teleported when upstepping... must abort the move
-			// note that z velocity handling may not be what QC expects here, but we cannot help it
-			return;
-		}
-
-		_Movetype_LinkEdict(this, true);
-
-		// check for stuckness, possibly due to the limited precision of floats
-		// in the clipping hulls
-		if (clip
-		    && fabs(originalorigin.y - this.origin.y) < 0.03125
-		    && fabs(originalorigin.x - this.origin.x) < 0.03125)
-		{
-			// Con_Printf("wall\n");
-			// stepping up didn't make any progress, revert to original move
-			this.origin = originalorigin;
-			this.velocity = originalvelocity;
-			// clip = originalmove_clip;
-			this.flags = originalflags;
-			this.groundentity = originalmove_groundentity;
-			// now try to unstick if needed
-			// clip = SV_TryUnstick (ent, oldvel);
-			return;
-		}
-
-		// Con_Printf("step - ");
-
-		// extra friction based on view angle
-		if ((clip & 2) && PHYS_WALLFRICTION(this))
-			_Movetype_WallFriction(this, move_stepnormal);
-	}
 	// don't do the down move if stepdown is disabled, moving upward, not in water, or the move started offground or ended onground
-	else if (!GAMEPLAYFIX_STEPDOWN(this) || this.waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) || !WAS_ONGROUND(this) || IS_ONGROUND(this)
+	if (!GAMEPLAYFIX_STEPDOWN(this) || this.waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) || !WAS_ONGROUND(this) || IS_ONGROUND(this)
 	|| (GAMEPLAYFIX_STEPDOWN_MAXSPEED(this) && vdist(start_velocity, >=, GAMEPLAYFIX_STEPDOWN_MAXSPEED(this)) && !IS_ONSLICK(this)))
 		return;
 
+	vector originalorigin = this.origin;
 	// move down
-	vector downmove = '0 0 0';
-	downmove.z = -PHYS_STEPHEIGHT(this) + start_velocity.z * dt;
-	if(!_Movetype_PushEntity(this, downmove, true))
+	if (!_Movetype_PushEntity(this, vec3(0, 0, -PHYS_STEPHEIGHT(this)), true))
 	{
 		// we got teleported when downstepping... must abort the move
 		return;
@@ -120,16 +37,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 	// cancel the step down if it didn't land on walkable ground
 	if (trace_fraction == 1 || trace_plane_normal.z < MIN_WALK_NORMAL)
-	{
-		// Con_Printf("slope\n");
-		// if the push down didn't end up on good ground, use the move without
-		// the step up.  This happens near wall / slope combinations, and can
-		// cause the player to hop up higher on a slope too steep to climb
 		this.origin = originalorigin;
-		this.velocity = originalvelocity;
-		this.flags = originalflags;
-		this.groundentity = originalmove_groundentity;
-	}
 	else if (GAMEPLAYFIX_STEPDOWN(this) == 2)
 		PM_GroundDetected(this, start_velocity);
 
