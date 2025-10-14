@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-13 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: k9er, 2024\n"
+"Last-Translator: k9er, 2024-2025\n"
 "Language-Team: English (United Kingdom) (http://app.transifex.com/team-"
 "xonotic/xonotic/language/en_GB/)\n"
 "Language: en_GB\n"
@@ -808,7 +808,7 @@ msgstr "objectives"
 msgid ""
 "How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"
 msgstr ""
-"How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"
+"How often a flag (CTF), a key (Key Hunt) or a ball (Keepaway) was picked up"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pickups"
@@ -10427,6 +10427,8 @@ msgid ""
 "Read the guide, listen to Xonotic music tracks, and view your demos and "
 "screenshots"
 msgstr ""
+"Read the guide, listen to Xonotic music tracks and view your demos and "
+"screenshots"
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:48
 msgid "Auto record demos"
@@ -10607,7 +10609,7 @@ msgstr "Multiplayer"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid "Play online, against your friends in LAN, or change player settings"
-msgstr ""
+msgstr "Play online, against your friends in LAN or change player settings"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
@@ -12932,7 +12934,7 @@ msgstr "This will create a backup config in your data directory"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skin"
-msgstr ""
+msgstr "Menu Skin"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"

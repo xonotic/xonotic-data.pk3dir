@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-13 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -2095,6 +2095,12 @@ msgid ""
 "to prevent hiding too much. Players who aren't in the lead steal a small "
 "percentage of health when they attack leaders, like in the %s mutator."
 msgstr ""
+"Les joueurs qui mènent la partie avec au moins 2 vies d'avance se mettent à "
+"briller et deviennent périodiquement visibles pendant quelques secondes par "
+"tous les joueurs à l'aide d'une balise au-dessus de leur tête, afin d'éviter "
+"qu'ils ne cherchent à se cacher. Les joueurs qui ne sont pas en tête volent "
+"un petit pourcentage de santé lorsqu'ils attaquent les meneurs, comme dans "
+"le mutateur %s."
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qh:11
 msgid "Last Man Standing"
@@ -2127,6 +2133,13 @@ msgid ""
 "if possible. Points are deducted when you walk into hazards, but not when "
 "you do movement tricks like blaster jumping since self damage is disabled."
 msgstr ""
+"Il se distingue par son système de points unique, qui prend en compte à la "
+"fois les frags et les dégâts infligés. Cela signifie que si vous êtes sur le "
+"point d'éliminer un joueur, vous serez tout de même récompensé par des "
+"points, mais il est toujours préférable de porter le coup fatal si possible. "
+"Des points sont retirés lorsque vous subissez des tirs ennemis, mais pas "
+"lorsque vous effectuez des figures telles que des sauts avec votre blaster, "
+"car les dégâts auto-infligés sont désactivés."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:15
 #, c-format
@@ -10160,6 +10173,8 @@ msgid ""
 "Read the guide, listen to Xonotic music tracks, and view your demos and "
 "screenshots"
 msgstr ""
+"Lire le guide, écouter la bande-son de Xonotic et visualiser vos démos et "
+"captures d'écran."
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:48
 msgid "Auto record demos"
@@ -10214,11 +10229,11 @@ msgstr "Tout ajouter"
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:44
 msgid "Set as menu track"
-msgstr "Définir en tant que chanson du menu"
+msgstr "Définir en tant que bande-son du menu"
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:48
 msgid "Reset default menu track"
-msgstr "Réinitialiser la chanson du menu par défaut"
+msgstr "Réinitialiser la bande-son du menu par défaut"
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:54
 msgid "Playlist:"
@@ -10341,6 +10356,8 @@ msgstr "Multijoueur"
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid "Play online, against your friends in LAN, or change player settings"
 msgstr ""
+"Jouer en ligne, contre vos amis en réseau local, ou modifier vos paramètres "
+"de joueur."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
@@ -12692,7 +12709,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skin"
-msgstr ""
+msgstr "Thème du menu"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"
@@ -13032,7 +13049,8 @@ msgstr "Partie Solo"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
-msgstr "Jouer tout seul contre des adversaires contrôlés par ordinateur"
+msgstr ""
+"Jouer à la campagne solo ou à des parties instantanées contre des bots."
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
