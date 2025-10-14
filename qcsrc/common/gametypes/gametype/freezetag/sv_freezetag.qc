@@ -22,7 +22,7 @@ float autocvar_g_ft_start_ammo_fuel = 0;
 void freezetag_count_alive_players()
 {
 	total_players = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
 	}
@@ -67,7 +67,7 @@ bool freezetag_CheckTeams()
 		return false;
 	}
 	int missing_teams_mask = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		if ((freezetag_teams & Team_IndexToBit(i)) &&
 			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))

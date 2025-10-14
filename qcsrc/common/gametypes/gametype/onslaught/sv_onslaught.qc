@@ -1152,7 +1152,7 @@ void Onslaught_count_generators()
 {
 	entity e;
 	total_generators = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		Team_SetNumberOfOwnedItems(Team_GetTeamFromIndex(i), 0);
 	}
