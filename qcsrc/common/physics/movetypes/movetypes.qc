@@ -99,28 +99,9 @@ bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot) // SV
 	return true;
 }
 
-void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
-{
-	/*float d, i;
-	vector into, side;
-	makevectors(this.v_angle);
-	d = (stepnormal * v_forward) + 0.5;
-
-	if(d < 0)
-	{
-	    i = (stepnormal * this.velocity);
-	    into = i * stepnormal;
-	    side = this.velocity - into;
-	    this.velocity_x = side.x * (1 * d);
-	    this.velocity_y = side.y * (1 * d);
-	}*/
-}
-
 vector planes[MAX_CLIP_PLANES];
-int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool applystepnormal, float stepheight) // SV_FlyMove
+int _Movetype_FlyMove(entity this, float time_left, bool applygravity, float stepheight) // SV_FlyMove
 {
-	move_stepnormal = '0 0 0';
-
 	int i;
 	int blockedflag = 0;
 	vector jumporigin = this.origin;
@@ -325,14 +306,6 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, bool appl
 			trace_plane_normal = my_trace_plane_normal;
 			trace_ent = my_trace_ent;
 			trace_dphitq3surfaceflags = my_trace_dphitq3surfaceflags;
-		}
-		if (!stepheight)
-		{
-			// step - return it to caller
-			blockedflag |= 2;
-			// save the trace for player extrafriction
-			if(applystepnormal)
-				move_stepnormal = trace_plane_normal;
 		}
 
 		if (trace_plane_normal.z > 0) // landed on a ground plane or got an edge collision
