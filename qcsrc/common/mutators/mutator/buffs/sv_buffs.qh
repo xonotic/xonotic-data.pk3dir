@@ -49,3 +49,5 @@ float buff_Available(entity buff);
 void buff_RemoveAll(entity actor, int removal_type);
 
 entity buff_FirstFromFlags(entity actor);
+
+void buff_Effect(entity player, entity eff, vector eff_loc, vector eff_vel, int eff_cnt, bool hide);
