@@ -25,7 +25,6 @@ const int MIN_WALK_NORMAL = 0.7;
 #define GAMEPLAYFIX_EASIERWATERJUMP(s)      STAT(GAMEPLAYFIX_EASIERWATERJUMP)
 #define GAMEPLAYFIX_STEPDOWN(s)             STAT(GAMEPLAYFIX_STEPDOWN, s)
 #define GAMEPLAYFIX_STEPDOWN_MAXSPEED(s)    STAT(GAMEPLAYFIX_STEPDOWN_MAXSPEED)
-#define GAMEPLAYFIX_STEPMULTIPLETIMES(s)    STAT(GAMEPLAYFIX_STEPMULTIPLETIMES)
 #define GAMEPLAYFIX_UNSTICKPLAYERS(s)       STAT(GAMEPLAYFIX_UNSTICKPLAYERS)
 #define GAMEPLAYFIX_WATERTRANSITION(s)      STAT(GAMEPLAYFIX_WATERTRANSITION)
 #define GAMEPLAYFIX_SLIDEMOVEPROJECTILES(s) STAT(GAMEPLAYFIX_SLIDEMOVEPROJECTILES)
@@ -38,7 +37,6 @@ const int MIN_WALK_NORMAL = 0.7;
 
 #define PHYS_NOSTEP(s)                      STAT(NOSTEP)
 #define PHYS_JUMPSTEP(s)                    STAT(MOVEVARS_JUMPSTEP)
-#define PHYS_WALLFRICTION(s)                STAT(MOVEVARS_WALLFRICTION)
 
 
 #ifdef CSQC
@@ -129,12 +127,8 @@ const int UNSTICK_FINE = 0;
 const int UNSTICK_FIXED = 1;
 const int UNSTICK_STUCK = 2;
 
-// set by _Movetype_FlyMove
-vector move_stepnormal;
-
 bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot);
-void _Movetype_WallFriction(entity this, vector stepnormal);
-int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight);
+int _Movetype_FlyMove(entity this, float dt, bool applygravity, float stepheight);
 void _Movetype_CheckWaterTransition(entity ent);
 void _Movetype_CheckStuck(entity this);
 float _Movetype_CheckWater(entity ent);
