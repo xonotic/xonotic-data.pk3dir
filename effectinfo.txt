@@ -3947,7 +3947,7 @@ effect EF_FLAME
 	color 0x8f0d00 0xff5a00
 	count 100
 	gravity -0.500000
-	originjitter 12 12 34
+	originjitter 12 12 24
 	originoffset 0 0 10
 	sizeincrease -1
 	size 5 21
@@ -3955,22 +3955,17 @@ effect EF_FLAME
 	velocityjitter 22 22 50
 effect EF_FLAME
 	type alphastatic
-	alpha 200 256 200
+	alpha 100 156 200
 	bounce 2
-	color 0x000000 0x111111
-	count 50
-	gravity -0.300000
-	originjitter 12 12 34
-	originoffset 0 0 10
+	color 0x000000 0x444444
+	count 30
+	gravity -0.500000
+	originjitter 6 6 24
+	originoffset 0 0 40
 	sizeincrease 6
 	size 11 15
 	tex 0 8
 	velocityjitter 11 11 50
-effect EF_FLAME
-	count 0.500000
-	lightcolor 0.9 0.9 0.2
-	lightradiusfade 10000
-	lightradius 200
 effect tr_rifle
 	type spark
 	alpha 256 256 2560
@@ -9003,3 +8998,43 @@ effect shotgun_woosh
 	tex 0 8
 	velocityjitter 128 128 64
 	velocitymultiplier 1
+effect EF_SHOCK
+	type static
+	airfriction 110
+	alpha 256 300 512
+	color 0xDDFDFF 0xFDFDFF
+	count 50
+	originjitter 6 6 10
+	rotate 0 360 0 0
+	sizeincrease -1
+	size 4 7
+	stretchfactor 1
+	tex 71 74
+	velocityjitter 250 250 250
+	velocitymultiplier 100
+effect EF_SHOCK
+	type static
+	airfriction 5
+	alpha 256 300 512
+	color 0xDDFDFF 0xFDFDFF
+	count 30
+	liquidfriction 5
+	orientation spark
+	originjitter 12 12 12
+	rotate 0 360 -36000 36000
+	sizeincrease -5
+	size 4 7
+	stretchfactor 1
+	tex 71 74
+	underwater
+	velocityjitter 250 250 250
+	velocitymultiplier 20
+effect EF_SHOCK
+	type smoke
+	alpha 40 60 350
+	color 0x80C0FF 0x80C0FF
+	count 10
+	sizeincrease 400
+	size 4 4
+	tex 38 38
+	velocitymultiplier 100

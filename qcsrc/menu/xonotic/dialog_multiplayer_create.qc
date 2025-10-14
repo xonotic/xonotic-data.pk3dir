@@ -82,7 +82,7 @@ void XonoticServerCreateTab_fill(entity me)
 	me.gotoRC(me, 13.5, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Time limit:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("timelimit_override",
-			_("Timelimit in minutes that when hit, will end the match")));
+			_("Time limit in minutes that when hit, will end the match")));
 			e.formatString = "m";
 			e.addText(e, ZCTX(_("TIMLIM^Default")), -1);
 			e.addRange(e, 1, 10, 1);

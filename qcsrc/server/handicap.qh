@@ -1,8 +1,8 @@
 #pragma once
 
 #include <common/mapinfo.qh>
-#include <common/gamemodes/gamemode/cts/cts.qh>
-#include <common/gamemodes/gamemode/race/race.qh>
+#include <common/gametypes/gametype/cts/cts.qh>
+#include <common/gametypes/gametype/race/race.qh>
 
 /// \file
 /// \brief Header file that describes the handicap system.

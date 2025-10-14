@@ -6,8 +6,8 @@
 #include <common/effects/all.qh>
 #include <common/effects/qc/globalsound.qh>
 #include <common/ent_cs.qh>
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/gamemode/nexball/sv_nexball.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/gametypes/gametype/nexball/sv_nexball.qh>
 #include <common/items/_mod.qh>
 #include <common/items/inventory.qh>
 #include <common/mapobjects/func/conveyor.qh>
@@ -331,6 +331,9 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
 	CS(this).spectatortime = time;
+	if (!autocvar_sv_spectate && CS(this).autojoin_checked) // unnecessary if autojoin succeeds, on failure it notifies
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+
 	if(this.bot_attack)
 		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
@@ -415,7 +418,7 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 	}
 	else
 	{
-		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR); // clears scores too in game modes without teams
+		SetPlayerTeam(this, -1, TEAM_CHANGE_SPECTATOR); // clears scores too in gametypes without teams
 		this.frags = FRAGS_SPECTATOR;
 	}
 
@@ -1182,10 +1185,6 @@ void ClientConnect(entity this)
 	bot_relinkplayerlist();
 
 	CS(this).spectatortime = time;
-	if (!autocvar_sv_spectate)
-		// no centreprint here: player forced to join, or informed of why they can't via centreprint
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-
 	CS(this).jointime = time;
 
 	if (IS_REAL_CLIENT(this))
@@ -2478,7 +2477,7 @@ void ObserverOrSpectatorThink(entity this)
 
 	if (IS_BOT_CLIENT(this) && !CS(this).autojoin_checked)
 	{
-		CS(this).autojoin_checked = true;
+		CS(this).autojoin_checked = 1;
 		TRANSMUTE(Player, this);
 		PutClientInServer(this);
 
@@ -2664,7 +2663,8 @@ void PlayerPreThink (entity this)
 			IntermissionThink(this);
 		return;
 	}
-	else if (IS_REAL_CLIENT(this) && CS(this).autojoin_checked <= 0 && time >= CS(this).jointime + MIN_SPEC_TIME)
+	else if (IS_REAL_CLIENT(this) && CS(this).autojoin_checked <= 0 && time >= CS(this).jointime + MIN_SPEC_TIME
+	&& this.ping > 0) // delay until centreprints could work (still on loading screen but timers start when it disappears)
 	{
 		bool early_join_requested = (CS(this).autojoin_checked < 0);
 		CS(this).autojoin_checked = 1;
@@ -2676,6 +2676,9 @@ void PlayerPreThink (entity this)
 		{
 			if(joinAllowed(this, this.wants_join))
 				Join(this, teamplay);
+			else if (!autocvar_sv_spectate) // we really want to join and some blockers may be brief (g_maxping)
+				if (time < CS(this).spectatortime + MIN_SPEC_TIME) // centreprints don't appear while spamming
+					CS(this).autojoin_checked = -1; // keep trying for MIN_SPEC_TIME
 			return;
 		}
 	}
@@ -2839,11 +2842,12 @@ void PlayerFrame (entity this)
 	&& (IS_SPEC(this) || IS_OBSERVER(this)) && !INGAME(this))
 	{
 		float cutoff = CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime;
-		if (time > cutoff + MIN_SPEC_TIME * 0.5)
+		if (time > cutoff + MIN_SPEC_TIME * 0.5 // sv_spectate was disabled recently (or the server was stalled far too long)
+		|| CS(this).autojoin_checked == 0) // or too soon to have tried to autojoin
 		{
-			// sv_spectate was disabled recently (or the server was stalled far too long)
 			CS(this).spectatortime = time; // reset the grace period
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+			if (CS(this).autojoin_checked) // only notify when sv_spectate was disabled recently, to prevent spam
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 		}
 		else if (time > cutoff)
 			if (dropclient_schedule(this))

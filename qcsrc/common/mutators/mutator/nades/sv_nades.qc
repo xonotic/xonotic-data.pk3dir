@@ -1,6 +1,6 @@
 #include "sv_nades.qh"
 
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/weapons/all.qh>
 #include <common/mutators/mutator/overkill/okmachinegun.qh>
 #include <common/mutators/mutator/overkill/okshotgun.qh>

@@ -4,7 +4,7 @@
 #include "items.qh"
 #include "../powerups/powerup/speed.qh"
 #include "../powerups/powerup/invisibility.qh"
-#include <common/gamemodes/gamemode/deathmatch/deathmatch.qh>
+#include <common/gametypes/gametype/deathmatch/deathmatch.qh>
 #include <common/items/item/ammo.qh>
 #include <common/weapons/weapon/vaporizer.qh>
 

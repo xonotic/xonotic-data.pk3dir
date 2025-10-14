@@ -1,0 +1,15 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticScreenshotBrowserTab, XonoticTab)
+	METHOD(XonoticScreenshotBrowserTab, fill, void(entity));
+	ATTRIB(XonoticScreenshotBrowserTab, intendedWidth, float, 0.96);
+	ATTRIB(XonoticScreenshotBrowserTab, rows, float, 17);
+	ATTRIB(XonoticScreenshotBrowserTab, columns, float, 6.5);
+	ATTRIB(XonoticScreenshotBrowserTab, name, string, "ScreenshotBrowser");
+
+	METHOD(XonoticScreenshotBrowserTab, loadPreviewScreenshot, void(entity, string));
+	ATTRIB(XonoticScreenshotBrowserTab, screenshotImage, entity);
+	ATTRIB(XonoticScreenshotBrowserTab, currentScrPath, string);
+ENDCLASS(XonoticScreenshotBrowserTab)
+entity makeXonoticScreenshotBrowserTab();

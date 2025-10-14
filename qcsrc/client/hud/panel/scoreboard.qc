@@ -129,7 +129,7 @@ string Label_getInfo(string label, int mode)
 	{
 		SCO_LABEL(_("SCO^bckills"),       "bckills", "            ", _("Number of ball carrier kills"));
 		SCO_LABEL(_("SCO^bctime"),        "bctime", "             ", _("Total amount of time holding the ball in Keepaway"));
-		SCO_LABEL(_("SCO^caps"),          "caps", "               ", _("How often a flag (CTF) or a key (KeyHunt) was captured"));
+		SCO_LABEL(_("SCO^caps"),          "caps", "               ", _("How often a flag (CTF) or a key (Key Hunt) was captured"));
 		SCO_LABEL(_("SCO^captime"),       "captime", "            ", _("Time of fastest capture (CTF)"));
 		SCO_LABEL(_("SCO^deaths"),        "deaths", "             ", _("Number of deaths"));
 		SCO_LABEL(_("SCO^destructions"),  "destructions", "       ", _("Number of keys destroyed by pushing them into void"));
@@ -144,7 +144,7 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^generators"),    "generators", "         ", _("Number of generators destroyed"));
 		SCO_LABEL(_("SCO^goals"),         "goals", "              ", _("Number of goals scored"));
 		SCO_LABEL(_("SCO^hunts"),         "hunts", "              ", _("Number of hunts (Survival)"));
-		SCO_LABEL(_("SCO^kckills"),       "kckills", "            ", _("Number of keys carrier kills"));
+		SCO_LABEL(_("SCO^kckills"),       "kckills", "            ", _("Number of key carrier kills"));
 		SCO_LABEL(_("SCO^k/d"),           "kd", "                 ", _("The kill-death ratio"));
 		SCO_LABEL(_("SCO^kdr"),           "kdr", "                ", _("The kill-death ratio"));
 		SCO_LABEL(_("SCO^kdratio"),       "kdratio", "            ", _("The kill-death ratio"));
@@ -155,7 +155,7 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^name"),          "name", "               ", _("Player name"));
 		SCO_LABEL(_("SCO^nick"),          "nick", "               ", _("Player name"));
 		SCO_LABEL(_("SCO^objectives"),    "objectives", "         ", _("Number of objectives destroyed"));
-		SCO_LABEL(_("SCO^pickups"),       "pickups", "            ", _("How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"));
+		SCO_LABEL(_("SCO^pickups"),       "pickups", "            ", _("How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"));
 		SCO_LABEL(_("SCO^ping"),          "ping", "               ", _("Ping time"));
 		SCO_LABEL(_("SCO^pl"),            "pl", "                 ", _("Packet loss"));
 		SCO_LABEL(_("SCO^pushes"),        "pushes", "             ", _("Number of players pushed into void"));
@@ -740,20 +740,20 @@ void Cmd_Scoreboard_Help()
 	LOG_HELP("");
 
 	LOG_HELP(_("Before a field you can put a + or - sign, then a comma separated list\n"
-	        "of game types, then a slash, to make the field show up only in these\n"
-	        "or in all but these game types. You can also specify 'all' as a\n"
-	        "field to show all fields available for the current game mode."));
+	        "of gametypes, then a slash, to make the field show up only in these\n"
+	        "or in all but these gametypes. You can also specify 'all' as a\n"
+	        "field to show all fields available for the current gametype."));
 	LOG_HELP("");
 
-	LOG_HELP(_("The special game type names 'teams' and 'noteams' can be used to\n"
-	        "include/exclude ALL teams/noteams game modes."));
+	LOG_HELP(_("The special gametype names 'teams' and 'noteams' can be used to\n"
+	        "include/exclude ALL teams/noteams gametypes."));
 	LOG_HELP("");
 
 	LOG_HELP(_("Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"));
 	LOG_HELP(_("will display name, ping and pl aligned to the left, and the fields\n"
 	        "right of the vertical bar aligned to the right."));
 	LOG_HELP(_("'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
-			"other gamemodes except DM."));
+			"other gametypes except DM."));
 }
 
 // NOTE: adding a gametype with ? to not warn for an optional field
@@ -1235,6 +1235,9 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 		if (sbt_field_icon_extra[j] != "")
 		{
 			sz = draw_getimagesize(sbt_field_icon_extra[j]);
+			// XONRELEASE TODO: xonotic-v0.9.0 after release remove if (sz == 0) case
+			if (sz == '0 0 0') // it happens in previous engine versions (Xonotic 0.8.6 or lower) when the image is missing
+				sz = '1 1 0';
 			sbt_fixcolumnwidth_iconlen_extra[j] = sz.x / sz.y;
 		}
 
@@ -2532,7 +2535,7 @@ void Scoreboard_Draw()
 			str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	// Game Info: Game Type
+	// Game Info: Gametype
 	if (scoreboard_ui_enabled == 2)
 		str = _("Team Selection");
 	else if (gametype_custom_name != "")
@@ -2565,7 +2568,7 @@ void Scoreboard_Draw()
 		float ll_and_fl = STAT(LEADLIMIT_AND_FRAGLIMIT);
 		str = "";
 		if (tl > 0)
-			str = strcat(str, sprintf(_("^3%1.0f minutes"), tl));
+			str = strcat(str, "^3", count_minutes(floor(tl)));
 		if (!gametype.m_hidelimits)
 		{
 			if (fl > 0)

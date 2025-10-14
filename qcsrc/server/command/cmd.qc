@@ -4,7 +4,7 @@
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/minigames/sv_minigames.qh>
@@ -1054,7 +1054,7 @@ CLIENT_COMMAND(mv_getpicture, "Retrieve mapshot picture from the server") { Clie
 CLIENT_COMMAND(physics, "Change physics set") { ClientCommand_physics(caller, request, arguments); }
 CLIENT_COMMAND(ready, "Qualify as ready to end warmup-stage") { ClientCommand_ready(caller, request); }
 CLIENT_COMMAND(say, "Send a public chat message to all players") { ClientCommand_say(caller, request, arguments, command); }
-CLIENT_COMMAND(say_team, "Send a chat message to all team mates") { ClientCommand_say_team(caller, request, arguments, command); }
+CLIENT_COMMAND(say_team, "Send a chat message to all teammates") { ClientCommand_say_team(caller, request, arguments, command); }
 CLIENT_COMMAND(selectteam, "Attempt to choose a team to join into") { ClientCommand_selectteam(caller, request, arguments); }
 CLIENT_COMMAND(selfstuff, "Stuffcmd a command to your own client") { ClientCommand_selfstuff(caller, request, command); }
 CLIENT_COMMAND(sentcvar, "New system for sending a client cvar to the server") { ClientCommand_sentcvar(caller, request, arguments); }

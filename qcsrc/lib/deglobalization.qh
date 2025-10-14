@@ -107,6 +107,13 @@ MACRO_END
 	CLEAR_V_GLOBALS(); \
 MACRO_END
 
+#define ADD_DYNAMIC_LIGHT2(org, radius, lightcolours, style, cubemapname, pflags, forward, right, up) MACRO_BEGIN \
+	DEGLOB_LOG(DEGLOB_WRAPPED, "ADD_DYNAMIC_LIGHT2", #org, #radius, #lightcolours, #style, #cubemapname, #pflags); \
+	SET_V_GLOBALS(forward, right, up); \
+	_adddynamiclight2_hidden(org, radius, lightcolours, style, cubemapname, pflags); \
+	CLEAR_V_GLOBALS(); \
+MACRO_END
+
 #define VECTOR_VECTORS(forward_in, forward, right, up) MACRO_BEGIN \
 	DEGLOB_LOG(DEGLOB_WRAPPED, "VECTOR_VECTORS", #forward_in); \
 	_vectorvectors_hidden(forward_in); \
@@ -144,6 +151,12 @@ MACRO_END
 #define adddynamiclight(org, radius, lightcolours) MACRO_BEGIN \
 	DEGLOB_LOG(DEGLOB_ORIGINAL, "adddynamiclight", #org, #radius, #lightcolours); \
 	_adddynamiclight_hidden(org, radius, lightcolours); \
+MACRO_END
+
+#undef adddynamiclight2
+#define adddynamiclight2(org, radius, lightcolours, style, cubemapname, pflags) MACRO_BEGIN \
+	DEGLOB_LOG(DEGLOB_ORIGINAL, "adddynamiclight2", #org, #radius, #lightcolours, #style, #cubemapname, #pflags); \
+	_adddynamiclight2_hidden(org, radius, lightcolours, style, cubemapname, pflags); \
 MACRO_END
 
 #undef gettaginfo

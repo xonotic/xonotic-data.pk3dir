@@ -1,8 +1,8 @@
 #include "race.qh"
 
 #include <common/deathtypes/all.qh>
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/rules.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/gametypes/rules.qh>
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
@@ -33,7 +33,7 @@
 #include <server/strafe.qh>
 
 
-.string stored_netname; // TODO: store this information independently of race-based gamemodes
+.string stored_netname; // TODO: store this information independently of race-based gametypes
 
 .float race_startspeed;
 .float race_startspeed_best;

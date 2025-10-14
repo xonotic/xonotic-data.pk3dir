@@ -25,7 +25,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 	miscApplyButton.disableOnClick = true;
 
 	me.TR(me);
-		me.TD(me, 1, 3.25, e = makeXonoticHeaderLabel(_("Network")));
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Network")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "shownetgraph", _("Show netgraph"),
 			_("Show a graph of packet sizes and other information")));
@@ -40,7 +40,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 1, "crypto_aeslevel", _("Use encryption (AES) when available")));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3.25, e = makeXonoticHeaderLabel(_("HTTP downloads")));
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("HTTP downloads")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Simultaneous:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1, 5, 1, "cl_curl_maxdownloads",

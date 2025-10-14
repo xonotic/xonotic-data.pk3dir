@@ -1,7 +1,7 @@
 #include "racer.qh"
 
 #ifdef SVQC
-	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+	#include <common/gametypes/gametype/ctf/sv_ctf.qh>
 	#include <common/mapobjects/trigger/impulse.qh>
 #endif
 

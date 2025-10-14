@@ -603,8 +603,7 @@ METHOD(Tuba, describe, string(Tuba this))
 	PAR(_("The secondary fire works the same way, playing a higher pitch."));
 	PAR(_("The only ammo it needs to operate is the breath from your lungs."));
 	PAR(_("Since your enemies need to be close by to hear your rubbish music, the %s is only effective at very close ranges."), COLORED_NAME(this));
-	PAR(_("The pitch the %s plays depends on the movement keys pressed. "
-	      "Reloading the weapon switches its model and notes played."), COLORED_NAME(this));
+	PAR(_("The pitch the %s plays depends on the movement keys pressed."), COLORED_NAME(this));
 	PAR(W_Guide_Keybinds(this));
 	PAR(W_Guide_DPS_onlyOne_unnamed(this.netname));
 	return PAGE_TEXT;

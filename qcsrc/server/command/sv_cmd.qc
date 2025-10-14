@@ -2,7 +2,7 @@
 
 #include <common/constants.qh>
 #include <common/effects/all.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <common/net_linked.qh>
@@ -785,7 +785,7 @@ void GameCommand_gametype(int request, int argc)
 					GameTypeVote_SetGametype(t, "", false);
 				}
 				else
-					bprint("Failed to switch to ", s, ": this game type does not exist!\n");
+					bprint("Failed to switch to ", s, ": this gametype does not exist!\n");
 
 				return;
 			}
@@ -976,7 +976,7 @@ void GameCommand_lockteams(int request)
 			}
 			else
 			{
-				bprint("lockteams command can only be used in a team-based gamemode.\n");
+				bprint("lockteams command can only be used in a team-based gametype.\n");
 			}
 			return;
 		}
@@ -1716,7 +1716,7 @@ void GameCommand_unlockteams(int request)
 			}
 			else
 			{
-				bprint("unlockteams command can only be used in a team-based gamemode.\n");
+				bprint("unlockteams command can only be used in a team-based gametype.\n");
 			}
 			return;
 		}

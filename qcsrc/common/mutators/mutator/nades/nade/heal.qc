@@ -12,7 +12,7 @@ void nade_heal_touch(entity this, entity toucher)
 	{
 		health_factor = autocvar_g_nades_heal_rate*frametime/2;
 		if ( toucher != this.realowner )
-			health_factor *= (SAME_TEAM(toucher,this)) ? autocvar_g_nades_heal_friend : autocvar_g_nades_heal_foe;
+			health_factor *= (SAME_TEAM(toucher, this.realowner)) ? autocvar_g_nades_heal_friend : autocvar_g_nades_heal_foe;
 
 		if ( health_factor > 0 )
 		{
