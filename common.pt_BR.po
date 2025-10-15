@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-13 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2025\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -2010,6 +2010,9 @@ msgid ""
 "points for collecting a key, fragging an enemy key carrier, and fragging "
 "other enemies."
 msgstr ""
+"A pontuação em %s é bem complicada, entrando na conta coletar todas as "
+"chaves, coletar uma chave, executar um inimigo portador de chave e executar "
+"outros inimigos."
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:13
 #, c-format
@@ -2152,6 +2155,9 @@ msgid ""
 "kick it around, or basketball where players have a %s so they can pass the "
 "ball and intercept passes."
 msgstr ""
+"%s é usualmente jogado ou como futebol, no qual os jogadores andam na bola "
+"para dar pontapés nela, ou como basquete, no qual os jogadores têm a arma %s "
+"para passar a bola e interceptar passes."
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:12
 msgid ""
@@ -9992,6 +9998,7 @@ msgid ""
 "Read the guide, listen to Xonotic music tracks, and view your demos and "
 "screenshots"
 msgstr ""
+"Leia o guia, escute as músicas do Xonotic, e veja demos e capturas de tela"
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:48
 msgid "Auto record demos"
@@ -12525,7 +12532,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skin"
-msgstr ""
+msgstr "Visual de Menu"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"

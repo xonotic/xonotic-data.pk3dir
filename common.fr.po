@@ -2438,6 +2438,9 @@ msgid ""
 "Scoring is similar to in %s, except that points are awarded for frags for "
 "all members of the team of the player holding the ball."
 msgstr ""
+"Le système de points est similaire à celui de %s, sauf que les points pour "
+"les frags sont attribués à tous les membres de l'équipe du joueur qui "
+"détient la balle."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
@@ -2493,6 +2496,7 @@ msgstr "Le type de munitions %s est utilisé par le (la) :"
 #, c-format
 msgid "By default, the pickup gives you %s ammo, to a maximum of %s."
 msgstr ""
+"Par défaut, cet objet vous fournit %s munitions, jusqu'à un maximum de %s."
 
 #: qcsrc/common/items/item/ammo.qc:25
 #, c-format
@@ -2522,7 +2526,7 @@ msgstr "Carburant"
 #: qcsrc/common/items/item/armor.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s armor."
-msgstr ""
+msgstr "Par défaut, cet objet vous confère %s points d'armure."
 
 #: qcsrc/common/items/item/armor.qc:13
 #, c-format
@@ -2530,6 +2534,9 @@ msgid ""
 "The %s provides you a small amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"La %s vous confère une petite quantité d'armure lorsque vous la ramassez, "
+"vous protégeant des dégâts en absorbant les coups reçus jusqu'à ce qu'elle "
+"soit épuisée."
 
 #: qcsrc/common/items/item/armor.qc:23
 #, c-format
@@ -2537,6 +2544,9 @@ msgid ""
 "The %s provides you a medium amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"La %s vous confère une quantité moyenne d'armure lorsque vous la ramassez, "
+"vous protégeant des dégâts en absorbant les coups reçus jusqu'à ce qu'elle "
+"soit épuisée."
 
 #: qcsrc/common/items/item/armor.qc:33
 #, c-format
@@ -2544,6 +2554,9 @@ msgid ""
 "The %s provides you a large amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"La %s vous confère une grande quantité d'armure lorsque vous la ramassez, "
+"vous protégeant des dégâts en absorbant les coups reçus jusqu'à ce qu'elle "
+"soit épuisée."
 
 #: qcsrc/common/items/item/armor.qc:43
 #, c-format
@@ -2551,6 +2564,9 @@ msgid ""
 "The %s provides you a huge amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"La %s vous confère une énorme quantité d'armure lorsque vous la ramassez, "
+"vous protégeant des dégâts en absorbant les coups reçus jusqu'à ce qu'elle "
+"soit épuisée."
 
 #: qcsrc/common/items/item/armor.qc:45 qcsrc/common/items/item/health.qc:45
 #, c-format
@@ -2580,7 +2596,7 @@ msgstr "Méga armure"
 #: qcsrc/common/items/item/health.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s health."
-msgstr ""
+msgstr "Par défaut, cet objet vous confère %s points de santé."
 
 #: qcsrc/common/items/item/health.qc:13
 #, c-format
@@ -2588,6 +2604,8 @@ msgid ""
 "The %s restores a small amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"La %s restaure une petite quantité de santé lorsque vous la ramassez, vous "
+"aidant ainsi à récupérer des dégâts subis pendant le combat."
 
 #: qcsrc/common/items/item/health.qc:23
 #, c-format
@@ -2595,6 +2613,8 @@ msgid ""
 "The %s restores a medium amount of health when picked up, helping you "
 "recover from damage taken during combat."
 msgstr ""
+"La %s restaure une quantité moyenne de santé lorsque vous la ramassez, vous "
+"aidant ainsi à récupérer des dégâts subis pendant le combat."
 
 #: qcsrc/common/items/item/health.qc:33
 #, c-format
@@ -2602,6 +2622,8 @@ msgid ""
 "The %s restores a large amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"La %s restaure une grande quantité de santé lorsque vous la ramassez, vous "
+"aidant ainsi à récupérer des dégâts subis pendant le combat."
 
 #: qcsrc/common/items/item/health.qc:43
 #, c-format
@@ -2609,6 +2631,8 @@ msgid ""
 "The %s restores a huge amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"La %s restaure une énorme quantité de santé lorsque vous la ramassez, vous "
+"aidant ainsi à récupérer des dégâts subis pendant le combat."
 
 #: qcsrc/common/items/item/health.qh:44
 msgid "Small health"
@@ -3100,6 +3124,8 @@ msgid ""
 "%s is a mutator in which players below a certain health threshold (for "
 "example 25) will suffer blood loss."
 msgstr ""
+"%s est un mutateur dans lequel les joueurs dont la santé est inférieure à un "
+"certain seuil (par exemple 25) souffriront d'hémorragie."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qc:77
 msgid ""
@@ -3107,6 +3133,10 @@ msgid ""
 "rapidly takes away health points until they either die or gain enough health "
 "to go above the health threshold."
 msgstr ""
+"L'hémorragie étourdit les joueurs, entrave considérablement leurs mouvements "
+"et leur fait rapidement perdre des points de santé jusqu'à ce qu'ils meurent "
+"ou regagnent suffisamment de santé pour repasser au-dessus du seuil "
+"nécessaire."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qh:5
 #: qcsrc/common/util.qc:310
@@ -3143,6 +3173,8 @@ msgid ""
 "The %s gives you infinite ammo until the buff expires, so you don't need to "
 "worry about running out of ammo."
 msgstr ""
+"Le %s vous donne des munitions infinies jusqu'à ce que le bonus expire, vous "
+"n'avez donc pas à vous soucier de manquer de munitions."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
 #, c-format
@@ -3150,6 +3182,8 @@ msgid ""
 "It also removes the need to reload any weapons that require reloading, like "
 "the %s and %s."
 msgstr ""
+"Cela évite également d'avoir à recharger les armes qui le nécessitent, comme "
+"le %s et le %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qh:11
 msgid "Ammo"
@@ -3161,10 +3195,14 @@ msgid ""
 "The %s increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
+"Le %s augmente votre force de recul et vous immunise contre celle des autres "
+"tant que le bonus est actif."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
 msgstr ""
+"Cela augmente également légèrement le recul que vous vous infligez à vous-"
+"même."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qh:14
 msgid "Bash"
@@ -3440,7 +3478,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/dodging/dodging.qc:13
 #, c-format
 msgid "Some other mutators like %s enable this by default."
-msgstr ""
+msgstr "D'autres mutateurs, comme %s, l'activent par défaut."
 
 #: qcsrc/common/mutators/mutator/dodging/dodging.qh:5 qcsrc/common/util.qc:296
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:77
@@ -3548,6 +3586,8 @@ msgid ""
 "The %s is sometimes present on maps when %s is enabled, providing ammo for "
 "the %s."
 msgstr ""
+"Les %s sont parfois présentes sur les cartes lorsque %s est activé, "
+"fournissant des munitions pour le %s."
 
 #: qcsrc/common/mutators/mutator/instagib/items.qc:19
 #, c-format
@@ -8224,6 +8264,8 @@ msgstr ""
 msgid ""
 "The secondary fire launches flaming balls that set nearby players alight."
 msgstr ""
+"Le tir secondaire lance des boules enflammées qui embrasent les joueurs à "
+"proximité."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:444
 msgid "It is a superweapon, so isn't often found in game."
@@ -8234,6 +8276,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/porto.qc:436
 msgid "It doesn't require ammo, but it is destroyed after some time."
 msgstr ""
+"Il ne nécessite pas de munitions, mais est détruit après un certain temps."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:446
 #, c-format
