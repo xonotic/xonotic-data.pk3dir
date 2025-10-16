@@ -3934,7 +3934,7 @@ msgstr "Pistolet-mitrailleur Overkill lourd"
 #: qcsrc/common/weapons/weapon/machinegun.qc:434
 #, c-format
 msgid "The %s quickly fires bullets with a small degree of spread."
-msgstr ""
+msgstr "Le %s tire rapidement des balles avec un faible degré de dispersion."
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:28
 msgid "Overkill MachineGun"
@@ -4061,6 +4061,9 @@ msgid ""
 "making it more difficult for enemies to see you. This powerup is often "
 "present in %s."
 msgstr ""
+"Le bonus de puissance %s vous rend translucide tant qu'il est actif, vous "
+"rendant difficilement détectable par les ennemis. Ce bonus de puissance est "
+"souvent présent en %s."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
@@ -4097,6 +4100,10 @@ msgid ""
 "expires, having a compounding effect with armor. It also makes you more "
 "resistant to knockback."
 msgstr ""
+"Le bonus de puissance %s réduit considérablement les dégâts que vous "
+"subissez jusqu'à son expiration, son effet se cumulant avec celui de "
+"l'armure. Il vous rend également plus résistant à la force de recul des tirs "
+"adverses."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
@@ -4111,6 +4118,10 @@ msgid ""
 "regeneration speed while the powerup is active. However, it also makes you a "
 "bit more vulnerable to incoming attacks."
 msgstr ""
+"Le bonus de puissance %s augmente votre vitesse de déplacement, votre "
+"vitesse d'attaque et votre vitesse de régénération de santé tant qu'il est "
+"actif. Cependant, il vous rend également un peu plus vulnérable aux attaques "
+"ennemies."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
@@ -4125,12 +4136,17 @@ msgid ""
 "The %s powerup greatly increases the damage you deal, until the powerup "
 "expires. It also increases the knockback that your attacks deal."
 msgstr ""
+"Le bonus de puissance %s augmente considérablement les dégâts que vous "
+"infligez, jusqu'à ce qu'il expire. Il augmente également la force de recul "
+"de vos attaques."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:58
 msgid ""
 "The damage and knockback you deal to yourself also increases but by a "
 "smaller amount."
 msgstr ""
+"Les dégâts et le recul que vous vous infligez à vous-même augmentent "
+"également, mais dans une moindre mesure."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:59
 #, c-format
@@ -5565,12 +5581,13 @@ msgstr "^BG%s%s^K1 a été électrocuté par l'Arc de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:476
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr "^BG%s%s^K1 a été mis en miettes par les rayons Arc de ^BG%s^K1%s%s"
+msgstr ""
+"^BG%s%s^K1 a été mis en miettes par les éclairs de l'Arc de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:477
 #, c-format
 msgid "^BG%s^K1 played with Arc bolts%s%s"
-msgstr "^BG%s^K1 a joué avec des rayons Arc%s%s"
+msgstr "^BG%s^K1 a joué avec des éclair d'Arc%s%s"
 
 #: qcsrc/common/notifications/all.inc:478
 #, c-format
@@ -5610,7 +5627,8 @@ msgstr "^BG%s^K1 s'est fait sauter avec son propre Devastator%s%s"
 #: qcsrc/common/notifications/all.inc:485
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"
-msgstr "^BG%s%s^K1 a été mis en miettes par le rayon Electro de ^BG%s^K1%s%s"
+msgstr ""
+"^BG%s%s^K1 a été mis en miettes par l'éclair de l'Electro de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:486
 #, c-format
@@ -5625,7 +5643,7 @@ msgstr "^BG%s%s^K1 s'est approché trop près de l'Electro-orbe de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:488
 #, c-format
 msgid "^BG%s^K1 played with Electro bolts%s%s"
-msgstr "^BG%s^K1 a joué avec des rayons Electro%s%s"
+msgstr "^BG%s^K1 a joué avec des éclairs d'Electro%s%s"
 
 #: qcsrc/common/notifications/all.inc:489
 #, c-format
@@ -7327,6 +7345,9 @@ msgid ""
 "Getting caught in the line of fire of this turret can be very deadly, but "
 "thankfully it doesn't shoot if you get too close, so as to not damage itself."
 msgstr ""
+"Il peut être très dangereux de se retrouver dans la ligne de tir de cette "
+"tourelle, mais heureusement, elle ne tire pas si vous vous approchez trop "
+"près, afin de ne pas s'infliger elle-même des dégâts."
 
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
@@ -8059,12 +8080,16 @@ msgid ""
 "The %s fires a continuous beam of electricity, steadily dealing damage to "
 "any enemies that cross its path."
 msgstr ""
+"L'%s émet un rayon électrique continu qui inflige des dégâts soutenus à tous "
+"les ennemis qui croisent son chemin."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1519
 msgid ""
 "The secondary fire rapidly shoots electric bolts forward, exploding on "
 "impact and dealing some splash damage."
 msgstr ""
+"Le tir secondaire tire une rapide succession d'éclairs électriques, qui "
+"explosent à l'impact et infligent des dégâts de zone."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1520
 #, c-format
@@ -8091,18 +8116,25 @@ msgid ""
 "high speed laser, dealing some splash damage but importantly a lot of "
 "knockback."
 msgstr ""
+"Le %s est l'une des deux armes principales par défaut. Il tire un laser "
+"relativement faible mais très rapide, qui inflige des dégâts de zone, mais "
+"surtout une importante force de recul."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:173
 msgid ""
 "It has no secondary fire, instead switching to the previously selected "
 "weapon."
 msgstr ""
+"Il n'a pas de tir secondaire, au lieu de quoi il passe à l'arme précédemment "
+"sélectionnée."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:174
 msgid ""
 "It doesn't require ammo, meaning it is a great choice if you are running low "
 "on ammo and need to preserve some."
 msgstr ""
+"Il ne nécessite pas de munitions, ce qui en fait un excellent choix si vous "
+"êtes à court de munitions et que vous devez en préserver."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:175
 #, c-format
@@ -8111,6 +8143,10 @@ msgid ""
 "in, but it's difficult to master when used over a medium to long range. "
 "Unlike other weapons, the %s can hit other projectiles directly."
 msgstr ""
+"Le %s est toujours disponible, il est donc très utilisé lorsque les joueurs "
+"apparaissent, mais il est difficile à maîtriser à moyenne et longue "
+"distance. Contrairement aux autres armes, le %s peut toucher directement "
+"d'autres projectiles."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:177
 #, c-format
@@ -8120,6 +8156,11 @@ msgid ""
 "Because it does a lot of knockback, another common usage is alternating "
 "between a high damage weapon and the %s to throw the enemy's aim off."
 msgstr ""
+"L'une des utilisations les plus courantes du %s est le « saut laser », qui "
+"permet de gagner en hauteur en visant vers le bas, en sautant, puis en "
+"tirant pour se propulser vers le haut. Comme il provoque un fort recul, une "
+"autre utilisation courante consiste à alterner entre une arme très puissante "
+"et le %s pour déstabiliser la visée de l'ennemi."
 
 #: qcsrc/common/weapons/weapon/blaster.qh:28
 msgid "Blaster"
@@ -8409,6 +8450,9 @@ msgid ""
 "fire and with no spread, but there's a short delay until it can be used "
 "again."
 msgstr ""
+"Le tir secondaire tire une courte rafale de balles à une cadence plus élevée "
+"que le tir principal et sans dispersion, mais il y a un court délai avant de "
+"pouvoir l'utiliser à nouveau."
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:436
 #, c-format
@@ -8425,6 +8469,10 @@ msgid ""
 "secondary fire has no spread, it's the better option when firing over a long "
 "range."
 msgstr ""
+"Le %s peut être utilisé dans de nombreuses situations et fonctionne "
+"particulièrement bien à longue distance, car les balles traversent "
+"instantanément la carte. Comme le tir secondaire n'a pas de dispersion, il "
+"s'agit de la meilleure option pour tirer à longue distance."
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:29
 msgid "MachineGun"
@@ -8468,12 +8516,16 @@ msgid ""
 "The %s launches a grenade that explodes immediately on impact, dealing a "
 "medium amount of splash damage."
 msgstr ""
+"Le %s lance une grenade qui explose immédiatement à l'impact, infligeant des "
+"dégâts de zone modérés."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:383
 msgid ""
 "The secondary fire shoots a similar grenade that explodes shortly after "
 "bouncing."
 msgstr ""
+"Le tir secondaire lance une grenade similaire qui explose peu après avoir "
+"rebondi."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:384
 #, c-format
@@ -8488,6 +8540,10 @@ msgid ""
 "exploding, it can be bounced against walls to damage enemies lurking around "
 "a corner."
 msgstr ""
+"Le %s est plus efficace à courte et moyenne distance, mais il est assez "
+"difficile d'atteindre un ennemi dans les airs. Comme la grenade du tir "
+"secondaire rebondit avant d'exploser, elle peut être lancée et rebondir "
+"contre les murs pour blesser les ennemis qui se cachent dans un coin."
 
 #: qcsrc/common/weapons/weapon/mortar.qh:31
 msgid "Mortar"
@@ -8499,18 +8555,25 @@ msgid ""
 "The %s is a unique gun that creates one-way portals between flat surfaces on "
 "the map, that immediately teleport players and projectiles."
 msgstr ""
+"Le %s est une arme unique qui crée des portails unidirectionnels entre des "
+"surfaces planes sur la carte, téléportant instantanément les joueurs et les "
+"projectiles."
 
 #: qcsrc/common/weapons/weapon/porto.qc:435
 msgid ""
 "The secondary fire is used to shoot the out-portal, while the primary fire "
 "shoots the in-portal."
 msgstr ""
+"Le tir secondaire permet de créer le portail de sortie, tandis que le tir "
+"principal permet de créer le portail d'entrée."
 
 #: qcsrc/common/weapons/weapon/porto.qc:437
 msgid ""
 "The portals will close either after the player who shot them dies or after "
 "some time period."
 msgstr ""
+"Les portails se fermeront soit après la mort du joueur qui les a activés, "
+"soit après un certain laps de temps."
 
 #: qcsrc/common/weapons/weapon/porto.qc:438
 #, c-format
@@ -8518,6 +8581,8 @@ msgid ""
 "The %s isn't often placed on maps, but if used well it can make for some "
 "interesting gameplay."
 msgstr ""
+"Le %s n'apparaît pas souvent sur les cartes, mais s'il est bien utilisé, il "
+"peut rendre le jeu intéressant."
 
 #: qcsrc/common/weapons/weapon/porto.qh:32
 msgid "Port-O-Launch"
@@ -8603,6 +8668,8 @@ msgid ""
 "The %s is one of the two main default weapons, firing a single shotgun round "
 "which spreads into multiple pellets upon exiting the barrel."
 msgstr ""
+"Le %s est l'une des deux armes principales par défaut. Il tire une seule "
+"balle de fusil qui se disperse en plusieurs plombs lorsqu'elle sort du canon."
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:404
 #, c-format
@@ -8621,6 +8688,8 @@ msgid ""
 "The primary fire consumes %s ammo, although if you spawn in with the %s you "
 "will already have some."
 msgstr ""
+"Le tir principal nécessite des munitions à %s, mais si vous apparaissez avec "
+"le %s, vous en aurez déjà quelques-unes à votre disposition."
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:30
 msgid "Shotgun"
@@ -8632,10 +8701,13 @@ msgid ""
 "The %s is a unique weapon that makes the ears of nearby enemies bleed by "
 "playing awful sounds, also slightly knocking them back."
 msgstr ""
+"Le %s est une arme unique qui fait saigner les oreilles des ennemis à "
+"proximité en émettant des sons horribles, et en les repoussant légèrement."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:603
 msgid "The secondary fire works the same way, playing a higher pitch."
 msgstr ""
+"Le tir secondaire fonctionne de la même manière, mais avec un son plus aigu."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:604
 msgid "The only ammo it needs to operate is the breath from your lungs."
@@ -8649,11 +8721,14 @@ msgid ""
 "Since your enemies need to be close by to hear your rubbish music, the %s is "
 "only effective at very close ranges."
 msgstr ""
+"Comme vos ennemis doivent être proches pour entendre votre musique "
+"insupportable, le %s n'est efficace qu'à très courte distance."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:606
 #, c-format
 msgid "The pitch the %s plays depends on the movement keys pressed."
 msgstr ""
+"La hauteur du son joué par le %s dépend des touches de mouvement enfoncées."
 
 #: qcsrc/common/weapons/weapon/tuba.qh:35
 #, no-c-format
@@ -9737,7 +9812,7 @@ msgstr "Afficher les touches d'attaque"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
-msgstr "Touches Appuyées"
+msgstr "Touches Enfoncées"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:26
 msgid "Translate commands"
@@ -11186,7 +11261,7 @@ msgstr "Autres"
 
 #: qcsrc/menu/xonotic/dialog_settings.qh:8
 msgid "Change the game settings"
-msgstr "Changer les paramètres du jeu"
+msgstr "Modifier les paramètres du jeu"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:30
 msgid "Master:"
@@ -13464,6 +13539,10 @@ msgid ""
 "immediately afterwards. Experiment a bit with the timing of firing the %s "
 "and jumping to get a feeling of which timings will get you how high."
 msgstr ""
+"Pour effectuer un « saut laser », il suffit de tirer le %s à vos pieds et de "
+"sauter immédiatement après. Faites quelques essais pour trouver le bon "
+"timing entre le tir du %s et le saut afin de déterminer quelle hauteur vous "
+"pouvez atteindre."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:111
 msgid "Wall Blastering"
@@ -13645,6 +13724,8 @@ msgid ""
 "%s (\"Xonotic Pro-Mode\") is a set of gameplay settings often used for "
 "competitive play, particularly in %s."
 msgstr ""
+"%s (« Xonotic Pro-Mode ») est un ensemble de paramètres de jeu souvent "
+"utilisés pour les compétitions, en particulier en %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:187
 #, c-format
