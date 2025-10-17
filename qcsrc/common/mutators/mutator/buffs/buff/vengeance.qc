@@ -21,8 +21,8 @@ METHOD(VengeanceBuff, describe, string(VengeanceBuff this))
 {
 	TC(VengeanceBuff, this);
 	PAGE_TEXT_INIT();
-	PAR(_("The %s reciprocates a portion of the damage enemies deal to you onto them, until the buff expires."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
-	PAR(_("In some sense, this is the opposite of the %s."), COLORED_NAME_WITH_CONCAT(BUFF_VAMPIRE, _("Buff")));
+	PAR(_("The %s buff reciprocates a portion of the damage enemies deal to you onto them, until the buff expires."), COLORED_NAME(this));
+	PAR(_("In some sense, this is the opposite of the %s buff."), COLORED_NAME(BUFF_VAMPIRE));
 	return PAGE_TEXT;
 }
 #endif // MENUQC

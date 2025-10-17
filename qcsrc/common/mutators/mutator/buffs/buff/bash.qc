@@ -24,7 +24,7 @@ METHOD(BashBuff, describe, string(BashBuff this))
 {
 	TC(BashBuff, this);
 	PAGE_TEXT_INIT();
-	PAR(_("The %s increases the knockback force you deal, and makes you immune to knockback while the buff is active."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAR(_("The %s buff increases the knockback force you deal, and makes you immune to knockback while the buff is active."), COLORED_NAME(this));
 	PAR(_("It also slightly increases the knockback you deal to yourself."));
 	return PAGE_TEXT;
 }
