@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-13 07:22+0200\n"
+"POT-Creation-Date: 2025-10-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: oblector o, 2022\n"
 "Language-Team: Latin (http://app.transifex.com/team-xonotic/xonotic/language/"
@@ -2796,33 +2796,10 @@ msgid "Blood loss"
 msgstr "Exsanguis"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:66
-#: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:27
-#: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:50
-#: qcsrc/common/mutators/mutator/buffs/buff/flight.qc:31
-#: qcsrc/common/mutators/mutator/buffs/buff/inferno.qc:23
-#: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:25
-#: qcsrc/common/mutators/mutator/buffs/buff/luck.qc:17
-#: qcsrc/common/mutators/mutator/buffs/buff/magnet.qc:29
-#: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:28
-#: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:14
-#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:87
-#: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:28
-#: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:29
-#: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:24
-#: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
-#: qcsrc/common/mutators/mutator/buffs/buffs.qh:23
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:84
-#: qcsrc/common/mutators/mutator/vampire/vampire.qc:11
-#: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
-#: qcsrc/common/mutators/mutator/waypoints/all.inc:83
-msgid "Buff"
-msgstr "Firmamen"
-
-#: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:66
 #, c-format
 msgid ""
-"The %s gives you infinite ammo until the buff expires, so you don't need to "
-"worry about running out of ammo."
+"The %s buff gives you infinite ammo until the buff expires, so you don't "
+"need to worry about running out of ammo."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
@@ -2839,7 +2816,7 @@ msgstr "Missilia"
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:27
 #, c-format
 msgid ""
-"The %s increases the knockback force you deal, and makes you immune to "
+"The %s buff increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
 
@@ -2854,8 +2831,8 @@ msgstr "Impactus"
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:50
 #, c-format
 msgid ""
-"The %s causes your enemies and monsters to slow down for a few seconds when "
-"you attack them, while the buff is active."
+"The %s buff causes your enemies and monsters to slow down for a few seconds "
+"when you attack them, while the buff is active."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
@@ -2870,8 +2847,8 @@ msgstr "Debilitas"
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qc:31
 #, c-format
 msgid ""
-"While you have the %s, you can crouch while mid-air to switch your gravity, "
-"allowing flight."
+"While you have the %s buff, you can crouch while mid-air to switch your "
+"gravity, allowing flight."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
@@ -2881,8 +2858,8 @@ msgstr "Volatus"
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qc:23
 #, c-format
 msgid ""
-"The %s sets any enemies or monsters you attack alight, dealing burn damage "
-"to them for several seconds until the buff expires."
+"The %s buff sets any enemies or monsters you attack alight, dealing burn "
+"damage to them for several seconds until the buff expires."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
@@ -2891,7 +2868,8 @@ msgstr "Infernus"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:25
 #, c-format
-msgid "The %s greatly increases your jump height, while the buff is active."
+msgid ""
+"The %s buff greatly increases your jump height, while the buff is active."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
@@ -2905,8 +2883,8 @@ msgstr "Saltus"
 #: qcsrc/common/mutators/mutator/buffs/buff/luck.qc:17
 #, c-format
 msgid ""
-"While you have the %s, each attack has a chance of being a critical hit with "
-"greatly increased damage."
+"While you have the %s buff, each attack has a chance of being a critical hit "
+"with greatly increased damage."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/luck.qh:13
@@ -2916,8 +2894,8 @@ msgstr "Fors"
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qc:29
 #, c-format
 msgid ""
-"The %s greatly increases your item pickup range, collecting nearby items for "
-"you while the buff is active."
+"The %s buff greatly increases your item pickup range, collecting nearby "
+"items for you while the buff is active."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:11
@@ -2927,9 +2905,9 @@ msgstr "Magnes"
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:28
 #, c-format
 msgid ""
-"The %s increases health regeneration speed, increases the maximum health you "
-"can have before health starts to rot, and reduces health rot speed until the "
-"buff expires."
+"The %s buff increases health regeneration speed, increases the maximum "
+"health you can have before health starts to rot, and reduces health rot "
+"speed until the buff expires."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:29
@@ -2944,7 +2922,7 @@ msgstr "Medicus"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:14
 #, c-format
-msgid "The %s greatly reduces your damage taken while the buff is active."
+msgid "The %s buff greatly reduces your damage taken while the buff is active."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
@@ -2958,7 +2936,7 @@ msgstr "Resistentia"
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:87
 #, c-format
 msgid ""
-"The %s allows you to press %s to switch places with a nearby enemy once."
+"The %s buff allows you to press %s to switch places with a nearby enemy once."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:88
@@ -2980,14 +2958,14 @@ msgstr "Mutuatio"
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:28
 #, c-format
 msgid ""
-"The %s converts some of the damage you deal to enemies and monsters into "
-"health for yourself, until the buff expires."
+"The %s buff converts some of the damage you deal to enemies and monsters "
+"into health for yourself, until the buff expires."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:29
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
 #, c-format
-msgid "In some sense, this is the opposite of the %s."
+msgid "In some sense, this is the opposite of the %s buff."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
@@ -2999,13 +2977,18 @@ msgstr "Striga"
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:24
 #, c-format
 msgid ""
-"The %s reciprocates a portion of the damage enemies deal to you onto them, "
-"until the buff expires."
+"The %s buff reciprocates a portion of the damage enemies deal to you onto "
+"them, until the buff expires."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qh:13
 msgid "Vengeance"
 msgstr "Ultio"
+
+#: qcsrc/common/mutators/mutator/buffs/buffs.qh:23
+#: qcsrc/common/mutators/mutator/waypoints/all.inc:83
+msgid "Buff"
+msgstr "Firmamen"
 
 #: qcsrc/common/mutators/mutator/cloaked/cloaked.qc:10
 #, c-format
@@ -3250,8 +3233,8 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:84
 #, c-format
 msgid ""
-"Similar to the %s, your weapon magazines remain full while you are inside "
-"the orb, so you don't need to reload."
+"Similar to the %s buff, your weapon magazines remain full while you are "
+"inside the orb, so you don't need to reload."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:21
@@ -3807,16 +3790,16 @@ msgstr "Tactus eruptio"
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:10
 #, c-format
 msgid ""
-"The %s mutator gives all players a permanent version of the %s. However, "
-"unlike the normal %s, when this mutator is enabled players' health can go "
-"way above the usual limit of 200."
+"The %s mutator gives all players a permanent version of the %s buff. "
+"However, unlike the normal %s buff, when this mutator is enabled players' "
+"health can go way above the usual limit of 200."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
 #, c-format
 msgid ""
 "Additionally the amount of health players get is equal to the damage they "
-"deal, which isn't normally the case with the %s."
+"deal, which isn't normally the case with the %s buff."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:81
@@ -11469,7 +11452,7 @@ msgid "Display health and armor"
 msgstr "Sanitatem armaturamque videre"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:181
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:78
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:80
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:155
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:67
 msgid "Other"
@@ -11513,107 +11496,109 @@ msgstr ""
 msgid "Do you wish to start a local game to set up the HUD?"
 msgstr "Visne incipi ludum localem ut videas Notarum Superpositarum optiones?"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:24
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:26
 msgid "Frag Information"
 msgstr "Caedium Notae"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:26
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:28
 msgid "Display information about killing sprees"
 msgstr "De caedium seriebus notas videre"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:29
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:31
 msgid "Only display sprees if they are achievements"
 msgstr "Caedium series videre modo si insignes sunt"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:34
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:36
 msgid "Show spree information in centerprints"
 msgstr "Caedium series scribere in media parte"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:38
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:40
 msgid "Show spree information in death messages"
 msgstr "Caedium series scribere in mortuorum notis"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:43
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:45
 msgid "Sprees in info messages:"
 msgstr "Caedium series in condicionum notis:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:46
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:48
 msgid "SPREES^Disabled"
 msgstr "Sine"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:47
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:49
 msgid "Target"
 msgstr "Vulnerati"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:48
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:50
 msgid "Attacker"
 msgstr "Vulnerans"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:49
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:51
 msgid "SPREES^Both"
 msgstr "Ambo"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:55
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:57
 msgid "Print on a separate line"
 msgstr "In alio versu scribere"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:59
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:61
 msgid "Add extra frag information to centerprint when available"
 msgstr "Plures notas de caedibus in scripto medio scribere si dicuntur"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:63
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:65
 msgid "Add frag location to death messages when available"
 msgstr "Locos caedium in mortuorum notis scribere si dicuntur"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:67
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:69
 msgid "Gametype Settings"
 msgstr "Ludi Modi Optiones"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:69
-msgid "Display capture times in Capture The Flag"
-msgstr "In Vexilli Captu tempora captuum videre"
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:71
+#, c-format
+msgid "Display capture times in %s"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:73
-msgid "Display name of flag stealer in Capture The Flag"
-msgstr "In Vexilli Captu nomen eius qui vexillum rapuit videre"
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:75
+#, c-format
+msgid "Display name of flag stealer in %s"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:80
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display console messages in the top left corner"
 msgstr "Iussorum loci notas videre in angulo supero sinistro"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:84
 msgid "Display all info messages in the chatbox"
 msgstr "Omnes condicionum notas in locutorii loco videre"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:84
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:86
 msgid "Display player statuses in the chatbox"
 msgstr "Ludentium condiciones in locutorii loco videre"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:88
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:90
 msgid "Powerup notifications"
 msgstr "Potestatum nuntia"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:91
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:93
 msgid "Weapon centerprint notifications"
 msgstr "Armorum nuntia in scripto medio"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:94
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:96
 msgid "Weapon info message notifications"
 msgstr "Armorum nuntia in condicionum notis"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:99
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:101
 msgid "Announcers"
 msgstr "Nuntiatores"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:101
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:103
 msgid "Respawn countdown sounds"
 msgstr "Soni numerationis regredientis cum renascitur"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:104
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:106
 msgid "Killstreak sounds"
 msgstr "Soni seriei caedium"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:107
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:109
 msgid "Achievement sounds"
 msgstr "Rerum insignium soni"
 
