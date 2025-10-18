@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -191,13 +191,12 @@ msgstr "sauter"
 #: qcsrc/client/hud/panel/infomessages.qc:137
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr "^2Vous êtes en file d'attente pour rejoindre l'équipe %s%s"
+msgstr "^2Vous êtes en attente pour rejoindre l'équipe %s%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:140
 msgid "^2You're queued to join any available team"
 msgstr ""
-"^2Vous êtes en file d'attente pour rejoindre n'importe quelle équipe "
-"disponible"
+"^2Vous êtes en attente pour rejoindre n'importe quelle équipe disponible"
 
 #: qcsrc/client/hud/panel/infomessages.qc:146
 #, c-format
@@ -3150,6 +3149,8 @@ msgid ""
 "The %s buff gives you infinite ammo until the buff expires, so you don't "
 "need to worry about running out of ammo."
 msgstr ""
+"Le bonus de %s vous donne des munitions infinies jusqu'à ce qu'il expire, "
+"vous n'avez donc pas à vous soucier de manquer de munitions."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
 #, c-format
@@ -3170,6 +3171,8 @@ msgid ""
 "The %s buff increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
+"Le bonus de %s augmente votre force de recul et vous immunise contre celle "
+"des autres tant que le bonus est actif."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
@@ -3187,11 +3190,14 @@ msgid ""
 "The %s buff causes your enemies and monsters to slow down for a few seconds "
 "when you attack them, while the buff is active."
 msgstr ""
+"Le bonus de %s ralentit vos ennemis et les monstres pendant quelques "
+"secondes lorsque vous les attaquez, et ce tant que le bonus est actif."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
 #, c-format
 msgid "This is particularly useful against speedy players, especially in %s."
 msgstr ""
+"Cela est particulièrement utile contre les joueurs rapides, notamment en %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qh:15
 msgid "Disability"
@@ -3203,6 +3209,8 @@ msgid ""
 "While you have the %s buff, you can crouch while mid-air to switch your "
 "gravity, allowing flight."
 msgstr ""
+"Tant que vous avez le bonus d'%s, vous pouvez vous accroupir quand vous êtes "
+"en l'air pour inverser votre gravité, ce qui vous permet de voler."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
 msgid "Flight"
@@ -3214,6 +3222,9 @@ msgid ""
 "The %s buff sets any enemies or monsters you attack alight, dealing burn "
 "damage to them for several seconds until the buff expires."
 msgstr ""
+"Le bonus %s enflamme tous les ennemis ou les monstres que vous attaquez, "
+"leur infligeant des dégâts de brûlure pendant plusieurs secondes, jusqu'à ce "
+"que le bonus expire."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
 msgid "Inferno"
@@ -3224,6 +3235,8 @@ msgstr "Inferno"
 msgid ""
 "The %s buff greatly increases your jump height, while the buff is active."
 msgstr ""
+"Le bonus de %s augmente considérablement la hauteur de vos sauts tant qu'il "
+"est actif."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
@@ -3239,6 +3252,9 @@ msgid ""
 "While you have the %s buff, each attack has a chance of being a critical hit "
 "with greatly increased damage."
 msgstr ""
+"Tant que vous possédez le bonus de %s, chaque attaque a une chance de se "
+"transformer en coup critique infligeant des dégâts considérablement "
+"augmentés."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/luck.qh:13
 msgid "Luck"
@@ -3250,6 +3266,9 @@ msgid ""
 "The %s buff greatly increases your item pickup range, collecting nearby "
 "items for you while the buff is active."
 msgstr ""
+"Le bonus d'%s augmente considérablement la distance maximale nécessaire au "
+"ramassage d'un objet, en collectant les objets à proximité tant que le bonus "
+"est actif."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:11
 msgid "Magnet"
@@ -3262,6 +3281,10 @@ msgid ""
 "health you can have before health starts to rot, and reduces health rot "
 "speed until the buff expires."
 msgstr ""
+"Le bonus de %s augmente la vitesse de régénération de la santé, augmente la "
+"santé maximale que vous pouvez avoir avant que la santé ne commence à se "
+"dégrader, et réduit la vitesse de dégradation de la santé, jusqu'à "
+"l'expiration du bonus."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:29
 msgid ""
@@ -3279,6 +3302,8 @@ msgstr "Médecin"
 #, c-format
 msgid "The %s buff greatly reduces your damage taken while the buff is active."
 msgstr ""
+"Le bonus de %s réduit considérablement les dégâts que vous subissez tant "
+"qu'il est actif."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
 msgid "This also impacts the damage you deal to yourself."
@@ -3294,18 +3319,25 @@ msgstr "Résistance"
 msgid ""
 "The %s buff allows you to press %s to switch places with a nearby enemy once."
 msgstr ""
+"Le bonus d'%s vous permet d'appuyer sur %s pour échanger une fois votre "
+"place avec celle d'un ennemi proche."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:88
 msgid ""
 "A common usage of this buff is to jump over the map's void, then swap with "
 "an enemy, to cause them to fall into the void."
 msgstr ""
+"Une utilisation commune de ce bonus consiste à sauter par-dessus le vide de "
+"la carte, puis à échanger sa place avec un ennemi afin de le faire tomber "
+"dans le vide."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:89
 msgid ""
 "The range that the buff works over is limited, so sometimes it may do "
 "nothing if there are no enemies nearby."
 msgstr ""
+"La portée de ce bonus est limitée, il peut donc arriver qu'il ne se produise "
+"rien s'il n'y a pas d'ennemis à proximité."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qh:10
 msgid "Swapper"
@@ -3317,12 +3349,15 @@ msgid ""
 "The %s buff converts some of the damage you deal to enemies and monsters "
 "into health for yourself, until the buff expires."
 msgstr ""
+"Le bonus de %s convertit une partie des dégâts que vous infligez aux ennemis "
+"et aux monstres en points de santé pour vous-même, jusqu'à ce que le bonus "
+"expire."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:29
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
 #, c-format
 msgid "In some sense, this is the opposite of the %s buff."
-msgstr ""
+msgstr "Dans un certain sens, c'est le contraire du bonus de %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
 #: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:307
@@ -3336,6 +3371,8 @@ msgid ""
 "The %s buff reciprocates a portion of the damage enemies deal to you onto "
 "them, until the buff expires."
 msgstr ""
+"Le bonus de %s renvoie une partie des dégâts que les ennemis vous infligent "
+"vers eux, jusqu'à ce que le bonus expire."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qh:13
 msgid "Vengeance"
@@ -3755,7 +3792,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qh:22
 msgid "Veil grenade"
-msgstr "Grenade dissimulée"
+msgstr "Grenade de dissimulation"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
 #, c-format
@@ -3858,6 +3895,8 @@ msgid ""
 "The %s is a superweapon that rapidly fires harmful bullets with a small "
 "degree of spread."
 msgstr ""
+"Le %s est une super-arme qui tire à une cadence rapide des balles perçantes "
+"avec un faible degré de dispersion."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:168
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:167
@@ -3869,6 +3908,9 @@ msgid ""
 "Like with all %s weapons, the secondary fire shoots a laser which doesn't "
 "damage or push enemies, but can be used to push yourself around."
 msgstr ""
+"Comme pour toutes les armes %s, le tir secondaire projette un laser qui "
+"n'inflige aucun dégât ni ne repousse les ennemis, mais qui peut être utilisé "
+"pour vous propulser."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:169
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:244
@@ -3897,6 +3939,9 @@ msgid ""
 "The %s can be used in a lot of situations, and it works particularly well at "
 "long ranges since the bullets pierce the sky instantaneously."
 msgstr ""
+"Le %s peut être utilisé dans de nombreuses situations et fonctionne "
+"particulièrement bien à longue portée, car les balles traversent "
+"instantanément la carte."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:173
 #, c-format
@@ -3904,6 +3949,8 @@ msgid ""
 "Since its bullets deal a lot more damage than the %s bullets, it is often "
 "heavily contested when it spawns in."
 msgstr ""
+"Comme ses balles infligent beaucoup plus de dégâts que les balles de %s, "
+"c'est une arme souvent très disputée lorsqu'elle apparaît."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:31
 msgid "Overkill Heavy MachineGun"
@@ -3913,7 +3960,9 @@ msgstr "Pistolet-mitrailleur Overkill lourd"
 #: qcsrc/common/weapons/weapon/machinegun.qc:434
 #, c-format
 msgid "The %s quickly fires bullets with a small degree of spread."
-msgstr "Le %s tire rapidement des balles avec un faible degré de dispersion."
+msgstr ""
+"Le %s tire à une cadence rapide des balles avec un faible degré de "
+"dispersion."
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:28
 msgid "Overkill MachineGun"
@@ -3926,6 +3975,8 @@ msgid ""
 "The %s fires harmful beams of energy that traverse the map instantaneously "
 "and deal a significant chunk of damage on impact."
 msgstr ""
+"Le %s tire des rayons d'énergie destructeurs qui traversent la carte "
+"instantanément et infligent des dégâts considérables à l'impact."
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qc:377
 #, c-format
@@ -3933,6 +3984,8 @@ msgid ""
 "Since it is the only %s weapon with no spread, the %s stands out at long "
 "ranges."
 msgstr ""
+"Comme c'est la seule arme %s sans dispersion, le %s se distingue à longue "
+"portée."
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:29
 msgid "Overkill Nex"
@@ -3983,6 +4036,9 @@ msgid ""
 "The %s damage drops off quickly as the range increases, so it is only useful "
 "for close combat or sometimes medium range combat."
 msgstr ""
+"Les dégâts du %s diminuent rapidement à mesure que la distance augmente, ce "
+"qui rend cette arme utile uniquement pour le combat rapproché ou parfois "
+"pour le combat à moyenne portée."
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:24
 msgid "Overkill Shotgun"
@@ -8123,9 +8179,9 @@ msgid ""
 "Unlike other weapons, the %s can hit other projectiles directly."
 msgstr ""
 "Le %s est toujours disponible, il est donc très utilisé lorsque les joueurs "
-"apparaissent, mais il est difficile à maîtriser à moyenne et longue "
-"distance. Contrairement aux autres armes, le %s peut toucher directement "
-"d'autres projectiles."
+"apparaissent, mais il est difficile à maîtriser à moyenne et longue portée. "
+"Contrairement aux autres armes, le %s peut toucher directement d'autres "
+"projectiles."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:177
 #, c-format
@@ -8154,12 +8210,21 @@ msgid ""
 "be utilized to deal more damage to an enemy by making the projectiles "
 "converge on them."
 msgstr ""
+"Le %s tire des projectiles semblables à des lasers, qui se dispersent à "
+"mesure qu'ils s'éloignent et rebondissent sur les murs. Lorsque vous "
+"maintenez le tir principal enfoncé puis le relâchez, les projectiles "
+"convergent avant de se disperser à nouveau, ce qui peut être utilisé pour "
+"infliger plus de dégâts à un ennemi en faisant converger les projectiles sur "
+"lui."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:641
 msgid ""
 "Projectiles deal damage on collision but also when they bounce, so with good "
 "positioning they can sometimes deal double damage."
 msgstr ""
+"Les projectiles infligent des dégâts lorsqu'ils touchent leur cible, mais "
+"aussi lorsqu'ils rebondissent à proximité immédiate. Ainsi, avec un bon "
+"positionnement, ils peuvent parfois infliger deux fois plus de dégâts."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:642
 msgid ""
@@ -8167,12 +8232,17 @@ msgid ""
 "is often the better option in situations where the enemy is an easy target "
 "to hit."
 msgstr ""
+"Le tir secondaire lance les projectiles en formation resserrée, ce qui en "
+"fait souvent la meilleure option dans les situations où l'ennemi est une "
+"cible facile à atteindre."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:643
 #, c-format
 msgid ""
 "It consumes %s ammo for each projectile, which is shared by several weapons."
 msgstr ""
+"Il consomme des munitions de type %s pour chaque projectile, en commun avec "
+"d'autres armes."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:644
 #, c-format
@@ -8180,6 +8250,9 @@ msgid ""
 "Close to medium range is the ideal time to use the %s, although the "
 "secondary fire can be useful for long range combat sometimes."
 msgstr ""
+"Les courtes et moyennes portées sont idéales pour utiliser le %s, bien que "
+"le tir secondaire puisse parfois s'avérer utile pour les combats à longue "
+"portée."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:645
 #, c-format
@@ -8203,6 +8276,9 @@ msgid ""
 "it explodes on impact. If the primary fire is held, the rocket can be guided "
 "by the user's aim, allowing steering it towards enemies."
 msgstr ""
+"Le %s lance une roquette télécommandée qui inflige des dégâts importants "
+"lorsqu'elle explose à l'impact. Si vous maintenez le tir principal enfoncé, "
+"vous pouvez guider la roquette vers vos ennemis."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:620
 msgid ""
@@ -8210,6 +8286,9 @@ msgid ""
 "dealing damage to enemies even if the rocket barely missed colliding with "
 "them."
 msgstr ""
+"Le tir secondaire peut être utilisé pour faire exploser immédiatement les "
+"roquettes, ce qui permet d'infliger des dégâts aux ennemis même si la "
+"roquette les a manqués de peu."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:621
 #, c-format
@@ -8217,6 +8296,9 @@ msgid ""
 "It consumes a bunch of %s ammo for each rocket, which can end up being "
 "depleted quickly, so often players alternate with another weapon like %s."
 msgstr ""
+"Il consomme pour chaque roquette beaucoup de munitions de type %s, qui "
+"peuvent rapidement être épuisées. Les joueurs alternent donc souvent avec "
+"une autre arme comme le %s."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:622
 #, c-format
@@ -8226,6 +8308,11 @@ msgid ""
 "combat. In close range combat, the large splash radius often results in "
 "rockets damaging both you and your enemy."
 msgstr ""
+"En raison de sa puissance de feu élevée, le %s est l'une des armes les plus "
+"couramment utilisées. Il peut être utilisé dans presque tous les scénarios, "
+"mais il est particulièrement efficace dans les combats à moyenne portée. "
+"Dans les combats rapprochés, ses larges dégâts de zone infligeront souvent "
+"des dégâts à la fois à vos ennemis et à vous-même."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:625
 #, c-format
@@ -8234,6 +8321,11 @@ msgid ""
 "flying,\" where you fire a rocket and immediately detonate it to boost "
 "yourself while mid-air, much more effective with the %s mutator enabled."
 msgstr ""
+"Grâce à la possibilité de déclencher des roquettes à distance, une "
+"utilisation courante est le « vol à la roquette », qui consiste à tirer une "
+"roquette et à la déclencher immédiatement pour se propulser lorsque vous "
+"êtes en l'air, ce qui est beaucoup plus efficace lorsque le mutateur %s est "
+"activé."
 
 #: qcsrc/common/weapons/weapon/devastator.qh:32
 msgid "Devastator"
@@ -8305,6 +8397,9 @@ msgid ""
 "it effectively may be difficult, but if done properly it can deal a ton of "
 "damage."
 msgstr ""
+"Comme le %s met un certain temps à se charger et que la boule de feu se "
+"déplace lentement, il peut être difficile de l'utiliser efficacement, mais "
+"s'il est utilisé correctement, il peut infliger d'énormes dégâts."
 
 #: qcsrc/common/weapons/weapon/fireball.qh:34
 msgid "Fireball"
@@ -8449,7 +8544,7 @@ msgid ""
 "range."
 msgstr ""
 "Le %s peut être utilisé dans de nombreuses situations et fonctionne "
-"particulièrement bien à longue distance, car les balles traversent "
+"particulièrement bien à longue portée, car les balles traversent "
 "instantanément la carte. Comme le tir secondaire n'a pas de dispersion, il "
 "s'agit de la meilleure option pour tirer à longue distance."
 
@@ -8519,7 +8614,7 @@ msgid ""
 "exploding, it can be bounced against walls to damage enemies lurking around "
 "a corner."
 msgstr ""
-"Le %s est plus efficace à courte et moyenne distance, mais il est assez "
+"Le %s est plus efficace à courte et moyenne portée, mais il est assez "
 "difficile d'atteindre un ennemi dans les airs. Comme la grenade du tir "
 "secondaire rebondit avant d'exploser, elle peut être lancée et rebondir "
 "contre les murs pour blesser les ennemis qui se cachent dans un coin."
@@ -8701,7 +8796,7 @@ msgid ""
 "only effective at very close ranges."
 msgstr ""
 "Comme vos ennemis doivent être proches pour entendre votre musique "
-"insupportable, le %s n'est efficace qu'à très courte distance."
+"insupportable, le %s n'est efficace qu'à très courte portée."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:606
 #, c-format
@@ -12125,12 +12220,12 @@ msgstr "Paramètres du type de partie"
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:71
 #, c-format
 msgid "Display capture times in %s"
-msgstr ""
+msgstr "Afficher les temps de capture en %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:75
 #, c-format
 msgid "Display name of flag stealer in %s"
-msgstr ""
+msgstr "Afficher le nom du voleur de drapeau en %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display console messages in the top left corner"

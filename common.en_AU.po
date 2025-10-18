@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Stuart Young <cefiar@gmail.com>, 2016\n"
+"Last-Translator: k9er, 2024-2025\n"
 "Language-Team: English (Australia) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/en_AU/)\n"
 "Language: en_AU\n"
@@ -3063,6 +3063,8 @@ msgid ""
 "The %s buff gives you infinite ammo until the buff expires, so you don't "
 "need to worry about running out of ammo."
 msgstr ""
+"The %s buff gives you infinite ammo until the buff expires, so you don't "
+"need to worry about running out of ammo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
 #, c-format
@@ -3083,6 +3085,8 @@ msgid ""
 "The %s buff increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
+"The %s buff increases the knockback force you deal, and makes you immune to "
+"knockback while the buff is active."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
@@ -3098,6 +3102,8 @@ msgid ""
 "The %s buff causes your enemies and monsters to slow down for a few seconds "
 "when you attack them, while the buff is active."
 msgstr ""
+"The %s buff causes your enemies and monsters to slow down for a few seconds "
+"when you attack them, while the buff is active."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
 #, c-format
@@ -3114,6 +3120,8 @@ msgid ""
 "While you have the %s buff, you can crouch while mid-air to switch your "
 "gravity, allowing flight."
 msgstr ""
+"While you have the %s buff, you can crouch while mid-air to switch your "
+"gravity, allowing flight."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
 msgid "Flight"
@@ -3125,6 +3133,8 @@ msgid ""
 "The %s buff sets any enemies or monsters you attack alight, dealing burn "
 "damage to them for several seconds until the buff expires."
 msgstr ""
+"The %s buff sets any enemies or monsters you attack alight, dealing burn "
+"damage to them for several seconds until the buff expires."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
 msgid "Inferno"
@@ -3135,6 +3145,7 @@ msgstr "Inferno"
 msgid ""
 "The %s buff greatly increases your jump height, while the buff is active."
 msgstr ""
+"The %s buff greatly increases your jump height, while the buff is active."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
@@ -3150,6 +3161,8 @@ msgid ""
 "While you have the %s buff, each attack has a chance of being a critical hit "
 "with greatly increased damage."
 msgstr ""
+"While you have the %s buff, each attack has a chance of being a critical hit "
+"with greatly increased damage."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/luck.qh:13
 msgid "Luck"
@@ -3161,6 +3174,8 @@ msgid ""
 "The %s buff greatly increases your item pickup range, collecting nearby "
 "items for you while the buff is active."
 msgstr ""
+"The %s buff greatly increases your item pickup range, collecting nearby "
+"items for you while the buff is active."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:11
 msgid "Magnet"
@@ -3173,6 +3188,9 @@ msgid ""
 "health you can have before health starts to rot, and reduces health rot "
 "speed until the buff expires."
 msgstr ""
+"The %s buff increases health regeneration speed, increases the maximum "
+"health you can have before health starts to rot and reduces health rot speed "
+"until the buff expires."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:29
 msgid ""
@@ -3190,6 +3208,7 @@ msgstr "Medic"
 #, c-format
 msgid "The %s buff greatly reduces your damage taken while the buff is active."
 msgstr ""
+"The %s buff greatly reduces your damage taken while the buff is active."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
 msgid "This also impacts the damage you deal to yourself."
@@ -3204,6 +3223,7 @@ msgstr "Resistance"
 msgid ""
 "The %s buff allows you to press %s to switch places with a nearby enemy once."
 msgstr ""
+"The %s buff allows you to press %s to switch places with a nearby enemy once."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:88
 msgid ""
@@ -3231,12 +3251,14 @@ msgid ""
 "The %s buff converts some of the damage you deal to enemies and monsters "
 "into health for yourself, until the buff expires."
 msgstr ""
+"The %s buff converts some of the damage you deal to enemies and monsters "
+"into health for yourself, until the buff expires."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:29
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
 #, c-format
 msgid "In some sense, this is the opposite of the %s buff."
-msgstr ""
+msgstr "In some sense, this is the opposite of the %s buff."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
 #: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:307
@@ -3250,6 +3272,8 @@ msgid ""
 "The %s buff reciprocates a portion of the damage enemies deal to you onto "
 "them, until the buff expires."
 msgstr ""
+"The %s buff reciprocates a portion of the damage enemies deal to you onto "
+"them, until the buff expires."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qh:13
 msgid "Vengeance"
@@ -3538,6 +3562,8 @@ msgid ""
 "Similar to the %s buff, your weapon magazines remain full while you are "
 "inside the orb, so you don't need to reload."
 msgstr ""
+"Similar to the %s buff, your weapon magazines remain full while you are "
+"inside the orb, so you don't need to reload."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:21
 msgid "Ammo grenade"
@@ -4206,6 +4232,9 @@ msgid ""
 "However, unlike the normal %s buff, when this mutator is enabled players' "
 "health can go way above the usual limit of 200."
 msgstr ""
+"The %s mutator gives all players a permanent version of the %s buff. "
+"However, unlike the normal %s buff, when this mutator is enabled players' "
+"health can go way above the usual limit of 200."
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
 #, c-format
@@ -4213,6 +4242,8 @@ msgid ""
 "Additionally the amount of health players get is equal to the damage they "
 "deal, which isn't normally the case with the %s buff."
 msgstr ""
+"Additionally the amount of health players get is equal to the damage they "
+"deal, which isn't normally the case with the %s buff."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:81
 #, c-format
@@ -12222,12 +12253,12 @@ msgstr "Gametype Settings"
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:71
 #, c-format
 msgid "Display capture times in %s"
-msgstr ""
+msgstr "Display capture times in %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:75
 #, c-format
 msgid "Display name of flag stealer in %s"
-msgstr ""
+msgstr "Display name of flag stealer in %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display console messages in the top left corner"

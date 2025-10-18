@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2025\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -2357,18 +2357,25 @@ msgstr "Sobrevivência"
 #, c-format
 msgid "%s is the team version of %s, played in teams rather than solo."
 msgstr ""
+"%s é a versão de equipes de %s, jogado em equipes em vez de individualmente."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:11
 msgid ""
 "Scoring is quite simple, adding a point for every frag, and subtracting a "
 "point for fragging yourself or a teammate."
 msgstr ""
+"A pontuação é bem simples, adicionando um ponto por cada execução, e "
+"subtraindo um ponto por cada vez que você matar a si ou a um colega de "
+"equipe."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:12
 msgid ""
 "Careful team coordination and map control is often key to winning a match, "
 "and sometimes players will share weapons with their teammates."
 msgstr ""
+"Coordenação cuidadosa e controle de mapa são muitas vezes a chave para "
+"vencer uma partida, e às vezes jogadores compartirão armas com seus colegas "
+"de equipe."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -2384,6 +2391,8 @@ msgid ""
 "%s is the team version of %s, where teams compete to maintain superior "
 "control over the ball."
 msgstr ""
+"%s é a versão de equipes de %s, na qual equipes competem por manter um "
+"controle superior sobre a bola."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qc:11
 #, c-format
@@ -2391,6 +2400,8 @@ msgid ""
 "Scoring is similar to in %s, except that points are awarded for frags for "
 "all members of the team of the player holding the ball."
 msgstr ""
+"A pontuação é similar à de %s, exceto que se concedem pontos por execuções "
+"para todos os membros da equipe do portador da bola."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
@@ -2409,6 +2420,10 @@ msgid ""
 "differences being that %s is a round-based gametype, and of course the "
 "scoring system differences."
 msgstr ""
+"%s é um tipo de jogo de equipes, de ação constante, baseado em %s, usando o "
+"mesmo sistema de pontuação. Tem muitas similaridades com %s, com uma das "
+"principais diferenças sendo que %s é um tipo de jogo em rodadas, e claro as "
+"diferenças no sistema de pontuação."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qc:13
 msgid ""
@@ -2416,6 +2431,9 @@ msgid ""
 "chaotic nature, team communication is less important in this gametype than "
 "other team-based gametypes."
 msgstr ""
+"Como não tem rodadas, o caos é contínuo. Como consequência da natureza "
+"caótica, comunicação de equipe é menos importante neste tipo de jogo do que "
+"em outros tipos de jogos de equipes."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid ""
@@ -2431,17 +2449,17 @@ msgstr "Mayhem por Equipe"
 #: qcsrc/common/items/item/ammo.qc:11
 #, c-format
 msgid "The %s ammo type is used by the:"
-msgstr ""
+msgstr "O tipo de munição %s é usado por:"
 
 #: qcsrc/common/items/item/ammo.qc:16 qcsrc/common/items/item/ammo.qc:26
 #, c-format
 msgid "By default, the pickup gives you %s ammo, to a maximum of %s."
-msgstr ""
+msgstr "Por padrão, a coleta lhe dá %s de munição, até um máximo de %s."
 
 #: qcsrc/common/items/item/ammo.qc:25
 #, c-format
 msgid "The %s ammo type is used by the %s."
-msgstr ""
+msgstr "O tipo de munição %s é usado por %s."
 
 #: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
 msgid "Shells"
@@ -2466,7 +2484,7 @@ msgstr "Combustível"
 #: qcsrc/common/items/item/armor.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s armor."
-msgstr ""
+msgstr "Por padrão, a coleta lhe dá %s de armadura."
 
 #: qcsrc/common/items/item/armor.qc:13
 #, c-format
@@ -2474,6 +2492,8 @@ msgid ""
 "The %s provides you a small amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"A %s dá-lhe uma pequena quantidade de armadura quando coletada, protegendo "
+"você do dano por absorção dos impactos recebidos até que se esgote."
 
 #: qcsrc/common/items/item/armor.qc:23
 #, c-format
@@ -2481,6 +2501,8 @@ msgid ""
 "The %s provides you a medium amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"A %s dá-lhe uma média quantidade de armadura quando coletada, protegendo "
+"você de dano por absorção dos impactos recebidos até que se esgote."
 
 #: qcsrc/common/items/item/armor.qc:33
 #, c-format
@@ -2488,6 +2510,8 @@ msgid ""
 "The %s provides you a large amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"A %s dá-lhe uma grande quantidade de armadura quando coletada, protegendo "
+"você do dano por absorção dos impactos recebidos até que se esgote."
 
 #: qcsrc/common/items/item/armor.qc:43
 #, c-format
@@ -2495,6 +2519,8 @@ msgid ""
 "The %s provides you a huge amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"A %s dá-lhe uma enorme quantidade de armadura quando coletada, protegendo "
+"você do dano por absorção dos impactos recebidos até que se esgote."
 
 #: qcsrc/common/items/item/armor.qc:45 qcsrc/common/items/item/health.qc:45
 #, c-format
@@ -2502,6 +2528,8 @@ msgid ""
 "It tends to be one of the most highly contested items on a map, particularly "
 "in gametypes like %s."
 msgstr ""
+"Costuma ser um dos itens mais disputados em um mapa, especialmente em tipos "
+"de jogo como %s."
 
 #: qcsrc/common/items/item/armor.qh:44
 msgid "Small armor"
@@ -2522,7 +2550,7 @@ msgstr "Mega armadura"
 #: qcsrc/common/items/item/health.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s health."
-msgstr ""
+msgstr "Por padrão, a coleta dá-lhe %s de saúde."
 
 #: qcsrc/common/items/item/health.qc:13
 #, c-format
@@ -2530,6 +2558,8 @@ msgid ""
 "The %s restores a small amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"A %s restaura uma pequena quantidade de saúde quando coletada, ajudando você "
+"a recuperar-se do dano recebido durante o combate."
 
 #: qcsrc/common/items/item/health.qc:23
 #, c-format
@@ -2537,6 +2567,8 @@ msgid ""
 "The %s restores a medium amount of health when picked up, helping you "
 "recover from damage taken during combat."
 msgstr ""
+"A %s restaura uma média quantidade de saúde quando coletada, ajudando você a "
+"recuperar-se do dano recebido durante o combate."
 
 #: qcsrc/common/items/item/health.qc:33
 #, c-format
@@ -2544,6 +2576,8 @@ msgid ""
 "The %s restores a large amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"A %s restaura uma grande quantidade de saúde quando coletada, ajudando você "
+"a recuperar-se do dano recebido durante o combate."
 
 #: qcsrc/common/items/item/health.qc:43
 #, c-format
@@ -2551,6 +2585,8 @@ msgid ""
 "The %s restores a huge amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"A %s restaura uma enorme quantidade de saúde quando coletada, ajudando você "
+"a recuperar-se do dano recebido durante o combate."
 
 #: qcsrc/common/items/item/health.qh:44
 msgid "Small health"
@@ -2856,6 +2892,8 @@ msgid ""
 "Golems are large powerful brutes capable of taking and dealing a beating. "
 "Keeping your distance is advised."
 msgstr ""
+"Os Golens são seres brutos, grandes e poderosos, capazes de tanto aguentar "
+"quanto dar uma pancada. Recomenda-se manter a distância."
 
 #: qcsrc/common/monsters/monster/golem.qc:289
 msgid ""
@@ -2863,12 +2901,17 @@ msgid ""
 "Golem may jump into the air, dealing massive damage in an area as it slams "
 "the ground."
 msgstr ""
+"O ataque corpo a corpo principal do Golem é uma série de socos. "
+"Ocasionalmente, o Golem pode saltar, causando um dano massivo em uma área ao "
+"bater contra o chão."
 
 #: qcsrc/common/monsters/monster/golem.qc:291
 msgid ""
 "To deal with distant foes, the Golem may throw a chunk of its electrified "
 "rocky exterior, zapping nearby targets on impact."
 msgstr ""
+"Para lidar com inimigos distantes, o Golem pode lançar um pedaço de seu "
+"exterior rochoso eletrificado, dando um choque em alvos próximos ao impactar."
 
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
@@ -2880,6 +2923,8 @@ msgid ""
 "Wielding nanotechnology as if it were sorcery, the Mage employs a range of "
 "unique abilities of its own creation in combat."
 msgstr ""
+"Manejando a nanotecnologia como se fosse bruxaria, o Mago emprega uma série "
+"de habilidades únicas de sua própria criação em combate."
 
 #: qcsrc/common/monsters/monster/mage.qc:499
 msgid ""
@@ -2887,6 +2932,9 @@ msgid ""
 "player. This sphere will track its target at high speed, exploding on impact "
 "or if it does not reach its target in time."
 msgstr ""
+"Como ataque primário, o Mago lança uma esfera elétrica guiada em direção ao "
+"jogador. Esta esfera rastreará seu alvo com alta velocidade, explodindo ao "
+"impactar ou quando não alcançar seu alvo a tempo."
 
 #: qcsrc/common/monsters/monster/mage.qc:501
 msgid ""
@@ -2894,18 +2942,25 @@ msgid ""
 "damage briefly. Enemies approaching too closely during this time may be "
 "pushed away with explosive force!"
 msgstr ""
+"Quando ameaçado, o Mago empregará um escudo de energia para proteger-se "
+"brevemente do dano. Inimigos que se aproximarem demais durante este tempo "
+"podem ser repelidos com força explosiva!"
 
 #: qcsrc/common/monsters/monster/mage.qc:503
 msgid ""
 "Defensively the Mage is capable of healing itself and nearby allies, with "
 "some variants also providing armor and ammunition."
 msgstr ""
+"Defensivamente, o Mago é capaz de curar a si próprio e os aliados próximos, "
+"com alguns variantes também provendo armadura e munição."
 
 #: qcsrc/common/monsters/monster/mage.qc:504
 msgid ""
 "The Mage may sometimes appear to blink out of existence as it teleports "
 "behind its target for a sneak attack."
 msgstr ""
+"O Mago às vezes pode parecer esvair-se da existência quando se "
+"teletransporta para atrás de seu alvo para um ataque sorrateiro."
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
@@ -2921,6 +2976,8 @@ msgid ""
 "The Spider is a large mechanically-enhanced arachnoid adept at hunting "
 "speedy enemies."
 msgstr ""
+"A Aranha é uma grande criatura aracnoide mecanicamente melhorada, adepta de "
+"caçar inimigos rápidos."
 
 #: qcsrc/common/monsters/monster/spider.qc:245
 msgid ""
@@ -2928,6 +2985,9 @@ msgid ""
 "from its cannons. Approaching its enwebbed prey, the Spider will inflict a "
 "series of high damage bites."
 msgstr ""
+"Para desacelerar seu alvo, a Aranha lança uma substância sintética, similar "
+"a teia, de seus canhões. Aproximando-se de sua presa emaranhada, a Aranha "
+"infligirá uma série de mordidas de grande dano."
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2947,12 +3007,16 @@ msgid ""
 "The Wyvern is a flying reptilian monster that glides around hunting for "
 "fresh prey."
 msgstr ""
+"O Wyvern é um monstro réptil voador que se move planando à busca de uma "
+"presa fresca."
 
 #: qcsrc/common/monsters/monster/wyvern.qc:189
 msgid ""
 "While fragile, the Wyvern is capable of launching deadly fireballs at the "
 "player from a distance, inflicting high damage and causing burning."
 msgstr ""
+"Embora frágil, o Wyvern é capaz de lançar mortais bolas de fogo ao jogador à "
+"distância, infligindo grande dano e causando queimaduras."
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
@@ -2968,6 +3032,8 @@ msgid ""
 "Zombies are the undead remains of deceased soldiers, risen with a ravenous "
 "hunger and no sense of self-preservation."
 msgstr ""
+"Os Zumbis são os restos mortos-vivos de soldados falecidos, que se levantam "
+"com um apetite voraz e sem nenhum senso de autopreservação."
 
 #: qcsrc/common/monsters/monster/zombie.qc:181
 msgid ""
@@ -2976,18 +3042,26 @@ msgid ""
 "massive damage on contact. If it gets close, the Zombie will punch and bite "
 "repeatedly."
 msgstr ""
+"Quando um Zumbi percebe um jogador próximo, começará a avançar contra seu "
+"alvo com grande velocidade. Enquanto avança, um Zumbi pode saltar em direção "
+"ao jogador, causando dano massivo ao impactar. Se chegar perto, o Zumbi "
+"socará e morderá repetidamente."
 
 #: qcsrc/common/monsters/monster/zombie.qc:184
 msgid ""
 "When threatened the Zombie may hold up its hands to block incoming attacks "
 "briefly."
 msgstr ""
+"Quando ameaçado, o Zumbi pode erguer suas mãos para bloquear brevemente "
+"ataques por vir."
 
 #: qcsrc/common/monsters/monster/zombie.qc:185
 msgid ""
 "It is no small task to kill that which is already dead. Once a Zombie is "
 "defeated, destroy its corpse to prevent it from rising again!"
 msgstr ""
+"Não é uma simples tarefa matar o que já está morto. Assim que um Zumbi for "
+"derrotado, destrua seu cadáver para impedir de levantar-se de novo!"
 
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
@@ -3000,6 +3074,8 @@ msgid ""
 "%s is a mutator in which players below a certain health threshold (for "
 "example 25) will suffer blood loss."
 msgstr ""
+"%s é um modificador no qual os jogadores abaixo de um certo limiar de saúde "
+"(por exemplo 25) sofrerão perda de sangue."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qc:77
 msgid ""
@@ -3007,6 +3083,9 @@ msgid ""
 "rapidly takes away health points until they either die or gain enough health "
 "to go above the health threshold."
 msgstr ""
+"A perda de sangue deixa os jogadores atordoados, prejudica severamente seu "
+"movimento e remove rapidamente pontos de saúde até que morram, a menos que "
+"recuperem saúde suficiente e superem o limiar de saúde."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qh:5
 #: qcsrc/common/util.qc:310
@@ -3215,6 +3294,9 @@ msgid ""
 "The %s mutator makes all players nearly invisible, similar to the %s "
 "powerup. This adds an extra layer of stealth and strategy to gameplay."
 msgstr ""
+"O modificador %s deixa todos os jogadores quase invisíveis, similar ao "
+"potencializador %s. Isto acresce uma camada de furtividade e estratégia ao "
+"jogo."
 
 #: qcsrc/common/mutators/mutator/cloaked/cloaked.qh:5 qcsrc/common/util.qc:303
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
@@ -3316,11 +3398,16 @@ msgid ""
 "while in contact with a wall, allowing quick speed gain if done repeatedly "
 "against a long wall."
 msgstr ""
+"%s é um modificador que ativa manobras de esquiva, facilitando a evasão de "
+"ataques em combates entre próximos. Se ativado, quando você está no chão e "
+"aperta duas vezes uma tecla de movimento, saltará à direção correspondente. "
+"Isto também funciona quando em contato com uma parede, permitindo rápido "
+"ganho de velocidade se feito repetidamente contra uma parede longa."
 
 #: qcsrc/common/mutators/mutator/dodging/dodging.qc:13
 #, c-format
 msgid "Some other mutators like %s enable this by default."
-msgstr ""
+msgstr "Alguns outros modificadores como %s ativam isto por padrão."
 
 #: qcsrc/common/mutators/mutator/dodging/dodging.qh:5 qcsrc/common/util.qc:296
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:77
@@ -3344,6 +3431,9 @@ msgid ""
 "The %s mutator gives all players a %s as their offhand weapon, used with %s. "
 "It has unlimited ammo, but the ordinary secondary fire can't be used."
 msgstr ""
+"O modificador %s dá a todos os jogadores um %s como arma imediata, usada com "
+"%s. Tem munição ilimitada, mas o disparo secundário ordinário não pode ser "
+"usado."
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:12
 #: qcsrc/common/mutators/mutator/nades/nades.qc:51
@@ -3359,11 +3449,14 @@ msgid ""
 "at their enemies at the same time, opening up more gameplay possibilities "
 "than the regular %s."
 msgstr ""
+"Como é dado como uma arma imediata, jogadores podem usá-lo para mover-se e "
+"atirar nos inimigos ao mesmo tempo, levando a mais possibilidades de jogo "
+"que o %s ordinário."
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:14
 #, c-format
 msgid "Note that it is overridden by the %s mutator."
-msgstr ""
+msgstr "Note que é revogado pelo modificador %s."
 
 #: qcsrc/common/mutators/mutator/hook/hook.qh:5 qcsrc/common/util.qc:304
 msgid "Hook"
@@ -3376,6 +3469,9 @@ msgid ""
 "instead giving players the %s, which immediately frags players in a single "
 "shot, hence the name \"InstaGib.\""
 msgstr ""
+"%s é um modificador que remove todas as armas e coletas de armas do mapa, e "
+"em seu lugar dá aos jogadores a arma %s, que imediatamente executa jogadores "
+"com um só tiro, daí o nome \"InstaGib\"."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qc:17
 #, c-format
@@ -3384,6 +3480,9 @@ msgid ""
 "after 10 seconds if you run out of ammo. Ammo (%s) can be picked up on the "
 "map often, or collected from dropped %s guns."
 msgstr ""
+"Mira precisa e conservação de munição são importantes, já que você se "
+"suicidará depois de 10 segundos se acabar sua munição. A munição (%s) pode "
+"ser coletada do mapa ou das armas %s largadas."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qc:19
 #, c-format
@@ -3392,6 +3491,9 @@ msgid ""
 "picked up (total extra lives is displayed as armor). Other powerups often "
 "present on maps include %s and %s."
 msgstr ""
+"Mapas muitas vezes têm uma %s neles, que salvará você da morte (com vidas "
+"extras, o seu número total sendo exibido como armadura). Outros "
+"potencializadores muitas vezes presentes nos mapas incluem %s e %s."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qc:21
 #, c-format
@@ -3400,6 +3502,9 @@ msgid ""
 "of gametypes but particularly %s. Sometimes it's enabled alongside other "
 "mutators such as %s for added movement possibilities."
 msgstr ""
+"É um modificador bem comum presente em muitos servidores, misturando bem com "
+"muitos tipos de jogos, em especial %s. Às vezes é ativado junto com outros "
+"modificadores como %s para possibilidades adicionais de movimento."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qh:5
 #: qcsrc/common/util.qc:297
@@ -3413,6 +3518,8 @@ msgid ""
 "The %s is sometimes present on maps when %s is enabled, providing ammo for "
 "the %s."
 msgstr ""
+"A %s é às vezes presente em mapas em que %s é ativo, provendo munição para a "
+"arma %s."
 
 #: qcsrc/common/mutators/mutator/instagib/items.qc:19
 #, c-format
@@ -3420,6 +3527,9 @@ msgid ""
 "The %s powerup acts as armor in %s. If a player is shot while having one or "
 "more extra lives, they will survive the shot but suffer strong knockback."
 msgstr ""
+"O potencializador %s age como armadura em %s. Se um jogador é atingido "
+"enquanto tem uma ou mais vidas, sobreviverá o tiro mas sofrerá um forte "
+"empurrão."
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:29
 msgid "Vaporizer ammo"
