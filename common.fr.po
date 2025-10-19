@@ -3895,7 +3895,7 @@ msgid ""
 "The %s is a superweapon that rapidly fires harmful bullets with a small "
 "degree of spread."
 msgstr ""
-"Le %s est une super-arme qui tire à une cadence rapide des balles perçantes "
+"Le %s est une super-arme qui tire une rapide succession de balles perçantes "
 "avec un faible degré de dispersion."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:168
@@ -4120,6 +4120,8 @@ msgid ""
 "It consumes %s ammo while operating, so make sure you don't run out when "
 "you're high up!"
 msgstr ""
+"Il consomme des munitions de type %s pendant son fonctionnement, alors "
+"assurez-vous de ne pas en manquer lorsque vous êtes en hauteur !"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:38
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:41
@@ -8132,6 +8134,8 @@ msgid ""
 "It consumes %s ammo, steadily churning through your supply to maintain the "
 "stream."
 msgstr ""
+"Il consomme des munitions de type %s, épuisant progressivement vos réserves "
+"pour maintenir le flux."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1521
 #, c-format
@@ -8212,7 +8216,7 @@ msgid ""
 msgstr ""
 "Le %s tire des projectiles semblables à des lasers, qui se dispersent à "
 "mesure qu'ils s'éloignent et rebondissent sur les murs. Lorsque vous "
-"maintenez le tir principal enfoncé puis le relâchez, les projectiles "
+"maintenez le tir primaire enfoncé puis le relâchez, les projectiles "
 "convergent avant de se disperser à nouveau, ce qui peut être utilisé pour "
 "infliger plus de dégâts à un ennemi en faisant converger les projectiles sur "
 "lui."
@@ -8264,6 +8268,12 @@ msgid ""
 "angle down and use the secondary fire to pull yourself forwards, in order to "
 "gain speed."
 msgstr ""
+"La force de recul du %s est assez unique, car elle tire le joueur depuis son "
+"centre vers le point d'impact. Cela en fait l'une des meilleures armes pour "
+"ralentir quelqu'un si vous le poursuivez, en particulier avec le tir "
+"secondaire. Une autre utilisation courante du %s est la « course au "
+"crylink », qui consiste à s'incliner légèrement vers le bas et à utiliser le "
+"tir secondaire pour se propulser vers l'avant afin de gagner de la vitesse."
 
 #: qcsrc/common/weapons/weapon/crylink.qh:32
 msgid "Crylink"
@@ -8277,7 +8287,7 @@ msgid ""
 "by the user's aim, allowing steering it towards enemies."
 msgstr ""
 "Le %s lance une roquette télécommandée qui inflige des dégâts importants "
-"lorsqu'elle explose à l'impact. Si vous maintenez le tir principal enfoncé, "
+"lorsqu'elle explose à l'impact. Si vous maintenez le tir primaire enfoncé, "
 "vous pouvez guider la roquette vers vos ennemis."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:620
@@ -8337,6 +8347,8 @@ msgid ""
 "The %s shoots electric balls forwards, dealing some splash damage when they "
 "burst on impact."
 msgstr ""
+"L'%s tire des boules électriques qui infligent des dégâts de zone "
+"lorsqu'elles explosent à l'impact."
 
 #: qcsrc/common/weapons/weapon/electro.qc:787
 #, c-format
@@ -8346,11 +8358,17 @@ msgid ""
 "damage enemies that walk by. The orbs burst after some time, and can be "
 "forced to burst in a \"combo\" if a primary fire ball bursts near them."
 msgstr ""
+"Le tir secondaire lance des orbes qui sont soumis à la gravité ; ils peuvent "
+"donc être placés à des endroits très fréquentés de la carte (comme les bases "
+"de drapeaux en %s) pour infliger des dégâts aux ennemis qui passent à "
+"proximité. Les orbes explosent après un certain temps et l'explosion peut "
+"être provoquée dans un « combo » si une boule de tir primaire explose à "
+"proximité."
 
 #: qcsrc/common/weapons/weapon/electro.qc:790
 #, c-format
 msgid "It consumes some %s ammo for each ball / orb."
-msgstr ""
+msgstr "Il consomme des munitions de type %s pour chaque boule/orbe."
 
 #: qcsrc/common/weapons/weapon/electro.qc:791
 #, c-format
@@ -8360,6 +8378,10 @@ msgid ""
 "fire doesn't travel particularly fast, the %s is not useful in many other "
 "situations."
 msgstr ""
+"L'%s est l'une des meilleures armes pour spammer les zones fréquentées, car "
+"ses combos peuvent infliger d'énormes dégâts si l'ennemi est suffisamment "
+"proche. Comme son tir primaire n'est pas particulièrement rapide, le %s est "
+"moins utile dans d'autres types de situations."
 
 #: qcsrc/common/weapons/weapon/electro.qh:33
 msgid "Electro"
@@ -8371,6 +8393,8 @@ msgid ""
 "The %s supercharges then fires a massive fireball in a straight line, "
 "dealing heaps of splash damage over a large radius on impact."
 msgstr ""
+"Le %s surcharge et tire alors une énorme boule de feu en ligne droite, "
+"infligeant d'énormes dégâts de zone sur un large rayon à l'impact."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:443
 msgid ""
@@ -8411,6 +8435,8 @@ msgid ""
 "The %s rapidly fires small propelled rockets forwards, dealing some splash "
 "damage on impact."
 msgstr ""
+"Le %s tire une rapide succession de petites roquettes, infligeant des dégâts "
+"de zone à l'impact."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:500
 msgid ""
@@ -8423,7 +8449,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/hagar.qc:502
 #, c-format
 msgid "It consumes %s ammo for each rocket."
-msgstr ""
+msgstr "Il consomme des munitions de type %s pour chaque roquette."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:503
 #, c-format
@@ -8525,7 +8551,7 @@ msgid ""
 "again."
 msgstr ""
 "Le tir secondaire tire une courte rafale de balles à une cadence plus élevée "
-"que le tir principal et sans dispersion, mais il y a un court délai avant de "
+"que le tir primaire et sans dispersion, mais il y a un court délai avant de "
 "pouvoir l'utiliser à nouveau."
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:436
@@ -8534,6 +8560,8 @@ msgid ""
 "It consumes %s ammo for each bullet shot, until the whole magazine is "
 "emptied."
 msgstr ""
+"Il consomme des munitions de type %s pour chaque balle tirée, jusqu'à ce que "
+"le chargeur soit entièrement vidé."
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:437
 #, c-format
@@ -8559,17 +8587,22 @@ msgid ""
 "enemies if stepped on. Only a couple mines can be placed at any time, and "
 "after several seconds they will self-detonate."
 msgstr ""
+"Le %s place des mines sur le sol qui explosent et infligent des dégâts aux "
+"ennemis qui marchent dessus. Seules quelques mines peuvent être placées à la "
+"fois, et elles explosent automatiquement après quelques secondes."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:527
 msgid ""
 "The secondary fire instantaneously detonates any mines fired by the primary "
 "fire, first waiting until you're far enough away."
 msgstr ""
+"Le tir secondaire fait exploser instantanément toutes les mines posées via "
+"le tir primaire, après avoir attendu que vous soyez suffisamment éloigné."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:528
 #, c-format
 msgid "It consumes %s ammo for each mine laid."
-msgstr ""
+msgstr "Il consomme des munitions de type %s pour chaque mine posée."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:529
 #, c-format
@@ -8579,6 +8612,10 @@ msgid ""
 "important areas of the map such as the flag in %s, control points in %s, or "
 "checkpoints in %s."
 msgstr ""
+"Les mines ne sont pas lancées très loin avant de toucher le sol, le %s n'est "
+"donc pas très efficace à moyenne et longue portée. Il est souvent utilisé "
+"pour protéger les zones importantes de la carte, telles que le drapeau en "
+"%s, les points de contrôle en %s ou les points de passage en %s."
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:34
 msgid "Mine Layer"
@@ -8604,7 +8641,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/mortar.qc:384
 #, c-format
 msgid "It consumes %s ammo for every grenade launched."
-msgstr ""
+msgstr "Il consomme des munitions de type %s pour chaque grenade lancée."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:385
 #, c-format
@@ -8639,7 +8676,7 @@ msgid ""
 "shoots the in-portal."
 msgstr ""
 "Le tir secondaire permet de créer le portail de sortie, tandis que le tir "
-"principal permet de créer le portail d'entrée."
+"primaire permet de créer le portail d'entrée."
 
 #: qcsrc/common/weapons/weapon/porto.qc:437
 msgid ""
@@ -8668,18 +8705,22 @@ msgid ""
 "The %s fires bullets that traverse the map instantaneously and deal a "
 "significant chunk of damage on impact."
 msgstr ""
+"Le %s tire des balles qui traversent instantanément la carte et infligent "
+"des dégâts importants à l'impact."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:271
 msgid ""
 "The secondary fire shoots a few less powerful bullets at once with a bit of "
 "scatter."
 msgstr ""
+"Le tir secondaire tire plusieurs balles de moindre puissance à la fois avec "
+"une légère dispersion."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:272
 #: qcsrc/common/weapons/weapon/vortex.qc:386
 #, c-format
 msgid "It consumes %s ammo for each bullet shot."
-msgstr ""
+msgstr "Il consomme des munitions de type %s pour chaque balle tirée."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:273
 #, c-format
@@ -8688,6 +8729,9 @@ msgid ""
 "manually with the %s. Also, it needs to be reloaded after its magazine is "
 "emptied."
 msgstr ""
+"Contrairement au %s, le tir secondaire ne permet pas de zoomer, le %s doit "
+"donc être utilisé manuellement avec le %s. De plus, il doit être rechargé "
+"une fois son chargeur vidé."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:274
 msgid "zoom"
@@ -8700,6 +8744,8 @@ msgid ""
 "Similar to the %s, the %s can be used at any range, but it stands out at "
 "long ranges."
 msgstr ""
+"Tout comme le %s, le %s peut être utilisé à n'importe quelle distance, mais "
+"il excelle particulièrement à longue portée."
 
 #: qcsrc/common/weapons/weapon/rifle.qh:30
 msgid "Rifle"
@@ -8712,17 +8758,24 @@ msgid ""
 "missiles if it collides with a player. The homing isn't perfect, so "
 "sometimes the missiles can hit an object or a corner."
 msgstr ""
+"Le %s est une arme unique qui tire une « balise » et lance ensuite plusieurs "
+"missiles à tête chercheuse si celle-ci heurte un joueur. Le guidage n'est "
+"pas parfait, les missiles peuvent donc parfois toucher un objet ou un coin."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:677
 msgid ""
 "The secondary fire launches a rapid barrage of scattered explosives that "
 "travel only a short distance."
 msgstr ""
+"Le tir secondaire lance une rafale rapide d'explosifs dispersés qui ne "
+"parcourent qu'une courte distance."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:678
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
 msgstr ""
+"Il consomme des munitions de type %s, même lorsque la balise n'atteint pas "
+"sa cible."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:679
 #, c-format
@@ -8731,6 +8784,10 @@ msgid ""
 "it requires skill to aim effectively. The secondary fire is only useful in "
 "close range combat, and sometimes the explosives can damage yourself too."
 msgstr ""
+"Le tir primaire du %s inflige beaucoup de dégâts lorsqu'une balise touche sa "
+"cible, mais il faut beaucoup d'habileté pour viser efficacement. Le tir "
+"secondaire n'est utile qu'en combat rapproché, et les explosifs peuvent "
+"parfois vous infliger des dégâts à vous-même."
 
 #: qcsrc/common/weapons/weapon/seeker.qh:44
 msgid "T.A.G. Seeker"
@@ -8762,8 +8819,8 @@ msgid ""
 "The primary fire consumes %s ammo, although if you spawn in with the %s you "
 "will already have some."
 msgstr ""
-"Le tir principal nécessite des munitions à %s, mais si vous apparaissez avec "
-"le %s, vous en aurez déjà quelques-unes à votre disposition."
+"Le tir primaire nécessite des munitions de type %s, mais si vous apparaissez "
+"avec le %s, vous en aurez déjà quelques-unes à votre disposition."
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:30
 msgid "Shotgun"
@@ -8816,6 +8873,9 @@ msgid ""
 "amount of damage. In %s, the beam has the ability to instantly kill enemies "
 "with a single shot, unless they have an %s."
 msgstr ""
+"Le %s est une arme unique qui tire un rayon d'énergie mortel infligeant "
+"d'énormes dégâts. En %s, le rayon a la capacité de tuer instantanément les "
+"ennemis en un seul tir, à moins qu'ils ne disposent d'une %s."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:421
 #, c-format
@@ -8823,6 +8883,8 @@ msgid ""
 "The secondary fire shoots a laser identical to that fired by the %s, with "
 "strong knockback."
 msgstr ""
+"Le tir secondaire projette un laser identique à celui tiré par le %s, avec "
+"une force de recul importante."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:422
 #, c-format
@@ -8836,7 +8898,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/vaporizer.qc:423
 #, c-format
 msgid "It consumes some %s ammo with each shot."
-msgstr ""
+msgstr "Il consomme des munitions de type %s pour chaque tir."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:31
 msgid "Vaporizer"
@@ -8845,6 +8907,8 @@ msgstr "Vaporizer"
 #: qcsrc/common/weapons/weapon/vortex.qc:385
 msgid "The secondary fire zooms in when held, allowing for ease of aiming."
 msgstr ""
+"Le tir secondaire effectue un zoom avant lorsqu'il est maintenu enfoncé, ce "
+"qui facilite la visée."
 
 #: qcsrc/common/weapons/weapon/vortex.qc:387
 #, c-format
@@ -8854,6 +8918,10 @@ msgid ""
 "slightly before it finishes completely reloading, albeit with the tradeoff "
 "of dealing slightly less damage."
 msgstr ""
+"Contrairement au %s, le %s n'a pas besoin d'être rechargé manuellement, mais "
+"vous devez attendre quelques secondes entre chaque tir. Il a la "
+"particularité de pouvoir être utilisé avant d'être complètement rechargé, "
+"mais cela réduit légèrement les dégâts infligés."
 
 #: qcsrc/common/weapons/weapon/vortex.qh:32
 msgid "Vortex"
@@ -13491,10 +13559,10 @@ msgid ""
 "skills is an essential part of Xonotic gameplay and must not be "
 "underestimated."
 msgstr ""
-"Xonotic est un jeu de tir en arène très effréné. La rapidité ne tient pas "
-"seulement aux temps de réaction, mais aussi à la vitesse de déplacement. "
-"Cela signifie que la maîtrise des techniques de déplacement est un élément "
-"essentiel du gameplay de Xonotic et ne doit pas être sous-estimée."
+"Xonotic est un jeu de tir en arène au rythme effréné. Le rythme soutenu ne "
+"tient pas seulement aux temps de réaction, mais aussi à la vitesse de "
+"déplacement. Cela signifie que la maîtrise des techniques de déplacement est "
+"un élément essentiel du gameplay de Xonotic et ne doit pas être sous-estimée."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:67
 msgid "For a new player, the most important tricks to learn are:"
@@ -13507,19 +13575,19 @@ msgstr "Bunny Hopping"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:70 qcsrc/menu/xonotic/guide/pages.qc:89
 msgid "Strafe Turning"
-msgstr ""
+msgstr "Virage en strafe"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:71 qcsrc/menu/xonotic/guide/pages.qc:101
 msgid "Blaster Jumping"
-msgstr ""
+msgstr "Saut au Blaster"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:73 qcsrc/menu/xonotic/guide/pages.qc:133
 msgid "Crylink Running"
-msgstr ""
+msgstr "Course au Crylink"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:74 qcsrc/menu/xonotic/guide/pages.qc:149
 msgid "Ramp Jumping"
-msgstr ""
+msgstr "Saut de rampe"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:80
 msgid ""
