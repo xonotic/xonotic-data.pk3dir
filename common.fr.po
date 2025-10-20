@@ -3389,6 +3389,9 @@ msgid ""
 "The %s mutator makes all players nearly invisible, similar to the %s "
 "powerup. This adds an extra layer of stealth and strategy to gameplay."
 msgstr ""
+"Le mutateur %s rend tous les joueurs quasi invisibles, comme le bonus de "
+"puissance %s. Cela ajoute une dimension supplémentaire de furtivité et de "
+"stratégie au gameplay."
 
 #: qcsrc/common/mutators/mutator/cloaked/cloaked.qh:5 qcsrc/common/util.qc:303
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
@@ -3490,6 +3493,12 @@ msgid ""
 "while in contact with a wall, allowing quick speed gain if done repeatedly "
 "against a long wall."
 msgstr ""
+"%s est un mutateur qui rend possible des manœuvres d'esquive, permettant "
+"d'éviter plus facilement les attaques en combat rapproché. Lorsqu'il est "
+"activé, si vous êtes au sol et que vous appuyez deux fois sur une touche de "
+"déplacement, vous bondirez dans cette direction. Cela fonctionne également "
+"lorsque vous touchez un mur, ce qui vous permet de gagner rapidement en "
+"vitesse si vous répétez cette action contre un mur suffisamment long."
 
 #: qcsrc/common/mutators/mutator/dodging/dodging.qc:13
 #, c-format
@@ -3611,6 +3620,9 @@ msgid ""
 "The %s powerup acts as armor in %s. If a player is shot while having one or "
 "more extra lives, they will survive the shot but suffer strong knockback."
 msgstr ""
+"Le bonus de puissance %s agit comme une armure en %s. Si un joueur est "
+"touché alors qu'il dispose d'une ou plusieurs vies supplémentaires, il "
+"survivra au tir mais subira un fort recul."
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:29
 msgid "Vaporizer ammo"
@@ -3639,6 +3651,10 @@ msgid ""
 "orb they will recover ammo, and if enemies enter the sphere they will lose "
 "ammo."
 msgstr ""
+"La %s explose après un court délai, créant une sphère temporaire autour du "
+"point où elle a explosé pendant plusieurs secondes. Si les membres de votre "
+"équipe pénètrent dans la sphère, ils récupèrent des munitions, et si des "
+"ennemis y pénètrent, ils perdent des munitions."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:84
 #, c-format
@@ -3646,6 +3662,9 @@ msgid ""
 "Similar to the %s buff, your weapon magazines remain full while you are "
 "inside the orb, so you don't need to reload."
 msgstr ""
+"Tout comme pour le bonus de %s, les chargeurs de vos armes restent pleins "
+"tant que vous êtes à l'intérieur de la sphère, vous n'avez donc pas besoin "
+"de recharger."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:21
 msgid "Ammo grenade"
@@ -3657,6 +3676,8 @@ msgid ""
 "The %s detonates after a short delay, creating a dark field which "
 "temporarily blinds enemies who enter it."
 msgstr ""
+"La %s explose après un court délai, créant un champ sombre qui aveugle "
+"temporairement les ennemis qui y pénètrent."
 
 #: qcsrc/common/mutators/mutator/nades/nade/darkness.qc:147
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qc:55
@@ -3675,10 +3696,13 @@ msgid ""
 "point where it detonated for several seconds. Players and projectiles that "
 "enter the sphere will be slowed down, including yourself."
 msgstr ""
+"La %s explose après un court délai, créant une sphère temporaire autour du "
+"point d'explosion pendant plusieurs secondes. Les joueurs et les projectiles "
+"qui pénètrent dans la sphère seront ralentis, y compris vous-même."
 
 #: qcsrc/common/mutators/mutator/nades/nade/entrap.qh:22
 msgid "Entrap grenade"
-msgstr "Grenade piégée"
+msgstr "Grenade de ralentissement"
 
 #: qcsrc/common/mutators/mutator/nades/nade/heal.qc:47
 #, c-format
@@ -3688,6 +3712,10 @@ msgid ""
 "members enter the orb they will recover health, and if enemies enter the "
 "sphere they will be harmed."
 msgstr ""
+"La %s explose après un court délai, créant une sphère de soins temporaire "
+"autour du point d'explosion pendant plusieurs secondes. Si les membres de "
+"votre équipe pénètrent dans la sphère, ils récupéreront des points de santé, "
+"et si des ennemis y pénètrent, ils subiront des dégâts."
 
 #: qcsrc/common/mutators/mutator/nades/nade/heal.qh:20
 msgid "Heal grenade"
@@ -3701,6 +3729,11 @@ msgid ""
 "players can't move or shoot, leaving them vulnerable to damage, but if left "
 "too long they'll unfreeze and run away!"
 msgstr ""
+"La %s explose après un court délai, gelant tous les ennemis qui traversent "
+"le rayon de l'explosion pendant quelques secondes après celle-ci. Tant "
+"qu'ils sont gelés, les joueurs ne peuvent ni bouger ni tirer, ce qui les "
+"rend vulnérables, mais s'ils sont laissés tranquilles, ils finissent par "
+"dégeler et s'enfuir !"
 
 #: qcsrc/common/mutators/mutator/nades/nade/ice.qh:19
 msgid "Ice grenade"
@@ -3711,6 +3744,8 @@ msgstr "Grenade de glace"
 msgid ""
 "The %s detonates after a short delay, spawning one of the five monster types."
 msgstr ""
+"La %s explose après un court délai, faisant apparaître l'un des cinq types "
+"de monstres."
 
 #: qcsrc/common/mutators/mutator/nades/nade/monster.qh:19
 msgid "Monster grenade"
@@ -3723,6 +3758,9 @@ msgid ""
 "a fountain. The napalm fire balls burn for a while, and damage players who "
 "get too close."
 msgstr ""
+"La %s explose après un court délai, projetant des boules de napalm "
+"enflammées tout autour d'elle. Les boules de napalm brûlent pendant un "
+"certain temps et infligent des dégâts aux joueurs qui s'approchent trop près."
 
 #: qcsrc/common/mutators/mutator/nades/nade/napalm.qh:30
 msgid "Napalm grenade"
@@ -3735,6 +3773,10 @@ msgid ""
 "players. If other nade types are destroyed before they detonate, they "
 "instead explode similar to this, without doing their special effects."
 msgstr ""
+"La %s (normale) explose après un court délai, infligeant des dégâts aux "
+"joueurs à proximité. Lorsque d'autres types de grenades sont détruits avant "
+"d'exploser, ils explosent de la même manière, sans produire leurs effets "
+"spéciaux."
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:19
 #, c-format
@@ -3742,6 +3784,7 @@ msgid ""
 "Make sure you remember to throw it with %s, or else it will blow up in your "
 "hands!"
 msgstr ""
+"N'oubliez pas de la lancer avec %s, sinon elle explosera entre vos mains !"
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qh:11
 #: qcsrc/common/mutators/mutator/nades/nades.qh:17
@@ -3755,6 +3798,10 @@ msgid ""
 "where it detonated. It is useful for cases where you want to go back to some "
 "point on the map after you die."
 msgstr ""
+"La %s explose après un court délai, assignant temporairement votre point "
+"d'apparition à l'endroit où elle a explosé. Elle est utile dans les cas de "
+"figure où vous souhaitez revenir à un certain point de la carte après votre "
+"mort."
 
 #: qcsrc/common/mutators/mutator/nades/nade/spawn.qh:17
 msgid "Spawn grenade"
@@ -3765,18 +3812,25 @@ msgstr "Grenade d'apparition"
 msgid ""
 "The %s detonates after a short delay, teleporting you to where it detonated."
 msgstr ""
+"La %s explose après un court délai, vous téléportant à l'endroit où elle a "
+"explosé."
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:46
 msgid ""
 "A common use of this nade is saving yourself from the void in space maps, "
 "however mastering this is very tricky."
 msgstr ""
+"Cette grenade est couramment utilisée pour éviter de chuter dans le vide "
+"dans les cartes spatiales, mais il est très difficile de maîtriser cette "
+"technique."
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:47
 msgid ""
 "If this grenade is destroyed by an attacker, it will deal some damage to "
 "them."
 msgstr ""
+"Si cette grenade est détruite par un attaquant, elle lui infligera des "
+"dégâts."
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qh:17
 msgid "Translocate grenade"
@@ -3789,10 +3843,14 @@ msgid ""
 "point where it detonated for several seconds. Players inside the orb will be "
 "invisible to those outside it."
 msgstr ""
+"La %s explose après un court délai, créant une sphère temporaire autour du "
+"point où elle a explosé pendant plusieurs secondes. Les joueurs à "
+"l'intérieur de la sphère seront invisibles pour ceux qui se trouvent à "
+"l'extérieur."
 
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qh:22
 msgid "Veil grenade"
-msgstr "Grenade de dissimulation"
+msgstr "Grenade de camouflage"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
 #, c-format
@@ -3808,6 +3866,9 @@ msgid ""
 "configuration options for this mutator, so they may act a little differently "
 "depending on the server you play on."
 msgstr ""
+"Il existe plusieurs types de grenades parmi lesquels choisir, ainsi que de "
+"nombreuses options de configuration pour ce mutateur. Leur fonctionnement "
+"peut donc varier légèrement selon le serveur sur lequel vous jouez."
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:54
 #, c-format
@@ -3834,6 +3895,8 @@ msgid ""
 "Since these weapons can't spawn in %s and %s, the %s mutator can't be "
 "enabled concurrently."
 msgstr ""
+"Comme ces armes ne peuvent pas apparaître en %s et %s, le mutateur %s ne "
+"peut pas être activé simultanément."
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:31
 #, c-format
@@ -3853,6 +3916,10 @@ msgid ""
 "After some time the weapon is reselected, and this repeats forever. Weapon "
 "and ammo pickups are also removed from the map."
 msgstr ""
+"%s est un mutateur qui équipe tous les joueurs de la même arme choisie au "
+"hasard. Après un certain temps, l'arme change, et ce processus se répète "
+"indéfiniment. Les armes et les munitions à ramasser sont également "
+"supprimées de la carte."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:299
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
@@ -4258,6 +4325,10 @@ msgid ""
 "However, unlike the normal %s buff, when this mutator is enabled players' "
 "health can go way above the usual limit of 200."
 msgstr ""
+"Le mutateur %s confère à tous les joueurs une version permanente du bonus de "
+"%s. Cependant, contrairement au bonus de %s normal, lorsque ce mutateur est "
+"activé, la santé des joueurs peut dépasser largement la limite habituelle de "
+"200."
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
 #, c-format
@@ -4265,6 +4336,9 @@ msgid ""
 "Additionally the amount of health players get is equal to the damage they "
 "deal, which isn't normally the case with the %s buff."
 msgstr ""
+"De plus, la quantité de santé que les joueurs obtiennent est égale aux "
+"dégâts qu'ils infligent, ce qui n'est généralement pas le cas avec le bonus "
+"de %s."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:81
 #, c-format
@@ -13666,7 +13740,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/guide/pages.qc:159
 #, c-format
 msgid "For an illustration of this technique, see %s."
-msgstr ""
+msgstr "Pour une illustration de cette technique, se référer à %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:104
 #, c-format
