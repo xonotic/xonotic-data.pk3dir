@@ -3514,7 +3514,7 @@ msgstr "Esquives"
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:9
 #: qcsrc/menu/xonotic/keybinder.qc:68
 msgid "offhand hook"
-msgstr ""
+msgstr "grappin mains libres"
 
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
@@ -13857,12 +13857,20 @@ msgid ""
 "upwards boost and enable you to reach places that are otherwise accessible "
 "only with laser jumps, which cost health and make noise."
 msgstr ""
+"Les rampes sont un élément important dans la conception des cartes de "
+"Xonotic. Toute surface inclinée que vous heurtez à la bonne vitesse et au "
+"bon angle vous donnera un élan ascendant significatif et vous permettra "
+"d'atteindre des endroits qui ne sont autrement accessibles qu'avec des sauts "
+"laser, qui coûtent de la santé et font du bruit."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:154
 msgid ""
 "When doing ramp jumps, it is vital to hit the ramp at a flat angle to "
 "receive the upwards boost and not lose too much speed."
 msgstr ""
+"Lorsque vous effectuez des sauts de rampe, il est essentiel de heurter la "
+"rampe à un angle plat afin de bénéficier d'un élan ascendant et de ne pas "
+"perdre trop de vitesse."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:155
 #, c-format
@@ -13871,6 +13879,9 @@ msgid ""
 "just before the ramp and keep %s pressed so you jump again once you hit the "
 "ramp."
 msgstr ""
+"Pour effectuer un saut de rampe, approchez-vous d'une surface inclinée "
+"(« rampe »), sautez juste avant la rampe et maintenez %s enfoncé afin de "
+"sauter à nouveau une fois que vous touchez la rampe."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:156
 msgid ""
@@ -13884,6 +13895,9 @@ msgid ""
 "Note that when trying to make a ramp jump while bunny hopping, it is vital "
 "to time your hops carefully so you get the angle right."
 msgstr ""
+"Veuillez noter que lorsque vous essayez d'effectuer un saut de rampe tout en "
+"exécutant un bunny hopping, il est essentiel de bien synchroniser vos sauts "
+"afin d'obtenir le bon angle."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:162
 msgid "Advanced Movement"
