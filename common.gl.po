@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: LegendGuard, 2020\n"
+"Last-Translator: nin hum <ninhum@gmx.com>, 2024-2025\n"
 "Language-Team: Galician (http://app.transifex.com/team-xonotic/xonotic/"
 "language/gl/)\n"
 "Language: gl\n"
@@ -2002,6 +2002,9 @@ msgid ""
 "points for collecting a key, fragging an enemy key carrier, and fragging "
 "other enemies."
 msgstr ""
+"A puntuación en %s é bastante complicada, xa que implica unha mestura de "
+"recoller todas as chaves, gañar puntos por coller unha chave, eliminar a un "
+"inimigo que leva unha chave e eliminar outros inimigos."
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:13
 #, c-format
@@ -2148,6 +2151,9 @@ msgid ""
 "kick it around, or basketball where players have a %s so they can pass the "
 "ball and intercept passes."
 msgstr ""
+"%s xógase normalmente como fútbol, onde os xogadores camiñan cara á pelota "
+"para golpeala e movela polo campo, ou como baloncesto, onde os xogadores "
+"teñen un %s para poder pasar a pelota e interceptar pases."
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:12
 msgid ""
@@ -3094,6 +3100,8 @@ msgid ""
 "The %s buff gives you infinite ammo until the buff expires, so you don't "
 "need to worry about running out of ammo."
 msgstr ""
+"O  potenciador %s dáche munición infinita ata que remata o seu efecto, así "
+"que non tes que preocuparte por quedar sen balas."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
 #, c-format
@@ -3114,6 +3122,8 @@ msgid ""
 "The %s buff increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
+"O potenciador %s aumenta a forza de retroceso que provocas e faiche inmune "
+"ao retroceso mentres o potenciador estea activo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
@@ -3129,6 +3139,8 @@ msgid ""
 "The %s buff causes your enemies and monsters to slow down for a few seconds "
 "when you attack them, while the buff is active."
 msgstr ""
+"O potenciador %s fai que os teus inimigos e monstros se volvan máis lentos "
+"durante uns segundos cando os atacas, mentres o potenciador estea activo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
 #, c-format
@@ -3146,6 +3158,8 @@ msgid ""
 "While you have the %s buff, you can crouch while mid-air to switch your "
 "gravity, allowing flight."
 msgstr ""
+"Mentres tes o potenciador %s, podes agacharte no aire para cambiar a túa "
+"gravidade, o que che permite voar."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
 msgid "Flight"
@@ -3157,6 +3171,9 @@ msgid ""
 "The %s buff sets any enemies or monsters you attack alight, dealing burn "
 "damage to them for several seconds until the buff expires."
 msgstr ""
+"O potenciador %s prende lume a calquera inimigo ou monstro que ataques, "
+"causando dano por queimadura durante varios segundos ata que o potenciador "
+"remata."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
 msgid "Inferno"
@@ -3167,6 +3184,7 @@ msgstr "Inferno"
 msgid ""
 "The %s buff greatly increases your jump height, while the buff is active."
 msgstr ""
+"O potenciador %s aumenta moito a túa altura de salto mentres está activo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
@@ -3182,6 +3200,8 @@ msgid ""
 "While you have the %s buff, each attack has a chance of being a critical hit "
 "with greatly increased damage."
 msgstr ""
+"Mentres tes o potenciador %s, cada ataque ten a posibilidade de ser un golpe "
+"crítico con un dano moito maior."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/luck.qh:13
 msgid "Luck"
@@ -3193,6 +3213,8 @@ msgid ""
 "The %s buff greatly increases your item pickup range, collecting nearby "
 "items for you while the buff is active."
 msgstr ""
+"O potenciador %s aumenta moito o teu rango de recollida de obxectos, "
+"collendo automaticamente os obxectos próximos mentres está activo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:11
 msgid "Magnet"
@@ -3205,6 +3227,9 @@ msgid ""
 "health you can have before health starts to rot, and reduces health rot "
 "speed until the buff expires."
 msgstr ""
+"O potenciador %s aumenta a velocidade de rexeneración da vida, incrementa a "
+"saúde máxima que podes ter antes de que comece a decaer e reduce a "
+"velocidade de perda de saúde ata que o potenciador remata."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:29
 msgid ""
@@ -3221,7 +3246,7 @@ msgstr "Menciña"
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:14
 #, c-format
 msgid "The %s buff greatly reduces your damage taken while the buff is active."
-msgstr ""
+msgstr "O potenciador %s reduce moito o dano que recibes mentres está activo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
 msgid "This also impacts the damage you deal to yourself."
@@ -3236,6 +3261,8 @@ msgstr "Resistencia"
 msgid ""
 "The %s buff allows you to press %s to switch places with a nearby enemy once."
 msgstr ""
+"O potenciador %s permítelle premer %s para intercambiar lugares cun inimigo "
+"próximo unha vez."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:88
 msgid ""
@@ -3263,12 +3290,14 @@ msgid ""
 "The %s buff converts some of the damage you deal to enemies and monsters "
 "into health for yourself, until the buff expires."
 msgstr ""
+"O potenciador %s converte parte do dano que causas a inimigos e monstros en "
+"vida para ti, ata que o potenciador remata."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:29
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
 #, c-format
 msgid "In some sense, this is the opposite of the %s buff."
-msgstr ""
+msgstr "En certo sentido, isto é o contrario do potenciador %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
 #: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:307
@@ -3282,6 +3311,8 @@ msgid ""
 "The %s buff reciprocates a portion of the damage enemies deal to you onto "
 "them, until the buff expires."
 msgstr ""
+"O potenciador %s devolve unha parte do dano que os inimigos che causan sobre "
+"eles, ata que o potenciador remata."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qh:13
 msgid "Vengeance"
@@ -3574,6 +3605,8 @@ msgid ""
 "Similar to the %s buff, your weapon magazines remain full while you are "
 "inside the orb, so you don't need to reload."
 msgstr ""
+"Semellante ao potenciador %s, os cargadores da túa arma permanecen cheos "
+"mentres estás dentro da esfera, así que non precisas recargar."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:21
 msgid "Ammo grenade"
@@ -4248,6 +4281,9 @@ msgid ""
 "However, unlike the normal %s buff, when this mutator is enabled players' "
 "health can go way above the usual limit of 200."
 msgstr ""
+"O mutador %s dá a todos os xogadores unha versión permanente do potenciador "
+"%s. Con todo, ao contrario do potenciador normal %s, cando este mutador está "
+"activado, a saúde dos xogadores pode superar moito o límite habitual de 200."
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
 #, c-format
@@ -4255,6 +4291,8 @@ msgid ""
 "Additionally the amount of health players get is equal to the damage they "
 "deal, which isn't normally the case with the %s buff."
 msgstr ""
+"Ademais, a cantidade de vida que reciben os xogadores é igual ao dano que "
+"causan, algo que normalmente non ocorre co potenciador %s."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:81
 #, c-format
@@ -8907,6 +8945,8 @@ msgstr ""
 #, c-format
 msgid "The pitch the %s plays depends on the movement keys pressed."
 msgstr ""
+"O ton que reproduce o potenciador %s depende das teclas de movemento que se "
+"preman."
 
 #: qcsrc/common/weapons/weapon/tuba.qh:35
 #, no-c-format
@@ -10478,6 +10518,8 @@ msgid ""
 "Read the guide, listen to Xonotic music tracks, and view your demos and "
 "screenshots"
 msgstr ""
+"Le a guía, escoita as pistas musicais de Xonotic e revisa as túas demos e "
+"capturas de pantalla"
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:48
 msgid "Auto record demos"
@@ -10661,6 +10703,8 @@ msgstr "Multixogador"
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid "Play online, against your friends in LAN, or change player settings"
 msgstr ""
+"Xoga en liña, contra os teus amigos en LAN ou cambia a configuración dos "
+"xogadores"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
@@ -12330,12 +12374,12 @@ msgstr "Axustes do tipo de xogo"
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:71
 #, c-format
 msgid "Display capture times in %s"
-msgstr ""
+msgstr "Amosa os tempos de captura en %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:75
 #, c-format
 msgid "Display name of flag stealer in %s"
-msgstr ""
+msgstr "Amosa o nome do ladrón da bandeira en %s."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display console messages in the top left corner"
@@ -13008,7 +13052,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skin"
-msgstr ""
+msgstr "Aparencia do menú"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"
