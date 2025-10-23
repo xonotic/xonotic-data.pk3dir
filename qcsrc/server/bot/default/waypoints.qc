@@ -1364,7 +1364,7 @@ bool waypoint_load_links()
 						LOG_TRACE("waypoint links for this map are not made for these waypoints.");
 					else
 						LOG_TRACE("waypoint links for this map are outdated.");
-					if (g_assault)
+					if (g_as)
 					{
 						LOG_TRACE("Assault waypoint links need to be manually updated in the editor");
 					}

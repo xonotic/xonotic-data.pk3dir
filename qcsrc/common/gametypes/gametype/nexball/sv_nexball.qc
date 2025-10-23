@@ -10,33 +10,33 @@
 
 .entity ballcarried;
 
-int autocvar_g_nexball_goalleadlimit;
-float autocvar_g_nexball_goallimit;
+int autocvar_g_nb_goalleadlimit;
+float autocvar_g_nb_goallimit;
 
-bool autocvar_g_nexball_basketball_jumppad = true;
-float autocvar_g_nexball_basketball_bouncefactor;
-float autocvar_g_nexball_basketball_bouncestop;
-float autocvar_g_nexball_basketball_carrier_highspeed;
-bool autocvar_g_nexball_basketball_meter;
-float autocvar_g_nexball_basketball_meter_maxpower;
-float autocvar_g_nexball_basketball_meter_minpower;
-float autocvar_g_nexball_delay_collect;
-float autocvar_g_nexball_delay_goal;
-float autocvar_g_nexball_delay_start;
-bool autocvar_g_nexball_football_jumppad = true;
-float autocvar_g_nexball_football_bouncefactor;
-float autocvar_g_nexball_football_bouncestop;
-bool autocvar_g_nexball_radar_showallplayers;
-bool autocvar_g_nexball_sound_bounce;
-int autocvar_g_nexball_trail_color;
-bool autocvar_g_nexball_playerclip_collisions = true;
+bool autocvar_g_nb_basketball_jumppad = true;
+float autocvar_g_nb_basketball_bouncefactor;
+float autocvar_g_nb_basketball_bouncestop;
+float autocvar_g_nb_basketball_carrier_highspeed;
+bool autocvar_g_nb_basketball_meter;
+float autocvar_g_nb_basketball_meter_maxpower;
+float autocvar_g_nb_basketball_meter_minpower;
+float autocvar_g_nb_delay_collect;
+float autocvar_g_nb_delay_goal;
+float autocvar_g_nb_delay_start;
+bool autocvar_g_nb_football_jumppad = true;
+float autocvar_g_nb_football_bouncefactor;
+float autocvar_g_nb_football_bouncestop;
+bool autocvar_g_nb_radar_showallplayers;
+bool autocvar_g_nb_sound_bounce;
+int autocvar_g_nb_trail_color;
+bool autocvar_g_nb_playerclip_collisions = true;
 
-float autocvar_g_nexball_safepass_turnrate;
-float autocvar_g_nexball_safepass_maxdist;
-float autocvar_g_nexball_safepass_holdtime;
-float autocvar_g_nexball_viewmodel_scale;
-float autocvar_g_nexball_tackling;
-vector autocvar_g_nexball_viewmodel_offset;
+float autocvar_g_nb_safepass_turnrate;
+float autocvar_g_nb_safepass_maxdist;
+float autocvar_g_nb_safepass_holdtime;
+float autocvar_g_nb_viewmodel_scale;
+float autocvar_g_nb_tackling;
+vector autocvar_g_nb_viewmodel_offset;
 
 float autocvar_g_balance_nexball_primary_animtime;
 float autocvar_g_balance_nexball_primary_refire;
@@ -144,7 +144,7 @@ void GiveBall(entity plyr, entity ball)
 	entity ownr = ball.owner;
 	if(ownr)
 	{
-		ownr.effects &= ~autocvar_g_nexball_basketball_effects_default;
+		ownr.effects &= ~autocvar_g_nb_basketball_effects_default;
 		ownr.ballcarried = NULL;
 		GameRules_scoring_vip(ownr, false);
 		if(STAT(NB_METERSTART, ownr))
@@ -163,7 +163,7 @@ void GiveBall(entity plyr, entity ball)
 	setorigin(ball, plyr.origin + plyr.view_ofs);
 
 	if(ball.team != plyr.team)
-		ball.lifetime = time + autocvar_g_nexball_basketball_delay_hold_forteam;
+		ball.lifetime = time + autocvar_g_nb_basketball_delay_hold_forteam;
 
 	ball.owner = ball.pusher = plyr; //"owner" is set to the player carrying, "pusher" to the last player who touched it
 	ball.weaponentity_fld = weaponentity;
@@ -172,8 +172,8 @@ void GiveBall(entity plyr, entity ball)
 	GameRules_scoring_vip(plyr, true);
 	ball.nb_dropper = plyr;
 
-	plyr.effects |= autocvar_g_nexball_basketball_effects_default;
-	ball.effects &= ~autocvar_g_nexball_basketball_effects_default;
+	plyr.effects |= autocvar_g_nb_basketball_effects_default;
+	ball.effects &= ~autocvar_g_nb_basketball_effects_default;
 
 	ball.velocity = '0 0 0';
 	set_movetype(ball, MOVETYPE_NONE);
@@ -184,10 +184,10 @@ void GiveBall(entity plyr, entity ball)
 	WaypointSprite_AttachCarrier(WP_NbBall, plyr, RADARICON_FLAGCARRIER);
 	WaypointSprite_UpdateRule(plyr.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 
-	if(autocvar_g_nexball_basketball_delay_hold)
+	if(autocvar_g_nb_basketball_delay_hold)
 	{
 		setthink(ball, DropOwner);
-		ball.nextthink = time + autocvar_g_nexball_basketball_delay_hold;
+		ball.nextthink = time + autocvar_g_nb_basketball_delay_hold;
 	}
 
 	STAT(WEAPONS, plyr.(weaponentity)) = STAT(WEAPONS, plyr);
@@ -201,9 +201,9 @@ void GiveBall(entity plyr, entity ball)
 
 void DropBall(entity ball, vector org, vector vel)
 {
-	ball.effects |= autocvar_g_nexball_basketball_effects_default;
+	ball.effects |= autocvar_g_nb_basketball_effects_default;
 	ball.effects &= ~EF_NOSHADOW;
-	ball.owner.effects &= ~autocvar_g_nexball_basketball_effects_default;
+	ball.owner.effects &= ~autocvar_g_nb_basketball_effects_default;
 
 	setattachment(ball, NULL, "");
 	setorigin(ball, org);
@@ -214,7 +214,7 @@ void DropBall(entity ball, vector org, vector vel)
 	ball.nb_droptime = time;
 	settouch(ball, basketball_touch);
 	setthink(ball, ResetBall);
-	ball.nextthink = min(time + autocvar_g_nexball_delay_idle, ball.lifetime);
+	ball.nextthink = min(time + autocvar_g_nb_delay_idle, ball.lifetime);
 
 	if(STAT(NB_METERSTART, ball.owner))
 	{
@@ -243,7 +243,7 @@ void InitBall(entity this)
 		settouch(this, football_touch);
 	this.cnt = 0;
 	setthink(this, ResetBall);
-	this.nextthink = time + autocvar_g_nexball_delay_idle + 3;
+	this.nextthink = time + autocvar_g_nb_delay_idle + 3;
 	this.lifetime = 0;
 	this.pusher = NULL;
 	this.team = false;
@@ -284,7 +284,7 @@ void ResetBall(entity this)
 		setorigin(this, this.spawnorigin); // make sure it's positioned correctly anyway
 		set_movetype(this, MOVETYPE_NONE);
 		setthink(this, InitBall);
-		this.nextthink = max(time, game_starttime) + autocvar_g_nexball_delay_start;
+		this.nextthink = max(time, game_starttime) + autocvar_g_nb_delay_start;
 	}
 }
 
@@ -298,7 +298,7 @@ void football_touch(entity this, entity toucher)
 			this.lastground = time;
 		}
 		if(this.velocity && !this.cnt)
-			this.nextthink = time + autocvar_g_nexball_delay_idle;
+			this.nextthink = time + autocvar_g_nb_delay_idle;
 		return;
 	}
 	if (!IS_PLAYER(toucher) && !IS_VEHICLE(toucher))
@@ -306,30 +306,30 @@ void football_touch(entity this, entity toucher)
 	if(GetResource(toucher, RES_HEALTH) < 1)
 		return;
 	if(!this.cnt)
-		this.nextthink = time + autocvar_g_nexball_delay_idle;
+		this.nextthink = time + autocvar_g_nb_delay_idle;
 
 	this.pusher = toucher;
 	this.team = toucher.team;
 
-	if(autocvar_g_nexball_football_physics == -1)	// MrBougo try 1, before decompiling Rev's original
+	if(autocvar_g_nb_football_physics == -1)	// MrBougo try 1, before decompiling Rev's original
 	{
 		if(toucher.velocity)
-			this.velocity = toucher.velocity * 1.5 + '0 0 1' * autocvar_g_nexball_football_boost_up;
+			this.velocity = toucher.velocity * 1.5 + '0 0 1' * autocvar_g_nb_football_boost_up;
 	}
-	else if(autocvar_g_nexball_football_physics == 1)	  // MrBougo's modded Rev style: partially independant of the height of the aiming point
+	else if(autocvar_g_nb_football_physics == 1)	  // MrBougo's modded Rev style: partially independant of the height of the aiming point
 	{
 		makevectors(toucher.v_angle);
-		this.velocity = toucher.velocity + v_forward * autocvar_g_nexball_football_boost_forward + '0 0 1' * autocvar_g_nexball_football_boost_up;
+		this.velocity = toucher.velocity + v_forward * autocvar_g_nb_football_boost_forward + '0 0 1' * autocvar_g_nb_football_boost_up;
 	}
-	else if(autocvar_g_nexball_football_physics == 2)	  // 2nd mod try: totally independant. Really playable!
+	else if(autocvar_g_nb_football_physics == 2)	  // 2nd mod try: totally independant. Really playable!
 	{
 		makevectors(toucher.v_angle.y * '0 1 0');
-		this.velocity = toucher.velocity + v_forward * autocvar_g_nexball_football_boost_forward + v_up * autocvar_g_nexball_football_boost_up;
+		this.velocity = toucher.velocity + v_forward * autocvar_g_nb_football_boost_forward + v_up * autocvar_g_nb_football_boost_up;
 	}
 	else	 // Revenant's original style (from the original mod's disassembly, acknowledged by Revenant)
 	{
 		makevectors(toucher.v_angle);
-		this.velocity = toucher.velocity + v_forward * autocvar_g_nexball_football_boost_forward + v_up * autocvar_g_nexball_football_boost_up;
+		this.velocity = toucher.velocity + v_forward * autocvar_g_nb_football_boost_forward + v_up * autocvar_g_nb_football_boost_up;
 	}
 	this.avelocity = -250 * v_forward;  // maybe there is a way to make it look better?
 }
@@ -342,7 +342,7 @@ void basketball_touch(entity this, entity toucher)
 		return;
 	}
 	// TODO: mutator hook to prevent picking up objectives
-	if(!this.cnt && IS_PLAYER(toucher) && !IS_DEAD(toucher) && (toucher != this.nb_dropper || time > this.nb_droptime + autocvar_g_nexball_delay_collect))
+	if(!this.cnt && IS_PLAYER(toucher) && !IS_DEAD(toucher) && (toucher != this.nb_dropper || time > this.nb_droptime + autocvar_g_nb_delay_collect))
 	{
 		if(GetResource(toucher, RES_HEALTH) < 1)
 			return;
@@ -353,7 +353,7 @@ void basketball_touch(entity this, entity toucher)
 	{
 		_sound(this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 		if(this.velocity && !this.cnt)
-			this.nextthink = min(time + autocvar_g_nexball_delay_idle, this.lifetime);
+			this.nextthink = min(time + autocvar_g_nb_delay_idle, this.lifetime);
 	}
 }
 
@@ -443,7 +443,7 @@ void GoalTouch(entity this, entity toucher)
 	setthink(ball, ResetBall);
 	if(ball.classname == "nexball_basketball")
 		settouch(ball, football_touch); // better than func_null: football control until the ball gets reset
-	ball.nextthink = time + autocvar_g_nexball_delay_goal * (this.team != GOAL_OUT);
+	ball.nextthink = time + autocvar_g_nb_delay_goal * (this.team != GOAL_OUT);
 }
 
 //=======================//
@@ -451,7 +451,7 @@ void GoalTouch(entity this, entity toucher)
 //=======================//
 spawnfunc(nexball_team)
 {
-	if(!g_nexball)
+	if(!g_nb)
 	{
 		delete(this);
 		return;
@@ -527,7 +527,7 @@ void nb_delayedinit(entity this)
 
 void SpawnBall(entity this)
 {
-	if(!g_nexball) { delete(this); return; }
+	if(!g_nb) { delete(this); return; }
 
 //	balls += 4; // using the remaining bits to count balls will leave more than the max edict count, so it's fine
 
@@ -549,16 +549,16 @@ void SpawnBall(entity this)
 
 	if(cvar(strcat("g_", this.classname, "_trail")))  //nexball_basketball :p
 	{
-		this.glow_color = autocvar_g_nexball_trail_color;
+		this.glow_color = autocvar_g_nb_trail_color;
 		this.glow_trail = true;
 	}
 
 	set_movetype(this, MOVETYPE_FLY);
 
-	if(autocvar_g_nexball_playerclip_collisions)
+	if(autocvar_g_nb_playerclip_collisions)
 		this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 
-	if(!autocvar_g_nexball_sound_bounce)
+	if(!autocvar_g_nb_sound_bounce)
 		this.noise = "";
 	else if(this.noise == "")
 		this.noise = strzone(SND(NB_BOUNCE));
@@ -577,7 +577,7 @@ void SpawnBall(entity this)
 
 	this.reset = ball_restart;
 	setthink(this, InitBall);
-	this.nextthink = game_starttime + autocvar_g_nexball_delay_start;
+	this.nextthink = game_starttime + autocvar_g_nb_delay_start;
 }
 
 spawnfunc(nexball_basketball)
@@ -586,20 +586,20 @@ spawnfunc(nexball_basketball)
 	if (!(balls & BALL_BASKET))
 	{
 		/*
-		CVTOV(g_nexball_basketball_effects_default);
-		CVTOV(g_nexball_basketball_delay_hold);
-		CVTOV(g_nexball_basketball_delay_hold_forteam);
-		CVTOV(g_nexball_basketball_teamsteal);
+		CVTOV(g_nb_basketball_effects_default);
+		CVTOV(g_nb_basketball_delay_hold);
+		CVTOV(g_nb_basketball_delay_hold_forteam);
+		CVTOV(g_nb_basketball_teamsteal);
 		*/
-		autocvar_g_nexball_basketball_effects_default = autocvar_g_nexball_basketball_effects_default & BALL_EFFECTMASK;
+		autocvar_g_nb_basketball_effects_default = autocvar_g_nb_basketball_effects_default & BALL_EFFECTMASK;
 	}
 	if(!this.effects)
-		this.effects = autocvar_g_nexball_basketball_effects_default;
+		this.effects = autocvar_g_nb_basketball_effects_default;
 	this.solid = SOLID_TRIGGER;
-	this.pushable = autocvar_g_nexball_basketball_jumppad;
+	this.pushable = autocvar_g_nb_basketball_jumppad;
 	balls |= BALL_BASKET;
-	this.bouncefactor = autocvar_g_nexball_basketball_bouncefactor;
-	this.bouncestop = autocvar_g_nexball_basketball_bouncestop;
+	this.bouncefactor = autocvar_g_nb_basketball_bouncefactor;
+	this.bouncestop = autocvar_g_nb_basketball_bouncestop;
 	SpawnBall(this);
 }
 
@@ -608,9 +608,9 @@ spawnfunc(nexball_football)
 	nexball_mode |= NBM_FOOTBALL;
 	this.solid = SOLID_TRIGGER;
 	balls |= BALL_FOOT;
-	this.pushable = autocvar_g_nexball_football_jumppad;
-	this.bouncefactor = autocvar_g_nexball_football_bouncefactor;
-	this.bouncestop = autocvar_g_nexball_football_bouncestop;
+	this.pushable = autocvar_g_nb_football_jumppad;
+	this.bouncefactor = autocvar_g_nb_football_bouncefactor;
+	this.bouncestop = autocvar_g_nb_football_bouncestop;
 	SpawnBall(this);
 }
 
@@ -625,7 +625,7 @@ bool nb_Goal_Customize(entity this, entity client)
 
 void SpawnGoal(entity this)
 {
-	if(!g_nexball) { delete(this); return; }
+	if(!g_nb) { delete(this); return; }
 
 	EXACTTRIGGER_INIT;
 
@@ -726,7 +726,7 @@ bool ball_customize(entity this, entity client)
 
 	if(client == this.owner)
 	{
-		this.scale = autocvar_g_nexball_viewmodel_scale;
+		this.scale = autocvar_g_nb_viewmodel_scale;
 		if(this.enemy)
 			this.effects |= EF_FLAME;
 		else
@@ -743,7 +743,7 @@ bool ball_customize(entity this, entity client)
 
 void nb_DropBall(entity player)
 {
-	if(player.ballcarried && g_nexball)
+	if(player.ballcarried && g_nb)
 		DropBall(player.ballcarried, player.origin, player.velocity);
 }
 
@@ -783,13 +783,13 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 			setcefc(player.ballcarried, ball_customize);
 
 			vector org = player.origin + player.view_ofs +
-					  v_forward * autocvar_g_nexball_viewmodel_offset.x +
-					  v_right * autocvar_g_nexball_viewmodel_offset.y +
-					  v_up * autocvar_g_nexball_viewmodel_offset.z;
+					  v_forward * autocvar_g_nb_viewmodel_offset.x +
+					  v_right * autocvar_g_nb_viewmodel_offset.y +
+					  v_up * autocvar_g_nb_viewmodel_offset.z;
 			setorigin(player.ballcarried, org);
 
 			// 'safe passing'
-			if(autocvar_g_nexball_safepass_maxdist)
+			if(autocvar_g_nb_safepass_maxdist)
 			{
 				if(player.ballcarried.wait < time && player.ballcarried.enemy)
 				{
@@ -798,19 +798,19 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 				}
 
 
-				//tracebox(player.origin + player.view_ofs, '-2 -2 -2', '2 2 2', player.origin + player.view_ofs + v_forward * autocvar_g_nexball_safepass_maxdist);
+				//tracebox(player.origin + player.view_ofs, '-2 -2 -2', '2 2 2', player.origin + player.view_ofs + v_forward * autocvar_g_nb_safepass_maxdist);
 				crosshair_trace(player);
 				if( trace_ent &&
 					IS_CLIENT(trace_ent) &&
 					!IS_DEAD(trace_ent) &&
 					trace_ent.team == player.team &&
-					vdist(trace_ent.origin - player.origin, <=, autocvar_g_nexball_safepass_maxdist) )
+					vdist(trace_ent.origin - player.origin, <=, autocvar_g_nb_safepass_maxdist) )
 				{
 
 					//if(player.ballcarried.enemy != trace_ent)
 					//	centerprint(player, sprintf("Locked to %s", trace_ent.netname));
 					player.ballcarried.enemy = trace_ent;
-					player.ballcarried.wait = time + autocvar_g_nexball_safepass_holdtime;
+					player.ballcarried.wait = time + autocvar_g_nb_safepass_holdtime;
 
 
 				}
@@ -873,7 +873,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPhysics_UpdateStats)
 	// these automatically reset, no need to worry
 
 	if(player.ballcarried)
-		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_nexball_basketball_carrier_highspeed;
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_nb_basketball_carrier_highspeed;
 }
 
 MUTATOR_HOOKFUNCTION(nb, ForbidThrowCurrentWeapon)
@@ -943,23 +943,23 @@ MUTATOR_HOOKFUNCTION(nb, SendWaypoint)
 
 void nb_Initialize()
 {
-	g_nexball_meter_period = autocvar_g_nexball_meter_period;
-	if(g_nexball_meter_period <= 0)
-		g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
-	g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
+	g_nb_meter_period = autocvar_g_nb_meter_period;
+	if(g_nb_meter_period <= 0)
+		g_nb_meter_period = 2; // avoid division by zero etc. due to silly users
+	g_nb_meter_period = rint(g_nb_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
 
 	// General settings
 	/*
-	CVTOV(g_nexball_football_boost_forward);   //100
-	CVTOV(g_nexball_football_boost_up);		//200
-	CVTOV(g_nexball_delay_idle);			   //10
-	CVTOV(g_nexball_football_physics);		 //0
+	CVTOV(g_nb_football_boost_forward);   //100
+	CVTOV(g_nb_football_boost_up);		//200
+	CVTOV(g_nb_delay_idle);			   //10
+	CVTOV(g_nb_football_physics);		 //0
 	*/
-	radar_showenemies = autocvar_g_nexball_radar_showallplayers;
+	radar_showenemies = autocvar_g_nb_radar_showallplayers;
 
 	GameRules_teams(true);
-	GameRules_limit_score(autocvar_g_nexball_goallimit);
-	GameRules_limit_lead(autocvar_g_nexball_goalleadlimit);
+	GameRules_limit_score(autocvar_g_nb_goallimit);
+	GameRules_limit_lead(autocvar_g_nb_goalleadlimit);
 
 	InitializeEntity(NULL, nb_delayedinit, INITPRIO_GAMETYPE);
 }

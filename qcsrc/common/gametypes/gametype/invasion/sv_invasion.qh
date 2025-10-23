@@ -1,12 +1,12 @@
 #pragma once
 
 #include <common/mutators/base.qh>
-#define autocvar_g_invasion_point_limit cvar("g_invasion_point_limit")
-int autocvar_g_invasion_type;
-bool g_invasion;
-IntrusiveList g_invasion_roundends;
-IntrusiveList g_invasion_waves;
-IntrusiveList g_invasion_spawns;
+#define autocvar_g_inv_point_limit cvar("g_inv_point_limit")
+int autocvar_g_inv_type;
+bool g_inv;
+IntrusiveList g_inv_roundends;
+IntrusiveList g_inv_waves;
+IntrusiveList g_inv_spawns;
 void invasion_Initialize();
 
 REGISTER_MUTATOR(inv, false)
@@ -14,12 +14,12 @@ REGISTER_MUTATOR(inv, false)
 	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		g_invasion_roundends = IL_NEW();
-		g_invasion_waves = IL_NEW();
-		g_invasion_spawns = IL_NEW();
-		GameRules_limit_score(autocvar_g_invasion_point_limit);
+		g_inv_roundends = IL_NEW();
+		g_inv_waves = IL_NEW();
+		g_inv_spawns = IL_NEW();
+		GameRules_limit_score(autocvar_g_inv_point_limit);
 
-		g_invasion = true;
+		g_inv = true;
 		cvar_settemp("g_monsters", "1");
 		invasion_Initialize();
 	}

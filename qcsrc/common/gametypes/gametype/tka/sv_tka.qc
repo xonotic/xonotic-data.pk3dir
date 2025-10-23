@@ -18,12 +18,12 @@ int autocvar_g_tka_score_bckill;
 int autocvar_g_tka_score_killac;
 bool autocvar_g_tka_score_team;
 int autocvar_g_tka_score_timepoints;
-int autocvar_g_tkaball_count;
-float autocvar_g_tkaball_damageforcescale;
-int autocvar_g_tkaball_effects;
-float autocvar_g_tkaball_respawntime;
-int autocvar_g_tkaball_trail_color;
-int autocvar_g_tkaball_tracking;
+int autocvar_g_tka_ball_count;
+float autocvar_g_tka_ball_damageforcescale;
+int autocvar_g_tka_ball_effects;
+float autocvar_g_tka_ball_respawntime;
+int autocvar_g_tka_ball_trail_color;
+int autocvar_g_tka_ball_tracking;
 
 bool tka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
 {
@@ -34,7 +34,7 @@ bool tka_ballcarrier_waypointsprite_visible_for_player(entity this, entity playe
 	if(IS_INVISIBLE(this.owner))
 		return false; // hide the waypointsprite if the owner is invisible
 
-	return autocvar_g_tkaball_tracking == 1;
+	return autocvar_g_tka_ball_tracking == 1;
 }
 
 void tka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
@@ -55,15 +55,15 @@ void tka_RespawnBall(entity this) // runs whenever the ball needs to be relocate
 	set_movetype(this, MOVETYPE_BOUNCE);
 	this.velocity = '0 0 200';
 	this.angles = '0 0 0';
-	this.effects = autocvar_g_tkaball_effects;
+	this.effects = autocvar_g_tka_ball_effects;
 	setthink(this, tka_RespawnBall);
-	this.nextthink = time + autocvar_g_tkaball_respawntime;
+	this.nextthink = time + autocvar_g_tka_ball_respawntime;
 	navigation_dynamicgoal_set(this, NULL);
 
 	Send_Effect(EFFECT_KA_BALL_RESPAWN, oldballorigin, '0 0 0', 1);
 	Send_Effect(EFFECT_KA_BALL_RESPAWN, this.origin, '0 0 0', 1);
 
-	if(autocvar_g_tkaball_tracking || warmup_stage)
+	if(autocvar_g_tka_ball_tracking || warmup_stage)
 	{
 		WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', NULL, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 		WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
@@ -197,7 +197,7 @@ void tka_DropEvent(entity player) // runs any time that a player is supposed to 
 	ball.previous_owner = player;
 	ball.wait = time + 0.5; // same as for thrown weapons
 	setthink(ball, tka_RespawnBall);
-	ball.nextthink = time + autocvar_g_tkaball_respawntime;
+	ball.nextthink = time + autocvar_g_tka_ball_respawntime;
 	ball.takedamage = DAMAGE_YES;
 	ball.scale = 1; // it's smaller while carried
 	ball.alpha = 1; // in case the carrier had an invisibility effect
@@ -215,7 +215,7 @@ void tka_DropEvent(entity player) // runs any time that a player is supposed to 
 	sound(NULL, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// waypoints
-	if(autocvar_g_tkaball_tracking || warmup_stage)
+	if(autocvar_g_tka_ball_tracking || warmup_stage)
 	{
 		WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 		WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
@@ -258,11 +258,11 @@ void tka_SpawnBalls()
 		// bones_was_here: that was WITH sv_legacy_bbox_expand 1 and FL_ITEM (mins -= '15 15 1'; maxs += '15 15 1')
 		// it's round so should have a symmetrical bbox, same height as pickup items so it can't be jumped over in any physics
 		setsize(e, '-24 -24 -24', '24 24 24');
-		e.damageforcescale = autocvar_g_tkaball_damageforcescale;
+		e.damageforcescale = autocvar_g_tka_ball_damageforcescale;
 		e.takedamage = DAMAGE_YES;
 		e.solid = SOLID_TRIGGER;
 		set_movetype(e, MOVETYPE_BOUNCE);
-		e.glow_color = autocvar_g_tkaball_trail_color;
+		e.glow_color = autocvar_g_tka_ball_trail_color;
 		e.glow_trail = true;
 		e.flags = FL_ITEM;
 		IL_PUSH(g_items, e);
@@ -276,7 +276,7 @@ void tka_SpawnBalls()
 
 		++i;
 	}
-	while (i < autocvar_g_tkaball_count);
+	while (i < autocvar_g_tka_ball_count);
 }
 
 void tka_Handler_CheckBall(entity this)

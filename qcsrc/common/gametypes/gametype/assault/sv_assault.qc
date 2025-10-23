@@ -287,7 +287,7 @@ int WinningCondition_Assault()
 // spawnfuncs
 spawnfunc(info_player_attacker)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_as) { delete(this); return; }
 
 	this.team = NUM_TEAM_1; // red, gets swapped every round
 	spawnfunc_info_player_deathmatch(this);
@@ -295,7 +295,7 @@ spawnfunc(info_player_attacker)
 
 spawnfunc(info_player_defender)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_as) { delete(this); return; }
 
 	this.team = NUM_TEAM_2; // blue, gets swapped every round
 	spawnfunc_info_player_deathmatch(this);
@@ -303,7 +303,7 @@ spawnfunc(info_player_defender)
 
 spawnfunc(target_objective)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_as) { delete(this); return; }
 
 	IL_PUSH(g_assault_objectives, this);
 	this.use = assault_objective_use;
@@ -314,7 +314,7 @@ spawnfunc(target_objective)
 
 spawnfunc(target_objective_decrease)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_as) { delete(this); return; }
 
 	IL_PUSH(g_assault_objectivedecreasers, this);
 
@@ -348,7 +348,7 @@ bool destructible_heal(entity targ, entity inflictor, float amount, float limit)
 
 spawnfunc(func_assault_destructible)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_as) { delete(this); return; }
 
 	this.spawnflags = 3;
 	this.event_heal = destructible_heal;
@@ -364,7 +364,7 @@ spawnfunc(func_assault_destructible)
 
 spawnfunc(func_assault_wall)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_as) { delete(this); return; }
 
 	this.mdl = this.model;
 	_setmodel(this, this.mdl);
@@ -376,7 +376,7 @@ spawnfunc(func_assault_wall)
 
 spawnfunc(target_assault_roundend)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_as) { delete(this); return; }
 
 	this.winning = 0; // round not yet won by attackers
 	this.use = target_assault_roundend_use;
@@ -386,7 +386,7 @@ spawnfunc(target_assault_roundend)
 
 spawnfunc(target_assault_roundstart)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_as) { delete(this); return; }
 
 	assault_attacker_team = NUM_TEAM_1;
 	this.use = assault_roundstart_use;

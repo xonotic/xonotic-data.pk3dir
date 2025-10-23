@@ -9,7 +9,7 @@ METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity we
     TC(BallStealer, thiswep);
     if(fire & 1)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_balance_nexball_primary_refire))
-            if(autocvar_g_nexball_basketball_meter)
+            if(autocvar_g_nb_basketball_meter)
             {
                 if(actor.ballcarried && !STAT(NB_METERSTART, actor))
                     STAT(NB_METERSTART, actor) = time;
@@ -66,8 +66,8 @@ void W_Nexball_Think(entity this)
 	vector new_dir = normalize(this.enemy.origin + '0 0 50' - this.origin);
 	vector old_dir = normalize(this.velocity);
 	float _speed = vlen(this.velocity);
-	vector new_vel = normalize(old_dir + (new_dir * autocvar_g_nexball_safepass_turnrate)) * _speed;
-	//vector new_vel = (new_dir * autocvar_g_nexball_safepass_turnrate
+	vector new_vel = normalize(old_dir + (new_dir * autocvar_g_nb_safepass_turnrate)) * _speed;
+	//vector new_vel = (new_dir * autocvar_g_nb_safepass_turnrate
 
 	this.velocity = new_vel;
 
@@ -83,7 +83,7 @@ void W_Nexball_Touch(entity this, entity toucher)
 
 	PROJECTILE_TOUCH(this, toucher);
 	// TODO: mutator hook to prevent picking up objectives
-	if(attacker.team != toucher.team || autocvar_g_nexball_basketball_teamsteal)
+	if(attacker.team != toucher.team || autocvar_g_nb_basketball_teamsteal)
 		if((ball = toucher.ballcarried) && !IS_DEAD(toucher) && (IS_PLAYER(attacker)))
 		{
 			toucher.velocity = toucher.velocity + normalize(this.velocity) * toucher.damageforcescale * autocvar_g_balance_nexball_secondary_force;
@@ -127,10 +127,10 @@ void W_Nexball_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 		mul = 1;
 	else
 	{
-		mi = autocvar_g_nexball_basketball_meter_minpower;
-		ma = max(mi, autocvar_g_nexball_basketball_meter_maxpower); // avoid confusion
+		mi = autocvar_g_nb_basketball_meter_minpower;
+		ma = max(mi, autocvar_g_nb_basketball_meter_maxpower); // avoid confusion
 		//One triangle wave period with 1 as max
-		mul = 2 * (t % g_nexball_meter_period) / g_nexball_meter_period;
+		mul = 2 * (t % g_nb_meter_period) / g_nb_meter_period;
 		if(mul > 1)
 			mul = 2 - mul;
 		mul = mi + (ma - mi) * mul; // range from the minimal power to the maximal power
@@ -154,7 +154,7 @@ void W_Nexball_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 		return;
 	}
 
-	if(!autocvar_g_nexball_tackling)
+	if(!autocvar_g_nb_tackling)
 		return;
 
 	W_SetupShot(actor, weaponentity, false, 2, SND_NB_SHOOT2, CH_WEAPON_A, 0, WEP_PORTO.m_id);

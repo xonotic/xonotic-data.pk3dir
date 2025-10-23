@@ -5,14 +5,14 @@
 CLASS(Invasion, Gametype)
 	INIT(Invasion)
 	{
-		this.gametype_init(this, _("Invasion"),"inv","g_invasion",GAMETYPE_FLAG_USEPOINTS,"","pointlimit=50 type=0",_("Survive against waves of monsters"));
+		this.gametype_init(this, _("Invasion"),"inv","g_inv",GAMETYPE_FLAG_USEPOINTS,"","pointlimit=50 type=0",_("Survive against waves of monsters"));
 	}
 	METHOD(Invasion, m_parse_mapinfo, bool(string k, string v))
 	{
 		switch (k)
 		{
 			case "type":
-				cvar_set("g_invasion_type", v);
+				cvar_set("g_inv_type", v);
 				return true;
 		}
 		return false;

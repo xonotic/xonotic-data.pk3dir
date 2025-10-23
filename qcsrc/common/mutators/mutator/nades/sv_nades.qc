@@ -814,7 +814,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 	entity frag_target = M_ARGV(2, entity);
 
 	if(frag_target.nade)
-	if(!STAT(FROZEN, frag_target) || !autocvar_g_freezetag_revive_nade)
+	if(!STAT(FROZEN, frag_target) || !autocvar_g_ft_revive_nade)
 		toss_nade(frag_target, true, '0 0 100', max(frag_target.nade.wait, time + 0.05));
 
 	if(IS_PLAYER(frag_attacker))
@@ -850,11 +850,11 @@ MUTATOR_HOOKFUNCTION(nades, Damage_Calculate)
 	entity frag_target = M_ARGV(2, entity);
 	float frag_deathtype = M_ARGV(3, float);
 
-	if(autocvar_g_freezetag_revive_nade && STAT(FROZEN, frag_target) && frag_attacker == frag_target && frag_deathtype == DEATH_NADE.m_id)
+	if(autocvar_g_ft_revive_nade && STAT(FROZEN, frag_target) && frag_attacker == frag_target && frag_deathtype == DEATH_NADE.m_id)
 	if(time - frag_inflictor.toss_time <= 0.1)
 	{
 		freezetag_Unfreeze(frag_target, false);
-		SetResource(frag_target, RES_HEALTH, autocvar_g_freezetag_revive_nade_health);
+		SetResource(frag_target, RES_HEALTH, autocvar_g_ft_revive_nade_health);
 		Send_Effect(EFFECT_ICEORGLASS, frag_target.origin, '0 0 0', 3);
 		M_ARGV(4, float) = 0;
 		M_ARGV(6, vector) = '0 0 0';

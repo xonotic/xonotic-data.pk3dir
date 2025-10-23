@@ -11,30 +11,30 @@
 #include <common/mapobjects/defs.qh>
 #include <common/mapobjects/triggers.qh>
 
-bool g_onslaught;
+bool g_ons;
 
-float autocvar_g_onslaught_teleport_wait;
-bool autocvar_g_onslaught_spawn_at_controlpoints;
-bool autocvar_g_onslaught_spawn_at_generator;
-float autocvar_g_onslaught_cp_proximitydecap;
-float autocvar_g_onslaught_cp_proximitydecap_distance = 512;
-float autocvar_g_onslaught_cp_proximitydecap_dps = 100;
-float autocvar_g_onslaught_spawn_at_controlpoints_chance = 0.5;
-float autocvar_g_onslaught_spawn_at_controlpoints_random;
-float autocvar_g_onslaught_spawn_at_generator_chance;
-float autocvar_g_onslaught_spawn_at_generator_random;
-float autocvar_g_onslaught_cp_buildhealth;
-float autocvar_g_onslaught_cp_buildtime;
-float autocvar_g_onslaught_cp_health;
-float autocvar_g_onslaught_cp_regen;
-float autocvar_g_onslaught_gen_health;
-float autocvar_g_onslaught_shield_force = 100;
-float autocvar_g_onslaught_allow_vehicle_touch;
-float autocvar_g_onslaught_round_timelimit;
-float autocvar_g_onslaught_warmup;
-float autocvar_g_onslaught_teleport_radius;
-float autocvar_g_onslaught_spawn_choose;
-float autocvar_g_onslaught_click_radius;
+float autocvar_g_ons_teleport_wait;
+bool autocvar_g_ons_spawn_at_controlpoints;
+bool autocvar_g_ons_spawn_at_generator;
+float autocvar_g_ons_cp_proximitydecap;
+float autocvar_g_ons_cp_proximitydecap_distance = 512;
+float autocvar_g_ons_cp_proximitydecap_dps = 100;
+float autocvar_g_ons_spawn_at_controlpoints_chance = 0.5;
+float autocvar_g_ons_spawn_at_controlpoints_random;
+float autocvar_g_ons_spawn_at_generator_chance;
+float autocvar_g_ons_spawn_at_generator_random;
+float autocvar_g_ons_cp_buildhealth;
+float autocvar_g_ons_cp_buildtime;
+float autocvar_g_ons_cp_health;
+float autocvar_g_ons_cp_regen;
+float autocvar_g_ons_gen_health;
+float autocvar_g_ons_shield_force = 100;
+float autocvar_g_ons_allow_vehicle_touch;
+float autocvar_g_ons_round_timelimit;
+float autocvar_g_ons_warmup;
+float autocvar_g_ons_teleport_radius;
+float autocvar_g_ons_spawn_choose;
+float autocvar_g_ons_click_radius;
 
 // =======================
 // CaptureShield Functions
@@ -414,7 +414,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 		else
 		{
 			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
-				if(vdist(it.origin - this.origin, <, autocvar_g_onslaught_cp_proximitydecap_distance))
+				if(vdist(it.origin - this.origin, <, autocvar_g_ons_cp_proximitydecap_distance))
 				{
 					if(DIFF_TEAM(it, this))
 					{
@@ -478,14 +478,14 @@ void ons_ControlPoint_Icon_Think(entity this)
 {
 	this.nextthink = time + ONS_CP_THINKRATE;
 
-	if (!this.owner.isshielded && autocvar_g_onslaught_cp_proximitydecap)
+	if (!this.owner.isshielded && autocvar_g_ons_cp_proximitydecap)
 	{
 		int _enemy_count = 0;
 		entity first_enemy = NULL;
 		int _friendly_count = 0;
 
 		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
-			if(vdist(it.origin - this.origin, <, autocvar_g_onslaught_cp_proximitydecap_distance))
+			if(vdist(it.origin - this.origin, <, autocvar_g_ons_cp_proximitydecap_distance))
 			{
 				if(SAME_TEAM(it, this))
 					++_friendly_count;
@@ -498,7 +498,7 @@ void ons_ControlPoint_Icon_Think(entity this)
 			}
 		});
 
-		float hlt = (_friendly_count - _enemy_count) * (autocvar_g_onslaught_cp_proximitydecap_dps * ONS_CP_THINKRATE);
+		float hlt = (_friendly_count - _enemy_count) * (autocvar_g_ons_cp_proximitydecap_dps * ONS_CP_THINKRATE);
 
 		if (hlt < 0)
 			TakeResource(this, RES_HEALTH, -hlt);
@@ -569,7 +569,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 	if (GetResource(this, RES_HEALTH) >= this.max_health)
 	{
 		SetResourceExplicit(this, RES_HEALTH, this.max_health);
-		this.count = autocvar_g_onslaught_cp_regen * ONS_CP_THINKRATE; // slow repair rate from now on
+		this.count = autocvar_g_ons_cp_regen * ONS_CP_THINKRATE; // slow repair rate from now on
 		setthink(this, ons_ControlPoint_Icon_Think);
 		sound(this, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILT, VOL_BASE, ATTEN_NORM);
 		this.owner.iscaptured = true;
@@ -626,8 +626,8 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	setorigin(e, cp.origin + CPICON_OFFSET);
 
 	e.owner = cp;
-	e.max_health = autocvar_g_onslaught_cp_health;
-	SetResourceExplicit(e, RES_HEALTH, autocvar_g_onslaught_cp_buildhealth);
+	e.max_health = autocvar_g_ons_cp_health;
+	SetResourceExplicit(e, RES_HEALTH, autocvar_g_ons_cp_buildhealth);
 	e.takedamage = DAMAGE_AIM;
 	e.bot_attack = true;
 	IL_PUSH(g_bot_targets, e);
@@ -635,7 +635,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	e.event_heal = ons_ControlPoint_Icon_Heal;
 	e.team = player.team;
 	e.colormap = 1024 + (e.team - 1) * 17;
-	e.count = (e.max_health - GetResource(e, RES_HEALTH)) * ONS_CP_THINKRATE / autocvar_g_onslaught_cp_buildtime; // how long it takes to build
+	e.count = (e.max_health - GetResource(e, RES_HEALTH)) * ONS_CP_THINKRATE / autocvar_g_ons_cp_buildtime; // how long it takes to build
 
 	sound(e, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILD, VOL_BASE, ATTEN_NORM);
 
@@ -718,7 +718,7 @@ void ons_ControlPoint_Touch(entity this, entity toucher)
 
 	if(IS_VEHICLE(toucher) && toucher.owner)
 	{
-		if (!autocvar_g_onslaught_allow_vehicle_touch)
+		if (!autocvar_g_ons_allow_vehicle_touch)
 			return;
 		toucher = toucher.owner;
 	}
@@ -1043,8 +1043,8 @@ void ons_GeneratorThink(entity this)
 void ons_GeneratorReset(entity this)
 {
 	this.team = this.team_saved;
-	SetResourceExplicit(this, RES_HEALTH, autocvar_g_onslaught_gen_health);
-	this.lasthealth = this.max_health = autocvar_g_onslaught_gen_health;
+	SetResourceExplicit(this, RES_HEALTH, autocvar_g_ons_gen_health);
+	this.lasthealth = this.max_health = autocvar_g_ons_gen_health;
 	this.takedamage = DAMAGE_AIM;
 	this.bot_attack = true;
 	if(!IL_CONTAINS(g_bot_targets, this))
@@ -1109,8 +1109,8 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.team_saved = teamnum;
 	IL_PUSH(g_saved_team, gen);
 	set_movetype(gen, MOVETYPE_NONE);
-	gen.lasthealth = gen.max_health = autocvar_g_onslaught_gen_health;
-	SetResourceExplicit(gen, RES_HEALTH, autocvar_g_onslaught_gen_health);
+	gen.lasthealth = gen.max_health = autocvar_g_ons_gen_health;
+	SetResourceExplicit(gen, RES_HEALTH, autocvar_g_ons_gen_health);
 	gen.takedamage = DAMAGE_AIM;
 	gen.bot_attack = true;
 	IL_PUSH(g_bot_targets, gen);
@@ -1234,7 +1234,7 @@ bool Onslaught_CheckWinner()
 
 	play2all(SND(CTF_CAPTURE(winner_team)));
 
-	round_handler_Init(7, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
+	round_handler_Init(7, autocvar_g_ons_warmup, autocvar_g_ons_round_timelimit);
 
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		STAT(ROUNDLOST, it) = true;
@@ -1643,7 +1643,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 					player.v_angle = player.angles;
 					bot_aim_reset(player);
 				}
-				player.teleport_antispam = time + autocvar_g_onslaught_teleport_wait;
+				player.teleport_antispam = time + autocvar_g_ons_teleport_wait;
 
 				if ( tele_effects )
 					Send_Effect(EFFECT_TELEPORT, player.origin + v_forward * 32, '0 0 0', 1);
@@ -1706,18 +1706,18 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 
 	if(ons_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT); }
 
-	if ( autocvar_g_onslaught_spawn_choose )
+	if ( autocvar_g_ons_spawn_choose )
 	if ( player.ons_spawn_by )
-	if ( ons_Teleport(player,player.ons_spawn_by,autocvar_g_onslaught_teleport_radius,false) )
+	if ( ons_Teleport(player,player.ons_spawn_by,autocvar_g_ons_teleport_radius,false) )
 	{
 		player.ons_spawn_by = NULL;
 		return false;
 	}
 
-	if(autocvar_g_onslaught_spawn_at_controlpoints)
-	if(random() <= autocvar_g_onslaught_spawn_at_controlpoints_chance)
+	if(autocvar_g_ons_spawn_at_controlpoints)
+	if(random() <= autocvar_g_ons_spawn_at_controlpoints_chance)
 	{
-		float random_target = autocvar_g_onslaught_spawn_at_controlpoints_random;
+		float random_target = autocvar_g_ons_spawn_at_controlpoints_random;
 		entity tmp_entity, closest_target = NULL;
 		vector spawn_loc = player.ons_deathloc;
 
@@ -1764,10 +1764,10 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 		}
 	}
 
-	if(autocvar_g_onslaught_spawn_at_generator)
-	if(random() <= autocvar_g_onslaught_spawn_at_generator_chance)
+	if(autocvar_g_ons_spawn_at_generator)
+	if(random() <= autocvar_g_ons_spawn_at_generator_chance)
 	{
-		float random_target = autocvar_g_onslaught_spawn_at_generator_random;
+		float random_target = autocvar_g_ons_spawn_at_generator_random;
 		entity tmp_entity, closest_target = NULL;
 		vector spawn_loc = player.ons_deathloc;
 
@@ -1833,7 +1833,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerDies)
 		l.sprite.SendFlags |= 16;
 	}
 
-	if ( autocvar_g_onslaught_spawn_choose )
+	if ( autocvar_g_ons_spawn_choose )
 	if ( ons_Count_SelfControlPoints(frag_target) > 1 )
 		stuffcmd(frag_target, "qc_cmd_cl hud clickradar\n");
 
@@ -1961,7 +1961,7 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 
 		if ( IS_PLAYER(player) )
 		{
-			entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_onslaught_teleport_radius);
+			entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_ons_teleport_radius);
 
 			if ( !source_point && GetResource(player, RES_HEALTH) > 0 )
 			{
@@ -1969,7 +1969,7 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 				return true;
 			}
 
-			entity closest_target = ons_Nearest_ControlPoint_2D(player, pos, autocvar_g_onslaught_click_radius);
+			entity closest_target = ons_Nearest_ControlPoint_2D(player, pos, autocvar_g_ons_click_radius);
 
 			if ( closest_target == NULL )
 			{
@@ -1990,7 +1990,7 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 					return true;
 				}
 
-				if ( !ons_Teleport(player,closest_target,autocvar_g_onslaught_teleport_radius,true) )
+				if ( !ons_Teleport(player,closest_target,autocvar_g_ons_teleport_radius,true) )
 					sprint(player, "\nUnable to teleport there\n");
 			}
 
@@ -2010,7 +2010,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerUseKey)
 
 	if((time > player.teleport_antispam) && (!IS_DEAD(player)) && !player.vehicle)
 	{
-		entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_onslaught_teleport_radius);
+		entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_ons_teleport_radius);
 		if ( source_point )
 		{
 			stuffcmd(player, "qc_cmd_cl hud clickradar\n");
@@ -2099,7 +2099,7 @@ keys:
  */
 spawnfunc(onslaught_link)
 {
-	if(!g_onslaught) { delete(this); return; }
+	if(!g_ons) { delete(this); return; }
 
 	if (this.target == "" || this.target2 == "")
 		objerror(this, "target and target2 must be set\n");
@@ -2124,7 +2124,7 @@ keys:
 
 spawnfunc(onslaught_controlpoint)
 {
-	if(!g_onslaught) { delete(this); return; }
+	if(!g_ons) { delete(this); return; }
 
 	ons_ControlPoint_Setup(this);
 }
@@ -2140,7 +2140,7 @@ keys:
  */
 spawnfunc(onslaught_generator)
 {
-	if(!g_onslaught) { delete(this); return; }
+	if(!g_ons) { delete(this); return; }
 	if(!this.team) { objerror(this, "team must be set"); }
 
 	ons_GeneratorSetup(this);
@@ -2164,14 +2164,14 @@ void ons_DelayedInit(entity this) // Do this check with a delay so we can wait f
 	ons_ScoreRules();
 
 	round_handler_Spawn(Onslaught_CheckPlayers, Onslaught_CheckWinner, Onslaught_RoundStart);
-	round_handler_Init(5, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
+	round_handler_Init(5, autocvar_g_ons_warmup, autocvar_g_ons_round_timelimit);
 }
 
 void ons_Initialize()
 {
-	g_onslaught = true;
+	g_ons = true;
 	g_onsshields = IL_NEW();
-	ons_captureshield_force = autocvar_g_onslaught_shield_force;
+	ons_captureshield_force = autocvar_g_ons_shield_force;
 
 	cam = new(objective_camera);
 

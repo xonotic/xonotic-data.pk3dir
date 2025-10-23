@@ -10,12 +10,12 @@
 #include <server/world.qh>
 #include <server/teamplay.qh>
 
-float autocvar_g_invasion_round_timelimit;
-float autocvar_g_invasion_spawnpoint_spawn_delay;
-float autocvar_g_invasion_warmup;
-int autocvar_g_invasion_monster_count;
-bool autocvar_g_invasion_zombies_only;
-float autocvar_g_invasion_spawn_delay;
+float autocvar_g_inv_round_timelimit;
+float autocvar_g_inv_spawnpoint_spawn_delay;
+float autocvar_g_inv_warmup;
+int autocvar_g_inv_monster_count;
+bool autocvar_g_inv_zombies_only;
+float autocvar_g_inv_spawn_delay;
 
 bool victent_present;
 .bool inv_endreached;
@@ -44,7 +44,7 @@ void target_invasion_roundend_use(entity this, entity actor, entity trigger)
 
 spawnfunc(target_invasion_roundend)
 {
-	if(!g_invasion) { delete(this); return; }
+	if(!g_inv) { delete(this); return; }
 
 	victent_present = true; // a victory entity is present, we don't need to rely on monster count TODO: merge this with the intrusive list (can check empty)
 
@@ -52,21 +52,21 @@ spawnfunc(target_invasion_roundend)
 
 	this.use = target_invasion_roundend_use;
 
-	IL_PUSH(g_invasion_roundends, this);
+	IL_PUSH(g_inv_roundends, this);
 }
 
 spawnfunc(invasion_wave)
 {
-	if(!g_invasion) { delete(this); return; }
+	if(!g_inv) { delete(this); return; }
 
-	IL_PUSH(g_invasion_waves, this);
+	IL_PUSH(g_inv_waves, this);
 }
 
 spawnfunc(invasion_spawnpoint)
 {
-	if(!g_invasion) { delete(this); return; }
+	if(!g_inv) { delete(this); return; }
 
-	IL_PUSH(g_invasion_spawns, this);
+	IL_PUSH(g_inv_spawns, this);
 }
 
 void ClearWinners();
@@ -79,12 +79,12 @@ int WinningCondition_Invasion()
 
 	int status = WINNING_NO;
 
-	if(autocvar_g_invasion_type == INV_TYPE_STAGE)
+	if(autocvar_g_inv_type == INV_TYPE_STAGE)
 	{
 		SetWinners(inv_endreached, true);
 
 		int found = 0;
-		IL_EACH(g_invasion_roundends, true,
+		IL_EACH(g_inv_roundends, true,
 		{
 			++found;
 			if(it.winning)
@@ -100,7 +100,7 @@ int WinningCondition_Invasion()
 		if(!found)
 			status = WINNING_YES; // just end it? TODO: should warn mapper!
 	}
-	else if(autocvar_g_invasion_type == INV_TYPE_HUNT)
+	else if(autocvar_g_inv_type == INV_TYPE_HUNT)
 	{
 		ClearWinners();
 
@@ -132,7 +132,7 @@ Monster invasion_PickMonster(int supermonster_count)
 		if((it.spawnflags & (MON_FLAG_HIDDEN | MONSTER_TYPE_PASSIVE | MONSTER_TYPE_FLY | MONSTER_TYPE_SWIM | MONSTER_SIZE_QUAKE))
 		|| ((it.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
 			continue;
-		if(autocvar_g_invasion_zombies_only && !(it.spawnflags & MONSTER_TYPE_UNDEAD))
+		if(autocvar_g_inv_zombies_only && !(it.spawnflags & MONSTER_TYPE_UNDEAD))
 			continue;
         RandomSelection_AddEnt(it, 1, 1);
 	});
@@ -144,10 +144,10 @@ entity invasion_PickSpawn()
 {
 	RandomSelection_Init();
 
-	IL_EACH(g_invasion_spawns, true,
+	IL_EACH(g_inv_spawns, true,
 	{
 		RandomSelection_AddEnt(it, 1, ((time < it.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
-		it.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
+		it.spawnshieldtime = time + autocvar_g_inv_spawnpoint_spawn_delay;
 	});
 
 	return RandomSelection_chosen_ent;
@@ -155,14 +155,14 @@ entity invasion_PickSpawn()
 
 entity invasion_GetWaveEntity(int wavenum)
 {
-	IL_EACH(g_invasion_waves, it.cnt == wavenum,
+	IL_EACH(g_inv_waves, it.cnt == wavenum,
 	{
 		return it; // found one
 	});
 
 	// if no specific one is found, find the last existing wave ent
 	entity best = NULL;
-	IL_EACH(g_invasion_waves, it.cnt <= wavenum,
+	IL_EACH(g_inv_waves, it.cnt <= wavenum,
 	{
 		if(!best || it.cnt > best.cnt)
 			best = it;
@@ -252,7 +252,7 @@ bool Invasion_CheckWinner()
 
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
-		round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
+		round_handler_Init(5, autocvar_g_inv_warmup, autocvar_g_inv_round_timelimit);
 		return 1;
 	}
 
@@ -270,7 +270,7 @@ bool Invasion_CheckWinner()
 		if(time >= inv_lastcheck)
 		{
 			invasion_SpawnMonsters(supermonster_count);
-			inv_lastcheck = time + autocvar_g_invasion_spawn_delay;
+			inv_lastcheck = time + autocvar_g_inv_spawn_delay;
 		}
 
 		return 0;
@@ -306,7 +306,7 @@ bool Invasion_CheckWinner()
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_PLAYER_WIN, winner.netname);
 	}
 
-	round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
+	round_handler_Init(5, autocvar_g_inv_warmup, autocvar_g_inv_round_timelimit);
 
 	return 1;
 }
@@ -333,7 +333,7 @@ void Invasion_RoundStart()
 	inv_numspawned = 0;
 	inv_numkilled = 0;
 
-	inv_maxspawned = rint(max(autocvar_g_invasion_monster_count, autocvar_g_invasion_monster_count * (inv_roundcnt * 0.5)));
+	inv_maxspawned = rint(max(autocvar_g_inv_monster_count, autocvar_g_inv_monster_count * (inv_roundcnt * 0.5)));
 }
 
 MUTATOR_HOOKFUNCTION(inv, MonsterDies)
@@ -343,7 +343,7 @@ MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 
 	if(!(frag_target.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
-		if(autocvar_g_invasion_type == INV_TYPE_ROUND)
+		if(autocvar_g_inv_type == INV_TYPE_ROUND)
 		{
 			inv_numkilled += 1;
 			inv_maxcurrent -= 1;
@@ -364,7 +364,7 @@ MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
 	entity mon = M_ARGV(0, entity);
 	mon.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 
-	if(autocvar_g_invasion_type == INV_TYPE_HUNT)
+	if(autocvar_g_inv_type == INV_TYPE_HUNT)
 		return false; // allowed
 
 	if(!(mon.spawnflags & MONSTERFLAG_SPAWNED))
@@ -384,7 +384,7 @@ MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
 
 MUTATOR_HOOKFUNCTION(inv, SV_StartFrame)
 {
-	if(autocvar_g_invasion_type != INV_TYPE_ROUND)
+	if(autocvar_g_inv_type != INV_TYPE_ROUND)
 		return; // uses map spawned monsters
 
 	monsters_total = inv_maxspawned; // TODO: make sure numspawned never exceeds maxspawned
@@ -433,7 +433,7 @@ MUTATOR_HOOKFUNCTION(inv, BotShouldAttack)
 
 MUTATOR_HOOKFUNCTION(inv, SetStartItems)
 {
-	if(autocvar_g_invasion_type == INV_TYPE_ROUND)
+	if(autocvar_g_inv_type == INV_TYPE_ROUND)
 	{
 		start_health = 200;
 		start_armorvalue = 200;
@@ -458,7 +458,7 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobSpawning)
 
 MUTATOR_HOOKFUNCTION(inv, CheckRules_World)
 {
-	if(autocvar_g_invasion_type == INV_TYPE_ROUND)
+	if(autocvar_g_inv_type == INV_TYPE_ROUND)
 		return false;
 
 	M_ARGV(0, float) = WinningCondition_Invasion();
@@ -481,7 +481,7 @@ void invasion_ScoreRules()
 
 void invasion_DelayedInit(entity this)
 {
-	if(autocvar_g_invasion_type == INV_TYPE_HUNT || autocvar_g_invasion_type == INV_TYPE_STAGE)
+	if(autocvar_g_inv_type == INV_TYPE_HUNT || autocvar_g_inv_type == INV_TYPE_STAGE)
 		cvar_set("fraglimit", "0");
 
 	independent_players = 1; // to disable extra useless scores
@@ -490,10 +490,10 @@ void invasion_DelayedInit(entity this)
 
 	independent_players = 0;
 
-	if(autocvar_g_invasion_type == INV_TYPE_ROUND)
+	if(autocvar_g_inv_type == INV_TYPE_ROUND)
 	{
 		round_handler_Spawn(Invasion_CheckPlayers, Invasion_CheckWinner, Invasion_RoundStart);
-		round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
+		round_handler_Init(5, autocvar_g_inv_warmup, autocvar_g_inv_round_timelimit);
 
 		inv_roundcnt = 0;
 		inv_maxrounds = 15; // 15?

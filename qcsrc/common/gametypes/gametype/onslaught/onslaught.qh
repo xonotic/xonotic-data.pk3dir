@@ -5,7 +5,7 @@
 CLASS(Onslaught, Gametype)
 	INIT(Onslaught)
 	{
-		this.gametype_init(this, _("Onslaught"),"ons","g_onslaught",GAMETYPE_FLAG_TEAMPLAY,"","pointlimit=1 timelimit=20",_("Capture control points to reach and destroy the enemy generator"));
+		this.gametype_init(this, _("Onslaught"),"ons","g_ons",GAMETYPE_FLAG_TEAMPLAY,"","pointlimit=1 timelimit=20",_("Capture control points to reach and destroy the enemy generator"));
 	}
 	METHOD(Onslaught, m_generate_mapinfo, void(Gametype this, string v))
 	{

@@ -1,11 +1,11 @@
 #include "sv_survival.qh"
 
-float autocvar_g_survival_hunter_count = 0.25;
-float autocvar_g_survival_round_timelimit = 120;
-float autocvar_g_survival_warmup = 10;
-bool autocvar_g_survival_punish_teamkill = true;
-bool autocvar_g_survival_reward_survival = true;
-float autocvar_g_survival_round_enddelay;
+float autocvar_g_surv_hunter_count = 0.25;
+float autocvar_g_surv_round_timelimit = 120;
+float autocvar_g_surv_warmup = 10;
+bool autocvar_g_surv_punish_teamkill = true;
+bool autocvar_g_surv_reward_survival = true;
+float autocvar_g_surv_round_enddelay;
 
 entity survivalStatuses;
 void SurvivalStatuses_Init();
@@ -65,7 +65,7 @@ void Surv_UpdateScores(bool timed_out)
 		// player survived the round
 		if(IS_PLAYER(it) && !IS_DEAD(it))
 		{
-			if(autocvar_g_survival_reward_survival && timed_out && it.survival_status == SURV_STATUS_PREY)
+			if(autocvar_g_surv_reward_survival && timed_out && it.survival_status == SURV_STATUS_PREY)
 				GameRules_scoring_add(it, SCORE, 1); // reward survivors who make it to the end of the round time limit
 			if(it.survival_status == SURV_STATUS_PREY)
 				GameRules_scoring_add(it, SURV_SURVIVALS, 1);
@@ -78,7 +78,7 @@ void Surv_UpdateScores(bool timed_out)
 float Surv_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
-		&& autocvar_g_survival_round_enddelay == -1)
+		&& autocvar_g_surv_round_enddelay == -1)
 	{
 		// if the match times out, survivors win too!
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_SURVIVAL_SURVIVOR_WIN);
@@ -91,7 +91,7 @@ float Surv_CheckWinner()
 
 		allowed_to_spawn = false;
 		game_stopped = true;
-		round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
+		round_handler_Init(5, autocvar_g_surv_warmup, autocvar_g_surv_round_timelimit);
 		survivalStatuses.SendFlags = STATUS_SEND_HUNTERS;
 		return 1;
 	}
@@ -114,13 +114,13 @@ float Surv_CheckWinner()
 	}
 
 	// delay round ending a bit
-	if (autocvar_g_survival_round_enddelay
+	if (autocvar_g_surv_round_enddelay
 		&& round_handler_GetEndTime() > 0
 		&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
 	{
 		if (round_handler_GetEndDelayTime() == -1)
 		{
-			round_handler_SetEndDelayTime(min(time + autocvar_g_survival_round_enddelay, round_handler_GetEndTime()));
+			round_handler_SetEndDelayTime(min(time + autocvar_g_surv_round_enddelay, round_handler_GetEndTime()));
 			return 0;
 		}
 		else if (round_handler_GetEndDelayTime() >= time)
@@ -149,7 +149,7 @@ float Surv_CheckWinner()
 
 	allowed_to_spawn = false;
 	game_stopped = true;
-	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
+	round_handler_Init(5, autocvar_g_surv_warmup, autocvar_g_surv_round_timelimit);
 	survivalStatuses.SendFlags = STATUS_SEND_HUNTERS;
 
 	FOREACH_CLIENT(IS_PLAYER(it), {
@@ -174,7 +174,7 @@ void Surv_RoundStart()
 			it.survival_status = 0; // this is mostly a safety check; if a client manages to somehow maintain a survival status, clear it before the round starts!
 		it.survival_validkills = 0;
 	});
-	int hunter_count = bound(1, ((autocvar_g_survival_hunter_count >= 1) ? autocvar_g_survival_hunter_count : floor(playercount * autocvar_g_survival_hunter_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
+	int hunter_count = bound(1, ((autocvar_g_surv_hunter_count >= 1) ? autocvar_g_surv_hunter_count : floor(playercount * autocvar_g_surv_hunter_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
 	int total_hunters = 0;
 	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) && !IS_DEAD(it),
 	{
@@ -245,7 +245,7 @@ void surv_Initialize() // run at the start of a match, initiates gametype
 
 	allowed_to_spawn = true;
 	round_handler_Spawn(Surv_CheckPlayers, Surv_CheckWinner, Surv_RoundStart);
-	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
+	round_handler_Init(5, autocvar_g_surv_warmup, autocvar_g_surv_round_timelimit);
 	EliminatedPlayers_Init(surv_isEliminated);
 	SurvivalStatuses_Init();
 }
@@ -267,7 +267,7 @@ MUTATOR_HOOKFUNCTION(surv, ClientObituary)
 		// "team" kill, a point is awarded to the player by default so we must take it away plus an extra one
 		// unless the player is going to be punished for suicide, in which case just remove one
 		if(frag_attacker.survival_status == frag_target.survival_status)
-			GiveFrags(frag_attacker, frag_target, ((autocvar_g_survival_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
+			GiveFrags(frag_attacker, frag_target, ((autocvar_g_surv_punish_teamkill) ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
 	}
 
 	if(frag_attacker.survival_status == SURV_STATUS_HUNTER)
@@ -391,7 +391,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 	}
 
 	// killed an ally! punishment is death
-	if(autocvar_g_survival_punish_teamkill && frag_attacker != frag_target && IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target) && frag_attacker.survival_status == frag_target.survival_status && !ITEM_DAMAGE_NEEDKILL(frag_deathtype))
+	if(autocvar_g_surv_punish_teamkill && frag_attacker != frag_target && IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target) && frag_attacker.survival_status == frag_target.survival_status && !ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted()) // don't autokill if the round hasn't started yet
 		Damage(frag_attacker, frag_attacker, frag_attacker, 100000, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
 	return true;

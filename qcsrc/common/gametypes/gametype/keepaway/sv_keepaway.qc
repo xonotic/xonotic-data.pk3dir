@@ -11,23 +11,23 @@
 .entity ballcarried;
 .entity previous_owner; // also used on kh keys
 
-int autocvar_g_keepaway_ballcarrier_maxballs;
-float autocvar_g_keepaway_ballcarrier_highspeed;
-vector autocvar_g_keepaway_ballcarrier_damage;
-vector autocvar_g_keepaway_ballcarrier_force;
-vector autocvar_g_keepaway_noncarrier_damage;
-vector autocvar_g_keepaway_noncarrier_force;
-bool autocvar_g_keepaway_noncarrier_warn;
+int autocvar_g_ka_ballcarrier_maxballs;
+float autocvar_g_ka_ballcarrier_highspeed;
+vector autocvar_g_ka_ballcarrier_damage;
+vector autocvar_g_ka_ballcarrier_force;
+vector autocvar_g_ka_noncarrier_damage;
+vector autocvar_g_ka_noncarrier_force;
+bool autocvar_g_ka_noncarrier_warn;
 
-int autocvar_g_keepaway_score_bckill;
-int autocvar_g_keepaway_score_killac;
-int autocvar_g_keepaway_score_timepoints;
-int autocvar_g_keepawayball_count;
-float autocvar_g_keepawayball_damageforcescale;
-int autocvar_g_keepawayball_effects;
-float autocvar_g_keepawayball_respawntime;
-int autocvar_g_keepawayball_trail_color;
-int autocvar_g_keepawayball_tracking;
+int autocvar_g_ka_score_bckill;
+int autocvar_g_ka_score_killac;
+int autocvar_g_ka_score_timepoints;
+int autocvar_g_ka_ball_count;
+float autocvar_g_ka_ball_damageforcescale;
+int autocvar_g_ka_ball_effects;
+float autocvar_g_ka_ball_respawntime;
+int autocvar_g_ka_ball_trail_color;
+int autocvar_g_ka_ball_tracking;
 
 bool ka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
 {
@@ -38,7 +38,7 @@ bool ka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player
 	if(IS_INVISIBLE(this.owner))
 		return false; // hide the waypointsprite if the owner is invisible
 
-	return autocvar_g_keepawayball_tracking == 1;
+	return autocvar_g_ka_ball_tracking == 1;
 }
 
 void ka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
@@ -58,15 +58,15 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	set_movetype(this, MOVETYPE_BOUNCE);
 	this.velocity = '0 0 200';
 	this.angles = '0 0 0';
-	this.effects = autocvar_g_keepawayball_effects;
+	this.effects = autocvar_g_ka_ball_effects;
 	setthink(this, ka_RespawnBall);
-	this.nextthink = time + autocvar_g_keepawayball_respawntime;
+	this.nextthink = time + autocvar_g_ka_ball_respawntime;
 	navigation_dynamicgoal_set(this, NULL);
 
 	Send_Effect(EFFECT_KA_BALL_RESPAWN, oldballorigin, '0 0 0', 1);
 	Send_Effect(EFFECT_KA_BALL_RESPAWN, this.origin, '0 0 0', 1);
 
-	if(autocvar_g_keepawayball_tracking || warmup_stage)
+	if(autocvar_g_ka_ball_tracking || warmup_stage)
 	{
 		WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', NULL, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 		WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
@@ -89,8 +89,8 @@ MUTATOR_HOOKFUNCTION(ka, reset_map_global)
 /// runs (only) while a player is carrying the ball
 void ka_BallThink_Carried(entity this)
 {
-	if (autocvar_g_keepaway_score_timepoints)
-		GameRules_scoring_add_float2int(this.owner, SCORE, autocvar_g_keepaway_score_timepoints * frametime, float2int_decimal_fld, 1);
+	if (autocvar_g_ka_score_timepoints)
+		GameRules_scoring_add_float2int(this.owner, SCORE, autocvar_g_ka_score_timepoints * frametime, float2int_decimal_fld, 1);
 	GameRules_scoring_add(this.owner, KEEPAWAY_BCTIME, frametime);
 
 	this.nextthink = time;
@@ -135,7 +135,7 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 
 	if (toucher.ballcarried) // multiple balls exist
 	{
-		if (toucher.ballcarried.cnt >= autocvar_g_keepaway_ballcarrier_maxballs)
+		if (toucher.ballcarried.cnt >= autocvar_g_ka_ballcarrier_maxballs)
 			return;
 		this.ballcarried = toucher.ballcarried; // new ball will be inserted at start of chain
 		this.cnt = toucher.ballcarried.cnt + 1; // for orbit animation offset
@@ -200,7 +200,7 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 	ball.previous_owner = player;
 	ball.wait = time + 0.5; // same as for thrown weapons
 	setthink(ball, ka_RespawnBall);
-	ball.nextthink = time + autocvar_g_keepawayball_respawntime;
+	ball.nextthink = time + autocvar_g_ka_ball_respawntime;
 	ball.takedamage = DAMAGE_YES;
 	ball.event_damage = ka_DamageEvent;
 	ball.damagedbycontents = true;
@@ -221,7 +221,7 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 	sound(NULL, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// waypoints
-	if(autocvar_g_keepawayball_tracking || warmup_stage)
+	if(autocvar_g_ka_ball_tracking || warmup_stage)
 	{
 		WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 		WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
@@ -265,13 +265,13 @@ void ka_SpawnBalls()
 		// bones_was_here: that was WITH sv_legacy_bbox_expand 1 and FL_ITEM (mins -= '15 15 1'; maxs += '15 15 1')
 		// it's round so should have a symmetrical bbox, same height as pickup items so it can't be jumped over in any physics
 		setsize(e, '-24 -24 -24', '24 24 24');
-		e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
+		e.damageforcescale = autocvar_g_ka_ball_damageforcescale;
 		e.takedamage = DAMAGE_YES;
 		e.event_damage = ka_DamageEvent;
 		e.damagedbycontents = true;
 		IL_PUSH(g_damagedbycontents, e);
 		set_movetype(e, MOVETYPE_BOUNCE);
-		e.glow_color = autocvar_g_keepawayball_trail_color;
+		e.glow_color = autocvar_g_ka_ball_trail_color;
 		e.glow_trail = true;
 		e.flags = FL_ITEM;
 		IL_PUSH(g_items, e);
@@ -285,7 +285,7 @@ void ka_SpawnBalls()
 
 		++i;
 	}
-	while (i < autocvar_g_keepawayball_count);
+	while (i < autocvar_g_ka_ball_count);
 }
 
 void ka_Handler_CheckBall(entity this)
@@ -409,17 +409,17 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDies)
 		if(frag_target.ballcarried) // add to amount of times killing carrier
 		{
 			GameRules_scoring_add(frag_attacker, KEEPAWAY_CARRIERKILLS, 1);
-			if(autocvar_g_keepaway_score_bckill) // add bckills to the score
-				GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_keepaway_score_bckill);
+			if(autocvar_g_ka_score_bckill) // add bckills to the score
+				GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_ka_score_bckill);
 		}
 		else if(!frag_attacker.ballcarried)
 		{
-			if(autocvar_g_keepaway_noncarrier_warn)
+			if(autocvar_g_ka_noncarrier_warn)
 				Send_Notification(NOTIF_ONE_ONLY, frag_attacker, MSG_CENTER, CENTER_KEEPAWAY_WARN);
 		}
 
 		if(frag_attacker.ballcarried) // add to amount of kills while ballcarrier
-			GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_keepaway_score_killac);
+			GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_ka_score_killac);
 	}
 
 	while (frag_target.ballcarried)
@@ -435,7 +435,7 @@ MUTATOR_HOOKFUNCTION(ka, GiveFragsForKill)
 MUTATOR_HOOKFUNCTION(ka, Scores_CountFragsRemaining)
 {
 	// announce remaining frags, but only when timed scoring is off
-	return !autocvar_g_keepaway_score_timepoints;
+	return !autocvar_g_ka_score_timepoints;
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerPreThink)
@@ -471,36 +471,36 @@ MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force valu
 	{
 		if (frag_target == frag_attacker) // damage done to themselves
 		{
-			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_damage.x;
-			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_force.x;
+			M_ARGV(4, float) *= autocvar_g_ka_ballcarrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_ka_ballcarrier_force.x;
 		}
 		else if (frag_target.ballcarried) // damage done to other ballcarriers
 		{
-			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_damage.y;
-			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_force.y;
+			M_ARGV(4, float) *= autocvar_g_ka_ballcarrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_ka_ballcarrier_force.y;
 		}
 		else // damage done to noncarriers
 		{
-			M_ARGV(4, float) *= autocvar_g_keepaway_ballcarrier_damage.z;
-			M_ARGV(6, vector) *= autocvar_g_keepaway_ballcarrier_force.z;
+			M_ARGV(4, float) *= autocvar_g_ka_ballcarrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_ka_ballcarrier_force.z;
 		}
 	}
 	else
 	{
 		if (frag_target == frag_attacker) // damage done to themselves
 		{
-			M_ARGV(4, float) *= autocvar_g_keepaway_noncarrier_damage.x;
-			M_ARGV(6, vector) *= autocvar_g_keepaway_noncarrier_force.x;
+			M_ARGV(4, float) *= autocvar_g_ka_noncarrier_damage.x;
+			M_ARGV(6, vector) *= autocvar_g_ka_noncarrier_force.x;
 		}
 		else if (frag_target.ballcarried) // damage done to ballcarriers
 		{
-			M_ARGV(4, float) *= autocvar_g_keepaway_noncarrier_damage.y;
-			M_ARGV(6, vector) *= autocvar_g_keepaway_noncarrier_force.y;
+			M_ARGV(4, float) *= autocvar_g_ka_noncarrier_damage.y;
+			M_ARGV(6, vector) *= autocvar_g_ka_noncarrier_force.y;
 		}
 		else // damage done to other noncarriers
 		{
-			M_ARGV(4, float) *= autocvar_g_keepaway_noncarrier_damage.z;
-			M_ARGV(6, vector) *= autocvar_g_keepaway_noncarrier_force.z;
+			M_ARGV(4, float) *= autocvar_g_ka_noncarrier_damage.z;
+			M_ARGV(6, vector) *= autocvar_g_ka_noncarrier_force.z;
 		}
 	}
 }
@@ -536,7 +536,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerPhysics_UpdateStats)
 	// these automatically reset, no need to worry
 
 	if(player.ballcarried)
-		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_keepaway_ballcarrier_highspeed;
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_ka_ballcarrier_highspeed;
 }
 
 MUTATOR_HOOKFUNCTION(ka, BotShouldAttack)

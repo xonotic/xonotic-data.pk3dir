@@ -9,19 +9,19 @@ void HUD_Mod_Dom_Export(int fh);
 CLASS(Domination, Gametype)
 	INIT(Domination)
 	{
-		this.gametype_init(this, _("Domination"),"dom","g_domination",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=200 teams=2 leadlimit=0",_("Capture and defend all the control points to win"));
+		this.gametype_init(this, _("Domination"),"dom","g_dom",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=200 teams=2 leadlimit=0",_("Capture and defend all the control points to win"));
 	}
 	METHOD(Domination, m_parse_mapinfo, bool(string k, string v))
 	{
 		if (!k)
 		{
-			cvar_set("g_domination_default_teams", cvar_defstring("g_domination_default_teams"));
+			cvar_set("g_dom_default_teams", cvar_defstring("g_dom_default_teams"));
 			return true;
 		}
 		switch (k)
 		{
 			case "teams":
-				cvar_set("g_domination_default_teams", v);
+				cvar_set("g_dom_default_teams", v);
 				return true;
 		}
 		return false;
@@ -34,7 +34,7 @@ CLASS(Domination, Gametype)
 	METHOD(Domination, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
 	{
 		TC(Gametype, this);
-		returns(menu, _("Point limit:"),    50,  500, 10, "g_domination_point_limit",  "g_domination_teams_override",  _("The amount of points needed before the match will end"));
+		returns(menu, _("Point limit:"),    50,  500, 10, "g_dom_point_limit",  "g_dom_teams_override",  _("The amount of points needed before the match will end"));
 	}
 #ifdef CSQC
 	ATTRIB(Domination, m_modicons, void(vector pos, vector mySize), HUD_Mod_Dom);

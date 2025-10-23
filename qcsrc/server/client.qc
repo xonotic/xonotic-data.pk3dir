@@ -812,10 +812,10 @@ void PutPlayerInServer(entity this)
 	MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
 	{
 		string s = spot.target;
-		if(g_assault || g_race) // TODO: make targeting work in assault & race without this hack
+		if(g_as || g_race) // TODO: make targeting work in assault & race without this hack
 			spot.target = string_null;
 		SUB_UseTargets(spot, this, NULL);
-		if(g_assault || g_race)
+		if(g_as || g_race)
 			spot.target = s;
 	}
 
@@ -906,7 +906,7 @@ void ClientInit_misc(entity this)
 {
 	int channel = MSG_ONE;
 	WriteHeader(channel, ENT_CLIENT_INIT);
-	WriteByte(channel, g_nexball_meter_period * 32);
+	WriteByte(channel, g_nb_meter_period * 32);
 	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[0]));
 	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[1]));
 	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[2]));

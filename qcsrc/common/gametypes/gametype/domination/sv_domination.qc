@@ -10,16 +10,16 @@
 #include <common/mapobjects/platforms.qh>
 #include <common/mapobjects/triggers.qh>
 
-bool g_domination;
+bool g_dom;
 
-int autocvar_g_domination_default_teams;
-bool autocvar_g_domination_disable_frags;
-int autocvar_g_domination_point_amt;
-bool autocvar_g_domination_point_fullbright;
-float autocvar_g_domination_round_timelimit;
-float autocvar_g_domination_warmup;
-float autocvar_g_domination_point_rate;
-int autocvar_g_domination_teams_override;
+int autocvar_g_dom_default_teams;
+bool autocvar_g_dom_disable_frags;
+int autocvar_g_dom_point_amt;
+bool autocvar_g_dom_point_fullbright;
+float autocvar_g_dom_round_timelimit;
+float autocvar_g_dom_warmup;
+float autocvar_g_dom_point_rate;
+int autocvar_g_dom_teams_override;
 
 void dom_EventLog(string mode, float team_before, entity actor) // use an alias for easy changing and quick editing later
 {
@@ -57,12 +57,12 @@ void dompoint_captured(entity this)
 	this.skin = head.skin;
 
 	float points, wait_time;
-	if (autocvar_g_domination_point_amt)
-		points = autocvar_g_domination_point_amt;
+	if (autocvar_g_dom_point_amt)
+		points = autocvar_g_dom_point_amt;
 	else
 		points = this.frags;
-	if (autocvar_g_domination_point_rate)
-		wait_time = autocvar_g_domination_point_rate;
+	if (autocvar_g_dom_point_rate)
+		wait_time = autocvar_g_dom_point_rate;
 	else
 		wait_time = this.wait;
 
@@ -111,12 +111,12 @@ void dompoint_captured(entity this)
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	IL_EACH(g_dompoints, true,
 	{
-		if (autocvar_g_domination_point_amt)
-			points = autocvar_g_domination_point_amt;
+		if (autocvar_g_dom_point_amt)
+			points = autocvar_g_dom_point_amt;
 		else
 			points = it.frags;
-		if (autocvar_g_domination_point_rate)
-			wait_time = autocvar_g_domination_point_rate;
+		if (autocvar_g_dom_point_rate)
+			wait_time = autocvar_g_dom_point_rate;
 		else
 			wait_time = it.wait;
 		switch(it.goalentity.team)
@@ -166,8 +166,8 @@ void dompointthink(entity this)
 	if (game_stopped || this.delay > time || time < game_starttime)	// game has ended, don't keep giving points
 		return;
 
-	if(autocvar_g_domination_point_rate)
-		this.delay = time + autocvar_g_domination_point_rate;
+	if(autocvar_g_dom_point_rate)
+		this.delay = time + autocvar_g_dom_point_rate;
 	else
 		this.delay = time + this.wait;
 
@@ -176,8 +176,8 @@ void dompointthink(entity this)
 	if (!domination_roundbased)
 	if (this.goalentity.netname != "")
 	{
-		if(autocvar_g_domination_point_amt)
-			fragamt = autocvar_g_domination_point_amt;
+		if(autocvar_g_dom_point_amt)
+			fragamt = autocvar_g_dom_point_amt;
 		else
 			fragamt = this.frags;
 		TeamScore_AddToTeam(this.goalentity.team, ST_SCORE, fragamt);
@@ -225,8 +225,8 @@ void dompointtouch(entity this, entity toucher)
 	this.dmg_inflictor = toucher;
 
 	// this.state = 1;
-	// this.delay = time + cvar("g_domination_point_capturetime");
-	//this.nextthink = time + cvar("g_domination_point_capturetime");
+	// this.delay = time + cvar("g_dom_point_capturetime");
+	//this.nextthink = time + cvar("g_dom_point_capturetime");
 	//this.think = dompoint_captured;
 
 	// go to neutral team in the mean time
@@ -276,12 +276,12 @@ void dom_controlpoint_setup(entity this)
 		this.wait = 5;
 
 	float points, waittime;
-	if (autocvar_g_domination_point_amt)
-		points = autocvar_g_domination_point_amt;
+	if (autocvar_g_dom_point_amt)
+		points = autocvar_g_dom_point_amt;
 	else
 		points = this.frags;
-	if (autocvar_g_domination_point_rate)
-		waittime = autocvar_g_domination_point_rate;
+	if (autocvar_g_dom_point_rate)
+		waittime = autocvar_g_dom_point_rate;
 	else
 		waittime = this.wait;
 
@@ -337,7 +337,7 @@ bool Domination_CheckWinner()
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 
 		game_stopped = true;
-		round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
+		round_handler_Init(5, autocvar_g_dom_warmup, autocvar_g_dom_round_timelimit);
 		return true;
 	}
 
@@ -354,7 +354,7 @@ bool Domination_CheckWinner()
 	}
 
 	game_stopped = true;
-	round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
+	round_handler_Init(5, autocvar_g_dom_warmup, autocvar_g_dom_round_timelimit);
 
 	return true;
 }
@@ -470,7 +470,7 @@ Control point for Domination gameplay.
 */
 spawnfunc(dom_controlpoint)
 {
-	if(!g_domination)
+	if(!g_dom)
 	{
 		delete(this);
 		return;
@@ -483,7 +483,7 @@ spawnfunc(dom_controlpoint)
 		this.scale = 0.6;
 
 	this.effects = this.effects | EF_LOWPRECISION;
-	if (autocvar_g_domination_point_fullbright)
+	if (autocvar_g_dom_point_fullbright)
 		this.effects |= EF_FULLBRIGHT;
 
 	IL_PUSH(g_dompoints, this);
@@ -534,7 +534,7 @@ Keys:
 
 spawnfunc(dom_team)
 {
-	if(!g_domination || autocvar_g_domination_teams_override >= 2)
+	if(!g_dom || autocvar_g_dom_teams_override >= 2)
 	{
 		delete(this);
 		return;
@@ -568,7 +568,7 @@ void ScoreRules_dom(int teams)
 	{
 		float sp_domticks, sp_score;
 		sp_score = sp_domticks = 0;
-		if(autocvar_g_domination_disable_frags)
+		if(autocvar_g_dom_disable_frags)
 			sp_domticks = SFL_SORT_PRIO_PRIMARY;
 		else
 			sp_score = SFL_SORT_PRIO_PRIMARY;
@@ -630,12 +630,12 @@ void dom_spawnteams(int teams)
 void dom_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
 {
 	// if no teams are found, spawn defaults
-	if(find(NULL, classname, "dom_team") == NULL || autocvar_g_domination_teams_override >= 2)
+	if(find(NULL, classname, "dom_team") == NULL || autocvar_g_dom_teams_override >= 2)
 	{
 		LOG_TRACE("No \"dom_team\" entities found on this map, creating them anyway.");
-		domination_teams = autocvar_g_domination_teams_override;
+		domination_teams = autocvar_g_dom_teams_override;
 		if (domination_teams < 2)
-			domination_teams = autocvar_g_domination_default_teams;
+			domination_teams = autocvar_g_dom_default_teams;
 		domination_teams = BITS(bound(2, domination_teams, 4));
 		dom_spawnteams(domination_teams);
 	}
@@ -646,20 +646,20 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 		TeamBalance_Destroy(balance);
 	}
 
-	domination_roundbased = autocvar_g_domination_roundbased;
+	domination_roundbased = autocvar_g_dom_roundbased;
 
 	ScoreRules_dom(domination_teams);
 
 	if(domination_roundbased)
 	{
 		round_handler_Spawn(Domination_CheckPlayers, Domination_CheckWinner, Domination_RoundStart);
-		round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
+		round_handler_Init(5, autocvar_g_dom_warmup, autocvar_g_dom_round_timelimit);
 	}
 }
 
 void dom_Initialize()
 {
-	g_domination = true;
+	g_dom = true;
 	g_dompoints = IL_NEW();
 
 	InitializeEntity(NULL, dom_DelayedInit, INITPRIO_GAMETYPE);
