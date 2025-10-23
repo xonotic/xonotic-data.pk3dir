@@ -291,8 +291,8 @@ void cvar_changes_init()
 		BADCVAR("g_jailbreak");
 		BADCVAR("g_jailbreak_teams");
 		BADCVAR("g_keepaway");
-		BADCVAR("g_keyhunt");
-		BADCVAR("g_keyhunt_teams");
+		BADCVAR("g_kh");
+		BADCVAR("g_kh_teams");
 		BADCVAR("g_lms");
 		BADCVAR("g_mayhem");
 		BADCVAR("g_nexball");
@@ -385,7 +385,7 @@ void cvar_changes_init()
 		BADCVAR("g_jump_grunt");
 		BADCVAR("g_keepaway_ballcarrier_effects");
 		BADCVAR("g_keepawayball_effects");
-		BADCVAR("g_keyhunt_point_leadlimit");
+		BADCVAR("g_kh_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_new_toys_autoreplace");
 		BADCVAR("g_new_toys_use_pickupsound");
@@ -475,8 +475,8 @@ void cvar_changes_init()
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
 		BADCVAR("g_fullbrightplayers");
-		BADCVAR("g_keyhunt_point_limit");
-		BADCVAR("g_keyhunt_teams_override");
+		BADCVAR("g_kh_point_limit");
+		BADCVAR("g_kh_teams_override");
 		BADCVAR("g_lms_lives_override");
 		BADCVAR("g_mayhem_powerups");
 		BADCVAR("g_maplist");

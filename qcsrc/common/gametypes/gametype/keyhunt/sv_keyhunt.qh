@@ -1,9 +1,9 @@
 #pragma once
 
 #include <common/mutators/base.qh>
-#define autocvar_g_keyhunt_point_limit cvar("g_keyhunt_point_limit")
-int autocvar_g_keyhunt_point_leadlimit;
-bool autocvar_g_keyhunt_team_spawns;
+#define autocvar_g_kh_point_limit cvar("g_kh_point_limit")
+int autocvar_g_kh_point_leadlimit;
+bool autocvar_g_kh_team_spawns;
 void kh_Initialize();
 
 REGISTER_MUTATOR(kh, false)
@@ -12,9 +12,9 @@ REGISTER_MUTATOR(kh, false)
 	MUTATOR_ONADD
 	{
 		GameRules_teams(true);
-		GameRules_spawning_teams(autocvar_g_keyhunt_team_spawns);
-		GameRules_limit_score(autocvar_g_keyhunt_point_limit);
-		GameRules_limit_lead(autocvar_g_keyhunt_point_leadlimit);
+		GameRules_spawning_teams(autocvar_g_kh_team_spawns);
+		GameRules_limit_score(autocvar_g_kh_point_limit);
+		GameRules_limit_lead(autocvar_g_kh_point_leadlimit);
 
 		kh_Initialize();
 	}

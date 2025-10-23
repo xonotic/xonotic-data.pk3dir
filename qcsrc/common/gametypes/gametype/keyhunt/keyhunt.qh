@@ -8,19 +8,19 @@ void HUD_Mod_KH(vector pos, vector mySize);
 CLASS(KeyHunt, Gametype)
 	INIT(KeyHunt)
 	{
-		this.gametype_init(this, _("Key Hunt"),"kh","g_keyhunt",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=1000 teams=3 leadlimit=0",_("Gather all the keys to win the round"));
+		this.gametype_init(this, _("Key Hunt"),"kh","g_kh",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=1000 teams=3 leadlimit=0",_("Gather all the keys to win the round"));
 	}
 	METHOD(KeyHunt, m_parse_mapinfo, bool(string k, string v))
 	{
 		if (!k)
 		{
-			cvar_set("g_keyhunt_teams", cvar_defstring("g_keyhunt_teams"));
+			cvar_set("g_kh_teams", cvar_defstring("g_kh_teams"));
 			return true;
 		}
 		switch (k)
 		{
 			case "teams":
-				cvar_set("g_keyhunt_teams", v);
+				cvar_set("g_kh_teams", v);
 				return true;
 		}
 		return false;
@@ -33,12 +33,12 @@ CLASS(KeyHunt, Gametype)
 	}
 	METHOD(KeyHunt, m_setTeams, void(string sa))
 	{
-		cvar_set("g_keyhunt_teams", sa);
+		cvar_set("g_kh_teams", sa);
 	}
 	METHOD(KeyHunt, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
 	{
 		TC(Gametype, this);
-		returns(menu, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit",     "g_keyhunt_teams_override",     _("The amount of points needed before the match will end"));
+		returns(menu, _("Point limit:"),   200, 1500, 50, "g_kh_point_limit",     "g_kh_teams_override",     _("The amount of points needed before the match will end"));
 	}
 #ifdef CSQC
     ATTRIB(KeyHunt, m_modicons, void(vector pos, vector mySize), HUD_Mod_KH);
