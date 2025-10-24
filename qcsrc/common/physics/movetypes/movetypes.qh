@@ -7,11 +7,14 @@ bool autocvar_physics_ode;
 bool use_engine_physics; // debug option for testing legacy engine code
 #endif
 
-// water levels
-const int WATERLEVEL_NONE = 0;
-const int WATERLEVEL_WETFEET = 1;
-const int WATERLEVEL_SWIMMING = 2;
-const int WATERLEVEL_SUBMERGED = 3;
+/// NB: water levels are also used as multipliers
+enum
+{
+	WATERLEVEL_NONE = 0,
+	WATERLEVEL_WETFEET = 1,
+	WATERLEVEL_SWIMMING = 2,
+	WATERLEVEL_SUBMERGED = 3
+};
 
 const int MIN_WALK_NORMAL = 0.7;
 
@@ -75,6 +78,7 @@ void set_movetype(entity this, int mt);
 	#define PMF_DJING 16
 	#define PMF_SKIMMING 32
 	#define PMF_TIME_KNOCKBACK 64
+	#define PMF_TIME_WATERJUMP 128
 #endif
 
 // CPMA double jumps
@@ -98,6 +102,13 @@ void set_movetype(entity this, int mt);
 	#define HAS_KNOCKBACK(s) (csqcplayer_current_moveflags & PMF_TIME_KNOCKBACK)
 #elifdef SVQC
 	#define HAS_KNOCKBACK(s) ((s).pm_time > 0 && ((s).flags & FL_KNOCKBACK))
+#endif
+
+// Q3 water jumping (no acceleration or friction, just gravity and collisions with skimming)
+#ifdef CSQC
+	#define IS_WATERJUMPING(s) (csqcplayer_current_moveflags & PMF_TIME_WATERJUMP)
+#elifdef SVQC
+	#define IS_WATERJUMPING(s) ((s).pm_time > 0 && ((s).flags & FL_WATERJUMP))
 #endif
 
 .float move_movetype;
