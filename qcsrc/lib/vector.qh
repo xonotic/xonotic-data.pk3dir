@@ -93,7 +93,7 @@ float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs)
 
 noref vector _vec2;
 #define vec2(...) EVAL(OVERLOAD(vec2, __VA_ARGS__))
-#define vec2_1(v) (_vec2 = (v), _vec2.z = 0, _vec2)
+#define vec2_1(v) (_vec2.x = (v).x, _vec2.y = (v).y, _vec2.z = 0, _vec2)
 #define vec2_2(x, y) (_vec2_x = (x), _vec2_y = (y), _vec2)
 
 noref vector _vec3;
