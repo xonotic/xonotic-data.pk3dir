@@ -3099,6 +3099,8 @@ msgid ""
 "The %s buff gives you infinite ammo until the buff expires, so you don't "
 "need to worry about running out of ammo."
 msgstr ""
+"O bônus %s dá-lhe munição infinita até o bônus expirar, logo você não "
+"precisa se preocupar com sua munição acabar."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
 #, c-format
@@ -3106,6 +3108,8 @@ msgid ""
 "It also removes the need to reload any weapons that require reloading, like "
 "the %s and %s."
 msgstr ""
+"Também remove a necessidade de recarregar qualquer arma que requeira "
+"recarga, como %s e %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qh:11
 msgid "Ammo"
@@ -3117,10 +3121,12 @@ msgid ""
 "The %s buff increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
+"O bônus %s aumenta a força de empurrão que você aplica, e faz você imune a "
+"empurrões quando o bônus está ativo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
-msgstr ""
+msgstr "Também aumenta ligeiramente o empurrão que você inflige em si mesmo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qh:14
 msgid "Bash"
@@ -3132,11 +3138,14 @@ msgid ""
 "The %s buff causes your enemies and monsters to slow down for a few seconds "
 "when you attack them, while the buff is active."
 msgstr ""
+"O bônus %s retarda seus inimigos e os monstros por alguns segundos depois de "
+"você os atacar, enquanto o bônus está ativo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
 #, c-format
 msgid "This is particularly useful against speedy players, especially in %s."
 msgstr ""
+"Isto é particularmente útil contra jogadores rápidos, especialmente em %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qh:15
 msgid "Disability"
@@ -3148,6 +3157,8 @@ msgid ""
 "While you have the %s buff, you can crouch while mid-air to switch your "
 "gravity, allowing flight."
 msgstr ""
+"Enquanto você tem o bônus %s, poderá agachar no ar para trocar sua "
+"gravidade, permitindo o voo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
 msgid "Flight"
@@ -3159,6 +3170,8 @@ msgid ""
 "The %s buff sets any enemies or monsters you attack alight, dealing burn "
 "damage to them for several seconds until the buff expires."
 msgstr ""
+"O bônus %s incendeia quaisquer inimigos e monstros que você atacar, causando "
+"dano por queimaduras a eles por vários segundos até o bônus expirar."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
 msgid "Inferno"
@@ -3169,10 +3182,11 @@ msgstr "Inferno"
 msgid ""
 "The %s buff greatly increases your jump height, while the buff is active."
 msgstr ""
+"O bônus %s aumenta muito a altura de seu pulo, enquanto o bônus está ativo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
-msgstr ""
+msgstr "Também faz você imune a dano por queda."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qh:12
 msgid "Jump"
@@ -3184,6 +3198,8 @@ msgid ""
 "While you have the %s buff, each attack has a chance of being a critical hit "
 "with greatly increased damage."
 msgstr ""
+"Enquanto você tem o bônus %s, cada ataque tem a chance de ser um golpe "
+"crítico com dano muito aumentado."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/luck.qh:13
 msgid "Luck"
@@ -3195,6 +3211,8 @@ msgid ""
 "The %s buff greatly increases your item pickup range, collecting nearby "
 "items for you while the buff is active."
 msgstr ""
+"O bônus %s aumenta muito o seu alcance de coleta de itens, coletando itens "
+"próximos para você enquanto o bônus está ativo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:11
 msgid "Magnet"
@@ -3207,12 +3225,17 @@ msgid ""
 "health you can have before health starts to rot, and reduces health rot "
 "speed until the buff expires."
 msgstr ""
+"O bônus %s aumenta a velocidade de regeneração da saúde, aumenta a saúde "
+"máxima que você pode ter antes da saúde começar a decair, e reduz a taxa de "
+"decaimento da saúde até o bônus expirar."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:29
 msgid ""
 "It also gives you a chance to survive a fatal hit, with a small amount of "
 "health left over."
 msgstr ""
+"Também lhe dá uma chance de sobreviver um golpe fatal, ficando com uma "
+"pequena quantidade de saúde."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qh:16
 msgid "Medic"
@@ -3221,11 +3244,11 @@ msgstr "Médico"
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:14
 #, c-format
 msgid "The %s buff greatly reduces your damage taken while the buff is active."
-msgstr ""
+msgstr "O bônus %s reduz muito o dano recebido enquanto o bônus está ativo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
 msgid "This also impacts the damage you deal to yourself."
-msgstr ""
+msgstr "Isto também afeta o dano que você causa a si mesmo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qh:12
 msgid "Resistance"
@@ -3236,18 +3259,24 @@ msgstr "Resistência"
 msgid ""
 "The %s buff allows you to press %s to switch places with a nearby enemy once."
 msgstr ""
+"O bônus %s permite que você aperte %s para trocar de lugar, uma vez, com um "
+"inimigo próximo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:88
 msgid ""
 "A common usage of this buff is to jump over the map's void, then swap with "
 "an enemy, to cause them to fall into the void."
 msgstr ""
+"Um uso comum deste bônus é pular no vazio do mapa e trocar de lugar com um "
+"inimigo, para fazê-lo cair no vazio."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:89
 msgid ""
 "The range that the buff works over is limited, so sometimes it may do "
 "nothing if there are no enemies nearby."
 msgstr ""
+"O alcance deste bônus é limitado, assim às vezes pode fazer nada se não "
+"houver inimigos por perto."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qh:10
 msgid "Swapper"
@@ -3259,12 +3288,14 @@ msgid ""
 "The %s buff converts some of the damage you deal to enemies and monsters "
 "into health for yourself, until the buff expires."
 msgstr ""
+"O bônus %s converte parte do dano que você causa aos inimigos e aos monstros "
+"em saúde para si próprio, até o bônus expirar."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:29
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
 #, c-format
 msgid "In some sense, this is the opposite of the %s buff."
-msgstr ""
+msgstr "Em um sentido, isto é o oposto do bônus %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
 #: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:307
@@ -3278,6 +3309,8 @@ msgid ""
 "The %s buff reciprocates a portion of the damage enemies deal to you onto "
 "them, until the buff expires."
 msgstr ""
+"O bônus %s reflete aos próprios inimigos uma porção do dano que eles causam "
+"a você, até o bônus expirar."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qh:13
 msgid "Vengeance"
@@ -3558,6 +3591,10 @@ msgid ""
 "orb they will recover ammo, and if enemies enter the sphere they will lose "
 "ammo."
 msgstr ""
+"A %s detona depois de um breve atraso, temporariamente criando um orbe ao "
+"redor do ponto onde detonou por vários segundos. Se seus colegas de equipe "
+"entrarem no orbe recuperarão munição, e se seus inimigos entrarem no orbe "
+"perderão munição."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:84
 #, c-format
@@ -3565,6 +3602,8 @@ msgid ""
 "Similar to the %s buff, your weapon magazines remain full while you are "
 "inside the orb, so you don't need to reload."
 msgstr ""
+"Similar ao bônus %s, os cartuchos de cada arma sua permanecerão cheios "
+"enquanto você estiver dentro do orbe, assim não precisará recarregá-los."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:21
 msgid "Ammo grenade"
@@ -3576,12 +3615,14 @@ msgid ""
 "The %s detonates after a short delay, creating a dark field which "
 "temporarily blinds enemies who enter it."
 msgstr ""
+"A %s detona depois de um breve atraso, criando um campo escuro que "
+"temporariamente cega inimigos que entrarem nele."
 
 #: qcsrc/common/mutators/mutator/nades/nade/darkness.qc:147
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qc:55
 #, c-format
 msgid "This is sort of the opposite of the %s."
-msgstr ""
+msgstr "Isto é mais ou menos o oposto de %s."
 
 #: qcsrc/common/mutators/mutator/nades/nade/darkness.qh:19
 msgid "Darkness grenade"
@@ -3594,6 +3635,9 @@ msgid ""
 "point where it detonated for several seconds. Players and projectiles that "
 "enter the sphere will be slowed down, including yourself."
 msgstr ""
+"A %s detona depois de um breve atraso, temporariamente criando um orbe ao "
+"redor do ponto onde detonou por vários segundos. Jogadores e projéteis que "
+"entrarem no orbe serão retardados, incluindo você mesmo."
 
 #: qcsrc/common/mutators/mutator/nades/nade/entrap.qh:22
 msgid "Entrap grenade"
@@ -3607,6 +3651,10 @@ msgid ""
 "members enter the orb they will recover health, and if enemies enter the "
 "sphere they will be harmed."
 msgstr ""
+"A %s detona depois de um breve atraso, temporariamente criando um orbe "
+"curador ao redor do ponto onde detonou por vários segundos. Se seus colegas "
+"de equipe entrarem no orbe recuperarão saúde, e se seus inimigos entrarem no "
+"orbe serão afligidos."
 
 #: qcsrc/common/mutators/mutator/nades/nade/heal.qh:20
 msgid "Heal grenade"
@@ -3620,6 +3668,11 @@ msgid ""
 "players can't move or shoot, leaving them vulnerable to damage, but if left "
 "too long they'll unfreeze and run away!"
 msgstr ""
+"A %s detona depois de um breve atraso, congelando quaisquer inimigos que "
+"andarem dentro do raio de explosão por alguns segundos depois da explosão. "
+"Enquanto congelados, jogadores não podem se mover nem disparar, fazendo-os "
+"vulneráveis a dano, mas se aí forem deixados por muito tempo, serão "
+"degelados e escaparão!"
 
 #: qcsrc/common/mutators/mutator/nades/nade/ice.qh:19
 msgid "Ice grenade"
@@ -3630,6 +3683,8 @@ msgstr "Granada de gelo"
 msgid ""
 "The %s detonates after a short delay, spawning one of the five monster types."
 msgstr ""
+"A %s detona depois de um breve atraso, fazendo surgir um de cinco tipos de "
+"monstros."
 
 #: qcsrc/common/mutators/mutator/nades/nade/monster.qh:19
 msgid "Monster grenade"
@@ -3642,6 +3697,9 @@ msgid ""
 "a fountain. The napalm fire balls burn for a while, and damage players who "
 "get too close."
 msgstr ""
+"A %s detona depois de um breve atraso, espalhando glóbulos ígneos de napalm "
+"ao redor de uma fonte. As bolas de fogo de napalm queimam por um tempo e "
+"causam dano a jogadores que se aproximam demais."
 
 #: qcsrc/common/mutators/mutator/nades/nade/napalm.qh:30
 msgid "Napalm grenade"
@@ -3654,13 +3712,16 @@ msgid ""
 "players. If other nade types are destroyed before they detonate, they "
 "instead explode similar to this, without doing their special effects."
 msgstr ""
+"A %s (normal) detona depois de um breve atraso, infligindo dano a jogadores "
+"próximos. Se outros tipos de granada são destruídos antes de detonarem, "
+"explodirão similar a este tipo, sem fazer seus efeitos especiais."
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:19
 #, c-format
 msgid ""
 "Make sure you remember to throw it with %s, or else it will blow up in your "
 "hands!"
-msgstr ""
+msgstr "Lembre-se de lançá-la com %s, caso contrário explodirá em suas mãos!"
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qh:11
 #: qcsrc/common/mutators/mutator/nades/nades.qh:17
@@ -3674,6 +3735,9 @@ msgid ""
 "where it detonated. It is useful for cases where you want to go back to some "
 "point on the map after you die."
 msgstr ""
+"A %s detona depois de um breve atraso, temporariamente definindo seu ponto "
+"de surgimento para onde detonou. É útil para casos em que você quer voltar a "
+"algum ponto no mapa depois de morrer."
 
 #: qcsrc/common/mutators/mutator/nades/nade/spawn.qh:17
 msgid "Spawn grenade"
@@ -3684,18 +3748,21 @@ msgstr "Granada de fragmentação"
 msgid ""
 "The %s detonates after a short delay, teleporting you to where it detonated."
 msgstr ""
+"A %s detona depois de um breve atraso, teletransportando você a onde detonou."
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:46
 msgid ""
 "A common use of this nade is saving yourself from the void in space maps, "
 "however mastering this is very tricky."
 msgstr ""
+"Um uso comum desta granada é salvar-se do vazio em mapas espaciais, porém "
+"dominar isto é muito difícil."
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:47
 msgid ""
 "If this grenade is destroyed by an attacker, it will deal some damage to "
 "them."
-msgstr ""
+msgstr "Se esta granada é destruída por um atacante, causará algum dano a ele."
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qh:17
 msgid "Translocate grenade"
@@ -3708,6 +3775,9 @@ msgid ""
 "point where it detonated for several seconds. Players inside the orb will be "
 "invisible to those outside it."
 msgstr ""
+"A %s detona depois de um breve atraso, temporariamente criando um orbe ao "
+"redor do ponto onde detonou por vários segundos. Jogadores dentro do orbe "
+"ficarão invisíveis para os fora do orbe."
 
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qh:22
 msgid "Veil grenade"
@@ -3720,6 +3790,10 @@ msgid ""
 "thrown by pressing %s twice. If the %s and %s mutators are disabled, they "
 "can also be thrown by holding then releasing %s."
 msgstr ""
+"O modificador %s dá a todos os jogadores granadas imediatas que podem ser "
+"espoletadas e então lançadas apertando %s duas vezes. Se os modificadores %s "
+"e %s estão desativados, também podem ser lançadas segurando e então soltando "
+"%s."
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:52
 msgid ""
@@ -3727,11 +3801,14 @@ msgid ""
 "configuration options for this mutator, so they may act a little differently "
 "depending on the server you play on."
 msgstr ""
+"Há múltiplos tipos de granadas que podem ser selecionadas, e muitas opções "
+"de configurações para este modificador, assim podem se comportar de forma um "
+"pouco diferente dependendo do servidor em que você jogue."
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:54
 #, c-format
 msgid "This mutator is enabled by default in %s."
-msgstr ""
+msgstr "Este modificador é ativado por padrão em %s."
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:82 qcsrc/common/util.qc:319
 #: qcsrc/menu/xonotic/guide/guide.qh:16
@@ -3744,6 +3821,8 @@ msgid ""
 "The %s mutator, enabled by default, allows the spawning of new gimmicky "
 "weapons, sometimes replacing a core weapon."
 msgstr ""
+"O modificador %s, ativado por padrão, permite o surgimento de armas "
+"chamativas novas, às vezes substituindo uma arma principal."
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:30
 #, c-format
@@ -3751,11 +3830,13 @@ msgid ""
 "Since these weapons can't spawn in %s and %s, the %s mutator can't be "
 "enabled concurrently."
 msgstr ""
+"Como estas armas não podem surgir em %s e %s, o modificador %s não pode ser "
+"ativado ao mesmo tempo."
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:31
 #, c-format
 msgid "The current %s weapons are:"
-msgstr ""
+msgstr "As armas atuais de %s são:"
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qh:7
 #: qcsrc/common/util.qc:298
@@ -3770,6 +3851,9 @@ msgid ""
 "After some time the weapon is reselected, and this repeats forever. Weapon "
 "and ammo pickups are also removed from the map."
 msgstr ""
+"%s é um modificador que dá a todos os jogadores a mesma arma escolhida "
+"aleatoriamente. Depois de um tempo, escolhe-se de novo uma arma, e isto "
+"repete para sempre. Cada coleta de arma ou munição é também removida do mapa."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:299
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
@@ -3787,6 +3871,9 @@ msgid ""
 "The %s mutator gives all players a %s as their offhand weapon, used with %s. "
 "It can be fired at any time, but the ordinary secondary fire can't be used."
 msgstr ""
+"O modificador %s dá a todos os jogadores %s como arma imediata, usada com "
+"%s. Pode disparar a qualquer momento, mas o disparo secundário ordinário não "
+"pode ser usado."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:13
 #, c-format
@@ -3794,11 +3881,14 @@ msgid ""
 "Since it's given as an offhand, you can fire it at the same time as the "
 "ordinary %s while laser jumping to achieve even more height."
 msgstr ""
+"Como é dada como arma imediata, você pode dispará-la ao mesmo tempo que a "
+"arma ordinária %s enquanto faz salto de laser para atingir ainda maior "
+"altura."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:14
 #, c-format
 msgid "Note that it overrides the %s mutator, since they use the same bind."
-msgstr ""
+msgstr "Note que revoga o modificador %s, já que usam a mesma tecla."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qh:5
 #: qcsrc/common/util.qc:320
@@ -3811,6 +3901,8 @@ msgid ""
 "The %s is a superweapon that rapidly fires harmful bullets with a small "
 "degree of spread."
 msgstr ""
+"A %s é uma superarma que dispara rapidamente balas danosas com um pequeno "
+"grau de dispersão."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:168
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:167
@@ -3822,6 +3914,8 @@ msgid ""
 "Like with all %s weapons, the secondary fire shoots a laser which doesn't "
 "damage or push enemies, but can be used to push yourself around."
 msgstr ""
+"Como com todas as armas de %s, o disparo secundário atira um laser que não "
+"causa dano nem empurra inimigos, mas pode ser usado para você se impulsar."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:169
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:244
@@ -3829,6 +3923,8 @@ msgid ""
 "It is a superweapon found on some maps, meaning that it breaks down after "
 "some time."
 msgstr ""
+"É uma superarma encontrada em alguns mapas, significando que se quebra "
+"depois de algum tempo."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:170
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:168
@@ -3840,6 +3936,9 @@ msgid ""
 "amount of it in %s. It has a limited magazine size, so needs reloading after "
 "several shots."
 msgstr ""
+"O disparo primário consome %s como munição, apesar de você surgir com uma "
+"quantidade infinita dela em %s. Tem um cartucho de tamanho limitado, assim "
+"precisa recarregar depois de vários disparos."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:172
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:170
@@ -3848,6 +3947,8 @@ msgid ""
 "The %s can be used in a lot of situations, and it works particularly well at "
 "long ranges since the bullets pierce the sky instantaneously."
 msgstr ""
+"A %s pode ser usada em muitas situações e funciona particularmente bem a "
+"longas distâncias, porque as balas perfuram o céu instantaneamente."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:173
 #, c-format
@@ -3855,6 +3956,8 @@ msgid ""
 "Since its bullets deal a lot more damage than the %s bullets, it is often "
 "heavily contested when it spawns in."
 msgstr ""
+"Como suas balas infligem muito mais dano que as balas de %s, é muitas vezes "
+"bem disputada quando surge no mapa."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:31
 msgid "Overkill Heavy MachineGun"
@@ -3864,7 +3967,7 @@ msgstr "Metralhadora Pesada Suprema"
 #: qcsrc/common/weapons/weapon/machinegun.qc:434
 #, c-format
 msgid "The %s quickly fires bullets with a small degree of spread."
-msgstr ""
+msgstr "A %s dispara rapidamente balas com um pequeno grau de dispersão."
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:28
 msgid "Overkill MachineGun"
@@ -3877,6 +3980,8 @@ msgid ""
 "The %s fires harmful beams of energy that traverse the map instantaneously "
 "and deal a significant chunk of damage on impact."
 msgstr ""
+"O %s atira feixes danosos de energia que atravessam o mapa instantaneamente "
+"e infligem uma grande quantidade de dano ao impactar."
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qc:377
 #, c-format
@@ -3884,6 +3989,7 @@ msgid ""
 "Since it is the only %s weapon with no spread, the %s stands out at long "
 "ranges."
 msgstr ""
+"Como é a única arma de %s sem dispersão, o %s destaca-se a longas distâncias."
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:29
 msgid "Overkill Nex"
@@ -3896,6 +4002,9 @@ msgid ""
 "chainsaw which explodes on impact, dealing a lot of splash damage to any "
 "players close by."
 msgstr ""
+"Como o nome sugere, o %s é uma superarma que atira uma motosserra propelida "
+"por foguete que explode ao impactar, infligindo muito dano difundido a "
+"quaisquer jogadores próximos."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:245
 #, c-format
@@ -3903,6 +4012,8 @@ msgid ""
 "The primary fire consumes %s ammo, although you spawn with an infinite "
 "amount of it in %s."
 msgstr ""
+"O disparo primário consome %s como munição, apesar de você surgir com uma "
+"quantidade infinita dela em %s."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:246
 #, c-format
@@ -3910,6 +4021,8 @@ msgid ""
 "Since it is the only %s weapon which deals splash damage, the %s is a good "
 "choice of weapon for attacking groups of enemies."
 msgstr ""
+"Como é a única arma de %s que inflige dano difundido, o %s é uma boa escolha "
+"de arma para atacar grupos de inimigos."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:31
 msgid "Overkill Rocket Propelled Chainsaw"
@@ -3921,6 +4034,8 @@ msgid ""
 "The %s fires a single shotgun round which spreads into multiple pellets upon "
 "exiting the barrel, dealing a deadly blow if up close."
 msgstr ""
+"A %s atira uma única carga de escopeta que se dispersa em várias pelotas ao "
+"sair do cano, infligindo um golpe mortal se à queima-roupa."
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qc:136
 #: qcsrc/common/weapons/weapon/shotgun.qc:407
@@ -3929,6 +4044,8 @@ msgid ""
 "The %s damage drops off quickly as the range increases, so it is only useful "
 "for close combat or sometimes medium range combat."
 msgstr ""
+"O dano de %s diminui rapidamente com o aumento da distância, logo só é útil "
+"para combate corpo a corpo ou às vezes combate a média distância."
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:24
 msgid "Overkill Shotgun"
@@ -3945,6 +4062,9 @@ msgid ""
 "%s is a mutator that makes players drop all their weapons when they die. "
 "Without this mutator, players normally drop only their equipped weapon."
 msgstr ""
+"%s é um modificador que faz jogadores soltarem todas suas armas ao morrer. "
+"Sem este modificador, cada um dos jogadores normalmente solta só sua arma "
+"equipada."
 
 #: qcsrc/common/mutators/mutator/pinata/pinata.qh:5 qcsrc/common/util.qc:308
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
@@ -3957,6 +4077,8 @@ msgid ""
 "The %s powerup regenerates %s needed for the %s until the powerup expires, "
 "so you can continue flying around for longer."
 msgstr ""
+"O potencializador %s regenera o %s necessário para %s até que o "
+"potencializador expire, logo você pode continuar voando por mais tempo."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:21
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qc:54
@@ -3964,7 +4086,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qc:40
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:60
 msgid "Since it is a powerup, it will drop if you die while holding it."
-msgstr ""
+msgstr "Como é um potencializador, você o soltará se morrer segurando-o."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:33
 msgid "Fuel regenerator"
@@ -3981,6 +4103,9 @@ msgid ""
 "making it more difficult for enemies to see you. This powerup is often "
 "present in %s."
 msgstr ""
+"O potencializador %s aumenta sua transparência enquanto o potencializador "
+"está ativo, fazendo mais difícil para inimigos verem você. Este "
+"potencializador é às vezes presente em %s."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
@@ -3995,6 +4120,8 @@ msgid ""
 "providing increased mobility, maneuverability, and the ability to reach "
 "higher ground."
 msgstr ""
+"O potencializador %s permite que você voe pelo mapa por um breve tempo, para "
+"mais fácil mover-se, manobrar-se e atingir chãos elevados."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qc:21
 #, c-format
@@ -4002,6 +4129,8 @@ msgid ""
 "It consumes %s ammo while operating, so make sure you don't run out when "
 "you're high up!"
 msgstr ""
+"Consome %s como munição enquanto opera, logo assegure-se de não o esgotar "
+"quando estiver em cima!"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:38
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:41
@@ -4017,6 +4146,9 @@ msgid ""
 "expires, having a compounding effect with armor. It also makes you more "
 "resistant to knockback."
 msgstr ""
+"O potencializador %s diminui muito o dano que você recebe até que o "
+"potencializador expire, tendo um efeito acentuado com armadura. Também faz "
+"você mais resistente a empurrões."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
@@ -4031,6 +4163,9 @@ msgid ""
 "regeneration speed while the powerup is active. However, it also makes you a "
 "bit more vulnerable to incoming attacks."
 msgstr ""
+"O potencializador %s aumenta sua velocidade de movimento, de ataque e de "
+"regeneração de saúde enquanto o potencializador está ativo. Entretanto, "
+"também faz você um pouco mais vulnerável a ataques por vir."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
@@ -4045,12 +4180,17 @@ msgid ""
 "The %s powerup greatly increases the damage you deal, until the powerup "
 "expires. It also increases the knockback that your attacks deal."
 msgstr ""
+"O potencializador %s aumenta muito o dano que você inflige, até que o "
+"potencializador expire. Também aumenta os empurrões que seus ataques "
+"infligem."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:58
 msgid ""
 "The damage and knockback you deal to yourself also increases but by a "
 "smaller amount."
 msgstr ""
+"O dano e o empurrão que você inflige a si também aumentam, mas por uma "
+"quantidade menor."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:59
 #, c-format
@@ -4059,6 +4199,9 @@ msgid ""
 "allow you to easily dominate a map, so it's often highly contested when it "
 "spawns in."
 msgstr ""
+"A %s é um dos itens mais cobiçados em uma mapa devido a sua habilidade de "
+"permitir a fácil dominação de um mapa, assim costuma ser muito disputado "
+"quando surge."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
@@ -4074,6 +4217,10 @@ msgid ""
 "hitbox, so they can give you a much larger speed boost, also allowing flying "
 "around the map."
 msgstr ""
+"O modificador %s remove o ligeiro atraso quando se denota imediatamente um "
+"foguete de %s depois de dispará-lo. Isto permite que foguetes sejam "
+"detonados muito mais perto de sua caixa de colisão, logo eles podem dar-lhe "
+"um incremento muito maior de velocidade, também permitindo voar pelo mapa."
 
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qh:5
 #: qcsrc/common/util.qc:300
@@ -4103,12 +4250,16 @@ msgstr "Superarmas"
 msgid ""
 "The %s mutator causes an explosion when two players collide if it is enabled."
 msgstr ""
+"O modificador %s causa uma explosão quando dois jogadores colidem se for "
+"ativado."
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qc:9
 msgid ""
 "This is a nice way to add some silly fun to a server, but it also does allow "
 "for the use of new tactics in some gametypes."
 msgstr ""
+"Isto é uma boa maneira de pôr um gracejo em um servidor, mas também permite "
+"o uso de novas táticas em alguns tipos de jogo."
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qh:5
 #: qcsrc/common/util.qc:316
@@ -4123,6 +4274,9 @@ msgid ""
 "However, unlike the normal %s buff, when this mutator is enabled players' "
 "health can go way above the usual limit of 200."
 msgstr ""
+"O modificador %s dá a todos os jogadores uma versão permanente do bônus %s. "
+"Entretanto, diferente do bônus %s normal, quando este modificador é ativado, "
+"a saúde de cada um dos jogadores podem muito exceder o limite usual de 200."
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
 #, c-format
@@ -4130,6 +4284,8 @@ msgid ""
 "Additionally the amount of health players get is equal to the damage they "
 "deal, which isn't normally the case with the %s buff."
 msgstr ""
+"Adicionalmente, a quantidade de saúde que os jogadores pegam é igual ao dano "
+"que infligem, que normalmente não é o caso com o bônus %s."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:81
 #, c-format
@@ -4137,12 +4293,16 @@ msgid ""
 "%s is a mutator that enables jumping off walls for added mobility. To do a "
 "wall jump, tap %s when against a wall."
 msgstr ""
+"%s é um modificador que permite pular de paredes para maior mobilidade. Para "
+"fazer um pulo de parede, aperte %s quando contra uma parede."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:83
 msgid ""
 "This mutator adds a bit of versatility, allowing for more dynamic and "
 "unpredictable movement."
 msgstr ""
+"Este modificador dá uma pouco de versatilidade, permitindo movimento mais "
+"dinâmico e imprevisível."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qh:5
 #: qcsrc/common/util.qc:317
