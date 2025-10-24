@@ -82,11 +82,11 @@ void sys_phys_update(entity this, float dt)
 			// { this.velocity_z = 70; }
 		}
 
-		// no skimming or double jumping past respawns (part of MOVETYPE_WALK but it's not used while dead)
+		// no skimming or double jumping or water jumping past respawns (part of MOVETYPE_WALK but it's not used while dead)
 		if (this.pm_time || this.pm_dj_time)
 		{
 			this.pm_time = this.pm_dj_time = 0;
-			this.flags &= ~FL_KNOCKBACK;
+			this.flags &= ~(FL_KNOCKBACK | FL_WATERJUMP);
 #ifdef CSQC
 			for (int i = 0; i < CL_MAX_USERCMDS; ++i)
 				csqcplayer_saved_moveflags[i] = 0;
@@ -102,6 +102,8 @@ void sys_phys_update(entity this, float dt)
 		this.angles = eY * this.v_angle.y;
 	if (IS_PLAYER(this)) // bones_was_here: should this instead check for MOVETYPE_WALK ?
 	{
+		PM_CheckDuck(this, PHYS_INPUT_BUTTON_CROUCH(this));
+		_Movetype_CheckWater(this);
 		// PM_DropTimers and PM_GroundTrace are part of MOVETYPE_WALK but must be called here, in this order,
 		// because some parts of the movetype are here and also need values set by these.
 		PM_DropTimers(this, dt);
@@ -113,15 +115,9 @@ void sys_phys_update(entity this, float dt)
 		CheckPlayerJump(this);
 	}
 
-	if (this.flags & FL_WATERJUMP)
+	if (IS_WATERJUMPING(this))
 	{
-		this.velocity_x = this.movedir.x;
-		this.velocity_y = this.movedir.y;
-		if (time > this.teleport_time || this.waterlevel == WATERLEVEL_NONE)
-		{
-			this.flags &= ~FL_WATERJUMP;
-			this.teleport_time = 0;
-		}
+		// no acceleration or friction, just gravity and collisions with skimming
 	}
 	else if (MUTATOR_CALLHOOK(PM_Physics, this, maxspeed_mod, dt))
 		{ /* handled */ }
@@ -140,7 +136,7 @@ void sys_phys_update(entity this, float dt)
 	else if (this.waterlevel >= WATERLEVEL_SWIMMING)
 	{
 		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;
-		this.com_phys_acc_rate = PHYS_ACCELERATE(this) * maxspeed_mod;
+		this.com_phys_acc_rate = (PHYS_WATERACCELERATE(this) >= 0 ? PHYS_WATERACCELERATE(this) : PHYS_ACCELERATE(this)) * maxspeed_mod;
 		this.com_phys_water = true;
 		sys_phys_simulate(this, dt);
 		this.com_phys_water = false;
@@ -228,35 +224,20 @@ void sys_phys_simulate(entity this, float dt)
 		}
 	}
 
-	if (this.com_phys_water)
+	//   3D movement using +jump and +crouch to control the vertical   //
+	// Xonotic +jump and +crouch are separate from +moveup and +movedown,
+	// whereas Q3 has only the latter and derives jump and crouch input states from them.
+	// This code also causes the acceleration penalty to air movement seen in Q3.
+	if (!PHYS_CS(this).movement.z)
 	{
-		// water jump only in certain situations
-		// this mimics quakeworld code
-		if (PHYS_INPUT_BUTTON_JUMP(this)
-		&&  this.waterlevel == WATERLEVEL_SWIMMING
-		&&  this.velocity_z >= -180
-		&& !this.viewloc
-		&& !PHYS_FROZEN(this))
-		{
-			vector yawangles = eY * this.v_angle.y;
-			vector forward, right, up;
-			MAKE_VECTORS(yawangles, forward, right, up);
-			vector spot = this.origin + 24 * forward;
-			spot_z += 8;
-			traceline(spot, spot, MOVE_NOMONSTERS, this);
-			if (trace_startsolid)
-			{
-				spot_z += 24;
-				traceline(spot, spot, MOVE_NOMONSTERS, this);
-				if (!trace_startsolid)
-				{
-					this.velocity = forward * 50;
-					this.velocity_z = 310;
-					UNSET_ONGROUND(this);
-					SET_JUMP_HELD(this);
-				}
-			}
-		}
+		if (PHYS_INPUT_BUTTON_CROUCH(this) && !this.com_phys_ground) // subtle nerf to crouched auto bhopping :)
+			PHYS_CS(this).movement.z -= this.com_phys_vel_max;
+
+		if (PHYS_INPUT_BUTTON_JUMP(this) && (this.com_phys_water || this.com_phys_ladder))
+			PHYS_CS(this).movement.z += this.com_phys_vel_max;
+
+		if (PHYS_CS(this).movement.z)
+			PHYS_CS(this).movement = normalize(PHYS_CS(this).movement) * this.com_phys_vel_max;
 	}
 
 	vector forward, right, up;
@@ -278,6 +259,10 @@ void sys_phys_simulate(entity this, float dt)
 
 	if (this.com_phys_water)
 	{
+		if (this.waterlevel == WATERLEVEL_SWIMMING)
+			if (PM_CheckWaterJump(this, wishvel, forward))
+				return; // no acceleration or friction, just gravity and collisions with skimming
+
 		if (PHYS_FROZEN(this))
 		{
 			if(this.waterlevel >= WATERLEVEL_SUBMERGED && this.velocity.z >= -70) // don't change the speed too abruptally
@@ -287,14 +272,13 @@ void sys_phys_simulate(entity this, float dt)
 		}
 		else
 		{
-			if (PHYS_INPUT_BUTTON_CROUCH(this))
-				wishvel.z = -PHYS_MAXSPEED(this);
 			if (this.viewloc)
 				wishvel.z = -160;    // drift anyway
 			else if (wishvel == '0 0 0')
-				wishvel.z = -60; // drift towards bottom
+				wishvel.z = -60; // Q3: sink towards bottom
 		}
 	}
+
 	if (this.com_phys_ladder)
 	{
 		if (this.viewloc)
@@ -310,7 +294,7 @@ void sys_phys_simulate(entity this, float dt)
 			f = this.ladder_entity.origin_z + this.ladder_entity.maxs_z;
 			if ((this.origin_z + this.view_ofs_z) < f)
 				this.waterlevel = WATERLEVEL_SUBMERGED;
-			else if ((this.origin_z + (this.mins_z + this.maxs_z) * 0.5) < f)
+			else if ((this.origin_z + (this.mins_z + this.view_ofs.z) * 0.5) < f)
 				this.waterlevel = WATERLEVEL_SWIMMING;
 			else if ((this.origin_z + this.mins_z + 1) < f)
 				this.waterlevel = WATERLEVEL_WETFEET;
@@ -329,7 +313,7 @@ void sys_phys_simulate(entity this, float dt)
 	const vector wishdir = wishspeed ? wishvel * (1 / wishspeed) : '0 0 0';
 	wishspeed = min(wishspeed, this.com_phys_vel_max);
 
-	if (this.com_phys_air)
+	if (this.com_phys_air) // PM_AirMove in Q3
 	{
 		// apply air speed limit
 		float airaccelqw = PHYS_AIRACCEL_QW(this);
@@ -394,57 +378,38 @@ void sys_phys_simulate(entity this, float dt)
 	}
 	else
 	{
-		if (this.com_phys_ground && IS_DUCKED(this))
-			wishspeed = min(wishspeed, this.com_phys_vel_max * PHYS_CROUCHSPEEDSCALE(this));
-
-		if (this.com_phys_water)
+		// Q3: apply water friction even if just wading
+		if (this.waterlevel && this.velocity)
 		{
-			wishspeed *= 0.7;
+			float waterfriction = PHYS_WATERFRICTION(this) >= 0 ? PHYS_WATERFRICTION(this) : PHYS_FRICTION(this);
+			this.velocity *= bound(0, 1 - waterfriction * this.waterlevel * dt, 1);
+		}
 
-			//	if (!(this.flags & FL_WATERJUMP)) // TODO: use
+		if (this.com_phys_water) // PM_WaterMove in Q3
+		{
+			// water acceleration
+			wishspeed = min(wishspeed, this.com_phys_vel_max * PHYS_SWIMSCALE(this));
+			float addspeed = wishspeed - this.velocity * wishdir;
+			if (addspeed > 0)
 			{
-				// water friction
-				float f = 1 - dt * PHYS_FRICTION(this);
-				this.velocity *= bound(0, f, 1);
+				float accelspeed = min(this.com_phys_acc_rate * dt * wishspeed, addspeed);
+				this.velocity += accelspeed * wishdir;
+			}
 
-				f = wishspeed - this.velocity * wishdir;
-				if (f > 0)
-				{
-					float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, f);
-					this.velocity += accelspeed * wishdir;
-				}
+			if (PHYS_WATERFLAGS(this) & 2)
+			// Q3: make sure we can go up slopes easily under water
+			if (this.groundplane_normal.z && this.groundplane_normal * this.velocity < 0)
+			{
+				float speed = vlen(this.velocity);
+				// Q3: slide along the ground plane
+				this.velocity = _Movetype_ClipVelocity(this.velocity, this.groundplane_normal, 1);
+				this.velocity = speed * normalize(this.velocity);
+			}
 
-				// holding jump button swims upward slowly
-				if (PHYS_INPUT_BUTTON_JUMP(this) && !this.viewloc && !PHYS_FROZEN(this))
-				{
-					// was:
-					// lava: 50
-					// slime: 80
-					// water: 100
-					// idea: double those
-					if (this.waterlevel >= WATERLEVEL_SUBMERGED)
-						this.velocity_z = PHYS_MAXSPEED(this) * 0.7;
-					else
-						this.velocity_z = 200;
-				}
-			}
-			if (this.viewloc)
-			{
-				const float addspeed = wishspeed - this.velocity * wishdir;
-				if (addspeed > 0)
-				{
-					const float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, addspeed);
-					this.velocity += accelspeed * wishdir;
-				}
-			}
-			else
-			{
-				// water acceleration
-				PM_Accelerate(this, dt, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
-			}
 			return;
 		}
-		if (this.com_phys_ground)
+
+		if (this.com_phys_ground) // PM_WalkMove in Q3
 		{
 			// apply edge friction
 			const float f2 = vlen2(vec2(this.velocity));
@@ -481,6 +446,18 @@ void sys_phys_simulate(entity this, float dt)
 				}
 				this.velocity *= f;
 			}
+
+			// Q3: clamp the speed lower if ducking
+			if (IS_DUCKED(this))
+				wishspeed = min(wishspeed, this.com_phys_vel_max * PHYS_CROUCHSPEEDSCALE(this));
+
+			// Q3: clamp the speed lower if wading or walking on the bottom
+			if ((PHYS_WATERFLAGS(this) & 1) && this.waterlevel)
+			{
+				float waterscale = 1 - (1 - PHYS_SWIMSCALE(this)) * this.waterlevel / 3;
+				wishspeed = min(wishspeed, this.com_phys_vel_max * waterscale);
+			}
+
 			const float addspeed = wishspeed - this.velocity * wishdir;
 			if (addspeed > 0)
 			{

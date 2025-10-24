@@ -150,6 +150,10 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_SKIMMING, this) = Physics_ClientOption(this, "skimming", autocvar_sv_skimming);
 	STAT(MOVEVARS_CROUCHJUMP, this) = Physics_ClientOption(this, "crouchjump", autocvar_sv_crouchjump);
 	STAT(MOVEVARS_CROUCHSPEEDSCALE, this) = Physics_ClientOption(this, "crouchspeedscale", autocvar_sv_crouchspeedscale);
+	STAT(MOVEVARS_WATERACCELERATE, this) = Physics_ClientOption(this, "wateraccelerate", autocvar_sv_wateraccelerate);
+	STAT(MOVEVARS_WATERFRICTION, this) = Physics_ClientOption(this, "waterfriction", autocvar_sv_waterfriction);
+	STAT(MOVEVARS_WATERFLAGS, this) = Physics_ClientOption(this, "waterflags", autocvar_sv_waterflags);
+	STAT(MOVEVARS_SWIMSCALE, this) = Physics_ClientOption(this, "swimscale", autocvar_sv_swimscale);
 
 	MUTATOR_CALLHOOK(PlayerPhysics_PostUpdateStats, this, maxspd_mod);
 }
@@ -173,9 +177,6 @@ float GeomLerp(float a, float _lerp, float b)
 
 void PM_CheckDuck(entity this, bool do_crouch)
 {
-	if(!IS_PLAYER(this))
-		return;
-
 	bool have_hook = false;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -230,8 +231,6 @@ void PM_CheckDuck(entity this, bool do_crouch)
 			setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
 		}
 	}
-
-	_Movetype_CheckWater(this); // needs to be run on the client, might as well use the latest on the server too!
 }
 
 void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
@@ -398,6 +397,9 @@ bool PlayerJump(entity this)
 		return true; // no jumping while blocked
 #endif
 
+	if (IS_WATERJUMPING(this))
+		return true;
+
 	float mjumpheight = ((PHYS_JUMPVELOCITY_CROUCH(this) && IS_DUCKED(this)) ? PHYS_JUMPVELOCITY_CROUCH(this) : PHYS_JUMPVELOCITY(this));
 	bool airjump = false;
 	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, airjump))
@@ -417,7 +419,7 @@ bool PlayerJump(entity this)
 		}
 		else
 		{
-			this.velocity_z = PHYS_MAXSPEED(this) * 0.7;
+			// Q3 doesn't call PM_CheckJump in PM_WaterMove
 			return true;
 		}
 	}
@@ -515,30 +517,64 @@ bool PlayerJump(entity this)
 	return true;
 }
 
-void CheckWaterJump(entity this)
+bool PM_CheckWaterJump(entity this, vector wishvel, vector forward)
 {
+	// Any pm_time (skimming, knockback, water jump) prevents a Q3 water jump starting,
+	// and it should be unnecessary when climbing a ladder.
+	if (IS_SKIMMING(this) || this.ladder_entity)
+		return false;
+
 // check for a jump-out-of-water
-	makevectors(this.v_angle);
 	vector start = this.origin;
-	start_z += 8;
-	v_forward_z = 0;
-	normalize(v_forward);
-	vector end = start + v_forward*24;
-	traceline (start, end, true, this);
-	if (trace_fraction < 1)
-	{	// solid at waist
-		start_z = start_z + this.maxs_z - 8;
-		end = start + v_forward*24;
-		this.movedir = trace_plane_normal * -50;
-		traceline(start, end, true, this);
-		if (trace_fraction == 1)
-		{	// open at eye level
-			this.velocity_z = 225;
-			this.flags |= FL_WATERJUMP;
-			this.teleport_time = time + 2; // safety net
-			SET_JUMP_HELD(this);
-		}
+	// +8 is equivalent to Q3's +4 because sv_q3compat_changehitbox uses mins.z -20
+	// so the origin is 4u lower than in Q3.
+	start.z += 8;
+	vector dir;
+
+	if (PHYS_WATERFLAGS(this) & 4) // Q3 water jump
+	{
+		vector spot = start + normalize(vec3(forward.x, forward.y, 0)) * STAT(PL_MAX, this).x * 2; // 30 with Q3 bbox
+		if (pointcontents(spot) != CONTENT_SOLID)
+			return false;
+		// Q3 uses 24+4+16=44 above the bbox floor
+		spot.z += STAT(PL_MAX, this).z / 2.25; // 16 with Q3 bbox, unaffected by crouching
+		if (pointcontents(spot) != CONTENT_EMPTY)
+			return false;
+		dir = forward;
 	}
+	else // more intuitive and reliable version
+	{
+		if (!wishvel)
+			return false;
+		vector end = start + normalize(vec3(wishvel.x, wishvel.y, 0)) * this.maxs.x; // 16 with Xon bbox
+		// traceline and pointcontents can miss if there's a grating, thin wall, etc, so using this bbox:
+		vector bmins = vec3(this.mins.x, this.mins.y, -0.5);
+		vector bmaxs = vec3(this.maxs.x, this.maxs.y, 0.5);
+		tracebox(start, bmins, bmaxs, end, MOVE_NORMAL, this);
+		if (trace_fraction == 1)
+			return false;
+		start.z = end.z = this.origin.z + this.view_ofs.z; // Hopefully straightforward for players to understand.
+		tracebox(start, bmins, bmaxs, end, MOVE_NORMAL, this);
+		if (trace_fraction < 1)
+			return false;
+		dir = normalize(wishvel);
+	}
+	// solid at waist, open at eye level
+
+	// Q3: jump out of water
+	this.velocity = 200 * dir;
+	this.velocity.z = 350;
+
+	#ifdef CSQC
+	csqcplayer_current_moveflags |= PMF_TIME_WATERJUMP | PMF_SKIMMING;
+	if (csqcplayer_moveframe == clientcommandframe)
+	#endif
+	{
+		this.pm_time = 2;
+		this.flags |= FL_WATERJUMP;
+	}
+
+	return true;
 }
 
 
@@ -589,9 +625,6 @@ void CheckPlayerJump(entity this)
 
 	if (!PHYS_INPUT_BUTTON_JUMP(this))
 		UNSET_JUMP_HELD(this);
-
-	if (this.waterlevel == WATERLEVEL_SWIMMING)
-		CheckWaterJump(this);
 }
 
 #ifdef SVQC
@@ -791,7 +824,7 @@ int PM_CorrectStuck(entity this)
 	return true;
 }
 
-/// Timer and prediction updates for CPMA double jumping and Q3 skimming
+/// Timer and prediction updates for CPMA double jumping and Q3 skimming and water jumping
 void PM_DropTimers(entity this, float dt)
 {
 #ifdef CSQC
@@ -807,7 +840,7 @@ void PM_DropTimers(entity this, float dt)
 		if (this.pm_time > 0)
 			this.pm_time -= dt;
 		if (this.pm_time <= 0)
-			this.flags &= ~FL_KNOCKBACK;
+			this.flags &= ~(FL_KNOCKBACK | FL_WATERJUMP);
 #ifdef CSQC
 	}
 
@@ -826,6 +859,8 @@ void PM_DropTimers(entity this, float dt)
 			csqcplayer_current_moveflags |= PMF_SKIMMING;
 			if (this.flags & FL_KNOCKBACK)
 				csqcplayer_current_moveflags |= PMF_TIME_KNOCKBACK;
+			if (this.flags & FL_WATERJUMP)
+				csqcplayer_current_moveflags |= PMF_TIME_WATERJUMP;
 		}
 		csqcplayer_saved_moveflags[i] = csqcplayer_current_moveflags;
 	}
@@ -842,8 +877,21 @@ int PM_GroundDetected(entity this, vector previous_velocity)
 	if (trace_plane_normal.z < MIN_WALK_NORMAL)
 		return 4;
 
+	// Q3: hitting solid ground will end a waterjump
+	if (IS_WATERJUMPING(this))
+	{
+		#ifdef CSQC
+		csqcplayer_current_moveflags &= ~(PMF_TIME_WATERJUMP | PMF_SKIMMING);
+		if (csqcplayer_moveframe == clientcommandframe)
+		#endif
+		{
+			this.pm_time = 0;
+			this.flags &= ~FL_WATERJUMP;
+		}
+	}
+
 	// Q3 skimming: set timer and first csqc moveframe
-	if (PHYS_SKIMMING(this) && !IS_ONGROUND(this) && !(this.flags & FL_WATERJUMP))
+	if (PHYS_SKIMMING(this) && !IS_ONGROUND(this))
 	if (previous_velocity.z < -200) // Q3: don't do landing time if we were just going down a slope
 	{
 		#ifdef CSQC

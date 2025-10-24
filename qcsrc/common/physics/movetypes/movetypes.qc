@@ -183,7 +183,7 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, float ste
 			vector prestep_org = this.origin;
 
 			// Q3's PM_WaterMove() doesn't step up, PM_WaterJumpMove() does
-			if (PHYS_STEPTYPE(this) > 1 && this.waterlevel > WATERLEVEL_WETFEET && !(this.flags & FL_WATERJUMP))
+			if (PHYS_STEPTYPE(this) > 1 && this.waterlevel > WATERLEVEL_WETFEET && !IS_WATERJUMPING(this))
 				goto NoStep;
 
 			// Q3: never step up when you still have up velocity
@@ -387,10 +387,7 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, float ste
 			primal_velocity = this.velocity;
 	}
 
-	// LordHavoc: this came from QW and allows you to get out of water more easily
-	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP) && !(blockedflag & 8))
-		this.velocity = primal_velocity;
-
+	// NB: skimming applies during water jumps because they share .pm_time like in Q3.
 	if (IS_SKIMMING(this) && !(blockedflag & 8))
 		this.velocity = primal_velocity;
 
@@ -406,7 +403,7 @@ int _Movetype_FlyMove(entity this, float time_left, bool applygravity, float ste
 	return blockedflag;
 }
 
-bool _Movetype_CheckWater(entity this)  // SV_CheckWater
+bool _Movetype_CheckWater(entity this)  // SV_CheckWater, PM_SetWaterLevel
 {
 	vector point = this.origin;
 	point.z += this.mins.z + 1;
@@ -419,6 +416,8 @@ bool _Movetype_CheckWater(entity this)  // SV_CheckWater
 			this.contentstransition(this.watertype, nativecontents);
 	}
 
+	// Q3: get waterlevel, accounting for ducking
+
 	this.waterlevel = WATERLEVEL_NONE;
 	this.watertype = CONTENT_EMPTY;
 
@@ -427,7 +426,8 @@ bool _Movetype_CheckWater(entity this)  // SV_CheckWater
 	{
 		this.watertype = nativecontents;
 		this.waterlevel = WATERLEVEL_WETFEET;
-		point.z = this.origin.z + (this.mins.z + this.maxs.z) * 0.5;
+
+		point.z = this.origin.z + (this.mins.z + this.view_ofs.z) * 0.5;
 		if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 		{
 			this.waterlevel = WATERLEVEL_SWIMMING;
