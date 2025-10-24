@@ -232,10 +232,12 @@ REGISTER_STAT(NOSTEP, INT, cvar("sv_nostep"))
 #ifdef SVQC
 float autocvar_sv_friction_on_land;
 var float autocvar_sv_friction_slick = 0.5;
+float autocvar_sv_waterfriction;
 #endif
 REGISTER_STAT(MOVEVARS_FRICTION, FLOAT)
 REGISTER_STAT(MOVEVARS_FRICTION_SLICK, FLOAT)
 REGISTER_STAT(MOVEVARS_FRICTION_ONLAND, FLOAT, autocvar_sv_friction_on_land)
+REGISTER_STAT(MOVEVARS_WATERFRICTION, FLOAT)
 
 REGISTER_STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, BOOL)
 REGISTER_STAT(MOVEVARS_JUMPSPEEDCAP_MIN, FLOAT)
@@ -412,6 +414,9 @@ REGISTER_STAT(ROUND_TIMELIMIT, FLOAT, round_limit)
 #define autocvar_sv_gravity cvar("sv_gravity")
 float autocvar_sv_stepheight;
 int autocvar_sv_steptype;
+float autocvar_sv_swimscale;
+float autocvar_sv_waterflags;
+float autocvar_sv_wateraccelerate;
 #endif
 REGISTER_STAT(MOVEVARS_TICRATE, FLOAT, autocvar_sys_ticrate)
 REGISTER_STAT(MOVEVARS_TIMESCALE, FLOAT, autocvar_slowmo)
@@ -422,6 +427,9 @@ REGISTER_STAT(MOVEVARS_MAXSPEED, FLOAT)
 REGISTER_STAT(MOVEVARS_ACCELERATE, FLOAT)
 REGISTER_STAT(MOVEVARS_AIRACCELERATE, FLOAT)
 REGISTER_STAT(MOVEVARS_SLICKACCELERATE, FLOAT)
+REGISTER_STAT(MOVEVARS_WATERACCELERATE, FLOAT)
+REGISTER_STAT(MOVEVARS_WATERFLAGS, FLOAT)
+REGISTER_STAT(MOVEVARS_SWIMSCALE, FLOAT)
 .float gravity;
 // FIXME: Was 0 on server, 1 on client. Still want that?
 REGISTER_STAT(MOVEVARS_ENTGRAVITY, FLOAT, (this.gravity) ? this.gravity : 1)
