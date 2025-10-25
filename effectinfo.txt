@@ -9174,3 +9174,29 @@ effect item_teleport
 	sizeincrease 32
 	size 16 16
 	tex 33 33
+effect hmg_muzzleflash
+	type static
+	alpha 256 256 512
+	color 0x202020 0x404040
+	count 1
+	gravity -0.100000
+	lightcolor 2 1.5 0.2
+	lightradiusfade 2000
+	lightradius 200
+	originjitter 1.5 1.5 1.5
+	size 5 5
+	tex 0 8
+	velocityjitter 1 1 1
+	velocitymultiplier 0.030000
+effect hmg_muzzleflash
+	type spark
+	airfriction 12
+	alpha 0 256 6000
+	color 0xff5800 0xff8e00
+	count 3
+	originjitter 1 1 1
+	size 0.300000 0.400000
+	stretchfactor 0.150000
+	tex 40 40
+	velocityjitter 555 555 555
+	velocitymultiplier 3
