@@ -8066,7 +8066,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/rifle.qc:274
 msgid "zoom"
-msgstr ""
+msgstr "amplificatio"
 
 #: qcsrc/common/weapons/weapon/rifle.qc:275
 #: qcsrc/common/weapons/weapon/vortex.qc:389
@@ -9717,6 +9717,8 @@ msgid ""
 "Read the guide, listen to Xonotic music tracks, and view your demos and "
 "screenshots"
 msgstr ""
+"Documenta lege, vel cantus Xonotici audi, vel pelliculas cinematographicas "
+"et imagines inspice"
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:48
 msgid "Auto record demos"
@@ -9900,6 +9902,7 @@ msgstr "Duo Ludentes aut Plures"
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid "Play online, against your friends in LAN, or change player settings"
 msgstr ""
+"Lude interreti vel reti locali cum amicis tuis, vel lusoris optiones elige"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
@@ -11555,12 +11558,12 @@ msgstr "Ludi Modi Optiones"
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:71
 #, c-format
 msgid "Display capture times in %s"
-msgstr ""
+msgstr "Tempora captuum videre dum est %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:75
 #, c-format
 msgid "Display name of flag stealer in %s"
-msgstr ""
+msgstr "Nomen eius qui vexillum rapuit videre dum est %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display console messages in the top left corner"
@@ -12236,7 +12239,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skin"
-msgstr ""
+msgstr "Facies Indicis"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"
