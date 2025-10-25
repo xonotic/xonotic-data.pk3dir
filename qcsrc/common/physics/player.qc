@@ -551,6 +551,7 @@ void CheckPlayerJump(entity this)
 		this.jetpack_stopped = false;
 		ITEMS_STAT(this) &= ~IT_USING_JETPACK;
 	}
+
 	if (!PHYS_INPUT_BUTTON_JUMP(this))
 		UNSET_JUMP_HELD(this);
 

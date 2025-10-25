@@ -1,5 +1,4 @@
 #include "physics.qh"
-#include "input.qh"
 
 .int disableclientprediction;
 
@@ -15,7 +14,6 @@ void sys_phys_update(entity this, float dt)
 		sys_phys_simulate_simple(this, dt);
 		return;
 	}
-	sys_in_update(this, dt);
 
 	sys_phys_fix(this, dt);
 	if (sys_phys_override(this, dt))
@@ -221,7 +219,7 @@ void sys_phys_simulate(entity this, float dt)
 	{
 		// water jump only in certain situations
 		// this mimics quakeworld code
-		if (this.com_in_jump
+		if (PHYS_INPUT_BUTTON_JUMP(this)
 		&&  this.waterlevel == WATERLEVEL_SWIMMING
 		&&  this.velocity_z >= -180
 		&& !this.viewloc
@@ -397,7 +395,7 @@ void sys_phys_simulate(entity this, float dt)
 				}
 
 				// holding jump button swims upward slowly
-				if (this.com_in_jump && !this.viewloc && !PHYS_FROZEN(this))
+				if (PHYS_INPUT_BUTTON_JUMP(this) && !this.viewloc && !PHYS_FROZEN(this))
 				{
 					// was:
 					// lava: 50
