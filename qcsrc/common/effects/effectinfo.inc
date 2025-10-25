@@ -9588,4 +9588,42 @@ SUB(item_teleport) {
 	MY(type) = "smoke";
 }
 
+DEF(hmg_muzzleflash);
+SUB(hmg_muzzleflash) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 1;
+	MY(gravity) = -0.100000;
+	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_max) = 8;
+	MY(type) = "static";
+	MY(velocityjitter) = '1.0 1.0 1.0';
+	MY(velocitymultiplier) = 0.030000;
+}
+SUB(hmg_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 6000;
+	MY(color_min) = "0xff5800";
+	MY(color_max) = "0xff8e00";
+	MY(count) = 3;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 0.300000;
+	MY(size_max) = 0.400000;
+	MY(stretchfactor) = 0.150000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '555.0 555.0 555.0';
+	MY(velocitymultiplier) = 3;
+}
+
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!

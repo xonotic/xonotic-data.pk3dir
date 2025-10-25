@@ -99,6 +99,8 @@ EFFECT(0, FIREBALL_LASER,           "fireball_laser")
 EFFECT(0, FIREBALL_MUZZLEFLASH,     "fireball_muzzleflash")
 EFFECT(0, FIREBALL_PRE_MUZZLEFLASH, "fireball_preattack_muzzleflash")
 
+EFFECT(0, HMG_MUZZLEFLASH,          "hmg_muzzleflash")
+
 
 
 EFFECT(0, RAPTOR_CANNON_IMPACT,     "raptor_cannon_impact")
