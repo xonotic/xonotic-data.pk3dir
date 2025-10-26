@@ -256,16 +256,6 @@ enum
 	TEAMS_COMPARE_GREATER ///< First team the greater than the second one.
 };
 
-/// \brief Compares two teams for the purposes of game balance.
-/// \param[in] balance Team balance entity.
-/// \param[in] team_index_a Index of the first team.
-/// \param[in] team_index_b Index of the second team.
-/// \param[in] use_score Whether to take into account team scores and skill ratings.
-/// \return TEAMS_COMPARE value. See above.
-/// \note You need to call TeamBalance_GetTeamCounts before calling this
-/// function.
-int TeamBalance_CompareTeams(entity balance, int team_index_a, int team_index_b, bool use_score);
-
 /// \brief Switches a bot from one team to another if teams are not balanced.
 void TeamBalance_AutoBalanceBots();
 
