@@ -26,7 +26,7 @@ METHOD(MagnetBuff, describe, string(MagnetBuff this))
 {
 	TC(MagnetBuff, this);
 	PAGE_TEXT_INIT();
-	PAR(_("The %s greatly increases your item pickup range, collecting nearby items for you while the buff is active."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAR(_("The %s buff greatly increases your item pickup range, collecting nearby items for you while the buff is active."), COLORED_NAME(this));
 	return PAGE_TEXT;
 }
 #endif // MENUQC

@@ -1170,8 +1170,6 @@ void Onslaught_count_generators()
 	}
 }
 
-void nades_Clear(entity e);
-
 bool Onslaught_CheckWinner()
 {
 	if ((autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60) || (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0))
@@ -1241,8 +1239,7 @@ bool Onslaught_CheckWinner()
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		STAT(ROUNDLOST, it) = true;
 		it.player_blocked = true;
-
-		nades_Clear(it);
+		nades_RemovePlayer(it);
 	});
 
 	game_stopped = true;

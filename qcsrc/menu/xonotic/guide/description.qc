@@ -57,6 +57,7 @@ void XonoticGuideDescription_setDescription(entity me, string desc)
 	me.m_descriptionWrapped = strzone(wrapGuideText(me.m_description, maxWidth, me.realFontSize));
 
 	me.nItems = tokenizebyseparator(me.m_descriptionWrapped, "\n");
+	me.setSelected(me, 0); // reset scrollbar position
 }
 
 void XonoticGuideDescription_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)

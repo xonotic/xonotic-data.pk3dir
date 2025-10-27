@@ -2,6 +2,7 @@
 
 float autocvar_g_ca_damage2score = 100;
 int autocvar_g_ca_prevent_stalemate;
+float autocvar_g_ca_round_enddelay;
 
 float autocvar_g_ca_start_health = 200;
 float autocvar_g_ca_start_armor = 200;
@@ -40,8 +41,6 @@ void CA_count_alive_players()
 		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(4));
 	});
 }
-
-void nades_Clear(entity player);
 
 int CA_PreventStalemate()
 {
@@ -139,7 +138,6 @@ int CA_PreventStalemate()
 	return -2; // Equality. Can't avoid the stalemate.
 }
 
-float autocvar_g_ca_round_enddelay = 1;
 float CA_CheckWinner()
 {
 	int winner_team = 0;
@@ -205,7 +203,9 @@ float CA_CheckWinner()
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
-	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		nades_RemovePlayer(it);
+	});
 
 	return 1;
 }

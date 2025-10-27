@@ -3,6 +3,8 @@
 #include "textlabel.qh"
 #include "checkbox.qh"
 #include "mixedslider.qh"
+#include <common/mapinfo.qh>
+#include <common/gametypes/gametype/ctf/ctf.qh>
 
 void XonoticGameMessageSettingsTab_showNotify(entity me)
 {
@@ -66,11 +68,11 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3.1, e = makeXonoticHeaderLabel(_("Gametype Settings")));
 	me.TR(me);
-		me.TD(me, 1, 3.1, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_CAPTURE_TIME", _("Display capture times in Capture The Flag"), "-"));
+		me.TD(me, 1, 3.1, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_CAPTURE_TIME", strzone(sprintf(_("Display capture times in %s"), MapInfo_Type_ToText(MAPINFO_TYPE_CTF))), "-"));
 			makeMulti(e, "notification_CHOICE_CTF_CAPTURE_BROKEN notification_CHOICE_CTF_CAPTURE_UNBROKEN");
 			e.sendCvars = true;
 	me.TR(me);
-		me.TD(me, 1, 3.1, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_PICKUP_ENEMY", _("Display name of flag stealer in Capture The Flag"), "-"));
+		me.TD(me, 1, 3.1, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_PICKUP_ENEMY", strzone(sprintf(_("Display name of flag stealer in %s"), MapInfo_Type_ToText(MAPINFO_TYPE_CTF))), "-"));
 			makeMulti(e, "notification_CHOICE_CTF_PICKUP_ENEMY_TEAM notification_CHOICE_CTF_PICKUP_ENEMY_NEUTRAL");
 			e.sendCvars = true;
 

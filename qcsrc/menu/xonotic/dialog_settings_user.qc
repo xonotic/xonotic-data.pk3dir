@@ -20,7 +20,7 @@ void XonoticUserSettingsTab_fill(entity me)
 
 	me.TR(me);
 		me.TDempty(me, 0.25);
-		me.TD(me, 1, 2.5, e = makeXonoticHeaderLabel(_("Menu Skins")));
+		me.TD(me, 1, 2.5, e = makeXonoticHeaderLabel(_("Menu Skin")));
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, me.rows - 3.5, 2.5, sk = makeXonoticSkinList());

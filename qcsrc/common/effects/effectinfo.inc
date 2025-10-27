@@ -5666,7 +5666,7 @@ SUB(EF_FLAME) {
 	MY(color_max) = "0xff5a00";
 	MY(count) = 100;
 	MY(gravity) = -0.500000;
-	MY(originjitter) = '12.0 12.0 34.0';
+	MY(originjitter) = '12.0 12.0 24.0';
 	MY(originoffset) = '0.0 0.0 10.0';
 	MY(sizeincrease) = -1;
 	MY(size_min) = 5;
@@ -5678,28 +5678,22 @@ SUB(EF_FLAME) {
 }
 // smoke
 SUB(EF_FLAME) {
-	MY(alpha_min) = 200;
-	MY(alpha_max) = 256;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 156;
 	MY(alpha_fade) = 200;
 	MY(bounce) = 2;
 	MY(color_min) = "0x000000";
-	MY(color_max) = "0x111111";
-	MY(count) = 50;
-	MY(gravity) = -0.300000;
-	MY(originjitter) = '12.0 12.0 34.0';
-	MY(originoffset) = '0.0 0.0 10.0';
+	MY(color_max) = "0x444444";
+	MY(count) = 30;
+	MY(gravity) = -0.500000;
+	MY(originjitter) = '6.0 6.0 24.0';
+	MY(originoffset) = '0.0 0.0 40.0';
 	MY(sizeincrease) = 6;
 	MY(size_min) = 11;
 	MY(size_max) = 15;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
 	MY(velocityjitter) = '11.0 11.0 50.0';
-}
-SUB(EF_FLAME) {
-	MY(count) = 0.500000;
-	MY(lightcolor) = '0.9 0.9 0.2';
-	MY(lightradiusfade) = 10000;
-	MY(lightradius) = 200;
 }
 
 // rifle bullet trail (somewhat like a tracer)
@@ -9298,6 +9292,73 @@ SUB(shotgun_woosh) {
 	MY(velocityjitter) = '128 128 64';
 	MY(velocitymultiplier) = 1;
 	MY(type) = "smoke";
+}
+
+DEF(EF_SHOCK);
+// impact sparks
+SUB(EF_SHOCK) {
+	MY(airfriction) = 110;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 300;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xDDFDFF";
+	MY(color_max) = "0xFDFDFF";
+	MY(count) = 50;
+	MY(originjitter) = '6.0 6.0 10.0';
+	MY(startangle_max) = 360;
+	MY(spin_min) = 0;
+	MY(spin_max) = 0;
+	MY(sizeincrease) = -1;
+	MY(size_min) = 4;
+	MY(size_max) = 7;
+	MY(stretchfactor) = 1;
+	MY(tex_min) = 71;
+	MY(tex_max) = 74;
+	MY(type) = "static";
+	MY(velocityjitter) = '250.0 250.0 250.0';
+	MY(velocitymultiplier) = 100;
+}
+// impact sparks (underwater)
+SUB(EF_SHOCK) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 300;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xDDFDFF";
+	MY(color_max) = "0xFDFDFF";
+	MY(count) = 30;
+	MY(liquidfriction) = 5;
+	MY(orientation) = "spark";
+	MY(originjitter) = '12.0 12.0 12.0';
+	MY(startangle_max) = 360;
+	MY(spin_min) = -36000;
+	MY(spin_max) = 36000;
+	MY(sizeincrease) = -5;
+	MY(size_min) = 4;
+	MY(size_max) = 7;
+	MY(stretchfactor) = 1;
+	MY(tex_min) = 71;
+	MY(tex_max) = 74;
+	MY(type) = "static";
+	MY(underwater) = true;
+	MY(velocityjitter) = '250.0 250.0 250.0';
+	MY(velocitymultiplier) = 20;
+}
+// impact smoke
+SUB(EF_SHOCK) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 60;
+	MY(alpha_fade) = 350;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(count) = 10;
+	MY(sizeincrease) = 400;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 100;
 }
 
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!

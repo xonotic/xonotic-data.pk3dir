@@ -1214,6 +1214,9 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 		if (sbt_field_icon_extra[j] != "")
 		{
 			sz = draw_getimagesize(sbt_field_icon_extra[j]);
+			// XONRELEASE TODO: xonotic-v0.9.0 after release remove if (sz == 0) case
+			if (sz == '0 0 0') // it happens in previous engine versions (Xonotic 0.8.6 or lower) when the image is missing
+				sz = '1 1 0';
 			sbt_fixcolumnwidth_iconlen_extra[j] = sz.x / sz.y;
 		}
 
