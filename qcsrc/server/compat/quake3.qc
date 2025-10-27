@@ -49,10 +49,15 @@
 */
 
 // Shotgun <-> Machine Gun
+// We don't want the swap on defrag maps (some of which have a valid .arena file as well as the .defi).
 // In Q3 defaults SG has 10 shells and MG has 100 bullets, Xonotic's GetAmmoConsumption() will return 1 for both
 // so .count will be out by 10x, however Xonotic has a stronger MG than Q3 so using 8x for SG->MG.
-SPAWNFUNC_Q3(weapon_shotgun, ammo_shells, q3compat & Q3COMPAT_ARENA ? WEP_MACHINEGUN : WEP_SHOTGUN, q3compat & Q3COMPAT_ARENA ? 8 : 1)
-SPAWNFUNC_Q3(weapon_machinegun, ammo_bullets, q3compat & Q3COMPAT_ARENA ? WEP_SHOTGUN : WEP_MACHINEGUN, q3compat & Q3COMPAT_ARENA ? 0.1 : 1)
+SPAWNFUNC_Q3(weapon_shotgun, ammo_shells,
+             q3compat == Q3COMPAT_ARENA ? WEP_MACHINEGUN : WEP_SHOTGUN,
+             q3compat == Q3COMPAT_ARENA ? 8 : 1)
+SPAWNFUNC_Q3(weapon_machinegun, ammo_bullets,
+             q3compat == Q3COMPAT_ARENA ? WEP_SHOTGUN : WEP_MACHINEGUN,
+             q3compat == Q3COMPAT_ARENA ? 0.1 : 1)
 
 // Grenade Launcher -> Mortar
 SPAWNFUNC_Q3(weapon_grenadelauncher, ammo_grenades, WEP_MORTAR)
