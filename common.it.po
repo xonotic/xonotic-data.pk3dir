@@ -157,7 +157,7 @@ msgstr "^1Premi ^3%s^1 per cambiare il modo di vedere"
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
-msgstr ""
+msgstr "^1Premi ^3%s^1 per info sul tipo di gioco"
 
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #: qcsrc/menu/xonotic/keybinder.qc:153
@@ -254,7 +254,7 @@ msgstr "^7Premi ^3ESC ^7per mostrare le opzioni dell'HUD."
 
 #: qcsrc/client/hud/panel/infomessages.qc:233
 msgid "^3Double-click ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^3Doppio-click ^7su un pannello per le sue specifiche opzioni."
 
 #: qcsrc/client/hud/panel/infomessages.qc:234
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -614,6 +614,7 @@ msgstr "Tempo totale di possesso della palla in Keepaway"
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "How often a flag (CTF) or a key (Key Hunt) was captured"
 msgstr ""
+"Per quante volte una bandiera (CTF) o una chiave (Key Hunt) è stata catturata"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^caps"
@@ -733,7 +734,7 @@ msgstr "cacce"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of key carrier kills"
-msgstr ""
+msgstr "Numero di uccisioni di portachiavi"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kckills"
@@ -814,6 +815,8 @@ msgstr "obiettivi"
 msgid ""
 "How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"
 msgstr ""
+"Per quante volte una bandiera (CTF) o una chiave (Key Hunt) o una palla "
+"(Keepaway) viene raccolta"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pickups"
@@ -1010,12 +1013,22 @@ msgid ""
 "or in all but these gametypes. You can also specify 'all' as a\n"
 "field to show all fields available for the current gametype."
 msgstr ""
+"Prima di un campo puoi mettere il segno + o -, seguito da una lista di tipi "
+"di gioco\n"
+"separati da virgole, seguita dal segno /, per mostrare il campo solo in "
+"questi\n"
+"o in tutti tranne questi tipi di gioco. Puoi anche specificare "
+"'all' (tutti)\n"
+"come campo per mostrare tutti i campi disponibili per l'attuale tipo di "
+"gioco."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:744
 msgid ""
 "The special gametype names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams gametypes."
 msgstr ""
+"I nomi speciali di tipo di gioco 'teams' e 'noteams' possono essere usati\n"
+"per includere/escludere TUTTI i tipi di gioco a squadre/senza squadre."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:748
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -1034,6 +1047,8 @@ msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gametypes except DM."
 msgstr ""
+"'campo3' sarà mostrato solo in CTF, e 'campo4' sarà mostrato in tutti\n"
+"gli altri tipi di gioco eccetto DM."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1059
 #: qcsrc/client/hud/panel/scoreboard.qc:1073
@@ -1208,7 +1223,7 @@ msgstr "Tempo supplementare #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering HUD configure mode"
-msgstr ""
+msgstr "^1Devi rispondere prima di entrare in modalità configurazione HUD"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -3534,7 +3549,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:31
 msgid "Overkill Heavy MachineGun"
-msgstr ""
+msgstr "Overkill Heavy MachineGun"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:166
 #: qcsrc/common/weapons/weapon/machinegun.qc:434
@@ -4397,7 +4412,7 @@ msgstr "^BG%s^K1 ha pensato di aver trovato un buon posto per campeggiare%s%s"
 #: qcsrc/common/notifications/all.inc:311
 #, c-format
 msgid "^BG%s^K1 unfairly eliminated themselves%s%s"
-msgstr ""
+msgstr "^BG%s^K1 si è eliminato slealmente%s%s"
 
 #: qcsrc/common/notifications/all.inc:313
 #, c-format
@@ -4709,7 +4724,7 @@ msgstr "^BG%s^K3 è stato risvegliato automaticamente dopo %s secondi"
 #: qcsrc/common/notifications/all.inc:371
 #, c-format
 msgid "^BG%s^K1 froze themselves"
-msgstr ""
+msgstr "^BG%s^K1 si è congelato da solo"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:706
@@ -5105,7 +5120,7 @@ msgstr "^K2Non ti è consentito unirti a una squadra più numerosa!"
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:821
 msgid "^K2You're not allowed to join that team!"
-msgstr ""
+msgstr "^K2Non ti è permesso unirti a questa squadra!"
 
 #: qcsrc/common/notifications/all.inc:463
 #: qcsrc/common/notifications/all.inc:822
@@ -5191,7 +5206,7 @@ msgstr "^BG%s%s^K1 è stato sparato a morte dal Blaster di ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s^K1 shot themselves to hell with their Blaster%s%s"
-msgstr ""
+msgstr "^BG%s^K1 si è sparato a morte con il proprio Blaster%s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
@@ -5216,7 +5231,7 @@ msgstr "^BG%s%s^K1 si è avvicinato troppo al razzo di ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:484
 #, c-format
 msgid "^BG%s^K1 blew themselves up with their Devastator%s%s"
-msgstr ""
+msgstr "^BG%s^K1 si è fatto esplodere con il prorpio Devastator%s%s"
 
 #: qcsrc/common/notifications/all.inc:485
 #, c-format
@@ -5361,12 +5376,13 @@ msgstr "^BG%s^K1 non ha visto la granata del suo Mortar%s%s"
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s^K1 blew themselves up with their own Mortar%s%s"
-msgstr ""
+msgstr "^BG%s^K1 si è fatto esplodere con il proprio Mortar%s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
 msgid "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy MachineGun%s%s"
 msgstr ""
+"^BG%s%s^K1 è stato dilaniato dall'Overkill Heavy MachineGun di ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
@@ -5410,6 +5426,8 @@ msgstr ""
 msgid ""
 "^BG%s^K1 blew themselves up with their Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s^K1 si è fatto esplodere con il proprio Overkill Rocket Propelled "
+"Chainsaw%s%s"
 
 #: qcsrc/common/notifications/all.inc:519
 #, c-format
@@ -5671,21 +5689,26 @@ msgstr "^BGIl %snemico^BG (^BG%s%s)^BG ha la bandiera ^TC^TT^BG! Recuperala!"
 #, c-format
 msgid "^BGYour %steammate^BG got the ^TC^TT^BG flag! Protect them!"
 msgstr ""
+"^BGIl tuo %scompagno di squadra^BG ha preso la bandiera ^TC^TT^BG! "
+"Proteggilo!"
 
 #: qcsrc/common/notifications/all.inc:601
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
 msgstr ""
+"^BGIl tuo %scompagno di squadra^BG (^BG%s%s)^BG ha preso la bandiera "
+"^TC^TT^BG! Proteggilo!"
 
 #: qcsrc/common/notifications/all.inc:602
 #, c-format
 msgid "^BGYour %steammate^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BGIl tuo %scompagno di squadra^BG ha la bandiera! Proteggilo!"
 
 #: qcsrc/common/notifications/all.inc:603
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the flag! Protect them!"
 msgstr ""
+"^BGIl tuo %scompagno di squadra (^BG%s%s)^BG ha la bandiera! Proteggilo!"
 
 #: qcsrc/common/notifications/all.inc:604
 #: qcsrc/common/notifications/all.inc:750
@@ -5789,7 +5812,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:651
 msgid "^K1You were punished for attacking your teammates!"
-msgstr ""
+msgstr "^K1Sei stato punito per aver attaccato i tuoi compagni di squadra!"
 
 #: qcsrc/common/notifications/all.inc:652
 msgid "^K1Die camper!"
@@ -5968,7 +5991,7 @@ msgstr "^K1Attento a dove metti i piedi!"
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
 msgid "^K1Traitor! You betrayed teammate ^BG%s"
-msgstr ""
+msgstr "^K1Traditore! Hai tradito un compagno di sqaudra ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
@@ -5978,7 +6001,7 @@ msgstr "^K1Traditore! Hai ucciso ^BG%s"
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
 msgid "^K1You were betrayed by teammate ^BG%s"
-msgstr ""
+msgstr "^K1Sei stato tradito da un compagno di squadra ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
@@ -6112,6 +6135,9 @@ msgid ""
 "^K2Your ping (connection latency) is currently too high to play here.\n"
 "Please consider joining a server closer to you."
 msgstr ""
+"^K2Il tuo ping (latenza di connessione) è attualmente troppo alto per "
+"giocare qui.\n"
+"Considera di connetterti a un server più vicino a te."
 
 #: qcsrc/common/notifications/all.inc:731
 msgid "^BGYou're queued to join any available team."
@@ -6441,7 +6467,7 @@ msgstr "^K1Suicidio in ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:819
 msgid "^K2Your current team choice seems fine."
-msgstr ""
+msgstr "^K2La tua attuale scelta di squadra sembra buona."
 
 #: qcsrc/common/notifications/all.inc:825
 msgid "^F4Timeout begins in ^COUNT"
@@ -8908,7 +8934,7 @@ msgstr "Controlli"
 #: qcsrc/menu/xonotic/dialog_media.qc:13
 #: qcsrc/menu/xonotic/dialog_media_guide.qh:7
 msgid "Guide"
-msgstr ""
+msgstr "Guida"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:60
 msgid "Quick menu"
@@ -9798,6 +9824,8 @@ msgid ""
 "Read the guide, listen to Xonotic music tracks, and view your demos and "
 "screenshots"
 msgstr ""
+"Leggi la guida, ascolta le tracce audio di Xonotic e vedi i tuoi demo e "
+"screenshot"
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:48
 msgid "Auto record demos"
@@ -9841,6 +9869,8 @@ msgid ""
 "Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
 "to clear; ENTER when done."
 msgstr ""
+"Clicca qui o CTRL-F per inserire una parola chiave per restringere la lista. "
+"CTRL-DEL per pulire; INVIO quando hai fatto."
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:37
 msgid "MUSICPL^Add"
@@ -9979,6 +10009,7 @@ msgstr "Multiplayer"
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid "Play online, against your friends in LAN, or change player settings"
 msgstr ""
+"Gioca online, contro i tuoi amici in LAN o cambia le impostazioni giocatore"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
@@ -10013,7 +10044,7 @@ msgstr "Limite di tempo:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:85
 msgid "Time limit in minutes that when hit, will end the match"
-msgstr ""
+msgstr "Tempo limite in minuti che appena raggiunto terminerà la partita"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
 msgid "TIMLIM^Default"
@@ -11347,6 +11378,7 @@ msgstr "Effetti punto di nascita"
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:241
 msgid "Particle effects at all spawn points and whenever a player spawns"
 msgstr ""
+"Effetti di particelle in tutti i punti di nascita e quando un giocatore nasce"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:246
 msgid "Quality:"
@@ -11620,7 +11652,7 @@ msgstr "Entrambi"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:57
 msgid "Print on a separate line"
-msgstr ""
+msgstr "Stampa in una riga separata"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:61
 msgid "Add extra frag information to centerprint when available"
@@ -11632,17 +11664,17 @@ msgstr "Aggiungi luogo di frag ai messaggi di morte quando disponibili"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:69
 msgid "Gametype Settings"
-msgstr ""
+msgstr "Settaggi Tipo di Gioco"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:71
 #, c-format
 msgid "Display capture times in %s"
-msgstr ""
+msgstr "Mostra tempi di cattura in %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:75
 #, c-format
 msgid "Display name of flag stealer in %s"
-msgstr ""
+msgstr "Mostra il nome di chi ruba la bandiera in %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display console messages in the top left corner"
@@ -12060,6 +12092,8 @@ msgstr "Ammorbidisci mira"
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:109
 msgid "Smooths the mouse movement, but makes aiming slightly less responsive"
 msgstr ""
+"Rende più morbido il movimento del mouse, però rende la mira leggermente "
+"meno reattiva"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:111
 msgid "Invert aiming"
@@ -12318,7 +12352,7 @@ msgstr "Ciò creerà una config. di backup nella cartella /data"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skin"
-msgstr ""
+msgstr "Tema Menu"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:62
 msgid "Text Language"
@@ -12632,7 +12666,7 @@ msgstr "Mostra i fotogrammi al secondo"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:149
 msgid "Instant action with bots!"
-msgstr ""
+msgstr "Azione immediata con i bot!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:169
 msgid "Campaign Difficulty:"
@@ -12673,7 +12707,7 @@ msgstr "entra nella 'migliore' squadra (auto-selezione)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "Auto-select team (recommended)"
-msgstr ""
+msgstr "Autoseleziona squadra (raccomandato)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
@@ -12731,7 +12765,7 @@ msgstr "libero per tutti"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:9 qcsrc/menu/xonotic/guide/pages.qc:62
 msgid "Introduction"
-msgstr ""
+msgstr "Introduzione"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:10
 msgid "Movement"
@@ -13235,7 +13269,7 @@ msgstr "mostra punteggi"
 
 #: qcsrc/menu/xonotic/keybinder.qc:137
 msgid "screenshot"
-msgstr ""
+msgstr "screenshot"
 
 #: qcsrc/menu/xonotic/keybinder.qc:138
 msgid "maximize radar"
@@ -13378,6 +13412,8 @@ msgid ""
 "Huh? Can't play this (invalid gametype). Refiltering so this won't happen "
 "again."
 msgstr ""
+"Eh? Non posso lanciare questa mappa (tipo di gioco invalido). Rifiltro in "
+"modo che non accada di nuovo."
 
 #: qcsrc/menu/xonotic/playerlist.qc:115
 msgid "spectator"
