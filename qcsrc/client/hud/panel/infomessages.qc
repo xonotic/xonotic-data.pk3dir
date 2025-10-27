@@ -58,13 +58,13 @@ vector InfoMessages_drawstring(string s, vector pos, vector sz, float a, vector 
 	img_curr_group = -1; \
 MACRO_END
 
-string get_team_list(int team_mask)
+string get_team_list(int team_mask, string suf_col)
 {
 	return strcat(
-		((team_mask & BIT(0)) ? strcat(Team_ColoredFullName(NUM_TEAM_1), (team_mask >> 1) ? ", " : "") : ""),
-		((team_mask & BIT(1)) ? strcat(Team_ColoredFullName(NUM_TEAM_2), (team_mask >> 2) ? ", " : "") : ""),
-		((team_mask & BIT(2)) ? strcat(Team_ColoredFullName(NUM_TEAM_3), (team_mask >> 3) ? ", " : "") : ""),
-		((team_mask & BIT(3)) ? Team_ColoredFullName(NUM_TEAM_4) : "")
+		((team_mask & BIT(0)) ? strcat(Team_ColoredFullName_WithSuffixColor(NUM_TEAM_1, suf_col), (team_mask >> 1) ? ", " : "") : ""),
+		((team_mask & BIT(1)) ? strcat(Team_ColoredFullName_WithSuffixColor(NUM_TEAM_2, suf_col), (team_mask >> 2) ? ", " : "") : ""),
+		((team_mask & BIT(2)) ? strcat(Team_ColoredFullName_WithSuffixColor(NUM_TEAM_3, suf_col), (team_mask >> 3) ? ", " : "") : ""),
+		((team_mask & BIT(3)) ? Team_ColoredFullName_WithSuffixColor(NUM_TEAM_4, suf_col) : "")
 	);
 }
 
@@ -205,7 +205,7 @@ void HUD_InfoMessages()
 		if (missing_teams_mask)
 		{
 			if (teamplay)
-				s = sprintf(_("%sNeed active players for: %s"), blinkcolor, get_team_list(missing_teams_mask));
+				s = sprintf(_("%sNeed active players for: %s"), blinkcolor, get_team_list(missing_teams_mask, blinkcolor));
 			else
 			{
 				if (missing_teams_mask == 1)
