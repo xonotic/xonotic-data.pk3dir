@@ -242,7 +242,14 @@ void W_MineLayer_Think(entity this)
 	if(this.realowner.(weaponentity).m_weapon == WEP_MINE_LAYER)
 	if(!IS_DEAD(this.realowner))
 	if(this.minelayer_detonate)
+	{
 		W_MineLayer_RemoteExplode(this);
+		return;
+	}
+
+	// if it was detached by damage but landed during the bounce time, reenable gravity so it will touch and reattach
+	if (this.move_movetype == MOVETYPE_BOUNCE && IS_ONGROUND(this))
+		UNSET_ONGROUND(this);
 }
 
 void W_MineLayer_Touch(entity this, entity toucher)
@@ -270,7 +277,7 @@ void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float da
 		set_movetype(this, MOVETYPE_BOUNCE); // not TOSS: so a direct perpendicular hit can move the mine
 		this.wait = time + 0.0625; // after this time it will reattach instead of bouncing
 		settouch(this, W_MineLayer_Touch);
-		this.avelocity = this.velocity += force * WEP_CVAR(WEP_MINE_LAYER, damageforcescale);
+		this.avelocity += force * -WEP_CVAR(WEP_MINE_LAYER, damageforcescale);
 	}
 
 	float is_from_enemy = (inflictor.realowner != this.realowner);
