@@ -3950,6 +3950,7 @@ msgstr ""
 #, c-format
 msgid "Note that it overrides the %s mutator, since they use the same bind."
 msgstr ""
+"Notez qu'il remplace le mutateur %s, car ils utilisent le même raccourci."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qh:5
 #: qcsrc/common/util.qc:320
@@ -3998,6 +3999,9 @@ msgid ""
 "amount of it in %s. It has a limited magazine size, so needs reloading after "
 "several shots."
 msgstr ""
+"Le tir primaire consomme des munitions de type %s, bien que vous en "
+"disposiez d'une quantité infinie en %s. Le chargeur a une capacité limitée, "
+"il faut donc recharger l'arme après un certain nombre de tirs."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:172
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:170
@@ -4084,6 +4088,8 @@ msgid ""
 "Since it is the only %s weapon which deals splash damage, the %s is a good "
 "choice of weapon for attacking groups of enemies."
 msgstr ""
+"Comme c'est la seule arme %s qui inflige des dégâts de zone, la %s est une "
+"arme de choix pour attaquer des groupes d'ennemis."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:31
 msgid "Overkill Rocket Propelled Chainsaw"
@@ -4095,6 +4101,8 @@ msgid ""
 "The %s fires a single shotgun round which spreads into multiple pellets upon "
 "exiting the barrel, dealing a deadly blow if up close."
 msgstr ""
+"Le %s tire un seul coup de fusil qui se disperse en plusieurs plombs à la "
+"sortie du canon, infligeant un coup mortel à bout portant."
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qc:136
 #: qcsrc/common/weapons/weapon/shotgun.qc:407
@@ -4137,6 +4145,8 @@ msgid ""
 "The %s powerup regenerates %s needed for the %s until the powerup expires, "
 "so you can continue flying around for longer."
 msgstr ""
+"Le bonus de puissance %s régénère le %s nécessaire pour le %s jusqu'à ce "
+"qu'il expire, afin que vous puissiez continuer à voler plus longtemps."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:21
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qc:54
@@ -4180,6 +4190,9 @@ msgid ""
 "providing increased mobility, maneuverability, and the ability to reach "
 "higher ground."
 msgstr ""
+"Le bonus de puissance %s vous permet de voler autour de la carte pendant une "
+"courte période, vous offrant une mobilité et une maniabilité accrues, ainsi "
+"que la possibilité d'atteindre des terrains plus élevés."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qc:21
 #, c-format
@@ -4259,6 +4272,9 @@ msgid ""
 "allow you to easily dominate a map, so it's often highly contested when it "
 "spawns in."
 msgstr ""
+"La %s est l'un des objets les plus recherchés sur une carte, car il permet "
+"de dominer facilement l'arène. Il est ainsi souvent très disputé lorsqu'il "
+"apparaît."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
@@ -4274,6 +4290,11 @@ msgid ""
 "hitbox, so they can give you a much larger speed boost, also allowing flying "
 "around the map."
 msgstr ""
+"Le mutateur %s supprime le léger délai qui survient lorsque vous faites "
+"exploser une roquette de %s immédiatement après l'avoir tirée. Cela permet "
+"de faire exploser les roquettes beaucoup plus près de votre hitbox, ce qui "
+"vous donne un boost de vitesse beaucoup plus important et vous permet "
+"également de voler autour de la carte."
 
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qh:5
 #: qcsrc/common/util.qc:300
@@ -4303,6 +4324,8 @@ msgstr "Super-armes"
 msgid ""
 "The %s mutator causes an explosion when two players collide if it is enabled."
 msgstr ""
+"Lorsqu'il est activé, le mutateur %s provoque une explosion lorsque deux "
+"joueurs entrent en collision."
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qc:9
 msgid ""
@@ -4346,12 +4369,17 @@ msgid ""
 "%s is a mutator that enables jumping off walls for added mobility. To do a "
 "wall jump, tap %s when against a wall."
 msgstr ""
+"%s est un mutateur qui permet de sauter depuis les murs pour une plus grande "
+"mobilité. Pour effectuer un saut mural, appuyez sur %s lorsque vous êtes "
+"contre un mur."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:83
 msgid ""
 "This mutator adds a bit of versatility, allowing for more dynamic and "
 "unpredictable movement."
 msgstr ""
+"Ce mutateur ajoute un peu de polyvalence, permettant des mouvements plus "
+"dynamiques et imprévisibles."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qh:5
 #: qcsrc/common/util.qc:317
