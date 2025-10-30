@@ -114,28 +114,8 @@ SPAWNFUNC_ITEM(item_invis, ITEM_Invisibility)
 // medkit -> armor (we have no holdables)
 SPAWNFUNC_ITEM(holdable_medkit, ITEM_ArmorBig)
 
-.float wait;
-.float delay;
 
 // weapon remove ent from df
-void target_init_verify(entity this)
-{
-	entity trigger, targ;
-	for(trigger = NULL; (trigger = find(trigger, classname, "trigger_multiple")); )
-		for(targ = NULL; (targ = find(targ, targetname, trigger.target)); )
-			if (targ.classname == "target_init" || targ.classname == "target_give" || targ.classname == "target_items")
-			{
-				trigger.wait = 0;
-				trigger.delay = 0;
-				targ.wait = 0;
-				targ.delay = 0;
-
-				//setsize(targ, trigger.mins, trigger.maxs);
-				//setorigin(targ, trigger.origin);
-				//remove(trigger);
-			}
-}
-
 void target_init_use(entity this, entity actor, entity trigger)
 {
 	if (!(this.spawnflags & 1))
@@ -204,49 +184,8 @@ void target_init_use(entity this, entity actor, entity trigger)
 spawnfunc(target_init)
 {
 	this.use = target_init_use;
-	InitializeEntity(this, target_init_verify, INITPRIO_FINDTARGET);
 }
 
-// weapon give ent from Q3
-void target_give_init(entity this)
-{
-	IL_EACH(g_items, it.targetname == this.target,
-	{
-		if (it.classname == "item_buff")
-		{
-			this.netname = cons(this.netname, it.buffdef.netname);
-			this.buffs_finished += it.buffs_finished;
-		}
-		else
-		{
-			this.ammo_rockets          += it.ammo_rockets;
-			this.ammo_cells            += it.ammo_cells;
-			this.ammo_shells           += it.ammo_shells;
-			this.ammo_nails            += it.ammo_nails;
-			this.invincible_finished   += it.invincible_finished;
-			this.strength_finished     += it.strength_finished;
-			this.speed_finished        += it.speed_finished;
-			this.invisibility_finished += it.invisibility_finished;
-			this.health                += it.health;
-			this.armorvalue            += it.armorvalue;
-
-			this.netname = cons(this.netname, (it.itemdef.m_weapon) ? it.itemdef.m_weapon.netname : it.itemdef.netname);
-		}
-
-		//remove(it); // removing ents in init functions causes havoc, workaround:
-		setthink(it, SUB_Remove);
-		it.nextthink = time;
-	});
-	this.spawnflags = 2;
-	this.spawnfunc_checked = true;
-	spawnfunc_target_items(this);
-	InitializeEntity(this, target_init_verify, INITPRIO_FINDTARGET);
-}
-
-spawnfunc(target_give)
-{
-	InitializeEntity(this, target_give_init, INITPRIO_FINDTARGET);
-}
 
 void score_use(entity this, entity actor, entity trigger)
 {
