@@ -21,6 +21,7 @@ int autocvar_g_balance_firetransfer_time;
 float autocvar_g_balance_armor_blockpercent;
 float autocvar_g_teamdamage_resetspeed;
 float autocvar_g_teamdamage_threshold;
+bool autocvar_g_teamkill_punishing;
 float autocvar_g_balance_selfdamagepercent;
 float autocvar_g_friendlyfire;
 float autocvar_g_friendlyfire_virtual;
