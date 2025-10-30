@@ -2489,7 +2489,7 @@ msgstr "Grabuge en Équipe"
 #: qcsrc/common/items/item/ammo.qc:11
 #, c-format
 msgid "The %s ammo type is used by the:"
-msgstr "Le type de munitions %s est utilisé par le (la) :"
+msgstr "Le type de munitions %s est utilisé par les armes suivantes :"
 
 #: qcsrc/common/items/item/ammo.qc:16 qcsrc/common/items/item/ammo.qc:26
 #, c-format
@@ -3546,7 +3546,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/hook/hook.qc:14
 #, c-format
 msgid "Note that it is overridden by the %s mutator."
-msgstr ""
+msgstr "Notez qu'il est remplacé par le mutateur %s."
 
 #: qcsrc/common/mutators/mutator/hook/hook.qh:5 qcsrc/common/util.qc:304
 msgid "Hook"
@@ -7365,6 +7365,8 @@ msgid ""
 "The %s is a mobile turret that rolls around, attacking its targets when they "
 "enter its line of sight."
 msgstr ""
+"La %s est une tourelle mobile qui roule et attaque ses cibles dès qu'elles "
+"entrent dans son champ de vision."
 
 #: qcsrc/common/turrets/turret/ewheel.qc:252
 #, c-format
@@ -7372,6 +7374,8 @@ msgid ""
 "It attacks by shooting laser beams similar to those of the %s, from both of "
 "its two cannons."
 msgstr ""
+"Elle attaque en tirant à partir de ses deux canons des rayons laser "
+"similaires à ceux du %s."
 
 #: qcsrc/common/turrets/turret/ewheel.qh:15
 msgid "eWheel Turret"
@@ -7387,6 +7391,8 @@ msgid ""
 "The %s is a turret similar to flak cannons, instead firing anti-projectile "
 "flak shells to take down projectiles fired by its targets."
 msgstr ""
+"Le %s est une tourelle similaire aux canons Flak, qui tire des obus destinés "
+"à détruire les projectiles tirés par ses cibles."
 
 #: qcsrc/common/turrets/turret/flac.qc:26
 #, c-format
@@ -7394,6 +7400,9 @@ msgid ""
 "The shells it shoots target projectiles such as the %s secondary fire "
 "grenade, %s secondary fire balls, %s rockets, and other missiles."
 msgstr ""
+"Les obus qu'il tire visent des projectiles tels que la grenade du tir "
+"secondaire du %s, les boules du tir secondaire de l'%s, les roquettes du %s "
+"et d'autres missiles."
 
 #: qcsrc/common/turrets/turret/flac.qh:13
 msgid "FLAC Cannon"
@@ -7411,6 +7420,10 @@ msgid ""
 "instead works by generating power for nearby turrets, so that they can "
 "attack their shared targets more often."
 msgstr ""
+"Le %s est une tourelle quelque peu unique, qui aide les autres tourelles "
+"plutôt que d'attaquer directement ses cibles. Elle ne dispose d'aucune arme "
+"propre, mais génère de l'énergie pour les tourelles à proximité afin "
+"qu'elles puissent attaquer plus souvent leurs cibles communes."
 
 #: qcsrc/common/turrets/turret/fusionreactor.qc:63
 msgid "This is the only turret that doesn't directly attack its targets."
@@ -7425,6 +7438,7 @@ msgstr "Réacteur à fusion"
 msgid ""
 "The %s fires homing missiles similar to those of the %s towards its targets."
 msgstr ""
+"La %s tire des missiles à guidage similaire à ceux du %s vers ses cibles."
 
 #: qcsrc/common/turrets/turret/hellion.qc:32
 #, c-format
@@ -7432,6 +7446,8 @@ msgid ""
 "Although the missiles usually deal less damage than a %s rocket, the %s has "
 "two cannons so it can dish out quite the punch."
 msgstr ""
+"Bien que les missiles infligent généralement moins de dégâts qu'une roquette "
+"de %s, la %s dispose de deux canons qui lui permettent d'être très puissante."
 
 #: qcsrc/common/turrets/turret/hellion.qh:13
 msgid "Hellion Missile Turret"
@@ -7448,6 +7464,9 @@ msgid ""
 "obstacles to find its target. The rocket it fires is similar to that of the "
 "%s."
 msgstr ""
+"La %s tire une seule puissante roquette à tête chercheuse capable d'éviter "
+"les obstacles pour atteindre sa cible. La roquette qu'elle tire est "
+"similaire à celle du %s."
 
 #: qcsrc/common/turrets/turret/hk.qh:15
 msgid "Hunter-Killer Turret"
@@ -7463,6 +7482,8 @@ msgid ""
 "As the name suggests, the %s fires bullets in a burst at its targets, "
 "similar to the %s."
 msgstr ""
+"Comme son nom l'indique, la %s tire des rafales de balles sur ses cibles, à "
+"l'instar du %s."
 
 #: qcsrc/common/turrets/turret/machinegun.qh:13
 msgid "Machinegun Turret"
@@ -7478,6 +7499,8 @@ msgid ""
 "The %s fires a rapid burst of 6 rockets similar to those of the %s towards "
 "its targets."
 msgstr ""
+"La %s tire une salve rapide de 6 roquettes similaires à celles du %s vers "
+"ses cibles."
 
 #: qcsrc/common/turrets/turret/mlrs.qc:36
 msgid ""
@@ -7502,6 +7525,7 @@ msgid ""
 "The %s is a turret that fires an invisible beam of energy towards its "
 "targets."
 msgstr ""
+"Le %s est une tourelle qui tire un rayon d'énergie invisible vers ses cibles."
 
 #: qcsrc/common/turrets/turret/phaser.qc:53
 #, c-format
@@ -7510,6 +7534,9 @@ msgid ""
 "seen, it constantly deals damage to and slows down players who intercept its "
 "path."
 msgstr ""
+"Les apparences sont trompeuses avec le %s, car même si le faisceau d'énergie "
+"est invisible, il inflige constamment des dégâts et ralentit les joueurs qui "
+"se trouvent sur son chemin."
 
 #: qcsrc/common/turrets/turret/phaser.qh:13
 msgid "Phaser Cannon"
@@ -7525,11 +7552,15 @@ msgid ""
 "The %s is a turret that fires electric balls forwards, similar to those of "
 "the %s."
 msgstr ""
+"Le %s est une tourelle qui tire des boules électriques similaires à celles "
+"de l'%s."
 
 #: qcsrc/common/turrets/turret/plasma.qc:57
 #, c-format
 msgid "It is a weaker version of the %s, which has two electric ball cannons."
 msgstr ""
+"Il s'agit d'une version moins puissante du %s, qui dispose de deux canons à "
+"boules électriques."
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
@@ -7541,12 +7572,16 @@ msgid ""
 "The %s is a turret that fires electric balls forwards from its two cannons, "
 "shooting balls similar to those of the %s."
 msgstr ""
+"Le %s est une tourelle qui tire des boules électriques à partir de ses deux "
+"canons, similaires à celles de l'%s."
 
 #: qcsrc/common/turrets/turret/plasma_dual.qc:45
 #, c-format
 msgid ""
 "It is a stronger version of the %s, which only has one electric ball cannon."
 msgstr ""
+"Il s'agit d'une version plus puissante du %s, qui ne dispose que d'un seul "
+"canon à boules électriques."
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:8
 msgid "Dual plasma"
@@ -7566,6 +7601,9 @@ msgid ""
 "The %s is a turret that electrocutes all who dare come near it, sending "
 "powerful high-voltage arcs of lightning to strike its targets."
 msgstr ""
+"La %s est une tourelle qui électrise tous ceux qui osent s'en approcher, "
+"envoyant de puissants arcs électriques à haute tension pour frapper ses "
+"cibles."
 
 #: qcsrc/common/turrets/turret/tesla.qc:96
 #, c-format
@@ -7573,6 +7611,8 @@ msgid ""
 "Since the arcs of lightning can jump between nearby targets, it is best to "
 "just stay away from the %s."
 msgstr ""
+"Comme les arcs électriques peuvent passer d'une cible à une autre située à "
+"proximité, il est préférable de rester à l'écart de la %s."
 
 #: qcsrc/common/turrets/turret/tesla.qh:13
 #: qcsrc/common/turrets/turret/tesla_weapon.qh:7
@@ -7583,6 +7623,8 @@ msgstr "Bobine Tesla"
 #, c-format
 msgid "The %s is an arachnid-like walking turret that hunts down its targets."
 msgstr ""
+"La %s est une tourelle mobile ressemblant à un arachnide qui traque ses "
+"cibles."
 
 #: qcsrc/common/turrets/turret/walker.qc:652
 #, c-format
@@ -7591,6 +7633,10 @@ msgid ""
 "and a rocket launcher shooting homing missiles like the %s for long range "
 "targets. It also has the ability to melee close by targets."
 msgstr ""
+"Elle dispose de deux armes : une mitrailleuse semblable au %s pour les "
+"combats à moyenne portée, et un lance-roquettes tirant des missiles à tête "
+"chercheuse comme le %s pour les cibles à longue portée. Elle est également "
+"capable d'attaquer au corps à corps les cibles proches."
 
 #: qcsrc/common/turrets/turret/walker.qh:15
 msgid "Walker Turret"
@@ -8578,6 +8624,8 @@ msgid ""
 "The secondary fire shoots a burst of multiple randomly-scattered lasers at "
 "once."
 msgstr ""
+"Le tir secondaire tire une rafale simultanée de plusieurs lasers dispersés "
+"aléatoirement."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:248
 #, c-format
@@ -13923,7 +13971,7 @@ msgid ""
 "Note that when trying to make a ramp jump while bunny hopping, it is vital "
 "to time your hops carefully so you get the angle right."
 msgstr ""
-"Veuillez noter que lorsque vous essayez d'effectuer un saut de rampe tout en "
+"Notez que lorsque vous essayez d'effectuer un saut de rampe tout en "
 "exécutant un bunny hopping, il est essentiel de bien synchroniser vos sauts "
 "afin d'obtenir le bon angle."
 
