@@ -19,6 +19,7 @@
 # NaitLee, 2022
 # NaitLee, 2022,2024
 # sapphireliu <balancedliu@gmail.com>, 2014
+# yu jiff <yujiff@sina.com>, 2025
 # CodingJellyfish <dumaosen_main01@outlook.com>, 2018-2020
 # CodingJellyfish <dumaosen_main01@outlook.com>, 2018
 # 韬 刘 <jiegushijia@gmail.com>, 2019
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-17 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
+"Last-Translator: yu jiff <yujiff@sina.com>, 2025\n"
 "Language-Team: Chinese (China) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -98,7 +99,7 @@ msgstr "控制点 %d"
 #: qcsrc/client/hud/panel/engineinfo.qc:75
 #, c-format
 msgid "FPS: %.*f"
-msgstr "FPS：%.*f"
+msgstr "帧率：%.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:94
 msgid "^1Observing"
@@ -166,7 +167,7 @@ msgstr "^1按 ^3%s^1 切换镜头模式"
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
-msgstr ""
+msgstr "^1按 ^3%s^1 了解游戏类型详情"
 
 #: qcsrc/client/hud/panel/infomessages.qc:120
 #: qcsrc/menu/xonotic/keybinder.qc:153
@@ -263,7 +264,7 @@ msgstr "^7按 ^3ESC ^7显示 HUD 设置。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:233
 msgid "^3Double-click ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^3双击^7一个面板以配置特定面板选项。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:234
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -622,7 +623,7 @@ msgstr "在驱离模式中持球的总时间"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "How often a flag (CTF) or a key (Key Hunt) was captured"
-msgstr ""
+msgstr "捡起旗帜、钥匙的频率"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^caps"
@@ -742,7 +743,7 @@ msgstr "狩猎"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of key carrier kills"
-msgstr ""
+msgstr "携钥匙者击杀数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kckills"
@@ -822,7 +823,7 @@ msgstr "目标"
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid ""
 "How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"
-msgstr ""
+msgstr "捡起旗帜、钥匙、球的频率"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pickups"
@@ -1014,12 +1015,17 @@ msgid ""
 "or in all but these gametypes. You can also specify 'all' as a\n"
 "field to show all fields available for the current gametype."
 msgstr ""
+"以加号 + 或减号 - 字符开头、斜杠 / 字符结尾、逗号 , 分隔的游戏类型列表，可以"
+"使该字段仅在指定游戏类型中显示或在除指定游戏类型外的所有游戏类型中显示。您也"
+"可以设置为 all，以显示当前游戏类型可用的所有字段。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:744
 msgid ""
 "The special gametype names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams gametypes."
 msgstr ""
+"指定游戏类型为 teams，包含所有团队游戏；指定游戏类型为 noteams，则包含所有自"
+"由竞技游戏。"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:748
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -1153,7 +1159,7 @@ msgstr "你死了, 按下 ^2%s^7 重生"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:32
 #, c-format
 msgid "%s°"
-msgstr ""
+msgstr "%s°"
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:101
 msgid "qu"
@@ -13255,15 +13261,15 @@ msgstr "有修改的服务器"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Overkill"
-msgstr "Overkill（绝灭模式）"
+msgstr "灭绝模式"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^InstaGib"
-msgstr "InstaGib（瞬杀）"
+msgstr "瞬杀模式"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^Defrag Mode"
-msgstr "Defrag（休闲）"
+msgstr "休闲模式"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
@@ -13419,7 +13425,7 @@ msgstr "可在这里下载更新："
 
 #: qcsrc/menu/xonotic/util.qc:518
 msgid "Autogenerating mapinfo for newly added maps..."
-msgstr "正在自动生成新增地图的地图信息 (mapinfo)..."
+msgstr "正在自动生成新增地图的地图信息……"
 
 #: qcsrc/menu/xonotic/util.qc:553
 #, c-format
