@@ -22,7 +22,7 @@ float autocvar_g_ft_start_ammo_fuel = 0;
 void freezetag_count_alive_players()
 {
 	total_players = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
 	}
@@ -52,7 +52,7 @@ void freezetag_count_alive_players()
 bool freezetag_CheckTeams()
 {
 	static float prev_missing_teams_mask;
-	if (Team_GetNumberOfAliveTeams() == NumTeams(freezetag_teams))
+	if (Team_GetNumberOfAliveTeams() == AVAILABLE_TEAMS)
 	{
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
@@ -67,9 +67,9 @@ bool freezetag_CheckTeams()
 		return false;
 	}
 	int missing_teams_mask = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
-		if ((freezetag_teams & Team_IndexToBit(i)) &&
+		if ((teamplay_bitmask & Team_IndexToBit(i)) &&
 			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
 		{
 			missing_teams_mask |= Team_IndexToBit(i);
@@ -988,12 +988,6 @@ MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ft, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
-{
-	M_ARGV(0, float) = freezetag_teams;
-	return true;
-}
-
 MUTATOR_HOOKFUNCTION(ft, SetWeaponArena)
 {
 	if(M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
@@ -1034,7 +1028,7 @@ MUTATOR_HOOKFUNCTION(ft, Scores_CountFragsRemaining)
 
 void freezetag_Initialize()
 {
-	freezetag_teams = autocvar_g_freezetag_teams_override;
+	int freezetag_teams = autocvar_g_freezetag_teams_override;
 	if(freezetag_teams < 2)
 		freezetag_teams = cvar("g_freezetag_teams"); // read the cvar directly as it gets written earlier in the same frame
 

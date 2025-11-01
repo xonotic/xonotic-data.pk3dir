@@ -2,6 +2,7 @@
 
 #include <common/mutators/base.qh>
 #include <common/scores.qh>
+#include <server/teamplay.qh>
 
 const int ASSAULT_VALUE_INACTIVE = 1000;
 
@@ -20,8 +21,8 @@ REGISTER_MUTATOR(as, false)
 		g_assault_objectivedecreasers = IL_NEW();
 		g_assault_objectives = IL_NEW();
 		GameRules_teams(true);
-		int teams = BITS(2); // always red vs blue
-		GameRules_scoring(teams, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY,
+		teamplay_bitmask = BITS(2); // always red vs blue
+		GameRules_scoring(teamplay_bitmask, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY,
 		{
 			field_team(ST_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);
 			field(SP_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);

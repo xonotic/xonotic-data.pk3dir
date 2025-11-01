@@ -376,7 +376,7 @@ void GoalTouch(entity this, entity toucher)
 	EXACTTRIGGER_TOUCH(this, toucher);
 
 
-	if(NumTeams(nb_teams) == 2)
+	if(AVAILABLE_TEAMS == 2)
 		otherteam = OtherTeam(ball.team);
 	else
 		otherteam = 0;
@@ -395,7 +395,7 @@ void GoalTouch(entity this, entity toucher)
 	else if(this.team == GOAL_FAULT)
 	{
 		LogNB("fault", ball.pusher);
-		if(NumTeams(nb_teams) == 2)
+		if(AVAILABLE_TEAMS == 2)
 			bprint(Team_ColoredFullName(otherteam), " gets a point due to ", pname, "^7's silliness.\n");
 		else
 			bprint(Team_ColoredFullName(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
@@ -421,7 +421,7 @@ void GoalTouch(entity this, entity toucher)
 
 	if(ball.team && pscore)
 	{
-		if(NumTeams(nb_teams) == 2 && pscore < 0)
+		if(AVAILABLE_TEAMS == 2 && pscore < 0)
 			TeamScore_AddToTeam(otherteam, ST_NEXBALL_GOALS, -pscore);
 		else
 			TeamScore_AddToTeam(ball.team, ST_NEXBALL_GOALS, pscore);
@@ -466,7 +466,7 @@ void nb_spawnteam(string teamname, float teamcolor)
 	e.netname = teamname;
 	e.cnt = teamcolor;
 	e.team = e.cnt + 1;
-	//nb_teams += 1;
+	//teamplay_bitmask += 1;
 }
 
 void nb_spawnteams()
@@ -481,7 +481,7 @@ void nb_spawnteams()
 			if(!t_red)
 			{
 				nb_spawnteam("Red", e.team-1)   ;
-				nb_teams |= BIT(0);
+				teamplay_bitmask |= BIT(0);
 				t_red = true;
 			}
 			break;
@@ -490,7 +490,7 @@ void nb_spawnteams()
 			{
 				nb_spawnteam("Blue", e.team-1)  ;
 				t_blue = true;
-				nb_teams |= BIT(1);
+				teamplay_bitmask |= BIT(1);
 			}
 			break;
 		case NUM_TEAM_3:
@@ -498,7 +498,7 @@ void nb_spawnteams()
 			{
 				nb_spawnteam("Yellow", e.team-1);
 				t_yellow = true;
-				nb_teams |= BIT(2);
+				teamplay_bitmask |= BIT(2);
 			}
 			break;
 		case NUM_TEAM_4:
@@ -506,7 +506,7 @@ void nb_spawnteams()
 			{
 				nb_spawnteam("Pink", e.team-1)  ;
 				t_pink = true;
-				nb_teams |= BIT(3);
+				teamplay_bitmask |= BIT(3);
 			}
 			break;
 		}
@@ -517,7 +517,7 @@ void nb_delayedinit(entity this)
 {
 	if(find(NULL, classname, "nexball_team") == NULL)
 		nb_spawnteams();
-	nb_ScoreRules(nb_teams);
+	nb_ScoreRules(teamplay_bitmask);
 }
 
 
@@ -912,12 +912,6 @@ MUTATOR_HOOKFUNCTION(nb, ItemTouch)
 		return MUT_ITEMTOUCH_RETURN; // no new weapons for you, mister!
 
 	return MUT_ITEMTOUCH_CONTINUE;
-}
-
-MUTATOR_HOOKFUNCTION(nb, TeamBalance_CheckAllowedTeams)
-{
-	M_ARGV(1, string) = "nexball_team";
-	return true;
 }
 
 MUTATOR_HOOKFUNCTION(nb, WantWeapon)

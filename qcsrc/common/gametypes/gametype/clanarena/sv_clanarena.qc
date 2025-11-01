@@ -17,7 +17,7 @@ float autocvar_g_ca_start_ammo_fuel = 0;
 void CA_count_alive_players()
 {
 	total_players = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
 	}
@@ -222,7 +222,7 @@ bool CA_CheckTeams()
 	static int prev_missing_teams_mask;
 	allowed_to_spawn = true;
 	CA_count_alive_players();
-	if (Team_GetNumberOfAliveTeams() == NumTeams(ca_teams))
+	if (Team_GetNumberOfAliveTeams() == AVAILABLE_TEAMS)
 	{
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
@@ -237,9 +237,9 @@ bool CA_CheckTeams()
 		return false;
 	}
 	int missing_teams_mask = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
-		if ((ca_teams & Team_IndexToBit(i)) &&
+		if ((teamplay_bitmask & Team_IndexToBit(i)) &&
 			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
 		{
 			missing_teams_mask |= Team_IndexToBit(i);
@@ -352,12 +352,6 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 MUTATOR_HOOKFUNCTION(ca, MatchEnd_BeforeScores)
 {
 	MatchEnd_RestoreSpectatorAndTeamStatus(prev_team);
-	return true;
-}
-
-MUTATOR_HOOKFUNCTION(ca, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
-{
-	M_ARGV(0, float) = ca_teams;
 	return true;
 }
 

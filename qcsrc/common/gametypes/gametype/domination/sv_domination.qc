@@ -32,9 +32,9 @@ void set_dom_state(entity e)
 	STAT(DOM_TOTAL_PPS, e) = total_pps;
 	STAT(DOM_PPS_RED, e) = pps_red;
 	STAT(DOM_PPS_BLUE, e) = pps_blue;
-	if(domination_teams & BIT(2))
+	if(teamplay_bitmask & BIT(2))
 		STAT(DOM_PPS_YELLOW, e) = pps_yellow;
-	if(domination_teams & BIT(3))
+	if(teamplay_bitmask & BIT(3))
 		STAT(DOM_PPS_PINK, e) = pps_pink;
 }
 
@@ -311,7 +311,7 @@ int total_control_points;
 void Domination_count_controlpoints()
 {
 	total_control_points = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		Team_SetNumberOfOwnedItems(Team_GetTeamFromIndex(i), 0);
 	}
@@ -399,31 +399,6 @@ void havocbot_role_dom(entity this)
 
 		navigation_goalrating_timeout_set(this);
 	}
-}
-
-MUTATOR_HOOKFUNCTION(dom, TeamBalance_CheckAllowedTeams)
-{
-	// fallback?
-	M_ARGV(0, float) = domination_teams;
-	string ret_string = "dom_team";
-
-	entity head = find(NULL, classname, ret_string);
-	while(head)
-	{
-		if(head.netname != "")
-		{
-			if (Team_IsValidTeam(head.team))
-			{
-				M_ARGV(0, float) |= Team_TeamToBit(head.team);
-			}
-		}
-
-		head = find(head, classname, ret_string);
-	}
-
-	M_ARGV(1, string) = string_null;
-
-	return true;
 }
 
 MUTATOR_HOOKFUNCTION(dom, reset_map_players)
@@ -629,21 +604,25 @@ void dom_spawnteams(int teams)
 
 void dom_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
 {
+	int domination_teams = 0;
+
+	if (autocvar_g_domination_teams_override < 2)
+	{
+		entity head = findchain(classname, "dom_team");
+		while (head)
+		{
+			if (Team_IsValidTeam(head.team))
+				domination_teams |= Team_TeamToBit(head.team);
+			head = head.chain;
+		}
+	}
 	// if no teams are found, spawn defaults
-	if(find(NULL, classname, "dom_team") == NULL || autocvar_g_domination_teams_override >= 2)
+	if (!domination_teams)
 	{
 		LOG_TRACE("No \"dom_team\" entities found on this map, creating them anyway.");
-		domination_teams = autocvar_g_domination_teams_override;
-		if (domination_teams < 2)
-			domination_teams = autocvar_g_domination_default_teams;
+		domination_teams = autocvar_g_domination_teams_override >= 2 ? autocvar_g_domination_teams_override : autocvar_g_domination_default_teams;
 		domination_teams = BITS(bound(2, domination_teams, 4));
 		dom_spawnteams(domination_teams);
-	}
-	else
-	{
-		entity balance = TeamBalance_CheckAllowedTeams(NULL);
-		domination_teams = TeamBalance_GetAllowedTeams(balance);
-		TeamBalance_Destroy(balance);
 	}
 
 	domination_roundbased = autocvar_g_domination_roundbased;
