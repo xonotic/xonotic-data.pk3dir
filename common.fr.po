@@ -605,7 +605,7 @@ msgstr "Cliquer pour sélectionner la destination de téléportation"
 
 #: qcsrc/client/hud/panel/radar.qc:343
 msgid "Click to select spawn location"
-msgstr "Cliquer pour sélectionner l'emplacement d'apparition"
+msgstr "Cliquer pour sélectionner le point de réapparition"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Number of ball carrier kills"
@@ -3527,6 +3527,9 @@ msgid ""
 "The %s mutator gives all players a %s as their offhand weapon, used with %s. "
 "It has unlimited ammo, but the ordinary secondary fire can't be used."
 msgstr ""
+"Le mutateur %s équipe tous les joueurs d'un %s en tant qu'arme mains libres, "
+"utilisée avec la touche %s. Il dispose de munitions illimitées, mais le tir "
+"secondaire ordinaire ne peut pas être utilisé."
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:12
 #: qcsrc/common/mutators/mutator/nades/nades.qc:51
@@ -3542,6 +3545,9 @@ msgid ""
 "at their enemies at the same time, opening up more gameplay possibilities "
 "than the regular %s."
 msgstr ""
+"Comme il s'agit d'une arme mains libres, les joueurs peuvent l'utiliser pour "
+"se déplacer et tirer sur leurs ennemis en même temps, ce qui ouvre davantage "
+"de possibilités de jeu que le %s standard."
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:14
 #, c-format
@@ -3702,7 +3708,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/entrap.qh:22
 msgid "Entrap grenade"
-msgstr "Grenade de ralentissement"
+msgstr "Grenade d'entrave"
 
 #: qcsrc/common/mutators/mutator/nades/nade/heal.qc:47
 #, c-format
@@ -3798,14 +3804,14 @@ msgid ""
 "where it detonated. It is useful for cases where you want to go back to some "
 "point on the map after you die."
 msgstr ""
-"La %s explose après un court délai, assignant temporairement votre point "
-"d'apparition à l'endroit où elle a explosé. Elle est utile dans les cas de "
+"La %s explose après un court délai, assignant temporairement votre point de "
+"réapparition à l'endroit où elle a explosé. Elle est utile dans les cas de "
 "figure où vous souhaitez revenir à un certain point de la carte après votre "
 "mort."
 
 #: qcsrc/common/mutators/mutator/nades/nade/spawn.qh:17
 msgid "Spawn grenade"
-msgstr "Grenade d'apparition"
+msgstr "Grenade de réapparition"
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:45
 #, c-format
@@ -3859,6 +3865,10 @@ msgid ""
 "thrown by pressing %s twice. If the %s and %s mutators are disabled, they "
 "can also be thrown by holding then releasing %s."
 msgstr ""
+"Le mutateur %s équipe tous les joueurs de grenades mains libres qui peuvent "
+"être dégoupillées puis lancées en appuyant deux fois sur %s. Si les "
+"mutateurs %s et %s sont désactivés, elles peuvent également être lancées en "
+"maintenant la touche %s enfoncée puis en la relâchant."
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:52
 msgid ""
@@ -3938,6 +3948,9 @@ msgid ""
 "The %s mutator gives all players a %s as their offhand weapon, used with %s. "
 "It can be fired at any time, but the ordinary secondary fire can't be used."
 msgstr ""
+"Le mutateur %s équipe tous les joueurs d'un %s en tant qu'arme mains libres, "
+"utilisée avec la touche %s. Il peut être utilisé à tout moment, mais le tir "
+"secondaire ordinaire ne peut pas être utilisé."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:13
 #, c-format
@@ -3945,6 +3958,9 @@ msgid ""
 "Since it's given as an offhand, you can fire it at the same time as the "
 "ordinary %s while laser jumping to achieve even more height."
 msgstr ""
+"Comme il s'agit d'une arme mains libres, vous pouvez tirer en même temps que "
+"le %s ordinaire lors d'un saut laser pour atteindre une hauteur encore plus "
+"grande."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:14
 #, c-format
@@ -4079,8 +4095,8 @@ msgid ""
 "The primary fire consumes %s ammo, although you spawn with an infinite "
 "amount of it in %s."
 msgstr ""
-"Le tir primaire consomme %s munitions, bien que vous apparaissiez avec une "
-"quantité infinie de munitions en %s."
+"Le tir primaire consomme des munitions de type %s, bien que vous en "
+"disposiez d'une quantité infinie en %s."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:246
 #, c-format
@@ -4309,7 +4325,7 @@ msgstr "Enflammé"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
-msgstr "Bouclier d'apparition"
+msgstr "Bouclier de réapparition"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/stunned.qh:16
 msgid "Stunned"
@@ -6634,7 +6650,7 @@ msgid ""
 "^K1No spawnpoints available!\n"
 "Hope your team can fix it..."
 msgstr ""
-"^K1Aucun endroit où réapparaître !\n"
+"^K1Aucun point de réapparition disponible !\n"
 "En espérant que votre équipe puisse y remédier…"
 
 #: qcsrc/common/notifications/all.inc:727
@@ -8081,6 +8097,8 @@ msgid ""
 "The %s vehicle seats up to three passengers, who are given different roles "
 "based on the order they enter."
 msgstr ""
+"Le %s peut accueillir jusqu'à trois passagers, qui se voient attribuer "
+"différents rôles en fonction de l'ordre dans lequel ils montent à bord."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:986
 msgid ""
@@ -8088,18 +8106,25 @@ msgid ""
 "skies. The first player can also shoot a green healing wave to heal other "
 "teammates on the ground."
 msgstr ""
+"Le premier joueur à entrer est le pilote, qui fait voler le véhicule dans "
+"les airs. Le premier joueur peut également tirer une vague de soins verte "
+"pour soigner ses coéquipiers au sol."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:988
 msgid ""
 "The second player to enter is the right gunner and the third player to enter "
 "is the left gunner."
 msgstr ""
+"Le second joueur à entrer est le tireur droit et le troisième joueur à "
+"entrer est le le tireur gauche."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:989
 msgid ""
 "When the pilot exits the vehicle, the players switch roles by moving up in "
 "position."
 msgstr ""
+"Lorsque le pilote quitte le véhicule, les joueurs changent de rôle en "
+"avançant d'une position."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qh:21
 msgid "Bumblebee"
@@ -8111,6 +8136,8 @@ msgid ""
 "The %s vehicle looks like a jet, but does not fly upwards very well. It "
 "seats only one passenger, who becomes the pilot."
 msgstr ""
+"Le %s ressemble à un avion à réaction, mais ne s'envole pas très bien vers "
+"le haut. Il ne peut accueillir qu'un seul passager, qui devient le pilote."
 
 #: qcsrc/common/vehicles/vehicle/racer.qc:652
 #, c-format
@@ -8118,6 +8145,8 @@ msgid ""
 "It can be accelerated by pressing %s, which consumes power from the same "
 "source as the primary weapon."
 msgstr ""
+"Il peut être accéléré en appuyant sur %s, ce qui consomme de l'énergie "
+"provenant de la même source que l'arme principale."
 
 #: qcsrc/common/vehicles/vehicle/racer.qc:653
 #, c-format
@@ -8125,6 +8154,8 @@ msgid ""
 "The %s primary weapon is a laser and the secondary weapon shoots energy "
 "balls that explode on impact."
 msgstr ""
+"L'arme principale du %s est un laser et l'arme secondaire tire des boules "
+"d'énergie qui explosent à l'impact."
 
 #: qcsrc/common/vehicles/vehicle/racer.qh:21
 msgid "Racer"
@@ -8140,6 +8171,8 @@ msgid ""
 "The %s vehicle is a flying vehicle that takes only one pilot, who can "
 "operate both of the weapons."
 msgstr ""
+"Le %s est un véhicule volant qui ne nécessite qu'un seul pilote, capable de "
+"manœuvrer les deux armes."
 
 #: qcsrc/common/vehicles/vehicle/raptor.qc:851
 #, c-format
@@ -8150,6 +8183,11 @@ msgid ""
 "reticle. The white reticle always points to the head of the vehicle, while "
 "the green reticle's location is determined by the momentum of the vehicle."
 msgstr ""
+"Les deux armes ont des réticules différents, similaires à ceux du %s. L'arme "
+"principale est basée sur un laser et tire vers le réticule blanc. L'arme "
+"secondaire largue des bombes au sol, en visant le réticule vert. Le réticule "
+"blanc pointe toujours vers l'avant du véhicule, tandis que l'emplacement du "
+"réticule vert est déterminé par l'élan du véhicule."
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:21
 msgid "Raptor"
@@ -8170,11 +8208,13 @@ msgstr "Flamme de Raptor"
 #: qcsrc/common/vehicles/vehicle/spiderbot.qc:655
 #, c-format
 msgid "The %s vehicle walks and jumps around, and takes only one rider."
-msgstr ""
+msgstr "Le %s se déplace et saute, et ne peut transporter qu'un seul passager."
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qc:656
 msgid "It can jump from very high altitudes while protecting the rider."
 msgstr ""
+"Il peut sauter depuis des altitudes très élevées tout en protégeant le "
+"passager."
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qc:657
 #, c-format
@@ -8186,6 +8226,12 @@ msgid ""
 "the green reticle also points to the front but with a bit of delay when the "
 "%s rotates."
 msgstr ""
+"Il dispose de deux armes que le pilote peut contrôler et qui ont des "
+"réticules différents, similaires à ceux du %s. L'arme principale est une "
+"mitrailleuse qui tire vers le réticule vert. L'arme secondaire tire des "
+"roquettes vers le réticule blanc. Le réticule blanc pointe vers l'avant du "
+"véhicule, tandis que le réticule vert pointe également vers l'avant, mais "
+"avec un léger décalage lorsque le %s tourne."
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qh:21
 msgid "Spiderbot"
@@ -8214,7 +8260,7 @@ msgstr "Cette arme inflige %s points de dégâts"
 #: qcsrc/common/weapons/all.qc:881
 #, c-format
 msgid "It shoots %s shots doing %s damage each"
-msgstr ""
+msgstr "Cette arme tire %s coups infligeant chacun %s points de dégâts"
 
 #: qcsrc/common/weapons/all.qc:882
 #, c-format
@@ -8291,6 +8337,8 @@ msgid ""
 "The %s is quite a versatile weapon, however it is more effective at close to "
 "medium ranges, since the stream is not instantaneous."
 msgstr ""
+"L'%s est une arme assez polyvalente, mais elle est plus efficace à courte et "
+"moyenne portée, car le flux n'est pas émis de façon instantanée."
 
 #: qcsrc/common/weapons/weapon/arc.qh:34
 msgid "Arc"
@@ -8331,9 +8379,9 @@ msgid ""
 "Unlike other weapons, the %s can hit other projectiles directly."
 msgstr ""
 "Le %s est toujours disponible, il est donc très utilisé lorsque les joueurs "
-"apparaissent, mais il est difficile à maîtriser à moyenne et longue portée. "
-"Contrairement aux autres armes, le %s peut toucher directement d'autres "
-"projectiles."
+"réapparaissent, mais il est difficile à maîtriser à moyenne et longue "
+"portée. Contrairement aux autres armes, le %s peut toucher directement "
+"d'autres projectiles."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:177
 #, c-format
@@ -8593,6 +8641,11 @@ msgid ""
 "it will fire itself after some time (after a warning beep) if the secondary "
 "fire isn't released."
 msgstr ""
+"Lorsque vous maintenez le tir secondaire enfoncé, plusieurs roquettes sont "
+"chargées et tirées simultanément lorsque vous relâchez le bouton. Ces "
+"roquettes ne peuvent pas être maintenues indéfiniment, elles seront donc "
+"tirées automatiquement après un certain temps (après un bip d'avertissement) "
+"si vous ne relâchez pas le bouton de tir secondaire."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:502
 #, c-format
@@ -8607,6 +8660,11 @@ msgid ""
 "before turning a corner, so you can surprise any enemies around the corner "
 "with a bunch of rockets to the face."
 msgstr ""
+"Le %s fonctionne mieux à courte et moyenne portée, car il est difficile "
+"d'atteindre des cibles à longue distance. Une utilisation classique consiste "
+"à charger complètement le tir secondaire avant de prendre un tournant, afin "
+"de surprendre les ennemis qui se trouvent derrière avec une rafale de "
+"roquettes en pleine poire."
 
 #: qcsrc/common/weapons/weapon/hagar.qh:36
 msgid "Hagar"
@@ -8618,6 +8676,8 @@ msgid ""
 "The %s (or HLAC for short) fires lasers in quick succession. The projectiles "
 "it fires are similar to those of the %s."
 msgstr ""
+"Le %s (ou HLAC en abrégé) tire des lasers en succession rapide. Les "
+"projectiles qu'il tire sont similaires à ceux du %s."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:247
 msgid ""
@@ -8633,6 +8693,8 @@ msgid ""
 "Unlike the %s, it consumes %s ammo for each laser shot, meaning that it "
 "cannot be used infinitely."
 msgstr ""
+"Contrairement au %s, il consomme des munitions de type %s à chaque tir de "
+"laser, ce qui signifie qu'il ne peut pas être utilisé indéfiniment."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:249
 #, c-format
@@ -8640,6 +8702,8 @@ msgid ""
 "The %s works best in close ranges, but the primary fire is also useful in "
 "medium ranges."
 msgstr ""
+"Le %s fonctionne mieux à courte portée, mais le tir primaire est également "
+"utile à moyenne portée."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:250
 #, c-format
@@ -8649,6 +8713,11 @@ msgid ""
 "fire every now and then is important to restore accuracy. Also, the %s has "
 "less spread when used while crouching."
 msgstr ""
+"Une caractéristique unique du %s est que plus vous maintenez la touche de "
+"tir primaire enfoncée, plus les lasers se dispersent. Il est donc important "
+"de relâcher la touche de temps en temps pour retrouver une bonne précision. "
+"De plus, le %s a moins de dispersion lorsqu'il est utilisé en position "
+"accroupie."
 
 #: qcsrc/common/weapons/weapon/hlac.qh:31
 msgid "Heavy Laser Assault Cannon"
@@ -8660,12 +8729,17 @@ msgid ""
 "The %s is a unique weapon, firing a chain forwards which pulls you in once "
 "it latches onto something."
 msgstr ""
+"Le %s est une arme unique qui tire un crochet au bout d'une chaîne et qui "
+"vous attire à lui dès que celui-ci s'accroche à quelque chose."
 
 #: qcsrc/common/weapons/weapon/hook.qc:431
 msgid ""
 "The secondary fire usually drops a gravity bomb that affects enemies, also "
 "releasing light and smoke sort of like a flashbang."
 msgstr ""
+"Le tir secondaire lance généralement une bombe gravitationnelle qui affecte "
+"les ennemis, tout en libérant de la lumière et de la fumée, un peu comme une "
+"grenade flashbang."
 
 #: qcsrc/common/weapons/weapon/hook.qc:432
 #, c-format
@@ -8673,6 +8747,9 @@ msgid ""
 "It usually requires %s ammo to work, consuming it both when initially firing "
 "the hook, and after a couple seconds as it reels you in."
 msgstr ""
+"Il nécessite généralement des munitions de type %s pour fonctionner, qu'il "
+"consomme à la fois lors du tir initial du crochet et après quelques secondes "
+"lorsqu'il vous fait remonter la chaîne."
 
 #: qcsrc/common/weapons/weapon/hook.qc:433
 #, c-format
@@ -8681,6 +8758,9 @@ msgid ""
 "around the map at high speeds, making both surprise ambushes and miraculous "
 "escapes possible."
 msgstr ""
+"Le %s permet d'atteindre des endroits auparavant inaccessibles sur les "
+"cartes et de filer à toute vitesse, rendant ainsi possibles les embuscades "
+"surprises et les échappées miraculeuses."
 
 #: qcsrc/common/weapons/weapon/hook.qc:435
 #, c-format
@@ -8688,6 +8768,9 @@ msgid ""
 "It isn't available very often on maps, unless the %s mutator is active, in "
 "which all players have it on their offhand, used with %s."
 msgstr ""
+"Il n'est pas souvent disponible sur les cartes, à moins que le mutateur %s "
+"ne soit actif, auquel cas tous les joueurs en disposent en tant qu'arme "
+"mains libres et s'en servent avec la touche %s."
 
 #: qcsrc/common/weapons/weapon/hook.qh:32
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
@@ -8969,8 +9052,9 @@ msgid ""
 "The primary fire consumes %s ammo, although if you spawn in with the %s you "
 "will already have some."
 msgstr ""
-"Le tir primaire nécessite des munitions de type %s, mais si vous apparaissez "
-"avec le %s, vous en aurez déjà quelques-unes à votre disposition."
+"Le tir primaire consomme des munitions de type %s, mais si vous "
+"réapparaissez avec le %s, vous en aurez déjà quelques-unes à votre "
+"disposition."
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:30
 msgid "Shotgun"
@@ -9043,7 +9127,7 @@ msgid ""
 "players spawn with it."
 msgstr ""
 "Il s'agit d'une super-arme, on ne le retrouve donc pas souvent dans le jeu, "
-"sauf en %s où tous les joueurs apparaissent avec."
+"sauf en %s où tous les joueurs réapparaissent avec."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:423
 #, c-format
@@ -13997,6 +14081,9 @@ msgid ""
 "%s is a mod that heavily changes the game, giving players fewer but more "
 "powerful weapons, nades, and more movement options."
 msgstr ""
+"%s est un mod qui modifie considérablement le jeu, offrant aux joueurs des "
+"armes moins nombreuses mais plus puissantes, des grenades et davantage "
+"d'options de déplacements."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:175
 #, c-format
@@ -14018,6 +14105,10 @@ msgid ""
 "push enemies, but can be used to push yourself around. Also since the %s "
 "mutator is active, all players have offhand nades."
 msgstr ""
+"Le tir secondaire de toutes les armes tire un laser qui n'inflige pas de "
+"dégâts et ne repousse pas les ennemis, mais qui peut être utilisé pour vous "
+"déplacer. De plus, comme le mutateur %s est actif, tous les joueurs sont "
+"équipés de grenades mains libres."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:179
 #, c-format
@@ -14025,6 +14116,8 @@ msgid ""
 "As for movement tricks, %s is enabled by default in %s, allowing for rapidly "
 "changing your movement direction."
 msgstr ""
+"En ce qui concerne les figures de déplacement, %s est activé par défaut en "
+"%s, ce qui vous permet de changer rapidement de direction."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:186
 #, c-format
@@ -14043,6 +14136,12 @@ msgid ""
 "give other players a fairer chance of rebuilding their stack. It also "
 "disables spawn protection and enables friendly fire in team-based gametypes."
 msgstr ""
+"Des règles supplémentaires sont appliquées pour le ramassage des objets, "
+"empêchant les joueurs ayant 100 points ou plus de santé ou d'armure de "
+"ramasser la %s, la %s, la %s et la %s, afin de donner aux autres joueurs une "
+"chance plus équitable de se refaire une santé. La protection lors de la "
+"réapparition est également désactivée, et les tirs amis dans les modes de "
+"jeu en équipe sont activés."
 
 #: qcsrc/menu/xonotic/keybinder.qc:61
 msgid "Moving"

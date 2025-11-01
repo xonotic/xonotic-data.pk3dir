@@ -8033,48 +8033,48 @@ msgstr "Spiderbot"
 
 #: qcsrc/common/weapons/all.qc:868
 msgid "This weapon has not been bound directly."
-msgstr ""
+msgstr "A esta arma não se atribuiu diretamente nenhuma tecla."
 
 #: qcsrc/common/weapons/all.qc:869
 #, c-format
 msgid "You have bound this weapon to: %s."
-msgstr ""
+msgstr "Você atribuiu a esta arma a tecla: %s."
 
 #: qcsrc/common/weapons/all.qc:875 qcsrc/common/weapons/all.qc:876
 #: qcsrc/common/weapons/all.qc:907
 #, c-format
 msgid "(DPS: %.2f)"
-msgstr ""
+msgstr "(DPS: %.2f)"
 
 #: qcsrc/common/weapons/all.qc:880
 #, c-format
 msgid "It does %s damage"
-msgstr ""
+msgstr "Causa %s de dano"
 
 #: qcsrc/common/weapons/all.qc:881
 #, c-format
 msgid "It shoots %s shots doing %s damage each"
-msgstr ""
+msgstr "Dispara %s tiros cada um causando %s de dano"
 
 #: qcsrc/common/weapons/all.qc:882
 #, c-format
 msgid "The %s does %s damage"
-msgstr ""
+msgstr "O %s causa %s de dano"
 
 #: qcsrc/common/weapons/all.qc:883
 #, c-format
 msgid "The %s does %s damage per second"
-msgstr ""
+msgstr "O %s causa %s de dano por segundo"
 
 #: qcsrc/common/weapons/all.qc:884
 #, c-format
 msgid "The %s shoots %s shots doing %s damage each"
-msgstr ""
+msgstr "O %s dispara %s tiros cada um causando %s de dano"
 
 #: qcsrc/common/weapons/all.qc:885
 #, c-format
 msgid "The %s shoots up to %s shots doing %s damage each"
-msgstr ""
+msgstr "O %s dispara até %s tiros cada um causando %s de dano"
 
 #: qcsrc/common/weapons/all.qc:908 qcsrc/common/weapons/all.qc:918
 #: qcsrc/common/weapons/all.qc:939 qcsrc/common/weapons/all.qc:953
@@ -8082,22 +8082,22 @@ msgstr ""
 #: qcsrc/common/weapons/all.qc:996 qcsrc/common/weapons/all.qc:1010
 #: qcsrc/common/weapons/all.qc:1034 qcsrc/common/weapons/all.qc:1046
 msgid "Default damage stats:"
-msgstr ""
+msgstr "Valores padrão de dano:"
 
 #: qcsrc/common/weapons/all.qc:910
 #, c-format
 msgid "A direct hit does %s damage"
-msgstr ""
+msgstr "Acertar diretamente causa %s de dano"
 
 #: qcsrc/common/weapons/all.qc:1032
 #, c-format
 msgid "(total DPS: %.2f)"
-msgstr ""
+msgstr "(DPS total: %.2f)"
 
 #: qcsrc/common/weapons/all.qc:1037
 #, c-format
 msgid "The combo adds an extra %s damage"
-msgstr ""
+msgstr "Este combo adiciona %s de dano extra"
 
 #: qcsrc/common/weapons/weapon/arc.qc:1518
 #, c-format
@@ -8105,12 +8105,16 @@ msgid ""
 "The %s fires a continuous beam of electricity, steadily dealing damage to "
 "any enemies that cross its path."
 msgstr ""
+"O %s dispara um feixe contínuo de eletricidade, constantemente infligindo "
+"dano a quaisquer inimigos que cruzarem seu caminho."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1519
 msgid ""
 "The secondary fire rapidly shoots electric bolts forward, exploding on "
 "impact and dealing some splash damage."
 msgstr ""
+"O disparo secundário rapidamente atira faíscas elétricas para frente, "
+"explodindo ao impactar e infligindo dano difundido."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1520
 #, c-format
@@ -8118,6 +8122,8 @@ msgid ""
 "It consumes %s ammo, steadily churning through your supply to maintain the "
 "stream."
 msgstr ""
+"Consome %s como munição, constantemente manejando seus suprimentos para "
+"manter o fluxo."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1521
 #, c-format
@@ -8125,6 +8131,8 @@ msgid ""
 "The %s is quite a versatile weapon, however it is more effective at close to "
 "medium ranges, since the stream is not instantaneous."
 msgstr ""
+"O %s é uma arma bem versátil, entretanto é mais efetivo a pequeno ou médio "
+"alcance, porque o fluxo não é instantâneo."
 
 #: qcsrc/common/weapons/weapon/arc.qh:34
 msgid "Arc"
@@ -8137,18 +8145,25 @@ msgid ""
 "high speed laser, dealing some splash damage but importantly a lot of "
 "knockback."
 msgstr ""
+"O %s é uma das duas armas padrão, disparando um laser relativamente fraco "
+"mas veloz, infligindo algum dano difundido e importantemente um grande "
+"empurrão."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:173
 msgid ""
 "It has no secondary fire, instead switching to the previously selected "
 "weapon."
 msgstr ""
+"Não tem disparo secundário, assim o botão corresponde faz trocar para a arma "
+"selecionada anteriormente."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:174
 msgid ""
 "It doesn't require ammo, meaning it is a great choice if you are running low "
 "on ammo and need to preserve some."
 msgstr ""
+"Não requer munição, significando que é uma ótima escolha se estiver com "
+"pouca munição e precisar conservá-la."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:175
 #, c-format
@@ -8157,6 +8172,10 @@ msgid ""
 "in, but it's difficult to master when used over a medium to long range. "
 "Unlike other weapons, the %s can hit other projectiles directly."
 msgstr ""
+"O %s está sempre disponível, logo acaba sendo muito usado quando os "
+"jogadores surgem, mas é difícil de dominá-lo quando usado a média ou grande "
+"distância. Diferentemente das outras armas, o %s pode acertar outros "
+"projéteis diretamente."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:177
 #, c-format
@@ -8166,6 +8185,10 @@ msgid ""
 "Because it does a lot of knockback, another common usage is alternating "
 "between a high damage weapon and the %s to throw the enemy's aim off."
 msgstr ""
+"Um dos usos mais comuns de %s é \"pular com laser\", em que você ganha "
+"altura mirando para baixo, pulando e então disparando para impulsar-se para "
+"cima. Como causa um grande empurrão, outro uso comum é alternar entre uma "
+"arma de alto dano e o %s para sabotar a mira do inimigo."
 
 #: qcsrc/common/weapons/weapon/blaster.qh:28
 msgid "Blaster"
@@ -8180,12 +8203,19 @@ msgid ""
 "be utilized to deal more damage to an enemy by making the projectiles "
 "converge on them."
 msgstr ""
+"O %s dispara rajadas de projéteis similares a laser, dispersando-se e "
+"refletindo-se nas paredes. Se o disparo primário é segurado, quando for "
+"solto os projéteis convergirão antes de dispersar-se de novo, o que pode ser "
+"usado para infligir mais dano a um inimigo fazendo os projéteis convergirem "
+"nele."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:641
 msgid ""
 "Projectiles deal damage on collision but also when they bounce, so with good "
 "positioning they can sometimes deal double damage."
 msgstr ""
+"Projéteis infligem dano ao colidir e também ao refletir, logo com bom "
+"posicionamento podem às vezes infligir dano duplo."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:642
 msgid ""
@@ -8193,12 +8223,16 @@ msgid ""
 "is often the better option in situations where the enemy is an easy target "
 "to hit."
 msgstr ""
+"O disparo secundário atira os projéteis em um grupo compactado, logo é às "
+"vezes é a melhor opção em situações em que o inimigo é um alvo fácil."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:643
 #, c-format
 msgid ""
 "It consumes %s ammo for each projectile, which is shared by several weapons."
 msgstr ""
+"Consome %s como munição para cada projétil, que é compartida com várias "
+"armas."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:644
 #, c-format
@@ -8206,6 +8240,8 @@ msgid ""
 "Close to medium range is the ideal time to use the %s, although the "
 "secondary fire can be useful for long range combat sometimes."
 msgstr ""
+"A alcances curtos ou médios é o momento ideal para usar o %s, porém o "
+"disparo secundário pode ser às vezes útil para combate a longo alcance."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:645
 #, c-format
@@ -8217,6 +8253,12 @@ msgid ""
 "angle down and use the secondary fire to pull yourself forwards, in order to "
 "gain speed."
 msgstr ""
+"O %s inflige empurrão de uma forma única, puxando o jogador do seu centro ao "
+"ponto de impacto. Isto torna esta arma uma das melhores para retardar algum "
+"se você estiver perseguindo-o, particularmente com o disparo secundário. "
+"Outro uso comum de %s é \"correr com crylink\", em que você mira "
+"diagonalmente para baixo e usa o disparo secundário para puxar-se para "
+"frente, a fim de ganhar velocidade."
 
 #: qcsrc/common/weapons/weapon/crylink.qh:32
 msgid "Crylink"
@@ -8229,6 +8271,10 @@ msgid ""
 "it explodes on impact. If the primary fire is held, the rocket can be guided "
 "by the user's aim, allowing steering it towards enemies."
 msgstr ""
+"O %s lança um foguete controlado remotamente, infligindo dano significativo "
+"quando explode ao impactar. Se o disparo primário é segurado, o foguete pode "
+"ser guiado pela mira do usuário, permitindo dirigi-lo em direção aos "
+"inimigos."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:620
 msgid ""
@@ -8236,6 +8282,8 @@ msgid ""
 "dealing damage to enemies even if the rocket barely missed colliding with "
 "them."
 msgstr ""
+"O disparo secundário pode ser usado para imediatamente detonar os foguetes, "
+"permitindo infligir dano a inimigos mesmo se o foguete os errou por pouco."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:621
 #, c-format
@@ -8243,6 +8291,8 @@ msgid ""
 "It consumes a bunch of %s ammo for each rocket, which can end up being "
 "depleted quickly, so often players alternate with another weapon like %s."
 msgstr ""
+"Consome muito de %s como munição para cada foguete, o que pode se esgotar "
+"rapidamente, logo às vezes jogadores alternam com outra arma como %s."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:622
 #, c-format
@@ -8252,6 +8302,10 @@ msgid ""
 "combat. In close range combat, the large splash radius often results in "
 "rockets damaging both you and your enemy."
 msgstr ""
+"Devido a sua alta capacidade de dano, o %s é uma das armas mais usadas. Pode "
+"ser usado em quase qualquer cenário, funcionando melhor em combate de médio "
+"alcance. Em combate a curto alcance, o grande raio de difusão às vezes "
+"resulta em foguetes ferindo tanto você quando seu inimigo."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:625
 #, c-format
@@ -8260,6 +8314,9 @@ msgid ""
 "flying,\" where you fire a rocket and immediately detonate it to boost "
 "yourself while mid-air, much more effective with the %s mutator enabled."
 msgstr ""
+"Devido à habilidade de remotamente detonar foguetes, um uso comum é \"voar "
+"com foguete\", em que você dispara um foguete e imediatamente o detona para "
+"impulsar-se no ar, muito mais efetivo com o modificador %s ativado."
 
 #: qcsrc/common/weapons/weapon/devastator.qh:32
 msgid "Devastator"
@@ -8271,6 +8328,8 @@ msgid ""
 "The %s shoots electric balls forwards, dealing some splash damage when they "
 "burst on impact."
 msgstr ""
+"O %s atira bolas elétricas para frente, infligindo algum dano difundido "
+"quando elas estouram ao impactar."
 
 #: qcsrc/common/weapons/weapon/electro.qc:787
 #, c-format
@@ -8280,11 +8339,16 @@ msgid ""
 "damage enemies that walk by. The orbs burst after some time, and can be "
 "forced to burst in a \"combo\" if a primary fire ball bursts near them."
 msgstr ""
+"O disparo secundário lança orbes que são influenciados pela gravidade, assim "
+"podem ser dispostos pelo mapa em lugares de muito tráfego (como em uma base "
+"de bandeira de %s) para ferir inimigos transeuntes. Os orbes estouram-se "
+"depois de algum tempo, e pode forçar-se seu estouro em um \"combo\" se uma "
+"bola de disparo primário estourar perto deles."
 
 #: qcsrc/common/weapons/weapon/electro.qc:790
 #, c-format
 msgid "It consumes some %s ammo for each ball / orb."
-msgstr ""
+msgstr "Consome um pouco de %s como munição para cada bola/orbe."
 
 #: qcsrc/common/weapons/weapon/electro.qc:791
 #, c-format
@@ -8294,6 +8358,10 @@ msgid ""
 "fire doesn't travel particularly fast, the %s is not useful in many other "
 "situations."
 msgstr ""
+"O %s é uma das melhores armas de dano alastrado em áreas lotadas, já que os "
+"combos podem infligir muito dano, se o inimigo estiver perto o suficiente. "
+"Como o disparo primário não é particularmente rápido, o %s não é útil em "
+"muitas outras situações."
 
 #: qcsrc/common/weapons/weapon/electro.qh:33
 msgid "Electro"
@@ -8305,20 +8373,24 @@ msgid ""
 "The %s supercharges then fires a massive fireball in a straight line, "
 "dealing heaps of splash damage over a large radius on impact."
 msgstr ""
+"A %s sobrecarrega e então dispara uma enorme bola de fogo em uma linha reta, "
+"infligindo muito dano difundido sobre um grande raio de impacto."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:443
 msgid ""
 "The secondary fire launches flaming balls that set nearby players alight."
 msgstr ""
+"O disparo secundário lança bolas flamejantes que incendeiam jogadores "
+"próximos."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:444
 msgid "It is a superweapon, so isn't often found in game."
-msgstr ""
+msgstr "É uma superarma, assim não é muito encontrada no jogo."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:445
 #: qcsrc/common/weapons/weapon/porto.qc:436
 msgid "It doesn't require ammo, but it is destroyed after some time."
-msgstr ""
+msgstr "Não requer munição, mas destrói-se depois de algum tempo."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:446
 #, c-format
@@ -8327,6 +8399,9 @@ msgid ""
 "it effectively may be difficult, but if done properly it can deal a ton of "
 "damage."
 msgstr ""
+"Como a %s demora um tempo para carregar e como a bola de fogo é lenta, usar "
+"essa arma efetivamente pode ser difícil, mas se usada propriamente pode "
+"infligir muito dano."
 
 #: qcsrc/common/weapons/weapon/fireball.qh:34
 msgid "Fireball"
@@ -8338,6 +8413,8 @@ msgid ""
 "The %s rapidly fires small propelled rockets forwards, dealing some splash "
 "damage on impact."
 msgstr ""
+"A %s rapidamente dispara pequenos foguetes propelidos para frente, "
+"infligindo algum dano difundido ao impactar."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:500
 msgid ""
@@ -8346,11 +8423,15 @@ msgid ""
 "it will fire itself after some time (after a warning beep) if the secondary "
 "fire isn't released."
 msgstr ""
+"Quando o disparo secundário é segurado, múltiplos foguetes são segurados, e "
+"eles são atirados ao mesmo tempo ao soltar o botão. Estes foguetes não podem "
+"ser segurados para sempre, logo serão atirados por si sós depois de algum "
+"tempo (após um bipe de alerta) se o disparo secundário não for solto."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:502
 #, c-format
 msgid "It consumes %s ammo for each rocket."
-msgstr ""
+msgstr "Consome %s como munição para cada foguete."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:503
 #, c-format
@@ -8360,6 +8441,10 @@ msgid ""
 "before turning a corner, so you can surprise any enemies around the corner "
 "with a bunch of rockets to the face."
 msgstr ""
+"A %s funciona melhor a curtos ou médios alcances, já que é difícil acertar "
+"os foguetes a longas distâncias. Um uso comum é carregar todo o disparo "
+"secundário antes de virar uma quina, para surpreender quaisquer inimigos "
+"perto da quina com um monte de foguetes em suas caras."
 
 #: qcsrc/common/weapons/weapon/hagar.qh:36
 msgid "Hagar"
@@ -8371,12 +8456,16 @@ msgid ""
 "The %s (or HLAC for short) fires lasers in quick succession. The projectiles "
 "it fires are similar to those of the %s."
 msgstr ""
+"O %s (abreviação sendo HLAC) dispara lasers em rápida sucessão. Os projéteis "
+"que dispara são similares aos de %s."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:247
 msgid ""
 "The secondary fire shoots a burst of multiple randomly-scattered lasers at "
 "once."
 msgstr ""
+"O disparo secundário atira uma rajada de múltiplos lasers espalhados "
+"aleatoriamente de uma vez."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:248
 #, c-format
@@ -8384,6 +8473,8 @@ msgid ""
 "Unlike the %s, it consumes %s ammo for each laser shot, meaning that it "
 "cannot be used infinitely."
 msgstr ""
+"Diferentemente de %s, consome %s como munição para cada disparo de laser, "
+"significando que não pode ser usado infinitamente."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:249
 #, c-format
@@ -8391,6 +8482,8 @@ msgid ""
 "The %s works best in close ranges, but the primary fire is also useful in "
 "medium ranges."
 msgstr ""
+"O %s funciona melhor a curtos alcances, mas o disparo primário também é útil "
+"a médios alcances."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:250
 #, c-format
@@ -8400,6 +8493,10 @@ msgid ""
 "fire every now and then is important to restore accuracy. Also, the %s has "
 "less spread when used while crouching."
 msgstr ""
+"Um aspecto único de %s é que, quando mais tempo se segurar o disparo "
+"primário, mais os lasers se espalharão. Isto significa que soltar o disparo "
+"primário de vez em quando é importante para restaurar a precisão. Também, o "
+"%s tem menos dispersão quando usado ao agachar-se."
 
 #: qcsrc/common/weapons/weapon/hlac.qh:31
 msgid "Heavy Laser Assault Cannon"
@@ -8411,12 +8508,17 @@ msgid ""
 "The %s is a unique weapon, firing a chain forwards which pulls you in once "
 "it latches onto something."
 msgstr ""
+"O %s é uma arma única, disparando uma cadeia para frente que puxa você assim "
+"que se prender a algo."
 
 #: qcsrc/common/weapons/weapon/hook.qc:431
 msgid ""
 "The secondary fire usually drops a gravity bomb that affects enemies, also "
 "releasing light and smoke sort of like a flashbang."
 msgstr ""
+"O disparo secundário usualmente solta uma bomba gravitacional que afeta "
+"inimigos, também liberando luz e fumaça como se fosse uma granada de luz e "
+"som."
 
 #: qcsrc/common/weapons/weapon/hook.qc:432
 #, c-format
@@ -8424,6 +8526,9 @@ msgid ""
 "It usually requires %s ammo to work, consuming it both when initially firing "
 "the hook, and after a couple seconds as it reels you in."
 msgstr ""
+"Usualmente requer %s como munição para funcionar, consumindo essa munição "
+"tanto ao disparar inicialmente o gancho quanto após alguns segundos ao puxar "
+"você."
 
 #: qcsrc/common/weapons/weapon/hook.qc:433
 #, c-format
@@ -8432,6 +8537,9 @@ msgid ""
 "around the map at high speeds, making both surprise ambushes and miraculous "
 "escapes possible."
 msgstr ""
+"O %s permite atingir lugares antes inatingíveis em mapas e viajar pelo mapa "
+"a altas velocidades, fazendo possíveis tanto emboscadas surpresa quanto "
+"escapes milagrosos."
 
 #: qcsrc/common/weapons/weapon/hook.qc:435
 #, c-format
@@ -8439,6 +8547,9 @@ msgid ""
 "It isn't available very often on maps, unless the %s mutator is active, in "
 "which all players have it on their offhand, used with %s."
 msgstr ""
+"Muitas vezes não é disponibilizado em mapas, a menos que o modificador %s "
+"esteja ativo, caso em que todos os jogadores o têm como arma imediata, usada "
+"com %s."
 
 #: qcsrc/common/weapons/weapon/hook.qh:32
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
@@ -8451,6 +8562,9 @@ msgid ""
 "fire and with no spread, but there's a short delay until it can be used "
 "again."
 msgstr ""
+"O disparo secundário dispara uma rápida rajada de balas mais rápido que o "
+"disparo primário e sem dispersão, mas há um curto atraso até que possa ser "
+"usado de novo."
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:436
 #, c-format
@@ -8458,6 +8572,8 @@ msgid ""
 "It consumes %s ammo for each bullet shot, until the whole magazine is "
 "emptied."
 msgstr ""
+"Consome %s como munição para cada bala atirada, até que o cartucho inteiro "
+"seja esvaziado."
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:437
 #, c-format
@@ -8467,6 +8583,10 @@ msgid ""
 "secondary fire has no spread, it's the better option when firing over a long "
 "range."
 msgstr ""
+"O %s pode ser usado em muitas situações, e funciona particularmente bem a "
+"longos alcances já que as balas perfuram o céu instantaneamente. Como o "
+"disparo secundário não tem dispersão, é a melhor opção ao disparar a longas "
+"distâncias."
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:29
 msgid "MachineGun"
@@ -8479,17 +8599,23 @@ msgid ""
 "enemies if stepped on. Only a couple mines can be placed at any time, and "
 "after several seconds they will self-detonate."
 msgstr ""
+"O %s coloca minas no chão quando disparado, que detonam e ferem inimigos que "
+"pisarem nelas. Só algumas minas podem ser colocadas de uma vez, e depois de "
+"vários segundos eles se detonarão sozinhas."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:527
 msgid ""
 "The secondary fire instantaneously detonates any mines fired by the primary "
 "fire, first waiting until you're far enough away."
 msgstr ""
+"O disparo secundário detona instantaneamente qualquer mina disparada pelo "
+"disparo primário, primeiro esperando até que você esteja distante o "
+"suficiente."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:528
 #, c-format
 msgid "It consumes %s ammo for each mine laid."
-msgstr ""
+msgstr "Consome %s como munição para cada mina colocada."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:529
 #, c-format
@@ -8499,6 +8625,10 @@ msgid ""
 "important areas of the map such as the flag in %s, control points in %s, or "
 "checkpoints in %s."
 msgstr ""
+"As minas não são lançadas muito longe antes de acertarem o chão, logo %s não "
+"é muito efetivo a médios ou longos alcances. É às vezes usado para proteger "
+"áreas importantes do mapa como a bandeira em %s, pontos de controle em %s, "
+"ou pontos de checagem em %s."
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:34
 msgid "Mine Layer"
@@ -8510,17 +8640,21 @@ msgid ""
 "The %s launches a grenade that explodes immediately on impact, dealing a "
 "medium amount of splash damage."
 msgstr ""
+"O %s lança uma granada que explode imediatamente ao impactar, infligindo uma "
+"média quantia de dano difundido."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:383
 msgid ""
 "The secondary fire shoots a similar grenade that explodes shortly after "
 "bouncing."
 msgstr ""
+"O disparo secundário atira uma granada similar que explode pouco depois de "
+"rebater."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:384
 #, c-format
 msgid "It consumes %s ammo for every grenade launched."
-msgstr ""
+msgstr "Consome %s como munição para cada granada lançada."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:385
 #, c-format
@@ -8530,6 +8664,10 @@ msgid ""
 "exploding, it can be bounced against walls to damage enemies lurking around "
 "a corner."
 msgstr ""
+"O %s funciona melhor a curtos ou médios alcances, mas é bem complicado de "
+"acertar um inimigo que esteja no ar. Como a granada do disparo secundário "
+"rebate antes de explodir, pode ser rebatida contra paredes para ferir "
+"inimigos escondendo-se do outro lado de uma quina."
 
 #: qcsrc/common/weapons/weapon/mortar.qh:31
 msgid "Mortar"
@@ -8541,18 +8679,24 @@ msgid ""
 "The %s is a unique gun that creates one-way portals between flat surfaces on "
 "the map, that immediately teleport players and projectiles."
 msgstr ""
+"O %s é uma arma única que cria portais unidirecionais entre superfícies "
+"planas no mapa, que imediatamente teletransportam jogadores e projéteis."
 
 #: qcsrc/common/weapons/weapon/porto.qc:435
 msgid ""
 "The secondary fire is used to shoot the out-portal, while the primary fire "
 "shoots the in-portal."
 msgstr ""
+"O disparo secundário é usado para atirar um portal de saída, enquanto que o "
+"disparo primário dispara o portal de entrada."
 
 #: qcsrc/common/weapons/weapon/porto.qc:437
 msgid ""
 "The portals will close either after the player who shot them dies or after "
 "some time period."
 msgstr ""
+"Os portais se fecharão ou depois do jogador que os atirou morrer ou depois "
+"de algum tempo."
 
 #: qcsrc/common/weapons/weapon/porto.qc:438
 #, c-format
@@ -8560,6 +8704,8 @@ msgid ""
 "The %s isn't often placed on maps, but if used well it can make for some "
 "interesting gameplay."
 msgstr ""
+"O %s não é muitas vezes posto nos mapas, mas se usado bem pode deixar o jogo "
+"mais interessante."
 
 #: qcsrc/common/weapons/weapon/porto.qh:32
 msgid "Port-O-Launch"
@@ -8571,18 +8717,22 @@ msgid ""
 "The %s fires bullets that traverse the map instantaneously and deal a "
 "significant chunk of damage on impact."
 msgstr ""
+"O %s dispara balas que atravessam o mapa instantaneamente e infligem uma "
+"quantia significativa de dano ao impactar."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:271
 msgid ""
 "The secondary fire shoots a few less powerful bullets at once with a bit of "
 "scatter."
 msgstr ""
+"O disparo secundário atira algumas balas menos poderosas de uma vez com um "
+"pouco de dispersão."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:272
 #: qcsrc/common/weapons/weapon/vortex.qc:386
 #, c-format
 msgid "It consumes %s ammo for each bullet shot."
-msgstr ""
+msgstr "Consome %s como munição para cada bala disparada."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:273
 #, c-format
@@ -8591,6 +8741,9 @@ msgid ""
 "manually with the %s. Also, it needs to be reloaded after its magazine is "
 "emptied."
 msgstr ""
+"Diferentemente de %s, o disparo secundário não dá zoom, logo %s precisa ser "
+"usado manualmente com %s. Também, precisa ser recarregado depois do cartucho "
+"ser esvaziado."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:274
 msgid "zoom"
@@ -8603,6 +8756,8 @@ msgid ""
 "Similar to the %s, the %s can be used at any range, but it stands out at "
 "long ranges."
 msgstr ""
+"Assim como %s, o %s pode ser usado a qualquer distância, porém destaca-se a "
+"longas distâncias."
 
 #: qcsrc/common/weapons/weapon/rifle.qh:30
 msgid "Rifle"
@@ -8615,17 +8770,22 @@ msgid ""
 "missiles if it collides with a player. The homing isn't perfect, so "
 "sometimes the missiles can hit an object or a corner."
 msgstr ""
+"O %s é uma arma única, disparando uma \"etiqueta\" que então lança algumas "
+"mísseis perseguidores se colidir com um jogador. A perseguição não é "
+"perfeita, logo às vezes os mísseis podem acertar um objeto ou um canto."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:677
 msgid ""
 "The secondary fire launches a rapid barrage of scattered explosives that "
 "travel only a short distance."
 msgstr ""
+"O disparo secundário lança uma rápida rajada de explosivos espalhados que só "
+"percorrem uma curta distância."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:678
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
-msgstr ""
+msgstr "Consome %s como munição, mesmo quando a etiqueta não aderir."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:679
 #, c-format
@@ -8634,6 +8794,9 @@ msgid ""
 "it requires skill to aim effectively. The secondary fire is only useful in "
 "close range combat, and sometimes the explosives can damage yourself too."
 msgstr ""
+"O disparo primário de %s inflige muito dano quando a etiqueta adere, porém "
+"requer habilidade para mirar efetivamente. O disparo secundário só é útil em "
+"combate a curto alcance, e às vezes os explosivos podem ferir você também."
 
 #: qcsrc/common/weapons/weapon/seeker.qh:44
 msgid "T.A.G. Seeker"
@@ -8645,6 +8808,8 @@ msgid ""
 "The %s is one of the two main default weapons, firing a single shotgun round "
 "which spreads into multiple pellets upon exiting the barrel."
 msgstr ""
+"A %s é uma das duas armas padrão, disparando uma única carga de escopeta que "
+"se dispersa em várias pelotas ao sair do cano."
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:404
 #, c-format
@@ -8653,6 +8818,9 @@ msgid ""
 "head of the weapon. Since the slap takes a moment to land, timing this well "
 "is difficult."
 msgstr ""
+"O disparo secundário balança a %s, dando uma surra em jogadores próximos o "
+"suficiente com o cano da arma. Como a surra demora um pouco para acertar, é "
+"difícil saber o momento certo."
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:406
 #, c-format
@@ -8660,6 +8828,8 @@ msgid ""
 "The primary fire consumes %s ammo, although if you spawn in with the %s you "
 "will already have some."
 msgstr ""
+"O disparo primário consome %s como munição, apesar de que, se você surgir "
+"com a %s, você já terá um pouco dessa munição."
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:30
 msgid "Shotgun"
@@ -8671,14 +8841,17 @@ msgid ""
 "The %s is a unique weapon that makes the ears of nearby enemies bleed by "
 "playing awful sounds, also slightly knocking them back."
 msgstr ""
+"A %s é uma arma única que faz sangrar os ouvidos dos inimigos próximos "
+"usando sons horríveis, e também os empurra ligeiramente para trás."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:603
 msgid "The secondary fire works the same way, playing a higher pitch."
 msgstr ""
+"O disparo secundário funciona do mesmo jeito, tocando um som mais agudo."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:604
 msgid "The only ammo it needs to operate is the breath from your lungs."
-msgstr ""
+msgstr "A única munição que requer para operar é o fôlego de seus pulmões."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:605
 #, c-format
@@ -8686,11 +8859,13 @@ msgid ""
 "Since your enemies need to be close by to hear your rubbish music, the %s is "
 "only effective at very close ranges."
 msgstr ""
+"Como seus inimigos precisam estar próximos para ouvir sua música terrível, a "
+"%s só é efetiva a distâncias bem pequenas."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:606
 #, c-format
 msgid "The pitch the %s plays depends on the movement keys pressed."
-msgstr ""
+msgstr "O timbre que %s reproduz depende das teclas direcionais apertadas."
 
 #: qcsrc/common/weapons/weapon/tuba.qh:35
 #, no-c-format
@@ -8704,6 +8879,9 @@ msgid ""
 "amount of damage. In %s, the beam has the ability to instantly kill enemies "
 "with a single shot, unless they have an %s."
 msgstr ""
+"O %s é uma arma única, disparando um feixe mortal de energia infligindo um "
+"enorme dano. Em %s, o feixe tem a habilidade de instantaneamente matar "
+"inimigos com um único tiro, a menos que tenham uma %s."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:421
 #, c-format
@@ -8711,6 +8889,8 @@ msgid ""
 "The secondary fire shoots a laser identical to that fired by the %s, with "
 "strong knockback."
 msgstr ""
+"O disparo secundário atira uma laser idêntico ao do %s, com um forte "
+"empurrão."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:422
 #, c-format
@@ -8718,11 +8898,13 @@ msgid ""
 "It is a superweapon, so isn't often found in game, except in %s where all "
 "players spawn with it."
 msgstr ""
+"É uma superarma, logo às vezes não é encontrada no jogo, exceto em %s em que "
+"todos os jogadores surgem com ela."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:423
 #, c-format
 msgid "It consumes some %s ammo with each shot."
-msgstr ""
+msgstr "Consome %s como munição por cada disparo."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:31
 msgid "Vaporizer"
@@ -8730,7 +8912,7 @@ msgstr "Vaporizer"
 
 #: qcsrc/common/weapons/weapon/vortex.qc:385
 msgid "The secondary fire zooms in when held, allowing for ease of aiming."
-msgstr ""
+msgstr "O disparo secundário dá zoom quando segurado, facilitando a mira."
 
 #: qcsrc/common/weapons/weapon/vortex.qc:387
 #, c-format
@@ -8740,6 +8922,10 @@ msgid ""
 "slightly before it finishes completely reloading, albeit with the tradeoff "
 "of dealing slightly less damage."
 msgstr ""
+"Diferentemente de %s, o %s não precisa ser recarregado manualmente, porém "
+"você precisa esperar alguns segundos entre os tiros. Unicamente, pode ser "
+"disparado um pouco de terminar de recarregar completamente, mas em "
+"contrapartida infligirá dano um pouco menor."
 
 #: qcsrc/common/weapons/weapon/vortex.qh:32
 msgid "Vortex"
@@ -10435,6 +10621,8 @@ msgstr "Multijogador"
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid "Play online, against your friends in LAN, or change player settings"
 msgstr ""
+"Jogue online, jogue contra seus amigos em rede local ou altere as "
+"configurações de jogador"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
@@ -12107,12 +12295,12 @@ msgstr "Configurações do Tipo de Jogo"
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:71
 #, c-format
 msgid "Display capture times in %s"
-msgstr ""
+msgstr "Exibir tempos de captura em %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:75
 #, c-format
 msgid "Display name of flag stealer in %s"
-msgstr ""
+msgstr "Exibir nome do ladrão da bandeira em %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display console messages in the top left corner"
