@@ -21,14 +21,20 @@ bool autocvar_g_nades_napalm_selfdamage;
 void nade_napalm_boom(entity this);
 #endif // SVQC
 
+#ifdef GAMEQC
 const int PROJECTILE_NADE_NAPALM = 73;
 const int PROJECTILE_NADE_NAPALM_BURN = 74;
 const int PROJECTILE_NAPALM_FOUNTAIN = 75;
+#endif
 
 CLASS(NapalmNade, Nade)
 	ATTRIB(NapalmNade, m_color, vector, '1 0.5 0');
 	ATTRIB(NapalmNade, m_name, string, _("Napalm grenade"));
+#ifndef SVQC
 	ATTRIB(NapalmNade, m_icon, string, "nade_napalm");
+#endif
 	ATTRIB(NapalmNade, netname, string, "napalm");
+#ifdef SVQC
 	ATTRIB(NapalmNade, impulse, int, 2);
+#endif
 ENDCLASS(NapalmNade)
