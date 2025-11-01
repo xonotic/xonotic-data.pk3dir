@@ -14,13 +14,19 @@ float autocvar_g_nades_entrap_time = 10;
 void nade_entrap_boom(entity this);
 #endif // SVQC
 
+#ifdef GAMEQC
 const int PROJECTILE_NADE_ENTRAP = 84;
 const int PROJECTILE_NADE_ENTRAP_BURN = 85;
+#endif
 
 CLASS(EntrapNade, Nade)
 	ATTRIB(EntrapNade, m_color, vector, '0.4 0.85 0.15');
 	ATTRIB(EntrapNade, m_name, string, _("Entrap grenade"));
+#ifndef SVQC
 	ATTRIB(EntrapNade, m_icon, string, "nade_entrap");
+#endif
 	ATTRIB(EntrapNade, netname, string, "entrap");
+#ifdef SVQC
 	ATTRIB(EntrapNade, impulse, int, 8);
+#endif
 ENDCLASS(EntrapNade)
