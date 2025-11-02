@@ -13794,9 +13794,10 @@ msgid ""
 "underestimated."
 msgstr ""
 "Xonotic est un jeu de tir en arène au rythme effréné. Le rythme soutenu ne "
-"tient pas seulement aux temps de réaction, mais aussi à la vitesse de "
-"déplacement. Cela signifie que la maîtrise des techniques de déplacement est "
-"un élément essentiel du gameplay de Xonotic et ne doit pas être sous-estimée."
+"se reflète pas seulement dans les temps de réaction, mais aussi dans la "
+"vitesse de déplacement. Cela signifie que la maîtrise des techniques de "
+"déplacement est un élément essentiel du gameplay de Xonotic et ne doit pas "
+"être sous-estimée."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:67
 msgid "For a new player, the most important tricks to learn are:"
@@ -13840,6 +13841,12 @@ msgid ""
 "down. This allows you to get around the map much faster than if you would "
 "just walk."
 msgstr ""
+"Grâce au contrôle aérien, vous pouvez accélérer dans les airs bien au-delà "
+"de la vitesse maximale de déplacement au sol. Pour éviter la friction avec "
+"le sol, les joueurs sautillent constamment en maintenant simplement la "
+"touche %s enfoncée, afin que le contact avec le sol ne les ralentisse pas. "
+"Cela vous permet de vous déplacer sur la carte beaucoup plus rapidement que "
+"si vous marchiez simplement."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:84
 #, c-format
@@ -13847,6 +13854,9 @@ msgid ""
 "Therefore, keeping %s held while moving quickly is one of the most essential "
 "movement strategies, used by all experienced players."
 msgstr ""
+"Par conséquent, maintenir la touche %s enfoncée tout en se déplaçant "
+"rapidement est l'une des stratégies de mouvement les plus essentielles, "
+"utilisée par tous les joueurs expérimentés."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:85
 msgid ""
@@ -13854,6 +13864,10 @@ msgid ""
 "900 qu/s (\"units per second\"). CTS/DeFRaG servers usually run with "
 "different CPMA-like physics that remove this cap."
 msgstr ""
+"Avec les paramètres par défaut, la vitesse que vous pouvez atteindre en "
+"pratiquant du bunny hopping est limitée à 900 qu/s (« unités par seconde »). "
+"Les serveurs CTS/DeFRaG fonctionnent généralement avec des physiques "
+"différentes, de type CPMA, qui suppriment cette limite."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:92
 msgid ""
@@ -13862,6 +13876,11 @@ msgid ""
 "method used to quickly change the direction you're traveling while mid-air, "
 "without losing speed."
 msgstr ""
+"Pour effectuer du bunny hopping dans les virages, il faut effectuer un "
+"« virage en strafe », sans quoi vous perdrez beaucoup de vitesse (voire ne "
+"pourrez tout simplement pas effectuer le virage). Le virage en strafe est "
+"une méthode utilisée pour changer rapidement de direction lorsque vous êtes "
+"en l'air, sans perdre de vitesse."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:94
 #, c-format
@@ -13870,10 +13889,14 @@ msgid ""
 "turn direction (%s or %s), then start turning smoothly into the turn "
 "direction. As always, during the entire strafe turn keep %s held."
 msgstr ""
+"Pendant que vous effectuez un bunny hopping, relâchez d'abord la touche %s, "
+"puis appuyez sur la touche de déplacement latéral dans le sens du virage (%s "
+"ou %s), enfin commencez à tourner doucement dans le sens du virage. Comme "
+"toujours, pendant tout le virage en strafe, maintenez la touche %senfoncée."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95
 msgid "move forward"
-msgstr ""
+msgstr "avancer"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:119
 #: qcsrc/menu/xonotic/keybinder.qc:64
@@ -13890,11 +13913,16 @@ msgid ""
 "Note that if you press the strafe key before releasing the forward key, you "
 "will suffer a speed penalty."
 msgstr ""
+"Notez que si vous appuyez sur la touche de déplacement latéral avant de "
+"relâcher la touche qui vous permet d'avancer, cela vous fera perdre de la "
+"vitesse."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:97
 msgid ""
 "If you do it right, you will even continue to accelerate in strafe turns."
 msgstr ""
+"Si vous faites cela correctement, vous continuerez à accélérer même dans les "
+"virages en strafe."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:98 qcsrc/menu/xonotic/guide/pages.qc:120
 #: qcsrc/menu/xonotic/guide/pages.qc:159
@@ -13909,6 +13937,10 @@ msgid ""
 "many players will often have single digit accuracy for the %s. It is instead "
 "especially useful to make high jumps."
 msgstr ""
+"Dans la plupart des situations, le %s est davantage un outil de déplacement "
+"qu'une arme. C'est pourquoi de nombreux joueurs ont souvent une précision à "
+"un chiffre pour le %s. Cette arme est en revanche particulièrement utile "
+"pour effectuer des sauts en hauteur."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:107
 #, c-format
