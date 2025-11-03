@@ -13892,7 +13892,8 @@ msgstr ""
 "Pendant que vous effectuez un bunny hopping, relâchez d'abord la touche %s, "
 "puis appuyez sur la touche de déplacement latéral dans le sens du virage (%s "
 "ou %s), enfin commencez à tourner doucement dans le sens du virage. Comme "
-"toujours, pendant tout le virage en strafe, maintenez la touche %senfoncée."
+"d'habitude, pendant tout le virage en strafe, maintenez la touche %s "
+"enfoncée."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95
 msgid "move forward"
@@ -13956,7 +13957,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/pages.qc:111
 msgid "Wall Blastering"
-msgstr ""
+msgstr "Blaster mural"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:114
 #, c-format
@@ -13965,6 +13966,11 @@ msgid ""
 "you, you can get significant horizontal speed. You can do this to pick up "
 "speed off the stand or even when passing a wall while already bunny hopping."
 msgstr ""
+"Si vous tirez avec le %s contre un mur à côté de vous plutôt que vers le "
+"sol, vous pouvez obtenir une vitesse horizontale importante. Vous pouvez "
+"utiliser cette technique pour prendre de la vitesse depuis une position de "
+"départ ou lorsque vous passez devant un mur tout en effectuant déjà un bunny "
+"hopping."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:116
 #, c-format
@@ -13975,6 +13981,12 @@ msgid ""
 "%s. Immediately flick back to your movement direction and continue to bunny "
 "hop."
 msgstr ""
+"Pour utiliser cette technique, entamez un bunny hopping. Juste après un "
+"saut, effectuez un rapide mouvement avec votre souris vers l'arrière à "
+"environ 8 heures si le mur se trouve à votre gauche (ou à 4 heures si le mur "
+"se trouve à votre droite), visez à hauteur de votre tête et tirez avec le "
+"%s. Revenez immédiatement dans le sens de votre mouvement et poursuivez "
+"votre bunny hopping."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:118
 #, c-format
@@ -13983,6 +13995,10 @@ msgid ""
 "a strafe key for the duration of the flick. This means using %s if the wall "
 "is to your left, and %s if the wall is to your right."
 msgstr ""
+"Afin de perdre le moins de vitesse possible lors du mouvement vers "
+"l'arrière, basculez sur une touche de déplacement latéral pendant toute la "
+"durée de la manœuvre. Cela signifie utiliser %s si le mur se trouve à votre "
+"gauche, et %s si le mur se trouve à votre droite."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:126
 #, c-format
@@ -14002,11 +14018,16 @@ msgid ""
 "immediately detonate it. The explosion will push you upwards a little bit, "
 "and can prolong a jump."
 msgstr ""
+"Lorsque vous êtes en l'air, vous pouvez également tirer une roquette sous "
+"vos pieds et la faire exploser immédiatement. L'explosion vous propulsera "
+"légèrement vers le haut et prolongera votre saut."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:130
 #, c-format
 msgid "Note that this strategy only really works if the %s mutator is enabled."
 msgstr ""
+"Notez que cette stratégie ne fonctionne réellement que si le mutateur %s est "
+"activé."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:136
 #, c-format
@@ -14014,6 +14035,8 @@ msgid ""
 "The drag force of the %s secondary fire can not only break other players' "
 "movement, but can also give yourself a significant speed boost."
 msgstr ""
+"La force du tir secondaire du %s peut non seulement stopper net le mouvement "
+"des autres joueurs, mais aussi vous donner un boost de vitesse significatif."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:137
 #, c-format
@@ -14023,10 +14046,15 @@ msgid ""
 "stand into high speed. Finding the best angle to aim at takes some practice, "
 "and changes depending on your speed."
 msgstr ""
+"Pour effectuer une « course au Crylink », utilisez le tir secondaire du %s "
+"vers le sol (ou un mur parallèle) juste devant vous et entamez un bunny "
+"hopping pour vous propulser à grande vitesse hors de votre position de "
+"départ. Trouver le meilleur angle de visée demande un peu d'entraînement et "
+"celui-ci varie en fonction de votre vitesse."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:141
 msgid "Crylink Wall Climbing"
-msgstr ""
+msgstr "Escalade au Crylink"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:144
 #, c-format
@@ -14035,12 +14063,17 @@ msgid ""
 "head), you can climb up walls quickly. This is called \"wall climbing\" with "
 "the %s."
 msgstr ""
+"En utilisant le tir secondaire du %s contre un mur à côté de vous (en visant "
+"juste au-dessus de votre tête), vous pouvez l'escalader rapidement. C'est ce "
+"qu'on appelle « l'escalade murale » avec le %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:146
 msgid ""
 "This is also a good way to save yourself from falling off the map, as it "
 "reliably stops your downfall."
 msgstr ""
+"C'est également un bon moyen d'éviter de chuter de la carte, car cela peut "
+"vous empêcher de tomber."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:152
 msgid ""
@@ -14081,6 +14114,9 @@ msgid ""
 "the stronger the upwards boost. As always, you can gain speed before the "
 "ramp by bunny hopping."
 msgstr ""
+"Plus votre vitesse est élevée lorsque vous atteignez la rampe (avec le bon "
+"angle), plus l'élan ascendant sera fort. Comme d'habitude, vous pouvez "
+"prendre de la vitesse avant la rampe en effectuant un bunny hopping."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:158
 msgid ""
@@ -14101,11 +14137,16 @@ msgid ""
 "jumping\" (\"CJ\") offer only limited benefits in vanilla gameplay, but are "
 "crucial on CTS/DeFRaG servers that use slightly different physics."
 msgstr ""
+"Les techniques avancées telles que le « strafe jumping » (« strafing ») ou "
+"le « circle jumping » (« CJ ») n'offrent que des avantages limités dans le "
+"gameplay classique, mais sont cruciales sur les serveurs CTS/DeFRaG qui "
+"utilisent des physiques légèrement différentes."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:167
 #, c-format
 msgid "If you want to master these techniques, be sure to check out %s."
 msgstr ""
+"Si vous souhaitez maîtriser ces techniques, n'hésitez pas à consulter %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:174
 #, c-format
