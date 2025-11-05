@@ -92,9 +92,7 @@
 	viewloc_SetViewLocation()
 
 // force updates of player entities this frequently (per second) even if unchanged
-#ifndef CSQCPLAYER_FORCE_UPDATES
 #define CSQCPLAYER_FORCE_UPDATES 4
-#endif
 
 // mod must define:
 //vector PL_MIN  = ...;
