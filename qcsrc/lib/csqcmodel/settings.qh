@@ -14,7 +14,7 @@
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP
 
 // force updates of player entities this frequently (per second) even if unchanged
-#define CSQCPLAYER_FORCE_UPDATES 4
+#define CSQCPLAYER_FORCE_UPDATES 8
 
 // mod must define:
 //vector PL_MIN  = ...;
