@@ -7254,6 +7254,8 @@ msgid ""
 "The %s is a mobile turret that rolls around, attacking its targets when they "
 "enter its line of sight."
 msgstr ""
+"A %s é uma sentinela que se move rolando, atacando seus alvos quando entram "
+"em sua linha de visão."
 
 #: qcsrc/common/turrets/turret/ewheel.qc:252
 #, c-format
@@ -7261,6 +7263,7 @@ msgid ""
 "It attacks by shooting laser beams similar to those of the %s, from both of "
 "its two cannons."
 msgstr ""
+"Ataca atirando feixes de laser similares aos de %s, de ambos canhões seus."
 
 #: qcsrc/common/turrets/turret/ewheel.qh:15
 msgid "eWheel Turret"
@@ -7276,6 +7279,8 @@ msgid ""
 "The %s is a turret similar to flak cannons, instead firing anti-projectile "
 "flak shells to take down projectiles fired by its targets."
 msgstr ""
+"A %s é uma sentinela similar aos canhões antiaéreos, disparando projéteis "
+"para interceptar projéteis disparados por seus alvos."
 
 #: qcsrc/common/turrets/turret/flac.qc:26
 #, c-format
@@ -7283,6 +7288,9 @@ msgid ""
 "The shells it shoots target projectiles such as the %s secondary fire "
 "grenade, %s secondary fire balls, %s rockets, and other missiles."
 msgstr ""
+"Os projéteis que dispara tentam interceptar projéteis como a granada do "
+"disparo secundário de %s, as bolas do disparo secundário de %s, os foguetes "
+"de %s, e outros mísseis."
 
 #: qcsrc/common/turrets/turret/flac.qh:13
 msgid "FLAC Cannon"
@@ -7300,10 +7308,14 @@ msgid ""
 "instead works by generating power for nearby turrets, so that they can "
 "attack their shared targets more often."
 msgstr ""
+"A %s é uma sentinela um tanto única, que ajuda outras sentinelas em vez de "
+"diretamente atacar seus alvos. Não tendo arma própria, gera energia para "
+"sentinelas vizinhas, para que estas possam atacar seus alvos comuns mais "
+"frequentemente."
 
 #: qcsrc/common/turrets/turret/fusionreactor.qc:63
 msgid "This is the only turret that doesn't directly attack its targets."
-msgstr ""
+msgstr "Esta é a única sentinela que não ataca diretamente seus alvos."
 
 #: qcsrc/common/turrets/turret/fusionreactor.qh:11
 msgid "Fusion Reactor"
@@ -7314,6 +7326,7 @@ msgstr "Reator de Fusão"
 msgid ""
 "The %s fires homing missiles similar to those of the %s towards its targets."
 msgstr ""
+"A %s dispara mísseis guiados similares aos de %s em direção a seus alvos."
 
 #: qcsrc/common/turrets/turret/hellion.qc:32
 #, c-format
@@ -7321,6 +7334,8 @@ msgid ""
 "Although the missiles usually deal less damage than a %s rocket, the %s has "
 "two cannons so it can dish out quite the punch."
 msgstr ""
+"Apesar de os mísseis usualmente infligirem menos dano que um foguete de %s, "
+"a %s tem dois canhões, assim pode causar um estrago e tanto."
 
 #: qcsrc/common/turrets/turret/hellion.qh:13
 msgid "Hellion Missile Turret"
@@ -7337,6 +7352,8 @@ msgid ""
 "obstacles to find its target. The rocket it fires is similar to that of the "
 "%s."
 msgstr ""
+"A %s dispara um único foguete guiado poderoso com a habilidade de esquivar "
+"obstáculos para encontrar seu alvo. O foguete que dispara é similar ao de %s."
 
 #: qcsrc/common/turrets/turret/hk.qh:15
 msgid "Hunter-Killer Turret"
@@ -7352,6 +7369,8 @@ msgid ""
 "As the name suggests, the %s fires bullets in a burst at its targets, "
 "similar to the %s."
 msgstr ""
+"Como o nome sugere, a %s dispara rajadas de balas em seus alvos, similares "
+"às da %s."
 
 #: qcsrc/common/turrets/turret/machinegun.qh:13
 msgid "Machinegun Turret"
@@ -7367,12 +7386,17 @@ msgid ""
 "The %s fires a rapid burst of 6 rockets similar to those of the %s towards "
 "its targets."
 msgstr ""
+"A %s dispara uma rápida rajada de 6 foguetes similares aos de %s em direção "
+"a seus alvos."
 
 #: qcsrc/common/turrets/turret/mlrs.qc:36
 msgid ""
 "Getting caught in the line of fire of this turret can be very deadly, but "
 "thankfully it doesn't shoot if you get too close, so as to not damage itself."
 msgstr ""
+"Ser pego na linha de tiro desta sentinela pode ser muito mortal, mas "
+"felizmente ela não atira se você chegar perto demais, para não causar dano a "
+"si mesma."
 
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
@@ -7388,6 +7412,8 @@ msgid ""
 "The %s is a turret that fires an invisible beam of energy towards its "
 "targets."
 msgstr ""
+"A %s é uma sentinela que dispara um feixe invisível de energia em direção a "
+"seus alvos."
 
 #: qcsrc/common/turrets/turret/phaser.qc:53
 #, c-format
@@ -7396,6 +7422,9 @@ msgid ""
 "seen, it constantly deals damage to and slows down players who intercept its "
 "path."
 msgstr ""
+"As aparências enganam com %s, já que, ainda que o feixe de energia não possa "
+"ser visto, constantemente inflige dano e retarda jogadores que cruzarem seu "
+"caminho."
 
 #: qcsrc/common/turrets/turret/phaser.qh:13
 msgid "Phaser Cannon"
@@ -7411,11 +7440,14 @@ msgid ""
 "The %s is a turret that fires electric balls forwards, similar to those of "
 "the %s."
 msgstr ""
+"A %s é uma sentinela que dispara bolas elétricas para frente, similares às "
+"de %s."
 
 #: qcsrc/common/turrets/turret/plasma.qc:57
 #, c-format
 msgid "It is a weaker version of the %s, which has two electric ball cannons."
 msgstr ""
+"É uma versão mais fraca de %s, que tem dois canhões de bolas elétricas."
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
@@ -7427,12 +7459,14 @@ msgid ""
 "The %s is a turret that fires electric balls forwards from its two cannons, "
 "shooting balls similar to those of the %s."
 msgstr ""
+"A %s é uma sentinela que dispara bolas elétricas para frente, a partir de "
+"seus dois canhões, atirando bolas similares às de %s."
 
 #: qcsrc/common/turrets/turret/plasma_dual.qc:45
 #, c-format
 msgid ""
 "It is a stronger version of the %s, which only has one electric ball cannon."
-msgstr ""
+msgstr "É uma versão mais forte de %s, que só tem um canhão de bola elétrica."
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:8
 msgid "Dual plasma"
@@ -7452,6 +7486,9 @@ msgid ""
 "The %s is a turret that electrocutes all who dare come near it, sending "
 "powerful high-voltage arcs of lightning to strike its targets."
 msgstr ""
+"A %s é uma sentinela que eletrocuta qualquer um que se atreva aproximar, "
+"mandando poderosos arcos elétricos de altas voltagens para atingir seus "
+"alvos."
 
 #: qcsrc/common/turrets/turret/tesla.qc:96
 #, c-format
@@ -7459,6 +7496,8 @@ msgid ""
 "Since the arcs of lightning can jump between nearby targets, it is best to "
 "just stay away from the %s."
 msgstr ""
+"Já que os arcos de eletricidade podem saltar entre alvos próximos, é melhor "
+"só ficar longe de %s."
 
 #: qcsrc/common/turrets/turret/tesla.qh:13
 #: qcsrc/common/turrets/turret/tesla_weapon.qh:7
@@ -7468,7 +7507,7 @@ msgstr "Bobina de Tesla"
 #: qcsrc/common/turrets/turret/walker.qc:651
 #, c-format
 msgid "The %s is an arachnid-like walking turret that hunts down its targets."
-msgstr ""
+msgstr "A %s é uma sentinela aracnídea ambulante que caça seus alvos."
 
 #: qcsrc/common/turrets/turret/walker.qc:652
 #, c-format
@@ -7477,6 +7516,10 @@ msgid ""
 "and a rocket launcher shooting homing missiles like the %s for long range "
 "targets. It also has the ability to melee close by targets."
 msgstr ""
+"Tem duas armas, tanto uma metralhadora como %s para combate a médios "
+"alcances, quanto um lançador de foguetes que atira mísseis guiados como %s "
+"para alvos a longos alcances. Também tem a habilidade de luta corpo a corpo "
+"com alvos próximos."
 
 #: qcsrc/common/turrets/turret/walker.qh:15
 msgid "Walker Turret"
@@ -7921,6 +7964,8 @@ msgid ""
 "The %s vehicle seats up to three passengers, who are given different roles "
 "based on the order they enter."
 msgstr ""
+"O veículo %s comporta até três passageiros, que recebem diferentes papéis "
+"baseados na ordem que entrarem."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:986
 msgid ""
@@ -7928,18 +7973,25 @@ msgid ""
 "skies. The first player can also shoot a green healing wave to heal other "
 "teammates on the ground."
 msgstr ""
+"O primeiro jogador a entrar será o piloto, voando o veículo pelos céus. O "
+"primeiro jogador também pode atirar uma onda verde curadora para curar "
+"outros colegas de equipe no chão."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:988
 msgid ""
 "The second player to enter is the right gunner and the third player to enter "
 "is the left gunner."
 msgstr ""
+"O segundo jogador a entrar é o artilheiro direito e o terceiro jogador a "
+"entrar é o artilheiro esquerdo."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:989
 msgid ""
 "When the pilot exits the vehicle, the players switch roles by moving up in "
 "position."
 msgstr ""
+"Quando o piloto sai do veículo, os jogadores trocam de papéis, subindo em "
+"uma cada posição."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qh:21
 msgid "Bumblebee"
@@ -7951,6 +8003,8 @@ msgid ""
 "The %s vehicle looks like a jet, but does not fly upwards very well. It "
 "seats only one passenger, who becomes the pilot."
 msgstr ""
+"O veículo %s parece com um jato, mas não voa para cima muito bem. Só "
+"comporta um passageiro, que se torna o piloto."
 
 #: qcsrc/common/vehicles/vehicle/racer.qc:652
 #, c-format
@@ -7958,6 +8012,8 @@ msgid ""
 "It can be accelerated by pressing %s, which consumes power from the same "
 "source as the primary weapon."
 msgstr ""
+"Pode ser acelerado apertando %s, que consome energia da mesma fonte que a "
+"arma primária."
 
 #: qcsrc/common/vehicles/vehicle/racer.qc:653
 #, c-format
@@ -7965,6 +8021,8 @@ msgid ""
 "The %s primary weapon is a laser and the secondary weapon shoots energy "
 "balls that explode on impact."
 msgstr ""
+"A arma primária de %s é um laser e a arma secundária atira bolas de energia "
+"que explodem ao impactar."
 
 #: qcsrc/common/vehicles/vehicle/racer.qh:21
 msgid "Racer"
@@ -7980,6 +8038,8 @@ msgid ""
 "The %s vehicle is a flying vehicle that takes only one pilot, who can "
 "operate both of the weapons."
 msgstr ""
+"O veículo %s é um veículo voador que comporta só um piloto, que pode operar "
+"ambas as armas."
 
 #: qcsrc/common/vehicles/vehicle/raptor.qc:851
 #, c-format
@@ -7990,6 +8050,11 @@ msgid ""
 "reticle. The white reticle always points to the head of the vehicle, while "
 "the green reticle's location is determined by the momentum of the vehicle."
 msgstr ""
+"As duas armas têm diferentes retículos similares aos de %s. A arma primária "
+"é baseada em laser, atirando em direção ao retículo branco. A arma "
+"secundária solta bombas ao chão, mirando em direção ao retículo verde. O "
+"retículo branco sempre aponta para a cabeça do veículo, enquanto que o "
+"retículo verde é determinado pelo momento do veículo."
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:21
 msgid "Raptor"
@@ -8010,11 +8075,11 @@ msgstr "Chama de Raptor"
 #: qcsrc/common/vehicles/vehicle/spiderbot.qc:655
 #, c-format
 msgid "The %s vehicle walks and jumps around, and takes only one rider."
-msgstr ""
+msgstr "O veículo %s anda e salta, e comporta só um condutor."
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qc:656
 msgid "It can jump from very high altitudes while protecting the rider."
-msgstr ""
+msgstr "Pode saltar de alturas bem elevadas, protegendo o condutor."
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qc:657
 #, c-format
@@ -8026,6 +8091,12 @@ msgid ""
 "the green reticle also points to the front but with a bit of delay when the "
 "%s rotates."
 msgstr ""
+"Tem duas armas que o condutor pode controlar, que têm diferentes retículos "
+"similares aos de %s. A arma primária é uma metralhadora que atira em direção "
+"ao retículo verde. A arma secundária atira foguetes em direção ao retículo "
+"branco. O retículo branco aponta para a frente do veículo, enquanto que o "
+"retículo verde também aponta para a frente mas com um pouco de atraso quando "
+"%s gira."
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qh:21
 msgid "Spiderbot"
