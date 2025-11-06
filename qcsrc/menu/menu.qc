@@ -90,9 +90,11 @@ void m_init()
 	RegisterSLCategories();
 
 	float ddsload = cvar("r_texture_dds_load");
+	float ddsloadsw = cvar("r_texture_dds_swdecode");
 	float texcomp = cvar("gl_texturecompression");
 	updateCompression();
-	if (ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression")) localcmd("\nr_restart\n");
+	if (ddsload != cvar("r_texture_dds_load") || ddsloadsw != cvar("r_texture_dds_swdecode") || texcomp != cvar("gl_texturecompression"))
+		localcmd("\nr_restart\n");
 
 	if (!restarting)
 	{
