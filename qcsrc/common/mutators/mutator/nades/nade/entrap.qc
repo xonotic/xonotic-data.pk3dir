@@ -25,8 +25,8 @@ void nade_entrap_touch(entity this, entity toucher)
 
 	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
-		show_tint.nade_entrap_time = time + 0.1;
+		entity real_toucher = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
+		real_toucher.nade_entrap_time = time + 0.1;
 	}
 }
 
@@ -64,3 +64,13 @@ MUTATOR_HOOKFUNCTION(nades, MonsterMove)
 	}
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(EntrapNade, describe, string(EntrapNade this))
+{
+	TC(EntrapNade, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
+	      "Players and projectiles that enter the sphere will be slowed down, including yourself."), COLORED_NAME(this));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

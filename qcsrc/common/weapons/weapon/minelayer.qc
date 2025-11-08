@@ -18,6 +18,8 @@ void W_MineLayer_Stick(entity this, entity to)
 
 	newmine.owner = this.owner;
 	newmine.realowner = this.realowner;
+	newmine.glowmod = colormapPaletteColor(this.realowner.clientcolors & 0x0F, true);
+
 	PROJECTILE_MAKETRIGGER(newmine);
 	setorigin(newmine, this.origin);
 	setmodel(newmine, MDL_MINELAYER_MINE);
@@ -73,6 +75,7 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 	{
 		entity own = this.realowner;
 		if(!thiswep.wr_checkammo1(thiswep, own, weaponentity))
+		if(!(own.items & IT_UNLIMITED_AMMO))
 		{
 			own.cnt = thiswep.m_id;
 			ATTACK_FINISHED(own, weaponentity) = time;
@@ -104,6 +107,7 @@ void W_MineLayer_DoRemoteExplode(entity this)
 	{
 		entity own = this.realowner;
 		if(!thiswep.wr_checkammo1(thiswep, own, weaponentity))
+		if(!(own.items & IT_UNLIMITED_AMMO))
 		{
 			own.cnt = thiswep.m_id;
 			ATTACK_FINISHED(own, weaponentity) = time;
@@ -115,14 +119,31 @@ void W_MineLayer_DoRemoteExplode(entity this)
 
 void W_MineLayer_RemoteExplode(entity this)
 {
-	if(!IS_DEAD(this.realowner))
-		if((this.spawnshieldtime >= 0)
-			? (time >= this.spawnshieldtime) // timer
-			: (vdist(NearestPointOnBox(this.realowner, this.origin) - this.origin, >, WEP_CVAR(WEP_MINE_LAYER, remote_radius))) // safety device
-		)
+	if(IS_DEAD(this.realowner))
+		return;
+
+	if(this.spawnshieldtime >= 0)
+	{
+		if(time < this.spawnshieldtime) // timer
+			return;
+	}
+	else
+	{
+		/* make sure no friend is in the mine's radius.
+		 * WEAPONTODO: modify protection cvar to allow disabling remote detonation protection.
+		 * disabling it currently allows Mine Layer-flying, even more powerful than rocket-flying
+		 * ... even without Rocket Flying mutator enabled
+		 */
+		entity head = WarpZone_FindRadius(this.origin, WEP_CVAR(WEP_MINE_LAYER, remote_radius), false);
+		while(head)
 		{
-			W_MineLayer_DoRemoteExplode(this);
+			if(SAME_TEAM(head, this.realowner))
+				return;
+			head = head.chain;
 		}
+	}
+
+	W_MineLayer_DoRemoteExplode(this);
 }
 
 void W_MineLayer_ProximityExplode(entity this)
@@ -130,11 +151,10 @@ void W_MineLayer_ProximityExplode(entity this)
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until they're at a safe distance
 	if(WEP_CVAR(WEP_MINE_LAYER, protection) && this.mine_explodeanyway == 0)
 	{
-		entity head;
-		head = findradius(this.origin, WEP_CVAR(WEP_MINE_LAYER, radius));
+		entity head = WarpZone_FindRadius(this.origin, WEP_CVAR(WEP_MINE_LAYER, radius), false);
 		while(head)
 		{
-			if(head == this.realowner || SAME_TEAM(head, this.realowner))
+			if(SAME_TEAM(head, this.realowner))
 				return;
 			head = head.chain;
 		}
@@ -177,11 +197,10 @@ void W_MineLayer_Think(entity this)
 		if(WEP_CVAR(WEP_MINE_LAYER, lifetime_countdown) > 0)
 			spamsound(this, CH_SHOTS, SND_MINE_TRIGGER, VOL_BASE, ATTN_NORM);
 		this.mine_time = time + WEP_CVAR(WEP_MINE_LAYER, lifetime_countdown);
-		this.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
+		this.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a teammate is near.
 	}
 
 	// a player's mines shall explode if they disconnect or die
-	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
 	if(!IS_PLAYER(this.realowner) || IS_DEAD(this.realowner) || STAT(FROZEN, this.realowner))
 	{
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -190,15 +209,23 @@ void W_MineLayer_Think(entity this)
 	}
 
 	// set the mine for detonation when a foe gets close enough
-	head = findradius(this.origin, WEP_CVAR(WEP_MINE_LAYER, proximityradius));
+	float time_core = WEP_CVAR(WEP_MINE_LAYER, proximity_time_core);
+	float time_edge = WEP_CVAR(WEP_MINE_LAYER, proximity_time_edge);
+	float proxrad = WEP_CVAR(WEP_MINE_LAYER, proximity_radius);
+	head = WarpZone_FindRadius(this.origin, proxrad, false);
 	while(head)
 	{
 		if(IS_PLAYER(head) && !IS_DEAD(head) && !STAT(FROZEN, head) && !IS_INDEPENDENT_PLAYER(head))
-		if(head != this.realowner && DIFF_TEAM(head, this.realowner)) // don't trigger for team mates
-		if(!this.mine_time)
+		if(DIFF_TEAM(head, this.realowner)) // don't trigger for teammates
 		{
-			spamsound(this, CH_SHOTS, SND_MINE_TRIGGER, VOL_BASE, ATTN_NORM);
-			this.mine_time = time + WEP_CVAR(WEP_MINE_LAYER, time);
+			if(!this.mine_time) // don't repeat the sound
+				spamsound(this, CH_SHOTS, SND_MINE_TRIGGER, VOL_BASE, ATTN_NORM);
+			// scale from time_edge to time_core based on how close the player is to the mine
+			float new_mine_time = time + time_core;
+			if(time_edge != time_core)
+				new_mine_time += (time_edge - time_core) * vlen(head.WarpZone_findradius_dist) / proxrad;
+			if((!this.mine_time) || this.mine_time > new_mine_time) // choose the earliest explosion time
+				this.mine_time = new_mine_time;
 		}
 		head = head.chain;
 	}
@@ -215,31 +242,43 @@ void W_MineLayer_Think(entity this)
 	if(this.realowner.(weaponentity).m_weapon == WEP_MINE_LAYER)
 	if(!IS_DEAD(this.realowner))
 	if(this.minelayer_detonate)
+	{
 		W_MineLayer_RemoteExplode(this);
+		return;
+	}
+
+	// if it was detached by damage but landed during the bounce time, reenable gravity so it will touch and reattach
+	if (this.move_movetype == MOVETYPE_BOUNCE && IS_ONGROUND(this))
+		UNSET_ONGROUND(this);
 }
 
 void W_MineLayer_Touch(entity this, entity toucher)
 {
 	if(this.move_movetype == MOVETYPE_NONE || this.move_movetype == MOVETYPE_FOLLOW)
 		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
+	if(time <= this.wait)
+		return; // don't reattach yet
 
 	PROJECTILE_TOUCH(this, toucher);
 
-	if((toucher && IS_PLAYER(toucher) && !IS_DEAD(toucher)) || toucher.owner == this.owner)
-	{
-		// hit a player or other mine
-		// don't stick
-	}
-	else
-	{
+	if (toucher.solid == SOLID_BSP)
 		W_MineLayer_Stick(this, toucher);
-	}
 }
 
 void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
+
+	// Reading the cvar here because this.damageforcescale is overridden in blaster.qc
+	// this way the blaster can hit mines midair but can only detach them when enabled by this cvar.
+	if (WEP_CVAR(WEP_MINE_LAYER, damageforcescale) && inflictor.classname != "mine")
+	{
+		set_movetype(this, MOVETYPE_BOUNCE); // not TOSS: so a direct perpendicular hit can move the mine
+		this.wait = time + 0.0625; // after this time it will reattach instead of bouncing
+		settouch(this, W_MineLayer_Touch);
+		this.avelocity += force * -WEP_CVAR(WEP_MINE_LAYER, damageforcescale);
+	}
 
 	float is_from_enemy = (inflictor.realowner != this.realowner);
 
@@ -509,6 +548,28 @@ METHOD(MineLayer, wr_impacteffect, void(entity thiswep, entity actor))
 	pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
 	if(!w_issilent)
 		sound(actor, CH_SHOTS, SND_MINE_EXP, VOL_BASE, ATTN_NORM);
+}
+
+#endif
+#ifdef MENUQC
+#include <common/gametypes/gametype/assault/assault.qh>
+#include <common/gametypes/gametype/ctf/ctf.qh>
+#include <common/gametypes/gametype/onslaught/onslaught.qh>
+#include <common/items/item/ammo.qh>
+
+METHOD(MineLayer, describe, string(MineLayer this))
+{
+	TC(MineLayer, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s places mines on the ground when fired, which detonate and damage enemies if stepped on. "
+	      "Only a couple mines can be placed at any time, and after several seconds they will self-detonate."), COLORED_NAME(this));
+	PAR(_("The secondary fire instantaneously detonates any mines fired by the primary fire, first waiting until you're far enough away."));
+	PAR(_("It consumes %s ammo for each mine laid."), COLORED_NAME(ITEM_Rockets));
+	PAR(_("The mines are not launched very far before they hit the ground, so the %s isn't very effective at medium to long ranges. "
+	      "It is often used to protect important areas of the map such as the flag in %s, control points in %s, or checkpoints in %s."), COLORED_NAME(this), COLORED_NAME(MAPINFO_TYPE_CTF), COLORED_NAME(MAPINFO_TYPE_ONSLAUGHT), COLORED_NAME(MAPINFO_TYPE_ASSAULT));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_onlyOne_unnamed(this.netname));
+	return PAGE_TEXT;
 }
 
 #endif

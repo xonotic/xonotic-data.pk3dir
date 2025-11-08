@@ -46,8 +46,11 @@ CLASS(MineLayer, Weapon)
 		P(class, prefix, lifetime, float, NONE) \
 		P(class, prefix, lifetime_countdown, float, NONE) \
 		P(class, prefix, limit, float, NONE) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, protection, float, NONE) \
-		P(class, prefix, proximityradius, float, NONE) \
+		P(class, prefix, proximity_radius, float, NONE) \
+		P(class, prefix, proximity_time_core, float, NONE) \
+		P(class, prefix, proximity_time_edge, float, NONE) \
 		P(class, prefix, radius, float, NONE) \
 		P(class, prefix, refire, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
@@ -59,7 +62,6 @@ CLASS(MineLayer, Weapon)
 		P(class, prefix, speed, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, time, float, NONE) \
 		P(class, prefix, weaponreplace, string, NONE) \
 		P(class, prefix, weaponstartoverride, float, NONE) \
 		P(class, prefix, weaponstart, float, NONE) \
@@ -67,6 +69,7 @@ CLASS(MineLayer, Weapon)
 	END()
 	W_PROPS(X, MineLayer, minelayer)
 #undef X
+
 ENDCLASS(MineLayer)
 REGISTER_WEAPON(MINE_LAYER, NEW(MineLayer));
 

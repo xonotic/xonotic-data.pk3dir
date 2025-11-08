@@ -367,7 +367,7 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 	race_col: color of race time/position (i.e. good or bad)
 	race_diff: show time difference between f2 and f3
 	missing_teams: show which teams still need players
-	pass_key: find the keybind for "passing" or "dropping" in CTF game mode
+	pass_key: find the keybind for "passing" or "dropping" in CTF gametype
 	nade_key: find the keybind for nade throwing
 	join_key: find the keybind for joining the game
 	frag_ping: show the ping of a player

@@ -9,5 +9,5 @@ CLASS(XonoticHUDScoreDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDScoreDialog, rows, float, 15.5);
 	ATTRIB(XonoticHUDScoreDialog, columns, float, 4);
 	ATTRIB(XonoticHUDScoreDialog, name, string, "HUDscore");
-	ATTRIB(XonoticHUDScoreDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDScoreDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDScoreDialog)

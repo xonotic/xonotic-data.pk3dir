@@ -64,7 +64,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 
 	// track max damage
 	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
-		accuracy_add(ent, wep, maxdamage, 0);
+		accuracy_add(ent, wep, maxdamage, 0, 0); // add to fired
 
 	if(IS_PLAYER(ent))
 		W_HitPlotAnalysis(ent, wep, forward, right, up);
@@ -208,7 +208,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	mspercallsum -= gettime(GETTIME_HIRES);
 	#endif
 
-	dir = W_CalculateSpread(dir, spread, autocvar_g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
+	dir = W_CalculateSpread(dir, spread, autocvar_g_projectiles_spread_style, false);
 
 	#if 0
 	mspercallsum += gettime(GETTIME_HIRES);
@@ -346,7 +346,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 
 	// calculate hits and fired shots for hitscan
 	if(this.(weaponentity))
-		accuracy_add(this, this.(weaponentity).m_weapon, 0, min(bdamage, totaldmg));
+		accuracy_add(this, this.(weaponentity).m_weapon, 0, min(bdamage, totaldmg), 0); // add to hit
 
 	trace_endpos = endpoint;
 	trace_ent = endent;
@@ -368,7 +368,7 @@ void fireBullet_falloff(entity this, .entity weaponentity, vector start, vector 
                         float force, float falloff_forcehalflife,
                         float dtype, entity tracer_effect, bool do_antilag)
 {
-	dir = normalize(dir + randomvec() * spread);
+	dir = W_CalculateSpread(dir, spread, autocvar_g_hitscan_spread_style, true);
 	vector end = start + dir * max_shot_distance;
 
 	fireBullet_last_hit = NULL;
@@ -474,7 +474,7 @@ void fireBullet_falloff(entity this, .entity weaponentity, vector start, vector 
 				// do not exceed 100%
 				float added_damage = min(damage - total_damage, damage * damage_fraction);
 				total_damage += damage * damage_fraction;
-				accuracy_add(this, this.(weaponentity).m_weapon, 0, added_damage);
+				accuracy_add(this, this.(weaponentity).m_weapon, 0, added_damage, 0); // add to hit
 			}
 		}
 

@@ -12,7 +12,7 @@ void nade_heal_touch(entity this, entity toucher)
 	{
 		health_factor = autocvar_g_nades_heal_rate*frametime/2;
 		if ( toucher != this.realowner )
-			health_factor *= (SAME_TEAM(toucher,this)) ? autocvar_g_nades_heal_friend : autocvar_g_nades_heal_foe;
+			health_factor *= (SAME_TEAM(toucher, this.realowner)) ? autocvar_g_nades_heal_friend : autocvar_g_nades_heal_foe;
 
 		if ( health_factor > 0 )
 		{
@@ -39,3 +39,13 @@ void nade_heal_boom(entity this)
 	orb.colormod = '1 0 0';
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(HealNade, describe, string(HealNade this))
+{
+	TC(HealNade, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s detonates after a short delay, temporarily creating a healing orb around the point where it detonated for several seconds. "
+	      "If your team members enter the orb they will recover health, and if enemies enter the sphere they will be harmed."), COLORED_NAME(this));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

@@ -3,7 +3,7 @@
 #include "../item/radiobutton.qh"
 CLASS(XonoticColorButton, RadioButton)
 	METHOD(XonoticColorButton, configureXonoticColorButton, void(entity, float, float, float));
-	METHOD(XonoticColorButton, setChecked, void(entity, float));
+	METHOD(XonoticColorButton, setChecked, void(entity, bool));
 	METHOD(XonoticColorButton, draw, void(entity));
 	ATTRIB(XonoticColorButton, fontSize, float, 0);
 	ATTRIB(XonoticColorButton, image, string, SKINGFX_COLORBUTTON);

@@ -114,3 +114,13 @@ void nade_ice_boom(entity this)
 		setmodel(fountain, MDL_Null);
 }
 #endif // SVQC
+#ifdef MENUQC
+METHOD(IceNade, describe, string(IceNade this))
+{
+	TC(IceNade, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s detonates after a short delay, freezing any enemies who walk within the explosion radius for a few seconds after the explosion. "
+	      "While frozen, players can't move or shoot, leaving them vulnerable to damage, but if left too long they'll unfreeze and run away!"), COLORED_NAME(this));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

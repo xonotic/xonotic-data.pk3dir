@@ -1,0 +1,9 @@
+#pragma once
+
+#ifdef MENUQC
+CLASS(MutatorRocketFlying, Mutator)
+	ATTRIB(MutatorRocketFlying, message, string, _("Rocket Flying"));
+ENDCLASS(MutatorRocketFlying)
+
+REGISTER_MUTATOR(rocketflying, true, MutatorRocketFlying);
+#endif

@@ -26,6 +26,7 @@ REPLICATE_INIT(bool, cvar_cl_accuracy_data_receive);
 .entity accuracy;
 .float accuracy_frags[REGISTRY_MAX(Weapons)];
 
+.float accuracy_real[REGISTRY_MAX(Weapons)];
 .float accuracy_hit[REGISTRY_MAX(Weapons)];
 .float accuracy_fired[REGISTRY_MAX(Weapons)];
 .float accuracy_cnt_hit[REGISTRY_MAX(Weapons)];
@@ -42,7 +43,7 @@ void accuracy_reset(entity e);
 void accuracy_resend(entity e);
 
 // update accuracy stats
-void accuracy_add(entity e, Weapon w, float fired, float hit);
+void accuracy_add(entity e, Weapon w, float fired, float hit, float real);
 
 // helper
 bool accuracy_isgooddamage(entity attacker, entity targ);

@@ -1,5 +1,6 @@
 #include "scoreboard.qh"
 
+#include <client/csqcmodel_hooks.qh>
 #include <client/draw.qh>
 #include <client/hud/panel/chat.qh>
 #include <client/hud/panel/physics.qh>
@@ -128,14 +129,13 @@ string Label_getInfo(string label, int mode)
 	{
 		SCO_LABEL(_("SCO^bckills"),       "bckills", "            ", _("Number of ball carrier kills"));
 		SCO_LABEL(_("SCO^bctime"),        "bctime", "             ", _("Total amount of time holding the ball in Keepaway"));
-		SCO_LABEL(_("SCO^caps"),          "caps", "               ", _("How often a flag (CTF) or a key (KeyHunt) was captured"));
+		SCO_LABEL(_("SCO^caps"),          "caps", "               ", _("How often a flag (CTF) or a key (Key Hunt) was captured"));
 		SCO_LABEL(_("SCO^captime"),       "captime", "            ", _("Time of fastest capture (CTF)"));
 		SCO_LABEL(_("SCO^deaths"),        "deaths", "             ", _("Number of deaths"));
 		SCO_LABEL(_("SCO^destructions"),  "destructions", "       ", _("Number of keys destroyed by pushing them into void"));
 		SCO_LABEL(_("SCO^damage dealt"),  "dmg", "                ", _("The total damage dealt"));
 		SCO_LABEL(_("SCO^damage taken"),  "dmgtaken", "           ", _("The total damage taken"));
 		SCO_LABEL(_("SCO^drops"),         "drops", "              ", _("Number of flag drops"));
-		SCO_LABEL(_("SCO^elo"),           "elo", "                ", _("Player ELO"));
 		SCO_LABEL(_("SCO^fastest"),       "fastest", "            ", _("Time of fastest lap (Race/CTS)"));
 		SCO_LABEL(_("SCO^faults"),        "faults", "             ", _("Number of faults committed"));
 		SCO_LABEL(_("SCO^fckills"),       "fckills", "            ", _("Number of flag carrier kills"));
@@ -144,7 +144,7 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^generators"),    "generators", "         ", _("Number of generators destroyed"));
 		SCO_LABEL(_("SCO^goals"),         "goals", "              ", _("Number of goals scored"));
 		SCO_LABEL(_("SCO^hunts"),         "hunts", "              ", _("Number of hunts (Survival)"));
-		SCO_LABEL(_("SCO^kckills"),       "kckills", "            ", _("Number of keys carrier kills"));
+		SCO_LABEL(_("SCO^kckills"),       "kckills", "            ", _("Number of key carrier kills"));
 		SCO_LABEL(_("SCO^k/d"),           "kd", "                 ", _("The kill-death ratio"));
 		SCO_LABEL(_("SCO^kdr"),           "kdr", "                ", _("The kill-death ratio"));
 		SCO_LABEL(_("SCO^kdratio"),       "kdratio", "            ", _("The kill-death ratio"));
@@ -155,7 +155,7 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^name"),          "name", "               ", _("Player name"));
 		SCO_LABEL(_("SCO^nick"),          "nick", "               ", _("Player name"));
 		SCO_LABEL(_("SCO^objectives"),    "objectives", "         ", _("Number of objectives destroyed"));
-		SCO_LABEL(_("SCO^pickups"),       "pickups", "            ", _("How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up"));
+		SCO_LABEL(_("SCO^pickups"),       "pickups", "            ", _("How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"));
 		SCO_LABEL(_("SCO^ping"),          "ping", "               ", _("Ping time"));
 		SCO_LABEL(_("SCO^pl"),            "pl", "                 ", _("Packet loss"));
 		SCO_LABEL(_("SCO^pushes"),        "pushes", "             ", _("Number of players pushed into void"));
@@ -165,6 +165,7 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^rounds won"),    "rounds", "             ", _("Number of rounds won"));
 		SCO_LABEL(_("SCO^rounds played"), "rounds_pl", "          ", _("Number of rounds played"));
 		SCO_LABEL(_("SCO^score"),         "score", "              ", _("Total score"));
+		SCO_LABEL(_("SCO^skill"),         "skill", "              ", _("Player skill"));
 		SCO_LABEL(_("SCO^suicides"),      "suicides", "           ", _("Number of suicides"));
 		SCO_LABEL(_("SCO^sum"),           "sum", "                ", _("Number of kills minus deaths"));
 		SCO_LABEL(_("SCO^survivals"),     "survivals", "          ", _("Number of survivals"));
@@ -735,20 +736,20 @@ void Cmd_Scoreboard_Help()
 	LOG_HELP("");
 
 	LOG_HELP(_("Before a field you can put a + or - sign, then a comma separated list\n"
-	        "of game types, then a slash, to make the field show up only in these\n"
-	        "or in all but these game types. You can also specify 'all' as a\n"
-	        "field to show all fields available for the current game mode."));
+	        "of gametypes, then a slash, to make the field show up only in these\n"
+	        "or in all but these gametypes. You can also specify 'all' as a\n"
+	        "field to show all fields available for the current gametype."));
 	LOG_HELP("");
 
-	LOG_HELP(_("The special game type names 'teams' and 'noteams' can be used to\n"
-	        "include/exclude ALL teams/noteams game modes."));
+	LOG_HELP(_("The special gametype names 'teams' and 'noteams' can be used to\n"
+	        "include/exclude ALL teams/noteams gametypes."));
 	LOG_HELP("");
 
 	LOG_HELP(_("Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"));
 	LOG_HELP(_("will display name, ping and pl aligned to the left, and the fields\n"
 	        "right of the vertical bar aligned to the right."));
 	LOG_HELP(_("'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
-			"other gamemodes except DM."));
+			"other gametypes except DM."));
 }
 
 // NOTE: adding a gametype with ? to not warn for an optional field
@@ -756,7 +757,7 @@ void Cmd_Scoreboard_Help()
 // otherwise the previous exclusive rule warns anyway
 // e.g. -teams,rc,cts,lms/kills ?+rc/kills
 #define SCOREBOARD_DEFAULT_COLUMNS \
-"ping pl fps name |" \
+"ping pl fps skill name |" \
 " -teams,rc,cts,surv,inv,lms/kills +ft,tdm,tmayhem/kills ?+rc,inv/kills" \
 " -teams,surv,lms/deaths +ft,tdm,tmayhem/deaths" \
 " +tdm/sum" \
@@ -882,7 +883,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 				});
 
 				// NOTE: can't check STAT(SHOWFPS) here, if checked too early it returns false anyway
-				if (!nocomplain && str != "fps") // server can disable the fps field
+				if (!nocomplain && str != "fps" && str != "skill") // server can disable the fps or skill fields
 					LOG_INFOF("^1Error:^7 Unknown score field: '%s'", str);
 
 				strfree(sbt_field_title[sbt_num_fields]);
@@ -1005,6 +1006,8 @@ string Scoreboard_GetName(entity pl)
 	if (ready_waiting && pl.ready)
 	{
 		sbt_field_icon_extra[0] = "gfx/scoreboard/player_ready";
+		sbt_field_icon_extra_rgb[0].y = 1;
+		sbt_field_icon_extra_rgb[0].x = sbt_field_icon_extra_rgb[0].z = min(1, 1 + sin(2*M_PI*time));
 	}
 	int handicap_lvl = entcs_GetHandicapLevel(pl.sv_entnum);
 	if (handicap_lvl != 0)
@@ -1020,22 +1023,18 @@ string Scoreboard_GetName(entity pl)
 	return entcs_GetName(pl.sv_entnum);
 }
 
-int autocvar_hud_panel_scoreboard_ping_best = 0;
-int autocvar_hud_panel_scoreboard_ping_medium = 70;
-int autocvar_hud_panel_scoreboard_ping_high = 100;
-int autocvar_hud_panel_scoreboard_ping_worst = 150;
-vector autocvar_hud_panel_scoreboard_ping_best_color = '0 1 0';
+int autocvar_hud_panel_scoreboard_ping_low = 20;
+int autocvar_hud_panel_scoreboard_ping_medium = 80;
+int autocvar_hud_panel_scoreboard_ping_high = 200;
+vector autocvar_hud_panel_scoreboard_ping_low_color = '0 1 0';
 vector autocvar_hud_panel_scoreboard_ping_medium_color = '1 1 0';
-vector autocvar_hud_panel_scoreboard_ping_high_color = '1 0.5 0';
-vector autocvar_hud_panel_scoreboard_ping_worst_color = '1 0 0';
-#define PING_BEST autocvar_hud_panel_scoreboard_ping_best
+vector autocvar_hud_panel_scoreboard_ping_high_color = '1 0 0';
+#define PING_LOW autocvar_hud_panel_scoreboard_ping_low
 #define PING_MED autocvar_hud_panel_scoreboard_ping_medium
 #define PING_HIGH autocvar_hud_panel_scoreboard_ping_high
-#define PING_WORST autocvar_hud_panel_scoreboard_ping_worst
-#define COLOR_BEST autocvar_hud_panel_scoreboard_ping_best_color
+#define COLOR_LOW autocvar_hud_panel_scoreboard_ping_low_color
 #define COLOR_MED autocvar_hud_panel_scoreboard_ping_medium_color
 #define COLOR_HIGH autocvar_hud_panel_scoreboard_ping_high_color
-#define COLOR_WORST autocvar_hud_panel_scoreboard_ping_worst_color
 string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 {
 	float tmp, num, denom;
@@ -1066,16 +1065,15 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 			f = pl.ping;
 			if (f == 0)
 				return _("N/A");
-			if (f < PING_BEST)
-				sbt_field_rgb = COLOR_BEST;
+			// this colour selection code should match menuqc XonoticServerList_drawListBoxItem()
+			if (f < PING_LOW)
+				sbt_field_rgb = COLOR_LOW;
 			else if (f < PING_MED)
-				sbt_field_rgb = COLOR_BEST + (COLOR_MED - COLOR_BEST) * ((f - PING_BEST) / (PING_MED - PING_BEST));
+				sbt_field_rgb = COLOR_LOW + (COLOR_MED - COLOR_LOW) * ((f - PING_LOW) / (PING_MED - PING_LOW));
 			else if (f < PING_HIGH)
 				sbt_field_rgb = COLOR_MED + (COLOR_HIGH - COLOR_MED) * ((f - PING_MED) / (PING_HIGH - PING_MED));
-			else if (f < PING_WORST)
-				sbt_field_rgb = COLOR_HIGH + (COLOR_WORST - COLOR_HIGH) * ((f - PING_HIGH) / (PING_WORST - PING_HIGH));
 			else
-				sbt_field_rgb = COLOR_WORST;
+				sbt_field_rgb = COLOR_HIGH;
 			return ftos(f);
 
 		case SP_PL:
@@ -1148,29 +1146,29 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 				return sprintf("%.1f", f / rounds_played);
 			return ftos(f);
 
-		case SP_ELO:
-		{
-			float elo = pl.(scores(SP_ELO));
-			switch (elo)
+		case SP_SKILL:
+			tmp = pl.(scores(SP_SKILL));
+			switch (tmp)
 			{
 				case -1: return "...";
 				case -2: return _("N/A");
-				default: return ftos(elo);
+				default: return ftos(tmp);
 			}
-		}
 
 		case SP_FPS:
-		{
-			float fps = pl.(scores(SP_FPS));
-			if (fps == 0)
+			tmp = pl.(scores(SP_FPS));
+			if (tmp == 0)
 			{
 				sbt_field_rgb = '1 1 1';
 				return ((pl.ping == 0) ? _("N/A") : "..."); // if 0 ping, either connecting or bot (either case can't show proper score)
 			}
-			//sbt_field_rgb = HUD_Get_Num_Color(fps, 200, true);
-			sbt_field_rgb = '1 0 0' + '0 1 1' * (bound(0, fps, 60) / 60);
-			return ftos(fps);
-		}
+			// <=32fps full red, 64fps to 96fps (inclusive) full yellow, >=128fps white
+			// A little opinionated but representative of what's adequate for a competitive experience,
+			// with consideration to the default and supported ticrates and the minimum USB polling rate.
+			sbt_field_rgb.x = 1;
+			sbt_field_rgb.y = bound(0, (tmp - 32) * 0.03125, 1); // 0 at 32fps, 1 at 64fps
+			sbt_field_rgb.z = bound(0, (tmp - 96) * 0.03125, 1); // 0 at 96fps, 1 at 128fps
+			return ftos(tmp);
 
 		case SP_ROUNDS_PL:
 			return ftos(pl.(scores(field)));
@@ -1224,6 +1222,9 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 		if (sbt_field_icon_extra[j] != "")
 		{
 			sz = draw_getimagesize(sbt_field_icon_extra[j]);
+			// XONRELEASE TODO: xonotic-v0.9.0 after release remove if (sz == 0) case
+			if (sz == '0 0 0') // it happens in previous engine versions (Xonotic 0.8.6 or lower) when the image is missing
+				sz = '1 1 0';
 			sbt_fixcolumnwidth_iconlen_extra[j] = sz.x / sz.y;
 		}
 
@@ -1448,6 +1449,16 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor
 				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[0]
 				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[1];
+			if (teamplay)
+			{
+				int wants_join = entcs_GetWantsJoin(pl.sv_entnum);
+				if (wants_join)
+				{
+					vector tmcolor = Team_ColorRGB(Team_IndexToTeam(wants_join)) * min(1, 1 + sin(2*M_PI*time));
+					drawstring(pos - tmp, "(Q)", hud_fontsize, tmcolor, sbt_fg_alpha, DRAWFLAG_NORMAL);
+					tmp.x -= stringwidth("(Q) ", true, hud_fontsize);
+				}
+			}
 			drawcolorcodedstring(pos - tmp, str, hud_fontsize, fg_alpha, DRAWFLAG_NORMAL);
 		}
 		else
@@ -1558,13 +1569,15 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		if (pl == excluded_pl)
 			continue;
 
-		if (entcs_GetWantsJoin(pl.sv_entnum))
+		if (teamplay)
 		{
-			vector tmcolor = Team_ColorRGB(Team_IndexToTeam(entcs_GetWantsJoin(pl.sv_entnum)));
-			tmcolor -= tmcolor * sin(2*M_PI*time);
-
-			drawstring(pos, "(Q)", hud_fontsize, tmcolor, sbt_fg_alpha, DRAWFLAG_NORMAL);
-			pos.x += stringwidth("(Q) ", true, hud_fontsize);
+			int wants_join = entcs_GetWantsJoin(pl.sv_entnum);
+			if (wants_join)
+			{
+				vector tmcolor = Team_ColorRGB(Team_IndexToTeam(wants_join)) * min(1, 1 + sin(2*M_PI*time));
+				drawstring(pos, "(Q)", hud_fontsize, tmcolor, sbt_fg_alpha, DRAWFLAG_NORMAL);
+				pos.x += stringwidth("(Q) ", true, hud_fontsize);
+			}
 		}
 
 		field = "";
@@ -1793,6 +1806,7 @@ bool Scoreboard_WouldDraw()
 	else if (intermission == 2)
 		return false;
 	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && !MUTATOR_CALLHOOK(DrawDeathScoreboard)
+		&& time - CSQCModel_server2csqc(player_localentnum - 1).death_time >= autocvar_cl_deathscoreboard_delay
 		&& (!HUD_MinigameMenu_IsOpened() || !active_minigame))
 	{
 		return true;
@@ -1923,7 +1937,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 			weapons_with_stats += 1;
 			average_accuracy += weapon_stats; // store sum of all accuracies in average_accuracy
 
-			string s = sprintf("%d%%", weapon_stats * 100);
+			string s = ftos_decimals_percentage(weapon_stats, 0);
 			float padding = (weapon_width - stringwidth(s, false, hud_fontsize)) / 2;
 
 			if (!autocvar_hud_panel_scoreboard_accuracy_nocolors)
@@ -2517,7 +2531,7 @@ void Scoreboard_Draw()
 			str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	// Game Info: Game Type
+	// Game Info: Gametype
 	if (scoreboard_ui_enabled == 2)
 		str = _("Team Selection");
 	else if (gametype_custom_name != "")
@@ -2550,7 +2564,7 @@ void Scoreboard_Draw()
 		float ll_and_fl = STAT(LEADLIMIT_AND_FRAGLIMIT);
 		str = "";
 		if (tl > 0)
-			str = strcat(str, sprintf(_("^3%1.0f minutes"), tl));
+			str = strcat(str, "^3", count_minutes(floor(tl)));
 		if (!gametype.m_hidelimits)
 		{
 			if (fl > 0)
@@ -2799,7 +2813,7 @@ void Scoreboard_Draw()
 			);
 		}
 		else if (time >= respawn_time)
-			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey("jump", "+jump"));
+			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey(_("jump"), "+jump"));
 
 		pos.y += 1.2 * hud_fontsize.y;
 		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);

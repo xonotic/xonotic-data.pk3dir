@@ -1,7 +1,7 @@
 #include "quake3.qh"
 
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/gametypes/gametype/ctf/sv_ctf.qh>
 #include <common/mapobjects/trigger/counter.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/buffs/_mod.qh>
@@ -45,48 +45,56 @@
  * CTF spawnfuncs in sv_ctf.qc
 
  NOTE: for best experience, you need to swap MGs with SGs in the map or it won't have a MG
+ Guns that are very different may need .count scaling beyond that of GetAmmoConsumption().
 */
 
-// SG -> MG || SG
-SPAWNFUNC_Q3_COND(weapon_shotgun, ammo_shells, (q3compat & Q3COMPAT_ARENA), WEP_MACHINEGUN, WEP_SHOTGUN)
+// Shotgun <-> Machine Gun
+// We don't want the swap on defrag maps (some of which have a valid .arena file as well as the .defi).
+// In Q3 defaults SG has 10 shells and MG has 100 bullets, Xonotic's GetAmmoConsumption() will return 1 for both
+// so .count will be out by 10x, however Xonotic has a stronger MG than Q3 so using 8x for SG->MG.
+SPAWNFUNC_Q3(weapon_shotgun, ammo_shells,
+             q3compat == Q3COMPAT_ARENA ? WEP_MACHINEGUN : WEP_SHOTGUN,
+             q3compat == Q3COMPAT_ARENA ? 8 : 1)
+SPAWNFUNC_Q3(weapon_machinegun, ammo_bullets,
+             q3compat == Q3COMPAT_ARENA ? WEP_SHOTGUN : WEP_MACHINEGUN,
+             q3compat == Q3COMPAT_ARENA ? 0.1 : 1)
 
-// MG -> SG || MG
-// Technically we should replace weapon_machinegun with WEP_SHOTGUN if Q3COMPAT_ARENA, but it almost never occurs on Q3 maps
-SPAWNFUNC_Q3AMMO_COND(ammo_bullets, (q3compat & Q3COMPAT_ARENA), WEP_SHOTGUN, WEP_MACHINEGUN)
-
-// GL -> Mortar
-SPAWNFUNC_Q3AMMO(ammo_grenades, WEP_MORTAR)
+// Grenade Launcher -> Mortar
+SPAWNFUNC_Q3(weapon_grenadelauncher, ammo_grenades, WEP_MORTAR)
 
 // Team Arena Proximity Launcher -> Mine Layer
 SPAWNFUNC_Q3(weapon_prox_launcher, ammo_mines, WEP_MINE_LAYER)
 
-// Team Arena Chaingun -> HLAC
+// Team Arena Chain Gun -> HLAC
 SPAWNFUNC_Q3(weapon_chaingun, ammo_belt, WEP_HLAC)
 
-// Quake Live Heavy Machine Gun -> HLAC
+// Quake Live Heavy MachineGun -> HLAC
 SPAWNFUNC_Q3(weapon_hmg, ammo_hmg, WEP_HLAC)
 
-// Team Arena Nailgun -> Crylink || Quake Nailgun -> Electro
-SPAWNFUNC_Q3_COND(weapon_nailgun, ammo_nails, autocvar_sv_mapformat_is_quake3, WEP_CRYLINK, WEP_ELECTRO)
+// Team Arena Nail Gun -> Crylink || Quake Nail Gun -> Electro
+SPAWNFUNC_Q3(weapon_nailgun, ammo_nails, autocvar_sv_mapformat_is_quake3 ? WEP_CRYLINK : WEP_ELECTRO)
 
-// LG -> Electro
-SPAWNFUNC_Q3(weapon_lightning, ammo_lightning, WEP_ELECTRO)
+// Lightning Gun -> Electro
+// Damage potential of 100 LG bolts (varies between Q3 derivatives) is roughly half that of 100 electro cells,
+// Xonotic's GetAmmoConsumption() will return 4 so we need a 1/8 .count scale here.
+SPAWNFUNC_Q3(weapon_lightning, ammo_lightning, WEP_ELECTRO, 0.125)
 
-// Plasma -> Hagar
+// Plasma Gun -> Hagar
 SPAWNFUNC_Q3(weapon_plasmagun, ammo_cells, WEP_HAGAR)
 
-// Rail -> Vortex
+// Rail Gun -> Vortex
 SPAWNFUNC_Q3(weapon_railgun, ammo_slugs, WEP_VORTEX)
 
 // BFG -> Crylink || Fireball
-SPAWNFUNC_Q3_COND(weapon_bfg, ammo_bfg, cvar_string("g_mod_balance") == "XDF", WEP_CRYLINK, WEP_FIREBALL)
-	// FIXME: WEP_FIREBALL has no ammo_type field so ammo_bfg is deleted by SPAWNFUNC_BODY
+SPAWNFUNC_Q3(weapon_bfg, ammo_bfg, cvar_string("g_mod_balance") == "XDF" ? WEP_CRYLINK : WEP_FIREBALL)
+	// NB: WEP_FIREBALL has no ammo_type field so ammo_bfg is deleted by SPAWNFUNC_BODY
 
-// grappling hook -> hook
+// Grappling Hook
 SPAWNFUNC_WEAPON(weapon_grapplinghook, WEP_HOOK)
+	// NB: in Q3 this doesn't use ammo
 
-// RL -> RL
-SPAWNFUNC_Q3AMMO(ammo_rockets, WEP_DEVASTATOR)
+// Rocket Launcher -> Devastator
+SPAWNFUNC_Q3(weapon_rocketlauncher, ammo_rockets, WEP_DEVASTATOR)
 
 // Gauntlet -> Tuba
 SPAWNFUNC_ITEM(weapon_gauntlet, WEP_TUBA)
@@ -447,19 +455,3 @@ bool DoesQ3ARemoveThisEntity(entity this)
 
 	return false;
 }
-
-/// Returns ammo consumed per shot by the primary/default fire mode.
-/// Return value is undefined if entity isn't a weapon that uses ammo.
-int GetAmmoConsumptionQ3(entity wpn)
-{
-	switch (wpn)
-	{
-		case WEP_ARC:        return WEP_CVAR(WEP_ARC,        beam_ammo);
-		case WEP_DEVASTATOR: return WEP_CVAR(WEP_DEVASTATOR, ammo);
-		case WEP_MACHINEGUN: return WEP_CVAR(WEP_MACHINEGUN, sustained_ammo);
-		case WEP_MINE_LAYER: return WEP_CVAR(WEP_MINE_LAYER, ammo);
-		case WEP_SEEKER:     return WEP_CVAR(WEP_SEEKER,     tag_ammo);
-		default:             return WEP_CVAR_PRI(wpn, ammo);
-	}
-}
-

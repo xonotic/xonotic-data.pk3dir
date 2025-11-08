@@ -20,7 +20,7 @@
 #include <common/effects/effect.qh>
 #include <common/effects/qc/_mod.qh>
 #include <common/ent_cs.qh>
-#include <common/gamemodes/gamemode/nexball/cl_nexball.qh>
+#include <common/gametypes/gametype/nexball/cl_nexball.qh>
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/_mod.qh>
@@ -185,7 +185,7 @@ void Shutdown()
 
 	cvar_set("slowmo", cvar_defstring("slowmo")); // reset it back to 'default'
 
-	// if _cl_hook_gamestart wasn't called with an actual gamemode
+	// if _cl_hook_gamestart wasn't called with an actual gametype
 	// before CSQC VM shutdown then call it with nop fallback here
 	if (!(calledhooks & HOOK_START) && !isdemo())
 		localcmd("\n_cl_hook_gamestart nop\n");
@@ -975,7 +975,7 @@ void CSQC_Ent_Remove(entity this)
 	delete(this);
 }
 
-void Gamemode_Init()
+void Gametype_Init()
 {
 	// fire game or demo start hooks here
 	if (!(calledhooks & HOOK_START))
@@ -1074,7 +1074,7 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 		net_handle_ServerWelcome();
 	return = true;
 	Scoreboard_InitScores();
-	Gamemode_Init();
+	Gametype_Init();
 }
 
 NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
@@ -1506,45 +1506,38 @@ NET_HANDLE(TE_CSQC_SERVERWELCOME, bool isNew)
 
 string _getcommandkey(string cmd_name, string command, bool forcename)
 {
-	string keys;
-	float n, j, k, l = 0;
-
 	if (!autocvar_hud_showbinds)
 		return cmd_name;
 
-	keys = db_get(binddb, command);
+	string key, keys = db_get(binddb, command);
+	int n, j, found = 0;
+	float k;
+
 	if (keys == "")
 	{
-		bool joy_active = cvar("joy_active");
+		const bool joy_active = cvar("joy_active");
 		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
-		for(j = 0; j < n; ++j)
+		for (j = 0; j < n; ++j)
 		{
 			k = stof(argv(j));
-			if(k != -1)
-			{
-				string key = keynumtostring(k);
-				if(!joy_active && substring(key, 0, 3) == "JOY")
-					continue;
+			if (k == -1)
+				continue;
+			key = keynumtostring(k);
+			if (!joy_active && startsWith(key, "JOY"))
+				continue;
 
-				key = translate_key(key);
+			keys = cons_mid(keys, ", ", translate_key(key));
 
-				if (keys == "")
-					keys = key;
-				else
-					keys = strcat(keys, ", ", key);
-
-				++l;
-				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit <= l)
-					break;
-			}
-
+			if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit <= ++found)
+				break;
 		}
 		if (keys == "")
 			keys = "NO_KEY";
 		db_put(binddb, command, keys);
 	}
 
-	if (keys == "NO_KEY") {
+	if (keys == "NO_KEY")
+	{
 		if (autocvar_hud_showbinds > 1)
 			return sprintf(_("%s (not bound)"), cmd_name);
 		else
@@ -1552,8 +1545,7 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 	}
 	else if (autocvar_hud_showbinds > 1 || forcename)
 		return sprintf("%s (%s)", cmd_name, keys);
-	else
-		return keys;
+	return keys;
 }
 
 /** engine callback */

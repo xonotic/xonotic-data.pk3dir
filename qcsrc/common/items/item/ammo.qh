@@ -2,6 +2,9 @@
 
 #include "pickup.qh"
 #include <common/items/all.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
+// NOTE: ammo doesn't need this powerups include, but it prevents #2994
+// TODO: this sort of problem could be fixed by moving away from registries
 #include <common/resources/resources.qh>
 #ifdef SVQC
     #include <common/resources/sv_resources.qh>
@@ -55,6 +58,7 @@ CLASS(Shells, Ammo)
 /* refname    */ ATTRIB(Shells, netname, string, "shells");
 /* itemname   */ ATTRIB(Shells, m_name, string, _("Shells"));
 /* icon       */ ATTRIB(Shells, m_icon, string, "ammo_shells");
+/* color      */ ATTRIB(Shells, m_color, vector, '0.604 0.647 0.671');
 #ifdef SVQC
 /* botvalue   */ ATTRIB(Shells, m_botvalue, int, 1000);
 /* itemid     */ ATTRIB(Shells, m_itemid, int, IT_RESOURCE);
@@ -90,6 +94,7 @@ CLASS(Bullets, Ammo)
 /* refname    */ ATTRIB(Bullets, netname, string, "bullets");
 /* itemname   */ ATTRIB(Bullets, m_name, string, _("Bullets"));
 /* icon       */ ATTRIB(Bullets, m_icon, string, "ammo_bullets");
+/* color      */ ATTRIB(Bullets, m_color, vector, '0.678 0.941 0.522');
 #ifdef SVQC
 /* botvalue   */ ATTRIB(Bullets, m_botvalue, int, 1500);
 /* itemid     */ ATTRIB(Bullets, m_itemid, int, IT_RESOURCE);
@@ -125,6 +130,7 @@ CLASS(Rockets, Ammo)
 /* refname    */ ATTRIB(Rockets, netname, string, "rockets");
 /* itename    */ ATTRIB(Rockets, m_name, string, _("Rockets"));
 /* icon       */ ATTRIB(Rockets, m_icon, string, "ammo_rockets");
+/* color      */ ATTRIB(Rockets, m_color, vector, '0.918 0.686 0.525');
 #ifdef SVQC
 /* botvalue   */ ATTRIB(Rockets, m_botvalue, int, 1500);
 /* itemid     */ ATTRIB(Rockets, m_itemid, int, IT_RESOURCE);
@@ -160,6 +166,7 @@ CLASS(Cells, Ammo)
 /* refname    */ ATTRIB(Cells, netname, string, "cells");
 /* itemname   */ ATTRIB(Cells, m_name, string, _("Cells"));
 /* icon       */ ATTRIB(Cells, m_icon, string, "ammo_cells");
+/* color      */ ATTRIB(Cells, m_color, vector, '0.545 0.882 0.969');
 #ifdef SVQC
 /* botvalue   */ ATTRIB(Cells, m_botvalue, int, 1500);
 /* itemid     */ ATTRIB(Cells, m_itemid, int, IT_RESOURCE);

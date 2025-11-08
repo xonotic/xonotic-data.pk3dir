@@ -2,7 +2,6 @@
 
 int autocvar_teamplay_mode;
 
-bool autocvar_g_changeteam_banned;
 bool autocvar_teamplay_lockonrestart;
 
 bool autocvar_g_balance_teams;
@@ -126,11 +125,6 @@ bool QueuedPlayersReady(entity this, bool checkspecificteam);
 /// \return True if team switch was successful, false otherwise.
 bool SetPlayerTeam(entity player, int team_index, int type);
 
-/// \brief Sets the team of the player with all sanity checks.
-/// \param[in,out] player Player to adjust.
-/// \param[in] team_index Index of the team to set.
-void Player_SetTeamIndexChecked(entity player, int team_index);
-
 /// \brief Moves player to the specified team.
 /// \param[in,out] client Client to move.
 /// \param[in] team_index Index of the team.
@@ -231,8 +225,9 @@ int TeamBalance_GetNumberOfPlayers(entity balance, int index);
 /// \param[in] player Player to check.
 /// \param[in] ignore_player ???
 /// \return Index of the team that will make the game most balanced if the
-/// player joins it. If there are several equally good teams available, the
-/// function will pick a random one.
+/// player joins it. If there are several equally good teams available the
+/// function will pick a random one, unless the player is already on one of them
+/// in which case that one is returned.
 int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player);
 
 /// \brief Returns the bitmask of the teams that will make the game most
@@ -313,6 +308,7 @@ void TeamBalance_BanTeamsExcept(entity balance, int index);
 /// \param[in] balance Team balance entity.
 /// \param[in] index Index of the team.
 /// \return Team entity of the team balance entity at the given index.
+/// \note The team entities are temporary so you may write to their fields.
 entity TeamBalance_GetTeamFromIndex(entity balance, int index);
 
 /// \brief Returns the team entity of the team balance entity that corresponds
@@ -321,6 +317,7 @@ entity TeamBalance_GetTeamFromIndex(entity balance, int index);
 /// \param[in] team_num Team value. See TEAM_NUM constants.
 /// \return Team entity of the team balance entity that corresponds to the given
 /// TEAM_NUM value.
+/// \note The team entities are temporary so you may write to their fields.
 entity TeamBalance_GetTeam(entity balance, int team_num);
 
 /// \brief Returns whether the team is allowed.

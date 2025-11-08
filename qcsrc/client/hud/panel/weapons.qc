@@ -536,6 +536,8 @@ void Weapons_Draw(
 		if (autocvar_hud_panel_weapons_accuracy)
 		{
 			float panel_weapon_accuracy = weapon_accuracy[it.m_id-WEP_FIRST];
+			if (autocvar__hud_configure && panel_weapon_accuracy == -1)
+				panel_weapon_accuracy = (it.m_id % 7 - 2) * 0.11 + 0.3; // make up something
 			if (panel_weapon_accuracy >= 0)
 			{
 				color = Accuracy_GetColor(panel_weapon_accuracy);
@@ -588,6 +590,9 @@ void Weapons_Draw(
 			{
 				float ammo_full;
 				float a = getstati(GetAmmoStat(it.ammo_type)); // how much ammo do we have?
+
+				if (autocvar__hud_configure && a == 0)
+					a = 60; // make up something
 
 				if (a > 0)
 				{

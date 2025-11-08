@@ -428,7 +428,7 @@ string GotoMap(string m)
 		return "The map you suggested is not available on this server.";
 	if (!autocvar_sv_vote_gametype)
 	if (!MapInfo_CheckMap(m))
-		return "The map you suggested does not support the current game mode.";
+		return "The map you suggested does not support the current gametype.";
 	if (m != get_nextmap())
 		Set_NextMap(m);
 	if (!intermission_running)

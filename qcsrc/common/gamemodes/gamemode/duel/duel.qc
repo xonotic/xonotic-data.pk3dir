@@ -1,1 +1,0 @@
-#include "duel.qh"

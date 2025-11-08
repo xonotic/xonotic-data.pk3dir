@@ -30,7 +30,7 @@ void XonoticTeamSelectDialog_fill(entity me)
 	entity e;
 	me.TR(me);
 		me.TD(me, 2, 4, e = makeTeamButton_T(_("join 'best' team (auto-select)"), '0 0 0', "cmd selectteam auto; cmd join",
-			_("Autoselect team (recommended)")));
+			_("Auto-select team (recommended)")));
 			e.preferredFocusPriority = 1;
 	me.TR(me);
 	me.TR(me);

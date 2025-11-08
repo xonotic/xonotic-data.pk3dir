@@ -23,7 +23,7 @@ ENABLE_DEBUGDRAW="${ENABLE_DEBUGDRAW:-0}"
 ENABLE_DEBUGTRACE="${ENABLE_DEBUGTRACE:-0}"
 
 case "$QCC" in
-	*/fteqcc)
+	*/fteqcc*)
 		QCCIDENT="-DFTEQCC"
 		;;
 	*)

@@ -24,10 +24,10 @@ qc: check-cvars
 	$(MAKE) -C qcsrc qc
 
 .PHONY: skin
-skin: gfx/menu/default/skinvalues.txt
+skin: gfx/menu/wickedx/skinvalues.txt
 
-gfx/menu/default/skinvalues.txt: qcsrc/menu/skin-customizables.inc
-	$(PERL) qcsrc/menu/skin-customizables.inc > gfx/menu/default/skinvalues.txt
+gfx/menu/wickedx/skinvalues.txt: qcsrc/menu/skin-customizables.inc
+	$(PERL) qcsrc/menu/skin-customizables.inc > gfx/menu/wickedx/skinvalues.txt
 
 .PHONY: clean
 clean:

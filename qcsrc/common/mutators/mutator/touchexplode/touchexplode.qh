@@ -1,0 +1,9 @@
+#pragma once
+
+#ifdef MENUQC
+CLASS(MutatorTouchExplode, Mutator)
+	ATTRIB(MutatorTouchExplode, message, string, _("Touch explode"));
+ENDCLASS(MutatorTouchExplode)
+
+REGISTER_MUTATOR(touchexplode, true, MutatorTouchExplode);
+#endif

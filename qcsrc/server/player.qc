@@ -6,8 +6,8 @@
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
 #include <common/effects/qc/_mod.qh>
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/sv_rules.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/gametypes/sv_rules.qh>
 #include <common/mapobjects/_mod.qh>
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/teleporters.qh>
@@ -437,7 +437,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		{
 			// accumulate damage, it will be logged later in this frame
 			if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this) && deathtype != DEATH_KILL.m_id)
+			{
+				if (accuracy_isgooddamage(attacker, this))
+					accuracy_add(attacker, awep, 0, 0, realdmg); // add to real
 				attacker.score_frame_dmg += realdmg;
+			}
 			if (IS_PLAYER(this))
 				this.score_frame_dmgtaken += realdmg;
 		}

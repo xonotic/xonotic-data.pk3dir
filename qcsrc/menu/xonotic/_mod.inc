@@ -44,6 +44,14 @@
 #include <menu/xonotic/dialog_hudpanel_vote.qc>
 #include <menu/xonotic/dialog_hudpanel_weapons.qc>
 #include <menu/xonotic/dialog_hudsetup_exit.qc>
+#include <menu/xonotic/dialog_media.qc>
+#include <menu/xonotic/dialog_media_demo.qc>
+#include <menu/xonotic/dialog_media_demo_startconfirm.qc>
+#include <menu/xonotic/dialog_media_demo_timeconfirm.qc>
+#include <menu/xonotic/dialog_media_guide.qc>
+#include <menu/xonotic/dialog_media_musicplayer.qc>
+#include <menu/xonotic/dialog_media_screenshot.qc>
+#include <menu/xonotic/dialog_media_screenshot_viewer.qc>
 #include <menu/xonotic/dialog_monstertools.qc>
 #include <menu/xonotic/dialog_multiplayer.qc>
 #include <menu/xonotic/dialog_multiplayer_create.qc>
@@ -53,13 +61,6 @@
 #include <menu/xonotic/dialog_multiplayer_join_serverinfo.qc>
 #include <menu/xonotic/dialog_multiplayer_join_serverinfotab.qc>
 #include <menu/xonotic/dialog_multiplayer_join_termsofservice.qc>
-#include <menu/xonotic/dialog_multiplayer_media.qc>
-#include <menu/xonotic/dialog_multiplayer_media_demo.qc>
-#include <menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc>
-#include <menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc>
-#include <menu/xonotic/dialog_multiplayer_media_musicplayer.qc>
-#include <menu/xonotic/dialog_multiplayer_media_screenshot.qc>
-#include <menu/xonotic/dialog_multiplayer_media_screenshot_viewer.qc>
 #include <menu/xonotic/dialog_multiplayer_profile.qc>
 #include <menu/xonotic/dialog_quit.qc>
 #include <menu/xonotic/dialog_sandboxtools.qc>
@@ -127,3 +128,5 @@
 #include <menu/xonotic/util.qc>
 #include <menu/xonotic/weaponarenacheckbox.qc>
 #include <menu/xonotic/weaponslist.qc>
+
+#include <menu/xonotic/guide/_mod.inc>

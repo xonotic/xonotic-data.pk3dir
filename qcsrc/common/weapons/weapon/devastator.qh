@@ -49,6 +49,7 @@ CLASS(Devastator, Weapon)
 		P(class, prefix, guidestop, float, NONE) \
 		P(class, prefix, health, float, NONE) \
 		P(class, prefix, lifetime, float, NONE) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, radius, float, NONE) \
 		P(class, prefix, refire, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
@@ -81,7 +82,6 @@ ENDCLASS(Devastator)
 REGISTER_WEAPON(DEVASTATOR, NEW(Devastator));
 
 SPAWNFUNC_WEAPON(weapon_devastator, WEP_DEVASTATOR)
-SPAWNFUNC_WEAPON(weapon_rocketlauncher, WEP_DEVASTATOR)
 
 #ifdef SVQC
 .float rl_release;

@@ -1107,7 +1107,7 @@ void bd_hud_board(vector pos, vector mySize)
 		string victory_text = _("Game over!");
 
 		if(active_minigame.minigame_flags & BD_TURN_WIN)
-			victory_text = _("Well done! Click 'Next Level' to continue");
+			victory_text = _("Well done! Click \"Next Level\" to continue");
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
@@ -1194,7 +1194,7 @@ string bd_turn_to_string(int turnflags)
 	}
 
 	if( turnflags & BD_TURN_EDIT )
-		return _("Press the space bar to change your currently selected tile");
+		return _("Press the spacebar to change your currently selected tile");
 
 	if ( turnflags & BD_TURN_MOVE )
 		return _("Push the boulders onto the targets");

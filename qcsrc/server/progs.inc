@@ -1,3 +1,11 @@
+#ifdef FTEQCC
+
+// To compile with fteqcc, run:
+// QCCFLAGS_WERROR='-O3' make -C data/xonotic-data.pk3dir/qcsrc ../progs.dat QCC=$HOME/src/fteqw/engine/qclib/fteqcc.bin
+#pragma target DP_20250104
+
+#endif
+
 #include <lib/_all.inc>
 
 #if XONOTIC

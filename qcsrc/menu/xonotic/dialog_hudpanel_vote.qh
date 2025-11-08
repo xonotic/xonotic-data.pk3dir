@@ -9,5 +9,5 @@ CLASS(XonoticHUDVoteDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDVoteDialog, rows, float, 15.5);
 	ATTRIB(XonoticHUDVoteDialog, columns, float, 4);
 	ATTRIB(XonoticHUDVoteDialog, name, string, "HUDvote");
-	ATTRIB(XonoticHUDVoteDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDVoteDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDVoteDialog)

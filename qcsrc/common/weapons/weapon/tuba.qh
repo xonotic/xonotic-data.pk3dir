@@ -52,6 +52,7 @@ CLASS(Tuba, Weapon)
 	END()
 	W_PROPS(X, Tuba, tuba)
 #undef X
+
 ENDCLASS(Tuba)
 REGISTER_WEAPON(TUBA, NEW(Tuba));
 

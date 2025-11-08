@@ -10,8 +10,12 @@
 CLASS(AmmoBuff, Buff)
 	ATTRIB(AmmoBuff, m_name, string, _("Ammo"));
 	ATTRIB(AmmoBuff, netname, string, "ammo");
+#ifndef SVQC
 	ATTRIB(AmmoBuff, m_icon, string, "buff_ammo");
+#endif
+#ifdef GAMEQC
 	ATTRIB(AmmoBuff, m_skin, int, 3);
+#endif
 	ATTRIB(AmmoBuff, m_color, vector, '0.29 0.37 1');
 ENDCLASS(AmmoBuff)
 

@@ -3,7 +3,7 @@
 #include "../item/checkbox.qh"
 CLASS(XonoticCheckBoxString, CheckBox)
 	METHOD(XonoticCheckBoxString, configureXonoticCheckBoxString, void(entity, string, string, string, string));
-	METHOD(XonoticCheckBoxString, setChecked, void(entity, float));
+	METHOD(XonoticCheckBoxString, setChecked, void(entity, bool));
 	ATTRIB(XonoticCheckBoxString, fontSize, float, SKINFONTSIZE_NORMAL);
 	ATTRIB(XonoticCheckBoxString, image, string, SKINGFX_CHECKBOX);
 	ATTRIB(XonoticCheckBoxString, yesString, string);

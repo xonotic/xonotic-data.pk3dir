@@ -48,10 +48,12 @@ CLASS(MachineGun, Weapon)
 		P(class, prefix, first_refire, float, NONE) \
 		P(class, prefix, first_spread, float, NONE) \
 		P(class, prefix, mode, float, NONE) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, solidpenetration, float, NONE) \
 		P(class, prefix, spread_add, float, NONE) \
+		P(class, prefix, spread_crouchmod, float, NONE) \
 		P(class, prefix, spread_decay, float, NONE) \
 		P(class, prefix, spread_max, float, NONE) \
 		P(class, prefix, spread_min, float, NONE) \
@@ -75,5 +77,4 @@ CLASS(MachineGun, Weapon)
 ENDCLASS(MachineGun)
 REGISTER_WEAPON(MACHINEGUN, NEW(MachineGun));
 
-SPAWNFUNC_WEAPON(weapon_machinegun, WEP_MACHINEGUN)
-SPAWNFUNC_WEAPON(weapon_uzi, WEP_MACHINEGUN)
+SPAWNFUNC_WEAPON(weapon_uzi, WEP_MACHINEGUN) // Nexuiz compat

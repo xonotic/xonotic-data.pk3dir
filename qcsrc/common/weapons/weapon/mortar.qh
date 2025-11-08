@@ -45,6 +45,7 @@ CLASS(Mortar, Weapon)
 		P(class, prefix, lifetime, float, BOTH) \
 		P(class, prefix, lifetime_bounce, float, SEC) \
 		P(class, prefix, lifetime_stick, float, BOTH) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, radius, float, BOTH) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload_ammo, float, NONE) \
@@ -65,11 +66,11 @@ CLASS(Mortar, Weapon)
 	END()
 	W_PROPS(X, Mortar, mortar)
 #undef X
+
 ENDCLASS(Mortar)
 REGISTER_WEAPON(MORTAR, NEW(Mortar));
 
 SPAWNFUNC_WEAPON(weapon_mortar, WEP_MORTAR)
-SPAWNFUNC_WEAPON(weapon_grenadelauncher, WEP_MORTAR)
 
 #ifdef SVQC
 .float gl_detonate_later;

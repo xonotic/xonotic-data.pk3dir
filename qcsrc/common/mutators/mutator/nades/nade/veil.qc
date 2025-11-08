@@ -7,19 +7,19 @@ void nade_veil_touch(entity this, entity toucher)
 {
 	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
+		entity real_toucher = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
 
 		float tint_alpha = 0.75;
 		if(SAME_TEAM(toucher, this.realowner))
 		{
 			tint_alpha = 0.45;
-			if(!show_tint.nade_veil_time)
+			if(!real_toucher.nade_veil_time)
 			{
 				toucher.nade_veil_prevalpha = toucher.alpha;
 				toucher.alpha = -1;
 			}
 		}
-		show_tint.nade_veil_time = time + 0.1;
+		real_toucher.nade_veil_time = time + 0.1;
 	}
 }
 
@@ -43,3 +43,16 @@ void nade_veil_Apply(entity player)
 	}
 }
 #endif // SVQC
+#ifdef MENUQC
+#include "darkness.qh"
+
+METHOD(VeilNade, describe, string(VeilNade this))
+{
+	TC(VeilNade, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s detonates after a short delay, temporarily creating an orb around the point where it detonated for several seconds. "
+	      "Players inside the orb will be invisible to those outside it."), COLORED_NAME(this));
+	PAR(_("This is sort of the opposite of the %s."), COLORED_NAME(NADE_TYPE_DARKNESS));
+	return PAGE_TEXT;
+}
+#endif // MENUQC

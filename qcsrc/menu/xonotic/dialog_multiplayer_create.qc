@@ -36,8 +36,7 @@ void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax,
 	{
 		// set new values
 		e.addText(e, strzone(_("Default")), -1);
-		for(i = pMin; i <= pMax; i += pStep)
-			e.addText(e, strzone(ftos(i)), i);
+		e.addRange(e, pMin, pMax, pStep);
 		e.addText(e, strzone(_("Unlimited")), 0);
 	}
 	e.configureXonoticMixedSliderValues(e);
@@ -83,29 +82,14 @@ void XonoticServerCreateTab_fill(entity me)
 	me.gotoRC(me, 13.5, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Time limit:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("timelimit_override",
-			_("Timelimit in minutes that when hit, will end the match")));
-			#define ADDVALUE_MINUTES(i) e.addText(e, strzone(sprintf(_("%d minutes"), i)), i)
+			_("Time limit in minutes that when hit, will end the match")));
+			e.formatString = "m";
 			e.addText(e, ZCTX(_("TIMLIM^Default")), -1);
-			e.addText(e, _("1 minute"), 1);
-			ADDVALUE_MINUTES(2);
-			ADDVALUE_MINUTES(3);
-			ADDVALUE_MINUTES(4);
-			ADDVALUE_MINUTES(5);
-			ADDVALUE_MINUTES(6);
-			ADDVALUE_MINUTES(7);
-			ADDVALUE_MINUTES(8);
-			ADDVALUE_MINUTES(9);
-			ADDVALUE_MINUTES(10);
-			ADDVALUE_MINUTES(15);
-			ADDVALUE_MINUTES(20);
-			ADDVALUE_MINUTES(25);
-			ADDVALUE_MINUTES(30);
-			ADDVALUE_MINUTES(40);
-			ADDVALUE_MINUTES(50);
-			ADDVALUE_MINUTES(60);
+			e.addRange(e, 1, 10, 1);
+			e.addRange(e, 15, 30, 5);
+			e.addRange(e, 40, 60, 10);
 			e.addText(e, ZCTX(_("TIMLIM^Infinite")), 0);
 			e.configureXonoticMixedSliderValues(e);
-			#undef ADDVALUE_MINUTES
 	me.TR(me);
 		me.TD(me, 1, 1, me.labelFraglimit = makeXonoticTextLabel(0, _("Frag limit:")));
 		me.TD(me, 1, 2, e = me.sliderFraglimit = makeXonoticMixedSlider("fraglimit_override"));
@@ -130,7 +114,8 @@ void XonoticServerCreateTab_fill(entity me)
 			setDependent(e, "g_campaign", 0, 0);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bot skill:")));
-			setDependentAND(e, "bot_number", 0, -1, "g_campaign", 0, 0);
+			setDependentNOT(e, "bot_number", 0);
+			setDependentAND(e, "g_campaign", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("skill",
 			_("Specify how experienced the bots will be")));
 			e.addText(e, _("Botlike"), 0);
@@ -145,7 +130,8 @@ void XonoticServerCreateTab_fill(entity me)
 			e.addText(e, _("Unhuman"), 9);
 			e.addText(e, _("Godlike"), 10);
 			e.configureXonoticMixedSliderValues(e);
-			setDependentAND(e, "bot_number", 0, -1, "g_campaign", 0, 0);
+			setDependentNOT(e, "bot_number", 0);
+			setDependentAND(e, "g_campaign", 0, 0);
 
 	// mapListBox is in the right column but the ref is needed for mutators dialog here
 	me.mapListBox = makeXonoticMapList();
@@ -174,7 +160,7 @@ void XonoticServerCreateTab_fill(entity me)
 		// string filter label and box
 		me.TD(me, 1, 0.35, e = makeXonoticTextLabel(1, _("Filter:")));
 		me.mapListBox.stringFilterBox = makeXonoticInputBox_T(0, string_null,
-			_("Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-Delete to clear; Enter when done."));
+			_("Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL to clear; ENTER when done."));
 		me.TD(me, 1, me.columns - me.firstColumn - 0.35, e = me.mapListBox.stringFilterBox);
 			e.onChange = MapList_StringFilterBox_Change;
 			e.keyDown = MapList_StringFilterBox_keyDown;

@@ -43,6 +43,7 @@ CLASS(Rifle, Weapon)
 		P(class, prefix, damagefalloff_mindist, float, BOTH) \
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, headshot_multiplier, float, BOTH) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload, float, SEC) \
 		P(class, prefix, reload_ammo, float, NONE) \
@@ -61,11 +62,12 @@ CLASS(Rifle, Weapon)
 	END()
 	W_PROPS(X, Rifle, rifle)
 #undef X
+
 ENDCLASS(Rifle)
 REGISTER_WEAPON(RIFLE, NEW(Rifle));
 
 SPAWNFUNC_WEAPON(weapon_rifle, WEP_RIFLE)
-SPAWNFUNC_WEAPON(weapon_campingrifle, WEP_RIFLE)
+SPAWNFUNC_WEAPON(weapon_campingrifle, WEP_RIFLE) // Nexuiz compat
 SPAWNFUNC_WEAPON(weapon_sniperrifle, WEP_RIFLE)
 
 #ifdef SVQC

@@ -2,7 +2,6 @@
 
 #include "listbox.qh"
 CLASS(XonoticWeaponsList, XonoticListBox)
-	METHOD(XonoticWeaponsList, configureXonoticWeaponsList, void(entity));
 	METHOD(XonoticWeaponsList, toString, string(entity));
 	ATTRIB(XonoticWeaponsList, rowsPerItem, float, 1);
 	METHOD(XonoticWeaponsList, draw, void(entity));

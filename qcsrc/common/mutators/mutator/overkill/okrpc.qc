@@ -14,7 +14,7 @@ void W_OverkillRocketPropelledChainsaw_Explode(entity this, entity directhitenti
 	{
 		// if chainsaw hit something, it removed fired damage (so that direct hit is 100%)
 		// now that we also damaged something by explosion we'd go over 100% so let's add the fired damage back
-		accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype), WEP_CVAR(WEP_OVERKILL_RPC, damage), 0);
+		accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype), WEP_CVAR(WEP_OVERKILL_RPC, damage), 0, 0); // add to fired
 	}
 
 	delete(this);
@@ -71,7 +71,7 @@ void W_OverkillRocketPropelledChainsaw_Think(entity this)
 				// We remove it here so that a direct hit that passes through and doesn't damage anything by the explosion later is still 100%.
 				float fired_damage = WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage2) - WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage);
 				float hit_damage = WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage2);
-				accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype), fired_damage, hit_damage);
+				accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype), fired_damage, hit_damage, 0); // add to fired and hit
 			}
 			this.m_chainsaw_damage += WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage2);
 		}
@@ -228,6 +228,25 @@ METHOD(OverkillRocketPropelledChainsaw, wr_impacteffect, void(entity thiswep, en
 	pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
 	if(!w_issilent)
 		sound(actor, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+}
+
+#endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+#include <common/mutators/mutator/overkill/overkill.qh>
+
+METHOD(OverkillRocketPropelledChainsaw, describe, string(OverkillRocketPropelledChainsaw this))
+{
+	TC(OverkillRocketPropelledChainsaw, this);
+	PAGE_TEXT_INIT();
+	PAR(_("As the name suggests, the %s is a superweapon that fires a rocket propelled chainsaw which explodes on impact, dealing a lot of splash damage to any players close by."), COLORED_NAME(this));
+	PAR(_("Like with all %s weapons, the secondary fire shoots a laser which doesn't damage or push enemies, but can be used to push yourself around."), COLORED_NAME(MUTATOR_ok));
+	PAR(_("It is a superweapon found on some maps, meaning that it breaks down after some time."));
+	PAR(_("The primary fire consumes %s ammo, although you spawn with an infinite amount of it in %s."), COLORED_NAME(ITEM_Rockets), COLORED_NAME(MUTATOR_ok));
+	PAR(_("Since it is the only %s weapon which deals splash damage, the %s is a good choice of weapon for attacking groups of enemies."), COLORED_NAME(MUTATOR_ok), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_onlyOne_andDirectHit(this.netname, "primary"));
+	return PAGE_TEXT;
 }
 
 #endif

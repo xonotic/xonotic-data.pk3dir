@@ -2,6 +2,8 @@
 
 string autocvar_g_midair;
 float autocvar_g_midair_shieldtime;
+float autocvar_g_midair_damagemultiplier;
+float autocvar_g_midair_damageforcescale;
 
 REGISTER_MUTATOR(midair, expr_evaluate(autocvar_g_midair));
 
@@ -12,10 +14,15 @@ MUTATOR_HOOKFUNCTION(midair, Damage_Calculate)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 
-	if(IS_PLAYER(frag_attacker))
-	if(IS_PLAYER(frag_target))
-	if(time < frag_target.midair_shieldtime)
-		M_ARGV(4, float) = 0;
+	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
+	{
+		if(time < frag_target.midair_shieldtime)
+			M_ARGV(4, float) = 0;
+		else
+			M_ARGV(4, float) *= autocvar_g_midair_damagemultiplier;
+		if(autocvar_g_midair_damageforcescale)
+			M_ARGV(6, vector) *= autocvar_g_midair_damageforcescale;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(midair, PlayerPowerups)

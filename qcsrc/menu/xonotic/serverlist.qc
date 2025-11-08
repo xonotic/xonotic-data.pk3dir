@@ -334,14 +334,13 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 		m = SLIST_MASK_AND - 1;
 		resethostcachemasks();
 
-		// ping: reject negative ping (no idea why this happens in the first place, engine bug)
-		sethostcachemasknumber(++m, SLIST_FIELD_PING, 0, SLIST_TEST_GREATEREQUAL);
-
 		// show full button
 		if(!me.filterShowFull)
 		{
-			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL); // legacy
-			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, ":S0:", SLIST_TEST_NOTCONTAIN); // g_maxplayers support
+			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL); // can connect
+			// There's several reasons to join a server where nJoinAllowed() reported 0 free slots, such as:
+			// to spec the match, chat, vote for a gametype with more players, or join your reserved tournament slot.
+			//sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, ":S0:", SLIST_TEST_NOTCONTAIN); // g_maxplayers support
 		}
 
 		// show empty button
@@ -709,7 +708,7 @@ void XonoticServerList_setSortOrder(entity me, int fld, int direction)
 	me.sortButton1.forcePressed = (fld == SLIST_FIELD_PING);
 	me.sortButton2.forcePressed = (fld == SLIST_FIELD_NAME);
 	me.sortButton3.forcePressed = (fld == SLIST_FIELD_MAP);
-	me.sortButton4.forcePressed = 0;
+	me.sortButton4.forcePressed = false;
 	me.sortButton5.forcePressed = (fld == SLIST_FIELD_NUMHUMANS);
 	me.selectedItem = 0;
 	strfree(me.selectedServer);
@@ -794,6 +793,9 @@ void XonoticServerList_doubleClickListBoxItem(entity me, int i, vector where)
 {
 	ServerList_Connect_Click(NULL, me);
 }
+int autocvar_hud_panel_scoreboard_ping_low;
+int autocvar_hud_panel_scoreboard_ping_medium;
+int autocvar_hud_panel_scoreboard_ping_high;
 void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	vector oldscale = draw_scale;
@@ -858,7 +860,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		versionstr = argv(1);
 	}
 	bool pure = false, pure_available = false;
-	int freeslots = -1, sflags = -1;
+	int qcfreeslots = -1, sflags = -1;
 	string modname = "";
 	for(int j = 2; j < m; ++j)
 	{
@@ -872,7 +874,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 			pure_available = true;
 		}
 		else if(key == "S")
-			freeslots = stof(value);
+			qcfreeslots = stof(value); // from nJoinAllowed()
 		else if(key == "F")
 			sflags = stoi(value);
 		else if(key == "M")
@@ -904,39 +906,38 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		pure_available = false;
 
 	float theAlpha;
-	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0)
+	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0) // can't connect
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
-	else if(freeslots == 0)
-		theAlpha = SKINALPHA_SERVERLIST_FULL; // g_maxplayers support
+	else if(qcfreeslots == 0) // can connect but may not be able to play yet (duel, g_maxplayers, etc)
+		theAlpha = SKINALPHA_SERVERLIST_EMPTY;
 	else if (!gethostcachenumber(SLIST_FIELD_NUMHUMANS, i))
 		theAlpha = SKINALPHA_SERVERLIST_EMPTY;
 	else
 		theAlpha = 1;
 
 	float ping = gethostcachenumber(SLIST_FIELD_PING, i);
-	const int PING_LOW = 75;
-	const int PING_MED = 200;
-	const int PING_HIGH = 500;
+	const int PING_LOW = autocvar_hud_panel_scoreboard_ping_low;
+	const int PING_MED = autocvar_hud_panel_scoreboard_ping_medium;
+	const int PING_HIGH = autocvar_hud_panel_scoreboard_ping_high;
 	vector theColor;
-	if(ping < PING_LOW)
-		theColor = SKINCOLOR_SERVERLIST_LOWPING + (SKINCOLOR_SERVERLIST_MEDPING - SKINCOLOR_SERVERLIST_LOWPING) * (ping / PING_LOW);
+	// this colour selection code should match csqc Scoreboard_GetField()
+	if (ping < PING_LOW)
+		theColor = SKINCOLOR_SERVERLIST_LOWPING;
 	else if(ping < PING_MED)
-		theColor = SKINCOLOR_SERVERLIST_MEDPING + (SKINCOLOR_SERVERLIST_HIGHPING - SKINCOLOR_SERVERLIST_MEDPING) * ((ping - PING_LOW) / (PING_MED - PING_LOW));
+		theColor = SKINCOLOR_SERVERLIST_LOWPING + (SKINCOLOR_SERVERLIST_MEDPING - SKINCOLOR_SERVERLIST_LOWPING) * ((ping - PING_LOW) / (PING_MED - PING_LOW));
 	else if(ping < PING_HIGH)
-	{
-		theColor = SKINCOLOR_SERVERLIST_HIGHPING;
-		theAlpha *= 1 + (SKINALPHA_SERVERLIST_HIGHPING - 1) * ((ping - PING_MED) / (PING_HIGH - PING_MED));
-	}
+		theColor = SKINCOLOR_SERVERLIST_MEDPING + (SKINCOLOR_SERVERLIST_HIGHPING - SKINCOLOR_SERVERLIST_MEDPING) * ((ping - PING_MED) / (PING_HIGH - PING_MED));
 	else
 	{
 		theColor = eX;
-		theAlpha *= SKINALPHA_SERVERLIST_HIGHPING;
+		theAlpha *= 1 + (SKINALPHA_SERVERLIST_HIGHPING - 1) * ((ping - PING_HIGH) / (PING_HIGH * 2 - PING_HIGH));
 	}
 
 	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, i))
 	{
 		theColor = theColor * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINCOLOR_SERVERLIST_FAVORITE * SKINALPHA_SERVERLIST_FAVORITE;
-		theAlpha = theAlpha * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINALPHA_SERVERLIST_FAVORITE;
+		if (gethostcachenumber(SLIST_FIELD_FREESLOTS, i) > 0) // can connect
+			theAlpha = theAlpha * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINALPHA_SERVERLIST_FAVORITE;
 	}
 
 	s = gethostcachestring(SLIST_FIELD_CNAME, i);
@@ -945,12 +946,12 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	if(substring(s, 0, 1) == "[")
 	{
 		isv6 = true;
-		me.seenIPv6 += 1;
+		++me.seenIPv6;
 	}
 	else if(IS_DIGIT(substring(s, 0, 1)))
 	{
 		isv4 = true;
-		me.seenIPv4 += 1;
+		++me.seenIPv4;
 	}
 
 	int crypto = stof(substring(crypto_getencryptlevel(s), 0, 1));
@@ -1124,7 +1125,7 @@ bool XonoticServerList_keyDown(entity me, int scan, bool ascii, bool shift)
 		ServerList_Connect_Click(NULL, me);
 		return true;
 	}
-	else if(scan == K_MOUSE2 || scan == K_SPACE)
+	else if(scan == K_MOUSE2 || scan == K_SPACE || ((shift & S_CTRL) && scan == K_MOUSE1))
 	{
 		if(me.nItems != 0)
 		{

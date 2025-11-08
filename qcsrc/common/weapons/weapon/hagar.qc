@@ -489,3 +489,22 @@ METHOD(Hagar, wr_impacteffect, void(entity thiswep, entity actor))
 }
 
 #endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+
+METHOD(Hagar, describe, string(Hagar this))
+{
+	TC(Hagar, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s rapidly fires small propelled rockets forwards, dealing some splash damage on impact."), COLORED_NAME(this));
+	PAR(_("When the secondary fire is held, multiple rockets are loaded up, and they're shot at the same time when released. "
+	      "These rockets can't be held forever, so it will fire itself after some time (after a warning beep) if the secondary fire isn't released."));
+	PAR(_("It consumes %s ammo for each rocket."), COLORED_NAME(ITEM_Rockets));
+	PAR(_("The %s works best over close to medium ranges, since it's hard to land hits at a long distance. "
+	      "A common usage is fully loading the secondary fire before turning a corner, so you can surprise any enemies around the corner with a bunch of rockets to the face."), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_load_max", "secondary_load_speed", true));
+	return PAGE_TEXT;
+}
+
+#endif

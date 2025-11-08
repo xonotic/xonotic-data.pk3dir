@@ -1,0 +1,12 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticDemoBrowserTab, XonoticTab)
+	METHOD(XonoticDemoBrowserTab, fill, void(entity));
+	ATTRIB(XonoticDemoBrowserTab, intendedWidth, float, 0.96);
+	ATTRIB(XonoticDemoBrowserTab, rows, float, 17);
+	ATTRIB(XonoticDemoBrowserTab, columns, float, 6.5);
+	ATTRIB(XonoticDemoBrowserTab, name, string, "DemoBrowser");
+	ATTRIB(XonoticDemoBrowserTab, democlicktype, float, 0);
+ENDCLASS(XonoticDemoBrowserTab)
+entity makeXonoticDemoBrowserTab();

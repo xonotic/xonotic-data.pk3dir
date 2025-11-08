@@ -85,6 +85,7 @@ CLASS(Seeker, Weapon)
 		P(class, prefix, missile_speed_z, float, NONE) \
 		P(class, prefix, missile_spread, float, NONE) \
 		P(class, prefix, missile_turnrate, float, NONE) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
@@ -106,6 +107,7 @@ CLASS(Seeker, Weapon)
 	END()
 	W_PROPS(X, Seeker, seeker)
 #undef X
+
 ENDCLASS(Seeker)
 REGISTER_WEAPON(SEEKER, NEW(Seeker));
 
