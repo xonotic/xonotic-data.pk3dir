@@ -203,24 +203,25 @@ bool Surv_CheckPlayers()
 	{
 		++playercount;
 	});
+	// NOTE missing_teams_mask stat is used for missing players in ffa games
 	if (playercount >= 2)
 	{
 		if(prev_missing_players > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_PLAYERS);
+			missing_teams_mask = 0;
 		prev_missing_players = -1;
 		return true;
 	}
 	if(playercount == 0)
 	{
 		if(prev_missing_players > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_PLAYERS);
+			missing_teams_mask = 0;
 		prev_missing_players = -1;
 		return false;
 	}
 	// if we get here, only 1 player is missing
 	if(prev_missing_players != 1)
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_PLAYERS, 1);
+		missing_teams_mask = 1;
 		prev_missing_players = 1;
 	}
 	return false;
