@@ -51,7 +51,7 @@ void XonoticSlider_loadCvars(entity me)
 	if (!me.controlledCvar)
 		return;
 
-	me.setValue(me, cvar(me.controlledCvar), false);
+	SUPER(XonoticSlider).setValue(me, cvar(me.controlledCvar), false);
 }
 void XonoticSlider_saveCvars(entity me)
 {
