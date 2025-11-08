@@ -142,6 +142,8 @@ bool ClientData_Send(entity this, entity to, int sf)
 	                                sf |= BIT(4); // show spectators
 	if (autocvar_sv_teamnagger && teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
 	                                sf |= (autocvar_sv_teamnagger & 0x03) << 5; // BIT(5) | BIT(6)
+	if (to.ignore_list && to.ignore_list_send_time == IGNORE_LIST_SEND_NOW && !IS_SPEC(to))
+	                                sf |= BIT(7); // ignore list (private, won't be sent to spectators)
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
@@ -149,11 +151,19 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (sf & BIT(1))
 		WriteByte(MSG_ENTITY, CS(to).spectatee_status);
 
+	// spectator list is cleared on the client if this flag is not set
 	if(sf & BIT(4))
 	{
 		float specs = CountSpectators(e, to);
 		WriteByte(MSG_ENTITY, specs);
 		WriteSpectators(e, to);
+	}
+
+	// ignore list is NOT cleared on the client if this flag is not set
+	if (sf & BIT(7))
+	{
+		to.ignore_list_send_time = 0;
+		WriteString(MSG_ENTITY, strcat(to.ignore_list));
 	}
 
 	return true;
@@ -172,17 +182,17 @@ void ClientData_Detach(entity this)
 	CS(this).clientdata = NULL;
 }
 
-void ClientData_Touch(entity e)
+void ClientData_Touch(entity e, bool to_spectators_too)
 {
 	entity cd = CS(e).clientdata;
 	if (cd) cd.SendFlags = 1;
 
-	// make it spectatable
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e,
-	{
-		entity cd = CS(it).clientdata;
-		if (cd) cd.SendFlags = 1;
-	});
+	if (to_spectators_too)
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e,
+		{
+			entity cd_spec = CS(it).clientdata;
+			if (cd_spec) cd_spec.SendFlags = cd.SendFlags;
+		});
 }
 
 
@@ -1189,6 +1199,8 @@ void ClientConnect(entity this)
 
 	if (IS_REAL_CLIENT(this))
 	{
+		ignore_list_update_on_connection(this);
+
 		if (g_weaponarena_weapons == WEPSET(TUBA))
 			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
 		// quickmenu file must be put in a subfolder with an unique name
@@ -1261,19 +1273,12 @@ void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
 
-	/* from "ignore" command */
 	strfree(this.ignore_list);
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it.ignore_list,
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		if(it.crypto_idfp && it.crypto_idfp != "")
-			continue;
-		string mylist = ignore_removefromlist(it, this);
-		if(it.ignore_list)
-			strunzone(it.ignore_list);
-
-		it.ignore_list = strzone(mylist);
+		// don't remove permanent ignores from db, only from list
+		ignore_remove_player(it, this, false);
 	});
-	/* from "ignore" command */
 
 	PlayerStats_GameReport_FinalizePlayer(this);
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -1748,7 +1753,7 @@ void SetZoomState(entity this, float newzoom)
 	if(newzoom != CS(this).zoomstate)
 	{
 		CS(this).zoomstate = newzoom;
-		ClientData_Touch(this);
+		ClientData_Touch(this, true);
 	}
 	zoomstate_set = true;
 }
@@ -1876,7 +1881,7 @@ bool SpectateSet(entity this)
 	if(!IS_PLAYER(this.enemy))
 		return false;
 
-	ClientData_Touch(this.enemy);
+	ClientData_Touch(this.enemy, true);
 
 	msg_entity = this;
 	WriteByte(MSG_ONE, SVC_SETVIEW);
@@ -1903,7 +1908,7 @@ void SetSpectatee_status(entity this, int spectatee_num)
 			STAT(PRESSED_KEYS, this) = 0;
 		}
 
-		ClientData_Touch(this);
+		ClientData_Touch(this, true);
 
 		// init or clear race data
 		if ((g_race || g_cts) && g_race_qualifying && IS_REAL_CLIENT(this))
@@ -1959,7 +1964,8 @@ void SetSpectatee(entity this, entity spectatee)
 		SetSpectatee_status(this, etof(spectatee));
 
 	// needed to update spectator list
-	if(old_spectatee) { ClientData_Touch(old_spectatee); }
+	if(old_spectatee)
+		ClientData_Touch(old_spectatee, true);
 }
 
 bool Spectate(entity this, entity pl)
@@ -2900,6 +2906,9 @@ void PlayerFrame (entity this)
 				Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, CS_CVAR(this).cvar_g_xonoticversion);
 		}
 	}
+
+	if (this.ignore_list_send_time > 0 && time > this.ignore_list_send_time)
+		ignore_list_send(this);
 
 	// GOD MODE info
 	if (!(this.flags & FL_GODMODE) && this.max_armorvalue)

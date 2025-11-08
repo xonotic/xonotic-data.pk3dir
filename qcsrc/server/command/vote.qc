@@ -507,7 +507,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 		FOREACH_CLIENT(IS_SPEC(it),
 		{
 			if (it.vote_master)
-				ClientData_Touch(it.enemy);
+				ClientData_Touch(it.enemy, true);
 			else
 			{
 				Send_Notification(NOTIF_ONE_ONLY, it, MSG_MULTI, SPECTATE_SPEC_NOTALLOWED);
