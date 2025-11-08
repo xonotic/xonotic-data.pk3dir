@@ -221,7 +221,7 @@ void SV_PausedTic(float elapsedtime)
 {
 	if (autocvar__endmatch) // `endmatch` while paused
 		setpause(0); // proceed to intermission
-	else if (!server_is_dedicated)
+	else if (!autocvar_sv_dedicated)
 	{
 		if (autocvar_sv_autopause)
 			Pause_TryPause();
@@ -232,7 +232,7 @@ void SV_PausedTic(float elapsedtime)
 
 void dedicated_print(string input)
 {
-	if (server_is_dedicated) print(input);
+	if (autocvar_sv_dedicated) print(input);
 }
 
 void make_safe_for_remove(entity e)
@@ -361,7 +361,7 @@ void StartFrame()
 	CheckRules_World();
 
 	// after CheckRules_World() as it may set intermission_running, and after RedirectionThink() in case listen server is closing
-	if (autocvar_sv_autopause && !server_is_dedicated && !intermission_running)
+	if (autocvar_sv_autopause && !autocvar_sv_dedicated && !intermission_running)
 		Pause_TryPause();
 
 	if (warmup_stage && !game_stopped && warmup_limit > 0 && time - game_starttime >= warmup_limit) {
