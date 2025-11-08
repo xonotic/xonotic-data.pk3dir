@@ -298,8 +298,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			if(!MUTATOR_CALLHOOK(ChatMessageTo, privatesay, source))
 			{
-				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, privatesay)) // check ignored players from personal chat log (from "ignore" command)
-					return -1; // no sending to this player, thank you very much
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(privatesay, source))
+					return -1; // source is ignored by privatesay, no sending to this player, thank you very much
 
 				sprint(privatesay, msgstr);
 				if(cmsgstr != "")
@@ -311,8 +311,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
-				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, it)) // check ignored players from personal chat log (from "ignore" command)
-					continue; // no sending to this player, thank you very much
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(it, source))
+					continue; // source is ignored by it, no sending to this player, thank you very much
 
 				sprint(it, msgstr);
 			});
@@ -326,8 +326,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
 			FOREACH_CLIENT((IS_PLAYER(it) || INGAME(it)) && IS_REAL_CLIENT(it) && it != source && it.team == source.team && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
-				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, it)) // check ignored players from personal chat log (from "ignore" command)
-					continue; // no sending to this player, thank you very much
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(it, source))
+					continue; // source is ignored by it, no sending to this player, thank you very much
 
 				sprint(it, msgstr);
 				if(cmsgstr != "")
@@ -340,8 +340,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
 			FOREACH_CLIENT(!(IS_PLAYER(it) || INGAME(it)) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
-				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, it)) // check ignored players from personal chat log (from "ignore" command)
-					continue; // no sending to this player, thank you very much
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(it, source))
+					continue; // source is ignored by it, no sending to this player, thank you very much
 
 				sprint(it, msgstr);
 			});
@@ -355,8 +355,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 				MX_Say(strcat(playername(source.netname, source.team, IS_PLAYER(source)), "^7: ", msgin));
 			}
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
-				if(IS_REAL_CLIENT(source) && ignore_playerinlist(source, it)) // check ignored players from personal chat log (from "ignore" command)
-					continue; // no sending to this player, thank you very much
+				if(IS_REAL_CLIENT(source) && ignore_playerinlist(it, source))
+					continue; // source is ignored by it, no sending to this player, thank you very much
 
 				sprint(it, msgstr);
 			});

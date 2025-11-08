@@ -516,7 +516,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 					IL_REMOVE(g_bot_targets, e);
 				e.bot_attack = false;
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_FINISHED, e.netname);
-				ClientData_Touch(e);
+				ClientData_Touch(e, true);
 			}
 		}
 	}
@@ -1233,7 +1233,7 @@ void race_AbandonRaceCheck(entity p)
 		CS(p).race_completed = 1;
 		MAKE_INDEPENDENT_PLAYER(p);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_ABANDONED, p.netname);
-		ClientData_Touch(p);
+		ClientData_Touch(p, true);
 	}
 }
 
