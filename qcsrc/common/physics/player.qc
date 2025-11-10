@@ -6,7 +6,7 @@
 #ifdef GAMEQC
 REPLICATE(cvar_cl_physics, string, "cl_physics");
 REPLICATE(cvar_cl_jetpack_jump, bool, "cl_jetpack_jump");
-REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
+REPLICATE(cvar_cl_movement_track_canjump, int, "cl_movement_track_canjump");
 #endif
 
 #ifdef SVQC
@@ -402,7 +402,7 @@ bool PlayerJump(entity this)
 		return true;
 
 	float mjumpheight = ((PHYS_JUMPVELOCITY_CROUCH(this) && IS_DUCKED(this)) ? PHYS_JUMPVELOCITY_CROUCH(this) : PHYS_JUMPVELOCITY(this));
-	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
+	bool track_jump = boolean(PHYS_CL_TRACK_CANJUMP(this));
 
 	if (this.waterlevel >= WATERLEVEL_SWIMMING)
 	{
