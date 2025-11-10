@@ -231,7 +231,18 @@ void sys_phys_simulate(entity this, float dt)
 	if (PHYS_INPUT_BUTTON_CROUCH(this) != PHYS_INPUT_BUTTON_JUMP(this)) // exactly one is pressed
 	{
 		if (this.com_phys_vel_2d) // walking/bhopping
-			;
+		{
+			if (PHYS_INPUT_BUTTON_CROUCH(this) && (PHYS_CROUCHFLAGS(this) & 32))
+			{
+				PHYS_CS(this).movement.z = -this.com_phys_vel_max;
+				PHYS_CS(this).movement = normalize(PHYS_CS(this).movement) * this.com_phys_vel_max;
+			}
+			else if (PHYS_INPUT_BUTTON_JUMP(this) && (PHYS_CL_TRACK_CANJUMP(this) == 2 || PHYS_TRACK_CANJUMP(this) == 2))
+			{
+				PHYS_CS(this).movement.z = this.com_phys_vel_max;
+				PHYS_CS(this).movement = normalize(PHYS_CS(this).movement) * this.com_phys_vel_max;
+			}
+		}
 		else if (PHYS_CS(this).movement.z == 0) // swimming/climbing/noclipping/etc and not using analog input or +moveup/+movedown
 			PHYS_CS(this).movement.z = PHYS_INPUT_BUTTON_CROUCH(this) ? -this.com_phys_vel_max : this.com_phys_vel_max;
 	}

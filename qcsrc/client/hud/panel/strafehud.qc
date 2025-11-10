@@ -99,6 +99,23 @@ void HUD_StrafeHUD(bool should_draw)
 
 	// only the local csqcplayer entity contains this information even when spectating
 	float maxspeed_mod = IS_DUCKED(csqcplayer) && (real_onground || !(PHYS_CROUCHFLAGS(this) & 16)) ? PHYS_CROUCHSPEEDSCALE(strafeplayer) : 1;
+	// bones_was_here: this is pretty awful but about the best allowed by the current strafehud "backend" design
+	if (is_local)
+	{
+		if (PHYS_INPUT_BUTTON_CROUCH(strafeplayer) != PHYS_INPUT_BUTTON_JUMP(strafeplayer)
+		&& PHYS_INPUT_BUTTON_FORWARD(strafeplayer) != PHYS_INPUT_BUTTON_BACKWARD(strafeplayer))
+			if ((PHYS_INPUT_BUTTON_CROUCH(strafeplayer) && (PHYS_CROUCHFLAGS(strafeplayer) & 32))
+			|| (PHYS_INPUT_BUTTON_JUMP(strafeplayer) && (PHYS_CL_TRACK_CANJUMP(strafeplayer) == 2 || PHYS_TRACK_CANJUMP(strafeplayer) == 2)))
+				maxspeed_mod *= PHYS_INPUT_BUTTON_LEFT(strafeplayer) != PHYS_INPUT_BUTTON_RIGHT(strafeplayer) ? M_SQRT2_3 : M_SQRT1_2;
+	}
+	else
+	{
+		if (boolean(keys & KEY_CROUCH) != boolean(keys & KEY_JUMP)
+		&& boolean(keys & KEY_FORWARD) != boolean(keys & KEY_BACKWARD))
+			if (((keys & KEY_CROUCH) && (PHYS_CROUCHFLAGS(strafeplayer) & 32))
+			|| ((keys & KEY_JUMP) && (PHYS_CL_TRACK_CANJUMP(strafeplayer) == 2 || PHYS_TRACK_CANJUMP(strafeplayer) == 2)))
+				maxspeed_mod *= boolean(keys & KEY_LEFT) != boolean(keys & KEY_RIGHT) ? M_SQRT2_3 : M_SQRT1_2;
+	}
 	float maxspeed_phys = onground ? PHYS_MAXSPEED(strafeplayer) : PHYS_MAXAIRSPEED(strafeplayer);
 	float maxspeed = !autocvar__hud_configure ? maxspeed_phys * maxspeed_mod : 320;
 	float maxaccel_phys = onground ? PHYS_ACCELERATE(strafeplayer) : PHYS_AIRACCELERATE(strafeplayer);
@@ -111,7 +128,10 @@ void HUD_StrafeHUD(bool should_draw)
 
 		if (!autocvar__hud_configure)
 		{
+			// bones_was_here: this is sometimes wrong
 			maxspeed = PHYS_MAXSPEED(strafeplayer) * maxspeed_mod;
+			// it should be more like wishspeed = min(wishspeed, maxairspd * maxspeed_mod);
+			// which requires using the real wishspeed/wishvel in the hud (networked when necessary) TODO FIXME
 			maxaccel = PHYS_ACCELERATE(strafeplayer);
 		}
 	}
