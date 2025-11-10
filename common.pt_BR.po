@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-09 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2025\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -230,17 +230,17 @@ msgstr "^2Aperte ^3%s^2 para terminar o aquecimento"
 #: qcsrc/client/hud/panel/infomessages.qc:208
 #, c-format
 msgid "%sNeed active players for: %s"
-msgstr ""
+msgstr "%sPrecisa-se de jogadores ativos para: %s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:212
 #, c-format
 msgid "%sWaiting for 1 player to join..."
-msgstr ""
+msgstr "%sEsperando 1 jogador entrar..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:214
 #, c-format
 msgid "%sWaiting for %d players to join..."
-msgstr ""
+msgstr "%sEsperando %d jogadores entrarem..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "Teams are unbalanced!"
@@ -13495,7 +13495,7 @@ msgstr "Sobre este guia"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:22
 msgid "Welcome to Xonotic, the free and fast arena shooter!"
-msgstr ""
+msgstr "Boas vindas ao Xonotic, um jogo de tiro em arena veloz e gratuito!"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:23
 msgid ""
@@ -13503,6 +13503,9 @@ msgid ""
 "other aspects of the game, but most of what you will learn will come from "
 "trying it out in practice."
 msgstr ""
+"Este guia cobre o básico que se deve conhecer sobre as armas, os itens e "
+"outros aspectos do jogo, mas a maior parte do que você aprenderá virá da "
+"prática."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:25
 msgid ""
@@ -13510,6 +13513,10 @@ msgid ""
 "settings. Xonotic is highly customizable and there are tons of servers out "
 "there that run with lightly or highly modified settings."
 msgstr ""
+"Por favor note que este guia descreve o comportamento padrão do jogo com as "
+"configurações originais. Xonotic é muito personalizável e há vários "
+"servidores por aí que rodam com configurações com pequenas ou grandes "
+"modificações."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:27
 #, c-format
@@ -13517,15 +13524,17 @@ msgid ""
 "You can usually find out which settings are modified by issuing %s in "
 "console after connecting to a server."
 msgstr ""
+"Você pode usualmente descobrir quais configurações estão modificadas pelo "
+"comando %s no console depois de conectar a um servidor."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:30
 msgid "Community"
-msgstr ""
+msgstr "Comunidade"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:32
 #, c-format
 msgid "%s on Matrix, %s on QuakeNet IRC, or the Discord"
-msgstr ""
+msgstr "%s em Matrix, %s em QuakeNet IRC, ou Discord"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:34
 msgid ""
@@ -13535,6 +13544,11 @@ msgid ""
 "respectfully, this will be recognized, while acting toxic on the other hand "
 "will not make your life easier on the servers."
 msgstr ""
+"Xonotic destaca-se por sua comunidade amigável, madura e acolhedora, e "
+"vários jogadores de longa data dizem que esta é provavelmente uma das "
+"melhores coisas sobre Xonotic. Se você tratar outros jogadores amigável e "
+"respeitosamente, isto será reconhecido, enquanto que, por outro lado, agir "
+"com má conduta não tornará sua vida mais fácil nos servidores."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:36
 #, c-format
@@ -13543,10 +13557,13 @@ msgid ""
 "online and use the in-game chat. You can also connect to the official "
 "communication channels (%s), and of course the official forum."
 msgstr ""
+"A melhor maneira de conversar com a comunidade é só começar a jogar online e "
+"usar o bate-papo do jogo. Você também pode conectar-se aos canais de "
+"comunicação oficiais (%s), e claro ao fórum oficial."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:40
 msgid "Getting good"
-msgstr ""
+msgstr "Pegando a manha"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:43
 msgid ""
@@ -13555,6 +13572,11 @@ msgid ""
 "the game mechanics. If you see experienced players doing tricks you don't "
 "understand, don't hesitate to ask anyone on the server!"
 msgstr ""
+"A discrepância de habilidades entre jogadores novos e experientes é às vezes "
+"imensa. Porém, isto é principalmente porque jogadores experientes aprenderam "
+"como usufruir das mecânicas do jogo. Se você vir jogadores experientes "
+"fazendo truques que você não entende, não hesite em perguntar a alguém no "
+"servidor!"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:46
 msgid ""
@@ -13563,6 +13585,10 @@ msgid ""
 "at which weapons they choose depending on the gameplay situation, for "
 "example in close combat, mid-range battles, or against groups of opponents."
 msgstr ""
+"Outro jeito de aprender é assistir a jogadores experientes. Observe quais "
+"armas combinam e as técnicas de movimento que usam. Também olhe para as "
+"escolhas de armas dependendo da situação do jogo, por exemplo, em combate "
+"próximo, batalhas a médias distâncias, ou contra grupos de adversários."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:49
 msgid ""
@@ -13570,10 +13596,13 @@ msgid ""
 "works will enable you to speed around the map and apply effective weapon "
 "combos in no time."
 msgstr ""
+"A curva de aprendizagem é muito íngreme. Dito isto, entender como o jogo "
+"funciona permitirá que você se mova velozmente pelo mapa e aplique "
+"combinações efetivas de armas em pouco tempo."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:52
 msgid "XonStat"
-msgstr ""
+msgstr "XonStat"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:55
 msgid ""
@@ -13581,10 +13610,13 @@ msgid ""
 "stores vital stats like your kill-death ratio, weapon damage and accuracy, "
 "and scoreboards from past games."
 msgstr ""
+"XonStat é a aplicação de estatísticas integradas de jogadores para Xonotic. "
+"Guarda estatísticas vitais como sua taxa de vítimas por mortes, danos e "
+"precisões de cada arma, e placares das partidas passadas."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:57
 msgid "Tracking is completely opt-in, and no login is required."
-msgstr ""
+msgstr "O rastreio é completamente opcional, e não se requer login."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:58
 #, c-format
@@ -13592,6 +13624,8 @@ msgid ""
 "Some of the statistics are available in-game on your player profile, while "
 "the rest are accessible at %s."
 msgstr ""
+"Algumas das estatísticas estão disponíveis no jogo no seu perfil de jogador, "
+"enquanto que o resto se encontra em %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:65
 msgid ""
@@ -13600,36 +13634,42 @@ msgid ""
 "skills is an essential part of Xonotic gameplay and must not be "
 "underestimated."
 msgstr ""
+"Xonotic é um jogo de tiro em arena muito ágil. Ser ágil não só tem a ver com "
+"os tempos de reação mas também com a velocidade de movimento. Isso significa "
+"que dominar habilidades de movimento é uma parte essencial da experiência de "
+"Xonotic e não deve ser subestimado."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:67
 msgid "For a new player, the most important tricks to learn are:"
-msgstr ""
+msgstr "Para um jogador novo, os truques mais importantes para aprender são:"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:69 qcsrc/menu/xonotic/guide/pages.qc:77
 msgid "Bunny Hopping"
-msgstr ""
+msgstr "Pulinhos de Coelho"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:70 qcsrc/menu/xonotic/guide/pages.qc:89
 msgid "Strafe Turning"
-msgstr ""
+msgstr "Virada de Strafe"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:71 qcsrc/menu/xonotic/guide/pages.qc:101
 msgid "Blaster Jumping"
-msgstr ""
+msgstr "Pulo com Blaster"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:73 qcsrc/menu/xonotic/guide/pages.qc:133
 msgid "Crylink Running"
-msgstr ""
+msgstr "Corrida com Crylink"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:74 qcsrc/menu/xonotic/guide/pages.qc:149
 msgid "Ramp Jumping"
-msgstr ""
+msgstr "Salto de Rampa"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:80
 msgid ""
 "Bunny hopping (\"bhopping\") is a technique known also from other arena "
 "shooters."
 msgstr ""
+"Os pulinhos de coelho (\"bhopping\") são uma técnica também conhecida em "
+"outros jogos de tiro em arena."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:81
 #, c-format
@@ -13640,6 +13680,11 @@ msgid ""
 "down. This allows you to get around the map much faster than if you would "
 "just walk."
 msgstr ""
+"Devido ao controle aéreo, você pode acelerar no ar muito além da velocidade "
+"máxima de movimento no chão. Para evitar a fricção do chão, jogadores "
+"constantemente pulam, simplesmente segurando %s, para que o contato com o "
+"chão não os retarde. Isto permite que você se desloque pelo mapa muito mais "
+"rapidamente do que seria só andando."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:84
 #, c-format
@@ -13647,6 +13692,8 @@ msgid ""
 "Therefore, keeping %s held while moving quickly is one of the most essential "
 "movement strategies, used by all experienced players."
 msgstr ""
+"Portanto, segurar %s enquanto você move rapidamente é uma das estratégias "
+"mais essenciais de movimento, usada por todos os jogadores experientes."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:85
 msgid ""
@@ -13654,6 +13701,10 @@ msgid ""
 "900 qu/s (\"units per second\"). CTS/DeFRaG servers usually run with "
 "different CPMA-like physics that remove this cap."
 msgstr ""
+"Com as configurações padrão, a velocidade que você pode atingir com os "
+"pulinhos de coelho é limitada a 900 qu/s (\"unidades por segundo\"). "
+"Servidores de CTS/DeFRaG usualmente rodam com físicas diferentes, estilo "
+"CPMA, que removem esse limite."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:92
 msgid ""
@@ -13662,6 +13713,10 @@ msgid ""
 "method used to quickly change the direction you're traveling while mid-air, "
 "without losing speed."
 msgstr ""
+"Os pulinhos de coelhos perto de quinas requerem \"virada de strafe\" para "
+"você não perder muita velocidade (ou simplesmente não ser capaz de virar na "
+"quina). Virada de strafe é um método usado para rapidamente alterar, no ar, "
+"a direção em que você se move, sem perder velocidade."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:94
 #, c-format
@@ -13670,6 +13725,10 @@ msgid ""
 "turn direction (%s or %s), then start turning smoothly into the turn "
 "direction. As always, during the entire strafe turn keep %s held."
 msgstr ""
+"Enquanto faz pulinhos de coelho, primeiro solte %s, então aperte a tecla de "
+"strafe, isto é, de movimento para um lado, para a direção de virada (%s ou "
+"%s), então comece a virar suavemente na direção de virada. Como sempre, "
+"durante toda a virada de strafe mantenha %s segurado."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95
 msgid "move forward"
@@ -13690,17 +13749,20 @@ msgid ""
 "Note that if you press the strafe key before releasing the forward key, you "
 "will suffer a speed penalty."
 msgstr ""
+"Note que, se você apertar o botão de strafe antes de soltar a tecla de mover-"
+"se para frente, sua velocidade será penalizada."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:97
 msgid ""
 "If you do it right, you will even continue to accelerate in strafe turns."
 msgstr ""
+"Se você fizer certo, você continuará a acelerar até em viradas de strafe."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:98 qcsrc/menu/xonotic/guide/pages.qc:120
 #: qcsrc/menu/xonotic/guide/pages.qc:159
 #, c-format
 msgid "For an illustration of this technique, see %s."
-msgstr ""
+msgstr "Para uma ilustração desta técnica, veja %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:104
 #, c-format
@@ -13709,6 +13771,10 @@ msgid ""
 "many players will often have single digit accuracy for the %s. It is instead "
 "especially useful to make high jumps."
 msgstr ""
+"Na maioria das situações, o %s é mais uma ferramenta de movimento do que uma "
+"arma. Isso é o motivo de vários jogadores muitas vezes terem precisão de um "
+"único dígito para %s. Em contrapartida, é especialmente útil para dar pulos "
+"altos."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:107
 #, c-format
@@ -13717,10 +13783,14 @@ msgid ""
 "immediately afterwards. Experiment a bit with the timing of firing the %s "
 "and jumping to get a feeling of which timings will get you how high."
 msgstr ""
+"Para fazer um \"pulo de laser\", simplesmente dispare o %s nos seus próprios "
+"pés e então pule imediatamente depois. Experimente um pouco com o tempo "
+"entre o disparo de %s e o pulo para adquirir o senso de quais tempos lhe "
+"darão pulos de quais alturas."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:111
 msgid "Wall Blastering"
-msgstr ""
+msgstr "Blaster em Parede"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:114
 #, c-format
@@ -13729,6 +13799,10 @@ msgid ""
 "you, you can get significant horizontal speed. You can do this to pick up "
 "speed off the stand or even when passing a wall while already bunny hopping."
 msgstr ""
+"Se você disparar o %s não no chão mas contra uma parede perto de você, pode "
+"ganhar uma velocidade horizontal significativa. Você pode fazer isto para "
+"ganhar velocidade após parar ou até ao passar por uma parede dando pulinhos "
+"de coelho."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:116
 #, c-format
@@ -13739,6 +13813,11 @@ msgid ""
 "%s. Immediately flick back to your movement direction and continue to bunny "
 "hop."
 msgstr ""
+"Para usar esta técnica, comece os pulinhos de coelho. Após um pulo, impila "
+"seu mouse como se fosse ao ponteiro de 8 horas se a parede estiver à sua "
+"esquerda (ou ao de 4 horas e a parede estiver à sua direita), mire ao nível "
+"de sua cabeça, e dispare com %s. Imediatamente impila de volta para a "
+"direção de movimento e continue a dar pulinhos de coelho."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:118
 #, c-format
@@ -13747,6 +13826,9 @@ msgid ""
 "a strafe key for the duration of the flick. This means using %s if the wall "
 "is to your left, and %s if the wall is to your right."
 msgstr ""
+"A fim de gastar o mínimo de velocidade possível ao impelir de volta o mouse, "
+"troque para uma tecla de strafe pela duração do impulso. Isto significa usar "
+"%s se a parede estiver à sua esquerda, e %s se estiver à sua direita."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:126
 #, c-format
@@ -13755,6 +13837,9 @@ msgid ""
 "damage to the player. In gametypes without self damage however it is a very "
 "versatile movement tool."
 msgstr ""
+"O %s pode ser usado assim como %s para movimento, mas inflige muito mais "
+"dano ao jogador. Em tipos de jogos sem dano próprio é, porém, uma ferramenta "
+"de movimento muito versátil."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:128
 msgid ""
@@ -13762,11 +13847,16 @@ msgid ""
 "immediately detonate it. The explosion will push you upwards a little bit, "
 "and can prolong a jump."
 msgstr ""
+"No ar, você também pode disparar um foguete em baixo de você e imediatamente "
+"o detonar. A explosão impulsará você um pouco para cima, assim prolongando "
+"um pulo."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:130
 #, c-format
 msgid "Note that this strategy only really works if the %s mutator is enabled."
 msgstr ""
+"Note que esta estratégia só funciona realmente se o modificador %s estiver "
+"ativado."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:136
 #, c-format
@@ -13774,6 +13864,9 @@ msgid ""
 "The drag force of the %s secondary fire can not only break other players' "
 "movement, but can also give yourself a significant speed boost."
 msgstr ""
+"A força de arrasto do disparo secundário de %s não só pode afetar os "
+"movimentos dos outros jogadores, mas também pode lhe dar um ganho "
+"significativo de velocidade."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:137
 #, c-format
@@ -13783,10 +13876,15 @@ msgid ""
 "stand into high speed. Finding the best angle to aim at takes some practice, "
 "and changes depending on your speed."
 msgstr ""
+"Para \"correr com crylink\", dispare o secundário de %s no chão (ou em uma "
+"parede paralela) um pouco à frente de você e comece a dar pulinhos de coelho "
+"para catapultar-se a partir de uma parada e obter alta velocidade. Achar o "
+"melhor ângulo no qual mirar exige prática e varia dependendo de sua "
+"velocidade."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:141
 msgid "Crylink Wall Climbing"
-msgstr ""
+msgstr "Escalada de Parede com Crylink"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:144
 #, c-format
@@ -13795,12 +13893,17 @@ msgid ""
 "head), you can climb up walls quickly. This is called \"wall climbing\" with "
 "the %s."
 msgstr ""
+"Disparando o secundário de %s contra uma parede perto de você (um pouco "
+"acima de sua cabeça), você pode escalar paredes rapidamente. Isto é chamado "
+"\"escalada de parede\" com %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:146
 msgid ""
 "This is also a good way to save yourself from falling off the map, as it "
 "reliably stops your downfall."
 msgstr ""
+"Isto também é uma boa maneira de salvar-se de cair do mapa, já que para "
+"fiavelmente sua queda."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:152
 msgid ""
@@ -13809,12 +13912,18 @@ msgid ""
 "upwards boost and enable you to reach places that are otherwise accessible "
 "only with laser jumps, which cost health and make noise."
 msgstr ""
+"Rampas são uma parte importante do design de mapas de Xonotic. Qualquer "
+"superfície inclinada com que colida com a velocidade e o ângulo corretos lhe "
+"dará uma aceleração significativa para cima e lhe permitirá atingir lugares "
+"que seriam só atingidos com pulos de laser, que custam saúde e fazem barulho."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:154
 msgid ""
 "When doing ramp jumps, it is vital to hit the ramp at a flat angle to "
 "receive the upwards boost and not lose too much speed."
 msgstr ""
+"Quando você faz saltos de rampas, é vital colidir com a rampa a um ângulo "
+"raso para receber a aceleração para cima e não perder muita velocidade."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:155
 #, c-format
@@ -13823,6 +13932,9 @@ msgid ""
 "just before the ramp and keep %s pressed so you jump again once you hit the "
 "ramp."
 msgstr ""
+"A fim de fazer um salto de rampa, aproxime-se de uma superfície inclinada "
+"(\"rampa\"), pule um pouco antes da rampa e mantenha %s segurado para que "
+"você pule de novo assim que colidir com a rampa."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:156
 msgid ""
@@ -13830,16 +13942,21 @@ msgid ""
 "the stronger the upwards boost. As always, you can gain speed before the "
 "ramp by bunny hopping."
 msgstr ""
+"Quanto mais alta sua velocidade ao colidir com a rampa (no ângulo certo), "
+"maior a aceleração para cima. Como sempre, você pode ganhar velocidade antes "
+"da rampa fazendo pulinhos de coelho."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:158
 msgid ""
 "Note that when trying to make a ramp jump while bunny hopping, it is vital "
 "to time your hops carefully so you get the angle right."
 msgstr ""
+"Note que, ao tentar fazer um salto de rampa enquanto faz pulinhos de coelho, "
+"é vital saber o momento certo dos pulinhos para obter o ângulo certo."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:162
 msgid "Advanced Movement"
-msgstr ""
+msgstr "Movimento Avançado"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:165
 msgid ""
@@ -13847,11 +13964,15 @@ msgid ""
 "jumping\" (\"CJ\") offer only limited benefits in vanilla gameplay, but are "
 "crucial on CTS/DeFRaG servers that use slightly different physics."
 msgstr ""
+"Técnicas avançadas como \"pulo de strafe\" (\"strafing\") ou \"pulo de "
+"círculo\" (\"CJ\") oferecem só benefícios limitados em jogo normal, mas são "
+"cruciais em servidores de CTS/DeFRaG que usam físicas ligeiramente "
+"diferentes."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:167
 #, c-format
 msgid "If you want to master these techniques, be sure to check out %s."
-msgstr ""
+msgstr "Se você quiser dominar estas técnicas, consulte %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:174
 #, c-format
@@ -13859,6 +13980,9 @@ msgid ""
 "%s is a mod that heavily changes the game, giving players fewer but more "
 "powerful weapons, nades, and more movement options."
 msgstr ""
+"%s é uma modificação que muito altera o jogo, dando a jogadores armas em "
+"menor quantidade mas com maior poder, além de granadas, e mais opções de "
+"movimento."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:175
 #, c-format
@@ -13868,6 +13992,10 @@ msgid ""
 "These weapons are a lot more powerful than the regular weapons, so their "
 "time-to-kill is quite low."
 msgstr ""
+"Em termos das armas, jogadores têm munições infinitas e surgem com %s, %s e "
+"%s, e podem coletar as superarmas %s e %s no mapa às vezes. Estas armas são "
+"muito mais poderosas que as armas regulares, logo seus tempos para matar são "
+"bem baixos."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:177
 #, c-format
@@ -13876,6 +14004,9 @@ msgid ""
 "push enemies, but can be used to push yourself around. Also since the %s "
 "mutator is active, all players have offhand nades."
 msgstr ""
+"O disparo secundário de todas as armas atira um laser que não fere nem "
+"empurra inimigos, mas pode ser usado para impulsar-se. Também, como o "
+"modificador %s é ativado, todos os jogadores têm granadas imediatas."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:179
 #, c-format
@@ -13883,6 +14014,8 @@ msgid ""
 "As for movement tricks, %s is enabled by default in %s, allowing for rapidly "
 "changing your movement direction."
 msgstr ""
+"Sobre truques de movimento, %s é ativado por padrão em %s, permitindo "
+"rapidamente trocar sua direção de movimento."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:186
 #, c-format
@@ -13890,6 +14023,8 @@ msgid ""
 "%s (\"Xonotic Pro-Mode\") is a set of gameplay settings often used for "
 "competitive play, particularly in %s."
 msgstr ""
+"%s (\"Xonotic Modo Prô\") é um conjunto de configurações do jogo às vezes "
+"usadas para jogos competitivos, particularmente em %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:187
 #, c-format
@@ -13899,6 +14034,10 @@ msgid ""
 "give other players a fairer chance of rebuilding their stack. It also "
 "disables spawn protection and enables friendly fire in team-based gametypes."
 msgstr ""
+"Adiciona regras extras para coletar itens, impedindo jogadores com 100 ou "
+"mais de saúde ou armadura de coletar os itens %s, %s, %s e %s, a fim de dar "
+"aos outros jogadores uma chance mais justa de recomporem-se. Também desativa "
+"proteção ao surgir e ativa fogo amigo em tipos de jogos em equipes."
 
 #: qcsrc/menu/xonotic/keybinder.qc:61
 msgid "Moving"

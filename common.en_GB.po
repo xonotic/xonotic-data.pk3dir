@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-09 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: k9er, 2024\n"
+"Last-Translator: k9er, 2024-2025\n"
 "Language-Team: English (United Kingdom) (http://app.transifex.com/team-"
 "xonotic/xonotic/language/en_GB/)\n"
 "Language: en_GB\n"
@@ -223,17 +223,17 @@ msgstr "^2Press ^3%s^2 to end warmup"
 #: qcsrc/client/hud/panel/infomessages.qc:208
 #, c-format
 msgid "%sNeed active players for: %s"
-msgstr ""
+msgstr "%sNeed active players for: %s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:212
 #, c-format
 msgid "%sWaiting for 1 player to join..."
-msgstr ""
+msgstr "%sWaiting for 1 player to join..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:214
 #, c-format
 msgid "%sWaiting for %d players to join..."
-msgstr ""
+msgstr "%sWaiting for %d players to join..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "Teams are unbalanced!"
