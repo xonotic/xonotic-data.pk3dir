@@ -233,7 +233,8 @@ void sys_phys_simulate(entity this, float dt)
 		if (PHYS_INPUT_BUTTON_CROUCH(this) && !this.com_phys_ground) // subtle nerf to crouched auto bhopping :)
 			PHYS_CS(this).movement.z -= this.com_phys_vel_max;
 
-		if (PHYS_INPUT_BUTTON_JUMP(this) && (this.com_phys_water || this.com_phys_ladder))
+		if (PHYS_INPUT_BUTTON_JUMP(this) && (this.com_phys_water || this.com_phys_ladder
+		|| ((PHYS_CL_TRACK_CANJUMP(this) == 2 || PHYS_TRACK_CANJUMP(this) == 2) && !this.com_phys_ground)))
 			PHYS_CS(this).movement.z += this.com_phys_vel_max;
 
 		if (PHYS_CS(this).movement.z)
