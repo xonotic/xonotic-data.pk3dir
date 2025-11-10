@@ -35,7 +35,7 @@ float autocvar_sv_airaccelerate;
 float autocvar_sv_slickaccelerate;
 float autocvar_sv_airstopaccelerate;
 bool autocvar_sv_airstopaccelerate_full;
-float autocvar_sv_track_canjump;
+int autocvar_sv_track_canjump;
 string autocvar_g_physics_clientselect_options;
 string autocvar_g_physics_clientselect_default;
 bool autocvar_g_jump_grunt;
@@ -78,7 +78,7 @@ bool IsFlying(entity a);
 #ifdef GAMEQC
 REPLICATE_INIT(string, cvar_cl_physics);
 REPLICATE_INIT(bool, cvar_cl_jetpack_jump);
-REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
+REPLICATE_INIT(int, cvar_cl_movement_track_canjump);
 #endif
 
 #define PHYS_PL_MAX(s)                      STAT(PL_MAX, s)
