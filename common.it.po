@@ -2088,6 +2088,11 @@ msgid ""
 "to prevent hiding too much. Players who aren't in the lead steal a small "
 "percentage of health when they attack leaders, like in the %s mutator."
 msgstr ""
+"I giocatori che conducono il gioco con almeno 2 vite in più brillano e "
+"periodicamente hanno dei waypoint sopra la testa visibili a tutti i "
+"giocatori per alcuni secondi, al fine di impedire che si nascondano troppo. "
+"I giocatori che non sono in testa rubano una piccola percentuale di salute "
+"quando attaccano i leader, come nel mutatore %s."
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qh:11
 msgid "Last Man Standing"
@@ -2108,6 +2113,10 @@ msgid ""
 "available weapons and maximum health and armor. There are no pickups enabled "
 "on maps, but buffs are still available."
 msgstr ""
+"%s è un deathmatch tutti contro tutti frenetico in cui i giocatori appaiono "
+"con tutte le armi disponibili e salute e armatura massime. Non ci sono "
+"oggetti da raccogliere (pickup) abilitati sulle mappe, ma i buff sono "
+"comunque disponibili."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:12
 msgid ""
@@ -2117,6 +2126,13 @@ msgid ""
 "if possible. Points are deducted when you walk into hazards, but not when "
 "you do movement tricks like blaster jumping since self damage is disabled."
 msgstr ""
+"Si distingue per la sua gestione unica del punteggio, che tiene conto sia "
+"delle eliminazioni che dei danni inflitti. Questo significa che se quasi "
+"elimini un giocatore sarai comunque ricompensato con dei punti, ma sferrare "
+"il colpo finale è sempre meglio, se possibile. I punti vengono detratti "
+"quando entri in zone pericolose, ma non quando si eseguono trucchi di "
+"movimento come saltare col blaster, poiché il danno auto-inflitto è "
+"disabilitato."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:15
 #, c-format
@@ -2124,15 +2140,21 @@ msgid ""
 "Since damage is always rewarded in %s, the more you shoot the better, "
 "turning this gametype into chaotic fun at times."
 msgstr ""
+"Dato che il danno è sempre ricompensato in %s, più spari meglio è, "
+"trasformando a volte questo tipo di gioco in un divertimento caotico."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:16
 #, c-format
 msgid "This gametype is often seen as a more newbie-friendly version of %s."
 msgstr ""
+"Questo tipo di gioco è spesso visto come una versione di %s più adatta ai "
+"neofiti."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem"
 msgstr ""
+"Competi per il maggior danno inflitto e le eliminazioni in questo caotico "
+"delirio"
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Mayhem"
@@ -2148,6 +2170,8 @@ msgstr "Il numero di punti neccessari prima che la partita finisca"
 msgid ""
 "%s is a fun ball sport game where 2 teams compete to score the most goals."
 msgstr ""
+"%s è un divertente gioco sportivo con la palla dove 2 squadre competono per "
+"segnare il maggior numero di gol."
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:11
 #, c-format
@@ -2156,12 +2180,17 @@ msgid ""
 "kick it around, or basketball where players have a %s so they can pass the "
 "ball and intercept passes."
 msgstr ""
+"%s è solitamente giocato come calcio, dove i giocatori vanno verso la palla "
+"per calciarla, o basket, dove i giocatori hanno un %s in modo da poter "
+"passare la palla e intercettare i passaggi."
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:12
 msgid ""
 "Keep in mind players can score own goals, so don't embarrass yourself in "
 "front of your team!"
 msgstr ""
+"Ricorda che i giocatori possono segnare autogol, quindi non metterti in "
+"imbarazzo davanti alla tua squadra!"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
 msgid "Nexball"
@@ -2170,6 +2199,7 @@ msgstr "Nexball"
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
 msgid "Shoot and kick the ball into the enemy's goal, keep your goal clean"
 msgstr ""
+"Tira e calcia la palla nella porta nemica, mantieni la tua porta intatta"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
 msgid "Goal limit:"
@@ -2190,6 +2220,10 @@ msgid ""
 "the enemy team core generator. In order to destroy the generator, control "
 "points on the map (similar to those in %s) must first be captured."
 msgstr ""
+"%s è un tipo di gioco a squadre simile a %s dove l'obiettivo finale è "
+"distruggere il generatore principale della squadra nemica. Per distruggere "
+"il generatore, devono prima essere catturati i punti di controllo sulla "
+"mappa (simili a quelli in %s)."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:79
 msgid ""
@@ -2247,6 +2281,8 @@ msgid ""
 "%s is a gametype similar to %s where players run on a track to be the first "
 "to cross the finish line after a certain number of laps."
 msgstr ""
+"%s è un tipo di gioco simile a %s dove i giocatori corrono su una pista per "
+"essere i primi ad attraversare il traguardo dopo un certo numero di giri."
 
 #: qcsrc/common/gametypes/gametype/race/race.qc:11
 #, c-format
@@ -2256,12 +2292,19 @@ msgid ""
 "similar to %s since weapons can't be used to disturb other players but can "
 "still be used to run faster."
 msgstr ""
+"Prima che inizi la vera corsa c'è una sessione di qualifica che decide la "
+"griglia di partenza in base al miglior tempo sul giro di ogni giocatore. "
+"Questa fase è molto simile a %s poiché le armi non possono essere usate per "
+"disturbare gli altri giocatori ma possono comunque essere usate per correre "
+"più velocemente."
 
 #: qcsrc/common/gametypes/gametype/race/race.qc:13
 msgid ""
 "During the real race it's possible to shoot other players in order to slow "
 "them down."
 msgstr ""
+"Durante la vera corsa è possibile sparare agli altri giocatori per "
+"rallentarli."
 
 #: qcsrc/common/gametypes/gametype/race/race.qh:11
 msgid "Race"
@@ -2292,6 +2335,12 @@ msgid ""
 "players only know which team they belong to, and not the team membership of "
 "any other players."
 msgstr ""
+"%s è un tipo di gioco cacciatore-sopravvissuto che coinvolge due squadre "
+"dove l'obiettivo dei cacciatori è eliminare tutti i sopravvissuti, e "
+"l'obiettivo dei sopravvissuti è eliminare tutti i cacciatori o sopravvivere "
+"fino allo scadere del tempo. Il trucco sta nel fatto che i giocatori sanno "
+"solo a quale squadra appartengono, e non l'appartenenza di nessun altro "
+"giocatore."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:13
 msgid ""
@@ -2299,6 +2348,9 @@ msgid ""
 "opposite team, it can be tricky for survivors to figure out their fellow "
 "teammates."
 msgstr ""
+"Dato che l'obiettivo di entrambe le squadre è essenzialmente eliminare tutti "
+"i membri della squadra avversaria, può essere difficile per i sopravvissuti "
+"scoprire i propri compagni di squadra."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:14
 msgid ""
@@ -2306,6 +2358,10 @@ msgid ""
 "a bit smaller, and then the round starts with a brief warmup grace period in "
 "which items can be collected but weapons can't be fired."
 msgstr ""
+"Le squadre vengono selezionate casualmente all'inizio del round, con la "
+"squadra dei cacciatori leggermente più piccola, e poi il round inizia con un "
+"breve periodo di grazia di riscaldamento in cui gli oggetti possono essere "
+"raccolti ma le armi non possono sparare."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:16
 msgid ""
@@ -2314,6 +2370,11 @@ msgid ""
 "fragged. Extra points are also given to survivors who survive until the "
 "round timer expires."
 msgstr ""
+"I giocatori sono ricompensati con un punto per ogni membro della squadra "
+"avversaria che eliminano, solo se sopravvivono al round, e i punti vengono "
+"detratti per ogni compagno di squadra eliminato. Punti extra vengono dati "
+"anche ai sopravvissuti che sopravvivono fino allo scadere del tempo del "
+"round."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
@@ -2329,18 +2390,25 @@ msgstr "Sopravvivenza"
 #, c-format
 msgid "%s is the team version of %s, played in teams rather than solo."
 msgstr ""
+"%s è la versione a squadre di %s, giocata in squadre piuttosto che da soli."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:11
 msgid ""
 "Scoring is quite simple, adding a point for every frag, and subtracting a "
 "point for fragging yourself or a teammate."
 msgstr ""
+"Il punteggio è piuttosto semplice, aggiungendo un punto per ogni "
+"eliminazione e sottraendo un punto per aver eliminato se stessi o un "
+"compagno di squadra."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:12
 msgid ""
 "Careful team coordination and map control is often key to winning a match, "
 "and sometimes players will share weapons with their teammates."
 msgstr ""
+"Un'attenta coordinazione di squadra e il controllo della mappa sono spesso "
+"fondamentali per vincere una partita, e a volte i giocatori condivideranno "
+"le armi con i loro compagni di squadra."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -2356,6 +2424,8 @@ msgid ""
 "%s is the team version of %s, where teams compete to maintain superior "
 "control over the ball."
 msgstr ""
+"%s è la versione a squadre di %s, dove le squadre competono per mantenere il "
+"controllo superiore sulla palla."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qc:11
 #, c-format
@@ -2363,6 +2433,9 @@ msgid ""
 "Scoring is similar to in %s, except that points are awarded for frags for "
 "all members of the team of the player holding the ball."
 msgstr ""
+"Il punteggio è simile a quello in %s, eccetto che i punti vengono assegnati "
+"per le eliminazioni a tutti i membri della squadra del giocatore che tiene "
+"la palla."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
@@ -2382,6 +2455,10 @@ msgid ""
 "differences being that %s is a round-based gametype, and of course the "
 "scoring system differences."
 msgstr ""
+"%s è un tipo di gioco a squadre ad azione costante basato su %s, che usa lo "
+"stesso sistema di punteggio. Ha molte somiglianze con %s, con una delle "
+"principali differenze che %s è un tipo di gioco a round, e ovviamente le "
+"differenze nel sistema di punteggio."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qc:13
 msgid ""
@@ -2389,12 +2466,17 @@ msgid ""
 "chaotic nature, team communication is less important in this gametype than "
 "other team-based gametypes."
 msgstr ""
+"Dato che non ha round, il caos è ininterrotto. Come conseguenza della natura "
+"caotica, la comunicazione di squadra è meno importante in questo tipo di "
+"gioco rispetto ad altri tipi di gioco a squadre."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem"
 msgstr ""
+"Competi con la tua squadra per il maggior danno inflitto e eliminazioni in "
+"questo caotico delirio"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
@@ -2403,17 +2485,17 @@ msgstr "Team Mayhem"
 #: qcsrc/common/items/item/ammo.qc:11
 #, c-format
 msgid "The %s ammo type is used by the:"
-msgstr ""
+msgstr "Il tipo di munizioni %s è usato dal:"
 
 #: qcsrc/common/items/item/ammo.qc:16 qcsrc/common/items/item/ammo.qc:26
 #, c-format
 msgid "By default, the pickup gives you %s ammo, to a maximum of %s."
-msgstr ""
+msgstr "Di default, l'oggetto ti da %s munizioni, fino a un massimo di %s."
 
 #: qcsrc/common/items/item/ammo.qc:25
 #, c-format
 msgid "The %s ammo type is used by the %s."
-msgstr ""
+msgstr "Il tipo di munizioni %s è usato dal %s."
 
 #: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
 msgid "Shells"
@@ -2438,7 +2520,7 @@ msgstr "Carburante"
 #: qcsrc/common/items/item/armor.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s armor."
-msgstr ""
+msgstr "Di default, l'oggetto ti da %s armatura."
 
 #: qcsrc/common/items/item/armor.qc:13
 #, c-format
@@ -2446,6 +2528,9 @@ msgid ""
 "The %s provides you a small amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"Il %s ti fornisce una piccola quantità di armatura quando raccolto, "
+"proteggendoti dai danni assorbendo i colpi in arrivo fino a quando non è "
+"esaurito."
 
 #: qcsrc/common/items/item/armor.qc:23
 #, c-format
@@ -2453,6 +2538,9 @@ msgid ""
 "The %s provides you a medium amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"Il %s ti fornisce una quantità media di armatura quando raccolto, "
+"proteggendoti dai danni assorbendo i colpi in arrivo fino a quando non è "
+"esaurito."
 
 #: qcsrc/common/items/item/armor.qc:33
 #, c-format
@@ -2460,6 +2548,9 @@ msgid ""
 "The %s provides you a large amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"Il %s ti fornisce una grande quantità di armatura quando raccolto, "
+"proteggendoti dai danni assorbendo i colpi in arrivo fino a quando non è "
+"esaurito."
 
 #: qcsrc/common/items/item/armor.qc:43
 #, c-format
@@ -2467,6 +2558,9 @@ msgid ""
 "The %s provides you a huge amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"Il %s ti fornisce una quantità enorme di armatura quando raccolto, "
+"proteggendoti dai danni assorbendo i colpi in arrivo fino a quando non è "
+"esaurito."
 
 #: qcsrc/common/items/item/armor.qc:45 qcsrc/common/items/item/health.qc:45
 #, c-format
@@ -2474,6 +2568,8 @@ msgid ""
 "It tends to be one of the most highly contested items on a map, particularly "
 "in gametypes like %s."
 msgstr ""
+"Tende ad essere uno degli oggetti più contesi su una mappa, in particolare "
+"in tipi di gioco come %s."
 
 #: qcsrc/common/items/item/armor.qh:44
 msgid "Small armor"
@@ -2494,7 +2590,7 @@ msgstr "Mega armatura"
 #: qcsrc/common/items/item/health.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s health."
-msgstr ""
+msgstr "Di default, l'oggetto ti da %s salute."
 
 #: qcsrc/common/items/item/health.qc:13
 #, c-format
@@ -2502,6 +2598,8 @@ msgid ""
 "The %s restores a small amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"Il %s ripristina una piccola quantità di salute quando raccolto, aiutandoti "
+"a recuperare dai danni subiti durante il combattimento."
 
 #: qcsrc/common/items/item/health.qc:23
 #, c-format
@@ -2509,6 +2607,8 @@ msgid ""
 "The %s restores a medium amount of health when picked up, helping you "
 "recover from damage taken during combat."
 msgstr ""
+"Il %s ripristina una quantità media di salute quando raccolto, aiutandoti a "
+"recuperare dai danni subiti durante il combattimento."
 
 #: qcsrc/common/items/item/health.qc:33
 #, c-format
@@ -2516,6 +2616,8 @@ msgid ""
 "The %s restores a large amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"Il %s ripristina una grande quantità di salute quando raccolto, aiutandoti a "
+"recuperare dai danni subiti durante il combattimento."
 
 #: qcsrc/common/items/item/health.qc:43
 #, c-format
@@ -2523,6 +2625,8 @@ msgid ""
 "The %s restores a huge amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"Il %s ripristina una enorme quantità di salute quando raccolto, aiutandoti a "
+"recuperare dai danni subiti durante il combattimento."
 
 #: qcsrc/common/items/item/health.qh:44
 msgid "Small health"
@@ -3008,6 +3112,8 @@ msgid ""
 "%s is a mutator in which players below a certain health threshold (for "
 "example 25) will suffer blood loss."
 msgstr ""
+"%s è un mutatore in cui i giocatori al di sotto di una certa soglia di "
+"salute (ad esempio 25) subiranno una perdita di sangue."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qc:77
 msgid ""
@@ -3015,6 +3121,9 @@ msgid ""
 "rapidly takes away health points until they either die or gain enough health "
 "to go above the health threshold."
 msgstr ""
+"La perdita di sangue stordisce i giocatori, compromette gravemente il loro "
+"movimento e sottrae rapidamente punti salute fino a quando non muoiono o "
+"guadagnano abbastanza salute per superare la soglia."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qh:5
 #: qcsrc/common/util.qc:310
@@ -3028,6 +3137,8 @@ msgid ""
 "The %s buff gives you infinite ammo until the buff expires, so you don't "
 "need to worry about running out of ammo."
 msgstr ""
+"Il buff %s ti dà munizioni infinite fino alla scadenza del buff, così non "
+"devi preoccuparti di rimanere senza munizioni."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
 #, c-format
@@ -3035,6 +3146,8 @@ msgid ""
 "It also removes the need to reload any weapons that require reloading, like "
 "the %s and %s."
 msgstr ""
+"Rimuove anche la necessità di ricaricare qualsiasi arma che richieda la "
+"ricarica, come %s e %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qh:11
 msgid "Ammo"
@@ -3046,10 +3159,12 @@ msgid ""
 "The %s buff increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
+"Il buff %s aumenta la forza di respinta che infliggi e ti rende immune alla "
+"respinta mentre il buff è attivo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
-msgstr ""
+msgstr "Aumenta anche leggermente la respinta che infliggi a te stesso."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qh:14
 msgid "Bash"
@@ -3061,11 +3176,14 @@ msgid ""
 "The %s buff causes your enemies and monsters to slow down for a few seconds "
 "when you attack them, while the buff is active."
 msgstr ""
+"Il buff %s fa rallentare i tuoi nemici e i mostri per alcuni secondi quando "
+"li attacchi, mentre il buff è attivo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
 #, c-format
 msgid "This is particularly useful against speedy players, especially in %s."
 msgstr ""
+"Questo è particolarmente utile contro i giocatori veloci, specialmente in %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qh:15
 msgid "Disability"
@@ -3077,6 +3195,8 @@ msgid ""
 "While you have the %s buff, you can crouch while mid-air to switch your "
 "gravity, allowing flight."
 msgstr ""
+"Mentre hai il buff %s, puoi accovacciarti a mezz'aria per cambiare la tua "
+"gravità, permettendo il volo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
 msgid "Flight"
@@ -3088,6 +3208,8 @@ msgid ""
 "The %s buff sets any enemies or monsters you attack alight, dealing burn "
 "damage to them for several seconds until the buff expires."
 msgstr ""
+"Il buff %s incendia qualsiasi nemico o mostro che attacchi, infliggendo loro "
+"danni da ustione per diversi secondi fino alla scadenza del buff."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
 msgid "Inferno"
@@ -3098,10 +3220,11 @@ msgstr "Inferno"
 msgid ""
 "The %s buff greatly increases your jump height, while the buff is active."
 msgstr ""
+"Il buff %s aumenta notevolmente l'altezza del salto mentre il buff è attivo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
-msgstr ""
+msgstr "Inoltre ti rende immune dal danno da caduta."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qh:12
 msgid "Jump"
@@ -3151,6 +3274,7 @@ msgstr "Dottore"
 #, c-format
 msgid "The %s buff greatly reduces your damage taken while the buff is active."
 msgstr ""
+"Il buff %s riduce notevolmente il danno subìto mentre il buff è attivo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
 msgid "This also impacts the damage you deal to yourself."
@@ -3193,7 +3317,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
 #, c-format
 msgid "In some sense, this is the opposite of the %s buff."
-msgstr ""
+msgstr "In un certo senso, questo è l'opposto del buff %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
 #: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:307

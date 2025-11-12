@@ -9,7 +9,7 @@ es    "Spanish" "Español" 78%
 fr    "French" "Français" 100%
 gl    "Galician" "Galego" 99%
 ga    "Irish" "Irish" 24%
-it    "Italian" "Italiano" 88%
+it    "Italian" "Italiano" 90%
 la    "Latin" "Lingua Latina" 87%
 hu    "Hungarian" "Magyar" 36%
 nl    "Dutch" "Nederlands" 49%

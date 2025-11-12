@@ -327,7 +327,7 @@ msgstr "Envoyer un message public à"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "QMCMD^:-) / nice one"
-msgstr ":-) / joli"
+msgstr ":-) / joli"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "QMCMD^nice one"
@@ -339,11 +339,11 @@ msgstr "belle partie"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^hi / good luck"
-msgstr "salut / bonne chance"
+msgstr "salut / bonne chance"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^hi / good luck and have fun"
-msgstr "salut / bonne chance et amusez-vous bien"
+msgstr "salut / bonne chance et amusez-vous bien"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Send in English"
@@ -457,11 +457,11 @@ msgstr "lâché l'arme %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:870
 msgid "QMCMD^drop flag/key, icon"
-msgstr "lâcher le drapeau / la clé, icône"
+msgstr "lâcher le drapeau / la clé, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:870
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
-msgstr "lâché le drapeau / la clé %w^7 (l:%l^7)"
+msgstr "lâché le drapeau / la clé %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:874
 msgid "QMCMD^Send private message to"
@@ -475,7 +475,7 @@ msgstr "Paramètres"
 #: qcsrc/client/hud/panel/quickmenu.qc:877
 #: qcsrc/client/hud/panel/quickmenu.qc:884
 msgid "QMCMD^View/HUD settings"
-msgstr "Paramètres de vue / ATH"
+msgstr "Paramètres de vue/ATH"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:878
 msgid "QMCMD^3rd person view"
@@ -702,7 +702,7 @@ msgstr "plus rapide"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Time of fastest lap (Race/CTS)"
-msgstr "Temps du tour le plus rapide (Course / CTS)"
+msgstr "Temps du tour le plus rapide (Course/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Number of faults committed"
@@ -796,7 +796,7 @@ msgstr "meurtres"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of laps finished (Race/CTS)"
-msgstr "Nombre de tours complétés (Course / CTS)"
+msgstr "Nombre de tours complétés (Course/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^laps"
@@ -984,7 +984,7 @@ msgstr "temps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "Total time raced (Race/CTS)"
-msgstr "Temps de course total (Course / CTS)"
+msgstr "Temps de course total (Course/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:724
 msgid ""
@@ -3657,7 +3657,7 @@ msgstr "Vie supplémentaire"
 #: qcsrc/common/mutators/mutator/nades/cl_nades.qc:71
 #: qcsrc/menu/xonotic/keybinder.qc:83
 msgid "drop weapon / throw nade"
-msgstr "lâcher l'arme / lancer la grenade"
+msgstr "lâcher l'arme / lancer la grenade"
 
 #: qcsrc/common/mutators/mutator/nades/cl_nades.qc:73
 #, c-format
@@ -7030,7 +7030,7 @@ msgstr "^F4Fin du temps mort dans ^COUNT"
 #: qcsrc/common/notifications/all.inc:825
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter/exit the vehicle"
-msgstr "^BGAppuyez sur ^F2%s^BG pour entrer / sortir du véhicule"
+msgstr "^BGAppuyez sur ^F2%s^BG pour entrer/sortir du véhicule"
 
 #: qcsrc/common/notifications/all.inc:826
 #, c-format
@@ -7213,7 +7213,7 @@ msgid ""
 "(Health ^1%d^BG / Armor ^2%d^BG)%s"
 msgstr ""
 "\n"
-"(Santé ^1%d^BG / Armure ^2%d^BG)%s"
+"(Santé ^1%d^BG / Armure ^2%d^BG)%s"
 
 #: qcsrc/common/notifications/all.qh:516
 #, c-format
@@ -8329,8 +8329,8 @@ msgid ""
 "It consumes %s ammo, steadily churning through your supply to maintain the "
 "stream."
 msgstr ""
-"Il consomme des munitions de type %s, épuisant progressivement vos réserves "
-"pour maintenir le flux."
+"Cette arme consomme des munitions de type %s, épuisant progressivement vos "
+"réserves pour maintenir le flux."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1521
 #, c-format
@@ -8361,8 +8361,8 @@ msgid ""
 "It has no secondary fire, instead switching to the previously selected "
 "weapon."
 msgstr ""
-"Il n'a pas de tir secondaire, au lieu de quoi il passe à l'arme précédemment "
-"sélectionnée."
+"Il ne possède pas de tir secondaire, au lieu de quoi il passe à l'arme "
+"précédemment sélectionnée."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:174
 msgid ""
@@ -8370,7 +8370,7 @@ msgid ""
 "on ammo and need to preserve some."
 msgstr ""
 "Il ne nécessite pas de munitions, ce qui en fait un excellent choix si vous "
-"êtes à court de munitions et que vous devez en préserver."
+"commencez à être à court de munitions et que vous devez en préserver."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:175
 #, c-format
@@ -8379,7 +8379,7 @@ msgid ""
 "in, but it's difficult to master when used over a medium to long range. "
 "Unlike other weapons, the %s can hit other projectiles directly."
 msgstr ""
-"Le %s est toujours disponible, il est donc très utilisé lorsque les joueurs "
+"Le %s étant toujours disponible, il est très utilisé lorsque les joueurs "
 "réapparaissent, mais il est difficile à maîtriser à moyenne et longue "
 "portée. Contrairement aux autres armes, le %s peut toucher directement "
 "d'autres projectiles."
@@ -8395,8 +8395,8 @@ msgstr ""
 "L'une des utilisations les plus courantes du %s est le « saut laser », qui "
 "permet de gagner en hauteur en visant vers le bas, en sautant, puis en "
 "tirant pour se propulser vers le haut. Comme il provoque un fort recul, une "
-"autre utilisation courante consiste à alterner entre une arme très puissante "
-"et le %s pour déstabiliser la visée de l'ennemi."
+"autre utilisation courante consiste à alterner entre une arme plus puissante "
+"et le %s pour déstabiliser la visée de l'adversaire."
 
 #: qcsrc/common/weapons/weapon/blaster.qh:28
 msgid "Blaster"
@@ -8415,8 +8415,8 @@ msgstr ""
 "mesure qu'ils s'éloignent et rebondissent sur les murs. Lorsque vous "
 "maintenez le tir primaire enfoncé puis le relâchez, les projectiles "
 "convergent avant de se disperser à nouveau, ce qui peut être utilisé pour "
-"infliger plus de dégâts à un ennemi en faisant converger les projectiles sur "
-"lui."
+"infliger davantage de dégâts à un ennemi en faisant converger les "
+"projectiles sur lui."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:641
 msgid ""
@@ -8442,8 +8442,8 @@ msgstr ""
 msgid ""
 "It consumes %s ammo for each projectile, which is shared by several weapons."
 msgstr ""
-"Il consomme des munitions de type %s pour chaque projectile, en commun avec "
-"d'autres armes."
+"Cette arme consomme des munitions de type %s pour chaque projectile, en "
+"commun avec d'autres armes."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:644
 #, c-format
@@ -8503,9 +8503,9 @@ msgid ""
 "It consumes a bunch of %s ammo for each rocket, which can end up being "
 "depleted quickly, so often players alternate with another weapon like %s."
 msgstr ""
-"Il consomme pour chaque roquette beaucoup de munitions de type %s, qui "
-"peuvent rapidement être épuisées. Les joueurs alternent donc souvent avec "
-"une autre arme comme le %s."
+"Cette arme consomme pour chaque roquette beaucoup de munitions de type %s, "
+"qui peuvent rapidement être épuisées. Les joueurs alternent donc souvent "
+"avec une autre arme comme le %s."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:622
 #, c-format
@@ -8559,13 +8559,13 @@ msgstr ""
 "donc être placés à des endroits très fréquentés de la carte (comme les bases "
 "de drapeaux en %s) pour infliger des dégâts aux ennemis qui passent à "
 "proximité. Les orbes explosent après un certain temps et l'explosion peut "
-"être provoquée dans un « combo » si une boule de tir primaire explose à "
+"être provoquée par un « combo » si une boule de tir primaire explose à "
 "proximité."
 
 #: qcsrc/common/weapons/weapon/electro.qc:790
 #, c-format
 msgid "It consumes some %s ammo for each ball / orb."
-msgstr "Il consomme des munitions de type %s pour chaque boule/orbe."
+msgstr "Cette arme consomme des munitions de type %s pour chaque boule/orbe."
 
 #: qcsrc/common/weapons/weapon/electro.qc:791
 #, c-format
@@ -8575,10 +8575,10 @@ msgid ""
 "fire doesn't travel particularly fast, the %s is not useful in many other "
 "situations."
 msgstr ""
-"L'%s est l'une des meilleures armes pour spammer les zones fréquentées, car "
-"ses combos peuvent infliger d'énormes dégâts si l'ennemi est suffisamment "
-"proche. Comme son tir primaire n'est pas particulièrement rapide, le %s est "
-"moins utile dans d'autres types de situations."
+"L'%s constitue l'une des meilleures armes pour spammer les zones "
+"fréquentées, car ses combos peuvent infliger d'énormes dégâts si l'ennemi "
+"est suffisamment proche. Comme son tir primaire n'est pas particulièrement "
+"rapide, l'%s est moins utile dans d'autres types de situations."
 
 #: qcsrc/common/weapons/weapon/electro.qh:33
 msgid "Electro"
@@ -8651,7 +8651,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/hagar.qc:502
 #, c-format
 msgid "It consumes %s ammo for each rocket."
-msgstr "Il consomme des munitions de type %s pour chaque roquette."
+msgstr "Cette arme consomme des munitions de type %s pour chaque roquette."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:503
 #, c-format
@@ -8694,8 +8694,8 @@ msgid ""
 "Unlike the %s, it consumes %s ammo for each laser shot, meaning that it "
 "cannot be used infinitely."
 msgstr ""
-"Contrairement au %s, il consomme des munitions de type %s à chaque tir de "
-"laser, ce qui signifie qu'il ne peut pas être utilisé indéfiniment."
+"Contrairement au %s, cette arme consomme des munitions de type %s à chaque "
+"tir de laser, ce qui signifie qu'elle ne peut pas être utilisée indéfiniment."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:249
 #, c-format
@@ -8748,9 +8748,9 @@ msgid ""
 "It usually requires %s ammo to work, consuming it both when initially firing "
 "the hook, and after a couple seconds as it reels you in."
 msgstr ""
-"Il nécessite généralement des munitions de type %s pour fonctionner, qu'il "
-"consomme à la fois lors du tir initial du crochet et après quelques secondes "
-"lorsqu'il vous fait remonter la chaîne."
+"Cette arme nécessite généralement des munitions de type %s pour fonctionner, "
+"qu'elle consomme à la fois lors du tir initial du crochet et après quelques "
+"secondes lorsqu'elle vous fait remonter la chaîne."
 
 #: qcsrc/common/weapons/weapon/hook.qc:433
 #, c-format
@@ -8794,8 +8794,8 @@ msgid ""
 "It consumes %s ammo for each bullet shot, until the whole magazine is "
 "emptied."
 msgstr ""
-"Il consomme des munitions de type %s pour chaque balle tirée, jusqu'à ce que "
-"le chargeur soit entièrement vidé."
+"Cette arme consomme des munitions de type %s pour chaque balle tirée, "
+"jusqu'à ce que le chargeur soit entièrement vidé."
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:437
 #, c-format
@@ -8807,7 +8807,7 @@ msgid ""
 msgstr ""
 "Le %s peut être utilisé dans de nombreuses situations et fonctionne "
 "particulièrement bien à longue portée, car les balles traversent "
-"instantanément la carte. Comme le tir secondaire n'a pas de dispersion, il "
+"instantanément la carte. Comme le tir secondaire ne se disperse pas, il "
 "s'agit de la meilleure option pour tirer à longue distance."
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:29
@@ -8836,7 +8836,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/minelayer.qc:567
 #, c-format
 msgid "It consumes %s ammo for each mine laid."
-msgstr "Il consomme des munitions de type %s pour chaque mine posée."
+msgstr "Cette arme consomme des munitions de type %s pour chaque mine posée."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:568
 #, c-format
@@ -8875,7 +8875,8 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/mortar.qc:384
 #, c-format
 msgid "It consumes %s ammo for every grenade launched."
-msgstr "Il consomme des munitions de type %s pour chaque grenade lancée."
+msgstr ""
+"Cette arme consomme des munitions de type %s pour chaque grenade lancée."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:385
 #, c-format
@@ -8954,7 +8955,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/vortex.qc:386
 #, c-format
 msgid "It consumes %s ammo for each bullet shot."
-msgstr "Il consomme des munitions de type %s pour chaque balle tirée."
+msgstr "Cette arme consomme des munitions de type %s pour chaque tir."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:273
 #, c-format
@@ -9008,8 +9009,8 @@ msgstr ""
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
 msgstr ""
-"Il consomme des munitions de type %s, même lorsque la balise n'atteint pas "
-"sa cible."
+"Cette arme consomme des munitions de type %s, même lorsque la balise "
+"n'atteint pas sa cible."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:679
 #, c-format
@@ -9043,7 +9044,7 @@ msgid ""
 "head of the weapon. Since the slap takes a moment to land, timing this well "
 "is difficult."
 msgstr ""
-"Le tir secondaire brandit le %s, frappant les joueurs suffisamment proches "
+"Le tir secondaire brandit le %s et frappe les joueurs suffisamment proches "
 "avec la crosse. Comme la frappe met un certain temps à atteindre sa cible, "
 "il est difficile de bien synchroniser son utilisation."
 
@@ -9133,7 +9134,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/vaporizer.qc:423
 #, c-format
 msgid "It consumes some %s ammo with each shot."
-msgstr "Il consomme des munitions de type %s pour chaque tir."
+msgstr "Cette arme consomme des munitions de type %s pour chaque tir."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:31
 msgid "Vaporizer"
@@ -9477,7 +9478,7 @@ msgstr "Conception des niveaux"
 
 #: qcsrc/menu/xonotic/credits.qc:87
 msgid "Music / Sound FX"
-msgstr "Musique / son FX"
+msgstr "Musique/son FX"
 
 #: qcsrc/menu/xonotic/credits.qc:103
 msgid "Game Code"
@@ -9485,7 +9486,7 @@ msgstr "Code du jeu"
 
 #: qcsrc/menu/xonotic/credits.qc:122
 msgid "Marketing / PR"
-msgstr "Marketing / Relations publiques"
+msgstr "Marketing/Relations publiques"
 
 #: qcsrc/menu/xonotic/credits.qc:128
 msgid "Legal"
@@ -10015,7 +10016,7 @@ msgstr "Activer même en mode échauffement"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
 msgid "Text/icon ratio:"
-msgstr "Ratio texte / icônes :"
+msgstr "Ratio texte/icônes :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:34
 msgid "Reduced"
@@ -10089,7 +10090,7 @@ msgstr "Activer en mode Course/CTS seulement"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 msgid "Flip speed/acceleration positions"
-msgstr "Inverser les positions de la vitesse/de l'accélération"
+msgstr "Inverser les positions de la vitesse / de l'accélération"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
@@ -12059,7 +12060,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:150
 msgid "Resolution of reflections/refractions"
-msgstr "Résolution des reflets / réfractions"
+msgstr "Résolution des reflets/réfractions"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:151
 msgid "Blurred"
@@ -12324,7 +12325,7 @@ msgstr "Vitesse d'estompage :"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:53
 msgid "Enable rows / columns highlighting"
-msgstr "Activer le surlignage des lignes / colonnes"
+msgstr "Activer le surlignage des lignes/colonnes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:55
 msgid "Show accuracy underneath scoreboard"
@@ -13772,7 +13773,7 @@ msgid ""
 "and scoreboards from past games."
 msgstr ""
 "XonStat est l'application intégrée de statistiques des joueurs pour Xonotic. "
-"Elle stocke des statistiques essentielles telles que votre ratio victoires / "
+"Elle stocke des statistiques essentielles telles que votre ratio victoires/"
 "défaites, les dégâts et la précision de vos armes, ainsi que les classements "
 "des parties précédentes."
 
@@ -14233,11 +14234,11 @@ msgstr "reculer"
 
 #: qcsrc/menu/xonotic/keybinder.qc:66
 msgid "jump / swim"
-msgstr "sauter / nager"
+msgstr "sauter/nager"
 
 #: qcsrc/menu/xonotic/keybinder.qc:67
 msgid "crouch / sink"
-msgstr "s'accroupir / couler"
+msgstr "s'accroupir/couler"
 
 #: qcsrc/menu/xonotic/keybinder.qc:69
 msgid "jetpack"
@@ -14342,11 +14343,11 @@ msgstr "auto-joindre une équipe"
 
 #: qcsrc/menu/xonotic/keybinder.qc:169
 msgid "drop key/flag, exit vehicle"
-msgstr "lâcher clé / drapeau, quitter véhicule"
+msgstr "lâcher clé/drapeau, quitter véhicule"
 
 #: qcsrc/menu/xonotic/keybinder.qc:170
 msgid "suicide / respawn"
-msgstr "suicide / réapparition"
+msgstr "suicide/réapparition"
 
 #: qcsrc/menu/xonotic/keybinder.qc:171
 msgid "quick menu"
@@ -14406,7 +14407,7 @@ msgstr "Quitter la partie solo en cours"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:32
 msgid "Leave current multiplayer match / Disconnect from the server"
-msgstr "Quitter la partie multijoueur en cours / Se déconnecter du serveur"
+msgstr "Quitter la partie multijoueur en cours / Se déconnecter du serveur"
 
 #: qcsrc/menu/xonotic/mainwindow.qc:78 qcsrc/menu/xonotic/mainwindow.qc:81
 msgid "Do not press this button again!"
