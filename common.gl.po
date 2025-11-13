@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-09 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: LegendGuard, 2020\n"
+"Last-Translator: nin hum <ninhum@gmx.com>, 2024-2025\n"
 "Language-Team: Galician (http://app.transifex.com/team-xonotic/xonotic/"
 "language/gl/)\n"
 "Language: gl\n"
@@ -223,17 +223,17 @@ msgstr "^2Prema ^3 %s ^2 para rematar o quecemento"
 #: qcsrc/client/hud/panel/infomessages.qc:208
 #, c-format
 msgid "%sNeed active players for: %s"
-msgstr ""
+msgstr "%s Precísanse xogadores activos para: %s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:212
 #, c-format
 msgid "%sWaiting for 1 player to join..."
-msgstr ""
+msgstr "%sAgardando a que 1 xogador se una..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:214
 #, c-format
 msgid "%sWaiting for %d players to join..."
-msgstr ""
+msgstr "%sAgardando a que %d xogadores se unan..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "Teams are unbalanced!"
