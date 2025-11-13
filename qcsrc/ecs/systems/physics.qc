@@ -308,69 +308,66 @@ void sys_phys_simulate(entity this, float dt)
 
 	if (this.com_phys_air)
 	{
-		if (!(this.flags & FL_WATERJUMP))
+		// apply air speed limit
+		float airaccelqw = PHYS_AIRACCEL_QW(this);
+		float wishspeed0 = wishspeed;
+		const float maxairspd = this.com_phys_vel_max;
+		wishspeed = min(wishspeed, maxairspd);
+		if (IS_DUCKED(this))
+			wishspeed *= 0.5;
+
+		float airaccel = this.com_phys_acc_rate_air;
+
+		float accelerating = (this.velocity * wishdir > 0);
+		float wishspeed2 = wishspeed;
+
+		// CPM: air control
+		if (PHYS_AIRSTOPACCELERATE(this))
 		{
-			// apply air speed limit
-			float airaccelqw = PHYS_AIRACCEL_QW(this);
-			float wishspeed0 = wishspeed;
-			const float maxairspd = this.com_phys_vel_max;
-			wishspeed = min(wishspeed, maxairspd);
-			if (IS_DUCKED(this))
-				wishspeed *= 0.5;
-
-			float airaccel = this.com_phys_acc_rate_air;
-
-			float accelerating = (this.velocity * wishdir > 0);
-			float wishspeed2 = wishspeed;
-
-			// CPM: air control
-			if (PHYS_AIRSTOPACCELERATE(this))
+			const float dot = normalize(vec2(this.velocity)) * wishdir;
+			if (dot < 0)
 			{
-				const float dot = normalize(vec2(this.velocity)) * wishdir;
-				if (dot < 0)
-				{
-					if (PHYS_AIRSTOPACCELERATE_FULL(this))
-						airaccel = this.com_phys_acc_rate_air_stop; // full slow-down
-					else
-						airaccel += (airaccel - this.com_phys_acc_rate_air_stop) * dot; // sinusoidal slow-down
-				}
+				if (PHYS_AIRSTOPACCELERATE_FULL(this))
+					airaccel = this.com_phys_acc_rate_air_stop; // full slow-down
+				else
+					airaccel += (airaccel - this.com_phys_acc_rate_air_stop) * dot; // sinusoidal slow-down
 			}
-			// note that for straight forward jumping:
-			// step = accel * dt * wishspeed0;
-			// accel  = bound(0, wishspeed - vel_xy_current, step) * accelqw + step * (1 - accelqw);
-			// -->
-			// dv/dt = accel * maxspeed (when slow)
-			// dv/dt = accel * maxspeed * (1 - accelqw) (when fast)
-			// log dv/dt = logaccel + logmaxspeed (when slow)
-			// log dv/dt = logaccel + logmaxspeed + log(1 - accelqw) (when fast)
-			float strafity = IsMoveInDirection(PHYS_CS(this).movement, -90) + IsMoveInDirection(PHYS_CS(this).movement, +90);  // if one is nonzero, other is always zero
-			if (PHYS_MAXAIRSTRAFESPEED(this))
-				wishspeed = min(wishspeed, GeomLerp(this.com_phys_vel_max_air,
-				                                    strafity,
-				                                    this.com_phys_vel_max_air_strafe));
-
-			if (PHYS_AIRSTRAFEACCELERATE(this))
-				airaccel = GeomLerp(airaccel, strafity, this.com_phys_acc_rate_air_strafe);
-
-			if (PHYS_AIRSTRAFEACCEL_QW(this))
-				airaccelqw =
-					(((strafity > 0.5 ? PHYS_AIRSTRAFEACCEL_QW(this) : PHYS_AIRACCEL_QW(this)) >= 0) ? +1 : -1)
-					*
-					(1 - GeomLerp(1 - fabs(PHYS_AIRACCEL_QW(this)), strafity, 1 - fabs(PHYS_AIRSTRAFEACCEL_QW(this))));
-			// !CPM
-
-			if (PHYS_WARSOWBUNNY_TURNACCEL(this) && accelerating && PHYS_CS(this).movement.y == 0 && PHYS_CS(this).movement.x != 0)
-				PM_AirAccelerate(this, dt, wishdir, wishspeed2);
-			else
-			{
-				float sidefric = maxairspd ? (PHYS_AIRACCEL_SIDEWAYS_FRICTION(this) / maxairspd) : 0;
-				PM_Accelerate(this, dt, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw,
-					PHYS_AIRACCEL_QW_STRETCHFACTOR(this), sidefric, PHYS_AIRSPEEDLIMIT_NONQW(this));
-			}
-
-			if (PHYS_AIRCONTROL(this))
-				CPM_PM_Aircontrol(this, dt, wishdir, wishspeed2);
 		}
+		// note that for straight forward jumping:
+		// step = accel * dt * wishspeed0;
+		// accel  = bound(0, wishspeed - vel_xy_current, step) * accelqw + step * (1 - accelqw);
+		// -->
+		// dv/dt = accel * maxspeed (when slow)
+		// dv/dt = accel * maxspeed * (1 - accelqw) (when fast)
+		// log dv/dt = logaccel + logmaxspeed (when slow)
+		// log dv/dt = logaccel + logmaxspeed + log(1 - accelqw) (when fast)
+		float strafity = IsMoveInDirection(PHYS_CS(this).movement, -90) + IsMoveInDirection(PHYS_CS(this).movement, +90);  // if one is nonzero, other is always zero
+		if (PHYS_MAXAIRSTRAFESPEED(this))
+			wishspeed = min(wishspeed, GeomLerp(this.com_phys_vel_max_air,
+			                                    strafity,
+			                                    this.com_phys_vel_max_air_strafe));
+
+		if (PHYS_AIRSTRAFEACCELERATE(this))
+			airaccel = GeomLerp(airaccel, strafity, this.com_phys_acc_rate_air_strafe);
+
+		if (PHYS_AIRSTRAFEACCEL_QW(this))
+			airaccelqw =
+				(((strafity > 0.5 ? PHYS_AIRSTRAFEACCEL_QW(this) : PHYS_AIRACCEL_QW(this)) >= 0) ? +1 : -1)
+				*
+				(1 - GeomLerp(1 - fabs(PHYS_AIRACCEL_QW(this)), strafity, 1 - fabs(PHYS_AIRSTRAFEACCEL_QW(this))));
+		// !CPM
+
+		if (PHYS_WARSOWBUNNY_TURNACCEL(this) && accelerating && PHYS_CS(this).movement.y == 0 && PHYS_CS(this).movement.x != 0)
+			PM_AirAccelerate(this, dt, wishdir, wishspeed2);
+		else
+		{
+			float sidefric = maxairspd ? (PHYS_AIRACCEL_SIDEWAYS_FRICTION(this) / maxairspd) : 0;
+			PM_Accelerate(this, dt, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw,
+				PHYS_AIRACCEL_QW_STRETCHFACTOR(this), sidefric, PHYS_AIRSPEEDLIMIT_NONQW(this));
+		}
+
+		if (PHYS_AIRCONTROL(this))
+			CPM_PM_Aircontrol(this, dt, wishdir, wishspeed2);
 	}
 	else
 	{
@@ -473,8 +470,8 @@ void sys_phys_simulate(entity this, float dt)
 			return;
 		}
 
-		if (!(this.flags & FL_WATERJUMP))
-			PM_Accelerate(this, dt, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
+		// MOVETYPE_NOCLIP, MOVETYPE_FLY, and ladders
+		PM_Accelerate(this, dt, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
 	}
 }
 
