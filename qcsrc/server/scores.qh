@@ -47,7 +47,7 @@ float PlayerScore_Set(entity player, PlayerScoreField scorefield, float score);
  * Use that when a spectator becomes a player.
  * Returns whether clearing has been performed
  */
-float PlayerScore_Clear(entity player);
+bool PlayerScore_Clear(entity player);
 
 /**
  * Adds a score to the player's team's scores.
@@ -77,7 +77,7 @@ float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tsc
 /**
  * Set the label of a team score item, as well as the scoring flags.
  */
-void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags);
+void ScoreInfo_SetLabel_TeamScore(int i, string label, float scoreflags);
 
 /**
  * Set the label of a player score item, as well as the scoring flags.
@@ -127,7 +127,7 @@ float WinningConditionHelper_zeroisworst;   ///< zero is worst, duh
  * If shortString is set, only the sort keys are returned.
  */
 string GetPlayerScoreString(entity pl, float shortString);
-string GetTeamScoreString(float tm, float shortString);
+string GetTeamScoreString(int tm, float shortString);
 
 /**
  * Sorts the players and stores their place in the given field, starting with

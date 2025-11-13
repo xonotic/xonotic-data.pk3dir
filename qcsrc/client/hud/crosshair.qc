@@ -236,7 +236,8 @@ void HUD_Crosshair(entity this)
 	float f, i, j;
 	vector v;
 	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) && !autocvar_cl_lockview
-		&& spectatee_status != -1 && (!csqcplayer.viewloc || (!spectatee_status && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))) && !MUTATOR_CALLHOOK(DrawCrosshair)
+		&& spectatee_status != -1 && STAT(HEALTH) > 0 && !MUTATOR_CALLHOOK(DrawCrosshair)
+		&& (!csqcplayer.viewloc || (!spectatee_status && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM)))
 		&& !HUD_MinigameMenu_IsOpened())
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
