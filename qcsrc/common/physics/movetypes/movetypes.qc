@@ -554,7 +554,7 @@ int _Movetype_ContentsMask(entity this)  // SV_GenericHitSuperContentsMask
 entity _Movetype_TestEntityPosition_ent;
 bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 {
-    entity this = _Movetype_TestEntityPosition_ent;
+	entity this = _Movetype_TestEntityPosition_ent;
 	vector org = this.origin + ofs;
 
 	//int cont = this.dphitcontentsmask;
@@ -578,21 +578,21 @@ bool _Movetype_TestEntityPosition_Offset(int offset)
 	// NOTE: expects _Movetype_TestEntityPosition_ent to be set to the correct entity
 	// returns true if stuck
 
-    // start at 2, since the first position has already been checked
-    for(int j = 2; j <= offset; ++j)
-    {
-    	if(!_Movetype_TestEntityPosition('0 0 -1' * j))
-    		return false;
-    	if(!_Movetype_TestEntityPosition('0 0 1' * j))
-    		return false;
-    }
+	// start at 2, since the first position has already been checked
+	for(int j = 2; j <= offset; ++j)
+	{
+		if(!_Movetype_TestEntityPosition('0 0 -1' * j))
+			return false;
+		if(!_Movetype_TestEntityPosition('0 0 1' * j))
+			return false;
+	}
 
 	return true;
 }
 
 int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 {
-    _Movetype_TestEntityPosition_ent = this;
+	_Movetype_TestEntityPosition_ent = this;
 	if (!_Movetype_TestEntityPosition(' 0  0  0')) {
 	    return UNSTICK_FINE;
 	}
@@ -604,12 +604,12 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	X('-1  1  0') X(' 1  1  0')
 	#undef X
 	{
-        if(_Movetype_TestEntityPosition_Offset(rint((this.maxs.z - this.mins.z) * 0.36)))
-        {
-            LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
-                etof(this), this.classname, vtos(this.origin));
-            return UNSTICK_STUCK;
-        }
+		if(_Movetype_TestEntityPosition_Offset(rint((this.maxs.z - this.mins.z) * 0.36)))
+		{
+			LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
+			etof(this), this.classname, vtos(this.origin));
+			return UNSTICK_STUCK;
+		}
 	}
 	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
 		etof(this), this.classname, vtos(this.origin));
