@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-09 07:22+0100\n"
+"POT-Creation-Date: 2025-11-14 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Rui <xymarior@yandex.com>, 2018\n"
 "Language-Team: Portuguese (http://app.transifex.com/team-xonotic/xonotic/"
@@ -8106,7 +8106,6 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/weapons/weapon/rifle.qc:272
-#: qcsrc/common/weapons/weapon/vortex.qc:386
 #, c-format
 msgid "It consumes %s ammo for each bullet shot."
 msgstr ""
@@ -8257,6 +8256,11 @@ msgstr "Vaporizador"
 
 #: qcsrc/common/weapons/weapon/vortex.qc:385
 msgid "The secondary fire zooms in when held, allowing for ease of aiming."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/vortex.qc:386
+#, c-format
+msgid "It consumes %s ammo for each shot."
 msgstr ""
 
 #: qcsrc/common/weapons/weapon/vortex.qc:387
