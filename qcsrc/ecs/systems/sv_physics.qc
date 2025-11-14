@@ -7,7 +7,6 @@ float autocvar_sv_spectator_speed_multiplier_max = 5;
 void sys_phys_fix(entity this, float dt)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
-	Physics_UpdateStats(this);
 	PM_ClientMovement_UpdateStatus(this);
 }
 

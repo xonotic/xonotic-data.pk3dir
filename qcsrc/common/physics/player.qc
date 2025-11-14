@@ -17,7 +17,7 @@ REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
 // client side physics
 bool Physics_Valid(string thecvar)
 {
-	return thecvar != "" && thecvar && thecvar != "default" && strhasword(autocvar_g_physics_clientselect_options, thecvar);
+	return thecvar != "" && thecvar != "default" && strhasword(autocvar_g_physics_clientselect_options, thecvar);
 }
 
 float Physics_ClientOption(entity this, string option, float defaultval)
@@ -31,7 +31,7 @@ float Physics_ClientOption(entity this, string option, float defaultval)
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
 	}
-	if(autocvar_g_physics_clientselect_default && autocvar_g_physics_clientselect_default != "" && autocvar_g_physics_clientselect_default != "default")
+	if(autocvar_g_physics_clientselect_default != "" && autocvar_g_physics_clientselect_default != "default")
 	{
 		// NOTE: not using Physics_Valid here, so the default can be forced to something normally unavailable
 		string s = strcat("g_physics_", autocvar_g_physics_clientselect_default, "_", option);
