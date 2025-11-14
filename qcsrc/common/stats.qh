@@ -239,7 +239,7 @@ float autocvar_sv_friction_on_land;
 var float autocvar_sv_friction_slick = 0.5;
 #endif
 REGISTER_STAT(MOVEVARS_FRICTION, FLOAT)
-REGISTER_STAT(MOVEVARS_FRICTION_SLICK, FLOAT, autocvar_sv_friction_slick)
+REGISTER_STAT(MOVEVARS_FRICTION_SLICK, FLOAT)
 REGISTER_STAT(MOVEVARS_FRICTION_ONLAND, FLOAT, autocvar_sv_friction_on_land)
 
 REGISTER_STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, INT, autocvar_sv_jumpspeedcap_max_disable_on_ramps)
