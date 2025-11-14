@@ -165,7 +165,7 @@ REGISTER_STAT(MULTIJUMP_CLIENT, BOOL, autocvar_g_multijump_client)
 .int multijump_count;
 REGISTER_STAT(MULTIJUMP_COUNT, INT, this.multijump_count)
 REGISTER_STAT(MULTIJUMP, INT, autocvar_g_multijump)
-REGISTER_STAT(DOUBLEJUMP, INT, autocvar_sv_doublejump)
+REGISTER_STAT(DOUBLEJUMP, INT)
 
 #ifdef SVQC
 bool g_bugrigs;
