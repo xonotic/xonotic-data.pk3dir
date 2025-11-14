@@ -62,7 +62,7 @@ const int WATERLEVEL_SUBMERGED = 3;
 	#define GAMEPLAYFIX_NOGRAVITYONGROUND           autocvar_sv_gameplayfix_nogravityonground
 	#define GAMEPLAYFIX_Q2AIRACCELERATE             autocvar_sv_gameplayfix_q2airaccelerate
 
-	#define PHYS_GRAVITY(s)                     autocvar_sv_gravity
+	#define PHYS_GRAVITY(s)                     (STAT(MOVEVARS_GRAVITY, s) ? STAT(MOVEVARS_GRAVITY, s) : autocvar_sv_gravity)
 	#define PHYS_ENTGRAVITY(s)                  ((s).gravity)
 
 	#define TICRATE sys_frametime

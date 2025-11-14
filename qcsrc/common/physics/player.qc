@@ -107,6 +107,8 @@ void Physics_UpdateStats(entity this)
 		STAT(PL_CROUCH_VIEW_OFS, this) = autocvar_sv_mapformat_is_quake2 ? '0 0 16'   : STAT(PL_VIEW_OFS, this);
 	}
 
+	STAT(MOVEVARS_GRAVITY, this) = Physics_ClientOption(this, "gravity", autocvar_sv_gravity);
+
 	// old stats
 	// fix some new settings
 	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, this) = Physics_ClientOption(this, "airaccel_qw_stretchfactor", autocvar_sv_airaccel_qw_stretchfactor);
