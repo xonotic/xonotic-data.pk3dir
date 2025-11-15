@@ -8412,6 +8412,12 @@ msgid ""
 "angle down and use the secondary fire to pull yourself forwards, in order to "
 "gain speed."
 msgstr ""
+"Il %s infligge respinta in un modo unico, tirando il giocatore dal suo "
+"centro al punto d'impatto. Questo lo rende una delle migliori armi per "
+"rallentare qualcuno se lo stai inseguendo, in particolare con il fuoco "
+"secondario. Un altro uso comune del %s è il \"correre col crylink\", in cui "
+"ti inclini parzialmente verso il basso e usi il fuoco secondario per tirarti "
+"in avanti, al fine di guadagnare velocità."
 
 #: qcsrc/common/weapons/weapon/crylink.qh:32
 msgid "Crylink"
@@ -8424,6 +8430,10 @@ msgid ""
 "it explodes on impact. If the primary fire is held, the rocket can be guided "
 "by the user's aim, allowing steering it towards enemies."
 msgstr ""
+"Il %s lancia un razzo telecomandato, infliggendo danni significativi quando "
+"esplode all'impatto. Se il fuoco primario viene tenuto premuto, il razzo può "
+"essere guidato dalla mira dell'utente, consentendo di dirigerlo verso i "
+"nemici."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:620
 msgid ""
@@ -8431,6 +8441,9 @@ msgid ""
 "dealing damage to enemies even if the rocket barely missed colliding with "
 "them."
 msgstr ""
+"Il fuoco secondario può essere usato per detonare immediatamente i razzi, "
+"permettendo di infliggere danni ai nemici anche se il razzo ha mancato di "
+"poco la collisione con loro."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:621
 #, c-format
@@ -8438,6 +8451,8 @@ msgid ""
 "It consumes a bunch of %s ammo for each rocket, which can end up being "
 "depleted quickly, so often players alternate with another weapon like %s."
 msgstr ""
+"Consuma un sacco di %s per ogni razzo, che possono esaurirsi rapidamente, "
+"quindi spesso i giocatori si alternano con un'altra arma come il %s."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:622
 #, c-format
@@ -8460,6 +8475,10 @@ msgid ""
 "flying,\" where you fire a rocket and immediately detonate it to boost "
 "yourself while mid-air, much more effective with the %s mutator enabled."
 msgstr ""
+"Grazie alla capacità di detonare a distanza i razzi, un uso comune è "
+"\"voloare col razzo\", dove si spara un razzo e lo si detona immediatamente "
+"per darsi una spinta mentre si è a mezz'aria, molto più efficace con il "
+"mutatore %s abilitato."
 
 #: qcsrc/common/weapons/weapon/devastator.qh:32
 msgid "Devastator"
@@ -8482,6 +8501,11 @@ msgid ""
 "damage enemies that walk by. The orbs burst after some time, and can be "
 "forced to burst in a \"combo\" if a primary fire ball bursts near them."
 msgstr ""
+"Il fuoco secondario lancia sfere che sono influenzate dalla gravità, quindi "
+"possono essere piazzate per la mappa in luoghi ad alto traffico (come le "
+"basi della bandiera di %s) per danneggiare i nemici che passano. Le sfere "
+"esplodono dopo un po' di tempo e possono essere costrette a esplodere in una "
+"\"combo\" se una palla di fuoco primario esplode vicino a loro."
 
 #: qcsrc/common/weapons/weapon/electro.qc:790
 #, c-format
@@ -8496,6 +8520,10 @@ msgid ""
 "fire doesn't travel particularly fast, the %s is not useful in many other "
 "situations."
 msgstr ""
+"Il %s è una delle migliori armi da \"spam\" da usare in aree affollate, "
+"poiché le combo possono infliggere una montagna di danni, se il nemico è "
+"abbastanza vicino. Dato che il fuoco primario non viaggia particolarmente "
+"veloce, il %s non è utile in molte altre situazioni."
 
 #: qcsrc/common/weapons/weapon/electro.qh:33
 msgid "Electro"
@@ -8515,6 +8543,7 @@ msgstr ""
 msgid ""
 "The secondary fire launches flaming balls that set nearby players alight."
 msgstr ""
+"Il fuoco secondario lancia sfere infuocate che incendiano i giocatori vicini."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:444
 msgid "It is a superweapon, so isn't often found in game."
@@ -8532,6 +8561,9 @@ msgid ""
 "it effectively may be difficult, but if done properly it can deal a ton of "
 "damage."
 msgstr ""
+"Dato che il %s impiega un momento per caricarsi e la palla di fuoco viaggia "
+"lentamente, usarlo efficacemente può essere difficile, ma se fatto "
+"correttamente può infliggere una montagna di danni."
 
 #: qcsrc/common/weapons/weapon/fireball.qh:34
 msgid "Fireball"
@@ -8553,6 +8585,11 @@ msgid ""
 "it will fire itself after some time (after a warning beep) if the secondary "
 "fire isn't released."
 msgstr ""
+"Quando il fuoco secondario viene tenuto premuto, vengono caricati più razzi "
+"e vengono sparati contemporaneamente quando rilasciato. Questi razzi non "
+"possono essere tenuti per sempre, quindi sparerà da sola dopo un po' di "
+"tempo (dopo un segnale acustico di avvertimento) se il fuoco secondario non "
+"viene rilasciato."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:502
 #, c-format
@@ -8567,6 +8604,10 @@ msgid ""
 "before turning a corner, so you can surprise any enemies around the corner "
 "with a bunch of rockets to the face."
 msgstr ""
+"Il %s funziona meglio su distanze ravvicinate o medie, poiché è difficile "
+"colpire a lunga distanza. Un uso comune è caricare completamente il fuoco "
+"secondario prima di svoltare un angolo, così puoi sorprendere qualsiasi "
+"nemico dietro l'angolo con un mucchio di razzi in faccia."
 
 #: qcsrc/common/weapons/weapon/hagar.qh:36
 msgid "Hagar"
@@ -8578,12 +8619,16 @@ msgid ""
 "The %s (or HLAC for short) fires lasers in quick succession. The projectiles "
 "it fires are similar to those of the %s."
 msgstr ""
+"Il %s (o HLAC in breve) spara laser in rapida successione. I proiettili che "
+"spara sono simili a quelli del %s."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:247
 msgid ""
 "The secondary fire shoots a burst of multiple randomly-scattered lasers at "
 "once."
 msgstr ""
+"Il fuoco secondario spara una raffica di più laser sparsi casualmente in una "
+"volta sola."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:248
 #, c-format
@@ -8591,6 +8636,8 @@ msgid ""
 "Unlike the %s, it consumes %s ammo for each laser shot, meaning that it "
 "cannot be used infinitely."
 msgstr ""
+"A differenza del %s, consuma %s per ogni colpo laser, il che significa che "
+"non può essere usato all'infinito."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:249
 #, c-format
@@ -8598,6 +8645,8 @@ msgid ""
 "The %s works best in close ranges, but the primary fire is also useful in "
 "medium ranges."
 msgstr ""
+"Il %s funziona meglio a corto raggio, ma il fuoco primario è utile anche a "
+"medio raggio."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:250
 #, c-format
@@ -8607,6 +8656,11 @@ msgid ""
 "fire every now and then is important to restore accuracy. Also, the %s has "
 "less spread when used while crouching."
 msgstr ""
+"Un aspetto unico del %s è che più a lungo si tiene premuto il fuoco "
+"primario, più i laser inizieranno a disperdersi. Ciò significa che "
+"rilasciare il fuoco primario di tanto in tanto è importante per ripristinare "
+"la precisione. Inoltre, il %s ha meno dispersione quando usato in posizione "
+"accovacciata."
 
 #: qcsrc/common/weapons/weapon/hlac.qh:31
 msgid "Heavy Laser Assault Cannon"
@@ -8618,12 +8672,16 @@ msgid ""
 "The %s is a unique weapon, firing a chain forwards which pulls you in once "
 "it latches onto something."
 msgstr ""
+"Il %s è un'arma unica, che spara una catena in avanti che ti tira verso di "
+"sé una volta che si aggancia a qualcosa."
 
 #: qcsrc/common/weapons/weapon/hook.qc:431
 msgid ""
 "The secondary fire usually drops a gravity bomb that affects enemies, also "
 "releasing light and smoke sort of like a flashbang."
 msgstr ""
+"Il fuoco secondario di solito sgancia una bomba gravitazionale che colpisce "
+"i nemici, rilasciando anche luce e fumo, un po' come una flashbang."
 
 #: qcsrc/common/weapons/weapon/hook.qc:432
 #, c-format
@@ -8631,6 +8689,8 @@ msgid ""
 "It usually requires %s ammo to work, consuming it both when initially firing "
 "the hook, and after a couple seconds as it reels you in."
 msgstr ""
+"Di solito richiede %s per funzionare, consumandole sia al momento del lancio "
+"iniziale del rampino, sia dopo un paio di secondi mentre ti trascina."
 
 #: qcsrc/common/weapons/weapon/hook.qc:433
 #, c-format
@@ -8639,6 +8699,9 @@ msgid ""
 "around the map at high speeds, making both surprise ambushes and miraculous "
 "escapes possible."
 msgstr ""
+"Il %s permette di raggiungere luoghi in precedenza inaccessibili sulle mappe "
+"e di sfrecciare per la mappa ad alta velocità, rendendo possibili sia "
+"imboscate a sorpresa che fughe miracolose."
 
 #: qcsrc/common/weapons/weapon/hook.qc:435
 #, c-format
@@ -8790,7 +8853,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/rifle.qc:272
 #, c-format
 msgid "It consumes %s ammo for each bullet shot."
-msgstr ""
+msgstr "Consuma %s per ogni pallottola sparata."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:273
 #, c-format
