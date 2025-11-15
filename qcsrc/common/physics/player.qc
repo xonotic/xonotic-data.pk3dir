@@ -446,10 +446,7 @@ bool PlayerJump(entity this)
 
 	if (!isnan(PHYS_JUMPSPEEDCAP_MAX(this)))
 	{
-		// don't do jump speedcaps on ramps to preserve old xonotic ramjump style
-		tracebox(this.origin + '0 0 0.01', this.mins, this.maxs, this.origin - '0 0 0.01', MOVE_NORMAL, this);
-
-		if (!(trace_fraction < 1 && trace_plane_normal_z < 0.98 && PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(this)))
+		if (!(this.groundplane_normal.z && this.groundplane_normal.z < 0.98 && PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(this)))
 		{
 			float maxjumpspeed = mjumpheight * PHYS_JUMPSPEEDCAP_MAX(this);
 
