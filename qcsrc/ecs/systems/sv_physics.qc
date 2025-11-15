@@ -114,17 +114,6 @@ void sys_phys_fixspeed(entity this, float maxspeed_mod)
 		stuffcmd(this, strcat("cl_sidespeed ", temps, "\n"));
 		stuffcmd(this, strcat("cl_upspeed ", temps, "\n"));
 	}
-
-	if (this.jumpspeedcap_min != autocvar_sv_jumpspeedcap_min)
-	{
-		this.jumpspeedcap_min = autocvar_sv_jumpspeedcap_min;
-		stuffcmd(this, sprintf("\ncl_jumpspeedcap_min \"%s\"\n", autocvar_sv_jumpspeedcap_min));
-	}
-	if (this.jumpspeedcap_max != autocvar_sv_jumpspeedcap_max)
-	{
-		this.jumpspeedcap_max = autocvar_sv_jumpspeedcap_max;
-		stuffcmd(this, sprintf("\ncl_jumpspeedcap_max \"%s\"\n", autocvar_sv_jumpspeedcap_max));
-	}
 }
 
 void sys_phys_land(entity this)

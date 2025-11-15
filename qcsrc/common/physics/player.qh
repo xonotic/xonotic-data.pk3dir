@@ -44,9 +44,9 @@ float autocvar_g_maxspeed;
 float autocvar_g_movement_highspeed = 1;
 bool autocvar_g_movement_highspeed_q3_compat = 0;
 bool autocvar_speedmeter;
-string autocvar_sv_jumpspeedcap_max;
-float autocvar_sv_jumpspeedcap_max_disable_on_ramps;
-string autocvar_sv_jumpspeedcap_min;
+float autocvar_sv_jumpspeedcap_max;
+bool autocvar_sv_jumpspeedcap_max_disable_on_ramps;
+float autocvar_sv_jumpspeedcap_min;
 float autocvar_sv_jumpvelocity;
 float autocvar_sv_jumpvelocity_crouch;
 float autocvar_sv_maxairspeed;
@@ -127,7 +127,9 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 #define PHYS_JETPACK_MAXSPEED_UP(s)         STAT(JETPACK_MAXSPEED_UP, s)
 #define PHYS_JETPACK_REVERSE_THRUST(s)      STAT(JETPACK_REVERSE_THRUST, s)
 
-#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(s) STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS)
+#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(s) STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, s)
+#define PHYS_JUMPSPEEDCAP_MIN(s)            STAT(MOVEVARS_JUMPSPEEDCAP_MIN, s)
+#define PHYS_JUMPSPEEDCAP_MAX(s)            STAT(MOVEVARS_JUMPSPEEDCAP_MAX, s)
 #define PHYS_JUMPVELOCITY(s)                STAT(MOVEVARS_JUMPVELOCITY, s)
 #define PHYS_JUMPVELOCITY_CROUCH(s)         STAT(MOVEVARS_JUMPVELOCITY_CROUCH, s)
 
@@ -219,9 +221,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 
 	#define PHYS_FIXANGLE(s) ('0 0 0')
 
-	string autocvar_cl_jumpspeedcap_min;
-	string autocvar_cl_jumpspeedcap_max;
-
 	.float watertype;
 	.float waterlevel;
 	.int items;
@@ -279,9 +278,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 
 	#define PHYS_INVEHICLE(s)                   (boolean(hud != HUD_NORMAL))
 
-	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_cl_jumpspeedcap_min
-	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_cl_jumpspeedcap_max
-
 	#define PHYS_CL_TRACK_CANJUMP(s)            STAT(MOVEVARS_CL_TRACK_CANJUMP, s)
 
 #elif defined(SVQC)
@@ -293,10 +289,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	void Physics_UpdateStats(entity this);
 
 	void PM_UpdateButtons(entity this, entity store);
-
-	/** Not real stats */
-	.string jumpspeedcap_min;
-	.string jumpspeedcap_max;
 
 	// footstep interval
 	.float nextstep;
@@ -331,9 +323,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	#define PHYS_INPUT_BUTTON_BUTTON16(s)       (CS(s).button16)
 
 	#define PHYS_INVEHICLE(s)                   (boolean((s).vehicle != NULL))
-
-	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_sv_jumpspeedcap_min
-	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_sv_jumpspeedcap_max
 
 	#define PHYS_CL_TRACK_CANJUMP(s)            (CS_CVAR(s).cvar_cl_movement_track_canjump)
 

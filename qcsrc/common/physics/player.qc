@@ -141,6 +141,9 @@ void Physics_UpdateStats(entity this)
 	STAT(DOUBLEJUMP, this) = Physics_ClientOption(this, "doublejump", autocvar_sv_doublejump);
 	STAT(MOVEVARS_JUMPVELOCITY, this) = Physics_ClientOption(this, "jumpvelocity", autocvar_sv_jumpvelocity);
 	STAT(MOVEVARS_JUMPVELOCITY_CROUCH, this) = Physics_ClientOption(this, "jumpvelocity_crouch", autocvar_sv_jumpvelocity_crouch);
+	STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, this) = Physics_ClientOption(this, "jumpspeedcap_max_disable_on_ramps", autocvar_sv_jumpspeedcap_max_disable_on_ramps);
+	STAT(MOVEVARS_JUMPSPEEDCAP_MIN, this) = Physics_ClientOption(this, "jumpspeedcap_min", autocvar_sv_jumpspeedcap_min);
+	STAT(MOVEVARS_JUMPSPEEDCAP_MAX, this) = Physics_ClientOption(this, "jumpspeedcap_max", autocvar_sv_jumpspeedcap_max);
 	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
 	STAT(GAMEPLAYFIX_STEPDOWN, this) = Physics_ClientOption(this, "stepdown", autocvar_sv_gameplayfix_stepdown);
 
@@ -434,22 +437,22 @@ bool PlayerJump(entity this)
 	// velocity bounds.  Final velocity is bound between (jumpheight *
 	// min + jumpheight) and (jumpheight * max + jumpheight);
 
-	if(PHYS_JUMPSPEEDCAP_MIN != "")
+	if (!isnan(PHYS_JUMPSPEEDCAP_MIN(this)))
 	{
-		float minjumpspeed = mjumpheight * stof(PHYS_JUMPSPEEDCAP_MIN);
+		float minjumpspeed = mjumpheight * PHYS_JUMPSPEEDCAP_MIN(this);
 
 		if (this.velocity_z < minjumpspeed)
 			mjumpheight += minjumpspeed - this.velocity_z;
 	}
 
-	if(PHYS_JUMPSPEEDCAP_MAX != "")
+	if (!isnan(PHYS_JUMPSPEEDCAP_MAX(this)))
 	{
 		// don't do jump speedcaps on ramps to preserve old xonotic ramjump style
 		tracebox(this.origin + '0 0 0.01', this.mins, this.maxs, this.origin - '0 0 0.01', MOVE_NORMAL, this);
 
 		if (!(trace_fraction < 1 && trace_plane_normal_z < 0.98 && PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(this)))
 		{
-			float maxjumpspeed = mjumpheight * stof(PHYS_JUMPSPEEDCAP_MAX);
+			float maxjumpspeed = mjumpheight * PHYS_JUMPSPEEDCAP_MAX(this);
 
 			if (this.velocity_z > maxjumpspeed)
 				mjumpheight -= this.velocity_z - maxjumpspeed;
