@@ -3643,7 +3643,7 @@ msgid ""
 msgstr ""
 "Le bonus de puissance %s agit comme une armure en %s. Si un joueur est "
 "touché alors qu'il dispose d'une ou plusieurs vies supplémentaires, il "
-"survivra au tir mais subira un fort recul."
+"survivra au tir mais subira une force de recul importante."
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:29
 msgid "Vaporizer ammo"
@@ -4086,8 +4086,8 @@ msgid ""
 "Since it is the only %s weapon with no spread, the %s stands out at long "
 "ranges."
 msgstr ""
-"Comme c'est la seule arme %s sans dispersion, le %s se distingue à longue "
-"portée."
+"Comme il s'agit de la seule arme %s sans dispersion, le %s se distingue à "
+"longue portée."
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:29
 msgid "Overkill Nex"
@@ -4102,7 +4102,7 @@ msgid ""
 msgstr ""
 "Comme son nom l'indique, la %s est une super-arme qui tire une tronçonneuse "
 "propulsée par une roquette qui explose à l'impact, infligeant d'importants "
-"dégâts collatéraux à tous les joueurs à proximité."
+"dégâts de zone à tous les joueurs à proximité."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:245
 #, c-format
@@ -4119,8 +4119,8 @@ msgid ""
 "Since it is the only %s weapon which deals splash damage, the %s is a good "
 "choice of weapon for attacking groups of enemies."
 msgstr ""
-"Comme c'est la seule arme %s qui inflige des dégâts de zone, la %s est une "
-"arme de choix pour attaquer des groupes d'ennemis."
+"Comme il s'agit de la seule arme %s qui inflige des dégâts de zone, la %s "
+"est une arme de choix pour attaquer des groupes d'ennemis."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:31
 msgid "Overkill Rocket Propelled Chainsaw"
@@ -4186,8 +4186,8 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:60
 msgid "Since it is a powerup, it will drop if you die while holding it."
 msgstr ""
-"Comme il s'agit d'un bonus de puissance, il sera relâché si vous mourez "
-"alors que vous le détenez."
+"Comme il s'agit d'un bonus de puissance, il sera relâché si vous mourez en "
+"sa possession."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:33
 msgid "Fuel regenerator"
@@ -4232,7 +4232,7 @@ msgid ""
 "you're high up!"
 msgstr ""
 "Il consomme des munitions de type %s pendant son fonctionnement, alors "
-"assurez-vous de ne pas en manquer lorsque vous êtes en hauteur !"
+"assurez-vous de ne pas en manquer lorsque vous êtes en altitude !"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:38
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:41
@@ -4293,8 +4293,8 @@ msgid ""
 "The damage and knockback you deal to yourself also increases but by a "
 "smaller amount."
 msgstr ""
-"Les dégâts et le recul que vous vous infligez à vous-même augmentent "
-"également, mais dans une moindre mesure."
+"Les dégâts et la force de recul que vous vous infligez à vous-même "
+"augmentent également, mais dans une moindre mesure."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:59
 #, c-format
@@ -4303,9 +4303,9 @@ msgid ""
 "allow you to easily dominate a map, so it's often highly contested when it "
 "spawns in."
 msgstr ""
-"La %s est l'un des objets les plus recherchés sur une carte, car il permet "
-"de dominer facilement l'arène. Il est ainsi souvent très disputé lorsqu'il "
-"apparaît."
+"La %s est l'un des objets les plus recherchés sur une carte, car elle permet "
+"de dominer facilement l'arène. Elle est ainsi souvent très disputée "
+"lorsqu'elle apparaît."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
@@ -8369,8 +8369,8 @@ msgid ""
 "It doesn't require ammo, meaning it is a great choice if you are running low "
 "on ammo and need to preserve some."
 msgstr ""
-"Il ne nécessite pas de munitions, ce qui en fait un excellent choix si vous "
-"commencez à être à court de munitions et que vous devez en préserver."
+"Cette arme ne nécessite pas de munitions, ce qui en fait un excellent choix "
+"si vous être presque à court de munitions et devez en préserver."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:175
 #, c-format
@@ -8394,9 +8394,9 @@ msgid ""
 msgstr ""
 "L'une des utilisations les plus courantes du %s est le « saut laser », qui "
 "permet de gagner en hauteur en visant vers le bas, en sautant, puis en "
-"tirant pour se propulser vers le haut. Comme il provoque un fort recul, une "
-"autre utilisation courante consiste à alterner entre une arme plus puissante "
-"et le %s pour déstabiliser la visée de l'adversaire."
+"tirant pour se propulser vers le haut. Sa force de recul étant importante, "
+"une autre utilisation courante consiste à alterner entre une arme plus "
+"puissante et le %s pour déstabiliser la visée de l'adversaire."
 
 #: qcsrc/common/weapons/weapon/blaster.qh:28
 msgid "Blaster"
@@ -8467,7 +8467,7 @@ msgid ""
 msgstr ""
 "La force de recul du %s est assez unique, car elle tire le joueur depuis son "
 "centre vers le point d'impact. Cela en fait l'une des meilleures armes pour "
-"ralentir quelqu'un si vous le poursuivez, en particulier avec le tir "
+"ralentir un adversaire que vous poursuivez, en particulier avec le tir "
 "secondaire. Une autre utilisation courante du %s est la « course au "
 "crylink », qui consiste à s'incliner légèrement vers le bas et à utiliser le "
 "tir secondaire pour se propulser vers l'avant afin de gagner de la vitesse."
@@ -8503,9 +8503,9 @@ msgid ""
 "It consumes a bunch of %s ammo for each rocket, which can end up being "
 "depleted quickly, so often players alternate with another weapon like %s."
 msgstr ""
-"Cette arme consomme pour chaque roquette beaucoup de munitions de type %s, "
-"qui peuvent rapidement être épuisées. Les joueurs alternent donc souvent "
-"avec une autre arme comme le %s."
+"Cette arme consomme beaucoup de munitions de type %s pour chaque roquette, "
+"celles-ci peuvent ainsi rapidement être épuisées. Les joueurs alternent donc "
+"souvent avec une autre arme comme le %s."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:622
 #, c-format
@@ -8577,7 +8577,7 @@ msgid ""
 msgstr ""
 "L'%s constitue l'une des meilleures armes pour spammer les zones "
 "fréquentées, car ses combos peuvent infliger d'énormes dégâts si l'ennemi "
-"est suffisamment proche. Comme son tir primaire n'est pas particulièrement "
+"est suffisamment proche. Son tir primaire n'étant pas particulièrement "
 "rapide, l'%s est moins utile dans d'autres types de situations."
 
 #: qcsrc/common/weapons/weapon/electro.qh:33
@@ -8609,7 +8609,8 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/porto.qc:436
 msgid "It doesn't require ammo, but it is destroyed after some time."
 msgstr ""
-"Il ne nécessite pas de munitions, mais est détruit après un certain temps."
+"Cette arme ne nécessite pas de munitions, mais est détruite après un certain "
+"temps."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:446
 #, c-format
@@ -8760,7 +8761,7 @@ msgid ""
 "escapes possible."
 msgstr ""
 "Le %s permet d'atteindre des endroits auparavant inaccessibles sur les "
-"cartes et de filer à toute vitesse, rendant ainsi possibles les embuscades "
+"cartes et de filer à toute allure, rendant ainsi possibles les embuscades "
 "surprises et les échappées miraculeuses."
 
 #: qcsrc/common/weapons/weapon/hook.qc:435
@@ -8954,7 +8955,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/rifle.qc:272
 #, c-format
 msgid "It consumes %s ammo for each bullet shot."
-msgstr "Cette arme consomme des munitions de type %s pour chaque tir."
+msgstr "Cette arme consomme des munitions de type %s pour chaque balle tirée."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:273
 #, c-format
@@ -8964,8 +8965,8 @@ msgid ""
 "emptied."
 msgstr ""
 "Contrairement au %s, le tir secondaire ne permet pas de zoomer, le %s doit "
-"donc être utilisé manuellement avec le %s. De plus, il doit être rechargé "
-"une fois son chargeur vidé."
+"donc être utilisé manuellement avec le %s. De plus, cette arme doit être "
+"rechargée une fois son chargeur vidé."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:274
 msgid "zoom"
@@ -9068,7 +9069,7 @@ msgid ""
 "playing awful sounds, also slightly knocking them back."
 msgstr ""
 "Le %s est une arme unique qui fait saigner les oreilles des ennemis à "
-"proximité en émettant des sons horribles, et en les repoussant légèrement."
+"proximité en émettant des bruits affreux, et qui les repousse légèrement."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:603
 msgid "The secondary fire works the same way, playing a higher pitch."
@@ -9128,7 +9129,8 @@ msgid ""
 "players spawn with it."
 msgstr ""
 "Il s'agit d'une super-arme, on ne le retrouve donc pas souvent dans le jeu, "
-"sauf en %s où tous les joueurs réapparaissent avec."
+"sauf en %s où tous les joueurs sont équipés de cette arme lorsqu’ils "
+"réapparaissent."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:423
 #, c-format
@@ -9142,8 +9144,8 @@ msgstr "Vaporizer"
 #: qcsrc/common/weapons/weapon/vortex.qc:385
 msgid "The secondary fire zooms in when held, allowing for ease of aiming."
 msgstr ""
-"Le tir secondaire effectue un zoom avant lorsqu'il est maintenu enfoncé, ce "
-"qui facilite la visée."
+"Le tir secondaire consiste en un zoom avant lorsqu'il est maintenu enfoncé, "
+"ce qui facilite la visée."
 
 #: qcsrc/common/weapons/weapon/vortex.qc:386
 #, c-format
@@ -9160,8 +9162,8 @@ msgid ""
 msgstr ""
 "Contrairement au %s, le %s n'a pas besoin d'être rechargé manuellement, mais "
 "vous devez attendre quelques secondes entre chaque tir. Il a la "
-"particularité de pouvoir être utilisé avant d'être complètement rechargé, "
-"mais cela réduit légèrement les dégâts infligés."
+"particularité de pouvoir être utilisé avant d'être complètement rechargé, en "
+"contrepartie de dégâts moins importants."
 
 #: qcsrc/common/weapons/weapon/vortex.qh:32
 msgid "Vortex"

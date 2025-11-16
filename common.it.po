@@ -8709,6 +8709,9 @@ msgid ""
 "It isn't available very often on maps, unless the %s mutator is active, in "
 "which all players have it on their offhand, used with %s."
 msgstr ""
+"Non è molto spesso disponibile sulle mappe, a meno che il mutatore %s non "
+"sia attivo, nel qual caso tutti i giocatori lo hanno come arma immediata, "
+"usato con %s."
 
 #: qcsrc/common/weapons/weapon/hook.qh:32
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
@@ -8721,6 +8724,9 @@ msgid ""
 "fire and with no spread, but there's a short delay until it can be used "
 "again."
 msgstr ""
+"Il fuoco secondario spara una rapida raffica di proiettili più velocemente "
+"del fuoco primario e senza dispersione, ma c'è un breve ritardo prima che "
+"possa essere usato di nuovo."
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:436
 #, c-format
@@ -8728,6 +8734,8 @@ msgid ""
 "It consumes %s ammo for each bullet shot, until the whole magazine is "
 "emptied."
 msgstr ""
+"Consuma %s per ogni proiettile sparato, fino a quando l'intero caricatore "
+"non è vuoto."
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:437
 #, c-format
@@ -8737,6 +8745,10 @@ msgid ""
 "secondary fire has no spread, it's the better option when firing over a long "
 "range."
 msgstr ""
+"Il %s può essere usato in molte situazioni, e funziona particolarmente bene "
+"a lunghe distanze poiché i proiettili penetrano il cielo istantaneamente. "
+"Dato che il fuoco secondario non ha dispersione, è l'opzione migliore quando "
+"si spara a lunga distanza."
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:29
 msgid "MachineGun"
@@ -8749,12 +8761,17 @@ msgid ""
 "enemies if stepped on. Only a couple mines can be placed at any time, and "
 "after several seconds they will self-detonate."
 msgstr ""
+"Il %s piazza mine a terra quando sparato, che detonano e danneggiano i "
+"nemici se ci si cammina sopra. Possono essere piazzate solo un paio di mine "
+"alla volta, e dopo diversi secondi si autodetoneranno."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:566
 msgid ""
 "The secondary fire instantaneously detonates any mines fired by the primary "
 "fire, first waiting until you're far enough away."
 msgstr ""
+"Il fuoco secondario detona istantaneamente tutte le mine sparate dal fuoco "
+"primario, aspettando prima che tu sia abbastanza lontano."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:567
 #, c-format
@@ -8769,6 +8786,10 @@ msgid ""
 "important areas of the map such as the flag in %s, control points in %s, or "
 "checkpoints in %s."
 msgstr ""
+"Le mine non vengono lanciate molto lontano prima di toccare terra, quindi il "
+"%s non è molto efficace a medie e lunghe distanze. Viene spesso usato per "
+"proteggere aree importanti della mappa come la bandiera in %s, i punti di "
+"controllo in %s o i checkpoint in %s."
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:34
 msgid "Mine Layer"
@@ -8788,6 +8809,8 @@ msgid ""
 "The secondary fire shoots a similar grenade that explodes shortly after "
 "bouncing."
 msgstr ""
+"Il fuoco secondario spara una granata simile che esplode poco dopo aver "
+"rimbalzato."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:384
 #, c-format
@@ -8802,6 +8825,10 @@ msgid ""
 "exploding, it can be bounced against walls to damage enemies lurking around "
 "a corner."
 msgstr ""
+"Il %s funziona meglio a corto e medio raggio, ma è piuttosto difficile "
+"colpire un nemico se è in aria. Dato che la granata del fuoco secondario "
+"rimbalza prima di esplodere, può essere fatta rimbalzare contro i muri per "
+"danneggiare i nemici in agguato dietro un angolo."
 
 #: qcsrc/common/weapons/weapon/mortar.qh:31
 msgid "Mortar"
@@ -8813,18 +8840,24 @@ msgid ""
 "The %s is a unique gun that creates one-way portals between flat surfaces on "
 "the map, that immediately teleport players and projectiles."
 msgstr ""
+"Il %s è un'arma unica che crea portali unidirezionali tra superfici piatte "
+"sulla mappa, che teletrasportano immediatamente giocatori e proiettili."
 
 #: qcsrc/common/weapons/weapon/porto.qc:435
 msgid ""
 "The secondary fire is used to shoot the out-portal, while the primary fire "
 "shoots the in-portal."
 msgstr ""
+"Il fuoco secondario viene usato per sparare il portale di uscita, mentre il "
+"fuoco primario spara il portale di entrata."
 
 #: qcsrc/common/weapons/weapon/porto.qc:437
 msgid ""
 "The portals will close either after the player who shot them dies or after "
 "some time period."
 msgstr ""
+"I portali si chiuderanno o dopo la morte del giocatore che li ha sparati o "
+"dopo un certo periodo di tempo."
 
 #: qcsrc/common/weapons/weapon/porto.qc:438
 #, c-format
@@ -8832,6 +8865,8 @@ msgid ""
 "The %s isn't often placed on maps, but if used well it can make for some "
 "interesting gameplay."
 msgstr ""
+"Il %s non è spesso posizionato sulle mappe, ma se usato bene può creare un "
+"gameplay interessante."
 
 #: qcsrc/common/weapons/weapon/porto.qh:32
 msgid "Port-O-Launch"
@@ -8843,12 +8878,16 @@ msgid ""
 "The %s fires bullets that traverse the map instantaneously and deal a "
 "significant chunk of damage on impact."
 msgstr ""
+"Il %s spara proiettili che attraversano la mappa istantaneamente e "
+"infliggono una notevole quantità di danno all'impatto."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:271
 msgid ""
 "The secondary fire shoots a few less powerful bullets at once with a bit of "
 "scatter."
 msgstr ""
+"Il fuoco secondario spara in una volta sola alcuni proiettili meno potenti "
+"con un po' di dispersione."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:272
 #, c-format
@@ -8862,6 +8901,9 @@ msgid ""
 "manually with the %s. Also, it needs to be reloaded after its magazine is "
 "emptied."
 msgstr ""
+"A differenza del %s, il fuoco secondario non ha zoom, quindi il %s deve "
+"essere usato manualmente con il %s. Inoltre, deve essere ricaricato dopo che "
+"il suo caricatore si è scaricato."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:274
 msgid "zoom"
@@ -8874,6 +8916,8 @@ msgid ""
 "Similar to the %s, the %s can be used at any range, but it stands out at "
 "long ranges."
 msgstr ""
+"Simile al %s, il %s può essere usato a qualsiasi raggio, ma si distingue a "
+"lunghe distanze."
 
 #: qcsrc/common/weapons/weapon/rifle.qh:30
 msgid "Rifle"
@@ -8886,17 +8930,23 @@ msgid ""
 "missiles if it collides with a player. The homing isn't perfect, so "
 "sometimes the missiles can hit an object or a corner."
 msgstr ""
+"Il %s è un'arma unica, che spara un etichetta o \"tag\" che poi lancia "
+"alcuni missili a ricerca di bersaglio se collide con un giocatore. La "
+"ricerca non è perfetta, quindi a volte i missili possono colpire un oggetto "
+"o un angolo."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:677
 msgid ""
 "The secondary fire launches a rapid barrage of scattered explosives that "
 "travel only a short distance."
 msgstr ""
+"Il fuoco secondario lancia una rapida raffica di esplosivi sparsi che "
+"viaggiano solo per una breve distanza."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:678
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
-msgstr ""
+msgstr "Consuma %s, anche quando il tag non colpisce."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:679
 #, c-format
@@ -8905,6 +8955,10 @@ msgid ""
 "it requires skill to aim effectively. The secondary fire is only useful in "
 "close range combat, and sometimes the explosives can damage yourself too."
 msgstr ""
+"Il fuoco primario del %s infligge una notevole quantità di danni quando un "
+"tag colpisce, sebbene richieda abilità per mirare efficacemente. Il fuoco "
+"secondario è utile solo nel combattimento a distanza ravvicinata, e a volte "
+"gli esplosivi possono anche danneggiare te stesso."
 
 #: qcsrc/common/weapons/weapon/seeker.qh:44
 msgid "T.A.G. Seeker"
@@ -8916,6 +8970,8 @@ msgid ""
 "The %s is one of the two main default weapons, firing a single shotgun round "
 "which spreads into multiple pellets upon exiting the barrel."
 msgstr ""
+"Il %s è una delle due armi predefinite principali, che spara una singola "
+"cartuccia che si disperde in più pallini all'uscita dalla canna."
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:404
 #, c-format
@@ -8924,6 +8980,9 @@ msgid ""
 "head of the weapon. Since the slap takes a moment to land, timing this well "
 "is difficult."
 msgstr ""
+"Il fuoco secondario fa un movimento col %s che schiaffeggia i giocatori "
+"abbastanza vicini con la testa dell'arma. Siccome lo schiaffo impiega un "
+"momento per andare a segno, brandirlo al momento giusto è difficile."
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:406
 #, c-format
@@ -8931,6 +8990,8 @@ msgid ""
 "The primary fire consumes %s ammo, although if you spawn in with the %s you "
 "will already have some."
 msgstr ""
+"Il fuoco primario consuma %s, anche se ne avrai già un po' se nasci con il "
+"%s."
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:30
 msgid "Shotgun"
@@ -8942,14 +9003,20 @@ msgid ""
 "The %s is a unique weapon that makes the ears of nearby enemies bleed by "
 "playing awful sounds, also slightly knocking them back."
 msgstr ""
+"Il %s è un'arma unica che fa sanguinare le orecchie dei nemici vicini "
+"riproducendo suoni orribili, e da loro anche un po' di respinta."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:603
 msgid "The secondary fire works the same way, playing a higher pitch."
 msgstr ""
+"Il fuoco secondario funziona allo stesso modo, suonando una tonalità più "
+"alta."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:604
 msgid "The only ammo it needs to operate is the breath from your lungs."
 msgstr ""
+"Le uniche munizioni di cui ha bisogno per funzionare è il respiro dei tuoi "
+"polmoni."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:605
 #, c-format
@@ -8957,11 +9024,14 @@ msgid ""
 "Since your enemies need to be close by to hear your rubbish music, the %s is "
 "only effective at very close ranges."
 msgstr ""
+"Dato che i tuoi nemici devono essere vicini per sentire la tua musica "
+"spazzatura, il %s è efficace solo a distanze molto ravvicinate."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:606
 #, c-format
 msgid "The pitch the %s plays depends on the movement keys pressed."
 msgstr ""
+"La tonalità che il %s riproduce dipende dai tasti di movimento premuti."
 
 #: qcsrc/common/weapons/weapon/tuba.qh:35
 #, no-c-format
@@ -8975,6 +9045,9 @@ msgid ""
 "amount of damage. In %s, the beam has the ability to instantly kill enemies "
 "with a single shot, unless they have an %s."
 msgstr ""
+"Il %s è un'arma unica, che spara un raggio mortale di energia infliggendo "
+"un'enorme quantità di danni. In %s, il raggio ha la capacità di uccidere "
+"istantaneamente i nemici con un singolo colpo, a meno che non abbiano una %s."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:421
 #, c-format
@@ -8982,6 +9055,8 @@ msgid ""
 "The secondary fire shoots a laser identical to that fired by the %s, with "
 "strong knockback."
 msgstr ""
+"Il fuoco secondario spara un laser identico a quello sparato dal %s, con una "
+"forte respinta."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:422
 #, c-format
@@ -8989,6 +9064,8 @@ msgid ""
 "It is a superweapon, so isn't often found in game, except in %s where all "
 "players spawn with it."
 msgstr ""
+"È una superarma, quindi non si trova spesso in gioco, eccetto in %s dove "
+"tutti i giocatori ne hanno una."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:423
 #, c-format
@@ -9002,11 +9079,12 @@ msgstr "Vaporizer"
 #: qcsrc/common/weapons/weapon/vortex.qc:385
 msgid "The secondary fire zooms in when held, allowing for ease of aiming."
 msgstr ""
+"Il fuoco secondario ingrandisce quando tenuto premuto, facilitando la mira."
 
 #: qcsrc/common/weapons/weapon/vortex.qc:386
 #, c-format
 msgid "It consumes %s ammo for each shot."
-msgstr ""
+msgstr "Consuma %s per ogni colpo."
 
 #: qcsrc/common/weapons/weapon/vortex.qc:387
 #, c-format
@@ -9016,6 +9094,11 @@ msgid ""
 "slightly before it finishes completely reloading, albeit with the tradeoff "
 "of dealing slightly less damage."
 msgstr ""
+"A differenza del %s, il %s non ha bisogno di essere ricaricato manualmente, "
+"anche se devi aspettare un paio di secondi tra un colpo e l'altro. "
+"Unicamente, può essere sparato leggermente prima che finisca completamente "
+"di ricaricarsi, sebbene con il compromesso di infliggere un danno "
+"leggermente inferiore."
 
 #: qcsrc/common/weapons/weapon/vortex.qh:32
 msgid "Vortex"
@@ -13507,6 +13590,9 @@ msgid ""
 "other aspects of the game, but most of what you will learn will come from "
 "trying it out in practice."
 msgstr ""
+"Questa guida copre le basi che si dovrebbero conoscere riguardo alle armi, "
+"agli oggetti e ad altri aspetti del gioco, ma la maggior parte di ciò che "
+"imparerai verrà dal provarlo in pratica."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:25
 msgid ""
@@ -13514,6 +13600,10 @@ msgid ""
 "settings. Xonotic is highly customizable and there are tons of servers out "
 "there that run with lightly or highly modified settings."
 msgstr ""
+"Nota che questa guida descrive il comportamento di gioco predefinito con "
+"impostazioni \"vanilla\" (standard). Xonotic è altamente personalizzabile e "
+"ci sono tantissimi server che funzionano con impostazioni leggermente o "
+"altamente modificate."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:27
 #, c-format
@@ -13521,6 +13611,8 @@ msgid ""
 "You can usually find out which settings are modified by issuing %s in "
 "console after connecting to a server."
 msgstr ""
+"Di solito puoi scoprire quali impostazioni sono modificate digitando %s "
+"nella console dopo esserti connesso a un server."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:30
 msgid "Community"
@@ -13539,6 +13631,12 @@ msgid ""
 "respectfully, this will be recognized, while acting toxic on the other hand "
 "will not make your life easier on the servers."
 msgstr ""
+"Xonotic si distingue per la sua community di giocatori amichevole, matura e "
+"accogliente, e molti giocatori di lunga data sostengono che questa sia "
+"probabilmente una delle cose migliori di Xonotic. Se ti avvicini agli altri "
+"giocatori in modo amichevole e rispettoso, questo sarà riconosciuto, mentre "
+"d'altra parte comportarsi in modo \"tossico\" non ti renderà la vita più "
+"facile sui server."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:36
 #, c-format
@@ -13547,6 +13645,10 @@ msgid ""
 "online and use the in-game chat. You can also connect to the official "
 "communication channels (%s), and of course the official forum."
 msgstr ""
+"Il modo migliore per entrare in contatto con la community è semplicemente "
+"iniziare a giocare online e usare la chat di gioco. Puoi anche connetterti "
+"ai canali di comunicazione ufficiali (%s) e, naturalmente, al forum "
+"ufficiale."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:40
 msgid "Getting good"
