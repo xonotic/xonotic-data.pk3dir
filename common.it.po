@@ -5907,7 +5907,7 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 è stato crivellato dall'Overkill  Machine gun di ^BG%s^K1%s%s"
+"^BG%s%s^K1 è stato crivellato dall'Overkill Machine gun di ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:513
 #, c-format
@@ -13661,6 +13661,10 @@ msgid ""
 "the game mechanics. If you see experienced players doing tricks you don't "
 "understand, don't hesitate to ask anyone on the server!"
 msgstr ""
+"Il divario di abilità tra giocatori nuovi ed esperti è spesso immenso. "
+"Tuttavia, questo è principalmente dovuto al fatto che i giocatori esperti "
+"hanno imparato a sfruttare le meccaniche di gioco. Se vedi giocatori esperti "
+"fare trucchi che non capisci, non esitare a chiedere a chiunque sul server!"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:46
 msgid ""
@@ -13669,6 +13673,11 @@ msgid ""
 "at which weapons they choose depending on the gameplay situation, for "
 "example in close combat, mid-range battles, or against groups of opponents."
 msgstr ""
+"Un altro modo per imparare è osservare i giocatori esperti. Osserva quali "
+"armi combinano e le tecniche di movimento che utilizzano. Guarda anche quali "
+"armi scelgono a seconda della situazione di gioco, ad esempio nel "
+"combattimento ravvicinato, nelle battaglie a medio raggio o contro gruppi di "
+"avversari."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:49
 msgid ""
@@ -13676,10 +13685,13 @@ msgid ""
 "works will enable you to speed around the map and apply effective weapon "
 "combos in no time."
 msgstr ""
+"La curva di apprendimento è molto ripida. Detto questo, capire come funziona "
+"il gioco ti permetterà di sfrecciare per la mappa e applicare efficaci "
+"combinazioni di armi in pochissimo tempo."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:52
 msgid "XonStat"
-msgstr ""
+msgstr "XonStat"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:55
 msgid ""
@@ -13687,10 +13699,14 @@ msgid ""
 "stores vital stats like your kill-death ratio, weapon damage and accuracy, "
 "and scoreboards from past games."
 msgstr ""
+"XonStat è l'applicazione integrata per le statistiche dei giocatori di "
+"Xonotic. Archivia statistiche vitali come il tuo rapporto uccisioni-morti, "
+"danni e precisione delle armi, e punteggi delle partite passate."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:57
 msgid "Tracking is completely opt-in, and no login is required."
 msgstr ""
+"Il tracciamento è completamente facoltativo e non è richiesto alcun login."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:58
 #, c-format
@@ -13698,6 +13714,8 @@ msgid ""
 "Some of the statistics are available in-game on your player profile, while "
 "the rest are accessible at %s."
 msgstr ""
+"Alcune statistiche sono disponibili in gioco sul tuo profilo giocatore, "
+"mentre il resto è accessibile su %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:65
 msgid ""
@@ -13706,36 +13724,42 @@ msgid ""
 "skills is an essential part of Xonotic gameplay and must not be "
 "underestimated."
 msgstr ""
+"Xonotic è uno sparatutto arena molto frenetico. Frenetico non si riferisce "
+"solo ai tempi di reazione ma anche alla velocità di movimento. Ciò significa "
+"che padroneggiare le abilità di movimento è una parte essenziale del "
+"gameplay di Xonotic e non deve essere sottovalutato."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:67
 msgid "For a new player, the most important tricks to learn are:"
-msgstr ""
+msgstr "Per un nuovo giocatore, i trucchi più importanti da imparare sono:"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:69 qcsrc/menu/xonotic/guide/pages.qc:77
 msgid "Bunny Hopping"
-msgstr ""
+msgstr "Correre come un coniglio"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:70 qcsrc/menu/xonotic/guide/pages.qc:89
 msgid "Strafe Turning"
-msgstr ""
+msgstr "Sterzare con movimento laterale"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:71 qcsrc/menu/xonotic/guide/pages.qc:101
 msgid "Blaster Jumping"
-msgstr ""
+msgstr "Saltare col Blaster"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:73 qcsrc/menu/xonotic/guide/pages.qc:133
 msgid "Crylink Running"
-msgstr ""
+msgstr "Correre col Crylink"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:74 qcsrc/menu/xonotic/guide/pages.qc:149
 msgid "Ramp Jumping"
-msgstr ""
+msgstr "Saltare su rampe"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:80
 msgid ""
 "Bunny hopping (\"bhopping\") is a technique known also from other arena "
 "shooters."
 msgstr ""
+"Saltare come un coniglio (\"bunny hoping\") è una tecnica conosciuta anche "
+"in altri sparatutto arena."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:81
 #, c-format
@@ -13746,6 +13770,12 @@ msgid ""
 "down. This allows you to get around the map much faster than if you would "
 "just walk."
 msgstr ""
+"Grazie al controllo in aria, puoi accelerare mentre sei in aria ben oltre la "
+"velocità massima di movimento a terra. Per evitare l'attrito del terreno, i "
+"giocatori saltellano costantemente semplicemente tenendo premuto %s, in modo "
+"che il contatto con il terreno non li rallenti. Questo ti permette di "
+"muoverti per la mappa molto più velocemente di quanto faresti semplicemente "
+"camminando."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:84
 #, c-format
@@ -13753,6 +13783,9 @@ msgid ""
 "Therefore, keeping %s held while moving quickly is one of the most essential "
 "movement strategies, used by all experienced players."
 msgstr ""
+"Pertanto, tenere premuto %s mentre ci si muove rapidamente è una delle "
+"strategie di movimento più essenziali, utilizzata da tutti i giocatori "
+"esperti."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:85
 msgid ""
@@ -13760,6 +13793,10 @@ msgid ""
 "900 qu/s (\"units per second\"). CTS/DeFRaG servers usually run with "
 "different CPMA-like physics that remove this cap."
 msgstr ""
+"Con le impostazioni predefinite, la velocità che puoi raggiungere saltando "
+"come un coniglio è limitata a 900 qu/s (\"unità al secondo\"). I server CTS/"
+"DeFRaG di solito funzionano con diverse fisiche simili a CPMA che rimuovono "
+"questo limite."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:92
 msgid ""
@@ -13768,6 +13805,11 @@ msgid ""
 "method used to quickly change the direction you're traveling while mid-air, "
 "without losing speed."
 msgstr ""
+"Il \"bunny hopping\" attorno agli angoli richiede di sterzare con il "
+"movimento laterale o perderai molta velocità (o semplicemente non riuscirai "
+"a fare la curva). Sterzare con il movimento laterale è un metodo utilizzato "
+"per cambiare rapidamente la direzione in cui stai viaggiando mentre sei a "
+"mezz'aria, senza perdere velocità."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:94
 #, c-format
@@ -13776,6 +13818,10 @@ msgid ""
 "turn direction (%s or %s), then start turning smoothly into the turn "
 "direction. As always, during the entire strafe turn keep %s held."
 msgstr ""
+"Mentre salti come un coniglio, rilascia prima %s, poi premi il tasto di "
+"movimento laterale nella direzione della curva (%s o %s), quindi inizia a "
+"girare dolcemente nella direzione della curva. Come sempre, durante l'intera "
+"curva tieni premuto %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95
 msgid "move forward"
@@ -13796,17 +13842,19 @@ msgid ""
 "Note that if you press the strafe key before releasing the forward key, you "
 "will suffer a speed penalty."
 msgstr ""
+"Nota che se premi il tasto strafe prima di rilasciare il tasto avanti, "
+"subirai una penalità di velocità."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:97
 msgid ""
 "If you do it right, you will even continue to accelerate in strafe turns."
-msgstr ""
+msgstr "Se lo fai bene, continuerai persino ad accelerare nelle curve."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:98 qcsrc/menu/xonotic/guide/pages.qc:120
 #: qcsrc/menu/xonotic/guide/pages.qc:159
 #, c-format
 msgid "For an illustration of this technique, see %s."
-msgstr ""
+msgstr "Per una vignetta di questa tecnica, vedi %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:104
 #, c-format
@@ -13815,6 +13863,10 @@ msgid ""
 "many players will often have single digit accuracy for the %s. It is instead "
 "especially useful to make high jumps."
 msgstr ""
+"Nella maggior parte delle situazioni, il %s è più uno strumento di movimento "
+"che un'arma. Ecco perché molti giocatori avranno spesso una precisione a "
+"singola cifra per il %s. È invece particolarmente utile per fare salti in "
+"alto."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:107
 #, c-format
@@ -13823,10 +13875,14 @@ msgid ""
 "immediately afterwards. Experiment a bit with the timing of firing the %s "
 "and jumping to get a feeling of which timings will get you how high."
 msgstr ""
+"Per fare un salto col laser, spara semplicemente il %s ai tuoi piedi e salta "
+"immediatamente dopo. Sperimenta un po' con la tempistica dello sparo del %s "
+"e del salto per avere un'idea di quali tempi ti faranno arrivare a quale "
+"altezza."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:111
 msgid "Wall Blastering"
-msgstr ""
+msgstr "Usare il blaster sulle pareti"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:114
 #, c-format
@@ -13835,6 +13891,10 @@ msgid ""
 "you, you can get significant horizontal speed. You can do this to pick up "
 "speed off the stand or even when passing a wall while already bunny hopping."
 msgstr ""
+"Se non spari il %s sul pavimento ma invece contro un muro accanto a te, puoi "
+"ottenere una significativa velocità orizzontale. Puoi farlo per prendere "
+"velocità da fermo o anche quando passi un muro mentre stai già saltando come "
+"un coniglio."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:116
 #, c-format
@@ -13845,6 +13905,11 @@ msgid ""
 "%s. Immediately flick back to your movement direction and continue to bunny "
 "hop."
 msgstr ""
+"Per utilizzare questa tecnica, inizia a saltare come un coniglio. Subito "
+"dopo aver saltato, fai un movimento rapido all'indietro con il mouse a circa "
+"ore 8 se il muro è alla tua sinistra (o ore 4 se il muro è alla tua destra), "
+"mira all'altezza della tua testa e spara con il %s. Torna immediatamente "
+"alla tua direzione di movimento e continua a saltare."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:118
 #, c-format
@@ -13853,6 +13918,10 @@ msgid ""
 "a strafe key for the duration of the flick. This means using %s if the wall "
 "is to your left, and %s if the wall is to your right."
 msgstr ""
+"Per sprecare meno velocità possibile mentre fai il movimento rapido "
+"all'indietro, passa a un tasto di movimento laterale per la durata del "
+"movimento. Questo significa usare %s se il muro è alla tua sinistra e %s se "
+"il muro è alla tua destra."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:126
 #, c-format
@@ -13861,6 +13930,9 @@ msgid ""
 "damage to the player. In gametypes without self damage however it is a very "
 "versatile movement tool."
 msgstr ""
+"Il %s può essere usato proprio come il %s per il movimento, ma infligge "
+"molti più danni al giocatore. Nei tipi di gioco senza danno auto-inflitto, "
+"tuttavia, è uno strumento di movimento molto versatile."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:128
 msgid ""
@@ -13868,11 +13940,16 @@ msgid ""
 "immediately detonate it. The explosion will push you upwards a little bit, "
 "and can prolong a jump."
 msgstr ""
+"Mentre sei a mezz'aria, puoi anche sparare un razzo sotto di te e detonarlo "
+"immediatamente. L'esplosione ti spingerà leggermente verso l'alto e può "
+"prolungare un salto."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:130
 #, c-format
 msgid "Note that this strategy only really works if the %s mutator is enabled."
 msgstr ""
+"Nota che questa strategia funziona davvero solo se il mutatore %s è "
+"abilitato."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:136
 #, c-format
@@ -13880,6 +13957,9 @@ msgid ""
 "The drag force of the %s secondary fire can not only break other players' "
 "movement, but can also give yourself a significant speed boost."
 msgstr ""
+"La forza di trascinamento del fuoco secondario del %s non solo può "
+"interrompere il movimento degli altri giocatori, ma può anche darti un "
+"significativo aumento di velocità."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:137
 #, c-format
@@ -13889,10 +13969,15 @@ msgid ""
 "stand into high speed. Finding the best angle to aim at takes some practice, "
 "and changes depending on your speed."
 msgstr ""
+"Per \"correre col crylink\", spara il fuoco secondario del %s sul pavimento "
+"(o su una parete parallela) proprio davanti a te e inizia a fare \"bunny "
+"hopping\" per catapultarti dalla posizione di partenza ad alta velocità. "
+"Trovare l'angolo migliore per mirare richiede un po' di pratica e cambia a "
+"seconda della tua velocità."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:141
 msgid "Crylink Wall Climbing"
-msgstr ""
+msgstr "Scalare le pareti col Crylink"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:144
 #, c-format
@@ -13901,12 +13986,17 @@ msgid ""
 "head), you can climb up walls quickly. This is called \"wall climbing\" with "
 "the %s."
 msgstr ""
+"Sparando il fuoco secondario del %s contro un muro accanto a te (appena "
+"sopra la tua testa), puoi scalare rapidamente i muri. Questo si chiama "
+"\"scalare i muri\" col %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:146
 msgid ""
 "This is also a good way to save yourself from falling off the map, as it "
 "reliably stops your downfall."
 msgstr ""
+"Questo è anche un buon modo per salvarti dal cadere dalla mappa, poiché "
+"ferma in modo affidabile la tua caduta."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:152
 msgid ""
@@ -13915,12 +14005,20 @@ msgid ""
 "upwards boost and enable you to reach places that are otherwise accessible "
 "only with laser jumps, which cost health and make noise."
 msgstr ""
+"Le rampe sono una parte importante del design delle mappe di Xonotic. "
+"Qualsiasi superficie inclinata che colpisci con la giusta velocità e la "
+"giusta angolazione ti darà una significativa spinta verso l'alto e ti "
+"permetterà di raggiungere luoghi altrimenti accessibili solo con i salti col "
+"laser, che costano salute e fanno rumore."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:154
 msgid ""
 "When doing ramp jumps, it is vital to hit the ramp at a flat angle to "
 "receive the upwards boost and not lose too much speed."
 msgstr ""
+"Quando si fanno i salti su rampe, è fondamentale colpire la rampa con un "
+"angolo piatto per ricevere la spinta verso l'alto e non perdere troppa "
+"velocità."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:155
 #, c-format
@@ -13929,6 +14027,9 @@ msgid ""
 "just before the ramp and keep %s pressed so you jump again once you hit the "
 "ramp."
 msgstr ""
+"Per fare un salto sulla rampa, avvicinati a una superficie inclinata "
+"(\"rampa\"), salta poco prima della rampa e tieni premuto %s in modo da "
+"saltare di nuovo una volta colpita la rampa."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:156
 msgid ""
@@ -13936,16 +14037,22 @@ msgid ""
 "the stronger the upwards boost. As always, you can gain speed before the "
 "ramp by bunny hopping."
 msgstr ""
+"Maggiore è la velocità che hai quando colpisci la rampa (con l'angolo "
+"giusto), più forte sarà la spinta verso l'alto. Come sempre, puoi guadagnare "
+"velocità prima della rampa saltando come un coniglio."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:158
 msgid ""
 "Note that when trying to make a ramp jump while bunny hopping, it is vital "
 "to time your hops carefully so you get the angle right."
 msgstr ""
+"Nota che quando si cerca di fare un salto sulla rampa mentre si fa \"bunny "
+"hopping\", è fondamentale programmare con attenzione i tuoi salti in modo da "
+"ottenere l'angolo giusto."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:162
 msgid "Advanced Movement"
-msgstr ""
+msgstr "Movimento avanzato"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:165
 msgid ""
@@ -13953,11 +14060,15 @@ msgid ""
 "jumping\" (\"CJ\") offer only limited benefits in vanilla gameplay, but are "
 "crucial on CTS/DeFRaG servers that use slightly different physics."
 msgstr ""
+"Le tecniche avanzate come saltare col movimento laterale o saltare col "
+"movimento circolare (\"circle jumping\") offrono solo benefici limitati nel "
+"gameplay standard, ma sono cruciali sui server CTS/DeFRaG che utilizzano una "
+"fisica leggermente diversa."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:167
 #, c-format
 msgid "If you want to master these techniques, be sure to check out %s."
-msgstr ""
+msgstr "Se vuoi padroneggiare queste tecniche, devi vedere %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:174
 #, c-format
@@ -13965,6 +14076,8 @@ msgid ""
 "%s is a mod that heavily changes the game, giving players fewer but more "
 "powerful weapons, nades, and more movement options."
 msgstr ""
+"%s è una mod che cambia radicalmente il gioco, dando ai giocatori meno armi "
+"ma più potenti, granate e più opzioni di movimento."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:175
 #, c-format
@@ -13974,6 +14087,10 @@ msgid ""
 "These weapons are a lot more powerful than the regular weapons, so their "
 "time-to-kill is quite low."
 msgstr ""
+"In termini di armamenti, i giocatori hanno munizioni infinite e nascono con "
+"%s, %s e %s, e a volte possono raccogliere le super-armi %s e %s sulla "
+"mappa. Queste armi sono molto più potenti delle armi normali, quindi il loro "
+"tempo per uccidere è piuttosto basso."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:177
 #, c-format
@@ -13982,6 +14099,9 @@ msgid ""
 "push enemies, but can be used to push yourself around. Also since the %s "
 "mutator is active, all players have offhand nades."
 msgstr ""
+"Il fuoco secondario di tutte le armi spara un laser che non danneggia né "
+"spinge i nemici, ma può essere usato per spingere se stessi. Inoltre, poiché "
+"il mutatore %s è attivo, tutti i giocatori hanno granate immediate."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:179
 #, c-format
@@ -13989,6 +14109,8 @@ msgid ""
 "As for movement tricks, %s is enabled by default in %s, allowing for rapidly "
 "changing your movement direction."
 msgstr ""
+"Per quanto riguarda i trucchi di movimento, %s è abilitato di default in %s, "
+"consentendo di cambiare rapidamente la direzione del movimento."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:186
 #, c-format
@@ -13996,6 +14118,8 @@ msgid ""
 "%s (\"Xonotic Pro-Mode\") is a set of gameplay settings often used for "
 "competitive play, particularly in %s."
 msgstr ""
+"%s (\"Xonotic Pro-Mode\") è un insieme di impostazioni di gioco spesso "
+"utilizzato per il gioco competitivo, in particolare in %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:187
 #, c-format
@@ -14005,6 +14129,11 @@ msgid ""
 "give other players a fairer chance of rebuilding their stack. It also "
 "disables spawn protection and enables friendly fire in team-based gametypes."
 msgstr ""
+"Aggiunge regole extra per la raccolta di oggetti, impedendo ai giocatori con "
+"100 o più di salute o armatura di prendere %s, %s, %s e %s, al fine di dare "
+"agli altri giocatori una possibilità più equa di ricostruire la loro salute "
+"e la loro armatura. Disabilita anche la protezione alla nascita e abilita il "
+"fuoco amico nei tipi di gioco a squadre."
 
 #: qcsrc/menu/xonotic/keybinder.qc:61
 msgid "Moving"
