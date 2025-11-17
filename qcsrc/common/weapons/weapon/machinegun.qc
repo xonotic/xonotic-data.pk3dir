@@ -277,7 +277,7 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
 {
 	// forced reload - wait until the bulletcounter is 0 so a burst loop can finish
 	if (WEP_CVAR(WEP_MACHINEGUN, reload_ammo)
-	&& actor.(weaponentity).clip_load < min(max(WEP_CVAR(WEP_MACHINEGUN, sustained_ammo), WEP_CVAR(WEP_MACHINEGUN, first_ammo)), WEP_CVAR(WEP_MACHINEGUN, burst_ammo))
+	&& actor.(weaponentity).clip_load < min(min(WEP_CVAR(WEP_MACHINEGUN, sustained_ammo), WEP_CVAR(WEP_MACHINEGUN, first_ammo)), WEP_CVAR(WEP_MACHINEGUN, burst_ammo))
 	&& actor.(weaponentity).misc_bulletcounter >= 0)
 	{
 		thiswep.wr_reload(thiswep, actor, weaponentity);
@@ -318,7 +318,9 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
 			{
 				// We don't want to shoot 3 rounds if there's 2 left in the mag, so we'll use a fraction.
 				// Also keep the fraction <= 1 otherwise we'd mag dump in one burst.
-				float burst_fraction = min(1, ammo_available / WEP_CVAR(WEP_MACHINEGUN, burst_ammo));
+				float burst_fraction = 1;
+				if(WEP_CVAR(WEP_MACHINEGUN, burst_ammo)) // avoid div by 0
+					burst_fraction = min(1, ammo_available / WEP_CVAR(WEP_MACHINEGUN, burst_ammo));
 				to_shoot = floor(to_shoot * burst_fraction);
 
 				// We also don't want to use 3 rounds if there's only 2 left.
@@ -355,7 +357,7 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
 METHOD(MachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount;
-	if(WEP_CVAR(WEP_MACHINEGUN, mode) == 1)
+	if(WEP_CVAR(WEP_MACHINEGUN, mode) == 1 || actor.(weaponentity).misc_bulletcounter != 1)
 		ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(WEP_MACHINEGUN, sustained_ammo);
 	else
 		ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(WEP_MACHINEGUN, first_ammo);
@@ -373,9 +375,11 @@ METHOD(MachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
 
 METHOD(MachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount;
-	float burst_ammo_per_shot = WEP_CVAR(WEP_MACHINEGUN, burst_ammo) / WEP_CVAR(WEP_MACHINEGUN, burst);
+	float burst_ammo_per_shot = 1;
+	if (WEP_CVAR(WEP_MACHINEGUN, burst)) // avoid div by 0
+		burst_ammo_per_shot = WEP_CVAR(WEP_MACHINEGUN, burst_ammo) / WEP_CVAR(WEP_MACHINEGUN, burst);
 
+	float ammo_amount;
 	if(WEP_CVAR(WEP_MACHINEGUN, mode) == 1)
 		ammo_amount = GetResource(actor, thiswep.ammo_type) >= burst_ammo_per_shot;
 	else
@@ -396,7 +400,7 @@ METHOD(MachineGun, wr_reload, void(entity thiswep, entity actor, .entity weapone
 {
 	if(actor.(weaponentity).misc_bulletcounter < 0)
 		return;
-	W_Reload(actor, weaponentity, min(max(WEP_CVAR(WEP_MACHINEGUN, sustained_ammo), WEP_CVAR(WEP_MACHINEGUN, first_ammo)), WEP_CVAR(WEP_MACHINEGUN, burst_ammo)), SND_RELOAD);
+	W_Reload(actor, weaponentity, min(min(WEP_CVAR(WEP_MACHINEGUN, sustained_ammo), WEP_CVAR(WEP_MACHINEGUN, first_ammo)), WEP_CVAR(WEP_MACHINEGUN, burst_ammo)), SND_RELOAD);
 }
 
 METHOD(MachineGun, wr_suicidemessage, Notification(entity thiswep))
