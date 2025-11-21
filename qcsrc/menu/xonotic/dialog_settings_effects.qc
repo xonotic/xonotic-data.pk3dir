@@ -87,32 +87,23 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.configureXonoticMixedSliderValues(e);
 			setDependent(e, "r_showsurfaces", 0, 0);
 			e.applyButton = effectsApplyButton;
+	bool can_dds = GL_Have_TextureCompression();
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		{
-			// detect texture compression method
-			float f;
-			f = updateCompression();
-			switch(f)
-			{
-				case 0:
-					me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_texture_dds_load", _("Avoid lossy texture compression")));
-						e.disabled = 1; // just show the checkbox anyway, but with no ability to control it
-						e.applyButton = effectsApplyButton;
-					break;
-				case 1:
-					me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_texture_dds_load", _("Avoid lossy texture compression")));
-						setDependent(e, "r_showsurfaces", 0, 0);
-						e.applyButton = effectsApplyButton;
-					break;
-				case 2:
-					me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_texture_dds_load", _("Avoid lossy texture compression")));
-						setDependent(e, "r_showsurfaces", 0, 0);
-						makeMulti(e, "gl_texturecompression");
-						e.applyButton = effectsApplyButton;
-					break;
-			}
-		}
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Texture compression:")));
+			if (can_dds)
+				setDependent(e, "r_showsurfaces", 0, 0);
+			else
+				e.disabled = true;
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("gl_texturecompression"));
+			e.addText(e, ZCTX(_("TCOMP^Fast")), 1);
+			e.addText(e, ZCTX(_("TCOMP^Good")), 2);
+			e.addText(e, ZCTX(_("TCOMP^None")), 0);
+			e.configureXonoticMixedSliderValues(e);
+			if (can_dds)
+				setDependent(e, "r_showsurfaces", 0, 0);
+			else
+				e.disabled = true;
+			e.applyButton = effectsApplyButton;
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticCheckBoxEx_T(1, 0, "r_sky", _("Show sky"), _("Disable sky for performance and visibility")));
