@@ -37,8 +37,8 @@ float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;
 int checkrules_overtimesadded; //how many overtimes have been already added
 
-// flag set on worldspawn so that the code knows if it is dedicated or not
-bool server_is_dedicated;
+// set by the engine so that the console and code know if it is dedicated or not
+bool autocvar_sv_dedicated;
 
 int world_initialized;
 

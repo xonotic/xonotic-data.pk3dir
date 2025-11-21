@@ -512,7 +512,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 
 			// Only initialize arguments if we're either a client or on a dedicated server
 			#ifdef SVQC
-			float should_process_args = server_is_dedicated;
+			float should_process_args = autocvar_sv_dedicated;
 			#else
 			float should_process_args = true;
 			#endif
@@ -1634,7 +1634,7 @@ void Send_Notification(
 		return;
 	}
 
-	if (server_is_dedicated
+	if (autocvar_sv_dedicated
 		&& (broadcast == NOTIF_ALL || broadcast == NOTIF_ALL_EXCEPT)
 		&& !(net_type == MSG_ANNCE || net_type == MSG_CENTER)
 	)

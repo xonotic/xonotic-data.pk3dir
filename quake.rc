@@ -1,9 +1,8 @@
 exec default.cfg
-exec config.cfg
-maxplayers $menu_maxplayers
+if_client exec config.cfg
 exec data/campaign.cfg
-exec config_update.cfg
-exec font-xolonium.cfg
+if_client exec config_update.cfg
+if_client exec font-xolonium.cfg
 exec autoexec/*.cfg
 exec autoexec.cfg
 stuffcmds
