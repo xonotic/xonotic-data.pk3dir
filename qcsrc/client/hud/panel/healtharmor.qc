@@ -80,9 +80,8 @@ void HUD_HealthArmor()
 
 	draw_beginBoldFont();
 
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
+	vector pos = panel_pos;
+	vector mySize = panel_size;
 
 	if (autocvar_hud_panel_healtharmor_dynamichud)
 		HUD_Scale_Enable();

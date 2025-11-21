@@ -74,7 +74,7 @@ vector Accuracy_GetColor(float accuracy)
 	// inject color j+1 in color j, how much depending on how much accuracy is higher than level j
 	float factor = (accuracy - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
 	vector color = acc_col[j];
-	color = color + factor * (acc_col[j+1] - color);
+	color += factor * (acc_col[j+1] - color);
 	return color;
 }
 
@@ -203,11 +203,7 @@ void HUD_Weapons()
 		if (cvar("wep_add"))
 		{
 			int nHidden = 0;
-			FOREACH(Weapons, it != WEP_Null,
-			{
-				if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)
-					++nHidden;
-			});
+			FOREACH(Weapons, it != WEP_Null && it.spawnflags & WEP_FLAG_MUTATORBLOCKED, ++nHidden);
 			weapons_stat = '0 0 0';
 			float countw = 1 + floor((floor(time * cvar("wep_add"))) % (REGISTRY_COUNT(Weapons) - 1 - nHidden));
 			for (int i = 0, j = 0; i <= REGISTRY_COUNT(Weapons) - 1 && j < countw; ++i)
@@ -290,20 +286,20 @@ void HUD_Weapons()
 			if (panel_pos.x + old_panel_size.x > vid_conwidth * 0.999)
 				panel_pos.x += old_panel_size.x - panel_size.x;
 			else
-				panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
+				panel_pos.x += (old_panel_size.x - panel_size.x) * 0.5;
 		}
 		else if (old_panel_size.x > vid_conwidth * 0.999)
-			panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
+			panel_pos.x += (old_panel_size.x - panel_size.x) * 0.5;
 
 		if (panel_pos.y > vid_conheight * 0.001)
 		{
 			if (panel_pos.y + old_panel_size.y > vid_conheight * 0.999)
 				panel_pos.y += old_panel_size.y - panel_size.y;
 			else
-				panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
+				panel_pos.y += (old_panel_size.y - panel_size.y) * 0.5;
 		}
 		else if (old_panel_size.y > vid_conheight * 0.999)
-			panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
+			panel_pos.y += (old_panel_size.y - panel_size.y) * 0.5;
 	}
 	else
 		weapon_count = REGISTRY_COUNT(Weapons) - 1; // unused value
@@ -459,13 +455,13 @@ void Weapons_Draw(
 		{
 			barsize.x = aspect * weapon_size.y;
 			barsize.y = weapon_size.y;
-			baroffset.x = (weapon_size.x - barsize.x) / 2;
+			baroffset.x = (weapon_size.x - barsize.x) * 0.5;
 		}
 		else
 		{
 			barsize.y = 1 / aspect * weapon_size.x;
 			barsize.x = weapon_size.x;
-			baroffset.y = (weapon_size.y - barsize.y) / 2;
+			baroffset.y = (weapon_size.y - barsize.y) * 0.5;
 		}
 	}
 	if (autocvar_hud_panel_weapons_accuracy)
@@ -479,11 +475,9 @@ void Weapons_Draw(
 	if (weapon_pos_current.x == -1)
 		weapon_pos_current = panel_pos;
 
-	float switch_speed;
-	if (autocvar_hud_panel_weapons_selection_speed <= 0 || autocvar__hud_configure)
-		switch_speed = 999;
-	else
-		switch_speed = frametime * autocvar_hud_panel_weapons_selection_speed;
+	float switch_speed = (autocvar_hud_panel_weapons_selection_speed <= 0 || autocvar__hud_configure)
+		? 999
+		: frametime * autocvar_hud_panel_weapons_selection_speed;
 	vector radius_size = weapon_size * (autocvar_hud_panel_weapons_selection_radius + 1);
 
 	// draw background behind currently selected weapon
@@ -565,8 +559,8 @@ void Weapons_Draw(
 		}
 
 		vector weapon_pos_real = weapon_pos;
-		weapon_pos_real.x = weapon_pos.x + (weapon_size.x - weapon_size_real.x) / 2;
-		weapon_pos_real.y = weapon_pos.y + (weapon_size.y - weapon_size_real.y) / 2;
+		weapon_pos_real.x = weapon_pos.x + (weapon_size.x - weapon_size_real.x) * 0.5;
+		weapon_pos_real.y = weapon_pos.y + (weapon_size.y - weapon_size_real.y) * 0.5;
 
 		// drawing all the weapon items
 		if (weapons_stat & WepSet_FromWeapon(it))
@@ -641,11 +635,9 @@ void Weapons_Draw(
 		// draw the complain message
 		if (it == complain_weapon)
 		{
-			float a;
-			if (fadetime)
-				a = ((complain_weapon_time + when > time) ? 1 : bound(0, (complain_weapon_time + when + fadetime - time) / fadetime, 1));
-			else
-				a = ((complain_weapon_time + when > time) ? 1 : 0);
+			float a = fadetime
+				? ((complain_weapon_time + when > time) ? 1 : bound(0, (complain_weapon_time + when + fadetime - time) / fadetime, 1))
+				: ((complain_weapon_time + when > time) ? 1 : 0);
 
 			string s;
 			if (complain_weapon_type == 0)

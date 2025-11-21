@@ -44,15 +44,15 @@ float StrafeHUD_DrawSlickDetector(entity e, bool already_detected)
 
 		// traceline downwards into every direction
 		trace_dphitq3surfaceflags = 0;
-		for (float i = 0; i < 90 * DEG2RAD - SLICKDETECT_STEPS_EPSILON && !slickdetected; i += slicksteps)
+		for (float f = 0; f < 90 * DEG2RAD - SLICKDETECT_STEPS_EPSILON && !slickdetected; f += slicksteps)
 		{
 			vector slickoffset;
 			float slickrotate;
 
-			// creates a vector angled 'i' degrees relative to the Z vector
+			// creates a vector angled 'f' degrees relative to the Z vector
 			// negative cosine value to face downwards
-			slickoffset.z = -cos(i) * autocvar_hud_panel_strafehud_slickdetector_range;
-			slickrotate = sin(i) * autocvar_hud_panel_strafehud_slickdetector_range;
+			slickoffset.z = -cos(f) * autocvar_hud_panel_strafehud_slickdetector_range;
+			slickrotate = sin(f) * autocvar_hud_panel_strafehud_slickdetector_range;
 
 			for (float j = 0; j < 360 * DEG2RAD - SLICKDETECT_STEPS_EPSILON && !slickdetected; j += slicksteps)
 			{
@@ -73,7 +73,7 @@ float StrafeHUD_DrawSlickDetector(entity e, bool already_detected)
 				}
 
 				// rotation does nothing when we are perpendicular to the ground, hence only one iteration
-				if (i == 0)
+				if (f == 0)
 					break;
 			}
 		}

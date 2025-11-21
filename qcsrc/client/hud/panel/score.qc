@@ -16,21 +16,18 @@ void HUD_Score_Export(int fh)
 void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 {
 	float score;
-	entity tm = NULL, pl;
 	int SCOREPANEL_MAX_ENTRIES = 6;
 	float SCOREPANEL_ASPECTRATIO = 2;
 	int entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize.y / mySize.x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
 	vector fontsize = '1 1 0' * (mySize.y / entries);
 
-	vector rgb, score_color;
-	rgb = '1 1 1';
-	score_color = '1 1 1';
+	vector rgb = '1 1 1';
+	vector score_color = '1 1 1';
 
 	float name_size = mySize.x * 0.75;
 	float spacing_size = mySize.x * 0.04;
 	const float highlight_alpha = 0.2;
 	int i = 0, first_pl = 0;
-	bool me_printed = false;
 	string s;
 	if (autocvar__hud_configure)
 	{
@@ -77,6 +74,9 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		}
 		return;
 	}
+
+	entity tm = NULL, pl;
+	bool me_printed = false;
 
 	Scoreboard_UpdatePlayerTeams();
 	if (team_count)
@@ -148,9 +148,8 @@ void HUD_Score()
 	}
 
 	HUD_Panel_LoadCvars();
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
+	vector pos = panel_pos;
+	vector mySize = panel_size;
 
 	if (autocvar_hud_panel_score_dynamichud)
 		HUD_Scale_Enable();
@@ -164,16 +163,12 @@ void HUD_Score()
 	}
 
 	float score, distribution = 0;
-	string sign;
 	vector distribution_color;
-	entity tm, pl, me;
-
-	me = playerslots[current_player];
+	entity pl;
+	entity me = playerslots[current_player];
 
 	if ((scores_flags(ps_primary) & SFL_TIME) && !teamplay) // race/cts record display on HUD
 	{
-		string timer, distrtimer;
-
 		pl = players.sort_next;
 		if (pl == me)
 			pl = pl.sort_next;
@@ -182,7 +177,7 @@ void HUD_Score()
 			pl = NULL;
 
 		score = me.(scores(ps_primary));
-		timer = TIME_ENCODED_TOSTRING(score, false);
+		string timer = TIME_ENCODED_TOSTRING(score, false);
 
 		draw_beginBoldFont();
 		if (pl && ((!(scores_flags(ps_primary) & SFL_ZERO_IS_WORST)) || score))
@@ -190,8 +185,9 @@ void HUD_Score()
 			// distribution display
 			distribution = me.(scores(ps_primary)) - pl.(scores(ps_primary));
 
-			distrtimer = ftos_decimals(fabs(distribution / (10 ** TIME_DECIMALS)), TIME_DECIMALS);
+			string distrtimer = ftos_decimals(fabs(distribution / (10 ** TIME_DECIMALS)), TIME_DECIMALS);
 
+			string sign;
 			if (distribution <= 0)
 			{
 				distribution_color = '0 1 0';
@@ -257,14 +253,14 @@ void HUD_Score()
 	}
 	else // teamgames
 	{
-		float row, column, rows = 0, columns = 0;
-		vector offset = '0 0 0';
-		vector score_pos, score_size; //for scores other than myteam
 		if (autocvar_hud_panel_score_rankings)
 		{
 			HUD_Score_Rankings(pos, mySize, me);
 			return;
 		}
+		float rows = 0, columns = 0;
+		vector offset = '0 0 0';
+		vector score_size; // for scores other than myteam
 		if (spectatee_status == -1)
 		{
 			rows = HUD_GetRowCount(team_count, mySize, 3);
@@ -276,25 +272,24 @@ void HUD_Score()
 			{
 				newSize = 3 * score_size.y;
 				offset.x = score_size.x - newSize;
-				pos.x += offset.x / 2;
+				pos.x += offset.x * 0.5;
 				score_size.x = newSize;
 			}
 			else
 			{
 				newSize = 1/3 * score_size.x;
 				offset.y = score_size.y - newSize;
-				pos.y += offset.y / 2;
+				pos.y += offset.y * 0.5;
 				score_size.y = newSize;
 			}
 		}
 		else
 			score_size = vec2(mySize.x / 4, mySize.y / 3);
 
-		float max_fragcount;
-		max_fragcount = -99;
+		float max_fragcount = -99;
+		float row = 0, column = 0;
 		draw_beginBoldFont();
-		row = column = 0;
-		for (tm = teams.sort_next; tm; tm = tm.sort_next)
+		for (entity tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
 			if (!tm.team || tm.team == NUM_SPECTATOR)
 				continue;
@@ -308,7 +303,7 @@ void HUD_Score()
 
 			if (spectatee_status == -1)
 			{
-				score_pos = pos + vec2(column * (score_size.x + offset.x), row * (score_size.y + offset.y));
+				vector score_pos = pos + vec2(column * (score_size.x + offset.x), row * (score_size.y + offset.y));
 				if (max_fragcount == score)
 					HUD_Panel_DrawHighlight(score_pos, score_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawstring_aspect(score_pos, ftos(score), score_size, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);

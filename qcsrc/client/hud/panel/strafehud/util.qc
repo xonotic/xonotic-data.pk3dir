@@ -17,13 +17,13 @@ float StrafeHUD_AngleToWidth(float angle, float range)
 // convert a strafe angle into a centered HUD offset value
 float StrafeHUD_AngleToOffset(float angle, float range)
 {
-	return StrafeHUD_AngleToWidth(angle, range) + panel_size.x / 2;
+	return StrafeHUD_AngleToWidth(angle, range) + panel_size.x * 0.5;
 }
 
 // turn a ratio into a projected ratio based on the total angular distance
 float StrafeHUD_Project(float ratio, float range, bool reverse)
 {
-	range *= DEG2RAD / 2;
+	range *= DEG2RAD * 0.5;
 	switch (autocvar_hud_panel_strafehud_projection)
 	{
 		default:
@@ -45,11 +45,11 @@ float StrafeHUD_Project(float ratio, float range, bool reverse)
 			if (!reverse)
 			{
 				ratio *= range;
-				ratio = tan(ratio / 2) / tan(range / 2);
+				ratio = tan(ratio * 0.5) / tan(range * 0.5);
 			}
 			else
 			{
-				ratio = atan(ratio * tan(range / 2)) * 2;
+				ratio = atan(ratio * tan(range * 0.5)) * 2;
 				ratio /= range;
 			}
 			break;
@@ -63,9 +63,9 @@ float StrafeHUD_ProjectOffset(float offset, float range, bool reverse)
 	if (autocvar_hud_panel_strafehud_projection == STRAFEHUD_PROJECTION_LINEAR)
 		return offset;
 
-	float ratio = (offset - (panel_size.x / 2)) / (panel_size.x / 2);
+	float ratio = (offset - (panel_size.x * 0.5)) / (panel_size.x * 0.5);
 	ratio = StrafeHUD_Project(ratio, range, reverse);
-	offset = ratio * (panel_size.x / 2) + (panel_size.x / 2);
+	offset = ratio * (panel_size.x * 0.5) + (panel_size.x * 0.5);
 	return offset;
 }
 
@@ -146,7 +146,7 @@ float StrafeHUD_DetermineFrameTime()
 		float dt_client = input_timelength;
 
 		if (dt_client > 0.05) // server splits frames longer than 50 ms into two moves (DarkPlaces behaviour)
-			dt_client /= 2; // does not ensure frames are smaller than 50 ms, just splits large frames in half, matches server behaviour
+			dt_client *= 0.5; // does not ensure frames are smaller than 50 ms, just splits large frames in half, matches server behaviour
 
 		/* calculate average frametime
 		 * calculated using a weighted arithmetic mean, where the weighting is equal to the frametime itself
@@ -359,7 +359,7 @@ vector StrafeHUD_MixColors(vector color1, vector color2, float ratio)
 
 vector StrafeHUD_CalculateTextIndicatorPosition(vector pos)
 {
-	pos.x *= panel_size.x / 2; // more intuitive since we start in the middle, this turns the range from -0.5 to +0.5 into -1 to +1
+	pos.x *= panel_size.x * 0.5; // more intuitive since we start in the middle, this turns the range from -0.5 to +0.5 into -1 to +1
 	pos.y *= panel_size.y;
 	pos.z = 0;
 

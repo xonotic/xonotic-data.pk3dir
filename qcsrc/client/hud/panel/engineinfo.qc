@@ -26,9 +26,8 @@ void HUD_EngineInfo()
 		return;
 
 	HUD_Panel_LoadCvars();
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
+	vector pos = panel_pos;
+	vector mySize = panel_size;
 
 	if (autocvar_hud_panel_engineinfo_dynamichud)
 		HUD_Scale_Enable();
@@ -45,12 +44,11 @@ void HUD_EngineInfo()
 	if (autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage)
 	{
 		float currentframetime = currentTime - prevfps_time;
-		frametimeavg = (frametimeavg + frametimeavg1 + frametimeavg2 + currentframetime) / 4; // average three frametimes into framecounter for slightly more stable fps readings :P
+		frametimeavg = (frametimeavg + frametimeavg1 + frametimeavg2 + currentframetime) * 0.25; // average three frametimes into framecounter for slightly more stable fps readings :P
 		frametimeavg2 = frametimeavg1;
 		frametimeavg1 = frametimeavg;
 
-		float weight;
-		weight = autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage_new_weight;
+		float weight = autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage_new_weight;
 		if (currentframetime > 0.0001) // filter out insane values which sometimes seem to occur and throw off the average? If you are getting 10,000 fps or more, then you don't need a framerate counter.
 		{
 			if (fabs(prevfps - (1 / frametimeavg)) > prevfps * autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage_instantupdate_change_threshold) // if there was a big jump in fps, just force prevfps at current (1 / currentframetime) to make big updates instant
@@ -61,7 +59,7 @@ void HUD_EngineInfo()
 	}
 	else
 	{
-		framecounter += 1;
+		++framecounter;
 		if (currentTime - prevfps_time > autocvar_hud_panel_engineinfo_framecounter_time)
 		{
 			prevfps = framecounter / (currentTime - prevfps_time);

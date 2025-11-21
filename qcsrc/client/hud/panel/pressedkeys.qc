@@ -22,9 +22,8 @@ void HUD_PressedKeys()
 	}
 
 	HUD_Panel_LoadCvars();
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
+	vector pos = panel_pos;
+	vector mySize = panel_size;
 
 	if (autocvar_hud_panel_pressedkeys_dynamichud)
 		HUD_Scale_Enable();
@@ -47,14 +46,14 @@ void HUD_PressedKeys()
 			newSize.x = aspect * mySize.y;
 			newSize.y = mySize.y;
 
-			pos.x = pos.x + (mySize.x - newSize.x) / 2;
+			pos.x += (mySize.x - newSize.x) * 0.5;
 		}
 		else
 		{
 			newSize.y = 1 / aspect * mySize.x;
 			newSize.x = mySize.x;
 
-			pos.y = pos.y + (mySize.y - newSize.y) / 2;
+			pos.y += (mySize.y - newSize.y) * 0.5;
 		}
 		mySize = newSize;
 	}

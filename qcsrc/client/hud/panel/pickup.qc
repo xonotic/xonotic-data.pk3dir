@@ -12,11 +12,11 @@ void HUD_Pickup_Export(int fh)
 	// allow saving cvars that aesthetically change the panel into hud skin files
 }
 
-void Pickup_Update(entity it, int count)
+void Pickup_Update(entity item, int count)
 {
-	if (last_pickup_item != it || time - STAT(LAST_PICKUP) > autocvar_hud_panel_pickup_time)
+	if (last_pickup_item != item || time - STAT(LAST_PICKUP) > autocvar_hud_panel_pickup_time)
 		last_pickup_count = 0;
-	last_pickup_item = it;
+	last_pickup_item = item;
 	last_pickup_count += count;
 }
 
@@ -36,9 +36,8 @@ void HUD_Pickup()
 		return;
 
 	HUD_Panel_LoadCvars();
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
+	vector pos = panel_pos;
+	vector mySize = panel_size;
 
 	if (autocvar_hud_panel_pickup_dynamichud)
 		HUD_Scale_Enable();
@@ -53,19 +52,19 @@ void HUD_Pickup()
 
 	float last_pickup_time = STAT(LAST_PICKUP);
 	float display_time = min(5, autocvar_hud_panel_pickup_time);
-	entity it = last_pickup_item;
+	entity item = last_pickup_item;
 
-	if ((last_pickup_time && last_pickup_time > time - display_time && it) || autocvar__hud_configure)
+	if ((last_pickup_time && last_pickup_time > time - display_time && item) || autocvar__hud_configure)
 	{
 		if (autocvar__hud_configure)
-			it = ITEM_ArmorMega;
+			item = ITEM_ArmorMega;
 
 		vector fontsize = '1 1 0' * mySize.y;
 		vector iconsize = fontsize * autocvar_hud_panel_pickup_iconsize;
 
-		string icon = strcat(hud_skin_path, "/", (it.model2) ? it.model2 : it.m_icon);
+		string icon = strcat(hud_skin_path, "/", (item.model2) ? item.model2 : item.m_icon);
 		if (precache_pic(icon) == "")
-			icon = strcat("gfx/hud/default/", (it.model2) ? it.model2 : it.m_icon);
+			icon = strcat("gfx/hud/default/", (item.model2) ? item.model2 : item.m_icon);
 
 		vector sz = draw_getimagesize(icon);
 		sz = vec2(iconsize.y * (sz.y ? sz.x / sz.y : 1), iconsize.y);
@@ -95,9 +94,9 @@ void HUD_Pickup()
 			}
 		}
 
-		drawpic(pos - eY * ((iconsize.y - fontsize.y) / 2), icon, sz, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		drawpic(pos - eY * (iconsize.y - fontsize.y) * 0.5, icon, sz, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		pos.x += sz.x + fontsize.x * 0.25;
-		string str_name = ((last_pickup_count > 1) ? sprintf("%s (x%d)", it.m_name, last_pickup_count) : it.m_name);
+		string str_name = ((last_pickup_count > 1) ? sprintf("%s (x%d)", item.m_name, last_pickup_count) : item.m_name);
 		str_name = textShortenToWidth(str_name, mySize.x - (pos.x - panel_pos.x), fontsize, stringwidth_nocolors);
 		drawstring(pos, str_name, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	}

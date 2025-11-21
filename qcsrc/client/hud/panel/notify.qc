@@ -87,9 +87,8 @@ void HUD_Notify()
 	if (!autocvar__hud_configure && notify_count == 0)
 		return;
 
-	vector pos, size;
-	pos  = panel_pos;
-	size = panel_size;
+	vector pos = panel_pos;
+	vector size = panel_size;
 
 	if (panel_bg_padding)
 	{
@@ -107,7 +106,7 @@ void HUD_Notify()
 	float entry_height = size.y / entry_count;
 
 	float panel_width_half = size.x * 0.5;
-	float icon_width_half = entry_height * icon_aspect / 2;
+	float icon_width_half = entry_height * icon_aspect * 0.5;
 	float name_maxwidth = panel_width_half - icon_width_half - size.x * NOTIFY_ICON_MARGIN;
 
 	vector font_size = '0.5 0.5 0' * entry_height * autocvar_hud_panel_notify_fontsize;
@@ -118,9 +117,8 @@ void HUD_Notify()
 
 	vector attacker_pos, victim_pos, icon_pos;
 	string attacker, victim, icon;
-	int i, j, count, step, limit;
-	float alpha;
 
+	int i, step, limit;
 	if (autocvar_hud_panel_notify_flip)
 	{
 		// Order items from the top down
@@ -136,7 +134,10 @@ void HUD_Notify()
 		limit = -1;
 	}
 
-	for (j = notify_index, count = 0; i != limit; i += step, ++j, ++count)
+	float alpha;
+	vector name_top;
+	int count = 0;
+	for (int j = notify_index; i != limit; i += step, ++j, ++count)
 	{
 		if (autocvar__hud_configure)
 		{
@@ -168,7 +169,7 @@ void HUD_Notify()
 
 		if (icon != "" && victim != "")
 		{
-			vector name_top = eY * (i * entry_height + 0.5 * (entry_height - font_size.y));
+			name_top = eY * (i * entry_height + 0.5 * (entry_height - font_size.y));
 
 			icon_pos = pos + icon_left + eY * i * entry_height;
 			drawpic_aspect_skin(icon_pos, icon, icon_size, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);

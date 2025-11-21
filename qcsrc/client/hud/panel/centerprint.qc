@@ -53,13 +53,12 @@ void centerprint_Add(int new_id, string strMessage, float duration, int countdow
 {
 	TC(int, new_id); TC(int, countdown_num);
 	//LOG_INFOF("centerprint_Add: ^2id: %d ^3dur: %d ^5countdown: %d\n'%s'", new_id, duration, countdown_num, strreplace("\n", "^7\\n^7", strMessage));
-	int i, j;
 
 	if (strMessage == "" && new_id == 0)
 		return;
 
 	// strip trailing newlines
-	j = strlen(strMessage) - 1;
+	int j = strlen(strMessage) - 1;
 	while (substring(strMessage, j, 1) == "\n" && j >= 0)
 		--j;
 	if (j < strlen(strMessage) - 1)
@@ -81,6 +80,7 @@ void centerprint_Add(int new_id, string strMessage, float duration, int countdow
 	if (!centerprint_showing)
 		centerprint_showing = true;
 
+	int i;
 	for (i = 0, j = cpm_index; i < CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
@@ -197,8 +197,7 @@ void HUD_CenterPrint()
 			{
 				centerprint_SetTitle(_("Title"));
 
-				float r;
-				r = random();
+				float r = random();
 				if (r > 0.8)
 					centerprint_Add(floor(r*1000), sprintf(_("^3Countdown message at time %s, seconds left: ^COUNT"), seconds_tostring(time)), 1, 10);
 				else if (r > 0.55)
@@ -255,17 +254,14 @@ void HUD_CenterPrint()
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	int i, j, k, n, g;
-	float a = 1, sz, align, current_msg_posY = 0, msg_size;
-	vector pos;
 	vector cp_fontsize = hud_fontsize * CENTERPRINT_BASE_SIZE;
-	string ts = "";
+	float current_msg_posY = 0; // k9er: this is unused?
 	bool all_messages_expired = true;
 
-	pos = panel_pos;
+	vector pos = panel_pos;
 	if (autocvar_hud_panel_centerprint_flip)
 		pos.y += panel_size.y;
-	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
+	float align = bound(0, autocvar_hud_panel_centerprint_align, 1);
 
 	// Show title if available
 	if (centerprint_title != "" || centerprint_title_left != "")
@@ -337,7 +333,7 @@ void HUD_CenterPrint()
 		all_messages_expired = false;
 	}
 
-	for (g = 0, i = 0, j = cpm_index; i < CENTERPRINT_MAX_MSGS; ++i, ++j)
+	for (int g = 0, i = 0, j = cpm_index; i < CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
@@ -376,15 +372,16 @@ void HUD_CenterPrint()
 		}
 
 		// fade
-		if (fade_in_time && centerprint_start_time[j] && time < centerprint_start_time[j] + fade_in_time) // Fade in
-			a = (time - centerprint_start_time[j]) / fade_in_time;
-		else if (time < centerprint_expire_time[j] - fade_out_time || centerprint_time[j] < 0) // Regularily printed or forced
-			a = 1;
-		else if (fade_out_time) // Expiring soon, so fade it out.
-			a = (centerprint_expire_time[j] - time) / fade_out_time;
-
-		if (centerprint_msgID[j] == ORDINAL(CPID_TIMEIN))
-			a = 1;
+		float a = 1;
+		if (centerprint_msgID[j] != ORDINAL(CPID_TIMEIN))
+		{
+			if (fade_in_time && centerprint_start_time[j] && time < centerprint_start_time[j] + fade_in_time) // Fade in
+				a = (time - centerprint_start_time[j]) / fade_in_time;
+			else if (time < centerprint_expire_time[j] - fade_out_time || centerprint_time[j] < 0) // Regularily printed or forced
+				a = 1;
+			else if (fade_out_time) // Expiring soon, so fade it out.
+				a = (centerprint_expire_time[j] - time) / fade_out_time;
+		}
 
 		// while counting down show it anyway in order to hold the current message position
 		if (a <= (0.5/255.0) && centerprint_countdown_num[j] == 0)  // Guaranteed invisible - don't show.
@@ -394,21 +391,23 @@ void HUD_CenterPrint()
 		if (autocvar_hud_panel_centerprint_fade_subsequent)
 		{
 			// pass one: all messages after the first have half alpha
-			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1);
+			a *= bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1);
 			// pass two: after that, gradually lower alpha even more for each message
-			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1);
+			a *= bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1);
 		}
 		a *= panel_fg_alpha;
 
 		// finally set the size based on the alpha
-		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
+		float sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
 		drawfontscale = hud_scale * sz;
 
+		int n, k;
 		if (centerprint_countdown_num[j])
 			n = tokenizebyseparator(strreplace("^COUNT", ftos(centerprint_countdown_num[j]), centerprint_messages[j]), "\n");
 		else
 			n = tokenizebyseparator(centerprint_messages[j], "\n");
 
+		string ts;
 		if (autocvar_hud_panel_centerprint_flip)
 		{
 			// check if the message can be entirely shown
@@ -424,13 +423,13 @@ void HUD_CenterPrint()
 					if (ts != "")
 						pos.y -= fontsize.y;
 					else
-						pos.y -= fontsize.y * CENTERPRINT_SPACING / 2;
+						pos.y -= fontsize.y * CENTERPRINT_SPACING * 0.5;
 				}
 			}
 			current_msg_posY = pos.y; // save starting pos (first line) of the current message
 		}
 
-		msg_size = pos.y;
+		float msg_size = pos.y;
 		for (k = 0; k < n; ++k)
 		{
 			getWrappedLine_remaining = argv(k);
@@ -456,7 +455,7 @@ void HUD_CenterPrint()
 					pos.y += fontsize.y;
 				}
 				else
-					pos.y += fontsize.y * CENTERPRINT_SPACING / 2;
+					pos.y += fontsize.y * CENTERPRINT_SPACING * 0.5;
 			}
 		}
 

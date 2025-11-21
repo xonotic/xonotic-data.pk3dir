@@ -22,7 +22,7 @@ void HUD_Vote()
 		if (!uid2name_dialog)
 			localcmd("menu_cmd directmenu Uid2Name\n");
 
-		vote_active = 1;
+		vote_active = true;
 		if (autocvar__hud_configure)
 		{
 			vote_yescount = 0;
@@ -57,8 +57,6 @@ void HUD_Vote()
 		vote_needed = 4;
 	}
 
-	string s;
-	float a;
 	if (vote_active != vote_prev)
 	{
 		vote_change = time;
@@ -70,7 +68,7 @@ void HUD_Vote()
 	else
 		vote_alpha = bound(0, 1 - (time - vote_change) * 2, 1);
 
-	a = vote_alpha * (vote_highlighted ? autocvar_hud_panel_vote_alreadyvoted_alpha : 1);
+	float a = vote_alpha * (vote_highlighted ? autocvar_hud_panel_vote_alreadyvoted_alpha : 1);
 	if (a <= 0)
 		return;
 
@@ -91,9 +89,8 @@ void HUD_Vote()
 		panel_size = vec2(0.4 * vid_conwidth, 0.3 * vid_conheight);
 	}
 
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
+	vector pos = panel_pos;
+	vector mySize = panel_size;
 
 	if (autocvar_hud_panel_vote_dynamichud)
 		HUD_Scale_Enable();
@@ -114,24 +111,25 @@ void HUD_Vote()
 		newSize.x = 3 * mySize.y;
 		newSize.y = mySize.y;
 
-		pos.x = pos.x + (mySize.x - newSize.x) / 2;
+		pos.x += (mySize.x - newSize.x) * 0.5;
 	}
 	else
 	{
 		newSize.y = 1/3 * mySize.x;
 		newSize.x = mySize.x;
 
-		pos.y = pos.y + (mySize.y - newSize.y) / 2;
+		pos.y += (mySize.y - newSize.y) * 0.5;
 	}
 	mySize = newSize;
 
-	s = _("A vote has been called for:");
-	if (uid2name_dialog)
-		s = _("Allow servers to store and display your name?");
+	string s = uid2name_dialog
+		? _("Allow servers to store and display your name?")
+		: _("A vote has been called for:");
 	drawstring_aspect(pos, s, vec2(mySize.x, (2/8) * mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	s = textShortenToWidth(ColorTranslateRGB(vote_called_vote), mySize.x, '1 1 0' * mySize.y * (1/8), stringwidth_colors);
 	if (autocvar__hud_configure)
 		s = _("^1Configure the HUD");
+	else
+		s = textShortenToWidth(ColorTranslateRGB(vote_called_vote), mySize.x, '1 1 0' * mySize.y * (1/8), stringwidth_colors);
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize.y, s, vec2(mySize.x, (1.75/8) * mySize.y), panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts

@@ -22,8 +22,7 @@ void HUD_RaceTimer_Export(int fh)
 string MakeRaceString(int cp, float mytime, float theirtime, float othertime, float lapdelta, string theirname)
 {
 	TC(int, cp);
-	string cpname, lapstr = "", timestr = "", col = "^7", othercol = "^7", othertimestr = "";
-	float namesize = autocvar_cl_race_cptimes_namesize * hud_fontsize.x;
+	string lapstr = "", timestr = "", col = "^7", othercol = "^7", othertimestr = "";
 	if (theirname == "" || !autocvar_cl_race_cptimes_showself)
 		othertime = 0; // don't count personal time
 
@@ -86,6 +85,7 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 		othercol = "^7";
 	}
 
+	string cpname;
 	if (cp == 254)
 		cpname = _("Start line");
 	else if (cp == 255)
@@ -96,7 +96,10 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 		cpname = _("Finish line");
 
 	if (theirname != "" && theirtime >= 0)
+	{
+		float namesize = autocvar_cl_race_cptimes_namesize * hud_fontsize.x;
 		theirname = textShortenToWidth(ColorTranslateRGB(theirname), namesize, hud_fontsize, stringwidth_colors);
+	}
 
 	if (theirtime < 0)
 		return strcat(col, cpname);
@@ -111,7 +114,7 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 void ClearCheckpointSplits(bool quiet)
 {
 	bool once = true;
-	bool changed_player = (racetimer_have_stored_splits_player != (current_player + 1));
+	bool changed_player = racetimer_have_stored_splits_player != current_player + 1;
 	for (int i = 0; i < 256; ++i)
 	{
 		if (race_checkpoint_splits[i]
@@ -138,7 +141,7 @@ void ClearCheckpointSplits(bool quiet)
 void StoreCheckpointSplits(float race_checkpoint, string forcetime, string s)
 {
 	// store checkpoint splits string for later printing
-	if (racetimer_have_stored_splits && racetimer_have_stored_splits_player != (current_player + 1)) // we changed player
+	if (racetimer_have_stored_splits && racetimer_have_stored_splits_player != current_player + 1) // we changed player
 		ClearCheckpointSplits(true);
 
 	// 0 or 255 go to 255 as finish, strcpy does the free if needed
@@ -163,9 +166,8 @@ void HUD_RaceTimer ()
 
 	HUD_Panel_LoadCvars();
 
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
+	vector pos = panel_pos;
+	vector mySize = panel_size;
 
 	if (autocvar_hud_panel_racetimer_dynamichud)
 		HUD_Scale_Enable();
@@ -185,19 +187,19 @@ void HUD_RaceTimer ()
 		newSize.x = 4 * mySize.y;
 		newSize.y = mySize.y;
 
-		pos.x = pos.x + (mySize.x - newSize.x) / 2;
+		pos.x += (mySize.x - newSize.x) * 0.5;
 	}
 	else
 	{
 		newSize.y = 1/4 * mySize.x;
 		newSize.x = mySize.x;
 
-		pos.y = pos.y + (mySize.y - newSize.y) / 2;
+		pos.y += (mySize.y - newSize.y) * 0.5;
 	}
 	mySize = newSize;
 
-	float a, t;
-	string s, forcetime;
+	float a;
+	string s;
 	vector str_pos;
 
 	if (autocvar__hud_configure)
@@ -221,7 +223,7 @@ void HUD_RaceTimer ()
 	{
 		a = bound(0, 2 - (time - race_checkpointtime), 1);
 		s = "";
-		forcetime = "";
+		string forcetime = "";
 		if (a > 0) // display a frozen split for the just reached checkpoint
 		{
 			if (race_checkpoint != 254 && race_time != 0)
@@ -239,10 +241,9 @@ void HUD_RaceTimer ()
 						ClearCheckpointSplits(true);
 
 					// build checkpoint split strings
-					if (race_time && race_previousbesttime)
-						s = MakeRaceString(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, ((race_mypreviousbesttime) ? TIME_DECODE(race_time) - TIME_DECODE(race_mypreviousbesttime) : 0), 0, race_previousbestname);
-					else
-						s = MakeRaceString(race_checkpoint, 0, -1, 0, 0, race_previousbestname);
+					s = (race_time && race_previousbesttime)
+						? MakeRaceString(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, ((race_mypreviousbesttime) ? TIME_DECODE(race_time) - TIME_DECODE(race_mypreviousbesttime) : 0), 0, race_previousbestname)
+						: MakeRaceString(race_checkpoint, 0, -1, 0, 0, race_previousbestname);
 
 					if (autocvar_cl_race_cptimes_showspeed)
 					{
@@ -354,7 +355,7 @@ void HUD_RaceTimer ()
 
 		if (race_penaltytime && !race_penaltyaccumulator)
 		{
-			t = race_penaltytime * 0.1 + race_penaltyeventtime;
+			float t = race_penaltytime * 0.1 + race_penaltyeventtime;
 			a = bound(0, (1 + t - time), 1);
 			if (a > 0)
 			{
@@ -369,8 +370,7 @@ void HUD_RaceTimer ()
 					t = 0;
 					col = "^2";
 				}
-				s = sprintf(_("PENALTY: %.1f (%s)"), t, race_penaltyreason);
-				s = strcat(col, s);
+				s = strcat(col, sprintf(_("PENALTY: %.1f (%s)"), t, race_penaltyreason));
 				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}

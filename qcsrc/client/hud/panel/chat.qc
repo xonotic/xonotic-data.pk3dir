@@ -49,14 +49,14 @@ float HUD_Panel_Chat_InputEvent(float bInputType, float nPrimary, float nSeconda
 	{
 		if (!key_pressed)
 			return true;
-		chat_maximized_scroll_ofs += vid_conheight / 2;
+		chat_maximized_scroll_ofs += vid_conheight * 0.5;
 		return true;
 	}
 	else if (nPrimary == K_PGDN)
 	{
 		if (!key_pressed)
 			return true;
-		chat_maximized_scroll_ofs -= vid_conheight / 2;
+		chat_maximized_scroll_ofs -= vid_conheight * 0.5;
 		if (chat_maximized_scroll_ofs < 0)
 			chat_maximized_scroll_ofs = 0;
 		return true;
@@ -115,8 +115,7 @@ void HUD_Chat()
 		panel_size.y = vid_conheight - panel_bg_border * 2;
 		if (panel.current_panel_bg == "0") // force a border when maximized
 		{
-			string panel_bg;
-			panel_bg = strcat(hud_skin_path, "/border_default");
+			string panel_bg = strcat(hud_skin_path, "/border_default");
 			if (precache_pic(panel_bg) == "")
 				panel_bg = "gfx/hud/default/border_default";
 			strcpy(panel.current_panel_bg, panel_bg);
@@ -126,9 +125,8 @@ void HUD_Chat()
 		panel_size.y += chat_maximized_scroll_ofs;
 	}
 
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
+	vector pos = panel_pos;
+	vector mySize = panel_size;
 
 	// chat messages don't scale properly since they are displayed directly by the engine
 	HUD_Scale_Disable();

@@ -186,7 +186,7 @@ void HUD_Powerups()
 				if (item.count > 1)
 					DrawNumIcon(itemPos, itemSize, fullSeconds, item.netname, isVertical, false, align, textColor, panel_fg_alpha);
 				if (item.count <= 5)
-					DrawNumIcon_expanding(itemPos, itemSize, fullSeconds, item.netname, isVertical, false, align, textColor, panel_fg_alpha, bound(0, (fullSeconds - item.count) / 0.5, 1));
+					DrawNumIcon_expanding(itemPos, itemSize, fullSeconds, item.netname, isVertical, false, align, textColor, panel_fg_alpha, bound(0, (fullSeconds - item.count) * 2, 1));
 			}
 		}
 

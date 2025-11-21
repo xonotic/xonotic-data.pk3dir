@@ -186,7 +186,7 @@ void StrafeHUD_DrawGradient(
 {
 	if (gradient_type == STRAFEHUD_GRADIENT_BOTH)
 	{
-		original_width /= 2;
+		original_width *= 0.5;
 
 		vector size1 = size;
 		size1.x = bound(0, original_width - gradient_offset, size.x);
@@ -196,7 +196,6 @@ void StrafeHUD_DrawGradient(
 
 		if (size1.x > 0)
 			StrafeHUD_DrawGradient(color1, color2, size1, original_width, offset, alpha, gradient_offset, STRAFEHUD_GRADIENT_LEFT, range);
-
 		if (size2.x > 0)
 			StrafeHUD_DrawGradient(color1, color2, size2, original_width, offset + size1.x, alpha, max(0, gradient_offset - original_width), STRAFEHUD_GRADIENT_RIGHT, range);
 
@@ -249,7 +248,7 @@ void StrafeHUD_DrawSoftGradient(
 {
 	float alpha1 = bound(0, alpha, 1);
 	float alpha2 = bound(0, autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha, 1);
-	if (alpha1 + alpha2 == 0)
+	if (alpha1 == 0 && alpha2 == 0)
 		return;
 
 	float color_ratio = alpha1 / (alpha1 + alpha2);

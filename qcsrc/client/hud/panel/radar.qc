@@ -137,8 +137,8 @@ void HUD_Radar_Mouse()
 	panel_size = autocvar_hud_panel_radar_maximized_size;
 	panel_size.x = bound(0.2, panel_size.x, 1) * vid_conwidth;
 	panel_size.y = bound(0.2, panel_size.y, 1) * vid_conheight;
-	panel_pos.x = (vid_conwidth - panel_size.x) / 2;
-	panel_pos.y = (vid_conheight - panel_size.y) / 2;
+	panel_pos.x = (vid_conwidth - panel_size.x) * 0.5;
+	panel_pos.y = (vid_conheight - panel_size.y) * 0.5;
 
 	if (mouseClicked & S_MOUSE1)
 	{
@@ -213,8 +213,7 @@ void HUD_Radar()
 		panel_pos.x = (vid_conwidth - panel_size.x) / 2;
 		panel_pos.y = (vid_conheight - panel_size.y) / 2;
 
-		string panel_bg;
-		panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
+		string panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
 		if (precache_pic(panel_bg) == "")
 			panel_bg = "gfx/hud/default/border_default"; // fallback
 		if (!radar_panel_modified && panel_bg != panel.current_panel_bg)
@@ -231,9 +230,8 @@ void HUD_Radar()
 		teamradar_angle = HUD_Radar_GetAngle(hud_panel_radar_rotation);
 	}
 
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
+	vector pos = panel_pos;
+	vector mySize = panel_size;
 
 	if (autocvar_hud_panel_radar_dynamichud)
 		HUD_Scale_Enable();
@@ -246,9 +244,6 @@ void HUD_Radar()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	int color2;
-	float scale2d, normalsize, bigsize;
-
 	teamradar_origin2d = HUD_Shift(pos + 0.5 * mySize);
 	teamradar_size2d = mySize;
 
@@ -257,11 +252,12 @@ void HUD_Radar()
 
 	teamradar_loadcvars();
 
-	scale2d = vlen_maxnorm2d(mi_picmax - mi_picmin);
+	float scale2d = vlen_maxnorm2d(mi_picmax - mi_picmin);
 	teamradar_size2d = HUD_Scale(mySize);
 
 	teamradar_extraclip_mins = teamradar_extraclip_maxs = '0 0 0'; // we always center
 
+	float bigsize;
 	// pixels per world qu to match the teamradar_size2d.x range in the longest dimension
 	if ((hud_panel_radar_rotation == 0 && !hud_panel_radar_maximized) || (hud_panel_radar_maximized_rotation == 0 && hud_panel_radar_maximized))
 	{
@@ -286,7 +282,7 @@ void HUD_Radar()
 		);
 	}
 
-	normalsize = vlen_maxnorm2d(teamradar_size2d) * scale2d / hud_panel_radar_scale;
+	float normalsize = vlen_maxnorm2d(teamradar_size2d) * scale2d / hud_panel_radar_scale;
 	if (bigsize > normalsize)
 		normalsize = bigsize;
 
@@ -320,6 +316,7 @@ void HUD_Radar()
 		entity icon = REGISTRY_GET(RadarIcons, it.teamradar_icon);
 		draw_teamradar_icon(it.origin, icon, it, spritelookupcolor(it, icon.netname, it.teamradar_color), panel_fg_alpha);
 	});
+	int color2;
 	AL_EACH(_entcs, e, it != NULL,
 	{
 		if (!it.m_entcs_private || it.sv_entnum == current_player)
@@ -333,9 +330,9 @@ void HUD_Radar()
 
 	if (hud_panel_radar_mouse)
 	{
-		string message = _("Click to select teleport destination");
-		if (STAT(HEALTH) <= 0)
-			message = _("Click to select spawn location");
+		string message = (STAT(HEALTH) <= 0)
+			? _("Click to select spawn location")
+			: _("Click to select teleport destination");
 
 		drawcolorcodedstring(pos + '0.5 0 0' * (mySize.x - stringwidth(message, true, hud_fontsize)) - '0 1 0' * hud_fontsize.y * 2,
 							 message, hud_fontsize, hud_panel_radar_foreground_alpha, DRAWFLAG_NORMAL);

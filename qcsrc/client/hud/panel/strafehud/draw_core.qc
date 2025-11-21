@@ -30,6 +30,7 @@ void StrafeHUD_DrawStrafeMeter(
 						autocvar_hud_panel_strafehud_bar_neutral_color,
 						autocvar_hud_panel_strafehud_bar_neutral_alpha * panel_fg_alpha,
 						DRAWFLAG_NORMAL);
+					break;
 			}
 		}
 	}
@@ -73,7 +74,7 @@ void StrafeHUD_DrawStrafeMeter(
 		neutral_offsetangle = 360 - current_startangle;
 
 		// calculate how far off-center the strafe zones currently are
-		shiftangle += neutral_offsetangle / 2 - wishangle;
+		shiftangle += neutral_offsetangle * 0.5 - wishangle;
 
 		// shift strafe zones into correct place
 		neutral_startangle += shiftangle;
@@ -144,7 +145,7 @@ void StrafeHUD_DrawAngleIndicator(
 		return;
 
 	// bound to HUD area
-	angle = bound(-hudangle / 2, angle, hudangle / 2);
+	angle = bound(hudangle * -0.5, angle, hudangle * 0.5);
 
 	float offset = StrafeHUD_AngleToOffset(angle, hudangle);
 	offset = StrafeHUD_ProjectOffset(offset, hudangle, false);
@@ -174,7 +175,7 @@ void StrafeHUD_DrawAngleIndicatorLine(vector size, float offset, int num_dashes,
 			segment_size.y = size.y - i;
 
 		drawfill(
-			panel_pos - eY * ((size.y - panel_size.y) / 2 - i) + eX * (offset - segment_size.x / 2),
+			panel_pos - eY * ((size.y - panel_size.y) * 0.5 - i) + eX * (offset - segment_size.x * 0.5),
 			segment_size, color, alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 }
@@ -187,11 +188,11 @@ void StrafeHUD_DrawAngleIndicatorArrow(float size, float offset, vector line_siz
 
 	if (top)
 		StrafeHUD_DrawStrafeArrow(
-			panel_pos + eY * ((panel_size.y - line_size.y) / 2) + eX * offset,
+			panel_pos + eY * ((panel_size.y - line_size.y) * 0.5) + eX * offset,
 			size, color, alpha * panel_fg_alpha, true, line_size.x);
 	else
 		StrafeHUD_DrawStrafeArrow(
-			panel_pos + eY * ((panel_size.y - line_size.y) / 2 + line_size.y) + eX * offset,
+			panel_pos + eY * ((panel_size.y - line_size.y) * 0.5 + line_size.y) + eX * offset,
 			size, color, alpha * panel_fg_alpha, false, line_size.x);
 }
 

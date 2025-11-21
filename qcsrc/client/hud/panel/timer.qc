@@ -73,9 +73,8 @@ void HUD_Timer()
 
 	draw_beginBoldFont();
 
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
+	vector pos = panel_pos;
+	vector mySize = panel_size;
 
 	if (autocvar_hud_panel_timer_dynamichud)
 		HUD_Scale_Enable();
@@ -182,7 +181,7 @@ void HUD_Timer()
 
 	if (subtimer_str)
 	{
-		float subtimer_padding = subtimer_size.y / 5;
+		float subtimer_padding = subtimer_size.y * 0.2;
 		timer_size.x -= subtimer_size.x;
 		drawstring_aspect(pos + eX * timer_size.x + eY * subtimer_padding,
 			(swap ? timer_str : subtimer_str), subtimer_size - eY * 2 * subtimer_padding,

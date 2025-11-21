@@ -75,11 +75,9 @@ void HUD_Physics()
 	if (autocvar_hud_panel_physics_progressbar && autocvar_hud_panel_physics_acceleration_progressbar_scale > 1)
 		accel_progressbar_scale = autocvar_hud_panel_physics_acceleration_progressbar_scale;
 
-	float text_scale;
-	if (autocvar_hud_panel_physics_text_scale <= 0)
-		text_scale = 1;
-	else
-		text_scale = min(autocvar_hud_panel_physics_text_scale, 1);
+	float text_scale = (autocvar_hud_panel_physics_text_scale <= 0)
+		? 1
+		: min(autocvar_hud_panel_physics_text_scale, 1);
 
 	// compute speed
 	vector strafevelocity = csqcplayer.velocity;
@@ -184,8 +182,7 @@ void HUD_Physics()
 	else
 	{
 		// NOTE: this code is similar to the logic in strafehud.qc
-		int keys = STAT(PRESSED_KEYS);
-		bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, is_local);
+		bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, STAT(PRESSED_KEYS), is_local);
 		bool real_onground = StrafeHUD_DetermineOnGround(strafeplayer, is_local);
 		bool onground = real_onground && !jumpheld;
 		bool real_onslick = onground && StrafeHUD_DetermineOnSlick(strafeplayer);

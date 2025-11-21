@@ -52,8 +52,8 @@ void DrawAmmoItem(vector myPos, vector mySize, Resource ammoType, bool isCurrent
 	if (!isCurrent)
 	{
 		float scale = bound(0.01, autocvar_hud_panel_ammo_noncurrent_scale, 1);
-		myPos = myPos + (mySize - mySize * scale) * 0.5;
-		mySize = mySize * scale;
+		myPos += (mySize - mySize * scale) * 0.5;
+		mySize *= scale;
 	}
 
 	vector iconPos, textPos;
@@ -121,9 +121,8 @@ void HUD_Ammo()
 
 	draw_beginBoldFont();
 
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
+	vector pos = panel_pos;
+	vector mySize = panel_size;
 
 	if (autocvar_hud_panel_ammo_dynamichud)
 		HUD_Scale_Enable();
@@ -171,14 +170,14 @@ void HUD_Ammo()
 	{
 		newSize = 3 * ammo_size.y;
 		offset.x = ammo_size.x - newSize;
-		pos.x += offset.x / 2;
+		pos.x += offset.x * 0.5;
 		ammo_size.x = newSize;
 	}
 	else
 	{
 		newSize = 1/3 * ammo_size.x;
 		offset.y = ammo_size.y - newSize;
-		pos.y += offset.y / 2;
+		pos.y += offset.y * 0.5;
 		ammo_size.y = newSize;
 	}
 
@@ -205,7 +204,7 @@ void HUD_Ammo()
 		if (row >= rows)
 		{
 			row = 0;
-			column = column + 1;
+			++column;
 		}
 	}
 	else
@@ -225,7 +224,7 @@ void HUD_Ammo()
 			if (row >= rows)
 			{
 				row = 0;
-				column = column + 1;
+				++column;
 			}
 		});
 	}

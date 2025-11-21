@@ -74,9 +74,8 @@ void HUD_InfoMessages()
 		return;
 
 	HUD_Panel_LoadCvars();
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
+	vector pos = panel_pos;
+	vector mySize = panel_size;
 
 	if (autocvar_hud_panel_infomessages_dynamichud)
 		HUD_Scale_Enable();
@@ -90,10 +89,11 @@ void HUD_InfoMessages()
 	}
 
 	vector fontsize = '0.2 0.2 0' * mySize.y;
-	string s;
 	int img_curr_group = -1;
+
 	if (!autocvar__hud_configure)
 	{
+		string s;
 		int wants_join = teamplay ? entcs_GetWantsJoin(current_player) : 0;
 
 		if (spectatee_status)
@@ -155,11 +155,7 @@ void HUD_InfoMessages()
 			InfoMessage(s);
 		}
 
-		string blinkcolor;
-		if (time % 1 >= 0.5)
-			blinkcolor = "^1";
-		else
-			blinkcolor = "^3";
+		string blinkcolor = (time % 1 >= 0.5) ? "^1" : "^3";
 
 		if (warmup_stage)
 		{
@@ -185,15 +181,16 @@ void HUD_InfoMessages()
 			}
 			else if (!spectatee_status)
 			{
+				string ready_key = getcommandkey(_("ready"), "ready");
 				if (ready_waiting)
 				{
 					if (ready_waiting_for_me)
-						s = sprintf(_("%sPress ^3%s%s to end warmup"), blinkcolor, getcommandkey(_("ready"), "ready"), blinkcolor);
+						s = sprintf(_("%sPress ^3%s%s to end warmup"), blinkcolor, ready_key, blinkcolor);
 					else
 						s = _("^2Waiting for others to ready up to end warmup...");
 				}
 				else
-					s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey(_("ready"), "ready"));
+					s = sprintf(_("^2Press ^3%s^2 to end warmup"), ready_key);
 				InfoMessage(s);
 			}
 		}
@@ -239,14 +236,15 @@ void HUD_InfoMessages()
 		{
 			s = ((spectatee_status) ? _("^1Spectating this player:") : _("^1Spectating you:"));
 			// InfoMessage(s)
+			string spec_name;
 			int limit = min(num_spectators, MAX_SPECTATORS);
 			for (int i = 0; i < limit; ++i)
 			{
-				float slot = spectatorlist[i];
+				spec_name = entcs_GetName(spectatorlist[i]);
 				if (i == 0)
-					s = strcat(s, " ^7", entcs_GetName(slot));
+					s = strcat(s, " ^7", spec_name);
 				else
-					s = strcat("^7", entcs_GetName(slot));
+					s = strcat("^7", spec_name);
 				InfoMessage(s);
 			}
 		}
