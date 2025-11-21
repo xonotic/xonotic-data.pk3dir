@@ -39,9 +39,12 @@ void HUD_Physics()
 {
 	if (!autocvar__hud_configure)
 	{
-		if (!autocvar_hud_panel_physics) return;
-		if (spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3)) return;
-		if (autocvar_hud_panel_physics == 3 && !MUTATOR_CALLHOOK(HUD_Physics_showoptional)) return;
+		if (!autocvar_hud_panel_physics)
+			return;
+		if (spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3))
+			return;
+		if (autocvar_hud_panel_physics == 3 && !MUTATOR_CALLHOOK(HUD_Physics_showoptional))
+			return;
 	}
 
 	HUD_Panel_LoadCvars();
@@ -105,9 +108,9 @@ void HUD_Physics()
 	{
 		float f = time - acc_prev_time;
 		if (autocvar_hud_panel_physics_acceleration_vertical)
-			accel = (vlen(strafevelocity) - vlen(acc_prev_vel));
+			accel = vlen(strafevelocity) - vlen(acc_prev_vel);
 		else
-			accel = (vlen(vec2(strafevelocity)) - vlen(vec2(acc_prev_vel)));
+			accel = vlen(vec2(strafevelocity)) - vlen(vec2(acc_prev_vel));
 
 		accel *= (1 / max(0.0001, f)) * ACCEL2GRAV; // now a fraction of gravity
 
@@ -170,8 +173,10 @@ void HUD_Physics()
 	if (speed > 0)
 	if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH
 	||  autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_SPEED)
+	{
 		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed / max_speed, 0, speed_baralign,
 			autocvar_hud_progressbar_speed_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
 
 	float accel_max;
 	if (autocvar__hud_configure)

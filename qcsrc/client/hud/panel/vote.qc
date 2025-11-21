@@ -12,11 +12,11 @@ void HUD_Vote_Export(int fh)
 
 void HUD_Vote()
 {
-	if(autocvar_cl_allow_uid2name == -1 && (MUTATOR_CALLHOOK(ShowRankings) || (serverflags & SERVERFLAG_PLAYERSTATS)))
+	if (autocvar_cl_allow_uid2name == -1 && (MUTATOR_CALLHOOK(ShowRankings) || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		// this dialog gets overriden by the uid2name menu dialog, if it exists
 		// TODO remove this client side uid2name dialog in the next release
-		if(!autocvar__menu_alpha)
+		if (!autocvar__menu_alpha)
 			uid2name_dialog = 0;
 
 		if (!uid2name_dialog)
@@ -34,14 +34,20 @@ void HUD_Vote()
 		uid2name_dialog = 1;
 	}
 
-	if(!autocvar__hud_configure)
+	if (!autocvar__hud_configure)
 	{
-		if(!autocvar_hud_panel_vote) return;
+		if (!autocvar_hud_panel_vote)
+			return;
 		/*
-		if(cvar("hud_panel_vote_test")) {
-			if(vote_called_vote) strunzone(vote_called_vote); vote_called_vote = strzone("^1test the vote panel");
+		if (cvar("hud_panel_vote_test"))
+		{
+			if (vote_called_vote)
+				strunzone(vote_called_vote);
+			vote_called_vote = strzone("^1test the vote panel");
 			vote_active = true; vote_yescount = 3; vote_nocount = 2; vote_needed = 4;
-		} else vote_active = false;
+		}
+		else
+			vote_active = false;
 		*/
 	}
 	else
@@ -53,34 +59,35 @@ void HUD_Vote()
 
 	string s;
 	float a;
-	if(vote_active != vote_prev) {
+	if (vote_active != vote_prev)
+	{
 		vote_change = time;
 		vote_prev = vote_active;
 	}
 
-	if(vote_active || autocvar__hud_configure)
+	if (vote_active || autocvar__hud_configure)
 		vote_alpha = bound(0, (time - vote_change) * 2, 1);
 	else
 		vote_alpha = bound(0, 1 - (time - vote_change) * 2, 1);
 
 	a = vote_alpha * (vote_highlighted ? autocvar_hud_panel_vote_alreadyvoted_alpha : 1);
-	if(a <= 0)
+	if (a <= 0)
 		return;
 
 	// menu can't hide this panel, unless:
 	// 1) the uid2name menu dialog is open (replaces this panel)
 	// 2) the settings menu of another panel is open (hud_config mode)
 	float hud_fade_alpha_save = hud_fade_alpha;
-	if(uid2name_dialog && autocvar__menu_alpha)
+	if (uid2name_dialog && autocvar__menu_alpha)
 		hud_fade_alpha = 0;
-	else if(!(hud_configure_menu_open == 2 && highlightedPanel != panel))
+	else if (!(hud_configure_menu_open == 2 && highlightedPanel != panel))
 		hud_fade_alpha = a;
 	HUD_Panel_LoadCvars();
 	hud_fade_alpha = hud_fade_alpha_save;
 
-	if(uid2name_dialog)
+	if (uid2name_dialog)
 	{
-		panel_pos = vec2(0.3 * vid_conwidth, 0.1 * vid_conheight);
+		panel_pos  = vec2(0.3 * vid_conwidth, 0.1 * vid_conheight);
 		panel_size = vec2(0.4 * vid_conwidth, 0.3 * vid_conheight);
 	}
 
@@ -94,7 +101,7 @@ void HUD_Vote()
 		HUD_Scale_Disable();
 	HUD_Panel_DrawBg();
 
-	if(panel_bg_padding)
+	if (panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
 		mySize -= '2 2 0' * panel_bg_padding;
@@ -102,7 +109,7 @@ void HUD_Vote()
 
 	// always force 3:1 aspect
 	vector newSize = '0 0 0';
-	if(mySize.x/mySize.y > 3)
+	if (mySize.x / mySize.y > 3)
 	{
 		newSize.x = 3 * mySize.y;
 		newSize.y = mySize.y;
@@ -119,11 +126,11 @@ void HUD_Vote()
 	mySize = newSize;
 
 	s = _("A vote has been called for:");
-	if(uid2name_dialog)
+	if (uid2name_dialog)
 		s = _("Allow servers to store and display your name?");
 	drawstring_aspect(pos, s, vec2(mySize.x, (2/8) * mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	s = textShortenToWidth(ColorTranslateRGB(vote_called_vote), mySize.x, '1 1 0' * mySize.y * (1/8), stringwidth_colors);
-	if(autocvar__hud_configure)
+	if (autocvar__hud_configure)
 		s = _("^1Configure the HUD");
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize.y, s, vec2(mySize.x, (1.75/8) * mySize.y), panel_fg_alpha, DRAWFLAG_NORMAL);
 
@@ -139,25 +146,26 @@ void HUD_Vote()
 	drawpic_skin(pos, "voteprogress_back", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// draw the highlights
-	if(vote_highlighted == 1) {
+	if (vote_highlighted == 1)
+	{
 		drawsetcliparea(pos.x, pos.y, mySize.x * 0.5, mySize.y);
 		drawpic_skin(pos, "voteprogress_voted", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	else if(vote_highlighted == -1) {
+	else if (vote_highlighted == -1)
+	{
 		drawsetcliparea(pos.x + 0.5 * mySize.x, pos.y, mySize.x * 0.5, mySize.y);
 		drawpic_skin(pos, "voteprogress_voted", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	// draw the progress bars
-	if(vote_yescount && vote_needed)
+	if (vote_yescount && vote_needed)
 	{
-		drawsetcliparea(pos.x, pos.y, mySize.x * 0.5 * (vote_yescount/vote_needed), mySize.y);
+		drawsetcliparea(pos.x, pos.y, mySize.x * 0.5 * (vote_yescount / vote_needed), mySize.y);
 		drawpic_skin(pos, "voteprogress_prog", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-
-	if(vote_nocount && vote_needed)
+	if (vote_nocount && vote_needed)
 	{
-		drawsetcliparea(pos.x + mySize.x - mySize.x * 0.5 * (vote_nocount/vote_needed), pos.y, mySize.x * 0.5, mySize.y);
+		drawsetcliparea(pos.x + mySize.x - mySize.x * 0.5 * (vote_nocount / vote_needed), pos.y, mySize.x * 0.5, mySize.y);
 		drawpic_skin(pos, "voteprogress_prog", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 

@@ -22,10 +22,10 @@ float img_time[IMG_COUNT];
 int img_select(int group_id)
 {
 	float fadetime = max(0.001, autocvar_hud_panel_infomessages_group_fadetime);
-	if(time > img_time[group_id])
+	if (time > img_time[group_id])
 	{
 		img_fade[group_id] = max(0, img_fade[group_id] - frametime / fadetime);
-		if(!img_fade[group_id])
+		if (!img_fade[group_id])
 		{
 			++img_cur_msg[group_id];
 			img_time[group_id] = floor(time) + autocvar_hud_panel_infomessages_group_time;
@@ -40,10 +40,10 @@ vector InfoMessages_drawstring(string s, vector pos, vector sz, float a, vector 
 {
 	getWrappedLine_remaining = s;
 	float offset = 0;
-	while(getWrappedLine_remaining)
+	while (getWrappedLine_remaining)
 	{
 		s = getWrappedLine(sz.x - offset, fontsize, stringwidth_colors);
-		if(autocvar_hud_panel_infomessages_flip)
+		if (autocvar_hud_panel_infomessages_flip)
 			offset = sz.x - stringwidth_colors(s, fontsize) - offset;
 		drawcolorcodedstring(pos + eX * offset, s, fontsize, a, DRAWFLAG_NORMAL);
 		pos.y += fontsize.y;
@@ -70,10 +70,8 @@ string get_team_list(int team_mask, string suf_col)
 
 void HUD_InfoMessages()
 {
-	if(!autocvar__hud_configure)
-	{
-		if(!autocvar_hud_panel_infomessages) return;
-	}
+	if (!autocvar__hud_configure && !autocvar_hud_panel_infomessages)
+		return;
 
 	HUD_Panel_LoadCvars();
 	vector pos, mySize;
@@ -85,7 +83,7 @@ void HUD_InfoMessages()
 	else
 		HUD_Scale_Disable();
 	HUD_Panel_DrawBg();
-	if(panel_bg_padding)
+	if (panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
 		mySize -= '2 2 0' * panel_bg_padding;
@@ -94,34 +92,34 @@ void HUD_InfoMessages()
 	vector fontsize = '0.2 0.2 0' * mySize.y;
 	string s;
 	int img_curr_group = -1;
-	if(!autocvar__hud_configure)
+	if (!autocvar__hud_configure)
 	{
 		int wants_join = teamplay ? entcs_GetWantsJoin(current_player) : 0;
 
-		if(spectatee_status)
+		if (spectatee_status)
 		{
-			if(spectatee_status == -1)
+			if (spectatee_status == -1)
 				s = _("^1Observing");
 			else
 				s = sprintf(_("^1Spectating: ^7%s"), entcs_GetName(current_player));
 			InfoMessage(s);
 
-			if(autocvar_hud_panel_infomessages_group0)
+			if (autocvar_hud_panel_infomessages_group0)
 			{
 				img_curr_group = 0;
-				switch(img_select(img_curr_group) % 3)
+				switch (img_select(img_curr_group) % 3)
 				{
 					default:
 					case 0:
-						if(spectatee_status == -1)
+						if (spectatee_status == -1)
 							s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey(_("primary fire"), "+fire"));
 						else
 							s = sprintf(_("^1Press ^3%s^1 or ^3%s^1 for next or previous player"), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
 						break;
 					case 1:
-						if(spectatee_status == -1)
+						if (spectatee_status == -1)
 							s = sprintf(_("^1Use ^3%s^1 or ^3%s^1 to change the speed"), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
-						else if(!observe_blocked)
+						else if (!observe_blocked)
 							s = sprintf(_("^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"), getcommandkey(_("secondary fire"), "+fire2"), getcommandkey(_("drop weapon"), "dropweapon"));
 						else
 							s = sprintf(_("^1Press ^3%s^1 to change camera mode"), getcommandkey(_("drop weapon"), "dropweapon"));
@@ -137,11 +135,11 @@ void HUD_InfoMessages()
 			pos = M_ARGV(0, vector);
 			img_curr_group = M_ARGV(2, int);
 
-			if(!mutator_returnvalue && !wants_join)
+			if (!mutator_returnvalue && !wants_join)
 				InfoMessage(sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump")));
 		}
 
-		if(wants_join > 0)
+		if (wants_join > 0)
 		{
 			wants_join = Team_IndexToTeam(wants_join);
 			InfoMessage(sprintf(_("^2You're queued to join the %s%s^2 team"), Team_ColorCode(wants_join), Team_ColorName(wants_join)));
@@ -158,38 +156,38 @@ void HUD_InfoMessages()
 		}
 
 		string blinkcolor;
-		if(time % 1 >= 0.5)
+		if (time % 1 >= 0.5)
 			blinkcolor = "^1";
 		else
 			blinkcolor = "^3";
 
-		if(warmup_stage)
+		if (warmup_stage)
 		{
 			InfoMessage(_("^2Currently in ^1warmup^2 stage!"));
 
 			int players_needed = 0;
 			Scoreboard_UpdatePlayerTeams(); // ensure numplayers, ts_min, ts_max are current
-			if(STAT(WARMUP_TIMELIMIT) <= 0 && srv_minplayers)
+			if (STAT(WARMUP_TIMELIMIT) <= 0 && srv_minplayers)
 				players_needed = srv_minplayers - numplayers;
 
-			if(players_needed > 0)
+			if (players_needed > 0)
 			{
-				if(players_needed == 1)
+				if (players_needed == 1)
 					s = _("^31^2 more player is needed for the match to start.");
 				else
 					s = sprintf(_("^3%d^2 more players are needed for the match to start."), players_needed);
 				InfoMessage(s);
 			}
-			else if(teamnagger && (ts_max - ts_min) >= teamnagger)
+			else if (teamnagger && (ts_max - ts_min) >= teamnagger)
 			{
 				// ready won't end warmup so don't display that message
 				// see below for unbalanced teams warning
 			}
-			else if(!spectatee_status)
+			else if (!spectatee_status)
 			{
-				if(ready_waiting)
+				if (ready_waiting)
 				{
-					if(ready_waiting_for_me)
+					if (ready_waiting_for_me)
 						s = sprintf(_("%sPress ^3%s%s to end warmup"), blinkcolor, getcommandkey(_("ready"), "ready"), blinkcolor);
 					else
 						s = _("^2Waiting for others to ready up to end warmup...");
@@ -235,17 +233,17 @@ void HUD_InfoMessages()
 			}
 		}
 
-		if(autocvar_cl_showspectators)
-		if(num_spectators)
-		//if(spectatee_status != -1)
+		if (autocvar_cl_showspectators)
+		if (num_spectators)
+		//if (spectatee_status != -1)
 		{
 			s = ((spectatee_status) ? _("^1Spectating this player:") : _("^1Spectating you:"));
 			// InfoMessage(s)
 			int limit = min(num_spectators, MAX_SPECTATORS);
-			for(int i = 0; i < limit; ++i)
+			for (int i = 0; i < limit; ++i)
 			{
 				float slot = spectatorlist[i];
-				if(i == 0)
+				if (i == 0)
 					s = strcat(s, " ^7", entcs_GetName(slot));
 				else
 					s = strcat("^7", entcs_GetName(slot));

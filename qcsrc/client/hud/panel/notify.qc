@@ -25,15 +25,13 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 	--notify_index;
 
 	if (notify_index == -1)
-		notify_index = NOTIFY_MAX_ENTRIES-1;
+		notify_index = NOTIFY_MAX_ENTRIES - 1;
 
 	// Free old strings
 	if (notify_attackers[notify_index])
 		strunzone(notify_attackers[notify_index]);
-
 	if (notify_victims[notify_index])
 		strunzone(notify_victims[notify_index]);
-
 	if (notify_icons[notify_index])
 		strunzone(notify_icons[notify_index]);
 
@@ -140,7 +138,7 @@ void HUD_Notify()
 
 	for (j = notify_index, count = 0; i != limit; i += step, ++j, ++count)
 	{
-		if(autocvar__hud_configure)
+		if (autocvar__hud_configure)
 		{
 			attacker = sprintf(_("Player %d"), count + 1);
 			victim = sprintf(_("Player %d"), count + 2);

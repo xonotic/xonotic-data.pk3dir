@@ -53,8 +53,7 @@ void Accuracy_LoadLevels()
 
 void Accuracy_LoadColors()
 {
-	if (time > acc_col_loadtime)
-	if (acc_levels >= 2)
+	if (time > acc_col_loadtime && acc_levels >= 2)
 	{
 		for (int i = 0; i < acc_levels; ++i)
 			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
@@ -68,7 +67,7 @@ vector Accuracy_GetColor(float accuracy)
 		return '0 0 0'; // return black, can't determine the right color
 
 	// find the max level lower than acc
-	int j = acc_levels-1;
+	int j = acc_levels - 1;
 	while (j && accuracy < acc_lev[j])
 		--j;
 
@@ -99,9 +98,12 @@ int weaponorder_cmp(int i, int j, entity pass)
 
 #define HUD_WEAPONS_GET_FULL_LAYOUT() MACRO_BEGIN \
 	int nHidden = 0; \
-	FOREACH(Weapons, it != WEP_Null, { \
-		if (weapons_stat & WepSet_FromWeapon(it)) continue; \
-		if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED)) nHidden += 1; \
+	FOREACH(Weapons, it != WEP_Null, \
+	{ \
+		if (weapons_stat & WepSet_FromWeapon(it)) \
+			continue; \
+		if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED)) \
+			++nHidden; \
 	}); \
 	vector table_size = HUD_GetTableSize_BestItemAR((REGISTRY_COUNT(Weapons) - 1) - nHidden, panel_size, aspect); \
 	columns = table_size.x; \
@@ -115,11 +117,12 @@ bool weapons_orderbyimpulse_old;
 void HUD_Weapons()
 {
 	// check to see if we want to continue
-	if (hud != HUD_NORMAL) return;
+	if (hud != HUD_NORMAL)
+		return;
 
 	if (!autocvar__hud_configure)
 	{
-		if ((!autocvar_hud_panel_weapons) || (spectatee_status == -1))
+		if (!autocvar_hud_panel_weapons || spectatee_status == -1)
 			return;
 		if (STAT(HEALTH) <= 0 && autocvar_hud_panel_weapons_hide_ondeath)
 			return;
@@ -141,7 +144,7 @@ void HUD_Weapons()
 	entity panel_switchweapon = NULL;
 	vector center = '0 0 0';
 
-	float when = max(1, autocvar_hud_panel_weapons_complainbubble_time);
+	float when     = max(1, autocvar_hud_panel_weapons_complainbubble_time);
 	float fadetime = max(0, autocvar_hud_panel_weapons_complainbubble_fadetime);
 
 	vector weapon_size = '0 0 0';
@@ -183,7 +186,8 @@ void HUD_Weapons()
 		if (!weapons_stat)
 		{
 			int j = 0;
-			FOREACH(Weapons, it != WEP_Null && it.impulse >= 0 && (it.impulse % 3 != 0) && j < 6, {
+			FOREACH(Weapons, it != WEP_Null && it.impulse >= 0 && (it.impulse % 3 != 0) && j < 6,
+			{
 				if (!(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_SPECIALATTACK)))
 				{
 					if (!panel_switchweapon || j < 4)
@@ -199,12 +203,14 @@ void HUD_Weapons()
 		if (cvar("wep_add"))
 		{
 			int nHidden = 0;
-			FOREACH(Weapons, it != WEP_Null, {
-				if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
+			FOREACH(Weapons, it != WEP_Null,
+			{
+				if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+					++nHidden;
 			});
 			weapons_stat = '0 0 0';
-			float countw = 1 + floor((floor(time * cvar("wep_add"))) % ((REGISTRY_COUNT(Weapons) - 1) - nHidden));
-			for (int i = 0, j = 0; i <= (REGISTRY_COUNT(Weapons) - 1) && j < countw; ++i)
+			float countw = 1 + floor((floor(time * cvar("wep_add"))) % (REGISTRY_COUNT(Weapons) - 1 - nHidden));
+			for (int i = 0, j = 0; i <= REGISTRY_COUNT(Weapons) - 1 && j < countw; ++i)
 			{
 				if (weaponorder[i].spawnflags & WEP_FLAG_MUTATORBLOCKED)
 					continue;
@@ -281,7 +287,7 @@ void HUD_Weapons()
 		// center the resized panel, or snap it to the screen edge when close enough
 		if (panel_pos.x > vid_conwidth * 0.001)
 		{
-			if(panel_pos.x + old_panel_size.x > vid_conwidth * 0.999)
+			if (panel_pos.x + old_panel_size.x > vid_conwidth * 0.999)
 				panel_pos.x += old_panel_size.x - panel_size.x;
 			else
 				panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
@@ -300,7 +306,7 @@ void HUD_Weapons()
 			panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
 	}
 	else
-		weapon_count = (REGISTRY_COUNT(Weapons) - 1); // unused value
+		weapon_count = REGISTRY_COUNT(Weapons) - 1; // unused value
 
 
 	Weapons_Fade(center);
@@ -339,21 +345,21 @@ void Weapons_Fade(vector center)
 		||  autocvar_hud_panel_weapons_timeout_effect == 3)
 		{
 			f *= f; // for a cooler movement
-			center.x = panel_pos.x + panel_size.x/2;
-			center.y = panel_pos.y + panel_size.y/2;
-			float screen_ar = vid_conwidth/vid_conheight;
-			if (center.x/center.y < screen_ar) //bottom left
+			center.x = panel_pos.x + panel_size.x / 2;
+			center.y = panel_pos.y + panel_size.y / 2;
+			float screen_ar = vid_conwidth / vid_conheight;
+			if (center.x / center.y < screen_ar) // bottom left
 			{
-				if ((vid_conwidth - center.x)/center.y < screen_ar) //bottom
+				if ((vid_conwidth - center.x) / center.y < screen_ar) // bottom
 					panel_pos.y += f * (vid_conheight - panel_pos.y);
-				else //left
+				else // left
 					panel_pos.x -= f * (panel_pos.x + panel_size.x);
 			}
-			else //top right
+			else // top right
 			{
-				if ((vid_conwidth - center.x)/center.y < screen_ar) //right
+				if ((vid_conwidth - center.x) / center.y < screen_ar) // right
 					panel_pos.x += f * (vid_conwidth - panel_pos.x);
-				else //top
+				else // top
 					panel_pos.y -= f * (panel_pos.y + panel_size.y);
 			}
 			if (f == 1)
@@ -368,13 +374,13 @@ void Weapons_Fade(vector center)
 		// fade the panel alpha
 		if (autocvar_hud_panel_weapons_timeout_effect == 1)
 		{
-			panel_bg_alpha *= (autocvar_hud_panel_weapons_timeout_fadebgmin * (1 - f) + f);
-			panel_fg_alpha *= (autocvar_hud_panel_weapons_timeout_fadefgmin * (1 - f) + f);
+			panel_bg_alpha *= autocvar_hud_panel_weapons_timeout_fadebgmin * (1 - f) + f;
+			panel_fg_alpha *= autocvar_hud_panel_weapons_timeout_fadefgmin * (1 - f) + f;
 		}
 		else if (autocvar_hud_panel_weapons_timeout_effect == 3)
 		{
-			panel_bg_alpha *= (f);
-			panel_fg_alpha *= (f);
+			panel_bg_alpha *= f;
+			panel_fg_alpha *= f;
 		}
 
 		// move the panel back on screen
@@ -383,21 +389,21 @@ void Weapons_Fade(vector center)
 		{
 			f *= f; // for a cooler movement
 			f = 1 - f;
-			center.x = panel_pos.x + panel_size.x/2;
-			center.y = panel_pos.y + panel_size.y/2;
-			float screen_ar = vid_conwidth/vid_conheight;
-			if (center.x/center.y < screen_ar) //bottom left
+			center.x = panel_pos.x + panel_size.x / 2;
+			center.y = panel_pos.y + panel_size.y / 2;
+			float screen_ar = vid_conwidth / vid_conheight;
+			if (center.x / center.y < screen_ar) // bottom left
 			{
-				if ((vid_conwidth - center.x)/center.y < screen_ar) //bottom
+				if ((vid_conwidth - center.x) / center.y < screen_ar) // bottom
 					panel_pos.y += f * (vid_conheight - panel_pos.y);
-				else //left
+				else // left
 					panel_pos.x -= f * (panel_pos.x + panel_size.x);
 			}
-			else //top right
+			else // top right
 			{
-				if ((vid_conwidth - center.x)/center.y < screen_ar) //right
+				if ((vid_conwidth - center.x) / center.y < screen_ar) // right
 					panel_pos.x += f * (vid_conwidth - panel_pos.x);
-				else //top
+				else // top
 					panel_pos.y -= f * (panel_pos.y + panel_size.y);
 			}
 		}
@@ -440,7 +446,7 @@ void Weapons_Draw(
 	if (!rows) // if rows is > 0 onlyowned code has already updated these vars
 	{
 		HUD_WEAPONS_GET_FULL_LAYOUT();
-		vertical_order = (panel_size.x / panel_size.y >= aspect);
+		vertical_order = panel_size.x / panel_size.y >= aspect;
 	}
 
 	// calculate position/size for visual bar displaying ammount of ammo status
@@ -449,7 +455,7 @@ void Weapons_Draw(
 		ammo_color = stov(autocvar_hud_panel_weapons_ammo_color);
 		ammo_alpha = panel_fg_alpha * autocvar_hud_panel_weapons_ammo_alpha;
 
-		if (weapon_size.x/weapon_size.y > aspect)
+		if (weapon_size.x / weapon_size.y > aspect)
 		{
 			barsize.x = aspect * weapon_size.y;
 			barsize.y = weapon_size.y;
@@ -457,7 +463,7 @@ void Weapons_Draw(
 		}
 		else
 		{
-			barsize.y = 1/aspect * weapon_size.x;
+			barsize.y = 1 / aspect * weapon_size.x;
 			barsize.x = weapon_size.x;
 			baroffset.y = (weapon_size.y - barsize.y) / 2;
 		}
@@ -505,15 +511,17 @@ void Weapons_Draw(
 			}
 			else
 			{
-				if (!((weapons_stat & WepSet_FromWeapon(it)) || (it == complain_weapon)))
+				if (!((weapons_stat & WepSet_FromWeapon(it)) || it == complain_weapon))
 					continue;
 			}
 		}
 		else
 		{
 			if ((it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED))
-			&& !(weapons_stat & WepSet_FromWeapon(it)))
+				&& !(weapons_stat & WepSet_FromWeapon(it)))
+			{
 				continue;
+			}
 		}
 
 		// figure out the drawing position of weapon
@@ -599,18 +607,18 @@ void Weapons_Draw(
 					// TODO: registry handles
 					switch (it.ammo_type)
 					{
-						case RES_SHELLS:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
-						case RES_BULLETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
-						case RES_ROCKETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
-						case RES_CELLS:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
-						case RES_FUEL:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
+						case RES_SHELLS:   ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
+						case RES_BULLETS:  ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
+						case RES_ROCKETS:  ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
+						case RES_CELLS:    ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
+						case RES_FUEL:     ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
 						default: ammo_full = 60;
 					}
 
 					drawsetcliparea(
 						weapon_pos.x + baroffset.x,
 						weapon_pos.y + baroffset.y,
-						barsize.x * bound(0, a/ammo_full, 1),
+						barsize.x * bound(0, a / ammo_full, 1),
 						barsize.y
 					);
 
@@ -628,9 +636,7 @@ void Weapons_Draw(
 			}
 		}
 		else // draw a "ghost weapon icon" if you don't have the weapon
-		{
 			drawpic_aspect_skin(weapon_pos_real, it.model2, weapon_size_real, '0.2 0.2 0.2', weapon_alpha_real * 0.5, DRAWFLAG_NORMAL);
-		}
 
 		// draw the complain message
 		if (it == complain_weapon)
@@ -664,7 +670,7 @@ void Weapons_Draw(
 
 		#if 0
 		/// debug code
-		if(!autocvar_hud_panel_weapons_onlyowned)
+		if (!autocvar_hud_panel_weapons_onlyowned)
 		{
 			drawfill(weapon_pos + '1 1 0', weapon_size - '2 2 0', '1 1 1', panel_fg_alpha * 0.2, DRAWFLAG_NORMAL);
 			drawstring(weapon_pos, ftos(i + 1), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
