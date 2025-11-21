@@ -1244,7 +1244,7 @@ void ClientConnect(entity this)
 
 	if (player_count == 1)
 	{
-		if (autocvar_sv_autopause && server_is_dedicated)
+		if (autocvar_sv_autopause && autocvar_sv_dedicated)
 			setpause(0);
 		localcmd("\nsv_hook_firstjoin\n");
 	}
@@ -2951,7 +2951,7 @@ void PlayerFrame (entity this)
 		if(autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0)
 		{
 			// maxidle disabled in local matches by not counting clients (totalClients 0)
-			if (server_is_dedicated)
+			if (autocvar_sv_dedicated)
 			{
 				FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
 				{

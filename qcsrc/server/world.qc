@@ -774,7 +774,6 @@ spawnfunc(worldspawn)
 	CheckEngineExtensions();
 
 	cvar_set("_endmatch", "0");
-	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
 	if (autocvar_sv_termsofservice_url && autocvar_sv_termsofservice_url != "")
 	{
@@ -787,7 +786,7 @@ spawnfunc(worldspawn)
 
 	bool wantrestart = false;
 	{
-		if (!server_is_dedicated)
+		if (!autocvar_sv_dedicated)
 		{
 			// DP unloads dlcache pk3s before starting a listen server since https://gitlab.com/xonotic/darkplaces/-/merge_requests/134
 			// restore csqc_progname too
@@ -1080,7 +1079,7 @@ spawnfunc(worldspawn)
 
 	WinningConditionHelper(this); // set worldstatus
 
-	if (autocvar_sv_autopause && server_is_dedicated && !wantrestart)
+	if (autocvar_sv_autopause && autocvar_sv_dedicated && !wantrestart)
 		// INITPRIO_LAST is too soon: bots either didn't join yet or didn't leave yet, see: bot_fixcount()
 		defer(this, 5, Pause_TryPause_Dedicated);
 
