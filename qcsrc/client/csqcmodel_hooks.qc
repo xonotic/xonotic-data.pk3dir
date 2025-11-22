@@ -552,80 +552,92 @@ void CSQCModel_Effects_Apply(entity this)
 	this.effects = 0;
 	this.traileffect = 0;
 
+	float pl_alpha = (!this.alpha ? 1 : this.alpha);
 	if(eff & EF_BRIGHTFIELD)
 		tref = EFFECT_TR_NEXUIZPLASMA.m_id;
 	// ignoring EF_MUZZLEFLASH
-	if(eff & EF_BRIGHTLIGHT)
-		adddynamiclight(this.origin, 400, '3 3 3');
-	if(eff & EF_DIMLIGHT)
-		adddynamiclight(this.origin, 200, '1.5 1.5 1.5');
-	if((eff & EF_NODRAW) || (this.alpha < 0))
+	if((eff & EF_NODRAW) || pl_alpha < 0)
 		this.drawmask = 0;
 	if(eff & EF_ADDITIVE)
 		this.renderflags |= RF_ADDITIVE;
-		if(eff & EF_BLUE)
-			adddynamiclight(this.origin, 200, '0.15 0.15 1.5');
-		if(eff & EF_RED)
-			adddynamiclight(this.origin, 200, '1.5 0.15 0.15');
 	// ignoring EF_NOGUNBOB
 	if(eff & EF_FULLBRIGHT)
 		this.renderflags |= RF_FULLBRIGHT;
-	if(eff & EF_FLAME)
+	if(pl_alpha > 0)
 	{
-		// XONRELEASE TODO: xonotic-v0.9.0 after release remove the ef_shock_num check
-		// NOTE here we check if EF_SHOCK exists because it was added together with the change to EF_FLAME
-		int ef_shock_num = particleeffectnum(EFFECT_EF_SHOCK);
-		if (ef_shock_num >= 0) // in the old version of EF_FLAME the light was spawned by boxparticles
-			adddynamiclight2(this.origin + '0 0 10', 200, '1 0.35 0', 6, "", PFLAGS_FULLDYNAMIC); // no PFLAGS_CORONA, it looks bad
-		int ef_flame_num = particleeffectnum(EFFECT_EF_FLAME);
-		boxparticles(ef_flame_num, this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
-		//pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', bound(0, frametime, 0.1));
-	}
-	if(eff & EF_SHOCK)
-	{
-		// XONRELEASE TODO: xonotic-v0.9.0 after release remove the ef_shock_num check
-		int ef_shock_num = particleeffectnum(EFFECT_EF_SHOCK);
-		if (ef_shock_num >= 0) // in ARC_LIGHTNING the light is spawned by boxparticles
-			adddynamiclight2(this.origin, 50, '3.1 4.4 10', 10, "", PFLAGS_FULLDYNAMIC); // no PFLAGS_CORONA, it looks bad
-		else
-			ef_shock_num = particleeffectnum(EFFECT_ARC_LIGHTNING);
-		boxparticles(ef_shock_num, this, this.absmin, this.absmax, '0 0 0', '0 0 0', bound(0, frametime, 0.1), 0);
-		//pointparticles(EFFECT_ARC_LIGHTNING, this.origin, '0 0 0', bound(0, frametime, 0.1));
-	}
-	if(eff & EF_SPEED)
-	{
-		vector dir = normalize(this.velocity);
-		// XONRELEASE TODO: xonotic-v0.9.0 post-release remove the ef_speed_num check
-		int ef_speed_num = particleeffectnum(EFFECT_EF_SPEED);
-		int foot_L_idx = gettagindex(this, "foot_L"); // left & right feet on the playermodel,
-		int foot_R_idx = gettagindex(this, "foot_R"); // roughly at the heel
-		if (foot_L_idx && foot_R_idx)
+		if(eff & EF_BLUE)
+			adddynamiclight(this.origin, 200 * pl_alpha, '0.15 0.15 1.5');
+		if(eff & EF_RED)
+			adddynamiclight(this.origin, 200 * pl_alpha, '1.5 0.15 0.15');
+		if(eff & EF_BRIGHTLIGHT)
+			adddynamiclight(this.origin, 400 * pl_alpha, '3 3 3');
+		if(eff & EF_DIMLIGHT)
+			adddynamiclight(this.origin, 200 * pl_alpha, '1.5 1.5 1.5');
+		if(eff & EF_FLAME)
 		{
-			vector foot_L_org = gettaginfo(this, foot_L_idx);
-			vector foot_R_org = gettaginfo(this, foot_R_idx);
-			if (ef_speed_num >= 0)
+			particles_alphamin = particles_alphamax = pl_alpha; // scale by player alpha
+			// XONRELEASE TODO: xonotic-v0.9.0 after release remove the ef_shock_num check
+			// NOTE here we check if EF_SHOCK exists because it was added together with the change to EF_FLAME
+			int ef_shock_num = particleeffectnum(EFFECT_EF_SHOCK);
+			if (ef_shock_num >= 0) // in the old version of EF_FLAME the light was spawned by boxparticles
+				adddynamiclight2(this.origin + '0 0 10', 200 * particles_alphamin, '1 0.35 0', 6, "", PFLAGS_FULLDYNAMIC); // no PFLAGS_CORONA, it looks bad
+			int ef_flame_num = particleeffectnum(EFFECT_EF_FLAME);
+			boxparticles(ef_flame_num, this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), PARTICLES_USEALPHA);
+			//pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', bound(0, frametime, 0.1));
+		}
+		if(eff & EF_SHOCK)
+		{
+			particles_alphamin = particles_alphamax = pl_alpha; // scale by player alpha
+			// XONRELEASE TODO: xonotic-v0.9.0 after release remove the ef_shock_num check
+			int ef_shock_num = particleeffectnum(EFFECT_EF_SHOCK);
+			if (ef_shock_num >= 0) // in ARC_LIGHTNING the light is spawned by boxparticles
+				adddynamiclight2(this.origin, 50 * particles_alphamin, '3.1 4.4 10', 10, "", PFLAGS_FULLDYNAMIC); // no PFLAGS_CORONA, it looks bad
+			else
+				ef_shock_num = particleeffectnum(EFFECT_ARC_LIGHTNING);
+			boxparticles(ef_shock_num, this, this.absmin, this.absmax, '0 0 0', '0 0 0', bound(0, frametime, 0.1), PARTICLES_USEALPHA);
+			//pointparticles(EFFECT_ARC_LIGHTNING, this.origin, '0 0 0', bound(0, frametime, 0.1));
+		}
+		if(eff & EF_SPEED)
+		{
+			float speed = vlen(this.velocity);
+			if (speed > 0)
 			{
-				// NOTE: to make this a proper trail the old foot_*_org will need to be stored, however it looks fine as-is
-				WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, foot_L_org - dir, foot_L_org + dir, bound(0, frametime, 0.1), 0);
-				WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, foot_R_org - dir, foot_R_org + dir, bound(0, frametime, 0.1), 0);
+				particles_alphamin = particles_alphamax = pl_alpha * min(speed / PHYS_MAXSPEED(this), 1); // scale by player alpha, and more transparent at lower speeds
+				vector dir = this.velocity * 1 / speed;
+				// XONRELEASE TODO: xonotic-v0.9.0 post-release remove the ef_speed_num check
+				int ef_speed_num = particleeffectnum(EFFECT_EF_SPEED);
+				int foot_L_idx = gettagindex(this, "foot_L"); // left & right feet on the playermodel,
+				int foot_R_idx = gettagindex(this, "foot_R"); // roughly at the heel
+				if (foot_L_idx && foot_R_idx)
+				{
+					vector foot_L_org = gettaginfo(this, foot_L_idx);
+					vector foot_R_org = gettaginfo(this, foot_R_idx);
+					if (ef_speed_num >= 0)
+					{
+						// NOTE: to make this a proper trail the old foot_*_org will need to be stored, however it looks fine as-is
+						WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, foot_L_org - dir, foot_L_org + dir, bound(0, frametime, 0.1), PARTICLES_USEALPHA);
+						WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, foot_R_org - dir, foot_R_org + dir, bound(0, frametime, 0.1), PARTICLES_USEALPHA);
+					}
+					// No fallback since nothing looks similar, light will still draw though
+					adddynamiclight(foot_L_org, 45 * particles_alphamin, STATUSEFFECT_Speed.m_color);
+					adddynamiclight(foot_R_org, 45 * particles_alphamin, STATUSEFFECT_Speed.m_color);
+				}
+				else
+				{
+					vector org = this.origin + 0.5 * (this.mins + this.maxs); // center
+					if (ef_speed_num >= 0)
+						WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, org - dir, org + dir, bound(0, frametime, 0.1), PARTICLES_USEALPHA);
+						//pointparticles(EFFECT_EF_SPEED, org, '0 0 0', bound(0, frametime, 0.1));
+					adddynamiclight(org, 45 * particles_alphamin, STATUSEFFECT_Speed.m_color);
+				}
 			}
-			// No fallback since nothing looks similar, light will still draw though
-			adddynamiclight(foot_L_org, 45, STATUSEFFECT_Speed.m_color);
-			adddynamiclight(foot_R_org, 45, STATUSEFFECT_Speed.m_color);
 		}
-		else
+		if(eff & EF_STARDUST)
 		{
-			vector org = this.origin + 0.5 * (this.mins + this.maxs); // center
-			if (ef_speed_num >= 0)
-				WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, org - dir, org + dir, bound(0, frametime, 0.1), 0);
-				//pointparticles(EFFECT_EF_SPEED, org, '0 0 0', bound(0, frametime, 0.1));
-			adddynamiclight(org, 45, STATUSEFFECT_Speed.m_color);
+			particles_alphamin = particles_alphamax = pl_alpha; // scale by player alpha
+			boxparticles(particleeffectnum(EFFECT_EF_STARDUST), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), PARTICLES_USEALPHA);
+			//pointparticles(EFFECT_EF_STARDUST, this.origin, '0 0 0', bound(0, frametime, 0.1));
 		}
-	}
-	if(eff & EF_STARDUST)
-	{
-		boxparticles(particleeffectnum(EFFECT_EF_STARDUST), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
-		//pointparticles(EFFECT_EF_STARDUST, this.origin, '0 0 0', bound(0, frametime, 0.1));
 	}
 	if(eff & EF_NOSHADOW)
 		this.renderflags |= RF_NOSHADOW;
