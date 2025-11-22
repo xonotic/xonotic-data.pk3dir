@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 07:22+0100\n"
+"POT-Creation-Date: 2025-11-22 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: С Станев, 2024\n"
 "Language-Team: Bulgarian (http://app.transifex.com/team-xonotic/xonotic/"
@@ -3039,7 +3039,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:124
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:68
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:137
-#: qcsrc/menu/xonotic/util.qc:768
+#: qcsrc/menu/xonotic/util.qc:746
 msgid "Color:"
 msgstr "Цвят:"
 
@@ -3057,7 +3057,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:25
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:25
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:25
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:175
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:166
 msgid "Fade time:"
 msgstr "Време за избледняване:"
 
@@ -8426,51 +8426,51 @@ msgstr "Елемент %d"
 msgid "Custom"
 msgstr "Потребителски"
 
-#: qcsrc/menu/menu.qc:513
+#: qcsrc/menu/menu.qc:515
 #, c-format
 msgid "^3%s^7 not equal to \"%s\""
 msgstr ""
 
-#: qcsrc/menu/menu.qc:518
+#: qcsrc/menu/menu.qc:520
 #, c-format
 msgid "^3%s^7 in range \"%s\" to \"%s\""
 msgstr ""
 
-#: qcsrc/menu/menu.qc:520
+#: qcsrc/menu/menu.qc:522
 #, c-format
 msgid "^3%s^7 outside range \"%s\" to \"%s\""
 msgstr ""
 
-#: qcsrc/menu/menu.qc:549
+#: qcsrc/menu/menu.qc:551
 msgid "Has special requirements"
 msgstr ""
 
-#: qcsrc/menu/menu.qc:552
+#: qcsrc/menu/menu.qc:554
 #, c-format
 msgid "Requires ^3%s^7 not equal to \"%s^7\""
 msgstr ""
 
-#: qcsrc/menu/menu.qc:564
+#: qcsrc/menu/menu.qc:566
 #, c-format
 msgid "Requires %s, %s, and %s"
 msgstr ""
 
-#: qcsrc/menu/menu.qc:564
+#: qcsrc/menu/menu.qc:566
 #, c-format
 msgid "Requires %s, %s, or %s"
 msgstr ""
 
-#: qcsrc/menu/menu.qc:567
+#: qcsrc/menu/menu.qc:569
 #, c-format
 msgid "Requires %s and %s"
 msgstr ""
 
-#: qcsrc/menu/menu.qc:567
+#: qcsrc/menu/menu.qc:569
 #, c-format
 msgid "Requires %s or %s"
 msgstr ""
 
-#: qcsrc/menu/menu.qc:570
+#: qcsrc/menu/menu.qc:572
 #, c-format
 msgid "Requires %s"
 msgstr ""
@@ -9027,8 +9027,8 @@ msgstr "Панел с информационни съобщения"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:103
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:137
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:195
-#: qcsrc/menu/xonotic/util.qc:763 qcsrc/menu/xonotic/util.qc:780
-#: qcsrc/menu/xonotic/util.qc:798
+#: qcsrc/menu/xonotic/util.qc:741 qcsrc/menu/xonotic/util.qc:758
+#: qcsrc/menu/xonotic/util.qc:776
 msgid "Disable"
 msgstr "Забраняване"
 
@@ -9101,7 +9101,7 @@ msgstr "Панел за уведомления"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:24
-#: qcsrc/menu/xonotic/util.qc:750
+#: qcsrc/menu/xonotic/util.qc:728
 msgid "Enable"
 msgstr ""
 
@@ -9175,7 +9175,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:71
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:250
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:241
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:85
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:116
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:139
@@ -9248,7 +9248,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:46
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:72
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:132
-#: qcsrc/menu/xonotic/util.qc:786
+#: qcsrc/menu/xonotic/util.qc:764
 msgid "Opacity:"
 msgstr ""
 
@@ -9291,8 +9291,8 @@ msgstr "Скала:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:42
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:76
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:170
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:258
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:161
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:249
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:151
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:65
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:72
@@ -9580,27 +9580,27 @@ msgstr ""
 msgid "Panel background defaults:"
 msgstr "Настройки на фона на панела:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:75 qcsrc/menu/xonotic/util.qc:759
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:75 qcsrc/menu/xonotic/util.qc:737
 msgid "Background:"
 msgstr "Фон:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:88 qcsrc/menu/xonotic/util.qc:777
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:88 qcsrc/menu/xonotic/util.qc:755
 msgid "Border size:"
 msgstr "Размер на рамката:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:100
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:134
-#: qcsrc/menu/xonotic/util.qc:794
+#: qcsrc/menu/xonotic/util.qc:772
 msgid "Team color:"
 msgstr "Отборен цвят:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:108
-#: qcsrc/menu/xonotic/util.qc:805
+#: qcsrc/menu/xonotic/util.qc:783
 msgid "Test team color in configure mode"
 msgstr "Тестване на отборния цвят по време на конфигурирането"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:111
-#: qcsrc/menu/xonotic/util.qc:808
+#: qcsrc/menu/xonotic/util.qc:786
 msgid "Padding:"
 msgstr "Отстояние:"
 
@@ -9871,10 +9871,10 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:69
-#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:762
-#: qcsrc/menu/xonotic/util.qc:774 qcsrc/menu/xonotic/util.qc:779
-#: qcsrc/menu/xonotic/util.qc:788 qcsrc/menu/xonotic/util.qc:797
-#: qcsrc/menu/xonotic/util.qc:810
+#: qcsrc/menu/xonotic/skinlist.qc:88 qcsrc/menu/xonotic/util.qc:740
+#: qcsrc/menu/xonotic/util.qc:752 qcsrc/menu/xonotic/util.qc:757
+#: qcsrc/menu/xonotic/util.qc:766 qcsrc/menu/xonotic/util.qc:775
+#: qcsrc/menu/xonotic/util.qc:788
 msgid "Default"
 msgstr "По подразбиране"
 
@@ -10957,245 +10957,255 @@ msgstr "RES^Добри"
 msgid "RES^Best"
 msgstr "RES^Най-добри"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:99
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:104
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:109
-msgid "Avoid lossy texture compression"
-msgstr "Текстурна компресия без загуби"
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:92
+msgid "Texture compression:"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:118
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:98
+msgid "TCOMP^Fast"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:99
+msgid "TCOMP^Good"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:100
+msgid "TCOMP^None"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:109
 msgid "Disable sky for performance and visibility"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:118
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:109
 msgid "Show sky"
 msgstr "Покажи небе"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:120
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:111
 msgid "Use lightmaps"
 msgstr "Използване на lightmaps"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:121
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:112
 msgid ""
 "Use high resolution lightmaps, which will look pretty but use up some extra "
 "video memory"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:123
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:114
 msgid "Deluxe mapping"
 msgstr "Специално качество"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:124
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:115
 msgid "Use per-pixel lighting effects"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:128
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:119
 msgid "Gloss"
 msgstr "Гланц"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:120
 msgid "Enable the use of glossmaps on textures supporting it"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:135
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:126
 msgid "Offset mapping"
 msgstr "Офсетово текстуриране"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:136
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:127
 msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:139
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:130
 msgid "Relief mapping"
 msgstr "Релефно текстуриране"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:140
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:131
 msgid ""
 "Higher quality offset mapping, which also has a huge impact on performance"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:145
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:136
 msgid "Reflections:"
 msgstr "Отражения:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:146
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:137
 msgid ""
 "Reflection and refraction quality, has a huge impact on performance on maps "
 "with reflecting surfaces"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:150
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:141
 msgid "Resolution of reflections/refractions"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:151
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:142
 msgid "Blurred"
 msgstr "Замазани"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:152
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:143
 msgid "REFL^Good"
 msgstr "REFL^Добри"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:153
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:144
 msgid "Sharp"
 msgstr "Най-добри"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:159
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:150
 msgid "Decals"
 msgstr "Петна"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:160
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:151
 msgid "Enable decals (bullet holes and blood)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:161
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:152
 msgid "Decals on models"
 msgstr "Петна по моделите"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:165
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:254
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:156
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:245
 msgid "Distance:"
 msgstr "Разстояние:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:169
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:160
 msgid "Decals further away than this will not be drawn"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:178
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:169
 msgid "Time in seconds before decals fade away"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:183
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:174
 msgid "Damage effects:"
 msgstr "Ефекти за повреда:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:185
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:176
 msgid "DMGFX^Disabled"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:186
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:177
 msgid "Skeletal"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:187
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:178
 msgid "DMGFX^All"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:191
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:182
 msgid "Realtime dynamic lights"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:183
 msgid ""
 "Temporary realtime light sources such as explosions, rockets and powerups"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:194
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:185
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:191
 msgid "Shadows"
 msgstr "Сенки"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:195
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:186
 msgid "Shadows cast by realtime dynamic lights"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:198
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:189
 msgid "Realtime world lights"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:190
 msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Shadows cast by realtime world lights"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:205
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:196
 msgid "Use normal maps"
 msgstr "Използване на карти на нормалите"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:197
 msgid ""
 "Directional shading of certain textures to simulate interaction of realtime "
 "light with a bumpy surface"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:209
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
 msgid "Soft shadows"
 msgstr "Меки сенки"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:203
 msgid "Corona brightness:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:205
 msgid "Flare effects around certain lights"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:217
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:208
 msgid "Fade coronas according to visibility"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:218
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:209
 msgid "Corona fading using occlusion queries"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:213
 msgid "Bloom"
 msgstr "Bloom"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:223
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance."
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:224
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:215
 msgid "Extra postprocessing effects"
 msgstr "Допълнителни ефекти"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:225
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:216
 msgid ""
 "Enables special postprocessing effects for when damaged or under water or "
 "using a powerup"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:231
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
 msgid "Motion blur strength - 0.4 recommended"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:232
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:223
 msgid "Motion blur:"
 msgstr "Размазани движения"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:239
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:230
 msgid "Particles"
 msgstr "Частици"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:240
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:231
 msgid "Spawnpoint effects"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:241
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:232
 msgid "Particle effects at all spawn points and whenever a player spawns"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:246
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:237
 msgid "Quality:"
 msgstr "Качество:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:249
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:240
 msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:257
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:248
 msgid "Particles further away than this will not be drawn"
 msgstr ""
 
@@ -13436,7 +13446,7 @@ msgstr "Автоматично генериране на информацият�
 msgid "Update to %s now!"
 msgstr "Обновете до %s сега!"
 
-#: qcsrc/menu/xonotic/util.qc:638
+#: qcsrc/menu/xonotic/util.qc:627
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
@@ -13444,6 +13454,6 @@ msgstr ""
 "^1ГРЕШКА: Компресията на текстури се изисква, но не се поддържа.\n"
 "^1Очаквайте визуални проблеми."
 
-#: qcsrc/menu/xonotic/util.qc:820
+#: qcsrc/menu/xonotic/util.qc:798
 msgid "Hide on death"
 msgstr ""
