@@ -1446,7 +1446,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 				{
 					vector tmcolor = Team_ColorRGB(Team_IndexToTeam(wants_join)) * min(1, 1 + sin(2*M_PI * time));
 					drawstring(pos - tmp, "(Q)", hud_fontsize, tmcolor, sbt_fg_alpha, DRAWFLAG_NORMAL);
-					tmp.x -= stringwidth("(Q) ", true, hud_fontsize);
+					tmp.x -= stringwidth("(Q) ", false, hud_fontsize);
 				}
 			}
 			drawcolorcodedstring(pos - tmp, str, hud_fontsize, fg_alpha, DRAWFLAG_NORMAL);
@@ -1558,17 +1558,6 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		if (pl == excluded_pl)
 			continue;
 
-		if (teamplay)
-		{
-			int wants_join = entcs_GetWantsJoin(pl.sv_entnum);
-			if (wants_join)
-			{
-				vector tmcolor = Team_ColorRGB(Team_IndexToTeam(wants_join)) * min(1, 1 + sin(2*M_PI * time));
-				drawstring(pos, "(Q)", hud_fontsize, tmcolor, sbt_fg_alpha, DRAWFLAG_NORMAL);
-				pos.x += stringwidth("(Q) ", true, hud_fontsize);
-			}
-		}
-
 		field = "";
 		if (this_team == NUM_SPECTATOR)
 		{
@@ -1584,8 +1573,10 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 
 		// ignored_size includes icon and padding
 		float ignored_size = (pl.ignored ? hud_fontsize.y + hud_fontsize.x * 0.25 : 0);
-		str = textShortenToWidth(str, namesize - ignored_size, hud_fontsize, stringwidth_colors);
-		float column_width = stringwidth(str, true, hud_fontsize) + ignored_size;
+		int wants_join = (teamplay ? entcs_GetWantsJoin(pl.sv_entnum) : 0);
+		float queued_size = (wants_join ? stringwidth("(Q) ", false, hud_fontsize) : 0);
+		str = textShortenToWidth(str, namesize - ignored_size - queued_size, hud_fontsize, stringwidth_colors);
+		float column_width = stringwidth(str, true, hud_fontsize) + ignored_size + queued_size;
 		if ((this_team == NUM_SPECTATOR) && autocvar_hud_panel_scoreboard_spectators_aligned)
 		{
 			if (column_width > max_name_width)
@@ -1630,6 +1621,12 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		{
 			drawpic(name_pos, "gfx/scoreboard/player_ignored", '1 1 0' * hud_fontsize.y, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
 			name_pos.x += ignored_size;
+		}
+		if (wants_join)
+		{
+			vector tmcolor = Team_ColorRGB(Team_IndexToTeam(wants_join)) * min(1, 1 + sin(2*M_PI * time));
+			drawstring(name_pos, "(Q)", hud_fontsize, tmcolor, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			name_pos.x += queued_size;
 		}
 		drawcolorcodedstring(name_pos, str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
 
