@@ -2,6 +2,6 @@
 #include "../panel.qh"
 
 bool autocvar_hud_panel_engineinfo;
-bool autocvar_hud_panel_engineinfo_dynamichud   = true;
+bool autocvar_hud_panel_engineinfo_dynamichud = true;
 float autocvar_hud_panel_engineinfo_framecounter_decimals;
 float autocvar_hud_panel_engineinfo_framecounter_time;

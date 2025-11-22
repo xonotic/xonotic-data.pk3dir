@@ -2,7 +2,7 @@
 #include "../panel.qh"
 
 bool autocvar_hud_panel_timer;
-bool autocvar_hud_panel_timer_dynamichud        = true;
+bool autocvar_hud_panel_timer_dynamichud = true;
 bool autocvar_hud_panel_timer_increment;
 int autocvar_hud_panel_timer_secondary = 1;
 bool autocvar_hud_panel_timer_unbound;
