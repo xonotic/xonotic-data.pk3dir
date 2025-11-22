@@ -6,15 +6,15 @@
 
 void nade_monster_boom(entity this)
 {
-	if(!autocvar_g_monsters)
+	if (!autocvar_g_monsters)
 		return;
 	entity e = spawn();
 	e.noalign = true; // don't drop to floor
 	e = spawnmonster(e, this.pokenade_type, MON_Null, this.realowner, this.realowner, this.origin, false, false, 1);
-	if(!e)
+	if (!e)
 		return; // monster failed to be spawned
 
-	if(autocvar_g_nades_pokenade_monster_lifetime > 0)
+	if (autocvar_g_nades_pokenade_monster_lifetime > 0)
 		e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
 	e.monster_skill = MONSTER_SKILL_INSANE;
 }
