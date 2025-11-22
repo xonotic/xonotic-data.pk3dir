@@ -52,15 +52,18 @@ const int QM_PCT_KEEP    = 2;
 #define QuickMenu_Buffer_Set(tag, string) bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat(tag, string))
 #define QuickMenu_Buffer_Get() bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index)
 
-#define QUICKMENU_ENTRY_TAG(title, command, tag) { \
-	if (QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES) \
-	{ \
-		QuickMenu_Buffer_Set(QM_TAG_TITLE, title); \
-		++QuickMenu_Buffer_Size; \
-		QuickMenu_Buffer_Set(tag, command); \
-	} \
-	++QuickMenu_Buffer_Size; \
+void QuickMenu_Entry_WithTag(string title, string command, string tag)
+{
+	if (QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES)
+	{
+		QuickMenu_Buffer_Set(QM_TAG_TITLE, title);
+		++QuickMenu_Buffer_Size;
+		QuickMenu_Buffer_Set(tag, command);
+	}
+	++QuickMenu_Buffer_Size;
 }
+
+#define QUICKMENU_ENTRY_TAG(title, command, tag) QuickMenu_Entry_WithTag(title, command, tag);
 
 #define QUICKMENU_ENTRY(title, command) QUICKMENU_ENTRY_TAG(title, command, QM_TAG_COMMAND)
 
@@ -936,7 +939,6 @@ void QuickMenu_Default(string target_submenu)
 }
 #undef QuickMenu_Buffer_Set
 #undef QuickMenu_Buffer_Get
-#undef QUICKMENU_ENTRY_TAG
 #undef QUICKMENU_ENTRY
 #undef QUICKMENU_ENTRY_SPECIAL
 #undef QUICKMENU_SMENU
