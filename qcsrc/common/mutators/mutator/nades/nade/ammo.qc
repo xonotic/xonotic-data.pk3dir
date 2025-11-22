@@ -53,7 +53,10 @@ void nade_ammo_touch(entity this, entity toucher)
 		GIVE_AMMO_RESOURCE(amcells,   RES_CELLS,   autocvar_g_pickup_cells_max);
 
 		if (gave && this.nade_show_particles)
-			Send_Effect(EFFECT_AMMO_REGEN, toucher.origin, vec2(toucher.velocity), 1);
+		{
+			float pl_alpha = (!toucher.alpha ? 1 : toucher.alpha);
+			Send_Effect_Core(EFFECT_AMMO_REGEN, toucher.origin, vec2(toucher.velocity), 1, '0 0 0', '0 0 0', pl_alpha, pl_alpha, -1, NULL);
+		}
 	}
 	else if (ammo_factor < 0)
 	{

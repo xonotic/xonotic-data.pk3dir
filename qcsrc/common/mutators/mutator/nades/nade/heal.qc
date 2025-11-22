@@ -27,7 +27,10 @@ void nade_heal_touch(entity this, entity toucher)
 		if (hp < maxhealth)
 		{
 			if (this.nade_show_particles)
-				Send_Effect(EFFECT_HEALING, toucher.origin, vec2(toucher.velocity), 1);
+			{
+				float pl_alpha = (!toucher.alpha ? 1 : toucher.alpha);
+				Send_Effect_Core(EFFECT_HEALING, toucher.origin, vec2(toucher.velocity), 1, '0 0 0', '0 0 0', pl_alpha, pl_alpha, -1, NULL);
+			}
 
 			GiveResourceWithLimit(toucher, RES_HEALTH, health_factor, maxhealth);
 		}
