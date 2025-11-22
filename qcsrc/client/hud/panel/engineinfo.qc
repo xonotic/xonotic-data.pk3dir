@@ -16,9 +16,6 @@ int framecounter;
 float frametimeavg;
 float frametimeavg1; // 1 frame ago
 float frametimeavg2; // 2 frames ago
-float autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage;
-float autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage_new_weight;
-float autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage_instantupdate_change_threshold;
 
 void HUD_EngineInfo()
 {
@@ -41,18 +38,18 @@ void HUD_EngineInfo()
 	}
 
 	float currentTime = gettime(GETTIME_FRAMESTART);
-	if (autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage)
+	if (autocvar_hud_panel_engineinfo_fps_movingaverage)
 	{
 		float currentframetime = currentTime - prevfps_time;
 		frametimeavg = (frametimeavg + frametimeavg1 + frametimeavg2 + currentframetime) * 0.25; // average three frametimes into framecounter for slightly more stable fps readings :P
 		frametimeavg2 = frametimeavg1;
 		frametimeavg1 = frametimeavg;
 
-		float weight = autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage_new_weight;
 		if (currentframetime > 0.0001) // filter out insane values which sometimes seem to occur and throw off the average? If you are getting 10,000 fps or more, then you don't need a framerate counter.
 		{
-			if (fabs(prevfps - (1 / frametimeavg)) > prevfps * autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage_instantupdate_change_threshold) // if there was a big jump in fps, just force prevfps at current (1 / currentframetime) to make big updates instant
+			if (fabs(prevfps - (1 / frametimeavg)) > prevfps * autocvar_hud_panel_engineinfo_fps_movingaverage_instantupdate_threshold) // if there was a big jump in fps, just force prevfps at current (1 / currentframetime) to make big updates instant
 				prevfps = 1 / currentframetime;
+			float weight = autocvar_hud_panel_engineinfo_fps_movingaverage_weight;
 			prevfps = (1 - weight) * prevfps + weight * (1 / frametimeavg); // framecounter just used so there's no need for a new variable, think of it as "frametime average"
 		}
 		prevfps_time = currentTime;
@@ -60,7 +57,7 @@ void HUD_EngineInfo()
 	else
 	{
 		++framecounter;
-		if (currentTime - prevfps_time > autocvar_hud_panel_engineinfo_framecounter_time)
+		if (currentTime - prevfps_time > autocvar_hud_panel_engineinfo_fps_time)
 		{
 			prevfps = framecounter / (currentTime - prevfps_time);
 			framecounter = 0;
@@ -69,5 +66,5 @@ void HUD_EngineInfo()
 	}
 
 	vector color = HUD_Get_Num_Color(prevfps, 100, true);
-	drawstring_aspect(pos, sprintf(_("FPS: %.*f"), autocvar_hud_panel_engineinfo_framecounter_decimals, prevfps), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos, sprintf(_("FPS: %.*f"), autocvar_hud_panel_engineinfo_fps_decimals, prevfps), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
