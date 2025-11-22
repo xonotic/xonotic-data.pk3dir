@@ -117,7 +117,7 @@ void HUD_Physics()
 
 		if (autocvar_hud_panel_physics_acceleration_movingaverage > 0)
 		{
-			f = bound(0, f * 10 / autocvar_hud_panel_physics_acceleration_movingaverage, 1);
+			f = bound(0, f * 10 / autocvar_hud_panel_physics_acceleration_movingaverage, 1); // same method as in the engineinfo HUD
 			acc_avg = acc_avg * (1 - f) + accel * f;
 			accel = acc_avg;
 		}
