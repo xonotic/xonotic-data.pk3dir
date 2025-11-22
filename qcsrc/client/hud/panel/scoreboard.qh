@@ -48,7 +48,7 @@ entity scoreboard_selected_team;
 int scoreboard_selected_columns_layout;
 
 // start from 1
-int SB_PANEL_FIRST = 1;
-int SB_PANEL_SCOREBOARD = 1;
-int SB_PANEL_RANKINGS = 2;
-int SB_PANEL_MAX = 2;
+int SB_PANEL_FIRST       = 1;
+int SB_PANEL_SCOREBOARD  = 1;
+int SB_PANEL_RANKINGS    = 2;
+int SB_PANEL_MAX         = 2;

@@ -3,7 +3,7 @@
 
 bool autocvar_hud_panel_vote;
 float autocvar_hud_panel_vote_alreadyvoted_alpha;
-bool autocvar_hud_panel_vote_dynamichud         = true;
+bool autocvar_hud_panel_vote_dynamichud = true;
 
 int autocvar_cl_allow_uid2name;
 

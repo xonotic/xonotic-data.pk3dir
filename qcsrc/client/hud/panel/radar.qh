@@ -2,7 +2,7 @@
 #include "../panel.qh"
 
 int autocvar_hud_panel_radar;
-bool autocvar_hud_panel_radar_dynamichud        = true;
+bool autocvar_hud_panel_radar_dynamichud = true;
 float autocvar_hud_panel_radar_foreground_alpha;
 float autocvar_hud_panel_radar_maximized_scale;
 vector autocvar_hud_panel_radar_maximized_size;

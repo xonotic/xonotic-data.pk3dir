@@ -4,4 +4,4 @@
 int autocvar_hud_panel_pressedkeys;
 float autocvar_hud_panel_pressedkeys_aspect;
 bool autocvar_hud_panel_pressedkeys_attack;
-bool autocvar_hud_panel_pressedkeys_dynamichud  = true;
+bool autocvar_hud_panel_pressedkeys_dynamichud = true;
