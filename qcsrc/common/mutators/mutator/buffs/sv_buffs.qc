@@ -105,11 +105,13 @@ void buff_Effect(entity player, entity eff, vector eff_loc, vector eff_vel, int 
 	if (time < player.buff_effect_delay || !autocvar_g_buffs_effects)
 		return;
 
-	Send_Effect_Core(eff, eff_loc, eff_vel, eff_cnt,
-		'0 0 0', '0 0 0',
-		-1, -1, -1,
-		(hide ? player : NULL)
-	);
+	float pl_alpha = (!player.alpha ? 1 : player.alpha);
+	if (pl_alpha > 0)
+		Send_Effect_Core(eff, eff_loc, eff_vel, eff_cnt,
+			'0 0 0', '0 0 0',
+			pl_alpha, pl_alpha, -1,
+			(hide ? player : NULL)
+		);
 	player.buff_effect_delay = time + 1/16; // 0.0625; prevent spam
 }
 

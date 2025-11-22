@@ -271,7 +271,9 @@ void M_Mage_Defend_Heal(entity this)
 					break;
 			}
 
-			Send_Effect(fx, it.origin, vec2(it.velocity), 5);
+			float pl_alpha = (!it.alpha ? 1 : it.alpha);
+			if (pl_alpha > 0)
+				Send_Effect_Core(fx, it.origin, vec2(it.velocity), 5, '0 0 0', '0 0 0', pl_alpha, pl_alpha, -1, NULL);
 		}
 		else
 		{

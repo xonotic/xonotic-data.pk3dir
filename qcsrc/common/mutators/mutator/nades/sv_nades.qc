@@ -96,7 +96,13 @@ void nade_Effect(entity player, entity eff, int eff_cnt)
 	if (time < player.nade_special_time)
 		return;
 
-	Send_Effect(eff, CENTER_OF_ENT(player), vec2(player.velocity), eff_cnt);
+	float pl_alpha = (!player.alpha ? 1 : player.alpha);
+	if (pl_alpha > 0)
+		Send_Effect_Core(eff, CENTER_OF_ENT(player), vec2(player.velocity), eff_cnt,
+			'0 0 0', '0 0 0',
+			pl_alpha, pl_alpha, -1,
+			NULL
+		);
 	player.nade_special_time = time + 1/16; // 0.0625; prevent spam
 }
 

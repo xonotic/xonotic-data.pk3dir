@@ -21,7 +21,10 @@ MUTATOR_HOOKFUNCTION(vampire, PlayerDamage_SplitHealthArmor)
 	{
 		float regen = autocvar_g_vampire_factor * damage_take;
 		GiveResource(frag_attacker, RES_HEALTH, regen);
-		Send_Effect(EFFECT_VAMPIRE, CENTER_OF_ENT(frag_attacker), vec2(frag_attacker.velocity), min(ceil(regen * 0.5), 50));
+		float pl_alpha = (!frag_attacker.alpha ? 1 : frag_attacker.alpha);
+		if (pl_alpha > 0)
+			Send_Effect_Core(EFFECT_VAMPIRE, CENTER_OF_ENT(frag_attacker), vec2(frag_attacker.velocity), min(ceil(regen * 0.5), 50),
+				'0 0 0', '0 0 0', pl_alpha, pl_alpha, -1, NULL);
 	}
 }
 
