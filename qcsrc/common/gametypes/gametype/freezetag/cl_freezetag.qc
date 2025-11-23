@@ -12,7 +12,7 @@ void HUD_Mod_FreezeTag(vector myPos, vector mySize, bool should_draw)
 	if (!should_draw)
 		return;
 
-	mod_active = 1; // required in each mod function that always shows something
+	mod_active = true; // required in each mod function that always shows something
 
 	HUD_Mod_CA_Draw(myPos, mySize, autocvar_hud_panel_modicons_freezetag_layout);
 }
