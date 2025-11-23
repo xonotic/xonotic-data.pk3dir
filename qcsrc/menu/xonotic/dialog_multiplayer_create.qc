@@ -64,6 +64,13 @@ entity makeXonoticServerCreateTab()
 	return me;
 }
 
+float canDoBotVsHuman(entity e)
+{
+	if (cvar("bot_number") == 0 || cvar("g_campaign"))
+		return false;
+	return e.parent.sliderTeams.value < 2; // either default (2) or 2 teams
+}
+
 void XonoticServerCreateTab_fill(entity me)
 {
 	entity e, e0;
@@ -73,13 +80,13 @@ void XonoticServerCreateTab_fill(entity me)
 	me.gotoRC(me, 0.5, 0);
 		me.TD(me, 1, 3, makeXonoticHeaderLabel(_("Gametype")));
 	me.TR(me);
-		me.TD(me, 10.5, 3, e = makeXonoticGametypeList());
+		me.TD(me, 10, 3, e = makeXonoticGametypeList());
 
-	me.gotoRC(me, 12, 0);
+	me.gotoRC(me, 11.5, 0);
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "menu_create_show_all", _("Show all"),
+		me.TD(me, 1, 2.9, e = makeXonoticCheckBox_T(0, "menu_create_show_all", _("Show all"),
 			_("Show all available gametypes")));
-	me.gotoRC(me, 13.5, 0);
+	me.gotoRC(me, 13, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Time limit:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("timelimit_override",
 			_("Time limit in minutes that when hit, will end the match")));
@@ -94,7 +101,7 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 1, 1, me.labelFraglimit = makeXonoticTextLabel(0, _("Frag limit:")));
 		me.TD(me, 1, 2, e = me.sliderFraglimit = makeXonoticMixedSlider("fraglimit_override"));
 
-	me.gotoRC(me, 16, 0);
+	me.gotoRC(me, 15.5, 0);
 		me.TD(me, 1, 1, me.labelTeams = makeXonoticTextLabel(0, _("Teams:")));
 		me.TD(me, 1, 2, e = me.sliderTeams = makeXonoticMixedSlider(string_null));
 			e.addText(e, _("Default"), 0);
@@ -132,6 +139,11 @@ void XonoticServerCreateTab_fill(entity me)
 			e.configureXonoticMixedSliderValues(e);
 			setDependentNOT(e, "bot_number", 0);
 			setDependentAND(e, "g_campaign", 0, 0);
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2.9, e = makeXonoticCheckBox_T(0, "bot_vs_human", _("Bots against humans"),
+			_("Put all bots in the same team")));
+			setDependentWeird(e, canDoBotVsHuman);
 
 	// mapListBox is in the right column but the ref is needed for mutators dialog here
 	me.mapListBox = makeXonoticMapList();
