@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-22 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Stuart Young <cefiar@gmail.com>, 2016\n"
+"Last-Translator: k9er, 2024-2025\n"
 "Language-Team: English (Australia) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/en_AU/)\n"
 "Language: en_AU\n"
@@ -11728,19 +11728,19 @@ msgstr "Best"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:92
 msgid "Texture compression:"
-msgstr ""
+msgstr "Texture compression:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:98
 msgid "TCOMP^Fast"
-msgstr ""
+msgstr "Fast"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:99
 msgid "TCOMP^Good"
-msgstr ""
+msgstr "Good"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:100
 msgid "TCOMP^None"
-msgstr ""
+msgstr "None"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:109
 msgid "Disable sky for performance and visibility"
