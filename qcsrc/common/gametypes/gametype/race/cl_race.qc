@@ -66,11 +66,11 @@ void HUD_Mod_Race(vector pos, vector mySize, bool should_draw)
 
 	if(!(scores_flags(ps_primary) & SFL_TIME) || teamplay) // race/cts record display on HUD
 	{
-		mod_active = 0; // hide it in this case!
+		mod_active = false; // hide it in this case!
 		return; // no records in the actual race
 	}
-
-	mod_active = 1;
+	else
+		mod_active = true;
 
 	// clientside personal record
 	string rr;

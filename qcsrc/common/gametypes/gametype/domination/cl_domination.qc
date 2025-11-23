@@ -66,7 +66,7 @@ void HUD_Mod_Dom(vector myPos, vector mySize, bool should_draw)
 	if (!should_draw)
 		return;
 
-	mod_active = 1; // required in each mod function that always shows something
+	mod_active = true; // required in each mod function that always shows something
 
 	int layout = autocvar_hud_panel_modicons_dom_layout;
 	int rows, columns;

@@ -24,12 +24,17 @@ MUTATOR_HOOKFUNCTION(cl_lms, DrawInfoMessages)
 	return false;
 }
 
-void HUD_Mod_LMS_Draw(vector myPos, vector mySize)
+void HUD_Mod_LMS(vector myPos, vector mySize, bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	int leaders_count = STAT(REDALIVE); // recycled stat
-	if(!leaders_count)
+	if (autocvar__hud_configure || leaders_count) // make up something, so the panel isn't empty
+		mod_active = true;
+	else
 	{
-		mod_active = 0;
+		mod_active = false;
 		return;
 	}
 
@@ -61,14 +66,4 @@ void HUD_Mod_LMS_Draw(vector myPos, vector mySize)
 		color = '1 0.5 0';
 	float scale = 0.75;
 	drawstring_aspect(pos + itemSize * (1 - scale) * 0.5, strcat("+", ftos(lives_diff)), itemSize * scale, color, panel_fg_alpha, DRAWFLAG_NORMAL);
-}
-
-void HUD_Mod_LMS(vector myPos, vector mySize, bool should_draw)
-{
-	if (!should_draw)
-		return;
-
-	mod_active = 1;
-
-	HUD_Mod_LMS_Draw(myPos, mySize);
 }
