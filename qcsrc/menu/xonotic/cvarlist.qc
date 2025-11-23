@@ -30,31 +30,41 @@ void CvarList_Load(entity me, string filter)
 	if(me.handle < 0)
 		return;
 
+	// buf_cvarlist and matchpattern(..., MATCH_AUTO) filtering works in this way:
+	//   *aa* finds aa anywhere in the cvar name
+	//   *aa finds aa in the end of the cvar name
+	//   aa* finds aa in the beginning of the cvar name
+	//   aa finds aa in the beginning of the cvar name (not anywhere!)
+	// The last case is not very intuitive so here we make it work like *aa*
+	// and make it behave like the apropos command
+	// Filter, cvar names and cvar descriptions are changed to lowercase to simulate a
+	// case insensitive search, like the apropos command
+	// Unlike the apropos command, hidden cvars starting with _ are  filtered out
+	if (filter == "*") // work around weird case where * doesn't list any cvar
+		filter = "";
+	else if (filter != "")
+	{
+		bool ispattern = ((strstrofs(filter, "*", 0) >= 0) || (strstrofs(filter, "?", 0) >= 0));
+		filter = strtolower(filter);
+		if (!ispattern)
+			filter = strcat("*", filter, "*");
+	}
+
 	if (!autocvar_menu_cvarlist_onlymodified
 		&& (!autocvar_menu_cvarlist_descriptions || filter == ""))
 	{
 		// simplest case where we filter only cvar names (or no filter at all)
-		buf_cvarlist(me.handle, filter, "_"); // cvars starting with "_" are excluded
+		buf_cvarlist(me.handle, filter, "_"); // exclude hidden cvars starting with "_"
 		me.nItems = buf_getsize(me.handle);
 		CvarList_UpdateResults(me);
 		return;
 	}
 
-	// get full cvar list will be filtered in the next loop
-	buf_cvarlist(me.handle, "", "_"); // cvars starting with "_" are excluded
+	// get the complete cvar list
+	buf_cvarlist(me.handle, "", "_"); // exclude hidden cvars starting with "_"
 	me.nItems = buf_getsize(me.handle);
 
-	// MATCHPATTERN_CVARLIST replicates buf_cvarlist filtering:
-	//   *aa* finds aa anywhere in the cvar name
-	//   *aa finds aa in the end of the cvar name
-	//   aa* finds aa in the beginning of the cvar name
-	//   aa finds aa in the beginning of the cvar name (not anywhere!)
-	// NOTE: using strstrofs(s, filter, 0) == 0 instead of strncmp(s, filter, strlen(s))
-	// because it's slightly more efficient
-	#define MATCHPATTERN_CVARLIST(s, filter, ispattern) \
-		(ispattern ? matchpattern(s, filter, MATCH_AUTO) : (strstrofs(s, filter, 0) == 0))
-
-	bool ispattern = ((strstrofs(filter, "*", 0) >= 0) || (strstrofs(filter, "?", 0) >= 0));
+	// filter
 	float newbuf = buf_create();
 	for (int i = 0; i < me.nItems; ++i)
 	{
@@ -63,15 +73,14 @@ void CvarList_Load(entity me, string filter)
 		{
 			continue;
 		}
-		if (filter != "" && !MATCHPATTERN_CVARLIST(cvar_name, filter, ispattern)
+		if (filter != "" && !matchpattern(strtolower(cvar_name), filter, MATCH_AUTO)
 			&& (!autocvar_menu_cvarlist_descriptions
-				|| !MATCHPATTERN_CVARLIST(cvar_description(cvar_name), filter, ispattern)))
+				|| !matchpattern(strtolower(cvar_description(cvar_name)), filter, MATCH_AUTO)))
 		{
 			continue;
 		}
 		bufstr_add(newbuf, cvar_name, false);
 	}
-	#undef MATCHPATTERN_CVARLIST
 	buf_del(me.handle);
 	me.handle = newbuf;
 	me.nItems = buf_getsize(me.handle);
