@@ -15,12 +15,15 @@ void HUD_Mod_TeamKeepaway(vector pos, vector mySize, bool should_draw)
 	if (!should_draw)
 		return;
 
-	mod_active = 1; // team keepaway should always show the mod HUD
+	mod_active = true; // team keepaway should always show the mod HUD
 
 	float tkaball_alpha = blink(0.85, 0.15, 5);
 
 	int stat_items = STAT(TKA_BALLSTATUS);
 	int tkaball = (stat_items & TKA_BALL_CARRYING);
+
+	if (autocvar__hud_configure && !(stat_items & (TKA_BALL_CARRYING | TKA_BALL_TAKEN_RED | TKA_BALL_TAKEN_BLUE | TKA_BALL_TAKEN_YELLOW | TKA_BALL_TAKEN_PINK))) // make up something, so the panel isn't empty
+		stat_items = TKA_BALL_TAKEN_RED;
 
 	if(tkaball != tkaball_prevstatus)
 	{
@@ -44,7 +47,7 @@ void HUD_Mod_TeamKeepaway(vector pos, vector mySize, bool should_draw)
 	if(tkaball_prevstatus && f < 1)
 		drawpic_aspect_skin_expanding(tkaball_pos, "keepawayball_carrying", tkaball_size, '1 1 1', panel_fg_alpha * tkaball_alpha, DRAWFLAG_NORMAL, f);
 
-	if(stat_items & TKA_BALL_CARRYING) // TODO: unique team based icon while carrying
+	if(tkaball) // TODO: unique team based icon while carrying
 		drawpic_aspect_skin(pos, "keepawayball_carrying", vec2(mySize.x, mySize.y), '1 1 1', panel_fg_alpha * tkaball_alpha * f, DRAWFLAG_NORMAL);
 	else if(stat_items & TKA_BALL_TAKEN_RED)
 		drawpic_aspect_skin(pos, "tka_taken_red", vec2(mySize.x, mySize.y), '1 1 1', panel_fg_alpha * tkaball_alpha * f, DRAWFLAG_NORMAL);
