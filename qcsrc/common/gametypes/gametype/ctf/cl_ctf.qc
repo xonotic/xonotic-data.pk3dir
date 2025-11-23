@@ -142,34 +142,30 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 
     switch (myteam) {
         default:
-        case NUM_TEAM_1: {
+        case NUM_TEAM_1:
             redflag_pos = pos;
-            blueflag_pos = pos + eX * fs2 * size1;
-            yellowflag_pos = pos - eX * fs2 * size1;
-            pinkflag_pos = pos + eX * fs3 * size1;
+            blueflag_pos = pos + e1 * fs2 * size1;
+            yellowflag_pos = pos - e1 * fs2 * size1;
+            pinkflag_pos = pos + e1 * fs3 * size1;
             break;
-        }
-        case NUM_TEAM_2: {
-            redflag_pos = pos + eX * fs2 * size1;
+        case NUM_TEAM_2:
+            redflag_pos = pos + e1 * fs2 * size1;
             blueflag_pos = pos;
-            yellowflag_pos = pos - eX * fs2 * size1;
-            pinkflag_pos = pos + eX * fs3 * size1;
+            yellowflag_pos = pos - e1 * fs2 * size1;
+            pinkflag_pos = pos + e1 * fs3 * size1;
             break;
-        }
-        case NUM_TEAM_3: {
-            redflag_pos = pos + eX * fs3 * size1;
-            blueflag_pos = pos - eX * fs2 * size1;
+        case NUM_TEAM_3:
+            redflag_pos = pos + e1 * fs3 * size1;
+            blueflag_pos = pos - e1 * fs2 * size1;
             yellowflag_pos = pos;
-            pinkflag_pos = pos + eX * fs2 * size1;
+            pinkflag_pos = pos + e1 * fs2 * size1;
             break;
-        }
-        case NUM_TEAM_4: {
-            redflag_pos = pos - eX * fs2 * size1;
-            blueflag_pos = pos + eX * fs3 * size1;
-            yellowflag_pos = pos + eX * fs2 * size1;
+        case NUM_TEAM_4:
+            redflag_pos = pos - e1 * fs2 * size1;
+            blueflag_pos = pos + e1 * fs3 * size1;
+            yellowflag_pos = pos + e1 * fs2 * size1;
             pinkflag_pos = pos;
             break;
-        }
     }
     neutralflag_pos = pos;
     flag_size = e1 * fs * size1 + e2 * size2;
