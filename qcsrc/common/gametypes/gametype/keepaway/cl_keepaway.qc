@@ -15,11 +15,14 @@ void HUD_Mod_Keepaway(vector pos, vector mySize, bool should_draw)
 	if (!should_draw)
 		return;
 
-	mod_active = 1; // keepaway should always show the mod HUD
+	mod_active = true; // keepaway should always show the mod HUD
 
 	float kaball_alpha = blink(0.85, 0.15, 5);
 
 	int kaball = (STAT(OBJECTIVE_STATUS) & KA_CARRYING);
+
+	if (autocvar__hud_configure && !kaball) // make up something, so the panel isn't empty
+		kaball = KA_CARRYING;
 
 	if(kaball != kaball_prevstatus)
 	{

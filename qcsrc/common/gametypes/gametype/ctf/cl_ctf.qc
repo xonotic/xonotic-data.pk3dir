@@ -49,14 +49,16 @@ void HUD_Mod_CTF(vector pos, vector mySize, bool should_draw)
 
     mod_active = (redflag || blueflag || yellowflag || pinkflag || neutralflag || (stat_items & CTF_SHIELDED));
 
-    if (autocvar__hud_configure) {
+    if (autocvar__hud_configure && !mod_active) // make up something, so the panel isn't empty & hidden
+    {
         redflag = 1;
         blueflag = 2;
         if (nteams & BIT(2))
-            yellowflag = 2;
+            yellowflag = 3;
         if (nteams & BIT(3))
-            pinkflag = 3;
+            pinkflag = 2;
         ctf_oneflag = neutralflag = 0; // disable neutral flag in hud editor?
+        mod_active = true;
     }
 
     // when status CHANGES, set old status into prevstatus and current status into status
