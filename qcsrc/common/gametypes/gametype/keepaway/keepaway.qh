@@ -14,6 +14,11 @@ CLASS(Keepaway, Gametype)
 	{
 		return true;
 	}
+	METHOD(Keepaway, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Point limit:"),     5,  100,  5, "g_keepaway_point_limit",         string_null,         _("The amount of points needed before the match will end"));
+	}
 #ifdef CSQC
 	ATTRIB(Keepaway, m_modicons, void(vector pos, vector mySize), HUD_Mod_Keepaway);
 #endif
