@@ -49,7 +49,7 @@ void HUD_Mod_Survival(vector pos, vector mySize, bool should_draw)
 	if (!should_draw)
 		return;
 
-	mod_active = 1; // survival should always show the mod HUD
+	mod_active = true; // survival should always show the mod HUD
 
 	int mystatus = playerslots[player_localnum].survival_status;
 	string player_text = "";
@@ -57,7 +57,12 @@ void HUD_Mod_Survival(vector pos, vector mySize, bool should_draw)
 	//string player_icon = "";
 
 	if(STAT(GAMESTARTTIME) > time || STAT(ROUNDSTARTTIME) > time || entcs_IsSpectating(player_localnum))
-		return;
+	{
+		if (autocvar__hud_configure) // make up something, so the panel isn't empty
+			mystatus = SURV_STATUS_HUNTER;
+		else
+			return;
+	}
 
 	if(mystatus == SURV_STATUS_HUNTER)
 	{

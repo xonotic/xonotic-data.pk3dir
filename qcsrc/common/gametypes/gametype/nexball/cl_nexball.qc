@@ -12,7 +12,13 @@ void HUD_Mod_NexBall(vector pos, vector mySize, bool should_draw)
 	int stat_items = STAT(OBJECTIVE_STATUS);
 	float nb_pb_starttime = STAT(NB_METERSTART);
 
-	mod_active = (stat_items & NB_CARRYING);
+	mod_active = boolean(stat_items & NB_CARRYING);
+
+	if (autocvar__hud_configure && !mod_active) // make up something, so the panel isn't empty & hidden
+	{
+		stat_items = NB_CARRYING;
+		mod_active = true;
+	}
 
 	//Manage the progress bar if any
 	if (nb_pb_starttime > 0)
