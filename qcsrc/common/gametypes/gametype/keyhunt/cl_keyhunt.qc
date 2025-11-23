@@ -10,46 +10,59 @@ void HUD_Mod_KH(vector pos, vector mySize, bool should_draw)
 	if (!should_draw)
 		return;
 
-	mod_active = 1; // keyhunt should never hide the mod icons panel
-
-	// Read current state
-	int state = STAT(OBJECTIVE_STATUS);
-	if(!state) return;
+	mod_active = true; // keyhunt should never hide the mod icons panel
 
 	int i, key_state;
 	int all_keys, team1_keys, team2_keys, team3_keys, team4_keys, dropped_keys, carrying_keys;
 	all_keys = team1_keys = team2_keys = team3_keys = team4_keys = dropped_keys = carrying_keys = 0;
 
-	for(i = 0; i < 4; ++i)
+	// Read current state
+	int state = STAT(OBJECTIVE_STATUS);
+	if (state)
 	{
-		key_state = (bitshift(state, i * -5) & 31) - 1;
-
-		if(key_state == -1)
-			continue;
-
-		if(key_state == 30)
+		for(i = 0; i < 4; ++i)
 		{
-			++carrying_keys;
-			key_state = myteam;
-		}
+			key_state = (bitshift(state, i * -5) & 31) - 1;
 
-		switch(key_state)
-		{
-			case NUM_TEAM_1: ++team1_keys; break;
-			case NUM_TEAM_2: ++team2_keys; break;
-			case NUM_TEAM_3: ++team3_keys; break;
-			case NUM_TEAM_4: ++team4_keys; break;
-			case 29: ++dropped_keys; break;
-		}
+			if(key_state == -1)
+				continue;
 
-		++all_keys;
+			if(key_state == 30)
+			{
+				++carrying_keys;
+				key_state = myteam;
+			}
+
+			switch(key_state)
+			{
+				case NUM_TEAM_1: ++team1_keys; break;
+				case NUM_TEAM_2: ++team2_keys; break;
+				case NUM_TEAM_3: ++team3_keys; break;
+				case NUM_TEAM_4: ++team4_keys; break;
+				case 29: ++dropped_keys; break;
+			}
+
+			++all_keys;
+		}
 	}
+	else if (autocvar__hud_configure) // make up something, so the panel isn't empty
+	{
+		int nteams = autocvar__teams_available;
+		++team1_keys;
+		++dropped_keys;
+		if (nteams & BIT(2))
+			++team3_keys;
+		if (nteams & BIT(3))
+			++team4_keys;
+	}
+	else
+		return;
 
 	// Calculate slot measurements
 	vector slot_size;
 	if(all_keys == 4 && mySize.x * 0.5 < mySize.y && mySize.y * 0.5 < mySize.x)
 	{
-		// Quadratic arrangement
+		// 2x2 arrangement
 		slot_size = vec2(mySize.x * 0.5, mySize.y * 0.5);
 		KH_SLOTS[0] = pos;
 		KH_SLOTS[1] = pos + eX * slot_size.x;
