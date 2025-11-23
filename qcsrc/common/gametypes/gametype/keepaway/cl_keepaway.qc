@@ -37,6 +37,7 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 	float kaball_statuschange_elapsedtime = time - kaball_statuschange_time;
 	float f = bound(0, kaball_statuschange_elapsedtime*2, 1);
 
+	// TODO: there can be multiple balls now, but this only shows 1 icon
 	if(kaball_prevstatus && f < 1)
 		drawpic_aspect_skin_expanding(kaball_pos, "keepawayball_carrying", kaball_size, '1 1 1', panel_fg_alpha * kaball_alpha, DRAWFLAG_NORMAL, f);
 
