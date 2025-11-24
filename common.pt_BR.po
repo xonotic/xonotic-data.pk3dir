@@ -9556,8 +9556,8 @@ msgstr "Idioma do texto:"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
-"Permitir que as estatísticas de jogador usem o seu apelido em stats.xonotic."
-"org?"
+"Permitir que as estatísticas de jogador usem o seu apelido em "
+"stats.xonotic.org?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"
@@ -13056,8 +13056,8 @@ msgstr "Deseja mesmo redefinir todas as configurações para o padrão?"
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:13
 msgid "This will create a backup config in your data directory"
 msgstr ""
-"Isso irá criar uma cópia da sua configuração na seguinte pasta: C:"
-"\\Users\\[usuário]\\Saved Games\\xonotic\\data"
+"Isso irá criar uma cópia da sua configuração na seguinte pasta: C:\\Users\\"
+"[usuário]\\Saved Games\\xonotic\\data"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:23
 msgid "Menu Skin"

@@ -1032,8 +1032,8 @@ msgstr ""
 "di gioco\n"
 "separati da virgole, seguita dal segno /, per mostrare il campo solo in "
 "questi\n"
-"o in tutti tranne questi tipi di gioco. Puoi anche specificare "
-"'all' (tutti)\n"
+"o in tutti tranne questi tipi di gioco. Puoi anche specificare 'all' "
+"(tutti)\n"
 "come campo per mostrare tutti i campi disponibili per l'attuale tipo di "
 "gioco."
 
@@ -9653,8 +9653,8 @@ msgstr "Lingua di testo:"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
-"Consenti alle statistiche dei giocatori di usare il tuo nome in stats."
-"xonotic.org?"
+"Consenti alle statistiche dei giocatori di usare il tuo nome in "
+"stats.xonotic.org?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"

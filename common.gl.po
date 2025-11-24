@@ -1616,8 +1616,8 @@ msgid ""
 "The game is won once a team reaches a certain number of \"caps\" (captures), "
 "or has a considerable lead over the other team."
 msgstr ""
-"O xogo gánase cando un equipo alcanza un determinado número de "
-"\"caps\" (capturas) ou ten unha vantaxe considerable sobre o outro equipo."
+"O xogo gánase cando un equipo alcanza un determinado número de \"caps\" "
+"(capturas) ou ten unha vantaxe considerable sobre o outro equipo."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:11
 msgid ""
@@ -9568,8 +9568,8 @@ msgstr "Idioma do texto:"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
-"Permitir  cas estatísticas do xogador utilicen o teu alcume en stats.xonotic."
-"org?"
+"Permitir  cas estatísticas do xogador utilicen o teu alcume en "
+"stats.xonotic.org?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"
@@ -13732,11 +13732,11 @@ msgid ""
 "method used to quickly change the direction you're traveling while mid-air, "
 "without losing speed."
 msgstr ""
-"Para facer Salto de coelliño ao redor das esquinas precisas “xiro "
-"estrafado” (strafe turning), ou perderás moita velocidade (ou simplemente "
-"non poderás realizar o xiro). O xiro lateral en movemento é un método usado "
-"para cambiar rapidamente a dirección na que viaxas mentres estás no aire, "
-"sen perder velocidade."
+"Para facer Salto de coelliño ao redor das esquinas precisas “xiro estrafado” "
+"(strafe turning), ou perderás moita velocidade (ou simplemente non poderás "
+"realizar o xiro). O xiro lateral en movemento é un método usado para cambiar "
+"rapidamente a dirección na que viaxas mentres estás no aire, sen perder "
+"velocidade."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:94
 #, c-format

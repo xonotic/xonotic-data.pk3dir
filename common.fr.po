@@ -9718,8 +9718,8 @@ msgstr "Langue du texte :"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
-"Autoriser les statistiques des joueurs à utiliser votre pseudonyme sur stats."
-"xonotic.org ?"
+"Autoriser les statistiques des joueurs à utiliser votre pseudonyme sur "
+"stats.xonotic.org ?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"

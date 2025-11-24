@@ -8825,8 +8825,8 @@ msgstr "Idioma do texto:"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
-"Permitir que as estatísticas dos jogadores utilizem a tua alcunha em stats."
-"xonotic.org?"
+"Permitir que as estatísticas dos jogadores utilizem a tua alcunha em "
+"stats.xonotic.org?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"

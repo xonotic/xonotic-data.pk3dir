@@ -8674,8 +8674,8 @@ msgstr "Γλώσσα κειμένου:"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
-"Θέλετε τα στατιστικά παιχτών να χρησιμοποιούν το όνομά σας στο stats.xonotic."
-"org;"
+"Θέλετε τα στατιστικά παιχτών να χρησιμοποιούν το όνομά σας στο "
+"stats.xonotic.org;"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"

@@ -10177,8 +10177,8 @@ msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
 msgstr ""
-"Включить подбор бонусов (случайных усилителей типа Медик, Невидимость и т."
-"д.) на поддерживаемых аренах"
+"Включить подбор бонусов (случайных усилителей типа Медик, Невидимость и "
+"т.д.) на поддерживаемых аренах"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
 msgid "Only possible to inflict damage on your enemy while they're airborne"

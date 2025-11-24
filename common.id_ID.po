@@ -8700,8 +8700,8 @@ msgstr "Teks bahasa:"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
-"Izinkan statistik pemain untuk menggunakan nama panggilan anda pada stats."
-"xonotic.org?"
+"Izinkan statistik pemain untuk menggunakan nama panggilan anda pada "
+"stats.xonotic.org?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"
