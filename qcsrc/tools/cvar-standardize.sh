@@ -8,7 +8,7 @@ CONFIG_EXT=".cfg"
 SCRIPT_IGNORE=' \/\/ script-ignore( [^"]+)?$'
 # can add `// script-ignore` to the end of lines to ignore
 # e.g. set g_ca 0 "Clan Arena: played in rounds, once you're dead you're out! The team with survivors wins the round" // script-ignore
-# the script would otherwise change "Clan" -> "clan", and other changes
+# the script would otherwise mess with the colon
 START='^(([[:space:]]*\/\/)?[[:space:]]*seta?[[:space:]]+(\w+|"\w+")[[:space:]]+([^"[:space:]]+|"[^"]*")[[:space:]]+")'
 END='("[[:space:]]*(\/\/.*)?)$'
 # selects all properly formatted set/seta lines, including commented out ones, excluding the script-ignore ones
@@ -51,9 +51,10 @@ function quote_options() {
 	#     \1    \5    \6     \7            \8   \9
 }
 function uppercase_notes() {
-	#- seta cl_test_cvar "1" "some test cvar (warning: does nothing)"
+	#- seta cl_test_cvar "1" "some test cvar (warning: Does nothing)"
 	#+ seta cl_test_cvar "1" "some test cvar (WARNING: does nothing)"
-	sed -i -E ":a; ${LINE_SELECTOR}s/$START"'(.*[[:space:]])?(\([a-zA-Z\-]*[a-z][a-zA-Z\-]*:)[[:space:]]+([^)]*\).*)'"$END"'/\1\5\U\6\E \7\8/; ta' "$1"
+	# also makes the text lowercase
+	sed -i -E ":a; ${LINE_SELECTOR}s/$START"'(.*[[:space:]])?(\([a-zA-Z\-]*[a-z][a-zA-Z\-]*:)[[:space:]]+([^)]*\).*)'"$END"'/\1\5\U\6\E \l\7\8/; ta' "$1"
 	# regex: /(.*\s)?(\([a-zA-Z\-]*[a-z][a-zA-Z\-]*:)\s+([^)]*\).*)/
 	#         +----+ +------------------------------+   +---------+
 	#     \1    \5                  \6                      \7       \8
@@ -66,23 +67,24 @@ function lowercase_option_first_letter() {
 	#         +----+ +------------+       +----------------------+
 	#     \1    \5         \6                        \7             \8
 }
-function lowercase_first_letter() {
-	#- seta cl_test_cvar "1" "Some test CVAR"
-	#+ seta cl_test_cvar "1" "some test CVAR"
-	# only affects words that start with a capital letter and have no other capital letters
-	# ... otherwise we assume the capitalization is intentional (e.g. StrafeHUD)
-	# also doesn't affect one-letter words (e.g. description that starts with "R G B")
-	sed -i -E "${LINE_SELECTOR}s/$START"'([A-Z][a-z\-]*[a-z]\b.*)'"$END"'/\1\l\5\6/' "$1"
-	# regex: /([A-Z][a-z\-]*[a-z]\b.*)/
+function uppercase_first_letter() {
+	#- seta cl_test_cvar "1" "some test CVAR"
+	#+ seta cl_test_cvar "1" "Some test CVAR"
+	# only affects words that are fully lowercase
+	# ... otherwise we assume the capitalization is intentional (e.g. strafeHUD)
+	# also doesn't affect one-letter words (e.g. description that starts with "r g b")
+	sed -i -E "${LINE_SELECTOR}s/$START"'([a-z][a-z\-]*[a-z]\b.*)'"$END"'/\1\u\5\6/' "$1"
+	# regex: /([a-z][a-z\-]*[a-z]\b.*)/
 	#         +----------------------+
 	#     \1             \5             \6
 }
-function lowercase_after_sentences() {
-	#- seta cl_test_cvar "1" "some test cvar; Does nothing"
-	#+ seta cl_test_cvar "1" "some test cvar; does nothing"
-	# same condition as in lowercase_first_letter()
-	sed -i -E ":a; ${LINE_SELECTOR}s/$START"'(.+[:;.?!])[[:space:]]+([A-Z][a-z\-]*[a-z]\b.*)'"$END"'/\1\5 \l\6\7/; ta' "$1"
-	# regex: /(.+[:;.?!])\s+([A-Z][a-z\-]*[a-z]\b.*)/
+function uppercase_after_sentences() {
+	#- seta cl_test_cvar "1" "some test cvar; does nothing"
+	#+ seta cl_test_cvar "1" "some test cvar; Does nothing"
+	# same condition as in uppercase_first_letter()
+	# doesn't include after notes, since those should be lowercase
+	sed -i -E ":a; ${LINE_SELECTOR}s/$START"'(.+[;.?!])[[:space:]]+([a-z][a-z\-]*[a-z]\b.*)'"$END"'/\1\5 \u\6\7/; ta' "$1"
+	# regex: /(.+[;.?!])\s+([a-z][a-z\-]*[a-z]\b.*)/
 	#         +---------+   +----------------------+
 	#     \1      \5                   \6             \7
 }
@@ -108,8 +110,8 @@ function check() {
 		quote_options "$file"
 		uppercase_notes "$file"
 		lowercase_option_first_letter "$file"
-		lowercase_first_letter "$file"
-		lowercase_after_sentences "$file"
+		uppercase_first_letter "$file"
+		uppercase_after_sentences "$file"
 		# Americanizing spelling will have to be done manually
 
 		newHash="$(hash "$file")"
