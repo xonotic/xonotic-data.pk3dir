@@ -419,7 +419,7 @@ bool DoesQ3ARemoveThisEntity(entity this)
 
 		if(g_ctf)
 		{
-			if (ctf_oneflag)
+			if (cvar("g_ctf_oneflag"))
 			{
 				gametypename_q3 = "oneflag";
 				gametypename_ql = "1f";
