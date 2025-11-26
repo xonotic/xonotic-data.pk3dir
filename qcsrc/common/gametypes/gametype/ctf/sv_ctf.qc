@@ -1182,7 +1182,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 		{
 			if(ctf_oneflag)
 			{
-				if(CTF_SAMETEAM(toucher, flag) && (toucher.flagcarried) && !toucher.flagcarried.team && is_not_monster)
+				if(CTF_SAMETEAM(toucher, flag) && (toucher.flagcarried) && flag.team && !toucher.flagcarried.team && is_not_monster)
 					ctf_Handle_Capture(flag, toucher, CAPTURE_NORMAL); // toucher just captured the neutral flag to enemy base
 				else if(!flag.team && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && is_not_monster)
 					ctf_Handle_Pickup(flag, toucher, PICKUP_BASE); // toucher just stole the neutral flag
