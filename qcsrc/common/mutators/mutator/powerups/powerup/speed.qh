@@ -17,7 +17,7 @@ SOUND(Speed, Item_Sound("powerup_shield"));
 .float speed_finished;
 
 bool autocvar_g_powerups_speed;
-float autocvar_g_balance_powerup_speed_attackrate;
+float autocvar_g_balance_powerup_speed_attack_time_multiplier;
 float autocvar_g_balance_powerup_speed_highspeed;
 float autocvar_g_balance_powerup_speed_time;
 void powerup_speed_init(Pickup def, entity item)

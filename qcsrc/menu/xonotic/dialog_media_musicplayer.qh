@@ -3,8 +3,8 @@
 #include "tab.qh"
 CLASS(XonoticMusicPlayerTab, XonoticTab)
 	METHOD(XonoticMusicPlayerTab, fill, void(entity));
-	ATTRIB(XonoticMusicPlayerTab, intendedWidth, float, 0.9);
-	ATTRIB(XonoticMusicPlayerTab, rows, float, 21);
+	ATTRIB(XonoticMusicPlayerTab, intendedWidth, float, 0.96);
+	ATTRIB(XonoticMusicPlayerTab, rows, float, 17);
 	ATTRIB(XonoticMusicPlayerTab, columns, float, 6.5);
 	ATTRIB(XonoticMusicPlayerTab, name, string, "MusicPlayer");
 ENDCLASS(XonoticMusicPlayerTab)

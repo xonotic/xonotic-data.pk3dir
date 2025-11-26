@@ -24,11 +24,11 @@ float StrafeHUD_DrawSlickDetector(entity e, bool already_detected)
 {
 	float slickdetector_height = bound(0, autocvar_hud_panel_strafehud_slickdetector_height, 1);
 	slickdetector_height *= panel_size.y;
-	if(autocvar_hud_panel_strafehud_slickdetector &&
-	   autocvar_hud_panel_strafehud_slickdetector_range > 0 &&
-	   autocvar_hud_panel_strafehud_slickdetector_alpha > 0 &&
-	   slickdetector_height > 0 &&
-	   panel_size.x > 0)
+	if (autocvar_hud_panel_strafehud_slickdetector
+		&& autocvar_hud_panel_strafehud_slickdetector_range > 0
+		&& autocvar_hud_panel_strafehud_slickdetector_alpha > 0
+		&& slickdetector_height > 0
+		&& panel_size.x > 0)
 	{
 		float slicksteps = bound(0, autocvar_hud_panel_strafehud_slickdetector_granularity, 4);
 		bool allslick = PHYS_FRICTION(e) == 0;
@@ -44,17 +44,17 @@ float StrafeHUD_DrawSlickDetector(entity e, bool already_detected)
 
 		// traceline downwards into every direction
 		trace_dphitq3surfaceflags = 0;
-		for(float i = 0; i < 90 * DEG2RAD - SLICKDETECT_STEPS_EPSILON && !slickdetected; i += slicksteps)
+		for (float f = 0; f < 90 * DEG2RAD - SLICKDETECT_STEPS_EPSILON && !slickdetected; f += slicksteps)
 		{
 			vector slickoffset;
 			float slickrotate;
 
-			// creates a vector angled 'i' degrees relative to the Z vector
+			// creates a vector angled 'f' degrees relative to the Z vector
 			// negative cosine value to face downwards
-			slickoffset.z = -cos(i) * autocvar_hud_panel_strafehud_slickdetector_range;
-			slickrotate = sin(i) * autocvar_hud_panel_strafehud_slickdetector_range;
+			slickoffset.z = -cos(f) * autocvar_hud_panel_strafehud_slickdetector_range;
+			slickrotate = sin(f) * autocvar_hud_panel_strafehud_slickdetector_range;
 
-			for(float j = 0; j < 360 * DEG2RAD - SLICKDETECT_STEPS_EPSILON && !slickdetected; j += slicksteps)
+			for (float j = 0; j < 360 * DEG2RAD - SLICKDETECT_STEPS_EPSILON && !slickdetected; j += slicksteps)
 			{
 				// adjusts the vector so that it rotates 'j' degrees around the Z vector
 				slickoffset.x = sin(j) * slickrotate;
@@ -66,23 +66,26 @@ float StrafeHUD_DrawSlickDetector(entity e, bool already_detected)
 				// note: it is not guaranteed that the detected surface is actually
 				//       a zero friction surface if PHYS_FRICTION_SLICK() does not equal zero
 				traceline(traceorigin, traceorigin + slickoffset, MOVE_NOMONSTERS, e);
-				if((allslick && trace_fraction < 1)
-				|| (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK))
+				if ((allslick && trace_fraction < 1)
+					|| (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK))
+				{
 					slickdetected = true;
+				}
 
 				// rotation does nothing when we are perpendicular to the ground, hence only one iteration
-				if(i == 0) break;
+				if (f == 0)
+					break;
 			}
 		}
 
 		// if a traceline hit a slick surface
-		if(slickdetected)
+		if (slickdetected)
 		{
 			vector slickdetector_size = panel_size;
 			slickdetector_size.y = slickdetector_height;
 
 			// horizontal lines
-			for(int i = 0; i <= 1; ++i)
+			for (int i = 0; i <= 1; ++i)
 			{
 				float y_offset = (i == 0)
 					? -slickdetector_size.y // top
@@ -104,7 +107,8 @@ float StrafeHUD_DrawSlickDetector(entity e, bool already_detected)
 // vertical angle for weapon jumps
 void StrafeHUD_DrawVerticalAngle(entity e, float text_offset_top, float text_offset_bottom)
 {
-	if(!autocvar_hud_panel_strafehud_vangle) return;
+	if (!autocvar_hud_panel_strafehud_vangle)
+		return;
 
 	float vangle = -PHYS_INPUT_ANGLES(e).x;
 	float vangle_height = autocvar_hud_panel_strafehud_vangle_size * panel_size.y;
@@ -123,34 +127,32 @@ void StrafeHUD_DrawVerticalAngle(entity e, float text_offset_top, float text_off
 void StrafeHUD_DrawJumpHeight(entity e, bool onground, bool swimming, float text_offset_top, float text_offset_bottom)
 {
 	float length_conversion_factor = StrafeHUD_GetLengthUnitFactor(autocvar_hud_speed_unit);
-	static float height_min = 0, height_max = 0; // ground and peak of jump z coordinates
 	static float jumpheight = 0, jumptime = 0;   // displayed value and timestamp for fade out
 
 	// tries to catch kill and spectate but those are not reliable
-	if((e.velocity.z <= 0) || onground || swimming || IS_DEAD(e) || !IS_PLAYER(e))
+	if ((e.velocity.z <= 0) || onground || swimming || IS_DEAD(e) || !IS_PLAYER(e))
+		jumpheight_min = jumpheight_max = e.origin.z;
+	else if(e.origin.z > jumpheight_max)
 	{
-		height_min = height_max = e.origin.z;
-	}
-	else if(e.origin.z > height_max)
-	{
-		height_max = e.origin.z;
-		float jumpheight_new = height_max - height_min;
+		jumpheight_max = e.origin.z;
+		float jumpheight_new = jumpheight_max - jumpheight_min;
 
-		if((jumpheight_new * length_conversion_factor) > max(autocvar_hud_panel_strafehud_jumpheight_min, 0))
+		if ((jumpheight_new * length_conversion_factor) > max(autocvar_hud_panel_strafehud_jumpheight_min, 0))
 		{
 			jumpheight = jumpheight_new;
 			jumptime = time;
 		}
 	}
 
-	if(!autocvar_hud_panel_strafehud_jumpheight) return;
+	if (!autocvar_hud_panel_strafehud_jumpheight)
+		return;
 
 	// use more decimals when displaying km or miles
 	int length_decimals = autocvar_hud_speed_unit >= 3 && autocvar_hud_speed_unit <= 5 ? 6 : 2;
 
 	float jumpheight_height = autocvar_hud_panel_strafehud_jumpheight_size * panel_size.y;
 	string jumpheight_text = ftos_decimals(jumpheight * length_conversion_factor, length_decimals);
-	if(autocvar_hud_panel_strafehud_unit_show)
+	if (autocvar_hud_panel_strafehud_unit_show)
 		jumpheight_text = strcat(jumpheight_text, StrafeHUD_GetLengthUnit(autocvar_hud_speed_unit));
 
 	StrafeHUD_DrawTextIndicator(
@@ -165,7 +167,8 @@ void StrafeHUD_DrawJumpHeight(entity e, bool onground, bool swimming, float text
 // the percentage changes linearly with angular distance
 void StrafeHUD_DrawStrafeEfficiency(float strafe_ratio, float text_offset_top, float text_offset_bottom)
 {
-	if(!autocvar_hud_panel_strafehud_strafeefficiency) return;
+	if (!autocvar_hud_panel_strafehud_strafeefficiency)
+		return;
 
 	float strafeeff_height = autocvar_hud_panel_strafehud_strafeefficiency_size * panel_size.y;
 	string strafeeff_text = strcat(ftos_decimals(strafe_ratio * 100, 2), "%");
@@ -185,21 +188,20 @@ void StrafeHUD_DrawStartSpeed(float speed, float text_offset_top, float text_off
 	static float startspeed = 0, starttime = 0; // displayed value and timestamp for fade out
 
 	// check if the start trigger was hit (will also trigger if the finish trigger was hit if those have the same ID)
-	if((race_nextcheckpoint == 1) || (race_checkpoint == 254 && race_nextcheckpoint == 255))
+	if (race_nextcheckpoint == 1 || (race_checkpoint == 254 && race_nextcheckpoint == 255))
+	if (race_checkpointtime > 0 && starttime != race_checkpointtime)
 	{
-		if((race_checkpointtime > 0) && (starttime != race_checkpointtime))
-		{
-			starttime = race_checkpointtime;
-			startspeed = speed;
-		}
+		starttime = race_checkpointtime;
+		startspeed = speed;
 	}
 
-	if(!autocvar_hud_panel_strafehud_startspeed) return;
+	if (!autocvar_hud_panel_strafehud_startspeed)
+		return;
 
 	float speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 	float startspeed_height = autocvar_hud_panel_strafehud_startspeed_size * panel_size.y;
 	string startspeed_text = ftos_decimals(startspeed * speed_conversion_factor, 2);
-	if(autocvar_hud_panel_strafehud_unit_show)
+	if (autocvar_hud_panel_strafehud_unit_show)
 		startspeed_text = strcat(startspeed_text, GetSpeedUnit(autocvar_hud_speed_unit));
 
 	StrafeHUD_DrawTextIndicator(
@@ -217,7 +219,7 @@ void StrafeHUD_Sonar(float strafe_ratio, string sonarsound)
 
 	float sonar_start = bound(0, autocvar_hud_panel_strafehud_sonar_start, 1);
 	float sonar_ratio = strafe_ratio - sonar_start;
-	if(sonar_start != 1)
+	if (sonar_start != 1)
 		sonar_ratio /= 1 - sonar_start;
 	else
 		sonar_ratio = 1;
@@ -225,7 +227,7 @@ void StrafeHUD_Sonar(float strafe_ratio, string sonarsound)
 	float sonar_interval = max(0, autocvar_hud_panel_strafehud_sonar_interval_start);
 	sonar_interval += autocvar_hud_panel_strafehud_sonar_interval_range * sonar_ratio ** max(1, autocvar_hud_panel_strafehud_sonar_interval_exponent);
 	bool sonar_ready = (sonar_time == 0) || ((time - sonar_time) >= sonar_interval);
-	if(autocvar_hud_panel_strafehud_sonar && sonar_ready && (strafe_ratio >= sonar_start))
+	if (autocvar_hud_panel_strafehud_sonar && sonar_ready && (strafe_ratio >= sonar_start))
 	{
 		sonar_time = time;
 
@@ -235,7 +237,7 @@ void StrafeHUD_Sonar(float strafe_ratio, string sonarsound)
 		float sonar_pitch = max(0, autocvar_hud_panel_strafehud_sonar_pitch_start);
 		sonar_pitch += autocvar_hud_panel_strafehud_sonar_pitch_range * sonar_ratio ** max(1, autocvar_hud_panel_strafehud_sonar_pitch_exponent);
 
-		if(sonarsound && (sonar_volume > 0))
+		if (sonarsound && (sonar_volume > 0))
 			sound7(csqcplayer, CH_INFO, sonarsound, bound(0, sonar_volume, 1) * VOL_BASE, ATTN_NONE, max(0.000001, sonar_pitch * 100), 0);
 	}
 }
@@ -246,20 +248,20 @@ string StrafeHUD_UpdateSonarSound()
 	string newsound = autocvar_hud_panel_strafehud_sonar_audio;
 	static string cursound = string_null;
 	static string sonarsound = string_null;
-	if(newsound == "")
+	if (newsound == "")
 	{
 		strfree(cursound);
 		strfree(sonarsound);
 		cursound = sonarsound = string_null;
 	}
-	else if(newsound != cursound)
+	else if (newsound != cursound)
 	{
 		strfree(cursound);
 		cursound = strzone(newsound);
 
 		strfree(sonarsound);
 		sonarsound = _Sound_fixpath(newsound);
-		if(sonarsound)
+		if (sonarsound)
 		{
 			sonarsound = strzone(sonarsound);
 			precache_sound(sonarsound);

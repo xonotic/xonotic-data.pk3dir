@@ -47,7 +47,7 @@ void XonoticDamageTextSettings_fill(entity me)
 			setDependentAND(e, "cl_damagetext_color_per_weapon", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_damagetext_color_per_weapon", _("Per weapon")));
+		me.TD(me, 1, 0.8, e = makeXonoticCheckBox(0, "cl_damagetext_color_per_weapon", _("Per weapon")));
 			setDependent(e, "cl_damagetext", 1, 1);
 
 	me.TR(me);

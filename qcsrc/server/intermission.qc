@@ -282,7 +282,7 @@ int Maplist_Init(void)
 	{
 		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
 		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
-		if(!server_is_dedicated)
+		if(!autocvar_sv_dedicated)
 			localcmd("\nmenu_cmd sync\n");
 	}
 

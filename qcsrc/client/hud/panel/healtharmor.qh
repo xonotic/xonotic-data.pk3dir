@@ -4,9 +4,9 @@
 bool autocvar_hud_panel_healtharmor;
 int autocvar_hud_panel_healtharmor_baralign;
 bool autocvar_hud_panel_healtharmor_combined;
-bool autocvar_hud_panel_healtharmor_dynamichud  = true;
+bool autocvar_hud_panel_healtharmor_dynamichud = true;
 bool autocvar_hud_panel_healtharmor_flip;
-bool autocvar_hud_panel_healtharmor_hide_ondeath  = false;
+bool autocvar_hud_panel_healtharmor_hide_ondeath = false;
 int autocvar_hud_panel_healtharmor_iconalign;
 int autocvar_hud_panel_healtharmor_maxarmor;
 int autocvar_hud_panel_healtharmor_maxhealth;

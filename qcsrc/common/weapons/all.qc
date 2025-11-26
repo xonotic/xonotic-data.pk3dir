@@ -571,7 +571,7 @@ NET_HANDLE(wframe, bool isNew)
 	switch (wepent.state)
 	{
 		case WS_RAISE:
-			wepent.weapon_switchdelay = wepent.activeweapon.switchdelay_raise;
+			wepent.weapon_switchdelay = wepent.switchweapon.switchdelay_raise;
 			break;
 		case WS_DROP:
 			wepent.weapon_switchdelay = wepent.activeweapon.switchdelay_drop;

@@ -39,7 +39,6 @@ void WarpZone_Accumulator_AddInverse(entity acc, entity wz)
 	WarpZone_Accumulator_AddInverseTransform(acc, wz.warpzone_transform, wz.warpzone_shift);
 }
 
-float autocvar_cl_warpzone_usetrace = 1;
 vector WarpZone_camera_transform(entity this, vector org, vector ang)
 {
 	vector vf, vr, vu;
@@ -55,10 +54,7 @@ vector WarpZone_camera_transform(entity this, vector org, vector ang)
 	vf = WarpZone_TransformVelocity(this, vf);
 	vr = WarpZone_TransformVelocity(this, vr);
 	vu = WarpZone_TransformVelocity(this, vu);
-	if(autocvar_cl_warpzone_usetrace)
-		traceline(this.warpzone_targetorigin, org, MOVE_NOMONSTERS, NULL);
-	else
-		trace_endpos = this.warpzone_targetorigin;
+	traceline(this.warpzone_targetorigin, org, MOVE_NOMONSTERS, NULL);
 	v_forward = vf;
 	v_right = vr;
 	v_up = vu;

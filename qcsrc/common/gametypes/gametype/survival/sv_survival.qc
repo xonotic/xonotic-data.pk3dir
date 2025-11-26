@@ -5,8 +5,7 @@ float autocvar_g_survival_round_timelimit = 120;
 float autocvar_g_survival_warmup = 10;
 bool autocvar_g_survival_punish_teamkill = true;
 bool autocvar_g_survival_reward_survival = true;
-
-void nades_Clear(entity player);
+float autocvar_g_survival_round_enddelay;
 
 entity survivalStatuses;
 void SurvivalStatuses_Init();
@@ -76,7 +75,6 @@ void Surv_UpdateScores(bool timed_out)
 	});
 }
 
-float autocvar_g_survival_round_enddelay = 1;
 float Surv_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
@@ -85,10 +83,8 @@ float Surv_CheckWinner()
 		// if the match times out, survivors win too!
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_SURVIVAL_SURVIVOR_WIN);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SURVIVAL_SURVIVOR_WIN);
-		FOREACH_CLIENT(true,
-		{
-			if(IS_PLAYER(it))
-				nades_Clear(it);
+		FOREACH_CLIENT(IS_PLAYER(it), {
+			nades_RemovePlayer(it);
 		});
 
 		Surv_UpdateScores(true);
@@ -156,10 +152,8 @@ float Surv_CheckWinner()
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
 	survivalStatuses.SendFlags = STATUS_SEND_HUNTERS;
 
-	FOREACH_CLIENT(true,
-	{
-		if(IS_PLAYER(it))
-			nades_Clear(it);
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		nades_RemovePlayer(it);
 	});
 
 	return 1;
@@ -209,24 +203,25 @@ bool Surv_CheckPlayers()
 	{
 		++playercount;
 	});
+	// NOTE missing_teams_mask stat is used for missing players in ffa games
 	if (playercount >= 2)
 	{
 		if(prev_missing_players > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_PLAYERS);
+			missing_teams_mask = 0;
 		prev_missing_players = -1;
 		return true;
 	}
 	if(playercount == 0)
 	{
 		if(prev_missing_players > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_PLAYERS);
+			missing_teams_mask = 0;
 		prev_missing_players = -1;
 		return false;
 	}
 	// if we get here, only 1 player is missing
 	if(prev_missing_players != 1)
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_PLAYERS, 1);
+		missing_teams_mask = 1;
 		prev_missing_players = 1;
 	}
 	return false;

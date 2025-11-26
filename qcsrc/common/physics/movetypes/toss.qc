@@ -28,8 +28,6 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 
 	this.move_suspendedinair = false;
 
-	_Movetype_CheckVelocity(this);
-
 	if(this.move_movetype == MOVETYPE_BOUNCE || this.move_movetype == MOVETYPE_TOSS)
 	{
 		this.move_didgravity = true;

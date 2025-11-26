@@ -63,7 +63,7 @@ METHOD(AmmoBuff, describe, string(AmmoBuff this))
 {
 	TC(AmmoBuff, this);
 	PAGE_TEXT_INIT();
-	PAR(_("The %s gives you infinite ammo until the buff expires, so you don't need to worry about running out of ammo."), COLORED_NAME_WITH_CONCAT(this, _("Buff")));
+	PAR(_("The %s buff gives you infinite ammo until the buff expires, so you don't need to worry about running out of ammo."), COLORED_NAME(this));
 	PAR(_("It also removes the need to reload any weapons that require reloading, like the %s and %s."), COLORED_NAME(WEP_RIFLE), COLORED_NAME(WEP_OVERKILL_MACHINEGUN));
 	return PAGE_TEXT;
 }

@@ -201,19 +201,19 @@ void XonoticCvarList_drawListBoxItem(entity me, int i, vector absSize, bool isSe
 
 float XonoticCvarList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if (scan == K_MOUSE3 || ((shift & S_CTRL) && scan == K_SPACE))
+	if (!me.cvarValueBox.disabled && (scan == K_MOUSE3 || ((shift & S_CTRL) && scan == K_SPACE)))
 	{
 		CvarList_Revert_Click(NULL, me);
 		return 1;
 	}
-	else if(scan == K_ENTER)
+	else if(!me.cvarValueBox.disabled && scan == K_ENTER)
 	{
 		me.cvarValueBox.parent.setFocus(me.cvarValueBox.parent, me.cvarValueBox);
 		return 1;
 	}
 	else if(SUPER(XonoticCvarList).keyDown(me, scan, ascii, shift))
 		return 1;
-	else if(!me.controlledTextbox)
+	else if(!me.controlledTextbox || me.cvarValueBox.disabled)
 		return 0;
 	else
 		return me.controlledTextbox.keyDown(me.controlledTextbox, scan, ascii, shift);
@@ -221,13 +221,15 @@ float XonoticCvarList_keyDown(entity me, float scan, float ascii, float shift)
 
 float XonoticCvarList_mouseRelease(entity me, vector pos)
 {
-	if(me.pressed == 2)
+	if (!me.cvarValueBox.disabled && me.pressed == 2)
 		me.cvarValueBox.parent.setFocus(me.cvarValueBox.parent, me.cvarValueBox);
 	return SUPER(XonoticCvarList).mouseRelease(me, pos);
 }
 
 void CvarList_Value_Change(entity box, entity me)
 {
+	if (box.disabled)
+		return;
 	cvar_set(me.cvarNameBox.text, box.text);
 	if(me.cvarNeedsForcing)
 	{
@@ -259,5 +261,6 @@ void CvarList_Revert_Click(entity btn, entity me)
 
 void CvarList_End_Editing(entity box, entity me)
 {
-	box.parent.setFocus(box.parent, me);
+	if (!box.disabled)
+		box.parent.setFocus(box.parent, me);
 }

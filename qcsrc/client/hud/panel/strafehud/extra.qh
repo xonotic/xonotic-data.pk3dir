@@ -1,6 +1,8 @@
 #pragma once
 #include "../strafehud.qh"
 
+float jumpheight_min, jumpheight_max; // ground and peak of jump z coordinates
+
 float StrafeHUD_DrawSlickDetector(entity, bool);
 
 void StrafeHUD_DrawVerticalAngle(entity, float, float);

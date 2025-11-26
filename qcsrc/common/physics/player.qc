@@ -178,18 +178,18 @@ void PM_ClientMovement_UpdateStatus(entity this)
 			break;
 		}
 	}
+
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
 	if(this.viewloc && !(this.viewloc.spawnflags & VIEWLOC_FREEMOVE) && PHYS_CS(this).movement.x < 0)
 		do_crouch = true;
-	if (have_hook) {
+	if (have_hook)
 		do_crouch = false;
-	//} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
-		//do_crouch = false;
-	} else if (PHYS_INVEHICLE(this)) {
+//	else if (this.waterlevel >= WATERLEVEL_SWIMMING)
+//		do_crouch = false;
+	else if (PHYS_INVEHICLE(this))
 		do_crouch = false;
-	} else if (PHYS_FROZEN(this) || IS_DEAD(this)) {
+	else if (PHYS_FROZEN(this) || IS_DEAD(this))
 		do_crouch = false;
-	}
 
 	MUTATOR_CALLHOOK(PlayerCanCrouch, this, do_crouch);
 	do_crouch = M_ARGV(1, bool);
@@ -198,16 +198,21 @@ void PM_ClientMovement_UpdateStatus(entity this)
 	if (STAT(PL_CROUCH_MAX, this).z == STAT(PL_MAX, this).z)
 		do_crouch = false;
 
-	if (do_crouch) {
-		if (!IS_DUCKED(this)) {
+	if (do_crouch)
+	{
+		if (!IS_DUCKED(this))
+		{
 			SET_DUCKED(this);
 			this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
 			setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
 			// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
 		}
-	} else if (IS_DUCKED(this)) {
+	}
+	else if (IS_DUCKED(this))
+	{
 		tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, MOVE_NORMAL, this);
-		if (!trace_startsolid) {
+		if (!trace_startsolid)
+		{
 			UNSET_DUCKED(this);
 			this.view_ofs = STAT(PL_VIEW_OFS, this);
 			setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
@@ -471,6 +476,10 @@ bool PlayerJump(entity this)
 	UNSET_ONSLICK(this);
 	SET_JUMP_HELD(this);
 
+#ifdef CSQC
+	jumpheight_min = jumpheight_max = this.origin.z;
+#endif
+
 #ifdef SVQC
 	animdecide_setaction(this, ANIMACTION_JUMP, true);
 
@@ -551,6 +560,7 @@ void CheckPlayerJump(entity this)
 		this.jetpack_stopped = false;
 		ITEMS_STAT(this) &= ~IT_USING_JETPACK;
 	}
+
 	if (!PHYS_INPUT_BUTTON_JUMP(this))
 		UNSET_JUMP_HELD(this);
 

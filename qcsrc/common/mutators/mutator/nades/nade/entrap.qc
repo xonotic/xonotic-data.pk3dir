@@ -25,8 +25,8 @@ void nade_entrap_touch(entity this, entity toucher)
 
 	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
 	{
-		entity show_tint = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
-		show_tint.nade_entrap_time = time + 0.1;
+		entity real_toucher = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
+		real_toucher.nade_entrap_time = time + 0.1;
 	}
 }
 

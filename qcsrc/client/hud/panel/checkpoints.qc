@@ -16,8 +16,8 @@ void HUD_Checkpoints_Export(int fh)
 	HUD_Write_Cvar("hud_panel_checkpoints_fontscale");
 }
 
-const float CHECKPOINTS_SPACING   = 0.25;
-const float CHECKPOINTS_BASE_SIZE = 0.75;
+const float CHECKPOINTS_SPACING    = 0.25;
+const float CHECKPOINTS_BASE_SIZE  = 0.75;
 
 string demolines[10];
 
@@ -91,10 +91,8 @@ vector Checkpoints_Draw(int end, vector pos, vector fontsize, vector rs_fontsize
 
 void HUD_Checkpoints()
 {
-	if (!autocvar__hud_configure)
-	{
-		if (!autocvar_hud_panel_checkpoints) return;
-	}
+	if (!autocvar__hud_configure && !autocvar_hud_panel_checkpoints)
+		return;
 
 	HUD_Panel_LoadCvars();
 

@@ -2,6 +2,7 @@
 
 float autocvar_g_ca_damage2score = 100;
 int autocvar_g_ca_prevent_stalemate;
+float autocvar_g_ca_round_enddelay;
 
 float autocvar_g_ca_start_health = 200;
 float autocvar_g_ca_start_armor = 200;
@@ -40,8 +41,6 @@ void CA_count_alive_players()
 		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(4));
 	});
 }
-
-void nades_Clear(entity player);
 
 int CA_PreventStalemate()
 {
@@ -139,7 +138,6 @@ int CA_PreventStalemate()
 	return -2; // Equality. Can't avoid the stalemate.
 }
 
-float autocvar_g_ca_round_enddelay = 1;
 float CA_CheckWinner()
 {
 	int winner_team = 0;
@@ -205,7 +203,9 @@ float CA_CheckWinner()
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
-	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		nades_RemovePlayer(it);
+	});
 
 	return 1;
 }
@@ -222,21 +222,11 @@ bool CA_CheckTeams()
 	static int prev_missing_teams_mask;
 	allowed_to_spawn = true;
 	CA_count_alive_players();
+	missing_teams_mask = 0;
 	if (Team_GetNumberOfAliveTeams() == NumTeams(ca_teams))
-	{
-		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
 		return true;
-	}
 	if(total_players == 0)
-	{
-		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
 		return false;
-	}
-	int missing_teams_mask = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
 		if ((ca_teams & Team_IndexToBit(i)) &&
@@ -246,10 +236,7 @@ bool CA_CheckTeams()
 		}
 	}
 	if(prev_missing_teams_mask != missing_teams_mask)
-	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 		prev_missing_teams_mask = missing_teams_mask;
-	}
 	return false;
 }
 

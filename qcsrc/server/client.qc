@@ -142,6 +142,8 @@ bool ClientData_Send(entity this, entity to, int sf)
 	                                sf |= BIT(4); // show spectators
 	if (autocvar_sv_teamnagger && teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
 	                                sf |= (autocvar_sv_teamnagger & 0x03) << 5; // BIT(5) | BIT(6)
+	if (to.ignore_list && to.ignore_list_send_time == IGNORE_LIST_SEND_NOW && !IS_SPEC(to))
+	                                sf |= BIT(7); // ignore list (private, won't be sent to spectators)
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
@@ -149,11 +151,19 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (sf & BIT(1))
 		WriteByte(MSG_ENTITY, CS(to).spectatee_status);
 
+	// spectator list is cleared on the client if this flag is not set
 	if(sf & BIT(4))
 	{
 		float specs = CountSpectators(e, to);
 		WriteByte(MSG_ENTITY, specs);
 		WriteSpectators(e, to);
+	}
+
+	// ignore list is NOT cleared on the client if this flag is not set
+	if (sf & BIT(7))
+	{
+		to.ignore_list_send_time = 0;
+		WriteString(MSG_ENTITY, strcat(to.ignore_list));
 	}
 
 	return true;
@@ -172,17 +182,17 @@ void ClientData_Detach(entity this)
 	CS(this).clientdata = NULL;
 }
 
-void ClientData_Touch(entity e)
+void ClientData_Touch(entity e, bool to_spectators_too)
 {
 	entity cd = CS(e).clientdata;
 	if (cd) cd.SendFlags = 1;
 
-	// make it spectatable
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e,
-	{
-		entity cd = CS(it).clientdata;
-		if (cd) cd.SendFlags = 1;
-	});
+	if (to_spectators_too)
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e,
+		{
+			entity cd_spec = CS(it).clientdata;
+			if (cd_spec) cd_spec.SendFlags = cd.SendFlags;
+		});
 }
 
 
@@ -331,6 +341,9 @@ void PutObserverInServer(entity this, bool is_forced, bool use_spawnpoint)
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
 	CS(this).spectatortime = time;
+	if (!autocvar_sv_spectate && CS(this).autojoin_checked) // unnecessary if autojoin succeeds, on failure it notifies
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+
 	if(this.bot_attack)
 		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
@@ -1182,14 +1195,12 @@ void ClientConnect(entity this)
 	bot_relinkplayerlist();
 
 	CS(this).spectatortime = time;
-	if (!autocvar_sv_spectate)
-		// no centreprint here: player forced to join, or informed of why they can't via centreprint
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-
 	CS(this).jointime = time;
 
 	if (IS_REAL_CLIENT(this))
 	{
+		ignore_list_update_on_connection(this);
+
 		if (g_weaponarena_weapons == WEPSET(TUBA))
 			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
 		// quickmenu file must be put in a subfolder with an unique name
@@ -1233,7 +1244,7 @@ void ClientConnect(entity this)
 
 	if (player_count == 1)
 	{
-		if (autocvar_sv_autopause && server_is_dedicated)
+		if (autocvar_sv_autopause && autocvar_sv_dedicated)
 			setpause(0);
 		localcmd("\nsv_hook_firstjoin\n");
 	}
@@ -1262,19 +1273,12 @@ void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
 
-	/* from "ignore" command */
 	strfree(this.ignore_list);
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it.ignore_list,
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		if(it.crypto_idfp && it.crypto_idfp != "")
-			continue;
-		string mylist = ignore_removefromlist(it, this);
-		if(it.ignore_list)
-			strunzone(it.ignore_list);
-
-		it.ignore_list = strzone(mylist);
+		// don't remove permanent ignores from db, only from list
+		ignore_remove_player(it, this, false);
 	});
-	/* from "ignore" command */
 
 	PlayerStats_GameReport_FinalizePlayer(this);
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -1749,7 +1753,7 @@ void SetZoomState(entity this, float newzoom)
 	if(newzoom != CS(this).zoomstate)
 	{
 		CS(this).zoomstate = newzoom;
-		ClientData_Touch(this);
+		ClientData_Touch(this, true);
 	}
 	zoomstate_set = true;
 }
@@ -1877,7 +1881,7 @@ bool SpectateSet(entity this)
 	if(!IS_PLAYER(this.enemy))
 		return false;
 
-	ClientData_Touch(this.enemy);
+	ClientData_Touch(this.enemy, true);
 
 	msg_entity = this;
 	WriteByte(MSG_ONE, SVC_SETVIEW);
@@ -1904,7 +1908,7 @@ void SetSpectatee_status(entity this, int spectatee_num)
 			STAT(PRESSED_KEYS, this) = 0;
 		}
 
-		ClientData_Touch(this);
+		ClientData_Touch(this, true);
 
 		// init or clear race data
 		if ((g_race || g_cts) && g_race_qualifying && IS_REAL_CLIENT(this))
@@ -1960,7 +1964,8 @@ void SetSpectatee(entity this, entity spectatee)
 		SetSpectatee_status(this, etof(spectatee));
 
 	// needed to update spectator list
-	if(old_spectatee) { ClientData_Touch(old_spectatee); }
+	if(old_spectatee)
+		ClientData_Touch(old_spectatee, true);
 }
 
 bool Spectate(entity this, entity pl)
@@ -2478,7 +2483,7 @@ void ObserverOrSpectatorThink(entity this)
 
 	if (IS_BOT_CLIENT(this) && !CS(this).autojoin_checked)
 	{
-		CS(this).autojoin_checked = true;
+		CS(this).autojoin_checked = 1;
 		TRANSMUTE(Player, this);
 		PutClientInServer(this);
 
@@ -2664,7 +2669,8 @@ void PlayerPreThink (entity this)
 			IntermissionThink(this);
 		return;
 	}
-	else if (IS_REAL_CLIENT(this) && CS(this).autojoin_checked <= 0 && time >= CS(this).jointime + MIN_SPEC_TIME)
+	else if (IS_REAL_CLIENT(this) && CS(this).autojoin_checked <= 0 && time >= CS(this).jointime + MIN_SPEC_TIME
+	&& this.ping > 0) // delay until centreprints could work (still on loading screen but timers start when it disappears)
 	{
 		bool early_join_requested = (CS(this).autojoin_checked < 0);
 		CS(this).autojoin_checked = 1;
@@ -2676,6 +2682,9 @@ void PlayerPreThink (entity this)
 		{
 			if(joinAllowed(this, this.wants_join))
 				Join(this, teamplay);
+			else if (!autocvar_sv_spectate) // we really want to join and some blockers may be brief (g_maxping)
+				if (time < CS(this).spectatortime + MIN_SPEC_TIME) // centreprints don't appear while spamming
+					CS(this).autojoin_checked = -1; // keep trying for MIN_SPEC_TIME
 			return;
 		}
 	}
@@ -2839,11 +2848,12 @@ void PlayerFrame (entity this)
 	&& (IS_SPEC(this) || IS_OBSERVER(this)) && !INGAME(this))
 	{
 		float cutoff = CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime;
-		if (time > cutoff + MIN_SPEC_TIME * 0.5)
+		if (time > cutoff + MIN_SPEC_TIME * 0.5 // sv_spectate was disabled recently (or the server was stalled far too long)
+		|| CS(this).autojoin_checked == 0) // or too soon to have tried to autojoin
 		{
-			// sv_spectate was disabled recently (or the server was stalled far too long)
 			CS(this).spectatortime = time; // reset the grace period
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+			if (CS(this).autojoin_checked) // only notify when sv_spectate was disabled recently, to prevent spam
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 		}
 		else if (time > cutoff)
 			if (dropclient_schedule(this))
@@ -2897,6 +2907,9 @@ void PlayerFrame (entity this)
 		}
 	}
 
+	if (this.ignore_list_send_time > 0 && time > this.ignore_list_send_time)
+		ignore_list_send(this);
+
 	// GOD MODE info
 	if (!(this.flags & FL_GODMODE) && this.max_armorvalue)
 	{
@@ -2938,7 +2951,7 @@ void PlayerFrame (entity this)
 		if(autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0)
 		{
 			// maxidle disabled in local matches by not counting clients (totalClients 0)
-			if (server_is_dedicated)
+			if (autocvar_sv_dedicated)
 			{
 				FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
 				{

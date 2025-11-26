@@ -2,8 +2,8 @@
 #include "../panel.qh"
 
 bool autocvar_hud_panel_ammo;
-bool autocvar_hud_panel_ammo_dynamichud         = true;
-bool autocvar_hud_panel_ammo_hide_ondeath         = false;
+bool autocvar_hud_panel_ammo_dynamichud = true;
+bool autocvar_hud_panel_ammo_hide_ondeath = false;
 bool autocvar_hud_panel_ammo_iconalign;
 int autocvar_hud_panel_ammo_maxammo;
 bool autocvar_hud_panel_ammo_onlycurrent;

@@ -12,12 +12,12 @@
 #include <common/command/_mod.qh>
 #include <menu/xonotic/gametypelist.qh>
 
-float GL_CheckExtension(string ext)
+bool GL_CheckExtension(string ext)
 {
 	return strhasword(cvar_string("gl_info_extensions"), ext);
 }
 
-float GL_Have_TextureCompression()
+bool GL_Have_TextureCompression()
 {
 	return GL_CheckExtension("GL_EXT_texture_compression_s3tc");
 }
@@ -601,57 +601,35 @@ string resolvemod(string m)
 		return m;
 }
 
-float updateCompression()
+void updateCompression()
 {
-	float have_dds, have_jpg, have_tga;
-	float can_dds;
-	have_dds = (fexists("dds/particles/particlefont.dds"));
-	have_jpg = (fexists("particles/particlefont.jpg"));
-	have_tga = (fexists("particles/particlefont.tga"));
-	can_dds = GL_Have_TextureCompression();
+	bool have_dds = (fexists("dds/particles/particlefont.dds"));
+	bool have_jpg = (fexists("particles/particlefont.jpg"));
+	bool have_tga = (fexists("particles/particlefont.tga"));
+	bool can_dds = GL_Have_TextureCompression();
+
+	if (!can_dds)
+		cvar_set("gl_texturecompression", "0");
+
 	if(have_dds && (have_jpg || have_tga))
 	{
 		// both? Let's only use good quality precompressed files
 		// but ONLY if we actually support it!
-		if(can_dds)
-		{
-			// these builds are meant to have GOOD quality, so let's not compress non-skinframes
-			cvar_set("gl_texturecompression", "0");
-			return 1;
-
-			//cvar_set("gl_texturecompression", cvar_string("r_texture_dds_load"));
-			//return 2;
-		}
-		else
-		{
-			cvar_set("gl_texturecompression", "0");
-			cvar_set("r_texture_dds_load", "0");
-			return 0;
-		}
+		// bones_was_here: quality settings moved to effects configs and menu
 	}
 	else if(have_dds)
 	{
-		// DDS only? We probably always want texture compression
-		cvar_set("gl_texturecompression", "1");
+		// DDS only? We _must_ load DDS files!
 		cvar_set("r_texture_dds_load", "1");
 		if(!can_dds)
-			LOG_INFO(_("^1ERROR: Texture compression is required but not supported.\n^1Expect visual problems."));
-		return 0;
+		{
+			cvar_set("r_texture_dds_swdecode", "1");
+			LOG_WARN(_("^1ERROR: Texture compression is required but not supported.\n^1Expect visual problems."));
+		}
 	}
 	else
 	{
 		// TGA only? Allow runtime compression
-		if(can_dds)
-		{
-			cvar_set("gl_texturecompression", cvar_string("r_texture_dds_load"));
-			return 2;
-		}
-		else
-		{
-			cvar_set("gl_texturecompression", "0");
-			cvar_set("r_texture_dds_load", "0");
-			return 0;
-		}
 	}
 }
 

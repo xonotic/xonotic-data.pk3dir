@@ -383,7 +383,7 @@ METHOD(Vortex, describe, string(Vortex this))
 	PAGE_TEXT_INIT();
 	PAR(_("The %s fires harmful beams of energy that traverse the map instantaneously and deal a significant chunk of damage on impact."), COLORED_NAME(this));
 	PAR(_("The secondary fire zooms in when held, allowing for ease of aiming."));
-	PAR(_("It consumes %s ammo for each bullet shot."), COLORED_NAME(ITEM_Cells)); // shared string
+	PAR(_("It consumes %s ammo for each shot."), COLORED_NAME(ITEM_Cells)); // shared string
 	PAR(_("Unlike the %s, the %s doesn't need to be reloaded manually, although you have to wait a couple seconds between shots. "
 	      "Uniquely, it can be fired slightly before it finishes completely reloading, albeit with the tradeoff of dealing slightly less damage."), COLORED_NAME(WEP_RIFLE), COLORED_NAME(this));
 	PAR(_("Similar to the %s, the %s can be used at any range, but it stands out at long ranges."), COLORED_NAME(WEP_RIFLE), COLORED_NAME(this));

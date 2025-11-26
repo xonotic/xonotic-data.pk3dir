@@ -9,6 +9,7 @@ float autocvar_g_freezetag_round_timelimit;
 //int autocvar_g_freezetag_teams;
 int autocvar_g_freezetag_teams_override;
 float autocvar_g_freezetag_warmup;
+float autocvar_g_freezetag_round_enddelay;
 
 float autocvar_g_ft_start_health = 100;
 float autocvar_g_ft_start_armor = 100;
@@ -51,21 +52,11 @@ void freezetag_count_alive_players()
 bool freezetag_CheckTeams()
 {
 	static float prev_missing_teams_mask;
+	missing_teams_mask = 0;
 	if (Team_GetNumberOfAliveTeams() == NumTeams(freezetag_teams))
-	{
-		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
 		return true;
-	}
 	if(total_players == 0)
-	{
-		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
 		return false;
-	}
-	int missing_teams_mask = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
 		if ((freezetag_teams & Team_IndexToBit(i)) &&
@@ -75,17 +66,10 @@ bool freezetag_CheckTeams()
 		}
 	}
 	if(prev_missing_teams_mask != missing_teams_mask)
-	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 		prev_missing_teams_mask = missing_teams_mask;
-	}
 	return false;
 }
 
-void nades_Clear(entity);
-void nades_GiveBonus(entity player, float score);
-
-float autocvar_g_freezetag_round_enddelay = 1;
 bool freezetag_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
@@ -96,7 +80,7 @@ bool freezetag_CheckWinner()
 		FOREACH_CLIENT(IS_PLAYER(it), {
 			it.freezetag_frozen_timeout = 0;
 			it.freezetag_revive_time = 0;
-			nades_Clear(it);
+			nades_RemovePlayer(it);
 		});
 		game_stopped = true;
 		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
@@ -141,7 +125,7 @@ bool freezetag_CheckWinner()
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.freezetag_frozen_timeout = 0;
 		it.freezetag_revive_time = 0;
-		nades_Clear(it);
+		nades_RemovePlayer(it);
 	});
 
 	game_stopped = true;

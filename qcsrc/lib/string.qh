@@ -485,14 +485,53 @@ string ftos_decimals_percentage(float number, int decimals)
 }
 
 /**
- * converts a number to a string with the minimum number of decimals
+ * Converts a number to a string with the minimum number of decimals
+ * It assumes that an extreme accuracy of the input number is not needed and
+ * reduces the max number of decimals to 4 in order to hide minor representation
+ * errors that can easily happen even with small numbers, e.g.:
+ *   x = 32.1;  sprintf("%f", x): "32.099998"
+ *   x = 4; x += 0.01; x += 0.01; sprintf("%f", x): "4.020001"
+ * Reducing the max number of decimals to 5 is not enough to hide most errors.
  */
 ERASEABLE
 string ftos_mindecimals(float number)
 {
 	// inhibit stupid negative zero
-	if (number == 0) number = 0;
-	return sprintf("%.7g", number);
+	if (fabs(number) < 0.0001)
+		return "0";
+
+	int rounded = rint(number);
+	if (fabs(number - rounded) < 0.0001)
+		return ftos(rounded);
+
+	string s = sprintf("%.4f", number);
+
+	// if the decimal part got lost (large numbers), return what we got
+	int dot_ofs = strstrofs(s, ".", 0);
+	if (dot_ofs < 0)
+		return s;
+
+	// count trailing zeros that will need to be removed
+	string ch = "";
+	int i = 0;
+	for ( ; i < 4; ++i)
+	{
+		ch = substring(s, -1 - i, -1 - i);
+		if (ch != "0")
+			break;
+	}
+
+	// no trailing zeros, return what we got
+	// FLOAT_NAN falls under this case and returned as is ("-1.#IND")
+	if (i == 0)
+		return s;
+
+	// if we've found 4 trailing zeros (i == 4) assume the next char is a dot and remove it too
+	// ch == "." handles cases where the decimal part has less than 4 decimal digits (large numbers)
+	if (i == 4 || ch == ".")
+		++i; // remove dot too
+
+	return substring(s, 0, -1 - i);
 }
 
 ERASEABLE
