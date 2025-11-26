@@ -14,6 +14,7 @@
 # Ihor <ihor@noleron.com>, 2021
 # Illia Serediuk, 2022
 # Illia Serediuk, 2022
+# Tran Qwill, 2025
 # Vasyl Kushniruk, 2024
 # Vasyl Kushniruk, 2024
 # Dmitro Sokhin <gamebot@ex.ua>, 2015
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-22 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Ihor <ihor@noleron.com>, 2021\n"
+"Last-Translator: Tran Qwill, 2025\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -8482,7 +8483,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:57
 msgid "Campaign"
-msgstr ""
+msgstr "Кампанія"
 
 #: qcsrc/menu/xonotic/credits.qc:62
 msgid "Level Design"
@@ -8726,7 +8727,7 @@ msgstr "Дозволити використання імені гравця в �
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"
-msgstr ""
+msgstr "Пізніше вирішу"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:92
 msgid ""
@@ -10963,7 +10964,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:109
 msgid "Show sky"
-msgstr ""
+msgstr "Показувати небо"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:111
 msgid "Use lightmaps"
@@ -11213,7 +11214,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:95
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:118
 msgid "Size:"
-msgstr ""
+msgstr "Розмір:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:74
 msgid "By health"
@@ -11300,7 +11301,7 @@ msgstr "Показувати дороговкази різний ігрових 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:79
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:139
 msgid "Font size:"
-msgstr ""
+msgstr "Розмір шрифту:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:87
 msgid "Edge offset:"
@@ -11332,7 +11333,7 @@ msgstr "Час зникнення:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:126
 msgid "Player Names"
-msgstr ""
+msgstr "Імена гравців"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:128
 msgid "Show names above players"
@@ -11364,7 +11365,7 @@ msgstr "Показувати кількість здоров'я та броні"
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:155
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:67
 msgid "Other"
-msgstr ""
+msgstr "Інше"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:183
 msgid "Speed unit:"
@@ -11859,7 +11860,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:94
 msgid "Mouse"
-msgstr ""
+msgstr "Миша"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:97
 msgid "Sensitivity:"
