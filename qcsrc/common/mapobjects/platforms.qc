@@ -64,7 +64,7 @@ void plat_hit_top(entity this)
 	this.state = STATE_TOP;
 
 	setthink(this, plat_go_down);
-	this.nextthink = this.ltime + 3;
+	this.nextthink = this.ltime + fabs(this.wait);
 }
 
 void plat_hit_bottom(entity this)
@@ -92,7 +92,6 @@ void plat_center_touch(entity this, entity toucher)
 #ifdef SVQC
 	if (!toucher.iscreature)
 		return;
-
 	if (GetResource(toucher, RES_HEALTH) <= 0)
 		return;
 #elif defined(CSQC)
@@ -102,9 +101,16 @@ void plat_center_touch(entity this, entity toucher)
 		return;
 #endif
 
-	if (this.enemy.state == STATE_BOTTOM) {
+	// in CPMA negative .wait prevents plats being held at the top, Q3 and Nexuiz ignore .wait
+	if (this.solid == SOLID_BSP) // `this` is the plat itself
+	{
+		if (this.state == STATE_TOP && this.wait >= 0)
+			this.nextthink = this.ltime + 1; // matches Q3, CPMA, and Nexuiz
+	}
+	else // `this` is the trigger we spawned
+	if (this.enemy.state == STATE_BOTTOM)
 		plat_go_up(this.enemy);
-	} else if (this.enemy.state == STATE_TOP)
+	else if (this.enemy.state == STATE_TOP && this.enemy.wait >= 0)
 		this.enemy.nextthink = this.enemy.ltime + 1;
 }
 
