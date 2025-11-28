@@ -2241,7 +2241,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 
 	// do an iteration for each team (plus neutral) and get the flag for that team
 	// this allows selection of the "best" flag for each team (e.g. the carried one)
-	for(int j = 0; j < 5; ++j)
+	for(int j = 0; j <= AVAILABLE_TEAMS; ++j)
 	{
 		int teamnumber = (j > 0) ? Team_IndexToTeam(j) : 0;
 		entity bestflag = NULL;
