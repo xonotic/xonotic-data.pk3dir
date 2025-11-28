@@ -9,6 +9,7 @@ void ctf_Initialize();
 
 int autocvar_captureleadlimit_override;
 int autocvar_capturelimit_override;
+IntrusiveList g_flags;
 
 REGISTER_MUTATOR(ctf, false)
 {
@@ -19,6 +20,7 @@ REGISTER_MUTATOR(ctf, false)
 		GameRules_limit_score(autocvar_capturelimit_override);
 		GameRules_limit_lead(autocvar_captureleadlimit_override);
 
+		g_flags = IL_NEW();
 		ctf_Initialize();
 	}
 	return 0;
@@ -95,9 +97,7 @@ void ctf_FlagTouch(entity this, entity toucher) { ITEM_HANDLE(Pickup, CTF_FLAG, 
 .string passeffect;
 .string capeffect;
 
-// list of flags on the map
-entity ctf_worldflaglist;
-.entity ctf_worldflagnext;
+// list of stale flags on the map
 .entity ctf_staleflagnext;
 
 // waypoint sprites
