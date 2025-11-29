@@ -3164,8 +3164,8 @@ msgid ""
 "The %s buff gives you infinite ammo until the buff expires, so you don't "
 "need to worry about running out of ammo."
 msgstr ""
-"Le bonus de %s vous donne des munitions infinies jusqu'à ce qu'il expire, "
-"vous n'avez donc pas à vous soucier de manquer de munitions."
+"Tant qu'il est actif, le bonus de %s vous donne des munitions infinies, vous "
+"n'avez donc pas à vous soucier de manquer de munitions."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
 #, c-format
@@ -3186,14 +3186,14 @@ msgid ""
 "The %s buff increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
-"Le bonus de %s augmente votre force de recul et vous immunise contre celle "
-"des autres tant que le bonus est actif."
+"Tant qu'il est actif, le bonus de %s augmente votre force de recul et vous "
+"immunise contre celle des autres."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
 msgstr ""
-"Cela augmente également légèrement le recul que vous vous infligez à vous-"
-"même."
+"Cela augmente également légèrement la force de recul que vous vous infligez "
+"à vous-même."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qh:14
 msgid "Bash"
@@ -3205,14 +3205,14 @@ msgid ""
 "The %s buff causes your enemies and monsters to slow down for a few seconds "
 "when you attack them, while the buff is active."
 msgstr ""
-"Le bonus de %s ralentit vos ennemis et les monstres pendant quelques "
-"secondes lorsque vous les attaquez, et ce tant que le bonus est actif."
+"Tant qu'il est actif, le bonus de %s ralentit vos ennemis et les monstres "
+"pendant quelques secondes lorsque vous les attaquez."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
 #, c-format
 msgid "This is particularly useful against speedy players, especially in %s."
 msgstr ""
-"Cela est particulièrement utile contre les joueurs rapides, notamment en %s."
+"Cela est particulièrement utile contre les joueurs véloces, notamment en %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qh:15
 msgid "Disability"
@@ -3224,8 +3224,8 @@ msgid ""
 "While you have the %s buff, you can crouch while mid-air to switch your "
 "gravity, allowing flight."
 msgstr ""
-"Tant que vous avez le bonus d'%s, vous pouvez vous accroupir quand vous êtes "
-"en l'air pour inverser votre gravité, ce qui vous permet de voler."
+"Tant que vous possédez le bonus d'%s, vous pouvez vous accroupir quand vous "
+"êtes en l'air pour inverser votre gravité, ce qui vous permet de voler."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
 msgid "Flight"
@@ -3237,9 +3237,9 @@ msgid ""
 "The %s buff sets any enemies or monsters you attack alight, dealing burn "
 "damage to them for several seconds until the buff expires."
 msgstr ""
-"Le bonus %s enflamme tous les ennemis ou les monstres que vous attaquez, "
-"leur infligeant des dégâts de brûlure pendant plusieurs secondes, jusqu'à ce "
-"que le bonus expire."
+"Tant qu'il est actif, le bonus %s enflamme tous les ennemis ou les monstres "
+"que vous attaquez, leur infligeant des dégâts de brûlure pendant plusieurs "
+"secondes."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
 msgid "Inferno"
@@ -3250,8 +3250,8 @@ msgstr "Inferno"
 msgid ""
 "The %s buff greatly increases your jump height, while the buff is active."
 msgstr ""
-"Le bonus de %s augmente considérablement la hauteur de vos sauts tant qu'il "
-"est actif."
+"Tant qu'il est actif, le bonus de %s augmente considérablement la hauteur de "
+"vos sauts."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
@@ -3281,9 +3281,9 @@ msgid ""
 "The %s buff greatly increases your item pickup range, collecting nearby "
 "items for you while the buff is active."
 msgstr ""
-"Le bonus d'%s augmente considérablement la distance maximale nécessaire au "
-"ramassage d'un objet, en collectant les objets à proximité tant que le bonus "
-"est actif."
+"Tant qu'il est actif, le bonus d'%s augmente considérablement la distance "
+"maximale nécessaire au ramassage d'un objet, en collectant les objets à "
+"proximité pour vous."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:11
 msgid "Magnet"
@@ -3296,10 +3296,10 @@ msgid ""
 "health you can have before health starts to rot, and reduces health rot "
 "speed until the buff expires."
 msgstr ""
-"Le bonus de %s augmente la vitesse de régénération de la santé, augmente la "
-"santé maximale que vous pouvez avoir avant que la santé ne commence à se "
-"dégrader, et réduit la vitesse de dégradation de la santé, jusqu'à "
-"l'expiration du bonus."
+"Tant qu'il est actif, le bonus de %s augmente la vitesse de régénération de "
+"la santé, augmente la santé maximale que vous pouvez avoir avant que la "
+"santé ne commence à se dégrader, et réduit la vitesse de dégradation de la "
+"santé."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:29
 msgid ""
@@ -3317,8 +3317,8 @@ msgstr "Médecin"
 #, c-format
 msgid "The %s buff greatly reduces your damage taken while the buff is active."
 msgstr ""
-"Le bonus de %s réduit considérablement les dégâts que vous subissez tant "
-"qu'il est actif."
+"Tant qu'il est actif, le bonus de %s réduit considérablement les dégâts que "
+"vous subissez."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
 msgid "This also impacts the damage you deal to yourself."
@@ -3342,7 +3342,7 @@ msgid ""
 "A common usage of this buff is to jump over the map's void, then swap with "
 "an enemy, to cause them to fall into the void."
 msgstr ""
-"Une utilisation commune de ce bonus consiste à sauter par-dessus le vide de "
+"Une utilisation courante de ce bonus consiste à sauter par-dessus le vide de "
 "la carte, puis à échanger sa place avec un ennemi afin de le faire tomber "
 "dans le vide."
 
@@ -3364,9 +3364,8 @@ msgid ""
 "The %s buff converts some of the damage you deal to enemies and monsters "
 "into health for yourself, until the buff expires."
 msgstr ""
-"Le bonus de %s convertit une partie des dégâts que vous infligez aux ennemis "
-"et aux monstres en points de santé pour vous-même, jusqu'à ce que le bonus "
-"expire."
+"Tant qu'il est actif, le bonus de %s convertit une partie des dégâts que "
+"vous infligez aux ennemis et aux monstres en points de santé pour vous-même."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:29
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
@@ -3386,8 +3385,8 @@ msgid ""
 "The %s buff reciprocates a portion of the damage enemies deal to you onto "
 "them, until the buff expires."
 msgstr ""
-"Le bonus de %s renvoie une partie des dégâts que les ennemis vous infligent "
-"vers eux, jusqu'à ce que le bonus expire."
+"Tant qu'il est actif, le bonus de %s renvoie une partie des dégâts que les "
+"ennemis vous infligent vers eux-mêmes."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qh:13
 msgid "Vengeance"
@@ -3674,8 +3673,8 @@ msgid ""
 msgstr ""
 "La %s explose après un court délai, créant une sphère temporaire autour du "
 "point où elle a explosé pendant plusieurs secondes. Si les membres de votre "
-"équipe pénètrent dans la sphère, ils récupèrent des munitions, et si des "
-"ennemis y pénètrent, ils perdent des munitions."
+"équipe pénètrent dans la sphère, ils récupèreront des munitions, et si des "
+"ennemis y pénètrent, ils perdront des munitions."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:84
 #, c-format
@@ -3805,7 +3804,8 @@ msgid ""
 "Make sure you remember to throw it with %s, or else it will blow up in your "
 "hands!"
 msgstr ""
-"N'oubliez pas de la lancer avec %s, sinon elle explosera entre vos mains !"
+"N'oubliez pas de la lancer avec la touche %s, sinon elle explosera entre vos "
+"mains !"
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qh:11
 #: qcsrc/common/mutators/mutator/nades/nades.qh:17
@@ -4176,8 +4176,8 @@ msgid ""
 "The %s powerup regenerates %s needed for the %s until the powerup expires, "
 "so you can continue flying around for longer."
 msgstr ""
-"Le bonus de puissance %s régénère le %s nécessaire pour le %s jusqu'à ce "
-"qu'il expire, afin que vous puissiez continuer à voler plus longtemps."
+"Tant qu'il est actif, le bonus de puissance %s régénère le %s nécessaire "
+"pour le %s, afin que vous puissiez continuer à voler plus longtemps."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:21
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qc:54
@@ -4204,7 +4204,7 @@ msgid ""
 "making it more difficult for enemies to see you. This powerup is often "
 "present in %s."
 msgstr ""
-"Le bonus de puissance %s vous rend translucide tant qu'il est actif, vous "
+"Tant qu'il est actif, le bonus de puissance %s vous rend translucide, vous "
 "rendant difficilement détectable par les ennemis. Ce bonus de puissance est "
 "souvent présent en %s."
 
@@ -4248,10 +4248,9 @@ msgid ""
 "expires, having a compounding effect with armor. It also makes you more "
 "resistant to knockback."
 msgstr ""
-"Le bonus de puissance %s réduit considérablement les dégâts que vous "
-"subissez jusqu'à son expiration, son effet se cumulant avec celui de "
-"l'armure. Il vous rend également plus résistant à la force de recul des tirs "
-"adverses."
+"Tant qu'il est actif, le bonus de puissance %s réduit considérablement les "
+"dégâts que vous subissez, son effet se cumulant avec celui de l'armure. Il "
+"vous rend également plus résistant à la force de recul des tirs adverses."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
@@ -4266,9 +4265,9 @@ msgid ""
 "regeneration speed while the powerup is active. However, it also makes you a "
 "bit more vulnerable to incoming attacks."
 msgstr ""
-"Le bonus de puissance %s augmente votre vitesse de déplacement, votre "
-"vitesse d'attaque et votre vitesse de régénération de santé tant qu'il est "
-"actif. Cependant, il vous rend également un peu plus vulnérable aux attaques "
+"Tant qu'il est actif, le bonus de puissance %s augmente votre vitesse de "
+"déplacement, votre vitesse d'attaque et votre vitesse de régénération de "
+"santé. Cependant, il vous rend également un peu plus vulnérable aux attaques "
 "ennemies."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
@@ -4284,9 +4283,9 @@ msgid ""
 "The %s powerup greatly increases the damage you deal, until the powerup "
 "expires. It also increases the knockback that your attacks deal."
 msgstr ""
-"Le bonus de puissance %s augmente considérablement les dégâts que vous "
-"infligez, jusqu'à ce qu'il expire. Il augmente également la force de recul "
-"de vos attaques."
+"Tant qu'il est actif, le bonus de puissance %s augmente considérablement les "
+"dégâts que vous infligez. Il augmente également la force de recul de vos "
+"attaques."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:58
 msgid ""
@@ -4303,9 +4302,9 @@ msgid ""
 "allow you to easily dominate a map, so it's often highly contested when it "
 "spawns in."
 msgstr ""
-"La %s est l'un des objets les plus recherchés sur une carte, car elle permet "
-"de dominer facilement l'arène. Elle est ainsi souvent très disputée "
-"lorsqu'elle apparaît."
+"Le bonus de puissance %s est l'un des objets les plus recherchés sur une "
+"carte, car il permet de dominer facilement l'arène. Il est ainsi souvent "
+"très disputé lorsqu'il apparaît."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
@@ -8137,8 +8136,8 @@ msgid ""
 "The %s vehicle looks like a jet, but does not fly upwards very well. It "
 "seats only one passenger, who becomes the pilot."
 msgstr ""
-"Le %s ressemble à un avion à réaction, mais ne s'envole pas très bien vers "
-"le haut. Il ne peut accueillir qu'un seul passager, qui devient le pilote."
+"Le %s ressemble à un avion à réaction, mais ne s'élève pas très bien dans "
+"les airs. Il ne peut accueillir qu'un seul passager, qui devient le pilote."
 
 #: qcsrc/common/vehicles/vehicle/racer.qc:652
 #, c-format
@@ -8146,8 +8145,8 @@ msgid ""
 "It can be accelerated by pressing %s, which consumes power from the same "
 "source as the primary weapon."
 msgstr ""
-"Il peut être accéléré en appuyant sur %s, ce qui consomme de l'énergie "
-"provenant de la même source que l'arme principale."
+"Il peut accélérer en appuyant sur %s, ce qui consomme de l'énergie provenant "
+"de la même source que l'arme principale."
 
 #: qcsrc/common/vehicles/vehicle/racer.qc:653
 #, c-format

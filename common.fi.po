@@ -9,6 +9,7 @@
 # Heidi Wenger, 2022
 # heidi.wenger, 2022
 # Henry 'Exitium' Sanmark <henry.sanmark@gmail.com>, 2011
+# Jaakko Muilu, 2025
 # Jaakko Saarikko <jaakko.saarikko@protonmail.com>, 2022
 # Jonas Sahlberg <fragthelion@gmail.com>, 2015
 # LINUX SAUNA, 2022
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-22 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Oftox, 2023\n"
+"Last-Translator: Jaakko Muilu, 2025\n"
 "Language-Team: Finnish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
 "Language: fi\n"
@@ -51,7 +52,7 @@ msgstr "^1Ei voitu kirjoittaa kohteeseen %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:197
 msgid "Title"
-msgstr ""
+msgstr "Otsikko:"
 
 #: qcsrc/client/hud/panel/centerprint.qc:202
 #, c-format
@@ -65,7 +66,7 @@ msgid ""
 "^BOLDlasts longer than normal"
 msgstr ""
 "^1Moniriviviesti ajassa %s joka\n"
-"^BOLDkestää pidempään kuin yleensä"
+"^BOLDkestää tavallista pidempään"
 
 #: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
@@ -91,7 +92,7 @@ msgstr "^3Pelaaja^7: Tämä on keskustelualue."
 #: qcsrc/client/hud/panel/racetimer.qc:209
 #, c-format
 msgid "Checkpoint %d"
-msgstr ""
+msgstr "Tarkastuspiste %d"
 
 #: qcsrc/client/hud/panel/engineinfo.qc:75
 #, c-format
@@ -110,7 +111,7 @@ msgstr "^1Katselee: ^7%s"
 #: qcsrc/client/hud/panel/infomessages.qc:117
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Paina ^3%s^1 katsellaksesi"
+msgstr "^1Katso painamalla ^3%s^1"
 
 #: qcsrc/client/hud/panel/infomessages.qc:117
 #: qcsrc/menu/xonotic/keybinder.qc:73
@@ -121,7 +122,7 @@ msgstr "ensisijainen tulitus"
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
 msgstr ""
-"^1Paina ^3%s^1 tai ^3%s^1 siirtyäksesi seuraavaan tai edelliseen pelaajaan"
+"^1Siirry seuraavaan tai edelliseen pelaajaan painamalla ^3%s^1 tai ^3%s^1"
 
 #: qcsrc/client/hud/panel/infomessages.qc:119
 #: qcsrc/client/hud/panel/infomessages.qc:123
@@ -136,7 +137,7 @@ msgstr "edellinen ase"
 #: qcsrc/client/hud/panel/infomessages.qc:123
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr "^1Käytä ^3%s^1 tai ^3%s^1 muuttaaksesi nopeutta"
+msgstr "^1Muuta nopeutta painamalla ^3%s^1 tai ^3%s^1"
 
 #: qcsrc/client/hud/panel/infomessages.qc:125
 #, c-format
@@ -160,12 +161,12 @@ msgstr "toissijainen tulitus"
 #: qcsrc/client/hud/panel/infomessages.qc:127
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr "^1Paina ^3%s^1 vaihtaaksesi kameratilaa"
+msgstr "^1Vaihda kameratilaa painamalla ^3%s^1"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
-msgstr ""
+msgstr "^1Katso pelitilatiedot painamalla ^3%s^1"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #: qcsrc/menu/xonotic/keybinder.qc:153
@@ -175,7 +176,7 @@ msgstr "palvelimen tiedot"
 #: qcsrc/client/hud/panel/infomessages.qc:141
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^1Paina ^3%s^1 liittyäksesi"
+msgstr "^1Liity painamalla ^3%s^1"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141
 #: qcsrc/client/hud/panel/scoreboard.qc:2816 qcsrc/client/main.qc:1397
@@ -190,7 +191,7 @@ msgstr "hyppää"
 #: qcsrc/client/hud/panel/infomessages.qc:147
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr ""
+msgstr "^2Olet jonossa liittyäksesi joukkueeseen %s%s^2"
 
 #: qcsrc/client/hud/panel/infomessages.qc:150
 msgid "^2You're queued to join any available team"
@@ -207,17 +208,17 @@ msgstr "^2Tällä hetkellä ^1lämmittelyssä^2 !"
 
 #: qcsrc/client/hud/panel/infomessages.qc:178
 msgid "^31^2 more player is needed for the match to start."
-msgstr "^31^2 pelaajaa tarvitaan lisää jotta ottelu voidaan aloittaa."
+msgstr "^31^2 pelaajaa tarvitaan lisää, jotta ottelu voi alkaa."
 
 #: qcsrc/client/hud/panel/infomessages.qc:180
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr "^3%d^2 pelaajaa tarvitaan lisää jotta ottelu voidaan aloittaa."
+msgstr "^3%d^2 pelaajaa tarvitaan lisää, jotta ottelu voi alkaa."
 
 #: qcsrc/client/hud/panel/infomessages.qc:193
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr "%sPaina ^3%s%s päättääksesi lämmittelyn"
+msgstr "%sPäätä lämmittely painamalla ^3%s%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:193
 #: qcsrc/client/hud/panel/infomessages.qc:198
@@ -227,36 +228,36 @@ msgstr "valmis"
 
 #: qcsrc/client/hud/panel/infomessages.qc:195
 msgid "^2Waiting for others to ready up to end warmup..."
-msgstr "^2Odotetaan muita saadakseen lämmittelynsä valmiiksi..."
+msgstr "^2Odotetaan, että muut ovat valmiit lopettamaan lämmittely..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:198
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr "^2Paina ^3%s^2 lämmittelyn lopettamiseksi"
+msgstr "^2Lopeta lämmittely painamalla ^3%s^2"
 
 #: qcsrc/client/hud/panel/infomessages.qc:208
 #, c-format
 msgid "%sNeed active players for: %s"
-msgstr ""
+msgstr "%sTarvitsee aktiivisia pelaajia: %s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:212
 #, c-format
 msgid "%sWaiting for 1 player to join..."
-msgstr ""
+msgstr "%sOdotetaan 1 pelaajaa liittymään..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:214
 #, c-format
 msgid "%sWaiting for %d players to join..."
-msgstr ""
+msgstr "%sOdotetaan %d pelaajaa liittymään..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "Joukkueet ovat epätasapainossa!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:229
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr " Paina ^3%s%s säätääksesi"
+msgstr "Säädä painamalla ^3%s%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:229
 #: qcsrc/menu/xonotic/keybinder.qc:164
@@ -273,15 +274,15 @@ msgstr "^1Sinua seuraa:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:258
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7Paina ^3ESC ^7nähdäksesi HUD-vaihtoehdot."
+msgstr "^7Katso HUD-valinnat painamalla ^3ESC ^7."
 
 #: qcsrc/client/hud/panel/infomessages.qc:259
 msgid "^3Double-click ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^3Katso paneelivalintoja tuplanapsauttamalla paneelia ^7a."
 
 #: qcsrc/client/hud/panel/infomessages.qc:260
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr "^3CTRL ^7kytkee pois yhteenottotestauksen, ^3SHIFT ^7ja"
+msgstr "^3CTRL ^7kytkee pois törmäystestin, ^3SHIFT ^7ja"
 
 #: qcsrc/client/hud/panel/infomessages.qc:261
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
@@ -295,7 +296,7 @@ msgstr "Pelaaja %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:220
 msgid "Standard quick menu"
-msgstr "Standardi pikavalikko"
+msgstr "Normaali pikavalikko"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:660
 #: qcsrc/client/hud/panel/quickmenu.qc:662
@@ -339,7 +340,7 @@ msgstr "QMCMD^hei / onnea matkaan"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:848
 msgid "QMCMD^hi / good luck and have fun"
-msgstr "QMCMD^hei / onnea matkaan ja pidäthän hauskaa"
+msgstr "QMCMD^hei / onnea matkaan ja pidä hauskaa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Send in English"
@@ -352,7 +353,7 @@ msgstr "QMCMD^joukkuekeskustelu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^strength soon"
-msgstr "QMCMD^voimistus pian"
+msgstr "QMCMD^vahvistus pian"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -597,7 +598,7 @@ msgstr "Aloituslinja"
 #: qcsrc/client/hud/panel/racetimer.qc:92
 #: qcsrc/client/hud/panel/racetimer.qc:96
 msgid "Finish line"
-msgstr "Maali"
+msgstr "Maaliviiva"
 
 #: qcsrc/client/hud/panel/racetimer.qc:212
 #: qcsrc/client/hud/panel/racetimer.qc:305
@@ -612,11 +613,11 @@ msgstr "tarkastuspiste sivuutettu"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select teleport destination"
-msgstr "Napsauta valitaksesi kaukosiirron määränpään"
+msgstr "Valitse kaukosiirron määränpää napsauttamalla"
 
 #: qcsrc/client/hud/panel/radar.qc:343
 msgid "Click to select spawn location"
-msgstr "Napsauta valitaksesi saapumismääränpään"
+msgstr "Valitse saapumismääränpää napsauttamalla"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Number of ball carrier kills"
@@ -668,19 +669,19 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^damage dealt"
-msgstr ""
+msgstr "SCO^vauriota tehty"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "The total damage dealt"
-msgstr ""
+msgstr "Tehty kokonaisvauriomäärä"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^damage taken"
-msgstr ""
+msgstr "SCO^vauriota otettu"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "The total damage taken"
-msgstr "Kärsityt tuhot kokonaisuudessaan"
+msgstr "Kärsitty kokonaisvauriomäärä"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Number of flag drops"
@@ -756,7 +757,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of key carrier kills"
-msgstr ""
+msgstr "Avaimenkantajien tapot"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kckills"
@@ -790,7 +791,7 @@ msgstr "SCO^tappoa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of laps finished (Race/CTS)"
-msgstr "Loppuunsaatettujen kierrosten lukumäärä (kilpa/CTS)"
+msgstr "Ajettu kierrosmäärä (kilpa/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^laps"
@@ -837,6 +838,7 @@ msgstr "SCO^tavoitteet"
 msgid ""
 "How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"
 msgstr ""
+"Monestiko lippu (CTF) tai avain (KeyHunt) tai pallo (Keepaway) poimittiin"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pickups"
@@ -900,7 +902,7 @@ msgstr "SCO^voitetut kierrokset"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "Number of rounds played"
-msgstr "Pelattujen kierrosten määrä"
+msgstr "Pelattu kierrosmäärä"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "SCO^rounds played"
@@ -916,11 +918,11 @@ msgstr "Yhteispisteet"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Player skill"
-msgstr ""
+msgstr "Pelaajan taito"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^skill"
-msgstr ""
+msgstr "SCO^taito"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of suicides"
@@ -940,11 +942,11 @@ msgstr "SCO^määrä"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "Number of survivals"
-msgstr ""
+msgstr "Eloonjääneet"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "SCO^survivals"
-msgstr ""
+msgstr "SCO^eloonjääneet"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of domination points taken (Domination)"
@@ -981,7 +983,7 @@ msgstr "Kilvan kokonaisaika (kilpa/CTS)"
 #: qcsrc/client/hud/panel/scoreboard.qc:724
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
-msgstr "Voit mukauttaa tulostaulua käyttäen ^2scoreboard_columns_set käskyä."
+msgstr "Voit mukauttaa tulostaulua komennolla ^2scoreboard_columns_set."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:725
 msgid "Usage:"
@@ -1087,7 +1089,7 @@ msgstr "Hirviöitä tapettu:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2171
 msgid "Secrets found:"
-msgstr "Salaisuuksia löydettiin:"
+msgstr "Salaisuuksia löydetty:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2389
 #, c-format
@@ -1110,7 +1112,7 @@ msgstr "SCO^pisteet"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2529
 msgid "Next map:"
-msgstr ""
+msgstr "Seuraava kartta:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2536
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
@@ -1120,18 +1122,17 @@ msgstr "Joukkueen valinta"
 #: qcsrc/client/hud/panel/scoreboard.qc:2550
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
-msgstr "^7Paina ^3%s^7 liittyäksesi valittuun joukkueeseen"
+msgstr "^7Liity valittuun joukkueeseen painamalla ^3%s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2552
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
-msgstr ""
-"^7Paina ^3%s^7 automaattista valintaa varten ja liittyäksesi tuohon valintaan"
+msgstr "^7Valitse joukkue automaattisesti ja liity painamalla ^3%s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2556
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
-msgstr "^7Paina ^3%s ^7valitaksesi määrätyn joukkueen"
+msgstr "^7Valitse määrätty joukkue painamalla ^3%s ^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2594
 #, c-format
@@ -1161,12 +1162,12 @@ msgstr "^1Virkoaminen tapahtuu ^3%s^1..."
 #: qcsrc/client/hud/panel/scoreboard.qc:2807
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr "Olet kuollut, odota ^3%s^7 ennen uudelleenvirkoamista"
+msgstr "Kuolit, odota ^3%s^7 ennen uudelleenvirkoamista"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2816
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr "Olet kuollut, paina ^2%s^7 virotaksesi uudelleen"
+msgstr "Kuolit, paina ^2%s^7 virotaksesi uudelleen"
 
 #: qcsrc/client/hud/panel/strafehud/extra.qc:111
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:55
@@ -1201,11 +1202,11 @@ msgstr "Lämmittely"
 
 #: qcsrc/client/hud/panel/timer.qc:151
 msgid "Warmup: too few players!"
-msgstr ""
+msgstr "Lämmittely: liian vähän pelaajia!"
 
 #: qcsrc/client/hud/panel/timer.qc:153
 msgid "Warmup: teams unbalanced!"
-msgstr ""
+msgstr "Lämmittely: joukkueet epätasapainossa!"
 
 #: qcsrc/client/hud/panel/timer.qc:155
 msgid "Warmup: no time limit"
@@ -1230,7 +1231,7 @@ msgstr "Yliaika #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:30
 msgid "^1You must answer before entering HUD configure mode"
-msgstr ""
+msgstr "^1Sinun tulee vastata ennen pääsyä HUD-asetustilaan"
 
 #: qcsrc/client/hud/panel/vote.qc:33
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1286,7 +1287,7 @@ msgstr "Ei saatavissa"
 
 #: qcsrc/client/main.qc:321
 msgid "Trying to remove a team which is not in the teamlist!"
-msgstr "Koetetaan poistaa joukkuetta joka ei ole joukkuelistassa!"
+msgstr "Yritetään poistaa joukkuetta, joka ei ole joukkueluettelossa!"
 
 #: qcsrc/client/main.qc:1128 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:185
 msgid "qu/s"
@@ -1322,11 +1323,11 @@ msgstr "Suurimman osan aseiden taistelukenttä"
 
 #: qcsrc/client/main.qc:1348
 msgid "Most Available Weapons Arena"
-msgstr "Taistelukenttä jossa suurin osa aseista käytössä"
+msgstr "Enimpien aseiden taistelukenttä"
 
 #: qcsrc/client/main.qc:1351 qcsrc/client/main.qc:1365
 msgid "No Weapons Arena"
-msgstr "Taistelukenttä jossa ei käytetä aseita"
+msgstr "Aseeton taistelukenttä"
 
 #: qcsrc/client/main.qc:1363
 #, c-format
@@ -1340,7 +1341,7 @@ msgstr "Tämä on %s"
 
 #: qcsrc/client/main.qc:1375
 msgid "Your client version is outdated."
-msgstr "Käyttämäsi asiakasohjelmajulkaisu on vanhentunut."
+msgstr "Asiakasohjelman versiosi on vanhentunut."
 
 #: qcsrc/client/main.qc:1376
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
@@ -1352,7 +1353,7 @@ msgstr "Ole hyvä ja päivitä!"
 
 #: qcsrc/client/main.qc:1380
 msgid "This server is using an outdated Xonotic version."
-msgstr "Tämä palvelin käyttää Xonotic:in vanhentunutta julkaisua."
+msgstr "Tämä palvelin käyttää vanhentunutta Xonotic-julkaisua."
 
 #: qcsrc/client/main.qc:1381
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
@@ -1361,7 +1362,7 @@ msgstr "### TÄMÄ PALVELIN ON YHTEENSOPIMATON ETKÄ TÄTEN VOI LIITTYÄ ###"
 #: qcsrc/client/main.qc:1383
 #, c-format
 msgid "Welcome to %s"
-msgstr "Tervetuloa kohteeseen %s"
+msgstr "Tervetuloa: %s"
 
 #: qcsrc/client/main.qc:1399 qcsrc/menu/xonotic/campaign.qc:245
 #, c-format
@@ -1371,7 +1372,7 @@ msgstr "Taso %d:"
 #: qcsrc/client/main.qc:1401
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
-msgstr "^BGPaina ^F2%s^BG liittyäksesi peliin"
+msgstr "^BGLiity peliin painamalla ^F2%s^BG"
 
 #: qcsrc/client/main.qc:1424
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:38
@@ -1399,20 +1400,20 @@ msgstr "%d :stä %d pelaajaa"
 #: qcsrc/client/main.qc:1438
 #, c-format
 msgid "%d players maximum"
-msgstr "%d pelaajaa on erimmäismäärä"
+msgstr "%d pelaajaa enimmillään"
 
 #: qcsrc/client/main.qc:1440
 #, c-format
 msgid "%d players minimum"
-msgstr "%d pelaajaa on vähimmäismäärä"
+msgstr "%d pelaajaa vähimmillään"
 
 #: qcsrc/client/main.qc:1445
 msgid "Active modifications:"
-msgstr "Toimessa olevat muunnokset:"
+msgstr "Aktiiviset muunnokset:"
 
 #: qcsrc/client/main.qc:1448
 msgid "Special gameplay tips:"
-msgstr "Erityisvinkit pelaamiseen:"
+msgstr "Erityiset pelivinkit:"
 
 #: qcsrc/client/main.qc:1455
 msgid "Server's message"
@@ -1483,6 +1484,8 @@ msgstr "virhe luodessa: curl handle"
 msgid ""
 "%s is a team-based gametype involving an attacking and a defending team."
 msgstr ""
+"%s on joukkuepohjainen pelityyppi, johon kuuluu hyökkäävä ja puolustava "
+"joukkue."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qc:9
 msgid ""
@@ -1500,18 +1503,19 @@ msgid ""
 "Objects have waypoints which show their health and position, and they're "
 "destroyed by shooting them with any weapon."
 msgstr ""
+"Esineillä on reittipisteet, jotka näyttävät niiden kunnon ja sijainnit, ja "
+"ne tuhotaan ampumalla millä tahansa aseella."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qh:8
 msgid "Assault"
-msgstr "Rynnäkkö (Assault)"
+msgstr "Rynnäkkö"
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qh:8
 msgid ""
 "Destroy obstacles to find and destroy the enemy power core before time runs "
 "out"
 msgstr ""
-"Tuhoa esteet löytääksesi ja tuhotaksesi vihollisen ytimen ennen kuin aika "
-"loppuu"
+"Etsi ja tuhoa vihollisen voimaydin tuhoamalla esteet ennen kuin aika loppuu"
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qh:22
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:28
@@ -1555,11 +1559,11 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:12
 msgid "Clan Arena"
-msgstr "Klaaniareena (Clan Arena)"
+msgstr "Klaaniareena"
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:12
 msgid "Kill all enemy teammates to win the round"
-msgstr "Tapa kaikki vihollisjoukkueen jäsenet voittaaksesi kierroksen"
+msgstr "Voita kierros tappamalla kaikki vihollisjoukkueen jäsenet"
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:42
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:45
@@ -1619,7 +1623,7 @@ msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
-"Löydä ja toimita vihollisen lippu tukikohtaasi kaapataksesi sen, puolusta "
+"Etsi ja vie vihollisen lippu tukikohtaasi, jotta kaappat sen, puolusta "
 "tukikohtaasi toiselta joukkueelta"
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qh:30
@@ -1628,12 +1632,12 @@ msgstr "Lipunryöstöraja"
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qh:30
 msgid "The amount of captures needed before the match will end"
-msgstr "Tarvittava kaappausten määrä ennen kuin ottelu loppuu"
+msgstr "Tarvittava kaappausmäärä ennen ottelun loppumista"
 
 #: qcsrc/common/gametypes/gametype/cts/cl_cts.qc:41
 #: qcsrc/common/gametypes/gametype/race/cl_race.qc:184
 msgid "Rankings"
-msgstr "Rankkaustasot"
+msgstr "Sijoitukset"
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qc:10
 #, c-format
@@ -1665,7 +1669,7 @@ msgstr "Kilpailu CTS (RACE CTS)"
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Race to the finish line for the fastest time"
-msgstr ""
+msgstr "Kilpaile maaliin nopeimmasta ajasta"
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:11
 #, c-format
@@ -1811,16 +1815,15 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:15
 msgid "Freeze Tag"
-msgstr "Pakkashippa (Freeze Tag)"
+msgstr "Pakkashippa"
 
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:15
 msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
-"Tapa viholliset heidät jäädyttääksesi, seiso jäädytettyjen "
-"joukkuekavereidesi vieressä elvyttääksesi heidät; jäädytä kaikki viholliset "
-"voittaaksesi"
+"Jäädytä viholliset tappamalla ne, elvytä jäätyneet joukkuekaverisi "
+"seisomalla niiden vieressä, voita kaikki viholliset jäädyttämällä"
 
 #: qcsrc/common/gametypes/gametype/invasion/invasion.qc:8
 #, c-format
@@ -1843,7 +1846,7 @@ msgstr "Tunkeutuminen"
 
 #: qcsrc/common/gametypes/gametype/invasion/invasion.qh:8
 msgid "Survive against waves of monsters"
-msgstr "Selviydy hirviöaaltoja vastaan"
+msgstr "Selviydy hirviöaalloilta"
 
 #: qcsrc/common/gametypes/gametype/keepaway/keepaway.qc:10
 #, c-format
@@ -1875,11 +1878,11 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/keepaway/keepaway.qh:11
 msgid "Hold the ball to get points for kills"
-msgstr "Pidä palloa saadaksesi tappopisteitä"
+msgstr "Tienaa tappopisteitä pitämällä palloa"
 
 #: qcsrc/common/gametypes/gametype/keepaway/keepaway.qh:11
 msgid "Keepaway"
-msgstr "Pakomatka (Keepaway)"
+msgstr "Pakomatka"
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:10
 #, c-format
@@ -1908,15 +1911,15 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qh:11
 msgid "Gather all the keys to win the round"
-msgstr "Kerää kaikki avaimet voittaaksesi kierroksen"
+msgstr "Voita kierros keräämällä kaikki avaimet"
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qh:11
 msgid "Key Hunt"
-msgstr "Avaimenetsintä (Key Hunt)"
+msgstr "Avaimenmetsästys"
 
 #: qcsrc/common/gametypes/gametype/lms/cl_lms.qc:18
 msgid "^1You have no more lives left"
-msgstr "^1Sinulla ei ole elämiä enää jäljellä"
+msgstr "^1Sinulla ei enää ole elämiä jäljellä"
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qc:10
 #, c-format
@@ -1945,11 +1948,11 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qh:11
 msgid "Last Man Standing"
-msgstr "Viimeiseen mieheen (Last Man Standing)"
+msgstr "Viimeiseen mieheen"
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qh:11
 msgid "Survive and kill until the enemies have no lives left"
-msgstr "Selviydy ja tapa kunnes vihollisilla ei ole enää elämiä jäljellä"
+msgstr "Selviydy ja tapa, kunnes vihollisilla ei ole enää elämiä jäljellä."
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qh:20
 msgid "Lives:"
@@ -2019,11 +2022,11 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
 msgid "Nexball"
-msgstr "Nexpallo (Nexball)"
+msgstr "Nex-pallo"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
 msgid "Shoot and kick the ball into the enemy's goal, keep your goal clean"
-msgstr ""
+msgstr "Ammu ja potkaise pallo vihollisen maaliin, pidä oma maalisi tyhjänä"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
 msgid "Goal limit:"
@@ -2031,7 +2034,7 @@ msgstr "Maaliraja:"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
 msgid "The amount of goals needed before the match will end"
-msgstr "Tarvittava maalimäärä ennen kuin ottelu loppuu"
+msgstr "Tarvittava maalimäärä ennen ottelun loppumista"
 
 #: qcsrc/common/gametypes/gametype/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -2072,15 +2075,15 @@ msgstr "Valtaa hallintapisteet päästäksesi vihollisen generaattorille"
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:8
 msgid "Onslaught"
-msgstr "Suurtaistelu (Onslaught)"
+msgstr "Suurtaistelu"
 
 #: qcsrc/common/gametypes/gametype/race/cl_race.qc:102
 msgid "Personal best"
-msgstr "Oma Ennätys"
+msgstr "Oma ennätys"
 
 #: qcsrc/common/gametypes/gametype/race/cl_race.qc:112
 msgid "Server best"
-msgstr "Serverin Paras"
+msgstr "Palvelimen paras"
 
 #: qcsrc/common/gametypes/gametype/race/race.qc:10
 #, c-format
@@ -2106,11 +2109,11 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/race/race.qh:11
 msgid "Race"
-msgstr "Kilpailu (RACE)"
+msgstr "Kilpailu"
 
 #: qcsrc/common/gametypes/gametype/race/race.qh:11
 msgid "Race against other players to the finish line"
-msgstr "Kisaa toisia pelaajia vastaan kohti maaliviivaa"
+msgstr "Kisaa toisia pelaajia vastaan maaliviivaan asti"
 
 #: qcsrc/common/gametypes/gametype/race/race.qh:40
 msgid "Laps:"
@@ -2118,11 +2121,11 @@ msgstr "Kierrokset:"
 
 #: qcsrc/common/gametypes/gametype/survival/cl_survival.qc:63
 msgid "Hunter"
-msgstr ""
+msgstr "Metsästäjä"
 
 #: qcsrc/common/gametypes/gametype/survival/cl_survival.qc:69
 msgid "Survivor"
-msgstr ""
+msgstr "Selviytyjä"
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:11
 #, c-format
@@ -2318,7 +2321,7 @@ msgstr "Pieni panssari"
 
 #: qcsrc/common/items/item/armor.qh:96
 msgid "Medium armor"
-msgstr "Keskiluokan panssari"
+msgstr "Keskisuuri panssari"
 
 #: qcsrc/common/items/item/armor.qh:148 qcsrc/common/items/item/armor.qh:159
 msgid "Big armor"
@@ -2367,7 +2370,7 @@ msgstr "Pieni terveyspalautus"
 
 #: qcsrc/common/items/item/health.qh:96
 msgid "Medium health"
-msgstr "Keskiluokan terveyspalautus"
+msgstr "Keskisuuri terveyspalautus"
 
 #: qcsrc/common/items/item/health.qh:148 qcsrc/common/items/item/health.qh:159
 msgid "Big health"
@@ -2393,7 +2396,7 @@ msgstr "Tarvittava tappojen määrä ennen ottelun päättymistä"
 
 #: qcsrc/common/minigames/cl_minigames.qc:287
 msgid "Spectators:"
-msgstr ""
+msgstr "Katselijat:"
 
 #: qcsrc/common/minigames/cl_minigames.qc:424
 msgid "It's your turn"
@@ -2446,7 +2449,7 @@ msgstr "Peli on ohi!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click \"Next Level\" to continue"
-msgstr ""
+msgstr "Hyvin meni! Jatka napsauttamalla \"Seuraava Taso\""
 
 #: qcsrc/common/minigames/minigame/bd.qc:1183
 #: qcsrc/common/minigames/minigame/c4.qc:383
@@ -2456,19 +2459,19 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/ps.qc:500
 #: qcsrc/common/minigames/minigame/ttt.qc:331
 msgid "You are spectating"
-msgstr "Olet tällä hetkellä katsojana"
+msgstr "Olet katsojana"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1186
 msgid "Better luck next time!"
-msgstr "Paremmin ensi kerralla!"
+msgstr "Parempi onni ensi kerralla!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1191
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr "Se meni putkeen! Paina \"Seuraava Taso\" jatkaaksesi!"
+msgstr "Se meni putkeen! Jatka painamalla \"Seuraava Taso\"!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1193
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr "Päheetä! Paina \"Seuraava taso\" jatkaaksesi!"
+msgstr "Päheetä! Jatka painamalla \"Seuraava taso\"!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1197
 msgid "Press the spacebar to change your currently selected tile"
@@ -2476,11 +2479,11 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/bd.qc:1200
 msgid "Push the boulders onto the targets"
-msgstr "Työnnä lohkareet kohteita kohti"
+msgstr "Työnnä lohkareet kohteita päin"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1436
 msgid "Next Level"
-msgstr "Seuraava Taso"
+msgstr "Seuraava taso"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1437
 msgid "Restart"
@@ -2534,14 +2537,14 @@ msgstr "Voitto on sinun!"
 #: qcsrc/common/minigames/minigame/pp.qc:470
 #: qcsrc/common/minigames/minigame/ttt.qc:353
 msgid "Wait for your opponent to make their move"
-msgstr "Odota että vastustajasi toteuttaa liikkeensä"
+msgstr "Odota, että vastustajasi tekee siirtonsa"
 
 #: qcsrc/common/minigames/minigame/c4.qc:399
 #: qcsrc/common/minigames/minigame/nmm.qc:619
 #: qcsrc/common/minigames/minigame/pp.qc:473
 #: qcsrc/common/minigames/minigame/ttt.qc:356
 msgid "Click on the game board to place your piece"
-msgstr "Napsauta pelilaudalla asettaaksesi nappulasi"
+msgstr "Aseta pelinappulasi napsauttamalla pelilautaa"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:3
 msgid "Nine Men's Morris"
