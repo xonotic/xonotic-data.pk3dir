@@ -953,7 +953,7 @@ MUTATOR_HOOKFUNCTION(ft, BotShouldAttack)
 {
 	entity targ = M_ARGV(1, entity);
 
-	return !STAT(FROZEN, targ);
+	return STAT(FROZEN, targ);
 }
 
 MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
