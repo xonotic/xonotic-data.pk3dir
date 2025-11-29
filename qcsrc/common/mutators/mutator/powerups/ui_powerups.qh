@@ -1,0 +1,10 @@
+#pragma once
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorPowerupsTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorPowerupsTab, fill, void(entity));
+	ATTRIB(XonoticMutatorPowerupsTab, title, string, _("Powerups"));
+	ATTRIB(XonoticMutatorPowerupsTab, message, string, "g_powerups");
+	METHOD(XonoticMutatorPowerupsTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorPowerupsTab)
+entity makeXonoticMutatorPowerupsTab();
