@@ -10,6 +10,7 @@
 # heidi.wenger, 2022
 # Henry 'Exitium' Sanmark <henry.sanmark@gmail.com>, 2011
 # Jaakko Muilu, 2025
+# Jaakko Muilu, 2025
 # Jaakko Saarikko <jaakko.saarikko@protonmail.com>, 2022
 # Jonas Sahlberg <fragthelion@gmail.com>, 2015
 # LINUX SAUNA, 2022
@@ -23,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 07:22+0100\n"
+"POT-Creation-Date: 2025-11-30 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Jaakko Muilu, 2025\n"
 "Language-Team: Finnish (http://app.transifex.com/team-xonotic/xonotic/"
@@ -34,23 +35,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:123
+#: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:126
 msgid "Checkpoint times:"
 msgstr ""
 
-#: qcsrc/client/hud/hud_config.qc:80
+#: qcsrc/client/hud/hud_config.qc:79
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)"
 msgstr ""
 "^2Viety onnistuneesti kohteeseen %s! (Huomautus: tallennettu kansioon data/"
 "data/)"
 
-#: qcsrc/client/hud/hud_config.qc:84
+#: qcsrc/client/hud/hud_config.qc:83
 #, c-format
 msgid "^1Couldn't write to %s"
 msgstr "^1Ei voitu kirjoittaa kohteeseen %s"
 
-#: qcsrc/client/hud/panel/centerprint.qc:197
+#: qcsrc/client/hud/panel/centerprint.qc:198
 msgid "Title"
 msgstr "Otsikko:"
 
@@ -77,75 +78,75 @@ msgstr "Viesti ajassa %s"
 msgid "Generic message"
 msgstr "Yleisluontoinen viesti"
 
-#: qcsrc/client/hud/panel/centerprint.qc:293
-#: qcsrc/client/hud/panel/centerprint.qc:303
+#: qcsrc/client/hud/panel/centerprint.qc:291
+#: qcsrc/client/hud/panel/centerprint.qc:301
 msgid "vs"
 msgstr "vastaan"
 
-#: qcsrc/client/hud/panel/chat.qc:168
+#: qcsrc/client/hud/panel/chat.qc:166
 msgid "^3Player^7: This is the chat area."
 msgstr "^3Pelaaja^7: Tämä on keskustelualue."
 
-#: qcsrc/client/hud/panel/checkpoints.qc:146
-#: qcsrc/client/hud/panel/checkpoints.qc:149
+#: qcsrc/client/hud/panel/checkpoints.qc:144
+#: qcsrc/client/hud/panel/checkpoints.qc:147
 #: qcsrc/client/hud/panel/racetimer.qc:94
-#: qcsrc/client/hud/panel/racetimer.qc:209
+#: qcsrc/client/hud/panel/racetimer.qc:214
 #, c-format
 msgid "Checkpoint %d"
 msgstr "Tarkastuspiste %d"
 
-#: qcsrc/client/hud/panel/engineinfo.qc:75
+#: qcsrc/client/hud/panel/engineinfo.qc:72
 #, c-format
 msgid "FPS: %.*f"
 msgstr "FPS-ruutunopeus: %.*f"
 
-#: qcsrc/client/hud/panel/infomessages.qc:104
+#: qcsrc/client/hud/panel/infomessages.qc:102
 msgid "^1Observing"
 msgstr "^1Tarkkailee"
 
-#: qcsrc/client/hud/panel/infomessages.qc:106
+#: qcsrc/client/hud/panel/infomessages.qc:104
 #, c-format
 msgid "^1Spectating: ^7%s"
 msgstr "^1Katselee: ^7%s"
 
-#: qcsrc/client/hud/panel/infomessages.qc:117
+#: qcsrc/client/hud/panel/infomessages.qc:115
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
 msgstr "^1Katso painamalla ^3%s^1"
 
-#: qcsrc/client/hud/panel/infomessages.qc:117
+#: qcsrc/client/hud/panel/infomessages.qc:115
 #: qcsrc/menu/xonotic/keybinder.qc:73
 msgid "primary fire"
 msgstr "ensisijainen tulitus"
 
-#: qcsrc/client/hud/panel/infomessages.qc:119
+#: qcsrc/client/hud/panel/infomessages.qc:117
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
 msgstr ""
 "^1Siirry seuraavaan tai edelliseen pelaajaan painamalla ^3%s^1 tai ^3%s^1"
 
-#: qcsrc/client/hud/panel/infomessages.qc:119
-#: qcsrc/client/hud/panel/infomessages.qc:123
+#: qcsrc/client/hud/panel/infomessages.qc:117
+#: qcsrc/client/hud/panel/infomessages.qc:121
 msgid "next weapon"
 msgstr "seuraava ase"
 
-#: qcsrc/client/hud/panel/infomessages.qc:119
-#: qcsrc/client/hud/panel/infomessages.qc:123
+#: qcsrc/client/hud/panel/infomessages.qc:117
+#: qcsrc/client/hud/panel/infomessages.qc:121
 msgid "previous weapon"
 msgstr "edellinen ase"
 
-#: qcsrc/client/hud/panel/infomessages.qc:123
+#: qcsrc/client/hud/panel/infomessages.qc:121
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
 msgstr "^1Muuta nopeutta painamalla ^3%s^1 tai ^3%s^1"
 
-#: qcsrc/client/hud/panel/infomessages.qc:125
+#: qcsrc/client/hud/panel/infomessages.qc:123
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
 msgstr "^1Paina ^3%s^1 tarkkaillaksesi, ^3%s^1 vaihtaaksesi kameratilaa"
 
+#: qcsrc/client/hud/panel/infomessages.qc:123
 #: qcsrc/client/hud/panel/infomessages.qc:125
-#: qcsrc/client/hud/panel/infomessages.qc:127
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:87
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:19
 #: qcsrc/common/mutators/mutator/nades/nades.qc:51
@@ -153,33 +154,33 @@ msgstr "^1Paina ^3%s^1 tarkkaillaksesi, ^3%s^1 vaihtaaksesi kameratilaa"
 msgid "drop weapon"
 msgstr "pudota ase"
 
-#: qcsrc/client/hud/panel/infomessages.qc:125
+#: qcsrc/client/hud/panel/infomessages.qc:123
 #: qcsrc/menu/xonotic/keybinder.qc:74
 msgid "secondary fire"
 msgstr "toissijainen tulitus"
 
-#: qcsrc/client/hud/panel/infomessages.qc:127
+#: qcsrc/client/hud/panel/infomessages.qc:125
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
 msgstr "^1Vaihda kameratilaa painamalla ^3%s^1"
 
-#: qcsrc/client/hud/panel/infomessages.qc:130
+#: qcsrc/client/hud/panel/infomessages.qc:128
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
 msgstr "^1Katso pelitilatiedot painamalla ^3%s^1"
 
-#: qcsrc/client/hud/panel/infomessages.qc:130
+#: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/menu/xonotic/keybinder.qc:153
 msgid "server info"
 msgstr "palvelimen tiedot"
 
-#: qcsrc/client/hud/panel/infomessages.qc:141
+#: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Liity painamalla ^3%s^1"
 
-#: qcsrc/client/hud/panel/infomessages.qc:141
-#: qcsrc/client/hud/panel/scoreboard.qc:2816 qcsrc/client/main.qc:1397
+#: qcsrc/client/hud/panel/infomessages.qc:139
+#: qcsrc/client/hud/panel/scoreboard.qc:2792 qcsrc/client/main.qc:1397
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:82
 #: qcsrc/common/notifications/all.qh:463
 #: qcsrc/common/vehicles/vehicle/racer.qc:652
@@ -188,405 +189,404 @@ msgstr "^1Liity painamalla ^3%s^1"
 msgid "jump"
 msgstr "hyppää"
 
-#: qcsrc/client/hud/panel/infomessages.qc:147
+#: qcsrc/client/hud/panel/infomessages.qc:145
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
 msgstr "^2Olet jonossa liittyäksesi joukkueeseen %s%s^2"
 
-#: qcsrc/client/hud/panel/infomessages.qc:150
+#: qcsrc/client/hud/panel/infomessages.qc:148
 msgid "^2You're queued to join any available team"
-msgstr ""
+msgstr "^2Olet jonossa liittyäksesi saatavilla olevaan joukkueeseen"
 
-#: qcsrc/client/hud/panel/infomessages.qc:156
+#: qcsrc/client/hud/panel/infomessages.qc:154
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
 msgstr "^1Peli alkaa ^3%d^1 sekunnin kuluttua"
 
-#: qcsrc/client/hud/panel/infomessages.qc:168
+#: qcsrc/client/hud/panel/infomessages.qc:162
 msgid "^2Currently in ^1warmup^2 stage!"
 msgstr "^2Tällä hetkellä ^1lämmittelyssä^2 !"
 
-#: qcsrc/client/hud/panel/infomessages.qc:178
+#: qcsrc/client/hud/panel/infomessages.qc:172
 msgid "^31^2 more player is needed for the match to start."
 msgstr "^31^2 pelaajaa tarvitaan lisää, jotta ottelu voi alkaa."
 
-#: qcsrc/client/hud/panel/infomessages.qc:180
+#: qcsrc/client/hud/panel/infomessages.qc:174
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
 msgstr "^3%d^2 pelaajaa tarvitaan lisää, jotta ottelu voi alkaa."
 
-#: qcsrc/client/hud/panel/infomessages.qc:193
-#, c-format
-msgid "%sPress ^3%s%s to end warmup"
-msgstr "%sPäätä lämmittely painamalla ^3%s%s"
-
-#: qcsrc/client/hud/panel/infomessages.qc:193
-#: qcsrc/client/hud/panel/infomessages.qc:198
+#: qcsrc/client/hud/panel/infomessages.qc:184
 #: qcsrc/menu/xonotic/keybinder.qc:149
 msgid "ready"
 msgstr "valmis"
 
-#: qcsrc/client/hud/panel/infomessages.qc:195
+#: qcsrc/client/hud/panel/infomessages.qc:188
+#, c-format
+msgid "%sPress ^3%s%s to end warmup"
+msgstr "%sPäätä lämmittely painamalla ^3%s%s"
+
+#: qcsrc/client/hud/panel/infomessages.qc:190
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr "^2Odotetaan, että muut ovat valmiit lopettamaan lämmittely..."
 
-#: qcsrc/client/hud/panel/infomessages.qc:198
+#: qcsrc/client/hud/panel/infomessages.qc:193
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr "^2Lopeta lämmittely painamalla ^3%s^2"
 
-#: qcsrc/client/hud/panel/infomessages.qc:208
+#: qcsrc/client/hud/panel/infomessages.qc:203
 #, c-format
 msgid "%sNeed active players for: %s"
 msgstr "%sTarvitsee aktiivisia pelaajia: %s"
 
-#: qcsrc/client/hud/panel/infomessages.qc:212
+#: qcsrc/client/hud/panel/infomessages.qc:207
 #, c-format
 msgid "%sWaiting for 1 player to join..."
 msgstr "%sOdotetaan 1 pelaajaa liittymään..."
 
-#: qcsrc/client/hud/panel/infomessages.qc:214
+#: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
 msgid "%sWaiting for %d players to join..."
 msgstr "%sOdotetaan %d pelaajaa liittymään..."
 
-#: qcsrc/client/hud/panel/infomessages.qc:226
+#: qcsrc/client/hud/panel/infomessages.qc:221
 msgid "Teams are unbalanced!"
 msgstr "Joukkueet ovat epätasapainossa!"
 
-#: qcsrc/client/hud/panel/infomessages.qc:229
+#: qcsrc/client/hud/panel/infomessages.qc:224
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr "Säädä painamalla ^3%s%s"
 
-#: qcsrc/client/hud/panel/infomessages.qc:229
+#: qcsrc/client/hud/panel/infomessages.qc:224
 #: qcsrc/menu/xonotic/keybinder.qc:164
 msgid "team selection"
 msgstr "joukkuevalinta"
 
-#: qcsrc/client/hud/panel/infomessages.qc:242
+#: qcsrc/client/hud/panel/infomessages.qc:237
 msgid "^1Spectating this player:"
 msgstr "^1Seurataan tätä pelaajaa:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:242
+#: qcsrc/client/hud/panel/infomessages.qc:237
 msgid "^1Spectating you:"
 msgstr "^1Sinua seuraa:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:258
+#: qcsrc/client/hud/panel/infomessages.qc:254
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr "^7Katso HUD-valinnat painamalla ^3ESC ^7."
 
-#: qcsrc/client/hud/panel/infomessages.qc:259
+#: qcsrc/client/hud/panel/infomessages.qc:255
 msgid "^3Double-click ^7a panel for panel-specific options."
 msgstr "^3Katso paneelivalintoja tuplanapsauttamalla paneelia ^7a."
 
-#: qcsrc/client/hud/panel/infomessages.qc:260
+#: qcsrc/client/hud/panel/infomessages.qc:256
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr "^3CTRL ^7kytkee pois törmäystestin, ^3SHIFT ^7ja"
 
-#: qcsrc/client/hud/panel/infomessages.qc:261
+#: qcsrc/client/hud/panel/infomessages.qc:257
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "^3ALT ^7+ ^3NUOLINÄPPÄIMET ^7hienosäätöä varten."
 
-#: qcsrc/client/hud/panel/notify.qc:145 qcsrc/client/hud/panel/notify.qc:146
-#: qcsrc/client/hud/panel/score.qc:66
+#: qcsrc/client/hud/panel/notify.qc:144 qcsrc/client/hud/panel/notify.qc:145
+#: qcsrc/client/hud/panel/score.qc:64
 #, c-format
 msgid "Player %d"
 msgstr "Pelaaja %d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:220
+#: qcsrc/client/hud/panel/quickmenu.qc:223
 msgid "Standard quick menu"
 msgstr "Normaali pikavalikko"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:660
-#: qcsrc/client/hud/panel/quickmenu.qc:662
+#: qcsrc/client/hud/panel/quickmenu.qc:652
+#: qcsrc/client/hud/panel/quickmenu.qc:654
 #, c-format
 msgid "Submenu%d"
 msgstr "Alivalikko%d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:667
+#: qcsrc/client/hud/panel/quickmenu.qc:659
 #, c-format
 msgid "Command%d"
 msgstr "Komento%d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:693
+#: qcsrc/client/hud/panel/quickmenu.qc:683
 msgid "Continue..."
 msgstr "Jatka..."
 
-#: qcsrc/client/hud/panel/quickmenu.qc:844
-#: qcsrc/client/hud/panel/quickmenu.qc:851
+#: qcsrc/client/hud/panel/quickmenu.qc:839
+#: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "Chat"
 msgstr "Keskustelu"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:845
+#: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^Send public message to"
 msgstr "QMCMD^Lähetä julkinen viesti "
 
-#: qcsrc/client/hud/panel/quickmenu.qc:846
+#: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^:-) / nice one"
 msgstr "QMCMD^:-) / se oli hieno"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:846
+#: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^nice one"
 msgstr "QMCMD^se oli hieno"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:847
+#: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^good game"
 msgstr "QMCMD^hyvä peli"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:848
+#: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^hi / good luck"
 msgstr "QMCMD^hei / onnea matkaan"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:848
+#: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^hi / good luck and have fun"
 msgstr "QMCMD^hei / onnea matkaan ja pidä hauskaa"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:850
+#: qcsrc/client/hud/panel/quickmenu.qc:845
 msgid "QMCMD^Send in English"
 msgstr "QMCMD^Lähetä Suomeksi"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:855
-#: qcsrc/client/hud/panel/quickmenu.qc:871
+#: qcsrc/client/hud/panel/quickmenu.qc:850
+#: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "QMCMD^Team chat"
 msgstr "QMCMD^joukkuekeskustelu"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:856
+#: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "QMCMD^strength soon"
 msgstr "QMCMD^vahvistus pian"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:857
+#: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^free item %x^7 (l:%y^7)"
 msgstr "QMCMD^vapauta esine %x^7 (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:857
+#: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^free item, icon"
 msgstr "QMCMD^vapaa esine, kuvake"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:858
+#: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^took item (l:%l^7)"
 msgstr "QMCMD^otti esineen (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:858
+#: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^took item, icon"
 msgstr "QMCMD^otti esineen, kuvake"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:859
+#: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "QMCMD^negative"
 msgstr "QMCMD^negatiivinen"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:860
+#: qcsrc/client/hud/panel/quickmenu.qc:855
 msgid "QMCMD^positive"
 msgstr "QMCMD^positiivinen"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:861
+#: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^avuntarve (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:861
+#: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^need help, icon"
 msgstr "QMCMD^avuntarve, kuvake"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:862
+#: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^enemy seen (l:%y^7)"
 msgstr "QMCMD^vihollinen havaittu (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:862
+#: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^enemy seen, icon"
 msgstr "QMCMD^vihollinen havaittu, kuvake"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:863
+#: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^flag seen (l:%y^7)"
 msgstr "QMCMD^lippu havaittu (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:863
+#: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^flag seen, icon"
 msgstr "QMCMD^lippu havaittu, kuvake"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:864
+#: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^puolustaa (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:864
+#: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^defending, icon"
 msgstr "QMCMD^puolustaa, kuvake"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:865
+#: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^kuljeskelee (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:865
+#: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^roaming, icon"
 msgstr "QMCMD^kuljeskelee, kuvake"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:866
+#: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^hyökkäämässä (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:866
+#: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^attacking, icon"
 msgstr "QMCMD^hyökkäämässä, kuvake"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:867
+#: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
 msgstr "QMCMD^lipunkantaja tapettu (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:867
+#: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^killed flagcarrier, icon"
 msgstr "QMCMD^lipunkantaja tapettu, kuvake"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:868
+#: qcsrc/client/hud/panel/quickmenu.qc:863
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
 msgstr "QMCMD^lippu pudotettu (l:%d^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:868
+#: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^dropped flag, icon"
 msgstr "QMCMD^lippu pudotettu, kuvake"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:869
+#: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^drop weapon, icon"
 msgstr "QMCMD^pudota ase, kuvake"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:869
+#: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
 msgstr "QMCMD^ase pudotettu %w^7 (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:870
+#: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^drop flag/key, icon"
 msgstr "QMCMD^pudota lippu/avain, kuvake"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:870
+#: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
 msgstr "QMCMD^pudotettu lippu/avain %w^7 (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:874
+#: qcsrc/client/hud/panel/quickmenu.qc:869
 msgid "QMCMD^Send private message to"
 msgstr "QMCMD^Lähetä yksityisviesti"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:876
-#: qcsrc/client/hud/panel/quickmenu.qc:906
+#: qcsrc/client/hud/panel/quickmenu.qc:871
+#: qcsrc/client/hud/panel/quickmenu.qc:900
 msgid "QMCMD^Settings"
 msgstr "QMCMD^Asetukset"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:877
-#: qcsrc/client/hud/panel/quickmenu.qc:884
+#: qcsrc/client/hud/panel/quickmenu.qc:872
+#: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "QMCMD^View/HUD settings"
 msgstr "QMCMD^Katso/HUD-asetukset"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:878
+#: qcsrc/client/hud/panel/quickmenu.qc:873
 msgid "QMCMD^3rd person view"
 msgstr "QMCMD^näkymä kolmannessa persoonassa"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:879
+#: qcsrc/client/hud/panel/quickmenu.qc:874
 msgid "QMCMD^Player models like mine"
 msgstr "QMCMD^Pelaajamallit, jotka vastaavat omaani"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:880
+#: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "QMCMD^Names above players"
 msgstr "QMCMD^Nimet pelaajien yläpuolella"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:881
+#: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "QMCMD^Crosshair per weapon"
 msgstr "QMCMD^Asekohtainen tähtäin"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:882
+#: qcsrc/client/hud/panel/quickmenu.qc:877
 msgid "QMCMD^FPS"
 msgstr "QMCMD^FPS-ruutunopeus"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:883
+#: qcsrc/client/hud/panel/quickmenu.qc:878
 msgid "QMCMD^Net graph"
 msgstr "QMCMD^Nettomallinnus"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:886
-#: qcsrc/client/hud/panel/quickmenu.qc:889
+#: qcsrc/client/hud/panel/quickmenu.qc:881
+#: qcsrc/client/hud/panel/quickmenu.qc:884
 msgid "QMCMD^Sound settings"
 msgstr "QMCMD^Ääniasetukset"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:887
+#: qcsrc/client/hud/panel/quickmenu.qc:882
 msgid "QMCMD^Hit sound"
 msgstr "QMCMD^Osumaääni"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:888
+#: qcsrc/client/hud/panel/quickmenu.qc:883
 msgid "QMCMD^Chat sound"
 msgstr "QMCMD^Chat-keskustelun ääni"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:893
+#: qcsrc/client/hud/panel/quickmenu.qc:888
 msgid "QMCMD^Change spectator camera"
 msgstr "QMCMD^Muuta katselijakameraa"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:898
-#: qcsrc/client/hud/panel/quickmenu.qc:902
+#: qcsrc/client/hud/panel/quickmenu.qc:892
+#: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "QMCMD^Observer camera"
 msgstr "QMCMD^Tarkkailijakamera"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:899
+#: qcsrc/client/hud/panel/quickmenu.qc:893
 msgid "QMCMD^Increase speed"
 msgstr "QMCMD^Korota nopeutta"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:900
+#: qcsrc/client/hud/panel/quickmenu.qc:894
 msgid "QMCMD^Decrease speed"
 msgstr "QMCMD^Vähennä nopeutta"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:901
+#: qcsrc/client/hud/panel/quickmenu.qc:895
 msgid "QMCMD^Wall collision"
 msgstr "QMCMD^Seinätörmäys"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:905
+#: qcsrc/client/hud/panel/quickmenu.qc:899
 msgid "QMCMD^Fullscreen"
 msgstr "QMCMD^Kokoruutu"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:908
-#: qcsrc/client/hud/panel/quickmenu.qc:918
+#: qcsrc/client/hud/panel/quickmenu.qc:902
+#: qcsrc/client/hud/panel/quickmenu.qc:912
 msgid "QMCMD^Call a vote"
 msgstr "QMCMD^Pyydä äänestystä"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:909
+#: qcsrc/client/hud/panel/quickmenu.qc:903
 msgid "QMCMD^Restart the map"
 msgstr "QMCMD^Uudelleenkäynnistä kartta"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:910
+#: qcsrc/client/hud/panel/quickmenu.qc:904
 msgid "QMCMD^End match"
 msgstr "QMCMD^Lopeta ottelu"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:913
+#: qcsrc/client/hud/panel/quickmenu.qc:907
 msgid "QMCMD^Reduce match time"
 msgstr "QMCMD^Vähennä otteluaikaa"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:914
+#: qcsrc/client/hud/panel/quickmenu.qc:908
 msgid "QMCMD^Extend match time"
 msgstr "QMCMD^Lisää otteluaikaa"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:917
+#: qcsrc/client/hud/panel/quickmenu.qc:911
 msgid "QMCMD^Shuffle teams"
 msgstr "QMCMD^Sekoita joukkueet"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:922
+#: qcsrc/client/hud/panel/quickmenu.qc:916
 msgid "Server quick menu"
 msgstr "Palvelimen pikavalikko"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:924
+#: qcsrc/client/hud/panel/quickmenu.qc:918
 msgid "Waypoint editor menu"
 msgstr "Välietapin muokkausvalikko"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:927
+#: qcsrc/client/hud/panel/quickmenu.qc:921
 msgid "Waypoint editor menu as default"
 msgstr "Välietapin muokkausvalikko oletuksena"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:929
+#: qcsrc/client/hud/panel/quickmenu.qc:923
 msgid "Server quick menu as default"
 msgstr "Palvelimen pikavalikko oletuksena"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:935
+#: qcsrc/client/hud/panel/quickmenu.qc:929
 msgid "QMCMD^Spectate a player"
 msgstr "QMCMD^Katsele pelaajaa"
 
-#: qcsrc/client/hud/panel/racetimer.qc:66
+#: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
 msgid " (-%dL)"
 msgstr " (-%dL)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:71
+#: qcsrc/client/hud/panel/racetimer.qc:70
 #, c-format
 msgid " (+%dL)"
 msgstr " (+%dL)"
@@ -600,24 +600,24 @@ msgstr "Aloituslinja"
 msgid "Finish line"
 msgstr "Maaliviiva"
 
-#: qcsrc/client/hud/panel/racetimer.qc:212
-#: qcsrc/client/hud/panel/racetimer.qc:305
-#: qcsrc/client/hud/panel/racetimer.qc:369
+#: qcsrc/client/hud/panel/racetimer.qc:217
+#: qcsrc/client/hud/panel/racetimer.qc:309
+#: qcsrc/client/hud/panel/racetimer.qc:373
 #, c-format
 msgid "PENALTY: %.1f (%s)"
 msgstr "RANGAISTUS: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:212 qcsrc/client/main.qc:1234
+#: qcsrc/client/hud/panel/racetimer.qc:217 qcsrc/client/main.qc:1234
 msgid "missing a checkpoint"
 msgstr "tarkastuspiste sivuutettu"
 
-#: qcsrc/client/hud/panel/radar.qc:339
-msgid "Click to select teleport destination"
-msgstr "Valitse kaukosiirron määränpää napsauttamalla"
-
-#: qcsrc/client/hud/panel/radar.qc:343
+#: qcsrc/client/hud/panel/radar.qc:334
 msgid "Click to select spawn location"
 msgstr "Valitse saapumismääränpää napsauttamalla"
+
+#: qcsrc/client/hud/panel/radar.qc:335
+msgid "Click to select teleport destination"
+msgstr "Valitse kaukosiirron määränpää napsauttamalla"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Number of ball carrier kills"
@@ -665,7 +665,7 @@ msgstr "Tuhottujen avainten määrä työntämällä ne hukkaan"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^destructions"
-msgstr ""
+msgstr "SCO^tuhoja"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^damage dealt"
@@ -980,20 +980,20 @@ msgstr "SCO^aika"
 msgid "Total time raced (Race/CTS)"
 msgstr "Kilvan kokonaisaika (kilpa/CTS)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:724
+#: qcsrc/client/hud/panel/scoreboard.qc:713
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr "Voit mukauttaa tulostaulua komennolla ^2scoreboard_columns_set."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:725
+#: qcsrc/client/hud/panel/scoreboard.qc:714
 msgid "Usage:"
 msgstr "Käyttö:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:727
+#: qcsrc/client/hud/panel/scoreboard.qc:716
 msgid "^2scoreboard_columns_set ^3field1 field2 ..."
 msgstr "^2scoreboard_columns_set ^3field1 field2 ..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:728
+#: qcsrc/client/hud/panel/scoreboard.qc:717
 msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
@@ -1001,7 +1001,7 @@ msgstr ""
 "^2scoreboard_columns_set ^7ilman argumentteja otetaan argumentit cvar "
 "scoreboard_columns :sta"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:729
+#: qcsrc/client/hud/panel/scoreboard.qc:718
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
@@ -1009,7 +1009,7 @@ msgstr ""
 "  ^5Huomautus: ^7scoreboard_columns_set ilman argumentteja ajetaan jokaisen "
 "kartan aloituksessa"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:730
+#: qcsrc/client/hud/panel/scoreboard.qc:719
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
@@ -1017,15 +1017,15 @@ msgstr ""
 "^2scoreboard_columns_set ^3expand_default ^7lataa vakioulkoasun ja laajentaa "
 "sen muotoon cvar scoreboard_columns jotta voit muokata sitä"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:731
+#: qcsrc/client/hud/panel/scoreboard.qc:720
 msgid "You can use a ^3|^7 to start the right-aligned fields."
 msgstr "Voit käyttää ^3|^7 aloittaaksesi oikealle tasatut kentät."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:732
+#: qcsrc/client/hud/panel/scoreboard.qc:721
 msgid "The following field names are recognized (case insensitive):"
 msgstr "Seuraavat kenttänimet tunnistetaan (ei vaatimusta kirjainkoolle):"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:738
+#: qcsrc/client/hud/panel/scoreboard.qc:727
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of gametypes, then a slash, to make the field show up only in these\n"
@@ -1033,18 +1033,18 @@ msgid ""
 "field to show all fields available for the current gametype."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:744
+#: qcsrc/client/hud/panel/scoreboard.qc:733
 msgid ""
 "The special gametype names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams gametypes."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:748
+#: qcsrc/client/hud/panel/scoreboard.qc:737
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
 msgstr ""
 "Esimerkki: scoreboard_columns_set nimi ping pl | +ctf/kenttä3 -dm/kenttä4"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:749
+#: qcsrc/client/hud/panel/scoreboard.qc:738
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
@@ -1052,16 +1052,16 @@ msgstr ""
 "näyttää nimen, pingin ja pl:n asemoituna vasemmalle, ja kentät\n"
 "pystysuorapalkista oikealla asemoituna oikealle."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:751
+#: qcsrc/client/hud/panel/scoreboard.qc:740
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gametypes except DM."
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1067
-#: qcsrc/client/hud/panel/scoreboard.qc:1081
-#: qcsrc/client/hud/panel/scoreboard.qc:1154
-#: qcsrc/client/hud/panel/scoreboard.qc:1163 qcsrc/common/util.qc:433
+#: qcsrc/client/hud/panel/scoreboard.qc:1058
+#: qcsrc/client/hud/panel/scoreboard.qc:1072
+#: qcsrc/client/hud/panel/scoreboard.qc:1143
+#: qcsrc/client/hud/panel/scoreboard.qc:1152 qcsrc/common/util.qc:433
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -1070,106 +1070,106 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1859
+#: qcsrc/client/hud/panel/scoreboard.qc:1845
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Tarkkuustilastot (keskimäärin %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2019
+#: qcsrc/client/hud/panel/scoreboard.qc:2004
 msgid "Item stats"
 msgstr "Esineen tilastot"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2134
+#: qcsrc/client/hud/panel/scoreboard.qc:2120
 msgid "Map stats:"
 msgstr "Kartan tilastot:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2164
+#: qcsrc/client/hud/panel/scoreboard.qc:2150
 msgid "Monsters killed:"
 msgstr "Hirviöitä tapettu:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2171
+#: qcsrc/client/hud/panel/scoreboard.qc:2157
 msgid "Secrets found:"
 msgstr "Salaisuuksia löydetty:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2389
+#: qcsrc/client/hud/panel/scoreboard.qc:2374
 #, c-format
 msgid "Spectators"
 msgstr "Katselijat"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2411
+#: qcsrc/client/hud/panel/scoreboard.qc:2396
 #, c-format
 msgid "^2+%s %s"
 msgstr "^2+%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2411
+#: qcsrc/client/hud/panel/scoreboard.qc:2396
 #, c-format
 msgid "^5%s %s"
 msgstr "^5%s %s"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2412
+#: qcsrc/client/hud/panel/scoreboard.qc:2397
 msgid "SCO^points"
 msgstr "SCO^pisteet"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2529
+#: qcsrc/client/hud/panel/scoreboard.qc:2512
 msgid "Next map:"
 msgstr "Seuraava kartta:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2536
+#: qcsrc/client/hud/panel/scoreboard.qc:2519
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "Joukkueen valinta"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2550
+#: qcsrc/client/hud/panel/scoreboard.qc:2533
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^7Liity valittuun joukkueeseen painamalla ^3%s^7"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2552
+#: qcsrc/client/hud/panel/scoreboard.qc:2535
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr "^7Valitse joukkue automaattisesti ja liity painamalla ^3%s^7"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2556
+#: qcsrc/client/hud/panel/scoreboard.qc:2539
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7Valitse määrätty joukkue painamalla ^3%s ^7"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2594
+#: qcsrc/client/hud/panel/scoreboard.qc:2577
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7pelaajaa"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2595 qcsrc/client/main.qc:1426
+#: qcsrc/client/hud/panel/scoreboard.qc:2578 qcsrc/client/main.qc:1426
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:43
 msgid "Map:"
 msgstr "Kartta:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2761
+#: qcsrc/client/hud/panel/scoreboard.qc:2739
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Nopeuspalkinto: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2765
+#: qcsrc/client/hud/panel/scoreboard.qc:2743
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "Kaikkien aikojen nopein: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2797
+#: qcsrc/client/hud/panel/scoreboard.qc:2775
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Virkoaminen tapahtuu ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2807
+#: qcsrc/client/hud/panel/scoreboard.qc:2784
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Kuolit, odota ^3%s^7 ennen uudelleenvirkoamista"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2816
+#: qcsrc/client/hud/panel/scoreboard.qc:2792
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Kuolit, paina ^2%s^7 virotaksesi uudelleen"
 
-#: qcsrc/client/hud/panel/strafehud/extra.qc:111
+#: qcsrc/client/hud/panel/strafehud/extra.qc:115
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:55
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:32
 #, c-format
@@ -1196,35 +1196,35 @@ msgstr "mi"
 msgid "nmi"
 msgstr "mpk"
 
-#: qcsrc/client/hud/panel/timer.qc:146
+#: qcsrc/client/hud/panel/timer.qc:153
 msgid "Warmup"
 msgstr "Lämmittely"
 
-#: qcsrc/client/hud/panel/timer.qc:151
+#: qcsrc/client/hud/panel/timer.qc:158
 msgid "Warmup: too few players!"
 msgstr "Lämmittely: liian vähän pelaajia!"
 
-#: qcsrc/client/hud/panel/timer.qc:153
+#: qcsrc/client/hud/panel/timer.qc:160
 msgid "Warmup: teams unbalanced!"
 msgstr "Lämmittely: joukkueet epätasapainossa!"
 
-#: qcsrc/client/hud/panel/timer.qc:155
+#: qcsrc/client/hud/panel/timer.qc:162
 msgid "Warmup: no time limit"
 msgstr "Lämmittely: ei aikarajaa"
 
-#: qcsrc/client/hud/panel/timer.qc:159
+#: qcsrc/client/hud/panel/timer.qc:166
 msgid "Timeout"
 msgstr "Aikalisä"
 
-#: qcsrc/client/hud/panel/timer.qc:161
+#: qcsrc/client/hud/panel/timer.qc:168
 msgid "Sudden Death"
 msgstr "Äkkikuolema"
 
-#: qcsrc/client/hud/panel/timer.qc:163
+#: qcsrc/client/hud/panel/timer.qc:170
 msgid "Overtime"
 msgstr "Yliaika"
 
-#: qcsrc/client/hud/panel/timer.qc:165
+#: qcsrc/client/hud/panel/timer.qc:172
 #, c-format
 msgid "Overtime #%d"
 msgstr "Yliaika #%d"
@@ -1237,19 +1237,19 @@ msgstr "^1Sinun tulee vastata ennen pääsyä HUD-asetustilaan"
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
 msgstr "^2Nimi ^7tämän sijasta \"^1Nimetön pelaaja^7\" tilastoissa"
 
-#: qcsrc/client/hud/panel/vote.qc:121
-msgid "A vote has been called for:"
-msgstr "Äänestys on tullut tulokseen:"
-
-#: qcsrc/client/hud/panel/vote.qc:123
+#: qcsrc/client/hud/panel/vote.qc:126
 msgid "Allow servers to store and display your name?"
 msgstr "Salli palvelimien tallentaa ja näyttää nimesi?"
 
 #: qcsrc/client/hud/panel/vote.qc:127
+msgid "A vote has been called for:"
+msgstr "Äänestys on tullut tulokseen:"
+
+#: qcsrc/client/hud/panel/vote.qc:130
 msgid "^1Configure the HUD"
 msgstr "^1Määrittele HUD"
 
-#: qcsrc/client/hud/panel/vote.qc:131 qcsrc/menu/xonotic/dialog_firstrun.qc:88
+#: qcsrc/client/hud/panel/vote.qc:136 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:30
 #: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:18
@@ -1261,7 +1261,7 @@ msgstr "^1Määrittele HUD"
 msgid "Yes"
 msgstr "Kyllä"
 
-#: qcsrc/client/hud/panel/vote.qc:133 qcsrc/menu/xonotic/dialog_firstrun.qc:89
+#: qcsrc/client/hud/panel/vote.qc:138 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:33
 #: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:21
@@ -1273,15 +1273,15 @@ msgstr "Kyllä"
 msgid "No"
 msgstr "Ei"
 
-#: qcsrc/client/hud/panel/weapons.qc:647
+#: qcsrc/client/hud/panel/weapons.qc:645
 msgid "Out of ammo"
 msgstr "Ammukset loppu"
 
-#: qcsrc/client/hud/panel/weapons.qc:652
+#: qcsrc/client/hud/panel/weapons.qc:650
 msgid "Don't have"
 msgstr "Ei ole"
 
-#: qcsrc/client/hud/panel/weapons.qc:657
+#: qcsrc/client/hud/panel/weapons.qc:655
 msgid "Unavailable"
 msgstr "Ei saatavissa"
 
@@ -1440,7 +1440,7 @@ msgstr "Aivan sama"
 #: qcsrc/client/mapvoting.qc:379
 #, c-format
 msgid "Suggested by: %s"
-msgstr ""
+msgstr "Ehdottaa: %s"
 
 #: qcsrc/client/mapvoting.qc:458
 msgid "Decide the gametype"
@@ -1764,7 +1764,7 @@ msgstr ""
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #, c-format
 msgid "%s is often played with %s rules."
-msgstr ""
+msgstr "%s pelaa yleensä %s-säännöillä."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #: qcsrc/menu/xonotic/guide/pages.qc:183 qcsrc/menu/xonotic/guide/pages.qc:186
@@ -1965,6 +1965,9 @@ msgid ""
 "available weapons and maximum health and armor. There are no pickups enabled "
 "on maps, but buffs are still available."
 msgstr ""
+"%s on nopeatempoinen, avoin deathmatch, jossa pelaajat syntyvtä kaikilla "
+"käytettävillä aseilla sekä enimmäisterveydellä ja -panssarilla. Kartoilla ei "
+"ole keräilyesineitä, mutta tehostuksia on edelleen saatavilla."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:12
 msgid ""
@@ -1990,6 +1993,7 @@ msgstr ""
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem"
 msgstr ""
+"Kilpaile vahingon- ja tappojen määrästä tässä kaoottisessa sekasorrossa!"
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Mayhem"
@@ -2019,6 +2023,8 @@ msgid ""
 "Keep in mind players can score own goals, so don't embarrass yourself in "
 "front of your team!"
 msgstr ""
+"Pidä mielessä, että pelaajat voivat tehdä omia maaleja, joten älä nolaa "
+"itseäsi joukkueesi edessä!"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
 msgid "Nexball"
@@ -2106,6 +2112,7 @@ msgid ""
 "During the real race it's possible to shoot other players in order to slow "
 "them down."
 msgstr ""
+"Oikeassa kisassa on mahdollista ampua muita pelaajia niiden hidastamiseksi."
 
 #: qcsrc/common/gametypes/gametype/race/race.qh:11
 msgid "Race"
@@ -2165,7 +2172,7 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qh:12
 msgid "Survival"
-msgstr ""
+msgstr "Selviytyminen"
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:10
 #, c-format
@@ -2208,7 +2215,7 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
-msgstr ""
+msgstr "Pidä pallo joukkueellasi, jotta saat tappopisteitä"
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Team Keepaway"
@@ -2235,6 +2242,8 @@ msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem"
 msgstr ""
+"Kilpaile joukkueesi kanssa vahingon- ja tappojen määrästä tässä kaoottisessa "
+"sekasortossa"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
@@ -2243,17 +2252,17 @@ msgstr "Joukkue Sekasorto"
 #: qcsrc/common/items/item/ammo.qc:11
 #, c-format
 msgid "The %s ammo type is used by the:"
-msgstr ""
+msgstr "%s ammustyyppiä käyttää:"
 
 #: qcsrc/common/items/item/ammo.qc:16 qcsrc/common/items/item/ammo.qc:26
 #, c-format
 msgid "By default, the pickup gives you %s ammo, to a maximum of %s."
-msgstr ""
+msgstr "Keräilyesine antaa oletuksena %s ammusta, enimmillään %s."
 
 #: qcsrc/common/items/item/ammo.qc:25
 #, c-format
 msgid "The %s ammo type is used by the %s."
-msgstr ""
+msgstr "%s ammustyyppiä käyttää %s."
 
 #: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
 msgid "Shells"
@@ -2278,7 +2287,7 @@ msgstr "Polttoaine"
 #: qcsrc/common/items/item/armor.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s armor."
-msgstr ""
+msgstr "Keräilyesine antaa oletuksena %s panssaria."
 
 #: qcsrc/common/items/item/armor.qc:13
 #, c-format
@@ -2286,6 +2295,8 @@ msgid ""
 "The %s provides you a small amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"Poimittaessa %s antaa pienen määrän panssaria, joka suojelee sinua "
+"vahingolta vaimentamalla kohtitulevia iskuja kunnes se loppuu."
 
 #: qcsrc/common/items/item/armor.qc:23
 #, c-format
@@ -2293,6 +2304,8 @@ msgid ""
 "The %s provides you a medium amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"Poimittaessa %s antaa kohtuumäärän panssaria, joka suojelee sinua vahingolta "
+"vaimentamalla kohtitulevia iskuja kunnes se loppuu."
 
 #: qcsrc/common/items/item/armor.qc:33
 #, c-format
@@ -2300,6 +2313,8 @@ msgid ""
 "The %s provides you a large amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"Poimittaessa %s antaa suuren määrän panssaria, joka suojelee sinua "
+"vahingolta vaimentamalla kohtitulevia iskuja kunnes se loppuu."
 
 #: qcsrc/common/items/item/armor.qc:43
 #, c-format
@@ -2307,6 +2322,8 @@ msgid ""
 "The %s provides you a huge amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"Poimittaessa %s antaa valtavan määrän panssaria, joka suojelee sinua "
+"vahingolta vaimentamalla kohtitulevia iskuja kunnes se loppuu."
 
 #: qcsrc/common/items/item/armor.qc:45 qcsrc/common/items/item/health.qc:45
 #, c-format
@@ -2334,7 +2351,7 @@ msgstr "Mahtipanssari"
 #: qcsrc/common/items/item/health.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s health."
-msgstr ""
+msgstr "Keräilyesine antaa oletuksena %s terveyttä."
 
 #: qcsrc/common/items/item/health.qc:13
 #, c-format
@@ -2342,6 +2359,8 @@ msgid ""
 "The %s restores a small amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"Poimittaessa %s palauttaa pienen määrän terveyttä, mikä auttaa toipumaan "
+"saadusta vahingosta taistelussa."
 
 #: qcsrc/common/items/item/health.qc:23
 #, c-format
@@ -2349,6 +2368,8 @@ msgid ""
 "The %s restores a medium amount of health when picked up, helping you "
 "recover from damage taken during combat."
 msgstr ""
+"Poimittaessa %s palauttaa kohtuumäärän terveyttä, mikä auttaa toipumaan "
+"saadusta vahingosta taistelussa."
 
 #: qcsrc/common/items/item/health.qc:33
 #, c-format
@@ -2356,6 +2377,8 @@ msgid ""
 "The %s restores a large amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"Poimittaessa %s palauttaa suuren määrän terveyttä, mikä auttaa toipumaan "
+"saadusta vahingosta taistelussa."
 
 #: qcsrc/common/items/item/health.qc:43
 #, c-format
@@ -2363,6 +2386,8 @@ msgid ""
 "The %s restores a huge amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"Poimittaessa %s palauttaa valtavan määrän terveyttä, mikä auttaa toipumaan "
+"saadusta vahingosta taistelussa."
 
 #: qcsrc/common/items/item/health.qh:44
 msgid "Small health"
@@ -2807,6 +2832,8 @@ msgid ""
 "%s is a mutator in which players below a certain health threshold (for "
 "example 25) will suffer blood loss."
 msgstr ""
+"%s on mutaattori, jossa tietyn ala-arvon (esim. 25) alittaneet pelaajat "
+"kärsivät verenhukasta."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qc:77
 msgid ""
@@ -2814,6 +2841,9 @@ msgid ""
 "rapidly takes away health points until they either die or gain enough health "
 "to go above the health threshold."
 msgstr ""
+"Verenhukka tyrmää pelaajat, mikä vaikeuttaa heidän liikkuvuuttan vakavasti "
+"ja vie nopeati terveyspisteitä, kunnes he joko kuolevat tai saavat tarpeeksi "
+"terveyttä ylitääkseen terveyden ala-arvon."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qh:5
 #: qcsrc/common/util.qc:310
@@ -2827,6 +2857,8 @@ msgid ""
 "The %s buff gives you infinite ammo until the buff expires, so you don't "
 "need to worry about running out of ammo."
 msgstr ""
+"%s-tehostus antaa loputtomia ammuksia, kunnes tehostus päättyy, joten "
+"ammusten loppumisesta ei tarvitse murehtia."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
 #, c-format
@@ -2845,6 +2877,8 @@ msgid ""
 "The %s buff increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
+"%s-tehostus lisää aiheutettua sysäysvoimaa ja tekee immuuniksi sysäyksille "
+"tehosteen ollessa päällä."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
@@ -2860,6 +2894,8 @@ msgid ""
 "The %s buff causes your enemies and monsters to slow down for a few seconds "
 "when you attack them, while the buff is active."
 msgstr ""
+"%s-tehostus saa viholliset ja hirviöt hidastumaan muutamaksi sekunniksi "
+"niitä vastaan hyökätessä tehostuksen ollessa päällä."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
 #, c-format
@@ -2876,6 +2912,8 @@ msgid ""
 "While you have the %s buff, you can crouch while mid-air to switch your "
 "gravity, allowing flight."
 msgstr ""
+"Kun sinulla on %s-tehostus, voit vaihtaa painovoimaasi kyyristymällä "
+"ilmassa, mikä mahdollistaa lentämisen."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
 msgid "Flight"
@@ -2887,6 +2925,8 @@ msgid ""
 "The %s buff sets any enemies or monsters you attack alight, dealing burn "
 "damage to them for several seconds until the buff expires."
 msgstr ""
+"%s-tehostus sytyttää hyökkäämäsi viholliset ja hirviöt tuleen, mikä "
+"aiheuttaa niille polttovahinkoa muutaman sekunnin, kunnes tehostus päättyy."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
 msgid "Inferno"
@@ -2896,7 +2936,7 @@ msgstr "Pätsi"
 #, c-format
 msgid ""
 "The %s buff greatly increases your jump height, while the buff is active."
-msgstr ""
+msgstr "%s-tehostus lisää hyppykorkeutta suuresti tehostuksen ollessa päällä."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
@@ -2912,6 +2952,8 @@ msgid ""
 "While you have the %s buff, each attack has a chance of being a critical hit "
 "with greatly increased damage."
 msgstr ""
+"Kun sinulla on %s-tehostus, joka hyökkäyksellä on mahdollisuus kriittiseen "
+"osumaan suuresti lisätyllä vahingolla."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/luck.qh:13
 msgid "Luck"
@@ -2923,6 +2965,8 @@ msgid ""
 "The %s buff greatly increases your item pickup range, collecting nearby "
 "items for you while the buff is active."
 msgstr ""
+"%s-tehostus lisää suuresti esineen poimintaetäisyyttä, jolloin läheiset "
+"esineet kerätään vahvistuksen ollessa päällä."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:11
 msgid "Magnet"
@@ -2935,12 +2979,17 @@ msgid ""
 "health you can have before health starts to rot, and reduces health rot "
 "speed until the buff expires."
 msgstr ""
+"%s-tehostus lisää terveyden palautumisnopeutta, enimmäisterveyttä, joka "
+"sinulla on ennen terveyden rapistumista, sekä alentaa terveyden "
+"rapistumisnopeutta, kunnes vahvistus päättyy."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:29
 msgid ""
 "It also gives you a chance to survive a fatal hit, with a small amount of "
 "health left over."
 msgstr ""
+"Se myös antaa mahdollisuuden selvitä kohtalokkaasta iskusta, mikä jättää "
+"pienen määrän terveyttä jäljelle."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qh:16
 msgid "Medic"
@@ -2950,6 +2999,7 @@ msgstr "Lääkintämies"
 #, c-format
 msgid "The %s buff greatly reduces your damage taken while the buff is active."
 msgstr ""
+" %s-tehostus vähentää suuresti otettua vahinkoa tehosteen ollessa päällä."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
 msgid "This also impacts the damage you deal to yourself."
@@ -2964,18 +3014,24 @@ msgstr "Vastarinta"
 msgid ""
 "The %s buff allows you to press %s to switch places with a nearby enemy once."
 msgstr ""
+"%s-tehostus antaa painaa %s, jolla vaihtaa paikkoja heti läheisen vihollisen "
+"kanssa."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:88
 msgid ""
 "A common usage of this buff is to jump over the map's void, then swap with "
 "an enemy, to cause them to fall into the void."
 msgstr ""
+"Tämän tehostuksen yleinen käyttötapa on hypätä kartan tyhjiöön ja vaihtaa "
+"sitten paikkaa vihollisen kanssa, jolloin tämä putoaa tyhjyyteen."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:89
 msgid ""
 "The range that the buff works over is limited, so sometimes it may do "
 "nothing if there are no enemies nearby."
 msgstr ""
+"Tyhjiön vaikutusalue on rajallinen, joten se ei välttämättä tee mitään, "
+"jollei lähistöllä ole vihollisia."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qh:10
 msgid "Swapper"
@@ -2987,12 +3043,14 @@ msgid ""
 "The %s buff converts some of the damage you deal to enemies and monsters "
 "into health for yourself, until the buff expires."
 msgstr ""
+"%s-tehostus muuntaa osan vihollisille ja hirviöille tehdystä vahingosta "
+"omaksi terveydeksi, kunnes vahvistus päättyy."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:29
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
 #, c-format
 msgid "In some sense, this is the opposite of the %s buff."
-msgstr ""
+msgstr "Jollain tämää tämä on vastakohtana %s-tehostukselle."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
 #: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:307
@@ -3014,7 +3072,7 @@ msgstr "Kosto"
 #: qcsrc/common/mutators/mutator/buffs/buffs.qh:23
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:83
 msgid "Buff"
-msgstr "Tsemppi"
+msgstr "Tehostus"
 
 #: qcsrc/common/mutators/mutator/cloaked/cloaked.qc:10
 #, c-format
@@ -3185,6 +3243,9 @@ msgid ""
 "instead giving players the %s, which immediately frags players in a single "
 "shot, hence the name \"InstaGib.\""
 msgstr ""
+"%s on mutaattori, joka poistaa kaikki aseet ja keräilyaseet kartalta. Sen "
+"sijaan pelaajille annetaan %s, mikä tappaa pelaajat heti kertalaukauksella, "
+"mistä nimi \"InstaGib.\""
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qc:17
 #, c-format
@@ -3470,6 +3531,9 @@ msgid ""
 "After some time the weapon is reselected, and this repeats forever. Weapon "
 "and ammo pickups are also removed from the map."
 msgstr ""
+"%s on mutaattori,  joka antaa kaikille pelaajille saman satunnaisesti "
+"valitun aseen. Kotvan kuluttua ase valitaan uudelleen, ja tämä toistuu "
+"loputtomiin. Keräiltävät aseet ja ammukset poistetaan myös kartalta."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:299
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
@@ -3710,7 +3774,7 @@ msgstr ""
 #: qcsrc/common/util.qc:311
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:129
 msgid "Jetpack"
-msgstr "Lentopakkaus"
+msgstr "Rakettireppu"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qc:56
 #, c-format
@@ -3832,6 +3896,8 @@ msgid ""
 "Additionally the amount of health players get is equal to the damage they "
 "deal, which isn't normally the case with the %s buff."
 msgstr ""
+"Lisäksi pelaajien saama terveysmäärä on yhtä suuri kuin heidän aiheuttamansa "
+"vahinko, mikä ei yleensä ole normaalia %s-tehosteen tapauksessa."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:81
 #, c-format
@@ -4177,7 +4243,7 @@ msgstr "^F2Kolikonheitto... Tulos: %s^F2!"
 
 #: qcsrc/common/notifications/all.inc:266
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
-msgstr "^BGSinulla ei ole polttoainetta ^F1Lentopakkaukseen"
+msgstr "^BGSinulla ei ole polttoainetta ^F1rakettireppuun"
 
 #: qcsrc/common/notifications/all.inc:268
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
@@ -4216,13 +4282,13 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
 msgid "^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr "^BG%s%s^K1 tapettiin ^BG%s^K1's ^BG%s^K1 tsempillä ^K1%s%s"
+msgstr "^BG%s%s^K1 tapettiin ^BG%s^K1's ^BG%s^K1 tehostuksella ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
 msgstr ""
-"^BG%s%s^K1 otettiin pisteitä pois ^BG%s^K1's ^BG%s^K1 tsempillä ^K1%s%s"
+"^BG%s%s^K1 otettiin pisteitä pois ^BG%s^K1's ^BG%s^K1 tehostuksella ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:278
 #, c-format
@@ -4744,24 +4810,24 @@ msgstr "^BGJumaltila pelasti sinut %s yksikköä vahinkoa, huiputtaja!"
 #: qcsrc/common/notifications/all.inc:380
 #, c-format
 msgid "^BG%s^BG got the %s^BG buff!"
-msgstr "^BG%s^BG sai %s^BG tsempin!"
+msgstr "^BG%s^BG sai %s^BG tehostuksen!"
 
 #: qcsrc/common/notifications/all.inc:381
 #, c-format
 msgid "^BG%s^BG lost the %s^BG buff!"
-msgstr "^BG%s^BG menetti %s^BG tsempin!"
+msgstr "^BG%s^BG menetti %s^BG tehostuksen!"
 
 #: qcsrc/common/notifications/all.inc:382
 #: qcsrc/common/notifications/all.inc:714
 #, c-format
 msgid "^BGYou dropped the %s^BG buff!"
-msgstr "^BGSinä pudotit %s^BG tsempin!"
+msgstr "^BGSinä pudotit %s^BG tehostuksen!"
 
 #: qcsrc/common/notifications/all.inc:383
 #: qcsrc/common/notifications/all.inc:715
 #, c-format
 msgid "^BGYou got the %s^BG buff!"
-msgstr "^BGSinulla on %s^BG tsemppi!"
+msgstr "^BGSinulla on %s^BG tehostus!"
 
 #: qcsrc/common/notifications/all.inc:385
 #: qcsrc/common/notifications/all.inc:718
@@ -6053,7 +6119,7 @@ msgstr "^BGSinulla on ^F1Polttoaineen uusiotuotin"
 
 #: qcsrc/common/notifications/all.inc:717
 msgid "^BGYou got the ^F1Jetpack"
-msgstr "^BGSinulla on ^F1Lentopakkaus"
+msgstr "^BGSinulla on ^F1rakettireppuun"
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^K1Your Xonotic version is incompatible with the server's version!"
@@ -7026,7 +7092,7 @@ msgstr "Aseet jäävät"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:89
 #: qcsrc/menu/xonotic/guide/guide.qh:15
 msgid "Buffs"
-msgstr "Tsempit"
+msgstr "Tehostukset"
 
 #: qcsrc/common/util.qc:314
 msgid "No powerups"
@@ -8742,27 +8808,36 @@ msgstr "Ukraina"
 msgid "Past Contributors"
 msgstr "Aikaisemmat panoksensa antajat"
 
-#: qcsrc/menu/xonotic/cvarlist.qc:73
+#: qcsrc/menu/xonotic/cvarlist.qc:25
+#, c-format
+msgid "%d results"
+msgstr ""
+
+#: qcsrc/menu/xonotic/cvarlist.qc:25
+msgid "1 result"
+msgstr ""
+
+#: qcsrc/menu/xonotic/cvarlist.qc:120
 msgid "forced to be saved to config.cfg"
 msgstr "pakoitettu tallennettavaksi tiedostoon config.cfg"
 
-#: qcsrc/menu/xonotic/cvarlist.qc:79 qcsrc/menu/xonotic/cvarlist.qc:89
+#: qcsrc/menu/xonotic/cvarlist.qc:126 qcsrc/menu/xonotic/cvarlist.qc:136
 msgid "will not be saved"
 msgstr "ei tallenneta"
 
-#: qcsrc/menu/xonotic/cvarlist.qc:84
+#: qcsrc/menu/xonotic/cvarlist.qc:131
 msgid "will be saved to config.cfg"
 msgstr "tallennetaan config.cfg-tiedostoon"
 
-#: qcsrc/menu/xonotic/cvarlist.qc:93
+#: qcsrc/menu/xonotic/cvarlist.qc:140
 msgid "private"
 msgstr "yksityinen"
 
-#: qcsrc/menu/xonotic/cvarlist.qc:95
+#: qcsrc/menu/xonotic/cvarlist.qc:142
 msgid "engine setting"
 msgstr "pelimoottorin asetus"
 
-#: qcsrc/menu/xonotic/cvarlist.qc:98
+#: qcsrc/menu/xonotic/cvarlist.qc:145
 msgid "read only"
 msgstr "vain luku"
 
@@ -8770,7 +8845,7 @@ msgstr "vain luku"
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:37
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:228
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:91
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:77
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:84
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
 msgstr "OK"
@@ -9047,7 +9122,7 @@ msgstr "Yhdistä terveys ja suojapanssari"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:20
 msgid "Flip health and armor positions"
-msgstr "Vaihda elämän ja panssarin paikkaa"
+msgstr "Vaihda terveyden ja panssarin paikkaa"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:27
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
@@ -9079,7 +9154,7 @@ msgstr "Kuvakkeen kohdistus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qh:6
 msgid "Health/Armor Panel"
-msgstr "Elämä/Panssaripaneeli"
+msgstr "Terveys/Panssaripaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qh:6
 msgid "Info Messages Panel"
@@ -9124,7 +9199,7 @@ msgstr "Piilota ilmestyneet esineet"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:40
 msgid "Hide big armor and health"
-msgstr "Piilota suuri suojapanssari ja terveysmääre"
+msgstr "Piilota suuri panssari ja terveys"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:42
 msgid "Dynamic size"
@@ -9265,7 +9340,7 @@ msgstr "Katsellaan"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
-msgstr "Poimintalaatta"
+msgstr "Keräilypaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
@@ -9319,7 +9394,7 @@ msgstr "Salli joukkuepeleissä"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:132
 #: qcsrc/menu/xonotic/util.qc:764
 msgid "Opacity:"
-msgstr ""
+msgstr "Läpikuultavuus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:61
@@ -9553,7 +9628,7 @@ msgstr "EF^Ei mikään"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "Opacity"
-msgstr ""
+msgstr "Läpikuultavuus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Slide"
@@ -10168,7 +10243,7 @@ msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
 msgstr ""
-"Kytke tsemppipoimittavat päälle (satunnaisia lisäetuja kuten ensiapu, "
+"Kytke kerättävät tehostukset päälle (satunnaisia lisäetuja, kuten ensiapu, "
 "näkymättömyys, jne.) niitä tukevissa kartoissa"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
@@ -10179,15 +10254,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:99
 msgid "Damage done to your enemy gets added to your own health"
-msgstr "Vihollisellesi aiheutettu vahinko siirtyy lisänä omaan terveyteesi "
+msgstr "Vihollisellesi tehty vahinko lisätään omaan terveyteesi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:104
 msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
 msgstr ""
-"Terveyden määrä jonka alittuessa pelaajat alkavat vuotamaan kuiviin (vointi "
-"repsahtaa eivätkä kykene hyppäämään)"
+"Terveysmäärä, jonka alittuessa pelaajat alkavat vuotamaan kuiviin (vointi "
+"romahtaa eivätkä kykene hyppäämään)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:113
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
@@ -10210,8 +10285,8 @@ msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
 msgstr ""
-"Pelaajat syntyvät lentopakkauksen kera. Kaksoisnäpäytä 'hyppy' tai paina "
-"'lentopakkaus' -näppäintä sitä käyttääksesi"
+"Pelaajat syntyvät rakettirepun kera. Käytä sitä kaksoisnapauttamalla hyppy-"
+"näppäintä tai painamalla rakettireppu-näppäintä"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:134
 msgid ""
@@ -10267,8 +10342,8 @@ msgid ""
 "Players will be given a set of weapons at spawn as well as unlimited ammo, "
 "without weapon pickups"
 msgstr ""
-"Pelaajille annetaan asevalikoima syntyessä kuten myös rajattomat ammukset, "
-"ilman asepoimintaa"
+"Pelaajille annetaan syntyessä asevalikoima sekä rajattomia ammuksia, ilman "
+"asepoimintoja"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
 msgid "Weapon arenas:"
@@ -10309,9 +10384,9 @@ msgid ""
 "weapon. After some time, a countdown will start, after which everyone will "
 "switch to another weapon."
 msgstr ""
-"Xonotic ilman esineitä - poiminnallisten esineiden sijasta, kaikki pelaavat "
-"samalla aseella. Kotvan kuluttua, lähtölaskenta alkaa, ja jonka päätyttyä "
-"jokainen vaihtaa toiseen aseeseen."
+"Xonotic ilman esineitä - keräilyesineiden sijasta kaikki pelaavat samalla "
+"aseella. Kotvan kuluttua lähtölaskenta alkaa, minkä loputtua kaikki "
+"vaihtavat toiseen aseeseen."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:218
 msgid "with blaster"
@@ -10610,7 +10685,7 @@ msgstr "Esineen *:n visuaaliset ominaisuudet:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:44
 msgid "Set opacity:"
-msgstr ""
+msgstr "Aseta läpikuultavuus"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:48
 msgid "Set color main:"
@@ -11036,7 +11111,7 @@ msgstr "PDET^Paras"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:78
 msgid "Texture resolution:"
-msgstr "Hahmonnusten tarkkuus:"
+msgstr "Tekstuurien tarkkuus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:81
 msgid "RES^Lowest"
@@ -11064,23 +11139,23 @@ msgstr "RES^Paras"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:92
 msgid "Texture compression:"
-msgstr ""
+msgstr "Tekstuurien pakkaus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:98
 msgid "TCOMP^Fast"
-msgstr ""
+msgstr "TCOMP^Nopea"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:99
 msgid "TCOMP^Good"
-msgstr ""
+msgstr "TCOMP^Hyvä"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:100
 msgid "TCOMP^None"
-msgstr ""
+msgstr "TCOMP^Ei mitään"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:109
 msgid "Disable sky for performance and visibility"
-msgstr "Kytke taivas pois päältä suorituskyvyn ja näkyvyyden lisäämiseksi"
+msgstr "Lisää suorituskykyä ja näkyvyyttä poistamalla taivas käytöstä"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:109
 msgid "Show sky"
@@ -11095,7 +11170,7 @@ msgid ""
 "Use high resolution lightmaps, which will look pretty but use up some extra "
 "video memory"
 msgstr ""
-"Käytä korkean erottelutarkkuuden valokarttoja; näyttää sievältä mutta syöden "
+"Käytä korkean tarkkuuden valokarttoja, mikä näyttää sievältä, mutta syö "
 "hiukan lisää videomuistia."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:114
@@ -11112,31 +11187,30 @@ msgstr "Kiilto"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:120
 msgid "Enable the use of glossmaps on textures supporting it"
-msgstr "Ota käyttöön tuetut hohtokartat tekstuureissa"
+msgstr "Ota käyttöön tuettuja hohtokarttoja tekstuureissa"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:126
 msgid "Offset mapping"
-msgstr "Poikkeavuuskartoitus"
+msgstr "Offset-kartoitus"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:127
 msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
 msgstr ""
-"Poikkeamatyyppinen kartoitusefekti joka laittaa tekstuurit bumpmappausten "
-"kanssa näyttämään siltä kuin ne \"pompsahtaisivat ulos\" lättänästä 2D "
-"pinnasta"
+"Offset-kartoitusefekti, joka saa bump-mapatut tekstuurit näyttämään siltä "
+"kuin ne \"ponnahtaisivat\" litteästä 2D-pinnasta."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:130
 msgid "Relief mapping"
-msgstr "Tehokas tekstuurien kuhmujen korostus"
+msgstr "Reliefikartoitus"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:131
 msgid ""
 "Higher quality offset mapping, which also has a huge impact on performance"
 msgstr ""
-"Korkeampilaatuinen poikkeamatyyppinen kartoitus jolla on myös suuri vaikutus "
-"suorituskykyyn"
+"Korkeampilaatuinen offset-kartoitus, jolla on myös suuri vaikutus "
+"suorituskykyyn."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:136
 msgid "Reflections:"
@@ -11147,12 +11221,12 @@ msgid ""
 "Reflection and refraction quality, has a huge impact on performance on maps "
 "with reflecting surfaces"
 msgstr ""
-"Heijastusten- ja taittumien laatu; omaa suuren vaikutuksen suorituskykyn "
-"kartoissa joissa on heijastavia pintoja"
+"Heijastusten- ja taittumien laatu, millä on suuri vaikutus suorituskykyn "
+"kartoissa, joissa on heijastavia pintoja."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:141
 msgid "Resolution of reflections/refractions"
-msgstr "Heijastusten/taittumien erottelumääre"
+msgstr "Heijastusten/taittumisten tarkkuus"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:142
 msgid "Blurred"
@@ -11172,11 +11246,11 @@ msgstr "Siirtokuvat"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:151
 msgid "Enable decals (bullet holes and blood)"
-msgstr "Ota käyttöön tapahtumajäljet (luodinreijät ja verijäljet)"
+msgstr "Ota käyttöön siirtokuvat (luodinreiät ja verijäljet)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:152
 msgid "Decals on models"
-msgstr "Hahmojen siirtokuvat"
+msgstr "Mallien siirtokuvat"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:156
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:245
@@ -11185,11 +11259,11 @@ msgstr "Etäisyys:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:160
 msgid "Decals further away than this will not be drawn"
-msgstr "Tapahtumajälkiä tätä kauempana ei piirretä "
+msgstr "Siirtokuvia ei piirretä tätä kauempana"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:169
 msgid "Time in seconds before decals fade away"
-msgstr "Aika sekunneissa milloin tapahtumajäljet haihtuvat"
+msgstr "Siirtokuvien katoamisaika sekunneissa"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:174
 msgid "Damage effects:"
@@ -11209,13 +11283,14 @@ msgstr "DMGFX^Kaikki"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:182
 msgid "Realtime dynamic lights"
-msgstr "Täsmäajallinen vaihteleva valaistus"
+msgstr "Tosiaikainen dynaaminen valaistus"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:183
 msgid ""
 "Temporary realtime light sources such as explosions, rockets and powerups"
 msgstr ""
-"Väliaikaiset täsmäaikavalolähteet kuten räjähdykset, raketit ja voimistukset "
+"Väliaikaiset tosiaikaiset valonlähteet, kuten räjähdykset, raketit ja "
+"vahvistukset"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:185
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:191
@@ -11224,35 +11299,35 @@ msgstr "Varjot"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:186
 msgid "Shadows cast by realtime dynamic lights"
-msgstr "Varjot lankeavat täsmäaikavalojen mukaisesti"
+msgstr "Tosiaikaiset dynaamiset valot langettavat varjoja"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:189
 msgid "Realtime world lights"
-msgstr "Maailmassa täsmäaikaiset valot"
+msgstr "Tosiaikaiset valot maailmassa"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:190
 msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
 msgstr ""
-"Täsmäaikavalolähteet sisällytetty tiettyihin karttoihin. Saattaa vaikuttaa "
-"merkittävästi suorituskykyyn."
+"Tosiaikaiset valonlähteet sisällytetty tiettyihin karttoihin. Saattaa "
+"vaikuttaa merkittävästi suorituskykyyn."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Shadows cast by realtime world lights"
-msgstr "Varjot lankeavat maailmallisten täsmäaikavalojen mukaisesti"
+msgstr "Tosiaikaiset valot maailmassa langettavat varjoja"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:196
 msgid "Use normal maps"
-msgstr "Käytä tekstuurien suunnattua varjostamista"
+msgstr "Käytä normaalikarttoja"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:197
 msgid ""
 "Directional shading of certain textures to simulate interaction of realtime "
 "light with a bumpy surface"
 msgstr ""
-"Suuntavarjostus tietyille pinnoitteille mallintaakseen kanssakäyntiä "
-"täsmäajallisten valojen suhteen muhkuraisella pinnalla"
+"Suuntavarjostus tietyille tekstuureille mallintamaan tosiaikaisten valojen "
+"vuorovaikutusta epätasaisella pinnalla."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:200
 msgid "Soft shadows"
@@ -11264,60 +11339,59 @@ msgstr "Koronan kirkkaus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:205
 msgid "Flare effects around certain lights"
-msgstr "Pyöröheijastukset tiettyjen valojen ympärille"
+msgstr "Pyöröheijastukset tiettyjen valojen ympärillä"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:208
 msgid "Fade coronas according to visibility"
-msgstr "Himmennä pyörövaloheijastuksia näkyvyyteen nähden"
+msgstr "Häivytä pyörövaloheijastuksia näkyvyyden mukaan"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:209
 msgid "Corona fading using occlusion queries"
-msgstr "Koronahäivennys käyttäen okluusiokyselyjä"
+msgstr "Koronahäivennys okluusiokyselyillä"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:213
 msgid "Bloom"
-msgstr "Kukintohehku"
+msgstr "Hehku"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance."
 msgstr ""
-"Ota käyttöön kukintohehku -tehoste, joka kirkastaa myös vierekkäiset "
-"pikselit hyvin kirkkaista pikseleistä. Vaikuttanee merkittävästi "
-"suorituskykyyn."
+"Ota käyttöön hehkutehoste, joka kirkastaa myös hyvin kirkkaiden pikselien "
+"vieruspikselit. Vaikuttaa merkittävästi suorituskykyyn."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:215
 msgid "Extra postprocessing effects"
-msgstr "Ylimääräiset jälkikäsittelyn tehosteet"
+msgstr "Jälkikäsittelyn lisätehosteet"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:216
 msgid ""
 "Enables special postprocessing effects for when damaged or under water or "
 "using a powerup"
 msgstr ""
-"Ottaa käyttöön erityiset jälkikäsittelytehosteet kärsiessä vahinkoa, ollessa "
-"veden alla tai kun käytetään pikavoimistuksia"
+"Ottaa käyttöön erityiset jälkikäsittelytehosteet kärsittäessä vahinkoa, "
+"ollessa veden alla käytettäessä vahvistusta"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
 msgid "Motion blur strength - 0.4 recommended"
-msgstr "Liikkeen utuisuuden voimakkuus - 0.4 on suositeltava"
+msgstr "Liikkeensumennuksen voimakkuus - 0.4 on suositeltava"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:223
 msgid "Motion blur:"
-msgstr "Liikesumeus:"
+msgstr "Liikkeensumennus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:230
 msgid "Particles"
-msgstr "Hiukkaset"
+msgstr "Partikkelit"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:231
 msgid "Spawnpoint effects"
-msgstr "Syntypistehosteet"
+msgstr "Syntypisteen tehosteet"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:232
 msgid "Particle effects at all spawn points and whenever a player spawns"
-msgstr ""
+msgstr "Partikkelitehosteet syntypisteellä ja aina kun pelaaja jälleensyntyy"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:237
 msgid "Quality:"
@@ -11328,12 +11402,12 @@ msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
-"Hiukkasten määrän kerroin. Vähemmän tietää lukumääräisesti vähempää määrää "
-"hiukkasia, joka puolestaan johtaa parempaan suorituskykyyn"
+"Partikkelimäärän kerroin. Vähemmän tarkoittaa vähemmän partikkeleita, mikä "
+"puolestaan antaa parempaa suorituskykyä"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:248
 msgid "Particles further away than this will not be drawn"
-msgstr "Tätä kauempana siintäviä hiukkasia ei piirretä"
+msgstr "Partikkeleita ei piirretä tätä kauempana"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:28
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qh:7
@@ -11349,7 +11423,8 @@ msgid ""
 "Set a different crosshair for each weapon, good if you play without weapon "
 "models"
 msgstr ""
-"Aseta eri tähtäin jokaiselle aseelle; on hyväksi jos pelaat ilman asemalleja"
+"Aseta eri tähtäin kullekin aseelle, mikä on hyväksi pelatessa ilman "
+"asemalleja"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:53
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:95
@@ -11359,19 +11434,19 @@ msgstr "Koko:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:74
 msgid "By health"
-msgstr "Elinvoiman mukaisesti"
+msgstr "Terveyden mukaan"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:90
 msgid "Use rings to indicate weapon status"
-msgstr "Käytä ympyröintiä asetilan osoittamiseksi"
+msgstr "Ilmaisee asetilaa ympyröinnillä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:114
 msgid "Enable center crosshair dot"
-msgstr "Käytä keskitettyä pistettä tähtäimessä"
+msgstr "Ota käyttöön tähtäinpiste"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:141
 msgid "Use normal color"
-msgstr ""
+msgstr "Käytä normaaliväriä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:157
 msgid "Smooth effects of crosshairs"
@@ -11383,23 +11458,23 @@ msgstr "Suorita osumatestejä tähtäimen suhteen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:164
 msgid "Blur if obstructed by an obstacle"
-msgstr "Sumenna mikäli eteen tulee este"
+msgstr "Sumenna, mikäli eteen tulee este"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:169
 msgid "Blur if obstructed by a teammate"
-msgstr "Sumenna mikäli joukkuekaveri tulee tielle"
+msgstr "Sumenna, mikäli joukkuekaveri tulee tielle"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:174
 msgid "Shrink if obstructed by a teammate"
-msgstr "Kutista mikäli joukkuekaveri tulee tielle"
+msgstr "Kutista, mikäli joukkuekaveri tulee tielle"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:178
 msgid "Animate crosshair when hitting an enemy"
-msgstr "Elävöitä tähtäin kun saat ammuttua osuman viholliseen"
+msgstr "Animoi tähtäin, kun osut viholliseen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:181
 msgid "Animate crosshair when picking up an item"
-msgstr "Elävöitä tähtäin poimiessasi esineen"
+msgstr "Animoi tähtäin poimiessasi esineen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:44
 msgid "Scoreboard"
@@ -11415,7 +11490,7 @@ msgstr "Ota käyttöön rivien / pystysarakkaiden korostus"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:55
 msgid "Show accuracy underneath scoreboard"
-msgstr "Näytä tulostaulun alaosassa osumatarkkuus"
+msgstr "Näytä osumatarkkuus tulostaulun alla"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:57
 msgid "Show team sizes:"
@@ -11439,12 +11514,12 @@ msgstr "Näytä välietappien maamerkit kartan kohteille "
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:69
 msgid "Show various gametype specific waypoints"
-msgstr "Näytä useita pelimuoto-ominaisia välietappeja"
+msgstr "Näytä useita pelimuotokohtaisia välietappeja"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:79
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:139
 msgid "Font size:"
-msgstr "Kirjasimen koko:"
+msgstr "Kirjasinkoko:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:87
 msgid "Edge offset:"
@@ -11452,7 +11527,7 @@ msgstr "Reunapoikkeama:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:97
 msgid "Fade when near the crosshair"
-msgstr "Hämärrä kun lähellä tähtäintä"
+msgstr "Hämärrä, kun lähellä tähtäintä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:102
 msgid "Display names instead of icons"
@@ -11460,7 +11535,7 @@ msgstr "Näytä nimet kuvakkeiden sijasta"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:108
 msgid "Damage"
-msgstr "Vahinkoaste"
+msgstr "Vahinko"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:110
 msgid "Overlay:"
@@ -11468,19 +11543,19 @@ msgstr "Päällinen:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:113
 msgid "Factor:"
-msgstr "Tarkennuskerroin:"
+msgstr "Kerroin:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:118
 msgid "Fade rate:"
-msgstr "Häivennyksen kesto"
+msgstr "Häivennyksen nopeus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:126
 msgid "Player Names"
-msgstr "Pelaajanimet"
+msgstr "Pelaajan nimet"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:128
 msgid "Show names above players"
-msgstr "Näytä pelaajanimet hahmojen yläpuolella"
+msgstr "Näytä nimet pelaajien yläpuolella"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:147
 msgid "Max distance:"
@@ -11501,7 +11576,7 @@ msgstr "Vain lähellä tähtäintä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:175
 msgid "Display health and armor"
-msgstr "Näytä elämän ja panssarin arvot"
+msgstr "Näytä terveyden ja panssarin arvot"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:181
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:80
@@ -11512,40 +11587,40 @@ msgstr "Muuta"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:183
 msgid "Speed unit:"
-msgstr "Nopeuden mittayksikkö:"
+msgstr "Nopeusyksikkö:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:192
 msgid "Damage overlay:"
-msgstr "Päällys joka osoittaa vahingot:"
+msgstr "Vahingon päällys:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:199
 msgid "Dynamic HUD"
-msgstr "Vaihtelupäivitteinen tieto-HUD"
+msgstr "Dynaaminen HUD"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:200
 msgid "HUD moves around following player's movement"
-msgstr "HUD liikkuu ympärillä seuraten pelaajan liikkeitä"
+msgstr "HUD liikkuu ympäriinsä seuraten pelaajan liikkeitä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:201
 msgid "Shake the HUD when hurt"
-msgstr "Väristä HUD:ia kun alkaa sattumaan"
+msgstr "Tärisytä HUD:ia vahingoittuessa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:204
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
 msgid "Enter HUD editor"
-msgstr "Muokkaa tietotaulua"
+msgstr "Siirry HUD-muokkaimeen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qh:7
 msgid "HUD"
-msgstr "HUD-tiedotenäkymä"
+msgstr "HUD"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:21
 msgid "In order for the HUD editor to show, you must first be in game."
-msgstr "Jotta tiedote-HUD:in muokkain näkyisi, täytyy sinun olla pelissä."
+msgstr "Sinun tulee olla pelissä, jotta HUD-muokkain näkyy."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:23
 msgid "Do you wish to start a local game to set up the HUD?"
-msgstr "Haluatko aloittaa paikallispelin asetellaksesi HUD-tiedotenäkymän?"
+msgstr "Haluatko aloittaa paikallispelin asettaaksesi HUD:in?"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:26
 msgid "Frag Information"
@@ -11557,15 +11632,15 @@ msgstr "Näytä tiedot sarjalahtauksista"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:31
 msgid "Only display sprees if they are achievements"
-msgstr "Näytä sarjat vain jos niitä saavutetaan"
+msgstr "Näytä sarjat vain, jos ne ovat saavutuksina"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:36
 msgid "Show spree information in centerprints"
-msgstr "Näytä lahtaussarjojen tiedot keskeistulosteessa"
+msgstr "Näytä lahtaussarjojen tiedot keskitulosteessa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:40
 msgid "Show spree information in death messages"
-msgstr "Näytä lahtaussarjojen tiedot kuoloviesteissä"
+msgstr "Näytä lahtaussarjojen tiedot kuolinviesteissä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:45
 msgid "Sprees in info messages:"
@@ -11589,29 +11664,29 @@ msgstr "SPREES^Molemmat"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:57
 msgid "Print on a separate line"
-msgstr ""
+msgstr "Tulosta eri riveille"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:61
 msgid "Add extra frag information to centerprint when available"
-msgstr "Laita lisälahtausten tiedot keskiulosteeseen kun saatavilla"
+msgstr "Laita lisälahtausten tiedot keskitulosteeseen kun saatavilla"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:65
 msgid "Add frag location to death messages when available"
-msgstr "Lisää lahtauksen sijaintitieto kuoloviesteihin kun saatavilla"
+msgstr "Lisää lahtauksen sijaintitieto kuolinviesteihin kun saatavilla"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:69
 msgid "Gametype Settings"
-msgstr ""
+msgstr "Pelityypin asetukset"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:71
 #, c-format
 msgid "Display capture times in %s"
-msgstr ""
+msgstr "Näytä kaappausajat %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:75
 #, c-format
 msgid "Display name of flag stealer in %s"
-msgstr ""
+msgstr "Näytä lipunvarastajan nimi %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display console messages in the top left corner"
@@ -11627,11 +11702,11 @@ msgstr "Näytä pelaajatilat keskustelulaatikossa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:90
 msgid "Powerup notifications"
-msgstr "Pikavoimistusten ilmoitukset"
+msgstr "Vahvistusten ilmoitukset"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:93
 msgid "Weapon centerprint notifications"
-msgstr "Aseiden ilmoitukset keskikirjoituksessa"
+msgstr "Aseiden ilmoitukset keskitulosteessa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:96
 msgid "Weapon info message notifications"
@@ -11643,7 +11718,7 @@ msgstr "Julkistajat"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:103
 msgid "Respawn countdown sounds"
-msgstr "Uudelleensyntymislaskennan äänet"
+msgstr "Jälleensyntymisen laskentaäänet"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:106
 msgid "Killstreak sounds"
@@ -11668,7 +11743,7 @@ msgstr "Käytä yksinkertaisia 2D-kuvia esinemallien sijasta"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:35
 msgid "Unavailable opacity:"
-msgstr ""
+msgstr "Ei saatavissa oleva läpikuultavuus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:39
 msgid "Unavailable color:"
@@ -11688,7 +11763,7 @@ msgstr "GHOITEMS^Sävytetty"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:45
 msgid "GHOITEMS^Normal"
-msgstr "GHOITEMS^Tavanomainen"
+msgstr "GHOITEMS^Normaali"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:46
 msgid "GHOITEMS^Blue"
@@ -11701,19 +11776,19 @@ msgstr "Pelaajat"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:54
 msgid "Force player models to mine"
-msgstr "Pakota hahmojen ulkomuoto samanlaiseksi:"
+msgstr "Pakota pelaajamallit kuten oma on"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
 msgid "Force player colors to mine"
-msgstr "Pakota pelaajien väri kuten omasi on"
+msgstr "Pakota pelaajien värit kuten oma on"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:58
 msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team"
 msgstr ""
-"Varoitus: mikäli tämä on kytketty päälle joukkuepeleissä voi joukkueesi väri "
-"ilmetä samana kuten vastapuolen väri"
+"Varoitus: Jos tämä on päällä joukkuepeleissä, joukkueesi väri voi ilmetä "
+"samana kuin vastapuolen väri"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
 msgid "Except in team games"
@@ -11721,7 +11796,7 @@ msgstr "Poislukien joukkuepelit"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:62
 msgid "Only in Duel"
-msgstr "Vain Kaksintaistelussa"
+msgstr "Vain kaksintaistelussa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:63
 msgid "Only in team games"
@@ -11733,7 +11808,7 @@ msgstr "Joukkuepeleissä sekä kaksintaisteluissa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:68
 msgid "Body fading:"
-msgstr "Ruhohäivytys:"
+msgstr "Ruumiin hävitys:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:72
 msgid "Gibs:"
@@ -11761,19 +11836,19 @@ msgstr "Mallit"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:8
 msgid "Customize how players and items are displayed in game"
-msgstr "Mukauta miten pelaajat ja esineet näytetään pelissä"
+msgstr "Mukauta, miten pelaajat ja esineet näytetään pelissä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:26
 msgid "Perspective"
-msgstr ""
+msgstr "Perspektiivi"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:29
 msgid "Field of view:"
-msgstr "Näkökenttä:"
+msgstr "Näköalue:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:31
 msgid "Field of vision in degrees"
-msgstr "Näkökenttä asteissa"
+msgstr "Näköalue asteissa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:35
 msgid "1st person perspective"
@@ -11781,7 +11856,7 @@ msgstr "1. persoonan näkymä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:38
 msgid "Slide to third person upon death"
-msgstr "Liu'uta kolmannen persoonan näkymään kuollessa"
+msgstr "Siirrä 3. persoonan näkymään kuollessa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:42
 msgid "Smooth the view when landing from a jump"
@@ -11789,7 +11864,7 @@ msgstr "Pehmennä näkymää laskeuduttaessa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:46
 msgid "Smooth the view while crouching"
-msgstr "Pehmennä näkymää kun menet kyykkyyn"
+msgstr "Pehmennä näkymää kun kyyristyt"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:50
 msgid "View bobbing while walking around"
@@ -11813,11 +11888,11 @@ msgstr "Etäisyys ylös:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:76
 msgid "Allow passing through walls while spectating"
-msgstr "Salli lentäminen seinien läpi katsojana"
+msgstr "Salli seinien läpi kulkeminen katsojana"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:80
 msgid "Zooming"
-msgstr ""
+msgstr "Zoomaus"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:82
 msgid "ZOOM^Zoom factor:"
@@ -11829,13 +11904,11 @@ msgstr "Kuinka iso zoomauksen kerroin on zoomaus-nappia painettaessa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:91
 msgid "ZOOM^Zoom speed:"
-msgstr "ZOOM^Zoom-nopeus:"
+msgstr "ZOOM^Zoomauksen nopeus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:94
 msgid "How fast the view will be zoomed, disable to zoom instantly"
-msgstr ""
-"Kuinka nopeasti näkymä zoomataan, ota pois käytöstä jotta zoom tapahtuu "
-"välittömästi"
+msgstr "Kuinka nopeasti näkymää zoomataan, poista käytöstä, jotta zoomaat heti"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:96
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:126
@@ -11844,17 +11917,19 @@ msgstr "ZOOM^Heti"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:101
 msgid "ZOOM^Zoom sensitivity:"
-msgstr "ZOOM^Zoom-herkkyys:"
+msgstr "ZOOM^Zoomin herkkyys:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:104
 msgid ""
 "How zoom changes sensitivity, from 0% (lower sensitivity) to 100% (no "
 "sensitivity change)"
 msgstr ""
+"Kuinka zoomaus muuttaa herkkyyttä, 0 %:sta (matala herkkyystaso) 100 %:iin "
+"(ei muutosta herkkyyteen)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:108
 msgid "Zoom scrolling"
-msgstr ""
+msgstr "Zoomauksen vieritys"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:132
 msgid "Velocity zoom"
@@ -11866,7 +11941,7 @@ msgstr "VZOOM^Kerroin"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:144
 msgid "Forward movement only"
-msgstr "Vain eteenpäinliike"
+msgstr "Vain eteenpäin liike"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:150
 msgid "Display reticle 2D overlay while zooming"
@@ -11874,11 +11949,11 @@ msgstr "Näytä 2D-päällisristikko zoomatessa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:153
 msgid "Release zoom when you die or respawn"
-msgstr "Vapauta zoom kuollessa tai uudelleensynnyttäessä"
+msgstr "Vapauta zoomaus kuollessa tai jälleensyntyessä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:157
 msgid "Release zoom when you switch weapons"
-msgstr "Vapauta zoom vaihtaessasi aseita"
+msgstr "Vapauta zoomaus vaihtaessasi aseita"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qh:7
 #: qcsrc/menu/xonotic/keybinder.qc:133
@@ -11887,7 +11962,7 @@ msgstr "Näkymä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:33
 msgid "Weapon Priority List (* = mutator weapon)"
-msgstr "Aseiden ensisijaisuusluettelo (* = muovaaja-ase)"
+msgstr "Aseiden tärkeyslista (* = muovaaja-ase)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:39
 msgid "Up"
@@ -11899,13 +11974,12 @@ msgstr "Alas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:50
 msgid "Use priority list for weapon cycling"
-msgstr "Hyödynnä ensisijaisuusluetteloa asekierrätyksessä"
+msgstr "Käytä tärkeyslistaa aseiden läpikäymiseen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:51
 msgid ""
 "Make use of the list above when cycling through weapons with the mouse wheel"
-msgstr ""
-"Hyödynnä ylläolevaa luetteloa läpikäydessä asevalikoimaa hiiren rullalla"
+msgstr "Hyödynnä ylläolevaa listaa läpikäydessä aseita hiiren rullalla"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:54
 msgid "Cycle through only usable weapon selections"
@@ -11913,7 +11987,7 @@ msgstr "Läpikäy vain käytettäviä aseita"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:58
 msgid "Weapon Options"
-msgstr ""
+msgstr "Aseiden asetukset"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:60
 msgid "Release attack buttons when you switch weapons"
@@ -11921,7 +11995,7 @@ msgstr "Vapauta hyökkäyspainikkeet vaihtaessasi aseita"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:62
 msgid "Auto switch weapons on pickup"
-msgstr "Vaihda ase automaattisesti poimimisen jälkeen"
+msgstr "Vaihda ase automaattisesti poimittaessa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:63
 msgid ""
@@ -11937,11 +12011,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:76
 msgid "Weapon Visuals"
-msgstr ""
+msgstr "Asegrafiikat"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:78
 msgid "Draw 1st person weapon model"
-msgstr "Piirrä ensimmäisen persoonan asemalli"
+msgstr "Piirrä 1. persoonan asemalli"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:79
 msgid "Draw the weapon model"
@@ -11979,7 +12053,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:116
 msgid "In team games"
-msgstr ""
+msgstr "Joukkuepeleissä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
 #: qcsrc/menu/xonotic/guide/guide.qh:12 qcsrc/menu/xonotic/keybinder.qc:77
@@ -12017,7 +12091,7 @@ msgstr "Herkkyys:"
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:99
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:103
 msgid "Mouse speed multiplier"
-msgstr "Hiiren nopeuden moninkertaistaja"
+msgstr "Hiiren nopeuden kerroin"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:108
 msgid "Smooth aiming"
@@ -12029,11 +12103,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:111
 msgid "Invert aiming"
-msgstr "Käännä hiiren suunta"
+msgstr "Käännä tähtäyssuunta"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:112
 msgid "Invert mouse movement on the Y-axis"
-msgstr "Käännä hiiriliikkeet Y-akselilla"
+msgstr "Käännä hiiren liikkeet Y-akselilla"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:114
 msgid ""
@@ -12043,7 +12117,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:116
 msgid "Acceleration factor:"
-msgstr ""
+msgstr "Kiihtyvyyden kerroin:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:119
 msgid "MOUSEACCEL^Fully disabled"
@@ -12055,7 +12129,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:125
 msgid "Speed bounds:"
-msgstr ""
+msgstr "Nopeusrajat:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:137
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:141
@@ -12085,7 +12159,7 @@ msgstr "Hyppää automaattisesti uudestaan pitämällä hyppynappi painettuna"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:163
 msgid "Jetpack on jump:"
-msgstr "Lentopakkaus hypätessä:"
+msgstr "Rakettireppu hypätessä:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:165
 msgid "JPJUMP^Disabled"
@@ -12249,22 +12323,26 @@ msgid "Modified cvars only"
 msgstr "Vain mukautetut cvar:it"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:46
+msgid "Search in cvar descriptions too"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Setting:"
 msgstr "Asetus:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:51
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:58
 msgid "Type:"
 msgstr "Tyyppi:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:55
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:62
 msgid "Value:"
 msgstr "Arvo:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:64
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:71
 msgid "Reset to default"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:72
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:79
 msgid "Description:"
 msgstr "Kuvaus:"
 
@@ -13147,11 +13225,11 @@ msgstr "hyppää / ui"
 
 #: qcsrc/menu/xonotic/keybinder.qc:67
 msgid "crouch / sink"
-msgstr "kyykisty / uppoa"
+msgstr "kyyristy / uppoa"
 
 #: qcsrc/menu/xonotic/keybinder.qc:69
 msgid "jetpack"
-msgstr "lentopakkaus"
+msgstr "rakettireppu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:72
 msgid "Attacking"
@@ -13175,20 +13253,20 @@ msgstr "ASE^paras"
 
 #: qcsrc/menu/xonotic/keybinder.qc:82
 msgid "reload"
-msgstr "lataa uudelleen"
+msgstr "lataa"
 
 #: qcsrc/menu/xonotic/keybinder.qc:111
 #, c-format
 msgid "weapon group %d"
-msgstr ""
+msgstr "aseryhmä %d"
 
 #: qcsrc/menu/xonotic/keybinder.qc:134
 msgid "hold zoom"
-msgstr "pidä zoom paikallaan"
+msgstr "pidä zoomi paikallaan"
 
 #: qcsrc/menu/xonotic/keybinder.qc:135
 msgid "toggle zoom"
-msgstr "zoom-kytkin"
+msgstr "zoomin vaihto"
 
 #: qcsrc/menu/xonotic/keybinder.qc:136
 msgid "show scores"
@@ -13196,7 +13274,7 @@ msgstr "näytä pisteet"
 
 #: qcsrc/menu/xonotic/keybinder.qc:137
 msgid "screenshot"
-msgstr ""
+msgstr "kuvankaappaus"
 
 #: qcsrc/menu/xonotic/keybinder.qc:138
 msgid "maximize radar"
@@ -13256,7 +13334,7 @@ msgstr "pudota avain/lippu, poistu ajoneuvosta"
 
 #: qcsrc/menu/xonotic/keybinder.qc:170
 msgid "suicide / respawn"
-msgstr "itsari / uudelleensynty"
+msgstr "itsemurha / uudelleensynty"
 
 #: qcsrc/menu/xonotic/keybinder.qc:171
 msgid "quick menu"
@@ -13264,7 +13342,7 @@ msgstr "pikavalikko"
 
 #: qcsrc/menu/xonotic/keybinder.qc:173
 msgid "scoreboard user interface"
-msgstr "Tulostaulukon käyttöliittymä"
+msgstr "tulostaulukon käyttöliittymä"
 
 #: qcsrc/menu/xonotic/keybinder.qc:176
 msgid "User defined"
@@ -13339,6 +13417,8 @@ msgid ""
 "Huh? Can't play this (invalid gametype). Refiltering so this won't happen "
 "again."
 msgstr ""
+"Täh? Tätä ei voi pelata (viallinen pelityyppi). Uudelleensuodatetaan jotta "
+"näin ei tapahtuisi enää."
 
 #: qcsrc/menu/xonotic/playerlist.qc:115
 msgid "spectator"
@@ -13350,11 +13430,11 @@ msgstr "<mallia ei löytynyt>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:263
 msgid "SERVER^Remove favorite"
-msgstr "PALVELIN^Poista lemppari"
+msgstr "PALVELIN^Poista suosikki"
 
 #: qcsrc/menu/xonotic/serverlist.qc:264
 msgid "Remove the currently highlighted server from bookmarks"
-msgstr "Poista tämänhetkinen korostettu palvelin kirjanmerkeistä"
+msgstr "Poista nykyinen korostettu palvelin kirjanmerkeistä"
 
 #: qcsrc/menu/xonotic/serverlist.qc:268
 msgid "SERVER^Favorite"
@@ -13365,8 +13445,8 @@ msgid ""
 "Bookmark the currently highlighted server so that it's faster to find in the "
 "future"
 msgstr ""
-"Laita kirjanmerkiksi tämänhetkinen korostettu palvelin jotta se on nopeampi "
-"löytää tulevassa"
+"Laita kirjanmerkiksi nykyinen korostettu palvelin, jotta se löytyy jatkossa "
+"nopeampi"
 
 #: qcsrc/menu/xonotic/serverlist.qc:754
 msgid "Ping"
@@ -13458,7 +13538,7 @@ msgstr "<AUTHOR>"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:72
 msgid "VOL^MAX"
-msgstr "VOL^MAX"
+msgstr "VOL^MAKS."
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:74
 msgid "VOL^OFF"
@@ -13474,8 +13554,8 @@ msgid ""
 "Change the sharpness of the textures. Lowering it will effectively reduce "
 "texture memory usage, but make the textures appear very blurry."
 msgstr ""
-"Muuta päällysteiden terävyyttä. Alennus vähentää tehokkaasti muistikäyttöä, "
-"mutta saa päällysteet näyttämään hyvin sumuisilta."
+"Muuta tekstuurien terävyyttä. Alentaminen vähentää tehokkaasti muistin "
+"käyttöä, mutta saa tekstuurit näyttämään hyvin sameilta."
 
 #: qcsrc/menu/xonotic/slider_resolution.qc:131
 msgid "Screen resolution"
@@ -13487,7 +13567,7 @@ msgstr "FADESPEED^Hidas"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "FADESPEED^Normal"
-msgstr "FADESPEED^Tavanomainen"
+msgstr "FADESPEED^Normaali"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "FADESPEED^Fast"
@@ -13590,7 +13670,7 @@ msgstr "Tapposuhde:"
 
 #: qcsrc/menu/xonotic/statslist.qc:209
 msgid "Skill:"
-msgstr ""
+msgstr "Taito:"
 
 #: qcsrc/menu/xonotic/statslist.qc:232
 #, c-format
@@ -13603,8 +13683,7 @@ msgstr "Päivitys ladattavissa osoitteessa:"
 
 #: qcsrc/menu/xonotic/util.qc:518
 msgid "Autogenerating mapinfo for newly added maps..."
-msgstr ""
-"Luodaan automaattisesti karttatietoja vastikään lisätyille kartoille..."
+msgstr "Luodaan automaattisesti karttatietoja vasta lisätyille kartoille..."
 
 #: qcsrc/menu/xonotic/util.qc:553
 #, c-format
@@ -13616,9 +13695,9 @@ msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems."
 msgstr ""
-"^1VIRHE: Tekstuuripakkaus vaaditaan mutta se ei ole tuettuna.\n"
-"^1Odotettavissa graafisia virheitä."
+"^1VIRHE: Tekstuuripakkaus vaaditaan, mutta sitä ei tueta.\n"
+"^1Odotettavissa graafiikkavirheitä."
 
 #: qcsrc/menu/xonotic/util.qc:798
 msgid "Hide on death"
-msgstr ""
+msgstr "Piilota kuollessa"
