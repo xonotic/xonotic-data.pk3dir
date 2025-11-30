@@ -25,6 +25,9 @@
 
 // generic CSQC model code
 
+#if CSQCPLAYER_FORCE_UPDATES
+.float csqcmodel_nextforcedupdate;
+#endif
 bool CSQCModel_Send(entity this, entity to, int sf)
 {
 	// some nice flags for CSQCMODEL_IF
@@ -59,12 +62,15 @@ bool CSQCModel_Send(entity this, entity to, int sf)
 #undef CSQCMODEL_ENDIF
 #undef CSQCMODEL_IF
 
+#if CSQCPLAYER_FORCE_UPDATES
+	// ensure at least 8 sends per sec
+	if (IS_REAL_CLIENT(this))
+		this.csqcmodel_nextforcedupdate = time + 1 / CSQCPLAYER_FORCE_UPDATES;
+#endif
+
 	return true;
 }
 
-#if CSQCPLAYER_FORCE_UPDATES
-.float csqcmodel_nextforcedupdate;
-#endif
 void CSQCModel_CheckUpdate(entity e)
 {
 	// some nice flags for CSQCMODEL_IF
@@ -73,10 +79,10 @@ void CSQCModel_CheckUpdate(entity e)
 	noref float isnolocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
 
 #if CSQCPLAYER_FORCE_UPDATES
-	if(isplayer && time > e.csqcmodel_nextforcedupdate)
+	if(IS_REAL_CLIENT(e) && time > e.csqcmodel_nextforcedupdate)
 	{
-		e.SendFlags |= CSQCMODEL_PROPERTY_ORIGIN;
-		e.csqcmodel_nextforcedupdate = time + (1 / (CSQCPLAYER_FORCE_UPDATES)) * (0.5 + random()); // ensure about 4 origin sends per sec
+//		e.SendFlags |= CSQCMODEL_PROPERTY_ORIGIN;
+		e.SendFlags |= BIT(4); // the smallest possible update (any update prevents prediction errors and flickering)
 	}
 #endif
 

@@ -36,7 +36,7 @@ MACRO_BEGIN \
 	(e).solid = SOLID_CORPSE; \
 	(e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE; \
 	if (!autocvar_g_projectiles_interact || (autocvar_g_projectiles_interact == 1 && (e).classname != "blasterbolt")) \
-		(e).clipgroup = FL_PROJECTILE; \
+		(e).clipgroup = 1; \
 MACRO_END
 
 // when doing this, hagar can go through clones
