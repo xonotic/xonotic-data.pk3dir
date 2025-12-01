@@ -9652,11 +9652,11 @@ msgstr "Contributeurs passés"
 #: qcsrc/menu/xonotic/cvarlist.qc:25
 #, c-format
 msgid "%d results"
-msgstr ""
+msgstr "%d résultats"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:25
 msgid "1 result"
-msgstr ""
+msgstr "1 résultat"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:120
 msgid "forced to be saved to config.cfg"
@@ -13197,7 +13197,7 @@ msgstr "Cvars modifiées uniquement"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:46
 msgid "Search in cvar descriptions too"
-msgstr ""
+msgstr "Rechercher également dans les descriptions de cvar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Setting:"

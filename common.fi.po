@@ -37,7 +37,7 @@ msgstr ""
 
 #: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:126
 msgid "Checkpoint times:"
-msgstr ""
+msgstr "Tarkistuspisteen ajat:"
 
 #: qcsrc/client/hud/hud_config.qc:79
 #, c-format
@@ -93,7 +93,7 @@ msgstr "^3Pelaaja^7: Tämä on keskustelualue."
 #: qcsrc/client/hud/panel/racetimer.qc:214
 #, c-format
 msgid "Checkpoint %d"
-msgstr "Tarkastuspiste %d"
+msgstr "Tarkistuspiste %d"
 
 #: qcsrc/client/hud/panel/engineinfo.qc:72
 #, c-format
@@ -252,7 +252,7 @@ msgstr "%sOdotetaan %d pelaajaa liittymään..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:221
 msgid "Teams are unbalanced!"
-msgstr "Joukkueet ovat epätasapainossa!"
+msgstr "Joukkueet ovat epätasaiset!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:224
 #, c-format
@@ -609,7 +609,7 @@ msgstr "RANGAISTUS: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:217 qcsrc/client/main.qc:1234
 msgid "missing a checkpoint"
-msgstr "tarkastuspiste sivuutettu"
+msgstr "tarkistuspiste sivuutettu"
 
 #: qcsrc/client/hud/panel/radar.qc:334
 msgid "Click to select spawn location"
@@ -1206,7 +1206,7 @@ msgstr "Lämmittely: liian vähän pelaajia!"
 
 #: qcsrc/client/hud/panel/timer.qc:160
 msgid "Warmup: teams unbalanced!"
-msgstr "Lämmittely: joukkueet epätasapainossa!"
+msgstr "Lämmittely: joukkueet epätasaiset!"
 
 #: qcsrc/client/hud/panel/timer.qc:162
 msgid "Warmup: no time limit"
@@ -2832,7 +2832,7 @@ msgid ""
 "%s is a mutator in which players below a certain health threshold (for "
 "example 25) will suffer blood loss."
 msgstr ""
-"%s on mutaattori, jossa tietyn ala-arvon (esim. 25) alittaneet pelaajat "
+"%s on muovaaja, jossa tietyn ala-arvon (esim. 25) alittaneet pelaajat "
 "kärsivät verenhukasta."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qc:77
@@ -3243,7 +3243,7 @@ msgid ""
 "instead giving players the %s, which immediately frags players in a single "
 "shot, hence the name \"InstaGib.\""
 msgstr ""
-"%s on mutaattori, joka poistaa kaikki aseet ja keräilyaseet kartalta. Sen "
+"%s on muovaaja, joka poistaa kaikki aseet ja keräilyaseet kartalta. Sen "
 "sijaan pelaajille annetaan %s, mikä tappaa pelaajat heti kertalaukauksella, "
 "mistä nimi \"InstaGib.\""
 
@@ -3531,9 +3531,9 @@ msgid ""
 "After some time the weapon is reselected, and this repeats forever. Weapon "
 "and ammo pickups are also removed from the map."
 msgstr ""
-"%s on mutaattori,  joka antaa kaikille pelaajille saman satunnaisesti "
-"valitun aseen. Kotvan kuluttua ase valitaan uudelleen, ja tämä toistuu "
-"loputtomiin. Keräiltävät aseet ja ammukset poistetaan myös kartalta."
+"%s on muovaaja,  joka antaa kaikille pelaajille saman satunnaisesti valitun "
+"aseen. Kotvan kuluttua ase valitaan uudelleen, ja tämä toistuu loputtomiin. "
+"Keräiltävät aseet ja ammukset poistetaan myös kartalta."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:299
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
@@ -3947,7 +3947,7 @@ msgstr "Esine"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:15
 msgid "Checkpoint"
-msgstr "Jatkopiste"
+msgstr "Tarkistuspiste"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:16
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:236
@@ -4277,61 +4277,59 @@ msgstr "^F4Laskenta pysäytetty!"
 #: qcsrc/common/notifications/all.inc:275
 #: qcsrc/common/notifications/all.inc:559
 msgid "Teams are too unbalanced."
-msgstr ""
+msgstr "Joukkueet ovat liian epätasaiset!"
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
 msgid "^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr "^BG%s%s^K1 tapettiin ^BG%s^K1's ^BG%s^K1 tehostuksella ^K1%s%s"
+msgstr "^BG%s%s^K1 tapettiin ^BG%s^K1' ^BG%s^K1 tehostuksella ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
 msgstr ""
-"^BG%s%s^K1 otettiin pisteitä pois ^BG%s^K1's ^BG%s^K1 tehostuksella ^K1%s%s"
+"^BG%s%s^K1 otettiin pisteitä pois ^BG%s^K1 ^BG%s^K1 tehostuksella ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:278
 #, c-format
 msgid "^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 lopetettiin epärehellisesti ja syyllinen oli ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 lopetettiin epäreilusti, ja syyllinen oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:279
 #, c-format
 msgid "^BG%s%s^K1 was drowned by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 hukutettiin syyllisen ollen ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 hukutettiin, ja tekijä oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 was grounded by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 palautettiin maanpinnalle syyllisen ollen ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 palautettiin maan kamaralle, ja tekijä oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
-msgstr ""
-"^BG%s%s^K1 tunsi mitä se on kun tekee poppaa ^BG%s^K1's tulen "
-"polttaessa^K1%s%s"
+msgstr "^BG%s%s^K1 tunsi poltetta ^BG%s^K1-tulittajalta^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"
-msgstr ""
-"^BG%s%s^K1 poltettiin täydeksi paistiksi syyllisen ollessa ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 poltettiin paistiksi, ja syyllinen oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
 msgid "^BG%s%s^K1 was cooked by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 päätyi murkinaksi kokin ollessa ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 päätyi murkinaksi kokkaajana ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:283
 #, c-format
 msgid "^BG%s%s^K1 was pushed in front of a monster by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 työnnettiin hirviön eteen ja tekijä oli ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 työnnettiin hirviön eteen, ja työntäjä oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:284
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"
-msgstr "^BG%s%s^K1 posautettiin taivaan tuuliin ^BG%s^K1's Naatilla%s%s"
+msgstr ""
+"^BG%s%s^K1 posautettiin taivaan tuuliin Naatilla, ja tekijä oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:285
 #, c-format
@@ -4341,35 +4339,32 @@ msgstr "^BG%s%s^K1 erehtyi liian lähelle napalmiräjähdystä%s%s"
 #: qcsrc/common/notifications/all.inc:285
 #, c-format
 msgid "^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"
-msgstr ""
-"^BG%s%s^K1 poltettiin kuoliaaksi ^BG%s^K1's Napalminaatin toimesta %s%s"
+msgstr "^BG%s%s^K1 poltettiin poroksi Napalminaatilla polttajana ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:286
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"
-msgstr "^BG%s%s^K1 posautettiin ^BG%s^K1's Jäänaatin toimesta %s%s"
+msgstr "^BG%s%s^K1 posautettiin Jäänaatilla posauttajana ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:287
 #, c-format
 msgid "^BG%s%s^K1 has not been healed by ^BG%s^K1's Healing Nade%s%s"
-msgstr "^BG%s%s^K1 ei tervehtynyt ^BG%s^K1's Terveysnaatista %s%s"
+msgstr "^BG%s%s^K1 ei parantunut ^BG%s^K1-parantajan Terveysnaatista %s%s"
 
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"
-msgstr ""
-"^BG%s%s^K1 ammuttiin planeettaa kiertävälle radalle syyllisen ollen "
-"^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 ammuttiin kiertoradalle, ja tekijä oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
 msgid "^BG%s%s^K1 was slimed by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 limakyllästettiin ja tekijä oli ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 limakyllästettiin, ja tekijä oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:290
 #, c-format
 msgid "^BG%s%s^K1 was preserved by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 säilöttiin säilöjän ollen ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 säilöttiin, ja säilöjä oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:291
 #, c-format
@@ -4380,83 +4375,82 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:291
 #, c-format
 msgid "^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 etäsurmattiin syyllisen ollen ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 etäsurmattiin, ja syyllinen oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:292
 #, c-format
 msgid "^BG%s%s^K1 died in an accident with ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 menehtyi onnettomuudessa ja kanssansa oli ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 menehtyi onnettomuudessa mukanaan ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:293
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s%s"
-msgstr ""
-"^BG%s%s^K1 otti osumaa töräyksestä kun ^BG%s^K1'n Bumblebee räjähti%s%s"
+msgstr "^BG%s%s^K1 otti osumaa Bumblebee-räjähdyksestä tekijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:294
 #, c-format
 msgid "^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s%s"
-msgstr ""
-"^BG%s%s^K1 koki kauniit valot joita ^BG%s^K1'n Bumblebee-ase tuottaa%s%s"
+msgstr "^BG%s%s^K1 näki kauniit valot Bumblebee-aseesta tekijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:295
 #, c-format
 msgid "^BG%s%s^K1 was crushed by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 tuli rusennetuksi syypään ollen ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 tuli rusennetuksi, ja syypää oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:296
 #, c-format
 msgid "^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s%s"
-msgstr "^BG%s%s^K1 sai maistaa sirpalepommia ^BG%s^K1'n Raptorin toimesta%s%s"
+msgstr "^BG%s%s^K1 sai maistaa Raptor-sirpalepommia tekijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:297
 #, c-format
 msgid "^BG%s%s^K1 couldn't resist ^BG%s^K1's purple blobs%s%s"
-msgstr "^BG%s%s^K1 ei voinut vastustaa ^BG%s^K1'n purppurakimpaleita%s%s"
+msgstr ""
+"^BG%s%s^K1 ei voinut vastustaa purppurakimpaleita tekijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:298
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Raptor exploded%s%s"
-msgstr "^BG%s%s^K1 otti osumaa töräyksestä kun ^BG%s^K1'n Raptor räjähti%s%s"
+msgstr "^BG%s%s^K1 otti osumaa Raptor-töräyksestä, ja tekijä oli ^BG%s^K1'%s%s"
 
 #: qcsrc/common/notifications/all.inc:299
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s"
 msgstr ""
-"^BG%s%s^K1 otti osumaa töräyksestä kun ^BG%s^K1'n Hämisbotti räjähti%s%s"
+"^BG%s%s^K1 otti osumaa Hämisbotin töräyksestä, ja tekijä oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:300
 #, c-format
 msgid "^BG%s%s^K1 got shredded by ^BG%s^K1's Spiderbot%s%s"
-msgstr "^BG%s%s^K1 silppuuntui ^BG%s^K1'n Hämisbotin toimesta%s%s"
+msgstr "^BG%s%s^K1 silppuuntui Hämisbotilla, ja silppuja oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:301
 #, c-format
 msgid "^BG%s%s^K1 was blasted to bits by ^BG%s^K1's Spiderbot%s%s"
-msgstr "^BG%s%s^K1 posautettiin päreiksi ^BG%s^K1'n Hämisbotin toimesta%s%s"
+msgstr "^BG%s%s^K1 posautettiin päreiksi Hämisbotilla tekijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:302
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s"
-msgstr "^BG%s%s^K1 otti osumaa töräyksestä kun ^BG%s^K1'n Kilpuri räjähti%s%s"
+msgstr ""
+"^BG%s%s^K1 otti osumaa Kilpuri-räjähdyksestä, ja tekijä oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"
-msgstr "^BG%s%s^K1 iskettiin alas ^BG%s^K1'n Kilpurin toimesta%s%s"
+msgstr "^BG%s%s^K1 iskettiin alas Kilpurin toimesta iskijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
 msgid "^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"
-msgstr "^BG%s%s^K1 ei löytänyt suojaa ^BG%s^K1'n Kilpurilta%s%s"
+msgstr "^BG%s%s^K1 ei löytänyt suojaa Kilpurilta omistajana ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
 msgid "^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"
-msgstr ""
-"^BG%s%s^K1 linkaistiin tuskien taipaleelle syyllisen ollen ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 linkaistiin tuskien taipaleelle, ja syypää oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:308
 #, c-format
@@ -4476,7 +4470,7 @@ msgstr "^BG%s^K1 luulivat löytäneensä lokoisan retkeilyalueen%s%s"
 #: qcsrc/common/notifications/all.inc:311
 #, c-format
 msgid "^BG%s^K1 unfairly eliminated themselves%s%s"
-msgstr ""
+msgstr "^BG%s^K1 lopettivat itsensä epäreilusti%s%s"
 
 #: qcsrc/common/notifications/all.inc:313
 #, c-format
@@ -4491,12 +4485,12 @@ msgstr "^BG%s^K1 oli vedessä liian pitkään%s%s"
 #: qcsrc/common/notifications/all.inc:314
 #, c-format
 msgid "^BG%s^K1 hit the ground with a bit too much force%s%s"
-msgstr "^BG%s^K1 kohtasi maankamaran hiukan liiallisella voimalla%s%s"
+msgstr "^BG%s^K1 törmäsi tantereeseen hiukan liian voimakkasti%s%s"
 
 #: qcsrc/common/notifications/all.inc:314
 #, c-format
 msgid "^BG%s^K1 hit the ground with a crunch%s%s"
-msgstr "^BG%s^K1 kohtasi maankamaran kanssa niin että narskui%s%s"
+msgstr "^BG%s^K1 Törmäsi maan kamaraan niin että rusahti%s%s"
 
 #: qcsrc/common/notifications/all.inc:315
 #, c-format
@@ -4511,12 +4505,12 @@ msgstr "^BG%s^K1 tunsi pientä kuumotusta%s%s"
 #: qcsrc/common/notifications/all.inc:316
 #, c-format
 msgid "^BG%s^K1 died%s%s"
-msgstr "^BG%s^K1 delasi%s%s"
+msgstr "^BG%s^K1 kuoli%s%s"
 
 #: qcsrc/common/notifications/all.inc:317
 #, c-format
 msgid "^BG%s^K1 found a hot place%s%s"
-msgstr "^BG%s^K1 ja kuumat paikat%s%s"
+msgstr "^BG%s^K1 sai kuumat paikat%s%s"
 
 #: qcsrc/common/notifications/all.inc:317
 #, c-format
@@ -4531,7 +4525,7 @@ msgstr "^BG%s^K1 joutui Velhon räjäyttämäksi%s%s"
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
-msgstr "^BG%s^K1's sisukset muuttuivat ulkoisiksi Golemin toimesta%s%s"
+msgstr "^BG%s^K1 sisuksineen muuttuivat ulkoisiksi Golemin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
@@ -4546,22 +4540,22 @@ msgstr "^BG%s^K1 sähköistettiin kuolemaansa Golemin toimesta%s%s"
 #: qcsrc/common/notifications/all.inc:322
 #, c-format
 msgid "^BG%s^K1 was bitten by a Spider%s%s"
-msgstr "^BG%s^K1 purtiin Hämähäkin toimesta%s%s"
+msgstr "^BG%s^K1 joutui Hämähäkin puraisemaksi%s%s"
 
 #: qcsrc/common/notifications/all.inc:323
 #, c-format
 msgid "^BG%s^K1 was fireballed by a Wyvern%s%s"
-msgstr "^BG%s^K1 sai Lohikäärmeen tulipallon kohtalokseen%s%s"
+msgstr "^BG%s^K1 sai Lohikäärmeen tulipallosta%s%s"
 
 #: qcsrc/common/notifications/all.inc:324
 #, c-format
 msgid "^BG%s^K1 joins the Zombies%s%s"
-msgstr "^BG%s^K1 liittyi eläviin kuolleisiin%s%s"
+msgstr "^BG%s^K1 liittyi zombeihin%s%s"
 
 #: qcsrc/common/notifications/all.inc:325
 #, c-format
 msgid "^BG%s^K1 was given kung fu lessons by a Zombie%s%s"
-msgstr "^BG%s^K1 sai kung fu -oppia Zombielta%s%s"
+msgstr "^BG%s^K1 sai kung fu -oppia zombielta%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #: qcsrc/common/notifications/all.inc:328
@@ -4584,17 +4578,17 @@ msgstr "^BG%s^K1 paloi poroksi omien Napalminaattiensa ansiosta%s%s"
 #: qcsrc/common/notifications/all.inc:329
 #, c-format
 msgid "^BG%s^K1's Healing Nade didn't quite heal them%s%s"
-msgstr "^BG%s^K1'n Terveysnaatti ei heitä aivan tervehdyttänyt%s%s"
+msgstr "^BG%s^K1 terveysnaatteineen ei aivan parantanut%s%s"
 
 #: qcsrc/common/notifications/all.inc:330
 #, c-format
 msgid "^BG%s^K1 died%s%s. What's the point of living without ammo?"
-msgstr "^BG%s^K1 kuoli%s%s. Onko elämällä jokin tarkoitus ilman ammuksia?"
+msgstr "^BG%s^K1 kuoli%s%s. Mitä itua elämällä ilman ammuksia?"
 
 #: qcsrc/common/notifications/all.inc:330
 #, c-format
 msgid "^BG%s^K1 ran out of ammo%s%s"
-msgstr "^BG%s^K1 huomasi ammustensa loppuneen%s%s"
+msgstr "^BG%s^K1 on ilman ammuksia%s%s"
 
 #: qcsrc/common/notifications/all.inc:331
 #, c-format
@@ -4624,7 +4618,7 @@ msgstr "^BG%s^K1 on nyt säilötty tuleville sukupolville%s%s"
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
 msgid "^BG%s^K1 switched to the %s%s"
-msgstr "^BG%s^K1 vaihtoi tähän %s%s"
+msgstr "^BG%s^K1 vaihtoi tähän: %s%s"
 
 #: qcsrc/common/notifications/all.inc:337
 #, c-format
@@ -4649,12 +4643,12 @@ msgstr "^BG%s^K1 otti osumaa FLAC-tykkitornin tulesta%s%s"
 #: qcsrc/common/notifications/all.inc:341
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Hellion turret%s%s"
-msgstr "^BG%s^K1 töräytettiin taivaan tuuliin Hellion-tykkitornin toimesta%s%s"
+msgstr "^BG%s^K1 posautettiin taivaan tuuliin Hellion-tykkitornin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:342
 #, c-format
 msgid "^BG%s^K1 could not hide from the Hunter turret%s%s"
-msgstr "^BG%s^K1 ei kyennyt piiloutumaan Hunter-tykkitornilta%s%s"
+msgstr "^BG%s^K1 ei voinut piiloutua Hunter-tykkitornilta%s%s"
 
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
@@ -4664,7 +4658,7 @@ msgstr "^BG%s^K1 ammuttiin seulaksi Machinegun-tykkitornin toimesta%s%s"
 #: qcsrc/common/notifications/all.inc:344
 #, c-format
 msgid "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s"
-msgstr "^BG%s^K1 muuntui kyteviksi viipaleiksi MLRS-tykkitornin toimesta%s%s"
+msgstr "^BG%s^K1 muuttui kyteviksi viipaleiksi MLRS-tykkitornin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:345
 #, c-format
@@ -4699,7 +4693,7 @@ msgstr "^BG%s^K1 posautettiin taivaan tuuliin Walker-tykkitornin toimesta%s%s"
 #: qcsrc/common/notifications/all.inc:351
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Bumblebee explosion%s%s"
-msgstr "^BG%s^K1 otti osumaa Bumblebee:n töräyksestä%s%s"
+msgstr "^BG%s^K1 otti osumaa Bumblebeen töräyksestä%s%s"
 
 #: qcsrc/common/notifications/all.inc:352
 #, c-format
@@ -4714,17 +4708,17 @@ msgstr "^BG%s^K1 otti osumaa Raptor-sirpalepommista%s%s"
 #: qcsrc/common/notifications/all.inc:354
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Raptor explosion%s%s"
-msgstr "^BG%s^K1 otti osumaa Raptor:in töräyksestä%s%s"
+msgstr "^BG%s^K1 otti osumaa Raptorin töräyksestä%s%s"
 
 #: qcsrc/common/notifications/all.inc:355
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Spiderbot explosion%s%s"
-msgstr "^BG%s^K1 otti osumaa Hämisbot:in räjähdyksen töräyksestä%s%s"
+msgstr "^BG%s^K1 otti osumaa Hämisbotin räjäytyksestä%s%s"
 
 #: qcsrc/common/notifications/all.inc:356
 #, c-format
 msgid "^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s"
-msgstr "^BG%s^K1 posautettiin palasiksi Hämisbot:in raketin toimesta%s%s"
+msgstr "^BG%s^K1 posautettiin palasiksi Hämisbotin raketilla%s%s"
 
 #: qcsrc/common/notifications/all.inc:357
 #, c-format
@@ -4734,32 +4728,32 @@ msgstr "^BG%s^K1 otti osumaa Kilpurin räjähdyksestä%s%s"
 #: qcsrc/common/notifications/all.inc:358
 #, c-format
 msgid "^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"
-msgstr "^BG%s^K1 ei löytänyt suojaa Kilpurin raketin edessä%s%s"
+msgstr "^BG%s^K1 ei löytänyt suojaa Kilpurin raketilta%s%s"
 
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
 msgid "^BG%s^K1 ended up in the wrong place%s%s"
-msgstr ""
+msgstr "^BG%s^K1 päätyi väärään paikkaan%s%s"
 
 #: qcsrc/common/notifications/all.inc:362
 #, c-format
 msgid "^BG%s^K1 was betrayed by ^BG%s^K1%s%s"
-msgstr "^BG%s^K1 petettiin ja syyllinen on ^BG%s^K1%s%s"
+msgstr "^BG%s^K1 petettiin, ja syyllinen on ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
 msgid "(%s every %s seconds)"
-msgstr ""
+msgstr "(%s joka %s sekunti)"
 
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
 msgid "^BG%s^K1 was frozen by ^BG%s"
-msgstr "^BG%s^K1 jäädytettiin ja pakkasukkona toimi ^BG%s"
+msgstr "^BG%s^K1 jäädytettiin, ja jäädyttäjä oli ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:367
 #, c-format
 msgid "^BG%s^K3 was revived by ^BG%s"
-msgstr "^BG%s^K3 elvytettiin ja auttaja oli ^BG%s"
+msgstr "^BG%s^K3 elvytettiin, ja auttaja oli ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
@@ -4774,12 +4768,12 @@ msgstr "^BG%s^K3 elvytettiin heidän Naattiräjähdyksellään"
 #: qcsrc/common/notifications/all.inc:370
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s seconds"
-msgstr "^BG%s^K3 elvytettiin automaattisesti %s sekunnin kuluttua"
+msgstr "^BG%s^K3 elvytettiin automaattisesti %s sekunnissa"
 
 #: qcsrc/common/notifications/all.inc:371
 #, c-format
 msgid "^BG%s^K1 froze themselves"
-msgstr ""
+msgstr "^BG%s^K1 jäädyttivät itsensä"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:706
@@ -4851,14 +4845,13 @@ msgstr "^BGSinulla on ^F1%s"
 #: qcsrc/common/notifications/all.inc:721
 #, c-format
 msgid "^BGYou don't have enough ammo for the ^F1%s"
-msgstr "^BGSinulla ei ole tarpeeksi ammuksia tähän ^F1%s"
+msgstr "^BGSinulla ei riitä ammuksia tähän: ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:389
 #: qcsrc/common/notifications/all.inc:722
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
-msgstr ""
-"^F1%s %s^BG on kykenemätön tulittamaan, mutta sen ^F1%s^BG kykenee siihen"
+msgstr "^F1%s %s^BG ei voi tulittaa, mutta sen ^F1%s^BG kyllä voi"
 
 #: qcsrc/common/notifications/all.inc:390
 #: qcsrc/common/notifications/all.inc:723
@@ -4889,29 +4882,29 @@ msgstr "^BG%s^F3 pelaa nyt ^TC^TT joukkueessa"
 #: qcsrc/common/notifications/all.inc:396
 #, c-format
 msgid "^BG%s^F3 wants to play on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 haluaa pelata joukkueessa ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:397
 #, c-format
 msgid "^BG%s^F3 wants to play"
-msgstr ""
+msgstr "^BG%s^F3 haluaa pelata"
 
 #: qcsrc/common/notifications/all.inc:399
 #: qcsrc/common/notifications/all.inc:737
 #, c-format
 msgid "^BG%s^BG has dropped the ball!"
-msgstr "^BG%s^BG on pudottanut pallon!"
+msgstr "^BG%s^BG pudotti pallon!"
 
 #: qcsrc/common/notifications/all.inc:400
 #: qcsrc/common/notifications/all.inc:738
 #, c-format
 msgid "^BG%s^BG has picked up the ball!"
-msgstr "^BG%s^BG on poiminut pallon!"
+msgstr "^BG%s^BG poimi pallon!"
 
 #: qcsrc/common/notifications/all.inc:402
 #, c-format
 msgid "^BG%s^BG captured the keys for the ^TC^TT team"
-msgstr "^BG%s^BG kaappasi avaimet ^TC^TT joukkueelle"
+msgstr "^BG%s^BG kaappasi avaimet joukkueelle ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
@@ -4941,11 +4934,11 @@ msgstr "^BG%s^BG poimi ^TC^TT Avaimen"
 #: qcsrc/common/notifications/all.inc:409
 #, c-format
 msgid "^BG%s^F3 has no more lives left"
-msgstr "^BG%s^F3 on menettänyt kaikki elämänsä"
+msgstr "^BG%s^F3 menetti kaikki elämänsä"
 
 #: qcsrc/common/notifications/all.inc:411
 msgid "^BGMonsters are currently disabled"
-msgstr "^BGHirviöt ovat tällä hetkellä otettu pelistä pois"
+msgstr "^BGHirviöt ovat tällä hetkellä pelistä pois"
 
 #: qcsrc/common/notifications/all.inc:413
 msgid "^BGThe ^TC^TT^BG team held the ball for too long"
@@ -5777,22 +5770,22 @@ msgstr "^K1%sKustannuksellasi tehtiin pisteitä ja syyllinen on ^BG%s"
 #: qcsrc/common/notifications/all.inc:620
 #, c-format
 msgid "^K3%sYou burned ^BG%s"
-msgstr "^K3%sSinä paloit ^BG%s"
+msgstr "^K3%sPoltit tämän: ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:622
 #, c-format
 msgid "^K1%sYou were burned by ^BG%s"
-msgstr "^K1%sTulit poltetuksi ^BG%s:n toimesta"
+msgstr "^K1%sSinä paloit, ja polttaja oli ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:629
 #, c-format
 msgid "^K3%sYou froze ^BG%s"
-msgstr "^K3%sJäädyit ^BG%s"
+msgstr "^K3%sJäädytit tämän: ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:631
 #, c-format
 msgid "^K1%sYou were frozen by ^BG%s"
-msgstr "^K1%sSinut jäädytettiin ^BG%s :n toimesta"
+msgstr "^K1%sJäädyit, ja jäädyttäjä on ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:638
 #, c-format
@@ -5818,11 +5811,11 @@ msgstr "^K1%sSinusta revittiin hyöty irti ^BG%s^K1 kirjoitellessasi"
 #: qcsrc/common/notifications/all.inc:647
 #, c-format
 msgid "^BGPress ^F2%s^BG again to toss the nade!"
-msgstr "^BGPaina ^F2%s^BG uudestaan viskataksesi naatin!"
+msgstr "^BGHeitä naatti painamalla ^F2%s^BG uudestaan!"
 
 #: qcsrc/common/notifications/all.inc:648
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
-msgstr "^F2Sinä sait ^K1LISÄETU-KRANAATIN^F2!"
+msgstr "^F2Sinä sait ^K1BONUSKRANAATIN^F2!"
 
 #: qcsrc/common/notifications/all.inc:650
 #, c-format
@@ -5835,24 +5828,24 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:651
 msgid "^K1You were punished for attacking your teammates!"
-msgstr ""
+msgstr "^K1Sinua rangaistiin hyökkäyksestä joukkuekavereitasi vastaan!"
 
 #: qcsrc/common/notifications/all.inc:652
 msgid "^K1Die camper!"
-msgstr "^K1Kuole senkin jumittaja!"
+msgstr "^K1Kuole, senkin jumittaja!"
 
 #: qcsrc/common/notifications/all.inc:652
 msgid "^K1Reconsider your tactics, camper!"
-msgstr "^K1Suunnitelmat uusiksi, tupajumi!"
+msgstr "^K1Suunnitelmat uusiksi, jumittaja!"
 
 #: qcsrc/common/notifications/all.inc:653
 msgid "^K1You unfairly eliminated yourself!"
-msgstr "^K1Tuhosit itsesi sangen epärehellisesti!"
+msgstr "^K1Tuhosit itsesi epäreilusti!"
 
 #: qcsrc/common/notifications/all.inc:654
 #, c-format
 msgid "^K1You were %s"
-msgstr "^K1Sinulle kävi nyt näin %s"
+msgstr "^K1Sinulle kävi nyt näin: %s"
 
 #: qcsrc/common/notifications/all.inc:655
 msgid "^K1You couldn't catch your breath!"
@@ -5872,11 +5865,11 @@ msgstr "^K1Nyt meni rapeaksi liiankin kanssa!"
 
 #: qcsrc/common/notifications/all.inc:658
 msgid "^K1You fragged yourself!"
-msgstr "^K1lahtasit itsesi!"
+msgstr "^K1Lahtasit itsesi!"
 
 #: qcsrc/common/notifications/all.inc:658
 msgid "^K1You need to be more careful!"
-msgstr "^K1Olisit piirunverran huolellisempi!"
+msgstr "^K1Ole piirun verran huolellisempi!"
 
 #: qcsrc/common/notifications/all.inc:659
 msgid "^K1You couldn't stand the heat!"
@@ -5884,7 +5877,7 @@ msgstr "^K1Et kestänyt löylyä!"
 
 #: qcsrc/common/notifications/all.inc:660
 msgid "^K1You need to watch out for monsters!"
-msgstr "^K1Varo niitä hirviöitä!"
+msgstr "^K1Varo nyt niitä hirviöitä!"
 
 #: qcsrc/common/notifications/all.inc:660
 msgid "^K1You were killed by a monster!"
@@ -5892,19 +5885,19 @@ msgstr "^K1Hirviö tappoi sinut!"
 
 #: qcsrc/common/notifications/all.inc:661
 msgid "^K1Tastes like chicken!"
-msgstr "^K1Maistuu ihan kotkotilta!"
+msgstr "^K1Maistuu ihan kanalta!"
 
 #: qcsrc/common/notifications/all.inc:661
 msgid "^K1You forgot to put the pin back in!"
-msgstr "^K1Taisipa unohtua laittaa tappi takaisin!"
+msgstr "^K1Taisit unohtaa laittaa tappi takaisin!"
 
 #: qcsrc/common/notifications/all.inc:662
 msgid "^K1Hanging around a napalm explosion is bad!"
-msgstr "^K1Sen siitä saa kun velttoilee napalmiräjähdysalueella!"
+msgstr "^K1Pahasti käy kun velttoilee napalmiräjähdysalueella!"
 
 #: qcsrc/common/notifications/all.inc:663
 msgid "^K1Your Healing Nade is a bit defective"
-msgstr "^K1Terveysnaattisi vaikuttaa jokseenkin kotikutoiselta"
+msgstr "^K1Terveysnaattisi vaikuttaa vähän kotikutoiselta"
 
 #: qcsrc/common/notifications/all.inc:664
 msgid "^K1You are respawning for running out of ammo..."
@@ -5912,7 +5905,7 @@ msgstr "^K1Jälleensyntymä ammusten loppumisen takia..."
 
 #: qcsrc/common/notifications/all.inc:664
 msgid "^K1You were killed for running out of ammo..."
-msgstr "^K1Ei ammuksia jäljellä joten hyväähän siitä ei seurannut..."
+msgstr "^K1Kuolit ammusten loppumisen takia..."
 
 #: qcsrc/common/notifications/all.inc:665
 msgid "^K1You grew too old without taking your medicine"
@@ -5977,7 +5970,7 @@ msgstr "^K1Sinut lahtasi Walker-tykkitorni! "
 
 #: qcsrc/common/notifications/all.inc:675
 msgid "^K1You got caught in the blast of a Bumblebee explosion!"
-msgstr "^K1Otit osumaa Bumblebee:n töräyksestä!"
+msgstr "^K1Otit osumaa Bumblebeen töräyksestä!"
 
 #: qcsrc/common/notifications/all.inc:676
 msgid "^K1You were crushed by a vehicle!"
@@ -5989,19 +5982,19 @@ msgstr "^K1YOtit osumaa Raptor-sirpalepommista!"
 
 #: qcsrc/common/notifications/all.inc:678
 msgid "^K1You got caught in the blast of a Raptor explosion!"
-msgstr "^K1YOtit osumaa Raptor:in töräyksestä!"
+msgstr "^K1YOtit osumaa Raptorin töräyksestä!"
 
 #: qcsrc/common/notifications/all.inc:679
 msgid "^K1You got caught in the blast of a Spiderbot explosion!"
-msgstr "^K1Otit osumaa Hämisbot:in räjähdyksen töräyksestä!"
+msgstr "^K1Otit osumaa Hämisbotin räjähdyksestä!"
 
 #: qcsrc/common/notifications/all.inc:680
 msgid "^K1You were blasted to bits by a Spiderbot rocket!"
-msgstr "^K1Sinut posautettiin palasiksi Hämisbot:in raketin toimesta!"
+msgstr "^K1Sinut posautettiin palasiksi Hämisbotin raketilla!"
 
 #: qcsrc/common/notifications/all.inc:681
 msgid "^K1You got caught in the blast of a Racer explosion!"
-msgstr "^K1Otit osumaa Kilpurin räjähdyksen töräyksestä! "
+msgstr "^K1Otit osumaa Kilpurin räjähdyksestä! "
 
 #: qcsrc/common/notifications/all.inc:682
 msgid "^K1You couldn't find shelter from a Racer rocket!"
@@ -6009,12 +6002,12 @@ msgstr "^K1Et löytänyt suojaa Kilpurin raketilta!"
 
 #: qcsrc/common/notifications/all.inc:683
 msgid "^K1Watch your step!"
-msgstr "^K1Katso vähän mihin astut!"
+msgstr "^K1Varo mihin astut!"
 
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
 msgid "^K1Traitor! You betrayed teammate ^BG%s"
-msgstr ""
+msgstr "^K1Petturi! Petit joukkuekaverisi ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
@@ -6713,12 +6706,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:619
 #, c-format
 msgid "%s^K1 drew first blood!"
-msgstr ""
+msgstr "%s^K1 verenvuodatti ensin!"
 
 #: qcsrc/common/notifications/all.qh:620
 #, c-format
 msgid "%s^K1 got the first score!"
-msgstr ""
+msgstr "%s^K1 sai ensipisteet!"
 
 #: qcsrc/common/notifications/all.qh:636
 #, c-format
@@ -6933,7 +6926,7 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/machinegun.qh:13
 msgid "Machinegun Turret"
-msgstr "Machinegun -koneaseellinen tykkitorni"
+msgstr "Konetykkitorni"
 
 #: qcsrc/common/turrets/turret/machinegun_weapon.qh:7
 msgid "Machinegun"
@@ -7081,7 +7074,7 @@ msgstr "Keskinoste"
 
 #: qcsrc/common/util.qc:306
 msgid "Melee only Arena"
-msgstr "Taistelukenttä jossa vain lähiaseet"
+msgstr "Taistelukenttä vain lähiaseilla"
 
 #: qcsrc/common/util.qc:309
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:164
@@ -7146,7 +7139,7 @@ msgstr "VÄLILYÖNTI"
 
 #: qcsrc/common/util.qc:1529
 msgid "BACKSPACE"
-msgstr "BACKSPACE-taakseaskellusnäppäin"
+msgstr "BACKSPACE-askelpalautin"
 
 #: qcsrc/common/util.qc:1530 qcsrc/common/util.qc:1587
 #, c-format
@@ -7611,12 +7604,12 @@ msgstr "Hämisbotti"
 
 #: qcsrc/common/weapons/all.qc:868
 msgid "This weapon has not been bound directly."
-msgstr ""
+msgstr "Tätä asetta ei ole sidottu suoraan."
 
 #: qcsrc/common/weapons/all.qc:869
 #, c-format
 msgid "You have bound this weapon to: %s."
-msgstr ""
+msgstr "Olet sitonut tämän aseen tähän: %s."
 
 #: qcsrc/common/weapons/all.qc:875 qcsrc/common/weapons/all.qc:876
 #: qcsrc/common/weapons/all.qc:907
@@ -7627,32 +7620,32 @@ msgstr ""
 #: qcsrc/common/weapons/all.qc:880
 #, c-format
 msgid "It does %s damage"
-msgstr ""
+msgstr "Se tekee %s vahinkoa"
 
 #: qcsrc/common/weapons/all.qc:881
 #, c-format
 msgid "It shoots %s shots doing %s damage each"
-msgstr ""
+msgstr "Se ampuu %s tehden kullakin%s vahinkoa"
 
 #: qcsrc/common/weapons/all.qc:882
 #, c-format
 msgid "The %s does %s damage"
-msgstr ""
+msgstr "%s tekee %s vahinkoa"
 
 #: qcsrc/common/weapons/all.qc:883
 #, c-format
 msgid "The %s does %s damage per second"
-msgstr ""
+msgstr "%s tekee %s vahinkoa sekunnissa"
 
 #: qcsrc/common/weapons/all.qc:884
 #, c-format
 msgid "The %s shoots %s shots doing %s damage each"
-msgstr ""
+msgstr "%s ampuu %s laukausta tehden kullakin %s vahinkoa"
 
 #: qcsrc/common/weapons/all.qc:885
 #, c-format
 msgid "The %s shoots up to %s shots doing %s damage each"
-msgstr ""
+msgstr "%s ampuu enintään %s laukausta tehden kullakin %s vahinkoa"
 
 #: qcsrc/common/weapons/all.qc:908 qcsrc/common/weapons/all.qc:918
 #: qcsrc/common/weapons/all.qc:939 qcsrc/common/weapons/all.qc:953
@@ -7665,7 +7658,7 @@ msgstr ""
 #: qcsrc/common/weapons/all.qc:910
 #, c-format
 msgid "A direct hit does %s damage"
-msgstr ""
+msgstr "Suora osuma tekee %s vahinkoa"
 
 #: qcsrc/common/weapons/all.qc:1032
 #, c-format
@@ -7675,7 +7668,7 @@ msgstr ""
 #: qcsrc/common/weapons/all.qc:1037
 #, c-format
 msgid "The combo adds an extra %s damage"
-msgstr ""
+msgstr "Kombo lisää %s lisävahinkoa"
 
 #: qcsrc/common/weapons/weapon/arc.qc:1518
 #, c-format
@@ -7875,7 +7868,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/electro.qh:33
 msgid "Electro"
-msgstr "Electro"
+msgstr "Elektro"
 
 #: qcsrc/common/weapons/weapon/fireball.qc:442
 #, c-format
@@ -7908,7 +7901,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/fireball.qh:34
 msgid "Fireball"
-msgstr "Fireball"
+msgstr "Tulipallo"
 
 #: qcsrc/common/weapons/weapon/hagar.qc:499
 #, c-format
@@ -7981,7 +7974,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/hlac.qh:31
 msgid "Heavy Laser Assault Cannon"
-msgstr "Raskas laser-rynnäkkötykki"
+msgstr "Raskas laserrynnäkkötykki"
 
 #: qcsrc/common/weapons/weapon/hook.qc:430
 #, c-format
@@ -8048,7 +8041,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:29
 msgid "MachineGun"
-msgstr "KoneTuliAse"
+msgstr "Konetuliase"
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:564
 #, c-format
@@ -8159,7 +8152,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/rifle.qc:272
 #, c-format
 msgid "It consumes %s ammo for each bullet shot."
-msgstr ""
+msgstr "Se kuluttaa %s ammusta joka laukauksella."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:273
 #, c-format
@@ -8171,7 +8164,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/rifle.qc:274
 msgid "zoom"
-msgstr ""
+msgstr "zoomi"
 
 #: qcsrc/common/weapons/weapon/rifle.qc:275
 #: qcsrc/common/weapons/weapon/vortex.qc:389
@@ -8272,7 +8265,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/tuba.qh:35
 #, no-c-format
 msgid "@!#%'n Tuba"
-msgstr "@!#%'n tuuba"
+msgstr "@!#%:n tuuba"
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:419
 #, c-format
@@ -8303,7 +8296,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:31
 msgid "Vaporizer"
-msgstr "Höyrystäjä"
+msgstr "Höyrystin"
 
 #: qcsrc/common/weapons/weapon/vortex.qc:385
 msgid "The secondary fire zooms in when held, allowing for ease of aiming."
@@ -8557,7 +8550,7 @@ msgstr "Esine %d"
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:79
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:147
 msgid "Custom"
-msgstr "Omavalintainen"
+msgstr "Mukautettu"
 
 #: qcsrc/menu/menu.qc:515
 #, c-format
@@ -8690,7 +8683,7 @@ msgstr "Kiina (Kiinassa)"
 
 #: qcsrc/menu/xonotic/credits.qc:191
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "Kiina (Hong Kong)"
 
 #: qcsrc/menu/xonotic/credits.qc:204
 msgid "Chinese (Taiwan)"
@@ -8710,7 +8703,7 @@ msgstr "Englanti (Australiassa)"
 
 #: qcsrc/menu/xonotic/credits.qc:255
 msgid "English (United Kingdom)"
-msgstr ""
+msgstr "Englanti (UK)"
 
 #: qcsrc/menu/xonotic/credits.qc:259
 msgid "Finnish"
@@ -8762,7 +8755,7 @@ msgstr "Korea"
 
 #: qcsrc/menu/xonotic/credits.qc:369
 msgid "Latin"
-msgstr ""
+msgstr "Latina"
 
 #: qcsrc/menu/xonotic/credits.qc:372
 msgid "Polish"
@@ -8815,7 +8808,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/cvarlist.qc:25
 msgid "1 result"
-msgstr ""
+msgstr "1 tulos"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:120
 msgid "forced to be saved to config.cfg"
@@ -8856,7 +8849,7 @@ msgstr "Tekijät"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:8
 msgid "The Xonotic credits"
-msgstr "Xonotic:in tunnustusmaininnat"
+msgstr "Xonoticin tekijät"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:44
 msgid ""
@@ -8864,8 +8857,8 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
-"Tervetuloa pelaamaan Xonoticia! Valitse haluamasi kieli ja pelaajanimesi "
-"aloittaaksesi. Voit vaihtaa näitä asetuksia jälkikäteen pelin "
+"Tervetuloa Xonoticiin! Valitse haluamasi kieli ja aloita antamalla "
+"pelaajanimesi. Voit vaihtaa näitä asetuksia jälkikäteen pelin "
 "asetusvalikosta."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:51
@@ -8876,7 +8869,7 @@ msgstr "Nimi:"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:62
 msgid "Name under which you will appear in the game"
-msgstr "Näkyvä nimi jota tulet käyttämään pelissä"
+msgstr "Näkyvä nimi, jolla esiintyt pelissä"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:75
 msgid "Text language:"
@@ -8884,7 +8877,7 @@ msgstr "Tekstin kieli:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
-msgstr "Salli pelinimesi käyttö pelaajatilastosivulla stats.xonotic.org?"
+msgstr "Sallitaanko pelinimesi käyttö pelaajatilastosivulla stats.xonotic.org?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"
@@ -8895,8 +8888,7 @@ msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
-"Pelaajatilastot ovat kytketyt päälle vakiollisesti, voit muuttaa tämän "
-"asianhaaran Profiili -valikossa"
+"Pelaajatilastot ovat oletuksena päällä, voit muuttaa tämän Profiili-valikossa"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:96
 msgid "Save settings"
@@ -8949,7 +8941,7 @@ msgstr "Ohjaus"
 #: qcsrc/menu/xonotic/dialog_media.qc:13
 #: qcsrc/menu/xonotic/dialog_media_guide.qh:7
 msgid "Guide"
-msgstr ""
+msgstr "Ohje"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:60
 msgid "Quick menu"
@@ -9048,11 +9040,11 @@ msgstr "Lihavoidun kirjasimen mittasuhde:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:45
 msgid "Title font scale:"
-msgstr ""
+msgstr "Otsikon kirjasinkoko:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:50
 msgid "Flip messages order"
-msgstr "Käänteistä viestijärjestys"
+msgstr "Käännä viestijärjestys"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:54
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:24
@@ -9082,7 +9074,7 @@ msgstr "Keskustelujen säilyvyys:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:27
 msgid "LIFETIME^Infinite"
-msgstr ""
+msgstr "LIFETIME^Rajaton"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:30
 msgid "Chat beep sound"
@@ -9094,11 +9086,11 @@ msgstr "Keskustelupalkki"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:21
 msgid "Flip checkpoint order"
-msgstr ""
+msgstr "Käännä tarkistuspisteiden järjestystä"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qh:6
 msgid "Checkpoints Panel"
-msgstr ""
+msgstr "Tarkistuspistepaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "FPS:"
@@ -9106,7 +9098,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:20
 msgid "Use an averaging algorithm"
-msgstr ""
+msgstr "Käytä tasoittavaa algoritmia"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:23
 msgid "Decimal places:"
@@ -9220,7 +9212,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:27
 msgid "Show icons"
-msgstr ""
+msgstr "Näytä kuvakkeet"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
@@ -9270,15 +9262,15 @@ msgstr "Tilapalkki"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:30
 msgid "None"
-msgstr ""
+msgstr "Ei mitään"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:32
 msgid "Acceleration"
-msgstr ""
+msgstr "Kiihtyvyys:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
 msgid "Both"
-msgstr ""
+msgstr "Molemmat"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:121
@@ -9295,7 +9287,7 @@ msgstr "Huippunopeus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:71
 msgid "Jump speed"
-msgstr ""
+msgstr "Hyppynopeus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:78
 msgid "Show speed unit"
@@ -9365,11 +9357,11 @@ msgstr "Painettujen näppäinten paneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:26
 msgid "Translate commands"
-msgstr ""
+msgstr "Käännä komennot"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:28
 msgid "Use the server's quickmenu"
-msgstr ""
+msgstr "Käytä palvelimen pikavalikkoa"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
@@ -9447,17 +9439,17 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:45
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:80
 msgid "Zoom mode:"
-msgstr "Sisäänkohdennuksen tila:"
+msgstr "Zoomin tila:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:84
 msgid "Zoomed in"
-msgstr "Lähennetty kohteeseen"
+msgstr "Lähennetty"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:50
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:85
 msgid "Zoomed out"
-msgstr "Loitonnettu kohteesta"
+msgstr "Loitonnettu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:51
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:86
@@ -9467,11 +9459,11 @@ msgstr "Aina lähennettynä"
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:52
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:87
 msgid "Never zoomed"
-msgstr "Kohdennus aina pois "
+msgstr "Zoomaus aina pois "
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:57
 msgid "Maximized radar:"
-msgstr ""
+msgstr "Suurennettu tutka:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
@@ -9500,11 +9492,11 @@ msgstr "Tulospaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:41
 msgid "Centered on:"
-msgstr ""
+msgstr "Keskitetty:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:42
 msgid "View angle"
-msgstr ""
+msgstr "Katselukulma"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:43
 msgid "Velocity angle"
@@ -9512,7 +9504,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
 msgid "Style:"
-msgstr ""
+msgstr "Tyyli:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:48
 msgid "STYL^Basic"
@@ -9520,7 +9512,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "Gradient"
-msgstr ""
+msgstr "Liukuväri"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:53
 msgid "Range:"
@@ -9528,7 +9520,7 @@ msgstr "Säde:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:56
 msgid "Dynamic"
-msgstr ""
+msgstr "Dynaaminen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:60
 msgid "Strafe bar:"
@@ -9632,7 +9624,7 @@ msgstr "Läpikuultavuus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Slide"
-msgstr "Liu'unta"
+msgstr "Liuku"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:35
 msgid "EF^Both"
@@ -9669,7 +9661,7 @@ msgstr "Näytä tarkkuus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:79
 msgid "Ammo bar opacity:"
-msgstr ""
+msgstr "Ammuskotelon läpikuultavuus"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:86
 msgid "Ammo bar color:"
@@ -9677,7 +9669,7 @@ msgstr "Ammuskotelon väri"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qh:6
 msgid "Weapons Panel"
-msgstr "Asepalkki"
+msgstr "Asepaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:27
 msgid "Are you sure you want to reset your HUD to this skin?"
@@ -9750,7 +9742,7 @@ msgstr "Pehmustus:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:115
 msgid "HUD Dock:"
-msgstr "Näkymän liitäntä:"
+msgstr "HUD-liitäntä:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:117
 msgid "DOCK^Disabled"
@@ -9774,7 +9766,7 @@ msgstr "Ruudukon asetukset:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:142
 msgid "Snap panels to grid"
-msgstr "Katkaise paneelit ruudukkoon"
+msgstr "Kiinnitä paneelit ruudukkoon"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:145
 msgid "Grid size:"
@@ -9798,8 +9790,8 @@ msgid ""
 "Show a vertical centerline to help align panels. It's possible to show more "
 "vertical lines by editing %s in the console"
 msgstr ""
-"Näytä pystysuora keskilinja paneeleiden linjaamisen avuksi. Keskilinjojen "
-"määrää voidaan korottaa muokkaamalla %s komentorivillä."
+"Näytä pystysuora keskilinja paneeleiden linjaamisen avuksi. Keskilinjoja voi "
+"näyttää enemmän muokkaamalla %s komentorivillä."
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:166
 msgid "Exit setup"
@@ -9811,7 +9803,7 @@ msgstr "Paneelin näkymän asetukset"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qh:18
 msgid "Reset HUD skin"
-msgstr ""
+msgstr "Nollaa HUD-päällyste"
 
 #: qcsrc/menu/xonotic/dialog_media.qc:14
 msgid "Demos"
@@ -9890,7 +9882,7 @@ msgstr "Aseta valikon musiikkiraidaksi"
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:48
 msgid "Reset default menu track"
-msgstr "Nollaa vakiollinen valikon musiikkiraita"
+msgstr "Nollaa valikon vakiomusiikkiraita"
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:54
 msgid "Playlist:"
@@ -10013,6 +10005,8 @@ msgstr "Moninpeli"
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid "Play online, against your friends in LAN, or change player settings"
 msgstr ""
+"Pelaa verkossa, ystäviäsi vastaan LAN-lähiverkossa, tai muuta pelaaja-"
+"asetuksia"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
@@ -10035,11 +10029,11 @@ msgstr "Pelimuoto"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:80
 msgid "Show all"
-msgstr ""
+msgstr "Näytä kaikki"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:81
 msgid "Show all available gametypes"
-msgstr ""
+msgstr "Näytä kaikki saatavilla olevat pelityypit"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
 msgid "Time limit:"
@@ -10047,7 +10041,7 @@ msgstr "Aikaraja"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:85
 msgid "Time limit in minutes that when hit, will end the match"
-msgstr ""
+msgstr "Aikaraja minuuteissa, jonka täytyttyä päättää ottelun"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
 msgid "TIMLIM^Default"
@@ -10082,7 +10076,7 @@ msgid ""
 "The maximum amount of players or bots that can be connected to your server "
 "at once"
 msgstr ""
-"Pelaajien tai bottien enimmäismäärä jotka voivat yhdistää palvelimeesi "
+"Pelaajien tai bottien enimmäismäärä, jotka voivat yhdistää palvelimeesi "
 "kerralla"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:110
@@ -10099,7 +10093,7 @@ msgstr "Bottien taitotaso:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:120
 msgid "Specify how experienced the bots will be"
-msgstr "Määritä kuinka kokeneita haluat bottien olevan"
+msgstr "Määritä, kuinka kokeneita haluat bottien olevan"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
 msgid "Botlike"
@@ -10111,7 +10105,7 @@ msgstr "Aloittelija"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "You will win"
-msgstr "Sinä tulet voittamaan"
+msgstr "Tulet voittamaan"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:124
 msgid "You can win"
@@ -10203,7 +10197,7 @@ msgstr "Tekijä:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:64
 msgid "Gametypes:"
-msgstr ""
+msgstr "Pelityypit:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
@@ -10220,7 +10214,7 @@ msgstr "Kartan tiedot"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:74
 msgid "Gameplay mutators:"
-msgstr "Pelityylin muokkaukset:"
+msgstr "Pelityylin muovaajat:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:78
 msgid ""
@@ -10312,7 +10306,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:150
 msgid "Randomly"
-msgstr ""
+msgstr "Satunnaisesti"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:155
 msgid ""
@@ -10320,18 +10314,17 @@ msgid ""
 "delay). This allows players to fire and detonate a Devastator rocket while "
 "in the air for a strong mid-air boost even while moving fast"
 msgstr ""
-"Hävittäjäraketit voidaan räjäyttää välittömästi (muutoin, ilmenee pieni "
-"viive). Tämä antaa pelaajalle mahdollisuuden ampua ja räjäyttää "
-"Hävittäjäraketin ilmassa ollessaan, tuottaakseen voimakkaan lisäpotkun "
-"keskikorkeudessa jopa liikkuessaan nopeasti"
+"Hävittäjäraketit voidaan räjäyttää välittömästi (muutoin on pieni viive). "
+"Tämä antaa pelaajien ampua ja räjäyttää hävittäjäraketin ilmassa saaden "
+"vahvaa ilmanostetta jopa liikkuessaan nopeasti"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
 msgid "Players will drop all weapons they possessed when they are killed"
-msgstr "Pelaajat pudottavat kaikki omaamansa aseet tapetuksi tullessaan "
+msgstr "Pelaajat pudottavat kaikki aseensa tultuaan tapetuiksi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:165
 msgid "Weapons stay after they are picked up"
-msgstr "Aseet säilyvät poimimisen jälkeen"
+msgstr "Aseet säilyvät poiminnan jälkeen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:170
 msgid "Regular (no arena)"
@@ -10372,11 +10365,10 @@ msgid ""
 "seconds to find some or if they fail to do so, face death. The secondary "
 "fire mode does not inflict any damage but is good for doing trickjumps."
 msgstr ""
-"Pelaajille annetaan vain yksittäinen ase, joka yhdellä osumalla tappaa "
-"vastustajan. Mikäli pelaajalta loppuvat ammukset, hänellä on 10 sekuntia "
-"aikaa löytää niitä. Ellei pelaaja löydä ammuksia ajallaan, hän kohtaa "
-"kuoleman. Toissijainen tulitus ei aiheuta yhtään vahinkoa, mutta voi koitua "
-"hyödylliseksi temppuhyppyjä varten."
+"Pelaajille annetaan vain yksi ase, joka tappaa vastustajan kertalaakista. "
+"Jos pelaajalta loppuvat ammukset, hänellä on 10 sekuntia aikaa löytää niitä, "
+"tai muutoin kohtaavat kuoleman. Toissijainen tulitus ei aiheuta yhtään "
+"vahinkoa, mutta se on hyödyllinen temppuhyppyjä varten."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:214
 msgid ""
@@ -10394,12 +10386,12 @@ msgstr "läjäyttimellä"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:219
 msgid "Always carry the blaster as an additional weapon in Nix"
-msgstr "Läjäytin aina kannossa lisäaseen ominaisuudessa Nix:issä"
+msgstr "Kanna aina läjäytintä lisäaseena Nixissä"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qh:8
 #: qcsrc/menu/xonotic/guide/guide.qh:20
 msgid "Mutators"
-msgstr "Muokatut pelitilat"
+msgstr "Muovaajat"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:32
 msgid "SRVS^Categories"
@@ -10419,7 +10411,7 @@ msgstr "SRVS^Täynnä"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:48
 msgid "Show full servers that have no slots available"
-msgstr "Näytä täydet palvelimet joissa ei ole pelaajapaikkoja jäljellä"
+msgstr "Näytä täydet palvelimet, joissa ei ole pelaajapaikkoja jäljellä"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "SRVS^Laggy"
@@ -10441,7 +10433,7 @@ msgstr "Tauko"
 msgid ""
 "Pause updating the server list to prevent servers from \"jumping around\""
 msgstr ""
-"Tauota palvelinluettelon päivittäminen estääksesi palvelimien \"sinne-tänne "
+"Tauota palvelinluettelon päivittäminen estääksesi palvelimien \"sinne-tänne-"
 "hyppelyn\""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:75
@@ -10474,7 +10466,7 @@ msgstr "%d muokattu"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 msgid "Official"
-msgstr "Viralliset asetukset"
+msgstr "Viralliset"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:159
 msgid "N/A (auth library missing, can't connect)"
@@ -10518,12 +10510,12 @@ msgstr "Vaadittu (salaus onnistuu)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:191
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
-msgstr "Käytä `crypto_aeslevel` cvar muuttaaksesi asetuksia"
+msgstr "Muuta asetuksia käyttämällä `crypto_aeslevel` cvar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1061
 msgid "custom stats server"
-msgstr "räätälöity tilastopalvelin"
+msgstr "mukautettu tilastopalvelin"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1061
@@ -11836,7 +11828,7 @@ msgstr "Mallit"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:8
 msgid "Customize how players and items are displayed in game"
-msgstr "Mukauta, miten pelaajat ja esineet näytetään pelissä"
+msgstr "Mukauta pelaajien ja esineiden näyttötapaa pelissä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:26
 msgid "Perspective"
@@ -11896,15 +11888,15 @@ msgstr "Zoomaus"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:82
 msgid "ZOOM^Zoom factor:"
-msgstr "ZOOM^Zoomauksen kerroin:"
+msgstr "ZOOM^Zoomauskerroin:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:84
 msgid "How big the zoom factor is when the zoom button is pressed"
-msgstr "Kuinka iso zoomauksen kerroin on zoomaus-nappia painettaessa"
+msgstr "Kuinka iso zoomauskerroin on zoomi-nappia painettaessa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:91
 msgid "ZOOM^Zoom speed:"
-msgstr "ZOOM^Zoomauksen nopeus:"
+msgstr "ZOOM^Zoomausnopeus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:94
 msgid "How fast the view will be zoomed, disable to zoom instantly"
@@ -13073,7 +13065,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/guide/pages.qc:130
 #, c-format
 msgid "Note that this strategy only really works if the %s mutator is enabled."
-msgstr ""
+msgstr "Huomaa, että tämä strategia toimii vain, jos %s-muovaaja on käytössä."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:136
 #, c-format
