@@ -5,38 +5,38 @@
 
 void nade_veil_touch(entity this, entity toucher)
 {
-	if ( IS_REAL_CLIENT(toucher) || (IS_VEHICLE(toucher) && toucher.owner) )
-	{
-		entity real_toucher = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
+	if (!IS_REAL_CLIENT(toucher) && !(IS_VEHICLE(toucher) && toucher.owner))
+		return;
 
-		float tint_alpha = 0.75;
-		if(SAME_TEAM(toucher, this.realowner))
+	entity real_toucher = (IS_VEHICLE(toucher) && toucher.owner) ? toucher.owner : toucher;
+
+	float tint_alpha;
+	if (SAME_TEAM(toucher, this.realowner))
+	{
+		tint_alpha = 0.45;
+		if (!real_toucher.nade_veil_time)
 		{
-			tint_alpha = 0.45;
-			if(!real_toucher.nade_veil_time)
-			{
-				toucher.nade_veil_prevalpha = toucher.alpha;
-				toucher.alpha = -1;
-			}
+			toucher.nade_veil_prevalpha = toucher.alpha;
+			toucher.alpha = -1;
 		}
-		real_toucher.nade_veil_time = time + 0.1;
 	}
+	else
+		tint_alpha = 0.75;
+	real_toucher.nade_veil_time = time + 0.1;
 }
 
 void nade_veil_boom(entity this)
 {
-	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_veil_time, autocvar_g_nades_veil_radius);
-
+	entity orb = nades_spawn_orb(this, autocvar_g_nades_veil_time, autocvar_g_nades_veil_radius, NADE_TYPE_VEIL.m_color);
 	settouch(orb, nade_veil_touch);
-	orb.colormod = NADE_TYPE_VEIL.m_color;
 }
 
 void nade_veil_Apply(entity player)
 {
-	if(player.nade_veil_time && player.nade_veil_time <= time)
+	if (player.nade_veil_time && player.nade_veil_time <= time)
 	{
 		player.nade_veil_time = 0;
-		if(player.vehicle)
+		if (player.vehicle)
 			player.vehicle.alpha = player.vehicle.nade_veil_prevalpha;
 		else
 			player.alpha = player.nade_veil_prevalpha;
