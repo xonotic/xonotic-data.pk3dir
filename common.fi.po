@@ -6502,11 +6502,11 @@ msgstr "^F2Tunkeilija havaittu, kytketään suojat pois!"
 #: qcsrc/common/notifications/all.inc:831
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
-msgstr ""
+msgstr "^K1Et voi äänestää, koska olet estetty tältä palvelimelta."
 
 #: qcsrc/common/notifications/all.inc:832
 msgid "^K1You aren't allowed to vote because you are banned in this server"
-msgstr ""
+msgstr "^K1Et voi äänestää, koska olet estetty tältä palvelimelta."
 
 #: qcsrc/common/notifications/all.qh:441 qcsrc/common/notifications/all.qh:442
 #: qcsrc/common/notifications/all.qh:443
@@ -6527,11 +6527,11 @@ msgstr "toissijainen"
 #: qcsrc/common/notifications/all.qh:453
 #, c-format
 msgid "%d points"
-msgstr ""
+msgstr "%d pistettä"
 
 #: qcsrc/common/notifications/all.qh:453
 msgid "1 point"
-msgstr ""
+msgstr "1 piste"
 
 #: qcsrc/common/notifications/all.qh:461
 msgid "drop flag"
@@ -6567,7 +6567,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:493
 msgid "RAGE!"
-msgstr ""
+msgstr "RAIVO!"
 
 #: qcsrc/common/notifications/all.qh:494
 #, c-format
@@ -6581,7 +6581,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:494
 msgid "MASSACRE!"
-msgstr ""
+msgstr "TEURASTUS!"
 
 #: qcsrc/common/notifications/all.qh:495
 #, c-format
@@ -6595,7 +6595,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:495
 msgid "MAYHEM!"
-msgstr ""
+msgstr "SEKASORTO!"
 
 #: qcsrc/common/notifications/all.qh:496
 #, c-format
@@ -6609,7 +6609,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:496
 msgid "BERSERKER!"
-msgstr ""
+msgstr "RAIVOHULLU!"
 
 #: qcsrc/common/notifications/all.qh:497
 #, c-format
@@ -6623,7 +6623,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:497
 msgid "CARNAGE!"
-msgstr ""
+msgstr "VERILÖYLY!"
 
 #: qcsrc/common/notifications/all.qh:498
 #, c-format
@@ -6637,7 +6637,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:498
 msgid "ARMAGEDDON!"
-msgstr ""
+msgstr "MAAILMANLOPPU!"
 
 #: qcsrc/common/notifications/all.qh:505
 #, c-format
@@ -6679,29 +6679,29 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:553
 msgid "First blood!"
-msgstr ""
+msgstr "Ensiveri!"
 
 #: qcsrc/common/notifications/all.qh:553
 msgid "First score!"
-msgstr ""
+msgstr "Ensipisteet!"
 
 #: qcsrc/common/notifications/all.qh:557
 msgid "First casualty!"
-msgstr ""
+msgstr "Ensikärsijä!"
 
 #: qcsrc/common/notifications/all.qh:557
 msgid "First victim!"
-msgstr ""
+msgstr "Ensiuhri!"
 
 #: qcsrc/common/notifications/all.qh:600
 #, c-format
 msgid "%s^K1 has %d frags in a row!"
-msgstr ""
+msgstr "%s^K1 teki %d lahtausta putkeen!"
 
 #: qcsrc/common/notifications/all.qh:601
 #, c-format
 msgid "%s^K1 made %d scores in a row!"
-msgstr ""
+msgstr "%s^K1 teki %d pistettä putkeen!"
 
 #: qcsrc/common/notifications/all.qh:619
 #, c-format
@@ -6825,13 +6825,15 @@ msgid ""
 "The %s is a mobile turret that rolls around, attacking its targets when they "
 "enter its line of sight."
 msgstr ""
+"%s on liikkuva tykkitorni, joka kierii ympäriinsä ja hyökkää kohteita "
+"vastaan, kun ne tulevat näköpiiriin."
 
 #: qcsrc/common/turrets/turret/ewheel.qc:252
 #, c-format
 msgid ""
 "It attacks by shooting laser beams similar to those of the %s, from both of "
 "its two cannons."
-msgstr ""
+msgstr "Se hyökkää ampumalla lasersäteitä molemmista tykeistään niin kuin %s."
 
 #: qcsrc/common/turrets/turret/ewheel.qh:15
 msgid "eWheel Turret"
@@ -6871,10 +6873,14 @@ msgid ""
 "instead works by generating power for nearby turrets, so that they can "
 "attack their shared targets more often."
 msgstr ""
+"%s on hieman ainutlaatuinen torni, joka auttaa muita torneja sen sijaan, "
+"että hyökkäisi suoraan kohteitaan päin. Sillä ei ole omaa asetta, vaan se "
+"tuottaa energiaa läheisille torneille, jotta ne voivat hyökätä yhteisiä "
+"kohteitaan useammin."
 
 #: qcsrc/common/turrets/turret/fusionreactor.qc:63
 msgid "This is the only turret that doesn't directly attack its targets."
-msgstr ""
+msgstr "Tämä on ainoa tykkitorni, joka ei hyökkää kohteisiinsa suoraan."
 
 #: qcsrc/common/turrets/turret/fusionreactor.qh:11
 msgid "Fusion Reactor"
@@ -6884,7 +6890,7 @@ msgstr "Fuusioreaktori"
 #, c-format
 msgid ""
 "The %s fires homing missiles similar to those of the %s towards its targets."
-msgstr ""
+msgstr "%s ampuu kohteisiinsa hakeutuvia ohjuksia, jotka ovat kuin %s-aseesta."
 
 #: qcsrc/common/turrets/turret/hellion.qc:32
 #, c-format
@@ -6892,6 +6898,8 @@ msgid ""
 "Although the missiles usually deal less damage than a %s rocket, the %s has "
 "two cannons so it can dish out quite the punch."
 msgstr ""
+"Vaikka ohjukset yleensä tekevät vähemmän vahinkoa kuin %s-raketti, %s "
+"sisältää kaksi tykkiä, joten se voi iskeä melkoisesti."
 
 #: qcsrc/common/turrets/turret/hellion.qh:13
 msgid "Hellion Missile Turret"
@@ -6944,6 +6952,8 @@ msgid ""
 "Getting caught in the line of fire of this turret can be very deadly, but "
 "thankfully it doesn't shoot if you get too close, so as to not damage itself."
 msgstr ""
+"Tämän tykkitornin tulilinjaan joutuminen voi olla kohtalokasta, mutta jos "
+"pääsee liian lähelle, se ei onneksi ammu, jottei se vahingoita itseään."
 
 #: qcsrc/common/turrets/turret/mlrs.qh:13
 msgid "MLRS Turret"
@@ -6958,7 +6968,7 @@ msgstr "MLRS"
 msgid ""
 "The %s is a turret that fires an invisible beam of energy towards its "
 "targets."
-msgstr ""
+msgstr "%s on tykkitorni, joka ampuu kohteisiinsa näkymättömän energiasäteen."
 
 #: qcsrc/common/turrets/turret/phaser.qc:53
 #, c-format
@@ -6967,6 +6977,8 @@ msgid ""
 "seen, it constantly deals damage to and slows down players who intercept its "
 "path."
 msgstr ""
+"Ulkonäkö pettää, kuten %s, sillä vaikka energiasädettä ei voi nähdä, se "
+"tekee vahinkoa jatkuvasti ja hidastaa pelaajia, jotka tulevat sen tielle."
 
 #: qcsrc/common/turrets/turret/phaser.qh:13
 msgid "Phaser Cannon"
@@ -7003,7 +7015,7 @@ msgstr ""
 #, c-format
 msgid ""
 "It is a stronger version of the %s, which only has one electric ball cannon."
-msgstr ""
+msgstr "Vahvempi %s-versio, jolla on vain yksi sähköpallotykki."
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:8
 msgid "Dual plasma"
@@ -7023,6 +7035,8 @@ msgid ""
 "The %s is a turret that electrocutes all who dare come near it, sending "
 "powerful high-voltage arcs of lightning to strike its targets."
 msgstr ""
+"%s on tykkitorni, joka sähköstää kaikki lähelle uskaltautuvat ja joka "
+"lähettää kohteisiinsa voimakkaita, suurjännitteisiä salamakaaria."
 
 #: qcsrc/common/turrets/turret/tesla.qc:96
 #, c-format
@@ -7030,6 +7044,8 @@ msgid ""
 "Since the arcs of lightning can jump between nearby targets, it is best to "
 "just stay away from the %s."
 msgstr ""
+"Koska salamakaaret hyppäävät läheisten kohteiden välillä, on parasta, että "
+"%s pysyy etäällä."
 
 #: qcsrc/common/turrets/turret/tesla.qh:13
 #: qcsrc/common/turrets/turret/tesla_weapon.qh:7
@@ -7039,7 +7055,7 @@ msgstr "Tesla-käämi"
 #: qcsrc/common/turrets/turret/walker.qc:651
 #, c-format
 msgid "The %s is an arachnid-like walking turret that hunts down its targets."
-msgstr ""
+msgstr "%s on hämähäkkimäinen kävelevä tykkitorni, joka jahtaa kohteitaan."
 
 #: qcsrc/common/turrets/turret/walker.qc:652
 #, c-format
@@ -7127,7 +7143,7 @@ msgstr "TAB"
 #: qcsrc/common/util.qc:1525 qcsrc/common/util.qc:1596
 #, c-format
 msgid "ENTER"
-msgstr "ENTER-rivinvaihtonäppäin"
+msgstr "ENTER-rivinvaihto"
 
 #: qcsrc/common/util.qc:1526
 msgid "ESCAPE"
