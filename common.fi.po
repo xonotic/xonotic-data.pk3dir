@@ -2296,7 +2296,7 @@ msgid ""
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
 "Poimittaessa %s antaa pienen määrän panssaria, joka suojelee sinua "
-"vahingolta vaimentamalla kohtitulevia iskuja kunnes se loppuu."
+"vahingolta vaimentamalla kohtitulevia iskuja, kunnes se loppuu."
 
 #: qcsrc/common/items/item/armor.qc:23
 #, c-format
@@ -2305,7 +2305,7 @@ msgid ""
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
 "Poimittaessa %s antaa kohtuumäärän panssaria, joka suojelee sinua vahingolta "
-"vaimentamalla kohtitulevia iskuja kunnes se loppuu."
+"vaimentamalla kohtitulevia iskuja, kunnes se loppuu."
 
 #: qcsrc/common/items/item/armor.qc:33
 #, c-format
@@ -2314,7 +2314,7 @@ msgid ""
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
 "Poimittaessa %s antaa suuren määrän panssaria, joka suojelee sinua "
-"vahingolta vaimentamalla kohtitulevia iskuja kunnes se loppuu."
+"vahingolta vaimentamalla kohtitulevia iskuja, kunnes se loppuu."
 
 #: qcsrc/common/items/item/armor.qc:43
 #, c-format
@@ -2323,7 +2323,7 @@ msgid ""
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
 "Poimittaessa %s antaa valtavan määrän panssaria, joka suojelee sinua "
-"vahingolta vaimentamalla kohtitulevia iskuja kunnes se loppuu."
+"vahingolta vaimentamalla kohtitulevia iskuja, kunnes se loppuu."
 
 #: qcsrc/common/items/item/armor.qc:45 qcsrc/common/items/item/health.qc:45
 #, c-format
@@ -2688,6 +2688,8 @@ msgid ""
 "Golems are large powerful brutes capable of taking and dealing a beating. "
 "Keeping your distance is advised."
 msgstr ""
+"Golemit ovat suuria, vahvoja raakalaisia, jotka kestävät ja jakavat iskuja. "
+"Suositellaan pitämään etäisyyttä."
 
 #: qcsrc/common/monsters/monster/golem.qc:289
 msgid ""
@@ -2695,12 +2697,17 @@ msgid ""
 "Golem may jump into the air, dealing massive damage in an area as it slams "
 "the ground."
 msgstr ""
+"Golemin ensisijainen lähitaisteluhyökkäys on sarja nyrkiniskuja. Golem voi "
+"välillä hypätä ilmaan ja aiheuttaa massiivista aluevahinkoa sen iskeytyessä "
+"maahan."
 
 #: qcsrc/common/monsters/monster/golem.qc:291
 msgid ""
 "To deal with distant foes, the Golem may throw a chunk of its electrified "
 "rocky exterior, zapping nearby targets on impact."
 msgstr ""
+"Kaukaisten vihollisten hoitelemiseksi Golem voi heittää kivikuorestaan "
+"sähköistetyn kimpaleen, joka antaa iskun läheisille kohteille osuessaan."
 
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
@@ -2712,6 +2719,8 @@ msgid ""
 "Wielding nanotechnology as if it were sorcery, the Mage employs a range of "
 "unique abilities of its own creation in combat."
 msgstr ""
+"Maagi, joka käyttää nanoteknologiaa kuin taikuutta, taistelee omilla "
+"luomillaan, ainutlaatuisilla kyvyillään."
 
 #: qcsrc/common/monsters/monster/mage.qc:499
 msgid ""
@@ -2719,6 +2728,9 @@ msgid ""
 "player. This sphere will track its target at high speed, exploding on impact "
 "or if it does not reach its target in time."
 msgstr ""
+"Maagi hyökkää ensisijaisesti heittämällä hakeutuvia sähköpalloja pelaajaa "
+"kohti. Tämä pallo seuraa kohdettaan nopeasti ja räjähtää osumasta tai jos se "
+"ei saavuta kohdettaan ajoissa."
 
 #: qcsrc/common/monsters/monster/mage.qc:501
 msgid ""
@@ -2726,18 +2738,25 @@ msgid ""
 "damage briefly. Enemies approaching too closely during this time may be "
 "pushed away with explosive force!"
 msgstr ""
+"Uhattuna maagi voi luoda energiakilven suojaamaan itseään hetkeksi. Sinä "
+"aikana liian lähelle tulleet viholliset joutuvat työnnetyiksi pois "
+"räjähtävällä voimalla!"
 
 #: qcsrc/common/monsters/monster/mage.qc:503
 msgid ""
 "Defensively the Mage is capable of healing itself and nearby allies, with "
 "some variants also providing armor and ammunition."
 msgstr ""
+"Puolustuksena maagi pystyy parantamaan itseään ja vierustovereitaan, jotkin "
+"muunnokset antavat myös panssaria ja ammuksia."
 
 #: qcsrc/common/monsters/monster/mage.qc:504
 msgid ""
 "The Mage may sometimes appear to blink out of existence as it teleports "
 "behind its target for a sneak attack."
 msgstr ""
+"Maagi voi joskus ilmestyä tyhjästä sen kaukosiirtyessä kohteensa taakse "
+"yllätyshyökkäystä varten."
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
@@ -2753,6 +2772,8 @@ msgid ""
 "The Spider is a large mechanically-enhanced arachnoid adept at hunting "
 "speedy enemies."
 msgstr ""
+"Hämähäkki on suuri mekaanisesti paranneltu hämähäkkieläin, joka sopeutunut "
+"jahtaamaan nopeita vihollisia."
 
 #: qcsrc/common/monsters/monster/spider.qc:245
 msgid ""
@@ -2760,6 +2781,9 @@ msgid ""
 "from its cannons. Approaching its enwebbed prey, the Spider will inflict a "
 "series of high damage bites."
 msgstr ""
+"Hidastaakseen kohteitaan hämähäkki laukoo tykeistään synteettistä, "
+"seittimäistä ainetta. Verkotettuja saaliitaan lähestyessään hämähäkki puree "
+"useita kertoja voimakkaasti."
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2779,27 +2803,33 @@ msgid ""
 "The Wyvern is a flying reptilian monster that glides around hunting for "
 "fresh prey."
 msgstr ""
+"Traakki on lentävä matelijahirviö, joka liitää ympäriinsä metsästäen "
+"tuoreita saaliita."
 
 #: qcsrc/common/monsters/monster/wyvern.qc:189
 msgid ""
 "While fragile, the Wyvern is capable of launching deadly fireballs at the "
 "player from a distance, inflicting high damage and causing burning."
 msgstr ""
+"Hauraana Traakki pystyy etäältä laukomaan pelaajaa kohti tappavia "
+"tulipalloja, jotka tekevät suurta vahinkoa ja aiheuttavat palamista."
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
 msgid "Wyvern"
-msgstr "Lohikäärme"
+msgstr "Traakki"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:28
 msgid "Wyvern attack"
-msgstr "Lohikäärmeen hyökkäys"
+msgstr "Traakin hyökkäys"
 
 #: qcsrc/common/monsters/monster/zombie.qc:180
 msgid ""
 "Zombies are the undead remains of deceased soldiers, risen with a ravenous "
 "hunger and no sense of self-preservation."
 msgstr ""
+"Zombit ovat kaatuneiden sotilaiden epäkuolleita jäännöksiä, jotka on "
+"nostatettu hirveän nälkäisinä vailla mitään itsesuojeluvaistoa."
 
 #: qcsrc/common/monsters/monster/zombie.qc:181
 msgid ""
@@ -2808,23 +2838,30 @@ msgid ""
 "massive damage on contact. If it gets close, the Zombie will punch and bite "
 "repeatedly."
 msgstr ""
+"Kun zombi aistii pelaajan läheltä, se alkaa rynnätä kohdettaan päin "
+"nopeasti. Ryntäessään zombi voi hypätä pelaajaa kohti ja aiheuttaa "
+"massiivista vahinkoa osuessaan. Lähelle päästyään zombi lyö ja puree "
+"toistuvasti."
 
 #: qcsrc/common/monsters/monster/zombie.qc:184
 msgid ""
 "When threatened the Zombie may hold up its hands to block incoming attacks "
 "briefly."
 msgstr ""
+"Uhattuna zombi voi nostaa kätensä torjuakseen kohtitulevia hyökkäyksiä tovin."
 
 #: qcsrc/common/monsters/monster/zombie.qc:185
 msgid ""
 "It is no small task to kill that which is already dead. Once a Zombie is "
 "defeated, destroy its corpse to prevent it from rising again!"
 msgstr ""
+"Ei ole pikkujuttu tappaa jotain, joka on jo kuollut. Kun zombi on lyöty, "
+"tuhoa sen ruumis, jotta estät sitä nousemasta taas!"
 
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
 msgid "Zombie"
-msgstr "Zombie"
+msgstr "Zombi"
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qc:76
 #, c-format
@@ -2866,6 +2903,8 @@ msgid ""
 "It also removes the need to reload any weapons that require reloading, like "
 "the %s and %s."
 msgstr ""
+"Se myös poistaa lataamistarpeen aseista, jotka vaativat lataamista, kuten %s "
+"ja %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qh:11
 msgid "Ammo"
@@ -2882,7 +2921,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
-msgstr ""
+msgstr "Se myös hieman nostaa itsellesi aiheutettua sysäystä."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qh:14
 msgid "Bash"
@@ -2940,7 +2979,7 @@ msgstr "%s-tehostus lisää hyppykorkeutta suuresti tehostuksen ollessa pääll�
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
-msgstr ""
+msgstr "Se myös tekee sinusta immuunin pudotusvahingolle."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qh:12
 msgid "Jump"
@@ -3003,7 +3042,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
 msgid "This also impacts the damage you deal to yourself."
-msgstr ""
+msgstr "Se myös vaikuttaa vahinkoon, jonka aiheutat itsellesi."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qh:12
 msgid "Resistance"
@@ -3050,7 +3089,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
 #, c-format
 msgid "In some sense, this is the opposite of the %s buff."
-msgstr "Jollain tämää tämä on vastakohtana %s-tehostukselle."
+msgstr "Jollain tapaa tämä on vastakohtana %s-tehostukselle."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
 #: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:307
@@ -3080,6 +3119,8 @@ msgid ""
 "The %s mutator makes all players nearly invisible, similar to the %s "
 "powerup. This adds an extra layer of stealth and strategy to gameplay."
 msgstr ""
+"%s muovaaja tekee kaikki pelaajan näkymättömiksi, kuten %s-tehostus. Se tuo "
+"peliin lisää häivettä ja strategiaa."
 
 #: qcsrc/common/mutators/mutator/cloaked/cloaked.qh:5 qcsrc/common/util.qc:303
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
@@ -3088,7 +3129,7 @@ msgstr "Häivetilassa"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:24
 msgid "Damage Text"
-msgstr ""
+msgstr "Vahinkoteksti"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:26
 msgid "Draw damage numbers"
@@ -3139,7 +3180,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:71
 msgid "If younger than:"
-msgstr ""
+msgstr "Jos on nuorempi kuin:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:76
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:46
@@ -3196,14 +3237,13 @@ msgstr "Väistely"
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:9
 #: qcsrc/menu/xonotic/keybinder.qc:68
 msgid "offhand hook"
-msgstr ""
+msgstr "toisen käden koukku"
 
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
 msgstr ""
-"^3tarttumiskoukku^8 tarjolla käytettäväksi, paina ^3%s^8 ottaaksesi sen "
-"käyttöön"
+"^3tarttumiskoukku^8 tarjolla käytettäväksi, ota se käyttöön painamalla ^3%s^8"
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:11
 #, c-format
@@ -3217,7 +3257,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:12
 #: qcsrc/common/weapons/weapon/hook.qc:435
 msgid "hook"
-msgstr ""
+msgstr "koukku"
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:13
 #, c-format
@@ -3230,7 +3270,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/hook/hook.qc:14
 #, c-format
 msgid "Note that it is overridden by the %s mutator."
-msgstr ""
+msgstr "Huomaa, että muovaaja %s korvaa sen"
 
 #: qcsrc/common/mutators/mutator/hook/hook.qh:5 qcsrc/common/util.qc:304
 msgid "Hook"
@@ -3329,7 +3369,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:21
 msgid "Ammo grenade"
-msgstr ""
+msgstr "Ammuskranaatti"
 
 #: qcsrc/common/mutators/mutator/nades/nade/darkness.qc:146
 #, c-format
@@ -3337,16 +3377,18 @@ msgid ""
 "The %s detonates after a short delay, creating a dark field which "
 "temporarily blinds enemies who enter it."
 msgstr ""
+"%s räjähtää lyhyen viiveen jälkeen, ja luo tumman kentän, joka sokaisee "
+"siihen tulevia vihollisia väliaikaisesti."
 
 #: qcsrc/common/mutators/mutator/nades/nade/darkness.qc:147
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qc:55
 #, c-format
 msgid "This is sort of the opposite of the %s."
-msgstr ""
+msgstr "Tämä on jokin vastakohtainen %s."
 
 #: qcsrc/common/mutators/mutator/nades/nade/darkness.qh:19
 msgid "Darkness grenade"
-msgstr ""
+msgstr "Pimeyskranaatti"
 
 #: qcsrc/common/mutators/mutator/nades/nade/entrap.qc:72
 #, c-format
@@ -3624,7 +3666,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:31
 msgid "Overkill Heavy MachineGun"
-msgstr ""
+msgstr "Yliampuva raskaskonetykki"
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:166
 #: qcsrc/common/weapons/weapon/machinegun.qc:434
@@ -3634,7 +3676,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:28
 msgid "Overkill MachineGun"
-msgstr "Ylimalkaallinen konepistooli"
+msgstr "Yliampuva konekivääri"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qc:373
 #: qcsrc/common/weapons/weapon/vortex.qc:384
@@ -3653,7 +3695,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:29
 msgid "Overkill Nex"
-msgstr "Ylimalkaallinen Nex"
+msgstr "Yliampuva Nex"
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:242
 #, c-format
@@ -3679,7 +3721,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:31
 msgid "Overkill Rocket Propelled Chainsaw"
-msgstr "Ylimalkaallinen rakettikäyttöinen moottorisaha"
+msgstr "Ylitehokas rakettikäyttöinen moottorisaha"
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qc:132
 #, c-format
@@ -3698,12 +3740,12 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:24
 msgid "Overkill Shotgun"
-msgstr "Ylimalkaallinen haulikko"
+msgstr "Yliampuva haulikko"
 
 #: qcsrc/common/mutators/mutator/overkill/overkill.qh:5
 #: qcsrc/common/util.qc:313 qcsrc/menu/xonotic/guide/pages.qc:171
 msgid "Overkill"
-msgstr "Ylimurska"
+msgstr "Yliampuva"
 
 #: qcsrc/common/mutators/mutator/pinata/pinata.qc:8
 #, c-format
@@ -4097,7 +4139,7 @@ msgstr "^1Palvelimen ilmoitukset:"
 
 #: qcsrc/common/notifications/all.inc:234
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4NOTE: ^BGKeskustelu on nyt pois käytöstä tällä palvelimella."
 
 #: qcsrc/common/notifications/all.inc:235
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -4313,7 +4355,7 @@ msgstr "^BG%s%s^K1 tunsi poltetta ^BG%s^K1-tulittajalta^K1%s%s"
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 poltettiin paistiksi, ja syyllinen oli ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 poltettiin paistiksi, ja polttaja oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
@@ -4354,7 +4396,7 @@ msgstr "^BG%s%s^K1 ei parantunut ^BG%s^K1-parantajan Terveysnaatista %s%s"
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 ammuttiin kiertoradalle, ja tekijä oli ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 ammuttiin kiertoradalle, ja syypää oli ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
@@ -4525,7 +4567,7 @@ msgstr "^BG%s^K1 joutui Velhon räjäyttämäksi%s%s"
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
-msgstr "^BG%s^K1 sisuksineen muuttuivat ulkoisiksi Golemin toimesta%s%s"
+msgstr "^BG%s^K1 sisuksineen muuttui nurinkuriseksi Golemin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
@@ -4545,7 +4587,7 @@ msgstr "^BG%s^K1 joutui Hämähäkin puraisemaksi%s%s"
 #: qcsrc/common/notifications/all.inc:323
 #, c-format
 msgid "^BG%s^K1 was fireballed by a Wyvern%s%s"
-msgstr "^BG%s^K1 sai Lohikäärmeen tulipallosta%s%s"
+msgstr "^BG%s^K1 sai Traakin tulipallosta%s%s"
 
 #: qcsrc/common/notifications/all.inc:324
 #, c-format
@@ -4555,7 +4597,7 @@ msgstr "^BG%s^K1 liittyi zombeihin%s%s"
 #: qcsrc/common/notifications/all.inc:325
 #, c-format
 msgid "^BG%s^K1 was given kung fu lessons by a Zombie%s%s"
-msgstr "^BG%s^K1 sai kung fu -oppia zombielta%s%s"
+msgstr "^BG%s^K1 sai kung fu -oppia zombilta%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #: qcsrc/common/notifications/all.inc:328
@@ -5216,12 +5258,12 @@ msgstr "^BG%s^K1 koki korvien vihlontaa @!#%% Haitarin takia%s%s"
 #: qcsrc/common/notifications/all.inc:475
 #, c-format
 msgid "^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"
-msgstr "^BG%s%s^K1 sai shokkihoitoa ^BG%s^K1'n Arc:in toimesta%s%s"
+msgstr "^BG%s%s^K1 sai shokkihoitoa Arcista tekijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:476
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr "^BG%s%s^K1 joutui läjäytetyksi ^BG%s^K1'n Arc-salamoista%s%s"
+msgstr "^BG%s%s^K1 joutui Arc-salamoiden posauttamaksi tekijänä ^BG%s^K1'n%s%s"
 
 #: qcsrc/common/notifications/all.inc:477
 #, c-format
@@ -5231,7 +5273,7 @@ msgstr "^BG%s^K1 leikitteli arkkisalamoilla%s%s"
 #: qcsrc/common/notifications/all.inc:478
 #, c-format
 msgid "^BG%s%s^K1 was shot to death by ^BG%s^K1's Blaster%s%s"
-msgstr "^BG%s%s^K1 ammuttiin kuoliaaksi ^BG%s^K1'n Läjäyttimellä%s%s"
+msgstr "^BG%s%s^K1 ammuttiin Läjäyttimellä kuoliaaksi tekijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
@@ -5266,7 +5308,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:485
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"
-msgstr "^BG%s%s^K1 päätyi läjäytetyksi ^BG%s^K1'n Sähkösalaman voimasta%s%s"
+msgstr "^BG%s%s^K1 läjäytettiin sähkösalamalla tekijänä ^BG%s^K1'n%s%s"
 
 #: qcsrc/common/notifications/all.inc:486
 #, c-format
@@ -5297,7 +5339,7 @@ msgstr "^BG%s%s^K1 erehtyi liian lähelle ^BG%s^K1'n tulipalloa%s%s"
 #: qcsrc/common/notifications/all.inc:491
 #, c-format
 msgid "^BG%s%s^K1 got burnt by ^BG%s^K1's firemine%s%s"
-msgstr "^BG%s%s^K1 paloi poroksi ^BG%s^K1'n tulimiinaan käveltyään%s%s"
+msgstr "^BG%s%s^K1 paloi poroksi tulimiinasta tekijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:492
 #, c-format
@@ -5312,14 +5354,12 @@ msgstr "^BG%s^K1 unohtivat tulimiinansa olemassaolon%s%s"
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by a burst of ^BG%s^K1's Hagar rockets%s%s"
-msgstr ""
-"^BG%s%s^K1 tuli nuijituksi tärskäyksellä ^BG%s^K1'n Hagar-raketteja%s%s"
+msgstr "^BG%s%s^K1 tuli nuijituksi Hagar-raketeilla tekijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Hagar rockets%s%s"
-msgstr ""
-"^BG%s%s^K1 tuli nuijituksi tärskäyksellä ^BG%s^K1'n Hagar-raketteja%s%s"
+msgstr "^BG%s%s^K1 tuli nuijituksi Hagar-raketeilla tekijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
@@ -5357,12 +5397,12 @@ msgstr "^BG%s^K1 hajottivat omat korvansa @!#%%'n Klein-pullolla%s%s"
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 laitettiin nippuun ^BG%s^K1'n Konekiväärillä %s%s"
+msgstr "^BG%s%s^K1 laitettiin nippuun Konekiväärillä ampujana ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:503
 #, c-format
 msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 koristeltiin reikiä täyteen ^BG%s^K1'n Konekiväärillä%s%s"
+msgstr "^BG%s%s^K1 rei'itettiin Konekiväärillä tekijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:504
 #: qcsrc/common/notifications/all.inc:834
@@ -5404,19 +5444,20 @@ msgstr ""
 #, c-format
 msgid "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy MachineGun%s%s"
 msgstr ""
+"^BG%s%s^K1 revittiin palasiksi Yliampuvalla raskaskonetykillä, jonka omisti "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 ropisi täyteen reikiä ^BG%s^K1'n Ylimalkaallisella "
-"konekiväärillä%s%s"
+"^BG%s%s^K1 ropisi täyteen reikiä ^BG%s^K1'n Yliampuvalla konekiväärillä%s%s"
 
 #: qcsrc/common/notifications/all.inc:513
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr "^BG%s%s^K1 höyrytettiin ^BG%s^K1'n Ylimalkaallisella Nex:illä%s%s"
+msgstr "^BG%s%s^K1 höyrytettiin Yliampuvalla Nex:illä ampujana ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:514
 #, c-format
@@ -5424,23 +5465,23 @@ msgid ""
 "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Overkill Rocket Propelled "
 "Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 sahattiin kahtia ^BG%s^K1'n Ylimalkaallisella rakettikäyttöisellä "
-"moottorisahalla%s%s"
+"^BG%s%s^K1 sahattiin kahtia Yliampuvalla rakettikäyttöisellä moottorisahalla "
+"tekijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:515
 #, c-format
 msgid ""
 "^BG%s%s^K1 almost dodged ^BG%s^K1's Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s%s^K1 sai lähes väistettyä ^BG%s^K1'n Ylimalkaallisen rakettikäyttöisen "
-"mootorisahan toiminnassaan%s%s"
+"^BG%s%s^K1 lähes väisti Ylitehokkaan rakettikäyttöisen mootorisahan tekijänä "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:516
 #, c-format
 msgid ""
 "^BG%s^K1 was sawn in half by their own Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
-"^BG%s^K1 sahasi itsensä kahtia omalla Ylimalkaallisella rakettikäyttöisellä "
+"^BG%s^K1 sahasi itsensä kahtia omalla Ylitehokkaalla rakettikäyttöisellä "
 "moottorisahallaan%s%s"
 
 #: qcsrc/common/notifications/all.inc:517
@@ -5448,11 +5489,13 @@ msgstr ""
 msgid ""
 "^BG%s^K1 blew themselves up with their Overkill Rocket Propelled Chainsaw%s%s"
 msgstr ""
+"^BG%s^K1 räjäytti itsensä ilmaan Ylitehokkaalla rakettikäyttöisellä "
+"moottorisahallaan%s%s"
 
 #: qcsrc/common/notifications/all.inc:519
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr "^BG%s%s^K1 ammuttiin ^BG%s^K1'n Ylimalkaallisella haulikolla%s%s"
+msgstr "^BG%s%s^K1 ammuttiin Yliampuvalla haulikolla ampujana ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:520
 #, c-format
@@ -7669,7 +7712,7 @@ msgstr "%s ampuu enintään %s laukausta tehden kullakin %s vahinkoa"
 #: qcsrc/common/weapons/all.qc:996 qcsrc/common/weapons/all.qc:1010
 #: qcsrc/common/weapons/all.qc:1034 qcsrc/common/weapons/all.qc:1046
 msgid "Default damage stats:"
-msgstr ""
+msgstr "Oletusvahingon tilastot:"
 
 #: qcsrc/common/weapons/all.qc:910
 #, c-format
@@ -7937,7 +7980,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/hagar.qc:502
 #, c-format
 msgid "It consumes %s ammo for each rocket."
-msgstr ""
+msgstr "Se kuluttaa %s ammusta joka raketilla."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:503
 #, c-format
@@ -7998,12 +8041,16 @@ msgid ""
 "The %s is a unique weapon, firing a chain forwards which pulls you in once "
 "it latches onto something."
 msgstr ""
+"%s on ainutlaatuinen ase, joka laukoo eteenpäin ketjun, joka vetää sinua "
+"heti kun se kiinnittyy johonkin."
 
 #: qcsrc/common/weapons/weapon/hook.qc:431
 msgid ""
 "The secondary fire usually drops a gravity bomb that affects enemies, also "
 "releasing light and smoke sort of like a flashbang."
 msgstr ""
+"Toissijainen tulitus yleensä pudottaa painovoimapommin, joka vaikuttaa "
+"vihollisiin, ja myös päästää valoa ja savua tyrmäyspommin tavoin."
 
 #: qcsrc/common/weapons/weapon/hook.qc:432
 #, c-format
@@ -13526,7 +13573,7 @@ msgstr "SLCAT^Mukautetut palvelimet"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Overkill"
-msgstr "SLCAT^Ylimalkaalliset"
+msgstr "SLCAT^Yliampuva"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^InstaGib"
