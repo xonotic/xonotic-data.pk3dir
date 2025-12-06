@@ -22,7 +22,7 @@ CLASS(OverkillHeavyMachineGun, Weapon)
 #ifdef GAMEQC
 /* model     */ ATTRIB(OverkillHeavyMachineGun, m_model, Model, MDL_HMG_ITEM);
 /* flash mdl */ ATTRIB(OverkillHeavyMachineGun, m_muzzlemodel, Model, MDL_HMG_MUZZLEFLASH);
-/* flash eff */ ATTRIB(OverkillHeavyMachineGun, m_muzzleeffect, entity, EFFECT_MACHINEGUN_MUZZLEFLASH);
+/* flash eff */ ATTRIB(OverkillHeavyMachineGun, m_muzzleeffect, entity, EFFECT_HMG_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(OverkillHeavyMachineGun, w_crosshair, string, "gfx/crosshairuzi");
 /* crosshair */ ATTRIB(OverkillHeavyMachineGun, w_crosshair_size, float, 0.6);
