@@ -613,7 +613,7 @@ msgstr "tarkistuspiste sivuutettu"
 
 #: qcsrc/client/hud/panel/radar.qc:334
 msgid "Click to select spawn location"
-msgstr "Valitse saapumismääränpää napsauttamalla"
+msgstr "Valitse luontimääränpää napsauttamalla"
 
 #: qcsrc/client/hud/panel/radar.qc:335
 msgid "Click to select teleport destination"
@@ -653,7 +653,7 @@ msgstr "Nopeimman kaappauksen aika (CTF)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of deaths"
-msgstr "Kuolemien määrä"
+msgstr "Kuolemat"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^deaths"
@@ -661,7 +661,7 @@ msgstr "SCO^kuolemaa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of keys destroyed by pushing them into void"
-msgstr "Tuhottujen avainten määrä työntämällä ne hukkaan"
+msgstr "Hukkaan työntämällä tuhotut avaimet"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^destructions"
@@ -685,7 +685,7 @@ msgstr "Kärsitty kokonaisvauriomäärä"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "Number of flag drops"
-msgstr "Lippupudotusten määrä"
+msgstr "Lippupudotukset"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:138
 msgid "SCO^drops"
@@ -701,7 +701,7 @@ msgstr "Nopeimman kierroksen aika (kilpa/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Number of faults committed"
-msgstr "Tehtyjen rikkomusten määrä"
+msgstr "Tehdyt rikkomukset"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "SCO^faults"
@@ -733,11 +733,11 @@ msgstr "SCO^tapot"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of generators destroyed"
-msgstr ""
+msgstr "Generaattoreita tuhottu"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^generators"
-msgstr ""
+msgstr "SCO^generaattorit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of goals scored"
@@ -749,11 +749,11 @@ msgstr "SCO^maalit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of hunts (Survival)"
-msgstr ""
+msgstr "Jahtien määrä (Selviytyminen)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^hunts"
-msgstr ""
+msgstr "SCO^jahdit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of key carrier kills"
@@ -807,7 +807,7 @@ msgstr "SCO^elämät"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Number of times a key was lost"
-msgstr "Montako kertaa avain menetettiin"
+msgstr "Avainten menetyskerrat"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^losses"
@@ -862,7 +862,7 @@ msgstr "SCO^pr"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of players pushed into void"
-msgstr "Montako pelaajaa työnnettiin hukkaan"
+msgstr "Hukkaan työnnetyt pelaajat"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^pushes"
@@ -878,7 +878,7 @@ msgstr "SCO^taso"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Number of flag returns"
-msgstr "Lipunpalautusten määrä"
+msgstr "Lipunpalautukset"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^returns"
@@ -886,7 +886,7 @@ msgstr "SCO^palautukset"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "Number of revivals"
-msgstr "Virkoamisten määrä"
+msgstr "Virkoamiset"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^revivals"
@@ -2077,7 +2077,8 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
-msgstr "Valtaa hallintapisteet päästäksesi vihollisen generaattorille"
+msgstr ""
+"Pääse vihollisen generaattorille ja tuhoa se valtaamalla hallintapisteet"
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:8
 msgid "Onslaught"
@@ -2689,7 +2690,7 @@ msgid ""
 "Keeping your distance is advised."
 msgstr ""
 "Golemit ovat suuria, vahvoja raakalaisia, jotka kestävät ja jakavat iskuja. "
-"Suositellaan pitämään etäisyyttä."
+"Suositellaan pitämään etäisyyttä niihin."
 
 #: qcsrc/common/monsters/monster/golem.qc:289
 msgid ""
@@ -2719,8 +2720,8 @@ msgid ""
 "Wielding nanotechnology as if it were sorcery, the Mage employs a range of "
 "unique abilities of its own creation in combat."
 msgstr ""
-"Maagi, joka käyttää nanoteknologiaa kuin taikuutta, taistelee omilla "
-"luomillaan, ainutlaatuisilla kyvyillään."
+"Maagi, joka käyttää nanoteknologiaa kuin taikuutta, käyttää taistelussa itse "
+"luomiaan, ainutlaatuisia kykyjään."
 
 #: qcsrc/common/monsters/monster/mage.qc:499
 msgid ""
@@ -2729,8 +2730,8 @@ msgid ""
 "or if it does not reach its target in time."
 msgstr ""
 "Maagi hyökkää ensisijaisesti heittämällä hakeutuvia sähköpalloja pelaajaa "
-"kohti. Tämä pallo seuraa kohdettaan nopeasti ja räjähtää osumasta tai jos se "
-"ei saavuta kohdettaan ajoissa."
+"kohti. Tämä pallo seuraa kohdettaan nopeasti ja räjähtää osumasta, tai jos "
+"se ei saavuta kohdettaan ajoissa."
 
 #: qcsrc/common/monsters/monster/mage.qc:501
 msgid ""
@@ -2747,8 +2748,8 @@ msgid ""
 "Defensively the Mage is capable of healing itself and nearby allies, with "
 "some variants also providing armor and ammunition."
 msgstr ""
-"Puolustuksena maagi pystyy parantamaan itseään ja vierustovereitaan, jotkin "
-"muunnokset antavat myös panssaria ja ammuksia."
+"Puolustuksena maagi pystyy parantamaan itseään ja vierustovereitaan, ja "
+"jotkin muunnokset antavat myös panssaria ja ammuksia."
 
 #: qcsrc/common/monsters/monster/mage.qc:504
 msgid ""
@@ -2772,8 +2773,8 @@ msgid ""
 "The Spider is a large mechanically-enhanced arachnoid adept at hunting "
 "speedy enemies."
 msgstr ""
-"Hämähäkki on suuri mekaanisesti paranneltu hämähäkkieläin, joka sopeutunut "
-"jahtaamaan nopeita vihollisia."
+"Hämähäkki on suuri mekaanisesti paranneltu hämähäkkieläin, joka on "
+"sopeutunut jahtaamaan nopeita vihollisia."
 
 #: qcsrc/common/monsters/monster/spider.qc:245
 msgid ""
@@ -2811,7 +2812,7 @@ msgid ""
 "While fragile, the Wyvern is capable of launching deadly fireballs at the "
 "player from a distance, inflicting high damage and causing burning."
 msgstr ""
-"Hauraana Traakki pystyy etäältä laukomaan pelaajaa kohti tappavia "
+"Hauraana traakki pystyy etäältä laukomaan pelaajaa kohti tappavia "
 "tulipalloja, jotka tekevät suurta vahinkoa ja aiheuttavat palamista."
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
@@ -2848,7 +2849,8 @@ msgid ""
 "When threatened the Zombie may hold up its hands to block incoming attacks "
 "briefly."
 msgstr ""
-"Uhattuna zombi voi nostaa kätensä torjuakseen kohtitulevia hyökkäyksiä tovin."
+"Uhattuna zombi voi nostaa kätensä torjuakseen kohtitulevia hyökkäyksiä "
+"hetkeksi."
 
 #: qcsrc/common/monsters/monster/zombie.qc:185
 msgid ""
@@ -2886,7 +2888,7 @@ msgstr ""
 #: qcsrc/common/util.qc:310
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:105
 msgid "Blood loss"
-msgstr "Verenvuodatus"
+msgstr "Verenhukka"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:66
 #, c-format
@@ -2979,7 +2981,7 @@ msgstr "%s-tehostus lisää hyppykorkeutta suuresti tehostuksen ollessa pääll�
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
-msgstr "Se myös tekee sinusta immuunin pudotusvahingolle."
+msgstr "Se myös tekee immuuniksi pudotusvahingolle."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qh:12
 msgid "Jump"
@@ -2992,11 +2994,11 @@ msgid ""
 "with greatly increased damage."
 msgstr ""
 "Kun sinulla on %s-tehostus, joka hyökkäyksellä on mahdollisuus kriittiseen "
-"osumaan suuresti lisätyllä vahingolla."
+"osumaan suurella lisätyllä vahingolla."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/luck.qh:13
 msgid "Luck"
-msgstr "Lykästys"
+msgstr "Lykky"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qc:29
 #, c-format
@@ -3018,17 +3020,17 @@ msgid ""
 "health you can have before health starts to rot, and reduces health rot "
 "speed until the buff expires."
 msgstr ""
-"%s-tehostus lisää terveyden palautumisnopeutta, enimmäisterveyttä, joka "
-"sinulla on ennen terveyden rapistumista, sekä alentaa terveyden "
-"rapistumisnopeutta, kunnes vahvistus päättyy."
+"%s-tehostus lisää terveyden palautumisnopeutta, enimmäisterveyttä, jota on "
+"ennen terveyden rapistumista, sekä alentaa terveyden rapistumisnopeutta, "
+"kunnes tehostus päättyy."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:29
 msgid ""
 "It also gives you a chance to survive a fatal hit, with a small amount of "
 "health left over."
 msgstr ""
-"Se myös antaa mahdollisuuden selvitä kohtalokkaasta iskusta, mikä jättää "
-"pienen määrän terveyttä jäljelle."
+"Se myös antaa mahdollisuuden selvitä kohtalokkaasta iskusta, jolloin pieni "
+"määrä terveyttä jää jäljelle."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qh:16
 msgid "Medic"
@@ -3042,7 +3044,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
 msgid "This also impacts the damage you deal to yourself."
-msgstr "Se myös vaikuttaa vahinkoon, jonka aiheutat itsellesi."
+msgstr "Se myös vaikuttaa itsellesi aiheutettuun vahinkoon."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qh:12
 msgid "Resistance"
@@ -3053,8 +3055,8 @@ msgstr "Vastarinta"
 msgid ""
 "The %s buff allows you to press %s to switch places with a nearby enemy once."
 msgstr ""
-"%s-tehostus antaa painaa %s, jolla vaihtaa paikkoja heti läheisen vihollisen "
-"kanssa."
+"%s-tehostus antaa painaa %s, jolla vaihdetaan paikkoja heti läheisen "
+"vihollisen kanssa."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:88
 msgid ""
@@ -3083,7 +3085,7 @@ msgid ""
 "into health for yourself, until the buff expires."
 msgstr ""
 "%s-tehostus muuntaa osan vihollisille ja hirviöille tehdystä vahingosta "
-"omaksi terveydeksi, kunnes vahvistus päättyy."
+"omaksi terveydeksi, kunnes tehostus päättyy."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:29
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
@@ -3103,6 +3105,8 @@ msgid ""
 "The %s buff reciprocates a portion of the damage enemies deal to you onto "
 "them, until the buff expires."
 msgstr ""
+"%s-tehostus palauttaa osan vihollisten tekemästä vahingosta niille, kunnes "
+"tehoste päättyy."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qh:13
 msgid "Vengeance"
@@ -3119,7 +3123,7 @@ msgid ""
 "The %s mutator makes all players nearly invisible, similar to the %s "
 "powerup. This adds an extra layer of stealth and strategy to gameplay."
 msgstr ""
-"%s muovaaja tekee kaikki pelaajan näkymättömiksi, kuten %s-tehostus. Se tuo "
+"%s-muovaaja tekee kaikki pelaajan näkymättömiksi, kuten %s-tehostus. Se tuo "
 "peliin lisää häivettä ja strategiaa."
 
 #: qcsrc/common/mutators/mutator/cloaked/cloaked.qh:5 qcsrc/common/util.qc:303
@@ -3164,7 +3168,7 @@ msgstr "Asekohtainen"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:55
 msgid "Initial opacity:"
-msgstr ""
+msgstr "Läpikuultavuuden alkuarvo:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:61
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:25
@@ -3207,7 +3211,7 @@ msgstr "Aina"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:83
 msgid "Or opacity greater than:"
-msgstr ""
+msgstr "Tai läpikuultavuuden ollessa suurempi kuin:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:7
 msgid "Damage text"
@@ -3432,7 +3436,7 @@ msgstr "Jääkranaatti"
 #, c-format
 msgid ""
 "The %s detonates after a short delay, spawning one of the five monster types."
-msgstr ""
+msgstr "%s räjähtää pienen viiveen jälkeen, jolloin luo yhden hirviötyypin."
 
 #: qcsrc/common/mutators/mutator/nades/nade/monster.qh:19
 msgid "Monster grenade"
@@ -3487,6 +3491,8 @@ msgstr "Uudelleensyntykranaatti"
 msgid ""
 "The %s detonates after a short delay, teleporting you to where it detonated."
 msgstr ""
+"%s räjähtää pienen viiveen jälkeen, jolloin kaukosiirtää sinut "
+"räjähdyspaikkaan."
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:46
 msgid ""
@@ -3776,7 +3782,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:33
 msgid "Fuel regenerator"
-msgstr "Polttoaineen uusiovalmistin"
+msgstr "Polttoaineen kehitin"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:36
 msgid "Fuel regen"
@@ -5012,7 +5018,7 @@ msgstr "^TC^TT^BG generaattori on tuhottu"
 
 #: qcsrc/common/notifications/all.inc:420
 msgid "^TC^TT^BG generator spontaneously combusted due to overtime!"
-msgstr "^TC^TT^BG generaattori syttyi oma-aloitteisesti yliajan johdosta!"
+msgstr "^TC^TT^BG generaattori syttyi itsestään yliajan johdosta!"
 
 #: qcsrc/common/notifications/all.inc:422
 #, c-format
@@ -6151,7 +6157,7 @@ msgstr "^K1A %s on saapunut!"
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^BGYou got the ^F1Fuel regenerator"
-msgstr "^BGSinulla on ^F1Polttoaineen uusiotuotin"
+msgstr "^BGSinulla on ^F1Polttoaineen kehitin"
 
 #: qcsrc/common/notifications/all.inc:717
 msgid "^BGYou got the ^F1Jetpack"
@@ -6220,7 +6226,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^BGYou're now playing on ^TC^TT^BG team!"
-msgstr ""
+msgstr "^BGPelaat nyt joukkueessa ^TC^TT^BG!"
 
 #: qcsrc/common/notifications/all.inc:739
 msgid "^BGYou picked up the ball"
@@ -6339,7 +6345,7 @@ msgid ""
 "^F2Capture some control points to unshield it"
 msgstr ""
 "^BGVihollisgeneraattoria ei vielä voi tuhota\n"
-"^F2Kaappaa hallintapisteitä haltuusi karsiaksesi sen suojaukset"
+"^F2Poista sen suojus kaappaamalla hallintapisteitä haltuusi"
 
 #: qcsrc/common/notifications/all.inc:767
 msgid "^BGThe ^TCenemy^BG generator is no longer shielded!"
@@ -6351,7 +6357,7 @@ msgid ""
 "^BGRe-capture control points to shield it!"
 msgstr ""
 "^K1Generaattorisi EI ole suojattu!\n"
-"^BGKaappaa hallintapisteet takaisin suojataksesi sitä!"
+"^BGSuojaa sitä kaappaamalla hallintapisteet takaisin!"
 
 #: qcsrc/common/notifications/all.inc:769
 #, c-format
