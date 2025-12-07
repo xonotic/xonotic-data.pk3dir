@@ -5284,7 +5284,7 @@ msgstr "^BG%s%s^K1 ammuttiin Läjäyttimellä kuoliaaksi tekijänä ^BG%s^K1%s%s
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s^K1 shot themselves to hell with their Blaster%s%s"
-msgstr ""
+msgstr "^BG%s^K1 ampui itsensä hiiteen uudella läjäyttimellään%s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
@@ -5444,7 +5444,7 @@ msgstr "^BG%s^K1 eivät huomanneet omaa Mörssärikranaattiaan%s%s"
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s^K1 blew themselves up with their own Mortar%s%s"
-msgstr ""
+msgstr "^BG%s^K1 räjäytti itsensä ilmaan omalla Mörssärillään%s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
@@ -5634,7 +5634,7 @@ msgid ""
 "^BGfor ^F2too many unsuccessful attempts^BG to capture.\n"
 "^BGMake some defensive scores before trying again."
 msgstr ""
-"^BGOlet nyt ^F1suojakerrotettu^BG lipulta (lipuilta)\n"
+"^BGOlet nyt ^F1suojattu^BG lipulta (lipuilta)\n"
 "^BGfor ^F2liian monta epäonnistunutta yritystä^BG kaappauksissa.\n"
 "^BGHanki puolustuspisteitä ennen kuin yrität uudelleen."
 
@@ -5767,7 +5767,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:602
 #, c-format
 msgid "^BGYour %steammate^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BG%s-joukkuekaverisi^BG sai lipun! Suojele häntä!"
 
 #: qcsrc/common/notifications/all.inc:603
 #, c-format
@@ -6066,7 +6066,7 @@ msgstr "^K1Petturi! Joukkuetapoit ^BG%s"
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
 msgid "^K1You were betrayed by teammate ^BG%s"
-msgstr ""
+msgstr "^K1Joukkuekaverisi petti sinut ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
@@ -7680,7 +7680,7 @@ msgstr "Olet sitonut tämän aseen tähän: %s."
 #: qcsrc/common/weapons/all.qc:907
 #, c-format
 msgid "(DPS: %.2f)"
-msgstr ""
+msgstr "(Vahinkoa sekunnissa %.2f)"
 
 #: qcsrc/common/weapons/all.qc:880
 #, c-format
@@ -7728,7 +7728,7 @@ msgstr "Suora osuma tekee %s vahinkoa"
 #: qcsrc/common/weapons/all.qc:1032
 #, c-format
 msgid "(total DPS: %.2f)"
-msgstr ""
+msgstr "(Vahinkoa sekunnissa yhteensä %.2f)"
 
 #: qcsrc/common/weapons/all.qc:1037
 #, c-format
@@ -7741,6 +7741,8 @@ msgid ""
 "The %s fires a continuous beam of electricity, steadily dealing damage to "
 "any enemies that cross its path."
 msgstr ""
+"%s ampuu jatkuvaa sähkövirtaa, joka tekee vahinkoa tasaisesti kaikille "
+"tielle tuleville vihollisille."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1519
 msgid ""
@@ -12401,7 +12403,7 @@ msgstr "Arvo:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:71
 msgid "Reset to default"
-msgstr ""
+msgstr "Palauta oletukset"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:79
 msgid "Description:"
@@ -12831,39 +12833,39 @@ msgstr "kaikille vapaa"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:9 qcsrc/menu/xonotic/guide/pages.qc:62
 msgid "Introduction"
-msgstr ""
+msgstr "Johdanto"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:10
 msgid "Movement"
-msgstr ""
+msgstr "Liikkuminen"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:11
 msgid "Gametypes"
-msgstr ""
+msgstr "Pelitilat"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:17
 msgid "Monsters"
-msgstr ""
+msgstr "Hirviöt"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:18
 msgid "Vehicles"
-msgstr ""
+msgstr "Ajoneuvot"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:19
 msgid "Turrets"
-msgstr ""
+msgstr "Tykkitornit"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:21
 msgid "Mods"
-msgstr ""
+msgstr "Modit"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:19
 msgid "About this guide"
-msgstr ""
+msgstr "Tietoja tästä oppaasta"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:22
 msgid "Welcome to Xonotic, the free and fast arena shooter!"
-msgstr ""
+msgstr "Tervetuloa Xonoticiin, ilmainen ja nopeatempoinen areenaräiskintä!"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:23
 msgid ""
@@ -12871,6 +12873,9 @@ msgid ""
 "other aspects of the game, but most of what you will learn will come from "
 "trying it out in practice."
 msgstr ""
+"Tämä opas kattaa perustiedot, jotka pelaajan tulee tietää aseista, esineistä "
+"ja muista pelin osa-alueista. Mutta suurin osa opitusta tulee käytännön "
+"kokeilusta."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:25
 msgid ""
@@ -12878,6 +12883,9 @@ msgid ""
 "settings. Xonotic is highly customizable and there are tons of servers out "
 "there that run with lightly or highly modified settings."
 msgstr ""
+"Huomaa, että tämä opas kuvaa pelin oletusasetuksia. Xonotic on hyvin "
+"muokattavissa, ja verkossa on lukuisia palvelimia, jotka toimivat kevyesti "
+"tai kovasti muokatuilla asetuksilla."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:27
 #, c-format
@@ -12888,7 +12896,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/pages.qc:30
 msgid "Community"
-msgstr ""
+msgstr "Yhteisö"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:32
 #, c-format
@@ -12923,6 +12931,10 @@ msgid ""
 "the game mechanics. If you see experienced players doing tricks you don't "
 "understand, don't hesitate to ask anyone on the server!"
 msgstr ""
+"Uusien ja kokeneiden pelaajien välinen taitoero on usein huima. Tämä johtuu "
+"pääosin siitä, että kokeneet pelaajat ovat oppineet hyödyntämään "
+"pelimekaanikkoja. Jos näet kokeneiden pelaajien tekevän temppuja, joita et "
+"ymmärrä, älä epäröi kysyä neuvoa keneltä tahansa palvelimella!"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:46
 msgid ""
@@ -12968,10 +12980,13 @@ msgid ""
 "skills is an essential part of Xonotic gameplay and must not be "
 "underestimated."
 msgstr ""
+"Xonotic on hyvin nopeatempoinen areenaräiskintä. Nopeatempoisuus ei liity "
+"reaktioaikaan, vaan myös liikkumisnopeuteen. Liikkumistaidot ovat siis "
+"ratkaiseva osa Xonotic-peliä, eikä sitä pidä aliarvioida."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:67
 msgid "For a new player, the most important tricks to learn are:"
-msgstr ""
+msgstr "Uudelle pelaajalle tärkeimmät opittavat temput ovat:"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:69 qcsrc/menu/xonotic/guide/pages.qc:77
 msgid "Bunny Hopping"
@@ -12979,19 +12994,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/pages.qc:70 qcsrc/menu/xonotic/guide/pages.qc:89
 msgid "Strafe Turning"
-msgstr ""
+msgstr "Sivuttaiskääntyminen"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:71 qcsrc/menu/xonotic/guide/pages.qc:101
 msgid "Blaster Jumping"
-msgstr ""
+msgstr "Läjäytinhyppely"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:73 qcsrc/menu/xonotic/guide/pages.qc:133
 msgid "Crylink Running"
-msgstr ""
+msgstr "Crylink-juokseminen"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:74 qcsrc/menu/xonotic/guide/pages.qc:149
 msgid "Ramp Jumping"
-msgstr ""
+msgstr "Ramppihyppely"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:80
 msgid ""
@@ -13041,7 +13056,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95
 msgid "move forward"
-msgstr ""
+msgstr "liiku eteenpäin"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:119
 #: qcsrc/menu/xonotic/keybinder.qc:64
@@ -13154,7 +13169,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/pages.qc:141
 msgid "Crylink Wall Climbing"
-msgstr ""
+msgstr "Crylink-seinäkiipeily"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:144
 #, c-format
@@ -13207,7 +13222,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/pages.qc:162
 msgid "Advanced Movement"
-msgstr ""
+msgstr "Edistynyt liikkuminen"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:165
 msgid ""
@@ -13219,7 +13234,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/guide/pages.qc:167
 #, c-format
 msgid "If you want to master these techniques, be sure to check out %s."
-msgstr ""
+msgstr "Jos haluat hallita näitä tekniikoita, tarkista %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:174
 #, c-format
@@ -13298,19 +13313,19 @@ msgstr "Hyökkääminen"
 
 #: qcsrc/menu/xonotic/keybinder.qc:78
 msgid "WEAPON^previous"
-msgstr "ASE^edellinen"
+msgstr "WEAPON^edellinen"
 
 #: qcsrc/menu/xonotic/keybinder.qc:79
 msgid "WEAPON^next"
-msgstr "ASE^seuraava"
+msgstr "WEAPON^seuraava"
 
 #: qcsrc/menu/xonotic/keybinder.qc:80
 msgid "WEAPON^previously used"
-msgstr "ASE^aiemmin käytetty"
+msgstr "WEAPON^aiemmin käytetty"
 
 #: qcsrc/menu/xonotic/keybinder.qc:81
 msgid "WEAPON^best"
-msgstr "ASE^paras"
+msgstr "WEAPON^paras"
 
 #: qcsrc/menu/xonotic/keybinder.qc:82
 msgid "reload"
@@ -13491,7 +13506,7 @@ msgstr "<mallia ei löytynyt>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:263
 msgid "SERVER^Remove favorite"
-msgstr "PALVELIN^Poista suosikki"
+msgstr "SERVER^Poista suosikki"
 
 #: qcsrc/menu/xonotic/serverlist.qc:264
 msgid "Remove the currently highlighted server from bookmarks"
@@ -13499,7 +13514,7 @@ msgstr "Poista nykyinen korostettu palvelin kirjanmerkeistä"
 
 #: qcsrc/menu/xonotic/serverlist.qc:268
 msgid "SERVER^Favorite"
-msgstr "PALVELIN^Lemppari"
+msgstr "SERVER^Lemppari"
 
 #: qcsrc/menu/xonotic/serverlist.qc:269
 msgid ""

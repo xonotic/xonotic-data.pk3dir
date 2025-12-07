@@ -8705,11 +8705,11 @@ msgstr "Alii qui Prius Adiuverunt"
 #: qcsrc/menu/xonotic/cvarlist.qc:25
 #, c-format
 msgid "%d results"
-msgstr ""
+msgstr "%d inventae"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:25
 msgid "1 result"
-msgstr ""
+msgstr "1 inventa"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:120
 msgid "forced to be saved to config.cfg"
@@ -11037,19 +11037,19 @@ msgstr "Optima"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:92
 msgid "Texture compression:"
-msgstr ""
+msgstr "Texturarum breviatio:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:98
 msgid "TCOMP^Fast"
-msgstr ""
+msgstr "Celeris"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:99
 msgid "TCOMP^Good"
-msgstr ""
+msgstr "Bona"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:100
 msgid "TCOMP^None"
-msgstr ""
+msgstr "Nulla"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:109
 msgid "Disable sky for performance and visibility"
@@ -12228,7 +12228,7 @@ msgstr "Modo optiones mutatae"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:46
 msgid "Search in cvar descriptions too"
-msgstr ""
+msgstr "Perscrutari in descriptionibus quoque"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Setting:"

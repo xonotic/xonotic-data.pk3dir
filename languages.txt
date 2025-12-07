@@ -10,14 +10,14 @@ fr    "French" "Français" 100%
 gl    "Galician" "Galego" 99%
 ga    "Irish" "Irish" 24%
 it    "Italian" "Italiano" 99%
-la    "Latin" "Lingua Latina" 86%
+la    "Latin" "Lingua Latina" 87%
 hu    "Hungarian" "Magyar" 36%
 nl    "Dutch" "Nederlands" 49%
 pl    "Polish" "Polski" 64%
 pt    "Portuguese" "Português" 81%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
 ro    "Romanian" "Romana" 56%
-fi    "Finnish" "Suomi" 85%
+fi    "Finnish" "Suomi" 86%
 sv    "Swedish" "Svenska" 78%
 tr    "Turkish" "Türkçe" 44%
 cs    "Czech" "Čeština" 25%
