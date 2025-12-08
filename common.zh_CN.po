@@ -86,7 +86,7 @@ msgstr "对战"
 
 #: qcsrc/client/hud/panel/chat.qc:166
 msgid "^3Player^7: This is the chat area."
-msgstr "^3玩家^7：这里是聊天区。"
+msgstr "^3玩家昵称^7: 这里是聊天区。"
 
 #: qcsrc/client/hud/panel/checkpoints.qc:144
 #: qcsrc/client/hud/panel/checkpoints.qc:147
@@ -625,7 +625,7 @@ msgstr "带球人击杀数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^bckills"
-msgstr "杀死带球人"
+msgstr "击杀带球人"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^bctime"
@@ -713,7 +713,7 @@ msgstr "持旗者击杀数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^fckills"
-msgstr "杀死持旗者"
+msgstr "击杀持旗者"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "FPS"
@@ -749,7 +749,7 @@ msgstr "进球"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of hunts (Survival)"
-msgstr "狩猎次数（生存模式）"
+msgstr "狩猎次数（生还模式）"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^hunts"
@@ -757,11 +757,11 @@ msgstr "狩猎"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of key carrier kills"
-msgstr "钥匙携带者击杀数"
+msgstr "持钥人击杀数"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kckills"
-msgstr "杀死携钥者"
+msgstr "击杀持钥人"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^k/d"
@@ -1534,9 +1534,8 @@ msgid ""
 "life per round. There are no pickups available on the map in %s, making the "
 "gameplay fast-paced and focused on combat."
 msgstr ""
-"%s是常见的轮次制团队游戏模式，玩家开始时携带所有武器，拥有最大生命值与护甲"
-"值，但每轮只有一条生命。%s模式下，不能从地图捡装备，整体游戏节奏快，集中于战"
-"斗。"
+"%s是常见的轮次制团队游戏模式，玩家开始时满血满甲、携带所有武器，但每轮只有一"
+"条生命。%s模式下，不能从地图捡装备，整体游戏节奏快，集中于战斗。"
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:10
 msgid ""
@@ -1783,7 +1782,7 @@ msgid ""
 "health, so it is a good opportunity to search the map for them to pick up an "
 "easy frag and continue your streak."
 msgstr ""
-"当你杀死对手时，对方会带着较少的武器和生命值重生，这是你搜查地图、轻松杀敌、"
+"当你击杀对手时，对方会带着较少的武器和生命值重生，这是你搜查地图、轻松杀敌、"
 "保持连杀的好机会。"
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:17
@@ -1854,7 +1853,7 @@ msgstr "冰封战"
 msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
-msgstr "杀死敌人以将他们冻结；站在被冻结的队友边以复活他们；冻结所有敌人即胜利"
+msgstr "击杀敌人以将他们冻结；站在被冻结的队友边以复活他们；冻结所有敌人即胜利"
 
 #: qcsrc/common/gametypes/gametype/invasion/invasion.qc:8
 #, c-format
@@ -1932,7 +1931,7 @@ msgid ""
 "after a ten second period, and the location of all keys will be visible on "
 "the radar after a few seconds."
 msgstr ""
-"%s是轮次制团队游戏模式，每支队伍都有一把钥匙，把所有钥匙收集起来，即赢得一"
+"%s是轮次制团队游戏模式，每个队伍都有一把钥匙，将所有钥匙收集起来，即赢得一"
 "局。每轮开始时，会在十秒后随机选出持钥人，并在几秒后显示在雷达上。"
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:12
@@ -1974,7 +1973,7 @@ msgid ""
 "item pickups don't spawn on the map."
 msgstr ""
 "%s是自由竞技模式，玩家开局有固定数量的几条命，耗尽时出局。与%s相似，玩家重生"
-"时携带所有武器、最大生命值与护甲值，且无法回血回甲，地图上没有可拾取的物件。"
+"时满血满甲、携带所有武器，且无法回血回甲，地图上没有可拾取的物件。"
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qc:13
 msgid ""
@@ -1992,6 +1991,8 @@ msgid ""
 "to prevent hiding too much. Players who aren't in the lead steal a small "
 "percentage of health when they attack leaders, like in the %s mutator."
 msgstr ""
+"若一玩家比别人多两条命，他会发光，且有路径点追踪，方便其他玩家寻找。这样的玩"
+"家被称为“鳌头”，其他玩家攻击鳌头时会吸收少量生命值（类似于%s修改）。"
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qh:11
 msgid "Last Man Standing"
@@ -2012,6 +2013,8 @@ msgid ""
 "available weapons and maximum health and armor. There are no pickups enabled "
 "on maps, but buffs are still available."
 msgstr ""
+"%s是快节奏的自由竞技模式，玩家生成时满血满甲、携带所有武器。地图上除增益外没"
+"有可拾取的物件。"
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:12
 msgid ""
@@ -2021,22 +2024,25 @@ msgid ""
 "if possible. Points are deducted when you walk into hazards, but not when "
 "you do movement tricks like blaster jumping since self damage is disabled."
 msgstr ""
+"此模式最独特的是它的得分机制，同时考虑了杀敌数和造成的伤害。这意味着若敌人在"
+"你的枪火下侥幸逃脱，你仍能获得可观分数，但最好做到给予对方最后一击。当你走入"
+"危险区域时会受伤扣分；此模式没有自伤，使用镭射枪走位不会减分。"
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:15
 #, c-format
 msgid ""
 "Since damage is always rewarded in %s, the more you shoot the better, "
 "turning this gametype into chaotic fun at times."
-msgstr ""
+msgstr "在%s中，伤害量等于分数，因此不要吝啬弹药，在混战中享受游戏。"
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:16
 #, c-format
 msgid "This gametype is often seen as a more newbie-friendly version of %s."
-msgstr ""
+msgstr "此模式通常被视为新手友好版的%s。"
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem"
-msgstr ""
+msgstr "在混战中打出最多伤害和杀敌数"
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Mayhem"
@@ -2051,7 +2057,7 @@ msgstr "分数达到目标后，一轮竞赛结束"
 #, c-format
 msgid ""
 "%s is a fun ball sport game where 2 teams compete to score the most goals."
-msgstr ""
+msgstr "%s是有趣的球赛游戏，由 2 支团队比拼进球数。"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:11
 #, c-format
@@ -2060,12 +2066,14 @@ msgid ""
 "kick it around, or basketball where players have a %s so they can pass the "
 "ball and intercept passes."
 msgstr ""
+"%s通常是足球或篮球游戏。足球游戏中，玩家在球场踢球，把球踢进对方球门。篮球游"
+"戏中，玩家持有%s，用它把球射进球篮，或者截获别人的球。"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:12
 msgid ""
 "Keep in mind players can score own goals, so don't embarrass yourself in "
 "front of your team!"
-msgstr ""
+msgstr "请留意球可以进自家球门，所以不要在队友面前丢人！"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
 msgid "Nexball"
@@ -2073,7 +2081,7 @@ msgstr "Nex 球赛"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
 msgid "Shoot and kick the ball into the enemy's goal, keep your goal clean"
-msgstr ""
+msgstr "把球踢进对方球门，守住自己的球门"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
 msgid "Goal limit:"
@@ -2094,6 +2102,8 @@ msgid ""
 "the enemy team core generator. In order to destroy the generator, control "
 "points on the map (similar to those in %s) must first be captured."
 msgstr ""
+"%s是团队游戏模式，类似于%s，最终目标是摧毁敌方核心发电机。要摧毁发电机，首先"
+"需要占领地图上的控制点（类似于%s中的地图目标）。"
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:79
 msgid ""
@@ -2101,6 +2111,8 @@ msgid ""
 "another control point currently owned by your team, you have to "
 "systematically work through the map to reach the enemy generator."
 msgstr ""
+"你的团队只能占领相继连接的控制点，因此需要系统性地处理地图上的控制点，才能接"
+"触到敌方发电机。"
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:80
 msgid ""
@@ -2109,12 +2121,15 @@ msgid ""
 "the \"info bot\" that hovers above them, converting the control point to "
 "neutral once it is destroyed."
 msgstr ""
+"接触控制点即可占领，它会在一定时间内构建完毕。摧毁敌方控制点则需要攻击其头上"
+"的“通讯机器人”。控制点摧毁后中立，可立即重新占领。"
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:82
 msgid ""
 "When in overtime, the enemy's generator will start to decay, at a faster "
 "rate the more control points your team has."
 msgstr ""
+"在决胜时刻，敌方发电机开始衰减。我方占领的控制点越多，敌方发电机衰减越快。"
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
@@ -2137,7 +2152,7 @@ msgstr "全服最佳"
 msgid ""
 "%s is a gametype similar to %s where players run on a track to be the first "
 "to cross the finish line after a certain number of laps."
-msgstr ""
+msgstr "%s模式类似于 %s，玩家跟着路径点跑圈，率先跑完指定圈数的玩家获胜。"
 
 #: qcsrc/common/gametypes/gametype/race/race.qc:11
 #, c-format
@@ -2147,12 +2162,14 @@ msgid ""
 "similar to %s since weapons can't be used to disturb other players but can "
 "still be used to run faster."
 msgstr ""
+"在竞速正式开始前会有试跑阶段，以每位玩家在此阶段的表现决定起跑线。此阶段非常"
+"像 %s，不能开枪干扰别人，但可以利用武器助跑、走位。"
 
 #: qcsrc/common/gametypes/gametype/race/race.qc:13
 msgid ""
 "During the real race it's possible to shoot other players in order to slow "
 "them down."
-msgstr ""
+msgstr "在正式赛跑时，可以开枪攻击其他玩家，减缓他们的进度。"
 
 #: qcsrc/common/gametypes/gametype/race/race.qh:11
 msgid "Race"
@@ -2168,11 +2185,11 @@ msgstr "圈数："
 
 #: qcsrc/common/gametypes/gametype/survival/cl_survival.qc:63
 msgid "Hunter"
-msgstr "狩猎者"
+msgstr "猎手"
 
 #: qcsrc/common/gametypes/gametype/survival/cl_survival.qc:69
 msgid "Survivor"
-msgstr "生存者"
+msgstr "幸存者"
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:11
 #, c-format
@@ -2183,13 +2200,16 @@ msgid ""
 "players only know which team they belong to, and not the team membership of "
 "any other players."
 msgstr ""
+"%s模式是猎手-生存游戏。猎手的目标是伪装自己、击杀所有幸存者，而幸存者的目标是"
+"找出并击杀所有猎手，或者存活至倒计时结束。模式的关键之处在于所有幸存者都只知"
+"道自己的角色，而不知道其他任何玩家的角色。"
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:13
 msgid ""
 "Since the goal of both teams is essentially to eliminate all members of the "
 "opposite team, it can be tricky for survivors to figure out their fellow "
 "teammates."
-msgstr ""
+msgstr "因为双方的目标都是消灭对方所有玩家，幸存者不易识别敌我，处境较为棘手。"
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:14
 msgid ""
@@ -2197,6 +2217,8 @@ msgid ""
 "a bit smaller, and then the round starts with a brief warmup grace period in "
 "which items can be collected but weapons can't be fired."
 msgstr ""
+"在游戏开始时会为玩家随机挑选角色，猎手人数相对较少。游戏开始时有短暂和平期，"
+"可以捡物品，但不能开火。"
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:16
 msgid ""
@@ -2205,10 +2227,12 @@ msgid ""
 "fragged. Extra points are also given to survivors who survive until the "
 "round timer expires."
 msgstr ""
+"玩家在击杀敌对玩家时加分，但仅当此局存活时才会算入总分，且每次击杀队友扣一"
+"分。坚持到倒计时结束的幸存者也加一分。"
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
-msgstr "在队友接连受害前认出并消灭所有狩猎者"
+msgstr "在队友接连受害前认出并消灭所有猎手"
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qh:12
 msgid "Survival"
@@ -2217,19 +2241,20 @@ msgstr "生还"
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:10
 #, c-format
 msgid "%s is the team version of %s, played in teams rather than solo."
-msgstr ""
+msgstr "%s是组队版本的%s，玩家组队合作而非独自战斗。"
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:11
 msgid ""
 "Scoring is quite simple, adding a point for every frag, and subtracting a "
 "point for fragging yourself or a teammate."
-msgstr ""
+msgstr "得分规则很简单，每次杀敌加一分，误杀队友或自杀扣一分。"
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:12
 msgid ""
 "Careful team coordination and map control is often key to winning a match, "
 "and sometimes players will share weapons with their teammates."
 msgstr ""
+"慎密的团队合作与对地图局势的掌控是获胜的关键。有时玩家会与队友分享武器。"
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -2244,14 +2269,14 @@ msgstr "团队死亡竞技"
 msgid ""
 "%s is the team version of %s, where teams compete to maintain superior "
 "control over the ball."
-msgstr ""
+msgstr "%s是组队版本的%s，队伍之间激烈竞争，夺得对球的终极控制。"
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qc:11
 #, c-format
 msgid ""
 "Scoring is similar to in %s, except that points are awarded for frags for "
 "all members of the team of the player holding the ball."
-msgstr ""
+msgstr "得分规则与%s相似，但持球团队的每位玩家杀敌都会加分。"
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
@@ -2269,6 +2294,9 @@ msgid ""
 "differences being that %s is a round-based gametype, and of course the "
 "scoring system differences."
 msgstr ""
+"%1$s是团队合作的即时战斗模式，与%2$s相似，且得分机制与%2$s相同。此模式也"
+"与%3$s有很多相同点，最主要的区别在于%3$s是轮次制游戏模式，得分机制与%1$s不"
+"同。"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qc:13
 msgid ""
@@ -2276,12 +2304,14 @@ msgid ""
 "chaotic nature, team communication is less important in this gametype than "
 "other team-based gametypes."
 msgstr ""
+"由于此模式不计轮次，混战永不停息。与其他组队模式相比，此模式战局混乱，团队沟"
+"通不太重要。"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid ""
 "Compete with your team for the most damage dealt and frags in this chaotic "
 "mayhem"
-msgstr ""
+msgstr "在混战中为团队争得最多的分数与杀敌数"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
@@ -2290,17 +2320,17 @@ msgstr "组队大乱斗"
 #: qcsrc/common/items/item/ammo.qc:11
 #, c-format
 msgid "The %s ammo type is used by the:"
-msgstr ""
+msgstr "%s用作以下武器的弹药："
 
 #: qcsrc/common/items/item/ammo.qc:16 qcsrc/common/items/item/ammo.qc:26
 #, c-format
 msgid "By default, the pickup gives you %s ammo, to a maximum of %s."
-msgstr ""
+msgstr "一般情况下，捡起可获得 %s 发弹药，最多持有 %s 发。"
 
 #: qcsrc/common/items/item/ammo.qc:25
 #, c-format
 msgid "The %s ammo type is used by the %s."
-msgstr ""
+msgstr "%s是用于%s的弹药。"
 
 #: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
 msgid "Shells"
@@ -2325,42 +2355,42 @@ msgstr "燃料"
 #: qcsrc/common/items/item/armor.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s armor."
-msgstr ""
+msgstr "一般情况下，捡起可获得 %s 点护甲值。"
 
 #: qcsrc/common/items/item/armor.qc:13
 #, c-format
 msgid ""
 "The %s provides you a small amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
-msgstr ""
+msgstr "捡起%s可获得少量护甲值，吸收受到的伤害。"
 
 #: qcsrc/common/items/item/armor.qc:23
 #, c-format
 msgid ""
 "The %s provides you a medium amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
-msgstr ""
+msgstr "捡起%s可获得中量护甲值，吸收受到的伤害。"
 
 #: qcsrc/common/items/item/armor.qc:33
 #, c-format
 msgid ""
 "The %s provides you a large amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
-msgstr ""
+msgstr "捡起%s可获得大量护甲值，吸收受到的伤害。"
 
 #: qcsrc/common/items/item/armor.qc:43
 #, c-format
 msgid ""
 "The %s provides you a huge amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
-msgstr ""
+msgstr "捡起%s可获得超多护甲值，吸收受到的伤害。"
 
 #: qcsrc/common/items/item/armor.qc:45 qcsrc/common/items/item/health.qc:45
 #, c-format
 msgid ""
 "It tends to be one of the most highly contested items on a map, particularly "
 "in gametypes like %s."
-msgstr ""
+msgstr "这是游戏中最值得争抢的物品之一，尤其是在%s模式。"
 
 #: qcsrc/common/items/item/armor.qh:44
 msgid "Small armor"
@@ -2381,35 +2411,35 @@ msgstr "超级护甲"
 #: qcsrc/common/items/item/health.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s health."
-msgstr ""
+msgstr "一般情况下，捡起可获得%s点生命值。"
 
 #: qcsrc/common/items/item/health.qc:13
 #, c-format
 msgid ""
 "The %s restores a small amount of health when picked up, helping you recover "
 "from damage taken during combat."
-msgstr ""
+msgstr "捡起%s可获得少量生命值，可供在战斗中受伤时恢复生命。"
 
 #: qcsrc/common/items/item/health.qc:23
 #, c-format
 msgid ""
 "The %s restores a medium amount of health when picked up, helping you "
 "recover from damage taken during combat."
-msgstr ""
+msgstr "捡起%s可获得中量生命值，可供在战斗中受伤时恢复生命。"
 
 #: qcsrc/common/items/item/health.qc:33
 #, c-format
 msgid ""
 "The %s restores a large amount of health when picked up, helping you recover "
 "from damage taken during combat."
-msgstr ""
+msgstr "捡起%s可获得大量生命值，可供在战斗中受伤时恢复生命。"
 
 #: qcsrc/common/items/item/health.qc:43
 #, c-format
 msgid ""
 "The %s restores a huge amount of health when picked up, helping you recover "
 "from damage taken during combat."
-msgstr ""
+msgstr "捡起%s可获得超多生命值，可供在战斗中受伤时恢复生命。"
 
 #: qcsrc/common/items/item/health.qh:44
 msgid "Small health"
@@ -2707,7 +2737,7 @@ msgstr "怪物"
 msgid ""
 "Golems are large powerful brutes capable of taking and dealing a beating. "
 "Keeping your distance is advised."
-msgstr ""
+msgstr "钢铁石巨人是重量级狂兽，可轻易致命。建议和它保持距离。"
 
 #: qcsrc/common/monsters/monster/golem.qc:289
 msgid ""
@@ -2715,23 +2745,26 @@ msgid ""
 "Golem may jump into the air, dealing massive damage in an area as it slams "
 "the ground."
 msgstr ""
+"钢铁石巨人的主要攻击方式是近身出拳。有时它会纵身跳起来，发动泰山压顶，造成大"
+"量伤害。"
 
 #: qcsrc/common/monsters/monster/golem.qc:291
 msgid ""
 "To deal with distant foes, the Golem may throw a chunk of its electrified "
 "rocky exterior, zapping nearby targets on impact."
 msgstr ""
+"钢铁石巨人也会扔出带电石质外壳，触碰时电击附近的目标，用于处理远处的敌人。"
 
 #: qcsrc/common/monsters/monster/golem.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Golem"
-msgstr "钢铁巨人"
+msgstr "钢铁石巨人"
 
 #: qcsrc/common/monsters/monster/mage.qc:498
 msgid ""
 "Wielding nanotechnology as if it were sorcery, the Mage employs a range of "
 "unique abilities of its own creation in combat."
-msgstr ""
+msgstr "纳米法师掌握纳米科技，如黑魔法般掌握一系列用于战斗的独特本领。"
 
 #: qcsrc/common/monsters/monster/mage.qc:499
 msgid ""
@@ -2739,6 +2772,8 @@ msgid ""
 "player. This sphere will track its target at high speed, exploding on impact "
 "or if it does not reach its target in time."
 msgstr ""
+"纳米法师的主要攻击方式是发射追踪的球状闪电，高速追击目标，在碰撞时爆炸造成范"
+"围伤害。"
 
 #: qcsrc/common/monsters/monster/mage.qc:501
 msgid ""
@@ -2746,23 +2781,26 @@ msgid ""
 "damage briefly. Enemies approaching too closely during this time may be "
 "pushed away with explosive force!"
 msgstr ""
+"当遭受威胁时，纳米法师会部署能量护盾抵挡少量伤害，此时接近它的敌人会受到猛烈"
+"的爆炸反弹！"
 
 #: qcsrc/common/monsters/monster/mage.qc:503
 msgid ""
 "Defensively the Mage is capable of healing itself and nearby allies, with "
 "some variants also providing armor and ammunition."
 msgstr ""
+"防御方面，纳米法师可以治疗自己和附近的队友。一些变种也可提供护甲或弹药。"
 
 #: qcsrc/common/monsters/monster/mage.qc:504
 msgid ""
 "The Mage may sometimes appear to blink out of existence as it teleports "
 "behind its target for a sneak attack."
-msgstr ""
+msgstr "纳米法师有时会闪出视野，传送到目标身后发动奇袭。"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
 msgid "Mage"
-msgstr "魔法师"
+msgstr "纳米法师"
 
 #: qcsrc/common/monsters/monster/mage.qh:29
 msgid "Mage spike"
@@ -2772,7 +2810,7 @@ msgstr "魔法突刺"
 msgid ""
 "The Spider is a large mechanically-enhanced arachnoid adept at hunting "
 "speedy enemies."
-msgstr ""
+msgstr "蜘蛛是大型的机械增强吐网蛛，擅长猎杀快速移动的敌人。"
 
 #: qcsrc/common/monsters/monster/spider.qc:245
 msgid ""
@@ -2780,6 +2818,8 @@ msgid ""
 "from its cannons. Approaching its enwebbed prey, the Spider will inflict a "
 "series of high damage bites."
 msgstr ""
+"蜘蛛会从炮口射出合成的蛛网状物质，减缓目标的移动速度。之后它会接近被捕的猎"
+"物，对其施加一系列高伤害咬噬。"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2798,13 +2838,14 @@ msgstr "蜘网"
 msgid ""
 "The Wyvern is a flying reptilian monster that glides around hunting for "
 "fresh prey."
-msgstr ""
+msgstr "飞龙是飞行的爬行类怪物，在空中滑翔，伺机捕杀新鲜的猎物。"
 
 #: qcsrc/common/monsters/monster/wyvern.qc:189
 msgid ""
 "While fragile, the Wyvern is capable of launching deadly fireballs at the "
 "player from a distance, inflicting high damage and causing burning."
 msgstr ""
+"尽管飞龙本身比较脆弱，它可以远距离对玩家发射致命火球，造成高伤害与灼烧。"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
@@ -2819,7 +2860,7 @@ msgstr "飞龙攻击"
 msgid ""
 "Zombies are the undead remains of deceased soldiers, risen with a ravenous "
 "hunger and no sense of self-preservation."
-msgstr ""
+msgstr "僵尸是已故士兵的尚存尸体，极度饥饿、丧心病狂。"
 
 #: qcsrc/common/monsters/monster/zombie.qc:181
 msgid ""
@@ -2828,18 +2869,21 @@ msgid ""
 "massive damage on contact. If it gets close, the Zombie will punch and bite "
 "repeatedly."
 msgstr ""
+"一旦僵尸嗅到附近有玩家，就会高速追击。僵尸在追击玩家时会扑上前去，造成大量接"
+"触伤害。当僵尸接近玩家时会不停地击打、咬噬。"
 
 #: qcsrc/common/monsters/monster/zombie.qc:184
 msgid ""
 "When threatened the Zombie may hold up its hands to block incoming attacks "
 "briefly."
-msgstr ""
+msgstr "受到威胁时，僵尸会举起手臂，抵挡小部分伤害。"
 
 #: qcsrc/common/monsters/monster/zombie.qc:185
 msgid ""
 "It is no small task to kill that which is already dead. Once a Zombie is "
 "defeated, destroy its corpse to prevent it from rising again!"
 msgstr ""
+"杀死已死之物并不简单。当击倒僵尸时，确保摧毁地上的尸体，不然它会再次苏醒！"
 
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
@@ -2851,7 +2895,7 @@ msgstr "僵尸"
 msgid ""
 "%s is a mutator in which players below a certain health threshold (for "
 "example 25) will suffer blood loss."
-msgstr ""
+msgstr "%s修改会使玩家生命在低于指定数值时（例如 25）持续掉血。"
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qc:77
 msgid ""
@@ -2859,6 +2903,8 @@ msgid ""
 "rapidly takes away health points until they either die or gain enough health "
 "to go above the health threshold."
 msgstr ""
+"失血状态下的玩家处于眩晕状态，移动速度大幅降低并迅速失去生命值，直到死亡或充"
+"足恢复生命为止。"
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qh:5
 #: qcsrc/common/util.qc:310
@@ -2871,14 +2917,14 @@ msgstr "失血"
 msgid ""
 "The %s buff gives you infinite ammo until the buff expires, so you don't "
 "need to worry about running out of ammo."
-msgstr ""
+msgstr "%s增益生效期间，弹药无限，这期间不用担心弹药用完。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
 #, c-format
 msgid ""
 "It also removes the need to reload any weapons that require reloading, like "
 "the %s and %s."
-msgstr ""
+msgstr "在此增益下，%s和%s等武器也无须换弹。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qh:11
 msgid "Ammo"
@@ -2889,11 +2935,11 @@ msgstr "弹药"
 msgid ""
 "The %s buff increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
-msgstr ""
+msgstr "%s增益生效期间，你的击退力增加，且免疫敌方击退。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
-msgstr ""
+msgstr "此增益也会略微增加对自己的击退效果。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qh:14
 msgid "Bash"
@@ -2904,12 +2950,12 @@ msgstr "重击"
 msgid ""
 "The %s buff causes your enemies and monsters to slow down for a few seconds "
 "when you attack them, while the buff is active."
-msgstr ""
+msgstr "%s增益生效期间，受你攻击的敌人移动速度降低，持续数秒。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
 #, c-format
 msgid "This is particularly useful against speedy players, especially in %s."
-msgstr ""
+msgstr "具体来说，这很适合用来应对快速移动的玩家，尤其是在%s模式。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qh:15
 msgid "Disability"
@@ -2920,7 +2966,7 @@ msgstr "致残"
 msgid ""
 "While you have the %s buff, you can crouch while mid-air to switch your "
 "gravity, allowing flight."
-msgstr ""
+msgstr "当你持有%s增益时，可以在半空中下蹲切换重力，开始飞行。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
 msgid "Flight"
@@ -2931,7 +2977,7 @@ msgstr "飞行"
 msgid ""
 "The %s buff sets any enemies or monsters you attack alight, dealing burn "
 "damage to them for several seconds until the buff expires."
-msgstr ""
+msgstr "%s增益生效期间，你攻击到的敌人会着火，并持续数秒烧伤。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
 msgid "Inferno"
@@ -2941,11 +2987,11 @@ msgstr "狱火"
 #, c-format
 msgid ""
 "The %s buff greatly increases your jump height, while the buff is active."
-msgstr ""
+msgstr "%s增益生效期间，你的跳跃高度大幅增加。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
-msgstr ""
+msgstr "此增益也会使你免疫摔落伤害。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qh:12
 msgid "Jump"
@@ -2956,7 +3002,7 @@ msgstr "跳跃"
 msgid ""
 "While you have the %s buff, each attack has a chance of being a critical hit "
 "with greatly increased damage."
-msgstr ""
+msgstr "当你持有%s增益时，有一定概率打出暴击，伤害大幅增加。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/luck.qh:13
 msgid "Luck"
@@ -2967,7 +3013,7 @@ msgstr "幸运"
 msgid ""
 "The %s buff greatly increases your item pickup range, collecting nearby "
 "items for you while the buff is active."
-msgstr ""
+msgstr "%s增益可大幅增加你的拾取范围，为你自动收集周边的物品。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:11
 msgid "Magnet"
@@ -2980,12 +3026,13 @@ msgid ""
 "health you can have before health starts to rot, and reduces health rot "
 "speed until the buff expires."
 msgstr ""
+"%s增益生效期间，生命恢复速度提升、最大稳定生命值提升、生命自然衰减速度降低。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:29
 msgid ""
 "It also gives you a chance to survive a fatal hit, with a small amount of "
 "health left over."
-msgstr ""
+msgstr "此增益也有概率减免致命伤害，玩家可残血幸存。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qh:16
 msgid "Medic"
@@ -2994,11 +3041,11 @@ msgstr "治愈"
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:14
 #, c-format
 msgid "The %s buff greatly reduces your damage taken while the buff is active."
-msgstr ""
+msgstr "%s增益生效期间，你受到的伤害大幅降低。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
 msgid "This also impacts the damage you deal to yourself."
-msgstr ""
+msgstr "此效果也影响对自己造成的伤害。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qh:12
 msgid "Resistance"
@@ -3008,19 +3055,20 @@ msgstr "抗性"
 #, c-format
 msgid ""
 "The %s buff allows you to press %s to switch places with a nearby enemy once."
-msgstr ""
+msgstr "%s增益下可以按%s键与附近的敌人互换一次位置。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:88
 msgid ""
 "A common usage of this buff is to jump over the map's void, then swap with "
 "an enemy, to cause them to fall into the void."
 msgstr ""
+"此增益通常的用法是纵身跳入虚空并激活，这样可与敌人互换位置，让他们掉下去。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:89
 msgid ""
 "The range that the buff works over is limited, so sometimes it may do "
 "nothing if there are no enemies nearby."
-msgstr ""
+msgstr "此增益的作用范围有限，范围内没有敌人时按键无用。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qh:10
 msgid "Swapper"
@@ -3031,13 +3079,13 @@ msgstr "位置交换"
 msgid ""
 "The %s buff converts some of the damage you deal to enemies and monsters "
 "into health for yourself, until the buff expires."
-msgstr ""
+msgstr "%s增益生效期间，你对敌人和怪物造成伤害的一部分会转为自己的生命值。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:29
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
 #, c-format
 msgid "In some sense, this is the opposite of the %s buff."
-msgstr ""
+msgstr "某种意义上，这是反面的%s增益。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
 #: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:307
@@ -3050,7 +3098,7 @@ msgstr "吸血"
 msgid ""
 "The %s buff reciprocates a portion of the damage enemies deal to you onto "
 "them, until the buff expires."
-msgstr ""
+msgstr "%s增益生效期间，自己受到伤害时，会把部分伤害还给敌人。"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qh:13
 msgid "Vengeance"
@@ -3067,6 +3115,8 @@ msgid ""
 "The %s mutator makes all players nearly invisible, similar to the %s "
 "powerup. This adds an extra layer of stealth and strategy to gameplay."
 msgstr ""
+"%s修改使所有玩家近乎隐身，与%s超能物品相似。这为游戏增添了一层隐蔽性与战术"
+"性。"
 
 #: qcsrc/common/mutators/mutator/cloaked/cloaked.qh:5 qcsrc/common/util.qc:303
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
@@ -4011,7 +4061,7 @@ msgstr "掉落的钥匙"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:53
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 msgid "Key carrier"
-msgstr "钥匙携带者"
+msgstr "持钥人"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:50
 msgid "Run here"
@@ -4482,22 +4532,22 @@ msgstr "^BG%s^K1 熔成了碎渣%s%s"
 #: qcsrc/common/notifications/all.inc:318
 #, c-format
 msgid "^BG%s^K1 was exploded by a Mage%s%s"
-msgstr "^BG%s^K1 被魔法师引爆了%s%s"
+msgstr "^BG%s^K1 被纳米法师引爆了%s%s"
 
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
-msgstr "^BG%s^K1 的内脏被钢铁巨人变成了外脏%s%s"
+msgstr "^BG%s^K1 的内脏被钢铁石巨人变成了外脏%s%s"
 
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
 msgid "^BG%s^K1 was smashed by a Golem%s%s"
-msgstr "^BG%s^K1 被钢铁巨人碾碎了%s%s"
+msgstr "^BG%s^K1 被钢铁石巨人碾碎了%s%s"
 
 #: qcsrc/common/notifications/all.inc:321
 #, c-format
 msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
-msgstr "^BG%s^K1 被钢铁巨人电击而亡%s%s"
+msgstr "^BG%s^K1 被钢铁石巨人电击而亡%s%s"
 
 #: qcsrc/common/notifications/all.inc:322
 #, c-format
@@ -4987,12 +5037,12 @@ msgstr "^F2因为你是旁观者、而服务器此时不允许旁观，你被踢
 #: qcsrc/common/notifications/all.inc:433
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr "^BG%s^F3 因为杀死太多队友而被踢出"
+msgstr "^BG%s^F3 因为击杀太多队友而被踢出"
 
 #: qcsrc/common/notifications/all.inc:434
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
-msgstr "^BG%s^F3 因为杀死太多队友而被转为观察者"
+msgstr "^BG%s^F3 因为击杀太多队友而被转为观察者"
 
 #: qcsrc/common/notifications/all.inc:435
 #, c-format
@@ -5090,12 +5140,12 @@ msgstr "^BG%s^K1 拿到了超级武器"
 #: qcsrc/common/notifications/all.inc:458
 #: qcsrc/common/notifications/all.inc:809
 msgid "^K1Hunters^BG win the round"
-msgstr "^K1狩猎者^BG赢得此局！"
+msgstr "^K1猎手^BG赢得此局！"
 
 #: qcsrc/common/notifications/all.inc:459
 #: qcsrc/common/notifications/all.inc:811
 msgid "^F1Survivors^BG win the round"
-msgstr "^F1生存者^BG赢得此局！"
+msgstr "^F1幸存者^BG赢得此局！"
 
 #: qcsrc/common/notifications/all.inc:461
 #: qcsrc/common/notifications/all.inc:817
@@ -5673,7 +5723,7 @@ msgstr "^BG僵局！敌人现在能在雷达上看到持旗者！"
 #: qcsrc/common/notifications/all.inc:611
 #, c-format
 msgid "^K3%sYou fragged ^BG%s"
-msgstr "^K3%s你杀死了 ^BG%s"
+msgstr "^K3%s你击杀了 ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:612
 #: qcsrc/common/notifications/all.inc:621
@@ -5685,7 +5735,7 @@ msgstr "^K3%s^BG%s^K3 让你得分^BG"
 #: qcsrc/common/notifications/all.inc:613
 #, c-format
 msgid "^K1%sYou were fragged by ^BG%s"
-msgstr "^K1%s你被 ^BG%s^K1 杀死了^BG"
+msgstr "^K1%s你被 ^BG%s^K1 击杀^BG"
 
 #: qcsrc/common/notifications/all.inc:614
 #: qcsrc/common/notifications/all.inc:623
@@ -5717,7 +5767,7 @@ msgstr "^K1%s你被 ^BG%s^K1 冻结了^BG"
 #: qcsrc/common/notifications/all.inc:638
 #, c-format
 msgid "^K1%sYou typefragged ^BG%s"
-msgstr "^K1%s你杀死了正在打字的 ^BG%s"
+msgstr "^K1%s你击杀了正在打字的 ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:639
 #, c-format
@@ -5727,7 +5777,7 @@ msgstr "^K1%s^BG%s^K1 在打字时让你得分"
 #: qcsrc/common/notifications/all.inc:640
 #, c-format
 msgid "^K1%sYou were typefragged by ^BG%s"
-msgstr "^K1%s正在打字的你被 ^BG%s^K1 杀死了"
+msgstr "^K1%s正在打字的你被 ^BG%s^K1 击杀"
 
 #: qcsrc/common/notifications/all.inc:641
 #, c-format
@@ -5938,7 +5988,7 @@ msgstr "^K1叛徒！你背叛了队友 ^BG%s"
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr "^K1叛徒！你杀死了队友 ^BG%s"
+msgstr "^K1叛徒！你击杀了队友 ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
@@ -5948,7 +5998,7 @@ msgstr "^K1你被队友 ^BG%s^K1 背叛"
 #: qcsrc/common/notifications/all.inc:686
 #, c-format
 msgid "^K1You were team killed by ^BG%s"
-msgstr "^K1你被队友 ^BG%s^K1 杀死了"
+msgstr "^K1你被队友 ^BG%s^K1 击杀"
 
 #: qcsrc/common/notifications/all.inc:688
 msgid ""
@@ -6368,11 +6418,11 @@ msgstr "^F2你现在拥有一把超级武器"
 msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
-msgstr "^BG你是^K1狩猎者^BG！消灭生存者，但不要引起怀疑！"
+msgstr "^BG你是^K1猎手^BG！消灭幸存者，但不要引起怀疑！"
 
 #: qcsrc/common/notifications/all.inc:810
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
-msgstr "^BG你是^F1生存者^BG！辨识并消灭狩猎者！"
+msgstr "^BG你是^F1幸存者^BG！辨识并消灭猎手！"
 
 #: qcsrc/common/notifications/all.inc:813
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -10221,7 +10271,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
 msgid "Players will drop all weapons they possessed when they are killed"
-msgstr "在玩家被杀死时会掉落他所捡起过的所有武器"
+msgstr "在玩家被击杀时会掉落他所捡起过的所有武器"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:165
 msgid "Weapons stay after they are picked up"
@@ -10264,8 +10314,8 @@ msgid ""
 "seconds to find some or if they fail to do so, face death. The secondary "
 "fire mode does not inflict any damage but is good for doing trickjumps."
 msgstr ""
-"每位玩家只拥有一把武器，它可以一击秒杀敌人。当玩家耗尽弹药时，需要在 10 秒内"
-"找到一些弹药；如果没有找到，迎接死亡。副火力不造成伤害，可以用来弹射走位。"
+"玩家只拥有一把武器，它可以一击秒杀敌人。当玩家耗尽弹药时，需要在 10 秒内找到"
+"一些弹药；如果没有找到，迎接死亡。副火力不造成伤害，可以用来弹射走位。"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:214
 msgid ""
@@ -10897,7 +10947,7 @@ msgstr "自动嘲讽："
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:178
 msgid "Automatically taunt enemies after fragging them"
-msgstr "杀死敌人后自动嘲讽他们"
+msgstr "击杀敌人后自动嘲讽他们"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:180
 msgid "Sometimes"

@@ -27,8 +27,8 @@ bg    "Bulgarian" "Български" 55%
 ru    "Russian" "Русский" 87%
 sr    "Serbian" "Српски" 47%
 uk    "Ukrainian" "Українська" 46%
-zh_TW "Chinese (Taiwan)" "中文（正體字）" 89%
-zh_CN "Chinese (China)" "中文（简体字）" 89%
-zh_HK "Chinese (Hong Kong)" "中文（香港字）" 89%
+zh_TW "Chinese (Taiwan)" "中文（正體字）" 92%
+zh_CN "Chinese (China)" "中文（简体字）" 92%
+zh_HK "Chinese (Hong Kong)" "中文（香港字）" 92%
 ja_JP "Japanese" "日本語" 78%
 ko    "Korean" "한국의" 28%
