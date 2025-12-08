@@ -54,7 +54,6 @@
 	CSQCMODEL_PROPERTY(BIT(3), int, ReadByte, WriteByte, move_movetype) \
 	CSQCMODEL_PROPERTY_SCALED(BIT(3), float, ReadByte, WriteByte, ALPHA, 254, -1, 254) /* NOTE: update the use of this in cl_model.qc if you change the bitflag number! */ \
 	CSQCMODEL_PROPERTY(BIT(3), float, ReadByte, WriteByte, solid) \
-	CSQCMODEL_PROPERTY(BIT(4), int, ReadByte, WriteByte, multijump_count) \
 	CSQCMODEL_PROPERTY(BIT(4), int, ReadByte, WriteByte, clipgroup) \
 	CSQCMODEL_PROPERTY(BIT(5), float, ReadApproxPastTime, WriteApproxPastTime, death_time) \
 	CSQCMODEL_IF(isplayer) \
