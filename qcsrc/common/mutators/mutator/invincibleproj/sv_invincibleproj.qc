@@ -1,7 +1,9 @@
 #include "sv_invincibleproj.qh"
 
+#include <common/mutators/mutator/melee_only/sv_melee_only.qh>
+
 string autocvar_g_invincible_projectiles;
-REGISTER_MUTATOR(invincibleprojectiles, expr_evaluate(autocvar_g_invincible_projectiles));
+REGISTER_MUTATOR(invincibleprojectiles, expr_evaluate(autocvar_g_invincible_projectiles) && !MUTATOR_IS_ENABLED(melee_only));
 
 MUTATOR_HOOKFUNCTION(invincibleprojectiles, EditProjectile)
 {

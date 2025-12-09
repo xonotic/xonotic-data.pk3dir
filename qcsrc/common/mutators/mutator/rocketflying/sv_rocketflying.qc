@@ -2,7 +2,7 @@
 
 string autocvar_g_rocket_flying;
 bool autocvar_g_rocket_flying_disabledelays = true;
-REGISTER_MUTATOR(rocketflying, expr_evaluate(autocvar_g_rocket_flying));
+REGISTER_MUTATOR(rocketflying, expr_evaluate(autocvar_g_rocket_flying) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok) && !MUTATOR_IS_ENABLED(melee_only));
 
 MUTATOR_HOOKFUNCTION(rocketflying, EditProjectile)
 {
