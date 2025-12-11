@@ -1,9 +1,7 @@
 #pragma once
 
-bool IsTeamAvailable(int team_num);
 int NumTeams(int teams);
 void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled);
 void ScoreRules_basics_end();
-void ScoreRules_generic();
 
-#define AVAILABLE_TEAMS teamplay
+#define AVAILABLE_TEAMS teamplay ///< Number of teams that exist currently.

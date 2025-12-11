@@ -74,7 +74,6 @@ int kh_Team_ByID(int t)
 }
 
 entity kh_controller;
-int kh_teams;
 int kh_interferemsg_team;
 float kh_interferemsg_time;
 .entity kh_next, kh_prev; // linked list
@@ -524,8 +523,8 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 {
 	// all key carriers get some points
 	entity key;
-	float score = (NumTeams(kh_teams) - 1) * autocvar_g_balance_keyhunt_score_capture;
-	DistributeEvenly_Init(score, NumTeams(kh_teams));
+	float score = (AVAILABLE_TEAMS - 1) * autocvar_g_balance_keyhunt_score_capture;
+	DistributeEvenly_Init(score, AVAILABLE_TEAMS);
 	// twice the score for 3 team games, three times the score for 4 team games!
 	// note: for a win by destroying the key, this should NOT be applied
 	FOR_EACH_KH_KEY(key)
@@ -570,12 +569,12 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 			firstorigin = thisorigin;
 		first = false;
 	}
-	if(NumTeams(kh_teams) > 2)
+	if(AVAILABLE_TEAMS > 2)
 	{
 		//te_lightning2(NULL, lastorigin, firstorigin); // TODO see above
 		Send_Effect(EFFECT_TR_NEXUIZPLASMA, lastorigin, firstorigin, 1);
 	}
-	midpoint = midpoint * (1 / NumTeams(kh_teams));
+	midpoint = midpoint * (1 / AVAILABLE_TEAMS);
 	te_customflash(midpoint, 1000, 1, Team_ColorRGB(winner_team) * 0.5 + '0.5 0.5 0.5');  // make the color >=0.5 in each component
 
 	play2all(SND(KH_CAPTURE));
@@ -632,8 +631,8 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 		int fragsleft = DistributeEvenly_Get(players);
 
 		// Now distribute these among all other teams...
-		int j = NumTeams(kh_teams) - 1;
-		for(int i = 0; i < NumTeams(kh_teams); ++i)
+		int j = AVAILABLE_TEAMS - 1;
+		for(int i = 0; i < AVAILABLE_TEAMS; ++i)
 		{
 			int thisteam = kh_Team_ByID(i);
 			if(thisteam == loser_team) // bad boy, no cookie - this WILL happen
@@ -787,7 +786,7 @@ int kh_Key_AllOwnedByWhichTeam()  // constantly called. check to see if all the 
 {
 	entity key;
 	int teem = -1;
-	int keys = NumTeams(kh_teams);
+	int keys = AVAILABLE_TEAMS;
 	FOR_EACH_KH_KEY(key)
 	{
 		if(!key.owner)
@@ -857,7 +856,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 int kh_GetMissingTeams()
 {
 	int missing_teams = 0;
-	for(int i = 0; i < NumTeams(kh_teams); ++i)
+	for(int i = 0; i < AVAILABLE_TEAMS; ++i)
 	{
 		int teem = kh_Team_ByID(i);
 		int players = 0;
@@ -922,7 +921,7 @@ void kh_StartRound()  // runs at the start of each round
 	Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_KEYHUNT);
 	Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_KEYHUNT_OTHER);
 
-	for(int i = 0; i < NumTeams(kh_teams); ++i)
+	for(int i = 0; i < AVAILABLE_TEAMS; ++i)
 	{
 		int teem = kh_Team_ByID(i);
 		int players = 0;
@@ -935,7 +934,7 @@ void kh_StartRound()  // runs at the start of each round
 					my_player = it;
 			}
 		});
-		kh_Key_Spawn(my_player, 360 * i / NumTeams(kh_teams), i);
+		kh_Key_Spawn(my_player, 360 * i / AVAILABLE_TEAMS, i);
 	}
 
 	kh_tracking_enabled = false;
@@ -974,7 +973,7 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 void kh_Initialize()  // sets up th KH environment
 {
 	// setup variables
-	kh_teams = autocvar_g_keyhunt_teams_override;
+	int kh_teams = autocvar_g_keyhunt_teams_override;
 	if(kh_teams < 2)
 		kh_teams = cvar("g_keyhunt_teams"); // read the cvar directly as it gets written earlier in the same frame
 	kh_teams = BITS(bound(2, kh_teams, 4));
@@ -1303,12 +1302,6 @@ MUTATOR_HOOKFUNCTION(kh, GiveFragsForKill, CBC_ORDER_FIRST)
 MUTATOR_HOOKFUNCTION(kh, MatchEnd)
 {
 	kh_finalize();
-}
-
-MUTATOR_HOOKFUNCTION(kh, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
-{
-	M_ARGV(0, float) = kh_teams;
-	return true;
 }
 
 MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)
