@@ -1,116 +1,111 @@
 #include "all.qh"
 
-const int EFF_NET_VELOCITY = BIT(0);
-const int EFF_NET_COLOR_MIN = BIT(1);
-const int EFF_NET_COLOR_MAX = BIT(2);
-const int EFF_NET_COLOR_SAME = BIT(3); // optimisation bit for sending only one color
-
 REGISTER_NET_TEMP(net_effect)
+const int SF_EFF_VELOCITY    = BIT(0);
+const int SF_EFF_COLOR_MIN   = BIT(1);
+const int SF_EFF_COLOR_MAX   = BIT(2);
+const int SF_EFF_COLOR_SAME  = BIT(3); ///< optimization bit for sending only one color if min & max match
+
 #ifdef CSQC
 NET_HANDLE(net_effect, bool isNew)
 {
+	int sf = ReadByte();
 	entity eff = ReadRegistered(Effects);
 
-	vector vel = '0 0 0';
-	int eff_flags = 0;
-	bool eff_trail = eff.eent_eff_trail;
-	vector v = ReadVector();
-	int extraflags = ReadByte();
+	vector vel, org = ReadVector();
 
-	particles_colormin = particles_colormax = '0 0 0';
-
-	if(extraflags & EFF_NET_VELOCITY)
+	if (sf & SF_EFF_VELOCITY)
 		vel = ReadVector();
+	else
+		vel = '0 0 0';
 
-	if(extraflags & EFF_NET_COLOR_MIN)
+	int eff_flags = 0;
+	if (sf & SF_EFF_COLOR_MIN)
 	{
 		particles_colormin.x = ReadByte() / 16;
 		particles_colormin.y = ReadByte() / 16;
 		particles_colormin.z = ReadByte() / 16;
 		eff_flags |= PARTICLES_USECOLOR;
 	}
-
-	if(extraflags & EFF_NET_COLOR_MAX)
+	if (sf & SF_EFF_COLOR_MAX)
 	{
 		particles_colormax.x = ReadByte() / 16;
 		particles_colormax.y = ReadByte() / 16;
 		particles_colormax.z = ReadByte() / 16;
 		eff_flags |= PARTICLES_USECOLOR;
 	}
-	else if(extraflags & EFF_NET_COLOR_SAME)
+	else if (sf & SF_EFF_COLOR_SAME)
 		particles_colormax = particles_colormin;
 
-	if(eff_trail)
-		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(eff), v, vel, 1, eff_flags);
+	if (eff.eent_eff_trail)
+		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(eff), org, vel, 1, eff_flags);
 	else
-		boxparticles(particleeffectnum(eff), NULL, v, v, vel, vel, ReadByte(), eff_flags);
+		boxparticles(particleeffectnum(eff), NULL, org, org, vel, vel, ReadByte(), eff_flags);
 	return true;
 }
-#endif
+#endif // CSQC
 
 #ifdef SVQC
-bool Net_Write_Effect(entity this, entity client, int sf)
-{
-	int channel = MSG_ONE;
-	msg_entity = client;
-	WriteHeader(channel, net_effect);
-	WriteRegistered(Effects, channel, this);
-	WriteVector(channel, this.eent_net_location);
-
-	int extraflags = 0;
-	if(this.eent_net_velocity != '0 0 0')
-		extraflags |= EFF_NET_VELOCITY;
-	if(this.eent_net_color_min != '0 0 0')
-		extraflags |= EFF_NET_COLOR_MIN;
-	// optimisation: only send one color if the min and max match
-	if(this.eent_net_color_min != '0 0 0' && this.eent_net_color_min == this.eent_net_color_max)
-		extraflags |= EFF_NET_COLOR_SAME;
-	else if(this.eent_net_color_max != '0 0 0')
-		extraflags |= EFF_NET_COLOR_MAX;
-
-	WriteByte(channel, extraflags);
-
-	// attempt to save a tiny bit more bandwidth by not sending velocity if it isn't set
-	if(extraflags & EFF_NET_VELOCITY)
-		WriteVector(channel, this.eent_net_velocity);
-
-	if(extraflags & EFF_NET_COLOR_MIN)
-	{
-		vector col = this.eent_net_color_min;
-		WriteByte(channel, rint(bound(0, 16 * col.x, 255)));
-		WriteByte(channel, rint(bound(0, 16 * col.y, 255)));
-		WriteByte(channel, rint(bound(0, 16 * col.z, 255)));
-	}
-
-	if(extraflags & EFF_NET_COLOR_MAX)
-	{
-		vector col = this.eent_net_color_max;
-		WriteByte(channel, rint(bound(0, 16 * col.x, 255)));
-		WriteByte(channel, rint(bound(0, 16 * col.y, 255)));
-		WriteByte(channel, rint(bound(0, 16 * col.z, 255)));
-	}
-
-	if(!this.eent_eff_trail) { WriteByte(channel, this.eent_net_count); }
-	return true;
-}
-
 void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt, vector eff_col_min, vector eff_col_max, entity ignore)
 {
-	if(!eff) { return; }
-	if(!eff.eent_eff_trail && !eff_cnt) { return; } // effect has no count!
-	entity net_eff = new_pure(net_effect);
-	net_eff.owner = eff;
-	//net_eff.eent_broadcast = broadcast;
-	net_eff.m_id = eff.m_id;
-	net_eff.eent_net_velocity = eff_vel;
-	net_eff.eent_net_location = eff_loc;
-	net_eff.eent_net_count = eff_cnt;
-	net_eff.eent_eff_trail = eff.eent_eff_trail;
-	net_eff.eent_net_color_min = eff_col_min;
-	net_eff.eent_net_color_max = eff_col_max;
+	if (!eff)
+		return;
+	if (!eff.eent_eff_trail && !eff_cnt)
+		return; // effect has no count!
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != ignore && !(IS_SPEC(it) && it.enemy && it.enemy == ignore), Net_Write_Effect(net_eff, it, 0));
-	delete(net_eff);
+	int sf = 0;
+	if (eff_vel != '0 0 0')
+		sf |= SF_EFF_VELOCITY;
+
+	if (eff_col_min != '0 0 0')
+	{
+		sf |= SF_EFF_COLOR_MIN;
+		eff_col_min.x = rint(bound(0, 16 * eff_col_min.x, BITS(8)));
+		eff_col_min.y = rint(bound(0, 16 * eff_col_min.y, BITS(8)));
+		eff_col_min.z = rint(bound(0, 16 * eff_col_min.z, BITS(8)));
+	}
+	if (eff_col_max != '0 0 0')
+	{
+		if (eff_col_min == eff_col_max)
+			sf |= SF_EFF_COLOR_SAME; // optimization: only send one color if the min and max match
+		else
+		{
+			sf |= SF_EFF_COLOR_MAX;
+			eff_col_max.x = rint(bound(0, 16 * eff_col_max.x, BITS(8)));
+			eff_col_max.y = rint(bound(0, 16 * eff_col_max.y, BITS(8)));
+			eff_col_max.z = rint(bound(0, 16 * eff_col_max.z, BITS(8)));
+		}
+	}
+
+	// now network to every client
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != ignore && !(IS_SPEC(it) && it.enemy && it.enemy == ignore),
+	{
+		msg_entity = it;
+		WriteHeader(MSG_ONE, net_effect);
+		WriteByte(MSG_ONE, sf);
+		WriteRegistered(Effects, MSG_ONE, eff);
+		WriteVector(MSG_ONE, eff_loc);
+
+		// attempt to save a tiny bit more bandwidth by not sending velocity if it isn't set
+		if (sf & SF_EFF_VELOCITY)
+			WriteVector(MSG_ONE, eff_vel);
+
+		if (sf & SF_EFF_COLOR_MIN)
+		{
+			WriteByte(MSG_ONE, eff_col_min.x);
+			WriteByte(MSG_ONE, eff_col_min.y);
+			WriteByte(MSG_ONE, eff_col_min.z);
+		}
+		if (sf & SF_EFF_COLOR_MAX)
+		{
+			WriteByte(MSG_ONE, eff_col_max.x);
+			WriteByte(MSG_ONE, eff_col_max.y);
+			WriteByte(MSG_ONE, eff_col_max.z);
+		}
+
+		if (!eff.eent_eff_trail)
+			WriteByte(MSG_ONE, eff_cnt);
+	});
 }
 
 void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
@@ -121,7 +116,8 @@ void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 {
 	// problem with this is, we might not have all the available effects for it
-	FOREACH(Effects, it.eent_eff_name == eff_name, {
+	FOREACH(Effects, it.eent_eff_name == eff_name,
+	{
 		Send_Effect(it, eff_loc, eff_vel, eff_cnt);
 		return;
 	});
