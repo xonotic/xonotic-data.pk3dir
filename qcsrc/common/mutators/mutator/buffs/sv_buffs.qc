@@ -106,7 +106,7 @@ void buff_Effect(entity player, entity eff, vector eff_loc, vector eff_vel, int 
 		return;
 
 	if (hide)
-		Send_Effect_Except(eff, eff_loc, eff_vel, eff_cnt, '0 0 0', '0 0 0', player);
+		Send_Effect_Core(eff, eff_loc, eff_vel, eff_cnt, '0 0 0', '0 0 0', -1, -1, -1, player);
 	else
 		Send_Effect(eff, eff_loc, eff_vel, eff_cnt);
 	player.buff_effect_delay = time + 0.05; // prevent spam

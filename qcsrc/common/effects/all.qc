@@ -4,6 +4,9 @@ const int EFF_NET_VELOCITY    = BIT(0);
 const int EFF_NET_COLOR_MIN   = BIT(1);
 const int EFF_NET_COLOR_MAX   = BIT(2);
 const int EFF_NET_COLOR_SAME  = BIT(3); // optimization bit for sending only one color
+const int EFF_NET_ALPHA_MIN   = BIT(4);
+const int EFF_NET_ALPHA_MAX   = BIT(5);
+const int EFF_NET_FADE        = BIT(6);
 
 REGISTER_NET_TEMP(net_effect)
 #ifdef CSQC
@@ -43,6 +46,22 @@ NET_HANDLE(net_effect, bool isNew)
 	else
 		particles_colormax = '0 0 0';
 
+	if (extraflags & EFF_NET_ALPHA_MIN)
+	{
+		particles_alphamin = ReadByte() / 255;
+		eff_flags |= PARTICLES_USEALPHA;
+	}
+	if (extraflags & EFF_NET_ALPHA_MAX)
+	{
+		particles_alphamax = ReadByte() / 255;
+		eff_flags |= PARTICLES_USEALPHA;
+	}
+	if (extraflags & EFF_NET_FADE)
+	{
+		particles_fade = ReadByte() / 255;
+		eff_flags |= PARTICLES_USEFADE;
+	}
+
 	if (eff_trail)
 		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(eff), v, vel, 1, eff_flags);
 	else
@@ -52,7 +71,7 @@ NET_HANDLE(net_effect, bool isNew)
 #endif
 
 #ifdef SVQC
-void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt, vector eff_col_min, vector eff_col_max, entity ignore)
+void Send_Effect_Core(entity eff, vector eff_loc, vector eff_vel, int eff_cnt, vector eff_col_min, vector eff_col_max, float eff_alpha_min, float eff_alpha_max, float eff_alpha_fade, entity ignore)
 {
 	if (!eff)
 		return;
@@ -63,25 +82,38 @@ void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt,
 	if (eff_vel != '0 0 0')
 		eff_flags |= EFF_NET_VELOCITY;
 	if (eff_col_min != '0 0 0')
-		eff_flags |= EFF_NET_COLOR_MIN;
-	// optimization: only send one color if the min and max match
-	if (eff_col_min != '0 0 0' && eff_col_min == eff_col_max)
-		eff_flags |= EFF_NET_COLOR_SAME;
-	else if (eff_col_max != '0 0 0')
-		eff_flags |= EFF_NET_COLOR_MAX;
-
-	if (eff_flags & EFF_NET_COLOR_MIN) // only rint & bound once, not for each client
 	{
+		eff_flags |= EFF_NET_COLOR_MIN;
 		eff_col_min.x = rint(bound(0, 16 * eff_col_min.x, 255));
 		eff_col_min.y = rint(bound(0, 16 * eff_col_min.y, 255));
 		eff_col_min.z = rint(bound(0, 16 * eff_col_min.z, 255));
 	}
-	if (eff_flags & EFF_NET_COLOR_MAX) // ...
+	// optimization: only send one color if the min and max match
+	if (eff_col_min != '0 0 0' && eff_col_min == eff_col_max)
+		eff_flags |= EFF_NET_COLOR_SAME;
+	else if (eff_col_max != '0 0 0')
 	{
+		eff_flags |= EFF_NET_COLOR_MAX;
 		eff_col_max.x = rint(bound(0, 16 * eff_col_max.x, 255));
 		eff_col_max.y = rint(bound(0, 16 * eff_col_max.y, 255));
 		eff_col_max.z = rint(bound(0, 16 * eff_col_max.z, 255));
 	}
+	if (eff_alpha_min >= 0)
+	{
+		eff_flags |= EFF_NET_ALPHA_MIN;
+		eff_alpha_min = rint(bound(0, eff_alpha_min, 1) * 255);
+	}
+	if (eff_alpha_max >= 0)
+	{
+		eff_flags |= EFF_NET_ALPHA_MAX;
+		eff_alpha_max = rint(bound(0, eff_alpha_max, 1) * 255);
+	}
+	if (eff_alpha_fade >= 0)
+	{
+		eff_flags |= EFF_NET_FADE;
+		eff_alpha_fade = rint(bound(0, eff_alpha_fade, 1) * 255);
+	}
+	// we only rint & bound once, not for each client
 
 	// now network to every client
 	int channel = MSG_ONE;
@@ -113,6 +145,13 @@ void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt,
 			WriteByte(channel, eff_col_max.z);
 		}
 
+		if (eff_flags & EFF_NET_ALPHA_MIN)
+			WriteByte(channel, eff_alpha_min);
+		if (eff_flags & EFF_NET_ALPHA_MAX)
+			WriteByte(channel, eff_alpha_max);
+		if (eff_flags & EFF_NET_FADE)
+			WriteByte(channel, eff_alpha_fade);
+
 		if (!eff.eent_eff_trail)
 			WriteByte(channel, eff_cnt);
 	});
@@ -120,7 +159,7 @@ void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt,
 
 void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 {
-	Send_Effect_Except(eff, eff_loc, eff_vel, eff_cnt, '0 0 0', '0 0 0', NULL);
+	Send_Effect_Core(eff, eff_loc, eff_vel, eff_cnt, '0 0 0', '0 0 0', -1, -1, -1, NULL);
 }
 
 void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
