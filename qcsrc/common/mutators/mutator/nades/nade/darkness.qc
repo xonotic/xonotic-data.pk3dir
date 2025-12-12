@@ -16,13 +16,13 @@ void nade_darkness_think(entity this)
 		{
 			vector expcol_min = nades_PlayerColor(this.realowner, false);
 			vector expcol_max = nades_PlayerColor(this.realowner, true);
-			Send_Effect_Except(EFFECT_NADE_EXPLODE, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
+			Send_Effect_Core(EFFECT_NADE_EXPLODE, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, -1, -1, -1, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			nade_normal_boom(this);
 		}
 		else
-			Send_Effect_Except(EFFECT_SPAWN, this.origin + '0 0 1', '0 0 0', 1, '0.5 0 0.5', '0.5 0 0.5', NULL);
+			Send_Effect_Core(EFFECT_SPAWN, this.origin + '0 0 1', '0 0 0', 1, '0.5 0 0.5', '0.5 0 0.5', -1, -1, -1, NULL);
 
 		delete(this);
 		return;

@@ -5,6 +5,10 @@ const int SF_EFF_VELOCITY    = BIT(0);
 const int SF_EFF_COLOR_MIN   = BIT(1);
 const int SF_EFF_COLOR_MAX   = BIT(2);
 const int SF_EFF_COLOR_SAME  = BIT(3); ///< optimization bit for sending only one color if min & max match
+const int SF_EFF_ALPHA_MIN   = BIT(4);
+const int SF_EFF_ALPHA_MAX   = BIT(5);
+const int SF_EFF_ALPHA_SAME  = BIT(6); ///< optimization bit for sending only one alpha if min & max match
+const int SF_EFF_FADE        = BIT(7);
 
 #ifdef CSQC
 NET_HANDLE(net_effect, bool isNew)
@@ -37,6 +41,24 @@ NET_HANDLE(net_effect, bool isNew)
 	else if (sf & SF_EFF_COLOR_SAME)
 		particles_colormax = particles_colormin;
 
+	if (sf & SF_EFF_ALPHA_MIN)
+	{
+		particles_alphamin = ReadByte() / BITS(8);
+		eff_flags |= PARTICLES_USEALPHA;
+	}
+	if (sf & SF_EFF_ALPHA_MAX)
+	{
+		particles_alphamax = ReadByte() / BITS(8);
+		eff_flags |= PARTICLES_USEALPHA;
+	}
+	else if (sf & SF_EFF_ALPHA_SAME)
+		particles_alphamax = particles_alphamin;
+	if (sf & SF_EFF_FADE)
+	{
+		particles_fade = ReadByte() / BITS(8);
+		eff_flags |= PARTICLES_USEFADE;
+	}
+
 	if (eff.eent_eff_trail)
 		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(eff), org, vel, 1, eff_flags);
 	else
@@ -46,7 +68,7 @@ NET_HANDLE(net_effect, bool isNew)
 #endif // CSQC
 
 #ifdef SVQC
-void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt, vector eff_col_min, vector eff_col_max, entity ignore)
+void Send_Effect_Core(entity eff, vector eff_loc, vector eff_vel, int eff_cnt, vector eff_col_min, vector eff_col_max, float eff_alpha_min, float eff_alpha_max, float eff_alpha_fade, entity ignore)
 {
 	if (!eff)
 		return;
@@ -77,6 +99,27 @@ void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt,
 		}
 	}
 
+	if (eff_alpha_min >= 0)
+	{
+		sf |= SF_EFF_ALPHA_MIN;
+		eff_alpha_min = rint(bound(0, eff_alpha_min, 1) * BITS(8));
+	}
+	if (eff_alpha_max >= 0)
+	{
+		if (eff_alpha_min == eff_alpha_max)
+			sf |= SF_EFF_ALPHA_SAME; // optimization: only send one alpha if the min and max match
+		else
+		{
+			sf |= SF_EFF_ALPHA_MAX;
+			eff_alpha_max = rint(bound(0, eff_alpha_max, 1) * BITS(8));
+		}
+	}
+	if (eff_alpha_fade >= 0)
+	{
+		sf |= SF_EFF_FADE;
+		eff_alpha_fade = rint(bound(0, eff_alpha_max, 1) * BITS(8));
+	}
+
 	// now network to every client
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != ignore && !(IS_SPEC(it) && it.enemy && it.enemy == ignore),
 	{
@@ -103,6 +146,13 @@ void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt,
 			WriteByte(MSG_ONE, eff_col_max.z);
 		}
 
+		if (sf & SF_EFF_ALPHA_MIN)
+			WriteByte(MSG_ONE, eff_alpha_min);
+		if (sf & SF_EFF_ALPHA_MAX)
+			WriteByte(MSG_ONE, eff_alpha_max);
+		if (sf & SF_EFF_FADE)
+			WriteByte(MSG_ONE, eff_alpha_fade);
+
 		if (!eff.eent_eff_trail)
 			WriteByte(MSG_ONE, eff_cnt);
 	});
@@ -110,7 +160,7 @@ void Send_Effect_Except(entity eff, vector eff_loc, vector eff_vel, int eff_cnt,
 
 void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 {
-	Send_Effect_Except(eff, eff_loc, eff_vel, eff_cnt, '0 0 0', '0 0 0', NULL);
+	Send_Effect_Core(eff, eff_loc, eff_vel, eff_cnt, '0 0 0', '0 0 0', -1, -1, -1, NULL);
 }
 
 void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)

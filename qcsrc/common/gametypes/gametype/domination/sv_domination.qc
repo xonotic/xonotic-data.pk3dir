@@ -109,7 +109,7 @@ void dompoint_captured(entity this)
 	WaypointSprite_UpdateSprites(this.sprite, msg, WP_Null, WP_Null);
 
 	vector expcol = Team_ColorRGB(real_team);
-	Send_Effect_Except(EFFECT_DOM_CAPTURE, this.origin, '0 0 0', 1, expcol, expcol, NULL);
+	Send_Effect_Core(EFFECT_DOM_CAPTURE, this.origin, '0 0 0', 1, expcol, expcol, -1, -1, -1, NULL);
 
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	IL_EACH(g_dompoints, true,
