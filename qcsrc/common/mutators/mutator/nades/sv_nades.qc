@@ -138,7 +138,7 @@ void nade_boom(entity this)
 #undef SET_NADE_EFFECT
 
 	if (expef)
-		Send_Effect_Except(expef, findbetterlocation(this.origin, 8), '0 0 0', 1, expcol_min, expcol_max, NULL);
+		Send_Effect_Core(expef, findbetterlocation(this.origin, 8), '0 0 0', 1, expcol_min, expcol_max, -1, -1, -1, NULL);
 
 	sound(this, CH_SHOTS_SINGLE, SND_Null,          VOL_BASE, ATTEN_NORM);
 	sound(this, CH_SHOTS,        SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
