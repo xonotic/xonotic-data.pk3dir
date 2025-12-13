@@ -69,6 +69,9 @@ do
 	QCCFLAGS_WTFS+=("$flag")
 done
 
+# shellcheck disable=SC2206
+# Compliler flags cannot split harmfully. Splitting allows empty
+# strings to disappear instead of causing gmqcc arg parsing errors.
 declare -a QCCFLAGS=(
 	-std=gmqcc
 	# Without -O3, GMQCC thinks some variables are used uninitialized if the initialization is done inside an `if (1)` block
@@ -76,9 +79,9 @@ declare -a QCCFLAGS=(
 	# There doesn't appear to be any measurable increase in compile time
 	# and it allows us to get rid of some explicit initializations which are just useless noise.
 	-O3
-	"${QCCFLAGS_WERROR[@]}"
+	${QCCFLAGS_WERROR[@]}
 	-Wall
-	"${QCCFLAGS_WTFS[@]}"
+	${QCCFLAGS_WTFS[@]}
 	-futf8
 	-freturn-assignments
 	-frelaxed-switch
