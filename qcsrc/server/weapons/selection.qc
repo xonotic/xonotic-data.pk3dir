@@ -25,8 +25,8 @@ void Send_WeaponComplain(entity e, float wpn, float type)
 
 void Weapon_whereis(Weapon this, entity cl)
 {
-	if (!autocvar_g_showweaponspawns) return;
-	IL_EACH(g_items, it.weapon == this.m_id && (!it.team || (it.ItemStatus & ITS_AVAILABLE)),
+	if (!autocvar_g_showweaponspawns || this.spawnflags & WEP_FLAG_HIDDEN) return;
+	IL_EACH(g_items, it.weapon == this.m_id && it.model,
 	{
 		if (ITEM_IS_LOOT(it) && (autocvar_g_showweaponspawns < 2))
 		{

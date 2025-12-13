@@ -1051,31 +1051,6 @@ void trigger_race_checkpoint_verify(entity this)
 			});
 		}
 	}
-
-	if (defrag_ents) { /* The following hack shall be removed when per-player trigger_multiple.wait is implemented for cts */
-		for (entity trigger = NULL; (trigger = find(trigger, classname, "trigger_multiple")); ) {
-			for (entity targ = NULL; (targ = find(targ, targetname, trigger.target)); ) {
-				if (targ.classname == "target_checkpoint" || targ.classname == "target_startTimer" || targ.classname == "target_stopTimer") {
-					trigger.wait = 0;
-					trigger.delay = 0;
-					targ.wait = 0;
-					targ.delay = 0;
-
-                    // These just make the game crash on some maps with oddly shaped triggers.
-                    // (on the other hand they used to fix the case when two players ran through a checkpoint at once,
-                    // and often one of them just passed through without being registered. Hope it's fixed  in a better way now.
-                    // (happened on item triggers too)
-                    //
-					//targ.wait = -2;
-					//targ.delay = 0;
-
-					//setsize(targ, trigger.mins, trigger.maxs);
-					//setorigin(targ, trigger.origin);
-					//remove(trigger);
-				}
-            }
-        }
-	}
 }
 
 vector trigger_race_checkpoint_spawn_evalfunc(entity this, entity player, entity spot, vector current)
