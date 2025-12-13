@@ -31,7 +31,7 @@ void HUD_ModIcons()
 			return;
 	}
 
-	if (mod_active || autocvar__hud_configure)
+	if (mod_active || (autocvar__hud_configure && !HUD_ModIcons_GameType))
 		mod_alpha = min(mod_alpha + frametime * 2, 1);
 	else
 		mod_alpha = max(mod_alpha - frametime * 2, 0);
@@ -56,7 +56,7 @@ void HUD_ModIcons()
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	if (autocvar__hud_configure)
+	if (autocvar__hud_configure && !HUD_ModIcons_GameType)
 		HUD_Mod_CTF(panel_pos, panel_size);
 	else
 		HUD_ModIcons_GameType(panel_pos, panel_size);

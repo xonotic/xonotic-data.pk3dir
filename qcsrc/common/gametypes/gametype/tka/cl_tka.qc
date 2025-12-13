@@ -41,6 +41,10 @@ void HUD_Mod_TeamKeepaway(vector pos, vector mySize)
 	if(tkaball_prevstatus && f < 1)
 		drawpic_aspect_skin_expanding(tkaball_pos, "keepawayball_carrying", tkaball_size, '1 1 1', panel_fg_alpha * tkaball_alpha, DRAWFLAG_NORMAL, f);
 
+	/* TODO: this only shows one icon, so information about the other balls is unknown.
+	 * to fix: stat_items needs to inform *which* ball is being carried (or multiple?)
+	 * ideally also network the total number of balls, or the status of each ball, so the HUD can be comprehensive
+	 */
 	if(stat_items & TKA_BALL_CARRYING) // TODO: unique team based icon while carrying
 		drawpic_aspect_skin(pos, "keepawayball_carrying", vec2(mySize.x, mySize.y), '1 1 1', panel_fg_alpha * tkaball_alpha * f, DRAWFLAG_NORMAL);
 	else if(stat_items & TKA_BALL_TAKEN_RED)
