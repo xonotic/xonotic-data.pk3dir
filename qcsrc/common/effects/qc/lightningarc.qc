@@ -63,7 +63,7 @@ void b_make(vector s,vector e, string t,float l,float z)
 		vector pos_l = from;
 		if (length > seglength)
 		{
-			for (int i = 1; i < steps; i += 1)
+			for (int i = 1; i < steps; ++i)
 			{
 				float drift = drifts * (1 - (i / steps)) + drifte * (i / steps);
 				vector dirnew = normalize(direction * (1 - drift) + randomvec() * drift);

@@ -12,7 +12,7 @@
 ERASEABLE
 float anglemods(float v)
 {
-	v = v - 360 * floor(v / 360);
+	v -= 360 * floor(v / 360);
 
 	if(v >= 180)
 		return v - 360;
@@ -76,7 +76,7 @@ vector angleofs3(vector from, vector ang, vector to)
 
 	v_res = normalize(to - from);
 	v_res = vectoangles(v_res);
-	v_res = v_res - ang;
+	v_res -= ang;
 
 	if (v_res_x < 0) 	v_res_x += 360;
 	if (v_res_x > 180) 	v_res_x -= 360;

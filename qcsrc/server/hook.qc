@@ -81,7 +81,7 @@ void GrapplingHook_Stop(entity this)
 bool GrapplingHookSend(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_HOOK);
-	sf = sf & 0x7F;
+	sf &= 0x7F;
 	if(sound_allowed(MSG_BROADCAST, this.realowner))
 		sf |= 0x80;
 	WriteByte(MSG_ENTITY, sf);
@@ -190,7 +190,7 @@ void GrapplingHookThink(entity this)
 				{
 					newlength = dist - ropestretch;
 					if(v * dir < 0) // only if not already moving in hook direction
-						v = v + frametime * dir * rubberforce_overstretch;
+						v += frametime * dir * rubberforce_overstretch;
 				}
 
 				this.hook_length = newlength;
@@ -207,8 +207,8 @@ void GrapplingHookThink(entity this)
 			{
 				// then pull the player
 				spd = bound(0, (dist - this.hook_length) / ropestretch, 1);
-				v = v * (1 - frametime * ropeairfriction);
-				v = v + frametime * dir * spd * rubberforce;
+				v *= 1 - frametime * ropeairfriction;
+				v += frametime * dir * spd * rubberforce;
 
 				vector dv = ((v - v0) * dir) * dir;
 				if(tarzan >= 2)
@@ -216,10 +216,10 @@ void GrapplingHookThink(entity this)
 					if(this.aiment.move_movetype == MOVETYPE_WALK || this.aiment.classname == "nade")
 					{
 						entity aim_ent = ((IS_VEHICLE(this.aiment) && this.aiment.owner) ? this.aiment.owner : this.aiment);
-						v = v - dv * 0.5;
+						v -= dv * 0.5;
 						if((frozen_pulling && target_isfrozen) || !frozen_pulling)
 						{
-							this.aiment.velocity = this.aiment.velocity - dv * 0.5;
+							this.aiment.velocity -= dv * 0.5;
 							UNSET_ONGROUND(this.aiment);
 							if(this.aiment.flags & FL_PROJECTILE)
 								UpdateCSQCProjectile(this.aiment);

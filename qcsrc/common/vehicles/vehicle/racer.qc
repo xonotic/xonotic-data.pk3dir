@@ -339,7 +339,7 @@ bool racer_frame(entity this, float dt)
 	if(time > vehic.delay)
 	if(PHYS_INPUT_BUTTON_ATCK2(player))
 	{
-		vehic.misc_bulletcounter += 1;
+		++vehic.misc_bulletcounter;
 		vehic.delay = time + 0.3;
 
 		if(vehic.misc_bulletcounter == 1)
@@ -503,7 +503,7 @@ void racer_blowup_think(entity this)
 void racer_deadtouch(entity this, entity toucher)
 {
 	this.avelocity_x *= 0.7;
-	this.cnt -= 1;
+	--this.cnt;
 	if(this.cnt <= 0)
 		racer_blowup(this);
 }

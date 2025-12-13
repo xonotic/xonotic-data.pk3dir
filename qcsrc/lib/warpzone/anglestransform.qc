@@ -77,9 +77,9 @@ vector AnglesTransform_Normalize(vector t, float minimize_roll)
 {
 	float need_flip;
 	// first, bring all angles in their range...
-	t.x = t.x - 360 * rint(t.x / 360);
-	t.y = t.y - 360 * rint(t.y / 360);
-	t.z = t.z - 360 * rint(t.z / 360);
+	t.x -= 360 * rint(t.x / 360);
+	t.y -= 360 * rint(t.y / 360);
+	t.z -= 360 * rint(t.z / 360);
 	if(minimize_roll)
 		need_flip = (t.z > 90 || t.z <= -90);
 	else

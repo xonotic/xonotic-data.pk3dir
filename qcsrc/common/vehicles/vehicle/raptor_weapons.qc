@@ -15,7 +15,7 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weapon
         vector org = w_shotorg;
         vector dir = w_shotdir;
         if (veh) {
-            veh.misc_bulletcounter += 1;
+            ++veh.misc_bulletcounter;
             org = (veh.misc_bulletcounter <= 2) ? gettaginfo(veh.gun1, gettagindex(veh.gun1, "fire1"))
               : (((veh.misc_bulletcounter >= 4) ? veh.misc_bulletcounter = 0 : 0), gettaginfo(veh.gun2, gettagindex(veh.gun2, "fire1")));
             dir = v_forward;

@@ -78,7 +78,7 @@ void PingPLReport_Think(entity this)
 		if(time > (CS(e).latency_time + LATENCY_THINKRATE))
 		{
 			CS(e).latency_sum += CS(e).ping;
-			CS(e).latency_cnt += 1;
+			++CS(e).latency_cnt;
 			CS(e).latency_time = time;
 			//print("sum: ", ftos(CS(e).latency_sum), ", cnt: ", ftos(CS(e).latency_cnt), ", avg: ", ftos(CS(e).latency_sum / CS(e).latency_cnt), ".\n");
 		}

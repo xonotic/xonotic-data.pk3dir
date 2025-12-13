@@ -195,7 +195,7 @@ int MaplistMethod_Iterate(void) // usual method
 		if(Map_Check(bufstr_get(maplist_buffer, mapindex), 1))
 			return mapindex;
 
-		attempts -= 1;
+		--attempts;
 		if(attempts <= 0)
 		{
 			LOG_DEBUG("MaplistMethod_Iterate: Couldn't find a suitable map, falling back to next valid");
@@ -268,7 +268,7 @@ int Maplist_Init(void)
 			{
 				if(!fexists(Map_Filename(it)))
 				{
-					trimmedmaps += 1;
+					++trimmedmaps;
 					continue;
 				}
 				newmaplist = cons(newmaplist, it);

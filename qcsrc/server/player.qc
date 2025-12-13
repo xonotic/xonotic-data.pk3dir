@@ -210,8 +210,8 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	// pause regeneration for 5 seconds
 	this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
-	this.dmg_save = this.dmg_save + save;//max(save - 10, 0);
-	this.dmg_take = this.dmg_take + take;//max(take - 10, 0);
+	this.dmg_save += save;//max(save - 10, 0);
+	this.dmg_take += take;//max(take - 10, 0);
 	this.dmg_inflictor = inflictor;
 
 	if (GetResource(this, RES_HEALTH) <= -autocvar_sv_gibhealth && this.alpha >= 0)
@@ -274,7 +274,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			if(f > 0)
 			{
 				hitloc = ear1;
-				force = force * -1;
+				force = -force;
 			}
 			else
 			{
@@ -397,8 +397,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		else
 			this.max_armorvalue += (save + take);
 	}
-	this.dmg_save = this.dmg_save + save;//max(save - 10, 0);
-	this.dmg_take = this.dmg_take + take;//max(take - 10, 0);
+	this.dmg_save += save;//max(save - 10, 0);
+	this.dmg_take += take;//max(take - 10, 0);
 	this.dmg_inflictor = inflictor;
 
 	bool abot = (IS_BOT_CLIENT(attacker));
@@ -492,7 +492,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// increment frag counter for used weapon type
 		Weapon w = DEATH_WEAPONOF(deathtype);
 		if(w != WEP_Null && accuracy_isgooddamage(attacker, this))
-			CS(attacker).accuracy.(accuracy_frags[w.m_id-1]) += 1;
+			++CS(attacker).accuracy.(accuracy_frags[w.m_id-1]);
 
 		this.respawn_time = 0;
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);

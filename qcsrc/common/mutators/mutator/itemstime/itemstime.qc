@@ -429,7 +429,7 @@ LABEL(iteration)
 		if (row >= rows)
 		{
 			row = 0;
-			column = column + 1;
+			++column;
 		}
 		if(id == REGISTRY_MAX(Items)) // can happen only in the last fake iteration
 			break;

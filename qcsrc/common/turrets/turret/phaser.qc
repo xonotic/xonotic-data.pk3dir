@@ -15,11 +15,11 @@ METHOD(PhaserTurret, tr_think, void(PhaserTurret thistur, entity it))
             if (it.tur_head.frame == 10)
                 it.tur_head.frame = 1;
             else
-                it.tur_head.frame = it.tur_head.frame +1;
+                ++it.tur_head.frame;
         }
         else if (it.fireflag == 2 )
         {
-            it.tur_head.frame = it.tur_head.frame +1;
+            ++it.tur_head.frame;
             if (it.tur_head.frame == 15)
             {
                 it.tur_head.frame = 0;

@@ -100,7 +100,7 @@ void g_clientmodel_dropbyspawnflags(entity this)
 
 bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 {
-	sf = sf & 0x0F;
+	sf &= 0x0F;
 	if(this.angles != '0 0 0')
 		sf |= 0x10;
 	if(this.mins != '0 0 0' || this.maxs != '0 0 0')

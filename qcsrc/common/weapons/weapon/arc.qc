@@ -117,7 +117,7 @@ void W_Arc_Bolt_Touch(entity this, entity toucher)
 	if(this.cnt >= WEP_CVAR(WEP_ARC, bolt_bounce_count) || !WEP_CVAR(WEP_ARC, bolt_bounce_count) || toucher.takedamage == DAMAGE_AIM) {
 		this.use(this, NULL, toucher);
 	} else {
-		this.cnt++;
+		++this.cnt;
 		Send_Effect(EFFECT_BALL_SPARKS, this.origin, this.velocity, 1);
 		this.angles = vectoangles(this.velocity);
 		this.owner = NULL;
@@ -176,7 +176,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity, int f
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 
-	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
+	++actor.(weaponentity).misc_bulletcounter;
 	if(actor.(weaponentity).misc_bulletcounter == 0)
 	{
 		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(WEP_ARC, bolt_refire2) * W_WeaponRateFactor(actor);
@@ -954,7 +954,7 @@ void Draw_ArcBeam(entity this)
 		else
 			this.beam_shotorigin = '0 0 0';
 
-		start_pos = start_pos + origin_offset;
+		start_pos += origin_offset;
 
 		// Move it also forward, but only as far as possible without hitting anything. Don't poke into walls!
 		traceline(start_pos, start_pos + forward * this.beam_shotorigin.x, MOVE_NORMAL, this);

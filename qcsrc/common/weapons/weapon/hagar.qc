@@ -67,7 +67,7 @@ void W_Hagar_Touch2(entity this, entity toucher)
 	if(this.cnt > 0 || toucher.takedamage == DAMAGE_AIM) {
 		this.use(this, NULL, toucher);
 	} else {
-		this.cnt++;
+		++this.cnt;
 		Send_Effect(EFFECT_HAGAR_BOUNCE, this.origin, this.velocity, 1);
 		this.angles = vectoangles(this.velocity);
 		this.owner = NULL;
@@ -224,7 +224,7 @@ void W_Hagar_Attack2_Load_Release(Weapon thiswep, entity actor, .entity weaponen
 		spread_pershot = (WEP_CVAR_SEC(WEP_HAGAR, spread) * spread_pershot * autocvar_g_weaponspreadfactor);
 
 		s = W_CalculateSpreadPattern(1, 0, counter, shots);
-		s = s * WEP_CVAR_SEC(WEP_HAGAR, load_spread) * autocvar_g_weaponspreadfactor;
+		s *= WEP_CVAR_SEC(WEP_HAGAR, load_spread) * autocvar_g_weaponspreadfactor;
 
 		W_SetupProjVelocity_Explicit(missile, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_SEC(WEP_HAGAR, speed), 0, 0, spread_pershot, false);
 
@@ -292,7 +292,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 				{
 					W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(WEP_HAGAR, ammo), weaponentity);
 					actor.(weaponentity).state = WS_INUSE;
-					actor.(weaponentity).hagar_load += 1;
+					++actor.(weaponentity).hagar_load;
 					sound(actor, CH_WEAPON_B, SND_HAGAR_LOAD, VOL_BASE * 0.8, ATTN_NORM); // sound is too loud according to most
 
 					if(actor.(weaponentity).hagar_load >= WEP_CVAR_SEC(WEP_HAGAR, load_max))

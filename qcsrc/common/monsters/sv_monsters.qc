@@ -232,7 +232,7 @@ void Monster_Delay_Action(entity this)
 
 	if(this.cnt > 1)
 	{
-		this.cnt -= 1;
+		--this.cnt;
 		setthink(this, Monster_Delay_Action);
 		this.nextthink = time + this.count;
 	}
@@ -442,7 +442,7 @@ bool Monster_Attack_Leap(entity this, vector anm, void(entity this, entity touch
 	if(IS_MONSTER(this))
 		this.state = MONSTER_ATTACK_RANGED;
 	settouch(this, touchfunc);
-	this.origin_z += 1;
+	++this.origin_z;
 	this.velocity = vel;
 	UNSET_ONGROUND(this);
 
@@ -584,7 +584,7 @@ void Monster_Dead_Fade(entity this)
 	else
 	{
 		// number of monsters spawned with mobspawn command
-		totalspawned -= 1;
+		--totalspawned;
 
 		SUB_SetFade(this, time + 3, 1);
 	}
@@ -1025,7 +1025,7 @@ void Monster_Dead_Damage(entity this, entity inflictor, entity attacker, float d
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
 		// number of monsters spawned with mobspawn command
-		totalspawned -= 1;
+		--totalspawned;
 
 		setthink(this, SUB_Remove);
 		this.nextthink = time + 0.1;
@@ -1044,7 +1044,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	Monster_Sound(this, monstersound_death, 0, false, CH_VOICE);
 
 	if(!(this.spawnflags & (MONSTERFLAG_SPAWNED | MONSTERFLAG_RESPAWNED)))
-		monsters_killed += 1;
+		++monsters_killed;
 
 	if(IS_PLAYER(attacker))
 	if(autocvar_g_monsters_score_spawned || !(this.spawnflags & (MONSTERFLAG_SPAWNED | MONSTERFLAG_RESPAWNED)))
@@ -1053,7 +1053,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	if(gibbed)
 	{
 		// number of monsters spawned with mobspawn command
-		totalspawned -= 1;
+		--totalspawned;
 	}
 
 	if(!gibbed && this.mdl_dead && this.mdl_dead != "")
@@ -1425,7 +1425,7 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 
 	if(!(this.spawnflags & MONSTERFLAG_SPAWNED)) // naturally spawned monster
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either
-		monsters_total += 1;
+		++monsters_total;
 
 	if(this.mdl && this.mdl != "")
 		_setmodel(this, this.mdl);

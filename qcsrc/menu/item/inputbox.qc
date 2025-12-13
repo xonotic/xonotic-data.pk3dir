@@ -16,7 +16,7 @@
 		{
 			me.cb_width = absSize.y / absSize.x;
 			me.cb_offset = bound(-1, me.cb_offset, 0) * me.cb_width;  // bound to range -1, 0
-			me.keepspaceRight = me.keepspaceRight - me.cb_offset + me.cb_width;
+			me.keepspaceRight -= me.cb_offset - me.cb_width;
 		}
 	}
 

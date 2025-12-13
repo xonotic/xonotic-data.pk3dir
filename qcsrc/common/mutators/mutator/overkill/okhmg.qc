@@ -38,7 +38,7 @@ void W_OverkillHeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity
 	float okhmg_spread = bound(WEP_CVAR_PRI(WEP_OVERKILL_HMG, spread_min), WEP_CVAR_PRI(WEP_OVERKILL_HMG, spread_min) + (WEP_CVAR_PRI(WEP_OVERKILL_HMG, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR_PRI(WEP_OVERKILL_HMG, spread_max));
 	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, okhmg_spread, WEP_CVAR_PRI(WEP_OVERKILL_HMG, solidpenetration), WEP_CVAR_PRI(WEP_OVERKILL_HMG, damage), 0, WEP_CVAR_PRI(WEP_OVERKILL_HMG, force), WEP_OVERKILL_HMG.m_id, EFFECT_RIFLE);
 
-	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
+	++actor.(weaponentity).misc_bulletcounter;
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 

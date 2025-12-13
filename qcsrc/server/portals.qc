@@ -123,7 +123,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player, entity portal_owne
 	transform = teleporter.portal_transform;
 
 	to = teleporter.enemy.origin;
-	to = to + AnglesTransform_Apply(teleporter.portal_transform, player.origin - from);
+	to += AnglesTransform_Apply(teleporter.portal_transform, player.origin - from);
 	newvel = AnglesTransform_Apply(transform, player.velocity);
 	// this now is INSIDE the plane... can't use that
 
@@ -254,7 +254,7 @@ float Portal_WillHitPlane(vector eorg, vector emins, vector emaxs, vector evel, 
 	// we don't need this check with solid portals, them being SOLID_BSP should suffice
 	delta = dist / distpersec;
 	v = eorg - evel * delta - porg;
-	v = v - pnorm * (pnorm * v);
+	v -= pnorm * (pnorm * v);
 	return vlen(v) < psize;
 #else
 	return 1;

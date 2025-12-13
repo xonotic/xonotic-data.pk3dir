@@ -747,7 +747,7 @@ void checkpoint_passed(entity this, entity player)
 		int cp_amount = 0, largest_cp_id = 0;
 		IL_EACH(g_race_targets, it.classname == "target_checkpoint",
 		{
-			cp_amount += 1;
+			++cp_amount;
 			if(it.race_checkpoint > largest_cp_id) // update the finish id if someone hit a new checkpoint
 			{
 				if(!largest_cp_id)

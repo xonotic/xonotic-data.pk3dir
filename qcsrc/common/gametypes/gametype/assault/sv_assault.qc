@@ -196,7 +196,7 @@ void assault_wall_think(entity this)
 void assault_new_round(entity this)
 {
 	// up round counter
-	this.winning = this.winning + 1;
+	++this.winning;
 
 	// swap attacker/defender roles
 	if(assault_attacker_team == NUM_TEAM_1)
@@ -447,7 +447,7 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 		//	te_knightspike(best.origin);
 
 			navigation_routerating(this, best, ratingscale, 4000);
-			best.cnt += 1;
+			++best.cnt;
 
 			this.havocbot_attack_time = 0;
 

@@ -69,7 +69,7 @@ void sys_phys_update(entity this, float dt)
 		int cont = pointcontents(midpoint);
 		if (cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 		{
-			this.velocity = this.velocity * 0.5;
+			this.velocity *= 0.5;
 
 			// do we want this?
 			// if(pointcontents(midpoint + '0 0 2') == CONTENT_WATER)
@@ -210,7 +210,7 @@ void sys_phys_simulate(entity this, float dt)
 		{
 			const float grav = -this.com_phys_gravity;
 			this.velocity_z += grav / 2;
-			this.velocity = this.velocity * (1 - dt * this.com_phys_friction);
+			this.velocity *= 1 - dt * this.com_phys_friction;
 			this.velocity_z += grav / 2;
 		}
 	}

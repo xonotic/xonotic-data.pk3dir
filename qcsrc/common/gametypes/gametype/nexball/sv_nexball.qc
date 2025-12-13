@@ -545,7 +545,7 @@ void SpawnBall(entity this)
 	relocate_nexball(this);
 	this.spawnorigin = this.origin;
 
-	this.effects = this.effects | EF_LOWPRECISION;
+	this.effects |= EF_LOWPRECISION;
 
 	if(cvar(strcat("g_", this.classname, "_trail")))  //nexball_basketball :p
 	{
@@ -591,7 +591,7 @@ spawnfunc(nexball_basketball)
 		CVTOV(g_nexball_basketball_delay_hold_forteam);
 		CVTOV(g_nexball_basketball_teamsteal);
 		*/
-		autocvar_g_nexball_basketball_effects_default = autocvar_g_nexball_basketball_effects_default & BALL_EFFECTMASK;
+		autocvar_g_nexball_basketball_effects_default &= BALL_EFFECTMASK;
 	}
 	if(!this.effects)
 		this.effects = autocvar_g_nexball_basketball_effects_default;

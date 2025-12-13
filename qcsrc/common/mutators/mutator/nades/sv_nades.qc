@@ -447,8 +447,8 @@ void nades_GiveBonus(entity player, float score)
 		{
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
 			play2(player, SND(NADE_BONUS));
-			STAT(NADE_BONUS, player)++;
-			STAT(NADE_BONUS_SCORE, player) -= 1;
+			++STAT(NADE_BONUS, player);
+			--STAT(NADE_BONUS_SCORE, player);
 		}
 	}
 }
@@ -588,7 +588,7 @@ void nade_prime(entity this)
 	{
 		ntype = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this));
 		pntype = this.pokenade_type;
-		STAT(NADE_BONUS, this) -= 1;
+		--STAT(NADE_BONUS, this);
 	}
 	else
 	{
@@ -796,7 +796,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 	if(player.nade_spawnloc)
 	{
 		setorigin(player, player.nade_spawnloc.origin);
-		player.nade_spawnloc.cnt -= 1;
+		--player.nade_spawnloc.cnt;
 
 		if(player.nade_spawnloc.cnt <= 0)
 		{

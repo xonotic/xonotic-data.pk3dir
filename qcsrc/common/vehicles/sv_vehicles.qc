@@ -560,7 +560,7 @@ void vehicles_regen(entity this, float timer, .float regen_field, float field_ma
 	if(timer + rpause < time)
 	{
 		if(_healthscale)
-			regen = regen * (GetResource(this, RES_HEALTH) / this.max_health);
+			regen *= GetResource(this, RES_HEALTH) / this.max_health;
 
 		this.(regen_field) = min(this.(regen_field) + regen * delta_time, field_max);
 
@@ -577,7 +577,7 @@ void vehicles_regen_resource(entity this, float timer, .float regen_field, float
 	if(timer + rpause < time)
 	{
 		if(_healthscale)
-			regen = regen * (resource_amount / this.max_health);
+			regen *= resource_amount / this.max_health;
 
 		SetResource(this, resource, min(resource_amount + regen * delta_time, field_max));
 

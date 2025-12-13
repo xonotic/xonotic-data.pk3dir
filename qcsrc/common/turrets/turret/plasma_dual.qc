@@ -21,12 +21,12 @@ METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret thistur, entity it))
     } else {
         SUPER(PlasmaTurret).tr_attack(thistur, it);
     }
-    it.tur_head.frame += 1;
+    ++it.tur_head.frame;
 }
 METHOD(DualPlasmaTurret, tr_think, void(DualPlasmaTurret thistur, entity it))
 {
     if ((it.tur_head.frame != 0) && (it.tur_head.frame != 3))
-        it.tur_head.frame = it.tur_head.frame + 1;
+        ++it.tur_head.frame;
 
     if (it.tur_head.frame > 6)
         it.tur_head.frame = 0;

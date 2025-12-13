@@ -55,7 +55,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 	// how high do we need to push the player?
 	jumpheight = fabs(ht);
 	if(zdist > 0)
-		jumpheight = jumpheight + zdist;
+		jumpheight += zdist;
 
 	/*
 		STOP.
@@ -385,7 +385,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 			if(!found)
 			{
 				targ.(jumppadsused[targ.jumppadcount % NUM_JUMPPADSUSED]) = this;
-				targ.jumppadcount = targ.jumppadcount + 1;
+				++targ.jumppadcount;
 			}
 
 			if(IS_REAL_CLIENT(targ))
@@ -856,7 +856,7 @@ spawnfunc(trigger_push)
 	// normal push setup
 	if (!this.speed)
 		this.speed = 1000;
-	this.movedir = this.movedir * this.speed * 10;
+	this.movedir *= this.speed * 10;
 
 	if (!this.noise)
 		this.noise = "misc/jumppad.wav";

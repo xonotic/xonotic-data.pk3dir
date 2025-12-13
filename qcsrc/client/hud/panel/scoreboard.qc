@@ -2108,9 +2108,9 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size)
 
 	// get number of rows
 	if (stat_secrets_total)
-		rows += 1;
+		++rows;
 	if (stat_monsters_total)
-		rows += 1;
+		++rows;
 
 	// if no rows, return
 	if (!rows)

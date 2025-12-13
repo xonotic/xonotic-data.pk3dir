@@ -292,7 +292,7 @@ string url_fgets(entity e)
 		// curl
 		string s;
 		s = bufstr_get(e.url_rbuf, e.url_rbufpos);
-		e.url_rbufpos += 1;
+		++e.url_rbufpos;
 		return s;
 	}
 	else if (e.url_fh == URL_FH_STDOUT)
@@ -316,7 +316,7 @@ void url_fputs(entity e, string s)
 		if (e.url_wbuf == -1) error("url_fputs: not writable in current state");
 		// curl
 		bufstr_set(e.url_wbuf, e.url_wbufpos, s);
-		e.url_wbufpos += 1;
+		++e.url_wbufpos;
 	}
 	else if (e.url_fh == URL_FH_STDOUT)
 	{
@@ -345,7 +345,7 @@ void url_multi_ready(entity fh, entity me, float status)
 			delete(me);
 			return;
 		}
-		me.url_attempt += 1;
+		++me.url_attempt;
 		n = tokenize_console(me.url_url);
 		if (n <= me.url_attempt)
 		{

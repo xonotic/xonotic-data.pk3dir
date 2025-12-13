@@ -263,7 +263,7 @@ void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 		this.velocity = normalize(this.velocity * xyspeed + wishdir * k);
 	}
 
-	this.velocity = this.velocity * xyspeed;
+	this.velocity *= xyspeed;
 	this.velocity_z = zspeed;
 }
 
@@ -609,7 +609,7 @@ bool PM_check_specialcommand(entity this, int buttons)
 
 	if (c == substring(specialcommand, CS(this).specialcommand_pos, 1))
 	{
-		CS(this).specialcommand_pos += 1;
+		++CS(this).specialcommand_pos;
 		if (CS(this).specialcommand_pos >= strlen(specialcommand))
 		{
 			CS(this).specialcommand_pos = 0;
@@ -826,7 +826,7 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 
 	if (f > 0 && wishvel != '0 0 0')
 	{
-		this.velocity = this.velocity + wishvel * f * dt;
+		this.velocity += wishvel * f * dt;
 		UNSET_ONGROUND(this);
 
 #ifdef SVQC

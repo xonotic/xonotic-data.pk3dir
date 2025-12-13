@@ -31,13 +31,13 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, in
 	if(mySize.x/mySize.y > aspect_ratio)
 	{
 		i = aspect_ratio * mySize.y;
-		myPos.x = myPos.x + (mySize.x - i) / 2;
+		myPos.x += (mySize.x - i) / 2;
 		mySize.x = i;
 	}
 	else
 	{
 		i = 1/aspect_ratio * mySize.x;
-		myPos.y = myPos.y + (mySize.y - i) / 2;
+		myPos.y += (mySize.y - i) / 2;
 		mySize.y = i;
 	}
 

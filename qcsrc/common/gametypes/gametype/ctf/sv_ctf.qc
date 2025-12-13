@@ -1037,7 +1037,7 @@ void ctf_FlagThink(entity this)
 				vector midpoint = ((this.absmin + this.absmax) * 0.5);
 				if(pointcontents(midpoint) == CONTENT_WATER)
 				{
-					this.velocity = this.velocity * 0.5;
+					this.velocity *= 0.5;
 
 					if (pointcontents(midpoint + eZ * FLAG_FLOAT_OFFSET_Z) == CONTENT_WATER)
 						{ this.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater; }
@@ -2511,7 +2511,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 			else
 			{
 				if(time > player.throw_prevtime + autocvar_g_ctf_throw_punish_time) { player.throw_count = 1; }
-				else { player.throw_count += 1; }
+				else { ++player.throw_count; }
 				if(player.throw_count >= autocvar_g_ctf_throw_punish_count) { player.throw_count = -1; }
 
 				player.throw_prevtime = time;

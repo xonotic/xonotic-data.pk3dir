@@ -28,7 +28,7 @@ void trigger_gravity_check_think(entity this)
 	}
 	else
 	{
-		this.count -= 1;
+		--this.count;
 		this.nextthink = time;
 	}
 }

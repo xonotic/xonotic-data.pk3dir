@@ -390,7 +390,7 @@ bool SetTeam(entity o, int Team)
 		if(o.has_team)
 		{
 			tm = GetTeam(o.team, false);
-			tm.team_size -= 1;
+			--tm.team_size;
 			o.has_team = 0;
 			return true;
 		}
@@ -401,17 +401,17 @@ bool SetTeam(entity o, int Team)
 		{
 			o.team = Team;
 			tm = GetTeam(Team, true);
-			tm.team_size += 1;
+			++tm.team_size;
 			o.has_team = 1;
 			return true;
 		}
 		else if(Team != o.team)
 		{
 			tm = GetTeam(o.team, false);
-			tm.team_size -= 1;
+			--tm.team_size;
 			o.team = Team;
 			tm = GetTeam(Team, true);
-			tm.team_size += 1;
+			++tm.team_size;
 			return true;
 		}
 	}

@@ -45,14 +45,14 @@ vector turret_aim_generic(entity this)
 				vz = this.enemy.velocity_z;
 				for(i = 0; i < impact_time; i += sys_frametime)
 				{
-					vz = vz - (autocvar_sv_gravity * sys_frametime);
-					prep_z = prep_z + vz * sys_frametime;
+					vz -= autocvar_sv_gravity * sys_frametime;
+					prep_z += vz * sys_frametime;
 				}
 			}
 			pre_pos = prep;
 		}
 		else
-			pre_pos = pre_pos + this.enemy.velocity * mintime;
+			pre_pos += this.enemy.velocity * mintime;
 	}
 
 	if(this.aim_flags & TFL_AIM_SPLASH)
@@ -231,7 +231,7 @@ void turret_damage(entity this, entity inflictor, entity attacker, float damage,
 	if(SAME_TEAM(this, attacker))
 	{
 		if(autocvar_g_friendlyfire)
-			damage = damage * autocvar_g_friendlyfire;
+			damage *= autocvar_g_friendlyfire;
 		else
 			return;
 	}
@@ -241,14 +241,14 @@ void turret_damage(entity this, entity inflictor, entity attacker, float damage,
 	// thorw head slightly off aim when hit?
 	if (this.damage_flags & TFL_DMG_HEADSHAKE)
 	{
-		this.tur_head.angles_x = this.tur_head.angles_x + (-0.5 + random()) * damage;
-		this.tur_head.angles_y = this.tur_head.angles_y + (-0.5 + random()) * damage;
+		this.tur_head.angles_x += (-0.5 + random()) * damage;
+		this.tur_head.angles_y += (-0.5 + random()) * damage;
 
 		this.SendFlags  |= TNSF_ANG;
 	}
 
 	if (this.turret_flags & TUR_FLAG_MOVE)
-		this.velocity = this.velocity + vforce;
+		this.velocity += vforce;
 
 	if (GetResource(this, RES_HEALTH) <= 0)
 	{
@@ -431,8 +431,8 @@ void turret_projectile_explode(entity this)
 #ifdef TURRET_DEBUG
 	float d;
 	d = RadiusDamage (this, this.owner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.projectiledeathtype, DMG_NOWEP, NULL);
-	this.owner.tur_debug_dmg_t_h = this.owner.tur_debug_dmg_t_h + d;
-	this.owner.tur_debug_dmg_t_f = this.owner.tur_debug_dmg_t_f + this.owner.shot_dmg;
+	this.owner.tur_debug_dmg_t_h += d;
+	this.owner.tur_debug_dmg_t_f += this.owner.shot_dmg;
 #else
 	RadiusDamage (this, this.realowner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.projectiledeathtype, DMG_NOWEP, NULL);
 #endif
@@ -657,7 +657,7 @@ void turret_track(entity this)
 	this.SendFlags  |= TNSF_AVEL;
 
 	// Force a angle update every 10'th frame
-	this.turret_framecounter += 1;
+	++this.turret_framecounter;
 	if(this.turret_framecounter >= 10)
 	{
 		this.SendFlags |= TNSF_ANG;
@@ -998,7 +998,7 @@ void turret_fire(entity this)
 
 	this.attack_finished_single[0] = time + this.shot_refire;
 	this.ammo -= this.shot_dmg;
-	this.volly_counter = this.volly_counter - 1;
+	--this.volly_counter;
 
 	if (this.volly_counter <= 0)
 	{

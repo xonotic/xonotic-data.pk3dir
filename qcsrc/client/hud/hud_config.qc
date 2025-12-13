@@ -347,9 +347,9 @@ void HUD_Panel_SetPosSize(vector mySize)
 
 	// left/top screen edges
 	if (myPos.x < 0)
-		mySize.x = mySize.x + myPos.x;
+		mySize.x += myPos.x;
 	if (myPos.y < 0)
-		mySize.y = mySize.y + myPos.y;
+		mySize.y += myPos.y;
 
 	// bottom/right screen edges
 	if (myPos.x + mySize.x > vid_conwidth)

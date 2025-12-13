@@ -9,7 +9,7 @@ bool pointparticles_SendEntity(entity this, entity to, float sendflags)
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_POINTPARTICLES);
 
 	// optional features to save space
-	sendflags = sendflags & 0x0F;
+	sendflags &= 0x0F;
 	if(this.spawnflags & PARTICLES_IMPULSE)
 		sendflags |= SF_POINTPARTICLES_IMPULSE; // absolute count on toggle-on
 	if(this.movedir != '0 0 0' || this.velocity != '0 0 0')

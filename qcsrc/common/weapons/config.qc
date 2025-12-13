@@ -94,9 +94,9 @@ void Dump_Weapon_Settings()
 
 		// step 5: debug info
 		LOG_INFOF("#%d: %s: %d settings...", i, it.m_name, WEP_CONFIG_COUNT);
-		totalweapons += 1;
+		++totalweapons;
 		totalsettings += WEP_CONFIG_COUNT;
-		wepcount += 1;
+		++wepcount;
 	});
 	#undef WEP_CONFIG_WRITETOFILE
 

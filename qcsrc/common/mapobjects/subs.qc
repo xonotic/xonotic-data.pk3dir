@@ -25,7 +25,7 @@ void SUB_Friction (entity this)
 {
 	this.nextthink = time;
 	if(IS_ONGROUND(this))
-		this.velocity = this.velocity * (1 - frametime * this.friction);
+		this.velocity *= 1 - frametime * this.friction;
 }
 
 /*
@@ -147,14 +147,14 @@ void SUB_CalcMove_controller_think (entity this)
 			v.z -= 360 * floor((v.z - destangle_z) / 360 + 0.5);
 			this.owner.angles = v;
 			angloc = destangle - this.owner.angles;
-			angloc = angloc * (1 / PHYS_INPUT_FRAMETIME); // so it arrives for the next frame
+			angloc *= 1 / PHYS_INPUT_FRAMETIME; // so it arrives for the next frame
 			this.owner.avelocity = angloc;
 		}
 		if(nexttick < this.animstate_endtime)
 			veloc = nextpos - this.owner.origin;
 		else
 			veloc = this.finaldest - this.owner.origin;
-		veloc = veloc * (1 / PHYS_INPUT_FRAMETIME); // so it arrives for the next frame
+		veloc *= 1 / PHYS_INPUT_FRAMETIME; // so it arrives for the next frame
 
 		this.owner.velocity = veloc;
 		this.nextthink = nexttick;

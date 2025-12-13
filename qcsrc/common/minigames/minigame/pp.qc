@@ -107,9 +107,9 @@ void pp_move(entity minigame, entity player, string pos )
 			if(existing && existing.team != 5)
 			{
 				if(existing.team == 1)
-					minigame.pp_team1_score++;
+					++minigame.pp_team1_score;
 				if(existing.team == 2)
-					minigame.pp_team2_score++;
+					++minigame.pp_team2_score;
 			}
 
 			if(minigame.pp_curr_piece)

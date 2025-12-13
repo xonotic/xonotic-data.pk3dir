@@ -174,7 +174,7 @@ vector lgamma(float e)
 	}
 	if(e < 1.1)
 		return lgamma(e + 1) - log(e) * '1 0 0';
-	e -= 1;
+	--e;
 	return (0.5 * log(2 * M_PI * e) + e * (log(e) - 1)) * '1 0 0' + '0 1 0';
 }
 float tgamma(float e)

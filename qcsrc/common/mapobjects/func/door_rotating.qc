@@ -120,7 +120,7 @@ spawnfunc(func_door_rotating)
 
 	if (this.angles_y==0) this.angles_y = 90;
 
-	this.movedir = this.movedir * this.angles_y;
+	this.movedir *= this.angles_y;
 	this.angles = '0 0 0';
 
 	this.avelocity = this.movedir;

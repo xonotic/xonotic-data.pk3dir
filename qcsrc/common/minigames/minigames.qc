@@ -101,7 +101,7 @@ int msle_id(string class_name)
 	if ( class_name == "minigame" ) return 1;
 	if ( class_name == "minigame_player" ) return 2;
 	int i = msle_base_id;
-#define MSLE(Name, Fields) i++; if ( class_name == #Name ) return i;
+#define MSLE(Name, Fields) ++i; if ( class_name == #Name ) return i;
 	MINIGAME_SIMPLELINKED_ENTITIES
 #undef MSLE
 	return 0;
@@ -112,7 +112,7 @@ string msle_classname(int id)
 	if ( id == 1 ) return "minigame";
 	if ( id == 2 ) return "minigame_player";
 	int i = msle_base_id;
-#define MSLE(Name, Fields) i++; if ( id == i ) return #Name;
+#define MSLE(Name, Fields) ++i; if ( id == i ) return #Name;
 	MINIGAME_SIMPLELINKED_ENTITIES
 #undef MSLE
 	return "";
@@ -129,7 +129,7 @@ int minigame_count_players(entity minigame)
 	while( (e = findentity(e,owner,minigame)) )
 		if ( e.classname == "minigame_player" )
 #endif
-		pl_num++;
+		++pl_num;
 	return pl_num;
 }
 

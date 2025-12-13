@@ -87,7 +87,7 @@ void walker_rocket_touch(entity this, entity toucher)
 void walker_rocket_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, .entity weaponentity, vector hitloc, vector vforce)
 {
     TakeResource(this, RES_HEALTH, damage);
-    this.velocity = this.velocity + vforce;
+    this.velocity += vforce;
 
     if (GetResource(this, RES_HEALTH) <= 0)
         W_PrepareExplosionByDamage(this, this.owner, walker_rocket_explode);
@@ -435,7 +435,7 @@ METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
             {
                 it.animflag = ANIM_NO;
 
-                it.tur_head.shot_volly = it.tur_head.shot_volly -1;
+                --it.tur_head.shot_volly;
                 if(it.tur_head.shot_volly == 0)
                     it.tur_head.attack_finished_single[0] = time + (autocvar_g_turrets_unit_walker_rocket_refire);
                 else

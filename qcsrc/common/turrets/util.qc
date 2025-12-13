@@ -32,7 +32,7 @@ void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax
 	vector force = dir * bforce;
 
 	// go a little bit into the wall because we need to hit this wall later
-	end = end + dir;
+	end += dir;
 
 	// trace multiple times until we hit a wall, each obstacle will be made unsolid.
 	// note down which entities were hit so we can damage them later
@@ -94,7 +94,7 @@ void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax
 		{
 			Damage(it, this, this, f_dmg, deathtype, DMG_NOWEP, it.railgunhitloc, it.railgunforce);
 			// slow down the target
-			it.velocity = it.velocity * f_velfactor;
+			it.velocity *= f_velfactor;
 		}
 
 		it.railgunhitloc = '0 0 0';
@@ -123,7 +123,7 @@ void marker_think(entity this)
 		return;
 	}
 
-	this.frame += 1;
+	++this.frame;
 	if(this.frame > 29)
 		this.frame = 0;
 

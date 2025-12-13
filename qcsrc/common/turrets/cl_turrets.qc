@@ -164,16 +164,16 @@ void turret_draw2d(entity this)
 	a *= waypointsprite_alpha;
 
 	{
-		a = a * (1 - (1 - waypointsprite_distancefadealpha) * (bound(0, dist/waypointsprite_distancefadedistance, 1)));
-		t = t * (1 - (1 - waypointsprite_distancefadescale) * (bound(0, dist/waypointsprite_distancefadedistance, 1)));
+		a *= 1 - (1 - waypointsprite_distancefadealpha) * (bound(0, dist/waypointsprite_distancefadedistance, 1));
+		t *= 1 - (1 - waypointsprite_distancefadescale) * (bound(0, dist/waypointsprite_distancefadedistance, 1));
 	}
 	if (edgedistance_min < waypointsprite_edgefadedistance) {
-		a = a * (1 - (1 - waypointsprite_edgefadealpha) * (1 - bound(0, edgedistance_min/waypointsprite_edgefadedistance, 1)));
-		t = t * (1 - (1 - waypointsprite_edgefadescale) * (1 - bound(0, edgedistance_min/waypointsprite_edgefadedistance, 1)));
+		a *= 1 - (1 - waypointsprite_edgefadealpha) * (1 - bound(0, edgedistance_min/waypointsprite_edgefadedistance, 1));
+		t *= 1 - (1 - waypointsprite_edgefadescale) * (1 - bound(0, edgedistance_min/waypointsprite_edgefadedistance, 1));
 	}
 	if(crosshairdistance < waypointsprite_crosshairfadedistance) {
-		a = a * (1 - (1 - waypointsprite_crosshairfadealpha) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1)));
-		t = t * (1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1)));
+		a *= 1 - (1 - waypointsprite_crosshairfadealpha) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1));
+		t *= 1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1));
 	}
 
 	bool draw_healthbar = ((this.helpme && time < this.helpme) || !autocvar_g_waypointsprite_turrets_onlyhurt || hud != HUD_NORMAL);
@@ -287,7 +287,7 @@ void turret_gibboom(entity this)
 	sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
 
-	for (int j = 1; j < 5; j = j + 1)
+	for (int j = 1; j < 5; ++j)
 		turret_gibtoss(strcat("models/turrets/head-gib", ftos(j), ".md3"), this.origin + '0 0 2', this.velocity + randomvec() * 700, '0 0 0', false);
 }
 
@@ -355,7 +355,7 @@ void turret_die(entity this)
 			{
 				headgib.angles = this.tur_head.angles;
 				headgib.avelocity = this.tur_head.avelocity + randomvec() * 45;
-				headgib.avelocity_y = headgib.avelocity_y * 5;
+				headgib.avelocity_y *= 5;
 				headgib.gravity = 0.5;
 			}
 		}

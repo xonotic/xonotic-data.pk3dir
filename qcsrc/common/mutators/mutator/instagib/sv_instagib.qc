@@ -200,11 +200,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 			float armor = GetResource(frag_target, RES_ARMOR);
 			if(armor)
 			{
-				armor -= 1;
+				--armor;
 				SetResource(frag_target, RES_ARMOR, armor);
 				frag_damage = 0;
-				frag_target.hitsound_damage_dealt += 1;
-				frag_attacker.hitsound_damage_dealt += 1;
+				++frag_target.hitsound_damage_dealt;
+				++frag_attacker.hitsound_damage_dealt;
 				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
 			}
 		}
@@ -234,7 +234,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 		float armor = GetResource(frag_attacker, RES_ARMOR);
 		if(armor > 0)
 		{
-			armor -= 1;
+			--armor;
 			SetResource(frag_attacker, RES_ARMOR, armor);
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
 			frag_attacker.hitsound_damage_dealt += frag_mirrordamage;

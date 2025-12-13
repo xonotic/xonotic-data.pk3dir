@@ -74,7 +74,7 @@ vector spiberbot_calcartillery(vector org, vector tgt, float ht)
     // how high do we need to go?
     jumpheight = fabs(ht);
     if(zdist > 0)
-        jumpheight = jumpheight + zdist;
+        jumpheight += zdist;
 
     // push so high...
     vz = sqrt(2 * grav * jumpheight); // NOTE: sqrt(positive)!
@@ -236,7 +236,7 @@ void spiderbot_rocket_do(entity this)
 
     rocket.cnt = time + autocvar_g_vehicle_spiderbot_rocket_lifetime;
 
-    this.tur_head.frame += 1;
+    ++this.tur_head.frame;
     if (this.tur_head.frame == 9)
         this.attack_finished_single[0] = autocvar_g_vehicle_spiderbot_rocket_reload;
     else

@@ -100,9 +100,9 @@ float Surv_CheckWinner()
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
 		if(it.survival_status == SURV_STATUS_PREY)
-			survivor_count++;
+			++survivor_count;
 		else if(it.survival_status == SURV_STATUS_HUNTER)
-			hunter_count++;
+			++hunter_count;
 	});
 	if(survivor_count > 0 && hunter_count > 0)
 	{
@@ -180,7 +180,7 @@ void Surv_RoundStart()
 	{
 		if(total_hunters >= hunter_count)
 			break;
-		total_hunters++;
+		++total_hunters;
 		it.survival_status = SURV_STATUS_HUNTER;
 	});
 	survivalStatuses.SendFlags = STATUS_SEND_RESET;

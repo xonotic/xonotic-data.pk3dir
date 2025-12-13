@@ -17,7 +17,7 @@ void orb_draw(entity this)
 
 	this.alpha = (this.ltime - time) / this.orb_lifetime;
 	this.scale = min((1 - this.alpha)*this.orb_lifetime*4,1)*this.orb_radius;
-	this.angles = this.angles + dt * this.avelocity;
+	this.angles += dt * this.avelocity;
 }
 
 float orb_drawtime; // global storage of last drawn orb frame, to counter overlapping orbs
@@ -44,7 +44,7 @@ void orb_setup(entity e)
 	float model_radius = e.maxs.x;
 	vector size = '.5 .5 .5' * e.orb_radius;
 	setsize(e,-size,size);
-	e.orb_radius = e.orb_radius/model_radius*0.6;
+	e.orb_radius *= 0.6 / model_radius;
 
 	e.draw = orb_draw;
 	e.draw2d = orb_draw2d;

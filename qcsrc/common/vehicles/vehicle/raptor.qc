@@ -156,7 +156,7 @@ bool raptor_frame(entity this, float dt)
 	if(ftmp > autocvar_g_vehicle_raptor_speed_forward)
 		ftmp = 1;
 	else
-		ftmp = ftmp / autocvar_g_vehicle_raptor_speed_forward;
+		ftmp /= autocvar_g_vehicle_raptor_speed_forward;
 	*/
 
 	if(vehic.sound_nexttime < time)
@@ -358,7 +358,7 @@ bool raptor_frame(entity this, float dt)
 						  autocvar_g_vehicle_raptor_cannon_turnlimit * -1,  autocvar_g_vehicle_raptor_cannon_turnlimit,  autocvar_g_vehicle_raptor_cannon_turnspeed, dt);
 
 	/*
-	ad = ad * 0.5;
+	ad *= 0.5;
 	v_forward = vf * 0.5;
 	traceline(ad, ad + v_forward * max_shot_distance, MOVE_NORMAL, vehic);
 	UpdateAuxiliaryXhair(this, trace_endpos, '0 1 0', 0);
@@ -558,7 +558,7 @@ bool raptor_impulse(entity this, int _imp)
 		case IMP_weapon_next_byid.impulse:
 		case IMP_weapon_next_bypriority.impulse:
 		case IMP_weapon_next_bygroup.impulse:
-			STAT(VEHICLESTAT_W2MODE, this.vehicle) += 1;
+			++STAT(VEHICLESTAT_W2MODE, this.vehicle);
 			if(STAT(VEHICLESTAT_W2MODE, this.vehicle) > RSM_LAST)
 				STAT(VEHICLESTAT_W2MODE, this.vehicle) = RSM_FIRST;
 
@@ -568,7 +568,7 @@ bool raptor_impulse(entity this, int _imp)
 		case IMP_weapon_prev_byid.impulse:
 		case IMP_weapon_prev_bypriority.impulse:
 		case IMP_weapon_prev_bygroup.impulse:
-			STAT(VEHICLESTAT_W2MODE, this.vehicle) -= 1;
+			--STAT(VEHICLESTAT_W2MODE, this.vehicle);
 			if(STAT(VEHICLESTAT_W2MODE, this.vehicle) < RSM_FIRST)
 				STAT(VEHICLESTAT_W2MODE, this.vehicle) = RSM_LAST;
 

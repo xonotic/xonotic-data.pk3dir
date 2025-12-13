@@ -105,7 +105,7 @@ int CountSpectators(entity player, entity to)
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_SPEC(it) && it != to && it.enemy == player,
 	{
-		spec_count++;
+		++spec_count;
 	});
 
 	return spec_count;
@@ -1476,7 +1476,7 @@ void calculate_player_respawn_time(entity this)
 		this.respawn_countdown = -1; // do not count down
 
 	if(autocvar_g_forced_respawn)
-		this.respawn_flags = this.respawn_flags | RESPAWN_FORCE;
+		this.respawn_flags |= RESPAWN_FORCE;
 }
 
 // LordHavoc: this hack will be removed when proper _pants/_shirt layers are

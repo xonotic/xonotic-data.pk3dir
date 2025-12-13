@@ -167,7 +167,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	}
 
 	// nudge w_shotend so a trace to w_shotend hits
-	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
+	w_shotend += normalize(w_shotend - w_shotorg) * nudge;
 	//if(w_shotend != prevend) { printf("SERVER: shotEND differs: %s - %s\n", vtos(w_shotend), vtos(prevend)); }
 	//if(w_shotorg != prevorg) { printf("SERVER: shotORG differs: %s - %s\n", vtos(w_shotorg), vtos(prevorg)); }
 	//if(w_shotdir != prevdir) { printf("SERVER: shotDIR differs: %s - %s\n", vtos(w_shotdir), vtos(prevdir)); }
@@ -179,7 +179,7 @@ vector W_CalculateProjectileVelocity(entity actor, vector pvelocity, vector mvel
 	float mspeed;
 	vector outvelocity;
 
-	mvelocity = mvelocity * W_WeaponSpeedFactor(actor);
+	mvelocity *= W_WeaponSpeedFactor(actor);
 
 	mdirection = normalize(mvelocity);
 	mspeed = vlen(mvelocity);
@@ -194,7 +194,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	if(proj.owner == NULL)
 		error("Unowned missile");
 
-	dir = dir + upDir * (pUpSpeed / pSpeed);
+	dir += upDir * (pUpSpeed / pSpeed);
 	dir.z += pZSpeed / pSpeed;
 	pSpeed *= vlen(dir);
 	dir = normalize(dir);
@@ -212,7 +212,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 
 	#if 0
 	mspercallsum += gettime(GETTIME_HIRES);
-	mspercallcount += 1;
+	++mspercallcount;
 	LOG_INFO("avg: ", ftos(mspercallcount / mspercallsum), " per sec");
 	#endif
 
@@ -241,7 +241,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	vector force = dir * bforce;
 
 	// go a little bit into the wall because we need to hit this wall later
-	end = end + dir;
+	end += dir;
 
 	float totaldmg = 0;
 	bool headshot = false; // indicates that one of the targets hit was a headshot

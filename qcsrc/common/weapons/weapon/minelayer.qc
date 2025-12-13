@@ -169,7 +169,7 @@ int W_MineLayer_Count(entity e, .entity weaponentity)
 	int minecount = 0;
 	IL_EACH(g_mines, it.realowner == e && it.weaponentity_fld == weaponentity,
 	{
-		minecount += 1;
+		++minecount;
 	});
 
 	return minecount;
@@ -409,20 +409,20 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor, .entity weaponentit
 				d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
 				// count potential damage according to type of target
 				if(it == actor)
-					selfdamage = selfdamage + d;
+					selfdamage += d;
 				else if(SAME_TEAM(it, actor))
-					teamdamage = teamdamage + d;
+					teamdamage += d;
 				else if(bot_shouldattack(actor, it))
-					enemydamage = enemydamage + d;
+					enemydamage += d;
 			});
 		});
 
 		float desirabledamage;
 		desirabledamage = enemydamage;
 		if(StatusEffects_active(STATUSEFFECT_Shield, actor) && !StatusEffects_active(STATUSEFFECT_SpawnShield, actor))
-			desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
+			desirabledamage -= selfdamage * autocvar_g_balance_selfdamagepercent;
 		if(teamplay && actor.team)
-			desirabledamage = desirabledamage - teamdamage;
+			desirabledamage -= teamdamage;
 
 		makevectors(actor.v_angle);
 		IL_EACH(g_mines, it.realowner == actor,

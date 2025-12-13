@@ -97,7 +97,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 	gren.velocity = '0 0 1' * WEP_CVAR_SEC(WEP_HOOK, speed);
 	if (autocvar_g_projectiles_newton_style)
-		gren.velocity = gren.velocity + actor.velocity;
+		gren.velocity += actor.velocity;
 
 	gren.gravity = WEP_CVAR_SEC(WEP_HOOK, gravity);
 	//W_SetupProjVelocity_Basic(gren); // just falling down!

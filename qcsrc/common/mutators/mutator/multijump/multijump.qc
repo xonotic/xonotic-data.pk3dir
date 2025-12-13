@@ -108,7 +108,7 @@ MUTATOR_HOOKFUNCTION(multijump, PlayerJump)
 				}
 				if (PHYS_MULTIJUMP(player) > 0)
 				{
-					player.multijump_count += 1;
+					++player.multijump_count;
 				}
 			}
 		}

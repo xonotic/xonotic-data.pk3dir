@@ -169,7 +169,7 @@ void c4_move(entity minigame, entity player, string pos )
 			piece.netname = strzone(pos);
 			minigame_server_sendflags(piece,MINIG_SF_ALL);
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
-			minigame.c4_npieces++;
+			++minigame.c4_npieces;
 			minigame.c4_nexteam = minigame_next_team(player.team,C4_TEAMS);
 			if ( c4_winning_piece(piece) )
 			{

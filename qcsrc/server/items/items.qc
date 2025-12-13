@@ -265,7 +265,7 @@ void Item_RespawnCountdown(entity this)
 	else
 	{
 		this.nextthink = time + 1;
-		this.item_respawncounter += 1;
+		++this.item_respawncounter;
 		if(this.item_respawncounter == 1)
 		{
 			do {
@@ -1259,7 +1259,7 @@ void setItemGroup(entity this)
 			if(!it.item_group)
 			{
 				it.item_group = group_count;
-				group_count++;
+				++group_count;
 			}
 			this.item_group = it.item_group;
 		}
@@ -1286,7 +1286,7 @@ void setItemGroupCount()
 	for (int k = 1; k <= group_count; ++k)
 	{
 		int count = 0;
-		IL_EACH(g_items, IS_SMALL(it.itemdef) && it.item_group == k, { count++; });
+		IL_EACH(g_items, IS_SMALL(it.itemdef) && it.item_group == k, { ++count; });
 		if (count)
 			IL_EACH(g_items, IS_SMALL(it.itemdef) && it.item_group == k, { it.item_group_count = count; });
 	}

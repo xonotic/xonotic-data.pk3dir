@@ -90,11 +90,11 @@ void ttt_move(entity minigame, entity player, string pos )
 			piece.netname = strzone(pos);
 			minigame_server_sendflags(piece,MINIG_SF_ALL);
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
-			minigame.ttt_npieces++;
+			++minigame.ttt_npieces;
 			minigame.ttt_nexteam = minigame_next_team(player.team,2);
 			if ( ttt_winning_piece(piece) )
 			{
-				player.minigame_flags++;
+				++player.minigame_flags;
 				minigame_server_sendflags(player, TTT_SF_PLAYERSCORE);
 				minigame.minigame_flags = TTT_TURN_WIN | player.team;
 			}

@@ -13,7 +13,7 @@ vector movelib_dragvec(entity this, float drag, float exp_)
 
     lspeed = vlen(this.velocity);
     ldrag = lspeed * drag;
-    ldrag = ldrag * (drag * exp_);
+    ldrag *= drag * exp_;
     ldrag = 1 - (ldrag / lspeed);
 
     return this.velocity * ldrag;
@@ -28,7 +28,7 @@ float movelib_dragflt(float fspeed,float drag,float exp_)
     float ldrag;
 
     ldrag = fspeed * drag;
-    ldrag = ldrag * ldrag * exp_;
+    ldrag *= ldrag * exp_;
     ldrag = 1 - (ldrag / fspeed);
 
     return ldrag;
@@ -79,10 +79,10 @@ void movelib_move(entity this, vector force,float max_velocity,float drag,float 
         if (breakforce)
         {
             breakvec = (normalize(this.velocity) * (breakforce / theMass) * deltatime);
-            this.velocity = this.velocity - breakvec;
+            this.velocity -= breakvec;
         }
 
-        this.velocity = this.velocity + force * (acceleration * deltatime);
+        this.velocity += force * (acceleration * deltatime);
     }
 
     if (drag)
@@ -90,11 +90,11 @@ void movelib_move(entity this, vector force,float max_velocity,float drag,float 
 
     if (this.waterlevel > 1)
     {
-        this.velocity = this.velocity + force * (acceleration * deltatime);
-        this.velocity = this.velocity + '0 0 0.05' * PHYS_GRAVITY(NULL) * deltatime;
+        this.velocity += force * (acceleration * deltatime)
+			+ '0 0 0.05' * PHYS_GRAVITY(NULL) * deltatime;
     }
     else
-        this.velocity = this.velocity + '0 0 -1' * PHYS_GRAVITY(NULL) * deltatime;
+        this.velocity -= '0 0 1' * PHYS_GRAVITY(NULL) * deltatime;
 
     mspeed = vlen(this.velocity);
 
@@ -157,7 +157,7 @@ void movelib_update(entity this, vector dir,float force)
 
 	ffriction = bound(0, ffriction, 1);
     acceleration *= ffriction;
-    //this.velocity = this.velocity * (ffriction * movelib_deltatime);
+    //this.velocity *= ffriction * movelib_deltatime;
     this.velocity += acceleration * movelib_deltatime;
     this.velocity_z = v_z;
 

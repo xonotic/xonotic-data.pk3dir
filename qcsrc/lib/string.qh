@@ -131,7 +131,7 @@ string seconds_tostring(float seconds)
 		negative = true;
 		seconds = -seconds;
 		if (floor(seconds) != seconds)
-			seconds += 1; // make floor work in the other direction
+			++seconds; // make floor work in the other direction
 	}
 	int minutes = floor(seconds / 60);
 	seconds -= minutes * 60;
@@ -618,7 +618,7 @@ vector checkColorCode(string theText, int text_len, int pos, bool check_at_the_e
 
 	int ofs = cc_len;
 	if (!check_at_the_end)
-		ofs--;
+		--ofs;
 	for (; ofs >= 1; --ofs)
 	{
 		if (!(pos >= ofs && text_len >= pos + (cc_len - ofs)))

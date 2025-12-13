@@ -86,7 +86,7 @@ void W_Nexball_Touch(entity this, entity toucher)
 	if(attacker.team != toucher.team || autocvar_g_nexball_basketball_teamsteal)
 		if((ball = toucher.ballcarried) && !IS_DEAD(toucher) && (IS_PLAYER(attacker)))
 		{
-			toucher.velocity = toucher.velocity + normalize(this.velocity) * toucher.damageforcescale * autocvar_g_balance_nexball_secondary_force;
+			toucher.velocity += normalize(this.velocity) * toucher.damageforcescale * autocvar_g_balance_nexball_secondary_force;
 			UNSET_ONGROUND(toucher);
 			if(!attacker.ballcarried && !IS_DEAD(attacker))
 			{

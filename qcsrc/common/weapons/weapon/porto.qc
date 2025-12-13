@@ -48,7 +48,7 @@ void Porto_Draw(entity this)
 			wepent.polyline[++idx] = pos;
 			if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & DPCONTENTS_PLAYERCLIP))
 			{
-				n += 1;
+				++n;
 				continue;
 			}
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -67,7 +67,7 @@ void Porto_Draw(entity this)
 					break;
 				}
 			}
-			portal_number += 1;
+			++portal_number;
 			if (portal_number >= portal_max) break;
 			if (portal_number == 1) portal1_idx = idx;
 		}
@@ -192,7 +192,7 @@ void W_Porto_Touch(entity this, entity toucher)
 	{
 		spamsound(this, CH_SHOTS, SND_PORTO_BOUNCE, VOL_BASE, ATTEN_NORM);
 		// just reflect
-		this.right_vector = this.right_vector - 2 * trace_plane_normal * (this.right_vector * trace_plane_normal);
+		this.right_vector -= 2 * trace_plane_normal * (this.right_vector * trace_plane_normal);
 		this.angles = vectoangles(this.velocity - 2 * trace_plane_normal * (this.velocity * trace_plane_normal));
 	}
 	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -244,7 +244,7 @@ void W_Porto_Touch(entity this, entity toucher)
 			sound(this, CH_SHOTS, SND_PORTO_CREATE, VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
 			Send_Notification(NOTIF_ONE, this.realowner, MSG_CENTER, CENTER_PORTO_CREATED_IN);
-			this.right_vector = this.right_vector - 2 * trace_plane_normal * (this.right_vector * norm);
+			this.right_vector -= 2 * trace_plane_normal * (this.right_vector * norm);
 			this.angles = vectoangles(this.velocity - 2 * trace_plane_normal * (this.velocity * norm));
 			CSQCProjectile(this, true, PROJECTILE_PORTO_BLUE, true); // change type
 		}

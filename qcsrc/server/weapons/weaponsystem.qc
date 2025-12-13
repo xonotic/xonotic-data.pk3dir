@@ -159,7 +159,7 @@ void CL_ExteriorWeaponentity_Think(entity this)
 	}
 	this.effects = this.owner.effects;
 	this.effects |= EF_LOWPRECISION;
-	this.effects = this.effects & EFMASK_CHEAP;  // eat performance
+	this.effects &= EFMASK_CHEAP;  // eat performance
 	if (this.owner.alpha == default_player_alpha) this.alpha = default_weapon_alpha;
 	else if (this.owner.alpha != 0) this.alpha = this.owner.alpha;
 	else this.alpha = 1;
@@ -335,7 +335,7 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 			}
 		}
 	}
-	this.bulletcounter += 1;
+	++this.bulletcounter;
 	// dprint("attack finished ", ftos(ATTACK_FINISHED(actor, weaponentity)), "\n");
 }
 

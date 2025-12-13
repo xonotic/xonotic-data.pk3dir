@@ -170,16 +170,16 @@ float CheatImpulse(entity this, int imp)
 		case CHIMPULSE_CLONE_MOVING.impulse:
 			IS_CHEAT(this, imp, 0, 0);
 			makevectors (this.v_angle);
-			this.velocity = this.velocity + v_forward * 300;
+			this.velocity += v_forward * 300;
 			CopyBody(this, 1);
-			this.lip += 1;
-			this.velocity = this.velocity - v_forward * 300;
+			++this.lip;
+			this.velocity -= v_forward * 300;
 			DID_CHEAT();
 			break;
 		case CHIMPULSE_CLONE_STANDING.impulse:
 			IS_CHEAT(this, imp, 0, 0);
 			CopyBody(this, 0);
-			this.lip += 1;
+			++this.lip;
 			DID_CHEAT();
 			break;
 		case CHIMPULSE_GIVE_ALL.impulse:
@@ -555,7 +555,7 @@ float CheatCommand(entity this, int argc)
 					{
 						if((e.cnt <= 0 && ent.cnt == 0) || e.cnt == ent.cnt)
 						{
-							start = start + ent.origin;
+							start += ent.origin;
 							++effectnum;
 						}
 					}
@@ -859,7 +859,7 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 
 	dragger.dragdistance = vlen(touchpoint - dragger.origin - dragger.view_ofs);
 	dragger.draglocalangle = draggee.angles.y - dragger.v_angle.y;
-	touchpoint = touchpoint - gettaginfo(draggee, 0);
+	touchpoint -= gettaginfo(draggee, 0);
 	tagscale = (vlen(v_forward) ** -2);
 	dragger.draglocalvector_x = touchpoint * v_forward * tagscale;
 	dragger.draglocalvector_y = touchpoint * v_right * tagscale;
@@ -953,7 +953,7 @@ void Drag_Update(entity dragger)
 	UNSET_ONGROUND(draggee);
 
 	curorigin = gettaginfo(draggee, 0);
-	curorigin = curorigin + v_forward * dragger.draglocalvector.x + v_right * dragger.draglocalvector.y + v_up * dragger.draglocalvector.z;
+	curorigin += v_forward * dragger.draglocalvector.x + v_right * dragger.draglocalvector.y + v_up * dragger.draglocalvector.z;
 	makevectors(dragger.v_angle);
 	neworigin = dragger.origin + dragger.view_ofs + v_forward * dragger.dragdistance;
 	goodvelocity = (neworigin - curorigin) * (1 / frametime);

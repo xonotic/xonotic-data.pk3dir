@@ -25,7 +25,7 @@ METHOD(TeslaCoil, tr_think, void(TeslaCoil thistur, entity it))
 
         float f;
         f = (it.ammo / it.ammo_max);
-        f = f * f;
+        f *= f;
         if(f > random())
             if(random() < 0.1)
                 te_csqc_lightningarc(it.tur_shotorg,it.tur_shotorg + (randomvec() * 350));

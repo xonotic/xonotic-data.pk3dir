@@ -2278,7 +2278,7 @@ void(float animmodelindex, float framegroup, float framegroupstarttime, float bl
 	{
 		if (example_skel_findbonegroup(self.skeletonindex, bonenum, groupbonename, excludegroupname1, excludegroupname2, "", "", "") == 1)
 			skel_build(self.skeletonindex, self, animmodelindex, 1 - blendalpha, bonenum, bonenum + 1);
-		bonenum = bonenum + 1;
+		++bonenum;
 	}
 };
 // make eyes point at a target location, be sure v_forward, v_right, v_up are set correctly before calling

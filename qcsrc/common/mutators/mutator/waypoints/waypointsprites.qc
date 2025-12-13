@@ -10,7 +10,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 {
     WriteHeader(MSG_ENTITY, waypointsprites);
 
-    sendflags = sendflags & 0x7F;
+    sendflags &= 0x7F;
 
     if (this.max_health || (this.pain_finished && (time < this.pain_finished + 0.25)))
         sendflags |= 0x80;
@@ -328,7 +328,7 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
     up = Rotate(up, rot);
 
     owidth = width + 2 * border;
-    o = o - up * (margin + border + theheight) + ri * (sz.x - owidth) * 0.5;
+    o += up * -(margin + border + theheight) + ri * (sz.x - owidth) * 0.5;
 
     drawquad(o - up * border,                               ri * owidth,    up * border,    "", rgb,  a,  f);
     drawquad(o + up * theheight,                            ri * owidth,    up * border,    "", rgb,  a,  f);
@@ -593,18 +593,18 @@ void Draw_WaypointSprite(entity this)
         if (max(f1, -f1) > max(f2, -f2)) {
             if (d.z * f1 > 0) {
                 // RIGHT edge
-                d = d * ((0.5 - waypointsprite_edgeoffset_right) / f1);
+                d *= (0.5 - waypointsprite_edgeoffset_right) / f1;
             } else {
                 // LEFT edge
-                d = d * (-(0.5 - waypointsprite_edgeoffset_left) / f1);
+                d *= -(0.5 - waypointsprite_edgeoffset_left) / f1;
             }
         } else {
             if (d.z * f2 > 0) {
                 // BOTTOM edge
-                d = d * ((0.5 - waypointsprite_edgeoffset_bottom) / f2);
+                d *= (0.5 - waypointsprite_edgeoffset_bottom) / f2;
             } else {
                 // TOP edge
-                d = d * (-(0.5 - waypointsprite_edgeoffset_top) / f2);
+                d *= -(0.5 - waypointsprite_edgeoffset_top) / f2;
             }
         }
 
@@ -633,16 +633,16 @@ void Draw_WaypointSprite(entity this)
     a *= waypointsprite_alpha;
 
     {
-        a = a * (1 - (1 - waypointsprite_distancefadealpha) * (bound(0, dist/waypointsprite_distancefadedistance, 1)));
-        t = t * (1 - (1 - waypointsprite_distancefadescale) * (bound(0, dist/waypointsprite_distancefadedistance, 1)));
+        a *= 1 - (1 - waypointsprite_distancefadealpha) * (bound(0, dist/waypointsprite_distancefadedistance, 1));
+        t *= 1 - (1 - waypointsprite_distancefadescale) * (bound(0, dist/waypointsprite_distancefadedistance, 1));
     }
     if (edgedistance_min < waypointsprite_edgefadedistance) {
-        a = a * (1 - (1 - waypointsprite_edgefadealpha) * (1 - bound(0, edgedistance_min/waypointsprite_edgefadedistance, 1)));
-        t = t * (1 - (1 - waypointsprite_edgefadescale) * (1 - bound(0, edgedistance_min/waypointsprite_edgefadedistance, 1)));
+        a *= 1 - (1 - waypointsprite_edgefadealpha) * (1 - bound(0, edgedistance_min/waypointsprite_edgefadedistance, 1));
+        t *= 1 - (1 - waypointsprite_edgefadescale) * (1 - bound(0, edgedistance_min/waypointsprite_edgefadedistance, 1));
     }
     if (crosshairdistance < waypointsprite_crosshairfadedistance) {
-        a = a * (1 - (1 - waypointsprite_crosshairfadealpha) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1)));
-        t = t * (1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1)));
+        a *= 1 - (1 - waypointsprite_crosshairfadealpha) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1));
+        t *= 1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1));
     }
 
     if (this.build_finished)
@@ -925,7 +925,7 @@ void WaypointSprite_FadeOutIn(entity e, float t)
         e.teleport_time = time + t;
         if (e.fade_time < 0)
         	e.fade_time = -e.fade_time;
-        e.fade_time = e.fade_time * t / current_fadetime;
+        e.fade_time *= t / current_fadetime;
     }
 
     e.SendFlags |= 16;

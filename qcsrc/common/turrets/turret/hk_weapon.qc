@@ -37,7 +37,7 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
 
         if (!isPlayer)
         if (actor.tur_head.frame == 0)
-            actor.tur_head.frame = actor.tur_head.frame + 1;
+            ++actor.tur_head.frame;
 	}
 }
 
@@ -77,9 +77,9 @@ void turret_hk_missile_think(entity this)
     }
 
     this.angles = vectoangles(this.velocity);
-    this.angles_x = this.angles_x * -1;
+    this.angles_x = -this.angles_x;
     makevectors(this.angles);
-    this.angles_x = this.angles_x * -1;
+    this.angles_x = -this.angles_x;
 
     if (this.enemy)
     {

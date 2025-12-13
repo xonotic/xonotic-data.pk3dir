@@ -147,7 +147,7 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 
 		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR_PRI(WEP_HLAC, refire) * W_WeaponRateFactor(actor);
 		W_HLAC_Attack(thiswep, actor, weaponentity);
-		actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
+		++actor.(weaponentity).misc_bulletcounter;
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_HLAC, refire), W_HLAC_Attack_Frame);
 	}
 	else

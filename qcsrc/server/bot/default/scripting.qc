@@ -66,7 +66,7 @@ void bot_queuecommand(entity bot, string cmdstring)
 		}
 	}
 
-	bot.bot_cmdqueuebuf_end += 1;
+	++bot.bot_cmdqueuebuf_end;
 }
 
 void bot_dequeuecommand(entity bot, float idx)
@@ -79,7 +79,7 @@ void bot_dequeuecommand(entity bot, float idx)
 		error("dequeueing a command in the future");
 	bufstr_set(bot.bot_cmdqueuebuf, idx, "");
 	if(idx == bot.bot_cmdqueuebuf_start)
-		bot.bot_cmdqueuebuf_start += 1;
+		++bot.bot_cmdqueuebuf_start;
 	if(bot.bot_cmdqueuebuf_start >= bot.bot_cmdqueuebuf_end)
 		bot_clearqueue(bot);
 }
@@ -138,7 +138,7 @@ entity bot_getplace(entity this, string placename)
 		{
 			this.(bot_placenames[i]) = strzone(placename);
 			this.(bot_places[i]) = e;
-			this.bot_places_count += 1;
+			++this.bot_places_count;
 		}
 		return e;
 	}
@@ -1125,7 +1125,7 @@ void bot_command_executed(entity this, bool rm)
 	if(rm)
 		bot_dequeuecommand(this, this.bot_cmd_execution_index);
 
-	this.bot_cmd_execution_index++;
+	++this.bot_cmd_execution_index;
 }
 
 void bot_setcurrentcommand(entity this)
@@ -1154,7 +1154,7 @@ void bot_setcurrentcommand(entity this)
 				// Invalid command, remove from queue
 				bot_cmd = NULL;
 				bot_dequeuecommand(this, this.bot_cmd_execution_index);
-				this.bot_cmd_execution_index++;
+				++this.bot_cmd_execution_index;
 			}
 		}
 		else

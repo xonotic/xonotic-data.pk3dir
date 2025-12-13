@@ -7,7 +7,7 @@ spawnfunc(turret_hellion) { if (!turret_initialize(this, TUR_HELLION)) delete(th
 METHOD(Hellion, tr_think, void(Hellion thistur, entity it))
 {
     if (it.tur_head.frame != 0)
-        it.tur_head.frame += 1;
+        ++it.tur_head.frame;
 
     if (it.tur_head.frame >= 7)
         it.tur_head.frame = 0;

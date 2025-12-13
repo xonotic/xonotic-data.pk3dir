@@ -49,8 +49,8 @@ void waypoint_unreachable(entity pl)
 		LOG_INFO("unreachable: ", etos(it), " ", vtos(it.origin), "\n");
 		it.colormod_z = 8;
 		it.effects |= EF_NODEPTHTEST | EF_BLUE;
-		j++;
-		m++;
+		++j;
+		++m;
 	});
 	if (j) LOG_INFOF("%d waypoints cannot be reached from here in any way (marked with blue light)\n", j);
 	navigation_markroutes_inverted(e2);
@@ -61,9 +61,9 @@ void waypoint_unreachable(entity pl)
 		LOG_INFO("cannot reach me: ", etos(it), " ", vtos(it.origin), "\n");
 		it.colormod_x = 8;
 		if (!(it.effects & EF_NODEPTHTEST))  // not already reported before
-			m++;
+			++m;
 		it.effects |= EF_NODEPTHTEST | EF_RED;
-		j++;
+		++j;
 	});
 	if (j) LOG_INFOF("%d waypoints cannot walk to here in any way (marked with red light)\n", j);
 	if (m) LOG_INFOF("%d waypoints have been marked total\n", m);
@@ -99,7 +99,7 @@ void waypoint_unreachable(entity pl)
 			it.spawnpointmodel.glowmod = '1 0 0';
 			it.spawnpointmodel.angles = it.angles;
 			setsize(it.spawnpointmodel, PL_MIN_CONST, PL_MAX_CONST);
-			j++;
+			++j;
 		}
 	});
 	if (j) LOG_INFOF("%d spawnpoints have no nearest waypoint (marked by player model)\n", j);
@@ -117,7 +117,7 @@ void waypoint_unreachable(entity pl)
 		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
 		it.effects |= EF_NODEPTHTEST | EF_RED;
 		it.colormod_x = 8;
-		j++;
+		++j;
 	});
 	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked away from (marked with red light)\n", j);
 
@@ -129,7 +129,7 @@ void waypoint_unreachable(entity pl)
 		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
 		it.effects |= EF_NODEPTHTEST | EF_BLUE;
 		it.colormod_z = 8;
-		j++;
+		++j;
 	});
 	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)\n", j);
 }
@@ -173,7 +173,7 @@ void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx)
 	for (int i = 0; i < 6; ++i)
 	{
 		if (argv(arg_idx + i) != "")
-			ctf_flags++;
+			++ctf_flags;
 	}
 	if (ctf_flags < 2)
 	{
@@ -792,7 +792,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 		if (vdist(org - pl.origin, >, 32))
 		{
 			if(wp_num > 2)
-				wp_num--;
+				--wp_num;
 			else
 				sym = false;
 			goto add_wp;
@@ -892,7 +892,7 @@ void waypoint_remove_fromeditor(entity pl)
 	{
 		e = wp_sym;
 		if(wp_num > 2)
-			wp_num--;
+			--wp_num;
 		else
 			sym = false;
 		goto remove_wp;
@@ -1821,7 +1821,7 @@ void waypoint_saveall()
 		s = strcat(s, ftos(it.wpflags));
 		s = strcat(s, "\n");
 		fputs(file, s);
-		c++;
+		++c;
 	});
 	fclose(file);
 	waypoint_save_links();
@@ -1907,9 +1907,9 @@ float waypoint_loadall()
 		fl &= ~WAYPOINTFLAG_NORELINK__DEPRECATED;
 		waypoint_spawn(m1, m2, fl);
 		if (m1 == m2)
-			cwp = cwp + 1;
+			++cwp;
 		else
-			cwb = cwb + 1;
+			++cwb;
 	}
 	fclose(file);
 	waypoint_version_loaded = ver;

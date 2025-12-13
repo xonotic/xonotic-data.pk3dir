@@ -93,7 +93,7 @@
 		}
 
 		if (me.zoomMax > 0 && me.zoomFactor > me.zoomMax) me.zoomFactor = me.zoomMax;
-		if (me.zoomFactor) me.imgSize = me.imgSize * me.zoomFactor;
+		if (me.zoomFactor) me.imgSize *= me.zoomFactor;
 
 		if (me.imgSize.x > 1 || me.imgSize.y > 1)
 		{

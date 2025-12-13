@@ -114,7 +114,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		d = WarpZone_TargetPlaneDist(wz, o1);
 		dv = WarpZone_TargetPlaneDist(wz, v1);
 		if(d < 0)
-			o1 = o1 - v1 * (d / dv);
+			o1 -= v1 * (d / dv);
 	}
 
 	// put them out of solid
@@ -560,15 +560,15 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 			b = getsurfacepoint(this, i_s, tri.y);
 			c = getsurfacepoint(this, i_s, tri.z);
 			n = cross(c - a, b - a);
-			area = area + vlen(n);
-			norm = norm + n;
-			point = point + vlen(n) * (a + b + c);
+			area += vlen(n);
+			norm += n;
+			point += vlen(n) * (a + b + c);
 		}
 	}
 	if(area > 0)
 	{
-		norm = norm * (1 / area);
-		point = point * (1 / (3 * area));
+		norm *= 1 / area;
+		point *= 1 / (3 * area);
 		if(vdist(norm, <, 0.99))
 		{
 			LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " is nonplanar. BEWARE.");
@@ -584,7 +584,7 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 		ang = this.aiment.angles;
 		if(area > 0)
 		{
-			org = org - ((org - point) * norm) * norm; // project to plane
+			org -= ((org - point) * norm) * norm; // project to plane
 			vector forward, right, up;
 			MAKE_VECTORS(ang, forward, right, up);
 			if(norm * forward < 0)

@@ -29,7 +29,7 @@ METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 METHOD(PlasmaTurret, tr_think, void(PlasmaTurret thistur, entity it))
 {
     if (it.tur_head.frame != 0)
-        it.tur_head.frame = it.tur_head.frame + 1;
+        ++it.tur_head.frame;
 
     if (it.tur_head.frame > 5)
         it.tur_head.frame = 0;

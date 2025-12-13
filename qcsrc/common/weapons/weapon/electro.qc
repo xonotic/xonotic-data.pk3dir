@@ -14,7 +14,7 @@ void electro_orb_draw(entity this)
 
 	float myscale = bound(0, (this.ltime - time) * 4, 1);
 	this.scale = (WEP_CVAR(WEP_ELECTRO, combo_radius) * 0.05) * myscale;
-	this.angles = this.angles + dt * this.avelocity;
+	this.angles += dt * this.avelocity;
 }
 
 void electro_orb_setup(entity e)
@@ -615,7 +615,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 	if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
 	{
 		W_Electro_Attack_Orb(thiswep, actor, weaponentity);
-		actor.(weaponentity).electro_count -= 1;
+		--actor.(weaponentity).electro_count;
 		actor.(weaponentity).electro_secondarytime = time;
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_ELECTRO, animtime), W_Electro_CheckAttack);
 		return;
@@ -662,7 +662,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 		if(actor.(weaponentity).clip_load >= WEP_CVAR_PRI(WEP_ELECTRO, ammo))
 			ammo_amount = 1;
 		if(actor.(weaponentity).clip_load >= WEP_CVAR_SEC(WEP_ELECTRO, ammo))
-			ammo_amount += 1;
+			++ammo_amount;
 
 		if(!ammo_amount)
 		{

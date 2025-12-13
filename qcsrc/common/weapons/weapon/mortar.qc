@@ -91,7 +91,7 @@ void W_Mortar_Grenade_Touch1(entity this, entity toucher)
 		spamsound(this, CH_SHOTS, SND_GRENADE_BOUNCE_RANDOM(), VOL_BASE, ATTN_NORM);
 		Send_Effect(EFFECT_HAGAR_BOUNCE, this.origin, this.velocity, 1);
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
-		this.gl_bouncecnt += 1;
+		++this.gl_bouncecnt;
 	}
 	else if(WEP_CVAR_PRI(WEP_MORTAR, type) == 2 && (!toucher || (toucher.takedamage != DAMAGE_AIM && toucher.move_movetype == MOVETYPE_NONE))) // stick
 	{
@@ -123,7 +123,7 @@ void W_Mortar_Grenade_Touch2(entity this, entity toucher)
 		spamsound(this, CH_SHOTS, SND_GRENADE_BOUNCE_RANDOM(), VOL_BASE, ATTN_NORM);
 		Send_Effect(EFFECT_HAGAR_BOUNCE, this.origin, this.velocity, 1);
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
-		this.gl_bouncecnt += 1;
+		++this.gl_bouncecnt;
 
 		if(WEP_CVAR_SEC(WEP_MORTAR, lifetime_bounce) && this.gl_bouncecnt == 1)
 			this.nextthink = time + WEP_CVAR_SEC(WEP_MORTAR, lifetime_bounce);

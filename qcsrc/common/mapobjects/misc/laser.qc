@@ -123,7 +123,7 @@ void misc_laser_think(entity this)
 bool laser_SendEntity(entity this, entity to, float sendflags)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_LASER);
-	sendflags = sendflags & 0x0F; // use that bit to indicate finite length laser
+	sendflags &= 0x0F; // use that bit to indicate finite length laser
 	if(this.spawnflags & LASER_FINITE)
 		sendflags |= SF_LASER_FINITE;
 	if(this.alpha)

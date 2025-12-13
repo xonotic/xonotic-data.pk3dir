@@ -36,7 +36,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity,
 		for(int sc = 0; sc < bullets; ++sc)
 		{
 			vector s = W_CalculateSpreadPattern(spread_pattern, spread_pattern_bias, sc, bullets);
-			s = s * fixed_spread_factor;
+			s *= fixed_spread_factor;
 			fireBullet_falloff(actor, weaponentity,
 			                   w_shotorg, w_shotdir + right * s.y + up * s.z,
 			                   0, solidpenetration, damage,

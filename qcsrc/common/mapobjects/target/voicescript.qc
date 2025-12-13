@@ -71,7 +71,7 @@ void target_voicescript_next(entity pl)
 					pl.voicescript_nextthink = pl.voicescript_voiceend;
 				}
 
-				pl.voicescript_index += 1;
+				++pl.voicescript_index;
 			}
 			else
 			{

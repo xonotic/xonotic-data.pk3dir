@@ -113,7 +113,7 @@ void generator_draw(entity this)
 
 	this.move_time = time + 0.05;
 
-	this.count -= 1;
+	--this.count;
 }
 
 void generator_damage(entity this, float hp)

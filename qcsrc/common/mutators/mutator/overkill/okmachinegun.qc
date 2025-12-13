@@ -42,7 +42,7 @@ void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weap
 	                   WEP_CVAR(WEP_OVERKILL_MACHINEGUN, damagefalloff_forcehalflife),
 	                   WEP_OVERKILL_MACHINEGUN.m_id, EFFECT_RIFLE, true);
 
-	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
+	++actor.(weaponentity).misc_bulletcounter;
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 

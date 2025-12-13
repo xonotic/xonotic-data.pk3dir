@@ -333,9 +333,9 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 			GiveFrags(attacker, targ, 1, deathtype, weaponentity);
 
 			CS(attacker).taunt_soundtime = time + 1;
-			CS(attacker).killcount = CS(attacker).killcount + 1;
+			++CS(attacker).killcount;
 
-			attacker.killsound += 1;
+			++attacker.killsound;
 
 			// TODO: improve SPREE_ITEM and KILL_SPREE_LIST
 			// these 2 macros are spread over multiple files
@@ -566,7 +566,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 					{
 						if(IS_PLAYER(targ) && !IS_DEAD(targ))
 						{
-							attacker.dmg_team = attacker.dmg_team + damage;
+							attacker.dmg_team += damage;
 							complainteamdamage = attacker.dmg_team - autocvar_g_teamdamage_threshold;
 						}
 					}
@@ -576,7 +576,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 					{
 						if(IS_PLAYER(targ) && !IS_DEAD(targ))
 						{
-							attacker.dmg_team = attacker.dmg_team + damage;
+							attacker.dmg_team += damage;
 							complainteamdamage = attacker.dmg_team - autocvar_g_teamdamage_threshold;
 							if(complainteamdamage > 0)
 								mirrordamage = autocvar_g_mirrordamage * complainteamdamage;
@@ -617,7 +617,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			damage *= autocvar_g_weapondamagefactor;
 			mirrordamage *= autocvar_g_weapondamagefactor;
 			complainteamdamage *= autocvar_g_weapondamagefactor;
-			force = force * autocvar_g_weaponforcefactor;
+			force *= autocvar_g_weaponforcefactor;
 			mirrorforce *= autocvar_g_weaponforcefactor;
 		}
 
@@ -638,7 +638,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		}
 
 		if (targ == attacker)
-			damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
+			damage *= autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
 		// count the damage
 		if(attacker)
@@ -663,12 +663,12 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 						if(deathtype != DEATH_FIRE.m_id)
 						{
 							if(PHYS_INPUT_BUTTON_CHAT(victim))
-								attacker.typehitsound += 1;
+								++attacker.typehitsound;
 							else
 								attacker.hitsound_damage_dealt += damage;
 						}
 
-						impressive_hits += 1;
+						++impressive_hits;
 
 						if (!DEATH_ISSPECIAL(deathtype))
 						{
@@ -682,7 +682,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 				{
 					if (deathtype != DEATH_FIRE.m_id)
 					{
-						attacker.typehitsound += 1;
+						++attacker.typehitsound;
 					}
 					if(complainteamdamage > 0)
 						if(time > CS(attacker).teamkill_complain)
@@ -708,7 +708,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 			farcent.enemy = targ;
 			farcent.movedir = farce * 10;
 			if(targ.mass)
-				farcent.movedir = farcent.movedir * targ.mass;
+				farcent.movedir *= targ.mass;
 			farcent.origin = hitloc;
 			farcent.forcetype = FORCETYPE_FORCEATPOS;
 			farcent.nextthink = time + 0.1;
@@ -716,7 +716,7 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		}
 		else if(targ.move_movetype != MOVETYPE_NOCLIP)
 		{
-			targ.velocity = targ.velocity + farce;
+			targ.velocity += farce;
 		}
 		UNSET_ONGROUND(targ);
 		UpdateCSQCProjectile(targ);
@@ -850,7 +850,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 							// shot origin was prevented from going into a ceiling but it still explodes at the ceiling
 							// shot origin wasn't raised as high as possible and the shooter gets upwards knockback
 							// TL;DR: no bugs if vertical shot origin is always within player bbox
-							center.z = center.z + targ.(weaponentity).movedir.z;
+							center.z += targ.(weaponentity).movedir.z;
 						#endif
 						}
 					}
@@ -867,7 +867,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					*/
 
 					force = normalize(center - inflictororigin_wz);
-					force = force * (finaldmg / max(coredamage, edgedamage)) * forceintensity;
+					force *= (finaldmg / max(coredamage, edgedamage)) * forceintensity;
 					hitloc = nearest;
 
 					// apply special force scalings
@@ -922,7 +922,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 							{
 								++hits;
 								if (hits > 1)
-									hitloc = hitloc + nearest;
+									hitloc += nearest;
 								else
 									hitloc = nearest;
 							}
@@ -934,9 +934,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						nearest = hitloc * (1 / max(1, hits));
 						hitratio = (hits / total);
 						a = bound(0, tfloordmg + (1-tfloordmg) * hitratio, 1);
-						finaldmg = finaldmg * a;
+						finaldmg *= a;
 						a = bound(0, tfloorforce + (1-tfloorforce) * hitratio, 1);
-						force = force * a;
+						force *= a;
 
 						if(autocvar_g_throughfloor_debug)
 							LOG_INFOF(" D=%f F=%f", finaldmg, vlen(force));

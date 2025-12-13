@@ -211,7 +211,7 @@ int nmm_count_pieces(entity minigame, int teamn, int pieceflags)
 	int n = 0;
 	entity e = NULL;
 	while (( e = nmm_find_piece(e,minigame, teamn, pieceflags) ))
-		n++;
+		++n;
 	return n;
 }
 
@@ -244,7 +244,7 @@ int nmm_server_event(entity minigame, string event, ...)
 		int n = 0;
 		entity e;
 		for ( e = minigame.minigame_players; e; e = e.list_next )
-			n++;
+			++n;
 		if ( n >= 2 )
 			return NMM_SPECTATOR_TEAM;
 		if ( minigame.minigame_players && minigame.minigame_players.team == 1 )

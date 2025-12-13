@@ -131,7 +131,7 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 	{
 		vector tic;
 		tic = this.velocity * sys_frametime;
-		tic = tic + normalize(tic) * vlen(this.maxs - this.mins);
+		tic += normalize(tic) * vlen(this.maxs - this.mins);
 		traceline(this.origin - tic, this.origin + tic, MOVE_NORMAL, this);
 		if (trace_fraction >= 1)
 		{

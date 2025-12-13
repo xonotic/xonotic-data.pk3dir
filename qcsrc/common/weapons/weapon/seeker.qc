@@ -142,7 +142,7 @@ void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, flo
 /*
 void W_Seeker_Missile_Animate(entity this)
 {
-	this.frame = this.frame +1;
+	++this.frame;
 	this.nextthink = time + 0.05;
 
 	if(this.enemy != NULL)
@@ -343,7 +343,7 @@ void W_Seeker_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seeker_Attack
 {
-	this.cnt = this.cnt - 1;
+	--this.cnt;
 
 	Weapon thiswep = WEP_SEEKER;
 	.entity weaponentity = this.weaponentity_fld;

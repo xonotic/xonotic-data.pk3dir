@@ -225,7 +225,7 @@ void W_Devastator_Think(entity this)
 	makevectors(this.angles.x * '-1 0 0' + this.angles.y * '0 1 0');
 	velspeed = WEP_CVAR(WEP_DEVASTATOR, speed) * W_WeaponSpeedFactor(this.realowner) - (this.velocity * v_forward);
 	if(velspeed > 0)
-		this.velocity = this.velocity + v_forward * min(WEP_CVAR(WEP_DEVASTATOR, speedaccel) * W_WeaponSpeedFactor(this.realowner) * frametime, velspeed);
+		this.velocity += v_forward * min(WEP_CVAR(WEP_DEVASTATOR, speedaccel) * W_WeaponSpeedFactor(this.realowner) * frametime, velspeed);
 
 	// laser guided, or remote detonation
 	.entity weaponentity = this.weaponentity_fld;
@@ -373,7 +373,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponenti
 		int fired_rockets = 0;
 		IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
 		{
-			fired_rockets++;
+			++fired_rockets;
 		});
 		// release PHYS_INPUT_BUTTON_ATCK after all fired rocket exploded otherwise bot can't fire again
 		if (!fired_rockets)

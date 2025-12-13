@@ -121,7 +121,7 @@ vector findbetterlocation (vector org, float mindist)
 	while (c < 6)
 	{
 		traceline (org, org + vec, true, NULL);
-		vec = vec * -1;
+		vec = -vec;
 		if (trace_fraction < 1)
 		{
 			vector loc = trace_endpos;
@@ -136,7 +136,7 @@ vector findbetterlocation (vector org, float mindist)
 			vec.x = vec.z;
 			vec.z = h;
 		}
-		c = c + 1;
+		++c;
 	}
 
 	return org;
@@ -152,7 +152,7 @@ vector real_origin(entity ent)
 
 	while(e)
 	{
-		v = v + ((e.absmin + e.absmax) * 0.5);
+		v += (e.absmin + e.absmax) * 0.5;
 		e = e.tag_entity;
 	}
 

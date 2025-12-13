@@ -79,7 +79,7 @@ bool spiderbot_frame(entity this, float dt)
 	vector vf = v_forward;
 	ad += gettaginfo(vehic.tur_head, gettagindex(vehic.tur_head, "tag_hardpoint02"));
 	vf += v_forward;
-	ad = ad * 0.5;
+	ad *= 0.5;
 	v_forward = vf * 0.5;
 	traceline(ad, ad + v_forward * max_shot_distance, MOVE_NORMAL, vehic);
 	UpdateAuxiliaryXhair(this, trace_endpos, ('1 0 0' * this.vehicle_reload1) + ('0 1 0' * (1 - this.vehicle_reload1)), 0);
@@ -261,7 +261,7 @@ bool spiderbot_frame(entity this, float dt)
 		{
 			entity gun;
 			vector v;
-			vehic.misc_bulletcounter += 1;
+			++vehic.misc_bulletcounter;
 
 			gun = (vehic.misc_bulletcounter % 2) ? vehic.gun1 : vehic.gun2;
 
@@ -486,7 +486,7 @@ bool spiderbot_impulse(entity this, int _imp)
 		case IMP_weapon_next_byid.impulse:
 		case IMP_weapon_next_bypriority.impulse:
 		case IMP_weapon_next_bygroup.impulse:
-			STAT(VEHICLESTAT_W2MODE, this.vehicle) += 1;
+			++STAT(VEHICLESTAT_W2MODE, this.vehicle);
 			if(STAT(VEHICLESTAT_W2MODE, this.vehicle) > SBRM_LAST)
 				STAT(VEHICLESTAT_W2MODE, this.vehicle) = SBRM_FIRST;
 
@@ -497,7 +497,7 @@ bool spiderbot_impulse(entity this, int _imp)
 		case IMP_weapon_prev_byid.impulse:
 		case IMP_weapon_prev_bypriority.impulse:
 		case IMP_weapon_prev_bygroup.impulse:
-			STAT(VEHICLESTAT_W2MODE, this.vehicle) -= 1;
+			--STAT(VEHICLESTAT_W2MODE, this.vehicle);
 			if(STAT(VEHICLESTAT_W2MODE, this.vehicle) < SBRM_FIRST)
 				STAT(VEHICLESTAT_W2MODE, this.vehicle) = SBRM_LAST;
 

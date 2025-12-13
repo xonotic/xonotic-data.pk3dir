@@ -402,7 +402,7 @@ void fpscounter_update()
 
 	float currentTime = gettime(GETTIME_FRAMESTART);
 
-	showfps_framecounter += 1;
+	++showfps_framecounter;
 	if(currentTime - showfps_prevfps_time > STAT(SHOWFPS))
 	{
 		float fps = showfps_framecounter / (currentTime - showfps_prevfps_time);
@@ -1260,7 +1260,7 @@ void HUD_Damage()
 
 	if(pain_threshold_lower && myhealth < pain_threshold_lower_health)
 	{
-		pain_threshold = pain_threshold - max(autocvar_hud_damage_pain_threshold_pulsating_min, fabs(sin(M_PI * time / autocvar_hud_damage_pain_threshold_pulsating_period))) * pain_threshold_lower * (1 - max(0, myhealth)/pain_threshold_lower_health);
+		pain_threshold -= max(autocvar_hud_damage_pain_threshold_pulsating_min, fabs(sin(M_PI * time / autocvar_hud_damage_pain_threshold_pulsating_period))) * pain_threshold_lower * (1 - max(0, myhealth)/pain_threshold_lower_health);
 	}
 
 	myhealth_flash_temp = bound(0, myhealth_flash - pain_threshold, 1);
@@ -1924,7 +1924,7 @@ void CSQC_Demo_Camera()
 		dir = normalize(view_origin - current_position);
 		n = mouse_angles.z;
 		mouse_angles = vectoangles(dir);
-		mouse_angles.x = mouse_angles.x * -1;
+		mouse_angles.x = -mouse_angles.x;
 		mouse_angles.z = n;
 	}
 	else
@@ -1988,7 +1988,7 @@ void CSQC_Demo_Camera()
 
 	if(dimensions)
 	{
-		speed = speed * sqrt(1 / dimensions);
+		speed *= sqrt(1 / dimensions);
 		camera_offset += tmp * speed;
 	}
 
@@ -2011,8 +2011,8 @@ void CSQC_Demo_Camera()
 		if ( camera_mode == CAMERA_FREE )
 		{
 			current_origin = view_origin;
-			camera_offset = camera_offset - current_origin;
-			current_camera_offset = current_camera_offset - current_origin;
+			camera_offset -= current_origin;
+			current_camera_offset -= current_origin;
 		}
 
 		camera_mode = CAMERA_CHASE;

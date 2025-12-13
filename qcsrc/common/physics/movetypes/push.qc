@@ -20,8 +20,8 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 		case SOLID_NOT:
 		case SOLID_TRIGGER:
 		{
-			this.origin = this.origin + dt * this.velocity;
-			this.angles = this.angles + dt * this.avelocity;
+			this.origin += dt * this.velocity;
+			this.angles += dt * this.avelocity;
 			this.angles_x -= 360.0 * floor(this.angles_x * (1.0 / 360.0));
 			this.angles_y -= 360.0 * floor(this.angles_y * (1.0 / 360.0));
 			this.angles_z -= 360.0 * floor(this.angles_z * (1.0 / 360.0));
@@ -57,8 +57,8 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 
 	// move the pusher to its final position
 
-	this.origin = this.origin + dt * this.velocity;
-	this.angles = this.angles + dt * this.avelocity;
+	this.origin += dt * this.velocity;
+	this.angles += dt * this.avelocity;
 	this.ltime += dt;
 	_Movetype_LinkEdict(this, false); // pulls absmin/absmax from the engine
 
@@ -104,14 +104,14 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 		if(rotated)
 		{
 			vector org = check.origin - this.origin;
-			org = org + pivot;
+			org += pivot;
 
 			vector org2;
 			org2.x = (org * forward);
 			org2.y = (org * left);
 			org2.z = (org * up);
 			move = org2 - org;
-			move = move + move1;
+			move += move1;
 		}
 		else
 			move = move1;
@@ -123,7 +123,7 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 		// physics objects need better collisions than this code can do
 		if(check.move_movetype == MOVETYPE_PHYSICS)
 		{
-			check.origin = check.origin + move;
+			check.origin += move;
 			_Movetype_LinkEdict(check, true);
 			continue;
 		}

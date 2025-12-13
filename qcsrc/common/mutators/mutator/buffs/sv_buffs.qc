@@ -62,7 +62,7 @@ void buffs_BuffModel_Think(entity this)
 
 	this.effects = player.effects;
 	this.effects |= EF_LOWPRECISION;
-	this.effects = this.effects & EFMASK_CHEAP; // eat performance
+	this.effects &= EFMASK_CHEAP; // eat performance
 
 	this.alpha = player.alpha;
 }

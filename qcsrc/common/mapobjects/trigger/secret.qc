@@ -21,7 +21,7 @@ void trigger_secret_touch(entity this, entity toucher)
 	EXACTTRIGGER_TOUCH(this, toucher);
 
 	// update secrets found counter
-	secrets_found += 1;
+	++secrets_found;
 
 	// message and noise handled by SUB_UseTargets
 	SUB_UseTargets(this, toucher, toucher);
@@ -57,7 +57,7 @@ spawnfunc(trigger_secret)
 	// FIXME: should it be disabled in most modes?
 
 	// update secrets count
-	secrets_total += 1;
+	++secrets_total;
 
 	// add default message
 	if (!this.message || this.message == "")

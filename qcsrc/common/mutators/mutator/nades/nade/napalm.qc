@@ -56,7 +56,7 @@ void napalm_ball_think(entity this)
 	vector midpoint = ((this.absmin + this.absmax) * 0.5);
 	if(pointcontents(midpoint) == CONTENT_WATER)
 	{
-		this.velocity = this.velocity * 0.5;
+		this.velocity *= 0.5;
 
 		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
 			{ this.velocity_z = 200; }
@@ -130,7 +130,7 @@ void napalm_fountain_think(entity this)
 	vector midpoint = ((this.absmin + this.absmax) * 0.5);
 	if(pointcontents(midpoint) == CONTENT_WATER)
 	{
-		this.velocity = this.velocity * 0.5;
+		this.velocity *= 0.5;
 
 		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
 			{ this.velocity_z = 200; }

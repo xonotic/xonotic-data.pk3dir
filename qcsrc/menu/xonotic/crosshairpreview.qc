@@ -29,7 +29,7 @@ void XonoticCrosshairPreview_draw(entity me)
 
 	sz = draw_PictureSize(me.src);
 	sz = globalToBoxSize(sz, me.size);
-	sz = sz * cvar("crosshair_size");
+	sz *= cvar("crosshair_size");
 
 	draw_Picture('0.5 0.5 0' - 0.5 * sz, me.src, sz, rgb, a);
 	if(cvar("crosshair_dot"))

@@ -241,7 +241,7 @@ void effectinfo_read()
     for (string line; (line = fgets(fh)); ) {
         int n = tokenize_console(line);
         if (n == 0) continue;
-        n--;
+        --n;
         string k = argv(0);
         if (k == "effect") {
             demand(n == 1);

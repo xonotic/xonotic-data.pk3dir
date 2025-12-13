@@ -27,7 +27,7 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponen
         Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);
 
         if (!isPlayer) {
-            actor.tur_head.frame = actor.tur_head.frame + 1;
+            ++actor.tur_head.frame;
             if (actor.tur_head.frame >= 4)
                 actor.tur_head.frame = 0;
         }
@@ -42,8 +42,8 @@ void turret_flac_projectile_think_explode(entity this)
 
 #ifdef TURRET_DEBUG
     float d = RadiusDamage (this, this.owner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.projectiledeathtype, DMG_NOWEP, NULL);
-    this.owner.tur_debug_dmg_t_h = this.owner.tur_debug_dmg_t_h + d;
-    this.owner.tur_debug_dmg_t_f = this.owner.tur_debug_dmg_t_f + this.owner.shot_dmg;
+    this.owner.tur_debug_dmg_t_h += d;
+    this.owner.tur_debug_dmg_t_f += this.owner.shot_dmg;
 #else
     RadiusDamage (this, this.realowner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.projectiledeathtype, DMG_NOWEP, NULL);
 #endif

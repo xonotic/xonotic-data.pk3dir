@@ -37,7 +37,7 @@ void Projectile_DrawTrail(entity this, vector to)
 	// force the effect even for stationary firemine
 	if (this.cnt == PROJECTILE_FIREMINE)
 		if (from == to)
-			from.z += 1;
+			++from.z;
 
 	// Note: alpha value 0 actually means 1 on entities.
 	// This can be relevant when coming from CSQCModel_Effects_Apply.

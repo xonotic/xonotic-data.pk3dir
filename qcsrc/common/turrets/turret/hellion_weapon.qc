@@ -34,7 +34,7 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
         missile.max_health   = time + 9;
         missile.tur_aimpos   = randomvec() * 128;
         missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
-        if (!isPlayer) actor.tur_head.frame += 1;
+        if (!isPlayer) ++actor.tur_head.frame;
     }
 }
 

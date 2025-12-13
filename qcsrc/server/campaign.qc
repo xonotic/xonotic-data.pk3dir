@@ -172,9 +172,9 @@ void CampaignPreIntermission()
 
 	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 		if(it.winning)
-			won += 1;
+			++won;
 		else
-			lost += 1;
+			++lost;
 	});
 
 	if(autocvar__campaign_testrun)

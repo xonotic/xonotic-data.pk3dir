@@ -255,7 +255,7 @@ void W_Fireball_Firemine_Think(entity this)
 	{
 		if(vdist(this.origin - this.owner.origin - this.owner.view_ofs, >, WEP_CVAR_SEC(WEP_FIREBALL, laserradius)))
 		{
-			this.cnt += 1;
+			++this.cnt;
 			if(this.cnt == 3)
 				this.owner = NULL;
 		}

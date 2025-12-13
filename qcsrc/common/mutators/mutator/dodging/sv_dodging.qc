@@ -208,8 +208,8 @@ bool PM_dodging_checkpressedkeys(entity this)
 	// normalize the dodging_direction vector.. (unlike UT99) XD
 	float length = sqrt(this.dodging_direction.x ** 2 + this.dodging_direction.y ** 2);
 
-	this.dodging_direction.x = this.dodging_direction.x / length;
-	this.dodging_direction.y = this.dodging_direction.y / length;
+	this.dodging_direction.x /= length;
+	this.dodging_direction.y /= length;
 
 	return true;
 }

@@ -43,7 +43,7 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 		this.velocity_z -= (((this.gravity) ? this.gravity : 1) * PHYS_GRAVITY(this) * dt);
 	}*/
 
-	this.angles = this.angles + this.avelocity * dt;
+	this.angles += this.avelocity * dt;
 
 	float movetime = dt;
 	for (int bump = 0; bump < MAX_CLIP_PLANES && movetime > 0; ++bump)

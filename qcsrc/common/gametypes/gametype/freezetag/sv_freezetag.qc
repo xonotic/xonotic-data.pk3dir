@@ -342,7 +342,7 @@ void havocbot_role_ft_offense(entity this)
 	// Count how many players on team are unfrozen.
 	int unfrozen = 0;
 	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, this) && !STAT(FROZEN, it), {
-		unfrozen++;
+		++unfrozen;
 	});
 
 	// If only one left on team or if role has timed out then start trying to free players.
@@ -763,7 +763,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			while (it.freezetag_revive_time > 1)
 			{
 				GameRules_scoring_add(it, SCORE, +1);
-				it.freezetag_revive_time -= 1;
+				--it.freezetag_revive_time;
 			}
 		}
 		if (revivers_last)

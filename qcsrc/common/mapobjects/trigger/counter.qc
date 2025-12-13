@@ -29,7 +29,7 @@ void counter_use(entity this, entity actor, entity trigger)
 		store = mycounter;
 	}
 
-	store.counter_cnt += 1;
+	++store.counter_cnt;
 	if (store.counter_cnt > this.count)
 		return;
 

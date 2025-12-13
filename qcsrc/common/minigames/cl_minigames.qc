@@ -22,8 +22,8 @@ vector minigame_hud_denormalize(vector v, vector pos, vector mySize)
 // De-normalize (2D vector) v from relative size inside pos mySize
 vector minigame_hud_denormalize_size(vector v, vector pos, vector mySize)
 {
-	v_x = v_x * mySize_x;
-	v_y = v_y * mySize_y;
+	v_x *= mySize_x;
+	v_y *= mySize_y;
 	return v;
 }
 

@@ -264,7 +264,7 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 	if(player == vehic.gunner2) { vehic.gunner2 = NULL; v_right *= -1; }
 
 	vector spot = real_origin(gunner);
-	spot = spot + v_up * 128 + v_forward * 300 + v_right * 150;
+	spot += v_up * 128 + v_forward * 300 + v_right * 150;
 	spot = bumblebee_gunner_findgoodexit(spot, gunner, player);
 
 	// TODO: figure a way to move player out of the gunner

@@ -187,7 +187,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 			LOG_SEVEREF("Net_ClientCommand() with malformed C2S=%d", C2S);
 			return;
 		}
-		g_buf_i--;
+		--g_buf_i;
 		int expected = strlen(buf);
 		if (g_buf_i > expected) LOG_WARNF("Underflow: %d", g_buf_i - expected);
 		if (g_buf_i < expected) LOG_WARNF("Overrflow: %d", expected - g_buf_i);

@@ -15,7 +15,7 @@ bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 	float ft, fr;
 
 	// note: flag 0x08 = no trail please (teleport bit)
-	sf = sf & 0x0F;
+	sf &= 0x0F;
 
 	if(this.csqcprojectile_clientanimate)
 		sf |= 0x80; // client animated, not interpolated

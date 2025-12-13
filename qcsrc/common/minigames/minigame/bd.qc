@@ -368,7 +368,7 @@ void bd_move(entity minigame, entity player, string dir)
 				}
 
 			if(moved)
-				player.bd_moves++;
+				++player.bd_moves;
 
 			bd_check_winner(minigame);
 
@@ -1359,7 +1359,7 @@ int bd_client_event(entity minigame, string event, ...)
 							return true;
 						if(bd_change_dozer_angle(minigame))
 							return true;
-						bd_curr_tile += 1;
+						++bd_curr_tile;
 						if(bd_curr_tile > BD_TILE_LAST)
 							bd_curr_tile = 1;
 						return true;
