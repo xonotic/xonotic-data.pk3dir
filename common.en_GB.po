@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-30 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: k9er, 2024\n"
+"Last-Translator: k9er, 2024-2025\n"
 "Language-Team: English (United Kingdom) (http://app.transifex.com/team-"
 "xonotic/xonotic/language/en_GB/)\n"
 "Language: en_GB\n"
@@ -9399,11 +9399,11 @@ msgstr "Past Contributors"
 #: qcsrc/menu/xonotic/cvarlist.qc:25
 #, c-format
 msgid "%d results"
-msgstr ""
+msgstr "%d results"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:25
 msgid "1 result"
-msgstr ""
+msgstr "1 result"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:120
 msgid "forced to be saved to config.cfg"
@@ -12912,7 +12912,7 @@ msgstr "Modified cvars only"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:46
 msgid "Search in cvar descriptions too"
-msgstr ""
+msgstr "Search in cvar descriptions too"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Setting:"
