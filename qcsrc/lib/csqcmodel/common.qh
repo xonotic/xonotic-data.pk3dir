@@ -92,3 +92,5 @@ const int CSQCMODEL_PROPERTY_SIZE = BIT(15);
 #else
 #define ALLPROPERTIES ALLPROPERTIES_COMMON
 #endif
+
+#define CL_MAX_USERCMDS 128 // must be a power of 2 and == engine's CL_MAX_USERCMDS

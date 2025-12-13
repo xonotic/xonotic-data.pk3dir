@@ -25,6 +25,9 @@
 
 // generic CSQC model code
 
+#if CSQCPLAYER_FORCE_UPDATES
+.float csqcmodel_originupdatetime;
+#endif
 bool CSQCModel_Send(entity this, entity to, int sf)
 {
 	// some nice flags for CSQCMODEL_IF
@@ -59,12 +62,14 @@ bool CSQCModel_Send(entity this, entity to, int sf)
 #undef CSQCMODEL_ENDIF
 #undef CSQCMODEL_IF
 
+#if CSQCPLAYER_FORCE_UPDATES
+	if (isplayer && (sf & CSQCMODEL_PROPERTY_ORIGIN))
+		this.csqcmodel_originupdatetime = time;
+#endif
+
 	return true;
 }
 
-#if CSQCPLAYER_FORCE_UPDATES
-.float csqcmodel_nextforcedupdate;
-#endif
 void CSQCModel_CheckUpdate(entity e)
 {
 	// some nice flags for CSQCMODEL_IF
@@ -73,10 +78,15 @@ void CSQCModel_CheckUpdate(entity e)
 	noref float isnolocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
 
 #if CSQCPLAYER_FORCE_UPDATES
-	if(isplayer && time > e.csqcmodel_nextforcedupdate)
+	if (isplayer)
 	{
-		e.SendFlags |= CSQCMODEL_PROPERTY_ORIGIN;
-		e.csqcmodel_nextforcedupdate = time + (1 / (CSQCPLAYER_FORCE_UPDATES)) * (0.5 + random()); // ensure about 4 origin sends per sec
+		// Ensure at least CSQCPLAYER_FORCE_UPDATES origin sends per sec,
+		float interval = 1 / CSQCPLAYER_FORCE_UPDATES;
+		// reducing the interval as needed to keep e's client well within the limits of its replay buffers.
+		if (e.ping && CS(e).pm_frametime)
+			interval = min(interval, 0.75*CL_MAX_USERCMDS * CS(e).pm_frametime - e.ping*0.001);
+		if (time >= e.csqcmodel_originupdatetime + interval)
+			e.SendFlags |= CSQCMODEL_PROPERTY_ORIGIN;
 	}
 #endif
 
