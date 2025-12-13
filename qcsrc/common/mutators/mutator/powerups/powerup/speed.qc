@@ -11,6 +11,7 @@ METHOD(SpeedStatusEffect, m_remove, void(StatusEffect this, entity actor, int re
     }
     if(wasactive)
         stopsound(actor, CH_TRIGGER_SINGLE); // get rid of the pickup sound
+    actor.effects &= ~EF_SPEED;
     SUPER(SpeedStatusEffect).m_remove(this, actor, removal_type);
 }
 METHOD(SpeedStatusEffect, m_apply, void(StatusEffect this, entity actor, float eff_time, float eff_flags))
@@ -27,6 +28,7 @@ METHOD(SpeedStatusEffect, m_apply, void(StatusEffect this, entity actor, float e
 METHOD(SpeedStatusEffect, m_tick, void(StatusEffect this, entity actor))
 {
     play_countdown(actor, StatusEffects_gettime(this, actor), SND_POWEROFF);
+    actor.effects |= EF_SPEED;
     SUPER(SpeedStatusEffect).m_tick(this, actor);
 }
 #endif // SVQC

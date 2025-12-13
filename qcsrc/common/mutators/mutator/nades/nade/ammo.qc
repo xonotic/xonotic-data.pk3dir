@@ -3,73 +3,79 @@
 #ifdef SVQC
 void nade_ammo_touch(entity this, entity toucher)
 {
-	float maxammo = 999;
-	float ammo_factor;
-	float amshells = GetResource(toucher, RES_SHELLS);
+	if ((!IS_PLAYER(toucher) && !IS_MONSTER(toucher))
+		|| IS_DEAD(toucher) || STAT(FROZEN, toucher))
+	{
+		return;
+	}
+
+	float new_load;
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (toucher.(weaponentity).clip_size)
+		{
+			new_load = (SAME_TEAM(toucher, this.realowner))
+				? toucher.(weaponentity).clip_size
+				: max(0, toucher.(weaponentity).clip_load - toucher.(weaponentity).clip_size * (autocvar_g_nades_ammo_clip_empty_rate * frametime * 0.5));
+
+			toucher.(weaponentity).clip_load = toucher.(weaponentity).(weapon_load[toucher.(weaponentity).m_switchweapon.m_id]) = new_load;
+		}
+	}
+
+	float ammo_factor = autocvar_g_nades_ammo_rate * frametime * 0.5;
+	if (toucher != this.realowner)
+		ammo_factor *= (SAME_TEAM(toucher, this))
+			? autocvar_g_nades_ammo_friend
+			: autocvar_g_nades_ammo_foe;
+
+	float amshells  = GetResource(toucher, RES_SHELLS);
 	float ambullets = GetResource(toucher, RES_BULLETS);
 	float amrockets = GetResource(toucher, RES_ROCKETS);
-	float amcells = GetResource(toucher, RES_CELLS);
-	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
-	if(!IS_DEAD(toucher))
-	if(!STAT(FROZEN, toucher))
-	{
-		float new_load;
-		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-			if (toucher.(weaponentity).clip_size)
-			{
-				new_load = (SAME_TEAM(toucher, this.realowner))
-					? toucher.(weaponentity).clip_size
-					: max(0, toucher.(weaponentity).clip_load - toucher.(weaponentity).clip_size * (autocvar_g_nades_ammo_clip_empty_rate * frametime/2));
+	float amcells   = GetResource(toucher, RES_CELLS);
 
-				toucher.(weaponentity).clip_load = toucher.(weaponentity).(weapon_load[toucher.(weaponentity).m_switchweapon.m_id]) = new_load;
-			}
-		}
-
-		ammo_factor = autocvar_g_nades_ammo_rate*frametime/2;
-		if ( toucher != this.realowner )
-			ammo_factor *= (SAME_TEAM(toucher, this.realowner)) ? autocvar_g_nades_ammo_friend : autocvar_g_nades_ammo_foe;
-
-#define CHECK_AMMO_RESOURCE_LIMIT(amresource, res_resource) \
-	if (amresource < maxammo) \
-		GiveResourceWithLimit(toucher, res_resource, ammo_factor, maxammo);
-
+#define GIVE_AMMO_RESOURCE(amresource, res_resource, max_resource) \
+	if (amresource < max_resource) \
+	{ \
+		GiveResourceWithLimit(toucher, res_resource, ammo_factor, max_resource); \
+		gave = true; \
+	}
 #define DROP_AMMO_RESOURCE(amresource, res_resource) \
 	if (amresource > 0) \
 		SetResource(toucher, res_resource, amresource + ammo_factor);
 		
-		if ( ammo_factor > 0 )
-		{
-			CHECK_AMMO_RESOURCE_LIMIT(amshells,  RES_SHELLS);
-			CHECK_AMMO_RESOURCE_LIMIT(ambullets, RES_BULLETS);
-			CHECK_AMMO_RESOURCE_LIMIT(amrockets, RES_ROCKETS);
-			CHECK_AMMO_RESOURCE_LIMIT(amcells,   RES_CELLS);
+	if (ammo_factor > 0)
+	{
+		bool gave = false;
+		GIVE_AMMO_RESOURCE(amshells,  RES_SHELLS,  autocvar_g_pickup_shells_max);
+		GIVE_AMMO_RESOURCE(ambullets, RES_BULLETS, autocvar_g_pickup_nails_max);
+		GIVE_AMMO_RESOURCE(amrockets, RES_ROCKETS, autocvar_g_pickup_rockets_max);
+		GIVE_AMMO_RESOURCE(amcells,   RES_CELLS,   autocvar_g_pickup_cells_max);
 
-			if (this.nade_show_particles)
-				Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
-		}
-		else if ( ammo_factor < 0 )
+		if (gave && this.nade_show_particles)
 		{
-			//Foe drops ammo points
-			DROP_AMMO_RESOURCE(amshells,  RES_SHELLS);
-			DROP_AMMO_RESOURCE(ambullets, RES_BULLETS);
-			DROP_AMMO_RESOURCE(amrockets, RES_ROCKETS);
-			DROP_AMMO_RESOURCE(amcells,   RES_CELLS);
-
-			return;
+			float pl_alpha = (!toucher.alpha ? 1 : toucher.alpha);
+			Send_Effect_Core(EFFECT_AMMO_REGEN, toucher.origin, vec2(toucher.velocity), 1, '0 0 0', '0 0 0', pl_alpha, pl_alpha, -1, NULL);
 		}
+	}
+	else if (ammo_factor < 0)
+	{
+		// Foe drops ammo points
+		DROP_AMMO_RESOURCE(amshells,  RES_SHELLS);
+		DROP_AMMO_RESOURCE(ambullets, RES_BULLETS);
+		DROP_AMMO_RESOURCE(amrockets, RES_ROCKETS);
+		DROP_AMMO_RESOURCE(amcells,   RES_CELLS);
+
+		return;
+	}
 #undef CHECK_AMMO_RESOURCE_LIMIT
 #undef DROP_AMMO_RESOURCE
-	}
 }
 
 void nade_ammo_boom(entity this)
 {
-	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_ammo_time, autocvar_g_nades_nade_radius);
-
+	entity orb = nades_spawn_orb(this, autocvar_g_nades_ammo_time, autocvar_g_nades_ammo_radius, NADE_TYPE_AMMO.m_color);
 	settouch(orb, nade_ammo_touch);
-	orb.colormod = NADE_TYPE_AMMO.m_color;
 }
 #endif // SVQC
 #ifdef MENUQC
