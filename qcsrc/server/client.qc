@@ -2770,8 +2770,6 @@ void Player_Physics(entity this)
 		return;
 
 	Movetype_Physics_NoMatchTicrate(this, CS(this).pm_frametime, true);
-
-	CS(this).pm_frametime = 0;
 }
 
 /*
@@ -2795,11 +2793,6 @@ void PlayerPostThink (entity this)
 		if (CS(this).impulse)
 			ImpulseCommands(this);
 		GetPressedKeys(this);
-		if (game_stopped)
-		{
-			CSQCMODEL_AUTOUPDATE(this);
-			return;
-		}
 	}
 	else if (IS_OBSERVER(this) && STAT(PRESSED_KEYS, this))
 	{
@@ -2808,6 +2801,7 @@ void PlayerPostThink (entity this)
 	}
 
 	CSQCMODEL_AUTOUPDATE(this);
+	CS(this).pm_frametime = 0; // CSQCModel_CheckUpdate() and Player_Physics() both read it
 }
 
 /*
