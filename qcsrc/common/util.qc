@@ -33,8 +33,7 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 
 	pos = v1 + dir * nudge;
 
-	float c;
-	c = 0;
+	float c = 0;
 
 	for (;;)
 	{
@@ -392,8 +391,7 @@ void wordwrap_cb(string s, float l, void(string) callback)
 
 void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass)
 {
-	entity e;
-	e = start;
+	entity e = start;
 	funcPre(pass, e);
 	while (e.(downleft))
 	{
@@ -642,9 +640,7 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 string mapPriorityList(string order, string(string) mapfunc)
 {
 	string neworder;
-	float n;
-
-	n = tokenize_console(order);
+	float n = tokenize_console(order);
 	neworder = "";
 	for(float i = 0; i < n; ++i)
 		neworder = strcat(neworder, mapfunc(argv(i)), " ");
@@ -810,9 +806,7 @@ void get_mi_min_max_texcoords(float mode)
 
 float cvar_settemp(string tmp_cvar, string tmp_value)
 {
-	float created_saved_value;
-
-	created_saved_value = 0;
+	float created_saved_value = 0;
 
 	if (!(tmp_cvar || tmp_value))
 	{
@@ -1432,10 +1426,8 @@ vector healtharmor_applydamage(float a, float armorblock, int deathtype, float d
 
 string getcurrentmod()
 {
-	float n;
-	string m;
-	m = cvar_string("fs_gamedir");
-	n = tokenize_console(m);
+	string m = cvar_string("fs_gamedir");
+	float n = tokenize_console(m);
 	if(n == 0)
 		return "data";
 	else
@@ -1842,8 +1834,7 @@ void Skeleton_SetBones(entity e)
 	if(e.skeleton_bones_index == e.modelindex)
 		return; // same model, nothing to update
 
-	float skelindex;
-	skelindex = skel_create(e.modelindex);
+	float skelindex = skel_create(e.modelindex);
 	e.skeleton_bones = skel_get_numbones(skelindex);
 	skel_delete(skelindex);
 	e.skeleton_bones_index = e.modelindex;
@@ -2105,8 +2096,7 @@ void attach_sameorigin(entity e, entity to, string tag)
 
 void detach_sameorigin(entity e)
 {
-    vector org;
-    org = gettaginfo(e, 0);
+    vector org = gettaginfo(e, 0);
     e.angles = fixedvectoangles2(v_forward, v_up);
     if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
 		e.angles = AnglesTransform_ToVAngles(e.angles);

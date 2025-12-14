@@ -32,8 +32,7 @@ entity makeXonoticCheckBox(float isInverted, string theCvar, string theText)
 
 entity makeXonoticCheckBoxEx_T(float theYesValue, float theNoValue, string theCvar, string theText, string theTooltip)
 {
-	entity me;
-	me = NEW(XonoticCheckBox);
+	entity me = NEW(XonoticCheckBox);
 	me.configureXonoticCheckBox(me, theYesValue, theNoValue, theCvar, theText, theTooltip);
 	return me;
 }

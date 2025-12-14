@@ -29,9 +29,7 @@ void turret_head_draw(entity this)
 
 void turret_draw(entity this)
 {
-	float dt;
-
-	dt = time - this.move_time;
+	float dt = time - this.move_time;
 	this.move_time = time;
 	if(dt <= 0)
 		return;
@@ -367,8 +365,7 @@ void turret_die(entity this)
 
 NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 {
-	float sf;
-	sf = ReadByte();
+	float sf = ReadByte();
 
 	if(sf & TNSF_SETUP)
 	{
@@ -425,8 +422,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 
 	if(sf & TNSF_STATUS)
 	{
-		float _tmp;
-		_tmp = ReadByte();
+		float _tmp = ReadByte();
 		if(_tmp != this.team)
 		{
 			this.team = _tmp;

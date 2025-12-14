@@ -227,8 +227,7 @@ int MaplistMethod_Random(void) // random map selection
 
 	for(i = 0; i <= imax; ++i)
 	{
-		int mapindex;
-		mapindex = (Map_Current + floor(random() * (Map_Count - 1) + 1)) % Map_Count; // any OTHER map
+		int mapindex = (Map_Current + floor(random() * (Map_Count - 1) + 1)) % Map_Count; // any OTHER map
 		if(Map_Check(bufstr_get(maplist_buffer, mapindex), 1))
 			return mapindex;
 	}
@@ -373,8 +372,7 @@ float DoNextMapOverride(float reinit)
 	}
 	if(get_nextmap() != "")
 	{
-		string m;
-		m = GameTypeVote_MapInfo_FixName(get_nextmap());
+		string m = GameTypeVote_MapInfo_FixName(get_nextmap());
 		if (m != get_nextmap())
 			Set_NextMap(m);
 

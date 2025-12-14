@@ -6,8 +6,7 @@ REGISTER_NET_TEMP(TE_CSQC_VAPORBEAMPARTICLE)
 
 #if defined(SVQC)
 void SendCSQCVaporizerBeamParticle(entity player, int hit) {
-	vector v;
-	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	WriteHeader(MSG_BROADCAST, TE_CSQC_VAPORBEAMPARTICLE);
 	WriteVector(MSG_BROADCAST, w_shotorg);
 	WriteVector(MSG_BROADCAST, v);
@@ -27,10 +26,8 @@ float Draw_VaporizerBeam_trace_callback_a;
 
 void Draw_VaporizerBeam_trace_callback(vector start, vector hit, vector end)
 {
-	float i;
-	vector vorg;
-	vorg = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
-	for(i = 0; i < Draw_VaporizerBeam_trace_callback_a; ++i)
+	vector vorg = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
+	for(int i = 0; i < Draw_VaporizerBeam_trace_callback_a; ++i)
 		Draw_CylindricLine(hit, start, 8, Draw_VaporizerBeam_trace_callback_tex, 0.25, Draw_VaporizerBeam_trace_callback_rnd, Draw_VaporizerBeam_trace_callback_rgb, min(1, Draw_VaporizerBeam_trace_callback_a - i), DRAWFLAG_NORMAL, vorg);
 	Draw_VaporizerBeam_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
 }

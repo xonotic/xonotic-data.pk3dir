@@ -30,8 +30,7 @@ float fromDecibelOfSquare(float f, float mi)
 
 entity makeXonoticDecibelsSlider_T(float theValueMin, float theValueMax, float theValueStep, string theCvar, string theTooltip)
 {
-	entity me;
-	me = NEW(XonoticDecibelsSlider);
+	entity me = NEW(XonoticDecibelsSlider);
 	me.configureXonoticSlider(me, theValueMin, theValueMax, theValueStep, theCvar, theTooltip);
 	return me;
 }

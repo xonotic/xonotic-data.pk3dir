@@ -3,8 +3,7 @@
 
 entity makeXonoticCommandButton_T(string theText, vector theColor, string theCommand, int theFlags, string theTooltip)
 {
-	entity me;
-	me = NEW(XonoticCommandButton);
+	entity me = NEW(XonoticCommandButton);
 	me.configureXonoticCommandButton(me, theText, theColor, theCommand, theFlags, theTooltip);
 	return me;
 }

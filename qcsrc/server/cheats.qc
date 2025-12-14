@@ -106,8 +106,7 @@ float CheatsAllowed(entity this, float imp, int argc, float cheatframe, bool log
 float num_autoscreenshot;
 void info_autoscreenshot_findtarget(entity this)
 {
-	entity e;
-	e = find(NULL, targetname, this.target);
+	entity e = find(NULL, targetname, this.target);
 	if(!e)
 	{
 		objerror(this, "Missing target. FAIL!");
@@ -291,8 +290,7 @@ float drag_lastcnt;
 float CheatCommand(entity this, int argc)
 {
 	BEGIN_CHEAT_FUNCTION();
-	string cmd;
-	cmd = argv(0);
+	string cmd = argv(0);
 	switch(cmd)
 	{
 		float effectnum, f;
@@ -870,8 +868,7 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 
 void Drag_Finish(entity dragger)
 {
-	entity draggee;
-	draggee = dragger.dragentity;
+	entity draggee = dragger.dragentity;
 	if(dragger)
 		dragger.dragentity = NULL;
 	draggee.draggedby = NULL;
@@ -945,25 +942,21 @@ void Drag_MoveBackward(entity dragger)
 
 void Drag_Update(entity dragger)
 {
-	vector curorigin, neworigin, goodvelocity;
-	float f;
-	entity draggee;
-
-	draggee = dragger.dragentity;
+	entity draggee = dragger.dragentity;
 	UNSET_ONGROUND(draggee);
 
-	curorigin = gettaginfo(draggee, 0);
+	vector curorigin = gettaginfo(draggee, 0);
 	curorigin += v_forward * dragger.draglocalvector.x + v_right * dragger.draglocalvector.y + v_up * dragger.draglocalvector.z;
 	makevectors(dragger.v_angle);
-	neworigin = dragger.origin + dragger.view_ofs + v_forward * dragger.dragdistance;
-	goodvelocity = (neworigin - curorigin) * (1 / frametime);
+	vector neworigin = dragger.origin + dragger.view_ofs + v_forward * dragger.dragdistance;
+	vector goodvelocity = (neworigin - curorigin) * (1 / frametime);
 
 	while(draggee.angles.y - dragger.v_angle.y - dragger.draglocalangle > 180)
 		dragger.draglocalangle += 360;
 	while(draggee.angles.y - dragger.v_angle.y - dragger.draglocalangle <= -180)
 		dragger.draglocalangle -= 360;
 
-	f = min(frametime * 10, 1);
+	float f = min(frametime * 10, 1);
 	draggee.velocity = draggee.velocity * (1 - f) + goodvelocity * f;
 
 	if(Drag_MayChangeAngles(draggee))

@@ -6,8 +6,7 @@
 
 entity makeXonoticServerToSTab()
 {
-	entity me;
-	me = NEW(XonoticServerToSTab);
+	entity me = NEW(XonoticServerToSTab);
 	me.configureDialog(me);
 	return me;
 }

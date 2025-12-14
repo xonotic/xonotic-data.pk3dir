@@ -17,8 +17,7 @@ vector crosshairpicker_crosshairToCell(entity me, string crosshair_str)
 
 entity makeXonoticCrosshairPicker()
 {
-	entity me;
-	me = NEW(XonoticCrosshairPicker);
+	entity me = NEW(XonoticCrosshairPicker);
 	me.configureXonoticCrosshairPicker(me);
 	return me;
 }

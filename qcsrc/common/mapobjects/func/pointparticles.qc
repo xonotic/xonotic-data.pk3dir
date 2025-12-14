@@ -168,8 +168,7 @@ void Draw_PointParticles(entity this)
 	float n, i, fail;
 	vector p;
 	vector sz;
-	vector o;
-	o = this.origin;
+	vector o = this.origin;
 	sz = this.maxs - this.mins;
 	n = doBGMScript(this);
 	if(this.absolute == ABSOLUTE_ONLY_SPAWN_AT_TOGGLE)

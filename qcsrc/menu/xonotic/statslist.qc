@@ -3,8 +3,7 @@
 
 entity makeXonoticStatsList()
 {
-	entity me;
-	me = NEW(XonoticStatsList);
+	entity me = NEW(XonoticStatsList);
 	me.configureXonoticStatsList(me);
 	return me;
 }

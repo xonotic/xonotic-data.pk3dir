@@ -67,8 +67,7 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 
 	int layout = autocvar_hud_panel_modicons_dom_layout;
 	int rows, columns;
-	float aspect_ratio;
-	aspect_ratio = (layout) ? 3 : 1;
+	float aspect_ratio = (layout) ? 3 : 1;
 	rows = HUD_GetRowCount(team_count, mySize, aspect_ratio);
 	columns = ceil(team_count/rows);
 

@@ -328,8 +328,7 @@ void PM_Accelerate(entity this, float dt, vector wishdir, float wishspeed, float
 
 	if (speedclamp >= 0)
 	{
-		float vel_xy_preclamp;
-		vel_xy_preclamp = vlen(vel_xy);
+		float vel_xy_preclamp = vlen(vel_xy);
 		if (vel_xy_preclamp > 0) // prevent division by zero
 		{
 			vel_xy_current += (vel_xy_forward - vel_xy_current) * speedclamp;
@@ -810,8 +809,7 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 	else
 		fz = bound(0, 1 + this.velocity_z / PHYS_JETPACK_MAXSPEED_UP(this), 1);
 
-	float fvel;
-	fvel = vlen(wishvel);
+	float fvel = vlen(wishvel);
 	wishvel_x *= fxy;
 	wishvel_y *= fxy;
 	wishvel_z = (wishvel_z - PHYS_GRAVITY(this)) * fz + PHYS_GRAVITY(this);

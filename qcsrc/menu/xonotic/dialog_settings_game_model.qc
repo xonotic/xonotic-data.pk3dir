@@ -12,8 +12,7 @@ void XonoticGameModelSettingsTab_showNotify(entity me)
 }
 entity makeXonoticGameModelSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticGameModelSettingsTab);
+	entity me = NEW(XonoticGameModelSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

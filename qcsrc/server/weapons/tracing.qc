@@ -124,8 +124,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 				traceline_antilag_force (ent, w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
 				if (trace_ent.takedamage && IS_PLAYER(trace_ent))
 				{
-					entity e;
-					e = trace_ent;
+					entity e = trace_ent;
 					traceline(w_shotorg, e.origin, MOVE_NORMAL, ent);
 					if(trace_ent == e)
 						w_shotdir = normalize(trace_ent.origin - w_shotorg);

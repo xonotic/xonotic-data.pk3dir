@@ -84,8 +84,7 @@ vector spiberbot_calcartillery(vector org, vector tgt, float ht)
         if(zdist < 0)
             vz = -vz;
 
-    vector solution;
-    solution = solve_quadratic(0.5 * grav, -vz, zdist); // equation "z(ti) = zdist"
+    vector solution = solve_quadratic(0.5 * grav, -vz, zdist); // equation "z(ti) = zdist"
     // ALWAYS solvable because jumpheight >= zdist
     if(!solution_z)
         solution_y = solution_x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)

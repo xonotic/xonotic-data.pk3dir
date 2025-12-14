@@ -272,8 +272,7 @@ void ServerList_Update_favoriteButton(entity btn, entity me)
 
 entity makeXonoticServerList()
 {
-	entity me;
-	me = NEW(XonoticServerList);
+	entity me = NEW(XonoticServerList);
 	me.configureXonoticServerList(me);
 	return me;
 }

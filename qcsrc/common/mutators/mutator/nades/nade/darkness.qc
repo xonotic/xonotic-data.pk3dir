@@ -33,11 +33,9 @@ void nade_darkness_think(entity this)
 	this.nextthink = time + 0.1;
 
 	// gaussian
-	float randomr;
-	randomr = random();
+	float randomr = random();
 	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_nade_radius;
-	float randomw;
-	randomw = random() * (2 * M_PI);
+	float randomw = random() * (2 * M_PI);
 	vector randomp;
 	randomp.x = randomr * cos(randomw);
 	randomp.y = randomr * sin(randomw);

@@ -186,8 +186,7 @@ void tka_PlayerReset(entity player)
 
 void tka_DropEvent(entity player) // runs any time that a player is supposed to lose the ball
 {
-	entity ball;
-	ball = player.ballcarried;
+	entity ball = player.ballcarried;
 
 	if(!ball) { return; }
 

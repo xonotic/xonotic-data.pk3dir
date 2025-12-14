@@ -72,9 +72,7 @@ vector shortangle_vxy(vector ang1, vector ang2)
 ERASEABLE
 vector angleofs3(vector from, vector ang, vector to)
 {
-	vector v_res;
-
-	v_res = normalize(to - from);
+	vector v_res = normalize(to - from);
 	v_res = vectoangles(v_res);
 	v_res -= ang;
 

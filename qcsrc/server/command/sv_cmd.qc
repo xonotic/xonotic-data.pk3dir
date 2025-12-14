@@ -997,9 +997,7 @@ void GameCommand_make_mapinfo(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity tmp_entity;
-
-			tmp_entity = new(make_mapinfo);
+			entity tmp_entity = new(make_mapinfo);
 			setthink(tmp_entity, make_mapinfo_Think);
 			tmp_entity.nextthink = time;
 			MapInfo_Enumerate();

@@ -47,8 +47,7 @@ LABEL(nottoolong)
 
 entity makeXonoticCampaignList()
 {
-	entity me;
-	me = NEW(XonoticCampaignList);
+	entity me = NEW(XonoticCampaignList);
 	me.configureXonoticCampaignList(me);
 	return me;
 }

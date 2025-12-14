@@ -126,8 +126,7 @@ float W_FixWeaponOrder_BuildImpulseList_buf[REGISTRY_MAX(Weapons)];
 string W_FixWeaponOrder_BuildImpulseList_order;
 void W_FixWeaponOrder_BuildImpulseList_swap(int i, int j, entity pass)
 {
-	float h;
-	h = W_FixWeaponOrder_BuildImpulseList_buf[i];
+	float h = W_FixWeaponOrder_BuildImpulseList_buf[i];
 	W_FixWeaponOrder_BuildImpulseList_buf[i] = W_FixWeaponOrder_BuildImpulseList_buf[j];
 	W_FixWeaponOrder_BuildImpulseList_buf[j] = h;
 }

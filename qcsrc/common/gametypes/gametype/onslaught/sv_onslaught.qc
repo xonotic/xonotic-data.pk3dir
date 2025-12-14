@@ -673,8 +673,7 @@ void ons_ControlPoint_UpdateSprite(entity e)
 	entity s1 = ons_ControlPoint_Waypoint(e);
 	WaypointSprite_UpdateSprites(e.sprite, s1, s1, s1);
 
-	bool sh;
-	sh = !(ons_ControlPoint_CanBeLinked(e, NUM_TEAM_1) || ons_ControlPoint_CanBeLinked(e, NUM_TEAM_2) || ons_ControlPoint_CanBeLinked(e, NUM_TEAM_3) || ons_ControlPoint_CanBeLinked(e, NUM_TEAM_4));
+	bool sh = !(ons_ControlPoint_CanBeLinked(e, NUM_TEAM_1) || ons_ControlPoint_CanBeLinked(e, NUM_TEAM_2) || ons_ControlPoint_CanBeLinked(e, NUM_TEAM_3) || ons_ControlPoint_CanBeLinked(e, NUM_TEAM_4));
 
 	if(e.lastteam != e.team + 2 || e.lastshielded != sh || e.iscaptured != e.lastcaptured)
 	{

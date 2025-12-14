@@ -25,9 +25,7 @@ vector movelib_dragvec(entity this, float drag, float exp_)
 **/
 float movelib_dragflt(float fspeed,float drag,float exp_)
 {
-    float ldrag;
-
-    ldrag = fspeed * drag;
+    float ldrag = fspeed * drag;
     ldrag *= ldrag * exp_;
     ldrag = 1 - (ldrag / fspeed);
 
@@ -41,9 +39,7 @@ float movelib_dragflt(float fspeed,float drag,float exp_)
 **/
 vector movelib_inertmove_byspeed(entity this, vector vel_new, float vel_max,float newmin,float oldmax)
 {
-    float influense;
-
-    influense = vlen(this.velocity) * (1 / vel_max);
+    float influense = vlen(this.velocity) * (1 / vel_max);
 
     influense = bound(newmin,influense,oldmax);
 

@@ -14,8 +14,7 @@ void XonoticGameCrosshairSettingsTab_showNotify(entity me)
 }
 entity makeXonoticGameCrosshairSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticGameCrosshairSettingsTab);
+	entity me = NEW(XonoticGameCrosshairSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

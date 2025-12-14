@@ -2,8 +2,7 @@
 
 entity makeXonoticPlayList()
 {
-	entity me;
-	me = NEW(XonoticPlayList);
+	entity me = NEW(XonoticPlayList);
 	me.configureXonoticPlayList(me);
 	return me;
 }

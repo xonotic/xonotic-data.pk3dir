@@ -23,8 +23,7 @@ METHOD(TeslaCoil, tr_think, void(TeslaCoil thistur, entity it))
         if(it.attack_finished_single[0] > time)
             return;
 
-        float f;
-        f = (it.ammo / it.ammo_max);
+        float f = it.ammo / it.ammo_max;
         f *= f;
         if(f > random())
             if(random() < 0.1)

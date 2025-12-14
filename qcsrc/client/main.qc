@@ -225,9 +225,7 @@ void Shutdown()
 void AuditLists()
 {
 	entity e;
-	entity prev;
-
-	prev = players;
+	entity prev = players;
 	for(e = prev.sort_next; e; prev = e, e = e.sort_next)
 	{
 		if(prev != e.sort_prev)

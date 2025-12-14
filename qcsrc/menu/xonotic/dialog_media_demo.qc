@@ -28,8 +28,7 @@ void DemoConfirm_Check_Gamestatus(entity btn, entity me)
 
 entity makeXonoticDemoBrowserTab()
 {
-	entity me;
-	me = NEW(XonoticDemoBrowserTab);
+	entity me = NEW(XonoticDemoBrowserTab);
 	me.configureDialog(me);
 	return me;
 }

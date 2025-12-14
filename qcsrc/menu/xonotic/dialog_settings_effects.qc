@@ -15,8 +15,7 @@
 
 entity makeXonoticEffectsSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticEffectsSettingsTab);
+	entity me = NEW(XonoticEffectsSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

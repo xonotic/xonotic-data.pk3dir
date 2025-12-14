@@ -14,8 +14,7 @@
 string _dumptree_space;
 void _dumptree_open(entity pass, entity me)
 {
-	string s;
-	s = me.toString(me);
+	string s = me.toString(me);
 	if (s == "") s = me.classname;
 	else s = strcat(me.classname, ": ", s);
 	print(_dumptree_space, etos(me), " (", s, ")");

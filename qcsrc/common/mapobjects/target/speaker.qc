@@ -17,8 +17,7 @@ void target_speaker_use_activator(entity this, entity actor, entity trigger)
 		else
 		{
 			tokenize_console(actor.(sample));
-			float n;
-			n = stof(argv(1));
+			float n = stof(argv(1));
 			if(n > 0)
 				snd = strcat(argv(0), ftos(floor(random() * n + 1)), ".wav"); // randomization
 			else
@@ -43,8 +42,7 @@ void target_speaker_use_on(entity this, entity actor, entity trigger)
 		else
 		{
 			tokenize_console(actor.(sample));
-			float n;
-			n = stof(argv(1));
+			float n = stof(argv(1));
 			if(n > 0)
 				snd = strcat(argv(0), ftos(floor(random() * n + 1)), ".wav"); // randomization
 			else

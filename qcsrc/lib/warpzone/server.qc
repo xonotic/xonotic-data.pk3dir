@@ -101,8 +101,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 		tracebox(o1 - player.view_ofs + v1 * frametime * f1, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f0, MOVE_WORLDONLY, player);
 		{
-			entity own;
-			own = player.owner;
+			entity own = player.owner;
 			player.owner = NULL;
 			tracebox(trace_endpos, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f1, MOVE_NORMAL, player); // this should get us through the warpzone
 			player.owner = own;
@@ -209,8 +208,7 @@ void WarpZone_Touch(entity this, entity toucher)
 	// but max 0.25 sec = 0.25/frametime frames
 	//       24/(0.25/frametime)
 	//       96*frametime
-	float d;
-	d = 24 + max(vlen(toucher.mins), vlen(toucher.maxs));
+	float d = 24 + max(vlen(toucher.mins), vlen(toucher.maxs));
 	if(IS_NOT_A_CLIENT(toucher))
 		f = -d / bound(frametime * d * 1, frametime * vlen(toucher.velocity), d);
 	else
@@ -341,8 +339,7 @@ float WarpZone_CheckProjectileImpact(entity player)
 		return 0;
 
 	// if player hit a warpzone, abort
-	entity wz;
-	wz = WarpZone_Find(o0 + player.mins, o0 + player.maxs);
+	entity wz = WarpZone_Find(o0 + player.mins, o0 + player.maxs);
 	if(!wz)
 		return 0;
 

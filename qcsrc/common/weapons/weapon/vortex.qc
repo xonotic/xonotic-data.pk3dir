@@ -36,8 +36,7 @@ REGISTER_NET_TEMP(TE_CSQC_VORTEXBEAMPARTICLE)
 
 #if defined(SVQC)
 void SendCSQCVortexBeamParticle(entity player, float charge) {
-	vector v;
-	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	WriteHeader(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);
 	WriteVector(MSG_BROADCAST, w_shotorg);
 	WriteVector(MSG_BROADCAST, v);
@@ -125,8 +124,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	if(WEP_CVAR_BOTH(WEP_VORTEX, !issecondary, armorpierce))
 		dtype |= HITTYPE_ARMORPIERCE;
 
-	float flying;
-	flying = IsFlying(actor); // do this BEFORE to make the trace values from FireRailgunBullet last
+	float flying = IsFlying(actor); // do this BEFORE to make the trace values from FireRailgunBullet last
 
 	if(WEP_CVAR(WEP_VORTEX, charge))
 	{

@@ -74,8 +74,7 @@ vector steerlib_attract2(vector point, float maximal_distance,float min_influens
 
     // i_target = bound(min_influense,(1-(distance / maximal_distance)),max_influense);
 
-    string s;
-    s = ftos(i_target);
+    string s = ftos(i_target);
     bprint("IT: ",s,"\n");
     s = ftos(i_current);
     bprint("IC  : ",s,"\n");

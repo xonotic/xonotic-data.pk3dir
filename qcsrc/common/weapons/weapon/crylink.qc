@@ -242,8 +242,7 @@ void W_Crylink_Touch(entity this, entity toucher)
 	float isprimary = !(this.projectiledeathtype & HITTYPE_SECONDARY);
 	PROJECTILE_TOUCH(this, toucher);
 
-	float a;
-	a = bound(0, 1 - (time - this.fade_time) * this.fade_rate, 1);
+	float a = bound(0, 1 - (time - this.fade_time) * this.fade_rate, 1);
 
 	finalhit = ((this.cnt <= 0) || (toucher.takedamage != DAMAGE_NO));
 	if(finalhit)

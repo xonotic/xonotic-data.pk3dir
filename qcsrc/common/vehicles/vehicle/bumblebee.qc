@@ -621,9 +621,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 
 void bumblebee_land(entity this)
 {
-	float hgt;
-
-	hgt = vehicle_altitude(this, 512);
+	float hgt = vehicle_altitude(this, 512);
 	this.velocity = (this.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * PHYS_INPUT_FRAMETIME);
 	this.angles_x *= 0.95;
 	this.angles_z *= 0.95;

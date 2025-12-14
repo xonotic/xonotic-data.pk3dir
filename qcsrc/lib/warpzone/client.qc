@@ -9,8 +9,7 @@
 
 void WarpZone_Fade_PreDraw(entity this)
 {
-	vector org;
-	org = getpropertyvec(VF_ORIGIN);
+	vector org = getpropertyvec(VF_ORIGIN);
 	if(!checkpvs(org, this)) // this makes sense as long as we don't support recursive warpzones
 		this.alpha = 0;
 	else if(this.warpzone_fadestart)

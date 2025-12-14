@@ -15,13 +15,11 @@
 	}
 	void Label_recalcPositionWithText(entity me, string t)
 	{
-		float spaceAvail;
-		spaceAvail = 1 - me.keepspaceLeft - me.keepspaceRight;
+		float spaceAvail = 1 - me.keepspaceLeft - me.keepspaceRight;
 
 		if (me.isBold) draw_beginBoldFont();
 
-		float spaceUsed;
-		spaceUsed = draw_TextWidth(t, me.allowColors, me.realFontSize);
+		float spaceUsed = draw_TextWidth(t, me.allowColors, me.realFontSize);
 
 		if (spaceUsed <= spaceAvail)
 		{

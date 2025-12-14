@@ -82,8 +82,7 @@ float updateConwidths(float width, float height, float pixelheight)
 }
 entity makeXonoticResolutionSlider()
 {
-	entity me;
-	me = NEW(XonoticResolutionSlider);
+	entity me = NEW(XonoticResolutionSlider);
 	me.configureXonoticResolutionSlider(me);
 	return me;
 }

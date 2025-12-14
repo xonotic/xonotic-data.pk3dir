@@ -66,8 +66,7 @@ void W_OverkillNex_Attack(Weapon thiswep, entity actor, .entity weaponentity, fl
 	myforcehalflife = WEP_CVAR_BOTH(WEP_OVERKILL_NEX, !issecondary, damagefalloff_forcehalflife);
 	myammo = WEP_CVAR_BOTH(WEP_OVERKILL_NEX, !issecondary, ammo);
 
-	float flying;
-	flying = IsFlying(actor); // do this BEFORE to make the trace values from FireRailgunBullet last
+	float flying = IsFlying(actor); // do this BEFORE to make the trace values from FireRailgunBullet last
 
 	if (WEP_CVAR(WEP_OVERKILL_NEX, charge))
 	{

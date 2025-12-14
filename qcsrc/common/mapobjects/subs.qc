@@ -135,8 +135,7 @@ void SUB_CalcMove_controller_think (entity this)
 
 		if(this.owner.platmovetype_turn)
 		{
-			vector destangle;
-			destangle = delta + 2 * delta2 * phasepos;
+			vector destangle = delta + 2 * delta2 * phasepos;
 			destangle = vectoangles(destangle);
 			destangle_x = -destangle_x; // flip up / down orientation
 

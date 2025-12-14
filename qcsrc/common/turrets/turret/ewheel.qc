@@ -216,9 +216,7 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
 
 void ewheel_draw(entity this)
 {
-    float dt;
-
-    dt = time - this.move_time;
+    float dt = time - this.move_time;
     this.move_time = time;
     if(dt <= 0)
         return;

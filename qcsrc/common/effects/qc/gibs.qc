@@ -137,8 +137,7 @@ void Gib_Touch(entity this, entity toucher)
 
 void Gib_Draw(entity this)
 {
-	vector oldorg;
-	oldorg = this.origin;
+	vector oldorg = this.origin;
 
 	Movetype_Physics_MatchTicrate(this, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
 	if(wasfreed(this))

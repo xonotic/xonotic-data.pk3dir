@@ -280,10 +280,8 @@ vector Draw_GrapplingHook_trace_callback_rgb;
 float Draw_GrapplingHook_trace_callback_a;
 void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 {
-	float i;
-	vector vorg;
-	vorg = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
-	for(i = 0; i < Draw_GrapplingHook_trace_callback_a; ++i)
+	vector vorg = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
+	for(int i = 0; i < Draw_GrapplingHook_trace_callback_a; ++i)
 		Draw_CylindricLine(hit, start, 8, Draw_GrapplingHook_trace_callback_tex, 0.25, Draw_GrapplingHook_trace_callback_rnd, Draw_GrapplingHook_trace_callback_rgb, min(1, Draw_GrapplingHook_trace_callback_a - i), DRAWFLAG_NORMAL, vorg);
 	Draw_GrapplingHook_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
 }

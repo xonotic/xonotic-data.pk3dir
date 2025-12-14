@@ -29,8 +29,7 @@ void b_draw()
 }
 void b_make(vector s,vector e, string t,float l,float z)
 {
-    entity b;
-    b = spawn();
+    entity b = spawn();
     b.fx_texture = t;
     b.fx_start = s;
     b.fx_end = e;

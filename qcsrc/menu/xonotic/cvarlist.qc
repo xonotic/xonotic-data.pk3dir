@@ -7,8 +7,7 @@
 
 entity makeXonoticCvarList()
 {
-	entity me;
-	me = NEW(XonoticCvarList);
+	entity me = NEW(XonoticCvarList);
 	me.configureXonoticCvarList(me);
 	return me;
 }
@@ -111,8 +110,7 @@ string autocvar_menu_forced_saved_cvars;
 string autocvar_menu_reverted_nonsaved_cvars;
 bool XonoticCvarList_updateCvarType(entity me)
 {
-	float t;
-	t = cvar_type(me.cvarName);
+	float t = cvar_type(me.cvarName);
 	me.cvarType = "";
 	bool needsForcing;
 	if(strhasword(autocvar_menu_forced_saved_cvars, me.cvarName))

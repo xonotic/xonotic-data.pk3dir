@@ -248,8 +248,7 @@ int WinningCondition_Assault()
 		SetWinners(team, NUM_TEAM_1);
 	}
 
-	entity ent;
-	ent = find(NULL, classname, "target_assault_roundend");
+	entity ent = find(NULL, classname, "target_assault_roundend");
 	if(ent)
 	{
 		if(ent.winning)	// round end has been triggered by attacking team

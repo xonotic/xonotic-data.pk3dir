@@ -51,8 +51,7 @@ void sandbox_ObjectFunction_Touch(entity this, entity toucher)
 	this.touch_timer = time + 0.1;
 
 	// make particle count and sound volume depend on impact speed
-	float intensity;
-	intensity = vlen(this.velocity) + vlen(toucher.velocity);
+	float intensity = vlen(this.velocity) + vlen(toucher.velocity);
 	if(intensity) // avoid divisions by 0
 		intensity /= 2; // average the two velocities
 	if (!(intensity >= autocvar_g_sandbox_object_material_velocity_min))
@@ -435,8 +434,7 @@ void sandbox_Database_Load()
 			if(substring(file_read, 0, 1) == "#")
 				continue;
 
-			entity e;
-			e = sandbox_ObjectPort_Load(NULL, file_read, true);
+			entity e = sandbox_ObjectPort_Load(NULL, file_read, true);
 
 			if(e.material)
 			{

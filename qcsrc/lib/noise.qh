@@ -17,8 +17,7 @@ float Noise_Brown(entity e, float dt)
 ERASEABLE
 float Noise_Pink(entity e, float dt)
 {
-	float f;
-	f = dt * 60;
+	float f = dt * 60;
 	// http://home.earthlink.net/~ltrammell/tech/pinkalg.htm
 	if (random() > (0.3190 ** f)) e.noise_paccum = 0.34848 * (2 * random() - 1);
 	if (random() > (0.7756 ** f)) e.noise_paccum2 = 0.28768 * (2 * random() - 1);

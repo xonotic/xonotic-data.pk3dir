@@ -578,9 +578,7 @@ void Draw_WaypointSprite(entity this)
     || o.y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
     {
         // scale it to be just in view
-        vector d;
-
-        d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
+        vector d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
         ang = atan2(-d.x, -d.y);
         if (o.z < 0)
             ang += M_PI;
@@ -615,8 +613,7 @@ void Draw_WaypointSprite(entity this)
 #if 1
         ang = M_PI;
 #else
-        vector d;
-        d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
+        vector d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
         ang = atan2(-d.x, -d.y);
 #endif
     }

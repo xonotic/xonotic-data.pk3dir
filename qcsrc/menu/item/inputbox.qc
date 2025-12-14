@@ -208,8 +208,7 @@
 
 		if (me.dragScrollTimer < time)
 		{
-			float save;
-			save = me.scrollPos;
+			float save = me.scrollPos;
 			me.scrollPos = bound(cursorPosInWidths - (0.875 - me.keepspaceLeft - me.keepspaceRight), me.scrollPos, cursorPosInWidths - 0.125);
 			if (me.scrollPos != save) me.dragScrollTimer = time + 0.2;
 		}

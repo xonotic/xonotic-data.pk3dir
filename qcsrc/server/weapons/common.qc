@@ -129,8 +129,7 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 
 	if (toucher == NULL && this.size != '0 0 0')
 	{
-		vector tic;
-		tic = this.velocity * sys_frametime;
+		vector tic = this.velocity * sys_frametime;
 		tic += normalize(tic) * vlen(this.maxs - this.mins);
 		traceline(this.origin - tic, this.origin + tic, MOVE_NORMAL, this);
 		if (trace_fraction >= 1)

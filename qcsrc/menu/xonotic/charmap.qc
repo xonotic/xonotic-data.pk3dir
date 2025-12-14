@@ -31,8 +31,7 @@ string charmap_cellToChar(entity me, vector cell)
 
 entity makeXonoticCharmap(entity controlledInputBox)
 {
-	entity me;
-	me = NEW(XonoticCharmap);
+	entity me = NEW(XonoticCharmap);
 	me.configureXonoticCharmap(me, controlledInputBox);
 	return me;
 }

@@ -57,8 +57,7 @@ float nexball_mode;
 
 float OtherTeam(float t)  //works only if there are two teams on the map!
 {
-	entity e;
-	e = find(NULL, classname, "nexball_team");
+	entity e = find(NULL, classname, "nexball_team");
 	if(e.team == t)
 		e = find(e, classname, "nexball_team");
 	return e.team;
@@ -130,8 +129,7 @@ void relocate_nexball(entity this)
 
 void DropOwner(entity this)
 {
-	entity ownr;
-	ownr = this.owner;
+	entity ownr = this.owner;
 	DropBall(this, ownr.origin, ownr.velocity);
 	makevectors(ownr.v_angle.y * '0 1 0');
 	ownr.velocity += ('0 0 0.75' - v_forward) * 1000;
@@ -472,8 +470,7 @@ void nb_spawnteam(string teamname, float teamcolor)
 void nb_spawnteams()
 {
 	bool t_red = false, t_blue = false, t_yellow = false, t_pink = false;
-	entity e;
-	for(e = NULL; (e = find(e, classname, "nexball_goal"));)
+	for(entity e = NULL; (e = find(e, classname, "nexball_goal"));)
 	{
 		switch(e.team)
 		{

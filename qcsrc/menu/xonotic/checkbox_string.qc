@@ -2,8 +2,7 @@
 
 entity makeXonoticCheckBoxString(string theYesValue, string theNoValue, string theCvar, string theText)
 {
-	entity me;
-	me = NEW(XonoticCheckBoxString);
+	entity me = NEW(XonoticCheckBoxString);
 	me.configureXonoticCheckBoxString(me, theYesValue, theNoValue, theCvar, theText);
 	return me;
 }

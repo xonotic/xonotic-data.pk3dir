@@ -417,8 +417,7 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor, .entity weaponentit
 			});
 		});
 
-		float desirabledamage;
-		desirabledamage = enemydamage;
+		float desirabledamage = enemydamage;
 		if(StatusEffects_active(STATUSEFFECT_Shield, actor) && !StatusEffects_active(STATUSEFFECT_SpawnShield, actor))
 			desirabledamage -= selfdamage * autocvar_g_balance_selfdamagepercent;
 		if(teamplay && actor.team)

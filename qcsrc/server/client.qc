@@ -1483,8 +1483,7 @@ void calculate_player_respawn_time(entity this)
 // added to the model skins
 /*void UpdateColorModHack()
 {
-	float c;
-	c = this.clientcolors & 15;
+	float c = this.clientcolors & 15;
 	// LordHavoc: only bothering to support white, green, red, yellow, blue
 	     if (!teamplay) this.colormod = '0 0 0';
 	else if (c ==  0) this.colormod = '1.00 1.00 1.00';

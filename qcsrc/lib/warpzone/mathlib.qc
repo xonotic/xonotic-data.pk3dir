@@ -142,8 +142,7 @@ float hypot(float e, float f)
 float erf(float e)
 {
 	// approximation taken from wikipedia
-	float f;
-	f = e*e;
+	float f = e*e;
 	return copysign(sqrt(1 - exp(-f * (1.273239544735163 + 0.14001228868667 * f) / (1 + 0.14001228868667 * f))), e);
 }
 float erfc(float e)
@@ -159,8 +158,7 @@ vector lgamma(float e)
 		return nan("gamma") * '1 1 1';
 	if(e < 0.1)
 	{
-		vector v;
-		v = lgamma(1.0 - e);
+		vector v = lgamma(1.0 - e);
 		// reflection formula:
 		// gamma(1-z) * gamma(z) = pi / sin(pi*z)
 		// lgamma(1-z) + lgamma(z) = log(pi) - log(sin(pi*z))

@@ -4,8 +4,7 @@
 
 entity makeXonoticHUDSkinList()
 {
-	entity me;
-	me = NEW(XonoticHUDSkinList);
+	entity me = NEW(XonoticHUDSkinList);
 	me.configureXonoticHUDSkinList(me);
 	return me;
 }

@@ -90,8 +90,7 @@ float race_readPos(string map, float t)
 
 void race_writeTime(string map, float t, string myuid)
 {
-	float newpos;
-	newpos = race_readPos(map, t);
+	float newpos = race_readPos(map, t);
 
 	float i, prevpos = 0;
 	for(i = 1; i <= RANKINGS_CNT; ++i)
@@ -1349,8 +1348,7 @@ float race_GetFractionalLapCount(entity e)
 	// also, this code is slow and would need optimization (i.e. "next CP"
 	// links on CP entities)
 
-	float l;
-	l = GameRules_scoring_add(e, RACE_LAPS, 0);
+	float l = GameRules_scoring_add(e, RACE_LAPS, 0);
 	if(CS(e).race_completed)
 		return l; // not fractional
 

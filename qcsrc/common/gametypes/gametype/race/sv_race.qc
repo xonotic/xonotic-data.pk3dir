@@ -100,8 +100,7 @@ float WinningCondition_Race(float fraglimit)
 
 float WinningCondition_QualifyingThenRace(float limit)
 {
-	float wc;
-	wc = WinningCondition_Scores(limit, 0);
+	float wc = WinningCondition_Scores(limit, 0);
 
 	// NEVER initiate overtime
 	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)

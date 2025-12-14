@@ -51,8 +51,7 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 	vector new_forward, new_up;
 	vector new_yawforward;
 
-	vector ang;
-	ang = vangle;
+	vector ang = vangle;
 	/*
 	   ang_x = bound(-89, mod(-ang_x + 180, 360) - 180, 89);
 	   ang = AnglesTransform_ApplyToVAngles(transform, ang);
@@ -218,8 +217,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player, entity portal_owne
 
 float Portal_FindSafeOrigin(entity portal)
 {
-	vector o;
-	o = portal.origin;
+	vector o = portal.origin;
 	portal.mins = PL_MIN_CONST - SAFERNUDGE;
 	portal.maxs = PL_MAX_CONST + SAFERNUDGE;
 	fixedmakevectors(portal.mangle);
@@ -409,8 +407,7 @@ void Portal_Connect(entity teleporter, entity destination)
 
 void Portal_Remove(entity portal, float killed)
 {
-	entity e;
-	e = portal.enemy;
+	entity e = portal.enemy;
 
 	if(e)
 	{
@@ -634,13 +631,11 @@ void Portal_ClearWithID(entity own, float id)
 
 entity Portal_Spawn(entity own, vector org, vector ang)
 {
-	entity portal;
-
 	fixedmakevectors(ang);
 	if(!CheckWireframeBox(own, org - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
 		return NULL;
 
-	portal = new(portal);
+	entity portal = new(portal);
 	portal.aiment = own;
 	setorigin(portal, org);
 	portal.mangle = ang;
@@ -671,15 +666,11 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 
 float Portal_SpawnInPortalAtTrace(entity own, vector dir, float portal_id_val)
 {
-	entity portal;
-	vector ang;
-	vector org;
-
-	org = trace_endpos;
-	ang = fixedvectoangles2(trace_plane_normal, dir);
+	vector org = trace_endpos;
+	vector ang = fixedvectoangles2(trace_plane_normal, dir);
 	fixedmakevectors(ang);
 
-	portal = Portal_Spawn(own, org, ang);
+	entity portal = Portal_Spawn(own, org, ang);
 	if(!portal)
 		return 0;
 
@@ -691,15 +682,11 @@ float Portal_SpawnInPortalAtTrace(entity own, vector dir, float portal_id_val)
 
 float Portal_SpawnOutPortalAtTrace(entity own, vector dir, float portal_id_val)
 {
-	entity portal;
-	vector ang;
-	vector org;
-
-	org = trace_endpos;
-	ang = fixedvectoangles2(trace_plane_normal, dir);
+	vector org = trace_endpos;
+	vector ang = fixedvectoangles2(trace_plane_normal, dir);
 	fixedmakevectors(ang);
 
-	portal = Portal_Spawn(own, org, ang);
+	entity portal = Portal_Spawn(own, org, ang);
 	if(!portal)
 		return 0;
 

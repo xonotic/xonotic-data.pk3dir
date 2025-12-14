@@ -418,9 +418,7 @@ METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
     {
         if (it.tur_dist_enemy < (autocvar_g_turrets_unit_walker_melee_range) && it.animflag != ANIM_MELEE)
         {
-            vector wish_angle;
-
-            wish_angle = angleofs(it, it.enemy);
+            vector wish_angle = angleofs(it, it.enemy);
             if (it.animflag != ANIM_SWIM)
             if (fabs(wish_angle_y) < 15)
             {
@@ -614,9 +612,7 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
 
 void walker_draw(entity this)
 {
-    float dt;
-
-    dt = time - this.move_time;
+    float dt = time - this.move_time;
     this.move_time = time;
     if(dt <= 0)
         return;

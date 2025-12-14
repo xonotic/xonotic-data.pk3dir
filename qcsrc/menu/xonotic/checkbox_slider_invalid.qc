@@ -4,8 +4,7 @@
 
 entity makeXonoticSliderCheckBox(float theOffValue, float isInverted, entity theControlledSlider, string theText)
 {
-	entity me;
-	me = NEW(XonoticSliderCheckBox);
+	entity me = NEW(XonoticSliderCheckBox);
 	me.configureXonoticSliderCheckBox(me, theOffValue, isInverted, theControlledSlider, theText);
 	return me;
 }

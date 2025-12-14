@@ -26,8 +26,7 @@ void XonoticGameHUDSettingsTab_showNotify(entity me)
 }
 entity makeXonoticGameHUDSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticGameHUDSettingsTab);
+	entity me = NEW(XonoticGameHUDSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

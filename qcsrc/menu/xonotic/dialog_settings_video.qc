@@ -10,8 +10,7 @@
 
 entity makeXonoticVideoSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticVideoSettingsTab);
+	entity me = NEW(XonoticVideoSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

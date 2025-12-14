@@ -3,8 +3,7 @@
 
 entity makeXonoticTextBox()
 {
-	entity me;
-	me = NEW(XonoticTextBox);
+	entity me = NEW(XonoticTextBox);
 	me.configureXonoticListBox(me);
 	return me;
 }

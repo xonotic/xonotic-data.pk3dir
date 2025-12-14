@@ -1570,8 +1570,7 @@ int havocbot_ctf_teamcount(entity bot, vector org, float tc_radius)
 #if 0
 void havocbot_goalrating_ctf_ourflag(entity this, float ratingscale)
 {
-	entity head;
-	head = ctf_worldflaglist;
+	entity head = ctf_worldflaglist;
 	while (head)
 	{
 		if (CTF_SAMETEAM(this, head))
@@ -1656,9 +1655,7 @@ void havocbot_goalrating_ctf_enemybase(entity this, float ratingscale)
 		return;
 	}
 	*/
-	entity head;
-
-	head = havocbot_ctf_find_enemy_flag(this);
+	entity head = havocbot_ctf_find_enemy_flag(this);
 
 	if (!head)
 		return;
@@ -1668,9 +1665,7 @@ void havocbot_goalrating_ctf_enemybase(entity this, float ratingscale)
 
 void havocbot_goalrating_ctf_ourstolenflag(entity this, float ratingscale)
 {
-	entity mf;
-
-	mf = havocbot_ctf_find_flag(this);
+	entity mf = havocbot_ctf_find_flag(this);
 
 	if(mf.ctf_status == FLAG_BASE)
 		return;
@@ -2080,9 +2075,7 @@ void havocbot_role_ctf_middle(entity this)
 
 	if (navigation_goalrating_timeout(this))
 	{
-		vector org;
-
-		org = havocbot_middlepoint;
+		vector org = havocbot_middlepoint;
 		org.z = this.origin.z;
 
 		navigation_goalrating_start(this);

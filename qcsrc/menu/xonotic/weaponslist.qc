@@ -13,8 +13,7 @@ void XonoticWeaponsList_cb(string _name, string _icon)
 
 entity makeXonoticWeaponsList()
 {
-	entity me;
-	me = NEW(XonoticWeaponsList);
+	entity me = NEW(XonoticWeaponsList);
 	me.configureXonoticListBox(me);
 	return me;
 }

@@ -10,8 +10,7 @@
 
 entity makeXonoticScreenshotBrowserTab()
 {
-	entity me;
-	me = NEW(XonoticScreenshotBrowserTab);
+	entity me = NEW(XonoticScreenshotBrowserTab);
 	me.configureDialog(me);
 	return me;
 }

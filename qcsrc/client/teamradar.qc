@@ -16,10 +16,9 @@ vector teamradar_3dcoord_to_texcoord(vector in)
 
 vector teamradar_texcoord_to_2dcoord(vector in)
 {
-	vector out;
 	in -= teamradar_origin3d_in_texcoord;
 
-	out = Rotate(in, teamradar_angle);
+	vector out = Rotate(in, teamradar_angle);
 	out.y = -out.y; // screen space is reversed
 
 	out *= teamradar_size;
@@ -31,8 +30,7 @@ vector teamradar_texcoord_to_2dcoord(vector in)
 
 vector teamradar_2dcoord_to_texcoord(vector in)
 {
-	vector out;
-	out = in;
+	vector out = in;
 
 	out -= teamradar_origin2d;
 	if(v_flipped)
@@ -58,13 +56,10 @@ vector teamradar_texcoord_to_3dcoord(vector in, float oz)
 
 void draw_teamradar_background(float fg)
 {
-	float fga;
-	vector fgc;
-
 	if(fg > 0 && minimapname != "")
 	{
-		fga = 1;
-		fgc = '1 1 1' * fg;
+		vector fgc = '1 1 1' * fg;
+		float fga = 1;
 		R_BeginPolygon(minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP, true);
 		if(v_flipped)
 		{
@@ -86,9 +81,7 @@ void draw_teamradar_background(float fg)
 
 void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 {
-	vector coord, rgb2;
-
-	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord3d));
+	vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord3d));
 
 	vector forward, right, up;
 	MAKE_VECTORS(pangles - '0 1 0' * (teamradar_angle * RAD2DEG), forward, right, up);
@@ -104,6 +97,7 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 	right.x = -forward.y;
 	right.y = forward.x;
 
+	vector rgb2;
 	if(rgb == '1 1 1')
 		rgb2 = '0 0 0';
 	else
@@ -148,18 +142,17 @@ void draw_teamradar_icon(vector coord, entity icon, entity pingdata, vector rgb,
 void draw_teamradar_link(vector start, vector end, int colors)
 {
 	TC(int, colors);
-	vector c0, c1, norm;
 
 	start = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(start));
 	end = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(end));
-	norm = normalize(start - end);
+	vector norm = normalize(start - end);
 	norm.z = norm.x;
 	norm.x = -norm.y;
 	norm.y = norm.z;
 	norm.z = 0;
 
-	c0 = colormapPaletteColor(colors & 0x0F, false);
-	c1 = colormapPaletteColor((colors & 0xF0) / 0x10, false);
+	vector c0 = colormapPaletteColor(colors & 0x0F, false);
+	vector c1 = colormapPaletteColor((colors & 0xF0) / 0x10, false);
 
 	R_BeginPolygon("", 0, true);
 	R_PolygonVertex(start - norm, '0 0 0', c0, panel_fg_alpha);

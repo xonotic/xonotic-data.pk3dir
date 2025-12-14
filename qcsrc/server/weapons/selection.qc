@@ -304,16 +304,14 @@ void W_SwitchWeapon_TryOthers(entity this, Weapon w, .entity weaponentity)
 
 void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponentity)
 {
-	float w;
-	w = W_GetCycleWeapon(this, weaponorder, dir, -1, true, true, weaponentity);
+	float w = W_GetCycleWeapon(this, weaponorder, dir, -1, true, true, weaponentity);
 	if(w > 0)
 		W_SwitchWeapon(this, REGISTRY_GET(Weapons, w), weaponentity);
 }
 
 void W_NextWeaponOnImpulse(entity this, float imp, .entity weaponentity)
 {
-	float w;
-	w = W_GetCycleWeapon(this, CS_CVAR(this).cvar_cl_weaponpriority, +1, imp, true, (CS_CVAR(this).cvar_cl_weaponimpulsemode == 0), weaponentity);
+	float w = W_GetCycleWeapon(this, CS_CVAR(this).cvar_cl_weaponpriority, +1, imp, true, (CS_CVAR(this).cvar_cl_weaponimpulsemode == 0), weaponentity);
 	if(w > 0)
 		W_SwitchWeapon(this, REGISTRY_GET(Weapons, w), weaponentity);
 }

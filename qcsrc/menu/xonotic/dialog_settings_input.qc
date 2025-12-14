@@ -49,8 +49,7 @@ void linkSensitivities(entity slider, entity field)
 
 entity makeXonoticInputSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticInputSettingsTab);
+	entity me = NEW(XonoticInputSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

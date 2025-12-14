@@ -1110,8 +1110,7 @@ void bd_hud_board(vector pos, vector mySize)
 			victory_text = _("Well done! Click \"Next Level\" to continue");
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
-		vector win_sz;
-		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
+		vector win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
 			victory_text, winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'0.3 0.3 1',0.8*panel_fg_alpha,DRAWFLAG_ADDITIVE);
@@ -1128,8 +1127,7 @@ void bd_hud_board(vector pos, vector mySize)
 void bd_hud_status(vector pos, vector mySize)
 {
 	HUD_Panel_DrawBg();
-	vector ts;
-	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
+	vector ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
 
 	pos_y += ts_y;

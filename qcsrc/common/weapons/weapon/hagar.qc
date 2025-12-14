@@ -385,8 +385,7 @@ METHOD(Hagar, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 
 METHOD(Hagar, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	float loadable_secondary;
-	loadable_secondary = (WEP_CVAR_SEC(WEP_HAGAR, load) && WEP_CVAR(WEP_HAGAR, secondary));
+	float loadable_secondary = (WEP_CVAR_SEC(WEP_HAGAR, load) && WEP_CVAR(WEP_HAGAR, secondary));
 
 	if(loadable_secondary)
 		W_Hagar_Attack2_Load(thiswep, actor, weaponentity); // must always run each frame

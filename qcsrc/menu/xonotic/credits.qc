@@ -679,8 +679,7 @@ void credits_export()
 
 entity makeXonoticCreditsList()
 {
-	entity me;
-	me = NEW(XonoticCreditsList);
+	entity me = NEW(XonoticCreditsList);
 	me.configureXonoticCreditsList(me);
 	return me;
 }

@@ -10,8 +10,7 @@ void XonoticDamageTextSettings_showNotify(entity me)
 }
 entity makeXonoticDamageTextSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticDamageTextSettings);
+	entity me = NEW(XonoticDamageTextSettings);
 	me.configureDialog(me);
 	return me;
 }

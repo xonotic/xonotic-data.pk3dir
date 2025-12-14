@@ -6,8 +6,7 @@
 
 entity makeXonoticGametypeList()
 {
-	entity me;
-	me = NEW(XonoticGametypeList);
+	entity me = NEW(XonoticGametypeList);
 	me.configureXonoticGametypeList(me);
 	return me;
 }

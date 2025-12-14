@@ -740,8 +740,7 @@ void bot_serverframe()
 
 	if(time > autoskill_nextthink)
 	{
-		float a;
-		a = autocvar_skill_auto;
+		float a = autocvar_skill_auto;
 		if(a)
 			autoskill(a);
 		autoskill_nextthink = time + 5;
@@ -815,8 +814,7 @@ void bot_serverframe()
 
 		if (botframe_nextdangertime < time)
 		{
-			float interval;
-			interval = autocvar_bot_ai_dangerdetectioninterval;
+			float interval = autocvar_bot_ai_dangerdetectioninterval;
 			if (botframe_nextdangertime < time - interval * 1.5)
 				botframe_nextdangertime = time;
 			botframe_nextdangertime += interval;

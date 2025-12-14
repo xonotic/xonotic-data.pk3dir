@@ -1630,8 +1630,7 @@ void havocbot_aim(entity this)
 bool havocbot_moveto_refresh_route(entity this)
 {
 	// Refresh path to goal if necessary
-	entity wp;
-	wp = this.havocbot_personal_waypoint;
+	entity wp = this.havocbot_personal_waypoint;
 	navigation_goalrating_start(this);
 	navigation_routerating(this, wp, 10000, 10000);
 	navigation_goalrating_end(this);

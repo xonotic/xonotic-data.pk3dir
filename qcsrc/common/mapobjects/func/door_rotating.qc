@@ -80,8 +80,7 @@ void door_rotating_go_up(entity this, entity oth)
 	this.state = STATE_UP;
 	SUB_CalcAngleMove (this, this.pos2, TSPEED_LINEAR, this.speed, door_rotating_hit_top);
 
-	string oldmessage;
-	oldmessage = this.message;
+	string oldmessage = this.message;
 	this.message = "";
 	SUB_UseTargets(this, NULL, oth); // TODO: is oth needed here?
 	this.message = oldmessage;

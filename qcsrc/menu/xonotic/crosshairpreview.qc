@@ -2,8 +2,7 @@
 
 entity makeXonoticCrosshairPreview()
 {
-	entity me;
-	me = NEW(XonoticCrosshairPreview);
+	entity me = NEW(XonoticCrosshairPreview);
 	me.configureXonoticCrosshairPreview(me);
 	return me;
 }
@@ -16,8 +15,7 @@ void XonoticCrosshairPreview_configureXonoticCrosshairPreview(entity me)
 
 void XonoticCrosshairPreview_draw(entity me)
 {
-	float save;
-	save = draw_alpha;
+	float save = draw_alpha;
 	if(me.disabled)
 		draw_alpha *= me.disabledAlpha;
 

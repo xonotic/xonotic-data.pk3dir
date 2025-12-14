@@ -238,8 +238,7 @@ void HUD_Score()
 		else
 			distribution_color = eX;
 
-		string distribution_str;
-		distribution_str = ftos(distribution);
+		string distribution_str = ftos(distribution);
 		draw_beginBoldFont();
 		if (distribution >= 0)
 		{

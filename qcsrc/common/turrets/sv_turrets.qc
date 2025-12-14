@@ -429,8 +429,7 @@ void turret_projectile_explode(entity this)
 	this.takedamage = DAMAGE_NO;
 	this.event_damage = func_null;
 #ifdef TURRET_DEBUG
-	float d;
-	d = RadiusDamage (this, this.owner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.projectiledeathtype, DMG_NOWEP, NULL);
+	float d = RadiusDamage (this, this.owner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.projectiledeathtype, DMG_NOWEP, NULL);
 	this.owner.tur_debug_dmg_t_h += d;
 	this.owner.tur_debug_dmg_t_f += this.owner.shot_dmg;
 #else

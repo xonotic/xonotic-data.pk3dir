@@ -62,9 +62,7 @@ vector autocvar_g_vehicle_raptor_bouncepain = '1 4 1000';
 
 void raptor_land(entity this)
 {
-	float hgt;
-
-	hgt = vehicle_altitude(this, 512);
+	float hgt = vehicle_altitude(this, 512);
 	this.velocity = (this.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * PHYS_INPUT_FRAMETIME);
 	this.angles_x *= 0.95;
 	this.angles_z *= 0.95;
@@ -194,8 +192,7 @@ bool raptor_frame(entity this, float dt)
 		}
 	//}
 
-	vector vang;
-	vang = vehic.angles;
+	vector vang = vehic.angles;
 	vector df = vectoangles(normalize(trace_endpos - vehic.origin + '0 0 32'));
 	vang_x *= -1;
 	df_x *= -1;

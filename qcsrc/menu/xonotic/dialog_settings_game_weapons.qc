@@ -15,8 +15,7 @@ void XonoticGameWeaponsSettingsTab_showNotify(entity me)
 }
 entity makeXonoticGameWeaponsSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticGameWeaponsSettingsTab);
+	entity me = NEW(XonoticGameWeaponsSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

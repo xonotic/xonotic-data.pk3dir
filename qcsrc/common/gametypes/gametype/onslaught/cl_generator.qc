@@ -209,8 +209,7 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 
 	if(sf & GSF_STATUS)
 	{
-		int _tmp;
-		_tmp = ReadByte();
+		int _tmp = ReadByte();
 		if(_tmp != this.team)
 		{
 			this.team = _tmp;

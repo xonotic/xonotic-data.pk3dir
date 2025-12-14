@@ -616,8 +616,7 @@ void HUD_Crosshair(entity this)
 
 			if (autocvar_crosshair_dot)
 			{
-				vector wcross_color_old;
-				wcross_color_old = wcross_color;
+				vector wcross_color_old = wcross_color;
 
 				if (autocvar_crosshair_dot_color_custom && autocvar_crosshair_dot_color != "0")
 					wcross_color = stov(autocvar_crosshair_dot_color);

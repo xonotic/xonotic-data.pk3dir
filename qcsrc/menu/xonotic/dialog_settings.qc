@@ -12,8 +12,7 @@
 
 void XonoticSettingsDialog_fill(entity me)
 {
-	entity mc;
-	mc = makeXonoticTabController(me.rows - 2.5);
+	entity mc = makeXonoticTabController(me.rows - 2.5);
 	me.TR(me);
 		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Video"),    makeXonoticVideoSettingsTab()));
 		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Effects"),  makeXonoticEffectsSettingsTab()));

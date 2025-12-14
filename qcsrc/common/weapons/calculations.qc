@@ -6,8 +6,7 @@
 
 float explosion_calcpush_getmultiplier(vector explosion_v, vector target_v)
 {
-	float a;
-	a  = explosion_v * (explosion_v - target_v);
+	float a = explosion_v * (explosion_v - target_v);
 
 	if(a <= 0)
 		// target is too fast to be hittable by this
@@ -53,8 +52,7 @@ vector damage_explosion_calcpush(vector explosion_f, vector target_v, float spee
 	// find m so that
 	//   speedfactor * (1 + e) * m / (1 + m) == 1
 	m = 1 / ((1 + 0) * speedfactor - 1);
-	vector v;
-	v = explosion_calcpush(explosion_f * speedfactor, m, target_v, 1, 0);
+	vector v = explosion_calcpush(explosion_f * speedfactor, m, target_v, 1, 0);
 	// the factor we then get is:
 	//   1
 	LOG_INFOF("MASS: %f\nv: %v -> %v\nENERGY BEFORE == %f + %f = %f\nENERGY AFTER >= %f",
