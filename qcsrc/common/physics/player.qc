@@ -849,7 +849,7 @@ bool IsFlying(entity this)
 
 void sys_phys_update(entity this, float dt);
 #if defined(SVQC)
-void SV_PlayerPhysics(entity this)
+void SV_PlayerPhysics(entity this) // called by engine before it calls PlayerPreThink()
 #elif defined(CSQC)
 void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #endif
