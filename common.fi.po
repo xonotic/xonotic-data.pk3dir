@@ -98,7 +98,7 @@ msgstr "Tarkistuspiste %d"
 #: qcsrc/client/hud/panel/engineinfo.qc:72
 #, c-format
 msgid "FPS: %.*f"
-msgstr "FPS-ruutunopeus: %.*f"
+msgstr "FPS-kehystaajuus: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 msgid "^1Observing"
@@ -344,7 +344,7 @@ msgstr "QMCMD^hei / onnea matkaan ja pidä hauskaa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:845
 msgid "QMCMD^Send in English"
-msgstr "QMCMD^Lähetä Suomeksi"
+msgstr "QMCMD^Lähetä suomeksi"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 #: qcsrc/client/hud/panel/quickmenu.qc:866
@@ -492,7 +492,7 @@ msgstr "QMCMD^Asekohtainen tähtäin"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:877
 msgid "QMCMD^FPS"
-msgstr "QMCMD^FPS-ruutunopeus"
+msgstr "QMCMD^FPS-kehystaajuus"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:878
 msgid "QMCMD^Net graph"
@@ -522,7 +522,7 @@ msgstr "QMCMD^Tarkkailijakamera"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:893
 msgid "QMCMD^Increase speed"
-msgstr "QMCMD^Korota nopeutta"
+msgstr "QMCMD^Lisää nopeutta"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:894
 msgid "QMCMD^Decrease speed"
@@ -637,7 +637,7 @@ msgstr "Pallon hallussapidon yhteisaika Keepaway:ssa "
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "How often a flag (CTF) or a key (Key Hunt) was captured"
-msgstr ""
+msgstr "Kuinka usein lippu (CTF) tai avain (KeyHunt) saatiin kaapattua"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^caps"
@@ -717,11 +717,11 @@ msgstr "SCO^lktapot"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "FPS"
-msgstr "FPS-ruutunopeus"
+msgstr "FPS-kehystaajuus"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^fps"
-msgstr "SCO^fpsruutunopeus"
+msgstr "SCO^kehystaajuus"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of kills minus suicides"
@@ -1032,12 +1032,20 @@ msgid ""
 "or in all but these gametypes. You can also specify 'all' as a\n"
 "field to show all fields available for the current gametype."
 msgstr ""
+"Ennen kenttää voit laittaa + tai - merkin, jota seuraa pilkuilla eritelty "
+"lista\n"
+"pelimuodoista, sitten kenoviiva, saadaksesi kentän näkymään vain näissä\n"
+"tai kaikissa näissä pelimuodoissa. Voit myöskin määrittää 'kaikki' "
+"kenttänä \n"
+"näyttääksesi kaikki tarjolla olevat kentät sen hetkiselle pelimuodolle."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:733
 msgid ""
 "The special gametype names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams gametypes."
 msgstr ""
+"Erikoispelimuotojen nimiä 'teams' ja 'noteams' voidaan käyttää\n"
+"sisällyttämään/poistamaan KAIKKI teams/noteams pelimuodot."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:737
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -1068,7 +1076,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:194
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:199
 msgid "N/A"
-msgstr "N/A"
+msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1845
 #, c-format
@@ -1623,7 +1631,7 @@ msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
-"Etsi ja vie vihollisen lippu tukikohtaasi, jotta kaappat sen, puolusta "
+"Etsi ja vie vihollisen lippu tukikohtaasi kaapataksesi sen, puolusta "
 "tukikohtaasi toiselta joukkueelta"
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qh:30
@@ -6965,6 +6973,8 @@ msgid ""
 "obstacles to find its target. The rocket it fires is similar to that of the "
 "%s."
 msgstr ""
+"%s ampuu yhden voimakkaan, hakeutuvan raketin, joka välttelee esteitä "
+"hakiessaan kohdettaan. Sen ampuma raketti on samanlainen kuin %s,"
 
 #: qcsrc/common/turrets/turret/hk.qh:15
 msgid "Hunter-Killer Turret"
@@ -7047,7 +7057,7 @@ msgstr ""
 #: qcsrc/common/turrets/turret/plasma.qc:57
 #, c-format
 msgid "It is a weaker version of the %s, which has two electric ball cannons."
-msgstr ""
+msgstr "Heikompi %s-versio, jolla on kaksi sähköpallotykkiä."
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
@@ -8875,7 +8885,7 @@ msgstr "Aikaisemmat panoksensa antajat"
 #: qcsrc/menu/xonotic/cvarlist.qc:25
 #, c-format
 msgid "%d results"
-msgstr ""
+msgstr "%d tulokset"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:25
 msgid "1 result"
@@ -12721,8 +12731,8 @@ msgid ""
 "Vsync prevents tearing, but increases latency and caps your fps at the "
 "screen refresh rate"
 msgstr ""
-"Vsync estää kuvanäkymän revintää, mutta lisää viivettä sekä asettaa katon "
-"ruudunpäivitykselle ruudun virkistysvasteessa"
+"Vsync estää kuvan repeilyä, mutta lisää viivettä ja asettaa rajan "
+"kehystaajuudelle ruudun virkistysvasteessa"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:188
 msgid "Show frames per second"
