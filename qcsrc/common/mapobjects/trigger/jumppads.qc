@@ -529,6 +529,20 @@ bool trigger_push_testorigin_for_item(entity tracetest_ent, entity item, vector 
 }
 #endif
 
+// target_push entities are never directly triggered
+// if the target field points to a target_push entity, return it
+// otherwise, return the original entity
+entity get_pusher_from_trigger(entity this)
+{
+	// jump pads should only point to one target_push, further targets are ignored
+	entity e = find(NULL, targetname, this.target);
+
+	if(e && e.classname == "target_push")
+		return e; // return the linked target_push entity
+	else
+		return this; // push and trigger are the same entity, return the original entity
+}
+
 #ifdef SVQC
 vector trigger_push_get_start_point(entity this)
 {
@@ -541,10 +555,11 @@ vector trigger_push_get_start_point(entity this)
 float trigger_push_get_push_time(entity this, vector endpos)
 {
 	vector org = trigger_push_get_start_point(this);
+	entity pusher = get_pusher_from_trigger(this);
 
 	float grav = PHYS_GRAVITY(NULL);
 
-	entity t = this.enemy;
+	entity t = pusher.enemy;
 	if (t)
 	{
 		entity e = spawn();
@@ -555,7 +570,7 @@ float trigger_push_get_push_time(entity this, vector endpos)
 		delete(e);
 		return (v.z + v2.z) / grav;
 	}
-	else if (!(this.target && this.target != ""))
+	else if (!(pusher.target && pusher.target != ""))
 	{
 		if (!this.team)
 		{
@@ -581,14 +596,15 @@ bool trigger_push_test(entity this, entity item)
 #ifdef SVQC
 	vector org = trigger_push_get_start_point(this);
 #endif
+	entity pusher = get_pusher_from_trigger(this);
 
-	if (this.target)
+	if (pusher.target)
 	{
 		int n = 0;
 #ifdef SVQC
 		vector vel = '0 0 0';
 #endif
-		for(entity t = NULL; (t = find(t, targetname, this.target)); )
+		for(entity t = NULL; (t = find(t, targetname, pusher.target)); )
 		{
 			++n;
 #ifdef SVQC
@@ -709,14 +725,14 @@ bool trigger_push_test(entity this, entity item)
 		{
 			// exactly one dest - bots love that
 			if (!this.team)
-				this.enemy = find(NULL, targetname, this.target);
+				pusher.enemy = find(NULL, targetname, pusher.target);
 			else // bots can't tell teamed jumppads from normal ones
-				this.enemy = NULL;
+				pusher.enemy = NULL;
 		}
 		else
 		{
 			// have to use random selection every single time
-			this.enemy = NULL;
+			pusher.enemy = NULL;
 		}
 
 	}
@@ -905,15 +921,14 @@ spawnfunc(target_push)
 
 	if(this.target && this.target != "") // Q3 or old style Nexuiz pusher
 	{
-		entity trigger_ent = findchain(target, this.targetname);
-		if (trigger_ent)
+		for (entity trigger_ent = findchain(target, this.targetname); trigger_ent; trigger_ent = trigger_ent.chain)
 		{
-			// apply size of its trigger entity so that it can be tested like a conventional
-			// trigger_push jumppad and spawn an usable box waypoyint
-			this.absmin = trigger_ent.absmin;
-			this.absmax = trigger_ent.absmax;
+			// add the triggering entity to the g_jumppads list. multiple jump pads can use the same target_push.
+			// this requires special handling in the navigation code since the target field will
+			// point to the target_push entity instead of the actual location entity
+			if(!IL_CONTAINS(g_jumppads, trigger_ent))
+				IL_PUSH(g_jumppads, trigger_ent);
 		}
-		IL_PUSH(g_jumppads, this);
 		InitializeEntity(this, trigger_push_findtarget, INITPRIO_FINDTARGET);
 	}
 	else // Q3 .angles and .speed pusher
