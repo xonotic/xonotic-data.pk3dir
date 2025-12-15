@@ -214,7 +214,6 @@ void movelib_groundalign4point(entity this, float spring_length, float spring_up
 
     a.x = r.z;
     r = this.origin;
-    r.z = r.z;
 
     push_angle.x = (a.z - c.z) * _max;
     push_angle.x += (b.z - d.z) * _max;
