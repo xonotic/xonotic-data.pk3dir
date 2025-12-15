@@ -639,9 +639,7 @@ msgstr "Temps total de possession de balle en mode Gardez-la-Balle"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "How often a flag (CTF) or a key (Key Hunt) was captured"
-msgstr ""
-"Combien de fois un drapeau (CTF) ou une clé (Chasse aux Clés) a été "
-"capturé(e)"
+msgstr "Fréquence de capture d'un drapeau (CTF) ou d'une clé (Chasse aux Clés)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^caps"
@@ -842,8 +840,8 @@ msgstr "objectifs"
 msgid ""
 "How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"
 msgstr ""
-"Combien de fois un drapeau (CTF), une clé (Chasse aux Clés) ou une balle "
-"(Gardez-la-Balle) a été ramassé(e)"
+"Fréquence de ramassage d'un drapeau (CTF), d'une clé (Chasse aux Clés) ou "
+"d'une balle (Gardez-la-Balle)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pickups"
@@ -4669,11 +4667,11 @@ msgstr "^BGLe drapeau a été détruit et est revenu à la base"
 #: qcsrc/common/notifications/all.inc:249
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
 msgstr ""
-"^BGLe drapeau ^TC^TT^BG a été lâché dans la base et est revenu tout seul"
+"^BGLe drapeau ^TC^TT^BG a été lâché dans la base et est revenu de lui-même"
 
 #: qcsrc/common/notifications/all.inc:250
 msgid "^BGThe flag was dropped in the base and returned itself"
-msgstr "^BGLe drapeau a été lâché dans la base et est revenu tout seul"
+msgstr "^BGLe drapeau a été lâché dans la base et est revenu de lui-même"
 
 #: qcsrc/common/notifications/all.inc:251
 msgid ""
@@ -4695,15 +4693,15 @@ msgid ""
 "itself"
 msgstr ""
 "^BGLe drapeau ^TC^TT^BG s'est impatienté après ^F1%.2f^BG secondes et est "
-"revenu tout seul"
+"revenu de lui-même"
 
 #: qcsrc/common/notifications/all.inc:254
 #, c-format
 msgid ""
 "^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"
 msgstr ""
-"^BGLe drapeau s'est impatienté après ^F1%.2f^BG secondes et est revenu tout "
-"seul"
+"^BGLe drapeau s'est impatienté après ^F1%.2f^BG secondes et est revenu de "
+"lui-même"
 
 #: qcsrc/common/notifications/all.inc:255
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
@@ -4837,7 +4835,7 @@ msgstr "^BG%s%s^K1 a été poussé face à un monstre par ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:284
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"
-msgstr "^BG%s%s^K1 a été explosé par la Grenade de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 a été pulvérisé par la Grenade de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:285
 #, c-format
@@ -4852,7 +4850,7 @@ msgstr "^BG%s%s^K1 a été brûlé à mort par la Grenade de Napalm de ^BG%s^K1%
 #: qcsrc/common/notifications/all.inc:286
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"
-msgstr "^BG%s%s^K1 a été explosé par la Grenade de Glace de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 a été pulvérisé par la Grenade de Glace de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:287
 #, c-format
@@ -4985,7 +4983,7 @@ msgstr "^BG%s^K1 pensait avoir trouvé un bon endroit pour camper%s%s"
 #: qcsrc/common/notifications/all.inc:311
 #, c-format
 msgid "^BG%s^K1 unfairly eliminated themselves%s%s"
-msgstr "^BG%s^K1 s'est injustement éliminé(e)%s%s"
+msgstr "^BG%s^K1 s'est auto-éliminé de manière injuste%s%s"
 
 #: qcsrc/common/notifications/all.inc:313
 #, c-format
@@ -5030,17 +5028,17 @@ msgstr "^BG%s^K1 a trouvé un endroit au chaud%s%s"
 #: qcsrc/common/notifications/all.inc:317
 #, c-format
 msgid "^BG%s^K1 turned into hot slag%s%s"
-msgstr "^BG%s^K1 s'est transformé en scories brûlantes%s%s"
+msgstr "^BG%s^K1 s'est transformé en scorie brûlante%s%s"
 
 #: qcsrc/common/notifications/all.inc:318
 #, c-format
 msgid "^BG%s^K1 was exploded by a Mage%s%s"
-msgstr "^BG%s^K1 a été explosé par un Mage%s%s"
+msgstr "^BG%s^K1 a été pulvérisé par un Mage%s%s"
 
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
-msgstr "^BG%s^K1 s'est retrouvé les tripes à l'air à cause d'un Golem%s%s"
+msgstr "^BG%s^K1 s'est fait retourner les tripes par un Golem%s%s"
 
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
@@ -5288,7 +5286,7 @@ msgstr "^BG%s^K3 a été dégelé automatiquement après %s secondes"
 #: qcsrc/common/notifications/all.inc:371
 #, c-format
 msgid "^BG%s^K1 froze themselves"
-msgstr "^BG%s^K1 s'est gelé(e) tout(e) seul(e)"
+msgstr "^BG%s^K1 s'est auto-gelé"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:706
@@ -5766,7 +5764,7 @@ msgstr "^BG%s%s^K1 a été abattu par le Blaster de ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s^K1 shot themselves to hell with their Blaster%s%s"
-msgstr "^BG%s^K1 s'est expédié(e) en enfer avec son propre Blaster%s%s"
+msgstr "^BG%s^K1 s'est expédié en enfer avec son propre Blaster%s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
@@ -6327,13 +6325,13 @@ msgstr "^K1%sVous avez été gelé par ^BG%s"
 #: qcsrc/common/notifications/all.inc:638
 #, c-format
 msgid "^K1%sYou typefragged ^BG%s"
-msgstr "^K1%sVous avez tué ^BG%s pendant qu'il écrivait"
+msgstr "^K1%sVous avez tué ^BG%s pendant qu'il/elle écrivait"
 
 #: qcsrc/common/notifications/all.inc:639
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
 msgstr ""
-"^K1%sVous avez pris pour cible ^BG%s^K1 pendant qu'il/elle tapait au clavier"
+"^K1%sVous avez pris ^BG%s^K1 pour cible pendant qu'il/elle tapait au clavier"
 
 #: qcsrc/common/notifications/all.inc:640
 #, c-format
@@ -6378,7 +6376,7 @@ msgstr "^K1Change de tactique, campeur !"
 
 #: qcsrc/common/notifications/all.inc:653
 msgid "^K1You unfairly eliminated yourself!"
-msgstr "^K1Vous vous êtes injustement éliminé vous-même !"
+msgstr "^K1Vous vous êtes auto-éliminé de manière injuste !"
 
 #: qcsrc/common/notifications/all.inc:654
 #, c-format
