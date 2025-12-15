@@ -2713,14 +2713,14 @@ void PlayerPreThink (entity this)
 		entity e = CS(this).teamkill_soundsource;
 		entity oldpusher = e.pusher;
 		e.pusher = this;
-		PlayerSound(e, playersound_teamshoot, CH_VOICE, VOL_BASEVOICE, VOICETYPE_LASTATTACKER_ONLY);
+		PlayerSound(e, playersound_teamshoot, CH_VOICE, VOL_BASEVOICE, VOICETYPE_LASTATTACKER_ONLY, 1);
 		e.pusher = oldpusher;
 	}
 
 	if (CS(this).taunt_soundtime && time > CS(this).taunt_soundtime)
 	{
 		CS(this).taunt_soundtime = 0;
-		PlayerSound(this, playersound_taunt, CH_VOICE, VOL_BASEVOICE, VOICETYPE_AUTOTAUNT);
+		PlayerSound(this, playersound_taunt, CH_VOICE, VOL_BASEVOICE, VOICETYPE_AUTOTAUNT, 1);
 	}
 
 	target_voicescript_next(this);
@@ -2739,7 +2739,7 @@ void DrownPlayer(entity this)
 	if (this.waterlevel != WATERLEVEL_SUBMERGED)
 	{
 		if(STAT(AIR_FINISHED, this) && STAT(AIR_FINISHED, this) < time)
-			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
+			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
 		STAT(AIR_FINISHED, this) = 0;
 	}
 	else
