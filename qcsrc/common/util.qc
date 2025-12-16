@@ -992,80 +992,66 @@ string find_last_color_code(string s)
 	return "";
 }
 
+string take_wrapped_line_until(int take_until, float colorlen)
+{
+	string s = getWrappedLine_remaining;
+	int last_word = take_until - 1;
+	while (last_word > 0 && substring(s, last_word, 1) != " ")
+		--last_word;
+
+	int skip = 0;
+	if (last_word != 0)
+	{
+		take_until = last_word;
+		skip = 1;
+	}
+
+	getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
+	if (getWrappedLine_remaining == "")
+		getWrappedLine_remaining = string_null;
+	else if (colorlen == 0)
+		getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
+	return substring(s, 0, take_until);
+}
+
 string getWrappedLine(float maxWidth, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
 	string s = getWrappedLine_remaining;
-
-	if(maxWidth <= 0)
+	if (maxWidth <= 0)
 	{
 		getWrappedLine_remaining = string_null;
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
 	int take_until = textLengthUpToWidth(s, maxWidth, theFontSize, tw);
-	if(take_until > 0 && take_until < strlen(s))
-	{
-		int last_word = take_until - 1;
-		while(last_word > 0 && substring(s, last_word, 1) != " ")
-			--last_word;
 
-		int skip = 0;
-		if(last_word != 0)
-		{
-			take_until = last_word;
-			skip = 1;
-		}
-
-		getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
-		if(getWrappedLine_remaining == "")
-			getWrappedLine_remaining = string_null;
-		else if (tw("^7", theFontSize) == 0)
-			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
-		return substring(s, 0, take_until);
-	}
-	else
-	{
+	if (take_until <= 0 || take_until >= strlen(s)) {
 		getWrappedLine_remaining = string_null;
-		return s;
+		return s; // remaining text fits the line
 	}
+
+	float colorlen = tw("^7", theFontSize);
+	return take_wrapped_line_until(take_until, colorlen);
 }
 
 string getWrappedLineLen(int maxLength, textLengthUpToLength_lenFunction_t tw)
 {
 	string s = getWrappedLine_remaining;
-
-	if(maxLength <= 0)
+	if (maxLength <= 0)
 	{
 		getWrappedLine_remaining = string_null;
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
 	int take_until = textLengthUpToLength(s, maxLength, tw);
-	if(take_until > 0 && take_until < strlen(s))
-	{
-		int last_word = take_until - 1;
-		while(last_word > 0 && substring(s, last_word, 1) != " ")
-			--last_word;
 
-		int skip = 0;
-		if(last_word != 0)
-		{
-			take_until = last_word;
-			skip = 1;
-		}
-
-		getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
-		if(getWrappedLine_remaining == "")
-			getWrappedLine_remaining = string_null;
-		else if (tw("^7") == 0)
-			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
-		return substring(s, 0, take_until);
-	}
-	else
-	{
+	if (take_until <= 0 || take_until >= strlen(s)) {
 		getWrappedLine_remaining = string_null;
-		return s;
+		return s; // remaining text fits the line
 	}
+
+	float colorlen = tw("^7");
+	return take_wrapped_line_until(take_until, colorlen);
 }
 
 string textShortenToWidth(string theText, float maxWidth, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
