@@ -23,6 +23,12 @@ CPP="cc -xc -E"
 # when used does this lead to .tmp or qcsrc/.tmp ?? both?
 export WORKDIR=../.tmp
 
+# Unset QCCFLAGS_WERROR to make compiler treat warnings as errors.
+# qcc.sh allows compiling with warnings if QCCFLAGS_WERROR is set
+# without containing -Werror, we do not want to run compilation
+# tests like that even accidentally.
+unset QCCFLAGS_WERROR
+
 # source additional functions and variables for compiling
 . qcc.sh
 
