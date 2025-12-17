@@ -529,6 +529,7 @@ bool trigger_push_testorigin_for_item(entity tracetest_ent, entity item, vector 
 }
 #endif
 
+#ifdef SVQC
 // target_push entities are never directly triggered
 // if the target field points to a target_push entity, return it
 // otherwise, return the original entity
@@ -543,7 +544,6 @@ entity get_pusher_from_trigger(entity this)
 		return this; // push and trigger are the same entity, return the original entity
 }
 
-#ifdef SVQC
 vector trigger_push_get_start_point(entity this)
 {
 	// calculate a typical start point for the jump
@@ -565,8 +565,8 @@ float trigger_push_get_push_time(entity this, vector endpos)
 		entity e = spawn();
 		setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 		e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-		vector v = trigger_push_calculatevelocity(org, t, this.height, e);
-		vector v2 = trigger_push_calculatevelocity(endpos, t, this.height, e);
+		vector v = trigger_push_calculatevelocity(org, t, pusher.height, e);
+		vector v2 = trigger_push_calculatevelocity(endpos, t, pusher.height, e);
 		delete(e);
 		return (v.z + v2.z) / grav;
 	}
@@ -574,7 +574,7 @@ float trigger_push_get_push_time(entity this, vector endpos)
 	{
 		if (!this.team)
 		{
-			vector v = this.movedir;
+			vector v = pusher.movedir;
 
 			float t = v.z / grav;
 			float jump_height = 1/2 * grav * (t ** 2);
@@ -595,8 +595,10 @@ bool trigger_push_test(entity this, entity item)
 {
 #ifdef SVQC
 	vector org = trigger_push_get_start_point(this);
-#endif
 	entity pusher = get_pusher_from_trigger(this);
+#elif defined(CSQC)
+	entity pusher = this;
+#endif
 
 	if (pusher.target)
 	{
@@ -618,7 +620,7 @@ bool trigger_push_test(entity this, entity item)
 			entity e = spawn();
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 			e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-			e.velocity = trigger_push_calculatevelocity(org, t, this.height, e);
+			e.velocity = trigger_push_calculatevelocity(org, t, pusher.height, e);
 
 			vel = e.velocity;
 			vector best_target = '0 0 0';
@@ -638,7 +640,7 @@ bool trigger_push_test(entity this, entity item)
 				// optimization: if horizontal velocity is 0 then target is not good since the trajectory
 				// will definitely go back to the jumppad (horizontal velocity of best_vel can't be 0 anyway)
 				if ((e.velocity.x != 0 || e.velocity.y != 0)
-					&& trigger_push_testorigin(e, t, this, org))
+					&& trigger_push_testorigin(e, t, pusher, org))
 				{
 					best_target = trace_endpos;
 					best_org = org;
@@ -659,7 +661,7 @@ bool trigger_push_test(entity this, entity item)
 				new_org = org + ofs;
 
 				LABEL(new_test)
-				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height, e);
+				e.velocity = trigger_push_calculatevelocity(new_org, t, pusher.height, e);
 				if (item)
 				{
 					if (!trigger_push_testorigin_for_item(e, item, new_org))
@@ -673,7 +675,7 @@ bool trigger_push_test(entity this, entity item)
 					vel = e.velocity;
 					if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
 						e.velocity = autocvar_sv_maxspeed * flatdir;
-					if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
+					if (trigger_push_testorigin(e, t, pusher, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
 					{
 						best_target = trace_endpos;
 						best_org = new_org;
@@ -745,7 +747,7 @@ bool trigger_push_test(entity this, entity item)
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 			e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 			setorigin(e, org);
-			e.velocity = this.movedir;
+			e.velocity = pusher.movedir;
 			tracetoss(e, e);
 			if (item)
 			{
@@ -761,7 +763,7 @@ bool trigger_push_test(entity this, entity item)
 			return false;
 	}
 
-	defer(this, 0.1, trigger_push_updatelink);
+	defer(pusher, 0.1, trigger_push_updatelink);
 #endif
 	return true;
 }
@@ -927,9 +929,11 @@ spawnfunc(target_push)
 			// this requires special handling in the navigation code since the target field will
 			// point to the target_push entity instead of the actual location entity
 			if(!IL_CONTAINS(g_jumppads, trigger_ent))
+			{
 				IL_PUSH(g_jumppads, trigger_ent);
+				InitializeEntity(trigger_ent, trigger_push_findtarget, INITPRIO_FINDTARGET);
+			}
 		}
-		InitializeEntity(this, trigger_push_findtarget, INITPRIO_FINDTARGET);
 	}
 	else // Q3 .angles and .speed pusher
 	{
