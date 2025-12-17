@@ -24,5 +24,5 @@ void XonoticHUDModIconsDialog_fill(entity me)
 		me.TD(me, 1, 2.6, e = makeXonoticCheckBox(0, "hud_panel_modicons_dom_layout", _("Show icons")));
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, ZCTX(sprintf(_("GAMETYPE^%s:"), MapInfo_Type_ToText(MAPINFO_TYPE_FREEZETAG)))));
-		me.TD(me, 1, 2.6, e = makeXonoticCheckBox(0, "hud_panel_modicons_freezetag_layout", _("Show icons")));
+		me.TD(me, 1, 2.6, e = makeXonoticCheckBox(0, "hud_panel_modicons_ft_layout", _("Show icons")));
 }

@@ -9,8 +9,6 @@ int autocvar_leadlimit_and_fraglimit;
 int autocvar_leadlimit_override;
 
 // TODO: find a better location for these?
-int total_players;
-
 .int ingame;
 #define INGAME_STATUS_NONE 0
 #define INGAME_STATUS_JOINING 0.5
