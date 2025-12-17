@@ -17,7 +17,6 @@ void HUD_Mod_CTF_Reset()
     redflag_statuschange_time = blueflag_statuschange_time = yellowflag_statuschange_time = pinkflag_statuschange_time = neutralflag_statuschange_time = 0;
 }
 
-int autocvar__teams_available;
 void HUD_Mod_CTF(vector pos, vector mySize, bool should_draw)
 {
     if (!should_draw)

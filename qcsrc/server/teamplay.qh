@@ -1,5 +1,7 @@
 #pragma once
 
+#include <common/teams.qh>
+
 int autocvar_teamplay_mode;
 
 bool autocvar_teamplay_lockonrestart;
@@ -19,6 +21,8 @@ bool lockteams;
 .float m_team_score; ///< The score of the team.
 .int m_num_players_alive; ///< Number of alive players in a team.
 .int m_num_owned_items; ///< Number of items owned by a team.
+
+entity g_team_entities[NUM_TEAMS]; ///< Holds global team entities.
 
 
 // ========================== Global teams API ================================
@@ -41,10 +45,6 @@ entity Team_GetTeam(int team_num);
 /// \brief Returns the winner team.
 /// \return Winner team or 0 if 2 or more teams have alive players or -1 if no team has any alive players.
 int Team_GetWinnerAliveTeam();
-
-/// \brief Returns the number of alive teams.
-/// \return Number of alive teams.
-int Team_GetNumberOfAliveTeams();
 
 /// \brief Returns the winner team.
 /// \param[in] min_owned_items Minimum number of items the winner team must have.

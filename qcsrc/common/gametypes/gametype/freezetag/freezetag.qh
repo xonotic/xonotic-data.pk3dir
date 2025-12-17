@@ -41,8 +41,8 @@ CLASS(FreezeTag, Gametype)
 		returns(menu, _("Round limit:"),     5,  100,  5, "fraglimit_override",        "g_freezetag_teams_override",   _("The amount of rounds won needed before the match will end"));
 	}
 #ifdef CSQC
-	ATTRIB(FreezeTag, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_FreezeTag);
-	ATTRIB(FreezeTag, m_modicons_export, void(int fh), HUD_Mod_FreezeTag_Export);
+	ATTRIB(FreezeTag, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_FT);
+	ATTRIB(FreezeTag, m_modicons_export, void(int fh), HUD_Mod_FT_Export);
 #endif
 	ATTRIB(FreezeTag, m_legacydefaults, string, "10 20 0");
 ENDCLASS(FreezeTag)

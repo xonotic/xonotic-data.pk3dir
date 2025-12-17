@@ -14,27 +14,6 @@ float autocvar_g_ca_start_ammo_fuel = 0;
 
 .int prev_team;
 
-void CA_count_alive_players()
-{
-	total_players = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
-		Team_GetTeamFromIndex(i).m_num_players_alive = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
-	{
-		++total_players;
-		if (IS_DEAD(it))
-			continue;
-		++Entity_GetTeam(it).m_num_players_alive;
-	});
-	FOREACH_CLIENT(IS_REAL_CLIENT(it),
-	{
-		STAT(REDALIVE, it) = Team_GetTeamFromIndex(1).m_num_players_alive;
-		STAT(BLUEALIVE, it) = Team_GetTeamFromIndex(2).m_num_players_alive;
-		STAT(YELLOWALIVE, it) = Team_GetTeamFromIndex(3).m_num_players_alive;
-		STAT(PINKALIVE, it) = Team_GetTeamFromIndex(4).m_num_players_alive;
-	});
-}
-
 int CA_PreventStalemate()
 {
 	//bprint("PreventStalemate running\n");
@@ -147,7 +126,6 @@ float CA_CheckWinner()
 			winner_team = -2;
 	}
 
-	CA_count_alive_players();
 	if (!winner_team)
 		winner_team = Team_GetWinnerAliveTeam();
 	if (!winner_team)
@@ -212,20 +190,17 @@ void CA_RoundStart()
 
 bool CA_CheckTeams()
 {
-	static int prev_missing_teams_mask;
 	allowed_to_spawn = true;
-	CA_count_alive_players();
 	missing_teams_mask = 0;
-	if (Team_GetNumberOfAliveTeams() == NumTeams(ca_teams))
-		return true;
-	if(total_players == 0)
+	if (total_alive_players == 0)
 		return false;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
-		if ((ca_teams & Team_IndexToBit(i)) && !Team_GetTeamFromIndex(i).m_num_players_alive)
-			missing_teams_mask |= Team_IndexToBit(i);
-	if(prev_missing_teams_mask != missing_teams_mask)
-		prev_missing_teams_mask = missing_teams_mask;
-	return false;
+	for (int b, i = 1; i <= NUM_TEAMS; ++i)
+	{
+		b = Team_IndexToBit(i);
+		if ((ca_teams & b) && !Team_GetTeamFromIndex(i).m_num_players_alive)
+			missing_teams_mask |= b;
+	}
+	return (missing_teams_mask == 0);
 }
 
 bool ca_isEliminated(entity e)
@@ -264,8 +239,10 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	if (time <= game_starttime) // reset on game restart, not on round start
 		player.float2int_decimal_fld = 0;
+	EliminatedPlayers_RecountAlivePlayers();
+	eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ALIVE;
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ELIMS;
 }
 
 MUTATOR_HOOKFUNCTION(ca, ForbidSpawn)
@@ -293,9 +270,6 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
-
-	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
 }
 
 MUTATOR_HOOKFUNCTION(ca, reset_map_players)
@@ -338,17 +312,14 @@ MUTATOR_HOOKFUNCTION(ca, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 
 entity ca_LastPlayerForTeam(entity this)
 {
-	entity last_pl = NULL;
-	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
-		if (!IS_DEAD(it) && SAME_TEAM(this, it))
+	entity tm = Entity_GetTeam(this);
+	if (tm.m_num_players_alive == 1) // need to first run EliminatedPlayers_RecountAlivePlayers
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this,
 		{
-			if (!last_pl)
-				last_pl = it;
-			else
-				return NULL;
-		}
-	});
-	return last_pl;
+			if (!IS_DEAD(it) && SAME_TEAM(this, it))
+				return it;
+		});
+	return NULL;
 }
 
 void ca_LastPlayerForTeam_Notify(entity this)
@@ -365,7 +336,6 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 
-	ca_LastPlayerForTeam_Notify(frag_target);
 	if (!allowed_to_spawn)
 	{
 		frag_target.respawn_flags = RESPAWN_SILENT;
@@ -373,16 +343,27 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 		frag_target.respawn_time = time + 2;
 	}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
-	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(ca, PlayerDied)
+{
+	entity player = M_ARGV(0, entity);
+
+	EliminatedPlayers_RecountAlivePlayers();
+	eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ALIVE;
+	if (!warmup_stage)
+		eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ELIMS;
+	ca_LastPlayerForTeam_Notify(player);
+}
 
 MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
+	player.frags = FRAGS_PLAYER_OUT_OF_GAME; // so ca_isEliminated will return true
+	EliminatedPlayers_RecountAlivePlayers();
+	eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ALIVE;
 	if (IS_PLAYER(player) && !IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
 	return true;
@@ -396,8 +377,6 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 	if (is_forced && INGAME(player))
 		INGAME_STATUS_CLEAR(player);
 
-	if (IS_PLAYER(player) && !IS_DEAD(player))
-		ca_LastPlayerForTeam_Notify(player);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
 	{
 		entcs_update_players(player);
@@ -408,8 +387,12 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 		player.would_spectate = observe_blocked_if_eliminated; // if blocked from observing force to spectate now
 	}
+	EliminatedPlayers_RecountAlivePlayers();
+	eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ALIVE;
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ELIMS;
+	if (IS_PLAYER(player) && !IS_DEAD(player))
+		ca_LastPlayerForTeam_Notify(player);
 	if (!INGAME(player))
 		return false;  // allow team reset
 	return true;  // prevent team reset

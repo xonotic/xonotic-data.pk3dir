@@ -21,29 +21,72 @@ void HUD_ModIcons_SetFunc()
 	HUD_ModIcons_GameType = gametype.m_modicons;
 }
 
-void HUD_Mod_TableWithAR_Draw(vector myPos, vector mySize, int limit, float aspect_ratio, void(vector, vector, float, int) drawFunc)
+void HUD_Mod_TableWithAR_Draw(vector myPos, vector mySize, int items, float aspect_ratio, void(vector, vector, float, int) drawFunc)
 {
-	int rows = HUD_GetRowCount(limit, mySize, aspect_ratio);
-	int cols = ceil(limit / rows);
+	if (!drawFunc)
+		return;
 
-	int row = 0, col = 0;
-	vector itemPos, itemSize = vec2(mySize.x / cols, mySize.y / rows);
-	itemPos.z = 0;
-	for (int i = 0; i < limit; ++i)
+	int rows = HUD_GetRowCount(items, mySize, aspect_ratio);
+	int cols = ceil(items / rows);
+
+	vector itemSize = vec2(mySize.x / cols, mySize.y / rows);
+	vector itemPos  = myPos;
+	int row = 0;
+	for (int i = 0; i < items; ++i)
 	{
-		itemPos.x = myPos.x + col * itemSize.x;
-		itemPos.y = myPos.y + row * itemSize.y;
-
-		drawFunc(itemPos, itemSize, aspect_ratio, i);
+		drawFunc(itemPos, itemSize, aspect_ratio, i); // e.g. HUD_Mod_EliminatedPlayers_DrawItem
 
 		if (row == rows - 1)
 		{
 			row = 0;
-			++col;
+			itemPos.y  = myPos.y;
+			itemPos.x += itemSize.x;
 		}
 		else
+		{
 			++row;
+			itemPos.y += itemSize.y;
+		}
 	}
+}
+
+/// General eliminated player draw func. Used by CA & FT modicons HUD
+void HUD_Mod_EliminatedPlayers_DrawItem(vector itemPos, vector itemSize, float aspect_ratio, int i)
+{
+	float f;
+	if (itemSize.x / itemSize.y > aspect_ratio)
+	{
+		f = itemSize.y * aspect_ratio;
+		itemPos.x += (itemSize.x - f) * 0.5;
+		itemSize.x = f;
+	}
+	else
+	{
+		f = itemSize.x / aspect_ratio;
+		itemPos.y += (itemSize.y - f) * 0.5;
+		itemSize.y = f;
+	}
+
+	int stat = alive_on_team[i];
+	int tm = Team_IndexToTeam(i + 1);
+	float alpha = (stat == 1 && tm == entcs_GetTeam(player_currententnum - 1))
+		? blink(0.85, 0.15, 5) // blink if there's 1 player left on our team
+		: (stat ? 1 : 0.5); // half alpha if the team is eliminated
+	vector color = Team_ColorRGB(tm) * alpha;
+
+	if (aspect_ratio != 1) // draw icon
+	{
+		string pic = strcat("player_", Static_Team_ColorName_Lower(tm));
+		itemSize.x *= 0.5;
+		drawpic_aspect_skin(itemPos, pic, itemSize, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		itemPos.x += itemSize.x;
+	}
+
+	// draw text
+	f = bound(0, (time - alive_on_team_change_time[i]) * 2, 1);
+	if (f < 1)
+		drawstring_aspect_expanding(itemPos, itos(stat), itemSize, color, panel_fg_alpha, DRAWFLAG_NORMAL, f);
+	drawstring_aspect(itemPos, itos(stat), itemSize, color, panel_fg_alpha * f, DRAWFLAG_NORMAL);
 }
 
 float mod_alpha;

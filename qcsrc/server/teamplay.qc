@@ -2,7 +2,6 @@
 
 #include <common/deathtypes/all.qh>
 #include <common/gametypes/_mod.qh>
-#include <common/teams.qh>
 #include <server/bot/api.qh>
 #include <server/bot/default/cvars.qh>
 #include <server/campaign.qh>
@@ -39,8 +38,6 @@ string autocvar_g_forced_team_blue;
 string autocvar_g_forced_team_yellow;
 string autocvar_g_forced_team_pink;
 
-entity g_team_entities[NUM_TEAMS]; ///< Holds global team entities.
-
 void Team_InitTeams()
 {
 	if (g_team_entities[0])
@@ -74,15 +71,6 @@ int Team_GetWinnerAliveTeam()
 			winner = Team_IndexToTeam(i + 1);
 		}
 	return (winner ? winner : -1);
-}
-
-int Team_GetNumberOfAliveTeams()
-{
-	int result = 0;
-	for (int i = 0; i < NUM_TEAMS; ++i)
-		if (g_team_entities[i].m_num_players_alive > 0)
-			++result;
-	return result;
 }
 
 int Team_GetWinnerTeam_WithOwnedItems(int min_control_points)

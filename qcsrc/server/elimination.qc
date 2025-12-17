@@ -1,31 +1,59 @@
 #include "elimination.qh"
 
 #include <common/net_linked.qh>
+#include <server/teamplay.qh>
 #include <server/utils.qh>
 
-.float(entity) isEliminated;
-bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
+/// Recounts .m_num_players_alive for each team
+void EliminatedPlayers_RecountAlivePlayers()
 {
-	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
-	WriteByte(MSG_ENTITY, sendflags);
-	if (sendflags & 1) {
-		for (int i = 1; i <= maxclients; i += 8) {
-			int f = 0;
-			entity e = edict_num(i);
-			for (int b = 0; b < 8; ++b, e = nextent(e)) {
-				if (eliminatedPlayers.isEliminated(e)) {
-					f |= BIT(b);
-				}
+	entity e, tm;
+	int i;
+	for (i = 0; i < NUM_TEAMS; ++i)
+		g_team_entities[i].m_num_players_alive = 0;
+	total_alive_players = 0;
+	for (i = 1; i <= maxclients; ++i)
+	{
+		e = edict_num(i);
+		if (!eliminatedPlayers.isEliminated(e))
+		{
+			tm = Entity_GetTeam(e);
+			if (tm)
+			{
+				++tm.m_num_players_alive;
+				++total_alive_players;
 			}
-			WriteByte(MSG_ENTITY, f);
 		}
 	}
+}
+
+bool EliminatedPlayers_SendEntity(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
+	WriteByte(MSG_ENTITY, sf);
+	int i;
+	if (sf & SF_ELIMPLAYERS_ELIMS) // send elimination statuses, in a bitset
+	{
+		int b, B;
+		for (i = 1; i <= maxclients; )
+		{
+			B = 0;
+			for (b = BIT(0); b < BIT(8) && i <= maxclients; b <<= 1, ++i)
+				if (eliminatedPlayers.isEliminated(edict_num(i)))
+					B |= b;
+			WriteByte(MSG_ENTITY, B);
+		}
+	}
+	// assume EliminatedPlayers_RecountAlivePlayers has already been run
+	if (sf & SF_ELIMPLAYERS_ALIVE) // send number of alive players on each team
+		for (i = 1; i <= NUM_TEAMS; ++i)
+			WriteByte(MSG_ENTITY, Team_GetTeamFromIndex(i).m_num_players_alive);
 	return true;
 }
 
-void EliminatedPlayers_Init(float(entity) isEliminated_func)
+void EliminatedPlayers_Init(bool(entity) isEliminated_func)
 {
-	if(eliminatedPlayers)
+	if (eliminatedPlayers)
 	{
 		backtrace("Can't spawn eliminatedPlayers again!");
 		return;

@@ -816,27 +816,31 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 	warmup_stage = (nags & BIT(4));
 }
 
-NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
+NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isNew)
 {
-	make_pure(this);
-	int sf = ReadByte();
-	if (sf & 1) {
-		for (int j = 0; j < maxclients; ++j) {
-			if (playerslots[j]) {
-				playerslots[j].eliminated = true;
-			}
-		}
-		for (int i = 1; i <= maxclients; i += 8) {
-			int f = ReadByte();
-			for (int b = 0; b < 8; ++b) {
-				if (f & BIT(b)) continue;
-				int j = i - 1 + b;
-				if (playerslots[j]) {
-					playerslots[j].eliminated = false;
-				}
-			}
-		}
+	int i, sf = ReadByte();
+	// receive elimination statuses, in a bitset
+	if (sf & SF_ELIMPLAYERS_ELIMS)
+	{
+		int B, b;
+		for (i = 0; i < maxclients; )
+			for (B = ReadByte(), b = BIT(0); b < BIT(8) && i < maxclients; b <<= 1, ++i)
+				if (playerslots[i])
+					playerslots[i].eliminated = boolean(B & b);
 	}
+	// receive number of alive players on each team
+	// required since .team is late to update in CSQC
+	if (sf & SF_ELIMPLAYERS_ALIVE)
+		for (i = 0; i < NUM_TEAMS; ++i)
+		{
+			alive_on_team[i] = ReadByte();
+			// update change-time caches, used by modicons
+			if (alive_on_team[i] != alive_on_team_prev[i])
+			{
+				alive_on_team_change_time[i] = time;
+				alive_on_team_prev[i] = alive_on_team[i];
+			}
+		}
 	return true;
 }
 
