@@ -1,7 +1,4 @@
 #pragma once
 
-int autocvar_hud_panel_modicons_ca_layout;
-
-void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int i);
 void HUD_Mod_CA(vector myPos, vector mySize, bool should_draw);
 void HUD_Mod_CA_Export(int fh);

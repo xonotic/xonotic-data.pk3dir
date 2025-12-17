@@ -56,7 +56,12 @@ void Gametype_Init();
 
 entity players;
 entity teams;
-float team_count; // real teams
+float team_count; ///< real teams
+int autocvar__teams_available; ///< bitmask of the teams available. popcount should always be equal to team_count
+
+int alive_on_team[NUM_TEAMS]; ///< number of players alive on each team, shared by CA and FT
+int alive_on_team_prev[NUM_TEAMS]; ///< last remembered alive_on_team[...] status
+float alive_on_team_change_time[NUM_TEAMS]; ///< time when the status of alive_on_team[...] changed
 
 void AuditLists();
 
