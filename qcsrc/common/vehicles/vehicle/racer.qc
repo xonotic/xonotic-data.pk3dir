@@ -527,31 +527,22 @@ spawnfunc(vehicle_racer)
 	}
 }
 
-#endif // SVQC
-
 METHOD(Racer, vr_impact, void(Racer thisveh, entity instance))
 {
-#ifdef SVQC
 	if (autocvar_g_vehicle_racer_bouncepain)
 		vehicles_impact(instance, autocvar_g_vehicle_racer_bouncepain.x, autocvar_g_vehicle_racer_bouncepain.y, autocvar_g_vehicle_racer_bouncepain.z);
-#endif
 }
-
 METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
 {
 	set_movetype(instance, MOVETYPE_BOUNCE);
-#ifdef SVQC
 	instance.owner.vehicle_health = (GetResource(instance, RES_HEALTH) / autocvar_g_vehicle_racer_health) * 100;
 	instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_racer_shield) * 100;
 
 	if (instance.owner.flagcarried)
 	   setorigin(instance.owner.flagcarried, '-190 0 96');
-#endif
 }
-
 METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
 {
-#ifdef SVQC
 	if (autocvar_g_vehicle_racer_hovertype != 0)
 		instance.racer_force_from_tag = vehicles_force_fromtag_maglev;
 	else
@@ -578,12 +569,9 @@ METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
 	instance.damageforcescale = 0.5;
 	SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_racer_health);
 	instance.vehicle_shield = autocvar_g_vehicle_racer_shield;
-#endif
 }
-
 METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
 {
-#ifdef SVQC
 	setSendEntity(instance, func_null); // stop networking this racer (for now)
 	SetResourceExplicit(instance, RES_HEALTH, 0);
 	instance.event_damage  = func_null;
@@ -605,24 +593,9 @@ METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
 
 	setthink(instance, racer_blowup_think);
 	instance.nextthink = time;
-#endif
 }
-
-#ifdef CSQC
-METHOD(Racer, vr_hud, void(Racer thisveh))
-{
-	Vehicles_drawHUD(VEH_RACER.m_icon, "vehicle_racer_weapon1", "vehicle_racer_weapon2",
-		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-		"vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
-}
-METHOD(Racer, vr_crosshair, void(Racer thisveh, entity player))
-{
-	Vehicles_drawCrosshair(vCROSS_GUIDE);
-}
-#endif
 METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
 {
-#ifdef SVQC
 	instance.vehicle_exit = racer_exit;
 
 	// we have no need to network energy
@@ -642,12 +615,27 @@ METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
 	SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_racer_health);
 	instance.vehicle_shield = autocvar_g_vehicle_racer_shield;
 	instance.max_health = GetResource(instance, RES_HEALTH);
-#endif
-
-#ifdef CSQC
-	AuxiliaryXhair[0].axh_image = vCROSS_LOCK; // Rocket
-#endif
 }
+
+#endif // SVQC
+#ifdef CSQC
+
+METHOD(Racer, vr_hud, void(Racer thisveh))
+{
+	Vehicles_drawHUD(VEH_RACER.m_icon, "vehicle_racer_weapon1", "vehicle_racer_weapon2",
+		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+		"vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
+}
+METHOD(Racer, vr_crosshair, void(Racer thisveh, entity player))
+{
+	Vehicles_drawCrosshair(vCROSS_GUIDE);
+}
+METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
+{
+	AuxiliaryXhair[0].axh_image = vCROSS_LOCK; // Rocket
+}
+
+#endif // CSQC
 
 #endif // GAMEQC
 #ifdef MENUQC

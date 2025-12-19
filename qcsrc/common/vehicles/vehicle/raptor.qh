@@ -3,12 +3,14 @@
 #include "raptor_weapons.qh"
 
 CLASS(Raptor, Vehicle)
+#ifdef SVQC
 /* spawnflags */ ATTRIB(Raptor, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
 /* mins       */ ATTRIB(Raptor, m_mins, vector, '-80 -80 0');
 /* maxs       */ ATTRIB(Raptor, m_maxs, vector, '80 80 70');
+#endif
+#ifdef GAMEQC
 /* view offset*/ ATTRIB(Raptor, view_ofs, vector, '0 0 160');
 /* view dist  */ ATTRIB(Raptor, height, float, 200);
-#ifdef GAMEQC
 /* model      */ ATTRIB(Raptor, mdl, string, "models/vehicles/raptor.dpm");
 /* model      */ ATTRIB(Raptor, model, string, "models/vehicles/raptor.dpm");
 /* head_model */ ATTRIB(Raptor, head_model, string, "");
