@@ -154,14 +154,14 @@ bool bumblebee_gunner_frame(entity this, float dt)
 
 		UpdateAuxiliaryXhair(this, ad, '1 0 1', 1);
 		vehicle_aimturret(vehic, trace_endpos, gun, "fire",
-						  autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
-						  _out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed, dt);
+			autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
+			_out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed, dt);
 
 	}
 	else
 		vehicle_aimturret(vehic, _ct, gun, "fire",
-						  autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
-						  _out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed, dt);
+			autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
+			_out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed, dt);
 
 	if(!weaponLocked(this) && !weaponUseForbidden(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
@@ -720,14 +720,14 @@ spawnfunc(vehicle_bumblebee)
 
 METHOD(Bumblebee, vr_impact, void(Bumblebee thisveh, entity instance))
 {
-    if(autocvar_g_vehicle_bumblebee_bouncepain)
-        vehicles_impact(instance, autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
+	if(autocvar_g_vehicle_bumblebee_bouncepain)
+		vehicles_impact(instance, autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
 }
 METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh, entity instance))
 {
-    settouch(instance, bumblebee_touch);
-    instance.nextthink = 0;
-    set_movetype(instance, MOVETYPE_BOUNCEMISSILE);
+	settouch(instance, bumblebee_touch);
+	instance.nextthink = 0;
+	set_movetype(instance, MOVETYPE_BOUNCEMISSILE);
 }
 METHOD(Bumblebee, vr_gunner_enter, void(Bumblebee thisveh, entity instance, entity actor))
 {
@@ -745,31 +745,31 @@ METHOD(Bumblebee, vr_gunner_enter, void(Bumblebee thisveh, entity instance, enti
 }
 METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
 {
-    instance.angles_z *= 0.8;
-    instance.angles_x *= 0.8;
+	instance.angles_z *= 0.8;
+	instance.angles_x *= 0.8;
 
-    instance.nextthink = time;
+	instance.nextthink = time;
 
-    if(!instance.owner)
-    {
-        if(instance.gunner1)
-        {
-        	entity e = instance.gunner1;
-        	instance.gun1.vehicle_exit(instance.gun1, VHEF_EJECT);
-        	instance.phase = 0;
-        	gettouch(instance)(instance, e);
-        	return;
-        }
+	if(!instance.owner)
+	{
+		if(instance.gunner1)
+		{
+			entity e = instance.gunner1;
+			instance.gun1.vehicle_exit(instance.gun1, VHEF_EJECT);
+			instance.phase = 0;
+			gettouch(instance)(instance, e);
+			return;
+		}
 
-        if(instance.gunner2)
-        {
-        	entity e = instance.gunner2;
-        	instance.gun2.vehicle_exit(instance.gun2, VHEF_EJECT);
-        	instance.phase = 0;
-        	gettouch(instance)(instance, e);
-            return;
-        }
-    }
+		if(instance.gunner2)
+		{
+			entity e = instance.gunner2;
+			instance.gun2.vehicle_exit(instance.gun2, VHEF_EJECT);
+			instance.phase = 0;
+			gettouch(instance)(instance, e);
+			return;
+		}
+	}
 }
 METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
 {
@@ -787,143 +787,143 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
 
 	instance.vehicle_exit(instance, VHEF_EJECT);
 
-    fixedmakevectors(instance.angles);
-    vehicle_tossgib(instance, instance.gun1, instance.velocity + v_right * 300 + v_up * 100 + randomvec() * 200, "cannon_right", rint(random()), rint(random()), 6, randomvec() * 200);
-    vehicle_tossgib(instance, instance.gun2, instance.velocity + v_right * -300 + v_up * 100 + randomvec() * 200, "cannon_left", rint(random()), rint(random()), 6, randomvec() * 200);
-    vehicle_tossgib(instance, instance.gun3, instance.velocity + v_forward * 300 + v_up * -100 + randomvec() * 200, "raygun", rint(random()), rint(random()), 6, randomvec() * 300);
+	fixedmakevectors(instance.angles);
+	vehicle_tossgib(instance, instance.gun1, instance.velocity + v_right * 300 + v_up * 100 + randomvec() * 200, "cannon_right", rint(random()), rint(random()), 6, randomvec() * 200);
+	vehicle_tossgib(instance, instance.gun2, instance.velocity + v_right * -300 + v_up * 100 + randomvec() * 200, "cannon_left", rint(random()), rint(random()), 6, randomvec() * 200);
+	vehicle_tossgib(instance, instance.gun3, instance.velocity + v_forward * 300 + v_up * -100 + randomvec() * 200, "raygun", rint(random()), rint(random()), 6, randomvec() * 300);
 
-    entity _body = vehicle_tossgib(instance, instance, instance.velocity + randomvec() * 200, "", rint(random()), rint(random()), 6, randomvec() * 100);
+	entity _body = vehicle_tossgib(instance, instance, instance.velocity + randomvec() * 200, "", rint(random()), rint(random()), 6, randomvec() * 100);
 
-    if(random() > 0.5)
-        settouch(_body, bumblebee_dead_touch);
-    else
-        settouch(_body, func_null);
+	if(random() > 0.5)
+		settouch(_body, bumblebee_dead_touch);
+	else
+		settouch(_body, func_null);
 
-    setthink(_body, bumblebee_diethink);
-    _body.nextthink = time;
-    _body.wait = time + 2 + (random() * 8);
-    _body.owner = instance;
-    _body.enemy = instance.enemy;
-    _body.scale = 1.5;
-    _body.angles = instance.angles;
+	setthink(_body, bumblebee_diethink);
+	_body.nextthink = time;
+	_body.wait = time + 2 + (random() * 8);
+	_body.owner = instance;
+	_body.enemy = instance.enemy;
+	_body.scale = 1.5;
+	_body.angles = instance.angles;
 
-    Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation(instance.origin, 16), '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation(instance.origin, 16), '0 0 0', 1);
 
-    SetResourceExplicit(instance, RES_HEALTH, 0);
-    instance.event_damage	= func_null;
-    instance.solid			= SOLID_NOT;
-    instance.takedamage		= DAMAGE_NO;
-    instance.deadflag		= DEAD_DYING;
-    set_movetype(instance, MOVETYPE_NONE);
-    instance.effects		= EF_NODRAW;
-    instance.colormod		= '0 0 0';
-    instance.avelocity		= '0 0 0';
-    instance.velocity		= '0 0 0';
-    settouch(instance, func_null);
-    instance.nextthink 		= 0;
+	SetResourceExplicit(instance, RES_HEALTH, 0);
+	instance.event_damage	= func_null;
+	instance.solid			= SOLID_NOT;
+	instance.takedamage		= DAMAGE_NO;
+	instance.deadflag		= DEAD_DYING;
+	set_movetype(instance, MOVETYPE_NONE);
+	instance.effects		= EF_NODRAW;
+	instance.colormod		= '0 0 0';
+	instance.avelocity		= '0 0 0';
+	instance.velocity		= '0 0 0';
+	settouch(instance, func_null);
+	instance.nextthink 		= 0;
 
-    setorigin(instance, instance.pos1);
+	setorigin(instance, instance.pos1);
 }
 METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
 {
-    if(!instance.gun1)
-    {
-        // for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
-        instance.vehicle_shieldent = new(vehicle_shieldent);
-        instance.vehicle_shieldent.effects = EF_LOWPRECISION;
-        setmodel(instance.vehicle_shieldent, MDL_VEH_BUMBLEBEE_SHIELD);
-        setattachment(instance.vehicle_shieldent, instance, "");
-        setorigin(instance.vehicle_shieldent, real_origin(instance) - instance.origin);
-        instance.vehicle_shieldent.scale       = 512 / vlen(instance.maxs - instance.mins);
-        setthink(instance.vehicle_shieldent, shieldhit_think);
-        instance.vehicle_shieldent.alpha = -1;
-        instance.vehicle_shieldent.effects = EF_LOWPRECISION | EF_NODRAW;
+	if(!instance.gun1)
+	{
+		// for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
+		instance.vehicle_shieldent = new(vehicle_shieldent);
+		instance.vehicle_shieldent.effects = EF_LOWPRECISION;
+		setmodel(instance.vehicle_shieldent, MDL_VEH_BUMBLEBEE_SHIELD);
+		setattachment(instance.vehicle_shieldent, instance, "");
+		setorigin(instance.vehicle_shieldent, real_origin(instance) - instance.origin);
+		instance.vehicle_shieldent.scale       = 512 / vlen(instance.maxs - instance.mins);
+		setthink(instance.vehicle_shieldent, shieldhit_think);
+		instance.vehicle_shieldent.alpha = -1;
+		instance.vehicle_shieldent.effects = EF_LOWPRECISION | EF_NODRAW;
 
-        instance.gun1 = new(vehicle_playerslot);
-        instance.gun2 = new(vehicle_playerslot);
-        instance.gun3 = new(bumblebee_raygun);
+		instance.gun1 = new(vehicle_playerslot);
+		instance.gun2 = new(vehicle_playerslot);
+		instance.gun3 = new(bumblebee_raygun);
 
-        instance.vehicle_flags |= VHF_MULTISLOT;
+		instance.vehicle_flags |= VHF_MULTISLOT;
 
-        instance.gun1.owner = instance;
-        instance.gun2.owner = instance;
-        instance.gun3.owner = instance;
+		instance.gun1.owner = instance;
+		instance.gun2.owner = instance;
+		instance.gun3.owner = instance;
 
-        setmodel(instance.gun1, MDL_VEH_BUMBLEBEE_CANNON_RIGHT);
-        setmodel(instance.gun2, MDL_VEH_BUMBLEBEE_CANNON_LEFT);
-        setmodel(instance.gun3, MDL_VEH_BUMBLEBEE_CANNON_CENTER);
+		setmodel(instance.gun1, MDL_VEH_BUMBLEBEE_CANNON_RIGHT);
+		setmodel(instance.gun2, MDL_VEH_BUMBLEBEE_CANNON_LEFT);
+		setmodel(instance.gun3, MDL_VEH_BUMBLEBEE_CANNON_CENTER);
 
-        setattachment(instance.gun1, instance, "cannon_right");
-        setattachment(instance.gun2, instance, "cannon_left");
+		setattachment(instance.gun1, instance, "cannon_right");
+		setattachment(instance.gun2, instance, "cannon_left");
 
-        // Angled bones are no fun, messes up gun-aim; so work arround it.
-        instance.gun3.pos1 = instance.angles;
-        instance.angles = '0 0 0';
-        vector ofs = gettaginfo(instance, gettagindex(instance, "raygun"));
-        ofs -= instance.origin;
-        setattachment(instance.gun3, instance, "");
-        setorigin(instance.gun3, ofs);
-        instance.angles = instance.gun3.pos1;
+		// Angled bones are no fun, messes up gun-aim; so work arround it.
+		instance.gun3.pos1 = instance.angles;
+		instance.angles = '0 0 0';
+		vector ofs = gettaginfo(instance, gettagindex(instance, "raygun"));
+		ofs -= instance.origin;
+		setattachment(instance.gun3, instance, "");
+		setorigin(instance.gun3, ofs);
+		instance.angles = instance.gun3.pos1;
 
-        vehicle_addplayerslot(instance, instance.gun1, HUD_BUMBLEBEE_GUN, MDL_VEH_BUMBLEBEE_GUNCOCKPIT, bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
-        vehicle_addplayerslot(instance, instance.gun2, HUD_BUMBLEBEE_GUN, MDL_VEH_BUMBLEBEE_GUNCOCKPIT, bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
+		vehicle_addplayerslot(instance, instance.gun1, HUD_BUMBLEBEE_GUN, MDL_VEH_BUMBLEBEE_GUNCOCKPIT, bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
+		vehicle_addplayerslot(instance, instance.gun2, HUD_BUMBLEBEE_GUN, MDL_VEH_BUMBLEBEE_GUNCOCKPIT, bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
 
-        setorigin(instance.vehicle_hudmodel, '50 0 -5');    // Move cockpit forward - down.
-        setorigin(instance.vehicle_viewport, '5 0 2');    // Move camera forward up
+		setorigin(instance.vehicle_hudmodel, '50 0 -5');    // Move cockpit forward - down.
+		setorigin(instance.vehicle_viewport, '5 0 2');    // Move camera forward up
 
-        //fixme-model-bones
-        setorigin(instance.gun1.vehicle_hudmodel, '90 -27 -23');
-        setorigin(instance.gun1.vehicle_viewport, '-85 0 50');
-        //fixme-model-bones
-        setorigin(instance.gun2.vehicle_hudmodel, '90 27 -23');
-        setorigin(instance.gun2.vehicle_viewport, '-85 0 50');
+		//fixme-model-bones
+		setorigin(instance.gun1.vehicle_hudmodel, '90 -27 -23');
+		setorigin(instance.gun1.vehicle_viewport, '-85 0 50');
+		//fixme-model-bones
+		setorigin(instance.gun2.vehicle_hudmodel, '90 27 -23');
+		setorigin(instance.gun2.vehicle_viewport, '-85 0 50');
 
-        instance.scale = 1.5;
+		instance.scale = 1.5;
 
-        // Raygun beam
-        if(instance.gun3.enemy == NULL)
-        {
-            instance.gun3.enemy = new(bumble_raygun);
-            Net_LinkEntity(instance.gun3.enemy, true, 0, bumble_raygun_send);
-            instance.gun3.enemy.SendFlags = BRG_SETUP;
-            instance.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;
-            instance.gun3.enemy.effects = EF_NODRAW | EF_LOWPRECISION;
-        }
-    }
+		// Raygun beam
+		if(instance.gun3.enemy == NULL)
+		{
+			instance.gun3.enemy = new(bumble_raygun);
+			Net_LinkEntity(instance.gun3.enemy, true, 0, bumble_raygun_send);
+			instance.gun3.enemy.SendFlags = BRG_SETUP;
+			instance.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;
+			instance.gun3.enemy.effects = EF_NODRAW | EF_LOWPRECISION;
+		}
+	}
 
-    if(!autocvar_g_vehicle_bumblebee_swim)
-    	instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
+	if(!autocvar_g_vehicle_bumblebee_swim)
+		instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
 
-    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_bumblebee_health);
-    instance.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
-    instance.solid = SOLID_BBOX;
-    set_movetype(instance, MOVETYPE_TOSS);
-    instance.damageforcescale = 0.025;
+	SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_bumblebee_health);
+	instance.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
+	instance.solid = SOLID_BBOX;
+	set_movetype(instance, MOVETYPE_TOSS);
+	instance.damageforcescale = 0.025;
 
-    instance.PlayerPhysplug = bumblebee_pilot_frame;
+	instance.PlayerPhysplug = bumblebee_pilot_frame;
 
-    setorigin(instance, instance.origin + '0 0 25');
+	setorigin(instance, instance.origin + '0 0 25');
 }
 METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
 {
-    if(autocvar_g_vehicle_bumblebee_energy)
-    if(autocvar_g_vehicle_bumblebee_energy_regen)
-        instance.vehicle_flags |= VHF_ENERGYREGEN;
+	if(autocvar_g_vehicle_bumblebee_energy)
+	if(autocvar_g_vehicle_bumblebee_energy_regen)
+		instance.vehicle_flags |= VHF_ENERGYREGEN;
 
-    if(autocvar_g_vehicle_bumblebee_shield)
-        instance.vehicle_flags |= VHF_HASSHIELD;
+	if(autocvar_g_vehicle_bumblebee_shield)
+		instance.vehicle_flags |= VHF_HASSHIELD;
 
-    if(autocvar_g_vehicle_bumblebee_shield_regen)
-        instance.vehicle_flags |= VHF_SHIELDREGEN;
+	if(autocvar_g_vehicle_bumblebee_shield_regen)
+		instance.vehicle_flags |= VHF_SHIELDREGEN;
 
-    if(autocvar_g_vehicle_bumblebee_health_regen)
-        instance.vehicle_flags |= VHF_HEALTHREGEN;
+	if(autocvar_g_vehicle_bumblebee_health_regen)
+		instance.vehicle_flags |= VHF_HEALTHREGEN;
 
-    instance.vehicle_exit = bumblebee_exit;
-    instance.respawntime = autocvar_g_vehicle_bumblebee_respawntime;
-    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_bumblebee_health);
-    instance.max_health = GetResource(instance, RES_HEALTH);
-    instance.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
+	instance.vehicle_exit = bumblebee_exit;
+	instance.respawntime = autocvar_g_vehicle_bumblebee_respawntime;
+	SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_bumblebee_health);
+	instance.max_health = GetResource(instance, RES_HEALTH);
+	instance.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
 }
 
 #endif // SVQC
@@ -938,37 +938,37 @@ void CSQC_BUMBLE_GUN_HUD()
 
 METHOD(Bumblebee, vr_hud, void(Bumblebee thisveh))
 {
-    Vehicles_drawHUD(VEH_BUMBLEBEE.m_icon, "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
-                     "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-                     "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color);
+	Vehicles_drawHUD(VEH_BUMBLEBEE.m_icon, "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
+	                 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+	                 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color);
 
-    float hudAlpha = autocvar_hud_panel_fg_alpha;
-    float blinkValue = 0.55 + sin(time * 7) * 0.45;
-    vector tmpPos  = '0 0 0';
-    vector tmpSize = hud_fontsize;
-    tmpPos.x = vehicleHud_Pos.x + vehicleHud_Size.x * (520/768);
+	float hudAlpha = autocvar_hud_panel_fg_alpha;
+	float blinkValue = 0.55 + sin(time * 7) * 0.45;
+	vector tmpPos  = '0 0 0';
+	vector tmpSize = hud_fontsize;
+	tmpPos.x = vehicleHud_Pos.x + vehicleHud_Size.x * (520/768);
 
-    if(!AuxiliaryXhair[1].draw2d)
-    {
-        tmpPos.y = vehicleHud_Pos.y + vehicleHud_Size.y * (96/256) - tmpSize.y;
-        drawstring(tmpPos, _("No right gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
-    }
+	if(!AuxiliaryXhair[1].draw2d)
+	{
+		tmpPos.y = vehicleHud_Pos.y + vehicleHud_Size.y * (96/256) - tmpSize.y;
+		drawstring(tmpPos, _("No right gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
+	}
 
-    if(!AuxiliaryXhair[2].draw2d)
-    {
-        tmpPos.y = vehicleHud_Pos.y + vehicleHud_Size.y * (160/256);
-        drawstring(tmpPos, _("No left gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
-    }
+	if(!AuxiliaryXhair[2].draw2d)
+	{
+		tmpPos.y = vehicleHud_Pos.y + vehicleHud_Size.y * (160/256);
+		drawstring(tmpPos, _("No left gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
+	}
 }
 METHOD(Bumblebee, vr_crosshair, void(Bumblebee thisveh, entity player))
 {
-    Vehicles_drawCrosshair(vCROSS_HEAL);
+	Vehicles_drawCrosshair(vCROSS_HEAL);
 }
 METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
 {
-    AuxiliaryXhair[0].axh_image = vCROSS_LOCK;  // Raygun-locked
-    AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Gunner1
-    AuxiliaryXhair[2].axh_image = vCROSS_BURST; // Gunner2
+	AuxiliaryXhair[0].axh_image = vCROSS_LOCK;  // Raygun-locked
+	AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Gunner1
+	AuxiliaryXhair[2].axh_image = vCROSS_BURST; // Gunner2
 }
 
 #endif

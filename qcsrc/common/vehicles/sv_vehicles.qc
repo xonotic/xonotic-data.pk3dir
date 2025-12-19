@@ -226,7 +226,7 @@ entity vehicles_projectile(entity this, entity _mzlfx, Sound _mzlsound,
 						   int _deahtype, float _projtype, float _health,
 						   bool _cull, bool _clianim, entity _owner)
 {
-    TC(Sound, _mzlsound);
+	TC(Sound, _mzlsound);
 	entity proj = new(vehicles_projectile);
 
 	PROJECTILE_MAKETRIGGER(proj);
@@ -1155,11 +1155,11 @@ void vehicles_spawn(entity this)
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(it.(weaponentity).hook.aiment == this)
-	    		RemoveHook(it.(weaponentity).hook);
-	    }
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(it.(weaponentity).hook.aiment == this)
+				RemoveHook(it.(weaponentity).hook);
+		}
 	});
 
 

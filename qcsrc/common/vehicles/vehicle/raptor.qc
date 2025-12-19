@@ -386,7 +386,7 @@ bool raptor_frame(entity this, float dt)
 		if(time > vehic.lip + autocvar_g_vehicle_raptor_bombs_refire)
 		if(PHYS_INPUT_BUTTON_ATCK2(this))
 		{
-		    .entity weaponentity = weaponentities[1];
+			.entity weaponentity = weaponentities[1];
 			wep2a.wr_think(wep2a, vehic, weaponentity, 2);
 			vehic.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
 			vehic.lip   = time;
@@ -398,7 +398,7 @@ bool raptor_frame(entity this, float dt)
 		if(time > vehic.lip + autocvar_g_vehicle_raptor_flare_refire)
 		if(PHYS_INPUT_BUTTON_ATCK2(this))
 		{
-		    .entity weaponentity = weaponentities[1];
+			.entity weaponentity = weaponentities[1];
 			wep2b.wr_think(wep2b, vehic, weaponentity, 2);
 			vehic.delay = time + autocvar_g_vehicle_raptor_flare_refire;
 			vehic.lip   = time;
@@ -590,166 +590,166 @@ spawnfunc(vehicle_raptor)
 
 METHOD(Raptor, vr_impact, void(Raptor thisveh, entity instance))
 {
-    if(autocvar_g_vehicle_raptor_bouncepain)
-        vehicles_impact(instance, autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
+	if(autocvar_g_vehicle_raptor_bouncepain)
+		vehicles_impact(instance, autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
 }
 METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
 {
-    STAT(VEHICLESTAT_W2MODE, instance) = RSM_BOMB;
-    instance.owner.PlayerPhysplug = raptor_takeoff;
-    set_movetype(instance, MOVETYPE_BOUNCEMISSILE);
-    instance.solid		  = SOLID_SLIDEBOX;
-    instance.owner.vehicle_health = (GetResource(instance, RES_HEALTH) / autocvar_g_vehicle_raptor_health) * 100;
-    instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_raptor_shield) * 100;
-    instance.velocity = '0 0 1'; // nudge upwards so takeoff sequence can work
-    instance.tur_head.exteriormodeltoclient = instance.owner;
+	STAT(VEHICLESTAT_W2MODE, instance) = RSM_BOMB;
+	instance.owner.PlayerPhysplug = raptor_takeoff;
+	set_movetype(instance, MOVETYPE_BOUNCEMISSILE);
+	instance.solid		  = SOLID_SLIDEBOX;
+	instance.owner.vehicle_health = (GetResource(instance, RES_HEALTH) / autocvar_g_vehicle_raptor_health) * 100;
+	instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_raptor_shield) * 100;
+	instance.velocity = '0 0 1'; // nudge upwards so takeoff sequence can work
+	instance.tur_head.exteriormodeltoclient = instance.owner;
 
-    instance.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
-    instance.lip   = time;
+	instance.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
+	instance.lip   = time;
 
-    if(instance.owner.flagcarried)
-       setorigin(instance.owner.flagcarried, '-20 0 96');
+	if(instance.owner.flagcarried)
+	   setorigin(instance.owner.flagcarried, '-20 0 96');
 
-    CSQCVehicleSetup(instance.owner, 0);
+	CSQCVehicleSetup(instance.owner, 0);
 }
 METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
 {
 	SetResourceExplicit(instance, RES_HEALTH, 0);
-    instance.event_damage		= func_null;
-    instance.solid				= SOLID_CORPSE;
-    instance.takedamage			= DAMAGE_NO;
-    instance.deadflag			= DEAD_DYING;
-    set_movetype(instance, MOVETYPE_BOUNCE);
-    setthink(instance, raptor_diethink);
-    instance.nextthink			= time;
-    instance.wait				= time + 5 + (random() * 5);
+	instance.event_damage		= func_null;
+	instance.solid				= SOLID_CORPSE;
+	instance.takedamage			= DAMAGE_NO;
+	instance.deadflag			= DEAD_DYING;
+	set_movetype(instance, MOVETYPE_BOUNCE);
+	setthink(instance, raptor_diethink);
+	instance.nextthink			= time;
+	instance.wait				= time + 5 + (random() * 5);
 
-    Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation (instance.origin, 16), '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation (instance.origin, 16), '0 0 0', 1);
 
-    instance.velocity_z += 600;
+	instance.velocity_z += 600;
 
-    instance.avelocity = '0 0.5 1' * (random() * 400);
-    instance.avelocity -= '0 0.5 1' * (random() * 400);
+	instance.avelocity = '0 0.5 1' * (random() * 400);
+	instance.avelocity -= '0 0.5 1' * (random() * 400);
 
-    instance.colormod = '-0.5 -0.5 -0.5';
-    settouch(instance, raptor_blowup);
+	instance.colormod = '-0.5 -0.5 -0.5';
+	settouch(instance, raptor_blowup);
 }
 METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
 {
-    if(!instance.gun1)
-    {
-        entity spinner;
-        vector ofs;
+	if(!instance.gun1)
+	{
+		entity spinner;
+		vector ofs;
 
-        //FIXME: Camera is in a bad place in HUD model.
-        //setorigin(instance.vehicle_viewport, '25 0 5');
+		//FIXME: Camera is in a bad place in HUD model.
+		//setorigin(instance.vehicle_viewport, '25 0 5');
 
-        instance.vehicles_impulse = raptor_impulse;
+		instance.vehicles_impulse = raptor_impulse;
 
-        instance.frame = 0;
+		instance.frame = 0;
 
-        instance.bomb1 = new(raptor_bomb);
-        instance.bomb2 = new(raptor_bomb);
-        instance.gun1  = new(raptor_gun);
-        instance.gun2  = new(raptor_gun);
+		instance.bomb1 = new(raptor_bomb);
+		instance.bomb2 = new(raptor_bomb);
+		instance.gun1  = new(raptor_gun);
+		instance.gun2  = new(raptor_gun);
 
-        setmodel(instance.bomb1, MDL_VEH_RAPTOR_CB_FOLDED);
-        setmodel(instance.bomb2, MDL_VEH_RAPTOR_CB_FOLDED);
-        setmodel(instance.gun1, MDL_VEH_RAPTOR_GUN);
-        setmodel(instance.gun2, MDL_VEH_RAPTOR_GUN);
-        setmodel(instance.tur_head, MDL_VEH_RAPTOR_TAIL);
+		setmodel(instance.bomb1, MDL_VEH_RAPTOR_CB_FOLDED);
+		setmodel(instance.bomb2, MDL_VEH_RAPTOR_CB_FOLDED);
+		setmodel(instance.gun1, MDL_VEH_RAPTOR_GUN);
+		setmodel(instance.gun2, MDL_VEH_RAPTOR_GUN);
+		setmodel(instance.tur_head, MDL_VEH_RAPTOR_TAIL);
 
-        setattachment(instance.bomb1, instance, "bombmount_left");
-        setattachment(instance.bomb2, instance, "bombmount_right");
-        setattachment(instance.tur_head, instance,"root");
+		setattachment(instance.bomb1, instance, "bombmount_left");
+		setattachment(instance.bomb2, instance, "bombmount_right");
+		setattachment(instance.tur_head, instance,"root");
 
-        // FIXMODEL Guns mounts to angled bones
-        instance.bomb1.angles = instance.angles;
-        instance.angles = '0 0 0';
-        // This messes up gun-aim, so work arround it.
-        //setattachment(instance.gun1, instance, "gunmount_left");
-        ofs = gettaginfo(instance, gettagindex(instance, "gunmount_left"));
-        ofs -= instance.origin;
-        setattachment(instance.gun1, instance, "");
-        setorigin(instance.gun1, ofs);
+		// FIXMODEL Guns mounts to angled bones
+		instance.bomb1.angles = instance.angles;
+		instance.angles = '0 0 0';
+		// This messes up gun-aim, so work arround it.
+		//setattachment(instance.gun1, instance, "gunmount_left");
+		ofs = gettaginfo(instance, gettagindex(instance, "gunmount_left"));
+		ofs -= instance.origin;
+		setattachment(instance.gun1, instance, "");
+		setorigin(instance.gun1, ofs);
 
-        //setattachment(instance.gun2, instance, "gunmount_right");
-        ofs = gettaginfo(instance, gettagindex(instance, "gunmount_right"));
-        ofs -= instance.origin;
-        setattachment(instance.gun2, instance, "");
-        setorigin(instance.gun2, ofs);
+		//setattachment(instance.gun2, instance, "gunmount_right");
+		ofs = gettaginfo(instance, gettagindex(instance, "gunmount_right"));
+		ofs -= instance.origin;
+		setattachment(instance.gun2, instance, "");
+		setorigin(instance.gun2, ofs);
 
-        instance.angles = instance.bomb1.angles;
-        instance.bomb1.angles = '0 0 0';
+		instance.angles = instance.bomb1.angles;
+		instance.bomb1.angles = '0 0 0';
 
-        spinner = new(raptor_spinner);
-        spinner.owner = instance;
-        setmodel(spinner, MDL_VEH_RAPTOR_PROP);
-        setattachment(spinner, instance, "engine_left");
-        set_movetype(spinner, MOVETYPE_NOCLIP);
-        spinner.avelocity = '0 90 0';
-        instance.bomb1.gun1 = spinner;
+		spinner = new(raptor_spinner);
+		spinner.owner = instance;
+		setmodel(spinner, MDL_VEH_RAPTOR_PROP);
+		setattachment(spinner, instance, "engine_left");
+		set_movetype(spinner, MOVETYPE_NOCLIP);
+		spinner.avelocity = '0 90 0';
+		instance.bomb1.gun1 = spinner;
 
-        spinner = new(raptor_spinner);
-        spinner.owner = instance;
-        setmodel(spinner, MDL_VEH_RAPTOR_PROP);
-        setattachment(spinner, instance, "engine_right");
-        set_movetype(spinner, MOVETYPE_NOCLIP);
-        spinner.avelocity = '0 -90 0';
-        instance.bomb1.gun2 = spinner;
+		spinner = new(raptor_spinner);
+		spinner.owner = instance;
+		setmodel(spinner, MDL_VEH_RAPTOR_PROP);
+		setattachment(spinner, instance, "engine_right");
+		set_movetype(spinner, MOVETYPE_NOCLIP);
+		spinner.avelocity = '0 -90 0';
+		instance.bomb1.gun2 = spinner;
 
-        // Sigh.
-        setthink(instance.bomb1, raptor_rotor_anglefix);
-        instance.bomb1.nextthink = time;
+		// Sigh.
+		setthink(instance.bomb1, raptor_rotor_anglefix);
+		instance.bomb1.nextthink = time;
 
-        instance.mass			   = 1 ;
-    }
+		instance.mass			   = 1 ;
+	}
 
-    instance.frame		  = 0;
-    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
-    instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
-    set_movetype(instance, MOVETYPE_TOSS);
-    instance.solid		  = SOLID_SLIDEBOX;
-    instance.vehicle_energy = 1;
+	instance.frame		  = 0;
+	SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
+	instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
+	set_movetype(instance, MOVETYPE_TOSS);
+	instance.solid		  = SOLID_SLIDEBOX;
+	instance.vehicle_energy = 1;
 
-    if(!autocvar_g_vehicle_raptor_swim)
-    	instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
+	if(!autocvar_g_vehicle_raptor_swim)
+		instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
 
-    instance.PlayerPhysplug = raptor_frame;
+	instance.PlayerPhysplug = raptor_frame;
 
-    instance.bomb1.gun1.avelocity_y = 90;
-    instance.bomb1.gun2.avelocity_y = -90;
+	instance.bomb1.gun1.avelocity_y = 90;
+	instance.bomb1.gun2.avelocity_y = -90;
 
-    instance.delay = time;
+	instance.delay = time;
 
-    instance.bouncefactor = autocvar_g_vehicle_raptor_bouncefactor;
-    instance.bouncestop = autocvar_g_vehicle_raptor_bouncestop;
-    instance.damageforcescale = 0.25;
-    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
-    instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
+	instance.bouncefactor = autocvar_g_vehicle_raptor_bouncefactor;
+	instance.bouncestop = autocvar_g_vehicle_raptor_bouncestop;
+	instance.damageforcescale = 0.25;
+	SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
+	instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
 }
 METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 {
-    if(autocvar_g_vehicle_raptor_shield)
-        instance.vehicle_flags |= VHF_HASSHIELD;
+	if(autocvar_g_vehicle_raptor_shield)
+		instance.vehicle_flags |= VHF_HASSHIELD;
 
-    if(autocvar_g_vehicle_raptor_shield_regen)
-        instance.vehicle_flags |= VHF_SHIELDREGEN;
+	if(autocvar_g_vehicle_raptor_shield_regen)
+		instance.vehicle_flags |= VHF_SHIELDREGEN;
 
-    if(autocvar_g_vehicle_raptor_health_regen)
-        instance.vehicle_flags |= VHF_HEALTHREGEN;
+	if(autocvar_g_vehicle_raptor_health_regen)
+		instance.vehicle_flags |= VHF_HEALTHREGEN;
 
-    if(autocvar_g_vehicle_raptor_energy_regen)
-        instance.vehicle_flags |= VHF_ENERGYREGEN;
+	if(autocvar_g_vehicle_raptor_energy_regen)
+		instance.vehicle_flags |= VHF_ENERGYREGEN;
 
-    instance.vehicle_exit = raptor_exit;
-    instance.respawntime = autocvar_g_vehicle_raptor_respawntime;
-    SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
-    instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
-    instance.max_health = GetResource(instance, RES_HEALTH);
+	instance.vehicle_exit = raptor_exit;
+	instance.respawntime = autocvar_g_vehicle_raptor_respawntime;
+	SetResourceExplicit(instance, RES_HEALTH, autocvar_g_vehicle_raptor_health);
+	instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
+	instance.max_health = GetResource(instance, RES_HEALTH);
 
-    if(!autocvar_g_vehicle_raptor_swim)
-    	instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
+	if(!autocvar_g_vehicle_raptor_swim)
+		instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
 }
 
 #endif
@@ -757,82 +757,82 @@ METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 
 METHOD(Raptor, vr_hud, void(Raptor thisveh))
 {
-    Vehicles_drawHUD(VEH_RAPTOR.m_icon, "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
-                     "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-                     "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
+	Vehicles_drawHUD(VEH_RAPTOR.m_icon, "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
+	                 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+	                 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
 }
 METHOD(Raptor, vr_crosshair, void(Raptor thisveh, entity player))
 {
-    string crosshair;
+	string crosshair;
 
-    switch(weapon2mode)
-    {
-        case RSM_FLARE: crosshair = vCROSS_RAIN;  break;
-        case RSM_BOMB:  crosshair = vCROSS_BURST; break;
-        default:        crosshair = vCROSS_BURST;
-    }
+	switch(weapon2mode)
+	{
+		case RSM_FLARE: crosshair = vCROSS_RAIN;  break;
+		case RSM_BOMB:  crosshair = vCROSS_BURST; break;
+		default:        crosshair = vCROSS_BURST;
+	}
 
-    vector tmpSize = '0 0 0';
-    if(weapon2mode != RSM_FLARE && !spectatee_status)
-    {
-        vector where;
+	vector tmpSize = '0 0 0';
+	if(weapon2mode != RSM_FLARE && !spectatee_status)
+	{
+		vector where;
 
-        if(!dropmark)
-        {
-            dropmark = new(raptor_dropmark);
-            dropmark.owner = player;
-            dropmark.gravity = 1;
-            dropmark.dphitcontentsmask = DPCONTENTS_SOLID;
-            dropmark.solid = SOLID_CORPSE;
+		if(!dropmark)
+		{
+			dropmark = new(raptor_dropmark);
+			dropmark.owner = player;
+			dropmark.gravity = 1;
+			dropmark.dphitcontentsmask = DPCONTENTS_SOLID;
+			dropmark.solid = SOLID_CORPSE;
 			set_movetype(dropmark, MOVETYPE_BOUNCE);
-        }
+		}
 
-        float reload2 = STAT(VEHICLESTAT_RELOAD2) * 0.01;
-        if(reload2 == 1)
-        {
-            setorigin(dropmark, pmove_org);
-            dropmark.velocity = pmove_vel;
-            tracetoss(dropmark, player);
+		float reload2 = STAT(VEHICLESTAT_RELOAD2) * 0.01;
+		if(reload2 == 1)
+		{
+			setorigin(dropmark, pmove_org);
+			dropmark.velocity = pmove_vel;
+			tracetoss(dropmark, player);
 
-            where = project_3d_to_2d(trace_endpos);
+			where = project_3d_to_2d(trace_endpos);
 
-            setorigin(dropmark, trace_endpos);
+			setorigin(dropmark, trace_endpos);
 
-            if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
-            {
-                tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size;
-                where.x -= tmpSize.x * 0.5;
-                where.y -= tmpSize.y * 0.5;
-                where.z = 0;
-                drawpic(where, vCROSS_DROP, tmpSize, '0 1 0', autocvar_crosshair_alpha * 0.9, DRAWFLAG_ADDITIVE);
-                drawpic(where, vCROSS_DROP, tmpSize, '0 1 0', autocvar_crosshair_alpha * 0.6, DRAWFLAG_NORMAL); // Ensure visibility against bright bg
-            }
-            dropmark.cnt = time + 5;
-        }
-        else
-        {
-            if(dropmark.cnt > time)
-            {
-                where = project_3d_to_2d(dropmark.origin);
+			if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
+			{
+				tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size;
+				where.x -= tmpSize.x * 0.5;
+				where.y -= tmpSize.y * 0.5;
+				where.z = 0;
+				drawpic(where, vCROSS_DROP, tmpSize, '0 1 0', autocvar_crosshair_alpha * 0.9, DRAWFLAG_ADDITIVE);
+				drawpic(where, vCROSS_DROP, tmpSize, '0 1 0', autocvar_crosshair_alpha * 0.6, DRAWFLAG_NORMAL); // Ensure visibility against bright bg
+			}
+			dropmark.cnt = time + 5;
+		}
+		else
+		{
+			if(dropmark.cnt > time)
+			{
+				where = project_3d_to_2d(dropmark.origin);
 
-                if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
-                {
-                    tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size * 1.25;
-                    where.x -= tmpSize.x * 0.5;
-                    where.y -= tmpSize.y * 0.5;
-                    where.z = 0;
-                    drawpic(where, vCROSS_DROP, tmpSize, '1 0 0', autocvar_crosshair_alpha * 0.9, DRAWFLAG_ADDITIVE);
-                    drawpic(where, vCROSS_DROP, tmpSize, '1 0 0', autocvar_crosshair_alpha * 0.6, DRAWFLAG_NORMAL); // Ensure visibility against bright bg
-                }
-            }
-        }
-    }
+				if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
+				{
+					tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size * 1.25;
+					where.x -= tmpSize.x * 0.5;
+					where.y -= tmpSize.y * 0.5;
+					where.z = 0;
+					drawpic(where, vCROSS_DROP, tmpSize, '1 0 0', autocvar_crosshair_alpha * 0.9, DRAWFLAG_ADDITIVE);
+					drawpic(where, vCROSS_DROP, tmpSize, '1 0 0', autocvar_crosshair_alpha * 0.6, DRAWFLAG_NORMAL); // Ensure visibility against bright bg
+				}
+			}
+		}
+	}
 
-    Vehicles_drawCrosshair(crosshair);
+	Vehicles_drawCrosshair(crosshair);
 }
 METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 {
-    AuxiliaryXhair[1].axh_image = vCROSS_LOCK;
+	AuxiliaryXhair[1].axh_image = vCROSS_LOCK;
 }
 
 #endif

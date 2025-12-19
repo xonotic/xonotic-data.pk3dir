@@ -116,7 +116,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Raygun
 	} else {
 		Vehicle info = REGISTRY_GET(Vehicles, hud_id);
-    	info.vr_setup(info, NULL);
+		info.vr_setup(info, NULL);
 	}
 }
 
