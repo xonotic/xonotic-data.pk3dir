@@ -10,12 +10,10 @@ void spiderbot_rocket_artillery(entity this)
 
 void spiderbot_rocket_unguided(entity this)
 {
-	vector newdir, olddir;
+	this.nextthink = time;
 
-	this.nextthink  = time;
-
-	olddir = normalize(this.velocity);
-	newdir = normalize(this.pos1 - this.origin) + randomvec() * autocvar_g_vehicle_spiderbot_rocket_noise;
+	vector olddir = normalize(this.velocity);
+	vector newdir = normalize(this.pos1 - this.origin) + randomvec() * autocvar_g_vehicle_spiderbot_rocket_noise;
 	this.velocity = normalize(olddir + newdir * autocvar_g_vehicle_spiderbot_rocket_turnrate) * autocvar_g_vehicle_spiderbot_rocket_speed;
 
 	UpdateCSQCProjectile(this);
@@ -26,16 +24,14 @@ void spiderbot_rocket_unguided(entity this)
 
 void spiderbot_rocket_guided(entity this)
 {
-	vector newdir, olddir;
-
 	this.nextthink  = time;
 
-	if(!this.realowner.vehicle)
+	if (!this.realowner.vehicle)
 		setthink(this, spiderbot_rocket_unguided);
 
 	crosshair_trace(this.realowner);
-	olddir = normalize(this.velocity);
-	newdir = normalize(trace_endpos - this.origin) + randomvec() * autocvar_g_vehicle_spiderbot_rocket_noise;
+	vector olddir = normalize(this.velocity);
+	vector newdir = normalize(trace_endpos - this.origin) + randomvec() * autocvar_g_vehicle_spiderbot_rocket_noise;
 	this.velocity = normalize(olddir + newdir * autocvar_g_vehicle_spiderbot_rocket_turnrate) * autocvar_g_vehicle_spiderbot_rocket_speed;
 
 	UpdateCSQCProjectile(this);
@@ -46,12 +42,12 @@ void spiderbot_rocket_guided(entity this)
 
 void spiderbot_guide_release(entity this)
 {
-	bool donetrace = false;
+	bool done_trace = false;
 	IL_EACH(g_projectiles, it.realowner == this.owner && getthink(it) == spiderbot_rocket_guided,
 	{
-		if(!donetrace) // something exists, let's trace!
+		if (!done_trace) // something exists, let's trace!
 		{
-			donetrace = true;
+			done_trace = true;
 			crosshair_trace(this.owner);
 		}
 
@@ -63,71 +59,67 @@ void spiderbot_guide_release(entity this)
 float spiberbot_calcartillery_flighttime;
 vector spiberbot_calcartillery(vector org, vector tgt, float ht)
 {
-	float grav, sdist, zdist, vs, vz, jumpheight;
-	vector sdir;
-
-	grav  = PHYS_GRAVITY(NULL);
-	zdist = tgt_z - org_z;
-	sdist = vlen(tgt - org - zdist * '0 0 1');
-	sdir  = normalize(tgt - org - zdist * '0 0 1');
+	float grav  = PHYS_GRAVITY(NULL);
+	float zdist = tgt.z - org.z;
+	float sdist = vlen(tgt - org - zdist * '0 0 1');
+	vector sdir = normalize(tgt - org - zdist * '0 0 1');
 
 	// how high do we need to go?
-	jumpheight = fabs(ht);
-	if(zdist > 0)
+	float jumpheight = fabs(ht);
+	if (zdist > 0)
 		jumpheight += zdist;
 
 	// push so high...
-	vz = sqrt(2 * grav * jumpheight); // NOTE: sqrt(positive)!
+	float vz = sqrt(2 * grav * jumpheight); // NOTE: sqrt(positive)!
 
 	// we start with downwards velocity only if it's a downjump and the jump apex should be outside the jump!
-	if(ht < 0)
-		if(zdist < 0)
-			vz = -vz;
+	if (ht < 0 && zdist < 0)
+		vz = -vz;
 
 	vector solution = solve_quadratic(0.5 * grav, -vz, zdist); // equation "z(ti) = zdist"
 	// ALWAYS solvable because jumpheight >= zdist
-	if(!solution_z)
-		solution_y = solution_x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
-	if(zdist == 0)
-		solution_x = solution_y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
+	if (!solution.z)
+		solution.y = solution.x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
+	if (zdist == 0)
+		solution.x = solution.y; // solution.x is 0 in this case, so don't use it, but rather use solution.y (which will be sqrt(0.5 * jumpheight / grav), actually)
 
-	if(zdist < 0)
+	if (zdist < 0)
 	{
 		// down-jump
-		if(ht < 0)
+		if (ht < 0)
 		{
 			// almost straight line type
 			// jump apex is before the jump
 			// we must take the larger one
-			spiberbot_calcartillery_flighttime = solution_y;
+			spiberbot_calcartillery_flighttime = solution.y;
 		}
 		else
 		{
 			// regular jump
 			// jump apex is during the jump
 			// we must take the larger one too
-			spiberbot_calcartillery_flighttime = solution_y;
+			spiberbot_calcartillery_flighttime = solution.y;
 		}
 	}
 	else
 	{
 		// up-jump
-		if(ht < 0)
+		if (ht < 0)
 		{
 			// almost straight line type
 			// jump apex is after the jump
 			// we must take the smaller one
-			spiberbot_calcartillery_flighttime = solution_x;
+			spiberbot_calcartillery_flighttime = solution.x;
 		}
 		else
 		{
 			// regular jump
 			// jump apex is during the jump
 			// we must take the larger one
-			spiberbot_calcartillery_flighttime = solution_y;
+			spiberbot_calcartillery_flighttime = solution.y;
 		}
 	}
-	vs = sdist / spiberbot_calcartillery_flighttime;
+	float vs = sdist / spiberbot_calcartillery_flighttime;
 
 	// finally calculate the velocity
 	return sdir * vs + '0 0 1' * vz;
@@ -135,17 +127,14 @@ vector spiberbot_calcartillery(vector org, vector tgt, float ht)
 
 void spiderbot_rocket_do(entity this)
 {
-	vector v;
-	entity rocket = NULL;
-
 	if (this.wait != -10)
 	{
 		if (PHYS_INPUT_BUTTON_ATCK2(this.owner) && STAT(VEHICLESTAT_W2MODE, this) == SBRM_GUIDE)
 		{
-			if (this.wait == 1)
-			if (this.tur_head.frame == 9 || this.tur_head.frame == 1)
+			if (this.wait == 1
+			&& (this.tur_head.frame == 9 || this.tur_head.frame == 1))
 			{
-				if(this.gun2.cnt < time && this.tur_head.frame == 9)
+				if (this.gun2.cnt < time && this.tur_head.frame == 9)
 					this.tur_head.frame = 1;
 
 				return;
@@ -154,14 +143,14 @@ void spiderbot_rocket_do(entity this)
 		}
 		else
 		{
-			if(this.wait)
+			if (this.wait)
 				spiderbot_guide_release(this);
 
 			this.wait = 0;
 		}
 	}
 
-	if(this.gun2.cnt > time)
+	if (this.gun2.cnt > time)
 		return;
 
 	if (this.tur_head.frame >= 9)
@@ -170,44 +159,46 @@ void spiderbot_rocket_do(entity this)
 		this.wait = 0;
 	}
 
-	if(this.wait != -10)
-	if(!PHYS_INPUT_BUTTON_ATCK2(this.owner))
+	if (this.wait != -10
+	&& !PHYS_INPUT_BUTTON_ATCK2(this.owner))
 		return;
 
-	if(weaponLocked(this.owner) || weaponUseForbidden(this.owner))
+	if (weaponLocked(this.owner) || weaponUseForbidden(this.owner))
 		return;
 
-	v = gettaginfo(this.tur_head,gettagindex(this.tur_head,"tag_fire"));
+	entity rocket = NULL;
+	vector v = gettaginfo(this.tur_head, gettagindex(this.tur_head, "tag_fire"));
 
-	switch(STAT(VEHICLESTAT_W2MODE, this))
+	switch (STAT(VEHICLESTAT_W2MODE, this))
 	{
 		case SBRM_VOLLY:
+		{
 			rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH, SND_VEH_SPIDERBOT_ROCKET_FIRE,
 				v, normalize(randomvec() * autocvar_g_vehicle_spiderbot_rocket_spread + v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
 				autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
 				DEATH_VH_SPID_ROCKET.m_id, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, true, this.owner);
 			crosshair_trace(this.owner);
 			float _dist = (random() * autocvar_g_vehicle_spiderbot_rocket_radius) + vlen(v - trace_endpos);
-			_dist -= (random() * autocvar_g_vehicle_spiderbot_rocket_radius) ;
-			rocket.nextthink  = time + (_dist / autocvar_g_vehicle_spiderbot_rocket_speed);
+			_dist -= random() * autocvar_g_vehicle_spiderbot_rocket_radius;
+			rocket.nextthink = time + (_dist / autocvar_g_vehicle_spiderbot_rocket_speed);
 			setthink(rocket, vehicles_projectile_explode_think);
 
-			if(PHYS_INPUT_BUTTON_ATCK2(this.owner) && this.tur_head.frame == 1)
+			if (PHYS_INPUT_BUTTON_ATCK2(this.owner) && this.tur_head.frame == 1)
 				this.wait = -10;
 			break;
+		}
 		case SBRM_GUIDE:
 			rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH, SND_VEH_SPIDERBOT_ROCKET_FIRE,
 				v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
 				autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
 				DEATH_VH_SPID_ROCKET.m_id, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, false, this.owner);
 			crosshair_trace(this.owner);
-			rocket.pos1	   = trace_endpos;
-			rocket.nextthink  = time;
+			rocket.pos1 = trace_endpos;
+			rocket.nextthink = time;
 			setthink(rocket, spiderbot_rocket_guided);
-
-
-		break;
+			break;
 		case SBRM_ARTILLERY:
+		{
 			rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH, SND_VEH_SPIDERBOT_ROCKET_FIRE,
 				v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
 				autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
@@ -215,23 +206,24 @@ void spiderbot_rocket_do(entity this)
 
 			crosshair_trace(this.owner);
 
-			rocket.pos1	   = trace_endpos + randomvec() * (0.75 * autocvar_g_vehicle_spiderbot_rocket_radius);
-			rocket.pos1_z	   = trace_endpos_z;
+			rocket.pos1   = trace_endpos + randomvec() * (0.75 * autocvar_g_vehicle_spiderbot_rocket_radius);
+			rocket.pos1.z = trace_endpos.z;
 
 			traceline(v, v + '0 0 1' * max_shot_distance, MOVE_WORLDONLY, this);
 			float h1 = 0.75 * vlen(v - trace_endpos);
 
 			//v = trace_endpos;
-			traceline(v , rocket.pos1 + '0 0 1' * max_shot_distance, MOVE_WORLDONLY, this);
+			traceline(v, rocket.pos1 + '0 0 1' * max_shot_distance, MOVE_WORLDONLY, this);
 			float h2 = 0.75 * vlen(rocket.pos1 - v);
 
-			rocket.velocity  = spiberbot_calcartillery(v, rocket.pos1, ((h1 < h2) ? h1 : h2));
+			rocket.velocity = spiberbot_calcartillery(v, rocket.pos1, (h1 < h2 ? h1 : h2));
 			set_movetype(rocket, MOVETYPE_TOSS);
-			rocket.gravity   = 1;
+			rocket.gravity = 1;
 			//setthink(rocket, spiderbot_rocket_artillery);
-		break;
+			break;
+		}
 	}
-	rocket.classname  = "spiderbot_rocket";
+	rocket.classname = "spiderbot_rocket";
 
 	rocket.cnt = time + autocvar_g_vehicle_spiderbot_rocket_lifetime;
 
@@ -239,9 +231,9 @@ void spiderbot_rocket_do(entity this)
 	if (this.tur_head.frame == 9)
 		this.attack_finished_single[0] = autocvar_g_vehicle_spiderbot_rocket_reload;
 	else
-		this.attack_finished_single[0] = ((STAT(VEHICLESTAT_W2MODE, this) ==  SBRM_VOLLY) ? autocvar_g_vehicle_spiderbot_rocket_refire2 : autocvar_g_vehicle_spiderbot_rocket_refire);
+		this.attack_finished_single[0] = (STAT(VEHICLESTAT_W2MODE, this) == SBRM_VOLLY) ? autocvar_g_vehicle_spiderbot_rocket_refire2 : autocvar_g_vehicle_spiderbot_rocket_refire;
 
 	this.gun2.cnt = time + this.attack_finished_single[0];
 }
 
-#endif
+#endif // SVQC

@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef SVQC
-#include <common/util.qh> // for icon_path_from_HUDskin
+	#include <common/util.qh> // for icon_path_from_HUDskin
 #endif
 
 CLASS(Vehicle, Object)
@@ -29,8 +29,8 @@ CLASS(Vehicle, Object)
 	/** cockpit model tag */
 	ATTRIB(Vehicle, tag_view, string);
 	/** player physics mod */
-	ATTRIB(Vehicle, PlayerPhysplug, bool(entity,float));
-	/**  */
+	ATTRIB(Vehicle, PlayerPhysplug, bool(entity, float));
+	/** spawnflags */
 	ATTRIB(Vehicle, spawnflags, int, 0);
 	/** vehicle hitbox size */
 	ATTRIB(Vehicle, m_mins, vector, '-0 -0 -0');
@@ -81,20 +81,20 @@ CLASS(Vehicle, Object)
 ENDCLASS(Vehicle)
 
 // vehicle spawn flags (need them here for common registrations)
-const int VHF_ISVEHICLE			= BIT(1); /// Indicates vehicle
-const int VHF_HASSHIELD			= BIT(2); /// Vehicle has shileding
-const int VHF_SHIELDREGEN		= BIT(3); /// Vehicles shield regenerates
-const int VHF_HEALTHREGEN		= BIT(4); /// Vehicles health regenerates
-const int VHF_ENERGYREGEN		= BIT(5); /// Vehicles energy regenerates
-const int VHF_DEATHEJECT		= BIT(6); /// Vehicle ejects pilot upon fatal damage
-const int VHF_MOVE_GROUND		= BIT(7); /// Vehicle moves on gound
-const int VHF_MOVE_HOVER		= BIT(8); /// Vehicle hover close to gound
-const int VHF_MOVE_FLY			= BIT(9); /// Vehicle is airborn
-const int VHF_DMGSHAKE			= BIT(10); /// Add random velocity each frame if health < 50%
-const int VHF_DMGROLL			= BIT(11); /// Add random angles each frame if health < 50%
-const int VHF_DMGHEADROLL		= BIT(12); /// Add random head angles each frame if health < 50%
-const int VHF_MULTISLOT			= BIT(13); /// Vehicle has multiple player slots
-const int VHF_PLAYERSLOT		= BIT(14); /// This ent is a player slot on a multi-person vehicle
+const int VHF_ISVEHICLE    = BIT(1);   ///< Indicates vehicle
+const int VHF_HASSHIELD    = BIT(2);   ///< Vehicle has shileding
+const int VHF_SHIELDREGEN  = BIT(3);   ///< Vehicles shield regenerates
+const int VHF_HEALTHREGEN  = BIT(4);   ///< Vehicles health regenerates
+const int VHF_ENERGYREGEN  = BIT(5);   ///< Vehicles energy regenerates
+const int VHF_DEATHEJECT   = BIT(6);   ///< Vehicle ejects pilot upon fatal damage
+const int VHF_MOVE_GROUND  = BIT(7);   ///< Vehicle moves on gound
+const int VHF_MOVE_HOVER   = BIT(8);   ///< Vehicle hover close to gound
+const int VHF_MOVE_FLY     = BIT(9);   ///< Vehicle is airborn
+const int VHF_DMGSHAKE     = BIT(10);  ///< Add random velocity each frame if health < 50%
+const int VHF_DMGROLL      = BIT(11);  ///< Add random angles each frame if health < 50%
+const int VHF_DMGHEADROLL  = BIT(12);  ///< Add random head angles each frame if health < 50%
+const int VHF_MULTISLOT    = BIT(13);  ///< Vehicle has multiple player slots
+const int VHF_PLAYERSLOT   = BIT(14);  ///< This ent is a player slot on a multi-person vehicle
 
 // fields:
 .entity tur_head;
