@@ -36,7 +36,6 @@
 				}
 				return;
 			}
-			// FIXME: pitch not implemented
 			WriteHeader(channel, globalsound);
 			WriteByte(channel, gs.m_id);
 			WriteByte(channel, r * 255);
@@ -44,6 +43,13 @@
 			WriteByte(channel, chan);
 			WriteByte(channel, floor(_vol * 255));
 			WriteByte(channel, floor(_atten * 64));
+			if(_pitch)
+			{
+				_pitch *= 0.01;
+				WriteShort(channel, floor(_pitch * 4000 + 0.5));
+			}
+			else
+				WriteShort(channel, 0);
 			entcs_force_origin(from);
 			vector o = from.origin + 0.5 * (from.mins + from.maxs);
 			WriteVector(channel, o);
@@ -73,7 +79,6 @@
 				}
 				return;
 			}
-			// FIXME: pitch not implemented
 			WriteHeader(channel, playersound);
 			WriteByte(channel, ps.m_id);
 			WriteByte(channel, r * 255);
@@ -81,6 +86,13 @@
 			WriteByte(channel, chan);
 			WriteByte(channel, floor(_vol * 255));
 			WriteByte(channel, floor(_atten * 64));
+			if(_pitch)
+			{
+				_pitch *= 0.01;
+				WriteShort(channel, floor(_pitch * 4000 + 0.5));
+			}
+			else
+				WriteShort(channel, 0);
 			entcs_force_origin(from);
 			vector o = from.origin + 0.5 * (from.mins + from.maxs);
 			WriteVector(channel, o);
@@ -99,19 +111,23 @@
 			int chan = ReadSByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
+			float pitch = ReadShort();
+			if(pitch)
+				pitch /= 4000;
+			pitch *= 100;
 			vector o = ReadVector();
 			// TODO: is this really what we want to be doing? Footsteps that follow the player at head height?
 			if (who == player_currententnum) e = findfloat(NULL, entnum, who);  // play at camera position for full volume
 			else if (e) e.origin = o;
 			if (e)
 			{
-				sound7(e, chan, sample, vol, atten, 0, 0);
+				sound7(e, chan, sample, vol, atten, pitch, 0);
 			}
 			else
 			{
 				// Can this happen?
-				LOG_WARNF("Missing entcs data for player %d", who);
-				sound8(e, o, chan, sample, vol, atten, 0, 0);
+				//LOG_WARNF("Missing entcs data for player %d", who);
+				sound8(e, o, chan, sample, vol, atten, pitch, 0);
 			}
 			return true;
 		}
@@ -128,18 +144,22 @@
 			int chan = ReadSByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
+			float pitch = ReadShort();
+			if(pitch)
+				pitch /= 4000;
+			pitch *= 100;
 			vector o = ReadVector();
 			if (who == player_currententnum) e = findfloat(NULL, entnum, who);  // play at camera position for full volume
 			else if (e) e.origin = o;
 			if (e)
 			{
 				// TODO: for non-visible players, origin should probably continue to be updated as long as the sound is playing
-				sound7(e, chan, sample, vol, atten, 0, 0);
+				sound7(e, chan, sample, vol, atten, pitch, 0);
 			}
 			else
 			{
 				// Can this happen?
-				LOG_WARNF("Missing entcs data for player %d", who);
+				//LOG_WARNF("Missing entcs data for player %d", who);
 				sound8(e, o, chan, sample, vol, atten, 0, 0);
 			}
 			return true;
