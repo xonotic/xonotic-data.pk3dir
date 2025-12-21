@@ -533,10 +533,26 @@ bool trigger_push_testorigin_for_item(entity tracetest_ent, entity item, vector 
 // get the push entity in cases where a non-push entity acts as the trigger of a jump pad
 entity get_pusher_from_trigger(entity this)
 {
-	entity e = find(NULL, targetname, this.target);
+	// triggers could point to several pusher but each pusher would overwrite the effect of the previous one
+	// this means only one pusher has to be considered
+	// we still have to traverse the target list though since entities other than pushers could be in it
+	entity pusher = NULL;
+	if(this.classname != "trigger_push")
+	{
+		for(entity t = NULL; (t = find(t, targetname, this.target)); )
+		{
+			if(t.classname == "target_push")
+			{
+				pusher = t;
+				break;
+			}
+		}
 
-	if(e && e.classname == "target_push")
-		return e; // if the target field points to a target_push entity, return it
+		if(!pusher) objerror (this, "Jump pad with non-existent target");
+	}
+
+	if(pusher)
+		return pusher; // if the target field points to a target_push entity, return it
 	else
 		return this; // otherwise, return the original entity
 }
