@@ -610,7 +610,7 @@ bool trigger_push_test(entity this, entity item)
 	vector org = trigger_push_get_start_point(this);
 	entity pusher = get_pusher_from_trigger(this); // function might get called from a non-push trigger entity
 #elif defined(CSQC)
-	entity pusher = this;
+	entity pusher = this; // client-side code never calls this on a non-push entity
 #endif
 
 	if (pusher.target)
