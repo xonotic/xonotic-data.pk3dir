@@ -62,8 +62,9 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 			_("Automatically switch to newly picked up weapons if they are better than what you are carrying")));
 			e.sendCvars = true;
 	me.TR(me);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Auto switch in CTS:")));
-		me.TD(me, 1, 1.8, e = makeXonoticMixedSlider("cl_autoswitch_cts"));
+		me.TD(me, 1, 4/3, e = makeXonoticTextLabel(0, _("Auto switch in CTS:")));
+		me.TD(me, 1, 5/3, e = makeXonoticMixedSlider("cl_autoswitch_cts"));
+			e.setValueSpace(e, e.valueSpace * (6/5));
 			e.addText(e, _("Never"), 0);
 			e.addText(e, _("Default"), -1);
 			e.addText(e, _("Always"), 1);
@@ -100,9 +101,10 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 			setDependentNOT(e, "cl_viewmodel_alpha", 0);
 			setDependentAND(e, "r_drawviewmodel", 1, 1);
 	me.TR(me);
-			me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Weapon model opacity:")));
+			me.TD(me, 1, 4/3, e = makeXonoticTextLabel(0, _("Weapon model opacity:")));
 				setDependent(e, "r_drawviewmodel", 1, 1);
-			me.TD(me, 1, 1.8, e = makeXonoticSlider(0.05, 1, 0.05, "cl_viewmodel_alpha"));
+			me.TD(me, 1, 5/3, e = makeXonoticSlider(0.05, 1, 0.05, "cl_viewmodel_alpha"));
+				e.setValueSpace(e, e.valueSpace * (6/5));
 				e.formatString = "%";
 				setDependent(e, "r_drawviewmodel", 1, 1);
 

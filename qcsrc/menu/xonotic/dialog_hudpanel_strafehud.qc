@@ -28,7 +28,7 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticMixedSlider("hud_panel_strafehud"));
-			e.setValueSpace(e, e.valueSpace * 1.2);
+			e.setValueSpace(e, e.valueSpace * 1.5);
 			e.addText(e, _("Disable"), 0);
 			e.addText(e, _("Enable"), 1);
 			e.addText(e, _("Enable even observing"), 2);
@@ -52,6 +52,7 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Range:")));
 		me.TD(me, 1, 2.8, e = makeXonoticMixedSlider("hud_panel_strafehud_range"));
+			e.setValueSpace(e, e.valueSpace * (13/14));
 			e.formatString = _("%s°");
 			e.addText(e, _("Dynamic"), 0);
 			e.addRange(e, 10, 360, 10);

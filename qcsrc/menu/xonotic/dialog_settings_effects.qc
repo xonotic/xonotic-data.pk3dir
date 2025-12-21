@@ -105,7 +105,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.applyButton = effectsApplyButton;
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticCheckBoxEx_T(1, 0, "r_sky", _("Show sky"), _("Disable sky for performance and visibility")));
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx_T(1, 0, "r_sky", _("Show sky"), _("Disable sky for performance and visibility")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(1, "mod_q3bsp_nolightmaps", _("Use lightmaps"),
 			_("Use high resolution lightmaps, which will look pretty but use up some extra video memory")));
@@ -126,7 +126,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			_("Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface")));
 			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 				setDependent(e, "vid_gl20", 1, 1);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping"),
+		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping"),
 			_("Higher quality offset mapping, which also has a huge impact on performance")));
 				setDependent(e, "r_glsl_offsetmapping", 1, 1);
 			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)

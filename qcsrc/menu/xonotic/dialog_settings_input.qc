@@ -114,7 +114,7 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Acceleration factor:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("m_accelerate", m_accelerate_tooltip));
-			e.setValueSpace(e, e.valueSpace * 1.25);
+			e.setValueSpace(e, e.valueSpace * 1.5);
 			e.addText(e, ZCTX(_("MOUSEACCEL^Fully disabled")), 0);
 			e.addText(e, ZCTX(_("MOUSEACCEL^Linear disabled")), 1);
 			e.addRange(e, 1.2, 4, 0.2);
@@ -161,6 +161,7 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Jetpack on jump:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider("cl_jetpack_jump"));
+			e.setValueSpace(e, e.valueSpace * 1.25);
 			e.addText(e, ZCTX(_("JPJUMP^Disabled")), 0);
 			e.addText(e, _("Air only"), 1);
 			e.addText(e, ZCTX(_("JPJUMP^All")), 2);
