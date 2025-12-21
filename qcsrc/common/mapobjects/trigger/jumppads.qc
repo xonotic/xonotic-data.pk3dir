@@ -530,18 +530,15 @@ bool trigger_push_testorigin_for_item(entity tracetest_ent, entity item, vector 
 #endif
 
 #ifdef SVQC
-// target_push entities are never directly triggered
-// if the target field points to a target_push entity, return it
-// otherwise, return the original entity
+// get the push entity in cases where a non-push entity acts as the trigger of a jump pad
 entity get_pusher_from_trigger(entity this)
 {
-	// jump pads should only point to one target_push, further targets are ignored
 	entity e = find(NULL, targetname, this.target);
 
 	if(e && e.classname == "target_push")
-		return e; // return the linked target_push entity
+		return e; // if the target field points to a target_push entity, return it
 	else
-		return this; // push and trigger are the same entity, return the original entity
+		return this; // otherwise, return the original entity
 }
 
 vector trigger_push_get_start_point(entity this)
@@ -555,7 +552,7 @@ vector trigger_push_get_start_point(entity this)
 float trigger_push_get_push_time(entity this, vector endpos)
 {
 	vector org = trigger_push_get_start_point(this);
-	entity pusher = get_pusher_from_trigger(this);
+	entity pusher = get_pusher_from_trigger(this); // function might get called from a non-push trigger entity
 
 	float grav = PHYS_GRAVITY(NULL);
 
@@ -595,7 +592,7 @@ bool trigger_push_test(entity this, entity item)
 {
 #ifdef SVQC
 	vector org = trigger_push_get_start_point(this);
-	entity pusher = get_pusher_from_trigger(this);
+	entity pusher = get_pusher_from_trigger(this); // function might get called from a non-push trigger entity
 #elif defined(CSQC)
 	entity pusher = this;
 #endif
@@ -925,9 +922,8 @@ spawnfunc(target_push)
 	{
 		for (entity trigger_ent = findchain(target, this.targetname); trigger_ent; trigger_ent = trigger_ent.chain)
 		{
-			// add the triggering entity to the g_jumppads list. multiple jump pads can use the same target_push.
-			// this requires special handling in the navigation code since the target field will
-			// point to the target_push entity instead of the actual location entity
+			// add the triggering entity to the g_jumppads list
+			// multiple jump pads can use the same target_push
 			if(!IL_CONTAINS(g_jumppads, trigger_ent))
 			{
 				IL_PUSH(g_jumppads, trigger_ent);
