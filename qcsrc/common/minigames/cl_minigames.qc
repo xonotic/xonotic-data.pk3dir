@@ -263,8 +263,6 @@ void minigame_show_allspecs(vector boardpos, vector boardsize)
 			current_spec = textShortenToWidth(current_spec, max_current_spec_width, hud_fontsize, stringwidth_colors);
 			if (allspecs != "")
 				current_spec = strcat(", ", current_spec);
-			else
-				current_spec = current_spec;
 
 			allspecs_width = stringwidth(allspecs, true, hud_fontsize);
 

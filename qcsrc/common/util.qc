@@ -977,14 +977,22 @@ string find_last_color_code(string s)
 		{
 			if(i+1 <= len)
 			if(IS_DIGIT(substring(s, i+1, 1)))
+			{
+				if(start == 0 && len == 1)
+					return "";
 				return substring(s, i, 2);
+			}
 
 			if(i+4 <= len)
 			if(substring(s, i+1, 1) == "x")
 			if(IS_HEXDIGIT(substring(s, i + 2, 1)))
 			if(IS_HEXDIGIT(substring(s, i + 3, 1)))
 			if(IS_HEXDIGIT(substring(s, i + 4, 1)))
+			{
+				if(start == 0 && len == 4)
+					return "";
 				return substring(s, i, 5);
+			}
 		}
 		i -= carets; // this also skips one char before the carets
 	}
