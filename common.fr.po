@@ -1190,7 +1190,7 @@ msgstr "Vous êtes mort, appuyez sur ^2%s^7 pour réapparaître"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:32
 #, c-format
 msgid "%s°"
-msgstr "%s°"
+msgstr "%s °"
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:101
 msgid "qu"
