@@ -2012,20 +2012,22 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size, Wep
 		vector accuracy_fontsize = hud_fontsize * 1.15;
 		string str = sprintf(_("%.*f%%"), 0, average_accuracy); // reuse transifex string
 		vector str_pos;
+		float y_offset = panel_bg_padding + 0.5 * hud_fontsize.y;
 		if (autocvar_hud_panel_scoreboard_team_size_position != 1) // team size not on left
 		{
 			// team score on the left (default)
-			str_pos = pos + vec2(-0.5 * hud_fontsize.x - stringwidth(str, false, accuracy_fontsize), hud_fontsize.y);
+			str_pos = pos + vec2(-0.5 * hud_fontsize.x - stringwidth(str, false, accuracy_fontsize), y_offset);
 			if (panel.current_panel_bg != "0")
 				str_pos.x -= panel_bg_border;
 		}
 		else
 		{
 			// team score on the right
-			str_pos = pos + vec2(0.5 * hud_fontsize.x + (panel_size.x + accuracy_fontsize.x), hud_fontsize.y);
+			str_pos = pos + vec2(0.5 * hud_fontsize.x + (panel_size.x + accuracy_fontsize.x), y_offset);
 			if (panel.current_panel_bg != "0")
 				str_pos.x += panel_bg_border;
 		}
+		str_pos.y += panel_bg_border;
 		drawstring(str_pos, str, accuracy_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
 	}
@@ -2686,7 +2688,7 @@ void Scoreboard_Draw(bool should_draw)
 		vector panel_bg_color_save = panel_bg_color;
 		vector team_score_baseoffset;
 		vector team_size_baseoffset;
-		float y_offset = (autocvar_hud_panel_scoreboard_minimal ? panel_bg_padding : hud_fontsize.y);
+		float y_offset = panel_bg_padding + (autocvar_hud_panel_scoreboard_minimal ? 0 : 0.5) * hud_fontsize.y;
 		if (autocvar_hud_panel_scoreboard_team_size_position != 1) // team size not on left
 		{
 			// put team score to the left of scoreboard (and team size to the right)
@@ -2695,7 +2697,7 @@ void Scoreboard_Draw(bool should_draw)
 			if (panel.current_panel_bg != "0")
 			{
 				team_score_baseoffset.x -= panel_bg_border;
-				team_size_baseoffset.x += panel_bg_border;
+				team_size_baseoffset.x  += panel_bg_border;
 			}
 		}
 		else
@@ -2706,7 +2708,7 @@ void Scoreboard_Draw(bool should_draw)
 			if (panel.current_panel_bg != "0")
 			{
 				team_score_baseoffset.x += panel_bg_border;
-				team_size_baseoffset.x -= panel_bg_border;
+				team_size_baseoffset.x  -= panel_bg_border;
 			}
 		}
 
