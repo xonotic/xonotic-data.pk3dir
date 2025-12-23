@@ -1996,7 +1996,7 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
 		return pos;
 
 	int rows = (autocvar_hud_panel_scoreboard_itemstats_doublerows && n >= floor(REGISTRY_COUNT(Items) / 2)) ? 2 : 1;
-	int columns = max(6, ceil(n / rows));
+	int columns = ceil(n / rows);
 
 	float item_height = hud_fontsize.y * 2.3;
 	float height = item_height + hud_fontsize.y;
