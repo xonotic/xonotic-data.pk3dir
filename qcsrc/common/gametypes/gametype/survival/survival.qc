@@ -1,8 +1,5 @@
 #include "survival.qh"
 
-#ifdef GAMEQC
-REGISTER_NET_LINKED(ENT_CLIENT_SURVIVALSTATUSES)
-#endif
 #ifdef MENUQC
 METHOD(Survival, describe, string(Survival this))
 {
