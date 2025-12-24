@@ -564,22 +564,19 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-.int survival_status;
 void Ent_RemovePlayerScore(entity this)
 {
-	if(this.owner) {
-		SetTeam(this.owner, -1);
-		this.owner.gotscores = 0;
-		FOREACH(Scores, true, {
-			this.owner.(scores(it)) = 0; // clear all scores
-		});
-		this.owner.ready = 0;
-		this.owner.eliminated = 0;
-		this.owner.ignored = false;
-		this.owner.colormap = 0;
-		// TODO add a hook to reset this Survival field
-		this.owner.survival_status = 0;
-	}
+	if (!this.owner)
+		return;
+
+	SetTeam(this.owner, -1);
+	this.owner.gotscores = 0;
+	FOREACH(Scores, true, this.owner.(scores(it)) = 0); // clear all scores
+	this.owner.ready = 0;
+	this.owner.eliminated = 0;
+	this.owner.ignored = false;
+	this.owner.colormap = 0;
+	MUTATOR_CALLHOOK(ResetPlayerGametypeFields, this.owner);
 }
 
 NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)

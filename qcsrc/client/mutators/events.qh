@@ -206,6 +206,12 @@ MUTATOR_HOOKABLE(DrawViewModel, EV_DrawViewModel);
 /** Called when updating the view's liquid contents, return true to disable the standard checks and apply your own */
 MUTATOR_HOOKABLE(HUD_Contents, EV_NO_ARGS);
 
+/** Called to reset gametype fields on a player */
+#define EV_ResetPlayerGametypeFields(i, o) \
+	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
+	/**/
+MUTATOR_HOOKABLE(ResetPlayerGametypeFields, EV_ResetPlayerGametypeFields);
+
 /** Return true to disable player model forcing */
 #define EV_ForcePlayermodels_Skip(i, o) \
 	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
